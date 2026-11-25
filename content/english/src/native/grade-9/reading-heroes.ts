@@ -42,6 +42,11 @@ Gilgamesh returns to Uruk with nothing. Yet as he looks at the great walls of hi
             "The fourth paragraph says grief changes him completely and that for the first time he is afraid of death, after Enkidu dies.",
             "第四段说恩奇都死后，悲痛彻底改变了他，他第一次害怕死亡。",
           ),
+          [
+            t("No war with another city is mentioned.", "文中没提与别城的战争。"),
+            t("His people prayed to the gods, not warned him.", "百姓向神祈祷，并没警告他。"),
+            t("He never loses his crown.", "他从没失去王冠。"),
+          ],
         ),
         ask(
           t("What happens to the plant that restores youth?", "那株能使人恢复青春的植物后来怎样了？"),
@@ -55,6 +60,11 @@ Gilgamesh returns to Uruk with nothing. Yet as he looks at the great walls of hi
             "The fourth paragraph says that while he bathes on the journey home, a snake steals the plant.",
             "第四段说他在回家途中洗澡时，一条蛇偷走了那株植物。",
           ),
+          [
+            t("He meant to bring it home but lost it.", "他本想带回去，却丢了。"),
+            t("Utnapishtim tells him where it is.", "乌特纳比西丁告诉了他植物在哪里。"),
+            t("It is stolen, not turned to stone.", "它被偷走了，没变成石头。"),
+          ],
         ),
         ask(
           t("What does Gilgamesh seem to understand at the end?", "结尾时吉尔伽美什似乎明白了什么？"),
@@ -68,12 +78,22 @@ Gilgamesh returns to Uruk with nothing. Yet as he looks at the great walls of hi
             "The last paragraph says that as he looks at the walls, he seems to understand that life is short but people's works can last.",
             "最后一段说，他望着城墙，似乎明白了生命短暂，但人的成就可以长存。",
           ),
+          [
+            t("He accepts that he is mortal.", "他接受了自己终有一死。"),
+            t("Forgiveness is never mentioned.", "文中没提宽恕。"),
+            t("The walls stand for lasting works, not floods.", "城墙象征流传的功业，与洪水无关。"),
+          ],
         ),
         ask(
           t("Of which city was Gilgamesh king?", "吉尔伽美什是哪座城的国王？"),
           t("Uruk", "乌鲁克"),
           [t("Ur", "乌尔"), t("Babylon", "巴比伦"), t("Troy", "特洛伊")],
           t("Gilgamesh is a proud and restless ruler of the city of Uruk.", "吉尔伽美什是乌鲁克城一位骄傲又不安分的统治者。"),
+          [
+            t("Ur is never mentioned.", "文中没提乌尔。"),
+            t("Babylon is never mentioned.", "文中没提巴比伦。"),
+            t("Troy belongs to the Odyssey.", "特洛伊属于《奥德赛》。"),
+          ],
         ),
       ],
       ["Mesopotamia", "Gilgamesh", "Uruk", "Enkidu", "Utnapishtim", "Heaven"],
@@ -104,6 +124,11 @@ The Odyssey has given English a word: an odyssey is any long, adventurous journe
             "The second paragraph says Odysseus called himself Nobody, so the Cyclops cried that Nobody was hurting him, and no one came.",
             "第二段说奥德修斯自称“没有人”，所以独眼巨人喊“没有人”在伤害他，于是没人来帮忙。",
           ),
+          [
+            t("They hear only that Nobody is hurting him.", "他们只听说“没有人”在伤害他。"),
+            t("Sleep is never mentioned.", "文中没提他们在睡觉。"),
+            t("He does cry to his neighbors.", "他确实向邻居呼救了。"),
+          ],
         ),
         ask(
           t("How have the suitors broken the rules of hospitality?", "求婚者们如何违反了待客之道？"),
@@ -117,6 +142,11 @@ The Odyssey has given English a word: an odyssey is any long, adventurous journe
             "The fourth paragraph says the suitors filled his palace, ate his food and tried to marry his wife, breaking the rules every guest was expected to respect.",
             "第四段说求婚者占据他的宫殿，吃他的食物，还想娶他的妻子，违反了每位客人都应遵守的规矩。",
           ),
+          [
+            t("They are in his palace, not guarding Ithaca.", "他们在他宫里，并没守着伊萨卡。"),
+            t("His ships were lost at sea.", "他的船是在海上沉没的。"),
+            t("No festival is mentioned.", "文中没提节日。"),
+          ],
         ),
         ask(
           t("According to the passage, what is Odysseus's great gift?", "根据文章，奥德修斯最大的天赋是什么？"),
@@ -126,12 +156,22 @@ The Odyssey has given English a word: an odyssey is any long, adventurous journe
             "The second paragraph says he is not the strongest of the Greek heroes and that his great gift is his mind.",
             "第二段说他并非希腊英雄中最强壮的，他最大的天赋是他的智慧。",
           ),
+          [
+            t("He is not the strongest hero.", "他不是最强壮的英雄。"),
+            t("The Sirens sing, not Odysseus.", "唱歌的是塞壬，不是奥德修斯。"),
+            t("Wealth is never his gift.", "财富从不是他的长处。"),
+          ],
         ),
         ask(
           t("What name did Odysseus give the Cyclops?", "奥德修斯告诉独眼巨人自己叫什么？"),
           t("Nobody", "“没有人”"),
           [t("Homer", "荷马"), t("Ithaca", "伊萨卡"), t("The Muse", "缪斯")],
           t("He tells the monster that his name is Nobody.", "他告诉怪物自己的名字叫“没有人”。"),
+          [
+            t("Homer is the poet.", "荷马是诗人。"),
+            t("Ithaca is his home island.", "伊萨卡是他家乡的岛。"),
+            t("The Muse is invoked by the poet.", "缪斯是诗人祈求的对象。"),
+          ],
         ),
       ],
       ["Odyssey", "Greek", "Homer", "Odysseus", "Trojan", "Ithaca", "Muse", "Cyclops", "Nobody", "Sirens", "Penelope"],
@@ -164,6 +204,11 @@ The poem ends with his funeral. His people build a great mound by the sea, so th
             "The third paragraph says Beowulf announces he will fight without a sword because Grendel uses none.",
             "第三段说贝奥武甫宣布他将不用剑作战，因为格伦德尔不用剑。",
           ),
+          [
+            t("His sword was not stolen.", "他的剑没被偷。"),
+            t("No such rule is mentioned.", "文中没提这样的规定。"),
+            t("He later kills the mother with a sword.", "他后来用剑杀了格伦德尔的母亲。"),
+          ],
         ),
         ask(
           t("What does Wiglaf do when the old king fights the dragon?", "老国王与龙搏斗时，威格拉夫做了什么？"),
@@ -177,6 +222,11 @@ The poem ends with his funeral. His people build a great mound by the sea, so th
             "The fifth paragraph says all the warriors ran in fear except Wiglaf, who stayed at the king's side.",
             "第五段说所有战士都吓跑了，只有威格拉夫留在国王身边。",
           ),
+          [
+            t("A thief stole the cup earlier.", "杯子是早先一个小偷偷的。"),
+            t("He stays; the others run.", "他留下了，跑的是别人。"),
+            t("They kill the dragon together.", "他们一起杀了龙。"),
+          ],
         ),
         ask(
           t(
@@ -189,12 +239,22 @@ The poem ends with his funeral. His people build a great mound by the sea, so th
             "The last paragraph says that in a world where life is short, the only lasting thing a person can win is a good name.",
             "最后一段说在生命短暂的世界里，人能赢得的唯一长久之物是好名声。",
           ),
+          [
+            t("The treasure angered the dragon.", "财宝激怒了龙。"),
+            t("Heorot was attacked for years.", "鹿厅被袭击了多年。"),
+            t("Life is called short.", "文中说生命短暂。"),
+          ],
         ),
         ask(
           t("What was Hrothgar's hall called?", "赫罗斯加的大厅叫什么？"),
           t("Heorot", "鹿厅（Heorot）"),
           [t("Uruk", "乌鲁克"), t("Lanka", "楞伽"), t("Ithaca", "伊萨卡")],
           t("King Hrothgar has built a magnificent hall called Heorot.", "赫罗斯加国王建了一座叫鹿厅的宏伟大厅。"),
+          [
+            t("Uruk is Gilgamesh's city.", "乌鲁克是吉尔伽美什的城。"),
+            t("Lanka is Ravana's island.", "楞伽是罗波那的岛。"),
+            t("Ithaca is Odysseus's home.", "伊萨卡是奥德修斯的家乡。"),
+          ],
         ),
       ],
       ["Beowulf", "English", "Scandinavia", "Hrothgar", "Danes", "Heorot", "Grendel", "Geats", "Grendel's", "Wiglaf"],
@@ -227,6 +287,11 @@ The epic praises Sundiata's courage, but it also praises patience. The boy who c
             "The first paragraph says the story is performed aloud by griots, professional storytellers and musicians.",
             "第一段说这个故事由格里奥，即职业说书人和乐师，口头表演。",
           ),
+          [
+            t("It is not read from a book.", "它不是照书念的。"),
+            t("Kings are its subject, not its singers.", "国王是故事主角，不是演唱者。"),
+            t("It is sung, not acted.", "它是吟唱的，不是表演的。"),
+          ],
         ),
         ask(
           t("What makes Sundiata decide to walk?", "是什么让松迪亚塔决定站起来行走？"),
@@ -240,6 +305,11 @@ The epic praises Sundiata's courage, but it also praises patience. The boy who c
             "The third paragraph says the first wife insulted Sogolon so cruelly that Sundiata decided he would walk.",
             "第三段说那位妻子残酷地侮辱了索格隆，于是松迪亚塔决定要走路。",
           ),
+          [
+            t("The old king had died.", "老国王已经去世。"),
+            t("Messengers came years later.", "信使是多年后才来的。"),
+            t("The rooster comes much later.", "白公鸡在很后面才出现。"),
+          ],
         ),
         ask(
           t("How is Soumaoro's power broken?", "苏毛罗的法力是如何被破除的？"),
@@ -253,6 +323,11 @@ The epic praises Sundiata's courage, but it also praises patience. The boy who c
             "The fifth paragraph says Sundiata tied the spur of a white rooster to an arrow, and when it grazed Soumaoro, his power vanished.",
             "第五段说松迪亚塔把白公鸡的距系在箭上，箭擦过苏毛罗时，他的法力就消失了。",
           ),
+          [
+            t("The iron bar helped him stand.", "铁棒帮他站了起来。"),
+            t("The kora is the griots' instrument.", "科拉琴是格里奥的乐器。"),
+            t("A giant's sword belongs to Beowulf.", "巨人之剑属于贝奥武甫。"),
+          ],
         ),
         ask(
           t("What instrument may a griot play while singing the epic?", "格里奥演唱史诗时可能弹奏什么乐器？"),
@@ -262,6 +337,11 @@ The epic praises Sundiata's courage, but it also praises patience. The boy who c
             "A griot may sing the epic for hours, playing a stringed instrument called the kora.",
             "格里奥可能边弹科拉琴边唱几个小时的史诗。",
           ),
+          [
+            t("Drums are not mentioned.", "文中没提鼓。"),
+            t("Flutes are not mentioned.", "文中没提笛子。"),
+            t("Violins are not mentioned.", "文中没提小提琴。"),
+          ],
         ),
       ],
       ["West", "Africa", "Sundiata", "Keita", "Mali", "Empire", "Manden", "Sogolon", "Soumaoro", "Sundiata's"],
@@ -295,6 +375,11 @@ For many readers, the Ramayana is more than an adventure. Rama is an example of 
             "The second paragraph says one of his father's wives reminded the king of a promise, and the king, bound by his word, had to send Rama away.",
             "第二段说父亲的一位妻子提醒国王曾许下的承诺，国王受诺言约束，只得把罗摩送走。",
           ),
+          [
+            t("The deer comes later, in the forest.", "金鹿是后来在森林里出现的。"),
+            t("The battle is at the end.", "战斗在结尾。"),
+            t("He is the people's favorite.", "他是百姓最爱戴的人。"),
+          ],
         ),
         ask(
           t("What does Hanuman give Sita in Lanka?", "哈努曼在楞伽岛给了悉多什么？"),
@@ -308,6 +393,11 @@ For many readers, the Ramayana is more than an adventure. Rama is an example of 
             "The fourth paragraph says Hanuman found Sita in a garden and gave her Rama's ring as a sign that help was coming.",
             "第四段说哈努曼在花园里找到悉多，把罗摩的戒指交给她，作为救援将至的信物。",
           ),
+          [
+            t("The deer was Ravana's trick.", "金鹿是罗波那的诡计。"),
+            t("The lamps come at the homecoming.", "灯是归来时点的。"),
+            t("The bridge was built later.", "石桥是后来建的。"),
+          ],
         ),
         ask(
           t("What does the word dharma mean in the passage?", "文中 dharma 一词是什么意思？"),
@@ -317,12 +407,22 @@ For many readers, the Ramayana is more than an adventure. Rama is an example of 
             "The last paragraph says dharma is a word that means duty and the right way to live.",
             "最后一段说 dharma 一词意为责任与正确的生活方式。",
           ),
+          [
+            t("Diwali is the festival.", "排灯节才是那个节日。"),
+            t("Magic belongs to Ravana.", "魔法属于罗波那。"),
+            t("The monkeys are allies.", "猴子是盟友。"),
+          ],
         ),
         ask(
           t("What did Ravana send to lure Rama and Lakshmana away?", "罗波那派什么把罗摩和罗什曼那引开？"),
           t("A magical golden deer", "一只有魔力的金鹿"),
           [t("A monkey army", "一支猴子大军"), t("A holy beggar", "一个圣洁的乞丐"), t("A bridge of stones", "一座石桥")],
           t("He sends a magical golden deer to lure Rama and Lakshmana away.", "他派一只有魔力的金鹿把罗摩和罗什曼那引开。"),
+          [
+            t("The monkeys were Rama's allies.", "猴子是罗摩的盟友。"),
+            t("The beggar was Ravana's own disguise.", "乞丐是罗波那自己的伪装。"),
+            t("The bridge was Rama's army's.", "石桥是罗摩军队建的。"),
+          ],
         ),
       ],
       ["Ramayana", "India", "Valmiki", "Tamil", "Thai", "Rama", "Sita", "Lakshmana", "Ravana", "Lanka", "Rama's", "Hanuman", "Diwali"],
@@ -356,6 +456,11 @@ In the end, after eighty-one ordeals, the pilgrims reach their goal. Along the w
             "The first paragraph says Xuanzang wanted to find Buddhist scriptures and bring them back to China.",
             "第一段说玄奘想要寻找佛经并带回中国。",
           ),
+          [
+            t("He sought scriptures, not a throne.", "他求的是佛经，不是王位。"),
+            t("No war is mentioned.", "文中没提战争。"),
+            t("The Monkey King is from the novel.", "孙悟空出自小说。"),
+          ],
         ),
         ask(
           t("Why do the demons want to capture the monk?", "妖怪们为什么想抓住那位僧人？"),
@@ -369,6 +474,11 @@ In the end, after eighty-one ordeals, the pilgrims reach their goal. Along the w
             "The fourth paragraph says demons try to capture him because they believe eating his flesh will make them immortal.",
             "第四段说妖怪们想抓他，因为他们相信吃了他的肉能长生不老。",
           ),
+          [
+            t("The horse is a dragon prince, not their target.", "马是龙太子，不是他们的目标。"),
+            t("Translating was his own life's work.", "翻译是他自己的事业。"),
+            t("Leaving China does not anger them.", "离开中国不会激怒他们。"),
+          ],
         ),
         ask(
           t("According to the last paragraph, how do many readers understand the journey?", "根据最后一段，许多读者如何理解这段旅程？"),
@@ -382,12 +492,22 @@ In the end, after eighty-one ordeals, the pilgrims reach their goal. Along the w
             "The last paragraph says that for many readers the journey is also a journey inward, a story about taming the restless mind.",
             "最后一段说对许多读者而言，这段旅程也是一段向内的旅程，讲的是驯服躁动的心。",
           ),
+          [
+            t("The novel is full of magic, not a record.", "小说充满魔法，不是纪实。"),
+            t("The journey reaches its goal.", "旅程最终成功了。"),
+            t("Pig and river spirits are companions, not the theme.", "猪精和河神是同伴，不是主题。"),
+          ],
         ),
         ask(
           t("In what year did Xuanzang set out for India?", "玄奘哪一年出发去印度？"),
           t("In 629", "629年"),
           [t("In 1629", "1629年"), t("In 1500", "1500年"), t("In 17 CE", "公元17年")],
           t("In the year 629, a Chinese monk named Xuanzang set out alone to travel to India.", "629年，中国僧人玄奘独自出发前往印度。"),
+          [
+            t("1629 adds a thousand years.", "1629 多了一千年。"),
+            t("1500s is when the novel was written.", "十六世纪是小说成书的年代。"),
+            t("17 is the number of years.", "十七是旅程的年数。"),
+          ],
         ),
       ],
       [
@@ -437,6 +557,11 @@ The story of Rostam and Sohrab has moved readers for a thousand years. It shows 
             "The second paragraph says he wrote when Persian was in danger of being replaced by Arabic, so he chose to use as few Arabic words as possible.",
             "第二段说他写作时波斯语面临被阿拉伯语取代的危险，所以他尽量少用阿拉伯语词汇。",
           ),
+          [
+            t("His reading of Arabic is never discussed.", "文中没讨论他是否会读阿拉伯文。"),
+            t("No king's order is mentioned.", "文中没提国王的命令。"),
+            t("Couplet form is never the reason.", "对句格律从来不是原因。"),
+          ],
         ),
         ask(
           t("Why does Rostam hide his name from Sohrab?", "鲁斯塔姆为什么对苏赫拉布隐瞒自己的名字？"),
@@ -450,6 +575,11 @@ The story of Rostam and Sohrab has moved readers for a thousand years. It shows 
             "The fifth paragraph says that when Sohrab asks if he is Rostam, Rostam, fearing a trick, hides his name.",
             "第五段说苏赫拉布问他是不是鲁斯塔姆时，鲁斯塔姆担心有诈，隐瞒了名字。",
           ),
+          [
+            t("He does not know Sohrab is his son.", "他不知道苏赫拉布是他儿子。"),
+            t("He knows his name; he hides it.", "他知道自己的名字，只是隐瞒了。"),
+            t("No order to disguise is mentioned.", "文中没提伪装作战的命令。"),
+          ],
         ),
         ask(
           t("How does Rostam finally learn that Sohrab is his son?", "鲁斯塔姆最终如何得知苏赫拉布是他的儿子？"),
@@ -463,6 +593,11 @@ The story of Rostam and Sohrab has moved readers for a thousand years. It shows 
             "The fifth paragraph says that only after wounding him does Rostam see the token on his son's arm.",
             "第五段说直到刺伤儿子之后，鲁斯塔姆才看见儿子手臂上的信物。",
           ),
+          [
+            t("Tahmineh is not there.", "塔赫米娜不在场。"),
+            t("Rakhsh is his horse and does nothing here.", "拉赫什是他的马，在这里没起作用。"),
+            t("No king tells him.", "没有国王告诉他。"),
+          ],
         ),
       ],
       ["Persian", "Ferdowsi", "Shahnameh", "Book", "Kings", "Iran", "Arab", "Arabic", "Iranians", "Rostam", "Rakhsh", "Tahmineh", "Sohrab"],
@@ -495,6 +630,11 @@ Not everyone admires the pattern. Some critics argue that Campbell forced very d
             "The second paragraph says that often the hero refuses the call at first, out of fear or duty.",
             "第二段说主人公起初常常出于恐惧或责任而拒绝召唤。",
           ),
+          [
+            t("The hero often refuses first.", "英雄通常先拒绝。"),
+            t("Permission is never mentioned.", "文中没提征求许可。"),
+            t("Campbell wrote the book, not the hero.", "书是坎贝尔写的，不是英雄写的。"),
+          ],
         ),
         ask(
           t("What role does the mentor play in the hero's journey?", "导师在英雄之旅中扮演什么角色？"),
@@ -508,6 +648,11 @@ Not everyone admires the pattern. Some critics argue that Campbell forced very d
             "The second paragraph says a mentor appears, an older and wiser figure who offers advice or a magical gift.",
             "第二段说会出现一位导师，一个年长睿智、提供建议或魔法礼物的人物。",
           ),
+          [
+            t("The enemy is someone else.", "敌人是另外的人。"),
+            t("The reward is the treasure.", "宝藏是奖赏。"),
+            t("The mentor appears; he does not stay behind.", "导师是出现来帮忙的，不是留在原地的人。"),
+          ],
         ),
         ask(
           t("Which criticism of Campbell does the passage mention?", "文章提到了对坎贝尔的哪一种批评？"),
@@ -521,6 +666,11 @@ Not everyone admires the pattern. Some critics argue that Campbell forced very d
             "The last paragraph says some critics argue that Campbell forced very different stories into one shape.",
             "最后一段说一些批评者认为坎贝尔把迥然不同的故事硬塞进同一个模式。",
           ),
+          [
+            t("He studied myths from all over the world.", "他研究了世界各地的神话。"),
+            t("He studied them closely.", "他仔细研究过这些史诗。"),
+            t("Lucas read the book later.", "卢卡斯是后来才读这本书的。"),
+          ],
         ),
       ],
       [

@@ -45,6 +45,11 @@ Then, around 1,100 years ago, many of the great cities in the southern rainfores
             "The second paragraph says the Maya had no metal tools, no wheels for loads and no horses or oxen, yet still built great temples.",
             "第二段说，玛雅人没有金属工具、没有运货的轮子，也没有马或牛，却仍然建起了宏伟的神庙。",
           ),
+          [
+            t("Stone was close by: they cut blocks of limestone.", "石头就在附近：他们开凿了石灰岩块。"),
+            t("Kings ruled the cities and did build. Nothing says they forbade it.", "国王统治着城市，也确实在建设。文中没说他们禁止。"),
+            t("It rains in a rainforest. The tanks collected rainwater.", "雨林是下雨的。水池就是收集雨水的。"),
+          ],
         ),
         ask(
           t("Why did Tikal have huge stone tanks?", "蒂卡尔为什么有巨大的石砌水池？"),
@@ -55,6 +60,11 @@ Then, around 1,100 years ago, many of the great cities in the southern rainfores
             t("To store blocks of limestone", "存放石灰岩块"),
           ],
           t("The third paragraph says the tanks collected rainwater for the dry season.", "第三段说，这些水池用来为旱季收集雨水。"),
+          [
+            t("Ceremonies were at the top of the temples, not the tanks.", "仪式在神庙顶上举行，不在水池里。"),
+            t("Keeping enemies out is not what the tanks were for.", "水池不是用来挡敌人的。"),
+            t("Limestone was cut for buildings, not stored in tanks.", "石灰岩是开凿来建房的，不是存在水池里。"),
+          ],
         ),
         ask(
           t("What may have caused the southern Maya cities to be abandoned?", "什么可能导致了南部玛雅城市被遗弃？"),
@@ -68,6 +78,14 @@ Then, around 1,100 years ago, many of the great cities in the southern rainfores
             "The last paragraph says scientists think a mix of long droughts, too many people and constant wars caused the decline. The forest grew back afterward, as a result.",
             "最后一段说，科学家认为长期干旱、人口过多和连年战争共同导致了衰落。森林重新生长是之后的结果。",
           ),
+          [
+            t("A single army is not mentioned. Several causes worked together.", "文中没提单独一支军队。是多个原因共同作用。"),
+            t(
+              "The forest grew back after the cities were empty. It was a result, not a cause.",
+              "城市空了之后森林才长回来。这是结果，不是原因。",
+            ),
+            t("Greece is only a comparison for city-states. The Maya did not move there.", "希腊只是城邦的比较。玛雅人没有搬去那里。"),
+          ],
         ),
         ask(
           t("Where did priests hold ceremonies?", "祭司在哪里举行仪式？"),
@@ -77,6 +95,14 @@ Then, around 1,100 years ago, many of the great cities in the southern rainfores
             "Priests climbed the steep stairs to hold ceremonies at the top, where everyone could see them.",
             "祭司登上陡峭的台阶，在顶上举行仪式，让所有人都能看见。",
           ),
+          [
+            t("The forest is where the cities stood, not where ceremonies took place.", "森林是城市所在的地方，不是举行仪式的地方。"),
+            t(
+              "Ball courts are listed as part of Tikal, not where priests held ceremonies.",
+              "球场只是蒂卡尔的一部分，不是祭司举行仪式的地方。",
+            ),
+            t("Tanks held rainwater.", "水池是储存雨水的。"),
+          ],
         ),
       ],
     ),
@@ -106,6 +132,14 @@ To make all these calculations, the Maya used a number system based on twenty, a
             "The second paragraph says some glyphs stood for whole words and others stood for sounds that could spell words.",
             "第二段说，有些符号代表完整的词，另一些代表可以拼成词的音。",
           ),
+          [
+            t(
+              "Kings are one example of a whole word, not the only thing a glyph meant.",
+              "国王只是表示整个词的一个例子，不是符号唯一的含义。",
+            ),
+            t("Numbers are not what glyphs are said to stand for here.", "这里没说符号代表数字。"),
+            t("Glyphs had meaning: words or sounds.", "符号是有意义的：表示词或音。"),
+          ],
         ),
         ask(
           t("How often did the 365-day and 260-day calendars repeat together?", "365 天历和 260 天历多久会一起重复一次？"),
@@ -115,6 +149,11 @@ To make all these calculations, the Maya used a number system based on twenty, a
             "The third paragraph says the two calendars together repeated only once every 52 years.",
             "第三段说，这两种历法合在一起每 52 年才重复一次。",
           ),
+          [
+            t("Once a year is far too often for two calendars of different lengths.", "两种长度不同的历法不可能每年都重合一次。"),
+            t("Twenty is the base of Maya numbers, not the calendar cycle.", "二十是玛雅数字的进位基础，不是历法周期。"),
+            t("260 is the length of the ceremonial calendar.", "260 是祭祀历的天数。"),
+          ],
         ),
         ask(
           t("What does the passage say about Maya numbers?", "文章怎样描述玛雅的数字？"),
@@ -128,12 +167,22 @@ To make all these calculations, the Maya used a number system based on twenty, a
             "The last paragraph says the Maya used a number system based on twenty and were among the first to use a sign for zero.",
             "最后一段说，玛雅人使用以二十为基数的计数法，而且是最早使用零的符号的民族之一。",
           ),
+          [
+            t("Ten is our base. The Maya used twenty.", "十是我们的进位基础。玛雅人用二十。"),
+            t("The Long Count shows they handled very large numbers.", "长计历说明他们能处理很大的数字。"),
+            t("The Greeks are not mentioned in this passage.", "这篇文章没提到希腊人。"),
+          ],
         ),
         ask(
           t("What were Maya folding books made of?", "玛雅人的折叠书是用什么做的？"),
           t("Bark paper", "树皮纸"),
           [t("Silk", "丝绸"), t("Clay", "陶土"), t("Animal skins", "兽皮")],
           t("The Maya wrote in folding books made of bark paper.", "玛雅人在用树皮纸做的折叠书上书写。"),
+          [
+            t("Silk is not mentioned.", "文中没提丝绸。"),
+            t("Clay is not mentioned for books. They painted on pottery.", "文中没说用黏土做书。他们是在陶器上画。"),
+            t("Animal skins are not mentioned.", "文中没提兽皮。"),
+          ],
         ),
       ],
     ),
@@ -163,6 +212,11 @@ Today, corn is grown on every continent except Antarctica. Every time you eat po
             "The second paragraph says bacteria on bean roots take nitrogen from the air and add it to the soil. The corn is the pole, and the squash shades the ground.",
             "第二段说，豆根上的细菌从空气中获取氮并加入土壤。玉米是杆子，南瓜给地面遮阴。",
           ),
+          [
+            t("A pole to climb is what corn gives the beans.", "提供攀爬的杆子是玉米给豆子的帮助。"),
+            t("Shading the soil is what squash leaves do.", "遮蔽土壤是南瓜叶的作用。"),
+            t("Prickly leaves belong to the squash, not the beans.", "带刺的叶子属于南瓜，不是豆子。"),
+          ],
         ),
         ask(
           t("Why are the crops called the Three Sisters?", "这些作物为什么被称为“三姐妹”？"),
@@ -176,6 +230,17 @@ Today, corn is grown on every continent except Antarctica. Every time you eat po
             "The passage explains that the plants help one another almost like members of a family.",
             "文章解释说，这些植物互相帮助，几乎像一家人。",
           ),
+          [
+            t(
+              "No real sisters planted them. The name describes how they work together.",
+              "没有真正的姐妹种植它们。这个名字描述它们如何协作。",
+            ),
+            t(
+              "They look very different: tall corn, climbing beans, spreading squash.",
+              "它们看起来很不一样：高高的玉米、攀爬的豆子、铺开的南瓜。",
+            ),
+            t("Anyone can eat them. The name is about helping one another.", "谁都能吃。这个名字说的是互相帮助。"),
+          ],
         ),
         ask(
           t("What does the Maya story about corn show?", "关于玉米的玛雅故事说明了什么？"),
@@ -189,6 +254,11 @@ Today, corn is grown on every continent except Antarctica. Every time you eat po
             "The fourth paragraph begins by saying corn was especially important, and the story that people were made from corn dough supports that.",
             "第四段开头说玉米格外重要，而人是用玉米面团造出来的故事支持了这一点。",
           ),
+          [
+            t("Corn is not grown in Antarctica, the passage says.", "文中说南极洲不种玉米。"),
+            t("Prickly squash leaves are from another paragraph.", "带刺的南瓜叶出自另一段。"),
+            t("Popcorn is mentioned only at the end, as a gift to us today.", "爆米花只在结尾提到，是今天我们享受的馈赠。"),
+          ],
         ),
         ask(
           t("How do squash leaves help the other crops?", "南瓜叶怎样帮助其他作物？"),
@@ -202,6 +272,11 @@ Today, corn is grown on every continent except Antarctica. Every time you eat po
             "The leaves shade the soil so it stays damp, block weeds from growing and keep animals away.",
             "叶子遮住土壤保持湿润，挡住杂草，还能赶走动物。",
           ),
+          [
+            t("A pole to climb comes from the corn.", "攀爬的杆子来自玉米。"),
+            t("Nitrogen comes from bacteria on the bean roots.", "氮来自豆子根上的细菌。"),
+            t("Growing faster is never said of squash.", "文中从没说南瓜让玉米长得更快。"),
+          ],
         ),
       ],
     ),
@@ -231,6 +306,11 @@ Today, Mexico City stands on the same spot, and the eagle on the cactus appears 
             'The passage marks the eagle story with "According to an Aztec legend." The dates and numbers are facts historians can check.',
             '文章用 "According to an Aztec legend" 标明鹰的故事。日期和数字是历史学家可以核实的事实。',
           ),
+          [
+            t("1519 is a dated historical event, not a legend.", "1519年是有日期的历史事件，不是传说。"),
+            t("The size of the city is given as history.", "城市人口是作为历史讲的。"),
+            t("Mexico City today is a present fact.", "今天的墨西哥城是现在的事实。"),
+          ],
         ),
         ask(
           t("What were the causeways for?", "堤道是做什么用的？"),
@@ -244,6 +324,11 @@ Today, Mexico City stands on the same spot, and the eagle on the cactus appears 
             "The second paragraph says the causeways were raised roads that crossed the water and joined the island to the shore. The aqueduct carried the water.",
             "第二段说，堤道是横跨水面、连接岛屿与湖岸的高路。输送淡水的是引水渠。",
           ),
+          [
+            t("Fresh water came by the aqueduct.", "淡水是由引水渠送来的。"),
+            t("The market was near the Great Temple, not on the causeways.", "市场在大神庙附近，不在堤道上。"),
+            t("Canoes filled the canals. Causeways did not stop them.", "独木舟挤满运河，堤道并不阻拦它们。"),
+          ],
         ),
         ask(
           t("According to the passage, what helped bring about the fall of the city?", "根据文章，是什么导致了这座城市的陷落？"),
@@ -257,12 +342,22 @@ Today, Mexico City stands on the same spot, and the eagle on the cactus appears 
             "The fourth paragraph says the city fell after fierce fighting and a terrible disease the Spanish had brought.",
             "第四段说，经过激烈的战斗以及西班牙人带来的可怕疾病，这座城市陷落了。",
           ),
+          [
+            t("A drought is mentioned for the Maya, not the Aztec.", "干旱是讲玛雅人时提到的，不是阿兹特克人。"),
+            t("The eagle is part of the founding legend, not the fall.", "鹰是建城传说的一部分，与城市陷落无关。"),
+            t("The large market showed the city's success, not its fall.", "大市场说明了城市的繁荣，不是陷落的原因。"),
+          ],
         ),
         ask(
           t("About how many people lived in Tenochtitlan by about 1500?", "大约1500年时，特诺奇蒂特兰住着多少人？"),
           t("Perhaps 200,000", "大约二十万"),
           [t("About 2,000", "大约两千"), t("About 20 million", "大约两千万"), t("Exactly 1,325", "正好一千三百二十五")],
           t("By about 1500, Tenochtitlan had perhaps 200,000 people.", "到大约1500年，特诺奇蒂特兰大约有二十万人。"),
+          [
+            t("2,000 is far too few for one of the largest cities in the world.", "两千人对于世界最大城市之一来说太少了。"),
+            t("20 million is far too many.", "两千万太多了。"),
+            t("1325 is the year they began to build, not a number of people.", "1325 是开始建城的年份，不是人口数。"),
+          ],
         ),
       ],
     ),
@@ -292,6 +387,11 @@ Thousands of chinampas surrounded Tenochtitlan, separated by canals. A few still
             'The second paragraph says farmers "first" drove stakes into the lake bottom; the mud came next, and the willows "finally."',
             '第二段说农民 "first" 把木桩打进湖底；然后填淤泥，"finally" 才种柳树。',
           ),
+          [
+            t("Willow trees were planted last.", "柳树是最后种的。"),
+            t("Mud and plants went in after the stakes and branch fence.", "泥和植物是在木桩和枝条围栏之后填进去的。"),
+            t("Scooping fresh mud was done later, when the soil wore out.", "挖新泥是后来土壤用尽时才做的。"),
+          ],
         ),
         ask(
           t("Did chinampas really float?", "浮田真的会漂浮吗？"),
@@ -305,6 +405,11 @@ Thousands of chinampas surrounded Tenochtitlan, separated by canals. A few still
             "The third paragraph says that though people called them floating gardens, chinampas did not really float; they were anchored islands.",
             "第三段说，虽然人们称之为浮动园圃，浮田其实并不漂浮，它们是固定的小岛。",
           ),
+          [
+            t("They did not drift. They were anchored.", "它们不漂移，而是被固定住的。"),
+            t("The dry season is not mentioned for chinampas.", "讲浮田时没提到旱季。"),
+            t("They were built in the lake, not on dry land.", "它们建在湖里，不是在干地上。"),
+          ],
         ),
         ask(
           t("Why did the crops on chinampas rarely need watering?", "浮田上的庄稼为什么很少需要浇水？"),
@@ -318,12 +423,22 @@ Thousands of chinampas surrounded Tenochtitlan, separated by canals. A few still
             "The fourth paragraph says water soaked up into the soil from below, so the crops rarely needed watering.",
             "第四段说，水从下面渗进土壤，所以庄稼很少需要浇水。",
           ),
+          [
+            t("Daily rain is not mentioned.", "文中没提每天下雨。"),
+            t("Willow roots held the garden in place. They did not carry water.", "柳树根固定园地，不负责送水。"),
+            t("Many crops grew, including corn, beans and squash.", "种了很多作物，包括玉米、豆子和南瓜。"),
+          ],
         ),
         ask(
           t("Why did farmers plant willow trees along the edges?", "农民为什么在边上种柳树？"),
           t("Their roots held the garden in place", "树根把菜园牢牢固定住"),
           [t("To give shade to the farmers", "给农民遮阴"), t("To make the garden float", "让菜园漂起来"), t("To sell the wood", "卖木头")],
           t("The willow roots grew down and held the garden firmly in place.", "柳树的根向下生长，把菜园牢牢固定住。"),
+          [
+            t("Shade for farmers is not mentioned.", "文中没提为农民遮阴。"),
+            t("The gardens did not really float.", "这些园地其实并不浮动。"),
+            t("Selling wood is not mentioned.", "文中没提卖木头。"),
+          ],
         ),
       ],
     ),
@@ -353,6 +468,14 @@ Parts of the Inca road are still used today, and some hikers walk it for days to
             "The first paragraph says they built roads to hold such a long, rugged empire together. The Inca had no horses.",
             "第一段说，他们修路是为了把这样一个漫长崎岖的帝国连在一起。印加人没有马。",
           ),
+          [
+            t("The Inca had no horses.", "印加人没有马。"),
+            t(
+              "The Maya lived far to the north, and their cities are not linked to the road.",
+              "玛雅人住在遥远的北方，他们的城市与这条路无关。",
+            ),
+            t("Wrapping around the Earth is only a way to show the length.", "环绕地球只是用来说明长度。"),
+          ],
         ),
         ask(
           t("How did messages travel on the Inca road?", "印加古道上的消息是怎样传递的？"),
@@ -366,6 +489,11 @@ Parts of the Inca road are still used today, and some hikers walk it for days to
             "The third paragraph describes a relay: each runner ran a few kilometers, then passed the message to the next.",
             "第三段描述了接力：每个跑者跑几公里，然后把消息传给下一个人。",
           ),
+          [
+            t("Llamas carried loads, not messages.", "美洲驼驮的是货物，不是消息。"),
+            t("The Inca had no horses.", "印加人没有马。"),
+            t("Shouting is never mentioned.", "文中从没提到喊话。"),
+          ],
         ),
         ask(
           t("Why did villagers rebuild the rope bridges every year?", "村民为什么每年都重建绳桥？"),
@@ -379,6 +507,11 @@ Parts of the Inca road are still used today, and some hikers walk it for days to
             "The second paragraph says villagers rebuilt the bridges every year so they never wore out.",
             "第二段说，村民每年重建这些桥，这样它们就不会磨损。",
           ),
+          [
+            t("Llamas eating the rope is never mentioned.", "文中从没说美洲驼吃草绳。"),
+            t("Rivers changing course is not mentioned.", "文中没提河流改道。"),
+            t("The Inca had no wheeled carts.", "印加人没有带轮子的车。"),
+          ],
         ),
         ask(
           t("How long was the Inca road network?", "印加的道路网有多长？"),
@@ -389,6 +522,11 @@ Parts of the Inca road are still used today, and some hikers walk it for days to
             t("About 400 kilometers", "大约四百公里"),
           ],
           t("The road network covered about 40,000 kilometers, enough to wrap around the Earth.", "道路网长约四万公里，足够绕地球一圈。"),
+          [
+            t("4,000 kilometers is the length of the empire.", "四千公里是帝国的长度。"),
+            t("240 kilometers is how far news traveled in a day.", "二百四十公里是一天传递消息的距离。"),
+            t("400 kilometers is not in the passage.", "四百公里不在文中。"),
+          ],
         ),
       ],
     ),
@@ -416,6 +554,11 @@ Machu Picchu was used for less than a hundred years. It was abandoned around the
             "The second paragraph says the stones fit without mortar and can shift slightly and settle back, so the walls have survived earthquakes.",
             "第二段说，石块不用灰浆就能严丝合缝，能轻微移动后再归位，所以墙经受住了地震。",
           ),
+          [
+            t("No mortar was used. The stones fit without it.", "没用灰浆。石头不靠它也能拼合。"),
+            t("Rebuilding every year describes the rope bridges.", "每年重建说的是绳桥。"),
+            t("The walls have survived many earthquakes, so they do happen.", "城墙经历过许多次地震，说明地震确实会发生。"),
+          ],
         ),
         ask(
           t("How did the terraces help farmers?", "梯田怎样帮助了农民？"),
@@ -429,6 +572,11 @@ Machu Picchu was used for less than a hundred years. It was abandoned around the
             "The third paragraph says the terraces stopped soil from washing away, and gravel underneath let extra water drain off.",
             "第三段说，梯田防止土壤被冲走，下面的砾石层能让多余的水排出。",
           ),
+          [
+            t("Clouds drift below the city. The terraces do not affect them.", "云飘在城市下方。梯田不影响云。"),
+            t("The terraces were for farming, not walking.", "梯田是用来种地的，不是用来走路的。"),
+            t("The Spanish never found it, but not because of the terraces.", "西班牙人从未发现它，但不是因为梯田。"),
+          ],
         ),
         ask(
           t("What does the passage say about how Machu Picchu became famous?", "文章怎样讲述马丘比丘出名的经过？"),
@@ -442,6 +590,11 @@ Machu Picchu was used for less than a hundred years. It was abandoned around the
             "The last paragraph says the Spanish never found it; in 1911 Hiram Bingham was led to it, and photographs made it famous.",
             "最后一段说，西班牙人从未发现它；1911 年海勒姆·宾厄姆被领到那里，照片使它闻名于世。",
           ),
+          [
+            t("The Spanish never found it.", "西班牙人从未找到它。"),
+            t("No emperor invited Europeans. It was a retreat.", "没有皇帝邀请欧洲人。它是一处行宫。"),
+            t("Farmers knew it was there. Selling stones is never mentioned.", "农民知道它在那里。文中从没提到卖石头。"),
+          ],
         ),
       ],
     ),
@@ -471,6 +624,14 @@ About 1,000 khipus survive in museums today. Scholars can read the numbers on ma
             "The third paragraph says the position showed the value. The color of the string may have shown what was being counted.",
             "第三段说，位置表示数值。绳子的颜色可能表示所计的东西。",
           ),
+          [
+            t(
+              "The color of a string, not a knot's position, may have shown what was counted.",
+              "表示所计物品的可能是绳子的颜色，不是绳结的位置。",
+            ),
+            t("The village is not shown by position.", "位置不表示是哪个村子。"),
+            t("Knot keepers' names are not recorded by position.", "位置不记录结绳人的名字。"),
+          ],
         ),
         ask(
           t(
@@ -483,6 +644,11 @@ About 1,000 khipus survive in museums today. Scholars can read the numbers on ma
             "Knots near the bottom are ones and the next group up are tens, so three tens and seven ones make thirty-seven.",
             "下部的结表示个位，上面一组表示十位，所以三个十加七个一是三十七。",
           ),
+          [
+            t("The digits are reversed. The bottom knots are the ones.", "数字颠倒了。底部的结是个位。"),
+            t("Ten just adds the knots. Position gives them value.", "十只是把结数加起来。位置决定数值。"),
+            t("Three hundred would need knots in the hundreds place.", "三百需要在百位上打结。"),
+          ],
         ),
         ask(
           t("What question about khipus is still unanswered?", "关于结绳，还有什么问题没有答案？"),
@@ -496,6 +662,11 @@ About 1,000 khipus survive in museums today. Scholars can read the numbers on ma
             "The last paragraph says scholars can read the numbers, but some believe khipus also recorded stories, and no one has learned to read those yet.",
             "最后一段说，学者能读出数字，但有人认为结绳还记录了故事，而这些至今没人能读懂。",
           ),
+          [
+            t("Numbers can be read on many khipus.", "许多结绳上的数字已经能读出来。"),
+            t("The word's meaning is given: knot.", "这个词的意思文中给了：结。"),
+            t("Knot keepers made and read the khipus.", "结绳人负责制作和解读结绳。"),
+          ],
         ),
       ],
     ),

@@ -45,6 +45,17 @@ Historians still argue about him. Was he a reformer who needed power to change h
             "The second paragraph says the gesture was planned and its meaning was clear: Napoleon owed his power to no one.",
             "第二段说这一举动是精心策划的，意思很清楚：拿破仑的权力不来自任何人。",
           ),
+          [
+            t(
+              "The cathedral is only where it happened; the gesture was aimed at the Pope's usual role.",
+              "大教堂只是地点；这个举动针对的是教皇惯常的角色。",
+            ),
+            t(
+              "The Pope was there, having traveled from Rome; Napoleon took the crown from him on purpose.",
+              "教皇从罗马赶来，就在现场；拿破仑是故意自己拿起王冠。",
+            ),
+            t("He made himself emperor; nothing was returned to a king.", "他自立为皇帝，并没有把权力还给国王。"),
+          ],
         ),
         ask(
           t("Why is Beethoven said to have torn the title page of his symphony?", "据说贝多芬为什么撕掉了交响曲的扉页？"),
@@ -58,6 +69,14 @@ Historians still argue about him. Was he a reformer who needed power to change h
             "Beethoven had admired Napoleon as a champion of freedom; the coronation showed him a man who made himself an emperor.",
             "贝多芬曾把拿破仑当作自由的捍卫者来敬仰；加冕却让他看到一个自立为皇帝的人。",
           ),
+          [
+            t("The coronation music is never mentioned; he was angry at Napoleon himself.", "文中没提加冕音乐；他气的是拿破仑本人。"),
+            t(
+              "An invitation is never mentioned; he had admired Napoleon as a champion of freedom.",
+              "文中没提邀请；他曾把拿破仑视为自由的斗士。",
+            ),
+            t("The Pope is not part of the story; he tore the page in anger at the coronation.", "教皇与此无关；他是因为加冕而愤怒撕页。"),
+          ],
         ),
         ask(
           t("How does the passage present Napoleon's character in the end?", "文章最后怎样呈现拿破仑的性格？"),
@@ -71,6 +90,14 @@ Historians still argue about him. Was he a reformer who needed power to change h
             "The last paragraph asks whether he was a reformer or a proud man who cost many lives, and answers that he was perhaps both.",
             "最后一段问他是改革者还是让许多人丧命的骄傲之人，并回答说他也许两者都是。",
           ),
+          [
+            t(
+              "The passage gives both sides; calling him only a hero ignores the costly pride.",
+              "文章两面都讲；只说他是英雄，忽略了代价高昂的骄傲。",
+            ),
+            t("He built roads and schools and a code of laws, so he did things of value.", "他修路、建学校、制定法典，做过有价值的事。"),
+            t("He seized the government and made himself emperor, so he clearly wanted power.", "他夺取政权、自立为帝，显然想要权力。"),
+          ],
         ),
         ask(
           t("Where was Napoleon sent after he was forced to abdicate in 1814?", "1814年被迫退位后，拿破仑被送到哪里？"),
@@ -80,6 +107,11 @@ Historians still argue about him. Was he a reformer who needed power to change h
             "In 1814 his enemies forced him to abdicate and sent him to the island of Elba.",
             "1814年，他的敌人迫使他退位，并把他送到厄尔巴岛。",
           ),
+          [
+            t("Corsica is where he came from, not where he was sent.", "科西嘉是他的出生地，不是流放地。"),
+            t("He invaded Russia in 1812; he was not exiled there.", "他在1812年入侵俄国，并没被流放到那里。"),
+            t("The Pope came from Rome; Napoleon was sent to Elba.", "教皇来自罗马；拿破仑被送到厄尔巴岛。"),
+          ],
         ),
       ],
       ["Napoleon", "Bonaparte", "Notre-Dame", "Corsica", "Beethoven", "Elba", "Waterloo"],
@@ -112,6 +144,11 @@ Was Brutus a loyal citizen or a treacherous friend? The question has fascinated 
             "The second paragraph says his enemies saw him as a king in all but name, and Romans had hated kings for nearly five hundred years.",
             "第二段说他的敌人认为他除了名号外就是国王，而罗马人憎恨国王已近五百年。",
           ),
+          [
+            t("He won the civil war against his rivals; he did not lose it.", "他赢了对手之间的内战，没有输。"),
+            t("Coins did carry his portrait, which added to the fear.", "钱币上确实有他的头像，这更让人害怕。"),
+            t("He conquered Gaul; nothing says he planned to give it back.", "他征服了高卢；文中没说他打算归还。"),
+          ],
         ),
         ask(
           t("What motive do many historians give for Brutus joining the plot?", "许多历史学家认为布鲁图参与密谋的动机是什么？"),
@@ -125,6 +162,20 @@ Was Brutus a loyal citizen or a treacherous friend? The question has fascinated 
             "The third paragraph says many historians believe he joined not out of envy but from a staunch belief in the republic.",
             "第三段说许多历史学家认为他参与密谋不是出于嫉妒，而是出于对共和国的坚定信念。",
           ),
+          [
+            t(
+              "Many historians believe he acted not out of envy or ambition to take Caesar's place.",
+              "许多史学家认为他不是出于嫉妒或想取代恺撒。",
+            ),
+            t(
+              "Caesar had pardoned him after the civil war, so there was no refusal to be angry about.",
+              "内战后恺撒赦免了他，并不存在拒绝赦免之事。",
+            ),
+            t(
+              "Mark Antony raised armies only after the killing; he was no reason for joining.",
+              "马克·安东尼是在刺杀之后才起兵的，不是他参与的原因。",
+            ),
+          ],
         ),
         ask(
           t("What does the passage suggest is ironic about the result of the plot?", "文章暗示这场密谋的结果有什么讽刺之处？"),
@@ -138,12 +189,22 @@ Was Brutus a loyal citizen or a treacherous friend? The question has fascinated 
             "Octavian became the first emperor, so the republic that Brutus had killed to save was gone.",
             "屋大维成了第一位皇帝，所以布鲁图为了拯救而杀人的那个共和国消失了。",
           ),
+          [
+            t("Brutus lost a battle and took his own life; Octavian became emperor.", "布鲁图斗败后自尽；成为皇帝的是屋大维。"),
+            t("Caesar died, stabbed twenty-three times, so he pardoned no one.", "恺撒被刺二十三刀身亡，不可能再赦免谁。"),
+            t("The Senate lost out; Rome soon had an emperor.", "元老院失势了；罗马很快有了皇帝。"),
+          ],
         ),
         ask(
           t("What land had Caesar conquered?", "恺撒征服了哪片土地？"),
           t("Gaul, the land that is now France", "高卢，即今天的法国"),
           [t("Egypt", "埃及"), t("Britain", "不列颠"), t("Greece", "希腊")],
           t("A brilliant general, he had conquered Gaul, the land that is now France.", "作为杰出的将军，他征服了高卢，即今天的法国。"),
+          [
+            t("Egypt is not mentioned; Gaul is the land that is now France.", "文中没提埃及；高卢就是今天的法国。"),
+            t("Britain is not mentioned; he conquered Gaul.", "文中没提不列颠；他征服的是高卢。"),
+            t("Greece is not mentioned; the passage names Gaul.", "文中没提希腊；提到的是高卢。"),
+          ],
         ),
       ],
       ["Caesar", "Brutus", "Gaul", "Antony", "Octavian", "Augustus", "BC"],
@@ -176,6 +237,14 @@ At Saratoga there is a strange monument. It shows a boot and a soldier's badge, 
             "The third paragraph says he was proud, felt treated unfairly as others were promoted ahead of him, and spent more than he earned.",
             "第三段说他很骄傲，看到别人比他先晋升而觉得不公，而且花的钱比挣的多。",
           ),
+          [
+            t(
+              "He fought for the Americans for years before changing sides; he was not a British officer all along.",
+              "他倒戈之前为美方作战多年，并非一直是英国军官。",
+            ),
+            t("Congress questioned his accounts; it did not order him to change sides.", "国会质疑他的账目，并没有命令他倒戈。"),
+            t("He offered to surrender West Point, the opposite of protecting it.", "他打算交出西点，与保护它恰恰相反。"),
+          ],
         ),
         ask(
           t("How was Arnold's plot discovered?", "阿诺德的阴谋是怎样被发现的？"),
@@ -189,6 +258,11 @@ At Saratoga there is a strange monument. It shows a boot and a soldier's badge, 
             "The fourth paragraph says John André was captured with the plans hidden in his boot.",
             "第四段说约翰·安德烈被捕时，计划藏在他的靴子里。",
           ),
+          [
+            t("His wife came from a family loyal to the British; she did not reveal the plot.", "他妻子出身亲英家庭，并没有揭发阴谋。"),
+            t("A British ship took him aboard when he escaped.", "他逃跑时上了一艘英国船。"),
+            t("He never confessed; he escaped after learning of André's arrest.", "他从未坦白；得知安德烈被捕后就逃了。"),
+          ],
         ),
         ask(
           t("Why does the monument at Saratoga not give Arnold's name?", "为什么萨拉托加的纪念碑不写阿诺德的名字？"),
@@ -202,6 +276,17 @@ At Saratoga there is a strange monument. It shows a boot and a soldier's badge, 
             "The monument praises the most brilliant soldier wounded there but, because he later betrayed his country, leaves out his name.",
             "纪念碑赞扬在那里受伤的最杰出的军人，但因为他后来背叛了国家，没有写他的名字。",
           ),
+          [
+            t(
+              "The monument describes the wounded soldier exactly, so people knew who he was.",
+              "纪念碑把那位伤者描述得很清楚，大家都知道是谁。",
+            ),
+            t(
+              'The monument honors him as "the most brilliant soldier," so he was already known.',
+              "纪念碑称他为“最杰出的士兵”，他早已出名。",
+            ),
+            t("A will is never mentioned; the silence shows a refusal to honor the traitor.", "文中没提遗嘱；不写名字是拒绝纪念叛徒。"),
+          ],
         ),
         ask(
           t("Which fort did Arnold offer to surrender to the British?", "阿诺德想把哪座要塞交给英国人？"),
@@ -211,6 +296,11 @@ At Saratoga there is a strange monument. It shows a boot and a soldier's badge, 
             "In 1780, Arnold took command of West Point, and in secret he offered to surrender it to the British.",
             "1780年，阿诺德掌管西点，并暗中提出把它交给英国人。",
           ),
+          [
+            t("Quebec is the city he marched to attack in 1775.", "魁北克是他1775年行军攻打的城市。"),
+            t("Saratoga is the battle where he was wounded.", "萨拉托加是他负伤的战役。"),
+            t("Philadelphia is where he was military governor.", "费城是他担任军事总督的地方。"),
+          ],
         ),
       ],
       ["Benedict", "Arnold", "Maine", "Quebec", "Saratoga", "Philadelphia", "Hudson", "André"],
@@ -243,6 +333,11 @@ The clay army was discovered by farmers digging a well in 1974. Today millions o
             "The second paragraph says he made the kingdoms use the same characters, coins, weights and measures, so a merchant could trade everywhere.",
             "第二段说他让各国使用相同的文字、钱币和度量衡，因此商人可以到处做生意。",
           ),
+          [
+            t("Burning books silenced criticism; it did nothing for trade.", "焚书是为了压制批评，与贸易无关。"),
+            t("The tomb prepared for the afterlife; it did not help merchants.", "陵墓是为来世准备的，并不帮助商人。"),
+            t("The medicine of long life was for the emperor himself, not for trade.", "长生药是为皇帝自己求的，与贸易无关。"),
+          ],
         ),
         ask(
           t("What does the passage say about Sima Qian's account?", "关于司马迁的记载，文章怎么说？"),
@@ -256,6 +351,11 @@ The clay army was discovered by farmers digging a well in 1974. Today millions o
             "The third paragraph says modern historians debate how much of his account is exact.",
             "第三段说现代历史学家对他的记载有多少是准确的仍有争论。",
           ),
+          [
+            t("Sima Qian wrote about a century after the emperor's death.", "司马迁是在皇帝死后约一百年写的。"),
+            t("His history was written later; it was not among the burned books.", "他的史书写于之后，不在被焚之列。"),
+            t("His account is the source of the emperor's reputation as a tyrant.", "正是他的记载让皇帝背上暴君之名。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest about the emperor's ambition?", "最后一句暗示皇帝的野心怎样？"),
@@ -269,6 +369,14 @@ The clay army was discovered by farmers digging a well in 1974. Today millions o
             "The final words describe an emperor who thought that even death could be commanded, a sign of boundless ambition.",
             "最后一句描述一位以为连死亡也可以被命令的皇帝，表明他的野心没有止境。",
           ),
+          [
+            t("He ruled an empire and sought eternal life; his ambition was anything but small.", "他统治帝国还追求永生，野心一点也不小。"),
+            t(
+              "His ministers hid his death and forged his orders, so they did not share his aims.",
+              "他的大臣隐瞒他的死讯、伪造诏令，并不与他同心。",
+            ),
+            t("Farmers found the clay army in 1974, long after his death.", "陶俑是1974年农民发现的，远在他死后。"),
+          ],
         ),
         ask(
           t("How was the clay army discovered?", "兵马俑是怎样被发现的？"),
@@ -279,6 +387,11 @@ The clay army was discovered by farmers digging a well in 1974. Today millions o
             t("A flood washed the earth away", "洪水冲走了泥土"),
           ],
           t("The clay army was discovered by farmers digging a well in 1974.", "兵马俑是1974年农民打井时发现的。"),
+          [
+            t("It was found by farmers digging a well, not by archaeologists searching.", "它是农民打井时发现的，不是考古学家搜寻到的。"),
+            t("Sima Qian is not said to have described where it was.", "文中没说司马迁记载过它的位置。"),
+            t("A flood is never mentioned; the discovery came from digging a well.", "文中没提洪水；是打井时发现的。"),
+          ],
         ),
       ],
       ["Qin", "Shi", "Huang", "Sima", "Qian", "BC"],
@@ -311,6 +424,14 @@ Edward lived the rest of his life in France as the Duke of Windsor. He and Walli
             "The third paragraph explains that the Church did not allow divorced people to remarry and the prime minister said she would not be accepted as queen.",
             "第三段解释说教会不允许离婚者再婚，首相说人们不会接受她当王后。",
           ),
+          [
+            t(
+              "Wallis Simpson is not said to have refused Britain; the problem was her divorces.",
+              "文中没说辛普森夫人拒绝住在英国；问题在于她离过婚。",
+            ),
+            t("His brother became king only because Edward abdicated.", "他弟弟是在爱德华退位后才成为国王的。"),
+            t("The radio carried his farewell speech, not a wedding.", "广播播的是他的告别演说，不是婚礼。"),
+          ],
         ),
         ask(
           t("How did the abdication affect Edward's brother?", "退位对爱德华的弟弟有什么影响？"),
@@ -324,6 +445,11 @@ Edward lived the rest of his life in France as the Duke of Windsor. He and Walli
             "The fourth paragraph says his brother, shy and with a stammer, had never expected or wanted to rule but had to take up the burden.",
             "第四段说他的弟弟腼腆、口吃，从未期待也不想统治，却不得不挑起重担。",
           ),
+          [
+            t("Edward, not his brother, lived the rest of his life in France.", "在法国度过余生的是爱德华，不是他弟弟。"),
+            t("His brother took up the burden and became King George VI.", "他弟弟挑起了重担，成为乔治六世。"),
+            t("Baldwin was the prime minister; the brother did not hand him the crown.", "鲍德温是首相；弟弟并没把王冠交给他。"),
+          ],
         ),
         ask(
           t("How does later evidence change the way some people see the abdication?", "后来的证据怎样改变了一些人对退位的看法？"),
@@ -340,12 +466,22 @@ Edward lived the rest of his life in France as the Duke of Windsor. He and Walli
             "The fifth paragraph says documents suggested Edward was less loyal than believed, and some historians think his abdication was fortunate for Britain.",
             "第五段说文件表明爱德华并不像人们以为的那样忠诚，一些历史学家认为他退位对英国是幸事。",
           ),
+          [
+            t("Edward and Wallis stayed together until his death, so love is not in doubt.", "爱德华和沃利斯相守到他去世，爱情并无疑问。"),
+            t("Baldwin advised the king; nothing says he wanted the throne.", "鲍德温只是向国王进言，文中没说他想当国王。"),
+            t("Millions heard the speech on December 11, 1936.", "1936年12月11日数百万人听到了这场演说。"),
+          ],
         ),
         ask(
           t("How did most people hear Edward's abdication speech?", "大多数人是怎样听到爱德华退位演讲的？"),
           t("On the radio", "通过收音机"),
           [t("In the cathedral", "在大教堂里"), t("In the newspapers only", "只从报纸上"), t("On television", "通过电视")],
           t("Millions of people in Britain and across its empire gathered around their radios.", "英国及其帝国的数百万人围在收音机旁。"),
+          [
+            t("The speech was broadcast, not given in a cathedral.", "演说是广播出去的，不是在大教堂里发表的。"),
+            t("People gathered around their radios to hear his voice.", "人们围在收音机旁听他的声音。"),
+            t("Television is never mentioned; people heard him on the radio.", "文中没提电视；人们是从收音机里听到的。"),
+          ],
         ),
       ],
       ["Edward", "VIII", "Wallis", "Simpson", "Stanley", "Baldwin", "George", "VI", "Nazi", "Hitler", "Windsor"],
@@ -384,6 +520,11 @@ Sam shrugged. "I thought you would," he said. "I just didn't know when."`,
             "The fourth paragraph says he told himself it was too late and that it was Sam's decision; he was skilled at finding reasons.",
             "第四段说他告诉自己已经太晚了，而且那是萨姆的决定；他很擅长找理由。",
           ),
+          [
+            t("Leo knew exactly who broke the window: it was his own kick.", "利奥很清楚是谁打破了窗户：就是他自己那一脚。"),
+            t("Sam never asked for silence; he said he thought Leo would tell.", "萨姆从没要求保密；他说他以为利奥会说出来。"),
+            t("The vice principal listened to him as soon as he came.", "利奥一进门，副校长就听他讲了。"),
+          ],
         ),
         ask(
           t("Why did Sam's friendliness make Leo feel worse?", "为什么萨姆的友好让利奥感觉更糟？"),
@@ -400,6 +541,11 @@ Sam shrugged. "I thought you would," he said. "I just didn't know when."`,
             "Sam did not seem angry, and that made it worse: Leo's guilt grew because his friend bore the punishment without complaint.",
             "萨姆似乎并不生气，这反而更糟：朋友毫无怨言地承担惩罚，使利奥的罪恶感越来越重。",
           ),
+          [
+            t("Nothing suggests revenge; Sam was not angry at all.", "没有迹象表明要报复；萨姆根本没生气。"),
+            t("The film is just what Sam chatted about; Leo's guilt is the problem.", "电影只是萨姆随口聊的；让利奥难受的是内疚。"),
+            t("Leo avoided Sam out of shame, not because he preferred other friends.", "利奥躲着萨姆是因为羞愧，不是更喜欢别的朋友。"),
+          ],
         ),
         ask(
           t("What does Sam's last reply reveal about him?", "萨姆最后的回答揭示了他什么？"),
@@ -413,6 +559,11 @@ Sam shrugged. "I thought you would," he said. "I just didn't know when."`,
             "\"I thought you would. I just didn't know when\" shows that Sam's silence came from loyalty and trust in his friend's conscience.",
             '"我以为你会说的，只是不知道什么时候"表明萨姆的沉默出于忠诚，以及对朋友良心的信任。',
           ),
+          [
+            t("Sam remembered everything; he had protected Leo by staying silent.", "萨姆什么都记得；他用沉默保护了利奥。"),
+            t("Sam never asks for money; Leo paid half from his savings.", "萨姆从没要钱；利奥用积蓄付了一半。"),
+            t("Sam is calm and even expected the confession.", "萨姆很平静，甚至早就料到他会坦白。"),
+          ],
         ),
         ask(
           t("How much of the window did Leo pay for?", "利奥为窗户付了多少钱？"),
@@ -422,6 +573,11 @@ Sam shrugged. "I thought you would," he said. "I just didn't know when."`,
             "Leo was given a detention of his own and paid for half of the window from his savings.",
             "利奥也被留校，并用积蓄付了一半的窗户钱。",
           ),
+          [
+            t("Leo paid half, not the whole window.", "利奥付了一半，不是全部。"),
+            t("He paid half from his savings, so he did pay.", "他用积蓄付了一半，确实付了钱。"),
+            t("He used his own savings, not his parents' help, and paid half.", "他用的是自己的积蓄，不是父母帮忙，付了一半。"),
+          ],
         ),
       ],
       ["Sam", "Okoro", "Leo"],
@@ -456,6 +612,11 @@ Years later, an old man was often seen sitting on the cathedral steps, looking a
             "The first paragraph says he had everything except the tallest building, an honor that belonged to the cathedral.",
             "第一段说他什么都有，唯独没有最高的建筑，这份荣耀属于大教堂。",
           ),
+          [
+            t("Brask already had a house by the harbor.", "布拉斯克已经有一座港口边的房子。"),
+            t("The spire had stood three hundred years; nothing says it would fall.", "尖塔已立了三百年，文中没说它要倒。"),
+            t("The council raised questions; Brask bribed members to stop them.", "议会提出过质疑，布拉斯克借钱给议员让他们闭嘴。"),
+          ],
         ),
         ask(
           t(
@@ -472,6 +633,14 @@ Years later, an old man was often seen sitting on the cathedral steps, looking a
             "He dismisses the architect, buys the council's silence and stops inviting Teo; each time he removes someone who doubts him.",
             "他解雇了建筑师，买通了议会，不再邀请泰奥；每一次他都清除了一个怀疑他的人。",
           ),
+          [
+            t("He thanks none of them; he replaces, pays off or drops each one.", "他谁也没感谢；他把每个人换掉、收买或冷落。"),
+            t("He shares nothing; he spends his own fortune on the tower.", "他什么也没分享；他把自己的财产都花在塔上。"),
+            t(
+              "He ignores their advice, and the soft ground proves the first architect right.",
+              "他无视他们的建议，松软的地基证明第一位建筑师是对的。",
+            ),
+          ],
         ),
         ask(
           t("What does Teo's last reply suggest?", "泰奥最后的回答暗示了什么？"),
@@ -485,6 +654,14 @@ Years later, an old man was often seen sitting on the cathedral steps, looking a
             '"For a month" reminds Brask how briefly the tower stood, after he had spent his ships, his money and his friend on it.',
             '"一个月"提醒布拉斯克这座塔只存在了多么短的时间，而他为此付出了船队、金钱和朋友。',
           ),
+          [
+            t("Teo was the one who warned against the tower; he never wanted it.", "提奥曾劝他不要建塔，从不想要它。"),
+            t("The council ordered it taken down, and no rebuilding is mentioned.", "议会下令拆除，文中没提重建。"),
+            t(
+              "The leaning tower shows the first architect was right about the soft ground.",
+              "塔的倾斜证明第一位建筑师对地基的判断是对的。",
+            ),
+          ],
         ),
       ],
       ["Varno", "Aldo", "Brask", "Teo"],
@@ -517,6 +694,14 @@ Yet many people believe that the commission did something that trials could not.
             "The third paragraph says they had to tell the whole truth about what they had done, in public; those who lied could still be tried.",
             "第三段说他们必须公开讲出自己所做的全部真相；说谎的人仍可能受审。",
           ),
+          [
+            t(
+              "Payments went to victims, recommended by the commission, not demanded from criminals.",
+              "赔偿是委员会建议付给受害者的，不是向罪犯索取的。",
+            ),
+            t("No one had to leave the country; they had to tell the truth in public.", "没人需要离开国家；他们必须公开说出真相。"),
+            t("Amnesty meant no prosecution, so no prison time was required.", "大赦意味着不被起诉，无需坐牢。"),
+          ],
         ),
         ask(
           t("Why did some people prefer a commission to trials?", "为什么一些人更倾向于成立委员会而不是审判？"),
@@ -530,6 +715,17 @@ Yet many people believe that the commission did something that trials could not.
             "The second paragraph says some feared trials would take decades and might cause new violence, since many of the guilty still held power.",
             "第二段说一些人担心审判要拖几十年，并可能引发新的暴力，因为许多有罪的人仍掌握权力。",
           ),
+          [
+            t(
+              "The passage describes thousands imprisoned, tortured or killed, so crimes were committed.",
+              "文中说有数千人被监禁、酷刑或杀害，罪行确实存在。",
+            ),
+            t("Victims came forward and described what happened, often for the first time.", "受害者站出来讲述遭遇，往往是第一次。"),
+            t(
+              "The trials after the Second World War were a model some wanted, not a reason to skip trials.",
+              "二战后的审判是一些人想效仿的模式，不是不审的理由。",
+            ),
+          ],
         ),
         ask(
           t("Which criticism of the commission does the passage mention?", "文章提到了对委员会的哪一种批评？"),
@@ -543,6 +739,14 @@ Yet many people believe that the commission did something that trials could not.
             "The fifth paragraph says some victims felt criminals walked free by talking, and not every perpetrator expressed contrition.",
             "第五段说一些受害者觉得罪犯只要开口就能获释，而且并非每个施害者都表示了悔恨。",
           ),
+          [
+            t("Many hearings were broadcast on radio and television.", "许多听证会在广播和电视上播出。"),
+            t(
+              "Tutu led the commission and argued for hearing the past, not ignoring victims.",
+              "图图领导委员会，主张直面过去，并没有不听受害者。",
+            ),
+            t("Other nations from Peru to Canada created their own commissions.", "从秘鲁到加拿大，其他国家也设立了自己的委员会。"),
+          ],
         ),
       ],
       ["Nelson", "Mandela", "Desmond", "Tutu", "Peru"],

@@ -51,6 +51,20 @@ That evening, Tomas told his grandmother the whole story. Pepper lay at his feet
             "The second paragraph gives the clues: muddy paw prints by the door, and Pepper licking her lips and wagging her tail under the table. Those fit a dog.",
             "第二段给出了线索：门边有泥爪印，佩珀在桌子下面舔嘴唇、摇尾巴。这些都说明它是一条狗。",
           ),
+          why: [
+            t(
+              "Tomas's little sister is never mentioned. Pepper leaves muddy paw prints and wags her tail, so she is an animal.",
+              "文中从没提到汤姆斯的妹妹。佩珀留下泥爪印、摇尾巴，说明它是动物。",
+            ),
+            t(
+              "A girl in his class is Ruby, who shares her lunch. Pepper is at home with paws and a tail.",
+              "班上的女孩是分午饭的鲁比。佩珀在家里，有爪子和尾巴。",
+            ),
+            t(
+              "The neighbor's cat is never mentioned. Pepper is under the family's own table and lies at Tomas's feet.",
+              "文中没提邻居的猫。佩珀就在自家桌子底下，还趴在汤姆斯脚边。",
+            ),
+          ],
         },
         {
           prompt: t("Which word best describes Ruby?", "哪个词最能描述鲁比？"),
@@ -60,6 +74,14 @@ That evening, Tomas told his grandmother the whole story. Pepper lay at his feet
             'Without being asked, Ruby breaks her sandwich in half, adds a cookie, and says "But I want to." She gives what is hers freely.',
             "没人请求，鲁比就把三明治掰成两半，还加了一块饼干，并说“But I want to.”。她心甘情愿地分享自己的东西。",
           ),
+          why: [
+            t(
+              "Greedy is the opposite. Ruby gives away half her sandwich and a cookie.",
+              "贪心正好相反。鲁比把半个三明治和一块饼干都给了别人。",
+            ),
+            t('Shy does not fit. Ruby speaks up first and asks, "What\'s wrong?"', "害羞不对。鲁比主动开口问：“怎么了？”"),
+            t("Bossy does not fit. Ruby tells Tomas nothing to do; she just shares.", "专横不对。鲁比没有命令汤姆斯做什么，只是分享。"),
+          ],
         },
         {
           prompt: t("Why will Tomas's grandmother pack a sandwich for Ruby?", "托马斯的奶奶为什么要给鲁比也准备一个三明治？"),
@@ -73,6 +95,17 @@ That evening, Tomas told his grandmother the whole story. Pepper lay at his feet
             "The grandmother decides this right after Tomas tells her the whole story, which includes Ruby sharing. The story does not say it, but a sandwich for Ruby is her way of saying thank you.",
             "奶奶是在托马斯讲完整件事（包括鲁比分享午餐）之后才这样决定的。故事没有直说，但给鲁比做三明治就是她表示感谢的方式。",
           ),
+          why: [
+            t(
+              "Pepper eating one is not the plan. Grandmother packs one sandwich for Tomas and one for Ruby by name.",
+              "不是怕佩珀吃掉一个。奶奶明说一个给汤姆斯，一个给鲁比。",
+            ),
+            t("Ruby never asks for anything. She shares without a word.", "鲁比从没要过什么。她一声不响就分享了。"),
+            t(
+              "Ruby did not forget her lunch. She had a cheese sandwich, carrot sticks and two cookies.",
+              "鲁比没忘带午饭。她有奶酪三明治、胡萝卜条和两块饼干。",
+            ),
+          ],
         },
       ],
     },
@@ -102,6 +135,17 @@ The next morning, she did not sit at the back. She sat at the table next to Owen
             "The first paragraph says she sits at the back, keeps her eyes on her desk, turns red and whispers only her name. Those are signs of a shy, nervous person.",
             "第一段说她坐在后排，眼睛一直盯着桌子，脸变红，只小声说出自己的名字。这些都是害羞紧张的表现。",
           ),
+          why: [
+            t(
+              "Angry and bored do not fit. Her face turns red and she only whispers her name.",
+              "生气和无聊不对。她脸红了，只小声说了自己的名字。",
+            ),
+            t(
+              "Proud and excited is the opposite of how she starts. She keeps her eyes on her desk.",
+              "骄傲兴奋和她开头的样子相反。她一直盯着课桌。",
+            ),
+            t("Sick and tired are never mentioned. She is quiet because she is new.", "文中没提生病和疲惫。她安静是因为刚来。"),
+          ],
         },
         {
           prompt: t("What does it show when Mei closes her notebook slowly?", "小梅慢慢合上笔记本，说明了什么？"),
@@ -115,6 +159,11 @@ The next morning, she did not sit at the back. She sat at the table next to Owen
             'The fifth paragraph says she closed it slowly "as if she did not want recess to end." Children had gathered around her drawings, and she was happy.',
             "第五段说她慢慢合上本子，“as if she did not want recess to end”。孩子们围着看她画画，她很开心。",
           ),
+          why: [
+            t("Tired of drawing is the opposite. Children were asking her for more pictures.", "画累了正好相反。孩子们还在请她画更多画。"),
+            t("Afraid of the bell is not in the story. The bell only means recess is over.", "怕铃声不在故事里。铃声只表示课间结束了。"),
+            t("Hiding her drawings is wrong. She had just been showing them to a crowd.", "不想让人看画不对。她刚才还在给一群人看。"),
+          ],
         },
         {
           prompt: t("How has Mei changed by the end of the story?", "到故事结尾，小梅有了什么变化？"),
@@ -128,6 +177,17 @@ The next morning, she did not sit at the back. She sat at the table next to Owen
             "The last paragraph says she no longer sits at the back: she sits next to Owen and raises her hand twice, unlike the first day.",
             "最后一段说她不再坐在后排：她坐在欧文旁边，还举了两次手，和第一天完全不同。",
           ),
+          why: [
+            t("Stopping drawing is not in the story. Drawing is how she made friends.", "不再画画故事里没有。她正是靠画画交到朋友的。"),
+            t(
+              "Bossy is not in the story. She simply sits with Owen and raises her hand.",
+              "专横故事里没有。她只是坐到欧文旁边，还举了手。",
+            ),
+            t(
+              "Changing schools is the opposite. She now sits at the front table and joins in.",
+              "想转学正好相反。她现在坐到前面，参与进来了。",
+            ),
+          ],
         },
       ],
     },
@@ -168,6 +228,17 @@ After school, Ms. Lee gave Priya a ribbon too. It was blue, and it said "Honest 
             "Her stomach drops right when she realizes she doubled the wrong letter, and her hands feel cold just before she tells the truth. Both show worry, not hunger or cold weather.",
             "她意识到自己重复错了字母时，心一下子沉了下去；在说出实情之前，她的手发凉。这两处都表现出担心，而不是饥饿或天气冷。",
           ),
+          why: [
+            t(
+              "Hunger and cold are not the cause. Her stomach drops the moment she knows she doubled the wrong letter.",
+              "不是饿也不是冷。她一意识到双写错了字母，心就一沉。",
+            ),
+            t("Excited to win is the opposite. The drop comes right after her mistake.", "赢了很兴奋正好相反。心一沉恰恰发生在犯错之后。"),
+            t(
+              "Angry at Sam is not in the story. She feels bad because Sam looks sad.",
+              "对萨姆生气故事里没有。她难过是因为萨姆看起来很伤心。",
+            ),
+          ],
         },
         {
           prompt: t("Which word best describes Priya?", "哪个词最能描述普丽娅？"),
@@ -177,6 +248,11 @@ After school, Ms. Lee gave Priya a ribbon too. It was blue, and it said "Honest 
             "Nobody noticed her mistake, yet she told Ms. Lee and gave up the win. Practicing for three weeks also shows she is not lazy.",
             "没有人发现她的错误，她却主动告诉李老师，放弃了胜利。她练了三个星期，也说明她并不懒。",
           ),
+          why: [
+            t("Careless does not fit. She practiced for three weeks and told the truth.", "粗心不对。她练了三周，还说了实话。"),
+            t("Boastful is the opposite. She gives up the win and speaks quietly.", "爱炫耀正好相反。她放弃了胜利，还轻声说话。"),
+            t("Lazy does not fit. Every night she walked and spelled out loud.", "懒惰不对。她每晚边走边大声拼单词。"),
+          ],
         },
         {
           prompt: t("Why does Priya look at Sam before she speaks up?", "普丽娅为什么在开口之前看了看山姆？"),
@@ -190,6 +266,14 @@ After school, Ms. Lee gave Priya a ribbon too. It was blue, and it said "Honest 
             "The fifth paragraph says Sam was trying hard not to look sad. Right after looking at him, Priya admits her mistake, so seeing him helps her decide to make it fair.",
             "第五段说山姆正努力不让自己显得难过。普丽娅看了他之后马上承认了错误，可见是看到他让她决定还他一个公平。",
           ),
+          why: [
+            t("Wanting Sam to speak for her is wrong. Priya speaks up herself.", "想让萨姆替她说话不对。普丽娅自己站出来说了。"),
+            t("Thinking he cheated is not in the story. The mistake was her own.", "认为他作弊故事里没有。错的是她自己。"),
+            t(
+              "Showing him the ribbon is wrong. She looks at the ribbon and then at sad Sam.",
+              "想给他看缎带不对。她先看缎带，再看难过的萨姆。",
+            ),
+          ],
         },
       ],
     },
@@ -221,6 +305,11 @@ I still have not told Ben, but I think he is a better builder than I am. Maybe t
             'The teller says "My little brother Ben is six" and "I am ten." The story is told in the first person by Ben\'s older brother or sister.',
             "讲故事的人说“My little brother Ben is six”和“I am ten”。故事是由本的哥哥或姐姐用第一人称讲述的。",
           ),
+          why: [
+            t('Ben himself is wrong. The teller says "My little brother Ben."', "本自己讲不对。讲述者说的是“我的小弟弟本”。"),
+            t("Their mom only takes a picture at the end. The teller is ten.", "妈妈只在最后拍了张照片。讲述者十岁。"),
+            t('A visiting friend is wrong. The teller calls Ben "my little brother."', "来访的朋友不对。讲述者称本为“我的小弟弟”。"),
+          ],
         },
         {
           prompt: t("How does the teller's opinion change during the story?", "讲述者的看法在故事中发生了什么变化？"),
@@ -234,6 +323,20 @@ I still have not told Ben, but I think he is a better builder than I am. Maybe t
             'In the second paragraph the teller says the castle "would never stand up." In the last paragraph the teller thinks Ben "is a better builder than I am."',
             "第二段里讲述者说城堡“would never stand up”；最后一段里讲述者却认为本“is a better builder than I am”。",
           ),
+          why: [
+            t(
+              "Loving the castle first is backwards. The teller first says it will never stand up.",
+              "一开始喜欢城堡是反的。讲述者一开始说它根本立不起来。",
+            ),
+            t(
+              'Being sure from the start is wrong. The teller was almost ready to say "I told you so."',
+              "一开始就有把握不对。讲述者差点就要说“我早告诉过你”。",
+            ),
+            t(
+              "Never paying attention is wrong. The teller watches every tower fall and rise.",
+              "从不关心不对。讲述者看着每座塔倒下又立起。",
+            ),
+          ],
         },
         {
           prompt: t("What does the reader know that Ben does not?", "读者知道哪件本不知道的事？"),
@@ -247,6 +350,11 @@ I still have not told Ben, but I think he is a better builder than I am. Maybe t
             'The last paragraph says "I still have not told Ben." Because the teller shares private thoughts with us, we know something Ben does not. The other things happened in front of Ben.',
             "最后一段说“I still have not told Ben”。讲述者把心里话告诉了我们，所以我们知道本不知道的事。其他几件事都是本亲眼看到的。",
           ),
+          why: [
+            t("The first tower falling over is something Ben saw himself.", "第一座塔倒下是本自己看到的。"),
+            t("Mom taking a picture happened in front of everyone.", "妈妈拍照是当着大家的面发生的。"),
+            t("The sock flag is something Ben made, so he knows.", "袜子做的旗子是本做的，他当然知道。"),
+          ],
         },
       ],
     },
@@ -275,6 +383,17 @@ I had forgotten how much I loved the sky.`,
             'The first sentence is "I am a kite." The whole story is told by the kite, using "I" and "me."',
             "第一句就是“I am a kite.”。整个故事都由风筝用“I”和“me”来讲述。",
           ),
+          why: [
+            t(
+              'The girl is talked about as "a girl with a gap in her front teeth," so she is not the "I."',
+              "女孩被描述为“门牙有个缝的女孩”，所以她不是“我”。",
+            ),
+            t("The grandpa is seen waving far below. The teller is up in the sky.", "爷爷在下面挥手，而讲述者在天上。"),
+            t(
+              'The girl\'s mother is only mentioned. The "I" is red and yellow with a ribbon tail.',
+              "女孩的妈妈只是被提到。那个“我”是红黄相间、带缎带尾巴的。",
+            ),
+          ],
         },
         {
           prompt: t(
@@ -291,6 +410,14 @@ I had forgotten how much I loved the sky.`,
             "Right after his eyes go soft, he says he made the kite for the girl's mother when she was a child. Seeing it reminds him of that time with love.",
             "他眼神变柔和之后，马上说这只风筝是他在女孩的妈妈小时候为她做的。看到它，他满怀深情地想起了那段时光。",
           ),
+          why: [
+            t(
+              "Being angry is wrong. He says he made the kite for his daughter, and his voice is gentle.",
+              "生气不对。他说这风筝是给女儿做的，语气很温柔。",
+            ),
+            t("Poor eyesight is not the reason. Light has poured into the hall.", "视力不好不是原因。光已经照进走廊了。"),
+            t("Being tired is not the point. His eyes soften the moment he sees the kite.", "累不是重点。他一看到风筝，眼神就柔和了。"),
+          ],
         },
         {
           prompt: t("How do the kite's feelings change from the beginning to the end?", "从开头到结尾，风筝的心情有什么变化？"),
@@ -304,6 +431,14 @@ I had forgotten how much I loved the sky.`,
             'In the first paragraph the kite thinks "nobody remembered me." The last line says it had forgotten "how much I loved the sky."',
             "第一段里风筝觉得“nobody remembered me”；最后一句说它已经忘了“how much I loved the sky”。",
           ),
+          why: [
+            t("Happy to scared is wrong. The kite ends high in the sky, loving it.", "从开心到害怕不对。风筝最后在高空，非常喜欢天空。"),
+            t("Angry to more angry is not in the story.", "从生气到更生气故事里没有。"),
+            t(
+              "Excited to bored is backwards. It starts alone in the dark and ends in joy.",
+              "从兴奋到无聊是反的。它开头孤零零在黑暗里，结尾充满喜悦。",
+            ),
+          ],
         },
       ],
     },
@@ -337,6 +472,14 @@ Jada found a note stuck in the fence. It said, "Sorry about your plants. I can h
             "In Marco's part, he says he does not know anyone and that kicking the ball reminds him of playing with his old team.",
             "在马可的部分里，他说自己谁都不认识，踢球能让他想起和以前的球队一起踢球的日子。",
           ),
+          why: [
+            t("Breaking Jada's plants was an accident. He says he kicked it too hard.", "踢坏贾达的植物是意外。他说自己踢得太用力了。"),
+            t("Making Jada angry is wrong. He wanted to say sorry.", "想惹贾达生气不对。他其实想道歉。"),
+            t(
+              "A coach is never mentioned. He kicks alone because he misses his old team.",
+              "文中没提教练。他一个人踢，因为想念以前的队友。",
+            ),
+          ],
         },
         {
           prompt: t("In her part, what does Jada think of Marco?", "在杰达的部分里，她怎么看马可？"),
@@ -350,6 +493,14 @@ Jada found a note stuck in the fence. It said, "Sorry about your plants. I can h
             "The last sentence of Jada's part says: \"I think the boy next door does not care about anyone but himself.\" She does not know he is lonely; only Marco's part tells us that.",
             "杰达部分的最后一句说：“I think the boy next door does not care about anyone but himself.”她并不知道他很孤单，只有马可的部分告诉了我们这一点。",
           ),
+          why: [
+            t(
+              "Lonely and missing friends is what Marco says in his own part. Jada does not know it.",
+              "孤单想朋友是马可在自己那部分说的。贾达并不知道。",
+            ),
+            t("A great soccer player is not what Jada says. She is upset about her tomatoes.", "贾达没说他球踢得好。她在为番茄生气。"),
+            t("Wanting to help her garden comes only in Marco's note the next day.", "想帮她修菜园是马可第二天在纸条里才说的。"),
+          ],
         },
         {
           prompt: t("Why does the story tell the same events twice, from two sides?", "故事为什么从两个角度把同一件事讲两遍？"),
@@ -363,6 +514,14 @@ Jada found a note stuck in the fence. It said, "Sorry about your plants. I can h
             "Jada thinks Marco is selfish, and Marco thinks Jada is just angry. Only by reading both parts do we see the whole picture, which they begin to see too in the last part.",
             "杰达以为马可自私，马可以为杰达只是在生气。只有读了两个部分，我们才看到全貌；在最后一部分，他们自己也开始明白了。",
           ),
+          why: [
+            t(
+              "Jada being right all along is wrong. Marco's side shows she did not know he was new and lonely.",
+              "贾达一直都对不对。马可那部分说明她不知道他刚搬来、很孤单。",
+            ),
+            t("Growing tomatoes is only a detail in Jada's part.", "种番茄只是贾达那部分里的一个细节。"),
+            t("Soccer skill is not compared. The two sides show what each one felt.", "文中没比谁球踢得好。两个视角是为了展示各自的感受。"),
+          ],
         },
       ],
     },
@@ -398,6 +557,14 @@ The next morning, he walked to the beetle's stone. "Will you show me where the r
             "Pip laughs at the beetle's warning and floods his tunnel. When he comes back and asks for help, his new tunnel stays dry. Listening to good advice is what made the difference.",
             "皮普嘲笑甲虫的提醒，结果地道被水淹了。后来他回去请教，新地道就没有进水。是否听取好建议决定了结果。",
           ),
+          why: [
+            t(
+              "Never digging tunnels is wrong. Pip digs again, around the willow tree.",
+              "永远别挖隧道不对。皮普后来又挖了，是绕着柳树挖的。",
+            ),
+            t("The fastest always winning is the opposite. Rushing flooded his tunnel.", "最快的总会赢正好相反。他赶得太急，隧道被淹了。"),
+            t("Never trusting a beetle is the opposite. The beetle's warning was right.", "别信甲虫的话正好相反。甲虫的提醒是对的。"),
+          ],
         },
         {
           prompt: t("Which detail shows that Pip missed a warning sign?", "哪个细节说明皮普忽略了危险的信号？"),
@@ -411,6 +578,11 @@ The next morning, he walked to the beetle's stone. "Will you show me where the r
             "The fifth paragraph says the ground near the willow felt cool and soft, a sign that water was close, but Pip did not stop to think about it.",
             "第五段说柳树附近的土又凉又软，这说明水就在附近，但皮普没有停下来想一想。",
           ),
+          why: [
+            t("Digging past the fence post is just a place along his way, not a warning.", "挖过篱笆桩只是路上的一个地点，不是警示。"),
+            t("Dirt flying is how he showed off at the start, not a sign of the river.", "泥土飞溅是他开头炫耀的样子，不是河流的迹象。"),
+            t("Drawing a map came the next morning, after the flood.", "画地图是第二天早上的事，在被淹之后。"),
+          ],
         },
         {
           prompt: t("How does Pip change by the end?", "到结尾，皮普有了什么变化？"),
@@ -424,6 +596,11 @@ The next morning, he walked to the beetle's stone. "Will you show me where the r
             'The last paragraph says he asks the beetle, "Will you show me where the river runs?" and digs around the willow even though "it took longer."',
             "最后一段说他问甲虫“Will you show me where the river runs?”，并且绕开柳树挖，尽管“it took longer”。",
           ),
+          why: [
+            t("Stopping digging forever is wrong. He digs a new tunnel around the tree.", "永远不挖了不对。他绕着树挖了一条新隧道。"),
+            t("Digging even faster is the opposite. This time it takes longer.", "挖得更快正好相反。这次花的时间更长。"),
+            t("Moving across the river is not in the story.", "搬到河对岸故事里没有。"),
+          ],
         },
       ],
     },
@@ -459,6 +636,14 @@ The sunflower was quiet for a long time. "I am sorry for what I said," she told 
             "The sunflower mocks the clover for being low, but the clover survives the storm and is the one the girl calls lucky. In the end the sunflower says sorry.",
             "向日葵嘲笑三叶草长得矮，可三叶草挺过了暴风雨，还被女孩称为幸运草。最后向日葵道了歉。",
           ),
+          why: [
+            t("Tall plants doing better is the opposite. The tall sunflower snapped.", "高的植物更好正好相反。高高的向日葵被吹断了。"),
+            t("Storms being bad for farms is just what happens, not the lesson.", "暴风雨对农场有害只是情节，不是寓意。"),
+            t(
+              "Always staying close to the ground is too narrow. The point is not to look down on others.",
+              "永远贴着地面太片面了。重点是不要瞧不起别人。",
+            ),
+          ],
         },
         {
           prompt: t(
@@ -475,6 +660,14 @@ The sunflower was quiet for a long time. "I am sorry for what I said," she told 
             "The first paragraph compares the flower to a gold plate: it looked round and bright like one, but it was not one.",
             "第一段把花盘比作金盘子：它看起来像金盘子一样圆而亮，但并不真是盘子。",
           ),
+          why: [
+            t("Made of gold is wrong. It is a comparison, not a fact.", "金子做的不对。这是比喻，不是事实。"),
+            t('The farmer eating from it is wrong. "Golden plate" only describes her face.', "农夫用它吃饭不对。“金盘子”只是形容花盘。"),
+            t(
+              "Heavy and hard is not what a plate stands for here. The words are round and bright.",
+              "又重又硬不是这里的意思。关键词是圆和亮。",
+            ),
+          ],
         },
         {
           prompt: t(
@@ -491,6 +684,11 @@ The sunflower was quiet for a long time. "I am sorry for what I said," she told 
             "A running horse is fast and powerful. In the fourth paragraph the wind is strong enough to crack the sunflower's stem, so the comparison shows its speed and force.",
             "奔跑的马又快又有力。第四段里风大到把向日葵的茎都折断了，所以这个比较表现的是风的速度和力量。",
           ),
+          why: [
+            t("Soft and quiet is the opposite of a running horse.", "轻柔安静和奔跑的马正好相反。"),
+            t("A real horse is wrong. The word *like* makes it a comparison.", "真的马不对。*like* 说明这是比喻。"),
+            t("Warm is not what the horse stands for. It shows speed and power.", "温暖不是马代表的意思，它表示速度和力量。"),
+          ],
         },
       ],
     },
@@ -527,6 +725,14 @@ That night, Ivy looked out at the snowman. The moon was a silver coin above the 
             "The next sentence says snow had covered the street, the cars and the fence in thick white, so everything looked like an empty white page.",
             "下一句说大雪把街道、汽车和篱笆都盖上了厚厚的白色，所以一切看起来就像一张空白的纸。",
           ),
+          why: [
+            t('A page of her book is wrong. "Blank page" describes the snow outside.', "她书里的一页不对。“空白的纸”形容的是外面的雪。"),
+            t("A dirty window is not in the story.", "窗户脏故事里没有。"),
+            t(
+              "Too dark to see is wrong. She sees the street, the cars and the fence in white.",
+              "太黑看不见不对。她看到了白茫茫的街道、汽车和篱笆。",
+            ),
+          ],
         },
         {
           prompt: t('Why does Max move "like a walking pillow"?', "麦克斯为什么走起来“like a walking pillow”？"),
@@ -540,6 +746,11 @@ That night, Ivy looked out at the snowman. The moon was a silver coin above the 
             "The third paragraph says he was wrapped in so many sweaters that he moved like a walking pillow: all the sweaters make him look round and soft.",
             "第三段说他裹了那么多件毛衣，走起来像个会走路的枕头：一层层毛衣让他看起来又圆又软。",
           ),
+          why: [
+            t("Carrying a pillow is wrong. *Like* makes it a comparison to his sweaters.", "抱着枕头不对。*like* 说明是拿毛衣作比较。"),
+            t("Being half asleep is not in the story. He follows her outside.", "半睡半醒故事里没有。他跟着她跑出去了。"),
+            t("A hurt leg is not in the story.", "腿受伤故事里没有。"),
+          ],
         },
         {
           prompt: t('What does "their fingers were icicles" tell you?', "“their fingers were icicles”告诉了你什么？"),
@@ -553,6 +764,11 @@ That night, Ivy looked out at the snowman. The moon was a silver coin above the 
             "The fifth paragraph says this after a whole morning in the snow, right before they go inside for hot chocolate. Icicles are frozen, so the words mean their fingers were freezing.",
             "第五段在他们玩了一上午雪之后这样说，紧接着他们就进屋喝热巧克力。冰柱是冻住的，所以这句话是说他们的手指冻僵了。",
           ),
+          why: [
+            t("Real icicles hanging from their fingers is too literal.", "手指上真挂着冰柱太按字面理解了。"),
+            t("Long and thin is not the point. The comparison is about cold.", "又长又细不是重点。这个比喻讲的是冷。"),
+            t("Gloves made of ice are not in the story.", "冰做的手套故事里没有。"),
+          ],
         },
       ],
     },
@@ -588,6 +804,14 @@ Theo grinned. "It was a piece of cake," he said. Then he paused. "Well, maybe a 
             'Right after he gets cold feet, Theo crumples his lines and whispers, "I can\'t do it." The words mean he was too scared to go on.',
             "西奥“got cold feet”之后，把台词纸都攥皱了，还小声说“I can't do it.”。这句话的意思是他害怕得不敢上台。",
           ),
+          why: [
+            t(
+              "Freezing feet is too literal. He is behind the curtain, scared of forgetting.",
+              "脚冻僵太按字面理解了。他站在幕后，怕忘词。",
+            ),
+            t("Small shoes are not in the story.", "鞋子太小故事里没有。"),
+            t("Snow is not in this story. It is the night of a play.", "这个故事里没有雪。那是演出的晚上。"),
+          ],
         },
         {
           prompt: t(
@@ -604,6 +828,17 @@ Theo grinned. "It was a piece of cake," he said. Then he paused. "Well, maybe a 
             'Zoe laughs and explains, "It means good luck, silly." Theo had thought about the real meaning of the words, so he was alarmed.',
             "佐伊笑着解释说“It means good luck, silly.”。西奥想到的是这几个词的字面意思，所以吓了一跳。",
           ),
+          why: [
+            t(
+              "A hurt leg is wrong. He looks down in alarm because he thinks the words are real.",
+              "腿受伤不对。他惊慌地低头，是因为把这句话当真了。",
+            ),
+            t("Checking his costume is not why he looks down.", "他低头不是在检查戏服。"),
+            t(
+              "Mr. Park pointing is not in the story. He only says the words as he walks past.",
+              "帕克老师指他的腿故事里没有。他只是路过时说了这句话。",
+            ),
+          ],
         },
         {
           prompt: t("What lesson does the story teach?", "这个故事告诉我们什么道理？"),
@@ -617,6 +852,14 @@ Theo grinned. "It was a piece of cake," he said. Then he paused. "Well, maybe a 
             "Theo is so scared he almost gives up, yet he remembers every word and even takes a bow. Being nervous did not stop him from doing well.",
             "西奥害怕得差点放弃，可他记住了每一句台词，还鞠了一躬。紧张并没有妨碍他表现出色。",
           ),
+          why: [
+            t("Never taking part is the opposite. Theo does it and does well.", "永远别参加正好相反。西奥上了台，还演得很好。"),
+            t("Laughing at mistakes is not the lesson. Zoe's laugh helps him relax.", "嘲笑别人的错误不是寓意。佐伊的笑让他放松下来。"),
+            t(
+              "Only fearless people acting is wrong. Zoe's knees shake too, and they both do well.",
+              "只有不紧张的人才能演不对。佐伊的膝盖也在发抖，可他们都演得很好。",
+            ),
+          ],
         },
       ],
     },

@@ -43,6 +43,20 @@ In this way, the mountains kept the Greeks apart, while the sea brought them tog
             "The second paragraph gives the cause: the mountains made travel slow and hard, so each valley became its own small world.",
             "第二段给出了原因：群山使旅行又慢又难，所以每个山谷都成了一个独立的小世界。",
           ),
+          [
+            t(
+              "No ruler forbade meeting. Greece had no single ruler, and the mountains kept villages apart.",
+              "没有统治者禁止往来。希腊没有统一的统治者，是山脉把村庄隔开。",
+            ),
+            t(
+              "The villages were in valleys on the mainland. The islands are a separate detail.",
+              "这些村庄在大陆的山谷里。岛屿是另一个细节。",
+            ),
+            t(
+              "Different languages is wrong. Later the passage says the Greeks shared one language.",
+              "语言不同是错的。后文说希腊人说同一种语言。",
+            ),
+          ],
         ),
         ask(
           t("Why did many Greeks have to trade for grain?", "为什么许多希腊人必须通过贸易获得粮食？"),
@@ -56,6 +70,11 @@ In this way, the mountains kept the Greeks apart, while the sea brought them tog
             "The third paragraph says the soil was good for olives and grapes but poor for large fields of wheat, so they traded for grain.",
             "第三段说，土壤适合种橄榄和葡萄，却不适合大片种植小麦，所以他们要通过贸易获得粮食。",
           ),
+          [
+            t("Flowers are not mentioned. The soil suited olives and grapes.", "文中没提花。那种土壤适合橄榄和葡萄。"),
+            t("Ships were for trade, not farming. Size is never the issue.", "船是用来贸易的，不是种地的。大小从来不是问题。"),
+            t("A flood is never mentioned. The soil was thin and stony.", "文中从没提到洪水。土壤又薄又多石。"),
+          ],
         ),
         ask(
           t("How does the last sentence sum up the passage?", "最后一句话怎样总结了全文？"),
@@ -69,6 +88,11 @@ In this way, the mountains kept the Greeks apart, while the sea brought them tog
             "The last sentence joins the two causes the passage has explained: the mountains kept the Greeks apart, while the sea brought them together with the world.",
             "最后一句把文章解释过的两个原因联系在一起：群山让希腊人彼此分开，而大海把他们与外面的世界联系起来。",
           ),
+          [
+            t("Liking is not discussed. The sentence says what each one did.", "文中没谈喜好。这句话说的是山和海各起了什么作用。"),
+            t("The thin soil also drove trade, and the sea made it possible.", "贫瘠的土壤也推动了贸易，而大海让贸易成为可能。"),
+            t("Greek sailors traveled all around the Mediterranean.", "希腊水手航行到地中海各地。"),
+          ],
         ),
         ask(
           t("What grew well in the thin, stony soil of Greece?", "希腊贫瘠多石的土壤适合种什么？"),
@@ -78,6 +102,11 @@ In this way, the mountains kept the Greeks apart, while the sea brought them tog
             "The soil was good for olive trees and grapevines but poor for large fields of wheat.",
             "土壤适合种橄榄树和葡萄藤，却不适合种大片小麦。",
           ),
+          [
+            t("Large fields of wheat were what the soil was poor for.", "大片麦田正是这种土壤不适合的。"),
+            t("Rice is not mentioned in the passage.", "文中没提到稻米。"),
+            t("Corn and beans are not mentioned.", "文中没提到玉米和豆子。"),
+          ],
         ),
       ],
     ),
@@ -107,6 +136,11 @@ The two most famous city-states, Athens and Sparta, were very different, as you 
             "The first paragraph defines a city-state as a city with its farms and villages that governed itself like a tiny nation. The agora was the marketplace.",
             "第一段把城邦定义为一座城市连同周围的农田和村庄，像一个小国家一样自治。市场是 agora。",
           ),
+          [
+            t("A single king is the opposite. Each city-state governed itself.", "单一的国王正好相反。每个城邦自己管理自己。"),
+            t("A large country is what Greece never was.", "希腊从来不是一个大国。"),
+            t("The marketplace is the agora, one part of a city-state.", "市场是集市广场，只是城邦的一部分。"),
+          ],
         ),
         ask(
           t("What was the acropolis used for?", "卫城有什么用途？"),
@@ -120,6 +154,11 @@ The two most famous city-states, Athens and Sparta, were very different, as you 
             "The third paragraph says people built temples on the acropolis and gathered there for safety in war. Buying food happened in the agora.",
             "第三段说，人们在卫城上建神庙，战时在那里聚集避难。买食物是在 agora 进行的。",
           ),
+          [
+            t("Buying food and arguing happened in the agora, below the hill.", "买食物和争论是在山下的集市广场。"),
+            t("The Olympic Games were held at Olympia, in another passage.", "奥运会在奥林匹亚举行，是另一篇文章。"),
+            t("Keeping barbarians out of farms is never mentioned.", "文中从没提到把外族挡在农田外。"),
+          ],
         ),
         ask(
           t("What did all the city-states share?", "所有的城邦有什么共同之处？"),
@@ -133,6 +172,11 @@ The two most famous city-states, Athens and Sparta, were very different, as you 
             "The fourth paragraph says they shared the same language, gods and stories, even though each had its own laws, army and money.",
             "第四段说，它们有相同的语言、神灵和故事，尽管各有自己的法律、军队和货币。",
           ),
+          [
+            t("Each city-state had its own army and its own laws.", "每个城邦都有自己的军队和法律。"),
+            t("There was no single ruler, and each often had its own money.", "没有统一的统治者，各城邦往往也有自己的货币。"),
+            t("They often competed and sometimes went to war.", "它们经常竞争，有时还会打仗。"),
+          ],
         ),
         ask(
           t("What was the agora?", "集市广场是什么？"),
@@ -142,6 +186,11 @@ The two most famous city-states, Athens and Sparta, were very different, as you 
             "Below the acropolis lay the agora, an open marketplace where citizens bought food and traded news.",
             "卫城下面是集市广场，一个市民买食物、交流消息的露天市场。",
           ),
+          [
+            t("A hill with temples is the acropolis.", "有神庙的山丘是卫城。"),
+            t("An army camp is not described.", "文中没描述军营。"),
+            t("A school is not described here.", "这里没有描述学校。"),
+          ],
         ),
       ],
     ),
@@ -171,6 +220,11 @@ Even so, the idea that people can govern themselves spread far beyond Athens. Ma
             'The first paragraph says democracy comes from two Greek words meaning "people" and "power."',
             '第一段说，democracy 来自两个希腊词，意思是 "people" 和 "power"。',
           ),
+          [
+            t("A king is what democracy replaced, not part of the word.", "国王是民主取代的对象，不是这个词的组成部分。"),
+            t("The hill is where they met, not the source of the word.", "山坡是开会的地方，不是这个词的来源。"),
+            t("No first leader is named. The word comes from people and power.", "文中没提第一位领袖。这个词来自“人民”和“权力”。"),
+          ],
         ),
         ask(
           t("Why were many public jobs filled by lottery?", "为什么许多公职通过抽签产生？"),
@@ -184,6 +238,14 @@ Even so, the idea that people can govern themselves spread far beyond Athens. Ma
             "The third paragraph says names were drawn at random so that ordinary citizens, not only the rich and powerful, would take turns.",
             "第三段说，随机抽取名字，是为了让普通公民而不只是有钱有势的人轮流管理城市。",
           ),
+          [
+            t(
+              "There was no king choosing friends. Athens chose democracy instead of a king.",
+              "没有国王挑选朋友。雅典选择了民主而不是国王。",
+            ),
+            t("Votes were counted by a show of hands.", "投票是举手计数的。"),
+            t("Danger is never mentioned. The lottery let ordinary citizens take turns.", "文中从没提到危险。抽签让普通公民轮流任职。"),
+          ],
         ),
         ask(
           t("Who could not vote in Athens?", "在雅典，哪些人不能投票？"),
@@ -197,12 +259,22 @@ Even so, the idea that people can govern themselves spread far beyond Athens. Ma
             "The fourth paragraph says only free men born in Athens were citizens; women, enslaved people and foreigners could not vote.",
             "第四段说，只有生在雅典的自由男子才是公民；妇女、奴隶和外国人都不能投票。",
           ),
+          [
+            t("Free men born in Athens were exactly the ones who could vote.", "生在雅典的自由男子正是能投票的人。"),
+            t("Jurors were citizens chosen by lottery.", "陪审员是抽签选出的公民。"),
+            t("The hillside was where the Assembly met, not where people lived.", "山坡是公民大会开会的地方，不是住的地方。"),
+          ],
         ),
         ask(
           t("How were votes in the Assembly often counted?", "公民大会上的投票通常怎样计数？"),
           t("By a show of hands", "举手表决"),
           [t("By drawing names", "抽签"), t("By writing on paper", "写在纸上"), t("By the king alone", "只由国王决定")],
           t("The text says votes were often counted by a show of hands.", "短文说投票通常以举手的方式计数。"),
+          [
+            t("Drawing names was how public jobs were filled.", "抽签是选出公职的方法。"),
+            t("Writing on paper is never mentioned.", "文中从没提到写在纸上。"),
+            t("Athens had no king deciding.", "雅典没有国王做决定。"),
+          ],
         ),
       ],
     ),
@@ -232,6 +304,11 @@ The Spartans were also known for saying a lot in very few words. Our word "lacon
             "The first paragraph states it directly: everything was organized around building the strongest army in Greece.",
             "第一段直接说明：一切都围绕着建立希腊最强大的军队来安排。",
           ),
+          [
+            t("Debates describe Athens, not Sparta.", "辩论描述的是雅典，不是斯巴达。"),
+            t("Trading olive oil was about Greek sailors in general.", "运橄榄油说的是希腊水手，不专指斯巴达。"),
+            t("The lottery was used in Athens.", "抽签是雅典用的方法。"),
+          ],
         ),
         ask(
           t("Why did Spartan girls train too?", "斯巴达女孩为什么也要训练？"),
@@ -245,6 +322,11 @@ The Spartans were also known for saying a lot in very few words. Our word "lacon
             "The third paragraph gives the reason: the Spartans believed strong mothers would have strong children.",
             "第三段给出了原因：斯巴达人相信强壮的母亲会生出强壮的孩子。",
           ),
+          [
+            t("Fighting in wars is never said of Spartan girls.", "文中从没说斯巴达女孩要上战场。"),
+            t("Leaving home at seven describes Spartan boys.", "七岁离家说的是斯巴达男孩。"),
+            t("The Olympic Games are not mentioned in this passage.", "这篇文章没提奥运会。"),
+          ],
         ),
         ask(
           t('What does the reply "If" show about the Spartans?', '回答 "If" 体现了斯巴达人的什么特点？'),
@@ -258,12 +340,22 @@ The Spartans were also known for saying a lot in very few words. Our word "lacon
             'The last paragraph uses the reply as an example of saying a lot in few words: "If" means the enemy may never manage to invade.',
             '最后一段用这个回答举例说明言简意赅："If" 的意思是敌人未必能攻进来。',
           ),
+          [
+            t('They understood the threat. "If" turns it back on him.', "他们听懂了威胁。“如果”一词把威胁反抛回去。"),
+            t("Fear does not fit. Spartans were trained to be tough.", "害怕不合理。斯巴达人受训就是为了坚强。"),
+            t("They spoke Greek. They chose to use one word.", "他们会说希腊语。是他们选择只用一个词。"),
+          ],
         ),
         ask(
           t("How many kings did Sparta have at the same time?", "斯巴达同时有几位国王？"),
           t("Two", "两位"),
           [t("One", "一位"), t("None", "没有"), t("Seven", "七位")],
           t("The text says Sparta had two kings at the same time.", "短文说斯巴达同时有两位国王。"),
+          [
+            t("One king would be usual, but Sparta had two at once.", "一位国王很常见，但斯巴达同时有两位。"),
+            t("None is wrong. The passage names two kings.", "没有是错的。文中说有两位国王。"),
+            t("Seven is the age when boys left home.", "七是男孩离家的年龄。"),
+          ],
         ),
       ],
     ),
@@ -293,6 +385,11 @@ The ancient games ended about 1,600 years ago. In 1896, they were brought back t
             "The second paragraph says that during the truce wars were paused so athletes and visitors could travel safely.",
             "第二段说，休战期间战争暂停，让运动员和观众能安全出行。",
           ),
+          [
+            t("The race was the first event, not the truce.", "赛跑是第一个比赛项目，不是休战。"),
+            t("Free meals were rewards back home for champions.", "免费餐是冠军回到家乡得到的奖励。"),
+            t("The wreath was the prize, not the truce.", "花环是奖品，不是休战。"),
+          ],
         ),
         ask(
           t("What did the winners of the ancient games receive at Olympia?", "古代奥运会的获胜者在奥林匹亚得到什么？"),
@@ -302,6 +399,11 @@ The ancient games ended about 1,600 years ago. In 1896, they were brought back t
             "The fourth paragraph says winners did not receive gold medals; each was crowned with a wreath of olive leaves.",
             "第四段说，获胜者没有金牌，而是戴上一个橄榄叶花环。",
           ),
+          [
+            t("Gold medals were not given, the passage says.", "文中说当时不发金牌。"),
+            t("Coins are not mentioned.", "文中没提到钱币。"),
+            t("Chariots were for races, not prizes.", "战车是比赛用的，不是奖品。"),
+          ],
         ),
         ask(
           t("Which sentence tells how the ancient games and the modern games are connected?", "哪句话说明了古代奥运会和现代奥运会的联系？"),
@@ -315,12 +417,25 @@ The ancient games ended about 1,600 years ago. In 1896, they were brought back t
             "The last paragraph links the two: the ancient games ended, and in 1896 they were brought back to life in Athens.",
             "最后一段把两者联系起来：古代运动会结束了，1896 年又在雅典重新举办。",
           ),
+          [
+            t(
+              "776 BCE tells when the ancient games began, not their link to today.",
+              "公元前776年说的是古代奥运何时开始，不是和今天的联系。",
+            ),
+            t("The first event describes the ancient games only.", "第一个项目只描述古代奥运。"),
+            t("Poets' songs are about ancient champions.", "诗人的歌颂是关于古代冠军的。"),
+          ],
         ),
         ask(
           t("In honor of which god were the Olympic Games held?", "奥林匹克运动会是为了纪念哪位神？"),
           t("Zeus, the king of the gods", "众神之王宙斯"),
           [t("The god of the sea", "海神"), t("The god of the sun", "太阳神"), t("The goddess of wisdom", "智慧女神")],
           t("The Olympic Games were held in honor of Zeus, the king of the gods.", "奥林匹克运动会是为纪念众神之王宙斯而举行的。"),
+          [
+            t("A sea god is not named in the passage.", "文中没提海神。"),
+            t("A sun god is not named.", "文中没提太阳神。"),
+            t("The goddess of wisdom is not mentioned here.", "这里没提到智慧女神。"),
+          ],
         ),
       ],
     ),
@@ -350,6 +465,11 @@ Teacher to student, student to teacher, these three thinkers passed their ideas 
             "The second paragraph says he asked another question, and then another, until people saw their answers were not so simple. He wrote nothing down.",
             "第二段说，他一个问题接一个问题地问，直到人们发现自己的答案并不简单。他什么也没写下来。",
           ),
+          [
+            t("Socrates wrote nothing down.", "苏格拉底什么都没写下来。"),
+            t("He did not give answers. He asked more questions.", "他不给答案，而是继续提问。"),
+            t("The Academy was founded by Plato, his student.", "学园是他的学生柏拉图创办的。"),
+          ],
         ),
         ask(
           t("How do we know about Socrates?", "我们是怎样了解苏格拉底的？"),
@@ -363,6 +483,11 @@ Teacher to student, student to teacher, these three thinkers passed their ideas 
             "The second paragraph says Socrates wrote nothing down and that we know about him mainly from his student Plato.",
             "第二段说，苏格拉底什么也没写下来，我们主要是从他的学生柏拉图那里了解他的。",
           ),
+          [
+            t("Socrates wrote no books.", "苏格拉底没写过书。"),
+            t("Aristotle collected observations of nature, not about Socrates.", "亚里士多德收集的是对自然的观察，不是关于苏格拉底的。"),
+            t("The Assembly made laws. It does not tell us about him.", "公民大会制定法律，并不告诉我们他的事。"),
+          ],
         ),
         ask(
           t("How are the three thinkers connected?", "这三位思想家有什么联系？"),
@@ -376,12 +501,22 @@ Teacher to student, student to teacher, these three thinkers passed their ideas 
             "Socrates taught Plato, and Plato taught Aristotle; the last paragraph calls this a chain of teacher and student.",
             "苏格拉底教了柏拉图，柏拉图又教了亚里士多德；最后一段称之为师生相传的链条。",
           ),
+          [
+            t("They were teacher and student, not family.", "他们是师生，不是一家人。"),
+            t("Thinkers did not rule. They became famous for asking questions.", "这些思想家不统治城邦。他们因提问而出名。"),
+            t("They did meet: each taught the next.", "他们确实见过：每人都教过下一位。"),
+          ],
         ),
         ask(
           t("What did Plato found?", "柏拉图创办了什么？"),
           t("A school called the Academy", "一所叫学园的学校"),
           [t("The Olympic Games", "奥林匹克运动会"), t("The Assembly", "公民大会"), t("A new city-state", "一个新的城邦")],
           t("Plato founded a school called the Academy.", "柏拉图创办了一所叫学园的学校。"),
+          [
+            t("The Olympic Games began long before, in honor of Zeus.", "奥运会早就为纪念宙斯而开始了。"),
+            t("The Assembly was part of Athenian democracy.", "公民大会是雅典民主的一部分。"),
+            t("Plato founded a school, not a city.", "柏拉图创办的是学校，不是城市。"),
+          ],
         ),
       ],
     ),
@@ -411,6 +546,11 @@ Today, you can see Greek-style columns on banks, museums and government building
             "The second paragraph says temples were homes for the gods, with a statue inside; ceremonies took place outside, not in a crowd inside.",
             "第二段说，神庙是神的居所，里面有神像；仪式在外面举行，人们不在里面聚集。",
           ),
+          [
+            t("Crowds did not pray inside. Ceremonies were outside.", "人群不在里面祈祷。仪式在外面举行。"),
+            t("A school is not what a temple was.", "神庙不是学校。"),
+            t("The Assembly met on a hillside, not in a temple.", "公民大会在山坡上开会，不在神庙里。"),
+          ],
         ),
         ask(
           t("How can you tell an Ionic column?", "怎样认出爱奥尼亚式柱？"),
@@ -424,6 +564,11 @@ Today, you can see Greek-style columns on banks, museums and government building
             "The third paragraph says Ionic tops curl into two scrolls. Leaves belong to Corinthian columns, and plain flat tops to Doric ones.",
             "第三段说，爱奥尼亚式柱头卷成两个涡卷。叶子是科林斯式柱的特征，平坦朴素的柱头是多立克式的。",
           ),
+          [
+            t("Leaves describe the Corinthian style.", "叶子描述的是科林斯式。"),
+            t("Flat and plain describes the Doric style.", "平而朴素描述的是多立克式。"),
+            t("Every style has a top. Ionic tops curl.", "每种风格都有柱头。爱奥尼亚式的柱头是卷曲的。"),
+          ],
         ),
         ask(
           t("Why do the Parthenon's columns bulge and lean slightly?", "帕特农神庙的柱子为什么略微鼓起并倾斜？"),
@@ -437,6 +582,11 @@ Today, you can see Greek-style columns on banks, museums and government building
             "The fourth paragraph calls these clever tricks: they make the building look perfectly straight and balanced from far away.",
             "第四段称之为巧妙的手法：它们让建筑从远处看起来完全笔直、匀称。",
           ),
+          [
+            t("It was on purpose, a clever trick, not a mistake.", "这是有意的巧妙设计，不是失误。"),
+            t("An earthquake is never mentioned.", "文中从没提到地震。"),
+            t("Crowds did not go inside a temple.", "人群不进入神庙。"),
+          ],
         ),
       ],
     ),
@@ -468,6 +618,11 @@ So the next time you watch a play, cast a vote or use a word like "biology," you
             'The second paragraph says "alphabet" comes from alpha and beta, the first two Greek letters. "Far" and "sound" make "telephone."',
             '第二段说 "alphabet" 来自 alpha 和 beta，即希腊字母的头两个。"far" 和 "sound" 组成的是 "telephone"。',
           ),
+          [
+            t("Far is part of telephone, not alphabet.", "“远”是 telephone 的一部分，不是 alphabet。"),
+            t("The study of life is biology.", "生命的研究是 biology（生物学）。"),
+            t("Pythagoras studied shapes and numbers, not letters.", "毕达哥拉斯研究图形和数字，不是字母。"),
+          ],
         ),
         ask(
           t("How is the passage organized?", "这篇文章是怎样组织的？"),
@@ -481,6 +636,14 @@ So the next time you watch a play, cast a vote or use a word like "biology," you
             'The passage takes one kind of gift at a time, with signal words such as "Start with," "Then," and "Finally."',
             '文章一次讲一类遗产，并用 "Start with"、"Then"、"Finally" 等提示词连接。',
           ),
+          [
+            t(
+              "Time order is not used. The parts are words, ideas, math and stories.",
+              "文章不是按时间排的。各部分是词语、思想、数学和故事。",
+            ),
+            t("No problem is set up and solved.", "文中没有提出问题再解决。"),
+            t("Athens and Sparta are compared in another passage.", "雅典和斯巴达的比较在另一篇文章。"),
+          ],
         ),
         ask(
           t("Which of these does the passage say began in Athens?", "文章说下面哪一项起源于雅典？"),
@@ -494,6 +657,14 @@ So the next time you watch a play, cast a vote or use a word like "biology," you
             "The third paragraph says the belief that citizens should have a say in their government began in Athens.",
             "第三段说，公民应该在政府中拥有发言权的观念起源于雅典。",
           ),
+          [
+            t("Banks have Greek-style columns today, not temples.", "今天银行用的是希腊式柱子，不是神庙。"),
+            t("Films are modern. The Greeks wrote the first plays.", "电影是现代的。希腊人写了最早的戏剧。"),
+            t(
+              "The alphabet's name comes from Greek letters, not the first alphabet in the world.",
+              "alphabet 的名字来自希腊字母，文中没说是世界上第一套字母。",
+            ),
+          ],
         ),
       ],
     ),

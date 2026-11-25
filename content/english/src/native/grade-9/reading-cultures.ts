@@ -41,6 +41,11 @@ Anansi is not always admirable. He is greedy, lazy and often punished for his tr
             "The first paragraph says a trickster is a character who wins not by strength but by cunning and who often breaks the rules.",
             "第一段说骗子精是不靠力量而靠狡猾取胜、常常打破规矩的人物。",
           ),
+          [
+            t("The sky god is Nyame, not a trickster.", "天神是尼亚梅，不是骗子角色。"),
+            t("Storytellers are not what the word means.", "这个词指的不是讲故事的人。"),
+            t("Tricksters break rules; they are not always honest.", "骗子角色常常犯规，并非总是诚实。"),
+          ],
         ),
         ask(
           t("How did Anansi catch the python?", "阿南西是怎么抓住巨蟒的？"),
@@ -54,6 +59,11 @@ Anansi is not always admirable. He is greedy, lazy and often punished for his tr
             "The third paragraph says he told the python it could not be as long as a palm branch, persuaded it to stretch out beside the branch and tied it fast.",
             "第三段说他告诉巨蟒它不可能有棕榈枝那么长，说服它在树枝旁伸直身子，然后把它牢牢捆住。",
           ),
+          [
+            t("Water was poured on the hornets.", "水是浇在马蜂身上的。"),
+            t("The pit was for the leopard.", "陷阱是挖给豹子的。"),
+            t("The gourd held the hornets.", "葫芦装的是马蜂。"),
+          ],
         ),
         ask(
           t("Why was Anansi important to enslaved people in the Americas?", "阿南西为什么对美洲被奴役的人很重要？"),
@@ -67,12 +77,22 @@ Anansi is not always admirable. He is greedy, lazy and often punished for his tr
             "The fourth paragraph says a small, powerless creature who outwitted the strong was a figure of hope and quiet resistance for enslaved people.",
             "第四段说对被奴役的人而言，一个弱小却能智胜强者的生物是希望和无声反抗的象征。",
           ),
+          [
+            t("Farming is never mentioned.", "文中没提耕种。"),
+            t("Nyame is the sky god; Anansi is a spider.", "尼亚梅是天神，阿南西是蜘蛛。"),
+            t("The stories were told, not written.", "这些故事是口头讲的，不是写下的。"),
+          ],
         ),
         ask(
           t("To whom did the stories belong in the beginning?", "起初这些故事属于谁？"),
           t("Nyame, the sky god", "天神尼亚梅"),
           [t("The python", "蟒蛇"), t("The great families of the Akan", "阿坎族的大家族"), t("Anansi's mother", "阿南西的母亲")],
           t("In the beginning, the stories belonged to Nyame, the sky god.", "起初，故事属于天神尼亚梅。"),
+          [
+            t("The python was one of the prices.", "蟒蛇只是代价之一。"),
+            t("Great families tried and failed to buy them.", "大家族曾想买却失败了。"),
+            t("His mother is never mentioned.", "文中没提他的母亲。"),
+          ],
         ),
       ],
       [
@@ -119,6 +139,11 @@ The stories are short, but they carry sharp lessons about vanity, honesty and th
             "The first paragraph says the stories have traveled so far and been told so often that it is impossible to separate the real man from the legend.",
             "第一段说这些故事流传太广、讲述太多，以致无法把真人与传说区分开。",
           ),
+          [
+            t("He is said to have lived, so not invented.", "据说他确有其人，并非虚构。"),
+            t("No books are mentioned.", "文中没提书。"),
+            t("Names differ by country, not by story.", "名字随国家而变，不随故事而变。"),
+          ],
         ),
         ask(
           t("What does Nasreddin show by feeding his coat at the feast?", "纳斯雷丁在宴会上喂他的外套，表明了什么？"),
@@ -132,6 +157,11 @@ The stories are short, but they carry sharp lessons about vanity, honesty and th
             "The second paragraph says he was ignored in shabby clothes and welcomed in a fine coat, so he told the coat to eat because it was the one they invited.",
             "第二段说他穿旧衣服时无人理睬，穿上华服就受到欢迎，于是他让外套吃，因为主人邀请的是外套。",
           ),
+          [
+            t("He goes home first; hunger is not the point.", "他先回家了，饥饿不是重点。"),
+            t("He does not ruin anything; he makes a point.", "他没破坏什么，只是在讽刺。"),
+            t("Hot soup is not the issue.", "汤烫不烫不是问题。"),
+          ],
         ),
         ask(
           t("What lesson does the story of searching outside the house suggest?", "在屋外找东西的故事暗示了什么教训？"),
@@ -145,12 +175,22 @@ The stories are short, but they carry sharp lessons about vanity, honesty and th
             "The last paragraph says the stories carry lessons about the way people look for easy answers in the wrong places.",
             "最后一段说这些故事蕴含着关于人们在错误的地方寻找简单答案的教训。",
           ),
+          [
+            t("Daylight is the joke, not the lesson.", "光线是笑点，不是教训。"),
+            t("The friend helps, and that is fine.", "朋友帮忙找东西无可厚非。"),
+            t("Finding things is not the point.", "能否找到不是重点。"),
+          ],
         ),
         ask(
           t("In which century is Nasreddin said to have lived?", "据说纳斯尔丁生活在哪个世纪？"),
           t("The thirteenth century", "十三世纪"),
           [t("The eighth century", "八世纪"), t("The eighteenth century", "十八世纪"), t("The twentieth century", "二十世纪")],
           t("He is said to have lived in Anatolia in the thirteenth century.", "据说他生活在十三世纪的安纳托利亚。"),
+          [
+            t("The eighth century is too early.", "八世纪太早了。"),
+            t("The eighteenth century is too late.", "十八世纪太晚了。"),
+            t("The twentieth century saw UNESCO's year.", "二十世纪是教科文组织纪念年。"),
+          ],
         ),
       ],
       [
@@ -196,6 +236,11 @@ The collection is a story about the power of stories. Shahrazad has no weapons a
             "The second paragraph says she stops at the most exciting moment as dawn breaks, and the king wants to hear the ending, so he lets her live.",
             "第二段说她在黎明时分最精彩的地方停下，国王想听结局，就让她多活一天。",
           ),
+          [
+            t("No poison is mentioned.", "文中没提下毒。"),
+            t("Her father begged her not to marry.", "她父亲求她别嫁。"),
+            t("She stays in the palace.", "她留在宫里。"),
+          ],
         ),
         ask(
           t(
@@ -215,6 +260,11 @@ The collection is a story about the power of stories. Shahrazad has no weapons a
             "The fourth paragraph says they do not appear in the oldest Arabic manuscripts and were added by Antoine Galland, who said he heard them from a Syrian storyteller.",
             "第四段说它们不见于最古老的阿拉伯文手稿，是安托万·加朗添加的，他说是从一位叙利亚说书人那里听来的。",
           ),
+          [
+            t("They are not in the oldest manuscripts.", "它们不在最古老的手稿里。"),
+            t("Shahrazad tells stories but is a character.", "舍赫拉查德是故事中的人物。"),
+            t("Greece is never mentioned.", "文中没提希腊。"),
+          ],
         ),
         ask(
           t("What does the passage say the collection is about?", "文章说这部故事集讲的是什么？"),
@@ -225,12 +275,22 @@ The collection is a story about the power of stories. Shahrazad has no weapons a
             t("Why merchants become thieves", "商人为何沦为盗贼"),
           ],
           t("The last paragraph says the collection is a story about the power of stories.", "最后一段说这部故事集讲的是故事的力量。"),
+          [
+            t("Kings are the frame, not the subject.", "国王只是框架，不是主题。"),
+            t("Islands are one kind of tale.", "岛屿只是其中一类故事。"),
+            t("Merchants and thieves are characters.", "商人和盗贼只是故事人物。"),
+          ],
         ),
         ask(
           t("Who was Shahrazad's father?", "山鲁佐德的父亲是谁？"),
           t("The king's own minister", "国王的大臣"),
           [t("A French translator", "一位法国翻译家"), t("A merchant from Egypt", "一位埃及商人"), t("The king of Persia", "波斯国王")],
           t("Shahrazad was the clever and well-read daughter of the king's own minister.", "山鲁佐德是国王大臣聪明博学的女儿。"),
+          [
+            t("Galland came centuries later.", "加朗是几百年后的人。"),
+            t("No merchant is her father.", "她父亲不是商人。"),
+            t("The king is her husband.", "国王是她丈夫。"),
+          ],
         ),
       ],
       [
@@ -283,6 +343,11 @@ The story has puzzled readers for centuries. Is it a punishment for disobedience
             "The second paragraph says the huge turtle told him the creature he saved was the daughter of the Dragon King and that he had been invited.",
             "第二段说那只大海龟告诉他，他救的是龙王的女儿，她邀请他去做客。",
           ),
+          [
+            t("No fish is mentioned.", "文中没提鱼。"),
+            t("He rides there on a turtle.", "他是骑着海龟去的。"),
+            t("He goes on his own invitation.", "他是受邀去的，不是母亲派的。"),
+          ],
         ),
         ask(
           t("What does Urashima discover when he returns to the shore?", "浦岛太郎回到岸上时发现了什么？"),
@@ -296,6 +361,11 @@ The story has puzzled readers for centuries. Is it a punishment for disobedience
             "The fifth paragraph says an old man told him a fisherman named Urashima disappeared three hundred years ago.",
             "第五段说一位老人告诉他，一个叫浦岛的渔夫三百年前在海上失踪了。",
           ),
+          [
+            t("Three days is how it seemed.", "三天只是感觉上的。"),
+            t("No one recognizes him.", "没人认识他。"),
+            t("The village changed, but not into a palace.", "村子变了，但没变成宫殿。"),
+          ],
         ),
         ask(
           t(
@@ -312,6 +382,11 @@ The story has puzzled readers for centuries. Is it a punishment for disobedience
             "The last paragraph says the endings are rarely happy and suggest that the price of paradise may be everything we leave behind.",
             "最后一段说这些故事的结局很少是圆满的，暗示天堂的代价也许是我们留下的一切。",
           ),
+          [
+            t("The paragraph is about loss, not danger alone.", "这段讲的是失去，不只是危险。"),
+            t("Turtles are not the lesson.", "海龟不是教训。"),
+            t("The box is a gift with a warning.", "盒子是带着告诫的礼物。"),
+          ],
         ),
         ask(
           t("What gift does the princess give Urashima when he leaves?", "乌岛太郎离开时公主送他什么礼物？"),
@@ -321,6 +396,11 @@ The story has puzzled readers for centuries. Is it a punishment for disobedience
             "As a parting gift, she gives him a beautiful lacquered box, but she warns him never to open it.",
             "临别时，她送他一个漂亮的漆盒，但警告他绝不能打开。",
           ),
+          [
+            t("No net is mentioned.", "文中没提渔网。"),
+            t("He returned the turtle earlier.", "他早先把海龟放回了海里。"),
+            t("No pearl is mentioned.", "文中没提珍珠。"),
+          ],
         ),
       ],
       ["Japan", "Urashima", "Taro", "Dragon", "King", "Otohime", "Irish", "Oisín"],
@@ -354,6 +434,11 @@ The novel's title comes from a poem by the Irish writer W. B. Yeats, which descr
             "The second paragraph says he had read European novels describing Africans as savage people without history or culture and wanted to show the Igbo world from the inside.",
             "第二段说他读过把非洲人描写成没有历史和文化的野蛮人的欧洲小说，想从内部展现伊博人的世界。",
           ),
+          [
+            t("No Nigerian critic is mentioned.", "文中没提尼日利亚批评者。"),
+            t("He wrote against European views.", "他写作是在反驳欧洲观点。"),
+            t("Yeats gave the title only.", "叶芝只提供了书名。"),
+          ],
         ),
         ask(
           t("What does the comparison of proverbs to palm oil mean?", "把谚语比作棕榈油是什么意思？"),
@@ -367,6 +452,11 @@ The novel's title comes from a poem by the Irish writer W. B. Yeats, which descr
             "The fourth paragraph says palm oil makes food smooth and rich, and proverbs in the same way make speech easier to swallow.",
             "第四段说棕榈油让食物顺滑浓郁，谚语同样让话语更易入耳。",
           ),
+          [
+            t("Proverbs are not sold.", "谚语不是卖的。"),
+            t("They are used in all talk.", "谚语用于各种谈话。"),
+            t("They make speech smoother, not heavier.", "它们让话更顺，不是更重。"),
+          ],
         ),
         ask(
           t("How does Achebe's use of proverbs support his argument?", "阿切贝对谚语的运用如何支持了他的论点？"),
@@ -380,6 +470,11 @@ The novel's title comes from a poem by the Irish writer W. B. Yeats, which descr
             "The fifth paragraph says a society that values the skill of speech so highly is clearly not without culture.",
             "第五段说一个如此重视说话技巧的社会显然并非没有文化。",
           ),
+          [
+            t("Writing is not the point.", "书面文字不是重点。"),
+            t("He wrote in English but praises Igbo.", "他用英语写作，但赞美伊博语。"),
+            t("Length is not the point.", "篇幅不是重点。"),
+          ],
         ),
         ask(
           t("Where does the title Things Fall Apart come from?", "《瓦解》这个书名出自哪里？"),
@@ -390,6 +485,11 @@ The novel's title comes from a poem by the Irish writer W. B. Yeats, which descr
             t("A European novel set in Africa", "一部以非洲为背景的欧洲小说"),
           ],
           t("The novel's title comes from a poem by the Irish writer W. B. Yeats.", "小说的书名来自爱尔兰作家叶芝的一首诗。"),
+          [
+            t("Proverbs fill the novel, not its title.", "谚语充满全书，但不是书名的来源。"),
+            t("Missionaries are characters, not a source.", "传教士是人物，不是出处。"),
+            t("European novels were what he answered.", "欧洲小说是他要反驳的。"),
+          ],
         ),
       ],
       [
@@ -446,6 +546,11 @@ Folklorists today study the Grimms' work with both admiration and caution. The b
             "The first paragraph says they believed the old stories preserved something of a shared German culture and had to be written down before they disappeared.",
             "第一段说他们认为这些老故事保存了共同的德意志文化，必须在消失前记录下来。",
           ),
+          [
+            t("They were scholars, not children's writers.", "他们是学者，不是儿童作家。"),
+            t("Napoleon was the conqueror.", "拿破仑是征服者。"),
+            t("Money is never mentioned.", "文中没提钱。"),
+          ],
         ),
         ask(
           t("Who were many of the brothers' storytellers in fact?", "兄弟俩的讲述者实际上很多是什么人？"),
@@ -459,6 +564,11 @@ Folklorists today study the Grimms' work with both admiration and caution. The b
             "The third paragraph says many of their storytellers were educated young women from middle-class families.",
             "第三段说他们的讲述者中很多是来自中产家庭、受过教育的年轻女性。",
           ),
+          [
+            t("That was the impression, not the fact.", "那只是他们给人的印象，不是事实。"),
+            t("Actors are not mentioned.", "文中没提演员。"),
+            t("Students are not mentioned.", "文中没提学生。"),
+          ],
         ),
         ask(
           t("How did Wilhelm change the tales over forty years?", "威廉在四十年间如何修改这些故事？"),
@@ -472,12 +582,22 @@ Folklorists today study the Grimms' work with both admiration and caution. The b
             "The fifth paragraph says he made the language smoother, added moral lessons and removed details that seemed unsuitable for children.",
             "第五段说他让语言更流畅，加入道德教训，删去了似乎不适合儿童的细节。",
           ),
+          [
+            t("He removed violence.", "他删去了暴力内容。"),
+            t("French was a source, not a target.", "法语是来源，不是翻译目标。"),
+            t("The tales grew in number.", "故事数量增加了。"),
+          ],
         ),
         ask(
           t("In which year did the Grimms publish their first volume of tales?", "格林兄弟哪年出版了第一卷故事集？"),
           t("In 1812", "1812年"),
           [t("In 1874", "1874年"), t("In 1785", "1785年"), t("In 1852", "1852年")],
           t("In 1812 they published the first volume of Children's and Household Tales.", "1812年，他们出版了《儿童与家庭童话集》第一卷。"),
+          [
+            t("1874 is not in the passage.", "1874 年不在文中。"),
+            t("1785 is too early.", "1785 年太早了。"),
+            t("1852 is forty years on, the revisions.", "1852 年是四十年后的修订期。"),
+          ],
         ),
       ],
       [
@@ -538,6 +658,11 @@ In 2008, UNESCO recognized the festival as part of the Intangible Cultural Herit
             "The second paragraph says it has roots in Indigenous traditions, which blended with the Catholic holidays of All Saints' Day and All Souls' Day.",
             "第二段说它源于原住民传统，后来与天主教的诸圣节和万灵节相融合。",
           ),
+          [
+            t("It began long before the twentieth century.", "它早在二十世纪之前就有了。"),
+            t("Asia is never mentioned.", "文中没提亚洲。"),
+            t("Films spread it; they did not create it.", "电影传播了它，但没创造它。"),
+          ],
         ),
         ask(
           t("Why are marigolds placed on the ofrenda?", "为什么在祭坛上摆放万寿菊？"),
@@ -551,6 +676,11 @@ In 2008, UNESCO recognized the festival as part of the Intangible Cultural Herit
             "The third paragraph says the marigolds' strong scent and color are believed to guide the spirits home.",
             "第三段说人们相信万寿菊浓烈的气味和颜色能指引亡灵回家。",
           ),
+          [
+            t("Food is on the altar separately.", "食物另放在祭坛上。"),
+            t("Candles are not protected by them.", "它们与蜡烛无关。"),
+            t("November flowers are not discussed.", "文中没讨论十一月开什么花。"),
+          ],
         ),
         ask(
           t("What is the spirit of the festival, according to the passage?", "根据文章，这个节日的精神是什么？"),
@@ -564,6 +694,11 @@ In 2008, UNESCO recognized the festival as part of the Intangible Cultural Herit
             "The fifth paragraph says its spirit is not gloomy but a celebration of memory and of the bond between generations.",
             "第五段说它的精神并不阴郁，而是对记忆和代际纽带的颂扬。",
           ),
+          [
+            t("That is how other cultures treat death.", "那是别的文化对待死亡的方式。"),
+            t("It is not gloomy.", "它并不阴郁。"),
+            t("Costumes appear, but no contest.", "有服装，但没有比赛。"),
+          ],
         ),
       ],
       [
@@ -621,6 +756,11 @@ English has similar expressions. A person may be said to have a narrow outlook o
             "The first paragraph says many chengyu come from stories in ancient books, and to understand one fully a speaker must know the story behind it.",
             "第一段说许多成语出自古书中的故事，要完全理解一个成语，必须了解它背后的故事。",
           ),
+          [
+            t("Chengyu are used in speech generally.", "成语在日常说话中普遍使用。"),
+            t("They can be read.", "它们是能读的。"),
+            t("Only one is about a frog.", "只有一个是关于青蛙的。"),
+          ],
         ),
         ask(
           t("What does the turtle tell the frog about the sea?", "海龟告诉青蛙关于大海的什么？"),
@@ -637,6 +777,11 @@ English has similar expressions. A person may be said to have a narrow outlook o
             "The third paragraph says the sea's size and depth cannot be measured, and it did not rise in floods or sink in droughts.",
             "第三段说大海的大小和深度无法测量，洪水时不涨，干旱时不落。",
           ),
+          [
+            t("The sea is far bigger.", "海比井大得多。"),
+            t("No other frogs are mentioned.", "文中没提其他青蛙。"),
+            t("It does not sink in drought.", "干旱时海也不会下降。"),
+          ],
         ),
         ask(
           t("What does the frog's story add that similar English expressions lack?", "青蛙的故事增添了哪些类似英语表达所缺少的东西？"),
@@ -650,6 +795,11 @@ English has similar expressions. A person may be said to have a narrow outlook o
             "The last paragraph says the frog is not stupid but proud of what he knows and has never been shown anything larger.",
             "最后一段说青蛙并不愚蠢，他只是为自己所知而自豪，从未见过更广阔的东西。",
           ),
+          [
+            t("The frog is not punished.", "青蛙没受惩罚。"),
+            t("He stays, astonished.", "它留在井里，只是很惊讶。"),
+            t("The turtle teaches the frog.", "是海龟给青蛙上了一课。"),
+          ],
         ),
       ],
       ["Chinese", "Zhuangzi", "Eastern", "Sea", "English"],

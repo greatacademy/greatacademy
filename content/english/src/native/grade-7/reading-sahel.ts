@@ -45,6 +45,11 @@ Ghana's power faded in the 1100s, but the trade it had built did not. Other empi
             "The second paragraph says gold mines lay to the south and salt mines to the north, and Ghana sat between them, in the middle of the trade.",
             "第二段说金矿在南方，盐矿在北方，而加纳位于两者之间，处在贸易的中心。",
           ),
+          [
+            t("The gold mines lay to the south, and the salt mines lay in the Sahara.", "金矿在南方，撒哈拉里的是盐矿。"),
+            t("Ghana traded with the Mediterranean world but never conquered it.", "加纳与地中海世界通商，但从没征服它。"),
+            t("The old empire had no connection to the modern country.", "古代帝国与现代国家没有关系。"),
+          ],
         ),
         ask(
           t("Why did the king keep all the gold nuggets for himself?", "国王为什么把所有金块都据为己有？"),
@@ -58,6 +63,11 @@ Ghana's power faded in the 1100s, but the trade it had built did not. Other empi
             "The third paragraph says the rule kept gold scarce, so its price stayed high.",
             "第三段说这条规定让黄金保持稀缺，所以价格一直很高。",
           ),
+          [
+            t("Tying horses to a nugget is from travelers' stories.", "把马拴在金块上出自旅行者的故事。"),
+            t("Traders could keep only gold dust because of the rule.", "正因为这条规定，商人只能留下金砂。"),
+            t("The salt tax was paid on loads of salt, not with nuggets.", "盐税按每批盐征收，不是用金块交的。"),
+          ],
         ),
         ask(
           t("Where did al-Bakri get his information about Ghana?", "巴克里关于加纳的信息是从哪里来的？"),
@@ -71,6 +81,11 @@ Ghana's power faded in the 1100s, but the trade it had built did not. Other empi
             "The fourth paragraph says al-Bakri wrote in Spain, based on the reports of merchants, so his description is a secondhand account.",
             "第四段说巴克里在西班牙写作，依据的是商人的报告，所以他的描述是转述。",
           ),
+          [
+            t("His description was based on others' reports, not a visit.", "他的描述来自别人的报告，不是亲自去过。"),
+            t("No letters from the king are mentioned.", "文中没提国王的信。"),
+            t("Greek books are never mentioned.", "文中从没提希腊书籍。"),
+          ],
         ),
         ask(
           t("In what year did al-Bakri write his description of Ghana?", "巴克里是哪一年写下对加纳的描述的？"),
@@ -80,6 +95,11 @@ Ghana's power faded in the 1100s, but the trade it had built did not. Other empi
             "In 1068, a scholar in Spain named al-Bakri wrote a description of Ghana's capital.",
             "1068年，西班牙学者巴克里写下了对加纳都城的描述。",
           ),
+          [
+            t("1324 is when Mansa Musa set out.", "1324 年是曼萨·穆萨出发的年份。"),
+            t("1235 is when Sundiata founded Mali.", "1235 年是松迪亚塔建立马里的年份。"),
+            t("1375 is the year of the map from Majorca.", "1375 年是马略卡地图的年份。"),
+          ],
         ),
       ],
       ["Ghana", "Ghana's", "Sahara", "Mauritania", "Mali", "Mediterranean", "Spain", "al-Bakri", "North", "Africa"],
@@ -111,6 +131,11 @@ That night, Yusuf lay beside the fire and looked up at Ibrahim's stars. He was t
             t("Because the camels could not see by day", "因为骆驼白天看不见"),
           ],
           t("The fourth paragraph says they traveled by night when the heat was worst.", "第四段说他们在最热的时候改在夜间赶路。"),
+          [
+            t("No soldiers are chasing the caravan.", "没有士兵在追赶商队。"),
+            t("The wells are not said to open at certain hours.", "文中没说水井只在特定时间开放。"),
+            t("Camels see fine by day.", "骆驼白天看得很清楚。"),
+          ],
         ),
         ask(
           t("Which detail in the story is a historical fact rather than an invention?", "故事中哪个细节是历史事实而不是虚构？"),
@@ -124,6 +149,11 @@ That night, Yusuf lay beside the fire and looked up at Ibrahim's stars. He was t
             "Yusuf, his uncle and Ibrahim are invented characters, and their thoughts are invented too. The salt houses of Taghaza are real: travelers who visited the town described houses built of salt blocks and roofed with camel skins.",
             "尤素福、他的叔叔和易卜拉欣都是虚构的人物，他们的想法也是虚构的。塔加扎的盐屋是真实的：到过那里的旅行者描述过用盐块建造、用骆驼皮做屋顶的房屋。",
           ),
+          [
+            t("Yusuf's age is part of the invented story.", "尤素福的年龄是虚构故事的一部分。"),
+            t("The comparison with the Quran is the writer's invention.", "和读《古兰经》的比较是作者编的。"),
+            t("His feeling at the end is invented.", "结尾他的感受是虚构的。"),
+          ],
         ),
         ask(
           t("What does the uncle's warning, The desert does not forgive mistakes, suggest?", "叔叔的警告“沙漠不会原谅错误”暗示了什么？"),
@@ -137,12 +167,22 @@ That night, Yusuf lay beside the fire and looked up at Ibrahim's stars. He was t
             "The uncle explains it in the next sentence: a caravan that loses its way dies of thirst.",
             "叔叔在下一句话中作了解释：迷路的商队会渴死。",
           ),
+          [
+            t("The uncle is warning, not praising the beauty.", "叔叔是在警告，不是赞美美景。"),
+            t("Yusuf has made no mistakes yet.", "尤素福还没犯错。"),
+            t("They are on their way to Taghaza.", "他们正是要去塔加扎。"),
+          ],
         ),
         ask(
           t("What were the houses of Taghaza built from?", "塔加扎的房子是用什么建的？"),
           t("Blocks of salt", "盐块"),
           [t("Mud bricks", "泥砖"), t("Stone from the mountains", "山上的石头"), t("Wood from the forests", "森林里的木头")],
           t("The houses of the town were built from blocks of salt, with roofs of camel skins.", "镇上的房子用盐块建成，屋顶是骆驼皮。"),
+          [
+            t("Mud bricks belong to Mesopotamia, not Taghaza.", "泥砖属于美索不达米亚，不属于塔加扎。"),
+            t("No stone is mentioned there.", "那里没提到石头。"),
+            t("The roofs were camel skins, not wood.", "屋顶是骆驼皮，不是木头。"),
+          ],
         ),
       ],
       ["Yusuf", "Sijilmasa", "Ibrahim", "Ibrahim's", "Quran", "Taghaza", "Mali"],
@@ -173,6 +213,11 @@ For the griots, these details are not mistakes. They express what the people of 
             "The first paragraph defines griots as storytellers and historians who memorize the history of their people and pass it from parent to child.",
             "第一段把格里奥定义为记忆本民族历史并代代相传的说书人和史官。",
           ),
+          [
+            t("Arab writers confirmed Mali's power, but they are not griots.", "阿拉伯作家证实了马里的强大，但他们不是格里奥。"),
+            t("Soldiers fought in the army; griots tell the story.", "士兵在军中作战，格里奥讲述故事。"),
+            t("The rival queen drove Sundiata out.", "对手王后把松迪亚塔赶走了。"),
+          ],
         ),
         ask(
           t("Which part of the story do historians accept as fact?", "历史学家接受故事的哪一部分为事实？"),
@@ -186,6 +231,11 @@ For the griots, these details are not mistakes. They express what the people of 
             "The fourth paragraph says historians agree Sundiata really lived and, around 1235, defeated Sosso and founded Mali, while the magical details cannot be checked against other sources.",
             "第四段说历史学家一致认为松迪亚塔确有其人，约在1235年打败索索并建立了马里，而那些神奇的细节无法与其他史料核对。",
           ),
+          [
+            t("The bending rod cannot be checked.", "弯曲的铁棍无法查证。"),
+            t("The rooster's spur is a magical detail.", "公鸡距是魔法细节。"),
+            t("His mother's looks are part of the epic, not checked fact.", "他母亲的相貌是史诗内容，不是查证的事实。"),
+          ],
         ),
         ask(
           t(
@@ -202,6 +252,11 @@ For the griots, these details are not mistakes. They express what the people of 
             "The last paragraph says the details are not mistakes for the griots; they express the belief that Sundiata rose from weakness to greatness and united many peoples against a tyrant.",
             "最后一段说对格里奥而言这些细节不是错误；它们表达了一种信念：松迪亚塔从弱小走向伟大，团结众多民族推翻了暴君。",
           ),
+          [
+            t("Real magic is not what the griots claim.", "格里奥并不是在说魔法真的存在。"),
+            t("Arab writers only confirmed Mali's power.", "阿拉伯作家只证实了马里的强大。"),
+            t("For the griots these details are not mistakes.", "对格里奥来说，这些细节不是错误。"),
+          ],
         ),
         ask(
           t("What did Sundiata pull himself up on when he first walked?", "松迪亚塔第一次走路时是扶着什么站起来的？"),
@@ -211,6 +266,11 @@ For the griots, these details are not mistakes. They express what the people of 
             "Sundiata pulled himself up on an iron rod so heavy that it bent, and he walked.",
             "松迪亚塔扶着一根重得被压弯的铁棒站了起来，走了路。",
           ),
+          [
+            t("His mother was insulted, but he did not lean on her.", "他母亲受了侮辱，但他没扶着她。"),
+            t("The rod was iron, not wood.", "那根棍子是铁的，不是木头的。"),
+            t("No palace wall is mentioned.", "文中没提宫墙。"),
+          ],
         ),
       ],
       ["Sundiata", "Sundiata's", "Keita", "Sumanguru", "Sosso", "Mali", "Arab", "West", "Africa"],
@@ -242,6 +302,11 @@ Mansa Musa also brought back more than memories. He returned with scholars and a
             "The first paragraph defines the hajj as the pilgrimage to the holy city of Mecca that every Muslim who is able should make once in a lifetime.",
             "第一段把朝觐定义为每个有能力的穆斯林一生中应完成一次的圣城麦加朝圣。",
           ),
+          [
+            t("Salt caravans are a different journey.", "盐商队是另一种旅程。"),
+            t("The hajj is a journey, not a tax.", "朝觐是旅程，不是税。"),
+            t("Timbuktu's schools came after the journey.", "廷巴克图的学校是在朝觐之后。"),
+          ],
         ),
         ask(
           t("Why did the price of gold in Cairo fall?", "开罗的金价为什么下跌？"),
@@ -255,6 +320,11 @@ Mansa Musa also brought back more than memories. He returned with scholars and a
             "The third paragraph says he spent and gave away so much gold in Cairo that the price of gold in the city fell.",
             "第三段说他在开罗花掉和送出了大量黄金，以致城里的金价下跌。",
           ),
+          [
+            t("Egypt's mines are never mentioned.", "文中从没提埃及的金矿。"),
+            t("Writers did not call gold worthless.", "作家没说黄金不值钱。"),
+            t("He gave gold away, not stole it.", "他是送出黄金，不是偷。"),
+          ],
         ),
         ask(
           t("What does the author mean by the last sentence?", "作者最后一句话是什么意思？"),
@@ -268,12 +338,22 @@ Mansa Musa also brought back more than memories. He returned with scholars and a
             "The last paragraph describes the scholars, architect, mosques and schools he brought to Timbuktu; the last sentence says his pilgrimage turned gold into knowledge, which lasted longer.",
             "最后一段描述了他带到廷巴克图的学者、建筑师、清真寺和学校；最后一句说他的朝圣把黄金变成了更持久的东西：知识。",
           ),
+          [
+            t("He brought scholars home, not sold books in Cairo.", "他把学者带回国，并没在开罗卖书。"),
+            t("The sentence is not about melting gold.", "这句话与熔化黄金无关。"),
+            t("Cairo and Timbuktu are not compared.", "开罗和廷巴克图没有被比较。"),
+          ],
         ),
         ask(
           t("In what year did Mansa Musa begin his journey to Mecca?", "曼萨·穆萨哪一年开始前往麦加？"),
           t("In 1324", "1324年"),
           [t("In 1375", "1375年"), t("In 1068", "1068年"), t("In 1235", "1235年")],
           t("In 1324, a caravan left the empire of Mali, led by Mansa Musa.", "1324年，曼萨·穆萨率领驼队离开马里帝国。"),
+          [
+            t("1375 is the year of the map.", "1375 年是那张地图的年份。"),
+            t("1068 is when al-Bakri wrote.", "1068 年是巴克里写作的年份。"),
+            t("1235 is Sundiata's victory.", "1235 年是松迪亚塔获胜的年份。"),
+          ],
         ),
       ],
       [
@@ -322,6 +402,11 @@ For a historian, the picture of Mansa Musa is powerful evidence. Fifty years aft
             "The second paragraph says sailors had measured these coasts for centuries and the mapmaker could rely on their charts.",
             "第二段说水手几个世纪以来一直在测量这些海岸，地图绘制者可以依靠他们的海图。",
           ),
+          [
+            t("Cresques relied on sailors' charts, not his own voyages.", "克雷斯克斯依靠水手的海图，不是自己航行。"),
+            t("Merchants from the south told him about Mali, not the coasts.", "南方来的商人讲的是马里，不是海岸。"),
+            t("Gold decorates the map but does not make it accurate.", "黄金装饰地图，但不让它更准确。"),
+          ],
         ),
         ask(
           t("What does the picture of the king on the atlas show about Mali?", "地图集上的国王画像表现了马里的什么？"),
@@ -335,6 +420,11 @@ For a historian, the picture of Mansa Musa is powerful evidence. Fifty years aft
             "The third paragraph describes a crowned king holding a gold nugget, with a label saying he is the richest king in all the land because of the gold found there.",
             "第三段描述了一位手持金块、头戴王冠的国王，旁边的标签说他因那里出产的黄金而成为这片土地上最富有的国王。",
           ),
+          [
+            t("He is the lord of Mali, not a European king.", "他是马里的君主，不是欧洲国王。"),
+            t("The details of Mali are vague, not exact.", "马里的细节很模糊，不精确。"),
+            t("A rider approaches across the desert, showing trade.", "一个骑手穿过沙漠走来，表明有贸易往来。"),
+          ],
         ),
         ask(
           t("Why are the details of Mali vague on the atlas?", "为什么马里的细节在地图集上很模糊？"),
@@ -348,6 +438,11 @@ For a historian, the picture of Mansa Musa is powerful evidence. Fifty years aft
             "The fourth paragraph says Cresques had never been to Mali and drew it from the reports of merchants, which is why the details are vague.",
             "第四段说克雷斯克斯从未去过马里，是根据商人的报告画的，所以细节很模糊。",
           ),
+          [
+            t("The parchment is never said to be damaged.", "文中从没说羊皮纸受损。"),
+            t("Mali was at its height then.", "那时马里正处于鼎盛。"),
+            t("Mansa Musa had died by then.", "那时曼萨·穆萨已经去世。"),
+          ],
         ),
         ask(
           t("Where is the Catalan Atlas kept today?", "加泰罗尼亚地图集如今保存在哪里？"),
@@ -361,6 +456,11 @@ For a historian, the picture of Mansa Musa is powerful evidence. Fifty years aft
             "Today it is called the Catalan Atlas, and it is kept in a library in Paris.",
             "它如今叫加泰罗尼亚地图集，保存在巴黎的一座图书馆里。",
           ),
+          [
+            t("Timbuktu holds manuscripts, not the atlas.", "廷巴克图保存的是手稿，不是这本地图集。"),
+            t("Majorca is where it was made.", "马略卡是它制作的地方。"),
+            t("Cairo is in another passage.", "开罗出现在另一篇文章里。"),
+          ],
         ),
       ],
       [
@@ -410,6 +510,11 @@ These collections changed how historians see Africa. Some writers in Europe once
             "The first paragraph says it sits at the edge of the Sahara near a bend in the Niger River, so it was a natural meeting point for caravans and boats.",
             "第一段说它位于撒哈拉边缘、尼日尔河的大拐弯附近，所以是商队和船只天然的交汇点。",
           ),
+          [
+            t("Ghana's capital is in another passage.", "加纳的首都出现在另一篇文章里。"),
+            t("Gold mines were farther south.", "金矿在更南边。"),
+            t("It sits at the edge of the Sahara, not on the coast.", "它在撒哈拉边缘，不在海边。"),
+          ],
         ),
         ask(
           t("What does Leo Africanus's report show about books in Timbuktu?", "利奥·阿非利加努斯的报告说明了廷巴克图的书籍什么情况？"),
@@ -423,6 +528,11 @@ These collections changed how historians see Africa. Some writers in Europe once
             "The third paragraph quotes his report that more profit was made from the sale of books than from any other goods.",
             "第三段引用了他的报告：卖书比卖任何其他商品赚的钱都多。",
           ),
+          [
+            t("Many were written in Arabic.", "许多是用阿拉伯文写的。"),
+            t("Books were precious, not free.", "书很珍贵，不是免费的。"),
+            t("They were copied by hand.", "它们是手抄的。"),
+          ],
         ),
         ask(
           t("What claim do the manuscripts of Timbuktu disprove?", "廷巴克图的手稿推翻了什么说法？"),
@@ -436,6 +546,11 @@ These collections changed how historians see Africa. Some writers in Europe once
             "The last paragraph says some writers in Europe once claimed Africa south of the Sahara had no written history, and the manuscripts show that this was simply wrong.",
             "最后一段说欧洲一些作者曾声称撒哈拉以南的非洲没有书面历史，而这些手稿表明这种说法完全错误。",
           ),
+          [
+            t("Scholars did study astronomy. That is not disproved.", "学者确实研究天文学，这一点没有被推翻。"),
+            t("Copying by hand is confirmed, not disproved.", "手抄得到了证实，而不是被推翻。"),
+            t("Caravans did cross. That is not disproved.", "商队确实穿越了沙漠，这一点没有被推翻。"),
+          ],
         ),
         ask(
           t("Near which river does Timbuktu sit?", "廷巴克图坐落在哪条河附近？"),
@@ -445,6 +560,11 @@ These collections changed how historians see Africa. Some writers in Europe once
             "Timbuktu sits at the edge of the Sahara, near a great bend in the Niger River.",
             "廷巴克图坐落在撒哈拉边缘，靠近尼日尔河的大弯道。",
           ),
+          [
+            t("The Nile flows through Egypt.", "尼罗河流经埃及。"),
+            t("The Congo is never mentioned.", "文中从没提刚果河。"),
+            t("The Tigris is in Mesopotamia.", "底格里斯河在美索不达米亚。"),
+          ],
         ),
       ],
       [
@@ -491,6 +611,11 @@ The trade routes shifted, too. European ships had begun sailing along the coast 
             "The second paragraph says many scholars disliked him, and most of what we know comes from those writers, so their accounts may be one-sided.",
             "第二段说许多学者不喜欢他，而我们所知道的大多来自这些作者，所以他们的记载可能有失偏颇。",
           ),
+          [
+            t("They were written later, not before he lived.", "这些记载写于后来，不是他生前之前。"),
+            t("The writers of Timbuktu are readable.", "廷巴克图作家的记载是能读懂的。"),
+            t("The map shows Mansa Musa, not Sunni Ali.", "地图上画的是曼萨·穆萨，不是索尼·阿里。"),
+          ],
         ),
         ask(
           t("How did Askia Muhammad differ from Sunni Ali?", "阿斯基亚·穆罕默德与逊尼·阿里有什么不同？"),
@@ -504,6 +629,11 @@ The trade routes shifted, too. European ships had begun sailing along the coast 
             "The third paragraph says where Sunni Ali had conquered, Askia Muhammad organized: provinces, governors, a professional army and standard weights and measures.",
             "第三段说逊尼·阿里征服，阿斯基亚·穆罕默德治理：设立省份和总督，建立职业军队，统一度量衡。",
           ),
+          [
+            t("Capturing Timbuktu was Sunni Ali's work.", "攻占廷巴克图是索尼·阿里做的。"),
+            t("He supported the scholars.", "他支持学者。"),
+            t("The guns belonged to the army from Morocco.", "枪属于摩洛哥军队。"),
+          ],
         ),
         ask(
           t(
@@ -520,6 +650,11 @@ The trade routes shifted, too. European ships had begun sailing along the coast 
             "The fourth paragraph describes the Moroccan army with guns defeating Songhai at Tondibi, and the last paragraph says trade routes shifted as European ships carried gold by sea.",
             "第四段描述了拥有枪支的摩洛哥军队在通迪比打败桑海，最后一段说随着欧洲船只走海路运送黄金，贸易路线发生了转移。",
           ),
+          [
+            t("The pilgrimage came long before the end.", "朝觐远在衰落之前。"),
+            t("No drought is mentioned.", "文中没提干旱。"),
+            t("Gao is the capital, and its fall is not given as a cause.", "加奥是首都，它的陷落没被列为原因。"),
+          ],
         ),
       ],
       [
@@ -576,6 +711,11 @@ Today, scholars are making digital copies of the rescued manuscripts so that peo
             "The second paragraph says that during times of danger, families hid manuscripts in clay jars, buried them in the sand or carried them into the desert.",
             "第二段说在危险时期，各个家庭把手稿藏在陶罐里、埋在沙里或带进沙漠。",
           ),
+          [
+            t("The manuscripts were kept by families, not sold to Europe.", "手稿由家族保管，没卖到欧洲。"),
+            t("Digital copies are being made today.", "数字副本是现在才在做的。"),
+            t("Sending them to Bamako happened in 2012.", "运到巴马科是 2012 年的事。"),
+          ],
         ),
         ask(
           t("What did the couriers say if they were stopped?", "信使如果被拦下会怎么说？"),
@@ -589,6 +729,11 @@ Today, scholars are making digital copies of the rescued manuscripts so that peo
             "The third paragraph says that if they were stopped, they explained that the trunks held old family papers.",
             "第三段说如果被拦下，他们就解释说箱子里装的是旧家庭文件。",
           ),
+          [
+            t("They did not say they carried food.", "他们没说运的是食物。"),
+            t("The burning came later, in 2013.", "焚烧是后来 2013 年的事。"),
+            t("They hid from the armed groups.", "他们是在躲避武装团体。"),
+          ],
         ),
         ask(
           t("What is the central idea of the last paragraph?", "最后一段的中心思想是什么？"),
@@ -602,6 +747,11 @@ Today, scholars are making digital copies of the rescued manuscripts so that peo
             "The last sentences say the rescue shows that a library is more than a building; it is also the people who are willing to protect it.",
             "最后几句说这次救援表明图书馆不只是一座建筑，它也是那些愿意保护它的人。",
           ),
+          [
+            t("Digital copies are for reading, not said to be better.", "数字副本方便阅读，并没说更好。"),
+            t("Where to build libraries is not discussed.", "文中没讨论图书馆该建在哪里。"),
+            t("Clay jars belong to earlier times.", "陶罐是更早时候的做法。"),
+          ],
         ),
       ],
       ["Timbuktu", "Abdel", "Kader", "Haidara", "Bamako", "Europe"],

@@ -43,6 +43,11 @@ Not every colonist wanted to break with Britain. Many, later called Loyalists, b
             "The passage says the colonists did not elect anyone to Parliament and argued that only their own assemblies had the right to tax them.",
             "文章说殖民者没有选出任何议会议员，他们认为只有他们自己的议会才有权向他们征税。",
           ),
+          [
+            t("The passage calls the tax small, so cost was not the point.", "文中说这笔税很少，钱不是问题所在。"),
+            t("The taxes paid for British soldiers, not French ones.", "税是为英国士兵付的，不是法国士兵。"),
+            t("No royal promise is mentioned.", "文中没提国王的承诺。"),
+          ],
         ),
         ask(
           t("What did Parliament do after the tea was thrown into Boston harbor?", "茶叶被倒入波士顿港后，议会做了什么？"),
@@ -56,6 +61,11 @@ Not every colonist wanted to break with Britain. Many, later called Loyalists, b
             "The third paragraph says Parliament closed the port of Boston and sent more soldiers.",
             "第三段说议会关闭了波士顿港并派来更多士兵。",
           ),
+          [
+            t("Parliament added force; it ended no taxes.", "议会加强了控制，没有取消税。"),
+            t("Colonists never got seats in Parliament.", "殖民者始终没在议会获得席位。"),
+            t("No one paid for the tea.", "没有人赔偿茶叶。"),
+          ],
         ),
         ask(
           t("How does the passage show that colonists did not all agree?", "文章如何表明殖民者并非意见一致？"),
@@ -69,12 +79,22 @@ Not every colonist wanted to break with Britain. Many, later called Loyalists, b
             "The last paragraph says many colonists, later called Loyalists, believed the protests had gone too far and that the colonies were safer under the king.",
             "最后一段说许多后来被称为效忠派的殖民者认为抗议过火了，殖民地在国王统治下更安全。",
           ),
+          [
+            t("Merchants refused British goods; they did not back the taxes.", "商人拒买英国货，并不支持征税。"),
+            t("The militia drilled and fought.", "民兵在操练，也开了火。"),
+            t("Colonists in disguise threw the tea.", "倒茶的是乔装的殖民者。"),
+          ],
         ),
         ask(
           t("How many chests of tea were thrown into Boston harbor?", "有多少箱茶叶被倒进波士顿港？"),
           t("342", "342箱"),
           [t("3", "3箱"), t("1,765", "1765箱"), t("42", "42箱")],
           t("Colonists threw 342 chests of tea into the water.", "殖民者把342箱茶叶倒进了水里。"),
+          [
+            t("Three is the number of ships.", "三是船的数量。"),
+            t("1765 is the year of the Stamp Act.", "1765 是《印花税法》的年份。"),
+            t("Forty-two drops the hundreds.", "四十二漏掉了百位。"),
+          ],
         ),
       ],
       [
@@ -119,6 +139,11 @@ Congress approved the Declaration on July 4, 1776. Its words were soon read alou
             "The second paragraph says the preamble states that when one people separates from another, it owes the world an explanation.",
             "第二段说序言指出，当一个民族脱离另一个民族时，应当向世界作出解释。",
           ),
+          [
+            t("The refused laws are in the list of grievances.", "拒批法律属于申诉清单。"),
+            t("Philadelphia is where Congress met, not what the preamble says.", "费城是大会召开地，不是序言的内容。"),
+            t("Choosing Jefferson came before the text.", "选定杰斐逊是在写文件之前。"),
+          ],
         ),
         ask(
           t(
@@ -135,6 +160,11 @@ Congress approved the Declaration on July 4, 1776. Its words were soon read alou
             "The passage explains that governments exist to protect these rights, and when a government destroys them, the people may change it or remove it.",
             "文章解释说政府的存在是为了保护这些权利，当政府破坏这些权利时，人民可以改变或推翻它。",
           ),
+          [
+            t("Asking the king is what the colonies gave up on.", "向国王请求正是殖民地放弃的做法。"),
+            t("No year-long tax strike is mentioned.", "文中没提一年不交税。"),
+            t("The grievances explain; they are not the remedy.", "申诉清单是说明理由，不是解决办法。"),
+          ],
         ),
         ask(
           t("What problem does the last paragraph raise about the Declaration?", "最后一段提出了关于《独立宣言》的什么问题？"),
@@ -148,6 +178,11 @@ Congress approved the Declaration on July 4, 1776. Its words were soon read alou
             "The passage notes that Jefferson held more than six hundred people in slavery and asks how a country founded on equality could allow some people to own others.",
             "文章指出杰斐逊一生奴役过六百多人，并问一个建立在平等之上的国家怎能允许一些人拥有另一些人。",
           ),
+          [
+            t("It came after more than a year of fighting.", "它是在打了一年多仗之后才通过的。"),
+            t("It was read aloud in town squares.", "它在城镇广场上被公开宣读。"),
+            t("The list is called long.", "文中说清单很长。"),
+          ],
         ),
         ask(
           t("How old was Thomas Jefferson when he drafted the Declaration?", "杰斐逊起草宣言时多大？"),
@@ -157,6 +192,11 @@ Congress approved the Declaration on July 4, 1776. Its words were soon read alou
             "The committee chose Thomas Jefferson, a thirty-three-year-old lawyer from Virginia.",
             "委员会选了来自弗吉尼亚的三十三岁律师托马斯·杰斐逊。",
           ),
+          [
+            t("Twenty-one is too young.", "二十一岁太年轻。"),
+            t("Fifty is too old.", "五十岁太老。"),
+            t("Seventy-six belongs to the year 1776.", "七十六来自 1776 这个年份。"),
+          ],
         ),
       ],
       [
@@ -204,6 +244,11 @@ In Paris, rumors spread that the king was gathering soldiers to crush them. On J
             "The first paragraph says a poor harvest pushed the price of bread so high that many families spent most of their wages just to eat.",
             "第一段说歉收使面包价格高涨，许多家庭把大部分工资都花在吃饭上。",
           ),
+          [
+            t("The Bastille held gunpowder, but families did not lose it.", "巴士底狱存有火药，但与百姓无关。"),
+            t("Nobles' buying is never mentioned.", "文中没提贵族买东西。"),
+            t("No markets were closed.", "没有市场被关闭。"),
+          ],
         ),
         ask(
           t("What was unfair about the three estates?", "三个等级有什么不公平之处？"),
@@ -217,6 +262,11 @@ In Paris, rumors spread that the king was gathering soldiers to crush them. On J
             "The passage says the first two estates were a tiny part of the population yet paid almost no taxes, while the third estate carried the weight of the taxes.",
             "文章说前两个等级只占人口的极小部分，却几乎不纳税，而第三等级承担了税收的重担。",
           ),
+          [
+            t("The third estate lacked a voice; it did not have more votes.", "第三等级缺少话语权，并没有更多票。"),
+            t("Land ownership is never discussed.", "文中没讨论土地所有权。"),
+            t("The first two estates paid almost nothing.", "前两个等级几乎不交税。"),
+          ],
         ),
         ask(
           t(
@@ -233,6 +283,11 @@ In Paris, rumors spread that the king was gathering soldiers to crush them. On J
             "The last paragraph explains that the Bastille stood for the power of a king who could imprison people without trial.",
             "最后一段解释说，巴士底狱象征着一个可以不经审判就监禁人民的国王的权力。",
           ),
+          [
+            t("The palace was Versailles.", "王宫是凡尔赛宫。"),
+            t("It held prisoners and gunpowder, not gold.", "它关押犯人、存放火药，并没有黄金。"),
+            t("The oath was sworn on a tennis court.", "誓言是在网球场上立下的。"),
+          ],
         ),
         ask(
           t("Where did the third estate swear not to separate?", "第三等级在哪里宣誓不解散？"),
@@ -242,6 +297,11 @@ In Paris, rumors spread that the king was gathering soldiers to crush them. On J
             "Locked out of their hall, they gathered on a nearby tennis court and swore not to separate.",
             "被锁在会场外，他们聚到附近的网球场宣誓不解散。",
           ),
+          [
+            t("The Bastille was stormed later, by a crowd.", "巴士底狱是后来被民众攻占的。"),
+            t("Versailles was the royal court.", "凡尔赛是王室宫廷。"),
+            t("No church is mentioned.", "文中没提教堂。"),
+          ],
         ),
       ],
       ["France", "French", "Europe", "American", "Revolution", "Versailles", "King", "Louis", "XVI", "Paris", "July", "Bastille"],
@@ -266,6 +326,11 @@ Many revolutionaries mocked her. In the violent years that followed, she critici
             "The first paragraph says the power to govern, it declared, comes from the nation, not from the king.",
             "第一段说它宣布统治权来自国民，而不是来自国王。",
           ),
+          [
+            t("It says the power does not come from the king.", "文中说权力不来自国王。"),
+            t("The church is never named as the source.", "文中从没说权力来自教会。"),
+            t("The army is never mentioned.", "文中没提军队。"),
+          ],
         ),
         ask(
           t("How did Olympe de Gouges write her declaration?", "奥兰普·德古热是如何写她的宣言的？"),
@@ -282,6 +347,11 @@ Many revolutionaries mocked her. In the violent years that followed, she critici
             "The passage says she copied the structure of the original almost article by article but changed its words, so that woman is born free and equal to man.",
             "文章说她几乎逐条沿用了原文的结构，但改动了用词，写成女性生而自由并与男性平等。",
           ),
+          [
+            t("She was a playwright, but this was a declaration, not a play.", "她是剧作家，但这份是宣言不是剧本。"),
+            t("No king's signature is mentioned.", "文中没提国王签字。"),
+            t("She kept the articles and changed their words.", "她保留了条款，只改了措辞。"),
+          ],
         ),
         ask(
           t("What was her argument for giving women a voice in making laws?", "她主张让女性参与立法的理由是什么？"),
@@ -295,12 +365,22 @@ Many revolutionaries mocked her. In the violent years that followed, she critici
             "The third paragraph says she argued that if women could be punished by the law, they should also have a voice in making it.",
             "第三段说她认为，既然女性会受到法律惩罚，她们也应该在制定法律时拥有发言权。",
           ),
+          [
+            t("Education is never compared.", "文中没比较受教育程度。"),
+            t("No promise of a vote is mentioned.", "文中没提投票的承诺。"),
+            t("Taxes are never compared.", "文中没比较纳税多少。"),
+          ],
         ),
         ask(
           t("When did French women win the right to vote?", "法国女性何时获得投票权？"),
           t("In 1944", "1944年"),
           [t("In 1791", "1791年"), t("In 1793", "1793年"), t("In 1893", "1893年")],
           t("French women would not win the right to vote until 1944.", "法国女性直到1944年才获得投票权。"),
+          [
+            t("1791 is when she wrote her declaration.", "1791 年是她写宣言的时候。"),
+            t("1793 is when she was executed.", "1793 年是她被处死的年份。"),
+            t("1893 is not in the passage.", "1893 年不在文中。"),
+          ],
         ),
       ],
       [
@@ -349,6 +429,11 @@ Then, in 1802, Napoleon sent a huge army to bring back French control, and many 
             "The first paragraph says the colony's wealth was built on the labor of nearly half a million enslaved Africans.",
             "第一段说这块殖民地的财富建立在近五十万被奴役非洲人的劳动之上。",
           ),
+          [
+            t("No gold mines are mentioned.", "文中没提金矿。"),
+            t("Trade with America is never discussed.", "文中没讨论与美洲的贸易。"),
+            t("The colonists were few; the enslaved did the work.", "殖民者很少，干活的是奴隶。"),
+          ],
         ),
         ask(
           t("What does the passage suggest started the insurrection of 1791?", "文章暗示是什么引发了1791年的起义？"),
@@ -362,6 +447,11 @@ Then, in 1802, Napoleon sent a huge army to bring back French control, and many 
             "The second paragraph says the news of the French Revolution and its talk of liberty and equality raised hopes, and the insurrection followed.",
             "第二段说法国大革命及其自由平等言论的消息燃起了希望，随后发生了起义。",
           ),
+          [
+            t("Napoleon came in 1802, after it began.", "拿破仑是 1802 年才来的。"),
+            t("Toussaint's arrest came later still.", "杜桑被捕更晚。"),
+            t("Sugar prices are never mentioned.", "文中没提糖价。"),
+          ],
         ),
         ask(
           t("Why is Haiti's independence described as unique?", "为什么说海地的独立是独一无二的？"),
@@ -375,12 +465,22 @@ Then, in 1802, Napoleon sent a huge army to bring back French control, and many 
             "The last sentence says Haiti was the first nation founded by people who had freed themselves from slavery.",
             "最后一句说海地是第一个由摆脱奴隶制的人建立的国家。",
           ),
+          [
+            t("Coffee was grown, but being first is not claimed.", "这里种咖啡，但没说是最早的。"),
+            t("Napoleon sent an army there.", "拿破仑派兵打过那里。"),
+            t("Its date was January 1, 1804.", "它的日期是 1804 年 1 月 1 日。"),
+          ],
         ),
         ask(
           t("Who declared the independence of Haiti?", "谁宣布了海地独立？"),
           t("Jean-Jacques Dessalines", "让-雅克·德萨林"),
           [t("Toussaint Louverture", "杜桑·卢维杜尔"), t("Napoleon", "拿破仑"), t("Simón Bolívar", "西蒙·玻利瓦尔")],
           t("On January 1, 1804, Dessalines declared the independence of Haiti.", "1804年1月1日，德萨林宣布海地独立。"),
+          [
+            t("Toussaint died in a French prison before then.", "杜桑在那之前死于法国监狱。"),
+            t("Napoleon fought against it.", "拿破仑是反对它的一方。"),
+            t("Bolívar belongs to South America.", "玻利瓦尔属于南美洲的故事。"),
+          ],
         ),
       ],
       [
@@ -430,6 +530,11 @@ By 1825, Bolívar's campaigns had freed the lands that became Venezuela, Colombi
             "The first paragraph says the most powerful positions were given to people born in Europe, so creoles felt like second-class subjects.",
             "第一段说最有权势的职位都给了在欧洲出生的人，所以克里奥尔人觉得自己是二等臣民。",
           ),
+          [
+            t("Freeing slaves is never mentioned for Spain.", "文中没说西班牙解放奴隶。"),
+            t("Napoleon imprisoned their king; he did not become it.", "拿破仑囚禁了国王，并没当他们的国王。"),
+            t("Bolívar travelled in Europe himself.", "玻利瓦尔本人就去过欧洲。"),
+          ],
         ),
         ask(
           t("How did events in Europe help the independence movements begin?", "欧洲的事件如何帮助独立运动兴起？"),
@@ -443,6 +548,11 @@ By 1825, Bolívar's campaigns had freed the lands that became Venezuela, Colombi
             "The second paragraph says that with no legitimate ruler in Madrid after Napoleon imprisoned the king, colonial leaders began to govern themselves.",
             "第二段说拿破仑囚禁国王后，马德里没有了合法统治者，殖民地领导人便开始自治。",
           ),
+          [
+            t("Bolívar came from a creole family, not from Spain.", "玻利瓦尔出身土生白人家庭，不是西班牙派来的。"),
+            t("No sale to Britain is mentioned.", "文中没提卖给英国。"),
+            t("Bolívar read the writers; they did not move.", "玻利瓦尔读过这些作家，他们没搬去。"),
+          ],
         ),
         ask(
           t("Which detail shows that people held conflicting views of Bolívar?", "哪个细节表明人们对玻利瓦尔有相互矛盾的看法？"),
@@ -456,12 +566,22 @@ By 1825, Bolívar's campaigns had freed the lands that became Venezuela, Colombi
             "The last paragraph says he was called the Liberator, yet as he took more power, critics began to call him a dictator.",
             "最后一段说他被称为解放者，但随着他掌握更多权力，批评者开始称他为独裁者。",
           ),
+          [
+            t("Travel is a fact, not a view.", "旅行是事实，不是看法。"),
+            t("Crossing the Andes shows daring, not disagreement.", "翻越安第斯山显示勇气，不显示分歧。"),
+            t("Naming a country is only praise.", "以他命名国家只是赞誉。"),
+          ],
         ),
         ask(
           t("Which country was named in Bolívar's honor?", "哪个国家以玻利瓦尔的名字命名？"),
           t("Bolivia", "玻利维亚"),
           [t("Venezuela", "委内瑞拉"), t("Colombia", "哥伦比亚"), t("Ecuador", "厄瓜多尔")],
           t("Bolivia was named in his honor.", "玻利维亚以他的名字命名。"),
+          [
+            t("Venezuela was his home.", "委内瑞拉是他的家乡。"),
+            t("Colombia is where he surprised the Spanish.", "哥伦比亚是他突袭西班牙军的地方。"),
+            t("Ecuador was freed but not named for him.", "厄瓜多尔获得解放，但不以他命名。"),
+          ],
         ),
       ],
       [
@@ -511,6 +631,11 @@ Defenders of the trade argued that it was essential to Britain's wealth and that
             "The first paragraph says over a million people died during the crossing, which was known as the Middle Passage.",
             "第一段说有一百多万人死于这段航程，它被称为“中间航程”。",
           ),
+          [
+            t("It was a sea crossing, not a road.", "它是横渡大洋，不是道路。"),
+            t("The ban came in 1807.", "禁令是 1807 年的事。"),
+            t("Quakers opposed the trade elsewhere.", "贵格会在别处反对奴隶贸易。"),
+          ],
         ),
         ask(
           t("Why was Olaudah Equiano's book so powerful?", "为什么奥劳达·艾奎亚诺的书如此有力量？"),
@@ -524,6 +649,11 @@ Defenders of the trade argued that it was essential to Britain's wealth and that
             "The passage says Equiano was captured as a child, enslaved for ten years, and described the chains, crowding and cruelty of the slave ships.",
             "文章说艾奎亚诺小时候被掳走，被奴役了十年，他描写了奴隶船上的锁链、拥挤和残酷。",
           ),
+          [
+            t("He was never in Parliament.", "他从没当过议员。"),
+            t("He was enslaved, not an owner.", "他是被奴役者，不是种植园主。"),
+            t("Wedgwood made the medallion.", "徽章是韦奇伍德做的。"),
+          ],
         ),
         ask(
           t("What view did the defenders of the trade hold?", "奴隶贸易的辩护者持什么观点？"),
@@ -537,6 +667,11 @@ Defenders of the trade argued that it was essential to Britain's wealth and that
             "The last paragraph says defenders argued the trade was essential to Britain's wealth and ending it would ruin merchants and ports.",
             "最后一段说辩护者认为这项贸易对英国的财富至关重要，废除它会毁掉商人和港口。",
           ),
+          [
+            t("Paying the enslaved is never discussed.", "文中没讨论给奴隶报酬。"),
+            t("Refusing sugar was the abolitionists' tactic.", "拒买糖是废奴派的做法。"),
+            t("France is never mentioned.", "文中没提法国。"),
+          ],
         ),
       ],
       [
@@ -592,6 +727,11 @@ The question of slavery divided the country until it led to civil war in 1861. I
             "The first paragraph says the cotton gin of 1793 made growing cotton far more profitable.",
             "第一段说1793年发明的轧棉机使种植棉花的利润大大提高。",
           ),
+          [
+            t("The Revolution did not make it legal; it already was.", "革命并没让奴隶制合法，它早已存在。"),
+            t("The Railroad led people north to freedom.", "地下铁路把人引向北方自由之地。"),
+            t("British cotton is never mentioned.", "文中没提英国棉花。"),
+          ],
         ),
         ask(
           t("What was the Underground Railroad?", "什么是“地下铁路”？"),
@@ -605,6 +745,11 @@ The question of slavery divided the country until it led to civil war in 1861. I
             "The second paragraph says a secret network of people who hid and guided these fugitives became known as the Underground Railroad.",
             "第二段说一个隐藏并引导这些逃亡者的秘密网络被称为“地下铁路”。",
           ),
+          [
+            t("It was no real railway.", "它不是真正的铁路。"),
+            t("No law let them travel.", "没有法律准许他们出行。"),
+            t("It existed before the war.", "它在内战之前就存在了。"),
+          ],
         ),
         ask(
           t("What point did Frederick Douglass make in his Fourth of July speech?", "弗雷德里克·道格拉斯在七四演讲中提出了什么观点？"),
@@ -618,6 +763,11 @@ The question of slavery divided the country until it led to civil war in 1861. I
             "The passage says Douglass answered that the holiday revealed the gross injustice and cruelty of which the enslaved were the constant victims.",
             "文章说道格拉斯回答，这个节日暴露了被奴役者一直遭受的严重不公和残酷。",
           ),
+          [
+            t("He did not ask to move the date.", "他没要求改日期。"),
+            t("He said it showed their suffering, not a reason to celebrate.", "他说这一天显出奴隶的苦难，而非让他们庆祝。"),
+            t("Slavery outlasted the Revolution until 1865.", "奴隶制在革命后一直延续到 1865 年。"),
+          ],
         ),
       ],
       [

@@ -52,6 +52,14 @@ Notice how the final couplet turns the poem. The slow clock, which seemed carele
             "The passage says the most important feature is the turn, sometimes called the volta: the moment when the poem changes direction.",
             "文章说，最重要的特征是转折，有时称为 volta：诗歌改变方向的时刻。",
           ),
+          [
+            t(
+              "The first line only opens the poem; the volta is the later moment when the poem changes direction.",
+              "第一行只是开头；volta 是后面诗意转向的那一刻。",
+            ),
+            t("The poet's name has nothing to do with it; the volta is a turn inside the poem.", "这与诗人名字无关；volta 是诗中的转折。"),
+            t("Rhyme is not the point; the volta is where the poem changes direction.", "押韵不是重点；volta 是诗意转向之处。"),
+          ],
         ),
         ask(
           t("How is an English sonnet arranged?", "英式十四行诗是怎样编排的？"),
@@ -65,6 +73,14 @@ Notice how the final couplet turns the poem. The slow clock, which seemed carele
             "The second paragraph says the English sonnet has three groups of four lines followed by a couplet.",
             "第二段说，英式十四行诗由三组四行诗加一个对句构成。",
           ),
+          [
+            t("Eight lines and then six is the Italian sonnet, not the English one.", "先八行后六行是意大利体，不是英国体。"),
+            t(
+              "The passage describes groups of four and a final couplet, not seven rhyming pairs.",
+              "文中说的是四行一组加一个对句，不是七对押韵的诗行。",
+            ),
+            t("Sonnets do rhyme; the English one ends on two rhyming lines.", "十四行诗是押韵的；英国体以两行押韵结尾。"),
+          ],
         ),
         ask(
           t("What does the final couplet of the example sonnet reveal?", "示例十四行诗的最后对句揭示了什么？"),
@@ -78,12 +94,31 @@ Notice how the final couplet turns the poem. The slow clock, which seemed carele
             "The couplet says some clocks are kind and let the ones we love fall less behind; the slow clock becomes an act of love.",
             "对句说，有些钟是仁慈的，让我们所爱的人不至于落后太远；慢钟成了一种爱的表现。",
           ),
+          [
+            t(
+              'Nothing suggests she cannot read it; she keeps it slow on purpose and says "Leave it slow."',
+              "文中没说她看不懂钟；她是故意让钟慢，还说“就让它慢着”。",
+            ),
+            t(
+              "No one buys a new clock; the speaker once set the old one, and she turned it back.",
+              "没人买新钟；说话人曾把旧钟调准，她又拨了回去。",
+            ),
+            t('No crime happened; she only laughed "as if a crime had been committed."', "并没有犯罪；她只是笑着，“仿佛有人犯了罪”。"),
+          ],
         ),
         ask(
           t("What does the word sonnet originally mean?", "sonnet 这个词原意是什么？"),
           t("Little song", "小歌"),
           [t("Love letter", "情书"), t("Fourteen lines", "十四行"), t("Turning point", "转折点")],
           t('The word sonnet comes from an Italian word meaning "little song."', "sonnet 一词来自意大利语，意为“小歌”。"),
+          [
+            t(
+              'Petrarch wrote sonnets to Laura, but the word itself means "little song."',
+              "彼特拉克写十四行诗给劳拉，但这个词本义是“小歌”。",
+            ),
+            t("Fourteen lines is the form's length, not what the word means.", "十四行是诗体的长度，不是词的本义。"),
+            t('The turning point is the volta; the word sonnet means "little song."', "转折点叫 volta；sonnet 一词的意思是“小歌”。"),
+          ],
         ),
       ],
       ["Italian", "Italy", "Petrarch", "Laura", "English", "Shakespeare", "da-DUM", "she'd"],
@@ -136,6 +171,20 @@ Notice how much is left unsaid. We never learn what happened to the husband, or 
             "The second paragraph says this pattern is easy to remember and to sing, which suited stories passed on by listening.",
             "第二段说，这种格律便于记忆和歌唱，适合靠聆听传播的故事。",
           ),
+          [
+            t(
+              "Ballads belonged to ordinary people and were passed from singer to singer, not written by experts.",
+              "民谣属于普通人，口口相传，不是专家写的。",
+            ),
+            t(
+              "Ballad meter has a clear pattern of four and three stresses, so it has strong rhythm.",
+              "民谣格律有四重音、三重音的清晰模式，节奏很强。",
+            ),
+            t(
+              "Ballads told news, gossip and stories of love and shipwrecks, not only prayers.",
+              "民谣讲新闻、闲话以及爱情和海难故事，不只是祈祷。",
+            ),
+          ],
         ),
         ask(
           t("What is the refrain of the example ballad?", "示例民谣的叠句是什么？"),
@@ -149,6 +198,17 @@ Notice how much is left unsaid. We never learn what happened to the husband, or 
             "A refrain returns at the end of each stanza; this line ends all four stanzas.",
             "叠句会在每一节末尾重复出现；这一行是四节的共同结尾。",
           ),
+          [
+            t("This line opens the first stanza; it does not return after each stanza.", "这一句是第一节的开头，并不在每节后重复。"),
+            t(
+              "This phrase appears once, in the third stanza, about how long she kept the lamp burning.",
+              "这个短语只在第三节出现一次，说的是她点灯的时长。",
+            ),
+            t(
+              "This phrase ends the old man's answer in the second stanza and is not repeated.",
+              "这个短语是第二节老人回答的结尾，没有重复。",
+            ),
+          ],
         ),
         ask(
           t("What effect does the unchanged refrain have, according to the passage?", "根据文章，一成不变的叠句产生了什么效果？"),
@@ -162,12 +222,28 @@ Notice how much is left unsaid. We never learn what happened to the husband, or 
             "The last paragraph says the refrain, repeated unchanged, makes the sea seem patient and indifferent to human grief.",
             "最后一段说，一成不变的叠句让大海显得耐心而对人类的悲伤漠然。",
           ),
+          [
+            t("The passage says we never learn what happened to the husband.", "文中说我们始终不知道丈夫怎么了。"),
+            t(
+              "The refrain makes the sea seem indifferent to grief, which is the opposite of funny.",
+              "叠句让大海显得对悲伤漠不关心，一点也不好笑。",
+            ),
+            t("The wife is never named; Lynn is the name of the missing boat.", "妻子从未被说出名字；Lynn 是失踪那条船的名字。"),
+          ],
         ),
         ask(
           t("How long did the fisher's wife keep her lamp burning?", "渔夫的妻子让灯亮了多久？"),
           t("Seven years", "七年"),
           [t("Seven nights", "七夜"), t("Until dawn", "直到黎明"), t("Ten years", "十年")],
           t("She lit a lamp in her window and kept it burning bright, for seven years.", "她在窗前点了一盏灯，让它亮了七年。"),
+          [
+            t('The ballad repeats "for seven years," not seven nights.', "民谣反复说的是“七年”，不是七夜。"),
+            t(
+              "Dawn is when a boat came in at the end; she kept the lamp burning far longer.",
+              "黎明是最后有船回来的时候；她点灯的时间长得多。",
+            ),
+            t("Ten is the number of boats she counted, not the years.", "十是她数到的船数，不是年数。"),
+          ],
         ),
       ],
       ["Lynn", "Raven", "Rock"],
@@ -210,6 +286,11 @@ In each, two images meet. A lonely bus and a love song; summer heat and a snowma
             "The first paragraph says the opening verse of a chain of linked verses gradually became a poem in its own right.",
             "第一段说，连句诗的开头一节逐渐成为一首独立的诗。",
           ),
+          [
+            t("Sonnets came from Italy; the haiku grew out of Japanese linked verse.", "十四行诗来自意大利；俳句源于日本的连句。"),
+            t("Songs at markets are how ballads spread, not how the haiku began.", "集市上的歌是民谣的传播方式，不是俳句的起源。"),
+            t("The haiku came from the opening verse of linked poems, not from plays.", "俳句来自连句的首句，不是来自戏剧。"),
+          ],
         ),
         ask(
           t("Why do many English-language poets use fewer than seventeen syllables?", "为什么许多英语诗人使用少于十七个音节？"),
@@ -223,6 +304,17 @@ In each, two images meet. A lonely bus and a love song; summer heat and a snowma
             "The second paragraph says English syllables carry more sound than Japanese units, and a strict count can make a poem feel padded.",
             "第二段说，英语音节比日语音节承载更多声音，严格计数会让诗显得冗余。",
           ),
+          [
+            t(
+              "English has syllables; the point is that they carry more sound than Japanese units.",
+              "英语当然有音节；关键是它们比日语音拍含有更多声音。",
+            ),
+            t("Basho made the haiku an art; he forbade nothing about length.", "芭蕉让俳句成为艺术，并没有禁止写长。"),
+            t(
+              "Selling poems is never mentioned; the reason given is that a strict count feels padded.",
+              "文中没提卖诗；给出的理由是死数音节会显得凑字。",
+            ),
+          ],
         ),
         ask(
           t("In the third haiku, what two things are placed side by side?", "在第三首俳句中，哪两样东西被并置在一起？"),
@@ -236,12 +328,28 @@ In each, two images meet. A lonely bus and a love song; summer heat and a snowma
             "The last paragraph names the pairs: in the third poem, a coat and an absence, since the coat still holds the shape of his arms.",
             "最后一段点出了各组意象：第三首中是外套与缺席，因为外套仍保留着他手臂的形状。",
           ),
+          [
+            t(
+              "The bus belongs to the first haiku and the snowman to the second, not the third.",
+              "公交车属于第一首，雪人属于第二首，都不是第三首。",
+            ),
+            t(
+              "Cherry blossoms and snow are examples of season words, not images in the third haiku.",
+              "樱花和雪是季语的例子，不是第三首里的意象。",
+            ),
+            t("The love song is in the first haiku and the blue chalk in the second.", "情歌在第一首里，蓝粉笔在第二首里。"),
+          ],
         ),
         ask(
           t("Which poet made the haiku an art in the seventeenth century?", "哪位诗人在十七世纪把俳句变成了艺术？"),
           t("Matsuo Basho", "松尾芭蕉"),
           [t("Petrarch", "彼特拉克"), t("Pablo Neruda", "巴勃罗·聂鲁达"), t("Katsushika Hokusai", "葛饰北斋")],
           t("In the seventeenth century, the poet Matsuo Basho made it an art.", "十七世纪，诗人松尾芭蕉把它变成了一门艺术。"),
+          [
+            t("Petrarch made the sonnet famous in Italy, not the haiku.", "彼特拉克让十四行诗在意大利出名，与俳句无关。"),
+            t("Neruda wrote odes to everyday things; he is not linked with the haiku.", "聂鲁达写日常事物的颂歌，与俳句无关。"),
+            t("Hokusai is not named in the passage; Matsuo Basho is.", "文中没提北斋，提的是松尾芭蕉。"),
+          ],
         ),
       ],
       ["Japan", "Japanese", "Matsuo", "Basho", "English"],
@@ -286,6 +394,20 @@ The poem contains no direct statement of grief. Instead, the toolbox, the gate a
             "The passage defines consolation as some kind of comfort, such as the belief that the dead live on in memory.",
             "文章把 consolation 定义为某种安慰，比如相信逝者活在记忆中。",
           ),
+          [
+            t(
+              "Elegies praise the dead person's qualities; consolation is not a list of faults.",
+              "挽歌赞美逝者的品质；consolation 不是列举缺点。",
+            ),
+            t(
+              "Anger may come at the start of an elegy; consolation is the comfort that comes at the end.",
+              "愤怒可能出现在挽歌开头；consolation 是结尾的安慰。",
+            ),
+            t(
+              "Meter comes up in the Greek history; consolation means comfort after a loss.",
+              "格律出现在希腊的历史里；consolation 指失去后的安慰。",
+            ),
+          ],
         ),
         ask(
           t("Why can a small detail carry more grief than a statement of grief?", "为什么一个小细节比直接表达悲伤更能传达悲伤？"),
@@ -299,6 +421,20 @@ The poem contains no direct statement of grief. Instead, the toolbox, the gate a
             "The third paragraph says a detail makes the reader feel the loss instead of being told about it.",
             "第三段说，细节让读者感受到失去，而不是被告知。",
           ),
+          [
+            t(
+              "Details are not sad in themselves; a habit or a joke becomes painful because of the loss.",
+              "细节本身不悲伤；习惯或玩笑因为失去才令人心痛。",
+            ),
+            t(
+              "Length is never the reason; the detail works because it lets readers feel the loss.",
+              "原因与篇幅无关；细节让读者亲身感受到失去。",
+            ),
+            t(
+              "Nothing forbids stating grief; the passage only says a detail can be stronger.",
+              "并没有规定不许直说悲伤；文中只说细节可能更有力。",
+            ),
+          ],
         ),
         ask(
           t(
@@ -315,6 +451,17 @@ The poem contains no direct statement of grief. Instead, the toolbox, the gate a
             "The speaker has the toolbox but cannot fix anything except its lid, which closes on what the uncle left: comfort and loss together.",
             "说话者拥有这个工具箱，却只会修它的盖子，而盖子合上的正是叔叔留下的东西：安慰与失去并存。",
           ),
+          [
+            t("The lid still closes every time; the toolbox is not broken.", "盖子每次都能合上；工具箱没坏。"),
+            t(
+              'The uncle fixed things "never for money," and money has nothing to do with the box.',
+              "舅舅修东西“从不收钱”，工具箱与钱无关。",
+            ),
+            t(
+              "The neighbor's fence was something he fixed; the toolbox now belongs to the speaker.",
+              "邻居的篱笆是他修过的东西；工具箱现在属于说话人。",
+            ),
+          ],
         ),
         ask(
           t("What did the uncle in the elegy always carry?", "挽歌里的叔叔总是带着什么？"),
@@ -324,6 +471,11 @@ The poem contains no direct statement of grief. Instead, the toolbox, the gate a
             "He fixed things never for money, always with the same gray toolbox and the same bad joke.",
             "他修东西从不收钱，总带着同一个灰色工具箱，讲同一个蹩脚笑话。",
           ),
+          [
+            t("He took a radio apart and put it back; he did not carry it around.", "他拆过收音机又装回去，并没有随身带着。"),
+            t("The bicycle chain is one of the things he fixed, not something he carried.", "自行车链是他修过的东西，不是随身带的。"),
+            t("He fixed the church's furnace; a church key is never mentioned.", "他修过教堂的暖炉；文中没提教堂钥匙。"),
+          ],
         ),
       ],
       ["Greece"],
@@ -368,6 +520,17 @@ The ode praises a humble object, and in the last lines the sneakers become a les
             "The third paragraph says Neruda wrote odes to his socks, an onion, salt and a tomato, praising the ordinary.",
             "第三段说，聂鲁达为他的袜子、洋葱、盐和番茄写颂歌，赞美平凡之物。",
           ),
+          [
+            t(
+              "Subjects like heroes and gods belonged to older odes; Neruda turned to everyday things.",
+              "英雄和神是旧颂歌的题材；聂鲁达转向日常事物。",
+            ),
+            t(
+              "Odes, his included, address their subjects directly; the passage never says he stopped.",
+              "颂歌，包括他的，都直接对对象说话；文中没说他不这么做。",
+            ),
+            t("Death is the subject of elegies; Neruda praised socks, onions and salt.", "死亡是挽歌的主题；聂鲁达赞美袜子、洋葱和盐。"),
+          ],
         ),
         ask(
           t("What is apostrophe, as the passage uses the word?", "文章中使用的 apostrophe 一词是什么意思？"),
@@ -381,6 +544,17 @@ The ode praises a humble object, and in the last lines the sneakers become a les
             "The fourth paragraph defines apostrophe as a figure of speech in which the speaker addresses something that cannot answer.",
             "第四段把 apostrophe 定义为一种修辞手法，即说话者对无法回应的事物说话。",
           ),
+          [
+            t(
+              "That is the punctuation mark with the same name, not the figure of speech in the passage.",
+              "那是同名的标点符号，不是文中说的修辞。",
+            ),
+            t("Apostrophe is about whom the speaker addresses, not about rhyme.", "呼语讲的是说话人对谁说话，与押韵无关。"),
+            t(
+              "Contests belong to Pindar's odes; apostrophe means addressing something that cannot answer.",
+              "比赛属于品达的颂歌；呼语是对不会回答的对象说话。",
+            ),
+          ],
         ),
         ask(
           t("What lesson do the sneakers come to represent?", "这双运动鞋最终代表了什么启示？"),
@@ -394,12 +568,28 @@ The ode praises a humble object, and in the last lines the sneakers become a les
             "The sneakers do not care whether the speaker lost or won; they only ask to be taken somewhere again.",
             "运动鞋不在乎说话者是输是赢；它们只求再次被带往某个地方。",
           ),
+          [
+            t("The poem praises the old gray sneakers; it never suggests buying new ones.", "诗赞美那双灰色旧鞋，从没建议买新鞋。"),
+            t(
+              "The sneakers carried the speaker to a lost race and a won one; they do not say stop racing.",
+              "鞋子陪说话人输过也赢过比赛，并没说别再比赛。",
+            ),
+            t(
+              '"You do not care which" means winning does not matter to them, the opposite of this.',
+              "“你不在乎是哪一次”说明输赢对它们不重要，与此相反。",
+            ),
+          ],
         ),
         ask(
           t("Whom did Pindar's odes honor?", "品达的颂歌赞颂的是谁？"),
           t("Winners of athletic contests", "体育比赛的获胜者"),
           [t("Kings who died in war", "战死的国王"), t("Ordinary everyday objects", "日常的普通物品"), t("The gods of the sea", "海神")],
           t("The poet Pindar wrote odes honoring the winners of athletic contests.", "诗人品达写颂歌赞颂体育比赛的获胜者。"),
+          [
+            t("Kings who died in war are not mentioned; Pindar honored athletic winners.", "文中没提战死的国王；品达赞颂的是运动会冠军。"),
+            t("Everyday objects are Neruda's subjects, much later than Pindar.", "日常物品是聂鲁达的题材，比品达晚得多。"),
+            t("Sea gods are never mentioned; Pindar wrote for winners of contests.", "文中没提海神；品达为比赛的获胜者写诗。"),
+          ],
         ),
       ],
       ["Greece", "Pindar", "English", "Romantic", "John", "Keats", "Greek", "Chilean", "Pablo", "Neruda", "West", "Wind"],
@@ -439,6 +629,17 @@ When you read a poem, notice where its lines end. Ask what word sits at the end 
             "The passage says that when the sentence continues past the end of the line, it is called enjambment.",
             "文章说，当句子越过行尾继续下去时，这称为跨行。",
           ),
+          [
+            t(
+              "A line ending at a natural pause is end-stopped, the opposite of enjambment.",
+              "在自然停顿处结束的诗行叫行尾停顿，与跨行相反。",
+            ),
+            t(
+              "Enjambment is about how a sentence crosses line breaks, so the poem must have lines.",
+              "跨行讲的是句子越过断行，所以诗必须分行。",
+            ),
+            t("Enjambment concerns sentences and lines, not rhyme.", "跨行涉及句子和诗行，与押韵无关。"),
+          ],
         ),
         ask(
           t("Why does the word alone gain weight in the example?", "为什么在例子中 alone 一词分量很重？"),
@@ -452,6 +653,14 @@ When you read a poem, notice where its lines end. Ask what word sits at the end 
             "The passage says the single word alone, set on its own line, gains enormous weight.",
             "文章说，单独一行的 alone 一词获得了极大的分量。",
           ),
+          [
+            t(
+              "The word is printed normally; its weight comes from standing alone on its line.",
+              "这个词是正常印刷的；它的分量来自独占一行。",
+            ),
+            t('"Alone" does not rhyme with the first line, "leave."', "alone 与第一行的 leave 并不押韵。"),
+            t('"Alone" appears only once, at the end.', "alone 只出现一次，在最后。"),
+          ],
         ),
         ask(
           t("Why does the line break do even more work in free verse?", "为什么在自由诗中断行的作用更大？"),
@@ -465,6 +674,11 @@ When you read a poem, notice where its lines end. Ask what word sits at the end 
             "The passage says that in free verse the line break does even more work, because there is no pattern to rely on.",
             "文章说，在自由诗中断行作用更大，因为没有模式可以依赖。",
           ),
+          [
+            t("Free verse does have lines; the passage says its line breaks do more work.", "自由诗是分行的；文中说它的断行更费功夫。"),
+            t("Free verse can be long; Whitman wrote long, flowing lines.", "自由诗可以很长；惠特曼就写长而舒展的诗行。"),
+            t("Whitman used free verse, but the passage never says he invented it.", "惠特曼写过自由诗，但文中没说是他发明的。"),
+          ],
         ),
         ask(
           t("What is an end-stopped line?", "什么是行末停顿的诗行？"),
@@ -478,6 +692,14 @@ When you read a poem, notice where its lines end. Ask what word sits at the end 
             "When a line ends at a natural pause, such as the end of a sentence or a phrase, it is called end-stopped.",
             "当诗行在自然停顿处结束，如句子或短语末尾，就叫行末停顿。",
           ),
+          [
+            t("Rhyme has nothing to do with it; an end-stopped line stops at a pause.", "与押韵无关；行尾停顿指在停顿处结束。"),
+            t(
+              'A one-word line like "alone" is shown with enjambment, not as the definition of end-stopped.',
+              "像 alone 这样的单字行出现在跨行的例子里，不是行尾停顿的定义。",
+            ),
+            t("Any line can be end-stopped, not only the last one.", "任何一行都可以是行尾停顿，不只是最后一行。"),
+          ],
         ),
       ],
       ["American", "Walt", "Whitman"],
@@ -512,6 +734,14 @@ Read aloud, it falls into five iambs: the WIND / came DOWN / the VAL / ley LIKE 
             "The second paragraph defines the iamb as an unstressed syllable followed by a stressed one, as in today.",
             "第二段把抑扬格音步定义为非重读音节后接重读音节，如 today。",
           ),
+          [
+            t("Stressed then unstressed is a trochee, the reverse of an iamb.", "先重后轻是扬抑格，与抑扬格相反。"),
+            t("Two unstressed syllables and a stress is an anapest.", "两个轻音加一个重音是抑抑扬格。"),
+            t(
+              "An iamb is one foot of two syllables; a line of five iambs has ten syllables.",
+              "抑扬格是两个音节的一个音步；五个音步的一行是十个音节。",
+            ),
+          ],
         ),
         ask(
           t("Why might iambic pentameter have lasted so long in English poetry?", "为什么抑扬格五音步在英语诗歌中能流传这么久？"),
@@ -525,6 +755,17 @@ Read aloud, it falls into five iambs: the WIND / came DOWN / the VAL / ley LIKE 
             "The second paragraph says it is close to the natural rhythm of English speech, which may explain why it has lasted.",
             "第二段说，它接近英语口语的自然节奏，这或许能解释它为何经久不衰。",
           ),
+          [
+            t(
+              "It is the meter of Shakespeare's plays, but the passage never says other meters were banned.",
+              "它是莎士比亚戏剧的格律，但文中没说别的格律被禁止。",
+            ),
+            t("Japan is linked with the haiku, not with iambic pentameter.", "与日本相关的是俳句，不是五步抑扬格。"),
+            t(
+              "Every iamb ends on a stressed syllable, so the meter is full of stresses.",
+              "每个抑扬格都以重音结尾，所以这种格律满是重音。",
+            ),
+          ],
         ),
         ask(
           t("Why might a skilled poet break the regular pattern of a meter?", "为什么一位高明的诗人可能会打破格律的固定模式？"),
@@ -538,6 +779,14 @@ Read aloud, it falls into five iambs: the WIND / came DOWN / the VAL / ley LIKE 
             "The fourth paragraph says a skilled poet varies the pattern to create emphasis, as the change catches the reader's ear.",
             "第四段说，高明的诗人会改变模式来形成强调，因为这种变化会吸引读者的耳朵。",
           ),
+          [
+            t(
+              "The passage calls this poet skilled; the variation is deliberate, not a failure to count.",
+              "文中说这是高明的诗人；变化是有意为之，不是不会数。",
+            ),
+            t("Singing is never mentioned; the change is meant to catch the ear.", "文中没提唱；变化是为了引起听觉注意。"),
+            t("The change draws attention to a word, the opposite of hiding meaning.", "变化是为了突出一个词，与隐藏意思相反。"),
+          ],
         ),
       ],
       [
@@ -602,6 +851,11 @@ Neither form is better. The quatrain offers the comfort of order and the authori
             "The passage says both poems describe a river that is indifferent to human feelings.",
             "文章说，两首诗都描写了一条对人类感情漠然的河。",
           ),
+          [
+            t("Neither poem calls the river dangerous; both say it does not care about people.", "两首诗都没说河危险；都说它不在乎人。"),
+            t("Drying up is never mentioned; the river has run for a hundred years.", "文中没提干涸；这条河已经流了一百年。"),
+            t('Its speed never changes; the quatrain says "it does not hurry."', "它的速度没变；四行诗说“它不慌不忙”。"),
+          ],
         ),
         ask(
           t("How does the quatrain's form match its subject?", "四行诗的形式如何与其主题相配？"),
@@ -615,6 +869,14 @@ Neither form is better. The quatrain offers the comfort of order and the authori
             "The passage says the regular rhythm imitates the steady flow, and the rhymes make the lines feel as permanent as the river.",
             "文章说，规律的节奏模仿稳定的水流，韵脚让诗行显得像河流一样恒久。",
           ),
+          [
+            t("Broken lines belong to the free-verse poem, and no river dries up.", "断行属于那首自由诗，河也没有干涸。"),
+            t(
+              "The quatrain has a regular rhythm; the passage compares it to steady flow, not a still pond.",
+              "四行诗节奏规则；文中把它比作稳定的流水，不是静止的池塘。",
+            ),
+            t("The rhymes make the lines feel fixed and permanent, not funny.", "这些韵让诗行显得固定、永恒，并不好笑。"),
+          ],
         ),
         ask(
           t("What does the comparison of a poet's form to a painter's brush suggest?", "把诗人选择形式比作画家选择画笔，暗示了什么？"),
@@ -628,6 +890,14 @@ Neither form is better. The quatrain offers the comfort of order and the authori
             "The last paragraph says neither form is better and that the choice will shape everything the reader feels.",
             "最后一段说，两种形式没有高下之分，形式的选择会影响读者的全部感受。",
           ),
+          [
+            t("The brush is only a comparison; poets are not told to paint.", "画笔只是比喻，并没让诗人去画画。"),
+            t("The passage says neither form is better.", "文中说两种形式没有优劣。"),
+            t(
+              "The comparison says the choice shapes everything the reader feels, so form matters a great deal.",
+              "比喻说明选择会影响读者的一切感受，形式非常重要。",
+            ),
+          ],
         ),
       ],
     ),

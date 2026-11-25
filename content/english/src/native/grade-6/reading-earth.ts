@@ -42,6 +42,11 @@ Still, most scientists rejected the idea. Wegener could not explain what force w
             "The second paragraph explains that Pangaea broke apart and its pieces slowly drifted, and then says he called this idea continental drift.",
             "第二段解释说盘古大陆分裂了，碎块慢慢漂移，然后说他把这个观点称为大陆漂移。",
           ),
+          [
+            t("Rivers carrying mud is never part of Wegener's idea.", "河流带走泥沙与魏格纳的观点无关。"),
+            t("The coastline shape was a clue, not the idea itself.", "海岸线的形状是线索，不是观点本身。"),
+            t("Mesosaurus is a fossil, used as evidence.", "中龙是化石，被用作证据。"),
+          ],
         ),
         ask(
           t("Why do the Mesosaurus fossils support Wegener's idea?", "为什么中龙化石支持魏格纳的观点？"),
@@ -55,6 +60,11 @@ Still, most scientists rejected the idea. Wegener could not explain what force w
             "The third paragraph says Mesosaurus lived in fresh water and could not have swum across an ocean, yet appears in both Brazil and southern Africa.",
             "第三段说中龙生活在淡水中，不可能游过大洋，却在巴西和非洲南部都有发现。",
           ),
+          [
+            t("It lived in fresh water and could not have swum an ocean.", "它生活在淡水里，不可能游过大洋。"),
+            t("The fossils were in Brazil and southern Africa.", "化石在巴西和非洲南部。"),
+            t("Dry oceans were never claimed.", "从没说过海洋曾经干涸。"),
+          ],
         ),
         ask(
           t("Why did most scientists reject Wegener's idea at first?", "为什么大多数科学家起初反对魏格纳的观点？"),
@@ -68,12 +78,22 @@ Still, most scientists rejected the idea. Wegener could not explain what force w
             "The last paragraph says Wegener could not explain what force was strong enough to move whole continents.",
             "最后一段说，魏格纳无法解释是什么力量强大到足以推动整块大陆。",
           ),
+          [
+            t("He did show fossil evidence.", "他确实拿出了化石证据。"),
+            t("The coasts do look like they fit.", "海岸看起来确实能拼合。"),
+            t("Hiding maps is never mentioned.", "文中从没说他不肯公开地图。"),
+          ],
         ),
         ask(
           t("In what year did Wegener offer his idea?", "魏格纳是哪一年提出他的观点的？"),
           t("In 1912", "1912年"),
           [t("In 1930", "1930年"), t("In the 1960s", "20世纪60年代"), t("In 1801", "1801年")],
           t("In 1912, a German scientist named Alfred Wegener offered an answer.", "1912年，德国科学家阿尔弗雷德·魏格纳提出了一个解释。"),
+          [
+            t("1930 is the year he died.", "1930 年是他去世的年份。"),
+            t("The 1960s is when his idea returned.", "1960 年代是他的观点重新被提起的时候。"),
+            t("1801 is never mentioned.", "文中从没提 1801 年。"),
+          ],
         ),
       ],
       ["America", "Africa", "Alfred", "Wegener", "Wegener's", "Pangaea", "Mesosaurus", "Brazil", "Greenland"],
@@ -104,6 +124,11 @@ The crust and the top of the mantle together are broken into giant pieces called
             "The first paragraph says scientists study earthquake waves, which change speed and direction as they pass through different materials.",
             "第一段说，科学家研究地震波，地震波穿过不同物质时会改变速度和方向。",
           ),
+          [
+            t("The deepest hole reaches only twelve kilometers.", "最深的钻孔只有十二公里。"),
+            t("No camera or volcano is used.", "文中没有摄像机或火山。"),
+            t("The apple's skin compares the crust; it is not measured.", "苹果皮是在比喻地壳，并不是被测量的东西。"),
+          ],
         ),
         ask(
           t("What clue helps you understand what the mantle is like?", "什么线索帮助你理解地幔是什么样的？"),
@@ -117,6 +142,11 @@ The crust and the top of the mantle together are broken into giant pieces called
             "The third paragraph explains that the mantle is solid but flows slowly, rather like a thick toffee that bends instead of breaking.",
             "第三段解释说，地幔是固态的，但会缓慢流动，就像会弯曲而不会断裂的浓稠太妃糖。",
           ),
+          [
+            t("The skin of an apple describes the crust.", "苹果皮描写的是地壳。"),
+            t("The magnetic field comes from the outer core.", "磁场来自外核。"),
+            t("Liquid metal is the outer core.", "液态金属是外核。"),
+          ],
         ),
         ask(
           t("Why does the inner core stay solid even though it is so hot?", "内核这么热，为什么仍然保持固态？"),
@@ -130,12 +160,22 @@ The crust and the top of the mantle together are broken into giant pieces called
             "The fourth paragraph says the inner core stays solid only because of the enormous pressure of all the layers above it.",
             "第四段说，内核之所以保持固态，只是因为上面所有层的巨大压力。",
           ),
+          [
+            t("It is as hot as the sun's surface, not cold.", "它和太阳表面一样热，并不冷。"),
+            t("The magnetic field does not freeze anything.", "磁场不会冻结任何东西。"),
+            t("It is at the center, farthest from the crust.", "它在中心，离地壳最远。"),
+          ],
         ),
         ask(
           t("What is the outer core made of?", "外核是由什么构成的？"),
           t("Liquid metal, mostly iron and nickel", "液态金属，主要是铁和镍"),
           [t("Solid rock", "固态岩石"), t("Thin, rocky crust", "薄薄的岩石地壳"), t("Water and ice", "水和冰")],
           t("The outer core is liquid metal, mostly iron and nickel.", "外核是液态金属，主要是铁和镍。"),
+          [
+            t("Solid rock is the mantle.", "固态岩石是地幔。"),
+            t("The rocky skin is the crust.", "岩石外皮是地壳。"),
+            t("No water or ice is in the core.", "地核里没有水或冰。"),
+          ],
         ),
       ],
     ),
@@ -163,6 +203,11 @@ At a transform boundary, two plates slide past each other sideways. They do not 
             "The second paragraph says that at a divergent boundary two plates move apart and hot rock rises, cools and forms new crust.",
             "第二段说，在离散型边界，两个板块分开，炽热的岩石上升、冷却，形成新的地壳。",
           ),
+          [
+            t("Sliding sideways is a transform boundary.", "横向滑过是转换边界。"),
+            t("Sinking beneath is subduction at a convergent boundary.", "俯冲到下方是汇聚边界的俯冲。"),
+            t("Crumpling upward is two continents colliding.", "挤压隆起是两块大陆相撞。"),
+          ],
         ),
         ask(
           t("Which clue tells you what subduction means?", "哪条线索告诉你 subduction 的意思？"),
@@ -176,6 +221,11 @@ At a transform boundary, two plates slide past each other sideways. They do not 
             "The passage first describes the heavier ocean plate sliding beneath the other and sinking, then says: This process is called subduction.",
             "文章先描述较重的大洋板块滑到另一个板块下面并下沉，然后说：这个过程叫作俯冲。",
           ),
+          [
+            t("Fingernails describe how fast plates move.", "指甲比喻的是板块移动的速度。"),
+            t("San Andreas is a transform boundary example.", "圣安德烈亚斯是转换边界的例子。"),
+            t("The first paragraph names only plate boundaries.", "第一段只提到板块边界。"),
+          ],
         ),
         ask(
           t("Why do the Himalayas keep growing?", "为什么喜马拉雅山脉还在长高？"),
@@ -189,6 +239,11 @@ At a transform boundary, two plates slide past each other sideways. They do not 
             "The third paragraph says that when two continental plates collide, the crust crumples and is pushed upward, and this uplift created the Himalayas, which are still growing.",
             "第三段说，两个大陆板块碰撞时，地壳被挤皱并向上推起，这种抬升造就了仍在长高的喜马拉雅山脉。",
           ),
+          [
+            t("A rift is where plates move apart.", "裂谷是板块分开的地方。"),
+            t("Two continental plates meet there, and neither sinks.", "那里是两块大陆板块相遇，都不下沉。"),
+            t("Sliding sideways builds no mountains.", "横向滑动不会造山。"),
+          ],
         ),
         ask(
           t("How fast do tectonic plates move?", "构造板块移动得有多快？"),
@@ -198,6 +253,11 @@ At a transform boundary, two plates slide past each other sideways. They do not 
             "They move only a few centimeters a year, about as fast as your fingernails grow.",
             "它们每年只移动几厘米，和指甲生长的速度差不多。",
           ),
+          [
+            t("Meters a day is far too fast.", "每天几米太快了。"),
+            t("Kilometers a year is far too fast.", "每年几公里太快了。"),
+            t("They move, slowly.", "它们在移动，只是很慢。"),
+          ],
         ),
       ],
       ["Atlantic", "Africa", "Himalayas", "San", "Andreas", "California"],
@@ -226,6 +286,11 @@ Many millions of people live along the Ring of Fire, in cities such as Tokyo, Ma
             "The first paragraph describes the horseshoe of volcanoes around the edges of the Pacific Ocean and says this curve is known as the Ring of Fire.",
             "第一段描述了环绕太平洋边缘的马蹄形火山带，并说这条弧线被称为火环。",
           ),
+          [
+            t("It is a long chain, not one volcano.", "它是一长串，不是一座火山。"),
+            t("It circles the Pacific, not the Atlantic.", "它环绕太平洋，不是大西洋。"),
+            t("No farmers' fires are involved.", "与农民生火无关。"),
+          ],
         ),
         ask(
           t("Why are there so many volcanoes along the Ring of Fire?", "为什么火环上有这么多火山？"),
@@ -239,6 +304,11 @@ Many millions of people live along the Ring of Fire, in cities such as Tokyo, Ma
             "The third paragraph explains that the heavy ocean plate is forced down, heats up and helps rock above it melt, and the melted rock rises to feed volcanoes.",
             "第三段解释说，较重的大洋板块被迫下沉、升温，促使上方的岩石熔化，熔化的岩石上升，形成火山。",
           ),
+          [
+            t("The rock melts from a sinking plate, not boiling water.", "岩石熔化是因为板块下沉，不是海水沸腾。"),
+            t("The plates there are colliding.", "那里的板块在碰撞。"),
+            t("Cities do not make volcanoes.", "城市不会造出火山。"),
+          ],
         ),
         ask(
           t(
@@ -255,12 +325,22 @@ Many millions of people live along the Ring of Fire, in cities such as Tokyo, Ma
             "The passage describes a pattern on a world map; a map with the volcanoes marked would show that pattern at a glance.",
             "文章描述的是世界地图上的一种分布规律；标出火山的地图能让人一眼看出这种规律。",
           ),
+          [
+            t("A glossary defines words but shows no location.", "词汇表解释词语，但不显示位置。"),
+            t("A heading does not show where it is.", "标题不能显示它在哪里。"),
+            t("One street cannot show a 40,000-kilometer curve.", "一条街道无法显示四万公里的弧线。"),
+          ],
         ),
         ask(
           t("What share of the world's earthquakes happen along the Ring of Fire?", "世界上多大比例的地震发生在环太平洋火山带？"),
           t("About nine out of every ten", "大约十分之九"),
           [t("About one in ten", "大约十分之一"), t("About half", "大约一半"), t("All of them", "全部")],
           t("About nine out of every ten earthquakes happen along it.", "大约十分之九的地震发生在这一带。"),
+          [
+            t("One in ten is far too few.", "十分之一太少了。"),
+            t("Half is too few.", "一半也太少了。"),
+            t("Nine in ten is not all.", "十分之九并不是全部。"),
+          ],
         ),
       ],
       ["Pacific", "America", "Alaska", "Japan", "Philippines", "Indonesia", "Zealand", "Tokyo", "Manila", "Lima", "Los", "Angeles"],
@@ -292,6 +372,11 @@ Layer by layer, the lava and ash build up around the opening and form a cone. Pa
             "The second paragraph calls melted rock underground magma, and the third says that once it reaches the air it is called lava.",
             "第二段把地下的熔融岩石称为 magma，第三段说它一旦接触空气就叫作 lava。",
           ),
+          [
+            t("Both are hot, melted rock.", "两者都是炽热的熔岩。"),
+            t("Ash and gas come out in eruptions; they are not the definitions.", "灰和气体是喷发的产物，不是定义。"),
+            t("Pumice is cooled rock with bubbles.", "浮石是带气泡冷却后的岩石。"),
+          ],
         ),
         ask(
           t("How does the passage help you understand the word fissure?", "文章怎样帮助你理解 fissure 一词？"),
@@ -305,6 +390,11 @@ Layer by layer, the lava and ash build up around the opening and form a cone. Pa
             "The sentence says the magma forces its way through a crack, or fissure; the word or introduces the technical word for the same thing.",
             "句子说岩浆从一道裂缝（crack, or fissure）中冲出；or 引出了同一事物的专业词。",
           ),
+          [
+            t("The floating stone is pumice.", "能浮起来的石头是浮石。"),
+            t("Soda bubbles explain gases in magma.", "汽水泡泡解释的是岩浆中的气体。"),
+            t("Crack appears right with it, in the third paragraph.", "crack 就在它旁边，在第三段。"),
+          ],
         ),
         ask(
           t("Why does the passage begin with the story of Dionisio Pulido?", "文章为什么以迪奥尼西奥·普利多的故事开头？"),
@@ -318,6 +408,11 @@ Layer by layer, the lava and ash build up around the opening and form a cone. Pa
             "The opening tells what Pulido saw in his field, and the following paragraphs explain the process behind it.",
             "开头讲述了普利多在田里看到的情景，接下来的段落解释了背后的过程。",
           ),
+          [
+            t("Corn is only where he was working.", "玉米只是他干活的地方。"),
+            t("No one was killed by the lava.", "没有人死于熔岩。"),
+            t("No scientist appears in the story.", "故事里没有科学家。"),
+          ],
         ),
         ask(
           t("In which country was Parícutin born?", "帕里库廷火山诞生在哪个国家？"),
@@ -327,6 +422,11 @@ Layer by layer, the lava and ash build up around the opening and form a cone. Pa
             "Dionisio Pulido was working in his cornfield in Mexico when the volcano appeared.",
             "火山出现时，迪奥尼西奥·普利多正在墨西哥的玉米地里干活。",
           ),
+          [
+            t("Japan is on the Ring of Fire but is not where it was born.", "日本在火环上，但不是它诞生的地方。"),
+            t("Indonesia is never linked to Parícutin.", "印度尼西亚与帕里库廷火山无关。"),
+            t("Peru is never mentioned here.", "这里从没提秘鲁。"),
+          ],
         ),
       ],
       ["Dionisio", "Pulido", "Mexico", "Parícutin"],
@@ -355,6 +455,11 @@ Most earthquakes are so small that nobody feels them. Scientists record hundreds
             "The second paragraph says the focus is where the slip begins underground and the epicenter is the point on the surface directly above it.",
             "第二段说，震源是地下开始滑动的地方，震中是震源正上方的地表点。",
           ),
+          [
+            t("Depth of the crust is not the epicenter.", "地壳深处不是震中。"),
+            t("Plates moving apart form a rift.", "板块分开形成裂谷。"),
+            t("The fastest wave is the primary wave.", "最快的波是纵波。"),
+          ],
         ),
         ask(
           t("What does the comparison with a bow help you understand?", "与弓的比较帮助你理解什么？"),
@@ -368,6 +473,11 @@ Most earthquakes are so small that nobody feels them. Scientists record hundreds
             "The first paragraph compares the strain in the rock to the energy in a bow when the string is pulled back, before it is suddenly released.",
             "第一段把岩石中的应变比作拉弓时储存在弓里的能量，随后能量会突然释放。",
           ),
+          [
+            t("Wave speed is explained later.", "波速是后面才讲的。"),
+            t("Damage from surface waves is explained later.", "面波造成的破坏是后面才讲的。"),
+            t("The epicenter is defined in the next paragraph.", "震中是在下一段定义的。"),
+          ],
         ),
         ask(
           t("Which seismic waves usually do the most damage?", "哪种地震波通常破坏性最大？"),
@@ -381,12 +491,22 @@ Most earthquakes are so small that nobody feels them. Scientists record hundreds
             "The third paragraph says surface waves come last and are the slowest, but they usually do the most damage to buildings and roads.",
             "第三段说，面波最后到达，速度最慢，但通常对建筑和道路破坏最大。",
           ),
+          [
+            t("Primary waves arrive first but do less damage.", "纵波最先到达，但破坏较小。"),
+            t("Secondary waves are slower, not fastest.", "横波较慢，不是最快的。"),
+            t("Surface waves usually do the most.", "面波通常破坏最大。"),
+          ],
         ),
         ask(
           t("Which seismic waves arrive first?", "哪种地震波最先到达？"),
           t("Primary waves", "纵波（P波）"),
           [t("Secondary waves", "横波（S波）"), t("Surface waves", "面波"), t("They all arrive together", "同时到达")],
           t("The fastest, called primary waves, arrive first, often as a sharp jolt.", "最快的纵波最先到达，常常是一下猛烈的震动。"),
+          [
+            t("Secondary waves are slower.", "横波较慢。"),
+            t("Surface waves come last.", "面波最后到达。"),
+            t("They arrive at different times.", "它们到达的时间不同。"),
+          ],
         ),
       ],
     ),
@@ -414,6 +534,11 @@ Magnitude alone does not tell the whole story. An earthquake of magnitude 7 deep
             "The first paragraph says the record a seismometer makes, a line that jumps when the ground moves, is called a seismogram.",
             "第一段说，地震仪记录下的、地面运动时上下跳动的线条叫作地震图。",
           ),
+          [
+            t("The instrument is the seismometer.", "仪器是地震仪。"),
+            t("Where circles cross is the epicenter.", "圆的交点是震中。"),
+            t("The scale is magnitude.", "标度是震级。"),
+          ],
         ),
         ask(
           t("How do scientists find the epicenter?", "科学家是怎样找到震中的？"),
@@ -427,6 +552,11 @@ Magnitude alone does not tell the whole story. An earthquake of magnitude 7 deep
             "The second paragraph explains that each station finds its distance from the gap between wave arrivals, and the point where the three circles cross is the epicenter.",
             "第二段解释说，每个台站根据波到达的时间差算出距离，三个圆的交点就是震中。",
           ),
+          [
+            t("The Richter scale measures size, not place.", "里氏震级测量大小，不是位置。"),
+            t("How people felt it is recorded later, for damage.", "人们的感受是另外记录的，用来看灾情。"),
+            t("No crack search is described.", "文中没有描写寻找裂缝。"),
+          ],
         ),
         ask(
           t(
@@ -443,6 +573,11 @@ Magnitude alone does not tell the whole story. An earthquake of magnitude 7 deep
             "The third paragraph says each step up the scale means about thirty-two times more energy; a thousand times is the difference of two steps.",
             "第三段说，震级每升高一级，能量约增加 32 倍；1000 倍是相差两级的结果。",
           ),
+          [
+            t("Each step means more energy.", "每升一级能量就更多。"),
+            t("Two times is far too small.", "两倍太小了。"),
+            t("A thousand times is two steps, from 4 to 6.", "一千倍是两级，从 4 到 6。"),
+          ],
         ),
       ],
       ["Charles", "Richter", "American"],
@@ -473,6 +608,11 @@ The final defense is being prepared. Schools hold drills, families plan where to
             "The second paragraph says most people who die in earthquakes are not killed by the shaking itself, but by buildings that fall on them.",
             "第二段说，地震中死亡的大多数人不是被震动本身夺去生命，而是被倒塌的建筑砸死。",
           ),
+          [
+            t("Shaking itself kills fewer people than falling buildings.", "地面震动本身致死的人比倒塌的建筑少。"),
+            t("Lava belongs to volcanoes.", "熔岩属于火山。"),
+            t("Phone alerts protect people.", "手机警报是保护人的。"),
+          ],
         ),
         ask(
           t("How is the passage organized?", "这篇文章是怎样组织的？"),
@@ -486,6 +626,11 @@ The final defense is being prepared. Schools hold drills, families plan where to
             "The passage marks its parts with The first defense, The second defense and The final defense, each followed by details and examples.",
             "文章用 The first defense、The second defense 和 The final defense 划分各部分，每部分后面都有细节和例子。",
           ),
+          [
+            t("No single day is followed.", "文中没有按某一天的时间顺序写。"),
+            t("Only one volcano, Pinatubo, is described.", "文中只写了皮纳图博一座火山。"),
+            t("Moving cities is never argued.", "文中从没讨论搬迁城市。"),
+          ],
         ),
         ask(
           t("What example shows that warnings about volcanoes can save lives?", "哪个例子说明火山预警可以拯救生命？"),
@@ -499,6 +644,11 @@ The final defense is being prepared. Schools hold drills, families plan where to
             "The third paragraph tells how scientists warned the government about Mount Pinatubo and tens of thousands of people were moved away in time.",
             "第三段讲述了科学家如何就皮纳图博火山向政府发出警告，数万人得以及时撤离。",
           ),
+          [
+            t("Rubber pads protect buildings in earthquakes.", "橡胶垫是地震时保护建筑的。"),
+            t("Kits belong to being prepared.", "应急包属于做好准备。"),
+            t("Phone alerts are for earthquakes, not volcanoes.", "手机警报针对地震，不是火山。"),
+          ],
         ),
       ],
       ["Japan", "Pinatubo", "Philippines"],

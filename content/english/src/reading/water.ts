@@ -33,6 +33,17 @@ So the fresh water that people can easily reach in rivers and lakes would barely
             "The first paragraph says that more than ninety-seven of the hundred cups would be filled from the oceans.",
             "第一段说，一百杯水中有九十七杯以上来自海洋。",
           ),
+          why: [
+            t(
+              "Rivers and lakes hold only a tiny part of the fresh water, which is itself about three cups in a hundred.",
+              "河流和湖泊只占淡水的极小一部分，而淡水本身只有一百杯里的约三杯。",
+            ),
+            t(
+              "Frozen water near the poles is most of the fresh water, not most of all water. The oceans fill over ninety-seven cups.",
+              "两极的冰是淡水的大部分，不是全部水的大部分。海洋装满九十七杯以上。",
+            ),
+            t('Water under the ground is only "some more" of the fresh water, a small share.', "地下水只是淡水中“又有一些”，占比很小。"),
+          ],
         },
         {
           prompt: t("What does the passage call water that is not salty?", "文章把不咸的水叫作什么？"),
@@ -42,6 +53,14 @@ So the fresh water that people can easily reach in rivers and lakes would barely
             'The second paragraph says: "Water that is not salty is called fresh water."',
             "第二段说：“Water that is not salty is called fresh water.”",
           ),
+          why: [
+            t("Ocean water is the salty kind, the opposite of what the question asks.", "海水是咸的，正好和问题问的相反。"),
+            t(
+              "Frozen water is one place fresh water is kept, not the name for water that is not salty.",
+              "冰冻的水只是淡水存放的一种地方，不是不咸的水的名称。",
+            ),
+            t("Rain is only one example. Rivers, lakes and snow are fresh water too.", "雨只是一个例子。河流、湖泊和雪也都是淡水。"),
+          ],
         },
         {
           prompt: t("Why does the writer say water is important to protect?", "作者为什么说保护水很重要？"),
@@ -55,6 +74,14 @@ So the fresh water that people can easily reach in rivers and lakes would barely
             "The last paragraph explains that the easy-to-reach fresh water is a tiny amount that all living things on land share.",
             "最后一段解释说，容易获得的淡水只有很少一点，陆地上所有生物都要共用。",
           ),
+          why: [
+            t(
+              "The oceans running out is never said. The worry is about the small amount of fresh water.",
+              "文中没说海洋会用完。担心的是淡水太少。",
+            ),
+            t("Ice near the poles is locked away, not easy to drink.", "两极的冰被锁住了，并不容易喝到。"),
+            t("Salty water is the opposite. Most farm plants cannot grow with it.", "咸水正好相反。大多数庄稼不能用它生长。"),
+          ],
         },
       ],
     },
@@ -82,6 +109,17 @@ Water keeps changing from one form to another, and back again, all over the worl
             "The first paragraph says it is the same water in each form and only its temperature is different.",
             "第一段说，每种形态都是同样的水，只是温度不同。",
           ),
+          why: [
+            t(
+              "Color does not change between the forms. The passage names only temperature.",
+              "三种形态之间颜色没有变化。文中只说温度不同。",
+            ),
+            t(
+              "Where the water comes from is not the difference. It is the same water in each form.",
+              "水从哪里来不是区别。每种形态都是同样的水。",
+            ),
+            t("Saltiness has nothing to do with solid, liquid or gas.", "咸不咸和固体、液体、气体无关。"),
+          ],
         },
         {
           prompt: t("Which form of water takes the shape of whatever holds it?", "哪种形态的水会随着容器改变形状？"),
@@ -91,6 +129,14 @@ Water keeps changing from one form to another, and back again, all over the worl
             "The third paragraph says a liquid has no shape of its own and takes the shape of whatever holds it.",
             "第三段说，液体没有自己的形状，会随着容器改变形状。",
           ),
+          why: [
+            t(
+              "Ice is a solid, which keeps its own shape, like the cube moved between plates.",
+              "冰是固体，保持自己的形状，就像在盘子间移动的冰块。",
+            ),
+            t("Water vapor is a gas we cannot see. The passage says nothing about its shape.", "水蒸气是看不见的气体。文中没说它的形状。"),
+            t("Snow is not discussed among the three forms at all.", "三种形态里根本没谈到雪。"),
+          ],
         },
         {
           prompt: t("According to the passage, what is the steam above hot soup?", "根据文章，热汤上方的“蒸汽”是什么？"),
@@ -104,6 +150,17 @@ Water keeps changing from one form to another, and back again, all over the worl
             "The fourth paragraph says we cannot see water vapor; the steam is tiny drops that formed when the vapor cooled.",
             "第四段说我们看不见水蒸气；那些“蒸汽”其实是水蒸气冷却后形成的小水滴。",
           ),
+          why: [
+            t(
+              "Water vapor cannot be seen. What we see is tiny drops formed after the vapor cooled.",
+              "水蒸气是看不见的。我们看到的是水蒸气冷却后形成的小水滴。",
+            ),
+            t("Smoke is not mentioned. The steam is water.", "文中没提到烟。那些白汽是水。"),
+            t(
+              "Ice needs very cold water. The drops come from vapor cooling above hot soup.",
+              "冰要很冷的水才会形成。这些水滴来自热汤上方冷却的水蒸气。",
+            ),
+          ],
         },
       ],
     },
@@ -135,6 +192,11 @@ You can see this for yourself. Leave a dish of salty water on a sunny window for
             'The second paragraph says: "This change from liquid to gas is called evaporation."',
             "第二段说：“This change from liquid to gas is called evaporation.”",
           ),
+          why: [
+            t("Gas changing to liquid is condensation, the opposite change.", "气体变液体是凝结，正好是相反的变化。"),
+            t("Freezing into ice is a change from liquid to solid, not to gas.", "结成冰是液体变固体，不是变气体。"),
+            t("Rain falling is how the puddles got there, not how they disappear.", "下雨是水坑出现的原因，不是它们消失的原因。"),
+          ],
         },
         {
           prompt: t("Which puddle would most likely disappear first?", "哪个水坑最可能最先消失？"),
@@ -148,6 +210,11 @@ You can see this for yourself. Leave a dish of salty water on a sunny window for
             "The third paragraph says heat makes evaporation faster, and wind helps too.",
             "第三段说，热量让蒸发更快，风也有帮助。",
           ),
+          why: [
+            t("Shade and still air are the two things that slow evaporation down.", "阴凉和无风正是让蒸发变慢的两个条件。"),
+            t("Wind helps, but shade makes it slower than a puddle in the sun.", "风有帮助，但在阴凉处还是比晒太阳的水坑慢。"),
+            t("Heat and wind change the speed, so they would not all go at once.", "热和风会改变快慢，所以不会同时消失。"),
+          ],
         },
         {
           prompt: t("What is left in the dish when salty water evaporates?", "咸水蒸发后，盘子里会留下什么？"),
@@ -157,6 +224,11 @@ You can see this for yourself. Leave a dish of salty water on a sunny window for
             "The last two paragraphs say the salt stays behind and a thin white layer of salt is left.",
             "最后两段说盐会留下来，盘子里会留下一层薄薄的白色盐。",
           ),
+          why: [
+            t("Something is left: a thin white layer in the dish.", "会留下东西：盘子里一层薄薄的白色。"),
+            t("Fresh water is what goes up into the air, not what stays.", "淡水是升到空气中的部分，不是留下的部分。"),
+            t("Ice cannot form on a sunny window. The water evaporates.", "阳光照着的窗台上不会结冰。水是蒸发了。"),
+          ],
         },
       ],
     },
@@ -188,6 +260,17 @@ So a cloud is not smoke or cotton. It is water, the same water that rose from pu
             "The first paragraph says the juice did not leak and the water came from the air.",
             "第一段说果汁并没有渗出来，水来自空气。",
           ),
+          why: [
+            t(
+              "Juice leaking is exactly what the passage rules out: it did not leak through the glass.",
+              "果汁渗出来正是文中排除的：它没有透过杯子渗出来。",
+            ),
+            t("Melting ice in the juice is never mentioned. The water came from the air.", "文中没提果汁里的冰融化。水来自空气。"),
+            t(
+              "The refrigerator only made the glass cold. The water came from the warm air outside.",
+              "冰箱只是让杯子变冷。水来自外面温暖的空气。",
+            ),
+          ],
         },
         {
           prompt: t("Why does the passage call condensation the opposite of evaporation?", "文章为什么说凝结是蒸发的反面？"),
@@ -201,6 +284,11 @@ So a cloud is not smoke or cotton. It is water, the same water that rose from pu
             "The second paragraph defines condensation as a change from gas to liquid; evaporation goes the other way.",
             "第二段说凝结是从气体变成液体；蒸发方向相反。",
           ),
+          why: [
+            t("Condensation happens on a cold glass too, not only in the sky.", "凝结在冷杯子上也会发生，不只是在天上。"),
+            t("Heat and cold are switched. Condensation happens when vapor cools.", "冷热说反了。凝结发生在水蒸气变冷的时候。"),
+            t("Salt is not part of condensation. The salt stays behind when ocean water evaporates.", "盐与凝结无关。海水蒸发时盐被留下。"),
+          ],
         },
         {
           prompt: t("What are many thin, feathery clouds high in the sky made of?", "高空中很多又薄又像羽毛的云是由什么组成的？"),
@@ -210,6 +298,14 @@ So a cloud is not smoke or cotton. It is water, the same water that rose from pu
             "The fourth paragraph says many thin, feathery clouds high in a summer sky are made of ice.",
             "第四段说，夏天高空中很多又薄又像羽毛的云是由冰组成的。",
           ),
+          why: [
+            t("Smoke is what the passage says a cloud is not.", "文中正说云不是烟。"),
+            t(
+              "Water vapor cannot be seen, but clouds can. These clouds are frozen drops.",
+              "水蒸气看不见，而云看得见。这些云是冻住的水滴。",
+            ),
+            t("Rain drops are big and heavy. These clouds are made of tiny pieces of ice.", "雨滴又大又重。这些云是由微小的冰粒组成的。"),
+          ],
         },
       ],
     },
@@ -239,6 +335,11 @@ Rain, snow and hail all bring water from the sky back to the land and the sea.`,
             "The first paragraph says the drops join together, grow heavier and fall when they are too heavy to float.",
             "第一段说水滴合在一起，越来越重，重得飘不住时就落下来。",
           ),
+          why: [
+            t("Wind is not what makes rain fall. The drops become too heavy to float.", "不是风让雨落下的。是水滴重到浮不住了。"),
+            t("A cloud warming is not mentioned. The drops grow heavier by joining.", "文中没提云变暖。水滴是靠合并变重的。"),
+            t("Freezing leads to snow or hail. Rain falls as liquid drops.", "结冰会变成雪或冰雹。雨是以液体水滴落下的。"),
+          ],
         },
         {
           prompt: t("When does water fall as snow instead of rain?", "水什么时候会以雪而不是雨的形式落下？"),
@@ -252,6 +353,14 @@ Rain, snow and hail all bring water from the sky back to the land and the sea.`,
             "The second paragraph says snow falls when the air is cold all the way from the cloud to the ground.",
             "第二段说，从云到地面的空气都很冷时就会下雪。",
           ),
+          why: [
+            t("A tall cloud is where hail comes from, not snow.", "高大的云是冰雹的来源，不是雪的。"),
+            t("Strong wind is part of how hail forms, not snow.", "强风是冰雹形成的一部分，不是雪。"),
+            t(
+              "Small drops stay floating in the cloud. Cold air all the way down makes snow.",
+              "小水滴会浮在云里。一路都冷的空气才会下雪。",
+            ),
+          ],
         },
         {
           prompt: t("Why does a large hailstone have layers?", "大冰雹为什么有一层一层的结构？"),
@@ -265,6 +374,17 @@ Rain, snow and hail all bring water from the sky back to the land and the sea.`,
             "The third paragraph says each time a piece of ice is pushed up into the cold top of the cloud, a new layer freezes around it. The tree rings are only a comparison.",
             "第三段说，冰块每次被推到冷的云顶，就会冻上新的一层。树的年轮只是一个比喻。",
           ),
+          why: [
+            t(
+              "The tree is only a comparison for how the layers look, not how the hailstone grows.",
+              "树只是比喻层的样子，不是冰雹怎么长大。",
+            ),
+            t(
+              "Snowflakes sticking together is not how hail forms. Ice is pushed up and down by wind.",
+              "雪花粘在一起不是冰雹的成因。冰是被风上下推动的。",
+            ),
+            t("The layers form inside the cloud, before the hailstone falls.", "这些层是在云里形成的，在冰雹落下之前。"),
+          ],
         },
       ],
     },
@@ -293,6 +413,14 @@ The water cycle has been going on for billions of years. Earth does not get new 
             "The first paragraph says that after it evaporates, the drop rises with warm air as water vapor.",
             "第一段说，水滴蒸发后以水蒸气的形式随暖空气上升。",
           ),
+          why: [
+            t("Falling as rain on a hill comes later, after it is part of a cloud.", "落在山上成为雨是后来的事，在它进入云之后。"),
+            t("Flowing into a river is near the end of the journey.", "流进河里接近旅程的末尾。"),
+            t(
+              "Freezing into snow is not part of this drop's trip. It condenses into a cloud drop.",
+              "冻成雪不在这滴水的旅程里。它凝结成云中的水滴。",
+            ),
+          ],
         },
         {
           prompt: t("What does the word *cycle* mean in this passage?", "这篇文章中 *cycle* 是什么意思？"),
@@ -306,6 +434,14 @@ The water cycle has been going on for billions of years. Earth does not get new 
             'The third paragraph explains the word: "A cycle is something that happens over and over in the same order."',
             "第三段解释了这个词：“A cycle is something that happens over and over in the same order.”",
           ),
+          why: [
+            t("Once is the opposite. A cycle happens over and over.", "只发生一次正好相反。循环是一次又一次发生。"),
+            t("A cloud is one stop in the cycle, not what the word means.", "云只是循环中的一站，不是这个词的意思。"),
+            t(
+              "A river flowing to the sea is one part of the trip, not the meaning of cycle.",
+              "河流入海是旅程的一部分，不是“循环”的意思。",
+            ),
+          ],
         },
         {
           prompt: t("What can you tell about the water in your glass?", "关于你杯子里的水，可以得出什么结论？"),
@@ -319,6 +455,11 @@ The water cycle has been going on for billions of years. Earth does not get new 
             "The last paragraph says Earth does not get new water; the same water keeps going around.",
             "最后一段说地球不会得到新的水；同样的水一直在循环。",
           ),
+          why: [
+            t("Earth does not get new water. The same water keeps going around.", "地球不会产生新的水。同样的水一直在循环。"),
+            t("It may once have been part of a cloud above the sea.", "它也许曾经是海上一片云的一部分。"),
+            t("It may once have fallen as snow on a mountain, not only come from the ocean.", "它也许曾经作为雪落在山上，不只是来自海洋。"),
+          ],
         },
       ],
     },
@@ -350,6 +491,11 @@ A single river can carry water from rain that fell in many different places, som
             'The first paragraph says: "The place where a river begins is called its source."',
             "第一段说：“The place where a river begins is called its source.”",
           ),
+          why: [
+            t("Where a river empties into the sea is its mouth, the other end.", "河流注入大海的地方是河口，是另一头。"),
+            t("A smaller stream that joins is a tributary.", "汇入的小溪叫支流。"),
+            t("Mud along the banks is what the river drops on flat land.", "岸边的泥是河流在平地上留下的。"),
+          ],
         },
         {
           prompt: t("Why does a river leave sand and mud on flatter land?", "河流为什么会在平坦的地方留下沙子和泥？"),
@@ -363,6 +509,11 @@ A single river can carry water from rain that fell in many different places, som
             "The third paragraph says the river slows down on flatter land, and slow water drops sand and stones.",
             "第三段说河流在平坦的地方变慢，慢水会放下沙子和石头。",
           ),
+          why: [
+            t("Tributaries make the river wider, but they do not explain the dropped sand.", "支流让河变宽，但解释不了沙子为什么被留下。"),
+            t("The river grows bigger as it goes, not smaller.", "河越流越大，不是越小。"),
+            t("People are not mentioned. The slow river drops the sand itself.", "文中没提到人。是变慢的河自己把沙留下的。"),
+          ],
         },
         {
           prompt: t("Which list follows a river in order, from start to end?", "哪一项按从头到尾的顺序描述了一条河？"),
@@ -376,6 +527,11 @@ A single river can carry water from rain that fell in many different places, som
             "The paragraphs follow the river in order: its source, then tributaries joining, then flatter land, then its mouth.",
             "各段按顺序讲述这条河：源头、支流汇入、平坦的地方、河口。",
           ),
+          why: [
+            t("This list runs backward, from the mouth to the source.", "这个顺序是倒过来的，从河口到源头。"),
+            t("The source must come first. The river starts there.", "源头必须在最前。河从那里开始。"),
+            t("The mouth is the last place the river reaches, after the slow curves.", "河口是河流最后到达的地方，在缓慢的弯道之后。"),
+          ],
         },
       ],
     },
@@ -403,6 +559,11 @@ Groundwater can run low. If people pump water out faster than rain can soak in t
             "The second paragraph says water moves through the spaces in the ground the way water moves through a sponge.",
             "第二段说，水在地下的空隙中移动，就像水在海绵中移动一样。",
           ),
+          why: [
+            t("A bucket is how people lift water out of a well, not the comparison.", "水桶是人们从井里提水用的，不是比喻。"),
+            t("A river is fed by groundwater from below, not compared to the ground.", "河流是由下方的地下水补给的，不是拿来比作地面的。"),
+            t("Clouds are not part of this passage at all.", "这篇文章里根本没提云。"),
+          ],
         },
         {
           prompt: t("How can a river keep flowing when it has not rained for weeks?", "几个星期没下雨，河流为什么还能继续流淌？"),
@@ -416,6 +577,11 @@ Groundwater can run low. If people pump water out faster than rain can soak in t
             "The fourth paragraph says some groundwater flows into lakes and rivers from below.",
             "第四段说，一些地下水会从下面流进湖泊和河流。",
           ),
+          why: [
+            t("Wells take water out of the ground. They do not fill rivers.", "井是从地下取水的，不往河里送水。"),
+            t("Water vapor is not the source here. The water comes from the ground below.", "这里的水源不是水蒸气，而是地下。"),
+            t("A river not evaporating is never said. Groundwater feeds it from below.", "文中没说河停止蒸发。是地下水从下方补给它。"),
+          ],
         },
         {
           prompt: t("Why might a well go dry?", "水井为什么可能干涸？"),
@@ -429,6 +595,11 @@ Groundwater can run low. If people pump water out faster than rain can soak in t
             "The last paragraph says wells can go dry if people pump water out faster than rain can soak in to replace it.",
             "最后一段说，如果人们抽水比雨水渗入补充得快，水井就会干涸。",
           ),
+          why: [
+            t("A deep well reaches water. Depth is not the problem.", "深井能打到水。深度不是问题。"),
+            t("Groundwater moves very slowly, not too fast.", "地下水移动得很慢，不是太快。"),
+            t("Rain refills groundwater. It does not wash wells away.", "雨水补充地下水，不会冲走水井。"),
+          ],
         },
       ],
     },
@@ -458,6 +629,14 @@ Glaciers hold a large share of Earth's fresh water. In many places, the water th
             "The first paragraph says the weight of new snow presses the old snow into hard, thick ice.",
             "第一段说，新雪的重量把下面的旧雪压成又硬又厚的冰。",
           ),
+          why: [
+            t(
+              "A frozen river is not a glacier. A glacier is snow pressed into ice over many years.",
+              "结冰的河不是冰川。冰川是多年积雪被压成的冰。",
+            ),
+            t("Rain is not part of it. Snow that does not melt piles up.", "雨与此无关。是没融化的雪堆积起来。"),
+            t("Frozen ocean water is not mentioned. Glaciers form on land from snow.", "文中没说海水结冰。冰川是陆地上由雪形成的。"),
+          ],
         },
         {
           prompt: t("Why does the writer compare a glacier to thick honey?", "作者为什么把冰川比作浓稠的蜂蜜？"),
@@ -471,6 +650,14 @@ Glaciers hold a large share of Earth's fresh water. In many places, the water th
             "The second paragraph says a glacier slides and creeps downhill, like very thick honey.",
             "第二段说冰川像非常浓稠的蜂蜜一样缓慢向下滑动。",
           ),
+          why: [
+            t("Sweetness has nothing to do with it. The point is slow movement.", "和甜不甜无关。重点是移动得慢。"),
+            t("Honey is not water. They share how they move, not what they are made of.", "蜂蜜不是水。它们相同的是移动方式，不是成分。"),
+            t(
+              "Honey does not melt in summer. The comparison is about creeping downhill.",
+              "蜂蜜不会在夏天融化。比喻说的是缓缓往下坡移动。",
+            ),
+          ],
         },
         {
           prompt: t("What might happen when glaciers shrink?", "冰川缩小时可能会发生什么？"),
@@ -484,6 +671,14 @@ Glaciers hold a large share of Earth's fresh water. In many places, the water th
             "The last paragraph says that when glaciers shrink, the rivers they fill may carry less water.",
             "最后一段说，冰川缩小时，由它们补给的河流水量可能会减少。",
           ),
+          why: [
+            t("Glaciers move only inches or feet a day, nothing like a car.", "冰川一天只移动几英寸或几英尺，根本不像汽车。"),
+            t("More water is the opposite. Rivers may carry less.", "水更多正好相反。河流可能水更少。"),
+            t(
+              "Valleys are carved by glaciers. Shrinking glaciers do not make them disappear.",
+              "山谷是冰川刻出来的。冰川缩小不会让山谷消失。",
+            ),
+          ],
         },
       ],
     },
@@ -510,6 +705,11 @@ Keeping water clean matters as much as saving it. Trash and chemicals that are d
             'The fourth paragraph says: "Farms use more fresh water than anything else."',
             "第四段说：“Farms use more fresh water than anything else.”",
           ),
+          why: [
+            t("Showers are one small example of saving water at home.", "淋浴只是在家节水的一个小例子。"),
+            t("Brushing teeth is another small daily example, not the biggest use.", "刷牙是另一个日常小例子，不是用水最多的。"),
+            t("Drinking is listed as one need, but farms use the most.", "喝水只是列出的一种需要，但农场用水最多。"),
+          ],
         },
         {
           prompt: t("Why do some farmers water crops through small tubes at the roots?", "为什么有些农民用小管子在根部浇水？"),
@@ -523,6 +723,11 @@ Keeping water clean matters as much as saving it. Trash and chemicals that are d
             "The fourth paragraph says the tubes drip water onto the roots, so less of it evaporates in the sun.",
             "第四段说，管子把水滴到根部，所以在阳光下蒸发得更少。",
           ),
+          why: [
+            t("Taller plants are not mentioned. The point is saving water.", "文中没提植物长得更高。重点是节水。"),
+            t("The tubes carry water to the roots. They do not clean it.", "管子把水送到根部，不会净化水。"),
+            t("Rain is not the problem. Watering on the surface loses water to the sun.", "问题不在雨。在地表浇水会被太阳蒸发掉水分。"),
+          ],
         },
         {
           prompt: t("What is the main idea of the passage?", "这篇文章的主要意思是什么？"),
@@ -536,6 +741,11 @@ Keeping water clean matters as much as saving it. Trash and chemicals that are d
             "Each paragraph gives a reason or a way to save fresh water or keep it clean, and the last sentence sums this up.",
             "每一段都讲了节约淡水或保持水清洁的原因或方法，最后一句作了总结。",
           ),
+          why: [
+            t("Plenty everywhere is wrong. Some places have very little.", "到处都很多是错的。有些地方水很少。"),
+            t("Showers are a small example. Farms use more than anything else.", "淋浴只是小例子。农场用水比什么都多。"),
+            t("Groundwater can be polluted. Chemicals can soak down into it.", "地下水是可能被污染的。化学物质会渗进去。"),
+          ],
         },
       ],
     },

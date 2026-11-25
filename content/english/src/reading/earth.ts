@@ -36,6 +36,11 @@ No one has ever dug down to the mantle, let alone the core. The deepest hole peo
             "The crust is like the thin skin, the mantle like the thick fruit, and the core like the stone in the middle.",
             "地壳像薄薄的果皮，地幔像厚厚的果肉，地核像中间的果核。",
           ),
+          why: [
+            t("Soft and sweet is about eating a peach, not the Earth's layers.", "软而甜说的是吃桃子，不是地球的分层。"),
+            t("Growing on trees has nothing to do with the Earth.", "长在树上和地球没有关系。"),
+            t("The same size is wrong. The comparison is about layers, not size.", "大小一样不对。这个比喻说的是分层，不是大小。"),
+          ],
         },
         {
           prompt: t("Why is the inner core solid even though it is very hot?", "内核温度很高，为什么仍是固体？"),
@@ -49,6 +54,11 @@ No one has ever dug down to the mantle, let alone the core. The deepest hole peo
             "The fourth paragraph says the inner core is pressed so hard by everything above it that it stays solid.",
             "第四段说内核受到上方一切的巨大挤压，所以保持固态。",
           ),
+          why: [
+            t("Ice is wrong. The core is melted and solid metal, mostly iron.", "冰不对。地核是熔化的和固态的金属，主要是铁。"),
+            t("Cooler than the crust is backwards. It is as hot as the sun's surface.", "比地壳凉是反的。它和太阳表面一样热。"),
+            t("Distance from the sun is not the reason given.", "离太阳远不是文中给的原因。"),
+          ],
         },
         {
           prompt: t("How do scientists learn about the inside of the Earth?", "科学家怎样了解地球内部？"),
@@ -62,6 +72,11 @@ No one has ever dug down to the mantle, let alone the core. The deepest hole peo
             "The last paragraph says no one has dug to the mantle, so scientists study earthquake waves and infer what the inside is like.",
             "最后一段说没有人挖到过地幔，所以科学家研究地震波，从而推断地球内部的样子。",
           ),
+          why: [
+            t("Digging to the core is wrong. No one has even reached the mantle.", "挖到地核不对。连地幔都没人挖到过。"),
+            t("Cutting the Earth in half is only an imagined picture at the start.", "把地球切成两半只是开头的想象。"),
+            t("Peaches are only the comparison, not how scientists study.", "桃子只是比喻，不是科学家的研究方法。"),
+          ],
         },
       ],
     },
@@ -91,6 +106,11 @@ The third group are changed rocks. Heat and pressure deep inside the Earth can s
             "The second paragraph says rocks made when melted rock cools and hardens are called igneous rocks.",
             "第二段说熔化的岩石冷却变硬形成的岩石叫作火成岩。",
           ),
+          why: [
+            t("Layers pressed together make sedimentary rock.", "一层层压在一起形成的是沉积岩。"),
+            t("Heat and pressure changing old rock makes metamorphic rock.", "高温高压改变旧岩石形成的是变质岩。"),
+            t("Shells growing into stone is not how any of the three is made.", "贝壳长成石头不是任何一种岩石的成因。"),
+          ],
         },
         {
           prompt: t("Why does the writer compare sandstone to the pages of a closed book?", "作者为什么把砂岩比作合上的书页？"),
@@ -100,6 +120,14 @@ The third group are changed rocks. Heat and pressure deep inside the Earth can s
             "The third paragraph says you can often see the layers of sandstone like the pages of a closed book.",
             "第三段说常常能看到砂岩的层，就像合上的书页。",
           ),
+          why: [
+            t("Words written on it is too literal.", "上面写着字太按字面理解了。"),
+            t("Being light is not in the passage.", "很轻文中没有。"),
+            t(
+              "Opening it is too literal. The book is closed, showing its pages as layers.",
+              "能打开太按字面理解了。书是合着的，书页就像岩层。",
+            ),
+          ],
         },
         {
           prompt: t("What does the word metamorphic come from?", "metamorphic 这个词来自什么意思？"),
@@ -113,6 +141,11 @@ The third group are changed rocks. Heat and pressure deep inside the Earth can s
             'The last sentence says metamorphic comes from words that mean "change of shape."',
             "最后一句说 metamorphic 来自意为“形状改变”的词。",
           ),
+          why: [
+            t("A scientist's name is not in the passage.", "科学家的名字文中没有。"),
+            t("Melted rock is where igneous rock begins.", "熔化的岩石是火成岩的起点。"),
+            t("Layers of mud make sedimentary rock.", "泥层形成的是沉积岩。"),
+          ],
         },
       ],
     },
@@ -141,6 +174,11 @@ Where plates meet, a lot happens. They may push together, pull apart or grind pa
             "The second paragraph says the crust is broken into huge pieces called plates.",
             "第二段说地壳分裂成叫作板块的巨大碎块。",
           ),
+          why: [
+            t("Dishes for food mixes up the everyday word plate.", "装食物的盘子把plate的日常意思弄混了。"),
+            t("Puzzle pieces are only how the coasts look.", "拼图块只是海岸线看起来的样子。"),
+            t("Layers in the core are wrong. Plates are pieces of the crust.", "地核里的层不对。板块是地壳的碎块。"),
+          ],
         },
         {
           prompt: t("Which evidence shows that the continents were once joined?", "哪项证据表明大陆曾经连在一起？"),
@@ -154,6 +192,14 @@ Where plates meet, a lot happens. They may push together, pull apart or grind pa
             "The fourth paragraph gives the evidence: the same fossils turn up on both sides of the Atlantic, and the rocks match.",
             "第四段给出了证据：大西洋两岸出现同样的化石，岩石也相匹配。",
           ),
+          why: [
+            t(
+              "Fingernail speed tells how fast plates move, not that continents were joined.",
+              "指甲的速度说的是板块移动多快，不是大陆曾经相连。",
+            ),
+            t("Flowing like toothpaste describes the mantle.", "像牙膏一样流动说的是地幔。"),
+            t("Many oceans on maps is not evidence given.", "地图上有很多海洋不是文中给的证据。"),
+          ],
         },
         {
           prompt: t("Why do the plates move such a long way even though they are slow?", "板块移动很慢，为什么却能移动很远？"),
@@ -167,6 +213,11 @@ Where plates meet, a lot happens. They may push together, pull apart or grind pa
             "The second paragraph says a few centimeters a year adds up to thousands of kilometers over millions of years.",
             "第二段说每年几厘米，经过数百万年就累积成几千公里。",
           ),
+          why: [
+            t("Jumping is wrong. They move slowly and steadily.", "跳跃不对。它们移动得慢而稳定。"),
+            t("The wind pushing them is not in the passage.", "风推动它们文中没有。"),
+            t("Floating on the ocean is wrong. They float on the mantle.", "漂在海洋上不对。它们漂在地幔上。"),
+          ],
         },
       ],
     },
@@ -199,6 +250,11 @@ Volcanoes can be dangerous, but they also make some of the richest soil on Earth
             "The first paragraph says melted rock is called magma underground and lava once it reaches the surface.",
             "第一段说熔化的岩石在地下叫 magma，到达地面后叫 lava。",
           ),
+          why: [
+            t("Cold and hot is wrong. Both are melted rock.", "冷和热不对。两者都是熔化的岩石。"),
+            t("Water is wrong. Lava is melted rock too.", "水不对。熔岩也是熔化的岩石。"),
+            t("Underground and surface are swapped.", "地下和地表说反了。"),
+          ],
         },
         {
           prompt: t("Why does the writer compare magma to soda?", "作者为什么把岩浆比作汽水？"),
@@ -208,6 +264,11 @@ Volcanoes can be dangerous, but they also make some of the richest soil on Earth
             "The second paragraph says magma holds gases like the bubbles in soda, and it bursts out when pressure builds up.",
             "第二段说岩浆像汽水里的气泡一样含有气体，压力积聚时就会喷出。",
           ),
+          why: [
+            t("Being sweet is not the point of the comparison.", "甜不是这个比喻的重点。"),
+            t("Being cold is wrong. Magma is very hot.", "冷不对。岩浆非常烫。"),
+            t("Coming in bottles is too literal.", "装在瓶子里太按字面理解了。"),
+          ],
         },
         {
           prompt: t("What good thing do volcanoes do, according to the passage?", "根据文章，火山有什么好处？"),
@@ -221,6 +282,11 @@ Volcanoes can be dangerous, but they also make some of the richest soil on Earth
             "The last paragraph says volcanoes make some of the richest soil on Earth.",
             "最后一段说火山造就了地球上一些最肥沃的土壤。",
           ),
+          why: [
+            t("Stopping earthquakes is not in the passage.", "阻止地震文中没有。"),
+            t("Cooling the Earth is not in the passage.", "让地球降温文中没有。"),
+            t("Stopping the plates is not in the passage.", "让板块停止移动文中没有。"),
+          ],
         },
       ],
     },
@@ -251,6 +317,11 @@ No one can say yet exactly when an earthquake will strike. But scientists collec
             "The second paragraph says the rough edges get stuck, the plates keep pushing, and pressure builds up for years.",
             "第二段说粗糙的边缘卡住了，板块继续推挤，压力积聚多年。",
           ),
+          why: [
+            t("Melting plates is not the reason.", "板块熔化不是原因。"),
+            t("Water filling cracks is about weathering, not plates.", "水填进裂缝说的是风化，不是板块。"),
+            t("The ground being still is how it feels, not why pressure builds.", "地面静止是人的感觉，不是压力积累的原因。"),
+          ],
         },
         {
           prompt: t("What does a seismograph do?", "地震仪有什么作用？"),
@@ -264,6 +335,11 @@ No one can say yet exactly when an earthquake will strike. But scientists collec
             "The third paragraph says seismographs record earthquakes by drawing a wavy line.",
             "第三段说地震仪通过画波浪线来记录地震。",
           ),
+          why: [
+            t("Stopping earthquakes is wrong. It only records them.", "阻止地震不对。它只是记录地震。"),
+            t("Saying exactly when is wrong. No one can do that yet.", "说出确切时间不对。目前还没人能做到。"),
+            t("Building buildings is what engineers do.", "建房子是工程师的工作。"),
+          ],
         },
         {
           prompt: t("How does data about earthquakes help people?", "地震数据怎样帮助人们？"),
@@ -277,6 +353,11 @@ No one can say yet exactly when an earthquake will strike. But scientists collec
             "The last paragraph says no one can yet say exactly when an earthquake will strike, but engineers use the data to design buildings that bend and sway.",
             "最后一段说还没有人能准确说出地震何时发生，但工程师利用这些数据设计能弯曲摇摆的建筑。",
           ),
+          why: [
+            t("The exact day is wrong. No one can say when one will strike.", "确切的日子不对。没人能说出地震何时发生。"),
+            t("Stopping the plates is not in the passage.", "让板块停下文中没有。"),
+            t("Making earthquakes smaller is not in the passage.", "让地震变小文中没有。"),
+          ],
         },
       ],
     },
@@ -307,6 +388,11 @@ Climbers on Mount Everest have found fossils of sea animals near the top. These 
             "The rugs fold and rise where they meet, just as the crust folds and rises when two plates push together.",
             "地毯相接处会褶皱隆起，就像两个板块相互挤压时地壳褶皱隆起一样。",
           ),
+          why: [
+            t("Cleaning a floor is not the point.", "打扫地板不是重点。"),
+            t("Soft mountains is wrong. It happens with solid rock.", "山是软的不对。发生在坚硬的岩石上。"),
+            t("Rugs being useful is not the point.", "地毯有用不是重点。"),
+          ],
         },
         {
           prompt: t("How did the Himalayas form?", "喜马拉雅山脉是怎样形成的？"),
@@ -320,6 +406,11 @@ Climbers on Mount Everest have found fossils of sea animals near the top. These 
             "The second paragraph says the Himalayas formed as the plate carrying India pushed into the rest of Asia.",
             "第二段说喜马拉雅山脉是载着印度的板块挤向亚洲其余部分而形成的。",
           ),
+          why: [
+            t("Lava building a volcano is another way, not the Himalayas.", "熔岩堆成火山是另一种方式，不是喜马拉雅山。"),
+            t("Cracking into blocks is a third way, not the Himalayas.", "裂成岩块是第三种方式，不是喜马拉雅山。"),
+            t("Wind piling sand is not in the passage.", "风堆起沙子文中没有。"),
+          ],
         },
         {
           prompt: t("What do the fossils of sea animals near the top of Everest show?", "珠穆朗玛峰顶附近的海洋动物化石说明了什么？"),
@@ -333,6 +424,11 @@ Climbers on Mount Everest have found fossils of sea animals near the top. These 
             "The last paragraph says the shells show that the rock at the top of the world was once at the bottom of a sea.",
             "最后一段说这些贝壳表明世界之巅的岩石曾经在海底。",
           ),
+          why: [
+            t("Sea animals climbing is wrong. The rock itself rose.", "海洋动物爬上山不对。是岩石本身升高了。"),
+            t("Climbers leaving shells is not in the passage.", "登山者留下贝壳文中没有。"),
+            t("The sea being on top is wrong. It was once a sea floor.", "海在山顶上不对。那里曾经是海底。"),
+          ],
         },
       ],
     },
@@ -363,6 +459,11 @@ Over a long time, weathering and erosion can wear a mountain down to a hill. The
             "The second paragraph defines weathering as breaking rock down, and the third defines erosion as moving the pieces from place to place.",
             "第二段把风化定义为把岩石分解，第三段把侵蚀定义为把碎块从一处搬到另一处。",
           ),
+          why: [
+            t("The two words are swapped.", "两个词说反了。"),
+            t("Only deserts and only rivers is wrong. Both happen in many places.", "只在沙漠、只在河流不对。两者在很多地方都会发生。"),
+            t("Building mountains is wrong. Both wear them down.", "造山不对。两者都在磨平山。"),
+          ],
         },
         {
           prompt: t("How does freezing water split a rock?", "结冰的水怎样使岩石裂开？"),
@@ -376,6 +477,11 @@ Over a long time, weathering and erosion can wear a mountain down to a hill. The
             "The second paragraph says water in a crack expands when it freezes and pushes the crack wider.",
             "第二段说裂缝里的水结冰时膨胀，把裂缝撑大。",
           ),
+          why: [
+            t("Melting the rock is wrong. Ice pushes the crack.", "让岩石熔化不对。冰是撑开裂缝。"),
+            t("Gluing pieces is backwards. It splits them apart.", "把碎块粘起来是反的。它把岩石撑裂。"),
+            t("Pulling into the ground is not in the passage.", "拉进地下文中没有。"),
+          ],
         },
         {
           prompt: t("What carved the Grand Canyon?", "是什么切割出了大峡谷？"),
@@ -389,6 +495,11 @@ Over a long time, weathering and erosion can wear a mountain down to a hill. The
             "The last paragraph says the Colorado River has been cutting through the rock for millions of years.",
             "最后一段说科罗拉多河已经切割岩石数百万年了。",
           ),
+          why: [
+            t("A glacier in one winter is wrong in both cause and time.", "冰川一个冬天，原因和时间都不对。"),
+            t("Wind in a few years is wrong. A river did it over millions of years.", "风几年不对。是河流用了几百万年。"),
+            t("An earthquake in one day is not in the passage.", "地震一天文中没有。"),
+          ],
         },
       ],
     },
@@ -418,6 +529,11 @@ By studying fossils, scientists can tell what living things were like long ago. 
             "The second paragraph says a dead animal is usually eaten or rots away; only one covered quickly by mud or sand may become a fossil.",
             "第二段说动物死后通常会被吃掉或腐烂，只有迅速被泥沙掩埋的才可能变成化石。",
           ),
+          why: [
+            t("Being too small is not the reason given.", "太小不是文中给的原因。"),
+            t("Living in lakes is wrong. Being covered in lake mud can help.", "住在湖里不对。被湖底泥覆盖反而有帮助。"),
+            t("Being made of stone is what a fossil becomes, not a living thing.", "石头做的是化石最后的样子，不是生物本身。"),
+          ],
         },
         {
           prompt: t("Why are fossils in deeper layers usually older?", "为什么较深地层里的化石通常更古老？"),
@@ -431,6 +547,11 @@ By studying fossils, scientists can tell what living things were like long ago. 
             "The third paragraph says the deeper layers were laid down first, so their fossils are usually older.",
             "第三段说较深的地层先形成，所以其中的化石通常更古老。",
           ),
+          why: [
+            t("Older animals being heavier is not in the passage.", "年老的动物更重文中没有。"),
+            t("Fossils sinking is wrong. Layers pile on top.", "化石下沉不对。是上面不断堆积新层。"),
+            t("Softer layers are not in the passage.", "更软的岩层文中没有。"),
+          ],
         },
         {
           prompt: t("How do we know about dinosaurs?", "我们怎么知道恐龙的？"),
@@ -444,6 +565,11 @@ By studying fossils, scientists can tell what living things were like long ago. 
             "The last paragraph says we know about dinosaurs only from their fossils, since no person ever saw one alive.",
             "最后一段说我们只能通过化石了解恐龙，因为没有人见过活的恐龙。",
           ),
+          why: [
+            t("People seeing them is wrong. No person ever saw one alive.", "有人见过不对。从没有人见过活着的恐龙。"),
+            t("Old pictures are not in the passage.", "古老的图画文中没有。"),
+            t("Dinosaurs living today is wrong.", "现在还有恐龙不对。"),
+          ],
         },
       ],
     },
@@ -475,6 +601,11 @@ Making soil takes a very long time. It can take hundreds of years to make just a
             "The third paragraph says humus is the dark material made from dead leaves, roots and animals.",
             "第三段说腐殖质是由枯叶、根和动物遗体形成的深色物质。",
           ),
+          why: [
+            t("The smallest rock pieces are clay.", "最小的岩石颗粒是黏土。"),
+            t("Worms help make humus, but they are not humus.", "蚯蚓帮助形成腐殖质，但不是腐殖质。"),
+            t("Water fills spaces in soil. It is not humus.", "水填在土壤空隙里，不是腐殖质。"),
+          ],
         },
         {
           prompt: t("Which piece of soil is the largest?", "土壤中哪种颗粒最大？"),
@@ -484,6 +615,11 @@ Making soil takes a very long time. It can take hundreds of years to make just a
             "The second paragraph says sand grains are the largest, and clay pieces are very small.",
             "第二段说沙粒最大，黏土颗粒非常小。",
           ),
+          why: [
+            t("Clay pieces are so small that wet clay feels smooth.", "黏土颗粒很小，湿黏土摸起来很滑。"),
+            t("Silt is in between, not the largest.", "粉砂介于中间，不是最大的。"),
+            t("Humus is not a piece of rock.", "腐殖质不是岩石颗粒。"),
+          ],
         },
         {
           prompt: t("Why must soil be protected?", "为什么必须保护土壤？"),
@@ -497,6 +633,11 @@ Making soil takes a very long time. It can take hundreds of years to make just a
             "The last paragraph says soil takes a very long time to make, yet wind and rain can carry it away quickly.",
             "最后一段说土壤形成需要很长时间，风雨却能很快把它带走。",
           ),
+          why: [
+            t("Gold is not in the passage.", "金子文中没有。"),
+            t("Worms eating it all is wrong. Worms help soil.", "蚯蚓全吃掉不对。蚯蚓对土壤有益。"),
+            t("Turning back into rock is not in the passage.", "变回岩石文中没有。"),
+          ],
         },
       ],
     },
@@ -528,6 +669,11 @@ Geologists often survey a whole area, making maps of the rocks that lie under th
             "The first paragraph says most of what geologists want to know happened long ago or deep underground, so they work from clues like detectives.",
             "第一段说地质学家想了解的大多发生在很久以前或地下深处，所以他们像侦探一样根据线索工作。",
           ),
+          why: [
+            t("Catching people is too literal.", "抓人太按字面理解了。"),
+            t("Working only at night is not in the passage.", "只在晚上工作文中没有。"),
+            t("Writing history books is wrong. Reading layers is only like reading one.", "写历史书不对。读岩层只是像读书。"),
+          ],
         },
         {
           prompt: t("How can instruments near volcanoes help people?", "火山附近的仪器怎样帮助人们？"),
@@ -541,6 +687,11 @@ Geologists often survey a whole area, making maps of the rocks that lie under th
             "The third paragraph says instruments measure changes in the ground and gases, which can warn that an eruption may occur soon.",
             "第三段说仪器测量地面和气体的变化，可以预警火山即将喷发。",
           ),
+          why: [
+            t("Stopping an eruption is wrong. They only warn.", "阻止喷发不对。它们只是预警。"),
+            t("Maps from space come from satellites.", "从太空拍地图的是卫星。"),
+            t("Testing under microscopes happens in the lab.", "在显微镜下检测是在实验室里。"),
+          ],
         },
         {
           prompt: t("What do builders use geologists' maps for?", "建筑者用地质学家的地图做什么？"),
@@ -554,6 +705,11 @@ Geologists often survey a whole area, making maps of the rocks that lie under th
             "The last paragraph says builders use these maps to choose safe places for roads and bridges.",
             "最后一段说建筑者用这些地图为道路和桥梁选择安全的位置。",
           ),
+          why: [
+            t("Finding dinosaurs is not what builders use them for.", "找恐龙不是建筑工人的用途。"),
+            t("Measuring plates is what satellites do.", "测量板块是卫星做的事。"),
+            t("Growing crops is not in the passage.", "种庄稼文中没有。"),
+          ],
         },
       ],
     },

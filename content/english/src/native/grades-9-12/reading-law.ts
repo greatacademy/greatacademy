@@ -39,6 +39,14 @@ Hammurabi presented himself as a protector of the weak. At the top of the stone,
             "The fourth paragraph says writing and displaying the laws made them hard for a judge to change at will, and an accused person could know what the law said.",
             "第四段说，把法律写下来并公开，法官就难以随意更改，被告也能知道法律的内容。",
           ),
+          [
+            t(
+              "The choice of stone is about display and permanence, not a lack of other materials.",
+              "选石头是为了公示和长久，不是没有别的材料。",
+            ),
+            t('The punishments stayed harsh, like "an eye for an eye."', "刑罚依旧严酷，比如“以眼还眼”。"),
+            t("Displaying them in public is the opposite of hiding them.", "公开展示与隐藏恰恰相反。"),
+          ],
         ),
         ask(
           t("What does the passage show about justice and social class in the code?", "关于法典中的正义与社会阶层，文章说明了什么？"),
@@ -52,6 +60,11 @@ Hammurabi presented himself as a protector of the weak. At the top of the stone,
             "The passage says harming a rich man brought a much heavier penalty than harming a poor man or a slave.",
             "文章说，伤害富人受到的惩罚比伤害穷人或奴隶重得多。",
           ),
+          [
+            t("Harming a rich man brought a heavier penalty, so people were not treated the same.", "伤害富人罚得更重，所以人们并不平等。"),
+            t("The code punished people of every class, not only slaves.", "法典惩罚各个阶层的人，不只是奴隶。"),
+            t("The poor and slaves could be punished too.", "穷人和奴隶也会受罚。"),
+          ],
         ),
         ask(
           t("What message did the image at the top of the stone send?", "石碑顶部的图像传达了什么信息？"),
@@ -65,12 +78,22 @@ Hammurabi presented himself as a protector of the weak. At the top of the stone,
             "The image shows Hammurabi receiving authority from a god of justice, so the laws seemed to come from heaven and were meant to last.",
             "图像显示汉谟拉比从正义之神那里接受权力，因此这些法律仿佛来自上天，意在长存。",
           ),
+          [
+            t("The king stands before the god receiving authority, not in fear.", "国王站在神前接受权力，并非畏惧。"),
+            t("The image says the laws were meant to last.", "图像表示这些法律要长久存在。"),
+            t("The image shows king and god; judges are not in it.", "图像里是国王和神，没有法官。"),
+          ],
         ),
         ask(
           t("About how many laws does Hammurabi's code contain?", "汉谟拉比法典大约有多少条法律？"),
           t("About 280", "约280条"),
           [t("About ten", "约十条"), t("About two thousand", "约两千条"), t("Exactly one hundred", "正好一百条")],
           t("The code contains about 280 laws.", "这部法典约有280条法律。"),
+          [
+            t("Ten is far too few; the code has about 280 laws.", "十条太少了；法典约有280条。"),
+            t("Two thousand is far too many.", "两千条太多了。"),
+            t("The passage says about 280, not exactly a hundred.", "文中说约280条，不是正好一百条。"),
+          ],
         ),
       ],
       ["Hammurabi", "Babylon", "Iraq", "Paris"],
@@ -101,6 +124,11 @@ When the founders of the United States wrote their constitution more than five c
             "The first paragraph says the king had lost wars, raised taxes again and again and punished his enemies without trial.",
             "第一段说，国王打了败仗，一再加税，并且不经审判就惩罚敌人。",
           ),
+          [
+            t("John wanted to keep power; the barons forced limits on him.", "约翰想保住权力，是贵族强迫他接受限制。"),
+            t("The pope later helped John cancel it; he did not order it.", "教皇后来帮约翰废除了它，并没下令签署。"),
+            t("John had lost wars in France, not won them.", "约翰在法国打了败仗，不是打了胜仗。"),
+          ],
         ),
         ask(
           t("What principle did Magna Carta establish, according to the passage?", "根据文章，大宪章确立了什么原则？"),
@@ -114,6 +142,11 @@ When the founders of the United States wrote their constitution more than five c
             "The fourth paragraph says that Magna Carta established the principle that even a king was subject to the law.",
             "第四段说，大宪章确立了即使国王也要受法律约束的原则。",
           ),
+          [
+            t("The charter limited the king's power, the opposite of this.", "宪章限制王权，与此相反。"),
+            t('"Free man" later came to mean every person.', "“自由人”后来指每一个人。"),
+            t("Taxes were a complaint, but the charter did not ban them.", "赋税是一项不满，但宪章并未禁止征税。"),
+          ],
         ),
         ask(
           t('How did the meaning of "free man" change over time?', "“自由人”一词的含义随着时间如何变化？"),
@@ -127,6 +160,11 @@ When the founders of the United States wrote their constitution more than five c
             'Later generations read the words more broadly than the barons intended, and "free man" came to mean every person.',
             "后人对这些词的理解比贵族们原本的意思更宽泛，“自由人”逐渐指每一个人。",
           ),
+          [
+            t("The phrase widened to everyone, not narrowed to the king.", "这个词扩大到所有人，没有缩小到国王。"),
+            t("It is still read today, more broadly than before.", "它至今仍在被引用，而且解读更宽。"),
+            t("Taxes have nothing to do with the phrase's meaning.", "这个词的含义与纳税无关。"),
+          ],
         ),
         ask(
           t("Whom did King John ask to cancel the charter?", "约翰王请谁废除这份宪章？"),
@@ -136,6 +174,11 @@ When the founders of the United States wrote their constitution more than five c
             "Within weeks, King John asked the pope to cancel it, and war broke out again.",
             "几周内，约翰王请求教皇废除它，战争再次爆发。",
           ),
+          [
+            t("The barons forced the charter on him; he did not ask them to cancel it.", "贵族逼他签宪章，他不会请他们废除。"),
+            t("The king of France is never mentioned.", "文中没提法国国王。"),
+            t("Parliament is never mentioned in the passage.", "文中没提议会。"),
+          ],
         ),
       ],
       ["John", "England", "Thames", "France", "London", "Magna", "Carta", "Latin", "English", "United", "States"],
@@ -166,6 +209,11 @@ After the trial, the jurors meet in private to discuss the case. They must reach
             "The third paragraph says the judge decides which evidence may be shown, while the jury decides what really happened.",
             "第三段说，法官决定哪些证据可以出示，而陪审团决定究竟发生了什么。",
           ),
+          [
+            t("Lawyers question jurors; neither chooses the other.", "律师询问陪审员；法官和陪审团并不互相挑选。"),
+            t("The legislature writes laws; a jury decides facts.", "立法机构制定法律；陪审团裁定事实。"),
+            t("The passage sets out a clear difference.", "文章讲明了两者的区别。"),
+          ],
         ),
         ask(
           t('What does "beyond a reasonable doubt" require?', "“排除合理怀疑”要求什么？"),
@@ -182,6 +230,11 @@ After the trial, the jurors meet in private to discuss the case. They must reach
             "The passage says jurors need not be absolutely certain, but serious doubt in a reasonable person's mind means a verdict of not guilty.",
             "文章说，陪审员不必绝对确定，但如果理性的人仍有严重怀疑，就必须判无罪。",
           ),
+          [
+            t("Jurors do not have to be absolutely certain.", "陪审员不必绝对确定。"),
+            t("Doubt leads to not guilty, the opposite of this.", "存疑应判无罪，与此相反。"),
+            t("The jury, not the judge, decides guilt.", "判定有罪与否的是陪审团，不是法官。"),
+          ],
         ),
         ask(
           t("What does the word unanimous most likely mean in the last paragraph?", "最后一段中的 unanimous 最可能是什么意思？"),
@@ -191,12 +244,22 @@ After the trial, the jurors meet in private to discuss the case. They must reach
             "Context clue: the jurors must reach a verdict together, and in many places it must be unanimous, that is, all must agree.",
             "上下文线索：陪审员必须共同作出裁决，在许多地方这一裁决必须 unanimous，也就是全体一致。",
           ),
+          [
+            t("The jury decides together, not the judge alone.", "是陪审团共同决定，不是法官独断。"),
+            t("Discussions can last hours or days, so it is not about speed.", "讨论可能持续数小时或数天，与快慢无关。"),
+            t("Secrecy is not what the word means; it means everyone agrees.", "这个词不是保密的意思，而是全体一致。"),
+          ],
         ),
         ask(
           t("How many members does a jury usually have?", "陪审团通常有多少名成员？"),
           t("Twelve", "十二名"),
           [t("Three", "三名"), t("Twenty-four", "二十四名"), t("One hundred", "一百名")],
           t("A jury usually has twelve members, though the number varies.", "陪审团通常有十二名成员，但人数不一。"),
+          [
+            t("Three is far too few; a jury usually has twelve.", "三人太少了；陪审团通常有十二人。"),
+            t("Twenty-four is double the usual number.", "二十四是通常人数的两倍。"),
+            t("One hundred is not mentioned.", "文中没提一百人。"),
+          ],
         ),
       ],
     ),
@@ -226,6 +289,11 @@ Yet winning the vote on paper did not always mean being able to use it. In parts
             "With men at the front, women ran factories, farms and offices, so it became harder to argue that they could not be trusted with a vote.",
             "男人们上了前线，妇女管理工厂、农场和办公室，于是人们更难再说她们不能被托付选举权。",
           ),
+          [
+            t("Women gained the vote by law, not by soldiers voting for it.", "女性是通过法律获得选举权，不是士兵投票给的。"),
+            t("Elections continued; the war did not end them.", "选举仍在进行，战争并没终止选举。"),
+            t("Women ran factories, farms and offices.", "女性经营工厂、农场和办公室。"),
+          ],
         ),
         ask(
           t(
@@ -242,6 +310,11 @@ Yet winning the vote on paper did not always mean being able to use it. In parts
             "The third paragraph says they broke windows, chained themselves to railings and went on hunger strikes in prison.",
             "第三段说，她们砸窗户，把自己锁在栏杆上，并在狱中绝食。",
           ),
+          [
+            t("They kept campaigning, more forcefully.", "她们继续抗争，而且更激烈。"),
+            t("New Zealand is another country's story, not where they went.", "新西兰是另一个国家的故事，不是她们去的地方。"),
+            t("Seneca Falls was in New York in 1848, not Britain.", "塞尼卡福尔斯会议是1848年在纽约，不是英国。"),
+          ],
         ),
         ask(
           t("What is the main point of the last paragraph?", "最后一段的主要观点是什么？"),
@@ -255,6 +328,11 @@ Yet winning the vote on paper did not always mean being able to use it. In parts
             "The paragraph explains that Black citizens were kept from voting for decades despite the law, until a new law in 1965.",
             "这一段说明，尽管法律有规定，黑人公民仍被阻止投票长达几十年，直到1965年的新法律出台。",
           ),
+          [
+            t("Black citizens were kept from voting until 1965.", "黑人公民直到1965年仍被阻止投票。"),
+            t("The tests were unfair, used to keep people from voting.", "这些测试是不公平的，用来阻止人投票。"),
+            t("Women did win the vote in many countries.", "许多国家的女性确实获得了选举权。"),
+          ],
         ),
         ask(
           t("Which was the first self-governing country to give women the vote?", "哪个自治国家第一个给予妇女选举权？"),
@@ -264,6 +342,11 @@ Yet winning the vote on paper did not always mean being able to use it. In parts
             "New Zealand became the first self-governing country to give women the vote, in 1893.",
             "新西兰于1893年成为第一个给予妇女选举权的自治国家。",
           ),
+          [
+            t("Finland followed in 1906, after New Zealand.", "芬兰在1906年跟进，晚于新西兰。"),
+            t("Britain gave many women the vote in 1918, much later.", "英国在1918年才给许多女性选举权，晚得多。"),
+            t("1848 was the Seneca Falls meeting, not a vote.", "1848年是塞尼卡福尔斯会议，不是获得选举权。"),
+          ],
         ),
       ],
       ["Seneca", "Falls", "New", "York", "Zealand", "Finland", "Britain", "British", "United", "States", "Black"],
@@ -294,6 +377,11 @@ The system is slow on purpose. Laws must pass many stages and survive many chall
             "The first paragraph says that if the same people make, carry out and judge the laws, nothing can stop them from becoming tyrants.",
             "第一段说，如果同一批人既制定法律、又执行法律、还裁决法律纠纷，就没有什么能阻止他们成为暴君。",
           ),
+          [
+            t("Money is not his concern; tyranny is.", "他担心的不是钱，而是暴政。"),
+            t("Courts are slow on purpose, but that is not his worry.", "法院故意慢，但这不是他担心的。"),
+            t("Voting is not his point; concentrated power is.", "他关注的不是投票，而是权力集中。"),
+          ],
         ),
         ask(
           t("What is judicial review?", "什么是司法审查？"),
@@ -307,6 +395,11 @@ The system is slow on purpose. Laws must pass many stages and survive many chall
             "The fourth paragraph defines judicial review as the power of a high court to declare a law unconstitutional.",
             "第四段把司法审查定义为高等法院宣布某项法律违宪的权力。",
           ),
+          [
+            t("Judges are appointed by the executive, not elected by the legislature.", "法官由行政机构任命，不是立法机构选出。"),
+            t("The veto is a separate check by the president.", "否决权是总统的另一种制衡。"),
+            t("Salaries are never mentioned.", "文中没提薪水。"),
+          ],
         ),
         ask(
           t("How do defenders answer the complaint that the system is slow?", "对于这个制度太慢的批评，支持者如何回应？"),
@@ -320,6 +413,11 @@ The system is slow on purpose. Laws must pass many stages and survive many chall
             "The last paragraph says that efficiency is not the only goal, since a government that can act quickly can also make mistakes quickly.",
             "最后一段说，效率不是唯一的目标，因为行动快的政府也可能很快犯错。",
           ),
+          [
+            t("Defenders agree it is slow; they say speed is not the only goal.", "支持者承认它慢；他们说效率不是唯一目标。"),
+            t("They say efficiency is not the only goal, not that it does not matter.", "他们说效率不是唯一目标，不是说它毫不重要。"),
+            t("Laws pass many stages, so all branches are slow.", "法律要过很多关，各部门都慢。"),
+          ],
         ),
         ask(
           t("What does the legislature do?", "立法机关做什么？"),
@@ -330,6 +428,11 @@ The system is slow on purpose. Laws must pass many stages and survive many chall
             t("It commands the army", "指挥军队"),
           ],
           t("The legislature, often called a parliament or congress, makes the laws.", "立法机关常被称为议会或国会，负责制定法律。"),
+          [
+            t("Carrying out laws is the executive's job.", "执行法律是行政部门的事。"),
+            t("Judging cases is the judiciary's job.", "审理案件是司法部门的事。"),
+            t("The executive directs the armed forces.", "指挥军队的是行政部门。"),
+          ],
         ),
       ],
       ["French", "Montesquieu"],
@@ -362,6 +465,14 @@ The jury of classmates argued for forty minutes. In the end, they found Theo not
             "Sami's questions revealed she was about thirty meters away in the rain, and she then hesitated and said only \"I'm pretty sure.\"",
             "萨米的提问揭示出她当时在雨中约三十米外，随后她犹豫了，只说“我很确定”。",
           ),
+          [
+            t(
+              "She was at the library, on the steps; only the distance and rain were questioned.",
+              "她确实在图书馆台阶上；被质疑的只是距离和雨。",
+            ),
+            t("The photograph of the cut lock was never challenged.", "剪断的锁的照片从未受到质疑。"),
+            t('She said only "I\'m pretty sure"; she never called Theo innocent.', "她只说“我挺确定”，从没说西奥无辜。"),
+          ],
         ),
         ask(
           t("What was the main idea of Sami's closing argument?", "萨米结案陈词的主要观点是什么？"),
@@ -375,6 +486,11 @@ The jury of classmates argued for forty minutes. In the end, they found Theo not
             "Sami focused on doubt: Theo may have cut the lock without any intention to steal, believing the bike was his cousin's.",
             "萨米着重于怀疑：西奥可能以为那是他表姐的车，剪断锁时并没有偷窃的意图。",
           ),
+          [
+            t("Sami did not claim Theo was perfect.", "萨米没有说西奥完美无缺。"),
+            t("The bike was taken; the question was intent.", "车确实被骑走了；问题在于意图。"),
+            t("Sami suggested she was mistaken, not lying.", "萨米暗示她看错了，不是撒谎。"),
+          ],
         ),
         ask(
           t("What does the juror's final comment suggest about the trial?", "陪审员最后的话对这次审判有什么暗示？"),
@@ -388,12 +504,22 @@ The jury of classmates argued for forty minutes. In the end, they found Theo not
             "The juror says being sure is harder than it looks, which reflects how doubt about the evidence shaped the verdict.",
             "这位陪审员说，要确定比看上去难，这反映出对证据的怀疑如何影响了裁决。",
           ),
+          [
+            t("They argued for forty minutes, so it was not easy.", "他们争论了四十分钟，并不容易。"),
+            t("The jury found Theo not guilty.", "陪审团判西奥无罪。"),
+            t("The juror says they learned something, so it was not wasted.", "陪审员说学到了东西，并非浪费时间。"),
+          ],
         ),
         ask(
           t("How long did the jury of classmates argue?", "同学组成的陪审团争论了多久？"),
           t("Forty minutes", "四十分钟"),
           [t("Four hours", "四个小时"), t("Two days", "两天"), t("Five minutes", "五分钟")],
           t("The jury of classmates argued for forty minutes.", "同学组成的陪审团争论了四十分钟。"),
+          [
+            t("Four hours is far too long.", "四小时太长了。"),
+            t("Two days is far too long.", "两天太长了。"),
+            t("Five minutes is far too short.", "五分钟太短了。"),
+          ],
         ),
       ],
       ["Riverside", "Adeyemi", "Theo", "Theo's", "Sami"],
@@ -426,6 +552,11 @@ Spotting fallacies does not mean that the conclusion is false. A person attacked
             "The passage says the witness's marriages have nothing to do with what she saw, so such questions do not help decide the facts.",
             "文章说，证人的婚姻与她看到的事情毫无关系，所以这类问题无助于判定事实。",
           ),
+          [
+            t("Length is not the reason; the questions do not help decide the facts.", "原因不在长短，而在于这些问题无助于查明事实。"),
+            t("Her marriages prove nothing about what she saw.", "她的婚姻证明不了她看到了什么。"),
+            t("The rule is about relevance, not about forbidding witnesses to speak.", "规则讲的是相关性，不是禁止证人谈自己。"),
+          ],
         ),
         ask(
           t('Which fallacy is "Either the defendant is a liar, or the police officer is"?', "“要么被告在撒谎，要么警官在撒谎”是哪种谬误？"),
@@ -435,6 +566,11 @@ Spotting fallacies does not mean that the conclusion is false. A person attacked
             "It pretends there are only two choices, when both people may be honest but mistaken.",
             "它假装只有两种选择，而实际上两个人可能都诚实但都弄错了。",
           ),
+          [
+            t("A slippery slope is a chain of disasters, not two choices.", "滑坡谬误是一连串灾难，不是二选一。"),
+            t("An ad hominem attacks a person, not a choice of two.", "人身攻击针对人，不是二选一。"),
+            t("A hasty generalization comes from too few examples.", "以偏概全来自太少的例子。"),
+          ],
         ),
         ask(
           t("What does the last paragraph say spotting a fallacy shows?", "最后一段说，发现一个谬误说明了什么？"),
@@ -448,6 +584,14 @@ Spotting fallacies does not mean that the conclusion is false. A person attacked
             "The last paragraph says spotting a fallacy does not mean the conclusion is false, only that the argument does not prove it.",
             "最后一段说，发现谬误并不意味着结论是错的，只说明这个论证没能证明它。",
           ),
+          [
+            t("The last paragraph says the conclusion may still be true.", "最后一段说结论仍可能是真的。"),
+            t(
+              "A person attacked unfairly might still be lying, or not; it shows nothing about honesty.",
+              "被不公攻击的人可能撒谎也可能没撒谎；谬误与诚实无关。",
+            ),
+            t("Spotting a fallacy does not end the case.", "找出谬误并不会结案。"),
+          ],
         ),
       ],
     ),
@@ -479,6 +623,11 @@ The grant came through. By September, a traffic light stood at the crossing. A s
             "The second paragraph says she learned that citizens have the right to petition their government, to ask it formally to take action.",
             "第二段说，她了解到公民有向政府请愿、正式要求政府采取行动的权利。",
           ),
+          [
+            t("Trial by jury belongs to courts, not to her campaign.", "陪审团审判属于法庭，与她的行动无关。"),
+            t("At fifteen she could not vote; she collected signatures.", "她十五岁还不能投票；她收集的是签名。"),
+            t("She asked the council to install it; she did not build it.", "她请议会安装，不是自己建。"),
+          ],
         ),
         ask(
           t("Why did the comparison with the festival decorations change many minds?", "为什么与节日装饰的比较改变了许多人的想法？"),
@@ -492,6 +641,11 @@ The grant came through. By September, a traffic light stood at the crossing. A s
             "The light cost about the same as the yearly decorations, so the claim that the town could not afford it seemed weaker.",
             "红绿灯的费用与每年的装饰费差不多，所以“小镇负担不起”的说法就显得没那么有力了。",
           ),
+          [
+            t("The festival is not criticized; the cost comparison mattered.", "文中没批评节日；起作用的是费用对比。"),
+            t("The light would cost money, about the same as the decorations.", "红绿灯要花钱，约等于装饰的费用。"),
+            t("The decorations are not dangerous; they are a comparison of cost.", "装饰并不危险；只是费用的对比。"),
+          ],
         ),
         ask(
           t("What does the sign beneath the light suggest about how the town sees Lena?", "红绿灯下的牌子暗示了小镇如何看待莉娜？"),
@@ -505,6 +659,11 @@ The grant came through. By September, a traffic light stood at the crossing. A s
             'The parents put up a sign that says "Thank you, Lena," which shows their gratitude.',
             "家长们立了一块写着“谢谢你，莉娜”的牌子，表达了他们的感激。",
           ),
+          [
+            t("The sign thanks her, with no complaint about decorations.", "牌子是感谢她，没有抱怨装饰。"),
+            t("A petition is lawful; nothing suggests she broke the law.", "请愿是合法的，没有迹象表明她违法。"),
+            t("The sign names her, so they know who she is.", "牌子写了她的名字，大家都知道她是谁。"),
+          ],
         ),
       ],
       ["Millbrook", "Lena", "Ortiz"],

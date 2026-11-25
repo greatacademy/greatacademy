@@ -45,6 +45,11 @@ In 1911, the Supreme Court ruled that Standard Oil had broken the law against mo
             "The second and fourth paragraphs say she read lawsuits and sworn testimony, left out what could not be checked, and that her method made her work hard to dismiss.",
             "第二段和第四段说她查阅诉讼和宣誓证词，删去无法核实的内容，而这种方法使她的作品难以被驳斥。",
           ),
+          [
+            t('Roosevelt named her kind "muckrakers"; no friendship is mentioned.', "罗斯福称她这类人为“扒粪者”，文中没提他们是朋友。"),
+            t("She saw the company from outside, through her father's ruin.", "她是从外面看这家公司的，起点是父亲生意被毁。"),
+            t("She did not rely on rumor and left out what she could not check.", "她不靠传闻，查证不了的就删掉。"),
+          ],
         ),
         ask(
           t("What did the South Improvement Company scheme do?", "南方改进公司的计划做了什么？"),
@@ -58,6 +63,11 @@ In 1911, the Supreme Court ruled that Standard Oil had broken the law against mo
             "The first paragraph says the railroads would charge the group low rates and everyone else high ones, and even pay the group part of what rivals paid.",
             "第一段说铁路会向这群人收取低价，向其他所有人收取高价，甚至把对手支付的一部分运费交给这群人。",
           ),
+          [
+            t("Despite its name, it was about railroad rates, not roads.", "名字好听，其实是铁路运费的事，与修路无关。"),
+            t("Small refiners were forced to sell, not paid fairly.", "小炼油商是被迫出售，不是得到公平价格。"),
+            t("It used existing railroads with secret rates for one group.", "它用现有铁路，只给一伙人秘密低价。"),
+          ],
         ),
         ask(
           t(
@@ -74,12 +84,22 @@ In 1911, the Supreme Court ruled that Standard Oil had broken the law against mo
             "The third paragraph defines graft as the bribing of officials and says the practices instead showed a company using its size to make fair competition impossible.",
             "第三段把贪污受贿定义为贿赂官员，并说这些做法表明的是一家公司利用其规模使公平竞争变得不可能。",
           ),
+          [
+            t("The Supreme Court later ruled against the company.", "最高法院后来判这家公司违法。"),
+            t("The rebates came from railroads, but the company used them.", "回扣来自铁路，但利用回扣的是这家公司。"),
+            t("They drove small refiners out of business.", "这些做法把小炼油商挤出了市场。"),
+          ],
         ),
         ask(
           t("For which magazine did Ida Tarbell write her series?", "艾达·塔贝尔为哪家杂志写了她的系列文章？"),
           t("McClure's", "《麦克卢尔》"),
           [t("The New York Times", "《纽约时报》"), t("The Washington Post", "《华盛顿邮报》"), t("The Literary Digest", "《文学文摘》")],
           t("She was a writer for McClure's, a popular magazine.", "她是流行杂志《麦克卢尔》的撰稿人。"),
+          [
+            t("The Times is in other passages; she wrote for McClure's.", "《纽约时报》出现在其他文章里；她写稿的是《麦克卢尔》。"),
+            t("The Post is not mentioned.", "文中没提《华盛顿邮报》。"),
+            t("The Literary Digest is not mentioned.", "文中没提《文摘》。"),
+          ],
         ),
       ],
       [
@@ -127,6 +147,11 @@ The same year, Congress passed a law that required drug companies to show that a
             "The second paragraph says the studies seemed thin and the claims of safety were not supported by the evidence she expected, so she asked for more data.",
             "第二段说研究显得单薄，安全性的说法没有她所期望的证据支持，所以她要求提供更多数据。",
           ),
+          [
+            t("She learned of the birth defects only later.", "她是后来才知道会致畸的。"),
+            t("The drug was already sold in dozens of countries.", "这种药已在几十个国家销售。"),
+            t("Her colleagues supported her, not stopped her.", "同事支持她，并没有阻止她。"),
+          ],
         ),
         ask(
           t("What question did the report about damaged nerves lead Kelsey to ask?", "关于神经损伤的报告让凯尔西提出了什么问题？"),
@@ -140,6 +165,11 @@ The same year, Congress passed a law that required drug companies to show that a
             "The second paragraph says she asked what the drug might do to an unborn child if it could harm adult nerves.",
             "第二段说她问：如果这种药能损伤成人的神经，它会对未出生的孩子造成什么影响。",
           ),
+          [
+            t("She never suspects the journal of being paid.", "她从没怀疑那家期刊收了钱。"),
+            t("Dose was the company's safety claim, not her question.", "剂量是公司的安全说法，不是她的疑问。"),
+            t("Price is never mentioned.", "文中没提价格。"),
+          ],
         ),
         ask(
           t('What does the last sentence, "Her misgiving had become the rule," mean?', "最后一句“她的疑虑成了规则”是什么意思？"),
@@ -153,6 +183,11 @@ The same year, Congress passed a law that required drug companies to show that a
             "The last paragraph says Congress required companies to show that a medicine was effective and safe, which turned her careful doubt into law.",
             "最后一段说国会要求公司证明药物有效且安全，这把她审慎的怀疑变成了法律。",
           ),
+          [
+            t("The law required proof, not shared personal doubts.", "法律要求的是证据，不是让人共享个人疑虑。"),
+            t("Congress passed the law; she did not write laws.", "法律是国会通过的，不是她写的。"),
+            t("The company is not said to admit anything.", "文中没说公司认错。"),
+          ],
         ),
         ask(
           t("Where did Frances Kelsey start a new job in 1960?", "1960年弗朗西丝·凯尔西在哪里开始新工作？"),
@@ -166,6 +201,11 @@ The same year, Congress passed a law that required drug companies to show that a
             "In the autumn of 1960, a doctor named Frances Kelsey started a new job at the Food and Drug Administration.",
             "1960年秋，医生弗朗西丝·凯尔西在食品药品监督管理局开始了新工作。",
           ),
+          [
+            t("She joined the U.S. agency, not a German company.", "她进的是美国的机构，不是德国公司。"),
+            t("Australian doctors found the defects; she did not work there.", "发现畸形的是澳大利亚医生；她不在那里工作。"),
+            t("Yale is where Milgram worked, in the next passage.", "耶鲁是下一篇中米尔格拉姆工作的地方。"),
+          ],
         ),
       ],
       [
@@ -210,6 +250,11 @@ The study has been criticized ever since. Some argue that it was cruel to the vo
             "The first paragraph says the study was presented as one of memory but was really about how far ordinary people would obey an authority.",
             "第一段说这项研究表面上是关于记忆的，实际上是关于普通人会在多大程度上服从权威。",
           ),
+          [
+            t("Memory was the cover story, not the real purpose.", "记忆只是幌子，不是真正目的。"),
+            t("The payment was small and was not what was studied.", "报酬很少，也不是研究对象。"),
+            t("The actor was already working with Milgram.", "演员本来就是米尔格拉姆的搭档。"),
+          ],
         ),
         ask(
           t('What happened when two other "teachers" refused to continue?', "当另外两位“老师”拒绝继续时发生了什么？"),
@@ -223,6 +268,11 @@ The study has been criticized ever since. Some argue that it was cruel to the vo
             "The fourth paragraph says that when two actors playing teachers refused to go on, most volunteers refused as well.",
             "第四段说，当两个扮演老师的演员拒绝继续时，大多数志愿者也拒绝了。",
           ),
+          [
+            t("The man in the gray coat is not said to stop anything.", "文中没说穿灰外套的人中止了实验。"),
+            t("Fewer obeyed, not more.", "服从的人更少，而不是更多。"),
+            t("The learner's secret was kept from them.", "学生是演员这件事一直瞒着他们。"),
+          ],
         ),
         ask(
           t("What lesson does the writer draw from the study?", "作者从这项研究中得出了什么教训？"),
@@ -239,12 +289,22 @@ The study has been criticized ever since. Some argue that it was cruel to the vo
             "The last paragraph says doing wrong may require only authority, order and small steps, and that those who refused showed the steps could be resisted.",
             "最后一段说做错事可能只需要权威、秩序和一系列小步骤，而那些拒绝的人表明这些步骤是可以抵抗的。",
           ),
+          [
+            t("It says doing wrong does not require bad people.", "文中说做错事不一定要坏人。"),
+            t("Experts predicted almost no one would go far, and were wrong.", "专家预测几乎没人会走到最后，结果错了。"),
+            t("Criticisms are about cruelty, not actors or ads.", "批评针对的是残忍，不是用演员或登广告。"),
+          ],
         ),
         ask(
           t("What did Milgram's newspaper advertisement say the study was about?", "米尔格拉姆的报纸广告说这项研究是关于什么的？"),
           t("Memory", "记忆"),
           [t("Obedience", "服从"), t("Pain", "疼痛"), t("Electricity", "电")],
           t("He offered a small payment to people who would take part in a study of memory.", "他向参加一项记忆研究的人提供少量报酬。"),
+          [
+            t("Obedience was the real subject, kept hidden.", "服从才是真正的主题，但被隐瞒了。"),
+            t("Pain was not what the ad offered to study.", "广告说要研究的不是痛苦。"),
+            t("Electricity was part of the setup, not the stated topic.", "电击只是实验设置的一部分，不是宣称的主题。"),
+          ],
         ),
       ],
       ["Stanley", "Milgram", "Milgram's", "Yale", "Connecticut"],
@@ -280,6 +340,11 @@ Watkins became one of the best-known figures of the scandal. She had not gone to
             "The paragraph explains that Enron hid its debts in partnerships so its books looked healthy, which shows the success was only apparent.",
             "这一段解释说安然把债务藏在合伙企业中，使账目看起来健康，这说明那种成功只是表面的。",
           ),
+          [
+            t("The profits came from hiding debts, not honest work.", "利润来自隐藏债务，不是诚实劳动。"),
+            t("Magazines praised it openly, so it was not secret.", "杂志公开称赞它，并没有保密。"),
+            t("Employees lost their savings; they did not own the success.", "员工失去了积蓄，成功并不属于他们。"),
+          ],
         ),
         ask(
           t("Why did many employees lose their savings?", "为什么许多员工失去了积蓄？"),
@@ -293,6 +358,11 @@ Watkins became one of the best-known figures of the scandal. She had not gone to
             "The fourth paragraph says many lost their savings because the shares in their retirement accounts became nearly worthless.",
             "第四段说许多人失去积蓄，是因为他们退休账户中的股票几乎变得一文不值。",
           ),
+          [
+            t("The partnerships hid debts; they did not raid banks.", "这些合伙企业是用来藏债务的，不是去抢银行。"),
+            t("The government did not take employees' money.", "政府没有拿走员工的钱。"),
+            t("Lawyers were hired by the company, not paid by employees.", "律师是公司请的，不是员工花钱。"),
+          ],
         ),
         ask(
           t("What does the writer say Watkins's case shows?", "作者说沃特金斯的事例说明了什么？"),
@@ -306,6 +376,11 @@ Watkins became one of the best-known figures of the scandal. She had not gone to
             "The last paragraph says her case showed the value and the limits of an inside voice: a warning helps only if those in power are willing to hear it.",
             "最后一段说她的事例显示了内部发声的价值和局限：只有掌权者愿意听，警告才有用。",
           ),
+          [
+            t("She did speak up inside, and the writer values it.", "她确实在公司内部发声了，作者也肯定了这一点。"),
+            t("The writer does not judge going to the press.", "作者没有评判找媒体对不对。"),
+            t("Arthur Andersen approved false books, so it failed.", "安达信批准了假账，可见会计师事务所靠不住。"),
+          ],
         ),
         ask(
           t("Where was Enron based?", "安然公司总部在哪里？"),
@@ -315,6 +390,11 @@ Watkins became one of the best-known figures of the scandal. She had not gone to
             "Enron, an energy company based in Houston, Texas, was one of the most admired businesses in the United States.",
             "总部位于得克萨斯州休斯敦的能源公司安然，曾是美国最受推崇的企业之一。",
           ),
+          [
+            t("New York is not named as its base.", "文中没说它的总部在纽约。"),
+            t("Chicago is not mentioned.", "文中没提芝加哥。"),
+            t("Congress is in Washington, but Enron was not.", "国会在华盛顿，但安然不在那里。"),
+          ],
         ),
       ],
       ["Enron", "Enron's", "Houston", "Texas", "Sherron", "Watkins", "Kenneth", "Lay", "Arthur", "Andersen", "Congress"],
@@ -347,6 +427,11 @@ Yet Acton's sentence has outlived the argument that produced it. It is quoted by
             "The first and second paragraphs say the sentence came from a letter in an argument about how historians should write about powerful men such as the popes.",
             "第一段和第二段说这句话出自一封信，信中争论的是历史学家应如何书写教皇等有权势的人。",
           ),
+          [
+            t("No parliament debate on taxes is mentioned.", "文中没提议会的税收辩论。"),
+            t("Creighton wrote about popes; they were not quarreling.", "克赖顿写的是教皇的历史，不是教皇之间的争吵。"),
+            t("It came from a letter, not a lecture.", "这句话出自一封信，不是讲座。"),
+          ],
         ),
         ask(
           t('Why does the writer say the word "tends" matters?', "作者为什么说“倾向于”这个词很重要？"),
@@ -363,6 +448,11 @@ Yet Acton's sentence has outlived the argument that produced it. It is quoted by
             "The fourth paragraph says Acton did not claim every powerful person becomes corrupt, only that power pushes people in that direction.",
             "第四段说阿克顿并没有说每个有权势的人都会腐败，只是说权力把人推向那个方向。",
           ),
+          [
+            t('The writer says "tends" is a precise claim, not doubt.', "作者说 tends 是精确的说法，不是不确定。"),
+            t("Acton wrote it; Creighton did not.", "这句话是阿克顿写的，不是克赖顿。"),
+            t("The push grows with power; it is not only for absolute rulers.", "权力越大推力越强，并不只针对专制君主。"),
+          ],
         ),
         ask(
           t("Why did Acton value laws, courts and divided authority?", "阿克顿为什么重视法律、法院和分权？"),
@@ -376,6 +466,11 @@ Yet Acton's sentence has outlived the argument that produced it. It is quoted by
             "The fourth paragraph says these institutions check the push of power before it turns into impunity.",
             "第四段说这些制度在权力的推动变成有恃无恐之前加以制约。",
           ),
+          [
+            t("Publishing is not mentioned.", "文中没提出版。"),
+            t("He wanted the powerful judged more strictly, not freer.", "他要求更严厉地评判掌权者，而不是给他们更多自由。"),
+            t("He insisted on judging, not removing it.", "他坚持要评判，而不是免除评判。"),
+          ],
         ),
         ask(
           t("In which year did Lord Acton write the letter with his famous sentence?", "阿克顿勋爵在哪一年写下那封含名言的信？"),
@@ -385,6 +480,11 @@ Yet Acton's sentence has outlived the argument that produced it. It is quoted by
             "In fact it comes from a letter written in 1887 by a British historian, Lord Acton.",
             "事实上，它出自英国历史学家阿克顿勋爵1887年写的一封信。",
           ),
+          [
+            t("1641 is too early.", "1641年太早了。"),
+            t("1740 is too early.", "1740年太早了。"),
+            t("1911 belongs to the Standard Oil ruling.", "1911年是标准石油案判决的年份。"),
+          ],
         ),
       ],
       ["Lord", "Acton", "Acton's", "John", "Dalberg-Acton", "Mandell", "Creighton", "Creighton's", "Cambridge", "Europe", "Catholic"],
@@ -420,6 +520,11 @@ Ellsberg always said that he had acted on conscience and was prepared to accept 
             "The second paragraph says the papers showed presidents telling the public one thing while privately believing another about the war.",
             "第二段说这些文件表明，总统们在战争问题上对公众说一套，私下却另有看法。",
           ),
+          [
+            t("The war was still killing thousands.", "战争当时还在造成数千人死亡。"),
+            t("McNamara ordered the study; he did not start the war.", "麦克纳马拉下令做研究，不是他发动了战争。"),
+            t("A team wrote it; he was one researcher.", "报告是一个团队写的，他只是其中一员。"),
+          ],
         ),
         ask(
           t("Why did the Supreme Court allow the newspapers to publish?", "最高法院为什么允许报纸发表？"),
@@ -433,6 +538,11 @@ Ellsberg always said that he had acted on conscience and was prepared to accept 
             "The fourth paragraph says the Court ruled that the government had not shown the kind of harm that justified stopping publication.",
             "第四段说法院裁定政府没有证明那种足以阻止发表的伤害。",
           ),
+          [
+            t("No such promise is mentioned.", "文中没提这种承诺。"),
+            t("His trial came after; he was not found innocent.", "审判在后，他也不是被判无罪。"),
+            t("Nixon's administration went to court to stop them.", "尼克松政府是去法院阻止发表的。"),
+          ],
         ),
         ask(
           t("Why was the case against Ellsberg dismissed?", "针对埃尔斯伯格的案件为什么被驳回？"),
@@ -446,6 +556,11 @@ Ellsberg always said that he had acted on conscience and was prepared to accept 
             "The fifth paragraph says the judge dismissed the case because of government misconduct, including the break-in at his psychiatrist's office.",
             "第五段说法官因政府的不当行为驳回了此案，其中包括闯入他的心理医生办公室。",
           ),
+          [
+            t("The papers were secret; that was why he was charged.", "文件是机密，正因如此他才被起诉。"),
+            t("No pardon is mentioned.", "文中没提赦免。"),
+            t("No fine is mentioned.", "文中没提罚款。"),
+          ],
         ),
         ask(
           t("Who ordered the secret study of the Vietnam War?", "谁下令对越战进行秘密研究？"),
@@ -455,6 +570,11 @@ Ellsberg always said that he had acted on conscience and was prepared to accept 
             "In 1967, Robert McNamara, the American secretary of defense, ordered a secret study.",
             "1967年，美国国防部长罗伯特·麦克纳马拉下令进行一项秘密研究。",
           ),
+          [
+            t("Nixon tried to stop publication later.", "尼克松是后来想阻止发表的人。"),
+            t("Ellsberg was a researcher on the study.", "埃尔斯伯格是参与研究的人。"),
+            t("The Times published it; it did not order it.", "《纽约时报》是发表者，不是下令者。"),
+          ],
         ),
       ],
       [
@@ -503,6 +623,11 @@ Serpico was not a perfect hero, and he never claimed to be. But his case shows w
             "The second paragraph says officers who took payments wondered whether he would report them, so he was not welcome.",
             "第二段说收钱的警察怀疑他会举报他们，所以他不受欢迎。",
           ),
+          [
+            t("Language is not mentioned.", "文中没提语言。"),
+            t("He refused money; he did not ask for more.", "他拒绝收钱，并没有要求更高的报酬。"),
+            t("His superiors told him to be patient, not to keep away.", "上级叫他耐心等，并没叫他远离同事。"),
+          ],
         ),
         ask(
           t("Why did Serpico's reports to his superiors lead to little action?", "为什么塞尔皮科向上级的举报几乎没有结果？"),
@@ -516,6 +641,11 @@ Serpico was not a perfect hero, and he never claimed to be. But his case shows w
             "The third paragraph says the corruption was so pervasive that the people he reported it to often had reasons to keep it quiet.",
             "第三段说腐败如此普遍，他举报的对象往往有自己的理由要把事情压下去。",
           ),
+          [
+            t("He tried for several years, not once.", "他反映了好几年，不是一次。"),
+            t("The problem was the listeners, not his writing.", "问题出在听的人，不在他的写法。"),
+            t("It was illegal; he reported it as corruption.", "这是违法的，他是当作腐败来举报的。"),
+          ],
         ),
         ask(
           t("What did Serpico tell the commission was the real problem?", "塞尔皮科告诉委员会真正的问题是什么？"),
@@ -529,6 +659,11 @@ Serpico was not a perfect hero, and he never claimed to be. But his case shows w
             "The fifth paragraph says he told the commission that the problem was not a few bad officers but a culture that protected them.",
             "第五段说他告诉委员会，问题不在于几个坏警察，而在于一种保护他们的风气。",
           ),
+          [
+            t("He said it was not a few bad officers.", "他说问题不是少数坏警察。"),
+            t("He used the newspaper; he did not blame it.", "他借助报纸揭露问题，并没有怪罪报纸。"),
+            t("Salaries are not mentioned.", "文中没提工资。"),
+          ],
         ),
       ],
       ["Frank", "Serpico", "Serpico's", "New", "York", "Knapp", "Whitman", "Commission", "Brooklyn", "City"],
@@ -561,6 +696,11 @@ Over the centuries, Bao Zheng became a hero of stories and operas, in which "Jud
             "The second paragraph says they demanded more than the court required and gave the extra ones as gifts to powerful friends in the capital.",
             "第二段说他们索要的比朝廷要求的多，并把多出来的送给京城里有权势的朋友。",
           ),
+          [
+            t("The extra stones went to the capital, not abroad.", "多出的砚台送到京城，不是卖到外国。"),
+            t("The court had lost nothing.", "朝廷并没丢失砚台。"),
+            t("The craftsmen paid the cost; they were not paid.", "代价落在工匠身上，他们并没有得到报酬。"),
+          ],
         ),
         ask(
           t("Why does the writer say the inkstone story was remembered?", "作者说为什么砚台的故事会被记住？"),
@@ -574,6 +714,11 @@ Over the centuries, Bao Zheng became a hero of stories and operas, in which "Jud
             "The third paragraph says the story was remembered because it was rare in an age when gifts and favors were the ordinary way to advance.",
             "第三段说这个故事之所以被记住，是因为在送礼和人情是升迁常道的时代，这样的事很少见。",
           ),
+          [
+            t("Size is not the point; he refused even one.", "重点不在大小，他一块也不要。"),
+            t("No poem by the emperor is mentioned.", "文中没提皇帝写诗。"),
+            t("The official history records it, not his speeches.", "记下这件事的是正史，不是他的讲话。"),
+          ],
         ),
         ask(
           t('How does the writer treat the legends of "Judge Bao"?', "作者如何看待“包青天”的传说？"),
@@ -587,6 +732,11 @@ Over the centuries, Bao Zheng became a hero of stories and operas, in which "Jud
             "The last paragraph says the legends grew far beyond the facts but grew from a real reputation for unimpeachable probity.",
             "最后一段说传说远远超出了事实，但它们源于一种真实的名声：无可指摘的清廉。",
           ),
+          [
+            t("The writer says the legends grew far beyond the facts.", "作者说传说远远超出了事实。"),
+            t("They grew from a real reputation.", "它们源自真实的名声。"),
+            t("The powers belong to the stories; no real judge had them.", "那些神力只存在于故事里，真实的法官没有。"),
+          ],
         ),
       ],
       ["Bao", "Zheng", "Zheng's", "Duanzhou", "Kaifeng", "Song", "China", "Chinese"],

@@ -43,6 +43,11 @@ Today, more than a million people a year run marathons. Few of them win. For mos
             "The second paragraph says the oldest accounts do not mention this run and that the famous story was written down more than five hundred years later.",
             "第二段说，最早的记载根本没有提到这次奔跑，而这个著名的故事是五百多年后才被记录下来的。",
           ),
+          [
+            t("Forty kilometers is a long run, and length is never the doubt.", "四十公里是很长的距离，文中从没因长度而怀疑。"),
+            t("The Athenian army won the battle at Marathon.", "雅典军队在马拉松打赢了。"),
+            t("The story was written five hundred years later, not by him.", "故事是五百年后写下的，不是他本人写的。"),
+          ],
         ),
         ask(
           t("Why is the marathon 42.195 kilometers long?", "为什么马拉松是 42.195 公里？"),
@@ -59,6 +64,14 @@ Today, more than a million people a year run marathons. Few of them win. For mos
             "The fourth paragraph says the 1908 London course was set at that length so it could start at Windsor Castle and finish in front of the royal box.",
             "第四段说，1908 年伦敦的赛道定为这个长度，是为了从温莎城堡出发、在皇家包厢前结束。",
           ),
+          [
+            t(
+              "Pheidippides ran about forty kilometers, and the length varied at first.",
+              "斐迪庇第斯跑了大约四十公里，而且起初长度不固定。",
+            ),
+            t("The run to Sparta was about 240 kilometers.", "去斯巴达那段约有 240 公里。"),
+            t("Louis won in 1896; the distance was set in 1908.", "路易斯 1896 年夺冠，距离是 1908 年定下的。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest about most marathon runners?", "最后一句暗示了大多数马拉松跑者怎样？"),
@@ -72,12 +85,22 @@ Today, more than a million people a year run marathons. Few of them win. For mos
             "It says the real contest for most is not against an opponent but against their own stamina and doubt.",
             "它说，对大多数人来说，真正的较量不是与对手，而是与自己的耐力和怀疑。",
           ),
+          [
+            t("Few of them win, the passage says.", "文中说他们中很少有人获胜。"),
+            t("Their contest is against stamina and doubt, which needs training.", "他们挑战的是耐力和怀疑，这需要训练。"),
+            t("More than a million people a year run marathons around the world.", "每年有一百多万人跑马拉松，不只在希腊。"),
+          ],
         ),
         ask(
           t("Who won the first modern Olympic marathon?", "谁赢得了第一届现代奥运会马拉松？"),
           t("A Greek water carrier named Spyridon Louis", "希腊送水工斯皮里东·路易斯"),
           [t("Pheidippides", "菲迪皮德斯"), t("A French scholar", "一位法国学者"), t("A runner from London", "一位伦敦选手")],
           t("The race was won by a Greek water carrier named Spyridon Louis.", "比赛的冠军是希腊送水工斯皮里东·路易斯。"),
+          [
+            t("Pheidippides is the legend from 490 BCE.", "斐迪庇第斯是公元前 490 年传说里的人。"),
+            t("The French scholar only suggested the race.", "那位法国学者只是提议举办比赛。"),
+            t("London hosted the 1908 Olympics, not the first race.", "伦敦举办的是 1908 年奥运会，不是第一场比赛。"),
+          ],
         ),
       ],
       [
@@ -126,6 +149,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "The first paragraph says that as the game became more competitive the system broke down, because captains rarely agreed when their own side had fouled.",
             "第一段说，随着比赛越来越激烈，这一做法行不通了，因为本方犯规时队长很少能达成一致。",
           ),
+          [
+            t("The number of captains is not the problem. They could not agree.", "问题不在队长人数，而在他们无法达成一致。"),
+            t("The captains were not said to lack the rules.", "文中没说队长不懂规则。"),
+            t("Umpires came after the captain system failed.", "裁判员是在队长制失败后才出现的。"),
+          ],
         ),
         ask(
           t("Where does the word referee come from?", "referee 这个词是怎么来的？"),
@@ -139,6 +167,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "The second paragraph says the umpires could refer a disagreement to the third official, so the referee is the person to whom a question is referred.",
             "第二段说，裁判员可以把争议提交给第三位裁判，所以 referee 就是问题被提交给的那个人。",
           ),
+          [
+            t("No captain's name is involved.", "和哪位队长的名字无关。"),
+            t("Running along the sides is what the assistants did later.", "沿边线跑是后来助理裁判做的事。"),
+            t("The word comes from refer, not a Greek word.", "这个词来自 refer，不是希腊语。"),
+          ],
         ),
         ask(
           t("What two reasons does the passage give for why sports need referees?", "文章给出了体育运动需要裁判的哪两个理由？"),
@@ -155,6 +188,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "The fourth paragraph gives One reason, that everyone involved wants a side to win, and Another reason, speed.",
             "第四段给出了 One reason，即所有参与者都希望某方获胜，以及 Another reason，即速度。",
           ),
+          [
+            t("Referees do not score goals or sell tickets.", "裁判不进球也不卖票。"),
+            t("Players could not be trusted to judge fairly. That is why referees came.", "正因为球员无法公正裁判，才有了裁判。"),
+            t("Booing and arguing are problems, not reasons for referees.", "喝倒彩和争吵是问题，不是需要裁判的理由。"),
+          ],
         ),
         ask(
           t("By what year had the referee moved onto the field?", "到哪一年裁判走进了球场？"),
@@ -164,6 +202,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "By 1891, the referee had moved onto the field and become the main decision maker.",
             "到1891年，裁判已走进球场成为主要决策者。",
           ),
+          [
+            t("The 1870s is when the third official was added on the side.", "1870 年代加入的第三位裁判还站在场边。"),
+            t("1908 is the year in the marathon passage, not this one.", "1908 年属于马拉松那篇，不是这篇。"),
+            t("2012 is never mentioned.", "文中从没提到 2012 年。"),
+          ],
         ),
       ],
       ["England"],
@@ -201,6 +244,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "Rule 2 says the first false start brings a warning to the whole field, and any runner who makes a false start after that is disqualified.",
             "第 2 条规定，第一次抢跑时全体选手受到警告，此后任何抢跑的选手都会被取消资格。",
           ),
+          [
+            t("The whole field gets a warning only for the first false start.", "只有第一次抢跑才给全体警告。"),
+            t("No rule moves a runner one meter back.", "没有规则让选手后退一米。"),
+            t("The warning has already been given, so this is not the first.", "警告已经给过，这不是第一次了。"),
+          ],
         ),
         ask(
           t(
@@ -220,6 +268,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "Rule 4 gives the exception: accidental contact is not a foul unless it causes another runner to fall or lose a place.",
             "第 4 条给出了例外：意外接触不算犯规，除非它导致另一名选手摔倒或失去名次。",
           ),
+          [
+            t("Accidental contact is not a foul unless someone falls or loses a place.", "意外接触不算犯规，除非有人摔倒或失去名次。"),
+            t("The back straight is past the green flag, so lanes are open.", "后直道已过绿旗，可以离开跑道。"),
+            t("Pushing, tripping and blocking are never allowed.", "推、绊和阻挡任何时候都不允许。"),
+          ],
         ),
         ask(
           t(
@@ -236,6 +289,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "Rule 3 says each runner must stay in his or her own lane for the first 100 meters, until the green flag.",
             "第 3 条规定，前 100 米内，直到绿旗处，每名选手都必须待在自己的跑道上。",
           ),
+          [
+            t("Rule 1 is about who may enter, not lanes.", "第一条讲参赛资格，不是跑道。"),
+            t("Rule 5 is about the finish.", "第五条讲的是终点。"),
+            t("Runners must keep their lanes for the first 100 meters.", "前 100 米必须留在自己的跑道上。"),
+          ],
         ),
         ask(
           t("What part of a runner must cross the line to finish?", "选手身体的哪个部位过线才算完成比赛？"),
@@ -245,6 +303,11 @@ Referees are often booed and shouted at. Yet without them, most games would quic
             "The race ends when a runner's chest, not head, arm or foot, crosses the finish line.",
             "选手的胸部（而不是头、手臂或脚）越过终点线时比赛结束。",
           ),
+          [
+            t("The head is named as not counting.", "规则明确说头不算。"),
+            t("The foot is named as not counting.", "规则明确说脚不算。"),
+            t("The arm is named as not counting.", "规则明确说手臂不算。"),
+          ],
         ),
       ],
       ["Westfield"],
@@ -275,6 +338,11 @@ The old saying is "Practice makes perfect." No one is perfect, so a better versi
             "The first paragraph grants that talent matters, then states the claim: how an athlete practices matters at least as much.",
             "第一段承认天赋很重要，然后提出观点：运动员怎样训练至少同样重要。",
           ),
+          [
+            t("Talent does matter, the author says, like a tall basketball player.", "作者说天赋确实重要，比如个子高的篮球运动员。"),
+            t("Height is an example, not the main claim.", "身高只是例子，不是主要观点。"),
+            t("The author says rest is needed.", "作者说需要休息。"),
+          ],
         ),
         ask(
           t("What evidence does the author give for the claim?", "作者为这一观点提供了什么证据？"),
@@ -291,6 +359,11 @@ The old saying is "Practice makes perfect." No one is perfect, so a better versi
             "The second paragraph describes Ericsson's study, in which the best students were those who had spent the most time in deliberate practice, and similar later results.",
             "第二段描述了埃里克森的研究：最优秀的学生是那些花最多时间刻意练习的人，后来的研究也得出了类似结果。",
           ),
+          [
+            t("Kicking with friends is an example of play, not evidence.", "和朋友踢球是玩耍的例子，不是证据。"),
+            t("The saying is something the author revises.", "这句俗语是作者要修改的说法。"),
+            t("Recovery explains rest, not the main claim.", "恢复解释的是休息，不是主要观点。"),
+          ],
         ),
         ask(
           t("Why do good training plans include rest?", "为什么好的训练计划包括休息？"),
@@ -307,12 +380,22 @@ The old saying is "Practice makes perfect." No one is perfect, so a better versi
             "The fourth paragraph says muscles grow stronger during recovery and athletes who never rest are more likely to suffer a strain or a sprain.",
             "第四段说，肌肉在恢复期间变强，而从不休息的运动员更容易拉伤或扭伤。",
           ),
+          [
+            t("Rest is not chosen for fun.", "休息不是为了好玩。"),
+            t("Feedback comes during practice, not rest.", "反馈在练习中给出，不是休息时。"),
+            t("Deliberate practice is hard, not easy.", "刻意练习很难，并不简单。"),
+          ],
         ),
         ask(
           t("Whom did Anders Ericsson study in Berlin?", "安德斯·埃里克森在柏林研究了谁？"),
           t("Violin students at a music school", "音乐学校的小提琴学生"),
           [t("Football players", "足球运动员"), t("Chess players", "国际象棋棋手"), t("Swimmers", "游泳运动员")],
           t("Ericsson studied violin students at a music school in Berlin.", "埃里克森研究了柏林一所音乐学校的小提琴学生。"),
+          [
+            t("Football is an example the author gives, not Ericsson's study.", "足球是作者举的例子，不是埃里克森的研究。"),
+            t("Chess came from later researchers.", "国际象棋来自后来的研究者。"),
+            t("Swimming came from later researchers too.", "游泳也来自后来的研究者。"),
+          ],
         ),
       ],
       ["Anders", "Ericsson", "Ericsson's", "Berlin"],
@@ -350,6 +433,11 @@ Weather and safety. If the gym must be closed, the league will post a notice on 
             "The playing time rule has an exception: a player who arrives after the start of the second quarter is not guaranteed playing time.",
             "上场时间规则有一个例外：在第二节开始后才到场的球员不保证有上场时间。",
           ),
+          [
+            t("The full-quarter rule has an exception for late arrival.", "打满一节的规则对迟到有例外。"),
+            t("The division does not change the late-arrival rule.", "组别不影响迟到规则。"),
+            t("Under-12 players do play full quarters.", "十二岁以下组的球员也打满一节。"),
+          ],
         ),
         ask(
           t(
@@ -369,6 +457,11 @@ Weather and safety. If the gym must be closed, the league will post a notice on 
             "The fouls rule says a technical foul counts as a personal foul, and a player with five personal fouls must leave the game.",
             "犯规规则说，技术犯规算作个人犯规，个人犯规满五次的球员必须离场。",
           ),
+          [
+            t("A technical foul counts as a personal foul.", "技术犯规算作个人犯规。"),
+            t("The coach leaves only after two technical fouls of his own.", "教练自己被判两次技术犯规才要离场。"),
+            t("Forfeits are about too few players.", "弃权与人数不足有关。"),
+          ],
         ),
         ask(
           t(
@@ -385,12 +478,22 @@ Weather and safety. If the gym must be closed, the league will post a notice on 
             "The defense rule says under-12 teams must play person-to-person, and zone defense is not allowed until the last two minutes.",
             "防守规则规定，12 岁以下组必须打人盯人防守，最后两分钟之前不允许区域防守。",
           ),
+          [
+            t("Under-12 teams must play person-to-person until the end.", "十二岁以下组在最后两分钟前必须人盯人。"),
+            t("The number of players does not unlock zone defense.", "人数多少不能解锁区域防守。"),
+            t("The ban is only for under-12, and only before the last two minutes.", "只在十二岁以下组限制，而且只到最后两分钟前。"),
+          ],
         ),
         ask(
           t("How many players must a team have to start a game?", "一支球队至少要有几名队员才能开赛？"),
           t("At least five", "至少五名"),
           [t("At least three", "至少三名"), t("At least eight", "至少八名"), t("At least twelve", "至少十二名")],
           t("A team must have at least five players present to start a game.", "球队必须至少有五名队员到场才能开赛。"),
+          [
+            t("Three forfeits is the number for suspension.", "三次弃权是停赛的标准。"),
+            t("Eight is never mentioned.", "文中没提八人。"),
+            t("Twelve is never mentioned.", "文中没提十二人。"),
+          ],
         ),
       ],
       ["Oakdale"],
@@ -423,6 +526,11 @@ That is why many coaches say that the true test of an athlete is not the score. 
             "The first paragraph describes the two runners hugging after competing hard and calls it a picture of sportsmanship; the second paragraph then defines the word.",
             "第一段描述了两位跑者全力竞争后相拥，称之为体育精神的写照；第二段接着给出这个词的定义。",
           ),
+          [
+            t("The passage is about behavior, not race tactics.", "文章讲的是行为，不是比赛技巧。"),
+            t("Rupp came second and celebrated Farah's win.", "拉普获得第二，为法拉的胜利庆祝。"),
+            t("They competed with everything they had.", "他们全力以赴地相互竞争。"),
+          ],
         ),
         ask(
           t("According to the passage, what does a good loser do?", "根据文章，一个输得起的人会怎么做？"),
@@ -436,6 +544,11 @@ That is why many coaches say that the true test of an athlete is not the score. 
             "The third paragraph says a good sport shakes hands, congratulates the other team and asks what she could do better next time.",
             "第三段说，有体育精神的人会握手、祝贺对方，并思考下次怎样做得更好。",
           ),
+          [
+            t("A good loser does not blame the referee.", "好的输家不怪裁判。"),
+            t("A good loser shakes hands.", "好的输家会握手。"),
+            t("Mocking is what a bad winner does.", "嘲笑是糟糕的赢家才会做的事。"),
+          ],
         ),
         ask(
           t("Which reason does the author give for why sportsmanship matters?", "作者给出了体育精神为什么重要的哪个理由？"),
@@ -449,12 +562,22 @@ That is why many coaches say that the true test of an athlete is not the score. 
             "The paragraph that asks Why does this matter? answers that sport is an agreement to follow the same rules and accept the result, and without it there would be no game.",
             "提出 Why does this matter? 的那一段回答说，体育是一种遵守同样规则并接受结果的约定，没有它就没有比赛。",
           ),
+          [
+            t("Winning more is never claimed.", "文中从没说会赢得更多。"),
+            t("Referees give no points for behavior.", "裁判不会因为表现好而加分。"),
+            t("Smiling is never mentioned.", "文中从没提微笑。"),
+          ],
         ),
         ask(
           t("Which race did Mo Farah win in 2012?", "2012年莫·法拉赢了哪个项目？"),
           t("The Olympic 10,000-meter race", "奥运会一万米赛跑"),
           [t("The marathon", "马拉松"), t("The 800-meter race", "800米赛跑"), t("The 100-meter race", "100米赛跑")],
           t("Mo Farah won the 2012 Olympic 10,000-meter race in London.", "莫·法拉赢得了2012年伦敦奥运会一万米赛跑。"),
+          [
+            t("The marathon is a different topic.", "马拉松是另一个话题。"),
+            t("The 800-meter race is in the track meet rules.", "800 米赛跑出现在田径规则里。"),
+            t("The 100-meter race is never mentioned.", "文中从没提 100 米赛跑。"),
+          ],
         ),
       ],
       ["Olympic", "London", "Mo", "Farah", "Galen", "Rupp"],
@@ -485,6 +608,11 @@ Kathrine Switzer ran the Boston Marathon again in 2017, at the age of seventy, w
             "The second paragraph says Switzer's run became a symbol of a long struggle for girls and women to play sports.",
             "第二段说，斯威策的奔跑成了女孩和女性争取参与体育运动这一长期斗争的象征。",
           ),
+          [
+            t("Switzer finished the race but is not said to have won.", "斯威策跑完了，但文中没说她获胜。"),
+            t("Pheidippides ran long before her.", "斐迪庇第斯在她之前很久就跑过。"),
+            t("Her friends pushed the official away.", "她的朋友把那名官员推开了。"),
+          ],
         ),
         ask(
           t("What evidence shows that Title IX made a difference?", "什么证据表明《第九条》起了作用？"),
@@ -501,6 +629,11 @@ Kathrine Switzer ran the Boston Marathon again in 2017, at the age of seventy, w
             "The third paragraph compares the numbers before and after the law: from about one in twenty-seven girls to about two in five.",
             "第三段对比了法律通过前后的数字：从约二十七分之一的女生增加到约五分之二。",
           ),
+          [
+            t("The year alone does not show a change.", "光有年份不能说明变化。"),
+            t("Lower pay shows what is still wrong.", "收入较低说明问题仍在。"),
+            t("Her second run is a symbol, not evidence of Title IX.", "她再跑一次是象征，不是第九条的证据。"),
+          ],
         ),
         ask(
           t("What is the author's view of the struggle today?", "作者对今天的这场斗争持什么看法？"),
@@ -514,6 +647,11 @@ Kathrine Switzer ran the Boston Marathon again in 2017, at the age of seventy, w
             "The fourth paragraph begins The struggle is not over and lists how women athletes are still treated unequally, after the passage has shown how much has changed.",
             "第四段以 The struggle is not over 开头，列举了女运动员至今仍受到的不平等待遇，而此前文章已说明了已有的巨大变化。",
           ),
+          [
+            t("Women are still paid less in many countries.", "在许多国家女性收入仍然更低。"),
+            t("Girls playing sports rose from one in twenty-seven to two in five.", "参加运动的女生从二十七分之一升到五分之二。"),
+            t("The author praises girls who step onto the field.", "作者赞扬走上赛场的女孩。"),
+          ],
         ),
       ],
       ["Kathrine", "Switzer", "Switzer's", "Boston", "K.", "V.", "Olympic", "Title", "IX"],
@@ -544,6 +682,11 @@ These are real problems, but they can be solved. Replay should be used only for 
             "The first paragraph ends with the claim: I believe this is the right choice, as long as it is used carefully.",
             "第一段最后提出了观点：我认为这是正确的选择，只要谨慎使用。",
           ),
+          [
+            t("The author supports replay, used carefully.", "作者支持谨慎使用回放。"),
+            t("Cameras help referees; they do not replace them.", "摄像机帮助裁判，而不是取代裁判。"),
+            t("The Lampard goal is an example, not the claim.", "兰帕德的进球是例子，不是观点。"),
+          ],
         ),
         ask(
           t("Which piece of evidence supports the reason of fairness?", "哪条证据支持“公平”这一理由？"),
@@ -557,6 +700,11 @@ These are real problems, but they can be solved. Replay should be used only for 
             "The second paragraph gives the reason of fairness and supports it with the tennis example, where players accept the cameras almost without argument.",
             "第二段提出公平这一理由，并用网球的例子来支持：球员几乎毫无异议地接受摄像系统的判定。",
           ),
+          [
+            t("Waiting is a point the critics make.", "等待是批评者提出的问题。"),
+            t("Judgment calls are another critics' point.", "判罚需要判断，也是批评者的观点。"),
+            t("The short glance supports protecting referees, not fairness.", "短暂一瞥支持的是保护裁判，不是公平。"),
+          ],
         ),
         ask(
           t("How does the author answer the critics?", "作者是怎样回应批评者的？"),
@@ -570,6 +718,11 @@ These are real problems, but they can be solved. Replay should be used only for 
             "The last paragraph calls the problems real but solvable, and proposes using replay only for clear, factual questions with a strict time limit.",
             "最后一段说这些问题确实存在但可以解决，并提议只将回放用于清楚的事实性问题，同时严格限时。",
           ),
+          [
+            t("The author does not attack the critics.", "作者没有攻击批评者。"),
+            t("The author still supports replay.", "作者仍然支持回放。"),
+            t("The author calls their points real problems.", "作者称他们的观点是真实的问题。"),
+          ],
         ),
       ],
       ["England's", "England", "Frank", "Lampard", "World", "Cup"],

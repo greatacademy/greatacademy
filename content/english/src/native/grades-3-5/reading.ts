@@ -39,6 +39,14 @@ Never look straight at the sun, even for a moment. Its light is strong enough to
             "The first paragraph says the sun only looks bigger and brighter because it is much closer to us than any other star.",
             "第一段说，太阳看起来更大更亮，只是因为它离我们比任何其他恒星都近得多。",
           ),
+          why: [
+            t("Not a star is the opposite. The passage says the sun is a star.", "不是恒星正好相反。文中说太阳就是一颗恒星。"),
+            t("All stars glow. The night stars are stars just like the sun.", "所有恒星都发光。夜空的星星和太阳一样都是恒星。"),
+            t(
+              "The moon has nothing to do with it. The sun is closer to us, not to the moon.",
+              "这和月亮无关。是太阳离我们近，不是离月亮近。",
+            ),
+          ],
         },
         {
           prompt: t("What holds the planets as they travel around the sun?", "是什么在行星绕太阳运行时拉住它们？"),
@@ -48,6 +56,11 @@ Never look straight at the sun, even for a moment. Its light is strong enough to
             "The third paragraph says the sun's gravity holds the earth and seven other planets as they travel around it.",
             "第三段说，太阳的引力拉住地球和其他七颗行星，让它们绕着它运行。",
           ),
+          why: [
+            t("Light lets plants grow, but it is gravity that holds the planets.", "阳光让植物生长，但留住行星的是引力。"),
+            t("The wind depends on the sun. It does not hold the planets.", "风依靠太阳，并不能留住行星。"),
+            t("The moon is not mentioned in this passage.", "这篇文章没提到月亮。"),
+          ],
         },
         {
           prompt: t("Which sentence best states the main idea of the fourth paragraph?", "哪一句最能概括第四段的主要意思？"),
@@ -61,12 +74,28 @@ Never look straight at the sun, even for a moment. Its light is strong enough to
             'The paragraph opens with "Without the sun, there would be no life on Earth," and every other sentence gives an example of it.',
             "这一段以“Without the sun, there would be no life on Earth”开头，其他每个句子都是它的例子。",
           ),
+          why: [
+            t("Plants feeding animals is one detail in the paragraph, not its main idea.", "植物养活动物只是这一段的一个细节，不是主旨。"),
+            t(
+              "Not freezing is another detail, and it is the sun's heat that keeps them from it.",
+              "不结冰是另一个细节，而且是太阳的热量让海洋不结冰。",
+            ),
+            t(
+              "Rain on sunny days only is never said. The sun warms the water that makes rain.",
+              "文中从没说只在晴天下雨。是太阳加热了形成雨的水。",
+            ),
+          ],
         },
         {
           prompt: t("How many Earths could fit inside the sun?", "太阳里能装下多少个地球？"),
           right: t("More than one million", "一百多万个"),
           wrong: [t("About one hundred", "大约一百个"), t("Exactly eight", "正好八个"), t("More than one thousand", "一千多个")],
           solution: t("The sun is so big that more than one million Earths could fit inside it.", "太阳大到能装下一百多万个地球。"),
+          why: [
+            t("One hundred is far too few. The sun holds more than a million.", "一百个太少了。太阳能装下一百多万个。"),
+            t("Eight is the number of planets, not the number of Earths that fit.", "八是行星的数量，不是能装下的地球数量。"),
+            t("One thousand is the number for Jupiter in a later passage.", "一千是后面文章里木星的数字。"),
+          ],
         },
       ],
     },
@@ -96,6 +125,11 @@ So when it is lunchtime for you, it is the middle of the night for children on t
             "The first paragraph says the sun is not moving across our sky; the earth is turning. The second says it spins around its axis.",
             "第一段说太阳并没有在天空中移动，是地球在转动；第二段说地球绕着地轴自转。",
           ),
+          why: [
+            t("The sun traveling around the earth is what people wrongly believed long ago.", "太阳绕着地球转是古人错误的看法。"),
+            t("The moon covering the sun is not mentioned.", "文中没提到月亮遮住太阳。"),
+            t("The sun keeps shining. Your side of the earth turns away from it.", "太阳一直在发光。是你这一侧的地球转离了太阳。"),
+          ],
         },
         {
           prompt: t("In this passage, what does the word *axis* mean?", "在这篇文章中，*axis* 是什么意思？"),
@@ -109,6 +143,11 @@ So when it is lunchtime for you, it is the middle of the night for children on t
             "The second paragraph asks us to imagine a line from the North Pole to the South Pole and says this line is called the earth's axis.",
             "第二段让我们想象一条从北极到南极的线，并说这条线叫作地球的 axis（地轴）。",
           ),
+          why: [
+            t("The path around the sun is called an orbit, from the first passage.", "绕太阳的路径叫轨道，是第一篇文章讲的。"),
+            t("The half facing the sun is where it is day.", "面向太阳的那一半是白天。"),
+            t("A top is only a comparison for how the earth spins.", "陀螺只是比喻地球怎样自转。"),
+          ],
         },
         {
           prompt: t("What can you infer from the last paragraph?", "从最后一段可以推断出什么？"),
@@ -122,12 +161,22 @@ So when it is lunchtime for you, it is the middle of the night for children on t
             "Because half of the earth faces the sun while the other half is dark, your lunchtime is night for children far away.",
             "因为地球一半朝向太阳、另一半处在黑暗中，所以你的午饭时间正是远方孩子的夜晚。",
           ),
+          why: [
+            t("Lunch is not the point. They are asleep in the middle of their night.", "午饭不是重点。他们正处在半夜。"),
+            t("Only half of the earth has night at any moment.", "任何时刻都只有半个地球是黑夜。"),
+            t("Lunchtime for you is the middle of the night elsewhere.", "你的午饭时间是别处的半夜。"),
+          ],
         },
         {
           prompt: t("How long does the earth take to make one full turn?", "地球转一整圈需要多久？"),
           right: t("Twenty-four hours", "二十四小时"),
           wrong: [t("One month", "一个月"), t("One year", "一年"), t("Twelve hours", "十二小时")],
           solution: t("The earth makes one full turn around its axis every twenty-four hours.", "地球每二十四小时绕地轴转一整圈。"),
+          why: [
+            t("One month is how long the moon takes to go around the earth.", "一个月是月亮绕地球一圈的时间。"),
+            t("One year is not given for the spin. The earth turns once every day.", "文中没说自转要一年。地球每天转一圈。"),
+            t("Twelve hours is only half a turn.", "十二小时只是半圈。"),
+          ],
         },
       ],
     },
@@ -157,6 +206,11 @@ These changing shapes are called the phases of the moon. Long ago, people used t
             "The second paragraph says the moon does not make any light of its own; it shines because sunlight bounces off it.",
             "第二段说月亮自己不发光，它发亮是因为阳光从它上面反射回来。",
           ),
+          why: [
+            t("The moon makes no light of its own.", "月亮自己不发光。"),
+            t("The moon is a ball of gray rock, not a star.", "月亮是一个灰色岩石球，不是恒星。"),
+            t("The light comes from the sun, not the earth.", "光来自太阳，不是地球。"),
+          ],
         },
         {
           prompt: t("What happens right after a new moon?", "新月之后紧接着会出现什么？"),
@@ -166,6 +220,11 @@ These changing shapes are called the phases of the moon. Long ago, people used t
             "The third paragraph says that a few nights after the new moon, a thin curve of light called a crescent appears.",
             "第三段说，新月之后几个晚上，会出现一弯叫作 crescent（月牙）的细光。",
           ),
+          why: [
+            t("A full moon comes later, after the bright part grows night after night.", "满月来得更晚，要在亮的部分一夜夜变大之后。"),
+            t("The moon keeps moving along its orbit.", "月亮一直沿着轨道运行。"),
+            t("A red moon is never mentioned.", "文中从没提到红色的月亮。"),
+          ],
         },
         {
           prompt: t("Why did people long ago use the moon as a calendar?", "很久以前人们为什么用月亮当日历？"),
@@ -179,12 +238,22 @@ These changing shapes are called the phases of the moon. Long ago, people used t
             "The moon's orbit takes about a month, and its phases go from new to full and back, so people could count months by them.",
             "月亮绕地球一圈大约一个月，月相从新月到满月再回到新月，所以人们可以用它来计算月份。",
           ),
+          why: [
+            t("Rising at the same time is never said.", "文中从没说月亮每晚在同一时间升起。"),
+            t("Being close to us does not make it a calendar. The repeating phases do.", "离我们近不能让它成为日历。重复的月相才能。"),
+            t("Gray rock describes what the moon is, not why it marks time.", "灰色岩石说的是月亮由什么组成，不是它为什么能计时。"),
+          ],
         },
         {
           prompt: t("How long does the moon take to travel around the earth?", "月球绕地球一周需要多久？"),
           right: t("About one month", "大约一个月"),
           wrong: [t("About one day", "大约一天"), t("About one year", "大约一年"), t("About one week", "大约一周")],
           solution: t("The moon travels around the earth in an orbit that takes about one month.", "月球绕地球运行一周大约需要一个月。"),
+          why: [
+            t("One day is how long the earth takes to turn once.", "一天是地球自转一圈的时间。"),
+            t("One year is too long. The moon's orbit takes about a month.", "一年太长了。月亮绕一圈大约一个月。"),
+            t("One week is only part of the trip, about from new moon to half full.", "一周只是旅程的一部分。"),
+          ],
         },
       ],
     },
@@ -216,6 +285,11 @@ Mars, the fourth planet, is called the Red Planet because its dusty soil is red 
             "The first paragraph says they are called the rocky planets because each has a hard, rocky surface you could stand on.",
             "第一段说，它们被称为岩石行星，是因为每一颗都有可以站立的坚硬岩石表面。",
           ),
+          why: [
+            t("Flying rocks are asteroids, from a later passage.", "飞行的岩石是小行星，出自后面的文章。"),
+            t("Mercury is the smallest, but Venus and Earth are not.", "水星最小，但金星和地球不是。"),
+            t("Only Mercury has almost no air. Venus has thick clouds.", "只有水星几乎没有空气。金星有厚厚的云层。"),
+          ],
         },
         {
           prompt: t(
@@ -232,6 +306,11 @@ Mars, the fourth planet, is called the Red Planet because its dusty soil is red 
             "The third paragraph says thick clouds trap the sun's heat, which makes Venus the hottest planet; the second says Mercury has almost no air to hold heat.",
             "第三段说厚厚的云层困住了太阳的热量，使金星成为最热的行星；第二段说水星几乎没有空气来保持热量。",
           ),
+          why: [
+            t("Nothing is bigger than the sun. Venus is about the size of Earth.", "没有什么比太阳大。金星大小和地球差不多。"),
+            t("Volcanoes are mentioned for Mars, not Venus.", "火山是讲火星时提到的，不是金星。"),
+            t("Rivers on Mercury are never mentioned.", "文中从没提到水星上有河流。"),
+          ],
         },
         {
           prompt: t("What does the passage say robots found on Mars?", "文章说机器人在火星上发现了什么？"),
@@ -245,6 +324,11 @@ Mars, the fourth planet, is called the Red Planet because its dusty soil is red 
             "The last sentence says scientists' robots found signs that rivers once flowed on Mars long ago.",
             "最后一句说，科学家的机器人发现了火星上很久以前曾有河流流过的迹象。",
           ),
+          why: [
+            t("Living animals were not found. Only Earth has living things we know of.", "没有发现活的动物。我们只知道地球上有生物。"),
+            t("Liquid water today is only on Earth. Mars had rivers long ago.", "如今只有地球有液态水。火星是很久以前有过河流。"),
+            t("Thick clouds belong to Venus.", "厚厚的云属于金星。"),
+          ],
         },
         {
           prompt: t("Why is Mars called the Red Planet?", "火星为什么被称为红色星球？"),
@@ -258,6 +342,11 @@ Mars, the fourth planet, is called the Red Planet because its dusty soil is red 
             "Mars is called the Red Planet because its dusty soil is red with rust.",
             "火星被称为红色星球，因为它的尘土因铁锈而发红。",
           ),
+          why: [
+            t("The hottest planet is Venus.", "最热的行星是金星。"),
+            t("Red clouds are not mentioned. The soil is red.", "文中没提红色的云。是土壤是红色的。"),
+            t("Mars is the fourth planet, farther from the sun than Earth.", "火星是第四颗行星，比地球离太阳更远。"),
+          ],
         },
       ],
     },
@@ -289,6 +378,11 @@ The giant planets also have many moons. Jupiter and Saturn each have more than n
             "The first paragraph says they are mostly made of gas and ice, and there is no solid ground to stand on.",
             "第一段说它们主要由气体和冰构成，没有可以站立的坚实地面。",
           ),
+          why: [
+            t("The giant planets are far from the sun, beyond Mars.", "巨行星离太阳很远，在火星之外。"),
+            t("Rings belong to Saturn and are not what stops a landing.", "光环属于土星，也不是不能着陆的原因。"),
+            t("Only Uranus spins on its side, and that is not why no one can land.", "只有天王星侧着转，而且这也不是不能着陆的原因。"),
+          ],
         },
         {
           prompt: t("What are Saturn's rings made of?", "土星环是由什么构成的？"),
@@ -302,6 +396,11 @@ The giant planets also have many moons. Jupiter and Saturn each have more than n
             "The third paragraph says the rings look solid from far away but are made of billions of pieces of ice and rock.",
             "第三段说，土星环从远处看像坚固的带子，其实由数十亿块冰和岩石构成。",
           ),
+          why: [
+            t("The rings only look like solid bands from far away.", "光环只是从远处看像固体的带子。"),
+            t("Gas is what the planet is mostly made of, not the rings.", "气体是土星本身的主要成分，不是光环的。"),
+            t("The biggest pieces are as big as a house, not as big as Jupiter.", "最大的碎块像房子那么大，不是像木星那么大。"),
+          ],
         },
         {
           prompt: t("What is unusual about Uranus?", "天王星有什么不寻常之处？"),
@@ -315,6 +414,14 @@ The giant planets also have many moons. Jupiter and Saturn each have more than n
             "The fourth paragraph says Uranus is unusual because it spins on its side, as if it had been knocked over.",
             "第四段说天王星不寻常，因为它侧着身子自转，好像很久以前被撞倒了一样。",
           ),
+          why: [
+            t("The largest planet is Jupiter.", "最大的行星是木星。"),
+            t(
+              "Moons are not counted for Uranus. Jupiter and Saturn have more than ninety.",
+              "文中没数天王星的卫星。木星和土星各有九十多颗。",
+            ),
+            t("Uranus is bitterly cold, far from the sun.", "天王星离太阳很远，极其寒冷。"),
+          ],
         },
         {
           prompt: t("What is the Great Red Spot?", "大红斑是什么？"),
@@ -328,6 +435,11 @@ The giant planets also have many moons. Jupiter and Saturn each have more than n
             "A giant storm called the Great Red Spot has been spinning on Jupiter for hundreds of years.",
             "一场叫大红斑的巨大风暴已经在木星上旋转了几百年。",
           ),
+          why: [
+            t("Saturn's rings are pieces of ice and rock, not a spot on Jupiter.", "土星环是冰块和岩石，不是木星上的斑点。"),
+            t("No moon of Neptune is described.", "文中没描述海王星的卫星。"),
+            t("The tallest volcano is on Mars, in the passage before.", "最高的火山在火星上，在前一篇文章里。"),
+          ],
         },
       ],
     },
@@ -359,6 +471,11 @@ As the earth travels around the sun, we see different constellations in differen
             "The first paragraph says people connected bright stars with lines in their minds, and each picture is called a constellation.",
             "第一段说，人们在脑海中用线把亮星连起来，每一幅这样的图画叫作 constellation（星座）。",
           ),
+          why: [
+            t("The stars only look close together. They are not.", "这些星星只是看起来靠得近，其实并不近。"),
+            t("A single bright star is not a picture.", "一颗亮星不能组成图案。"),
+            t("Sailors used constellations to find their way. They did not draw them.", "水手用星座来辨认方向，不是他们画的。"),
+          ],
         },
         {
           prompt: t("According to the passage, how did sailors use constellations?", "根据文章，水手怎样利用星座？"),
@@ -372,6 +489,11 @@ As the earth travels around the sun, we see different constellations in differen
             "The fourth paragraph says sailors used constellations to find their way across the ocean at night; it was farmers who used them to plan planting.",
             "第四段说水手用星座在夜里横渡海洋时辨认方向；用星座安排播种的是农民。",
           ),
+          why: [
+            t("Planting seeds is what farmers used them for.", "播种是农民用星座做的事。"),
+            t("Measuring the ocean is never said.", "文中从没说测量海洋。"),
+            t("Stories for children are not mentioned.", "文中没提给孩子讲故事。"),
+          ],
         },
         {
           prompt: t("Why do we see different constellations in winter and in summer?", "为什么冬天和夏天看到的星座不同？"),
@@ -385,6 +507,14 @@ As the earth travels around the sun, we see different constellations in differen
             "The last paragraph says that as the earth travels around the sun, we see different constellations in different seasons.",
             "最后一段说，随着地球绕太阳运行，我们在不同季节看到不同的星座。",
           ),
+          why: [
+            t("The stars do not move closer together. They only seem close from Earth.", "星星不会靠得更近。只是从地球看起来近。"),
+            t(
+              "Different peoples saw different pictures, but the change by season comes from Earth's travel.",
+              "不同民族看到不同图案，但季节变化来自地球公转。",
+            ),
+            t("Stars do not stop shining. We see different ones as Earth moves.", "星星不会停止发光。地球移动时我们看到的星星不同。"),
+          ],
         },
         {
           prompt: t("Why did farmers watch for certain constellations?", "农民为什么留意某些星座？"),
@@ -398,6 +528,11 @@ As the earth travels around the sun, we see different constellations in differen
             "Farmers watched for certain constellations to know when to plant their seeds.",
             "农民留意某些星座，以便知道什么时候播种。",
           ),
+          why: [
+            t("Finding a way across the ocean is what sailors did.", "在海上辨认方向是水手做的事。"),
+            t("Telling the time of day is not mentioned.", "文中没提看时间。"),
+            t("Maps of fields are never mentioned.", "文中从没提到田地的地图。"),
+          ],
         },
       ],
     },
@@ -423,6 +558,14 @@ Sometimes small pieces of rock from space fall toward the earth. Most burn up in
             "The second paragraph says most asteroids circle the sun between Mars and Jupiter, in the asteroid belt.",
             "第二段说大多数小行星在火星和木星之间的小行星带里绕太阳运行。",
           ),
+          why: [
+            t(
+              "Close to the earth is not where most travel. They circle between two planets.",
+              "大多数不在地球附近，而是在两颗行星之间绕行。",
+            ),
+            t("Nothing travels inside the sun.", "没有东西在太阳里面运行。"),
+            t("They circle the sun, not the moon.", "它们绕太阳转，不是绕月亮转。"),
+          ],
         },
         {
           prompt: t("What causes a comet to grow a tail?", "是什么让彗星长出尾巴？"),
@@ -436,6 +579,11 @@ Sometimes small pieces of rock from space fall toward the earth. Most burn up in
             "The third paragraph says that when a comet comes close to the sun, the heat turns some of its ice into gas, and gas and dust stream out in a tail.",
             "第三段说彗星靠近太阳时，热量把它的一部分冰变成气体，气体和尘埃向后流出形成尾巴。",
           ),
+          why: [
+            t("Crashing into an asteroid is never mentioned.", "文中从没提到撞上小行星。"),
+            t("Freezing solid happens far from the sun, when there is no tail.", "远离太阳时会冻得坚硬，那时没有彗尾。"),
+            t("Burning up in the air describes shooting stars.", "在空气中燃烧描述的是流星。"),
+          ],
         },
         {
           prompt: t('Why does the writer say shooting stars "are not stars at all"?', "作者为什么说流星“根本不是星星”？"),
@@ -449,6 +597,11 @@ Sometimes small pieces of rock from space fall toward the earth. Most burn up in
             "The last paragraph explains that shooting stars are small pieces of rock from space that burn up in the air.",
             "最后一段解释说，流星是来自太空、在空气中燃烧的小石块。",
           ),
+          why: [
+            t("Comets have tails, but shooting stars are small rocks.", "彗星有尾巴，但流星是小石块。"),
+            t("Planets are not mentioned. These pieces fall toward the earth.", "文中没提行星。这些碎块落向地球。"),
+            t("Daytime is not mentioned. People see bright streaks.", "文中没提白天。人们看到的是明亮的光带。"),
+          ],
         },
       ],
     },
@@ -478,6 +631,11 @@ Today, astronauts from many countries live and work together on a space station 
             "The first paragraph says Galileo saw mountains on the moon and four small moons circling Jupiter.",
             "第一段说伽利略看到了月球上的山和绕着木星运行的四颗小卫星。",
           ),
+          why: [
+            t("Astronauts walked on the moon in 1969, long after Galileo.", "宇航员在1969年登月，比伽利略晚得多。"),
+            t("Robots on Mars came in the last hundred years.", "火星上的机器人是近一百年的事。"),
+            t("The space station is today, not four hundred years ago.", "空间站是现在的事，不是四百年前。"),
+          ],
         },
         {
           prompt: t("Why are the astronauts' footprints still on the moon?", "为什么宇航员的脚印至今还留在月球上？"),
@@ -491,6 +649,11 @@ Today, astronauts from many countries live and work together on a space station 
             "The second paragraph says the footprints are still there because the moon has no wind to blow them away.",
             "第二段说脚印至今还在，因为月球上没有风把它们吹走。",
           ),
+          why: [
+            t("The astronauts never went back. The moon has no wind.", "宇航员没有回去。是因为月球上没有风。"),
+            t("The footprints are pressed into dust, not made of rock.", "脚印是踩在尘土里的，不是岩石做的。"),
+            t("Robots are sent to Mars, not to clean the moon.", "机器人被派往火星，不是去打扫月球。"),
+          ],
         },
         {
           prompt: t("Why do scientists send robots to most of the solar system?", "为什么科学家把机器人送往太阳系的大部分地方？"),
@@ -504,6 +667,11 @@ Today, astronauts from many countries live and work together on a space station 
             "The third paragraph says most of the solar system is too far or too dangerous for people to visit, so scientists send robots instead.",
             "第三段说太阳系的大部分地方对人来说太远或太危险，所以科学家改派机器人去。",
           ),
+          why: [
+            t("Telescopes are not compared with robots here.", "这里没有拿望远镜和机器人比较。"),
+            t("People do go to space: they live on a space station.", "人类确实去太空：他们住在空间站里。"),
+            t("Cost is never mentioned.", "文中从没提到费用。"),
+          ],
         },
       ],
     },

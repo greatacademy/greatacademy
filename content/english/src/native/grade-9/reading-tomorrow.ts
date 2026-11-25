@@ -41,6 +41,11 @@ His influence on real explorers was enormous. Several pioneers of rocket science
             "The first paragraph says the idea of a giant gun was wrong because the force of the blast would have crushed the passengers.",
             "第一段说巨炮的构想是错的，因为爆炸的冲击力会把乘客压碎。",
           ),
+          [
+            t("Florida was the right place, as Cape Canaveral shows.", "佛罗里达选对了，卡纳维拉尔角就是证明。"),
+            t("His speed figure was close to correct.", "他算出的速度接近真实。"),
+            t("Metal strength is never discussed.", "文中没讨论金属强度。"),
+          ],
         ),
         ask(
           t("What was Verne's method for imagining the future?", "凡尔纳想象未来的方法是什么？"),
@@ -54,6 +59,11 @@ His influence on real explorers was enormous. Several pioneers of rocket science
             "The third paragraph says his method was to begin with real knowledge and then ask what might come next.",
             "第三段说他的方法是从真实的知识出发，然后问接下来可能会出现什么。",
           ),
+          [
+            t("He read and talked to experts; he built nothing.", "他读书、请教专家，并没造机器。"),
+            t("He drew on science, not other novelists.", "他取材于科学，不是别的小说家。"),
+            t("He started from real knowledge.", "他从真实知识出发。"),
+          ],
         ),
         ask(
           t("How did Verne help to build the future, according to the last paragraph?", "根据最后一段，凡尔纳如何帮助建造了未来？"),
@@ -70,6 +80,11 @@ His influence on real explorers was enormous. Several pioneers of rocket science
             "The last paragraph says pioneers such as Tsiolkovsky said reading Verne made them dream of space travel, so by filling young minds with possibilities he helped to build the future.",
             "最后一段说齐奥尔科夫斯基等先驱称读凡尔纳的书让他们梦想太空旅行，他用种种可能填满年轻的头脑，从而帮助建造了未来。",
           ),
+          [
+            t("He was a novelist, not an engineer.", "他是小说家，不是工程师。"),
+            t("Apollo is never linked to his money.", "阿波罗计划与他的钱无关。"),
+            t("The Nautilus was imagined, not built.", "鹦鹉螺号是想象的，不是造出来的。"),
+          ],
         ),
         ask(
           t("What did Verne imagine in Twenty Thousand Leagues Under the Seas?", "凡尔纳在《海底两万里》中想象了什么？"),
@@ -83,6 +98,11 @@ His influence on real explorers was enormous. Several pioneers of rocket science
             "In Twenty Thousand Leagues Under the Seas, he imagined the Nautilus, an electric submarine that could travel around the world underwater.",
             "在《海底两万里》中，他想象了鹦鹉螺号，一艘能在水下环游世界的电动潜艇。",
           ),
+          [
+            t("Mars is never mentioned.", "文中没提火星。"),
+            t("No flying ship is mentioned.", "文中没提飞船。"),
+            t("The cannon is in the Moon novel.", "大炮在登月小说里。"),
+          ],
         ),
       ],
       [
@@ -131,6 +151,11 @@ Yet Čapek's play is not really about technology. It is about what happens when 
             "The first paragraph says robota means forced labor, the work peasants once had to do for their lords.",
             "第一段说 robota 意为强迫劳动，即农民过去必须为领主做的活。",
           ),
+          [
+            t("The play's robots are not metal.", "剧中的机器人不是金属做的。"),
+            t("Servant is close but not the meaning given.", "“仆人”相近，但不是文中的意思。"),
+            t("The word is about unpaid, forced work.", "这个词指无偿的强迫劳动。"),
+          ],
         ),
         ask(
           t(
@@ -147,6 +172,11 @@ Yet Čapek's play is not really about technology. It is about what happens when 
             "The second paragraph says they are not metal machines but made of synthetic flesh, and they look almost exactly like people.",
             "第二段说它们不是金属机器，而是由合成血肉制成，看起来几乎和人一模一样。",
           ),
+          [
+            t("Gears and wires are what they are not.", "齿轮电线正是它们所不具备的。"),
+            t("They are grown in factories, not tiny.", "它们在工厂里培育，并不微小。"),
+            t("They stay on Earth.", "它们留在地球上。"),
+          ],
         ),
         ask(
           t("According to the last paragraph, what is the play really about?", "根据最后一段，这部剧真正讲的是什么？"),
@@ -160,6 +190,11 @@ Yet Čapek's play is not really about technology. It is about what happens when 
             "The last paragraph says the play is not really about technology but about what happens when people are treated as tools.",
             "最后一段说这部剧真正讲的不是技术，而是人被当作工具对待会发生什么。",
           ),
+          [
+            t("The passage says it is not about technology.", "文中说它其实不是讲技术的。"),
+            t("The language is only the word's source.", "捷克语只是词源。"),
+            t("Factories are the setting, not the message.", "工厂只是背景，不是主旨。"),
+          ],
         ),
         ask(
           t("Who suggested the word robot to Karel Čapek?", "谁向卡雷尔·恰佩克建议了“robot”这个词？"),
@@ -170,6 +205,11 @@ Yet Čapek's play is not really about technology. It is about what happens when 
             t("His teacher at school", "他的学校老师"),
           ],
           t("His brother Josef, a painter, suggested robot.", "他的哥哥、画家约瑟夫建议用“robot”。"),
+          [
+            t("Factory owners buy robots in the play.", "工厂主是剧中买机器人的人。"),
+            t("Asimov came later.", "阿西莫夫是后来的人。"),
+            t("No teacher is mentioned.", "文中没提老师。"),
+          ],
         ),
       ],
       ["Prague", "Czech", "Karel", "Čapek", "R.U.R.", "Rossum's", "Universal", "Robots", "Josef", "Čapek's", "Earth", "Adam", "Eve"],
@@ -201,6 +241,11 @@ Today, engineers designing artificial intelligence face similar questions. Real 
             "The first paragraph says he thought it unlikely engineers would build dangerous machines without safety features, like guards on knives.",
             "第一段说他认为工程师不太可能制造没有安全装置的危险机器，就像刀有护套一样。",
           ),
+          [
+            t("He wanted robots safe.", "他希望机器人安全。"),
+            t("He chose the idea himself.", "这是他自己的主意。"),
+            t("He thought dangerous robots unlikely.", "他认为危险的机器人不太可能出现。"),
+          ],
         ),
         ask(
           t("Why does the robot on Mercury run in a circle?", "水星上的机器人为什么绕圈跑？"),
@@ -214,6 +259,11 @@ Today, engineers designing artificial intelligence face similar questions. Real 
             "The third paragraph says the order to collect the substance is weak, the danger triggers its duty to protect itself, and the two laws balance exactly.",
             "第三段说收集物质的命令很弱，危险触发了自我保护的职责，两条定律恰好互相平衡。",
           ),
+          [
+            t("Heat damage is not the cause.", "原因不是高温损坏。"),
+            t("No human is near it.", "附近没有人类。"),
+            t("It was ordered to collect, not circle.", "它接到的命令是采集，不是转圈。"),
+          ],
         ),
         ask(
           t("What is Asimov's central insight, according to the last paragraph?", "根据最后一段，阿西莫夫的核心洞见是什么？"),
@@ -230,6 +280,11 @@ Today, engineers designing artificial intelligence face similar questions. Real 
             "The last paragraph says it is not enough to tell a machine to be good; we must decide very carefully what good means.",
             "最后一段说只告诉机器要向善是不够的，我们必须非常仔细地界定什么是善。",
           ),
+          [
+            t("Real systems do not follow the laws.", "现实系统并不遵循这些定律。"),
+            t("Usefulness is not doubted.", "文中没质疑它们是否有用。"),
+            t("Machines are not called more moral.", "文中没说机器更有道德。"),
+          ],
         ),
         ask(
           t("What does the First Law of Robotics say?", "机器人第一定律说了什么？"),
@@ -246,6 +301,11 @@ Today, engineers designing artificial intelligence face similar questions. Real 
             "First, a robot may not injure a human being or, through inaction, allow a human being to come to harm.",
             "第一，机器人不得伤害人类，也不得因不作为而使人类受到伤害。",
           ),
+          [
+            t("Self-protection is the Third Law.", "自我保护是第三定律。"),
+            t("Obedience is the Second Law, with exceptions.", "服从是第二定律，并有例外。"),
+            t("Factories are not in the laws.", "定律里没提工厂。"),
+          ],
         ),
       ],
       ["Isaac", "Asimov", "Three", "Laws", "Robotics", "First", "Law", "Second", "Asimov's", "Mercury"],
@@ -278,6 +338,11 @@ Turing died in 1954, long before any of this. But the question he asked has only
             "The first paragraph says Turing decided the question was too vague because nobody could agree on what thinking meant.",
             "第一段说图灵认为这个问题太模糊，因为没人能就思考的含义达成一致。",
           ),
+          [
+            t("No prize is mentioned.", "文中没提奖项。"),
+            t("He asked whether they could.", "他问的正是它们能不能思考。"),
+            t("He was a mathematician.", "他本身就是数学家。"),
+          ],
         ),
         ask(
           t("How did Turing answer people who said machines could never have feelings?", "对于认为机器永远不会有感情的人，图灵如何回应？"),
@@ -291,6 +356,11 @@ Turing died in 1954, long before any of this. But the question he asked has only
             "The third paragraph says Turing replied that we only assume other humans have feelings because of how they act.",
             "第三段说图灵回应道，我们只是根据他人的行为才认为他们有感情。",
           ),
+          [
+            t("He thought they might one day deserve the courtesy.", "他认为机器有一天也许值得同样对待。"),
+            t("He took feelings seriously.", "他很重视感情问题。"),
+            t("He built no such machine.", "他没造过这样的机器。"),
+          ],
         ),
         ask(
           t("Why do many scientists doubt that large language models think?", "为什么许多科学家怀疑大型语言模型会思考？"),
@@ -307,12 +377,22 @@ Turing died in 1954, long before any of this. But the question he asked has only
             "The fifth paragraph says a system that predicts which words are likely to come next may imitate understanding without having it.",
             "第五段说预测下一个可能出现的词的系统，也许只是模仿理解而并不真正理解。",
           ),
+          [
+            t("They write fluently.", "它们写得很流畅。"),
+            t("They have been widely used.", "它们已被广泛使用。"),
+            t("Turing died long before.", "图灵很早就去世了。"),
+          ],
         ),
         ask(
           t("What did Turing originally call his test?", "图灵最初怎么称呼他的测试？"),
           t("The imitation game", "模仿游戏"),
           [t("The thinking machine", "思考机器"), t("The question game", "提问游戏"), t("The mind test", "心智测试")],
           t("He called it the imitation game.", "他称之为模仿游戏。"),
+          [
+            t("A thinking machine is the topic, not the name.", "会思考的机器是话题，不是名称。"),
+            t("The question game is not the name.", "“提问游戏”不是名称。"),
+            t("The mind test is not the name.", "“心智测试”不是名称。"),
+          ],
         ),
       ],
       ["British", "Alan", "Turing"],
@@ -345,6 +425,11 @@ More than half a billion people watched the landing on television. It was the wo
             "The second paragraph says that when each stage ran empty, it fell away, so the remaining rocket was lighter and could go faster.",
             "第二段说每一级燃料耗尽后就脱落，剩下的火箭更轻，能飞得更快。",
           ),
+          [
+            t("Height is not the reason.", "高度不是原因。"),
+            t("All three astronauts rode together.", "三名宇航员同乘一艘。"),
+            t("The lunar module did the landing.", "着陆用的是登月舱。"),
+          ],
         ),
         ask(
           t(
@@ -361,6 +446,11 @@ More than half a billion people watched the landing on television. It was the wo
             "The third paragraph says the Moon is a moving target, so engineers aimed at where it would be three days later.",
             "第三段说月球是一个移动的目标，所以工程师瞄准它三天后的位置。",
           ),
+          [
+            t("The Sun is never in the way.", "太阳从没挡住月球。"),
+            t("Its path curved.", "它的路线是弯曲的。"),
+            t("They wanted to arrive, not delay.", "他们想到达，不想拖延。"),
+          ],
         ),
         ask(
           t("Why did Armstrong take manual control during the landing?", "着陆时阿姆斯特朗为什么改为手动操控？"),
@@ -374,6 +464,11 @@ More than half a billion people watched the landing on television. It was the wo
             "The fourth paragraph says Armstrong saw that the computer was guiding them toward a field of large boulders and took manual control.",
             "第四段说阿姆斯特朗发现电脑正把他们引向一片巨石区，于是改为手动操控。",
           ),
+          [
+            t("The computer was overloaded, not dead.", "计算机是超负荷，不是停摆。"),
+            t("Engineers said it was safe to go on.", "工程师说可以继续。"),
+            t("Collins stayed in orbit.", "柯林斯留在轨道上。"),
+          ],
         ),
         ask(
           t("How many people worked on the Moon landing?", "有多少人参与了登月工作？"),
@@ -383,6 +478,11 @@ More than half a billion people watched the landing on television. It was the wo
             "It was the work of about four hundred thousand engineers, scientists and workers.",
             "这是约四十万名工程师、科学家和工人的成果。",
           ),
+          [
+            t("Four thousand is too few.", "四千太少了。"),
+            t("Half a billion watched on television.", "五亿多人是电视观众。"),
+            t("Three is the crew.", "三人是机组人数。"),
+          ],
         ),
       ],
       ["July", "Florida", "Neil", "Armstrong", "Buzz", "Aldrin", "Michael", "Collins", "Moon", "Saturn", "V", "Earth", "Earth's", "Moon's"],
@@ -418,6 +518,11 @@ Supporters argue that a settlement on Mars could protect humanity if a disaster 
             "The second paragraph says the distance changes constantly because the planets travel at different speeds, so the best moments come about every twenty-six months.",
             "第二段说由于两颗行星运行速度不同，距离不断变化，所以最佳发射时机大约每二十六个月出现一次。",
           ),
+          [
+            t("Building time is not the reason.", "建造时间不是原因。"),
+            t("Dust storms are on Mars, not at launch.", "沙尘暴在火星上，与发射无关。"),
+            t("Training is never mentioned.", "文中没提训练。"),
+          ],
         ),
         ask(
           t("How could ice beneath the surface of Mars help settlers?", "火星地表下的冰如何帮助定居者？"),
@@ -431,6 +536,11 @@ Supporters argue that a settlement on Mars could protect humanity if a disaster 
             "The fourth paragraph says ice could provide water, and water can be split into oxygen to breathe and hydrogen for fuel.",
             "第四段说冰能提供水，水又能分解成可呼吸的氧气和用作燃料的氢。",
           ),
+          [
+            t("Radiation is a separate problem.", "辐射是另一个问题。"),
+            t("Selling is never mentioned.", "文中没提出售。"),
+            t("Dust storms are unaffected.", "冰与沙尘暴无关。"),
+          ],
         ),
         ask(
           t("What do studies of research stations in Antarctica show?", "对南极科考站的研究表明了什么？"),
@@ -444,6 +554,11 @@ Supporters argue that a settlement on Mars could protect humanity if a disaster 
             "The fifth paragraph says studies of isolated places like Antarctica show that loneliness and conflict can be as dangerous as any machine failure.",
             "第五段说对南极等偏远之地的研究表明，孤独与冲突可能和机器故障一样危险。",
           ),
+          [
+            t("People do live there.", "人确实住在那里。"),
+            t("Machines are not said to fail there.", "文中没说机器在那里一定坏。"),
+            t("Conflict does happen.", "冲突确实会发生。"),
+          ],
         ),
         ask(
           t("What is the Martian atmosphere made of, mostly?", "火星大气主要由什么组成？"),
@@ -453,6 +568,11 @@ Supporters argue that a settlement on Mars could protect humanity if a disaster 
             "Mars has an atmosphere about one hundred times thinner than Earth's, made mostly of carbon dioxide.",
             "火星的大气比地球稀薄约一百倍，主要由二氧化碳组成。",
           ),
+          [
+            t("Oxygen is made from it with effort.", "氧气需要费力从中制取。"),
+            t("Hydrogen comes from ice.", "氢来自冰。"),
+            t("Water is under the surface as ice.", "水以冰的形式在地下。"),
+          ],
         ),
       ],
       ["Mars", "Earth", "Sun", "Earth's", "Celsius", "NASA", "Martian", "Antarctica"],
@@ -485,6 +605,11 @@ Readers often argue about which of these warnings has come truest. Some point to
             "The second paragraph says everyone is kept content with entertainment, easy pleasures and a drug that removes unhappy feelings.",
             "第二段说人人都被娱乐、轻易的享乐和一种消除不快情绪的药物弄得心满意足。",
           ),
+          [
+            t("Fear is Orwell's method.", "恐惧是奥威尔书中的手段。"),
+            t("Burning books is Bradbury's.", "焚书是布拉德伯里书中的事。"),
+            t("There is no war.", "书中没有战争。"),
+          ],
         ),
         ask(
           t("Why does the government in Nineteen Eighty-Four try to shrink the language?", "《一九八四》中的政府为什么试图缩减语言？"),
@@ -498,6 +623,11 @@ Readers often argue about which of these warnings has come truest. Some point to
             "The third paragraph says the government tries to shrink the language so that rebellious thoughts become impossible to express.",
             "第三段说政府试图缩减语言，使反叛的思想无法表达。",
           ),
+          [
+            t("Book length is not the aim.", "书的长短不是目的。"),
+            t("Ease of learning is not the aim.", "易学不是目的。"),
+            t("Screens are another tool.", "屏幕是另一种手段。"),
+          ],
         ),
         ask(
           t("What pattern do the three novels share?", "这三部小说有什么共同的模式？"),
@@ -511,6 +641,11 @@ Readers often argue about which of these warnings has come truest. Some point to
             "The fifth paragraph says each begins with a character who accepts the system, then shows that character beginning to question it.",
             "第五段说每部小说都从一个接受体制的人物开始，然后表现他开始质疑体制。",
           ),
+          [
+            t("No weddings are mentioned.", "文中没提婚礼。"),
+            t("They are set on Earth.", "故事都发生在地球上。"),
+            t("People tell them.", "讲述者是人。"),
+          ],
         ),
       ],
       [
@@ -564,6 +699,11 @@ Le Guin does not tell readers what to think. The story is a thought experiment t
             "The second paragraph says the narrator invites the reader to add any details that would make the city seem more believable.",
             "第二段说叙述者邀请读者添加任何能让这座城市显得更可信的细节。",
           ),
+          [
+            t("The narrator describes it fully.", "叙述者描述得很完整。"),
+            t("It is complete.", "故事是完整的。"),
+            t("The invitation is to make it happy, not frightening.", "邀请是为了让它可信，不是可怕。"),
+          ],
         ),
         ask(
           t("What does the happiness of Omelas depend on?", "奥美拉斯的幸福依赖于什么？"),
@@ -577,6 +717,11 @@ Le Guin does not tell readers what to think. The story is a thought experiment t
             "The third paragraph says the happiness of the entire city depends on that child's suffering.",
             "第三段说整座城市的幸福依赖于那个孩子的苦难。",
           ),
+          [
+            t("The races are part of the festival.", "赛马只是节庆的一部分。"),
+            t("No gold is mentioned.", "文中没提黄金。"),
+            t("The walkers leave; they hold nothing up.", "出走者离开了，并不支撑什么。"),
+          ],
         ),
         ask(
           t("What does Le Guin do with the story's question?", "勒古恩如何处理这个故事提出的问题？"),
@@ -590,6 +735,11 @@ Le Guin does not tell readers what to think. The story is a thought experiment t
             "The last paragraph says Le Guin does not tell readers what to think; the story is a thought experiment that asks a hard question.",
             "最后一段说勒古恩不告诉读者该怎么想，这个故事是一个提出难题的思想实验。",
           ),
+          [
+            t("The end is open.", "结尾是开放的。"),
+            t("She never tells anyone to stay.", "她从没让人留下。"),
+            t("The bargain is never explained.", "这个交易从未被解释。"),
+          ],
         ),
       ],
       ["American", "Ursula", "K.", "Le", "Guin", "Ones", "Who", "Walk", "Away", "Omelas"],

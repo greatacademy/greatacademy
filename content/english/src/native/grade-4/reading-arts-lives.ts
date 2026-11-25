@@ -52,6 +52,11 @@ export const artUnit: ReadingUnitDef = {
             "The second paragraph says that before cameras, art was the only way to show what a person or a place looked like.",
             "第二段说，在有照相机之前，艺术是展示一个人或一个地方样貌的唯一方式。",
           ],
+          [
+            ["Not remembering faces without art is not what the passage says.", "没有艺术就记不住脸不是文中说的。"],
+            ["Cheaper paintings is not in the passage.", "画更便宜文中没有。"],
+            ["Only kings remembering is not in the passage.", "只有国王才能记住文中没有。"],
+          ],
         ),
         q(
           ["How might a sad artist show feelings in a painting?", "一位悲伤的艺术家可能怎样在画中表达情感？"],
@@ -64,6 +69,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The third paragraph says a sad artist might paint with dark, heavy colors; bright, vivid ones belong to a joyful artist.",
             "第三段说，悲伤的艺术家可能用深暗、沉重的颜色；明亮鲜艳的颜色属于快乐的艺术家。",
+          ],
+          [
+            ["Bright, vivid colors are what a joyful artist might choose.", "鲜艳明亮的颜色是快乐的画家会选的。"],
+            ["A festival is something art remembers, not a sad feeling.", "节日是艺术记录的场景，不是悲伤。"],
+            ["Carving bone is what early humans did, not about feelings.", "刻骨头是早期人类做的事，和感情无关。"],
           ],
         ),
         q(
@@ -78,6 +88,11 @@ export const artUnit: ReadingUnitDef = {
             "The last paragraph gives the cup as an example of art that simply makes life more beautiful.",
             "最后一段用杯子作为例子，说明艺术能让生活更美好。",
           ],
+          [
+            ["Remembering history is a different reason, shown by portraits.", "记住历史是另一个原因，用肖像画来说明。"],
+            ["Stories and beliefs are a different reason, shown by famous paintings.", "故事和信仰是另一个原因，用名画来说明。"],
+            ["Art before writing is from the first paragraph.", "文字出现前的艺术在第一段。"],
+          ],
         ),
         q(
           ["What did humans do long before anyone could write?", "在人类会写字之前很久，他们做了什么？"],
@@ -90,6 +105,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "Long before anyone could write, humans carved shapes into bone and painted animals on rock.",
             "在有人会写字之前很久，人类就在骨头上刻图形，在岩石上画动物。",
+          ],
+          [
+            ["Photographs came much later.", "照片是很晚才有的。"],
+            ["Portraits of kings are not named here.", "国王的肖像这里没提。"],
+            ["Writing on paper is wrong. They could not write yet.", "在纸上写故事不对。他们那时还不会写字。"],
           ],
         ),
       ],
@@ -121,6 +141,11 @@ export const artUnit: ReadingUnitDef = {
             "The first paragraph says four teenagers found the cave when they climbed in after their dog.",
             "第一段说，四个少年跟着狗爬进去，发现了这个洞穴。",
           ],
+          [
+            ["Scientists digging for years is not in the passage.", "科学家挖了好多年文中没有。"],
+            ["A farmer digging a well found the clay soldiers in China.", "农民挖井发现的是中国的兵马俑。"],
+            ["Hunters looking for horses is not in the passage.", "猎人找马文中没有。"],
+          ],
         ),
         q(
           ["How did the cave painters get their colors?", "洞穴画家是怎样得到颜料的？"],
@@ -133,6 +158,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The second paragraph says they ground red and yellow earth and charcoal into powder and mixed it with water or animal fat.",
             "第二段说，他们把红色和黄色的泥土以及黑色的木炭磨成粉，和水或动物油脂混合。",
+          ],
+          [
+            ["Shops are wrong. There were no shops to buy paint from.", "商店不对。那时没有卖颜料的店。"],
+            ["Animal blood is not in the passage.", "动物的血文中没有。"],
+            ["Flower juice is not in the passage.", "花汁文中没有。"],
           ],
         ),
         q(
@@ -147,6 +177,11 @@ export const artUnit: ReadingUnitDef = {
             "Like a signature, a handprint marks the work of one particular person, here someone who lived long ago.",
             "像签名一样，手印标出了某一个人的作品，这里是一个很久以前生活的人。",
           ],
+          [
+            ["A pen is wrong. They blew paint around their hands.", "笔不对。他们是在手的周围吹颜料。"],
+            ["Spelling names is wrong. They are outlines, not letters.", "拼出名字不对。它们是手的轮廓，不是字母。"],
+            ["Buying food is not in the passage.", "买食物文中没有。"],
+          ],
         ),
         q(
           ["How did the cave artists see in the dark?", "洞穴画家怎样在黑暗中看清？"],
@@ -157,6 +192,11 @@ export const artUnit: ReadingUnitDef = {
             ["By the light of a fire outside", "靠外面火堆的光"],
           ],
           ["The artists worked by the light of small lamps that burned animal fat.", "画家们借着燃烧动物脂肪的小油灯的光作画。"],
+          [
+            ["Sunlight through a hole is wrong. Caves are dark.", "洞口透进的阳光不对。洞里很黑。"],
+            ["Wax candles are not named. The lamps burned animal fat.", "蜡烛文中没提。灯烧的是动物脂肪。"],
+            ["A fire outside is not in the passage.", "外面的火文中没有。"],
+          ],
         ),
       ],
       { names: ["France", "Lascaux"] },
@@ -187,6 +227,11 @@ export const artUnit: ReadingUnitDef = {
             "The first paragraph says these are called primary colors because they cannot be made by mixing other paints.",
             "第一段说，它们叫原色，因为不能用其他颜料调出来。",
           ],
+          [
+            ["The rainbow is not the reason given.", "彩虹不是文中给的原因。"],
+            ["Being popular is not the reason given.", "受欢迎不是文中给的原因。"],
+            ["Making brown is what happens when too many colors are mixed.", "变成棕色是混太多颜色的结果。"],
+          ],
         ),
         q(
           ["What is a tint?", "什么是浅色调（tint）？"],
@@ -199,6 +244,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The third paragraph says adding white makes a tint; adding black makes a shade, and two primaries make a secondary color.",
             "第三段说，加白色得到浅色调；加黑色得到暗色调，两种原色混合得到间色。",
+          ],
+          [
+            ["Black added makes a shade.", "加黑色得到的是暗色。"],
+            ["Two primaries mixed make a secondary color.", "两种原色混合得到的是二次色。"],
+            ["An opposite color is a complementary color.", "相反的颜色是互补色。"],
           ],
         ),
         q(
@@ -213,6 +263,11 @@ export const artUnit: ReadingUnitDef = {
             "The fourth paragraph says complementary colors make each other look brighter, so artists use them to make a part stand out.",
             "第四段说，互补色会让彼此看起来更亮，所以艺术家用它们来突出某一部分。",
           ],
+          [
+            ["Muddy brown comes from mixing too many colors.", "浑浊的棕色来自混太多颜色。"],
+            ["Paler colors come from adding white.", "更浅的颜色来自加白色。"],
+            ["Saving paint is not the reason given.", "节省颜料不是文中给的原因。"],
+          ],
         ),
         q(
           ["What do yellow and blue make?", "黄色和蓝色混合成什么？"],
@@ -223,6 +278,11 @@ export const artUnit: ReadingUnitDef = {
             ["Brown", "棕色"],
           ],
           ['The text says, "Yellow and blue make green."', "短文说：“黄色和蓝色混合成绿色。”"],
+          [
+            ["Orange comes from red and yellow.", "橙色来自红和黄。"],
+            ["Purple comes from blue and red.", "紫色来自蓝和红。"],
+            ["Brown comes from mixing too many colors.", "棕色来自混太多颜色。"],
+          ],
         ),
       ],
     ),
@@ -252,6 +312,11 @@ export const artUnit: ReadingUnitDef = {
             "The second paragraph says Leonardo softened the edges of her mouth and eyes with thin layers of paint, so her expression seems to change.",
             "第二段说，列奥纳多用薄薄的颜料层柔化了她嘴和眼睛的边缘，所以她的表情似乎会变。",
           ],
+          [
+            ["A moving lamp is not in the passage.", "移动的灯文中没有。"],
+            ["Fading paint is not the reason given.", "颜料褪色不是文中给的原因。"],
+            ["Being painted more than once is not in the passage.", "画了不止一次文中没有。"],
+          ],
         ),
         q(
           ["How can a portrait show who a person is?", "肖像怎样能表现一个人是谁？"],
@@ -264,6 +329,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The third paragraph says the artist chooses the pose, clothes, background and objects, such as a scientist's books.",
             "第三段说，艺术家选择姿势、衣着、背景和物品，比如科学家的书。",
+          ],
+          [
+            ["Life size is not what the passage says.", "和真人一样大不是文中说的。"],
+            ["Always smiling is wrong. The artist chooses many things.", "总是微笑不对。画家要选择很多东西。"],
+            ["One color is not in the passage.", "只用一种颜色文中没有。"],
           ],
         ),
         q(
@@ -278,6 +348,11 @@ export const artUnit: ReadingUnitDef = {
             "The fourth paragraph says that when artists paint themselves, the picture is called a self-portrait.",
             "第四段说，艺术家画自己时，这幅画就叫自画像。",
           ],
+          [
+            ["A famous person can be painted by anyone. That is not a self-portrait.", "名人谁都可以画，那不是自画像。"],
+            ["No background is not what self-portrait means.", "没有背景不是自画像的意思。"],
+            ["Carved in stone is not what self-portrait means.", "刻在石头上不是自画像的意思。"],
+          ],
         ),
         q(
           ["How many self-portraits did Frida Kahlo paint?", "弗里达·卡罗画了多少幅自画像？"],
@@ -288,6 +363,11 @@ export const artUnit: ReadingUnitDef = {
             ["More than five hundred", "五百多幅"],
           ],
           ["The Mexican painter Frida Kahlo painted more than fifty self-portraits.", "墨西哥画家弗里达·卡罗画了五十多幅自画像。"],
+          [
+            ["Five is far too few.", "五幅太少了。"],
+            ["Ten is far too few.", "十幅太少了。"],
+            ["Five hundred mixes it up with the Mona Lisa's age.", "五百幅把它和《蒙娜丽莎》的年代弄混了。"],
+          ],
         ),
       ],
       { names: ["Mona", "Lisa", "Leonardo", "da", "Vinci", "Italy", "Mexican", "Frida", "Kahlo", "Mexico"] },
@@ -318,6 +398,11 @@ export const artUnit: ReadingUnitDef = {
             "The second paragraph says they walked in the mountains, studied them and then painted from memory at home.",
             "第二段说，他们在山中行走，观察山川，然后回家凭记忆作画。",
           ],
+          [
+            ["Copying one view outside is what they usually did not do.", "在户外照着一处画正是他们通常不做的。"],
+            ["Painting before the light changed is how European painters worked.", "趁光线变化前快画是欧洲画家的做法。"],
+            ["Paint in tubes is from Europe two hundred years ago.", "管装颜料是两百年前欧洲的事。"],
+          ],
         ),
         q(
           ["What does the tiny figure on a bridge show in a Chinese landscape?", "中国山水画中桥上的小人表现了什么？"],
@@ -330,6 +415,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The second paragraph says a tiny figure crossing a bridge shows how small people are beside nature.",
             "第二段说，过桥的小人表现了人在大自然面前多么渺小。",
+          ],
+          [
+            ["Who painted it is not what the figure shows.", "谁画的不是那个小人表示的。"],
+            ["Being unfinished is not in the passage.", "没画完文中没有。"],
+            ["Where the painter lived is not in the passage.", "画家住哪里文中没有。"],
           ],
         ),
         q(
@@ -344,6 +434,11 @@ export const artUnit: ReadingUnitDef = {
             "The fourth paragraph says that in The Starry Night, the sky seems to move like the sea, an image of movement.",
             "第四段说，在《星月夜》中，天空好像大海一样涌动，这是一个表现动感的意象。",
           ],
+          [
+            ["Quiet as the village is wrong. The sky seems to move.", "和村庄一样安静不对。天空好像在动。"],
+            ["Hidden by mist is from Chinese landscapes.", "被雾遮住说的是中国山水画。"],
+            ["Flat as a field is the opposite of swirling.", "像田野一样平正好和旋转相反。"],
+          ],
         ),
         q(
           ["What does the Chinese name for landscape painting mean?", "中国山水画的名字是什么意思？"],
@@ -354,6 +449,14 @@ export const artUnit: ReadingUnitDef = {
             ["Light and shadow", "光和影"],
           ],
           ['Its Chinese name means "mountains and water."', "它的中文名字意思是“山和水”。"],
+          [
+            [
+              "Fields and forests are in the definition of landscape, not the Chinese name.",
+              "田野和森林是风景画的定义，不是中文名的意思。",
+            ],
+            ["Sky and sea are not the Chinese name.", "天和海不是中文名的意思。"],
+            ["Light and shadow is about ink painting.", "光和影说的是水墨画。"],
+          ],
         ),
       ],
       { names: ["China", "Chinese", "Europe", "Dutch", "Vincent", "van", "Gogh", "Starry"] },
@@ -384,6 +487,11 @@ export const artUnit: ReadingUnitDef = {
             "The second paragraph says that by adding more or less water, the painter can make ink deep black, soft gray or very pale.",
             "第二段说，加多加少的水，画家就能调出浓黑、淡灰或很浅的墨。",
           ],
+          [
+            ["Different colored inks is wrong. Many ink paintings use no other color.", "不同颜色的墨不对。很多水墨画不用别的颜色。"],
+            ["A thin pen is wrong. Painters use a brush.", "细笔不对。画家用的是毛笔。"],
+            ["Drying in the sun is not in the passage.", "在太阳下晒干文中没有。"],
+          ],
         ),
         q(
           ["Why must an ink painter think first and paint quickly?", "为什么水墨画家必须先想好再快速作画？"],
@@ -396,6 +504,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The fourth paragraph says ink cannot be erased and soaks into the paper at once, so the painter must think first.",
             "第四段说，墨擦不掉，而且立刻渗进纸里，所以画家必须先想好。",
+          ],
+          [
+            ["The ink stone drying is not the reason.", "砚台变干不是原因。"],
+            ["The brush losing hairs is not in the passage.", "毛笔掉毛文中没有。"],
+            ["Expensive paper is not the reason given.", "纸太贵不是文中给的原因。"],
           ],
         ),
         q(
@@ -410,6 +523,11 @@ export const artUnit: ReadingUnitDef = {
             "The last paragraph says Qi Baishi was famous for his shrimp, painted with a few strokes of gray ink.",
             "最后一段说，齐白石以画虾闻名，他只用几笔淡墨就画出了虾。",
           ],
+          [
+            ["Bamboo leaves describe the shape of one brush stroke.", "竹叶说的是一笔的形状。"],
+            ["Mountains in mist are from landscape painting.", "雾中的山来自山水画。"],
+            ["Portraits are from another passage.", "肖像来自另一篇文章。"],
+          ],
         ),
         q(
           ["What were the Four Treasures of the Study?", "文房四宝是什么？"],
@@ -420,6 +538,11 @@ export const artUnit: ReadingUnitDef = {
             ["Silk, bamboo, bone and clay", "丝绸、竹子、骨头和陶土"],
           ],
           ["The Four Treasures of the Study are the brush, the ink stick, the ink stone and paper.", "文房四宝是笔、墨、砚和纸。"],
+          [
+            ["Four famous paintings is wrong. They are tools.", "四幅名画不对。它们是工具。"],
+            ["Colored inks are wrong. Ink is ground from one stick.", "彩色墨水不对。墨是从墨条磨出来的。"],
+            ["Silk, bamboo, bone and clay are not the four treasures.", "丝、竹、骨、陶不是文房四宝。"],
+          ],
         ),
       ],
       { names: ["China", "Four Treasures", "Study", "Qi", "Baishi"] },
@@ -448,6 +571,11 @@ export const artUnit: ReadingUnitDef = {
             "The first three paragraphs explain that carving takes material away from a block, while modeling builds up soft clay.",
             "前三段说明，雕刻是从一块材料上去掉多余部分，而塑造是用软陶土一点点堆起来。",
           ],
+          [
+            ["Clay and stone are swapped. Carving uses stone or wood.", "陶土和石头说反了。雕刻用的是石头或木头。"],
+            ["Flat is wrong. Both make sculptures with three dimensions.", "平面不对。两者做出的雕塑都是立体的。"],
+            ["Firing in a kiln belongs to modeling, not carving.", "进窑烧是塑造的步骤，不是雕刻的。"],
+          ],
         ),
         q(
           ["Why does clay go into a kiln?", "为什么要把陶土放进窑里？"],
@@ -461,6 +589,11 @@ export const artUnit: ReadingUnitDef = {
             "The third paragraph says the clay is fired in a hot kiln, which makes it hard.",
             "第三段说，陶土要放进高温的窑里烧，这样会变硬。",
           ],
+          [
+            ["Making it soft is backwards. Clay is soft before firing.", "让它变软是反的。烧之前黏土是软的。"],
+            ["Painting it is not what the kiln does.", "上色不是窑做的事。"],
+            ["Cutting away is carving, not firing.", "削掉是雕刻，不是烧制。"],
+          ],
         ),
         q(
           ["Which detail shows how carefully the clay soldiers were made?", "哪个细节表明陶俑做得多么用心？"],
@@ -473,6 +606,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The last paragraph says each of the eight thousand faces is different, which shows great care; the other details do not.",
             "最后一段说，八千张脸各不相同，这表现了极大的用心；其他细节没有说明这一点。",
+          ],
+          [
+            ["Being found by farmers is about how they were discovered.", "被农民发现说的是怎样被找到的。"],
+            ["Being buried long ago is about age, not care.", "很久以前被埋说的是年代，不是用心。"],
+            ["Guarding a tomb is their purpose, not their care.", "守护陵墓是用途，不是制作的用心。"],
           ],
         ),
       ],
@@ -504,6 +642,11 @@ export const artUnit: ReadingUnitDef = {
             "The first paragraph defines a mural as a painting made directly on a wall or ceiling.",
             "第一段把壁画定义为直接画在墙上或天花板上的画。",
           ],
+          [
+            ["A painting of a garden is one example of a mural, not its meaning.", "花园的画只是壁画的一个例子，不是定义。"],
+            ["Hung in a frame is the opposite. A mural is the wall itself.", "挂在框里正好相反。壁画就画在墙上。"],
+            ["A statue is not a painting.", "雕像不是画。"],
+          ],
         ),
         q(
           ["Why can a fresco last for hundreds of years?", "为什么湿壁画能保存几百年？"],
@@ -517,6 +660,11 @@ export const artUnit: ReadingUnitDef = {
             "The third paragraph says the colors soak into the wet plaster and become part of the wall.",
             "第三段说，颜料渗进湿灰泥里，成为墙的一部分。",
           ],
+          [
+            ["One day is how fast it must be painted, not why it lasts.", "一天是作画要多快，不是它能持久的原因。"],
+            ["Glass is not in the passage.", "玻璃文中没有。"],
+            ["Only on ceilings is wrong. Frescoes go on walls.", "只在天花板上不对。湿壁画画在墙上。"],
+          ],
         ),
         q(
           ["Why did Diego Rivera paint murals on public buildings?", "迭戈·里维拉为什么在公共建筑上画壁画？"],
@@ -529,6 +677,11 @@ export const artUnit: ReadingUnitDef = {
           [
             "The fourth paragraph says the murals showed the country's history and workers' lives so that everyone, not only the rich, could enjoy art.",
             "第四段说，这些壁画表现国家的历史和工人的生活，让每个人而不只是富人都能欣赏艺术。",
+          ],
+          [
+            ["Cheaper walls is not the reason given.", "墙更便宜不是文中给的原因。"],
+            ["Rich families' tombs is Egypt, long ago.", "富人的墓是很久以前埃及的事。"],
+            ["The government stopping him is not in the passage.", "政府不许他在别处画文中没有。"],
           ],
         ),
       ],
@@ -592,6 +745,11 @@ export const playsUnit: ReadingUnitDef = {
             "Maya's first line is that her ticket to the concert is gone, and the play is about finding it.",
             "玛雅的第一句台词就是她的音乐会门票不见了，整部戏都围绕找票展开。",
           ],
+          [
+            ["Leo is reading his comic. It is not lost.", "利奥在看漫画，漫画没丢。"],
+            ["Mom is holding the car keys.", "妈妈手里拿着车钥匙。"],
+            ["A canceled concert is not in the play.", "音乐会取消剧中没有。"],
+          ],
         ),
         q(
           ["What does the stage direction [In a small voice] tell the actor playing Maya?", "舞台说明“小声地”告诉扮演玛雅的演员什么？"],
@@ -604,6 +762,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "A stage direction tells the actor how to say a line; a small voice is quiet and shows that Maya is worried.",
             "舞台说明告诉演员怎样说台词；小声说表现出玛雅很担心。",
+          ],
+          [
+            ["Shouting is the opposite of a small voice.", "大喊正好和小声相反。"],
+            ["Leaving the stage is a different direction.", "离开舞台是另一种舞台说明。"],
+            ["Singing is not in the play.", "唱歌剧中没有。"],
           ],
         ),
         q(
@@ -618,6 +781,11 @@ export const playsUnit: ReadingUnitDef = {
             "Maya says, I'm sorry I snapped at you, which shows she knows she was unkind to Leo earlier.",
             "玛雅说“对不起，我刚才冲你发火了”，这表明她知道自己之前对利奥不好。",
           ],
+          [
+            ["Still angry is wrong. She says sorry.", "还在生气不对。她道歉了。"],
+            ["Not caring is wrong. She was upset to lose the ticket.", "不在乎不对。丢了票她很着急。"],
+            ["Wanting the cereal is Leo's line.", "想要麦片是利奥的台词。"],
+          ],
         ),
         q(
           ["How long is it until the family leaves?", "还有多久全家要出发？"],
@@ -628,6 +796,11 @@ export const playsUnit: ReadingUnitDef = {
             ["Ten minutes", "十分钟"],
           ],
           ['Mom says, "We leave in five minutes."', "妈妈说：“我们五分钟后出发。”"],
+          [
+            ["One hour is far too long.", "一小时太长了。"],
+            ["Two minutes is not what Mom says.", "两分钟不是妈妈说的。"],
+            ["Ten minutes is not what Mom says.", "十分钟不是妈妈说的。"],
+          ],
         ),
       ],
       { names: ["Maya", "Leo", "Mom"] },
@@ -682,6 +855,11 @@ export const playsUnit: ReadingUnitDef = {
             "The list of characters at the top of a script names everyone in the play: Grandpa, Sam and Bolt, a robot.",
             "剧本开头的人物表列出了戏里所有人物：爷爷、萨姆和机器人博尔特。",
           ],
+          [
+            ["Sam's mother is not in this play.", "萨姆的妈妈不在这出戏里。"],
+            ["Friends from school are not in this play.", "学校的朋友不在这出戏里。"],
+            ["A cook is not in this play.", "厨师不在这出戏里。"],
+          ],
         ),
         q(
           ["What causes Bolt to do everything wrong?", "是什么让博尔特把每件事都做错？"],
@@ -694,6 +872,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "Sam opens the panel and finds that two wires are crossed; when he switches them, Bolt works.",
             "萨姆打开面板，发现两根电线接反了；他把电线换过来后，博尔特就正常了。",
+          ],
+          [
+            ["Pots and pans are what he is made of, not why he goes wrong.", "锅碗瓢盆是他的材料，不是出错的原因。"],
+            ["The wrong button is not in the play. Grandpa pressed the big red one.", "按错按钮剧中没有。爷爷按的是那个大红按钮。"],
+            ["A trick by Sam is wrong. Sam fixed him.", "萨姆捉弄他不对。是萨姆修好了他。"],
           ],
         ),
         q(
@@ -708,6 +891,11 @@ export const playsUnit: ReadingUnitDef = {
             "Instead of getting upset when Bolt sweeps the ceiling, Grandpa finds something good to say, which shows he is cheerful.",
             "博尔特扫天花板时，爷爷没有生气，反而找了句好话说，表现出他很乐观。",
           ],
+          [
+            ["Angry is wrong. He jokes about it.", "生气不对。他拿这事开玩笑。"],
+            ["Not caring is wrong. He built Bolt proudly.", "不在乎不对。他很自豪地造了波尔特。"],
+            ["Blaming Sam is not in the play.", "怪萨姆剧中没有。"],
+          ],
         ),
         q(
           ["What is Bolt made of?", "博尔特是用什么做的？"],
@@ -720,6 +908,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "The setting says a robot made of old pots and pans stands in the corner.",
             "场景说明里说，角落里站着一个用旧锅碗瓢盆做成的机器人。",
+          ],
+          [
+            ["Shiny new metal is wrong. The pots are old.", "崭新的金属不对。锅是旧的。"],
+            ["Wood and string are not in the play.", "木头和绳子剧中没有。"],
+            ["Paper and glue are not in the play.", "纸和胶水剧中没有。"],
           ],
         ),
       ],
@@ -769,6 +962,11 @@ export const playsUnit: ReadingUnitDef = {
             "The queen's first line says she hates rain because it ruins her parades and spoils her shoes.",
             "女王的第一句台词说，她讨厌雨，因为雨毁了她的游行，弄脏了她的鞋。",
           ],
+          [
+            ["Farmers asking is wrong. Finn speaks for them later, about the drought.", "农民请求不对。芬后来替他们说的是干旱。"],
+            ["Killing roses is what the drought did.", "害死玫瑰的是干旱。"],
+            ["Too-full wells is backwards. The wells went dry.", "井水太满是反的。井干了。"],
+          ],
         ),
         q(
           ["What do the stage directions about the lights show?", "关于灯光的舞台说明表现了什么？"],
@@ -781,6 +979,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "The direction Time passes, with lights growing hotter and yellower, shows the long dry days without rain.",
             "舞台说明“时间过去”，灯光变得更热更黄，表现了没有雨的漫长干旱。",
+          ],
+          [
+            ["Getting angrier is wrong. She is smiling at first.", "越来越生气不对。她起初在笑。"],
+            ["A fire is not in the play.", "着火剧中没有。"],
+            ["Leaving the stage is not what lights mean here.", "离开舞台不是这里灯光的意思。"],
           ],
         ),
         q(
@@ -795,6 +998,11 @@ export const playsUnit: ReadingUnitDef = {
             "After Finn explains that rain feeds the kingdom, the queen lets the rain return, says sorry and even finds it nice.",
             "芬恩解释雨养育着整个王国后，女王让雨回来了，还道了歉，甚至觉得雨挺好。",
           ],
+          [
+            ["Banishing Finn is not in the play.", "驱逐芬剧中没有。"],
+            ["New shoes are not in the play.", "新鞋剧中没有。"],
+            ["Forbidding the sun is not in the play.", "禁止太阳剧中没有。"],
+          ],
         ),
         q(
           ["How long had it not rained when Finn came in?", "芬进来时已经多久没下雨了？"],
@@ -805,6 +1013,11 @@ export const playsUnit: ReadingUnitDef = {
             ["A week", "一周"],
           ],
           ['Finn says, "Your Majesty, it has not rained for a hundred days."', "芬说：“陛下，已经一百天没下雨了。”"],
+          [
+            ["Ten days is far too short.", "十天太短了。"],
+            ["One year is not what Finn says.", "一年不是芬说的。"],
+            ["A week is far too short.", "一周太短了。"],
+          ],
         ),
       ],
       { names: ["Amara", "Finn", "Majesty"] },
@@ -855,6 +1068,11 @@ export const playsUnit: ReadingUnitDef = {
             "Priya complains that her mom always packs the same thing, and Jade says she would love to try something different.",
             "普丽娅抱怨妈妈总是装同样的饭，杰德说她很想尝点不一样的。",
           ],
+          [
+            ["The teacher only comes by after the swap.", "老师是交换之后才走过来的。"],
+            ["Priya forgetting her lunch is wrong. She opens her box.", "普丽娅忘带午饭不对。她打开了饭盒。"],
+            ["Jade not liking cheese is wrong. She is only tired of it.", "洁德不喜欢奶酪不对。她只是吃腻了。"],
+          ],
         ),
         q(
           ["What does Priya's line Jade's sandwich is... very nice and soft show?", "普丽娅说“杰德的三明治……很好，很软”表现了什么？"],
@@ -867,6 +1085,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "The direction Politely and the pause in her line show that Priya is kind but does not really love the plain sandwich.",
             "舞台说明“礼貌地”和台词里的停顿表明，普丽娅很友善，但其实不太喜欢这个普通的三明治。",
+          ],
+          [
+            ["The best sandwich is wrong. She found it plain.", "最好的三明治不对。她觉得很淡。"],
+            ["Swapping every day is wrong. She wants to bring rice for Jade.", "每天交换不对。她想给洁德带米饭。"],
+            ["Angry is not in the play.", "生气剧中没有。"],
           ],
         ),
         q(
@@ -881,6 +1104,11 @@ export const playsUnit: ReadingUnitDef = {
             "Jade loves the spicy rice and Priya finds the sandwich plain, so the trade was a good deal for Jade.",
             "杰德很喜欢辣味米饭，而普丽娅觉得三明治很普通，所以这笔交易对杰德有利。",
           ],
+          [
+            ["Both losing is wrong. Jade loved the rice.", "两人都吃亏不对。洁德很爱米饭。"],
+            ["Priya is the one who got the plain sandwich.", "吃到淡三明治的是普丽娅。"],
+            ["Paying for food is not in the play.", "付钱剧中没有。"],
+          ],
         ),
         q(
           ["What is in Priya's lunch box?", "普丽娅的饭盒里有什么？"],
@@ -891,6 +1119,11 @@ export const playsUnit: ReadingUnitDef = {
             ["Noodles", "面条"],
           ],
           ['Priya says, "Rice and lentils again."', "普丽娅说：“又是米饭和扁豆。”"],
+          [
+            ["A cheese sandwich is Jade's lunch.", "奶酪三明治是洁德的午饭。"],
+            ["Pizza is not in the play.", "比萨剧中没有。"],
+            ["Noodles are not in the play.", "面条剧中没有。"],
+          ],
         ),
       ],
       { names: ["Priya", "Priya's", "Jade", "Jade's", "Okafor", "Mr.", "Mom"] },
@@ -945,6 +1178,11 @@ export const playsUnit: ReadingUnitDef = {
             "Omar says that juggling in Ella's kitchen was easy, but this is the whole school.",
             "奥马尔说，在埃拉家厨房里抛球很容易，但这里是全校。",
           ],
+          [
+            ["Never juggling before is wrong. He juggled five balls yesterday.", "从没抛过球不对。他昨天抛了五个球。"],
+            ["Losing all his balls is wrong. Only one rolled away.", "球全丢了不对。只滚走了一个。"],
+            ["Ms. Reyes being angry is not in the play.", "雷耶斯老师生气剧中没有。"],
+          ],
         ),
         q(
           ["How does Ella help Omar?", "埃拉是怎样帮助奥马尔的？"],
@@ -957,6 +1195,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "Ella tells Omar not to look at the audience but at the balls, and to pretend he is in her kitchen.",
             "埃拉让奥马尔别看观众，看着球，假装是在她家厨房里。",
+          ],
+          [
+            ["Juggling in his place is not in the play.", "替他表演剧中没有。"],
+            ["Canceling his act is not in the play.", "取消他的节目剧中没有。"],
+            ["Hiding his balls is the opposite. She picks one up for him.", "藏起他的球正好相反。她帮他捡起了球。"],
           ],
         ),
         q(
@@ -971,6 +1214,11 @@ export const playsUnit: ReadingUnitDef = {
             "At the start Omar says he can't do it; at the end he wants to try six balls next year, so he has become confident.",
             "开头奥马尔说他做不到；结尾他想明年试着抛六个球，说明他变得自信了。",
           ],
+          [
+            ["Never again is the opposite of trying six.", "再也不抛了正好和想抛六个相反。"],
+            ["Angry about the drop is wrong. He is grinning.", "为掉球生气不对。他在笑。"],
+            ["Ella juggling next year is not what he says.", "洁拉明年表演不是他说的。"],
+          ],
         ),
         q(
           ["How many balls did Omar juggle at Ella's house?", "奥马尔在艾拉家抛接了几个球？"],
@@ -981,6 +1229,11 @@ export const playsUnit: ReadingUnitDef = {
             ["Two", "两个"],
           ],
           ['Ella says, "You juggled five balls at my house yesterday."', "艾拉说：“你昨天在我家抛接了五个球。”"],
+          [
+            ["Three is not in the play.", "三个剧中没有。"],
+            ["Six is what he wants to try next year.", "六个是他明年想试的。"],
+            ["Two is not in the play.", "两个剧中没有。"],
+          ],
         ),
       ],
       { names: ["Omar", "Ella", "Ella's", "Ms.", "Reyes", "Amazing"] },
@@ -1033,6 +1286,11 @@ export const playsUnit: ReadingUnitDef = {
             "The genie says that without homework, Noah will stay at school until nine every night to finish his work there.",
             "精灵说，没有了家庭作业，诺亚每晚都要在学校待到九点完成功课。",
           ],
+          [
+            ["Twice the homework is wrong. He has to finish it at school.", "作业加倍不对。他得在学校做完。"],
+            ["Never leaving his room is the second wish.", "不能离开房间是第二个愿望。"],
+            ["The genie refusing is wrong. He says granted.", "精灵拒绝不对。他说准了。"],
+          ],
         ),
         q(
           ["What does the stage direction [Looking around in panic] tell the actor?", "舞台说明“惊慌地四处张望”告诉演员什么？"],
@@ -1045,6 +1303,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "A stage direction tells an actor what to do; looking around in panic shows that Noah is frightened to be stuck in his room.",
             "舞台说明告诉演员做什么；惊慌地四处张望表现出诺亚害怕被困在房间里。",
+          ],
+          [
+            ["Fetching pizza is not in the stage direction.", "去拿比萨不在舞台说明里。"],
+            ["Snapping fingers is what the genie does.", "打响指是精灵做的。"],
+            ["Reading a book is not in the stage direction.", "读书不在舞台说明里。"],
           ],
         ),
         q(
@@ -1059,6 +1322,11 @@ export const playsUnit: ReadingUnitDef = {
             "Noah turns down gold and a castle and asks for everything back as it was, showing he has learned from his first two wishes.",
             "诺亚拒绝了黄金和城堡，要求一切恢复原样，表明他从前两个愿望中吸取了教训。",
           ],
+          [
+            ["Gold and a castle are what the genie offered, and Noah said no.", "金子和城堡是精灵提出的，诺亚拒绝了。"],
+            ["More wishes is not in the play.", "要更多愿望剧中没有。"],
+            ["Freeing the genie is not in the play.", "让精灵自由剧中没有。"],
+          ],
         ),
         q(
           ["Where did Noah find the old lamp?", "诺亚在哪里找到那盏旧灯？"],
@@ -1069,6 +1337,11 @@ export const playsUnit: ReadingUnitDef = {
             ["Under his bed", "在床底下"],
           ],
           ["The setting says Noah is polishing an old lamp he found at a yard sale.", "场景说明里说诺亚在擦一盏他在旧货甩卖上找到的旧灯。"],
+          [
+            ["A cave is not in the play.", "山洞剧中没有。"],
+            ["School is not where he found it.", "学校不是他找到灯的地方。"],
+            ["Under his bed is not in the play.", "床底下剧中没有。"],
+          ],
         ),
       ],
       { names: ["Noah", "Genie", "Lamp"] },
@@ -1121,6 +1394,11 @@ export const playsUnit: ReadingUnitDef = {
             "The first stage direction says thunder crashes and the stage goes completely dark: the storm has cut the power.",
             "第一条舞台说明写着雷声轰鸣，舞台一片漆黑：暴风雨导致停电了。",
           ],
+          [
+            ["Ben breaking the flashlight is wrong. Dad finds one that works.", "本弄坏了手电筒不对。爸爸找到的手电是好的。"],
+            ["Dad saving energy is wrong. Thunder made it dark.", "爸爸为了省电不对。是打雷让灯灭了。"],
+            ["A tablet running out is wrong. The whole stage goes dark.", "平板没电不对。整个舞台都黑了。"],
+          ],
         ),
         q(
           ["What does the word Reluctantly tell the actor playing Ben?", "“不情愿地”这个词告诉扮演本的演员什么？"],
@@ -1134,6 +1412,11 @@ export const playsUnit: ReadingUnitDef = {
             "Reluctantly means not wanting to do something; Ben puts the tablet down but is not keen at first.",
             "“不情愿地”的意思是不想做某事；本放下了平板电脑，但一开始并不乐意。",
           ],
+          [
+            ["Very happy is the opposite of reluctantly.", "很高兴正好和不情愿相反。"],
+            ["A rabbit shadow is Dad's, and Ben makes a bird.", "兔子影子是爸爸做的，本做的是鸟。"],
+            ["Afraid of the dark is how Zoe feels, not Ben.", "怕黑的是佐伊，不是本。"],
+          ],
         ),
         q(
           ["What does Ben's last line show?", "本的最后一句台词表现了什么？"],
@@ -1146,6 +1429,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "Ben looks at his tablet and then the wall and asks to turn the lights off again, so he would rather keep playing shadow puppets.",
             "本看看平板，又看看墙，要求再关灯，说明他宁愿继续玩手影。",
+          ],
+          [
+            ["Wanting to sleep is not in the play.", "想睡觉剧中没有。"],
+            ["Still angry is wrong. He wants the lights off again for fun.", "还在生气不对。他想再关灯接着玩。"],
+            ["Fear of the storm is not what his line shows.", "怕暴风雨不是他这句话表现的。"],
           ],
         ),
       ],
@@ -1195,6 +1483,11 @@ export const playsUnit: ReadingUnitDef = {
             "Dr. Park looks inside and finds a large piece of knight's armor stuck between Flame's teeth.",
             "帕克医生往里一看，发现一大块骑士盔甲卡在火焰的牙缝里。",
           ],
+          [
+            ["Too much candy is not in the play.", "糖吃多了剧中没有。"],
+            ["A burned tongue is not in the play.", "舌头被火烧了剧中没有。"],
+            ["A knight with a sword is wrong. The knight ran away and left his armor.", "骑士用剑打他不对。骑士跑掉了，留下了盔甲。"],
+          ],
         ),
         q(
           ["Why do Dr. Park and the Mayor point at the sign?", "帕克医生和镇长为什么指着那块牌子？"],
@@ -1208,6 +1501,11 @@ export const playsUnit: ReadingUnitDef = {
             "Flame takes a deep breath and says he is so happy he could..., so they stop him because the sign reads No Fire, Please.",
             "火焰深吸一口气，说他高兴得都能……，所以他们阻止他，因为牌子上写着“请勿喷火”。",
           ],
+          [
+            ["Opening hours are not on the sign. It says no fire.", "营业时间不在牌子上。牌子写的是禁止喷火。"],
+            ["Where to sit is not on the sign.", "坐在哪里不在牌子上。"],
+            ["Paying is not in the play.", "付钱剧中没有。"],
+          ],
         ),
         q(
           ["What does Dr. Park's calm reply to the Mayor show about her?", "帕克医生平静地回答镇长，表现了她什么？"],
@@ -1220,6 +1518,11 @@ export const playsUnit: ReadingUnitDef = {
           [
             "While the Mayor rushes in alarmed, Dr. Park calmly puts on her gloves and says to send the dragon in, which shows she is brave.",
             "镇长慌慌张张地冲进来，帕克医生却平静地戴上手套，让龙进来，这表现出她很勇敢。",
+          ],
+          [
+            ["Not believing it is wrong. She says to send him in.", "不相信不对。她说让他进来。"],
+            ["Being too busy is wrong. She sees him at once.", "太忙不对。她马上就给他看了。"],
+            ["Asking the Mayor to fight is not in the play.", "让镇长去打龙剧中没有。"],
           ],
         ),
       ],
@@ -1257,6 +1560,11 @@ export const livesUnit: ReadingUnitDef = {
             "The first paragraph says that when Mary's father died, the family was very poor, and the fossils she found helped to feed them.",
             "第一段说，玛丽的父亲去世后，家里很穷，她找到的化石帮助一家人糊口。",
           ],
+          [
+            ["Joining a London society is wrong. Women were not allowed.", "加入伦敦的学会不对。女性是不被允许的。"],
+            ["Her father's museum is not in the passage.", "她父亲的博物馆文中没有。"],
+            ["Building walls is not in the passage.", "砌墙文中没有。"],
+          ],
         ),
         q(
           ["Why was the best time to search after storms?", "为什么暴风雨后是寻找化石的最好时机？"],
@@ -1269,6 +1577,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The third paragraph says the best time was after storms, when rocks fell from the cliffs, uncovering fossils.",
             "第三段说，最好的时机是暴风雨后，那时岩石从悬崖上掉落，露出化石。",
+          ],
+          [
+            ["Visitors staying home is not the reason given.", "游客待在家里不是文中给的原因。"],
+            ["The sea bringing fossils is not in the passage.", "大海带来化石文中没有。"],
+            ["Safer wet cliffs is wrong. She was nearly killed by a landslide.", "湿悬崖更安全不对。她差点死于山崩。"],
           ],
         ),
         q(
@@ -1283,6 +1596,11 @@ export const livesUnit: ReadingUnitDef = {
             "The passage uses she and her for Mary, so someone else is telling her life: a biography.",
             "文章用“她”来称呼玛丽，说明是别人在讲述她的一生，所以是传记。",
           ],
+          [
+            ["Using I and me would make it an autobiography.", "用“我”讲就成了自传。"],
+            ["Made-up is wrong. Mary Anning really lived.", "虚构的不对。玛丽·安宁是真实的人。"],
+            ["Instructions are not what the passage gives.", "文章没有给出操作说明。"],
+          ],
         ),
         q(
           ["What did Mary find when she was about twelve?", "玛丽大约十二岁时发现了什么？"],
@@ -1295,6 +1613,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "She and her brother found a skull, and the skeleton turned out to be an ichthyosaur.",
             "她和弟弟发现了一个头骨，整副骨架原来是一条鱼龙。",
+          ],
+          [
+            ["A plesiosaur came later, and it was a whole skeleton.", "蛇颈龙是后来发现的，而且是完整的骨架。"],
+            ["A dinosaur egg is not in the passage.", "恐龙蛋文中没有。"],
+            ["A gold coin is not in the passage.", "金币文中没有。"],
           ],
         ),
       ],
@@ -1324,6 +1647,11 @@ export const livesUnit: ReadingUnitDef = {
             "The second paragraph says the emperor wanted to know quickly where help was needed, but news traveled only as fast as a horse.",
             "第二段说，皇帝想尽快知道哪里需要救助，但当时消息只能以马的速度传递。",
           ],
+          [
+            ["Stopping earthquakes is wrong. It only showed their direction.", "阻止地震不对。它只显示方向。"],
+            ["Star maps were another of his works.", "星图是他的另一项成就。"],
+            ["Decoration is not the reason given.", "装饰不是文中给的原因。"],
+          ],
         ),
         q(
           ["How did the detector show the direction of an earthquake?", "地动仪怎样显示地震的方向？"],
@@ -1336,6 +1664,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The third paragraph says that when the ground shook, a ball dropped from one dragon into the toad below, showing the direction.",
             "第三段说，地面震动时，一个铜球会从某条龙口中落进下面蟾蜍的嘴里，指示方向。",
+          ],
+          [
+            ["A bell is not in the passage.", "铃文中没有。"],
+            ["A messenger came days later with the news.", "信使是几天后才带来消息的。"],
+            ["Water power turned his globe, not the detector.", "水力转动的是浑天仪，不是地动仪。"],
           ],
         ),
         q(
@@ -1350,6 +1683,11 @@ export const livesUnit: ReadingUnitDef = {
             "The last paragraph says a messenger arrived with news of an earthquake far to the west, so the detector had been right.",
             "最后一段说，一名信使带来了西边远处发生地震的消息，说明地动仪是对的。",
           ],
+          [
+            ["The emperor ordering it is not in the passage.", "皇帝下令文中没有。"],
+            ["Feeling it in the capital is wrong. No one there felt anything.", "在京城感到震动不对。那里没人感觉到。"],
+            ["A second machine is not in the passage.", "第二台机器文中没有。"],
+          ],
         ),
         q(
           ["How many dragons were on Zhang Heng's detector?", "张衡的地动仪上有几条龙？"],
@@ -1360,6 +1698,11 @@ export const livesUnit: ReadingUnitDef = {
             ["Twelve", "十二条"],
           ],
           ["Around the outside were eight dragons, each facing a different direction.", "外面围着八条龙，各朝一个方向。"],
+          [
+            ["Four is half the number.", "四只是一半。"],
+            ["Two is far too few.", "两只太少了。"],
+            ["Twelve is not in the passage.", "十二只文中没有。"],
+          ],
         ),
       ],
       { names: ["Zhang", "Heng", "China", "Han"] },
@@ -1390,6 +1733,11 @@ export const livesUnit: ReadingUnitDef = {
             "The second paragraph says the books were printed with large raised letters and were huge and heavy, so reading was slow.",
             "第二段说，书上印着大大的凸起字母，又大又重，所以读得很慢。",
           ],
+          [
+            ["Not allowed at night is not in the passage.", "晚上不许读书文中没有。"],
+            ["No books at all is wrong. The school had a few.", "一本书都没有不对。学校有几本。"],
+            ["Dots are what Louis invented later.", "点字是路易后来发明的。"],
+          ],
         ),
         q(
           ["Where did Louis get the idea for his system?", "路易的系统的灵感来自哪里？"],
@@ -1402,6 +1750,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The third paragraph says a soldier had invented a way to read messages at night with raised dots, and it gave Louis an idea.",
             "第三段说，一名士兵发明了在夜里用凸点读信息的方法，这给了路易灵感。",
+          ],
+          [
+            ["Tools in the workshop hurt his eye. They gave no idea.", "作坊的工具伤了他的眼睛，没给他灵感。"],
+            ["The raised letters were the problem he wanted to solve.", "凸起的字母正是他想解决的问题。"],
+            ["A dream is not in the passage.", "梦文中没有。"],
           ],
         ),
         q(
@@ -1416,6 +1769,11 @@ export const livesUnit: ReadingUnitDef = {
             "Louis overcame blindness and years of hard work to invent his system, so a proverb about will finding a way fits best.",
             "路易克服了失明，经过多年努力发明了他的系统，所以“有志者事竟成”最合适。",
           ],
+          [
+            ["Look before you leap warns against rushing. Louis was not rash.", "三思而后行是劝人别冒失。路易并不冒失。"],
+            ["Too many cooks is about too many helpers.", "人多手杂说的是帮手太多。"],
+            ["The early bird is about getting up early.", "早起的鸟儿有虫吃说的是早起。"],
+          ],
         ),
         q(
           ["How many dots made up each letter in Louis's system?", "路易的系统中每个字母最多由几个点组成？"],
@@ -1428,6 +1786,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "Each letter was a pattern of up to six dots that could be felt with one fingertip.",
             "每个字母是最多六个点组成的图案，用一个指尖就能摸出来。",
+          ],
+          [
+            ["Twelve is double the number.", "十二个多了一倍。"],
+            ["Exactly two is too few.", "正好两个太少了。"],
+            ["Twenty-six is the number of letters, not dots.", "二十六是字母的数量，不是点数。"],
           ],
         ),
       ],
@@ -1461,6 +1824,11 @@ export const livesUnit: ReadingUnitDef = {
             "The first paragraph says girls in Poland were not allowed to go to university then, so Maria studied in secret.",
             "第一段说，当时波兰的女孩不能上大学，所以玛丽亚秘密学习。",
           ],
+          [
+            ["Hiding from Pierre is wrong. She met him later, in Paris.", "瞒着皮埃尔不对。她是后来在巴黎认识他的。"],
+            ["The shed was in Paris, later.", "那个棚子是后来在巴黎的。"],
+            ["Forbidden books are not in the passage.", "书被禁止文中没有。"],
+          ],
         ),
         q(
           ["Why did Marie name one element polonium?", "玛丽为什么把一种元素命名为钋（polonium）？"],
@@ -1473,6 +1841,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The third paragraph says she named polonium after her home country; radium was named because it glowed.",
             "第三段说，她以祖国命名了钋；镭（radium）是因为会发光而得名。",
+          ],
+          [
+            ["Glowing in the dark is why radium got its name.", "在黑暗中发光是镭名字的来历。"],
+            ["Her husband is not who it is named after.", "不是以她丈夫命名的。"],
+            ["The shed is not the reason for the name.", "棚子不是名字的来历。"],
           ],
         ),
         q(
@@ -1487,6 +1860,11 @@ export const livesUnit: ReadingUnitDef = {
             "The fifth paragraph says she drove cars with X-ray machines to the battlefields so doctors could find bullets in wounded soldiers.",
             "第五段说，她驾驶装有X光机的车到战场，让医生能找到伤员体内的子弹。",
           ],
+          [
+            ["Lighting battlefields with radium is not in the passage.", "用镭照亮战场文中没有。"],
+            ["Winning a Nobel Prize is what Marie did, not the cars.", "获得诺贝尔奖的是居里夫人，不是车。"],
+            ["Crushing rock was her earlier lab work.", "碾碎岩石是她早先在实验室的工作。"],
+          ],
         ),
         q(
           ["What was the Curies' laboratory like?", "居里夫妇的实验室是什么样的？"],
@@ -1497,6 +1875,11 @@ export const livesUnit: ReadingUnitDef = {
             ["A warm kitchen", "一间温暖的厨房"],
           ],
           ['The text says, "Their laboratory was a cold, leaky shed."', "短文说：“他们的实验室是一个又冷又漏的棚子。”"],
+          [
+            ["A big new building is wrong. It was a leaky shed.", "崭新的大楼不对。那是个漏雨的棚子。"],
+            ["A palace room is not in the passage.", "宫殿里的房间文中没有。"],
+            ["A warm kitchen is wrong. It was cold.", "温暖的厨房不对。那里很冷。"],
+          ],
         ),
       ],
       {
@@ -1532,6 +1915,11 @@ export const livesUnit: ReadingUnitDef = {
             "The third paragraph gives the chain: forests were cut down, the soil washed away without roots, and streams dried up.",
             "第三段给出了因果链：森林被砍伐，没有了树根，水土流失，小溪就干涸了。",
           ],
+          [
+            ["Women using too much water is not the reason given.", "女人用水太多不是文中给的原因。"],
+            ["No more rain is not the reason given.", "不再下雨不是文中给的原因。"],
+            ["Tadpoles drinking streams is not possible or in the passage.", "蝌蚪把溪水喝干既不可能也不在文中。"],
+          ],
         ),
         q(
           ["How did the Green Belt Movement help women?", "绿带运动怎样帮助了妇女？"],
@@ -1544,6 +1932,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The fourth paragraph says Wangari paid women for each young tree, and they gained money and skills.",
             "第四段说，旺加里为每棵树苗向妇女支付报酬，她们得到了钱和技能。",
+          ],
+          [
+            ["Land in the capital is not in the passage.", "首都的土地文中没有。"],
+            ["No longer working is wrong. They worked growing trees.", "不用再工作不对。她们靠种树工作。"],
+            ["Studying in the United States is what Wangari did.", "在美国读书是旺加里自己做的事。"],
           ],
         ),
         q(
@@ -1558,6 +1951,11 @@ export const livesUnit: ReadingUnitDef = {
             "The fifth paragraph says she was arrested and beaten when she protested to save a park, but she did not give up.",
             "第五段说，她为保护一座公园而抗议时被捕并遭到殴打，但她没有放弃。",
           ],
+          [
+            ["Being an excellent student shows success, not struggle.", "成绩优异说明成功，不是困难。"],
+            ["Growing up in the hills is about her childhood.", "在山里长大说的是她的童年。"],
+            ["Clean water is about her childhood too.", "干净的水也是说她的童年。"],
+          ],
         ),
         q(
           ["When did Wangari start the Green Belt Movement?", "旺加里什么时候发起了绿带运动？"],
@@ -1568,6 +1966,11 @@ export const livesUnit: ReadingUnitDef = {
             ["In 1969", "1969年"],
           ],
           ["In 1977 she started the Green Belt Movement.", "她在1977年发起了绿带运动。"],
+          [
+            ["2004 is when she won the Nobel Peace Prize.", "2004年是她获得诺贝尔和平奖的时候。"],
+            ["The 1940s is when she grew up.", "20世纪40年代是她成长的年代。"],
+            ["1969 is from Tu Youyou's story, not Wangari's.", "1969年是屠呦呦故事里的，不是旺加里的。"],
+          ],
         ),
       ],
       { names: ["Wangari", "Maathai", "Kenya", "United States", "East Africa", "Green Belt Movement", "African", "Nobel", "Peace Prize"] },
@@ -1598,6 +2001,11 @@ export const livesUnit: ReadingUnitDef = {
             "The second paragraph says she began in the library, reading old Chinese medical books.",
             "第二段说，她从图书馆开始，阅读古代中医书籍。",
           ],
+          [
+            ["A hospital is not where she began.", "医院不是她开始的地方。"],
+            ["A forest of mosquitoes is not in the passage.", "满是蚊子的森林文中没有。"],
+            ["A garden of wormwood is not where she began.", "青蒿园不是她开始的地方。"],
+          ],
         ),
         q(
           ["Why did the first tests of sweet wormwood fail?", "青蒿的最初试验为什么失败了？"],
@@ -1610,6 +2018,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The third paragraph says Tu realized that heat might be destroying the medicine, so she drew it out at a low temperature.",
             "第三段说，屠呦呦意识到高温可能破坏了药效，于是改用低温提取。",
+          ],
+          [
+            ["No medicine in the plant is wrong. It worked at a low temperature.", "植物里没有药效不对。低温提取就有效了。"],
+            ["Mosquitoes eating plants is not in the passage.", "蚊子吃植物文中没有。"],
+            ["Incorrect books is wrong. The old book held the clue.", "书写错了不对。古书里正好有线索。"],
           ],
         ),
         q(
@@ -1624,6 +2037,11 @@ export const livesUnit: ReadingUnitDef = {
             "The fourth paragraph says she and two of her team tested it on themselves to make sure it was safe.",
             "第四段说，她和两名组员在自己身上试药，以确保它是安全的。",
           ],
+          [
+            ["Having malaria herself is not in the passage.", "她自己得了疟疾文中没有。"],
+            ["Winning a prize is not why she did it.", "获奖不是她这样做的原因。"],
+            ["Patients not wanting it is not in the passage.", "病人不想用文中没有。"],
+          ],
         ),
         q(
           ["How is malaria spread?", "疟疾是怎样传播的？"],
@@ -1634,6 +2052,11 @@ export const livesUnit: ReadingUnitDef = {
             ["By sweet wormwood", "通过青蒿"],
           ],
           ['The text says, "Malaria is a disease spread by mosquitoes."', "短文说：“疟疾是一种由蚊子传播的疾病。”"],
+          [
+            ["Dirty water is not how it spreads.", "脏水不是传播途径。"],
+            ["Cold weather is not in the passage.", "寒冷天气文中没有。"],
+            ["Sweet wormwood is the cure, not the cause.", "青蒿是药，不是病因。"],
+          ],
         ),
       ],
       { names: ["Tu", "Youyou", "Chinese", "Nobel"], glossed: ["malaria", "wormwood"] },
@@ -1664,6 +2087,11 @@ export const livesUnit: ReadingUnitDef = {
             "The second paragraph says many thinkers believed our eyes send out invisible rays that touch the things we look at.",
             "第二段说，许多思想家认为眼睛会发出看不见的射线，去触碰我们看的东西。",
           ],
+          [
+            ["Light bouncing into the eyes is Ibn al-Haytham's own idea.", "光反射进眼睛是伊本·海赛姆自己的观点。"],
+            ["Seeing in the dark is what he asked about, since we cannot.", "在黑暗中看见正是他质疑的，因为我们看不见。"],
+            ["The tiny hole is his experiment, not the old belief.", "小孔是他的实验，不是旧观点。"],
+          ],
         ),
         q(
           ["What did the experiment in the dark room show?", "暗室里的实验说明了什么？"],
@@ -1677,6 +2105,11 @@ export const livesUnit: ReadingUnitDef = {
             "The fourth paragraph says the picture made through the tiny hole showed that light travels in straight lines.",
             "第四段说，通过小孔形成的图像说明光沿直线传播。",
           ],
+          [
+            ["Eyes sending rays is the old idea he doubted.", "眼睛发射光线是他怀疑的旧观点。"],
+            ["The sun hurting eyes is one of his questions, not the result.", "太阳刺眼是他提的问题之一，不是实验结果。"],
+            ["Always upside down is too broad. Only the picture through the hole was.", "总是倒着的太绝对。只有小孔成的像是倒的。"],
+          ],
         ),
         q(
           ["Why is Ibn al-Haytham important to science today?", "伊本·海赛姆为什么对今天的科学很重要？"],
@@ -1689,6 +2122,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The last paragraph says he believed ideas must be tested, a way of working at the heart of science today.",
             "最后一段说，他认为观点必须经过检验，这种工作方式是今天科学的核心。",
+          ],
+          [
+            ["Building the first lamp is not in the passage.", "造了第一盏灯文中没有。"],
+            ["Living in Cairo is where he lived, not why he matters.", "住在开罗是他的住处，不是他重要的原因。"],
+            ["Not seeing at night is not what he proved.", "晚上什么都看不见不是他证明的。"],
           ],
         ),
       ],
@@ -1718,6 +2156,11 @@ export const livesUnit: ReadingUnitDef = {
             "The second paragraph says that before machines did the job, computers were people who did difficult math by hand.",
             "第二段说，在机器出现之前，计算员是手工进行复杂计算的人。",
           ],
+          [
+            ["Machines counting stars is wrong. Katherine counted stars as a child.", "数星星的机器不对。数星星的是童年的凯瑟琳。"],
+            ["Spacecraft are what computers planned paths for.", "宇宙飞船是计算员规划路线的对象。"],
+            ["Books of numbers are not what the word meant.", "数字书不是这个词的意思。"],
+          ],
         ),
         q(
           ["Why did John Glenn ask for Katherine to check the numbers?", "约翰·格伦为什么要求凯瑟琳核对数字？"],
@@ -1731,6 +2174,11 @@ export const livesUnit: ReadingUnitDef = {
             "The third paragraph says Glenn did not fully trust the machines and asked for Katherine to check the numbers by hand.",
             "第三段说，格伦不完全信任机器，要求凯瑟琳手工核对数字。",
           ],
+          [
+            ["Director of NASA is wrong. She was a computer there.", "NASA的主管不对。她在那里是计算员。"],
+            ["Broken machines for a year is not in the passage.", "机器坏了一年文中没有。"],
+            ["Wanting to meet her is not the reason given.", "想见她不是文中给的原因。"],
+          ],
         ),
         q(
           ["Which detail shows an obstacle Katherine faced?", "哪个细节表明凯瑟琳遇到了障碍？"],
@@ -1743,6 +2191,11 @@ export const livesUnit: ReadingUnitDef = {
           [
             "The second paragraph says Black Americans faced unfair laws, and many jobs were closed to them: an obstacle she overcame.",
             "第二段说，美国黑人面临不公平的法律，许多工作不对他们开放：这是她克服的障碍。",
+          ],
+          [
+            ["Counting stars is a happy detail from childhood.", "数星星是童年的快乐细节。"],
+            ["Living to 101 is about her long life.", "活到101岁说的是她长寿。"],
+            ["Apollo 11 is a success, not an obstacle.", "阿波罗11号是成就，不是障碍。"],
           ],
         ),
       ],

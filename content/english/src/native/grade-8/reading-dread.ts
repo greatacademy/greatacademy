@@ -44,6 +44,11 @@ The Gothic did not disappear when its first fashion passed. Its castles became h
             "The third paragraph says the setting was usually old and isolated, with hidden doors, secret passages and dank vaults.",
             "第三段说故事背景通常古老而偏僻，有暗门、秘密通道和阴湿的地下室。",
           ),
+          [
+            t("The settings were dim and stormy, never sunny or modern.", "这些故事的背景昏暗多风暴，从不是阳光明媚的现代城市。"),
+            t("Crime-solving detectives came later, with Poe.", "用科学破案的侦探是后来坡的发明。"),
+            t("The mood was foreboding, not cheerful.", "气氛是不祥的，并不欢乐。"),
+          ],
         ),
         ask(
           t("Why was the word Gothic used for these novels?", "为什么这些小说被称为“哥特”小说？"),
@@ -60,6 +65,11 @@ The Gothic did not disappear when its first fashion passed. Its castles became h
             "The second paragraph says Gothic had once meant the style of medieval cathedrals, and Walpole's castle belonged to that dark, ancient world.",
             "第二段说“哥特”一词曾指中世纪大教堂的风格，而沃波尔笔下的城堡属于那个黑暗古老的世界。",
           ),
+          [
+            t("Walpole's own name is Walpole.", "作者姓沃波尔，不叫哥特。"),
+            t("The novels were written in English.", "这些小说是用英语写的。"),
+            t("Cathedrals gave the style, not the subject.", "大教堂提供的是风格，不是题材。"),
+          ],
         ),
         ask(
           t("How did Ann Radcliffe often treat her ghosts?", "安·拉德克利夫通常如何处理她笔下的鬼魂？"),
@@ -73,6 +83,11 @@ The Gothic did not disappear when its first fashion passed. Its castles became h
             "The fourth paragraph says she often explained her ghosts at the end as tricks or accidents, after building suspense for hundreds of pages.",
             "第四段说她常在结尾把鬼魂解释为诡计或意外，此前已经营造了数百页的悬念。",
           ),
+          [
+            t("Her books were full of ghosts.", "她的书里满是鬼怪。"),
+            t("Her heroes were heroines in danger, not ghosts.", "她的主角是身处险境的女主人公，不是鬼。"),
+            t("She explained them only at the end.", "她到结尾才解释它们。"),
+          ],
         ),
         ask(
           t("What crushed the young prince at the start of The Castle of Otranto?", "《奥特兰托城堡》开头是什么压死了年轻的王子？"),
@@ -82,6 +97,11 @@ The Gothic did not disappear when its first fashion passed. Its castles became h
             "It began with a giant helmet falling from the sky and crushing a young prince.",
             "小说开头，一顶巨大的头盔从天而降压死了年轻的王子。",
           ),
+          [
+            t("The statue only bled from its nose.", "那座雕像只是鼻子流血。"),
+            t("No tower falls in the story.", "故事里没有塔倒下。"),
+            t("The portrait stepped out of its frame.", "那幅画像是从画框里走出来的。"),
+          ],
         ),
       ],
       ["English", "Horace", "Walpole", "Castle", "Otranto", "Walpole's", "Gothic", "Ann", "Radcliffe"],
@@ -118,6 +138,11 @@ Frankenstein is often called the first science fiction novel. It also asks a que
             "The passage links the eruption to a year without summer, when cold rain kept the group indoors and Byron proposed the ghost story contest.",
             "文章把喷发与“无夏之年”联系起来，那时冷雨使这群人待在室内，拜伦提议举办鬼故事比赛。",
           ),
+          [
+            t("Her novel is about a scientist, not a volcano.", "她的小说写科学家，不写火山。"),
+            t("They were in Switzerland, far from Indonesia.", "他们在瑞士，离印度尼西亚很远。"),
+            t("The villa stood; the rain only kept them inside.", "别墅没事，只是雨把他们困在屋里。"),
+          ],
         ),
         ask(
           t("What gave Mary the idea for her story?", "玛丽的故事灵感来自哪里？"),
@@ -131,6 +156,11 @@ Frankenstein is often called the first science fiction novel. It also asks a que
             "The third paragraph says she lay awake one night and saw in her mind a student watching a figure he had made begin to stir.",
             "第三段说她一天夜里躺着睡不着，脑海中看到一个学生注视着自己造出的人形开始动起来。",
           ),
+          [
+            t("Byron proposed the contest; he did not give her the story.", "拜伦只是提出比赛，并没给她故事。"),
+            t("She met no scientist there.", "她在那里没有遇到科学家。"),
+            t("No newspaper is mentioned.", "文中没提报纸。"),
+          ],
         ),
         ask(
           t("What question does the last paragraph say Frankenstein raises?", "最后一段说《弗兰肯斯坦》提出了什么问题？"),
@@ -144,6 +174,11 @@ Frankenstein is often called the first science fiction novel. It also asks a que
             "The last paragraph says the novel asks what responsibility creators have for what they create, a question that remains alive today.",
             "最后一段说这部小说提出了创造者对其创造物负有什么责任的问题，这个问题至今仍有意义。",
           ),
+          [
+            t("The volcano opens the passage but is not Frankenstein's question.", "火山开头出现，但不是《弗兰肯斯坦》提出的问题。"),
+            t("Vampires belong to Polidori's story.", "吸血鬼属于波里道利的故事。"),
+            t("The contest is how it began, not what it asks.", "比赛是起因，不是小说提出的问题。"),
+          ],
         ),
         ask(
           t("Where had the writers rented a villa that summer?", "那年夏天作家们在哪里租了一座别墅？"),
@@ -154,6 +189,11 @@ Frankenstein is often called the first science fiction novel. It also asks a que
             t("On a lonely moor in England", "英格兰荒凉的沼地"),
           ],
           t("The writers had rented a villa beside Lake Geneva, in Switzerland.", "作家们在瑞士日内瓦湖畔租了一座别墅。"),
+          [
+            t("Indonesia is where the volcano erupted.", "印度尼西亚是火山喷发的地方。"),
+            t("London is never mentioned.", "文中没提伦敦。"),
+            t("A lonely moor is a Gothic setting from the first passage.", "荒原是第一篇里的哥特式背景。"),
+          ],
         ),
       ],
       [
@@ -211,6 +251,11 @@ Poe wrote many tales of terror, and his short life was marked by poverty and gri
             "The fourth paragraph says everything he says to prove he is sane, such as the obsession and the sound no one else hears, proves the opposite.",
             "第四段说他为证明自己神志正常所说的一切，比如那种执念和别人听不到的声音，恰恰证明了相反的情况。",
           ),
+          [
+            t("He tells it in order, night by night.", "他是按顺序一夜一夜讲的。"),
+            t("The old man's name never matters.", "老人的名字无关紧要。"),
+            t("He did the crime himself.", "罪行是他亲手干的。"),
+          ],
         ),
         ask(
           t("What does the narrator give as his reason for the crime?", "叙述者给出的犯罪理由是什么？"),
@@ -224,6 +269,11 @@ Poe wrote many tales of terror, and his short life was marked by poverty and gri
             "The second paragraph says he had no quarrel with the old man; the only problem was one of the old man's eyes, which he could not bear.",
             "第二段说他和老人并无矛盾；唯一的问题是老人的一只眼睛，他无法忍受。",
           ),
+          [
+            t("He says the old man never wronged him.", "他说老人从未亏待过他。"),
+            t("He says he had no wish for gold.", "他说他不图钱。"),
+            t("No neighbor urged him; one only reported a scream.", "没有邻居唆使他，邻居只是报告了尖叫声。"),
+          ],
         ),
         ask(
           t("What finally makes the narrator confess?", "最终是什么使叙述者认罪？"),
@@ -237,12 +287,22 @@ Poe wrote many tales of terror, and his short life was marked by poverty and gri
             "The third paragraph says he hears a sound he believes is the beating heart, grows sure the officers hear it, and confesses in a frenzy.",
             "第三段说他听到一个自认为是心跳的声音，确信警察也听到了，于是在狂乱中认罪。",
           ),
+          [
+            t("The officers never find the body; he confesses first.", "警察没找到尸体，是他先招认的。"),
+            t("No one saw through a window.", "没有人从窗外看到。"),
+            t("The old man stays dead.", "老人并没有复活。"),
+          ],
         ),
         ask(
           t("Where did the narrator hide the body?", "叙述者把尸体藏在哪里？"),
           t("Under the floorboards", "地板下面"),
           [t("In the garden", "花园里"), t("In a trunk", "箱子里"), t("In the river", "河里")],
           t("He killed him and hid the body under the floorboards.", "他杀了老人，把尸体藏在地板下面。"),
+          [
+            t("There is no garden in the story.", "故事里没有花园。"),
+            t("No trunk is mentioned.", "文中没提箱子。"),
+            t("No river is mentioned.", "文中没提河。"),
+          ],
         ),
       ],
       ["Edgar", "Allan", "Poe's", "Poe", "Tell-Tale", "Heart"],
@@ -279,6 +339,11 @@ The supply boat's captain added a note below the last entry: Pryce reached the m
             'He writes "I am perfectly calm" and later asks himself "Did I watch it go?", showing that his account can no longer be trusted.',
             "他写道“我非常平静”，后来又问自己“我看着它离开了吗？”，说明他的叙述已经不可信了。",
           ),
+          [
+            t("Lighting the lamp is his normal duty.", "点灯是他的日常职责。"),
+            t("Checking the store room is a calm, sensible act.", "检查储藏室是冷静合理的举动。"),
+            t("His twenty years show experience, not doubt.", "二十年经验说明他老练，不说明他怀疑。"),
+          ],
         ),
         ask(
           t("What does the captain's note reveal?", "船长的附注揭示了什么？"),
@@ -295,6 +360,11 @@ The supply boat's captain added a note below the last entry: Pryce reached the m
             "The note says Pryce reached the mainland on October 3 and recovered, which confirms that he left and leaves the figure on the stairs unexplained.",
             "附注说普赖斯10月3日抵达大陆并康复了，这证实他确实离开了，而楼梯上的人影仍无法解释。",
           ),
+          [
+            t("Pryce reached the mainland.", "普赖斯到了大陆。"),
+            t("The keeper was never found.", "守塔人始终没被找到。"),
+            t("The relief boat was late.", "换班的船来晚了。"),
+          ],
         ),
         ask(
           t("Why does the story use short dated entries?", "这个故事为什么采用简短的带日期的日志形式？"),
@@ -308,6 +378,11 @@ The supply boat's captain added a note below the last entry: Pryce reached the m
             "Each entry is a little stranger than the last, from the wind to a man on the stairs to a dark lamp, so the form builds dread step by step.",
             "每一篇日志都比上一篇更离奇，从风声到楼梯上的人，再到熄灭的灯，这种形式一步步营造恐惧。",
           ),
+          [
+            t("He wrote every day, so he was not too busy.", "他每天都写，并不太忙。"),
+            t("The entries are fiction and prove nothing.", "这些日志是虚构的，证明不了什么。"),
+            t("The lamp is barely explained.", "文中几乎没解释灯塔的工作原理。"),
+          ],
         ),
         ask(
           t("Why had Pryce left the lighthouse?", "普赖斯为什么离开灯塔？"),
@@ -318,6 +393,11 @@ The supply boat's captain added a note below the last entry: Pryce reached the m
             t("He quarreled with the keeper", "他和看守人吵架了"),
           ],
           t("My assistant, Pryce, left on the last boat with a fever.", "我的助手普赖斯发着烧坐最后一班船走了。"),
+          [
+            t("The keeper was the one seeing things, not Pryce.", "看到怪事的是守塔人，不是普赖斯。"),
+            t("He left early, not at the end of his service.", "他是提前离开，不是服役期满。"),
+            t("No quarrel is mentioned.", "文中没提争吵。"),
+          ],
         ),
       ],
       ["Gull", "Rock", "October", "Pryce", "Pryce's"],
@@ -351,6 +431,11 @@ That night, Nadia left her door open. When the humming began, she did not hide. 
             "The author moves from ordinary noises to humming that stops, then to humming and a glow, so the tension rises step by step.",
             "作者从普通的噪音写到戛然而止的哼唱，再写到哼唱和光亮，使紧张感一步步加强。",
           ),
+          [
+            t("The ghost is never clearly seen.", "鬼魂始终没被清楚看到。"),
+            t("The wind explains only the first week.", "风声只能解释第一周的声音。"),
+            t("The library comes later, in the fourth paragraph.", "图书馆在第四段才出现。"),
+          ],
         ),
         ask(
           t("What does Nadia learn at the library?", "娜迪娅在图书馆了解到了什么？"),
@@ -367,6 +452,11 @@ That night, Nadia left her door open. When the humming began, she did not hide. 
             "The fourth paragraph says a sick girl spent her days in the same bedroom and her mother hummed a lullaby to her each night until she died.",
             "第四段说一个生病的女孩在同一间卧室里度日，她母亲每晚都为她哼摇篮曲，直到她去世。",
           ),
+          [
+            t("The 1891 date is when the girl lived there.", "1891 年是那个女孩住在那里的时候。"),
+            t("The librarian only brought the folder.", "图书管理员只是拿来了资料夹。"),
+            t("Pipes were the ordinary first-week noises.", "水管声是第一周的寻常声响。"),
+          ],
         ),
         ask(
           t("How does this story differ from a typical tale of horror?", "这个故事与典型的恐怖故事有什么不同？"),
@@ -380,6 +470,11 @@ That night, Nadia left her door open. When the humming began, she did not hide. 
             "The story uses a haunted house and strange sounds, but the ghost is a mother's lullaby, and Nadia's kindness lets it rest.",
             "故事运用了鬼屋和怪声，但鬼魂是一位母亲的摇篮曲，而娜迪娅的善意让它得以安息。",
           ),
+          [
+            t("It does take place in an old house.", "故事确实发生在老房子里。"),
+            t("It is set in a village.", "故事发生在村子里。"),
+            t("The ghost harms no one.", "鬼魂没有伤害任何人。"),
+          ],
         ),
         ask(
           t("Why did Nadia choose the small bedroom at the top of the stairs?", "娜迪娅为什么选了楼梯顶上的小卧室？"),
@@ -389,6 +484,11 @@ That night, Nadia left her door open. When the humming began, she did not hide. 
             "Nadia chose the small bedroom at the top of the stairs because it had a window seat.",
             "娜迪娅选了楼梯顶上的小卧室，因为它有靠窗的座位。",
           ),
+          [
+            t("Warmth is never mentioned.", "文中从没提温暖。"),
+            t("Her mother only laughed at the stories.", "她妈妈只是笑那些传言。"),
+            t("The room was small.", "那个房间很小。"),
+          ],
         ),
       ],
       ["Marsh", "Lane", "Nadia's", "Nadia"],
@@ -423,6 +523,11 @@ I did not touch it. In the morning, I asked the lawyer to sell the house. I have
             "Blackwood Hall is a stone mansion on a hill, the narrator goes down on a stormy night, and the portrait hides a secret linked to the family's past.",
             "布莱克伍德庄园是山上的一座石头宅邸，叙述者在暴风雨之夜下楼，而肖像隐藏着与家族过去有关的秘密。",
           ),
+          [
+            t("It is set on a wet night in a gray mansion.", "故事发生在雨夜的灰色大宅里。"),
+            t("It is set on earth, in the past's shadow.", "故事发生在地球，被过去的阴影笼罩。"),
+            t("There is no school or match.", "故事里没有学校或比赛。"),
+          ],
         ),
         ask(
           t(
@@ -439,6 +544,11 @@ I did not touch it. In the morning, I asked the lawyer to sell the house. I have
             "The fourth paragraph says the frame hung crooked and behind it was a dark rectangle where the color had not faded, showing it had been moved.",
             "第四段说画框挂歪了，后面有一块颜色没有褪去的深色长方形，表明它被移动过。",
           ),
+          [
+            t("Following eyes are a skill of painters, he says.", "他说眼睛跟着人转是画家的技巧。"),
+            t("A cold fireplace shows only an unused room.", "冷壁炉只说明房间没人用。"),
+            t("Covered furniture shows only an empty house.", "盖着的家具只说明房子没人住。"),
+          ],
         ),
         ask(
           t("Why does the author end the story with three knocks?", "作者为什么用三声敲击结束故事？"),
@@ -452,6 +562,11 @@ I did not touch it. In the morning, I asked the lawyer to sell the house. I have
             "The knocks come from behind the wall after the narrator has refused to move the portrait, so the story ends on a chilling question rather than an answer.",
             "敲击声在叙述者拒绝移动肖像后从墙后传来，所以故事以一个令人发寒的问题而不是答案结尾。",
           ),
+          [
+            t("Mrs. Crane is not shown tricking anyone.", "文中没说克兰太太在捣鬼。"),
+            t("The uncle's death stays unexplained.", "叔叔的死因仍未解释。"),
+            t("The sale is mentioned before the knocks.", "卖房在敲门声之前就提到了。"),
+          ],
         ),
         ask(
           t("What did the uncle's letter tell the narrator?", "叔叔的信上告诉叙述者什么？"),
@@ -465,6 +580,11 @@ I did not touch it. In the morning, I asked the lawyer to sell the house. I have
             'The letter said only: "Whatever you do, do not move the portrait in the hall."',
             "信上只写着：“无论如何，不要移动大厅里的画像。”",
           ),
+          [
+            t("Selling was his own choice.", "卖房是他自己的决定。"),
+            t("The letter never mentions Mrs. Crane.", "信中没提克兰太太。"),
+            t("Going down at night is not forbidden.", "信中没禁止晚上下楼。"),
+          ],
         ),
       ],
       ["Blackwood", "Hall", "November", "Mrs", "Crane", "Crane's"],
@@ -495,6 +615,11 @@ Not everyone enjoys being scared, of course. For some people, fear is simply fea
             "The second paragraph says that when we know we are safe, we can enjoy the rush of a frightened body without the real danger.",
             "第二段说当我们知道自己是安全的，就能享受身体受惊时的冲动而没有真正的危险。",
           ),
+          [
+            t("Actors do leap out in haunted houses.", "鬼屋里确实有演员跳出来。"),
+            t("Fear speeds the heart and breathing.", "恐惧会让心跳和呼吸加快。"),
+            t("Visitors know the ghost is an actor.", "游客知道鬼是演员扮的。"),
+          ],
         ),
         ask(
           t("What did Margee Kerr find about visitors to the haunted attraction?", "玛吉·克尔发现鬼屋游客有什么变化？"),
@@ -508,6 +633,11 @@ Not everyone enjoys being scared, of course. For some people, fear is simply fea
             "The third paragraph says visitors reported feeling less anxious and more confident, as though they had faced something difficult and survived.",
             "第三段说游客们表示焦虑减轻、信心增强，仿佛他们面对了困难并挺了过来。",
           ),
+          [
+            t("Nothing says they refused to return.", "文中没说他们不愿再去。"),
+            t("They felt calmer, not sleepless.", "他们感觉更平静，并没失眠。"),
+            t("Being scared together brings people closer.", "一起受惊会让人更亲近。"),
+          ],
         ),
         ask(
           t("What idea do the researchers in the fourth paragraph propose?", "第四段中的研究者提出了什么观点？"),
@@ -521,6 +651,11 @@ Not everyone enjoys being scared, of course. For some people, fear is simply fea
             "The fourth paragraph suggests that by imagining dangerous situations, we may learn to recognize and respond to threats without facing them for real.",
             "第四段提出，通过想象危险的情境，我们也许能学会识别和应对威胁，而不必真正经历它们。",
           ),
+          [
+            t("The pandemic was not caused by films.", "疫情不是电影引起的。"),
+            t("Denmark was where one study took place.", "丹麦只是一项研究的地点。"),
+            t("The paragraph says fear can help.", "这一段说恐惧可能有帮助。"),
+          ],
         ),
       ],
       ["Margee", "Kerr", "Pittsburgh", "Denmark"],
@@ -559,6 +694,11 @@ Clara`,
             "Her certainty about the whispering faces and her belief that the doctor and servants conspire against her give the reader reason to doubt her account.",
             "她坚信墙纸里的脸会低语，又相信医生和仆人在密谋害她，这让读者有理由怀疑她的叙述。",
           ),
+          [
+            t("The roses are an ordinary detail.", "玫瑰只是寻常细节。"),
+            t("Writing to her brother is normal.", "给哥哥写信很正常。"),
+            t("Her illness is a fact, not a sign of doubt.", "她生过病是事实，本身不是可疑之处。"),
+          ],
         ),
         ask(
           t("How might the reader explain the locked door differently from Clara?", "读者可能会如何以不同于克拉拉的方式解释那扇锁着的门？"),
@@ -572,6 +712,11 @@ Clara`,
             "Clara thinks the door is locked because the servants fear what she knows, but the details also fit a patient who is being watched for her own safety.",
             "克拉拉认为门被锁是因为仆人害怕她知道的事，但这些细节同样符合一个为了自身安全而受到看护的病人。",
           ),
+          [
+            t("The faces are Clara's belief, not the servants'.", "脸是克拉拉的想法，不是仆人的。"),
+            t("Thomas does not know about the lock.", "托马斯不知道锁门的事。"),
+            t("They keep it locked; it is not broken.", "门是他们锁的，并没坏。"),
+          ],
         ),
         ask(
           t("Why does the author tell this story as a letter?", "作者为什么用书信的形式讲这个故事？"),
@@ -585,6 +730,11 @@ Clara`,
             "A letter gives only the writer's words, with no narrator to correct them, so the reader has to weigh Clara's account against the clues she lets slip.",
             "书信只有写信人的话，没有叙述者来纠正，所以读者必须把克拉拉的叙述和她无意中透露的线索进行比较。",
           ),
+          [
+            t("A letter can be as false as any story.", "信和故事一样可能不真实。"),
+            t("The doctor never speaks for himself.", "医生从没亲口说话。"),
+            t("The letter suggests she is still ill.", "这封信反而暗示她仍在病中。"),
+          ],
         ),
       ],
       ["Thomas", "Greythorn", "Dr", "Ellis", "Clara"],

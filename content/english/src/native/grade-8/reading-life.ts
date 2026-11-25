@@ -45,6 +45,11 @@ Because she was a woman and not wealthy, Anning was not allowed to join the scie
             "The first paragraph says each winter storm broke off chunks of soft rock, and in that rock lay the remains of strange creatures.",
             "第一段说每次冬季风暴都会冲下大块松软的岩石，而岩石里埋着奇异生物的遗骸。",
           ),
+          [
+            t("Collectors bought fossils; they did not bury them.", "收藏家买化石，并没有埋化石。"),
+            t("No museum is mentioned.", "文中没提博物馆。"),
+            t("Her father died young and dug no mine.", "她父亲早逝，没有挖过矿。"),
+          ],
         ),
         ask(
           t("Why did some experts doubt the plesiosaur skeleton at first?", "为什么一些专家起初怀疑蛇颈龙骨架？"),
@@ -58,6 +63,11 @@ Because she was a woman and not wealthy, Anning was not allowed to join the scie
             "The third paragraph says some experts suspected that she had joined bones from different animals, until a careful examination proved her right.",
             "第三段说一些专家怀疑她把不同动物的骨头拼在一起，直到仔细检查证明她是对的。",
           ),
+          [
+            t("A whale is never suggested.", "文中没提鲸鱼。"),
+            t("She found it herself.", "化石是她自己发现的。"),
+            t("She taught herself to read.", "她自学了阅读。"),
+          ],
         ),
         ask(
           t("What idea did Anning's discoveries help scientists accept?", "安宁的发现帮助科学家接受了什么观点？"),
@@ -71,12 +81,22 @@ Because she was a woman and not wealthy, Anning was not allowed to join the scie
             "The fourth paragraph says her finds helped convince scientists that whole kinds of animals had once lived and had since disappeared, the idea of extinction.",
             "第四段说她的发现帮助科学家相信，整类动物曾经存在后来又消失了，也就是灭绝的观念。",
           ),
+          [
+            t("Only some reptiles lived in the sea.", "只有一些爬行动物生活在海里。"),
+            t("Ichthyosaurus was neither fish nor lizard.", "鱼龙既不是鱼也不是蜥蜴。"),
+            t("The cliffs' age is never compared.", "文中没比较悬崖的年代。"),
+          ],
         ),
         ask(
           t("What does the name Ichthyosaurus mean?", "“鱼龙”这个名字是什么意思？"),
           t("Fish lizard", "鱼蜥蜴"),
           [t("Sea dragon", "海龙"), t("Long neck", "长脖子"), t("Wise human", "智人")],
           t('Scientists named it Ichthyosaurus, which means "fish lizard."', "科学家把它命名为鱼龙，意思是“鱼蜥蜴”。"),
+          [
+            t("Sea dragon is not the meaning given.", "“海龙”不是文中给出的意思。"),
+            t("A long neck describes the plesiosaur.", "长脖子描述的是蛇颈龙。"),
+            t("Wise human is Homo sapiens.", "“智人”是 Homo sapiens 的意思。"),
+          ],
         ),
       ],
       ["English", "Lyme", "Regis", "Mary", "Anning", "Mary's", "Anning's", "Ichthyosaurus", "Earth"],
@@ -107,6 +127,11 @@ Linnaeus himself named more than ten thousand species. His two-part names are st
             "The first paragraph says each species might have several names and a scientific name could be a dozen words long, and Linnaeus decided this confusion had to end.",
             "第一段说每个物种可能有好几个名字，学名可能长达十几个词，林奈决定结束这种混乱。",
           ),
+          [
+            t("Explorers sent back thousands, not too few.", "探险家送回了成千上万的标本，并不太少。"),
+            t("Latin was in use; the names were just long.", "大家用拉丁语，只是名字太长。"),
+            t("Extinction is never his concern here.", "这里他关心的不是灭绝。"),
+          ],
         ),
         ask(
           t("In the name Felis catus, what does Felis name?", "在 Felis catus 这个名字中，Felis 指的是什么？"),
@@ -120,6 +145,11 @@ Linnaeus himself named more than ten thousand species. His two-part names are st
             "The second paragraph explains that the first part of a two-part name names the genus and the second names the species.",
             "第二段解释说，双名中的第一部分指属，第二部分指种。",
           ),
+          [
+            t("The kingdom is the largest group, not the first word.", "界是最大的分类，不是名字的第一部分。"),
+            t("Names do not record countries.", "名字不记录国家。"),
+            t("Names do not record scientists.", "名字不记录科学家。"),
+          ],
         ),
         ask(
           t("What evidence made Linnaeus move whales from the fish to the mammals?", "什么证据使林奈把鲸从鱼类移到哺乳动物中？"),
@@ -133,12 +163,22 @@ Linnaeus himself named more than ten thousand species. His two-part names are st
             "The fourth paragraph says he decided whales belonged with mammals because they breathe air and feed their young on milk; size and range do not decide the group.",
             "第四段说他认为鲸属于哺乳动物，因为它们呼吸空气并用乳汁喂养幼崽；体型和分布范围并不决定类别。",
           ),
+          [
+            t("Size is not his reason.", "体型不是他的理由。"),
+            t("Where they live is not his reason.", "生活在哪里不是他的理由。"),
+            t("Genes came much later than Linnaeus.", "基因比较远在林奈之后。"),
+          ],
         ),
         ask(
           t("What is the scientific name of humans?", "人类的学名是什么？"),
           t("Homo sapiens", "智人（Homo sapiens）"),
           [t("Felis catus", "家猫（Felis catus）"), t("Ichthyosaurus", "鱼龙"), t("Linnaeus", "林奈")],
           t('Humans became Homo sapiens, meaning "wise human."', "人类被命名为Homo sapiens，意思是“智慧的人”。"),
+          [
+            t("Felis catus is the house cat.", "Felis catus 是家猫。"),
+            t("Ichthyosaurus is a sea reptile.", "Ichthyosaurus 是海生爬行动物。"),
+            t("Linnaeus is the scientist's name.", "林奈是科学家的名字。"),
+          ],
         ),
       ],
       ["Europe", "Swedish", "Carl", "Linnaeus", "Latin", "Homo", "sapiens", "Felis", "catus"],
@@ -167,6 +207,11 @@ In the 1970s, two biologists, Peter and Rosemary Grant, began studying the finch
             "The second paragraph says the birds were all finches but belonged to about a dozen species, differing mainly in their beaks.",
             "第二段说这些鸟都是雀鸟，但属于大约十几个不同的物种，主要区别在于喙。",
           ),
+          [
+            t("They were about a dozen species, not one.", "它们约有十几个物种，不是一种。"),
+            t("Most lived nowhere else on Earth.", "大多数在地球别处都没有。"),
+            t("Most were unlike the mainland's.", "大多数与大陆上的不同。"),
+          ],
         ),
         ask(
           t(
@@ -183,6 +228,11 @@ In the 1970s, two biologists, Peter and Rosemary Grant, began studying the finch
             "The third paragraph says birds whose beaks were best suited to the available food survived and raised more young, and over generations the populations diverged.",
             "第三段说喙最适合现有食物的鸟存活下来并养育了更多后代，经过许多代，种群逐渐分化。",
           ),
+          [
+            t("Birds do not choose their beaks.", "鸟不能选择喙的形状。"),
+            t("Volcanoes made the islands, not the beaks.", "火山造就了岛屿，不是鸟喙。"),
+            t("Sailors are never mentioned.", "文中没提水手。"),
+          ],
         ),
         ask(
           t("Why is the Grants' study strong evidence for natural selection?", "为什么格兰特夫妇的研究是自然选择的有力证据？"),
@@ -196,12 +246,22 @@ In the 1970s, two biologists, Peter and Rosemary Grant, began studying the finch
             "The Grants observed the cause, a drought that left only hard seeds, and measured the effect, larger beaks in the next generation, which tests Darwin's idea directly.",
             "格兰特夫妇观察到了原因（干旱只留下坚硬的种子），并测量了结果（下一代的喙更大），这直接检验了达尔文的观点。",
           ),
+          [
+            t("They watched living birds, not fossils.", "他们观察的是活鸟，不是化石。"),
+            t("Daphne Major is not where Darwin stayed five weeks.", "达夫尼大岛并非达尔文停留五周的地方。"),
+            t("Tool use was already known.", "使用工具早已为人所知。"),
+          ],
         ),
         ask(
           t("In what year did the Beagle reach the Galápagos?", "“小猎犬号”哪一年到达加拉帕戈斯？"),
           t("In 1835", "1835年"),
           [t("In 1977", "1977年"), t("In 1859", "1859年"), t("In 1700", "1700年")],
           t("In 1835, the Beagle reached the Galápagos.", "1835年，“小猎犬号”到达加拉帕戈斯群岛。"),
+          [
+            t("1977 is the year of the drought.", "1977 年是旱灾的年份。"),
+            t("1859 is not in the passage.", "1859 年不在文中。"),
+            t("The 1700s belong to Linnaeus.", "十八世纪属于林奈。"),
+          ],
         ),
       ],
       [
@@ -253,6 +313,11 @@ In that vast span of geologic time, human beings are newcomers. If Earth's histo
             "The second paragraph says that in layers that have not been disturbed, the lowest layer formed first and is the oldest.",
             "第二段说在未受扰动的岩层中，最下面的一层最先形成，也最古老。",
           ),
+          [
+            t("The top layer is the youngest.", "最上层最年轻。"),
+            t("Thickness says nothing about age.", "厚度和年代无关。"),
+            t("Color says nothing about age.", "颜色和年代无关。"),
+          ],
         ),
         ask(
           t("What did William Smith's discovery allow geologists to do?", "威廉·史密斯的发现使地质学家能够做什么？"),
@@ -266,6 +331,11 @@ In that vast span of geologic time, human beings are newcomers. If Earth's histo
             "The third paragraph says each layer had its own set of fossils in the same order everywhere, which allowed geologists to match layers in different places.",
             "第三段说每一层都有自己特有的化石，而且到处顺序相同，这使地质学家能够对应不同地方的岩层。",
           ),
+          [
+            t("Measuring years came in the twentieth century.", "测量年份是二十世纪的事。"),
+            t("Canals were his job, not the discovery.", "挖运河是他的工作，不是他的发现。"),
+            t("Gold is never mentioned.", "文中没提黄金。"),
+          ],
         ),
         ask(
           t("What is the purpose of the comparison in the last paragraph?", "最后一段中的比较有什么目的？"),
@@ -279,6 +349,11 @@ In that vast span of geologic time, human beings are newcomers. If Earth's histo
             "Compressing four and a half billion years into one day, with humans in the last seconds, makes the vast span of geologic time easy to picture.",
             "把四十五亿年压缩成一天、人类只出现在最后几秒，使人们容易想象地质时间的漫长。",
           ),
+          [
+            t("A day is only the comparison.", "一天只是用来作比较的。"),
+            t("Humans came seconds before midnight, long after dinosaurs.", "人类出现在午夜前几秒，远在恐龙之后。"),
+            t("The canyon took billions of years.", "大峡谷经历了数十亿年。"),
+          ],
         ),
         ask(
           t("About how old is Earth?", "地球大约有多少岁？"),
@@ -289,6 +364,11 @@ In that vast span of geologic time, human beings are newcomers. If Earth's histo
             t("About 252 million years", "大约二亿五千二百万年"),
           ],
           t("Earth itself is about four and a half billion years old.", "地球本身大约有四十五亿年历史。"),
+          [
+            t("Two billion is the age of the canyon's oldest rocks.", "二十亿年是大峡谷最古老岩石的年龄。"),
+            t("Ten thousand is far too young.", "一万年太年轻了。"),
+            t("252 million belongs to the Great Dying.", "两亿五千二百万年属于大灭绝那篇。"),
+          ],
         ),
       ],
       ["Grand", "Canyon", "Arizona", "Danish", "Nicolas", "Steno", "English", "William", "Smith", "Earth's", "Earth", "Steno's", "Smith's"],
@@ -319,6 +399,11 @@ Each extinction was also a new beginning. With so many species gone, the survivo
             "The third paragraph says the strongest evidence points to enormous eruptions in Siberia; the asteroid is linked to a different extinction sixty-six million years ago.",
             "第三段说最有力的证据指向西伯利亚的巨大喷发；小行星与六千六百万年前的另一次灭绝有关。",
           ),
+          [
+            t("The asteroid ended the dinosaurs much later.", "小行星是在很久以后灭绝了恐龙。"),
+            t("Trilobites were victims, not killers.", "三叶虫是受害者，不是凶手。"),
+            t("The planet grew hotter, not icy.", "地球变得更热，不是冰封。"),
+          ],
         ),
         ask(
           t("How does the author show the size of the Great Dying?", "作者如何表现大灭绝的规模？"),
@@ -332,6 +417,11 @@ Each extinction was also a new beginning. With so many species gone, the survivo
             "The second paragraph says about nine out of ten species in the sea and seven out of ten on land died out, figures that show the scale.",
             "第二段说海洋中约十分之九、陆地上约十分之七的物种灭绝了，这些数字表明了规模。",
           ),
+          [
+            t("A trilobite's size shows variety, not the disaster's scale.", "三叶虫的大小说明多样性，不是灾难规模。"),
+            t("It gives shares, not a list.", "文中给出比例，并没逐个列出。"),
+            t("The day comparison is in the Grand Canyon passage.", "一天的比喻在大峡谷那篇里。"),
+          ],
         ),
         ask(
           t('Why does the author call each extinction "a new beginning"?', "为什么作者把每次灭绝称为“新的开始”？"),
@@ -345,6 +435,11 @@ Each extinction was also a new beginning. With so many species gone, the survivo
             "The last paragraph says that with so many species gone, the survivors spread into empty habitats and evolved into new forms.",
             "最后一段说由于许多物种消失，幸存者扩散到空出的栖息地并进化出新的形态。",
           ),
+          [
+            t("Lost species did not return.", "灭绝的物种没有回来。"),
+            t("Only one extinction ended the dinosaurs.", "只有一次灭绝终结了恐龙。"),
+            t("The rock record is one, not restarted.", "岩石记录只有一套，不会重来。"),
+          ],
         ),
         ask(
           t("Where did the eruptions behind the Great Dying take place?", "导致大灭绝的火山喷发发生在哪里？"),
@@ -354,6 +449,11 @@ Each extinction was also a new beginning. With so many species gone, the survivo
             "The strongest evidence points to enormous eruptions in what is now Siberia.",
             "最有力的证据指向今天西伯利亚的大规模火山喷发。",
           ),
+          [
+            t("Mexico is where the asteroid struck.", "墨西哥是小行星撞击的地方。"),
+            t("The Grand Canyon is another passage.", "大峡谷属于另一篇。"),
+            t("The Galápagos belong to Darwin.", "加拉帕戈斯属于达尔文。"),
+          ],
         ),
       ],
       ["Permian", "Great", "Dying", "Siberia", "Europe", "Mexico"],
@@ -384,6 +484,11 @@ Mendel published his findings in 1866, but almost no one paid attention. His pap
             "The second paragraph says he chose peas because they grow quickly and have traits that are easy to see.",
             "第二段说他选择豌豆是因为它们生长迅速，而且性状容易观察。",
           ),
+          [
+            t("The garden is never said to hold only peas.", "文中没说花园里只有豌豆。"),
+            t("He moved pollen by hand.", "他亲手转移花粉。"),
+            t("Blending is the idea he disproved.", "融合正是他推翻的观点。"),
+          ],
         ),
         ask(
           t("Which result disproved the idea that traits simply blend?", "哪个结果推翻了性状只是混合的观点？"),
@@ -397,6 +502,11 @@ Mendel published his findings in 1866, but almost no one paid attention. His pap
             "If traits blended, the short trait could not return; its reappearance in about one in four plants showed it had been hidden, not mixed away.",
             "如果性状是混合的，矮茎性状就不可能再出现；它在约四分之一的植株中重新出现，说明它只是被隐藏了，而不是被混合掉了。",
           ),
+          [
+            t("All-tall hybrids only hid the trait.", "全是高茎只是把性状藏了起来。"),
+            t("The count is a fact about his work, not a result.", "数量只是工作量，不是实验结果。"),
+            t("Flower color says nothing about blending.", "花色本身说明不了融合问题。"),
+          ],
         ),
         ask(
           t("Why was Mendel's work ignored at first?", "孟德尔的研究为什么起初被忽视？"),
@@ -413,6 +523,11 @@ Mendel published his findings in 1866, but almost no one paid attention. His pap
             "The last paragraph says his paper was read by few scientists and his use of mathematics in biology was unusual.",
             "最后一段说他的论文很少有科学家读过，而且他在生物学中使用数学很不寻常。",
           ),
+          [
+            t("His laws were rediscovered and confirmed.", "他的定律后来被重新发现并证实。"),
+            t("He did publish, in 1866.", "他在 1866 年确实发表了。"),
+            t("He studied peas.", "他研究的是豌豆。"),
+          ],
         ),
         ask(
           t("About how many pea plants did Mendel study?", "孟德尔大约研究了多少株豌豆？"),
@@ -422,6 +537,11 @@ Mendel published his findings in 1866, but almost no one paid attention. His pap
             "Between 1856 and 1863, Mendel grew and studied about twenty-eight thousand pea plants.",
             "1856年到1863年间，孟德尔种植并研究了约两万八千株豌豆。",
           ),
+          [
+            t("Twenty-eight leaves off the thousands.", "二十八漏掉了“千”。"),
+            t("One thousand is too few.", "一千太少了。"),
+            t("A million is too many.", "一百万太多了。"),
+          ],
         ),
       ],
       ["Gregor", "Mendel", "Czech", "Republic", "Mendel's"],
@@ -452,6 +572,11 @@ The discovery was important not only for what was found but for how it was found
             "The second paragraph says they predicted the fossils should be in 375-million-year-old rocks from shallow streams, and found such rocks on Ellesmere Island.",
             "第二段说他们预测化石应该在三亿七千五百万年前浅溪形成的岩石中，并在埃尔斯米尔岛找到了这种岩石。",
           ),
+          [
+            t("No earlier fossil was found there.", "那里此前没有发现化石。"),
+            t("The Arctic was hard, not easy, to work in.", "在北极工作很艰难，并不容易。"),
+            t("The name came after the find.", "名字是发现之后才取的。"),
+          ],
         ),
         ask(
           t("Which feature of Tiktaalik was like a four-legged animal?", "提塔利克鱼的哪个特征像四足动物？"),
@@ -461,6 +586,11 @@ The discovery was important not only for what was found but for how it was found
             "The fourth paragraph says its scales and gills were like a fish's, while its fin bones matched the upper arm, forearm and wrist of a four-legged animal.",
             "第四段说它的鳞片和鳃像鱼，而鳍骨与四足动物的上臂、前臂和腕部相对应。",
           ),
+          [
+            t("Scales are fish-like.", "鳞片像鱼。"),
+            t("Gills are fish-like.", "鳃像鱼。"),
+            t("Living in water is fish-like.", "生活在水中像鱼。"),
+          ],
         ),
         ask(
           t(
@@ -477,6 +607,11 @@ The discovery was important not only for what was found but for how it was found
             "The last paragraph says the team predicted where the fossil should be and found it there; a theory that makes testable predictions and passes them earns trust.",
             "最后一段说研究小组预测了化石应在的位置并在那里找到了它；能作出可检验预测并通过检验的理论会赢得信任。",
           ),
+          [
+            t("Four seasons show effort, not proof.", "四个季节说明努力，不说明证据。"),
+            t("The name honors the region, nothing more.", "名字只是为了纪念当地。"),
+            t("The short summer only made work hard.", "短暂的夏天只让工作更难。"),
+          ],
         ),
       ],
       ["Neil", "Shubin", "Ellesmere", "Island", "Arctic", "Canada", "Tiktaalik", "Inuktitut", "Shubin's"],
@@ -510,6 +645,11 @@ The question is not only whether scientists can bring back the mammoth, but whet
             "Cave paintings show that early humans admired mammoths, but they say nothing about whether mammoths would protect the Arctic today.",
             "洞穴壁画说明早期人类欣赏猛犸象，但它们与猛犸象今天能否保护北极毫无关系。",
           ),
+          [
+            t("Grazing is about the habitat.", "吃草关乎栖息地。"),
+            t("Cold ground is about the habitat.", "冻土关乎栖息地。"),
+            t("Greenhouse gases are about the Arctic's future.", "温室气体关乎北极的未来。"),
+          ],
         ),
         ask(
           t("Why would scientists start with an Asian elephant?", "为什么科学家要从亚洲象入手？"),
@@ -523,6 +663,11 @@ The question is not only whether scientists can bring back the mammoth, but whet
             "The second paragraph names the Asian elephant as the mammoth's closest living relative, whose genes would be changed to match the mammoth's.",
             "第二段指出亚洲象是猛犸象现存的最近亲缘物种，科学家会改变它的基因使之与猛犸象相符。",
           ),
+          [
+            t("Genes must be changed to give it hair.", "需要改基因才能长出厚毛。"),
+            t("Wrangel Island held the last mammoths.", "弗兰格尔岛是最后一批猛犸象生活的地方。"),
+            t("Its genome must be changed, so it differs.", "需要修改基因组，说明二者不同。"),
+          ],
         ),
         ask(
           t("Which objection is about the welfare of the animals themselves?", "哪一个反对意见是关于动物本身福祉的？"),
@@ -536,6 +681,11 @@ The question is not only whether scientists can bring back the mammoth, but whet
             "Growing up without a herd to learn from would harm intelligent, social animals; the other objections concern money and the Arctic.",
             "在没有象群可以学习的环境中长大会伤害聪明而合群的动物；其他反对意见涉及金钱和北极。",
           ),
+          [
+            t("Cost is about money.", "成本关乎金钱。"),
+            t("Effects on the Arctic are about other species.", "对北极的影响关乎其他物种。"),
+            t("Wrangel Island is history, not an objection.", "弗兰格尔岛是历史，不是反对理由。"),
+          ],
         ),
       ],
       ["Europe", "Asia", "North", "America", "Wrangel", "Island", "Siberia", "Egypt", "Asian", "Arctic"],

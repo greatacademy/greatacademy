@@ -50,6 +50,11 @@ export const talesUnit: ReadingUnitDef = {
             "Roping a whole herd with a single throw is far beyond what a real person could do; that is the exaggeration of a tall tale.",
             "一次就套住一整群牛远远超出了真人的能力，这就是荒诞故事的夸张。",
           ],
+          [
+            ["Living in Texas is an ordinary fact, not an exaggeration.", "住在德州是普通的事实，不是夸张。"],
+            ["Cowhands hiding in ditches is what real people might do.", "牛仔躲进沟里是真人也会做的事。"],
+            ["A green sky before a storm is a real weather sign, not a stretch.", "暴风雨前天变绿是真实的天气迹象，不是夸张。"],
+          ],
         ),
         q(
           ["What does the tornado do after Daisy tames it?", "戴西驯服龙卷风之后，它做了什么？"],
@@ -62,6 +67,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The last paragraph says that every afternoon the tamed tornado spun the windmills and swept the dust off the town.",
             "最后一段说，被驯服的龙卷风每天下午转动风车，扫去小镇的尘土。",
+          ],
+          [
+            ["Swallowing a barn is what it did before she tamed it.", "吞掉谷仓是她驯服它之前的事。"],
+            ["Riding to New Mexico was how she tamed it, not after.", "骑到新墨西哥是驯服它的过程，不是之后。"],
+            ["Turning into a horse is wrong. It only bucked like one.", "变成马不对。它只是像马一样乱蹦。"],
           ],
         ),
         q(
@@ -76,6 +86,11 @@ export const talesUnit: ReadingUnitDef = {
             "The last sentence says that this is why the wind blows across Texas every single afternoon, an ending that explains something in nature.",
             "最后一句说，这就是得克萨斯每天下午都刮风的原因，这是一个解释自然现象的结尾。",
           ],
+          [
+            ["A green sky is in the story, but the ending does not explain it.", "天变绿在故事里，但结尾没解释它。"],
+            ["Cowhands' ropes are not what the ending explains.", "牛仔的绳子不是结尾要解释的。"],
+            ["Creeks are not what the ending explains.", "小溪不是结尾要解释的。"],
+          ],
         ),
         q(
           ["What color did the sky turn before the tornado came?", "龙卷风来之前天空变成了什么颜色？"],
@@ -88,6 +103,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The tale says the sky turned green, and a giant tornado came spinning across the prairie.",
             "故事说天空变绿了，一股巨大的龙卷风旋转着穿过草原。",
+          ],
+          [
+            ["Red is not named.", "文中没说红色。"],
+            ["Black is not named.", "文中没说黑色。"],
+            ["Yellow is not named.", "文中没说黄色。"],
           ],
         ),
       ],
@@ -117,6 +137,11 @@ export const talesUnit: ReadingUnitDef = {
             "The second paragraph says the trees had grown so tangled that the deer could not walk and the rivers could not reach the sea.",
             "第二段说，树缠得太乱，鹿走不过去，河流也到不了大海。",
           ],
+          [
+            ["Making a comb is how he solved it, not why.", "做梳子是他解决的办法，不是原因。"],
+            ["Eagles asking him is not in the tale. They only nested in his beard.", "老鹰请他帮忙故事里没有。它们只是在他胡子里筑巢。"],
+            ["A new dinner plate is wrong. He used a wagon wheel as a boy.", "新餐盘不对。他小时候用的是车轮。"],
+          ],
         ),
         q(
           ["Which detail is an exaggeration of Ole's size?", "哪个细节夸大了奥勒的身材？"],
@@ -129,6 +154,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "Only a man as tall as the clouds could have eagles nesting in his beard; the other details could be true of anyone.",
             "只有像云一样高的人，胡子里才会有老鹰筑巢；其他细节放在任何人身上都可能是真的。",
+          ],
+          [
+            ["Working in the north woods is an ordinary detail.", "在北方森林干活是普通的细节。"],
+            ["Thinking for a while is something anyone does.", "想了一会儿是谁都会做的事。"],
+            ["Grateful deer are not about his size.", "感激的鹿和他的个子无关。"],
           ],
         ),
         q(
@@ -143,6 +173,11 @@ export const talesUnit: ReadingUnitDef = {
             "The last paragraph says people call the straight lines valleys, and the rivers run along them to the sea.",
             "最后一段说，人们把这些直线叫作山谷，河流沿着它们流向大海。",
           ],
+          [
+            ["Roads for lumberjacks are not in the tale.", "伐木工的路故事里没有。"],
+            ["Rows of trees are what he lined up, not the lines left.", "一排排树是他排整齐的，不是留下的线。"],
+            ["Paths for deer are not what the tale calls them.", "鹿走的小路不是故事里的说法。"],
+          ],
         ),
         q(
           ["What was Ole's comb made from?", "奥勒的梳子是用什么做的？"],
@@ -153,6 +188,11 @@ export const talesUnit: ReadingUnitDef = {
             ["Eagle feathers", "鹰的羽毛"],
           ],
           ["He pulled out a giant comb he had made from the jawbone of a whale.", "他掏出一把用鲸的颌骨做成的巨梳。"],
+          [
+            ["A wagon wheel was his dinner plate.", "车轮是他的餐盘。"],
+            ["A pine tree is not what the comb was made of.", "松树不是做梳子的材料。"],
+            ["Eagle feathers are not in the tale. Eagles nested in his beard.", "鹰的羽毛故事里没有。老鹰在他胡子里筑巢。"],
+          ],
         ),
       ],
       { names: ["Ole", "Larsen"] },
@@ -181,6 +221,11 @@ export const talesUnit: ReadingUnitDef = {
             "The first paragraph says most riders took ten days; Lou ran the whole route in a single morning.",
             "第一段说，大多数骑手要十天；卢一个上午就能跑完全程。",
           ],
+          [
+            ["A single morning was how fast Lou ran.", "一个上午是露跑的速度。"],
+            ["Until lunch is Lou's time again, not the riders'.", "到午饭前又是露的时间，不是骑手的。"],
+            ["One winter is when the blizzard came.", "一个冬天是暴风雪来的时候。"],
+          ],
         ),
         q(
           ["Why did Lou set off in the blizzard?", "卢为什么要在暴风雪中出发？"],
@@ -193,6 +238,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The third paragraph says a doctor needed medicine, and no rider could get through the blizzard.",
             "第三段说，一位医生需要药，而暴风雪中没有骑手能通过。",
+          ],
+          [
+            ["Melting the snow was a result, not her reason.", "融化雪是结果，不是她的原因。"],
+            ["A runaway horse is wrong. Lou never needed a horse.", "马跑掉了不对。露从来不需要马。"],
+            ["Letters arriving early is a joke about her speed, not why she went.", "信提前到是夸她速度的玩笑，不是她出发的原因。"],
           ],
         ),
         q(
@@ -213,6 +263,11 @@ export const talesUnit: ReadingUnitDef = {
             "A good summary names the hero, her feat and the ending; the other options give only one detail.",
             "好的概括要说出主人公、她的壮举和结局；其他选项只说了一个细节。",
           ],
+          [
+            ["The doctor's family is one part, without Lou or her trail.", "医生的家人只是一部分，没讲露和她的路。"],
+            ["Trains replacing riders is not in the tale.", "火车取代骑手故事里没有。"],
+            ["The blizzard is only the problem, not the whole tale.", "暴风雪只是问题，不是整个故事。"],
+          ],
         ),
         q(
           ["What happened to the snow under Lou's boots?", "卢的靴子下面的雪怎样了？"],
@@ -223,6 +278,11 @@ export const talesUnit: ReadingUnitDef = {
             ["It piled up behind her", "在她身后堆了起来"],
           ],
           ["She ran so fast that the snow melted under her boots.", "她跑得太快，靴子下面的雪都融化了。"],
+          [
+            ["Freezing harder is backwards.", "冻得更硬是反的。"],
+            ["Turning to ice is backwards. Green grass grew.", "结成冰是反的。长出了绿草。"],
+            ["Piling up behind her is wrong. She left a trail of grass.", "在她身后堆起来不对。她留下的是一条草路。"],
+          ],
         ),
       ],
       { names: ["Lou", "Lou's", "West"] },
@@ -253,6 +313,11 @@ export const talesUnit: ReadingUnitDef = {
             "The first paragraph says Spider, who was small but clever, wanted the stories for everyone.",
             "第一段说，蜘蛛个子小但很聪明，他想把故事给所有人。",
           ],
+          [
+            ["Selling to the leopard is not in the tale.", "卖给豹子故事里没有。"],
+            ["Sitting on the throne is not in the tale.", "坐上王位故事里没有。"],
+            ["A golden box of his own is wrong. He shared the stories.", "自己要金盒子不对。他把故事分享给大家了。"],
+          ],
         ),
         q(
           ["How did Spider trick the python?", "蜘蛛是怎样骗过蟒蛇的？"],
@@ -265,6 +330,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The fifth paragraph says Spider told the proud python it was shorter than a branch, so it stretched out to prove it wrong and was tied up.",
             "第五段说，蜘蛛说骄傲的蟒蛇比树枝还短，它就伸直身子要证明不是这样，结果被绑住了。",
+          ],
+          [
+            ["Splashing water was the trick for the hornets.", "泼水是对付马蜂的计策。"],
+            ["The pit was for the leopard.", "陷阱是对付豹子的。"],
+            ["The dry gourd was for the hornets.", "干葫芦是给马蜂的。"],
           ],
         ),
         q(
@@ -279,6 +349,11 @@ export const talesUnit: ReadingUnitDef = {
             "The third paragraph says the Sky King laughed and was sure the little spider would fail.",
             "第三段说，天王笑了，他确信小蜘蛛会失败。",
           ],
+          [
+            ["Sharing the stories is wrong. The King kept them in his box.", "分享故事不对。天王把故事锁在盒子里。"],
+            ["Fear of the leopard is not in the tale.", "怕豹子故事里没有。"],
+            ["Honey is not in the tale.", "蜂蜜故事里没有。"],
+          ],
         ),
         q(
           ["How did Spider catch the leopard?", "蜘蛛怎样抓住了豹子？"],
@@ -289,6 +364,11 @@ export const talesUnit: ReadingUnitDef = {
             ["He splashed water on it", "他往它身上泼水"],
           ],
           ["Last, he dug a deep pit on the leopard's path, and the leopard fell in.", "最后，他在豹子的路上挖了个深坑，豹子掉了进去。"],
+          [
+            ["Tying to a branch was the python.", "绑在树枝上的是蟒蛇。"],
+            ["Trapping in a gourd was the hornets.", "关进葫芦的是马蜂。"],
+            ["Splashing water was also for the hornets.", "泼水也是对付马蜂的。"],
+          ],
         ),
       ],
       { names: ["Spider", "Sky King", "Sky King's"] },
@@ -321,6 +401,11 @@ export const talesUnit: ReadingUnitDef = {
             "The third paragraph says Rabbit knew the only thing Fox wanted for dinner was a rabbit.",
             "第三段说，兔子知道狐狸晚餐唯一想吃的就是兔子。",
           ],
+          [
+            ["Sharing stew is what Fox said, not what he wanted.", "分享炖菜是狐狸嘴上说的，不是他真想的。"],
+            ["Saying sorry is not in the tale.", "道歉故事里没有。"],
+            ["Fear of the hunter came later, from Rabbit's trick.", "怕猎人是后来兔子用计吓的。"],
+          ],
         ),
         q(
           ["Why did Rabbit accept the invitation?", "兔子为什么接受了邀请？"],
@@ -333,6 +418,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The third paragraph says Rabbit knew that if he refused, Fox would only try something else.",
             "第三段说，兔子知道，如果他拒绝，狐狸只会换别的办法。",
+          ],
+          [
+            ["Believing Fox was a friend is wrong. Rabbit was no fool.", "相信狐狸是朋友不对。兔子可不傻。"],
+            ["Hunger for stew is not the reason given.", "想喝炖菜不是文中给的原因。"],
+            ["Meeting a hunter is wrong. The hunter was made up.", "想见猎人不对。猎人是编出来的。"],
           ],
         ),
         q(
@@ -347,6 +437,11 @@ export const talesUnit: ReadingUnitDef = {
             "The fifth paragraph shows Rabbit telling Fox that a hunter with dogs was asking where Fox lived and was coming that way.",
             "第五段写兔子告诉狐狸，一个带狗的猎人在打听狐狸住在哪里，正往这边来。",
           ],
+          [
+            ["Hiding behind the door is what Fox did.", "躲在门后的是狐狸。"],
+            ["Poisoned stew is not in the tale.", "有毒的炖菜故事里没有。"],
+            ["Locking Fox in is wrong. Fox ran out the back.", "把狐狸锁在里面不对。狐狸从后门跑了。"],
+          ],
         ),
         q(
           ["What did Rabbit see through the window?", "兔子从窗户里看到了什么？"],
@@ -357,6 +452,11 @@ export const talesUnit: ReadingUnitDef = {
             ["Fox asleep in bed", "狐狸睡在床上"],
           ],
           ["There was no stew on the stove, only an empty pot and a big wooden spoon.", "炉子上没有炖菜，只有一口空锅和一把大木勺。"],
+          [
+            ["Stew is wrong. The pot was empty.", "炖菜不对。锅是空的。"],
+            ["A hunter is only in Rabbit's made-up story.", "猎人只在兔子编的话里。"],
+            ["Fox asleep is wrong. He was hiding behind the door.", "狐狸睡着了不对。他躲在门后面。"],
+          ],
         ),
       ],
       { names: ["Fox", "Rabbit", "Fox's"] },
@@ -385,6 +485,11 @@ export const talesUnit: ReadingUnitDef = {
             "The second paragraph says Monkey was furious when he found out that looking after the horses was one of the lowest jobs in heaven.",
             "第二段说，猴王发现看管天马是天宫里最低微的差事之一时，非常生气。",
           ],
+          [
+            ["Horses kicking the desk is wrong. Monkey kicked it.", "马踢翻桌子不对。是猴子踢的。"],
+            ["Not being allowed peaches came later, in the Peach Garden.", "不让吃桃是后来在蟠桃园的事。"],
+            ["The Buddha's bet came at the end.", "佛祖的赌约在最后。"],
+          ],
         ),
         q(
           ["What did Monkey do in the Peach Garden?", "猴王在蟠桃园里做了什么？"],
@@ -397,6 +502,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The third paragraph says Monkey ate the finest peaches himself, then crashed a royal feast.",
             "第三段说，猴王自己吃掉了最好的桃子，然后又大闹了一场御宴。",
+          ],
+          [
+            ["Planting trees is not in the tale.", "种桃树故事里没有。"],
+            ["Guarding the peaches was his job, but he did not do it.", "看守桃子是他的工作，但他没做到。"],
+            ["Giving peaches to monkeys is not in the tale.", "把桃子分给猴子们故事里没有。"],
           ],
         ),
         q(
@@ -411,6 +521,11 @@ export const talesUnit: ReadingUnitDef = {
             "The last paragraph says the pillars were the Buddha's fingers, so Monkey had never left the Buddha's palm.",
             "最后一段说，那些柱子是佛祖的手指，所以猴王根本没有离开佛祖的手掌。",
           ],
+          [
+            ["Ruling heaven is wrong. He lost the bet.", "统治天庭不对。他输了赌约。"],
+            ["Stone pillars is wrong. They were fingers.", "石头柱子不对。它们是手指。"],
+            ["Being caught by armies is wrong. The armies could not catch him.", "被天兵抓住不对。天兵抓不到他。"],
+          ],
         ),
         q(
           ["How many shapes could Monkey change into?", "猴子能变成多少种样子？"],
@@ -421,6 +536,11 @@ export const talesUnit: ReadingUnitDef = {
             ["One hundred", "一百种"],
           ],
           ["He could change into seventy-two different shapes.", "他能变成七十二种不同的样子。"],
+          [
+            ["Five is the number of pillars.", "五是柱子的数量。"],
+            ["Twelve is not in the tale.", "十二故事里没有。"],
+            ["One hundred is not in the tale.", "一百故事里没有。"],
+          ],
         ),
       ],
       { names: ["Monkey", "Jade Emperor", "Emperor", "Peach Garden", "Buddha", "Buddha's"] },
@@ -449,6 +569,11 @@ export const talesUnit: ReadingUnitDef = {
             "The third paragraph says Coyote made the old woman laugh until she fell asleep by the fire, then grabbed the bag and ran.",
             "第三段说，郊狼逗老妇人笑，直到她在火边睡着，然后抓起袋子就跑。",
           ],
+          [
+            ["Trading jokes for the bag is wrong. The jokes put her to sleep.", "用笑话换袋子不对。笑话是让她睡着。"],
+            ["Asking politely is not in the tale.", "礼貌地要故事里没有。"],
+            ["Eagle stealing it is wrong. Coyote went in alone.", "老鹰偷走不对。土狼是一个人进去的。"],
+          ],
         ),
         q(
           ["In what order did the animals carry the bag?", "动物们是按什么顺序传递袋子的？"],
@@ -462,6 +587,11 @@ export const talesUnit: ReadingUnitDef = {
             "The third paragraph says Coyote threw the bag to Eagle, Eagle dropped it to Deer, and Deer passed it to Turtle.",
             "第三段说，郊狼把袋子扔给老鹰，老鹰丢给鹿，鹿再传给乌龟。",
           ],
+          [
+            ["Eagle first is wrong. Coyote grabbed it first.", "老鹰第一不对。土狼最先抓到袋子。"],
+            ["Deer before Eagle is wrong. Eagle carried it over the mountains first.", "鹿在老鹰前面不对。老鹰先带它飞过山。"],
+            ["Turtle first is backwards. Turtle was last.", "乌龟第一是反的。乌龟是最后一个。"],
+          ],
         ),
         q(
           ["What does the tale explain at the end?", "这个故事在结尾解释了什么？"],
@@ -474,6 +604,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The last paragraph says the old woman takes summer home for a while each year, and that is why winter still comes.",
             "最后一段说，老妇人每年都把夏天拿回去一阵子，所以冬天仍然会来。",
+          ],
+          [
+            ["Turtle shells are in the tale but not explained.", "乌龟壳在故事里，但没被解释。"],
+            ["Eagles flying high is a fact used, not explained.", "老鹰飞得高是用到的事实，不是被解释的。"],
+            ["Coyote's jokes are not what the ending explains.", "土狼讲笑话不是结尾要解释的。"],
           ],
         ),
       ],
@@ -503,6 +638,11 @@ export const talesUnit: ReadingUnitDef = {
             "The second paragraph says that in a week the pumpkin was as big as the farmhouse; it was as big as a hay wagon after one night.",
             "第二段说，一周后南瓜和农舍一样大；一夜之后它和运干草的马车一样大。",
           ],
+          [
+            ["A hay wagon was its size the first morning.", "干草车是第一天早上的大小。"],
+            ["The whole valley was in shadow after a month.", "一个月后整个山谷都被遮住了。"],
+            ["A pie dish is what families brought.", "派盘是各家带来的。"],
+          ],
         ),
         q(
           ["How does the exaggeration in the tale grow?", "故事中的夸张是怎样增长的？"],
@@ -515,6 +655,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "The tale moves from lunchtime to supper to the next morning to a week to a month, and the pumpkin grows bigger each time.",
             "故事从午饭到晚饭，到第二天早上，再到一周、一个月，南瓜每次都变得更大。",
+          ],
+          [
+            ["The farmer growing taller is not in the tale.", "农夫长高故事里没有。"],
+            ["Bigger pies are not in the tale.", "更大的派故事里没有。"],
+            ["Smaller and smaller is backwards.", "越来越小是反的。"],
           ],
         ),
         q(
@@ -531,6 +676,11 @@ export const talesUnit: ReadingUnitDef = {
           [
             "A summary gives the beginning, the middle and the end: the pumpkin grows, Hattie Mae makes pies, and the shell becomes a barn.",
             "概括要写出开头、经过和结尾：南瓜长大，哈蒂·梅做派，南瓜壳变成谷仓。",
+          ],
+          [
+            ["Chickens roosting is one small detail.", "鸡在里面栖息是一个小细节。"],
+            ["The mayor's and children's plans are only ideas, not what happened.", "镇长和孩子们的计划只是想法，不是结果。"],
+            ["Best pie in Iowa is not what the tale says.", "爱荷华最好的派不是故事说的。"],
           ],
         ),
       ],
@@ -570,6 +720,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The second paragraph says each lord promised to be loyal to the king and to send knights to fight for him in times of war.",
             "第二段说，每个领主都承诺效忠国王，并在战时派骑士为他作战。",
           ],
+          [
+            ["A castle with a hall is how a lord lived, not his promise.", "带大厅的城堡是领主的生活，不是他的承诺。"],
+            ["Farming and animals is what peasants did.", "种地和照看牲畜是农民做的。"],
+            ["Training in armor is what knights did.", "穿盔甲训练是骑士做的。"],
+          ],
         ),
         q(
           ["What did peasants get from the lord in return for their work?", "农民为领主劳动，得到了什么回报？"],
@@ -582,6 +737,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The fourth paragraph says the lord let the peasants live on his land and protected them from attack.",
             "第四段说，领主让农民住在他的土地上，并保护他们免受攻击。",
+          ],
+          [
+            ["Land of their own is wrong. They farmed the lord's land.", "自己的土地不对。他们种的是领主的地。"],
+            ["Horses and armor belong to knights.", "马和盔甲属于骑士。"],
+            ["Feasting is what lords did in the great hall.", "宴饮是领主在大厅里做的事。"],
           ],
         ),
         q(
@@ -596,6 +756,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The passage puts the king at the top and says peasants, at the bottom, were by far the largest group, like the wide base of a pyramid.",
             "文章把国王放在顶端，并说底部的农民是人数最多的群体，就像金字塔宽大的底座。",
           ],
+          [
+            ["Building pyramids is too literal.", "建金字塔太按字面理解了。"],
+            ["Living inside a pyramid is too literal.", "住在金字塔里太按字面理解了。"],
+            ["Being equal is the opposite. The pyramid shows who stood higher.", "平等正好相反。金字塔显示的是谁的地位高。"],
+          ],
         ),
         q(
           ["Who owned all the land under feudalism?", "在封建制度下，谁拥有所有的土地？"],
@@ -608,6 +773,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             'The text says, "The king owned all the land, but he could not run it alone."',
             "短文说：“国王拥有所有的土地，但他无法独自管理。”",
+          ],
+          [
+            ["The lords got pieces from the king.", "领主的土地是国王给的。"],
+            ["The knights got smaller pieces from lords.", "骑士从领主那里得到小块土地。"],
+            ["The peasants farmed land that was not theirs.", "农民种的地不是他们自己的。"],
           ],
         ),
       ],
@@ -639,6 +809,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The second paragraph says a high spot let guards see enemies coming from far away.",
             "第二段说，在高处守卫能远远看到敌人过来。",
           ],
+          [
+            ["Carrying stone uphill would be harder, not easier.", "把石头运上山更难，不是更容易。"],
+            ["Softer ground is not the reason given.", "地更软不是文中给的原因。"],
+            ["Peasants living on hilltops is not in the passage.", "农民住在山顶文中没有。"],
+          ],
         ),
         q(
           ["How did the walkway along the top of the walls help defenders?", "城墙顶上的走道怎样帮助守城的人？"],
@@ -651,6 +826,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The third paragraph says the walkway had gaps so archers could shoot while staying behind cover.",
             "第三段说，走道上有缺口，弓箭手可以躲在掩体后射箭。",
+          ],
+          [
+            ["Visitors reached the gate by the drawbridge.", "访客是通过吊桥到达大门的。"],
+            ["Holding water for the moat is not in the passage.", "给护城河蓄水文中没有。"],
+            ["The lord lived in the keep.", "领主住在主塔里。"],
           ],
         ),
         q(
@@ -665,6 +845,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The last paragraph defines the keep as the strongest tower, where the lord and his family lived.",
             "最后一段把主堡定义为最坚固的塔楼，领主和家人住在那里。",
           ],
+          [
+            ["A ditch with water is a moat.", "有水的深沟是护城河。"],
+            ["An iron gate is the portcullis.", "铁闸门是吊闸。"],
+            ["A bridge that rises is the drawbridge.", "能升起的桥是吊桥。"],
+          ],
         ),
         q(
           ["What was a portcullis?", "吊闸门是什么？"],
@@ -677,6 +862,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "Behind the drawbridge hung the portcullis, a heavy iron gate that slid down to block the entrance.",
             "吊桥后面挂着吊闸门，那是一扇滑下来就能堵住入口的沉重铁门。",
+          ],
+          [
+            ["A ditch with water is the moat.", "有水的沟是护城河。"],
+            ["A bridge that can be raised is the drawbridge.", "能升起的桥是吊桥。"],
+            ["The strongest tower is the keep.", "最坚固的塔是主塔。"],
           ],
         ),
       ],
@@ -708,6 +898,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The first paragraph says the attackers hoped that hunger would make the people inside surrender.",
             "第一段说，进攻者希望饥饿会让城里的人投降。",
           ],
+          [
+            ["Filling the well is not what attackers wanted.", "让井装满水不是进攻者想要的。"],
+            ["Defenders building a siege tower is backwards. Attackers built them.", "守城者造攻城塔是反的。攻城塔是进攻者造的。"],
+            ["A feast is not in the passage.", "宴会文中没有。"],
+          ],
         ),
         q(
           ["What was a siege tower for?", "攻城塔是做什么用的？"],
@@ -720,6 +915,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The third paragraph says a siege tower on wheels could be rolled up to the walls so soldiers could climb across.",
             "第三段说，带轮子的攻城塔可以推到城墙边，让士兵爬过去。",
+          ],
+          [
+            ["Throwing stones is a catapult's job.", "抛石头是投石机的工作。"],
+            ["Storing food is what cellars did.", "储存食物是地窖的作用。"],
+            ["Digging tunnels was another plan, without a tower.", "挖地道是另一种办法，不用塔。"],
           ],
         ),
         q(
@@ -734,6 +934,14 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The last paragraph says the people inside could run out of food and give up, or the attackers could grow hungry and go home.",
             "最后一段说，城里的人可能吃光食物而投降，进攻者也可能饿了而回家。",
           ],
+          [
+            ["Throwing food is not in the passage.", "扔食物文中没有。"],
+            ["Food making walls thicker is not in the passage.", "食物让墙变厚文中没有。"],
+            [
+              "Never being allowed to eat is wrong. Attackers grew hungry when food ran short.",
+              "进攻者不许吃饭不对。他们是因为缺粮才挨饿。",
+            ],
+          ],
         ),
         q(
           ["How did some armies try to make castle walls collapse?", "有些军队怎样设法让城墙倒塌？"],
@@ -744,6 +952,14 @@ export const middleAgesUnit: ReadingUnitDef = {
             ["They climbed over with ropes", "用绳子翻过去"],
           ],
           ["The text says some armies dug tunnels under the walls to make them collapse.", "短文说有些军队在城墙下挖地道，让城墙倒塌。"],
+          [
+            ["Pouring water is not in the passage.", "浇水文中没有。"],
+            ["Setting the moat on fire is not in the passage.", "放火烧护城河文中没有。"],
+            [
+              "Climbing with ropes is not the way named. Siege towers let them climb across.",
+              "用绳子爬不是文中说的方法。攻城塔才能让他们爬过去。",
+            ],
+          ],
         ),
       ],
     ),
@@ -773,6 +989,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The second paragraph says a page served the lord's family at the table, ran errands and learned good manners.",
             "第二段说，侍童在餐桌旁服侍领主一家，跑腿，并学习礼仪。",
           ],
+          [
+            ["Caring for a horse and armor is what a squire did.", "照料马和盔甲是侍从做的事。"],
+            ["Leading knights into battle is not a page's job.", "带领骑士作战不是侍童的工作。"],
+            ["Tapping with a sword is what the lord did at dubbing.", "用剑轻拍是领主在授封仪式上做的。"],
+          ],
         ),
         q(
           ["At about what age did a boy become a squire?", "男孩大约在多大时成为侍从？"],
@@ -785,6 +1006,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The third paragraph says that at about fourteen, the page became a squire; he became a page at seven and a knight at about twenty-one.",
             "第三段说，大约十四岁时侍童成为侍从；他七岁成为侍童，大约二十一岁成为骑士。",
+          ],
+          [
+            ["Seven is when a boy became a page.", "七岁是男孩成为侍童的年龄。"],
+            ["Twenty-one is when a squire became a knight.", "二十一岁是侍从成为骑士的年龄。"],
+            ["Ten is not named in the passage.", "十岁文中没提。"],
           ],
         ),
         q(
@@ -799,6 +1025,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The last paragraph says a knight promised to be brave in battle, loyal to his lord and kind to the weak.",
             "最后一段说，骑士承诺在战斗中勇敢，对领主忠诚，善待弱者。",
           ],
+          [
+            ["Praying every night is wrong. He prayed the night before dubbing.", "每晚祈祷不对。他是在授封前一晚祈祷。"],
+            ["Polishing armor is what a squire did for a knight.", "擦亮盔甲是侍从为骑士做的事。"],
+            ["A castle of his own is not part of the code.", "自己的城堡不是骑士准则的一部分。"],
+          ],
         ),
         q(
           ["Where did a squire spend the night before he was made a knight?", "侍从在受封骑士的前一晚待在哪里？"],
@@ -809,6 +1040,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             ["Riding in the woods", "在树林里骑马"],
           ],
           ["He spent the night before praying in a chapel.", "他在前一晚到小教堂里祈祷。"],
+          [
+            ["Feasting in the hall is not in the passage.", "在大厅宴饮文中没有。"],
+            ["Guarding the gate is not in the passage.", "守城门文中没有。"],
+            ["Riding in the woods is not in the passage.", "在林中骑马文中没有。"],
+          ],
         ),
       ],
       { names: ["Middle Ages"], glossed: ["dubbing"] },
@@ -839,6 +1075,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The first paragraph defines a manor as the land a lord owned, with a village, fields, woods, a mill and often a church.",
             "第一段把庄园定义为领主拥有的土地，有村庄、田地、树林、磨坊，往往还有教堂。",
           ],
+          [
+            ["A mud hut is where peasant families lived.", "泥草屋是农民家庭住的地方。"],
+            ["A long strip is one part of the fields.", "长条地只是田地的一部分。"],
+            ["A fair is a celebration, not the land.", "集市是庆祝活动，不是土地。"],
+          ],
         ),
         q(
           ["Why did animals sometimes sleep inside the huts in winter?", "为什么冬天牲畜有时睡在小屋里？"],
@@ -851,6 +1092,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The second paragraph says that in winter, the family's animals often slept inside with them for warmth.",
             "第二段说，冬天，家里的牲畜常常和人睡在一起取暖。",
+          ],
+          [
+            ["Guarding grain is not the reason given.", "看守粮食不是文中给的原因。"],
+            ["The lord ordering it is not in the passage.", "领主下令文中没有。"],
+            ["Keeping the fire burning is not the reason given.", "让火一直烧着不是文中给的原因。"],
           ],
         ),
         q(
@@ -865,6 +1111,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The third and fourth paragraphs say peasants worked several days a week on the lord's strips and gave him part of their flour, eggs and cheese.",
             "第三、四段说，农民每周要在领主的田上干几天活，还要把一部分面粉、鸡蛋和奶酪交给他。",
           ],
+          [
+            ["Resting on holy days shows time off, not what they owed.", "节日休息说明有空闲，不是他们欠的。"],
+            ["Dancing at fairs shows fun, not what they owed.", "在集市跳舞说明有乐趣，不是他们欠的。"],
+            ["A one-room hut shows they were poor, not what they owed.", "一间屋的小屋说明他们穷，不是他们欠的。"],
+          ],
         ),
         q(
           ["What did peasants have to do at the lord's mill?", "农民在领主的磨坊必须做什么？"],
@@ -877,6 +1128,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "They had to grind their grain at the lord's mill and give him part of the flour.",
             "他们必须在领主的磨坊磨谷物，并把一部分面粉交给他。",
+          ],
+          [
+            ["Selling eggs is wrong. They paid him in eggs.", "卖鸡蛋不对。他们是用鸡蛋交租。"],
+            ["Building strips is not in the passage.", "开新田文中没有。"],
+            ["Sleeping with animals happened in their huts.", "和牲畜睡在一起是在他们的小屋里。"],
           ],
         ),
       ],
@@ -906,6 +1162,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The first paragraph says towns grew up where roads met, beside rivers and around markets.",
             "第一段说，城镇在道路交会处、河边和集市周围兴起。",
           ],
+          [
+            ["High hills and cliffs are where castles were built.", "高山和悬崖是建城堡的地方。"],
+            ["Inside castle walls is not where towns grew.", "城堡墙内不是城镇形成的地方。"],
+            ["The manor's fields are where peasants farmed.", "庄园的田地是农民种地的地方。"],
+          ],
         ),
         q(
           ["What could happen to a baker who sold bread that was too small?", "卖的面包太小的面包师会怎样？"],
@@ -918,6 +1179,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The third paragraph says a baker who sold bread that was too small could be fined by the bakers' guild.",
             "第三段说，卖的面包太小的面包师会被面包师行会罚款。",
+          ],
+          [
+            ["Becoming a journeyman came after seven years of training.", "成为熟练工是学徒七年后的事。"],
+            ["The lord taking his house is not in the passage.", "领主收走房子文中没有。"],
+            ["Making a masterpiece is how one became a master.", "做出杰作是成为师傅的途径。"],
           ],
         ),
         q(
@@ -932,6 +1198,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The last paragraph says that to become a master, a journeyman had to make a piece of work so fine that the guild approved it: his masterpiece.",
             "最后一段说，雇工要成为师傅，必须做出一件精美得能被行会认可的作品，这就是他的杰作。",
           ],
+          [
+            ["A famous painting is today's meaning, not the Middle Ages'.", "著名的画作是今天的意思，不是中世纪的。"],
+            ["The first thing made is backwards. It came at the end of training.", "最先做的东西是反的。它是在学徒期结束时做的。"],
+            ["A guild's rule is not a piece of work.", "行会的规定不是一件作品。"],
+          ],
         ),
         q(
           ["What did a guild do when a craftsman fell ill or died?", "工匠生病或去世时，行会怎么做？"],
@@ -942,6 +1213,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             ["It sent him to a manor", "把他送到庄园"],
           ],
           ["If a craftsman fell ill or died, the guild cared for his family.", "工匠生病或去世时，行会会照顾他的家人。"],
+          [
+            ["Closing his shop is not in the passage.", "关掉店铺文中没有。"],
+            ["Fining his family is backwards. The guild helped them.", "罚他的家人是反的。行会帮助他们。"],
+            ["Sending him to a manor is not in the passage.", "把他送到庄园文中没有。"],
+          ],
         ),
       ],
       { names: ["Middle Ages"] },
@@ -972,6 +1248,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The second paragraph says the monks sat by the windows to catch the daylight, because candles might set the pages on fire.",
             "第二段说，修道士坐在窗边借日光，因为蜡烛可能会让书页着火。",
           ],
+          [
+            ["Watching animals is not the reason given.", "看动物不是文中给的原因。"],
+            ["Drying parchment is not in the passage.", "晾干羊皮纸文中没有。"],
+            ["Keeping warm is not the reason given.", "取暖不是文中给的原因。"],
+          ],
         ),
         q(
           ["What was parchment made from?", "羊皮纸是用什么做的？"],
@@ -985,6 +1266,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The third paragraph says parchment was made from the skins of sheep or calves, scraped thin and dried.",
             "第三段说，羊皮纸是用绵羊或小牛的皮刮薄晒干做成的。",
           ],
+          [
+            ["Goose feathers made the pens.", "鹅毛是做笔的。"],
+            ["Oak galls and iron made the ink.", "栎瘿和铁是做墨水的。"],
+            ["Paper and gold are wrong. Parchment was not paper.", "纸和金子不对。羊皮纸不是纸。"],
+          ],
         ),
         q(
           ["Why are some books called illuminated?", "为什么有些书被称为“泥金装饰”的？"],
@@ -997,6 +1283,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The fifth paragraph says these books are called illuminated because the gold seems to light up the page.",
             "第五段说，这些书叫作泥金装饰手抄本，因为金色仿佛照亮了书页。",
+          ],
+          [
+            ["Candlelight is wrong. Monks avoided candles.", "烛光不对。修士们避免用蜡烛。"],
+            ["Being copied quickly is backwards. One book took a year.", "抄得很快是反的。一本书要一年。"],
+            ["No pictures is the opposite. They had bright pictures.", "没有图画正好相反。它们有鲜艳的图画。"],
           ],
         ),
       ],
@@ -1026,6 +1317,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The first paragraph says ships carried rats, the rats carried fleas, and the fleas carried the plague.",
             "第一段说，船上有老鼠，老鼠身上有跳蚤，跳蚤携带着瘟疫。",
           ],
+          [
+            ["Bad air is what some people blamed, but it was wrong.", "坏空气是一些人归咎的原因，但那是错的。"],
+            ["Flowers were carried to sweeten the air, not the cause.", "花是用来让空气变香的，不是病因。"],
+            ["Silk came on the ships, but the fleas carried the disease.", "丝绸在船上，但传播疾病的是跳蚤。"],
+          ],
         ),
         q(
           ["Why did no one at the time understand the cause of the plague?", "为什么当时没有人明白瘟疫的起因？"],
@@ -1039,6 +1335,11 @@ export const middleAgesUnit: ReadingUnitDef = {
             "The third paragraph says no one at the time knew about germs, so no one understood where it came from.",
             "第三段说，当时没有人知道病菌，所以没有人明白起因。",
           ],
+          [
+            ["Busy doctors is not the reason given.", "医生太忙不是文中给的原因。"],
+            ["Hidden rats is wrong. Rats were everywhere.", "老鼠藏起来不对。到处都是老鼠。"],
+            ["Too slowly is backwards. Many died within days.", "杀人太慢是反的。很多人几天内就死了。"],
+          ],
         ),
         q(
           ["How did the plague help end the feudal system?", "瘟疫是怎样帮助终结封建制度的？"],
@@ -1051,6 +1352,11 @@ export const middleAgesUnit: ReadingUnitDef = {
           [
             "The last paragraph explains the chain: so many died that few were left to work, so survivors could ask for higher wages or leave their manors.",
             "最后一段解释了这条因果链：死的人太多，干活的人很少，于是幸存者可以要求更高的工钱，或者离开庄园。",
+          ],
+          [
+            ["Lords moving to Italy is not in the passage.", "领主搬到意大利文中没有。"],
+            ["The king giving castles is not in the passage.", "国王赐城堡文中没有。"],
+            ["Finding a cure is wrong. None of the cures worked.", "找到疗法不对。没有一种疗法有效。"],
           ],
         ),
       ],
@@ -1088,6 +1394,14 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The first paragraph says the Silk Road was not one road but a huge web of routes, some over land and some across the sea.",
             "第一段说，丝绸之路不是一条路，而是一张巨大的路线网，有的在陆地上，有的跨越大海。",
           ],
+          [
+            [
+              "A single stone road is what the name suggests, but the passage says it was not.",
+              "一条石头路是名字给人的印象，但文中说不是。",
+            ],
+            ["A river is not in the passage.", "河流文中没有。"],
+            ["A market town is one stop along the routes.", "集镇只是路线上的一站。"],
+          ],
         ),
         q(
           ["Why did the price of silk rise on its way west?", "丝绸往西运的路上为什么越来越贵？"],
@@ -1100,6 +1414,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The second paragraph says a bolt of silk might change hands a dozen times, and its price would rise at every stop.",
             "第二段说，一匹丝绸可能转手十几次，每到一站价格都会上涨。",
+          ],
+          [
+            ["Camel drivers charging more is not the reason given.", "驼夫越走收费越高不是文中给的原因。"],
+            ["A Roman law is not in the passage.", "罗马的法律文中没有。"],
+            ["Silk growing longer is not in the passage.", "丝绸变长文中没有。"],
           ],
         ),
         q(
@@ -1114,6 +1433,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The last paragraph supports the point with a fact: a German scholar first called it the Silk Road in 1877, after its great days were over.",
             "最后一段用一个事实支持这个观点：一位德国学者在1877年首次称它为丝绸之路，那时它的鼎盛时期早已过去。",
           ],
+          [
+            ["Fifteen hundred years shows the routes were old, not the name.", "一千五百年说明路线古老，不是名字。"],
+            ["Few travelers making the whole trip is about stages.", "很少有人走完全程说的是分段运输。"],
+            ["Towns along the routes are not about the name.", "沿途的城镇和名字无关。"],
+          ],
         ),
         q(
           ["How long were the routes of the Silk Road in use?", "丝绸之路的路线使用了多久？"],
@@ -1124,6 +1448,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             ["About one hundred years", "大约一百年"],
           ],
           ["The text says the routes were in use for more than fifteen hundred years.", "短文说这些路线使用了一千五百多年。"],
+          [
+            ["Fifty years is far too short.", "五十年太短了。"],
+            ["Since 1877 is when the name began.", "1877年是名字开始使用的时候。"],
+            ["One hundred years is far too short.", "一百年太短了。"],
+          ],
         ),
       ],
       { names: ["Silk Road", "China", "Central Asia", "India", "Middle East", "Europe", "Rome", "German"] },
@@ -1151,6 +1480,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             ["Small moths and caterpillars", "小飞蛾和毛毛虫"],
           ],
           ["The second paragraph says the silkworm eats nothing but the leaves of the mulberry tree.", "第二段说，蚕只吃桑树的叶子。"],
+          [
+            ["Any green leaf is wrong. It eats only mulberry leaves.", "任何绿叶不对。它只吃桑叶。"],
+            ["Threads of other cocoons are not in the passage.", "别的茧的丝文中没有。"],
+            ["Moths and caterpillars are not what it eats.", "飞蛾和毛毛虫不是它的食物。"],
+          ],
         ),
         q(
           ["Why do workers drop the cocoons into hot water?", "工人为什么把蚕茧放进热水里？"],
@@ -1163,6 +1497,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The third paragraph says workers drop the cocoons into hot water, which loosens the thread so it can be unwound.",
             "第三段说，工人把蚕茧放进热水里，让丝松开，这样就能抽丝了。",
+          ],
+          [
+            ["Dyeing comes later, on the finished cloth.", "染色是之后对织好的布做的。"],
+            ["Making moths fly away is not in the passage.", "让飞蛾飞走文中没有。"],
+            ["Twisting threads comes after unwinding.", "捻丝是在抽丝之后。"],
           ],
         ),
         q(
@@ -1177,6 +1516,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The last paragraph says legends tell of travelers hiding silkworm eggs inside hollow walking sticks.",
             "最后一段说，传说旅人把蚕卵藏在空心的手杖里。",
           ],
+          [
+            ["A Roman emperor buying it is not in the passage.", "罗马皇帝买下秘密文中没有。"],
+            ["Moths flying west is not in the legend.", "飞蛾往西飞不在传说里。"],
+            ["Giving it away is wrong. China guarded the secret.", "免费送出去不对。中国严守这个秘密。"],
+          ],
         ),
         q(
           ["How long can the thread of one cocoon be?", "一个蚕茧的丝能有多长？"],
@@ -1187,6 +1531,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             ["Six thousand kilometers", "六千公里"],
           ],
           ["The cocoon is spun from a single thread that can be more than a kilometer long.", "蚕茧由一根丝织成，这根丝可以超过一公里长。"],
+          [
+            ["A meter is far too short.", "一米太短了。"],
+            ["Ten centimeters is far too short.", "十厘米太短了。"],
+            ["Six thousand kilometers is the length of the whole Silk Road.", "六千公里是整条丝绸之路的长度。"],
+          ],
         ),
       ],
       { names: ["China", "Rome"] },
@@ -1217,6 +1566,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The second paragraph says traveling in a group was safer, because bandits were less likely to attack.",
             "第二段说，成群出行更安全，因为强盗不太敢攻击。",
           ],
+          [
+            ["Camels refusing to walk alone is not in the passage.", "骆驼不肯独行文中没有。"],
+            ["A law is not in the passage.", "法律文中没有。"],
+            ["Moving faster is wrong. Caravans moved slowly.", "走得更快不对。商队走得很慢。"],
+          ],
         ),
         q(
           ["Which detail shows that the Bactrian camel was suited to the desert?", "哪个细节说明双峰驼适应沙漠？"],
@@ -1229,6 +1583,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The third paragraph lists its features for the desert: it could carry heavy loads, go days without water and close its nostrils against sand.",
             "第三段列出了它适应沙漠的特点：能驮重物，几天不喝水，还能关闭鼻孔挡住沙子。",
+          ],
+          [
+            ["Thirty kilometers a day is about the caravan's speed, not the camel's body.", "每天三十公里说的是商队速度，不是骆驼的身体。"],
+            ["Resting at inns is about travelers, not the camel.", "在客栈休息说的是旅人，不是骆驼。"],
+            ["Being owned by merchants does not show it suits the desert.", "属于商人并不说明它适合沙漠。"],
           ],
         ),
         q(
@@ -1243,6 +1602,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The fourth paragraph says caravanserais were large inns with a courtyard for the animals and rooms for the travelers.",
             "第四段说，商队客栈是大客栈，有给牲畜的院子和给旅人的房间。",
           ],
+          [
+            ["A desert no one could cross describes the Taklamakan's name.", "无人能穿越的沙漠说的是塔克拉玛干的名字。"],
+            ["A two-humped camel is the Bactrian camel.", "双峰驼是巴克特里亚骆驼。"],
+            ["A bundle of cargo is what a camel carried.", "一捆货物是骆驼驮的东西。"],
+          ],
         ),
         q(
           ["How far did a caravan often travel in a day?", "驼队一天常常走多远？"],
@@ -1253,6 +1617,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             ["More than a thousand kilometers", "一千多公里"],
           ],
           ["Caravans moved slowly, often only about thirty kilometers a day.", "驼队走得很慢，常常一天只走大约三十公里。"],
+          [
+            ["Three hundred is ten times too far.", "三百公里远了十倍。"],
+            ["Three is far too little.", "三公里太少了。"],
+            ["A thousand is far too much.", "一千公里太多了。"],
+          ],
         ),
       ],
       { names: ["Silk Road", "Taklamakan", "China", "Bactrian"], glossed: ["caravanserais"] },
@@ -1283,6 +1652,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The first paragraph says Samarkand stood where many routes of the Silk Road met.",
             "第一段说，撒马尔罕位于丝绸之路许多路线交会的地方。",
           ],
+          [
+            ["The capital of China is wrong. Samarkand is in Central Asia.", "中国的都城不对。撒马尔罕在中亚。"],
+            ["The only city with markets is not in the passage.", "唯一有市场的城市文中没有。"],
+            ["The coast is wrong. It is in the middle of Central Asia.", "海边不对。它在中亚腹地。"],
+          ],
         ),
         q(
           ["What does it mean to barter?", "barter 是什么意思？"],
@@ -1295,6 +1669,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The third paragraph says traders who bartered swapped one kind of good for another instead of using money.",
             "第三段说，以物易物的商人用一种货物换另一种，而不用钱。",
+          ],
+          [
+            ["Accepting the first price is what a good merchant never did.", "接受第一个价格是好商人从不做的事。"],
+            ["Sipping tea is part of bargaining, not bartering.", "喝茶是讨价还价的一部分，不是以物易物。"],
+            ["Silver coins is wrong. Barter uses no money.", "银币不对。以物易物不用钱。"],
           ],
         ),
         q(
@@ -1309,6 +1688,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The last paragraph says all this trade made Samarkand rich, and its rulers built grand buildings with blue tiles.",
             "最后一段说，这些贸易使撒马尔罕富裕，它的统治者建造了贴着蓝色瓷砖的宏伟建筑。",
           ],
+          [
+            ["Sweet fruit shows good farming, not the city's wealth.", "甜水果说明农业好，不是城市的财富。"],
+            ["Arguing over prices shows how they traded.", "讨价还价说明他们怎样交易。"],
+            ["Pepper from India shows what was sold.", "印度的胡椒说明卖的是什么。"],
+          ],
         ),
         q(
           ["What did traders from India sell in Samarkand?", "来自印度的商人在撒马尔罕卖什么？"],
@@ -1319,6 +1703,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             ["Silk and porcelain", "丝绸和瓷器"],
           ],
           ["Traders from India sold pepper, cotton and precious stones.", "来自印度的商人卖胡椒、棉花和宝石。"],
+          [
+            ["Carpets and silver came from Persia.", "地毯和白银来自波斯。"],
+            ["Furs and amber came from the north.", "毛皮和琥珀来自北方。"],
+            ["Silk and porcelain came from China.", "丝绸和瓷器来自中国。"],
+          ],
         ),
       ],
       { names: ["Central Asia", "Silk Road", "Samarkand", "Samarkand's", "China", "India", "Persia"] },
@@ -1347,6 +1736,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The first paragraph says bamboo was heavy, silk was costly, and parchment took a long time to make.",
             "第一段说，竹简重，丝绸贵，羊皮纸制作费时。",
           ],
+          [
+            ["Costly was silk's problem.", "昂贵是丝绸的问题。"],
+            ["Taking long to make was parchment's problem.", "制作费时是羊皮纸的问题。"],
+            ["Rags are what paper was made from.", "破布是造纸的材料。"],
+          ],
         ),
         q(
           ["According to one story, how did papermaking leave China?", "根据一种说法，造纸术是怎样传出中国的？"],
@@ -1359,6 +1753,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The third paragraph says that, according to one story, prisoners taken in the battle of 751 knew how to make paper and taught their captors.",
             "第三段说，根据一种说法，751年那场战斗中的俘虏会造纸，教会了俘虏他们的人。",
+          ],
+          [
+            ["Cai Lun going to Spain is not in the passage.", "蔡伦去西班牙文中没有。"],
+            ["Traders in Rome is not in the passage.", "罗马的商人文中没有。"],
+            ["A book sent west is not in the passage.", "把书送到西方文中没有。"],
           ],
         ),
         q(
@@ -1373,6 +1772,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The last paragraph says paper made books cheaper, which helped ideas spread faster than ever before.",
             "最后一段说，纸让书变得更便宜，帮助思想以前所未有的速度传播。",
           ],
+          [
+            ["Stopping writing on paper is backwards.", "不再用纸写字是反的。"],
+            ["Bamboo becoming popular is backwards. Bamboo was heavy.", "竹简更流行是反的。竹简很重。"],
+            ["The army returning is not in the passage.", "军队回国文中没有。"],
+          ],
         ),
         q(
           ["Who, by tradition, found a way to make paper?", "按照传统说法，是谁发明了造纸的方法？"],
@@ -1385,6 +1789,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "According to tradition, an official named Cai Lun found a way to make paper.",
             "按照传统说法，一位名叫蔡伦的官员发明了造纸的方法。",
+          ],
+          [
+            ["A merchant from Samarkand is not named.", "撒马尔罕的商人文中没提。"],
+            ["A prisoner at Talas taught papermaking later.", "怛罗斯的俘虏是后来传授造纸的。"],
+            ["A German scholar named the Silk Road, not paper.", "德国学者给丝绸之路起了名，和纸无关。"],
           ],
         ),
       ],
@@ -1429,6 +1838,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The first paragraph says pepper was so precious that it was counted out by the grain and used to pay rent.",
             "第一段说，胡椒珍贵到要一粒一粒地数，还被用来付房租。",
           ],
+          [
+            ["Coming from India is where spices came from, not how precious they were.", "来自印度是香料的产地，不是它多珍贵。"],
+            ["Tasting better is why people wanted them, not how precious.", "更好吃是人们想要的原因，不是多珍贵。"],
+            ["Stories at night are about another kind of trade.", "夜里讲故事说的是另一种交流。"],
+          ],
         ),
         q(
           ["Why did some merchants tell wild stories about where spices came from?", "为什么有些商人编造香料来源的离奇故事？"],
@@ -1441,6 +1855,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The third paragraph says merchants kept their sources secret and told wild stories to keep prices high.",
             "第三段说，商人隐瞒来源，并编造离奇的故事来保持高价。",
+          ],
+          [
+            ["Making listeners laugh is not the reason given.", "逗听众笑不是文中给的原因。"],
+            ["Teaching children is not in the passage.", "教孩子文中没有。"],
+            ["Warning of danger is not in the passage.", "警告危险文中没有。"],
           ],
         ),
         q(
@@ -1455,6 +1874,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The last paragraph says merchants traded folk tales as well as goods, and some traveled from India or Persia all the way to Europe.",
             "最后一段说，商人既交换货物，也交换民间故事，有些故事从印度或波斯一路传到了欧洲。",
           ],
+          [
+            ["Giant birds' nests are the merchants' wild stories, already described.", "巨鸟巢是商人编的离奇故事，前面讲过了。"],
+            ["Pepper prices are not stories.", "胡椒价格不是故事。"],
+            ["Keeping meat fresh is a use of spices.", "保存肉类是香料的用途。"],
+          ],
         ),
         q(
           ["Where did pepper, cinnamon and cloves come from?", "胡椒、肉桂和丁香来自哪里？"],
@@ -1465,6 +1889,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             ["The lands to the north", "北方的土地"],
           ],
           ["These spices came from India and the islands of Southeast Asia.", "这些香料来自印度和东南亚的岛屿。"],
+          [
+            ["Rome and Spain are where goods went, not where spices grew.", "罗马和西班牙是货物去的地方，不是香料产地。"],
+            ["The deserts of China are not named.", "中国的沙漠文中没提。"],
+            ["The lands to the north sent furs and amber.", "北方送来的是毛皮和琥珀。"],
+          ],
         ),
       ],
       { names: ["India", "Southeast", "Asia", "Europe", "Persia"], glossed: ["caravanserais"] },
@@ -1495,6 +1924,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The first and last paragraphs state the main idea: ideas traveled the Silk Road, connecting people's minds as well as their markets. The other options are details.",
             "第一段和最后一段说出了主要意思：思想沿丝绸之路传播，连接了人们的思想和市场。其他选项都是细节。",
           ],
+          [
+            ["Buddhism beginning in India is one example of an idea.", "佛教起源于印度只是思想传播的一个例子。"],
+            ["Grapes reaching China is one example among many.", "葡萄传到中国是众多例子之一。"],
+            ["Scholars in Baghdad are one detail, not the main idea.", "巴格达的学者是一个细节，不是中心思想。"],
+          ],
         ),
         q(
           ["What do the caves at Dunhuang hold?", "敦煌的石窟里有什么？"],
@@ -1508,6 +1942,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The second paragraph says the caves at Dunhuang, in western China, hold thousands of paintings.",
             "第二段说，位于中国西部的敦煌石窟里有成千上万幅壁画。",
           ],
+          [
+            ["Bundles of silk are goods, not what the caves hold.", "成捆的丝绸是货物，不在石窟里。"],
+            ["Gunpowder traveled west, but it is not in the caves.", "火药传到了西方，但不在石窟里。"],
+            ["Books from Baghdad are not in the caves.", "巴格达的书不在石窟里。"],
+          ],
         ),
         q(
           ["Where were the numbers we use today first developed?", "我们今天使用的数字最早是在哪里发展起来的？"],
@@ -1520,6 +1959,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The fourth paragraph says the numbers we use today, with their zero, were first developed in India and then carried west.",
             "第四段说，我们今天使用的带零的数字最早在印度发展起来，然后传到西方。",
+          ],
+          [
+            ["Baghdad is where scholars studied them, not where they began.", "巴格达是学者研究它们的地方，不是起源地。"],
+            ["China sent paper and the compass, not these numbers.", "中国传出的是纸和指南针，不是这些数字。"],
+            ["Japan is where Buddhism reached, not where numbers began.", "日本是佛教传到的地方，不是数字的起源地。"],
           ],
         ),
       ],
@@ -1551,6 +1995,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The second paragraph says a ship could carry far more cargo and did not have to stop at dozens of markets where the price rose.",
             "第二段说，船能装多得多的货物，也不用在几十个会涨价的市场停留。",
           ],
+          [
+            ["Camels pulling ships is not in the passage.", "骆驼拉船文中没有。"],
+            ["Never sailing around Africa is wrong. A sailor did just that in 1498.", "从不绕过非洲不对。1498年就有水手这样做了。"],
+            ["Being safer than oasis towns is not the reason given.", "比绿洲城镇更安全不是文中给的原因。"],
+          ],
         ),
         q(
           ["What was another reason the land routes faded?", "陆上路线衰落的另一个原因是什么？"],
@@ -1564,6 +2013,11 @@ export const silkRoadUnit: ReadingUnitDef = {
             "The third paragraph says that as empires broke apart, wars and bandits made the land routes less safe.",
             "第三段说，随着帝国解体，战争和强盗让陆上路线变得不再安全。",
           ],
+          [
+            ["Camels going to sea is not in the passage.", "骆驼出海文中没有。"],
+            ["People stopping wanting silk is wrong. Ships still carried silk.", "人们不再想要丝绸不对。船还在运丝绸。"],
+            ["Green deserts is wrong. Some towns were swallowed by sand.", "沙漠变绿不对。有些城镇被沙子吞没了。"],
+          ],
         ),
         q(
           ["How do the old paths of the Silk Road carry goods today?", "如今丝绸之路的古道怎样运送货物？"],
@@ -1576,6 +2030,11 @@ export const silkRoadUnit: ReadingUnitDef = {
           [
             "The last paragraph says new railways and highways follow some of the old paths, carrying goods between China and Europe.",
             "最后一段说，新的铁路和公路沿着一些古道修建，在中国和欧洲之间运送货物。",
+          ],
+          [
+            ["Camels on all the paths is wrong. Railways and highways follow some.", "骆驼走所有的路不对。是铁路和公路沿着其中一些。"],
+            ["Ships through the desert is not in the passage.", "船穿过沙漠文中没有。"],
+            ["Not used at all is wrong. Goods travel them again.", "完全不用不对。货物又在这些路上运输了。"],
           ],
         ),
       ],

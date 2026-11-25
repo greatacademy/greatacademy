@@ -45,6 +45,14 @@ Whether it was a national disaster or a smaller event, the tulip trade has given
             "The second paragraph says the patterns were caused by a virus, which weakened the plants and made them hard to multiply.",
             "第二段说花纹是病毒造成的，病毒还削弱了植株，使它们难以繁殖。",
           ),
+          [
+            t(
+              "Tulips came from Turkey, but the Dutch grew them; soil is not the reason.",
+              "郁金香来自土耳其，但荷兰人也在种；原因不在土壤。",
+            ),
+            t("No ban is mentioned; the virus made them hard to multiply.", "文中没提禁令；是病毒让它们难以繁殖。"),
+            t("Blooming once a decade is never mentioned.", "文中没提十年开一次花。"),
+          ],
         ),
         ask(
           t("How have some modern historians changed the usual story?", "一些现代历史学家怎样改变了通常的说法？"),
@@ -61,6 +69,11 @@ Whether it was a national disaster or a smaller event, the tulip trade has given
             "The fifth paragraph says they found little evidence of widespread bankruptcy and believe the accounts of ruin came from moralists' pamphlets.",
             "第五段说他们发现几乎没有大范围破产的证据，并认为关于破产的记载来自道德家的小册子。",
           ),
+          [
+            t("They doubt the dramatic accounts, not prove a bulb cost a house.", "他们质疑夸张的记载，而不是证明一个球茎值一座房子。"),
+            t("Tulips came from Turkey, and no one changed that.", "郁金香来自土耳其，这一点没人改动。"),
+            t("Prices did collapse in 1637; that is not in doubt.", "1637年价格确实崩溃了，这毫无疑问。"),
+          ],
         ),
         ask(
           t("According to the last paragraph, what drives a bubble?", "根据最后一段，是什么推动了泡沫？"),
@@ -74,6 +87,11 @@ Whether it was a national disaster or a smaller event, the tulip trade has given
             "It says prices rise because people expect them to, and what has changed is belief, not the thing being traded.",
             "它说价格上涨是因为人们预期它会上涨，变化的是信念，而不是所交易的东西。",
           ),
+          [
+            t("The last paragraph says the thing traded may change very little.", "最后一段说交易的东西本身可能几乎没变。"),
+            t("A money shortage is never mentioned; belief drives the rise.", "文中没提钱荒；推动上涨的是信念。"),
+            t("No laws force buying; people buy because they expect higher prices.", "没有法律强迫购买；人们买是因为预期涨价。"),
+          ],
         ),
         ask(
           t("Where did the tulip prices suddenly collapse in February 1637?", "1637年2月，郁金香价格在哪里突然崩盘？"),
@@ -87,6 +105,11 @@ Whether it was a national disaster or a smaller event, the tulip trade has given
             "In February 1637, at an auction in the city of Haarlem, buyers suddenly failed to appear.",
             "1637年2月，在哈勒姆的一场拍卖会上，买家突然没有出现。",
           ),
+          [
+            t("Amsterdam is where a bulb was said to cost a house.", "阿姆斯特丹是传说一个球茎值一栋房子的地方。"),
+            t("London is never mentioned.", "文中没提伦敦。"),
+            t("Leiden is never mentioned; the auction was in Haarlem.", "文中没提莱顿；拍卖在哈勒姆。"),
+          ],
         ),
       ],
       ["Dutch", "Turkey", "Amsterdam", "Haarlem"],
@@ -121,6 +144,11 @@ The five-dollar day is often remembered as an act of generosity. It was also a c
             "The fourth paragraph says the company had to hire over fifty thousand people to keep fourteen thousand, and constant training was expensive.",
             "第四段说公司要雇用五万多人才能维持一万四千人的劳动力，而不断培训的成本很高。",
           ),
+          [
+            t("The assembly line made cars fast; the problem was workers quitting.", "流水线让造车很快；问题是工人不断辞职。"),
+            t("No government order is mentioned; Ford chose to raise pay.", "文中没提政府命令；是福特自己加薪。"),
+            t("Workers used the line but found it boring and quit.", "工人用了流水线，只是觉得枯燥而辞职。"),
+          ],
         ),
         ask(
           t("What does the passage say about the conditions attached to the higher wage?", "关于高工资附带的条件，文章怎么说？"),
@@ -134,6 +162,11 @@ The five-dollar day is often remembered as an act of generosity. It was also a c
             "The sixth paragraph says workers needed six months of service, and company staff checked their homes and habits.",
             "第六段说工人需要工作满六个月，公司员工还会检查他们的家庭和习惯。",
           ),
+          [
+            t("A worker had to have been there six months first.", "工人得先干满六个月。"),
+            t("Women were at first mostly excluded, not the only ones paid.", "起初女性大多被排除在外，而不是只有女性能领。"),
+            t("Buying a car was Ford's hope, not a condition.", "买车是福特的期望，不是条件。"),
+          ],
         ),
         ask(
           t("What is the main point of the final paragraph?", "最后一段的主要观点是什么？"),
@@ -147,12 +180,25 @@ The five-dollar day is often remembered as an act of generosity. It was also a c
             "It says the five-dollar day was both generosity and calculation, and that paying well can be good for workers and for business.",
             "它说五美元工作日既是慷慨也是算计，高薪可以既有利于工人，也有利于企业。",
           ),
+          [
+            t("The passage calls it a calculation as well, not only generosity.", "文中说这也是一种算计，不只是慷慨。"),
+            t("The plan worked and productivity rose.", "这个计划奏效了，生产率提高了。"),
+            t("Nothing says workers should distrust employers.", "文中没说工人不该信任雇主。"),
+          ],
         ),
         ask(
           t("What had Ford introduced the year before the five-dollar day?", "在五美元日薪的前一年，福特引入了什么？"),
           t("The moving assembly line", "移动装配线"),
           [t("The eight-hour day", "八小时工作制"), t("Electric cars", "电动汽车"), t("Home visits to workers", "家访工人")],
           t("The year before, the company had introduced the moving assembly line.", "前一年，公司引入了移动装配线。"),
+          [
+            t(
+              "The eight-hour day came with the five-dollar wage, not the year before.",
+              "八小时工作制是和五美元日薪一起推出的，不是前一年。",
+            ),
+            t("Electric cars are never mentioned; Ford built the Model T.", "文中没提电动车；福特造的是T型车。"),
+            t("Home visits came with the higher wage, not before it.", "家访是随高工资而来的，不是之前。"),
+          ],
         ),
       ],
       ["Ford", "Ford's", "Detroit", "Model", "T", "Henry"],
@@ -189,6 +235,11 @@ Japan remained a rich and stable country throughout. But its experience became a
             "The second paragraph says much of Japan's apparent wealth rested on a bubble, in which people borrowed to buy land expecting prices to rise.",
             "第二段说日本表面上的财富很大一部分建立在泡沫之上，人们借钱买地，期待价格上涨。",
           ),
+          [
+            t("No sale of the palace is mentioned; it was a comparison of value.", "文中没提出售皇宫；这只是价值对比。"),
+            t("California was not poor; Tokyo land was overpriced.", "加州并不穷；是东京地价虚高。"),
+            t("Land was not running out; its price was unreal.", "土地并非用尽，而是价格脱离现实。"),
+          ],
         ),
         ask(
           t('What were "zombie companies"?', '"僵尸企业"是什么？'),
@@ -202,6 +253,11 @@ Japan remained a rich and stable country throughout. But its experience became a
             "The fifth paragraph says banks kept lending to insolvent companies, which survived as zombie companies, too weak to grow.",
             "第五段说银行继续向资不抵债的公司放贷，这些公司作为僵尸企业苟延残喘，弱得无法成长。",
           ),
+          [
+            t("Monster films are not the meaning; the firms are kept alive by loans.", "意思不是拍怪物电影的公司，而是靠贷款续命的企业。"),
+            t("Zombie firms are weak and cannot grow.", "僵尸企业很弱，无法成长。"),
+            t("The banks kept lending to them; they did not refuse.", "银行一直借钱给它们，并没有拒贷。"),
+          ],
         ),
         ask(
           t("Why can falling prices harm an economy, according to the passage?", "根据文章，物价下跌为什么会损害经济？"),
@@ -215,6 +271,11 @@ Japan remained a rich and stable country throughout. But its experience became a
             "The sixth paragraph says if people expect things to be cheaper next year they delay buying, so companies sell less, cut wages and investment.",
             "第六段说如果人们预期明年东西更便宜，就会推迟购买，于是公司卖得更少，削减工资和投资。",
           ),
+          [
+            t("Goods do not disappear; people just wait to buy.", "商品并没有消失；人们只是推迟购买。"),
+            t("Companies cut wages; no law makes them raise wages.", "公司会减薪；没有法律逼它们加薪。"),
+            t("People spend too little, not too much.", "人们花得太少，不是太多。"),
+          ],
         ),
         ask(
           t("What did the central bank do at the end of 1989?", "1989年底中央银行做了什么？"),
@@ -228,6 +289,11 @@ Japan remained a rich and stable country throughout. But its experience became a
             "At the end of 1989, the central bank began to raise interest rates to cool the economy.",
             "1989年底，中央银行开始加息以给经济降温。",
           ),
+          [
+            t("Printing money is never mentioned; the bank raised rates.", "文中没提印钞；央行加了息。"),
+            t("The bank bought no land; it raised interest rates.", "央行没买地，而是提高利率。"),
+            t("The stock market stayed open; share prices fell.", "股市没关闭，只是股价下跌。"),
+          ],
         ),
       ],
       ["Japan", "Japan's", "Tokyo", "Imperial", "California"],
@@ -262,6 +328,11 @@ None of this means that averages are useless. It means that when you see one, yo
             "When one billionaire joins, the mean jumps to over ninety million dollars though no one else earns more, showing how one value distorts it.",
             "一位亿万富翁加入后，平均值跃升到九千多万美元，而其他人的收入一分没多，说明一个数值就能扭曲它。",
           ),
+          [
+            t("The café shows the mean can mislead, not that it is the best.", "咖啡馆的例子说明平均数会误导，而不是最准确。"),
+            t("The café has only eleven people, and the mean is easily calculated.", "咖啡馆只有十一个人，平均数很好算。"),
+            t("After the billionaire arrives, the mean and median are far apart.", "亿万富翁一来，平均数和中位数就相差悬殊。"),
+          ],
         ),
         ask(
           t("Why do economists often prefer the median when describing incomes?", "为什么经济学家描述收入时常常更喜欢中位数？"),
@@ -275,6 +346,11 @@ None of this means that averages are useless. It means that when you see one, yo
             "The fourth paragraph says the median stays about the same whether or not the billionaire is there and describes the typical person better.",
             "第四段说不管亿万富翁在不在，中位数都基本不变，更能描述典型的人。",
           ),
+          [
+            t("Ease of calculation is not the reason given.", "文中没给出“好算”这个理由。"),
+            t("The median stays at the typical income; it does not make people look richer.", "中位数停在典型收入上，并不让人显得更富。"),
+            t("The median includes everyone, put in order.", "中位数包含了所有人，只是按顺序排列。"),
+          ],
         ),
         ask(
           t(
@@ -291,6 +367,11 @@ None of this means that averages are useless. It means that when you see one, yo
             "The fifth paragraph says a government might prefer the mean and a union the median; both could be accurate but tell different stories.",
             "第五段说政府可能偏好平均值而工会偏好中位数；两者都可能准确，却讲述不同的故事。",
           ),
+          [
+            t("The passage says both figures could be accurate.", "文中说两个数字可能都准确。"),
+            t("They describe the same incomes in the same country.", "它们描述的是同一个国家的同一批收入。"),
+            t("Nothing forbids unions from using the mean.", "没有规定禁止工会使用平均数。"),
+          ],
         ),
         ask(
           t("How do you find the median?", "怎样找到中位数？"),
@@ -304,6 +385,11 @@ None of this means that averages are useless. It means that when you see one, yo
             "To find the median, put all the values in order and choose the one in the middle.",
             "要找中位数，就把所有数值排序，取中间那个。",
           ),
+          [
+            t("Adding and dividing gives the mean, not the median.", "相加再除得到的是平均数，不是中位数。"),
+            t("The largest value is the maximum.", "最大的值是最大值。"),
+            t("The most frequent value is a different measure.", "出现最多的值是另一种统计量。"),
+          ],
         ),
       ],
       [],
@@ -338,6 +424,14 @@ For Jonas, the choice has been a good one. "My friends at university talk about 
             "The second paragraph says the dual system combines learning in a workplace with learning in a classroom, usually over three years.",
             "第二段说双元制把工作场所的学习与课堂学习结合起来，通常为期三年。",
           ),
+          [
+            t("The two parts are workplace and school, not two university subjects.", "两部分是工作场所和学校，不是大学的两门课。"),
+            t("Jonas works at one company and attends one school.", "乔纳斯在一家公司工作，上一所学校。"),
+            t(
+              "Baker and bank clerk are two of the many occupations, not both trained at once.",
+              "面包师和银行职员是众多职业中的两种，不是同时学两样。",
+            ),
+          ],
         ),
         ask(
           t("Which is a criticism of the system mentioned in the passage?", "文章提到了对这一制度的哪一种批评？"),
@@ -354,6 +448,11 @@ For Jonas, the choice has been a good one. "My friends at university talk about 
             "The fifth paragraph says students must choose a path around fifteen or sixteen, when many do not yet know what they want to do.",
             "第五段说学生要在十五六岁左右选择道路，而那时许多人还不知道自己想做什么。",
           ),
+          [
+            t("Apprentices are paid a monthly wage from the first week.", "学徒从第一周起就领月薪。"),
+            t("The credential is recognized across the country.", "这个证书全国通用。"),
+            t("Germany has one of Europe's lowest youth unemployment rates.", "德国的青年失业率是欧洲最低之一。"),
+          ],
         ),
         ask(
           t("What does Jonas's comment suggest about his training?", "约纳斯的话说明他的培训怎样？"),
@@ -367,6 +466,11 @@ For Jonas, the choice has been a good one. "My friends at university talk about 
             "He says he can explain the theory and then go and fix the machine, showing that his training joins knowledge and practice.",
             "他说他能解释理论，然后去修好机器，表明他的培训把知识和实践结合了起来。",
           ),
+          [
+            t("He is pleased with his choice and has a job offer.", "他对选择很满意，还获得了工作邀约。"),
+            t("He says his friends talk theory; he does not say they cannot fix anything.", "他说朋友们讲理论，并没说他们修不了东西。"),
+            t("He says he can explain the theory.", "他说自己能讲清理论。"),
+          ],
         ),
         ask(
           t("In which city does Jonas train?", "约纳斯在哪个城市接受培训？"),
@@ -376,6 +480,11 @@ For Jonas, the choice has been a good one. "My friends at university talk about 
             "Three days a week, he worked at a company in Stuttgart that builds machines for factories.",
             "他每周三天在斯图加特一家为工厂造机器的公司工作。",
           ),
+          [
+            t("Berlin is never mentioned.", "文中没提柏林。"),
+            t("Munich is never mentioned.", "文中没提慕尼黑。"),
+            t("Hamburg is never mentioned; he trains in Stuttgart.", "文中没提汉堡；他在斯图加特培训。"),
+          ],
         ),
       ],
       ["Jonas", "Jonas's", "Stuttgart", "Germany", "Germans", "German", "Europe", "Middle", "Ages"],
@@ -408,6 +517,11 @@ Greece's economy began to grow again in the late 2010s, and in 2018 it left the 
             "The second paragraph says Greece used the euro, so it could not simply print more money or lower the value of its currency.",
             "第二段说希腊使用欧元，所以不能简单地多印钞票或让本国货币贬值。",
           ),
+          [
+            t("Printing machines are not the issue; the shared currency is.", "问题不在印钞机，而在共同货币。"),
+            t("The IMF lent money with conditions; it did not forbid printing.", "国际货币基金组织附条件贷款，并没有禁止印钞。"),
+            t("Greek banks printing money is never mentioned.", "文中没提希腊银行印钞。"),
+          ],
         ),
         ask(
           t("What did the program of austerity require?", "紧缩计划要求什么？"),
@@ -421,6 +535,11 @@ Greece's economy began to grow again in the late 2010s, and in 2018 it left the 
             "The third paragraph says Greece had to cut government spending sharply and raise taxes to reduce its deficit.",
             "第三段说希腊必须大幅削减政府开支并提高税收以减少赤字。",
           ),
+          [
+            t("Jobs and pensions were cut, not increased.", "工作岗位和养老金被削减，而不是增加。"),
+            t("Greece stayed in the euro.", "希腊仍留在欧元区。"),
+            t("Greece borrowed from others; it did not lend.", "希腊是向别国借钱，不是借给别国。"),
+          ],
         ),
         ask(
           t("How does the fifth paragraph treat the question of blame?", "第五段怎样处理责任问题？"),
@@ -434,12 +553,22 @@ Greece's economy began to grow again in the late 2010s, and in 2018 it left the 
             "It gives the view that Greece overspent and hid its debts, then the view that the lenders' demands were too harsh, and leaves the debate open.",
             "它先给出希腊过度开支、隐瞒债务的观点，再给出债权人要求过于苛刻的观点，并让争论保持开放。",
           ),
+          [
+            t("The paragraph also gives the lenders' side.", "这一段也讲了贷款方的观点。"),
+            t("It also gives Greece's failings.", "它也讲了希腊自身的问题。"),
+            t("Both sides blame someone; the paragraph just does not choose.", "双方都在追责；这一段只是不作取舍。"),
+          ],
         ),
         ask(
           t("In which year did Greece leave the last of its rescue programs?", "希腊哪年退出了最后一个救助计划？"),
           t("In 2018", "2018年"),
           [t("In 2009", "2009年"), t("In 2012", "2012年"), t("In 2001", "2001年")],
           t("In 2018 it left the last of its rescue programs.", "2018年，它退出了最后一个救助计划。"),
+          [
+            t("2009 is when the deficit was announced.", "2009年是赤字被公布的时候。"),
+            t("2012 is not mentioned.", "文中没提2012年。"),
+            t("2001 is not mentioned.", "文中没提2001年。"),
+          ],
         ),
       ],
       ["Greece", "Greece's", "Greek", "Greeks", "Athens", "International", "Monetary", "Fund", "European"],
@@ -474,6 +603,11 @@ None of these tricks require false data. That is what makes them effective. The 
             "The second paragraph says the scale began at 90, so a result of 96 against 92 was made to look enormous.",
             "第二段说刻度从90开始，所以96对92的结果被弄得看起来差距巨大。",
           ),
+          [
+            t("The difference was about four percent, not four times.", "差别只有约百分之四，不是四倍。"),
+            t("No refusal to be tested is mentioned.", "文中没提拒绝测试。"),
+            t("The chart showed two bars, not years.", "图表只有两根柱子，不是多年数据。"),
+          ],
         ),
         ask(
           t('Why can "doubles the risk" be misleading?', '为什么"风险加倍"可能具有误导性？'),
@@ -487,6 +621,11 @@ None of these tricks require false data. That is what makes them effective. The 
             "The fifth paragraph says a rise from one in a million to two in a million doubles the risk but leaves it tiny.",
             "第五段说从百万分之一升到百万分之二是风险加倍，但仍然微乎其微。",
           ),
+          [
+            t("The passage never says medicines have no side effects.", "文中没说药物没有副作用。"),
+            t("The example gives risk as numbers, one and two in a million.", "例子正是用数字表示风险：百万分之一和百万分之二。"),
+            t("No rule against percentages is mentioned.", "文中没提禁止用百分比。"),
+          ],
         ),
         ask(
           t("Why does the passage say these tricks are effective?", "文章为什么说这些手法很有效？"),
@@ -500,6 +639,11 @@ None of these tricks require false data. That is what makes them effective. The 
             "The last paragraph says none of these tricks require false data, and that is what makes them effective.",
             "最后一段说这些手法都不需要虚假数据，这正是它们有效的原因。",
           ),
+          [
+            t("Small print is never mentioned; the data is true.", "文中没提小字；数据本身是真的。"),
+            t("Governments use them too; nothing says they are approved.", "政府也会用这些手法，但文中没说被批准。"),
+            t("Readers usually look at bar heights, not the scale.", "读者通常看柱子的高度，不看刻度。"),
+          ],
         ),
       ],
       ["Fresha", "Fresha's"],
@@ -536,6 +680,11 @@ The first invoice Mei ever sent was for the largest sum of money she had ever ea
             'Her aunt says, "If you value your work at zero, so will everyone else."',
             '她的姑姑说："如果你把自己的工作估价为零，其他人也会这样。"',
           ),
+          [
+            t("No law against free work is mentioned.", "文中没提禁止免费工作的法律。"),
+            t("Mrs. Delgado asked her price, not whether it was free.", "德尔加多太太问的是价格，不是能否免费。"),
+            t("Her aunt helped for nothing in return.", "姑妈帮忙并不图回报。"),
+          ],
         ),
         ask(
           t("How did Mei respond when Mrs. Delgado said the price was too high?", "德尔加多太太说价格太高时，梅是怎样回应的？"),
@@ -549,6 +698,11 @@ The first invoice Mei ever sent was for the largest sum of money she had ever ea
             "The fifth paragraph says she offered the full set at her price or the logo alone for less.",
             "第五段说她提出按原价做全套作品，或者以更低的价格只做标志。",
           ),
+          [
+            t("She almost lowered it but did not.", "她差点降价，但没有降。"),
+            t("She offered two options, so she did not refuse.", "她给了两个选项，并没有拒绝。"),
+            t("She did the drawings herself, twenty-eight hours of them.", "她亲自画了二十八个小时。"),
+          ],
         ),
         ask(
           t("How did the written agreement help Mei?", "书面协议怎样帮助了梅？"),
@@ -562,6 +716,11 @@ The first invoice Mei ever sent was for the largest sum of money she had ever ea
             "Because the agreement stipulated what was included, Mei could politely say the website drawings were additional work with a separate price.",
             "因为协议规定了包含的内容，梅可以礼貌地说网站绘画是额外工作，需另行报价。",
           ),
+          [
+            t("The extra work got a separate price, not double.", "额外工作单独报价，并不是付双倍。"),
+            t("The work took twenty-eight hours; finishing early is not mentioned.", "这份工作花了二十八小时，文中没提提前完成。"),
+            t("Two other shops were recommended her.", "还有两家店被推荐给了她。"),
+          ],
         ),
       ],
       ["Mei", "Mei's", "Delgado"],

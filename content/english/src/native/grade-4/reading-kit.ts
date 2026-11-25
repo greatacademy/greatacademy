@@ -5,12 +5,19 @@ import { type PassageDef, type PassageQuestionDef, t } from "@ga/content";
 /** Pair is a text in English and in Chinese. */
 type Pair = readonly [en: string, zh: string];
 
-/** q builds a question of a passage from its prompt, right option, three wrong options and solution. */
-export const q = (prompt: Pair, right: Pair, wrong: readonly [Pair, Pair, Pair], solution: Pair): PassageQuestionDef => ({
+/** q builds a question of a passage from its prompt, right option, three wrong options, solution and, for each wrong option, why it is wrong. */
+export const q = (
+  prompt: Pair,
+  right: Pair,
+  wrong: readonly [Pair, Pair, Pair],
+  solution: Pair,
+  why?: readonly [Pair, Pair, Pair],
+): PassageQuestionDef => ({
   prompt: t(prompt[0], prompt[1]),
   right: t(right[0], right[1]),
   wrong: wrong.map(([en, zh]) => t(en, zh)),
   solution: t(solution[0], solution[1]),
+  ...(why && { why: why.map(([en, zh]) => t(en, zh)) }),
 });
 
 /** Edge is a topic a passage practices, with its weight. */

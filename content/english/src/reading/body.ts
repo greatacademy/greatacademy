@@ -36,6 +36,11 @@ Organs work together too, in teams called systems. In the passages that follow, 
             "The first paragraph says your body is built from tiny living parts called cells.",
             "第一段说你的身体由叫作细胞的微小生命单位构成。",
           ),
+          why: [
+            t("Large organs are made of many cells. They are not cells.", "大的器官由许多细胞组成，它们不是细胞。"),
+            t("A tool for seeing small things is a microscope.", "看小东西的工具是显微镜。"),
+            t("A drop of blood holds millions of cells. It is not a cell.", "一滴血里有几百万个细胞，它本身不是细胞。"),
+          ],
         },
         {
           prompt: t("Why are skin cells compared to tiles on a floor?", "为什么把皮肤细胞比作地板上的瓷砖？"),
@@ -49,6 +54,11 @@ Organs work together too, in teams called systems. In the passages that follow, 
             "The second paragraph says skin cells are flat and fit together like tiles to cover and protect you.",
             "第二段说皮肤细胞扁平，像瓷砖一样拼在一起，覆盖并保护你。",
           ),
+          why: [
+            t("Hard and shiny is not the point of the comparison.", "又硬又亮不是这个比喻的重点。"),
+            t("Carrying messages is what nerve cells do.", "传递信息是神经细胞做的事。"),
+            t("Making the body move is what muscle cells do.", "让身体动起来是肌肉细胞做的事。"),
+          ],
         },
         {
           prompt: t("Which list goes from smallest to largest?", "哪一项是从小到大排列的？"),
@@ -62,6 +72,11 @@ Organs work together too, in teams called systems. In the passages that follow, 
             "The passage builds up in order: cells form tissues, tissues form organs, and organs work together in systems.",
             "文章按顺序说明：细胞组成组织，组织组成器官，器官协同组成系统。",
           ),
+          why: [
+            t("Organs first is wrong. Cells are the smallest.", "器官排第一不对。细胞最小。"),
+            t("Systems first is largest to smallest, the reverse.", "系统排第一是从大到小，正好反了。"),
+            t("Tissues first is wrong. Tissues are made of cells.", "组织排第一不对。组织是由细胞组成的。"),
+          ],
         },
       ],
     },
@@ -95,6 +110,11 @@ To keep your bones strong, eat foods with calcium, such as milk, cheese and leaf
             "The second paragraph says that as the baby grows, some of its bones join together.",
             "第二段说婴儿长大时，有些骨头会长在一起。",
           ),
+          why: [
+            t("Losing bones when they break is wrong. A broken bone heals.", "骨折时丢了骨头不对。骨折能愈合。"),
+            t("New bones every day is wrong. Marrow makes new blood cells.", "每天长新骨头不对。骨髓每天造的是新血细胞。"),
+            t("Adults having no skull is wrong. The skull protects the brain.", "成年人没有颅骨不对。颅骨保护大脑。"),
+          ],
         },
         {
           prompt: t("What does marrow do?", "骨髓起什么作用？"),
@@ -105,6 +125,11 @@ To keep your bones strong, eat foods with calcium, such as milk, cheese and leaf
             t("It holds the bones together", "它把骨头连在一起"),
           ],
           solution: t("The fourth paragraph says marrow makes new blood cells every day.", "第四段说骨髓每天制造新的血细胞。"),
+          why: [
+            t("Protecting the brain is the skull's job.", "保护大脑是颅骨的工作。"),
+            t("Bending like a hinge is what the knee joint does.", "像合页一样弯曲是膝关节做的。"),
+            t("Holding bones together is not marrow's job.", "把骨头连在一起不是骨髓的工作。"),
+          ],
         },
         {
           prompt: t("Which joint works most like the hinge of a door?", "哪个关节最像门的铰链？"),
@@ -114,6 +139,11 @@ To keep your bones strong, eat foods with calcium, such as milk, cheese and leaf
             "The fifth paragraph says the knee bends back and forth like the hinge of a door.",
             "第五段说膝盖像门的铰链一样来回弯曲。",
           ),
+          why: [
+            t("The shoulder swings in a full circle, not back and forth.", "肩膀能转一整圈，不是来回弯曲。"),
+            t("The skull is a case, not a joint that bends.", "颅骨是一个保护壳，不是能弯的关节。"),
+            t("The ribs form a cage, not a hinge.", "肋骨形成笼子，不是合页。"),
+          ],
         },
       ],
     },
@@ -145,6 +175,11 @@ Muscles grow stronger when you use them. Running, climbing, swimming and playing
             "The second paragraph says muscles can only pull, so one of the pair pulls while the other relaxes.",
             "第二段说肌肉只能拉，所以一对肌肉中一块拉，另一块放松。",
           ),
+          why: [
+            t("A sleeping muscle is not in the passage. One relaxes.", "睡着的肌肉文中没有。是一块放松。"),
+            t("Pushing is backwards. Muscles can only pull.", "推是反的。肌肉只能拉。"),
+            t("Two tendons per bone is not the reason given.", "每块骨头要两根肌腱不是文中给的原因。"),
+          ],
         },
         {
           prompt: t("What are tendons?", "什么是肌腱？"),
@@ -158,6 +193,11 @@ Muscles grow stronger when you use them. Running, climbing, swimming and playing
             "The third paragraph says muscles are joined to bones by strong cords called tendons.",
             "第三段说肌肉通过叫作肌腱的结实索带连到骨头上。",
           ),
+          why: [
+            t("Stomach muscles squeeze food. They are not tendons.", "胃部肌肉挤压食物，不是肌腱。"),
+            t("Bones in the ankle are wrong. A tendon is a cord above the heel.", "脚踝的骨头不对。肌腱是脚跟上方的带子。"),
+            t("Places where bones meet are joints.", "骨头相接的地方是关节。"),
+          ],
         },
         {
           prompt: t("Which muscle works without your having to think about it?", "哪块肌肉不用你去想就会工作？"),
@@ -171,6 +211,11 @@ Muscles grow stronger when you use them. Running, climbing, swimming and playing
             "The fourth paragraph says the heart is a muscle that beats even while you sleep.",
             "第四段说心脏是一块即使在你睡觉时也在跳动的肌肉。",
           ),
+          why: [
+            t("Bending your arm is something you choose to do.", "弯手臂是你主动做的事。"),
+            t("Jumping is something you choose to do.", "跳是你主动做的事。"),
+            t("Climbing is something you choose to do.", "爬是你主动做的事。"),
+          ],
         },
       ],
     },
@@ -200,6 +245,11 @@ You can feel your heart working. Press two fingers gently on the inside of your 
             "The second paragraph says arteries carry blood away from the heart and veins bring it back.",
             "第二段说动脉把血液运离心脏，静脉把血液运回心脏。",
           ),
+          why: [
+            t("Arms and legs is not the difference.", "手臂和腿不是区别所在。"),
+            t("Veins and arteries are swapped.", "静脉和动脉说反了。"),
+            t("Food and water is wrong. Blood carries both oxygen and food.", "食物和水不对。血液同时运送氧气和养料。"),
+          ],
         },
         {
           prompt: t("Why does the writer call blood a delivery service?", "作者为什么把血液称为送货服务？"),
@@ -213,6 +263,11 @@ You can feel your heart working. Press two fingers gently on the inside of your 
             "The third paragraph says blood carries oxygen and food to every cell and picks up wastes on the way back.",
             "第三段说血液把氧气和食物送到每个细胞，回程时带走废物。",
           ),
+          why: [
+            t("Bringing mail is too literal.", "送信太按字面理解了。"),
+            t("One direction is wrong. It brings things and takes wastes away.", "只朝一个方向不对。它既送东西也带走废物。"),
+            t("Making the heart beat is backwards. The heart pumps the blood.", "让心脏跳动是反的。是心脏推动血液。"),
+          ],
         },
         {
           prompt: t("Why does your heart beat faster after running?", "跑步后心跳为什么会加快？"),
@@ -226,6 +281,11 @@ You can feel your heart working. Press two fingers gently on the inside of your 
             "The last sentence says your heart beats faster when your body needs more oxygen.",
             "最后一句说身体需要更多氧气时，心跳会加快。",
           ),
+          why: [
+            t("Ribs pressing on it is not the reason.", "肋骨压着它不是原因。"),
+            t("Heavier blood is not in the passage.", "血变重文中没有。"),
+            t("The wrist stopping the pulse is wrong. You feel the pulse there.", "手腕阻止脉搏不对。你是在手腕摸脉搏。"),
+          ],
         },
       ],
     },
@@ -257,6 +317,11 @@ Exercise makes your lungs work harder, and that helps keep them strong.`,
             "The third paragraph says oxygen passes into the blood and carbon dioxide passes into the air sacs.",
             "第三段说氧气进入血液，二氧化碳进入肺泡。",
           ),
+          why: [
+            t("Turning food into energy is not in this passage.", "把食物变成能量不在这篇文章里。"),
+            t("Making bones is not what air sacs do.", "造骨头不是肺泡的工作。"),
+            t("Pumping blood is the heart's job.", "泵血是心脏的工作。"),
+          ],
         },
         {
           prompt: t("Why does the writer compare the inside of the lungs to an upside-down tree?", "作者为什么把肺的内部比作倒立的树？"),
@@ -270,6 +335,11 @@ Exercise makes your lungs work harder, and that helps keep them strong.`,
             "The second paragraph says the branches divide again and again, like the branches of an upside-down tree.",
             "第二段说这些分支一次次地分开，就像倒立的树的树枝。",
           ),
+          why: [
+            t("Being made of wood is too literal.", "是木头做的太按字面理解了。"),
+            t("Growing leaves is too literal.", "长叶子太按字面理解了。"),
+            t("Being green is not in the passage. Lungs are spongy.", "是绿色的文中没有。肺是海绵状的。"),
+          ],
         },
         {
           prompt: t("What does the diaphragm do?", "膈肌起什么作用？"),
@@ -283,6 +353,11 @@ Exercise makes your lungs work harder, and that helps keep them strong.`,
             "The fourth paragraph says when the diaphragm moves down air rushes in, and when it moves up air is pushed out.",
             "第四段说膈肌向下时空气涌入，向上时空气被推出。",
           ),
+          why: [
+            t("Cleaning air in the nose is not the diaphragm's job.", "清洁鼻子里的空气不是膈肌的工作。"),
+            t("Carrying oxygen is the blood's job.", "运送氧气是血液的工作。"),
+            t("Splitting the windpipe is wrong. The windpipe branches by itself.", "把气管分开不对。气管自己分叉。"),
+          ],
         },
       ],
     },
@@ -314,6 +389,11 @@ What is left moves into the large intestine, where water is taken back into the 
             "The first paragraph says food must be broken down into pieces small enough to pass into your blood.",
             "第一段说食物必须分解成小到能进入血液的碎块。",
           ),
+          why: [
+            t("Tasting better is not the reason given.", "更好吃不是文中给的原因。"),
+            t("An empty stomach is not the reason.", "让胃空着不是原因。"),
+            t("Strong teeth are not the reason.", "让牙齿结实不是原因。"),
+          ],
         },
         {
           prompt: t("Where does most of the food get broken down and pass into the blood?", "大部分食物在哪里被分解并进入血液？"),
@@ -323,6 +403,11 @@ What is left moves into the large intestine, where water is taken back into the 
             "The fourth paragraph says that in the small intestine most of the food is broken down and the useful parts pass into the blood.",
             "第四段说大部分食物在小肠里被分解，有用的部分进入血液。",
           ),
+          why: [
+            t("The mouth only starts digestion.", "嘴只是消化的开始。"),
+            t("The esophagus only carries food down.", "食道只是把食物送下去。"),
+            t("The large intestine takes back water.", "大肠是回收水分的。"),
+          ],
         },
         {
           prompt: t("Which list follows food through the body in order?", "哪一项按顺序描述了食物在体内的路线？"),
@@ -336,6 +421,11 @@ What is left moves into the large intestine, where water is taken back into the 
             "The paragraphs follow the food in order from the mouth to the large intestine.",
             "各段按顺序讲述了食物从口腔到大肠的路线。",
           ),
+          why: [
+            t("The stomach cannot come before the mouth.", "胃不能排在嘴前面。"),
+            t("The esophagus comes before the stomach, not after.", "食道在胃之前，不在之后。"),
+            t("The esophagus is not before the mouth.", "食道不在嘴前面。"),
+          ],
         },
       ],
     },
@@ -367,6 +457,14 @@ Your brain also stores memories, solves problems and lets you learn, which you a
             "The second paragraph explains the spinal cord as the thick cable of nerves inside your backbone.",
             "第二段解释说脊髓是脊柱里面的一束粗神经。",
           ),
+          why: [
+            t("A bone in the arm is wrong. The cord is inside the backbone.", "手臂里的骨头不对。它在脊柱里面。"),
+            t("The muscle that pulls the hand is in the arm.", "拉开手的肌肉在手臂上。"),
+            t(
+              "Part of the skin is wrong. The skin has nerves, but this is a cable inside the back.",
+              "皮肤的一部分不对。皮肤有神经，但这是背部里面的一束。",
+            ),
+          ],
         },
         {
           prompt: t("Why do you pull your hand from a hot pan before you feel the pain?", "为什么你在感到疼痛之前就把手从热锅上缩回来了？"),
@@ -380,6 +478,11 @@ Your brain also stores memories, solves problems and lets you learn, which you a
             "The fourth paragraph says some messages are so urgent that the spinal cord answers them before the brain does.",
             "第四段说有些信息非常紧急，脊髓在大脑之前就作出反应。",
           ),
+          why: [
+            t("The pan pushing is not in the passage.", "锅推开手文中没有。"),
+            t("Skin with no nerves is wrong. Skin nerves send the pain message.", "皮肤没有神经不对。皮肤神经会发出疼痛信号。"),
+            t("A sleeping brain is wrong. The spinal cord is simply faster.", "大脑睡着了不对。只是脊髓更快。"),
+          ],
         },
         {
           prompt: t("What is a reflex?", "什么是反射？"),
@@ -393,6 +496,11 @@ Your brain also stores memories, solves problems and lets you learn, which you a
             "The fourth paragraph calls the quick action of jerking your hand away a reflex.",
             "第四段把迅速缩手这种快速动作称为反射。",
           ),
+          why: [
+            t("A stored memory is something the brain keeps, not a quick action.", "储存的记忆是大脑保存的东西，不是快速动作。"),
+            t("A message of pain goes in. A reflex is the action out.", "疼痛信息是传进来的。反射是做出来的动作。"),
+            t("A nerve cell is a part, not an action.", "神经细胞是一个部件，不是动作。"),
+          ],
         },
       ],
     },
@@ -420,6 +528,11 @@ Your skin is your largest organ of touch. It can sense heat, cold, pressure and 
             "The second paragraph says special cells at the back of the eye turn the light into nerve messages.",
             "第二段说眼睛后部的特殊细胞把光变成神经信息。",
           ),
+          why: [
+            t("The pupil only lets light in.", "瞳孔只是让光进来。"),
+            t("The eardrum is in the ear, for sound.", "鼓膜在耳朵里，管声音。"),
+            t("Fingertips sense touch, not light.", "指尖感觉触摸，不是光。"),
+          ],
         },
         {
           prompt: t("Why does food seem to have little flavor when you have a stuffy nose?", "鼻塞时，食物为什么好像没什么味道？"),
@@ -433,6 +546,11 @@ Your skin is your largest organ of touch. It can sense heat, cold, pressure and 
             "The fourth paragraph says most of what you think of as taste is really smell.",
             "第四段说你以为的味道大部分其实是气味。",
           ),
+          why: [
+            t("The tongue stopping is wrong. It still tastes a few flavors.", "舌头停止工作不对。它还能尝出几种味道。"),
+            t("The food changing is wrong. The nose is the change.", "食物变味不对。变化的是鼻子。"),
+            t("Hearing food is not in the passage.", "听见食物文中没有。"),
+          ],
         },
         {
           prompt: t("What is the eardrum?", "鼓膜是什么？"),
@@ -446,6 +564,11 @@ Your skin is your largest organ of touch. It can sense heat, cold, pressure and 
             "The third paragraph describes the eardrum as a thin sheet of skin inside your ear that shakes when sound reaches it.",
             "第三段说鼓膜是耳朵里的一层薄膜，声音传来时会随之振动。",
           ),
+          why: [
+            t("A small bone passes the shaking deeper. It is not the eardrum.", "小骨头把振动往里传，它不是鼓膜。"),
+            t("A drum people play is too literal.", "人们敲的鼓太按字面理解了。"),
+            t("The opening of the eye is the pupil.", "眼睛的开口是瞳孔。"),
+          ],
         },
       ],
     },
@@ -471,6 +594,11 @@ You can help your body too. Washing your hands with soap, covering your mouth wh
             "The second paragraph says your skin is a wall that most germs cannot get through; white blood cells fight germs that are already inside.",
             "第二段说皮肤是大多数病菌无法穿过的墙；白细胞对付的是已经进入体内的病菌。",
           ),
+          why: [
+            t("White blood cells fight germs that already got in.", "白细胞对付的是已经进来的细菌。"),
+            t("The heart is not named as a guard.", "文中没说心脏是防线。"),
+            t("Bones are not named as a guard.", "文中没说骨头是防线。"),
+          ],
         },
         {
           prompt: t("Why is the special weapon of a white blood cell compared to a key?", "为什么把白细胞的特殊武器比作钥匙？"),
@@ -484,6 +612,11 @@ You can help your body too. Washing your hands with soap, covering your mouth wh
             "The third paragraph says the weapons fit one kind of germ, like a key that fits one lock.",
             "第三段说这些武器只适合一种病菌，就像一把钥匙只能开一把锁。",
           ),
+          why: [
+            t("Opening the skin is not what it does.", "打开皮肤不是它的作用。"),
+            t("Being metal is too literal.", "金属做的太按字面理解了。"),
+            t("Locking germs inside is backwards. It destroys them.", "把细菌锁在体内是反的。它是消灭细菌。"),
+          ],
         },
         {
           prompt: t("Why might you not feel sick when the same germ comes back?", "同样的病菌再次进入时，你为什么可能不会生病？"),
@@ -497,6 +630,11 @@ You can help your body too. Washing your hands with soap, covering your mouth wh
             "The third paragraph says your body remembers a germ it has beaten and can fight it much faster.",
             "第三段说身体会记住打败过的病菌，能更快地对付它。",
           ),
+          why: [
+            t("The germ forgetting is not in the passage. The body remembers.", "细菌忘了路文中没有。是身体记住了它。"),
+            t("Thicker skin is not in the passage.", "皮肤变厚文中没有。"),
+            t("Stronger stomach juices is not the reason given.", "胃液更强不是文中给的原因。"),
+          ],
         },
       ],
     },
@@ -528,6 +666,11 @@ Finally, sleep. While you sleep, your body repairs itself and your brain sorts o
             "The first paragraph says each system depends on the others, so caring for the body means caring for the whole team.",
             "第一段说每个系统都依赖其他系统，所以照顾身体就是照顾整个团队。",
           ),
+          why: [
+            t("Playing sports is too literal.", "一起运动太按字面理解了。"),
+            t("Taking turns sleeping is not in the passage.", "轮流睡觉文中没有。"),
+            t("The same job is wrong. Each system has its own job.", "做同样的工作不对。每个系统各有分工。"),
+          ],
         },
         {
           prompt: t("Why does the body need water, according to the passage?", "根据文章，身体为什么需要水？"),
@@ -541,6 +684,11 @@ Finally, sleep. While you sleep, your body repairs itself and your brain sorts o
             "The third paragraph says drinking water helps your blood flow and your body stay cool.",
             "第三段说喝水帮助血液流动，让身体保持凉爽。",
           ),
+          why: [
+            t("Growing bones is what calcium helps, not water.", "长骨头靠的是钙，不是水。"),
+            t("Replacing sleep is wrong. Sleep is a separate need.", "代替睡眠不对。睡眠是另一种需要。"),
+            t("Giving sweets is not what water does.", "提供糖果不是水的作用。"),
+          ],
         },
         {
           prompt: t("What does the body do during sleep, according to the passage?", "根据文章，身体在睡眠时做什么？"),
@@ -554,6 +702,11 @@ Finally, sleep. While you sleep, your body repairs itself and your brain sorts o
             "The last paragraph says the body repairs itself and the brain sorts out what you learned during the day.",
             "最后一段说身体会自我修复，大脑会整理白天学到的东西。",
           ),
+          why: [
+            t("Stopping all systems is wrong. The body repairs itself.", "所有系统停止不对。身体在自我修复。"),
+            t("Digesting only sweets is not in the passage.", "只消化糖果文中没有。"),
+            t("New teeth are not in the passage.", "长新牙文中没有。"),
+          ],
         },
       ],
     },

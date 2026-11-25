@@ -35,6 +35,11 @@ Almost everyone in ancient Egypt lived in the Black Land, close to the river. Th
             t("A kind of dark soil", "一种黑色的土壤"),
           ],
           solution: t("The first paragraph explains the word right after using it.", "第一段在用到这个词之后紧接着解释了它。"),
+          why: [
+            t("A river through a desert is the Nile, not the meaning of civilization.", "穿过沙漠的河是尼罗河，不是“文明”的意思。"),
+            t("A strip of green land is the Black Land along the river.", "一条绿色土地是河边的黑土地。"),
+            t("Dark soil is what gave the Black Land its name.", "深色土壤是黑土地名字的来历。"),
+          ],
         },
         {
           prompt: t("Why did the Egyptians call the land along the river the Black Land?", "埃及人为什么把河边的土地叫作“黑土地”？"),
@@ -48,6 +53,14 @@ Almost everyone in ancient Egypt lived in the Black Land, close to the river. Th
             "The third paragraph says they called it the Black Land because of its dark, rich soil.",
             "第三段说因为那里的土壤又黑又肥沃，所以叫“黑土地”。",
           ),
+          why: [
+            t("Always night is too literal. Black describes the soil.", "总是黑夜太按字面理解了。黑说的是土壤。"),
+            t("Rocks are not mentioned. The soil was rich.", "文中没说石头。那里的土壤肥沃。"),
+            t(
+              "No one living there is backwards. Almost everyone lived in the Black Land.",
+              "没人住那里正好相反。几乎所有人都住在黑土地上。",
+            ),
+          ],
         },
         {
           prompt: t(
@@ -64,6 +77,11 @@ Almost everyone in ancient Egypt lived in the Black Land, close to the river. Th
             "The passage explains that the land around the river is desert and that the Nile gave people water, food and a way to travel.",
             "文章说明河周围都是沙漠，是尼罗河给了人们水、食物和交通。",
           ),
+          why: [
+            t("A rainy place is wrong. The passage says there is almost no rain.", "多雨的地方不对。文中说几乎不下雨。"),
+            t("Built under the river is too literal. People lived along its banks.", "建在河底下太按字面理解了。人们住在河两岸。"),
+            t("Not liking the river is the opposite. The river gave them everything.", "不喜欢这条河正好相反。河给了他们一切。"),
+          ],
         },
       ],
     },
@@ -95,6 +113,11 @@ Because the flood came at about the same time every year, the Egyptians used it 
             "The first paragraph says heavy rains fell in the mountains far to the south, and the water rushed north.",
             "第一段说南方远处山区下大雨，雨水向北奔流。",
           ),
+          why: [
+            t("Rain on Egypt's fields is wrong. The rain fell far to the south.", "雨落在埃及的田里不对。雨下在遥远的南方。"),
+            t("Melting ice near the sea is not in the passage.", "海边的冰融化文中没有。"),
+            t("Farmers opening gates is not in the passage.", "农民打开闸门文中没有。"),
+          ],
         },
         {
           prompt: t("Why was the mud the flood left behind important?", "洪水留下的淤泥为什么很重要？"),
@@ -108,6 +131,11 @@ Because the flood came at about the same time every year, the Egyptians used it 
             "The third paragraph says the mud was full of the minerals crops need and made the soil rich.",
             "第三段说淤泥里有庄稼需要的矿物质，让土壤变得肥沃。",
           ),
+          why: [
+            t("Building boats is not what the mud was for.", "造船不是这泥的用途。"),
+            t("Keeping villages dry is the job of higher ground.", "让村庄保持干燥靠的是高地。"),
+            t("Stopping the river from rising is not in the passage.", "阻止河水上涨文中没有。"),
+          ],
         },
         {
           prompt: t("What did a flood that was too low mean?", "水位太低的洪水意味着什么？"),
@@ -117,6 +145,11 @@ Because the flood came at about the same time every year, the Egyptians used it 
             "The fourth paragraph says a flood that was too low meant dry fields and not enough food.",
             "第四段说水位太低的洪水意味着田地干旱、粮食不够。",
           ),
+          why: [
+            t("Homes washed away came from a flood that was too high.", "房屋被冲走是洪水太高造成的。"),
+            t("A very good year came from a good flood.", "好年景来自恰到好处的洪水。"),
+            t("More fish is not in the passage.", "鱼更多文中没有。"),
+          ],
         },
       ],
     },
@@ -145,6 +178,11 @@ Even with the flood's help, the fields far from the river needed more water. So 
             "The second paragraph says that while their fields were under water, farmers could not plant anything.",
             "第二段说田地被水淹着的时候，农民什么也种不了。",
           ),
+          why: [
+            t("Too cold is wrong. The fields were under water.", "太冷不对。田地被水淹着。"),
+            t("Having no seeds is not in the passage.", "没有种子文中没有。"),
+            t("The king not allowing it is wrong. Farmers worked for him instead.", "国王不允许不对。农民是改去为国王干活。"),
+          ],
         },
         {
           prompt: t("What was flax used for?", "亚麻被用来做什么？"),
@@ -154,6 +192,11 @@ Even with the flood's help, the fields far from the river needed more water. So 
             "The third paragraph says flax is a plant whose stems could be made into cloth.",
             "第三段说亚麻是一种茎可以用来做布的植物。",
           ),
+          why: [
+            t("Bread was made from wheat and barley.", "面包是用小麦和大麦做的。"),
+            t("Canals were ditches dug by farmers.", "水渠是农民挖的沟。"),
+            t("Feeding fish is not in the passage.", "喂鱼文中没有。"),
+          ],
         },
         {
           prompt: t("What are canals, according to the passage?", "根据文章，canals 是什么？"),
@@ -167,6 +210,11 @@ Even with the flood's help, the fields far from the river needed more water. So 
             "The last paragraph says farmers dug ditches, called canals, to carry water from the Nile to their fields.",
             "最后一段说农民挖了叫作 canals 的沟渠，把尼罗河的水引到田里。",
           ),
+          why: [
+            t("Boats carrying crops is not what canals are.", "运庄稼的船不是水渠。"),
+            t("A machine lifting water is the pole with a bucket.", "提水的机器是带水桶的长杆。"),
+            t("Fields far from the river are what the canals water.", "离河远的田地是水渠灌溉的对象。"),
+          ],
         },
       ],
     },
@@ -199,6 +247,11 @@ Most pharaohs were men, but a few women also ruled Egypt as pharaoh. They wore t
             "The first paragraph says the Egyptians believed the pharaoh was a link between the people and their gods.",
             "第一段说埃及人认为法老是人民与神之间的纽带。",
           ),
+          why: [
+            t("An ordinary farmer is wrong. The pharaoh was more than a king.", "普通农民不对。法老比国王还重要。"),
+            t("Living under the river is not in the passage.", "住在河底下文中没有。"),
+            t("Having no duties is the opposite. He had many.", "没有职责正好相反。他有很多职责。"),
+          ],
         },
         {
           prompt: t("Why was grain stored in large buildings?", "为什么要把粮食储存在大仓库里？"),
@@ -212,6 +265,11 @@ Most pharaohs were men, but a few women also ruled Egypt as pharaoh. They wore t
             "The second paragraph says the grain was stored and handed out in years when the flood was poor.",
             "第二段说粮食被储存起来，在洪水不好的年份分发。",
           ),
+          why: [
+            t("Eating it all is wrong. The grain was handed out to people.", "自己全吃掉不对。粮食是分给大家的。"),
+            t("Planting in the desert is not in the passage.", "在沙漠里种文中没有。"),
+            t("The army selling it is not in the passage.", "军队卖粮文中没有。"),
+          ],
         },
         {
           prompt: t("Who was the vizier?", "维齐尔（vizier）是谁？"),
@@ -221,6 +279,11 @@ Most pharaohs were men, but a few women also ruled Egypt as pharaoh. They wore t
             "The fourth paragraph says the most powerful official was the vizier, who managed the government from day to day.",
             "第四段说最有权力的官员是维齐尔，他负责管理日常政务。",
           ),
+          why: [
+            t("The pharaoh's son is not mentioned.", "法老的儿子文中没提。"),
+            t("A god of the river is one of the gods, not an official.", "河神是一位神，不是官员。"),
+            t("A farmer paid taxes. The vizier ran the government.", "农民交税。维齐尔管理政府。"),
+          ],
         },
       ],
     },
@@ -251,6 +314,11 @@ The builders were not slaves, as people once thought. Many were skilled workers 
             "The first paragraph says the pyramids were built as tombs, and each great pyramid was made for a pharaoh.",
             "第一段说金字塔是作为陵墓建造的，每座大金字塔都是为一位法老而建。",
           ),
+          why: [
+            t("Homes for workers is wrong. They were tombs.", "工人的住所不对。它们是坟墓。"),
+            t("Storing grain was done in other large buildings.", "储存粮食是在别的大房子里。"),
+            t("Watching the flood is not in the passage.", "观察洪水文中没有。"),
+          ],
         },
         {
           prompt: t("Why did workers pour water on the sand in front of the sleds?", "工人为什么要在雪橇前面的沙子上泼水？"),
@@ -264,6 +332,11 @@ The builders were not slaves, as people once thought. Many were skilled workers 
             "The third paragraph says the water made the sand firm and the sleds easier to pull.",
             "第三段说泼水让沙子变得结实，雪橇更容易拉动。",
           ),
+          why: [
+            t("Cooling the workers is not the reason given.", "给工人降温不是文中给的原因。"),
+            t("Washing the blocks is not in the passage.", "清洗石块文中没有。"),
+            t("Helping plants grow is not in the passage.", "让植物生长文中没有。"),
+          ],
         },
         {
           prompt: t("Which statement about the builders is supported by the passage?", "关于建造者，哪一项说法得到了文章的支持？"),
@@ -277,6 +350,11 @@ The builders were not slaves, as people once thought. Many were skilled workers 
             "The last paragraph says the builders were not slaves; many were skilled paid workers and others were farmers during the flood.",
             "最后一段说建造者不是奴隶；很多是有报酬的熟练工人，其他的是洪水季节来干活的农民。",
           ),
+          why: [
+            t("All slaves is what people once thought, and the passage says it was wrong.", "都是奴隶是人们过去的看法，文中说这不对。"),
+            t("Modern machines is wrong. They built without machines.", "现代机器不对。他们没用机器。"),
+            t("All pharaohs is wrong. The pyramids were built for pharaohs, by workers.", "都是法老不对。金字塔是工人为法老建的。"),
+          ],
         },
       ],
     },
@@ -307,6 +385,11 @@ For hundreds of years after Egypt's civilization ended, no one could read hierog
             "The first paragraph says Egyptian writing is called hieroglyphs, and hieroglyphs are small pictures.",
             "第一段说埃及文字叫作象形文字，象形文字就是小图画。",
           ),
+          why: [
+            t("Letters of our alphabet is wrong. Some signs only work like letters.", "我们的字母不对。只有一些符号像字母那样表示声音。"),
+            t("Sheets of paper are papyrus.", "纸张是莎草纸。"),
+            t("Reed brushes are what scribes wrote with.", "芦苇笔是书吏写字用的。"),
+          ],
         },
         {
           prompt: t("Why could only a few people write?", "为什么只有少数人会写字？"),
@@ -320,6 +403,11 @@ For hundreds of years after Egypt's civilization ended, no one could read hierog
             "The second paragraph says learning to write took many years, so only a few people could do it.",
             "第二段说学写字要花很多年，所以只有少数人会写。",
           ),
+          why: [
+            t("The pharaoh not allowing it is not in the passage.", "法老不允许文中没有。"),
+            t("No paper is wrong. They had papyrus.", "没有纸不对。他们有莎草纸。"),
+            t("Writing in the fields is wrong. Scribes did not work in the fields.", "在田里写字不对。书吏不用下田干活。"),
+          ],
         },
         {
           prompt: t("How were scholars at last able to read hieroglyphs?", "学者们最后是怎样读懂象形文字的？"),
@@ -333,6 +421,14 @@ For hundreds of years after Egypt's civilization ended, no one could read hierog
             "The last paragraph says scholars compared the same message in hieroglyphs and in Greek on one stone.",
             "最后一段说学者们比较了同一块石头上用象形文字和希腊文写的同一段内容。",
           ),
+          why: [
+            t(
+              "A scribe teaching them is wrong. No one could read hieroglyphs for hundreds of years.",
+              "书吏教他们不对。几百年来没人能读懂象形文字。",
+            ),
+            t("A dictionary in a pyramid is not in the passage.", "金字塔里的词典文中没有。"),
+            t("Guessing from the pictures alone is wrong. They compared two languages.", "只靠看图猜不对。他们对照了两种文字。"),
+          ],
         },
       ],
     },
@@ -362,6 +458,11 @@ The river connected the whole country. A message, a load of grain or an army cou
             "The first paragraph says there were few roads across the desert and carrying heavy loads over sand was slow and hard.",
             "第一段说穿越沙漠的道路很少，在沙地上运送重物又慢又难。",
           ),
+          why: [
+            t("No water in the river is wrong. Boats sailed on it.", "河里没水不对。船在上面航行。"),
+            t("Boats not allowed on land roads is too literal.", "船不能上陆路太按字面理解了。"),
+            t("The pharaoh living on a boat is not in the passage.", "法老住在船上文中没有。"),
+          ],
         },
         {
           prompt: t("How did a boat travel south on the Nile?", "船怎样在尼罗河上向南航行？"),
@@ -375,6 +476,11 @@ The river connected the whole country. A message, a load of grain or an army cou
             "The second paragraph says the wind blows from north to south, so a boat going south raised its sail.",
             "第二段说风从北往南吹，所以向南的船会扬起帆。",
           ),
+          why: [
+            t("Floating with the current is how a boat went north.", "顺流漂是往北走的方法。"),
+            t("People pulling it is not in the passage.", "人在岸上拉文中没有。"),
+            t("A motor is wrong. These were ancient boats.", "马达不对。这些是古代的船。"),
+          ],
         },
         {
           prompt: t("In this passage, what does *current* mean?", "这篇文章中的 *current* 是什么意思？"),
@@ -384,6 +490,11 @@ The river connected the whole country. A message, a load of grain or an army cou
             "The second paragraph says the river flows from south to north and a boat going north could float with the current, so current means the water's flow.",
             "第二段说河水从南向北流，向北的船可以随 current 漂浮，所以 current 指水流。",
           ),
+          why: [
+            t("Happening now is another meaning of current, not the one here.", "正在发生是current的另一个意思，不是这里的意思。"),
+            t("A sail is what catches the wind.", "帆是用来兜风的。"),
+            t("The wind blows from the north, but it is not the current.", "风从北方吹来，但它不是水流。"),
+          ],
         },
       ],
     },
@@ -416,6 +527,11 @@ Bread and beer were the main foods, with onions, beans, fish and fruit. Meat was
             "The second paragraph says they slept on the roof on summer nights, when it was cooler outside than in.",
             "第二段说他们夏天晚上睡在屋顶上，因为那时外面比屋里凉快。",
           ),
+          why: [
+            t("Having no beds is not in the passage.", "没有床文中没有。"),
+            t("Watching for the flood is not the reason given.", "看洪水不是文中给的原因。"),
+            t("A straw roof is wrong. The houses were mud brick.", "稻草屋顶不对。房子是泥砖的。"),
+          ],
         },
         {
           prompt: t("What does the passage say was rare in the ancient world?", "文章说在古代世界中什么是罕见的？"),
@@ -429,6 +545,11 @@ Bread and beer were the main foods, with onions, beans, fish and fruit. Meat was
             "The third paragraph says Egyptian women could own land and run businesses, which was rare in the ancient world.",
             "第三段说埃及女性可以拥有土地和经营生意，这在古代世界很少见。",
           ),
+          why: [
+            t("Children playing is ordinary, not called rare.", "孩子玩耍很普通，没说少见。"),
+            t("Eating bread was the main food, not rare.", "吃面包是主食，不少见。"),
+            t("Mud-brick houses were common.", "泥砖房很常见。"),
+          ],
         },
         {
           prompt: t("What do archaeologists do?", "考古学家做什么？"),
@@ -442,6 +563,11 @@ Bread and beer were the main foods, with onions, beans, fish and fruit. Meat was
             "The fourth paragraph explains the word right after it: scientists who study how people lived long ago by digging up what they left behind.",
             "第四段紧接着解释了这个词：通过挖掘古人留下的东西来研究他们生活的科学家。",
           ),
+          why: [
+            t("Making mud bricks is what villagers did.", "做泥砖是村民的事。"),
+            t("Selling at the market is what many women did.", "在集市卖东西是很多妇女做的事。"),
+            t("Building houses is not what archaeologists do. They dig up the past.", "建房子不是考古学家的事。他们挖掘过去。"),
+          ],
         },
       ],
     },
@@ -472,6 +598,11 @@ Temples were also important places of work. They owned farms, stored grain and e
             "The second paragraph says the Egyptians built great temples as homes for their gods.",
             "第二段说埃及人建造宏伟的神庙作为神的居所。",
           ),
+          why: [
+            t("Homes for farmers were mud-brick houses in villages.", "农民的家是村里的泥砖房。"),
+            t("Tombs for pharaohs were the pyramids.", "法老的坟墓是金字塔。"),
+            t("Markets for trade is wrong, though temples did store grain.", "做买卖的市场不对，虽然神庙也存粮食。"),
+          ],
         },
         {
           prompt: t("How did priests care for the statue each morning?", "祭司每天早上怎样照料神像？"),
@@ -485,6 +616,11 @@ Temples were also important places of work. They owned farms, stored grain and e
             "The second paragraph says priests washed and dressed the statue and brought it food each morning.",
             "第二段说祭司每天早上给神像清洗、穿衣，并带来食物。",
           ),
+          why: [
+            t("Carrying it to the market is wrong. It was carried out only on festival days.", "搬到集市不对。只有节日才抬出来。"),
+            t("Painting it a new color is not in the passage.", "涂新颜色文中没有。"),
+            t("Hiding it from the pharaoh is not in the passage.", "把它藏起来不让法老看文中没有。"),
+          ],
         },
         {
           prompt: t(
@@ -501,6 +637,14 @@ Temples were also important places of work. They owned farms, stored grain and e
             "The last paragraph says temples owned farms, stored grain and employed bakers, builders and scribes.",
             "最后一段说神庙拥有农场、储存粮食，并雇用面包师、建筑工和书吏。",
           ),
+          why: [
+            t(
+              "Everyone in Egypt living inside it is wrong. Ordinary people did not usually enter.",
+              "全埃及人都住在里面不对。普通人通常不进神庙。",
+            ),
+            t("Its own pharaoh is not in the passage.", "它有自己的法老文中没有。"),
+            t("Far from people is wrong. Crowds gathered at festivals.", "远离人群不对。节日时人们聚集观看。"),
+          ],
         },
       ],
     },
@@ -532,6 +676,11 @@ When we compare our lives with the lives of people along the Nile long ago, we m
             "The second paragraph says they studied the sky because they needed to know when the flood would come.",
             "第二段说他们研究天空是因为需要知道洪水什么时候到来。",
           ),
+          why: [
+            t("Counting the pyramids is not the reason.", "数金字塔不是原因。"),
+            t("Festivals for doctors is not in the passage.", "为医生办节日文中没有。"),
+            t("Measuring angles was for building pyramids, not the calendar.", "测量角度是为了建金字塔，不是为了历法。"),
+          ],
         },
         {
           prompt: t("What does the word *estimate* mean in the third paragraph?", "第三段中的 *estimate* 是什么意思？"),
@@ -541,6 +690,11 @@ When we compare our lives with the lives of people along the Nile long ago, we m
             "The scribes use it to find the area of a field and how much grain a storehouse holds, which is working out an amount.",
             "书吏用它来求田地的面积和仓库能装多少粮食，也就是估算数量。",
           ),
+          why: [
+            t("Washing away borders is what the flood did.", "冲掉边界是洪水做的事。"),
+            t("Building a storehouse is not the meaning. They worked out how much it held.", "建仓库不是这个意思。他们是估算它能装多少。"),
+            t("Writing a letter is a scribe's job, not the meaning of estimate.", "写信是书吏的事，不是estimate的意思。"),
+          ],
         },
         {
           prompt: t("What is the main idea of the passage?", "这篇文章的主要意思是什么？"),
@@ -557,6 +711,17 @@ When we compare our lives with the lives of people along the Nile long ago, we m
             "The passage lists the calendar, math and medicine that Egypt left us, and the last paragraph ties them back to the river.",
             "文章列举了埃及留给我们的历法、数学和医学，最后一段又回到了这条河。",
           ),
+          why: [
+            t(
+              "Doctors being better than today is not said. They were famous in the ancient world.",
+              "比今天的医生强文中没说。他们在古代很有名。",
+            ),
+            t("A short time is backwards. Egypt lasted three thousand years.", "时间很短正好相反。埃及延续了三千年。"),
+            t(
+              "Never studying the sky is the opposite. They studied it to make a calendar.",
+              "从不研究天空正好相反。他们研究天空制定历法。",
+            ),
+          ],
         },
       ],
     },

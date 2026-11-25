@@ -43,6 +43,11 @@ Over the centuries, people have used many things as money, including shells, sal
             "The second paragraph says a trade can happen only when each person has something the other wants at the same time, which economists call a double coincidence of wants.",
             "第二段说只有当双方同时拥有对方想要的东西时交易才能发生，经济学家称之为需求的双重巧合。",
           ),
+          [
+            t("Carrying goods is not the problem named.", "文中说的问题不是携带货物。"),
+            t("Barter works well in small communities.", "易货在小社区里运作良好。"),
+            t("The shoemaker wanting fish is one example, not a rule.", "鞋匠想要鱼只是一个例子，不是规律。"),
+          ],
         ),
         ask(
           t("How does the third paragraph relate to the second?", "第三段与第二段是什么关系？"),
@@ -56,6 +61,11 @@ Over the centuries, people have used many things as money, including shells, sal
             "The second paragraph sets out two problems of barter; the third opens with Money solves these problems and explains how, so the two sections work as problem and solution.",
             "第二段提出了以物易物的两个问题；第三段以“钱解决了这些问题”开头并解释如何解决，所以这两部分是问题与解决方案的关系。",
           ),
+          [
+            t("No new barter example comes in the third paragraph.", "第三段没有新的易货例子。"),
+            t("The passage favors money, not barter.", "文章倾向于货币，不是易货。"),
+            t("The history of shells comes in the last paragraph.", "贝壳的历史在最后一段。"),
+          ],
         ),
         ask(
           t("What does it mean that money is a store of value?", "钱是一种价值储存手段，这是什么意思？"),
@@ -69,12 +79,22 @@ Over the centuries, people have used many things as money, including shells, sal
             "The third paragraph says a store of value can be saved and spent later, unlike eggs, which spoil. Measuring prices is a unit of account, and being accepted in trade is a medium of exchange.",
             "第三段说价值储存手段可以存起来以后再花，不像鸡蛋会变质。衡量价格是记账单位，被交易接受是交换媒介。",
           ),
+          [
+            t("Store here means keeping value, not a shop.", "这里的 store 指保存价值，不是商店。"),
+            t("Measuring prices is the unit of account.", "衡量价格是计价单位。"),
+            t("Being accepted in trade is the medium of exchange.", "被交易接受是交换媒介。"),
+          ],
         ),
         ask(
           t("What is barter?", "什么是以物易物？"),
           t("Direct trade of goods for goods", "用货物直接交换货物"),
           [t("Saving money for later", "存钱以后用"), t("Lending money at interest", "有息借钱"), t("Paying with coins", "用硬币付款")],
           t("Direct trade, goods for goods, is called barter.", "用货物直接交换货物叫作以物易物。"),
+          [
+            t("Saving is what money allows, not barter.", "储蓄是货币才能做到的，不是易货。"),
+            t("Lending at interest is never part of barter.", "有息借贷与易货无关。"),
+            t("Coins are money, the opposite of barter.", "硬币是货币，正好与易货相反。"),
+          ],
         ),
       ],
       [],
@@ -105,6 +125,11 @@ Today, most money is not even paper. It exists as numbers in the computers of ba
             "The second paragraph says the stamp was a promise that the coin contained the right amount of metal, so traders could count coins instead of weighing metal.",
             "第二段说印记承诺硬币含有足量的金属，所以商人可以数硬币而不必称金属。",
           ),
+          [
+            t("Paper money came much later.", "纸币是很久以后才出现的。"),
+            t("Holes belonged to Chinese coins.", "带孔的是中国钱币。"),
+            t("Iron coins were made in Sichuan.", "铁钱是四川铸造的。"),
+          ],
         ),
         ask(
           t("Why did merchants in Sichuan begin using paper receipts?", "四川的商人为什么开始使用纸质收据？"),
@@ -118,6 +143,11 @@ Today, most money is not even paper. It exists as numbers in the computers of ba
             "The third paragraph says coins were heavy in large amounts, and in Sichuan the local coins were made of heavy iron, so merchants left them with shops and traded the receipts.",
             "第三段说大量硬币很重，而四川当地的钱是沉重的铁钱，所以商人把钱存放在店铺里，用收据进行交易。",
           ),
+          [
+            t("The government took over later; it did not ban coins first.", "政府是后来才接手的，并没先禁止钱币。"),
+            t("Faking iron coins is never mentioned.", "文中从没提伪造铁钱。"),
+            t("Lydia was far away and long before.", "吕底亚又远又早得多。"),
+          ],
         ),
         ask(
           t("What idea connects every section of the passage?", "什么观点贯穿了文章的每一部分？"),
@@ -131,12 +161,22 @@ Today, most money is not even paper. It exists as numbers in the computers of ba
             "Each step, the stamped coin, the trusted receipt, paper money and numbers in a bank, depends on trust, and the last sentence names it: what has not changed is that money depends on trust.",
             "每一步，盖印的硬币、可靠的收据、纸币和银行里的数字，都依赖信任，最后一句点明了这一点：不变的是钱依赖于信任。",
           ),
+          [
+            t("Paper and numbers on screens are money too.", "纸和屏幕上的数字也是货币。"),
+            t("Lydia made the first coins, not China.", "最早的硬币是吕底亚造的，不是中国。"),
+            t("Money has become lighter, not heavier.", "货币越来越轻，不是越来越重。"),
+          ],
         ),
         ask(
           t("Where were the first coins made?", "最早的硬币是在哪里制造的？"),
           t("In the kingdom of Lydia", "吕底亚王国"),
           [t("In Sichuan, China", "中国四川"), t("In Athens", "雅典"), t("In Persia", "波斯")],
           t("Around 600 BCE, in the kingdom of Lydia, rulers began to make coins.", "大约公元前600年，吕底亚王国的统治者开始铸造硬币。"),
+          [
+            t("Sichuan gave the first paper money.", "四川出现了最早的纸币。"),
+            t("Athens is never mentioned.", "文中从没提雅典。"),
+            t("The idea spread to Persia later.", "这个做法后来才传到波斯。"),
+          ],
         ),
       ],
       ["Lydia", "Lydian", "Turkey", "Greek", "Persian", "China", "Song", "Sichuan", "BCE"],
@@ -169,6 +209,11 @@ Thinking about opportunity cost does not tell you what to choose. It helps you s
             "The second paragraph defines it as the value of the best thing you give up when you make a choice, even when no money changes hands.",
             "第二段把它定义为作选择时放弃的最佳选项的价值，即使没有花钱也是如此。",
           ),
+          [
+            t("The ticket's price is money spent, not what is given up.", "票价是花掉的钱，不是放弃的东西。"),
+            t("Money left over is not what you gave up.", "剩下的钱不是放弃的东西。"),
+            t("Total savings is not a cost.", "储蓄总额不是成本。"),
+          ],
         ),
         ask(
           t("Why does opportunity cost exist?", "机会成本为什么存在？"),
@@ -182,6 +227,11 @@ Thinking about opportunity cost does not tell you what to choose. It helps you s
             "The third paragraph says opportunity cost exists because of scarcity: resources are limited, wants are almost unlimited, so every choice means giving something up.",
             "第三段说机会成本因稀缺而存在：资源有限，欲望几乎无限，所以每个选择都意味着放弃某些东西。",
           ),
+          [
+            t("The two prices are never said to be the same.", "文中从没说两样东西价格相同。"),
+            t("Governments face the choice; they do not price it.", "政府也面临选择，并不给选择定价。"),
+            t("People do not always pick the cheaper thing.", "人们并不总选便宜的。"),
+          ],
         ),
         ask(
           t("What made Maya's opportunity cost of buying the shoes smaller?", "是什么让玛雅买鞋的机会成本变小了？"),
@@ -195,12 +245,22 @@ Thinking about opportunity cost does not tell you what to choose. It helps you s
             "The last paragraph says she learned her friends were planning a free concert next month, so giving up the ticket cost her less than it first seemed.",
             "最后一段说她得知朋友们下个月打算去一场免费音乐会，所以放弃这张票的代价比最初看起来要小。",
           ),
+          [
+            t("The price of the shoes is not given.", "鞋的价格没有给出。"),
+            t("No one gave her more money.", "没人给她更多钱。"),
+            t("The season was not cancelled.", "赛季没有取消。"),
+          ],
         ),
         ask(
           t("How had Maya earned her forty dollars?", "玛雅的四十美元是怎么挣来的？"),
           t("From babysitting", "照看孩子"),
           [t("From walking dogs", "遛狗"), t("From a birthday present", "生日礼物"), t("From running races", "跑步比赛")],
           t("Maya had saved forty dollars from babysitting.", "玛雅靠照看孩子攒了四十美元。"),
+          [
+            t("Walking dogs is Theo's business.", "遛狗是西奥的生意。"),
+            t("No present is mentioned.", "文中没提礼物。"),
+            t("She runs track but did not earn from races.", "她参加田径，但没靠比赛挣钱。"),
+          ],
         ),
       ],
       ["Maya", "Maya's", "Saturday"],
@@ -231,6 +291,11 @@ But the system depends on trust. If too many savers become frightened and try to
             "The first two paragraphs say most of the money is not in the bank; it keeps a small part ready and lends most of the rest.",
             "前两段说大部分钱并不在银行里；银行只留一小部分备用，把其余大部分借出去。",
           ),
+          [
+            t("Only a small part is kept ready.", "只有一小部分留作备用。"),
+            t("Interest is a small part of the money, not most of it.", "利息只是一小部分，不是大部分。"),
+            t("Buildings are never mentioned.", "文中从没提银行大楼。"),
+          ],
         ),
         ask(
           t("How does the bank in the example make a profit?", "例子中的银行是怎样获利的？"),
@@ -244,6 +309,11 @@ But the system depends on trust. If too many savers become frightened and try to
             "The third paragraph says the bank earns six percent from borrowers and pays two percent to savers, and the difference covers its costs and gives it a profit.",
             "第三段说银行从借款人那里赚取百分之六，付给储户百分之二，差额用于支付成本并带来利润。",
           ),
+          [
+            t("It pays savers; it does not charge them.", "它付利息给储户，不向他们收费。"),
+            t("Banks do not print money.", "银行不印钞票。"),
+            t("It pays savers two percent.", "它付给储户百分之二。"),
+          ],
         ),
         ask(
           t("What is the purpose of the last paragraph?", "最后一段的作用是什么？"),
@@ -257,6 +327,11 @@ But the system depends on trust. If too many savers become frightened and try to
             "After the paragraphs on how the system works and helps, the last one turns to what can go wrong, a bank run, and ends with how deposit insurance makes panic less likely.",
             "在讲述体系如何运作和带来好处的段落之后，最后一段转向可能出现的问题，即挤兑，并以存款保险如何降低恐慌的可能性作结。",
           ),
+          [
+            t("Interest rates are explained earlier.", "利率在前面已经解释了。"),
+            t("The author says the system helps everyone.", "作者说这个体系对大家都有好处。"),
+            t("The loan examples come earlier.", "贷款的例子在前面。"),
+          ],
         ),
         ask(
           t("What is a bank run?", "什么是挤兑？"),
@@ -267,6 +342,11 @@ But the system depends on trust. If too many savers become frightened and try to
             t("A government insuring deposits", "政府为存款担保"),
           ],
           t("If too many savers try to withdraw their money at the same moment, it is called a bank run.", "太多储户同时取钱就叫挤兑。"),
+          [
+            t("Lending to a farmer is normal banking.", "借钱给农民是正常业务。"),
+            t("Paying interest is normal banking.", "支付利息是正常业务。"),
+            t("Insurance is how governments prevent runs.", "存款保险是政府防止挤兑的办法。"),
+          ],
         ),
       ],
       [],
@@ -299,6 +379,11 @@ Economists often show this on a graph, with one line for supply and another for 
             "The third paragraph says farms harvest by the ton in summer, so supply is large, and farmers lower prices to sell before the berries spoil.",
             "第三段说夏天农场大量收获，所以供应充足，农民为了在草莓变质前卖出而降价。",
           ),
+          [
+            t("People still buy them; the supply is just large.", "人们照样买，只是供应量大。"),
+            t("Summer berries come from local farms, not greenhouses.", "夏天的草莓来自本地农场，不是温室。"),
+            t("Prices settle on their own, not by government.", "价格是自然形成的，不是政府定的。"),
+          ],
         ),
         ask(
           t(
@@ -315,6 +400,11 @@ Economists often show this on a graph, with one line for supply and another for 
             "The fourth paragraph says that if supply stays the same, the price goes up, because more buyers are competing for the same berries.",
             "第四段说如果供应不变，价格就会上涨，因为更多的买家在争购同样多的草莓。",
           ),
+          [
+            t("Sellers raise prices when buyers compete.", "买家竞争时卖家会涨价。"),
+            t("More buyers change the price even with the same supply.", "即使供应不变，买家增多也会影响价格。"),
+            t("The passage says nothing about after the holiday.", "文中没说节日之后的事。"),
+          ],
         ),
         ask(
           t("How do high winter prices help balance supply and demand?", "冬季的高价是如何帮助平衡供需的？"),
@@ -328,6 +418,11 @@ Economists often show this on a graph, with one line for supply and another for 
             "The fifth paragraph says high prices lead some buyers to choose apples or oranges, lowering demand, and encourage growers to build greenhouses, raising supply.",
             "第五段说高价让一些买家选择苹果或橙子，从而降低需求，同时鼓励种植者建造温室，从而增加供应。",
           ),
+          [
+            t("No one plants in snow.", "没人在雪里种草莓。"),
+            t("Prices do not change how fast fruit spoils.", "价格不影响水果坏得多快。"),
+            t("High prices make some buyers buy less.", "高价会让一些人少买。"),
+          ],
         ),
         ask(
           t("Where do winter strawberries come from?", "冬天的草莓来自哪里？"),
@@ -337,6 +432,11 @@ Economists often show this on a graph, with one line for supply and another for 
             "In winter, strawberries must be grown in heated greenhouses or flown in from warmer countries.",
             "冬天，草莓要在加温温室里种或从温暖国家空运来。",
           ),
+          [
+            t("Local fields are bare in winter.", "冬天本地田地是光秃秃的。"),
+            t("Frozen stores are never mentioned.", "文中从没提冷冻储存。"),
+            t("City gardens are never mentioned.", "文中从没提城市菜园。"),
+          ],
         ),
       ],
       [],
@@ -371,6 +471,11 @@ His aunt was impressed. "You found a need, you counted your costs, and when thin
             "The third paragraph says the flyers, leashes and treats were his start-up costs, the money he had to spend before earning anything.",
             "第三段说传单、牵引绳和零食是他的启动成本，即在挣到钱之前必须花的钱。",
           ),
+          [
+            t("Eight dollars is his price.", "八美元是他的收费。"),
+            t("Bags were bought in the first month, after he began.", "袋子是开始后第一个月买的。"),
+            t("Vacations cut his revenue.", "度假让他的收入减少。"),
+          ],
         ),
         ask(
           t("Why was Theo's profit less than his revenue?", "西奥的利润为什么比收入少？"),
@@ -384,6 +489,11 @@ His aunt was impressed. "You found a need, you counted your costs, and when thin
             "The fifth paragraph says revenue is not the same as profit: profit is what is left after you pay your costs, including treats, bags and start-up costs.",
             "第五段说收入不等于利润：利润是支付成本之后剩下的钱，包括零食、袋子和启动成本。",
           ),
+          [
+            t("All customers paid, as far as we know.", "据文中所知，客户都付了钱。"),
+            t("He matched what other walkers charged.", "他参考了其他遛狗人的价格。"),
+            t("His aunt took none of it.", "姑姑一分也没拿。"),
+          ],
         ),
         ask(
           t("How did Theo solve the problem of depending on too few customers?", "西奥是怎样解决顾客太少的问题的？"),
@@ -397,12 +507,22 @@ His aunt was impressed. "You found a need, you counted your costs, and when thin
             "The sixth paragraph says he made new flyers offering to feed pets while families were away, and by summer he had eight customers.",
             "第六段说他制作了新传单，提供主人外出时喂宠物的服务，到夏天他有了八位顾客。",
           ),
+          [
+            t("He did not change his price.", "他没有改价格。"),
+            t("He found work during vacations, not stopped.", "他在假期里找到了活，并没停工。"),
+            t("She was impressed; she did not buy it.", "她很欣赏，并没有买下生意。"),
+          ],
         ),
         ask(
           t("How much did Theo charge for a thirty-minute walk?", "西奥遛狗三十分钟收多少钱？"),
           t("Eight dollars", "八美元"),
           [t("Ten dollars", "十美元"), t("Thirty dollars", "三十美元"), t("Forty dollars", "四十美元")],
           t("He decided on eight dollars for a thirty-minute walk.", "他定价每次三十分钟八美元。"),
+          [
+            t("Ten dollars was for the flyers.", "十美元是印传单的钱。"),
+            t("Thirty dollars was for leashes and treats.", "三十美元是买牵绳和零食的钱。"),
+            t("Forty was the number of walks.", "四十是遛狗的次数。"),
+          ],
         ),
       ],
       ["Theo", "Theo's"],
@@ -435,6 +555,11 @@ At the end of 1923, Germany introduced a new currency and strictly limited how m
             "The first paragraph defines inflation as the slow, steady rise in prices over time, in which each dollar buys a little less than before.",
             "第一段把通货膨胀定义为物价随时间缓慢而持续地上涨，每一美元能买的东西比以前少一点。",
           ),
+          [
+            t("Inflation is a rise, not a fall.", "通货膨胀是上涨，不是下跌。"),
+            t("Printing money can cause it but is not its meaning.", "印钞可能导致它，但不是它的定义。"),
+            t("War payments were Germany's debts.", "战争赔款是德国的债务。"),
+          ],
         ),
         ask(
           t("What caused hyperinflation in Germany?", "德国恶性通货膨胀的原因是什么？"),
@@ -448,6 +573,11 @@ At the end of 1923, Germany introduced a new currency and strictly limited how m
             "The third paragraph says the government printed more and more money to pay its huge debts, and with so much money chasing the same goods, prices rose.",
             "第三段说政府为偿还巨额债务印了越来越多的钱，这么多钱追逐同样多的商品，物价就上涨了。",
           ),
+          [
+            t("Being paid twice a day was a result.", "一天发两次工资是结果。"),
+            t("No bad harvest is mentioned.", "文中没提歉收。"),
+            t("The new currency ended it.", "新货币结束了恶性通胀。"),
+          ],
         ),
         ask(
           t("Why are the details about bread, wheelbarrows and stoves included?", "为什么要写面包、手推车和炉子这些细节？"),
@@ -461,6 +591,11 @@ At the end of 1923, Germany introduced a new currency and strictly limited how m
             "These details in the fourth paragraph make the numbers concrete: bread costing billions, money carried in wheelbarrows and banknotes burned as fuel show how useless the money had become.",
             "第四段的这些细节让数字变得具体：面包要几千亿马克，钱用手推车装，钞票被当柴烧，都说明了钱变得多么一文不值。",
           ),
+          [
+            t("Central banks appear in another paragraph.", "中央银行出现在另一段。"),
+            t("Firewood shows how worthless money was, not its own price.", "柴火说明钱多么不值钱，不是说柴火贵。"),
+            t("These details show hyperinflation, not normal inflation.", "这些细节说明的是恶性通胀，不是正常通胀。"),
+          ],
         ),
       ],
       ["Germany", "First", "World", "War", "November"],
@@ -493,6 +628,11 @@ The lesson is simple, though not always easy: start saving early, and pay off de
             "The third paragraph says simple interest is paid only on the money you put in, while compound interest is paid on that money and on the interest already earned.",
             "第三段说单利只对你存入的钱计息，而复利既对本金计息，也对已获得的利息计息。",
           ),
+          [
+            t("Compound interest grows faster.", "复利增长得更快。"),
+            t("It is paid again and again.", "它一次又一次地计息。"),
+            t("Simple interest can be paid on savings too.", "单利也可以用于储蓄。"),
+          ],
         ),
         ask(
           t("Why does Ana end up with more money than Ben, even though she saved less?", "为什么安娜存的钱少，最后却比本多？"),
@@ -506,6 +646,11 @@ The lesson is simple, though not always easy: start saving early, and pay off de
             "The passage says both earned seven percent. The fourth paragraph explains that Ana's money had ten extra years to grow, and those early years made all the difference.",
             "文章说两人的利率都是百分之七。第四段解释说安娜的钱多了十年增长时间，正是这些早年的时间造成了全部差别。",
           ),
+          [
+            t("Both earn seven percent.", "两人都得到百分之七的利率。"),
+            t("Ben saved for thirty years.", "本存了三十年。"),
+            t("Ben's saving is the example, not borrowing.", "本的例子是储蓄，不是借钱。"),
+          ],
         ),
         ask(
           t("How does compound interest work in reverse?", "复利如何反向起作用？"),
@@ -519,6 +664,11 @@ The lesson is simple, though not always easy: start saving early, and pay off de
             "The fifth paragraph says unpaid credit card interest is added to the debt, and then interest is charged on that interest, so a small debt can grow fast.",
             "第五段说未还的信用卡利息会加入债务，然后又对这些利息计息，所以一笔小债务可能增长得很快。",
           ),
+          [
+            t("Savings that stop growing do not shrink.", "停止增加的储蓄并不会缩水。"),
+            t("Age does not change the interest rate.", "年龄不改变利率。"),
+            t("Interest always comes after money is saved.", "利息总是在存钱之后才有。"),
+          ],
         ),
       ],
       ["Ana", "Ana's", "Ben"],

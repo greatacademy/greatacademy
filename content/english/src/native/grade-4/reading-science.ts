@@ -45,6 +45,17 @@ export const biomesUnit: ReadingUnitDef = {
             "The second paragraph defines a biome as a large area with its own climate and its own kinds of plants and animals.",
             "第二段把生物群落定义为一个有自己的气候以及特有动植物的大区域。",
           ],
+          [
+            [
+              "A city is wrong. A biome is set by climate, plants and animals, not buildings.",
+              "城市不对。生物群落由气候和动植物决定，不是建筑。",
+            ],
+            ["A map is wrong. A biome is a real area of land.", "地图不对。生物群落是一片真实的土地。"],
+            [
+              "A desert plant is wrong. The cactus is only one example of life suited to a biome.",
+              "沙漠植物不对。仙人掌只是适应某种群落的生物的一个例子。",
+            ],
+          ],
         ),
         q(
           ["According to the passage, which two things matter most in a biome?", "根据文章，生物群落中最重要的两点是什么？"],
@@ -57,6 +68,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The second paragraph says the two things that matter most are how warm a place is and how much rain it gets.",
             "第二段说，最重要的两点是一个地方有多温暖、雨水有多少。",
+          ],
+          [
+            ["Size and people are not named. The passage names warmth and rain.", "大小和人口文中没提。文中说的是温度和雨水。"],
+            ["Tree height and age are not what matters most.", "树的高度和年龄不是最重要的。"],
+            ["Distance from sea and mountains is not in the passage.", "离海和山的距离文中没有。"],
           ],
         ),
         q(
@@ -71,6 +87,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The last paragraph explains that a desert slowly turns into a grassland, and a grassland into a forest.",
             "最后一段解释说，沙漠慢慢变成草原，草原又慢慢变成森林。",
           ],
+          [
+            ["Unfinished maps are not the reason. The land itself changes slowly.", "地图还没画完不是原因。是土地本身在慢慢变化。"],
+            ["The same size is not in the passage.", "大小一样文中没有。"],
+            ["Animals moving lines is not in the passage.", "动物移动分界线文中没有。"],
+          ],
         ),
         q(
           ["What kind of biome has four seasons?", "哪种生物群落有四季？"],
@@ -81,6 +102,11 @@ export const biomesUnit: ReadingUnitDef = {
             ["The tundra", "苔原"],
           ],
           ["The text says a temperate forest has four seasons.", "短文说温带森林有四季。"],
+          [
+            ["A desert is dry. Seasons are not what describes it.", "沙漠很干燥，描述它的不是四季。"],
+            ["A rainforest is warm and wet.", "雨林温暖潮湿。"],
+            ["The tundra is cold and dry.", "苔原寒冷干燥。"],
+          ],
         ),
       ],
     ),
@@ -108,6 +134,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The third paragraph says the fennec fox sleeps in a cool burrow during the day and hunts after dark.",
             "第三段说，耳廓狐白天在凉爽的洞里睡觉，天黑后出来捕猎。",
           ],
+          [
+            ["Swimming at an oasis is not in the passage.", "在绿洲里游泳文中没有。"],
+            ["Climbing date palms is not in the passage.", "爬枣椰树文中没有。"],
+            ["Herders travel with camels. The fox does not.", "牧民带着骆驼迁徙，狐狸不是。"],
+          ],
         ),
         q(
           ["What are the two jobs of the fennec fox's ears?", "耳廓狐的耳朵有哪两个作用？"],
@@ -120,6 +151,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The third paragraph says the ears help the fox hear insects under the sand and let extra heat leave its body.",
             "第三段说，耳朵帮狐狸听到沙下的昆虫，也让多余的热量散出身体。",
+          ],
+          [
+            ["Keeping out sand and finding water are not the jobs named.", "挡沙子和找水不是文中说的作用。"],
+            ["Scaring enemies and digging are not in the passage.", "吓唬敌人和挖洞文中没有。"],
+            ["Collecting fog is what beetles do with their backs.", "收集雾水是甲虫用背做的事。"],
           ],
         ),
         q(
@@ -134,6 +170,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The last paragraph defines an oasis as a place where water rises from under the ground, so plants can grow.",
             "最后一段把绿洲定义为有水从地下涌出的地方，所以植物能生长。",
           ],
+          [
+            ["Rain almost every day is wrong. Some years get no rain.", "几乎每天下雨不对。有的年份一点雨都没有。"],
+            ["Never-hot sand is wrong. The sand can burn feet.", "沙子从不热不对。沙子能烫脚。"],
+            ["Carrying water on camels is not why gardens grow.", "用骆驼运水不是花园能生长的原因。"],
+          ],
         ),
         q(
           ["Why can the Sahara become cold at night?", "撒哈拉夜里为什么会变冷？"],
@@ -144,6 +185,11 @@ export const biomesUnit: ReadingUnitDef = {
             ["The wind comes from the sea", "风从海上吹来"],
           ],
           ["At night, the heat escapes into the clear sky, and the air can become cold.", "夜里热量散到晴朗的天空中，空气就会变冷。"],
+          [
+            ["Rain every night is wrong. The Sahara is very dry.", "每晚下雨不对。撒哈拉非常干燥。"],
+            ["Snow on the sand is not in the passage.", "雪盖住沙子文中没有。"],
+            ["Wind from the sea is not the reason given.", "海风不是文中给的原因。"],
+          ],
         ),
       ],
       { names: ["Sahara", "Africa", "United States"] },
@@ -172,6 +218,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The second paragraph says the pleats open out so that the stem can swell with the water the roots soak up.",
             "第二段说，褶皱张开，茎就能因根吸进的水而膨胀。",
           ],
+          [
+            ["New leaves are wrong. A cactus has spines, not leaves.", "长新叶子不对。仙人掌只有刺，没有叶子。"],
+            ["Losing its spines is not in the passage.", "掉刺文中没有。"],
+            ["Folding tighter is backwards. The pleats open out.", "褶皱收得更紧是反的。褶皱是展开的。"],
+          ],
         ),
         q(
           ["Why does a cactus have spines instead of wide leaves?", "仙人掌为什么长刺而不长宽叶子？"],
@@ -184,6 +235,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The third paragraph says wide leaves would lose water, while spines lose very little and keep thirsty animals from biting.",
             "第三段说，宽叶子会失水，而刺几乎不失水，还能防止口渴的动物来咬。",
+          ],
+          [
+            ["Catching insects is not in the passage.", "捉虫子吃文中没有。"],
+            ["Growing faster is not in the passage.", "长得更快文中没有。"],
+            ["Soaking water from the air is wrong. The roots soak it up.", "从空气里吸水不对。是根吸水。"],
           ],
         ),
         q(
@@ -198,6 +254,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The last paragraph names other tricks: very long roots, or waiting as seeds until rain falls. The other details describe the cactus.",
             "最后一段讲了其他办法：很长的根，或以种子的形式等到下雨。其他细节说的都是仙人掌。",
           ],
+          [
+            ["A waxy skin belongs to the cactus already described.", "蜡质的表皮是前面讲过的仙人掌的特点。"],
+            ["Shallow roots are the saguaro's way.", "浅根是巨人柱仙人掌的方法。"],
+            ["Swelling after a storm is also the saguaro's way.", "暴雨后膨胀也是巨人柱仙人掌的方法。"],
+          ],
         ),
         q(
           ["Where do the saguaro's roots spread?", "巨人柱仙人掌的根向哪里伸展？"],
@@ -208,6 +269,11 @@ export const biomesUnit: ReadingUnitDef = {
             ["Around other plants", "缠在别的植物上"],
           ],
           ["Its shallow roots spread wide just under the surface.", "它的浅根在地表下向四周铺开。"],
+          [
+            ["Deep roots belong to some other plants.", "深根是另一些植物的特点。"],
+            ["Up into the air is not in the passage.", "伸到空中文中没有。"],
+            ["Around other plants is not in the passage.", "缠在别的植物上文中没有。"],
+          ],
         ),
       ],
       { names: ["saguaro"] },
@@ -238,6 +304,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The third paragraph says most animals live in the canopy because it is full of leaves, fruit and flowers.",
             "第三段说，大多数动物生活在树冠层，因为那里有大量的叶子、果实和花。",
           ],
+          [
+            ["Darkest and stillest describes the forest floor.", "最暗最静说的是森林地面。"],
+            ["The only layer with trees is wrong. Every layer has plants.", "唯一有树的一层不对。每层都有植物。"],
+            ["Safe from rain and wind is not the reason given.", "不受风雨影响不是文中给的原因。"],
+          ],
         ),
         q(
           ["Why do understory plants have large, dark leaves?", "为什么林下层的植物叶子又大又深？"],
@@ -250,6 +321,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The fifth paragraph says little sunlight reaches the understory, so its plants have large, dark leaves to catch every bit of light.",
             "第五段说，林下层照到的阳光很少，所以那里的植物长着又大又深的叶子，好接住每一点光。",
+          ],
+          [
+            ["Hiding from jaguars is not the reason given.", "躲避美洲豹不是文中给的原因。"],
+            ["Keeping wind away is wrong. Strong wind is at the top.", "挡风不对。大风在最高层。"],
+            ["Storing water is not in the passage.", "储存水分文中没有。"],
           ],
         ),
         q(
@@ -264,6 +340,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The passage begins with the emergent layer at the very top and ends with the forest floor at the bottom.",
             "文章从最顶部的露生层开始，到最底部的地面层结束。",
           ],
+          [
+            ["Floor up to top is backwards.", "从地面到顶层是反的。"],
+            ["Wettest to driest is not how it is ordered.", "从最湿到最干不是文章的顺序。"],
+            ["Smallest to largest is not how it is ordered.", "从最小到最大不是文章的顺序。"],
+          ],
         ),
         q(
           ["What happens to leaves that fall on the forest floor?", "落到森林地面的树叶会怎样？"],
@@ -276,6 +357,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "Leaves that fall there rot quickly in the warm, wet air, and their goodness goes back into the soil.",
             "落在那里的树叶在温暖潮湿的空气中很快腐烂，养分回到土壤里。",
+          ],
+          [
+            ["Staying for years is wrong. They rot quickly.", "留好几年不对。它们很快就腐烂了。"],
+            ["Blown up to the canopy is not in the passage.", "被吹到树冠层文中没有。"],
+            ["Drying in the sun is wrong. The floor is dark and damp.", "被太阳晒干不对。地面又暗又潮。"],
           ],
         ),
       ],
@@ -307,6 +393,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The second paragraph says the tail can wrap around a branch and hold the monkey's whole weight while its hands pick fruit.",
             "第二段说，尾巴能缠住树枝撑起猴子的全身重量，这时它的手可以摘果子。",
           ],
+          [
+            ["Picking fruit is done by its hands while it hangs.", "摘果子是它挂着时用手做的。"],
+            ["Spreading like a parachute is the flying frog.", "像降落伞一样张开是飞蛙。"],
+            ["Green plants grow in the sloth's fur.", "绿色植物长在树懒的毛里。"],
+          ],
         ),
         q(
           ["How is the sloth different from the spider monkey?", "树懒和蜘蛛猴有什么不同？"],
@@ -319,6 +410,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The third paragraph says that instead of racing through the trees, the sloth moves so slowly that it hardly uses any energy.",
             "第三段说，树懒不在树间飞奔，而是动得极慢，几乎不消耗能量。",
+          ],
+          [
+            ["Racing quickly is backwards for the sloth.", "飞快地跑对树懒来说正好相反。"],
+            ["Gliding on webbed feet is the flying frog.", "用蹼足滑翔是飞蛙。"],
+            ["Fruit at branch tips is what toucans reach.", "枝头的果实是巨嘴鸟够的。"],
           ],
         ),
         q(
@@ -333,6 +429,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The third paragraph says tiny green plants grow in the sloth's fur, which helps it blend in with the leaves.",
             "第三段说，树懒的毛里长着绿色的小植物，这帮它与树叶融为一体。",
           ],
+          [
+            ["A bright beak belongs to the toucan.", "鲜艳的嘴属于巨嘴鸟。"],
+            ["A tail around a branch belongs to the spider monkey.", "尾巴缠树枝是蜘蛛猴。"],
+            ["Webbed feet belong to the flying frog.", "蹼足属于飞蛙。"],
+          ],
         ),
         q(
           ["How does the flying frog get from one tree to the next?", "飞蛙怎样从一棵树到另一棵树？"],
@@ -343,6 +444,11 @@ export const biomesUnit: ReadingUnitDef = {
             ["It flies with wings", "用翅膀飞过去"],
           ],
           ["When it leaps, it spreads its toes, and the webs act like small parachutes.", "它跳起时张开脚趾，蹼就像小降落伞一样。"],
+          [
+            ["Climbing down and walking is wrong. It leaps and glides.", "爬下来走路不对。它是跳起来滑翔。"],
+            ["Swinging by its tail is the spider monkey.", "用尾巴荡是蜘蛛猴。"],
+            ["Wings are wrong. Its webs act like parachutes.", "翅膀不对。它的蹼像降落伞。"],
+          ],
         ),
       ],
     ),
@@ -370,6 +476,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The second paragraph explains that the melted water cannot sink into the permafrost, so it collects in shallow ponds.",
             "第二段解释说，融化的水渗不进永久冻土，所以积成浅浅的池塘。",
           ],
+          [
+            ["Daily rain is not the reason given.", "每天下雨不是文中给的原因。"],
+            ["Melting icebergs are not in the passage.", "融化的冰山文中没有。"],
+            ["Caribou digging ponds is not in the passage.", "驯鹿挖池塘文中没有。"],
+          ],
         ),
         q(
           ["What causes tundra plants to stay small?", "是什么使苔原植物长得矮小？"],
@@ -382,6 +493,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The third paragraph begins: because roots cannot grow deep, tundra plants stay small.",
             "第三段开头说：因为根扎不深，苔原植物长得矮小。",
+          ],
+          [
+            ["Caribou eating the tops is not the reason given.", "驯鹿吃掉顶部不是文中给的原因。"],
+            ["Too much sunlight is not the reason. Frozen ground is.", "阳光太多不是原因。是冻土。"],
+            ["Mosquitoes damaging plants is not in the passage.", "蚊子伤害植物文中没有。"],
           ],
         ),
         q(
@@ -396,6 +512,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The last paragraph says a few animals, such as the arctic fox and the musk ox, stay all year, while caribou and birds come and go.",
             "最后一段说，有几种动物全年留下，比如北极狐和麝牛，而驯鹿和鸟会来来去去。",
           ],
+          [
+            ["Caribou walk south before winter.", "驯鹿在冬天前往南走。"],
+            ["Nesting birds fly in only for summer.", "筑巢的鸟只在夏天飞来。"],
+            ["The nesting birds leave, so this pair is only half right.", "筑巢的鸟会离开，所以这一组只对了一半。"],
+          ],
         ),
         q(
           ["How long does summer last on the tundra?", "苔原上的夏天有多长？"],
@@ -406,6 +527,11 @@ export const biomesUnit: ReadingUnitDef = {
             ["About two weeks", "大约两周"],
           ],
           ["The text says summer lasts only about two months.", "短文说夏天只有大约两个月。"],
+          [
+            ["Six months is far too long.", "六个月太长了。"],
+            ["All year is wrong. Summer is short.", "全年不对。夏天很短。"],
+            ["Two weeks is too short.", "两周太短了。"],
+          ],
         ),
       ],
     ),
@@ -433,6 +559,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The second paragraph says there is a layer of blubber under the fur and that the skin underneath is black.",
             "第二段说，毛下面有一层脂肪，下面的皮肤是黑色的。",
           ],
+          [
+            ["White skin and feathers are wrong. Its skin is black.", "白皮肤和羽毛不对。它的皮肤是黑色的。"],
+            ["No fat is wrong. It has blubber up to ten centimeters deep.", "没有脂肪不对。它有厚达十厘米的脂肪层。"],
+            ["A second coat of hair is wrong. Fat lies under the fur.", "第二层毛不对。毛下面是脂肪。"],
+          ],
         ),
         q(
           ["How does a polar bear catch a seal?", "北极熊怎样捕捉海豹？"],
@@ -446,6 +577,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The third paragraph says seals must come up to breathe at holes, and a bear waits beside a hole until a seal appears.",
             "第三段说，海豹必须到冰洞处换气，熊就守在洞旁直到海豹出现。",
           ],
+          [
+            ["Chasing on land in summer is wrong. Little food is on land.", "夏天在陆地上追不对。陆地上几乎没有吃的。"],
+            ["Diving under floes is not how it hunts.", "潜到浮冰下面不是它的捕猎方法。"],
+            ["Digging a burrow is not in the passage.", "挖洞文中没有。"],
+          ],
         ),
         q(
           ["Why do scientists worry about the polar bears?", "科学家为什么担心北极熊？"],
@@ -458,6 +594,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The last paragraph says the ice melts earlier and freezes later, so the bears have less and less time to hunt.",
             "最后一段说，冰融化得更早、结冰得更晚，所以熊捕猎的时间越来越少。",
+          ],
+          [
+            ["Fur turning black is wrong. The skin is black, the fur looks white.", "毛变黑不对。是皮肤黑，毛看起来是白的。"],
+            ["Too many seals is not the worry.", "海豹太多不是担心的问题。"],
+            ["Paws too wide is wrong. Wide paws help on thin ice.", "爪子太宽不对。宽爪子有助于在薄冰上行走。"],
           ],
         ),
       ],
@@ -487,6 +628,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The second paragraph says that about eight thousand years ago, the Sahara was a green land of grass, lakes and rivers.",
             "第二段说，大约八千年前，撒哈拉是一片有草地、湖泊和河流的绿地。",
           ],
+          [
+            ["Ice and snow is wrong. It had grass and lakes.", "冰雪不对。那里有草和湖泊。"],
+            ["Exactly as dry is backwards. It was green.", "和现在一样干是反的。那里曾经是绿色的。"],
+            ["A thick rainforest is not what the passage describes.", "茂密的雨林不是文中的描述。"],
+          ],
         ),
         q(
           ["What happens when grasslands are grazed too heavily?", "草原被过度放牧会怎样？"],
@@ -500,6 +646,11 @@ export const biomesUnit: ReadingUnitDef = {
             "The third paragraph says the plants that hold the soil disappear, and the land can turn to dust; this is one way deserts spread.",
             "第三段说，固定土壤的植物消失了，土地可能变成尘土；这是沙漠扩张的一种方式。",
           ],
+          [
+            ["Taller grass is backwards. The plants disappear.", "草长得更高是反的。植物消失了。"],
+            ["Turning into a rainforest is not in the passage.", "变成雨林文中没有。"],
+            ["More rain is not in the passage.", "下更多雨文中没有。"],
+          ],
         ),
         q(
           ["How do the trees planted by farmers help the land?", "农民种的树怎样帮助这片土地？"],
@@ -512,6 +663,11 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The last paragraph says the roots hold the soil, the shade keeps it damp, and crops grow again.",
             "最后一段说，树根固定土壤，树荫保持土壤湿润，庄稼又能生长了。",
+          ],
+          [
+            ["Bringing rains back is not in the passage.", "带回雨水文中没有。"],
+            ["Cutting them down is the opposite of what helps.", "砍掉它们正好和帮助相反。"],
+            ["Keeping animals away is not in the passage.", "把动物挡在外面文中没有。"],
           ],
         ),
       ],
@@ -549,6 +705,11 @@ export const energyUnit: ReadingUnitDef = {
             "The first sentence defines energy as the power to make things move, grow, heat up or change.",
             "第一句把能量定义为使物体运动、生长、变热或改变的能力。",
           ],
+          [
+            ["Holding it in your hand is wrong. You cannot hold energy.", "握在手里不对。能量是握不住的。"],
+            ["Electricity is only one form of energy.", "电只是能量的一种形式。"],
+            ["Food stores energy but is not the definition.", "食物储存能量，但不是能量的定义。"],
+          ],
         ),
         q(
           ["What happens to energy when you rub your hands together?", "你搓手时能量发生了什么？"],
@@ -561,6 +722,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The third paragraph says that when you rub your hands together, the energy of motion turns into heat.",
             "第三段说，搓手时，运动的能量转化为热。",
+          ],
+          [
+            ["Heat into light is not in the passage.", "热变成光文中没有。"],
+            ["Used up completely is wrong. Energy is never used up.", "完全用光不对。能量永远不会用完。"],
+            ["Sound into electricity is not this example.", "声音变成电不是这个例子。"],
           ],
         ),
         q(
@@ -575,6 +741,11 @@ export const energyUnit: ReadingUnitDef = {
             "The passage calls the fact that energy only changes from one form to another one of the most important, and repeats it at the end.",
             "文章称能量只是从一种形式变成另一种形式是最重要的事实之一，并在结尾再次强调。",
           ],
+          [
+            ["A boiling kettle is only one example.", "烧开的水壶只是一个例子。"],
+            ["Batteries storing energy is a detail, not the main idea.", "电池储存能量是细节，不是中心思想。"],
+            ["Light from the sun is a detail, not the main idea.", "太阳的光是细节，不是中心思想。"],
+          ],
         ),
         q(
           ["Where is energy stored, according to the passage?", "根据短文，能量储存在哪里？"],
@@ -587,6 +758,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The text says energy is stored in food, in fuel such as wood and gas, and in batteries.",
             "短文说能量储存在食物、木柴和燃气等燃料以及电池里。",
+          ],
+          [
+            ["Only in the sun is wrong. The sun sends light.", "只在太阳里不对。太阳发出的是光。"],
+            ["Only in wires is wrong. Wires carry electricity.", "只在电线里不对。电线是输电的。"],
+            ["Shadows are not in this passage.", "影子不在这篇文章里。"],
           ],
         ),
       ],
@@ -615,6 +791,11 @@ export const energyUnit: ReadingUnitDef = {
             "The second paragraph says the higher the cars go, the more energy they store, and at the top they hold a great deal of it.",
             "第二段说，车厢越高，储存的能量越多；到了顶端，它们储存了大量能量。",
           ],
+          [
+            ["The bottom is where stored energy has turned into motion.", "底部是储存的能量已经变成运动的地方。"],
+            ["Moving fastest means most motion energy, not stored.", "跑得最快说明运动能量最多，不是储存的能量。"],
+            ["At the brakes, the energy becomes heat.", "在刹车时，能量变成了热。"],
+          ],
         ),
         q(
           ["What happens to the energy as the cars roll downhill?", "车厢下坡时能量怎样变化？"],
@@ -627,6 +808,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The third paragraph says that as the cars roll downhill, the stored energy turns into the energy of motion.",
             "第三段说，车厢下坡时，储存的能量转化为运动的能量。",
+          ],
+          [
+            ["Motion into stored is what happens going up the next hill.", "运动变成储存是爬下一个坡时发生的。"],
+            ["All into sound is wrong. Only some becomes heat and sound.", "全部变成声音不对。只有一部分变成热和声音。"],
+            ["The chain only pulls the cars up the first hill.", "链条只把车拉上第一个坡。"],
           ],
         ),
         q(
@@ -641,6 +827,11 @@ export const energyUnit: ReadingUnitDef = {
             "The last paragraph says some energy changes into heat and sound as the wheels rub and rumble, so it no longer pushes the cars.",
             "最后一段说，车轮摩擦、轰隆作响时，一部分能量变成热和声音，不再推动车厢。",
           ],
+          [
+            ["Lighter cars is not in the passage.", "车变轻文中没有。"],
+            ["The chain pulling down is wrong. It pulls up the first hill.", "链条往下拉不对。它是往上拉第一个坡。"],
+            ["Lost and disappears is wrong. The passage says energy is not lost.", "丢失消失不对。文中说能量没有丢失。"],
+          ],
         ),
         q(
           ["What pulls the cars up the first big hill?", "什么把车厢拉上第一座大坡？"],
@@ -651,6 +842,11 @@ export const energyUnit: ReadingUnitDef = {
             ["Gravity", "重力"],
           ],
           ["The text says a chain pulls the cars slowly up the first big hill.", "短文说一条链条把车厢慢慢拉上第一座大坡。"],
+          [
+            ["The brakes stop the cars at the end.", "刹车是在最后让车停下。"],
+            ["The wind is not in the passage.", "风文中没有。"],
+            ["Gravity pulls the cars down, not up.", "重力把车往下拉，不是往上。"],
+          ],
         ),
       ],
     ),
@@ -680,6 +876,11 @@ export const energyUnit: ReadingUnitDef = {
             "The first paragraph says heat always flows from something warmer to something cooler.",
             "第一段说，热总是从较热的物体流向较冷的物体。",
           ],
+          [
+            ["Cooler to warmer is backwards.", "从冷到热是反的。"],
+            ["Upward is about warm air rising, not every flow of heat.", "向上说的是暖空气上升，不是所有热的流动。"],
+            ["Only through metal is wrong. Heat travels three ways.", "只通过金属不对。热有三种传播方式。"],
+          ],
         ),
         q(
           ["How does a heater warm a whole room?", "暖气怎样让整个房间变暖？"],
@@ -692,6 +893,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The third paragraph explains convection: warm air rises, cool air sinks, warms and rises in turn, which is how a heater warms a room.",
             "第三段解释了对流：热空气上升，冷空气下沉、变暖、再上升，暖气就是这样让房间变暖的。",
+          ],
+          [
+            ["A metal spoon is conduction, not how a heater warms a room.", "金属勺是传导，不是暖气给房间加热的方式。"],
+            ["Through empty space is radiation, like the sun.", "穿过真空是辐射，像太阳那样。"],
+            ["Trapped air in a coat is about insulators.", "外套里的空气说的是隔热材料。"],
           ],
         ),
         q(
@@ -706,6 +912,11 @@ export const energyUnit: ReadingUnitDef = {
             "The last paragraph says a coat is an insulator: it slows the flow of heat out of your body.",
             "最后一段说，外套是隔热体：它减慢热量从身体流出。",
           ],
+          [
+            ["Making heat is wrong. A coat only slows heat leaving.", "产生热量不对。外套只是减慢热量流失。"],
+            ["Pulling heat from cold air is backwards.", "从冷空气里吸热是反的。"],
+            ["Reflecting sunlight is not in the passage.", "反射阳光文中没有。"],
+          ],
         ),
         q(
           ["What are insulators?", "什么是隔热材料？"],
@@ -718,6 +929,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "Some materials, called insulators, slow heat down, such as wool, feathers and trapped air.",
             "有些材料叫隔热材料，能减缓热量流动，比如羊毛、羽毛和被困住的空气。",
+          ],
+          [
+            ["Letting heat pass easily is the opposite.", "让热量容易通过正好相反。"],
+            ["Machines that make heat are heaters, not insulators.", "产生热的机器是暖气，不是隔热材料。"],
+            ["Ways heat travels are conduction, convection and radiation.", "热传播的方式是传导、对流和辐射。"],
           ],
         ),
       ],
@@ -747,6 +963,11 @@ export const energyUnit: ReadingUnitDef = {
             "The second paragraph says light travels in straight lines and cannot bend around corners, so an object in its path makes a shadow.",
             "第二段说，光沿直线传播，不能绕过拐角，所以挡路的物体会形成影子。",
           ],
+          [
+            ["Light being slower is wrong. Light is the fastest thing we know.", "光更慢不对。光是我们知道的最快的东西。"],
+            ["Eight minutes is how long sunlight takes, not why shadows form.", "八分钟是阳光要走的时间，不是形成影子的原因。"],
+            ["Dark light is not in the passage.", "黑色的光文中没有。"],
+          ],
         ),
         q(
           ["What is a translucent material?", "什么是半透明材料？"],
@@ -759,6 +980,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The third paragraph says translucent materials let some light through, but things behind them look blurry.",
             "第三段说，半透明材料让部分光通过，但后面的东西看起来模糊。",
+          ],
+          [
+            ["All light passing through is transparent.", "光全部透过是透明。"],
+            ["Blocking completely is opaque.", "完全挡住是不透明。"],
+            ["Sending light back is what a mirror does.", "把光反射回来是镜子做的事。"],
           ],
         ),
         q(
@@ -773,6 +999,11 @@ export const energyUnit: ReadingUnitDef = {
             "The last paragraph says that when light bounces off a red apple and enters your eye, you see the apple and its color.",
             "最后一段说，光从红苹果上反射进入你的眼睛，你就看到了苹果和它的颜色。",
           ],
+          [
+            ["Making its own light is wrong. Light bounces off it.", "自己发光不对。光是从它上面反射的。"],
+            ["Passing through the apple is wrong. It is opaque.", "光穿过苹果不对。苹果不透光。"],
+            ["Blocking all light would not let us see its color.", "挡住所有光就看不见它的颜色了。"],
+          ],
         ),
         q(
           ["How long does sunlight take to reach the Earth?", "阳光到达地球需要多久？"],
@@ -783,6 +1014,11 @@ export const energyUnit: ReadingUnitDef = {
             ["About eight hours", "大约八小时"],
           ],
           ["Sunlight takes only about eight minutes to cross from the sun to the Earth.", "阳光从太阳到地球只需大约八分钟。"],
+          [
+            ["Eight seconds is far too short.", "八秒太短了。"],
+            ["One day is far too long.", "一天太长了。"],
+            ["Eight hours mixes up the unit.", "八小时把单位弄错了。"],
+          ],
         ),
       ],
     ),
@@ -807,6 +1043,11 @@ export const energyUnit: ReadingUnitDef = {
             ["With an empty space", "从一片真空开始"],
           ],
           ["The first sentence says every sound begins with something that vibrates.", "第一句说，每个声音都从某个东西振动开始。"],
+          [
+            ["A beam of light is not how sound begins.", "一束光不是声音的开始。"],
+            ["A push from your brain is wrong. The brain only hears.", "大脑的推动不对。大脑只是听。"],
+            ["Empty space is where sound cannot travel.", "真空是声音无法传播的地方。"],
+          ],
         ),
         q(
           ["Why is space completely silent?", "为什么太空完全没有声音？"],
@@ -819,6 +1060,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The third paragraph says sound cannot travel through empty space, where there is nothing to carry the push.",
             "第三段说，声音无法穿过真空，因为那里没有东西传递这种推动。",
+          ],
+          [
+            ["Too cold is not the reason given.", "太冷不是文中给的原因。"],
+            ["Too fast is wrong. Sound cannot travel there at all.", "太快不对。声音根本无法在那里传播。"],
+            ["Too much light is not in the passage.", "光太多文中没有。"],
           ],
         ),
         q(
@@ -833,6 +1079,11 @@ export const energyUnit: ReadingUnitDef = {
             "The last paragraph says fast vibrations make high sounds and slow vibrations make low sounds; strength makes a sound loud or soft.",
             "最后一段说，快的振动产生高音，慢的振动产生低音；振动的强弱决定声音的大小。",
           ],
+          [
+            ["Slow vibrations make low sounds.", "慢的振动产生低音。"],
+            ["Strong vibrations make loud sounds, not high ones.", "强的振动产生响亮的声音，不是高音。"],
+            ["Water only is not in the passage.", "只在水里文中没有。"],
+          ],
         ),
         q(
           ["Where does sound travel fastest?", "声音在哪里传播得最快？"],
@@ -843,6 +1094,11 @@ export const energyUnit: ReadingUnitDef = {
             ["In empty space", "在真空中"],
           ],
           ["Sound travels faster in water than in air, and faster still in solids.", "声音在水中比在空气中快，在固体中更快。"],
+          [
+            ["Air is the slowest of the three.", "空气是三者中最慢的。"],
+            ["Water is faster than air but slower than solids.", "水比空气快，但比固体慢。"],
+            ["Empty space carries no sound at all.", "真空根本不传声。"],
+          ],
         ),
       ],
     ),
@@ -872,6 +1128,11 @@ export const energyUnit: ReadingUnitDef = {
             "The second paragraph says that when the coil spins near the magnets, electricity begins to flow in the wire.",
             "第二段说，线圈在磁铁旁转动时，电就开始在电线中流动。",
           ],
+          [
+            ["Water into steam happens before, in the boiler.", "水变成蒸汽是在锅炉里先发生的。"],
+            ["Magnets melting is not in the passage.", "磁铁熔化文中没有。"],
+            ["The turbine stopping is backwards. It turns the generator.", "涡轮停转是反的。它在带动发电机。"],
+          ],
         ),
         q(
           [
@@ -888,6 +1149,11 @@ export const energyUnit: ReadingUnitDef = {
             "The third paragraph gives the order: fuel is burned to boil water, the steam spins a turbine, and the turbine turns the generator.",
             "第三段给出了顺序：燃烧燃料烧开水，蒸汽转动涡轮，涡轮带动发电机。",
           ],
+          [
+            ["Steam cannot come first. Water must boil before there is steam.", "蒸汽不能排第一。水先烧开才有蒸汽。"],
+            ["The generator turning first is backwards. It is the last step.", "发电机先转是反的。它是最后一步。"],
+            ["The turbine cannot turn the generator before steam spins it.", "蒸汽带动涡轮之前，涡轮转不了发电机。"],
+          ],
         ),
         q(
           ["What spins the turbines at a dam?", "在水坝，是什么转动涡轮？"],
@@ -901,6 +1167,11 @@ export const energyUnit: ReadingUnitDef = {
             "The fourth paragraph says that at a dam, water rushing downhill spins the turbines.",
             "第四段说，在水坝，向下奔流的水转动涡轮。",
           ],
+          [
+            ["Steam from coal is used in other power stations.", "烧煤产生的蒸汽用在别的电站。"],
+            ["Wind on a hill turns wind turbines, not dam turbines.", "山上的风转的是风力涡轮，不是水坝的涡轮。"],
+            ["Electricity from towers is what the station sends out.", "电塔上的电是电站送出去的。"],
+          ],
         ),
         q(
           ["What does a generator have inside it?", "发电机里面有什么？"],
@@ -911,6 +1182,11 @@ export const energyUnit: ReadingUnitDef = {
             ["A dam and a river", "一座水坝和一条河"],
           ],
           ["A generator has a coil of wire and a set of magnets.", "发电机有一个线圈和一组磁铁。"],
+          [
+            ["Boiling water is outside, in the boiler.", "沸水在外面的锅炉里。"],
+            ["A battery and lamp are not in the passage.", "电池和灯文中没有。"],
+            ["A dam and river spin turbines. They are not inside a generator.", "水坝和河流带动涡轮，不在发电机里面。"],
+          ],
         ),
       ],
     ),
@@ -940,6 +1216,11 @@ export const energyUnit: ReadingUnitDef = {
             "The first paragraph says they are limited and will run out, and burning them sends gases into the air that warm the planet.",
             "第一段说，它们是有限的，会用完；燃烧它们会向空气排放使地球变暖的气体。",
           ],
+          [
+            ["Too heavy and hard to find is not in the passage.", "太重、难找文中没有。"],
+            ["Only at night is about the sun's limits, not fuels.", "只在晚上说的是太阳能的局限，不是燃料。"],
+            ["Needing wind and sun is wrong. Those are the other sources.", "需要风和阳光不对。那是另一类能源。"],
+          ],
         ),
         q(
           ["What does renewable mean in this passage?", "在这篇文章中，renewable 是什么意思？"],
@@ -953,6 +1234,11 @@ export const energyUnit: ReadingUnitDef = {
             "The second paragraph explains that renewable sources of energy are ones that will not run out.",
             "第二段解释说，可再生能源就是不会用完的能源。",
           ],
+          [
+            ["Lots of smoke is the opposite. Renewables make no smoke.", "大量烟雾正好相反。可再生能源没有烟。"],
+            ["Midday is when solar panels work best, not the meaning.", "中午是太阳能板效率最高的时候，不是这个词的意思。"],
+            ["Batteries store energy, but that is not what renewable means.", "电池储存能量，但不是renewable的意思。"],
+          ],
         ),
         q(
           ["Why are engineers building huge batteries?", "工程师为什么建造巨大的电池？"],
@@ -965,6 +1251,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The last paragraph says the sun does not always shine and the wind does not always blow, so batteries store extra electricity for when it is needed.",
             "最后一段说，太阳不总是照耀，风也不总是吹，所以用电池储存多余的电，需要时再送出。",
+          ],
+          [
+            ["Replacing old panels is not in the passage.", "换掉旧太阳能板文中没有。"],
+            ["Making the wind steady is not in the passage.", "让风变稳定文中没有。"],
+            ["Burning less coal is not the reason given.", "少烧煤不是文中给的原因。"],
           ],
         ),
       ],
@@ -995,6 +1286,11 @@ export const energyUnit: ReadingUnitDef = {
             "The third paragraph says heating often uses more energy than anything else in a home.",
             "第三段说，取暖往往比家里其他任何东西用的能源都多。",
           ],
+          [
+            ["The lights are the easiest place to start, not the biggest user.", "灯是最容易开始的地方，不是耗能最多的。"],
+            ["A phone charger wastes a little energy, not the most.", "手机充电器浪费一点能量，不是最多的。"],
+            ["Curtains save energy. They do not use it.", "窗帘是节能的，不耗能。"],
+          ],
         ),
         q(
           ["How is insulation like a thick coat for a house?", "隔热层为什么像房子的厚外套？"],
@@ -1008,6 +1304,11 @@ export const energyUnit: ReadingUnitDef = {
             "The third paragraph says insulation works like a thick coat for the house, slowing the flow of heat outside.",
             "第三段说，隔热层就像房子的厚外套，减慢热量流向室外。",
           ],
+          [
+            ["Brighter rooms is not what insulation does.", "让房间更亮不是隔热层的作用。"],
+            ["Keeping food cold is the refrigerator's job.", "保持食物冷藏是冰箱的工作。"],
+            ["Turning off machines is a separate habit.", "关掉机器是另一个习惯。"],
+          ],
         ),
         q(
           ["Why does a short shower save energy?", "为什么短时间淋浴能节约能源？"],
@@ -1020,6 +1321,11 @@ export const energyUnit: ReadingUnitDef = {
           [
             "The last paragraph says it takes energy to heat water, and a short shower uses far less hot water than a full bath.",
             "最后一段说，加热水需要能源，短时间淋浴用的热水比泡澡少得多。",
+          ],
+          [
+            ["A closed window is not in this paragraph.", "关窗不在这一段里。"],
+            ["Needing no light is not the reason.", "不需要开灯不是原因。"],
+            ["Unplugging machines is a separate habit.", "拔掉插头是另一个习惯。"],
           ],
         ),
       ],

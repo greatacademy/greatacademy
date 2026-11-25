@@ -48,6 +48,11 @@ Today, the twenty-second of June is celebrated in Britain as Windrush Day, a rec
             "The second paragraph says many had been taught in school to think of Britain as the mother country, the center of the world they belonged to.",
             "第二段说许多人在学校里被教导把英国视为祖国，是他们所属世界的中心。",
           ),
+          [
+            t("They came from the Caribbean islands, not born in Britain.", "他们来自加勒比海岛屿，不是生在英国。"),
+            t("The weather was cold and grey, a surprise to them.", "天气又冷又阴，出乎他们意料。"),
+            t("Most were arriving for the first time.", "大多数人是第一次来。"),
+          ],
         ),
         ask(
           t("What difficulties did the newcomers face?", "新来的人遇到了哪些困难？"),
@@ -61,6 +66,11 @@ Today, the twenty-second of June is celebrated in Britain as Windrush Day, a rec
             "The third paragraph says landlords put up signs refusing to rent to Black people and only the hardest, lowest-paid jobs were open to them.",
             "第三段说房东贴出拒绝租房给黑人的告示，他们只能做最艰苦、薪水最低的工作。",
           ),
+          [
+            t("They had the right to live and work there as citizens.", "作为公民，他们有权在那里生活和工作。"),
+            t("They started their own churches and newspapers.", "他们创办了自己的教会和报纸。"),
+            t("Paying for the ship is not mentioned.", "文中没提为船付费。"),
+          ],
         ),
         ask(
           t("What was the scandal of 2018?", "2018 年的丑闻是什么？"),
@@ -77,12 +87,22 @@ Today, the twenty-second of June is celebrated in Britain as Windrush Day, a rec
             "The sixth paragraph says some who had lived legally for decades were wrongly told they were illegal because they lacked documents the government had never given them.",
             "第六段说一些合法居住了几十年的人，因缺少政府从未发放的证件，被错误地告知他们是非法居留。",
           ),
+          [
+            t("The ship is not said to be stolen.", "文中没说船被偷。"),
+            t("The carnival grew into a huge festival; no ban is mentioned.", "狂欢节发展成大型节日；文中没提禁令。"),
+            t("Nurses worked in the health service; training is not questioned.", "护士在医疗系统工作；她们的培训没有受到质疑。"),
+          ],
         ),
         ask(
           t("Where did the Empire Windrush dock in 1948?", "1948年“帝国疾风号”停靠在哪里？"),
           t("At Tilbury, near London", "伦敦附近的蒂尔伯里"),
           [t("At Liverpool", "利物浦"), t("In Jamaica", "牙买加"), t("At Dover", "多佛")],
           t("A ship called the Empire Windrush docked at Tilbury, near London.", "一艘名为“帝国疾风号”的船停靠在伦敦附近的蒂尔伯里。"),
+          [
+            t("Liverpool is not mentioned.", "文中没提利物浦。"),
+            t("Jamaica is where many passengers came from.", "牙买加是许多乘客的出发地。"),
+            t("Dover is not mentioned.", "文中没提多佛。"),
+          ],
         ),
       ],
       [
@@ -131,6 +151,11 @@ The line Radcliffe drew still divides the two countries. It reminds us that a bo
             "The second paragraph says he had never been to India and was given about five weeks, old maps and census figures that were sometimes out of date.",
             "第二段说他从没到过印度，只有大约五周时间，用的是旧地图和有时过时的人口普查数据。",
           ),
+          [
+            t("He was surrounded by advisers who argued.", "他身边有一群争吵不休的顾问。"),
+            t("He drew lines on paper; he did not build walls.", "他在纸上划线，并没筑墙。"),
+            t("He had maps, old ones; reading them was not the problem.", "他有地图，只是太旧；会不会看图不是问题。"),
+          ],
         ),
         ask(
           t("What happened after the borders were announced?", "边界宣布后发生了什么？"),
@@ -144,6 +169,11 @@ The line Radcliffe drew still divides the two countries. It reminds us that a bo
             "The third and fourth paragraphs say people began to move, between ten and twenty million crossed, and violence broke out between communities.",
             "第三、四段说人们开始迁移，一千万到两千万人跨越边界，各社区之间爆发了暴力冲突。",
           ),
+          [
+            t("People moved in fear; things changed enormously.", "人们因恐惧而迁移，变化巨大。"),
+            t("The line still divides the two countries.", "这条线至今仍分隔两国。"),
+            t("Farmers and weavers moved from the countryside too.", "农民和织工也从乡村迁走了。"),
+          ],
         ),
         ask(
           t("What do the recorded stories show besides violence?", "除了暴力，那些记录下来的故事还展现了什么？"),
@@ -157,6 +187,11 @@ The line Radcliffe drew still divides the two countries. It reminds us that a bo
             "The sixth paragraph says the stories describe kindness too: neighbors who hid families of the other religion and strangers who shared water.",
             "第六段说这些故事也记录了善意：邻居藏匿其他宗教的家庭，陌生人在路上分享水。",
           ),
+          [
+            t("The stories describe the violence too.", "这些故事也讲述了暴力。"),
+            t("Families lost homes forever and kept the keys.", "家庭永远失去家园，只留下钥匙。"),
+            t("He had never been to India.", "他从没去过印度。"),
+          ],
         ),
         ask(
           t("When were the borders announced?", "边界是什么时候公布的？"),
@@ -167,6 +202,11 @@ The line Radcliffe drew still divides the two countries. It reminds us that a bo
             t("Five weeks after independence", "独立五周后"),
           ],
           t("The borders were announced on the seventeenth of August, two days after independence.", "边界于8月17日公布，即独立两天后。"),
+          [
+            t("He had five weeks before; the borders came after.", "他事先有五周时间；边界是之后公布的。"),
+            t("The date was the seventeenth, two days after the fifteenth.", "日期是十七日，比十五日晚两天。"),
+            t("Five weeks was his working time.", "五周是他的工作时间。"),
+          ],
         ),
       ],
       [
@@ -216,6 +256,11 @@ Today, many descendants of those emigrants live around the world. Some travel to
             "The second paragraph says emigrants sent letters home, usually with money enclosed.",
             "第二段说移民寄信回家，通常信中附有钱。",
           ),
+          [
+            t("Photographs are not mentioned as enclosed.", "文中没说附了照片。"),
+            t("Seeds are not mentioned.", "文中没提种子。"),
+            t("The men planned to return, not bring families out.", "这些人打算回乡，不是接家人出去。"),
+          ],
         ),
         ask(
           t("Why did the towers of Kaiping often mix styles?", "开平碉楼为什么常常融合多种风格？"),
@@ -229,6 +274,11 @@ Today, many descendants of those emigrants live around the world. Some travel to
             "The third paragraph says many mixed Chinese styles with designs their owners had seen abroad, such as Roman arches and Gothic windows.",
             "第三段说许多碉楼把中国风格和楼主在国外见过的设计结合起来，例如罗马拱门和哥特式窗户。",
           ),
+          [
+            t("The owners chose the designs; no one forced foreign architects.", "设计是房主选的，没有人强迫外国建筑师。"),
+            t("The towers protected families from bandits and floods.", "碉楼是为防土匪和洪水而建的。"),
+            t("Mixing was a statement of success, not indecision.", "混搭是成功的象征，不是拿不定主意。"),
+          ],
         ),
         ask(
           t("What loss did emigration bring to families left behind?", "移民给留守的家庭带来了什么损失？"),
@@ -242,12 +292,22 @@ Today, many descendants of those emigrants live around the world. Some travel to
             "The fifth paragraph says wives might wait decades and children grew up knowing their fathers only through letters and photographs.",
             "第五段说妻子可能要等几十年，孩子成长时只能通过书信和照片认识父亲。",
           ),
+          [
+            t("The money built houses and schools.", "这些钱盖了房子、建了学校。"),
+            t("The towers still stand.", "碉楼至今仍在。"),
+            t("The letters were the link; no ban is mentioned.", "书信是纽带；文中没提禁令。"),
+          ],
         ),
         ask(
           t("What were the tall towers of Kaiping called?", "开平的高楼叫什么？"),
           t("Diaolou", "碉楼"),
           [t("Qiaopi", "侨批"), t("Pagodas", "宝塔"), t("Qiaoxiang", "侨乡")],
           t("Families built tall towers of concrete and stone called diaolou.", "人们建起了叫作碉楼的混凝土和石头高楼。"),
+          [
+            t("Qiaopi are the letters.", "侨批是书信。"),
+            t("Pagoda is not the word used.", "文中用的不是“宝塔”。"),
+            t("Qiaoxiang are the home villages.", "侨乡是家乡村落。"),
+          ],
         ),
       ],
       ["Guangdong", "Fujian", "Kaiping", "Taishan", "Southeast", "Asia", "America", "Chinese", "UNESCO", "qiaoxiang", "diaolou"],
@@ -282,6 +342,11 @@ Many adult third-culture kids say they found their sense of belonging not in a p
             "The first paragraph says these children did not fully belong to either culture but shared a third culture with other children like them.",
             "第一段说这些孩子既不完全属于这种文化，也不完全属于那种文化，而是与其他类似的孩子共享第三种文化。",
           ),
+          [
+            t("Three languages are not the meaning.", "意思不是三种官方语言。"),
+            t("The children did not fully belong to either India or America.", "这些孩子既不完全属于印度，也不完全属于美国。"),
+            t("No special schools are mentioned.", "文中没提专门学校。"),
+          ],
         ),
         ask(
           t(
@@ -298,6 +363,11 @@ Many adult third-culture kids say they found their sense of belonging not in a p
             "The paragraph moves into Mei Lin's mind: the short commands and the question that ends it are her thoughts, told in the third person without quotation marks.",
             "这一段进入了美琳的内心：那些简短的指令和结尾的问题都是她的想法，用第三人称讲述，没有引号。",
           ),
+          [
+            t("The narrator is reporting Mei Lin's thought.", "叙述者是在转述梅琳的想法。"),
+            t("No one says this aloud to her.", "没人对她这样说。"),
+            t("It is a scene, not research.", "这是一个场景，不是研究结论。"),
+          ],
         ),
         ask(
           t("What is reverse culture shock?", "什么是“逆向文化冲击”？"),
@@ -311,12 +381,22 @@ Many adult third-culture kids say they found their sense of belonging not in a p
             "The sixth paragraph says that on returning to their parents' country, many feel like foreigners in the place that is supposed to be home.",
             "第六段说回到父母的祖国时，许多人在本该是家的地方感到自己像外国人。",
           ),
+          [
+            t("Shock on first arrival is ordinary culture shock.", "初到时的冲击是普通文化冲击。"),
+            t("Language learning is not the problem.", "问题不在学语言。"),
+            t("They do return; that is when it happens.", "他们确实回去了，那时才出现这种感受。"),
+          ],
         ),
         ask(
           t("How many times has Mei Lin's family moved?", "美琳一家搬过几次家？"),
           t("Four times", "四次"),
           [t("Twice", "两次"), t("Ten times", "十次"), t("Never", "从没搬过")],
           t("Her family has moved four times.", "她家搬过四次。"),
+          [
+            t("Twice is too few.", "两次太少了。"),
+            t("Ten is far too many.", "十次太多了。"),
+            t("Never contradicts her many schools.", "“从未”与她换过多所学校矛盾。"),
+          ],
         ),
       ],
       [
@@ -364,6 +444,11 @@ Some readers have wondered why he did not write in Polish or French. Conrad once
             "The second paragraph says his father, a patriot who worked for Polish independence, was arrested and sent into exile, and the family went with him.",
             "第二段说他父亲是为波兰独立奋斗的爱国者，被捕后被流放，全家随同前往。",
           ),
+          [
+            t("His father was a poet and patriot, not a sailor.", "他父亲是诗人兼爱国者，不是水手。"),
+            t("Money is not the reason; it was an arrest.", "原因不是钱，而是被捕。"),
+            t("The cold north was a punishment, not a choice.", "寒冷的北方是惩罚，不是选择。"),
+          ],
         ),
         ask(
           t("How did Conrad learn English?", "康拉德是怎么学会英语的？"),
@@ -377,6 +462,11 @@ Some readers have wondered why he did not write in Polish or French. Conrad once
             "The third paragraph says he joined a British ship knowing only a few words and learned the language from sailors, newspapers and books.",
             "第三段说他加入英国船只时只会几个英语单词，是从水手、报纸和书本中学会的。",
           ),
+          [
+            t("He learned English as an adult, last.", "他是成年后最后才学英语的。"),
+            t("His father was a Polish poet.", "他父亲是波兰诗人。"),
+            t("In Marseille he spoke French.", "在马赛他说法语。"),
+          ],
         ),
         ask(
           t("What does Conrad's remark about being adopted by English suggest?", "康拉德说自己是被英语“收养”的，这暗示了什么？"),
@@ -390,12 +480,22 @@ Some readers have wondered why he did not write in Polish or French. Conrad once
             "The last paragraph says that for a man who had lost his country, parents and home, a language may have been the one place he could make his own.",
             "最后一段说对一个失去祖国、父母和家园的人来说，语言也许是他唯一能据为己有的地方。",
           ),
+          [
+            t("He chose English to write in.", "他选择用英语写作。"),
+            t("No one forced him.", "没人逼他。"),
+            t('"Adopted" is a metaphor; an uncle raised him.', "“收养”是比喻；抚养他的是舅舅。"),
+          ],
         ),
         ask(
           t("Where did Conrad settle in England?", "康拉德在英国定居在哪里？"),
           t("In Kent, in the south of England", "英格兰南部的肯特"),
           [t("In London", "伦敦"), t("In Scotland", "苏格兰"), t("In Marseille", "马赛")],
           t("He became a British citizen and settled in Kent, in the south of England.", "他成为英国公民，定居在英格兰南部的肯特。"),
+          [
+            t("London is not named as his home.", "文中没说他住伦敦。"),
+            t("Scotland is not mentioned.", "文中没提苏格兰。"),
+            t("Marseille is in France, where he first sailed.", "马赛在法国，是他最初出海的地方。"),
+          ],
         ),
       ],
       [
@@ -449,6 +549,11 @@ The story of the braceros is repeated in many countries today, wherever temporar
             "The first paragraph says the country faced a shortage of farm workers because millions of young men had joined the army.",
             "第一段说因为数百万年轻男子参军，国家缺少农场工人。",
           ),
+          [
+            t("Teaching methods are not the reason.", "教授方法不是原因。"),
+            t("The need was American, not Mexican.", "需要劳力的是美国，不是墨西哥。"),
+            t("Cotton was one of the crops they picked.", "棉花是他们采摘的作物之一。"),
+          ],
         ),
         ask(
           t("What happened to the savings taken from the braceros' wages?", "从短期劳工工资中扣下的储蓄怎么样了？"),
@@ -462,6 +567,11 @@ The story of the braceros is repeated in many countries today, wherever temporar
             "The third paragraph says many never received the money, and the sixth says some received a settlement in 2008, after many had died.",
             "第三段说许多人从未拿到这笔钱，第六段说一些人在 2008 年获得和解赔偿，而许多人在此之前已经去世。",
           ),
+          [
+            t("Many never received the money.", "很多人从未拿到这笔钱。"),
+            t("Schools are not mentioned.", "文中没提建学校。"),
+            t("The money was taken from them, not given.", "钱是从他们工资中扣的，不是他们自愿给的。"),
+          ],
         ),
         ask(
           t(
@@ -478,6 +588,11 @@ The story of the braceros is repeated in many countries today, wherever temporar
             "The fifth paragraph says they were welcome as long as their labor was needed but not expected to stay, bring families or become part of the communities.",
             "第五段说只要需要他们的劳动，他们就受欢迎，但人们并不希望他们留下、带来家人或融入社区。",
           ),
+          [
+            t("They lived in crowded camps, not as honored guests.", "他们住在拥挤的营地，不是贵宾。"),
+            t("They lived in camps, not farmers' homes.", "他们住营地，不是农场主家里。"),
+            t("They are not said to refuse invitations.", "文中没说他们拒绝邀请。"),
+          ],
         ),
         ask(
           t("About how many work contracts were signed from 1942 to 1964?", "1942年至1964年约签订了多少份工作合同？"),
@@ -491,6 +606,11 @@ The story of the braceros is repeated in many countries today, wherever temporar
             "From 1942 to 1964, about four and a half million work contracts were signed.",
             "从1942年到1964年，约签订了四百五十万份工作合同。",
           ),
+          [
+            t("Forty-five thousand is far too few.", "四万五千太少了。"),
+            t("Half a million is too few.", "五十万太少了。"),
+            t("Forty-five million is ten times too many.", "四千五百万多了十倍。"),
+          ],
         ),
       ],
       ["Bracero", "Mexico", "Mexican", "Mexicans", "American", "Americans", "California", "Texas", "Arizona", "Spanish"],
@@ -523,6 +643,11 @@ Some young adults, having lost their family language as children, now study it a
             "The first paragraph describes the first generation speaking the native language, the second both, and the third often only the dominant language.",
             "第一段描述了第一代说母语、第二代说两种语言、第三代往往只说主流语言的过程。",
           ),
+          [
+            t("It is about loss over generations, not three years.", "它讲的是几代人的流失，不是三年。"),
+            t("Living together is not the meaning.", "意思不是三代同堂。"),
+            t("Official languages are not the subject.", "主题不是官方语言。"),
+          ],
         ),
         ask(
           t(
@@ -539,6 +664,11 @@ Some young adults, having lost their family language as children, now study it a
             "The paragraph slips into Rosa's mind as she switches to English: the short sentence and the regret about the story are her feelings, told by the narrator.",
             "当罗莎改说英语时，这一段滑入了她的内心：那句短句和对故事的遗憾都是她的感受，由叙述者讲出。",
           ),
+          [
+            t("Ana asks questions in English; this is not her line.", "安娜用英语提问；这句不是她说的。"),
+            t("Fishman studied the pattern; this is a scene.", "费希曼研究这种模式；这是一个场景。"),
+            t("Daniel answers in English, but this thought is Rosa's.", "丹尼尔用英语回答，但这个想法是罗莎的。"),
+          ],
         ),
         ask(
           t("What practices help families keep their language alive?", "哪些做法有助于家庭保留他们的语言？"),
@@ -555,6 +685,11 @@ Some young adults, having lost their family language as children, now study it a
             "The fifth paragraph lists speaking only the family language at home, weekend language schools, visiting the country of origin and making the language part of music, films and cooking.",
             "第五段列出了在家只说家族语言、上周末语言学校、回原籍国探访，以及把语言融入音乐、电影和烹饪。",
           ),
+          [
+            t("Speaking only the dominant language causes the loss.", "只说主流语言正是导致流失的原因。"),
+            t("Music and films help, not hurt.", "音乐和电影有帮助，不是有害。"),
+            t("Waiting is not advised; practices start in childhood.", "不建议等待；这些做法从小开始。"),
+          ],
         ),
       ],
       ["Fishman", "Joshua", "Rosa", "Ana", "Daniel", "Spanish", "English", "American", "Americans", "Korean", "Chinese"],
@@ -589,6 +724,11 @@ Living in two languages can be tiring. It can also mean never being quite comple
             "The first paragraph says many believed it was harmful and worried that children would be confused and fall behind at school.",
             "第一段说许多人认为它有害，担心孩子会困惑并在学校落后。",
           ),
+          [
+            t("Reading is not mentioned.", "文中没提阅读。"),
+            t("Height is not mentioned.", "文中没提身高。"),
+            t("No law is mentioned.", "文中没提法律。"),
+          ],
         ),
         ask(
           t("How does the passage treat the claim that bilingualism improves attention?", "文章如何对待“双语能提高注意力”这一说法？"),
@@ -602,6 +742,11 @@ Living in two languages can be tiring. It can also mean never being quite comple
             "The fourth paragraph says the claims are debated, other researchers found smaller effects or none, and the question is still open.",
             "第四段说这些说法有争议，其他研究者发现效果较小或没有效果，这个问题仍然没有定论。",
           ),
+          [
+            t("Other studies found smaller effects or none.", "其他研究发现效果更小或没有效果。"),
+            t("Researchers like Bialystok held it.", "比亚韦斯托克等研究者提出过这一观点。"),
+            t("Researchers, not parents, made the claim.", "提出这一观点的是研究者，不是家长。"),
+          ],
         ),
         ask(
           t("What does the example of the teenager show about code-switching?", "那个青少年的例子说明了语码转换的什么特点？"),
@@ -615,6 +760,11 @@ Living in two languages can be tiring. It can also mean never being quite comple
             "The sixth paragraph says that, far from being confused, she reads each situation and chooses the right language for it.",
             "第六段说她并不困惑，而是在判断每种情境并为之选择合适的语言。",
           ),
+          [
+            t("She is far from confused; she reads each situation.", "她一点也不糊涂，而是在判断场合。"),
+            t("It is a choice, not tiredness.", "这是选择，不是疲惫。"),
+            t("She switches with friends and cousins too.", "她和朋友、表亲在一起时也会切换。"),
+          ],
         ),
       ],
       ["English", "Spanish", "Chinese", "Mandarin", "Ellen", "Bialystok", "Canadian", "Toronto"],

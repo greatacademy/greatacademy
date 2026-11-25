@@ -44,6 +44,11 @@ By August I could swim the length of the pool. I was slow and clumsy, but I coul
             "The last paragraph begins Looking back and explains what the experience taught the writer, the way a memoirist reflects on a real event.",
             "最后一段以 Looking back 开头，解释了这段经历教给作者的东西，这正是回忆录作者回顾真实事件的方式。",
           ),
+          [
+            t("A pool and a lake could be in any invented story.", "泳池和湖泊在任何虚构故事里都可能出现。"),
+            t("Comparing cousins to seals is a description, not a sign of memoir.", "把表弟表妹比作海豹只是描写，不能说明是回忆录。"),
+            t("Summer could be the setting of any story.", "夏天可以是任何故事的背景。"),
+          ],
         ),
         ask(
           t("Why was the writer afraid of the water?", "作者为什么怕水？"),
@@ -57,6 +62,11 @@ By August I could swim the length of the pool. I was slow and clumsy, but I coul
             "The second paragraph tells how she slipped off a dock at the lake and went under when she was six.",
             "第二段讲述了她六岁时从湖边码头滑落、沉入水中的经历。",
           ),
+          [
+            t("The cousins splashed nearby but caused no fear.", "表弟表妹在旁边戏水，并没有引起她的恐惧。"),
+            t("Her aunt helped her. She never called the pool dangerous.", "姨妈帮助她，从没说泳池危险。"),
+            t("She stood in the pool, so she had seen one.", "她就站在泳池里，所以见过泳池。"),
+          ],
         ),
         ask(
           t("How does the writer change by the end of the summer?", "到夏天结束时，作者有了什么变化？"),
@@ -70,12 +80,22 @@ By August I could swim the length of the pool. I was slow and clumsy, but I coul
             "At the start she grips the edge of the pool, terrified; by August she can swim the length of it, slowly but on her own.",
             "一开始她害怕地抓着池边；到了八月，她已经能独自游完泳池全长，虽然游得很慢。",
           ),
+          [
+            t("She is slow and clumsy, not the fastest.", "她游得又慢又笨，不是最快的。"),
+            t("She learns to swim instead of staying away.", "她学会了游泳，没有远离水。"),
+            t("Becoming a teacher is never said.", "文中从没说她当了老师。"),
+          ],
         ),
         ask(
           t("Who taught the writer to swim?", "谁教作者游泳？"),
           t("Her aunt", "她的姑妈"),
           [t("Her uncle", "她的叔叔"), t("Her little cousins", "她的小表亲"), t("A coach she did not know", "一位陌生的教练")],
           t("Her aunt, who taught swimming at the town pool, offered to give her lessons.", "在镇游泳池教游泳的姑妈主动提出给她上课。"),
+          [
+            t("Her uncle pulled her out of the lake years before.", "她叔叔是多年前把她从湖里拉出来的。"),
+            t("Her cousins only splashed in the deep end.", "表弟表妹只是在深水区玩水。"),
+            t("Her aunt taught her, a family member, not a stranger.", "教她的是姨妈，是家人，不是陌生人。"),
+          ],
         ),
       ],
     ),
@@ -105,6 +125,11 @@ My grandmother died when I was fourteen. Her kitchen is gone now, and someone el
             "The first paragraph ends by saying the smell of ginger can make the writer feel nine years old again.",
             "第一段最后说，姜的气味能让作者重新觉得自己九岁。",
           ),
+          [
+            t("Becoming a cook is never mentioned.", "文中从没提到当厨师。"),
+            t("City traffic is not linked to ginger.", "城市交通与姜味无关。"),
+            t("She still folds dumplings, so she does not dislike them.", "她现在还包饺子，所以并不讨厌饺子。"),
+          ],
         ),
         ask(
           t(
@@ -121,6 +146,11 @@ My grandmother died when I was fourteen. Her kitchen is gone now, and someone el
             "She never laughs at the failed dumplings and says the ugliest tastes best because the child made it, which shows her kindness through what she does.",
             "她从不嘲笑失败的饺子，还说最难看的最好吃，因为是孩子做的，这通过她的行为表现了她的慈爱。",
           ),
+          [
+            t("Nice-looking dumplings are not the point. She ate the ugly one out of love.", "好看与否不是重点。她出于爱吃了最丑的那个。"),
+            t("She cooked them anyway, so tiredness is not the reason.", "她照样煮了，所以不是因为累。"),
+            t("She never laughed at them, so it was no hard lesson.", "她从没笑话过，所以不是在给孩子上严厉的课。"),
+          ],
         ),
         ask(
           t("Why does the writer put the ugliest dumpling on her own plate at the end?", "结尾作者为什么把最难看的饺子放在自己的盘子里？"),
@@ -134,12 +164,22 @@ My grandmother died when I was fourteen. Her kitchen is gone now, and someone el
             "The ending echoes the grandmother's gesture: now the writer is the older one folding dumplings with a child, and she does what her grandmother did.",
             "结尾呼应了外婆的举动：现在作者成了和孩子一起包饺子的长辈，她做了外婆曾经做的事。",
           ),
+          [
+            t("Her skill is not mentioned now. The act is about care.", "文中没说她现在手艺如何。这个举动关乎关爱。"),
+            t("Her brother refusing is never said.", "文中从没说弟弟不肯吃。"),
+            t("No such rule exists in the story. It is her grandmother's habit.", "故事里没有这样的规矩，这是奶奶的习惯。"),
+          ],
         ),
         ask(
           t("What was the writer's job in the kitchen every Sunday?", "每个星期天作者在厨房里的任务是什么？"),
           t("Folding dumplings", "包饺子"),
           [t("Baking bread", "烤面包"), t("Washing the dishes", "洗碗"), t("Chopping ginger", "切姜")],
           t("Every Sunday my grandmother put me to work folding dumplings.", "每个星期天奶奶都让我包饺子。"),
+          [
+            t("Something sweet baked in the oven, but that was not her job.", "烤箱里烤着甜点，但那不是她的工作。"),
+            t("Washing dishes is never mentioned.", "文中从没提到洗碗。"),
+            t("Ginger was a smell in the kitchen, not her task.", "姜是厨房里的气味，不是她的任务。"),
+          ],
         ),
       ],
       ["Lunar"],
@@ -170,6 +210,11 @@ We stayed in that town for four years, the longest I had ever lived anywhere. Ma
             "The first paragraph says he had moved three times in four years and had learned that being new was easier if nobody noticed you.",
             "第一段说，他四年里搬了三次家，体会到当新生时不被注意会容易些。",
           ),
+          [
+            t("Science class is where his plan broke down, not why he made it.", "科学课是计划落空的地方，不是他订计划的原因。"),
+            t("The library was a place to hide, not a love of reading.", "图书馆是用来躲的地方，不是因为爱读书。"),
+            t("Marcus was friendly from the start.", "马库斯从一开始就很友好。"),
+          ],
         ),
         ask(
           t("How does the writer change in the passage?", "作者在文中有什么变化？"),
@@ -183,6 +228,11 @@ We stayed in that town for four years, the longest I had ever lived anywhere. Ma
             "At first he plans to eat alone in the library; by the end of the week he has opinions to share at the lunch table, and he stays friends with Marcus for years.",
             "一开始他打算在图书馆独自吃午饭；到周末他已经能在午餐桌上发表意见，并且和马库斯做了多年朋友。",
           ),
+          [
+            t("It is the reverse. He grows friendlier.", "正好相反。他变得更友好了。"),
+            t("The spy is only Marcus's joke about the teacher.", "间谍只是马库斯开老师的玩笑。"),
+            t("He changes a great deal: he joins a group.", "他变化很大：他融入了一群朋友。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest about the writer?", "最后一句暗示了作者的什么？"),
@@ -196,6 +246,11 @@ We stayed in that town for four years, the longest I had ever lived anywhere. Ma
             "He says he was hiding from the very thing he wanted most, which reveals that what he really wanted was friends.",
             "他说自己当时躲避的正是他最想要的东西，这表明他真正想要的是朋友。",
           ),
+          [
+            t("Reading more is not what he regrets.", "他遗憾的不是没多读书。"),
+            t("He stayed friends with Marcus, so he does not prefer being alone.", "他和马库斯一直是朋友，所以并不喜欢独处。"),
+            t("Anger at his family is never expressed.", "文中他从没对家人表示愤怒。"),
+          ],
         ),
         ask(
           t("Who was the writer's lab partner?", "作者的实验搭档是谁？"),
@@ -209,6 +264,11 @@ We stayed in that town for four years, the longest I had ever lived anywhere. Ma
             "My partner was a tall boy named Marcus who talked more than anyone I had ever met.",
             "我的搭档是一个叫马库斯的高个男孩，他比谁都能说。",
           ),
+          [
+            t("Ms. Okafor was the teacher who made the pairs.", "奥卡福老师是分组的老师。"),
+            t("Marcus's sisters are only mentioned in his talk.", "马库斯的姐妹只是在他的话里提到。"),
+            t("He had a partner. The teacher paired them.", "他有搭档。是老师给他们配的对。"),
+          ],
         ),
       ],
       ["Riverside", "Okafor", "Marcus"],
@@ -239,6 +299,11 @@ That paper is pinned to the wall of my room in our new apartment. I have added t
             "The second paragraph says the move felt like a punishment because he was leaving the only home he remembered, his best friend and the tree in the backyard.",
             "第二段说，搬家感觉像是一种惩罚，因为他要离开他记得的唯一的家、他最好的朋友和后院的那棵树。",
           ),
+          [
+            t("Tiredness is never mentioned.", "文中从没提到累。"),
+            t("Heavy boxes are not the reason.", "箱子重不是原因。"),
+            t("His sister was packing too, and she was moving with him.", "他姐姐也在打包，而且和他一起搬走。"),
+          ],
         ),
         ask(
           t("How does the mother help her son?", "母亲是怎样帮助儿子的？"),
@@ -252,6 +317,11 @@ That paper is pinned to the wall of my room in our new apartment. I have added t
             "The third and fourth paragraphs tell how she says she cried when she left her own hometown, then traces the lines with him so he can take them.",
             "第三、四段讲述了她说自己离开家乡时也哭过，然后和他一起把刻度描下来，让他带走。",
           ),
+          [
+            t("She did not say it would be fine.", "她没有说一切都会好的。"),
+            t("Moving back is never promised.", "她从没承诺会搬回来。"),
+            t("She traced the marks so they would not be lost, not to paint over them.", "她描下标记是为了不丢失，不是要涂掉。"),
+          ],
         ),
         ask(
           t(
@@ -268,6 +338,11 @@ That paper is pinned to the wall of my room in our new apartment. I have added t
             "The traced height marks, now pinned in his new room, are a piece of the old home he carried with him, which is what the closing line looks back on.",
             "描下来的身高刻度如今钉在他新房间的墙上，是他从旧家带来的一部分，结尾那句话回顾的正是这一点。",
           ),
+          [
+            t("Carrying furniture by hand is not the meaning.", "不是说要用手搬家具。"),
+            t("A moving truck is only how they moved.", "搬家卡车只是搬家的方式。"),
+            t("He cared deeply. He still misses Linden Street.", "他非常在乎，至今仍想念林登街。"),
+          ],
         ),
         ask(
           t("Why was the family moving?", "这家人为什么搬家？"),
@@ -278,6 +353,11 @@ That paper is pinned to the wall of my room in our new apartment. I have added t
             t("Jada's family was moving too", "贾达一家也要搬"),
           ],
           t("They were moving to a city where the mother had found a better job.", "他们要搬到妈妈找到更好工作的城市。"),
+          [
+            t("The house's size is never mentioned.", "文中从没提房子的大小。"),
+            t("The father's work is not mentioned.", "文中没提父亲的工作。"),
+            t("Jada stayed. They still call each week.", "贾达没搬走。他们每周还通电话。"),
+          ],
         ),
       ],
       ["Linden", "Jada"],
@@ -308,6 +388,11 @@ In the end, Theo was the one who broke it. He knocked on my door with the plane 
             "The third paragraph says that instead of telling him, she glued the wing back on and put the plane back on his shelf.",
             "第三段说，她没有告诉哥哥，而是把机翼粘回去，再把飞机放回他的架子上。",
           ),
+          [
+            t("She broke the wing. She did not throw the plane.", "她弄断了机翼，没有把飞机扔出窗外。"),
+            t("The wings were silver, and she did not paint them.", "机翼是银色的，而且不是她涂的。"),
+            t("She told no one, including their parents.", "她谁也没告诉，包括父母。"),
+          ],
         ),
         ask(
           t("What does the phrase like strangers tell you about the siblings?", "like strangers 这个短语告诉你这对兄妹怎样？"),
@@ -321,6 +406,11 @@ In the end, Theo was the one who broke it. He knocked on my door with the plane 
             "Passing each other in the hallway like strangers means they ignored each other and did not speak, as people who do not know each other would.",
             "像陌生人一样在走廊里擦肩而过，意思是他们互相不理睬、不说话，就像互不认识的人一样。",
           ),
+          [
+            t("They had known each other all their lives.", "他们从小就认识。"),
+            t("They avoided each other, not spent time together.", "他们互相回避，没有待在一起。"),
+            t("They lived in the same house and passed in the hallway.", "他们住在同一所房子里，在走廊里擦肩而过。"),
+          ],
         ),
         ask(
           t("How did the fight finally end?", "这场争吵最后是怎样结束的？"),
@@ -334,12 +424,22 @@ In the end, Theo was the one who broke it. He knocked on my door with the plane 
             "The last paragraph says Theo knocked on her door with the plane and asked if she wanted to help fix it properly, though neither apologized in words.",
             "最后一段说，西奥拿着飞机敲她的门，问她愿不愿意帮忙把它好好修好，尽管两人都没有口头道歉。",
           ),
+          [
+            t("Neither of them apologized in words.", "两人都没有用言语道歉。"),
+            t("Parents are not part of the ending.", "父母不在结局里。"),
+            t("They fixed the old plane together.", "他们一起修好了那架旧飞机。"),
+          ],
         ),
         ask(
           t("What color had Theo painted the plane's wings?", "西奥把飞机的机翼涂成了什么颜色？"),
           t("Silver", "银色"),
           [t("Red", "红色"), t("Gold", "金色"), t("White", "白色")],
           t("Theo had spent weeks building it, painting the wings silver.", "西奥花了几周造它，把机翼涂成了银色。"),
+          [
+            t("Red is the color of the bike in another story.", "红色是另一个故事里自行车的颜色。"),
+            t("Gold is never mentioned.", "文中从没提到金色。"),
+            t("White is never mentioned.", "文中从没提到白色。"),
+          ],
         ),
       ],
       ["Theo"],
@@ -370,6 +470,11 @@ I rode that bike until it was much too small for me. I have owned better bikes s
             "The son first thinks it is a joke, then understands it is not: the question pushes him to make a plan and earn the money.",
             "儿子起初以为这是玩笑，后来明白并不是：这个问题促使他制订计划、自己挣钱。",
           ),
+          [
+            t("He heard. The question was his answer.", "他听见了。这个问题就是他的回答。"),
+            t("At first the boy thought it was a joke, but it was not.", "男孩起初以为是玩笑，但其实不是。"),
+            t("He did not buy it. The boy paid with his own money.", "他没有买。男孩用自己的钱付了款。"),
+          ],
         ),
         ask(
           t("Which detail shows that saving the money was hard?", "哪个细节表明攒钱很不容易？"),
@@ -383,6 +488,11 @@ I rode that bike until it was much too small for me. I have owned better bikes s
             "The third paragraph says some weeks he earned nothing and the chart did not move, and that twice he nearly gave up.",
             "第三段说，有些星期他什么也没挣到，图表没有变化，他还两次差点放弃。",
           ),
+          [
+            t("Silver handlebars describe the bike.", "银色车把是在描写自行车。"),
+            t("The free helmet came at the end, as a reward.", "免费头盔是最后的奖励。"),
+            t("Passing the shop shows how much he wanted it, not that saving was hard.", "路过商店说明他多想要，不说明攒钱难。"),
+          ],
         ),
         ask(
           t("What lesson does the writer draw when he looks back?", "作者回顾往事时得出了什么道理？"),
@@ -396,12 +506,22 @@ I rode that bike until it was much too small for me. I have owned better bikes s
             "The last sentence states the lesson his father's question taught him: the things you work for are the ones you value most.",
             "最后一句点明了父亲的问题教给他的道理：你努力争取来的东西，才是你最珍惜的。",
           ),
+          [
+            t("The bike cost a lot. Buying cheap is not the lesson.", "这辆车很贵。买便宜货不是教训。"),
+            t("The helmet was one shop owner's kindness.", "头盔是一位店主的好意。"),
+            t("The color is a detail, not the lesson.", "颜色只是细节，不是教训。"),
+          ],
         ),
         ask(
           t("How long did it take to save for the bike?", "攒钱买自行车用了多久？"),
           t("Eleven months", "十一个月"),
           [t("Two weeks", "两个星期"), t("Two years", "两年"), t("One summer", "一个夏天")],
           t("It took me eleven months.", "我用了十一个月。"),
+          [
+            t("Two weeks is far too short.", "两周太短了。"),
+            t("Two years is too long.", "两年太长了。"),
+            t("It took most of a year, longer than one summer.", "花了将近一年，比一个夏天长。"),
+          ],
         ),
       ],
       ["Hassan's", "Hassan"],
@@ -432,6 +552,11 @@ Afterward, I was sure I had embarrassed myself. But my teacher hugged me and sai
             "The second paragraph shows her fear through her body: cold, damp hands and a tightening stomach.",
             "第二段通过她身体的反应表现了恐惧：冰冷潮湿的手和发紧的胃。",
           ),
+          [
+            t("Months of practice show effort, not fear.", "几个月的练习说明努力，不说明恐惧。"),
+            t("The younger girl's age is a detail about her.", "小女孩的年龄只是关于她的细节。"),
+            t("The hug came afterward, when the fear was over.", "拥抱是之后的事，那时恐惧已经过去。"),
+          ],
         ),
         ask(
           t("What did the writer do after she played the wrong chord?", "作者弹错和弦之后做了什么？"),
@@ -445,6 +570,11 @@ Afterward, I was sure I had embarrassed myself. But my teacher hugged me and sai
             "The fourth paragraph says she remembered Never go back. Keep the music moving, and played the rest without another mistake.",
             "第四段说，她想起了“永远不要回头，让音乐继续”，然后把剩下的部分弹完，再没出错。",
           ),
+          [
+            t("She did not start again. Her teacher said never go back.", "她没有从头再来。老师说永远不要回头。"),
+            t("She wanted to run but did not.", "她想跑，但没有跑。"),
+            t("She did not speak to the audience.", "她没有对观众说话。"),
+          ],
         ),
         ask(
           t("Why did the teacher call it the bravest performance?", "老师为什么称它为最勇敢的演奏？"),
@@ -458,6 +588,11 @@ Afterward, I was sure I had embarrassed myself. But my teacher hugged me and sai
             "Looking back, the writer explains that courage is not playing without mistakes but going on after you make one.",
             "回顾往事时，作者解释说，勇气不是不犯错，而是犯错后继续前进。",
           ),
+          [
+            t("The piece was not very difficult for a real pianist.", "对真正的钢琴家来说这首曲子并不难。"),
+            t("She did make a mistake, a loud wrong chord.", "她确实出了错，弹了一个响亮的错和弦。"),
+            t("A girl of about eight played before her, so she was not the youngest.", "在她之前弹奏的女孩大约八岁，所以她不是最小的。"),
+          ],
         ),
       ],
     ),
@@ -487,6 +622,11 @@ Years later, after my mother had passed away, I found a shoebox in her closet. I
             "The second paragraph says she found the letters a little embarrassing and her cabinmates teased her about them.",
             "第二段说，她觉得这些信有点让人难为情，同屋的营员还拿这事取笑她。",
           ),
+          [
+            t("She read every letter at night.", "她每晚都读那些信。"),
+            t("The letters came every afternoon, not late.", "信每天下午都按时到。"),
+            t("Pride is not what she felt. She was embarrassed.", "她没有感到骄傲，而是有点难为情。"),
+          ],
         ),
         ask(
           t("Why might the campers who got no letters have watched her with that look?", "那些没收到信的营员为什么可能用那种眼神看她？"),
@@ -500,6 +640,11 @@ Years later, after my mother had passed away, I found a shoebox in her closet. I
             "The writer says she did not understand the look at the time; the campers who got nothing were likely feeling left out and longing for word from home.",
             "作者说她当时不理解那种眼神；没收到信的营员很可能感到被冷落，渴望家里的消息。",
           ),
+          [
+            t("No test is mentioned.", "文中从没提到考试。"),
+            t("She broke no rule by getting mail.", "收信并没有违反营地规定。"),
+            t("The letters were from her mother, and the campers knew it.", "信是她妈妈写的，营员们也知道。"),
+          ],
         ),
         ask(
           t("What does the writer understand when she finds the shoebox?", "作者发现鞋盒时明白了什么？"),
@@ -513,6 +658,11 @@ Years later, after my mother had passed away, I found a shoebox in her closet. I
             "Her mother had kept all eleven short letters, tied with ribbon, which shows a love the writer did not fully see until much later.",
             "母亲把那十一封简短的信全都用丝带捆好保存着，这显示了作者很久以后才完全明白的爱。",
           ),
+          [
+            t("Her mother had kept them all, so she read them.", "妈妈把信全保存着，所以她读过。"),
+            t("Staying longer at camp is not the point.", "在营地多待几天不是重点。"),
+            t("The ribbon only tied the letters.", "丝带只是用来扎信的。"),
+          ],
         ),
       ],
     ),

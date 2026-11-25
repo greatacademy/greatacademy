@@ -45,6 +45,11 @@ Every year, December 10 is celebrated as Human Rights Day.`,
             "The first paragraph says many horrors had been committed by governments against their own people, and leaders asked how such things could be prevented.",
             "第一段说许多暴行是政府对本国人民犯下的，领导人们思考如何防止这类事情发生。",
           ),
+          [
+            t("Punishing the losers is never the aim given.", "文中从没说目的是惩罚战败国。"),
+            t("The committee had a leader already; it wrote rights.", "委员会已有主席，任务是写权利。"),
+            t("It is not a law and replaced none.", "它不是法律，也没有取代任何法律。"),
+          ],
         ),
         ask(
           t("Why did the committee argue over every word for two years?", "为什么委员会花了两年时间字斟句酌地争论？"),
@@ -58,6 +63,11 @@ Every year, December 10 is celebrated as Human Rights Day.`,
             "The second paragraph says the members came from many countries and held very different beliefs about religion, government and the economy.",
             "第二段说委员们来自许多国家，在宗教、政府和经济方面的信仰差异很大。",
           ),
+          [
+            t("Language is never named as the problem.", "文中从没说语言是问题。"),
+            t("They did want to write it; they argued about wording.", "他们愿意写，只是在措辞上争论。"),
+            t("The war had ended in 1945.", "战争在 1945 年已经结束。"),
+          ],
         ),
         ask(
           t(
@@ -74,6 +84,11 @@ Every year, December 10 is celebrated as Human Rights Day.`,
             "The fourth paragraph admits it is not a law, but says it became a standard people could use to measure governments, and many countries used it as a model for their constitutions.",
             "第四段承认它不是法律，但说它成为人们衡量政府的标准，许多国家以它为范本制定宪法。",
           ),
+          [
+            t("No court can punish a country for breaking it.", "没有法院能因违反它而惩罚国家。"),
+            t("A whole committee wrote it.", "它是整个委员会写的。"),
+            t("It has thirty articles.", "它有三十条。"),
+          ],
         ),
         ask(
           t("Who led the committee that wrote the Declaration?", "谁领导了起草《世界人权宣言》的委员会？"),
@@ -83,6 +98,11 @@ Every year, December 10 is celebrated as Human Rights Day.`,
             "The committee was led by Eleanor Roosevelt, the widow of President Franklin Roosevelt.",
             "委员会由罗斯福总统的遗孀埃莉诺·罗斯福领导。",
           ),
+          [
+            t("Franklin Roosevelt was her late husband.", "富兰克林·罗斯福是她已故的丈夫。"),
+            t("Kate Sheppard led women in New Zealand.", "凯特·谢泼德领导的是新西兰的妇女。"),
+            t("Gandhi led the Salt March.", "甘地领导的是食盐进军。"),
+          ],
         ),
       ],
       [
@@ -133,6 +153,11 @@ Two months later, women voted for the first time. Kate Sheppard's face now appea
             "The second paragraph gives their argument: women paid taxes and obeyed the laws, so they should have a say in making them. The other options are what opponents said, or not in the passage.",
             "第二段给出了她们的论点：妇女纳税、守法，所以应该在立法中有发言权。其他选项是反对者的说法，或文中没有提及。",
           ),
+          [
+            t("Women could not even vote, let alone run Parliament.", "女性连投票权都没有，更别说掌管议会。"),
+            t("Politics harming women was the opponents' argument.", "政治会伤害女性是反对者的说法。"),
+            t("Belonging at home was also the opponents' argument.", "女性属于家庭也是反对者的说法。"),
+          ],
         ),
         ask(
           t("Why was the 1893 petition hard to ignore?", "为什么1893年的请愿书让人难以忽视？"),
@@ -146,6 +171,11 @@ Two months later, women voted for the first time. Kate Sheppard's face now appea
             "The third paragraph says about twenty-four thousand women signed, nearly a quarter of the adult women, and the roll stretched more than two hundred and seventy meters.",
             "第三段说大约两万四千名妇女签了名，接近成年女性的四分之一，纸卷长达两百七十多米。",
           ),
+          [
+            t("Women signed it, not members of Parliament.", "签名的是女性，不是议员。"),
+            t("Newspapers printed letters, not the petition.", "报纸刊登的是来信，不是请愿书。"),
+            t("The first petitions had been rejected earlier.", "最早的请愿书早已被驳回。"),
+          ],
         ),
         ask(
           t("Why does the author describe the petition being unrolled across the floor?", "作者为什么描写请愿书铺满地板的情景？"),
@@ -159,12 +189,22 @@ Two months later, women voted for the first time. Kate Sheppard's face now appea
             "A roll stretched across the debating chamber turns a number into an image: lawmakers could literally see the support they were being asked to answer.",
             "铺满辩论厅的纸卷把数字变成了画面：议员们可以真切地看到他们需要回应的支持有多大。",
           ),
+          [
+            t("The size of the chamber is not the point.", "议事厅的大小不是重点。"),
+            t("Gluing is a detail, not the purpose.", "粘贴只是细节，不是目的。"),
+            t("The tricks were delays, unrelated to the unrolling.", "那些花招是拖延，与展开请愿书无关。"),
+          ],
         ),
         ask(
           t("Whose face appears on New Zealand's ten-dollar note?", "新西兰十元纸币上印着谁的头像？"),
           t("Kate Sheppard's", "凯特·谢泼德"),
           [t("Eleanor Roosevelt's", "埃莉诺·罗斯福"), t("The queen's", "女王"), t("A prime minister's", "一位总理")],
           t("Kate Sheppard's face now appears on New Zealand's ten-dollar note.", "凯特·谢泼德的头像如今印在新西兰十元纸币上。"),
+          [
+            t("Eleanor Roosevelt was American.", "埃莉诺·罗斯福是美国人。"),
+            t("No queen is mentioned.", "文中没提女王。"),
+            t("No prime minister is mentioned.", "文中没提总理。"),
+          ],
         ),
       ],
       ["New", "Zealand", "Zealand's", "Kate", "Sheppard", "Sheppard's", "Parliament", "September"],
@@ -197,6 +237,11 @@ In two minutes, Lincoln turned a ceremony for the dead into a call to the living
             "The third paragraph says he built his argument by moving through time: the founding in the past, the war in the present and, in the fifth paragraph, the work of the future.",
             "第三段说他通过时间的推进来构建论证：过去的建国，现在的战争，以及第五段中未来的任务。",
           ),
+          [
+            t("He named no soldiers.", "他没有点任何士兵的名。"),
+            t("He did not reply to Everett.", "他没有回应埃弗里特。"),
+            t("He did not describe the fighting.", "他没有描述战斗。"),
+          ],
         ),
         ask(
           t("What turn does Lincoln make in the fourth paragraph?", "林肯在第四段作了什么转折？"),
@@ -213,6 +258,11 @@ In two minutes, Lincoln turned a ceremony for the dead into a call to the living
             "The crowd had come to dedicate the ground, but Lincoln says the living cannot truly do it: the soldiers had already done so, far better than any words could.",
             "人们来是为了献祭这片土地，但林肯说生者无法真正做到：士兵们已经做到了，远胜于任何言语。",
           ),
+          [
+            t("He dedicated the cemetery; he did not oppose it.", "他为墓地举行献词，并不反对建墓地。"),
+            t("He never said the nation would lose.", "他从没说国家会输。"),
+            t("He did not criticize the crowd.", "他没有批评人群。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest was the purpose of the speech?", "最后一句暗示了这篇演讲的目的是什么？"),
@@ -226,12 +276,22 @@ In two minutes, Lincoln turned a ceremony for the dead into a call to the living
             "The last sentence says Lincoln turned a ceremony for the dead into a call to the living, matching the fifth paragraph, where he says it is for the living to finish the soldiers' work.",
             "最后一句说林肯把悼念死者的仪式变成了对生者的号召，这与第五段相呼应，他在那里说生者应当完成士兵们的事业。",
           ),
+          [
+            t("The battle's outcome is not described.", "文中没描写战役的结果。"),
+            t("Everett spoke before him.", "埃弗里特在他之前讲话。"),
+            t("He turned mourning into a call to act.", "他把哀悼变成了行动的号召。"),
+          ],
         ),
         ask(
           t("How long did Edward Everett speak?", "爱德华·埃弗里特讲了多久？"),
           t("About two hours", "大约两小时"),
           [t("About two minutes", "大约两分钟"), t("About ten minutes", "大约十分钟"), t("All day", "一整天")],
           t("The main speaker, Edward Everett, talked for about two hours.", "主讲人爱德华·埃弗里特讲了大约两小时。"),
+          [
+            t("Two minutes was Lincoln's speech.", "两分钟是林肯的演讲。"),
+            t("Ten minutes is never mentioned.", "文中从没提十分钟。"),
+            t("All day is far too long.", "一整天太长了。"),
+          ],
         ),
       ],
       [
@@ -276,6 +336,11 @@ The march did not win independence at once. That would not come until 1947. But 
             "The first paragraph says salt is something everyone needs, rich or poor, so the tax fell hardest on the poorest. The same tax is a much larger share of a small income.",
             "第一段说盐是无论贫富每个人都需要的东西，所以这种税对最贫穷的人打击最大。同样的税在微薄收入中占比大得多。",
           ),
+          [
+            t("Everyone had to buy salt, not only the poor.", "人人都得买盐，不只是穷人。"),
+            t("No one was allowed to make their own salt.", "谁都不准自己制盐。"),
+            t("The tax is not said to vary by village.", "文中没说税额因村而异。"),
+          ],
         ),
         ask(
           t("Why did Gandhi choose the salt law as his target?", "甘地为什么选择盐法作为抗议目标？"),
@@ -289,6 +354,11 @@ The march did not win independence at once. That would not come until 1947. But 
             "The second paragraph says Gandhi understood that salt was something every Indian could understand, and breaking the law only meant picking up salt from the seashore.",
             "第二段说甘地明白盐是每个印度人都能理解的东西，而违反这条法律只需从海边捡起盐。",
           ),
+          [
+            t("His followers were puzzled; they saw larger injustices.", "他的追随者很困惑，觉得还有更大的不公。"),
+            t("His followers were puzzled by the choice.", "他的追随者对这个选择感到困惑。"),
+            t("Salt's price is not compared with other goods.", "文中没把盐价和别的商品比较。"),
+          ],
         ),
         ask(
           t("What is nonviolent protest, as the passage describes it?", "文章所描述的非暴力抗议是什么？"),
@@ -302,6 +372,11 @@ The march did not win independence at once. That would not come until 1947. But 
             "The last paragraph defines it: refusing to obey an unjust law peacefully, and accepting the punishment.",
             "最后一段给出了定义：和平地拒绝服从不公正的法律，并接受惩罚。",
           ),
+          [
+            t("Writing letters is not the method described.", "写信不是文中描述的方法。"),
+            t("Selling salt broke the law, but price is not the point.", "卖盐是违法，但重点不在价格。"),
+            t("The walk was a protest, not exercise.", "步行是抗议，不是锻炼。"),
+          ],
         ),
         ask(
           t("At which village did Gandhi pick up the salt?", "甘地在哪个村子拾起了盐？"),
@@ -311,6 +386,11 @@ The march did not win independence at once. That would not come until 1947. But 
             "On April 6, at the coastal village of Dandi, Gandhi picked up a lump of natural salt.",
             "4月6日，甘地在海边村庄丹迪拾起一块天然盐。",
           ),
+          [
+            t("Ahmedabad was where they set out.", "艾哈迈达巴德是出发地。"),
+            t("Delhi is never mentioned.", "文中从没提德里。"),
+            t("Montgomery is in Alabama.", "蒙哥马利在亚拉巴马州。"),
+          ],
         ),
       ],
       ["India", "Indians", "Indian", "Britain", "British", "Mohandas", "Gandhi", "Ahmedabad", "Dandi", "Salt", "March", "April"],
@@ -343,6 +423,11 @@ Change came slowly, and many states passed their own laws first. In 1938, the Un
             "The second paragraph says factory owners claimed the children were happy, well treated and helping their families.",
             "第二段说工厂主声称孩子们很快乐、受到善待，还在帮助家庭。",
           ),
+          [
+            t("Many working children never went to school.", "许多童工从没上过学。"),
+            t("Children did work in mines.", "孩子们确实在矿井里干活。"),
+            t("The owners kept him out but did not call photos fake.", "工厂主不让他进去，但没说照片是假的。"),
+          ],
         ),
         ask(
           t("Why did Hine measure children against the buttons on his coat?", "海因为什么用外套上的纽扣测量孩子的身高？"),
@@ -356,6 +441,11 @@ Change came slowly, and many states passed their own laws first. In 1938, the Un
             "The fourth paragraph says he did it to show how young the children were. His buttons were at known heights, so he could estimate a child's height without a ruler.",
             "第四段说他这样做是为了显示孩子们有多小。他的纽扣高度已知，所以不用尺子也能估算孩子的身高。",
           ),
+          [
+            t("The disguise was pretending, not measuring.", "伪装是假扮身份，不是测量。"),
+            t("He did not sell coats.", "他不卖外套。"),
+            t("Measuring showed age, not who to choose.", "测量是为了显示年龄，不是挑人拍照。"),
+          ],
         ),
         ask(
           t("Why did Hine's notes make his photographs stronger evidence?", "为什么海因的记录让他的照片成为更有力的证据？"),
@@ -369,12 +459,22 @@ Change came slowly, and many states passed their own laws first. In 1938, the Un
             "The fifth paragraph says the notes made his photographs more than pictures: they were evidence that could be checked, which made the owners' claims much harder to defend.",
             "第五段说这些记录让他的照片不只是图片：它们是可以核实的证据，这让工厂主的说法难以自圆其说。",
           ),
+          [
+            t("Notes made them checkable, not prettier.", "记录让照片可以查证，不是更好看。"),
+            t("Hine wrote the notes himself.", "记录是海因自己写的。"),
+            t("His job as a teacher is not what the notes prove.", "记录证明的不是他当过老师。"),
+          ],
         ),
         ask(
           t("What did Hine sometimes pretend to be?", "海因有时会假扮成什么人？"),
           t("A salesman or a fire inspector", "推销员或消防检查员"),
           [t("A factory owner", "工厂老板"), t("A lawmaker", "立法者"), t("A child worker", "童工")],
           t("Hine sometimes pretended to be a salesman or a fire inspector.", "海因有时假扮成推销员或消防检查员。"),
+          [
+            t("The owners tried to keep him out.", "工厂主想把他挡在外面。"),
+            t("Lawmakers saw his photographs.", "议员们看过他的照片。"),
+            t("He photographed the child workers.", "他拍的是童工。"),
+          ],
         ),
       ],
       ["United", "States", "Americans", "National", "Child", "Labor", "Committee", "Lewis", "Hine"],
@@ -406,6 +506,11 @@ Still, they kept going, not for a week or a month, but for 381 days. The bus com
             "The paragraph says she was not simply a tired woman who happened to refuse, as some stories claimed, but an experienced activist who had worked for civil rights for years.",
             "这一段说她并不像某些故事所说的那样只是一个碰巧拒绝的疲惫女人，而是一位多年为民权奋斗的资深活动家。",
           ),
+          [
+            t("She was arrested, the passage says.", "文中说她被捕了。"),
+            t("She was a passenger and seamstress.", "她是乘客，是女裁缝。"),
+            t("She refused to give up her seat.", "她拒绝让座。"),
+          ],
         ),
         ask(
           t("Why was the boycott effective against the bus company?", "为什么这次抵制对公交公司有效？"),
@@ -419,6 +524,11 @@ Still, they kept going, not for a week or a month, but for 381 days. The bus com
             "The fourth paragraph says Black riders made up most of the company's passengers, and the fifth says the company lost much of its income.",
             "第四段说黑人乘客占公司乘客的大多数，第五段说公司损失了大部分收入。",
           ),
+          [
+            t("The drivers are not said to have joined.", "文中没说司机参加了。"),
+            t("The buses still ran.", "公交车照常运行。"),
+            t("The city did not close the company.", "市政府没有关闭公交公司。"),
+          ],
         ),
         ask(
           t("Which two efforts together ended the bus laws in Montgomery?", "哪两方面的努力共同终结了蒙哥马利的公交法规？"),
@@ -432,12 +542,22 @@ Still, they kept going, not for a week or a month, but for 381 days. The bus com
             "The last paragraph describes both: the boycott lasted 381 days and cost the company its income, while lawyers took the case to court, and the Supreme Court ruled the separation unconstitutional.",
             "最后一段描述了两方面：抵制持续了381天，使公司失去收入；同时律师把案件提交法院，最高法院裁定隔离违宪。",
           ),
+          [
+            t("Carpools helped but did not end the law.", "拼车有帮助，但没有终结法律。"),
+            t("The march to the sea was in India.", "向海边进军发生在印度。"),
+            t("Arrests did not end the law.", "逮捕没有终结法律。"),
+          ],
         ),
         ask(
           t("How many days did the boycott last?", "抵制运动持续了多少天？"),
           t("381 days", "381天"),
           [t("30 days", "30天"), t("7 days", "7天"), t("1,955 days", "1955天")],
           t("They kept going for 381 days.", "他们坚持了381天。"),
+          [
+            t("Thirty days would be about a month.", "三十天大约只有一个月。"),
+            t("Seven days would be a week.", "七天只有一周。"),
+            t("1955 is the year, not the number of days.", "1955 是年份，不是天数。"),
+          ],
         ),
       ],
       [
@@ -484,6 +604,11 @@ Loaded language is not always dishonest. Writers of opinion pieces and speeches 
             "The fifth paragraph says a mob sounds dangerous and out of control, while marchers or students does not. Saturday and traffic are neutral facts.",
             "第五段说 mob 听起来危险而失控，而 marchers 或 students 则不会。Saturday 和 traffic 是中性的事实。",
           ),
+          [
+            t("Saturday is a plain date.", "星期六只是普通的日期。"),
+            t("Students is the neutral word.", "“学生”是中性词。"),
+            t("Traffic is plain; choking is the loaded part.", "traffic 是平常词，choking 才是带感情色彩的部分。"),
+          ],
         ),
         ask(
           t("What important information does Report B give that Report A leaves out?", "报道B给出了哪条报道A遗漏的重要信息？"),
@@ -497,6 +622,11 @@ Loaded language is not always dishonest. Writers of opinion pieces and speeches 
             "The sixth paragraph says Report B tells the reader why the students marched, to call for more bicycle lanes, which Report A leaves out.",
             "第六段说报道B告诉读者学生们为什么游行，即呼吁修建更多自行车道，而报道A没有提到。",
           ),
+          [
+            t("Report A also mentions traffic.", "报道 A 也提到了交通。"),
+            t("Report A also says Saturday.", "报道 A 也说了星期六。"),
+            t("Report A also says downtown.", "报道 A 也说了市中心。"),
+          ],
         ),
         ask(
           t(
@@ -513,6 +643,11 @@ Loaded language is not always dishonest. Writers of opinion pieces and speeches 
             "The last paragraph says loaded language is used openly in opinion pieces and speeches, but when a news report uses it, readers should notice.",
             "最后一段说观点文章和演讲公开使用带感情色彩的语言，但当新闻报道使用它时，读者应该留意。",
           ),
+          [
+            t("Speeches use strong words openly, to persuade.", "演讲公开使用强烈的词来说服人。"),
+            t("Numbers are a sign of neutral writing.", "数字是中性写作的标志。"),
+            t("Petitions are not discussed in this way.", "文中没这样讨论请愿书。"),
+          ],
         ),
       ],
       ["Saturday", "City", "Hall", "Report"],
@@ -548,6 +683,11 @@ Mandela was not sentenced to death, but he spent twenty-seven years in prison. I
             "The first paragraph defines apartheid as a system of laws that separated people by race and denied the Black majority the right to vote, own land and live where they chose.",
             "第一段把种族隔离定义为一套按种族隔离人群的法律制度，剥夺了黑人多数的选举权、土地所有权和居住自由。",
           ),
+          [
+            t("Peaceful protest was what his group did earlier.", "和平抗议是他的组织早期的做法。"),
+            t("The dock is where Mandela stood.", "被告席是曼德拉站的地方。"),
+            t("Pretoria is the city of the trial.", "比勒陀利亚是受审的城市。"),
+          ],
         ),
         ask(
           t("Why did Mandela begin by explaining his organization's past?", "曼德拉为什么首先解释他的组织的过去？"),
@@ -564,6 +704,11 @@ Mandela was not sentenced to death, but he spent twenty-seven years in prison. I
             "He explains that for years they used only peaceful methods, the government answered with force, Sharpeville happened and peaceful protest was banned. Only then did they choose sabotage. This order makes his choice look like a last resort.",
             "他解释说多年来他们只用和平手段，政府却以武力回应，发生了沙佩维尔事件，和平抗议被禁止。只有在那时他们才选择了破坏行动。这种顺序让他的选择看起来是迫不得已。",
           ),
+          [
+            t("He did not deny his actions.", "他没有否认自己的行为。"),
+            t("Police killed sixty-nine people.", "警察打死了六十九人。"),
+            t("He said he was prepared to die, not asked for mercy.", "他说自己准备好赴死，没有请求宽大。"),
+          ],
         ),
         ask(
           t(
@@ -580,6 +725,11 @@ Mandela was not sentenced to death, but he spent twenty-seven years in prison. I
             "The fourth paragraph says he used facts and numbers about poverty, schools and families, but also spoke of dignity and the wish to be treated as equals, appealing to reason and to feeling.",
             "第四段说他用事实和数字讲述贫困、学校和家庭，同时也谈到尊严和希望被平等对待的愿望，既诉诸理性，也诉诸情感。",
           ),
+          [
+            t("He tells no jokes.", "他没讲笑话。"),
+            t("He reads no petition and does not sing.", "他没念请愿书，也没唱歌。"),
+            t("He makes a statement; he does not question the judge.", "他作陈述，没有质问法官。"),
+          ],
         ),
       ],
       ["Nelson", "Mandela", "Pretoria", "South", "Africa", "Africans", "Black", "Sharpeville"],

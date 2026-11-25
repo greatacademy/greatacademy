@@ -49,6 +49,11 @@ Thoreau spent only one night behind bars. But the question he asked that night, 
             "The second paragraph says the tax went to a government that permitted slavery and had gone to war with Mexico, and he did not want to support either.",
             "第二段说这笔税交给了一个允许奴隶制并对墨西哥开战的政府，他不想支持这两者。",
           ),
+          [
+            t("The tax was small; his reason was conscience, not money.", "这笔税很少；他的理由是良知，不是钱。"),
+            t("He did not oppose government in general, only an unjust one.", "他并不反对一切政府，只反对不公正的政府。"),
+            t("He refused on purpose when the collector reminded him.", "收税员提醒时他是故意拒绝的。"),
+          ],
         ),
         ask(
           t(
@@ -65,6 +70,11 @@ Thoreau spent only one night behind bars. But the question he asked that night, 
             "The fourth paragraph says the person who breaks a law for conscience must accept the punishment openly, and that openness separates civil disobedience from crime.",
             "第四段说出于良知违法的人必须公开接受惩罚，这种公开性将公民不服从与犯罪区分开来。",
           ),
+          [
+            t("Thoreau said the act must be open, not secret.", "梭罗说这种行为必须公开，不能秘密。"),
+            t("The age of a law is not the test; injustice is.", "标准不是法律的新旧，而是是否不公。"),
+            t("No lawyer's permission is mentioned.", "文中没提律师许可。"),
+          ],
         ),
         ask(
           t("How did the essay's influence spread in the twentieth century?", "这篇文章的影响在二十世纪是如何传播的？"),
@@ -81,12 +91,22 @@ Thoreau spent only one night behind bars. But the question he asked that night, 
             "The fifth paragraph says Gandhi said it influenced his ideas, and leaders of the civil rights movement read it too.",
             "第五段说甘地称这篇文章影响了他的思想，民权运动的领袖们也读过它。",
           ),
+          [
+            t("It had few readers for decades, but it was not banned.", "它几十年读者寥寥，但没有被禁。"),
+            t("It travelled far beyond Concord, to India and the American South.", "它传到康科德之外，远至印度和美国南方。"),
+            t("Protesters used it against unjust laws, not governments for taxes.", "抗议者用它反对不公法律，而不是政府用来征税。"),
+          ],
         ),
         ask(
           t("Why had Thoreau walked into town that day in July 1846?", "1846年7月那天梭罗为什么进城？"),
           t("To collect a mended shoe", "去取一只补好的鞋"),
           [t("To pay his poll tax", "去交人头税"), t("To give a lecture", "去做演讲"), t("To visit his mother", "去看望母亲")],
           t("Thoreau walked into the town of Concord to collect a mended shoe.", "梭罗走进康科德镇去取一只补好的鞋。"),
+          [
+            t("He refused to pay the tax when asked.", "被要求时他拒绝交税。"),
+            t("The lecture came after the night in jail.", "演讲是在坐牢之后。"),
+            t("His mother is not mentioned; his aunt probably paid the tax.", "文中没提他母亲；可能是他姑姑交了税。"),
+          ],
         ),
       ],
       [
@@ -134,6 +154,11 @@ Within months, Birmingham's leaders agreed to end segregation in many stores. Th
             "The second paragraph says they agreed segregation was wrong but called the protests unwise and untimely and urged patience and the courts.",
             "第二段说他们同意种族隔离是错误的，但称抗议不明智、不合时宜，并主张耐心等待法院解决。",
           ),
+          [
+            t("They agreed segregation was wrong.", "他们也认为种族隔离是错的。"),
+            t("They urged him to stop demonstrating.", "他们劝他停止示威。"),
+            t("The amusement park is in King's reply, about his daughter.", "游乐园出现在金的回信中，与他女儿有关。"),
+          ],
         ),
         ask(
           t("How did King distinguish a just law from an unjust one?", "金如何区分正义的法律与不正义的法律？"),
@@ -150,6 +175,11 @@ Within months, Birmingham's leaders agreed to end segregation in many stores. Th
             "The fifth paragraph says a just law uplifts human dignity, and an unjust law degrades it or is imposed by a majority on a minority.",
             "第五段说正义的法律提升人的尊严，不正义的法律贬低尊严，或由多数强加于少数。",
           ),
+          [
+            t("Age is not his test; dignity is.", "他的标准不是新旧，而是尊严。"),
+            t("He compares laws by their effect, not by who passed them.", "他看法律的效果，而不是由谁通过。"),
+            t("Ease of obeying is not his standard.", "容易遵守与否不是他的标准。"),
+          ],
         ),
         ask(
           t("Whom did King call the greatest obstacle to freedom?", "金称谁是自由的最大障碍？"),
@@ -163,6 +193,11 @@ Within months, Birmingham's leaders agreed to end segregation in many stores. Th
             "The sixth paragraph says the greatest obstacle was not the open racist but the moderate who preferred order to justice.",
             "第六段说最大的障碍不是公开的种族主义者，而是更看重秩序而非正义的温和派。",
           ),
+          [
+            t("He named the moderate, not the open racist, as the greatest obstacle.", "他说最大障碍是温和派，而不是公开的种族主义者。"),
+            t("His lawyers helped him; they were no obstacle.", "他的律师在帮他，不是障碍。"),
+            t("Young marchers supported the movement.", "年轻的游行者支持这场运动。"),
+          ],
         ),
         ask(
           t("Why was King arrested in Birmingham?", "金为什么在伯明翰被捕？"),
@@ -176,6 +211,11 @@ Within months, Birmingham's leaders agreed to end segregation in many stores. Th
             "Martin Luther King Jr. was arrested in Birmingham, Alabama, for leading a march without a permit.",
             "马丁·路德·金因未经许可领导游行在阿拉巴马州伯明翰被捕。",
           ),
+          [
+            t("Unpaid taxes belong to Thoreau's story.", "欠税属于梭罗的故事。"),
+            t("He wrote the letter after his arrest.", "他是被捕后才写的信。"),
+            t("The lunch counters were segregated, but he was arrested for marching.", "午餐柜台确实隔离，但他是因游行被捕的。"),
+          ],
         ),
       ],
       ["Martin", "Luther", "King", "Jr", "Birmingham", "Alabama", "King's", "Black", "American", "Americans", "Easter"],
@@ -210,6 +250,11 @@ In 1970, five years after the strike began, the major grape growers signed contr
             "The third paragraph says the strike was hard to win, so they took the struggle beyond the fields by asking people to stop buying grapes.",
             "第三段说罢工难以取胜，所以他们把斗争扩展到田地之外，呼吁人们不买葡萄。",
           ),
+          [
+            t("Health is never the reason; the boycott was about dignity.", "原因与健康无关；抵制关乎尊严。"),
+            t("The government is not said to have asked anything.", "文中没说政府提了什么要求。"),
+            t("The union did not sell grapes.", "工会并不卖葡萄。"),
+          ],
         ),
         ask(
           t("Why did Chavez go without food for twenty-five days?", "查韦斯为什么绝食二十五天？"),
@@ -223,6 +268,11 @@ In 1970, five years after the strike began, the major grape growers signed contr
             "The fifth paragraph says that when some members talked of force, he fasted for twenty-five days to recommit the union to peaceful methods.",
             "第五段说当一些成员谈论使用武力时，他绝食二十五天，让工会重新坚守和平方式。",
           ),
+          [
+            t("The fast was about nonviolence, not grape prices.", "绝食是为了非暴力，不是葡萄价格。"),
+            t("It was a choice, not a lack of money for food.", "这是一种选择，不是买不起食物。"),
+            t("The weight loss was a cost, not the goal.", "体重下降是代价，不是目的。"),
+          ],
         ),
         ask(
           t("What objections to the boycott does the passage present fairly?", "文章公正地陈述了对抵制运动的哪些反对意见？"),
@@ -236,6 +286,11 @@ In 1970, five years after the strike began, the major grape growers signed contr
             "The sixth paragraph says growers argued the boycott hurt small farmers and some workers felt pressured, and calls these objections not all unreasonable.",
             "第六段说种植者认为抵制伤害了小农户，一些工人感到有压力，并称这些反对意见并非都不合理。",
           ),
+          [
+            t("Grape prices are not one of the objections.", "葡萄价格不在反对理由之中。"),
+            t("The union is not said to be owned by growers.", "文中没说工会归种植园主所有。"),
+            t("Chavez insisted on nonviolence, even when strikers were beaten.", "即使罢工者被打，查韦斯也坚持非暴力。"),
+          ],
         ),
         ask(
           t("How much were the grape pickers paid when they walked out in 1965?", "1965年葡萄采摘工罢工时工资是多少？"),
@@ -246,6 +301,11 @@ In 1970, five years after the strike began, the major grape growers signed contr
             t("Nothing at all", "一分钱也没有"),
           ],
           t("They were paid about a dollar and twenty-five cents an hour.", "他们每小时只拿约一美元二十五美分。"),
+          [
+            t("Five dollars a day is not the figure given.", "每天五美元不是文中的数字。"),
+            t("Ten dollars an hour is far too high.", "每小时十美元太高了。"),
+            t("They were paid, though very little.", "他们有工资，只是很少。"),
+          ],
         ),
       ],
       [
@@ -297,6 +357,11 @@ Every year, on the anniversary of the fire, people gather outside the building, 
             "The second paragraph says the owners kept the door locked, it was later said, to prevent workers from stealing and taking unauthorized breaks.",
             "第二段说据后来的说法，老板锁着这扇门，以防工人偷东西和擅自休息。",
           ),
+          [
+            t("Firefighters' ladders reached only the sixth floor; they did not lock doors.", "消防梯只到六楼；消防员没锁门。"),
+            t("The door was kept locked on purpose, not broken.", "门是故意锁上的，不是坏了。"),
+            t("The owners, not the workers, locked it.", "锁门的是老板，不是工人。"),
+          ],
         ),
         ask(
           t("Why was the fire not a complete surprise?", "为什么这场大火并不完全出人意料？"),
@@ -313,6 +378,11 @@ Every year, on the anniversary of the fire, people gather outside the building, 
             "The third paragraph says workers had struck two years earlier, demanding unlocked doors and working fire escapes, and the owners refused.",
             "第三段说工人们两年前曾罢工，要求不锁门和可用的消防梯，老板拒绝了。",
           ),
+          [
+            t("No earlier fires are mentioned.", "文中没提以前的火灾。"),
+            t("The owners announced nothing; they refused demands.", "老板什么也没宣布，只是拒绝了要求。"),
+            t("Height is not the issue; locked doors and a weak fire escape are.", "问题不在楼高，而在锁门和不牢固的消防梯。"),
+          ],
         ),
         ask(
           t("What lasting change followed the fire?", "这场大火之后发生了什么持久的变化？"),
@@ -326,6 +396,11 @@ Every year, on the anniversary of the fire, people gather outside the building, 
             "The fifth paragraph says the state passed dozens of new laws on fire drills, sprinklers, unlocked doors and working hours, which became models for the country.",
             "第五段说该州通过了数十项关于消防演习、喷淋装置、不锁门和工作时间的新法律，这些法律成为全国的范本。",
           ),
+          [
+            t("The owners were found not guilty.", "老板被判无罪。"),
+            t("Factories got safer, not closed.", "工厂变安全了，并没关闭。"),
+            t("Immigrants were not forbidden to work.", "移民并没有被禁止工作。"),
+          ],
         ),
         ask(
           t("What did the Triangle Shirtwaist Company make?", "三角衬衫厂生产什么？"),
@@ -335,6 +410,11 @@ Every year, on the anniversary of the fire, people gather outside the building, 
             "The top three floors were occupied by the Triangle Shirtwaist Company, which made women's blouses.",
             "顶层三层是三角衬衫厂，生产女式衬衫。",
           ),
+          [
+            t("Men's suits are not mentioned.", "文中没提男士西装。"),
+            t("Shoes are not mentioned.", "文中没提鞋子。"),
+            t("Cotton scraps burned, but the company made blouses.", "燃烧的是棉布碎料，但公司生产的是女式衬衫。"),
+          ],
         ),
       ],
       ["Triangle", "Shirtwaist", "Company", "New", "York", "Manhattan", "Frances", "Perkins", "Italian", "Jewish", "American"],
@@ -372,6 +452,11 @@ Many Freedom Riders went on to lead the civil rights movement; one of them, John
             "The first two paragraphs say the court had ruled such segregation illegal, but it was ignored, so the riders set out to test the law.",
             "前两段说法院已裁定这种隔离违法却无人遵守，所以乘车者出发去检验这项法律。",
           ),
+          [
+            t("Speed was not their aim; they rode to test the law.", "他们不求快，而是乘车检验法律。"),
+            t("Ticket prices are not mentioned.", "文中没提票价。"),
+            t("New buses are not mentioned.", "文中没提新巴士。"),
+          ],
         ),
         ask(
           t("What argument did some people make for stopping the rides?", "一些人以什么理由主张停止乘车行动？"),
@@ -388,6 +473,11 @@ Many Freedom Riders went on to lead the civil rights movement; one of them, John
             "The fourth paragraph says some supporters argued the rides were too provocative and progress would come faster through quieter negotiation.",
             "第四段说一些支持者认为乘车行动太具挑衅性，较温和的谈判会更快带来进步。",
           ),
+          [
+            t("Cost is not the argument given.", "给出的理由不是费用。"),
+            t("Other passengers are not mentioned.", "文中没提其他乘客。"),
+            t("The goals were not yet won; signs still stood.", "目标尚未实现；牌子还在。"),
+          ],
         ),
         ask(
           t("Why did Diane Nash insist that the rides continue?", "黛安·纳什为什么坚持继续乘车行动？"),
@@ -401,6 +491,11 @@ Many Freedom Riders went on to lead the civil rights movement; one of them, John
             "The fifth paragraph says she believed that if the rides stopped, it would send the message that violence could defeat nonviolence.",
             "第五段说她认为如果停止乘车，就等于告诉人们暴力可以战胜非暴力。",
           ),
+          [
+            t("Prison was a cost, not her goal.", "坐牢是代价，不是她的目标。"),
+            t("No payment was promised.", "没人承诺付钱。"),
+            t("The mobs were still violent.", "暴徒依然很暴力。"),
+          ],
         ),
         ask(
           t("How many people set out on the first Freedom Ride in May 1961?", "1961年5月第一次自由乘车有多少人出发？"),
@@ -410,6 +505,11 @@ Many Freedom Riders went on to lead the civil rights movement; one of them, John
             "In May 1961, a group of thirteen people, Black and white, decided to test the law.",
             "1961年5月，一群十三个人，有黑人也有白人，决定检验这条法律。",
           ),
+          [
+            t("Four hundred joined over the summer, not at first.", "四百人是整个夏天陆续加入的，不是一开始。"),
+            t("Three is far too few.", "三人太少了。"),
+            t("A thousand is far too many.", "一千人太多了。"),
+          ],
         ),
       ],
       [
@@ -461,6 +561,11 @@ The debate between them was not about the goal, which both men shared, but about
             "The first paragraph says Washington suggested Black Americans would work hard, learn useful skills and build up property, rather than press for rights for now.",
             "第一段说华盛顿提出美国黑人应努力工作、学习实用技能、积累财产，暂不争取权利。",
           ),
+          [
+            t("Voting rights are what he asked to delay.", "投票权正是他要求暂缓的。"),
+            t("Moving north is not his program.", "北迁不是他的计划。"),
+            t("Doctorates are Du Bois's story.", "博士学位属于杜波依斯的经历。"),
+          ],
         ),
         ask(
           t(
@@ -477,6 +582,11 @@ The debate between them was not about the goal, which both men shared, but about
             "The third paragraph says Du Bois argued the approach asked them to give up political power, civil rights and higher education for their most gifted young people.",
             "第三段说杜波依斯认为这条路线要求他们放弃政治权力、公民权利以及最有天赋的年轻人接受高等教育的机会。",
           ),
+          [
+            t("Du Bois did not say they gave up farms or schools.", "杜波依斯没说他们放弃农场或学校。"),
+            t("Du Bois agreed that hard work and trade schools mattered.", "杜波依斯也认为勤劳和职业学校很重要。"),
+            t("Homes and families are not mentioned.", "文中没提家园和家庭。"),
+          ],
         ),
         ask(
           t("What kind of disagreement did the two men have?", "两人之间是哪一类分歧？"),
@@ -490,12 +600,22 @@ The debate between them was not about the goal, which both men shared, but about
             "The last paragraph says the debate was not about the goal, which both shared, but about the road.",
             "最后一段说争论不在于目标，两人目标相同，而在于道路。",
           ),
+          [
+            t("Both shared the goal of equality.", "两人都以平等为目标。"),
+            t("Their birthplaces are not argued over.", "他们并未争论出生地。"),
+            t("Both valued schools.", "两人都重视学校。"),
+          ],
         ),
         ask(
           t("Which book did Du Bois publish in 1903?", "杜波依斯在1903年出版了哪本书？"),
           t("The Souls of Black Folk", "《黑人的灵魂》"),
           [t("The Epic of America", "《美国史诗》"), t("Up from Slavery", "《超越奴役》"), t("Civil Disobedience", "《论公民的不服从》")],
           t("In 1903, W. E. B. Du Bois published a book called The Souls of Black Folk.", "1903年，杜波依斯出版了《黑人的灵魂》一书。"),
+          [
+            t("The Epic of America is Adams's book.", "《美国史诗》是亚当斯的书。"),
+            t("Up from Slavery is not mentioned in the passage.", "文中没提《力争上游》。"),
+            t("Civil Disobedience is Thoreau's essay.", "《论公民的不服从》是梭罗的文章。"),
+          ],
         ),
       ],
       [
@@ -548,6 +668,11 @@ Opinions of the protest have changed greatly over time. Today a statue of the tw
             "The third paragraph says the Olympic leadership expelled them, saying political gestures had no place in sport.",
             "第三段说奥运会领导层把他们驱逐了，称政治姿态在体育中没有立足之地。",
           ),
+          [
+            t("They won the race fairly.", "他们公平地赢得了比赛。"),
+            t("They did accept their medals.", "他们确实接受了奖牌。"),
+            t("Norman stood with them in support.", "诺曼站在他们一边表示支持。"),
+          ],
         ),
         ask(
           t("What was the critics' main argument against the protest?", "批评者反对这次抗议的主要理由是什么？"),
@@ -561,6 +686,11 @@ Opinions of the protest have changed greatly over time. Today a statue of the tw
             "The fourth paragraph says critics argued the Olympics were meant to bring nations together above politics, and protest broke that rule.",
             "第四段说批评者认为奥运会旨在超越政治、团结各国，抗议违反了这一规则。",
           ),
+          [
+            t("They won medals, so they trained hard.", "他们拿到奖牌，说明训练刻苦。"),
+            t("Socks are part of the gesture, not a rule broken.", "袜子是表态的一部分，不是违规。"),
+            t("Race speed is not discussed.", "文中没讨论比赛速度。"),
+          ],
         ),
         ask(
           t(
@@ -580,6 +710,11 @@ Opinions of the protest have changed greatly over time. Today a statue of the tw
             "The fifth paragraph says they answered that nations already used the Games to show power, and staying silent would mean accepting injustice.",
             "第五段说他们回应称各国早已利用奥运会展示实力，保持沉默就意味着接受不公。",
           ),
+          [
+            t("They said the gesture was a salute to human rights, so it was political.", "他们说那是向人权致敬，显然有政治含义。"),
+            t("They did not claim to be above the rules.", "他们并没说规则不适用于自己。"),
+            t("Running again is not part of their answer.", "是否再跑步不在他们的回答里。"),
+          ],
         ),
       ],
       [
@@ -627,6 +762,11 @@ The struggle did not end there. Women in Iceland still earned less than men deca
             "The third paragraph says strike seemed too aggressive and might frighten off less political women, so day off let women of every background join.",
             "第三段说“罢工”显得太激进，可能吓退不太关心政治的女性，所以“休假日”让各种背景的女性都能参加。",
           ),
+          [
+            t("Strikes are not said to be illegal.", "文中没说罢工违法。"),
+            t("The date is not called a holiday.", "那天并不是公共假日。"),
+            t("Pay is not mentioned; employers might punish them.", "文中没提工资；雇主可能会惩罚她们。"),
+          ],
         ),
         ask(
           t("What did the day show about the country?", "这一天说明了这个国家的什么情况？"),
@@ -640,6 +780,11 @@ The struggle did not end there. Women in Iceland still earned less than men deca
             "The second paragraph says organizers wanted to show how much the country depended on women's work, and the fourth paragraph shows banks, schools and newspapers stopping.",
             "第二段说组织者想说明国家有多依赖女性的劳动，第四段写了银行、学校和报纸停摆的情景。",
           ),
+          [
+            t("Banks and shops had to close without women, not run better by men.", "没有女性，银行和商店不得不关门，男人并没做得更好。"),
+            t("Schools shut for one day because teachers were women.", "学校停课一天，是因为老师是女性。"),
+            t("Newspapers were hard to print, not unread.", "报纸难以印刷，不是没人读。"),
+          ],
         ),
         ask(
           t("What followed the day off in later years?", "休假日之后的几年里发生了什么？"),
@@ -653,6 +798,11 @@ The struggle did not end there. Women in Iceland still earned less than men deca
             "The fifth paragraph says parliament passed an equal pay law the next year, and in 1980 Vigdis Finnbogadottir was elected president.",
             "第五段说议会第二年通过了同工同酬法，1980 年维格迪丝·芬博阿多蒂尔当选总统。",
           ),
+          [
+            t("No ban on women working followed.", "之后并没有禁止女性工作。"),
+            t("Nurseries shut only for the day.", "托儿所只关了一天。"),
+            t("No law against strikes is mentioned.", "文中没提禁止罢工的法律。"),
+          ],
         ),
       ],
       ["Iceland", "Icelandic", "Reykjavik", "Vigdis", "Finnbogadottir", "United", "Nations"],

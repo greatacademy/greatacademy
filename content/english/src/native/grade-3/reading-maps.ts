@@ -37,6 +37,11 @@ A map cannot show everything. It is much smaller than the real place, so the map
             "The first paragraph says that a map is a drawing of a place as it looks from high above.",
             "第一段说，地图是一个地方从高处往下看时的样子的图。",
           ],
+          [
+            ["A photo from the street is wrong. A map shows a place from high above.", "从街上拍的照片不对。地图是从高处往下看的样子。"],
+            ["A list of roads is wrong. A map is a drawing, not a list.", "道路清单不对。地图是一幅画，不是清单。"],
+            ["A story about a trip is not a map. The passage calls a map a drawing.", "旅行故事不是地图。文中说地图是一幅画。"],
+          ],
         ),
         ask(
           ["Why did sailors long ago draw maps of the coast?", "很久以前的水手为什么要画海岸的地图？"],
@@ -49,6 +54,11 @@ A map cannot show everything. It is much smaller than the real place, so the map
           [
             "The second paragraph says sailors drew maps of the coast so that they could find their way back to port.",
             "第二段说，水手画海岸的地图是为了能找到回港口的路。",
+          ],
+          [
+            ["The borders of fields are what farmers drew.", "田地的边界是农民画的。"],
+            ["Finding the lions is what a zoo map is for.", "找狮子是动物园地图的用处。"],
+            ["Selling maps to farmers is not in the passage.", "把地图卖给农民文中没有。"],
           ],
         ),
         ask(
@@ -66,6 +76,11 @@ A map cannot show everything. It is much smaller than the real place, so the map
             "The last paragraph says a map is smaller than the real place, so the mapmaker chooses what to draw, and every map is made for a reason.",
             "最后一段说，地图比真实的地方小得多，所以画图的人要选择画什么，而且每张地图都是为某个目的而画的。",
           ],
+          [
+            ["Hikers not allowed on roads is not in the passage.", "徒步者不许走公路文中没有。"],
+            ["Roads being too small to see is wrong. You can see the roads from the tower.", "公路太小看不见不对。从塔上就能看见公路。"],
+            ["Sailors drew maps of the coast, not hiking maps.", "水手画的是海岸地图，不是徒步地图。"],
+          ],
         ),
         ask(
           ["What does a map on a phone show?", "手机上的地图显示什么？"],
@@ -78,6 +93,11 @@ A map cannot show everything. It is much smaller than the real place, so the map
           [
             'The text says, "A map on a phone shows the fastest route to a friend\'s house."',
             "短文说：“手机上的地图显示去朋友家最快的路线。”",
+          ],
+          [
+            ["Lions and penguins are on the zoo map.", "狮子和企鹅在动物园地图上。"],
+            ["The whole world is on the map in a school book.", "整个世界在课本里的地图上。"],
+            ["Fields are what farmers drew long ago.", "田地是很久以前农民画的。"],
           ],
         ),
       ],
@@ -108,6 +128,11 @@ Whenever you open a new map, read the key first. Then the map will make sense.`,
             "The first paragraph says there is not enough room to write the name of every thing, so symbols save space.",
             "第一段说，地图上没有足够的地方写出每样东西的名字，所以用符号来节省空间。",
           ],
+          [
+            ["Being easier to color is not the reason given.", "更容易上色不是文中给的原因。"],
+            ["Mapmakers not knowing how to spell is not in the passage.", "制图者不会拼写文中没有。"],
+            ["Showing distance is the job of the scale, not words.", "显示距离是比例尺的工作，不是文字的。"],
+          ],
         ),
         ask(
           ["What is another name for a map key?", "地图图例的另一个名字是什么？"],
@@ -121,6 +146,11 @@ Whenever you open a new map, read the key first. Then the map will make sense.`,
             "The second paragraph says you look at the map key, which is also called the legend.",
             "第二段说，你要看地图图例，它也叫作 legend。",
           ],
+          [
+            ["A scale is a line marked with a distance, not the key.", "比例尺是标着距离的线段，不是图例。"],
+            ["A symbol is one small picture inside the key.", "符号是图例里的一个小图。"],
+            ["The corner is where the key usually sits, not its name.", "角落是图例通常所在的位置，不是它的名字。"],
+          ],
         ),
         ask(
           ["On many maps, what does the color blue show?", "在许多地图上，蓝色表示什么？"],
@@ -131,6 +161,11 @@ Whenever you open a new map, read the key first. Then the map will make sense.`,
             ["Schools", "学校"],
           ],
           ["The third paragraph says that on many maps blue means water.", "第三段说，在许多地图上，蓝色表示水。"],
+          [
+            ["High land is shown in brown or orange.", "高地用棕色或橙色表示。"],
+            ["Land with trees is shown in green.", "有树的地方用绿色表示。"],
+            ["A school is shown by a black square, not a color.", "学校用黑色方块表示，不是颜色。"],
+          ],
         ),
         ask(
           ["What does a scale on a map tell you?", "地图上的比例尺告诉你什么？"],
@@ -143,6 +178,11 @@ Whenever you open a new map, read the key first. Then the map will make sense.`,
           [
             "A scale is a short line marked with a distance, and it tells you how far apart two places really are.",
             "比例尺是一条标有距离的短线，告诉你两个地方实际相距多远。",
+          ],
+          [
+            ["What each symbol stands for is told by the key.", "每个符号代表什么是图例告诉你的。"],
+            ["Which way is north is shown by a compass rose.", "哪边是北是指南针图告诉你的。"],
+            ["How high mountains are is not what a scale tells.", "山有多高不是比例尺告诉你的。"],
           ],
         ),
       ],
@@ -170,6 +210,11 @@ With directions, a map turns into a set of clear instructions.`,
             ["At the bottom", "在下面"],
           ],
           ["The first paragraph says that on most maps east is on the right.", "第一段说，在大多数地图上，东方在右边。"],
+          [
+            ["The top is north on most maps.", "大多数地图上方是北。"],
+            ["The left is west.", "左边是西。"],
+            ["The bottom is south.", "下方是南。"],
+          ],
         ),
         ask(
           ["What is a compass rose?", "什么是指南针玫瑰图？"],
@@ -182,6 +227,11 @@ With directions, a map turns into a set of clear instructions.`,
           [
             "The second paragraph says a compass rose is a small drawing shaped like a star, with a letter at each point for a direction.",
             "第二段说，指南针玫瑰图是一个形状像星星的小图，每个角上都有一个表示方向的字母。",
+          ],
+          [
+            ["A flower in the north mixes up the word rose.", "北方的花把“玫瑰”这个词理解错了。"],
+            ["A line that tells distance is a scale.", "表示距离的线是比例尺。"],
+            ["The box that lists symbols is the key.", "列出符号的方框是图例。"],
           ],
         ),
         ask(
@@ -196,6 +246,11 @@ With directions, a map turns into a set of clear instructions.`,
             "The fourth paragraph says the sun rises in the east, and if you face the rising sun, north is on your left.",
             "第四段说，太阳从东方升起，如果你面朝升起的太阳，北方就在你的左边。",
           ],
+          [
+            ["South is behind you when you face east, not on your left.", "面向东时南在你右边，不在左边。"],
+            ["West is behind you when you face the rising sun.", "面向日出时西在你身后。"],
+            ["East is the way you are facing, toward the rising sun.", "东是你面对的方向，朝着日出。"],
+          ],
         ),
         ask(
           ["Where does the sun set every evening?", "太阳每天傍晚在哪里落下？"],
@@ -206,6 +261,11 @@ With directions, a map turns into a set of clear instructions.`,
             ["In the south", "在南边"],
           ],
           ["The sun rises in the east every morning and sets in the west every evening.", "太阳每天早上从东边升起，傍晚在西边落下。"],
+          [
+            ["The east is where the sun rises in the morning.", "东方是早上太阳升起的地方。"],
+            ["North is not where the sun sets.", "北方不是太阳落下的地方。"],
+            ["South is not where the sun sets.", "南方不是太阳落下的地方。"],
+          ],
         ),
       ],
       ["N", "S", "E", "W"],
@@ -233,6 +293,11 @@ Each continent has its own animals, plants and weather. Together they make up th
             ["Antarctica", "南极洲"],
           ],
           ["The second paragraph says the biggest continent is Asia.", "第二段说，最大的洲是亚洲。"],
+          [
+            ["Africa is the second biggest.", "非洲是第二大的。"],
+            ["Australia is the smallest.", "澳大利亚是最小的。"],
+            ["Antarctica is the icy continent at the bottom, not the biggest.", "南极洲是最下面的冰雪大陆，不是最大的。"],
+          ],
         ),
         ask(
           ["Which continent is also a country?", "哪个洲同时也是一个国家？"],
@@ -245,6 +310,11 @@ Each continent has its own animals, plants and weather. Together they make up th
           [
             "The third paragraph says Australia is the smallest continent, and it is also a country.",
             "第三段说，澳洲是最小的洲，它也是一个国家。",
+          ],
+          [
+            ["Europe has many countries close together.", "欧洲有许多挨得很近的国家。"],
+            ["South America is joined to North America, not a single country.", "南美洲和北美洲相连，不是一个国家。"],
+            ["Asia has many people, not one country.", "亚洲人很多，但不是一个国家。"],
           ],
         ),
         ask(
@@ -259,6 +329,11 @@ Each continent has its own animals, plants and weather. Together they make up th
             "The fourth paragraph says Antarctica is covered with ice all year, and only scientists stay there for a few months at a time.",
             "第四段说，南极洲一年到头都被冰覆盖，只有科学家每次在那里待几个月。",
           ],
+          [
+            ["Being the biggest is Asia, not Antarctica.", "最大的是亚洲，不是南极洲。"],
+            ["Penguins and seals live there, but they are not the reason.", "企鹅和海豹住在那里，但不是原因。"],
+            ["Joined to Asia is Europe, not Antarctica.", "和亚洲相连的是欧洲，不是南极洲。"],
+          ],
         ),
         ask(
           ["Which continent has the longest river?", "哪个大洲有最长的河？"],
@@ -269,6 +344,11 @@ Each continent has its own animals, plants and weather. Together they make up th
             ["South America", "南美洲"],
           ],
           ["The text says Africa has the longest river, the Nile.", "短文说非洲有最长的河——尼罗河。"],
+          [
+            ["Asia has the highest mountain, not the longest river.", "亚洲有最高的山，不是最长的河。"],
+            ["Europe is not said to have the longest river.", "文中没说欧洲有最长的河。"],
+            ["South America is not said to have the longest river. The Nile is in Africa.", "文中没说南美洲有最长的河。尼罗河在非洲。"],
+          ],
         ),
       ],
       ["Asia", "Africa", "Nile", "America", "Europe", "Australia", "Antarctica"],
@@ -294,6 +374,11 @@ Oceans are salty, so we cannot drink their water. But they give us fish to eat, 
             ["The Arctic Ocean", "北冰洋"],
           ],
           ["The second paragraph says the Pacific Ocean is the largest and the deepest.", "第二段说，太平洋最大、最深。"],
+          [
+            ["The Atlantic is the second largest.", "大西洋是第二大的。"],
+            ["The Indian Ocean is the warmest, not the largest.", "印度洋最温暖，不是最大的。"],
+            ["The Arctic is the smallest.", "北冰洋是最小的。"],
+          ],
         ),
         ask(
           ["Where is the Southern Ocean?", "南大洋在哪里？"],
@@ -304,6 +389,11 @@ Oceans are salty, so we cannot drink their water. But they give us fish to eat, 
             ["Between the Americas and Europe", "在美洲和欧洲之间"],
           ],
           ["The third paragraph says the Southern Ocean flows all the way around Antarctica.", "第三段说，南大洋环绕着整个南极洲流动。"],
+          [
+            ["Between Africa and Australia is the Indian Ocean.", "非洲和澳大利亚之间的是印度洋。"],
+            ["The far north is the Arctic Ocean.", "遥远的北方是北冰洋。"],
+            ["Between the Americas and Europe is the Atlantic.", "美洲和欧洲之间的是大西洋。"],
+          ],
         ),
         ask(
           ["Why can we not drink ocean water?", "为什么我们不能喝海水？"],
@@ -314,6 +404,11 @@ Oceans are salty, so we cannot drink their water. But they give us fish to eat, 
             ["It is full of whales", "里面全是鲸鱼"],
           ],
           ["The last paragraph says oceans are salty, so we cannot drink their water.", "最后一段说，海洋是咸的，所以我们不能喝海水。"],
+          [
+            ["Frozen all year is wrong. Only the Arctic freezes for much of the year.", "全年冰冻不对。只有北冰洋一年中很多时候结冰。"],
+            ["Being too deep is not why we cannot drink it.", "太深不是不能喝的原因。"],
+            ["Whales live in the ocean, but they are not the reason.", "鲸鱼住在海里，但不是原因。"],
+          ],
         ),
         ask(
           ["Which ocean is the warmest?", "哪个大洋最暖和？"],
@@ -324,6 +419,11 @@ Oceans are salty, so we cannot drink their water. But they give us fish to eat, 
             ["The Southern Ocean", "南大洋"],
           ],
           ['The text says, "The Indian Ocean is the warmest."', "短文说：“印度洋是最暖和的。”"],
+          [
+            ["The Pacific is the largest and deepest, not the warmest.", "太平洋最大最深，不是最温暖的。"],
+            ["The Arctic is frozen for much of the year.", "北冰洋一年中很多时候都结冰。"],
+            ["The Southern Ocean has icy water.", "南大洋的海水冰冷。"],
+          ],
         ),
       ],
       ["Earth", "Pacific", "Atlantic", "Americas", "Europe", "Africa", "Indian", "Asia", "Australia", "Antarctica", "Arctic"],
@@ -354,6 +454,11 @@ The farther a place is from the equator, the colder its winters usually are.`,
             "The first paragraph says the equator is a line drawn around the middle of the globe, and it is not a real line on the ground.",
             "第一段说，赤道是画在地球仪中间的一条线，它并不是地面上真正的线。",
           ],
+          [
+            ["A real wall is wrong. The equator is not a real line on the ground.", "真的墙不对。赤道不是地上真的线。"],
+            ["The coldest places are the poles.", "最冷的地方是两极。"],
+            ["A belt sailors wear twists the comparison. The line is only like a belt.", "水手系的腰带把比喻理解歪了。这条线只是像腰带。"],
+          ],
         ),
         ask(
           ["What is a hemisphere?", "什么是半球？"],
@@ -366,6 +471,11 @@ The farther a place is from the equator, the colder its winters usually are.`,
           [
             "The second paragraph says the equator divides the world into two halves, and each half is called a hemisphere.",
             "第二段说，赤道把世界分成两半，每一半叫作一个半球。",
+          ],
+          [
+            ["A line around a globe is the equator.", "地球仪上的一圈线是赤道。"],
+            ["A rainforest grows near the equator. It is not a half of the world.", "雨林长在赤道附近，不是半个世界。"],
+            ["The top of the globe is the North Pole.", "地球仪的顶端是北极。"],
           ],
         ),
         ask(
@@ -380,6 +490,11 @@ The farther a place is from the equator, the colder its winters usually are.`,
             "The fourth paragraph says the sun's light reaches the poles at a low slant, so it gives little heat.",
             "第四段说，阳光斜斜地照到两极，所以带来的热量很少。",
           ],
+          [
+            ["Rainforests grow near the equator, not at the poles.", "雨林长在赤道附近，不在两极。"],
+            ["The middle of the globe is the equator, which is hot.", "地球仪的中间是赤道，那里很热。"],
+            ["Most people live in the northern hemisphere, not at the poles.", "大多数人住在北半球，不在两极。"],
+          ],
         ),
         ask(
           ["Why are places near the equator hot all year?", "赤道附近的地方为什么全年炎热？"],
@@ -392,6 +507,11 @@ The farther a place is from the equator, the colder its winters usually are.`,
           [
             "The text says the sun shines almost straight down on them, so there is no cold winter.",
             "短文说太阳几乎直射那里，所以没有寒冷的冬天。",
+          ],
+          [
+            ["Being close to the poles would make them cold.", "靠近两极会让那里变冷。"],
+            ["Having no rain is wrong. Rainforests grow there.", "没有雨不对。那里长着雨林。"],
+            ["High mountains are not the reason given.", "高山不是文中给的原因。"],
           ],
         ),
       ],
@@ -420,6 +540,11 @@ Near the coast, the land may turn wet and soft. A swamp is land covered with sha
             ["Land covered with shallow water", "被浅水覆盖的土地"],
           ],
           ["The second paragraph says a long line of mountain tops is called a ridge.", "第二段说，一长排山顶叫作山脊。"],
+          [
+            ["A low strip between mountains is a valley.", "山之间的低地是山谷。"],
+            ["High land with a flat top is a plateau.", "顶部平坦的高地是高原。"],
+            ["Land covered with shallow water is a swamp.", "被浅水覆盖的地方是沼泽。"],
+          ],
         ),
         ask(
           ["How is a canyon made?", "峡谷是怎样形成的？"],
@@ -433,6 +558,11 @@ Near the coast, the land may turn wet and soft. A swamp is land covered with sha
             "The third paragraph says that when a river cuts deep into rock for millions of years, it can make a canyon.",
             "第三段说，河流在几百万年里深深地切入岩石，就能形成峡谷。",
           ],
+          [
+            ["People digging it is not in the passage. A river makes a canyon.", "人挖出来的文中没有。峡谷是河流冲出来的。"],
+            ["Snow staying all summer is about mountain tops.", "积雪整个夏天不化说的是山顶。"],
+            ["Trees and reeds in shallow water describe a swamp.", "浅水里长着树和芦苇说的是沼泽。"],
+          ],
         ),
         ask(
           ["How is a plateau different from a plain?", "高原和平原有什么不同？"],
@@ -445,6 +575,11 @@ Near the coast, the land may turn wet and soft. A swamp is land covered with sha
           [
             "The fourth paragraph says a plateau is high land with a flat top and a plain is low, flat land.",
             "第四段说，高原是顶部平坦的高地，平原是又低又平的土地。",
+          ],
+          [
+            ["Wet and dry is wrong. A swamp is the wet land.", "湿和干不对。湿的地方是沼泽。"],
+            ["Steep sides belong to a canyon, and a plain is land, not a river.", "陡峭的边是峡谷的特点，平原是陆地，不是河。"],
+            ["Low and high are backwards. The plateau is the high one.", "低和高说反了。高原才是高的。"],
           ],
         ),
       ],
@@ -473,6 +608,17 @@ Last, they added a key in the corner and a compass rose. Now anyone who visits R
             "The first paragraph says each row has a letter and each column has a number, so every square has a name, such as B3.",
             "第一段说，每一行有一个字母，每一列有一个数字，所以每个方格都有一个名字，比如 B3。",
           ],
+          [
+            ["The river running north to south was drawn first, not because of the grid.", "河流从北向南流是先画的，和网格无关。"],
+            [
+              "Looking like a game is not the reason. The grid gives every square a name.",
+              "看起来像棋盘游戏不是原因。网格让每个格子都有名字。",
+            ],
+            [
+              "The library being east of the river is where it is, not why the grid was drawn.",
+              "图书馆在河东是它的位置，不是画网格的原因。",
+            ],
+          ],
         ),
         ask(
           ["What does the bell on the map stand for?", "地图上的铃铛代表什么？"],
@@ -486,6 +632,11 @@ Last, they added a key in the corner and a compass rose. Now anyone who visits R
             "The second paragraph says a small bell stands for the old clock tower in square B2.",
             "第二段说，小铃铛代表 B2 方格里的老钟楼。",
           ],
+          [
+            ["The library is shown by a book.", "图书馆用书表示。"],
+            ["The campground is shown by a tent.", "营地用帐篷表示。"],
+            ["The school has no symbol given in the passage.", "文中没有给学校符号。"],
+          ],
         ),
         ask(
           ["To walk from the school to the library, which way do you go along Oak Street?", "从学校走到图书馆，沿着橡树街要往哪个方向走？"],
@@ -498,6 +649,14 @@ Last, they added a key in the corner and a compass rose. Now anyone who visits R
           [
             "The third paragraph says you leave the school, walk north along Oak Street and cross the bridge.",
             "第三段说，你离开学校，沿着橡树街往北走，然后过桥。",
+          ],
+          [
+            ["South is the wrong way. The library is in row C2, north of the school in C4.", "向南方向错了。图书馆在C2，在C4学校的北边。"],
+            ["West is wrong. You walk along Oak Street northward.", "向西不对。你沿橡树街往北走。"],
+            [
+              "East is where the library sits from the river, not the way along Oak Street.",
+              "东是图书馆相对河流的位置，不是沿橡树街走的方向。",
+            ],
           ],
         ),
       ],

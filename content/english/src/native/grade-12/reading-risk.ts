@@ -50,6 +50,11 @@ Chernobyl showed that the risk of a technology depends not only on its machines 
             "The first paragraph says they wanted to know whether the slowing turbines could keep the cooling pumps running until backup generators started.",
             "第一段说他们想知道在失去电力时，减速的涡轮机能否在备用发电机启动前维持冷却泵运转。",
           ),
+          [
+            t("Releasing radiation was the disaster, not the goal.", "放出辐射是灾难的结果，不是测试目的。"),
+            t("Firefighters came after the explosion; there was no training.", "消防员是爆炸后才赶来的，并没有培训。"),
+            t("They switched off safety systems for the test, not to prove anything.", "关掉安全系统只是为了做测试，不是要证明什么。"),
+          ],
         ),
         ask(
           t("How did the world first learn about the disaster?", "世界最初是怎样得知这场灾难的？"),
@@ -63,6 +68,11 @@ Chernobyl showed that the risk of a technology depends not only on its machines 
             "The third paragraph says the government said nothing until workers at a plant in Sweden detected radiation and traced it back to the east.",
             "第三段说政府一直没有声明，直到瑞典一座核电站的工人检测到辐射并追溯到东方。",
           ),
+          [
+            t("The government said nothing for two days.", "政府两天都没出声。"),
+            t("Many firefighters died within weeks; no calls are mentioned.", "许多消防员几周内就死了，文中没提他们打电话。"),
+            t("Pripyat was evacuated late; no letters are mentioned.", "普里皮亚季撤离得晚，文中没提写信。"),
+          ],
         ),
         ask(
           t("What does the writer conclude about the risk of a technology?", "作者对技术的风险得出了什么结论？"),
@@ -76,12 +86,22 @@ Chernobyl showed that the risk of a technology depends not only on its machines 
             "The last paragraph says the risk of a technology depends not only on its machines but on the people and institutions that run it.",
             "最后一段说技术的风险不仅取决于机器，还取决于运行它的人和机构。",
           ),
+          [
+            t("A safe design can be undone by careless use.", "安全的设计也会被粗心使用毁掉。"),
+            t("Climate is not mentioned.", "文中没提气候。"),
+            t("The fallout spread across Europe.", "放射性尘埃扩散到了整个欧洲。"),
+          ],
         ),
         ask(
           t("About how many people were eventually moved from their homes after Chernobyl?", "切尔诺贝利事故后最终约有多少人被迁离家园？"),
           t("More than three hundred thousand", "三十多万人"),
           [t("About fifty", "约五十人"), t("About three thousand", "约三千人"), t("More than thirty million", "三千多万人")],
           t("Eventually more than three hundred thousand people were moved from their homes.", "最终三十多万人被迁离家园。"),
+          [
+            t("Fifty is far too few.", "五十人太少了。"),
+            t("Three thousand is far too few.", "三千人太少了。"),
+            t("Thirty million is a hundred times too many.", "三千万多了一百倍。"),
+          ],
         ),
       ],
       ["Chernobyl", "Pripyat", "Ukraine", "Soviet", "Union", "Sweden", "Swedish", "Europe", "April"],
@@ -114,6 +134,11 @@ Investigators concluded that the disaster was made by people as well as by natur
             "The second paragraph says water poured over the wall and flooded the basements where most backup generators were kept, so the cooling stopped.",
             "第二段说海水漫过海堤，淹没了存放大部分备用发电机的地下室，冷却随之停止。",
           ),
+          [
+            t("The plant worked after the quake; the water stopped it.", "地震后电站正常运转，是海水让它停摆的。"),
+            t("The workers did not switch anything off.", "工人并没有关掉任何东西。"),
+            t("The reactors shut down automatically.", "反应堆自动停了下来。"),
+          ],
         ),
         ask(
           t('Why does the writer call the disaster "foreseeable"?', "作者为什么说这场灾难是“可以预见的”？"),
@@ -127,6 +152,11 @@ Investigators concluded that the disaster was made by people as well as by natur
             "The third paragraph mentions evidence of a huge tsunami in 869 and the engineers' estimate of a wave of more than fifteen meters.",
             "第三段提到了公元 869 年大海啸的证据，以及工程师对超过十五米海浪的估算。",
           ),
+          [
+            t("No one predicted the exact day.", "没人预测到具体日期。"),
+            t("The wall was simply too low; no storm damage is mentioned.", "海堤只是太矮，文中没提风暴损坏。"),
+            t("Other plants are not mentioned.", "文中没提其他电站。"),
+          ],
         ),
         ask(
           t("Why can a once-in-a-thousand-years wave be more likely than it seems?", "为什么千年一遇的海浪可能比看上去更有可能发生？"),
@@ -140,12 +170,22 @@ Investigators concluded that the disaster was made by people as well as by natur
             "The fourth paragraph says a plant running for fifty years, among many plants along a coast, faces a far greater chance than the yearly number suggests.",
             "第四段说一座运行五十年的核电站，加上沿海众多核电站，面临的可能性远比每年的数字所显示的大。",
           ),
+          [
+            t("Waves do not grow on a schedule.", "海浪不会按时变大。"),
+            t("Pairs of earthquakes are not mentioned.", "文中没提地震成对出现。"),
+            t("The number was right; it was misjudged over time.", "数字没错，错在没有考虑长期累积。"),
+          ],
         ),
         ask(
           t("How high was the seawall protecting the Fukushima plant?", "保护福岛核电站的海堤有多高？"),
           t("Less than six meters", "不到六米"),
           [t("About fifteen meters", "约十五米"), t("About thirty meters", "约三十米"), t("There was no wall", "根本没有海堤")],
           t("The plant was protected by a seawall less than six meters high.", "核电站由一道不到六米高的海堤保护。"),
+          [
+            t("Fifteen meters was the estimated wave, not the wall.", "十五米是估算的浪高，不是海堤高度。"),
+            t("Thirty meters is not mentioned.", "文中没提三十米。"),
+            t("There was a wall, just too low.", "海堤是有的，只是太矮。"),
+          ],
         ),
       ],
       ["Fukushima", "Daiichi", "Japan", "Japanese", "Tokyo", "March", "Jogan"],
@@ -178,6 +218,11 @@ This is a common pattern in public health. Some of the largest risks are spread 
             "The first paragraph says a cold, still mass of air lay over the valley like a lid, trapping everything beneath it.",
             "第一段说一团寒冷静止的空气像盖子一样压在河谷上空，把下面的一切都困住了。",
           ),
+          [
+            t("The air was still; no wind blew.", "空气是静止的，没有风。"),
+            t("Buildings are not the cause.", "原因不在建筑物。"),
+            t("Millions of chimneys were burning.", "当时有数百万个烟囱在烧煤。"),
+          ],
         ),
         ask(
           t("How was the scale of the danger discovered?", "这场危险的规模是怎样被发现的？"),
@@ -191,6 +236,11 @@ This is a common pattern in public health. Some of the largest risks are spread 
             "The third paragraph says the weekly figures showed around four thousand more deaths than usual, and later studies suggested about twelve thousand.",
             "第三段说每周的统计显示比平常多死了约四千人，后来的研究认为总数约为一万二千。",
           ),
+          [
+            t("There were no dramatic scenes of destruction.", "当时并没有触目惊心的破坏场面。"),
+            t("Those were signs, not how the scale was measured.", "那些只是迹象，不是衡量规模的方法。"),
+            t("Visibility shows the fog, not the deaths.", "能见度反映的是雾，不是死亡人数。"),
+          ],
         ),
         ask(
           t("What question does the writer say a careful reader of such numbers must ask?", "作者说细心读这类数字的人必须问什么问题？"),
@@ -204,12 +254,22 @@ This is a common pattern in public health. Some of the largest risks are spread 
             "The last paragraph says a careful reader must ask not only how many died, but how many more than usual.",
             "最后一段说细心的读者不仅要问死了多少人，还要问比平常多死了多少人。",
           ),
+          [
+            t("Population is not the comparison meant.", "比较的不是人口。"),
+            t("Chimneys explain the cause, not the count.", "烟囱说明的是原因，不是统计。"),
+            t("Duration is not the key question.", "持续时间不是关键问题。"),
+          ],
         ),
         ask(
           t("How long did London almost stop during the Great Smog?", "大烟雾期间伦敦几乎停摆了多久？"),
           t("For five days", "五天"),
           [t("For one night", "一夜"), t("For a month", "一个月"), t("For a whole winter", "整个冬天")],
           t("For five days, London almost stopped.", "整整五天，伦敦几乎停摆。"),
+          [
+            t("It lasted longer than one night.", "它持续的不止一夜。"),
+            t("A month is too long; it was five days.", "一个月太长，只有五天。"),
+            t("The whole winter is far too long.", "整个冬天就太长了。"),
+          ],
         ),
       ],
       ["London", "Londoners", "December", "Parliament", "Thames", "Britain", "British", "Friday", "Great", "Smog", "Clean", "Air", "Act"],
@@ -242,6 +302,11 @@ Nader's case shows how a report about risk can change a whole industry, and how 
             "The first paragraph says the book argued that the industry knew how to make cars safer but chose not to, because style and low cost sold cars.",
             "第一段说这本书认为汽车业知道如何把车造得更安全，却因款式和低价更好卖而选择不这样做。",
           ),
+          [
+            t("He blamed design, not drivers.", "他怪的是设计，不是司机。"),
+            t("Small cars are not called safer.", "文中没说小车更安全。"),
+            t("He wanted safety standards, not bans.", "他要的是安全标准，不是禁车。"),
+          ],
         ),
         ask(
           t("What made the book famous?", "是什么让这本书出了名？"),
@@ -255,6 +320,11 @@ Nader's case shows how a report about risk can change a whole industry, and how 
             "The third paragraph says what made it famous was General Motors hiring private investigators to look into his private life, which became public.",
             "第三段说让它出名的是通用汽车公司雇用私家侦探调查他的私生活，而此事后来被公开了。",
           ),
+          [
+            t("No film is mentioned.", "文中没提电影。"),
+            t("He went to the Senate, not as a senator.", "他与参议院有关，但没当选参议员。"),
+            t("It was sold, not given away.", "书是卖的，不是白送的。"),
+          ],
         ),
         ask(
           t("What does the later study about the Corvair suggest?", "后来关于科维尔的研究说明了什么？"),
@@ -268,6 +338,11 @@ Nader's case shows how a report about risk can change a whole industry, and how 
             "The fifth paragraph says a later study found the car was not more likely to roll over than similar cars, so whether Nader was fair has been debated.",
             "第五段说后来的研究发现这款车并不比同类车更容易翻车，所以纳德是否公正一直存在争议。",
           ),
+          [
+            t("It found the car no more likely to roll over.", "研究发现这款车翻车的可能性并不更高。"),
+            t("Deaths fell with safety standards.", "有了安全标准，死亡人数下降了。"),
+            t("The model had already been improved.", "这款车型早已改进过。"),
+          ],
         ),
         ask(
           t("Which car did the first chapter of Nader's book attack?", "纳德书的第一章抨击了哪款车？"),
@@ -277,6 +352,11 @@ Nader's case shows how a report about risk can change a whole industry, and how 
             "The book's first chapter attacked a popular small car, the Chevrolet Corvair.",
             "书的第一章抨击了一款流行的小型车雪佛兰科维尔。",
           ),
+          [
+            t("The Model T is not mentioned.", "文中没提福特T型车。"),
+            t("German cars are not mentioned.", "文中没提德国跑车。"),
+            t("Trucks are not mentioned.", "文中没提送货卡车。"),
+          ],
         ),
       ],
       [
@@ -324,6 +404,11 @@ Judging such cases requires evidence about what was found and fixed, not only ab
             "The first paragraph says that when the year changed from 99 to 00, a computer might think the date was 1900, not 2000.",
             "第一段说年份从 99 变成 00 时，计算机可能以为日期是 1900 年而不是 2000 年。",
           ),
+          [
+            t("The issue was the wrong century, not size.", "问题是世纪弄错，不是数字太大。"),
+            t("Programmers knew it; they chose it to save memory.", "程序员是知道的，他们这样做是为了省内存。"),
+            t("Banks used these systems.", "银行本身就在用这些系统。"),
+          ],
         ),
         ask(
           t("What do people who think the preparation worked point to?", "那些认为准备工作起了作用的人举出了什么证据？"),
@@ -337,6 +422,11 @@ Judging such cases requires evidence about what was found and fixed, not only ab
             "The fourth paragraph says they reply that the problems found and repaired during testing show that real failures were prevented.",
             "第四段说他们回应称，测试期间发现并修复的问题表明真正的故障被预防了。",
           ),
+          [
+            t("Planes did not fall.", "飞机并没有掉下来。"),
+            t("Money did not disappear.", "钱也没有消失。"),
+            t("Storing food shows fear, not proof.", "囤粮只说明人们害怕，不是证据。"),
+          ],
         ),
         ask(
           t('What is the "preparedness paradox"?', "什么是“准备悖论”？"),
@@ -350,6 +440,11 @@ Judging such cases requires evidence about what was found and fixed, not only ab
             "The fifth paragraph says the paradox is that the better the preparation, the more it seems to have been unnecessary.",
             "第五段说这个悖论是：准备得越好，它就显得越没有必要。",
           ),
+          [
+            t("Danger does not grow with preparation.", "危险不会因准备而增加。"),
+            t("No second danger is mentioned.", "文中没提引出另一种危险。"),
+            t("The best-prepared had few problems.", "准备最充分的反而问题很少。"),
+          ],
         ),
         ask(
           t("Why did programmers store years with only two digits?", "程序员为什么只用两位数字存储年份？"),
@@ -363,6 +458,11 @@ Judging such cases requires evidence about what was found and fixed, not only ab
             "For decades, to save expensive computer memory, programmers stored years with only two digits.",
             "几十年来，为了节省昂贵的内存，程序员只用两位数字存储年份。",
           ),
+          [
+            t("Two digits are not easier to read.", "两位数并不更好读。"),
+            t("No law is mentioned.", "文中没提法律规定。"),
+            t("Hackers are not mentioned.", "文中没提黑客。"),
+          ],
         ),
       ],
       ["January", "Y2K", "December", "Y"],
@@ -393,6 +493,11 @@ Gigerenzer argued that the answer is not to tell people their fear is wrong but 
             "The second paragraph says that mile for mile, driving on American roads is far more dangerous than flying on a commercial airline.",
             "第二段说按里程计算，在美国道路上开车比乘坐民航飞机危险得多。",
           ),
+          [
+            t("Roads were open; people drove.", "道路是通的，人们在开车。"),
+            t("Cars were not used in the attacks.", "袭击中没有用到汽车。"),
+            t("Tiredness is not given as the reason.", "文中没把疲劳当作原因。"),
+          ],
         ),
         ask(
           t('What is a "dread risk"?', "什么是“恐惧风险”？"),
@@ -406,6 +511,11 @@ Gigerenzer argued that the answer is not to tell people their fear is wrong but 
             "The third paragraph says people fear most the kind of event in which many die at once, suddenly and in a way they cannot control.",
             "第三段说人们最害怕的是许多人突然同时死去、而且无法控制的那种事件。",
           ),
+          [
+            t("These dangers are well known.", "这些危险人人都知道。"),
+            t("Local news is where slow risks appear.", "本地新闻报道的是慢性风险。"),
+            t("That is the opposite kind of risk.", "那正是相反的一类风险。"),
+          ],
         ),
         ask(
           t("What does Gigerenzer suggest is the best response to such fears?", "吉仁泽认为应对这种恐惧的最好办法是什么？"),
@@ -419,6 +529,11 @@ Gigerenzer argued that the answer is not to tell people their fear is wrong but 
             "The last paragraph says the answer is to give people the numbers in a form they can understand, so they can compare risks and choose.",
             "最后一段说办法是用人们能理解的方式给出数字，让他们比较风险并自己作出选择。",
           ),
+          [
+            t("He says not to call fear wrong.", "他说不要说人们的恐惧是错的。"),
+            t("He wants people to choose, not be banned.", "他希望人们自己选择，而不是被禁止。"),
+            t("He wants more information, not less.", "他要更多信息，不是更少。"),
+          ],
         ),
         ask(
           t(
@@ -428,6 +543,11 @@ Gigerenzer argued that the answer is not to tell people their fear is wrong but 
           t("The German psychologist Gerd Gigerenzer", "德国心理学家格尔德·吉仁泽"),
           [t("Ralph Nader", "拉尔夫·纳德"), t("Stanley Milgram", "斯坦利·米尔格拉姆"), t("Raj Chetty", "拉吉·切蒂")],
           t("The German psychologist Gerd Gigerenzer studied what happened next.", "德国心理学家格尔德·吉仁泽研究了此后发生的事。"),
+          [
+            t("Nader wrote about cars.", "纳德写的是汽车。"),
+            t("Milgram studied obedience.", "米尔格拉姆研究的是服从。"),
+            t("Chetty is not in this passage.", "切蒂不在这篇文章里。"),
+          ],
         ),
       ],
       ["Gerd", "Gigerenzer", "September", "American", "Americans", "New", "York", "Washington", "German"],
@@ -463,6 +583,11 @@ The debate shows that "better safe than sorry" is not as simple as it sounds. In
             "The second paragraph says the principle allows action on reasonable suspicion when the stakes are high, instead of requiring proof first.",
             "第二段说该原则允许在利害重大时基于合理的怀疑采取行动，而不是先要求证据。",
           ),
+          [
+            t("It says not to wait for full certainty.", "它说不必等完全确定。"),
+            t("It is about preventing irreversible harm.", "它恰恰是为了防止不可逆的伤害。"),
+            t("It allows action, not permanent bans.", "它允许采取措施，不是永久禁止。"),
+          ],
         ),
         ask(
           t("What is the critics' main objection to the principle?", "批评者对该原则的主要反对意见是什么？"),
@@ -476,6 +601,11 @@ The debate shows that "better safe than sorry" is not as simple as it sounds. In
             "The fourth paragraph says the critics' main objection is that risks exist on all sides, so banning something also carries a risk.",
             "第四段说批评者的主要反对意见是各方面都有风险，所以禁止某种东西本身也带有风险。",
           ),
+          [
+            t("Science often takes years to settle.", "科学往往要好几年才有定论。"),
+            t("A pesticide may harm insects.", "农药可能伤害昆虫。"),
+            t("Governments signed one in 1992.", "各国政府在1992年就签署过。"),
+          ],
         ),
         ask(
           t('What does a "proportionate" version of precaution require?', "“相称的”审慎原则要求什么？"),
@@ -489,6 +619,11 @@ The debate shows that "better safe than sorry" is not as simple as it sounds. In
             "The fifth paragraph says precaution should be commensurate with the size and likelihood of the harm and with the costs of acting.",
             "第五段说审慎应当与危害的大小和可能性以及行动的成本相称。",
           ),
+          [
+            t("Proportion means not the strongest action every time.", "相称意味着不是每次都采取最强措施。"),
+            t("It should be provisional and revised.", "它应是暂时的，可以修订。"),
+            t("It compares acting and not acting.", "它要比较行动和不行动的风险。"),
+          ],
         ),
       ],
       ["Rio", "Janeiro", "Earth", "Summit", "United", "Nations"],
@@ -519,6 +654,11 @@ The Delta Works are now studied around the world, especially as rising seas incr
             "The second paragraph says the committee asked how safe was safe enough and tried to answer with numbers, weighing costs, values and likelihoods.",
             "第二段说委员会提出了多安全才算足够安全的问题，并试图用数字回答，权衡成本、价值和可能性。",
           ),
+          [
+            t("It protected the heart of the country.", "它保护了国家的核心地区。"),
+            t("It weighed cost carefully.", "它仔细权衡了成本。"),
+            t("The Dutch paid themselves.", "费用是荷兰自己出的。"),
+          ],
         ),
         ask(
           t("Why was the plan for the Eastern Scheldt changed?", "东斯海尔德的方案为什么改变了？"),
@@ -532,6 +672,11 @@ The Delta Works are now studied around the world, especially as rising seas incr
             "The third paragraph says fishermen and environmental groups pointed out that a solid dam would turn the tidal water into a still lake and destroy its life.",
             "第三段说渔民和环保团体指出，实心大坝会把潮汐水域变成静止的湖泊，毁掉那里的生物。",
           ),
+          [
+            t("They built a barrier instead, so it was possible.", "他们后来建了挡潮闸，可见工程是可行的。"),
+            t("The inlet was part of the plan for that reason.", "正因如此那片海湾才列入计划。"),
+            t("The barrier cost more, so money was not the reason.", "挡潮闸花钱更多，所以不是钱不够。"),
+          ],
         ),
         ask(
           t("What is the lesson of the Delta Works, according to the writer?", "作者认为三角洲工程的启示是什么？"),
@@ -545,6 +690,11 @@ The Delta Works are now studied around the world, especially as rising seas incr
             "The last paragraph says a society can decide openly how much risk to accept, weigh it against cost and other values, and commit to a plan for generations.",
             "最后一段说一个社会可以公开决定愿意接受多大的风险，把它与成本及其他价值相权衡，并为几代人作出规划。",
           ),
+          [
+            t("They did not try to make risk zero.", "他们并没想把风险降到零。"),
+            t("They weighed it against other values.", "他们把风险与其他价值一起权衡。"),
+            t("The works are studied because seas are rising.", "正因为海平面上升，人们才研究这些工程。"),
+          ],
         ),
       ],
       ["Netherlands", "Dutch", "Eastern", "Scheldt", "North", "Sea", "Delta", "Works", "Committee", "January", "February", "Holland"],

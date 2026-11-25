@@ -45,6 +45,11 @@ The Great Moon Hoax, as it came to be called, is often remembered as a funny epi
             "The third paragraph says the articles claimed to come from a scientific journal and were full of technical details, which made them sound convincing.",
             "第三段说文章声称来自一份科学刊物，并充满技术细节，所以听起来很有说服力。",
           ),
+          [
+            t("Herschel knew nothing about the articles, so he confirmed nothing.", "赫歇尔对这些文章一无所知，根本没有证实。"),
+            t("The articles were full of technical details, but no photographs are mentioned.", "文章满是技术细节，但文中没提照片。"),
+            t("Other papers reprinted it afterward; they did not print it first.", "其他报纸是后来转载的，不是先登的。"),
+          ],
         ),
         ask(
           t("What did the Sun gain from the hoax?", "《太阳报》从这场骗局中得到了什么？"),
@@ -58,6 +63,11 @@ The Great Moon Hoax, as it came to be called, is often remembered as a funny epi
             "The third paragraph says the Sun's sales soared and it claimed the largest circulation in the world.",
             "第三段说《太阳报》销量猛增，并声称拥有世界上最大的发行量。",
           ),
+          [
+            t("No prize is mentioned; the Sun's sales soared.", "文中没提奖项；《太阳报》的销量猛增。"),
+            t("Herschel gave the paper nothing and later tired of the letters.", "赫歇尔什么也没给报社，后来还厌烦了来信。"),
+            t("The rivals called the story a hoax; they did not apologize.", "对手报纸称之为骗局，并没有道歉。"),
+          ],
         ),
         ask(
           t("What lasting point does the final paragraph make?", "最后一段提出了什么持久的观点？"),
@@ -71,6 +81,14 @@ The Great Moon Hoax, as it came to be called, is often remembered as a funny epi
             "It says people are more likely to believe exciting, technical-sounding stories from sources they cannot check, and the reasons have not changed.",
             "它说人们更容易相信听起来刺激、技术性强、来源又无法核实的故事，而这些原因至今未变。",
           ),
+          [
+            t("The passage says false stories now travel faster, not that they stopped.", "文中说假新闻如今传得更快，不是不再出现。"),
+            t("Telescopes are not criticized; the lesson is about believing stories.", "文中没批评望远镜；教训在于轻信故事。"),
+            t(
+              "The bat-people were invented; the passage gives no hint of real life on the moon.",
+              "蝙蝠人是编造的；文中丝毫没暗示月球有生命。",
+            ),
+          ],
         ),
         ask(
           t("Where was Herschel's great telescope said to be?", "据说赫歇尔的大望远镜在哪里？"),
@@ -80,6 +98,11 @@ The Great Moon Hoax, as it came to be called, is often remembered as a funny epi
             "Sir John Herschel, it said, had built an enormous new telescope at the Cape of Good Hope in southern Africa.",
             "报道说，约翰·赫歇尔爵士在南部非洲的好望角建了一台巨大的新望远镜。",
           ),
+          [
+            t("Edinburgh was where the fake journal was said to be, not the telescope.", "爱丁堡是那份假期刊的所在地，不是望远镜的位置。"),
+            t("New York is where the Sun was printed.", "纽约是《太阳报》的出版地。"),
+            t("London is not mentioned; the telescope was at the Cape.", "文中没提伦敦；望远镜在好望角。"),
+          ],
         ),
       ],
       ["Sun", "Sir", "John", "Herschel", "Cape", "Africa", "Edinburgh", "Richard", "Adams", "Locke", "British"],
@@ -112,6 +135,17 @@ Bly's work helped to create a new kind of journalism, sometimes called investiga
             "The first paragraph says the only way to find out the truth about the rumored cruelty was to get inside.",
             "第一段说，要查明传闻中的虐待真相，唯一的办法就是进去。",
           ),
+          [
+            t(
+              "The boarding house was only a step toward the asylum; she did not want free lodging.",
+              "寄宿公寓只是进入疯人院的一步，她不是想白住。",
+            ),
+            t(
+              "Her editor sent her to learn the truth about the asylum, not to test the police.",
+              "编辑派她去查清疯人院真相，不是测试警察。",
+            ),
+            t("The missing trunks were part of her act, not a real loss.", "丢失的箱子是她装出来的，不是真丢了。"),
+          ],
         ),
         ask(
           t("What did Bly's experience suggest about the doctors' examinations?", "布莱的经历表明医生的检查怎样？"),
@@ -128,6 +162,11 @@ Bly's work helped to create a new kind of journalism, sometimes called investiga
             "Several doctors declared her insane, and readers were shocked by how easily a sane woman had been declared insane.",
             "几位医生都判定她精神失常，读者对一个正常女人如此轻易地被判定为疯子感到震惊。",
           ),
+          [
+            t("Several doctors declared a sane woman insane, the opposite of careful.", "几位医生把一个正常女子判为疯癫，谈不上仔细。"),
+            t("Doctors examined her; the lawyer only came to get her out.", "检查她的是医生；律师只是来接她出去。"),
+            t("They found her insane, and other sane women were sent there too.", "他们判她疯了，还有别的正常女子也被送了进去。"),
+          ],
         ),
         ask(
           t("What question about Bly's method does the passage raise?", "关于布莱的方法，文章提出了什么问题？"),
@@ -141,6 +180,11 @@ Bly's work helped to create a new kind of journalism, sometimes called investiga
             "The last paragraph asks whether it is ever right for a reporter to lie about who she is.",
             "最后一段问记者在身份上撒谎是否在任何时候都是正当的。",
           ),
+          [
+            t("The two-part publication is a fact, not the question raised.", "分两部分发表只是事实，不是提出的问题。"),
+            t("The grand jury's visit is a result, not a question.", "大陪审团的探访是结果，不是问题。"),
+            t("Language came up with immigrant patients, not nurses.", "语言问题涉及的是移民病人，不是护士。"),
+          ],
         ),
         ask(
           t("How did Nellie Bly get out of the asylum?", "内莉·布莱是怎样离开疯人院的？"),
@@ -151,6 +195,11 @@ Bly's work helped to create a new kind of journalism, sometimes called investiga
             t("Her family came for her", "她的家人来接她"),
           ],
           t("After ten days, a lawyer from the World arrived to secure her release.", "十天后，《世界报》的一位律师前来让她获释。"),
+          [
+            t("She did not escape; she was released.", "她没有逃跑，是被保释出来的。"),
+            t("The doctors kept her; it was the lawyer who freed her.", "医生们没放她，是律师把她弄出来的。"),
+            t("Her family is never mentioned.", "文中从未提到她的家人。"),
+          ],
         ),
       ],
       ["Nellie", "Bly", "Bly's", "Blackwell's", "World", "English"],
@@ -188,6 +237,14 @@ And what destroyed the Maine? A navy investigation in 1898 blamed a mine. In 197
             "The third paragraph says the two papers were fighting a fierce battle for readers and had discovered that dramatic stories about Cuba sold papers.",
             "第三段说这两家报纸在激烈争夺读者，并发现有关古巴的戏剧性故事能卖报。",
           ),
+          [
+            t("No one knew the cause, so the papers had no proof.", "没人知道原因，报纸并无证据。"),
+            t("No government order is mentioned; they printed what sold.", "文中没提政府命令；他们登的是好卖的东西。"),
+            t(
+              "No artist had seen the explosion, yet they printed drawings as if one had.",
+              "没有画家看到爆炸，他们却印出画来，仿佛有人看见。",
+            ),
+          ],
         ),
         ask(
           t("Which of these is a sign of bias in the Journal's coverage?", "下面哪一项是《新闻报》报道中存在偏见的迹象？"),
@@ -201,6 +258,11 @@ And what destroyed the Maine? A navy investigation in 1898 blamed a mine. In 197
             "No one knew the cause, yet the Journal claimed a secret enemy weapon and printed invented drawings, choosing a conclusion before the evidence.",
             "当时没人知道原因，《新闻报》却声称是敌人的秘密武器，还刊登了虚构的图画，在证据出现前就下了结论。",
           ),
+          [
+            t("The number of dead is a plain fact, not a sign of bias.", "遇难人数只是客观事实，不是偏见。"),
+            t("Saying where the harbor is is plain description.", "说明港口位置只是客观描述。"),
+            t("The war's length is a fact reported later.", "战争时长是后来报道的事实。"),
+          ],
         ),
         ask(
           t('Why does the passage say the Hearst quotation "survived"?', '文章为什么说赫斯特那句话"流传了下来"？'),
@@ -214,6 +276,11 @@ And what destroyed the Maine? A navy investigation in 1898 blamed a mine. In 197
             "The fourth paragraph says historians doubt he said it, but the story survived because it seemed to fit.",
             "第四段说历史学家怀疑他说过这句话，但这个故事因为似乎符合事实而流传下来。",
           ),
+          [
+            t("No film of it exists; historians doubt it was ever said.", "没有这段话的影像；史学家怀疑它根本没说过。"),
+            t("Nothing says Hearst repeated it.", "文中没说赫斯特反复刊登这句话。"),
+            t('The slogan on people\'s lips was "Remember the Maine!", not this quote.', "人们口中的口号是“铭记缅因号”，不是这句话。"),
+          ],
         ),
         ask(
           t("What did the 1976 study conclude had most likely destroyed the Maine?", "1976年的研究认为“缅因号”最可能是被什么摧毁的？"),
@@ -223,6 +290,11 @@ And what destroyed the Maine? A navy investigation in 1898 blamed a mine. In 197
             "The study concluded that the most likely cause was a fire in the ship's own coal store, which set off its ammunition.",
             "研究认为最可能的原因是船上煤仓起火，引爆了弹药。",
           ),
+          [
+            t("A mine was the navy's conclusion in 1898.", "水雷是1898年海军调查的结论。"),
+            t("A storm is never mentioned.", "文中没提风暴。"),
+            t("The rebels are never blamed for the explosion.", "文中没把爆炸归咎于起义者。"),
+          ],
         ),
       ],
       [
@@ -283,6 +355,11 @@ Watergate made investigative reporting famous, and many young people became jour
             "The second paragraph says they asked why a burglar had a White House official's number and where the money in their pockets came from.",
             "第二段说他们追问一名窃贼为什么有白宫官员的电话号码，以及他们口袋里的钱从哪儿来。",
           ),
+          [
+            t('The White House called it a "third-rate burglary."', "白宫称之为“三流入室盗窃”。"),
+            t("The guard only found the tape; he knew nothing of a fund.", "保安只发现了胶带，不知道什么基金。"),
+            t("Deep Throat helped later; he did not call on the night of the arrest.", "“深喉”是后来才帮忙的，不是在逮捕当晚打电话。"),
+          ],
         ),
         ask(
           t(
@@ -299,6 +376,11 @@ Watergate made investigative reporting famous, and many young people became jour
             "The fourth paragraph says a story accusing the president's men would be attacked fiercely, and one mistake could destroy the paper's credibility.",
             "第四段说指控总统手下的报道会遭到猛烈攻击，一个错误就可能毁掉报纸的公信力。",
           ),
+          [
+            t("The rule was the editors' own caution, not a law.", "这是编辑们自己的谨慎做法，不是法律规定。"),
+            t("The reporters worked together; no disagreement is mentioned.", "两位记者合作调查，文中没提分歧。"),
+            t("Deep Throat met only Woodward, so that is not the reason.", "“深喉”只见伍德沃德一人，这不是原因。"),
+          ],
         ),
         ask(
           t("What finally proved that Nixon had helped cover up the crime?", "最终是什么证明尼克松帮助掩盖了罪行？"),
@@ -312,6 +394,14 @@ Watergate made investigative reporting famous, and many young people became jour
             "The sixth paragraph says recordings Nixon had secretly made in his office showed he had helped cover up the crime.",
             "第六段说尼克松在办公室秘密录制的录音表明他帮助掩盖了罪行。",
           ),
+          [
+            t("Nixon never confessed to the Post; his own recordings proved it.", "尼克松从未向《邮报》认罪；证据是他自己的录音。"),
+            t("The burglars' cameras are not what proved the cover-up.", "证明掩盖行为的不是窃贼的相机。"),
+            t(
+              "Felt kept his identity secret until 2005; no letter to the Senate is mentioned.",
+              "费尔特直到2005年才公开身份；文中没提致参议院的信。",
+            ),
+          ],
         ),
         ask(
           t("What did the security guard notice at the Watergate building?", "水门大楼的保安注意到了什么？"),
@@ -322,6 +412,11 @@ Watergate made investigative reporting famous, and many young people became jour
             t("A light on in an empty office", "空办公室里亮着灯"),
           ],
           t("A security guard noticed a piece of tape holding a door unlocked.", "一名保安注意到一块胶带让一扇门锁不上。"),
+          [
+            t("No broken window is mentioned; it was tape on a door.", "文中没提破窗；是门上的胶带。"),
+            t("No one climbing is mentioned; the guard noticed tape.", "文中没提有人爬墙；保安注意到的是胶带。"),
+            t("A light is never mentioned; the clue was tape on a door.", "文中没提灯光；线索是门上的胶带。"),
+          ],
         ),
       ],
       [
@@ -377,6 +472,11 @@ The lesson of 1936 still applies whenever a number is used to describe what "peo
             "The fourth and fifth paragraphs say the size of a sample matters less than whether it represents the population, and the Digest's lists left out poorer voters.",
             "第四段和第五段说样本大小远不如其代表性重要，而《文摘》的名单漏掉了较穷的选民。",
           ),
+          [
+            t("It asked about ten million people; size was not the problem.", "它问了大约一千万人；数量不是问题。"),
+            t("The answers were from 1936, the right year.", "答案来自1936年，年份没错。"),
+            t("No bribe is mentioned; the sample was biased.", "文中没提贿赂；问题在于样本有偏差。"),
+          ],
         ),
         ask(
           t("Why did using telephone directories and lists of car owners distort the sample?", "为什么用电话簿和车主名单会使样本失真？"),
@@ -390,6 +490,11 @@ The lesson of 1936 still applies whenever a number is used to describe what "peo
             "The fifth paragraph says owners of phones and cars were wealthier than average during the Depression, and wealthier voters favored Landon.",
             "第五段说大萧条期间有电话和汽车的人比一般人富裕，而较富裕的选民支持兰登。",
           ),
+          [
+            t("Phone owners did vote, and they leaned toward Landon.", "有电话的人也投票，而且偏向兰登。"),
+            t("Kansas is Landon's state; car owners lived everywhere.", "堪萨斯是兰登的州；车主遍布各地。"),
+            t("The lists' dates are not the issue; who was on them is.", "问题不在名单的年份，而在名单上是谁。"),
+          ],
         ),
         ask(
           t("How did Gallup's method differ from the Digest's?", "盖洛普的方法与《文摘》有什么不同？"),
@@ -403,6 +508,11 @@ The lesson of 1936 still applies whenever a number is used to describe what "peo
             "The seventh paragraph says Gallup used about fifty thousand people chosen to match the population in age, income, region and more.",
             "第七段说盖洛普用了大约五万人，他们是按年龄、收入、地区等与总体相匹配挑选出来的。",
           ),
+          [
+            t("He used a much smaller sample, about fifty thousand.", "他用的样本小得多，约五万人。"),
+            t("Using only subscribers was the Digest's mistake.", "只问订户正是《文摘》的错误。"),
+            t("Angry voters replying more was the Digest's second problem.", "愤怒的选民更爱回信，是《文摘》的第二个问题。"),
+          ],
         ),
         ask(
           t("About how many people were in George Gallup's sample?", "乔治·盖洛普的样本大约有多少人？"),
@@ -412,6 +522,11 @@ The lesson of 1936 still applies whenever a number is used to describe what "peo
             "George Gallup predicted Roosevelt's victory using a sample of only about fifty thousand people.",
             "乔治·盖洛普只用约五万人的样本就预测了罗斯福的胜利。",
           ),
+          [
+            t("Ten million is how many the Digest mailed.", "一千万是《文摘》寄出的问卷数。"),
+            t("About two million is how many replied to the Digest.", "约两百万是回复《文摘》的人数。"),
+            t("Five hundred is far too few.", "五百人太少了。"),
+          ],
         ),
       ],
       [
@@ -463,6 +578,11 @@ Survivorship bias is dangerous because the missing data is, by its nature, invis
             "The fourth paragraph says it was not because engines were rarely hit but because planes hit in the engines usually did not return.",
             "第四段说这不是因为发动机很少中弹，而是因为发动机中弹的飞机通常回不来。",
           ),
+          [
+            t("Nothing says the enemy avoided engines; those planes were shot down.", "文中没说敌人不打引擎；被打中的飞机都坠毁了。"),
+            t("Armor was the question being asked, so it was not already there.", "加装装甲正是要讨论的问题，所以原本没有。"),
+            t("Mechanics recorded the hits carefully; the missing planes explain the gap.", "机械师记录得很仔细；缺失的飞机才是原因。"),
+          ],
         ),
         ask(
           t("How do books about successful businesses show survivorship bias?", "关于成功企业的书怎样体现幸存者偏差？"),
@@ -476,6 +596,11 @@ Survivorship bias is dangerous because the missing data is, by its nature, invis
             "The sixth paragraph says many companies that did the same things failed, and nobody writes books about them.",
             "第六段说许多做了同样事情的公司失败了，却没有人写关于它们的书。",
           ),
+          [
+            t("These books describe famous successes, not companies that closed.", "这些书写的是成功名企，不是倒闭的公司。"),
+            t("They praise bold risks, not avoiding them.", "它们赞扬大胆冒险，而不是回避风险。"),
+            t("Who writes them is not the point; the failures are left out.", "重点不在作者是谁，而在失败者被忽略。"),
+          ],
         ),
         ask(
           t("Why does the passage call survivorship bias dangerous?", "文章为什么说幸存者偏差很危险？"),
@@ -489,6 +614,11 @@ Survivorship bias is dangerous because the missing data is, by its nature, invis
             "The last paragraph says the missing data is invisible by its nature, and no one notices what is not there.",
             "最后一段说缺失的数据本质上是看不见的，没有人会注意到不存在的东西。",
           ),
+          [
+            t("It appears in many places outside war.", "它在战争之外的许多地方都会出现。"),
+            t("Armor makes planes heavy; the bias itself does not.", "让飞机变重的是装甲，不是偏差本身。"),
+            t("Poor building makes old buildings fall; the bias only hides them.", "建得差才让老房子倒塌；偏差只是让它们被忽视。"),
+          ],
         ),
         ask(
           t("Where did the returning bombers have many bullet holes?", "返航的轰炸机在哪些部位有很多弹孔？"),
@@ -498,6 +628,11 @@ Survivorship bias is dangerous because the missing data is, by its nature, invis
             "The planes had many bullet holes in the wings, in the body and around the tail.",
             "这些飞机的机翼、机身和机尾周围有很多弹孔。",
           ),
+          [
+            t("The engines had far fewer holes.", "引擎上的弹孔少得多。"),
+            t("The cockpit is never mentioned.", "文中没提驾驶舱。"),
+            t("The planes had many holes, so this is wrong.", "飞机上弹孔很多，这不对。"),
+          ],
         ),
       ],
       ["Abraham", "Wald", "Europe", "Nazis", "American"],
@@ -532,6 +667,11 @@ What is certain is that the apps are not neutral. They are designed by skilled p
             "The second paragraph says that by removing the stopping point at the end of a page, he helped create a tool that kept people scrolling long after they would have stopped.",
             "第二段说他去掉了页面末尾的停止点，帮助制造了一种让人们在本该停下后仍长时间滑动的工具。",
           ),
+          [
+            t("He made it to make websites easier to use.", "他发明它是为了让网站更好用。"),
+            t("Payment is never mentioned.", "文中没提报酬。"),
+            t("Batteries are never mentioned; he regrets the wasted time.", "文中没提电池；他后悔的是浪费的时间。"),
+          ],
         ),
         ask(
           t("Why do social media companies care so much about engagement?", "社交媒体公司为什么如此在意参与度？"),
@@ -545,6 +685,11 @@ What is certain is that the apps are not neutral. They are designed by skilled p
             "The third paragraph says most platforms earn money from advertising, so more time spent means more advertisements and more earnings.",
             "第三段说大多数平台靠广告赚钱，所以使用时间越长，广告越多，收入也越多。",
           ),
+          [
+            t("Governments do not pay; the money comes from advertising.", "政府并不付钱；收入来自广告。"),
+            t("Phone prices are never mentioned.", "文中没提手机价格。"),
+            t("Users do not pay per click; advertisers pay.", "用户点击不付费，付钱的是广告商。"),
+          ],
         ),
         ask(
           t("Why might an angry post reach far more people than a calm one?", "为什么愤怒的帖子可能比平静的帖子传播得更广？"),
@@ -558,6 +703,11 @@ What is certain is that the apps are not neutral. They are designed by skilled p
             "The fifth paragraph says the programs often find that anger and outrage produce the most engagement, so such posts are shown to more people.",
             "第五段说程序常常发现愤怒和激愤能带来最多参与，所以这类帖子会被推送给更多人。",
           ),
+          [
+            t("Accuracy is not the reason; anger draws attention.", "原因不在准确；是愤怒吸引注意。"),
+            t("Calm posts are seen by a few hundred, not deleted.", "冷静的帖子有几百人看到，并没被删。"),
+            t("Many people use social media to stay in touch and learn.", "许多人用社交媒体来联络朋友、学习新知。"),
+          ],
         ),
       ],
       ["Aza", "Raskin"],
@@ -599,6 +749,11 @@ The influencer eventually posted a short apology and deleted the clip. Several n
             "The fourth paragraph says the video began in the middle of the argument and the only source for the name was an anonymous account created that week.",
             "第四段说视频从争吵中间开始，而名字的唯一来源是当周才创建的匿名账号。",
           ),
+          [
+            t("The cashier is not said to be her classmate.", "文中没说收银员是她的同学。"),
+            t("Marcus wanted the story fast; he did not doubt the video.", "马库斯想尽快出稿，并没怀疑视频。"),
+            t("She called the supermarket herself, before any denial.", "是她自己打电话给超市，此前没有任何否认。"),
+          ],
         ),
         ask(
           t("What did the full security video show?", "完整的监控录像显示了什么？"),
@@ -612,6 +767,11 @@ The influencer eventually posted a short apology and deleted the clip. Several n
             "The manager said the man was shouting at someone who had grabbed the cashier's bag, and then chased the thief.",
             "经理说那个男人是在冲一个抓走收银员包的人大喊，然后去追那个小偷。",
           ),
+          [
+            t("The full video shows he was shouting at someone behind her.", "完整视频显示他是在对她身后的人喊。"),
+            t("The cashier is the victim of the theft, not the one who started it.", "收银员是被偷的人，不是挑事的人。"),
+            t("The teacher was the wrongly named stranger, not the man in the video.", "那位老师是被错认的陌生人，不是视频里的人。"),
+          ],
         ),
         ask(
           t("What contrast do the numbers in the story emphasize?", "故事中的数字强调了什么对比？"),
@@ -625,6 +785,11 @@ The influencer eventually posted a short apology and deleted the clip. Several n
             "Priya's confirmed story was shared a few hundred times, while the original video was viewed eight million times.",
             "普丽娅核实过的报道只被分享了几百次，而原视频被观看了八百万次。",
           ),
+          [
+            t("The numbers compare the clip and the correction, not reading habits.", "数字对比的是视频与更正，不是阅读习惯。"),
+            t("The supermarket's earnings are never mentioned.", "文中没提超市的收入。"),
+            t("The influencer had a huge following, far larger than Priya's.", "那位网红粉丝众多，远超普丽娅。"),
+          ],
         ),
       ],
       ["Priya", "Priya's", "Marcus"],

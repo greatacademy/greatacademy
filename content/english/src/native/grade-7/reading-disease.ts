@@ -47,6 +47,14 @@ The miasma theory was eventually replaced by the germ theory: the idea that many
             "The second paragraph says the theory held that diseases were caused by bad air, a poisonous vapor that rose from rotting garbage, dirty water and swamps.",
             "第二段说这个理论认为疾病是由坏空气引起的，即从腐烂垃圾、脏水和沼泽中升起的有毒气体。",
           ),
+          [
+            t(
+              "Tiny living things passing between people is the germ theory that replaced it.",
+              "在人与人之间传播的微小生物是后来取代它的细菌说。",
+            ),
+            t("The masks were meant to protect against bad air, not cause disease.", "面具是用来防坏空气的，不是病因。"),
+            t("Sewers were built to fight disease, not cause it.", "下水道是为对抗疾病而建的，不是病因。"),
+          ],
         ),
         ask(
           t("Why did building sewers really reduce disease?", "修建下水道为什么真的减少了疾病？"),
@@ -60,6 +68,14 @@ The miasma theory was eventually replaced by the germ theory: the idea that many
             "The fourth paragraph says the changes reduced disease not because they removed smells, but because they removed germs. The smell and the disease were linked, but the smell was not the cause.",
             "第四段说这些改变减少疾病不是因为消除了臭味，而是因为清除了病菌。臭味和疾病相互关联，但臭味不是原因。",
           ),
+          [
+            t(
+              "Removing smells is what people believed, but the passage says that was the wrong reason.",
+              "人们以为是除掉了臭味，但文中说这个理由是错的。",
+            ),
+            t("Burning fires in the streets was a different action.", "在街上点火是另一种做法。"),
+            t("Herbs were stuffed in masks, not streets.", "草药是塞在面具里的，不是街上。"),
+          ],
         ),
         ask(
           t("What lesson about science does the author draw from the miasma theory?", "作者从瘴气说中得出了什么关于科学的教训？"),
@@ -73,6 +89,11 @@ The miasma theory was eventually replaced by the germ theory: the idea that many
             "The last sentence states it: a theory can seem to match the evidence and even lead to useful actions, and still be wrong about the cause.",
             "最后一句点明了这一点：一个理论可以看起来与证据相符，甚至带来有用的行动，却仍然在原因上出错。",
           ),
+          [
+            t("The miasma theory led to useful actions and was still wrong.", "瘴气说带来了有用的做法，却仍然是错的。"),
+            t("Masks are an example from the past, not the lesson.", "面具是过去的例子，不是寓意。"),
+            t("Bad smells were linked to disease, not health.", "臭味被认为与疾病有关，不是健康。"),
+          ],
         ),
         ask(
           t("What did plague doctors stuff into their beak-shaped masks?", "瘟疫医生在鸟嘴面具里塞了什么？"),
@@ -82,6 +103,11 @@ The miasma theory was eventually replaced by the germ theory: the idea that many
             "Doctors wore masks shaped like long beaks, stuffed with sweet-smelling herbs.",
             "医生戴着长鸟嘴形的面具，里面塞着芳香的草药。",
           ),
+          [
+            t("Chlorine belongs to the Semmelweis story.", "氯水属于塞麦尔维斯的故事。"),
+            t("Garbage was thought to give off the bad air.", "垃圾被认为会散发坏空气。"),
+            t("Wet cotton is never mentioned.", "文中从没提湿棉花。"),
+          ],
         ),
       ],
       ["Greek"],
@@ -115,6 +141,11 @@ Many doctors refused to believe him. Semmelweis could not explain what the parti
             "The difference in death rates was an observation he could count. That particles were carried on the doctors' hands was his inference, an explanation he could not yet see.",
             "死亡率的差别是他能够统计的观察结果。微粒被医生的手带过去，则是他的推断，是一种他当时还看不见的解释。",
           ),
+          [
+            t("The particles were his inference, made later.", "微粒是他后来作出的推断。"),
+            t("Germs were proved only after his death.", "细菌是他死后才被证实的。"),
+            t("Chlorine came after the inference, as the test.", "氯水是推断之后的检验。"),
+          ],
         ),
         ask(
           t("What was the key difference between the two clinics?", "两个诊室之间的关键区别是什么？"),
@@ -128,6 +159,11 @@ Many doctors refused to believe him. Semmelweis could not explain what the parti
             "The third paragraph says the First Clinic was run by doctors and students, who often came straight from the room where they examined the bodies of patients who had died.",
             "第三段说第一诊室由医生和学生负责，他们常常直接从检查死者尸体的房间过来。",
           ),
+          [
+            t("The two clinics were alike in many ways.", "两个诊室在许多方面都一样。"),
+            t("The number of mothers is never compared.", "文中从没比较产妇人数。"),
+            t("The Second Clinic was run by midwives, and chlorine came later.", "第二诊室由助产士负责，氯水是后来才用的。"),
+          ],
         ),
         ask(
           t("What evidence supported Semmelweis's idea?", "什么证据支持了塞麦尔维斯的观点？"),
@@ -141,6 +177,11 @@ Many doctors refused to believe him. Semmelweis could not explain what the parti
             "The fifth paragraph says that within months of the chlorine handwashing, the death rate fell to about the level of the Second Clinic.",
             "第五段说用氯水洗手几个月之内，死亡率就降到了与第二诊室大致相同的水平。",
           ),
+          [
+            t("Many doctors refused to believe him.", "许多医生不肯相信他。"),
+            t("He could not explain what the particles were.", "他说不清那些微粒是什么。"),
+            t("Women begged to enter the Second Clinic, not the First.", "产妇恳求进的是第二诊室，不是第一诊室。"),
+          ],
         ),
         ask(
           t("What did Semmelweis order everyone in the First Clinic to wash their hands in?", "塞麦尔维斯要求第一产科的人用什么洗手？"),
@@ -150,6 +191,11 @@ Many doctors refused to believe him. Semmelweis could not explain what the parti
             "He ordered everyone to wash their hands in a solution of chlorine before examining patients.",
             "他要求所有人在检查病人前用氯溶液洗手。",
           ),
+          [
+            t("Soup is never mentioned here.", "这里从没提汤。"),
+            t("River water is never mentioned.", "文中从没提河水。"),
+            t("Beer belongs to the Broad Street brewery.", "啤酒属于宽街的酿酒厂。"),
+          ],
         ),
       ],
       ["Vienna", "Hungarian", "Ignaz", "Semmelweis", "Semmelweis's"],
@@ -183,6 +229,11 @@ These cases pointed to the water, not the air. Snow presented his evidence to th
             "The third paragraph explains that a cluster alone did not prove the pump was the cause, because people who lived near it also breathed the same air.",
             "第三段解释说，单凭聚集不能证明水泵是原因，因为住在附近的人也呼吸着同样的空气。",
           ),
+          [
+            t("The map is never said to be wrong.", "文中从没说地图画错了。"),
+            t("The cluster shows many did use the pump.", "聚集的病例说明很多人用了这个水泵。"),
+            t("The deaths came within ten days.", "这些死亡发生在十天之内。"),
+          ],
         ),
         ask(
           t("Why were the brewery workers important evidence?", "为什么酿酒厂的工人是重要的证据？"),
@@ -196,6 +247,11 @@ These cases pointed to the water, not the air. Snow presented his evidence to th
             "The fourth paragraph says the brewery was on Broad Street, its workers drank beer and rarely used the pump, and none died. Same air, different water, different result.",
             "第四段说酿酒厂就在宽街上，工人们喝啤酒，很少用这个水泵，没有一个人死亡。同样的空气，不同的水，不同的结果。",
           ),
+          [
+            t("They rarely used the pump.", "他们很少用这个水泵。"),
+            t("Snow drew the map himself.", "地图是斯诺自己画的。"),
+            t("The brewery was on Broad Street.", "酿酒厂就在宽街。"),
+          ],
         ),
         ask(
           t("Why does the author say the removal of the handle may not have ended the outbreak?", "作者为什么说拆掉把手不一定终结了疫情？"),
@@ -209,12 +265,22 @@ These cases pointed to the water, not the air. Snow presented his evidence to th
             "The last paragraph says the outbreak was already declining by September 8, so the fall in deaths after the removal cannot be credited to it alone.",
             "最后一段说到9月8日疫情已经在消退，所以拆除之后死亡人数的下降不能完全归功于它。",
           ),
+          [
+            t("Using a pump with no handle is never mentioned.", "文中从没提没有把手还在用水泵。"),
+            t("The handle is never said to go back.", "文中从没说把手被装回去。"),
+            t("The passage says cholera spreads through water.", "文中说霍乱通过水传播。"),
+          ],
         ),
         ask(
           t("On what date was the handle of the pump removed?", "水泵的把手是哪天被拆掉的？"),
           t("September 8", "9月8日"),
           [t("August 31", "8月31日"), t("October 1", "10月1日"), t("December 25", "12月25日")],
           t("On September 8 the officials removed the handle of the pump.", "9月8日，官员拆掉了水泵的把手。"),
+          [
+            t("August 31 is not given.", "文中没给出 8 月 31 日。"),
+            t("October 1 is not given.", "文中没给出 10 月 1 日。"),
+            t("December 25 is not given.", "文中没给出 12 月 25 日。"),
+          ],
         ),
       ],
       ["Soho", "London", "John", "Snow", "Snow's", "Broad", "September", "August"],
@@ -250,6 +316,11 @@ His experiment helped support the germ theory of disease and led to many practic
             "The first paragraph defines it: the belief that tiny living things arose on their own from the soup itself.",
             "第一段给出了定义：认为微小的生物会从汤本身自行产生。",
           ),
+          [
+            t("Heating milk is pasteurization.", "加热牛奶是巴氏消毒。"),
+            t("Bending glass was part of the experiment, not the idea tested.", "弯曲玻璃是实验的一部分，不是被检验的观点。"),
+            t("Microbes on dust is what Pasteur suspected instead.", "灰尘上的微生物是巴斯德的另一种猜想。"),
+          ],
         ),
         ask(
           t("Why did the broth in the swan-neck flasks stay clear?", "为什么鹅颈烧瓶里的肉汤保持清澈？"),
@@ -263,6 +334,11 @@ His experiment helped support the germ theory of disease and led to many practic
             "The fourth paragraph says air could travel through the curved necks, but dust and the microbes riding on it were trapped in the bend and never reached the broth.",
             "第四段说空气可以通过弯曲的瓶颈，但灰尘及其携带的微生物被困在弯曲处，始终没有到达肉汤。",
           ),
+          [
+            t("The necks were open, so air did reach it.", "瓶颈是开着的，空气能进去。"),
+            t("The broth was boiled, then sat for weeks.", "肉汤煮沸后放了几个星期。"),
+            t("Chlorine belongs to Semmelweis.", "氯水属于塞麦尔维斯。"),
+          ],
         ),
         ask(
           t("Which statement is Pasteur's inference rather than an observation?", "哪一句是巴斯德的推断而不是观察？"),
@@ -276,6 +352,11 @@ His experiment helped support the germ theory of disease and led to many practic
             "Clear and cloudy broth and moisture in the bend are things he could see. That the microbes came from the air is the conclusion he drew from those observations.",
             "清澈或浑浊的肉汤、弯曲处的水汽都是他能看到的。微生物来自空气，是他根据这些观察得出的结论。",
           ),
+          [
+            t("Clear broth is what he saw.", "肉汤清澈是他看到的。"),
+            t("Cloudy broth is what he saw.", "肉汤变浑是他看到的。"),
+            t("The moisture in the bend was seen too.", "弯管里有水汽也是看到的。"),
+          ],
         ),
         ask(
           t("What is pasteurization?", "巴氏消毒是什么？"),
@@ -286,6 +367,11 @@ His experiment helped support the germ theory of disease and led to many practic
             t("Washing hands in chlorine", "用氯水洗手"),
           ],
           t("Pasteurization is the heating of milk to kill harmful bacteria.", "巴氏消毒就是加热牛奶以杀死有害细菌。"),
+          [
+            t("Boiling broth in a flask was the experiment, not pasteurization.", "在瓶里煮肉汤是实验，不是巴氏消毒。"),
+            t("Freezing is never mentioned.", "文中从没提冷冻。"),
+            t("Handwashing in chlorine is Semmelweis's method.", "用氯水洗手是塞麦尔维斯的方法。"),
+          ],
         ),
       ],
       ["Louis", "Pasteur", "French", "Paris"],
@@ -318,6 +404,11 @@ In the 1960s and 1970s, the World Health Organization led a worldwide effort to 
             "The second paragraph says people had noticed that milkmaids rarely caught smallpox, and many had caught cowpox, so Jenner wondered whether cowpox protected them.",
             "第二段说人们注意到挤奶女工很少得天花，而她们中很多人得过牛痘，所以詹纳想知道牛痘是否保护了她们。",
           ),
+          [
+            t("The death rate shows how feared smallpox was, not his question.", "死亡率说明天花可怕，不是他的问题来源。"),
+            t("Cowpox is a mild disease of cows.", "牛痘是牛的轻微疾病。"),
+            t("Boys are not compared with anyone.", "文中没把男孩和别人比较。"),
+          ],
         ),
         ask(
           t("Why does the author say Jenner's test would never be allowed today?", "作者为什么说詹纳的试验在今天绝不会被允许？"),
@@ -331,6 +422,11 @@ In the 1960s and 1970s, the World Health Organization led a worldwide effort to 
             "The fourth paragraph says he exposed James, an eight-year-old, to material from a smallpox sore. Exposing a child to a disease that killed three in ten would be far too dangerous today.",
             "第四段说他让八岁的詹姆斯接触了天花脓疮的物质。让孩子接触一种致死率达十分之三的疾病，在今天是极其危险的。",
           ),
+          [
+            t("The milkmaid's sores are not the problem.", "挤奶女工的疮不是问题所在。"),
+            t("Publishing results is normal science.", "发表结果是正常的科学做法。"),
+            t("Testing more people is normal too.", "在更多人身上测试也很正常。"),
+          ],
         ),
         ask(
           t("Where does the word vaccination come from?", "vaccination 这个词来自哪里？"),
@@ -344,6 +440,11 @@ In the 1960s and 1970s, the World Health Organization led a worldwide effort to 
             "The fifth paragraph says Jenner called his method vaccination, from vacca, the Latin word for cow.",
             "第五段说詹纳把他的方法称为 vaccination，来自拉丁语中表示奶牛的 vacca。",
           ),
+          [
+            t("Sarah Nelmes is the milkmaid, not the source of the word.", "萨拉·内尔姆斯是挤奶女工，不是这个词的来源。"),
+            t("The WHO came almost two centuries later.", "世界卫生组织是近两百年后才有的。"),
+            t("The word is Latin, not Greek.", "这个词来自拉丁语，不是希腊语。"),
+          ],
         ),
         ask(
           t("In what year did the WHO announce that smallpox was eradicated?", "世卫组织哪一年宣布天花被根除？"),
@@ -353,6 +454,11 @@ In the 1960s and 1970s, the World Health Organization led a worldwide effort to 
             "In 1980, the World Health Organization announced that smallpox had been eradicated.",
             "1980年，世界卫生组织宣布天花已被根除。",
           ),
+          [
+            t("1796 is Jenner's test.", "1796 年是詹纳做试验的年份。"),
+            t("The 1960s is when the effort began.", "1960 年代是行动开始的时候。"),
+            t("1945 is never mentioned here.", "这里从没提 1945 年。"),
+          ],
         ),
       ],
       [
@@ -402,6 +508,11 @@ In 1945, Fleming, Florey and Chain shared the Nobel Prize. Fleming's luck had ma
             "The second paragraph says there was a clear ring around the mold where the bacteria had died, while farther away the bacteria grew normally.",
             "第二段说霉菌周围有一圈细菌死亡的透明区域，而更远处的细菌生长正常。",
           ),
+          [
+            t("Bacteria farther away were growing normally.", "远处的细菌正常生长。"),
+            t("The jelly is not said to die.", "文中没说培养胶死了。"),
+            t("The bacteria died around the mold.", "细菌在霉菌周围死了。"),
+          ],
         ),
         ask(
           t("Why did penicillin remain a laboratory curiosity for about ten years?", "为什么青霉素大约十年里一直只是实验室里的稀奇之物？"),
@@ -415,6 +526,11 @@ In 1945, Fleming, Florey and Chain shared the Nobel Prize. Fleming's luck had ma
             "The fourth paragraph says Fleming could not make enough of it to treat patients, and it was difficult to purify.",
             "第四段说弗莱明无法制造足够的量来治疗病人，而且它很难提纯。",
           ),
+          [
+            t("It killed many kinds of bacteria.", "它能杀死多种细菌。"),
+            t("He did not throw the dish away.", "他没把培养皿扔掉。"),
+            t("No ban on its use is mentioned.", "文中没提禁止使用它。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest about the discovery of penicillin?", "最后一句话暗示了青霉素的发现有什么特点？"),
@@ -428,12 +544,22 @@ In 1945, Fleming, Florey and Chain shared the Nobel Prize. Fleming's luck had ma
             "The last sentence says Fleming's luck mattered, but so did his curiosity and the long work of others, such as Florey, Chain and the companies that grew the mold.",
             "最后一句说弗莱明的运气很重要，但他的好奇心和其他人长期的工作同样重要，比如弗洛里、钱恩和大量培养霉菌的公司。",
           ),
+          [
+            t("The prize was shared by three people.", "奖项是三人共享的。"),
+            t("Luck mattered, but so did curiosity and others' work.", "运气重要，好奇心和别人的工作也重要。"),
+            t("Fleming found the mold, not Florey and Chain.", "发现霉菌的是弗莱明，不是弗洛里和钱恩。"),
+          ],
         ),
         ask(
           t("Where did Fleming return from in September 1928?", "1928年9月弗莱明是从哪里回到实验室的？"),
           t("A summer holiday", "暑假度假"),
           [t("A war hospital", "战地医院"), t("The University of Oxford", "牛津大学"), t("A trip to the United States", "美国之行")],
           t("Fleming returned to his laboratory in London after a summer holiday.", "弗莱明度完暑假回到了伦敦的实验室。"),
+          [
+            t("War hospitals came later.", "战地医院是后来的事。"),
+            t("Oxford is where Florey's team worked.", "牛津是弗洛里团队工作的地方。"),
+            t("The United States grew the mold in tanks later.", "美国是后来用大罐培养霉菌的。"),
+          ],
         ),
       ],
       [
@@ -487,6 +613,11 @@ Scientists are searching for new antibiotics, but the most powerful tool may be 
             "The second paragraph says that just by chance, a few bacteria have a change in their genes that lets them survive the antibiotic.",
             "第二段说，纯属偶然，少数细菌的基因发生了变化，使它们能在抗生素中存活。",
           ),
+          [
+            t("Viruses cause colds; they do not shelter bacteria.", "病毒引起感冒，并不给细菌藏身。"),
+            t("Too much medicine is not the cause.", "吃药太多不是原因。"),
+            t("Size is never mentioned.", "文中从没提大小。"),
+          ],
         ),
         ask(
           t("Why is taking an antibiotic for a cold not helpful?", "为什么因感冒而服用抗生素没有帮助？"),
@@ -500,6 +631,11 @@ Scientists are searching for new antibiotics, but the most powerful tool may be 
             "The third paragraph says antibiotics are sometimes used when they cannot help, such as for colds and flu, which are caused by viruses, not bacteria.",
             "第三段说抗生素有时被用在无效的场合，比如感冒和流感，它们是由病毒而不是细菌引起的。",
           ),
+          [
+            t("Colds are caused by viruses, not bacteria.", "感冒由病毒引起，不是细菌。"),
+            t("Antibiotics work on people too.", "抗生素对人也有效。"),
+            t("Timing is not the reason given.", "文中给出的理由与时间无关。"),
+          ],
         ),
         ask(
           t("What does the author suggest may be the most powerful tool against resistance?", "作者认为对抗耐药性最有力的工具可能是什么？"),
@@ -513,6 +649,11 @@ Scientists are searching for new antibiotics, but the most powerful tool may be 
             "The last paragraph says that while scientists search for new antibiotics, the most powerful tool may be using the ones we have only when truly needed.",
             "最后一段说，在科学家寻找新抗生素的同时，最有力的工具可能是只在真正需要时使用现有的抗生素。",
           ),
+          [
+            t("Farm animals are part of the problem.", "给农场动物用药是问题的一部分。"),
+            t("Stopping early makes the problem worse.", "提前停药会让问题更糟。"),
+            t("The warning is not a tool.", "警告不是工具。"),
+          ],
         ),
       ],
       ["Alexander", "Fleming", "Nobel", "Prize"],
@@ -543,6 +684,11 @@ So the popular claim is mostly not supported. Vitamin C will not stop most peopl
             "The first paragraph says Pauling had won two Nobel Prizes, so many readers trusted him. The second paragraph points out that a famous name is not evidence.",
             "第一段说鲍林获得过两次诺贝尔奖，所以许多读者相信他。第二段指出，名气不是证据。",
           ),
+          [
+            t("Controlled studies mostly did not support him.", "对照研究大多不支持他。"),
+            t("He did not test it on runners.", "他没在跑步者身上做测试。"),
+            t("The placebo was for volunteers in later studies.", "安慰剂是后来研究中给志愿者的。"),
+          ],
         ),
         ask(
           t(
@@ -559,6 +705,11 @@ So the popular claim is mostly not supported. Vitamin C will not stop most peopl
             "The second paragraph says neither group knows who is taking which, so their expectations cannot affect the results.",
             "第二段说双方都不知道谁吃的是哪种药，这样他们的预期就不会影响结果。",
           ),
+          [
+            t("The aim is fairness, not more colds.", "目的是公平，不是让人多感冒。"),
+            t("The pills look the same.", "两种药片看起来一样。"),
+            t("There are two groups.", "研究分为两组。"),
+          ],
         ),
         ask(
           t(
@@ -575,6 +726,11 @@ So the popular claim is mostly not supported. Vitamin C will not stop most peopl
             "The third and fourth paragraphs say the combined studies show no drop in the number of colds for most people, but colds ended slightly sooner. The last paragraph sums up: the claim is mostly not supported.",
             "第三、四段说综合研究显示对大多数人来说感冒次数没有减少，但感冒结束得稍早一些。最后一段总结说：这一说法基本得不到支持。",
           ),
+          [
+            t("It is mostly not supported.", "这一说法大多得不到支持。"),
+            t("It may shorten a cold, not lengthen it.", "它可能缩短感冒，而不是延长。"),
+            t("Dozens of studies tested it.", "几十项研究检验过它。"),
+          ],
         ),
       ],
       ["Linus", "Pauling", "Pauling's", "Nobel", "Prizes"],

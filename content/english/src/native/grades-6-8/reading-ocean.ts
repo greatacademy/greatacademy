@@ -42,6 +42,11 @@ Each zone is a separate ecosystem, yet they are all linked: what happens near th
             "The second paragraph says sunlight lets producers make food, and because food is plentiful, about ninety percent of ocean life lives there.",
             "第二段说，阳光让生产者能制造食物，因为食物充足，大约百分之九十的海洋生物生活在那里。",
           ),
+          [
+            t("Cold water is deep, in the midnight zone.", "冷水在深处的午夜带。"),
+            t("Crushing pressure is deep down, not near the top.", "巨大的压力在深处，不在表层。"),
+            t("Making their own light happens in the dark midnight zone.", "自己发光发生在黑暗的午夜带。"),
+          ],
         ),
         ask(
           t("What is the daily migration described in the passage?", "文中描述的每日迁徙是什么？"),
@@ -55,6 +60,11 @@ Each zone is a separate ecosystem, yet they are all linked: what happens near th
             "The third paragraph says creatures of the twilight zone swim up each night to feed and sink back before dawn.",
             "第三段说，暮光层的生物每天夜里游上来觅食，黎明前再沉回去。",
           ),
+          [
+            t("Whales traveling between poles and tropics is another passage.", "鲸在两极和热带之间迁徙是另一篇的内容。"),
+            t("Plankton drift; they are not said to sink daily.", "浮游生物随水漂流，文中没说它们每天下沉。"),
+            t("Fish leaving for rivers is never mentioned.", "文中从没提鱼游进河里。"),
+          ],
         ),
         ask(
           t('What does "bioluminescence" mean, as the passage uses it?', '文中的 "bioluminescence" 是什么意思？'),
@@ -68,12 +78,22 @@ Each zone is a separate ecosystem, yet they are all linked: what happens near th
             "The fourth paragraph defines it right after the word: animals that make their own light.",
             "第四段在这个词前面就给出了解释：动物自己发光。",
           ),
+          [
+            t("Pressure is a condition of the deep, not a skill.", "压力是深海的条件，不是一种本领。"),
+            t("The blue glow from above is sunlight, not the animals' own.", "来自上方的蓝光是阳光，不是动物自己的光。"),
+            t("Making food is photosynthesis.", "制造食物是光合作用。"),
+          ],
         ),
         ask(
           t("How far down does the sunlight zone reach?", "阳光带向下延伸多深？"),
           t("About six hundred feet", "约六百英尺"),
           [t("About three thousand feet", "约三千英尺"), t("More than six miles", "六英里以上"), t("About sixty feet", "约六十英尺")],
           t("The top layer, the sunlight zone, reaches down about six hundred feet.", "最上层的阳光带向下延伸约六百英尺。"),
+          [
+            t("Three thousand feet is the bottom of the twilight zone.", "三千英尺是暮光带的底部。"),
+            t("Six miles is the depth of the trenches.", "六英里是海沟的深度。"),
+            t("Sixty feet is never mentioned.", "文中从没提六十英尺。"),
+          ],
         ),
       ],
       ["Earth"],
@@ -105,6 +125,11 @@ Because plankton are so important, scientists watch them closely. Changes in pla
             "The first paragraph says the name means wanderer because plankton cannot swim against the currents and simply drift.",
             "第一段说，这个名字意为漫游者，因为浮游生物无法逆流游动，只能随水漂流。",
           ),
+          [
+            t("They go wherever the water carries them, not around the world.", "它们随水漂流，并不是周游各大洋。"),
+            t("Rivers are never mentioned.", "文中从没提河流。"),
+            t("They are not said to move away from light.", "文中没说它们远离光。"),
+          ],
         ),
         ask(
           t(
@@ -121,6 +146,11 @@ Because plankton are so important, scientists watch them closely. Changes in pla
             "The oxygen fact connects plankton to every breath people take; the other details are true but do not show why they matter to people.",
             "氧气这一事实把浮游生物和人们的每一次呼吸联系起来；其他细节虽然正确，却不能说明它们为什么对人很重要。",
           ),
+          [
+            t("Being tiny does not show they matter on land.", "个子小不能说明它们对陆地重要。"),
+            t("Copepods are zooplankton and not about oxygen.", "桡足类是浮游动物，与氧气无关。"),
+            t("Jellyfish drifting says nothing about people on land.", "水母漂流与陆地上的人无关。"),
+          ],
         ),
         ask(
           t("Why are jellyfish counted as plankton?", "为什么水母被算作浮游生物？"),
@@ -134,6 +164,11 @@ Because plankton are so important, scientists watch them closely. Changes in pla
             "The third paragraph says jellyfish are zooplankton, even when large, because they cannot swim against the currents.",
             "第三段说，水母即使很大也属于浮游动物，因为它们无法逆流游动。",
           ),
+          [
+            t("Some jellyfish grow very large.", "有些水母长得很大。"),
+            t("Making food from sunlight is phytoplankton.", "用阳光制造食物的是浮游植物。"),
+            t("Krill feeds the blue whale, not jellyfish.", "磷虾是蓝鲸的食物，不是水母的。"),
+          ],
         ),
         ask(
           t("What does a blue whale live on almost entirely?", "蓝鲸几乎完全靠吃什么生存？"),
@@ -143,6 +178,11 @@ Because plankton are so important, scientists watch them closely. Changes in pla
             "A blue whale survives almost entirely on krill, a small, shrimp-like zooplankton.",
             "蓝鲸几乎完全靠磷虾这种小虾似的浮游动物生存。",
           ),
+          [
+            t("Large fish are eaten by other predators.", "大鱼是别的捕食者吃的。"),
+            t("Seaweed is a producer, not the whale's food.", "海藻是生产者，不是鲸的食物。"),
+            t("Jellyfish are not its food.", "水母不是它的食物。"),
+          ],
         ),
       ],
       ["Greek", "Earth"],
@@ -174,6 +214,11 @@ Scientists and volunteers are fighting back. They grow young corals in underwate
             "The first paragraph says reefs cover less than one percent of the ocean floor but hold about a quarter of ocean species.",
             "第一段说，珊瑚礁占海底面积不到百分之一，却容纳了大约四分之一的海洋物种。",
           ),
+          [
+            t("Reefs have no trees.", "珊瑚礁上没有树。"),
+            t("Rain is not the comparison.", "这个比喻与降雨无关。"),
+            t("The comparison is about variety, not location.", "比喻说的是物种多样，不是位置。"),
+          ],
         ),
         ask(
           t("Which sentence from the passage defines symbiosis?", "文中哪一句给出了共生的定义？"),
@@ -187,6 +232,11 @@ Scientists and volunteers are fighting back. They grow young corals in underwate
             "The third paragraph says a relationship in which two different organisms both benefit is called symbiosis.",
             "第三段说，两种不同的生物都受益的关系叫作共生。",
           ),
+          [
+            t("Turning white is bleaching.", "变白是白化。"),
+            t("A colony of polyps defines a coral.", "珊瑚虫群落是珊瑚的定义。"),
+            t("Nurseries are part of the recovery effort.", "苗圃是恢复工作的一部分。"),
+          ],
         ),
         ask(
           t("What causes coral bleaching?", "是什么导致了珊瑚白化？"),
@@ -200,6 +250,11 @@ Scientists and volunteers are fighting back. They grow young corals in underwate
             "The fourth paragraph says that when the water becomes too warm, corals push out their algae and turn white.",
             "第四段说，海水过热时，珊瑚会排出体内的藻类而变白。",
           ),
+          [
+            t("Sunny water is what reefs need.", "珊瑚礁需要阳光充足的水。"),
+            t("Building cups is normal growth.", "建造杯状骨骼是正常生长。"),
+            t("Planting corals helps reefs recover.", "种植珊瑚是帮助珊瑚礁恢复。"),
+          ],
         ),
         ask(
           t("What is each coral polyp about the size of?", "每个珊瑚虫大约有多大？"),
@@ -210,6 +265,11 @@ Scientists and volunteers are fighting back. They grow young corals in underwate
             t("Too small to see even with a microscope", "用显微镜也看不见"),
           ],
           t("Each coral is a colony of tiny polyps, each no bigger than a pea.", "每块珊瑚是由不比豌豆大的珊瑚虫组成的群体。"),
+          [
+            t("A fist is far too big.", "拳头太大了。"),
+            t("A sea turtle is far too big.", "海龟太大了。"),
+            t("The tiny algae need a microscope, not the polyps.", "需要显微镜看的是藻类，不是珊瑚虫。"),
+          ],
         ),
       ],
       ["Great", "Barrier", "Reef"],
@@ -237,6 +297,11 @@ When laws protected the otters and their numbers began to rise, the urchins were
             "The second paragraph says kelp has no roots and clings to rocks with a holdfast.",
             "第二段说，海藻没有根，靠固着器附着在岩石上。",
           ),
+          [
+            t("Kelp has no roots.", "海带没有根。"),
+            t("Gas bulbs lift the blades up.", "气囊把叶片托起。"),
+            t("Leaves are not said to be sticky.", "文中没说叶子是黏的。"),
+          ],
         ),
         ask(
           t("What happened to kelp forests when sea otters were hunted?", "海獭被捕杀后，海藻林发生了什么？"),
@@ -250,6 +315,11 @@ When laws protected the otters and their numbers began to rise, the urchins were
             "The fourth paragraph says that without otters, sea urchins multiplied and chewed through the kelp.",
             "第四段说，没有了海獭，海胆大量繁殖，把海藻啃光了。",
           ),
+          [
+            t("The kelp was eaten, not grown faster.", "海带被吃光了，并没长得更快。"),
+            t("Seals shelter in kelp; they do not eat it.", "海豹在海带林里栖身，并不吃海带。"),
+            t("No divers planted kelp.", "没有潜水员种海带。"),
+          ],
         ),
         ask(
           t("Why is the sea otter called a keystone species?", "为什么海獭被称为关键物种？"),
@@ -263,12 +333,22 @@ When laws protected the otters and their numbers began to rise, the urchins were
             "The last paragraph compares the otter to the central stone of an arch: removing it causes the whole structure to collapse.",
             "最后一段把海獭比作拱门中央的那块石头：拿掉它，整个结构就会坍塌。",
           ),
+          [
+            t("Size is not the reason.", "原因不是体型。"),
+            t("Where it lives is not the reason.", "原因不是它住在哪里。"),
+            t("Its fur explains the hunting, not the name.", "皮毛解释了被捕杀的原因，不是这个名称。"),
+          ],
         ),
         ask(
           t("How fast can kelp grow in good conditions?", "条件好时海带能长多快？"),
           t("Up to two feet in a single day", "一天最多两英尺"),
           [t("Two inches a year", "每年两英寸"), t("One hundred feet a day", "每天一百英尺"), t("One foot a month", "每月一英尺")],
           t("In good conditions, kelp can grow up to two feet in a single day.", "条件好时，海带一天能长两英尺。"),
+          [
+            t("Two inches a year is far too slow.", "每年两英寸太慢了。"),
+            t("One hundred feet is its full height, not a day's growth.", "一百英尺是它的总高度，不是一天的生长。"),
+            t("A foot a month is far too slow.", "每月一英尺太慢了。"),
+          ],
         ),
       ],
       ["California", "South", "Africa", "Australia", "Earth"],
@@ -298,6 +378,11 @@ For this reason, many scientists argue that fishing limits must consider the who
             "The first paragraph says almost all of that energy begins with the sun, which producers use to make food.",
             "第一段说，几乎所有能量都始于太阳，生产者利用阳光制造食物。",
           ),
+          [
+            t("Sharks are at the top, not the start.", "鲨鱼在顶端，不是起点。"),
+            t("Decomposers recycle nutrients, not energy from the start.", "分解者回收养分，不是能量的起点。"),
+            t("Fishing boats only take from the web.", "渔船只是从食物网中索取。"),
+          ],
         ),
         ask(
           t("What job do decomposers do in the web?", "分解者在食物网中起什么作用？"),
@@ -311,6 +396,11 @@ For this reason, many scientists argue that fishing limits must consider the who
             "The fourth paragraph says decomposers break down dead plants and animals and return nutrients to the water.",
             "第四段说，分解者分解死去的动植物，把养分归还给海水。",
           ),
+          [
+            t("Making food from sunlight is the producers' job.", "用阳光制造食物是生产者的工作。"),
+            t("Hunting is done by predators.", "捕猎是捕食者的事。"),
+            t("Currents carry plankton.", "洋流带着浮游生物走。"),
+          ],
         ),
         ask(
           t('Why do scientists say "web" instead of "chain"?', "为什么科学家说“网”而不说“链”？"),
@@ -324,6 +414,11 @@ For this reason, many scientists argue that fishing limits must consider the who
             "The fifth paragraph explains that most animals eat more than one kind of food and are eaten by more than one predator.",
             "第五段解释说，大多数动物吃不止一种食物，也被不止一种捕食者吃。",
           ),
+          [
+            t("Web describes connections, not shape.", "web 描述的是联系，不是形状。"),
+            t("No spiders are involved.", "与蜘蛛无关。"),
+            t("Chains are not said to be found only on land.", "文中没说食物链只存在于陆地。"),
+          ],
         ),
         ask(
           t("What may happen when fishing boats catch too many anchovies?", "渔船捕捞太多凤尾鱼可能会怎样？"),
@@ -334,6 +429,11 @@ For this reason, many scientists argue that fishing limits must consider the who
             t("More krill are eaten", "更多磷虾被吃掉"),
           ],
           t("The seabirds, seals and larger fish that depend on anchovies may go hungry.", "依赖凤尾鱼的海鸟、海豹和大鱼可能会挨饿。"),
+          [
+            t("Phytoplankton are not said to vanish.", "文中没说浮游植物会消失。"),
+            t("Sharks are not said to grow.", "文中没说鲨鱼会变大。"),
+            t("Krill are not part of this example.", "磷虾不在这个例子里。"),
+          ],
         ),
       ],
       [],
@@ -361,6 +461,11 @@ Humpbacks were once hunted until only a few thousand remained. Since hunting was
             "The third paragraph says females give birth in warm waters because newborn calves could not survive in icy seas.",
             "第三段说，雌鲸在温暖的海域生产，因为刚出生的幼鲸无法在冰冷的海水中存活。",
           ),
+          [
+            t("Krill is in the cold polar waters.", "磷虾在寒冷的极地水域。"),
+            t("Hunting was banned, and it is not the reason for travel.", "捕鲸已被禁止，也不是迁徙的原因。"),
+            t("They build blubber in summer at the poles.", "它们是夏天在极地积累脂肪的。"),
+          ],
         ),
         ask(
           t("How do humpbacks use bubbles to hunt?", "座头鲸怎样用气泡捕食？"),
@@ -374,6 +479,11 @@ Humpbacks were once hunted until only a few thousand remained. Since hunting was
             "The second paragraph says the bubbles form a net that traps the fish, and the whales rise through the middle to eat them.",
             "第二段说，气泡形成一张网困住鱼群，鲸从中间向上游，把鱼吃掉。",
           ),
+          [
+            t("Sharks are never mentioned.", "文中从没提鲨鱼。"),
+            t("The whales rise by swimming up.", "鲸是自己游上来的。"),
+            t("Breathing is not the reason for the bubbles.", "吐泡泡不是为了呼吸。"),
+          ],
         ),
         ask(
           t("Which detail supports the claim that humpbacks have recovered?", "哪个细节支持座头鲸数量已经恢复的说法？"),
@@ -387,12 +497,22 @@ Humpbacks were once hunted until only a few thousand remained. Since hunting was
             "The last paragraph says their numbers have recovered since hunting was banned and that they are no longer considered endangered.",
             "最后一段说，自从禁止捕鲸以来，它们的数量已经恢复，不再被认为是濒危物种。",
           ),
+          [
+            t("The distance shows the journey, not recovery.", "距离说明旅程，不是数量恢复。"),
+            t("Food intake shows feeding, not numbers.", "食量说明进食，不是数量。"),
+            t("Navigation is a different topic.", "导航是另一个话题。"),
+          ],
         ),
         ask(
           t("When was whale hunting banned?", "捕鲸是哪一年被禁止的？"),
           t("In 1966", "1966年"),
           [t("In 1866", "1866年"), t("In 2006", "2006年"), t("In 1700", "1700年")],
           t("Since hunting was banned in 1966, humpback numbers have recovered.", "自1966年禁止捕鲸以来，座头鲸的数量已经恢复。"),
+          [
+            t("1866 is long before the ban.", "1866 年远在禁令之前。"),
+            t("2006 is long after.", "2006 年远在之后。"),
+            t("1700 is when hunting otters began, not a whale ban.", "1700 年代是海獭被捕杀的时候，不是禁捕鲸。"),
+          ],
         ),
       ],
       ["Earth", "North", "South", "Poles", "Hawaii", "Mexico"],
@@ -424,6 +544,11 @@ Some groups are building machines to collect plastic from the sea. Many scientis
             "The first paragraph says some falls from ships, but most comes from land, through drains and rivers.",
             "第一段说，有一些来自船只，但大部分来自陆地，经下水道和河流进入大海。",
           ),
+          [
+            t("Some falls from ships, but most comes from land.", "有些从船上掉落，但大部分来自陆地。"),
+            t("Trenches are where microplastics end up.", "海沟是微塑料最终到达的地方。"),
+            t("Arctic ice also holds microplastics but is not a source.", "北极冰里也有微塑料，但不是来源。"),
+          ],
         ),
         ask(
           t("How can microplastics reach people?", "微塑料怎样到达人类？"),
@@ -437,6 +562,11 @@ Some groups are building machines to collect plastic from the sea. Many scientis
             "The third paragraph says microplastics are eaten by plankton and small fish and can move up the food web to fish that people eat.",
             "第三段说，微塑料被浮游生物和小鱼吃掉，可以沿着食物网向上进入人们吃的鱼。",
           ),
+          [
+            t("Rain is never mentioned.", "文中从没提下雨。"),
+            t("No one adds it on purpose.", "没人故意添加。"),
+            t("They break into smaller pieces, not larger.", "它们会碎成更小的颗粒，不会变大。"),
+          ],
         ),
         ask(
           t("What mistaken idea about the garbage patch does the passage correct?", "文章纠正了关于垃圾带的什么错误看法？"),
@@ -450,6 +580,11 @@ Some groups are building machines to collect plastic from the sea. Many scientis
             "The fourth paragraph says it is not a solid island of trash, as many people imagine, but a vast area of floating pieces.",
             "第四段说，它并不像很多人想象的那样是一座实心的垃圾岛，而是一大片漂浮着碎片的海域。",
           ),
+          [
+            t("It does lie in the Pacific.", "它确实在太平洋。"),
+            t("It does contain plastic.", "它确实含有塑料。"),
+            t("Currents do carry plastic there.", "洋流确实把塑料带到那里。"),
+          ],
         ),
       ],
       ["Arctic", "Great", "Pacific", "Garbage", "Patch", "Hawaii", "California"],
@@ -481,6 +616,11 @@ Ordinary people can help as well. Choosing seafood that is caught in sustainable
             "The first paragraph defines it as a part of the sea where fishing, drilling and mining are limited or banned.",
             "第一段把它定义为限制或完全禁止捕鱼、钻探和采矿的海域。",
           ),
+          [
+            t("Swimming bans are not mentioned.", "文中没提禁止游泳。"),
+            t("Parks on land are the comparison.", "陆地上的公园只是比较对象。"),
+            t("Breeding fish is not what these areas do.", "这些区域不是用来养鱼的。"),
+          ],
         ),
         ask(
           t("How can protected areas help fishers, according to the passage?", "根据文章，保护区怎样帮助渔民？"),
@@ -494,6 +634,11 @@ Ordinary people can help as well. Choosing seafood that is caught in sustainable
             "The second paragraph says that as fish populations grow, some swim out into surrounding waters, where fishers can catch them.",
             "第二段说，随着鱼的数量增加，一些鱼会游到周围海域，渔民可以在那里捕捞。",
           ),
+          [
+            t("No payments are mentioned.", "文中没提发钱。"),
+            t("Fishing inside on weekends is never allowed.", "文中从没说周末可以进去捕鱼。"),
+            t("No new boats are mentioned.", "文中没提新渔船。"),
+          ],
         ),
         ask(
           t("Which is a limit of protected areas that the passage names?", "文章提到了保护区的哪个局限？"),
@@ -507,6 +652,11 @@ Ordinary people can help as well. Choosing seafood that is caught in sustainable
             "The third paragraph says protection cannot stop every threat, because warming water and plastic do not respect boundaries.",
             "第三段说，保护区无法阻止所有威胁，因为海水变暖和塑料污染不受边界限制。",
           ),
+          [
+            t("Fish grow larger there.", "那里的鱼会长得更大。"),
+            t("Only about ten percent is protected.", "只有大约百分之十受到保护。"),
+            t("Patrolling is expensive, not cheap.", "巡逻很昂贵，并不便宜。"),
+          ],
         ),
       ],
       [],

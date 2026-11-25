@@ -43,6 +43,11 @@ For the rest, it was the beginning of a new life. They took a ferry to Manhattan
             "The second paragraph says passengers in first- or second-class cabins were usually inspected on board and allowed to go straight into the city.",
             "第二段说一等舱或二等舱的乘客通常在船上接受检查，然后直接进城。",
           ),
+          [
+            t("They were immigrants, not citizens.", "他们是移民，不是公民。"),
+            t("They arrived in the same harbor.", "他们到达的是同一个港口。"),
+            t("They were inspected, just on board.", "他们也要接受检查，只是在船上。"),
+          ],
         ),
         ask(
           t("Why did doctors watch immigrants climbing the staircase?", "为什么医生要观察爬楼梯的移民？"),
@@ -56,6 +61,11 @@ For the rest, it was the beginning of a new life. They took a ferry to Manhattan
             "The third paragraph says doctors at the top of the stairs marked anyone who seemed out of breath, had trouble walking or looked ill.",
             "第三段说楼梯顶上的医生会给看起来喘不过气、行走困难或面带病容的人做记号。",
           ),
+          [
+            t("Inspectors, not doctors, handled the questions and counts.", "提问和统计是检查员的事，不是医生的。"),
+            t("The doctors watched; they did not help carry.", "医生只是观察，并不帮忙搬东西。"),
+            t("Tickets are never checked on the stairs.", "文中没说在楼梯上查票。"),
+          ],
         ),
         ask(
           t('Why was Ellis Island also called the "Island of Tears"?', "为什么埃利斯岛也被称为“泪水之岛”？"),
@@ -69,6 +79,11 @@ For the rest, it was the beginning of a new life. They took a ferry to Manhattan
             "The fourth paragraph says about two percent were refused entry and sent back, and for those families Ellis Island became the Island of Tears.",
             "第四段说约百分之二的人被拒绝入境并被遣返，对这些家庭来说，埃利斯岛成了“泪水之岛”。",
           ),
+          [
+            t("Only about two percent were refused.", "只有大约百分之二被拒。"),
+            t("Flooding is never mentioned.", "文中从没提洪水。"),
+            t("Most stayed only a few hours.", "大多数人只待几个小时。"),
+          ],
         ),
         ask(
           t('What did a chalk "E" on a coat stand for?', "外套上的粉笔“E”代表什么？"),
@@ -78,6 +93,11 @@ For the rest, it was the beginning of a new life. They took a ferry to Manhattan
             'Doctors marked people with chalk: "H" for heart, "E" for eyes, "L" for lameness.',
             "医生用粉笔做记号：“H”代表心脏，“E”代表眼睛，“L”代表跛足。",
           ),
+          [
+            t("The chalk letters listed heart, eyes and lameness, not ears.", "粉笔字母代表心脏、眼睛和跛足，没有耳朵。"),
+            t("The letters marked health, not countries.", "字母标记的是健康，不是国家。"),
+            t("The marks led to examination, not refusal.", "记号是要进一步检查，不是拒绝入境。"),
+          ],
         ),
       ],
       [
@@ -129,6 +149,11 @@ In 1940, a fire destroyed the administration building, and the station closed. Y
             "The first paragraph says many held there came from China, and the United States had passed laws designed to keep them out.",
             "第一段说被关在那里的许多人来自中国，而美国通过了旨在把他们拒之门外的法律。",
           ),
+          [
+            t("It was designed to keep people out, not welcome more.", "它是为拒人入境设计的，不是接纳更多人。"),
+            t("It was an immigration station.", "它是移民站。"),
+            t("Merchants were one allowed group among several.", "商人只是获准的几类人之一。"),
+          ],
         ),
         ask(
           t("Why were immigrants asked about windows, wells and neighbors?", "为什么移民被问到窗户、水井和邻居的问题？"),
@@ -145,6 +170,11 @@ In 1940, a fire destroyed the administration building, and the station closed. Y
             "The second paragraph says their answers were compared with those of relatives who had already arrived, and a single difference could lead to deportation.",
             "第二段说他们的回答会与已经到达的亲属的回答进行比对，一处不同就可能导致被驱逐出境。",
           ),
+          [
+            t("The questions tested claims, not housing.", "这些问题是核实身份，不是安排住处。"),
+            t("No map was made.", "没有绘制地图。"),
+            t("Jobs were not assigned this way.", "工作不是这样分配的。"),
+          ],
         ),
         ask(
           t("Why are the poems on the walls valuable to historians?", "为什么墙上的诗对历史学家很有价值？"),
@@ -158,12 +188,22 @@ In 1940, a fire destroyed the administration building, and the station closed. Y
             "The poems, carved by the detained immigrants themselves, speak of loneliness, anger and longing, a firsthand record found nowhere else.",
             "这些诗由被拘留的移民亲手刻下，诉说着孤独、愤怒和思乡之情，是别处找不到的第一手记录。",
           ),
+          [
+            t("The immigrants wrote them, not officials.", "诗是移民写的，不是官员。"),
+            t("They speak of feelings, not interview answers.", "诗写的是感受，不是面试答案。"),
+            t("They were written in Chinese.", "它们是用中文写的。"),
+          ],
         ),
         ask(
           t("In what year was the Chinese Exclusion Act repealed?", "《排华法案》哪一年被废除？"),
           t("In 1943", "1943年"),
           [t("In 1882", "1882年"), t("In 1910", "1910年"), t("In 1940", "1940年")],
           t("The Chinese Exclusion Act itself was not repealed until 1943.", "《排华法案》直到1943年才被废除。"),
+          [
+            t("1882 is when the act was passed.", "1882 年是法案通过的年份。"),
+            t("1910 is when the station opened.", "1910 年是移民站开放的年份。"),
+            t("1940 is when the station closed.", "1940 年是移民站关闭的年份。"),
+          ],
         ),
       ],
       ["United", "States", "San", "Francisco", "Bay", "Angel", "Island", "Ellis", "China", "Chinese", "Exclusion", "Act", "American"],
@@ -202,6 +242,11 @@ Mr. Le: For a long time, I thought home was the place I lost. Now I think home i
             "The first paragraph gives the speaker's name, where he came from and when, and explains that the interviewer's questions are marked with a Q.",
             "第一段给出了讲述者的名字、来自哪里、何时到来，并说明采访者的问题用 Q 标注。",
           ),
+          [
+            t("The boat's size is in the interview itself.", "船的大小在访谈正文里。"),
+            t("The woman's name is never given.", "那位女士的名字从没提到。"),
+            t("The book's fate is never told.", "那本书后来怎样从没交代。"),
+          ],
         ),
         ask(
           t("What does the detail of the math book suggest about Mr. Le as a boy?", "数学书这个细节暗示了少年时的黎先生是怎样的人？"),
@@ -215,6 +260,11 @@ Mr. Le: For a long time, I thought home was the place I lost. Now I think home i
             'Mr. Le says, "I think I wanted something from school," which suggests he was holding on to a piece of the ordinary life he was leaving.',
             "黎先生说“我想我是想留一点学校里的东西”，这表明他想抓住即将离开的平常生活的一部分。",
           ),
+          [
+            t("He does not mention teaching.", "他没提要当老师。"),
+            t("His mother said only to take what he could carry.", "母亲只说带上能拿的东西。"),
+            t("No test in Canada is mentioned.", "文中没提在加拿大考试。"),
+          ],
         ),
         ask(
           t("How has Mr. Le's idea of home changed?", "黎先生对家的看法发生了怎样的变化？"),
@@ -228,12 +278,22 @@ Mr. Le: For a long time, I thought home was the place I lost. Now I think home i
             "In his last answer, he says that for a long time home was the place he lost, but now he thinks home is the people.",
             "在最后一个回答中，他说很长时间以来家是他失去的地方，但现在他认为家是人。",
           ),
+          [
+            t("He calls himself Canadian and Vietnamese.", "他说自己既是加拿大人也是越南人。"),
+            t("The church sponsored him; it is not his home.", "教会是担保人，不是他的家。"),
+            t("He has thought about it a great deal.", "他对此想了很多。"),
+          ],
         ),
         ask(
           t("Which city's church sponsored Mr. Le's family?", "哪座城市的教会资助了黎先生一家？"),
           t("Winnipeg", "温尼伯"),
           [t("Toronto", "多伦多"), t("Vancouver", "温哥华"), t("Montreal", "蒙特利尔")],
           t("A church in Winnipeg sponsored our family.", "温尼伯的一个教会资助了我们一家。"),
+          [
+            t("Toronto is never mentioned.", "文中从没提多伦多。"),
+            t("Vancouver is never mentioned.", "文中从没提温哥华。"),
+            t("Montreal is never mentioned.", "文中从没提蒙特利尔。"),
+          ],
         ),
       ],
       [
@@ -280,6 +340,11 @@ The writer Isabel Wilkerson, who interviewed more than a thousand people for her
             "The second paragraph lists Jim Crow laws, being prevented from voting, the threat of violence and sharecroppers falling deeper into debt.",
             "第二段列举了吉姆·克劳法、被阻止投票、暴力威胁以及佃农债务越积越深。",
           ),
+          [
+            t("Southern schools and hospitals were segregated, not better.", "南方的学校和医院是隔离的，并不更好。"),
+            t("The war comes in the third paragraph, as a pull to the North.", "战争在第三段，是北方的吸引力。"),
+            t("Land shortage is not given as a reason.", "土地短缺没被列为原因。"),
+          ],
         ),
         ask(
           t("How did newspapers and letters encourage the migration?", "报纸和信件如何促进了这次迁徙？"),
@@ -293,6 +358,11 @@ The writer Isabel Wilkerson, who interviewed more than a thousand people for her
             "The third paragraph says the Chicago Defender printed stories of jobs and freedom, and families wrote home describing better wages.",
             "第三段说《芝加哥保卫者报》刊登了关于工作和自由的报道，家人们也写信回家描述更高的工资。",
           ),
+          [
+            t("They urged readers to come, not stay.", "它们催人北上，不是留下。"),
+            t("No free tickets are mentioned.", "文中没提免费车票。"),
+            t("Black newspapers and families wrote them.", "写这些的是黑人报纸和家人。"),
+          ],
         ),
         ask(
           t(
@@ -312,6 +382,11 @@ The writer Isabel Wilkerson, who interviewed more than a thousand people for her
             "Asylum is protection sought by people fleeing danger; Wilkerson's comparison shows that the migrants fled injustice without crossing a border.",
             "庇护是逃离危险的人所寻求的保护；威尔克森的比较表明，这些移民没有越过国界，却在逃离不公。",
           ),
+          [
+            t("They were not refused; they faced discrimination.", "他们没被拒绝，而是受到歧视。"),
+            t("They moved within the country.", "他们是在国内迁移。"),
+            t("They were Americans moving north, not from Europe.", "他们是北迁的美国人，不是欧洲移民。"),
+          ],
         ),
         ask(
           t("Which newspaper urged readers to come north?", "哪家报纸鼓励读者北上？"),
@@ -322,6 +397,11 @@ The writer Isabel Wilkerson, who interviewed more than a thousand people for her
             t("A Southern farm paper", "南方的一份农业报"),
           ],
           t("Black newspapers such as the Chicago Defender urged readers to come.", "《芝加哥保卫者报》等黑人报纸鼓励读者北上。"),
+          [
+            t("The New York Times is never mentioned.", "文中从没提《纽约时报》。"),
+            t("Harlem was a place of culture, not the named paper.", "哈莱姆是文化之地，不是那份报纸。"),
+            t("The paper was from Chicago, not the South.", "这份报纸来自芝加哥，不是南方。"),
+          ],
         ),
       ],
       [
@@ -379,6 +459,11 @@ After the war, Sugihara left the diplomatic service and lived quietly for many y
             "The second paragraph says their route ran across the Soviet Union to Japan and on to other countries, and to pass through Japan they needed a transit visa.",
             "第二段说他们的路线是穿越苏联到日本，再去其他国家，要途经日本就需要过境签证。",
           ),
+          [
+            t("They wanted to escape Lithuania.", "他们想逃离立陶宛。"),
+            t("They had fled from Poland.", "他们是从波兰逃出来的。"),
+            t("They needed papers, not jobs.", "他们需要证件，不是工作。"),
+          ],
         ),
         ask(
           t("What does Sugihara's writing visas from his train window show about him?", "杉原千亩在火车窗口写签证说明了他是怎样的人？"),
@@ -392,6 +477,11 @@ After the war, Sugihara left the diplomatic service and lived quietly for many y
             "Even after being ordered to leave, he kept writing at his hotel and from the train, which shows his determination to save every person he could.",
             "即使在被命令离开之后，他仍在旅馆和火车上继续写签证，这表明他决心救下每一个能救的人。",
           ),
+          [
+            t("He kept writing as he left, not rushed away.", "他离开时还在写，并不急着走。"),
+            t("His government had refused permission.", "他的政府拒绝了他的请求。"),
+            t("He had been ordered to leave, so he knew.", "他已被命令离开，所以他知道。"),
+          ],
         ),
         ask(
           t("Why did Israel honor Sugihara as one of the Righteous Among the Nations?", "以色列为什么授予杉原千亩“国际义人”的称号？"),
@@ -405,12 +495,22 @@ After the war, Sugihara left the diplomatic service and lived quietly for many y
             "The last paragraph says the title is given to people who risked their own safety to save Jews from persecution, as Sugihara did by disobeying orders.",
             "最后一段说这个称号授予那些冒着自身危险从迫害中拯救犹太人的人，杉原千亩违抗命令正是这样做的。",
           ),
+          [
+            t("Being first is never claimed.", "文中从没说他是第一个。"),
+            t("He wrote visas, not a history.", "他写的是签证，不是历史书。"),
+            t("He lived quietly, not in Israel.", "他过着平静的生活，并没住在以色列。"),
+          ],
         ),
         ask(
           t("In which city was Sugihara's consulate?", "杉原千亩所在的领事馆在哪座城市？"),
           t("Kaunas, in Lithuania", "立陶宛的考纳斯"),
           [t("Warsaw, in Poland", "波兰的华沙"), t("Tokyo", "东京"), t("Berlin", "柏林")],
           t("The crowd gathered outside the Japanese consulate in Kaunas, a city in Lithuania.", "人群聚集在立陶宛考纳斯的日本领事馆外。"),
+          [
+            t("Warsaw is never mentioned.", "文中从没提华沙。"),
+            t("Tokyo is his government's seat, not his post.", "东京是他政府所在地，不是他的驻地。"),
+            t("Berlin is never mentioned.", "文中从没提柏林。"),
+          ],
         ),
       ],
       [
@@ -460,6 +560,11 @@ Each account does something the other cannot. The report gives the facts: dates,
             "The report gives dates, numbers and places, such as about ten thousand children between December 1938 and September 1939; the other details come from the memoir.",
             "报告给出了日期、人数和地点，比如1938年12月至1939年9月间约一万名儿童；其他细节来自回忆录。",
           ),
+          [
+            t("The smell is in the memoir.", "气味在回忆录里。"),
+            t("The running mother is in the memoir.", "母亲追着火车跑在回忆录里。"),
+            t("The English words are in the memoir.", "那几个英语单词在回忆录里。"),
+          ],
         ),
         ask(
           t("What does the memoir show that the report cannot?", "回忆录展现了什么是报告无法展现的？"),
@@ -473,6 +578,11 @@ Each account does something the other cannot. The report gives the facts: dates,
             "The last paragraph says the memoir shows what it felt like to one child, through personal details such as the name tags and the stranger's smell.",
             "最后一段说回忆录通过名字标签、陌生人的气味等个人细节，展现了一个孩子的感受。",
           ),
+          [
+            t("The government's decision is in the report.", "政府的决定在报告里。"),
+            t("The number is in the report.", "人数在报告里。"),
+            t("The countries are in the report.", "国家名称在报告里。"),
+          ],
         ),
         ask(
           t("Why do historians use both kinds of sources?", "为什么历史学家两种资料都使用？"),
@@ -489,12 +599,22 @@ Each account does something the other cannot. The report gives the facts: dates,
             "The passage ends by saying a report without memoirs can seem cold and a memoir without reports can be hard to place in the larger story.",
             "文章结尾说没有回忆录的报告会显得冷冰冰，而没有报告的回忆录则难以放进更大的历史背景中。",
           ),
+          [
+            t("Neither is called more accurate.", "文中没说哪一种更准确。"),
+            t("Neither is called more interesting.", "文中没说哪一种更有趣。"),
+            t("Each does something the other cannot.", "两者各有对方做不到的事。"),
+          ],
         ),
         ask(
           t("About how many children did the Kindertransport bring to Britain?", "儿童转运行动大约把多少孩子带到了英国？"),
           t("About ten thousand", "大约一万"),
           [t("About one hundred", "大约一百"), t("About a million", "大约一百万"), t("About two thousand", "大约两千")],
           t("The Kindertransport brought about ten thousand children to Britain.", "儿童转运行动把大约一万名儿童带到了英国。"),
+          [
+            t("A hundred is far too few.", "一百人太少了。"),
+            t("A million is far too many.", "一百万人太多了。"),
+            t("Two thousand is the number of Sugihara's visas.", "两千是杉原签发签证的数量。"),
+          ],
         ),
       ],
       [
@@ -537,6 +657,11 @@ For millions of people around the world, the diaspora is not a distant community
             "The first paragraph describes a nurse, a construction worker and a taxi driver before naming the payments remittances.",
             "第一段先描述了一位护士、一名建筑工人和一位出租车司机，然后才把这些款项称为侨汇。",
           ),
+          [
+            t("No dictionary is quoted.", "文中没引用词典。"),
+            t("Hurricanes come in the third paragraph.", "飓风在第三段。"),
+            t("Fees come in the fourth paragraph.", "手续费在第四段。"),
+          ],
         ),
         ask(
           t("Which fact best shows how large remittances are?", "哪个事实最能说明侨汇的规模之大？"),
@@ -550,6 +675,11 @@ For millions of people around the world, the diaspora is not a distant community
             "The second paragraph compares remittances with all the foreign aid these countries receive, which shows their scale across the world.",
             "第二段把侨汇与这些国家获得的全部外国援助相比较，显示了侨汇在全世界的规模。",
           ),
+          [
+            t("One nurse's payment does not show the total.", "一位护士的汇款不能说明总量。"),
+            t("Sending more after disasters shows timing, not size.", "灾后多寄说明时机，不是规模。"),
+            t("Fees are a cost, not the size.", "手续费是成本，不是规模。"),
+          ],
         ),
         ask(
           t("Which is a cost of remittances named in the fourth paragraph?", "第四段提到了侨汇的哪一项代价？"),
@@ -563,6 +693,11 @@ For millions of people around the world, the diaspora is not a distant community
             "The fourth paragraph says the money is earned through separation, with many migrants spending years apart from their children; the other choices are benefits.",
             "第四段说这笔钱是以分离为代价挣来的，许多移民多年与孩子分开；其他选项是好处。",
           ),
+          [
+            t("School fees are a benefit.", "交学费是好处。"),
+            t("Reaching people is a benefit.", "资金送到人手里是好处。"),
+            t("Starting businesses is a benefit.", "创办小生意是好处。"),
+          ],
         ),
       ],
       ["Philippines", "Dubai", "Manila", "Mexico", "Texas", "Oaxaca", "London", "Bangladesh", "World", "Bank", "Tonga", "Tajikistan"],
@@ -604,6 +739,11 @@ Amira: That the quiet doesn't last. You're still yourself, even when you can't s
             'A reader of an oral history should know how it was recorded and changed; "lightly edited for length" means some parts were cut.',
             "口述历史的读者应该知道它是如何记录和修改的；“为篇幅作了少量编辑”意味着有些部分被删掉了。",
           ),
+          [
+            t("Edited means someone else shortened it.", "edited 表示有人做了删减。"),
+            t("Moving to Canada is told elsewhere.", "搬到加拿大是另外讲的。"),
+            t("Edited means not every word is exact.", "edited 表示并非每个字都原样。"),
+          ],
         ),
         ask(
           t('What does Amira mean when she says she had become "a smaller one"?', "阿米拉说自己变成了“一个更渺小的人”是什么意思？"),
@@ -617,6 +757,11 @@ Amira: That the quiet doesn't last. You're still yourself, even when you can't s
             "She contrasts the girl who always had her hand up in Syria with the girl who sat silent at the back in Germany, understanding nothing.",
             "她把在叙利亚总是举手的女孩，与在德国坐在后排、什么也听不懂、默不作声的女孩进行对比。",
           ),
+          [
+            t("Her weight is never mentioned.", "文中从没提她的体重。"),
+            t("Age in the class is not the point.", "她在班里的年龄不是重点。"),
+            t("No desk is mentioned.", "文中没提课桌。"),
+          ],
         ),
         ask(
           t(
@@ -636,6 +781,11 @@ Amira: That the quiet doesn't last. You're still yourself, even when you can't s
             "She says she has stopped thinking she has to pick one identity and calls dreaming in three languages a gift.",
             "她说自己不再认为必须选择一种身份，并把用三种语言做梦称为一份礼物。",
           ),
+          [
+            t("She says she belongs to three places.", "她说自己属于三个地方。"),
+            t("She calls three languages a gift.", "她说三种语言是一份礼物。"),
+            t("She lives in Canada and does not plan to return.", "她住在加拿大，没打算回去。"),
+          ],
         ),
       ],
       ["Amira", "Syria", "Germany", "Canada", "Lena", "Turkey", "Arabic", "Q", "Syrian"],

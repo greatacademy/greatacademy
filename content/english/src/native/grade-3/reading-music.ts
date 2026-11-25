@@ -38,6 +38,11 @@ Every musical instrument is a way of making something vibrate. A guitar shakes i
             "The second paragraph says a sound begins when something vibrates, or moves back and forth very quickly.",
             "第二段说，当某样东西振动，也就是很快地来回移动时，声音就开始了。",
           ],
+          [
+            ["Becoming very hot is not in the passage.", "变得很热文中没有。"],
+            ["Your brain making it up is wrong. The brain hears a real vibration.", "大脑编出来不对。大脑听到的是真实的振动。"],
+            ["Still air is the opposite. The air passes the vibration along.", "空气很静正好相反。空气把振动传过去。"],
+          ],
         ),
         ask(
           ["How does a vibration reach your ears?", "振动是怎样传到你耳朵里的？"],
@@ -50,6 +55,17 @@ Every musical instrument is a way of making something vibrate. A guitar shakes i
           [
             "The second paragraph says the air passes the vibration along, like a wave moving across a pond, until it reaches your ears.",
             "第二段说，空气把振动一路传下去，就像水波在池塘上移动，直到它到达你的耳朵。",
+          ],
+          [
+            [
+              "Jumping straight to your brain is wrong. It travels through the air to your ear first.",
+              "直接跳到大脑不对。它先通过空气传到耳朵。",
+            ],
+            ["A friend carrying it is not in the passage.", "朋友带过来文中没有。"],
+            [
+              "Only through tables is wrong. Sound travels through air, water and solids.",
+              "只能通过桌子不对。声音能在空气、水和固体中传播。",
+            ],
           ],
         ),
         ask(
@@ -64,6 +80,11 @@ Every musical instrument is a way of making something vibrate. A guitar shakes i
             "The third paragraph says sound moves through water, which is why whales can hear each other from far away.",
             "第三段说，声音能在水中传播，所以鲸鱼能听见远处同伴的声音。",
           ],
+          [
+            ["A blurry rubber band shows vibration, not sound in water.", "模糊的橡皮筋说明的是振动，不是水中的声音。"],
+            ["Tapping a table shows sound through solids.", "敲桌子说明的是声音能通过固体。"],
+            ["A guitar shaking its strings is about instruments.", "吉他振动琴弦说的是乐器。"],
+          ],
         ),
         ask(
           ["What is the thin piece of skin inside your ear called?", "耳朵里那层薄薄的膜叫什么？"],
@@ -74,6 +95,11 @@ Every musical instrument is a way of making something vibrate. A guitar shakes i
             ["The pond", "池塘"],
           ],
           ["Inside your ear, a thin piece of skin called the eardrum starts to vibrate.", "在耳朵里，一层叫鼓膜的薄膜开始振动。"],
+          [
+            ["The throat is where you feel the hum.", "喉咙是你感到嗡嗡声的地方。"],
+            ["A drum skin is on a drum, not in your ear.", "鼓皮在鼓上，不在耳朵里。"],
+            ["A pond is part of the comparison with a wave.", "池塘是和波浪比喻里的一部分。"],
+          ],
         ),
       ],
     ),
@@ -101,6 +127,11 @@ Drummers are the keepers of the beat in many bands. If they speed up or slow dow
             "The first paragraph says the beat is the steady pulse of the music, which goes on at the same speed.",
             "第一段说，节拍是音乐稳定的律动，以同样的速度一直持续下去。",
           ],
+          [
+            ["The singer's words are not the beat.", "歌手唱的词不是节拍。"],
+            ["The loudest note is not in the passage.", "最响的音文中没有。"],
+            ["A pattern of long and short sounds is rhythm, not the beat.", "长短音的组合是节奏，不是节拍。"],
+          ],
         ),
         ask(
           ["What is the tempo of a piece of music?", "音乐的速度指的是什么？"],
@@ -111,6 +142,11 @@ Drummers are the keepers of the beat in many bands. If they speed up or slow dow
             ["Which instrument plays first", "哪种乐器先演奏"],
           ],
           ["The second paragraph says that how fast or slow the beat goes is called the tempo.", "第二段说，节拍走得多快或多慢叫作速度。"],
+          [
+            ["Loudness is not tempo.", "响度不是速度。"],
+            ["How many people are playing is not tempo.", "多少人演奏不是速度。"],
+            ["Which instrument plays first is not tempo.", "哪个乐器先演奏不是速度。"],
+          ],
         ),
         ask(
           ["Why do the other musicians in a band follow the drummer?", "为什么乐队里的其他乐手要跟着鼓手？"],
@@ -124,6 +160,11 @@ Drummers are the keepers of the beat in many bands. If they speed up or slow dow
             "The last paragraph says drummers keep the beat in many bands, so if they speed up or slow down, everyone else must follow.",
             "最后一段说，在很多乐队里鼓手掌握节拍，所以他们加快或放慢时，其他人都得跟着。",
           ],
+          [
+            ["Singing all the words is not what the drummer does.", "唱所有的词不是鼓手的事。"],
+            ["Being the oldest is not in the passage.", "年纪最大文中没有。"],
+            ["The highest notes are not the drummer's job.", "最高的音不是鼓手的工作。"],
+          ],
         ),
         ask(
           ["What is rhythm?", "什么是节奏？"],
@@ -134,6 +175,11 @@ Drummers are the keepers of the beat in many bands. If they speed up or slow dow
             ["The steady pulse of the music", "音乐稳定的脉动"],
           ],
           ["Rhythm is the pattern of long and short sounds that sit on top of the beat.", "节奏是落在拍子之上的长短声音的组合。"],
+          [
+            ["How fast the beat goes is tempo.", "节拍有多快是速度。"],
+            ["How loud the music is is not rhythm.", "音乐多响不是节奏。"],
+            ["The steady pulse is the beat, not the rhythm on top of it.", "稳定的律动是节拍，不是上面的节奏。"],
+          ],
         ),
       ],
       ["Twinkle"],
@@ -159,6 +205,11 @@ Pitch is different from loudness. A high note can be soft, like a gentle whistle
             ["How fast the beat goes", "节拍走得多快"],
           ],
           ["The first paragraph says that pitch is how high or low a sound is.", "第一段说，音高就是声音有多高或多低。"],
+          [
+            ["Loud or soft is loudness. The passage says pitch is different from loudness.", "响或轻是响度。文中说音高和响度不同。"],
+            ["How long a song lasts is not pitch.", "一首歌多长不是音高。"],
+            ["How fast the beat goes is tempo, from another passage.", "节拍多快是速度，在另一篇里。"],
+          ],
         ),
         ask(
           ["Why does the squeak of a mouse have a high pitch?", "为什么老鼠的吱吱声音调很高？"],
@@ -171,6 +222,11 @@ Pitch is different from loudness. A high note can be soft, like a gentle whistle
           [
             "The second paragraph says that when an object vibrates very quickly it makes a high pitch, like the squeak of a mouse.",
             "第二段说，物体振动得很快时会发出高音，比如老鼠的吱吱声。",
+          ],
+          [
+            ["Vibrating slowly makes a low pitch, like thunder.", "振动慢产生低音，像雷声。"],
+            ["Mice being bigger than dogs is wrong and not the reason.", "老鼠比狗大是错的，也不是原因。"],
+            ["Being louder than thunder is wrong. Pitch is not loudness.", "比雷声响不对。音高不是响度。"],
           ],
         ),
         ask(
@@ -185,6 +241,11 @@ Pitch is different from loudness. A high note can be soft, like a gentle whistle
             "The third paragraph says the short bars on a xylophone play high notes and the long bars play low ones.",
             "第三段说，木琴上短的琴键发出高音，长的琴键发出低音。",
           ],
+          [
+            ["The short bars play the high notes.", "短的木条奏高音。"],
+            ["Bars filled with water mixes up the glasses.", "装水的木条把玻璃杯弄混了。"],
+            ["Painted bars are not in the passage.", "涂了颜色的木条文中没有。"],
+          ],
         ),
         ask(
           ["Which glass rings with the highest note?", "哪个杯子敲出的音最高？"],
@@ -195,6 +256,11 @@ Pitch is different from loudness. A high note can be soft, like a gentle whistle
             ["An empty bottle", "一个空瓶子"],
           ],
           ["The text says the glass with the least water rings with the highest note.", "短文说水最少的杯子敲出的音最高。"],
+          [
+            ["The most water gives the lowest note.", "水最多的杯子音最低。"],
+            ["The biggest glass is not what the passage compares.", "最大的杯子不是文中比较的东西。"],
+            ["An empty bottle is not in this test.", "空瓶子不在这个实验里。"],
+          ],
         ),
       ],
     ),
@@ -222,6 +288,11 @@ The body of a string instrument is hollow wood. When the strings vibrate, the wo
             "The first paragraph says the double bass is the biggest member of the family and plays the lowest notes.",
             "第一段说，低音提琴是这一家里最大的，发出的音最低。",
           ],
+          [
+            ["The violin is the smallest and plays the highest.", "小提琴最小，奏最高的音。"],
+            ["The viola is not the biggest.", "中提琴不是最大的。"],
+            ["The harp is not one of the four main members.", "竖琴不是四个主要成员之一。"],
+          ],
         ),
         ask(
           ["What is a bow made of?", "琴弓是用什么做的？"],
@@ -234,6 +305,11 @@ The body of a string instrument is hollow wood. When the strings vibrate, the wo
           [
             "The second paragraph says a bow is a long stick with a ribbon of horsehair stretched along it.",
             "第二段说，琴弓是一根长杆，上面绷着一条马尾毛。",
+          ],
+          [
+            ["Hollow wood with strings is the body of the instrument.", "带弦的空心木头是乐器的琴身。"],
+            ["A metal tube with holes sounds like a flute.", "带孔的金属管像长笛。"],
+            ["A drum skin on a frame is a drum.", "框上的鼓皮是鼓。"],
           ],
         ),
         ask(
@@ -248,6 +324,11 @@ The body of a string instrument is hollow wood. When the strings vibrate, the wo
             "The third paragraph says pressing a string down makes the part that vibrates shorter, and a shorter string plays a higher note.",
             "第三段说，按住琴弦会让振动的那一段变短，而更短的琴弦发出更高的音。",
           ],
+          [
+            ["Looser is wrong. Pressing makes the vibrating part shorter.", "变松不对。按下是让振动部分变短。"],
+            ["The body stopping is wrong. It vibrates too.", "琴身停止振动不对。它也在振动。"],
+            ["The bow moving slowly is not in the passage.", "弓移动得慢文中没有。"],
+          ],
         ),
         ask(
           ["Why is the body of a string instrument hollow wood?", "弦乐器的琴身为什么是空心木头？"],
@@ -260,6 +341,11 @@ The body of a string instrument is hollow wood. When the strings vibrate, the wo
           [
             "When the strings vibrate, the wooden body vibrates too and makes the sound much louder.",
             "琴弦振动时，木质琴身也振动，使声音响得多。",
+          ],
+          [
+            ["Lighter to carry is not the reason given.", "更轻便好拿不是文中给的原因。"],
+            ["Keeping strings dry is not in the passage.", "让琴弦保持干燥文中没有。"],
+            ["Changing the pitch is done with the fingers on the strings.", "改变音高是用手指按弦。"],
           ],
         ),
       ],
@@ -288,6 +374,11 @@ In both families, the bigger the instrument, the lower its notes. The tiny picco
             "The second paragraph says woodwinds were once all made of wood, which gave the family its name.",
             "第二段说，木管乐器以前都是用木头做的，这一家的名字就是这么来的。",
           ],
+          [
+            ["Living in the woods is not in the passage.", "住在树林里文中没有。"],
+            ["Sounding like wind in trees is not the reason given.", "听起来像风吹过树不是文中给的原因。"],
+            ["Being played outdoors is not in the passage.", "只在户外演奏文中没有。"],
+          ],
         ),
         ask(
           ["How does a brass player make a sound?", "铜管乐手怎样发出声音？"],
@@ -300,6 +391,11 @@ In both families, the bigger the instrument, the lower its notes. The tiny picco
           [
             "The third paragraph says a brass player presses the lips against a cup-shaped mouthpiece and buzzes them.",
             "第三段说，铜管乐手把嘴唇贴在杯形吹嘴上，让嘴唇振动。",
+          ],
+          [
+            ["Blowing across a hole is how a flute works.", "对着孔吹是长笛的方法。"],
+            ["Plucking a string is how string players make a short sound.", "拨弦是弦乐手发出短音的方法。"],
+            ["Hitting the tubes is not in the passage.", "敲管子文中没有。"],
           ],
         ),
         ask(
@@ -314,6 +410,11 @@ In both families, the bigger the instrument, the lower its notes. The tiny picco
             "The last paragraph says the bigger the instrument, the lower its notes, so the giant tuba booms below the tiny piccolo.",
             "最后一段说，乐器越大，音越低，所以巨大的大号在小小的短笛下面低沉地轰鸣。",
           ],
+          [
+            ["Smaller means higher, so the piccolo plays high.", "越小音越高，所以短笛音高。"],
+            ["Being made of wood is not the reason. Size sets the pitch.", "木头做的不是原因。大小决定音高。"],
+            ["Playing the same notes is wrong. One squeaks high, one booms low.", "同样的音不对。一个尖高，一个低沉。"],
+          ],
         ),
         ask(
           ["What is a reed?", "簧片是什么？"],
@@ -326,6 +427,11 @@ In both families, the bigger the instrument, the lower its notes. The tiny picco
           [
             "A clarinet player blows against a thin, flat piece of cane called a reed, which vibrates.",
             "单簧管演奏者吹向一片叫簧片的薄而扁的藤片，簧片会振动。",
+          ],
+          [
+            ["A button on a trumpet is a valve.", "小号上的按钮是活塞。"],
+            ["A long metal slide is on a trombone.", "长金属滑管在长号上。"],
+            ["A hole along a flute is covered with fingers to change pitch.", "长笛上的孔是用手指按住来改变音高的。"],
           ],
         ),
       ],
@@ -355,6 +461,11 @@ In an orchestra, the percussion players stand at the back. They often have many 
             "The first paragraph says percussion instruments make sound when they are hit, shaken or scraped.",
             "第一段说，打击乐器在被敲打、摇晃或刮擦时发出声音。",
           ],
+          [
+            ["Blowing is how woodwinds and brass work.", "吹是木管和铜管的方法。"],
+            ["Drawing a bow is how strings work.", "拉弓是弦乐的方法。"],
+            ["Playing by themselves is not in the passage.", "自己演奏文中没有。"],
+          ],
         ),
         ask(
           ["Which percussion instrument can play different pitches?", "哪种打击乐器能发出不同的音高？"],
@@ -367,6 +478,11 @@ In an orchestra, the percussion players stand at the back. They often have many 
           [
             "The second paragraph says the timpani are huge copper drums that a player can tune to different pitches with a foot pedal.",
             "第二段说，定音鼓是巨大的铜鼓，演奏者可以用脚踏板把它调成不同的音高。",
+          ],
+          [
+            ["A snare drum makes a sharp crack but no tune.", "小军鼓发出清脆的响声，但奏不出曲调。"],
+            ["A bass drum makes a deep thud but no tune.", "大鼓发出低沉的咚声，但奏不出曲调。"],
+            ["A shaker rattles but plays no notes.", "沙锤沙沙响，但奏不出音。"],
           ],
         ),
         ask(
@@ -381,6 +497,11 @@ In an orchestra, the percussion players stand at the back. They often have many 
             "The third paragraph says a tighter skin plays a higher sound, and a looser one plays a lower sound.",
             "第三段说，鼓皮越紧声音越高，越松声音越低。",
           ],
+          [
+            ["A lower sound comes from a looser skin.", "更低的声音来自更松的鼓皮。"],
+            ["No sound at all is wrong. It still vibrates.", "完全没声音不对。它还会振动。"],
+            ["Sounding like a cymbal is not in the passage.", "听起来像钹文中没有。"],
+          ],
         ),
         ask(
           ["Where do the percussion players stand in an orchestra?", "管弦乐队中打击乐手站在哪里？"],
@@ -391,6 +512,11 @@ In an orchestra, the percussion players stand at the back. They often have many 
             ["Beside the conductor", "在指挥旁边"],
           ],
           ['The text says, "In an orchestra, the percussion players stand at the back."', "短文说：“在管弦乐队中，打击乐手站在后面。”"],
+          [
+            ["The front is where the strings sit.", "前面是弦乐坐的地方。"],
+            ["The middle is for woodwinds.", "中间是木管乐器。"],
+            ["Beside the conductor is wrong. The conductor stands in front.", "指挥旁边不对。指挥站在最前面。"],
+          ],
         ),
       ],
     ),
@@ -418,6 +544,11 @@ Before a concert begins, the oboe plays a single note, and all the other players
             "The second paragraph says the strings sit at the front because there are so many of them.",
             "第二段说，弦乐组坐在前面，是因为他们人数很多。",
           ],
+          [
+            ["The loudest is wrong. The brass is loud and sits at the back.", "最响不对。铜管很响，坐在后面。"],
+            ["Arriving first is not in the passage.", "最先到达文中没有。"],
+            ["The conductor plays no instrument.", "指挥不演奏乐器。"],
+          ],
         ),
         ask(
           ["What does the conductor do?", "指挥做些什么？"],
@@ -431,6 +562,11 @@ Before a concert begins, the oboe plays a single note, and all the other players
             "The third paragraph says the conductor moves a baton to show the beat and tells each section when to come in, play louder or softer, and stop.",
             "第三段说，指挥挥动指挥棒打出节拍，并告诉每个声部什么时候进来、什么时候大声或小声、什么时候停下。",
           ],
+          [
+            ["Playing a drum is wrong. The conductor plays no instrument.", "打鼓不对。指挥不演奏乐器。"],
+            ["Selling tickets is not in the passage.", "卖票文中没有。"],
+            ["The first note comes from the oboe player, not the conductor.", "第一个音是双簧管乐手吹的，不是指挥。"],
+          ],
         ),
         ask(
           ["What happens just before a concert begins?", "音乐会开始前会发生什么？"],
@@ -443,6 +579,11 @@ Before a concert begins, the oboe plays a single note, and all the other players
           [
             "The last paragraph says that before a concert the oboe plays a single note, and all the other players tune their instruments to match it.",
             "最后一段说，音乐会开始前，双簧管吹出一个音，其他乐手都照着它给乐器调音。",
+          ],
+          [
+            ["Clapping and bowing happen at the end.", "鼓掌和鞠躬是在结束时。"],
+            ["Percussion moving to the front is wrong. They stay at the back.", "打击乐手移到前面不对。他们待在后面。"],
+            ["A conductor's solo is wrong. The conductor plays no instrument.", "指挥独奏不对。指挥不演奏乐器。"],
           ],
         ),
       ],
@@ -470,6 +611,11 @@ From the steel drums of the Caribbean to the bagpipes of Scotland, the world is 
             ["By squeezing the cords on its sides", "挤压两侧的绳子"],
           ],
           ["The second paragraph says the erhu player draws a bow between the two strings.", "第二段说，二胡演奏者在两根弦之间拉动琴弓。"],
+          [
+            ["Plucking four strings is the pipa.", "拨四根弦是琵琶。"],
+            ["A long wooden tube is the didgeridoo.", "长木管是迪吉里杜管。"],
+            ["Squeezing cords is the talking drum.", "挤压绳子是会说话的鼓。"],
+          ],
         ),
         ask(
           ["How did drummers in West Africa send messages long ago?", "很久以前，西非的鼓手怎样传递消息？"],
@@ -483,6 +629,11 @@ From the steel drums of the Caribbean to the bagpipes of Scotland, the world is 
             "The third paragraph says drummers changed the pitch of the talking drum so it rose and fell like a voice, and sent messages from village to village.",
             "第三段说，鼓手改变会说话的鼓的音高，让它像说话声一样起伏，把消息从一个村子传到另一个村子。",
           ],
+          [
+            ["Writing letters on drum skins is not in the passage.", "在鼓皮上写信文中没有。"],
+            ["The didgeridoo is from Australia, not West Africa.", "迪吉里杜管来自澳大利亚，不是西非。"],
+            ["Sending the drums is wrong. The sound carried the message.", "把鼓送过去不对。是声音传递了消息。"],
+          ],
         ),
         ask(
           ["Why does the sound of a didgeridoo never stop?", "为什么迪吉里杜管的声音从不中断？"],
@@ -495,6 +646,11 @@ From the steel drums of the Caribbean to the bagpipes of Scotland, the world is 
           [
             "The fourth paragraph says players breathe in through the nose while they keep blowing out, so the sound never stops.",
             "第四段说，演奏者一边继续往外吹气，一边用鼻子吸气，所以声音从不中断。",
+          ],
+          [
+            ["A very long tube is true but not why the sound never stops.", "管子很长是真的，但不是声音不停的原因。"],
+            ["Players taking turns is not in the passage.", "几个人轮流吹文中没有。"],
+            ["The wind blowing through it is not in the passage.", "风吹过它文中没有。"],
           ],
         ),
       ],

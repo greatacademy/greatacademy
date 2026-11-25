@@ -45,6 +45,11 @@ Mr. Ortiz opened the back of the watch, looked at it for a long time, and closed
             'The story never says he is kind. The jar he keeps full but "never mentioned" and the gift of his smallest tool show it. That is indirect characterization.',
             '故事从没说他善良。他总装满却 "never mentioned" 的糖罐，以及送出的最小的工具，把这一点表现了出来。这是间接人物塑造。',
           ),
+          why: [
+            t("The writer never states it directly.", "作者从没直接说出来。"),
+            t("He speaks very little.", "他话很少。"),
+            t("Others say little about him; his actions speak.", "别人很少评价他，是他的行动在说话。"),
+          ],
         },
         {
           prompt: t("Why do the children first think Mr. Ortiz is strict?", "孩子们为什么起初觉得奥尔蒂斯先生很严厉？"),
@@ -58,6 +63,11 @@ Mr. Ortiz opened the back of the watch, looked at it for a long time, and closed
             '"He spoke very little" comes just before the children think he is strict. His quiet manner hides the kindness they notice later.',
             '"He spoke very little" 紧接在孩子们觉得他严厉之前。他沉默的样子掩盖了他们后来才注意到的善意。',
           ),
+          why: [
+            t("He never shouts.", "他从不吼人。"),
+            t("The candy jar is always open to them.", "糖罐一直对他们开放。"),
+            t("He is never wrong about the time.", "他对时间从没错过。"),
+          ],
         },
         {
           prompt: t("What does the ending suggest about Mr. Ortiz?", "结尾暗示了奥尔蒂斯先生的什么？"),
@@ -71,6 +81,11 @@ Mr. Ortiz opened the back of the watch, looked at it for a long time, and closed
             'On the day the shop closes, he hands over his tool and tells the boy to "take as long as it needs," the same patience he showed for thirty years.',
             '在店铺关门的那天，他交出工具，告诉男孩 "take as long as it needs"，这正是他三十年来所表现的耐心。',
           ),
+          why: [
+            t("He looks and knows; he still has the skill.", "他一看就懂，手艺还在。"),
+            t("The boy found it broken; he did not break it.", "表是男孩捡到时就坏的，不是他弄坏的。"),
+            t("The shop is closing.", "店铺要关门了。"),
+          ],
         },
       ],
     },
@@ -104,6 +119,11 @@ He did not fall. He became a pilot, and later he taught others to fly. But every
             'It is an allusion to the Greek myth of Icarus, who flew too close to the sun on wings of wax and fell. The father adds "Too close to the sun, and the wax melts" to make the warning clear.',
             '这是在引用希腊神话中的伊卡洛斯：他用蜡做的翅膀飞得离太阳太近，结果坠落。父亲补充 "Too close to the sun, and the wax melts"，让警告更明白。',
           ),
+          why: [
+            t("Icarus is a myth, not a friend.", "伊卡洛斯是神话人物，不是朋友。"),
+            t("Better glue is Leo's joke.", "“更好的胶水”是利奥的玩笑。"),
+            t("The mill is the father's life, not the warning.", "工厂是父亲的一生，不是那句告诫。"),
+          ],
         },
         {
           prompt: t(
@@ -120,6 +140,11 @@ He did not fall. He became a pilot, and later he taught others to fly. But every
             "Leo laughs and answers the myth with a practical fix. He knows the story, but he trusts his own skill, which fits a boy who built glider after glider.",
             "利奥笑着用一个实际的办法回应这个神话。他知道这个故事，但相信自己的本事，这符合一个造了一架又一架滑翔机的男孩。",
           ),
+          why: [
+            t("He keeps flying, so he is not afraid.", "他一直在飞，并不害怕。"),
+            t("He knows the story well enough to joke.", "他很懂这个故事，才能开玩笑。"),
+            t("He laughs; he is not angry.", "他在笑，没有生气。"),
+          ],
         },
         {
           prompt: t("What does the narrator come to understand at the end?", "叙述者最后明白了什么？"),
@@ -133,6 +158,11 @@ He did not fall. He became a pilot, and later he taught others to fly. But every
             'The last sentence says the warning "had never really been about flying." The allusion carried a feeling the father could not say directly.',
             '最后一句说这个警告 "had never really been about flying"。这个典故承载了父亲无法直接说出的感情。',
           ),
+          why: [
+            t("Leo became a good pilot and teacher.", "利奥成了好飞行员和教练。"),
+            t("Glue was only Leo's joke.", "胶水只是利奥的玩笑。"),
+            t("The father worked in a mill and wished nothing of the kind.", "父亲在工厂工作，没有这样的愿望。"),
+          ],
         },
       ],
     },
@@ -166,6 +196,11 @@ Sometimes, she thought, you have to lose something to hear it.`,
             '"Sweet" and "sorrow" seem to clash, yet together they name Mira\'s feeling exactly: sadness mixed with warmth. Two opposite words placed side by side make an oxymoron.',
             '"Sweet" 和 "sorrow" 看似矛盾，合在一起却准确地说出了米拉的感受：悲伤中带着温暖。把两个相反的词并置，就构成矛盾修饰。',
           ),
+          why: [
+            t("That is a simile.", "这是明喻。"),
+            t("That is a list.", "这是一串并列。"),
+            t("That is a plain phrase.", "这是普通短语。"),
+          ],
         },
         {
           prompt: t('Why is the silence called "the loudest thing in the house"?', '为什么沉默被称为 "the loudest thing in the house"？'),
@@ -182,6 +217,11 @@ Sometimes, she thought, you have to lose something to hear it.`,
             "It is a paradox: silence cannot be loud, but the absence of Grandma Rose's voice fills Mira's attention more than any sound. The contradiction points to a deeper truth about grief.",
             "这是一个悖论：沉默不可能响亮，但罗斯奶奶声音的缺席比任何声音都更占据米拉的心。这种矛盾指向关于悲伤的更深的真理。",
           ),
+          why: [
+            t("The house was full of talk.", "屋子里满是说话声。"),
+            t("People talked, not shouted.", "人们在聊天，没大喊。"),
+            t("She was not sick.", "她没生病。"),
+          ],
         },
         {
           prompt: t(
@@ -198,6 +238,11 @@ Sometimes, she thought, you have to lose something to hear it.`,
             'Mira "had never noticed" the humming "until it stopped." The line turns that experience into a paradox that states the story\'s theme.',
             '米拉 "had never noticed" 那哼唱声，"until it stopped"。这一句把这段经历变成一个悖论，点明了故事的主题。',
           ),
+          why: [
+            t("Her hearing is fine.", "她的听力很好。"),
+            t("She starts humming at the end.", "她在结尾开始哼歌。"),
+            t("Grandma Rose died; her voice was not lost.", "罗丝奶奶去世了，不是失声。"),
+          ],
         },
       ],
     },
@@ -231,6 +276,11 @@ On the day Ana left for college, her mother asked for the key back. Ana took the
             'At first the key "meant an empty apartment, a quiet kitchen, a long wait." Other children had parents at the gate; "Ana had the key."',
             '起初钥匙 "meant an empty apartment, a quiet kitchen, a long wait"。别的孩子有父母在校门口等，"Ana had the key"。',
           ),
+          why: [
+            t("Cooking comes later, at twelve.", "做饭是后来十二岁时的事。"),
+            t("College is at the end.", "大学在结尾。"),
+            t("Her mother is not angry, only busy.", "她妈妈只是忙，并没生气。"),
+          ],
         },
         {
           prompt: t("How does the meaning of the key change?", "钥匙的含义怎样变化？"),
@@ -244,6 +294,11 @@ On the day Ana left for college, her mother asked for the key back. Ana took the
             "\"As the years passed, the key began to mean something else\": her mother's trust and Ana's ability to take care of herself. A symbol can change as a character grows.",
             '"As the years passed, the key began to mean something else"：母亲的信任，以及安娜照顾自己的能力。象征可以随着人物的成长而改变。',
           ),
+          why: [
+            t("She is not afraid of the dark.", "她并不怕黑。"),
+            t("It means more, not nothing.", "它的意义更多了，不是没了。"),
+            t("School is where she walks from.", "学校只是她放学的地方。"),
+          ],
         },
         {
           prompt: t("Why does Ana keep the key when she leaves?", "安娜离开时为什么留下钥匙？"),
@@ -257,6 +312,11 @@ On the day Ana left for college, her mother asked for the key back. Ana took the
             '"So I can always let myself in" changes the words of her lonely childhood into a promise of belonging. The key now carries home with her.',
             '"So I can always let myself in" 把她孤独童年里的话变成了归属的承诺。如今钥匙让她把家带在身边。',
           ),
+          why: [
+            t("She chooses to keep it.", "她是主动留下的。"),
+            t("She is leaving for college.", "她要去上大学了。"),
+            t("She smiles at her mother; there is no anger.", "她对母亲没有怨气。"),
+          ],
         },
       ],
     },
@@ -297,6 +357,11 @@ Daniel looked at the sky, at his laughing parents and at the cake, and began to 
             "Daniel means what he says, so it is not verbal irony. His careful plan meets the very rain he checked for, and things go wrong right after he says they cannot: situational irony.",
             "丹尼尔说的是真心话，所以不是言语反讽。他精心的计划恰恰遇上了他反复查过的雨，就在他说不会出错之后一切出了错：这是情境反讽。",
           ),
+          why: [
+            t("He means what he says.", "他说的是真心话。"),
+            t("The reader learns of the rain with him.", "读者和他同时知道下雨。"),
+            t("The rain makes it ironic.", "下雨让它成了反讽。"),
+          ],
         },
         {
           prompt: t('Why does his mother call the ruined picnic "perfect"?', '母亲为什么说这场被毁的野餐 "perfect"？'),
@@ -310,6 +375,11 @@ Daniel looked at the sky, at his laughing parents and at the cake, and began to 
             'She calls out that the wedding "had also been ruined by rain" and adds "Just like the first time!" The rain makes the day perfect in a way Daniel\'s plan could not.',
             '她喊道婚礼 "had also been ruined by rain"，又补充说 "Just like the first time!"。这场雨以丹尼尔的计划做不到的方式让这一天变得完美。',
           ),
+          why: [
+            t("She is laughing, not angry.", "她在笑，并不生气。"),
+            t("The rain soaks her.", "雨把她淋湿了。"),
+            t("She is dancing, not cancelling.", "她在跳舞，并不想取消。"),
+          ],
         },
         {
           prompt: t("What does Daniel learn by the end?", "丹尼尔最后明白了什么？"),
@@ -323,6 +393,11 @@ Daniel looked at the sky, at his laughing parents and at the cake, and began to 
             "He moves from almost crying to laughing with his parents. The irony of the story is that the ruined plan gives them the day they most wanted.",
             "他从几乎哭出来变成和父母一起大笑。这个故事的反讽在于：被毁的计划反而给了他们最想要的一天。",
           ),
+          why: [
+            t("The forecast was not his lesson.", "天气预报不是他学到的东西。"),
+            t("The picnic is a happy memory.", "这次野餐成了美好回忆。"),
+            t("Cake is not the point.", "蛋糕不是重点。"),
+          ],
         },
       ],
     },
@@ -354,6 +429,11 @@ Well. I suppose they were laughing at some joke. Families can be strange. But I 
             'The narrator says "I have lived across the street" and sees the family only from outside. Sam\'s thoughts are never told; the neighbor guesses at them.',
             '叙述者说 "I have lived across the street"，只能从外面看到这家人。萨姆的想法从未被讲出来；邻居只是在猜测。',
           ),
+          why: [
+            t("Sam never speaks for himself.", "萨姆从没自己讲述。"),
+            t("She knows no one's thoughts.", "她不知道任何人的想法。"),
+            t("The story uses I, not you.", "故事用“我”，不是“你”。"),
+          ],
         },
         {
           prompt: t("Why is the narrator unreliable?", "为什么这位叙述者不可靠？"),
@@ -370,6 +450,11 @@ Well. I suppose they were laughing at some joke. Families can be strange. But I 
             'The evidence she reports, "Same time next week?", the laughter and the arm around Sam, suggests a warm ritual. Yet she says "I still say that boy is miserable." Her judgment does not fit her own facts.',
             '她讲述的证据，"Same time next week?"、笑声和搂着萨姆的手臂，都暗示这是一个温馨的惯例。但她说 "I still say that boy is miserable"。她的判断与她自己说的事实不符。',
           ),
+          why: [
+            t("She lives across the street.", "她就住在街对面。"),
+            t("She still says the boy is miserable.", "她仍说那男孩很痛苦。"),
+            t("She cannot know his thoughts.", "她不可能知道他的想法。"),
+          ],
         },
         {
           prompt: t("What does the reader understand that the narrator does not?", "读者明白了哪些叙述者不明白的事？"),
@@ -383,6 +468,11 @@ Well. I suppose they were laughing at some joke. Families can be strange. But I 
             "The gap between what the narrator sees and what she concludes lets the reader see the truth she misses. That gap creates dramatic irony.",
             "叙述者所见与她的结论之间的落差，让读者看到了她错过的真相。这种落差造成了戏剧反讽。",
           ),
+          why: [
+            t("The laugh and hug show the opposite.", "笑声和拥抱说明正相反。"),
+            t('He says "Same time," so he will return.', "他说“老时间”，会再来的。"),
+            t("Her roses are fine.", "她的玫瑰没问题。"),
+          ],
         },
       ],
     },
@@ -418,6 +508,11 @@ Nora folded the letter and held it for a long time. Tomorrow she would start her
             '"Twenty years earlier" takes the story back in time to a scene from Nora\'s childhood, then the story returns to the present with "Now, in the letter." That is flashback.',
             '"Twenty years earlier" 把故事带回诺拉童年的一个场景，然后故事以 "Now, in the letter" 回到现在。这就是倒叙。',
           ),
+          why: [
+            t("No accident is foreshadowed.", "文中没预示事故。"),
+            t("It stays in third person.", "故事一直是第三人称。"),
+            t("The job is in the last line only.", "新工作只在最后一句出现。"),
+          ],
         },
         {
           prompt: t("Why does the flashback matter to the ending?", "这段倒叙为什么对结尾很重要？"),
@@ -431,6 +526,11 @@ Nora folded the letter and held it for a long time. Tomorrow she would start her
             'Because the reader has seen the first time he said "Being afraid just means it matters," the same words in the letter carry the weight of that memory as Nora faces another first day.',
             '因为读者已经看到他第一次说 "Being afraid just means it matters" 的情景，信中同样的话在诺拉面对又一个第一天时，承载着那段回忆的分量。',
           ),
+          why: [
+            t("The father is gentle, not angry.", "父亲很温柔，并没生气。"),
+            t("She did go to school.", "她确实去上学了。"),
+            t("The city is never named.", "城市从没说出名字。"),
+          ],
         },
         {
           prompt: t('What does "For the day you need this" suggest about the father?', '"For the day you need this" 暗示了父亲的什么？'),
@@ -447,6 +547,11 @@ Nora folded the letter and held it for a long time. Tomorrow she would start her
             'His study is "empty," and he left the letter for a future moment. He prepared comfort for a day he could not be there for.',
             '他的书房 "empty"，他把信留给未来的某个时刻。他为自己无法陪伴的那一天准备了安慰。',
           ),
+          why: [
+            t("He wrote it on purpose.", "他是有意写的。"),
+            t("He wanted her to keep it.", "他希望她保存这封信。"),
+            t("He repeats the words because he believes them.", "他重复这句话，正因为他相信。"),
+          ],
         },
       ],
     },
@@ -482,6 +587,11 @@ The gym was closed that afternoon. Two days later, under the weight of the snow,
             "September, October, November, December: each month the crack is longer and the signs worse, from falling paint to a creaking roof. These hints point toward the collapse before it comes.",
             "九月、十月、十一月、十二月：每个月裂缝更长，迹象更糟，从掉落的油漆到嘎吱作响的屋顶。这些暗示在坍塌发生之前就指向了它。",
           ),
+          why: [
+            t("The gym's building year is only mentioned.", "体育馆的年份只是被提到。"),
+            t("The ending comes last.", "结局在最后。"),
+            t("Only one narrator tells it.", "只有一个叙述者。"),
+          ],
         },
         {
           prompt: t("What does Jonah's notebook show about him?", "约拿的笔记本表现了他什么样的性格？"),
@@ -495,6 +605,11 @@ The gym was closed that afternoon. Two days later, under the weight of the snow,
             'He drew the crack "every week since September." When words alone did not move the coach, his careful record convinced the principal.',
             '他 "every week since September" 都画下了这道裂缝。光靠说话没能打动教练时，他细致的记录说服了校长。',
           ),
+          why: [
+            t("He draws every week, so he is not careless.", "他每周都画，并不粗心。"),
+            t("The drawings are evidence, not art.", "这些画是证据，不是艺术作品。"),
+            t("He goes past the coach to the principal.", "他越过教练去找校长。"),
+          ],
         },
         {
           prompt: t(
@@ -511,6 +626,11 @@ The gym was closed that afternoon. Two days later, under the weight of the snow,
             "The past does not prove the present: the growing crack is new evidence. The coach's answer ignores it, and the ending shows the cost.",
             "过去不能证明现在：不断扩大的裂缝是新的证据。教练的回答忽视了它，结局显示了代价。",
           ),
+          why: [
+            t("It is seventy years old.", "它有七十年了。"),
+            t("The coach believes it; he is not lying.", "教练相信这一点，并没撒谎。"),
+            t("Seventy years is not too short; it is irrelevant.", "七十年不算短，只是不相关。"),
+          ],
         },
       ],
     },
@@ -545,6 +665,11 @@ He tells the story every year on the day he arrived. My little cousins think it 
             "The allusion is to Homer's Odyssey, in which Odysseus takes years to get home while his wife waits. The long travel, the temptation to stay and the faithful wife all echo the epic.",
             "这里引用的是荷马的《奥德赛》：奥德修斯花了许多年才回到家，妻子一直在等他。漫长的旅途、留下的诱惑和忠贞的妻子都与这部史诗呼应。",
           ),
+          why: [
+            t("No ship is named.", "文中没提船名。"),
+            t("School is never mentioned.", "文中没提上学。"),
+            t("It took four years.", "它花了四年。"),
+          ],
         },
         {
           prompt: t("Which detail most closely matches the story of Odysseus?", "哪个细节与奥德修斯的故事最相似？"),
@@ -558,6 +683,11 @@ He tells the story every year on the day he arrived. My little cousins think it 
             "In the epic, Odysseus returns home so changed that he is not known at first. The grandmother not recognizing her thin, sunburned husband echoes that scene.",
             "在史诗中，奥德修斯回家时变化太大，起初没人认出他。祖母没认出又瘦又晒黑的丈夫，正呼应了这一场景。",
           ),
+          why: [
+            t("The kitchen is just a job.", "厨房只是一份工作。"),
+            t("The cousins' view is modern.", "表亲的看法是现代的。"),
+            t("Retelling is family habit.", "每年讲述是家庭习惯。"),
+          ],
         },
         {
           prompt: t("What does the grandmother's last line suggest?", "祖母的最后一句话暗示了什么？"),
@@ -571,6 +701,11 @@ He tells the story every year on the day he arrived. My little cousins think it 
             '"And he thinks he was the one who had a hard time" is said with humor, but it reminds listeners that she waited while "many people told her he would never come." Her line adds a second hero to the story.',
             '"And he thinks he was the one who had a hard time" 带着幽默，却提醒听众，她在 "many people told her he would never come" 的情况下一直等待。她这句话为故事加上了第二位英雄。',
           ),
+          why: [
+            t("She has heard it fifty times and believes it.", "她听了五十遍，也相信。"),
+            t("She waited for him.", "她一直在等他。"),
+            t("She says four years as a long time.", "她说的“四年”意味着很久。"),
+          ],
         },
       ],
     },
@@ -606,6 +741,11 @@ Years later, Kayla had forgotten her times and most of her medals. She had never
             '"Kayla did not win the race. She did not even place." Calling her "The Winner" anyway is situational irony that points to a different kind of victory.',
             '"Kayla did not win the race. She did not even place." 却依然称她为 "The Winner"，这种情境反讽指向另一种意义上的胜利。',
           ),
+          why: [
+            t("She did not even place.", "她连名次都没有。"),
+            t("The headline is on purpose.", "标题是有意的。"),
+            t("Bea crossed with Kayla, long after.", "比娅和凯拉很晚才一起冲线。"),
+          ],
         },
         {
           prompt: t("What does Kayla's choice to stop reveal about her?", "凯拉停下来的选择揭示了她什么样的性格？"),
@@ -619,6 +759,11 @@ Years later, Kayla had forgotten her times and most of her medals. She had never
             "A runner who had won every race gives up a sure victory to help a rival. The action reveals her character more than any description could.",
             "一个赢过每场比赛的跑者放弃了稳操胜券的胜利去帮助对手。这一行动比任何描述都更能揭示她的性格。",
           ),
+          why: [
+            t("She was in the lead.", "她当时领先。"),
+            t("She helps Bea up.", "她扶比娅起来。"),
+            t("She cared, but chose kindness.", "她在乎比赛，但选择了善良。"),
+          ],
         },
         {
           prompt: t("What does the last paragraph suggest?", "最后一段暗示了什么？"),
@@ -632,6 +777,11 @@ Years later, Kayla had forgotten her times and most of her medals. She had never
             'She forgot "her times and most of her medals" but "never forgotten the sound of the crowd." What lasts is the choice, not the result.',
             '她忘了 "her times and most of her medals"，却 "never forgotten the sound of the crowd"。留下来的是选择，而不是结果。',
           ),
+          why: [
+            t("She is glad she stopped.", "她庆幸自己停下了。"),
+            t("Nothing says she stopped running.", "文中没说她不再跑步。"),
+            t("The crowd cheered.", "观众欢呼了。"),
+          ],
         },
       ],
     },

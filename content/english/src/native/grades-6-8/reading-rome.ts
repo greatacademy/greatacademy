@@ -38,6 +38,11 @@ Historians do not believe the legend is true. Archaeologists have found that peo
             "The first paragraph says the king was afraid the twins would one day take his throne.",
             "第一段说，国王担心双胞胎将来有一天会夺走他的王位。",
           ),
+          [
+            t("A river god is never mentioned. The king feared for his throne.", "文中从没提到河神。国王担心的是自己的王位。"),
+            t("The twins were babies. They had done nothing to him.", "双胞胎还是婴儿，并没有对他做过什么。"),
+            t("The she-wolf found the twins later. She did not speak to the king.", "母狼是后来才发现双胞胎的，她没有和国王说话。"),
+          ],
         ),
         ask(
           t("What do archaeologists' findings show about the legend?", "考古学家的发现说明了这个传说的什么？"),
@@ -54,6 +59,11 @@ Historians do not believe the legend is true. Archaeologists have found that peo
             "The last paragraph says archaeologists found villages on the hills long before that date, so historians do not believe the legend.",
             "最后一段说，考古学家发现那个年代之前很久山丘上就有村落，所以历史学家并不相信这个传说。",
           ),
+          [
+            t("Archaeology does not prove the she-wolf. The finds are about villages.", "考古并不能证明母狼存在。发现的是村落。"),
+            t("Building alone is part of the legend, not what the finds show.", "独自建城是传说的内容，不是考古发现的结论。"),
+            t("The finds show the opposite: people lived there before 753 BCE.", "发现正好相反：公元前753年之前就有人住在那里。"),
+          ],
         ),
         ask(
           t("Why did the legend matter to the Romans, even if it was not true?", "即使这个传说不是真的，它为什么对罗马人很重要？"),
@@ -67,12 +77,22 @@ Historians do not believe the legend is true. Archaeologists have found that peo
             "The last paragraph says the story reminded Romans that their people were tough, fierce and favored by the gods.",
             "最后一段说，这个故事提醒罗马人，他们的民族坚强、勇猛，并受到众神的眷顾。",
           ),
+          [
+            t("The legend gives one date, 753 BCE, not the date of every event.", "传说只给了一个日期：公元前753年，不是每件事的日期。"),
+            t("Raising wolves is not the lesson. The wolf is a symbol.", "养狼不是传说的意义。狼是一个象征。"),
+            t("The river is part of the story, not explained by it.", "河流只是故事的一部分，传说并不解释它的形成。"),
+          ],
         ),
         ask(
           t("Who first fed the twins after their basket floated ashore?", "篮子漂到岸边后，最先喂养双胞胎的是谁？"),
           t("A she-wolf", "一只母狼"),
           [t("A shepherd", "一个牧羊人"), t("The jealous king", "那位嫉妒的国王"), t("The god of war", "战神")],
           t("A she-wolf found the crying boys and fed them with her own milk.", "一只母狼发现了哭着的孩子，用自己的奶喂养他们。"),
+          [
+            t("The shepherd came later and raised them.", "牧羊人是后来才收养他们的。"),
+            t("The king wanted them dead.", "国王想让他们死。"),
+            t("The god of war was their father, but he did not feed them.", "战神是他们的父亲，但没有喂养他们。"),
+          ],
         ),
       ],
       ["Romans", "Romulus", "Remus", "Tiber", "Rome", "Rome's", "BCE"],
@@ -101,6 +121,11 @@ The Roman Republic lasted for nearly five hundred years. Its ideas, such as elec
             "The first paragraph says Tarquin the Proud was so cruel that the people rose up and drove him out, then swore never to have a king again.",
             "第一段说，“傲慢者”塔克文太残暴，人们起来把他赶出城，并发誓再也不要国王。",
           ),
+          [
+            t("The king was driven out, not dead without a son.", "国王是被赶走的，不是死后无子。"),
+            t("No conquest is mentioned. The people rose up themselves.", "文中没提被征服。是人民自己起来反抗。"),
+            t("The gods did not order it. The people swore it.", "不是神下令，而是人民发誓。"),
+          ],
         ),
         ask(
           t('What does "res publica" mean?', "“res publica”是什么意思？"),
@@ -110,6 +135,11 @@ The Roman Republic lasted for nearly five hundred years. Its ideas, such as elec
             'The second paragraph says the words mean "the public thing" or "the people\'s business."',
             "第二段说，这个词的意思是“公共的事物”或“人民的事务”。",
           ),
+          [
+            t("A king's command is what the republic replaced.", "国王的命令正是共和国要取代的。"),
+            t("The rich families were patricians, not the meaning of the words.", "富裕家族是贵族，不是这个词的意思。"),
+            t("Walls are never mentioned.", "文中从没提到城墙。"),
+          ],
         ),
         ask(
           t("How did the plebeians gain more rights?", "平民是怎样获得更多权利的？"),
@@ -123,12 +153,22 @@ The Roman Republic lasted for nearly five hundred years. Its ideas, such as elec
             "The third paragraph says the plebeians struggled for many years and at times refused to work or fight until their demands were met.",
             "第三段说，平民抗争了许多年，有时拒绝劳动或作战，直到他们的要求得到满足。",
           ),
+          [
+            t("Paying the patricians is never mentioned.", "文中从没提到给贵族付钱。"),
+            t("Choosing a king is the opposite. Romans swore never to have one.", "选国王正好相反。罗马人发誓不再要国王。"),
+            t("They did not leave Rome forever. They refused to work or fight.", "他们没有永远离开罗马，而是拒绝工作或打仗。"),
+          ],
         ),
         ask(
           t("Who held most of the power in the Republic at first?", "共和国早期大部分权力掌握在谁手里？"),
           t("Wealthy families called patricians", "叫作贵族的富有家族"),
           [t("The plebeians", "平民"), t("A single king", "一位国王"), t("The army", "军队")],
           t("At first, power was held mostly by wealthy families called patricians.", "起初，权力主要掌握在叫作贵族的富有家族手中。"),
+          [
+            t("The plebeians had little say at first.", "平民起初几乎没有发言权。"),
+            t("The kings were gone by then.", "那时国王已经被赶走了。"),
+            t("The army is not named as holding power.", "文中没说军队掌权。"),
+          ],
         ),
       ],
       ["Rome", "Tarquin", "BCE", "Romans", "Latin", "res", "publica", "Roman", "Republic"],
@@ -159,12 +199,22 @@ In an emergency, however, the Romans could appoint a dictator, a single leader w
             "The first two paragraphs explain that the system was designed to stop one person from becoming too powerful: each consul could veto the other.",
             "前两段解释说，这个制度是为了防止一个人权力过大：每位执政官都可以否决另一位。",
           ),
+          [
+            t("The army's size is not the reason given.", "军队规模不是文中给的原因。"),
+            t("Being away at war is not mentioned.", "文中没提一个执政官总是在外打仗。"),
+            t("The senate advised. It did not fail to choose.", "元老院只是提供建议，不是选不出一个人。"),
+          ],
         ),
         ask(
           t('What does the word "veto" mean?', "“veto”这个词是什么意思？"),
           t("I forbid", "我禁止"),
           [t("I agree", "我同意"), t("I command the army", "我指挥军队"), t("I step down", "我辞职")],
           t('The second paragraph says veto means "I forbid."', "第二段说，veto 的意思是“我禁止”。"),
+          [
+            t("Agreeing is the opposite of forbidding.", "同意和禁止正好相反。"),
+            t("Commanding the army is a consul's job, not the word's meaning.", "指挥军队是执政官的职责，不是这个词的意思。"),
+            t("Stepping down came after one year. Veto blocks a decision.", "卸任是一年后的事。否决是阻止决定。"),
+          ],
         ),
         ask(
           t("How did the Romans limit the power of a dictator?", "罗马人怎样限制独裁官的权力？"),
@@ -178,12 +228,22 @@ In an emergency, however, the Romans could appoint a dictator, a single leader w
             "The last paragraph says that to keep the power from being abused, a dictator could rule for no more than six months.",
             "最后一段说，为了防止权力被滥用，独裁官的任期不得超过六个月。",
           ),
+          [
+            t("Daily votes of both consuls are never mentioned.", "文中从没提到每天要两位执政官投票。"),
+            t("A dictator had almost complete power, including the army.", "独裁官几乎拥有全部权力，包括军队。"),
+            t("A lottery is not how a dictator was chosen here.", "这里独裁官不是抽签选出的。"),
+          ],
         ),
         ask(
           t("How long did a consul serve?", "执政官任期多长？"),
           t("Only one year", "只有一年"),
           [t("For life", "终身"), t("Six months", "六个月"), t("Ten years", "十年")],
           t("A consul served for only one year and then had to step down.", "执政官只任职一年，然后必须卸任。"),
+          [
+            t("For life is how long senators served.", "终身任职的是元老。"),
+            t("Six months is the limit for a dictator.", "六个月是独裁官的期限。"),
+            t("Ten years is never mentioned.", "文中从没提到十年。"),
+          ],
         ),
       ],
       ["Roman", "Republic", "Romans"],
@@ -214,6 +274,11 @@ These roads were so well built that some of them are still used today, more than
             "The second paragraph says the Romans built the roads above all for the army, so soldiers could reach trouble quickly.",
             "第二段说，罗马人修路首先是为了军队，让士兵能迅速到达出事的地方。",
           ),
+          [
+            t("Comfort is what the Romans did not build them for.", "罗马人修路正不是为了舒适。"),
+            t("Borders are not why roads were built.", "修路不是为了标明边界。"),
+            t("Jobs for workers are not mentioned.", "文中没提为工人提供工作。"),
+          ],
         ),
         ask(
           t("Why was the surface of a Roman road curved?", "罗马道路的路面为什么是弧形的？"),
@@ -227,6 +292,11 @@ These roads were so well built that some of them are still used today, more than
             "The third paragraph says the surface was curved so that rainwater would run off into ditches at the sides.",
             "第三段说，路面做成弧形，是为了让雨水流进两侧的沟里。",
           ),
+          [
+            t("Turning chariots is not mentioned.", "文中没提战车转弯。"),
+            t("The road is not shaped to look like a bridge.", "路面并不是为了像桥。"),
+            t("Milestones stood along the roads, not on the curve.", "里程碑立在路边，不在路面上。"),
+          ],
         ),
         ask(
           t("How is the third paragraph mainly organized?", "第三段主要是怎样组织的？"),
@@ -240,12 +310,22 @@ These roads were so well built that some of them are still used today, more than
             "The paragraph tells how a road was built step by step: first a trench, then layers of stone, then paving stones on top.",
             "这一段一步步讲述道路的修建方法：先挖沟，再铺几层石料，最后在上面铺石板。",
           ),
+          [
+            t("Only one way of building is described, not two roads.", "只描述了一种修路方法，没比较两条路。"),
+            t("It describes how to build, not a problem and its fix.", "它讲怎么修路，不是问题和解决方法。"),
+            t("The famous road is in the next paragraph.", "那条著名的路在下一段。"),
+          ],
         ),
         ask(
           t("When was the Appian Way begun?", "阿庇亚大道是哪一年开始修的？"),
           t("In 312 BCE", "公元前312年"),
           [t("In 753 BCE", "公元前753年"), t("In 79 CE", "公元79年"), t("In 509 BCE", "公元前509年")],
           t("The Appian Way was begun in 312 BCE.", "阿庇亚大道始建于公元前312年。"),
+          [
+            t("753 BCE is the legendary founding of Rome.", "公元前753年是传说中罗马建城的年份。"),
+            t("79 CE is when Vesuvius erupted.", "公元79年是维苏威火山喷发的年份。"),
+            t("509 BCE is when the last king was driven out.", "公元前509年是最后一位国王被赶走的年份。"),
+          ],
         ),
       ],
       ["Rome", "Roman", "Empire", "Britain", "Egypt", "Romans", "Appian", "BCE"],
@@ -276,6 +356,11 @@ When the water reached the city, it flowed into large tanks and then through pip
             "The first paragraph says the river was dirty and there were not enough wells, so aqueducts brought fresh water from the hills.",
             "第一段说，河水很脏，井也不够，所以人们用引水渠从山里引来淡水。",
           ),
+          [
+            t("Floods are never mentioned.", "文中从没提到洪水。"),
+            t("There were not enough wells.", "水井是不够的。"),
+            t("Steep roads are not part of this passage.", "陡峭的道路与这篇文章无关。"),
+          ],
         ),
         ask(
           t("How did aqueducts move water without pumps?", "引水渠不用水泵怎样输水？"),
@@ -289,6 +374,11 @@ When the water reached the city, it flowed into large tanks and then through pip
             "The third paragraph says the aqueducts relied entirely on gravity, with each channel sloping gently downhill.",
             "第三段说，引水渠完全依靠重力，每条水渠都缓缓向下倾斜。",
           ),
+          [
+            t("Slaves carrying jars are never mentioned.", "文中从没提到奴隶用罐子运水。"),
+            t("Wind is not mentioned.", "文中没提风。"),
+            t("The arches only crossed valleys. They did not lift water.", "拱只是跨越山谷，不能把水抬高。"),
+          ],
         ),
         ask(
           t("According to the passage, which common belief about aqueducts is wrong?", "根据文章，关于引水渠的哪个常见看法是错误的？"),
@@ -302,12 +392,22 @@ When the water reached the city, it flowed into large tanks and then through pip
             "The fourth paragraph says most people picture rows of arches, but in fact most of each aqueduct ran underground.",
             "第四段说，大多数人想象的是一排排拱门，但实际上每条引水渠的大部分都在地下。",
           ),
+          [
+            t("Carrying water to Rome is true.", "把水送到罗马是真的。"),
+            t("The Romans did build them.", "它们确实是罗马人建的。"),
+            t("Some still stand, the passage says.", "文中说有些至今仍在。"),
+          ],
         ),
         ask(
           t("How many aqueducts did Rome have by the third century CE?", "到公元三世纪，罗马有多少条渡槽？"),
           t("Eleven", "十一条"),
           [t("One", "一条"), t("Fifty", "五十条"), t("Three hundred", "三百条")],
           t("By the third century CE, Rome had eleven aqueducts.", "到公元三世纪，罗马共有十一条渡槽。"),
+          [
+            t("One was the first, in 312 BCE.", "一座是第一座，建于公元前312年。"),
+            t("Fifty is the number of miles some routes ran.", "五十是某些水道的英里数。"),
+            t("Three hundred is not about aqueducts.", "三百与引水渠无关。"),
+          ],
         ),
       ],
       ["CE", "Rome", "Tiber", "Romans", "Romans'", "BCE", "Roman"],
@@ -338,6 +438,11 @@ Pompeii lay buried under deep ash for more than sixteen hundred years. Today, it
             "The first paragraph describes bakers, shopkeepers and people in the forum going about an ordinary day.",
             "第一段描写了面包师、店主和广场上的人们过着平常的一天。",
           ),
+          [
+            t("Nobody was preparing to flee that morning.", "那天早上没有人准备逃离。"),
+            t("The eruption came around midday, after the morning scene.", "喷发发生在中午前后，在早晨的情景之后。"),
+            t("The forum and shops are described in the paragraph.", "这一段就描写了广场和商店。"),
+          ],
         ),
         ask(
           t("Why are Pliny's letters a primary source?", "为什么小普林尼的信是一手资料？"),
@@ -351,6 +456,11 @@ Pompeii lay buried under deep ash for more than sixteen hundred years. Today, it
             "A primary source comes from someone who was there. Pliny watched the eruption from across the bay and described what he saw.",
             "一手资料来自亲历者。小普林尼在海湾对岸目睹了喷发，并描述了他所看到的。",
           ),
+          [
+            t("Pliny lived then, not today.", "普林尼生活在当时，不是现代。"),
+            t("He watched from across the bay, not from inside Pompeii.", "他是在海湾对岸看的，不是在庞贝城里。"),
+            t("He wrote years after the eruption.", "他是在喷发多年后才写的。"),
+          ],
         ),
         ask(
           t("Why do the ruins of Pompeii matter to historians today?", "庞贝遗址为什么对今天的历史学家很重要？"),
@@ -364,12 +474,22 @@ Pompeii lay buried under deep ash for more than sixteen hundred years. Today, it
             "The last paragraph says the streets, houses and paintings give one of the clearest pictures of everyday Roman life.",
             "最后一段说，那里的街道、房屋和壁画清楚地展现了罗马人的日常生活。",
           ),
+          [
+            t("Predicting volcanoes is not what the ruins show.", "遗址并不是用来说明火山能否预测的。"),
+            t("Pliny's letters were not found in Pompeii.", "普林尼的信不是在庞贝发现的。"),
+            t("The town was buried, not rebuilt.", "这座城被掩埋了，没有重建。"),
+          ],
         ),
         ask(
           t("Why did roofs in Pompeii collapse?", "庞贝的屋顶为什么塌了？"),
           t("Under the weight of falling stones", "被落下的石块压塌"),
           [t("Because of a flood", "因为洪水"), t("Because of strong winds", "因为大风"), t("Because they were very old", "因为太旧")],
           t("Small stones began to rain down, and roofs collapsed under their weight.", "小石块像雨一样落下，屋顶被压塌了。"),
+          [
+            t("No flood is mentioned.", "文中没提洪水。"),
+            t("Wind is not the cause given.", "风不是文中给的原因。"),
+            t("The roofs' age is never mentioned.", "文中从没提到屋顶的年代。"),
+          ],
         ),
       ],
       ["August", "CE", "Pompeii", "Vesuvius", "Pliny", "Roman"],
@@ -400,6 +520,11 @@ Over the centuries, earthquakes damaged the Colosseum, and people took away its 
             "The second paragraph says entry was free because emperors used the games to win the people's support.",
             "第二段说，入场免费，因为皇帝借这些表演赢得民众的支持。",
           ),
+          [
+            t("Gladiators did not pay for tickets.", "角斗士并不为门票付钱。"),
+            t("It had eighty entrances.", "它有八十个入口。"),
+            t("Poor citizens and women came too, in the highest rows.", "穷人和妇女也来，坐在最高的几排。"),
+          ],
         ),
         ask(
           t("Who were most gladiators?", "大多数角斗士是什么人？"),
@@ -413,6 +538,11 @@ Over the centuries, earthquakes damaged the Colosseum, and people took away its 
             "The third paragraph says gladiators were usually slaves, prisoners or poor men hoping for fame and money.",
             "第三段说，角斗士通常是奴隶、囚犯或希望成名发财的穷人。",
           ),
+          [
+            t("Senators were spectators, sitting close to the arena.", "元老是观众，坐在离竞技场最近的地方。"),
+            t("The emperor's guard is not mentioned.", "文中没提皇帝的卫队。"),
+            t("Sailors stretched the awning. They did not fight.", "水手负责撑遮阳篷，不参加角斗。"),
+          ],
         ),
         ask(
           t("What two sides of Rome does the last sentence say the Colosseum stands for?", "最后一句说斗兽场象征了罗马的哪两个方面？"),
@@ -426,6 +556,11 @@ Over the centuries, earthquakes damaged the Colosseum, and people took away its 
             "The final sentence calls the Colosseum a symbol of both Rome's engineering genius and its taste for violent entertainment.",
             "最后一句称斗兽场既象征罗马卓越的工程技术，也象征它对暴力娱乐的嗜好。",
           ),
+          [
+            t("Wealth and poverty are not what the sentence names.", "最后一句说的不是富有和贫穷。"),
+            t("Animals were hunted there, and sailing is a side detail.", "动物是在那里被猎杀的，航海只是附带细节。"),
+            t("Gods are not mentioned in the last sentence.", "最后一句没提到神。"),
+          ],
         ),
       ],
       ["Rome", "Colosseum", "Vespasian", "CE", "Titus", "Rome's"],
@@ -459,6 +594,11 @@ Not all of the empire fell, however. In the east, the empire continued for nearl
             "The first paragraph says Odoacer removed the last emperor in the west in 476 and did not replace him. The looting was in 410 and Constantinople fell in 1453.",
             "第一段说，奥多亚克在476年废黜了西部最后一位皇帝，且没有另立新君。洗劫罗马发生在410年，君士坦丁堡陷落于1453年。",
           ),
+          [
+            t("410 CE is when the Visigoths looted Rome.", "公元410年是西哥特人洗劫罗马的年份。"),
+            t("Constantinople fell in 1453.", "君士坦丁堡在1453年陷落。"),
+            t("Twenty emperors came in fifty years of the third century.", "二十位皇帝是在三世纪的五十年间。"),
+          ],
         ),
         ask(
           t("How is the body of the passage mainly organized?", "文章的主体部分主要是怎样组织的？"),
@@ -472,6 +612,11 @@ Not all of the empire fell, however. In the east, the empire continued for nearl
             "The passage gives a first, second and third problem, each a cause of the empire's fall.",
             "文章依次列出第一、第二和第三个问题，每一个都是帝国衰亡的原因。",
           ),
+          [
+            t("No single soldier tells the story.", "文中没有一个士兵在讲故事。"),
+            t("It does not compare two cities.", "它没有比较两座城市。"),
+            t("It explains causes, not how to defend a border.", "它解释原因，不是讲怎样守边。"),
+          ],
         ),
         ask(
           t("Why did emperors raise taxes, according to the passage?", "根据文章，皇帝为什么要增加赋税？"),
@@ -485,6 +630,11 @@ Not all of the empire fell, however. In the east, the empire continued for nearl
             "The second paragraph says defending the borders required huge armies, and emperors raised taxes to pay for them.",
             "第二段说，保卫边境需要庞大的军队，皇帝为此增加了赋税。",
           ),
+          [
+            t("The Colosseum is in another passage.", "斗兽场在另一篇文章里。"),
+            t("Paying the Huns is never mentioned.", "文中从没提到付钱给匈人。"),
+            t("Taxes made people poorer, not richer.", "赋税让人们更穷，不是更富。"),
+          ],
         ),
       ],
       [

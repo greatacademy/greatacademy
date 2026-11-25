@@ -39,6 +39,14 @@ The story of ancient China begins on the banks of this mighty yellow river.`,
             "The second paragraph says the river picks up fine yellow soil as it flows and carries it along.",
             "第二段说，黄河流过大地时卷起细细的黄土，并带着它一起流动。",
           ],
+          [
+            ["Yellow flowers along the banks are not in the passage.", "河岸上的黄花文中没有。"],
+            [
+              "Yellow mountains are wrong. It begins in mountains, but the color comes from soil.",
+              "黄色的山不对。它发源于山里，但颜色来自泥土。",
+            ],
+            ["The sun shining yellow is not the reason given.", "阳光照成黄色不是文中给的原因。"],
+          ],
         ),
         ask(
           ["Why do many Chinese people call it the Mother River?", "为什么许多中国人把它叫作母亲河？"],
@@ -51,6 +59,11 @@ The story of ancient China begins on the banks of this mighty yellow river.`,
           [
             "The third paragraph says that like a mother, the river fed the people and helped them grow.",
             "第三段说，这条河像母亲一样养育人们，帮助他们成长。",
+          ],
+          [
+            ["The oldest river is not what the passage says.", "最古老的河文中没这么说。"],
+            ["Never flooding is wrong. The river burst its banks.", "从不泛滥不对。河水会冲出河岸。"],
+            ["A queen naming it is not in the passage.", "王后给它起名文中没有。"],
           ],
         ),
         ask(
@@ -65,6 +78,11 @@ The story of ancient China begins on the banks of this mighty yellow river.`,
             "The river gave water and rich soil for crops, but the fourth paragraph says that in heavy rains it swept away fields and homes.",
             "这条河为庄稼提供了水和肥沃的土壤，但第四段说，下大雨时它会冲走田地和房屋。",
           ],
+          [
+            ["Too far from villages is wrong. People farmed along its banks.", "离村子太远不对。人们就在河岸边种地。"],
+            ["Salty water is not in the passage.", "水太咸文中没有。"],
+            ["Changing color every year is not in the passage.", "每年变颜色文中没有。"],
+          ],
         ),
         ask(
           ["Where does the Yellow River begin?", "黄河发源于哪里？"],
@@ -77,6 +95,11 @@ The story of ancient China begins on the banks of this mighty yellow river.`,
           [
             "The text says it begins high in the mountains of western China and winds east to the sea.",
             "短文说它发源于中国西部的高山，向东蜿蜒流入大海。",
+          ],
+          [
+            ["The sea in the east is where the river ends.", "东边的大海是河流的终点。"],
+            ["A desert in the south is not in the passage.", "南方的沙漠文中没有。"],
+            ["A town in the north is not where it begins.", "北方的小镇不是它的源头。"],
           ],
         ),
       ],
@@ -106,6 +129,11 @@ Families cooked millet into a thick, warm porridge. They also raised pigs and ch
             "The first paragraph says the land in the north was too dry for rice paddies, which need to be flooded with water.",
             "第一段说，北方的土地太干，种不了需要灌满水的水稻田。",
           ],
+          [
+            ["Rice being expensive is not in the passage.", "大米太贵文中没有。"],
+            ["Tasting sweeter is not the reason given.", "更甜不是文中给的原因。"],
+            ["The river being too far is wrong. They farmed beside it.", "离河太远不对。他们就在河边种地。"],
+          ],
         ),
         ask(
           ["How did farmers keep their millet dry all winter?", "农民怎样让小米整个冬天保持干燥？"],
@@ -119,6 +147,11 @@ Families cooked millet into a thick, warm porridge. They also raised pigs and ch
             "The third paragraph says farmers stored the millet in deep pits lined with clay, so that it would stay dry all winter.",
             "第三段说，农民把小米存放在用黏土抹过的深坑里，好让它整个冬天保持干燥。",
           ],
+          [
+            ["Hanging it from roofs is not in the passage.", "挂在屋顶下文中没有。"],
+            ["Cooking all of it is wrong. It was stored for winter.", "全部煮掉不对。它是留着过冬的。"],
+            ["Carrying it south is not in the passage.", "运到南方文中没有。"],
+          ],
         ),
         ask(
           ["What are millet seeds like?", "小米的种子是什么样的？"],
@@ -129,6 +162,11 @@ Families cooked millet into a thick, warm porridge. They also raised pigs and ch
             ["Sharp and hard, like stone tools", "又尖又硬，像石头工具一样"],
           ],
           ["The second paragraph says millet seeds are tiny and round, like beads.", "第二段说，小米的种子又小又圆，像珠子一样。"],
+          [
+            ["Long and flat like leaves is not how the seeds look.", "又长又扁像叶子不是种子的样子。"],
+            ["Large and soft like plums is wrong. The seeds are tiny.", "又大又软像李子不对。种子很小。"],
+            ["Stone tools were what farmers dug with, not what seeds looked like.", "石器是农民挖地用的，不是种子的样子。"],
+          ],
         ),
         ask(
           ["What did families cook millet into?", "人们把小米做成什么？"],
@@ -139,6 +177,11 @@ Families cooked millet into a thick, warm porridge. They also raised pigs and ch
             ["Cakes", "糕点"],
           ],
           ['The text says, "Families cooked millet into a thick, warm porridge."', "短文说：“人们把小米煮成浓稠温热的粥。”"],
+          [
+            ["Bread is not mentioned. Millet became porridge.", "文中没提面包。小米做成了粥。"],
+            ["Noodles are not mentioned.", "文中没提面条。"],
+            ["Cakes are not mentioned.", "文中没提糕点。"],
+          ],
         ),
       ],
       ["China"],
@@ -167,6 +210,11 @@ For thousands of years after, people kept building levees along the river and di
             "The first paragraph says that year after year the soil sank to the bottom of the river, and the riverbed slowly rose.",
             "第一段说，泥土年复一年地沉到河底，河床就慢慢升高了。",
           ],
+          [
+            ["Throwing stones is not in the passage.", "扔石头文中没有。"],
+            ["Freezing every winter is not in the passage.", "每年冬天结冰文中没有。"],
+            ["Canals led water away. They did not raise the riverbed.", "水渠是把水引走的，没有抬高河床。"],
+          ],
         ),
         ask(
           ["How was Yu's way different from his father's?", "禹的办法和他父亲的有什么不同？"],
@@ -179,6 +227,11 @@ For thousands of years after, people kept building levees along the river and di
           [
             "The second and third paragraphs say Yu's father built walls of earth, but Yu dug canals to lead the water away to the sea.",
             "第二段和第三段说，禹的父亲修筑土墙，而禹挖运河把水引到海里。",
+          ],
+          [
+            ["Taller walls of earth is what his father tried.", "更高的土墙是他父亲用的办法。"],
+            ["Moving people to the mountains is not in the passage.", "把人搬到山上文中没有。"],
+            ["Waiting for the flood to end is wrong. He worked for thirteen years.", "等洪水自己退不对。他干了十三年。"],
           ],
         ),
         ask(
@@ -193,6 +246,11 @@ For thousands of years after, people kept building levees along the river and di
             "The third paragraph says Yu was so busy that he passed his own home three times without going in.",
             "第三段说，禹太忙了，三次经过自己的家都没有进去。",
           ],
+          [
+            ["Not liking his family is not what the story shows.", "不喜欢家人不是故事要表达的。"],
+            ["Being lost is wrong. He passed his home on purpose.", "迷路不对。他是有意路过家门不入。"],
+            ["His home washed away is not in the story.", "家被冲走故事里没有。"],
+          ],
         ),
         ask(
           ["How long did Yu work to stop the flood, as the story says?", "故事里说禹治水用了多久？"],
@@ -203,6 +261,11 @@ For thousands of years after, people kept building levees along the river and di
             ["Thirteen days", "十三天"],
           ],
           ["The story says that Yu worked for thirteen years.", "故事说禹干了十三年。"],
+          [
+            ["Three years mixes it up with passing his home three times.", "三年把它和三过家门弄混了。"],
+            ["Four thousand years is how long ago he lived.", "四千年是他生活的年代距今多久。"],
+            ["Thirteen days is far too short. The story says years.", "十三天太短了。故事说的是年。"],
+          ],
         ),
       ],
       ["Chinese", "Yu", "Yu's"],
@@ -231,6 +294,11 @@ Today, experts have read thousands of these bones. They tell us what the Shang k
             "The first two paragraphs say the kings wanted to know the future, and they believed the spirits of their ancestors could see it.",
             "前两段说，国王们想知道将来会怎样，他们相信祖先的灵魂能看见将来。",
           ],
+          [
+            ["Selling them as medicine happened much later.", "当药卖是很久以后的事。"],
+            ["Teaching children is not in the passage.", "教孩子写字文中没有。"],
+            ["A list of soldiers is not in the passage.", "士兵名单文中没有。"],
+          ],
         ),
         ask(
           ["How did the priest get an answer from a bone?", "祭司怎样从骨头上得到答案？"],
@@ -243,6 +311,11 @@ Today, experts have read thousands of these bones. They tell us what the Shang k
           [
             "The second paragraph says the priest pressed a hot metal rod against the bone until it cracked, then studied the shape of the cracks.",
             "第二段说，祭司把烧热的金属棒压在骨头背面，直到骨头裂开，再观察裂纹的形状。",
+          ],
+          [
+            ["Listening to it is not in the passage.", "用耳朵听文中没有。"],
+            ["Burying it was what happened later, by accident.", "埋在地下是后来偶然发生的。"],
+            ["A turtle reading it twists the turtle shell.", "乌龟来读把龟甲理解歪了。"],
           ],
         ),
         ask(
@@ -257,6 +330,14 @@ Today, experts have read thousands of these bones. They tell us what the Shang k
             "The third paragraph says the marks on the bones turned out to be the oldest Chinese writing ever found.",
             "第三段说，骨头上的刻痕原来是迄今发现的最古老的中文文字。",
           ],
+          [
+            [
+              "Still telling the future is wrong. The passage says the kings only believed that.",
+              "现在还能预知未来不对。文中说只是国王这样相信。",
+            ],
+            ["Being the biggest bones is not in the passage.", "最大的骨头文中没有。"],
+            ["Curing every sickness is wrong. They were only sold as medicine.", "能治百病不对。它们只是被当药卖。"],
+          ],
         ),
         ask(
           ["What did a priest use to ask a question?", "祭司用什么来提问？"],
@@ -269,6 +350,11 @@ Today, experts have read thousands of these bones. They tell us what the Shang k
           [
             "A priest took a flat piece of bone, often from an ox, or the shell of a turtle.",
             "祭司拿一块扁平的骨头（常是牛骨）或一片龟甲。",
+          ],
+          [
+            ["Paper came much later.", "纸是很晚才有的。"],
+            ["Bronze bells were for music.", "铜钟是用来奏乐的。"],
+            ["Silk was used for writing later, not for these questions.", "丝绸是后来写字用的，不是问这些问题用的。"],
           ],
         ),
       ],
@@ -298,6 +384,11 @@ They also made sets of bronze bells. Each bell rang a different note, and musici
             "The first paragraph says bronze is a mix of two softer metals, copper and tin.",
             "第一段说，青铜是两种较软的金属——铜和锡——的混合物。",
           ],
+          [
+            ["Iron came later than bronze.", "铁比青铜晚。"],
+            ["Gold and silver are not mentioned.", "文中没提金和银。"],
+            ["Stone and wood are not mentioned.", "文中没提石头和木头。"],
+          ],
         ),
         ask(
           ["Why did workers break the clay mold open?", "工人为什么要把黏土模子打破？"],
@@ -310,6 +401,11 @@ They also made sets of bronze bells. Each bell rang a different note, and musici
           [
             "The second paragraph says that when the metal cooled, they broke the mold open, and the bronze object was inside.",
             "第二段说，金属冷却以后，他们把模子打破，青铜器就在里面。",
+          ],
+          [
+            ["Too hot to touch is wrong. They waited for it to cool.", "太烫不能碰不对。他们等它冷却了。"],
+            ["Needing clay for cooking pots is not in the passage.", "要用陶土做锅文中没有。"],
+            ["The king not liking the shape is not in the passage.", "国王不喜欢形状文中没有。"],
           ],
         ),
         ask(
@@ -324,6 +420,11 @@ They also made sets of bronze bells. Each bell rang a different note, and musici
             "The last paragraph says musicians struck the bells with wooden hammers to play songs.",
             "最后一段说，乐师用木槌敲击编钟来演奏乐曲。",
           ],
+          [
+            ["Blowing into them like flutes is wrong. Bells are struck.", "像笛子一样吹不对。钟是敲的。"],
+            ["Shaking them like rattles is not in the passage.", "像拨浪鼓一样摇文中没有。"],
+            ["Rubbing them with hands is not in the passage.", "用手摩擦文中没有。"],
+          ],
         ),
         ask(
           ["How many bells are in the set found in one tomb?", "在一座墓里发现的那套钟有多少口？"],
@@ -334,6 +435,11 @@ They also made sets of bronze bells. Each bell rang a different note, and musici
             ["One hundred", "一百口"],
           ],
           ["The text says a set found in one tomb has sixty-five bells.", "短文说在一座墓里发现的一套钟有六十五口。"],
+          [
+            ["Three is the number of legs on some pots.", "三是一些鼎的腿数。"],
+            ["Twenty-six is the number of English letters, in another passage.", "二十六是英文字母的数量，在另一篇里。"],
+            ["One hundred is not in the passage.", "一百文中没有。"],
+          ],
         ),
       ],
       ["China", "Shang"],
@@ -363,6 +469,11 @@ Today, many children in China still practice calligraphy. A good teacher says th
             "The first paragraph says English uses twenty-six letters for sounds, while Chinese uses thousands of characters that each stand for a word or a part of one.",
             "第一段说，英文用二十六个代表读音的字母，而中文用几千个字，每个字代表一个词或词的一部分。",
           ],
+          [
+            ["Twenty-six letters for sounds is English, not Chinese.", "二十六个表音的字母是英文，不是中文。"],
+            ["Having no characters is wrong. Chinese uses thousands.", "没有汉字不对。中文有成千上万个。"],
+            ["Only on paper is wrong. People wrote on bamboo and silk too.", "只写在纸上不对。人们也写在竹简和丝绸上。"],
+          ],
         ),
         ask(
           ["What is calligraphy?", "什么是书法？"],
@@ -373,6 +484,11 @@ Today, many children in China still practice calligraphy. A good teacher says th
             ["Carving questions onto bones", "把问题刻在骨头上"],
           ],
           ["The second paragraph says writing beautifully with a brush is called calligraphy.", "第二段说，用毛笔把字写得很美叫作书法。"],
+          [
+            ["Making paper is a different skill.", "造纸是另一门手艺。"],
+            ["Tying bamboo strips is how old books were made.", "把竹片绑在一起是古书的做法。"],
+            ["Carving onto bones was how the Shang asked questions.", "在骨头上刻字是商朝人提问的方法。"],
+          ],
         ),
         ask(
           ["Why did paper help books to be shared?", "为什么纸让书更容易流传？"],
@@ -386,6 +502,11 @@ Today, many children in China still practice calligraphy. A good teacher says th
             "The third paragraph says paper was cheap and light, so books could be copied and shared.",
             "第三段说，纸又便宜又轻，所以书可以被抄写和分享。",
           ],
+          [
+            ["Stronger than bamboo is not what the passage says.", "比竹子结实文中没这么说。"],
+            ["Rolling into a brush is wrong. Brushes were made of animal hair.", "卷成毛笔不对。毛笔是动物毛做的。"],
+            ["Making ink black is not in the passage.", "让墨变黑文中没有。"],
+          ],
         ),
         ask(
           ["What did people in China write on before paper?", "在有纸之前，中国人写在什么上？"],
@@ -396,6 +517,11 @@ Today, many children in China still practice calligraphy. A good teacher says th
             ["Stone walls", "石墙"],
           ],
           ["Long ago, people wrote on strips of bamboo tied together, or on silk.", "很久以前，人们写在串起来的竹片上，或写在丝绸上。"],
+          [
+            ["Bones only is wrong. The passage names bamboo and silk.", "只有骨头不对。文中说的是竹简和丝绸。"],
+            ["Bronze pots were for cooking meat.", "铜鼎是用来煮肉的。"],
+            ["Stone walls are not mentioned for writing.", "文中没提在石墙上写字。"],
+          ],
         ),
       ],
       ["Chinese", "English", "China"],
@@ -424,6 +550,11 @@ Along the wall stand thousands of watchtowers. A garrison of soldiers lived in t
             "The first paragraph says the Great Wall was built to keep out invaders, and the second says riders from the north attacked China's farms and towns.",
             "第一段说长城是为了挡住入侵者而修建的，第二段说北方的骑兵会袭击中国的农田和城镇。",
           ],
+          [
+            ["Stopping the river's floods was done with levees and canals.", "阻挡洪水靠的是堤坝和水渠。"],
+            ["Growing millet is not what the wall was for.", "种小米不是长城的用途。"],
+            ["Marking the road to the sea is not in the passage.", "标出通往大海的路文中没有。"],
+          ],
         ),
         ask(
           ["What did the first emperor of all China do with the old walls?", "统一中国的第一位皇帝怎样处理那些旧城墙？"],
@@ -437,6 +568,11 @@ Along the wall stand thousands of watchtowers. A garrison of soldiers lived in t
             "The second paragraph says the first emperor of all China joined many of these walls into one long barrier.",
             "第二段说，统一中国的第一位皇帝把许多段城墙连成了一道长长的屏障。",
           ],
+          [
+            ["Knocking them down is the opposite. He joined them.", "推倒正好相反。他把它们连起来。"],
+            ["Brick and stone came about five hundred years ago, from later rulers.", "砖石是大约五百年前后来的统治者用的。"],
+            ["Moving them south is not in the passage.", "搬到南方文中没有。"],
+          ],
         ),
         ask(
           ["How did soldiers on the wall send a warning?", "城墙上的士兵怎样传递警报？"],
@@ -449,6 +585,11 @@ Along the wall stand thousands of watchtowers. A garrison of soldiers lived in t
           [
             "The last paragraph says soldiers lit a beacon fire, and the smoke could be seen from the next tower.",
             "最后一段说，士兵点燃烽火，下一座烽火台就能看见烟。",
+          ],
+          [
+            ["Riding horses is wrong. The fire was faster than any horse.", "骑马不对。烽火比马还快。"],
+            ["Bronze bells are not in this passage.", "铜钟不在这篇文章里。"],
+            ["Letters on scrolls are not in this passage.", "卷轴上的信不在这篇文章里。"],
           ],
         ),
       ],
@@ -478,6 +619,11 @@ For a long time, only China knew how to make silk. Traders carried it thousands 
             "The first paragraph says a cocoon fell into the queen's cup, and as she lifted it out, a shining thread began to unwind.",
             "第一段说，一个蚕茧掉进了王后的杯子，她把它捞出来时，一根闪亮的丝开始散开。",
           ],
+          [
+            ["A moth weaving cloth is not in the story.", "飞蛾织布故事里没有。"],
+            ["A trader from the west is wrong. Silk went west, not the other way.", "西方来的商人不对。丝绸是往西运的。"],
+            ["Buying it at a market is not in the story.", "在集市上买故事里没有。"],
+          ],
         ),
         ask(
           ["What do silkworms eat?", "蚕吃什么？"],
@@ -488,6 +634,11 @@ For a long time, only China knew how to make silk. Traders carried it thousands 
             ["Other caterpillars", "别的毛毛虫"],
           ],
           ["The second paragraph says silkworms are caterpillars that eat only mulberry leaves.", "第二段说，蚕是只吃桑叶的毛毛虫。"],
+          [
+            ["Millet and rice are what people ate.", "小米和大米是人吃的。"],
+            ["Tea leaves are what was in the queen's cup.", "茶叶是王后杯子里的东西。"],
+            ["Other caterpillars is wrong. They eat only mulberry leaves.", "别的毛毛虫不对。它们只吃桑叶。"],
+          ],
         ),
         ask(
           ["Why did workers drop the cocoons into hot water?", "工人为什么要把蚕茧放进热水里？"],
@@ -500,6 +651,11 @@ For a long time, only China knew how to make silk. Traders carried it thousands 
           [
             "The third paragraph says workers dropped the cocoons into hot water to loosen the thread.",
             "第三段说，工人把蚕茧放进热水里，是为了让丝松开。",
+          ],
+          [
+            ["Cooking them for dinner is not in the passage.", "煮了当晚饭文中没有。"],
+            ["Changing into moths is wrong. The water loosened the thread.", "变成飞蛾不对。热水是让丝变松。"],
+            ["Yellow soil is about the river, not silk.", "黄土说的是河，不是丝。"],
           ],
         ),
       ],

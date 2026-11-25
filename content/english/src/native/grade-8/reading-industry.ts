@@ -45,6 +45,11 @@ When James Watt improved the steam engine in the 1770s and 1780s, factories no l
             "Each paragraph traces one step in the same change: from cloth made in cottages, to machines in mills, to factories spreading into towns.",
             "每一段都追溯同一变化中的一步：从农舍里织布，到工厂里的机器，再到工厂扩散到城镇。",
           ),
+          [
+            t("Arkwright's wealth is never compared.", "文中从没比较阿克莱特的财富。"),
+            t("The passage does not rank wheels above machines.", "文中没说纺车比机器好。"),
+            t("Wool is never said to stop.", "文中从没说停止生产羊毛。"),
+          ],
         ),
         ask(
           t("Why were the first factories built beside fast rivers?", "为什么最早的工厂建在湍急的河流旁边？"),
@@ -58,6 +63,11 @@ When James Watt improved the steam engine in the 1770s and 1780s, factories no l
             "The passage says Arkwright's machine was so large that it had to be driven by a water wheel, so the buildings were placed beside fast rivers.",
             "文章说阿克莱特的机器太大，必须用水车驱动，所以厂房建在湍急的河流旁边。",
           ),
+          [
+            t("Washing cloth is never mentioned.", "文中从没提洗布。"),
+            t("Merchants are not said to travel by boat.", "文中没说商人坐船。"),
+            t("Coal came with the steam engine, later.", "煤是后来蒸汽机时代的事。"),
+          ],
         ),
         ask(
           t("How did the steam engine change where factories could be built?", "蒸汽机如何改变了工厂的选址？"),
@@ -71,12 +81,22 @@ When James Watt improved the steam engine in the 1770s and 1780s, factories no l
             "The last paragraph says that after Watt improved the steam engine, factories could be built anywhere there was coal to burn.",
             "最后一段说瓦特改进蒸汽机后，只要有煤可烧，哪里都可以建工厂。",
           ),
+          [
+            t("It freed factories from the countryside.", "它让工厂不必建在乡下。"),
+            t("London is never named.", "文中从没提伦敦。"),
+            t("Factories left cottages behind.", "工厂与农舍分开了。"),
+          ],
         ),
         ask(
           t("How many threads could one worker spin at once on the spinning jenny?", "用珍妮纺纱机一个工人能同时纺几根线？"),
           t("Eight", "八根"),
           [t("Two", "两根"), t("Twelve", "十二根"), t("One hundred", "一百根")],
           t("The spinning jenny let one worker spin eight threads at once.", "珍妮纺纱机让一个工人能同时纺八根线。"),
+          [
+            t("Two is too few.", "两根太少了。"),
+            t("Twelve is the length of a shift in hours.", "十二是一个班次的小时数。"),
+            t("One hundred is far too many.", "一百根太多了。"),
+          ],
         ),
       ],
       ["Britain", "James", "Hargreaves", "Richard", "Arkwright", "Cromford", "England", "Watt"],
@@ -107,6 +127,11 @@ In 1833, Parliament passed a Factory Act that banned children under nine from wo
             "The first paragraph gives both reasons: children could be paid far less than adults, and small hands could reach into the machines.",
             "第一段给出了两个原因：儿童的工钱比成人少得多，而且小手能伸进机器里。",
           ),
+          [
+            t("Small hands mattered, not strength.", "重要的是小手，不是力气。"),
+            t("No law required child workers.", "没有法律要求雇用童工。"),
+            t("Reading is never mentioned.", "文中从没提识字。"),
+          ],
         ),
         ask(
           t("Which sentence from the passage states a judgment rather than a fact?", "文章中哪个句子表达的是判断而不是事实？"),
@@ -120,6 +145,11 @@ In 1833, Parliament passed a Factory Act that banned children under nine from wo
             "That work kept children out of trouble is the owners' opinion, which others disputed; the other sentences report facts that can be checked.",
             "工作能让孩子们不惹麻烦是工厂主的观点，别人对此有异议；其他句子报告的是可以核实的事实。",
           ),
+          [
+            t("The year a law passed is a fact.", "法律通过的年份是事实。"),
+            t("The number of inspectors is a fact.", "督察员人数是事实。"),
+            t("The starting age is a fact.", "开始工作的年龄是事实。"),
+          ],
         ),
         ask(
           t("How did Robert Owen's mill differ from many others?", "罗伯特·欧文的工厂与许多其他工厂有什么不同？"),
@@ -133,6 +163,11 @@ In 1833, Parliament passed a Factory Act that banned children under nine from wo
             "The fourth paragraph says that at New Lanark, Owen refused to hire children under ten and built a school for them instead.",
             "第四段说欧文在新拉纳克拒绝雇用十岁以下的儿童，而是为他们建了一所学校。",
           ),
+          [
+            t("Pay for children is not compared.", "文中没比较孩子的工钱。"),
+            t("His mill's hours are not given.", "文中没给出他工厂的工作时长。"),
+            t("His workers' origins are not given.", "文中没说他的工人来自哪里。"),
+          ],
         ),
         ask(
           t("In what year did Parliament pass the Factory Act?", "议会哪一年通过了《工厂法》？"),
@@ -142,6 +177,11 @@ In 1833, Parliament passed a Factory Act that banned children under nine from wo
             "In 1833, Parliament passed a Factory Act that banned children under nine from textile mills.",
             "1833年，议会通过了禁止九岁以下儿童在纺织厂工作的《工厂法》。",
           ),
+          [
+            t("1832 is when the committee heard evidence.", "1832 年是委员会听取证词的时候。"),
+            t("1771 is when Arkwright's mill opened.", "1771 年是阿克莱特工厂开业的年份。"),
+            t("1850 belongs to the cotton passage.", "1850 年属于棉纺那篇文章。"),
+          ],
         ),
       ],
       ["Parliament", "Samuel", "Coulson", "Robert", "Owen", "New", "Lanark", "Scotland", "Factory", "Act"],
@@ -173,6 +213,11 @@ Coal also changed the air above ground. In mining and factory towns, smoke from 
             "The first paragraph shows how much the age depended on coal, and the others describe its dangers below ground and its smoke above.",
             "第一段说明那个时代多么依赖煤，其余段落描述了它在地下的危险和地上的烟雾。",
           ),
+          [
+            t("Mines were deadly, not safe.", "矿井很危险，并不安全。"),
+            t("Britain had huge deposits.", "英国有巨大的煤藏。"),
+            t("Firedamp is one detail, not the main idea.", "沼气只是一个细节，不是中心思想。"),
+          ],
         ),
         ask(
           t("Why did the Hartley disaster lead to a new law?", "为什么哈特利灾难促成了一项新法律？"),
@@ -189,6 +234,11 @@ Coal also changed the air above ground. In mining and factory towns, smoke from 
             "The passage says the beam fell down the only shaft and trapped the men, so Parliament required every mine to have at least two shafts.",
             "文章说横梁掉进了唯一的竖井，困住了矿工，所以议会要求每座矿井至少有两个竖井。",
           ),
+          [
+            t("A falling beam, not an explosion, trapped them.", "困住他们的是落下的横梁，不是爆炸。"),
+            t("No flood is mentioned.", "文中没提洪水。"),
+            t("No strike is mentioned.", "文中没提罢工。"),
+          ],
         ),
         ask(
           t("What does the last paragraph suggest about people's view of the smoke?", "最后一段暗示了人们对烟雾的什么看法？"),
@@ -202,6 +252,11 @@ Coal also changed the air above ground. In mining and factory towns, smoke from 
             "The last paragraph says people accepted the smoke as the price of progress, and few understood how much it harmed their lungs.",
             "最后一段说人们把烟雾当作进步的代价来接受，很少有人明白它对肺的伤害有多大。",
           ),
+          [
+            t("No campaign against chimneys is mentioned.", "文中没提反对烟囱的运动。"),
+            t("Few understood the harm; none called it healthy.", "很少有人了解危害，但没人说它有益健康。"),
+            t("No one is said to move away.", "文中没说有人搬走。"),
+          ],
         ),
         ask(
           t("What was firedamp?", "什么是沼气（firedamp）？"),
@@ -212,6 +267,11 @@ Coal also changed the air above ground. In mining and factory towns, smoke from 
             t("A kind of coal", "一种煤"),
           ],
           t("Firedamp could explode at the touch of a candle flame.", "沼气一碰到烛火就可能爆炸。"),
+          [
+            t("Suffocating without warning is blackdamp.", "无声无息地让人窒息的是黑气。"),
+            t("Seeping water is a separate danger.", "渗水是另一种危险。"),
+            t("It is a gas, not coal.", "它是气体，不是煤。"),
+          ],
         ),
       ],
       ["Industrial", "Revolution", "Britain", "Hartley", "Colliery", "England", "Parliament"],
@@ -243,6 +303,11 @@ By 1850, Britain had more than six thousand miles of railway. Fresh food could b
             "The second paragraph says it was the first line built to carry passengers on a timetable, with every train pulled by steam.",
             "第二段说它是第一条按时刻表运送乘客、每列火车都由蒸汽牵引的线路。",
           ),
+          [
+            t("The earlier line carried coal and passengers.", "更早的铁路运煤也载客。"),
+            t("Its length is not compared with others.", "文中没比较它的长度。"),
+            t("Every train was pulled by steam.", "每列火车都由蒸汽机牵引。"),
+          ],
         ),
         ask(
           t("Which is an interpretation or judgment rather than a plain fact?", "哪一项是解读或判断，而不是单纯的事实？"),
@@ -256,6 +321,11 @@ By 1850, Britain had more than six thousand miles of railway. Fresh food could b
             "The doctors' warning was their own belief about what might happen, and it proved wrong; the other choices report measurable facts.",
             "医生的警告是他们对可能发生的事情的看法，后来被证明是错的；其他选项报告的是可以测量的事实。",
           ),
+          [
+            t("The miles of track can be counted.", "铁路里程可以计算。"),
+            t("The opening year is a fact.", "开通年份是事实。"),
+            t("The Rocket's speed was measured.", "火箭号的速度是测量过的。"),
+          ],
         ),
         ask(
           t("How did railways change the way the country kept time?", "铁路如何改变了全国的计时方式？"),
@@ -269,6 +339,11 @@ By 1850, Britain had more than six thousand miles of railway. Fresh food could b
             "The last sentence says that to keep timetables accurate, the whole country began to set its clocks to London time.",
             "最后一句说为了让时刻表准确，全国开始把时钟调成伦敦时间。",
           ),
+          [
+            t("Towns gave up their own sun time.", "各镇不再使用各自的太阳时。"),
+            t("Clocks were not banned.", "钟表没有被禁止。"),
+            t("Night trains are never discussed.", "文中从没讨论夜车。"),
+          ],
         ),
         ask(
           t("Who designed the Rocket?", "谁设计了“火箭号”？"),
@@ -278,6 +353,11 @@ By 1850, Britain had more than six thousand miles of railway. Fresh food could b
             "Its most famous engine, the Rocket, was designed by George and Robert Stephenson.",
             "它最著名的机车“火箭号”由乔治和罗伯特·斯蒂芬森设计。",
           ),
+          [
+            t("Watt improved the steam engine.", "瓦特改进的是蒸汽机。"),
+            t("Arkwright built mills.", "阿克莱特建的是纺纱厂。"),
+            t("Hargreaves built the spinning jenny.", "哈格里夫斯造的是珍妮纺纱机。"),
+          ],
         ),
       ],
       [
@@ -319,6 +399,11 @@ Visitors who saw only the city center told a different story. They admired grand
             "The first paragraph says it showed both the wealth and the misery that the factories could create.",
             "第一段说它同时展现了工厂所能创造的财富和苦难。",
           ),
+          [
+            t("No earthquake struck.", "没有发生地震。"),
+            t("It had hundreds of mills.", "它有几百家工厂。"),
+            t("It had been a market town, not the oldest city.", "它原是集镇，不是最古老的城市。"),
+          ],
         ),
         ask(
           t("What problem do the details in the second paragraph show?", "第二段的细节说明了什么问题？"),
@@ -332,6 +417,11 @@ Visitors who saw only the city center told a different story. They admired grand
             "The paragraph says the population quadrupled and builders could not keep up, so families were packed into cheap houses and cellars.",
             "这一段说人口翻了两番，建筑工人跟不上，于是许多家庭挤进廉价房屋和地下室。",
           ),
+          [
+            t("The mills were growing, not closing.", "工厂在增加，不是关闭。"),
+            t("The houses had no gardens.", "房子没有花园。"),
+            t("Builders worked but could not keep up.", "建筑工在干活，只是跟不上。"),
+          ],
         ),
         ask(
           t("How does the last paragraph treat the two different accounts of the city?", "最后一段如何对待关于这座城市的两种不同说法？"),
@@ -345,6 +435,11 @@ Visitors who saw only the city center told a different story. They admired grand
             "The last paragraph says that both views were true: the city had great wealth and invention, and many of its people lived in terrible conditions.",
             "最后一段说两种看法都是对的：这座城市有巨大的财富和发明，而许多市民生活在可怕的条件下。",
           ),
+          [
+            t("Engels is not accused of inventing anything.", "恩格斯没被指责编造。"),
+            t("The visitors saw only the center.", "参观者只看到了市中心。"),
+            t("It says both were true.", "它说两种看法都对。"),
+          ],
         ),
         ask(
           t("About how many people lived in Manchester in 1851?", "1851年曼彻斯特大约有多少人？"),
@@ -354,6 +449,11 @@ Visitors who saw only the city center told a different story. They admired grand
             "The population rose from about seventy-five thousand in 1801 to about three hundred thousand in 1851.",
             "人口从1801年的约七万五千增长到1851年的约三十万。",
           ),
+          [
+            t("Seventy-five thousand was the 1801 figure.", "七万五千是 1801 年的数字。"),
+            t("Three million is far too many.", "三百万太多了。"),
+            t("Ten thousand is far too few.", "一万太少了。"),
+          ],
         ),
       ],
       ["Manchester", "Britain", "Ireland", "German", "Friedrich", "Engels"],
@@ -382,6 +482,11 @@ The government responded harshly. It sent twelve thousand soldiers to the affect
             "The second paragraph says their quarrel was with employers who used new machines to make cheap goods while cutting the wages of skilled workers.",
             "第二段说他们的不满针对的是那些用新机器生产廉价商品、同时削减熟练工人工资的雇主。",
           ),
+          [
+            t("Historians say they were not against all machines.", "历史学家说他们并不反对所有机器。"),
+            t("The war made times hard but was not their target.", "战争让日子艰难，但不是他们反对的对象。"),
+            t("Machine prices were not their complaint.", "机器价格不是他们抱怨的事。"),
+          ],
         ),
         ask(
           t(
@@ -398,6 +503,11 @@ The government responded harshly. It sent twelve thousand soldiers to the affect
             "Breaking only the machines of employers who underpaid and leaving others alone shows that the attacks were aimed, not random.",
             "只砸毁少付工资的雇主的机器而放过其他人，说明这些袭击是有针对性的，而不是随意的。",
           ),
+          [
+            t("The name shows a disguise, not careful choice.", "这个名字是一种掩护，不是谨慎选择。"),
+            t("Blackened faces hid them.", "涂黑的脸是为了隐藏身份。"),
+            t("Hammers were the tool, not the choice of target.", "锤子是工具，与选择目标无关。"),
+          ],
         ),
         ask(
           t("How did the government respond to the machine breaking?", "政府如何应对砸机器的行为？"),
@@ -411,12 +521,22 @@ The government responded harshly. It sent twelve thousand soldiers to the affect
             "The last paragraph says the government sent twelve thousand soldiers and made machine breaking a crime punishable by death.",
             "最后一段说政府派出一万二千名士兵，并把砸机器定为可处死刑的罪行。",
           ),
+          [
+            t("Wages were not raised.", "工资没有提高。"),
+            t("Workers had no vote.", "工人没有选举权。"),
+            t("Machines were not banned.", "机器没有被禁止。"),
+          ],
         ),
         ask(
           t("How many men were hanged in York in 1813?", "1813年在约克有多少人被绞死？"),
           t("Seventeen", "十七人"),
           [t("Twelve", "十二人"), t("Two hundred", "二百人"), t("None", "没有")],
           t("In 1813, seventeen men were hanged in York.", "1813年，有十七人在约克被绞死。"),
+          [
+            t("Twelve thousand is the number of soldiers.", "一万二是士兵的人数。"),
+            t("Two hundred belongs to the Hartley mine.", "两百属于哈特利煤矿。"),
+            t("Seventeen were hanged.", "有十七人被绞死。"),
+          ],
         ),
       ],
       ["Nottinghamshire", "England", "General", "Ludd", "King", "Luddites", "Luddite", "Britain", "France", "Portugal", "York"],
@@ -447,6 +567,11 @@ The strike was small, but it inspired other unskilled workers, including the doc
             "The second paragraph says white phosphorus could cause phossy jaw, which made the bones of the jaw rot and could lead to death.",
             "第二段说白磷会引起“磷毒性颌骨坏死”，使颌骨腐烂，甚至导致死亡。",
           ),
+          [
+            t("Fires are never mentioned.", "文中从没提火灾。"),
+            t("Weight is never the issue.", "重量从来不是问题。"),
+            t("White phosphorus was the cheaper one.", "白磷才是便宜的那种。"),
+          ],
         ),
         ask(
           t("What finally started the strike?", "罢工最终是由什么引发的？"),
@@ -460,6 +585,11 @@ The strike was small, but it inspired other unskilled workers, including the doc
             "The third paragraph says that when the workers refused to sign the statement and one was dismissed, the women walked out.",
             "第三段说当工人们拒绝签署声明、其中一人被解雇时，女工们罢工了。",
           ),
+          [
+            t("The fines existed before but did not start it.", "罚款早就有，但不是罢工的导火索。"),
+            t("No fire happened.", "没有发生火灾。"),
+            t("Parliament ordered nothing.", "议会没有下令。"),
+          ],
         ),
         ask(
           t("What does the last paragraph add to the central idea of the passage?", "最后一段为文章的中心思想补充了什么？"),
@@ -473,6 +603,11 @@ The strike was small, but it inspired other unskilled workers, including the doc
             "The last paragraph shows that the strike mattered beyond the factory, inspiring the London dock workers, who struck and won the next year.",
             "最后一段表明这次罢工的意义超出了工厂本身，它鼓舞了伦敦码头工人，后者第二年罢工并取得胜利。",
           ),
+          [
+            t("The strike won.", "罢工胜利了。"),
+            t("The dock workers followed their example.", "码头工人效仿了她们。"),
+            t("The factory is not said to close.", "文中没说工厂关闭。"),
+          ],
         ),
       ],
       ["Bryant", "May", "East", "London", "June", "Annie", "Besant", "White", "Slavery", "Parliament"],
@@ -501,6 +636,11 @@ Bazalgette's sewers, more than a thousand miles of them, carried waste away from
             "The first paragraph says Chadwick argued that much of the disease was caused by filth: sewage in the streets, polluted water and overcrowded homes.",
             "第一段说查德威克认为许多疾病是由污秽引起的：街上的污水、被污染的水和拥挤的住房。",
           ),
+          [
+            t("Long hours are not Chadwick's cause.", "长时间劳动不是查德威克说的原因。"),
+            t("Miasma was the other belief.", "瘴气是另一种看法。"),
+            t("Cold weather is never mentioned.", "文中从没提寒冷天气。"),
+          ],
         ),
         ask(
           t("How did John Snow's evidence challenge the miasma theory?", "约翰·斯诺的证据如何挑战了瘴气理论？"),
@@ -514,6 +654,11 @@ Bazalgette's sewers, more than a thousand miles of them, carried waste away from
             "Snow mapped the deaths around the Broad Street pump and saw cases fall when its handle was removed, which pointed to water, not air.",
             "斯诺在地图上标出宽街水泵周围的死亡病例，并发现拆掉水泵把手后病例减少，这表明病因是水而不是空气。",
           ),
+          [
+            t("Snow disproved smells as the cause.", "斯诺否定了臭味致病说。"),
+            t("Rats are never mentioned.", "文中从没提老鼠。"),
+            t("Gentlemen are in Chadwick's report.", "绅士出现在查德威克的报告里。"),
+          ],
         ),
         ask(
           t("What finally pushed Parliament to act?", "最终是什么促使议会采取行动？"),
@@ -527,6 +672,11 @@ Bazalgette's sewers, more than a thousand miles of them, carried waste away from
             "The third paragraph says London was slow to act until the Great Stink of 1858; within weeks, Parliament approved Bazalgette's plan.",
             "第三段说伦敦一直行动迟缓，直到1858年的大恶臭；几周之内，议会就批准了巴泽尔杰特的计划。",
           ),
+          [
+            t("Chadwick's report came sixteen years earlier.", "查德威克的报告早了十六年。"),
+            t("No strike is mentioned.", "文中没提罢工。"),
+            t("The pump was in 1854, four years before.", "水泵事件在 1854 年，早了四年。"),
+          ],
         ),
       ],
       [

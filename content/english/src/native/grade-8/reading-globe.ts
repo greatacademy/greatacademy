@@ -48,6 +48,11 @@ The Globe was rebuilt the next year, and a modern copy now stands near the origi
             "The second paragraph says the lease had run out and the landlord planned to keep the building, so the actors took it apart first and kept the timber.",
             "第二段说租约到期，地主打算把建筑据为己有，所以演员们抢先拆掉它，保住了木材。",
           ),
+          [
+            t("The fire came in 1613, to the Globe, not the Theatre.", "火灾发生在 1613 年，烧的是环球剧院，不是剧场。"),
+            t("No queen's order is mentioned.", "文中没提女王的命令。"),
+            t("The thatched roof was only on the new building.", "茅草屋顶只是新剧院的特点。"),
+          ],
         ),
         ask(
           t("How was the stage of the Globe arranged?", "环球剧场的舞台是如何布置的？"),
@@ -61,6 +66,11 @@ The Globe was rebuilt the next year, and a modern copy now stands near the origi
             "The third paragraph says the stage stuck out into the yard, so the audience surrounded the actors on three sides.",
             "第三段说舞台伸进院子，观众从三面围住演员。",
           ),
+          [
+            t("There was no curtain hiding it.", "舞台没有被幕布遮住。"),
+            t("The roof was thatch, not a stage.", "屋顶是茅草，不是舞台。"),
+            t("The yard was open ground, not a pit below.", "院子是露天平地，不是地下坑。"),
+          ],
         ),
         ask(
           t("What caused the fire of 1613?", "1613年的火灾是由什么引起的？"),
@@ -74,12 +84,22 @@ The Globe was rebuilt the next year, and a modern copy now stands near the origi
             "The fourth paragraph says a cannon fired as a sound effect during Henry VIII set fire to the thatched roof.",
             "第四段说在演出《亨利八世》时作为音效发射的炮点燃了茅草屋顶。",
           ),
+          [
+            t("The landlord lost in court years earlier.", "房东多年前就输了官司。"),
+            t("No storm is mentioned.", "文中没提暴风雨。"),
+            t("Candles played no part.", "蜡烛与此无关。"),
+          ],
         ),
         ask(
           t("In what year did the Globe open?", "环球剧院哪一年开张？"),
           t("In 1599", "1599年"),
           [t("In 1613", "1613年"), t("In 1564", "1564年"), t("In 1660", "1660年")],
           t("The Globe opened in 1599.", "环球剧院于1599年开张。"),
+          [
+            t("1613 is when it burned.", "1613 年是它被烧毁的年份。"),
+            t("1564 is when Shakespeare was born.", "1564 年是莎士比亚出生的年份。"),
+            t("1660 is when women first acted.", "1660 年是女性开始登台的年份。"),
+          ],
         ),
       ],
       [
@@ -130,6 +150,11 @@ All the parts are played by men and boys. Women were not allowed to act on the E
             "The second paragraph says those who paid a penny stood in the open yard in front of the stage and were called groundlings.",
             "第二段说花一便士的人站在舞台前的露天院子里，被称为“站票观众”。",
           ),
+          [
+            t("The wealthiest sat in the lords' rooms.", "最富有的人坐在贵宾包厢里。"),
+            t("Boys played women.", "女性角色由男孩扮演。"),
+            t("Boatmen only rowed people there.", "船夫只是载人过河。"),
+          ],
         ),
         ask(
           t("How did the audience know a scene took place at night?", "观众怎么知道一场戏发生在夜里？"),
@@ -143,6 +168,11 @@ All the parts are played by men and boys. Women were not allowed to act on the E
             "The third paragraph says there was little scenery and plays were performed by daylight, so when a character said it was night, the audience imagined it.",
             "第三段说那时几乎没有布景，戏在白天演出，所以当角色说现在是夜里时，观众就自己想象。",
           ),
+          [
+            t("There were no electric lights.", "当时没有电灯。"),
+            t("There was no painted backdrop.", "没有绘制的背景幕。"),
+            t("Plays were all by daylight in the afternoon.", "演出都在下午借日光进行。"),
+          ],
         ),
         ask(
           t("Why was Juliet played by a boy?", "为什么朱丽叶由男孩扮演？"),
@@ -156,6 +186,11 @@ All the parts are played by men and boys. Women were not allowed to act on the E
             "The last paragraph says all parts were played by men and boys because women were not allowed to act on the English stage until 1660.",
             "最后一段说所有角色都由男人和男孩扮演，因为直到1660年女性才被允许在英国舞台上表演。",
           ),
+          [
+            t("No one says boys were better actors.", "没人说男孩演得更好。"),
+            t("The part was a girl's; the rule forced a boy into it.", "这是女孩的角色，是规定迫使男孩来演。"),
+            t("Women did come to watch; they could not act.", "女性能来看戏，只是不能演戏。"),
+          ],
         ),
         ask(
           t("What showed that there would be a play that day?", "什么表示当天有戏演？"),
@@ -169,6 +204,11 @@ All the parts are played by men and boys. Women were not allowed to act on the E
             "A flag is flying from the top of the Globe to show that there will be a play today.",
             "环球剧院顶上飘着旗子，表示今天有戏演。",
           ),
+          [
+            t("No church bell is mentioned; a trumpet sounded.", "文中没提教堂钟声，吹响的是号角。"),
+            t("No newspaper is mentioned.", "文中没提报纸。"),
+            t("There were no lights to show.", "当时没有灯光可以示意。"),
+          ],
         ),
       ],
       ["Globe", "London", "Bridge", "English", "Juliet"],
@@ -199,6 +239,11 @@ He retired to Stratford and died there in 1616. Seven years later, two of his fe
             "The second paragraph says that for several years he disappears from the records, and historians call this period the lost years.",
             "第二段说他有好几年从记录中消失了，历史学家称这段时期为“失踪的岁月”。",
           ),
+          [
+            t("The fire burned the Globe, not his records.", "大火烧的是剧院，不是他的记录。"),
+            t("School years are recorded, not lost.", "上学的年份并没有缺失。"),
+            t("His retirement is known.", "他退休后的事是有记载的。"),
+          ],
         ),
         ask(
           t("What do Shakespeare's tragedies show, according to the passage?", "根据文章，莎士比亚的悲剧表现了什么？"),
@@ -215,6 +260,11 @@ He retired to Stratford and died there in 1616. Seven years later, two of his fe
             "The third paragraph says his tragedies show great men and women destroyed by their own choices and by forces they cannot control; the other choices describe the comedies and histories.",
             "第三段说他的悲剧表现伟大的男男女女被自己的选择和无法控制的力量所毁灭；其他选项描述的是喜剧和历史剧。",
           ),
+          [
+            t("Mistaken identities belong to his comedies.", "身份误会属于他的喜剧。"),
+            t("Kings of the past belong to his histories.", "历代国王属于他的历史剧。"),
+            t("Clever servants belong to the comedies too.", "机灵的仆人也属于喜剧。"),
+          ],
         ),
         ask(
           t("Why is the First Folio important?", "为什么《第一对开本》很重要？"),
@@ -228,12 +278,22 @@ He retired to Stratford and died there in 1616. Seven years later, two of his fe
             "The last paragraph says two fellow actors collected his plays in the First Folio, and without it, half of them might have been lost.",
             "最后一段说两位同事把他的剧本收集成《第一对开本》，没有它，其中一半可能已经失传。",
           ),
+          [
+            t("It came after his death, not first.", "它在他死后才出版，不是他的第一部戏。"),
+            t("It does not cover the lost years.", "它没有记录那些空白年份。"),
+            t("Two fellow actors collected it.", "编纂者是他的两位演员同事。"),
+          ],
         ),
         ask(
           t("What was Shakespeare's father's trade?", "莎士比亚的父亲是做什么的？"),
           t("A glove maker", "手套匠"),
           [t("A playwright", "剧作家"), t("A schoolteacher", "教师"), t("A boatman", "船夫")],
           t("His father was a glove maker who became an important man in the town.", "他父亲是个手套匠，后来成了镇上的要人。"),
+          [
+            t("Playwright was his own trade.", "剧作家是他自己的职业。"),
+            t("He went to school; his father taught nothing.", "他上过学，他父亲没教书。"),
+            t("Boatmen belong to the Globe passage.", "船夫出现在环球剧院那篇里。"),
+          ],
         ),
       ],
       [
@@ -287,6 +347,11 @@ Only then, standing over the bodies of their children, do the two families agree
             "Romeo is a Montague and Juliet a Capulet, two families in a long feud, so they are married secretly by the friar; the banishment comes only after the wedding.",
             "罗密欧是蒙太古家族的人，朱丽叶是凯普莱特家族的人，两家是世仇，所以他们由神父秘密主婚；放逐是在婚礼之后才发生的。",
           ),
+          [
+            t("The Prince forbade fighting, not marriage.", "亲王禁止的是打斗，不是婚姻。"),
+            t("The banishment comes after the wedding.", "放逐发生在婚礼之后。"),
+            t("Tybalt is her cousin, not her husband.", "提伯尔特是她的表哥，不是丈夫。"),
+          ],
         ),
         ask(
           t('What does Juliet mean by "My only love sprung from my only hate"?', "朱丽叶说“我唯一的爱来自我唯一的恨”是什么意思？"),
@@ -300,6 +365,11 @@ Only then, standing over the bodies of their children, do the two families agree
             "Juliet has just learned that Romeo is a Montague, the family of her family's enemy, so her love has come from the only thing she was taught to hate.",
             "朱丽叶刚得知罗密欧是蒙太古家族的人，即她家族的仇敌，所以她的爱来自她被教导去恨的唯一对象。",
           ),
+          [
+            t("She loves him wholly.", "她全心爱他。"),
+            t("She is speaking of her first love.", "她说的正是初恋。"),
+            t("Her love never turns to hate.", "她的爱从没变成恨。"),
+          ],
         ),
         ask(
           t("Which event leads directly to Romeo's banishment?", "哪件事直接导致了罗密欧被放逐？"),
@@ -313,12 +383,22 @@ Only then, standing over the bodies of their children, do the two families agree
             "The third paragraph says Romeo kills Tybalt in a rage after Mercutio is killed, and then the Prince banishes him from Verona.",
             "第三段说茂丘西奥被杀后，罗密欧一怒之下杀了提伯尔特，随后亲王把他逐出维罗纳。",
           ),
+          [
+            t("The party leads to love, not banishment.", "舞会带来爱情，而非放逐。"),
+            t("The wedding is secret and unpunished.", "秘密婚礼没受到惩罚。"),
+            t("The poison comes after he is banished.", "买毒药是在被放逐之后。"),
+          ],
         ),
         ask(
           t("Who secretly married Romeo and Juliet?", "谁秘密为罗密欧和朱丽叶主持了婚礼？"),
           t("Friar Laurence", "劳伦斯神父"),
           [t("The Prince of Verona", "维罗纳亲王"), t("Mercutio", "茂丘西奥"), t("Lord Montague", "蒙太古勋爵")],
           t("The next day, they are secretly married by Friar Laurence.", "第二天，劳伦斯神父秘密为他们主持了婚礼。"),
+          [
+            t("The Prince only keeps the peace.", "亲王只负责维持秩序。"),
+            t("Mercutio is Romeo's friend who dies.", "茂丘西奥是罗密欧死去的朋友。"),
+            t("Lord Montague is Romeo's father and knows nothing.", "蒙太古是罗密欧的父亲，并不知情。"),
+          ],
         ),
       ],
       [
@@ -366,6 +446,11 @@ Above all, remember that these plays were written to be heard, not read silently
             "The third paragraph explains that wherefore meant why, so she is asking why he has to be Romeo, a member of the family hers hates.",
             "第三段解释说 wherefore 的意思是“为什么”，所以她是在问他为什么偏偏是罗密欧，她家族所憎恨的家族的一员。",
           ),
+          [
+            t("Wherefore meant why, not where.", "wherefore 意思是“为什么”，不是“在哪里”。"),
+            t("She does not ask the time.", "她没有问时间。"),
+            t("She does not ask how he feels.", "她没有问他的感受。"),
+          ],
         ),
         ask(
           t('What could a sudden switch from "you" to "thou" show?', "突然从 you 换成 thou 可能表示什么？"),
@@ -382,6 +467,11 @@ Above all, remember that these plays were written to be heard, not read silently
             "The second paragraph says thou was used with close friends, family, children or servants, so switching to it can show affection or be an insult.",
             "第二段说 thou 用于亲密的朋友、家人、孩子或仆人，所以换用它可以表示亲密，也可以是一种侮辱。",
           ),
+          [
+            t("Names are never the issue.", "名字从来不是问题。"),
+            t("The word choice has nothing to do with time of day.", "用词和时间无关。"),
+            t("Thou was for one person, not a crowd.", "thou 用于一个人，不是人群。"),
+          ],
         ),
         ask(
           t('How would you put "Him have I seen" in modern word order?', "“Him have I seen”用现代语序应该怎么说？"),
@@ -395,12 +485,18 @@ Above all, remember that these plays were written to be heard, not read silently
             "The fourth paragraph gives this example and advises putting the subject and verb back in their usual order: I have seen him.",
             "第四段给出了这个例子，建议把主语和动词放回通常的位置：I have seen him。",
           ),
+          [
+            t("It is a statement, not a question.", "这是陈述句，不是疑问句。"),
+            t("The subject is I, not he.", "主语是“我”，不是“他”。"),
+            t("Have seen is past, not future.", "have seen 表示过去，不是将来。"),
+          ],
         ),
         ask(
           t('What did "anon" mean in Shakespeare\'s English?', "莎士比亚时代的“anon”是什么意思？"),
           t("Soon", "很快"),
           [t("Before", "以前"), t("Hurry", "赶快"), t("Why", "为什么")],
           t('"Anon" meant "soon," "ere" meant "before," and "hie" meant "hurry."', "“anon”意思是“很快”，“ere”是“以前”，“hie”是“赶快”。"),
+          [t("Before is ere.", "“之前”是 ere。"), t("Hurry is hie.", "“快点”是 hie。"), t("Why is wherefore.", "“为什么”是 wherefore。")],
         ),
       ],
       ["Shakespeare", "English", "Early", "Modern", "Shakespeare's", "Juliet", "Romeo"],
@@ -431,6 +527,11 @@ The play asks whether Macbeth's fate was decided by the witches or by his own ch
             'The third paragraph says she fears he is "too full of the milk of human kindness" to seize the crown, meaning too kind.',
             "第三段说她担心他“满怀人情的乳汁”而不敢夺取王位，意思是他太仁慈了。",
           ),
+          [
+            t("She never doubts the witches.", "她从没怀疑女巫。"),
+            t("Battle is not her worry at that point.", "那时她并不担心战事。"),
+            t("Duncan never learns of the prophecy.", "邓肯始终不知道预言。"),
+          ],
         ),
         ask(
           t("What does Lady Macbeth's sleepwalking show?", "麦克白夫人的梦游表明了什么？"),
@@ -444,6 +545,11 @@ The play asks whether Macbeth's fate was decided by the witches or by his own ch
             "The fourth paragraph says guilt destroys both of them; trying to wash invisible blood from her hands shows that she cannot escape what she has done.",
             "第四段说罪恶感摧毁了他们两人；她试图洗掉手上看不见的血，说明她无法摆脱自己的所作所为。",
           ),
+          [
+            t("She once seemed strong; now she breaks.", "她曾看似坚强，现在崩溃了。"),
+            t("She plans nothing in her sleep.", "她梦游时没在策划什么。"),
+            t("No spell is mentioned.", "文中没提咒语。"),
+          ],
         ),
         ask(
           t("According to the last paragraph, who is responsible for Macbeth's fate?", "根据最后一段，谁应该为麦克白的命运负责？"),
@@ -457,12 +563,22 @@ The play asks whether Macbeth's fate was decided by the witches or by his own ch
             "The last paragraph says the witches only told him what might happen, and it was Macbeth who chose villainy to make it happen.",
             "最后一段说女巫只是告诉他可能会发生什么，是麦克白自己选择用罪恶让它成真。",
           ),
+          [
+            t("The witches only told him what might happen.", "女巫只是说了可能发生的事。"),
+            t("Duncan's reward was a fact, not a cause.", "邓肯的封赏只是事实，不是原因。"),
+            t("Malcolm ended his reign, not shaped his choices.", "马尔康终结了他的统治，并没左右他的选择。"),
+          ],
         ),
         ask(
           t("Where does Macbeth begin?", "《麦克白》开场在哪里？"),
           t("On a lonely heath in Scotland", "苏格兰荒凉的荒野上"),
           [t("In King Duncan's castle", "邓肯国王的城堡里"), t("At a feast", "宴会上"), t("In Verona", "维罗纳")],
           t("It begins on a lonely heath in Scotland, in thunder and lightning.", "它在电闪雷鸣中苏格兰荒凉的荒野上开场。"),
+          [
+            t("The castle comes later.", "城堡在后面才出现。"),
+            t("The feast is later still.", "宴会更晚。"),
+            t("Verona is in Romeo and Juliet.", "维罗纳在《罗密欧与朱丽叶》里。"),
+          ],
         ),
       ],
       ["Macbeth", "Shakespeare's", "Scotland", "King", "Duncan", "Banquo", "Lady", "Duncan's", "Malcolm", "Macbeth's"],
@@ -493,6 +609,11 @@ In another play, Twelfth Night, the clown Feste observes that it takes wit to pl
             "The first paragraph says that because a fool was not taken seriously, he was often allowed to say things no one else dared to say.",
             "第一段说因为没有人把弄臣当真，所以他常常被允许说别人不敢说的话。",
           ),
+          [
+            t("A fool was a servant, not a son.", "弄臣是仆人，不是王子。"),
+            t("Fools spoke in riddles and songs, not Latin.", "弄臣用谜语和歌，不用拉丁语。"),
+            t("Pay is never mentioned.", "文中没提报酬。"),
+          ],
         ),
         ask(
           t("Why does Lear banish Cordelia?", "李尔王为什么放逐考狄利娅？"),
@@ -506,6 +627,11 @@ In another play, Twelfth Night, the clown Feste observes that it takes wit to pl
             "The third paragraph says Cordelia, who truly loves him, refuses to flatter and says only that she loves him as a daughter should, and in his anger he banishes her.",
             "第三段说真心爱他的考狄利娅拒绝奉承，只说她像女儿应当的那样爱他，李尔一怒之下放逐了她。",
           ),
+          [
+            t("It is her sisters who turn against him.", "背叛他的是她的姐姐们。"),
+            t("The largest share was the flatterers' prize.", "最大份额是给阿谀者的。"),
+            t("The Fool speaks up only afterwards.", "弄臣是事后才说话的。"),
+          ],
         ),
         ask(
           t("What is the main idea of the passage?", "这篇文章的主旨是什么？"),
@@ -522,6 +648,11 @@ In another play, Twelfth Night, the clown Feste observes that it takes wit to pl
             "The second paragraph states it, and the examples of Lear's Fool and Feste support it: the fools see the truth others miss and speak it through jokes.",
             "第二段点明了这一点，李尔的弄臣和费斯特的例子支持了它：弄臣看到别人看不到的真相，并通过笑话说出来。",
           ),
+          [
+            t("The passage says they are often the wisest.", "文中说他们常常最聪明。"),
+            t("King Lear is a tragedy.", "《李尔王》是悲剧。"),
+            t("Jesters were in great houses too.", "大户人家也有弄臣。"),
+          ],
         ),
       ],
       ["Shakespeare's", "Shakespeare", "Fool", "King", "Lear", "Cordelia", "Lear's", "Twelfth", "Night", "Feste", "Latin"],
@@ -555,6 +686,11 @@ Each production shows something different in the play. Comparing them helps us s
             "The second paragraph says audiences saw the lovers as truly young, which made their haste and their deaths feel even more tragic.",
             "第二段说观众看到的恋人确实很年轻，这使他们的匆忙和死亡显得更加悲惨。",
           ),
+          [
+            t("The gang war feel was Luhrmann's.", "帮派战争的感觉来自鲁赫曼。"),
+            t("West Side Story replaced the words.", "替换台词的是《西区故事》。"),
+            t("New York belongs to West Side Story too.", "纽约也属于《西区故事》。"),
+          ],
         ),
         ask(
           t('Why did Luhrmann\'s guns carry the brand name "Sword"?', "为什么鲁尔曼电影里的枪上印着“剑”这个品牌名？"),
@@ -568,6 +704,11 @@ Each production shows something different in the play. Comparing them helps us s
             'The third paragraph says the film kept Shakespeare\'s language, so printing "Sword" on the guns let the lines about swords still make sense.',
             "第三段说电影保留了莎士比亚的语言，所以在枪上印上“剑”使有关剑的台词仍然合理。",
           ),
+          [
+            t("Films are full of guns.", "电影里到处是枪。"),
+            t("Luhrmann set it in a modern city.", "鲁赫曼把故事放在现代城市。"),
+            t("Real swords were not the problem.", "问题不在于真剑。"),
+          ],
         ),
         ask(
           t("How does West Side Story change the meaning of the feud?", "《西区故事》如何改变了世仇的含义？"),
@@ -581,6 +722,11 @@ Each production shows something different in the play. Comparing them helps us s
             "The fourth paragraph says the rival gangs are white Americans and Puerto Rican immigrants, so the old feud becomes a story about prejudice.",
             "第四段说对立的帮派是美国白人和波多黎各移民，所以古老的世仇变成了一个关于偏见的故事。",
           ),
+          [
+            t("The feud remains real and deadly.", "世仇依然存在且致命。"),
+            t("Business families are Luhrmann's change.", "商业家族是鲁赫曼的改动。"),
+            t("It keeps the plot, feud and all.", "它保留了情节，包括世仇。"),
+          ],
         ),
       ],
       [

@@ -39,6 +39,11 @@ The legislature refused. Over the next decades, the original mill girls were gra
             "A bell woke them, called them to meals and sent them back to work: every part of the day was set by the mill.",
             "钟声叫醒她们、叫她们吃饭、又催她们回去干活：一天的每个环节都由工厂安排。",
           ),
+          [
+            t("Church is mentioned only on Sundays; the bell ruled every part of the day.", "教堂只在周日出现；钟声支配着一天的每个环节。"),
+            t("The bell was a signal to work, not music to enjoy.", "钟声是上工的信号，不是供人欣赏的音乐。"),
+            t("They worked from five to seven, six days a week, with little free time.", "她们每周六天从早五点干到晚七点，几乎没有空闲。"),
+          ],
         ),
         ask(
           t("Why did the women walk out in 1834 and 1836?", "这些女工为什么在1834年和1836年罢工？"),
@@ -52,6 +57,11 @@ The legislature refused. Over the next decades, the original mill girls were gra
             "The fourth paragraph says the owners cut wages and sped up the machines, asking each worker to tend more looms for less pay.",
             "第四段说，厂主削减工资、加快机器速度，让每个工人以更少的报酬照看更多织机。",
           ),
+          [
+            t("They protested to stay and get fair pay, not to go home.", "她们抗议是为了留下并争取公平报酬，不是回家。"),
+            t("The boarding houses kept running; they are not the cause.", "寄宿公寓照常运营，不是罢工原因。"),
+            t("Cotton prices fell, but the mills did not run out of cotton.", "棉价下跌了，但工厂并没有缺棉花。"),
+          ],
         ),
         ask(
           t(
@@ -68,6 +78,11 @@ The legislature refused. Over the next decades, the original mill girls were gra
             "The passage ends by saying they had shown that factory workers could organize, speak in public and demand a voice.",
             "文章最后说，她们证明了工厂工人能够组织起来、公开发言并争取话语权。",
           ),
+          [
+            t("The legislature refused the ten-hour day.", "州议会拒绝了十小时工作制。"),
+            t("The mills stayed with the owners.", "工厂仍归老板所有。"),
+            t("Immigrants replaced them; immigration did not stop.", "移民取代了她们；移民并没有停止。"),
+          ],
         ),
         ask(
           t("In which town were the cotton mills?", "这些棉纺厂在哪个城镇？"),
@@ -77,6 +92,11 @@ The legislature refused. Over the next decades, the original mill girls were gra
             "Thousands of young women left farms across New England to work in the cotton mills of Lowell, Massachusetts.",
             "成千上万的年轻女性离开新英格兰的农场，到马萨诸塞州洛厄尔的棉纺厂做工。",
           ),
+          [
+            t("New York is never named as the mill town.", "文中没说纽约是工厂所在地。"),
+            t("Detroit is not mentioned.", "文中没提底特律。"),
+            t("Manchester is not mentioned; the mills were in Lowell.", "文中没提曼彻斯特；工厂在洛厄尔。"),
+          ],
         ),
       ],
       ["New", "England", "Lowell", "Massachusetts", "United", "States", "Ireland"],
@@ -109,6 +129,11 @@ The poet Emma Lazarus had written in 1883 of a lamp lifted "beside the golden do
             "The second paragraph says the doctors looked for anyone who breathed with difficulty or walked with a limp.",
             "第二段说，医生们在寻找呼吸困难或走路一瘸一拐的人。",
           ),
+          [
+            t("The doctors watched; no one carried bags for them.", "医生在观察，并没帮人提包。"),
+            t("Counting is not their purpose; they looked for illness.", "他们不是在数人，而是在找病症。"),
+            t("Jobs were not handed out on the island.", "岛上并不分配工作。"),
+          ],
         ),
         ask(
           t("Which reason for coming to America does the passage NOT mention?", "文章没有提到以下哪个来美国的原因？"),
@@ -122,6 +147,11 @@ The poet Emma Lazarus had written in 1883 of a lamp lifted "beside the golden do
             "The fourth paragraph names poverty, hunger, persecution and relatives' letters, but not joining an army.",
             "第四段提到了贫困、饥饿、迫害和亲戚的来信，但没有提到参军。",
           ),
+          [
+            t("Escaping poverty and hunger is named in the passage.", "文中提到了逃离贫困和饥饿。"),
+            t("Fleeing persecution for religion or politics is named.", "文中提到了因宗教或政治逃离迫害。"),
+            t("Relatives' letters about jobs are named.", "文中提到了亲戚来信说有工作。"),
+          ],
         ),
         ask(
           t('What does the "golden door" stand for in the last paragraph?', "最后一段中的“金色的大门”象征什么？"),
@@ -135,6 +165,11 @@ The poet Emma Lazarus had written in 1883 of a lamp lifted "beside the golden do
             "Lazarus's image of a lamp beside the golden door welcomes the poor and tired; for millions, Ellis Island was that welcome.",
             "拉撒路笔下金门旁的明灯欢迎贫穷和疲惫的人；对数百万人来说，埃利斯岛就是那份欢迎。",
           ),
+          [
+            t("There was no real door of gold; it is Lazarus's image.", "并没有真的金门，这是拉扎勒斯的意象。"),
+            t("Most immigrants were poor, so it is not about their wealth.", "大多数移民很穷，与他们的财富无关。"),
+            t("The 1920s laws limited immigration, the opposite of a welcome.", "1920年代的法律限制移民，与欢迎相反。"),
+          ],
         ),
         ask(
           t("About how many people passed through Ellis Island between 1892 and 1954?", "1892年至1954年间约有多少人经过埃利斯岛？"),
@@ -144,6 +179,11 @@ The poet Emma Lazarus had written in 1883 of a lamp lifted "beside the golden do
             "Between 1892 and 1954, about twelve million people passed through Ellis Island.",
             "1892年至1954年间，约一千二百万人经过埃利斯岛。",
           ),
+          [
+            t("Twelve thousand is far too few; it was twelve million.", "一万两千太少了；是一千二百万。"),
+            t("One million is far too few.", "一百万太少了。"),
+            t("A hundred million is far too many.", "一亿太多了。"),
+          ],
         ),
       ],
       ["Ellis", "Island", "New", "York", "United", "States", "America", "Americans", "Europe", "Asia", "Emma", "Lazarus"],
@@ -184,6 +224,11 @@ A historian reading this letter would notice several things. It is a primary sou
             "Tom writes that he is not allowed to say where they are and that the officers read every letter.",
             "汤姆写道，他不能说出他们在哪里，而且军官会看每一封信。",
           ),
+          [
+            t("His mother asks what it is like; she wants to know more, not less.", "母亲问他那里怎样，她想多了解，不是嫌信长。"),
+            t("Paper is never mentioned as a problem.", "文中没说缺纸。"),
+            t("Spelling is never mentioned; officers read the letters.", "文中没提拼写；是军官会检查信件。"),
+          ],
         ),
         ask(
           t('Why might Tom claim that "our spirits are good"?', "汤姆为什么可能会说“我们士气很好”？"),
@@ -197,6 +242,11 @@ A historian reading this letter would notice several things. It is a primary sou
             "The historian notes that the letter was written for a worried mother, so the claim may be meant to comfort her.",
             "历史学家指出，这封信是写给担心的母亲的，所以这句话可能是为了安慰她。",
           ),
+          [
+            t("The food is mentioned, but no one ordered him to praise it.", "提到了食物，但没人命令他夸。"),
+            t("He tells her not to worry; he does not ask to come home.", "他让她别担心，并没说要立刻回家。"),
+            t("The letter is to his mother, not a newspaper.", "信是写给母亲的，不是报纸。"),
+          ],
         ),
         ask(
           t(
@@ -213,12 +263,22 @@ A historian reading this letter would notice several things. It is a primary sou
             "The last paragraph says such details are more reliable because he had no reason to invent them.",
             "最后一段说，这些细节更可靠，因为他没有理由编造它们。",
           ),
+          [
+            t("The officers read the letters; they did not add to them.", "军官读信，并不往里加内容。"),
+            t("Newspapers are not where these details come from.", "这些细节不是来自报纸。"),
+            t("Capital letters are not the reason; he had no reason to invent them.", "原因不在大写，而在他没有理由编造。"),
+          ],
         ),
         ask(
           t("What has Tom kept in his pocket?", "汤姆在口袋里留着什么？"),
           t("Little Annie's drawing", "小安妮的画"),
           [t("A photograph of his father", "他父亲的照片"), t("A piece of the cake", "一块蛋糕"), t("His mother's letter", "他母亲的信")],
           t("Tell little Annie that I have kept her drawing in my pocket.", "告诉小安妮，我把她的画留在口袋里了。"),
+          [
+            t("A photograph of his father is not mentioned; he apologizes to him.", "文中没提父亲的照片；他是向父亲道歉。"),
+            t("The cake was shared to the last crumb.", "蛋糕被分得一点不剩。"),
+            t("Her letter is not what he keeps; he keeps Annie's drawing.", "他保存的不是母亲的信，是安妮的画。"),
+          ],
         ),
       ],
       ["France", "Davies", "Annie", "Tom"],
@@ -251,6 +311,11 @@ Historians still debate the exact causes. Most agree that the crash revealed dee
             "The second paragraph says prices climbed faster than real growth, so people bought because they expected others to buy.",
             "第二段说，股价上涨的速度远超实际增长，所以人们买入是因为预期别人也会买入。",
           ),
+          [
+            t("Prices climbed far faster than the companies grew.", "股价涨得远比公司增长快。"),
+            t("The government did not set prices; buyers did.", "价格不是政府定的，是买家推动的。"),
+            t("Millions of ordinary Americans bought shares.", "数百万普通美国人都买了股票。"),
+          ],
         ),
         ask(
           t("How did bank failures spread, according to the passage?", "根据文章，银行倒闭是如何蔓延的？"),
@@ -264,6 +329,11 @@ Historians still debate the exact causes. Most agree that the crash revealed dee
             "The fourth paragraph says frightened people rushed to withdraw their savings from other banks, which caused even more to collapse.",
             "第四段说，惊慌的人们争相从其他银行取出存款，导致更多银行倒闭。",
           ),
+          [
+            t("The government was slow to act, not closing banks on purpose.", "政府行动迟缓，并没故意关闭银行。"),
+            t("Lending to factories is not how the failures spread.", "向工厂放贷不是倒闭蔓延的方式。"),
+            t("Moving money abroad is never mentioned.", "文中没提把钱转到国外。"),
+          ],
         ),
         ask(
           t("What is the cycle described in the fifth paragraph?", "第五段描述的是什么样的循环？"),
@@ -277,6 +347,11 @@ Historians still debate the exact causes. Most agree that the crash revealed dee
             "People bought fewer goods, factories laid off workers, and those workers had even less to spend, so the cycle repeated.",
             "人们买的东西更少，工厂解雇工人，这些工人可花的钱更少，于是循环往复。",
           ),
+          [
+            t("Prices and wages did not rise; spending fell.", "物价和工资没有上涨，是消费下降。"),
+            t("People had less money, not more savings.", "人们钱更少了，并没有更多储蓄。"),
+            t("Factories laid off workers, not hired more.", "工厂裁员，而不是招工。"),
+          ],
         ),
         ask(
           t("What was the day prices collapsed in 1929 later called?", "1929年股价暴跌的那一天后来被称为什么？"),
@@ -286,6 +361,11 @@ Historians still debate the exact causes. Most agree that the crash revealed dee
             "Five days later, on a day later called Black Tuesday, prices collapsed.",
             "五天后，在后来被称为“黑色星期二”的那天，股价暴跌。",
           ),
+          [
+            t("Black Friday is not the name given.", "文中给出的名字不是“黑色星期五”。"),
+            t("Red Monday is not mentioned.", "文中没提“红色星期一”。"),
+            t("The Day of Doubt is not mentioned; it was Black Tuesday.", "文中没提“怀疑之日”；是“黑色星期二”。"),
+          ],
         ),
       ],
       ["American", "Americans", "New", "York", "Stock", "Exchange", "October", "Black", "Tuesday", "United", "States"],
@@ -316,6 +396,11 @@ Looking at a poster, a historian asks: Who made this? For whom? What did they wa
             "The second paragraph says posters were cheap to print and could be placed anywhere, from stations to factories.",
             "第二段说，海报印制便宜，可以张贴在从车站到工厂的任何地方。",
           ),
+          [
+            t("Other art is never said to be banned.", "文中没说其他艺术被禁止。"),
+            t("The posters were for people at home, not sent to the enemy.", "海报是给国内民众看的，不是寄给敌国。"),
+            t("Propaganda often showed only one side.", "宣传往往只呈现一面。"),
+          ],
         ),
         ask(
           t("What does the passage say posters show historians?", "文章说海报向历史学家展示了什么？"),
@@ -329,6 +414,11 @@ Looking at a poster, a historian asks: Who made this? For whom? What did they wa
             "The fourth paragraph says posters do not show what people believed, but what governments wanted them to believe.",
             "第四段说，海报并不显示人们实际相信什么，而是显示政府希望他们相信什么。",
           ),
+          [
+            t("The passage says they do not show what people actually believed.", "文中说它们并不反映人们真实的想法。"),
+            t("Soldier numbers are not what posters show.", "海报并不显示士兵人数。"),
+            t("Prices are not what posters show.", "海报并不显示物价。"),
+          ],
         ),
         ask(
           t(
@@ -345,12 +435,25 @@ Looking at a poster, a historian asks: Who made this? For whom? What did they wa
             "The passage says such a poster also tells us that some people needed to be convinced that women could do the job.",
             "文章说，这样的海报也告诉我们，有些人需要被说服，相信妇女能做好这份工作。",
           ),
+          [
+            t(
+              "The need to convince suggests doubt about women's ability, not unwillingness.",
+              "需要说服说明有人怀疑女性的能力，不是女性不愿工作。",
+            ),
+            t("Factories needed more workers, so they were not closing.", "工厂需要更多工人，并没有关闭。"),
+            t("The posters asked for wartime work, so the war was still on.", "海报号召战时劳动，说明战争仍在进行。"),
+          ],
         ),
         ask(
           t("What did governments want everyone to buy during the war?", "战争期间政府希望每个人买什么？"),
           t("War bonds", "战争债券"),
           [t("New cars", "新汽车"), t("Radios", "收音机"), t("Posters", "海报")],
           t("They needed everyone to buy war bonds that helped pay for the fighting.", "他们需要每个人购买战争债券来帮助支付战争费用。"),
+          [
+            t("Cars are not what they asked people to buy.", "他们并不是号召买车。"),
+            t("Radios are not mentioned as a purchase.", "文中没提买收音机。"),
+            t("Posters were the tool, not what people bought.", "海报是工具，不是要人买的东西。"),
+          ],
         ),
       ],
       ["Britain", "United", "States"],
@@ -384,6 +487,17 @@ The new nations faced enormous challenges. Many had borders drawn by colonial of
             "The second paragraph says the campaigns showed that British rule depended on the cooperation of Indians, and that it could be withdrawn.",
             "第二段说，这些运动表明英国的统治依赖于印度人的合作，而这种合作是可以撤回的。",
           ),
+          [
+            t("The campaigns were nonviolent, with no battles.", "这些运动是非暴力的，没有战斗。"),
+            t(
+              "Indians refused to buy British cloth; Britain was not asked to buy Indian cloth.",
+              "是印度人拒买英国布，不是让英国买印度布。",
+            ),
+            t(
+              "Partition came from disputes between Hindu and Muslim leaders, not Gandhi's campaigns.",
+              "分治源于印度教和穆斯林领袖之争，不是甘地的运动。",
+            ),
+          ],
         ),
         ask(
           t("What was partition, as described in the passage?", "文章所描述的“分治”是什么？"),
@@ -397,6 +511,11 @@ The new nations faced enormous challenges. Many had borders drawn by colonial of
             "The third paragraph says disputes led to partition: British India was divided into two countries, India and Pakistan.",
             "第三段说，分歧导致了分治：英属印度被分成印度和巴基斯坦两个国家。",
           ),
+          [
+            t("The salt tax was what Gandhi's march defied.", "盐税是甘地游行所反抗的。"),
+            t("The Assembly was where Nehru spoke.", "制宪会议是尼赫鲁演讲的地方。"),
+            t("Nonviolent resistance was Gandhi's method.", "非暴力抵抗是甘地的方法。"),
+          ],
         ),
         ask(
           t("Why did many new nations face difficulties with their borders?", "为什么许多新国家在边界问题上面临困难？"),
@@ -410,6 +529,11 @@ The new nations faced enormous challenges. Many had borders drawn by colonial of
             "The last paragraph says many borders were drawn by colonial officials who knew little about the peoples living there.",
             "最后一段说，许多边界是由对当地民族了解甚少的殖民官员划定的。",
           ),
+          [
+            t("They did have borders, drawn badly.", "它们有边界，只是划得不好。"),
+            t("Colonial officials, not the peoples, drew them.", "边界是殖民官员划的，不是当地人。"),
+            t("Trade with neighbors is not mentioned.", "文中没提与邻国的贸易。"),
+          ],
         ),
         ask(
           t("Who spoke at midnight in New Delhi as India became independent?", "印度独立的午夜，谁在新德里发表讲话？"),
@@ -419,6 +543,11 @@ The new nations faced enormous challenges. Many had borders drawn by colonial of
             "At midnight in the hall of the Constituent Assembly in New Delhi, Jawaharlal Nehru rose to speak.",
             "午夜时分，在新德里制宪会议大厅里，贾瓦哈拉尔·尼赫鲁起身讲话。",
           ),
+          [
+            t("Gandhi led the campaigns but did not give this speech.", "甘地领导了运动，但没发表这次演讲。"),
+            t("The British king is not mentioned.", "文中没提英国国王。"),
+            t("No general spoke; Nehru did.", "没有将军发言；讲话的是尼赫鲁。"),
+          ],
         ),
       ],
       [
@@ -475,6 +604,11 @@ That night, strangers embraced and climbed onto the wall with hammers. Within a 
             "The first paragraph says the government of East Germany built it to stop its citizens from escaping to the West.",
             "第一段说，东德政府修建它是为了阻止本国公民逃往西方。",
           ),
+          [
+            t("Floods are never mentioned.", "文中没提洪水。"),
+            t("Football clubs are not mentioned.", "文中没提足球俱乐部。"),
+            t("It kept East Germans in, not Western soldiers out.", "它是把东德人关在里面，不是把西方士兵挡在外面。"),
+          ],
         ),
         ask(
           t("What role did the spokesman's mistake play?", "发言人的失误起到了什么作用？"),
@@ -488,6 +622,11 @@ That night, strangers embraced and climbed onto the wall with hammers. Within a 
             'He said "Immediately, without delay," though the rule was meant for the next day, and crowds rushed to the wall.',
             "他说“立即生效，毫不拖延”，尽管新规定本应第二天才实施，于是人群涌向了柏林墙。",
           ),
+          [
+            t("The guards had no orders and opened the gates.", "卫兵没有接到命令，打开了大门。"),
+            t("He announced free travel, not a taller wall.", "他宣布的是自由出行，不是加高围墙。"),
+            t('He answered, confusedly, "Immediately, without delay."', "他困惑地回答“立即，毫不延迟”。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest about the fall of the wall?", "最后一句话暗示了柏林墙倒塌的什么情况？"),
@@ -504,6 +643,11 @@ That night, strangers embraced and climbed onto the wall with hammers. Within a 
             '"A door that history was already pushing on" means weak economies, protests and reforms were already making change likely.',
             "“一扇历史早已在推动的门”意味着疲弱的经济、抗议和改革已经让变化成为可能。",
           ),
+          [
+            t("The sentence says history was already pushing, so not one accident alone.", "这句说历史早已在推动，并非仅靠一次意外。"),
+            t("Crowds had marched for change for weeks.", "人群已连续数周游行要求变革。"),
+            t("The announcement was a confused mistake, not a careful plan.", "这个宣布是慌乱的失误，不是精心策划。"),
+          ],
         ),
       ],
       [
@@ -557,6 +701,11 @@ Today, people disagree about how much countries should depend on each other. Som
             "The second paragraph says containers of a standard size could be lifted straight from ships onto trains and trucks, cutting costs.",
             "第二段说，标准尺寸的集装箱可以直接从船上吊到火车和卡车上，从而降低了成本。",
           ),
+          [
+            t("Containers were steel, not gold.", "集装箱是钢制的，不是金的。"),
+            t("Crews are not mentioned; cranes did the lifting.", "文中没提船员；是起重机吊装。"),
+            t("Containers moved by ship, train and truck, not air.", "集装箱由船、火车和卡车运输，不是空运。"),
+          ],
         ),
         ask(
           t("Who lost from globalization, according to the passage?", "根据文章，谁在全球化中受损？"),
@@ -570,6 +719,11 @@ Today, people disagree about how much countries should depend on each other. Som
             "The fifth paragraph says factories in older industrial towns closed as companies moved production abroad, and many workers lost their jobs.",
             "第五段说，随着公司把生产转移到国外，老工业城镇的工厂关闭，许多工人失去了工作。",
           ),
+          [
+            t("Buyers gained from cheaper goods.", "消费者因商品更便宜而受益。"),
+            t("Asian villagers gained jobs and wages.", "亚洲村民获得了工作和工资。"),
+            t("Companies used the internet to coordinate; they are not named as losers.", "公司利用互联网协调，文中没说它们受损。"),
+          ],
         ),
         ask(
           t("What does the word fragile most likely mean in the fifth paragraph?", "第五段中的 fragile 最可能是什么意思？"),
@@ -579,6 +733,11 @@ Today, people disagree about how much countries should depend on each other. Som
             "Context clue: supply chains proved fragile when shortages appeared quickly as factories closed and ships were delayed.",
             "上下文线索：工厂关闭、船只延误后很快出现短缺，说明供应链是 fragile 的，即容易被打断。",
           ),
+          [
+            t("Shortages appeared quickly, the opposite of strong and reliable.", "短缺很快出现，与坚固可靠相反。"),
+            t("Cost is not the point; disruption is.", "重点不在便宜，而在易受干扰。"),
+            t("Supply chains were long-standing, not new.", "供应链早已存在，并不是新的。"),
+          ],
         ),
       ],
       ["Asia", "Europe", "North", "America"],

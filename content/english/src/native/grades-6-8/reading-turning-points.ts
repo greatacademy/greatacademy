@@ -40,6 +40,11 @@ Daniel worked at the bakery all summer. By August, he could shape rolls faster t
             t("He liked getting up early", "他喜欢早起"),
           ],
           t("The first paragraph says he wanted a new bike more than anything.", "第一段说，他最想要的就是一辆新自行车。"),
+          [
+            t("Baking came with the job; the bike came first.", "烘焙是工作带来的，他最初想的是自行车。"),
+            t("Mr. Okafor is a stranger, not his uncle.", "奥卡福先生是陌生人，不是他舅舅。"),
+            t("He had never gotten up at five.", "他从没五点起过床。"),
+          ],
         ),
         ask(
           t("What does Mr. Okafor's response to Daniel's mistakes show about him?", "奥卡福先生对丹尼尔犯错的反应说明了他是怎样的人？"),
@@ -53,6 +58,11 @@ Daniel worked at the bakery all summer. By August, he could shape rolls faster t
             'Each time Daniel made a mistake, Mr. Okafor only said "Again" and showed him once more, which shows patience.',
             "每次丹尼尔犯错，奥卡福先生只说一句“再来”，然后再示范一遍，这表现了他的耐心。",
           ),
+          [
+            t('He only says "Again" and never shouts.', "他只说“再来”，从不发火。"),
+            t("He sees each mistake and shows him again.", "他看到了每个错误，并再示范一次。"),
+            t("He keeps teaching instead of pushing him out.", "他一直教，没有赶他走。"),
+          ],
         ),
         ask(
           t("What is the turning point for Daniel in the story?", "故事中丹尼尔的转折点是什么？"),
@@ -66,12 +76,22 @@ Daniel worked at the bakery all summer. By August, he could shape rolls faster t
             "The last paragraph says that years later, what Daniel remembered was not the bike but the old woman and the baker's generosity.",
             "最后一段说，多年以后丹尼尔记住的不是自行车，而是那位老妇人和面包师的慷慨。",
           ),
+          [
+            t("Burning rolls was one of many first-week mistakes.", "烤焦面包只是第一周的许多失误之一。"),
+            t("The bike mattered less than he expected.", "自行车没他想的那么重要。"),
+            t("Walking past the sign comes before the story turns.", "从招牌前走过是故事转折之前的事。"),
+          ],
         ),
         ask(
           t("What time did Mr. Okafor ask Daniel to get up?", "奥卡福先生问丹尼尔能不能几点起床？"),
           t("At five", "五点"),
           [t("At seven", "七点"), t("At noon", "中午"), t("At midnight", "半夜")],
           t('"Can you get up at five?" Mr. Okafor asked.', "奥卡福先生问：“你能五点起床吗？”"),
+          [
+            t("Seven is too late for a bakery.", "七点对面包店来说太晚了。"),
+            t("Noon is far too late.", "中午太晚了。"),
+            t("Midnight is too early.", "午夜太早了。"),
+          ],
         ),
       ],
       ["Okafor's", "Okafor", "Daniel", "HELP", "WANTED", "August"],
@@ -106,6 +126,11 @@ That afternoon, when a girl in her class asked about the strange word on her not
             "The first paragraph says she did not cry but stopped talking to them for three days.",
             "第一段说，她没有哭，而是三天没和他们说话。",
           ),
+          [
+            t("The story says she did not cry.", "故事说她没有哭。"),
+            t("She was clearly not excited.", "她显然并不兴奋。"),
+            t("She never asks to live with Lin.", "她从没要求和林住。"),
+          ],
         ),
         ask(
           t('Why does Mei feel "as if she had disappeared"?', "为什么梅觉得自己“好像消失了”？"),
@@ -119,6 +144,11 @@ That afternoon, when a girl in her class asked about the strange word on her not
             "Lin's answers grow shorter, and she mentions a party Mei was not invited to, so Mei feels left out of her old life too.",
             "林的回复越来越短，还提到一个没邀请梅的聚会，所以梅觉得自己连过去的生活也被排除在外了。",
           ),
+          [
+            t("She is at home, not lost.", "她在家里，并没迷路。"),
+            t("She turned the phone off herself.", "手机是她自己关掉的。"),
+            t("Her parents are not the cause.", "原因不在她父母。"),
+          ],
         ),
         ask(
           t("Which statement best expresses the theme of the story?", "哪一句最能表达这个故事的主题？"),
@@ -132,12 +162,22 @@ That afternoon, when a girl in her class asked about the strange word on her not
             "The old man's advice, to let the city be something new, changes Mei, and she begins to open up. The other choices are a plot summary, a topic, or an idea the story does not show.",
             "老人的建议——让这座城市成为新的东西——改变了梅，她开始敞开心扉。其他选项分别是情节概述、话题，或故事没有表现的观点。",
           ),
+          [
+            t("That is the plot, not the theme.", "这是情节，不是主题。"),
+            t("One word is a topic, not a theme.", "一个词只是话题，不是主题。"),
+            t("Her old friend drifts away.", "她的老朋友渐渐疏远。"),
+          ],
         ),
         ask(
           t("On which floor was Mei's new apartment?", "梅的新公寓在几楼？"),
           t("The twenty-second floor", "二十二楼"),
           [t("The second floor", "二楼"), t("The tenth floor", "十楼"), t("The top floor of a house by the sea", "海边房子的顶楼")],
           t("The new apartment was on the twenty-second floor.", "新公寓在二十二楼。"),
+          [
+            t("Two is far too low.", "二楼太低了。"),
+            t("Ten is not the number given.", "十楼不是文中的数字。"),
+            t("The house by the sea was her old home.", "海边的房子是她的旧家。"),
+          ],
         ),
       ],
       ["Mei", "Lin"],
@@ -170,6 +210,11 @@ She showed him her drawings. They were good. By the end of the ride, Omar realiz
             "The second paragraph says it was the kind of nod you give someone you barely know.",
             "第二段说，那是你对几乎不认识的人才会做的那种点头。",
           ),
+          [
+            t("He is not angry; he is distant.", "他不是生气，而是疏远。"),
+            t("He saw Omar and nodded.", "他看见了奥马尔并点了头。"),
+            t("He turned away, not inviting him.", "他转过身去，并没邀请他。"),
+          ],
         ),
         ask(
           t('What does the word "resentful" most likely mean in the third paragraph?', '第三段中的 "resentful" 最可能是什么意思？'),
@@ -179,6 +224,11 @@ She showed him her drawings. They were good. By the end of the ride, Omar realiz
             "Omar imagines saying cruel things to Theo and lies awake replaying conversations, which shows bitterness at being hurt.",
             "奥马尔想象对西奥说刻薄的话，夜里躺着反复回想对话，这表现出受伤后的怨恨。",
           ),
+          [
+            t("He replays conversations, not calm.", "他反复回想对话，并不平静。"),
+            t("He feels hot-faced, not proud.", "他脸发烫，并不自豪。"),
+            t("He lies awake, not sleepy.", "他彻夜难眠，并不困倦。"),
+          ],
         ),
         ask(
           t("How does Omar change by the end of the story?", "到故事结尾，奥马尔有了什么变化？"),
@@ -192,6 +242,11 @@ She showed him her drawings. They were good. By the end of the ride, Omar realiz
             "After his grandmother's words, Omar invites Rosa to sit with him and realizes he has not thought about Theo once.",
             "听了奶奶的话后，奥马尔邀请罗莎和他坐在一起，并发现自己一次也没想起西奥。",
           ),
+          [
+            t("Theo never comes back.", "西奥始终没回来。"),
+            t("The team is Theo's choice, not Omar's.", "篮球队是西奥的选择，不是奥马尔的。"),
+            t("He makes a new friend at once.", "他马上交了新朋友。"),
+          ],
         ),
         ask(
           t("Who sat with Omar on the bus at the end?", "最后谁和奥马尔坐在一起？"),
@@ -201,6 +256,11 @@ She showed him her drawings. They were good. By the end of the ride, Omar realiz
             "A quiet girl named Rosa, who always sat alone with a sketchbook, sat beside him.",
             "一个总是拿着素描本独自坐着的安静女孩罗莎坐到了他旁边。",
           ),
+          [
+            t("Theo sat with the team.", "西奥和球队坐在一起。"),
+            t("His grandmother was on the porch, not the bus.", "奶奶在门廊上，不在车上。"),
+            t("The team boys sat with Theo.", "球队男孩们和西奥坐在一起。"),
+          ],
         ),
       ],
       ["Omar", "Theo", "Rosa"],
@@ -230,6 +290,11 @@ I went every day that summer. Some days he knew me, and most days he did not. It
             t("He did not like gardening", "他不喜欢种菜"),
           ],
           t("The second paragraph says he could not stand to see his grandfather like that.", "第二段说，他无法忍受看到爷爷变成那样。"),
+          [
+            t("No summer school is mentioned.", "文中没提暑期学校。"),
+            t("His grandfather was polite, not unkind.", "爷爷很客气，并没赶他走。"),
+            t("He loved the garden as a child.", "他小时候就喜欢花园。"),
+          ],
         ),
         ask(
           t("What does the fourth paragraph do?", "第四段起什么作用？"),
@@ -243,6 +308,11 @@ I went every day that summer. Some days he knew me, and most days he did not. It
             "The paragraph goes back to the spring when the narrator was six, an earlier time, which is a flashback.",
             "这一段回到叙述者六岁时的那个春天，即更早的时间，所以是倒叙。",
           ),
+          [
+            t("The tomatoes come back.", "番茄后来又长好了。"),
+            t("The next morning comes in the fifth paragraph.", "第二天早上在第五段。"),
+            t("The illness is never named there.", "那一段没提病名。"),
+          ],
         ),
         ask(
           t('What does the last line, "I know who I was," suggest?', "最后一句“我知道我是谁”暗示了什么？"),
@@ -259,12 +329,22 @@ I went every day that summer. Some days he knew me, and most days he did not. It
             "Being recognized has stopped mattering as much; he knows he is the grandson who came back to help.",
             "被认出来已经没那么重要了；他知道自己是那个回来帮忙的孙子。",
           ),
+          [
+            t("He knows his own name well.", "他很清楚自己的名字。"),
+            t("The grandfather still does not know him.", "爷爷仍然不认识他。"),
+            t("Farming is not his goal.", "务农不是他的志向。"),
+          ],
         ),
         ask(
           t("What was dying in Grandfather's garden?", "爷爷的花园里什么快死了？"),
           t("His tomatoes", "他的西红柿"),
           [t("His roses", "他的玫瑰"), t("His apple tree", "他的苹果树"), t("His beans", "他的豆子")],
           t("Grandfather's tomatoes were dying, because he kept forgetting to water them.", "爷爷的西红柿快死了，因为他总忘了浇水。"),
+          [
+            t("Roses are not in the garden.", "花园里没提玫瑰。"),
+            t("No apple tree is mentioned.", "文中没提苹果树。"),
+            t("Beans are not mentioned.", "文中没提豆子。"),
+          ],
         ),
       ],
       ["June", "Grandfather's", "Grandfather", "August"],
@@ -299,6 +379,11 @@ Kenji raked every Saturday that fall. It was the least fun he had ever had. Some
             "The story turns on what happens inside Kenji: he hides, cannot sleep, and finally decides to tell the truth. It is a conflict with himself.",
             "故事围绕健二的内心展开：他躲起来，睡不着，最后决定说出真相。这是人与自我的冲突。",
           ),
+          [
+            t("His friends ran, but he did not fight them.", "朋友们跑了，但他没和他们吵。"),
+            t("No game result is given.", "文中没给比赛结果。"),
+            t("She never hunts for anyone.", "她从没去找肇事者。"),
+          ],
         ),
         ask(
           t("Why does the memory of the soup matter to Kenji's decision?", "关于那壶汤的回忆为什么影响了健二的决定？"),
@@ -312,6 +397,11 @@ Kenji raked every Saturday that fall. It was the least fun he had ever had. Some
             "The fourth paragraph recalls her bringing soup without being asked, which makes running away feel even worse to Kenji.",
             "第四段回忆她主动送来热汤，这让健二觉得逃走更说不过去了。",
           ),
+          [
+            t("Hunger has nothing to do with it.", "这与饥饿无关。"),
+            t("She was at work all day.", "她整天都在上班。"),
+            t("The soup was a gift, not a debt.", "汤是礼物，不是欠债。"),
+          ],
         ),
         ask(
           t("Why is the ending a little ironic?", "为什么说结尾有点反讽意味？"),
@@ -325,12 +415,22 @@ Kenji raked every Saturday that fall. It was the least fun he had ever had. Some
             'The last lines set "the least fun he had ever had" against "he did not mind," an unexpected turn that shows his change.',
             "最后几句把“他经历过的最无趣的事”和“他并不介意”放在一起，这个出人意料的转折表现了他的变化。",
           ),
+          [
+            t("The ball broke her window.", "是球打破了她的窗户。"),
+            t("He gave up the game money.", "他放弃了买游戏的钱。"),
+            t("His friends kept running.", "他的朋友们一直在跑。"),
+          ],
         ),
         ask(
           t("How old was Mrs. Alvarez?", "阿尔瓦雷斯太太多大年纪？"),
           t("Seventy-two", "七十二岁"),
           [t("Fifty", "五十岁"), t("Ninety", "九十岁"), t("Forty-two", "四十二岁")],
           t("She was seventy-two and lived alone.", "她七十二岁，独自生活。"),
+          [
+            t("Fifty is too young.", "五十岁太年轻。"),
+            t("Ninety is too old.", "九十岁太老。"),
+            t("Forty-two reverses the digits.", "四十二把数字颠倒了。"),
+          ],
         ),
       ],
       ["Kenji's", "Kenji", "Alvarez's", "Alvarez"],
@@ -363,6 +463,11 @@ The next season, our coach pinned a new photo in the locker room. It was the oth
             "The fifth paragraph says they lost because they were sure they could not lose; after scoring, they stopped trying and showed off.",
             "第五段说，他们输是因为确信自己不会输；进球之后，他们不再努力，只顾炫耀。",
           ),
+          [
+            t("The other team was smaller.", "对方队伍更矮小。"),
+            t("They ignored the coach.", "他们没听教练的话。"),
+            t("Mud came only at the end.", "泥泞只在最后出现。"),
+          ],
         ),
         ask(
           t('What makes the newspaper headline "Unstoppable" ironic?', "报纸标题“势不可挡”为什么具有反讽意味？"),
@@ -376,6 +481,11 @@ The next season, our coach pinned a new photo in the locker room. It was the oth
             "Situational irony: what happens is the opposite of what the headline, and everyone, expected.",
             "这是情境反讽：发生的事情与标题和所有人的预期正好相反。",
           ),
+          [
+            t("The paper named the right team.", "报纸写的是对的队。"),
+            t("Cutting it out happens before the loss.", "剪报是在输球之前。"),
+            t("They had uniforms, just not matching.", "他们有队服，只是不统一。"),
+          ],
         ),
         ask(
           t("Why does the coach put up the photo of the other team?", "教练为什么贴出对方球队的照片？"),
@@ -389,12 +499,22 @@ The next season, our coach pinned a new photo in the locker room. It was the oth
             "The photo shows what overconfidence cost them, and no one asks to take it down because they all understand the lesson.",
             "这张照片提醒他们过度自信付出的代价，没有人要求撤下，因为大家都明白这个教训。",
           ),
+          [
+            t("The photo honors them; no one mocks them.", "照片是向对手致敬，没人取笑他们。"),
+            t("He keeps coaching the Hawks.", "他继续执教鹰队。"),
+            t("No newspaper asks for it.", "没有报社要求这样做。"),
+          ],
         ),
         ask(
           t("How soon did the Hawks score their first goal?", "雄鹰队开场多久进了第一球？"),
           t("Just three minutes in", "开场仅三分钟"),
           [t("In the last minute", "最后一分钟"), t("In the second half", "下半场"), t("They never scored", "一球未进")],
           t("We scored first, just three minutes in.", "开场才三分钟我们就先进了球。"),
+          [
+            t("They scored early, not last.", "他们很早就进球了，不是最后。"),
+            t("The second half is when the other team scored.", "下半场是对方进球的时候。"),
+            t("They did score once.", "他们确实进了一个球。"),
+          ],
         ),
       ],
       ["Hawks", "Unstoppable"],
@@ -427,6 +547,11 @@ When my parents came home, they found us both asleep in the armchair. I did not 
             "The second and third paragraphs show the parents too busy to help or ask about the narrator's day.",
             "第二段和第三段写父母忙得顾不上帮忙，也不过问叙述者的一天。",
           ),
+          [
+            t("The baby is healthy, just loud.", "婴儿很健康，只是很吵。"),
+            t("No move is mentioned.", "文中没提搬家。"),
+            t("No wish for a sister is mentioned.", "文中没提想要妹妹。"),
+          ],
         ),
         ask(
           t("Which detail best shows the narrator's turning point?", "哪个细节最能表现叙述者的转折点？"),
@@ -440,6 +565,11 @@ When my parents came home, they found us both asleep in the armchair. I did not 
             "When Sami stops crying and holds the narrator's finger, the narrator's feelings toward him change.",
             "当萨米不哭了、抓住叙述者的手指时，叙述者对他的感情发生了变化。",
           ),
+          [
+            t("Painting the room comes before the birth.", "刷房间是在出生之前。"),
+            t("The project shows neglect, not change.", "科学作业说明被冷落，不是转变。"),
+            t("The library is where the narrator hid.", "图书馆是叙述者躲避的地方。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest about the narrator?", "最后一句暗示了叙述者的什么？"),
@@ -453,6 +583,11 @@ When my parents came home, they found us both asleep in the armchair. I did not 
             "Holding Sami the whole time so he would not stop needing the narrator shows a new, protective love.",
             "叙述者一直抱着萨米，怕他不再需要自己，这表现出一种新的、想要保护他的爱。",
           ),
+          [
+            t("The narrator says nothing angry.", "叙述者没说气话。"),
+            t("Fear of the dark is not the point.", "怕黑不是重点。"),
+            t("The narrator stays, holding Sami.", "叙述者留下，抱着萨米。"),
+          ],
         ),
       ],
       ["Sami"],
@@ -483,6 +618,11 @@ We drove home on the fifth day without ever having seen the blue lake. Years lat
             "The first paragraph describes the calendar, Dad's study of the trail maps and the cabin Mom booked.",
             "第一段描写了日历、爸爸对路线地图的研究和妈妈预订的小屋。",
           ),
+          [
+            t("The broken car shows what went wrong.", "抛锚的车说明出了问题。"),
+            t("The cards come after the power cut.", "纸牌是停电后才出现的。"),
+            t("The rain is a setback, not planning.", "下雨是挫折，不是计划。"),
+          ],
         ),
         ask(
           t("What is the turning point of the trip?", "这次旅行的转折点是什么？"),
@@ -496,6 +636,11 @@ We drove home on the fifth day without ever having seen the blue lake. Years lat
             "On the third night, the candles and the card game turn the family's misery into laughter.",
             "第三天晚上，烛光和纸牌游戏把一家人的沮丧变成了欢笑。",
           ),
+          [
+            t("The breakdown starts the trouble.", "抛锚是麻烦的开始。"),
+            t("Arriving late adds to the trouble.", "深夜到达只是增添了麻烦。"),
+            t("Going home is the end, not the turn.", "回家是结局，不是转折。"),
+          ],
         ),
         ask(
           t("Why is the ending ironic?", "为什么说结尾具有反讽意味？"),
@@ -509,6 +654,11 @@ We drove home on the fifth day without ever having seen the blue lake. Years lat
             "What happens is the opposite of what anyone would expect: the ruined trip is remembered as the best one.",
             "发生的事与任何人的预期相反：那次搞砸的旅行反而被记为最好的一次。",
           ),
+          [
+            t("They never see the blue lake.", "他们始终没看到蓝湖。"),
+            t("It rained the whole time.", "一直在下雨。"),
+            t("They still talk of their vacations.", "他们还在谈论各次假期。"),
+          ],
         ),
       ],
       [],

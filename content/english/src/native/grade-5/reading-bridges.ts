@@ -43,6 +43,11 @@ So the secret of a bridge is not only what it is made of, but how it is shaped.`
             "The paper did not change, but its shape did, and the folded shape held the coin. The last sentence states this main point.",
             "纸没有变，变的是形状，折过的形状托住了硬币。最后一句说明了这个要点。",
           ),
+          [
+            t("Metal is never compared. Only the paper's shape changed.", "文中从没和金属比较。变的只是纸的形状。"),
+            t("The coin is just a test load, not a lesson about bridges.", "硬币只是试验用的重物，不是讲桥的道理。"),
+            t("The books are only supports. They stayed the same in both tries.", "书只是支架，两次试验中都没变。"),
+          ],
         ),
         ask(
           t("What is tension?", "什么是拉力？"),
@@ -56,6 +61,11 @@ So the secret of a bridge is not only what it is made of, but how it is shaped.`
             "The second paragraph defines tension as a pulling force that stretches material apart. Squeezing is compression.",
             "第二段把 tension 定义为把材料拉开的拉力。挤压是 compression。",
           ),
+          [
+            t("A pushing force that squeezes is compression.", "挤压的推力是压力。"),
+            t("A truck is a load. Tension is a force inside the material.", "卡车是载荷。拉力是材料内部的力。"),
+            t("The fan is the shape from the paper test.", "扇子是纸张试验中的形状。"),
+          ],
         ),
         ask(
           t("Why do most modern bridges use steel?", "为什么大多数现代桥梁使用钢材？"),
@@ -69,6 +79,11 @@ So the secret of a bridge is not only what it is made of, but how it is shaped.`
             "The third paragraph says stone and concrete crack when pulled, but steel is strong in both compression and tension.",
             "第三段说，石头和混凝土被拉时会开裂，而钢在受压和受拉时都很坚固。",
           ),
+          [
+            t("Never cracking is not the reason. Steel is strong under both forces.", "从不开裂不是原因。钢在两种力下都很坚固。"),
+            t("Steel is not lighter than paper.", "钢并不比纸轻。"),
+            t("Cost is never mentioned.", "文中从没提到成本。"),
+          ],
         ),
         ask(
           t("What is compression?", "压缩力是什么？"),
@@ -79,6 +94,11 @@ So the secret of a bridge is not only what it is made of, but how it is shaped.`
             t("The wind on a bridge", "桥上的风"),
           ],
           t("Compression is a pushing force that squeezes material together.", "压缩力是把材料挤压在一起的推力。"),
+          [
+            t("A pulling force that stretches is tension.", "拉伸的拉力是张力。"),
+            t("The coin is a load in the paper test.", "硬币是纸张试验中的重物。"),
+            t("Wind is not discussed in this passage.", "这篇文章没讨论风。"),
+          ],
         ),
       ],
     ),
@@ -108,6 +128,11 @@ The ancient Romans built arches so well that some of their arched bridges still 
             "The first paragraph says the egg's curved shell spreads the push around, and that an arch works in the same way.",
             "第一段说，蛋的弯曲外壳把压力分散开，而拱的原理也一样。",
           ),
+          [
+            t("It is the opposite: an egg is hard to crush, like a strong arch.", "正好相反：鸡蛋很难捏碎，就像坚固的拱。"),
+            t("Eggs are not used in building here.", "这里不是用鸡蛋来建造的。"),
+            t("The point is the curve, not an egg shape.", "重点是弧形，不是蛋形。"),
+          ],
         ),
         ask(
           t("When can the wooden frame be taken away?", "什么时候可以拆掉木架？"),
@@ -121,6 +146,11 @@ The ancient Romans built arches so well that some of their arched bridges still 
             "The third paragraph says the keystone goes in last, and once it is in place the frame can be taken away.",
             "第三段说，拱心石最后放入，一旦放好，木架就可以拆掉了。",
           ),
+          [
+            t("The frame holds the stones before any are laid, so it cannot go first.", "木架在铺石之前就要撑着石头，所以不能先拆。"),
+            t("Half the stones cannot stand alone yet.", "只铺一半石头还立不住。"),
+            t("Sliding feet are the danger to avoid, not a signal to remove the frame.", "拱脚滑开是要避免的危险，不是拆架的信号。"),
+          ],
         ),
         ask(
           t("Why do builders brace the ends of an arch?", "建造者为什么要加固拱的两端？"),
@@ -134,12 +164,22 @@ The ancient Romans built arches so well that some of their arched bridges still 
             "The fourth paragraph names the danger: as the arch pushes outward, its feet can slide apart, so the ends are braced.",
             "第四段指出了危险：拱向外推时，拱脚可能滑开，所以要加固两端。",
           ),
+          [
+            t("The keystone locks the arch. It is not what the bracing is for.", "拱心石锁住拱，不是加固两端的原因。"),
+            t("Rain is never mentioned.", "文中从没提到雨。"),
+            t("Direction is reversed. The arch pushes outward.", "方向反了。拱是向外推的。"),
+          ],
         ),
         ask(
           t("What is the last stone put into an arch called?", "拱上最后放进去的石头叫什么？"),
           t("The keystone", "拱顶石"),
           [t("The cornerstone", "基石"), t("The anchorage", "锚碇"), t("The oculus", "天窗")],
           t("The last stone to go in is the keystone, at the very top.", "最后放进去的是最顶上的拱顶石。"),
+          [
+            t("A cornerstone is not mentioned.", "文中没提到基石。"),
+            t("An anchorage holds cables of a suspension bridge.", "锚碇是悬索桥固定缆索的。"),
+            t("The oculus is the opening at the top of a dome.", "圆孔是穹顶顶部的开口。"),
+          ],
         ),
       ],
     ),
@@ -167,6 +207,11 @@ Today, domes cover sports stadiums, train stations and museums, sheltering thous
             "The first paragraph explains that a dome is like many arches joined at the top, so it needs no column in the middle.",
             "第一段解释说，穹顶就像许多在顶部相连的拱，所以中间不需要柱子。",
           ),
+          [
+            t("Cables hold up suspension bridges, not domes.", "缆索支撑的是悬索桥，不是穹顶。"),
+            t("Light rock was only near the top. Heavy stone was near the bottom.", "轻石只在顶部。底部用的是重石。"),
+            t("The oculus lets in light. It does not hold up the dome.", "圆孔是采光的，不支撑穹顶。"),
+          ],
         ),
         ask(
           t("Why did the Romans use lighter rock near the top of the Pantheon's dome?", "罗马人为什么在万神殿穹顶的上部使用较轻的石料？"),
@@ -180,6 +225,11 @@ Today, domes cover sports stadiums, train stations and museums, sheltering thous
             "The second paragraph says the concrete was lighter near the top, and the oculus removes weight where the dome is weakest.",
             "第二段说，上部的混凝土较轻，顶部的圆孔也去掉了穹顶最薄弱处的重量。",
           ),
+          [
+            t("Carrying is not the problem. The top is where the dome is weakest.", "搬运不是问题。顶部是穹顶最薄弱的地方。"),
+            t("Light rock does not let sunlight through. The oculus does.", "轻石不透光。透光的是圆孔。"),
+            t("Rain comes in through the oculus anyway.", "雨本来就会从圆孔进来。"),
+          ],
         ),
         ask(
           t("What problem did Brunelleschi solve?", "布鲁内莱斯基解决了什么问题？"),
@@ -193,6 +243,11 @@ Today, domes cover sports stadiums, train stations and museums, sheltering thous
             "The third paragraph states the problem: how to build a dome too wide for any wooden frame. Two shells and spiraling bricks were his answer.",
             "第三段说明了这个问题：怎样建造一个宽得任何木架都撑不住的穹顶。双层外壳和螺旋砌砖是他的办法。",
           ),
+          [
+            t("Concrete that never cracks is not his problem. He built with bricks.", "永不开裂的混凝土不是他的难题。他用的是砖。"),
+            t("The oculus belongs to the Pantheon in Rome.", "圆孔属于罗马的万神殿。"),
+            t("Stadium domes are modern, long after Brunelleschi.", "体育场穹顶是现代的，比布鲁内莱斯基晚得多。"),
+          ],
         ),
         ask(
           t("How wide is the dome of the Pantheon?", "万神殿的穹顶有多宽？"),
@@ -203,6 +258,11 @@ Today, domes cover sports stadiums, train stations and museums, sheltering thous
             t("Exactly 1,900 meters across", "直径正好1900米"),
           ],
           t("Its concrete dome is more than 43 meters across.", "它的混凝土穹顶直径超过43米。"),
+          [
+            t("7 meters is the height of the Zhaozhou Bridge in another passage.", "七米是另一篇里赵州桥的高度。"),
+            t("600 is how many years ago Brunelleschi built.", "六百是布鲁内莱斯基建造距今的年数。"),
+            t("1,900 is how many years ago the Pantheon was built.", "一千九百是万神殿建成距今的年数。"),
+          ],
         ),
       ],
     ),
@@ -232,6 +292,11 @@ Today, the Zhaozhou Bridge is closed to traffic to protect it, but visitors can 
             "The second paragraph contrasts tall half-circle bridges with steep roads; the flatter curve made the bridge easier for carts to climb.",
             "第二段对比了路面陡峭的高半圆拱桥；较平的弧度让车更容易上桥。",
           ),
+          [
+            t("Fewer piers was the point. Steep half-circles needed thick piers.", "要的是更少的桥墩。陡的半圆拱需要粗桥墩。"),
+            t("Running short of stone is not why. The small arches saved stone later.", "不是因为石头不够。节省石头是小拱的作用。"),
+            t("Boats are not mentioned.", "文中没提船。"),
+          ],
         ),
         ask(
           t("Which is NOT a benefit of the small open arches?", "下面哪一项不是小拱的好处？"),
@@ -245,6 +310,11 @@ Today, the Zhaozhou Bridge is closed to traffic to protect it, but visitors can 
             "The third paragraph lists three benefits: lighter, less stone, and a path for floodwater. It says nothing about ships.",
             "第三段列出了三个好处：更轻、省石料、给洪水留出通道。文中没有提到船。",
           ),
+          [
+            t("Making the bridge lighter is a benefit the passage names.", "让桥更轻是文中列出的好处。"),
+            t("Saving stone is a benefit the passage names.", "节省石头是文中列出的好处。"),
+            t("Letting floodwater through is a benefit the passage names.", "让洪水通过是文中列出的好处。"),
+          ],
         ),
         ask(
           t("Which detail best supports the idea that the bridge is very strong?", "哪个细节最能支持这座桥非常坚固的观点？"),
@@ -258,6 +328,11 @@ Today, the Zhaozhou Bridge is closed to traffic to protect it, but visitors can 
             "Standing through floods, wars and eight major earthquakes is evidence of strength. The other details are facts about the bridge that do not show it.",
             "历经洪水、战争和八次大地震仍然屹立，这是坚固的证据。其他细节是关于桥的事实，并不能说明这一点。",
           ),
+          [
+            t("The builder's name says nothing about strength.", "建造者的名字说明不了是否坚固。"),
+            t("Being closed to traffic protects it. It does not show strength.", "禁止通行是为了保护它，不能证明坚固。"),
+            t("The location tells where, not how strong.", "位置只说明在哪里，不说明多坚固。"),
+          ],
         ),
         ask(
           t("Who built the Zhaozhou Bridge?", "赵州桥是谁建的？"),
@@ -268,6 +343,11 @@ Today, the Zhaozhou Bridge is closed to traffic to protect it, but visitors can 
             t("Engineers from San Francisco", "旧金山的工程师"),
           ],
           t("It was built around the year 600 by a craftsman named Li Chun.", "它大约建于公元600年，建造者是一位叫李春的工匠。"),
+          [
+            t("Brunelleschi built a dome in Florence.", "布鲁内莱斯基在佛罗伦萨建了穹顶。"),
+            t("The Romans built the Pantheon and old arched bridges.", "罗马人建了万神殿和古老的拱桥。"),
+            t("San Francisco has the Golden Gate Bridge.", "旧金山有金门大桥。"),
+          ],
         ),
       ],
     ),
@@ -295,6 +375,11 @@ Tall towers face a special force: wind. Near the top, strong winds push hard aga
             "The first paragraph says the taller the building, the thicker the lower walls had to be, which left almost no room inside.",
             "第一段说，楼越高，底层墙壁就得越厚，结果里面几乎没有空间。",
           ),
+          [
+            t("Light bricks are not the problem. Thick walls are.", "砖轻不是问题。墙太厚才是问题。"),
+            t("Brick buildings had windows. Steel frames allowed bigger ones.", "砖房有窗户。钢架让窗户可以更大。"),
+            t("Land comes up later, as a reason to build higher.", "土地是后面提到的，作为建高楼的理由。"),
+          ],
         ),
         ask(
           t("How is the passage mainly organized?", "这篇文章主要是怎样组织的？"),
@@ -308,6 +393,11 @@ Tall towers face a special force: wind. Near the top, strong winds push hard aga
             'The first paragraph describes the problem of thick walls, and the second begins "Two inventions changed everything," giving the solutions.',
             '第一段描述了墙太厚的问题，第二段以 "Two inventions changed everything" 开头，给出了解决办法。',
           ),
+          [
+            t("No list of towers by height is given.", "文中没有按高度排列的楼名单。"),
+            t("The passage is not a story told by a builder.", "这篇文章不是建筑工人讲的故事。"),
+            t("Only Chicago is named, as an example.", "只提到芝加哥，作为例子。"),
+          ],
         ),
         ask(
           t("What do the huge weights near the top of some skyscrapers do?", "一些摩天大楼顶部附近的巨大重物有什么作用？"),
@@ -321,6 +411,11 @@ Tall towers face a special force: wind. Near the top, strong winds push hard aga
             "The last paragraph says the weights swing against the motion caused by wind and keep the building steady.",
             "最后一段说，这些重物逆着风引起的晃动摆动，让大楼保持稳定。",
           ),
+          [
+            t("The steel frame holds the walls, not the weights.", "固定外墙的是钢架，不是重物。"),
+            t("The elevator carries people.", "电梯负责运人。"),
+            t("The weights swing to resist sway, not to push down.", "重物摆动是为了抵抗摇晃，不是往下压。"),
+          ],
         ),
         ask(
           t("Which two inventions let cities grow upward?", "哪两项发明让城市向高处发展？"),
@@ -331,6 +426,11 @@ Tall towers face a special force: wind. Near the top, strong winds push hard aga
             t("Large windows and heavy weights", "大窗户和重物"),
           ],
           t("The steel frame and the safe passenger elevator changed everything.", "钢框架和安全的载客电梯改变了一切。"),
+          [
+            t("Thick brick walls were the old way, the problem.", "厚砖墙是旧方法，正是问题所在。"),
+            t("Domes and cables come from other passages.", "穹顶和缆索出自其他文章。"),
+            t("Large windows were a result, and the weights fight wind.", "大窗户是结果，重物是抗风的。"),
+          ],
         ),
       ],
     ),
@@ -358,6 +458,11 @@ The idea of hanging a path is very old. Long before steel, people in the mountai
             "The second paragraph says thinner cables called hangers drop from the main cables and hold up the road; the road does not rest on supports underneath.",
             "第二段说，叫作吊索的细缆从主缆垂下，托起桥面；桥面下没有支撑。",
           ),
+          [
+            t("Piers stand under beam and arch bridges. This road hangs.", "桥墩在梁桥和拱桥下面。这条路是悬挂的。"),
+            t("An arch pushes up from below. Here nothing does.", "拱从下方支撑。这里下面没有东西。"),
+            t("Swinging weights belong to skyscrapers.", "摆动的重物属于摩天大楼。"),
+          ],
         ),
         ask(
           t("What are anchorages?", "什么是锚碇？"),
@@ -371,6 +476,11 @@ The idea of hanging a path is very old. Long before steel, people in the mountai
             "The second paragraph defines anchorages as massive concrete blocks buried at each end, where the main cables are fixed.",
             "第二段把锚碇定义为埋在两端地下的巨大混凝土块，主缆就固定在那里。",
           ),
+          [
+            t("The tall towers are separate from the anchorages.", "高塔和锚碇是分开的。"),
+            t("The thin wires make up the cables.", "细钢丝组成了缆索。"),
+            t("Vine walkways are old hanging paths, not anchorages.", "藤条步道是古老的悬挂通道，不是锚碇。"),
+          ],
         ),
         ask(
           t("What does the last paragraph add to the passage?", "最后一段给文章补充了什么？"),
@@ -384,12 +494,22 @@ The idea of hanging a path is very old. Long before steel, people in the mountai
             "The last paragraph moves back in time, showing that people hung paths across valleys long before steel. The wires and the date belong to the paragraph before.",
             "最后一段回溯历史，说明早在钢材出现之前，人们就在山谷间悬挂步道。钢丝和年份属于前一段。",
           ),
+          [
+            t("Thin wires come in the paragraph before.", "细钢丝在前一段。"),
+            t("1937 is a detail about the Golden Gate Bridge.", "1937年是关于金门大桥的细节。"),
+            t("Wide rivers are where suspension bridges are used.", "悬索桥是用在宽阔河流上的。"),
+          ],
         ),
         ask(
           t("When was the Golden Gate Bridge finished?", "金门大桥是哪一年完工的？"),
           t("In 1937", "1937年"),
           [t("In 1880", "1880年"), t("Around the year 600", "大约公元600年"), t("In 2000", "2000年")],
           t("The Golden Gate Bridge in San Francisco was finished in 1937.", "旧金山的金门大桥于1937年完工。"),
+          [
+            t("1880 is close to when Chicago's thick-walled building stood.", "1880年代是芝加哥厚墙楼的年代。"),
+            t("600 is when the Zhaozhou Bridge was built.", "600年是赵州桥建成的时间。"),
+            t("2000 is not in the passage.", "2000年不在文中。"),
+          ],
         ),
       ],
     ),
@@ -419,6 +539,11 @@ A new, safer bridge opened on the same spot in 1950.`,
             "The first paragraph says the nickname came from the way its road rose and fell in waves even on calm days.",
             "第一段说，这个绰号来自桥面即使在平静的日子也会像波浪一样起伏。",
           ),
+          [
+            t("No woman named Gertie built it. It is a nickname.", "没有叫格蒂的女人建它。这是绰号。"),
+            t("Horses are not mentioned. Galloping describes the waves.", "文中没提马。“奔腾”形容的是波浪般的起伏。"),
+            t("It had been open for four months.", "它已经通车四个月了。"),
+          ],
         ),
         ask(
           t("What caused the bridge to collapse?", "是什么导致了这座桥倒塌？"),
@@ -432,6 +557,11 @@ A new, safer bridge opened on the same spot in 1950.`,
             "The third paragraph says the wind set up a twisting motion that fed on itself. The second paragraph says the wind was not unusually strong.",
             "第三段说，风引起的扭动不断自我加强。第二段说当时的风并不特别大。",
           ),
+          [
+            t("The wind was steady, not unusually strong.", "风是稳定的，并不特别大。"),
+            t("Traffic is not the cause given.", "车流不是文中给出的原因。"),
+            t("The towers did not sink. A section of road tore loose.", "塔没有下沉。是一段路面被撕裂了。"),
+          ],
         ),
         ask(
           t("What lesson did engineers learn from the collapse?", "工程师从这次倒塌中吸取了什么教训？"),
@@ -445,6 +575,11 @@ A new, safer bridge opened on the same spot in 1950.`,
             "The fourth paragraph says designs are now tested with models in wind tunnels and decks are made stiffer. A new suspension bridge was built on the same spot.",
             "第四段说，现在设计都要用模型在风洞中测试，桥面也做得更坚固。原址上又建了一座新的悬索桥。",
           ),
+          [
+            t("Engineers kept building them, more carefully.", "工程师继续修建，只是更谨慎了。"),
+            t("Wind cannot be avoided. Designs are tested in wind tunnels.", "风是避免不了的。设计要在风洞里测试。"),
+            t("Narrow and light made the deck too flexible.", "又窄又轻让桥面太软。"),
+          ],
         ),
       ],
     ),
@@ -474,6 +609,11 @@ On Friday, our truss bridge held thirty-one cups of sand before a joint finally 
             "The third paragraph says the middle was the weakest part, because nothing held it up. The sand was added one cup at a time.",
             "第三段说，中间是最薄弱的部分，因为没有东西支撑它。沙子是一杯一杯加的。",
           ),
+          [
+            t("Too much glue is never mentioned.", "文中从没提到胶水用太多。"),
+            t("The gap was set by the challenge at 40 centimeters.", "间距由挑战规定为四十厘米。"),
+            t("They added sand one cup at a time.", "他们是一杯一杯加沙的。"),
+          ],
         ),
         ask(
           t("Why did the team test one truss side before gluing everything?", "小组为什么在全部粘好之前先测试一侧桁架？"),
@@ -487,6 +627,11 @@ On Friday, our truss bridge held thirty-one cups of sand before a joint finally 
             "Testing one side alone let them find a weak joint and fix it before building the rest, which matches the lesson to test early.",
             "单独测试一侧让他们在建好其余部分之前发现并修好了一个薄弱的接头，这符合“尽早测试”的教训。",
           ),
+          [
+            t("Running out of sticks is not mentioned.", "文中没提木棍用完了。"),
+            t("The teacher only suggested looking at real bridges.", "老师只是建议看真实的桥。"),
+            t("A beam was the failed first idea.", "梁是失败的第一个想法。"),
+          ],
         ),
         ask(
           t("Which detail supports the claim that the second bridge was much better?", "哪个细节支持第二座桥好得多的说法？"),
@@ -500,6 +645,11 @@ On Friday, our truss bridge held thirty-one cups of sand before a joint finally 
             "Thirty-one cups compared with six is the evidence that the truss bridge was much stronger. The other details do not compare the two bridges.",
             "三十一杯对六杯，是桁架桥坚固得多的证据。其他细节没有比较两座桥。",
           ),
+          [
+            t("Not being the strongest is a limit, not proof it was better.", "不是最强是一个局限，不能证明更好。"),
+            t("100 sticks describes the supplies.", "一百根木棍描述的是材料。"),
+            t("40 centimeters is the gap to span.", "四十厘米是要跨越的间距。"),
+          ],
         ),
       ],
     ),

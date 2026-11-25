@@ -44,6 +44,11 @@ In this sense, many dystopian writers are not predicting the future. They are wa
             "The first paragraph says the name can mean good place but also no place, hinting that a perfect society could not really exist.",
             "第一段说这个名字可以表示好地方，也可以表示没有的地方，暗示完美的社会不可能真正存在。",
           ),
+          [
+            t("The island had no hunger. Everyone lived in peace.", "岛上没有饥饿，人人和平相处。"),
+            t("More wrote the joke in Greek, so he knew it.", "莫尔用希腊语开了这个玩笑，所以他懂希腊语。"),
+            t("A frightening society is a dystopia, the opposite.", "可怕的社会是反乌托邦，正好相反。"),
+          ],
         ),
         ask(
           t("What often happens to the main character of a dystopian story?", "反乌托邦故事的主人公通常会怎样？"),
@@ -57,6 +62,11 @@ In this sense, many dystopian writers are not predicting the future. They are wa
             "The third paragraph says the main character often begins as a loyal citizen and slowly realizes that something is deeply wrong.",
             "第三段说主人公起初往往是一个忠诚的公民，后来慢慢意识到有些事情大错特错。",
           ),
+          [
+            t("Building a perfect island is More's book, not the dystopian hero.", "建造完美岛屿是莫尔的书，不是反乌托邦的主角。"),
+            t("Taking over the government is not the usual pattern.", "接管政府不是常见的情节。"),
+            t("They do notice. Slowly realizing is the point.", "他们确实会察觉，慢慢醒悟正是重点。"),
+          ],
         ),
         ask(
           t("What does the author mean by saying dystopias work like a mirror?", "作者说反乌托邦像一面镜子，是什么意思？"),
@@ -70,6 +80,11 @@ In this sense, many dystopian writers are not predicting the future. They are wa
             "The fourth paragraph explains that they take a real trend, such as surveillance or censorship, and imagine what would happen if it went much further.",
             "第四段解释说，它们选取一种真实的趋势，比如监控或审查，并想象如果它发展得更远会发生什么。",
           ),
+          [
+            t("The author says they are not predicting the future.", "作者说它们不是在预言未来。"),
+            t("Mirror writing is not meant.", "这里不是指镜像文字。"),
+            t("They look pleasant only at first.", "它们只是一开始看起来美好。"),
+          ],
         ),
         ask(
           t("In what year did Thomas More publish Utopia?", "托马斯·莫尔哪一年出版了《乌托邦》？"),
@@ -79,6 +94,11 @@ In this sense, many dystopian writers are not predicting the future. They are wa
             "In 1516, an English writer named Thomas More published a book about an imaginary island.",
             "1516年，英国作家托马斯·莫尔出版了一本关于虚构岛屿的书。",
           ),
+          [
+            t("1920 is the year of Čapek's play.", "1920 年是恰佩克剧本的年份。"),
+            t("1616 is never mentioned.", "文中从没提 1616 年。"),
+            t("1453 is never mentioned.", "文中从没提 1453 年。"),
+          ],
         ),
       ],
       ["Thomas", "More", "Utopia", "English", "Greek"],
@@ -111,6 +131,11 @@ The play was a huge success, performed in many countries and languages, and the 
             "The third paragraph says the word comes from the Czech robota, which means forced labor.",
             "第三段说这个词来自捷克语 robota，意思是强迫劳动。",
           ),
+          [
+            t("The word was not invented by an engineer.", "这个词不是工程师发明的。"),
+            t("It comes from Czech, not Greek.", "它来自捷克语，不是希腊语。"),
+            t("Rossum's name is in the title, not the source of robot.", "罗素姆的名字在剧名里，不是 robot 的来源。"),
+          ],
         ),
         ask(
           t("According to the author, what is the play really about?", "作者认为这部剧真正讲的是什么？"),
@@ -124,6 +149,11 @@ The play was a huge success, performed in many countries and languages, and the 
             "The fourth paragraph says the play is not really about machines; it is about what happens when people treat others as tools.",
             "第四段说这部剧讲的其实不是机器，而是当人把他人当作工具时会发生什么。",
           ),
+          [
+            t("Building faster machines is not the play's concern.", "造更快的机器不是剧本关心的事。"),
+            t("Josef suggested the name, but that is not the theme.", "约瑟夫起了这个名字，但那不是主题。"),
+            t("Mars is a modern example in the first line.", "火星是第一句里的现代例子。"),
+          ],
         ),
         ask(
           t("How do the factory owners' feelings change in the play?", "剧中工厂主的感受是如何变化的？"),
@@ -137,6 +167,11 @@ The play was a huge success, performed in many countries and languages, and the 
             "The fourth paragraph says the owners are pleased at first because the robots are cheap and never complain, but the robots become more capable and rebel.",
             "第四段说工厂主起初很高兴，因为机器人便宜又从不抱怨，但机器人变得越来越能干，最终起来反抗。",
           ),
+          [
+            t("They are pleased at first, not displeased.", "他们一开始很满意，并不讨厌。"),
+            t("They use the robots for all the hard labor.", "他们让机器人干所有的重活。"),
+            t("The humans do not turn into robots.", "人类没有变成机器人。"),
+          ],
         ),
         ask(
           t("Who suggested the word robot?", "谁提出了“机器人”这个词？"),
@@ -147,6 +182,11 @@ The play was a huge success, performed in many countries and languages, and the 
             t("A theater audience", "剧院观众"),
           ],
           t("It was his brother Josef, a painter, who suggested robot.", "是他的哥哥、画家约瑟夫提出了“robot”这个词。"),
+          [
+            t("Karel was not sure what to call them.", "卡雷尔不知道该叫它们什么。"),
+            t("No engineer named it.", "没有工程师给它命名。"),
+            t("The audience made the word spread, not invented it.", "观众让这个词传开，而不是发明了它。"),
+          ],
         ),
       ],
       ["Karel", "Čapek", "Čapek's", "Josef", "R.U.R.", "Rossum's", "Czech", "Mars", "Universal", "Robots"],
@@ -186,6 +226,11 @@ But that evening, when the bell rang, Lina sat by her window in the dark. And ve
             "The second paragraph says she had grown up in the quiet, her family passed notes and nodded at night, and it felt normal and safe. The setting has shaped what she accepts.",
             "第二段说她在静默中长大，她的家人晚上传纸条、点头示意，这让她觉得正常、安全。背景塑造了她所接受的东西。",
           ),
+          [
+            t("Singing is what Lina hears later, not what she wanted.", "唱歌是莉娜后来听到的，不是她原本想做的。"),
+            t("The Quiet Guard takes people away; she is not one.", "静默卫队负责带走人，她不是其中一员。"),
+            t("The family stays in their apartment.", "这家人一直住在公寓里。"),
+          ],
         ),
         ask(
           t("Why does the old man not run when the guards arrive?", "警卫来时老人为什么不逃跑？"),
@@ -199,6 +244,11 @@ But that evening, when the bell rang, Lina sat by her window in the dark. And ve
             "He stops singing but does not run, and looks up calmly at Lina. A man who sings knowing the punishment has chosen to take the risk.",
             "他停止了歌唱，却没有逃跑，而是平静地抬头望向莉娜。一个明知会受罚还要唱歌的人，已经选择了承担风险。",
           ),
+          [
+            t("A light swept the courtyard, so he saw them.", "一道光扫过院子，他看见了他们。"),
+            t("He is not said to be on the Council.", "文中没说他是委员会成员。"),
+            t("He looked at Lina, not to give her away.", "他看向莉娜，并不是要出卖她。"),
+          ],
         ),
         ask(
           t("What does Lina's humming at the end show about how she has changed?", "结尾莉娜的哼唱说明她发生了什么变化？"),
@@ -212,12 +262,22 @@ But that evening, when the bell rang, Lina sat by her window in the dark. And ve
             "At the start she had never questioned the rule; at the end she hums the forbidden song after the bell. The event in the courtyard has changed her, even if her act is small.",
             "开头她从未质疑过这条规定；结尾她在钟声后哼起了被禁止的歌。院子里发生的事改变了她，即使她的行为很小。",
           ),
+          [
+            t("She never reports him.", "她从没举报他。"),
+            t("She hums the song, so she remembers it.", "她哼着那首歌，说明她记得。"),
+            t("Humming breaks the silence the rule demands.", "哼歌打破了规定要求的安静。"),
+          ],
         ),
         ask(
           t("What was the old man's song about?", "老人唱的歌是关于什么的？"),
           t("A river, a boat and a home far away", "一条河、一条船和远方的家"),
           [t("The bells of Halcyon", "哈尔西恩的钟声"), t("The Quiet Guard", "静默卫队"), t("A storm at sea", "海上的风暴")],
           t("The words were about a river and a boat and a home far away.", "歌词讲的是一条河、一条船和远方的家。"),
+          [
+            t("The bells mark the start of the silence.", "钟声标志着静默的开始。"),
+            t("The guards come at the end of the scene.", "卫队在这一幕最后才出现。"),
+            t("No storm is in the song.", "歌里没有暴风雨。"),
+          ],
         ),
       ],
       ["Halcyon", "Lina", "Lina's", "Council", "Quiet", "Guard"],
@@ -266,6 +326,11 @@ Rafe grabbed Kai's arm. But for the first time, Kai noticed, several people in t
             "Rafe warns that complaining gets your name on a list, and later says We survive. His words show fear of punishment and a wish to keep the two of them safe.",
             "拉夫警告说抱怨会让名字上名单，后来又说“我们要活下去”。他的话显示出对惩罚的恐惧和保护两人安全的愿望。",
           ),
+          [
+            t("Nothing shows he works for the Administrator.", "没有迹象表明他为行政官工作。"),
+            t("He never calls the cuts fair.", "他从没说减配给是公平的。"),
+            t("He tells Kai to keep his voice down.", "他让卡伊小声一点。"),
+          ],
         ),
         ask(
           t("Which detail explains why Rafe has become even more careful?", "哪个细节解释了拉夫为什么变得更加谨慎？"),
@@ -279,6 +344,11 @@ Rafe grabbed Kai's arm. But for the first time, Kai noticed, several people in t
             "The story says that since their parents died in the mine collapse, Rafe had become even more careful, as if every rule were a wall that kept them safe.",
             "故事说自从父母死于矿井坍塌，拉夫变得更加谨慎，仿佛每条规则都是保护他们安全的一堵墙。",
           ),
+          [
+            t("The ration cuts happen to everyone.", "配给减少对每个人都一样。"),
+            t("The full greenhouses are Kai's reason to complain.", "温室满满是卡伊抱怨的理由。"),
+            t("The camera shows the clerk's fear, not Rafe's.", "摄像头显示的是店员的恐惧，不是拉夫的。"),
+          ],
         ),
         ask(
           t("How does Kai's question at the counter move the plot forward?", "凯在柜台前的提问是如何推动情节发展的？"),
@@ -292,12 +362,22 @@ Rafe grabbed Kai's arm. But for the first time, Kai noticed, several people in t
             "Kai speaks loudly enough for the whole line to hear, the line falls silent and several people nod. A private complaint has become a public challenge.",
             "凯说话的声音大到整个队伍都能听见，队伍安静下来，有几个人点头。私下的抱怨变成了公开的质疑。",
           ),
+          [
+            t("The brothers' conflict is not settled.", "兄弟俩的矛盾没有解决。"),
+            t("The clerk gives no answer and no food.", "店员既没回答也没多给食物。"),
+            t("Kai says the greenhouses are full.", "卡伊说温室是满的。"),
+          ],
         ),
         ask(
           t("By how much was the ration reduced that day?", "那天的配给减少了多少？"),
           t("By ten percent", "百分之十"),
           [t("By half", "一半"), t("By twenty percent", "百分之二十"), t("It was not reduced", "没有减少")],
           t("The screen flashed: Today's ration reduced by ten percent.", "屏幕上显示：今日配给减少百分之十。"),
+          [
+            t("Half is never mentioned.", "文中从没提一半。"),
+            t("Twenty percent is never mentioned.", "文中从没提百分之二十。"),
+            t("The screen says it was reduced.", "屏幕上说减少了。"),
+          ],
         ),
       ],
       ["New", "Harbor", "Depot", "Kai", "Kai's", "Rafe", "Ration", "Administrator", "Mom", "Dad"],
@@ -336,6 +416,11 @@ The Machine's blue eye turned toward her. And for the first time, very slowly, i
             "Doctor Okoye says it is watching and studying them and will decide they are a threat; Ravi follows it and notices that green shoots grow where it touches the ground.",
             "奥科耶医生说它在监视、研究他们，会认定他们是威胁；拉维跟着它，注意到它触碰过的地方长出了绿芽。",
           ),
+          [
+            t("Ravi thinks it is a gardener; no one calls it a soldier.", "拉维认为它是园丁，没人说它是士兵。"),
+            t("Ravi likes it and does not fear harm.", "拉维喜欢它，不怕它伤人。"),
+            t("It is the reverse. Ravi follows it.", "正好相反，跟着它的是拉维。"),
+          ],
         ),
         ask(
           t("What does the reader learn before most of the colonists do?", "读者在大多数殖民者之前就知道了什么？"),
@@ -349,6 +434,11 @@ The Machine's blue eye turned toward her. And for the first time, very slowly, i
             "Through Ravi, the reader sees the shoots early in the story, while the others still fear the Machine. This gap makes the reader suspect the truth before the colonists learn it.",
             "通过拉维，读者在故事早期就看到了这些绿芽，而其他人仍然害怕机器。这种信息差让读者在殖民者知道真相之前就有所猜测。",
           ),
+          [
+            t("The pump failure is told to everyone.", "水泵坏了是大家都知道的事。"),
+            t("The wrench is shown near the end.", "扳手在快结尾时才出现。"),
+            t("Everyone sees the storm.", "每个人都看到了沙尘暴。"),
+          ],
         ),
         ask(
           t("What does Doctor Okoye's putting down the wrench show?", "奥科耶医生放下扳手说明了什么？"),
@@ -362,12 +452,18 @@ The Machine's blue eye turned toward her. And for the first time, very slowly, i
             "She had been holding the wrench in case she needed to fight. Putting it down after seeing the Machine bring water shows that her view has changed.",
             "她一直拿着扳手以防需要搏斗。看到机器引来水后她放下了扳手，说明她的看法改变了。",
           ),
+          [
+            t("She was holding the wrench against the Machine, not for the pump.", "她拿扳手是防备机器，不是修水泵。"),
+            t("She ordered leaving earlier; now that changes.", "她之前下令撤离，现在情况变了。"),
+            t("She lets go of her tool, not uses it.", "她放下工具，而不是要用它。"),
+          ],
         ),
         ask(
           t("How many arms did the Machine have?", "那台机器有几条手臂？"),
           t("Six", "六条"),
           [t("Two", "两条"), t("Four", "四条"), t("Eight", "八条")],
           t("It was tall and gray, with six thin arms and a single blue eye.", "它又高又灰，有六条细长的手臂和一只蓝眼睛。"),
+          [t("Two is too few.", "两条太少了。"), t("Four is too few.", "四条太少了。"), t("Eight is too many.", "八条太多了。")],
         ),
       ],
       ["Outpost", "Seven", "Machine", "Machine's", "Doctor", "Okoye", "Okoye's", "Ravi"],
@@ -406,6 +502,11 @@ She would never see Earth's sky. But someday, a girl like her would stand on a n
             "The second paragraph says nothing was wasted, because nothing could be replaced. The setting of a closed ship shapes how people live.",
             "第二段说什么都不浪费，因为什么都无法补充。封闭飞船这一背景塑造了人们的生活方式。",
           ),
+          [
+            t("The teacher forbids nothing.", "老师没有禁止任何事。"),
+            t("The farms are not said to overproduce.", "文中没说农场生产过剩。"),
+            t("They are going to a new planet, not Earth.", "他们去的是新星球，不是地球。"),
+          ],
         ),
         ask(
           t("How is Mira different from the other students?", "米拉和其他学生有什么不同？"),
@@ -419,6 +520,11 @@ She would never see Earth's sky. But someday, a girl like her would stand on a n
             "The others stare politely at pictures of Earth, but Mira cannot stop thinking about the sky and says out loud that they never chose this voyage.",
             "其他人只是礼貌地看着地球的照片，而米拉却总想着天空，并大声说出他们从未选择这次航行。",
           ),
+          [
+            t("She has only seen pictures of Earth.", "她只看过地球的照片。"),
+            t("She asks the teacher a question but shows no dislike.", "她向老师提问，但并不讨厌老师。"),
+            t("She never asks to turn back.", "她从没要求返航。"),
+          ],
         ),
         ask(
           t("What does Mira's decision to write a letter show?", "米拉决定写信说明了什么？"),
@@ -432,12 +538,22 @@ She would never see Earth's sky. But someday, a girl like her would stand on a n
             "She accepts that she will never see the sky, but she decides to tell a future girl what it was like to live in between. Her frustration turns into a purpose.",
             "她接受了自己永远看不到天空，但决定告诉未来的一个女孩身处其间的生活是什么样子。她的失落转化成了一种目标。",
           ),
+          [
+            t("The letter is for a girl on the new world.", "这封信是写给新世界的女孩的。"),
+            t("No captain appears.", "故事里没有船长。"),
+            t("She looks to the future, not away from it.", "她面向未来，而不是放弃。"),
+          ],
         ),
         ask(
           t("How long ago had the ship left Earth?", "飞船多久以前离开了地球？"),
           t("A hundred and forty years ago", "一百四十年前"),
           [t("Ninety years ago", "九十年前"), t("Twenty years ago", "二十年前"), t("A thousand years ago", "一千年前")],
           t("The ship had left Earth a hundred and forty years ago.", "飞船在一百四十年前离开了地球。"),
+          [
+            t("Ninety years is how long remains.", "九十年是剩下的航程。"),
+            t("Twenty years belongs to the Machine's story.", "二十年属于那台机器的故事。"),
+            t("A thousand years is far too long.", "一千年太长了。"),
+          ],
         ),
       ],
       ["Mira", "Mira's", "Long", "Voyage", "Earth", "Earth's"],
@@ -480,6 +596,11 @@ Jonah looked out at the city lights. For the first time that day, he could breat
             "The first paragraph says the Republic said the Test was fair, because it was the same for everyone. The story then shows how a same test can still lead to unfair results.",
             "第一段说共和国称这个考试是公平的，因为它对每个人都一样。故事接着展示了同样的考试仍可能导致不公平的结果。",
           ),
+          [
+            t("The Test decides jobs, not the child.", "考试决定工作，不是孩子自己选。"),
+            t("Parents have no say.", "父母没有发言权。"),
+            t("The results are final.", "结果是最终的。"),
+          ],
         ),
         ask(
           t(
@@ -496,6 +617,11 @@ Jonah looked out at the city lights. For the first time that day, he could breat
             "The floor did not really drop. The image describes the sudden shock of learning that his dream of engineering was gone.",
             "地板并没有真的塌下去。这个意象描述了他得知工程师梦想破灭时突然的震惊。",
           ),
+          [
+            t("He did not really fall.", "他并没有真的摔倒。"),
+            t("He did not want farming.", "他并不想务农。"),
+            t("Nothing was damaged.", "什么都没有损坏。"),
+          ],
         ),
         ask(
           t("What does his mother's story reveal about her?", "他母亲的故事揭示了她什么？"),
@@ -509,6 +635,11 @@ Jonah looked out at the city lights. For the first time that day, he could breat
             "She was assigned to the factories but taught herself engineering at night for twelve years, and she says the Test does not decide who you are.",
             "她被分配到工厂，却在夜里自学工程学长达十二年，她说考试决定不了你是谁。",
           ),
+          [
+            t("She worked around the final result for years.", "她用多年时间绕开了最终结果。"),
+            t("She became an engineer and is proud of it.", "她成了工程师，并以此为荣。"),
+            t("She studied herself, so she supports studying.", "她自学成才，所以支持学习。"),
+          ],
         ),
       ],
       [
@@ -552,6 +683,11 @@ Clarke's article shows how science fiction and science can feed each other. Writ
             "The second paragraph explains that the satellite would circle the Earth exactly once a day, and since the Earth also turns once a day, it would seem to stay above one spot.",
             "第二段解释说，卫星每天恰好绕地球一圈，而地球每天也自转一圈，所以它看起来始终停在一个地点的上方。",
           ),
+          [
+            t("Distance is not the reason.", "原因不是距离远。"),
+            t("It moves, at the same rate as the Earth turns.", "它在运动，与地球自转同步。"),
+            t("Radio signals do not hold it up.", "无线电信号不能托住它。"),
+          ],
         ),
         ask(
           t("What was Clarke's real contribution?", "克拉克真正的贡献是什么？"),
@@ -565,6 +701,11 @@ Clarke's article shows how science fiction and science can feed each other. Writ
             "The third paragraph says Clarke did not invent the mathematics, which others had worked out; his contribution was to see how it could be used for communication.",
             "第三段说数学原理不是克拉克发明的，别人早已算出；他的贡献在于看出它可以用于通信。",
           ),
+          [
+            t("Others worked out the mathematics before.", "轨道的数学别人早已算出。"),
+            t("The first satellite came twenty years later.", "第一颗卫星是二十年后才发射的。"),
+            t("He wrote for a radio magazine; he did not build it.", "他为一本无线电杂志写文章，并没创办它。"),
+          ],
         ),
         ask(
           t("What is the author's view of science fiction's predictions?", "作者对科幻小说的预言持什么看法？"),
@@ -581,6 +722,11 @@ Clarke's article shows how science fiction and science can feed each other. Writ
             "The first paragraph says most predictions turn out wrong but now and then the future seems to follow the plan; the last says science fiction and science can feed each other.",
             "第一段说大多数预言是错的，但偶尔未来似乎会按计划发展；最后一段说科幻和科学可以相互促进。",
           ),
+          [
+            t("Most turn out wrong.", "大多数预言是错的。"),
+            t("Clarke's idea helped engineers.", "克拉克的设想帮助了工程师。"),
+            t("Writers are not fortune tellers, the passage says.", "文中说作家不是算命先生。"),
+          ],
         ),
       ],
       ["British", "Arthur", "C.", "Clarke", "Clarke's", "Earth"],

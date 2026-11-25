@@ -44,6 +44,11 @@ The story is often told as a warning about critics who failed to recognize geniu
             "The second paragraph describes harsh chords, sudden rhythms and stamping, jerking dancers unlike anything most of the audience had experienced.",
             "第二段描述了刺耳的和弦、突变的节奏以及跺脚、抽动的舞者，这些与大多数观众经历过的都不同。",
           ),
+          [
+            t("Ticket sales are not mentioned.", "文中没提票卖多了。"),
+            t("Stravinsky is not said to insult anyone.", "文中没说斯特拉文斯基侮辱了观众。"),
+            t("The dancers stamped on purpose; it was the choreography.", "舞者跺脚是有意编排的，不是忘了舞步。"),
+          ],
         ),
         ask(
           t("What was the 1914 concert performance evidence of?", "1914 年的音乐会演出证明了什么？"),
@@ -57,6 +62,11 @@ The story is often told as a warning about critics who failed to recognize geniu
             "The fourth paragraph says that less than a year later the audience cheered and carried Stravinsky out on their shoulders.",
             "第四段说不到一年之后，观众欢呼着把斯特拉文斯基扛在肩上抬了出去。",
           ),
+          [
+            t("The 1914 concert had no dancing at all.", "1914年的演出根本没有舞蹈。"),
+            t("The same city cheered it a year later.", "同一座城市一年后为它喝彩。"),
+            t("The music was played again, not rewritten.", "音乐是重演，不是重写。"),
+          ],
         ),
         ask(
           t("What does the writer conclude about judging new art?", "作者对评判新艺术得出了什么结论？"),
@@ -70,12 +80,22 @@ The story is often told as a warning about critics who failed to recognize geniu
             "The last paragraph says a judgment depends on what the judge expects, and it takes time for expectations to change.",
             "最后一段说评判取决于评判者的期待，而期待需要时间才能改变。",
           ),
+          [
+            t("The writer says the warning is only partly fair.", "作者说这个警示只说对了一部分。"),
+            t("Concerts happened to come later; it is not a rule.", "音乐会只是碰巧在后来举办，不是什么规则。"),
+            t("Noise is part of the story, not the lesson.", "喧闹是故事内容，不是结论。"),
+          ],
         ),
         ask(
           t("Who composed the music for The Rite of Spring?", "谁为《春之祭》作曲？"),
           t("Igor Stravinsky", "伊戈尔·斯特拉文斯基"),
           [t("Ludwig van Beethoven", "路德维希·凡·贝多芬"), t("Claude Monet", "克劳德·莫奈"), t("Marcel Duchamp", "马塞尔·杜尚")],
           t("The music was by a young Russian composer, Igor Stravinsky.", "音乐出自年轻的俄国作曲家伊戈尔·斯特拉文斯基之手。"),
+          [
+            t("Beethoven is not mentioned.", "文中没提贝多芬。"),
+            t("Monet is the painter in the next passage.", "莫奈是下一篇里的画家。"),
+            t("Duchamp made Fountain, not music.", "杜尚做的是《泉》，不是音乐。"),
+          ],
         ),
       ],
       [
@@ -123,6 +143,11 @@ Yet Leroy was not simply foolish. He noticed exactly what was new about the work
             "The fourth paragraph says Leroy meant the word as an insult, implying they painted only vague impressions.",
             "第四段说勒鲁瓦用这个词是一种侮辱，暗示他们只画模糊的印象。",
           ),
+          [
+            t("The painters later adopted the name; they did not ask for it.", "画家们是后来才接受这个名字的，并没有主动要求。"),
+            t("He mocked them for looking unfinished, not detailed.", "他嘲笑画作没画完，并不是称赞细致。"),
+            t("Only Monet's harbor showed a sunrise.", "只有莫奈的港口画了日出。"),
+          ],
         ),
         ask(
           t("What standard was Leroy's judgment based on, according to the writer?", "作者认为勒鲁瓦的评判基于什么标准？"),
@@ -136,6 +161,11 @@ Yet Leroy was not simply foolish. He noticed exactly what was new about the work
             "The fifth paragraph says his complaint assumes that a good painting must be smooth and detailed.",
             "第五段说他的抱怨假定一幅好画必须光滑而细致。",
           ),
+          [
+            t("Ordinary subjects were the painters' choice, not his standard.", "平凡题材是画家的选择，不是他的标准。"),
+            t("Bright colors were what the painters used.", "鲜艳的颜色是画家们用的。"),
+            t("He mocked their quickness; he wanted finish.", "他嘲笑的就是画得快，他要的是画完整。"),
+          ],
         ),
         ask(
           t("What does the writer say a careful reader of reviews should do?", "作者说一个细心的评论读者应该怎么做？"),
@@ -149,6 +179,11 @@ Yet Leroy was not simply foolish. He noticed exactly what was new about the work
             "The last paragraph says a careful reader separates what the critic observes, which may be accurate, from the standard of judgment, which may be in question.",
             "最后一段说细心的读者会把评论家所观察到的（可能准确）与评判标准（可能有问题）区分开。",
           ),
+          [
+            t("His humor is not what makes him trustworthy.", "诙谐并不能让他可信。"),
+            t("His review was in a humorous paper but still worth reading.", "他的评论登在幽默报纸上，仍值得一读。"),
+            t("The point is to question the standard, not accept it.", "要点是质疑标准，不是接受它。"),
+          ],
         ),
         ask(
           t("What did Monet's harbor painting show above the water?", "莫奈的港口画中水面上方有什么？"),
@@ -158,6 +193,11 @@ Yet Leroy was not simply foolish. He noticed exactly what was new about the work
             "One of Monet's paintings showed the harbor of Le Havre in the early morning, with a small orange sun above gray-blue water.",
             "莫奈的一幅画描绘清晨的勒阿弗尔港，灰蓝色水面上有一轮橙色的小太阳。",
           ),
+          [
+            t("The sun was there, not the moon.", "画上是太阳，不是月亮。"),
+            t("Birds are not in the painting; dark boats are.", "画上没有鸟，只有几条深色的船。"),
+            t("Fireworks are in Whistler's painting.", "烟花出现在惠斯勒的画里。"),
+          ],
         ),
       ],
       [
@@ -213,6 +253,11 @@ Both sides agree on one point. Fountain made it impossible to ask "Is this good 
             "The second paragraph says that after an argument they decided the object was not art and kept it out.",
             "第二段说他们争论之后认定这件东西不是艺术，并把它排除在外。",
           ),
+          [
+            t("Anyone who paid could enter; the fee was not the issue.", "交了费就能参展，问题不在费用。"),
+            t("The original was lost later; it arrived whole.", "原件是后来丢失的，送来时是完好的。"),
+            t("There was no jury.", "展览没有评审团。"),
+          ],
         ),
         ask(
           t("According to Duchamp's defenders, what made Fountain a work of art?", "根据杜尚的辩护者，什么使《泉》成为一件艺术作品？"),
@@ -226,6 +271,11 @@ Both sides agree on one point. Fountain made it impossible to ask "Is this good 
             "The third paragraph says the act of choosing, not the skill of making, was what made it art, creating a new thought for the object.",
             "第三段说是选择的行为而不是制作的技艺使它成为艺术，为这件物品创造了新的思想。",
           ),
+          [
+            t("He bought it; he did not make it.", "他是买来的，不是自己做的。"),
+            t("The price is not mentioned.", "文中没提价格。"),
+            t("Beauty is the old standard the work challenged.", "美正是这件作品挑战的旧标准。"),
+          ],
         ),
         ask(
           t("What do critics of the readymades argue?", "现成品的批评者主张什么？"),
@@ -239,6 +289,11 @@ Both sides agree on one point. Fountain made it impossible to ask "Is this good 
             "The fifth paragraph says critics argue that if anything can be art, the word means nothing, and that skill and beauty are not arbitrary standards.",
             "第五段说批评者认为，如果什么都能是艺术，这个词就毫无意义，而技艺和美并不是任意的标准。",
           ),
+          [
+            t("Readymades need no skill; difficulty is not the complaint.", "现成品不需要技巧，难不难不是批评的重点。"),
+            t("The false name is a detail, not their argument.", "化名只是细节，不是他们的论点。"),
+            t("The original is lost, so this is not argued.", "原件已丢失，没有人这样主张。"),
+          ],
         ),
         ask(
           t("In which city was the 1917 exhibition held?", "1917年的展览在哪个城市举办？"),
@@ -248,6 +303,11 @@ Both sides agree on one point. Fountain made it impossible to ask "Is this good 
             "In 1917, a new art society in New York announced an exhibition that would accept any work.",
             "1917年，纽约一个新艺术协会宣布举办一场接受任何作品的展览。",
           ),
+          [
+            t("Paris is where the 1874 show was.", "巴黎是1874年那场展览的地点。"),
+            t("London is the Banksy auction.", "伦敦是班克斯拍卖的地点。"),
+            t("Chicago is Maier's city.", "芝加哥是梅尔的城市。"),
+          ],
         ),
       ],
       [
@@ -293,6 +353,11 @@ The disagreement turns partly on intention and partly on effect. If the purpose 
             "The second paragraph says the message seemed to be a protest against the art market, which turns works into expensive objects.",
             "第二段说这一举动似乎是在抗议艺术市场，它把作品变成昂贵的物品。",
           ),
+          [
+            t("The auction house sold the work.", "拍卖行卖了这幅作品。"),
+            t("It sold for over a million pounds.", "它卖出了一百多万英镑。"),
+            t("Banksy himself paints walls at night.", "班克斯自己就在夜里涂鸦。"),
+          ],
         ),
         ask(
           t(
@@ -309,6 +374,11 @@ The disagreement turns partly on intention and partly on effect. If the purpose 
             "The third paragraph says the half-shredded work was renamed and sold three years later for more than eighteen million pounds.",
             "第三段说这件半碎的作品被重新命名，三年后以超过一千八百万英镑售出。",
           ),
+          [
+            t("He built the shredder himself.", "碎纸机是他亲手装的。"),
+            t("The shredder was real and partly worked.", "碎纸机是真的，也碎了一半。"),
+            t("The lower half was shredded by the frame; the house did nothing.", "下半部是画框里的机器碎掉的，拍卖行什么也没做。"),
+          ],
         ),
         ask(
           t("What does the writer say a fair review of the event must do?", "作者说对这一事件的公正评论必须做什么？"),
@@ -322,6 +392,11 @@ The disagreement turns partly on intention and partly on effect. If the purpose 
             "The last paragraph says a fair review must weigh both what the artist apparently meant and what the act actually did.",
             "最后一段说公正的评论必须权衡两者：艺术家显然想表达什么，以及这一行为实际造成了什么。",
           ),
+          [
+            t("That is one question among several.", "那只是众多问题中的一个。"),
+            t("It asks for weighing, not praise.", "作者要的是权衡，不是称赞。"),
+            t("The price is part of what must be weighed.", "价格正是需要权衡的部分。"),
+          ],
         ),
         ask(
           t("What new title was given to the half-shredded painting?", "被碎掉一半的画得到了什么新名字？"),
@@ -331,6 +406,11 @@ The disagreement turns partly on intention and partly on effect. If the purpose 
             "Banksy's team gave the half-shredded piece a new title, Love Is in the Bin.",
             "班克斯团队给这幅被碎掉一半的作品取了新名字《爱在垃圾桶里》。",
           ),
+          [
+            t("That describes the picture, not its new title.", "这只是描述画面，不是新标题。"),
+            t("The Red Heart is not a title used.", "文中没有用“红心”这个标题。"),
+            t("Half a Picture is not the title.", "标题不是“半幅画”。"),
+          ],
         ),
       ],
       ["Banksy", "Banksy's", "Girl", "Balloon", "Love", "Bin", "London", "Sotheby's"],
@@ -361,6 +441,11 @@ Her admirers reply that the quality of the pictures is evident in thousands of t
             "The second paragraph says she usually hung her camera at her waist, which let her photograph people without raising it to her eye.",
             "第二段说她通常把相机挂在腰间，这让她无需举到眼前就能拍人。",
           ),
+          [
+            t("The box of negatives was found later.", "那箱底片是后来才被发现的。"),
+            t("She photographed the streets by day.", "她白天在街上拍照。"),
+            t("She took the pictures herself.", "照片是她自己拍的。"),
+          ],
         ),
         ask(
           t("Why did some critics question whether the exhibited work was truly hers?", "为什么一些评论家质疑展出的作品是否真是她的？"),
@@ -374,6 +459,11 @@ Her admirers reply that the quality of the pictures is evident in thousands of t
             "The fourth paragraph says Maier chose almost none of the prints and that others decided which to print, how to crop them and how dark to make them.",
             "第四段说迈尔几乎没有挑选过任何一张照片，是别人决定冲印哪些、怎样裁剪、冲印深浅。",
           ),
+          [
+            t("She took them herself; no copying is mentioned.", "照片是她自己拍的，文中没提抄袭。"),
+            t("Damage is not mentioned.", "文中没提底片受损。"),
+            t("Maloof bought them; he did not take them.", "马卢夫是买下的，不是他拍的。"),
+          ],
         ),
         ask(
           t("What is the main point of the last paragraph?", "最后一段的要点是什么？"),
@@ -387,6 +477,11 @@ Her admirers reply that the quality of the pictures is evident in thousands of t
             "The last paragraph says judging a work of art can depend on more than the work, including who made the choices that shaped what we see.",
             "最后一段说评判艺术作品可能不只取决于作品本身，还取决于谁作出了塑造我们所见内容的选择。",
           ),
+          [
+            t("Portraits are not compared.", "文中没比较人像和街拍。"),
+            t("It asks a narrower question about showing her private work.", "它问的是更具体的问题：该不该展出她的私人作品。"),
+            t("Admirers say quality is evident in thousands.", "支持者说作品的质量在成千张照片里都看得出来。"),
+          ],
         ),
         ask(
           t("How much did John Maloof pay for the box of negatives?", "约翰·马卢夫花多少钱买下那箱底片？"),
@@ -400,6 +495,11 @@ Her admirers reply that the quality of the pictures is evident in thousands of t
             "He bought a box of old photographic negatives at an auction for about four hundred dollars.",
             "他在拍卖会上花约四百美元买了一箱旧底片。",
           ),
+          [
+            t("Four thousand is ten times too much.", "四千元多了十倍。"),
+            t("Forty is ten times too little.", "四十元少了十倍。"),
+            t("He bought it at an auction.", "他是在拍卖会上买的。"),
+          ],
         ),
       ],
       ["Vivian", "Maier", "Maier's", "Chicago", "John", "Maloof", "New", "York"],
@@ -432,6 +532,11 @@ Neither man won. But the case still raises a question for anyone who writes revi
             "The second paragraph quotes Ruskin calling Whistler a coxcomb who asked two hundred guineas for flinging a pot of paint in the public's face.",
             "第二段引用罗斯金的话，称惠斯勒是个花花公子，竟为把一罐颜料泼到公众脸上而要价两百几尼。",
           ),
+          [
+            t("No copying is mentioned.", "文中没提抄袭。"),
+            t("The fireworks were suggested, and real ones are not the issue.", "烟花只是暗示，真假不是问题。"),
+            t("No sale to Ruskin is mentioned.", "文中没提卖给罗斯金。"),
+          ],
         ),
         ask(
           t("Why did Whistler give his paintings musical titles?", "惠斯勒为什么给他的画起音乐性的标题？"),
@@ -445,6 +550,11 @@ Neither man won. But the case still raises a question for anyone who writes revi
             "The fourth paragraph says Whistler believed a painting should be judged as an arrangement of colors and forms, as music is judged as an arrangement of sounds.",
             "第四段说惠斯勒认为画应该像音乐作为声音的编排那样，作为色彩和形式的编排来评判。",
           ),
+          [
+            t("He was a painter, not a composer.", "他是画家，不是作曲家。"),
+            t("Musicians as buyers are not mentioned.", "文中没提卖给音乐家。"),
+            t("The jury judged libel, not titles.", "陪审团判的是诽谤，不是标题。"),
+          ],
         ),
         ask(
           t("What lesson about reviews does the writer draw from the case?", "作者从这个案件中得出了关于评论的什么教训？"),
@@ -458,6 +568,11 @@ Neither man won. But the case still raises a question for anyone who writes revi
             "The last paragraph says a critic may dislike a work strongly, but Ruskin judged the painter's honesty without reasons a reader could check.",
             "最后一段说评论家可以强烈地不喜欢一件作品，但罗斯金评判的是画家的诚实，且没有给出读者能核实的理由。",
           ),
+          [
+            t("It says a critic may dislike a work strongly.", "文中说批评家可以强烈表达不喜欢。"),
+            t("It says neither man won.", "文中说两人都没赢。"),
+            t("The jury awarded a farthing, so its verdict settles nothing.", "陪审团只判一法新，它的裁决说明不了什么。"),
+          ],
         ),
         ask(
           t("How much did the jury award Whistler in damages?", "陪审团判给惠斯勒多少赔偿？"),
@@ -467,6 +582,11 @@ Neither man won. But the case still raises a question for anyone who writes revi
             "The jury awarded him damages of one farthing, the smallest coin in the country.",
             "陪审团判给他一法寻的赔偿，那是全国最小的硬币。",
           ),
+          [
+            t("Two hundred guineas was the painting's price.", "两百基尼是画的价钱。"),
+            t("A thousand pounds is not mentioned.", "文中没提一千英镑。"),
+            t("He won, but only one farthing.", "他赢了，但只得到一法新。"),
+          ],
         ),
       ],
       [
@@ -516,6 +636,11 @@ Were the first critics simply wrong? Not entirely. They described the book accur
             "The third paragraph says the British edition left out the final section explaining how Ishmael survived, so reviewers complained that a drowned narrator could not tell the story.",
             "第三段说英国版漏掉了解释以实玛利如何幸存的结尾部分，所以评论家抱怨淹死的叙述者不可能讲述这个故事。",
           ),
+          [
+            t("The sinking happens in the story; that is not the complaint.", "沉船是故事情节，不是他们的批评点。"),
+            t("Many praised its descriptions of the sea.", "很多人称赞它对大海的描写。"),
+            t("The pages were in order; a section was missing.", "书页顺序没错，只是少了一部分。"),
+          ],
         ),
         ask(
           t("Why did readers after 1919 value the book more?", "为什么 1919 年以后的读者更看重这本书？"),
@@ -529,6 +654,11 @@ Were the first critics simply wrong? Not entirely. They described the book accur
             "The fifth paragraph says readers living after a world war found in its dark, restless style a picture of their own uncertain age.",
             "第五段说经历过世界大战的读者在它阴暗、不安的风格中看到了自己那个不确定时代的写照。",
           ),
+          [
+            t("The whale chapters were what now seemed bold.", "关于鲸的章节正是如今显得大胆的地方。"),
+            t("Melville had died in 1891.", "梅尔维尔1891年就去世了。"),
+            t("He worked as a customs inspector; it was not reading for them.", "他当过海关检查员，这不是给检查员读的书。"),
+          ],
         ),
         ask(
           t("According to the writer, what was the first critics' real mistake?", "根据作者，最初的评论家真正的错误是什么？"),
@@ -542,6 +672,11 @@ Were the first critics simply wrong? Not entirely. They described the book accur
             "The last paragraph says they described the book accurately; their mistake was not of observation but of judgment, tied to the expectations of their time.",
             "最后一段说他们准确地描述了这本书；他们的错误不在观察，而在于受时代期待束缚的判断。",
           ),
+          [
+            t("They described it accurately, so they read it.", "他们描述得准确，说明读过。"),
+            t("The writer says their descriptions were accurate.", "作者说他们的描述是准确的。"),
+            t("Many reviews were harsh.", "许多评论都很尖锐。"),
+          ],
         ),
       ],
       [
@@ -585,6 +720,11 @@ For this reason, careful readers of crowd reviews tend to read the words, not ju
             "The third paragraph says those who are delighted or furious are more likely to write than those who are merely satisfied.",
             "第三段说非常满意或非常愤怒的人比只是满意的人更有可能写评论。",
           ),
+          [
+            t("Websites are not said to limit ratings.", "文中没说网站限制评分。"),
+            t("Crowd reviews are written by customers.", "大众评论是顾客写的。"),
+            t("Customers understand them; they just do not write.", "顾客明白中间分的含义，只是不写评论。"),
+          ],
         ),
         ask(
           t("What did the experiment with a single positive vote show?", "加一个好评的实验说明了什么？"),
@@ -598,6 +738,11 @@ For this reason, careful readers of crowd reviews tend to read the words, not ju
             "The third paragraph says comments given one random positive vote went on to receive higher ratings, so people followed the crowd.",
             "第三段说随机多得一个好评的评论后来获得了更高的评分，所以人们会随大流。",
           ),
+          [
+            t("Fake reviews are a separate weakness.", "假评论是另一个问题。"),
+            t("Reading habits were not tested.", "研究没测阅读习惯。"),
+            t("Researchers added the vote at random, not users.", "随机加票的是研究人员，不是用户。"),
+          ],
         ),
         ask(
           t("What does the writer advise careful readers of crowd reviews to do?", "作者建议细心的大众评论读者怎么做？"),
@@ -611,6 +756,11 @@ For this reason, careful readers of crowd reviews tend to read the words, not ju
             "The last paragraph says careful readers read the words and ask what judgment is made, what evidence supports it and what standard it assumes.",
             "最后一段说细心的读者会阅读文字，并问作出了什么判断、有什么证据支持、假定了什么标准。",
           ),
+          [
+            t("A single number is the problem.", "只看一个数字恰恰是问题所在。"),
+            t("Crowd reviews have real strengths.", "大众评论有真正的优点。"),
+            t("Volume alone is not advised.", "作者没建议只看评论数量。"),
+          ],
         ),
       ],
       ["Internet"],

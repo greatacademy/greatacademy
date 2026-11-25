@@ -51,6 +51,11 @@ The trophy came back on Wednesday, shining, with every player's name on the base
             "Priya saw that the glass was not broken and the lock was not scratched, so whoever opened the case used a key.",
             "普丽娅看到玻璃没碎、锁没划痕，所以开柜子的人用的是钥匙。",
           ),
+          [
+            t("When the trophy was won says nothing about how the case was opened.", "奖杯何时赢得，说明不了柜子是怎么打开的。"),
+            t("The coach's guess was wrong. A guess is not a clue.", "教练的猜测是错的。猜测不是线索。"),
+            t("The dust ring shows where the trophy stood, not how it was taken.", "灰尘圈只说明奖杯放在哪里，不说明怎么被拿走的。"),
+          ],
         ),
         ask(
           t('What did the strip of tape marked "ENGR" turn out to mean?', '标着 "ENGR" 的胶带最后说明了什么？'),
@@ -64,6 +69,11 @@ The trophy came back on Wednesday, shining, with every player's name on the base
             "The secretary explains that the shop was engraving the team's name; \"ENGR\" was a label for that job, not a thief's message.",
             '秘书解释说，店里正在刻球队的名字；"ENGR" 是这项活儿的标签，不是小偷留下的信息。',
           ),
+          [
+            t("A thief would not label the shelf. It was left by someone sending it out.", "小偷不会贴标签。这是送奖杯出去的人留下的。"),
+            t("Another school is never mentioned. The fifth grade won it.", "文中从没提到别的学校。奖杯是五年级赢的。"),
+            t("The lock was opened with a key, not tape.", "锁是用钥匙打开的，不是用胶带。"),
+          ],
         ),
         ask(
           t("Which idea in the story turned out to be a red herring?", "故事中哪个想法后来证明是误导？"),
@@ -77,12 +87,22 @@ The trophy came back on Wednesday, shining, with every player's name on the base
             "The coach's guess of a break-in pointed the wrong way: the trophy had not been stolen at all. The key and the office led to the answer.",
             "教练猜有人闯入，这把人引向了错误的方向：奖杯根本没有被偷。钥匙和办公室才引出了答案。",
           ),
+          [
+            t("A key is what Priya worked out from the lock. It was true.", "用钥匙开柜是普丽娅从锁上推断出来的。这是真的。"),
+            t("The office did know. That idea led to the answer.", "办公室确实知道。这个想法引出了答案。"),
+            t("Mrs. Dunn did have a key, and she took the trophy.", "邓恩太太确实有钥匙，也是她拿走了奖杯。"),
+          ],
         ),
         ask(
           t("Who had keys to the trophy case?", "谁有奖杯柜的钥匙？"),
           t("Only Mr. Bell and Mrs. Dunn", "只有贝尔先生和邓恩太太"),
           [t("Every player on the team", "球队的每个队员"), t("Only Priya", "只有普丽娅"), t("The shop on Main Street", "大街上的那家店")],
           t("Mr. Bell said only he and Mrs. Dunn, the custodian, had keys.", "贝尔先生说只有他和管理员邓恩太太有钥匙。"),
+          [
+            t("Players did not have keys.", "球员没有钥匙。"),
+            t("Priya had to ask who had keys.", "普丽娅得问谁有钥匙。"),
+            t("The shop engraved the trophy. It had no key to the case.", "商店只是刻字，没有柜子的钥匙。"),
+          ],
         ),
       ],
     ),
@@ -120,6 +140,11 @@ That afternoon, Grandpa Joe nailed a board over the hole and put the rolls in a 
             "Tess studies the prints: each was round with four marks and no bigger than a coin, so they were not shoe prints. The door was locked.",
             "特丝仔细看了脚印：每个都是圆的，前面有四个小印子，比硬币还小，所以不是鞋印。门是锁着的。",
           ),
+          [
+            t("The back door was locked all night.", "后门整夜都锁着。"),
+            t("Grandpa Joe thought it was a burglar, a person.", "乔爷爷以为是窃贼，也就是人。"),
+            t("Three rolls were missing, not one.", "少了三个肉桂卷，不是一个。"),
+          ],
         ),
         ask(
           t("How did the author build suspense before the answer?", "作者在揭晓答案前是怎样制造悬念的？"),
@@ -133,6 +158,11 @@ That afternoon, Grandpa Joe nailed a board over the hole and put the rolls in a 
             "Just before the answer, the author slows down with a sound and two bright eyes in the dark, so the reader waits to learn what they belong to.",
             "就在揭晓之前，作者放慢节奏，写了一个声音和黑暗中两只发亮的眼睛，让读者等着知道它们是谁的。",
           ),
+          [
+            t("The answer comes at the end, not in the first sentence.", "答案在结尾，不在第一句。"),
+            t("No recipe is described.", "文中没描述食谱。"),
+            t("Nailing the board comes after the answer is known.", "钉木板是在知道答案之后的事。"),
+          ],
         ),
         ask(
           t("How did the raccoon get into the bakery?", "浣熊是怎样进入面包店的？"),
@@ -146,12 +176,22 @@ That afternoon, Grandpa Joe nailed a board over the hole and put the rolls in a 
             "The prints led to the corner, where the light showed a hole behind the cupboard just wide enough for a small animal.",
             "脚印通向角落，手电照出柜子后面有一个洞，大小正好能让小动物钻过。",
           ),
+          [
+            t("The back door was locked.", "后门是锁着的。"),
+            t("A window is never mentioned.", "文中从没提到窗户。"),
+            t("The sack was knocked over, not a hiding place.", "面粉袋被打翻了，不是藏身之处。"),
+          ],
         ),
         ask(
           t("What was missing from the tray?", "托盘上少了什么？"),
           t("Three cinnamon rolls", "三个肉桂卷"),
           [t("A sack of flour", "一袋面粉"), t("A loaf of bread", "一条面包"), t("Grandpa Joe's flashlight", "乔爷爷的手电筒")],
           t("Three cinnamon rolls were missing from the tray he had left cooling.", "他留着晾凉的托盘上少了三个肉桂卷。"),
+          [
+            t("The flour sack was knocked over, not taken.", "面粉袋被打翻了，没被拿走。"),
+            t("Bread is not mentioned. The rolls were missing.", "文中没提面包。少的是肉桂卷。"),
+            t("The flashlight was Tess's, and she used it.", "手电筒是苔丝的，她还用了它。"),
+          ],
         ),
       ],
     ),
@@ -191,6 +231,11 @@ Mrs. Ferreira pulled the curtains open. For a long moment, the parrot stared at 
             "Leo asked whether Captain was eating and moving; both answers were yes, so illness was unlikely.",
             "利奥问船长是否吃东西、是否活动；答案都是肯定的，所以不太可能是病了。",
           ),
+          [
+            t("Captain had not shouted for three days.", "船长已经三天没叫了。"),
+            t("Mrs. Ferreira was worried he was sick.", "费雷拉太太担心它生病了。"),
+            t("The curtains are the next clue, about why he was silent.", "窗帘是下一条线索，说明它为什么不出声。"),
+          ],
         ),
         ask(
           t("What conclusion did Leo draw from the curtains?", "利奥从窗帘得出了什么结论？"),
@@ -204,6 +249,11 @@ Mrs. Ferreira pulled the curtains open. For a long moment, the parrot stared at 
             "The curtains hid the street, and Captain talks to people he can see, so Leo concluded he was bored, not sick.",
             "窗帘挡住了街道，而船长只跟看得见的人说话，所以利奥断定它是无聊，而不是病了。",
           ),
+          [
+            t("Leo said Captain was not sick.", "利奥说船长没有生病。"),
+            t("The cat is not what changed. Captain could no longer see it.", "变化的不是猫。是船长看不见猫了。"),
+            t("Color is never mentioned. The curtains were thick.", "文中没提颜色。窗帘是厚的。"),
+          ],
         ),
         ask(
           t("How does the ending prove Leo right?", "结尾怎样证明利奥是对的？"),
@@ -217,6 +267,11 @@ Mrs. Ferreira pulled the curtains open. For a long moment, the parrot stared at 
             'Once the curtains open and the mail carrier appears, Captain shouts "Good morning!", which confirms Leo\'s reasoning.',
             '窗帘一拉开，邮递员一出现，船长就喊 "Good morning!"，这证实了利奥的推理。',
           ),
+          [
+            t("No doctor appears in the story.", "故事里没有医生。"),
+            t("The cage stays by the window.", "笼子一直在窗边。"),
+            t("The cat is not part of the ending.", "猫不在结尾里。"),
+          ],
         ),
         ask(
           t("What had Mrs. Ferreira changed in the house?", "费雷拉太太在家里换了什么？"),
@@ -227,6 +282,11 @@ Mrs. Ferreira pulled the curtains open. For a long moment, the parrot stared at 
             t("She changed the parrot's food", "换了鹦鹉的食物"),
           ],
           t("She put up new, thick curtains to keep out the morning sun.", "她挂上了新的厚窗帘挡住早晨的阳光。"),
+          [
+            t("The cage stood by the front window, not in the kitchen.", "笼子在前窗边，不在厨房。"),
+            t("The cat belongs to the neighbor.", "猫是邻居的。"),
+            t("Captain was eating normally.", "船长吃东西很正常。"),
+          ],
         ),
       ],
     ),
@@ -260,6 +320,11 @@ Ms. Ortiz checked the latch and smiled sheepishly. "I think I owe Sam an apology
             "The story says Sam had begged to take Nibbles home and been told no, which made him look guilty. Ms. Ortiz was the last to feed the hamster.",
             "故事说萨姆曾恳求把仓鼠带回家却被拒绝，这让他看起来有嫌疑。最后喂仓鼠的是奥尔蒂斯老师。",
           ),
+          [
+            t("Ms. Ortiz fed Nibbles last.", "最后喂仓鼠的是奥尔蒂斯老师。"),
+            t("Nobody had eaten sunflower seeds in class.", "班上没有人吃过葵花籽。"),
+            t("His seat is never mentioned.", "文中从没提到他的座位。"),
+          ],
         ),
         ask(
           t("Which clue pointed to where Nibbles really was?", "哪个线索指出了仓鼠真正的位置？"),
@@ -269,6 +334,11 @@ Ms. Ortiz checked the latch and smiled sheepishly. "I think I owe Sam an apology
             "Nobody had eaten sunflower seeds in class, so the fresh shells under the bookshelf showed that the hamster had been there.",
             "班里没有人吃过葵花籽，所以书架下新鲜的籽壳说明仓鼠去过那里。",
           ),
+          [
+            t("Sam's red face shows feeling, not where the hamster was.", "山姆脸红说明情绪，不说明仓鼠在哪儿。"),
+            t("The long weekend explains why Sam asked, not where Nibbles went.", "长周末解释的是山姆为什么请求，不是仓鼠去了哪里。"),
+            t("The meeting explains the hurried feeding.", "开会解释的是匆忙喂食。"),
+          ],
         ),
         ask(
           t("What really happened to Nibbles?", "仓鼠到底怎么了？"),
@@ -282,12 +352,22 @@ Ms. Ortiz checked the latch and smiled sheepishly. "I think I owe Sam an apology
             "Ms. Ortiz admits she did not close the door properly; the latch slipped and Nibbles escaped to the bookshelf on his own.",
             "奥尔蒂斯老师承认她没有关好门；门闩松开了，仓鼠自己跑到了书架后面。",
           ),
+          [
+            t("Sam did not take him. Ms. Ortiz apologized to Sam.", "山姆没拿。奥尔蒂斯老师向山姆道了歉。"),
+            t("Hana found Nibbles. She did not hide him.", "是哈娜找到了仓鼠，不是她藏的。"),
+            t("No other class is mentioned.", "文中没提到别的班。"),
+          ],
         ),
         ask(
           t("What had Nibbles made his nest from?", "尼布尔斯用什么做了窝？"),
           t("An old worksheet", "一张旧练习纸"),
           [t("Sunflower seeds", "葵花籽"), t("A soft blanket", "一条软毯子"), t("Leaves from outside", "外面的树叶")],
           t("He sat on a nest of shredded paper he had made from an old worksheet.", "他坐在用旧练习纸撕碎做成的窝上。"),
+          [
+            t("Seeds filled his cheeks. The nest was paper.", "种子塞满了它的腮帮。窝是纸做的。"),
+            t("A blanket is not mentioned.", "文中没提毯子。"),
+            t("Leaves are not mentioned.", "文中没提叶子。"),
+          ],
         ),
       ],
     ),
@@ -319,6 +399,11 @@ The director looked at the radiator and sighed. The next day, the map was mended
             'The director says "Vandals" and "Someone tore it on purpose." That guess turns out to be wrong.',
             '馆长说 "Vandals" 和 "Someone tore it on purpose"。这个猜测后来证明是错的。',
           ),
+          [
+            t("It was torn on the morning the exhibit opened, not always.", "地图是在展览开幕那天早上撕破的，不是一直破的。"),
+            t("The guard found it. Nobody says he dropped it.", "保安发现了它。没人说是他弄掉的。"),
+            t("The map was found on the floor, not blown away.", "地图是在地上找到的，没有被吹走。"),
+          ],
         ),
         ask(
           t("Why did the shape of the tear matter?", "撕口的形状为什么重要？"),
@@ -332,6 +417,11 @@ The director looked at the radiator and sighed. The next day, the map was mended
             "Ines saw that a tear made by two hands would be straight, but this one followed a fold, which pointed to the paper splitting by itself.",
             "伊内丝看出，用两只手撕会是直的，而这道裂口沿着折痕，说明纸是自己裂开的。",
           ),
+          [
+            t("Brown ink describes how the map was drawn.", "棕色墨水描述地图是怎么画的。"),
+            t("The window is never compared with the tear.", "文中从没拿窗户和裂口比较。"),
+            t("The guard's honesty is never questioned.", "文中从没怀疑保安是否诚实。"),
+          ],
         ),
         ask(
           t("Which clues together explain the torn map?", "哪些线索合起来解释了地图为何破损？"),
@@ -345,6 +435,11 @@ The director looked at the radiator and sighed. The next day, the map was mended
             "Hot, dry air made the paper brittle, and wind from the open window moved it against the pins until it split. The other details do not explain the tear.",
             "又热又干的空气让纸变脆，开着的窗户吹进的风让它不停碰到图钉，直到裂开。其他细节不能解释破损。",
           ),
+          [
+            t("The director's anger and the exhibit do not explain the tear.", "馆长的愤怒和展览解释不了裂口。"),
+            t("The ink and the year describe the map, not the damage.", "墨水和年份描述的是地图，不是损坏。"),
+            t("The guard only found it, and the missing glass alone does not tear paper.", "保安只是发现了它，没有玻璃本身也不会撕破纸。"),
+          ],
         ),
         ask(
           t("How old was the town shown on the map?", "地图上画的是哪一年的小镇？"),
@@ -355,6 +450,11 @@ The director looked at the radiator and sighed. The next day, the map was mended
             t("The town in 1950", "1950年的小镇"),
           ],
           t("The map showed the town as it was in 1850.", "地图画的是1850年时的小镇。"),
+          [
+            t("Today is not what the map shows.", "地图画的不是今天的样子。"),
+            t("1,000 years ago is not mentioned.", "文中没提一千年前。"),
+            t("1950 is not mentioned.", "文中没提1950年。"),
+          ],
         ),
       ],
     ),
@@ -390,6 +490,11 @@ The librarian laughed when they showed her. "The Puzzle Club hides clues in book
             "The date stamp showed the book had last been borrowed eight months ago, so the note was old.",
             "日期章显示这本书八个月前才被借过，所以字条是旧的。",
           ),
+          [
+            t("Pencil says nothing about the date.", "铅笔说明不了日期。"),
+            t("The library being closed is never said.", "文中从没说图书馆周六关门。"),
+            t("No name does not show the note is old.", "没有署名并不能说明纸条是旧的。"),
+          ],
         ),
         ask(
           t('What did "where the dragon sleeps" turn out to mean?', '"where the dragon sleeps" 最后指的是什么？'),
@@ -403,6 +508,11 @@ The librarian laughed when they showed her. "The Puzzle Club hides clues in book
             "Lucia found a long green stuffed dragon curled on a bookshelf, with the key tucked under its tail.",
             "露西娅在书架上找到一条蜷着的绿色毛绒龙，钥匙就塞在它的尾巴下面。",
           ),
+          [
+            t("The book is about volcanoes, but no dragon sleeps there.", "书是讲火山的，但那里没有龙睡觉。"),
+            t("A cave is never mentioned.", "文中从没提到山洞。"),
+            t("The librarian's office is not where they found the key.", "他们不是在馆员办公室找到钥匙的。"),
+          ],
         ),
         ask(
           t("How does the opening build suspense?", "开头是怎样制造悬念的？"),
@@ -416,12 +526,22 @@ The librarian laughed when they showed her. "The Puzzle Club hides clues in book
             "The note's secret meeting and unknown key make Ben, and the reader, ask questions that the story answers only at the end.",
             "字条里的秘密会面和不明钥匙让本和读者都产生疑问，故事到结尾才给出答案。",
           ),
+          [
+            t("The club is explained only at the end.", "俱乐部到结尾才解释。"),
+            t("Volcanoes are only the book's subject.", "火山只是书的主题。"),
+            t("The writer is not revealed in the opening.", "开头并没有说出写纸条的人。"),
+          ],
         ),
         ask(
           t("What was the library book about?", "那本图书馆的书是关于什么的？"),
           t("Volcanoes", "火山"),
           [t("Dragons", "龙"), t("Puzzles", "谜题"), t("Keys", "钥匙")],
           t("Ben opened the library book about volcanoes, and a note slid out.", "本打开那本关于火山的书，一张纸条滑了出来。"),
+          [
+            t("Dragons are only in the note and the corner.", "龙只出现在纸条和儿童角里。"),
+            t("Puzzles belong to Lucia and the club.", "谜题属于露西亚和俱乐部。"),
+            t("The key was under the dragon, not the subject of the book.", "钥匙在龙下面，不是书的主题。"),
+          ],
         ),
       ],
     ),
@@ -453,6 +573,11 @@ Mr. Park fixed the board that weekend and stopped blaming the neighbors.`,
             "Min-jun points out that the padlock showed no scratches and the key had hung on its hook all week.",
             "敏俊指出，挂锁没有划痕，钥匙整个星期都挂在钩子上。",
           ),
+          [
+            t("A holiday is never mentioned.", "文中从没提到度假。"),
+            t("The shed had a door with a padlock.", "棚子有门，还有挂锁。"),
+            t("Liking tomatoes is not his reason.", "喜不喜欢番茄不是他的理由。"),
+          ],
         ),
         ask(
           t("Which clue suggested an animal was getting in?", "哪个线索暗示有动物进来了？"),
@@ -466,6 +591,11 @@ Mr. Park fixed the board that weekend and stopped blaming the neighbors.`,
             "The loose board left a gap, and gray hairs clung to the nail below it, suggesting a furry animal had squeezed through.",
             "松动的木板留下一道缝，下面的钉子上挂着灰色的毛，说明有毛茸茸的动物钻过。",
           ),
+          [
+            t("The tomatoes were what got nibbled, not a sign of who did it.", "番茄是被啃的东西，不能说明是谁啃的。"),
+            t("The padlock suggested no person broke in, not an animal.", "挂锁说明没有人闯入，不说明是动物。"),
+            t("The key in the kitchen rules out copying, not an animal.", "厨房里的钥匙排除了复制，不说明是动物。"),
+          ],
         ),
         ask(
           t("How is this mystery like the one in the bakery story?", "这个故事和面包店的故事有什么相似之处？"),
@@ -479,6 +609,11 @@ Mr. Park fixed the board that weekend and stopped blaming the neighbors.`,
             "In both stories a grown-up suspects a person, but a child follows the clues and finds an animal: a raccoon in one, a squirrel in the other.",
             "两个故事里都是大人怀疑有人作案，孩子却顺着线索发现是动物：一个是浣熊，一个是松鼠。",
           ),
+          [
+            t("A key under a tail is from the library story.", "尾巴下的钥匙出自图书馆的故事。"),
+            t("A museum guard is from the torn map story.", "博物馆保安出自撕破地图的故事。"),
+            t("The detective here is Min-jun, a son, not a police officer.", "这里的侦探是儿子敏俊，不是警察。"),
+          ],
         ),
       ],
     ),
@@ -514,6 +649,11 @@ The man in the gray coat had already slipped away, but the station guard had see
             "His ticket was punched for a train that had just left, which made his story of being asleep hard to believe.",
             "他的车票是刚开走那班车的，这让他睡了一路的说法难以令人相信。",
           ),
+          [
+            t("The woman's name was never on it.", "票上从来没有那个女人的名字。"),
+            t("The city is never mentioned.", "文中从没提到城市。"),
+            t("It had been punched for the 4:15 train.", "票已经为四点十五分的火车打过孔了。"),
+          ],
         ),
         ask(
           t("Whose statement showed that the man had lied?", "谁的话说明那个男人说了谎？"),
@@ -523,6 +663,11 @@ The man in the gray coat had already slipped away, but the station guard had see
             "The woman said that when she took off her headphones, the man was standing by the door, not asleep.",
             "那位女子说，她摘下耳机时，那个男人正站在门边，并没有睡觉。",
           ),
+          [
+            t("The boy only said he came from the platform.", "男孩只说他刚从站台进来。"),
+            t("Aunt Rosa was buying a newspaper.", "罗莎姑妈在买报纸。"),
+            t("The guard only saw his face afterward.", "保安只是事后看到了他的脸。"),
+          ],
         ),
         ask(
           t("Why did Nadia run to the platform?", "娜迪亚为什么跑到站台上去？"),
@@ -536,6 +681,11 @@ The man in the gray coat had already slipped away, but the station guard had see
             "The woman saw the man looking out at the platform, so Nadia concluded the suitcase was probably there.",
             "那位女子看到男人在向站台张望，所以娜迪亚推断箱子很可能在那里。",
           ),
+          [
+            t("The boy said nothing about hiding the suitcase.", "男孩没说他藏了行李箱。"),
+            t("The 4:15 had already left.", "四点十五分的车已经开走了。"),
+            t("The newspaper came before the suitcase vanished.", "买报纸是在行李箱消失之前。"),
+          ],
         ),
       ],
     ),

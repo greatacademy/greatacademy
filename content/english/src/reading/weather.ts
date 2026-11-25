@@ -32,6 +32,11 @@ Almost all of our weather happens in the lowest layer of the atmosphere, within 
             "The first sentence says Earth is wrapped in a thick blanket of air called the atmosphere.",
             "第一句说地球被一层厚厚的空气包裹着，这叫作大气层。",
           ),
+          why: [
+            t("A kind of cloud is wrong. Clouds form inside the lowest layer of the atmosphere.", "一种云不对。云是在大气最低层里形成的。"),
+            t("The top of a mountain is wrong. Mountains are where the air gets thinner.", "山顶不对。山上是空气变稀薄的地方。"),
+            t("A tank of oxygen is what climbers carry, not the atmosphere itself.", "氧气罐是登山者带的，不是大气本身。"),
+          ],
         },
         {
           prompt: t("Why do we not notice the air pressing on us?", "我们为什么感觉不到空气在压着我们？"),
@@ -45,6 +50,14 @@ Almost all of our weather happens in the lowest layer of the atmosphere, within 
             "The third paragraph says we do not notice it because the pressure is the same on every side of the body.",
             "第三段说我们感觉不到，是因为身体各个方向受到的压力相同。",
           ),
+          why: [
+            t(
+              "Air having no weight is the opposite. The third paragraph says air has weight.",
+              "空气没有重量正好相反。第三段说空气是有重量的。",
+            ),
+            t("Pressing only on mountains is wrong. Air presses on you all the time.", "只压在山上不对。空气一直压着你。"),
+            t("Breathing the pressure out is not in the passage.", "把压力呼出去文中没有。"),
+          ],
         },
         {
           prompt: t("Why do climbers on the tallest peaks carry oxygen?", "攀登最高山峰的人为什么要带氧气？"),
@@ -55,6 +68,11 @@ Almost all of our weather happens in the lowest layer of the atmosphere, within 
             t("Oxygen keeps them warm", "氧气能让他们保暖"),
           ],
           solution: t("The fourth paragraph says the higher you go, the thinner the air becomes.", "第四段说越往高处，空气越稀薄。"),
+          why: [
+            t("No wind on mountains is not the reason given.", "山上没风不是文中给的原因。"),
+            t("Thicker air high up is the opposite. The higher you go, the thinner it gets.", "高处空气更厚正好相反。越高空气越稀薄。"),
+            t("Keeping warm is not why they carry oxygen.", "保暖不是他们带氧气的原因。"),
+          ],
         },
       ],
     },
@@ -86,6 +104,11 @@ Because some places are warmer than others, the air above them is warmer too. Th
             "The second paragraph says sunlight shines almost straight down near the equator, so its energy is packed into a small area.",
             "第二段说赤道附近阳光几乎直射，能量集中在一小块地方。",
           ),
+          why: [
+            t("Being closer to the moon is not in the passage.", "离月亮更近文中没有。"),
+            t("No air at the equator is wrong. The sun warms the air there.", "赤道没有空气不对。太阳在那里加热空气。"),
+            t("A low slant is what happens near the poles, where it is cold.", "斜射是在两极附近，那里很冷。"),
+          ],
         },
         {
           prompt: t("What does the flashlight tilted across a table help explain?", "斜照在桌上的手电筒帮助说明了什么？"),
@@ -99,6 +122,14 @@ Because some places are warmer than others, the air above them is warmer too. Th
             "The third paragraph compares slanted sunlight at the poles to the light of a tilted flashlight spread over a larger area.",
             "第三段把两极的斜射阳光比作斜照的手电筒光，光被分散到更大的面积上。",
           ),
+          why: [
+            t("The cool sea is about land and water, in the next paragraph.", "海水凉爽讲的是陆地和水，在下一段。"),
+            t(
+              "How the sun travels through space is in the first paragraph, not this comparison.",
+              "太阳光穿过太空在第一段，不是这个比喻。",
+            ),
+            t("Hot sand is about land heating quickly.", "沙子烫说的是陆地升温快。"),
+          ],
         },
         {
           prompt: t("How is water different from land, according to the passage?", "根据文章，水和陆地有什么不同？"),
@@ -112,6 +143,14 @@ Because some places are warmer than others, the air above them is warmer too. Th
             "The fourth paragraph says land heats and cools quickly, while water heats slowly and holds its warmth for a long time.",
             "第四段说陆地升温和降温都很快，而水升温慢，保温时间长。",
           ),
+          why: [
+            t(
+              "Heating faster than land is backwards. On a hot day the sand burns but the sea stays cool.",
+              "比陆地升温快是反的。大热天沙子烫脚，海水却凉。",
+            ),
+            t("Never getting warm is wrong. Water warms, just slowly.", "永远不变暖不对。水会变暖，只是慢。"),
+            t("Cooling quickly is what land does. Water holds its warmth.", "降温快是陆地的特点。水能保持温暖。"),
+          ],
         },
       ],
     },
@@ -143,6 +182,11 @@ The same thing happens on a much larger scale all over the world. Huge differenc
             "The second paragraph says the answer is differences in temperature: warm air rises and cooler air flows in.",
             "第二段说答案是温度差异：暖空气上升，较冷的空气流进来。",
           ),
+          why: [
+            t("Trees bending is what wind does, not what causes it.", "树弯腰是风造成的结果，不是风的原因。"),
+            t("Sailboats are pushed by wind. They do not push the air.", "帆船是被风推动的，它们不推空气。"),
+            t("Warm air becoming heavier is backwards. Warm air gets lighter and rises.", "暖空气变重是反的。暖空气变轻并上升。"),
+          ],
         },
         {
           prompt: t("Why does a breeze often blow from the sea in the afternoon?", "为什么下午常常有风从海上吹来？"),
@@ -156,6 +200,11 @@ The same thing happens on a much larger scale all over the world. Huge differenc
             "The third paragraph says the land warms faster in the day, warm air rises over it, and cool air from over the water rushes in.",
             "第三段说白天陆地升温更快，暖空气在陆地上空上升，海上的冷空气就涌了过来。",
           ),
+          why: [
+            t("The sea being warmer by day is backwards. The land warms faster.", "白天海水更暖是反的。陆地升温更快。"),
+            t("The land cooling faster happens at night, not in the afternoon.", "陆地降温更快是晚上的事，不是下午。"),
+            t("Waves pushing the air is not in the passage.", "海浪推空气文中没有。"),
+          ],
         },
         {
           prompt: t(
@@ -172,6 +221,11 @@ The same thing happens on a much larger scale all over the world. Huge differenc
             "The paragraph explains that at night the breeze blows from the land toward the sea, the opposite of the day.",
             "这一段解释说，夜里风从陆地吹向大海，和白天的方向相反。",
           ),
+          why: [
+            t("Stopping completely is wrong. The breeze keeps blowing, just the other way.", "完全停止不对。风还在吹，只是方向反了。"),
+            t("The sea turning into land is too literal.", "海变成陆地太按字面理解了。"),
+            t("Growing stronger is not what the phrase means.", "这句话的意思不是风变强。"),
+          ],
         },
       ],
     },
@@ -196,6 +250,11 @@ Today, weather stations around the world take these measurements every hour. Wea
           right: t("Air pressure", "气压"),
           wrong: [t("Temperature", "温度"), t("The speed of the wind", "风速"), t("How much rain fell", "降雨量")],
           solution: t('The third paragraph says: "A barometer measures air pressure."', "第三段说：“A barometer measures air pressure.”"),
+          why: [
+            t("Temperature is measured by a thermometer.", "温度是用温度计测的。"),
+            t("Wind speed is measured by an anemometer.", "风速是用风速计测的。"),
+            t("Rainfall is measured by a rain gauge.", "降雨量是用雨量计测的。"),
+          ],
         },
         {
           prompt: t("How does an anemometer show the speed of the wind?", "风速计怎样显示风速？"),
@@ -209,6 +268,11 @@ Today, weather stations around the world take these measurements every hour. Wea
             "The fourth paragraph says the faster the wind blows, the faster the cups spin.",
             "第四段说风吹得越快，小杯转得越快。",
           ),
+          why: [
+            t("Pointing into the wind is what a wind vane does.", "指向风来的方向是风向标做的事。"),
+            t("Collecting in a tube is what a rain gauge does with rain.", "用管子收集是雨量计对雨水做的事。"),
+            t("Taking pictures from space is what satellites do.", "从太空拍照是卫星做的事。"),
+          ],
         },
         {
           prompt: t("What does *forecast* mean in the last paragraph?", "最后一段中的 *forecast* 是什么意思？"),
@@ -218,6 +282,14 @@ Today, weather stations around the world take these measurements every hour. Wea
             'The passage explains the word right after it: "to forecast, or tell ahead of time."',
             "文章紧接着解释了这个词：“to forecast, or tell ahead of time.”",
           ),
+          why: [
+            t("Measuring rain is the job of a rain gauge.", "测雨量是雨量计的工作。"),
+            t("Spinning quickly describes the anemometer's cups.", "快速旋转说的是风速计的风杯。"),
+            t(
+              "Collecting pictures is what satellites do. The word is explained right after it: tell ahead of time.",
+              "收集图片是卫星做的事。这个词后面紧接着就解释了：提前告知。",
+            ),
+          ],
         },
       ],
     },
@@ -248,6 +320,14 @@ When you hear thunder, go inside a building. Do not stand under a tree, which li
             "The second paragraph says drops and bits of ice rub and crash together and build up electric charges.",
             "第二段说水滴和冰粒互相摩擦碰撞，积累起电荷。",
           ),
+          why: [
+            t(
+              "Lightning striking a tree happens after the charge builds, and outside the cloud.",
+              "闪电击中树是电荷积累之后的事，而且在云外。",
+            ),
+            t("Thunder is the sound after lightning, not what makes the charge.", "雷声是闪电之后的声音，不是产生电荷的原因。"),
+            t("The sun shining on the cloud is not in the passage.", "太阳照在云上文中没有。"),
+          ],
         },
         {
           prompt: t("What causes the sound of thunder?", "雷声是怎样产生的？"),
@@ -261,6 +341,11 @@ When you hear thunder, go inside a building. Do not stand under a tree, which li
             "The third paragraph says the heated air expands so suddenly that it makes a loud boom, which is thunder.",
             "第三段说被加热的空气突然膨胀，发出巨响，这就是雷声。",
           ),
+          why: [
+            t("Clouds bumping together is not the cause given.", "云相撞不是文中给的原因。"),
+            t("Ice falling is not in the passage. Ice moves up and down inside the cloud.", "冰落地文中没有。冰是在云里上下翻滚。"),
+            t("Wind through trees is not thunder. Thunder comes from heated air.", "风吹树不是雷声。雷声来自被加热的空气。"),
+          ],
         },
         {
           prompt: t(
@@ -273,6 +358,14 @@ When you hear thunder, go inside a building. Do not stand under a tree, which li
             "The fourth paragraph says about five seconds means about a mile, so ten seconds means about two miles.",
             "第四段说大约五秒相当于一英里，所以十秒大约是两英里。",
           ),
+          why: [
+            t(
+              "Ten miles mixes up seconds and miles. Five seconds is one mile, so ten seconds is two.",
+              "十英里把秒数当成了英里数。五秒是一英里，十秒就是两英里。",
+            ),
+            t("Half a mile is too close. Half a mile would be only a few seconds.", "半英里太近了。半英里只需要两三秒。"),
+            t("Right above you would mean almost no gap between flash and boom.", "就在头顶意味着闪光和雷声几乎同时。"),
+          ],
         },
       ],
     },
@@ -304,6 +397,14 @@ When a hurricane moves over land or cold water, it loses its supply of warm, dam
             "The first paragraph says they are called hurricanes in some places and typhoons in others, and they are the same kind of storm.",
             "第一段说它们在有些地方叫飓风，在另一些地方叫台风，是同一种风暴。",
           ),
+          why: [
+            t(
+              "Typhoons forming over land is wrong. They begin over warm tropical oceans too.",
+              "台风在陆地上形成不对。它们同样起源于温暖的热带海洋。",
+            ),
+            t("Hurricanes being smaller is not in the passage. They are the same storm.", "飓风更小文中没有。它们是同一种风暴。"),
+            t("Typhoons having no eye is wrong. They are the same kind of storm.", "台风没有风眼不对。它们是同一种风暴。"),
+          ],
         },
         {
           prompt: t("What is the eye of a hurricane?", "飓风的风眼是什么？"),
@@ -317,6 +418,11 @@ When a hurricane moves over land or cold water, it loses its supply of warm, dam
             "The fourth paragraph says the eye is a calm area at the center, and the strongest winds are around it.",
             "第四段说风眼是中心平静的区域，最强的风在它周围。",
           ),
+          why: [
+            t("The wall of strongest winds is around the eye, not the eye itself.", "最强风的风墙在风眼周围，不是风眼本身。"),
+            t("Where the storm begins is warm ocean water, not the eye.", "风暴开始的地方是温暖海面，不是风眼。"),
+            t("A high wave is damage on the coast, not part of the storm's center.", "巨浪是海岸上的破坏，不是风暴中心的一部分。"),
+          ],
         },
         {
           prompt: t("Why does a hurricane weaken over land?", "飓风为什么在陆地上会减弱？"),
@@ -330,6 +436,14 @@ When a hurricane moves over land or cold water, it loses its supply of warm, dam
             "The last paragraph says that over land or cold water it loses its supply of warm, damp air and weakens.",
             "最后一段说在陆地或冷水上空，它失去温暖潮湿空气的供应，于是减弱。",
           ),
+          why: [
+            t("Mountains breaking it is not in the passage.", "山把它打碎文中没有。"),
+            t("Earth stopping spinning is not in the passage.", "地球停止转动文中没有。"),
+            t(
+              "The eye closing is not in the passage. It weakens without warm, damp air.",
+              "风眼关闭文中没有。它是因为没有了温暖潮湿的空气而减弱。",
+            ),
+          ],
         },
       ],
     },
@@ -359,6 +473,11 @@ The southern half always has the opposite season. When children in the north are
             "The first paragraph says many people think it is warm in summer because Earth is closer to the sun, and that this is not the reason.",
             "第一段说很多人认为夏天热是因为地球离太阳更近，但这不是原因。",
           ),
+          why: [
+            t("Earth spinning on its axis is a true fact the passage uses, not a mistake.", "地球绕轴自转是文中用到的事实，不是错误。"),
+            t("Long summer days are true too. The passage says the days are long in summer.", "夏天白天长也是对的。文中说夏天白天长。"),
+            t("Earth traveling around the sun is true and part of the explanation.", "地球绕太阳转是对的，也是解释的一部分。"),
+          ],
         },
         {
           prompt: t("What is the real reason for the seasons?", "四季形成的真正原因是什么？"),
@@ -372,12 +491,22 @@ The southern half always has the opposite season. When children in the north are
             'The second paragraph begins: "The real reason is that Earth is tilted."',
             "第二段开头说：“The real reason is that Earth is tilted.”",
           ),
+          why: [
+            t("The sun growing hotter is not in the passage.", "太阳变得更热文中没有。"),
+            t("Earth stopping spinning is wrong. It always spins.", "地球停止转动不对。它一直在转。"),
+            t("The moon blocking the sun is not in the passage.", "月亮挡住太阳文中没有。"),
+          ],
         },
         {
           prompt: t("If it is summer in the north, what season is it in the south?", "如果北半球是夏天，南半球是什么季节？"),
           right: t("Winter", "冬天"),
           wrong: [t("Summer", "夏天"), t("Spring", "春天"), t("It has no season", "没有季节")],
           solution: t("The last paragraph says the southern half always has the opposite season.", "最后一段说南半球的季节总是相反的。"),
+          why: [
+            t("Summer in both halves is wrong. The south always has the opposite season.", "南北都是夏天不对。南半球总是相反的季节。"),
+            t("Spring is not the opposite of summer.", "春天不是夏天的相反季节。"),
+            t("No season is wrong. The south has the opposite one.", "没有季节不对。南半球是相反的季节。"),
+          ],
         },
       ],
     },
@@ -411,6 +540,11 @@ A single cold week does not change a place's climate, in the same way that one b
             "The second and third paragraphs define weather as what the air is doing now and climate as the usual pattern over many years.",
             "第二段和第三段把天气定义为空气此刻的状况，把气候定义为多年的通常规律。",
           ),
+          why: [
+            t("Rain and wind is wrong. Both words cover all kinds of weather.", "雨和风不对。两个词都涵盖各种天气。"),
+            t("Weather lasting years is backwards. Weather changes hour to hour.", "天气持续多年是反的。天气每小时都在变。"),
+            t("Meaning the same thing is what the first paragraph says is a mix-up.", "意思一样正是第一段说的混淆。"),
+          ],
         },
         {
           prompt: t(
@@ -423,6 +557,11 @@ A single cold week does not change a place's climate, in the same way that one b
             "The third paragraph says scientists look at the weather over thirty years or more.",
             "第三段说科学家要看三十年或更久的天气。",
           ),
+          why: [
+            t("A few days is weather, not climate.", "几天是天气，不是气候。"),
+            t("One year is far too short. The passage says thirty years or more.", "一年太短了。文中说三十年以上。"),
+            t("One week is weather. A cold week does not change a climate.", "一周是天气。冷一周不会改变气候。"),
+          ],
         },
         {
           prompt: t("Why does the writer mention clothes in a closet?", "作者为什么提到衣柜里的衣服？"),
@@ -436,6 +575,11 @@ A single cold week does not change a place's climate, in the same way that one b
             "The fourth paragraph compares what to wear today to weather, and the clothes you keep for the whole year to climate.",
             "第四段把今天穿什么比作天气，把一年四季都要备着的衣服比作气候。",
           ),
+          why: [
+            t("Shopping advice is not the point.", "购物建议不是重点。"),
+            t("Weather never changing is the opposite. Weather changes quickly.", "天气从不变化正好相反。天气变得很快。"),
+            t("How clouds form is not in this passage.", "云怎样形成不在这篇文章里。"),
+          ],
         },
       ],
     },
@@ -467,6 +611,11 @@ Within each zone, other things make a difference. A city by the ocean has milder
             "The first paragraph says a climate zone depends mostly on how far a region is from the equator.",
             "第一段说气候带主要取决于一个地区离赤道有多远。",
           ),
+          why: [
+            t("How many people live there is not mentioned.", "住多少人文中没提。"),
+            t("Trees are not what sets a zone. Rain forests grow because of the climate.", "树木不决定气候带。雨林是因为气候才长出来的。"),
+            t("Deserts are found in several zones, so they do not set the zone.", "沙漠分布在几个气候带里，所以它不决定气候带。"),
+          ],
         },
         {
           prompt: t("Which zone has four seasons in most places?", "哪个气候带的大多数地方有四季？"),
@@ -476,6 +625,14 @@ Within each zone, other things make a difference. A city by the ocean has milder
             "The fourth paragraph says most places in the temperate zones have four seasons.",
             "第四段说温带的大多数地方有四季。",
           ),
+          why: [
+            t("The tropical zone is warm all year, with no cold winter.", "热带全年温暖，没有寒冬。"),
+            t("The polar zones are cold all year.", "极地全年寒冷。"),
+            t(
+              "Deserts are not a zone with four seasons; they are found wherever little rain falls.",
+              "沙漠不是有四季的气候带，凡是少雨的地方都有。",
+            ),
+          ],
         },
         {
           prompt: t("Why does a city by the ocean have milder winters than a city far inland?", "为什么海边城市的冬天比内陆城市温和？"),
@@ -489,6 +646,14 @@ Within each zone, other things make a difference. A city by the ocean has milder
             "The last paragraph says the ocean city is milder because water warms and cools slowly.",
             "最后一段说海边城市更温和，是因为水升温和降温都很慢。",
           ),
+          why: [
+            t("Oceans being always hot is wrong. Ocean cities have cooler summers.", "海洋总是热的不对。海边城市的夏天更凉爽。"),
+            t("Blocking the wind is not the reason given.", "挡风不是文中给的原因。"),
+            t(
+              "Being near the equator is not the reason. The passage points to how water warms and cools.",
+              "靠近赤道不是原因。文中指的是水升温降温慢。",
+            ),
+          ],
         },
       ],
     },
@@ -517,6 +682,11 @@ People around the world are working on ways to slow this change. They are buildi
             "The first paragraph says past changes usually took thousands of years, and the second says scientists have measured a faster change today.",
             "第一段说过去的变化通常需要几千年，第二段说科学家测量到如今的变化更快。",
           ),
+          why: [
+            t("The first change ever is wrong. The climate has changed many times before.", "第一次变化不对。气候以前变过很多次。"),
+            t("Getting colder is the opposite. Temperatures have risen.", "变冷正好相反。气温升高了。"),
+            t("Taking thousands of years is how past changes worked.", "要几千年是过去变化的特点。"),
+          ],
         },
         {
           prompt: t(
@@ -529,6 +699,11 @@ People around the world are working on ways to slow this change. They are buildi
             "The second paragraph says the main reason is the burning of coal, oil and gas.",
             "第二段说主要原因是燃烧煤、石油和天然气。",
           ),
+          why: [
+            t("Planting trees is a way to slow the change, not a cause.", "种树是减缓变化的办法，不是原因。"),
+            t("Ice ages are past changes, not today's warming.", "冰河时期是过去的变化，不是今天的变暖。"),
+            t("Sea level rising is a result of warming, not its cause.", "海平面上升是变暖的结果，不是原因。"),
+          ],
         },
         {
           prompt: t("Why does the writer compare carbon dioxide to a blanket?", "作者为什么把二氧化碳比作毯子？"),
@@ -542,6 +717,14 @@ People around the world are working on ways to slow this change. They are buildi
             "The second paragraph says carbon dioxide traps heat near the ground, a little like a blanket on a bed.",
             "第二段说二氧化碳把热量困在地面附近，有点像床上的毯子。",
           ),
+          why: [
+            t("Being soft is not the point of the comparison.", "柔软不是这个比喻的重点。"),
+            t("Being washable is not the point.", "可以洗不是重点。"),
+            t(
+              "Covering the ocean is wrong. The blanket is about trapping heat near the ground.",
+              "盖住海洋不对。毯子说的是把热量困在地面附近。",
+            ),
+          ],
         },
       ],
     },

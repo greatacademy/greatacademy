@@ -43,6 +43,14 @@ The bald eagle, which had almost disappeared from much of the country, slowly re
             "The second paragraph says the town was imaginary, but every disaster she described had happened somewhere.",
             "第二段说小镇是想象的，但她描写的每一场灾难都在某处发生过。",
           ),
+          [
+            t(
+              "Carson gathered evidence from across the country; the town is a device, not a sign she knew none.",
+              "卡森从全国收集证据；虚构小镇是一种手法，不是因为她没去过真实城镇。",
+            ),
+            t("She says the cause was not magic but chemistry.", "她说原因不是魔法，而是化学。"),
+            t("The book was for adults, read even by the president's advisers.", "这本书面向成人，连总统的顾问都读了。"),
+          ],
         ),
         ask(
           t("How did DDT harm eagles and ospreys?", "滴滴涕怎样伤害了鹰和鹗？"),
@@ -56,6 +64,11 @@ The bald eagle, which had almost disappeared from much of the country, slowly re
             "The third paragraph says DDT made the shells of their eggs so thin that they broke when the parents sat on them.",
             "第三段说滴滴涕使它们的蛋壳太薄，亲鸟孵蛋时蛋就破了。",
           ),
+          [
+            t("Trees and nests are not mentioned; the harm was to the eggshells.", "文中没提树木和鸟巢；受害的是蛋壳。"),
+            t("DDT built up through the food chain; it did not kill the birds on contact.", "DDT 在食物链中积累，并不是喷洒时直接毒死鸟。"),
+            t("The birds did not migrate away; their numbers collapsed where they lived.", "鸟并没有迁走，而是在原地数量锐减。"),
+          ],
         ),
         ask(
           t("What image does Carson use for nature, according to the fifth paragraph?", "根据第五段，卡森用什么意象来描述自然？"),
@@ -69,6 +82,11 @@ The bald eagle, which had almost disappeared from much of the country, slowly re
             "The fifth paragraph says she described nature as a web in which every strand is connected, so harm in one place is felt in another.",
             "第五段说她把自然描述为一张每根丝都相连的网，一处的伤害会在别处被感受到。",
           ),
+          [
+            t("Resources to be controlled is the older view she argued against.", "“可控制的资源”是她反对的旧观念。"),
+            t("No machine image is used; she describes a web.", "文中没用机器的比喻，她描述的是一张网。"),
+            t("The fairy tale is how the book opens, not her image of nature.", "童话是书的开头方式，不是她对自然的比喻。"),
+          ],
         ),
         ask(
           t("In which year did Rachel Carson publish her book?", "蕾切尔·卡森哪年出版了她的书？"),
@@ -78,6 +96,11 @@ The bald eagle, which had almost disappeared from much of the country, slowly re
             "In 1962, an American scientist and writer named Rachel Carson published a book.",
             "1962年，美国科学家、作家蕾切尔·卡森出版了一本书。",
           ),
+          [
+            t("1945 is around the end of the war, when spraying began.", "1945年左右是战争结束、开始喷药的时候。"),
+            t("1964 is the year Carson died.", "1964年是卡森去世那年。"),
+            t("1972 is when the United States banned DDT on crops.", "1972年是美国禁止在农作物上使用 DDT 的时候。"),
+          ],
         ),
       ],
       ["Rachel", "Carson", "America", "DDT"],
@@ -110,6 +133,14 @@ The true story is more complicated than the popular one, but its lesson remains 
             "The second paragraph says the elk population grew and the elk ate the young willow and aspen trees in the river valleys.",
             "第二段说麋鹿数量增长，它们吃掉了河谷里的柳树和白杨幼树。",
           ),
+          [
+            t("Beavers became rare once the willows went; they did not cut them all down.", "柳树消失后海狸变得稀少，并不是海狸砍光了树。"),
+            t("Rangers removed the wolves, not the trees.", "护林员清除的是狼，不是树。"),
+            t(
+              "Drought is a later point about the elk, not the reason the trees vanished.",
+              "干旱是后面讲麋鹿时提到的，不是树木消失的原因。",
+            ),
+          ],
         ),
         ask(
           t("Why do many ecologists doubt the claim that wolves changed the rivers?", "为什么许多生态学家怀疑狼改变了河流的说法？"),
@@ -123,6 +154,14 @@ The true story is more complicated than the popular one, but its lesson remains 
             "The fifth paragraph says the recovery has been uneven, drought, hunting and bears also reduced the elk, and some streams hardly changed.",
             "第五段说恢复并不均衡，干旱、狩猎和熊也减少了麋鹿，而且有些溪流几乎没有变化。",
           ),
+          [
+            t("The wolves did arrive: thirty-one were released in 1995 and 1996.", "狼确实来了：1995和1996年放归了三十一只。"),
+            t(
+              "The doubt is that the effect was exaggerated; trees holding banks is not denied.",
+              "质疑的是效果被夸大，并没有否认树木能固岸。",
+            ),
+            t("The elk population fell after the wolves returned.", "狼回来后麋鹿数量下降了。"),
+          ],
         ),
         ask(
           t("What comparison does the passage use to explain a trophic cascade?", "文章用什么比喻来解释营养级联？"),
@@ -136,6 +175,11 @@ The true story is more complicated than the popular one, but its lesson remains 
             "The last paragraph describes a change that flows down through the whole system, like water falling from step to step.",
             "最后一段把这种变化描述为贯穿整个系统向下传递，就像水一级一级往下落。",
           ),
+          [
+            t("Rewinding a clock is what bringing a species back does not do.", "“倒拨时钟”恰恰是物种回归做不到的事。"),
+            t("Videos spread the exaggerated story; they are not the comparison.", "视频传播了夸大的说法，不是那个比喻。"),
+            t("Beaver dams are one effect of the cascade, not the image for it.", "海狸坝是连锁效应的结果之一，不是比喻本身。"),
+          ],
         ),
         ask(
           t("How many wolves did scientists release into Yellowstone?", "科学家向黄石公园放了多少只狼？"),
@@ -146,6 +190,11 @@ The true story is more complicated than the popular one, but its lesson remains 
             t("Two, a male and a female", "两只，一公一母"),
           ],
           t("Scientists brought thirty-one wolves from Canada and released them into the park.", "科学家从加拿大带来三十一只狼放进公园。"),
+          [
+            t("Twenty-four is the number of rabbits Austin got from England.", "二十四是奥斯汀从英国要来的兔子数。"),
+            t("The wolves came from Canada, not zoos.", "狼来自加拿大，不是动物园。"),
+            t("Two is far too few; thirty-one wolves were released.", "两只太少了；放归的是三十一只。"),
+          ],
         ),
       ],
       ["Yellowstone", "Canada"],
@@ -178,6 +227,11 @@ Today there are still hundreds of millions of rabbits in Australia. The story of
             "The second paragraph says Australia had few animals that could hunt rabbits and a mild climate, so they could breed almost all year.",
             "第二段说澳大利亚几乎没有能捕食兔子的动物，气候温和，所以它们几乎全年都能繁殖。",
           ),
+          [
+            t("The rabbits ate the farmers' grass; farmers did not feed them.", "是兔子吃了农民的草，不是农民喂它们。"),
+            t("Australia had no native rabbits.", "澳大利亚没有本土兔子。"),
+            t("Austin asked for only twenty-four rabbits.", "奥斯汀只要了二十四只兔子。"),
+          ],
         ),
         ask(
           t("Why did releasing foxes and cats make the problem worse?", "为什么放出狐狸和猫使问题更严重？"),
@@ -191,6 +245,14 @@ Today there are still hundreds of millions of rabbits in Australia. The story of
             "The fourth paragraph says the foxes and cats preferred native animals, which were easier to catch, so two invasive species were added to the first.",
             "第四段说狐狸和猫更喜欢捕食更容易抓到的本地动物，于是在兔子之外又多了两种入侵物种。",
           ),
+          [
+            t("The rabbits dug under fences by themselves; foxes and cats did not help.", "兔子自己从篱笆下挖过去，狐狸和猫没帮忙。"),
+            t(
+              "Myxoma was released by scientists in 1950, not carried by foxes or cats.",
+              "黏液瘤病毒是科学家1950年释放的，不是狐狸或猫带来的。",
+            ),
+            t("The grass was eaten by rabbits; foxes and cats hunted animals.", "草是兔子吃的；狐狸和猫猎食动物。"),
+          ],
         ),
         ask(
           t("What lesson does the last paragraph draw from the story?", "最后一段从这个故事中得出什么教训？"),
@@ -204,6 +266,11 @@ Today there are still hundreds of millions of rabbits in Australia. The story of
             "The passage ends by saying the safest moment to stop an invasion is before it begins.",
             "文章结尾说阻止入侵最安全的时机是在它开始之前。",
           ),
+          [
+            t("The fences failed; the rabbits dug under them or got through gaps.", "篱笆失败了；兔子从下面挖或从缝隙钻过。"),
+            t("The viruses worked only for a while before resistant rabbits increased again.", "病毒只奏效一时，抗病兔子又多起来了。"),
+            t("Millions were shot each year with no effect on their numbers.", "每年射杀数百万只，数量却毫无变化。"),
+          ],
         ),
         ask(
           t("Why did Thomas Austin want rabbits?", "托马斯·奥斯汀为什么想要兔子？"),
@@ -217,6 +284,11 @@ Today there are still hundreds of millions of rabbits in Australia. The story of
             "Austin missed the hunting of his youth, and he wanted rabbits to shoot on his land.",
             "奥斯汀怀念年轻时打猎的日子，想在自己的土地上打兔子。",
           ),
+          [
+            t("Fur is never mentioned; he missed the hunting of his youth.", "文中没提毛皮；他怀念年轻时的打猎。"),
+            t("His children are not mentioned; he wanted rabbits to shoot.", "文中没提他的孩子；他想要兔子来打猎。"),
+            t("Weeds are never mentioned; he wanted hunting and a touch of home.", "文中没提杂草；他想要打猎和一点家乡的感觉。"),
+          ],
         ),
       ],
       ["Thomas", "Austin", "Melbourne", "Australia", "Australians", "England", "myxoma"],
@@ -251,6 +323,14 @@ The Amazon is often called the lungs of the planet, though in fact it uses most 
             "The fourth paragraph says scientists call these streams of moisture in the air flying rivers, carried by the wind across the continent.",
             "第四段说科学家把空气中的这些水汽流称为飞翔的河流，它们被风带着穿越大陆。",
           ),
+          [
+            t("The flying rivers are in the air, not floods on the ground.", "“空中河流”在空中，不是地上的洪水。"),
+            t(
+              "The Andes are where the moisture turns south, not where it falls as waterfalls.",
+              "安第斯山是水汽转向南方的地方，不是瀑布。",
+            ),
+            t("Roads are part of deforestation, not the flying rivers.", "道路属于毁林的一部分，与“空中河流”无关。"),
+          ],
         ),
         ask(
           t("Why does deforestation in the Amazon matter to farms in Argentina?", "为什么亚马孙的森林砍伐对阿根廷的农场很重要？"),
@@ -264,6 +344,14 @@ The Amazon is often called the lungs of the planet, though in fact it uses most 
             "The fourth and fifth paragraphs say the flying rivers bring rain to farmland far away, and cleared land releases far less water.",
             "第四段和第五段说飞翔的河流把雨水带到遥远的农田，而被砍伐的土地释放的水少得多。",
           ),
+          [
+            t("Soybean trade is not the link; rain carried from the forest is.", "联系不在大豆贸易，而在森林输送的雨水。"),
+            t("The forest sends moisture, not shelter from wind.", "森林输送的是水汽，不是挡风。"),
+            t(
+              "Cattle ranches are inside Brazil's cleared forest; no Argentine cattle graze there.",
+              "牧场在巴西被砍伐的林地里，没有阿根廷的牛在那里吃草。",
+            ),
+          ],
         ),
         ask(
           t("Why does the author suggest a heart is a better comparison than lungs?", "作者为什么认为心脏比肺是更好的比喻？"),
@@ -280,6 +368,14 @@ The Amazon is often called the lungs of the planet, though in fact it uses most 
             "The last paragraph says the forest uses most of its oxygen, but pumps water like a heart, and a heart damaged slowly can fail all at once.",
             "最后一段说森林消耗了它产生的大部分氧气，但它像心脏一样泵送水分，而缓慢受损的心脏可能突然衰竭。",
           ),
+          [
+            t("The passage says it uses most of the oxygen it produces.", "文中说它消耗了自己产生的大部分氧气。"),
+            t(
+              "Location is not the point; the heart image is about pumping and sudden failure.",
+              "重点不在地点；心脏的比喻讲的是泵送和突然衰竭。",
+            ),
+            t("Tree shape is never mentioned; the comparison is about what the forest does.", "文中没提树的形状；比喻讲的是森林的作用。"),
+          ],
         ),
         ask(
           t("How large is the Amazon rainforest?", "亚马孙雨林有多大？"),
@@ -293,6 +389,11 @@ The Amazon is often called the lungs of the planet, though in fact it uses most 
             "The Amazon rainforest covers more than five million square kilometers of South America, an area larger than India.",
             "亚马孙雨林覆盖南美洲五百多万平方公里，面积比印度还大。",
           ),
+          [
+            t("France is never mentioned; the forest is larger than India.", "文中没提法国；森林比印度还大。"),
+            t("It covers more than five million square kilometers, far bigger than any city.", "它覆盖五百多万平方公里，远大于任何城市。"),
+            t("One million is far too small, and the size is given as more than five million.", "一百万太小了；文中说的是五百多万。"),
+          ],
         ),
       ],
       ["Amazon", "America", "India", "Andes", "Brazil", "Paraguay", "Argentina"],
@@ -327,6 +428,11 @@ The Dust Bowl is remembered as one of the worst environmental disasters in Ameri
             "The third paragraph says farmers plowed up millions of hectares of grass whose roots held the soil, so nothing held it when the rain stopped.",
             "第三段说农民翻耕了数百万公顷草地，而草根原本固定着土壤，所以雨停后再也没有东西能固定它。",
           ),
+          [
+            t("Planting trees was part of the cure, not the cause.", "种树是补救办法，不是原因。"),
+            t("People left during the disaster, not before it.", "人们是在灾难中离开的，不是之前。"),
+            t("High wheat prices made them plow more grass, not stop.", "高麦价让他们开垦更多草地，不是停止种麦。"),
+          ],
         ),
         ask(
           t("Which detail shows how far the dust traveled?", "哪个细节表明沙尘传得有多远？"),
@@ -340,6 +446,11 @@ The Dust Bowl is remembered as one of the worst environmental disasters in Ameri
             "The fourth paragraph says some storms carried dust to the east coast cities and onto ships at sea.",
             "第四段说一些风暴把沙尘带到了东海岸的城市和海上的船只。",
           ),
+          [
+            t("Not seeing your hands shows how thick the dust was, not how far it went.", "看不见自己的手说明尘土之浓，不是距离之远。"),
+            t("Wet towels show dust getting into homes, not its distance.", "湿毛巾说明尘土钻进屋里，不是它飘多远。"),
+            t("Dust pneumonia shows the harm to health, not distance.", "尘肺病说明对健康的危害，不是距离。"),
+          ],
         ),
         ask(
           t("What lesson does the final paragraph draw?", "最后一段得出什么教训？"),
@@ -353,12 +464,22 @@ The Dust Bowl is remembered as one of the worst environmental disasters in Ameri
             "It says the soil seems permanent but can be lost in a few seasons, and takes far longer to replenish.",
             "它说土壤看似永恒，却可能在几个季节内流失，而补充它需要长得多的时间。",
           ),
+          [
+            t("Wheat could not prevent drought; it died when the rain stopped.", "小麦防不了干旱，雨一停就死了。"),
+            t("The passage teaches farmers to protect soil, not to stop farming.", "文中教农民保护土壤，不是停止耕种。"),
+            t("Nothing says dust storms happen only in America.", "文中没说沙尘暴只发生在美国。"),
+          ],
         ),
         ask(
           t("About how many people left the plains during the 1930s?", "二十世纪三十年代约有多少人离开了大平原？"),
           t("About two and a half million", "约二百五十万"),
           [t("About twenty-five thousand", "约两万五千"), t("About fifty million", "约五千万"), t("Only a few hundred", "只有几百人")],
           t("About two and a half million people left the plains during the 1930s.", "二十世纪三十年代，约二百五十万人离开了大平原。"),
+          [
+            t("Twenty-five thousand is far too few; about two and a half million left.", "两万五千太少了；离开的约有两百五十万人。"),
+            t("Fifty million is far too many.", "五千万太多了。"),
+            t("A few hundred is nothing like the millions who left.", "几百人与离开的数百万人相差太远。"),
+          ],
         ),
       ],
       ["Oklahoma", "Texas", "Asia", "Washington", "York", "California", "American"],
@@ -393,6 +514,11 @@ Standing on the deck beneath those cliffs, a visitor sees a landscape that seems
             "The third paragraph says rivers wear a narrow V, while glaciers scrape floor and sides into a wide, deep U.",
             "第三段说河流冲刷出狭窄的V形，而冰川刮削谷底和谷壁，形成宽而深的U形。",
           ),
+          [
+            t("This swaps the two; a glacier makes the U and a river the V.", "这把两者弄反了；冰川形成 U 形，河流形成 V 形。"),
+            t("Glacier valleys are deep, carved even below the present sea.", "冰川谷很深，甚至切到现今海平面以下。"),
+            t("Rivers cut valleys on land; it was the glacier valleys that the sea filled.", "河流在陆地上切谷；被海水灌满的是冰川谷。"),
+          ],
         ),
         ask(
           t("Why is the land in parts of Scandinavia still rising?", "为什么斯堪的纳维亚部分地区的土地仍在上升？"),
@@ -406,6 +532,11 @@ Standing on the deck beneath those cliffs, a visitor sees a landscape that seems
             "The fifth paragraph says the weight of the ice pressed the land down, and when it disappeared the land began to rise again.",
             "第五段说冰的重量把土地压低，冰消失后土地又开始上升。",
           ),
+          [
+            t("Volcanoes are never mentioned; the cause is the ice's lost weight.", "文中没提火山；原因是冰的重量消失了。"),
+            t("The sea is rising, not drying up.", "海平面在上升，不是干涸。"),
+            t("The glaciers are shrinking, not forming.", "冰川在消融，不是在形成。"),
+          ],
         ),
         ask(
           t(
@@ -422,6 +553,11 @@ Standing on the deck beneath those cliffs, a visitor sees a landscape that seems
             "It seems eternal, but the land is rising, glaciers are shrinking and the story is still being written.",
             "它看似永恒，但土地在上升，冰川在退缩，这个故事仍在书写之中。",
           ),
+          [
+            t("The fjords took millions of years of ice ages to form.", "峡湾是经历数百万年冰期才形成的。"),
+            t("The phrase is about time and change, not how long a visit should be.", "这句话讲的是时间与变化，不是游客该待多久。"),
+            t('No novel is mentioned; "story" is a metaphor for change.', "文中没提小说；“故事”是变化的比喻。"),
+          ],
         ),
         ask(
           t("When did the ice melt and retreat from the fjords?", "冰川是什么时候融化后退的？"),
@@ -432,6 +568,11 @@ Standing on the deck beneath those cliffs, a visitor sees a landscape that seems
             t("In the last century", "上个世纪"),
           ],
           t("When the climate warmed, about ten thousand years ago, the ice melted and retreated.", "约一万年前气候变暖，冰融化并后退。"),
+          [
+            t("Two and a half million years ago is when the ice ages began.", "两百五十万年前是冰期开始的时候。"),
+            t("A thousand years is far too recent; the melt came ten thousand years ago.", "一千年太近了；冰是一万年前融化的。"),
+            t("The last century is when today's remaining glaciers are shrinking.", "上个世纪是现存冰川正在消融的时候。"),
+          ],
         ),
       ],
       ["Norway", "Europe", "Scandinavia", "Greenland", "Chile", "Zealand", "Alaska", "Canada"],
@@ -466,6 +607,14 @@ I walked back slowly, soaked and oddly happy. I had crossed the moor, and for an
             "The writer describes an ocean of heather with swells, crags like rocks in the sea and herself as a sailor in an open boat, and returns to the sea at the end.",
             "作者描写石南花的海洋，有浪涌，岩峰像海中礁石，自己像小船上的水手，结尾又回到大海的意象。",
           ),
+          [
+            t(
+              "There are no streets or buildings; the images are swells, rocks and a boat.",
+              "文中没有街道和建筑；意象是浪涌、礁石和小船。",
+            ),
+            t("The heather is wild, not a garden tended by villagers.", "石楠是野生的，不是村民打理的花园。"),
+            t("No book image is used; the moor is compared to the sea.", "文中没用书的比喻；荒原被比作大海。"),
+          ],
         ),
         ask(
           t("Why did the writer stop and wait when the mist came down?", "雾降下来时，作者为什么停下来等待？"),
@@ -479,6 +628,11 @@ I walked back slowly, soaked and oddly happy. I had crossed the moor, and for an
             "The woman at the inn had told her that if the mist came down, she should stay where she was, and the writer remembered this advice.",
             "旅店的女人告诉过她，如果起雾就待在原地，作者记起了这个建议。",
           ),
+          [
+            t("She saw no other person for hours; she was alone.", "她几个小时没见到别人，独自一人。"),
+            t("No camera is mentioned; she crouched and waited.", "文中没提相机；她蹲下等待。"),
+            t("The path did not end; it was ten meters away the whole time.", "小路并没有到头，一直就在十米外。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest the writer learned?", "最后一句暗示作者明白了什么？"),
@@ -492,6 +646,11 @@ I walked back slowly, soaked and oddly happy. I had crossed the moor, and for an
             "She is soaked but oddly happy, because for an hour the moor showed how little it cared about her.",
             "她浑身湿透却出奇地快乐，因为在那一小时里荒原让她明白它对她毫不在意。",
           ),
+          [
+            t('She ends "oddly happy," not warning anyone away.', "她最后感到“莫名地快乐”，并没劝人别来。"),
+            t("The woman's warning proved exactly right.", "那位女士的提醒完全正确。"),
+            t("Her map was soon useless; the advice saved her.", "她的地图很快没用了，是那条建议救了她。"),
+          ],
         ),
       ],
       [],
@@ -526,6 +685,11 @@ Even so, the metaphor endures because it captures something simple and true. We 
             "The third paragraph says that on a ship there is nowhere for waste to go, so every pollutant remains on board with the crew.",
             "第三段说船上废物无处可去，所以每种污染物都和船员一起留在船上。",
           ),
+          [
+            t('Ports are never mentioned; "away" is where people think rubbish goes.', "文中没提港口；away 指人们以为垃圾会去的地方。"),
+            t("Holidays are not the meaning; there is nowhere for waste to go.", "意思不是度假，而是废物无处可去。"),
+            t("Engines are not the point; waste stays on board.", "重点不是引擎，而是废物留在船上。"),
+          ],
         ),
         ask(
           t("Why did the Earthrise photograph make the metaphor more powerful?", "为什么《地出》照片使这个隐喻更有力量？"),
@@ -539,6 +703,11 @@ Even so, the metaphor endures because it captures something simple and true. We 
             "The fifth paragraph says the photograph let millions see the earth as a single, fragile object alone in the dark, exactly like a ship.",
             "第五段说这张照片让数百万人看到地球是黑暗中孤独、脆弱的一个整体，就像一艘船。",
           ),
+          [
+            t("The earth was not built by engineers; that is the metaphor's limit.", "地球不是工程师造的，这正是比喻的局限。"),
+            t("The photo showed the earth above the moon, not a ship.", "照片拍的是月球上空的地球，不是飞船。"),
+            t("Astronauts took it, not Fuller.", "照片是宇航员拍的，不是富勒。"),
+          ],
         ),
         ask(
           t("What limit of the metaphor do some critics point out?", "一些批评者指出了这个隐喻的什么局限？"),
@@ -552,6 +721,11 @@ Even so, the metaphor endures because it captures something simple and true. We 
             "The sixth paragraph says a spaceship is a machine engineers can repair, while the earth is a living system, so the image may encourage faith in a technical fix.",
             "第六段说飞船是工程师能修理的机器，而地球是一个有生命的系统，所以这个意象可能助长对技术解决方案的迷信。",
           ),
+          [
+            t("Size is not the criticism; the problem is the machine image.", "批评不在大小，而在机器的意象。"),
+            t("Ward said rich and poor are on board alike.", "沃德说富人和穷人同在一条船上。"),
+            t("It caught on quickly in the 1960s and still endures.", "它在1960年代迅速流行，至今仍在。"),
+          ],
         ),
       ],
       ["Buckminster", "Fuller", "Barbara", "Ward", "Earthrise", "British"],

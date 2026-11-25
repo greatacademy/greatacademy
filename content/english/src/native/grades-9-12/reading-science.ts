@@ -41,6 +41,11 @@ Within a few decades, the work of other scientists showed that germs cause disea
             "Semmelweis tested one idea after another; changing the route tested whether the priest made a difference, and it did not.",
             "塞麦尔维斯逐一检验各种猜想；改变路线是为了检验神父是否有影响，结果并没有。",
           ),
+          [
+            t("The priest never asked; Semmelweis was testing ideas one by one.", "牧师从没提出要求；塞麦尔维斯是在逐一检验想法。"),
+            t("The bell is part of the idea being tested, not a nuisance to the doctors.", "铃声是被检验的假设的一部分，不是打扰医生。"),
+            t("Room for students has nothing to do with it.", "这与给学生腾地方无关。"),
+          ],
         ),
         ask(
           t("What evidence supported his hypothesis about the doctors' hands?", "什么证据支持了他关于医生双手的假设？"),
@@ -54,6 +59,11 @@ Within a few decades, the work of other scientists showed that germs cause disea
             "After hand washing in chlorine was ordered, deaths in the first clinic fell to about the rate of the second.",
             "下令用氯溶液洗手之后，第一诊室的死亡率下降到与第二诊室大致相同。",
           ),
+          [
+            t('Germs had not been discovered; he could not explain the "something."', "当时还没发现细菌；他解释不了那个“东西”是什么。"),
+            t("The midwives did no such work.", "助产士从不做这类工作。"),
+            t("Women avoiding the clinic is not evidence for the hypothesis.", "妇女躲避诊所不是支持假设的证据。"),
+          ],
         ),
         ask(
           t("What lesson does the last paragraph draw from the story?", "最后一段从这个故事中得出了什么教训？"),
@@ -67,6 +77,11 @@ Within a few decades, the work of other scientists showed that germs cause disea
             "The passage ends by saying evidence alone does not always persuade people, especially when it threatens their pride.",
             "文章结尾说，仅有证据并不总能说服人，尤其当证据威胁到他们的自尊时。",
           ),
+          [
+            t("The lesson is about pride, not distrusting all doctors.", "教训在于傲慢，不是不信任所有医生。"),
+            t("Hand washing sharply cut deaths.", "洗手大幅降低了死亡率。"),
+            t("Semmelweis was right even though he could not explain the cause.", "塞麦尔维斯虽然解释不了原因，却是对的。"),
+          ],
         ),
         ask(
           t("What did Semmelweis order everyone in the first clinic to do?", "塞麦尔维斯要求第一诊所的每个人做什么？"),
@@ -80,6 +95,11 @@ Within a few decades, the work of other scientists showed that germs cause disea
             "He ordered everyone in the first clinic to wash their hands in a chlorine solution before examining patients.",
             "他要求第一诊所的每个人在检查病人前用氯溶液洗手。",
           ),
+          [
+            t("He did not stop examinations; he made them cleaner.", "他没有停止检查，而是让检查更干净。"),
+            t("Moving beds is not what he ordered.", "他并没有下令搬床。"),
+            t("Masks are never mentioned.", "文中没提口罩。"),
+          ],
         ),
       ],
       ["Vienna", "Hungarian", "Ignaz", "Semmelweis", "Semmelweis's"],
@@ -121,6 +141,11 @@ How do scientists find out which is true? The strongest method is a controlled e
             "The first paragraph says both rise in summer: heat is a third factor that drives both.",
             "第一段说，两者都在夏天上升：高温是驱动两者的第三个因素。",
           ),
+          [
+            t("Ice cream does not make swimming dangerous; heat drives both.", "冰淇淋不会让游泳变危险；是炎热同时推动两者。"),
+            t("Drowning does not make people buy ice cream.", "溺水不会让人买冰淇淋。"),
+            t("It is not chance; there is a real third factor, heat.", "这不是巧合，确实有第三个因素：炎热。"),
+          ],
         ),
         ask(
           t("What is a confounding variable?", "什么是混杂变量？"),
@@ -134,6 +159,11 @@ How do scientists find out which is true? The strongest method is a controlled e
             "The passage calls a hidden factor that causes both a confounding variable, using breakfast and family advantages as an example.",
             "文章把同时导致两者的隐藏因素称为混杂变量，并以早餐与家庭优势为例。",
           ),
+          [
+            t("A variable changed on purpose belongs to an experiment.", "有意改变的变量属于实验。"),
+            t("Measuring mistakes are not discussed.", "文中没讨论测量误差。"),
+            t("A chance match is coincidence, a different reason.", "偶然吻合是巧合，是另一种原因。"),
+          ],
         ),
         ask(
           t("Why is a controlled experiment the strongest method?", "为什么对照实验是最有力的方法？"),
@@ -147,6 +177,11 @@ How do scientists find out which is true? The strongest method is a controlled e
             "If only one variable changes, any difference in the result can be traced to it rather than to a hidden factor.",
             "如果只有一个变量改变，结果的任何差异都可以归因于它，而不是某个隐藏因素。",
           ),
+          [
+            t("Size is not what makes it strong; control is.", "它强不在样本大，而在控制变量。"),
+            t("Cost is never given as its strength.", "文中没把成本当作它的优点。"),
+            t("All results should be repeated, as replication demands.", "所有结果都应重复验证。"),
+          ],
         ),
         ask(
           t("What has decades of research shown about smoking and lung cancer?", "几十年的研究表明吸烟和肺癌有什么关系？"),
@@ -160,6 +195,11 @@ How do scientists find out which is true? The strongest method is a controlled e
             "Smoking and lung cancer are correlated, and decades of careful research have shown that smoking does cause the disease.",
             "吸烟和肺癌相关，几十年的研究表明吸烟确实会导致这种病。",
           ),
+          [
+            t("The link was shown to be cause, not chance.", "这种关联已被证明是因果，不是巧合。"),
+            t("The reverse direction applies to the bed example, not smoking.", "反向因果适用于病床的例子，不是吸烟。"),
+            t("A hidden factor applies to the breakfast example.", "隐藏因素适用于早餐的例子。"),
+          ],
         ),
       ],
     ),
@@ -191,6 +231,11 @@ Such trials are expensive and slow, but they are one of the great achievements o
             "The second paragraph defines a placebo as a treatment with no active ingredient, such as a sugar pill.",
             "第二段把安慰剂定义为不含有效成分的治疗，例如糖丸。",
           ),
+          [
+            t("A placebo has no active ingredient, so it is not strong.", "安慰剂没有有效成分，谈不上强效。"),
+            t("A headache is what the pill might treat, not the pill.", "头痛是药要治的病，不是药本身。"),
+            t("Tests and doctors are the trial, not the placebo.", "测试和医生属于试验，不是安慰剂。"),
+          ],
         ),
         ask(
           t(
@@ -207,6 +252,11 @@ Such trials are expensive and slow, but they are one of the great achievements o
             "The passage says the double-blind design prevents the expectations of either patients or doctors from affecting the results.",
             "文章说，双盲设计可以防止病人或医生的预期影响结果。",
           ),
+          [
+            t("Cost is not the reason for blinding.", "设盲不是为了省钱。"),
+            t("Patients may still feel better; blinding just controls expectation.", "病人仍可能好转；设盲只是控制预期。"),
+            t("The number of pills is not the point.", "药片数量不是重点。"),
+          ],
         ),
         ask(
           t("What can researchers conclude if both groups improve equally?", "如果两组的好转程度相同，研究人员可以得出什么结论？"),
@@ -220,12 +270,22 @@ Such trials are expensive and slow, but they are one of the great achievements o
             "The fifth paragraph says that if both groups improve equally, the medicine is probably no better than a sugar pill.",
             "第五段说，如果两组改善程度相同，这种药很可能并不比糖丸好。",
           ),
+          [
+            t("Equal improvement means no real effect.", "同等好转意味着没有真正的效果。"),
+            t("The placebo is a sugar pill, not a dangerous drug.", "安慰剂是糖丸，不是危险药物。"),
+            t("Blinding is a design choice, not what equal results show.", "设盲是设计选择，不是结果相同所能说明的。"),
+          ],
         ),
         ask(
           t("How are patients divided in a randomized controlled trial?", "在随机对照试验中，病人是怎样分组的？"),
           t("By chance", "随机"),
           [t("By age", "按年龄"), t("By how ill they are", "按病情轻重"), t("By their own choice", "按自己的选择")],
           t("Patients are divided by chance into two groups.", "病人被随机分成两组。"),
+          [
+            t("Age is not how patients are assigned.", "病人不是按年龄分组的。"),
+            t("Illness is not the basis; chance is.", "分组依据不是病情，而是随机。"),
+            t("Patients do not choose; chance decides.", "病人不能自选，由随机决定。"),
+          ],
         ),
       ],
     ),
@@ -257,6 +317,14 @@ For readers, the lesson is clear. A single surprising study, however widely repo
             "The first paragraph says other scientists following the same method should get the same result, and calls this replication.",
             "第一段说，其他科学家按同样方法应得到同样结果，这被称为重复验证。",
           ),
+          [
+            t("Publishing is a separate step from replication.", "发表与重复验证是两回事。"),
+            t(
+              "Collecting data in many countries is one way teams replicate, not the meaning.",
+              "在多国收集数据是重复验证的一种方式，不是它的定义。",
+            ),
+            t("Copying words is plagiarism, not replication.", "抄别人的话是剽窃，不是重复验证。"),
+          ],
         ),
         ask(
           t("Why does the writer describe flipping a coin?", "作者为什么要描述抛硬币？"),
@@ -270,6 +338,11 @@ For readers, the lesson is clear. A single surprising study, however widely repo
             "Ten flips can give eight heads by chance, while a thousand flips come close to half, just as small studies are more easily misleading.",
             "抛十次可能偶然出现八次正面，而抛一千次就会接近一半，正如小规模研究更容易误导人。",
           ),
+          [
+            t("The coin shows chance, not how studies are chosen.", "抛硬币说明的是偶然，不是如何选研究。"),
+            t("A thousand flips show the coin is fair.", "抛一千次说明硬币是公平的。"),
+            t("The coin is an example of chance, not a joke about psychology.", "硬币是偶然性的例子，不是在嘲讽心理学。"),
+          ],
         ),
         ask(
           t('What is the "file drawer problem"?', "什么是“抽屉问题”？"),
@@ -283,6 +356,11 @@ For readers, the lesson is clear. A single surprising study, however widely repo
             "The fourth paragraph says studies with dull results sit unseen in a drawer, which makes published effects look stronger than they are.",
             "第四段说，结果平淡的研究被放在抽屉里无人问津，这让已发表的效果看起来比实际更强。",
           ),
+          [
+            t("Lost notes are not the problem; dull studies stay unpublished.", "问题不是笔记丢了，而是平淡的研究没发表。"),
+            t("Space is not the issue; journals prefer exciting results.", "问题不在篇幅，而在期刊偏好惊人的结果。"),
+            t("The passage says the cause is rarely dishonesty.", "文中说原因很少是不诚实。"),
+          ],
         ),
         ask(
           t("What do many researchers now do before collecting data?", "现在许多研究者在收集数据前做什么？"),
@@ -293,6 +371,11 @@ For readers, the lesson is clear. A single surprising study, however widely repo
             t("Decide what result to publish", "决定公布什么结果"),
           ],
           t("Many researchers now publish their plans before collecting data.", "现在许多研究者在收集数据前公布他们的计划。"),
+          [
+            t("Newspapers are not asked for advice.", "研究者并不向报纸请教。"),
+            t("Choosing only surprising questions is part of the problem.", "只选惊人的问题正是问题的一部分。"),
+            t("Deciding the result ahead would be dishonest; they publish their methods.", "预先定结果是不诚实的；他们公布的是方法。"),
+          ],
         ),
       ],
     ),
@@ -326,6 +409,11 @@ None of this means that science news is useless. It means that a headline is an 
             "The third paragraph says a substance that helps a mouse's memory may have no effect on people.",
             "第三段说，有助于老鼠记忆的物质可能对人没有效果。",
           ),
+          [
+            t("Mice can be tested; the issue is whether the effect carries to people.", "老鼠可以测试；问题是效果能否用到人身上。"),
+            t("Many mouse studies do reach the news.", "很多老鼠研究都上了新闻。"),
+            t("Taste is not the point.", "口味不是重点。"),
+          ],
         ),
         ask(
           t("What is a peer-reviewed journal?", "什么是同行评审期刊？"),
@@ -339,6 +427,11 @@ None of this means that science news is useless. It means that a headline is an 
             "The second paragraph explains that in a peer-reviewed journal, other experts checked the methods before publication.",
             "第二段解释说，在同行评审期刊中，其他专家会在发表前审查研究方法。",
           ),
+          [
+            t("Students do not write it; experts check it.", "不是学生写的，是专家审核的。"),
+            t("An advertisement is the least trusted source.", "广告是最不可信的来源。"),
+            t("A newspaper page is not peer reviewed.", "报纸版面不经同行评审。"),
+          ],
         ),
         ask(
           t('What does the writer mean by "a headline is an invitation to ask questions"?', "作者说“标题是一份提问的邀请”是什么意思？"),
@@ -352,6 +445,11 @@ None of this means that science news is useless. It means that a headline is an 
             "The last paragraph says science news is not useless; a headline should start careful questioning rather than end it.",
             "最后一段说，科学新闻并非无用；标题应当开启审慎的提问，而不是结束提问。",
           ),
+          [
+            t("The headline need not be a question; the reader should ask questions.", "标题不必是问句；该提问的是读者。"),
+            t("The passage says science news is not useless.", "文中说科学新闻并非无用。"),
+            t("Writing to scientists is not suggested.", "文中没建议写信给科学家。"),
+          ],
         ),
         ask(
           t("What headline does the passage begin with?", "文章开头是哪条标题？"),
@@ -361,6 +459,11 @@ None of this means that science news is useless. It means that a headline is an 
             '"Chocolate Makes You Smarter, Scientists Say." Headlines like this appear every week.',
             "“科学家称巧克力让你更聪明。”这样的标题每周都有。",
           ),
+          [
+            t("Coffee is not mentioned.", "文中没提咖啡。"),
+            t("Mice are mentioned for studies, not reading.", "提到老鼠是关于实验，不是读书。"),
+            t("Breakfast appears in another passage.", "早餐出现在另一篇文章里。"),
+          ],
         ),
       ],
     ),
@@ -392,6 +495,11 @@ The story is often held up as proof that the world can act together on an enviro
             "The first paragraph says they assumed their equipment was faulty, but the new instruments showed the same thing.",
             "第一段说，他们以为设备有故障，但新仪器显示了同样的结果。",
           ),
+          [
+            t("Theft is never mentioned.", "文中没提被盗。"),
+            t("They measured ozone, not refrigerators.", "他们测的是臭氧，不是冰箱。"),
+            t("No government order is mentioned.", "文中没提政府命令。"),
+          ],
         ),
         ask(
           t("What turned the theory about CFCs into a consensus?", "是什么让关于氟氯化碳的理论成为共识的？"),
@@ -408,6 +516,11 @@ The story is often held up as proof that the world can act together on an enviro
             "The third paragraph says the Antarctic measurements, followed by flights that found the chemicals responsible, made the theory a consensus.",
             "第三段说，南极的测量数据，加上飞入臭氧洞发现相关化学物质的观测，使这一理论成为共识。",
           ),
+          [
+            t("Many companies dismissed the theory as unproven.", "很多公司认为这一理论未经证实而不予理会。"),
+            t("New spray cans are not mentioned as evidence.", "文中没把新喷雾罐当证据。"),
+            t("The Protocol came after the consensus, as a result.", "议定书是在共识形成之后才签的。"),
+          ],
         ),
         ask(
           t("Why did the ozone hole not close as soon as CFCs were phased out?", "为什么氟氯化碳被逐步淘汰后，臭氧洞没有立即闭合？"),
@@ -421,6 +534,11 @@ The story is often held up as proof that the world can act together on an enviro
             "The fifth paragraph says CFCs remain in the atmosphere for decades, so the hole did not close at once.",
             "第五段说，氟氯化碳会在大气中停留几十年，所以臭氧洞没有立即闭合。",
           ),
+          [
+            t("Every UN country eventually joined.", "最终所有联合国成员国都加入了。"),
+            t("The replacements were safer.", "替代品更安全。"),
+            t("Measurements continue and show recovery.", "测量仍在继续，并显示正在恢复。"),
+          ],
         ),
         ask(
           t("Which agreement promised to phase out CFCs?", "哪项协议承诺逐步淘汰氟氯烃？"),
@@ -430,6 +548,11 @@ The story is often held up as proof that the world can act together on an enviro
             "In 1987, countries around the world signed an agreement called the Montreal Protocol, promising to phase out CFCs.",
             "1987年，世界各国签署了《蒙特利尔议定书》，承诺逐步淘汰氟氯烃。",
           ),
+          [
+            t("The Paris Agreement is not mentioned.", "文中没提《巴黎协定》。"),
+            t("The Antarctic Treaty is not mentioned.", "文中没提《南极条约》。"),
+            t("The Kyoto Protocol is not mentioned.", "文中没提《京都议定书》。"),
+          ],
         ),
       ],
       ["British", "Antarctica", "Antarctic", "Earth", "CFCs", "Montreal", "Protocol", "United", "Nations"],
@@ -463,6 +586,11 @@ Supporters respond that refusing to use the tool also has costs: every year with
             "The third paragraph says editing an embryo would change every cell of the child and pass to their children and grandchildren.",
             "第三段说，编辑胚胎会改变孩子的每一个细胞，并遗传给他们的子孙。",
           ),
+          [
+            t("Embryos can be edited; that is the danger.", "胚胎可以被编辑，这正是危险所在。"),
+            t("Cost is not the concern.", "担忧不在成本。"),
+            t("It changes every cell, not one.", "它改变的是每个细胞，不是一个。"),
+          ],
         ),
         ask(
           t("How did scientists react to the 2018 experiment on twin babies?", "科学家们对2018年的双胞胎婴儿实验作何反应？"),
@@ -476,6 +604,11 @@ Supporters respond that refusing to use the tool also has costs: every year with
             "The passage says scientists around the world condemned the experiment as unsafe and unethical.",
             "文章说，世界各地的科学家谴责这项实验不安全、不道德。",
           ),
+          [
+            t("They condemned it, not praised it.", "他们谴责它，而不是赞扬。"),
+            t("No one rushed to repeat it.", "没有人急于重复它。"),
+            t("They responded strongly, not ignoring it.", "他们反应强烈，并没有无视。"),
+          ],
         ),
         ask(
           t('What is the "middle path" most scientists agree on?', "大多数科学家认同的“中间道路”是什么？"),
@@ -489,6 +622,11 @@ Supporters respond that refusing to use the tool also has costs: every year with
             "The last paragraph describes the middle path: careful use to treat disease, strict rules and open debate before inherited changes.",
             "最后一段描述了这条中间道路：谨慎地用于治病、严格的规则，以及在作出可遗传改变之前开展公开讨论。",
           ),
+          [
+            t("A ban is not the middle path.", "禁止不是中间道路。"),
+            t("Choosing any trait is what critics fear.", "随意选择性状正是批评者担心的。"),
+            t("Crops are one use, but the path is about treating disease.", "农作物是一种用途，但中间道路讲的是治病。"),
+          ],
         ),
       ],
       ["CRISPR", "DNA"],
@@ -521,6 +659,11 @@ His teacher stopped him. "This is a good result," she said. "You designed a fair
             "His sister pointed out that the bedroom got afternoon sun and the kitchen did not, so light could explain any difference.",
             "他姐姐指出，卧室有午后的阳光而厨房没有，所以任何差别都可能是光照造成的。",
           ),
+          [
+            t("Twelve plants is not the problem; light is.", "问题不是十二株植物，而是光照。"),
+            t("The experiment tests whether music matters; that is not the flaw.", "实验正是检验音乐是否有影响，这不是缺陷。"),
+            t("Four weeks is not the problem.", "四周的时长不是问题。"),
+          ],
         ),
         ask(
           t("Why did Ayaan flip a coin to decide which plants went in which box?", "阿扬为什么抛硬币来决定哪些植物放进哪个盒子？"),
@@ -534,6 +677,11 @@ His teacher stopped him. "This is a good result," she said. "You designed a fair
             "Choosing by chance prevents him from, even without meaning to, putting the healthier plants in the music box.",
             "随机选择可以防止他即使无意中也把更健康的植物放进有音乐的盒子。",
           ),
+          [
+            t("He counted twelve plants easily.", "他轻松地数了十二株植物。"),
+            t("The judge appeared only at the fair.", "评委只在科学展上出现。"),
+            t("Music was already decided; the coin chose boxes.", "放不放音乐早已决定；硬币决定的是分箱。"),
+          ],
         ),
         ask(
           t('What does the teacher mean when she says "This is a good result"?', "老师说“这是个好结果”是什么意思？"),
@@ -547,6 +695,11 @@ His teacher stopped him. "This is a good result," she said. "You designed a fair
             "The teacher says he designed a fair test and found no real effect, which is valuable information.",
             "老师说他设计了一个公平的测试，并发现没有真正的效果，这本身就是有价值的信息。",
           ),
+          [
+            t("The difference was tiny, smaller than within one box.", "差别很小，比同一盒内的差别还小。"),
+            t("He did not win first prize.", "他没有得一等奖。"),
+            t("His teacher stopped him from doing that.", "老师阻止了他这么做。"),
+          ],
         ),
       ],
       ["Ayaan"],

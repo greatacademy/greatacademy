@@ -43,6 +43,11 @@ I am not an engineer, and I am not a politician. I am a grandmother who would li
             'She opens with "Members of the council" and ends by asking them to vote tonight. The children and engineers are mentioned, but she is not speaking to them.',
             '她以 "Members of the council" 开头，结尾请他们今晚投票。孩子和工程师虽被提到，但她不是在对他们说话。',
           ),
+          why: [
+            t("The children are who she worries about, not whom she addresses.", "孩子是她担心的人，不是她的听众。"),
+            t("The engineers wrote the report; they do not vote.", "工程师写了报告，但不投票。"),
+            t("Other neighborhoods compete for the money.", "其他街区是在争同一笔钱。"),
+          ],
         },
         {
           prompt: t("How does the first paragraph mainly persuade?", "第一段主要用什么方式说服人？"),
@@ -59,6 +64,11 @@ I am not an engineer, and I am not a politician. I am a grandmother who would li
             "Forty-one years on Mill Street, three children raised there, and countless crossings establish that she knows the bridge. That is an appeal to her credibility, or ethos.",
             "在磨坊街住了四十一年、在那里养大三个孩子、无数次过桥，这些都说明她了解这座桥。这是在诉诸她的可信度，即人格诉求。",
           ),
+          why: [
+            t("The report comes in the third paragraph.", "报告在第三段才出现。"),
+            t("She attacks no one.", "她没有攻击任何人。"),
+            t("The budget comes later, as a statement.", "预算在后面，而且是陈述句。"),
+          ],
         },
         {
           prompt: t("Why does the speaker mention the engineers' report?", "演讲者为什么提到工程师的报告？"),
@@ -72,6 +82,11 @@ I am not an engineer, and I am not a politician. I am a grandmother who would li
             'She admits she is "not an engineer," so she borrows the authority of people who are. The report rates the bridge as poor and sets a deadline, which turns her worry into a fact the council cannot ignore.',
             '她承认自己 "not an engineer"，所以借用了专业人士的权威。报告把桥评为差并给出期限，让她的担忧变成议会无法忽视的事实。',
           ),
+          why: [
+            t("She says she is not an engineer.", "她说自己不是工程师。"),
+            t("The report rates the bridge, not the budget.", "报告评的是桥，不是预算。"),
+            t("She blames no one.", "她没有指责任何人。"),
+          ],
         },
       ],
     },
@@ -107,6 +122,11 @@ A parent of two`,
             'The writer says "I urge the board to look more carefully" and ends "let us make sure the change is worth it." Every paragraph gives a reason to slow down, so the purpose is to persuade.',
             '作者说 "I urge the board to look more carefully"，结尾写 "let us make sure the change is worth it"。每一段都给出放慢决定的理由，所以目的是说服。',
           ),
+          why: [
+            t("Buses are only one point about savings.", "校车只是省钱论点中的一项。"),
+            t("The tired child is evidence, not entertainment.", "疲倦的孩子是论据，不是娱乐。"),
+            t("The board is still considering it.", "董事会还在考虑。"),
+          ],
         },
         {
           prompt: t("Why is the state education office's study good evidence?", "为什么州教育办公室的研究是有力的证据？"),
@@ -120,6 +140,11 @@ A parent of two`,
             "A named, official source that studied several districts gains nothing from the answer and draws on many cases, so its finding carries more weight than one person's opinion.",
             "一个有名称的官方来源研究了多个学区，它不会因答案而获利，且依据许多案例，所以它的结论比个人看法更有分量。",
           ),
+          why: [
+            t("A parent wrote the letter, not the study.", "写信的是家长，研究不是。"),
+            t("Most districts saved under two percent.", "大多数学区节省不到百分之二。"),
+            t("It is an office's study, not one teacher's view.", "这是官方研究，不是一位老师的意见。"),
+          ],
         },
         {
           prompt: t("What does the writer do in the last paragraph before restating the position?", "作者在最后一段重申立场之前做了什么？"),
@@ -133,6 +158,11 @@ A parent of two`,
             '"I do not doubt that the board wants to save money, and it should" admits the other side\'s goal. Granting a fair point makes the writer seem reasonable before the final turn with "But".',
             '"I do not doubt that the board wants to save money, and it should" 承认了对方的目标。先承认合理之处，再用 "But" 转折，让作者显得通情达理。',
           ),
+          why: [
+            t("It calls the board well-meaning.", "它说董事会是好意的。"),
+            t("No new numbers appear there.", "那里没有新数字。"),
+            t("No election is mentioned.", "文中没提选举。"),
+          ],
         },
       ],
     },
@@ -167,6 +197,11 @@ Thank you. Now let us get to work.`,
             'Three sentences in a row begin with "We planted them." Repeating the opening words builds a rhythm of steady effort.',
             '连续三个句子都以 "We planted them" 开头。重复开头的词营造出坚持不懈的节奏。',
           ),
+          why: [
+            t("Antithesis sets opposites side by side.", "对照是把相反的东西并列。"),
+            t("These are statements, not questions.", "这些是陈述，不是问句。"),
+            t("Nothing is borrowed from a famous story.", "这里没有引用典故。"),
+          ],
         },
         {
           prompt: t(
@@ -183,6 +218,11 @@ Thank you. Now let us get to work.`,
             'It is a rhetorical question: the speaker expects no answer, because the expected answer, "No," is the point.',
             '这是一个反问：演讲者并不期待回答，因为预期的答案 "No" 本身就是要表达的意思。',
           ),
+          why: [
+            t("It expects agreement, not ideas.", "它期待认同，不是建议。"),
+            t("The speaker is sure, not unsure.", "演讲者很确定，并不犹豫。"),
+            t("It is a question, not a fact.", "这是问句，不是事实。"),
+          ],
         },
         {
           prompt: t("What does the speaker ask the audience to do?", "演讲者要求听众做什么？"),
@@ -196,6 +236,11 @@ Thank you. Now let us get to work.`,
             'The city has given land and trees; "What it cannot give us is hands. We need yours." The request is for people to come and plant.',
             '市政府提供了土地和树苗；"What it cannot give us is hands. We need yours." 要求的是人们来种树。',
           ),
+          why: [
+            t("The city has given the trees.", "城市已提供了树苗。"),
+            t("The park replaced the parking lot.", "公园取代了停车场。"),
+            t("No vote is asked for.", "演讲没要求投票。"),
+          ],
         },
       ],
     },
@@ -226,6 +271,11 @@ There are real questions here. How much traffic would the mall bring to the narr
             'The speaker attacks the director\'s background instead of the plan. As the writer says, it "tells us nothing about whether the mall is a good idea."',
             '这位发言者攻击的是主管的背景而不是计划本身。正如作者所说，这 "tells us nothing about whether the mall is a good idea"。',
           ),
+          why: [
+            t("Bandwagon is about what everyone wants.", "从众是“大家都想要”。"),
+            t("A false dilemma offers two choices only.", "非此即彼只给两个选项。"),
+            t("No sample is generalized.", "这里没有以偏概全。"),
+          ],
         },
         {
           prompt: t(
@@ -238,6 +288,11 @@ There are real questions here. How much traffic would the mall bring to the narr
             'It claims that one mall will lead step by step to an extreme result, without showing why. The writer answers that "one decision does not force the next."',
             '它断言一个商场会一步步导致极端的结果，却没有说明理由。作者回应说 "one decision does not force the next"。',
           ),
+          why: [
+            t("It misstates no one's position.", "它没有歪曲谁的立场。"),
+            t("It attacks no person.", "它没攻击任何人。"),
+            t("It is a chain of steps, not popularity.", "这是连锁推论，不是从众。"),
+          ],
         },
         {
           prompt: t("What does the writer want the debate to focus on?", "作者希望辩论聚焦于什么？"),
@@ -251,6 +306,11 @@ There are real questions here. How much traffic would the mall bring to the narr
             'The last paragraph lists the questions that "deserve answers" and asks readers to "argue about them, and leave the rest aside." The other choices are the faulty arguments the writer sets aside.',
             '最后一段列出了 "deserve answers" 的问题，并请读者 "argue about them, and leave the rest aside"。其他选项正是作者搁置的错误论证。',
           ),
+          why: [
+            t("The director's life is what he sets aside.", "导演的经历正是他要搁置的。"),
+            t("Popularity is called no proof.", "受欢迎被说成不是理由。"),
+            t("Feelings are called not arguments.", "情绪被说成不是论证。"),
+          ],
         },
       ],
     },
@@ -290,6 +350,11 @@ Congratulations, graduates.`,
             "Knowing exactly and not knowing are set side by side in two balanced halves, so each makes the other sharper. That is antithesis.",
             "确切知道与不知道被放在平衡的两半句中，彼此衬托得更鲜明。这就是对照。",
           ),
+          why: [
+            t("That line simply opens the speech.", "那句只是开场白。"),
+            t("That line states, without contrast.", "那句是陈述，没有对比。"),
+            t("That line closes the speech.", "那句是结束语。"),
+          ],
         },
         {
           prompt: t("What is the speaker's purpose?", "演讲者的目的是什么？"),
@@ -303,6 +368,11 @@ Congratulations, graduates.`,
             'The speech praises what the graduates learned, gives them a lesson for the future and ends "we are proud of you." It welcomes both leaving and staying, so it is not urging either.',
             '演讲称赞毕业生学到的东西，给他们一个面向未来的道理，最后说 "we are proud of you"。它对离开和留下都表示欢迎，所以并不是在劝说哪一种。',
           ),
+          why: [
+            t("It says some will leave.", "演讲说有人会离开。"),
+            t("Tests are not its subject.", "考试不是主题。"),
+            t("It says they fall and get up.", "它说的是跌倒了再站起来。"),
+          ],
         },
         {
           prompt: t('What does the speaker mean by "So go out and fall"?', '演讲者说 "So go out and fall" 是什么意思？'),
@@ -316,6 +386,11 @@ Congratulations, graduates.`,
             'It follows the lesson that successful people "fall and get up, and fall and get up again." Falling here stands for failing, and the speaker urges the graduates to risk it.',
             '这句话紧接着那个道理：成功的人 "fall and get up, and fall and get up again"。这里的跌倒代表失败，演讲者鼓励毕业生敢于冒这个险。',
           ),
+          why: [
+            t("Falling is a figure, not stairs.", "跌倒是比喻，不是楼梯。"),
+            t("It expects them to get up.", "它期望他们重新站起来。"),
+            t("Leaving in autumn is not meant.", "不是指秋天离开。"),
+          ],
         },
       ],
     },
@@ -348,6 +423,11 @@ None of this means the tea is harmful. It may be a pleasant drink. But a careful
             "It urges readers to drink the tea because many others do. As the writer notes, popularity is not evidence that the tea works.",
             "它以很多人都在喝为由劝读者喝这种茶。正如作者指出的，流行并不能证明这种茶有效。",
           ),
+          why: [
+            t("It attacks no person.", "它没攻击任何人。"),
+            t("It misstates no position.", "它没歪曲任何立场。"),
+            t("It predicts no chain of events.", "它没预言连锁反应。"),
+          ],
         },
         {
           prompt: t("Why does the company's study prove very little?", "为什么公司的研究几乎证明不了什么？"),
@@ -361,6 +441,11 @@ None of this means the tea is harmful. It may be a pleasant drink. But a careful
             'The study "included only ten people," too few to generalize from, and the company "profit[s] from the result," so it has a reason to report good news.',
             '这项研究 "included only ten people"，人数太少，无法据此概括；而且公司会 "profit from the result"，所以它有理由只报喜。',
           ),
+          why: [
+            t("Where it was printed does not matter.", "刊登在哪里无关紧要。"),
+            t("It claimed the tea helps.", "它声称茶有好处。"),
+            t("No doctors are named.", "没有任何医生被点名。"),
+          ],
         },
         {
           prompt: t("What does the writer suggest a careful reader should do?", "作者建议细心的读者应该怎么做？"),
@@ -374,6 +459,11 @@ None of this means the tea is harmful. It may be a pleasant drink. But a careful
             'The last sentence names the three questions. The writer says the tea "may be a pleasant drink," so the point is to question sources, not to avoid tea.',
             '最后一句列出了这三个问题。作者说这种茶 "may be a pleasant drink"，所以重点是质疑来源，而不是不喝茶。',
           ),
+          why: [
+            t("The writer says the tea may be pleasant.", "作者说这茶也许挺好喝。"),
+            t("A number alone proves little.", "光有数字证明不了什么。"),
+            t("Print is no guarantee.", "印出来不等于可信。"),
+          ],
         },
       ],
     },
@@ -407,6 +497,11 @@ Families who object should be able to choose another book for their own child, a
             '"I understand their concern. No parent wants to see a child hurt" grants the other side\'s feelings. This builds goodwill before the writer disagrees.',
             '"I understand their concern. No parent wants to see a child hurt" 承认了对方的感受。这在表达反对之前先建立了善意。',
           ),
+          why: [
+            t("She calls their worry understandable.", "她说他们的担心可以理解。"),
+            t("No statistics appear there.", "那里没有统计数据。"),
+            t("The plot is never retold.", "情节从没被复述。"),
+          ],
         },
         {
           prompt: t("Which reason relies mainly on logos?", "哪个理由主要依靠理性诉求？"),
@@ -423,6 +518,11 @@ Families who object should be able to choose another book for their own child, a
             "It reasons from a principle to its consequence: if upsetting someone were enough, nearly every great book would go. That logical step is an appeal to reason.",
             "它从一个原则推出其后果：如果让人不安就足以撤书，那么几乎每本好书都要被撤下。这一推理是在诉诸理性。",
           ),
+          why: [
+            t("That line appeals to feeling.", "那句诉诸情感。"),
+            t("That line shows sympathy.", "那句表达同情。"),
+            t("That line grants a point.", "那句是让步。"),
+          ],
         },
         {
           prompt: t("What solution does the writer offer for families who object?", "作者为反对的家庭提出了什么解决办法？"),
@@ -436,6 +536,11 @@ Families who object should be able to choose another book for their own child, a
             'The last paragraph says families "should be able to choose another book for their own child," which the school already allows, while the book stays for everyone else.',
             '最后一段说这些家庭 "should be able to choose another book for their own child"，学校已经允许这样做，而这本书仍保留给其他学生。',
           ),
+          why: [
+            t("She wants the book kept.", "她希望保留这本书。"),
+            t("Teachers teach it.", "由老师来教这本书。"),
+            t("Moving schools is never offered.", "她没提出转学。"),
+          ],
         },
       ],
     },
@@ -474,6 +579,11 @@ I say we cannot afford to lose what we have won. Renew the law, and let the next
             'Each paragraph begins "When my ... was a boy" and shows a loss: clear water, then brown water, then a danger sign. The family story makes the audience feel what was lost.',
             '每段都以 "When my ... was a boy" 开头，展示一次失去：清澈的水，然后是浑浊的水，再然后是危险标志。这个家族故事让听众感受到失去了什么。',
           ),
+          why: [
+            t("The tests come in the fifth paragraph.", "检测结果在第五段。"),
+            t("The factories are not attacked.", "工厂没被攻击。"),
+            t("The law comes later.", "法律是后面才讲的。"),
+          ],
         },
         {
           prompt: t("Why does the speaker cite the state university's scientists?", "演讲者为什么引用州立大学科学家的研究？"),
@@ -487,6 +597,11 @@ I say we cannot afford to lose what we have won. Renew the law, and let the next
             'The scientists tested the river every season and found it "the cleanest it has been in sixty years." Expert, regular testing turns the emotional story into proof that renewing the law is worth it.',
             '科学家每个季节都检测河水，发现它是 "the cleanest it has been in sixty years"。专家的定期检测把感人的故事变成了值得续订这项法律的证据。',
           ),
+          why: [
+            t("The report shows the water is clean.", "报告显示水变清了。"),
+            t("His grandfather's fishing needs no proof.", "祖父捉鱼不需要证明。"),
+            t("The cost is the opponents' point.", "成本是反对者的论点。"),
+          ],
         },
         {
           prompt: t(
@@ -503,6 +618,11 @@ I say we cannot afford to lose what we have won. Renew the law, and let the next
             'The speech began with a grandfather who could "see the stones at the bottom." Returning to that image ties the future to the past and gives the audience a clear picture of what renewing the law would win.',
             '演讲开头讲祖父能 "see the stones at the bottom"。回到这个画面把未来和过去连在一起，让听众清楚地看到续订法律能赢得什么。',
           ),
+          why: [
+            t("It repeats, not adds.", "它是呼应，不是新论点。"),
+            t("The law worked.", "法律起了作用。"),
+            t("It is a command, not a question.", "这是祈使句，不是问句。"),
+          ],
         },
       ],
     },
@@ -534,6 +654,11 @@ In her report, she used the second source. She mentioned the first only as an ex
             "The page fails every test: no named author or experts, no date, no study, and an advertisement for an app that profits from students' dislike of homework.",
             "这个网页每一项都不合格：没有具名作者或专家、没有日期、没有研究，还为一个靠学生讨厌作业而获利的应用做广告。",
           ),
+          why: [
+            t("Disagreeing is not a weakness.", "观点不同不算缺陷。"),
+            t("Topic is not the problem.", "话题不是问题。"),
+            t("A university wrote the second source.", "第二个来源才是大学写的。"),
+          ],
         },
         {
           prompt: t("What did the university's summary find?", "大学的研究综述发现了什么？"),
@@ -550,6 +675,11 @@ In her report, she used the second source. She mentioned the first only as an ex
             "The summary gives a careful, mixed answer: help for older students under some conditions, little for young children. That is \"a more careful answer than either 'homework is good' or 'homework is bad.'\"",
             "这份综述给出了谨慎、分情况的答案：在某些条件下对高年级学生有帮助，对年幼孩子帮助不大。这是 \"a more careful answer than either 'homework is good' or 'homework is bad'\"。",
           ),
+          why: [
+            t("It helped older students.", "它对高年级学生有帮助。"),
+            t("Short homework worked best.", "短作业效果最好。"),
+            t("It did little for young children.", "它对小孩子作用不大。"),
+          ],
         },
         {
           prompt: t("What did the student realize when she read more closely?", "学生仔细阅读后意识到了什么？"),
@@ -563,6 +693,11 @@ In her report, she used the second source. She mentioned the first only as an ex
             'She first saw two opposite sides, then saw "that they were not equals": one had no evidence and something to sell, the other drew on many studies.',
             '她起初以为是对立的两方，后来发现 "that they were not equals"：一个没有证据还在推销，另一个依据了许多研究。',
           ),
+          why: [
+            t("They said different things.", "它们说法不同。"),
+            t("She used only the second.", "她只用了第二个。"),
+            t("Both were about homework.", "两个都谈作业。"),
+          ],
         },
       ],
     },
@@ -593,6 +728,11 @@ So let us reject the false choice. Build the tower on Fourth Street. Keep the th
             '"Either we build the new office tower ... or we stay poor" offers only two choices. The speaker shows a third: build the tower somewhere else.',
             '"Either we build the new office tower ... or we stay poor" 只给出两个选择。演讲者指出了第三种：把大楼建在别处。',
           ),
+          why: [
+            t("No chain of events is claimed.", "对方没说连锁反应。"),
+            t("Popularity is not mentioned.", "没提受欢迎程度。"),
+            t("No small sample is used.", "没有用小样本。"),
+          ],
         },
         {
           prompt: t("In the third paragraph, the speaker answers which fallacy?", "在第三段，演讲者回应了哪种谬误？"),
@@ -602,6 +742,11 @@ So let us reject the false choice. Build the tower on Fourth Street. Keep the th
             'The opponents twisted the speaker\'s position into caring "more about old buildings than about jobs." The speaker replies, "I have never said that," showing the view was misstated.',
             '对手把演讲者的立场歪曲成 "more about old buildings than about jobs"。演讲者回应 "I have never said that"，指出观点被曲解了。',
           ),
+          why: [
+            t("He answers a twisting of his view, not a personal attack.", "他回应的是对立场的歪曲，不是人身攻击。"),
+            t("Popularity is not involved.", "与受欢迎无关。"),
+            t("The false dilemma was the first paragraph.", "非此即彼在第一段。"),
+          ],
         },
         {
           prompt: t("How does the fourth paragraph mainly persuade?", "第四段主要用什么方式说服人？"),
@@ -618,6 +763,11 @@ So let us reject the false choice. Build the tower on Fourth Street. Keep the th
             "Children's first plays, the night the war ended and ninety years of weddings call up shared memories and feelings. That is an appeal to emotion.",
             "孩子们的第一场演出、战争结束的那个夜晚、九十年来的婚礼，唤起了共同的回忆和情感。这是在诉诸情感。",
           ),
+          why: [
+            t("No costs are given.", "没有给出成本。"),
+            t("No qualifications are listed.", "没有列出资历。"),
+            t("It attacks no one there.", "那一段没攻击任何人。"),
+          ],
         },
       ],
     },

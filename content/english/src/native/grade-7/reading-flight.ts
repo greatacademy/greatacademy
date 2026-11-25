@@ -49,6 +49,11 @@ The same forces act on a bird, a paper airplane and a rocket. Only the ways of p
             "The fifth paragraph says the arrow pointing backward is drag, the resistance of the air pushing against the plane as it moves.",
             "第五段说指向后方的箭头是阻力，即飞机移动时空气对它的阻碍。",
           ),
+          [
+            t("Thrust is the forward arrow.", "推力是指向前方的箭头。"),
+            t("Weight is the downward arrow.", "重力是指向下方的箭头。"),
+            t("Lift is the upward arrow.", "升力是指向上方的箭头。"),
+          ],
         ),
         ask(
           t("Why are the four arrows in the diagram drawn the same length?", "为什么图中的四个箭头画得一样长？"),
@@ -62,6 +67,11 @@ The same forces act on a bird, a paper airplane and a rocket. Only the ways of p
             "The sixth paragraph says the arrows are the same length because in steady, level flight lift equals weight and thrust equals drag. The length of an arrow shows the size of a force.",
             "第六段说箭头一样长，是因为在平稳的水平飞行中升力等于重量，推力等于阻力。箭头的长度表示力的大小。",
           ),
+          [
+            t("Weight varies; a jet can weigh three hundred tonnes.", "重量各不相同，喷气机可重达三百吨。"),
+            t("Room on the page is not the reason.", "原因不是版面不够。"),
+            t("In level flight lift equals weight, not more.", "平飞时升力等于重力，并不更大。"),
+          ],
         ),
         ask(
           t(
@@ -78,12 +88,22 @@ The same forces act on a bird, a paper airplane and a rocket. Only the ways of p
             "The text says that to speed up, the pilot increases thrust. In the diagram, that means the forward arrow becomes longer than the backward arrow, drag.",
             "文中说要加速，飞行员会增大推力。在图中，这意味着向前的箭头变得比向后的阻力箭头更长。",
           ),
+          [
+            t("Weight does not change when the pilot speeds up.", "飞行员加速时重量不变。"),
+            t("Drag is resistance; the pilot increases thrust.", "阻力是空气阻碍，飞行员增加的是推力。"),
+            t("Speeding up changes the balance of the arrows.", "加速会改变箭头的平衡。"),
+          ],
         ),
         ask(
           t("Where does a plane's thrust come from?", "飞机的推力来自哪里？"),
           t("The engines", "发动机"),
           [t("The wings", "机翼"), t("Gravity", "重力"), t("The resistance of the air", "空气阻力")],
           t("Thrust comes from the engines, which push air or hot gases backward.", "推力来自发动机，它把空气或热气向后推。"),
+          [
+            t("The wings produce lift.", "机翼产生升力。"),
+            t("Gravity produces weight.", "重力来自地心引力。"),
+            t("Air resistance is drag.", "空气阻碍是阻力。"),
+          ],
         ),
       ],
       [],
@@ -114,6 +134,11 @@ You may have heard that air over the top must travel faster because it has to me
             "The second paragraph says the wing is tilted slightly, with its front edge a little higher than its back, and this tilt is called the angle of attack.",
             "第二段说机翼略微倾斜，前缘比后缘稍高，这种倾斜叫作攻角。",
           ),
+          [
+            t("The curve of the top surface is part of the airfoil shape.", "上表面的弧度是翼型形状的一部分。"),
+            t("Takeoff speed is never defined here.", "文中从没定义起飞速度。"),
+            t("The sharp back edge is part of the shape, not the tilt.", "尖锐的后缘是形状的一部分，不是倾角。"),
+          ],
         ),
         ask(
           t("In the diagram, what do the arrows curving toward the ground behind the wing show?", "图中机翼后方弯向地面的箭头表示什么？"),
@@ -127,6 +152,11 @@ You may have heard that air over the top must travel faster because it has to me
             "The third paragraph says air leaves the back edge heading downward, and in the diagram this is shown by arrows behind the wing curving toward the ground.",
             "第三段说空气离开后缘时向下流动，在图中用机翼后方弯向地面的箭头表示。",
           ),
+          [
+            t("Weight is shown as one arrow pointing down from the plane.", "重力是从飞机向下的一个箭头。"),
+            t("Thrust comes from the engines, not behind the wing.", "推力来自发动机，不在机翼后面。"),
+            t("Air meeting at the back edge is the wrong popular idea.", "空气在后缘会合是错误的流行说法。"),
+          ],
         ),
         ask(
           t("Why does the author describe the popular explanation in the last paragraph?", "作者为什么在最后一段描述那个流行的解释？"),
@@ -140,12 +170,22 @@ You may have heard that air over the top must travel faster because it has to me
             "The last paragraph calls the popular explanation wrong and gives the evidence: air over the top arrives at the back edge well before the air from below.",
             "最后一段称这个流行的解释是错的，并给出了证据：上方的空气比下方的空气早得多到达后缘。",
           ),
+          [
+            t("The true reason came in the earlier paragraphs.", "真正的原因在前面几段。"),
+            t("Newton's law was used earlier for the real explanation.", "牛顿定律在前面用于正确解释。"),
+            t("The angle of attack was defined earlier.", "攻角在前面已经定义了。"),
+          ],
         ),
         ask(
           t("What is the cross-section of a wing called?", "机翼的横截面形状叫什么？"),
           t("An airfoil", "翼型"),
           [t("A propeller", "螺旋桨"), t("A runway", "跑道"), t("A wind tunnel", "风洞")],
           t("A wing cut across from front to back has a shape called an airfoil.", "机翼从前到后切开的形状叫翼型。"),
+          [
+            t("A propeller makes thrust on small planes.", "螺旋桨为小飞机产生推力。"),
+            t("A runway is where planes take off.", "跑道是飞机起飞的地方。"),
+            t("A wind tunnel is where wings are tested.", "风洞是测试机翼的地方。"),
+          ],
         ),
       ],
       ["Isaac", "Newton's"],
@@ -177,6 +217,11 @@ The balloon could not be steered; it went wherever the wind blew. But it had pro
             "The second paragraph explains that hot air is lighter than the same amount of cool air, so the bag floats upward like a cork in water.",
             "第二段解释说热空气比同样多的冷空气轻，所以袋子会像水中的软木塞一样向上浮起。",
           ),
+          [
+            t("Smoke and hot air rose together, but the reason is the air's lightness.", "烟和热空气一起上升，但原因是空气更轻。"),
+            t("Paper and cloth are heavier than air.", "纸和布比空气重。"),
+            t("The wind moved the balloon sideways, not up.", "风让气球横向飘动，不是向上。"),
+          ],
         ),
         ask(
           t("Why were animals the first passengers?", "为什么第一批乘客是动物？"),
@@ -190,6 +235,11 @@ The balloon could not be steered; it went wherever the wind blew. But it had pro
             "The third paragraph says no one knew whether living creatures could survive high in the air, so the first passengers were a sheep, a duck and a rooster.",
             "第三段说没有人知道生物能否在高空存活，所以第一批乘客是一只羊、一只鸭和一只公鸡。",
           ),
+          [
+            t("The king watched, but that is not why animals went first.", "国王在观看，但这不是先让动物上去的原因。"),
+            t("Two men later flew in a balloon.", "后来两个人乘气球飞上了天。"),
+            t("Animals could not steer, and nothing could.", "动物不能操控，气球本来也没法操控。"),
+          ],
         ),
         ask(
           t("What problem did the balloon leave for later inventors?", "气球给后来的发明家留下了什么问题？"),
@@ -203,6 +253,11 @@ The balloon could not be steered; it went wherever the wind blew. But it had pro
             "The last paragraph says the balloon could not be steered and went wherever the wind blew, so the next challenge was to control where people went.",
             "最后一段说气球无法操纵，随风飘荡，所以下一个挑战是控制人们飞往何处。",
           ),
+          [
+            t("It did leave the ground.", "它确实离开了地面。"),
+            t("Two men flew in it.", "两个人乘坐它飞行过。"),
+            t("It floated over Paris for twenty-five minutes.", "它在巴黎上空飘了二十五分钟。"),
+          ],
         ),
         ask(
           t("What business did the Montgolfier brothers run?", "孟格菲兄弟经营什么生意？"),
@@ -212,6 +267,11 @@ The balloon could not be steered; it went wherever the wind blew. But it had pro
             "Joseph and Étienne Montgolfier were brothers who ran a paper factory in France.",
             "约瑟夫和艾蒂安·孟格菲兄弟在法国经营一家造纸厂。",
           ),
+          [
+            t("The bicycle shop belonged to the Wrights.", "自行车店属于莱特兄弟。"),
+            t("No farm is mentioned for them.", "文中没提他们有农场。"),
+            t("The barbershop is in Bessie Coleman's story.", "理发店出现在贝茜·科尔曼的故事里。"),
+          ],
         ),
       ],
       ["Joseph", "Étienne", "Montgolfier", "France", "King", "Louis", "XVI", "Versailles", "November", "Paris"],
@@ -244,6 +304,11 @@ On December 17, 1903, at Kitty Hawk, Orville flew their powered Flyer for twelve
             "The second paragraph says strong, steady winds blew across soft sand dunes at Kitty Hawk, ideal for gliders and safer landings.",
             "第二段说基蒂霍克有强劲稳定的风吹过松软的沙丘，非常适合滑翔机，着陆也更安全。",
           ),
+          [
+            t("Their shop was in Dayton, Ohio.", "他们的店在俄亥俄州代顿。"),
+            t("They built the wind tunnel in Dayton.", "风洞是他们在代顿建的。"),
+            t("Earlier experimenters are never placed there.", "文中从没说早期实验者住在那里。"),
+          ],
         ),
         ask(
           t("What did the brothers do after the disappointing 1901 glider?", "1901年的滑翔机令人失望之后，兄弟俩做了什么？"),
@@ -257,6 +322,11 @@ On December 17, 1903, at Kitty Hawk, Orville flew their powered Flyer for twelve
             "The fourth paragraph says they decided the old tables might be wrong, built a wind tunnel and tested about two hundred model wings, measuring the lift of each.",
             "第四段说他们认为旧数据表可能有误，于是造了一个风洞，测试了约两百个模型机翼，逐一测量升力。",
           ),
+          [
+            t("Wilbur felt discouraged but they did not give up.", "威尔伯一度灰心，但他们没有放弃。"),
+            t("They decided the old tables might be wrong.", "他们认为旧数据表可能有错。"),
+            t("The better glider came first, then the engine.", "先造出更好的滑翔机，然后才是发动机。"),
+          ],
         ),
         ask(
           t("What is the central idea of the passage?", "文章的中心思想是什么？"),
@@ -270,6 +340,11 @@ On December 17, 1903, at Kitty Hawk, Orville flew their powered Flyer for twelve
             "The first paragraph says their success came not from a sudden flash of genius but from years of patient trial and error, and the rest of the passage shows each step.",
             "第一段说他们的成功不是来自灵光一现，而是来自多年耐心的反复试验，文章其余部分展示了每一步。",
           ),
+          [
+            t("The passage says success did not come from sudden genius.", "文中说成功不是来自突然的天才灵感。"),
+            t("They had no university degrees.", "他们没有大学学位。"),
+            t("Gliders are a step, not the point.", "滑翔机只是一个步骤，不是重点。"),
+          ],
         ),
         ask(
           t("How long did Orville's first powered flight last?", "奥维尔的第一次动力飞行持续了多久？"),
@@ -279,6 +354,11 @@ On December 17, 1903, at Kitty Hawk, Orville flew their powered Flyer for twelve
             "Orville flew their powered Flyer for twelve seconds, covering about thirty-seven meters.",
             "奥维尔驾驶动力飞行者号飞了十二秒，约三十七米。",
           ),
+          [
+            t("Fifty-nine seconds was Wilbur's longest flight that day.", "五十九秒是当天威尔伯最长的一次。"),
+            t("Two minutes is never mentioned.", "文中从没提两分钟。"),
+            t("An hour is far too long.", "一小时太长了。"),
+          ],
         ),
       ],
       ["Wilbur", "Orville", "Wright", "Wrights", "Dayton", "Ohio", "Kitty", "Hawk", "North", "Carolina", "December", "Flyer"],
@@ -311,6 +391,11 @@ Coleman dreamed of opening a flight school for Black students. She died in a cra
             "The third paragraph says no flight school in the United States would accept her, because she was a woman and African American, so she was advised to go to France.",
             "第三段说美国没有一所飞行学校愿意接收她，因为她是女性又是非裔美国人，所以有人建议她去法国。",
           ),
+          [
+            t("She heard war stories but did not go to fight.", "她听了战争故事，但没去打仗。"),
+            t("Her family stayed in Texas.", "她的家人留在得克萨斯。"),
+            t("The plane in France was fragile, not safer.", "法国的飞机很脆弱，并不更安全。"),
+          ],
         ),
         ask(
           t(
@@ -327,6 +412,11 @@ Coleman dreamed of opening a flight school for Black students. She died in a cra
             "The fourth paragraph says she saw a fellow student killed in a crash, but she did not quit. Continuing after seeing that danger shows determination and courage.",
             "第四段说她目睹一名同学在坠机中丧生，但她没有放弃。在目睹这样的危险后坚持下去，体现了她的决心和勇气。",
           ),
+          [
+            t("She did not ignore danger. She kept going despite it.", "她没有无视危险，而是在危险面前坚持下去。"),
+            t("She did not quit.", "她没有放弃。"),
+            t("She blamed no one.", "她没有怪任何人。"),
+          ],
         ),
         ask(
           t("How did Coleman use her fame as a stunt pilot?", "科尔曼是如何利用她作为特技飞行员的名气的？"),
@@ -340,12 +430,22 @@ Coleman dreamed of opening a flight school for Black students. She died in a cra
             "The fifth paragraph says she refused to perform where Black spectators were not allowed to enter through the same gates as white spectators.",
             "第五段说她拒绝在黑人观众不能与白人观众走同一入口的地方表演。",
           ),
+          [
+            t("She died before opening a school.", "她还没开办学校就去世了。"),
+            t("She is never said to sell planes.", "文中从没说她卖飞机。"),
+            t("The newspaper publisher was someone she knew.", "报纸发行人是她认识的人。"),
+          ],
         ),
         ask(
           t("What did crowds call Bessie Coleman?", "观众怎样称呼贝茜·科尔曼？"),
           t('"Queen Bess"', "“贝丝女王”"),
           [t('"The Flying Barber"', "“飞行理发师”"), t('"Lady Lindy"', "“林迪夫人”"), t('"Miss Chicago"', "“芝加哥小姐”")],
           t('Crowds called her "Queen Bess."', "观众叫她“贝丝女王”。"),
+          [
+            t("She worked in a barbershop, but that was not her nickname.", "她在理发店工作过，但那不是她的绰号。"),
+            t("Lady Lindy is never mentioned.", "文中从没提 Lady Lindy。"),
+            t("She lived in Chicago, but that was not her name.", "她住在芝加哥，但那不是她的名字。"),
+          ],
         ),
       ],
       [
@@ -402,6 +502,11 @@ Controllers keep planes a safe distance apart, both side by side and up and down
             "The second paragraph says a flight is passed from one group to the next, like a baton in a relay race: ground, tower, departure and distant centers each handle one stage.",
             "第二段说航班从一组交给下一组，就像接力赛中的接力棒：地面、塔台、离场和远方的管制中心各负责一段。",
           ),
+          [
+            t("Controllers do not run anywhere.", "管制员并不跑动。"),
+            t("Planes do not race each other.", "飞机之间并不比赛。"),
+            t("No prize is mentioned.", "文中没提奖品。"),
+          ],
         ),
         ask(
           t("Why must pilots repeat important instructions back?", "为什么飞行员必须复述重要指令？"),
@@ -415,6 +520,11 @@ Controllers keep planes a safe distance apart, both side by side and up and down
             "The third paragraph says pilots must repeat important instructions back so that the controller can catch any mistake.",
             "第三段说飞行员必须复述重要指令，这样管制员可以发现任何错误。",
           ),
+          [
+            t("Teaching other pilots is not the reason.", "原因不是教别的飞行员。"),
+            t("The radio works both ways.", "无线电是双向的。"),
+            t("The runway is chosen by controllers.", "跑道由管制员选择。"),
+          ],
         ),
         ask(
           t(
@@ -427,6 +537,11 @@ Controllers keep planes a safe distance apart, both side by side and up and down
             "The fourth paragraph explains that runway 9 points east, toward ninety degrees; from the other end the same strip points west, toward two hundred and seventy degrees, so it is runway 27.",
             "第四段解释说，9号跑道指向东方，即90度；从另一端看，同一条跑道指向西方，即270度，所以是27号跑道。",
           ),
+          [
+            t("The same runway has a different number from the other end.", "同一条跑道从另一端看编号不同。"),
+            t("Eighteen would be south, at one hundred eighty degrees.", "十八是正南，一百八十度。"),
+            t("The degrees are divided by ten.", "度数要除以十。"),
+          ],
         ),
         ask(
           t("What are taxiways?", "滑行道是什么？"),
@@ -437,6 +552,11 @@ Controllers keep planes a safe distance apart, both side by side and up and down
             t("The ends of a runway", "跑道的两端"),
           ],
           t("Taxiways are the roads that connect the gates to the runways.", "滑行道是连接登机口和跑道的道路。"),
+          [
+            t("Paths in the sky are not taxiways.", "空中航路不是滑行道。"),
+            t("Controllers sit in the tower.", "管制员坐在塔台里。"),
+            t("The numbers are painted on the ends of runways.", "编号漆在跑道两端。"),
+          ],
         ),
       ],
       [],
@@ -468,6 +588,11 @@ The recorders have made flying far safer. After each accident, investigators stu
             "The first paragraph says investigators struggled because there were no survivors and little evidence.",
             "第一段说调查人员举步维艰，因为没有幸存者，证据也很少。",
           ),
+          [
+            t("There were no recorders yet.", "那时还没有记录仪。"),
+            t("The pilots died in the crashes.", "飞行员在事故中丧生了。"),
+            t("The orange boxes came later.", "橙色的记录仪是后来才有的。"),
+          ],
         ),
         ask(
           t("Why are the black boxes painted bright orange?", "为什么黑匣子被漆成亮橙色？"),
@@ -481,6 +606,11 @@ The recorders have made flying far safer. After each accident, investigators stu
             "The fourth paragraph says the boxes are bright orange, so that searchers can find them in wreckage.",
             "第四段说这些匣子是亮橙色的，以便搜寻人员在残骸中找到它们。",
           ),
+          [
+            t("Their build, not their color, protects them from fire.", "防火靠的是结构，不是颜色。"),
+            t("They are not kept for pilots to see.", "它们不是放给飞行员看的。"),
+            t("The signal does not depend on color.", "信号与颜色无关。"),
+          ],
         ),
         ask(
           t("According to the last paragraph, how have the recorders made flying safer?", "根据最后一段，记录器是怎样让飞行更安全的？"),
@@ -494,6 +624,11 @@ The recorders have made flying far safer. After each accident, investigators stu
             "The last paragraph says investigators study the recordings after each accident, and their findings lead to new designs, rules or training, so every accident becomes a lesson.",
             "最后一段说每次事故后调查人员都会研究记录，他们的发现带来新的设计、规定或培训，所以每次事故都成了一次教训。",
           ),
+          [
+            t("They cannot stop a crash.", "它们不能阻止坠机。"),
+            t("They record; they do not fly.", "它们只记录，不驾驶飞机。"),
+            t("There are two recorders, one for data too.", "有两个记录仪，其中一个记录数据。"),
+          ],
         ),
       ],
       ["Comet", "Australian", "Australia", "David", "Warren"],
@@ -524,6 +659,11 @@ The sound barrier had been broken, not by a single brave leap, but by step-by-st
             "The first paragraph says pilots near the speed of sound reported violent shaking and failing controls, and some planes broke apart, so people spoke of an invisible wall.",
             "第一段说飞行员在接近音速时报告剧烈震动和操纵失灵，一些飞机解体了，所以人们说有一堵看不见的墙。",
           ),
+          [
+            t("No one saw a wall. It was invisible and not real.", "没人见过墙，它是看不见的，也不存在。"),
+            t("Sound does travel through air.", "声音能在空气中传播。"),
+            t("Bullets were known to fly faster than sound.", "人们知道子弹能超过音速。"),
+          ],
         ),
         ask(
           t("What is a shock wave, as the passage explains it?", "文章是如何解释激波的？"),
@@ -537,6 +677,11 @@ The sound barrier had been broken, not by a single brave leap, but by step-by-st
             "The second paragraph says that as the plane catches up with its own pressure waves, they pile up into a shock wave, a sudden jump in pressure.",
             "第二段说当飞机追上自己的压力波时，这些波堆积起来形成激波，即压力的骤然跃升。",
           ),
+          [
+            t("The wall was not real.", "那堵墙并不存在。"),
+            t("The rocket engine is part of the X-1.", "火箭发动机是 X-1 的一部分。"),
+            t("Smooth flow happens at low speeds.", "平稳的气流出现在低速时。"),
+          ],
         ),
         ask(
           t("Why was the X-1 shaped like a bullet?", "为什么X-1被设计成子弹的形状？"),
@@ -550,6 +695,11 @@ The sound barrier had been broken, not by a single brave leap, but by step-by-st
             "The third paragraph says its shape was modeled on a bullet, which was known to fly faster than sound and stay stable.",
             "第三段说它的形状仿照子弹，而子弹是公认能以超音速飞行并保持稳定的。",
           ),
+          [
+            t("It was dropped to save fuel, not shaped for it.", "为省燃料是把它投放下来，与外形无关。"),
+            t("Fuel was saved in the air, not on the ground.", "燃料是在空中节省的，不在地面。"),
+            t("No request from the pilot is mentioned.", "文中没提飞行员提出这种要求。"),
+          ],
         ),
       ],
       ["United", "States", "Bell", "X-1", "October", "Chuck", "Yeager"],

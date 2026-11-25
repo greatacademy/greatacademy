@@ -46,6 +46,11 @@ Yet his method changed philosophy. Epistemology, the study of what we can know a
             "The third paragraph says Descartes did not believe the spirit existed but used it as a test to find whether anything could survive the most extreme doubt.",
             "第三段说笛卡尔并不相信这个精灵存在，而是用它来检验是否有任何东西能经受住最极端的怀疑。",
           ),
+          [
+            t("Descartes did not believe such a spirit existed.", "笛卡尔并不相信真有这样的恶灵。"),
+            t("The sums were only an example of what doubt could reach.", "算术只是怀疑可能触及的一个例子。"),
+            t("Religion is not why he used the spirit; it was a test.", "用恶灵不是为了宗教，而是一种检验。"),
+          ],
         ),
         ask(
           t("Why could the spirit not deceive Descartes about his own existence?", "为什么那个精灵无法在笛卡尔自身的存在上欺骗他？"),
@@ -59,6 +64,11 @@ Yet his method changed philosophy. Epistemology, the study of what we can know a
             "The fourth paragraph says that to be deceived he must be something that thinks, so he could not be deceived into thinking he existed if he did not.",
             "第四段说要被欺骗，他必须是一个思考的东西，所以他不可能在不存在时被骗以为自己存在。",
           ),
+          [
+            t("No promise from the spirit is mentioned.", "文中没提恶灵作过什么承诺。"),
+            t("He doubted his senses, so seeing his body proved nothing.", "他连感官都怀疑，看见身体也证明不了什么。"),
+            t("His teachers disagreed and could not be trusted.", "他的老师意见不一，靠不住。"),
+          ],
         ),
         ask(
           t("What does the writer suggest about Descartes's attempt to rebuild his knowledge?", "作者对笛卡尔重建知识的尝试有什么看法？"),
@@ -72,6 +82,11 @@ Yet his method changed philosophy. Epistemology, the study of what we can know a
             "The fifth paragraph says many readers have found the rebuilding far less convincing than the doubt that came before it.",
             "第五段说许多读者认为这种重建远不如之前的怀疑有说服力。",
           ),
+          [
+            t("The writer says many found it unconvincing.", "作者说很多人觉得它没有说服力。"),
+            t("His method of doubt changed philosophy, not the rebuilding.", "改变哲学的是他的怀疑方法，不是重建。"),
+            t("It led to dualism, mind and body as two things.", "它导向二元论，认为心与身是两种东西。"),
+          ],
         ),
         ask(
           t("Which book of Descartes was published in 1641?", "笛卡尔哪本书出版于1641年？"),
@@ -81,6 +96,11 @@ Yet his method changed philosophy. Epistemology, the study of what we can know a
             "He carried out the plan years later in a short book, the Meditations, published in 1641.",
             "多年后他在1641年出版的短书《沉思集》中实施了这个计划。",
           ),
+          [
+            t("The Republic is Plato's, much older.", "《理想国》是柏拉图的，年代早得多。"),
+            t("A Theory of Justice is Rawls's, from 1971.", "《正义论》是罗尔斯1971年的书。"),
+            t("Nature is not Descartes's book.", "《论自然》不是笛卡尔写的。"),
+          ],
         ),
       ],
       ["René", "Descartes", "Descartes's", "Meditations", "Latin", "French", "Europe", "Germany", "God"],
@@ -111,6 +131,11 @@ But the ring has outlasted the argument. It is a simple way to ask a question th
             "The second paragraph says Glaucon argues that most people are just only because they fear being caught, and that no one values justice for itself.",
             "第二段说格劳孔认为大多数人之所以正义只是因为害怕被抓，没有人为了正义本身而重视正义。",
           ),
+          [
+            t("Gyges seized the throne by murder, not by being a good king.", "巨吉斯靠杀人篡位，不是当了好国王。"),
+            t("The ring is a device for the argument, not a warning about gold.", "戒指是论证的道具，不是关于黄金的警告。"),
+            t("The earthquake only opens the story.", "地震只是故事的开头。"),
+          ],
         ),
         ask(
           t("What feature of real life does the thought experiment remove?", "这个思想实验去掉了现实生活中的什么特征？"),
@@ -124,6 +149,11 @@ But the ring has outlasted the argument. It is a simple way to ask a question th
             "The third paragraph says the story removes one feature of real life, the chance of being seen, and asks what is left.",
             "第三段说这个故事去掉了现实生活的一个特征，即被人看见的可能，然后问剩下了什么。",
           ),
+          [
+            t("Work is not what the ring takes away.", "戒指去掉的不是工作。"),
+            t("The earthquake happens in the story but is not removed.", "地震是故事情节，并不是被去掉的东西。"),
+            t("Kings and shepherds are characters, not the removed feature.", "国王和牧羊人是人物，不是被去掉的条件。"),
+          ],
         ),
         ask(
           t(
@@ -140,6 +170,11 @@ But the ring has outlasted the argument. It is a simple way to ask a question th
             "The last paragraph says a person who would act the same either way is not just because of fear, so their honesty does not depend on being seen.",
             "最后一段说一个无论如何都会同样行事的人并非出于恐惧而正义，所以他的诚实不取决于被看见。",
           ),
+          [
+            t("That describes someone who fears being caught, the opposite.", "这说的是怕被抓的人，正好相反。"),
+            t("The sentence praises their honesty, not indifference.", "这句话是在称赞他们诚实，不是说他们无所谓。"),
+            t("It is about being watched, not watching others.", "讲的是被人看见，不是看着别人。"),
+          ],
         ),
         ask(
           t("What was Gyges's job?", "古各斯是做什么的？"),
@@ -149,6 +184,11 @@ But the ring has outlasted the argument. It is a simple way to ask a question th
             "A shepherd named Gyges, working in the hills of Lydia, finds a gold ring.",
             "在吕底亚山中放牧的牧羊人古各斯发现了一枚金戒指。",
           ),
+          [
+            t("He became a king only by killing one.", "他是杀了国王才当上国王的。"),
+            t("Soldier is not mentioned; Descartes was the soldier.", "文中没说他是士兵；当过兵的是笛卡尔。"),
+            t("He found a gold ring; he did not make one.", "他是捡到金戒指，不是打造戒指。"),
+          ],
         ),
       ],
       ["Gyges", "Gyges's", "Plato", "Plato's", "Republic", "Glaucon", "Lydia", "Greek"],
@@ -184,6 +224,11 @@ Scientists rely on induction every day, and science works remarkably well. Some 
             "The third paragraph says we know nature is uniform only because it always has been, so we justify induction by using induction.",
             "第三段说我们只因为自然一直如此才知道它是一致的，所以我们是用归纳来证明归纳。",
           ),
+          [
+            t("Repeated experiments are not the circle meant.", "这里的循环不是指重复实验。"),
+            t("The sunrise is the example, not the circle.", "日出只是例子，不是循环本身。"),
+            t("Books are not the subject.", "书不是话题。"),
+          ],
         ),
         ask(
           t("What does Russell's story of the chicken show?", "罗素关于鸡的故事说明了什么？"),
@@ -197,6 +242,11 @@ Scientists rely on induction every day, and science works remarkably well. Some 
             "The fourth paragraph says the chicken's reasoning was the same as ours, growing more confident each day, until one day it was wrong.",
             "第四段说鸡的推理和我们一样，一天比一天更有信心，直到有一天错了。",
           ),
+          [
+            t("The farmer is part of the story, not its lesson.", "农夫只是故事里的人物，不是寓意所在。"),
+            t("The chicken reasons the same way we do.", "鸡的推理方式和我们一样。"),
+            t("Food is the example; the lesson is about confidence.", "食物只是例子，寓意是关于信心的。"),
+          ],
         ),
         ask(
           t("How did Hume himself respond to his own doubts in daily life?", "休谟本人在日常生活中如何对待自己的怀疑？"),
@@ -210,6 +260,11 @@ Scientists rely on induction every day, and science works remarkably well. Some 
             "The fifth paragraph says he admitted that he forgot his doubts as soon as he left his study to dine and play games with friends.",
             "第五段说他承认，一离开书房去和朋友吃饭、玩游戏，他就忘了自己的怀疑。",
           ),
+          [
+            t("He went on to dine with friends.", "他照样和朋友们一起吃饭。"),
+            t("He said nature is too strong for such doubts.", "他说天性太强，这种怀疑撑不住。"),
+            t("He stayed a philosopher.", "他一直是哲学家。"),
+          ],
         ),
         ask(
           t("What kind of philosopher was Hume?", "休谟是哪一类哲学家？"),
@@ -223,6 +278,11 @@ Scientists rely on induction every day, and science works remarkably well. Some 
             "Hume was an empiricist: he believed that all our knowledge of the world comes from experience.",
             "休谟是经验主义者：他认为我们对世界的一切知识都来自经验。",
           ),
+          [
+            t("Rationalists trust pure reason; Hume relied on experience.", "理性主义者只信纯粹理性；休谟依靠经验。"),
+            t("Hedonism appears in the Nozick passage.", "享乐主义出现在诺齐克那篇里。"),
+            t("Confucian scholars are Mencius and Xunzi, not Hume.", "儒家学者是孟子和荀子，不是休谟。"),
+          ],
         ),
       ],
       ["David", "Hume", "Hume's", "Scotland", "Scottish", "Bertrand", "Russell", "Russell's"],
@@ -253,6 +313,11 @@ Neither view has been proved. Studies of babies and young children have found bo
             "The second paragraph says the feeling of alarm and pity does not come from wanting friendship or praise but is simply there, which shows human nature is good.",
             "第二段说惊恐和怜悯的感受并非出于想得到友谊或称赞，而是自然存在，这说明人性是善的。",
           ),
+          [
+            t("Wells are part of the example, not a safety warning.", "井是例子的一部分，不是安全警告。"),
+            t("He says the feeling does not come from wanting praise.", "他说这种感受并非为了得到称赞。"),
+            t("Knowing right from wrong is one sprout to be nourished.", "是非之心只是需要培养的一个萌芽。"),
+          ],
         ),
         ask(
           t("What does Xunzi's image of the crooked wood mean?", "荀子关于弯曲木头的比喻是什么意思？"),
@@ -266,6 +331,11 @@ Neither view has been proved. Studies of babies and young children have found bo
             "The third paragraph says goodness is like a straight board made from crooked wood that must be steamed and bent, through education, ritual and example.",
             "第三段说善就像用弯曲的木头做成的直板，必须经过蒸烤和弯折，即教育、礼仪和榜样。",
           ),
+          [
+            t("The wood is a metaphor, not about buildings.", "木头是比喻，与建学校无关。"),
+            t("The wood is crooked and must be bent straight.", "木头是弯的，需要矫直。"),
+            t("It is about steaming and bending, not punishment.", "讲的是蒸烤弯曲，不是惩罚。"),
+          ],
         ),
         ask(
           t("On what did Mencius and Xunzi agree, according to the passage?", "根据文章，孟子和荀子在什么问题上意见一致？"),
@@ -279,12 +349,22 @@ Neither view has been proved. Studies of babies and young children have found bo
             "The fourth paragraph says both believed that anyone could become good and both thought learning was essential.",
             "第四段说两人都相信任何人都能成为好人，也都认为学习至关重要。",
           ),
+          [
+            t("Only Xunzi said nature is bad.", "只有荀子说人性本恶。"),
+            t("Xunzi valued ritual as a tool.", "荀子把礼当作工具。"),
+            t("Studies found both sympathy and selfishness.", "研究发现了同情心，也发现了自私。"),
+          ],
         ),
         ask(
           t("What did Mencius believe about human nature?", "孟子对人性怎么看？"),
           t("It is good", "人性本善"),
           [t("It is bad", "人性本恶"), t("It is neither good nor bad", "无善无恶"), t("It cannot be known", "不可知")],
           t("Mencius argued that human nature is good.", "孟子认为人性本善。"),
+          [
+            t("Bad is Xunzi's view.", "性恶是荀子的观点。"),
+            t("He firmly said it is good.", "他明确说人性本善。"),
+            t("He was certain, not doubtful.", "他很确定，并不怀疑。"),
+          ],
         ),
       ],
       ["Mencius", "Xunzi", "Xunzi's", "Confucius", "Mencius's", "China", "Chinese", "Warring", "States"],
@@ -315,6 +395,11 @@ The experiment does not settle the matter. What it does is make an abstract ques
             "The second paragraph says the question was aimed at hedonism, the claim that pleasure is the only thing good in itself.",
             "第二段说这个问题针对的是享乐主义，即快乐是唯一本身就好的东西这一主张。",
           ),
+          [
+            t("Replacing humans is not discussed.", "文中没讨论机器取代人类。"),
+            t("Climbing is one experience inside the machine.", "登山只是机器里的一种体验。"),
+            t("Brain research is not questioned.", "文中没质疑研究大脑。"),
+          ],
         ),
         ask(
           t("What does it suggest if most people refuse to plug in?", "如果大多数人拒绝接入机器，这说明了什么？"),
@@ -328,6 +413,11 @@ The experiment does not settle the matter. What it does is make an abstract ques
             "The third paragraph says that if Nozick's reasons are right, something matters to us besides how our lives feel from the inside.",
             "第三段说如果诺齐克的理由是对的，那么除了生活内在的感受之外，还有别的东西对我们很重要。",
           ),
+          [
+            t("They want pleasure, plus more.", "人们想要快乐，还想要更多。"),
+            t("Cost is never raised.", "文中从没提成本。"),
+            t("They understand it and still refuse.", "他们明白问题，仍然拒绝。"),
+          ],
         ),
         ask(
           t("Why do defenders of hedonism mention the reversed question?", "享乐主义的辩护者为什么提到反过来的问题？"),
@@ -341,12 +431,22 @@ The experiment does not settle the matter. What it does is make an abstract ques
             "The fourth paragraph says many people would not choose to unplug, so our refusal may reflect habit rather than a deep principle.",
             "第四段说许多人不会选择断开，所以我们的拒绝可能反映的是习惯，而不是深层的原则。",
           ),
+          [
+            t("It is a hypothetical, not proof the machine exists.", "这只是假设，不能证明机器存在。"),
+            t("The harder real world is the one they refuse.", "他们拒绝的正是更艰难的现实世界。"),
+            t("Nozick is not said to change his mind.", "文中没说诺齐克改变了看法。"),
+          ],
         ),
         ask(
           t("In which year did Robert Nozick propose his machine?", "罗伯特·诺齐克在哪一年提出他的机器？"),
           t("In 1974", "1974年"),
           [t("In 1971", "1971年"), t("In 1997", "1997年"), t("In 1641", "1641年")],
           t("In 1974, the American philosopher Robert Nozick proposed a machine.", "1974年，美国哲学家罗伯特·诺齐克提出了一台机器。"),
+          [
+            t("1971 is when Rawls published.", "1971年是罗尔斯出书的年份。"),
+            t("1997 is the year of the chess match.", "1997年是人机象棋赛那年。"),
+            t("1641 is when Descartes published.", "1641年是笛卡尔出书的年份。"),
+          ],
         ),
       ],
       ["Robert", "Nozick", "Nozick's", "Anarchy", "State", "Utopia", "American"],
@@ -382,6 +482,11 @@ The debate continues. But the veil itself has become a common tool. Whenever peo
             "The second paragraph says no one could design the rules to favor himself because no one would know his place.",
             "第二段说没有人能设计出有利于自己的规则，因为没有人知道自己的位置。",
           ),
+          [
+            t("They do not know if they are rich or healthy.", "他们不知道自己是贫是富、是否健康。"),
+            t("No judge is mentioned; the veil does the work.", "文中没提法官；起作用的是无知之幕。"),
+            t("They do not know their religion.", "他们不知道自己信什么教。"),
+          ],
         ),
         ask(
           t("When does Rawls's second principle allow inequality?", "罗尔斯的第二条原则在什么情况下允许不平等？"),
@@ -395,6 +500,11 @@ The debate continues. But the veil itself has become a common tool. Whenever peo
             "The third paragraph says inequalities are allowed only if they are open to all on equal terms and make the least advantaged better off.",
             "第三段说只有当不平等以平等条件向所有人开放并使最不利者受益时，才被允许。",
           ),
+          [
+            t("The rich cannot vote for themselves behind the veil.", "在幕后富人无法为自己投票。"),
+            t("Harder work is not the test; the worst off must gain.", "标准不是谁更勤劳，而是最弱势的人要得益。"),
+            t("Doctors earn more only if it helps the worst off.", "医生多拿钱的前提是对最弱势的人有利。"),
+          ],
         ),
         ask(
           t("What objection does the passage say some critics raised?", "文章说一些批评者提出了什么反对意见？"),
@@ -408,6 +518,11 @@ The debate continues. But the veil itself has become a common tool. Whenever peo
             "The fifth paragraph says some critics argued that people might gamble instead, choosing greater rewards and greater risks.",
             "第五段说一些批评者认为人们可能会冒险，选择更大回报和更大风险的社会。",
           ),
+          [
+            t("The veil hides one's position, not one's name.", "无知之幕遮住的是位置，不是名字。"),
+            t("Meeting strangers is the setup, not an objection.", "与陌生人一起是设定，不是反对意见。"),
+            t("Free speech is listed as a basic liberty.", "言论自由被列为基本自由。"),
+          ],
         ),
         ask(
           t("Which book contains the thought experiment of the veil of ignorance?", "哪本书包含“无知之幕”这个思想实验？"),
@@ -417,6 +532,11 @@ The debate continues. But the veil itself has become a common tool. Whenever peo
             "This is the thought experiment at the heart of A Theory of Justice, published in 1971 by the American philosopher John Rawls.",
             "这是美国哲学家约翰·罗尔斯1971年出版的《正义论》的核心思想实验。",
           ),
+          [
+            t("The Republic is Plato's.", "《理想国》是柏拉图的。"),
+            t("The Meditations is Descartes's.", "《第一哲学沉思集》是笛卡尔的。"),
+            t("Civil Disobedience is Thoreau's essay.", "《论公民的不服从》是梭罗的文章。"),
+          ],
         ),
       ],
       ["John", "Rawls", "Rawls's", "Theory", "Justice", "American", "Robert", "Nozick"],
@@ -447,6 +567,11 @@ The case is an example of how a thought experiment works. It does not report a r
             "The second paragraph says Jackson meant it as an argument against materialism: if Mary learns something new, there must be facts that are not physical.",
             "第二段说杰克逊用它来反驳唯物主义：如果玛丽学到了新东西，那么一定存在非物理的事实。",
           ),
+          [
+            t("Going outdoors is the story's event, not its point.", "走出房间是故事情节，不是论点。"),
+            t("She already knows how light strikes the eye.", "光如何射入眼睛她早就知道。"),
+            t("The books are a setting, not a target.", "黑白书只是设定，不是批评对象。"),
+          ],
         ),
         ask(
           t('What is the "new ability" reply to the argument?', "对这一论证的“新能力”回应是什么？"),
@@ -460,6 +585,11 @@ The case is an example of how a thought experiment works. It does not report a r
             "The third paragraph says some materialists reply that Mary does not learn a new fact but gains the ability to recognize, imagine and remember red.",
             "第三段说一些唯物主义者回应说，玛丽没有学到新事实，而是获得了辨认、想象和记住红色的能力。",
           ),
+          [
+            t("Darkness is not mentioned.", "文中没提黑暗。"),
+            t("Reading is not the new ability.", "新能力不是读书。"),
+            t("Leaving the room is not the ability meant.", "这里的能力不是离开房间。"),
+          ],
         ),
         ask(
           t("What is surprising about Jackson's own view later on?", "杰克逊后来的观点有什么令人意外之处？"),
@@ -473,6 +603,11 @@ The case is an example of how a thought experiment works. It does not report a r
             "The fourth paragraph says Jackson later changed his mind and came to think the argument was mistaken and materialism correct.",
             "第四段说杰克逊后来改变了想法，认为这个论证是错的，唯物主义是对的。",
           ),
+          [
+            t("No one could live as Mary does; she is imaginary.", "没人能像玛丽那样生活，她是虚构的。"),
+            t("He kept discussing it and admitted it was hard to explain.", "他继续讨论，并承认这很难解释。"),
+            t("He came to accept materialism, not deny colors.", "他后来接受了唯物主义，并没否认颜色。"),
+          ],
         ),
       ],
       ["Frank", "Jackson", "Jackson's", "Mary", "Mary's", "Australian", "Beijing", "Peking", "Chinese", "English"],
@@ -505,6 +640,11 @@ Some people dismiss trolley problems as silly, since no one faces such choices. 
             "The fourth paragraph says that in both cases one dies so five may live, yet most people say no to pushing, so our judgment treats them differently.",
             "第四段说两种情况都是一人死而五人活，但大多数人反对推人，所以我们的判断对它们区别对待。",
           ),
+          [
+            t("The bridge is not called more dangerous.", "文中没说桥更危险。"),
+            t("The workers are part of the case, not the point.", "工人是案例的一部分，不是重点。"),
+            t("The man only stands there; he caused nothing.", "那人只是站在那里，什么也没造成。"),
+          ],
         ),
         ask(
           t('What is the "means" explanation of the difference between the cases?', "关于两种情况差异的“手段”解释是什么？"),
@@ -518,6 +658,11 @@ Some people dismiss trolley problems as silly, since no one faces such choices. 
             "The fifth paragraph says in the first case the death is a side effect, while in the second the man is used as a means, like a tool.",
             "第五段说在第一种情况下，死亡是副作用，而在第二种情况下，那个人被当作手段，像工具一样。",
           ),
+          [
+            t("The side-track worker made no choice.", "侧轨上的工人并没有做选择。"),
+            t("Speed is the same in both cases.", "两个案例里速度一样。"),
+            t("One worker dies in the switch case.", "扳道案例中有一名工人死亡。"),
+          ],
         ),
         ask(
           t("Why does the writer say trolley problems are not simply silly?", "作者为什么说电车难题并不只是荒唐的？"),
@@ -534,6 +679,11 @@ Some people dismiss trolley problems as silly, since no one faces such choices. 
             "The last paragraph says versions arise in how doctors divide medicines, how governments plan for disasters and how engineers program cars.",
             "最后一段说它们的变体出现在医生分配药物、政府规划救灾和工程师为汽车编程等问题中。",
           ),
+          [
+            t("No one faces such choices literally, the writer says.", "作者说没人真遇到这种场面。"),
+            t("Philosophers, not engineers, invented them.", "提出它们的是哲学家，不是工程师。"),
+            t("The debate continues; there is no single answer.", "争论仍在继续，没有唯一答案。"),
+          ],
         ),
       ],
       ["Philippa", "Foot", "Foot's", "Judith", "Jarvis", "Thomson", "Thomson's", "British", "American"],

@@ -41,6 +41,11 @@ I think now that the sweater was never really the point. What my grandmother gav
             "She says it was only a sweater she never liked, yet after her grandmother died, losing it felt like losing something of her.",
             "她说那只是一件她从未喜欢过的毛衣，可祖母去世后，弄丢它就像失去了祖母的一部分。",
           ),
+          [
+            t("No school event is mentioned; she wore it only once.", "文中没提学校活动；她只穿过一次。"),
+            t("Her mother helped search; she was not angry.", "妈妈帮着找，并没有生气。"),
+            t("Its cost is never mentioned; it was handmade.", "文中没提价钱；毛衣是手织的。"),
+          ],
         ),
         ask(
           t(
@@ -57,6 +62,14 @@ I think now that the sweater was never really the point. What my grandmother gav
             "The joke shows the scarf is imperfect, yet she wears it anyway, which makes the essay's feeling honest rather than sentimental.",
             "这个玩笑表明围巾并不完美，但她照样戴着，这让文章的情感真诚而不煽情。",
           ),
+          [
+            t("Her bird looks like a potato, the opposite of expert work.", "她织的鸟像土豆，正说明她不是行家。"),
+            t(
+              "The scarf line comes after she lost the sweater; it explains nothing about the loss.",
+              "围巾这句是在弄丢毛衣之后，与丢失原因无关。",
+            ),
+            t("The joke is about her own clumsy bird, not her grandmother.", "这个玩笑是笑她自己笨拙的鸟，不是批评奶奶。"),
+          ],
         ),
         ask(
           t("What does the writer realize in the last paragraph?", "作者在最后一段领悟到了什么？"),
@@ -70,12 +83,22 @@ I think now that the sweater was never really the point. What my grandmother gav
             "She says the gift was not an object but a patience, one loop at a time, which she had not lost.",
             "她说，那份礼物不是一件物品，而是一种一针一线的耐心，而她并没有失去它。",
           ),
+          [
+            t("She never found the sweater.", "她始终没找到那件毛衣。"),
+            t("She values learning to knit; she does not regret it.", "她珍惜学会编织，并不后悔。"),
+            t("She says the object was never the point.", "她说那件东西本身从来不是重点。"),
+          ],
         ),
         ask(
           t("What pattern was on the sweater the grandmother knitted?", "奶奶织的毛衣上是什么图案？"),
           t("Small white birds", "小白鸟"),
           [t("Red flowers", "红花"), t("Blue stripes", "蓝条纹"), t("Green trees", "绿树")],
           t("It was dark green, with a pattern of small white birds across the chest.", "它是深绿色的，胸前有一排小白鸟图案。"),
+          [
+            t("The birds were white, not red flowers.", "图案是白色的鸟，不是红花。"),
+            t("The sweater was dark green, with no stripes mentioned.", "毛衣是深绿色的，文中没提条纹。"),
+            t("Dark green was the color of the wool, not a tree pattern.", "深绿是毛衣的颜色，不是树的图案。"),
+          ],
         ),
       ],
     ),
@@ -105,6 +128,11 @@ The subject of a personal essay does not need to be dramatic. Some of the best e
             "The first paragraph says that what makes it an essay is reflection: looking back to understand what happened.",
             "第一段说，使它成为随笔的是反思：回顾过去，理解发生的事。",
           ),
+          [
+            t("It says the subject need not be dramatic.", "文中说题材不必惊心动魄。"),
+            t("It prefers an insight to a neat lesson, not a happy ending.", "它更看重领悟，而不是圆满的结尾。"),
+            t("Essays are usually in the first person.", "随笔通常用第一人称。"),
+          ],
         ),
         ask(
           t('What are the "two versions of the writer" described in the third paragraph?', "第三段描述的“作者的两个版本”是什么？"),
@@ -118,6 +146,11 @@ The subject of a personal essay does not need to be dramatic. Some of the best e
             "The paragraph describes the younger self who did not yet understand and the older self who writes now with new knowledge.",
             "这一段描述了当时尚未理解的年少自我，以及如今带着新认识写作的年长自我。",
           ),
+          [
+            t("No editor is mentioned; both are the writer.", "文中没提编辑；两个都是作者自己。"),
+            t("These are not characters in a story but two ages of one person.", "这不是故事里的角色，而是同一个人的两个年龄。"),
+            t("Pen names are not discussed.", "文中没讨论笔名。"),
+          ],
         ),
         ask(
           t("What does the word candid most likely mean in the fourth paragraph?", "第四段中的 candid 最可能是什么意思？"),
@@ -127,12 +160,22 @@ The subject of a personal essay does not need to be dramatic. Some of the best e
             "Context clue: candid essays admit mistakes, confusion or embarrassment, which is what an honest and open writer does.",
             "上下文线索：candid 的随笔承认错误、困惑或尴尬，这正是坦诚直率的作者会做的事。",
           ),
+          [
+            t("Candid essays admit embarrassment, not sweetness.", "坦率的随笔会承认尴尬，并不是甜美。"),
+            t("Candid means the opposite of hidden: admitting mistakes.", "candid 与隐瞒正相反，是承认错误。"),
+            t("The essay sounds like a real person talking, not formal.", "这种随笔听起来像真人说话，并不正式。"),
+          ],
         ),
         ask(
           t("In which person are personal essays usually written?", "个人随笔通常用第几人称写？"),
           t("The first person", "第一人称"),
           [t("The second person", "第二人称"), t("The third person", "第三人称"), t("No person at all", "不用人称")],
           t("Personal essays are usually written in the first person.", "个人随笔通常用第一人称写。"),
+          [
+            t('The second person addresses "you"; that is the letter\'s special case.', "第二人称是对“你”说话，只是书信那篇的特殊形式。"),
+            t("The third person is not the usual form.", "第三人称不是常见写法。"),
+            t("A real person's voice is always present.", "文中总有一个真人的声音。"),
+          ],
         ),
       ],
     ),
@@ -164,6 +207,11 @@ I have started learning his village language. I am slow and make mistakes, and h
             "The first paragraph says she was embarrassed by all of his languages and wanted him to be like other fathers.",
             "第一段说，她为父亲的每一种语言感到难堪，希望他像别的父亲一样。",
           ),
+          [
+            t("The hospital scene is his story, not when she wanted quiet.", "医院是他讲的故事，不是她嫌他吵的场合。"),
+            t("He spoke English, slowly and with an accent.", "他会说英语，只是慢而且有口音。"),
+            t("Jokes are not mentioned.", "文中没提讲笑话。"),
+          ],
         ),
         ask(
           t("What changed the writer's view of her father?", "是什么改变了作者对父亲的看法？"),
@@ -177,6 +225,11 @@ I have started learning his village language. I am slow and make mistakes, and h
             "His story about calming and translating for an old man showed that his languages were a strength, not a weakness.",
             "他讲述的安抚老人并为其翻译的故事表明，他的语言是一种优势，而不是缺点。",
           ),
+          [
+            t("The suit is a detail; the story changed her.", "西装只是细节；改变她的是那个故事。"),
+            t("No teacher punishes her.", "没有老师惩罚她。"),
+            t("Her mother explains nothing; he speaks himself.", "妈妈什么也没解释，是他自己讲的。"),
+          ],
         ),
         ask(
           t('What does the writer mean by "It is a fair revenge"?', "作者说“这是公平的报复”是什么意思？"),
@@ -193,12 +246,22 @@ I have started learning his village language. I am slow and make mistakes, and h
             "The line is gently humorous: she once felt embarrassed by his accent, and now he laughs at hers.",
             "这句话带着温和的幽默：她曾为父亲的口音难堪，如今父亲笑她的口音。",
           ),
+          [
+            t("The tone is fond, not angry.", "语气是亲切的，不是生气。"),
+            t("He is teaching her; he laughs at her accent.", "他在教她，只是笑她的口音。"),
+            t("She has started learning and is continuing.", "她已经开始学，而且会继续学下去。"),
+          ],
         ),
         ask(
           t("What is the father's job?", "父亲的工作是什么？"),
           t("A nurse", "护士"),
           [t("A teacher", "教师"), t("A translator", "翻译"), t("A shopkeeper", "店主")],
           t("He stood in front of my class to talk about his job as a nurse.", "他站在我们班前面讲他当护士的工作。"),
+          [
+            t("He spoke at career day but is not a teacher.", "他在职业日上发言，但不是老师。"),
+            t("He translated once, but his job is nursing.", "他有一次做了翻译，但他的工作是护士。"),
+            t("The supermarket is where he spoke Spanish, not his job.", "超市是他说西班牙语的地方，不是他工作的地方。"),
+          ],
         ),
       ],
       ["English", "Spanish", "Tagalog"],
@@ -231,6 +294,11 @@ I won the regional championship the next year. I remember it less clearly than t
             "A year of dark mornings, rain and a careful notebook makes clear what she gave up when she stopped to help.",
             "一年的清晨摸黑、风雨无阻和细致的训练笔记，清楚地表明了她停下来帮忙时放弃了什么。",
           ),
+          [
+            t("It is not a training guide; the details build up her loss.", "这不是训练指南；细节是为了衬托她的牺牲。"),
+            t("Her coach is kind; she has no complaint.", "教练很体贴，她没有抱怨。"),
+            t("She trained eagerly for a whole year.", "她整整一年都在热心训练。"),
+          ],
         ),
         ask(
           t('What does the phrase "Without really deciding, I stopped" suggest?', "“没有真正做决定，我就停了下来”这句话暗示了什么？"),
@@ -244,6 +312,11 @@ I won the regional championship the next year. I remember it less clearly than t
             "She did not weigh the choice; she simply acted, which is why the moment revealed who she was.",
             "她并没有权衡这个选择，而是直接行动，这正是那一刻揭示出她本性的原因。",
           ),
+          [
+            t("She was near the front and running well.", "她当时在前面，跑得很好。"),
+            t("The coach is not there; she stops on her own.", "教练不在场，她是自己停下的。"),
+            t("She was trying to win; stopping was not planned.", "她一心想赢，停下来不是事先计划的。"),
+          ],
         ),
         ask(
           t(
@@ -260,12 +333,22 @@ I won the regional championship the next year. I remember it less clearly than t
             "In that minute on the hill, she found out what she would do when no one was asking, which mattered more than winning.",
             "在山坡上的那一分钟，她发现了在无人要求时自己会怎么做，这比获胜更重要。",
           ),
+          [
+            t("The other girl fell, not the writer.", "摔倒的是另一个女孩，不是作者。"),
+            t("Both were championship races; length is not the reason.", "两场都是锦标赛，长短不是原因。"),
+            t("She won the next year and was there.", "她第二年赢了，当然在场。"),
+          ],
         ),
         ask(
           t("In which place did the writer finish the race?", "作者在比赛中得了第几名？"),
           t("Nineteenth", "第十九名"),
           [t("First", "第一名"), t("Third", "第三名"), t("Last", "最后一名")],
           t("I finished nineteenth.", "我得了第十九名。"),
+          [
+            t("A dozen runners passed her, so she was not first.", "十几个人超过了她，所以不是第一名。"),
+            t("She was in the top three before she stopped.", "她停下之前才在前三名。"),
+            t("Nineteenth is not said to be last.", "文中没说第十九名是最后一名。"),
+          ],
         ),
       ],
     ),
@@ -297,6 +380,11 @@ We have agreed on a compromise: the new table will come, and the old one will go
             "Homework, a broken tooth, a lost job, birthdays and a funeral all happened there, so the table holds the family's memories.",
             "写作业、摔断牙、失业、生日和葬礼都在那里发生，所以这张桌子承载着家庭的记忆。",
           ),
+          [
+            t("She calls it an ugly table.", "她说这是张难看的桌子。"),
+            t("Arguments are one memory among many happy ones.", "争吵只是众多回忆之一，还有很多欢乐时光。"),
+            t("She never says how the table was made.", "她从没说过桌子是怎么做的。"),
+          ],
         ),
         ask(
           t("What does the writer realize she is really upset about?", "作者意识到她真正难过的是什么？"),
@@ -310,6 +398,11 @@ We have agreed on a compromise: the new table will come, and the old one will go
             "She says she is not really arguing about furniture: she will leave for college, and the table is one of the few things that has never changed.",
             "她说她其实不是在为家具争论：她即将去上大学，而这张桌子是少数从未改变的东西之一。",
           ),
+          [
+            t("She does not mention its cost.", "她没提新桌子的价钱。"),
+            t("Her mother points out the stain; the writer does not care about it.", "是妈妈指出污渍的；作者并不在乎它。"),
+            t("The tooth is an old family story, not today's worry.", "门牙是过去的家庭往事，不是现在的烦恼。"),
+          ],
         ),
         ask(
           t('What does the final sentence, "I suspect I will visit it," suggest?', "最后一句“我想我会去看它”暗示了什么？"),
@@ -323,12 +416,22 @@ We have agreed on a compromise: the new table will come, and the old one will go
             "The gentle, humorous ending shows she has accepted the change but still cherishes what the table means.",
             "温和而幽默的结尾表明，她接受了改变，但仍珍惜这张桌子的意义。",
           ),
+          [
+            t("It goes to the garage, not for sale.", "桌子是搬去车库，不是卖掉。"),
+            t("Visiting is about memory, not meals.", "去看它是为了回忆，不是在那里吃饭。"),
+            t("She argued to keep it, so she clearly cares.", "她争着要留下它，显然很在乎。"),
+          ],
         ),
         ask(
           t("How did the writer's brother break his front tooth?", "作者的弟弟是怎样磕断门牙的？"),
           t("On the edge of the table, when he was four", "四岁时磕在桌边上"),
           [t("Falling off a bicycle", "从自行车上摔下来"), t("Playing football", "踢足球"), t("Biting a birthday cake", "咬生日蛋糕")],
           t("My brother broke his front tooth on its edge when he was four.", "我弟弟四岁时在桌边磕断了门牙。"),
+          [
+            t("The table, not a bicycle, broke it.", "弄断门牙的是桌子，不是自行车。"),
+            t("He was four and at home, not playing football.", "他当时四岁，在家里，不是踢球。"),
+            t("Birthday cakes sat on the table; they broke nothing.", "生日蛋糕放在桌上，什么也没弄坏。"),
+          ],
         ),
       ],
       ["Africa"],
@@ -361,6 +464,11 @@ I am not naturally talkative, and I never will be. But I learned that year that 
             "The second paragraph explains that her family had moved, the new school felt confusing and silence felt safer.",
             "第二段解释说，她家搬了家，新学校让她无所适从，沉默让她觉得更安全。",
           ),
+          [
+            t("Teachers stopped calling on her later, as she wanted.", "老师后来不再点她，那正合她意。"),
+            t('She said she did not know "even when I did."', "她说“不知道”，其实常常知道。"),
+            t("Illness is not mentioned.", "文中没提生病。"),
+          ],
         ),
         ask(
           t("What did Felix do that was different from others?", "费利克斯做了什么与别人不同的事？"),
@@ -374,6 +482,11 @@ I am not naturally talkative, and I never will be. But I learned that year that 
             "Felix did not repeat the question or joke; he simply waited, with genuine curiosity.",
             "费利克斯没有重复问题，也没有开玩笑；他只是带着真诚的好奇心等待。",
           ),
+          [
+            t("He did not make a joke.", "他没开玩笑。"),
+            t("He told no one about her silence.", "他没把她不说话的事告诉任何人。"),
+            t("He waited for her to answer herself.", "他等着她自己回答。"),
+          ],
         ),
         ask(
           t(
@@ -390,12 +503,22 @@ I am not naturally talkative, and I never will be. But I learned that year that 
             "Silence felt safe, like a shelter, but it also made her invisible and isolated, like a wall.",
             "沉默让她感到安全，像一处庇护所，但也让她变得隐形和孤立，像一面墙。",
           ),
+          [
+            t("She says silence can also shut her away.", "她说沉默也会把她隔绝起来。"),
+            t("The wall is a metaphor, not a real wall.", "“墙”是比喻，不是真的墙。"),
+            t("She learns that speaking can be safe.", "她明白了说话也可以是安全的。"),
+          ],
         ),
         ask(
           t("In which grade did the writer stop speaking in class?", "作者在几年级时不再在课上说话？"),
           t("Seventh grade", "七年级"),
           [t("Kindergarten", "幼儿园"), t("Tenth grade", "十年级"), t("Fourth grade", "四年级")],
           t("In seventh grade, I stopped speaking in class.", "七年级时，我不再在课上说话。"),
+          [
+            t("Kindergarten is when her old friendships began.", "幼儿园是她旧友谊开始的时候。"),
+            t("Tenth grade is not mentioned.", "文中没提十年级。"),
+            t("Fourth grade is not mentioned.", "文中没提四年级。"),
+          ],
         ),
       ],
       ["Felix"],
@@ -438,6 +561,11 @@ The letter form lets the writer reflect on her past while speaking directly to i
             "The introduction says the essay is a letter from a high school senior to herself at twelve.",
             "引言说，这篇随笔是一名高三学生写给十二岁的自己的信。",
           ),
+          [
+            t("They are one person at two ages, not friends.", "这是同一个人的两个年龄，不是两个朋友。"),
+            t("No sisters are mentioned; she writes to herself.", "文中没提姐妹；她是写给自己。"),
+            t("Twelve is a name for her younger self, not a topic.", "“十二”是对年轻的自己的称呼，不是话题。"),
+          ],
         ),
         ask(
           t('What does the writer call "the hard one" to say?', "作者把哪一点称为“最难说的”？"),
@@ -451,6 +579,11 @@ The letter form lets the writer reflect on her past while speaking directly to i
             "The third point says she will feel this way again about other things, but she will get up from the floor every time.",
             "第三点说，她还会因为别的事情有同样的感受，但她每次都会从地上站起来。",
           ),
+          [
+            t("Sofia moves away; no invitation is promised.", "索菲亚搬走了，并没说会邀请她。"),
+            t("It says she will feel this way again.", "信里说她还会再有这种感受。"),
+            t("Priya becomes her best friend; she does not leave.", "普丽娅成了她最好的朋友，并没有离开。"),
+          ],
         ),
         ask(
           t("What does the last paragraph say the letter form allows the writer to do?", "最后一段说，书信这种形式让作者能够做什么？"),
@@ -464,6 +597,11 @@ The letter form lets the writer reflect on her past while speaking directly to i
             "The final paragraph says the letter form lets the writer reflect on her past while speaking directly to it.",
             "最后一段说，书信形式让作者能够一边反思过去，一边直接对过去说话。",
           ),
+          [
+            t("She signs it Seventeen, hiding nothing.", "她署名“十七”，没有隐藏身份。"),
+            t("The letter is full of her feelings.", "信里满是她的感受。"),
+            t("It is about herself, not someone else.", "写的是她自己，不是别人。"),
+          ],
         ),
       ],
       ["Sofia", "Priya", "Twelve", "Seventeen"],
@@ -496,6 +634,11 @@ I went into that job thinking it was a way to earn money. I left understanding t
             'He said, "Now you\'re one of us. Everyone breaks the first stack," treating the mistake as a kind of welcome.',
             "他说：“现在你是我们中的一员了。每个人都会打碎第一摞盘子。”把这个失误当作一种欢迎。",
           ),
+          [
+            t("He tells her she is one of them, the opposite of mocking.", "他说她成了自己人，和嘲笑正相反。"),
+            t("The cost of plates is never mentioned.", "文中没提盘子的价钱。"),
+            t("He responds at once, so he noticed.", "他马上有反应，显然注意到了。"),
+          ],
         ),
         ask(
           t('What does Marcus mean by "They come because the lights are on"?', "马库斯说“他们来是因为灯亮着”是什么意思？"),
@@ -509,6 +652,11 @@ I went into that job thinking it was a way to earn money. I left understanding t
             "Marcus says people do not come at three in the morning for the food; an open, lit place offers them comfort.",
             "马库斯说，人们凌晨三点来不是为了食物；一个开着灯的地方给了他们慰藉。",
           ),
+          [
+            t("Brightness is not compared with other places.", "文中没和别处比亮度。"),
+            t("The lights are a sign of welcome, not for seeing.", "灯光是欢迎的信号，不是为了照明。"),
+            t("He says food is not why they come, not that it is bad.", "他说人们不是为食物而来，并没说饭菜难吃。"),
+          ],
         ),
         ask(
           t("What does the writer learn by the end of the summer?", "到夏天结束时，作者学到了什么？"),
@@ -522,6 +670,11 @@ I went into that job thinking it was a way to earn money. I left understanding t
             "The last paragraph says she left understanding that work, even the humblest kind, can be a way of looking after people.",
             "最后一段说，她离开时明白了，工作哪怕再平凡，也可以是一种照顾他人的方式。",
           ),
+          [
+            t("She took the job for money but learned something else.", "她为钱接下这份工作，却学到了别的。"),
+            t("She still thinks fondly of the night lights.", "她至今还怀念那些夜晚的灯光。"),
+            t("Customers were tired or lonely, and one wished her luck.", "顾客有的疲惫，有的孤独，还有人祝她好运。"),
+          ],
         ),
       ],
       ["Delacroix", "Marcus"],

@@ -47,6 +47,14 @@ His book did not end the Depression. But it named an aspiration that has outlast
             "The first paragraph says banks had failed and millions were out of work, so it was a strange moment to write about hope.",
             "第一段说银行倒闭、数百万人失业，所以那是一个写希望的奇怪时刻。",
           ),
+          [
+            t(
+              "Adams's book gave the country the phrase; it was new, not a century old.",
+              "亚当斯的书让全国有了这个说法；它是新词，不是用了百年。",
+            ),
+            t("His earlier books are never mentioned; he is introduced as a historian.", "文中没提他以前的书；他被介绍为历史学家。"),
+            t("People were out of work in 1931; the getting rich happened in the 1920s.", "1931年人们失业；发财是1920年代的事。"),
+          ],
         ),
         ask(
           t("According to Adams, what was the dream mainly about?", "在亚当斯看来，这个梦想主要关乎什么？"),
@@ -60,6 +68,11 @@ His book did not end the Depression. But it named an aspiration that has outlast
             "The second paragraph says the dream was not simply about cars and wages but about a better life for everyone and recognition for who people are.",
             "第二段说这个梦想不只是关于汽车和工资，而是关于人人都有更好的生活，人们因其本身而受到认可。",
           ),
+          [
+            t("Adams said the dream was not simply motor cars and high wages.", "亚当斯说梦想不只是汽车和高薪。"),
+            t("The suburban house is the narrower picture that came later.", "郊区住房是后来变窄的图景。"),
+            t("He worried about measuring success only in dollars, like the 1920s.", "他担心像1920年代那样只用金钱衡量成功。"),
+          ],
         ),
         ask(
           t(
@@ -76,6 +89,11 @@ His book did not end the Depression. But it named an aspiration that has outlast
             "The fifth paragraph says that both sides assume the dream is about moving up, while Adams also meant treating every person as a person of worth.",
             "第五段说双方都假定梦想关乎向上流动，而亚当斯还指把每个人都当作有价值的人来对待。",
           ),
+          [
+            t("Neither side says hard work no longer matters; one says rising is harder.", "双方都没说努力不重要；一方只说上升变难了。"),
+            t("The Depression returning is never discussed.", "文中没讨论大萧条会不会重来。"),
+            t("Both sides use his phrase; neither says he was wrong.", "双方都用他的说法，没人说他错了。"),
+          ],
         ),
         ask(
           t("What was the name of the book in which Adams named the American dream?", "亚当斯在哪本书中提出了“美国梦”？"),
@@ -85,6 +103,11 @@ His book did not end the Depression. But it named an aspiration that has outlast
             "A historian named James Truslow Adams published a book called The Epic of America.",
             "历史学家詹姆斯·特拉斯洛·亚当斯出版了一本名为《美国史诗》的书。",
           ),
+          [
+            t("The Gospel of Wealth is Carnegie's essay.", "《财富的福音》是卡内基的文章。"),
+            t("Ragged Dick is Alger's novel.", "《衣衫褴褛的迪克》是阿尔杰的小说。"),
+            t("Walden is not mentioned.", "文中没提《瓦尔登湖》。"),
+          ],
         ),
       ],
       ["James", "Truslow", "Adams", "American", "Americans", "Epic", "America"],
@@ -120,6 +143,14 @@ None of this means that effort does not matter. Many people have improved their 
             "The third paragraph says their rise almost always depends on luck, such as the drowning child or the generous stranger.",
             "第三段说他们的发迹几乎总是靠运气，比如落水的孩子或慷慨的陌生人。",
           ),
+          [
+            t("Saving to open a business is never their path.", "攒钱开店从来不是他们的路。"),
+            t("They are street boys, not university students.", "他们是街头少年，不是大学生。"),
+            t(
+              "A lost relative's fortune is not mentioned; a grateful stranger helps.",
+              "文中没提失散亲人的遗产；帮助他们的是感恩的陌生人。",
+            ),
+          ],
         ),
         ask(
           t("What unstated assumption does the passage find in the later Alger myth?", "文章在后来的阿尔杰神话中发现了什么未言明的假设？"),
@@ -133,6 +164,11 @@ None of this means that effort does not matter. Many people have improved their 
             "The fourth paragraph says the myth supposes that effort is what separates the poor from the affluent, and that circumstances count for little.",
             "第四段说这个神话假定努力是区分穷人和富人的因素，而环境几乎不起作用。",
           ),
+          [
+            t("Newspapers are only the boys' first job, not the assumption.", "卖报只是少年的起点工作，不是那个假设。"),
+            t("Orphans appear in the novels, but no one assumes the rich were orphans.", "孤儿出现在小说里，但没人假设富人曾是孤儿。"),
+            t("The myth removed luck, so it does not rank luck above character.", "神话去掉了运气，并没把运气放在品格之上。"),
+          ],
         ),
         ask(
           t(
@@ -149,12 +185,22 @@ None of this means that effort does not matter. Many people have improved their 
             "The fifth paragraph says that for those boys, the cheerful message could feel like a quiet accusation.",
             "第五段说对那些男孩来说，这种乐观的信息可能像一种无声的指责。",
           ),
+          [
+            t("The novels promised hope to some, but these boys never rose.", "小说给了一些人希望，但这些少年始终没翻身。"),
+            t("The stories were serious, close to their own lives.", "这些故事是严肃的，贴近他们的生活。"),
+            t("The novels are not about selling methods.", "小说讲的不是卖报技巧。"),
+          ],
         ),
         ask(
           t("What jobs do Alger's poor heroes often do at the start?", "阿尔杰笔下的穷孩子起初常做什么工作？"),
           t("They shine shoes or sell newspapers", "擦鞋或卖报"),
           [t("They work in steel mills", "在钢铁厂做工"), t("They farm on the plains", "在平原上务农"), t("They work as clerks", "当职员")],
           t("A poor boy, often an orphan, shines shoes or sells newspapers on the streets.", "一个穷男孩，常常是孤儿，在街头擦鞋或卖报。"),
+          [
+            t("Steel mills belong to Carnegie's story.", "钢厂属于卡内基的故事。"),
+            t("Farming on the plains belongs to the Homestead story.", "在平原种地属于宅地法的故事。"),
+            t("Clerk is where they end up, not where they start.", "职员是他们的终点，不是起点。"),
+          ],
         ),
       ],
       ["Horatio", "Alger", "Ragged", "Dick", "Dick's", "American", "Americans", "New", "York"],
@@ -185,6 +231,11 @@ The Homestead Act is sometimes held up as the purest example of the American dre
             "The first paragraph says the settler had to live on the land for five years, build a home and farm it.",
             "第一段说定居者必须在土地上住满五年、建造住房并耕种。",
           ),
+          [
+            t("The fee was small, and there was no yearly payment.", "费用很少，也没有每年缴费。"),
+            t("Military service was not required.", "并不要求服兵役。"),
+            t("The railway is not part of the conditions.", "铁路不在条件之中。"),
+          ],
         ),
         ask(
           t("Why did many settlers on the Great Plains fail?", "为什么许多大平原上的定居者失败了？"),
@@ -198,6 +249,11 @@ The Homestead Act is sometimes held up as the purest example of the American dre
             "The third paragraph says the dry plains were not suited to small farms, and drought, grasshoppers and winters drove many away.",
             "第三段说干旱的平原不适合小农场，干旱、蝗虫和寒冬赶走了许多人。",
           ),
+          [
+            t("The government did not take land back; settlers left on their own.", "政府没有收回土地；是移民自己离开的。"),
+            t("They came to farm; the weather drove them away.", "他们是来种地的，是天气把他们赶走了。"),
+            t("The plains were dry, not too wet.", "平原干旱，不是太湿。"),
+          ],
         ),
         ask(
           t("What assumption did the Homestead Act make about the land?", "《宅地法》对土地做了什么假设？"),
@@ -211,12 +267,25 @@ The Homestead Act is sometimes held up as the purest example of the American dre
             "The fourth paragraph says the law assumed that land not farmed in the European way was unused and available, though Native nations lived there.",
             "第四段说该法假定没有按欧洲方式耕种的土地是闲置可用的，尽管原住民部族住在那里。",
           ),
+          [
+            t("The act assumed the land was usable, not too dry.", "法案认为土地可用，并非太干。"),
+            t(
+              "Native peoples were pushed out, often through broken treaties, not paid fairly.",
+              "原住民被驱逐，常因条约被撕毁，并没有得到公平补偿。",
+            ),
+            t("Women could claim land, but so could men.", "女性能申请土地，男性也能。"),
+          ],
         ),
         ask(
           t("How much land could a settler claim under the Homestead Act?", "根据《宅地法》，定居者可申领多少土地？"),
           t("160 acres", "160英亩"),
           [t("16 acres", "16英亩"), t("1,600 acres", "1600英亩"), t("As much as they could farm", "能耕种多少就多少")],
           t("Any adult citizen could claim 160 acres of public land.", "任何成年公民都可以申领160英亩公共土地。"),
+          [
+            t("Sixteen acres is far too small.", "十六英亩太小了。"),
+            t("1,600 acres is ten times the real figure.", "1600英亩是实际的十倍。"),
+            t("The limit was a fixed 160 acres.", "上限固定为160英亩。"),
+          ],
         ),
       ],
       [
@@ -263,6 +332,11 @@ The libraries still stand in many towns. So do the questions about how their bui
             "The second paragraph quotes Carnegie's claim that the man who dies rich dies disgraced, so the rich must give their wealth away while alive.",
             "第二段引用了卡内基的话“死时富有的人死得不光彩”，所以富人必须在生前捐出财富。",
           ),
+          [
+            t("His workers had long hours; higher wages were what critics wanted.", "他的工人工时很长；加薪是批评者的要求。"),
+            t('He said "the man who dies rich dies disgraced."', "他说“死时富有的人死得耻辱”。"),
+            t("He kept running his steel company.", "他继续经营钢铁公司。"),
+          ],
         ),
         ask(
           t(
@@ -282,6 +356,11 @@ The libraries still stand in many towns. So do the questions about how their bui
             "The third paragraph says Carnegie thought direct gifts encouraged idleness and wanted institutions that would help people improve themselves.",
             "第三段说卡内基认为直接捐钱会助长懒惰，想要资助能帮助人们自我提升的机构。",
           ),
+          [
+            t("He did want to help; he chose institutions over handouts.", "他确实想帮人，只是选择办机构而不是直接施舍。"),
+            t("Libraries lent any book, not his own.", "图书馆出借各种书，不只是他的书。"),
+            t("No government told him to.", "没有政府要求他这样做。"),
+          ],
         ),
         ask(
           t("What do the two sides of the debate disagree about?", "争论的双方在什么问题上有分歧？"),
@@ -298,6 +377,11 @@ The libraries still stand in many towns. So do the questions about how their bui
             "The fifth paragraph asks whether it is better for the rich to give generously or for a society to share wealth more fairly through wages and taxes.",
             "第五段提出的问题是：是富人慷慨捐赠好，还是社会通过工资和税收更公平地分配财富好。",
           ),
+          [
+            t("Libraries are not in dispute; they still stand.", "图书馆的价值没有争议，它们至今仍在。"),
+            t("His birthplace is a fact, not a debate.", "他的出生地是事实，不是争论点。"),
+            t("The debate is about wealth, not the steel industry.", "争论的是财富分配，不是钢铁业。"),
+          ],
         ),
         ask(
           t("How old was Carnegie when he arrived in the United States?", "卡内基到达美国时几岁？"),
@@ -307,6 +391,11 @@ The libraries still stand in many towns. So do the questions about how their bui
             "Andrew Carnegie arrived in the United States from Scotland in 1848 as a poor boy of twelve.",
             "安德鲁·卡内基1848年从苏格兰来到美国，当时是个十二岁的穷孩子。",
           ),
+          [
+            t("Twenty is too old; he came as a boy.", "二十岁太大了；他来时还是个孩子。"),
+            t("Six is too young.", "六岁太小了。"),
+            t("Thirty is far too old.", "三十岁太大了。"),
+          ],
         ),
       ],
       ["Andrew", "Carnegie", "Carnegie's", "Scotland", "Pittsburgh", "Homestead", "American", "Americans"],
@@ -339,6 +428,11 @@ Levittown still stands, and many of its houses have been enlarged and changed be
             "The second paragraph says teams moved down the street, each doing one task, and finished thirty houses a day.",
             "第二段说工作队沿街推进，每队做一项工作，每天能建成三十座房子。",
           ),
+          [
+            t("He built new houses on potato fields.", "他在土豆田上建新房。"),
+            t("Teams built identical houses; families did not build their own.", "是施工队建相同的房子，不是各家自建。"),
+            t("His workers were paid teams; soldiers bought the houses.", "他的工人是受雇施工队；士兵是买房的人。"),
+          ],
         ),
         ask(
           t("Who was shut out of buying houses in Levittown?", "谁被排除在莱维敦购房之外？"),
@@ -352,6 +446,11 @@ Levittown still stands, and many of its houses have been enlarged and changed be
             "The fourth paragraph says the contracts forbade sale or rent to anyone not white, and Black veterans were largely shut out.",
             "第四段说合同禁止把房子卖给或租给非白人，黑人退伍军人在很大程度上被排除在外。",
           ),
+          [
+            t("Veterans were the main buyers; service was not required.", "退伍军人是主要买家，但并不要求服过兵役。"),
+            t("Family size is not mentioned.", "文中没提家庭人数。"),
+            t("Car owners are not excluded; the car was part of the dream.", "有车的人没被排斥；汽车是梦想的一部分。"),
+          ],
         ),
         ask(
           t(
@@ -368,6 +467,11 @@ Levittown still stands, and many of its houses have been enlarged and changed be
             "The fifth paragraph says a house is the main way most families build wealth, so excluded families had nothing to pass on.",
             "第五段说房子是大多数家庭积累财富的主要方式，被排除的家庭就没有什么可以传给下一代。",
           ),
+          [
+            t("Many houses still stand, enlarged.", "很多房子至今仍在，还扩建了。"),
+            t("Rents never became free.", "房租从来没有免费。"),
+            t("The excluded families stayed; they had nothing to pass on.", "被排斥的家庭留了下来，只是没有财产可传。"),
+          ],
         ),
         ask(
           t("About how much did a Levittown house cost in 1950?", "1950年一栋莱维敦房子大约多少钱？"),
@@ -377,6 +481,11 @@ Levittown still stands, and many of its houses have been enlarged and changed be
             "Families who bought a Levittown house in 1950 for about 8,000 dollars could pass on a valuable property.",
             "1950年花约8000美元买下莱维敦房子的家庭，可以传下一份有价值的房产。",
           ),
+          [
+            t("800 dollars is far too low.", "800美元太低了。"),
+            t("80,000 dollars is ten times too high.", "80000美元高了十倍。"),
+            t("A dollar a week was Carnegie's first wage.", "一周一美元是卡内基的第一份工资。"),
+          ],
         ),
       ],
       ["Levittown", "Levitt", "William", "New", "York", "Long", "Island", "American", "Americans", "Black"],
@@ -414,6 +523,11 @@ The data, in other words, turn an argument about faith into a question of design
             "The third paragraph says about 90 percent of children born in 1940 out-earned their parents, but only about half of those born in 1980 did.",
             "第三段说 1940 年出生的孩子约百分之九十收入超过父母，而 1980 年出生的只有约一半。",
           ),
+          [
+            t("The chance fell, not rose.", "机会下降了，不是上升。"),
+            t("It changed sharply, from almost certain to a coin toss.", "它变化很大，从几乎必然变成抛硬币。"),
+            t("It fell to about half, not to zero.", "降到约一半，不是降到零。"),
+          ],
         ),
         ask(
           t("What did areas with more mobility tend to have?", "流动性较高的地区往往有什么特点？"),
@@ -427,6 +541,11 @@ The data, in other words, turn an argument about faith into a question of design
             "The fourth paragraph lists less segregation, better schools, more two-parent families and stronger community groups.",
             "第四段列出了隔离较少、学校较好、双亲家庭较多以及社区团体较强。",
           ),
+          [
+            t("Better schools, not fewer, went with mobility.", "流动性高的地方学校更好，不是更少。"),
+            t("Taxes and factories are not named as factors.", "文中没把税收和工厂列为因素。"),
+            t("Moving abroad is not mentioned.", "文中没提移居国外。"),
+          ],
         ),
         ask(
           t("What belief do the comparisons with Denmark and Canada challenge?", "与丹麦和加拿大的比较挑战了什么信念？"),
@@ -440,6 +559,11 @@ The data, in other words, turn an argument about faith into a question of design
             "The fifth paragraph says that despite the belief in exceptional American opportunity, poor children in Denmark or Canada had a better chance of rising.",
             "第五段说尽管人们相信美国机会格外多，丹麦或加拿大的穷孩子向上流动的机会却更大。",
           ),
+          [
+            t("Denmark being wealthy is assumed, not challenged.", "丹麦富裕是前提，不是被质疑的观点。"),
+            t("The study itself used tax records.", "研究本身就用了税务记录。"),
+            t("Incomes rising is not what the comparison is about.", "这个比较与收入上升无关。"),
+          ],
         ),
         ask(
           t("What records did Chetty's team use to measure mobility?", "切蒂团队用什么记录来衡量社会流动性？"),
@@ -449,6 +573,11 @@ The data, in other words, turn an argument about faith into a question of design
             "A team led by the economist Raj Chetty used tax records, with names removed, for tens of millions of Americans.",
             "经济学家拉吉·切蒂领导的团队使用了数千万美国人去掉姓名的税务记录。",
           ),
+          [
+            t("Report cards are not mentioned.", "文中没提成绩单。"),
+            t("The team used records, not interviews.", "团队用的是记录，不是访谈。"),
+            t("Newspapers are not the source.", "数据来源不是报纸。"),
+          ],
         ),
       ],
       [
@@ -496,6 +625,11 @@ The story of the Gold Mountain is a dream that turned out very differently from 
             "The second paragraph says most planned to stay a few years, find gold and return home rich to support their families.",
             "第二段说大多数人打算待几年，找到金子，然后富裕地回家养家。",
           ),
+          [
+            t("Most planned to stay only a few years.", "多数人只打算待几年。"),
+            t("They hoped to buy land in China, not California.", "他们希望在中国买地，不是加州。"),
+            t("They were paid for railroad work, though less.", "他们修铁路是有报酬的，只是更少。"),
+          ],
         ),
         ask(
           t("How were Chinese railroad workers treated compared with white workers?", "与白人工人相比，中国铁路工人受到怎样的对待？"),
@@ -509,6 +643,11 @@ The story of the Gold Mountain is a dream that turned out very differently from 
             "The third paragraph says they blasted tunnels in winter, hundreds died, and they were paid less than white workers for the same labor.",
             "第三段说他们在冬天爆破隧道，数百人死亡，同样的劳动报酬却比白人工人少。",
           ),
+          [
+            t("They were paid less, not more.", "他们的工资更少，不是更多。"),
+            t("No land was given.", "没有分给他们土地。"),
+            t("They blasted tunnels in winter, the hardest work.", "他们冬天炸隧道，干的是最苦的活。"),
+          ],
         ),
         ask(
           t("What does the last paragraph suggest about the American dream?", "最后一段对美国梦有什么暗示？"),
@@ -522,6 +661,11 @@ The story of the Gold Mountain is a dream that turned out very differently from 
             "The last paragraph says the dream was shaped by those who were welcomed and by those who were turned away and stayed anyway.",
             "最后一段说这个梦想既是由被接纳的人塑造的，也是由被拒之门外却依然留下的人塑造的。",
           ),
+          [
+            t("Few found gold, yet they shaped the dream.", "很少有人找到金子，但他们塑造了这个梦想。"),
+            t("Communities survived and grew after 1882.", "1882年后社区依然存续并壮大。"),
+            t("The companies hired them; they did not invent the dream.", "公司雇用了他们，并没有发明这个梦想。"),
+          ],
         ),
       ],
       [
@@ -571,6 +715,11 @@ Of course, many people buy tickets simply for fun, the way others buy a cinema t
             "The second paragraph says a ticket does not really buy money but a few days of hope, in which a person can imagine a better life.",
             "第二段说彩票真正买的不是钱，而是几天的希望，让人可以想象更好的生活。",
           ),
+          [
+            t("The chance of winning is tiny.", "中奖的几率微乎其微。"),
+            t("Schools are funded, but buyers get no share.", "钱用于学校，但买彩票的人并没有份额。"),
+            t("Lightning is only a comparison of odds.", "闪电只是概率的比较。"),
+          ],
         ),
         ask(
           t("Why do economists call lottery spending regressive?", "为什么经济学家称买彩票的支出是累退的？"),
@@ -584,6 +733,11 @@ Of course, many people buy tickets simply for fun, the way others buy a cinema t
             "The third paragraph says poorer households spend a larger share of income on tickets, so the spending takes the most from those who have the least.",
             "第三段说较穷的家庭在彩票上花的收入比例更高，所以这种支出从最穷的人那里拿走的最多。",
           ),
+          [
+            t("Prize size is not the meaning.", "与奖金大小无关。"),
+            t("Anyone can win; the poor just spend more.", "谁都可能中奖；只是穷人花得更多。"),
+            t("Prices in poor countries are not the point.", "重点不在穷国的票价。"),
+          ],
         ),
         ask(
           t("What do careful studies suggest about lottery winners?", "严谨的研究对彩票中奖者有什么发现？"),
@@ -597,6 +751,11 @@ Of course, many people buy tickets simply for fun, the way others buy a cinema t
             "The fourth paragraph says that careful studies suggest stories of winners who lost everything are less common than the stories imply.",
             "第四段说严谨的研究表明，中奖者失去一切的故事比人们想象的要少。",
           ),
+          [
+            t("The passage says such disasters are less common than stories imply.", "文中说这类灾难没有传闻那么常见。"),
+            t("Their satisfaction rises somewhat.", "他们的满意度有所上升。"),
+            t("Whether they keep buying is never discussed.", "文中没讨论他们是否继续买彩票。"),
+          ],
         ),
       ],
       ["American", "Americans"],

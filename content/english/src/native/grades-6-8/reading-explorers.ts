@@ -40,6 +40,11 @@ Historians still wonder what might have happened if the voyages had continued. C
             "The third paragraph says he did not sail to conquer or build colonies, but to show the emperors' power and invite rulers to send gifts and envoys.",
             "第三段说，他航行不是为了征服或殖民，而是为了展示皇帝的威力，邀请各国派使节朝贡。",
           ),
+          [
+            t("He did not sail to conquer or build colonies.", "他出航不是为了征服或建殖民地。"),
+            t("The South Pole belongs to another passage.", "南极属于另一篇文章。"),
+            t("The emperor sent him; he was not escaping.", "是皇帝派他去的，他不是在逃跑。"),
+          ],
         ),
         ask(
           t("Why did the voyages stop?", "航行为什么停止了？"),
@@ -53,6 +58,11 @@ Historians still wonder what might have happened if the voyages had continued. C
             "The fourth paragraph gives the officials' reasons: the cost and the dangers on the northern borders.",
             "第四段给出了官员们的理由：花费太大，以及北方边境的威胁。",
           ),
+          [
+            t("No storm sank the fleet; the ships were left to rot.", "没有风暴击沉船队，船是被弃置腐烂的。"),
+            t("Zheng He is not said to refuse.", "文中没说郑和拒绝出航。"),
+            t("They reached many lands, including Africa.", "他们到达了许多地方，包括非洲。"),
+          ],
         ),
         ask(
           t("Which sentence shows that some facts about the fleets are uncertain?", "哪一句表明关于船队的某些事实并不确定？"),
@@ -66,6 +76,11 @@ Historians still wonder what might have happened if the voyages had continued. C
             'The phrase "still debate" signals that the size of the treasure ships is not known for sure.',
             "“仍在争论”这个说法表明宝船的大小还不能确定。",
           ),
+          [
+            t("The giraffe is a plain fact of the voyage.", "长颈鹿是航行中的确切事实。"),
+            t("The list of people aboard is stated as fact.", "船上人员的名单是作为事实陈述的。"),
+            t("That the voyages stopped is certain.", "航行停止是确定的。"),
+          ],
         ),
         ask(
           t("What animal did one voyage bring back to the capital?", "有一次航行带回了什么动物？"),
@@ -75,6 +90,11 @@ Historians still wonder what might have happened if the voyages had continued. C
             "From one voyage they brought back a giraffe, which amazed the people of the capital.",
             "有一次航行带回了一只长颈鹿，让京城的人惊叹不已。",
           ),
+          [
+            t("No elephant is mentioned.", "文中没提大象。"),
+            t("No lion is mentioned.", "文中没提狮子。"),
+            t("No camel is mentioned here.", "这里没提骆驼。"),
+          ],
         ),
       ],
       ["Zheng", "Ming", "Arabia", "Asian", "Southeast"],
@@ -104,6 +124,11 @@ The voyage proved that the old methods worked. It also helped bring the art of w
             "The second paragraph says they carried no compass and lists stars, swells, birds and clouds.",
             "第二段说他们不带罗盘，并列举了星星、海浪、鸟和云。",
           ),
+          [
+            t("Stars rising and setting were one of their methods.", "星辰的升落是他们的方法之一。"),
+            t("Feeling swells was one of their methods.", "感受涌浪是他们的方法之一。"),
+            t("Following birds was one of their methods.", "追随鸟类是他们的方法之一。"),
+          ],
         ),
         ask(
           t('What does "wayfinding" most likely mean in the last paragraph?', '最后一段中 "wayfinding" 最可能是什么意思？'),
@@ -113,6 +138,11 @@ The voyage proved that the old methods worked. It also helped bring the art of w
             "The passage describes navigating by stars, swells and birds, and calls this art wayfinding.",
             "文章描述了靠星星、海浪和鸟来导航，并把这门技艺称为 wayfinding。",
           ),
+          [
+            t("Building canoes is a separate skill.", "造独木舟是另一种技能。"),
+            t("Fishing is not wayfinding.", "捕鱼不是导航。"),
+            t("They used no maps.", "他们不用地图。"),
+          ],
         ),
         ask(
           t("What did the 1976 voyage of Hokulea prove?", "1976 年 Hokulea 号的航行证明了什么？"),
@@ -129,6 +159,11 @@ The voyage proved that the old methods worked. It also helped bring the art of w
             "Some scholars said settlement was accidental; Mau Piailug's voyage without instruments showed the old methods worked.",
             "一些学者认为定居是偶然的；毛·皮亚卢格不用仪器的航行表明传统方法是可行的。",
           ),
+          [
+            t("The voyage was planned, which disproves the accident idea.", "这次航行是有计划的，推翻了偶然漂流说。"),
+            t("Hokulea crossed more than two thousand miles.", "霍库勒阿号航行了两千多英里。"),
+            t("He used no instruments.", "他没有使用仪器。"),
+          ],
         ),
         ask(
           t("Who guided Hokulea from Hawaii to Tahiti?", "谁引领霍库莱阿号从夏威夷航行到塔希提？"),
@@ -138,6 +173,11 @@ The voyage proved that the old methods worked. It also helped bring the art of w
             "Mau Piailug, a master navigator from Micronesia, steered it without instruments.",
             "密克罗尼西亚的领航大师毛·皮艾卢格不用仪器驾驶它。",
           ),
+          [
+            t("Zheng He sailed for the Ming emperors.", "郑和是为明朝皇帝航海的。"),
+            t("Captain Cook is never mentioned.", "文中从没提库克船长。"),
+            t("He steered without instruments.", "他不用仪器掌舵。"),
+          ],
         ),
       ],
       ["Polynesian", "Hawaii", "Zealand", "Easter", "Hawaiians", "Hokulea", "Mau", "Piailug", "Micronesia", "Tahiti", "Islanders"],
@@ -162,6 +202,11 @@ Historians use the Rihla carefully, since some parts may be borrowed from other 
           t("To make the pilgrimage to Mecca", "去麦加朝圣"),
           [t("To become a judge in India", "去印度当法官"), t("To escape from robbers", "躲避强盗"), t("To write a book", "写一本书")],
           t("The first sentence says he left Tangier to make the pilgrimage to Mecca.", "第一句说，他离开丹吉尔是为了去麦加朝圣。"),
+          [
+            t("He became a judge years later.", "他是多年后才当上法官的。"),
+            t("He survived robbers on the way; they were not why he left.", "他在途中遇到强盗，但那不是他出发的原因。"),
+            t("The book came only after he settled down.", "书是他定居后才写的。"),
+          ],
         ),
         ask(
           t("Why did rulers often welcome him?", "统治者为什么常常欢迎他？"),
@@ -175,6 +220,11 @@ Historians use the Rihla carefully, since some parts may be borrowed from other 
             "The third paragraph explains that because he was a scholar of Islamic law, rulers welcomed him and gave him jobs.",
             "第三段解释说，因为他是伊斯兰法学者，统治者欢迎他并给他工作。",
           ),
+          [
+            t("He traveled with merchants but was a scholar.", "他和商人同行，但他本人是学者。"),
+            t("He had no army.", "他没有军队。"),
+            t("He was not a sultan's son.", "他不是苏丹的儿子。"),
+          ],
         ),
         ask(
           t('Why do historians use the Rihla "carefully"?', "为什么历史学家“谨慎地”使用《游记》？"),
@@ -188,12 +238,22 @@ Historians use the Rihla carefully, since some parts may be borrowed from other 
             "The last paragraph gives the reason directly: some parts may be borrowed from other writers or misremembered.",
             "最后一段直接给出原因：有些部分可能借自其他作者，或者记错了。",
           ),
+          [
+            t("No code is mentioned.", "文中没提密码。"),
+            t("It describes much of the known world.", "它描述了已知世界的大部分地区。"),
+            t("Being lost is never mentioned.", "文中从没说它失传过。"),
+          ],
         ),
         ask(
           t("What did the sultan of Delhi make Ibn Battuta?", "德里苏丹让伊本·白图泰担任什么？"),
           t("A judge", "法官"),
           [t("An admiral", "海军将领"), t("A merchant", "商人"), t("A doctor", "医生")],
           t("He spent years in India, where the sultan of Delhi made him a judge.", "他在印度待了多年，德里苏丹任命他为法官。"),
+          [
+            t("Admirals belong to Zheng He's story.", "海军将领属于郑和的故事。"),
+            t("He traveled with merchants but was not made one.", "他与商人同行，但并没被任命为商人。"),
+            t("No doctor's post is mentioned.", "文中没提医生的职位。"),
+          ],
         ),
       ],
       [
@@ -244,6 +304,11 @@ For a long time, Columbus was celebrated simply as a brave explorer. Today, many
             "The first paragraph says he was trying to reach Asia, whose spices and silk were valuable.",
             "第一段说，他想到达香料和丝绸都很值钱的亚洲。",
           ),
+          [
+            t("The South Pole race came four centuries later.", "南极竞赛是四百年后的事。"),
+            t("He sailed west for Asia, not Africa.", "他向西航行去亚洲，不是非洲。"),
+            t("The passage says he thought the Earth small, not flat.", "文中说他以为地球很小，不是平的。"),
+          ],
         ),
         ask(
           t("What was the Columbian Exchange?", "什么是哥伦布大交换？"),
@@ -257,6 +322,11 @@ For a long time, Columbus was celebrated simply as a brave explorer. Today, many
             "The third paragraph explains it with examples: corn and potatoes went one way, horses and wheat the other.",
             "第三段用例子解释：玉米和土豆运往一边，马和小麦运往另一边。",
           ),
+          [
+            t("Ships were not traded.", "船只没有交换。"),
+            t("No meeting with a king is described.", "文中没描写与国王会面。"),
+            t("No war is described.", "文中没描写战争。"),
+          ],
         ),
         ask(
           t("What is the author's view of how Columbus should be remembered?", "作者认为应该怎样纪念哥伦布？"),
@@ -267,6 +337,11 @@ For a long time, Columbus was celebrated simply as a brave explorer. Today, many
             t("Only as a cruel ruler", "只作为一位残暴的统治者"),
           ],
           t("The last paragraph says his story must be told whole, with both sides.", "最后一段说，他的故事要完整地讲，两面都要讲。"),
+          [
+            t("The author says the story must be told whole.", "作者说故事要完整讲述。"),
+            t("The author does not say to forget him.", "作者没说要忘记他。"),
+            t("The author also mentions his courage.", "作者也提到了他的勇气。"),
+          ],
         ),
         ask(
           t("On what date did a sailor first spot land?", "水手哪天第一次望见陆地？"),
@@ -276,6 +351,11 @@ For a long time, Columbus was celebrated simply as a brave explorer. Today, many
             "On October 12, a sailor spotted land: an island in what is now the Bahamas.",
             "10月12日，一名水手望见了陆地：今巴哈马的一座岛。",
           ),
+          [
+            t("August is when he set sail.", "八月是他起航的时候。"),
+            t("July 4 is never mentioned.", "文中从没提 7 月 4 日。"),
+            t("December 25 is never mentioned.", "文中从没提 12 月 25 日。"),
+          ],
         ),
       ],
       ["August", "Christopher", "Columbus", "Spain", "October", "Bahamas", "Indians", "Americas", "Columbian", "Exchange", "Taino"],
@@ -307,6 +387,11 @@ Only one ship, the Victoria, made it home. Under the command of Juan Sebastian E
             "The first paragraph says the goal was to reach the Spice Islands by sailing west around the Americas.",
             "第一段说，目标是向西绕过美洲到达香料群岛。",
           ),
+          [
+            t("He fought there by chance, not as a goal.", "他在那里打仗是偶然的，不是目标。"),
+            t("The South Pole is a different expedition.", "南极是另一次探险。"),
+            t("Africa is never part of this voyage.", "非洲不在这次航线上。"),
+          ],
         ),
         ask(
           t("Which detail best shows how hard the Pacific crossing was?", "哪个细节最能说明横渡太平洋有多艰难？"),
@@ -320,6 +405,11 @@ Only one ship, the Victoria, made it home. Under the command of Juan Sebastian E
             "The third paragraph describes rotting food, eating sawdust and leather, and deaths from scurvy.",
             "第三段描述了食物腐烂、吃木屑和皮革，以及死于坏血病。",
           ),
+          [
+            t("Naming the ocean shows calm, not hardship.", "给大洋命名显示的是平静，不是艰难。"),
+            t("The departure month is a plain fact.", "出发月份只是普通事实。"),
+            t("Cloves came at the end, after the crossing.", "丁香是在横渡之后才装上的。"),
+          ],
         ),
         ask(
           t("Who completed the voyage around the world?", "是谁完成了环球航行？"),
@@ -333,6 +423,11 @@ Only one ship, the Victoria, made it home. Under the command of Juan Sebastian E
             "The last paragraph says the Victoria reached Spain under Elcano with just eighteen of the original crew.",
             "最后一段说，维多利亚号在埃尔卡诺指挥下回到西班牙，原船员只剩十八人。",
           ),
+          [
+            t("Magellan was killed on the way.", "麦哲伦死在途中。"),
+            t("Only one ship made it home.", "只有一艘船回到了家。"),
+            t("That ship went back to Spain early.", "那艘船很早就返回了西班牙。"),
+          ],
         ),
         ask(
           t("Where was Magellan killed?", "麦哲伦在哪里被杀？"),
@@ -342,6 +437,11 @@ Only one ship, the Victoria, made it home. Under the command of Juan Sebastian E
             "Magellan took sides in a local conflict and was killed in battle on the island of Mactan.",
             "麦哲伦卷入当地冲突，在马克坦岛的战斗中被杀。",
           ),
+          [
+            t("The strait was where they entered the Pacific.", "海峡是他们进入太平洋的地方。"),
+            t("The survivors reached the Spice Islands after his death.", "他死后幸存者才到达香料群岛。"),
+            t("He died in battle on land.", "他死于陆地上的战斗。"),
+          ],
         ),
       ],
       [
@@ -387,6 +487,11 @@ On the long march back, Scott's party ran short of food and fuel, and terrible s
             t("Both teams walked without sledges", "两队都没用雪橇，徒步行走"),
           ],
           t("The second and third paragraphs compare the two teams' methods.", "第二段和第三段比较了两队的方法。"),
+          [
+            t("Only Scott used motor sledges.", "只有斯科特用机动雪橇。"),
+            t("It is the reverse: Amundsen used dogs.", "正好相反：阿蒙森用狗。"),
+            t("Both used sledges.", "两队都用雪橇。"),
+          ],
         ),
         ask(
           t("How is the passage mainly organized?", "这篇文章主要是怎样组织的？"),
@@ -400,6 +505,11 @@ On the long march back, Scott's party ran short of food and fuel, and terrible s
             "The passage sets two expeditions side by side and shows how their plans and results differed.",
             "文章把两支探险队并列，说明它们的计划和结果有何不同。",
           ),
+          [
+            t("No instructions are given.", "文中没给出操作步骤。"),
+            t("It sets two teams side by side, not one problem.", "它把两支队伍并列比较，不是讲一个问题。"),
+            t("It is about two journeys, not a place.", "它讲的是两次旅程，不是一个地方。"),
+          ],
         ),
         ask(
           t("What do many historians say decided the race?", "许多历史学家认为是什么决定了这场竞赛的胜负？"),
@@ -409,12 +519,22 @@ On the long march back, Scott's party ran short of food and fuel, and terrible s
             "The last sentence says Amundsen's careful planning, not luck, won the race.",
             "最后一句说，赢得竞赛的是阿蒙森周密的计划，而不是运气。",
           ),
+          [
+            t("Historians say planning, not luck.", "历史学家说是计划，不是运气。"),
+            t("The diary came after the race.", "日记是在竞赛之后。"),
+            t("The flag shows who won, not why.", "旗帜说明谁赢了，不是为什么赢。"),
+          ],
         ),
         ask(
           t("On what date did Amundsen reach the Pole?", "阿蒙森哪天到达南极点？"),
           t("December 14, 1911", "1911年12月14日"),
           [t("January 17, 1912", "1912年1月17日"), t("July 4, 1911", "1911年7月4日"), t("March 1, 1912", "1912年3月1日")],
           t("Amundsen reached the Pole on December 14, 1911.", "阿蒙森于1911年12月14日到达南极点。"),
+          [
+            t("January 17, 1912 is Scott's arrival.", "1912 年 1 月 17 日是斯科特到达的日期。"),
+            t("July 4 is never mentioned.", "文中从没提 7 月 4 日。"),
+            t("March 1 is never mentioned.", "文中从没提 3 月 1 日。"),
+          ],
         ),
       ],
       [
@@ -463,6 +583,11 @@ No one returned for more than fifty years. In 2012, the filmmaker James Cameron 
             "The second paragraph says the water presses with more than eight tons on every square inch.",
             "第二段说，水压在每平方英寸上超过八吨。",
           ),
+          [
+            t("No sharks are mentioned.", "文中没提鲨鱼。"),
+            t("Narrowness is never mentioned.", "文中从没提狭窄。"),
+            t("No sunlight reaches that depth.", "那个深度没有阳光。"),
+          ],
         ),
         ask(
           t("Why was the Trieste's float filled with gasoline?", "为什么“的里雅斯特”号的浮筒里装满汽油？"),
@@ -476,6 +601,11 @@ No one returned for more than fifty years. In 2012, the filmmaker James Cameron 
             "The third paragraph says the float was filled with gasoline, which is lighter than water.",
             "第三段说，浮筒里装着比水轻的汽油。",
           ),
+          [
+            t("The float did not power anything.", "浮筒不提供动力。"),
+            t("Their light came from a lamp.", "他们的光来自灯。"),
+            t("Warmth is never mentioned.", "文中从没提保暖。"),
+          ],
         ),
         ask(
           t("What does the last sentence suggest?", "最后一句暗示了什么？"),
@@ -489,6 +619,11 @@ No one returned for more than fifty years. In 2012, the filmmaker James Cameron 
             "Comparing it with the moon shows how few people have reached the deepest point of the sea.",
             "与月球相比，说明到过海洋最深处的人有多少。",
           ),
+          [
+            t("The moon is not compared with beaches.", "月球没有和海滩比较。"),
+            t("Several people have dived there since.", "此后又有好几个人下潜过。"),
+            t("Cameron dove alone in the sea, not to the moon.", "卡梅隆独自下潜到海底，没去月球。"),
+          ],
         ),
       ],
       ["Challenger", "Mariana", "January", "Jacques", "Piccard", "Swiss", "Don", "Walsh", "Navy", "Trieste", "James", "Cameron"],
@@ -516,6 +651,11 @@ The astronauts became famous, but they were only the most visible part of a huge
             t("He planted the flag", "他插上了旗帜"),
           ],
           t("The second paragraph says Collins stayed behind to fly the command ship.", "第二段说，柯林斯留下来驾驶指令舱。"),
+          [
+            t("Armstrong walked first.", "阿姆斯特朗第一个踏上月面。"),
+            t("Armstrong steered the Eagle.", "驾驶鹰号的是阿姆斯特朗。"),
+            t("Armstrong and Aldrin planted the flag.", "插旗的是阿姆斯特朗和奥尔德林。"),
+          ],
         ),
         ask(
           t("Which detail shows how close the landing came to failing?", "哪个细节表明着陆差点失败？"),
@@ -526,6 +666,11 @@ The astronauts became famous, but they were only the most visible part of a huge
             t("Six hundred million people watched", "六亿人观看了直播"),
           ],
           t("The third paragraph describes alarms, boulders and how little fuel was left.", "第三段描写了警报、巨石和所剩无几的燃料。"),
+          [
+            t("The rocket's height says nothing about the landing.", "火箭高度与着陆无关。"),
+            t("Three days of travel went smoothly.", "三天的旅程很顺利。"),
+            t("The audience size is not about danger.", "观众人数与危险无关。"),
+          ],
         ),
         ask(
           t("What is the main point of the last paragraph?", "最后一段的主要观点是什么？"),
@@ -539,6 +684,11 @@ The astronauts became famous, but they were only the most visible part of a huge
             "It says the astronauts were only the most visible part of an effort by about four hundred thousand people.",
             "它说宇航员只是约四十万人共同努力中最显眼的那部分。",
           ),
+          [
+            t("The astronauts were only the visible part.", "宇航员只是看得见的那部分。"),
+            t("The moon's worth is not discussed.", "文中没讨论月球值不值得去。"),
+            t("Twelve is how many walked there.", "十二是登月的人数。"),
+          ],
         ),
       ],
       ["July", "Florida", "Neil", "Armstrong", "Buzz", "Aldrin", "Michael", "Collins", "Apollo", "Eagle", "That's", "Collins's"],

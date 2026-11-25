@@ -41,6 +41,11 @@ Some living things, such as bacteria, are unicellular, made of only a single cel
             "The first paragraph says the boxes reminded him of the small rooms monks lived in, which were called cells, so he gave them the same name.",
             "第一段说，这些小格子让他想起修道士住的小房间，那些房间叫作 cells，所以他用了同样的名字。",
           ),
+          [
+            t("Batteries are never mentioned.", "文中从没提到电池。"),
+            t("The German scientists came much later and did not name cells.", "德国科学家晚得多，也没有给细胞起名。"),
+            t("The boxes were empty, not full of bacteria.", "那些小格子是空的，里面没有细菌。"),
+          ],
         ),
         ask(
           t(
@@ -57,6 +62,14 @@ Some living things, such as bacteria, are unicellular, made of only a single cel
             "The second paragraph says leaves, skin, blood, roots and pond water all turned out to be made of cells, and Schleiden and Schwann found cells everywhere they looked.",
             "第二段说，叶子、皮肤、血液、根和池塘水都被发现是由细胞构成的，施莱登和施旺在所观察的一切中都发现了细胞。",
           ),
+          [
+            t("Hooke saw only cork. One sample cannot show all living things.", "胡克只看了软木。一个样本证明不了所有生物。"),
+            t("Monks' rooms only gave the name.", "修士的房间只提供了名字。"),
+            t(
+              "The count of body cells is a fact about us, not evidence for the theory.",
+              "人体细胞数是关于我们的事实，不是这个理论的证据。",
+            ),
+          ],
         ),
         ask(
           t("What does unicellular mean?", "unicellular 是什么意思？"),
@@ -70,12 +83,22 @@ Some living things, such as bacteria, are unicellular, made of only a single cel
             "The last paragraph defines it right after the word: made of only a single cell, like bacteria.",
             "最后一段在这个词后面紧接着给出了定义：只由一个细胞构成，比如细菌。",
           ),
+          [
+            t("Thirty trillion cells describes your multicellular body.", "三十万亿个细胞描述的是你这样的多细胞身体。"),
+            t("Every living thing has cells, the theory says.", "细胞学说认为所有生物都有细胞。"),
+            t("Bacteria are unicellular, and they are not plants.", "细菌是单细胞的，而且不是植物。"),
+          ],
         ),
         ask(
           t("What did Robert Hooke look at under his microscope?", "罗伯特·胡克在显微镜下观察了什么？"),
           t("A thin slice of cork", "一片薄薄的软木"),
           [t("A drop of blood", "一滴血"), t("A leaf", "一片叶子"), t("Pond water", "池塘水")],
           t("In 1665, Hooke placed a thin slice of cork under his microscope.", "1665年，胡克把一片薄软木放在显微镜下。"),
+          [
+            t("Blood was studied later by others.", "血液是后来别人研究的。"),
+            t("Leaves were studied later too.", "叶子也是后来才研究的。"),
+            t("Pond water came later as well.", "池塘水也是后来的事。"),
+          ],
         ),
       ],
       ["Robert", "Hooke", "Matthias", "Schleiden", "Theodor", "Schwann", "Rudolf", "Virchow", "English"],
@@ -106,6 +129,11 @@ Other organelles have jobs of their own. Ribosomes build proteins, the materials
             "The first paragraph says organelles means little organs, because each one does a job for the cell the way your heart or lungs do for your body.",
             "第一段说 organelles 意为小器官，因为每一个都像心脏或肺为身体工作那样为细胞工作。",
           ),
+          [
+            t("No scientist named Organ is mentioned. The word means little organs.", "文中没提叫Organ的科学家。这个词意思是“小器官”。"),
+            t("They are tiny, not larger than organs.", "它们很小，并不比器官大。"),
+            t("They float inside the cell, in the cytoplasm.", "它们漂浮在细胞内的细胞质中。"),
+          ],
         ),
         ask(
           t("What is the job of the nucleus?", "细胞核的作用是什么？"),
@@ -119,6 +147,11 @@ Other organelles have jobs of their own. Ribosomes build proteins, the materials
             "The third paragraph calls the nucleus the control center, holding the DNA that tells the cell what to make and when to divide.",
             "第三段把细胞核称为控制中心，它保存着 DNA，告诉细胞制造什么、何时分裂。",
           ),
+          [
+            t("Turning food into energy is what mitochondria do.", "把食物转化成能量是线粒体的工作。"),
+            t("Letting things in and out is the membrane's job.", "控制物质进出是细胞膜的工作。"),
+            t("Storing water and waste is what vacuoles do.", "储存水和废物是液泡的工作。"),
+          ],
         ),
         ask(
           t("Why might muscle cells contain thousands of mitochondria?", "为什么肌肉细胞可能含有数千个线粒体？"),
@@ -132,6 +165,11 @@ Other organelles have jobs of their own. Ribosomes build proteins, the materials
             "The fourth paragraph says mitochondria turn food into energy and that cells that work hard, such as muscle cells, can contain thousands.",
             "第四段说线粒体把食物转化为能量，而像肌肉细胞这样工作强度大的细胞可能含有数千个线粒体。",
           ),
+          [
+            t("Storing water is a vacuole's job.", "储水是液泡的工作。"),
+            t("Muscle cells are not said to lack a nucleus.", "文中没说肌肉细胞没有细胞核。"),
+            t("A thick membrane is never mentioned.", "文中从没提到厚的细胞膜。"),
+          ],
         ),
         ask(
           t("What do ribosomes do?", "核糖体做什么？"),
@@ -145,6 +183,11 @@ Other organelles have jobs of their own. Ribosomes build proteins, the materials
             "Ribosomes build proteins, the materials the cell uses to grow and repair itself.",
             "核糖体制造蛋白质，细胞用它来生长和修复自己。",
           ),
+          [
+            t("Storing water and waste is what vacuoles do.", "储存水和废物是液泡的作用。"),
+            t("Turning food into energy is what mitochondria do.", "把食物变成能量是线粒体的作用。"),
+            t("Holding the DNA is the nucleus's job.", "保存DNA是细胞核的工作。"),
+          ],
         ),
       ],
       ["DNA"],
@@ -173,6 +216,11 @@ The third difference is storage. Most plant cells have one large central vacuole
             "The second paragraph explains that plant cells have a cell wall, a stiff layer outside the membrane that gives the cell its shape.",
             "第二段解释说，植物细胞有细胞壁，那是膜外一层坚硬的结构，赋予细胞形状。",
           ),
+          [
+            t("Chloroplasts make food. They do not give the cell its shape.", "叶绿体制造食物，不决定细胞形状。"),
+            t("Both cells have a nucleus.", "两种细胞都有细胞核。"),
+            t("Knives are not mentioned. The shape comes from the wall.", "文中没提刀。形状来自细胞壁。"),
+          ],
         ),
         ask(
           t("Why do animal cells not need chloroplasts?", "为什么动物细胞不需要叶绿体？"),
@@ -186,6 +234,11 @@ The third difference is storage. Most plant cells have one large central vacuole
             "The third paragraph says chloroplasts capture sunlight to make food, but animals cannot do this, so they must get energy by eating.",
             "第三段说，叶绿体捕获阳光来制造食物，而动物做不到这一点，所以必须通过进食获取能量。",
           ),
+          [
+            t("Animals live in sunlight too. They just cannot use it for food.", "动物也生活在阳光下，只是不能用它来制造食物。"),
+            t("Animal cells have no cell wall at all.", "动物细胞根本没有细胞壁。"),
+            t("Vacuoles store things. They do not make food.", "液泡储存东西，不制造食物。"),
+          ],
         ),
         ask(
           t("What happens to a plant's vacuoles when it is not watered?", "植物缺水时，它的液泡会怎样？"),
@@ -199,12 +252,22 @@ The third difference is storage. Most plant cells have one large central vacuole
             "The last paragraph says the vacuole stores water and keeps the plant firm, and when the plant is not watered its vacuoles shrink and it wilts.",
             "最后一段说，液泡储存水分，让植物保持挺立，植物缺水时液泡会缩小，植物就会枯萎。",
           ),
+          [
+            t("Turning green is about chloroplasts, not vacuoles.", "变绿与叶绿体有关，不是液泡。"),
+            t("Vacuoles do not grow into new cells.", "液泡不会长成新细胞。"),
+            t("Vacuoles do not build walls.", "液泡不会建造细胞壁。"),
+          ],
         ),
         ask(
           t("What is the cell wall mostly made of?", "细胞壁主要由什么构成？"),
           t("Cellulose", "纤维素"),
           [t("Chlorophyll", "叶绿素"), t("Glucose", "葡萄糖"), t("Protein", "蛋白质")],
           t("The cell wall is a stiff layer made mostly of a material called cellulose.", "细胞壁是一层坚硬的结构，主要由纤维素构成。"),
+          [
+            t("Chlorophyll is the green substance in chloroplasts.", "叶绿素是叶绿体里的绿色物质。"),
+            t("Glucose is the sugar a plant makes.", "葡萄糖是植物制造的糖。"),
+            t("Proteins are built by ribosomes, not the wall.", "蛋白质由核糖体合成，不是细胞壁的材料。"),
+          ],
         ),
       ],
     ),
@@ -232,6 +295,11 @@ So the material van Helmont's willow gained came not only from the water he gave
             "The first paragraph gives his measurements: after five years the tree had gained about seventy-four kilograms while the soil had lost only a few grams.",
             "第一段给出了他的测量结果：五年后，树增重约七十四公斤，而土壤只少了几克。",
           ),
+          [
+            t("What most people believed is the idea he tested, not evidence.", "大多数人的看法是他要检验的观点，不是证据。"),
+            t("The tree grew. It did not die.", "树长大了，并没有死。"),
+            t("Chloroplasts were not known to him. They are explained today.", "他那时不知道叶绿体。这是今天的解释。"),
+          ],
         ),
         ask(
           t("What three things does a plant need for photosynthesis?", "植物进行光合作用需要哪三样东西？"),
@@ -245,6 +313,14 @@ So the material van Helmont's willow gained came not only from the water he gave
             "The third paragraph lists them: water through the roots, carbon dioxide through the leaves and energy from sunlight captured by chlorophyll.",
             "第三段列出了这三样：通过根吸收的水、通过叶子吸收的二氧化碳，以及叶绿素捕获的阳光能量。",
           ),
+          [
+            t(
+              "Soil is not needed for photosynthesis, and oxygen and glucose are what it makes.",
+              "光合作用不需要土壤，氧气和葡萄糖是它的产物。",
+            ),
+            t("Darkness is the opposite. The plant needs light.", "黑暗正好相反。植物需要光。"),
+            t("Oxygen is released, not taken in for this process.", "氧气是释放出来的，不是这个过程需要的原料。"),
+          ],
         ),
         ask(
           t("Why was van Helmont only partly right?", "为什么说范·海尔蒙特只对了一部分？"),
@@ -258,12 +334,22 @@ So the material van Helmont's willow gained came not only from the water he gave
             "The last paragraph says the material came not only from the water he gave it but also from the air, as carbon dioxide.",
             "最后一段说，这些物质不仅来自他浇的水，也来自空气中的二氧化碳。",
           ),
+          [
+            t("The soil lost only a few grams.", "土壤只少了几克。"),
+            t("Nothing says his weighing was wrong.", "文中没说他称错了。"),
+            t("Willows do use sunlight, like other plants.", "柳树和别的植物一样需要阳光。"),
+          ],
         ),
         ask(
           t("What did van Helmont give the willow tree for five years?", "范·海尔蒙特五年里给柳树浇了什么？"),
           t("Nothing but rainwater", "只有雨水"),
           [t("Extra soil", "额外的土"), t("Sugar water", "糖水"), t("Plant food", "肥料")],
           t("For five years, he gave it nothing but rainwater.", "五年里，他只给它浇雨水。"),
+          [
+            t("He weighed the soil at the start and added none.", "他一开始称好土，之后没有添加。"),
+            t("Sugar water is not mentioned.", "文中没提糖水。"),
+            t("Plant food is never mentioned.", "文中从没提到植物肥料。"),
+          ],
         ),
       ],
       ["Belgian", "Jan", "van", "Helmont", "Helmont's"],
@@ -294,6 +380,11 @@ All the chemical work that goes on inside your body, including respiration, is c
             "The third paragraph describes the mitochondria combining glucose with oxygen to release energy and then says the process is called cellular respiration.",
             "第三段描述了线粒体把葡萄糖和氧结合以释放能量，然后说这个过程叫作细胞呼吸。",
           ),
+          [
+            t("The lungs take in air. Respiration happens in the cells.", "肺吸入空气。细胞呼吸发生在细胞里。"),
+            t("Making glucose from light is photosynthesis.", "用光制造葡萄糖是光合作用。"),
+            t("Breaking down a sandwich is digestion.", "分解三明治是消化。"),
+          ],
         ),
         ask(
           t("Why does the passage compare the two processes to two halves of a circle?", "文章为什么把这两个过程比作一个圆的两半？"),
@@ -307,6 +398,11 @@ All the chemical work that goes on inside your body, including respiration, is c
             "The fourth paragraph shows that plants make glucose and oxygen from carbon dioxide and water, and animals turn glucose and oxygen back into carbon dioxide and water.",
             "第四段说明，植物用二氧化碳和水制造葡萄糖和氧气，动物则把葡萄糖和氧气变回二氧化碳和水。",
           ),
+          [
+            t("Respiration happens in animals too.", "动物也进行呼吸作用。"),
+            t("Only photosynthesis makes oxygen.", "只有光合作用产生氧气。"),
+            t("Time is never the point of the circle.", "这个“圆”的比喻与时间无关。"),
+          ],
         ),
         ask(
           t("Why do you breathe faster when you exercise?", "为什么运动时呼吸会变快？"),
@@ -320,6 +416,11 @@ All the chemical work that goes on inside your body, including respiration, is c
             "The last paragraph says your muscle cells need more oxygen and glucose to release the extra energy they are using.",
             "最后一段说，肌肉细胞需要更多氧气和葡萄糖来释放它们所消耗的额外能量。",
           ),
+          [
+            t("Glucose is used, not thrown away.", "葡萄糖被利用了，没有被排掉。"),
+            t("Mitochondria work harder, not stop.", "线粒体工作得更卖力，不是停止。"),
+            t("Lungs take in oxygen. They do not make glucose.", "肺吸入氧气，不制造葡萄糖。"),
+          ],
         ),
         ask(
           t("About how many times a day do your heart cells contract?", "你的心肌细胞每天大约收缩多少次？"),
@@ -330,6 +431,11 @@ All the chemical work that goes on inside your body, including respiration, is c
             t("About thirty trillion times", "大约三十万亿次"),
           ],
           t("Your heart cells contract about a hundred thousand times a day.", "你的心肌细胞每天大约收缩十万次。"),
+          [
+            t("A hundred is far too few.", "一百次太少了。"),
+            t("A thousand is also too few.", "一千次也太少了。"),
+            t("Thirty trillion is the number of cells in your body.", "三十万亿是你身体里细胞的数量。"),
+          ],
         ),
       ],
     ),
@@ -357,6 +463,11 @@ Organs, in turn, work together in organ systems. The digestive system includes t
             "The first paragraph defines it in the same sentence: each kind has a special shape and job.",
             "第一段在同一句中给出了定义：每一种都有特定的形状和功能。",
           ),
+          [
+            t("Doing every job alone describes a single-celled living thing.", "独自完成所有工作描述的是单细胞生物。"),
+            t("Made of one cell is unicellular.", "由一个细胞组成是单细胞的意思。"),
+            t("Joining into a system is the next level, not specialization.", "组成系统是更高的层次，不是特化。"),
+          ],
         ),
         ask(
           t("How does the passage support the claim that a cell's shape suits its job?", "文章怎样支持“细胞的形状适合其功能”这一观点？"),
@@ -373,6 +484,11 @@ Organs, in turn, work together in organ systems. The digestive system includes t
             "The second paragraph supports it with examples: the long nerve cell carries signals far, the red blood cell has room for oxygen, and the muscle cell can contract.",
             "第二段用例子支持了这一观点：长长的神经细胞把信号传得很远，红细胞有空间运载氧气，肌肉细胞能够收缩。",
           ),
+          [
+            t("No doctor is quoted.", "文中没有引用医生的话。"),
+            t("The examples do more than repeat the claim.", "这些例子不只是重复观点。"),
+            t("A cell count is not given here.", "这里没有给出细胞数量。"),
+          ],
         ),
         ask(
           t("Which list goes from the smallest level to the largest?", "哪一组是从最小层级到最大层级的？"),
@@ -386,6 +502,11 @@ Organs, in turn, work together in organ systems. The digestive system includes t
             "The passage builds up step by step: cells group into tissues, tissues join into organs, and organs work together in organ systems.",
             "文章一步步递进：细胞组成组织，组织组成器官，器官共同构成器官系统。",
           ),
+          [
+            t("Organ comes after tissue, not first.", "器官在组织之后，不在最前。"),
+            t("Cell is smaller than tissue.", "细胞比组织小。"),
+            t("This list runs from largest to smallest, the wrong way round.", "这个顺序是从大到小，正好反了。"),
+          ],
         ),
         ask(
           t("Why does a red blood cell have no nucleus?", "红细胞为什么没有细胞核？"),
@@ -395,6 +516,11 @@ Organs, in turn, work together in organ systems. The digestive system includes t
             "A red blood cell has no nucleus, which leaves more room for the substance that carries oxygen.",
             "红细胞没有细胞核，这样能给运输氧气的物质留出更多空间。",
           ),
+          [
+            t("Carrying signals is the nerve cell's job.", "传递信号是神经细胞的工作。"),
+            t("Pulling on bones is the muscle cell's job.", "牵动骨骼是肌肉细胞的工作。"),
+            t("Digestive juices come from gland tissue.", "消化液来自腺体组织。"),
+          ],
         ),
       ],
     ),
@@ -422,6 +548,11 @@ Today we call Mendel's factors genes. Genes are sections of DNA in the nucleus o
             "The first paragraph ends by defining it: the passing on of traits is called heredity.",
             "第一段最后给出了定义：性状的传递叫作遗传。",
           ),
+          [
+            t("Peas were what Mendel studied, not the meaning of heredity.", "豌豆是孟德尔研究的对象，不是遗传的意思。"),
+            t("The photograph shows resemblance. It is not heredity itself.", "照片显示的是相像，不是遗传本身。"),
+            t("Monasteries are only where Mendel worked.", "修道院只是孟德尔工作的地方。"),
+          ],
         ),
         ask(
           t(
@@ -438,6 +569,11 @@ Today we call Mendel's factors genes. Genes are sections of DNA in the nucleus o
             "The third paragraph says that when the tall offspring were crossed with each other, about one in four of the next generation was short, so the trait had been hidden.",
             "第三段说，把高的后代彼此杂交后，下一代中约四分之一是矮的，所以这个性状只是被隐藏了。",
           ),
+          [
+            t("All tall offspring is the first result, before shortness returned.", "全部是高茎是第一次的结果，矮的性状还没重新出现。"),
+            t("The number of plants shows how much work he did, not this result.", "植株数量说明他工作量大，不说明这个结果。"),
+            t("Flower color is a different trait.", "花色是另一种性状。"),
+          ],
         ),
         ask(
           t("Why do you resemble both your parents but are exactly like neither?", "为什么你既像父母双方，又和谁都不完全一样？"),
@@ -451,6 +587,11 @@ Today we call Mendel's factors genes. Genes are sections of DNA in the nucleus o
             "The last paragraph says you inherit half your genes from your mother and half from your father, which is why you resemble both but are exactly like neither.",
             "最后一段说，你一半基因来自母亲，一半来自父亲，所以你既像他们，又和谁都不完全一样。",
           ),
+          [
+            t("All from one parent is wrong. Half comes from each.", "全部来自一方是错的。一半来自父亲，一半来自母亲。"),
+            t("Genes do not change every year.", "基因并不是每年都变。"),
+            t("Traits are passed on. That is heredity.", "性状确实会遗传，这就是遗传。"),
+          ],
         ),
       ],
       ["Gregor", "Mendel", "Mendel's"],
@@ -479,6 +620,11 @@ Scientists are excited about stem cells because they might be able to replace da
             "The second paragraph says every cell has the same DNA but not every cell uses all of it; each switches on the genes for its own job.",
             "第二段说，每个细胞的 DNA 都相同，但并非每个细胞都用到全部；每个细胞都启用与自身工作相关的基因。",
           ),
+          [
+            t("Every cell has the same complete set of DNA.", "每个细胞都有同样完整的一套DNA。"),
+            t("Copying jobs from neighbors is never mentioned.", "文中从没说细胞从邻居那里学工作。"),
+            t("Cells keep all their genes. They switch some on.", "细胞保留全部基因，只是打开其中一部分。"),
+          ],
         ),
         ask(
           t("What are stem cells?", "干细胞是什么？"),
@@ -492,6 +638,11 @@ Scientists are excited about stem cells because they might be able to replace da
             "The third paragraph describes cells that have not yet chosen their job and says they are called stem cells, whose daughter cells can become many kinds.",
             "第三段描述了尚未确定功能的细胞，并说它们叫作干细胞，其子细胞可以变成多种细胞。",
           ),
+          [
+            t("Plant stems are not meant. Stem cells are in people too.", "不是指植物的茎。人体里也有干细胞。"),
+            t("They can divide again and again.", "它们可以一次又一次地分裂。"),
+            t("They have not yet chosen. They do not switch on everything.", "它们还没选定工作，不是打开所有基因。"),
+          ],
         ),
         ask(
           t("Which claim in the last paragraph is supported by what doctors already do?", "最后一段中哪个观点有医生已经在做的事情作支持？"),
@@ -505,6 +656,11 @@ Scientists are excited about stem cells because they might be able to replace da
             "The paragraph says some doctors already use stem cells to treat certain blood diseases; repairing hearts or nerves is still being tested.",
             "这一段说，一些医生已经用干细胞治疗某些血液疾病；修复心脏或神经还在试验中。",
           ),
+          [
+            t("Every heart soon goes beyond what is being tested.", "很快修复所有心脏，超出了目前的实验。"),
+            t("Researchers say it will take many years.", "研究人员说这需要很多年。"),
+            t("Scientists are excited, so it is worth studying.", "科学家很兴奋，所以值得研究。"),
+          ],
         ),
       ],
       ["DNA"],

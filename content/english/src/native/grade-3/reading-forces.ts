@@ -37,6 +37,11 @@ Forces are all around us. Without them, nothing in the world would ever move.`,
             "The first paragraph says that a force is a push or a pull, and gives kicking and lifting as examples.",
             "第一段说，力就是推或拉，还举了踢球和提书包的例子。",
           ],
+          [
+            ["A heavy metal is not a force. A force is a push or a pull.", "重金属不是力。力是推或拉。"],
+            ["The shape of an object is something a force can change, not the force itself.", "物体的形状是力能改变的，不是力本身。"],
+            ["Always seeing it is wrong. You cannot see a force, only what it does.", "总能看见不对。你看不见力，只能看见它的作用。"],
+          ],
         ),
         ask(
           ["Which of these is something a force can do?", "下面哪一项是力能做到的？"],
@@ -49,6 +54,14 @@ Forces are all around us. Without them, nothing in the world would ever move.`,
           [
             "The second paragraph says a force can change the direction something is moving in, like a kick that sends a rolling ball toward the goal.",
             "第二段说，力能改变物体运动的方向，比如一脚把滚动的球踢向球门。",
+          ],
+          [
+            ["Making something disappear is not in the passage.", "让东西消失文中没有。"],
+            [
+              "Turning a ball into clay twists the clay example. Squeezing only changes its shape.",
+              "把球变成黏土把例子理解歪了。挤压只是改变形状。",
+            ],
+            ["Stopping gravity is not something the passage says a force can do.", "阻止重力文中没说力能做到。"],
           ],
         ),
         ask(
@@ -63,6 +76,11 @@ Forces are all around us. Without them, nothing in the world would ever move.`,
             "The third paragraph says your hand must touch the door, but gravity is a pull that works without touching.",
             "第三段说，你的手必须碰到门，而重力是一种不用接触就能起作用的拉力。",
           ],
+          [
+            ["Pushing upward is wrong. Gravity pulls things toward the ground.", "向上推不对。重力把东西往地面拉。"],
+            ["Working only on doors is wrong. Gravity pulls everything.", "只对门起作用不对。重力拉所有东西。"],
+            ["Needing a hand is backwards. Gravity works without touching.", "需要用手是反的。重力不用接触就起作用。"],
+          ],
         ),
         ask(
           ["Why does a dropped apple fall and not float away?", "掉落的苹果为什么会落下而不会飘走？"],
@@ -73,6 +91,11 @@ Forces are all around us. Without them, nothing in the world would ever move.`,
             ["Apples are too heavy to float", "苹果太重，飘不起来"],
           ],
           ["Gravity pulls everything toward the ground, which is why a dropped apple falls.", "重力把一切拉向地面，所以掉落的苹果会落下。"],
+          [
+            ["The wind is not the reason given.", "风不是文中给的原因。"],
+            ["Your hand only dropped it. It did not push it down.", "你的手只是松开了它，没有往下推。"],
+            ["Being too heavy to float is not the passage's reason.", "太重浮不起来不是文中的原因。"],
+          ],
         ),
       ],
     ),
@@ -102,6 +125,11 @@ That is why seat belts matter. When a car stops suddenly, your body keeps moving
             "The first paragraph says the ball will stay there all day unless something pushes or pulls it.",
             "第一段说，除非有东西推它或拉它，那个球会在那里待一整天。",
           ],
+          [
+            ["Slowly starting to roll is wrong. It needs a force to move.", "慢慢滚起来不对。它需要力才能动。"],
+            ["Rolling in a straight line is what a moving ball does.", "沿直线滚是运动中的球才会做的。"],
+            ["Sinking into the grass is not in the passage.", "陷进草里文中没有。"],
+          ],
         ),
         ask(
           ["Why is a full shopping cart harder to push than an empty one?", "为什么装满东西的购物车比空车难推？"],
@@ -114,6 +142,11 @@ That is why seat belts matter. When a car stops suddenly, your body keeps moving
           [
             "The fourth paragraph says heavy objects need more force to start and stop than light ones, like a full cart.",
             "第四段说，重的物体比轻的物体需要更大的力才能开始运动和停下来，比如装满的购物车。",
+          ],
+          [
+            ["Smaller wheels are not in the passage.", "轮子更小文中没有。"],
+            ["A rougher floor is not the reason given.", "地面更粗糙不是文中给的原因。"],
+            ["Gravity pulling empty carts is not in the passage.", "重力拉空车文中没有。"],
           ],
         ),
         ask(
@@ -128,6 +161,11 @@ That is why seat belts matter. When a car stops suddenly, your body keeps moving
             "The last paragraph says your body keeps moving forward, and the seat belt is the force that holds you back.",
             "最后一段说，你的身体会继续往前冲，安全带就是把你拉回来的力。",
           ],
+          [
+            ["Making the car stop more slowly is not what the belt does.", "让车停得更慢不是安全带的作用。"],
+            ["Pushing the car forward is wrong. The belt holds you back.", "把车往前推不对。安全带是把你往后拉住。"],
+            ["Stopping gravity is not in the passage.", "阻止重力文中没有。"],
+          ],
         ),
         ask(
           ["What happens when you kick a ball hard instead of tapping it?", "用力踢球而不是轻轻碰它，会怎样？"],
@@ -140,6 +178,11 @@ That is why seat belts matter. When a car stops suddenly, your body keeps moving
           [
             "If you kick it hard, it shoots across the field, because a strong push gives more speed.",
             "如果用力踢，它会飞快地穿过球场，因为大的推力给它更大的速度。",
+          ],
+          [
+            ["Rolling a little way is what a gentle tap does.", "只滚一点点是轻轻一碰的结果。"],
+            ["Staying still is wrong. A kick is a strong force.", "不动不对。踢是很大的力。"],
+            ["Getting heavier is not in the passage.", "变重文中没有。"],
           ],
         ),
       ],
@@ -170,6 +213,11 @@ Next time you rub your hands together on a cold day, feel the warmth. That is fr
             "The first two paragraphs say friction works against motion and that rough surfaces like carpet make a lot of it.",
             "前两段说，摩擦力总是阻碍运动，而像地毯这样粗糙的表面摩擦力很大。",
           ],
+          [
+            ["Someone grabbing it is wrong. The passage says nobody grabbed it.", "有人抓住它不对。文中说没人抓它。"],
+            ["The carpet pushing it upward is not in the passage.", "地毯把它往上推文中没有。"],
+            ["Gravity stopping on carpets is wrong. Gravity always works.", "重力在地毯上失效不对。重力一直在起作用。"],
+          ],
         ),
         ask(
           ["Which surface makes the least friction?", "哪种表面的摩擦力最小？"],
@@ -182,6 +230,11 @@ Next time you rub your hands together on a cold day, feel the warmth. That is fr
           [
             "The second paragraph says smooth surfaces like ice make very little friction, which is why it is easy to slip on ice.",
             "第二段说，像冰这样光滑的表面摩擦力很小，所以在冰上很容易滑倒。",
+          ],
+          [
+            ["Sandpaper is rough, so it makes a lot of friction.", "砂纸很粗糙，摩擦力很大。"],
+            ["A gravel path is rough and makes a lot of friction.", "碎石路粗糙，摩擦力很大。"],
+            ["A carpet is rough. The ball stops quickly on it.", "地毯粗糙。球在上面很快停下。"],
           ],
         ),
         ask(
@@ -196,6 +249,11 @@ Next time you rub your hands together on a cold day, feel the warmth. That is fr
             "The fourth paragraph says the brakes on a bike use friction to stop the wheels.",
             "第四段说，自行车的刹车利用摩擦力让车轮停下来。",
           ],
+          [
+            ["Tires lasting forever is wrong. Friction wears them out.", "轮胎永远不坏不对。摩擦会磨损轮胎。"],
+            ["Keeping parts cold is backwards. Friction makes them hot.", "让零件保持凉爽是反的。摩擦让它们发热。"],
+            ["Going faster downhill is not how friction helps. It slows things down.", "下坡更快不是摩擦的帮助。它让东西变慢。"],
+          ],
         ),
         ask(
           ["Why do people put oil on the parts of machines?", "人们为什么给机器零件上油？"],
@@ -208,6 +266,11 @@ Next time you rub your hands together on a cold day, feel the warmth. That is fr
           [
             "Friction makes the parts of machines hot, so people put oil on them to help the parts slide.",
             "摩擦让机器零件发热，所以人们给零件上油，帮助它们滑动。",
+          ],
+          [
+            ["Making parts heavier is not in the passage.", "让零件更重文中没有。"],
+            ["More friction is backwards. Oil reduces it.", "增加摩擦是反的。油是减少摩擦的。"],
+            ["Making parts shine is not the reason given.", "让零件发亮不是文中给的原因。"],
           ],
         ),
       ],
@@ -238,6 +301,11 @@ Ramps are useful in real life too. A ramp makes it easier to roll a heavy box or
             "The second paragraph says that with a steeper ramp the car raced down faster and rolled much farther.",
             "第二段说，斜坡更陡时，小车冲下来更快，滚得也远得多。",
           ],
+          [
+            ["Stopping at the top is wrong. The car raced down.", "停在顶上不对。车冲了下来。"],
+            ["A shorter way is backwards. It rolled much farther.", "滚得更短是反的。它滚得远多了。"],
+            ["Falling off the side is not in the passage.", "从旁边掉下来文中没有。"],
+          ],
         ),
         ask(
           ["Why did the car stop quickly on the rug?", "为什么小车在地毯上很快就停了？"],
@@ -250,6 +318,11 @@ Ramps are useful in real life too. A ramp makes it easier to roll a heavy box or
           [
             "The third paragraph says the car stopped quickly on the rug because the rough rug made more friction.",
             "第三段说，小车在地毯上很快停下，是因为粗糙的地毯摩擦力更大。",
+          ],
+          [
+            ["The rug being steeper is wrong. The rug is on the floor, not the ramp.", "地毯更陡不对。地毯铺在地上，不是坡道。"],
+            ["Mei pushing backward is wrong. She never pushed it.", "美推车往后不对。她从不推车。"],
+            ["Pulling like a magnet is not in the passage.", "像磁铁一样拉文中没有。"],
           ],
         ),
         ask(
@@ -264,6 +337,11 @@ Ramps are useful in real life too. A ramp makes it easier to roll a heavy box or
             "The fourth paragraph says Mei used the same car from the same spot and changed only one thing at a time.",
             "第四段说，梅用同一辆车从同一个地方出发，每次只改变一样东西。",
           ],
+          [
+            ["A new car each time is wrong. She used the same car.", "每次换新车不对。她用的是同一辆车。"],
+            ["Pushing harder each time is wrong. She did not push at all.", "每次推得更用力不对。她根本不推。"],
+            ["Asking her brother to guess is not how she kept it fair.", "让弟弟猜不是她保证公平的办法。"],
+          ],
         ),
         ask(
           ["What did Mei and her brother first make the ramp from?", "梅和哥哥一开始用什么搭斜坡？"],
@@ -274,6 +352,11 @@ Ramps are useful in real life too. A ramp makes it easier to roll a heavy box or
             ["A wheelchair ramp", "一个轮椅坡道"],
           ],
           ["First they made a ramp from a board and two books.", "他们先用一块木板和两本书搭了一个斜坡。"],
+          [
+            ["A box and a rug is wrong. The rug was at the bottom later.", "箱子和地毯不对。地毯是后来放在坡底的。"],
+            ["Two chairs are not in the passage.", "两把椅子文中没有。"],
+            ["A wheelchair ramp is a real-life use at the end.", "轮椅坡道是文末说的生活中的用途。"],
+          ],
         ),
       ],
       ["Mei"],
@@ -304,6 +387,11 @@ If you push the book across the table, your push is bigger than the friction hol
             "The second paragraph says that if both teams pull with the same strength, the rope does not move because the forces are balanced.",
             "第二段说，如果两队用一样大的力拉，绳子不会动，因为力是平衡的。",
           ],
+          [
+            ["Breaking in the middle is not in the passage.", "从中间断开文中没有。"],
+            ["Moving toward the left team happens only if that team pulls harder.", "向左边那队移动要那队拉得更用力才会发生。"],
+            ["Both teams falling is not in the passage.", "两队都摔倒文中没有。"],
+          ],
         ),
         ask(
           ["Which way does an object move when the forces on it are unbalanced?", "物体受到不平衡的力时，会往哪个方向移动？"],
@@ -316,6 +404,11 @@ If you push the book across the table, your push is bigger than the friction hol
           [
             "The third paragraph says that when the forces are unbalanced, the object moves in the direction of the bigger force.",
             "第三段说，力不平衡时，物体会朝较大的那个力的方向移动。",
+          ],
+          [
+            ["Always straight up is not in the passage.", "总是向上文中没有。"],
+            ["The smaller force is the wrong way. It moves toward the bigger one.", "较小的力方向错了。它朝较大的力移动。"],
+            ["Not moving at all is what balanced forces do.", "完全不动是平衡力的结果。"],
           ],
         ),
         ask(
@@ -330,6 +423,11 @@ If you push the book across the table, your push is bigger than the friction hol
             "The fourth paragraph says gravity pulls the book down while the table pushes up with an equal force, so the forces are balanced.",
             "第四段说，重力把书往下拉，桌子用同样大的力往上推，所以这两个力是平衡的。",
           ],
+          [
+            ["No forces at all is wrong. Gravity and the table both act on it.", "完全没有力不对。重力和桌子都作用在它上面。"],
+            ["Being too heavy is not the reason given.", "太重不是文中给的原因。"],
+            ["Friction pulling it to the edge is not in the passage.", "摩擦把它拉到桌边文中没有。"],
+          ],
         ),
         ask(
           ["Why does a book soon stop after you stop pushing it?", "你停止推书后，书为什么很快停下？"],
@@ -342,6 +440,11 @@ If you push the book across the table, your push is bigger than the friction hol
           [
             "When you stop pushing, friction is the only force left, and the book soon stops.",
             "你停止推时，只剩下摩擦力，书很快就停下了。",
+          ],
+          [
+            ["Gravity pushing it back is wrong. Gravity pulls down.", "重力把它往回推不对。重力是向下拉。"],
+            ["The table pulling it is not in the passage.", "桌子拉它文中没有。"],
+            ["Still balanced is wrong. Only friction is left, so they are unbalanced.", "仍然平衡不对。只剩摩擦力，所以力不平衡。"],
           ],
         ),
       ],
@@ -370,6 +473,11 @@ A magnet's pull can even pass through some materials. A magnet can hold a drawin
             "The second paragraph says magnets pull on iron and steel, but not on wood, plastic or glass.",
             "第二段说，磁铁会吸铁和钢，但不会吸木头、塑料或玻璃。",
           ],
+          [
+            ["A wooden spoon is wood, which magnets do not attract.", "木勺是木头，磁铁吸不住。"],
+            ["A plastic cup is plastic, which magnets do not attract.", "塑料杯是塑料，磁铁吸不住。"],
+            ["A glass marble is glass, which magnets do not attract.", "玻璃珠是玻璃，磁铁吸不住。"],
+          ],
         ),
         ask(
           ["What is a magnetic field?", "什么是磁场？"],
@@ -382,6 +490,11 @@ A magnet's pull can even pass through some materials. A magnet can hold a drawin
           [
             "The third paragraph says the space around a magnet where its pull can be felt is called its magnetic field.",
             "第三段说，磁铁周围能感受到吸力的空间叫作磁场。",
+          ],
+          [
+            ["A field in the ground mixes up the word field.", "地里的田把field这个词理解错了。"],
+            ["Paper with iron on it is how you see the field, not the field itself.", "撒了铁屑的纸是看磁场的方法，不是磁场本身。"],
+            ["The metal a magnet is made of is not its field.", "磁铁的材料不是它的磁场。"],
           ],
         ),
         ask(
@@ -396,6 +509,11 @@ A magnet's pull can even pass through some materials. A magnet can hold a drawin
             "The third paragraph says that tiny bits of iron sprinkled on paper over a magnet line up in curved patterns that show where the field is.",
             "第三段说，撒在磁铁上方纸上的细小铁屑会排成弯弯的图案，显示出磁场在哪里。",
           ],
+          [
+            ["Shining a light is not in the passage. The field is invisible.", "用光照文中没有。磁场是看不见的。"],
+            ["Painting the magnet is not in the passage.", "给磁铁涂色文中没有。"],
+            ["Dropping it into water is not in the passage.", "把它扔进水里文中没有。"],
+          ],
         ),
         ask(
           ["How can a magnet hold a drawing to the refrigerator?", "磁铁怎样把画固定在冰箱上？"],
@@ -408,6 +526,11 @@ A magnet's pull can even pass through some materials. A magnet can hold a drawin
           [
             "A magnet's pull can pass through some materials, so it can hold a drawing through a sheet of paper.",
             "磁铁的吸力能穿过一些材料，所以它能隔着一张纸把画固定住。",
+          ],
+          [
+            ["Being sticky like glue is wrong. It pulls without glue.", "像胶水一样黏不对。它不用胶就能吸住。"],
+            ["Attracting paper is wrong. Magnets do not attract paper.", "吸纸不对。磁铁不吸纸。"],
+            ["The drawing being iron is wrong. Its pull goes through the paper.", "画是铁做的不对。它的吸力穿过了纸。"],
           ],
         ),
       ],
@@ -436,6 +559,11 @@ The Earth itself acts like a giant magnet. That is why the needle of a compass, 
             "The first paragraph says the pull of a magnet is strongest at its poles, so most paper clips cling to the two ends.",
             "第一段说，磁铁的吸力在两极最强，所以大多数回形针都吸在两端。",
           ],
+          [
+            ["The middle is where very few clips stick.", "中间只粘着很少的回形针。"],
+            ["Only the north pole is wrong. Both ends pull strongly.", "只有北极不对。两端吸力都很强。"],
+            ["Being painted red is not in the passage.", "涂成红色文中没有。"],
+          ],
         ),
         ask(
           ["What happens when you hold two north poles together?", "把两个北极放在一起会怎样？"],
@@ -449,6 +577,11 @@ The Earth itself acts like a giant magnet. That is why the needle of a compass, 
             "The second paragraph says that two north poles push each other away, because like poles repel.",
             "第二段说，两个北极会互相推开，因为同极相斥。",
           ],
+          [
+            ["Snapping together is what opposite poles do.", "吸在一起是异极的情况。"],
+            ["Turning into south poles is not in the passage.", "变成南极文中没有。"],
+            ["Nothing happening is wrong. You can feel them fight back.", "什么也不发生不对。你能感到它们在反抗。"],
+          ],
         ),
         ask(
           ["Why does a compass needle point north?", "为什么指南针的指针会指向北方？"],
@@ -461,6 +594,11 @@ The Earth itself acts like a giant magnet. That is why the needle of a compass, 
           [
             "The last paragraph says the Earth acts like a giant magnet, which is why a compass needle always swings to point north.",
             "最后一段说，地球就像一块巨大的磁铁，所以指南针的指针总是转向北方。",
+          ],
+          [
+            ["Sailors turning it by hand is wrong. It swings by itself.", "水手用手转不对。它自己会转。"],
+            ["The sea pulling it is not in the passage.", "大海拉它文中没有。"],
+            ["Cutting in half is about bar magnets, not why a compass points north.", "切成两半说的是条形磁铁，不是指南针指北的原因。"],
           ],
         ),
       ],
@@ -492,6 +630,11 @@ Magnets also work inside things you cannot see, such as speakers, headphones and
             "The second paragraph says a strip of magnet pulls the refrigerator door tightly shut, so the cold air stays inside.",
             "第二段说，冰箱门边的磁条把门紧紧吸住，冷气就不会跑出来。",
           ],
+          [
+            ["Holding notes is another use, not why the edge has a magnet.", "吸住便条是另一种用途，不是门边装磁铁的原因。"],
+            ["Keeping food from moving is not in the passage.", "让食物不动文中没有。"],
+            ["Making the door easier to break is not in the passage.", "让门更容易坏文中没有。"],
+          ],
         ),
         ask(
           ["How does a recycling center use a giant magnet?", "回收站怎样使用巨大的磁铁？"],
@@ -505,6 +648,11 @@ Magnets also work inside things you cannot see, such as speakers, headphones and
             "The third paragraph says the giant magnet lifts the steel cans out and leaves the aluminum cans behind.",
             "第三段说，巨大的磁铁把钢罐吸出来，把铝罐留在原处。",
           ],
+          [
+            ["The aluminum cans are left behind, not lifted.", "铝罐是留下的，不是被吸起来的。"],
+            ["Crushing cans is not in the passage.", "压扁罐子文中没有。"],
+            ["Washing cans is not in the passage.", "清洗罐子文中没有。"],
+          ],
         ),
         ask(
           ["What makes an electromagnet different from an ordinary magnet?", "电磁铁和普通磁铁有什么不同？"],
@@ -517,6 +665,11 @@ Magnets also work inside things you cannot see, such as speakers, headphones and
           [
             "The fourth paragraph says an electromagnet becomes a magnet when electricity flows through its wire and lets go when the electricity stops.",
             "第四段说，电流通过电线时电磁铁就变成磁铁，电流停止时它就松开。",
+          ],
+          [
+            ["Attracting aluminum is wrong. Aluminum cans stay behind.", "吸铝不对。铝罐被留下了。"],
+            ["Having no poles is not in the passage.", "没有磁极文中没有。"],
+            ["Wood and wire is wrong. It is wire around iron.", "木头和电线不对。它是铁上绕电线。"],
           ],
         ),
       ],

@@ -40,6 +40,17 @@ Today, microscopes can magnify things a million times. But it all began with a c
             "The first paragraph says he wanted to check the threads of the cloth he sold; he only later pointed his lenses at other things.",
             "第一段说他想检查所卖布料的线；后来他才把镜片对准别的东西。",
           ),
+          [
+            t(
+              "Microbes in rainwater came later, after he began pointing his lenses at other things.",
+              "雨水里的微生物是后来的事，那时他才开始用镜片看别的东西。",
+            ),
+            t("Selling microscopes is never mentioned. He sold cloth.", "文中从没提他卖显微镜。他卖的是布。"),
+            t(
+              "Proving people wrong came much later, when others saw the creatures too.",
+              "证明别人错了是很久以后的事，那时别人也看到了这些生物。",
+            ),
+          ],
         ),
         ask(
           t("Which words does the passage quote from van Leeuwenhoek?", "文章引用了列文虎克的哪个说法？"),
@@ -53,6 +64,11 @@ Today, microscopes can magnify things a million times. But it all began with a c
             'The second paragraph quotes him exactly: he called them "little animals." The other phrases are not in the passage.',
             '第二段准确地引用了他的话：他称它们为 "little animals"。其他说法文中没有。',
           ),
+          [
+            t("Germs is a modern word. He called them little animals.", "细菌是现代的说法。他称它们为“小动物”。"),
+            t("Water bugs is not in the passage, though he did look at water.", "文中没有“水虫”这个词，虽然他确实看了水。"),
+            t("Cells come up in later passages, not in his own words here.", "细胞是后面文章才讲的，不是他这里的原话。"),
+          ],
         ),
         ask(
           t("Why did people finally believe van Leeuwenhoek?", "人们最后为什么相信了列文虎克？"),
@@ -66,12 +82,25 @@ Today, microscopes can magnify things a million times. But it all began with a c
             "The third paragraph says other scientists built their own microscopes and saw the same tiny creatures.",
             "第三段说，其他科学家自己制作了显微镜，也看到了同样的微小生物。",
           ),
+          [
+            t(
+              "Size is reversed. A thousand creatures together were no bigger than one grain of sand.",
+              "大小说反了。一千个小生物加起来也没有一粒沙大。",
+            ),
+            t("A million times describes today's microscopes, not his.", "放大一百万倍说的是今天的显微镜，不是他的。"),
+            t("Microbes woven into cloth is never said. He only checked threads.", "文中从没说布里织进了微生物。他只是检查布线。"),
+          ],
         ),
         ask(
           t("What was van Leeuwenhoek's job?", "列文虎克是做什么工作的？"),
           t("He sold cloth", "他卖布"),
           [t("He was a doctor", "他是医生"), t("He was a sailor", "他是水手"), t("He taught science", "他教科学")],
           t("The text says he was a Dutch cloth seller.", "短文说他是一个荷兰布商。"),
+          [
+            t("Doctor is not his job in the passage. He was a cloth seller.", "文中他不是医生。他是卖布的。"),
+            t("Sailor is never mentioned.", "文中从没提到水手。"),
+            t("He was a shopkeeper with a hobby, not a teacher.", "他是有业余爱好的店主，不是老师。"),
+          ],
         ),
       ],
     ),
@@ -101,6 +130,14 @@ Cells also make more cells. A cell divides into two, then those two divide, and 
             "Just as a wall is made of many bricks, every living thing is made of many cells.",
             "正如一堵墙由许多砖组成，每个生物都由许多细胞组成。",
           ),
+          [
+            t(
+              "Hard and heavy is not the point. Bricks are many small units, like cells.",
+              "又硬又重不是重点。砖块是许多小单位，就像细胞。",
+            ),
+            t("It is the other way: living things are made of cells, not walls.", "正好反过来：是生物由细胞组成，不是墙。"),
+            t("Bacteria are a single tiny cell, far smaller than a brick.", "细菌只是一个微小的细胞，比砖块小得多。"),
+          ],
         ),
         ask(
           t("Why are red blood cells round and flat?", "红细胞为什么又圆又扁？"),
@@ -114,6 +151,11 @@ Cells also make more cells. A cell divides into two, then those two divide, and 
             "The third paragraph says red blood cells are round and flat, like cushions, so they can squeeze through narrow tubes.",
             "第三段说，红细胞又圆又扁，像小垫子一样，这样能挤过狭窄的管道。",
           ),
+          [
+            t("Carrying messages like wires is the job of long, thin nerve cells.", "像电线一样传递信息是细长的神经细胞的工作。"),
+            t("Holding a plant upright is what stiff cell walls do.", "让植物直立是坚硬的细胞壁的作用。"),
+            t("Controlling what enters is the membrane's job.", "控制进出是细胞膜的工作。"),
+          ],
         ),
         ask(
           t("What does the nucleus do, according to the passage?", "根据文章，细胞核有什么作用？"),
@@ -127,6 +169,11 @@ Cells also make more cells. A cell divides into two, then those two divide, and 
             "The fourth paragraph compares the nucleus to a control center that directs what the cell does. The membrane is the part like a bag.",
             "第四段把细胞核比作指挥中心，它指挥细胞的活动。像袋子的是细胞膜。",
           ),
+          [
+            t("Surrounding the cell like a bag describes the membrane.", "像袋子一样包住细胞描述的是细胞膜。"),
+            t("Holding a plant upright is the work of stiff cell walls.", "让植物直立是坚硬细胞壁的作用。"),
+            t("Healing comes from cells dividing, not from the nucleus alone.", "愈合来自细胞分裂，不只是细胞核。"),
+          ],
         ),
         ask(
           t("What does the membrane of a cell do?", "细胞膜有什么作用？"),
@@ -140,6 +187,11 @@ Cells also make more cells. A cell divides into two, then those two divide, and 
             "A thin membrane surrounds each cell like a bag, controlling what goes in and out.",
             "一层薄膜像袋子一样包住每个细胞，控制物质的进出。",
           ),
+          [
+            t("Carrying messages is what nerve cells do.", "传递信息是神经细胞的工作。"),
+            t("Holding a plant upright is what cell walls do.", "让植物直立是细胞壁的作用。"),
+            t("Making food from sunlight is never said of the membrane.", "文中没说细胞膜能利用阳光制造食物。"),
+          ],
         ),
       ],
     ),
@@ -171,6 +223,11 @@ Every one of these creatures is busy finding food, escaping danger and making co
             "The third paragraph says the paramecium is covered with tiny hairs that beat like oars, pushing it through the water.",
             "第三段说，草履虫身上有细小的毛，像桨一样划动，推动它在水中前进。",
           ),
+          [
+            t("Rolling slowly like a ball describes the colony of algae.", "像球一样慢慢滚动描述的是藻类群落。"),
+            t("Oozing like jelly describes the amoeba.", "像果冻一样蠕动描述的是变形虫。"),
+            t("Making food from sunlight is what algae do, not a paramecium.", "利用阳光制造食物是藻类做的，不是草履虫。"),
+          ],
         ),
         ask(
           t("How does an amoeba eat?", "变形虫怎样进食？"),
@@ -184,6 +241,11 @@ Every one of these creatures is busy finding food, escaping danger and making co
             "The fourth paragraph says the amoeba stretches out around its food, wraps it up and swallows it whole.",
             "第四段说，变形虫伸展身体包住食物，然后整个吞下去。",
           ),
+          [
+            t("Making food from sunlight is what the algae do.", "利用阳光制造食物是藻类做的事。"),
+            t("Tiny oars belong to the paramecium, and they move it, not catch food.", "小桨是草履虫的，用来移动，不是抓食物。"),
+            t("Waiting is not in the passage. The amoeba stretches out around its food.", "文中没说等待。变形虫会伸展身体包住食物。"),
+          ],
         ),
         ask(
           t("Why does the author compare a drop of pond water to a city?", "作者为什么把一滴池塘水比作一座城市？"),
@@ -197,12 +259,28 @@ Every one of these creatures is busy finding food, escaping danger and making co
             "The first and last paragraphs call the drop a crowded, busy city because so many creatures are finding food and escaping danger.",
             "第一段和最后一段把这滴水称为拥挤繁忙的城市，因为有这么多生物在觅食和躲避危险。",
           ),
+          [
+            t(
+              "Streets and buildings are not on the slide. The city is a comparison for busy life.",
+              "玻片上没有街道和楼房。城市是比喻生物繁忙。",
+            ),
+            t(
+              "Cloudy water is how the jar looks before the microscope, not the comparison.",
+              "浑浊是用显微镜之前罐子的样子，不是这个比喻。",
+            ),
+            t("One drop fits on a slide. The point is how much is in it.", "一滴水放得上玻片。重点是里面有多少东西。"),
+          ],
         ),
         ask(
           t("What is the green ball rolling across the slide?", "在载玻片上滚动的绿球是什么？"),
           t("A colony of algae", "一群藻类"),
           [t("A water flea", "一只水蚤"), t("An amoeba", "一只变形虫"), t("A paramecium", "一只草履虫")],
           t("The green ball is a colony of algae, thousands of cells living together.", "绿球是一群藻类，成千上万个细胞生活在一起。"),
+          [
+            t("A water flea is a tiny animal with a see-through body, not a green ball.", "水蚤是身体透明的小动物，不是绿色的球。"),
+            t("An amoeba is a blob with no fixed shape.", "变形虫是没有固定形状的一团。"),
+            t("A paramecium is shaped like the sole of a shoe and darts past.", "草履虫形状像鞋底，会快速游过。"),
+          ],
         ),
       ],
     ),
@@ -228,6 +306,11 @@ Without bacteria, the world would be buried under dead plants and animals, and t
             "The third paragraph says one bacterium can divide into two in about twenty minutes.",
             "第三段说，一个细菌大约二十分钟就能分裂成两个。",
           ),
+          [
+            t("Three days is far too slow. A few can become millions in one day.", "三天太慢了。几个细菌一天之内就能变成几百万。"),
+            t("A year is far too slow for bacteria that divide every twenty minutes.", "对每二十分钟分裂一次的细菌来说，一年太慢了。"),
+            t("An hour is three times longer than the passage says.", "一小时是文中所说时间的三倍。"),
+          ],
         ),
         ask(
           t("What is the main idea of the fourth paragraph?", "第四段的主要意思是什么？"),
@@ -241,6 +324,11 @@ Without bacteria, the world would be buried under dead plants and animals, and t
             "The fourth paragraph says most bacteria are harmless and many are helpful, then gives examples from soil and food.",
             "第四段说大多数细菌无害，许多是有益的，然后举了土壤和食物的例子。",
           ),
+          [
+            t("Strep throat belongs to the third paragraph, about harmful bacteria.", "链球菌咽喉炎属于第三段，讲的是有害细菌。"),
+            t("Hot springs and ice are in the second paragraph, about where bacteria live.", "温泉和冰在第二段，讲的是细菌生活在哪里。"),
+            t("Being older than plants is from the first paragraph.", "比植物更古老来自第一段。"),
+          ],
         ),
         ask(
           t("What would happen without bacteria, according to the passage?", "根据文章，如果没有细菌会怎样？"),
@@ -254,6 +342,14 @@ Without bacteria, the world would be buried under dead plants and animals, and t
             "The last paragraph says the world would be buried under dead things, and the soil would have no food for crops.",
             "最后一段说，世界会被死去的生物掩埋，土壤也没有养分供给庄稼。",
           ),
+          [
+            t(
+              "Illness is not the point of the last paragraph. It is about dead matter and soil.",
+              "疾病不是最后一段的重点。它讲的是死去的生物和土壤。",
+            ),
+            t("Plants would suffer, because the soil would have no food for crops.", "植物会受害，因为土壤里没有养料给庄稼。"),
+            t("Cheese and yogurt need bacteria, so there would be less, not more.", "奶酪和酸奶需要细菌，所以只会更少，不会更多。"),
+          ],
         ),
         ask(
           t("How do some bacteria help make food?", "有些细菌怎样帮助制作食物？"),
@@ -264,6 +360,11 @@ Without bacteria, the world would be buried under dead plants and animals, and t
             t("They turn milk into water", "把牛奶变成水"),
           ],
           t("The text says other bacteria help make cheese and yogurt.", "短文说还有些细菌帮助制作奶酪和酸奶。"),
+          [
+            t("Bread rising comes from yeast in another passage, not bacteria.", "面包发起来靠的是另一篇里的酵母，不是细菌。"),
+            t("Mushrooms are fungi, not bacteria.", "蘑菇是真菌，不是细菌。"),
+            t("Milk turning into water is never mentioned.", "文中从没提到牛奶变成水。"),
+          ],
         ),
       ],
     ),
@@ -293,6 +394,11 @@ Some fungi are dangerous. Certain wild mushrooms are poisonous, and only an expe
             "The second paragraph says plants make their own food from sunlight but fungi cannot, so they feed on other things.",
             "第二段说，植物利用阳光制造食物，而真菌不能，所以它们以别的东西为食。",
           ),
+          [
+            t("Some fungi do grow in the ground, the passage says.", "文中说有些真菌确实长在地里。"),
+            t("Size is not the difference. Only one fungus is described as huge.", "大小不是区别。只有一种真菌被描述得很大。"),
+            t("Seeds and spores are reversed. Fungi spread by spores.", "种子和孢子说反了。真菌靠孢子传播。"),
+          ],
         ),
         ask(
           t("What does the passage say about the fungus in the American forest?", "文章怎样描述美国森林里的那种真菌？"),
@@ -306,6 +412,14 @@ Some fungi are dangerous. Certain wild mushrooms are poisonous, and only an expe
             "The third paragraph says the threads of a single fungus stretch across nearly ten square kilometers.",
             "第三段说，一种真菌的菌丝延伸了近十平方公里。",
           ),
+          [
+            t("Poisonous mushrooms are mentioned later, not this fungus.", "有毒的蘑菇是后面提到的，不是这个真菌。"),
+            t("Penicillin came from a mold, not the forest fungus.", "青霉素来自一种霉菌，不是森林里的这种真菌。"),
+            t(
+              "Bread is where mold grows in the first paragraph. This fungus is in a forest.",
+              "面包是第一段霉菌生长的地方。这个真菌在森林里。",
+            ),
+          ],
         ),
         ask(
           t("Where does a spore start to grow?", "孢子在什么地方开始生长？"),
@@ -319,6 +433,11 @@ Some fungi are dangerous. Certain wild mushrooms are poisonous, and only an expe
             "The fourth paragraph says a spore starts to grow when it lands somewhere warm, damp and full of food.",
             "第四段说，孢子落在温暖、潮湿、食物丰富的地方就开始生长。",
           ),
+          [
+            t("Cold and dry is the opposite of what a spore needs.", "又冷又干正好与孢子需要的相反。"),
+            t("The ocean is never mentioned as a place spores grow.", "文中从没说孢子在海洋里生长。"),
+            t("Living plants are not required. Mold grows on dead and rotting things.", "不一定需要活植物。霉菌长在死去或腐烂的东西上。"),
+          ],
         ),
         ask(
           t("What medicine came from a mold?", "哪种药来自一种霉菌？"),
@@ -328,6 +447,11 @@ Some fungi are dangerous. Certain wild mushrooms are poisonous, and only an expe
             "One mold gave the world penicillin, a medicine that has saved millions of lives.",
             "一种霉菌给世界带来了青霉素，这种药挽救了数百万人的生命。",
           ),
+          [
+            t("Aspirin is not mentioned in the passage.", "文中没有提到阿司匹林。"),
+            t("Yogurt is a food made with bacteria, and not in this passage.", "酸奶是细菌帮助做成的食物，而且不在这篇文章里。"),
+            t("Yeast is a fungus used for bread, not a medicine.", "酵母是做面包用的真菌，不是药。"),
+          ],
         ),
       ],
     ),
@@ -357,6 +481,11 @@ In the hot oven, the bubbles grew larger still, and then the heat killed the yea
             "Grandma says \"It's awake, and it's eating\" after the yeast forms a foamy layer, showing it has become active.",
             "酵母形成一层泡沫后，奶奶说 \"It's awake, and it's eating\"，说明它已经活跃起来了。",
           ),
+          [
+            t("Killed by heat is what happens in the oven, at the end.", "被热杀死是最后在烤箱里发生的。"),
+            t("Brown sand is how the yeast looked before it was fed.", "棕色的沙子是酵母喂食前的样子。"),
+            t("The bread is not made yet. Mixing and rising come next.", "面包还没做好。之后才混合和发酵。"),
+          ],
         ),
         ask(
           t("Why does the dough double in size?", "面团为什么会涨大一倍？"),
@@ -370,6 +499,11 @@ In the hot oven, the bubbles grew larger still, and then the heat killed the yea
             "The third paragraph says the yeast gives off carbon dioxide, which is trapped in thousands of bubbles, so the dough grows before it ever reaches the oven.",
             "第三段说，酵母放出二氧化碳，被困在成千上万的小气泡里，所以面团在进烤箱之前就涨大了。",
           ),
+          [
+            t("The cloth only covers the bowl. It does not make the dough grow.", "布只是盖住碗，不会让面团长大。"),
+            t("Flour soaking up water is not mentioned.", "文中没提面粉吸水。"),
+            t("The oven comes after the dough has already doubled.", "烤箱是面团已经长大一倍之后的事。"),
+          ],
         ),
         ask(
           t("What warning does Grandma Lin give at the end?", "林奶奶最后给出了什么提醒？"),
@@ -383,12 +517,22 @@ In the hot oven, the bubbles grew larger still, and then the heat killed the yea
             'She says "too hot, and you\'ll kill your helper before it works," meaning heat that is too strong kills the yeast.',
             '她说 "too hot, and you\'ll kill your helper before it works"，意思是温度太高会杀死酵母。',
           ),
+          [
+            t("Bitter bread from sugar is not Grandma's warning.", "糖太多让面包发苦不是奶奶的提醒。"),
+            t("The dough rose for an hour, not a day.", "面团发了一个小时，不是一整天。"),
+            t("They did cut the first warm slice.", "他们确实切下了第一片温热的面包。"),
+          ],
         ),
         ask(
           t("What gas does yeast give off as it feeds on sugar?", "酵母吃糖时会放出什么气体？"),
           t("Carbon dioxide", "二氧化碳"),
           [t("Oxygen", "氧气"), t("Steam", "水蒸气"), t("Smoke", "烟")],
           t("As yeast feeds on sugar, it gives off a gas called carbon dioxide.", "酵母吃糖时会放出一种叫二氧化碳的气体。"),
+          [
+            t("Oxygen is not named. The gas is carbon dioxide.", "文中没提氧气。那种气体是二氧化碳。"),
+            t("Steam is not what yeast gives off.", "酵母放出的不是蒸汽。"),
+            t("Smoke is not mentioned.", "文中没提到烟。"),
+          ],
         ),
       ],
     ),
@@ -416,6 +560,14 @@ A vaccine uses this memory. It shows the body a harmless piece or weakened form 
             "Like a pirate capturing a ship, a virus takes over a cell and forces it to make copies of the virus.",
             "就像海盗劫持船只一样，病毒控制细胞，迫使它复制病毒。",
           ),
+          [
+            t(
+              "Sailing through blood is not said. The pirate captures a ship, like a virus taking over a cell.",
+              "文中没说在血液里航行。海盗劫船就像病毒控制细胞。",
+            ),
+            t("The virus does not leave with food. It forces the cell to make copies.", "病毒不是偷了食物就走。它迫使细胞复制病毒。"),
+            t("A virus is tiny, even smaller than a bacterium.", "病毒非常小，比细菌还小。"),
+          ],
         ),
         ask(
           t("How does a vaccine protect the body?", "疫苗怎样保护身体？"),
@@ -429,6 +581,11 @@ A vaccine uses this memory. It shows the body a harmless piece or weakened form 
             "The fourth paragraph says a vaccine shows the body a harmless form of a virus so it learns to recognize it.",
             "第四段说，疫苗让身体接触病毒的无害形式，从而学会识别它。",
           ),
+          [
+            t("White blood cells are the body's fighters. A vaccine does not kill them.", "白细胞是身体的战士。疫苗不会杀死它们。"),
+            t("Cells bursting is what a real virus does, not a vaccine.", "细胞破裂是真病毒做的事，不是疫苗。"),
+            t("The coat wraps the virus's instructions, not the body's cells.", "外壳包裹的是病毒的指令，不是身体的细胞。"),
+          ],
         ),
         ask(
           t("Why do scientists need special microscopes to see most viruses?", "为什么科学家需要特殊的显微镜才能看到大多数病毒？"),
@@ -442,6 +599,14 @@ A vaccine uses this memory. It shows the body a harmless piece or weakened form 
             "The first paragraph says most viruses are so tiny that an ordinary microscope cannot show them.",
             "第一段说，大多数病毒太小，普通显微镜看不到。",
           ),
+          [
+            t(
+              "Hiding in white blood cells is not said. White blood cells destroy viruses.",
+              "文中没说病毒藏在白细胞里。白细胞会消灭病毒。",
+            ),
+            t("Darkness is not mentioned. Special microscopes use electrons instead of light.", "文中没提黑暗。特殊显微镜用电子而不是光。"),
+            t("Speed is not the problem. Size is.", "问题不是速度，而是大小。"),
+          ],
         ),
       ],
     ),
@@ -471,6 +636,11 @@ Scientists are only beginning to understand this hidden world. Some believe that
             "The second paragraph defines mutualism as a partnership in which both sides benefit, like you and your gut microbes.",
             "第二段把 mutualism 定义为双方都受益的伙伴关系，就像你和你的肠道微生物。",
           ),
+          [
+            t("Illness is the opposite. These microbes are partners, not invaders.", "疾病正好相反。这些微生物是伙伴，不是入侵者。"),
+            t("Yogurt with live microbes is a later example, not the meaning of the word.", "含活菌的酸奶是后面的例子，不是这个词的意思。"),
+            t("The microbes make vitamins. They do not break them down.", "微生物会制造维生素，不是分解维生素。"),
+          ],
         ),
         ask(
           t("What does the comparison to a full parking lot explain?", "把肠道比作停满车的停车场说明了什么？"),
@@ -484,6 +654,11 @@ Scientists are only beginning to understand this hidden world. Some believe that
             "The third paragraph says helpful microbes take up the space and food harmful bacteria would use, like a full parking lot with no room left.",
             "第三段说，有益微生物占据了有害细菌要用的空间和食物，就像停满车、没有空位的停车场。",
           ),
+          [
+            t("Cars are only part of the picture. Microbes do not travel in them.", "汽车只是比喻的一部分。微生物不会坐车。"),
+            t("The gut still digests food. The full lot only blocks harmful bacteria.", "肠道照样消化食物。停满的停车场只挡住有害细菌。"),
+            t("Harmful bacteria are kept out. Nothing says the gut grows larger.", "有害细菌被挡在外面。文中没说肠道会变大。"),
+          ],
         ),
         ask(
           t("What do the microbes get from you?", "微生物从你这里得到了什么？"),
@@ -497,6 +672,11 @@ Scientists are only beginning to understand this hidden world. Some believe that
             "The second paragraph says the microbes get a warm home and a steady supply of food in return for their work.",
             "第二段说，微生物帮你干活，作为回报得到温暖的家和稳定的食物来源。",
           ),
+          [
+            t("Vitamins go the other way: some microbes make vitamins for you.", "维生素是反过来的：有些微生物为你制造维生素。"),
+            t("Yogurt adds live microbes. It is not something they hide from.", "酸奶带来活的微生物，不是它们要躲的东西。"),
+            t("The mango only shows how much the microbes weigh.", "芒果只是说明微生物有多重。"),
+          ],
         ),
       ],
     ),

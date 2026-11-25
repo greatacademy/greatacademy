@@ -40,6 +40,14 @@ The next time you walk in a park or a forest, look carefully. Animals may be wat
             "The first paragraph states the idea, and every later paragraph gives an animal that hides by matching its home. The hare is only one detail.",
             "第一段说出了这个意思，后面每一段都举了一种靠与环境相配来隐藏的动物。雪鞋兔只是其中一个细节。",
           ),
+          why: [
+            t("The snowshoe hare is only one example of hiding, in the second paragraph.", "雪鞋兔只是第二段里讲藏身的一个例子。"),
+            t(
+              "Tigers in zoos is a passing detail. The point is that their stripes hide them in tall grass.",
+              "动物园里的老虎只是顺带一提。重点是条纹让它们藏在高草里。",
+            ),
+            t("A walk in the park is the closing invitation, not what the passage is about.", "去公园散步是结尾的邀请，不是文章的主题。"),
+          ],
         },
         {
           prompt: t("Why does the snowshoe hare grow white fur in autumn?", "雪鞋兔为什么在秋天长出白色的毛？"),
@@ -53,6 +61,17 @@ The next time you walk in a park or a forest, look carefully. Animals may be wat
             "The second paragraph says that by the time snow covers the ground, the white hare is almost impossible to spot.",
             "第二段说，等到雪覆盖地面时，白色的兔子几乎无法被发现。",
           ),
+          why: [
+            t(
+              "Staying warm in summer is wrong. The hare is brown in summer and turns white in autumn.",
+              "夏天保暖不对。雪鞋兔夏天是棕色的，秋天才变白。",
+            ),
+            t(
+              "Being found more easily is the opposite. White fur makes it almost impossible to spot.",
+              "更容易被发现正好相反。白毛让它几乎看不出来。",
+            ),
+            t("Eating white leaves is not in the passage. The fur matches the snow.", "吃白色树叶文中没有。白毛是为了和雪一样。"),
+          ],
         },
         {
           prompt: t("How does camouflage help a tiger?", "伪装怎样帮助老虎？"),
@@ -66,6 +85,14 @@ The next time you walk in a park or a forest, look carefully. Animals may be wat
             "The fourth paragraph says the tiger seems to disappear in tall grass, so it can creep close to a deer before the deer knows it is there.",
             "第四段说老虎在高草中好像消失了，所以它能在鹿察觉之前悄悄靠近。",
           ),
+          why: [
+            t(
+              "Safety from hunters is how camouflage helps the hare. The tiger is the hunter.",
+              "躲避捕猎者是伪装对雪鞋兔的作用。老虎本身就是捕猎者。",
+            ),
+            t("Looking bold in a zoo is the opposite. In a zoo the stripes stand out.", "在动物园里显眼正好相反。在动物园里条纹很醒目。"),
+            t("Finding water is not in the passage.", "找水文中没有。"),
+          ],
         },
       ],
     },
@@ -98,6 +125,14 @@ Even its color helps. Its pale fur matches the snow, so a seal resting on the ic
             "The first paragraph ends by saying the bear's whole body is made for this hard home, and each paragraph after it describes one part of the body.",
             "第一段最后说北极熊的整个身体都是为这个艰苦的家而生的，之后每一段都描述身体的一个部分。",
           ),
+          why: [
+            t("Eating seals is one detail in the fourth paragraph.", "吃海豹只是第四段的一个细节。"),
+            t(
+              "The cold of the far north is the setting, not the main idea about the bear's body.",
+              "北极的寒冷是背景，不是关于熊身体的主旨。",
+            ),
+            t("Swimming for hours is one result of its fat and fur.", "游几个小时只是脂肪和皮毛带来的一个结果。"),
+          ],
         },
         {
           prompt: t("Which detail supports the idea that a polar bear's feet are made for ice?", "哪个细节支持北极熊的脚是为冰面而生的？"),
@@ -111,6 +146,11 @@ Even its color helps. Its pale fur matches the snow, so a seal resting on the ic
             "The third paragraph is about the feet: they are wide like snowshoes, and small bumps keep the bear from slipping.",
             "第三段讲的是脚：脚掌宽得像雪鞋，小凸起让北极熊不会滑倒。",
           ),
+          why: [
+            t("Smelling a seal is about its nose, the third feature.", "闻到海豹说的是鼻子，第三个特点。"),
+            t("Thick fat is about staying warm, the first feature.", "厚脂肪说的是保暖，第一个特点。"),
+            t("Pale fur is about hunting, not walking on ice.", "浅色皮毛说的是捕猎，不是在冰上行走。"),
+          ],
         },
         {
           prompt: t("Why does the bear's pale color help it hunt?", "北极熊浅色的毛为什么有助于捕猎？"),
@@ -124,6 +164,14 @@ Even its color helps. Its pale fur matches the snow, so a seal resting on the ic
             "The last paragraph says the pale fur matches the snow, so a resting seal may not see the bear until it is too late.",
             "最后一段说浅色的毛与雪相配，所以休息的海豹可能直到太晚才看到北极熊。",
           ),
+          why: [
+            t("Keeping warm is the job of fat and fur, not color.", "保暖靠的是脂肪和皮毛，不是颜色。"),
+            t("Smelling under ice is the job of its nose.", "在冰下闻气味靠的是鼻子。"),
+            t(
+              "Scaring seals is the opposite. The color hides the bear so seals do not see it.",
+              "吓跑海豹正好相反。颜色让熊藏起来，海豹看不见。",
+            ),
+          ],
         },
       ],
     },
@@ -155,6 +203,14 @@ When the days grow warm again, the squirrel's body slowly warms up. It wakes, cl
             "The third paragraph supports this idea with the heart that slows to a few beats a minute and breathing only once every few minutes.",
             "第三段用心跳减慢到每分钟几下、每隔几分钟才呼吸一次来支持这个意思。",
           ),
+          why: [
+            t(
+              "Curling up in a burrow is how it begins to sleep, not proof its body shuts down.",
+              "蜷在洞里是它开始睡觉的样子，不是身体几乎停摆的证据。",
+            ),
+            t("Eating until fat happens in late summer, before hibernation.", "吃到发胖是夏末、冬眠之前的事。"),
+            t("Looking for a meal happens in spring, after it wakes.", "找食物是春天醒来以后的事。"),
+          ],
         },
         {
           prompt: t("How does the squirrel stay alive without eating all winter?", "松鼠整个冬天不吃东西，怎样活下来？"),
@@ -168,6 +224,11 @@ When the days grow warm again, the squirrel's body slowly warms up. It wakes, cl
             "The fourth paragraph says the squirrel does not eat at all and lives on the fat it stored in summer.",
             "第四段说松鼠完全不吃东西，靠夏天储存的脂肪生活。",
           ),
+          why: [
+            t("Waking to eat insects is wrong. It does not eat at all while it sleeps.", "醒来吃虫子不对。它睡觉时完全不吃东西。"),
+            t("Keeping food in its burrow is not in the passage.", "在洞里存粮文中没有。"),
+            t("Drinking melted snow is not in the passage.", "喝雪水文中没有。"),
+          ],
         },
         {
           prompt: t("Why do some animals hibernate?", "有些动物为什么要冬眠？"),
@@ -181,6 +242,11 @@ When the days grow warm again, the squirrel's body slowly warms up. It wakes, cl
             "The first paragraph names the problem: in winter food is hard to find, so some animals sleep through the hardest months.",
             "第一段说出了问题：冬天很难找到食物，所以有些动物睡过最艰难的几个月。",
           ),
+          why: [
+            t("Being too hot in summer is not the reason. The problem is winter food.", "夏天太热不是原因。问题是冬天的食物。"),
+            t("Wanting to grow thinner is wrong. Getting thinner is just what happens by spring.", "想变瘦不对。变瘦只是到春天时的结果。"),
+            t("Small burrows are not in the passage.", "洞太小文中没有。"),
+          ],
         },
       ],
     },
@@ -208,6 +274,11 @@ Finally, in the stream of their birth, the females lay their eggs in the gravel,
             "The third paragraph begins with the time words *when that food is gone*: the young salmon begin to swim and hunt. The trip to the ocean comes a year or two later.",
             "第三段以时间词 *when that food is gone* 开头：小鲑鱼开始游动和捕食。去大海是一两年以后的事。",
           ),
+          why: [
+            t("Swimming to the ocean comes after a year or two in the stream.", "游向大海是在溪流里待一两年之后的事。"),
+            t("Laying eggs happens at the very end of their lives.", "产卵是它们一生的最后阶段。"),
+            t("Hatching comes before the food bag, not after it.", "孵化在吃卵黄囊之前，不是之后。"),
+          ],
         },
         {
           prompt: t("Which happens last in the salmon's life?", "鲑鱼一生中最后发生的是哪件事？"),
@@ -221,6 +292,11 @@ Finally, in the stream of their birth, the females lay their eggs in the gravel,
             "The last paragraph begins with *finally*: the females lay their eggs, and the journey begins again.",
             "最后一段以 *finally* 开头：雌鱼产卵，旅程重新开始。",
           ),
+          why: [
+            t("Growing large in the ocean comes before the trip home.", "在海里长大是回家之前的事。"),
+            t("Leaping waterfalls happens on the way home, before the eggs are laid.", "跃过瀑布是回家路上的事，在产卵之前。"),
+            t("Swimming downstream happens when they are young.", "顺流而下是它们年幼时的事。"),
+          ],
         },
         {
           prompt: t("How do scientists think salmon find their way home?", "科学家认为鲑鱼怎样找到回家的路？"),
@@ -234,6 +310,11 @@ Finally, in the stream of their birth, the females lay their eggs in the gravel,
             "The fourth paragraph says scientists think the salmon find their home stream by its smell.",
             "第四段说科学家认为鲑鱼靠气味找到出生的溪流。",
           ),
+          why: [
+            t("Following other fish is not in the passage.", "跟着别的鱼文中没有。"),
+            t("Looking at the stars is not in the passage.", "看星星文中没有。"),
+            t("The sound of waterfalls is not the clue. Scientists think it is smell.", "瀑布的声音不是线索。科学家认为是气味。"),
+          ],
         },
       ],
     },
@@ -266,6 +347,11 @@ Then the clouds return. As soon as the rain falls, green grass springs up, the h
             "The second paragraph gives the reason with *because*: there is so little to eat and drink, so the herds begin to walk.",
             "第二段用 *because* 说明原因：吃的喝的太少，所以兽群开始迁徙。",
           ),
+          why: [
+            t("Lions chasing them is not why they walk. The reason is food and water.", "狮子追赶不是它们迁徙的原因，原因是食物和水。"),
+            t("Elephants digging holes helps those that stay, not why herds leave.", "大象挖坑帮助的是留下的动物，不是兽群离开的原因。"),
+            t("Tall grass is the opposite. The grass dries and turns brown.", "草太高正好相反。草干枯变黄了。"),
+          ],
         },
         {
           prompt: t("What happens because elephants dig into dry riverbeds?", "大象挖开干涸的河床，带来了什么结果？"),
@@ -279,6 +365,11 @@ Then the clouds return. As soon as the rain falls, green grass springs up, the h
             "The third paragraph says elephants dig until they reach water, and smaller animals then drink from the holes the elephants made.",
             "第三段说大象挖到有水为止，然后小动物就从大象挖的洞里喝水。",
           ),
+          why: [
+            t("Rain falling comes when the clouds return, not because of elephants.", "下雨是云回来了，不是因为大象。"),
+            t("Grass turning brown is caused by no rain.", "草变黄是因为没下雨。"),
+            t("Herds leaving is caused by too little food.", "兽群离开是因为食物太少。"),
+          ],
         },
         {
           prompt: t("Why do some lions go hungry in the dry season?", "为什么有些狮子在旱季会挨饿？"),
@@ -292,6 +383,14 @@ Then the clouds return. As soon as the rain falls, green grass springs up, the h
             "The fourth paragraph says that as the herds leave, lions have less to eat.",
             "第四段说随着兽群离开，狮子能吃的东西变少了。",
           ),
+          why: [
+            t("Being too hot to hunt is not the reason given.", "太热没法捕猎不是文中给的原因。"),
+            t(
+              "Elephants eating their food is wrong. Lions eat meat, and their prey left.",
+              "大象吃了它们的食物不对。狮子吃肉，是猎物走了。",
+            ),
+            t("Sleeping through the season is hibernation, from another passage.", "整季睡觉是冬眠，那是另一篇的内容。"),
+          ],
         },
       ],
     },
@@ -321,6 +420,11 @@ Both animals are slow, and both would be easy to catch without their armor. But 
             "The first paragraph says both wear a kind of armor, and the last paragraph says both animals are slow.",
             "第一段说两者都穿着一种盔甲，最后一段说两种动物都很慢。",
           ),
+          why: [
+            t("A shell of bone belongs only to the turtle.", "骨质的壳只有乌龟有。"),
+            t("Sharp quills belong only to the porcupine.", "尖刺只有豪猪有。"),
+            t("Running fast is the opposite. Both are slow.", "跑得快正好相反。两者都很慢。"),
+          ],
         },
         {
           prompt: t("How is the porcupine's armor different from the turtle's?", "豪猪的盔甲和箱龟的有什么不同？"),
@@ -334,6 +438,11 @@ Both animals are slow, and both would be easy to catch without their armor. But 
             "The second paragraph says the turtle's armor keeps danger out, while the third says the porcupine's armor hurts whoever attacks.",
             "第二段说箱龟的盔甲把危险挡在外面，而第三段说豪猪的盔甲会伤害攻击者。",
           ),
+          why: [
+            t("Hard bone is the turtle's armor.", "硬骨头是乌龟的盔甲。"),
+            t("Closing like a door is what the turtle's shell does.", "像门一样关上是乌龟壳做的事。"),
+            t("Keeping warm is not in the passage.", "保暖文中没有。"),
+          ],
         },
         {
           prompt: t("What does the box turtle do when danger comes?", "危险来临时，箱龟会怎么做？"),
@@ -347,6 +456,11 @@ Both animals are slow, and both would be easy to catch without their armor. But 
             "The second paragraph says the turtle pulls its head, legs and tail inside, then closes the bottom of its shell like a door.",
             "第二段说箱龟把头、腿和尾巴缩进去，然后像关门一样合上壳的底部。",
           ),
+          why: [
+            t("Raising quills is what the porcupine does.", "竖起刺是豪猪做的事。"),
+            t("Running and hiding is wrong. These animals carry protection instead.", "逃跑躲藏不对。这些动物是随身带着保护。"),
+            t("Turning its back is the porcupine's move.", "转身背对敌人是豪猪的做法。"),
+          ],
         },
       ],
     },
@@ -379,6 +493,11 @@ The fences work. Most elephants now turn back before they reach the crops. As a 
             "The second paragraph says the farmers tried shouting, banging pots and lighting fires, but the elephants kept coming back.",
             "第二段说农民试过大喊、敲锅和生火，可大象还是一次次回来。",
           ),
+          why: [
+            t("Leaving for good is the opposite. They kept coming back.", "永远离开正好相反。它们还是一再回来。"),
+            t("Bees came later, with the scientist's idea.", "蜜蜂是后来科学家想出的办法。"),
+            t("Faster crops are not in the passage.", "庄稼长得更快文中没有。"),
+          ],
         },
         {
           prompt: t("Why do beehive fences keep elephants away?", "蜂箱围栏为什么能让大象远离？"),
@@ -392,6 +511,11 @@ The fences work. Most elephants now turn back before they reach the crops. As a 
             "The third paragraph says a bee sting inside the trunk is painful, and elephants walk away when they hear angry bees.",
             "第三段说鼻子里被蜇非常疼，大象听到被激怒的蜜蜂就会走开。",
           ),
+          why: [
+            t("Being too tall is not the reason. The wire makes the hives swing.", "太高不是原因。是铁丝让蜂箱晃动。"),
+            t("Bad-tasting honey is not in the passage. Elephants fear the stings.", "蜂蜜难吃文中没有。大象怕的是被蜇。"),
+            t("Farmers shouting was the old way that did not work.", "农民大喊是以前不管用的办法。"),
+          ],
         },
         {
           prompt: t("What extra good do the bees bring the farmers?", "蜜蜂还给农民带来了什么额外的好处？"),
@@ -405,6 +529,11 @@ The fences work. Most elephants now turn back before they reach the crops. As a 
             "The last paragraph says the bees make honey the farmers can sell and carry pollen that helps the crops grow.",
             "最后一段说蜜蜂酿的蜂蜜农民可以出售，还能传粉帮助庄稼生长。",
           ),
+          why: [
+            t("Wood for fires is not in the passage.", "生火的木柴文中没有。"),
+            t("Food for elephants is wrong. The fences keep elephants away.", "给大象的食物不对。篱笆是为了挡住大象。"),
+            t("Water for fields is not in the passage.", "给田地浇水文中没有。"),
+          ],
         },
       ],
     },
@@ -437,6 +566,11 @@ Ana stood still for a long time. Then she walked home, thinking about the story 
             "The second paragraph says its tracks were far apart, as if the animal had been leaping. An animal that leaps far is moving fast.",
             "第二段说它的足迹相隔很远，好像这只动物在跳跃。跳得远的动物是在快速移动。",
           ),
+          why: [
+            t("Sleeping is wrong. The groups of prints were far apart.", "睡觉不对。脚印组之间离得很远。"),
+            t("Walking slowly is wrong. The animal was leaping.", "慢慢走不对。那只动物在跳着跑。"),
+            t("Digging a burrow is not in the passage. The tracks go across the field.", "挖洞文中没有。脚印是横穿田野的。"),
+          ],
         },
         {
           prompt: t("What most likely happened at the edge of the woods?", "在树林边缘最可能发生了什么？"),
@@ -450,6 +584,14 @@ Ana stood still for a long time. Then she walked home, thinking about the story 
             "The fourth paragraph gives the clues: the snow pressed down in a circle, tufts of fur, and only the larger tracks going on into the trees.",
             "第四段给出了线索：雪地上压出一个圆圈，有几撮毛，只有大动物的足迹继续通向树林。",
           ),
+          why: [
+            t(
+              "Becoming friends is wrong. There was fur on the snow and only one line went on.",
+              "成了朋友不对。雪上有毛，而且只有一行脚印继续向前。",
+            ),
+            t("Ana catching it is wrong. She only followed the tracks.", "安娜抓住了它不对。她只是跟着脚印走。"),
+            t("Both running into the trees is wrong. Only the larger tracks continued.", "两只都跑进树林不对。只有大的脚印继续向前。"),
+          ],
         },
         {
           prompt: t("Which clue shows the larger animal was following the smaller one?", "哪条线索说明大动物在跟踪小动物？"),
@@ -463,6 +605,11 @@ Ana stood still for a long time. Then she walked home, thinking about the story 
             "The third paragraph says the second line of tracks joined the first halfway across the field, and both lines led to the edge of the woods.",
             "第三段说第二行足迹在田野中途加入了第一行，两行都通向树林边缘。",
           ),
+          why: [
+            t("Four toes and a pad tell what animal it was, not that it was following.", "四个脚趾和肉垫说明是什么动物，不说明它在跟踪。"),
+            t("Ana standing still is what she did after, not a clue in the tracks.", "安娜站着不动是之后的事，不是脚印里的线索。"),
+            t("Groups of four belong to the small animal's tracks.", "四个一组是小动物的脚印。"),
+          ],
         },
       ],
     },
@@ -497,6 +644,11 @@ Sharks have lived in the oceans for millions of years, longer than trees have gr
             "Most paragraphs show that sharks rarely hurt people while people catch millions of sharks, and the last one asks us to protect them.",
             "大多数段落都说明鲨鱼很少伤人，人却每年捕捞数百万条鲨鱼；最后一段请我们保护它们。",
           ),
+          why: [
+            t("The biggest animals is wrong. Most sharks are smaller than a person.", "最大的动物不对。大多数鲨鱼比人还小。"),
+            t("Exciting movies are what the writer argues against.", "刺激的电影正是作者反驳的东西。"),
+            t("Lightning is only a comparison to show how rare bites are.", "闪电只是用来说明被咬多么罕见的比较。"),
+          ],
         },
         {
           prompt: t("What does the whale shark eat?", "鲸鲨吃什么？"),
@@ -510,6 +662,14 @@ Sharks have lived in the oceans for millions of years, longer than trees have gr
             "The second paragraph says the whale shark is as long as a bus but eats only tiny plants and animals that float in the water.",
             "第二段说鲸鲨和公共汽车一样长，却只吃漂浮在水中的微小植物和动物。",
           ),
+          why: [
+            t("People are not its food. It eats only tiny things in the water.", "人不是它的食物。它只吃水里的微小生物。"),
+            t("Other sharks are not named as its food.", "文中没说它吃别的鲨鱼。"),
+            t(
+              "Fish as big as a bus mixes up its size with its food. It is the shark that is bus-sized.",
+              "和公交车一样大的鱼弄混了大小和食物。像公交车那么大的是鲨鱼本身。",
+            ),
+          ],
         },
         {
           prompt: t(
@@ -526,6 +686,11 @@ Sharks have lived in the oceans for millions of years, longer than trees have gr
             "The third paragraph says fewer than one hundred people a year are bitten, which shows attacks are rare.",
             "第三段说每年被咬的人不到一百个，说明鲨鱼袭击很少见。",
           ),
+          why: [
+            t("A bus-long whale shark shows size, and it only eats tiny things.", "像公交车一样长的鲸鲨说明的是大小，而且它只吃小东西。"),
+            t("Millions of years in the ocean is about their history, not danger.", "在海里生活了几百万年说的是历史，不是危险。"),
+            t("Becoming rare is about danger to sharks, not from them.", "变得稀少说的是鲨鱼面临的危险，不是它们带来的。"),
+          ],
         },
       ],
     },
@@ -555,6 +720,14 @@ Imagine stepping outside on a summer morning and finding a striped caterpillar m
             "The first paragraphs explain that monarchs need milkweed and that it is disappearing; the rest tells you how to plant it and asks you to.",
             "前几段说明帝王蝶离不开马利筋，而马利筋正在消失；其余部分告诉你怎样种马利筋，并请你去种。",
           ),
+          why: [
+            t(
+              "Caterpillars eating many plants is the opposite. Monarch caterpillars eat only milkweed.",
+              "毛毛虫吃很多种植物正好相反。帝王蝶幼虫只吃马利筋。",
+            ),
+            t("Roads and parking lots are what replaced the milkweed.", "公路和停车场是取代马利筋的东西。"),
+            t("Summer mornings are only the picture the writer asks you to imagine.", "夏日清晨只是作者让你想象的画面。"),
+          ],
         },
         {
           prompt: t("Why are there fewer monarchs today?", "为什么现在的帝王蝶变少了？"),
@@ -568,6 +741,11 @@ Imagine stepping outside on a summer morning and finding a striped caterpillar m
             "The second paragraph says fields of milkweed have become roads, parking lots and lawns, and as the milkweed goes, so do the butterflies.",
             "第二段说长马利筋的田野变成了道路、停车场和草坪，马利筋消失，蝴蝶也随之消失。",
           ),
+          why: [
+            t("Stopping flying north is wrong. They still fly north looking for milkweed.", "不再往北飞不对。它们仍然往北飞去找马利筋。"),
+            t("Eating too many leaves is not the reason.", "吃太多叶子不是原因。"),
+            t("Too much milkweed is the opposite. Milkweed is disappearing.", "马利筋种得太多正好相反。马利筋正在消失。"),
+          ],
         },
         {
           prompt: t("Why does the author ask you to imagine a summer morning?", "作者为什么请你想象一个夏日的早晨？"),
@@ -581,6 +759,17 @@ Imagine stepping outside on a summer morning and finding a striped caterpillar m
             "The last paragraph paints a pleasant picture of a caterpillar and a butterfly at your window, then asks you to plant milkweed: the picture makes the request more appealing.",
             "最后一段描绘了毛毛虫和蝴蝶出现在窗前的美好画面，然后请你种马利筋：这幅画面让请求更有吸引力。",
           ),
+          why: [
+            t("What time butterflies wake is not the point.", "蝴蝶几点醒来不是重点。"),
+            t(
+              "Warning about caterpillars is the opposite. The caterpillar is something nice to find.",
+              "提醒小心毛毛虫正好相反。发现毛毛虫是件美好的事。",
+            ),
+            t(
+              "Summer being the best season is not the argument. The goal is to get you to plant milkweed.",
+              "夏天最好不是论点。目的是让你去种马利筋。",
+            ),
+          ],
         },
       ],
     },

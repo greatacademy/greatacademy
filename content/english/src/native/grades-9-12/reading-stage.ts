@@ -40,6 +40,11 @@ The tragedies usually told old stories that the audience already knew, about the
             "The passage says the masks had clear expressions so that people in the highest rows could tell a king from a servant or grief from anger.",
             "文章说，面具的表情清楚，这样坐在最高几排的人也能分辨国王和仆人、悲伤和愤怒。",
           ),
+          [
+            t("Shame is never mentioned.", "文中没提羞愧。"),
+            t("Cost is never mentioned.", "文中没提成本。"),
+            t("The judges are never said to be fooled.", "文中没说要骗过评委。"),
+          ],
         ),
         ask(
           t("Where did the surprise of a Greek tragedy lie, according to the passage?", "根据文章，希腊悲剧的惊喜之处在哪里？"),
@@ -53,6 +58,11 @@ The tragedies usually told old stories that the audience already knew, about the
             "The audience already knew the stories, so the surprise was not in what happened but in how the writer made it feel.",
             "观众早已知道这些故事，所以惊喜不在于发生了什么，而在于作者怎样让它打动人心。",
           ),
+          [
+            t("The stories were already known.", "故事观众早已知道。"),
+            t("The stories were old, not new.", "故事是旧的，不是新的。"),
+            t("There were only two or three actors.", "演员只有两三个。"),
+          ],
         ),
         ask(
           t("What does the word catharsis name in the last paragraph?", "最后一段中的 catharsis 一词指的是什么？"),
@@ -66,6 +76,11 @@ The tragedies usually told old stories that the audience already knew, about the
             "Context clues: watching a ruler fall, the audience felt pity and fear and left somehow cleansed; Aristotle called this feeling catharsis.",
             "上下文线索：看着统治者倒下，观众感到怜悯和恐惧，离开时仿佛得到了净化；亚里士多德把这种感受称为 catharsis。",
           ),
+          [
+            t("Masks are a separate thing.", "面具是另一回事。"),
+            t("The contests are not catharsis.", "比赛不是“净化”。"),
+            t("The building is the costume house.", "那栋建筑是换装用的。"),
+          ],
         ),
         ask(
           t("Which god did the Athenian festival of plays honor?", "雅典的戏剧节是为了纪念哪位神？"),
@@ -76,6 +91,11 @@ The tragedies usually told old stories that the audience already knew, about the
             t("Apollo, the god of the sun", "太阳神阿波罗"),
           ],
           t("The festival honored Dionysus, the god of wine and celebration.", "这个节日纪念酒神与欢庆之神狄俄尼索斯。"),
+          [
+            t("Zeus is never mentioned.", "文中没提宙斯。"),
+            t("Athena is never mentioned.", "文中没提雅典娜。"),
+            t("Apollo is never mentioned.", "文中没提阿波罗。"),
+          ],
         ),
       ],
       ["Athens", "Dionysus", "Aeschylus", "Sophocles", "Euripides", "Aristotle", "Greeks", "Greek"],
@@ -106,6 +126,11 @@ All the roles, including those of women, were played by men and boys. Shakespear
             "The first paragraph says the landlord had refused to renew the lease, so they carried the timbers across the river to build the Globe.",
             "第一段说，房东拒绝续租，于是他们把木料运过河，建起了环球剧场。",
           ),
+          [
+            t("The Globe burned later, in 1613.", "环球剧院是后来 1613 年才烧毁的。"),
+            t("No queen's order is mentioned.", "文中没提女王的命令。"),
+            t("The chorus belongs to Greek theater.", "歌队属于希腊戏剧。"),
+          ],
         ),
         ask(
           t(
@@ -122,6 +147,11 @@ All the roles, including those of women, were played by men and boys. Shakespear
             "Plays used daylight and had little scenery, so a writer had to set the scene with words.",
             "演出依靠日光，几乎没有布景，所以作者必须用文字来交代场景。",
           ),
+          [
+            t("The audience was loud but could hear.", "观众很吵，但听得见。"),
+            t("Forgetting lines is not the reason.", "忘词不是原因。"),
+            t("Plays were in the afternoon.", "戏在下午演。"),
+          ],
         ),
         ask(
           t(
@@ -138,6 +168,11 @@ All the roles, including those of women, were played by men and boys. Shakespear
             "Audiences were loud, so a playwright had to give them sword fights, jokes and ghosts as well as great speeches.",
             "观众很吵闹，所以剧作家除了精彩的独白，还得提供剑斗、笑话和鬼魂。",
           ),
+          [
+            t("Silence would lose them.", "沉默会让观众走神。"),
+            t("The penny crowd stood closest.", "一便士观众站得最近。"),
+            t("Men and boys played women.", "男人和男孩扮演女性角色。"),
+          ],
         ),
         ask(
           t("How much did the poorer members of the audience pay?", "较穷的观众付多少钱？"),
@@ -147,6 +182,11 @@ All the roles, including those of women, were played by men and boys. Shakespear
             "In the center, standing on the bare ground, were the poorer members of the audience, who paid a single penny.",
             "站在中间空地上的是较穷的观众，他们只付一便士。",
           ),
+          [
+            t("Three pennies is for better seats elsewhere.", "三便士是别处的说法。"),
+            t("A pound is far too much.", "一英镑太多了。"),
+            t("They did pay.", "他们确实付了钱。"),
+          ],
         ),
       ],
       ["London", "Globe", "William", "Shakespeare", "Shakespeare's", "Hamlet", "Macbeth"],
@@ -179,6 +219,11 @@ Dramatic irony adds to the tension throughout. When the audience knows something
             "The passage says the flaw is very often hubris, a pride so great that the character believes they cannot be wrong or beaten.",
             "文章说，这种缺陷往往是傲慢，骄傲到让人物以为自己不会错、不会被打败。",
           ),
+          [
+            t("Laziness is not a heroic flaw.", "懒惰不是英雄的缺陷。"),
+            t("The hero is not wicked.", "主人公并不邪恶。"),
+            t("The hero begins high, not poor.", "主人公起点很高，并不贫穷。"),
+          ],
         ),
         ask(
           t("What is a reversal, as described in the passage?", "文章所描述的“逆转”是什么？"),
@@ -192,6 +237,11 @@ Dramatic irony adds to the tension throughout. When the audience knows something
             "The passage defines a reversal as the moment when the action the character hoped would save them is exactly what destroys them.",
             "文章把逆转定义为：人物希望用来自救的行动，恰恰把他毁掉的时刻。",
           ),
+          [
+            t("Nothing is performed backward.", "没有倒着演。"),
+            t("Villain and hero do not swap.", "反派和英雄没有互换。"),
+            t("Learning a secret is dramatic irony.", "观众知道秘密是戏剧反讽。"),
+          ],
         ),
         ask(
           t(
@@ -208,6 +258,11 @@ Dramatic irony adds to the tension throughout. When the audience knows something
             "When the audience knows something a character does not, the character's confidence shows how little they understand their danger.",
             "当观众知道人物所不知道的事情时，人物的自信恰恰说明他对自身危险知之甚少。",
           ),
+          [
+            t("Volume is not the reason.", "音量不是原因。"),
+            t("The chorus is a separate passage.", "歌队是另一篇。"),
+            t("The character means it.", "角色是真心的。"),
+          ],
         ),
         ask(
           t("What is the climax of a tragedy?", "悲剧的高潮是什么？"),
@@ -221,6 +276,11 @@ Dramatic irony adds to the tension throughout. When the audience knows something
             "At the climax, the highest point of tension, the protagonist reaches a point of no return.",
             "高潮是张力的最高点，主人公从此无法回头。",
           ),
+          [
+            t("The opening is exposition.", "开头是交代部分。"),
+            t("The final resolution is the denouement.", "最后结局是收场。"),
+            t("The starting event is the inciting incident.", "引发冲突的是诱发事件。"),
+          ],
         ),
       ],
       ["Athens"],
@@ -251,6 +311,11 @@ When you read a play with a chorus, pay attention to the gap between what the ch
             "The first paragraph says writers added one actor, then a second, then a third, and the chorus gradually gave up the center of the stage.",
             "第一段说，作者先后增加了第一、第二、第三个演员，歌队逐渐让出了舞台中心。",
           ),
+          [
+            t("It did not replace them.", "它没有取代演员。"),
+            t("It never disappeared.", "它从未消失。"),
+            t("Comedies are not mentioned.", "文中没提喜剧。"),
+          ],
         ),
         ask(
           t("Which of these is NOT a job of the chorus described in the passage?", "以下哪一项不是文章所描述的歌队的职能？"),
@@ -264,6 +329,11 @@ When you read a play with a chorus, pay attention to the gap between what the ch
             "The passage lists background information, reactions, advice and time to think; the protagonist is played by an actor, not the chorus.",
             "文章列出了提供背景、作出反应、给出建议和留出思考时间；主人公由演员扮演，而不是歌队。",
           ),
+          [
+            t("Background is one of its jobs.", "交代背景是它的职责之一。"),
+            t("Reacting is one of its jobs.", "反应是它的职责之一。"),
+            t("Giving time to think is one of its jobs.", "给观众思考时间是它的职责之一。"),
+          ],
         ),
         ask(
           t("According to the last paragraph, what gap is a source of a tragedy's power?", "根据最后一段，哪种差距是悲剧力量的来源之一？"),
@@ -277,6 +347,11 @@ When you read a play with a chorus, pay attention to the gap between what the ch
             "The chorus often sees the danger clearly while the protagonist rushes on, and that gap is a source of power.",
             "歌队常常清楚地看到危险，而主人公却一意孤行，这种差距就是悲剧力量的来源之一。",
           ),
+          [
+            t("Seats are the Globe's topic.", "座位属于环球剧院那篇。"),
+            t("Acts are not discussed.", "文中没讨论幕次。"),
+            t("Stage distance is not discussed.", "文中没讨论舞台距离。"),
+          ],
         ),
         ask(
           t("How did a Greek chorus speak, though it was made of many people?", "希腊歌队虽然由很多人组成，却怎样说话？"),
@@ -290,6 +365,11 @@ When you read a play with a chorus, pay attention to the gap between what the ch
             "A Greek chorus spoke and sang as a single character, though it was made up of many people.",
             "希腊歌队虽由很多人组成，却作为一个角色说唱。",
           ),
+          [
+            t("It spoke as one group.", "它作为一个整体说话。"),
+            t("Masks of kings are actors' masks.", "国王面具属于演员。"),
+            t("It sang and spoke.", "它既唱也说。"),
+          ],
         ),
       ],
       ["Greek", "Shakespeare"],
@@ -322,6 +402,11 @@ She stumbled once, in the third act, and the actor beside her covered the moment
             "An understudy learns a role in case the regular actor cannot go on, just as insurance protects against something going wrong.",
             "替补演员学习角色，以防正式演员不能上台，就像保险是用来防备意外的。",
           ),
+          [
+            t("Money is not her role.", "管钱不是她的职责。"),
+            t("She sat in the back row learning.", "她坐在后排学习。"),
+            t("Tickets are never mentioned.", "文中没提卖票。"),
+          ],
         ),
         ask(
           t("How does Maya's fear change when she steps onto the stage?", "玛雅走上舞台时，她的恐惧发生了什么变化？"),
@@ -335,6 +420,11 @@ She stumbled once, in the third act, and the actor beside her covered the moment
             "The passage says the fear did not leave, but it changed into energy, sharp and bright.",
             "文章说，恐惧并没有消失，而是变成了敏锐而明亮的能量。",
           ),
+          [
+            t("The fear did not leave.", "恐惧并没离开。"),
+            t("She spoke clearly.", "她说得很清楚。"),
+            t("She stays and performs.", "她留在台上演出。"),
+          ],
         ),
         ask(
           t('What does the director\'s final line, "Not anymore," suggest?', "导演最后一句“Not anymore”暗示了什么？"),
@@ -348,6 +438,11 @@ She stumbled once, in the third act, and the actor beside her covered the moment
             "The director returns to the word he used at the start; after her success, she is no longer only a backup.",
             "导演用回开头说过的那个词；她成功之后，就不再只是一个备用人选了。",
           ),
+          [
+            t("He is praising her.", "他是在称赞她。"),
+            t("Money is not his meaning.", "他说的与钱无关。"),
+            t("The lead only had a fever.", "主演只是发烧了。"),
+          ],
         ),
         ask(
           t("Why did Maya have to perform on opening night?", "为什么首演夜玛雅必须上台？"),
@@ -358,6 +453,11 @@ She stumbled once, in the third act, and the actor beside her covered the moment
             t("The play was changed", "剧目改了"),
           ],
           t("The lead actor had a fever and could barely speak.", "主演发烧了，几乎说不出话。"),
+          [
+            t("The director did not choose her.", "导演没有挑选她。"),
+            t("The lead was ill, not late.", "主演是生病，不是迟到。"),
+            t("The play was changed only slightly.", "剧本只是小改。"),
+          ],
         ),
       ],
       ["Maya", "Okonkwo", "Macbeth"],
@@ -388,6 +488,11 @@ Farce is also extremely hard to perform. Timing must be exact: a door that opens
             "The passage says the difference lies mainly in how we feel: we care about a tragic protagonist but stay at a distance in a farce.",
             "文章说，区别主要在于我们的感受：我们关心悲剧主人公，而对闹剧人物则保持距离。",
           ),
+          [
+            t("Both have structure.", "两者都有结构。"),
+            t("Both use dramatic irony.", "两者都用戏剧反讽。"),
+            t("Length is never compared.", "文中没比较长短。"),
+          ],
         ),
         ask(
           t("Why do actors in a farce rehearse like dancers?", "为什么闹剧演员要像舞者一样排练？"),
@@ -401,6 +506,11 @@ Farce is also extremely hard to perform. Timing must be exact: a door that opens
             "The passage says timing must be exact, since a door that opens one second too late can kill a joke.",
             "文章说，时机必须精确，因为一扇门晚开一秒就可能毁掉一个笑点。",
           ),
+          [
+            t("Farces need not have dances.", "闹剧不一定有舞蹈。"),
+            t("They have lines.", "他们有台词。"),
+            t("Stage size is not mentioned.", "文中没提舞台大小。"),
+          ],
         ),
         ask(
           t(
@@ -417,6 +527,11 @@ Farce is also extremely hard to perform. Timing must be exact: a door that opens
             "The phrase joins opposite ideas: what looks like chaos is the product of exact planning, as the paragraph says every fall is planned to the inch.",
             "这个说法把相反的概念放在一起：看起来的混乱其实是精确策划的产物，正如这一段所说，每一次摔倒都经过分毫不差的设计。",
           ),
+          [
+            t("Machines are only a metaphor.", "机器只是比喻。"),
+            t("It is all planned.", "一切都是计划好的。"),
+            t("The audience only watches.", "观众只是看。"),
+          ],
         ),
         ask(
           t("What kind of characters usually appear in a farce?", "闹剧里通常是什么样的人物？"),
@@ -426,6 +541,11 @@ Farce is also extremely hard to perform. Timing must be exact: a door that opens
             "The characters are usually types, such as the jealous husband, the clever servant or the nervous guest.",
             "人物通常是类型化的，如嫉妒的丈夫、聪明的仆人或紧张的客人。",
           ),
+          [
+            t("Characters are not deep.", "人物并不深刻。"),
+            t("Gods and kings belong to tragedy.", "神和国王属于悲剧。"),
+            t("History is not mentioned.", "文中没提历史人物。"),
+          ],
         ),
       ],
     ),
@@ -460,6 +580,11 @@ Older plays often have very few stage directions, because writers expected to di
             "The passage says these few words tell you that the family is tired, perhaps struggling, and that something has been left undone.",
             "文章说，这寥寥几个词告诉你，这个家庭很疲惫，也许在挣扎，还有事情没做完。",
           ),
+          [
+            t("A messy kitchen does not suggest wealth.", "凌乱的厨房不说明富有。"),
+            t("It is late at night, not a party.", "是深夜，不是聚会。"),
+            t("The dishes are undone, not shared work.", "碗没洗，不是一起做饭。"),
+          ],
         ),
         ask(
           t("What is subtext, as the passage uses the word?", "文章中使用的 subtext 一词是什么意思？"),
@@ -473,6 +598,11 @@ Older plays often have very few stage directions, because writers expected to di
             "The passage defines subtext as the meaning beneath the words, as when a polite chat hides a real conversation underneath.",
             "文章把 subtext 定义为话语之下的含义，就像一场客气的闲聊下面隐藏着真正的对话。",
           ),
+          [
+            t("It is not printed text.", "它不是印出来的文字。"),
+            t("It is not a translation.", "它不是翻译。"),
+            t("The list of characters is not subtext.", "人物表不是潜台词。"),
+          ],
         ),
         ask(
           t(
@@ -489,6 +619,11 @@ Older plays often have very few stage directions, because writers expected to di
             'The last paragraph says that in older plays you must find the clues in the dialogue, as when "Why do you weep?" shows that another character is crying.',
             '最后一段说，在老剧本中，你必须从对白中找线索，比如 "Why do you weep?" 说明另一个人物在哭。',
           ),
+          [
+            t("Reviews are not mentioned.", "文中没提剧评。"),
+            t("The clues are there.", "线索是存在的。"),
+            t("Costumes are not mentioned.", "文中没提服装。"),
+          ],
         ),
       ],
     ),
@@ -548,6 +683,11 @@ Notice how little either character says directly. Daniel never explains why he i
             "Mr. Reyes never asks Daniel to stay; sharing his own story is a way to reach him, and Daniel almost smiles in response.",
             "雷耶斯先生从未要求丹尼尔留下；讲自己的故事是接近儿子的方式，丹尼尔听后差点笑了。",
           ),
+          [
+            t("He tells a modest story.", "他讲的是平实的往事。"),
+            t("He ran out of money then, not now.", "他当年没钱，不是现在要钱。"),
+            t("He lets Daniel choose.", "他让丹尼尔自己选。"),
+          ],
         ),
         ask(
           t("What does the opening of the umbrella at the end suggest?", "结尾撑开雨伞暗示了什么？"),
@@ -561,6 +701,11 @@ Notice how little either character says directly. Daniel never explains why he i
             "The father holds the umbrella over both of them, a gesture of care and presence that the stage direction shows without any words.",
             "父亲把伞撑在两人头上，这个舞台说明不用任何台词就表现出关怀与陪伴。",
           ),
+          [
+            t("He sits and stays.", "他坐着不走。"),
+            t("It is still raining.", "雨还在下。"),
+            t("Daniel sits down again.", "丹尼尔又坐下了。"),
+          ],
         ),
         ask(
           t(
@@ -577,6 +722,11 @@ Notice how little either character says directly. Daniel never explains why he i
             "The last paragraph explains that the repeated line changes meaning because now Daniel is choosing not to go.",
             "最后一段解释说，重复的台词含义变了，因为此时丹尼尔选择了不走。",
           ),
+          [
+            t("The bus is there; he chooses not to go.", "车就在那里，他选择不走。"),
+            t("Daniel says it both times.", "两次都是丹尼尔说的。"),
+            t("No driver is mentioned.", "文中没提司机。"),
+          ],
         ),
       ],
       ["Daniel", "Reyes", "DANIEL", "REYES", "MR"],

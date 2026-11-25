@@ -48,6 +48,11 @@ Yet the passage has lasted because it names the problem clearly. Every translato
             "The first paragraph says translation has three difficulties: faithfulness, expressiveness and elegance.",
             "第一段说翻译有三难：信、达、雅。",
           ),
+          [
+            t("Speed and cost are not among his standards.", "速度和成本不在他的标准之中。"),
+            t("These are details of writing, not his three difficulties.", "这些是书写细节，不是他说的三难。"),
+            t("These are the subjects he translated, not the standards.", "这些是他翻译的主题，不是标准。"),
+          ],
         ),
         ask(
           t("Why did Yan Fu write in classical Chinese?", "严复为什么用文言文写作？"),
@@ -61,6 +66,11 @@ Yet the passage has lasted because it names the problem clearly. Every translato
             "The third paragraph says he wrote in classical Chinese to reach the educated readers he most wanted to persuade, a style they respected.",
             "第三段说他用文言文是为了打动他最想说服的有学问的读者，因为他们尊重这种文体。",
           ),
+          [
+            t("He studied abroad and knew plain language too; it was a choice.", "他留过学，也会写浅白文字，用文言是有意选择。"),
+            t("Huxley is not said to ask for anything.", "文中没说赫胥黎提过要求。"),
+            t("Classical Chinese is harder, and he wrote for scholars.", "文言更难懂，他是写给读书人看的。"),
+          ],
         ),
         ask(
           t("In what way was Yan Fu's translation not fully faithful?", "严复的译本在哪方面不完全忠实？"),
@@ -74,6 +84,11 @@ Yet the passage has lasted because it names the problem clearly. Every translato
             "The fourth paragraph says Huxley argued ethics should resist nature's struggle, while Yan Fu's readers took the book as a call to win it.",
             "第四段说赫胥黎主张伦理应抵抗自然的竞争，而严复的读者却把这本书当作赢得竞争的号召。",
           ),
+          [
+            t("He rearranged and added, but kept the lectures.", "他调整、增补了内容，但讲稿都保留了。"),
+            t("It came from Huxley's English lectures.", "译本来自赫胥黎的英文讲稿。"),
+            t("He wrote in classical Chinese, the style scholars respected.", "他用的是读书人推崇的文言。"),
+          ],
         ),
         ask(
           t("Where had Yan Fu studied as a young man?", "严复年轻时在哪里学习？"),
@@ -84,6 +99,11 @@ Yet the passage has lasted because it names the problem clearly. Every translato
             t("At home with private teachers", "在家跟私塾先生"),
           ],
           t("As a young man he had studied at a naval college in Britain.", "他年轻时在英国的一所海军学院学习。"),
+          [
+            t("Tokyo is where Lu Xun studied.", "东京是鲁迅留学的地方。"),
+            t("Paris is not mentioned.", "文中没提巴黎。"),
+            t("He studied abroad, in Britain.", "他是出国留学的，去的是英国。"),
+          ],
         ),
       ],
       [
@@ -136,6 +156,11 @@ Lu Xun's hard translations are seldom read today, but his argument has proved in
             "The second paragraph defines hard translation as keeping the sentence structure of the original even when it made the Chinese sound awkward.",
             "第二段把硬译定义为即使中文听起来别扭，也保留原文的句子结构。",
           ),
+          [
+            t("It is about method, not the difficulty of the books.", "这说的是译法，不是书有多难。"),
+            t("That is the smooth method he rejected.", "那正是他反对的顺译。"),
+            t('Speed is not the meaning of "hard."', "这里的“硬”不是指慢。"),
+          ],
         ),
         ask(
           t("Why did Lu Xun believe hard translation was worth the difficulty?", "鲁迅为什么认为硬译值得这样的难度？"),
@@ -149,6 +174,11 @@ Lu Xun's hard translations are seldom read today, but his argument has proved in
             "The third paragraph says he believed Chinese lacked precision for modern thought and that importing foreign structures could enrich it.",
             "第三段说他认为当时的中文缺乏表达现代思想所需的精确性，引进外国句式可以丰富它。",
           ),
+          [
+            t("He accepted that readers would have to work.", "他承认读者要费力。"),
+            t("Hard translation was slower to read, not faster to make.", "硬译读起来更费劲，也不见得译得更快。"),
+            t("Publishers' pay is not mentioned.", "文中没提出版商的稿酬。"),
+          ],
         ),
         ask(
           t("What was Liang Shiqiu's main objection?", "梁实秋的主要反对意见是什么？"),
@@ -162,6 +192,11 @@ Lu Xun's hard translations are seldom read today, but his argument has proved in
             "The fourth paragraph says Liang asked what use a translation is if a reader cannot understand it, since a translator's duty is also to the reader.",
             "第四段说梁实秋问，读者看不懂的译文有什么用，因为译者也要对读者负责。",
           ),
+          [
+            t("Length of books is not his complaint.", "书的长短不是他批评的地方。"),
+            t("He wanted translators to serve readers, not ignore originals.", "他要译者顾及读者，不是不读原文。"),
+            t("He criticized one method, not translation itself.", "他批评的是一种译法，不是翻译本身。"),
+          ],
         ),
         ask(
           t("Where were the two brothers studying when they published their anthology?", "兄弟俩出版选集时在哪里留学？"),
@@ -171,6 +206,11 @@ Lu Xun's hard translations are seldom read today, but his argument has proved in
             "In 1909, two young Chinese brothers studying in Tokyo published a small anthology of stories.",
             "1909年，两个在东京留学的中国兄弟出版了一本小说选集。",
           ),
+          [
+            t("The stories came from Russia; they studied in Tokyo.", "小说来自俄国，他们是在东京留学的。"),
+            t("London is not mentioned.", "文中没提伦敦。"),
+            t("They were studying abroad, not in Beijing.", "他们在国外留学，不在北京。"),
+          ],
         ),
       ],
       [
@@ -224,6 +264,11 @@ Many critics now treat the English Gitanjali as a separate work, with its own be
             "The third paragraph says Tagore rendered the poems in plain prose, left out and combined poems, and lost the music of the Bengali.",
             "第三段说泰戈尔用平白的散文翻译，删去或合并了一些诗，孟加拉语的音乐性几乎完全丧失。",
           ),
+          [
+            t("Yeats wrote an introduction, not the poems.", "叶芝写的是序言，不是诗本身。"),
+            t("No printing mistake is mentioned.", "文中没提印刷错误。"),
+            t("The Bengali was full of rhyme and rhythm.", "孟加拉语原诗充满韵律和节奏。"),
+          ],
         ),
         ask(
           t("What did Tagore later admit about his translations?", "泰戈尔后来对自己的翻译承认了什么？"),
@@ -237,6 +282,11 @@ Many critics now treat the English Gitanjali as a separate work, with its own be
             "The fourth paragraph says that in later letters he admitted he had not been a good translator and the English versions gave a poor idea of the originals.",
             "第四段说他在后来的信中承认自己不是一个好的自译者，英文版没能很好地体现原作。",
           ),
+          [
+            t("He said they were worse, not better.", "他说译文不如原作，并没说更好。"),
+            t("He made them himself.", "译文是他自己做的。"),
+            t("He published them gladly at the time.", "他当时很乐意出版。"),
+          ],
         ),
         ask(
           t("How do many critics now treat the English Gitanjali?", "许多评论家现在如何看待英文版《吉檀迦利》？"),
@@ -250,12 +300,22 @@ Many critics now treat the English Gitanjali as a separate work, with its own be
             "The last paragraph says many critics treat it as a separate work with its own beauty, related to the Bengali but not equivalent to it.",
             "最后一段说许多评论家把它当作一部有自身之美的独立作品，与孟加拉语原作相关但不等同。",
           ),
+          [
+            t("It is not equivalent to the Bengali.", "它与孟加拉语原作并不对等。"),
+            t("Tagore wrote it himself.", "这是泰戈尔自己写的。"),
+            t("Newer translations also try to recover what was lost.", "较新的译本也在设法找回失去的东西。"),
+          ],
         ),
         ask(
           t("Which prize did Tagore win the year after his London visit?", "泰戈尔访问伦敦后的第二年获得了什么奖？"),
           t("The Nobel Prize in Literature", "诺贝尔文学奖"),
           [t("The Nobel Peace Prize", "诺贝尔和平奖"), t("A prize for music", "一个音乐奖"), t("A prize for translation", "一个翻译奖")],
           t("The following year, Tagore was awarded the Nobel Prize in Literature.", "第二年，泰戈尔获得了诺贝尔文学奖。"),
+          [
+            t("It was for literature, not peace.", "这是文学奖，不是和平奖。"),
+            t("He composed songs, but the prize was for literature.", "他也作曲，但获的是文学奖。"),
+            t("No translation prize is mentioned.", "文中没提翻译奖。"),
+          ],
         ),
       ],
       [
@@ -309,6 +369,11 @@ What is not in doubt is Garnett's achievement. Whatever her faults, she made a w
             "The third paragraph says she smoothed over or left out difficult phrases and that her steady style made very different authors sound alike.",
             "第三段说她会把难懂的短语抹平或略去，她平稳的风格使截然不同的作家听起来都一样。",
           ),
+          [
+            t("She translated about seventy volumes.", "她译了大约七十卷。"),
+            t("Her English was clear and graceful.", "她的英文清晰优美。"),
+            t("She smoothed and cut; she did not add chapters.", "她把难处抹平或删去，并没有加写章节。"),
+          ],
         ),
         ask(
           t("How were the newer translations of the 1990s criticized?", "二十世纪九十年代的新译本受到了怎样的批评？"),
@@ -322,6 +387,11 @@ What is not in doubt is Garnett's achievement. Whatever her faults, she made a w
             "The fourth paragraph says other readers criticized them as awkward and too literal, producing English no one would naturally write.",
             "第四段说其他读者批评它们生硬、过于直译，写出的英语没人会自然地那样写。",
           ),
+          [
+            t("They aimed to stay closer, not freer.", "他们力求更贴近原文，而不是更自由。"),
+            t("They were new versions, not copies.", "它们是新译本，不是抄袭。"),
+            t("They worked from the Russian.", "他们是从俄语直接翻译的。"),
+          ],
         ),
         ask(
           t("What does the writer say about comparing the translations?", "作者对比较这些译本是怎么说的？"),
@@ -335,6 +405,11 @@ What is not in doubt is Garnett's achievement. Whatever her faults, she made a w
             "The fifth paragraph says one reader will call the newer version truer and another Garnett's more readable, and both judgments can be supported with evidence.",
             "第五段说一个读者会说新版更忠实，另一个会说加内特的更好读，两种判断都能找到证据支持。",
           ),
+          [
+            t("It says both judgments can be supported.", "文中说两种判断都有依据。"),
+            t("Newer is not said to be better.", "文中没说越新越好。"),
+            t("It calls comparing instructive.", "文中说比较很有启发。"),
+          ],
         ),
         ask(
           t("Why did Constance Garnett's secretary read the Russian aloud to her?", "为什么康斯坦斯·加内特的秘书要把俄文念给她听？"),
@@ -345,6 +420,11 @@ What is not in doubt is Garnett's achievement. Whatever her faults, she made a w
             t("She was working on two books at once", "她同时在译两本书"),
           ],
           t("Her eyesight grew so weak that a secretary read the Russian aloud to her.", "她的视力变得很差，秘书只好把俄文念给她听。"),
+          [
+            t("She knew Russian well.", "她精通俄语。"),
+            t("Music is not the reason.", "原因不是喜欢听词语的音韵。"),
+            t("Two books at once is not mentioned.", "文中没提她同时译两本书。"),
+          ],
         ),
       ],
       [
@@ -404,6 +484,11 @@ No version is simply right. Each serves a different reader: one who wants a beau
             "The first paragraph says its court Japanese is full of hints and poetry, and characters are referred to by ranks or titles that change.",
             "第一段说它的宫廷日语充满暗示和诗歌，人物用会变化的官阶或头衔来称呼。",
           ),
+          [
+            t("It can be read; it is just hard.", "这部作品是可以读的，只是难读。"),
+            t("It is very long.", "这部作品篇幅很长。"),
+            t("The author is not said to forbid it.", "文中没说作者禁止翻译。"),
+          ],
         ),
         ask(
           t("How did Waley's version differ from Seidensticker's?", "韦利的译本和赛登施蒂克的译本有什么不同？"),
@@ -417,6 +502,11 @@ No version is simply right. Each serves a different reader: one who wants a beau
             "The second and third paragraphs say Waley took liberties in flowing English, while Seidensticker cut nothing and wrote in a plainer, spare style.",
             "第二段和第三段说韦利以流畅的英语随意发挥，而赛登施蒂克一字不删，文风更朴素简洁。",
           ),
+          [
+            t("Waley cut a chapter; Seidensticker cut nothing.", "韦利删了一章，赛登施蒂克一点也没删。"),
+            t("Tyler, not Waley, added notes.", "加注释的是泰勒，不是韦利。"),
+            t("All three are in English.", "三个译本都是英文的。"),
+          ],
         ),
         ask(
           t("What is the writer's conclusion about the three versions?", "作者对这三个版本的结论是什么？"),
@@ -430,6 +520,11 @@ No version is simply right. Each serves a different reader: one who wants a beau
             "The last paragraph says no version is simply right and each serves a different reader.",
             "最后一段说没有哪个版本是绝对正确的，每个版本服务于不同的读者。",
           ),
+          [
+            t("No single version is called right.", "作者没说哪一个译本才对。"),
+            t("Readers fell in love with Waley's.", "读者都爱上了韦利的译本。"),
+            t("Tyler's is called the most faithful.", "泰勒的译本被认为最忠实。"),
+          ],
         ),
         ask(
           t("Who wrote The Tale of Genji?", "谁写了《源氏物语》？"),
@@ -439,6 +534,11 @@ No version is simply right. Each serves a different reader: one who wants a beau
             "A woman at the imperial court of Japan, known to us as Murasaki Shikibu, wrote a long work of fiction.",
             "日本宫廷中一位被我们称为紫式部的女子写了一部长篇小说。",
           ),
+          [
+            t("Waley translated it.", "韦利是译者。"),
+            t("Genji is the character, not the author.", "源氏是书中人物，不是作者。"),
+            t("Tyler translated it.", "泰勒是译者。"),
+          ],
         ),
       ],
       [
@@ -488,6 +588,11 @@ Borges loved such puzzles, and his stories have been translated into dozens of l
             "The first paragraph says his project was not to copy or modernize but to produce pages that would coincide word for word with Cervantes's original.",
             "第一段说他的计划不是抄写或改写成现代版，而是写出与塞万提斯原作逐字吻合的篇章。",
           ),
+          [
+            t("The story says he did not copy it.", "故事说他不是抄写。"),
+            t("Not a modern version, the story says.", "故事说不是写一个现代版本。"),
+            t("He wrote in Spanish; he did not translate.", "他用西班牙语写，并没有翻译。"),
+          ],
         ),
         ask(
           t(
@@ -504,6 +609,11 @@ Borges loved such puzzles, and his stories have been translated into dozens of l
             "The third paragraph says that written by a modern man with later knowledge, the same words become a different and astonishing idea.",
             "第三段说由一个拥有后世知识的现代人写出来，同样的词就变成了一个不同的、惊人的思想。",
           ),
+          [
+            t("The words are identical.", "两段文字一字不差。"),
+            t("Printing is not mentioned.", "文中没提印刷问题。"),
+            t("His Spanish is old-fashioned, not French.", "他写的是古雅的西班牙语，不是法语。"),
+          ],
         ),
         ask(
           t("What does the story suggest about translation?", "这个故事对翻译有什么启示？"),
@@ -520,6 +630,11 @@ Borges loved such puzzles, and his stories have been translated into dozens of l
             "The fifth paragraph says a translator cannot simply carry words over, because words carry their meaning partly from their place in a culture.",
             "第五段说译者不能简单地搬运词语，因为词语的部分含义来自它们在文化中的位置。",
           ),
+          [
+            t("Knowing both languages is not enough, it suggests.", "它暗示只懂两种语言还不够。"),
+            t("It matters for translation; it does not forbid it.", "它说明了翻译的难处，但没有禁止翻译。"),
+            t("Menard rejected becoming Cervantes as too easy.", "梅纳尔认为变成塞万提斯太容易，所以放弃了。"),
+          ],
         ),
         ask(
           t("Which classic did Pierre Menard try to write again?", "皮埃尔·梅纳尔想重写哪部经典？"),
@@ -529,6 +644,11 @@ Borges loved such puzzles, and his stories have been translated into dozens of l
             "Menard's greatest project was to write pages identical to Don Quixote.",
             "梅纳尔最大的计划是写出与《堂吉诃德》一模一样的篇章。",
           ),
+          [
+            t("Genji is the Japanese novel.", "《源氏物语》是日本小说。"),
+            t("Gitanjali is Tagore's poems.", "《吉檀迦利》是泰戈尔的诗集。"),
+            t("War and Peace is Tolstoy's.", "《战争与和平》是托尔斯泰写的。"),
+          ],
         ),
       ],
       [
@@ -577,6 +697,11 @@ For everyday purposes, machine translation is a remarkable tool. For literature,
             "The second paragraph says the program had a small vocabulary and carefully chosen sentences, and real language proved far harder.",
             "第二段说程序词汇量很小，句子经过精心挑选，而真实的语言要难得多。",
           ),
+          [
+            t("No breakdown is mentioned.", "文中没提电脑坏了。"),
+            t("Russian scientists are not said to refuse.", "文中没说苏联科学家拒绝。"),
+            t("The government was eager to read Russian.", "政府很想读懂俄文资料。"),
+          ],
         ),
         ask(
           t("What new approach did researchers take in the 1990s?", "研究人员在二十世纪九十年代采取了什么新方法？"),
@@ -590,6 +715,11 @@ For everyday purposes, machine translation is a remarkable tool. For literature,
             "The third paragraph says they gave computers huge collections of texts in two languages and let them calculate which words and phrases corresponded.",
             "第三段说他们给计算机大量双语文本，让它计算哪些词和短语通常相对应。",
           ),
+          [
+            t("Hand-written rules were the old approach.", "手写规则是旧方法。"),
+            t("No human speaking is mentioned.", "文中没提人对电脑说话。"),
+            t("Short sentences were the 1954 trick.", "挑短句是1954年演示的手法。"),
+          ],
         ),
         ask(
           t(
@@ -606,6 +736,11 @@ For everyday purposes, machine translation is a remarkable tool. For literature,
             "The fifth paragraph says a smooth sentence that is confidently wrong can be more dangerous, since its fluency hides the mistake.",
             "第五段说一个自信而错误的流畅句子可能更危险，因为它的流畅掩盖了错误。",
           ),
+          [
+            t("Speed is not the issue.", "问题不在速度。"),
+            t("Length is not the issue.", "问题不在长短。"),
+            t("Anyone can read it; that is the danger.", "谁都能读懂它，这才危险。"),
+          ],
         ),
       ],
       ["IBM", "Georgetown", "New", "York", "Russian", "English", "Cold", "War", "United", "Nations", "European", "Union", "January"],
@@ -641,6 +776,11 @@ Sometimes, the answer is to borrow. English has taken thousands of words from ot
             "The third paragraph says the meaning is not missing; what is missing is a single English word with the same meaning and associations.",
             "第三段说缺少的不是意思，而是一个含义和联想都相同的英语单词。",
           ),
+          [
+            t("The lists do explain the meaning.", "这些清单确实解释了词义。"),
+            t("Dictionaries are not the missing thing.", "缺的不是词典。"),
+            t("Bilingual people are not discussed.", "文中没讨论双语者。"),
+          ],
         ),
         ask(
           t("What romantic idea do some linguists warn against?", "一些语言学家告诫人们不要有什么浪漫化的想法？"),
@@ -654,6 +794,11 @@ Sometimes, the answer is to borrow. English has taken thousands of words from ot
             "The fourth paragraph warns against the idea that a people without a word for a feeling cannot have the feeling.",
             "第四段告诫人们不要认为一个没有某种感受之词的民族就不会有这种感受。",
           ),
+          [
+            t("The passage says languages divide experience differently.", "文章说不同语言划分经验的方式不同。"),
+            t("Borrowing is described as natural.", "借词被描述成很自然的事。"),
+            t("No ranking of songs is made.", "文中没有比较歌曲优劣。"),
+          ],
         ),
         ask(
           t("What choices does the passage say a translator faces with such a word?", "文章说面对这样的词，译者有哪些选择？"),
@@ -667,6 +812,11 @@ Sometimes, the answer is to borrow. English has taken thousands of words from ot
             "The fifth paragraph lists keeping and explaining the word, finding a near equivalent, or using a longer phrase, none of them perfect.",
             "第五段列出了保留并解释、找近似对等词、或使用较长短语这几种选择，没有一种是完美的。",
           ),
+          [
+            t("Deleting is not among the choices.", "删除不在这些选择之中。"),
+            t("Asking others is not mentioned.", "文中没提去问别人。"),
+            t("Literal translation is not one of the options.", "直译不在列出的选择之中。"),
+          ],
         ),
       ],
       [

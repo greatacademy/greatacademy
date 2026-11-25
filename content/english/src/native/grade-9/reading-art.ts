@@ -42,6 +42,11 @@ Auden's poem does something the painting cannot. It tells us what to notice, and
             "The second paragraph says most of the canvas is filled with an ordinary scene and Icarus is almost impossible to find.",
             "第二段说画面大部分是日常景象，几乎找不到伊卡洛斯。",
           ),
+          [
+            t("Icarus is two small legs in a corner.", "伊卡洛斯只是角落里的两条小腿。"),
+            t("The sun's color is never discussed.", "文中从没讨论太阳的颜色。"),
+            t("Daedalus is not shown at work in the painting.", "画中没有画代达罗斯造翅膀。"),
+          ],
         ),
         ask(
           t("According to Auden's poem, what did the old painters understand about suffering?", "根据奥登的诗，古代画家对苦难有什么理解？"),
@@ -55,6 +60,11 @@ Auden's poem does something the painting cannot. It tells us what to notice, and
             "The third paragraph says the old painters knew suffering takes place while others are eating, opening a window or walking dully along.",
             "第三段说古代画家明白，苦难发生时别人正在吃饭、开窗或无聊地走着。",
           ),
+          [
+            t("The sky is only where Icarus fell from.", "天空只是伊卡洛斯坠落的地方。"),
+            t("The painters did paint it.", "这些画家确实画了苦难。"),
+            t("The poem says everyone turns away.", "诗里说人人都转过身去。"),
+          ],
         ),
         ask(
           t("What can the poem do that the painting cannot?", "这首诗能做到哪些画做不到的事？"),
@@ -68,6 +78,11 @@ Auden's poem does something the painting cannot. It tells us what to notice, and
             "The last paragraph says Auden's poem tells us what to notice and adds a quiet, ironic voice, while the painting makes us search.",
             "最后一段说奥登的诗告诉我们该注意什么，并加入一种平静而反讽的声音，而画则让我们去寻找。",
           ),
+          [
+            t("The sea's colors are the painting's work.", "画出海的颜色是画的长处。"),
+            t("Making us search is what the painting does.", "让我们去找正是画的作用。"),
+            t("The ploughing farmer is in the painting.", "犁地的农夫在画里。"),
+          ],
         ),
         ask(
           t("What were Icarus's wings made of?", "伊卡洛斯的翅膀是用什么做的？"),
@@ -77,6 +92,11 @@ Auden's poem does something the painting cannot. It tells us what to notice, and
             "Daedalus made wings of feathers and wax so that he and his son could escape.",
             "代达罗斯用羽毛和蜡做了翅膀，让他和儿子得以逃走。",
           ),
+          [
+            t("Wood and cloth are not mentioned.", "文中没提木头和布。"),
+            t("Leaves and string are not mentioned.", "文中没提树叶和绳子。"),
+            t("Paper and glue are not mentioned.", "文中没提纸和胶水。"),
+          ],
         ),
       ],
       [
@@ -134,6 +154,11 @@ The story is a reminder that critics can be wrong, especially about new art. It 
             "The first paragraph says they had been rejected by the official art exhibition in Paris and decided to hold one of their own.",
             "第一段说他们被巴黎的官方美术展拒绝，决定自己办展。",
           ),
+          [
+            t("No king is mentioned.", "文中没提国王。"),
+            t("The official exhibition went on without them.", "官方展览照常举行，只是没有他们。"),
+            t("Leroy came after, to mock them.", "勒鲁瓦是事后来嘲讽的。"),
+          ],
         ),
         ask(
           t("How did the young painters' work differ from the official taste?", "年轻画家的作品与官方趣味有何不同？"),
@@ -147,6 +172,11 @@ The story is a reminder that critics can be wrong, especially about new art. It 
             "The second paragraph says they worked quickly outdoors to capture light, with loose and visible brushstrokes and bright colors.",
             "第二段说他们在户外快速作画以捕捉光线，笔触松散可见，色彩明亮。",
           ),
+          [
+            t("Religious subjects were the official taste.", "宗教题材是官方喜好。"),
+            t("Hidden brushstrokes were the official style.", "看不见的笔触是官方风格。"),
+            t("They often worked outdoors, quickly.", "他们常在户外快速作画。"),
+          ],
         ),
         ask(
           t("What did Leroy mean by calling the painters Impressionists?", "勒鲁瓦称这些画家为“印象派”是什么意思？"),
@@ -160,12 +190,22 @@ The story is a reminder that critics can be wrong, especially about new art. It 
             "The fourth paragraph says he meant it as an insult, suggesting they could produce only vague impressions, not real art.",
             "第四段说他把这当作一种侮辱，暗指他们只能画出模糊的印象，而非真正的艺术。",
           ),
+          [
+            t("He meant it as mockery, not praise.", "他是在嘲讽，不是夸奖。"),
+            t("He called them unfinished, not the best.", "他说他们没画完，不是最好的。"),
+            t("They painted; they did not print.", "他们是画画，不是印刷。"),
+          ],
         ),
         ask(
           t("What did Monet call his painting of the harbor at Le Havre?", "莫奈把他画的勒阿弗尔港口叫什么？"),
           t("Impression, Sunrise", "《印象·日出》"),
           [t("The Great Wave", "《神奈川冲浪里》"), t("Morning Mist", "《晨雾》"), t("Boats on a River", "《河上的船》")],
           t("He called it Impression, Sunrise.", "他把它称为《印象·日出》。"),
+          [
+            t("The Great Wave is Hokusai's print.", "《神奈川冲浪里》是北斋的版画。"),
+            t("Mist is in the picture, not the title.", "雾是画中景物，不是画名。"),
+            t("Boats on a river is a common subject, not the title.", "河上小船是常见题材，不是画名。"),
+          ],
         ),
       ],
       [
@@ -222,6 +262,11 @@ The painting has become one of the most famous images against war. A copy hangs 
             "The second paragraph says that when he read the reports and saw the photographs of Guernica, he abandoned his earlier ideas.",
             "第二段说他读到格尔尼卡的报道并看到照片后，放弃了原有的构思。",
           ),
+          [
+            t("The government had asked him to paint.", "是政府请他作画的。"),
+            t("Paint is never mentioned.", "文中没提颜料。"),
+            t("The fair went ahead that summer.", "世博会那年夏天照常举行。"),
+          ],
         ),
         ask(
           t("Why might Picasso have painted Guernica only in black, white and gray?", "毕加索为什么可能只用黑、白、灰来画《格尔尼卡》？"),
@@ -235,6 +280,11 @@ The painting has become one of the most famous images against war. A copy hangs 
             "The third paragraph says it was painted only in black, white and gray, like a newspaper photograph.",
             "第三段说它只用黑、白、灰绘成，就像一张报纸照片。",
           ),
+          [
+            t("Cost is never mentioned.", "文中没提成本。"),
+            t("Size had nothing to do with color.", "尺寸与颜色无关。"),
+            t("No order about color is mentioned.", "文中没提有关颜色的命令。"),
+          ],
         ),
         ask(
           t("When did Picasso say the painting could return to Spain?", "毕加索说这幅画什么时候才能回到西班牙？"),
@@ -248,6 +298,11 @@ The painting has become one of the most famous images against war. A copy hangs 
             "The fifth paragraph says Picasso said it should not return to Spain until democracy was restored there.",
             "第五段说毕加索表示，在西班牙恢复民主之前，这幅画不应回去。",
           ),
+          [
+            t("After the fair it toured the world.", "世博会后它在世界巡展。"),
+            t("Rebuilding the town is never the condition.", "重建小镇从不是条件。"),
+            t("He refused to explain it at all.", "他根本拒绝解释。"),
+          ],
         ),
         ask(
           t("Where does a copy of Guernica hang today?", "今天《格尔尼卡》的一件复制品挂在哪里？"),
@@ -258,6 +313,11 @@ The painting has become one of the most famous images against war. A copy hangs 
             t("In Picasso's house", "毕加索的家中"),
           ],
           t("A copy hangs at the headquarters of the United Nations in New York.", "一件复制品挂在纽约的联合国总部。"),
+          [
+            t("The original went to Spain, not the town.", "原作去了西班牙，不是那个小镇。"),
+            t("The fair ended in 1937.", "世博会在 1937 年结束。"),
+            t("No house is mentioned.", "文中没提他的房子。"),
+          ],
         ),
       ],
       [
@@ -315,6 +375,11 @@ Hokusai was never satisfied with his own work. In his seventies he wrote that no
             "The second paragraph says it is a woodblock print, with craftsmen carving one block for each color.",
             "第二段说它是一幅木版画，工匠为每种颜色雕刻一块木版。",
           ),
+          [
+            t("It is not a painting.", "它不是油画。"),
+            t("No photograph is involved.", "与照片无关。"),
+            t("It is printed on paper, not drawn on silk.", "它印在纸上，不是画在绢上。"),
+          ],
         ),
         ask(
           t("What does the series Thirty-six Views of Mount Fuji ask the viewer to do?", "《富岳三十六景》系列让观者做什么？"),
@@ -328,6 +393,11 @@ Hokusai was never satisfied with his own work. In his seventies he wrote that no
             "The third paragraph says the series asks the viewer to look at one subject from many points of view.",
             "第三段说这个系列让观者从多个角度去看同一个题材。",
           ),
+          [
+            t("No one is asked to climb.", "没人被要求去爬山。"),
+            t("Counting waves is not the point.", "数浪花不是重点。"),
+            t("It is one mountain in every print.", "每幅画里都是同一座山。"),
+          ],
         ),
         ask(
           t("What did European artists admire in Japanese prints?", "欧洲艺术家欣赏日本版画的哪些方面？"),
@@ -341,6 +411,11 @@ Hokusai was never satisfied with his own work. In his seventies he wrote that no
             "The fifth paragraph says they admired the bold outlines, the flat areas of color and the unusual compositions.",
             "第五段说他们欣赏大胆的轮廓、平涂的色块和不寻常的构图。",
           ),
+          [
+            t("Smooth strokes were the old European style.", "平滑笔触是旧欧洲风格。"),
+            t("The prints showed Japan, not European religion.", "这些版画画的是日本，不是欧洲宗教。"),
+            t("They were sold cheaply.", "它们卖得很便宜。"),
+          ],
         ),
         ask(
           t("What new imported pigment did Hokusai use?", "北斋使用了哪种新进口的颜料？"),
@@ -350,6 +425,11 @@ Hokusai was never satisfied with his own work. In his seventies he wrote that no
             "Hokusai used a new imported pigment, Prussian blue, which gave the print its deep, rich color.",
             "北斋使用了新进口的颜料普鲁士蓝，使版画有了深沉浓郁的颜色。",
           ),
+          [
+            t("Vermilion is never mentioned.", "文中没提朱红。"),
+            t("Gold leaf is never mentioned.", "文中没提金箔。"),
+            t("Indigo is never mentioned.", "文中没提靛蓝。"),
+          ],
         ),
       ],
       [
@@ -407,6 +487,11 @@ Today the melody of the Ode to Joy serves as the anthem of the European Union. I
             "The first paragraph says he wrote that he had withdrawn from society because he could not bear to ask people to shout.",
             "第一段说他在信中写道，他远离社交是因为无法忍受请别人大声喊话。",
           ),
+          [
+            t("He kept composing, but that is not his reason.", "他一直作曲，但这不是理由。"),
+            t("His brothers received the letter; they forbade nothing.", "他的兄弟收到信，并没禁止什么。"),
+            t("Vienna's music is not his complaint.", "维也纳的音乐不是他的抱怨。"),
+          ],
         ),
         ask(
           t("Which old rule did the Ninth Symphony break?", "第九交响曲打破了哪条古老的规则？"),
@@ -420,6 +505,11 @@ Today the melody of the Ode to Joy serves as the anthem of the European Union. I
             "The fourth paragraph says in the final movement voices enter, breaking one of the oldest rules of the form.",
             "第四段说在最后一个乐章中加入了人声，打破了这一体裁最古老的规则之一。",
           ),
+          [
+            t("A conductor stood beside him.", "他身边有指挥。"),
+            t("It was longer, nearly an hour before the voices.", "它更长，人声前已演奏近一小时。"),
+            t("Four notes open the Fifth.", "四个音是第五交响曲的开头。"),
+          ],
         ),
         ask(
           t("What happened at the end of the premiere, according to the most famous account?", "根据最著名的记述，首演结束时发生了什么？"),
@@ -433,6 +523,11 @@ Today the melody of the Ode to Joy serves as the anthem of the European Union. I
             "The fifth paragraph says one of the singers gently turned him around so he could see the crowd clapping.",
             "第五段说一位歌手轻轻把他转过身来，让他看到人群在鼓掌。",
           ),
+          [
+            t("He could not hear it.", "他听不到掌声。"),
+            t("The crowd clapped and waved hats.", "观众鼓掌挥帽。"),
+            t("The symphony played to its end.", "交响曲演奏到了结尾。"),
+          ],
         ),
         ask(
           t("How did friends communicate with Beethoven once he was almost deaf?", "贝多芬几乎全聋后，朋友们怎样和他交流？"),
@@ -442,6 +537,11 @@ Today the melody of the Ode to Joy serves as the anthem of the European Union. I
             "Friends communicated with him by writing in notebooks, and many of these conversation books survive.",
             "朋友们在笔记本上写字和他交流，许多谈话本留存了下来。",
           ),
+          [
+            t("Sign language is not mentioned.", "文中没提手语。"),
+            t("Shouting was what he could not bear to ask for.", "大喊正是他不忍让人做的。"),
+            t("His brothers are only in the letter.", "他的兄弟只出现在信中。"),
+          ],
         ),
       ],
       [
@@ -491,6 +591,11 @@ From these two beginnings, film developed in two directions that still exist tod
             "The first paragraph says the machine could record moving images and also project them onto a screen.",
             "第一段说这台机器能录制活动影像，也能把它们投射到银幕上。",
           ),
+          [
+            t("Sound is not mentioned.", "文中没提声音。"),
+            t("It made moving images, not color prints.", "它拍的是动态影像，不是彩色照片。"),
+            t("Television did not exist.", "当时还没有电视。"),
+          ],
         ),
         ask(
           t("What do historians say about the legend of audiences running from the train?", "历史学家如何看待观众被火车吓跑的传说？"),
@@ -504,6 +609,11 @@ From these two beginnings, film developed in two directions that still exist tod
             "The third paragraph says historians have found little evidence that this really happened.",
             "第三段说历史学家几乎没有找到证据表明这真的发生过。",
           ),
+          [
+            t("No police reports are mentioned.", "文中没提警方报告。"),
+            t("Even once is doubtful.", "连一次都存疑。"),
+            t("Journalists and writers may have spread it.", "可能是记者和作家传开的。"),
+          ],
         ),
         ask(
           t("Which two directions of film does the last paragraph describe?", "最后一段描述了电影的哪两个方向？"),
@@ -517,12 +627,22 @@ From these two beginnings, film developed in two directions that still exist tod
             "The last paragraph says one direction records real life, leading to the documentary, and the other creates impossible worlds, leading to fantasy.",
             "最后一段说一个方向记录真实生活，发展出纪录片；另一个创造不可能的世界，发展出奇幻片。",
           ),
+          [
+            t("Comedy is one early film, not a direction.", "喜剧只是一部早期影片，不是方向。"),
+            t("Sound is never discussed.", "文中没讨论有声片。"),
+            t("Countries are not the division.", "划分标准不是国家。"),
+          ],
         ),
         ask(
           t("How much did each person pay at the first Lumière screening?", "卢米埃尔首场放映每人付多少钱？"),
           t("One franc", "一法郎"),
           [t("Ten francs", "十法郎"), t("One penny", "一便士"), t("Nothing", "免费")],
           t("About thirty people paid one franc each to watch something new.", "约三十人每人付一法郎观看新鲜事物。"),
+          [
+            t("Ten is the number of films.", "十是影片的数量。"),
+            t("A penny is British money.", "便士是英国货币。"),
+            t("They paid.", "他们是付了钱的。"),
+          ],
         ),
       ],
       [
@@ -572,6 +692,11 @@ During her lifetime, she was often overshadowed by her husband, the famous mural
             "The second paragraph says a mirror was fixed above her bed, and with nothing to look at but herself, she began to paint self-portraits.",
             "第二段说她床上方装了一面镜子，除了自己没什么可看，于是她开始画自画像。",
           ),
+          [
+            t("No teacher is mentioned.", "文中没提老师。"),
+            t("Money for models is never mentioned.", "文中没提雇模特的钱。"),
+            t("Rivera is never said to ask.", "文中没说里维拉提出要求。"),
+          ],
         ),
         ask(
           t("What does the stone column in The Broken Column represent?", "《破碎的脊柱》中的石柱代表什么？"),
@@ -585,6 +710,11 @@ During her lifetime, she was often overshadowed by her husband, the famous mural
             "The fourth paragraph says her body is split open to reveal a crumbling stone column in place of her spine.",
             "第四段说她的身体被剖开，露出一根代替脊柱的、正在崩塌的石柱。",
           ),
+          [
+            t("It is in her body, not a building.", "它在她身体里，不是建筑。"),
+            t("Rivera's murals are separate.", "里维拉的壁画是另一回事。"),
+            t("She said she never painted dreams.", "她说她从不画梦。"),
+          ],
         ),
         ask(
           t("Why did Kahlo reject the label Surrealist?", "卡罗为什么拒绝“超现实主义者”这个标签？"),
@@ -598,6 +728,11 @@ During her lifetime, she was often overshadowed by her husband, the famous mural
             "The fifth paragraph quotes her saying she never painted dreams but her own reality.",
             "第五段引用她的话：她从不画梦，她画的是自己的现实。",
           ),
+          [
+            t("She was a modern artist herself.", "她自己就是现代艺术家。"),
+            t("Muralist was Rivera's title.", "壁画家是里维拉的头衔。"),
+            t("Critics used the label to her face.", "评论家当面这样称呼她。"),
+          ],
         ),
       ],
       ["Mexican", "Frida", "Kahlo", "Mexico", "City", "Tehuana", "Broken", "Column", "Two", "Fridas", "Surrealist", "Diego", "Rivera"],
@@ -631,6 +766,11 @@ Comparing these versions reveals what each medium can do. A play relies on words
             "The first paragraph says he took it from an English poem by Arthur Brooke, which was itself based on Italian tales.",
             "第一段说他取材于阿瑟·布鲁克的一首英文诗，而那首诗本身又基于意大利故事。",
           ),
+          [
+            t("The passage says he did not invent it.", "文中说故事不是他编的。"),
+            t("The ballet came long after.", "芭蕾舞剧晚得多。"),
+            t("Films came centuries later.", "电影晚了几百年。"),
+          ],
         ),
         ask(
           t("How does Prokofiev's ballet tell the story without words?", "普罗科菲耶夫的芭蕾舞剧如何在没有台词的情况下讲故事？"),
@@ -644,6 +784,11 @@ Comparing these versions reveals what each medium can do. A play relies on words
             "The third paragraph says Prokofiev told the story through music and dance, giving the families a heavy, stamping march.",
             "第三段说普罗科菲耶夫通过音乐和舞蹈讲故事，为两个家族写了一首沉重、跺脚的进行曲。",
           ),
+          [
+            t("No narrator reads aloud.", "没有旁白朗读。"),
+            t("No subtitles are mentioned.", "文中没提字幕。"),
+            t("Music is the heart of it.", "音乐是核心。"),
+          ],
         ),
         ask(
           t("How did West Side Story change what the feud is about?", "《西区故事》如何改变了世仇的内涵？"),
@@ -657,6 +802,11 @@ Comparing these versions reveals what each medium can do. A play relies on words
             "The fourth paragraph says the feud was no longer about old family pride but about prejudice and the struggle for territory.",
             "第四段说世仇不再关乎古老的家族荣誉，而是关乎偏见和地盘之争。",
           ),
+          [
+            t("Money is not the cause given.", "金钱不是文中给出的原因。"),
+            t("They are gangs, not schools.", "他们是帮派，不是学校。"),
+            t("It stays in one city.", "故事发生在一座城市里。"),
+          ],
         ),
       ],
       [

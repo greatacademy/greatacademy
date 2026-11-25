@@ -45,6 +45,11 @@ Lind's twelve sailors still matter. Every time a new medicine is tested against 
             "The fourth paragraph says he compared treatments fairly by making sure the patients were alike and the only important difference was the treatment.",
             "第四段说他确保病人情况相似，使唯一重要的差别是治疗方法，从而公平地比较各种疗法。",
           ),
+          [
+            t("Beds are never mentioned.", "文中没提床位。"),
+            t("Each pair got its own treatment, not shared oranges.", "每组各有疗法，并非共用橙子。"),
+            t("No captain's order is mentioned.", "文中没提船长的命令。"),
+          ],
         ),
         ask(
           t("Which pair of sailors recovered fastest?", "哪一对水手恢复得最快？"),
@@ -58,6 +63,11 @@ Lind's twelve sailors still matter. Every time a new medicine is tested against 
             "The third paragraph says one sailor who ate citrus fruit was fit for duty within six days and the other nearly recovered.",
             "第三段说吃柑橘类水果的一名水手六天内就能执勤，另一名也几乎康复。",
           ),
+          [
+            t("The cider pair improved only slightly.", "喝苹果酒的那组只是略有好转。"),
+            t("The seawater pair did not improve.", "喝海水的那组没有好转。"),
+            t("The vinegar pair did not improve.", "喝醋的那组没有好转。"),
+          ],
         ),
         ask(
           t("Why was the lesson of the experiment not quickly learned?", "为什么这个实验的教训没有很快被吸取？"),
@@ -74,6 +84,11 @@ Lind's twelve sailors still matter. Every time a new medicine is tested against 
             "The fifth paragraph says Lind was not sure why citrus worked and later recommended a boiled juice that had lost much of its power.",
             "第五段说林德不确定柑橘为何有效，后来还推荐了一种失去大部分效力的煮过的果汁。",
           ),
+          [
+            t("The results were not lost.", "结果并没有丢失。"),
+            t("Oranges were not forbidden.", "橙子没被禁止。"),
+            t("No one proved him wrong; he was right.", "没人证明他错了，他是对的。"),
+          ],
         ),
         ask(
           t("Which disease did Lind's experiment study?", "林德的实验研究的是哪种病？"),
@@ -83,6 +98,11 @@ Lind's twelve sailors still matter. Every time a new medicine is tested against 
             "For centuries, the most dangerous enemy of sailors on long voyages was a disease called scurvy.",
             "几个世纪以来，远航水手最危险的敌人是一种叫坏血病的疾病。",
           ),
+          [
+            t("Fever after childbirth is Semmelweis's subject.", "产褥热是塞麦尔维斯研究的。"),
+            t("Seasickness is never mentioned.", "文中没提晕船。"),
+            t("Malaria is never mentioned.", "文中没提疟疾。"),
+          ],
         ),
       ],
       ["Scottish", "James", "Lind", "Salisbury", "Lind's", "British", "C"],
@@ -113,6 +133,11 @@ Today, most medical journals require authors to disclose their funding and any c
             "The second paragraph says the review concluded that fat was the main dietary problem and that the evidence against sugar was weak.",
             "第二段说这篇综述的结论是脂肪是主要的饮食问题，而指控糖的证据薄弱。",
           ),
+          [
+            t("It said the opposite about sugar.", "它对糖的结论正相反。"),
+            t("It blamed fat, so diet mattered.", "它归咎于脂肪，所以饮食有关。"),
+            t("Cholesterol was blamed along with fat.", "胆固醇和脂肪一起被归咎。"),
+          ],
         ),
         ask(
           t("How did researchers discover in 2016 who had paid for the review?", "2016 年研究人员如何发现谁资助了那篇综述？"),
@@ -126,6 +151,11 @@ Today, most medical journals require authors to disclose their funding and any c
             "The third paragraph says the 2016 article was based on old letters the researchers had found in archives.",
             "第三段说 2016 年的文章是根据研究人员在档案中找到的旧信件写成的。",
           ),
+          [
+            t("No confession is mentioned.", "文中没提有人认错。"),
+            t("The journal did not require funding reports.", "期刊当时不要求说明资助来源。"),
+            t("Yudkin blamed sugar but revealed no payments.", "尤德金指责糖，但没揭露资助。"),
+          ],
         ),
         ask(
           t("What question does the passage suggest readers ask about any health claim?", "文章建议读者对任何健康说法都问什么问题？"),
@@ -139,6 +169,11 @@ Today, most medical journals require authors to disclose their funding and any c
             "The last paragraph says the question to ask is who paid for the research and what they hoped it would show.",
             "最后一段说要问的问题是谁资助了这项研究，他们希望它表明什么。",
           ),
+          [
+            t("Fame is not the question.", "名气不是问题所在。"),
+            t("Age of a study is not the question.", "研究新旧不是问题。"),
+            t("Agreeing with you proves nothing.", "与你观点一致说明不了什么。"),
+          ],
         ),
         ask(
           t("Who paid for the 1967 review of diet and heart disease?", "谁资助了1967年那篇关于饮食与心脏病的综述？"),
@@ -152,6 +187,11 @@ Today, most medical journals require authors to disclose their funding and any c
             "The Sugar Research Foundation, which was funded by the sugar industry, paid three scientists at Harvard to write a review.",
             "由糖业资助的糖业研究基金会出钱请哈佛的三位科学家写了一篇综述。",
           ),
+          [
+            t("California is where the 2016 researchers worked.", "加州是 2016 年研究者所在地。"),
+            t("The journal only published it.", "期刊只是发表了它。"),
+            t("The government is never named as payer.", "文中没说政府出资。"),
+          ],
         ),
       ],
       [
@@ -198,6 +238,11 @@ Both effects remind us that the mind and the body are not separate. What we beli
             "The second paragraph says the effect is strongest for symptoms the brain helps to produce, such as pain, nausea and tiredness.",
             "第二段说安慰剂效应对大脑参与产生的症状最强，如疼痛、恶心和疲劳。",
           ),
+          [
+            t("Infections are named as things it cannot cure.", "文中说它治不了感染。"),
+            t("It does not shrink tumors.", "它不能缩小肿瘤。"),
+            t("Diet diseases are never discussed.", "文中没讨论饮食病。"),
+          ],
         ),
         ask(
           t("What does the experiment with the price of a placebo suggest?", "关于安慰剂价格的实验说明了什么？"),
@@ -211,6 +256,11 @@ Both effects remind us that the mind and the body are not separate. What we beli
             "The third paragraph says volunteers told the placebo was expensive reported more relief, showing that expectations shape how we experience our bodies.",
             "第三段说被告知安慰剂很贵的志愿者报告了更多缓解，表明预期会影响我们对身体的感受。",
           ),
+          [
+            t("Both were the same placebo.", "两者都是同样的安慰剂。"),
+            t("Sugar content is never measured.", "文中没测含糖量。"),
+            t("They could tell the price, which changed their feeling.", "他们知道价格，而价格改变了感受。"),
+          ],
         ),
         ask(
           t("What is a double-blind trial?", "什么是双盲试验？"),
@@ -224,6 +274,11 @@ Both effects remind us that the mind and the body are not separate. What we beli
             "The fourth paragraph says in a double-blind trial neither the patients nor the doctors know who is getting which.",
             "第四段说在双盲试验中，病人和医生都不知道谁服用的是哪一种。",
           ),
+          [
+            t("Blind means not knowing, not blindfolds.", "“盲”指不知情，不是蒙眼。"),
+            t("It is not run twice.", "试验并非做两遍。"),
+            t("Two pills was a separate finding.", "两粒药是另一项发现。"),
+          ],
         ),
         ask(
           t("What is the nocebo effect?", "什么是反安慰剂效应？"),
@@ -237,6 +292,11 @@ Both effects remind us that the mind and the body are not separate. What we beli
             "Patients who are warned that a drug may cause headaches sometimes develop headaches even when they have been given a placebo.",
             "被告知药物可能引起头痛的病人，即使服的是安慰剂，有时也会头痛。",
           ),
+          [
+            t("No placebo cures infections.", "安慰剂治不了感染。"),
+            t("Price belongs to the placebo study.", "价格属于安慰剂研究。"),
+            t("Doctors knowing is the opposite of double-blind.", "医生知情与双盲正相反。"),
+          ],
         ),
       ],
       ["Second", "World", "War", "American", "Henry", "Beecher", "Italy", "Beecher's", "Powerful", "Placebo"],
@@ -270,6 +330,11 @@ Only after his death did the work of scientists such as Louis Pasteur and Joseph
             "The first and third paragraphs say doctors and students delivered babies in the first clinic and often came straight from autopsies, while midwives did not perform autopsies.",
             "第一段和第三段说第一诊所由医生和学生接生，他们常常直接从尸体解剖室过来，而助产士不做解剖。",
           ),
+          [
+            t("It was the same building.", "两个诊室在同一栋楼。"),
+            t("The patients were the same kind.", "病人类型相同。"),
+            t("Crowding was similar.", "拥挤程度相近。"),
+          ],
         ),
         ask(
           t("What made Semmelweis connect autopsies with the fever?", "是什么让塞麦尔维斯把尸体解剖与产褥热联系起来？"),
@@ -283,6 +348,11 @@ Only after his death did the work of scientists such as Louis Pasteur and Joseph
             "The second paragraph says a colleague died after being cut during an autopsy, and his symptoms were the same as those of the dying mothers.",
             "第二段说一位同事在解剖时被割伤后去世，他的症状与垂死产妇的症状相同。",
           ),
+          [
+            t("Midwives gave no explanation.", "助产士没有给出解释。"),
+            t("Pasteur's work came later.", "巴斯德的研究晚于此。"),
+            t("He saw no germs; he guessed at particles.", "他没看到细菌，只是推测有“颗粒”。"),
+          ],
         ),
         ask(
           t("Why did many senior doctors reject Semmelweis's idea?", "为什么许多资深医生拒绝塞麦尔维斯的观点？"),
@@ -296,6 +366,11 @@ Only after his death did the work of scientists such as Louis Pasteur and Joseph
             "The fifth paragraph says some were offended by the suggestion that gentlemen's hands could be unclean, and he did not explain his findings clearly in print.",
             "第五段说有些人被“绅士的手可能不干净”这一说法冒犯，而且他多年没有在出版物中清楚地解释他的发现。",
           ),
+          [
+            t("The death rate fell dramatically.", "死亡率大幅下降。"),
+            t("Cost is never raised.", "文中没提成本问题。"),
+            t("He did not explain his findings clearly in print.", "他没在出版物中清楚解释发现。"),
+          ],
         ),
         ask(
           t("What did Semmelweis order everyone in his clinic to do?", "塞麦尔维斯要求诊所里每个人做什么？"),
@@ -309,6 +384,11 @@ Only after his death did the work of scientists such as Louis Pasteur and Joseph
             "He ordered everyone in his clinic to wash their hands in a solution of chlorinated lime before examining patients.",
             "他要求诊所里每个人在检查病人前用含氯石灰溶液洗手。",
           ),
+          [
+            t("Autopsies continued; washing was the rule.", "尸检照常，规定的是洗手。"),
+            t("Doctors still delivered babies.", "医生继续接生。"),
+            t("Fresh air is never mentioned.", "文中没提新鲜空气。"),
+          ],
         ),
       ],
       ["General", "Hospital", "Vienna", "Hungarian", "Ignaz", "Semmelweis", "Louis", "Pasteur", "Joseph", "Lister", "Semmelweis's"],
@@ -342,6 +422,11 @@ Gage's story, then, teaches two lessons. One is about the brain's importance in 
             "The fourth paragraph says the case suggested that parts of the brain, especially the front, are connected to personality, judgment and self-control.",
             "第四段说这个病例表明大脑的某些部分，特别是前部，与性格、判断力和自控力有关。",
           ),
+          [
+            t("The case suggested more than movement and speech.", "这个病例说明它不止管运动和语言。"),
+            t("It suggested a big part in behavior.", "它说明前额叶对行为影响很大。"),
+            t("He could still remember.", "他仍能记事。"),
+          ],
         ),
         ask(
           t("Why have historians warned about the story of Gage?", "历史学家为什么对盖奇的故事提出警告？"),
@@ -355,6 +440,11 @@ Gage's story, then, teaches two lessons. One is about the brain's importance in 
             "The fifth paragraph says there are few reliable records of Gage's behavior and later writers exaggerated his changes.",
             "第五段说关于盖奇行为的可靠记录很少，后来的作者夸大了他的变化。",
           ),
+          [
+            t("The accident is real.", "事故是真的。"),
+            t("Harlow was his doctor.", "哈洛是他的医生。"),
+            t("The rod went through his skull.", "铁棍穿过了他的头骨。"),
+          ],
         ),
         ask(
           t("What does his later work as a stagecoach driver suggest?", "他后来当驿站马车车夫的工作说明了什么？"),
@@ -368,6 +458,11 @@ Gage's story, then, teaches two lessons. One is about the brain's importance in 
             "The fifth paragraph says the job required skill, planning and responsibility, and some scientists believe he may have recovered much of his former self.",
             "第五段说这份工作需要技巧、计划和责任心，一些科学家认为他可能恢复了以前的大部分自我。",
           ),
+          [
+            t("He did change at first.", "他起初确实变了。"),
+            t("The job required planning.", "这份工作需要计划能力。"),
+            t("Chile was work, not shame.", "去智利是工作，不是蒙羞。"),
+          ],
         ),
         ask(
           t("What was Phineas Gage's job at the time of the accident?", "事故发生时菲尼亚斯·盖奇的工作是什么？"),
@@ -377,6 +472,11 @@ Gage's story, then, teaches two lessons. One is about the brain's importance in 
             "A railroad construction foreman named Phineas Gage was preparing to blast rock in Vermont.",
             "一位名叫菲尼亚斯·盖奇的铁路施工工头正准备在佛蒙特州爆破岩石。",
           ),
+          [
+            t("Stagecoach driving came later.", "驾驶驿马车是后来的事。"),
+            t("Harlow was the doctor.", "哈洛才是医生。"),
+            t("Chile was later and not mining.", "智利是后来的事，也不是挖矿。"),
+          ],
         ),
       ],
       ["September", "Phineas", "Gage", "Vermont", "John", "Harlow", "Harlow's", "Gage's", "Chile"],
@@ -410,6 +510,11 @@ Morton spent the rest of his life fighting with others who claimed to have disco
             "The first paragraph says patients were awake for every cut and held down, so the best surgeons were the fastest.",
             "第一段说病人清醒地挨每一刀并被按住，所以最好的外科医生是最快的。",
           ),
+          [
+            t("Charges are never mentioned.", "文中没提收费。"),
+            t("Waiting lists are not the reason.", "候诊人数不是原因。"),
+            t("Pay is never mentioned.", "文中没提报酬。"),
+          ],
         ),
         ask(
           t("What did Gilbert Abbott say when he woke up?", "吉尔伯特·阿博特醒来后说了什么？"),
@@ -420,6 +525,11 @@ Morton spent the rest of his life fighting with others who claimed to have disco
             t("That the operation was a humbug", "这次手术是骗局"),
           ],
           t("The third paragraph says that when Abbott woke, he said he had felt no pain.", "第三段说阿博特醒来后说他没有感到疼痛。"),
+          [
+            t("The tumor was removed.", "肿瘤被切除了。"),
+            t("He did not ask for more.", "他没要求更多乙醚。"),
+            t("Humbug was Warren's word, in denial.", "“骗局”是沃伦说的，而且是否定的。"),
+          ],
         ),
         ask(
           t("How did anesthesia change surgery beyond the patient's experience?", "除了病人的感受，麻醉还如何改变了外科手术？"),
@@ -433,6 +543,11 @@ Morton spent the rest of his life fighting with others who claimed to have disco
             "The fifth paragraph says that because surgeons no longer had to rush, they could perform longer and more careful operations.",
             "第五段说外科医生不必再匆忙，因而可以做更长、更细致的手术。",
           ),
+          [
+            t("Assistants are never said to go.", "文中没说不再需要助手。"),
+            t("Cost is never compared.", "文中没比较费用。"),
+            t("Germs still mattered; antiseptics were needed.", "细菌仍有危害，仍需消毒剂。"),
+          ],
         ),
         ask(
           t("What did William Morton give his patient before the operation?", "手术前威廉·莫顿给病人用了什么？"),
@@ -442,6 +557,11 @@ Morton spent the rest of his life fighting with others who claimed to have disco
             "On October 16, 1846, he gave ether to a young man named Gilbert Abbott.",
             "1846年10月16日，他给一位名叫吉尔伯特·阿博特的年轻人使用了乙醚。",
           ),
+          [
+            t("Chloroform was Queen Victoria's.", "氯仿是维多利亚女王用的。"),
+            t("Opium did little against surgery.", "鸦片对手术疼痛作用不大。"),
+            t("Alcohol did little too.", "酒精作用也不大。"),
+          ],
         ),
       ],
       [
@@ -496,6 +616,11 @@ Scientists are cautious but hopeful. The microbiome is real and important, and i
             "The second paragraph says humans cannot break down many kinds of fiber, but some gut bacteria can.",
             "第二段说人类无法分解许多种纤维，但一些肠道细菌可以。",
           ),
+          [
+            t("Fat is never mentioned.", "文中没提脂肪。"),
+            t("Taste is never mentioned.", "文中没提味道。"),
+            t("Stomach acid is never mentioned.", "文中没提胃酸。"),
+          ],
         ),
         ask(
           t(
@@ -512,6 +637,11 @@ Scientists are cautious but hopeful. The microbiome is real and important, and i
             "The fifth paragraph says many dramatic findings come from studies of mice, and many human studies are small and show a link without showing which causes which.",
             "第五段说许多惊人的发现来自老鼠实验，许多人体研究规模小，只显示关联而未表明因果。",
           ),
+          [
+            t("Probiotics help with only some problems.", "益生菌只对部分问题有效。"),
+            t("The microbiome is real.", "微生物群是真实存在的。"),
+            t("No danger from yogurt is mentioned.", "文中没说酸奶有危险。"),
+          ],
         ),
         ask(
           t("What advice has the strongest support, according to the last paragraph?", "根据最后一段，哪条建议得到的支持最充分？"),
@@ -525,6 +655,11 @@ Scientists are cautious but hopeful. The microbiome is real and important, and i
             "The last paragraph says the advice with the strongest support is to eat a wide variety of vegetables, fruits and whole grains.",
             "最后一段说支持最充分的建议是多吃各种蔬菜、水果和全谷物。",
           ),
+          [
+            t("Pills are what it warns about.", "文中正是提醒小心这些药丸。"),
+            t("Many bacteria help us.", "很多细菌对我们有益。"),
+            t("Processed food lowers diversity.", "加工食品会降低多样性。"),
+          ],
         ),
       ],
       [],
@@ -558,6 +693,11 @@ Teenagers face a particular difficulty. During adolescence, the body's internal 
             "The second paragraph says during REM sleep the brain becomes almost as active as when awake, and most vivid dreams occur.",
             "第二段说在快速眼动睡眠期间，大脑几乎和清醒时一样活跃，大多数生动的梦都出现在这时。",
           ),
+          [
+            t("It is busy, not switched off.", "大脑很忙，并没关机。"),
+            t("Slow waves are the deepest stage.", "慢波属于深睡期。"),
+            t("Memory is strengthened in sleep.", "睡眠会巩固记忆。"),
+          ],
         ),
         ask(
           t("What did researchers studying mice find in 2013?", "2013 年研究老鼠的科学家发现了什么？"),
@@ -571,6 +711,11 @@ Teenagers face a particular difficulty. During adolescence, the body's internal 
             "The fourth paragraph says that during sleep the spaces between brain cells widen, allowing fluid to wash away waste products.",
             "第四段说睡眠时脑细胞之间的空隙变大，使液体能冲走废物。",
           ),
+          [
+            t("The mice did sleep.", "这些老鼠也睡觉。"),
+            t("The waste is linked to Alzheimer's, not sleep.", "与阿尔茨海默病有关的是废物，不是睡眠。"),
+            t("The spaces widen, not shrink.", "间隙是扩大，不是缩小。"),
+          ],
         ),
         ask(
           t("Why do many teenagers not feel sleepy until late at night?", "为什么许多青少年直到深夜才感到困？"),
@@ -584,6 +729,11 @@ Teenagers face a particular difficulty. During adolescence, the body's internal 
             "The last paragraph says during adolescence the body's internal clock shifts later, so many teenagers do not feel sleepy until late at night.",
             "最后一段说青春期时身体的生物钟会推迟，所以许多青少年直到深夜才感到困。",
           ),
+          [
+            t("Sugar is never mentioned.", "文中没提糖。"),
+            t("Schools start early.", "学校开始得早。"),
+            t("Dreams are not the cause.", "做梦不是原因。"),
+          ],
         ),
       ],
       ["REM", "Alzheimer's"],

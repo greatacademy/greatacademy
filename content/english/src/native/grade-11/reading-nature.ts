@@ -49,6 +49,14 @@ Walden sold slowly at first. Today it is one of the most widely read books in Am
             "The second paragraph says he went to the woods to live deliberately and to see if he could learn what life had to teach.",
             "第二段说他去林中是为了从容地生活，看看能否学到生活要教给他的东西。",
           ),
+          [
+            t("No crime or police are mentioned.", "文中没提犯罪或警察。"),
+            t(
+              "He grew beans to live, not to get rich; he worked about six weeks a year.",
+              "他种豆是为了生活，不是发财；他一年只工作约六周。",
+            ),
+            t("He wrote Walden, a reflection on living, not a guidebook.", "他写的《瓦尔登湖》是对生活的思考，不是导游手册。"),
+          ],
         ),
         ask(
           t("What did Thoreau's experiment show about work?", "梭罗的实验在工作方面说明了什么？"),
@@ -62,6 +70,11 @@ Walden sold slowly at first. Today it is one of the most widely read books in Am
             "The third paragraph says that by working about six weeks a year, he could earn enough to live on.",
             "第三段说一年工作大约六个星期，他就能赚够生活所需。",
           ),
+          [
+            t("He worked about six weeks a year, not every day.", "他一年工作约六周，不是每天。"),
+            t("He farmed alone and managed well.", "他独自种地，做得不错。"),
+            t("Living simply cost him very little.", "简单生活花费很少。"),
+          ],
         ),
         ask(
           t("How does the pond work in Thoreau's book?", "这个湖在梭罗的书中起什么作用？"),
@@ -78,6 +91,11 @@ Walden sold slowly at first. Today it is one of the most widely read books in Am
             "The fourth paragraph says the pond is a recurring presence, almost a character, and Thoreau called it the earth's eye in which one measures one's own nature.",
             "第四段说这个湖反复出现，几乎是一个人物，梭罗称它为大地之眼，人在其中衡量自己本性的深度。",
           ),
+          [
+            t("The pond recurs throughout the book.", "湖贯穿全书，反复出现。"),
+            t("He records its colors, ice and loon, not only fish.", "他记录湖水颜色、冰和潜鸟，不只是钓鱼。"),
+            t("The pond is the earth's eye, a contrast to the town.", "湖是“大地之眼”，与城镇形成对比。"),
+          ],
         ),
         ask(
           t("In which year was Walden published?", "《瓦尔登湖》哪年出版？"),
@@ -87,6 +105,11 @@ Walden sold slowly at first. Today it is one of the most widely read books in Am
             "His book about the experience, Walden, published in 1854, records the colors of the water in different seasons.",
             "他写这段经历的书《瓦尔登湖》出版于1854年，记录了不同季节湖水的颜色。",
           ),
+          [
+            t("1845 is when he moved to the pond.", "1845年是他搬到湖边的时间。"),
+            t("1836 is when Emerson published Nature.", "1836年是爱默生出版《论自然》的时间。"),
+            t("1892 is when Muir founded the Sierra Club.", "1892年是缪尔创立塞拉俱乐部的时间。"),
+          ],
         ),
       ],
       ["Henry", "David", "Thoreau", "Thoreau's", "Walden", "Massachusetts", "Concord", "Ralph", "Waldo", "Emerson", "American"],
@@ -122,6 +145,11 @@ Still, his central challenge remains a powerful one. In a world full of advice, 
             "The first paragraph says he came to believe that the forms of religion had become empty and that each person could find truth directly.",
             "第一段说他开始相信宗教的形式已经空洞，每个人都可以直接找到真理。",
           ),
+          [
+            t("He became a writer and lecturer, not a farmer.", "他成了作家和演说家，不是农夫。"),
+            t("His father had been a minister too; no order is mentioned.", "他父亲也是牧师；文中没提命令。"),
+            t("Money is not the reason; his beliefs changed.", "原因不是钱，而是信念变了。"),
+          ],
         ),
         ask(
           t("What did Emerson mean by warning against a foolish consistency?", "爱默生告诫人们警惕愚蠢的一致性，是什么意思？"),
@@ -138,6 +166,11 @@ Still, his central challenge remains a powerful one. In a world full of advice, 
             "The third paragraph says he warned against the fear of contradicting what one said yesterday, and urged saying what one believes today.",
             "第三段说他告诫人们不要害怕与昨天说的话相矛盾，要说出今天所相信的。",
           ),
+          [
+            t("He says the opposite: do not fear contradicting yesterday.", "他的意思恰恰相反：别怕与昨天的话矛盾。"),
+            t("He urged readers to trust themselves, not famous men.", "他劝读者相信自己，而不是名人。"),
+            t("Habits are not the point; changing beliefs is.", "重点不在习惯，而在改变看法。"),
+          ],
         ),
         ask(
           t("What criticism of self-reliance does the passage mention?", "文章提到了对自立思想的什么批评？"),
@@ -154,12 +187,25 @@ Still, his central challenge remains a powerful one. In a world full of advice, 
             "The fifth paragraph says some readers argue self-reliance can become an excuse for selfishness or ignores how much people depend on others.",
             "第五段说有些读者认为自立可能成为自私的借口，或忽视了人们对他人的依赖。",
           ),
+          [
+            t("Difficulty is not the criticism given.", "批评并不在于难懂。"),
+            t("His ideas fit a country breaking free from Europe, not copying it.", "他的思想契合一个摆脱欧洲的国家，不是抄袭欧洲。"),
+            t(
+              "He left his own church; self-reliance does the opposite of keeping people there.",
+              "他自己离开了教会；自立思想并不让人留在教会。",
+            ),
+          ],
         ),
         ask(
           t('What was the message of Emerson\'s essay "Self-Reliance"?', "爱默生的《论自助》传达了什么信息？"),
           t("Trust thyself", "相信你自己"),
           [t("Obey your church", "服从你的教会"), t("Return to Europe", "回到欧洲"), t("Work for the rich", "为富人工作")],
           t("Its message was simple and bold: trust thyself.", "它的信息简单而大胆：相信你自己。"),
+          [
+            t("He left the church; he did not urge obeying it.", "他离开了教会，并不劝人服从教会。"),
+            t("The young country saw itself breaking free from Europe.", "这个年轻国家认为自己在摆脱欧洲。"),
+            t("Working for the rich is not his message.", "为富人工作不是他的主张。"),
+          ],
         ),
       ],
       ["Ralph", "Waldo", "Emerson", "Emerson's", "Boston", "Concord", "Thoreau", "Nature", "American", "Americans", "Europe"],
@@ -192,6 +238,11 @@ Today, Muir is honored as a founder of the movement to protect wild places. Hist
             "The first paragraph says a file struck his eye, and after weeks of fearing blindness, he decided to spend his life looking at nature.",
             "第一段说锉刀击中了他的眼睛，几周担心失明之后，他决定把一生用来观赏自然。",
           ),
+          [
+            t("He came to Yosemite as an adult, after walking a thousand miles.", "他是成年后步行千里才到优胜美地的。"),
+            t("He met Roosevelt in 1903, decades later, camping in Yosemite.", "他是1903年在优胜美地露营时见罗斯福的，晚了几十年。"),
+            t("He took the sawmill job after reaching Yosemite.", "他是到优胜美地后才去锯木厂工作的。"),
+          ],
         ),
         ask(
           t("How did Muir see the wilderness?", "缪尔如何看待荒野？"),
@@ -208,6 +259,11 @@ Today, Muir is honored as a founder of the movement to protect wild places. Hist
             "The third paragraph says the wilderness for him was not a primeval wasteland to be conquered but a sacred place of communion.",
             "第三段说对他来说，荒野不是有待征服的原始荒地，而是可以与更伟大之物交融的神圣之地。",
           ),
+          [
+            t("He climbed and slept there; he did not avoid it.", "他在那里攀登、露宿，并不回避。"),
+            t("He fought to protect it, not clear it.", "他努力保护它，而不是开垦。"),
+            t("He tried to save the forests, not cut them.", "他努力拯救森林，而不是砍伐。"),
+          ],
         ),
         ask(
           t("What does the last paragraph say Muir's vision overlooked?", "最后一段说缪尔的观点忽视了什么？"),
@@ -221,6 +277,11 @@ Today, Muir is honored as a founder of the movement to protect wild places. Hist
             "The last paragraph says historians note that his vision of empty wilderness overlooked the Native peoples who had lived there and been forced out.",
             "最后一段说历史学家指出，他关于空旷荒野的设想忽视了曾住在那里又被迫离开的原住民。",
           ),
+          [
+            t("Water for San Francisco is the dam's purpose, not what he overlooked.", "为旧金山供水是水坝的目的，不是他忽视的东西。"),
+            t("He loved Hetch Hetchy and fought to save it.", "他热爱赫奇赫奇谷，努力保护它。"),
+            t("Climbing without ropes is his habit, not the oversight.", "不系绳攀登是他的习惯，不是被忽视的问题。"),
+          ],
         ),
         ask(
           t("What did Muir found in 1892?", "缪尔在1892年创立了什么？"),
@@ -231,6 +292,11 @@ Today, Muir is honored as a founder of the movement to protect wild places. Hist
             t("A school in Indiana", "印第安纳的一所学校"),
           ],
           t("In 1892 he founded the Sierra Club to protect the mountains.", "1892年，他创立了塞拉俱乐部来保护山脉。"),
+          [
+            t("Roosevelt, not Muir, protected land as parks.", "把土地划为公园的是罗斯福，不是缪尔。"),
+            t("He worked at a sawmill; he did not found one.", "他在锯木厂工作，并没创办锯木厂。"),
+            t("Indiana is where he hurt his eye.", "印第安纳是他伤眼的地方。"),
+          ],
         ),
       ],
       [
@@ -283,6 +349,11 @@ The daffodils by the lake still bloom each spring. Visitors who come to see them
             "The first paragraph says the sister described the daffodils in her journal that evening, and the second paragraph names her as Dorothy.",
             "第一段说妹妹当晚在日记里描写了水仙花，第二段说出她就是多萝西。",
           ),
+          [
+            t("William wrote his poem two years later, not a letter.", "威廉两年后写了诗，不是写信。"),
+            t("Dorothy wrote that same evening.", "多萝西是当晚就写下的。"),
+            t("No newspaper is mentioned.", "文中没提报纸。"),
+          ],
         ),
         ask(
           t("In William's poem, what role does the memory of the daffodils play?", "在威廉的诗中，对水仙花的回忆起了什么作用？"),
@@ -296,6 +367,11 @@ The daffodils by the lake still bloom each spring. Visitors who come to see them
             "The fourth paragraph says the speaker sees the flowers again with his inward eye, and the recurring memory becomes a source of joy.",
             "第四段说说话人用内心之眼再次看到这些花，反复出现的回忆成为快乐的源泉。",
           ),
+          [
+            t("The memory brings bliss, not sadness.", "回忆带来的是幸福，不是悲伤。"),
+            t("The wind is part of the scene, not a danger.", "风是景色的一部分，不是危险。"),
+            t("The memory returns again and again.", "这段回忆一再浮现。"),
+          ],
         ),
         ask(
           t("What do some critics argue about Dorothy?", "一些评论家对多萝西有什么看法？"),
@@ -312,6 +388,11 @@ The daffodils by the lake still bloom each spring. Visitors who come to see them
             "The fifth paragraph says some critics argue she was a great writer in her own right whose talent was hidden because she chose to serve her brother's work.",
             "第五段说一些评论家认为她本身就是一位伟大的作家，因为选择为哥哥的工作服务，她的才华被掩盖了。",
           ),
+          [
+            t("She recorded images; nothing says she wrote his poems.", "她记下了意象，但文中没说她写了他的诗。"),
+            t("They walked for miles every day.", "他们每天都走好几英里。"),
+            t("Her journals were not written for publication.", "她的日记不是为出版而写。"),
+          ],
         ),
         ask(
           t("Where did Dorothy and William Wordsworth live for most of their lives?", "多萝西和威廉·华兹华斯一生大部分时间住在哪里？"),
@@ -325,6 +406,11 @@ The daffodils by the lake still bloom each spring. Visitors who come to see them
             "Dorothy and William lived together for most of their lives in a small cottage in Grasmere, in the Lake District.",
             "多萝西和威廉一生大部分时间一起住在湖区格拉斯米尔的一座小屋里。",
           ),
+          [
+            t("London is not mentioned.", "文中没提伦敦。"),
+            t("Scotland is not mentioned; they lived in the Lake District.", "文中没提苏格兰；他们住在湖区。"),
+            t("Manchester is not mentioned.", "文中没提曼彻斯特。"),
+          ],
         ),
       ],
       ["William", "Wordsworth", "Wordsworth's", "Dorothy", "Dorothy's", "Grasmere", "Lake", "District", "England", "Ullswater", "English"],
@@ -357,6 +443,11 @@ Tao's choice has inspired readers for sixteen centuries. In a world that often m
             "The first paragraph says he refused to put on formal robes and bow like a servant for five pecks of rice, and resigned that day.",
             "第一段说他拒绝穿上官服、像仆人一样为五斗米折腰，当天就辞了职。",
           ),
+          [
+            t("He resigned by choice, not dismissal.", "他是主动辞职，不是被免职。"),
+            t("No flood is mentioned.", "文中没提洪水。"),
+            t("He never returned to official life.", "他再也没有回到官场。"),
+          ],
         ),
         ask(
           t("What does the recurring image of the returning bird suggest in his poems?", "他诗中反复出现的归鸟意象暗示了什么？"),
@@ -370,6 +461,11 @@ Tao's choice has inspired readers for sixteen centuries. In a world that often m
             "The third paragraph says he compares himself to a caged bird that longs for its woods, and going home is a return to his true nature.",
             "第三段说他把自己比作思念旧林的笼中鸟，回到田园就是回归本性。",
           ),
+          [
+            t("The bird flies home, not abroad.", "鸟是飞回家，不是去远方。"),
+            t("Winters are not mentioned.", "文中没提冬天。"),
+            t("The bird is a symbol, not prey.", "鸟是象征，不是猎物。"),
+          ],
         ),
         ask(
           t("What is the Peach Blossom Spring a lasting image of?", "桃花源是什么的持久意象？"),
@@ -383,6 +479,11 @@ Tao's choice has inspired readers for sixteen centuries. In a world that often m
             "The fifth paragraph says the Peach Blossom Spring has become an image of an ideal place, always longed for and never quite reached.",
             "第五段说桃花源已成为一个理想之地的意象，总是令人向往，却永远无法真正到达。",
           ),
+          [
+            t("The village was peaceful and hidden, not a busy market.", "那个村子安宁隐秘，不是热闹的集市。"),
+            t("The capital is the life he left.", "京城是他离开的生活。"),
+            t("It was found by a fisherman, not planted by Tao.", "它是渔夫发现的，不是陶渊明种的。"),
+          ],
         ),
         ask(
           t("How long had Tao Yuanming been magistrate when he resigned?", "陶渊明辞官时已当了多久县令？"),
@@ -392,6 +493,11 @@ Tao's choice has inspired readers for sixteen centuries. In a world that often m
             "He had held the post for only about eighty days when word came that an inspector was on his way.",
             "他才任职约八十天，就传来督邮要来的消息。",
           ),
+          [
+            t("Eight years is far too long.", "八年太长了。"),
+            t("Twenty years is the rest of his life in the country.", "二十年是他余下的田园生活。"),
+            t("Eight days is far too short.", "八天太短了。"),
+          ],
         ),
       ],
       ["Tao", "Yuanming", "Yuanming's", "Jin", "Chinese", "Peach", "Blossom", "Spring"],
@@ -427,6 +533,11 @@ The idea also had a lasting practical effect. As the sublime became fashionable,
             "The first paragraph says travelers described mountains as ugly, frightening and dangerous and even drew their curtains so as not to see them.",
             "第一段说旅行者形容高山丑陋、可怕而危险，甚至拉上车帘不去看它们。",
           ),
+          [
+            t("Gentle landscapes were thought beautiful, not mountains.", "被视为美的是柔和的风景，不是山。"),
+            t("No cities in the mountains are mentioned.", "文中没提在山里建城。"),
+            t("Crops grow in green fields, not on cliffs.", "庄稼种在绿野上，不是悬崖上。"),
+          ],
         ),
         ask(
           t("According to Burke, how can the terror of the sublime become delight?", "根据伯克的观点，崇高带来的恐惧怎样才能变成喜悦？"),
@@ -440,6 +551,11 @@ The idea also had a lasting practical effect. As the sublime became fashionable,
             "The second paragraph says that when we experience the sublime from a place of safety, the terror becomes a kind of delight.",
             "第二段说当我们在安全的地方体验崇高时，恐惧就变成了一种喜悦。",
           ),
+          [
+            t("Small, gentle things are the beautiful, not the sublime.", "小而柔和的是“美”，不是“崇高”。"),
+            t("Tiredness is not part of his idea.", "疲惫不在他的理论之中。"),
+            t("Safety is the condition, not distance through a story.", "条件是身处安全，不是隔着故事。"),
+          ],
         ),
         ask(
           t("What practical effect did the idea of the sublime have?", "崇高这一观念产生了什么实际影响？"),
@@ -453,6 +569,11 @@ The idea also had a lasting practical effect. As the sublime became fashionable,
             "The last paragraph says that as the sublime became fashionable, wild places came to be valued, mountain tourism grew and some places were protected as parks.",
             "最后一段说随着崇高成为时尚，荒野受到重视，山地旅游兴起，有些地方被保护为公园。",
           ),
+          [
+            t("Travelers began to seek out the mountains.", "旅行者开始主动去山里。"),
+            t("Gardens were the old ideal that faded.", "花园是逐渐过时的旧理想。"),
+            t("Painters showed tiny human figures.", "画家画的是渺小的人影。"),
+          ],
         ),
         ask(
           t("Who published a book about the sublime in 1757?", "谁在1757年出版了一本论崇高的书？"),
@@ -462,6 +583,11 @@ The idea also had a lasting practical effect. As the sublime became fashionable,
             "In 1757, a young Irish writer named Edmund Burke published a book that tried to explain why people were drawn to things that frightened them.",
             "1757年，年轻的爱尔兰作家埃德蒙·伯克出版了一本书，试图解释人为何被令他们恐惧的事物吸引。",
           ),
+          [
+            t("Muir came much later, in the 1800s.", "缪尔晚得多，在19世纪。"),
+            t("Emerson wrote Nature in 1836.", "爱默生在1836年写了《论自然》。"),
+            t("Wordsworth was a poet, born later.", "华兹华斯是诗人，出生更晚。"),
+          ],
         ),
       ],
       ["Edmund", "Burke", "Burke's", "Alps", "Europe", "Irish", "Mont", "Blanc", "Mary", "Shelley"],
@@ -494,6 +620,11 @@ But perhaps that is the point. In modern life, many people spend more than ninet
             "The first paragraph says forest bathing did not involve water but meant walking slowly through the trees using all the senses.",
             "第一段说森林浴不涉及水，而是在林中慢慢行走，调动所有感官。",
           ),
+          [
+            t("Forest bathing involves no water.", "森林浴不涉及水。"),
+            t("It aims to protect forests, not cut them.", "它旨在保护森林，不是砍伐。"),
+            t("The walking is slow, not fast.", "是慢慢走，不是快跑。"),
+          ],
         ),
         ask(
           t("What problem do some scientists see in the studies?", "一些科学家认为这些研究有什么问题？"),
@@ -507,6 +638,11 @@ But perhaps that is the point. In modern life, many people spend more than ninet
             "The fourth paragraph says some studies were small and it is hard to separate the trees' effect from simply taking a holiday.",
             "第四段说一些研究规模小，而且很难把树木的作用与单纯度假的作用区分开来。",
           ),
+          [
+            t("Blood pressure was measured and fell.", "血压测过，并且下降了。"),
+            t("The size of the forests is not the concern; small studies are.", "问题不在森林大小，而在研究规模小。"),
+            t("The participants grew healthier, not ill.", "参与者变得更健康，不是生病。"),
+          ],
         ),
         ask(
           t("What point does the last paragraph make?", "最后一段表达了什么观点？"),
@@ -523,6 +659,11 @@ But perhaps that is the point. In modern life, many people spend more than ninet
             "The last paragraph says forest bathing gives people who spend most of their time indoors permission to slow down as humans have done for thousands of years.",
             "最后一段说森林浴让大部分时间待在室内的人可以像人类数千年来那样放慢脚步。",
           ),
+          [
+            t("People have always found peace in the woods.", "人们向来在林中寻得安宁。"),
+            t("It suggests slowing down, not living in the forest.", "它建议放慢脚步，不是住进森林。"),
+            t("Screens are what keep people indoors.", "正是屏幕把人们关在室内。"),
+          ],
         ),
       ],
       ["Japan", "Japanese", "Tokyo", "Shinrin", "Yoku", "Qing", "Li"],
@@ -555,6 +696,11 @@ Today, thousands of people set out on the Appalachian Trail each year, with ligh
             "The second paragraph says she had a cloth bag she sewed herself and wore ordinary canvas sneakers.",
             "第二段说她背着一个自己缝的布袋，穿着普通的帆布运动鞋。",
           ),
+          [
+            t("She carried almost nothing, not a heavy pack.", "她几乎什么都没带，不是背大包。"),
+            t("She walked the whole trail.", "她走完了全程。"),
+            t("Newspapers found her along the way; they gave her no map.", "报社是途中才发现她的，并没给她地图。"),
+          ],
         ),
         ask(
           t("What does the passage suggest about why Gatewood walked the trail?", "文章暗示盖特伍德为什么要走这条步道？"),
@@ -571,6 +717,11 @@ Today, thousands of people set out on the Appalachian Trail each year, with ligh
             "The fourth paragraph says her husband had beaten her for over thirty years, and the walk may have been a way of reclaiming a life taken from her.",
             "第四段说她丈夫殴打她三十多年，这次远足可能是她夺回被剥夺的人生的一种方式。",
           ),
+          [
+            t("Fame came by accident; she did not seek it.", "出名是意外，不是她追求的。"),
+            t("No magazine paid her; she read an article.", "没有杂志付钱给她；她只是读了一篇文章。"),
+            t("She told her children only that she was going for a walk.", "她只告诉孩子们她去散步。"),
+          ],
         ),
         ask(
           t("How did Gatewood help the trail itself?", "盖特伍德对步道本身有什么帮助？"),
@@ -584,6 +735,11 @@ Today, thousands of people set out on the Appalachian Trail each year, with ligh
             "The fifth paragraph says she complained about the path's poor condition and her fame helped bring volunteers and money to repair it.",
             "第五段说她抱怨步道状况糟糕，她的名气帮助带来了修缮所需的志愿者和资金。",
           ),
+          [
+            t("Volunteers did the repairs, not she alone.", "修缮由志愿者完成，不是她独自建的。"),
+            t("Buying land is never mentioned.", "文中没提买地。"),
+            t("She wanted it repaired for walkers, not closed.", "她希望为徒步者修好它，不是关闭。"),
+          ],
         ),
       ],
       [

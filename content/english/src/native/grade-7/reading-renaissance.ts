@@ -43,6 +43,11 @@ No single cause explains the Renaissance. It grew from the meeting of ruins, ric
             "The first sentence says the word Renaissance means rebirth, a new interest in the ideas of ancient Greece and Rome.",
             "第一句话说 Renaissance 的意思是重生，即对古希腊和古罗马思想的重新关注。",
           ),
+          [
+            t("Ruins were one reason it began in Italy, not the word's meaning.", "遗迹是它在意大利兴起的原因之一，不是这个词的意思。"),
+            t("Trade was another cause, not the meaning.", "贸易是另一个原因，不是词义。"),
+            t("Competition was a cause too, not the meaning.", "竞争也是原因，不是词义。"),
+          ],
         ),
         ask(
           t("How did trade help the Renaissance begin?", "贸易是怎样帮助文艺复兴兴起的？"),
@@ -59,6 +64,11 @@ No single cause explains the Renaissance. It grew from the meeting of ruins, ric
             "The third paragraph says merchants grew rich from trade and bankers lent money to kings, and this wealth paid for new buildings, paintings and schools.",
             "第三段说商人通过贸易致富，银行家向国王放贷，这些财富资助了新的建筑、绘画和学校。",
           ),
+          [
+            t("The ruins were already in Italy.", "遗迹本来就在意大利。"),
+            t("Italy stayed a patchwork of city-states.", "意大利仍是由许多城邦拼成的。"),
+            t("The scholars fled to Italy, not Paris.", "学者们逃往意大利，不是巴黎。"),
+          ],
         ),
         ask(
           t("How did the fall of Constantinople affect Italy?", "君士坦丁堡的陷落对意大利有什么影响？"),
@@ -72,12 +82,22 @@ No single cause explains the Renaissance. It grew from the meeting of ruins, ric
             "The fifth paragraph says many Greek scholars fled west to Italy after 1453, bringing precious manuscripts and the knowledge of how to read them.",
             "第五段说1453年后许多希腊学者向西逃到意大利，带去了珍贵的手稿和阅读它们的知识。",
           ),
+          [
+            t("It brought Italy scholars, not poverty.", "它给意大利带来了学者，而不是贫穷。"),
+            t("The trade in silk and spices is not said to end.", "文中没说丝绸和香料贸易结束了。"),
+            t("Rome's ruins were untouched by it.", "罗马的遗迹没受影响。"),
+          ],
         ),
         ask(
           t("In what year did Constantinople fall to the Ottoman Turks?", "君士坦丁堡哪一年被奥斯曼土耳其人攻陷？"),
           t("In 1453", "1453年"),
           [t("In 1350", "1350年"), t("In 1600", "1600年"), t("In 1519", "1519年")],
           t("In 1453 the city of Constantinople fell to the Ottoman Turks.", "1453年，君士坦丁堡被奥斯曼土耳其人攻陷。"),
+          [
+            t("1350 is roughly when the Renaissance began.", "1350 年大约是文艺复兴开始的时间。"),
+            t("1600 is roughly when it ended.", "1600 年大约是它结束的时间。"),
+            t("1519 is when Leonardo died.", "1519 年是达·芬奇去世的年份。"),
+          ],
         ),
       ],
       [
@@ -130,6 +150,11 @@ The Medici were not always popular, and they were driven from Florence more than
             "The second paragraph says Florence was officially a republic, but Cosimo made sure his friends were chosen for the councils, so his word decided most matters.",
             "第二段说佛罗伦萨名义上是共和国，但科西莫确保他的朋友被选进议会，所以大多数事情由他说了算。",
           ),
+          [
+            t("He never held the title of ruler.", "他从没有统治者的头衔。"),
+            t("No army is mentioned.", "文中没提军队。"),
+            t("The pope did not appoint him.", "教皇没有任命他。"),
+          ],
         ),
         ask(
           t("What is a patron, as the passage uses the word?", "按照文章的用法，patron 是什么意思？"),
@@ -143,6 +168,11 @@ The Medici were not always popular, and they were driven from Florence more than
             "The third paragraph defines the word right after it: someone who supports artists and scholars with money.",
             "第三段在这个词后面紧接着给出了定义：用金钱资助艺术家和学者的人。",
           ),
+          [
+            t("Councils were elected; Cosimo packed them with friends.", "议会是选举产生的，科西莫安插了自己的朋友。"),
+            t("A sculptor is supported by a patron, not one himself.", "雕塑家是受资助的人，自己不是资助人。"),
+            t("Lending to kings is banking, not patronage.", "借钱给国王是银行业务，不是资助。"),
+          ],
         ),
         ask(
           t(
@@ -159,6 +189,11 @@ The Medici were not always popular, and they were driven from Florence more than
             "The fifth paragraph says a beautiful chapel showed the city the family's wealth and good taste and won the respect of the people it ruled; the last paragraph says they were still driven out more than once.",
             "第五段说一座美丽的礼拜堂向全城展示了这个家族的财富和品味，赢得了被统治者的尊重；最后一段说他们仍不止一次被赶走。",
           ),
+          [
+            t("Art is never said to earn more than lending.", "文中从没说艺术比放贷赚得多。"),
+            t("Florence stayed officially a republic.", "佛罗伦萨名义上仍是共和国。"),
+            t("They were driven out more than once.", "他们不止一次被赶出佛罗伦萨。"),
+          ],
         ),
         ask(
           t("Whom did Lorenzo invite to live in his palace?", "洛伦佐邀请谁住进他的宫殿？"),
@@ -172,6 +207,11 @@ The Medici were not always popular, and they were driven from Florence more than
             "Lorenzo invited a teenage sculptor named Michelangelo to live in his palace.",
             "洛伦佐邀请一个叫米开朗基罗的少年雕塑家住进他的宫殿。",
           ),
+          [
+            t("Brunelleschi was hired by Cosimo.", "布鲁内莱斯基是科西莫雇用的。"),
+            t("Plato lived in ancient Greece.", "柏拉图生活在古希腊。"),
+            t("The bank had a branch in London, not a guest.", "伦敦是银行分行所在地，不是来客。"),
+          ],
         ),
       ],
       [
@@ -219,6 +259,11 @@ This system trained many of the greatest artists of the age. Leonardo da Vinci w
             "The second paragraph says the master agreed to feed and house the boy and teach him the trade, while the apprentice worked without pay.",
             "第二段说师傅答应供这个男孩吃住并教他手艺，而学徒无偿工作。",
           ),
+          [
+            t("Apprentices worked for years without pay.", "学徒多年没有工钱。"),
+            t("The master usually painted the faces himself.", "面部通常由师傅亲自画。"),
+            t("Rome is never mentioned for apprentices.", "文中没提学徒去罗马学习。"),
+          ],
         ),
         ask(
           t("Which job would an apprentice most likely do first?", "学徒最可能先做哪项工作？"),
@@ -232,6 +277,11 @@ This system trained many of the greatest artists of the age. Leonardo da Vinci w
             "The third paragraph lists the simplest first jobs: sweeping, cleaning brushes and grinding minerals and plants into pigments. Painting parts of a commission came only after years.",
             "第三段列出了最初最简单的工作：扫地、洗画笔、把矿物和植物磨成颜料。为委托作品画局部要在多年之后。",
           ),
+          [
+            t("Faces were the master's job.", "画脸是师傅的活。"),
+            t("Contracts were signed by the family, not the boy.", "合同由家人签，不是孩子自己。"),
+            t("Painting a sky came only after years of practice.", "画天空要练习多年之后才行。"),
+          ],
         ),
         ask(
           t(
@@ -248,6 +298,11 @@ This system trained many of the greatest artists of the age. Leonardo da Vinci w
             "The last sentence gives the author's reason: the story may not be true, but it shows how a workshop could turn an apprentice into a master.",
             "最后一句给出了作者的理由：这个故事可能不是真的，但它说明了作坊如何把学徒培养成大师。",
           ),
+          [
+            t("The story praises Leonardo; it does not attack Verrocchio.", "这个故事称赞达·芬奇，并不贬低韦罗基奥。"),
+            t("Masters usually painted faces.", "面部通常由师傅画。"),
+            t("Workshops show artists working in teams.", "作坊说明艺术家是团队合作的。"),
+          ],
         ),
         ask(
           t("In whose workshop was Leonardo an apprentice?", "列奥纳多在谁的作坊里当学徒？"),
@@ -257,6 +312,11 @@ This system trained many of the greatest artists of the age. Leonardo da Vinci w
             "Leonardo was an apprentice in the workshop of Andrea del Verrocchio in Florence.",
             "列奥纳多在佛罗伦萨安德烈亚·德尔·韦罗基奥的作坊当学徒。",
           ),
+          [
+            t("Cosimo was a banker and patron.", "科西莫是银行家和资助人。"),
+            t("Michelangelo studied in Lorenzo's palace.", "米开朗琪罗是在洛伦佐的宫殿学习的。"),
+            t("Donatello was hired by Cosimo.", "多那太罗是科西莫雇用的。"),
+          ],
         ),
       ],
       ["Leonardo", "da", "Vinci", "Andrea", "del", "Verrocchio", "Verrocchio's", "Florence", "Renaissance", "Italy", "Rome"],
@@ -288,6 +348,11 @@ After his death in 1519, his notebooks were scattered. Some pages were lost, and
             "The second paragraph says he dissected more than thirty corpses to understand the human body, drawing bones, muscles and organs.",
             "第二段说他为了了解人体解剖了三十多具尸体，画下了骨骼、肌肉和器官。",
           ),
+          [
+            t("The diving suit was a machine design.", "潜水服是一项机器设计。"),
+            t("Mirror writing had nothing to do with corpses.", "镜像书写与解剖无关。"),
+            t("The Last Supper is not linked to dissection.", "《最后的晚餐》与解剖无关。"),
+          ],
         ),
         ask(
           t("What does the passage suggest about Leonardo's machines?", "文章对列奥纳多的机器有什么暗示？"),
@@ -304,6 +369,11 @@ After his death in 1519, his notebooks were scattered. Some pages were lost, and
             "The third paragraph says most of the machines would not have worked as drawn, but they show a mind that asked how things could be done.",
             "第三段说大多数机器按图纸造出来都行不通，但它们显示了一个追问事情可以怎样做的头脑。",
           ),
+          [
+            t("No army built them.", "没有军队造出这些机器。"),
+            t("They came from his own mind.", "它们出自他自己的构想。"),
+            t("Most would not have worked as drawn.", "大多数照图纸造出来是不能用的。"),
+          ],
         ),
         ask(
           t("Why did Leonardo's discoveries do little to change the science of his time?", "为什么列奥纳多的发现对当时的科学影响不大？"),
@@ -317,12 +387,22 @@ After his death in 1519, his notebooks were scattered. Some pages were lost, and
             "The last paragraph says the notebooks were scattered and sat in private collections for centuries, and because his discoveries stayed hidden, they did little to change the science of his time.",
             "最后一段说笔记本散落各处，在私人收藏中沉睡了几百年，正因为他的发现一直不为人知，它们对当时的科学影响不大。",
           ),
+          [
+            t("No one is said to doubt his drawings.", "文中没说有人怀疑他的画。"),
+            t("Mirror writing is readable in a mirror.", "镜像文字用镜子就能读。"),
+            t("His notebooks survived, about seven thousand pages.", "他的笔记留存下来，约有七千页。"),
+          ],
         ),
         ask(
           t("How did Leonardo write his notes?", "列奥纳多怎样书写他的笔记？"),
           t("In mirror writing, from right to left", "用镜像文字从右往左写"),
           [t("In a secret code of numbers", "用数字密码"), t("In Greek letters", "用希腊字母"), t("Only in drawings", "只画图")],
           t("Leonardo wrote his notes in mirror writing, from right to left.", "列奥纳多用镜像文字从右往左写笔记。"),
+          [
+            t("No number code is mentioned.", "文中没提数字密码。"),
+            t("He wrote in mirror writing, not Greek letters.", "他用镜像书写，不是希腊字母。"),
+            t("He wrote notes as well as drawing.", "他既画图也写笔记。"),
+          ],
         ),
       ],
       ["Leonardo", "da", "Vinci", "Mona", "Lisa", "Supper"],
@@ -353,6 +433,11 @@ The printing press did not cause the Renaissance, which had already begun. But i
             "The second paragraph says printing itself was not new, since printers in China and Korea had used blocks and movable type; Gutenberg combined several ideas, metal type, an adapted press and oil-based ink, into a system.",
             "第二段说印刷本身并不新，中国和朝鲜的印刷工早已使用雕版和活字；古腾堡把金属活字、改造的压榨机和油性墨水等几种想法结合成一个系统。",
           ),
+          [
+            t("Printing was not new; China and Korea had it.", "印刷并不新，中国和朝鲜早就有了。"),
+            t("Carved blocks were used in China and Korea long before.", "雕版在中国和朝鲜早已使用。"),
+            t("He printed books; he did not copy by hand.", "他是印书，不是手抄。"),
+          ],
         ),
         ask(
           t("How did printing help scholars catch errors?", "印刷是怎样帮助学者发现错误的？"),
@@ -366,6 +451,11 @@ The printing press did not cause the Renaissance, which had already begun. But i
             "The fourth paragraph says scholars could compare the same text in many cities, so errors were caught and corrected.",
             "第四段说学者可以在许多城市比对同一文本，所以错误被发现并纠正了。",
           ),
+          [
+            t("Scribes did not check printed pages.", "抄写员不检查印刷页。"),
+            t("Printers are not said to refuse anything.", "文中没说印刷商拒绝印什么。"),
+            t("Type can be set wrongly too.", "铅字也可能排错。"),
+          ],
         ),
         ask(
           t("What is the author's view of how printing and the Renaissance were connected?", "作者对印刷和文艺复兴之间关系的看法是什么？"),
@@ -379,12 +469,22 @@ The printing press did not cause the Renaissance, which had already begun. But i
             "The last paragraph says the printing press did not cause the Renaissance, which had already begun, but carried it far beyond Italy.",
             "最后一段说印刷机没有引发已经开始的文艺复兴，但把它带到了意大利以外的远方。",
           ),
+          [
+            t("The author says printing did not cause it.", "作者说印刷术并不是它的起因。"),
+            t("The Renaissance had already begun, not ended.", "文艺复兴已经开始，并没结束。"),
+            t("Printing sped ideas up, not slowed them.", "印刷让思想传播更快，不是更慢。"),
+          ],
         ),
         ask(
           t("What had Gutenberg's press been adapted from?", "古腾堡的印刷机是由什么改造的？"),
           t("A press used to squeeze grapes for wine", "酿酒用的榨葡萄机"),
           [t("A goldsmith's furnace", "金匠的熔炉"), t("A Korean printing block", "朝鲜的雕版"), t("A scribe's desk", "抄写员的书桌")],
           t("He adapted a press like those used to squeeze grapes for wine.", "他改造了一台类似榨葡萄酿酒的压榨机。"),
+          [
+            t("He was a goldsmith, but the press is not from a furnace.", "他是金匠，但压印机不是从熔炉改来的。"),
+            t("Korean printing used blocks and type, not his press.", "朝鲜的印刷用雕版和活字，不是他的压印机。"),
+            t("A scribe's desk is not a press.", "抄写员的书桌不是压印机。"),
+          ],
         ),
       ],
       ["Gutenberg", "Johannes", "Mainz", "German", "China", "Korea", "Bible", "Europe", "European", "Renaissance", "Italy"],
@@ -415,6 +515,11 @@ Proof would come later, from new instruments and careful measurements. Copernicu
             "The second paragraph says some planets, such as Mars, seemed to stop and move backward, and Ptolemy's followers had to add circles within circles to explain it.",
             "第二段说一些行星，比如火星，似乎会停下来并逆行，托勒密的追随者不得不在模型中添加圆中之圆来解释。",
           ),
+          [
+            t("The sun rising in the east seemed to fit the model.", "太阳东升似乎符合这个模型。"),
+            t("The moon circling the Earth fit the model.", "月亮绕地球转符合这个模型。"),
+            t("Not feeling motion was an argument against Copernicus.", "感觉不到运动是反对哥白尼的理由。"),
+          ],
         ),
         ask(
           t("Why does the author compare Earth and Mars to two cars on a highway?", "作者为什么把地球和火星比作高速公路上的两辆车？"),
@@ -428,6 +533,11 @@ Proof would come later, from new instruments and careful measurements. Copernicu
             "The third paragraph uses the comparison: the faster Earth passing the slower Mars makes Mars seem to drift backward, just as a fast car makes a slower one seem to.",
             "第三段使用了这个比较：较快的地球超过较慢的火星，使火星看起来在后退，就像快车让慢车看起来在后退一样。",
           ),
+          [
+            t("Size is not compared.", "文中没比较大小。"),
+            t("The comparison shows the Earth moving, not still.", "这个比喻说明地球在动，不是静止的。"),
+            t("The sun's speed is not the point.", "重点不在太阳的速度。"),
+          ],
         ),
         ask(
           t("Why did few people accept Copernicus's idea at first?", "为什么起初很少有人接受哥白尼的观点？"),
@@ -441,12 +551,22 @@ Proof would come later, from new instruments and careful measurements. Copernicu
             "The fourth paragraph gives three reasons: the idea seemed to go against common sense, it went against the teachings of the Church, and Copernicus could only show it was simpler, not prove it.",
             "第四段给出了三个原因：这个观点似乎违背常识，违背教会的教义，而且哥白尼只能说明它更简单，却无法证明。",
           ),
+          [
+            t("His model was simpler, not more complicated.", "他的模型更简单，不是更复杂。"),
+            t("He did publish a book.", "他确实出版了书。"),
+            t("Later instruments proved him right.", "后来的仪器证明他是对的。"),
+          ],
         ),
         ask(
           t("In what year did Copernicus publish his book?", "哥白尼哪一年出版了他的书？"),
           t("In 1543", "1543年"),
           [t("In 1450", "1450年"), t("In 1453", "1453年"), t("In 1600", "1600年")],
           t("In 1543, Nicolaus Copernicus published a book with a bold idea.", "1543年，尼古拉·哥白尼出版了一本观点大胆的书。"),
+          [
+            t("1450 is around Gutenberg's press.", "1450 年左右是古腾堡印刷机的时代。"),
+            t("1453 is the fall of Constantinople.", "1453 年是君士坦丁堡陷落的年份。"),
+            t("1600 is roughly the end of the period.", "1600 年大约是这个时期的结束。"),
+          ],
         ),
       ],
       ["Ptolemy", "Ptolemy's", "Nicolaus", "Copernicus", "Copernicus's", "Polish", "Mars", "Church", "Earth", "European", "Greek"],
@@ -477,6 +597,11 @@ Yet his evidence could not be taken back. Other astronomers built telescopes and
             "The second paragraph says the points moved from night to night and he realized they were moons circling Jupiter.",
             "第二段说这些光点每晚都在移动，他意识到它们是绕木星运行的卫星。",
           ),
+          [
+            t("The Milky Way's stars were a separate finding.", "银河由恒星组成是另一项发现。"),
+            t("Mountains were on the moon, not near Jupiter.", "山脉在月球上，不在木星附近。"),
+            t("They moved from night to night, so they were not lens faults.", "它们每晚移动位置，所以不是镜片的瑕疵。"),
+          ],
         ),
         ask(
           t("Why were the phases of Venus evidence for the heliocentric model?", "为什么金星的相位是日心说的证据？"),
@@ -490,6 +615,11 @@ Yet his evidence could not be taken back. Other astronomers built telescopes and
             "The third paragraph says the geocentric model could not explain the full set of phases, but Copernicus's idea, with Venus circling the sun, explained them easily.",
             "第三段说地心说无法解释全部相位，而哥白尼的观点，即金星绕太阳运行，可以轻松解释。",
           ),
+          [
+            t("Moons were seen around Jupiter, not Venus.", "卫星是在木星周围看到的，不是金星。"),
+            t("The rough moon is a different finding.", "月面粗糙是另一项发现。"),
+            t("Phases show Venus moving around the sun.", "相位说明金星绕太阳运行。"),
+          ],
         ),
         ask(
           t("Why does the author say his evidence could not be taken back?", "作者为什么说他的证据收不回来了？"),
@@ -503,6 +633,11 @@ Yet his evidence could not be taken back. Other astronomers built telescopes and
             "The last paragraph explains: other astronomers built telescopes and saw the same moons and phases, so the evidence stood even after Galileo was forced to recant.",
             "最后一段解释说：其他天文学家制造了望远镜，看到了同样的卫星和相位，所以即使伽利略被迫认错，证据依然成立。",
           ),
+          [
+            t("He was forced to say he had been wrong.", "他被迫公开认错。"),
+            t("The Church opposed his findings.", "教会反对他的发现。"),
+            t("No museum is mentioned.", "文中没提博物馆。"),
+          ],
         ),
       ],
       [
@@ -547,6 +682,11 @@ When the ceiling was revealed in 1512, people were amazed. The sculptor who had 
             "The first paragraph says Michelangelo thought of himself as a sculptor and complained that painting was not his trade.",
             "第一段说米开朗琪罗认为自己是雕塑家，抱怨绘画不是他的本行。",
           ),
+          [
+            t("Heights are never mentioned.", "文中从没提恐高。"),
+            t("Payment is never mentioned.", "文中从没提报酬。"),
+            t("No other chapel is mentioned.", "文中没提别的礼拜堂。"),
+          ],
         ),
         ask(
           t("Why did painting in fresco force Michelangelo to work quickly?", "为什么湿壁画法迫使米开朗琪罗快速工作？"),
@@ -560,6 +700,11 @@ When the ceiling was revealed in 1512, people were amazed. The sculptor who had 
             "The second paragraph says paint is brushed onto fresh, wet plaster and he had to finish each section in a single day before the plaster set.",
             "第二段说颜料要刷在新鲜的湿灰泥上，他必须在灰泥凝固前的一天之内完成每一部分。",
           ),
+          [
+            t("No one-week deadline was set; it took four years.", "没有一周的期限，他画了四年。"),
+            t("The platform was fixed into the walls.", "平台固定在墙上。"),
+            t("The plaster set in about a day, not seconds.", "灰泥大约一天才干，不是几秒钟。"),
+          ],
         ),
         ask(
           t("Which detail corrects a common belief about how Michelangelo worked?", "哪个细节纠正了关于米开朗琪罗工作方式的一个常见看法？"),
@@ -573,6 +718,11 @@ When the ceiling was revealed in 1512, people were amazed. The sculptor who had 
             "The third paragraph says he did not lie on his back, as people often imagine; he stood with his head bent back and his arm raised.",
             "第三段说他并不像人们常常想象的那样躺着，而是仰着头、举着手臂站着。",
           ),
+          [
+            t("Working with assistants is a fact, not a correction.", "有助手帮忙只是事实，不是纠正。"),
+            t("The number of figures corrects no belief.", "人物的数量没有纠正任何误解。"),
+            t("The platform design is a fact, not a correction.", "平台的设计只是事实，不是纠正。"),
+          ],
         ),
       ],
       ["Julius", "II", "Michelangelo", "Sistine", "Adam", "Bible", "Pope", "Rome"],

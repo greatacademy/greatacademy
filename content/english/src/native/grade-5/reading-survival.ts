@@ -47,6 +47,11 @@ After a quarter of an hour, three whistle blasts answered from the fog ahead. So
             "The story says his first thought was to run and hurry along the ridge, and his legs were already moving.",
             "故事说他的第一个念头是跑，赶紧沿着山脊追上去，腿已经迈开了。",
           ),
+          [
+            t("Crying is never mentioned. His legs were already moving.", "文中从没提到哭。他的腿已经迈开了。"),
+            t("The photo is why he fell behind, not what he wanted next.", "拍照是他落后的原因，不是他接下来想做的。"),
+            t("Climbing down is the danger the guide warned of, not his impulse.", "爬下山脊是向导警告的危险，不是他的冲动。"),
+          ],
         ),
         ask(
           t("What made Owen change his mind?", "是什么让欧文改变了主意？"),
@@ -60,6 +65,11 @@ After a quarter of an hour, three whistle blasts answered from the fog ahead. So
             "He remembered the guide saying that if you are lost you should stop, because panic makes people walk in circles or off cliffs.",
             "他想起向导说过，迷路时要停下来，因为惊慌会让人绕圈子或走下悬崖。",
           ),
+          [
+            t("He could not see the posts in the fog.", "大雾里他看不到路标。"),
+            t("Nobody answered when he called.", "他喊的时候没人回应。"),
+            t("The fog did not lift until the guide came.", "向导来之前雾一直没散。"),
+          ],
         ),
         ask(
           t("What does Owen's way of facing the problem show about him?", "欧文面对问题的方式说明了他是怎样的人？"),
@@ -73,12 +83,22 @@ After a quarter of an hour, three whistle blasts answered from the fog ahead. So
             "Owen stood still, took three slow breaths, worked out what he knew and signaled with his whistle, showing calm thinking under pressure.",
             "欧文站住不动，慢慢吸了三口气，理清自己知道的情况，再吹哨求救，表现出在压力下冷静思考的能力。",
           ),
+          [
+            t("He is careful, not careless. He stopped and thought.", "他很谨慎，不是粗心。他停下来思考了。"),
+            t("He wanted to catch up with the group, not be alone.", "他想追上队伍，不想独处。"),
+            t("He trusted the guide and followed the advice.", "他信任向导，听从了建议。"),
+          ],
         ),
         ask(
           t("Why had Owen fallen behind the group?", "欧文为什么落在队伍后面？"),
           t("He stopped to take a photo of a hawk", "他停下来拍一只鹰"),
           [t("He hurt his leg", "他伤了腿"), t("He lost his whistle", "他丢了哨子"), t("He went back for his jacket", "他回去拿夹克")],
           t("He had stopped to take a photo of a hawk, and the group had gone on without him.", "他停下来拍一只鹰，队伍就先走了。"),
+          [
+            t("His legs were fine. He started to run.", "他的腿没事。他还开始跑了。"),
+            t("The whistle was clipped to his pack, and he used it.", "哨子夹在背包上，他还用了它。"),
+            t("He pulled his jacket tight. He never went back for it.", "他把外套拉紧了。他从没回去拿外套。"),
+          ],
         ),
       ],
     ),
@@ -112,6 +132,11 @@ Near dawn, a boat with two firefighters pulled up beside the house. Tomas waved.
             "The story gives the reason right after the rule: the water outside could be deeper and faster than it looked.",
             "故事在这条规则后面马上给出了理由：外面的水可能比看上去更深更急。",
           ),
+          [
+            t("The view is not the reason. Outside water can be dangerous.", "不是为了看风景。外面的水可能很危险。"),
+            t("Grandma could not walk far. She did not like the attic for sleeping.", "奶奶走不远。文中没说她喜欢睡阁楼。"),
+            t("A locked door is never mentioned.", "文中从没提到门被锁住。"),
+          ],
         ),
         ask(
           t("Why did Lena go back downstairs twice?", "莉娜为什么两次下楼？"),
@@ -125,6 +150,11 @@ Near dawn, a boat with two firefighters pulled up beside the house. Tomas waved.
             "She waded back down to bring the emergency bag from the hall closet and Grandma's medicine from the kitchen.",
             "她蹚水下楼，从走廊壁橱拿来应急包，又从厨房拿来奶奶的药。",
           ),
+          [
+            t("Mom was at the hospital, not downstairs.", "妈妈在医院，不在楼下。"),
+            t("Lights are not mentioned. She used a flashlight.", "文中没提电灯。她用的是手电筒。"),
+            t("She went for supplies, not to measure the river.", "她下楼是去拿东西，不是去量河水。"),
+          ],
         ),
         ask(
           t("What result of Lena's choices does the ending show?", "结尾展现了莉娜的选择带来了什么结果？"),
@@ -138,12 +168,22 @@ Near dawn, a boat with two firefighters pulled up beside the house. Tomas waved.
             "Because Lena called for help and signaled with the flashlight, the boat found them at dawn, all safe.",
             "因为莉娜打电话求救并用手电发信号，船在黎明时找到了他们，全家平安。",
           ),
+          [
+            t("A boat came to them. Nobody swam.", "是船来接他们，没人游泳。"),
+            t("The water came into the house.", "水已经进了屋。"),
+            t("Lena made the call, not Tomas.", "打电话的是莉娜，不是托马斯。"),
+          ],
         ),
         ask(
           t("Where was Lena's mother that night?", "那天夜里莉娜的妈妈在哪里？"),
           t("Working the night shift at the hospital", "在医院上夜班"),
           [t("In the attic", "在阁楼里"), t("On a rescue boat", "在救援船上"), t("Visiting Grandma", "去看奶奶了")],
           t("Her mother was working the night shift at the hospital.", "她妈妈在医院上夜班。"),
+          [
+            t("The attic is where Lena took her family.", "阁楼是莉娜带家人去的地方。"),
+            t("Firefighters were on the boat.", "船上的是消防员。"),
+            t("Grandma was at home with the children.", "奶奶和孩子们一起在家。"),
+          ],
         ),
       ],
     ),
@@ -177,6 +217,11 @@ Kai jumped up and down in the sand, waving both arms. "They saw it!"`,
             "Malia said they were both right: they would explore but always return, because searchers would look for the boat first.",
             "玛丽亚说两人都对：他们去探索，但总要回来，因为搜救人员会先找船。",
           ),
+          [
+            t("They both explored. Nobody went alone.", "他们一起去探路。没有人单独行动。"),
+            t("They found water, made shelter and signaled.", "他们找到了水，搭了棚子，还发了信号。"),
+            t("Malia changed her plan too. Both sides gave a little.", "玛丽亚也改了计划。双方都让了步。"),
+          ],
         ),
         ask(
           t("Why did they spell SOS on the open beach?", "他们为什么在开阔的海滩上拼出 SOS？"),
@@ -190,6 +235,11 @@ Kai jumped up and down in the sand, waving both arms. "They saw it!"`,
             "The story says they made the letters big, with driftwood and dark stones, so they could be seen from above.",
             "故事说，他们用浮木和深色石头拼出大大的字母，这样从空中就能看到。",
           ),
+          [
+            t("The stream was found by following plants.", "溪流是顺着植物找到的。"),
+            t("The sail was tied between palm trees.", "帆是绑在两棵棕榈树之间的。"),
+            t("Stories kept Kai calm at night.", "晚上是故事让凯平静下来。"),
+          ],
         ),
         ask(
           t("How are the two cousins different?", "这对表兄妹有什么不同？"),
@@ -203,12 +253,22 @@ Kai jumped up and down in the sand, waving both arms. "They saw it!"`,
             "Malia, fifteen, finds a way to end the argument and tells stories to calm Kai, who jumps at every noise. Kai, not Malia, wanted to wait.",
             "十五岁的玛丽亚想办法化解争执，还讲故事安抚一听到声响就吓一跳的凯。想留下等待的是凯，不是玛丽亚。",
           ),
+          [
+            t("Kai is the one who was scared at night.", "晚上害怕的是凯。"),
+            t("Their wishes are reversed. Kai wanted to wait.", "他们的想法说反了。是凯想等。"),
+            t("Sailing skill is never compared.", "文中从没比较谁会航海。"),
+          ],
         ),
         ask(
           t("What did they use to make a roof?", "他们用什么搭了屋顶？"),
           t("The torn sail", "撕破的船帆"),
           [t("Palm leaves", "棕榈叶"), t("Driftwood and stones", "浮木和石头"), t("The broken mast", "折断的桅杆")],
           t("They dragged the torn sail between two palm trees to make a roof.", "他们把撕破的船帆拉到两棵棕榈树之间做屋顶。"),
+          [
+            t("Palm trees held the sail. Their leaves are not mentioned.", "棕榈树撑着帆。文中没提它们的叶子。"),
+            t("Driftwood and stones spelled SOS.", "漂流木和石头拼出了SOS。"),
+            t("The mast was snapped, not used.", "桅杆断了，没有被用上。"),
+          ],
         ),
       ],
     ),
@@ -242,6 +302,11 @@ By morning, the storm was over. The sky was blue, and the hut was in plain sight
             "The second paragraph says the whole world turned white, with no up or down and no near or far.",
             "第二段说，整个世界变成了白色，分不清上下，也分不清远近。",
           ),
+          [
+            t("A fresh trail is not a whiteout. There was no up or down.", "新雪覆盖的路不是白茫茫。那时连上下都分不清。"),
+            t("The cave was their shelter, not the whiteout.", "雪洞是他们的避难所，不是白茫茫。"),
+            t("A painted hut is never mentioned.", "文中从没提到刷白的小屋。"),
+          ],
         ),
         ask(
           t("Why did they make a cave in the snow?", "他们为什么在雪里挖洞？"),
@@ -255,6 +320,11 @@ By morning, the storm was over. The sky was blue, and the hut was in plain sight
             "Inside the cave it was out of the wind, and the father explains that snow full of trapped air keeps heat in like a blanket.",
             "雪洞里没有风，父亲解释说，充满空气的雪能像毯子一样保温。",
           ),
+          [
+            t("The skis are not mentioned in the cave.", "在雪洞里没提到滑雪板。"),
+            t("The hut was two kilometers away, not buried.", "小屋在两公里外，没被埋住。"),
+            t("Tea came from a flask.", "茶是从保温瓶里倒的。"),
+          ],
         ),
         ask(
           t("Why was stopping the right choice, as the ending shows?", "结尾怎样说明停下来是正确的选择？"),
@@ -268,12 +338,22 @@ By morning, the storm was over. The sky was blue, and the hut was in plain sight
             "By morning the storm was over and the hut was in plain sight, so waiting let them reach it without the danger of skiing off an edge.",
             "到了早上暴风雪停了，小屋清晰可见，所以等待让他们避开了滑下悬崖的危险，安全抵达。",
           ),
+          [
+            t("The hut was in plain sight, not destroyed.", "小屋清楚可见，没被毁。"),
+            t("They stayed in the cave all night.", "他们整夜都在雪洞里。"),
+            t("The hut was there, and they did not ski home.", "小屋就在那里，他们没有滑回家。"),
+          ],
         ),
         ask(
           t("What did Anya and her father share in the snow cave?", "安雅和爸爸在雪洞里分享了什么？"),
           t("Chocolate and warm tea", "巧克力和热茶"),
           [t("Bread and cheese", "面包和奶酪"), t("Apples and water", "苹果和水"), t("Soup and crackers", "汤和饼干")],
           t("They shared chocolate and warm tea from a flask.", "他们分享了巧克力和保温瓶里的热茶。"),
+          [
+            t("Bread and cheese are not mentioned.", "文中没提面包和奶酪。"),
+            t("Apples and water are not mentioned.", "文中没提苹果和水。"),
+            t("Soup and crackers are not mentioned.", "文中没提汤和饼干。"),
+          ],
         ),
       ],
     ),
@@ -309,6 +389,11 @@ The canoe was barely floating when they reached the campsite, but they made it j
             "The story says the riverbank on both sides was thick forest and steep rock, with no trail, so walking was not a real choice.",
             "故事说两岸都是密林和陡峭的岩石，没有路，所以步行行不通。",
           ),
+          [
+            t("Ruth was the one who wanted to fix it.", "是露丝想修好它。"),
+            t("The campsite was eight kilometers downstream.", "营地在下游八公里处。"),
+            t("Returning the canoe is never mentioned.", "文中从没提到还船。"),
+          ],
         ),
         ask(
           t("Why did they dry the canoe before taping it?", "他们为什么在贴胶带之前先把独木舟擦干？"),
@@ -322,6 +407,11 @@ The canoe was barely floating when they reached the campsite, but they made it j
             "The story gives the reason directly: they dried it because tape won't stick to wet wood.",
             "故事直接给出了理由：他们擦干它，因为胶带粘不住湿木头。",
           ),
+          [
+            t("Weight is not why. Tape needs a dry surface.", "不是为了重量。胶带需要干燥的表面。"),
+            t("Comfort is not the reason given.", "舒适不是文中给出的原因。"),
+            t("The shirt was used for drying.", "衬衫是用来擦干的。"),
+          ],
         ),
         ask(
           t('What does Ruth mean by "Maybe not well, but well enough"?', '露丝说 "Maybe not well, but well enough" 是什么意思？'),
@@ -335,6 +425,11 @@ The canoe was barely floating when they reached the campsite, but they made it j
             "A taped canoe still leaked, and Jonah had to scoop water, but it got them to the campsite: well enough, if not well.",
             "贴了胶带的独木舟仍然漏水，乔纳得一路舀水，但它把他们送到了营地：不算好，但够用了。",
           ),
+          [
+            t("It is the opposite. She admits the fix will not be perfect.", "正好相反。她承认修不完美。"),
+            t("They did fix it.", "他们确实修好了。"),
+            t("Paddling is not what she is talking about.", "她说的不是划船。"),
+          ],
         ),
         ask(
           t("What did they use to fix the crack?", "他们用什么修补裂缝？"),
@@ -344,6 +439,11 @@ The canoe was barely floating when they reached the campsite, but they made it j
             "From the repair kit, they took a roll of duct tape and pressed strips across the crack.",
             "他们从修理包里拿出一卷胶带，一条条贴在裂缝上。",
           ),
+          [
+            t("Glue and wood are not in the kit.", "工具包里没有胶水和木头。"),
+            t("The shirt dried the canoe.", "衬衫是擦干船用的。"),
+            t("Mud and stones are not mentioned for the fix.", "修补时没用泥和石头。"),
+          ],
         ),
       ],
     ),
@@ -379,6 +479,11 @@ In the cool of the evening, Uncle Faisal drove forward slowly, and the truck cra
             "Zara remembered that a vehicle is much easier to spot than a person and gives shade. Her phone had no signal.",
             "扎拉记得，车比人容易被发现，还能遮阴。她的手机没有信号。",
           ),
+          [
+            t("Tiredness is not her reason.", "累不是她的理由。"),
+            t("There was no signal.", "手机没有信号。"),
+            t("The road was behind them.", "公路就在他们身后。"),
+          ],
         ),
         ask(
           t("Why did they let some air out of the tires?", "他们为什么给轮胎放掉一些气？"),
@@ -392,6 +497,11 @@ In the cool of the evening, Uncle Faisal drove forward slowly, and the truck cra
             "The story says letting air out made the tires wider and better at gripping the sand.",
             "故事说，放气让轮胎变宽，能更好地抓住沙子。",
           ),
+          [
+            t("Heat is not the reason given.", "热不是文中给出的原因。"),
+            t("Air in the tires does not cool the truck.", "轮胎里的空气不能给车降温。"),
+            t("They drove it out. Nobody pushed.", "他们是开出去的，没人推车。"),
+          ],
         ),
         ask(
           t("What decision at the start caused the trouble?", "开头的什么决定引来了麻烦？"),
@@ -405,6 +515,11 @@ In the cool of the evening, Uncle Faisal drove forward slowly, and the truck cra
             "The first line shows Uncle Faisal leaving the paved road for a shortcut; on the dirt track, the truck sank into soft sand.",
             "第一句写费萨尔叔叔离开公路抄近路；在土路上，卡车陷进了软沙。",
           ),
+          [
+            t("Zara's book helped them, not caused the trouble.", "扎拉的书帮了他们，不是惹麻烦的原因。"),
+            t("Driving in the evening was how they got out.", "傍晚开车正是他们脱困的方式。"),
+            t("The floor mats helped the wheels grip.", "脚垫帮车轮抓地。"),
+          ],
         ),
         ask(
           t("How did they make shade?", "他们怎样弄出阴凉？"),
@@ -415,6 +530,11 @@ In the cool of the evening, Uncle Faisal drove forward slowly, and the truck cra
             t("They walked back to the road", "走回公路"),
           ],
           t("They rigged a blanket from the side of the truck to make shade.", "他们从卡车侧面挂起一条毯子遮阴。"),
+          [
+            t("There was no tree in the desert.", "沙漠里没有树。"),
+            t("Digging a hole is not mentioned.", "文中没提挖坑。"),
+            t("They stayed with the truck.", "他们留在车旁。"),
+          ],
         ),
       ],
     ),
@@ -446,6 +566,11 @@ She waved both arms over her head, the signal for help the lifeguard had taught.
             "The story says a current was pulling her out, and it was stronger than she was, so the beach got no closer.",
             "故事说，一股水流在把她往外拉，而且比她的力气大，所以海滩没有变近。",
           ),
+          [
+            t("The raft had no hole.", "筏子没有破洞。"),
+            t("She was paddling straight toward the shore.", "她正朝着岸边划。"),
+            t("The beach did not move. The current did.", "岸没有动。是水流在动。"),
+          ],
         ),
         ask(
           t("What did Mei do to stay calm?", "梅做了什么让自己保持冷静？"),
@@ -459,6 +584,11 @@ She waved both arms over her head, the signal for help the lifeguard had taught.
             "She counted her strokes to stay calm: one hundred, then rest, then one hundred more.",
             "她数着划水的次数来保持冷静：一百下，休息，再一百下。",
           ),
+          [
+            t("She was awake. Dozing is how she drifted away.", "她是醒着的。打瞌睡才是她漂走的原因。"),
+            t("No song is mentioned.", "文中没提到歌。"),
+            t("She kept paddling, resting only between hundreds.", "她一直在划，只在每一百下之间休息。"),
+          ],
         ),
         ask(
           t("How did Mei know she was out of the current?", "梅怎么知道自己已经脱离了水流？"),
@@ -472,6 +602,11 @@ She waved both arms over her head, the signal for help the lifeguard had taught.
             "She noticed the little waves were now rolling toward the beach instead of away, a sign she had left the current.",
             "她发现小浪现在朝海滩涌去而不是往外，这说明她已经离开了水流。",
           ),
+          [
+            t("The lifeguard ran toward her after she signaled.", "救生员是在她发信号后才跑过来的。"),
+            t("The raft was still moving.", "筏子还在动。"),
+            t("She was still far out, not able to touch the bottom.", "她还在远处，碰不到海底。"),
+          ],
         ),
       ],
     ),
@@ -505,6 +640,11 @@ They had left a note at the park office, saying where they had gone and when the
             'Lucas wanted action and Amara was frightened; the story says "Keeping busy helped."',
             '卢卡斯想行动，阿玛拉很害怕；故事说 "Keeping busy helped"。',
           ),
+          [
+            t("Nobody swam. She forbade going into the water.", "没人游泳。她禁止下水。"),
+            t("The rangers came only in the morning.", "护林员早上才来。"),
+            t("Strength is not the point. The jobs kept fear away.", "不是比谁强壮。分工是为了驱散恐惧。"),
+          ],
         ),
         ask(
           t("Why did the rangers come looking for the group?", "护林员为什么来找这群人？"),
@@ -518,6 +658,11 @@ They had left a note at the park office, saying where they had gone and when the
             "The note at the park office said where they had gone and when they would be back, so the rangers knew to come when they didn't return.",
             "公园办公室的字条写明了他们去了哪里、什么时候回来，所以他们没回来时护林员知道要来找。",
           ),
+          [
+            t("Lucas stayed. Nobody went into the water.", "卢卡斯留下了。没人下水。"),
+            t("No phone call is mentioned in the cave.", "在洞里没提打电话。"),
+            t("Jokes could not be heard from outside.", "外面听不到笑话。"),
+          ],
         ),
         ask(
           t("How is this story like the one about the whiteout?", "这个故事和白茫茫天气的故事有什么相似之处？"),
@@ -531,6 +676,11 @@ They had left a note at the park office, saying where they had gone and when the
             "In both stories a grown-up refuses to push on through danger, and the group waits, safe, until conditions improve by morning.",
             "两个故事里都有大人拒绝冒险前进，大家安全地等到早上情况好转。",
           ),
+          [
+            t("A snow cave is from the whiteout story, not this one.", "雪洞来自白茫茫的故事，不是这个。"),
+            t("A boat rescue is from the flood story.", "船只救援来自洪水的故事。"),
+            t("The ridge is from Owen's story.", "山脊来自欧文的故事。"),
+          ],
         ),
       ],
     ),

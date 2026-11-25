@@ -43,6 +43,17 @@ Scientists sort the world by its properties. Once you know what something is mad
             "The first paragraph defines matter as anything that has mass and takes up space.",
             "第一段把物质定义为任何有质量并且占据空间的东西。",
           ),
+          [
+            t(
+              "Color and smell are properties that tell substances apart, not what makes something matter.",
+              "颜色和气味是区分物质的性质，不是构成物质的条件。",
+            ),
+            t(
+              "Floating and hardness are also just properties. A rock sinks and is still matter.",
+              "浮和硬也只是性质。石头会沉，但仍是物质。",
+            ),
+            t("Light and heat are named as things that are not matter at all.", "光和热正是文中说的根本不是物质的东西。"),
+          ],
         ),
         ask(
           t("Why does the passage compare a bowling ball and a beach ball?", "文章为什么把保龄球和沙滩球作比较？"),
@@ -56,6 +67,14 @@ Scientists sort the world by its properties. Once you know what something is mad
             "The two balls are the same size, yet the bowling ball is harder to lift because it has more mass.",
             "两个球一样大，但保龄球更难举起，因为它的质量更大。",
           ),
+          [
+            t(
+              "Same substance is never claimed. The two balls differ in how heavy they are.",
+              "文中从没说它们是同一种物质。两个球的区别在于轻重。",
+            ),
+            t("Light comes up in a later paragraph, not in the comparison of the balls.", "光是在后面一段才提到的，与两个球的比较无关。"),
+            t("The balls are the same size, so neither has a larger volume.", "两个球大小一样，所以谁的体积都不更大。"),
+          ],
         ),
         ask(
           t("Which of these is not matter, according to the passage?", "根据文章，下面哪一项不是物质？"),
@@ -65,12 +84,25 @@ Scientists sort the world by its properties. Once you know what something is mad
             "The passage says light, sound and heat have no mass and fill no space, so a sunbeam is not matter. Air, cork and stone all are.",
             "文章说光、声和热没有质量，也不占空间，所以阳光不是物质。空气、软木塞和石头都是物质。",
           ),
+          [
+            t("The air in a balloon is matter: it has a little mass and a large volume.", "气球里的空气是物质：它有少量质量和较大体积。"),
+            t("A cork is matter. It floats because it is not dense.", "软木塞是物质。它浮起来是因为密度小。"),
+            t("A stone is matter. The sunbeam only warms it.", "石头是物质。阳光只是让它变暖。"),
+          ],
         ),
         ask(
           t("Why does a cork float in water?", "软木塞为什么能浮在水上？"),
           t("It is not dense", "它的密度不大"),
           [t("It is heavier than a rock", "它比石头重"), t("It has no mass", "它没有质量"), t("It is made of light", "它是光做的")],
           t("A rock is dense, so it sinks, while a cork is not, so it floats.", "石头密度大，所以下沉；软木塞不是，所以漂浮。"),
+          [
+            t(
+              "Heavier than a rock is the reverse. The rock is the dense one that sinks.",
+              "比石头重是反过来了。石头才是密度大、会下沉的那个。",
+            ),
+            t("A cork has mass. Only light, sound and heat have none.", "软木塞有质量。只有光、声和热没有质量。"),
+            t("Light is not matter, and a cork is not made of it.", "光不是物质，软木塞也不是光做的。"),
+          ],
         ),
       ],
     ),
@@ -100,6 +132,14 @@ The tiny particles explain much of what we see, from a melting ice cube to the s
             "The first paragraph says Democritus guessed you would reach tiny pieces that could not be cut any further, which he called atoms.",
             "第一段说，德谟克利特猜想最后会得到不能再分割的微小颗粒，他称之为原子。",
           ),
+          [
+            t("Sugar is only the example he cut in half. He did not say matter is sugar.", "糖只是他拿来切半的例子。他没说物质是糖。"),
+            t(
+              "Cutting forever is the opposite. He guessed you would reach pieces that cannot be cut.",
+              "永远切下去正好相反。他猜想最后会得到切不开的小块。",
+            ),
+            t("Stars are only a comparison for how many particles a drop holds.", "星星只是用来比喻一滴水里粒子有多少。"),
+          ],
         ),
         ask(
           t("Which detail is evidence that particles are always moving?", "哪个细节证明颗粒一直在运动？"),
@@ -113,6 +153,14 @@ The tiny particles explain much of what we see, from a melting ice cube to the s
             "The fourth paragraph says the color spreads without stirring because moving water particles carry it, which is evidence of motion.",
             "第四段说，不用搅拌颜色也会扩散，因为运动的水颗粒带着它走，这就是运动的证据。",
           ),
+          [
+            t(
+              "A drop holding many particles shows how many there are, not that they move.",
+              "一滴水有很多粒子说明粒子多，不说明它们在动。",
+            ),
+            t("Being too small to see says nothing about movement.", "太小看不见和是否运动无关。"),
+            t("When Democritus lived is history, not evidence of movement.", "德谟克利特生活的年代是历史，不是运动的证据。"),
+          ],
         ),
         ask(
           t("How do particles behave in a gas?", "气体中的颗粒是怎样运动的？"),
@@ -126,6 +174,11 @@ The tiny particles explain much of what we see, from a melting ice cube to the s
             "The third paragraph says particles in a gas zoom around freely and spread out to fill a container. Shaking in place describes a solid, and sliding describes a liquid.",
             "第三段说气体中的颗粒自由飞快地运动，散开充满容器。在原地颤动说的是固体，相互滑过说的是液体。",
           ),
+          [
+            t("Packed tightly and shaking describes a solid.", "紧密排列、原地振动描述的是固体。"),
+            t("Sliding past one another describes a liquid.", "彼此滑过描述的是液体。"),
+            t("The passage says particles are always moving, in every state.", "文中说粒子在任何状态下都一直在运动。"),
+          ],
         ),
         ask(
           t("How do particles behave in a solid?", "固体中的粒子怎样运动？"),
@@ -136,6 +189,11 @@ The tiny particles explain much of what we see, from a melting ice cube to the s
             t("They do not move at all", "它们完全不动"),
           ],
           t("In a solid, particles are packed tightly and only shake in place.", "在固体中，粒子紧密排列，只在原地振动。"),
+          [
+            t("Zooming around freely describes a gas.", "自由飞来飞去描述的是气体。"),
+            t("Sliding past one another describes a liquid.", "彼此滑过描述的是液体。"),
+            t("They do move: they shake in place.", "它们是在动的：在原地振动。"),
+          ],
         ),
       ],
     ),
@@ -165,6 +223,11 @@ These three forms are called states of matter. The same substance can move from 
             "The third paragraph says the amount of juice stays the same while its shape changes to fit each container.",
             "第三段说果汁的量不变，而形状随每个容器改变。",
           ),
+          [
+            t("Keeping its own shape is true of a solid, like the ice cube.", "保持自己的形状是固体的特点，比如冰块。"),
+            t("Spreading to fill the room is a gas, like the perfume.", "扩散到整个房间是气体，比如香水。"),
+            t("Pouring juice into a dish changes its shape, not its state.", "把果汁倒进盘子改变的是形状，不是状态。"),
+          ],
         ),
         ask(
           t("Why does the author mention a bottle of perfume?", "作者为什么提到一瓶香水？"),
@@ -178,6 +241,14 @@ These three forms are called states of matter. The same substance can move from 
             "The perfume example supports the point that a gas spreads to fill whatever space it is in.",
             "香水的例子支持了“气体会散开充满所在空间”这一观点。",
           ),
+          [
+            t("A solid keeping its shape is shown by the ice cube, not the perfume.", "固体保持形状是用冰块说明的，不是香水。"),
+            t("Ice floating is never discussed in this passage.", "这篇文章没有谈冰为什么浮。"),
+            t(
+              "Steam and soup appear in the first paragraph. The perfume shows a gas spreading.",
+              "蒸汽和汤出现在第一段。香水说明的是气体扩散。",
+            ),
+          ],
         ),
         ask(
           t("What does the comparison to a child, a teenager and an adult explain?", "把物质和儿童、少年、成年人作比较，解释了什么？"),
@@ -191,6 +262,14 @@ These three forms are called states of matter. The same substance can move from 
             "Just as one person passes through different ages, ice, water and steam are all the same substance, water.",
             "正如一个人会经历不同的年龄，冰、水和蒸汽都是同一种物质：水。",
           ),
+          [
+            t("Growing larger is not the point. The person stays the same person.", "长大不是重点。这个人还是同一个人。"),
+            t(
+              "Heating three times is not said. Heating or cooling moves a substance between states.",
+              "文中没说要加热三次。加热或冷却让物质在状态间变化。",
+            ),
+            t("The comparison is about water, not about people alone changing.", "这个比喻说的是水，不是说只有人会变。"),
+          ],
         ),
         ask(
           t("Where can you find water as a gas on an ordinary day?", "平常的一天里，你在哪里能找到气态的水？"),
@@ -201,6 +280,11 @@ These three forms are called states of matter. The same substance can move from 
             t("In a bottle of perfume", "在一瓶香水里"),
           ],
           t("Water is gas in the invisible steam above a pot of soup.", "水在一锅汤上方看不见的蒸汽里是气态的。"),
+          [
+            t("Ice cubes in the freezer are water as a solid.", "冰箱里的冰块是固态的水。"),
+            t("A glass of water holds liquid water.", "一杯水装的是液态的水。"),
+            t("Perfume is the example of a gas spreading, not of water.", "香水是气体扩散的例子，不是水。"),
+          ],
         ),
       ],
     ),
@@ -230,6 +314,11 @@ Different substances melt and boil at different temperatures. Butter melts in a 
             "The first paragraph says added heat makes particles shake faster until they break free, and the solid melts.",
             "第一段说，加热让颗粒颤动得更快，直到挣脱原位，固体就熔化了。",
           ),
+          [
+            t("Slowing down and locking together is what happens when heat is taken away.", "变慢并锁在一起是去掉热量时发生的。"),
+            t("Melting is a physical change. The substance stays the same.", "熔化是物理变化。物质本身不变。"),
+            t("Stopping is the opposite. Heat makes particles shake faster.", "停止不动正好相反。加热让粒子振动得更快。"),
+          ],
         ),
         ask(
           t("Why are melting and boiling called physical changes?", "为什么熔化和沸腾叫作物理变化？"),
@@ -243,6 +332,11 @@ Different substances melt and boil at different temperatures. Butter melts in a 
             "The fourth paragraph says these are physical changes because the substance does not change; melted chocolate is still chocolate.",
             "第四段说，这些是物理变化，因为物质没有改变；熔化的巧克力仍然是巧克力。",
           ),
+          [
+            t("A laboratory is never mentioned for melting and boiling.", "文中没说熔化和沸腾只在实验室发生。"),
+            t("100 degrees is only water's boiling point. Butter melts in a warm hand.", "100度只是水的沸点。黄油在温暖的手里就会熔化。"),
+            t("They can be reversed: melted chocolate cools back into a bar.", "它们是可以逆转的：熔化的巧克力能冷却成块。"),
+          ],
         ),
         ask(
           t("What happens when steam touches a cold window?", "蒸汽碰到冰冷的窗户会怎样？"),
@@ -256,6 +350,11 @@ Different substances melt and boil at different temperatures. Butter melts in a 
             "The third paragraph says steam that touches a cold window cools and turns back into drops of liquid water.",
             "第三段说，碰到冰冷窗户的蒸汽会冷却，变回液态的水滴。",
           ),
+          [
+            t("Boiling needs heat. The window is cold, so the steam cools.", "沸腾需要热。窗户是冷的，所以蒸汽冷却。"),
+            t("It turns into drops of liquid first. Freezing comes only in a freezer.", "它先变成液态水滴。只有放进冰箱才会结冰。"),
+            t("It stays water. Cooling steam gives liquid water, not a new gas.", "它还是水。蒸汽冷却变成液态水，不是新的气体。"),
+          ],
         ),
         ask(
           t("At what temperature does water boil?", "水在多少度沸腾？"),
@@ -266,6 +365,11 @@ Different substances melt and boil at different temperatures. Butter melts in a 
             t("More than 1,500 degrees Celsius", "一千五百多摄氏度"),
           ],
           t('The text says, "At one hundred degrees Celsius, water boils."', "短文说：“水在一百摄氏度时沸腾。”"),
+          [
+            t("Zero degrees is where ice melts, not where water boils.", "零度是冰熔化的温度，不是水沸腾的温度。"),
+            t("Fifty degrees is not given anywhere in the passage.", "文中根本没有提到五十度。"),
+            t("More than 1,500 degrees is what iron needs to melt.", "超过1500度是铁熔化所需的温度。"),
+          ],
         ),
       ],
     ),
@@ -295,6 +399,14 @@ Knowing which substances dissolve helps cooks, doctors and scientists every day.
             "The second paragraph defines a solution as a mixture in which one substance dissolves completely into another.",
             "第二段把溶液定义为一种物质完全溶解于另一种物质的混合物。",
           ),
+          [
+            t(
+              "Pieces a sieve can catch, like sand and beans, form a mixture that is not a solution.",
+              "能被筛子分开的大块，比如沙和豆子，是混合物而不是溶液。",
+            ),
+            t("Sinking to the bottom is what sand does because it does not dissolve.", "沉到底部是沙子的表现，因为它不溶解。"),
+            t("Heating is not mentioned. In a solution the sugar is still sugar.", "文中没提加热。溶液里的糖仍然是糖。"),
+          ],
         ),
         ask(
           t("How can the sugar be taken back out of sugar water?", "怎样把糖从糖水里取回来？"),
@@ -308,6 +420,11 @@ Knowing which substances dissolve helps cooks, doctors and scientists every day.
             "The third paragraph says the water slowly evaporates in a dish in the sun and leaves the sugar behind as crystals.",
             "第三段说，把糖水放在阳光下的浅盘里，水慢慢蒸发，糖以晶体的形式留下来。",
           ),
+          [
+            t("A sieve separates beans from sand. Dissolved sugar passes through.", "筛子分开的是豆子和沙。溶解的糖会穿过去。"),
+            t("Stirring only helps sugar dissolve. It does not take it out.", "搅拌只会帮糖溶解，不会把它取出来。"),
+            t("Sand does not dissolve and would not pull the sugar out.", "沙子不溶解，也不会把糖带出来。"),
+          ],
         ),
         ask(
           t("Which sentence shows that sand is not soluble in water?", "哪句话表明沙子不溶于水？"),
@@ -321,6 +438,11 @@ Knowing which substances dissolve helps cooks, doctors and scientists every day.
             "Sand that sinks has not dissolved. The other details describe sugar, which is soluble.",
             "沉下去的沙子没有溶解。其他细节说的都是能溶解的糖。",
           ),
+          [
+            t("Spreading evenly between water particles describes sugar dissolving.", "均匀分散在水分子之间描述的是糖溶解。"),
+            t("Disappearing but still tasting sweet describes sugar in water.", "看不见但尝得出来描述的是水中的糖。"),
+            t("Crystals left in the sun are the sugar taken back out of water.", "阳光下留下的晶体是从水里取回的糖。"),
+          ],
         ),
         ask(
           t("How could you separate sand from dried beans?", "怎样把沙子和干豆子分开？"),
@@ -330,6 +452,11 @@ Knowing which substances dissolve helps cooks, doctors and scientists every day.
             "You could separate them with a sieve, because the beans are too big to pass through its holes.",
             "可以用筛子把它们分开，因为豆子太大，漏不过筛孔。",
           ),
+          [
+            t("Boiling is not how the passage separates sand and beans.", "文中不是用煮沸来分开沙子和豆子的。"),
+            t("Adding sugar would only make the mixture more mixed.", "加糖只会让混合物更杂。"),
+            t("Freezing would not part them. The beans are too big for the sieve's holes.", "冷冻分不开它们。豆子太大，穿不过筛孔。"),
+          ],
         ),
       ],
     ),
@@ -357,6 +484,11 @@ Not every clue proves a chemical change. Boiling water bubbles too, but it is st
             "The first paragraph says rust is a brand-new substance formed when the iron in steel reacts with water and oxygen.",
             "第一段说，铁锈是钢中的铁与水和氧气反应后形成的全新物质。",
           ),
+          [
+            t("Melting keeps steel as steel. Rust is a new substance, not steel at all.", "熔化后钢还是钢。铁锈是新物质，根本不是钢。"),
+            t("Paint is not mentioned. The crust forms from the iron itself.", "文中没提油漆。锈层来自铁本身。"),
+            t("Steel does not dissolve in rain. Iron reacts with water and oxygen.", "钢不会溶解在雨水里。是铁和水、氧气发生了反应。"),
+          ],
         ),
         ask(
           t("How is a chemical change different from melting?", "化学变化和熔化有什么不同？"),
@@ -370,6 +502,11 @@ Not every clue proves a chemical change. Boiling water bubbles too, but it is st
             "The second paragraph says a chemical change usually cannot be undone, unlike melted butter, which can become solid again.",
             "第二段说，化学变化通常不能逆转，不像熔化的黄油可以重新变成固体。",
           ),
+          [
+            t("Heat is not ruled out. A burning candle gives off heat.", "文中没说不需要热。燃烧的蜡烛就会放热。"),
+            t("Light is only one possible clue, given off sometimes, not always.", "光只是可能的线索之一，有时出现，并非总是。"),
+            t("Keeping the same substance is melting. A chemical change makes a new one.", "保持同一种物质是熔化。化学变化会产生新物质。"),
+          ],
         ),
         ask(
           t("Why does the author mention boiling water in the last paragraph?", "作者为什么在最后一段提到沸水？"),
@@ -383,12 +520,22 @@ Not every clue proves a chemical change. Boiling water bubbles too, but it is st
             "Boiling water bubbles but stays water, so the author uses it to show that one clue is not proof.",
             "沸水会冒泡但仍然是水，所以作者用它来说明一条线索不等于证据。",
           ),
+          [
+            t("Boiling water is still water, so no new substance forms.", "沸水仍然是水，所以没有新物质形成。"),
+            t("Baking soda and vinegar come in the paragraph before, as a separate clue.", "小苏打和醋出现在前一段，是另一条线索。"),
+            t("Water turning into rust is never said. Rust forms from iron.", "文中从没说水会变成铁锈。铁锈来自铁。"),
+          ],
         ),
         ask(
           t("What happens when baking soda meets vinegar?", "小苏打遇到醋会怎样？"),
           t("Bubbles of gas fizz up", "冒出气泡"),
           [t("It turns into rust", "变成铁锈"), t("It melts", "融化了"), t("It gives off light", "发出光")],
           t("Bubbles of gas may fizz up, as when baking soda meets vinegar.", "会冒出气泡，就像小苏打遇到醋那样。"),
+          [
+            t("Rust forms from iron, water and air, not from baking soda.", "铁锈来自铁、水和空气，不是小苏打。"),
+            t("Melting is a physical change. This reaction makes gas.", "熔化是物理变化。这个反应会产生气体。"),
+            t("Light is the clue of a burning candle, not of this reaction.", "发光是燃烧蜡烛的线索，不是这个反应的。"),
+          ],
         ),
       ],
     ),
@@ -420,6 +567,11 @@ Scientists call this idea the conservation of mass. It is one of the most import
             "The first paragraph states the question: when baking soda and vinegar react, does any matter disappear?",
             "第一段提出了问题：小苏打和醋反应时，会有物质消失吗？",
           ),
+          [
+            t("The balloon filling is part of the test, not the question the class asked.", "气球鼓起是实验的一部分，不是全班要问的问题。"),
+            t("The class weighed everything together, not vinegar against soda.", "全班是一起称的，不是比较醋和小苏打谁重。"),
+            t("The smell of vinegar is never mentioned.", "文中从没提到醋的气味。"),
+          ],
         ),
         ask(
           t("Why did the mass drop in the open bottle?", "为什么开口瓶的质量下降了？"),
@@ -429,6 +581,11 @@ Scientists call this idea the conservation of mass. It is one of the most import
             "The fourth paragraph says the mass dropped to 178 grams because the gas had escaped into the room.",
             "第四段说质量降到178克，是因为气体跑到了房间里。",
           ),
+          [
+            t("Nothing was destroyed. The conclusion is that matter only changes form.", "什么都没被消灭。结论是物质只是改变了形态。"),
+            t("The same scale gave 182 grams for the sealed bottle, so it worked.", "同一个秤称密封瓶子得到182克，所以秤没坏。"),
+            t("The open bottle had no balloon at all.", "开口的瓶子根本没有气球。"),
+          ],
         ),
         ask(
           t("Which result supports the conclusion that matter is not destroyed?", "哪个结果支持“物质不会被消灭”的结论？"),
@@ -442,6 +599,14 @@ Scientists call this idea the conservation of mass. It is one of the most import
             "Only the unchanged mass of the sealed bottle shows that no matter vanished. Fizzing and swelling show a reaction, not that mass was kept.",
             "只有密封瓶质量不变才能说明没有物质消失。冒泡和胀大说明发生了反应，但不能说明质量守恒。",
           ),
+          [
+            t("Fizzing shows a reaction happened, not that the mass stayed the same.", "冒泡说明发生了反应，不说明质量不变。"),
+            t(
+              "The lighter open bottle seems to show matter vanishing. The gas only escaped.",
+              "开口瓶子变轻似乎说明物质消失，其实只是气体跑了。",
+            ),
+            t("The swelling balloon shows gas formed, not that no matter was lost.", "气球鼓起说明产生了气体，不说明质量没有减少。"),
+          ],
         ),
       ],
     ),
@@ -471,6 +636,11 @@ So the next time you help in the kitchen, remember: you are doing science.`,
             "The third paragraph says the cooked egg cannot be made clear and runny again, so a new substance has formed. The other three are physical changes.",
             "第三段说煮熟的鸡蛋不能再变回透明、流动的样子，所以形成了新物质。另外三个都是物理变化。",
           ),
+          [
+            t("Melted butter becomes solid butter again when it cools: a physical change.", "熔化的黄油冷却后又变回固体黄油：是物理变化。"),
+            t("Freezing juice changes its state, not what it is made of.", "冻果汁改变的是状态，不是成分。"),
+            t("A chopped carrot is still a carrot, only in smaller pieces.", "切碎的胡萝卜还是胡萝卜，只是块小了。"),
+          ],
         ),
         ask(
           t("What makes a cake rise, according to the passage?", "根据文章，是什么让蛋糕膨胀？"),
@@ -484,6 +654,14 @@ So the next time you help in the kitchen, remember: you are doing science.`,
             "The third paragraph says the batter rises as baking powder gives off bubbles of gas that are trapped as it sets.",
             "第三段说，发酵粉放出的气泡被困在凝固的面糊中，面糊就膨胀了。",
           ),
+          [
+            t(
+              "Melting butter is a physical change mentioned earlier. It does not make the cake rise.",
+              "熔化黄油是前面提到的物理变化，不会让蛋糕膨胀。",
+            ),
+            t("Eggs turning white is a separate example of a chemical change.", "鸡蛋变白是另一个化学变化的例子。"),
+            t("The smell comes from toast, a different food.", "香味来自烤面包，是另一种食物。"),
+          ],
         ),
         ask(
           t("Why does the author call a recipe a careful procedure?", "作者为什么把食谱称为严谨的步骤？"),
@@ -497,6 +675,11 @@ So the next time you help in the kitchen, remember: you are doing science.`,
             "The fourth paragraph says a good recipe is tested again and again until the results are consistent, like a scientist's procedure.",
             "第四段说，好的食谱要反复测试，直到结果一致，就像科学家的实验步骤。",
           ),
+          [
+            t("The kitchen is only called a laboratory, not a real one.", "厨房只是被比作实验室，不是真的实验室。"),
+            t("Recipes use chemical changes on purpose, like rising cake.", "食谱会有意利用化学变化，比如蛋糕膨胀。"),
+            t("Too much baking powder makes a bitter cake.", "发酵粉太多会让蛋糕发苦。"),
+          ],
         ),
       ],
     ),

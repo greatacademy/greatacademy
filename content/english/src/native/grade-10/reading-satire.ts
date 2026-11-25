@@ -49,6 +49,11 @@ Nearly three hundred years later, "a modest proposal" is still used to describe 
             "The sixth paragraph says its power comes from the incongruity between the gentle voice and the horror of what it says.",
             "第六段说它的力量来自温和的口吻与所说内容的恐怖之间的不协调。",
           ),
+          [
+            t("Swift was not proposing anything of the kind; the plan was satire.", "斯威夫特根本没有这个意思；这个计划是讽刺。"),
+            t("No rule about pamphlets is mentioned; his anger shows near the end.", "文中没提小册子的规定；他的愤怒在结尾显露出来。"),
+            t("The calm voice draws readers in, the opposite of putting them to sleep.", "冷静的语气吸引读者，而不是让人睡着。"),
+          ],
         ),
         ask(
           t("What real situation was Swift attacking?", "斯威夫特抨击的是什么真实情况？"),
@@ -62,6 +67,14 @@ Nearly three hundred years later, "a modest proposal" is still used to describe 
             "The fifth paragraph says he forced readers to see how the powerful were already treating the poor as goods to be used, not human beings.",
             "第五段说他迫使读者看到当权者已经把穷人当作可利用的商品，而不是人。",
           ),
+          [
+            t(
+              "No doctors' plan is mentioned; Swift attacked landlords and unfair laws.",
+              "文中没提医生的计划；斯威夫特抨击的是地主和不公的法律。",
+            ),
+            t("Cooks are not the subject; the recipes are part of the satire.", "厨师不是主题；食谱只是讽刺的一部分。"),
+            t("Gulliver's Travels is mentioned only to say Swift was famous.", "提到《格列佛游记》只是说明斯威夫特出名。"),
+          ],
         ),
         ask(
           t(
@@ -78,12 +91,25 @@ Nearly three hundred years later, "a modest proposal" is still used to describe 
             "He dismisses real reforms as impossible because no one will adopt them, and there his anger at complacent rulers shows through.",
             "他以没人会采纳为由把真正的改革斥为不可能，此时他对自满的统治者的愤怒显露出来。",
           ),
+          [
+            t("The reforms had not been tried; no one would adopt them.", "这些改革根本没实行，没人愿意采纳。"),
+            t("The dismissal is deliberate, a moment where his anger shows.", "这种否定是有意的，显露出他的愤怒。"),
+            t("The reforms included buying Irish goods, not English ones.", "改革中包括购买爱尔兰货，而不是英国货。"),
+          ],
         ),
         ask(
           t("Where and when did the pamphlet first appear?", "这本小册子最早在何时何地出现？"),
           t("In Dublin, in 1729", "1729年，都柏林"),
           [t("In London, in 1726", "1726年，伦敦"), t("In Paris, in 1789", "1789年，巴黎"), t("In Edinburgh, in 1835", "1835年，爱丁堡")],
           t("In 1729, a short pamphlet appeared in Dublin with a long title.", "1729年，一本标题很长的小册子在都柏林出现。"),
+          [
+            t(
+              "1726 and Gulliver's Travels came earlier; the pamphlet was Dublin, 1729.",
+              "1726年出的是《格列佛游记》；这本小册子是1729年在都柏林出版的。",
+            ),
+            t("Paris and 1789 have nothing to do with Swift.", "巴黎和1789年与斯威夫特无关。"),
+            t("Edinburgh and 1835 belong to the moon hoax story, not Swift.", "爱丁堡和1835年属于月球骗局，与斯威夫特无关。"),
+          ],
         ),
       ],
       ["Dublin", "Ireland", "Ireland's", "Irish", "Jonathan", "Swift", "Swift's", "Gulliver's", "English"],
@@ -116,6 +142,11 @@ The genius of the satire is its scale. By shrinking the people, Swift shrinks th
             "The third paragraph says readers recognized a mockery of the British court, where ministers competed for favor and honors in absurd ways.",
             "第三段说读者看出这是在嘲讽英国宫廷，那里的大臣以同样荒唐的方式争宠和争荣誉。",
           ),
+          [
+            t("Circus performers are not the target; readers saw the British court.", "讽刺对象不是马戏演员；读者看出的是英国宫廷。"),
+            t("Gulliver is a ship's doctor, but the contests mock ministers.", "格列佛是船医，但比赛讽刺的是大臣。"),
+            t("Children's games are not the target; ministers' contests for favor are.", "讽刺对象不是儿童游戏，而是大臣争宠。"),
+          ],
         ),
         ask(
           t("What real conflicts was the war over eggs meant to suggest?", "关于鸡蛋的战争是为了暗示哪些真实的冲突？"),
@@ -129,6 +160,11 @@ The genius of the satire is its scale. By shrinking the people, Swift shrinks th
             "The fifth paragraph says Europe had been torn by wars between Catholics and Protestants over questions that seemed as trivial as the end of an egg.",
             "第五段说欧洲曾被天主教徒和新教徒之间的战争撕裂，而争论的问题在斯威夫特看来就像鸡蛋从哪头打开一样琐碎。",
           ),
+          [
+            t("Chickens are not the point; the quarrel mirrors religious wars.", "重点不在养鸡；这场争吵影射宗教战争。"),
+            t("Blefuscu is an invented island, standing for France.", "布莱夫斯库是虚构的岛，影射法国。"),
+            t("Recipes are not the point; the egg stands for religious quarrels.", "重点不在菜谱；鸡蛋代表宗教纷争。"),
+          ],
         ),
         ask(
           t("How does making the people tiny help the satire?", "把人写得很小怎样有助于讽刺？"),
@@ -142,6 +178,14 @@ The genius of the satire is its scale. By shrinking the people, Swift shrinks th
             "The last paragraph says by shrinking the people, Swift shrinks their quarrels, and readers can see how small and foolish they are.",
             "最后一段说斯威夫特缩小了人，也就缩小了他们的争吵，读者便能看清这些争吵多么渺小和愚蠢。",
           ),
+          [
+            t("The satire is aimed at adult readers and their politics.", "这种讽刺针对的是成年读者及其政治。"),
+            t(
+              "Gulliver's strength is not the point; the tiny scale makes quarrels look foolish.",
+              "格列佛的力量不是重点；缩小的比例让争吵显得愚蠢。",
+            ),
+            t("Readers recognized Britain at once; nothing was hidden.", "读者一眼就认出了英国，并无隐藏。"),
+          ],
         ),
         ask(
           t("What was Lemuel Gulliver's job?", "莱缪尔·格列佛的职业是什么？"),
@@ -151,6 +195,11 @@ The genius of the satire is its scale. By shrinking the people, Swift shrinks th
             "A ship's doctor named Lemuel Gulliver is shipwrecked and wakes to find himself tied to the ground.",
             "一位名叫莱缪尔·格列佛的船医遭遇海难，醒来发现自己被绑在地上。",
           ),
+          [
+            t("He was not the captain; he was the ship's doctor.", "他不是船长，而是船医。"),
+            t("Rope dancing is how Lilliputian officials won their jobs.", "走绳索是小人国官员求职的方式。"),
+            t("Ministers belong to the Lilliputian court, not Gulliver.", "大臣属于小人国宫廷，不是格列佛。"),
+          ],
         ),
       ],
       [
@@ -199,6 +248,11 @@ The story mocks more than one folly. It mocks the vanity of the emperor, the obs
             "The third paragraph says he wondered if he was stupid or unfit and dared not admit it, so he praised the pattern.",
             "第三段说他怀疑自己是否愚蠢或不称职，不敢承认，于是称赞那些图案。",
           ),
+          [
+            t("No bribe is mentioned; the minister acted out of fear.", "文中没提贿赂；大臣是出于恐惧。"),
+            t("He saw nothing on the empty looms.", "他在空织布机上什么也没看到。"),
+            t("The emperor sent him only to check the work, not to lie.", "皇帝只派他去查看进度，并没让他撒谎。"),
+          ],
         ),
         ask(
           t("Why is it a child who speaks the truth?", "为什么说出真相的是一个孩子？"),
@@ -212,6 +266,11 @@ The story mocks more than one folly. It mocks the vanity of the emperor, the obs
             "The story shows that fear of looking foolish makes people act foolishly; the child, without that fear, simply says what he sees.",
             "故事表明害怕显得愚蠢会让人做蠢事；孩子没有这种恐惧，只是说出了他看到的东西。",
           ),
+          [
+            t("The child is in the crowd watching the procession.", "孩子就在观看游行的人群中。"),
+            t("The child is not a swindler; the swindlers are the two weavers.", "孩子不是骗子；骗子是那两个织工。"),
+            t("There was no cloth for anyone to see.", "根本没有布，谁也看不见。"),
+          ],
         ),
         ask(
           t("What does the emperor's decision to walk on more proudly reveal?", "皇帝决定更加骄傲地走下去，揭示了什么？"),
@@ -225,12 +284,22 @@ The story mocks more than one folly. It mocks the vanity of the emperor, the obs
             "He suspects the crowd is right but goes through with the procession more proudly than ever, choosing appearance over truth.",
             "他怀疑人群是对的，却比以往任何时候都更骄傲地走完游行，选择了面子而非真相。",
           ),
+          [
+            t("He has learned nothing; he keeps up the act.", "他什么也没学到，仍在继续演戏。"),
+            t("Punishing the swindlers is never mentioned.", "文中没提惩罚骗子。"),
+            t("He suspects the child is right.", "他怀疑孩子说得对。"),
+          ],
         ),
         ask(
           t('Who were the two "weavers" really?', "那两个“织工”到底是什么人？"),
           t("Swindlers", "骗子"),
           [t("The emperor's ministers", "皇帝的大臣"), t("Famous artists", "著名艺术家"), t("Children from the crowd", "人群中的孩子")],
           t("Two swindlers arrive in the city and claim to be weavers.", "两个骗子来到城里，自称是织工。"),
+          [
+            t("The ministers were the ones fooled, not the weavers.", "大臣是被骗的人，不是织工。"),
+            t("They were not real artists; they set up empty looms.", "他们不是真正的艺术家，只架起了空织布机。"),
+            t("The child in the crowd exposed them, not the other way round.", "人群中的孩子揭穿了他们，而不是相反。"),
+          ],
         ),
       ],
       ["Danish", "Hans", "Christian", "Andersen"],
@@ -265,6 +334,11 @@ Today, every April 1, newspapers and websites around the world publish their own
             "The passage says it came from a respected program, was told in a calm and serious voice and was full of convincing details.",
             "文章说它来自一个受尊敬的节目，用平静严肃的口吻讲述，并充满令人信服的细节。",
           ),
+          [
+            t("The film was from Switzerland, not British gardens.", "影片拍的是瑞士，不是英国花园。"),
+            t("No scientists are mentioned; the details were invented.", "文中没提科学家；细节都是编的。"),
+            t("There was no warning; the report was played straight.", "没有任何预警；报道一本正经地播出。"),
+          ],
         ),
         ask(
           t("What does the BBC's advice to callers show?", "英国广播公司给来电者的建议说明了什么？"),
@@ -278,6 +352,11 @@ Today, every April 1, newspapers and websites around the world publish their own
             "Staff answered with a perfectly straight face, advising people to put a sprig of spaghetti in tomato sauce and hope for the best.",
             "工作人员一本正经地回答，建议人们把一小枝意大利面放进番茄酱里，然后听天由命。",
           ),
+          [
+            t("The BBC sold no trees; the advice was a joke.", "BBC 并没卖树；那个建议是玩笑。"),
+            t("The staff knew; they answered with a straight face.", "员工知情，只是一本正经地回答。"),
+            t("Some callers were angry, but no apology is mentioned.", "有些来电者生气了，但文中没提道歉。"),
+          ],
         ),
         ask(
           t("How does the writer defend the viewers who were fooled?", "作者怎样为被愚弄的观众辩护？"),
@@ -291,6 +370,11 @@ Today, every April 1, newspapers and websites around the world publish their own
             "The writer says pasta was not common in 1950s Britain and the gullible viewers were not stupid but trusting.",
             "作者说意大利面在20世纪50年代的英国并不常见，那些容易受骗的观众不是愚蠢，而是信任。",
           ),
+          [
+            t("They were fooled, so they had not been told.", "他们被骗了，说明事先并不知情。"),
+            t("No payment is mentioned; they believed it honestly.", "文中没提报酬；他们是真心相信。"),
+            t("They watched Panorama, the program that ran the report.", "他们看的正是播出这则报道的《全景》节目。"),
+          ],
         ),
         ask(
           t("Which pest's disappearance supposedly led to a record spaghetti crop?", "据说是哪种害虫的消失带来了意大利面大丰收？"),
@@ -300,6 +384,11 @@ Today, every April 1, newspapers and websites around the world publish their own
             "The mild winter and the disappearance of a pest called the spaghetti weevil had led to a record crop.",
             "暖冬和一种叫意大利面象鼻虫的害虫消失，带来了创纪录的丰收。",
           ),
+          [
+            t("The pasta moth is not in the report.", "报道中没有“意面蛾”。"),
+            t("The tomato beetle is not mentioned.", "文中没提“番茄甲虫”。"),
+            t("The noodle worm is not mentioned; it was the spaghetti weevil.", "文中没提“面条虫”；是“意面象鼻虫”。"),
+          ],
         ),
       ],
       ["Panorama", "Switzerland", "BBC", "BBC's", "Britain", "British", "Fools"],
@@ -334,6 +423,11 @@ You Zhan's method was simple but brilliant. Instead of saying that the emperor w
             "The second paragraph says because a jester's words were taken as jokes, he could say things that would have been dangerous from anyone else.",
             "第二段说因为优伶的话被当作玩笑，他能说出别人说了会有危险的话。",
           ),
+          [
+            t("He was a jester, not a relative.", "他是弄臣，不是亲戚。"),
+            t("Ministers spoke but dared not disagree.", "大臣可以说话，只是不敢反对。"),
+            t("The emperor listened to You Zhan, so he did listen to someone.", "皇帝听了优旃的话，并非谁都不听。"),
+          ],
         ),
         ask(
           t("How did You Zhan argue against the hunting park?", "优旃是怎样反对扩建猎苑的？"),
@@ -347,6 +441,11 @@ You Zhan's method was simple but brilliant. Instead of saying that the emperor w
             "The fourth paragraph says he did not argue against it but carried it one step further until its absurdity was obvious.",
             "第四段说他并没有反驳，而是把它再往前推了一步，直到其荒唐显而易见。",
           ),
+          [
+            t("He did not argue; he praised the plan.", "他没有反驳，而是夸赞这个计划。"),
+            t("The people did not protest, and he asked no one to.", "百姓没有抗议，他也没叫人抗议。"),
+            t("He kept entertaining; his joke itself changed the plan.", "他照常逗乐；正是笑话本身改变了计划。"),
+          ],
         ),
         ask(
           t("What does the joke about building a house over the city mock?", "关于在全城上方盖房子的玩笑嘲讽了什么？"),
@@ -360,12 +459,22 @@ You Zhan's method was simple but brilliant. Instead of saying that the emperor w
             "By pointing out that drying the lacquer would need a building over the whole city, he made the plan's cost and folly impossible to ignore.",
             "他指出晾干漆需要一座罩住全城的房子，使这个计划的代价和愚蠢无法被忽视。",
           ),
+          [
+            t("His height is not part of this joke.", "他的身高与这个笑话无关。"),
+            t("The builders are not mocked; the cost is.", "被讽刺的不是工匠，而是花费。"),
+            t("Hunting belongs to the first story, about the park.", "打猎属于第一个关于园囿的故事。"),
+          ],
         ),
         ask(
           t("What was You Zhan like in appearance?", "优旃的外表是什么样的？"),
           t("He was very short", "他个子很矮"),
           [t("He was very tall", "他个子很高"), t("He was very old", "他年纪很大"), t("He wore a famous mask", "他戴着著名的面具")],
           t("There lived a jester named You Zhan. He was very short.", "有一个名叫优旃的俳优，他个子很矮。"),
+          [
+            t("He was very short, not tall.", "他很矮，不是高。"),
+            t("His age is never mentioned.", "文中没提他的年龄。"),
+            t("No mask is mentioned.", "文中没提面具。"),
+          ],
         ),
       ],
       ["China", "BC", "You", "Zhan", "Zhan's", "Sima", "Qian", "Majesty", "Europe"],
@@ -398,6 +507,11 @@ The film was released in 1940 and was a great success. Years later, after the fu
             "The third paragraph says Hitler's government was persecuting Jewish people and threatening its neighbors, and many worried about political problems.",
             "第三段说希特勒政府迫害犹太人并威胁邻国，许多人担心会引发政治问题。",
           ),
+          [
+            t("Chaplin had made dozens of films.", "卓别林已经拍过几十部电影。"),
+            t("Silent films were not banned; he had made many.", "默片并没被禁，他拍过很多。"),
+            t("The balloon bursting is a scene, not a danger in making the film.", "气球爆裂是电影情节，不是拍摄的危险。"),
+          ],
         ),
         ask(
           t("What does the scene with the balloon globe suggest about Hynkel?", "地球仪气球那场戏暗示了海因克尔怎样？"),
@@ -411,6 +525,11 @@ The film was released in 1940 and was a great success. Years later, after the fu
             "He dances with the globe, dreaming of ruling it all, until it bursts in his hands, which shows how foolish and fragile his ambition is.",
             "他抱着地球仪跳舞，梦想统治整个世界，直到它在他手中破裂，显示出他的野心多么愚蠢和脆弱。",
           ),
+          [
+            t("It is about ambition, not sport.", "它讲的是野心，不是运动。"),
+            t("He dreams of ruling the world, not protecting it.", "他梦想统治世界，不是保护它。"),
+            t("He plays with the globe lovingly, not fearfully.", "他痴迷地玩着地球仪，并不害怕。"),
+          ],
         ),
         ask(
           t("What question does Chaplin's later remark raise?", "卓别林后来的话提出了什么问题？"),
@@ -424,6 +543,11 @@ The film was released in 1940 and was a great success. Years later, after the fu
             "He wrote that had he known the truth he could not have made fun of the Nazis, which raises whether some evils are too terrible to laugh at.",
             "他写道，如果当时知道真相，他就不可能嘲笑纳粹，这引出了某些罪恶是否可怕到不能被嘲笑的问题。",
           ),
+          [
+            t("Film length is never discussed.", "文中从未讨论电影长短。"),
+            t("The barber's speech is a plot point, not the question.", "理发师的演讲是情节，不是那个问题。"),
+            t("Silent films are not the question raised.", "提出的问题与默片无关。"),
+          ],
         ),
         ask(
           t("Which two roles did Chaplin play in The Great Dictator?", "卓别林在《大独裁者》中扮演哪两个角色？"),
@@ -437,6 +561,14 @@ The film was released in 1940 and was a great success. Years later, after the fu
             "He would play two roles: a poor Jewish barber, and the dictator Hynkel.",
             "他扮演两个角色：一个贫穷的犹太理发师和独裁者欣克尔。",
           ),
+          [
+            t("The Little Tramp is his older character, not a role in this film.", "流浪汉是他以前的角色，不在这部片里。"),
+            t(
+              "He played a lampoon of Hitler, not Hitler himself, and no British minister.",
+              "他演的是讽刺希特勒的角色，不是希特勒本人，也没有英国大臣。",
+            ),
+            t("No banker or policeman is mentioned.", "文中没提银行家或警察。"),
+          ],
         ),
       ],
       [
@@ -492,6 +624,11 @@ Nast went on to create many images that Americans still know, including the elep
             "The second paragraph says many of his supporters were poor immigrants who could not read English well, so articles did not reach them.",
             "第二段说他的许多支持者是英语不好的贫穷移民，文章影响不到他们。",
           ),
+          [
+            t("Newspapers did report on him; he did not own them all.", "报纸确实报道了他，他并不拥有全部报纸。"),
+            t("The articles were critical, not praise.", "文章是批评性的，不是赞扬。"),
+            t("Newspapers were published freely.", "报纸是自由出版的。"),
+          ],
         ),
         ask(
           t("What made Nast's cartoons so effective?", "是什么让纳斯特的漫画如此有效？"),
@@ -505,6 +642,11 @@ Nast went on to create many images that Americans still know, including the elep
             "The fourth paragraph says the cartoons required no reading at all; anyone could look at them and understand.",
             "第四段说这些漫画根本不需要阅读，任何人看了都能明白。",
           ),
+          [
+            t("Language did not matter; the pictures needed no words.", "语言不重要；图画不需要文字。"),
+            t("Color is never mentioned; simplicity was the strength.", "文中没提颜色；简洁才是长处。"),
+            t("Tweed tried to bribe Nast to stop, the opposite of approving.", "特威德想贿赂纳斯特停笔，谈不上批准。"),
+          ],
         ),
         ask(
           t("What does the cartoon of men pointing to the man on their right suggest?", "那幅人人指向右边之人的漫画暗示了什么？"),
@@ -518,6 +660,11 @@ Nast went on to create many images that Americans still know, including the elep
             'Under the title "Who stole the people\'s money?", each man points to another, mocking a group in which all are guilty and each shifts the blame.',
             '在"谁偷了人民的钱？"这个标题下，每个人都指着别人，嘲讽一群人人有罪又互相推诿的人。',
           ),
+          [
+            t("They knew; each pointed to blame someone else.", "他们都知道；每人都指着别人推卸责任。"),
+            t("They were the thieves, not catching one.", "他们就是贼，不是在抓贼。"),
+            t("No dance is mentioned; the circle is about blame.", "文中没提舞会；围成一圈是在互相推诿。"),
+          ],
         ),
       ],
       [
@@ -578,6 +725,11 @@ Everyone applauded. It was, the newspaper said the next morning, a historic day.
             "The bridge cost more than three years of school spending and leads only to a field, yet the mayor celebrates it as a symbol of ambition.",
             "这座桥的花费超过学校三年的开支，却只通向一片田地，而市长仍把它当作雄心的象征来庆祝。",
           ),
+          [
+            t("The cows are innocent bystanders.", "奶牛只是无辜的旁观者。"),
+            t("The band is part of the scene, not its target.", "乐队只是场景的一部分，不是讽刺对象。"),
+            t("The bridge cost a fortune, more than three years of school spending.", "这座桥花费巨大，超过三年的学校开支。"),
+          ],
         ),
         ask(
           t("Which detail shows the deputy is a sycophant?", "哪个细节表明副手是个阿谀奉承者？"),
@@ -591,6 +743,11 @@ Everyone applauded. It was, the newspaper said the next morning, a historic day.
             "The deputy nodded at every sentence and applauded at the end of each paragraph, sometimes before it had ended, flattering the mayor without thought.",
             "副手对每句话都点头，每段结束都鼓掌，有时段落还没讲完就鼓掌，不假思索地奉承市长。",
           ),
+          [
+            t("The murmur about cows came from a councillor at the back.", "关于奶牛的嘀咕来自后排的一位议员。"),
+            t("The newspaper editor is the mayor's brother-in-law.", "报纸编辑是市长的妹夫。"),
+            t("Stonemasons carved the swans, not the deputy.", "天鹅是石匠雕的，不是副手。"),
+          ],
         ),
         ask(
           t(
@@ -607,6 +764,11 @@ Everyone applauded. It was, the newspaper said the next morning, a historic day.
             "The paper is run by the mayor's brother-in-law and praises an empty ceremony, so its words are ironic and mock the town's complacency.",
             "这家报纸由市长的妹夫经营，赞扬一场空洞的典礼，所以这句话是反讽，嘲讽了小镇的自满。",
           ),
+          [
+            t("The bridge led to a field; nothing about the day was historic.", "桥通向一片田野，这一天毫无历史意义。"),
+            t("The mayor only promised the road for next year.", "市长只说明年再修路。"),
+            t("The editor is the mayor's brother-in-law and praises him.", "编辑是市长的妹夫，是在吹捧他。"),
+          ],
         ),
       ],
       ["Ash", "Dunmere", "Percival", "Blane", "London", "Paris", "Europe"],

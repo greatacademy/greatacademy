@@ -40,6 +40,11 @@ The myth explains how the world was formed, but it also says something about sac
             "The first paragraph says the universe was a dark, shapeless mass with no up or down, only chaos.",
             "第一段说，宇宙是一团黑暗、没有形状的东西，没有上下之分，只有混沌。",
           ),
+          [
+            t("A bright sky and earth came only after Pangu split the egg.", "明亮的天和地是盘古劈开蛋之后才有的。"),
+            t("Mountains and rivers came from Pangu's body at the end.", "山川河流是最后由盘古的身体变成的。"),
+            t("No ocean or island is mentioned before.", "在此之前文中没提海洋和岛屿。"),
+          ],
         ),
         ask(
           t("Why did Pangu stand between the sky and the earth?", "盘古为什么站在天和地之间？"),
@@ -53,6 +58,11 @@ The myth explains how the world was formed, but it also says something about sac
             "The third paragraph says Pangu was afraid the sky and the earth would join together again, so he stood between them.",
             "第三段说，盘古担心天和地会重新合在一起，所以站在它们中间。",
           ),
+          [
+            t("Reaching the sun is never his aim.", "够到太阳从来不是他的目的。"),
+            t("He had already cracked the egg open.", "他已经把蛋劈开了。"),
+            t("Rivers came later, from his blood.", "河流是后来由他的血变成的。"),
+          ],
         ),
         ask(
           t(
@@ -69,12 +79,22 @@ The myth explains how the world was formed, but it also says something about sac
             "The last paragraph says the myth is also about sacrifice: the world was made from Pangu's long labor and his final gift.",
             "最后一段说，这则神话也关乎牺牲：世界是由盘古漫长的劳作和他最后的奉献造就的。",
           ),
+          [
+            t("Pangu helped the world. Giants are not shown as dangerous.", "盘古帮助了世界，故事没说巨人危险。"),
+            t("It is the reverse. The heavy parts sank to become the earth.", "正好相反。重的部分下沉成为大地。"),
+            t("He slept, then worked for ages. Sleep is not praised.", "他睡了很久，然后劳作了很久，故事并没有赞美睡觉。"),
+          ],
         ),
         ask(
           t("What did Pangu's left eye become?", "盘古的左眼变成了什么？"),
           t("The sun", "太阳"),
           [t("The moon", "月亮"), t("The rivers", "江河"), t("The thunder", "雷声")],
           t("His left eye became the sun and his right eye the moon.", "他的左眼变成了太阳，右眼变成了月亮。"),
+          [
+            t("The moon came from his right eye.", "月亮是他的右眼变成的。"),
+            t("His blood became the rivers.", "他的血变成了河流。"),
+            t("His voice became the thunder.", "他的声音变成了雷。"),
+          ],
         ),
       ],
       ["Pangu", "Chinese"],
@@ -107,6 +127,11 @@ The myth asks a difficult question: is it right to break a rule to help others, 
             "The second paragraph says Zeus feared that with fire, humans would grow too powerful and no longer need the gods.",
             "第二段说，宙斯担心人类有了火会变得过于强大，不再需要众神。",
           ),
+          [
+            t("Children are never mentioned. Zeus feared human power.", "文中从没提孩子。宙斯担心人类变得强大。"),
+            t("Keeping the earth cold is a result, not his reason.", "让大地寒冷是结果，不是他的理由。"),
+            t("The gods had fire on Olympus.", "众神在奥林匹斯山上有火。"),
+          ],
         ),
         ask(
           t("What is the main conflict in this myth?", "这则神话的主要冲突是什么？"),
@@ -120,6 +145,11 @@ The myth asks a difficult question: is it right to break a rule to help others, 
             "The story turns on Prometheus breaking Zeus's rule to give fire to humans, and the punishment that follows.",
             "故事围绕着普罗米修斯违反宙斯的规定、把火给人类，以及随之而来的惩罚展开。",
           ),
+          [
+            t("The eagle is his punishment, not the conflict.", "老鹰是对他的惩罚，不是冲突本身。"),
+            t("Humans do not fight each other here.", "这里人类之间没有争斗。"),
+            t("Heracles frees Prometheus. They do not compete.", "赫拉克勒斯解救了普罗米修斯，他们并不竞争。"),
+          ],
         ),
         ask(
           t('What does the word "mentor" most likely mean in the first paragraph?', '第一段中的 "mentor" 最可能是什么意思？'),
@@ -129,6 +159,11 @@ The myth asks a difficult question: is it right to break a rule to help others, 
             "Prometheus made the first people and watched over them, the way a wise guide watches over someone who is learning.",
             "普罗米修斯创造了最早的人类并照看他们，就像一位睿智的引导者照看正在学习的人。",
           ),
+          [
+            t("A cruel ruler describes Zeus, not a mentor.", "残酷的统治者描述的是宙斯，不是导师。"),
+            t("He watched over people closely, not as a stranger.", "他近距离照看人类，不是陌生人。"),
+            t("A rival competes. A mentor guides.", "对手是竞争，导师是引导。"),
+          ],
         ),
         ask(
           t("How did Prometheus carry the fire down to earth?", "普罗米修斯怎样把火带到人间？"),
@@ -138,6 +173,11 @@ The myth asks a difficult question: is it right to break a rule to help others, 
             "He held a hollow stalk of fennel to the sun's chariot until a coal glowed inside it.",
             "他把空心的茴香茎凑近太阳战车，直到里面燃起一块火炭。",
           ),
+          [
+            t("A golden cup is not mentioned.", "文中没提金杯。"),
+            t("He held the stalk near the sun's chariot. He did not take the chariot.", "他把茎秆靠近太阳的战车，并没有拿走战车。"),
+            t("The eagle appears later, in the punishment.", "老鹰是在后来的惩罚里才出现的。"),
+          ],
         ),
       ],
       ["Prometheus", "Titan", "Zeus", "Olympus", "Heracles", "Greek"],
@@ -163,6 +203,11 @@ The Greeks used this myth to explain why the world is full of suffering. But the
           t("All-gifted", "拥有一切天赋的"),
           [t("All-curious", "对一切好奇的"), t("First woman", "第一个女人"), t("Keeper of the jar", "罐子的守护者")],
           t('The first paragraph says her name means "all-gifted."', "第一段说，她的名字意思是“拥有一切天赋的”。"),
+          [
+            t("Curious describes her, but it is not what her name means.", "好奇是她的性格，不是名字的意思。"),
+            t("She was the first woman, but that is not the meaning of the name.", "她是第一个女人，但这不是名字的意思。"),
+            t("She was told never to open the jar, not to keep it.", "她被告诫永远不要打开罐子，名字并不是“守罐人”。"),
+          ],
         ),
         ask(
           t("What caused Pandora to open the jar?", "是什么导致潘多拉打开了罐子？"),
@@ -176,6 +221,11 @@ The Greeks used this myth to explain why the world is full of suffering. But the
             "The third paragraph shows her curiosity growing day after day until, in the fourth, she could not resist. The voice spoke only after she had already opened it once.",
             "第三段写她的好奇心一天天增长，直到第四段她再也忍不住了。那个声音是在她第一次打开之后才出现的。",
           ),
+          [
+            t("Zeus told her never to open it.", "宙斯告诫她永远不要打开。"),
+            t("Her husband asked nothing.", "她丈夫什么也没要求。"),
+            t("The voice spoke only after the troubles escaped.", "那个声音是灾难飞出之后才响起的。"),
+          ],
         ),
         ask(
           t("What two things does the myth explain, according to the last paragraph?", "根据最后一段，这则神话解释了哪两件事？"),
@@ -189,6 +239,11 @@ The Greeks used this myth to explain why the world is full of suffering. But the
             "The last paragraph says the myth explains why the world is full of suffering, but also that people never lose hope.",
             "最后一段说，这则神话解释了世界为什么充满苦难，同时也说明人们永远不会失去希望。",
           ),
+          [
+            t("Lids and gifts are details, not what the myth explains.", "盖子和礼物只是细节，不是神话要解释的。"),
+            t("Fire comes from the Prometheus myth.", "火来自普罗米修斯的神话。"),
+            t("The myth is not about why women are curious or men marry.", "这个神话不是讲女人为何好奇、男人为何结婚。"),
+          ],
         ),
         ask(
           t("Whom did Pandora marry?", "潘多拉嫁给了谁？"),
@@ -198,6 +253,11 @@ The Greeks used this myth to explain why the world is full of suffering. But the
             "Zeus sent Pandora down to earth to marry Epimetheus, the brother of Prometheus.",
             "宙斯把潘多拉送到人间，嫁给普罗米修斯的弟弟厄庇墨透斯。",
           ),
+          [
+            t("Zeus sent her down. He did not marry her.", "是宙斯派她下凡的，他没有娶她。"),
+            t("Prometheus was her husband's brother.", "普罗米修斯是她丈夫的哥哥。"),
+            t("Heracles belongs to the Prometheus myth.", "赫拉克勒斯属于普罗米修斯的神话。"),
+          ],
         ),
       ],
       ["Pandora", "Pandora's", "Zeus", "Epimetheus", "Prometheus", "Greek", "Greeks", "Hope"],
@@ -230,6 +290,11 @@ Daedalus flew on alone, weeping. Today, people still tell this myth to warn agai
             "The second and third paragraphs say that since the ships guarded the sea, Daedalus made wings to escape through the air.",
             "第二段和第三段说，由于船只把守着海面，代达罗斯做了翅膀，从空中逃走。",
           ),
+          [
+            t("The king's ships guarded the harbors.", "国王的船守着每个港口。"),
+            t("The labyrinth was a maze he built for the king, not a hiding place.", "迷宫是他为国王建的，不是藏身之处。"),
+            t("The sea was guarded, so there was no escape by water.", "海上有人把守，所以无法从水路逃走。"),
+          ],
         ),
         ask(
           t("What caused Icarus to fall?", "伊卡洛斯为什么会坠落？"),
@@ -243,6 +308,11 @@ Daedalus flew on alone, weeping. Today, people still tell this myth to warn agai
             "The fifth paragraph says Icarus climbed toward the sun until the wax softened and the feathers drifted away.",
             "第五段说，伊卡洛斯朝太阳越飞越高，直到蜡变软、羽毛飘落。",
           ),
+          [
+            t("Flying too low was the other danger, and he did the opposite.", "飞得太低是另一种危险，他做的恰恰相反。"),
+            t("No soldiers shot him.", "没有士兵射他。"),
+            t("His father flew ahead and could not hold him.", "他父亲在前面飞，没有抓着他。"),
+          ],
         ),
         ask(
           t("Which sentence best states the theme of the myth?", "哪一句最能表达这则神话的主题？"),
@@ -256,12 +326,22 @@ Daedalus flew on alone, weeping. Today, people still tell this myth to warn agai
             "The last paragraph says the myth warns against pride and the danger of ignoring wise advice. The other choices are a retelling or ideas the story does not teach.",
             "最后一段说，这则神话警示人们不要骄傲、不要无视明智的劝告。其他选项要么是复述情节，要么是故事没有表达的意思。",
           ),
+          [
+            t("Labyrinths are background, not the lesson.", "迷宫只是背景，不是寓意。"),
+            t("A father and son flying is the plot, not the theme.", "父子飞行是情节，不是主题。"),
+            t("The king's promises are never discussed.", "文中从没讨论国王是否守信。"),
+          ],
         ),
         ask(
           t("Why was there no escape by water?", "为什么无法从海上逃走？"),
           t("The king's ships guarded every harbor", "国王的船守住了每个港口"),
           [t("The sea was frozen", "海面结冰了"), t("Daedalus could not swim", "代达罗斯不会游泳"), t("The tower had no door", "塔没有门")],
           t("The king's ships guarded every harbor, so there was no escape by water.", "国王的船守住了每个港口，所以无法从海上逃走。"),
+          [
+            t("A frozen sea is never mentioned.", "文中从没提到海面结冰。"),
+            t("His swimming is never mentioned.", "文中从没提到他会不会游泳。"),
+            t("The tower's door is not the problem. The harbors were guarded.", "塔门不是问题，问题是港口有人把守。"),
+          ],
         ),
       ],
       ["Daedalus", "Icarus", "Greece", "Crete", "Minos"],
@@ -294,6 +374,11 @@ The Greek word for spider is still related to her name, and the myth still warns
             "In the second paragraph Arachne says no one taught her and that she is a better weaver than Athena.",
             "在第二段中，阿拉克涅说没有人教过她，她织得比雅典娜还好。",
           ),
+          [
+            t("She knew of Athena and challenged her.", "她知道雅典娜，还向她挑战。"),
+            t("She was not afraid. She laughed.", "她不害怕，还笑了。"),
+            t("She refused to be anyone's student.", "她不愿当任何人的学生。"),
+          ],
         ),
         ask(
           t("What chance did Athena give Arachne before the contest?", "比赛前，雅典娜给了阿拉克涅什么机会？"),
@@ -307,6 +392,11 @@ The Greek word for spider is still related to her name, and the myth still warns
             "Disguised as an old woman, Athena told Arachne to ask the goddess to forgive her, and promised that she would.",
             "雅典娜扮成老妇人，劝阿拉克涅请求女神宽恕，并说女神会原谅她。",
           ),
+          [
+            t("Leaving the village is never offered.", "从没给她离开村子的机会。"),
+            t("Athena warned her, not offered lessons.", "雅典娜是警告她，不是要教她。"),
+            t("No prize is mentioned.", "文中没提奖品。"),
+          ],
         ),
         ask(
           t("Why was Athena so angry, even though Arachne's weaving was perfect?", "阿拉克涅织得完美无缺，雅典娜为什么还如此愤怒？"),
@@ -320,12 +410,22 @@ The Greek word for spider is still related to her name, and the myth still warns
             "The fifth paragraph says the goddess was furious at Arachne's lack of respect; her picture made fun of the gods.",
             "第五段说，女神对阿拉克涅的不敬感到愤怒；她织的图画嘲弄了众神。",
           ),
+          [
+            t("Arachne used her own threads.", "阿拉克涅用的是自己的线。"),
+            t("Her picture was perfect, not ugly.", "她的画完美无瑕，并不丑。"),
+            t("She did weave, in the contest.", "她在比赛中确实织了。"),
+          ],
         ),
         ask(
           t("How did Athena first come to Arachne's door?", "雅典娜最初以什么样子来到阿拉克涅门前？"),
           t("Disguised as an old woman", "扮成一位老妇人"),
           [t("As a spider", "变成一只蜘蛛"), t("As a young weaver", "扮成一个年轻织工"), t("Riding a chariot", "驾着战车")],
           t("Disguised as an old woman, Athena came to Arachne's door and warned her.", "雅典娜扮成老妇人来到阿拉克涅门前警告她。"),
+          [
+            t("The spider is what Arachne became at the end.", "蜘蛛是阿拉克涅最后变成的样子。"),
+            t("Athena did not come as a young weaver.", "雅典娜没有扮成年轻织工。"),
+            t("Hades rode a chariot in another myth.", "驾战车的是另一个神话里的哈得斯。"),
+          ],
         ),
       ],
       ["Arachne", "Arachne's", "Athena", "Greece", "Greek"],
@@ -358,6 +458,11 @@ In this way, the myth explained the cycle of the seasons long before anyone knew
             "The third paragraph says the crops withered, the fields turned brown and people began to starve.",
             "第三段说，庄稼枯萎，田野变成棕色，人们开始挨饿。",
           ),
+          [
+            t("Flowers are the opposite. The fields turned brown.", "开满鲜花正好相反。田野变得枯黄。"),
+            t("Floods are never mentioned.", "文中从没提到洪水。"),
+            t("The sun kept rising. Demeter's grief stopped growth.", "太阳照常升起，是得墨忒耳的悲伤让万物停止生长。"),
+          ],
         ),
         ask(
           t("Why could Persephone not return to earth for good?", "为什么珀耳塞福涅不能永远回到人间？"),
@@ -371,6 +476,11 @@ In this way, the myth explained the cycle of the seasons long before anyone knew
             "The fourth paragraph gives the rule that anyone who ate food in the underworld must stay, and Persephone had eaten six seeds.",
             "第四段给出了规则：在冥界吃过东西的人必须留在那里，而珀耳塞福涅吃了六颗石榴籽。",
           ),
+          [
+            t("Her mother searched the whole earth for her.", "她母亲找遍了整个大地。"),
+            t("Zeus did order Hades to return her.", "宙斯确实下令让哈得斯放人。"),
+            t("Love for the underworld is never said.", "文中从没说她爱上了冥界。"),
+          ],
         ),
         ask(
           t("What does the myth explain?", "这则神话解释了什么？"),
@@ -384,12 +494,22 @@ In this way, the myth explained the cycle of the seasons long before anyone knew
             "The first and last paragraphs say the story explained the cycle of the seasons.",
             "第一段和最后一段都说，这个故事解释了季节的循环。",
           ),
+          [
+            t("Pomegranate seeds are part of the plot, not what it explains.", "石榴籽是情节的一部分，不是神话要解释的。"),
+            t("The earth's travel is the modern explanation the Greeks did not know.", "地球公转是古希腊人不知道的现代解释。"),
+            t("The horses' color is a detail.", "马的颜色只是细节。"),
+          ],
         ),
         ask(
           t("How many pomegranate seeds had Persephone eaten?", "珀耳塞福涅吃了几颗石榴籽？"),
           t("Six", "六颗"),
           [t("One", "一颗"), t("Twelve", "十二颗"), t("None", "一颗也没吃")],
           t("Persephone had eaten six seeds of a pomegranate.", "珀耳塞福涅吃了六颗石榴籽。"),
+          [
+            t("One is too few.", "一颗太少了。"),
+            t("Twelve is the number of months, not seeds.", "十二是月份数，不是籽数。"),
+            t("She did eat some, so she had to return.", "她确实吃了，所以必须回去。"),
+          ],
         ),
       ],
       ["Demeter", "Persephone", "Hades", "Zeus", "Greeks"],
@@ -422,6 +542,11 @@ The people honored Hou Yi as a hero, and the myth is still told as a story of co
             "The first two paragraphs say one sun crossed the sky each morning while the others rested, and that for a long time they took turns.",
             "前两段说，每天早晨有一个太阳穿过天空，其他的在树上休息，很长时间里它们一直轮流。",
           ),
+          [
+            t("All rising together is what caused the trouble.", "一起升起正是引发灾难的原因。"),
+            t("The people hid in caves, not the suns.", "躲在山洞里的是人，不是太阳。"),
+            t("They never fought. They played across the sky.", "它们从没打架，而是在空中嬉戏。"),
+          ],
         ),
         ask(
           t("Why did the emperor tell Hou Yi to stop before the last sun?", "为什么皇帝让后羿留下最后一个太阳？"),
@@ -432,6 +557,11 @@ The people honored Hou Yi as a hero, and the myth is still told as a story of co
             t("The god of the eastern sky asked him to", "东方天帝要求他这样做"),
           ],
           t('The emperor says, "Leave one, or the world will be dark and cold forever."', "皇帝说：“留下一个，否则世界将永远黑暗寒冷。”"),
+          [
+            t("He still had his last arrow in hand.", "他手里还有最后一支箭。"),
+            t("The sun made no promise before he stopped.", "在他停手之前太阳并没有承诺。"),
+            t("The emperor stopped him, not the god.", "是皇帝阻止了他，不是神。"),
+          ],
         ),
         ask(
           t("What is the climax of the myth?", "这则神话的高潮是什么？"),
@@ -445,6 +575,11 @@ The people honored Hou Yi as a hero, and the myth is still told as a story of co
             "The moment of greatest tension is Hou Yi's shooting, which turns the story. The mulberry tree is exposition, boredom starts the rising action, and the honor comes in the resolution.",
             "后羿射日是紧张感最强的时刻，也是故事的转折点。桑树是开端，太阳们厌倦是发展的开始，人们的尊崇属于结局。",
           ),
+          [
+            t("The mulberry tree is the opening setting.", "扶桑树是开头的背景。"),
+            t("Honoring the hero comes after the climax.", "尊崇英雄是在高潮之后。"),
+            t("The boredom starts the trouble. It is not the high point.", "厌倦是麻烦的开端，不是高潮。"),
+          ],
         ),
       ],
       ["China", "Hou", "Yi"],
@@ -477,6 +612,11 @@ At last the sun agreed. From then on, it traveled slowly enough for Hina's cloth
             "The second paragraph says the days were short, so Hina's cloth never dried and farmers and fishermen could not finish their work.",
             "第二段说，白天很短，所以希娜的布总也晒不干，农民和渔民也干不完活。",
           ),
+          [
+            t("Burned crops belong to the ten suns story.", "庄稼被烤焦属于十个太阳的故事。"),
+            t("Warm nights are never mentioned.", "文中从没提到夜晚太热。"),
+            t("The sea drying up is not mentioned.", "文中没提海水干涸。"),
+          ],
         ),
         ask(
           t("Why did Maui hide near the top of Haleakala?", "毛伊为什么躲在哈雷阿卡拉山顶附近？"),
@@ -490,6 +630,11 @@ At last the sun agreed. From then on, it traveled slowly enough for Hina's cloth
             "The third paragraph says Haleakala was where the sun rose each morning, so Maui could catch its first rays.",
             "第三段说，哈雷阿卡拉山是太阳每天早晨升起的地方，所以毛伊能抓住它最早的光线。",
           ),
+          [
+            t("Coolness is not why he chose the mountain.", "他选这座山不是因为凉快。"),
+            t("Hina made cloth below. She did not live in the cave.", "希娜在山下做布，不住在山洞里。"),
+            t("The farmers were not his enemies.", "农民不是他的敌人。"),
+          ],
         ),
         ask(
           t("Which word best describes Maui in this story?", "哪个词最能形容故事中的毛伊？"),
@@ -499,6 +644,11 @@ At last the sun agreed. From then on, it traveled slowly enough for Hina's cloth
             "Maui plans carefully, weaves sixteen ropes and holds on while the sun burns, which shows both cleverness and determination.",
             "毛伊精心策划，编了十六根绳子，在太阳灼烧时也不松手，这既表现了聪明，也表现了坚定。",
           ),
+          [
+            t("He worked hard on the ropes, so he was not lazy.", "他费力编了绳子，所以并不懒。"),
+            t("He leapt out and held on, so he was not shy.", "他跳出来紧紧拉住太阳，所以并不胆小。"),
+            t("He helped everyone, so he was not cruel or greedy.", "他帮助了所有人，所以并不残忍贪婪。"),
+          ],
         ),
       ],
       ["Pacific", "Maui", "Maui's", "Hawaii", "Hina", "Hina's", "Haleakala"],

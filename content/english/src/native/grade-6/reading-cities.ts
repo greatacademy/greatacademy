@@ -39,6 +39,11 @@ With extra food stored away, not everyone had to farm. Some people could become 
             "The last paragraph explains that with extra food stored, not everyone had to farm, so some people became potters, weavers, builders or priests.",
             "最后一段解释说，有了储存的余粮，不是每个人都必须务农，所以有些人成了陶工、织工、建筑工或祭司。",
           ),
+          [
+            t("Surplus freed some people from farming, not everyone from work.", "余粮让一部分人不必种地，而不是人人都不用工作。"),
+            t("Surplus helped people settle, the opposite of nomads.", "余粮帮助人们定居，与游牧相反。"),
+            t("The Greeks only gave the land its name.", "希腊人只是给这片土地起了名字。"),
+          ],
         ),
         ask(
           t("What job does the second paragraph do in the passage?", "第二段在文章中起什么作用？"),
@@ -52,6 +57,11 @@ With extra food stored away, not everyone had to farm. Some people could become 
             "The second paragraph describes the hot, dry land and then shows how the spring floods left rich mud for crops.",
             "第二段描写了炎热干燥的土地，然后说明春季洪水如何留下适合庄稼生长的肥沃泥土。",
           ),
+          [
+            t("No single family's story is told here.", "这里没有讲某一个家庭的故事。"),
+            t("The summary comes in the last paragraph.", "总结在最后一段。"),
+            t("Greece appears only as the source of the name.", "希腊只是作为名字的来源出现。"),
+          ],
         ),
         ask(
           t("What does specialization mean in this passage?", "在这篇文章中，specialization 是什么意思？"),
@@ -65,6 +75,11 @@ With extra food stored away, not everyone had to farm. Some people could become 
             "The last paragraph defines it right after the word: a system in which people do different jobs and trade for what they need.",
             "最后一段在这个词后面紧接着给出了定义：人们从事不同的工作并通过交换获得所需的一种体系。",
           ),
+          [
+            t("Moving after herds describes nomads.", "跟着畜群迁移说的是游牧民。"),
+            t("Growing many crops, like wheat and barley, is described.", "文中写到种植小麦和大麦等多种作物。"),
+            t("Storing food is surplus, not specialization.", "储存粮食是余粮，不是分工。"),
+          ],
         ),
         ask(
           t("What does the name Mesopotamia mean?", "美索不达米亚这个名字是什么意思？"),
@@ -78,6 +93,11 @@ With extra food stored away, not everyone had to farm. Some people could become 
             'The Greeks called it Mesopotamia, which means "the land between the rivers."',
             "希腊人称它为美索不达米亚，意思是“两河之间的土地”。",
           ),
+          [
+            t("Cities are not part of the name.", "名字里没有“城市”。"),
+            t("Rich mud explains farming, not the name.", "肥沃的泥土解释的是耕种，不是名字。"),
+            t("Nomads are not part of the name.", "名字里没有“游牧民”。"),
+          ],
         ),
       ],
       ["Tigris", "Euphrates", "Iraq", "Mesopotamia"],
@@ -106,6 +126,11 @@ Irrigation also brought a problem that the farmers did not understand. As water 
             "The first paragraph says that, unlike the gentle Nile, the Tigris and the Euphrates flooded at unpredictable times.",
             "第一段说，与温和的尼罗河不同，底格里斯河和幼发拉底河在无法预测的时间泛滥。",
           ),
+          [
+            t("They flooded, sometimes far too much.", "它们会泛滥，有时洪水还很大。"),
+            t("Their size and speed are not compared.", "文中没比较河流的大小和流速。"),
+            t("No forests are mentioned. Mesopotamia had none.", "文中没提森林，美索不达米亚也没有森林。"),
+          ],
         ),
         ask(
           t("According to the passage, how did irrigation help lead to governments?", "根据文章，灌溉是如何促成政府产生的？"),
@@ -119,6 +144,11 @@ Irrigation also brought a problem that the farmers did not understand. As water 
             "The third paragraph says hundreds of people had to dig together and someone had to plan the work, which helped give rise to leaders and governments.",
             "第三段说，成百上千的人必须一起挖掘，还得有人规划工作，这促成了首领和政府的出现。",
           ),
+          [
+            t("Kings came after the need for planning, not before.", "国王出现在需要统筹之后，而不是之前。"),
+            t("No single family could do it alone.", "没有哪个家庭能独自完成。"),
+            t("Canals carried water, not messages.", "运河输送的是水，不是消息。"),
+          ],
         ),
         ask(
           t("What is the job of the last sentence of the passage?", "文章最后一句起什么作用？"),
@@ -132,12 +162,22 @@ Irrigation also brought a problem that the farmers did not understand. As water 
             "The sentence draws the passage together: the water that built the cities also slowly ruined the fields that fed them.",
             "这句话把全文收拢起来：建起城市的水，也慢慢毁掉了养活城市的田地。",
           ),
+          [
+            t("Canal gates were described earlier.", "运河闸门在前面已经描写过了。"),
+            t("Irrigation was explained earlier in the passage.", "灌溉在文章前面已经解释过了。"),
+            t("Egypt appears only at the start.", "埃及只在开头出现过。"),
+          ],
         ),
         ask(
           t("Which crop did farmers switch to as salt built up?", "盐分积累后，农民改种了什么作物？"),
           t("Barley", "大麦"),
           [t("Wheat", "小麦"), t("Rice", "水稻"), t("Reeds", "芦苇")],
           t("Farmers switched to barley, which can stand more salt.", "农民改种了更耐盐的大麦。"),
+          [
+            t("Wheat failed first because of the salt.", "小麦先因为盐分而歉收。"),
+            t("Rice is never mentioned.", "文中从没提到水稻。"),
+            t("Reeds were used for gates, not food.", "芦苇用来做闸门，不是粮食。"),
+          ],
         ),
       ],
       ["Mesopotamia", "Tigris", "Euphrates", "Nile", "Egypt"],
@@ -166,6 +206,11 @@ The temple was also the center of the city's life. Around its base stood storero
             "The second paragraph says the outside bricks were baked hard and set in tar so the rare winter rains would not wash the building away.",
             "第二段说，外层的砖经过烧制变得坚硬，并用沥青粘合，这样偶尔的冬雨就不会冲毁建筑。",
           ),
+          [
+            t("Sun-dried bricks were the cheap ones, used inside.", "晒干的砖才便宜，用在里面。"),
+            t("Seeing it from afar came from its height.", "从远处能看见是因为它高。"),
+            t("Color is never mentioned.", "文中从没提颜色。"),
+          ],
         ),
         ask(
           t("What does the last paragraph mainly show?", "最后一段主要说明了什么？"),
@@ -182,6 +227,11 @@ The temple was also the center of the city's life. Around its base stood storero
             "It lists the storerooms, workshops and offices around the temple and calls it the city's bank, market and largest employer.",
             "它列举了神庙周围的仓库、作坊和办公处，并称它是城市的银行、市场和最大的雇主。",
           ),
+          [
+            t("Workers and stewards worked there, not only priests.", "那里有工人和管事，不只有祭司。"),
+            t("How long building took is never said.", "文中从没说建了多久。"),
+            t("Nanna's power compared with other gods is never discussed.", "文中没有比较南纳与其他神的力量。"),
+          ],
         ),
         ask(
           t("What did a steward do at the temple?", "神庙里的管事做什么？"),
@@ -195,12 +245,22 @@ The temple was also the center of the city's life. Around its base stood storero
             "The last paragraph says a steward kept track of the grain and animals that flowed in from the temple's farms.",
             "最后一段说，管事负责记录从神庙农场运来的粮食和牲畜。",
           ),
+          [
+            t("Only priests climbed to the shrine.", "只有祭司能登上神殿。"),
+            t("Brick making is not the steward's job.", "烧砖不是管事的工作。"),
+            t("City walls are never mentioned.", "文中从没提城墙。"),
+          ],
         ),
         ask(
           t("For which god was the ziggurat of Ur built?", "乌尔的金字形神塔是为哪位神建的？"),
           t("The moon god Nanna", "月神南纳"),
           [t("The sun god", "太阳神"), t("The god of war", "战神"), t("The god of the rivers", "河神")],
           t("It was built as a home for the moon god Nanna.", "它是作为月神南纳的居所而建的。"),
+          [
+            t("No sun god appears.", "文中没有太阳神。"),
+            t("No god of war appears.", "文中没有战神。"),
+            t("The rivers have no god in this passage.", "这篇里河流没有神。"),
+          ],
         ),
       ],
       ["Ur", "Nanna"],
@@ -229,6 +289,11 @@ When a tablet was finished, it was left to dry in the sun. Important tablets wer
             "The first sentence begins with Imagine and describes the problem of keeping records without writing, which leads into the invention.",
             "第一句以 Imagine 开头，描述了没有文字时记录的难题，由此引出这项发明。",
           ),
+          [
+            t("No scribe is quoted.", "文中没有引用哪位书吏的话。"),
+            t("The definition comes near the end.", "定义出现在接近结尾处。"),
+            t("Dates are given only in passing.", "年代只是顺带提到。"),
+          ],
         ),
         ask(
           t("Why were the first pictographs not enough?", "为什么最初的象形符号不够用？"),
@@ -242,6 +307,11 @@ When a tablet was finished, it was left to dry in the sun. Important tablets wer
             "The second paragraph says pictographs worked well for counting but could not show names, ideas or actions.",
             "第二段说，象形符号很适合计数，但无法表示名字、观念或动作。",
           ),
+          [
+            t("Drawing on wet clay was simple.", "在湿泥上画画很简单。"),
+            t("Pictographs worked well for counting.", "象形符号用来计数效果很好。"),
+            t("Rain is not mentioned as a problem for tablets.", "文中没说雨对泥板有影响。"),
+          ],
         ),
         ask(
           t("Why have so many clay tablets survived?", "为什么有这么多泥板保存了下来？"),
@@ -255,12 +325,22 @@ When a tablet was finished, it was left to dry in the sun. Important tablets wer
             "The last paragraph says tablets were dried in the sun and important ones were baked as hard as pottery, so hundreds of thousands survived.",
             "最后一段说，泥板在阳光下晒干，重要的还会烧得像陶器一样坚硬，所以有数十万块保存了下来。",
           ),
+          [
+            t("No glass cases are mentioned.", "文中没提玻璃柜。"),
+            t("The marks were pressed into clay, not written in ink.", "字是压在泥上的，不是用墨水写的。"),
+            t("No yearly copying is mentioned.", "文中没提每年重抄。"),
+          ],
         ),
         ask(
           t("What did scribes use to press signs into the clay?", "书吏用什么把符号压进泥板？"),
           t("A stylus cut from a reed", "用芦苇削成的笔"),
           [t("A brush and ink", "毛笔和墨"), t("A metal knife", "金属刀"), t("Their fingers", "手指")],
           t("Scribes began using a stylus, a reed with an end cut into a wedge shape.", "书吏开始用一端削成楔形的芦苇笔。"),
+          [
+            t("Ink and brushes are never mentioned.", "文中从没提墨和笔刷。"),
+            t("The stylus was a reed, not metal.", "书写工具是芦苇，不是金属。"),
+            t("The marks needed a wedge-shaped tool.", "楔形记号需要楔形工具。"),
+          ],
         ),
       ],
       ["Sumer", "Mesopotamia"],
@@ -294,6 +374,11 @@ The schoolboy's tablet ends happily. His father invites the teacher home, gives 
             "The first paragraph tells of the schoolboy's complaints and says his story shows what learning to write was like.",
             "第一段讲述了那个学生的抱怨，并说他的故事展示了学习写字是什么样子。",
           ),
+          [
+            t("How signs were made comes in the third paragraph.", "符号怎么做在第三段。"),
+            t("Scribes' jobs come in the fourth paragraph.", "书吏的工作在第四段。"),
+            t("The story is told, not used to argue.", "故事只是讲述，不是为了论证。"),
+          ],
         ),
         ask(
           t("Why were most students the sons of wealthy families?", "为什么大多数学生是富裕家庭的儿子？"),
@@ -307,6 +392,11 @@ The schoolboy's tablet ends happily. His father invites the teacher home, gives 
             "The second paragraph gives the reason: only the rich could spare a child from work for about twelve years of study.",
             "第二段给出了原因：只有富人才能让孩子不干活，花大约十二年来学习。",
           ),
+          [
+            t("Poor children are not banned from clay.", "文中没说穷孩子不准碰泥板。"),
+            t("The school's location is never given.", "文中没给出学校的位置。"),
+            t("The boys came to learn to write.", "这些男孩是来学写字的。"),
+          ],
         ),
         ask(
           t("Why was being a scribe a respected job?", "为什么书吏是受人尊敬的职业？"),
@@ -320,12 +410,22 @@ The schoolboy's tablet ends happily. His father invites the teacher home, gives 
             "The fourth paragraph says very few people were literate and lists the important records scribes kept for temples, palaces and kings.",
             "第四段说，识字的人很少，并列举了书吏为神庙、宫殿和国王保管的重要记录。",
           ),
+          [
+            t("Scribes kept records, not farms.", "书吏记账，不种地。"),
+            t("They studied for about twelve years.", "他们要学大约十二年。"),
+            t("The moon god belongs to another passage.", "月神属于另一篇文章。"),
+          ],
         ),
         ask(
           t("About how long did boys study before becoming scribes?", "男孩大约要学多少年才能成为书吏？"),
           t("About twelve years", "大约十二年"),
           [t("About one year", "大约一年"), t("About four years", "大约四年"), t("About forty years", "大约四十年")],
           t("Boys often started young and studied for about twelve years.", "男孩往往很小就开始学，要学大约十二年。"),
+          [
+            t("One year is far too short for hundreds of signs.", "一年太短，学不完几百个符号。"),
+            t("Four thousand years is how old the tablet is.", "四千年是泥板的年代。"),
+            t("Forty years is never mentioned.", "文中从没提四十年。"),
+          ],
         ),
       ],
       ["Mesopotamia"],
@@ -354,6 +454,11 @@ To modern readers, many of the punishments seem harsh. The laws were also unequa
             "The second paragraph says he conquered many cities and built a large kingdom, and to rule it he wanted one set of laws everyone could know.",
             "第二段说，他征服了许多城市，建立了一个大王国，为了统治它，他想要一套人人都能知道的法律。",
           ),
+          [
+            t("The archaeologists came 3,700 years later.", "考古学家是三千七百年后才来的。"),
+            t("The laws were written in cuneiform signs.", "法典是用楔形文字写的。"),
+            t("Punishments differed by class.", "惩罚因阶层而不同。"),
+          ],
         ),
         ask(
           t("How does the third paragraph develop the idea of the code?", "第三段是怎样展开法典这个观点的？"),
@@ -367,6 +472,11 @@ To modern readers, many of the punishments seem harsh. The laws were also unequa
             "The paragraph states the if-then pattern and then gives examples: the stolen ox, the badly built house and the laws that protected the weak.",
             "这一段说明了 if-then 的格式，然后举例：偷牛、房子盖得不好，以及保护弱者的法律。",
           ),
+          [
+            t("The finding is told in the first paragraph.", "发现过程在第一段。"),
+            t("Ur is not compared here.", "这里没有和乌尔比较。"),
+            t("Cuneiform's invention is in another passage.", "楔形文字的发明在另一篇文章里。"),
+          ],
         ),
         ask(
           t(
@@ -383,12 +493,22 @@ To modern readers, many of the punishments seem harsh. The laws were also unequa
             "The last paragraph says that by writing the laws down in public, he made the rules public, and judges could not simply invent a punishment.",
             "最后一段说，他把法律公开写下来，使规则公之于众，法官不能随意编造惩罚。",
           ),
+          [
+            t("Many punishments were harsh.", "许多惩罚很严厉。"),
+            t("The laws were unequal by class.", "法律因阶层而不平等。"),
+            t("Stone fixed the laws so they could not shift.", "刻在石头上让法律不能随意改变。"),
+          ],
         ),
         ask(
           t("How many laws did Hammurabi have carved on the pillars?", "汉谟拉比在石柱上刻了多少条法律？"),
           t("282", "282条"),
           [t("30", "30条"), t("1,901", "1901条"), t("12", "12条")],
           t("He had 282 laws carved on stone pillars and set up in public places.", "他让人把282条法律刻在石柱上，立在公共场所。"),
+          [
+            t("Thirty is the payback for a stolen ox.", "三十倍是偷牛的赔偿。"),
+            t("1901 is the year the pillar was found.", "1901 是石柱被发现的年份。"),
+            t("Twelve is never mentioned.", "文中从没提十二。"),
+          ],
         ),
       ],
       ["Iran", "Hammurabi", "Babylon"],
@@ -419,6 +539,11 @@ Trade made the cities rich, and it did more than move goods. Along with copper a
             "The first paragraph shows that Mesopotamia lacked wood, stone and metal yet had them, asks how, and answers: trade.",
             "第一段说明美索不达米亚缺少木材、石头和金属却拥有这些东西，提出了怎么做到的问题，并回答：贸易。",
           ),
+          [
+            t("Nanni's complaint comes in the fourth paragraph.", "纳尼的投诉在第四段。"),
+            t("No definition of trade is given.", "文中没给出贸易的定义。"),
+            t("Copper prices are never listed.", "文中从没列出铜价。"),
+          ],
         ),
         ask(
           t("Why did merchants press seals into clay?", "商人为什么要把印章压在泥块上？"),
@@ -432,6 +557,11 @@ Trade made the cities rich, and it did more than move goods. Along with copper a
             "The third paragraph says the seal proved who owned a bundle of merchandise and worked like a signature.",
             "第三段说，印章可以证明一捆货物归谁所有，作用就像签名一样。",
           ),
+          [
+            t("Deals were paid in silver.", "交易用银子付款。"),
+            t("Weight is not the point of a seal.", "印章与重量无关。"),
+            t("Complaints were written on tablets, not sealed bundles.", "投诉写在泥板上，不是封在货物上。"),
+          ],
         ),
         ask(
           t("What is the job of the fourth paragraph?", "第四段起什么作用？"),
@@ -445,6 +575,11 @@ Trade made the cities rich, and it did more than move goods. Along with copper a
             "The paragraph says merchants kept careful records and then gives the example of Nanni's tablet complaining about poor copper.",
             "这一段说商人保存了详细的记录，然后举了南尼抱怨铜质量差的泥板为例。",
           ),
+          [
+            t("Silver replaced coins in the third paragraph.", "没有硬币、用银子付款在第三段。"),
+            t("Goods are listed in the second paragraph.", "商品在第二段列出。"),
+            t("The central idea came at the end of the first paragraph.", "中心思想在第一段末尾已经提出。"),
+          ],
         ),
       ],
       ["Mesopotamia", "Ur", "Nanni", "Ea-nasir"],
@@ -475,6 +610,11 @@ Today, archaeologists are still finding tablets. Each one adds a line to the chr
             "The second paragraph says no one alive could read cuneiform, so the tablets held their words like boxes that could not be opened.",
             "第二段说没有人能读懂楔形文字，所以泥板就像打不开的盒子一样藏着它们的文字。",
           ),
+          [
+            t("No locked rooms are mentioned.", "文中没提上锁的房间。"),
+            t("Weight is not the comparison.", "比喻与重量无关。"),
+            t("Selling them is never mentioned.", "文中从没提出售。"),
+          ],
         ),
         ask(
           t("How did the inscription on the cliff help scholars?", "悬崖上的铭文是怎样帮助学者的？"),
@@ -491,6 +631,11 @@ Today, archaeologists are still finding tablets. Each one adds a line to the chr
             "The third paragraph explains that Old Persian was simpler and already partly understood, so scholars could use it to work out the other languages.",
             "第三段解释说，古波斯语较简单，而且已经部分被理解，所以学者可以借助它破解其他语言。",
           ),
+          [
+            t("No list of signs was carved there.", "崖上没刻符号表。"),
+            t("The languages were ancient, not English.", "那是古代语言，不是英语。"),
+            t("No map was carved.", "崖上没刻地图。"),
+          ],
         ),
         ask(
           t("What is the job of the last paragraph?", "最后一段起什么作用？"),
@@ -504,6 +649,11 @@ Today, archaeologists are still finding tablets. Each one adds a line to the chr
             "It says archaeologists are still finding tablets and that each one lets the people of the first cities speak again.",
             "它说考古学家仍在发现泥板，每一块都让最早城市的人们重新开口说话。",
           ),
+          [
+            t("The Gilgamesh plot comes in the fourth paragraph.", "吉尔伽美什的情节在第四段。"),
+            t("Rawlinson's climb is in the third paragraph.", "罗林森攀崖在第三段。"),
+            t("Crumbling walls open the passage.", "城墙坍塌在文章开头。"),
+          ],
         ),
       ],
       ["Mesopotamia", "Iran", "Henry", "Rawlinson", "George", "Smith", "Gilgamesh"],

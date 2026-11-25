@@ -49,6 +49,11 @@ Today, engineers who build powerful computer systems sometimes speak of the prob
             "The first paragraph says the community was in danger from false accusations and mobs, and the rabbi decided to protect his people.",
             "第一段说社区受到诬告和暴徒的威胁，拉比决定保护他的人民。",
           ),
+          [
+            t("The Golem was hidden in the synagogue attic; it did not build one.", "傀儡最后被藏在犹太会堂的阁楼里，并不是为了建会堂。"),
+            t("No contest between rabbis is mentioned.", "文中没提拉比之间的比赛。"),
+            t("The Golem could not speak at all.", "傀儡根本不会说话。"),
+          ],
         ),
         ask(
           t("What weakness of the Golem leads to the trouble?", "魔像的什么弱点导致了麻烦？"),
@@ -62,6 +67,11 @@ Today, engineers who build powerful computer systems sometimes speak of the prob
             "The third paragraph says it did not understand the reasons for its orders and followed instructions exactly, without judgment; the fourth shows the danger.",
             "第三段说它不理解命令的理由，不加判断地严格执行指令；第四段展现了由此带来的危险。",
           ),
+          [
+            t("It was enormously strong and carried heavy loads.", "它力大无穷，能搬重物。"),
+            t("It obeyed its maker and protected the community from enemies.", "它服从造它的人，保护社区不受敌人侵害。"),
+            t("It could not speak, so it gave nothing away.", "它不会说话，什么也泄露不了。"),
+          ],
         ),
         ask(
           t("What assumption does the passage say the makers in these stories share?", "文章说这些故事里的创造者都有什么共同的假设？"),
@@ -75,6 +85,11 @@ Today, engineers who build powerful computer systems sometimes speak of the prob
             "The sixth paragraph says that in each story the maker assumes that what is made will remain a servant, and the assumption is tested.",
             "第六段说在每个故事中，创造者都假设被造物会一直是仆人，而这个假设受到了考验。",
           ),
+          [
+            t("Clay is not compared with metal.", "文中没把黏土和金属作比较。"),
+            t("The Golem was useful; the makers expected service.", "傀儡是有用的；造它的人期待它服务。"),
+            t("The passage takes these stories seriously, not as children's tales.", "文章认真看待这些故事，并不把它们当成儿童读物。"),
+          ],
         ),
         ask(
           t("In which city is the legend of the Golem told?", "魔像的传说流传在哪个城市？"),
@@ -84,6 +99,11 @@ Today, engineers who build powerful computer systems sometimes speak of the prob
             "In the old Jewish quarter of Prague, there is a legend that has been told for more than four hundred years.",
             "在布拉格古老的犹太区，有一个流传了四百多年的传说。",
           ),
+          [
+            t("Lyon is the silk city of the next passage.", "里昂是下一篇里的丝绸之城。"),
+            t("Vienna is not mentioned.", "文中没提维也纳。"),
+            t("Warsaw is not mentioned.", "文中没提华沙。"),
+          ],
         ),
       ],
       ["Prague", "Judah", "Loew", "Loew's", "Jewish", "Hebrew", "Golem", "Mary", "Shelley"],
@@ -116,6 +136,11 @@ Few of the weavers of Lyon could have guessed that a pattern of holes in a card 
             "The second paragraph says each punched card controlled one row; where there was a hole, a hook passed through and lifted a thread.",
             "第二段说每张打孔卡控制一行图案；有孔的地方，钩子穿过并提起一根线。",
           ),
+          [
+            t("The child pulling threads was what the loom replaced.", "机器取代的正是拉线的孩子。"),
+            t("No chalk drawing is mentioned; the cards held the pattern.", "文中没提粉笔画；图案存在卡片上。"),
+            t("Changing the cards changed the pattern; it copied nothing.", "换卡片就换图案，它不是照着布复制的。"),
+          ],
         ),
         ask(
           t("Why did some weavers attack Jacquard?", "为什么有些织工攻击雅卡尔？"),
@@ -129,6 +154,11 @@ Few of the weavers of Lyon could have guessed that a pattern of holes in a card 
             "The fourth paragraph says many weavers feared that the machine would take away their work and their skill, and some attacked him.",
             "第四段说许多织工担心机器会夺走他们的工作和技艺，一些人攻击了他。",
           ),
+          [
+            t("The loom made silk faster; quality was not their complaint.", "织机让丝绸做得更快；他们抱怨的不是质量。"),
+            t("Napoleon praised the loom and rewarded Jacquard.", "拿破仑称赞了这台织机，还奖励了雅卡尔。"),
+            t("Refusing to sell is not mentioned.", "文中没提拒绝出售。"),
+          ],
         ),
         ask(
           t("What is the loom's central idea that remains in every program today?", "织布机中哪个核心理念至今仍存在于每一个程序中？"),
@@ -142,6 +172,11 @@ Few of the weavers of Lyon could have guessed that a pattern of holes in a card 
             "The last paragraph says Jacquard's central idea, separating the machine from the instructions it follows, is at the heart of every program.",
             "最后一段说雅卡尔的核心理念，即把机器与它执行的指令分开，是每个程序的核心。",
           ),
+          [
+            t("Silk was what the loom wove, not how parts connected.", "丝是织机织的东西，不是连接零件的东西。"),
+            t("The loom made the children unnecessary.", "这台织机让孩子们不再被需要。"),
+            t("The point was not rebuilding the machine for each pattern.", "关键恰恰是不用为每种图案重造机器。"),
+          ],
         ),
         ask(
           t("Who praised Jacquard's loom and granted him a pension?", "谁称赞了雅卡尔的织机并给了他养老金？"),
@@ -151,6 +186,11 @@ Few of the weavers of Lyon could have guessed that a pattern of holes in a card 
             "Napoleon, the emperor of France, praised the loom and granted Jacquard a pension.",
             "法国皇帝拿破仑称赞了这台织机，并给了雅卡尔一笔养老金。",
           ),
+          [
+            t("No English king is mentioned.", "文中没提英国国王。"),
+            t("Many weavers feared and attacked the loom.", "许多织工害怕并攻击这台织机。"),
+            t("The pope is not mentioned.", "文中没提教皇。"),
+          ],
         ),
       ],
       ["Joseph", "Marie", "Jacquard", "Jacquard's", "Lyon", "France", "French", "Napoleon", "IBM"],
@@ -185,6 +225,11 @@ The Lawrence strike showed that the poorest workers, from many nations, could un
             "The first paragraph says a law reduced the working week, and the owners responded by cutting pay to match and speeding up the machines.",
             "第一段说法律缩短了工作周，老板随之按比例削减工资并加快机器速度。",
           ),
+          [
+            t("The mills stayed open; pay was cut.", "工厂没关，是工资被削减。"),
+            t("The machines were sped up, not replaced.", "机器被加快了，不是被取代。"),
+            t("Children were sent away during the strike, not as its cause.", "孩子是在罢工期间被送走的，并不是罢工的起因。"),
+          ],
         ),
         ask(
           t("What assumption about the workers proved wrong?", "关于工人的哪个假设被证明是错误的？"),
@@ -198,6 +243,11 @@ The Lawrence strike showed that the poorest workers, from many nations, could un
             "The second paragraph says many assumed that workers so divided by language could never act together, and they were wrong.",
             "第二段说许多人认为语言如此分散的工人永远无法团结行动，但他们错了。",
           ),
+          [
+            t("They did demand higher wages and won them.", "他们确实要求加薪，而且成功了。"),
+            t("Cotton use was a fact, not a wrong assumption.", "用棉花是事实，不是错误的假设。"),
+            t("Children did work there from fourteen.", "孩子们确实从十四岁就在那里干活。"),
+          ],
         ),
         ask(
           t("What does the phrase bread and roses express?", "“面包与玫瑰”这句话表达了什么？"),
@@ -214,6 +264,11 @@ The Lawrence strike showed that the poorest workers, from many nations, could un
             "The sixth paragraph says the words meant workers wanted not only bread to survive but also roses: dignity, rest and beauty.",
             "第六段说这句话的意思是工人不仅想要赖以生存的面包，还想要玫瑰：尊严、休息和美。",
           ),
+          [
+            t("Bread and roses are symbols, not goods to sell.", "“面包和玫瑰”是象征，不是要卖的东西。"),
+            t("They wanted both, not roses instead of bread.", "他们两者都要，不是不要面包只要玫瑰。"),
+            t("They wanted better lives in the mills, not farming.", "他们想要在工厂里过上更好的生活，不是去种地。"),
+          ],
         ),
         ask(
           t("In which year did the Lawrence strike begin?", "劳伦斯罢工是哪年开始的？"),
@@ -223,6 +278,11 @@ The Lawrence strike showed that the poorest workers, from many nations, could un
             "In January 1912, in the mill town of Lawrence, Massachusetts, women weavers found their wages had been cut.",
             "1912年1月，在马萨诸塞州的纺织镇劳伦斯，女织工们发现工资被削减了。",
           ),
+          [
+            t("1834 is too early.", "1834年太早了。"),
+            t("The strike began in January 1912, not 1911.", "罢工始于1912年1月，不是1911年。"),
+            t("1965 is far too late.", "1965年太晚了。"),
+          ],
         ),
       ],
       [
@@ -273,6 +333,11 @@ The match of 1997 did not end human chess. It changed the question from whether 
             "The second paragraph says many assumed a machine could never match the intuition and creativity of a human master.",
             "第二段说许多人认为机器永远无法与人类大师的直觉和创造力相匹敌。",
           ),
+          [
+            t("He had played and beaten Deep Blue the year before.", "他前一年就与深蓝下过棋，而且赢了。"),
+            t("No ban is mentioned.", "文中没提禁令。"),
+            t("IBM built Deep Blue to win.", "IBM造深蓝就是为了赢。"),
+          ],
         ),
         ask(
           t("What did critics point out about Deep Blue after its victory?", "深蓝获胜后，批评者指出了它的什么特点？"),
@@ -286,6 +351,14 @@ The match of 1997 did not end human chess. It changed the question from whether 
             "The fourth paragraph says Deep Blue did not understand chess at all, did not know it was playing and could do nothing else.",
             "第四段说深蓝根本不懂国际象棋，不知道自己在下棋，也做不了别的事。",
           ),
+          [
+            t(
+              "Kasparov suspected human help, not copying, and IBM denied it.",
+              "卡斯帕罗夫怀疑的是有人暗中帮忙，不是抄袭，而且IBM否认了。",
+            ),
+            t("It examined two hundred million positions a second.", "它每秒能分析两亿个局面。"),
+            t("It was built for a single task.", "它是为单一任务而造的。"),
+          ],
         ),
         ask(
           t("What did Kasparov later find about teams of humans and computers?", "卡斯帕罗夫后来对人机组合有什么发现？"),
@@ -299,12 +372,22 @@ The match of 1997 did not end human chess. It changed the question from whether 
             "The fifth paragraph says the best teams were not always those with the strongest players or fastest machines, but those who knew best how to work with their computers.",
             "第五段说最好的组合不一定是棋手最强或机器最快的，而是最懂得与计算机合作的。",
           ),
+          [
+            t("The fastest machines did not always win.", "最快的机器并不总能赢。"),
+            t("He promoted this form of chess; teams could do well.", "他推广这种下法；人机组合可以表现很好。"),
+            t("Computers were consulted freely.", "计算机可以随时被咨询。"),
+          ],
         ),
         ask(
           t("What was the computer that played Kasparov called?", "和卡斯帕罗夫对弈的计算机叫什么？"),
           t("Deep Blue", "深蓝"),
           [t("AlphaZero", "AlphaZero 程序"), t("The Moral Machine", "道德机器"), t("Big Mind", "大心智")],
           t("The machine, called Deep Blue, had been built by a team of engineers.", "这台名叫“深蓝”的机器由一个工程师团队制造。"),
+          [
+            t("AlphaZero came in 2017.", "阿尔法零是2017年才出现的。"),
+            t("The Moral Machine is a website about cars.", "道德机器是关于汽车的网站。"),
+            t("Big Mind is not mentioned.", "文中没提“大脑”。"),
+          ],
         ),
       ],
       ["Garry", "Kasparov", "Kasparov's", "Deep", "Blue", "IBM", "New", "York", "Russian", "AlphaZero"],
@@ -339,6 +422,11 @@ The puzzle may be rare on real roads. But it forces makers to ask what values th
             "The second paragraph says engineers must decide in advance how their cars will behave in rare emergencies, in software for millions of vehicles.",
             "第二段说工程师必须事先决定汽车在罕见紧急情况下的行为，写进可能驾驶数百万辆车的软件里。",
           ),
+          [
+            t("Philosophers argue; engineers build the cars.", "哲学家负责争论，造车的是工程师。"),
+            t("Trains are still used; they were only the old example.", "火车仍在使用；它们只是旧例子。"),
+            t("Decisions are made in advance in software, not by asking.", "决定是事先写进软件的，不是临时去问乘客。"),
+          ],
         ),
         ask(
           t("What hidden assumptions did critics find in the Moral Machine?", "批评者在“道德机器”中发现了哪些隐含的假设？"),
@@ -355,6 +443,11 @@ The puzzle may be rare on real roads. But it forces makers to ask what values th
             "The fifth paragraph lists the hidden assumptions: that a car could know age, that such choices would be common and that an online game reflected what people truly want.",
             "第五段列出了隐含的假设：汽车能知道年龄、这类选择很常见、网上游戏能反映人们的真实意愿。",
           ),
+          [
+            t("The study assumed accidents, not none.", "研究的前提是会出事故，并没假设永不出事。"),
+            t("Preferences differed between regions.", "不同地区的偏好不同。"),
+            t("Millions of visitors chose, not only engineers.", "做选择的是数百万访客，不只是工程师。"),
+          ],
         ),
         ask(
           t("What did some argue was the real moral duty of engineers?", "有些人认为工程师真正的道德责任是什么？"),
@@ -368,6 +461,11 @@ The puzzle may be rare on real roads. But it forces makers to ask what values th
             "The sixth paragraph says the real duty is to make cars that brake earlier, see better and crash far less often than human drivers.",
             "第六段说真正的责任是让汽车刹车更早、看得更清楚、事故比人类驾驶者少得多。",
           ),
+          [
+            t("They called the whole debate a distraction, not a guide to follow.", "他们认为整场争论都偏离了重点，并不主张照着投票做。"),
+            t("Passenger choice is not proposed.", "文中没提由乘客决定。"),
+            t("They wanted better cars, not none.", "他们想要更好的车，不是不要车。"),
+          ],
         ),
         ask(
           t("Which website did MIT researchers launch in 2016?", "麻省理工学院的研究者在2016年推出了哪个网站？"),
@@ -377,6 +475,11 @@ The puzzle may be rare on real roads. But it forces makers to ask what values th
             "In 2016, researchers at the Massachusetts Institute of Technology launched a website called the Moral Machine.",
             "2016年，麻省理工学院的研究者推出了一个名为“道德机器”的网站。",
           ),
+          [
+            t("Deep Blue was the chess computer.", "深蓝是下棋的计算机。"),
+            t("Trolley Game is not the name.", "名字不叫“电车游戏”。"),
+            t("Safe Roads is not mentioned.", "文中没提“安全道路”。"),
+          ],
         ),
       ],
       ["Moral", "Machine", "MIT", "Massachusetts", "Germany", "German", "Japan", "Colombia", "China", "Finland"],
@@ -409,6 +512,11 @@ The government promised compensation to tens of thousands of families, though ma
             "The first paragraph says officials believed a machine would be faster and more objective than human judgment.",
             "第一段说官员们认为机器比人的判断更快、更客观。",
           ),
+          [
+            t("They wanted to crack down on fraud, not give more.", "他们想打击骗补，不是多发钱。"),
+            t("Parliament banned nothing; it later investigated.", "议会没有禁止什么，只是后来做了调查。"),
+            t("Families did not ask for this.", "家庭并没有提出这种要求。"),
+          ],
         ),
         ask(
           t("Which factor made the system discriminatory?", "哪个因素使这个系统具有歧视性？"),
@@ -422,6 +530,11 @@ The government promised compensation to tens of thousands of families, though ma
             "The second paragraph says one of the factors that raised a family's risk score was whether a parent held a second nationality.",
             "第二段说提高家庭风险评分的因素之一是父母是否拥有第二国籍。",
           ),
+          [
+            t("Many families received childcare help; flagging was by risk score.", "许多家庭都领育儿补助；被标记要看风险分数。"),
+            t("The capital is not mentioned.", "文中没提首都。"),
+            t("Number of children is not a factor named.", "孩子数目并不在文中列出的因素里。"),
+          ],
         ),
         ask(
           t("What unstated assumption did investigators find in the system?", "调查人员在系统中发现了什么隐含的假设？"),
@@ -435,6 +548,11 @@ The government promised compensation to tens of thousands of families, though ma
             "The fifth paragraph says the system had been built on an unstated assumption: that the people it flagged were probably guilty.",
             "第五段说这个系统建立在一个隐含的假设之上：被它标记的人很可能有罪。",
           ),
+          [
+            t("The opposite: it treated flagged families as guilty.", "正相反：它把被标记的家庭当成有罪。"),
+            t("Arithmetic is not the issue; the rules were flawed.", "问题不在算术，而在规则有缺陷。"),
+            t("Free childcare is not discussed.", "文中没讨论免费托育。"),
+          ],
         ),
         ask(
           t("What did the government help families pay for?", "政府帮助家庭支付什么费用？"),
@@ -444,6 +562,11 @@ The government promised compensation to tens of thousands of families, though ma
             "Many families with young children receive help from the government to pay for childcare.",
             "许多有幼儿的家庭得到政府补助来支付托儿费。",
           ),
+          [
+            t("Some lost homes, but help was not for housing.", "有人失去了房子，但补助不是用来交房租的。"),
+            t("University fees are not mentioned.", "文中没提大学学费。"),
+            t("Medical bills are not mentioned.", "文中没提医疗费。"),
+          ],
         ),
       ],
       ["Netherlands", "Dutch", "Hague", "Mark", "Rutte", "Amnesty", "International"],
@@ -478,6 +601,11 @@ The question is not whether cameras are good or bad, but who controls them, what
             "The second paragraph says cameras help police find people, some studies show less car theft and many residents feel safer.",
             "第二段说摄像头帮助警方找人，一些研究显示汽车盗窃减少，许多居民感到更安全。",
           ),
+          [
+            t("Results on violent crime were mixed.", "对暴力犯罪的效果说法不一。"),
+            t("Cost is not one of their arguments.", "成本不在他们的论据之中。"),
+            t("Critics object; not everyone loves them.", "有人反对，并非人人喜欢。"),
+          ],
         ),
         ask(
           t("What unstated assumption do critics find in arguments for cameras?", "批评者在支持摄像头的论证中发现了什么隐含的假设？"),
@@ -491,6 +619,11 @@ The question is not whether cameras are good or bad, but who controls them, what
             "The third paragraph says the arguments often rest on a rarely stated assumption that only people who have done something wrong have anything to fear.",
             "第三段说这些论证常常基于一个很少被说出的假设：只有做了坏事的人才有理由害怕。",
           ),
+          [
+            t("Cost is not raised.", "文中没提成本。"),
+            t("Criminals moving elsewhere is a finding, not the assumption.", "罪犯转移到别处是研究发现，不是假设。"),
+            t("Walking at night is about feeling safe, not this assumption.", "夜里走路说的是安全感，不是这个假设。"),
+          ],
         ),
         ask(
           t(
@@ -507,6 +640,11 @@ The question is not whether cameras are good or bad, but who controls them, what
             "The fifth paragraph says the photographs used to train them had included mostly lighter-skinned men.",
             "第五段说用来训练它们的照片主要是肤色较浅的男性。",
           ),
+          [
+            t("Daylight is not the problem.", "问题不在白天能不能用。"),
+            t("The studies were in the United States.", "这些研究是在美国做的。"),
+            t("The fault was the training photos, not the people.", "毛病出在训练用的照片，不在被拍的人。"),
+          ],
         ),
       ],
       ["London", "Londoners", "British", "Britain", "San", "Francisco", "European", "Union"],
@@ -541,6 +679,11 @@ The gig economy is new, but the question it raises is old: what does a worker ow
             "The second paragraph says they can choose when to work, take days off without permission and earn money quickly.",
             "第二段说他们可以选择何时工作，不用请假就能休息，并能快速挣钱。",
           ),
+          [
+            t("They often have no sick pay or holidays.", "他们往往没有病假工资，也没有带薪假。"),
+            t("They pay for their own bicycles and phones.", "他们自己掏钱买自行车和手机。"),
+            t("No human manager; an app decides.", "没有人类经理，是应用程序做决定。"),
+          ],
         ),
         ask(
           t("What assumption does the companies' position rest on?", "公司的立场建立在什么假设之上？"),
@@ -554,6 +697,14 @@ The gig economy is new, but the question it raises is old: what does a worker ow
             "The fifth paragraph says the companies' position rests on the assumption that because riders can choose their hours, they are their own bosses.",
             "第五段说公司的立场基于一个假设：骑手能选择工作时间，所以他们是自己的老板。",
           ),
+          [
+            t("Rain is a condition Amir faces, not an assumption.", "下雨是阿米尔遇到的情况，不是假设。"),
+            t("Ratings can be low and hurt riders.", "评分可能很低，会伤害骑手。"),
+            t(
+              "Courts are not part of the companies' assumption; some have ruled against them.",
+              "公司的立场与法院无关；有些法院还判它们败诉。",
+            ),
+          ],
         ),
         ask(
           t("What have some new laws required of the companies?", "一些新法律对公司提出了什么要求？"),
@@ -567,6 +718,11 @@ The gig economy is new, but the question it raises is old: what does a worker ow
             "The sixth paragraph says some laws require companies to explain how their algorithms make decisions and to let a human review a decision to remove someone.",
             "第六段说一些法律要求公司解释算法如何对工人做出决定，并允许由人来复核移除某人的决定。",
           ),
+          [
+            t("Apps are still used; they must explain.", "应用程序仍在使用，只是必须解释。"),
+            t("Equal doctor's pay is not mentioned.", "文中没提要付和医生一样的工资。"),
+            t("Customer choice of rider is not mentioned.", "文中没提让顾客挑骑手。"),
+          ],
         ),
       ],
       ["Amir"],

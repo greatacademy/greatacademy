@@ -42,6 +42,11 @@ Perhaps that is why so many young people create their own rites: a first job, a 
             "The first paragraph says the young person is separated from childhood, goes through a transition and returns with a new status.",
             "第一段说年轻人先与童年分离，经历过渡期，然后以新身份回到群体中。",
           ),
+          [
+            t("Birth, marriage and death are life events, not his stages.", "出生、结婚、死亡是人生大事，不是他说的阶段。"),
+            t("Failing is not one of the stages.", "失败不是其中的阶段。"),
+            t("Dancing and feasting are parts of some rites, not the pattern.", "跳舞和宴会只是某些仪式的内容，不是规律。"),
+          ],
         ),
         ask(
           t("What is the point of the bullet ant ritual, according to the passage?", "根据文章，子弹蚁仪式的意义是什么？"),
@@ -55,6 +60,11 @@ Perhaps that is why so many young people create their own rites: a first job, a 
             "The second paragraph says the point is not cruelty but endurance: a man must bear pain without giving up.",
             "第二段说其意义不在于残酷，而在于忍耐：男人必须承受痛苦而不放弃。",
           ),
+          [
+            t("Catching ants is not the goal.", "目的不是捉蚂蚁。"),
+            t("The passage says the point is not cruelty.", "文中说目的不是残忍。"),
+            t("The ants are used, not fought.", "蚂蚁是被利用的，不是被驱赶的。"),
+          ],
         ),
         ask(
           t(
@@ -71,6 +81,11 @@ Perhaps that is why so many young people create their own rites: a first job, a 
             "The fourth paragraph says the line is blurred, with driving, voting and drinking at different ages, and that without a clear rite the passage has become more confusing.",
             "第四段说界线模糊了，开车、投票、饮酒的年龄各不相同，没有明确的仪式，步入成年就变得更令人困惑。",
           ),
+          [
+            t("Nothing says the young do not want to grow up.", "文中没说年轻人不想长大。"),
+            t("Painful ceremonies are not the problem.", "痛苦的仪式不是问题。"),
+            t("Graduations are named as rites people still create.", "毕业典礼被说成是人们仍在创造的仪式。"),
+          ],
         ),
         ask(
           t("When does Japan hold its coming-of-age ceremonies?", "日本在什么时候举行成人礼？"),
@@ -84,6 +99,11 @@ Perhaps that is why so many young people create their own rites: a first job, a 
             "Every year on the second Monday of January, Japanese cities hold ceremonies for new adults.",
             "每年一月的第二个星期一，日本各城市为新成年人举行仪式。",
           ),
+          [
+            t("The fifteenth birthday is the quinceañera.", "十五岁生日属于成人礼 quinceañera。"),
+            t("No spring festival is mentioned.", "文中没提春季节日。"),
+            t("The last day of school is not mentioned.", "文中没提学期最后一天。"),
+          ],
         ),
       ],
       ["French", "Arnold", "van", "Gennep", "Sateré-Mawé", "Amazon", "Latin", "America", "Japan", "Monday", "January", "Gennep's"],
@@ -117,6 +137,11 @@ Scientists warn against using this research to dismiss young people as foolish. 
             "The third paragraph says connections that are used often become stronger and faster, while those rarely used are cut away.",
             "第三段说常用的连接变得更强更快，而很少用的则被修剪掉。",
           ),
+          [
+            t("Use makes the difference, so not all grow equally.", "使用频率决定差别，并非一样快。"),
+            t("The brain keeps changing.", "大脑仍在变化。"),
+            t("Pruning cuts connections; it does not double them.", "修剪是减少连接，不是成倍增加。"),
+          ],
         ),
         ask(
           t("What does the passage mean by the accelerator and the brakes?", "文中的“油门”和“刹车”指什么？"),
@@ -133,6 +158,11 @@ Scientists warn against using this research to dismiss young people as foolish. 
             "The fourth paragraph says reward and emotion areas become very active early, while the front part, which controls impulses, matures more slowly.",
             "第四段说奖赏与情绪区域很早就很活跃，而控制冲动的前部发育较慢。",
           ),
+          [
+            t("Driving is only the image.", "开车只是比喻。"),
+            t("The brain is still building, not stopped.", "大脑仍在发育，并未停止。"),
+            t("Parents are not part of the image.", "父母不在这个比喻里。"),
+          ],
         ),
         ask(
           t("What did the driving game experiment show?", "驾驶游戏实验表明了什么？"),
@@ -146,6 +176,11 @@ Scientists warn against using this research to dismiss young people as foolish. 
             "The fifth paragraph says teenagers took far more risks when they knew their friends were in the next room, and adults did not.",
             "第五段说青少年知道朋友在隔壁房间时冒了多得多的风险，而成年人没有。",
           ),
+          [
+            t("Adults did not change.", "成年人没有变化。"),
+            t("They took more risks, not fewer.", "他们冒险更多，不是更少。"),
+            t("Teenagers took many risks.", "青少年冒了很多险。"),
+          ],
         ),
         ask(
           t(
@@ -158,6 +193,11 @@ Scientists warn against using this research to dismiss young people as foolish. 
             "A child's brain reaches about ninety percent of its adult size by the age of six.",
             "孩子的大脑到六岁时就达到成人大小的约百分之九十。",
           ),
+          [
+            t("Twelve is too late.", "十二岁太晚了。"),
+            t("Eighteen is too late.", "十八岁太晚了。"),
+            t("Twenty-five is when change may end.", "二十五岁是变化可能结束的时候。"),
+          ],
         ),
       ],
     ),
@@ -189,6 +229,11 @@ The form is still alive. Novels about young people from many backgrounds, findin
             "The second paragraph says the real subject is not the adventures themselves but the growth of a mind.",
             "第二段说真正的主题不是冒险本身，而是心智的成长。",
           ),
+          [
+            t("Countries are never the subject.", "国家从不是主题。"),
+            t("The theater is Wilhelm's adventure.", "剧团只是威廉的经历。"),
+            t("The merchant family is what he leaves.", "商人家庭是他离开的地方。"),
+          ],
         ),
         ask(
           t("Why does the title Great Expectations become ironic?", "为什么《远大前程》这个书名具有讽刺意味？"),
@@ -202,6 +247,11 @@ The form is still alive. Novels about young people from many backgrounds, findin
             "The third paragraph says only after his fortune collapses does Pip understand what he has lost, and his great expectations were the wrong ones.",
             "第三段说直到财富破灭，皮普才明白自己失去了什么，他的远大前程是错误的期望。",
           ),
+          [
+            t("He does receive money.", "他确实得到了钱。"),
+            t("The blacksmith stays a blacksmith.", "铁匠一直是铁匠。"),
+            t("He goes to London.", "他去了伦敦。"),
+          ],
         ),
         ask(
           t("What effect does an older narrator looking back create?", "一位回顾往事的年长叙述者会产生什么效果？"),
@@ -215,12 +265,22 @@ The form is still alive. Novels about young people from many backgrounds, findin
             "The fifth paragraph says looking back creates two voices at once, the young person who does not yet understand and the adult who does.",
             "第五段说回顾往事同时产生两种声音：尚不明白的年轻人和已经明白的成年人。",
           ),
+          [
+            t("The narrator looks back, so it is past.", "叙述者在回顾，所以是过去时。"),
+            t("The two voices are not called untrustworthy.", "这两种声音没被说成不可信。"),
+            t("The story is made of memories.", "故事正是由回忆构成的。"),
+          ],
         ),
         ask(
           t("In which year was Jane Eyre published?", "《简·爱》哪一年出版？"),
           t("In 1847", "1847年"),
           [t("In 1868", "1868年"), t("In 1799", "1799年"), t("In 1909", "1909年")],
           t("Charlotte Brontë's Jane Eyre was published in 1847.", "夏洛蒂·勃朗特的《简·爱》出版于1847年。"),
+          [
+            t("1868 is when Little Women was asked for.", "1868 年是出版商约稿《小妇人》的年份。"),
+            t("1799 is not in the passage.", "1799 年不在文中。"),
+            t("1909 belongs to van Gennep.", "1909 年属于范热内普。"),
+          ],
         ),
       ],
       [
@@ -275,6 +335,11 @@ Otto Frank published it in 1947. It has since been translated into more than sev
             "The second paragraph says Margot received an order to report to a labor camp, and the family went into hiding at once.",
             "第二段说玛戈特接到去劳动营报到的命令，全家立即躲藏起来。",
           ),
+          [
+            t("Bombers flew over, but the house stood.", "轰炸机飞过，但房子没毁。"),
+            t("Her father kept his office; they hid behind it.", "她父亲的办公室还在，他们就躲在后面。"),
+            t("Writing was not the reason.", "写作不是原因。"),
+          ],
         ),
         ask(
           t("What surprising side of Anne's life does the diary record?", "日记记录了安妮生活中哪个令人意外的方面？"),
@@ -288,6 +353,11 @@ Otto Frank published it in 1947. It has since been translated into more than sev
             "The third paragraph says she argues with her mother, falls in love for the first time and wonders what kind of person she wants to become.",
             "第三段说她和母亲争吵，第一次恋爱，并思考自己想成为什么样的人。",
           ),
+          [
+            t("She stayed hidden, not traveling.", "她一直躲着，没有旅行。"),
+            t("Journalism was her dream, not her job.", "记者是她的梦想，不是工作。"),
+            t("America is never mentioned.", "文中没提美国。"),
+          ],
         ),
         ask(
           t("Why did Anne begin to rewrite her diary in 1944?", "安妮为什么在 1944 年开始改写日记？"),
@@ -304,12 +374,22 @@ Otto Frank published it in 1947. It has since been translated into more than sev
             "The fourth paragraph says she heard a broadcast asking Dutch people to keep their diaries as records and began to rewrite hers, hoping to publish it.",
             "第四段说她听到广播请荷兰人保存日记作为战争记录，于是开始改写日记，希望出版。",
           ),
+          [
+            t("Her father did not ask.", "她父亲没提这个要求。"),
+            t("The notebook survived.", "日记本保存下来了。"),
+            t("The helpers asked nothing.", "帮助者没提要求。"),
+          ],
         ),
         ask(
           t("What did Anne call the imaginary friend she wrote to?", "安妮把日记写给的想象中的朋友叫什么？"),
           t("Kitty", "基蒂"),
           [t("Margot", "玛格特"), t("Otto", "奥托"), t("Marmee", "玛米")],
           t("She addressed her entries to an imaginary friend she called Kitty.", "她把日记写给一个叫基蒂的想象中的朋友。"),
+          [
+            t("Margot was her sister.", "玛戈是她姐姐。"),
+            t("Otto was her father.", "奥托是她父亲。"),
+            t("Marmee is the mother in Little Women.", "马米是《小妇人》里的母亲。"),
+          ],
         ),
       ],
       [
@@ -354,6 +434,11 @@ Malala has often said that she does not want to be remembered as the girl who wa
             t("That boys study abroad", "男孩出国学习"),
           ],
           t("The first paragraph says the Taliban had ordered girls' schools to close.", "第一段说塔利班已下令关闭女子学校。"),
+          [
+            t("Newspapers are not mentioned.", "文中没提报纸。"),
+            t("Families stayed.", "家庭留了下来。"),
+            t("Boys are not the target.", "对象不是男孩。"),
+          ],
         ),
         ask(
           t("How did Malala's father influence her?", "马拉拉的父亲如何影响了她？"),
@@ -370,6 +455,11 @@ Malala has often said that she does not want to be remembered as the girl who wa
             "The second paragraph says she grew up hearing him argue that every child had a right to learn, and over time she began speaking publicly herself.",
             "第二段说她从小听父亲主张每个孩子都有受教育的权利，后来她自己也开始公开发声。",
           ),
+          [
+            t("He encouraged her.", "他是鼓励她的。"),
+            t("She wrote it herself.", "日记是她自己写的。"),
+            t("She went to Britain after the attack.", "她是遇袭后才去英国的。"),
+          ],
         ),
         ask(
           t("How does Malala want to be remembered?", "马拉拉希望人们怎样记住她？"),
@@ -383,12 +473,22 @@ Malala has often said that she does not want to be remembered as the girl who wa
             "The last paragraph says she wants to be remembered not as the girl who was shot, but as the girl who stood up.",
             "最后一段说她希望人们记住的不是中枪的女孩，而是挺身而出的女孩。",
           ),
+          [
+            t("She says she does not want that.", "她说不想被这样记住。"),
+            t("Oxford is a later detail.", "牛津是后来的细节。"),
+            t("Her father is not her focus.", "她父亲不是她的重点。"),
+          ],
         ),
         ask(
           t("At what age did Malala receive the Nobel Peace Prize?", "马拉拉几岁获得诺贝尔和平奖？"),
           t("Seventeen", "十七岁"),
           [t("Eleven", "十一岁"), t("Sixteen", "十六岁"), t("Twenty-one", "二十一岁")],
           t("In 2014, at the age of seventeen, Malala received the Nobel Peace Prize.", "2014年，十七岁的马拉拉获得诺贝尔和平奖。"),
+          [
+            t("Eleven is when she began the diary.", "十一岁是她开始写日记的时候。"),
+            t("Sixteen is when she spoke at the UN.", "十六岁是她在联合国演讲的时候。"),
+            t("Twenty-one is not mentioned.", "二十一岁没被提到。"),
+          ],
         ),
       ],
       [
@@ -440,6 +540,11 @@ Little Women is about how four very different young women grow up within one fam
             "The first paragraph says she did not know many girls except her own sisters, so she wrote about them.",
             "第一段说她除了自己的姐妹不认识多少女孩，于是就写了她们。",
           ),
+          [
+            t("Her sisters asked nothing.", "她的姐妹没有提要求。"),
+            t("No diaries are mentioned.", "文中没提日记。"),
+            t("Fame was not her aim.", "出名不是她的目的。"),
+          ],
         ),
         ask(
           t("What does Jo realize after Amy falls through the ice?", "艾美掉进冰窟后，乔意识到了什么？"),
@@ -453,6 +558,11 @@ Little Women is about how four very different young women grow up within one fam
             "The third paragraph says Jo is horrified to realize how close her anger came to hurting someone she loves.",
             "第三段说乔惊恐地意识到她的怒气差点伤害了她所爱的人。",
           ),
+          [
+            t("Amy did burn it.", "艾米确实烧了手稿。"),
+            t("She keeps writing.", "她继续写作。"),
+            t("Marmee was not there.", "马米不在场。"),
+          ],
         ),
         ask(
           t("Why did Alcott give Jo a husband in the end?", "奥尔科特最后为什么给乔安排了丈夫？"),
@@ -466,6 +576,11 @@ Little Women is about how four very different young women grow up within one fam
             "The fourth paragraph says Alcott, under pressure from her publisher, gave Jo a different husband and privately complained about it.",
             "第四段说奥尔科特在出版商的压力下给乔安排了另一位丈夫，并私下抱怨过此事。",
           ),
+          [
+            t("No married friend is mentioned.", "文中没提已婚朋友。"),
+            t("Her sisters did not insist.", "她的姐妹没坚持。"),
+            t("She complained about it privately.", "她私下对此不满。"),
+          ],
         ),
         ask(
           t("Which sister burns Jo's manuscript?", "哪个妹妹烧了乔的手稿？"),
@@ -475,6 +590,11 @@ Little Women is about how four very different young women grow up within one fam
             "Amy, angry at being left out, burns the manuscript of a book Jo has been writing.",
             "艾米因被冷落而生气，烧了乔正在写的书稿。",
           ),
+          [
+            t("Meg is the gentle eldest.", "梅格是温柔的大姐。"),
+            t("Beth is shy and kind.", "贝丝害羞善良。"),
+            t("Marmee is the mother.", "马米是母亲。"),
+          ],
         ),
       ],
       ["American", "Louisa", "May", "Alcott", "Little", "Women", "March", "Civil", "War", "Meg", "Jo", "Beth", "Amy", "Marmee", "Laurie"],
@@ -511,6 +631,11 @@ Historians point out that the idea of the teenager is now spread around the worl
             "The second paragraph says that instead of spending their days among adults at work, young people spent them among others their own age and developed their own slang, fashions and friendships.",
             "第二段说年轻人不再整天和成年人一起工作，而是与同龄人相处，形成了自己的俚语、时尚和友谊。",
           ),
+          [
+            t("No such class existed.", "没有这样的课。"),
+            t("Schools did not pay students.", "学校不给学生钱。"),
+            t("School replaced work.", "上学取代了工作。"),
+          ],
         ),
         ask(
           t("Why did businesses begin to sell directly to young people?", "为什么商家开始直接向年轻人推销？"),
@@ -524,6 +649,11 @@ Historians point out that the idea of the teenager is now spread around the worl
             "The third paragraph says many teenagers had part-time jobs or allowances and money of their own, and businesses noticed.",
             "第三段说许多青少年有兼职或零花钱，有了自己的钱，商家注意到了这一点。",
           ),
+          [
+            t("No law required it.", "没有法律要求。"),
+            t("Parents are not mentioned.", "文中没提父母。"),
+            t("Young people were the customers.", "年轻人是顾客。"),
+          ],
         ),
         ask(
           t("What point do historians make in the last paragraph?", "历史学家在最后一段提出了什么观点？"),
@@ -537,6 +667,11 @@ Historians point out that the idea of the teenager is now spread around the worl
             "The last paragraph says the idea reminds us that even something that seems natural, like the stage between childhood and adulthood, has a history of its own.",
             "最后一段说这个概念提醒我们，即使像童年与成年之间的阶段这样看似自然的事物，也有它自己的历史。",
           ),
+          [
+            t("The age group always existed; only the idea is new.", "这个年龄段一直存在，只是概念是新的。"),
+            t("It takes different forms in different cultures.", "它在不同文化中形式不同。"),
+            t("Rock and roll's future is not discussed.", "文中没讨论摇滚乐的未来。"),
+          ],
         ),
       ],
       ["English", "Second", "World", "War", "United", "States"],
@@ -573,6 +708,11 @@ I am older now, and the shop has been closed for years. But I still have the key
             "The second paragraph says only her grandfather and grandmother had carried the key for forty years, and she knew what it meant.",
             "第二段说四十年来只有她的祖父和祖母带过这把钥匙，她明白它意味着什么。",
           ),
+          [
+            t("It is brass and scratched.", "它是黄铜的，还有划痕。"),
+            t("It opens the shop door.", "它开的是店门。"),
+            t("It was given to her.", "它是别人给她的。"),
+          ],
         ),
         ask(
           t("How does the narrator finally open the door?", "叙述者最后是怎么打开门的？"),
@@ -586,6 +726,11 @@ I am older now, and the shop has been closed for years. But I still have the key
             "The sixth paragraph says she remembered that her grandmother always lifted the door slightly with her knee before turning the key.",
             "第六段说她想起祖母总是先用膝盖把门稍稍抬起再转钥匙。",
           ),
+          [
+            t("The man only sighed.", "那个人只是叹气。"),
+            t("Her grandmother came at nine.", "奶奶九点才到。"),
+            t("She lifted, not broke.", "她是抬门，不是撬锁。"),
+          ],
         ),
         ask(
           t("What does the narrator understand about her grandmother's silence?", "叙述者如何理解祖母的沉默？"),
@@ -599,6 +744,11 @@ I am older now, and the shop has been closed for years. But I still have the key
             "The seventh paragraph says her grandmother did not praise her, and she understood later that this was the praise.",
             "第七段说祖母没有表扬她，她后来明白这本身就是表扬。",
           ),
+          [
+            t("She nodded, so she was not angry.", "她点了点头，并没生气。"),
+            t("She looked around and saw it.", "她环顾四周，看到了一切。"),
+            t("The shop closed years later.", "店是多年后才关的。"),
+          ],
         ),
       ],
       ["Bridge", "Street", "Monday"],

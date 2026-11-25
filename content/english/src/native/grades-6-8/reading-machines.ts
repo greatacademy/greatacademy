@@ -37,6 +37,11 @@ Some historians call the printing press the most important invention of the last
             t("Rulers banned all books", "统治者禁止一切书籍"),
           ],
           t("The first paragraph says a single copy could take a scribe many months.", "第一段说，抄写员抄一本书可能要好几个月。"),
+          [
+            t("Few people learned to read because books were rare, not the reverse.", "书少所以识字的人少，而不是反过来。"),
+            t("Paper is never said to be missing.", "文中从没说没有纸。"),
+            t("No ban on books is mentioned.", "文中没提禁书。"),
+          ],
         ),
         ask(
           t("What did Gutenberg do that was new?", "古腾堡做了什么新的事情？"),
@@ -50,6 +55,11 @@ Some historians call the printing press the most important invention of the last
             "The passage says printing and movable type already existed in China and Korea; Gutenberg put several ideas together.",
             "文章说，印刷和活字在中国和朝鲜早已存在；古腾堡是把几种想法结合在了一起。",
           ),
+          [
+            t("China had printed for centuries before.", "中国在此之前已印刷了几百年。"),
+            t("Clay type was Bi Sheng's invention.", "泥活字是毕昇的发明。"),
+            t("He printed books; he wrote none.", "他印书，不写书。"),
+          ],
         ),
         ask(
           t("Which effect of the printing press does the passage NOT mention?", "文章没有提到印刷机的哪一个影响？"),
@@ -63,12 +73,22 @@ Some historians call the printing press the most important invention of the last
             "The fourth paragraph lists reading, science and the spread of ideas, but not faster travel.",
             "第四段列出了阅读、科学和思想传播，但没有提到旅行变快。",
           ),
+          [
+            t("More readers is named as an effect.", "识字的人增多是文中提到的影响。"),
+            t("Exact sharing of discoveries is named.", "准确分享发现是文中提到的。"),
+            t("Faster ideas is named.", "思想传播更快是文中提到的。"),
+          ],
         ),
         ask(
           t("What did Bi Sheng make his movable type from?", "毕昇用什么制作活字？"),
           t("Baked clay", "烧制的黏土"),
           [t("Metal", "金属"), t("Carved wood", "雕刻的木头"), t("Stone", "石头")],
           t("Around 1040, Bi Sheng made movable type from baked clay.", "大约1040年，毕昇用烧制的黏土制作了活字。"),
+          [
+            t("Metal type came later, in Korea.", "金属活字是后来朝鲜的。"),
+            t("Carved wood was for whole-page blocks.", "木刻用于整版印刷。"),
+            t("Stone is never mentioned.", "文中从没提石头。"),
+          ],
         ),
       ],
       ["Bi", "Sheng", "Korean", "Johannes", "Gutenberg"],
@@ -99,6 +119,11 @@ The change came at a cost. Factory work was long and dangerous, children worked 
             "The second paragraph explains that trapped steam pushes a piston that can turn a wheel.",
             "第二段解释说，被困住的蒸汽推动活塞，活塞可以带动轮子。",
           ),
+          [
+            t("The steam pushes; nothing is cooled to spin.", "是蒸汽推动的，不是冷却使之转动。"),
+            t("Coal heats the water; it does not pull.", "煤加热水，并不拉动活塞。"),
+            t("Wind and sails are what the engine replaced.", "风和帆正是蒸汽机取代的东西。"),
+          ],
         ),
         ask(
           t("What problem did James Watt solve?", "詹姆斯·瓦特解决了什么问题？"),
@@ -112,6 +137,11 @@ The change came at a cost. Factory work was long and dangerous, children worked 
             "Watt noticed that heat was wasted when the cylinder was cooled, so he added a separate chamber.",
             "瓦特注意到气缸冷却时会浪费热量，于是加了一个单独的冷凝室。",
           ),
+          [
+            t("The first engines did pump water.", "最早的蒸汽机确实能抽水。"),
+            t("Workers filled the cities.", "城市里挤满了工人。"),
+            t("Rivers were no problem for trains here.", "这里火车过河不是问题。"),
+          ],
         ),
         ask(
           t("How is the passage mainly organized?", "这篇文章主要是怎样组织的？"),
@@ -125,6 +155,11 @@ The change came at a cost. Factory work was long and dangerous, children worked 
             "The passage explains the invention and then the effects it had on factories, travel and cities, including its costs.",
             "文章先解释这项发明，再讲它对工厂、交通和城市的影响，包括它的代价。",
           ),
+          [
+            t("No building steps are given.", "文中没有建造步骤。"),
+            t("No factory worker tells the story.", "不是工厂工人讲的故事。"),
+            t("Only Watt is compared with nobody.", "只提到瓦特，没有比较两位发明家。"),
+          ],
         ),
         ask(
           t("What were the first practical steam engines used for?", "最早的实用蒸汽机用来做什么？"),
@@ -134,6 +169,11 @@ The change came at a cost. Factory work was long and dangerous, children worked 
             "The first practical steam engines, built in England in the early 1700s, pumped water out of coal mines.",
             "18世纪初英国制造的第一批实用蒸汽机用于抽出煤矿里的水。",
           ),
+          [
+            t("Trains came later.", "火车是后来的事。"),
+            t("Steamships came later.", "轮船是后来的事。"),
+            t("Lighting is never mentioned.", "文中从没提照明。"),
+          ],
         ),
       ],
       ["England", "Scottish", "James", "Watt"],
@@ -164,6 +204,11 @@ The telegraph changed daily life in ways people had never imagined. Newspapers c
             "The second paragraph explains that pressing the key closes the circuit and sends a pulse.",
             "第二段解释说，按下电键会接通电路并发出电脉冲。",
           ),
+          [
+            t("It makes a click or mark, not printed letters.", "它发出咔嗒声或留下记号，不是印字。"),
+            t("Horses were the slow old way.", "马是以前的慢方法。"),
+            t("Voices came with the telephone.", "传送声音是电话做到的。"),
+          ],
         ),
         ask(
           t("Why was Morse code important to the telegraph's success?", "为什么说摩尔斯电码对电报的成功很重要？"),
@@ -177,6 +222,11 @@ The telegraph changed daily life in ways people had never imagined. Newspapers c
             "The third paragraph says the code turned letters into dots and dashes that operators could send at dozens of words a minute.",
             "第三段说，电码把字母变成点和划，电报员每分钟能发送几十个单词。",
           ),
+          [
+            t("The code did not change the wires.", "代码没有改变电线。"),
+            t("Voices were not sent by telegraph.", "电报不传声音。"),
+            t("Operators everywhere learned it.", "各地的报务员都学会了它。"),
+          ],
         ),
         ask(
           t("What is the central idea of the passage?", "这篇文章的中心思想是什么？"),
@@ -190,12 +240,22 @@ The telegraph changed daily life in ways people had never imagined. Newspapers c
             "The opening contrast between 1800 and 1870 and the last sentence both point to this idea.",
             "开头 1800 年与 1870 年的对比和最后一句都指向这个观点。",
           ),
+          [
+            t("Morse as a painter is never mentioned.", "文中从没说莫尔斯是画家。"),
+            t("Ships were the old way, before the telegraph.", "轮船是电报出现前的旧方式。"),
+            t("Broken wires are never mentioned.", "文中从没提电线断了。"),
+          ],
         ),
         ask(
           t("Between which two cities did Morse send his 1844 message?", "1844年莫尔斯在哪两座城市之间发送了电报？"),
           t("Washington and Baltimore", "华盛顿和巴尔的摩"),
           [t("London and New York", "伦敦和纽约"), t("Boston and Chicago", "波士顿和芝加哥"), t("Paris and Berlin", "巴黎和柏林")],
           t("In 1844, Morse sent a message from Washington to Baltimore.", "1844年，莫尔斯从华盛顿向巴尔的摩发送了一条消息。"),
+          [
+            t("London and New York were linked by the 1866 cable, not in 1844.", "伦敦和纽约是 1866 年海底电缆连通的，不是 1844 年。"),
+            t("Boston and Chicago are never mentioned.", "文中从没提波士顿和芝加哥。"),
+            t("Paris and Berlin are never mentioned.", "文中从没提巴黎和柏林。"),
+          ],
         ),
       ],
       ["Atlantic", "Samuel", "Morse", "Alfred", "Vail", "Washington", "Baltimore", "Europe"],
@@ -221,6 +281,11 @@ Electric light changed how people lived. Streets became safer after dark. Factor
             t("They were too cheap to sell", "它们太便宜，卖不出去"),
           ],
           t("The second paragraph says the filament quickly burned up in air.", "第二段说，灯丝在空气中很快就会烧坏。"),
+          [
+            t("Weight is never the problem.", "重量从来不是问题。"),
+            t("They did glow; Davy showed it.", "它们确实会发光，戴维证明了这一点。"),
+            t("Price is not the problem.", "价格不是问题。"),
+          ],
         ),
         ask(
           t("According to the passage, what made Edison's work stand out?", "根据文章，爱迪生的工作有什么突出之处？"),
@@ -234,6 +299,11 @@ Electric light changed how people lived. Streets became safer after dark. Factor
             "The third paragraph says it was not a single bulb but a whole system: generators, wires, switches and meters.",
             "第三段说，突出的不是一只灯泡，而是一整套系统：发电机、电线、开关和电表。",
           ),
+          [
+            t("Davy made a filament glow long before.", "戴维很早就让灯丝发光了。"),
+            t("He had a team.", "他有一个团队。"),
+            t("He joined his company with Swan's instead.", "他反而和斯旺合并了公司。"),
+          ],
         ),
         ask(
           t('How does the author\'s view differ from what "most people" believe?', "作者的观点与“大多数人”的看法有什么不同？"),
@@ -247,12 +317,22 @@ Electric light changed how people lived. Streets became safer after dark. Factor
             "The first paragraph sets up the common belief, then says the bulb was the work of many inventors over many years.",
             "第一段先提出普遍看法，然后说电灯泡是许多发明家多年努力的成果。",
           ),
+          [
+            t("Edison did work on bulbs.", "爱迪生确实研究过灯泡。"),
+            t("The work dates from the 1800s.", "这项工作在十九世纪。"),
+            t("The passage praises electric light over candles.", "文章赞扬电灯胜过蜡烛。"),
+          ],
         ),
         ask(
           t("What was the long-lasting filament of Edison's team made of?", "爱迪生团队那根耐用的灯丝是用什么做的？"),
           t("Baked bamboo", "烤过的竹子"),
           [t("Platinum", "铂"), t("Glass", "玻璃"), t("Copper wire", "铜线")],
           t("They found a filament of baked bamboo that lasted more than a thousand hours.", "他们找到了一种烤竹灯丝，能用一千多小时。"),
+          [
+            t("Platinum was tested and set aside.", "铂试过之后被放弃了。"),
+            t("Glass formed the bulb, not the filament.", "玻璃是灯泡外壳，不是灯丝。"),
+            t("Copper wire is never named as a filament.", "文中从没说铜线是灯丝。"),
+          ],
         ),
       ],
       ["Thomas", "Edison", "English", "Humphry", "Davy", "England", "Joseph", "Swan", "Edison's", "Jersey", "York"],
@@ -283,6 +363,11 @@ At first, many people thought the telephone was a toy. Who would want to talk to
             "The second paragraph describes vibrations becoming a changing current and then vibrations again.",
             "第二段描述了振动变成变化的电流，再变回振动。",
           ),
+          [
+            t("Dots and dashes were the telegraph.", "点和划是电报。"),
+            t("Air was not piped anywhere.", "空气没有被管道输送。"),
+            t("Light is never mentioned.", "文中从没提光。"),
+          ],
         ),
         ask(
           t('What does the word "diaphragm" mean in the passage?', '文中 "diaphragm" 是什么意思？'),
@@ -292,6 +377,11 @@ At first, many people thought the telephone was a toy. Who would want to talk to
             "The passage defines it right away: a thin sheet that shook when someone spoke into it.",
             "文章紧接着给出了定义：人对着它说话时会振动的薄片。",
           ),
+          [
+            t("The wire carries the current; it is not the diaphragm.", "导线传送电流，不是振膜。"),
+            t("No battery is described.", "文中没描述电池。"),
+            t("The notebook recorded the first words.", "笔记本记下了第一句话。"),
+          ],
         ),
         ask(
           t("What does the passage say about Elisha Gray?", "文章是怎样提到伊莱沙·格雷的？"),
@@ -305,12 +395,22 @@ At first, many people thought the telephone was a toy. Who would want to talk to
             "The fourth paragraph says Gray filed papers describing a similar idea on the very same day.",
             "第四段说，格雷在同一天提交了描述类似想法的文件。",
           ),
+          [
+            t("Watson was Bell's assistant.", "沃森是贝尔的助手。"),
+            t("Watson heard the first call.", "听到第一通电话的是沃森。"),
+            t("The telegraph came from Morse and others.", "电报来自莫尔斯等人。"),
+          ],
         ),
         ask(
           t("What was Alexander Graham Bell's work before the telephone?", "贝尔发明电话前从事什么工作？"),
           t("He taught deaf students", "教聋哑学生"),
           [t("He ran a bicycle shop", "开自行车店"), t("He was a telegraph operator", "当电报员"), t("He built steam engines", "造蒸汽机")],
           t("Bell was a teacher of deaf students who had studied how sound travels.", "贝尔是一位研究过声音传播的聋哑学生教师。"),
+          [
+            t("The bicycle shop belongs to the Wrights.", "自行车店属于莱特兄弟。"),
+            t("Telegraph operators are a different job.", "电报员是另一份工作。"),
+            t("Steam engines belong to Watt.", "蒸汽机属于瓦特。"),
+          ],
         ),
       ],
       ["Alexander", "Graham", "Bell", "Bell's", "March", "Thomas", "Watson", "Mr", "Elisha", "Gray"],
@@ -345,6 +445,11 @@ Few people noticed at first. Within a few decades, though, airplanes were carryi
             "The second paragraph says they found the tables were wrong and tested more than two hundred wing shapes.",
             "第二段说，他们发现数据表有误，于是测试了两百多种机翼形状。",
           ),
+          [
+            t("A shop needs no wind tunnel to cool it.", "商店降温不需要风洞。"),
+            t("The engine came from their mechanic.", "发动机是他们的机械师造的。"),
+            t("No visitors are mentioned.", "文中没提参观者。"),
+          ],
         ),
         ask(
           t("What did the brothers see as the hardest problem of flight?", "莱特兄弟认为飞行最难的问题是什么？"),
@@ -355,6 +460,11 @@ Few people noticed at first. Within a few decades, though, airplanes were carryi
             t("Selling tickets to passengers", "向乘客卖票"),
           ],
           t("The third paragraph begins by saying the hardest problem was control.", "第三段开头就说，最难的问题是控制。"),
+          [
+            t("They flew at Kitty Hawk without trouble finding it.", "他们在基蒂霍克飞行，并不难找场地。"),
+            t("Looks like a bird were not the aim.", "外形像鸟不是目标。"),
+            t("Passengers came decades later.", "乘客是几十年后的事。"),
+          ],
         ),
         ask(
           t("Why does the author compare the airplane to a bicycle rider?", "作者为什么把飞机比作骑自行车的人？"),
@@ -371,6 +481,11 @@ Few people noticed at first. Within a few decades, though, airplanes were carryi
             "The comparison explains control in three directions with something familiar, and it fits the brothers' bicycle work.",
             "这个比较用熟悉的事物解释三个方向的控制，也与兄弟俩修自行车的经历相呼应。",
           ),
+          [
+            t("Wheels are not the point.", "重点不在轮子。"),
+            t("Bicycles do not fly.", "自行车不会飞。"),
+            t("They ran a bicycle shop and liked bicycles.", "他们开自行车店，并不讨厌自行车。"),
+          ],
         ),
         ask(
           t("Who built the Wright brothers' engine?", "谁为莱特兄弟造了发动机？"),
@@ -380,6 +495,11 @@ Few people noticed at first. Within a few decades, though, airplanes were carryi
             "Because no engine light enough could be bought, their mechanic built one.",
             "买不到足够轻的发动机，于是他们的机械师造了一台。",
           ),
+          [
+            t("No engine light enough could be bought, so neither brother built it.", "买不到够轻的发动机，也不是兄弟俩自己造的。"),
+            t("No company built it.", "不是哪家公司造的。"),
+            t("Watt worked on steam a century earlier.", "瓦特研究的是一个世纪前的蒸汽机。"),
+          ],
         ),
       ],
       ["Wilbur", "Orville", "Wright", "Ohio", "December", "Kitty", "Hawk", "Carolina"],
@@ -406,6 +526,11 @@ Each step made computers smaller and more powerful. In the 1970s, computers smal
             "The first paragraph says the word once meant a person who worked out calculations by hand.",
             "第一段说，这个词曾经指用手做计算的人。",
           ),
+          [
+            t("The machine meaning came later.", "机器的意思是后来才有的。"),
+            t("It never meant a clock.", "它从来不是钟的意思。"),
+            t("Phones are today's computers.", "手机是今天的计算机。"),
+          ],
         ),
         ask(
           t("Why was the transistor such an important invention?", "为什么说晶体管是一项非常重要的发明？"),
@@ -419,6 +544,11 @@ Each step made computers smaller and more powerful. In the 1970s, computers smal
             "The fourth paragraph says the transistor was smaller, cheaper and far more efficient than a vacuum tube.",
             "第四段说，晶体管比真空管更小、更便宜、效率更高。",
           ),
+          [
+            t("ENIAC filled rooms, before transistors.", "ENIAC 占满房间，那是晶体管之前。"),
+            t("It made machines better, not replace all workers.", "它让机器更好，并没取代所有工人。"),
+            t("Lovelace lived in the 1800s.", "洛夫莱斯生活在十九世纪。"),
+          ],
         ),
         ask(
           t("How is the passage mainly organized?", "这篇文章主要是怎样组织的？"),
@@ -432,6 +562,11 @@ Each step made computers smaller and more powerful. In the 1970s, computers smal
             "The passage moves through the 1800s, the 1830s, the 1940s, 1947, the 1970s and today.",
             "文章依次讲了 19 世纪、19 世纪 30 年代、20 世纪 40 年代、1947 年、20 世纪 70 年代和今天。",
           ),
+          [
+            t("There are many steps, not one solution.", "这里有许多步骤，不是单一的解决办法。"),
+            t("No brands are listed.", "文中没列品牌。"),
+            t("Countries are not compared.", "文中没有比较国家。"),
+          ],
         ),
       ],
       ["English", "Charles", "Babbage", "Ada", "Lovelace", "ENIAC"],
@@ -463,6 +598,11 @@ Like the printing press and the telegraph before it, the smartphone has changed 
             "It lists five separate things people once needed and says many now carry them all in one device.",
             "它列出了人们过去需要的五样东西，并说现在许多人用一台设备就能全部带上。",
           ),
+          [
+            t("The camera's age is not the point.", "相机的年代不是重点。"),
+            t("Paper maps are not praised.", "文中没称赞纸质地图。"),
+            t("Music is one of the jobs the phone does.", "音乐是手机能做的事之一。"),
+          ],
         ),
         ask(
           t("What happened in 2007, according to the passage?", "根据文章，2007 年发生了什么？"),
@@ -476,6 +616,11 @@ Like the printing press and the telegraph before it, the smartphone has changed 
             "The third paragraph names 2007 as the year phones with large touch screens went on sale.",
             "第三段指出，2007 年带大触摸屏的手机开始销售。",
           ),
+          [
+            t("The mobile phone came in the 1970s.", "移动电话出现在 1970 年代。"),
+            t("Two billion came within ten years.", "二十亿是十年之内的事。"),
+            t("Navigation was invented separately, earlier.", "卫星导航是更早单独发明的。"),
+          ],
         ),
         ask(
           t("How does the author present the smartphone?", "作者是怎样介绍智能手机的？"),
@@ -489,6 +634,11 @@ Like the printing press and the telegraph before it, the smartphone has changed 
             "The fourth paragraph gives benefits and then problems, and the last line says how we use it is up to us.",
             "第四段先讲好处再讲问题，最后一句说怎样使用取决于我们自己。",
           ),
+          [
+            t("No ban is suggested.", "文中没建议禁止。"),
+            t("The author names new problems.", "作者指出了新问题。"),
+            t("Two billion people use it.", "二十亿人在用它。"),
+          ],
         ),
       ],
       [],
