@@ -61,8 +61,8 @@ const constrainedSubsets: KnowledgePointDef = {
   id: "subsets-with-required-and-forbidden-elements",
   title: t("Subsets with required and forbidden elements", "必含和必不含某些元素的子集"),
   explanation: t(
-    "Building a subset means deciding, for each element, whether it is in or out. An element that must be in, or must be out, leaves no decision. Only the remaining elements each offer two choices. So the number of subsets is a power of two whose exponent counts just the undecided elements.",
-    "构造子集就是对每个元素决定它在或不在。必须在或必须不在的元素没有选择的余地。只有其余的元素各有两种选择。所以子集的个数是二的幂，指数只计算尚未确定的元素。",
+    "Building a subset means deciding, for each element, whether it is in or out. An element that must be in, or must be out, leaves no decision. Only the remaining elements each offer two choices. So the number of subsets is a power of two whose exponent counts just the undecided elements. The subsets of $\\{1, \\dots, 6\\}$ that contain $1$ but not $6$ leave $4$ elements free: $2^{4} = 16$ subsets.\n\n> **Watch out.** A forbidden element is decided just as much as a required one. Both leave the exponent, and the count is divided by $2$ for each, not reduced by subtraction.",
+    "构造子集就是对每个元素决定它在或不在。必须在或必须不在的元素没有选择的余地。只有其余的元素各有两种选择。所以子集的个数是二的幂，指数只计算尚未确定的元素。$\\{1, \\dots, 6\\}$ 中含 $1$ 但不含 $6$ 的子集，还剩 $4$ 个元素可以自由选择：共 $2^{4} = 16$ 个。\n\n> **注意。** 必不含的元素和必含的元素一样，都已确定。它们都不计入指数，每个都使个数除以 $2$，而不是做减法。",
   ),
   generate(rng) {
     const n = rng.int(7, 12);
@@ -82,10 +82,45 @@ const constrainedSubsets: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 ** (n - inside), 2 ** n - 2 ** (inside + outside), 2 ** (n - inside - outside - 1)],
-      solution: t(
-        `The ${inside + outside} named numbers are decided, which leaves ${free} free ones. So there are $2^{${free}} = ${answer}$ subsets.`,
-        `指定的 ${inside + outside} 个数已经确定，还剩 ${free} 个可以自由选择。所以有 $2^{${free}} = ${answer}$ 个子集。`,
+      wrong: [2 ** (n - inside - outside - 1)],
+      mistakes: [
+        why(
+          2 ** (n - inside),
+          `That settles only the required numbers; the forbidden ones are decided too, so they leave the exponent as well.`,
+          `这只确定了必含的数；必不含的数同样已经确定，也不计入指数。`,
+        ),
+        why(
+          2 ** n - 2 ** (inside + outside),
+          "That subtracts from the number of all subsets; each decided element halves the count instead.",
+          "这是从全部子集的个数中做减法；每个确定的元素应使个数减半。",
+        ),
+        why(
+          2 ** n,
+          `That counts every subset of the ${n} numbers, ignoring the conditions.`,
+          `这数的是 ${n} 个数的全部子集，没有考虑条件。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Settle the named numbers", "确定指定的数"],
+            t(
+              `${inside} number${inside === 1 ? " is" : "s are"} in and ${outside} ${outside === 1 ? "is" : "are"} out, so $${inside} + ${outside} = ${inside + outside}$ numbers are decided and $${n} - ${inside + outside} = ${free}$ are free.`,
+              `${inside} 个数必在，${outside} 个数必不在，所以 $${inside} + ${outside} = ${inside + outside}$ 个数已经确定，还剩 $${n} - ${inside + outside} = ${free}$ 个可以自由选择。`,
+            ),
+          ],
+          [
+            ["Count the free choices", "数自由的选择"],
+            t(
+              `Each free number is in or out: $2^{${free}} = ${answer}$ subsets.`,
+              `每个自由的数可在可不在：共 $2^{${free}} = ${answer}$ 个子集。`,
+            ),
+          ],
+        ],
+        t(
+          `Start from all $2^{${n}}$ subsets. Each condition on one number keeps exactly half of them, so $2^{${n}} \\div 2^{${inside + outside}} = ${answer}$.`,
+          `从全部 $2^{${n}}$ 个子集出发。关于一个数的每个条件恰好保留一半，所以 $2^{${n}} \\div 2^{${inside + outside}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -123,8 +158,8 @@ const partitionsWithBlockSizes: KnowledgePointDef = {
   id: "partitions-into-two-blocks-of-given-sizes",
   title: t("Partitions into two blocks of given sizes", "分成两个给定大小的块"),
   explanation: t(
-    "A partition into two blocks is fixed once one block is chosen, because the other block is whatever remains. If the sizes differ, choose the block of the first size. If they are equal, this counts each partition twice, since a partition does not say which block came first, so divide by two.",
-    "分成两块时，选定一块，划分就确定了，因为另一块就是剩下的元素。如果大小不同，就选出第一种大小的块。如果大小相等，这样会把每个划分算两次，因为划分不区分哪一块在前，所以要除以二。",
+    "A partition into two blocks is fixed once one block is chosen, because the other block is whatever remains. If the sizes differ, choose the block of the first size. If they are equal, this counts each partition twice, since a partition does not say which block came first, so divide by two. A set of $4$ elements splits into blocks of $1$ and $3$ in $\\binom{4}{1} = 4$ ways, and into two blocks of $2$ in $\\binom{4}{2} \\div 2 = 3$ ways.\n\n> **Watch out.** Halve only when the two blocks have the same size. With different sizes, the block of the smaller size already tells the blocks apart, and nothing is counted twice.",
+    "分成两块时，选定一块，划分就确定了，因为另一块就是剩下的元素。如果大小不同，就选出第一种大小的块。如果大小相等，这样会把每个划分算两次，因为划分不区分哪一块在前，所以要除以二。$4$ 元集合分成 $1$ 元块和 $3$ 元块有 $\\binom{4}{1} = 4$ 种方式，分成两个 $2$ 元块有 $\\binom{4}{2} \\div 2 = 3$ 种方式。\n\n> **注意。** 只有两块大小相同时才除以二。大小不同时，较小的那块本身就把两块区分开了，没有重复计数。",
   ),
   generate(rng) {
     const a = rng.int(1, 8);
@@ -139,17 +174,61 @@ const partitionsWithBlockSizes: KnowledgePointDef = {
       prompt: t(`How many partitions of a set of ${n} elements consist of ${sizesEn}?`, `${n} 元集合有多少种划分由${sizesZh}组成？`),
       answer,
       form: "integer",
-      wrong: [a === b ? choose : 2 * choose, 2 ** (n - 1) - 1, a * b],
-      solution:
+      mistakes: [
+        a === b
+          ? why(
+              choose,
+              "That counts each partition twice: choosing either of its two blocks gives the same partition.",
+              "这把每种划分算了两次：选出它的两块中的任何一块，得到的是同一种划分。",
+            )
+          : why(
+              2 * choose,
+              `Choosing the block of ${a} already fixes the partition; the blocks differ in size, so nothing needs doubling.`,
+              `选出 ${a} 元的块就已确定划分；两块大小不同，不需要乘以二。`,
+            ),
+        why(
+          2 ** (n - 1) - 1,
+          "That counts every partition into two blocks, whatever their sizes.",
+          "这数的是分成两块的所有划分，没有限定块的大小。",
+        ),
+        why(
+          a * b,
+          "That multiplies the block sizes; a block is a choice of elements, counted by a binomial coefficient.",
+          "这是把块的大小相乘；一个块是对元素的选取，要用组合数来数。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Choose one block", "选出一块"],
+            t(
+              `Choose the ${a} elements of ${a === b ? "one" : "the smaller"} block: $\\binom{${n}}{${a}} = ${choose}$ ways. The other ${b} elements form the other block.`,
+              `选出${a === b ? "其中一块" : "较小一块"}的 ${a} 个元素：$\\binom{${n}}{${a}} = ${choose}$ 种方式。其余 ${b} 个元素组成另一块。`,
+            ),
+          ],
+          a === b
+            ? [
+                ["Remove the double count", "去掉重复计数"],
+                t(
+                  `The two blocks have no order, so each partition was counted twice: $${choose} \\div 2 = ${answer}$.`,
+                  `两块没有顺序，每种划分被算了两次：$${choose} \\div 2 = ${answer}$。`,
+                ),
+              ]
+            : [
+                ["Count the partitions", "数出划分"],
+                t(`Each choice gives a different partition, so there are $${answer}$.`, `每种选法给出不同的划分，所以共 $${answer}$ 种。`),
+              ],
+        ],
         a === b
           ? t(
-              `Choosing one block gives $\\binom{${n}}{${a}} = ${choose}$ ways, but the two blocks have no order, so each partition is counted twice. That leaves ${answer}.`,
-              `选出一块有 $\\binom{${n}}{${a}} = ${choose}$ 种方式，但两块没有顺序，每种划分被算了两次。所以有 ${answer} 种。`,
+              `Fix one element; its block needs $${a - 1}$ of the other $${n - 1}$ elements, which gives $\\binom{${n - 1}}{${a - 1}} = ${binom(n - 1, a - 1)}$ partitions, counted once each.`,
+              `固定一个元素；它所在的块还需从其余 $${n - 1}$ 个元素中选 $${a - 1}$ 个，得 $\\binom{${n - 1}}{${a - 1}} = ${binom(n - 1, a - 1)}$ 种划分，每种只算一次。`,
             )
           : t(
-              `Choosing the block of ${a} fixes the partition, since the rest form the other block. That gives $\\binom{${n}}{${a}} = ${answer}$.`,
-              `选出 ${a} 元的块就确定了划分，因为其余元素组成另一块。所以有 $\\binom{${n}}{${a}} = ${answer}$ 种。`,
+              `Choosing the block of ${b} instead gives $\\binom{${n}}{${b}} = ${binom(n, b)}$, the same count.`,
+              `改为选出 ${b} 元的块，得 $\\binom{${n}}{${b}} = ${binom(n, b)}$，个数相同。`,
             ),
+      ),
     });
   },
 };
@@ -186,8 +265,8 @@ const squaredIndicatorDifference: KnowledgePointDef = {
   id: "the-sum-of-a-squared-indicator-difference",
   title: t("The sum of a squared indicator difference", "指示函数之差平方的和"),
   explanation: t(
-    "The difference of two indicator functions is $1$, $-1$ or $0$ at each point, and its square is $1$ exactly where the point lies in one set but not the other. So summing this square over a finite universe counts the symmetric difference. Algebra with indicators turns into counting with sets in this way.",
-    "两个指示函数之差在每一点上是 $1$、$-1$ 或 $0$，它的平方恰好在该点只属于其中一个集合时为 $1$。所以在有限全集上对这个平方求和，数的就是对称差。指示函数的代数运算就是这样转化为集合计数的。",
+    "The difference of two indicator functions is $1$, $-1$ or $0$ at each point, and its square is $1$ exactly where the point lies in one set but not the other. So summing this square over a finite universe counts the symmetric difference. Algebra with indicators turns into counting with sets in this way. With $A = \\{1, 2, 3\\}$ and $B = \\{3, 4\\}$, the terms are $1$ at $1$, $2$ and $4$, and $0$ at $3$, so the sum is $3$.\n\n> **Watch out.** A point in both sets gives $(1 - 1)^2 = 0$, so the sum is not $|A| + |B|$; and a point of $B$ only gives $(0 - 1)^2 = 1$, not $-1$, so it adds to the sum rather than cancelling.",
+    "两个指示函数之差在每一点上是 $1$、$-1$ 或 $0$，它的平方恰好在该点只属于其中一个集合时为 $1$。所以在有限全集上对这个平方求和，数的就是对称差。指示函数的代数运算就是这样转化为集合计数的。取 $A = \\{1, 2, 3\\}$，$B = \\{3, 4\\}$，各项在 $1$、$2$、$4$ 处为 $1$，在 $3$ 处为 $0$，所以和是 $3$。\n\n> **注意。** 同时属于两个集合的点给出 $(1 - 1)^2 = 0$，所以和不是 $|A| + |B|$；只属于 $B$ 的点给出 $(0 - 1)^2 = 1$，而不是 $-1$，所以它使和增加，不会抵消。",
   ),
   generate(rng) {
     const shared = rng.int(1, 9);
@@ -203,10 +282,44 @@ const squaredIndicatorDifference: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b, a + b - shared, Math.abs(a - b)],
-      solution: t(
-        `Each term is 1 exactly for $x$ in one set only, so the sum is $${a} + ${b} - 2 \\cdot ${shared} = ${answer}$.`,
-        `每一项恰好在 $x$ 只属于一个集合时为 1，所以和是 $${a} + ${b} - 2 \\cdot ${shared} = ${answer}$。`,
+      mistakes: [
+        why(
+          a + b,
+          "That counts the points of $A \\cap B$, but there each term is $(1 - 1)^2 = 0$.",
+          "这算上了 $A \\cap B$ 中的点，但在那里每一项都是 $(1 - 1)^2 = 0$。",
+        ),
+        why(
+          a + b - shared,
+          "That is $|A \\cup B|$; the points of $A \\cap B$ give $0$, so they must be left out entirely.",
+          "这是 $|A \\cup B|$；$A \\cap B$ 中的点给出 $0$，应当完全去掉。",
+        ),
+        why(
+          Math.abs(a - b),
+          "That lets the points of $B$ only cancel those of $A$ only, but squaring makes each of their terms $1$, not $-1$.",
+          "这让只属于 $B$ 的点抵消了只属于 $A$ 的点，但平方后它们的每一项都是 $1$，不是 $-1$。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the value of each term", "求每一项的值"],
+            t(
+              "The term is $(1 - 0)^2 = 1$ or $(0 - 1)^2 = 1$ for $x$ in exactly one of the sets, and $0$ for $x$ in both or in neither.",
+              "$x$ 恰属于一个集合时，该项为 $(1 - 0)^2 = 1$ 或 $(0 - 1)^2 = 1$；$x$ 两个都属于或都不属于时为 $0$。",
+            ),
+          ],
+          [
+            ["Count the points in exactly one set", "数恰属于一个集合的点"],
+            t(
+              `$|A \\setminus B| = ${a} - ${shared} = ${p}$ and $|B \\setminus A| = ${b} - ${shared} = ${q}$, so the sum is $${p} + ${q} = ${answer}$.`,
+              `$|A \\setminus B| = ${a} - ${shared} = ${p}$，$|B \\setminus A| = ${b} - ${shared} = ${q}$，所以和是 $${p} + ${q} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Expand the square: $\\mathbf{1}_A^2 - 2 \\mathbf{1}_A \\mathbf{1}_B + \\mathbf{1}_B^2 = \\mathbf{1}_A - 2 \\cdot \\mathbf{1}_{A \\cap B} + \\mathbf{1}_B$, whose sum is $${a} - 2 \\cdot ${shared} + ${b} = ${answer}$.`,
+          `展开平方：$\\mathbf{1}_A^2 - 2 \\mathbf{1}_A \\mathbf{1}_B + \\mathbf{1}_B^2 = \\mathbf{1}_A - 2 \\cdot \\mathbf{1}_{A \\cap B} + \\mathbf{1}_B$，求和得 $${a} - 2 \\cdot ${shared} + ${b} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -248,8 +361,8 @@ const disjointLists: KnowledgePointDef = {
   id: "counting-lists-of-pairwise-disjoint-subsets",
   title: t("Counting lists of pairwise disjoint subsets", "数两两不交的子集序列"),
   explanation: t(
-    "To count lists of pairwise disjoint subsets, decide for each element where it goes rather than choosing the subsets one at a time. Each element lies in one of the subsets or, if the union need not be everything, in none of them. The decisions are independent, so the count is a power.",
-    "要数两两不交的子集序列，不必逐个选子集，而是对每个元素决定它的去向。每个元素属于其中一个子集；如果并集不必是全集，它也可以不属于任何子集。这些决定相互独立，所以个数是一个幂。",
+    'To count lists of pairwise disjoint subsets, decide for each element where it goes rather than choosing the subsets one at a time. Each element lies in one of the subsets or, if the union need not be everything, in none of them. The decisions are independent, so the count is a power. For lists of $2$ disjoint subsets of a $3$-element set, each element goes into the first, the second or neither: $3^{3} = 27$ lists.\n\n> **Watch out.** "In none of them" is a place only when the union need not be the whole set. And the number of places is the base, the number of elements the exponent, not the other way round.',
+    "要数两两不交的子集序列，不必逐个选子集，而是对每个元素决定它的去向。每个元素属于其中一个子集；如果并集不必是全集，它也可以不属于任何子集。这些决定相互独立，所以个数是一个幂。$3$ 元集合由 $2$ 个两两不交的子集组成的序列，每个元素可进入第一个、第二个或都不进入：共 $3^{3} = 27$ 个。\n\n> **注意。** 只有当并集不必是全集时，“都不属于”才算一种去向。并且去向的个数是底数，元素的个数是指数，不要弄反。",
   ),
   generate(rng) {
     const r = rng.int(2, 4);
@@ -269,16 +382,56 @@ const disjointLists: KnowledgePointDef = {
           ),
       answer,
       form: "integer",
-      wrong: [whole ? (r + 1) ** n : r ** n, 2 ** (r * n), n ** places],
-      solution: whole
-        ? t(
-            `Each of the ${n} elements lies in exactly one of the ${r} subsets, which gives $${r}^{${n}} = ${answer}$.`,
-            `${n} 个元素各恰好属于 ${r} 个子集之一，所以有 $${r}^{${n}} = ${answer}$ 个。`,
-          )
-        : t(
-            `Each of the ${n} elements lies in one of the ${r} subsets or in none, which is ${places} places. That gives $${places}^{${n}} = ${answer}$.`,
-            `${n} 个元素各属于 ${r} 个子集之一或不属于任何一个，共 ${places} 种去向。所以有 $${places}^{${n}} = ${answer}$ 个。`,
-          ),
+      mistakes: [
+        whole
+          ? why(
+              (r + 1) ** n,
+              "That lets an element lie in none of the subsets, but the union must be the whole set, so every element goes into one.",
+              "这允许元素不属于任何子集，但并集必须是整个集合，所以每个元素都要进入某一个子集。",
+            )
+          : why(
+              r ** n,
+              "That forces every element into a subset; the union need not be the whole set, so lying in none is one more place.",
+              "这迫使每个元素都进入某个子集；并集不必是整个集合，所以“都不属于”也是一种去向。",
+            ),
+        why(
+          2 ** (r * n),
+          "That decides for each subset separately whether it holds an element, which lets an element lie in two subsets at once.",
+          "这对每个子集分别决定是否含某元素，会让一个元素同时属于两个子集。",
+        ),
+        why(
+          n ** places,
+          `That swaps base and exponent: each of the ${n} elements has ${places} places, which gives $${places}^{${n}}$.`,
+          `这把底数和指数弄反了：${n} 个元素各有 ${places} 种去向，应为 $${places}^{${n}}$。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Count the places for one element", "数一个元素的去向"],
+            whole
+              ? t(
+                  `Disjoint subsets whose union is everything give each element exactly one of the ${r} subsets: ${places} places.`,
+                  `两两不交且并集是全集，所以每个元素恰好属于 ${r} 个子集之一：${places} 种去向。`,
+                )
+              : t(
+                  `Disjoint subsets give each element at most one of the ${r} subsets, or none: $${r} + 1 = ${places}$ places.`,
+                  `两两不交，所以每个元素至多属于 ${r} 个子集之一，也可以都不属于：$${r} + 1 = ${places}$ 种去向。`,
+                ),
+          ],
+          [
+            ["Multiply the independent choices", "把独立的选择相乘"],
+            t(
+              `The ${n} elements choose independently: $${places}^{${n}} = ${answer}$ lists.`,
+              `${n} 个元素各自独立选择：共 $${places}^{${n}} = ${answer}$ 个序列。`,
+            ),
+          ],
+        ],
+        t(
+          `Build the set one element at a time. With one element there are $${places}$ lists, one for each place it can go, and each new element multiplies the count by $${places}$, giving $${places}^{${n}} = ${answer}$.`,
+          `逐个加入元素。只有一个元素时有 $${places}$ 个序列，对应它的每种去向；每加入一个新元素，个数乘以 $${places}$，得 $${places}^{${n}} = ${answer}$。`,
+        ),
+      ),
     });
   },
 };
@@ -372,8 +525,8 @@ const extremeOfDefinedSet: KnowledgePointDef = {
   id: "the-largest-element-of-a-set-given-by-conditions",
   title: t("The largest element of a set given by conditions", "由条件给出的集合的最大元"),
   explanation: t(
-    "A set given by conditions may have no largest element in general, but a nonempty bounded set of integers always has one. To find it, turn the conditions into a bound and then move down from that bound to the first integer that meets the remaining conditions. An absolute value bound gives an interval.",
-    "由条件给出的集合一般可能没有最大元，但非空有上界的整数集一定有。要求出它，先把条件化成一个上界，再从上界往下，找到第一个满足其余条件的整数。绝对值不等式给出一个区间。",
+    "A set given by conditions may have no largest element in general, but a nonempty bounded set of integers always has one. To find it, turn the conditions into a bound and then move down from that bound to the first integer that meets the remaining conditions. An absolute value bound gives an interval. For $\\{x \\in \\mathbb{Z} : |x - 3| \\le 7 \\text{ and } 4 \\mid x\\}$, the first condition gives $-4 \\le x \\le 10$, and the largest multiple of $4$ there is $8$.\n\n> **Watch out.** The end of the interval is the largest element only if it meets the other conditions too. Move down from it, never up: a larger number leaves the interval.",
+    "由条件给出的集合一般可能没有最大元，但非空有上界的整数集一定有。要求出它，先把条件化成一个上界，再从上界往下，找到第一个满足其余条件的整数。绝对值不等式给出一个区间。对 $\\{x \\in \\mathbb{Z} : |x - 3| \\le 7 \\text{ 且 } 4 \\mid x\\}$，第一个条件给出 $-4 \\le x \\le 10$，其中 $4$ 的最大倍数是 $8$。\n\n> **注意。** 区间的端点只有在也满足其他条件时才是最大元。要从端点往下找，不能往上：更大的数就离开区间了。",
   ),
   generate(rng) {
     const c = rng.pick([...Array(41).keys()].map((i) => i - 20).filter((i) => i !== 0));
@@ -388,10 +541,40 @@ const extremeOfDefinedSet: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [top, answer + m, c - r],
-      solution: t(
-        `The first condition says $${c - r} \\le x \\le ${top}$. The largest multiple of ${m} up to ${top} is $${answer}$.`,
-        `第一个条件就是 $${c - r} \\le x \\le ${top}$。不超过 ${top} 的 ${m} 的最大倍数是 $${answer}$。`,
+      mistakes: [
+        why(top, `That is the right end of the interval, but it is not a multiple of ${m}.`, `这是区间的右端点，但它不是 ${m} 的倍数。`),
+        why(
+          answer + m,
+          `That is a multiple of ${m}, but it is larger than ${top}, so it lies outside the interval.`,
+          `这是 ${m} 的倍数，但它大于 ${top}，不在区间内。`,
+        ),
+        why(
+          c - r,
+          "That is the left end of the interval, where the smallest elements are, not the largest.",
+          "这是区间的左端点，那里是最小的元素，不是最大的。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Turn the absolute value into an interval", "把绝对值化为区间"],
+            t(
+              `$|${poly([1, "x"], [-c, ""])}| \\le ${r}$ means $${c} - ${r} \\le x \\le ${c} + ${r}$, that is $${c - r} \\le x \\le ${top}$.`,
+              `$|${poly([1, "x"], [-c, ""])}| \\le ${r}$ 即 $${c} - ${r} \\le x \\le ${c} + ${r}$，也就是 $${c - r} \\le x \\le ${top}$。`,
+            ),
+          ],
+          [
+            [`Move down to a multiple of ${m}`, `往下找 ${m} 的倍数`],
+            t(
+              `$${top} = ${m} \\cdot ${Math.floor(top / m)} + ${top - Math.floor(top / m) * m}$, so the largest multiple of ${m} up to ${top} is $${m} \\cdot ${Math.floor(top / m)} = ${answer}$.`,
+              `$${top} = ${m} \\cdot ${Math.floor(top / m)} + ${top - Math.floor(top / m) * m}$，所以不超过 ${top} 的 ${m} 的最大倍数是 $${m} \\cdot ${Math.floor(top / m)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer}$ meets both conditions: $|${answer} - (${c})| = ${Math.abs(answer - c)} \\le ${r}$ and ${m} divides it. The next multiple, $${answer + m}$, gives $|${answer + m} - (${c})| = ${Math.abs(answer + m - c)} > ${r}$.`,
+          `$${answer}$ 满足两个条件：$|${answer} - (${c})| = ${Math.abs(answer - c)} \\le ${r}$，且 ${m} 整除它。下一个倍数 $${answer + m}$ 给出 $|${answer + m} - (${c})| = ${Math.abs(answer + m - c)} > ${r}$。`,
+        ),
       ),
     });
   },
@@ -2051,8 +2234,8 @@ const chainsOfSubsets: KnowledgePointDef = {
   id: "counting-nested-chains-of-subsets",
   title: t("Counting nested chains of subsets", "数嵌套的子集链"),
   explanation: t(
-    "Proving $A \\subseteq B$ means following one element at a time, and counting nested subsets works the same way. For a chain of subsets, an element is settled by the first set it enters, since the inclusions force it into all the later sets. Each element decides independently of the others, which turns the count of chains into a power.",
-    "证明 $A \\subseteq B$ 要逐个元素地追踪，数嵌套的子集也是这样。对于一条子集链，一个元素由它最先进入的集合决定，因为包含关系迫使它进入所有后面的集合。每个元素的决定相互独立，所以子集链的个数是一个幂。",
+    "Proving $A \\subseteq B$ means following one element at a time, and counting nested subsets works the same way. For a chain of subsets, an element is settled by the first set it enters, since the inclusions force it into all the later sets. Each element decides independently of the others, which turns the count of chains into a power. For $A_1 \\subseteq A_2$ inside a $2$-element set, each element is in $A_1$ (and so in $A_2$), in $A_2$ only, or in neither: $3^{2} = 9$ chains.\n\n> **Watch out.** Choosing each set freely gives $2^{rn}$ lists, most of them not nested. An element does not choose in or out for each set separately; it chooses where it first enters, or none.",
+    "证明 $A \\subseteq B$ 要逐个元素地追踪，数嵌套的子集也是这样。对于一条子集链，一个元素由它最先进入的集合决定，因为包含关系迫使它进入所有后面的集合。每个元素的决定相互独立，所以子集链的个数是一个幂。对 $2$ 元集合中的 $A_1 \\subseteq A_2$，每个元素属于 $A_1$（因而属于 $A_2$）、只属于 $A_2$ 或都不属于：共 $3^{2} = 9$ 条链。\n\n> **注意。** 每个集合自由选取会得到 $2^{rn}$ 个序列，其中大多数不嵌套。元素不是对每个集合分别决定在或不在，而是决定它最先进入哪个集合，或者都不进入。",
   ),
   generate(rng) {
     if (rng.pick([true, false])) {
@@ -2067,16 +2250,44 @@ const chainsOfSubsets: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [2 ** (r * n), r ** n, r * 2 ** n],
-        solution: t(
-          `Each element either enters first at one of the ${r} sets or is in none of them, which is ${r + 1} choices. For ${n} elements, that gives $${r + 1}^{${n}} = ${answer}$.`,
-          `每个元素要么最先进入 ${r} 个集合之一，要么不属于任何一个，共 ${r + 1} 种选择。对 ${n} 个元素，得 $${r + 1}^{${n}} = ${answer}$。`,
+        mistakes: [
+          why(
+            2 ** (r * n),
+            `That chooses each of the ${r} sets freely, and most of those lists are not nested.`,
+            `这对 ${r} 个集合分别自由选取，其中大多数序列并不嵌套。`,
+          ),
+          why(r ** n, "That leaves out the choice of an element lying in none of the sets.", "这漏掉了元素不属于任何一个集合的情形。"),
+          why(
+            r * 2 ** n,
+            `That multiplies $${r}$ by $2^{${n}}$; each element has its own ${r + 1} choices, so the choices multiply over the ${n} elements.`,
+            `这是把 $${r}$ 乘以 $2^{${n}}$；每个元素各有 ${r + 1} 种选择，应对 ${n} 个元素把选择数相乘。`,
+          ),
+        ],
+        solution: walked(
+          [
+            [
+              ["Count the choices of one element", "数一个元素的选择"],
+              t(
+                `An element first enters $A_1$, $A_2$, …, or $A_{${r}}$, and is then in every later set; or it is in none. That is $${r} + 1 = ${r + 1}$ choices.`,
+                `一个元素最先进入 $A_1$、$A_2$、…、$A_{${r}}$ 之一，此后属于所有后面的集合；或者都不属于。共 $${r} + 1 = ${r + 1}$ 种选择。`,
+              ),
+            ],
+            [
+              ["Multiply over the elements", "对所有元素相乘"],
+              t(`$${r + 1}^{${n}} = ${answer}$ chains.`, `共 $${r + 1}^{${n}} = ${answer}$ 条链。`),
+            ],
+          ],
+          t(
+            `List the chains for one element: it can be in all ${r} sets, in the last ${r - 1}, …, in the last one only, or in none. That is ${r + 1} chains, matching $${r + 1}^{1}$, and each further element multiplies the count by ${r + 1}.`,
+            `对一个元素列出所有链：它可以属于全部 ${r} 个集合、属于后 ${r - 1} 个、……、只属于最后一个，或都不属于。共 ${r + 1} 条链，与 $${r + 1}^{1}$ 一致；每增加一个元素，个数乘以 ${r + 1}。`,
+          ),
         ),
       });
     }
     const n = rng.int(3, 9);
     const m = rng.int(1, n - 1);
     const answer = binom(n, m) * 2 ** m;
+    const byX = [...Array(m + 1).keys()].map((k) => binom(n, k) * binom(n - k, m - k));
     return numberProblem({
       prompt: t(
         `Let $U$ be a set of ${n} elements. How many pairs of subsets of $U$ satisfy $X \\subseteq Y$ and $|Y| = ${m}$?`,
@@ -2084,10 +2295,38 @@ const chainsOfSubsets: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [binom(n, m), 2 ** n, 2 ** m],
-      solution: t(
-        `There are $\\binom{${n}}{${m}} = ${binom(n, m)}$ choices of $Y$, and each has ${2 ** m} subsets $X$. That gives $${binom(n, m)} \\cdot ${2 ** m} = ${answer}$.`,
-        `$Y$ 有 $\\binom{${n}}{${m}} = ${binom(n, m)}$ 种选法，每个 $Y$ 有 ${2 ** m} 个子集 $X$。所以有 $${binom(n, m)} \\cdot ${2 ** m} = ${answer}$ 对。`,
+      mistakes: [
+        why(
+          binom(n, m),
+          `That counts only the choices of $Y$; each $Y$ still has $2^{${m}}$ subsets $X$.`,
+          `这只数了 $Y$ 的选法；每个 $Y$ 还有 $2^{${m}}$ 个子集 $X$。`,
+        ),
+        why(2 ** n, "That counts the subsets of $U$; both $Y$ and $X$ must be chosen.", "这数的是 $U$ 的子集；$Y$ 和 $X$ 都要选。"),
+        why(
+          2 ** m,
+          `That counts the sets $X$ for one $Y$; there are $\\binom{${n}}{${m}}$ choices of $Y$.`,
+          `这是一个 $Y$ 对应的 $X$ 的个数；$Y$ 有 $\\binom{${n}}{${m}}$ 种选法。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Choose Y", "选出 Y"],
+            t(
+              `$Y$ is ${m} of the ${n} elements: $\\binom{${n}}{${m}} = ${binom(n, m)}$ ways.`,
+              `$Y$ 由 ${n} 个元素中的 ${m} 个组成：$\\binom{${n}}{${m}} = ${binom(n, m)}$ 种。`,
+            ),
+          ],
+          [["Choose X inside Y", "在 Y 中选出 X"], t(`$Y$ has $2^{${m}} = ${2 ** m}$ subsets.`, `$Y$ 有 $2^{${m}} = ${2 ** m}$ 个子集。`)],
+          [
+            ["Multiply", "相乘"],
+            t(`$${binom(n, m)} \\cdot ${2 ** m} = ${answer}$ pairs.`, `共 $${binom(n, m)} \\cdot ${2 ** m} = ${answer}$ 对。`),
+          ],
+        ],
+        t(
+          `Choose $X$ first instead. With $|X| = k$, the other $${m} - k$ elements of $Y$ come from the remaining $${n} - k$: $\\sum_{k=0}^{${m}} \\binom{${n}}{k}\\binom{${n} - k}{${m} - k} = ${byX.join(" + ")} = ${answer}$.`,
+          `改为先选 $X$。若 $|X| = k$，$Y$ 的另外 $${m} - k$ 个元素从其余 $${n} - k$ 个中选：$\\sum_{k=0}^{${m}} \\binom{${n}}{k}\\binom{${n} - k}{${m} - k} = ${byX.join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2097,8 +2336,8 @@ const intersectionWithAUnion: KnowledgePointDef = {
   id: "the-size-of-a-distributed-set-expression",
   title: t("The size of a distributed set expression", "分配后集合表达式的大小"),
   explanation: t(
-    "The distributive law rewrites $A \\cap (B \\cup C)$ as a union of two intersections, and inclusion-exclusion counts a union of two sets from their overlap. The overlap of those two intersections is the triple intersection, so that is the part counted twice. Likewise, $A \\cup (B \\cap C)$ is a union whose two parts overlap in the triple intersection too.",
-    "分配律把 $A \\cap (B \\cup C)$ 改写成两个交集的并，而容斥原理由重叠部分算出两个集合的并的大小。这两个交集的重叠部分就是三者的交，这正是被算了两次的部分。同样，$A \\cup (B \\cap C)$ 也是一个并，它的两部分也在三者的交上重叠。",
+    "The distributive law rewrites $A \\cap (B \\cup C)$ as a union of two intersections, and inclusion-exclusion counts a union of two sets from their overlap. The overlap of those two intersections is the triple intersection, so that is the part counted twice. Likewise, $A \\cup (B \\cap C)$ is a union whose two parts overlap in the triple intersection too. With $|A \\cap B| = 5$, $|A \\cap C| = 4$ and $|A \\cap B \\cap C| = 2$, $|A \\cap (B \\cup C)| = 5 + 4 - 2 = 7$.\n\n> **Watch out.** Subtract the triple intersection exactly once. Not subtracting it counts those elements twice; subtracting it twice leaves them out, though they belong to the set.",
+    "分配律把 $A \\cap (B \\cup C)$ 改写成两个交集的并，而容斥原理由重叠部分算出两个集合的并的大小。这两个交集的重叠部分就是三者的交，这正是被算了两次的部分。同样，$A \\cup (B \\cap C)$ 也是一个并，它的两部分也在三者的交上重叠。若 $|A \\cap B| = 5$，$|A \\cap C| = 4$，$|A \\cap B \\cap C| = 2$，则 $|A \\cap (B \\cup C)| = 5 + 4 - 2 = 7$。\n\n> **注意。** 三者的交恰好减一次。不减，这些元素被算了两次；减两次，就把它们漏掉了，而它们属于这个集合。",
   ),
   generate(rng) {
     const triple = rng.int(1, 6);
@@ -2113,10 +2352,38 @@ const intersectionWithAUnion: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [ab + ac, ab + ac - 2 * triple, answer + 2 * triple],
-        solution: t(
-          `Distributing gives $(A \\cap B) \\cup (A \\cap C)$, and these two sets overlap in $A \\cap B \\cap C$. So the size is $${ab} + ${ac} - ${triple} = ${answer}$.`,
-          `分配后得 $(A \\cap B) \\cup (A \\cap C)$，这两个集合在 $A \\cap B \\cap C$ 上重叠。所以大小是 $${ab} + ${ac} - ${triple} = ${answer}$。`,
+        mistakes: [
+          why(
+            ab + ac,
+            "That counts the elements of $A \\cap B \\cap C$ twice, once in each intersection.",
+            "这把 $A \\cap B \\cap C$ 的元素算了两次，每个交集里各一次。",
+          ),
+          why(
+            ab + ac - 2 * triple,
+            "That subtracts $A \\cap B \\cap C$ twice, which leaves its elements out, though they are in $A \\cap (B \\cup C)$.",
+            "这把 $A \\cap B \\cap C$ 减了两次，漏掉了它的元素，而它们属于 $A \\cap (B \\cup C)$。",
+          ),
+          why(answer + 2 * triple, "That adds the overlap instead of subtracting it.", "这把重叠部分加上了，而不是减去。"),
+        ],
+        solution: walked(
+          [
+            [
+              ["Distribute", "分配"],
+              t("$A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)$.", "$A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)$。"),
+            ],
+            [
+              ["Find the overlap", "找出重叠部分"],
+              t("$(A \\cap B) \\cap (A \\cap C) = A \\cap B \\cap C$.", "$(A \\cap B) \\cap (A \\cap C) = A \\cap B \\cap C$。"),
+            ],
+            [
+              ["Apply inclusion-exclusion", "应用容斥原理"],
+              t(`$${ab} + ${ac} - ${triple} = ${answer}$.`, `$${ab} + ${ac} - ${triple} = ${answer}$。`),
+            ],
+          ],
+          t(
+            `Split the set into parts that do not overlap: $A \\cap B$ outside $C$ has $${ab - triple}$ elements, $A \\cap C$ outside $B$ has $${ac - triple}$, and $A \\cap B \\cap C$ has $${triple}$. Together $${ab - triple} + ${ac - triple} + ${triple} = ${answer}$.`,
+            `把集合拆成互不重叠的部分：$A \\cap B$ 中不在 $C$ 里的有 $${ab - triple}$ 个元素，$A \\cap C$ 中不在 $B$ 里的有 $${ac - triple}$ 个，$A \\cap B \\cap C$ 有 $${triple}$ 个。合计 $${ab - triple} + ${ac - triple} + ${triple} = ${answer}$。`,
+          ),
         ),
       });
     }
@@ -2130,10 +2397,41 @@ const intersectionWithAUnion: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + bc, a + bc - 2 * triple, a + triple],
-      solution: t(
-        `The sets $A$ and $B \\cap C$ overlap in $A \\cap B \\cap C$, so the size of their union is $${a} + ${bc} - ${triple} = ${answer}$.`,
-        `集合 $A$ 和 $B \\cap C$ 在 $A \\cap B \\cap C$ 上重叠，所以它们的并的大小是 $${a} + ${bc} - ${triple} = ${answer}$。`,
+      mistakes: [
+        why(
+          a + bc,
+          "That counts the elements of $A \\cap B \\cap C$ twice, once in $A$ and once in $B \\cap C$.",
+          "这把 $A \\cap B \\cap C$ 的元素算了两次：在 $A$ 中一次，在 $B \\cap C$ 中一次。",
+        ),
+        why(
+          a + bc - 2 * triple,
+          "That subtracts $A \\cap B \\cap C$ twice, which leaves its elements out, though they are in the union.",
+          "这把 $A \\cap B \\cap C$ 减了两次，漏掉了它的元素，而它们属于这个并集。",
+        ),
+        why(
+          a + triple,
+          "That adds $A \\cap B \\cap C$, which is already inside $A$; the new elements are those of $B \\cap C$ outside $A$.",
+          "这加上的是 $A \\cap B \\cap C$，它已经在 $A$ 里了；新增的元素是 $B \\cap C$ 中不在 $A$ 里的那些。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the overlap", "找出重叠部分"],
+            t(
+              "The two parts $A$ and $B \\cap C$ overlap in $A \\cap (B \\cap C) = A \\cap B \\cap C$.",
+              "两部分 $A$ 与 $B \\cap C$ 的重叠部分是 $A \\cap (B \\cap C) = A \\cap B \\cap C$。",
+            ),
+          ],
+          [
+            ["Apply inclusion-exclusion", "应用容斥原理"],
+            t(`$${a} + ${bc} - ${triple} = ${answer}$.`, `$${a} + ${bc} - ${triple} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Start from the $${a}$ elements of $A$ and add the elements of $B \\cap C$ outside $A$, of which there are $${bc} - ${triple} = ${bc - triple}$: $${a} + ${bc - triple} = ${answer}$.`,
+          `从 $A$ 的 $${a}$ 个元素出发，再加上 $B \\cap C$ 中不在 $A$ 里的元素，共 $${bc} - ${triple} = ${bc - triple}$ 个：$${a} + ${bc - triple} = ${answer}$。`,
+        ),
       ),
     });
   },

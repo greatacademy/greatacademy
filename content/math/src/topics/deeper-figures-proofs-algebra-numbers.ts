@@ -148,36 +148,47 @@ const deMorganOnVenn = point(
   "de-morgans-laws-on-a-diagram",
   ["De Morgan's laws on a diagram", "图上的德摩根律"],
   [
-    "De Morgan's laws say $(A \\cup B)^{c} = A^{c} \\cap B^{c}$ and $(A \\cap B)^{c} = A^{c} \\cup B^{c}$. Being outside the union means being outside each set, and being outside the overlap means being outside at least one set.",
-    "德摩根律指出 $(A \\cup B)^{c} = A^{c} \\cap B^{c}$，$(A \\cap B)^{c} = A^{c} \\cup B^{c}$。在并集之外就是在每个集合之外，在重叠部分之外就是至少在一个集合之外。",
+    "De Morgan's laws say $(A \\cup B)^{c} = A^{c} \\cap B^{c}$ and $(A \\cap B)^{c} = A^{c} \\cup B^{c}$. Being outside the union means being outside each set, and being outside the overlap means being outside at least one set. On a diagram, $A^{c}$ is everything outside the left circle and $B^{c}$ everything outside the right one; they share only the part outside both circles, which is $(A \\cup B)^{c}$.\n\n> **Watch out.** The complement swaps $\\cup$ and $\\cap$. The part outside both circles is $A^{c} \\cap B^{c}$; $A^{c} \\cup B^{c}$ also covers the parts inside just one circle.",
+    "德摩根律指出 $(A \\cup B)^{c} = A^{c} \\cap B^{c}$，$(A \\cap B)^{c} = A^{c} \\cup B^{c}$。在并集之外就是在每个集合之外，在重叠部分之外就是至少在一个集合之外。在图上，$A^{c}$ 是左圆之外的全部，$B^{c}$ 是右圆之外的全部；它们的公共部分只有两个圆之外的部分，即 $(A \\cup B)^{c}$。\n\n> **注意。** 取补集时 $\\cup$ 与 $\\cap$ 互换。两个圆之外的部分是 $A^{c} \\cap B^{c}$；$A^{c} \\cup B^{c}$ 还包括只在一个圆内的部分。",
   ],
   (rng) => {
     const names = namesOf(rng);
     const [a, b] = names;
     const union = rng.bool();
     const shaded: readonly Region[] = union ? ["out"] : ["onlyA", "onlyB", "out"];
-    const options: Pair[] = [
-      same(`${a}^{c} \\cap ${b}^{c}`),
-      same(`${a}^{c} \\cup ${b}^{c}`),
-      same(`${a} \\cap ${b}^{c}`),
-      same(`${a}^{c} \\cap ${b}`),
+    const options: [Pair, readonly Region[]][] = [
+      [same(`${a}^{c} \\cap ${b}^{c}`), ["out"]],
+      [same(`${a}^{c} \\cup ${b}^{c}`), ["onlyA", "onlyB", "out"]],
+      [same(`${a} \\cap ${b}^{c}`), ["onlyA"]],
+      [same(`${a}^{c} \\cap ${b}`), ["onlyB"]],
     ];
-    const right = (union ? options[0] : options[1]) as Pair;
-    return choose(
-      rng,
-      ["The box is the universal set. Which set equals the shaded part of the diagram?", "方框是全集。哪个集合等于图中的阴影部分？"],
-      right,
-      options.filter((o) => o !== right),
-      union
-        ? [
-            `The shading is outside both sets, so it is the elements outside $${a}$ and outside $${b}$: $${a}^{c} \\cap ${b}^{c}$.`,
-            `阴影在两个集合之外，也就是既在 $${a}$ 之外又在 $${b}$ 之外的元素：$${a}^{c} \\cap ${b}^{c}$。`,
-          ]
-        : [
-            `The shading is everything except the overlap, so it is the elements outside $${a}$ or outside $${b}$: $${a}^{c} \\cup ${b}^{c}$.`,
-            `阴影是重叠部分之外的全部，也就是在 $${a}$ 之外或在 $${b}$ 之外的元素：$${a}^{c} \\cup ${b}^{c}$。`,
-          ],
-      figureOf(vennTwo(names, shaded), vennAlt(names, shaded)),
+    const [right] = (union ? options[0] : options[1]) as [Pair, readonly Region[]];
+    const wrong = options.filter(([o]) => o !== right);
+    const regions = (rs: readonly Region[], i: 0 | 1) => rs.map((r) => regionNames[r][i]).join(i === 0 ? " and " : "和");
+    return reasoned(
+      choose(
+        rng,
+        ["The box is the universal set. Which set equals the shaded part of the diagram?", "方框是全集。哪个集合等于图中的阴影部分？"],
+        right,
+        wrong.map(([o]) => o),
+        union
+          ? [
+              `**Step 1: Read the shading.** Only the part outside both circles is shaded: the complement of $${a} \\cup ${b}$.\n\n**Step 2: Apply De Morgan's law.** $(${a} \\cup ${b})^{c} = ${a}^{c} \\cap ${b}^{c}$.\n\n**Check.** $${a}^{c}$ covers the part only in $${b}$ and the part outside both; $${b}^{c}$ covers the part only in $${a}$ and the part outside both. They share only the part outside both, as shaded.`,
+              `**第一步：读阴影。** 只有两个圆之外的部分有阴影：它是 $${a} \\cup ${b}$ 的补集。\n\n**第二步：应用德摩根律。** $(${a} \\cup ${b})^{c} = ${a}^{c} \\cap ${b}^{c}$。\n\n**检验。** $${a}^{c}$ 包括只属于 $${b}$ 的部分和两者之外的部分；$${b}^{c}$ 包括只属于 $${a}$ 的部分和两者之外的部分。它们的公共部分只有两者之外的部分，与阴影一致。`,
+            ]
+          : [
+              `**Step 1: Read the shading.** Everything except the overlap is shaded: the complement of $${a} \\cap ${b}$.\n\n**Step 2: Apply De Morgan's law.** $(${a} \\cap ${b})^{c} = ${a}^{c} \\cup ${b}^{c}$.\n\n**Check.** $${a}^{c}$ covers the part only in $${b}$ and the part outside both; $${b}^{c}$ covers the part only in $${a}$ and the part outside both. Together they cover all but the overlap, as shaded.`,
+              `**第一步：读阴影。** 除重叠部分外全部有阴影：它是 $${a} \\cap ${b}$ 的补集。\n\n**第二步：应用德摩根律。** $(${a} \\cap ${b})^{c} = ${a}^{c} \\cup ${b}^{c}$。\n\n**检验。** $${a}^{c}$ 包括只属于 $${b}$ 的部分和两者之外的部分；$${b}^{c}$ 包括只属于 $${a}$ 的部分和两者之外的部分。合起来是除重叠部分外的全部，与阴影一致。`,
+            ],
+        figureOf(vennTwo(names, shaded), vennAlt(names, shaded)),
+      ),
+      wrong.map(
+        ([o, rs]): Reason => [
+          o[0],
+          `That set is ${regions(rs, 0)}, but the shading covers ${regions(shaded, 0)}.`,
+          `这个集合是${regions(rs, 1)}，但阴影覆盖的是${regions(shaded, 1)}。`,
+        ],
+      ),
     );
   },
 );
@@ -434,8 +445,8 @@ const extremeOnLine = point(
   "the-maximum-of-a-drawn-interval",
   ["The maximum of a drawn interval", "所画区间的最大值"],
   [
-    "The maximum of a set must belong to the set. An interval with a hollow right end has values as close to that end as you like but none at it, so it has no maximum, though the end is still its supremum.",
-    "集合的最大值必须属于该集合。右端空心的区间有任意接近该端点的值，但取不到它，所以没有最大值，尽管该端点仍是它的上确界。",
+    "The maximum of a set must belong to the set. An interval with a hollow right end has values as close to that end as you like but none at it, so it has no maximum, though the end is still its supremum. The interval from $0$ (filled) to $3$ (hollow) has minimum $0$ but no maximum: $2.9$, $2.99$, $2.999$, … are all in it, and $3$ is not.\n\n> **Watch out.** A hollow end is not in the set, so it cannot be the maximum or the minimum, however close the set comes to it. A filled end is.",
+    "集合的最大值必须属于该集合。右端空心的区间有任意接近该端点的值，但取不到它，所以没有最大值，尽管该端点仍是它的上确界。从 $0$（实心）到 $3$（空心）的区间有最小值 $0$，但没有最大值：$2.9$、$2.99$、$2.999$、……都在其中，而 $3$ 不在。\n\n> **注意。** 空心端点不在集合中，所以无论集合多么接近它，它都不是最大值或最小值。实心端点则是。",
   ],
   (rng) => {
     const a = rng.int(-6, 1);
@@ -446,38 +457,68 @@ const extremeOnLine = point(
     const value = askMax ? b : a;
     const included = askMax ? rightIn : leftIn;
     const other = askMax ? a : b;
+    const inner = askMax ? value - 1 : value + 1;
+    const mid = value === 0 ? "\\frac{x}{2}" : `\\frac{x ${value < 0 ? "-" : "+"} ${Math.abs(value)}}{2}`;
     const none: Pair = askMax ? ["There is no maximum", "没有最大值"] : ["There is no minimum", "没有最小值"];
     const word: Pair = askMax ? ["maximum", "最大值"] : ["minimum", "最小值"];
+    const [side, sideZh] = askMax ? ["right", "右"] : ["left", "左"];
+    const [beyond, beyondZh] = askMax ? ["larger", "更大"] : ["smaller", "更小"];
     const marks: PlaneMark[] = [
       { kind: "segment", a: [a, 0], b: [b, 0], accent: true },
       { kind: "point", at: [a, 0], open: !leftIn },
       { kind: "point", at: [b, 0], open: !rightIn },
     ];
-    return choose(
-      rng,
-      [
-        `The colored segment on the $x$-axis is a set of real numbers, with a filled dot for an end it contains and a hollow dot for an end it does not. What is its ${word[0]}?`,
-        `$x$ 轴上的彩色线段是一个实数集，实心点表示包含该端点，空心点表示不包含。它的${word[1]}是什么？`,
-      ],
-      included ? same(String(value)) : none,
-      [included ? none : same(String(value)), same(String(other)), same(String(askMax ? value - 1 : value + 1))],
+    const reasons: Reason[] = [
       included
         ? [
-            `The end $${value}$ has a filled dot, so it is in the set, and nothing in the set goes past it.`,
-            `端点 $${value}$ 是实心点，所以它在集合中，集合中没有超过它的数。`,
+            none[0],
+            `The end $${value}$ has a filled dot, so it belongs to the set, and no number of the set is ${beyond}.`,
+            `端点 $${value}$ 是实心点，所以它属于集合，集合中没有比它${beyondZh}的数。`,
           ]
         : [
-            `The end $${value}$ has a hollow dot, so it is not in the set, and any number of the set can be beaten by one closer to $${value}$.`,
-            `端点 $${value}$ 是空心点，所以它不在集合中，而集合中任何一个数都能被更接近 $${value}$ 的数超过。`,
+            `$${value}$`,
+            `$${value}$ has a hollow dot, so it is not in the set; a ${word[0]} must belong to the set.`,
+            `$${value}$ 是空心点，所以不在集合中；${word[1]}必须属于集合。`,
           ],
-      drawn(
-        { xMin: -7, xMax: 7, yMin: -2, yMax: 2 },
-        marks,
-        t(
-          `A segment from ${a} (${leftIn ? "filled" : "hollow"}) to ${b} (${rightIn ? "filled" : "hollow"}).`,
-          `从 ${a}（${leftIn ? "实心" : "空心"}）到 ${b}（${rightIn ? "实心" : "空心"}）的线段。`,
+      [
+        `$${other}$`,
+        `$${other}$ is the other end of the segment, where the ${askMax ? "smallest" : "largest"} numbers are.`,
+        `$${other}$ 是线段的另一端，那里是${askMax ? "最小" : "最大"}的数。`,
+      ],
+      [
+        `$${inner}$`,
+        `$${inner}$ is in the set, but the numbers between it and $${value}$ are ${beyond}.`,
+        `$${inner}$ 在集合中，但它与 $${value}$ 之间的数${beyondZh}。`,
+      ],
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          `The colored segment on the $x$-axis is a set of real numbers, with a filled dot for an end it contains and a hollow dot for an end it does not. What is its ${word[0]}?`,
+          `$x$ 轴上的彩色线段是一个实数集，实心点表示包含该端点，空心点表示不包含。它的${word[1]}是什么？`,
+        ],
+        included ? same(String(value)) : none,
+        [included ? none : same(String(value)), same(String(other)), same(String(inner))],
+        included
+          ? [
+              `**Step 1: Find the ${side} end.** The segment ends at $${value}$ on the ${side}.\n\n**Step 2: Read its dot.** The dot is filled, so $${value}$ is in the set, and it is the ${word[0]}.\n\n**Check.** Every number of the set lies ${askMax ? "at or below" : "at or above"} $${value}$, and $${value}$ itself is in the set, which is what a ${word[0]} needs.`,
+              `**第一步：找${sideZh}端点。** 线段的${sideZh}端在 $${value}$。\n\n**第二步：看端点。** 这是实心点，所以 $${value}$ 在集合中，它就是${word[1]}。\n\n**检验。** 集合中每个数都${askMax ? "不大于" : "不小于"} $${value}$，而 $${value}$ 本身属于集合，这正是${word[1]}的要求。`,
+            ]
+          : [
+              `**Step 1: Find the ${side} end.** The segment ends at $${value}$ on the ${side}.\n\n**Step 2: Read its dot.** The dot is hollow, so $${value}$ is not in the set. There is no ${word[0]}.\n\n**Check.** Take any $x$ in the set. Then $${mid}$ is also in the set and is ${beyond} than $x$, so no element is the ${word[0]}.`,
+              `**第一步：找${sideZh}端点。** 线段的${sideZh}端在 $${value}$。\n\n**第二步：看端点。** 这是空心点，所以 $${value}$ 不在集合中。没有${word[1]}。\n\n**检验。** 任取集合中的 $x$，则 $${mid}$ 也在集合中，且比 $x$ ${beyondZh}，所以没有元素是${word[1]}。`,
+            ],
+        drawn(
+          { xMin: -7, xMax: 7, yMin: -2, yMax: 2 },
+          marks,
+          t(
+            `A segment from ${a} (${leftIn ? "filled" : "hollow"}) to ${b} (${rightIn ? "filled" : "hollow"}).`,
+            `从 ${a}（${leftIn ? "实心" : "空心"}）到 ${b}（${rightIn ? "实心" : "空心"}）的线段。`,
+          ),
         ),
       ),
+      reasons,
     );
   },
 );

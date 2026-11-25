@@ -2262,12 +2262,20 @@ const vennCases = [
   { tex: "B^c", inA: true, inB: false, both: false, out: true, en: "everything outside B", zh: "B 之外的所有部分" },
 ] as const;
 
+/** vennParts names the four regions of a two-circle diagram, in the order inA, inB, both, out. */
+const vennParts = [
+  { key: "inA", en: "the part only in A", zh: "只在 A 中的部分" },
+  { key: "inB", en: "the part only in B", zh: "只在 B 中的部分" },
+  { key: "both", en: "the overlap", zh: "重叠部分" },
+  { key: "out", en: "the outside", zh: "外面" },
+] as const;
+
 const vennFromDrawing: KnowledgePointDef = {
   id: "naming-a-shaded-venn-region",
   title: t("Naming a shaded Venn region", "说出维恩图的阴影区域"),
   explanation: t(
-    "A diagram of two sets has four regions: the part only in A, the part only in B, the overlap, and the outside. Every set built with union, intersection and complement is some group of these regions. So work out the expression region by region. De Morgan's laws are easy to see this way, as the complement of a union is the outside region alone.",
-    "两个集合的图有四个区域：只在 A 中的部分、只在 B 中的部分、重叠部分，以及外面。用并、交、补构成的每个集合都是这些区域的某个组合。所以要逐个区域地求表达式。这样很容易看出德摩根律，因为并集的补就是外面那一个区域。",
+    "A diagram of two sets has four regions: the part only in A, the part only in B, the overlap, and the outside. Every set built with union, intersection and complement is some group of these regions. So work out the expression region by region. For example, $(A \\cup B)^c$ is the outside alone, while $(A \\cap B)^c$ is the outside together with the parts only in A and only in B. De Morgan's laws are easy to see this way.\n\n> **Watch out.** The complement of the overlap is not just the outside: $(A \\cap B)^c$ also holds the parts in one circle only. Compare the shading with an expression on all four regions, not on the one that catches your eye.",
+    "两个集合的图有四个区域：只在 A 中的部分、只在 B 中的部分、重叠部分，以及外面。用并、交、补构成的每个集合都是这些区域的某个组合。所以要逐个区域地求表达式。例如，$(A \\cup B)^c$ 只有外面一个区域，而 $(A \\cap B)^c$ 是外面加上只在 A 中和只在 B 中的部分。这样很容易看出德摩根律。\n\n> **注意。** 重叠部分的补集不只是外面：$(A \\cap B)^c$ 还包括只在一个圆内的部分。要在全部四个区域上比较阴影和表达式，而不是只看最显眼的那一块。",
   ),
   generate(rng) {
     const [first, second] = rng.pick([
@@ -2279,20 +2287,51 @@ const vennFromDrawing: KnowledgePointDef = {
     const name = (text: string) => text.replaceAll("A", first).replaceAll("B", second);
     const right = rng.pick(vennCases);
     const others = rng.shuffle(vennCases.filter((c) => c !== right)).slice(0, 3);
-    return pickChoice(
-      rng,
-      t("Which set is shaded?", "哪个集合涂了阴影？"),
-      math(name(right.tex)),
-      others.map((c) => math(name(c.tex))),
-      t(`The shading covers ${name(right.en)}, which is $${name(right.tex)}$.`, `阴影覆盖${name(right.zh)}，也就是 $${name(right.tex)}$。`),
-      vennFigure(
-        right,
-        [first, second],
-        t(
-          `Two overlapping sets ${first} and ${second}, with ${name(right.en)} shaded.`,
-          `两个相交的集合 ${first} 和 ${second}，${name(right.zh)}涂了阴影。`,
+    const shaded = vennParts.filter((p) => right[p.key]);
+    const plain = vennParts.filter((p) => !right[p.key]);
+    const list = (ps: readonly (typeof vennParts)[number][], locale: "en" | "zh") => {
+      const words = ps.map((p) => p[locale]);
+      const last = words.pop() as string;
+      return name(words.length === 0 ? last : `${words.join(locale === "en" ? ", " : "、")}${locale === "en" ? " and " : "和"}${last}`);
+    };
+    return reasoned(
+      pickChoice(
+        rng,
+        t("Which set is shaded?", "哪个集合涂了阴影？"),
+        math(name(right.tex)),
+        others.map((c) => math(name(c.tex))),
+        walked(
+          [
+            [["Read the shading", "读阴影"], t(`The shading covers ${list(shaded, "en")}.`, `阴影覆盖${list(shaded, "zh")}。`)],
+            [
+              ["Match an expression", "对应表达式"],
+              t(
+                `$${name(right.tex)}$ is ${name(right.en)}: exactly these regions.`,
+                `$${name(right.tex)}$ 是${name(right.zh)}：恰好是这些区域。`,
+              ),
+            ],
+          ],
+          t(
+            `Each unshaded region lies outside $${name(right.tex)}$: ${list(plain, "en")}. So the shading and the expression agree on all four regions.`,
+            `没有阴影的区域都不在 $${name(right.tex)}$ 中：${list(plain, "zh")}。所以阴影与表达式在全部四个区域上一致。`,
+          ),
+        ),
+        vennFigure(
+          right,
+          [first, second],
+          t(
+            `Two overlapping sets ${first} and ${second}, with ${name(right.en)} shaded.`,
+            `两个相交的集合 ${first} 和 ${second}，${name(right.zh)}涂了阴影。`,
+          ),
         ),
       ),
+      others.map((c) => {
+        const part = vennParts.find((p) => c[p.key] !== right[p.key]) ?? vennParts[0];
+        const tex = name(c.tex);
+        return right[part.key]
+          ? [`$${tex}$`, `$${tex}$ leaves out ${name(part.en)}, which is shaded.`, `$${tex}$ 不包含${name(part.zh)}，而那里有阴影。`]
+          : [`$${tex}$`, `$${tex}$ contains ${name(part.en)}, which is not shaded.`, `$${tex}$ 包含${name(part.zh)}，而那里没有阴影。`];
+      }),
     );
   },
 };

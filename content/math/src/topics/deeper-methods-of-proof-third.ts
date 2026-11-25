@@ -1036,8 +1036,8 @@ const outsideBoth = point(
   "counting-outside-both-sets",
   ["Counting outside both sets", "计算两个集合之外的元素"],
   [
-    "The elements outside both sets form $A^{c} \\cap B^{c}$, which De Morgan's law rewrites as $(A \\cup B)^{c}$. So the count is the size of the universe minus the size of the union, and the union must be found with inclusion and exclusion.",
-    "两个集合之外的元素构成 $A^{c} \\cap B^{c}$，德摩根律把它改写为 $(A \\cup B)^{c}$。所以个数等于全集大小减去并集大小，而并集要用容斥原理求出。",
+    "The elements outside both sets form $A^{c} \\cap B^{c}$, which De Morgan's law rewrites as $(A \\cup B)^{c}$. So the count is the size of the universe minus the size of the union, and the union must be found with inclusion and exclusion. With $|U| = 20$, $|A| = 8$, $|B| = 6$ and $|A \\cap B| = 3$, the union has $8 + 6 - 3 = 11$ elements, so $20 - 11 = 9$ lie outside both.\n\n> **Watch out.** $|U| - |A| - |B|$ removes the elements of $A \\cap B$ twice. Subtract the union, found by inclusion and exclusion, instead.",
+    "两个集合之外的元素构成 $A^{c} \\cap B^{c}$，德摩根律把它改写为 $(A \\cup B)^{c}$。所以个数等于全集大小减去并集大小，而并集要用容斥原理求出。若 $|U| = 20$，$|A| = 8$，$|B| = 6$，$|A \\cap B| = 3$，则并集有 $8 + 6 - 3 = 11$ 个元素，所以两个集合之外有 $20 - 11 = 9$ 个。\n\n> **注意。** $|U| - |A| - |B|$ 把 $A \\cap B$ 的元素减了两次。应当减去用容斥原理求出的并集。",
   ],
   (rng) => {
     const both = rng.int(1, 15);
@@ -1046,16 +1046,35 @@ const outsideBoth = point(
     const union = a + b - both;
     const outside = rng.int(1, 40);
     const U = union + outside;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `In a universe with $|U| = ${U}$, sets have $|A| = ${a}$, $|B| = ${b}$ and $|A \\cap B| = ${both}$. Find $|A^{c} \\cap B^{c}|$.`,
+          `全集满足 $|U| = ${U}$，集合满足 $|A| = ${a}$，$|B| = ${b}$，$|A \\cap B| = ${both}$。求 $|A^{c} \\cap B^{c}|$。`,
+        ],
+        outside,
+        [U - a - b, union, U - both],
+        [
+          `**Step 1: Apply De Morgan's law.** $A^{c} \\cap B^{c} = (A \\cup B)^{c}$.\n\n**Step 2: Find the union.** $|A \\cup B| = ${a} + ${b} - ${both} = ${union}$.\n\n**Step 3: Take the complement.** $|(A \\cup B)^{c}| = ${U} - ${union} = ${outside}$.\n\n**Check.** The four regions of the diagram fill $U$: $A$ only has $${a - both}$, $B$ only has $${b - both}$, both has $${both}$ and outside has $${outside}$, and $${a - both} + ${b - both} + ${both} + ${outside} = ${U}$.`,
+          `**第一步：应用德摩根律。** $A^{c} \\cap B^{c} = (A \\cup B)^{c}$。\n\n**第二步：求并集。** $|A \\cup B| = ${a} + ${b} - ${both} = ${union}$。\n\n**第三步：取补集。** $|(A \\cup B)^{c}| = ${U} - ${union} = ${outside}$。\n\n**检验。** 图中四个区域合起来是 $U$：只属于 $A$ 的有 $${a - both}$ 个，只属于 $B$ 的有 $${b - both}$ 个，两者都属于的有 $${both}$ 个，两者之外的有 $${outside}$ 个，而 $${a - both} + ${b - both} + ${both} + ${outside} = ${U}$。`,
+        ],
+      ),
       [
-        `In a universe with $|U| = ${U}$, sets have $|A| = ${a}$, $|B| = ${b}$ and $|A \\cap B| = ${both}$. Find $|A^{c} \\cap B^{c}|$.`,
-        `全集满足 $|U| = ${U}$，集合满足 $|A| = ${a}$，$|B| = ${b}$，$|A \\cap B| = ${both}$。求 $|A^{c} \\cap B^{c}|$。`,
-      ],
-      outside,
-      [U - a - b, union, U - both],
-      [
-        `By De Morgan's law this is $|(A \\cup B)^{c}|$. The union has $${a} + ${b} - ${both} = ${union}$ elements, which leaves $${U} - ${union} = ${outside}$.`,
-        `由德摩根律，这等于 $|(A \\cup B)^{c}|$。并集有 $${a} + ${b} - ${both} = ${union}$ 个元素，所以剩下 $${U} - ${union} = ${outside}$。`,
+        say(
+          String(U - a - b),
+          "That removes the elements of $A \\cap B$ twice, once with $A$ and once with $B$.",
+          "这把 $A \\cap B$ 的元素减了两次：减 $A$ 时一次，减 $B$ 时一次。",
+        ),
+        say(
+          String(union),
+          "That is $|A \\cup B|$, the elements in at least one set; the elements outside both are asked for.",
+          "这是 $|A \\cup B|$，即至少属于一个集合的元素；题目问的是两个集合之外的元素。",
+        ),
+        say(
+          String(U - both),
+          "That is $|(A \\cap B)^{c}|$, the elements missing at least one set; outside both means outside the union.",
+          "这是 $|(A \\cap B)^{c}|$，即至少不属于一个集合的元素；两个集合之外是指在并集之外。",
+        ),
       ],
     );
   },
@@ -1065,8 +1084,8 @@ const falseIdentity = point(
   "a-counterexample-to-a-set-identity",
   ["A counterexample to a set identity", "集合恒等式的反例"],
   [
-    "A set identity that looks reasonable can still be false. An element chased through both sides reveals where the argument breaks, and one element in only one side is enough to disprove the equality. A true proof needs both inclusions, but a disproof needs only one failure.",
-    "看起来合理的集合恒等式仍可能不成立。追踪一个元素经过两边，就能看出论证在哪里失败，只要有一个元素只在一边，就足以否定等式。证明需要两个方向的包含，而否定只需一处不成立。",
+    "A set identity that looks reasonable can still be false. An element chased through both sides reveals where the argument breaks, and one element in only one side is enough to disprove the equality. A true proof needs both inclusions, but a disproof needs only one failure. With $A = \\{1, 2\\}$ and $B = \\{2, 3\\}$, $(A \\cup B) \\setminus B = \\{1\\}$, which has lost the element $2$ of $A$.\n\n> **Watch out.** An element of $A$ outside $B$ passes through $(A \\cup B) \\setminus B$ unharmed. Only an element in both sets can break the claim, because removing $B$ removes it.",
+    "看起来合理的集合恒等式仍可能不成立。追踪一个元素经过两边，就能看出论证在哪里失败，只要有一个元素只在一边，就足以否定等式。证明需要两个方向的包含，而否定只需一处不成立。取 $A = \\{1, 2\\}$，$B = \\{2, 3\\}$，则 $(A \\cup B) \\setminus B = \\{1\\}$，丢掉了 $A$ 的元素 $2$。\n\n> **注意。** $A$ 中不属于 $B$ 的元素经过 $(A \\cup B) \\setminus B$ 后仍然保留。只有同时属于两个集合的元素才会使等式不成立，因为去掉 $B$ 时它也被去掉了。",
   ],
   (rng) => {
     const values = rng.sample(
@@ -1079,16 +1098,31 @@ const falseIdentity = point(
     const A = [common, ...onlyA].sort((x, y) => x - y);
     const B = [common, ...onlyB].sort((x, y) => x - y);
     const left = [...onlyA].sort((x, y) => x - y);
-    return ask(
+    const union = [...A, ...onlyB].sort((x, y) => x - y);
+    return withMistakes(
+      ask(
+        [
+          `Let $A = \\{${A.join(", ")}\\}$ and $B = \\{${B.join(", ")}\\}$. The claim $(A \\cup B) \\setminus B = A$ fails. Which element of $A$ is missing from the left side?`,
+          `设 $A = \\{${A.join(", ")}\\}$，$B = \\{${B.join(", ")}\\}$。等式 $(A \\cup B) \\setminus B = A$ 不成立。$A$ 的哪个元素不在左边？`,
+        ],
+        common,
+        [onlyA[0] as number, onlyB[0] as number, onlyA[1] as number],
+        [
+          `**Step 1: Form the union.** $A \\cup B = \\{${union.join(", ")}\\}$.\n\n**Step 2: Remove B.** Removing every element of $B$ leaves $(A \\cup B) \\setminus B = \\{${left.join(", ")}\\}$.\n\n**Step 3: Compare with A.** $A = \\{${A.join(", ")}\\}$ also has $${common}$, which the left side lacks.\n\n**Check.** Chase $${common}$: it is in $A \\cup B$, but it is also in $B$, so it is removed. Yet it is in $A$, so it lies in only one side of the claim.`,
+          `**第一步：求并集。** $A \\cup B = \\{${union.join(", ")}\\}$。\n\n**第二步：去掉 B。** 去掉 $B$ 的每个元素，剩下 $(A \\cup B) \\setminus B = \\{${left.join(", ")}\\}$。\n\n**第三步：与 A 比较。** $A = \\{${A.join(", ")}\\}$ 还含有 $${common}$，而左边没有。\n\n**检验。** 追踪 $${common}$：它属于 $A \\cup B$，但也属于 $B$，所以被去掉了。而它属于 $A$，所以它只在等式的一边。`,
+        ],
+      ),
       [
-        `Let $A = \\{${A.join(", ")}\\}$ and $B = \\{${B.join(", ")}\\}$. The claim $(A \\cup B) \\setminus B = A$ fails. Which element of $A$ is missing from the left side?`,
-        `设 $A = \\{${A.join(", ")}\\}$，$B = \\{${B.join(", ")}\\}$。等式 $(A \\cup B) \\setminus B = A$ 不成立。$A$ 的哪个元素不在左边？`,
-      ],
-      common,
-      [onlyA[0] as number, onlyB[0] as number, onlyA[1] as number],
-      [
-        `Removing $B$ removes every element of $B$, so the left side is $\\{${left.join(", ")}\\}$. The element $${common}$ lies in both sets, so it is lost.`,
-        `去掉 $B$ 会去掉 $B$ 的每个元素，所以左边是 $\\{${left.join(", ")}\\}$。元素 $${common}$ 同时在两个集合中，所以被去掉了。`,
+        ...onlyA.map((x) =>
+          say(
+            String(x),
+            `$${x}$ is in $A$ but not in $B$, so it stays in $(A \\cup B) \\setminus B$.`,
+            `$${x}$ 属于 $A$ 但不属于 $B$，所以它留在 $(A \\cup B) \\setminus B$ 中。`,
+          ),
+        ),
+        ...onlyB.map((x) =>
+          say(String(x), `$${x}$ is not an element of $A$; the question asks for one.`, `$${x}$ 不是 $A$ 的元素；题目问的是 $A$ 的元素。`),
+        ),
       ],
     );
   },
@@ -1098,8 +1132,8 @@ const threeSetDeMorgan = point(
   "de-morgans-laws-for-three-sets",
   ["De Morgan's laws for three sets", "三个集合的德摩根律"],
   [
-    "De Morgan's laws extend to any number of sets, and the element argument is the same as for two. Being outside an intersection means missing at least one of the sets, and being outside a union means missing every one of them.",
-    "德摩根律可以推广到任意多个集合，元素论证与两个集合时相同。不在交集中意味着至少不属于其中一个集合，不在并集中意味着不属于其中每一个集合。",
+    'De Morgan\'s laws extend to any number of sets, and the element argument is the same as for two. Being outside an intersection means missing at least one of the sets, and being outside a union means missing every one of them. With $A = \\{1, 2\\}$, $B = \\{2, 3\\}$ and $C = \\{4\\}$, the number $5$ is in none of them, so it is outside $A \\cup B \\cup C$; the number $2$ misses only $C$, which already puts it outside $A \\cap B \\cap C$.\n\n> **Watch out.** The complement of an intersection becomes an "or" and the complement of a union an "and", and every membership is negated as well.',
+    "德摩根律可以推广到任意多个集合，元素论证与两个集合时相同。不在交集中意味着至少不属于其中一个集合，不在并集中意味着不属于其中每一个集合。取 $A = \\{1, 2\\}$，$B = \\{2, 3\\}$，$C = \\{4\\}$，数 $5$ 都不属于它们，所以在 $A \\cup B \\cup C$ 之外；数 $2$ 只不属于 $C$，这就已经使它在 $A \\cap B \\cap C$ 之外。\n\n> **注意。** 交集的补变成“或”，并集的补变成“且”，并且每个隶属关系也都要取否定。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(["A", "B", "C", "D", "E", "F"], 3) as [string, string, string];
@@ -1111,75 +1145,177 @@ const threeSetDeMorgan = point(
     const inOne = same(`x \\in ${a},\\ x \\in ${b}\\text{ or }x \\in ${c}`);
     const inAll = same(`x \\in ${a},\\ x \\in ${b}\\text{ and }x \\in ${c}`);
     const right = isCap ? atLeast : none;
-    return choose(
-      rng,
-      [
-        `In the proof of De Morgan's law for three sets, what does $x \\in (${set})^{c}$ mean?`,
-        `在三个集合的德摩根律的证明中，$x \\in (${set})^{c}$ 是什么意思？`,
-      ],
-      right,
-      [isCap ? none : atLeast, inOne, inAll],
-      isCap
-        ? [
-            `An element outside an intersection misses at least one of the sets, so the statement is an "or".`,
-            `不在交集中的元素至少不属于其中一个集合，所以这是一个“或”命题。`,
-          ]
-        : [
-            `An element outside a union belongs to none of the sets, so the statement is an "and".`,
-            `不在并集中的元素不属于其中任何一个集合，所以这是一个“且”命题。`,
+    const reasons: Reason[] = isCap
+      ? [
+          [
+            none[0],
+            `That says $x$ misses all three sets, which is being outside the union. To be outside the intersection, missing one set is enough.`,
+            `这是说 $x$ 三个集合都不属于，即在并集之外。要在交集之外，只需不属于其中一个集合。`,
           ],
+          [
+            inOne[0],
+            "An element in all three sets satisfies this, yet it is in the intersection, not in its complement.",
+            "三个集合都属于的元素满足这一条，但它在交集中，不在其补集中。",
+          ],
+          [
+            inAll[0],
+            "That is membership in the intersection itself, the opposite of the complement.",
+            "这是属于交集本身，与补集正好相反。",
+          ],
+        ]
+      : [
+          [
+            atLeast[0],
+            "Missing one set is not enough to be outside the union: $x$ could still be in the other two.",
+            "只不属于一个集合，还不足以在并集之外：$x$ 仍可能属于另外两个。",
+          ],
+          [inOne[0], "That is membership in the union itself, the opposite of the complement.", "这是属于并集本身，与补集正好相反。"],
+          [
+            inAll[0],
+            "That is membership in the intersection; an element outside the union is in none of the sets.",
+            "这是属于交集；在并集之外的元素不属于任何一个集合。",
+          ],
+        ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          `In the proof of De Morgan's law for three sets, what does $x \\in (${set})^{c}$ mean?`,
+          `在三个集合的德摩根律的证明中，$x \\in (${set})^{c}$ 是什么意思？`,
+        ],
+        right,
+        [isCap ? none : atLeast, inOne, inAll],
+        isCap
+          ? [
+              `**Step 1: Leave the complement.** $x \\in (${set})^{c}$ means $x \\notin ${set}$.\n\n**Step 2: Negate the membership.** Being in the intersection means $x \\in ${a}$, $x \\in ${b}$ and $x \\in ${c}$. Its negation, by De Morgan's law, is $x \\notin ${a}$, $x \\notin ${b}$ or $x \\notin ${c}$.\n\n**Check.** An element of $${a}$ and $${b}$ but not $${c}$ is outside $${set}$, and it satisfies the statement through $x \\notin ${c}$.`,
+              `**第一步：去掉补集。** $x \\in (${set})^{c}$ 即 $x \\notin ${set}$。\n\n**第二步：否定隶属关系。** 属于交集是指 $x \\in ${a}$、$x \\in ${b}$ 且 $x \\in ${c}$。由德摩根律，它的否定是 $x \\notin ${a}$、$x \\notin ${b}$ 或 $x \\notin ${c}$。\n\n**检验。** 属于 $${a}$ 和 $${b}$ 但不属于 $${c}$ 的元素在 $${set}$ 之外，它通过 $x \\notin ${c}$ 满足这条命题。`,
+            ]
+          : [
+              `**Step 1: Leave the complement.** $x \\in (${set})^{c}$ means $x \\notin ${set}$.\n\n**Step 2: Negate the membership.** Being in the union means $x \\in ${a}$, $x \\in ${b}$ or $x \\in ${c}$. Its negation, by De Morgan's law, is $x \\notin ${a}$, $x \\notin ${b}$ and $x \\notin ${c}$.\n\n**Check.** An element of $${a}$ only misses $${b}$ and $${c}$, yet it is in $${set}$, and indeed it fails the statement at $x \\notin ${a}$.`,
+              `**第一步：去掉补集。** $x \\in (${set})^{c}$ 即 $x \\notin ${set}$。\n\n**第二步：否定隶属关系。** 属于并集是指 $x \\in ${a}$、$x \\in ${b}$ 或 $x \\in ${c}$。由德摩根律，它的否定是 $x \\notin ${a}$、$x \\notin ${b}$ 且 $x \\notin ${c}$。\n\n**检验。** 只属于 $${a}$ 的元素不属于 $${b}$ 和 $${c}$，但它在 $${set}$ 中；它也确实在 $x \\notin ${a}$ 处不满足这条命题。`,
+            ],
+      ),
+      reasons,
     );
   },
 );
+
+/** Membership tells whether an element is in a set built from three sets, given whether it is in each of them. */
+type Membership = (x: boolean, y: boolean, z: boolean) => boolean;
 
 const differenceDistributes = point(
   "how-set-difference-distributes",
   ["How set difference distributes", "集合差如何分配"],
   [
-    "Set difference distributes too, but the side matters. A union or intersection on the left of the minus sign keeps its operation. On the right, the operation flips, because removing a union means satisfying two conditions of not belonging.",
-    "集合差也能分配，但要看在哪一边。减号左边的并或交保持原来的运算。在右边，运算要翻转，因为去掉一个并集意味着要同时满足两个不属于的条件。",
+    "Set difference distributes too, but the side matters. A union or intersection on the left of the minus sign keeps its operation. On the right, the operation flips, because removing a union means satisfying two conditions of not belonging. With $A = \\{1, 2, 3\\}$, $B = \\{1\\}$ and $C = \\{2\\}$, $A \\setminus (B \\cup C) = \\{3\\}$, and $(A \\setminus B) \\cap (A \\setminus C) = \\{2, 3\\} \\cap \\{1, 3\\} = \\{3\\}$.\n\n> **Watch out.** Only an operation on the right of the minus sign flips. The set on the left is kept in every difference: $A \\setminus (B \\cup C)$ is not $(A \\setminus B) \\cup C$.",
+    "集合差也能分配，但要看在哪一边。减号左边的并或交保持原来的运算。在右边，运算要翻转，因为去掉一个并集意味着要同时满足两个不属于的条件。取 $A = \\{1, 2, 3\\}$，$B = \\{1\\}$，$C = \\{2\\}$，则 $A \\setminus (B \\cup C) = \\{3\\}$，而 $(A \\setminus B) \\cap (A \\setminus C) = \\{2, 3\\} \\cap \\{1, 3\\} = \\{3\\}$。\n\n> **注意。** 只有减号右边的运算才翻转。左边的集合在每个差中都要保留：$A \\setminus (B \\cup C)$ 不是 $(A \\setminus B) \\cup C$。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(["A", "B", "C", "D", "E", "F"], 3) as [string, string, string];
     const d = (x: string, y: string) => `(${x} \\setminus ${y})`;
     const kind = rng.int(0, 3);
-    const [start, right, wrong] = [
+    const [start, startIn, right, wrong, unpack, regroup] = (
       [
-        `${a} \\setminus (${b} \\cup ${c})`,
-        `${d(a, b)} \\cap ${d(a, c)}`,
-        [`${d(a, b)} \\cup ${d(a, c)}`, `${d(a, b)} \\cup ${c}`, `${a} \\setminus (${b} \\cap ${c})`],
-      ],
-      [
-        `${a} \\setminus (${b} \\cap ${c})`,
-        `${d(a, b)} \\cup ${d(a, c)}`,
-        [`${d(a, b)} \\cap ${d(a, c)}`, `${d(a, b)} \\cap ${c}`, `${a} \\setminus (${b} \\cup ${c})`],
-      ],
-      [
-        `(${a} \\cup ${b}) \\setminus ${c}`,
-        `${d(a, c)} \\cup ${d(b, c)}`,
-        [`${d(a, c)} \\cap ${d(b, c)}`, `${a} \\cup ${d(b, c)}`, `(${a} \\cap ${b}) \\setminus ${c}`],
-      ],
-      [
-        `(${a} \\cap ${b}) \\setminus ${c}`,
-        `${d(a, c)} \\cap ${d(b, c)}`,
-        [`${d(a, c)} \\cup ${d(b, c)}`, `${d(a, b)} \\cap ${c}`, `(${a} \\cup ${b}) \\setminus ${c}`],
-      ],
-    ][kind] as [string, string, string[]];
-    const onRight = kind < 2;
-    return choose(
-      rng,
-      [`Which set equals $${start}$ for all sets?`, `对所有集合，哪个集合等于 $${start}$？`],
-      same(right),
-      wrong.map(same),
-      onRight
-        ? [
-            `Here the operation is on the right of the difference, so it flips, and the result is $${right}$.`,
-            `这里的运算在差的右边，所以要翻转，结果是 $${right}$。`,
-          ]
-        : [
-            `Here the operation is on the left of the difference, so it stays the same, and the result is $${right}$.`,
-            `这里的运算在差的左边，所以保持不变，结果是 $${right}$。`,
+        [
+          `${a} \\setminus (${b} \\cup ${c})`,
+          (x, y, z) => x && !y && !z,
+          `${d(a, b)} \\cap ${d(a, c)}`,
+          [
+            [`${d(a, b)} \\cup ${d(a, c)}`, (x, y, z) => x && (!y || !z)],
+            [`${d(a, b)} \\cup ${c}`, (x, y, z) => (x && !y) || z],
+            [`${a} \\setminus (${b} \\cap ${c})`, (x, y, z) => x && !(y && z)],
           ],
+          [
+            `$x \\in ${a}$ and $x \\notin ${b} \\cup ${c}$, that is $x \\in ${a}$, $x \\notin ${b}$ and $x \\notin ${c}$`,
+            `$x \\in ${a}$ 且 $x \\notin ${b} \\cup ${c}$，即 $x \\in ${a}$、$x \\notin ${b}$ 且 $x \\notin ${c}$`,
+          ],
+          [
+            `$x \\in ${a} \\setminus ${b}$ and $x \\in ${a} \\setminus ${c}$`,
+            `$x \\in ${a} \\setminus ${b}$ 且 $x \\in ${a} \\setminus ${c}$`,
+          ],
+        ],
+        [
+          `${a} \\setminus (${b} \\cap ${c})`,
+          (x, y, z) => x && !(y && z),
+          `${d(a, b)} \\cup ${d(a, c)}`,
+          [
+            [`${d(a, b)} \\cap ${d(a, c)}`, (x, y, z) => x && !y && !z],
+            [`${d(a, b)} \\cap ${c}`, (x, y, z) => x && !y && z],
+            [`${a} \\setminus (${b} \\cup ${c})`, (x, y, z) => x && !y && !z],
+          ],
+          [
+            `$x \\in ${a}$ and $x \\notin ${b} \\cap ${c}$, that is $x \\in ${a}$ and ($x \\notin ${b}$ or $x \\notin ${c}$)`,
+            `$x \\in ${a}$ 且 $x \\notin ${b} \\cap ${c}$，即 $x \\in ${a}$ 且（$x \\notin ${b}$ 或 $x \\notin ${c}$）`,
+          ],
+          [
+            `$x \\in ${a} \\setminus ${b}$ or $x \\in ${a} \\setminus ${c}$`,
+            `$x \\in ${a} \\setminus ${b}$ 或 $x \\in ${a} \\setminus ${c}$`,
+          ],
+        ],
+        [
+          `(${a} \\cup ${b}) \\setminus ${c}`,
+          (x, y, z) => (x || y) && !z,
+          `${d(a, c)} \\cup ${d(b, c)}`,
+          [
+            [`${d(a, c)} \\cap ${d(b, c)}`, (x, y, z) => x && y && !z],
+            [`${a} \\cup ${d(b, c)}`, (x, y, z) => x || (y && !z)],
+            [`(${a} \\cap ${b}) \\setminus ${c}`, (x, y, z) => x && y && !z],
+          ],
+          [`($x \\in ${a}$ or $x \\in ${b}$) and $x \\notin ${c}$`, `（$x \\in ${a}$ 或 $x \\in ${b}$）且 $x \\notin ${c}$`],
+          [
+            `$x \\in ${a} \\setminus ${c}$ or $x \\in ${b} \\setminus ${c}$`,
+            `$x \\in ${a} \\setminus ${c}$ 或 $x \\in ${b} \\setminus ${c}$`,
+          ],
+        ],
+        [
+          `(${a} \\cap ${b}) \\setminus ${c}`,
+          (x, y, z) => x && y && !z,
+          `${d(a, c)} \\cap ${d(b, c)}`,
+          [
+            [`${d(a, c)} \\cup ${d(b, c)}`, (x, y, z) => (x || y) && !z],
+            [`${d(a, b)} \\cap ${c}`, (x, y, z) => x && !y && z],
+            [`(${a} \\cup ${b}) \\setminus ${c}`, (x, y, z) => (x || y) && !z],
+          ],
+          [`$x \\in ${a}$, $x \\in ${b}$ and $x \\notin ${c}$`, `$x \\in ${a}$、$x \\in ${b}$ 且 $x \\notin ${c}$`],
+          [
+            `$x \\in ${a} \\setminus ${c}$ and $x \\in ${b} \\setminus ${c}$`,
+            `$x \\in ${a} \\setminus ${c}$ 且 $x \\in ${b} \\setminus ${c}$`,
+          ],
+        ],
+      ] as [string, Membership, string, [string, Membership][], Pair, Pair][]
+    )[kind] as [string, Membership, string, [string, Membership][], Pair, Pair];
+    const onRight = kind < 2;
+    const bits = [false, true];
+    const kinds = bits.flatMap((x) => bits.flatMap((y) => bits.map((z) => [x, y, z] as const)));
+    const rel = (inside: boolean, s: string) => `x ${inside ? "\\in" : "\\notin"} ${s}`;
+    const reasons = wrong.map(([w, wIn]): Reason => {
+      const [x, y, z] = kinds.find(([p, q, r]) => wIn(p, q, r) !== startIn(p, q, r)) as readonly [boolean, boolean, boolean];
+      const pattern = `$${rel(x, a)}$, $${rel(y, b)}$, $${rel(z, c)}$`;
+      const patternZh = `$${rel(x, a)}$、$${rel(y, b)}$、$${rel(z, c)}$`;
+      const inStart = startIn(x, y, z);
+      return [
+        `$${w}$`,
+        `An element with ${pattern} is ${inStart ? "in" : "not in"} $${start}$ but ${inStart ? "not in" : "in"} $${w}$, so the two sets differ.`,
+        `满足${patternZh}的元素${inStart ? "属于" : "不属于"} $${start}$，却${inStart ? "不属于" : "属于"} $${w}$，所以两个集合不同。`,
+      ];
+    });
+    // Sets in which every way of belonging to the three sets occurs once.
+    const U = [1, 2, 3, 4, 5, 6, 7, 8];
+    const at = (n: number) => [(n - 1) % 2 === 1, Math.floor((n - 1) / 2) % 2 === 1, Math.floor((n - 1) / 4) % 2 === 1] as const;
+    const list = (f: Membership) => `\\{${U.filter((n) => f(...at(n))).join(", ")}\\}`;
+    const given = `${a} = \\{2, 4, 6, 8\\}, ${b} = \\{3, 4, 7, 8\\}, ${c} = \\{5, 6, 7, 8\\}`;
+    return reasoned(
+      choose(
+        rng,
+        [`Which set equals $${start}$ for all sets?`, `对所有集合，哪个集合等于 $${start}$？`],
+        same(right),
+        wrong.map(([w]) => same(w)),
+        [
+          `**Step 1: Unpack the membership.** $x \\in ${start}$ means ${unpack[0]}.\n\n**Step 2: Regroup it.** ${onRight ? "The operation on the right of the difference flips" : "The operation on the left of the difference stays"}: ${regroup[0]}, so the set is $${right}$.\n\n**Check.** With $${given}$, both $${start}$ and $${right}$ are $${list(startIn)}$.`,
+          `**第一步：展开隶属关系。** $x \\in ${start}$ 即${unpack[1]}。\n\n**第二步：重新组合。** ${onRight ? "差的右边的运算要翻转" : "差的左边的运算保持不变"}：${regroup[1]}，所以这个集合是 $${right}$。\n\n**检验。** 取 $${given}$，$${start}$ 与 $${right}$ 都等于 $${list(startIn)}$。`,
+        ],
+      ),
+      reasons,
     );
   },
 );
@@ -1188,8 +1324,8 @@ const productUnionSize = point(
   "the-product-with-a-union-from-given-products",
   ["The product with a union from given products", "由已知乘积求与并集的乘积"],
   [
-    "Since $A \\times (B \\cup C) = (A \\times B) \\cup (A \\times C)$ and the two products overlap in $A \\times (B \\cap C)$, inclusion and exclusion applies to the products themselves. Simply adding the two products would count the overlap twice.",
-    "由于 $A \\times (B \\cup C) = (A \\times B) \\cup (A \\times C)$，且两个乘积的重叠部分是 $A \\times (B \\cap C)$，所以容斥原理可以直接用于乘积。简单地把两个乘积相加，会把重叠部分计算两次。",
+    "Since $A \\times (B \\cup C) = (A \\times B) \\cup (A \\times C)$ and the two products overlap in $A \\times (B \\cap C)$, inclusion and exclusion applies to the products themselves. Simply adding the two products would count the overlap twice. With $|A \\times B| = 6$, $|A \\times C| = 4$ and $|A \\times (B \\cap C)| = 2$, $|A \\times (B \\cup C)| = 6 + 4 - 2 = 8$.\n\n> **Watch out.** Subtract the overlap $A \\times (B \\cap C)$ once; adding it, or leaving it in, counts its pairs wrongly. Sizes of unions come from inclusion and exclusion, not from multiplying the given sizes.",
+    "由于 $A \\times (B \\cup C) = (A \\times B) \\cup (A \\times C)$，且两个乘积的重叠部分是 $A \\times (B \\cap C)$，所以容斥原理可以直接用于乘积。简单地把两个乘积相加，会把重叠部分计算两次。若 $|A \\times B| = 6$，$|A \\times C| = 4$，$|A \\times (B \\cap C)| = 2$，则 $|A \\times (B \\cup C)| = 6 + 4 - 2 = 8$。\n\n> **注意。** 重叠部分 $A \\times (B \\cap C)$ 要减去一次；把它加上或不减，都会算错它的有序对。并集的大小用容斥原理求，不是把已知的大小相乘。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
@@ -1197,16 +1333,31 @@ const productUnionSize = point(
     const b = i + rng.int(1, 6);
     const c = i + rng.int(1, 6);
     const answer = a * (b + c - i);
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `Sets satisfy $|A \\times B| = ${a * b}$, $|A \\times C| = ${a * c}$ and $|A \\times (B \\cap C)| = ${a * i}$. Find $|A \\times (B \\cup C)|$.`,
+          `集合满足 $|A \\times B| = ${a * b}$，$|A \\times C| = ${a * c}$，$|A \\times (B \\cap C)| = ${a * i}$。求 $|A \\times (B \\cup C)|$。`,
+        ],
+        answer,
+        [a * (b + c), a * (b + c) + a * i, a * b * c],
+        [
+          `**Step 1: Distribute.** $A \\times (B \\cup C) = (A \\times B) \\cup (A \\times C)$.\n\n**Step 2: Find the overlap.** $(A \\times B) \\cap (A \\times C) = A \\times (B \\cap C)$, with $${a * i}$ pairs.\n\n**Step 3: Apply inclusion and exclusion.** $${a * b} + ${a * c} - ${a * i} = ${answer}$.\n\n**Check.** Split into products that do not overlap: $A \\times (B \\setminus C)$ has $${a * b} - ${a * i} = ${a * (b - i)}$ pairs, $A \\times (C \\setminus B)$ has $${a * c} - ${a * i} = ${a * (c - i)}$, and $A \\times (B \\cap C)$ has $${a * i}$. Together $${a * (b - i)} + ${a * (c - i)} + ${a * i} = ${answer}$.`,
+          `**第一步：分配。** $A \\times (B \\cup C) = (A \\times B) \\cup (A \\times C)$。\n\n**第二步：找出重叠部分。** $(A \\times B) \\cap (A \\times C) = A \\times (B \\cap C)$，有 $${a * i}$ 个有序对。\n\n**第三步：应用容斥原理。** $${a * b} + ${a * c} - ${a * i} = ${answer}$。\n\n**检验。** 拆成互不重叠的乘积：$A \\times (B \\setminus C)$ 有 $${a * b} - ${a * i} = ${a * (b - i)}$ 个有序对，$A \\times (C \\setminus B)$ 有 $${a * c} - ${a * i} = ${a * (c - i)}$ 个，$A \\times (B \\cap C)$ 有 $${a * i}$ 个。合计 $${a * (b - i)} + ${a * (c - i)} + ${a * i} = ${answer}$。`,
+        ],
+      ),
       [
-        `Sets satisfy $|A \\times B| = ${a * b}$, $|A \\times C| = ${a * c}$ and $|A \\times (B \\cap C)| = ${a * i}$. Find $|A \\times (B \\cup C)|$.`,
-        `集合满足 $|A \\times B| = ${a * b}$，$|A \\times C| = ${a * c}$，$|A \\times (B \\cap C)| = ${a * i}$。求 $|A \\times (B \\cup C)|$。`,
-      ],
-      answer,
-      [a * (b + c), a * (b + c) + a * i, a * b * c],
-      [
-        `The two products overlap in exactly $A \\times (B \\cap C)$, so the size is $${a * b} + ${a * c} - ${a * i} = ${answer}$.`,
-        `两个乘积的重叠部分正好是 $A \\times (B \\cap C)$，所以大小是 $${a * b} + ${a * c} - ${a * i} = ${answer}$。`,
+        say(
+          String(a * (b + c)),
+          "That adds the two products, which counts the pairs of $A \\times (B \\cap C)$ twice.",
+          "这把两个乘积相加，$A \\times (B \\cap C)$ 的有序对被算了两次。",
+        ),
+        say(String(a * (b + c) + a * i), "That adds the overlap instead of subtracting it.", "这把重叠部分加上了，而不是减去。"),
+        say(
+          String(a * b * c),
+          "That multiplies the given sizes; the size of a union comes from inclusion and exclusion.",
+          "这是把已知的大小相乘；并集的大小要用容斥原理求。",
+        ),
       ],
     );
   },

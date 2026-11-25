@@ -9,6 +9,7 @@ import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
 
 /** regionPoints lists which of the three sets each of the eight regions of a Venn diagram lies in, with the point for its shading. */
@@ -43,26 +44,64 @@ function vennFigure(names: readonly [string, string, string], member: (a: boolea
 interface SetExpression {
   readonly tex: (a: string, b: string, c: string) => string;
   readonly member: (a: boolean, b: boolean, c: boolean) => boolean;
+  /** rule says in words when a region belongs to the set of A, B and C. */
+  readonly rule: Pair;
 }
 
 const expressions: readonly SetExpression[] = [
-  { tex: (a, b, c) => `${a} \\cap (${b} \\cup ${c})`, member: (a, b, c) => a && (b || c) },
-  { tex: (a, b, c) => `${a} \\cup (${b} \\cap ${c})`, member: (a, b, c) => a || (b && c) },
-  { tex: (a, b, c) => `(${a} \\cup ${b}) \\cap ${c}`, member: (a, b, c) => (a || b) && c },
-  { tex: (a, b, c) => `(${a} \\cap ${b}) \\cup ${c}`, member: (a, b, c) => (a && b) || c },
-  { tex: (a, b, c) => `${a} \\cap ${b} \\cap ${c}`, member: (a, b, c) => a && b && c },
-  { tex: (a, b, c) => `${a} \\cup ${b} \\cup ${c}`, member: (a, b, c) => a || b || c },
-  { tex: (a, b, c) => `(${a} \\cap ${b}) \\setminus ${c}`, member: (a, b, c) => a && b && !c },
-  { tex: (a, b, c) => `${a} \\setminus (${b} \\cup ${c})`, member: (a, b, c) => a && !b && !c },
+  {
+    tex: (a, b, c) => `${a} \\cap (${b} \\cup ${c})`,
+    member: (a, b, c) => a && (b || c),
+    rule: ["inside A and inside at least one of B and C", "在 A 内，并且至少在 B、C 之一内"],
+  },
+  {
+    tex: (a, b, c) => `${a} \\cup (${b} \\cap ${c})`,
+    member: (a, b, c) => a || (b && c),
+    rule: ["inside A, or inside both B and C", "在 A 内，或者同时在 B 和 C 内"],
+  },
+  {
+    tex: (a, b, c) => `(${a} \\cup ${b}) \\cap ${c}`,
+    member: (a, b, c) => (a || b) && c,
+    rule: ["inside C and inside at least one of A and B", "在 C 内，并且至少在 A、B 之一内"],
+  },
+  {
+    tex: (a, b, c) => `(${a} \\cap ${b}) \\cup ${c}`,
+    member: (a, b, c) => (a && b) || c,
+    rule: ["inside C, or inside both A and B", "在 C 内，或者同时在 A 和 B 内"],
+  },
+  { tex: (a, b, c) => `${a} \\cap ${b} \\cap ${c}`, member: (a, b, c) => a && b && c, rule: ["inside all three circles", "在三个圆内"] },
+  {
+    tex: (a, b, c) => `${a} \\cup ${b} \\cup ${c}`,
+    member: (a, b, c) => a || b || c,
+    rule: ["inside at least one of the three circles", "至少在三个圆之一内"],
+  },
+  {
+    tex: (a, b, c) => `(${a} \\cap ${b}) \\setminus ${c}`,
+    member: (a, b, c) => a && b && !c,
+    rule: ["inside A and B but outside C", "在 A 和 B 内，但在 C 外"],
+  },
+  {
+    tex: (a, b, c) => `${a} \\setminus (${b} \\cup ${c})`,
+    member: (a, b, c) => a && !b && !c,
+    rule: ["inside A but outside both B and C", "在 A 内，但在 B 和 C 外"],
+  },
 ];
+
+/** regionName names the region of a three-circle diagram inside exactly the circles A, B and C marked true. */
+function regionName(a: boolean, b: boolean, c: boolean): Pair {
+  const n = ["A", "B", "C"].filter((_, i) => [a, b, c][i]);
+  if (n.length === 0) return ["the region outside all three circles", "三个圆之外的区域"];
+  if (n.length === 3) return ["the region inside all three circles", "三个圆的公共区域"];
+  return [`the region inside only ${n.join(" and ")}`, `只在 ${n.join("、")} 内的区域`];
+}
 
 const setOfVenn = {
   ...point(
     "the-set-marked-on-a-three-circle-diagram",
     ["The set marked on a three-circle diagram", "三圆图上标出的集合"],
     [
-      "The distributive laws say that $A \\cap (B \\cup C)$ and $(A \\cap B) \\cup (A \\cap C)$ mark the same regions of a Venn diagram. To name a marked set, test each region: is it in the first set, in the second and in the third? An expression matches only if it agrees with the drawing on all eight regions.",
-      "分配律说 $A \\cap (B \\cup C)$ 与 $(A \\cap B) \\cup (A \\cap C)$ 在文氏图上标出相同的区域。要说出标记的集合，就检查每个区域：它是否在第一个集合里、第二个里和第三个里？只有在全部八个区域上都与图一致的表达式才匹配。",
+      "Three circles split the box into eight regions, one for each way of being inside or outside each circle. An expression in $A$, $B$ and $C$ is a rule that each region either meets or fails, so to name a marked set, test every region against the rule. For example, $A \\cap (B \\cup C)$ contains a region when it is inside $A$ and inside $B$ or $C$: that gives three regions, inside only $A$ and $B$, inside only $A$ and $C$, and inside all three. By the distributive law, $(A \\cap B) \\cup (A \\cap C)$ marks the same three.\n\n> **Watch out.** Brackets change the set. $A \\cap (B \\cup C)$ and $(A \\cap B) \\cup C$ use the same symbols, but the second contains all of $C$, even the part outside $A$. An expression matches only if it agrees with the dots on all eight regions.",
+      "三个圆把方框分成八个区域，每个区域对应在每个圆内或圆外的一种情况。由 $A$、$B$、$C$ 组成的表达式就是一条规则，每个区域要么满足、要么不满足，所以要说出标记的集合，就用规则检验每个区域。例如，$A \\cap (B \\cup C)$ 包含一个区域，当且仅当它在 $A$ 内、并且在 $B$ 或 $C$ 内：这给出三个区域，只在 $A$ 和 $B$ 内、只在 $A$ 和 $C$ 内、在三个圆内。由分配律，$(A \\cap B) \\cup (A \\cap C)$ 标出同样的三个区域。\n\n> **注意。** 括号会改变集合。$A \\cap (B \\cup C)$ 与 $(A \\cap B) \\cup C$ 用的符号相同，但后者包含整个 $C$，连 $A$ 外的部分也包括。只有在全部八个区域上都与点一致的表达式才匹配。",
     ],
     (rng) => {
       const names = rng.shuffle(["A", "B", "C"]) as [string, string, string];
@@ -73,37 +112,52 @@ const setOfVenn = {
         const value: Record<string, boolean> = { [names[0]]: a, [names[1]]: b, [names[2]]: c };
         return right.member(value.A as boolean, value.B as boolean, value.C as boolean);
       };
-      const inside = regionPoints.filter(([a, b, c]) => member(a, b, c)).map(([a, b, c]) => names.filter((_, i) => [a, b, c][i]));
+      const inside = regionPoints.filter(([a, b, c]) => member(a, b, c)).map(([a, b, c]) => names.filter((_, i) => [a, b, c][i]).sort());
       const regionsEn = inside.map((n) =>
         n.length === 0 ? "outside all three circles" : n.length === 3 ? "inside all three circles" : `inside only ${n.join(" and ")}`,
       );
       const regionsZh = inside.map((n) =>
         n.length === 0 ? "三个圆之外" : n.length === 3 ? "三个圆的公共部分" : `只在 ${n.join("、")} 内`,
       );
-      return choose(
-        rng,
-        [
-          "A dot marks each region of the diagram that belongs to a set. Which expression names that set?",
-          "图中的点标出属于某集合的每个区域。哪个表达式表示这个集合？",
-        ],
-        same(texOf(right)),
-        rng
-          .sample(
-            expressions.filter((e) => e !== right),
-            3,
-          )
-          .map((e) => same(texOf(e))),
-        [
-          `Testing each of the eight regions against $${texOf(right)}$ gives exactly the regions with dots, and every other choice differs from the drawing on at least one region.`,
-          `对八个区域逐一检验 $${texOf(right)}$，恰好得到有点的区域，其他选项都至少在一个区域上与图不同。`,
-        ],
-        {
-          svg: vennFigure(names, member),
-          alt: t(
-            `Three overlapping circles labeled ${names.join(", ")}, with a dot in each of these regions: ${regionsEn.join("; ")}.`,
-            `标有 ${names.join("、")} 的三个相交的圆，以下每个区域各有一个点：${regionsZh.join("；")}。`,
-          ),
-        },
+      const wrongs = rng.sample(
+        expressions.filter((e) => e !== right),
+        3,
+      );
+      const reasons = wrongs.map((e): Reason => {
+        const [a, b, c] = regionPoints.find(([x, y, z]) => e.member(x, y, z) !== right.member(x, y, z)) ?? [false, false, false];
+        const [en, zh] = regionName(a, b, c);
+        const tex = texOf(e);
+        return right.member(a, b, c)
+          ? [
+              same(tex)[0],
+              `${en[0]?.toUpperCase()}${en.slice(1)} has a dot, but $${tex}$ leaves it out.`,
+              `${zh}有点，但 $${tex}$ 不包含它。`,
+            ]
+          : [same(tex)[0], `$${tex}$ contains ${en}, which has no dot.`, `$${tex}$ 包含${zh}，而那里没有点。`];
+      });
+      const n = inside.length;
+      return reasoned(
+        choose(
+          rng,
+          [
+            "A dot marks each region of the diagram that belongs to a set. Which expression names that set?",
+            "图中的点标出属于某集合的每个区域。哪个表达式表示这个集合？",
+          ],
+          same(texOf(right)),
+          wrongs.map((e) => same(texOf(e))),
+          [
+            `**Step 1: Read the dots.** ${n === 1 ? "One region carries a dot" : `${n} regions carry dots`}: ${regionsEn.join("; ")}.\n\n**Step 2: Find the rule.** $${texOf(right)}$ contains a region when it is ${right.rule[0]}. The dotted regions are exactly the regions that meet this rule.\n\n**Check.** Each of the other ${8 - n} regions fails the rule and has no dot, so $${texOf(right)}$ agrees with the drawing on all eight regions.`,
+            `**第一步：读点。** 有点的区域共 ${n} 个：${regionsZh.join("；")}。\n\n**第二步：找规则。** $${texOf(right)}$ 包含一个区域，当且仅当它${right.rule[1]}。有点的区域恰好是满足这条规则的区域。\n\n**检验。** 其余 ${8 - n} 个区域都不满足规则，也都没有点，所以 $${texOf(right)}$ 在全部八个区域上都与图一致。`,
+          ],
+          {
+            svg: vennFigure(names, member),
+            alt: t(
+              `Three overlapping circles labeled ${names.join(", ")}, with a dot in each of these regions: ${regionsEn.join("; ")}.`,
+              `标有 ${names.join("、")} 的三个相交的圆，以下每个区域各有一个点：${regionsZh.join("；")}。`,
+            ),
+          },
+        ),
+        reasons,
       );
     },
   ),
@@ -709,8 +763,8 @@ const partitionCheck = point(
   "whether-drawn-groups-form-a-partition",
   ["Whether drawn groups form a partition", "图中的分组是否构成分划"],
   [
-    "A partition of a set divides it into nonempty blocks so that every element is in exactly one block. A drawing fails this test if a point lies in two blocks, or if a point lies in none. Otherwise the blocks form a partition, however unequal in size they may be, and a block with one point is allowed.",
-    "集合的分划把它分成非空的块，使每个元素恰好在一个块中。如果有点落在两个块中，或者有点不在任何块中，图就不符合。否则这些块构成分划，不管大小多么不等，只含一点的块也可以。",
+    "A partition of a set divides it into nonempty blocks so that every element is in exactly one block. A drawing fails this test if a point lies in two blocks, or if an element of the set lies in none. Otherwise the blocks form a partition, however unequal in size they may be, and a block with one point is allowed. For example, $\\{1, 2\\}, \\{3\\}, \\{4, 5, 6\\}$ is a partition of $\\{1, 2, 3, 4, 5, 6\\}$, but $\\{1, 2\\}, \\{2, 3\\}, \\{4, 5, 6\\}$ is not, because $2$ lies in two blocks.\n\n> **Watch out.** Sizes do not matter. Look for an element drawn twice and for an element drawn nowhere; if neither happens, the blocks form a partition.",
+    "集合的分划把它分成非空的块，使每个元素恰好在一个块中。如果有点落在两个块中，或者集合中有元素不在任何块中，图就不符合。否则这些块构成分划，不管大小多么不等，只含一点的块也可以。例如，$\\{1, 2\\}, \\{3\\}, \\{4, 5, 6\\}$ 是 $\\{1, 2, 3, 4, 5, 6\\}$ 的分划，但 $\\{1, 2\\}, \\{2, 3\\}, \\{4, 5, 6\\}$ 不是，因为 $2$ 在两个块中。\n\n> **注意。** 大小无关紧要。要找的是画了两次的元素和哪里都没画的元素；两者都没有，这些块就构成分划。",
   ],
   (rng) => {
     const kind = rng.pick(["partition", "overlap", "missing"] as const);
@@ -732,11 +786,8 @@ const partitionCheck = point(
       body += `<ellipse class="accent" stroke="currentColor" fill="none" cx="${50 + b * 105}" cy="${50 + (Math.ceil(size / 2) - 1) * 22}" rx="48" ry="${26 + (Math.ceil(size / 2) - 1) * 24}"/>`;
     });
     const set = Array.from({ length: n }, (_, i) => i + 1);
-    let extra = "";
-    if (kind === "overlap") {
-      const v = blocks[0]?.[0] as number;
-      extra = node(place(1, 3), String(v));
-    }
+    const twice = blocks[0]?.[0] as number;
+    const extra = kind === "overlap" ? node(place(1, 3), String(twice)) : "";
     const missing = kind === "missing" ? n + rng.int(1, 3) : 0;
     const domain = kind === "missing" ? [...set, missing] : set;
     const options: Record<string, Pair> = {
@@ -745,33 +796,79 @@ const partitionCheck = point(
       missing: ["It is not a partition, because a point lies in no block", "不是分划，因为有一点不在任何块中"],
       empty: ["It is not a partition, because blocks must have equal sizes", "不是分划，因为各块大小必须相等"],
     };
-    const reason: Pair =
+    const why: Record<string, Pair> = {
+      partition:
+        kind === "overlap"
+          ? [
+              `$${twice}$ is drawn in two ellipses, so it is not in exactly one block.`,
+              `$${twice}$ 画在两个椭圆中，所以它不是恰好在一个块中。`,
+            ]
+          : [`$${missing}$ is an element of the set but lies in no ellipse.`, `$${missing}$ 是集合的元素，却不在任何椭圆中。`],
+      overlap: ["No number is drawn in two ellipses.", "没有数画在两个椭圆中。"],
+      missing: ["Every element of the set lies in some ellipse.", "集合的每个元素都在某个椭圆中。"],
+      empty: [
+        "Blocks of a partition may have any sizes; only an element in two blocks or in none breaks the rule.",
+        "分划的块可以是任意大小；只有元素在两个块中或不在任何块中才违反规则。",
+      ],
+    };
+    const reasons = Object.keys(options)
+      .filter((k) => k !== kind)
+      .map((k): Reason => [(options[k] as Pair)[0], (why[k] as Pair)[0], (why[k] as Pair)[1]]);
+    const drawnCount = n + (kind === "overlap" ? 1 : 0);
+    const sizes = blocks.map((b) => b.length).join(" + ");
+    const step1: Pair =
+      kind === "overlap"
+        ? [`$${twice}$ is drawn in the first ellipse and again in the second.`, `$${twice}$ 画在第一个椭圆中，又画在第二个椭圆中。`]
+        : ["No number is drawn twice.", "没有数画了两次。"];
+    const step2: Pair =
+      kind === "missing"
+        ? [`$${missing}$ is in the set but in no ellipse.`, `$${missing}$ 在集合中，却不在任何椭圆中。`]
+        : ["Every element of the set appears in an ellipse.", "集合的每个元素都出现在某个椭圆中。"];
+    const verdict: Pair =
+      kind === "partition"
+        ? ["Every element lies in exactly one block, so the blocks form a partition.", "每个元素恰好在一个块中，所以这些块构成分划。"]
+        : kind === "overlap"
+          ? [`$${twice}$ lies in two blocks, so this is not a partition.`, `$${twice}$ 在两个块中，所以这不是分划。`]
+          : [`$${missing}$ lies in no block, so this is not a partition.`, `$${missing}$ 不在任何块中，所以这不是分划。`];
+    const check: Pair =
       kind === "partition"
         ? [
-            "Every element of the set lies in exactly one block, and unequal sizes are allowed",
-            "集合的每个元素恰好在一个块中，大小不等是允许的",
+            `The blocks hold ${sizes} = ${n} points, the size of the set, as they must when each element is counted once.`,
+            `各块共有 ${sizes} = ${n} 个点，正是集合的大小，每个元素恰好算一次时就应如此。`,
           ]
         : kind === "overlap"
-          ? [`The point $${blocks[0]?.[0]}$ appears in two blocks`, `点 $${blocks[0]?.[0]}$ 出现在两个块中`]
-          : [`The element $${missing}$ of the set appears in no block`, `集合中的元素 $${missing}$ 不在任何块中`];
-    return choose(
-      rng,
-      [
-        `The ellipses show proposed blocks for the set $\\{${domain.join(", ")}\\}$. Do they form a partition?`,
-        `椭圆表示集合 $\\{${domain.join(", ")}\\}$ 的拟议分块。它们是否构成分划？`,
-      ],
-      options[kind] as Pair,
-      Object.keys(options)
-        .filter((k) => k !== kind)
-        .map((k) => options[k] as Pair),
-      [`${reason[0]}.`, `${reason[1]}。`],
-      {
-        svg: svgDocument(130, body + extra),
-        alt: t(
-          `Ellipses holding the blocks ${blocks.map((b) => `{${b.join(", ")}}`).join(", ")}${kind === "overlap" ? `, with ${blocks[0]?.[0]} also drawn in the second block` : ""}.`,
-          `椭圆中的块为 ${blocks.map((b) => `{${b.join(", ")}}`).join("，")}${kind === "overlap" ? `，${blocks[0]?.[0]} 同时画在第二个块中` : ""}。`,
-        ),
-      },
+          ? [
+              `The ellipses hold ${drawnCount} points for a set of ${n} elements, so some element is counted twice.`,
+              `椭圆中共有 ${drawnCount} 个点，而集合只有 ${n} 个元素，所以有元素被算了两次。`,
+            ]
+          : [
+              `The ellipses hold ${drawnCount} points for a set of ${n + 1} elements, so some element is left out.`,
+              `椭圆中共有 ${drawnCount} 个点，而集合有 ${n + 1} 个元素，所以有元素被漏掉。`,
+            ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          `The ellipses show proposed blocks for the set $\\{${domain.join(", ")}\\}$. Do they form a partition?`,
+          `椭圆表示集合 $\\{${domain.join(", ")}\\}$ 的拟议分块。它们是否构成分划？`,
+        ],
+        options[kind] as Pair,
+        Object.keys(options)
+          .filter((k) => k !== kind)
+          .map((k) => options[k] as Pair),
+        [
+          `**Step 1: Look for an element drawn twice.** ${step1[0]}\n\n**Step 2: Look for an element drawn nowhere.** ${step2[0]} ${verdict[0]}\n\n**Check.** ${check[0]}`,
+          `**第一步：找画了两次的元素。** ${step1[1]}\n\n**第二步：找哪里都没画的元素。** ${step2[1]}${verdict[1]}\n\n**检验。** ${check[1]}`,
+        ],
+        {
+          svg: svgDocument(130, body + extra),
+          alt: t(
+            `Ellipses holding the blocks ${blocks.map((b) => `{${b.join(", ")}}`).join(", ")}${kind === "overlap" ? `, with ${twice} also drawn in the second block` : ""}.`,
+            `椭圆中的块为 ${blocks.map((b) => `{${b.join(", ")}}`).join("，")}${kind === "overlap" ? `，${twice} 同时画在第二个块中` : ""}。`,
+          ),
+        },
+      ),
+      reasons,
     );
   },
 );
@@ -781,8 +878,8 @@ const indicatorGraph = {
     "the-set-of-a-drawn-indicator-function",
     ["The set of a drawn indicator function", "图中示性函数的集合"],
     [
-      "The indicator function of a set equals one on the set and zero off it. So its graph shows the set directly as the part at height one. A filled circle at an end at height one means that the end belongs to the set, and an open circle there means it does not, which decides the type of bracket.",
-      "集合的示性函数在集合上等于一，在集合外等于零。所以它的图以高度一的部分直接显示这个集合。高度一处端点的实心圆表示端点属于集合，空心圆表示不属于，这决定了括号的类型。",
+      "The indicator function of a set equals one on the set and zero off it. So its graph shows the set directly as the part at height one. At each end of that part, one of the two dots, at height one or at height zero, is filled: it gives the value there. A filled dot at height one means the end belongs to the set, so its bracket is square; a filled dot at height zero means it does not, so its bracket is round. For example, a graph at height one from $-1$ to $2$, filled at $(-1, 1)$ and at $(2, 0)$, is the indicator function of $[-1, 2)$.\n\n> **Watch out.** Read the end from the filled dot, not from where the segment seems to stop. A hollow dot at height one, with a filled dot below it, leaves the end out of the set.",
+      "集合的示性函数在集合上等于一，在集合外等于零。所以它的图以高度一的部分直接显示这个集合。在这部分的每个端点处，高度一和高度零的两个点中有一个是实心的：它给出那里的函数值。高度一处实心，表示端点属于集合，用方括号；高度零处实心，表示端点不属于集合，用圆括号。例如，从 $-1$ 到 $2$ 高度为一、在 $(-1, 1)$ 和 $(2, 0)$ 处实心的图，是 $[-1, 2)$ 的示性函数。\n\n> **注意。** 端点要看实心点，而不是看线段似乎停在哪里。高度一处是空心点、下方是实心点时，端点不属于集合。",
     ],
     (rng) => {
       const a = rng.int(-5, 1);
@@ -798,24 +895,42 @@ const indicatorGraph = {
         { kind: "point", at: [b, 1], open: !rightIn, accent: true },
         { kind: "point", at: [b, 0], open: rightIn, accent: true },
       ];
-      const word = (b1: boolean): Pair => (b1 ? ["belongs to the set", "属于集合"] : ["does not belong to the set", "不属于集合"]);
-      return choose(
-        rng,
-        ["The graph shows the indicator function of a set. Which set is it?", "图中是某集合的示性函数。它是哪个集合？"],
-        same(interval(leftIn, rightIn)),
-        [same(interval(!leftIn, rightIn)), same(interval(leftIn, !rightIn)), same(interval(!leftIn, !rightIn))],
-        [
-          `The graph has height one from $${a}$ to $${b}$. The value at $${a}$ is ${leftIn ? "one" : "zero"}, so it ${word(leftIn)[0]}, and the value at $${b}$ is ${rightIn ? "one" : "zero"}, so it ${word(rightIn)[0]}.`,
-          `图在 $${a}$ 到 $${b}$ 之间高度为一。在 $${a}$ 处的值是${leftIn ? "一" : "零"}，所以它${word(leftIn)[1]}；在 $${b}$ 处的值是${rightIn ? "一" : "零"}，所以它${word(rightIn)[1]}。`,
-        ],
-        drawn(
-          { xMin: -7, xMax: 7, yMin: -2, yMax: 3 },
-          marks,
-          t(
-            `Height one from ${a} (${leftIn ? "filled" : "open"} there) to ${b} (${rightIn ? "filled" : "open"} there), and zero elsewhere.`,
-            `从 ${a}（那里${leftIn ? "实心" : "空心"}）到 ${b}（那里${rightIn ? "实心" : "空心"}）高度为一，其他地方为零。`,
+      const word = (inSet: boolean): Pair => (inSet ? ["belongs to the set", "属于集合"] : ["does not belong to the set", "不属于集合"]);
+      const end = (x: number, inSet: boolean): Pair => [
+        `The filled dot at $${x}$ is at height ${inSet ? "one" : "zero"}, so $${x}$ ${word(inSet)[0]}, but this interval ${inSet ? "leaves it out" : "includes it"}.`,
+        `$${x}$ 处的实心点在高度${inSet ? "一" : "零"}，所以 $${x}$ ${word(inSet)[1]}，但这个区间${inSet ? "不包含它" : "包含了它"}。`,
+      ];
+      const wrong: [boolean, boolean][] = [
+        [!leftIn, rightIn],
+        [leftIn, !rightIn],
+        [!leftIn, !rightIn],
+      ];
+      const reasons = wrong.map(([l, r]): Reason => {
+        const parts = [...(l !== leftIn ? [end(a, leftIn)] : []), ...(r !== rightIn ? [end(b, rightIn)] : [])];
+        return [same(interval(l, r))[0], parts.map((p) => p[0]).join(" "), parts.map((p) => p[1]).join("")];
+      });
+      const bracket = (inSet: boolean, left: boolean) => (inSet ? (left ? "[" : "]") : left ? "(" : ")");
+      const right = interval(leftIn, rightIn);
+      return reasoned(
+        choose(
+          rng,
+          ["The graph shows the indicator function of a set. Which set is it?", "图中是某集合的示性函数。它是哪个集合？"],
+          same(right),
+          wrong.map(([l, r]) => same(interval(l, r))),
+          [
+            `**Step 1: Find the part at height one.** The graph is at height one from $${a}$ to $${b}$, so the set runs from $${a}$ to $${b}$.\n\n**Step 2: Read the ends.** At $${a}$ the filled dot is at height ${leftIn ? "one" : "zero"}, so $${a}$ ${word(leftIn)[0]} and the bracket is $${bracket(leftIn, true)}$. At $${b}$ the filled dot is at height ${rightIn ? "one" : "zero"}, so $${b}$ ${word(rightIn)[0]} and the bracket is $${bracket(rightIn, false)}$. The set is $${right}$.\n\n**Check.** $${a + 1}$ lies inside, where the graph is at height one, and $${b + 1}$ lies outside, where it is at height zero; $${right}$ contains $${a + 1}$ and not $${b + 1}$.`,
+            `**第一步：找高度为一的部分。** 图在 $${a}$ 到 $${b}$ 之间高度为一，所以集合从 $${a}$ 到 $${b}$。\n\n**第二步：读端点。** 在 $${a}$ 处，实心点在高度${leftIn ? "一" : "零"}，所以 $${a}$ ${word(leftIn)[1]}，括号是 $${bracket(leftIn, true)}$。在 $${b}$ 处，实心点在高度${rightIn ? "一" : "零"}，所以 $${b}$ ${word(rightIn)[1]}，括号是 $${bracket(rightIn, false)}$。集合是 $${right}$。\n\n**检验。** $${a + 1}$ 在内部，图在那里高度为一；$${b + 1}$ 在外部，图在那里高度为零；$${right}$ 包含 $${a + 1}$ 而不包含 $${b + 1}$。`,
+          ],
+          drawn(
+            { xMin: -7, xMax: 7, yMin: -2, yMax: 3 },
+            marks,
+            t(
+              `Height one from ${a} (${leftIn ? "filled" : "open"} there) to ${b} (${rightIn ? "filled" : "open"} there), and zero elsewhere.`,
+              `从 ${a}（那里${leftIn ? "实心" : "空心"}）到 ${b}（那里${rightIn ? "实心" : "空心"}）高度为一，其他地方为零。`,
+            ),
           ),
         ),
+        reasons,
       );
     },
   ),
