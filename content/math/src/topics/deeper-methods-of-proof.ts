@@ -21,6 +21,9 @@ const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 /** totient counts the integers from 1 to n coprime to n. */
 const totient = (n: number) => [...Array(n).keys()].filter((i) => gcd(i + 1, n) === 1).length;
 /** divisorsOf lists the positive divisors of n in increasing order. */
+/** firstOf keeps the first mistake for each wrong value. */
+const firstOf = <T extends { readonly value: unknown }>(ms: readonly T[]): T[] =>
+  ms.filter((m, i) => ms.findIndex((x) => String(x.value) === String(m.value)) === i);
 const divisorsOf = (n: number) => [...Array(n).keys()].map((i) => i + 1).filter((i) => n % i === 0);
 /** count sets a noun beside a number, with its singular for one. */
 const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -834,14 +837,16 @@ const squaresByCases: KnowledgePointDef = {
   id: "the-remainders-a-square-can-leave",
   title: t("The remainders a square can leave", "平方数可能的余数"),
   explanation: t(
-    "A claim about all integers can often be proved by finitely many cases, one for each remainder. The remainder of a square depends only on the remainder of the number, so it is enough to square each residue. Since $n$ and $-n$ have the same square, only half of the residues need to be tried.",
-    "关于所有整数的命题，常常可以按余数分成有限种情况来证明。平方数的余数只取决于这个数的余数，所以只要把每个余数平方。由于 $n$ 和 $-n$ 的平方相同，只需试一半的余数。",
+    "A claim about all integers can often be proved by finitely many cases, one for each remainder. The remainder of a square depends only on the remainder of the number, so it is enough to square each residue. Since $n$ and $-n$ have the same square, only half of the residues need to be tried. On division by $4$: $0^2 = 0$, $1^2 = 1$, $2^2 = 4 \\equiv 0$, so a square leaves only $0$ or $1$.\n\n> **Watch out.** Count different remainders, not residues tried. Two residues whose squares agree give one remainder, not two.",
+    "关于所有整数的命题，常常可以按余数分成有限种情况来证明。平方数的余数只取决于这个数的余数，所以只要把每个余数平方。由于 $n$ 和 $-n$ 的平方相同，只需试一半的余数。除以 $4$ 时：$0^2 = 0$，$1^2 = 1$，$2^2 = 4 \\equiv 0$，所以平方数只余 $0$ 或 $1$。\n\n> **注意。** 要数不同的余数，而不是试过的余数个数。两个余数的平方相同时，只算一个余数。",
   ),
   generate(rng) {
     const m = rng.int(3, 32);
     const half = Math.floor(m / 2);
-    const values = [...new Set([...Array(half + 1).keys()].map((i) => (i * i) % m))].sort((x, y) => x - y);
+    const squares = [...Array(half + 1).keys()].map((i) => (i * i) % m);
+    const values = [...new Set(squares)].sort((x, y) => x - y);
     const answer = values.length;
+    const r = half + 1;
     return numberProblem({
       prompt: t(
         `As $n$ runs through the integers, how many different remainders can $n^2$ leave on division by ${m}?`,
@@ -849,10 +854,44 @@ const squaresByCases: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m, half + 1, answer + 1],
-      solution: t(
-        `Squaring the residues 0 to ${half} covers every case and gives the remainders ${values.join(", ")}. That is ${answer} values.`,
-        `把余数 0 到 ${half} 平方就覆盖了所有情况，得到余数 ${values.join(", ")}，共 ${answer} 个值。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(
+          m,
+          `That counts the remainders of $n$; different remainders of $n$ can give the same remainder of $n^2$.`,
+          `这数的是 $n$ 的余数；$n$ 的不同余数可以给出 $n^2$ 的相同余数。`,
+        ),
+        why(
+          half + 1,
+          `That counts the residues tried, but some of their squares leave the same remainder.`,
+          `这数的是试过的余数个数，但其中有些平方的余数相同。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Halve the cases", "情况减半"],
+            t(
+              `$n$ and $${m} - n$ have the same square modulo $${m}$, so the residues $0$ to $${half}$ cover every case.`,
+              `$n$ 与 $${m} - n$ 的平方模 $${m}$ 相同，所以余数 $0$ 到 $${half}$ 就覆盖了所有情况。`,
+            ),
+          ],
+          [
+            ["Square them", "把它们平方"],
+            t(`Their squares leave the remainders $${squares.join(", ")}$.`, `它们的平方分别余 $${squares.join(", ")}$。`),
+          ],
+          [
+            ["Count the different ones", "数不同的余数"],
+            t(
+              `The different remainders are $${values.join(", ")}$: ${answer} of them.`,
+              `不同的余数是 $${values.join(", ")}$：共 ${answer} 个。`,
+            ),
+          ],
+        ],
+        t(
+          `A residue past $${half}$ adds nothing new: $${r}^2 = ${r * r}$ leaves $${(r * r) % m}$, the same as $${m - r}^2$.`,
+          `超过 $${half}$ 的余数不会带来新的结果：$${r}^2 = ${r * r}$ 余 $${(r * r) % m}$，与 $${m - r}^2$ 相同。`,
+        ),
       ),
     });
   },
@@ -862,8 +901,8 @@ const rationalisingMultiplier: KnowledgePointDef = {
   id: "the-smallest-multiplier-that-makes-a-root-rational",
   title: t("The smallest multiplier that makes a root rational", "使根式成为有理数的最小乘数"),
   explanation: t(
-    "The square root of a positive integer is rational only if the integer is a perfect square; otherwise it is irrational, by the usual contradiction. So to make a root rational, every prime in the integer must have an even exponent. Write the integer as a square times a square-free part. That part supplies the smallest multiplier.",
-    "正整数的平方根只有在这个数是完全平方数时才是有理数，否则由通常的反证法知它是无理数。所以要使根式成为有理数，每个素因子的指数都必须是偶数。把这个数写成一个平方数乘以无平方因子的部分，这一部分就是最小的乘数。",
+    "The square root of a positive integer is rational only if the integer is a perfect square; otherwise it is irrational, by the usual contradiction. So to make a root rational, every prime in the integer must have an even exponent. Write the integer as a square times a square-free part. That part supplies the smallest multiplier. For $\\sqrt{12k}$: $12 = 4 \\cdot 3$, so $k = 3$ gives $\\sqrt{36} = 6$.\n\n> **Watch out.** Only the square-free part needs a partner. The square factor is already a perfect square, so multiplying by its root adds nothing.",
+    "正整数的平方根只有在这个数是完全平方数时才是有理数，否则由通常的反证法知它是无理数。所以要使根式成为有理数，每个素因子的指数都必须是偶数。把这个数写成一个平方数乘以无平方因子的部分，这一部分就是最小的乘数。对 $\\sqrt{12k}$：$12 = 4 \\cdot 3$，所以 $k = 3$ 得 $\\sqrt{36} = 6$。\n\n> **注意。** 只有无平方因子的部分需要配对。平方因子本身已经是完全平方数，再乘以它的平方根没有用处。",
   ),
   generate(rng) {
     const s = rng.int(2, 7);
@@ -876,10 +915,45 @@ const rationalisingMultiplier: KnowledgePointDef = {
       ),
       answer: free,
       form: "integer",
-      wrong: [a, s, s * free],
-      solution: t(
-        `Since $${a} = ${s * s} \\cdot ${free}$, we have $\\sqrt{${a}k} = ${s}\\sqrt{${free}k}$. This is rational only if $${free}k$ is a perfect square, and ${free} is square-free, so the smallest choice is $k = ${free}$.`,
-        `由于 $${a} = ${s * s} \\cdot ${free}$，所以 $\\sqrt{${a}k} = ${s}\\sqrt{${free}k}$。只有 $${free}k$ 是完全平方数时它才是有理数，而 ${free} 没有平方因子，所以最小取 $k = ${free}$。`,
+      mistakes: firstOf([
+        why(
+          a,
+          `$k = ${a}$ works, since $${a}^2$ is a square, but it is not the smallest.`,
+          `$k = ${a}$ 可行，因为 $${a}^2$ 是平方数，但它不是最小的。`,
+        ),
+        why(
+          s,
+          `$${s * s}$ is already a perfect square; it is the part $${free}$ that needs a partner.`,
+          `$${s * s}$ 已经是完全平方数；需要配对的是 $${free}$ 这一部分。`,
+        ),
+        why(
+          s * free,
+          `The factor $${s}$ is not needed: $${s * s}$ is already a perfect square.`,
+          `不需要因数 $${s}$：$${s * s}$ 已经是完全平方数。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Split off the square", "分出平方因子"], t(`$${a} = ${s * s} \\cdot ${free}$.`, `$${a} = ${s * s} \\cdot ${free}$。`)],
+          [
+            ["Simplify the root", "化简根式"],
+            t(
+              `$\\sqrt{${a}k} = ${s}\\sqrt{${free}k}$, which is rational only if $${free}k$ is a perfect square.`,
+              `$\\sqrt{${a}k} = ${s}\\sqrt{${free}k}$，只有 $${free}k$ 是完全平方数时它才是有理数。`,
+            ),
+          ],
+          [
+            ["Choose the smallest k", "取最小的 k"],
+            t(
+              `$${free}$ has no square factor, so the smallest choice is $k = ${free}$.`,
+              `$${free}$ 没有平方因子，所以最小取 $k = ${free}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${a} \\cdot ${free} = ${a * free} = ${s * free}^2$, so $\\sqrt{${a * free}} = ${s * free}$.`,
+          `$${a} \\cdot ${free} = ${a * free} = ${s * free}^2$，所以 $\\sqrt{${a * free}} = ${s * free}$。`,
+        ),
       ),
     });
   },
@@ -2441,8 +2515,8 @@ const linearDividesQuadratic: KnowledgePointDef = {
   id: "when-a-linear-expression-divides-a-quadratic",
   title: t("When a linear expression divides a quadratic", "一次式何时整除二次式"),
   explanation: t(
-    "If $d$ divides both $u$ and $v$, then it divides any combination of them, and this works in reverse too. So when a variable expression divides another, subtract a multiple of the divisor to remove the variable. What is left is a fixed number that the divisor must divide, which leaves only finitely many values to check.",
-    "如果 $d$ 同时整除 $u$ 和 $v$，它就整除它们的任何线性组合，反过来也一样。所以当含变量的式子整除另一个式子时，减去除式的倍数以消去变量。剩下的是一个固定的数，除式必须整除它，于是只需检查有限多个值。",
+    "If $d$ divides both $u$ and $v$, then it divides any combination of them, and this works in reverse too. So when a variable expression divides another, subtract a multiple of the divisor to remove the variable. What is left is a fixed number that the divisor must divide, which leaves only finitely many values to check. For $n + 2 \\mid n^2 + 5$: $n^2 + 5 = (n + 2)(n - 2) + 9$, so $n + 2 \\mid 9$; with $n + 2 > 2$ that leaves $3$ and $9$, so $n = 1$ or $n = 7$.\n\n> **Watch out.** For positive $n$, $n + a$ is larger than $a$, so only the divisors greater than $a$ give a value of $n$. The smaller divisors would need $n \\le 0$.",
+    "如果 $d$ 同时整除 $u$ 和 $v$，它就整除它们的任何线性组合，反过来也一样。所以当含变量的式子整除另一个式子时，减去除式的倍数以消去变量。剩下的是一个固定的数，除式必须整除它，于是只需检查有限多个值。对 $n + 2 \\mid n^2 + 5$：$n^2 + 5 = (n + 2)(n - 2) + 9$，所以 $n + 2 \\mid 9$；由 $n + 2 > 2$，只剩 $3$ 和 $9$，所以 $n = 1$ 或 $n = 7$。\n\n> **注意。** 对正整数 $n$，$n + a$ 大于 $a$，所以只有大于 $a$ 的因数才给出 $n$ 的值。较小的因数需要 $n \\le 0$。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -2453,6 +2527,9 @@ const linearDividesQuadratic: KnowledgePointDef = {
     const answer = large.length;
     const divisor = poly([1, "n"], [a, ""]);
     const other = poly([1, "n"], [-a, ""]);
+    const d0 = large[0]!;
+    const n0 = d0 - a;
+    const v0 = n0 * n0 + c;
     return numberProblem({
       prompt: t(
         `For how many positive integers $n$ does $${divisor}$ divide $n^2 + ${c}$?`,
@@ -2460,10 +2537,49 @@ const linearDividesQuadratic: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [divisors.length, answer + 1, divisorsOf(c).length, fixed],
-      solution: t(
-        `Since $n^2 + ${c} = (${divisor})(${other}) + ${fixed}$, the expression $${divisor}$ must divide ${fixed}. It is also greater than ${a}. ${answer === 1 ? `The only divisor of ${fixed} greater than ${a} is ${large.join(", ")}, which gives one $n$.` : `The divisors of ${fixed} greater than ${a} are ${large.join(", ")}, and each gives one $n$.`} So there ${answer === 1 ? "is 1 value" : `are ${answer} values`}.`,
-        `由于 $n^2 + ${c} = (${divisor})(${other}) + ${fixed}$，所以 $${divisor}$ 必须整除 ${fixed}。它还大于 ${a}。${fixed} 的大于 ${a} 的因数是 ${large.join(", ")}，每个因数给出一个 $n$。所以有 ${answer} 个值。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(
+          divisors.length,
+          `That counts every divisor of $${fixed}$, but $${divisor} > ${a}$, so the divisors up to $${a}$ give no positive $n$.`,
+          `这数的是 $${fixed}$ 的所有因数，但 $${divisor} > ${a}$，所以不超过 $${a}$ 的因数给不出正整数 $n$。`,
+        ),
+        why(
+          divisorsOf(c).length,
+          `The fixed number is not $${c}$: dividing $n^2 + ${c}$ by $${divisor}$ leaves $${a * a} + ${c} = ${fixed}$.`,
+          `固定的数不是 $${c}$：$n^2 + ${c}$ 除以 $${divisor}$ 余 $${a * a} + ${c} = ${fixed}$。`,
+        ),
+        why(
+          fixed,
+          `$${fixed}$ is the number $${divisor}$ must divide, not the number of values of $n$.`,
+          `$${fixed}$ 是 $${divisor}$ 必须整除的数，而不是 $n$ 的个数。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Remove the variable", "消去变量"],
+            t(`$n^2 + ${c} = (${divisor})(${other}) + ${fixed}$.`, `$n^2 + ${c} = (${divisor})(${other}) + ${fixed}$。`),
+          ],
+          [
+            ["Find what the divisor must divide", "找出除式必须整除的数"],
+            t(
+              `$${divisor}$ divides $n^2 + ${c}$ and $(${divisor})(${other})$, so it divides their difference $${fixed}$.`,
+              `$${divisor}$ 整除 $n^2 + ${c}$ 和 $(${divisor})(${other})$，所以整除它们的差 $${fixed}$。`,
+            ),
+          ],
+          [
+            ["Count", "计数"],
+            t(
+              `The divisors of $${fixed}$ greater than $${a}$ are $${large.join(", ")}$, each giving one $n = d - ${a}$: ${answer} value${answer === 1 ? "" : "s"}.`,
+              `$${fixed}$ 的大于 $${a}$ 的因数是 $${large.join(", ")}$，每个给出一个 $n = d - ${a}$：共 ${answer} 个值。`,
+            ),
+          ],
+        ],
+        t(
+          `At $n = ${n0}$, $${divisor} = ${d0}$ and $n^2 + ${c} = ${v0} = ${d0} \\cdot ${v0 / d0}$.`,
+          `$n = ${n0}$ 时，$${divisor} = ${d0}$，$n^2 + ${c} = ${v0} = ${d0} \\cdot ${v0 / d0}$。`,
+        ),
       ),
     });
   },
@@ -2473,8 +2589,8 @@ const smallestCounterexample: KnowledgePointDef = {
   id: "the-smallest-counterexample-to-a-non-divisibility-claim",
   title: t("The smallest counterexample to a non-divisibility claim", "不可除性命题的最小反例"),
   explanation: t(
-    "One counterexample is enough to disprove a universal statement, and the search can be kept short. The remainder of a polynomial on division by a fixed number depends only on the remainder of the input, so the remainders repeat. If no counterexample turns up within one full period of inputs, then none exists. Otherwise, going through them in order finds the smallest.",
-    "一个反例就足以推翻全称命题，而且搜索范围可以很小。多项式除以固定的数所得的余数，只取决于输入的余数，所以余数是循环的。如果在输入的一个完整周期内找不到反例，那么反例就不存在。否则，按顺序检查就能找到最小的反例。",
+    "One counterexample is enough to disprove a universal statement, and the search can be kept short. The remainder of a polynomial on division by a fixed number depends only on the remainder of the input, so the remainders repeat. If no counterexample turns up within one full period of inputs, then none exists. Otherwise, going through them in order finds the smallest. For the claim $5 \\nmid n^2 + 1$, $n = 1$ gives $2$ and $n = 2$ gives $5$, so $n = 2$ is the smallest counterexample.\n\n> **Watch out.** A counterexample is an $n$ where the claim fails, that is, where the expression is a multiple. Look for remainder $0$, and stop at the first one.",
+    "一个反例就足以推翻全称命题，而且搜索范围可以很小。多项式除以固定的数所得的余数，只取决于输入的余数，所以余数是循环的。如果在输入的一个完整周期内找不到反例，那么反例就不存在。否则，按顺序检查就能找到最小的反例。对命题 $5 \\nmid n^2 + 1$，$n = 1$ 得 $2$，$n = 2$ 得 $5$，所以最小的反例是 $n = 2$。\n\n> **注意。** 反例是使命题不成立的 $n$，也就是使表达式成为倍数的 $n$。要找余数为 $0$ 的情况，并在第一个处停下。",
   ),
   generate(rng) {
     const m = rng.int(5, 13);
@@ -2491,6 +2607,7 @@ const smallestCounterexample: KnowledgePointDef = {
       answer += 1;
     }
     const formula = poly([1, "n^2"], [a, "n"], [b, ""]);
+    const hit = value(answer);
     return numberProblem({
       prompt: t(
         `Claim: "for every positive integer $n$, $${m} \\nmid ${formula}$." Find the smallest positive integer $n$ that is a counterexample.`,
@@ -2498,17 +2615,54 @@ const smallestCounterexample: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [answer + 1, answer + m, m, m - answer],
-      solution:
-        answer === 1
-          ? t(
-              `At $n = 1$ the expression equals ${value(1)}, which is a multiple of ${m}. So $n = 1$ is the smallest counterexample.`,
-              `当 $n = 1$ 时，表达式等于 ${value(1)}，它是 ${m} 的倍数。所以最小的反例是 $n = 1$。`,
-            )
-          : t(
-              `${answer === 2 ? `At $n = 1$, the remainder on division by ${m} is ${remainders.join(", ")}, not 0.` : `For $n$ from 1 to ${answer - 1}, the remainders on division by ${m} are ${remainders.join(", ")}, none of them 0.`} At $n = ${answer}$ the expression equals ${value(answer)}, which is a multiple of ${m}. So the smallest counterexample is $n = ${answer}$.`,
-              `${answer === 2 ? `当 $n = 1$ 时，除以 ${m} 的余数是 ${remainders.join(", ")}，不是 0。` : `当 $n$ 从 1 到 ${answer - 1} 时，除以 ${m} 的余数是 ${remainders.join(", ")}，都不是 0。`}当 $n = ${answer}$ 时，表达式等于 ${value(answer)}，它是 ${m} 的倍数。所以最小的反例是 $n = ${answer}$。`,
+      wrong: [m - answer],
+      mistakes: firstOf([
+        why(
+          answer + 1,
+          `A smaller $n$ already makes the expression a multiple of $${m}$.`,
+          `更小的 $n$ 就已经使表达式成为 $${m}$ 的倍数。`,
+        ),
+        why(
+          answer + m,
+          `The remainders repeat every $${m}$, so this is a counterexample too, but not the smallest.`,
+          `余数每 $${m}$ 个循环一次，所以这也是反例，但不是最小的。`,
+        ),
+        why(
+          m,
+          `$${m}$ is the divisor in the claim; the counterexample is found by checking $n = 1, 2, 3, \\ldots$ in order.`,
+          `$${m}$ 是命题中的除数；反例要按 $n = 1, 2, 3, \\ldots$ 的顺序检查才能找到。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          ...(answer === 1
+            ? []
+            : ([
+                [
+                  ["Check in order", "按顺序检查"],
+                  t(
+                    answer === 2
+                      ? `At $n = 1$, the remainder on division by $${m}$ is $${remainders[0]}$, not $0$.`
+                      : `For $n$ from $1$ to $${answer - 1}$, the remainders on division by $${m}$ are $${remainders.join(", ")}$, none of them $0$.`,
+                    answer === 2
+                      ? `$n = 1$ 时，除以 $${m}$ 的余数是 $${remainders[0]}$，不是 $0$。`
+                      : `$n$ 从 $1$ 到 $${answer - 1}$ 时，除以 $${m}$ 的余数是 $${remainders.join(", ")}$，都不是 $0$。`,
+                  ),
+                ],
+              ] as const)),
+          [
+            ["The first multiple", "第一个倍数"],
+            t(
+              `At $n = ${answer}$ the expression equals $${hit}$, a multiple of $${m}$, so the claim fails there.`,
+              `$n = ${answer}$ 时表达式等于 $${hit}$，是 $${m}$ 的倍数，所以命题在此不成立。`,
             ),
+          ],
+        ],
+        t(
+          `$${answer}^2 + ${a === 1 ? "" : `${a} \\cdot `}${answer} + ${b} = ${hit} = ${m} \\cdot ${hit / m}$.`,
+          `$${answer}^2 + ${a === 1 ? "" : `${a} \\cdot `}${answer} + ${b} = ${hit} = ${m} \\cdot ${hit / m}$。`,
+        ),
+      ),
     });
   },
 };
@@ -2517,8 +2671,8 @@ const biconditionalOfDivisibility: KnowledgePointDef = {
   id: "counting-the-truth-set-of-a-divisibility-biconditional",
   title: t("Counting the truth set of a divisibility biconditional", "数可除性双条件的真值集"),
   explanation: t(
-    "Proving a biconditional takes two directions because it says that its two sides stand or fall together. It holds when both sides are true and also when both sides are false, a case that is easy to forget. So its truth set has two separate parts. Each part can be counted on its own, and the two counts are then added.",
-    "证明双条件要证两个方向，因为它是说两边同真同假。两边都真时它成立，两边都假时它也成立，后一种情形容易被忘记。所以它的真值集由两个分开的部分组成。每部分可以单独数，再把两个个数相加。",
+    'Proving a biconditional takes two directions because it says that its two sides stand or fall together. It holds when both sides are true and also when both sides are false, a case that is easy to forget. So its truth set has two separate parts. Each part can be counted on its own, and the two counts are then added. In $\\{1, \\dots, 12\\}$, "$2 \\mid x$ if and only if $3 \\mid x$" holds at $6, 12$ (both true) and at $1, 5, 7, 11$ (both false): $6$ values.\n\n> **Watch out.** The values divisible by neither number make the biconditional true as well. Counting only the common multiples leaves them out.',
+    "证明双条件要证两个方向，因为它是说两边同真同假。两边都真时它成立，两边都假时它也成立，后一种情形容易被忘记。所以它的真值集由两个分开的部分组成。每部分可以单独数，再把两个个数相加。在 $\\{1, \\dots, 12\\}$ 中，“$2 \\mid x$ 当且仅当 $3 \\mid x$”在 $6, 12$（两边都真）和 $1, 5, 7, 11$（两边都假）处成立：共 $6$ 个值。\n\n> **注意。** 两个数都不能整除的值也使双条件为真。只数公倍数会把它们漏掉。",
   ),
   generate(rng) {
     const [a, b] = rng.pick(independentDivisors);
@@ -2529,6 +2683,7 @@ const biconditionalOfDivisibility: KnowledgePointDef = {
     const both = Math.floor(size / lcm);
     const neither = size - onA - onB + both;
     const answer = both + neither;
+    const differ = onA - both + (onB - both);
     return numberProblem({
       prompt: t(
         `Let $U = \\{1, 2, \\dots, ${size}\\}$. For how many $x \\in U$ is "$${a} \\mid x$ if and only if $${b} \\mid x$" true?`,
@@ -2536,10 +2691,45 @@ const biconditionalOfDivisibility: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [both, neither, size - answer],
-      solution: t(
-        `Both sides are true for the ${both} multiples of $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$. Both sides are false for the other $${size} - (${onA} + ${onB} - ${both}) = ${neither}$ values outside the two groups of multiples. The total is $${both} + ${neither} = ${answer}$.`,
-        `$\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 的 ${both} 个倍数使两边都真。两组倍数之外的 $${size} - (${onA} + ${onB} - ${both}) = ${neither}$ 个值使两边都假。总数是 $${both} + ${neither} = ${answer}$。`,
+      mistakes: firstOf([
+        why(
+          both,
+          "That counts only where both sides are true; the biconditional also holds where both are false.",
+          "这只数了两边都真的情况；两边都假时双条件也成立。",
+        ),
+        why(
+          neither,
+          "That counts only where both sides are false; the common multiples make it true as well.",
+          "这只数了两边都假的情况；公倍数也使它为真。",
+        ),
+        why(
+          size - answer,
+          "That counts where the two sides disagree, which is exactly where the biconditional is false.",
+          "这数的是两边不一致的情况，恰好是双条件为假的地方。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Both sides true", "两边都真"],
+            t(
+              `$x$ is a multiple of $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$: $\\lfloor ${size} / ${lcm} \\rfloor = ${both}$ values.`,
+              `$x$ 是 $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 的倍数：$\\lfloor ${size} / ${lcm} \\rfloor = ${both}$ 个值。`,
+            ),
+          ],
+          [
+            ["Both sides false", "两边都假"],
+            t(
+              `$x$ is a multiple of neither: $${size} - (${onA} + ${onB} - ${both}) = ${neither}$ values.`,
+              `$x$ 两个都不是其倍数：$${size} - (${onA} + ${onB} - ${both}) = ${neither}$ 个值。`,
+            ),
+          ],
+          [["Add", "相加"], t(`$${both} + ${neither} = ${answer}$.`, `$${both} + ${neither} = ${answer}$。`)],
+        ],
+        t(
+          `The sides disagree for $(${onA} - ${both}) + (${onB} - ${both}) = ${differ}$ values, and $${answer} + ${differ} = ${size}$, all of $U$.`,
+          `两边不一致的有 $(${onA} - ${both}) + (${onB} - ${both}) = ${differ}$ 个值，而 $${answer} + ${differ} = ${size}$，正好是 $U$ 的全部。`,
+        ),
       ),
     });
   },
@@ -2549,8 +2739,8 @@ const divisorForcingASquare: KnowledgePointDef = {
   id: "the-smallest-divisor-that-forces-a-square-divisibility",
   title: t("The smallest divisor that forces a square divisibility", "迫使平方可除的最小除数"),
   explanation: t(
-    "A statement with negated parts, such as one that begins with a failure of divisibility, becomes much easier through its contrapositive, which is a positive claim about divisibility. Squaring a number doubles the exponent of each prime. So for a square to contain a given prime power, the number itself needs only about half of that exponent, rounded up when the exponent is odd.",
-    "含否定部分的命题，比如以不能整除开头的命题，通过逆否命题就容易得多，因为逆否命题是关于整除的肯定说法。把一个数平方，每个素数的指数都翻倍。所以要使平方含有给定的素数幂，这个数本身只需要大约一半的指数，指数为奇数时向上取整。",
+    'A statement with negated parts, such as one that begins with a failure of divisibility, becomes much easier through its contrapositive, which is a positive claim about divisibility. Squaring a number doubles the exponent of each prime. So for a square to contain a given prime power, the number itself needs only about half of that exponent, rounded up when the exponent is odd. For "if $8 \\nmid n^2$ then $b \\nmid n$": $8 = 2^3$, so $b = 2^2 = 4$; indeed $4 \\mid n$ gives $16 \\mid n^2$, while $b = 2$ fails at $n = 2$.\n\n> **Watch out.** Halve each exponent and round up, prime by prime. Rounding down gives a $b$ whose square misses a factor of the number.',
+    "含否定部分的命题，比如以不能整除开头的命题，通过逆否命题就容易得多，因为逆否命题是关于整除的肯定说法。把一个数平方，每个素数的指数都翻倍。所以要使平方含有给定的素数幂，这个数本身只需要大约一半的指数，指数为奇数时向上取整。对“若 $8 \\nmid n^2$，则 $b \\nmid n$”：$8 = 2^3$，所以 $b = 2^2 = 4$；确实由 $4 \\mid n$ 得 $16 \\mid n^2$，而 $b = 2$ 在 $n = 2$ 时不成立。\n\n> **注意。** 对每个素数，把指数折半并向上取整。向下取整得到的 $b$，其平方会缺少原数的某个因数。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -2573,10 +2763,49 @@ const divisorForcingASquare: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a, p * q, p ** Math.floor(e / 2) * q ** Math.floor(f / 2), answer * p],
-      solution: t(
-        `The contrapositive says that $b \\mid n$ implies $${a} \\mid n^2$. Taking $n = b$ shows that $${a} \\mid b^2$. Since $${a} = ${primePower(p, e)} \\cdot ${primePower(q, f)}$, the exponents in $b$ must be at least half of these, so the smallest choice is $b = ${primePower(p, eUp)} \\cdot ${primePower(q, fUp)} = ${answer}$. This $b$ works, because $b \\mid n$ gives $b^2 \\mid n^2$.`,
-        `逆否命题是说 $b \\mid n$ 蕴涵 $${a} \\mid n^2$。取 $n = b$，得 $${a} \\mid b^2$。由于 $${a} = ${primePower(p, e)} \\cdot ${primePower(q, f)}$，$b$ 的指数至少是这些指数的一半，所以最小取 $b = ${primePower(p, eUp)} \\cdot ${primePower(q, fUp)} = ${answer}$。这个 $b$ 确实可行，因为由 $b \\mid n$ 可得 $b^2 \\mid n^2$。`,
+      mistakes: firstOf([
+        why(
+          a,
+          `$${a}$ works but is not the smallest: $b$ needs only half of each exponent, since squaring doubles them.`,
+          `$${a}$ 可行但不是最小的：平方使指数翻倍，所以 $b$ 只需要每个指数的一半。`,
+        ),
+        why(
+          p * q,
+          `That takes each prime once; each exponent in $b$ must be at least half of the one in $${a}$.`,
+          `这让每个素数只出现一次；$b$ 中每个指数至少要是 $${a}$ 中指数的一半。`,
+        ),
+        why(
+          p ** Math.floor(e / 2) * q ** Math.floor(f / 2),
+          "That rounds the halved exponents down, so its square is missing a factor; round up instead.",
+          "这把折半后的指数向下取整了，它的平方会缺少因数；应当向上取整。",
+        ),
+        why(answer * p, "That works but is larger than needed.", "这可行，但比所需的大。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the contrapositive", "取逆否命题"],
+            t(
+              `The claim says: if $b \\mid n$, then $${a} \\mid n^2$. Taking $n = b$ shows $${a} \\mid b^2$ is needed.`,
+              `命题等价于：若 $b \\mid n$，则 $${a} \\mid n^2$。取 $n = b$ 可知需要 $${a} \\mid b^2$。`,
+            ),
+          ],
+          [
+            ["Factor", "分解"],
+            t(`$${a} = ${primePower(p, e)} \\cdot ${primePower(q, f)}$.`, `$${a} = ${primePower(p, e)} \\cdot ${primePower(q, f)}$。`),
+          ],
+          [
+            ["Halve the exponents, rounding up", "指数折半，向上取整"],
+            t(
+              `$b = ${primePower(p, eUp)} \\cdot ${primePower(q, fUp)} = ${answer}$. It works, because $b \\mid n$ gives $b^2 \\mid n^2$.`,
+              `$b = ${primePower(p, eUp)} \\cdot ${primePower(q, fUp)} = ${answer}$。它可行，因为由 $b \\mid n$ 得 $b^2 \\mid n^2$。`,
+            ),
+          ],
+        ],
+        t(
+          `$b^2 = ${answer * answer} = ${a} \\cdot ${(answer * answer) / a}$, so $${a} \\mid b^2$.`,
+          `$b^2 = ${answer * answer} = ${a} \\cdot ${(answer * answer) / a}$，所以 $${a} \\mid b^2$。`,
+        ),
       ),
     });
   },
@@ -2586,8 +2815,8 @@ const pigeonholeByContradiction: KnowledgePointDef = {
   id: "the-pigeonhole-bound-by-contradiction",
   title: t("The pigeonhole bound by contradiction", "用反证法得到的鸽巢界"),
   explanation: t(
-    "The pigeonhole principle is a proof by contradiction. Assume that every box holds fewer than some number of objects, add up the boxes, and find that the total is too small to account for all the objects. To show that a bound is the best possible, you also need an arrangement that spreads the objects as evenly as it can.",
-    "鸽巢原理是一种反证法。假设每个盒子里的物体都少于某个数，把各盒相加，发现总数太小，不足以容纳所有物体。要说明一个界是最好的，还需要给出一种尽量平均地分配物体的安排。",
+    "The pigeonhole principle is a proof by contradiction. Assume that every box holds fewer than some number of objects, add up the boxes, and find that the total is too small to account for all the objects. To show that a bound is the best possible, you also need an arrangement that spreads the objects as evenly as it can. With $10$ objects in $3$ boxes, if every box held at most $3$, there would be at most $9$ objects, so some box holds at least $4$.\n\n> **Watch out.** Divide and round up: the guaranteed count is $\\lceil \\text{objects} / \\text{boxes} \\rceil$. Rounding down gives a number that an even spread already beats.",
+    "鸽巢原理是一种反证法。假设每个盒子里的物体都少于某个数，把各盒相加，发现总数太小，不足以容纳所有物体。要说明一个界是最好的，还需要给出一种尽量平均地分配物体的安排。$10$ 个物体放入 $3$ 个盒子，如果每个盒子至多 $3$ 个，总共至多 $9$ 个，所以某个盒子至少有 $4$ 个。\n\n> **注意。** 要相除后向上取整：能保证的个数是 $\\lceil \\text{物体数} / \\text{盒子数} \\rceil$。向下取整得到的数，平均分配时就已经超过了。",
   ),
   generate(rng) {
     const boxes = rng.int(3, 12);
@@ -2595,6 +2824,7 @@ const pigeonholeByContradiction: KnowledgePointDef = {
       const objects = rng.int(20, 120);
       const answer = Math.ceil(objects / boxes);
       const capacity = boxes * (answer - 1);
+      const full = objects - capacity;
       return numberProblem({
         prompt: t(
           `A total of ${objects} objects are placed in ${boxes} boxes. What is the largest $k$ such that some box must hold at least $k$ objects, however they are placed?`,
@@ -2602,10 +2832,45 @@ const pigeonholeByContradiction: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [Math.floor(objects / boxes), answer + 1, objects - boxes + 1],
-        solution: t(
-          `If every box held at most ${answer - 1}, the total would be at most $${boxes} \\cdot ${answer - 1} = ${capacity}$, which is less than ${objects}. That is a contradiction, so some box holds at least ${answer}. An even spread keeps every box at ${answer} or fewer, so no larger $k$ is guaranteed.`,
-          `如果每个盒子至多有 ${answer - 1} 个，总数至多是 $${boxes} \\cdot ${answer - 1} = ${capacity}$，小于 ${objects}。这是矛盾，所以某个盒子至少有 ${answer} 个。平均分配时每个盒子都不超过 ${answer} 个，所以不能保证更大的 $k$。`,
+        mistakes: firstOf([
+          why(
+            Math.floor(objects / boxes),
+            "The quotient was rounded down; the guaranteed count rounds it up.",
+            "商被向下取整了；能保证的个数要向上取整。",
+          ),
+          why(
+            answer + 1,
+            `An even spread keeps every box at $${answer}$ or fewer, so this is not guaranteed.`,
+            `平均分配时每个盒子都不超过 $${answer}$ 个，所以这不能保证。`,
+          ),
+          why(
+            objects - boxes + 1,
+            "That is the most one box can hold, not what some box must hold.",
+            "这是一个盒子最多能放的数，而不是某个盒子必定有的数。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Assume the opposite", "假设反面"],
+              t(`Suppose every box held at most $${answer - 1}$.`, `假设每个盒子至多有 $${answer - 1}$ 个。`),
+            ],
+            [
+              ["Count", "计数"],
+              t(
+                `Then the total is at most $${boxes} \\cdot ${answer - 1} = ${capacity} < ${objects}$, a contradiction. So some box holds at least $${answer}$.`,
+                `那么总数至多是 $${boxes} \\cdot ${answer - 1} = ${capacity} < ${objects}$，矛盾。所以某个盒子至少有 $${answer}$ 个。`,
+              ),
+            ],
+          ],
+          t(
+            full === boxes
+              ? `No larger $k$ is forced: put $${answer}$ in every box, for $${boxes} \\cdot ${answer} = ${objects}$ objects.`
+              : `No larger $k$ is forced: put $${answer}$ in ${full} box${full === 1 ? "" : "es"} and $${answer - 1}$ in the other ${boxes - full}, for $${full} \\cdot ${answer} + ${boxes - full} \\cdot ${answer - 1} = ${objects}$ objects.`,
+            full === boxes
+              ? `更大的 $k$ 不能保证：每个盒子各放 $${answer}$ 个，共 $${boxes} \\cdot ${answer} = ${objects}$ 个。`
+              : `更大的 $k$ 不能保证：${full} 个盒子各放 $${answer}$ 个，其余 ${boxes - full} 个各放 $${answer - 1}$ 个，共 $${full} \\cdot ${answer} + ${boxes - full} \\cdot ${answer - 1} = ${objects}$ 个。`,
+          ),
         ),
       });
     }
@@ -2618,10 +2883,44 @@ const pigeonholeByContradiction: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [boxes * k, answer - 1, boxes + k - 1],
-      solution: t(
-        `With $${boxes} \\cdot ${k - 1} = ${answer - 1}$ objects, every box can hold exactly ${k - 1}, so that is not enough. With ${answer} objects, assuming every box holds at most ${k - 1} allows only ${answer - 1} objects, a contradiction.`,
-        `有 $${boxes} \\cdot ${k - 1} = ${answer - 1}$ 个物体时，每个盒子可以恰好放 ${k - 1} 个，所以还不够。有 ${answer} 个物体时，假设每个盒子至多放 ${k - 1} 个，最多只能放 ${answer - 1} 个，矛盾。`,
+      mistakes: firstOf([
+        why(
+          boxes * k,
+          `$${answer}$ objects already force it; $${boxes} \\cdot ${k}$ is more than needed.`,
+          `$${answer}$ 个物体就已经能保证；$${boxes} \\cdot ${k}$ 比所需的多。`,
+        ),
+        why(
+          answer - 1,
+          `With $${answer - 1}$ objects every box can hold exactly $${k - 1}$, so no box reaches $${k}$.`,
+          `有 $${answer - 1}$ 个物体时，每个盒子可以恰好放 $${k - 1}$ 个，没有盒子达到 $${k}$ 个。`,
+        ),
+        why(
+          boxes + k - 1,
+          `Each box can take $${k - 1}$ before any reaches $${k}$, so multiply by the number of boxes rather than adding.`,
+          `每个盒子在达到 $${k}$ 个之前都能放 $${k - 1}$ 个，所以要乘以盒子数，而不是相加。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the most that is not enough", "找出不够的最大数"],
+            t(
+              `With $${boxes} \\cdot ${k - 1} = ${answer - 1}$ objects, every box can hold exactly $${k - 1}$, so that is not enough.`,
+              `有 $${boxes} \\cdot ${k - 1} = ${answer - 1}$ 个物体时，每个盒子可以恰好放 $${k - 1}$ 个，所以还不够。`,
+            ),
+          ],
+          [
+            ["Add one", "再加一个"],
+            t(
+              `With $${answer}$ objects, if every box held at most $${k - 1}$, there would be at most $${answer - 1}$ objects, a contradiction.`,
+              `有 $${answer}$ 个物体时，如果每个盒子至多放 $${k - 1}$ 个，最多只有 $${answer - 1}$ 个物体，矛盾。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\lceil ${answer} / ${boxes} \\rceil = ${k}$, while $\\lceil ${answer - 1} / ${boxes} \\rceil = ${k - 1}$.`,
+          `$\\lceil ${answer} / ${boxes} \\rceil = ${k}$，而 $\\lceil ${answer - 1} / ${boxes} \\rceil = ${k - 1}$。`,
+        ),
       ),
     });
   },
@@ -2637,8 +2936,8 @@ const rationalShiftedSquare: KnowledgePointDef = {
   id: "when-a-shifted-square-has-a-rational-root",
   title: t("When a shifted square has a rational root", "平方数平移后的根何时为有理数"),
   explanation: t(
-    "The standard contradiction shows that the square root of a positive integer is either an integer or irrational, and never a fraction in between. So asking whether a root is rational is the same as asking whether the integer under it is a perfect square. A difference of two squares then factors, which turns the condition into a search through factor pairs.",
-    "标准的反证法说明，正整数的平方根要么是整数，要么是无理数，绝不会是中间的分数。所以问根式是否为有理数，就是问根号下的整数是否为完全平方数。两个平方数之差可以因式分解，于是这个条件就变成了对因数对的搜索。",
+    "The standard contradiction shows that the square root of a positive integer is either an integer or irrational, and never a fraction in between. So asking whether a root is rational is the same as asking whether the integer under it is a perfect square. A difference of two squares then factors, which turns the condition into a search through factor pairs. For $\\sqrt{n^2 + 15}$: $(m - n)(m + n) = 15$ with pairs $(1, 15)$ and $(3, 5)$, giving $n = 7$ and $n = 1$.\n\n> **Watch out.** The two factors differ by $2n$, so they must have the same parity. A pair of opposite parity gives no integer $n$ and must be left out.",
+    "标准的反证法说明，正整数的平方根要么是整数，要么是无理数，绝不会是中间的分数。所以问根式是否为有理数，就是问根号下的整数是否为完全平方数。两个平方数之差可以因式分解，于是这个条件就变成了对因数对的搜索。对 $\\sqrt{n^2 + 15}$：$(m - n)(m + n) = 15$，因数对为 $(1, 15)$ 和 $(3, 5)$，给出 $n = 7$ 和 $n = 1$。\n\n> **注意。** 两个因数相差 $2n$，所以奇偶性必须相同。奇偶性不同的因数对给不出整数 $n$，必须排除。",
   ),
   generate(rng) {
     const usable = [...Array(118).keys()].map((i) => i + 3).filter((v) => factorPairs(v).length > 0);
@@ -2648,6 +2947,9 @@ const rationalShiftedSquare: KnowledgePointDef = {
     const values = pairs.map(([d, e]) => (e - d) / 2);
     const allPairs = divisorsOf(c).filter((d) => d * d < c).length;
     const listed = pairs.map(([d, e]) => `(${d}, ${e})`).join(", ");
+    const [d0, e0] = pairs[0]!;
+    const n0 = (e0 - d0) / 2;
+    const m0 = (e0 + d0) / 2;
     return numberProblem({
       prompt: t(
         `For how many positive integers $n$ is $\\sqrt{n^2 + ${c}}$ rational?`,
@@ -2655,10 +2957,45 @@ const rationalShiftedSquare: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [allPairs, answer + 1, divisorsOf(c).length, values[0] ?? 0],
-      solution: t(
-        `The root is rational only if it is an integer $m$, and then $(m - n)(m + n) = ${c}$. The factors differ by $2n$, so they have the same parity and the first is smaller. ${answer === 1 ? `The only such factor pair is ${listed}, which gives $n = ${values.join(", ")}$.` : `The factor pairs are ${listed}, which give $n = ${values.join(", ")}$.`} So there ${answer === 1 ? "is 1 value" : `are ${answer} values`}.`,
-        `根式为有理数时只能是整数 $m$，这时 $(m - n)(m + n) = ${c}$。两个因数相差 $2n$，所以奇偶性相同，且第一个较小。这样的因数对是 ${listed}，给出 $n = ${values.join(", ")}$。所以有 ${answer} 个值。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(
+          allPairs,
+          "That counts every factor pair, but a pair of opposite parity gives no integer $n$.",
+          "这数的是所有因数对，但奇偶性不同的因数对给不出整数 $n$。",
+        ),
+        why(
+          divisorsOf(c).length,
+          "That counts divisors; each value of $n$ comes from a pair of factors of the same parity.",
+          "这数的是因数；每个 $n$ 来自一对奇偶性相同的因数。",
+        ),
+        why(values[0] ?? 0, "That is one of the values of $n$, not the number of values.", "这是 $n$ 的一个值，而不是值的个数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reduce to integers", "化为整数"],
+            t(
+              `The root is rational only if it is an integer $m$, and then $m^2 - n^2 = ${c}$.`,
+              `根式为有理数时只能是整数 $m$，这时 $m^2 - n^2 = ${c}$。`,
+            ),
+          ],
+          [
+            ["Factor", "因式分解"],
+            t(
+              `$(m - n)(m + n) = ${c}$. The factors differ by $2n$, so they have the same parity and the first is smaller.`,
+              `$(m - n)(m + n) = ${c}$。两个因数相差 $2n$，所以奇偶性相同，且第一个较小。`,
+            ),
+          ],
+          [
+            ["List the pairs", "列出因数对"],
+            t(
+              `${answer === 1 ? `The only such pair is ${listed}` : `The pairs are ${listed}`}, giving $n = ${values.join(", ")}$: ${answer} value${answer === 1 ? "" : "s"}.`,
+              `这样的因数对是 ${listed}，给出 $n = ${values.join(", ")}$：共 ${answer} 个值。`,
+            ),
+          ],
+        ],
+        t(`At $n = ${n0}$, $n^2 + ${c} = ${n0 * n0 + c} = ${m0}^2$.`, `$n = ${n0}$ 时，$n^2 + ${c} = ${n0 * n0 + c} = ${m0}^2$。`),
       ),
     });
   },
@@ -3291,8 +3628,8 @@ const oddExpressionPairs: KnowledgePointDef = {
   id: "counting-the-pairs-that-make-an-expression-odd",
   title: t("Counting the pairs that make an expression odd", "计算使表达式为奇数的数对"),
   explanation: t(
-    "A proof about parity often starts by factoring. Since $mn + m = m(n + 1)$, the expression is a product, and a product is odd exactly when every factor is odd. So $m$ must be odd and $n + 1$ must be odd, which means that $n$ is even. These two conditions are independent of each other, so the number of pairs is a simple product of the number of odd $m$ and the number of even $n$.",
-    "关于奇偶性的证明常常从因式分解开始。由于 $mn + m = m(n + 1)$，表达式是乘积，而乘积为奇数当且仅当每个因子都是奇数。所以 $m$ 必须是奇数，$n + 1$ 必须是奇数，也就是 $n$ 是偶数。这两个条件相互独立，所以数对的个数就是奇数 $m$ 的个数与偶数 $n$ 的个数之积。",
+    "A proof about parity often starts by factoring. Since $mn + m = m(n + 1)$, the expression is a product, and a product is odd exactly when every factor is odd. So $m$ must be odd and $n + 1$ must be odd, which means that $n$ is even. These two conditions are independent of each other, so the number of pairs is a simple product of the number of odd $m$ and the number of even $n$. With $1 \\le m \\le 3$ and $1 \\le n \\le 4$: $m \\in \\{1, 3\\}$ and $n \\in \\{2, 4\\}$, so $2 \\cdot 2 = 4$ pairs.\n\n> **Watch out.** $n + 1$ is odd when $n$ is even. Requiring $n$ itself to be odd makes $n + 1$ even and the product even.",
+    "关于奇偶性的证明常常从因式分解开始。由于 $mn + m = m(n + 1)$，表达式是乘积，而乘积为奇数当且仅当每个因子都是奇数。所以 $m$ 必须是奇数，$n + 1$ 必须是奇数，也就是 $n$ 是偶数。这两个条件相互独立，所以数对的个数就是奇数 $m$ 的个数与偶数 $n$ 的个数之积。当 $1 \\le m \\le 3$，$1 \\le n \\le 4$ 时：$m \\in \\{1, 3\\}$，$n \\in \\{2, 4\\}$，共 $2 \\cdot 2 = 4$ 对。\n\n> **注意。** $n$ 为偶数时 $n + 1$ 才是奇数。要求 $n$ 本身为奇数会使 $n + 1$ 为偶数，乘积也为偶数。",
   ),
   generate(rng) {
     const a = rng.int(2, 30);
@@ -3309,10 +3646,34 @@ const oddExpressionPairs: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a * b - answer, oddA * oddB, evenA * evenB, answer + 1],
-      solution: t(
-        `Since $mn + m = m(n + 1)$, we need $m$ odd and $n$ even. There are $${oddA}$ odd values of $m$ and $${evenB}$ even values of $n$, so the count is $${answer}$.`,
-        `由于 $mn + m = m(n + 1)$，需要 $m$ 为奇数且 $n$ 为偶数。奇数 $m$ 有 $${oddA}$ 个，偶数 $n$ 有 $${evenB}$ 个，所以个数是 $${answer}$。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(a * b - answer, "That counts the pairs that make the expression even.", "这数的是使表达式为偶数的数对。"),
+        why(oddA * oddB, "$n + 1$ is odd when $n$ is even, not when $n$ is odd.", "$n$ 为偶数时 $n + 1$ 才是奇数，而不是 $n$ 为奇数时。"),
+        why(evenA * evenB, "An even $m$ makes the product even; $m$ must be odd.", "偶数 $m$ 会使乘积为偶数；$m$ 必须是奇数。"),
+      ]),
+      solution: walked(
+        [
+          [["Factor", "因式分解"], t("$mn + m = m(n + 1)$.", "$mn + m = m(n + 1)$。")],
+          [
+            ["Make every factor odd", "使每个因子都是奇数"],
+            t(
+              "A product is odd exactly when every factor is: $m$ odd and $n + 1$ odd, that is, $n$ even.",
+              "乘积为奇数当且仅当每个因子都是奇数：$m$ 为奇数，$n + 1$ 为奇数，即 $n$ 为偶数。",
+            ),
+          ],
+          [
+            ["Count", "计数"],
+            t(
+              `There are $${oddA}$ odd values of $m$ and $${evenB}$ even values of $n$: $${oddA} \\cdot ${evenB} = ${answer}$ pairs.`,
+              `奇数 $m$ 有 $${oddA}$ 个，偶数 $n$ 有 $${evenB}$ 个：共 $${oddA} \\cdot ${evenB} = ${answer}$ 对。`,
+            ),
+          ],
+        ],
+        t(
+          "At $(m, n) = (1, 2)$, $mn + m = 3$ is odd; at $(1, 1)$, $mn + m = 2$ is even.",
+          "$(m, n) = (1, 2)$ 时 $mn + m = 3$ 是奇数；$(1, 1)$ 时 $mn + m = 2$ 是偶数。",
+        ),
       ),
     });
   },
@@ -3322,8 +3683,8 @@ const vacuousCases: KnowledgePointDef = {
   id: "counting-the-vacuous-cases-of-a-conditional",
   title: t("Counting the vacuous cases of a conditional", "计算条件句的空真情形"),
   explanation: t(
-    "A conditional is vacuously true at a value where its hypothesis is false, and in that case its conclusion is never examined. This is why a universal claim only needs checking where the hypothesis holds. So the vacuous cases can be counted from the hypothesis alone, even if the conclusion looks relevant. In a domain of numbers, a hypothesis about divisibility is false for all the numbers that are not multiples of the divisor.",
-    "在假设为假的值上，条件句是空真的，这时根本不用检查结论。这就是为什么全称命题只需要在假设成立的地方检查。所以只凭假设就能数出空真情形，即使结论看上去相关。在数的论域中，关于整除的假设对所有不是除数倍数的数都为假。",
+    'A conditional is vacuously true at a value where its hypothesis is false, and in that case its conclusion is never examined. This is why a universal claim only needs checking where the hypothesis holds. So the vacuous cases can be counted from the hypothesis alone, even if the conclusion looks relevant. In a domain of numbers, a hypothesis about divisibility is false for all the numbers that are not multiples of the divisor. On $\\{1, \\dots, 10\\}$, "if $3 \\mid x$, then $x > 4$" is vacuous at the $10 - 3 = 7$ values that are not multiples of $3$.\n\n> **Watch out.** Whether a case is vacuous depends only on the hypothesis. A value where the conclusion fails is not vacuous; if the hypothesis holds there, the conditional is false.',
+    "在假设为假的值上，条件句是空真的，这时根本不用检查结论。这就是为什么全称命题只需要在假设成立的地方检查。所以只凭假设就能数出空真情形，即使结论看上去相关。在数的论域中，关于整除的假设对所有不是除数倍数的数都为假。在 $\\{1, \\dots, 10\\}$ 上，“如果 $3 \\mid x$，那么 $x > 4$”在不是 $3$ 的倍数的 $10 - 3 = 7$ 个值上空真。\n\n> **注意。** 一个情形是否空真只取决于假设。结论不成立的值并不空真；如果假设在那里成立，条件句就是假的。",
   ),
   generate(rng) {
     const n = rng.int(12, 80);
@@ -3338,10 +3699,36 @@ const vacuousCases: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [multiples, n, n - k, answer + 1],
-      solution: t(
-        `It is vacuous when the hypothesis fails. There are $${multiples}$ multiples of ${d} in the domain, which leaves $${n} - ${multiples} = ${answer}$ values.`,
-        `假设不成立时它是空真的。论域中有 $${multiples}$ 个 ${d} 的倍数，剩下 $${n} - ${multiples} = ${answer}$ 个值。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(multiples, "Those are the values where the hypothesis holds, which are not vacuous.", "这些是假设成立的值，它们不是空真的。"),
+        why(
+          n,
+          `The multiples of $${d}$ make the hypothesis true, so they are not vacuous.`,
+          `$${d}$ 的倍数使假设为真，所以它们不是空真的。`,
+        ),
+        why(
+          n - k,
+          "That counts where the conclusion is true; vacuity depends only on the hypothesis.",
+          "这数的是结论为真的值；是否空真只取决于假设。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Find the vacuous cases", "找出空真情形"], t(`They are the values with $${d} \\nmid x$.`, `它们是满足 $${d} \\nmid x$ 的值。`)],
+          [
+            ["Count the multiples", "数倍数"],
+            t(
+              `There are $\\lfloor ${n} / ${d} \\rfloor = ${multiples}$ multiples of $${d}$ in the domain.`,
+              `论域中 $${d}$ 的倍数有 $\\lfloor ${n} / ${d} \\rfloor = ${multiples}$ 个。`,
+            ),
+          ],
+          [["Subtract", "相减"], t(`$${n} - ${multiples} = ${answer}$.`, `$${n} - ${multiples} = ${answer}$。`)],
+        ],
+        t(
+          `The largest multiple of $${d}$ in the domain is $${d * multiples} = ${d} \\cdot ${multiples}$, and $${multiples} + ${answer} = ${n}$ accounts for every value.`,
+          `论域中 $${d}$ 的最大倍数是 $${d * multiples} = ${d} \\cdot ${multiples}$，而 $${multiples} + ${answer} = ${n}$ 涵盖了每个值。`,
+        ),
       ),
     });
   },

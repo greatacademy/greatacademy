@@ -1367,23 +1367,35 @@ const squareResidue = point(
   "a-direct-proof-with-a-remainder",
   ["A direct proof with a remainder", "带余数的直接证明"],
   [
-    "A direct proof about remainders starts by writing $n = mk + r$. Expanding gives $n^{2} = m(mk^{2} + 2kr) + r^{2}$, so the remainder of $n^{2}$ depends only on $r^{2}$, which may still need reducing because it can be larger than $m$.",
-    "关于余数的直接证明从写出 $n = mk + r$ 开始。展开得 $n^{2} = m(mk^{2} + 2kr) + r^{2}$，所以 $n^{2}$ 的余数只取决于 $r^{2}$，而 $r^{2}$ 可能大于 $m$，这时还需要继续化简。",
+    "A direct proof about remainders starts by writing $n = mk + r$. Expanding gives $n^{2} = m(mk^{2} + 2kr) + r^{2}$, so the remainder of $n^{2}$ depends only on $r^{2}$, which may still need reducing because it can be larger than $m$. If $n$ leaves $3$ on division by $5$, then $n^{2} = 5(5k^{2} + 6k) + 9$ and $9 = 5 + 4$, so $n^{2}$ leaves $4$.\n\n> **Watch out.** $r^{2}$ is not yet the remainder when it is $m$ or more: reduce it modulo $m$ as a last step.",
+    "关于余数的直接证明从写出 $n = mk + r$ 开始。展开得 $n^{2} = m(mk^{2} + 2kr) + r^{2}$，所以 $n^{2}$ 的余数只取决于 $r^{2}$，而 $r^{2}$ 可能大于 $m$，这时还需要继续化简。若 $n$ 除以 $5$ 余 $3$，则 $n^{2} = 5(5k^{2} + 6k) + 9$，而 $9 = 5 + 4$，所以 $n^{2}$ 余 $4$。\n\n> **注意。** 当 $r^{2}$ 不小于 $m$ 时，它还不是余数：最后一步要把它模 $m$ 化简。",
   ],
   (rng) => {
     const m = rng.int(3, 15);
     const r = rng.int(1, m - 1);
     const answer = (r * r) % m;
-    return ask(
+    const big = (m + r) ** 2;
+    return withMistakes(
+      ask(
+        [
+          `Suppose $n$ leaves remainder $${r}$ on division by $${m}$. A direct proof shows that $n^{2}$ always leaves the same remainder on division by $${m}$. What is it?`,
+          `设 $n$ 除以 $${m}$ 余 $${r}$。直接证明可以说明 $n^{2}$ 除以 $${m}$ 的余数总是相同的。这个余数是多少？`,
+        ],
+        answer,
+        [r, r * r, (2 * r) % m],
+        [
+          `**Step 1: Write n with its remainder.** $n = ${m}k + ${r}$.\n\n**Step 2: Square.** $n^{2} = ${m}(${m}k^{2} + ${2 * r}k) + ${r * r}$.\n\n**Step 3: Reduce.** $${r * r} = ${m} \\cdot ${Math.floor((r * r) / m)} + ${answer}$, so $n^{2}$ leaves $${answer}$.\n\n**Check.** Take $n = ${m + r}$: $n^{2} = ${big} = ${m} \\cdot ${Math.floor(big / m)} + ${big % m}$.`,
+          `**第一步：写出 n 与余数。** $n = ${m}k + ${r}$。\n\n**第二步：平方。** $n^{2} = ${m}(${m}k^{2} + ${2 * r}k) + ${r * r}$。\n\n**第三步：化简。** $${r * r} = ${m} \\cdot ${Math.floor((r * r) / m)} + ${answer}$，所以 $n^{2}$ 余 $${answer}$。\n\n**检验。** 取 $n = ${m + r}$：$n^{2} = ${big} = ${m} \\cdot ${Math.floor(big / m)} + ${big % m}$。`,
+        ],
+      ),
       [
-        `Suppose $n$ leaves remainder $${r}$ on division by $${m}$. A direct proof shows that $n^{2}$ always leaves the same remainder on division by $${m}$. What is it?`,
-        `设 $n$ 除以 $${m}$ 余 $${r}$。直接证明可以说明 $n^{2}$ 除以 $${m}$ 的余数总是相同的。这个余数是多少？`,
-      ],
-      answer,
-      [r, r * r, (2 * r) % m],
-      [
-        `Writing $n = ${m}k + ${r}$ gives $n^{2} = ${m}(${m}k^{2} + ${2 * r}k) + ${r * r}$. Reducing $${r * r}$ modulo $${m}$ gives $${answer}$.`,
-        `写成 $n = ${m}k + ${r}$，得 $n^{2} = ${m}(${m}k^{2} + ${2 * r}k) + ${r * r}$。把 $${r * r}$ 模 $${m}$ 化简，得 $${answer}$。`,
+        say(String(r), "That is the remainder of $n$; the question asks about $n^{2}$.", "这是 $n$ 的余数；题目问的是 $n^{2}$。"),
+        say(
+          String(r * r),
+          `$${r * r}$ is at least $${m}$, so it still has to be reduced modulo $${m}$.`,
+          `$${r * r}$ 不小于 $${m}$，还要模 $${m}$ 化简。`,
+        ),
+        say(String((2 * r) % m), "That doubles the remainder; squaring multiplies it by itself.", "这是把余数乘以 2；平方是把它乘以自身。"),
       ],
     );
   },
@@ -1393,8 +1405,8 @@ const smallestCounterexample = point(
   "the-smallest-counterexample-to-a-divisibility-claim",
   ["The smallest counterexample to a divisibility claim", "整除命题的最小反例"],
   [
-    "The claim that divisibility by $a$ and $b$ implies divisibility by $ab$ holds only when $a$ and $b$ are coprime. If they share a factor, their least common multiple is divisible by both but not by the product, so it is the smallest counterexample.",
-    "“能被 $a$ 和 $b$ 整除就能被 $ab$ 整除”只在 $a$ 与 $b$ 互素时成立。如果它们有公因数，它们的最小公倍数能被两者整除，却不能被乘积整除，所以它是最小的反例。",
+    'The claim that divisibility by $a$ and $b$ implies divisibility by $ab$ holds only when $a$ and $b$ are coprime. If they share a factor, their least common multiple is divisible by both but not by the product, so it is the smallest counterexample. For "if $4 \\mid n$ and $6 \\mid n$, then $24 \\mid n$", $n = 12$ is divisible by $4$ and $6$ but not by $24$.\n\n> **Watch out.** A counterexample must satisfy the hypothesis, so it is a common multiple of $a$ and $b$. The smallest one is the least common multiple, not the greatest common divisor.',
+    "“能被 $a$ 和 $b$ 整除就能被 $ab$ 整除”只在 $a$ 与 $b$ 互素时成立。如果它们有公因数，它们的最小公倍数能被两者整除，却不能被乘积整除，所以它是最小的反例。对“如果 $4 \\mid n$ 且 $6 \\mid n$，那么 $24 \\mid n$”，$n = 12$ 能被 $4$ 和 $6$ 整除，却不能被 $24$ 整除。\n\n> **注意。** 反例必须满足假设，所以它是 $a$ 和 $b$ 的公倍数。最小的是最小公倍数，而不是最大公因数。",
   ],
   (rng) => {
     const g = rng.int(2, 6);
@@ -1404,16 +1416,28 @@ const smallestCounterexample = point(
     const a = g * x;
     const b = g * y;
     const answer = lcm(a, b);
-    return ask(
+    const d = gcd(a, b);
+    return withMistakes(
+      ask(
+        [
+          `Find the smallest positive integer $n$ that disproves the claim "if $${a} \\mid n$ and $${b} \\mid n$, then $${a * b} \\mid n$".`,
+          `求能否定命题“如果 $${a} \\mid n$ 且 $${b} \\mid n$，那么 $${a * b} \\mid n$”的最小正整数 $n$。`,
+        ],
+        answer,
+        [a * b, d, a + b],
+        [
+          `**Step 1: Meet the hypothesis.** A counterexample must be a common multiple of $${a}$ and $${b}$.\n\n**Step 2: Take the smallest.** $\\operatorname{lcm}(${a}, ${b}) = ${a * b} / ${d} = ${answer}$.\n\n**Step 3: Break the conclusion.** $${answer} < ${a * b}$, so $${a * b} \\nmid ${answer}$.\n\n**Check.** $${answer} = ${a} \\cdot ${answer / a} = ${b} \\cdot ${answer / b}$, while $${a * b} = ${answer} \\cdot ${d}$.`,
+          `**第一步：满足假设。** 反例必须是 $${a}$ 和 $${b}$ 的公倍数。\n\n**第二步：取最小的。** $\\operatorname{lcm}(${a}, ${b}) = ${a * b} / ${d} = ${answer}$。\n\n**第三步：推翻结论。** $${answer} < ${a * b}$，所以 $${a * b} \\nmid ${answer}$。\n\n**检验。** $${answer} = ${a} \\cdot ${answer / a} = ${b} \\cdot ${answer / b}$，而 $${a * b} = ${answer} \\cdot ${d}$。`,
+        ],
+      ),
       [
-        `Find the smallest positive integer $n$ that disproves the claim "if $${a} \\mid n$ and $${b} \\mid n$, then $${a * b} \\mid n$".`,
-        `求能否定命题“如果 $${a} \\mid n$ 且 $${b} \\mid n$，那么 $${a * b} \\mid n$”的最小正整数 $n$。`,
-      ],
-      answer,
-      [a * b, gcd(a, b), a + b],
-      [
-        `A counterexample must be a common multiple of $${a}$ and $${b}$. The smallest is $${answer}$, and it is less than $${a * b}$, so $${a * b}$ does not divide it.`,
-        `反例必须是 $${a}$ 和 $${b}$ 的公倍数。最小的是 $${answer}$，它小于 $${a * b}$，所以不能被 $${a * b}$ 整除。`,
+        say(String(a * b), `$${a * b}$ divides itself, so the claim holds there.`, `$${a * b}$ 能整除自身，所以命题在这里成立。`),
+        say(
+          String(d),
+          `$${d}$ is not a multiple of $${a}$ and $${b}$, so the hypothesis fails there.`,
+          `$${d}$ 不是 $${a}$ 和 $${b}$ 的倍数，所以假设在这里不成立。`,
+        ),
+        say(String(a + b), `$${a + b}$ is not a common multiple of $${a}$ and $${b}$.`, `$${a + b}$ 不是 $${a}$ 和 $${b}$ 的公倍数。`),
       ],
     );
   },
@@ -1423,8 +1447,8 @@ const threeThreshold = point(
   "a-threshold-for-three-numbers-by-contrapositive",
   ["A threshold for three numbers by contrapositive", "用逆否命题求三个数的阈值"],
   [
-    "A claim of the form if the sum is large, then some number is large is proved by contrapositive: if every integer is below its bound, then the sum is at most the sum of the largest allowed values. One more than this maximum is the smallest threshold that works.",
-    "“如果和很大，那么某个数很大”这种命题用逆否命题证明：如果每个整数都低于它的界，那么和至多为各允许最大值之和。比这个最大值多一就是有效的最小阈值。",
+    "A claim of the form if the sum is large, then some number is large is proved by contrapositive: if every integer is below its bound, then the sum is at most the sum of the largest allowed values. One more than this maximum is the smallest threshold that works. For bounds $a \\ge 2$, $b \\ge 3$, $c \\ge 4$: the contrapositive allows $a \\le 1$, $b \\le 2$, $c \\le 3$, a sum of at most $6$, so $S = 7$.\n\n> **Watch out.** Below the bound means one less: $a < p$ is $a \\le p - 1$. The largest bad sum is $(p - 1) + (q - 1) + (r - 1)$, and the threshold is one more than that.",
+    "“如果和很大，那么某个数很大”这种命题用逆否命题证明：如果每个整数都低于它的界，那么和至多为各允许最大值之和。比这个最大值多一就是有效的最小阈值。对于界 $a \\ge 2$，$b \\ge 3$，$c \\ge 4$：逆否命题允许 $a \\le 1$，$b \\le 2$，$c \\le 3$，和至多为 $6$，所以 $S = 7$。\n\n> **注意。** 低于界就是少一：$a < p$ 即 $a \\le p - 1$。不满足结论的最大和是 $(p - 1) + (q - 1) + (r - 1)$，阈值比它多一。",
   ],
   (rng) => {
     const p = rng.int(2, 15);
@@ -1432,16 +1456,35 @@ const threeThreshold = point(
     const r = rng.int(2, 15);
     const most = p + q + r - 3;
     const answer = most + 1;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `Find the smallest integer $S$ such that, for all integers $a, b, c$, if $a + b + c \\ge S$ then $a \\ge ${p}$ or $b \\ge ${q}$ or $c \\ge ${r}$.`,
+          `求最小的整数 $S$，使得对所有整数 $a, b, c$，如果 $a + b + c \\ge S$，那么 $a \\ge ${p}$ 或 $b \\ge ${q}$ 或 $c \\ge ${r}$。`,
+        ],
+        answer,
+        [most, p + q + r, p + q + r - 1],
+        [
+          `**Step 1: Take the contrapositive.** If $a \\le ${p - 1}$, $b \\le ${q - 1}$ and $c \\le ${r - 1}$, then $a + b + c < S$.\n\n**Step 2: Find the largest bad sum.** $${p - 1} + ${q - 1} + ${r - 1} = ${most}$, reached at $a = ${p - 1}, b = ${q - 1}, c = ${r - 1}$.\n\n**Step 3: Add one.** $S$ must exceed $${most}$, so the smallest threshold is $${answer}$.\n\n**Check.** At $(${p - 1}, ${q - 1}, ${r - 1})$ the sum is $${most} < ${answer}$ and no bound is met; raising any one number by $1$ makes the sum $${answer}$ and meets its bound.`,
+          `**第一步：取逆否命题。** 如果 $a \\le ${p - 1}$，$b \\le ${q - 1}$，$c \\le ${r - 1}$，那么 $a + b + c < S$。\n\n**第二步：找出不满足结论的最大和。** $${p - 1} + ${q - 1} + ${r - 1} = ${most}$，在 $a = ${p - 1}, b = ${q - 1}, c = ${r - 1}$ 处取到。\n\n**第三步：加一。** $S$ 必须大于 $${most}$，所以最小的阈值是 $${answer}$。\n\n**检验。** 在 $(${p - 1}, ${q - 1}, ${r - 1})$ 处和为 $${most} < ${answer}$，且没有达到任何界；任意一个数加 $1$ 后和为 $${answer}$，并达到它的界。`,
+        ],
+      ),
       [
-        `Find the smallest integer $S$ such that, for all integers $a, b, c$, if $a + b + c \\ge S$ then $a \\ge ${p}$ or $b \\ge ${q}$ or $c \\ge ${r}$.`,
-        `求最小的整数 $S$，使得对所有整数 $a, b, c$，如果 $a + b + c \\ge S$，那么 $a \\ge ${p}$ 或 $b \\ge ${q}$ 或 $c \\ge ${r}$。`,
-      ],
-      answer,
-      [most, p + q + r, p + q + r - 1],
-      [
-        `The contrapositive assumes $a \\le ${p - 1}$, $b \\le ${q - 1}$ and $c \\le ${r - 1}$, so the sum is at most $${most}$ and can equal it. The smallest threshold is $${answer}$.`,
-        `逆否命题假设 $a \\le ${p - 1}$，$b \\le ${q - 1}$，$c \\le ${r - 1}$，所以和至多为 $${most}$，并且可以取到。最小的阈值是 $${answer}$。`,
+        say(
+          String(most),
+          `At $a = ${p - 1}, b = ${q - 1}, c = ${r - 1}$ the sum is $${most}$, yet no bound is met.`,
+          `在 $a = ${p - 1}, b = ${q - 1}, c = ${r - 1}$ 处和为 $${most}$，却没有达到任何界。`,
+        ),
+        say(
+          String(p + q + r),
+          `That threshold works but is not the smallest: every bound is one more than the largest value allowed below it.`,
+          `这个阈值可行但不是最小的：每个界都比它下面允许的最大值大一。`,
+        ),
+        say(
+          String(p + q + r - 1),
+          `That threshold works but is not the smallest: the largest bad sum is $${most}$.`,
+          `这个阈值可行但不是最小的：不满足结论的最大和是 $${most}$。`,
+        ),
       ],
     );
   },
@@ -1451,8 +1494,8 @@ const parityVerdict = point(
   "deciding-a-parity-claim-by-the-coefficients",
   ["Deciding a parity claim by the coefficients", "由系数判断奇偶性命题"],
   [
-    "Not every parity claim is true, and the coefficients decide it. Test the contrapositive by substituting an odd $n$: only the parities of the coefficients matter. If the result can be odd, then $n = 1$ gives a counterexample to the claim.",
-    "并非每个奇偶性命题都成立，要由系数决定。代入奇数 $n$ 来检验逆否命题：只有系数的奇偶性起作用。如果结果可能为奇数，那么 $n = 1$ 就是这个命题的反例。",
+    'Not every parity claim is true, and the coefficients decide it. Test the contrapositive by substituting an odd $n$: only the parities of the coefficients matter. If the result can be odd, then $n = 1$ gives a counterexample to the claim. "If $3n + 5$ is odd, then $n$ is even" is true, since an odd $n$ makes $3n + 5$ odd plus odd, which is even. "If $3n + 4$ is odd, then $n$ is even" is false: $n = 1$ gives $7$.\n\n> **Watch out.** A counterexample must make the conclusion false, so it needs an odd $n$. An even $n$ such as $n = 2$ agrees with the conclusion "$n$ is even" and can never disprove the claim.',
+    "并非每个奇偶性命题都成立，要由系数决定。代入奇数 $n$ 来检验逆否命题：只有系数的奇偶性起作用。如果结果可能为奇数，那么 $n = 1$ 就是这个命题的反例。“如果 $3n + 5$ 是奇数，那么 $n$ 是偶数”成立，因为奇数 $n$ 使 $3n + 5$ 成为奇数加奇数，是偶数。“如果 $3n + 4$ 是奇数，那么 $n$ 是偶数”不成立：$n = 1$ 时得 $7$。\n\n> **注意。** 反例必须使结论为假，所以需要奇数 $n$。像 $n = 2$ 这样的偶数满足结论“$n$ 是偶数”，永远不能否定这个命题。",
   ],
   (rng) => {
     const kind = rng.int(0, 2);
@@ -1464,20 +1507,45 @@ const parityVerdict = point(
     const one: Pair = ["False: $n = 1$ is a counterexample", "不成立：$n = 1$ 是反例"];
     const two: Pair = ["False: $n = 2$ is a counterexample", "不成立：$n = 2$ 是反例"];
     const option = kind === 0 ? right : one;
-    return choose(
-      rng,
-      [`Decide the claim "if $${expr}$ is odd, then $n$ is even".`, `判断命题“如果 $${expr}$ 是奇数，那么 $n$ 是偶数”。`],
-      option,
-      [right, converse, one, two].filter((o) => o !== option),
+    const parity = (x: number) => (x % 2 === 0 ? ["even", "偶数"] : ["odd", "奇数"]);
+    const [aEn, aZh] = parity(a);
+    const [bEn, bZh] = parity(b);
+    const reasons: Reason[] = [
+      [converse[0], "That is the converse of the claim, which is not equivalent to it.", "这是原命题的逆命题，与原命题不等价。"],
+      [
+        two[0],
+        "$n = 2$ is even, so it agrees with the conclusion and cannot be a counterexample.",
+        "$n = 2$ 是偶数，满足结论，不可能是反例。",
+      ],
       kind === 0
         ? [
-            `The contrapositive assumes $n$ odd. Then $${a}n$ is odd and adding the odd $${b}$ gives an even number, so the claim is true.`,
-            `逆否命题假设 $n$ 是奇数。这时 $${a}n$ 是奇数，加上奇数 $${b}$ 得偶数，所以命题成立。`,
+            one[0],
+            `At $n = 1$ the expression is $${a + b}$, which is even, so the hypothesis fails there.`,
+            `$n = 1$ 时表达式等于 $${a + b}$，是偶数，所以假设在这里不成立。`,
           ]
         : [
-            `With $n = 1$, the expression is $${a + b}$, which is odd, although $n$ is odd. So the claim is false.`,
-            `当 $n = 1$ 时，表达式等于 $${a + b}$，它是奇数，但 $n$ 是奇数。所以命题不成立。`,
+            right[0],
+            `At $n = 1$, which is odd, the expression is $${a + b}$, which is odd.`,
+            `$n = 1$ 是奇数，此时表达式等于 $${a + b}$，是奇数。`,
           ],
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [`Decide the claim "if $${expr}$ is odd, then $n$ is even".`, `判断命题“如果 $${expr}$ 是奇数，那么 $n$ 是偶数”。`],
+        option,
+        [right, converse, one, two].filter((o) => o !== option),
+        kind === 0
+          ? [
+              `**Step 1: Take the contrapositive.** If $n$ is odd, then $${expr}$ is even.\n\n**Step 2: Substitute an odd n.** $${a}n$ is odd times odd, which is odd, and adding the odd $${b}$ gives an even number. So the claim is true.\n\n**Check.** $n = 1$ gives $${a + b}$ and $n = 3$ gives $${3 * a + b}$, both even.`,
+              `**第一步：取逆否命题。** 如果 $n$ 是奇数，那么 $${expr}$ 是偶数。\n\n**第二步：代入奇数 n。** $${a}n$ 是奇数乘奇数，是奇数，加上奇数 $${b}$ 得偶数。所以命题成立。\n\n**检验。** $n = 1$ 得 $${a + b}$，$n = 3$ 得 $${3 * a + b}$，都是偶数。`,
+            ]
+          : [
+              `**Step 1: Take the contrapositive.** The claim is true only if every odd $n$ makes $${expr}$ even.\n\n**Step 2: Substitute an odd n.** $${a}$ is ${aEn} and $${b}$ is ${bEn}, so for odd $n$ the expression is odd. At $n = 1$ it is $${a + b}$. So the claim is false, and $n = 1$ is a counterexample.\n\n**Check.** At $n = 1$ the hypothesis holds, since $${a + b}$ is odd, and the conclusion fails, since $1$ is odd.`,
+              `**第一步：取逆否命题。** 只有每个奇数 $n$ 都使 $${expr}$ 为偶数，命题才成立。\n\n**第二步：代入奇数 n。** $${a}$ 是${aZh}，$${b}$ 是${bZh}，所以 $n$ 为奇数时表达式是奇数。$n = 1$ 时它等于 $${a + b}$。所以命题不成立，$n = 1$ 是反例。\n\n**检验。** $n = 1$ 时假设成立，因为 $${a + b}$ 是奇数；结论不成立，因为 $1$ 是奇数。`,
+            ],
+      ),
+      reasons,
     );
   },
 );
@@ -1486,24 +1554,45 @@ const bothIndivisible = point(
   "when-two-non-multiples-add-to-a-multiple",
   ["When two non-multiples add to a multiple", "两个非倍数之和成为倍数"],
   [
-    "A contradiction proof shows that a multiple plus a non-multiple is never a multiple. The same conclusion fails when both terms are non-multiples, because their remainders can add up to the divisor. So the hypothesis that one term is a multiple cannot be dropped.",
-    "反证法说明倍数加非倍数永远不是倍数。当两项都是非倍数时，这个结论不成立，因为它们的余数相加可能等于除数。所以“有一项是倍数”这个假设不能去掉。",
+    "A contradiction proof shows that a multiple plus a non-multiple is never a multiple. The same conclusion fails when both terms are non-multiples, because their remainders can add up to the divisor. So the hypothesis that one term is a multiple cannot be dropped. With divisor $5$ and $a = 7$, which leaves $2$, the choice $b = 3$ leaves $3$, and $7 + 3 = 10$.\n\n> **Watch out.** $b$ must supply the missing part of the divisor: if $a$ leaves $r$, then $b$ must leave $d - r$, not $r$.",
+    "反证法说明倍数加非倍数永远不是倍数。当两项都是非倍数时，这个结论不成立，因为它们的余数相加可能等于除数。所以“有一项是倍数”这个假设不能去掉。除数为 $5$，$a = 7$ 余 $2$，取 $b = 3$ 余 $3$，而 $7 + 3 = 10$。\n\n> **注意。** $b$ 必须补足除数缺少的部分：若 $a$ 余 $r$，则 $b$ 必须余 $d - r$，而不是 $r$。",
   ],
   (rng) => {
     const d = rng.int(3, 13);
     const a = d * rng.int(1, 9) + rng.int(1, d - 1);
     const r = a % d;
     const answer = d - r;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `The claim "if $${d} \\nmid a$ and $${d} \\nmid b$, then $${d} \\nmid a + b$" is false. For $a = ${a}$, find the smallest positive $b$ that shows this.`,
+          `命题“如果 $${d} \\nmid a$ 且 $${d} \\nmid b$，那么 $${d} \\nmid a + b$”不成立。对 $a = ${a}$，求能说明这一点的最小正整数 $b$。`,
+        ],
+        answer,
+        [r, d, a],
+        [
+          `**Step 1: Find the remainder of a.** $${a} = ${d} \\cdot ${Math.floor(a / d)} + ${r}$.\n\n**Step 2: Complete the divisor.** $b$ must leave $${d} - ${r} = ${answer}$, so that the remainders add up to $${d}$.\n\n**Step 3: Take the smallest.** $b = ${answer}$, which is not a multiple of $${d}$, so it meets the hypothesis.\n\n**Check.** $${a} + ${answer} = ${a + answer} = ${d} \\cdot ${(a + answer) / d}$.`,
+          `**第一步：求 a 的余数。** $${a} = ${d} \\cdot ${Math.floor(a / d)} + ${r}$。\n\n**第二步：补足除数。** $b$ 必须余 $${d} - ${r} = ${answer}$，使两个余数之和为 $${d}$。\n\n**第三步：取最小的。** $b = ${answer}$，它不是 $${d}$ 的倍数，所以满足假设。\n\n**检验。** $${a} + ${answer} = ${a + answer} = ${d} \\cdot ${(a + answer) / d}$。`,
+        ],
+      ),
       [
-        `The claim "if $${d} \\nmid a$ and $${d} \\nmid b$, then $${d} \\nmid a + b$" is false. For $a = ${a}$, find the smallest positive $b$ that shows this.`,
-        `命题“如果 $${d} \\nmid a$ 且 $${d} \\nmid b$，那么 $${d} \\nmid a + b$”不成立。对 $a = ${a}$，求能说明这一点的最小正整数 $b$。`,
-      ],
-      answer,
-      [r, d, a],
-      [
-        `$a$ leaves remainder $${r}$ on division by $${d}$, so $b$ must leave remainder $${answer}$. The smallest such $b$ is $${answer}$, and $${a} + ${answer} = ${a + answer}$ is a multiple of $${d}$.`,
-        `$a$ 除以 $${d}$ 余 $${r}$，所以 $b$ 除以 $${d}$ 必须余 $${answer}$。这样的最小 $b$ 是 $${answer}$，且 $${a} + ${answer} = ${a + answer}$ 是 $${d}$ 的倍数。`,
+        say(
+          String(r),
+          `Then $a + b$ leaves $${(2 * r) % d}$, not $0$: $b$ must leave $${d} - ${r}$, not $${r}$.`,
+          `这时 $a + b$ 余 $${(2 * r) % d}$，不是 $0$：$b$ 必须余 $${d} - ${r}$，而不是 $${r}$。`,
+        ),
+        say(
+          String(d),
+          `$${d}$ is a multiple of $${d}$, so it breaks the hypothesis $${d} \\nmid b$.`,
+          `$${d}$ 是 $${d}$ 的倍数，不满足假设 $${d} \\nmid b$。`,
+        ),
+        say(
+          String(a),
+          (2 * r) % d === 0
+            ? `$b = ${a}$ works, but a smaller $b$ does too.`
+            : `$${a} + ${a} = ${2 * a}$ leaves $${(2 * r) % d}$ on division by $${d}$.`,
+          (2 * r) % d === 0 ? `$b = ${a}$ 可行，但更小的 $b$ 也可行。` : `$${a} + ${a} = ${2 * a}$ 除以 $${d}$ 余 $${(2 * r) % d}$。`,
+        ),
       ],
     );
   },
