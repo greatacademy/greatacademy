@@ -77,7 +77,7 @@ export function spokenProblem(
   mode: "repeat" | "read" | "say",
   model: string,
   accept: readonly string[],
-  wrong: readonly string[],
+  wrong: readonly (readonly [said: string, why: Text])[],
   maxSeconds: number,
 ): Problem {
   const expected: Json = mode === "say" ? { mode, accept } : { mode, reference: model };
@@ -89,8 +89,27 @@ export function spokenProblem(
       input: { kind: "speech", language: LANGUAGE, mode, ...(mode !== "say" && { text: model }), maxSeconds },
     },
     canonical: heardAs(model),
-    wrong: wrong.map(heardAs),
+    wrong: wrong.map(([said]) => heardAs(said)),
+    mistakes: wrong.map(([said, why]) => ({ response: heardAs(said), feedback: why })),
   };
+}
+
+/** cutShort says why a reading that stops halfway is wrong: where it stopped, and how the text goes on. */
+export function cutShort(text: string, half: string): Text {
+  const stopped = spokenWords(half).at(-1) ?? "";
+  const last = spokenWords(text).at(-1) ?? "";
+  return t(
+    `You stopped after *${stopped}*, but the text goes on to *${last}*. Read every word through to the last end mark.`,
+    `你读到 *${stopped}* 就停了，可原文一直到 *${last}* 才结束。要把每个词都读完，读到最后一个句末标点。`,
+  );
+}
+
+/** soundsLike says why a word said like another is wrong: the two words it was heard between. */
+export function soundsLike(word: string, other: string): Text {
+  return t(
+    `That sounded like *${other}*, a different word, not *${word}*. Listen again for the sound that tells them apart and say it clearly.`,
+    `听起来像 *${other}*，那是另一个词，不是 *${word}*。再听一遍，找出区分两者的那个音，把它说清楚。`,
+  );
 }
 
 /** sayable are the words of a unit said alone: one word of letters, said only one way. */
@@ -123,7 +142,7 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       "repeat",
       w.head,
       [],
-      [other],
+      [[other, soundsLike(w.head, other)]],
       5,
     );
   };
@@ -149,7 +168,7 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       "read",
       s,
       [],
-      [half],
+      [[half, cutShort(s, half)]],
       readSeconds(s),
     );
   };
@@ -160,6 +179,7 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
         frame: f,
         x,
         accept: f.answers.map((a) => fill(a, x)),
+        otherValue: f.values[(i + 1) % f.values.length]!,
         other: fill(f.answers[0]!, f.values[(i + 1) % f.values.length]!),
       })),
     ),
@@ -186,7 +206,22 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       "say",
       model,
       item.accept,
-      [item.other, item.x],
+      [
+        [
+          item.other,
+          t(
+            `That answer uses *${item.otherValue}*, but the word given is *${item.x}*. Build your sentence around *${item.x}*.`,
+            `这个回答用的是 *${item.otherValue}*，可给出的词是 *${item.x}*。要围绕 *${item.x}* 来组织句子。`,
+          ),
+        ],
+        [
+          item.x,
+          t(
+            `*${item.x}* alone is just the word. Answer in a full sentence, with a subject and a verb, as you would to a person asking.`,
+            `只说 *${item.x}* 只是一个词。要像回答真人提问那样，用有主语和动词的完整句子作答。`,
+          ),
+        ],
+      ],
       12,
     );
   };

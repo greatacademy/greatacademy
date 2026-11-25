@@ -3,6 +3,7 @@
 // is right or wrong.
 
 import { type Generator, joinText, type KnowledgePointDef, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
+import { keptAsShown } from "@ga/subject-english";
 
 /** Pair is a text in English and in Simplified Chinese. */
 export type Pair = readonly [en: string, zh: string];
@@ -92,6 +93,9 @@ export function arrangeGenerator(items: readonly Arrange[]): Generator {
       solution: item.why,
       canonical: expected.join(","),
       wrong: [shuffled.map((_, i) => i).join(",")],
+      mistakes: [
+        { response: shuffled.map((_, i) => i).join(","), feedback: keptAsShown(item.steps[shuffled[0] ?? 0] ?? "", shuffled[0] === 0) },
+      ],
     };
   };
 }

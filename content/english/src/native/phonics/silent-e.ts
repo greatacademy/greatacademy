@@ -204,6 +204,7 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   word: s.word,
   accepted: [s.word],
   wrong: [s.short, s.other, s.moved],
+  whyNot: whyNot(s),
   solution: t(
     `${picture(s.word).alt.en} Say **${s.word}** slowly: you hear three sounds, and **${s.vowel}** says its letter name, so write *${s.short}* and add a silent **e** at the end: **${s.word}**.\n\n**Check.** Cover the final **e** and it reads short *${s.short}*; with the **e** at the end, it reads **${s.word}**, matching the picture.`,
     `${picture(s.word).alt["zh-CN"]}慢慢说出 **${s.word}**：你听到三个音，**${s.vowel}** 读字母名，所以写出 *${s.short}* 后再在末尾加一个不发音的 **e**：**${s.word}**。\n\n**检验。** 盖住结尾的 **e** 会读成短音 *${s.short}*；加上结尾的 **e** 才读成 **${s.word}**，和图片一致。`,

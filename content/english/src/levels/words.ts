@@ -395,6 +395,14 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
           if (!w.spellings.some((x) => x.toLowerCase() === wrong.toLowerCase()) && !conflictOf(notes.get(w.head)!, wrong))
             throw new Error(`${id}: ${w.head} has no conflict for the filler ${wrong}`);
 
+  /** fillsNot says why a wrong filler does not complete a sentence of a word, from its notes when the topic has them. */
+  const fillsNot =
+    (w: WordDef, s: WordSentence) =>
+    (wrong: string): Text => {
+      const c = notes ? conflictOf(notes.get(w.head)!, wrong) : undefined;
+      return c ? t(`${capitalize(c.en)}.`, `${c["zh-CN"]}。`) : fitsNot(w, wrong, s.answer);
+    };
+
   const complete = distinct(
     interleave(
       words.map((w) =>
@@ -404,10 +412,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             right: s.answer,
             wrong: s.wrong,
             solution: notes ? taughtComplete(w, s, notes.get(w.head)!, k) : explainedComplete(w, s),
-            whyNot: (wrong) => {
-              const c = notes ? conflictOf(notes.get(w.head)!, wrong) : undefined;
-              return c ? t(`${capitalize(c.en)}.`, `${c["zh-CN"]}。`) : fitsNot(w, wrong, s.answer);
-            },
+            whyNot: fillsNot(w, s),
             sounds: sentenceSounds(w, s.full),
           }),
         ),
@@ -459,6 +464,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         answer: s.answer,
         wrong: s.wrong,
         solution: notes ? taughtSpell(w, s, notes.get(w.head)!) : explainedSpell(w, s),
+        whyNot: fillsNot(w, s),
         sounds: sentenceSounds(w, s.full),
       })),
     ),
@@ -475,13 +481,15 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
 
   const typed: Generator = (rng: Rng): Problem => {
     const item = rng.cycle(spell);
+    const wrong = item.wrong.filter((w) => w.toLowerCase() !== item.answer.toLowerCase());
     return {
       prompt: item.prompt,
       answer: { checker: "word-form", expected: [item.answer], input: { kind: "text" } },
       solution: item.solution,
       ...item.sounds,
       canonical: item.answer,
-      wrong: item.wrong.filter((w) => w.toLowerCase() !== item.answer.toLowerCase()),
+      wrong,
+      mistakes: wrong.map((w) => ({ response: w, feedback: item.whyNot(w) })),
     };
   };
 

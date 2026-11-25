@@ -142,6 +142,7 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   word: s.word,
   accepted: [s.word],
   wrong: [...s.vowel, s.first[0], s.last[0]],
+  whyNot: (w) => nearWhy[s.vowel.includes(w) ? "vowel" : w === s.first[0] ? "first" : "last"](w),
   solution: t(
     `${picture(s.word).alt.en} Say **${s.word}** slowly and write one letter for each sound in order: *${letters(s.word)}* gives **${s.word}**.\n\n**Check.** Read back the three letters you wrote from left to right—**${s.word[0]}**, **${s.word[1]}**, **${s.word[2]}**—and blend them: **${s.word}**, matching the picture.`,
     `${picture(s.word).alt["zh-CN"]}慢慢说出 **${s.word}**，按顺序每个音写一个字母：*${letters(s.word)}*，写成 **${s.word}**。\n\n**检验。** 从左到右反过来拼读自己写的三个字母——**${s.word[0]}**、**${s.word[1]}**、**${s.word[2]}**——连起来正是 **${s.word}**，和图片一致。`,

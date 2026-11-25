@@ -218,7 +218,42 @@ export interface TypedPictureItem {
   readonly accepted: readonly string[];
   readonly wrong: readonly string[];
   readonly solution: Text;
+  readonly whyNot?: (wrong: string) => Text;
 }
+
+/** filledGap is what a gapped hint such as "**_ _ o g**" spells with a response in its gaps, or undefined when the response cannot fill them. */
+export const filledGap = (hint: string, part: string): string | undefined => {
+  const shape = [...hint.replace(/[*\s]/gu, "")];
+  const holes = shape.filter((c) => c === "_").length;
+  if (holes === 0) return undefined;
+  if (part.length === holes) {
+    let k = 0;
+    return shape.map((c) => (c === "_" ? part[k++] : c)).join("");
+  }
+  const start = shape.indexOf("_");
+  const end = shape.lastIndexOf("_");
+  return end - start + 1 === holes ? [...shape.slice(0, start), part, ...shape.slice(end + 1)].join("") : undefined;
+};
+
+/** gapWhyNot is the feedback for wrong letters typed into the gap of a picture's word: what the word then says. */
+export const gapWhyNot =
+  (hint: string, holes: number) =>
+  (wrong: string): Text => {
+    const filled = filledGap(hint, wrong);
+    const count =
+      wrong.length === holes
+        ? t("", "")
+        : t(
+            ` **${wrong}** is ${wrong.length === 1 ? "one letter" : `${wrong.length} letters`}, but the gap has ${holes} places, one letter for each.`,
+            ` **${wrong}** 是 ${wrong.length} 个字母，但空格有 ${holes} 个位置，每个位置一个字母。`,
+          );
+    return filled === undefined
+      ? t(`**${wrong}** does not fit the gap.${count.en}`, `**${wrong}** 填不进这个空格。${count["zh-CN"]}`)
+      : t(
+          `With **${wrong}** in the gap, the word reads *${filled}* (*${letters(filled)}*), which does not sound like this picture's word.${count.en} Say the word slowly and listen for the missing sound.`,
+          `把 **${wrong}** 填进空格，这个词就成了 *${filled}*（*${letters(filled)}*），读起来和这张图片的词不一样。${count["zh-CN"]}慢慢说出这个词，听清缺少的音。`,
+        );
+  };
 
 /** pictureTyped shows a picture and asks to type a letter or a word. */
 export function pictureTyped(question: Text, bank: readonly TypedPictureItem[]) {
@@ -233,6 +268,10 @@ export function pictureTyped(question: Text, bank: readonly TypedPictureItem[]) 
       ...sounds.get(item.word),
       canonical: item.accepted[0] ?? "",
       wrong: [...item.wrong],
+      mistakes: item.wrong.map((w) => ({
+        response: w,
+        feedback: (item.whyNot ?? gapWhyNot(item.extra ?? "", (item.extra ?? "").split("_").length - 1))(w),
+      })),
     };
   };
 }

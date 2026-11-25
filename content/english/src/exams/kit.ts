@@ -15,7 +15,7 @@ import {
   type TopicDef,
   t,
 } from "@ga/content";
-import { criterionById, point, type WritingItem, type WritingLimits, writingGenerator } from "@ga/subject-english";
+import { criterionById, keptAsShown, point, type WritingItem, type WritingLimits, writingGenerator } from "@ga/subject-english";
 import type { Strand } from "../pack.ts";
 
 /** examGroup is the shelf of the exam courses. */
@@ -243,7 +243,20 @@ export function replyGenerator(question: Text, bank: readonly ReplyItem[]): Gene
         `合适的回答：\n\n${quote(reply)}\n\n**检验。** ${check["zh-CN"]}`,
       ),
       canonical: (expected[0] as number[]).join(","),
-      wrong: isRight(shuffled) ? [] : [shuffled.map((_, i) => i).join(",")],
+      ...(isRight(shuffled)
+        ? { wrong: [] }
+        : {
+            wrong: [shuffled.map((_, i) => i).join(",")],
+            mistakes: [
+              {
+                response: shuffled.map((_, i) => i).join(","),
+                feedback: keptAsShown(
+                  item.chunks[shuffled[0] ?? 0] ?? "",
+                  rightOrders.some((o) => o[0] === shuffled[0]),
+                ),
+              },
+            ],
+          }),
     };
   };
 }

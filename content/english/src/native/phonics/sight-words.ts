@@ -516,10 +516,10 @@ const choice =
 
 /** typed asks to type a word or a part of one for a sentence. */
 const typed =
-  (question: Text, build: (s: SightWord) => { extra: string; accepted: string; wrong: readonly string[] }) =>
+  (question: Text, build: (s: SightWord) => { extra: string; accepted: string; wrong: readonly string[]; whyNot: (w: string) => Text }) =>
   (rng: Rng): Problem => {
     const s = rng.cycle(sightWords);
-    const { extra, accepted, wrong } = build(s);
+    const { extra, accepted, wrong, whyNot } = build(s);
     return {
       prompt: joinText([question, same(s.sentence), same(extra)]),
       answer: { checker: "word-form", expected: [accepted], input: { kind: "text" } },
@@ -527,6 +527,7 @@ const typed =
       ...sightSounds.get(s.word),
       canonical: accepted,
       wrong: [...wrong],
+      mistakes: wrong.map((w) => ({ response: w, feedback: whyNot(w) })),
     };
   };
 
@@ -619,6 +620,15 @@ const spellingSightWords = phonicsTopic({
           .filter((w) => w.length === s.word.length)
           .map((w) => [...w].filter((_, i) => s.gap[i] === "_").join(""))
           .filter((w, i, all) => w !== tricky(s) && all.indexOf(w) === i),
+        whyNot: (part) => {
+          const entry = s.near.find(([w]) => w.length === s.word.length && [...w].filter((_, i) => s.gap[i] === "_").join("") === part);
+          if (!entry) throw new Error(`no near entry for ${part}`);
+          const reason = nearSpellingWhyNot(entry, s);
+          return t(
+            `With **${part}** in the gaps, the word reads *${entry[0]}*. ${reason.en}`,
+            `把 **${part}** 填进空格，这个词就成了 *${entry[0]}*。${reason["zh-CN"]}`,
+          );
+        },
       })),
     ),
     point(
@@ -632,6 +642,11 @@ const spellingSightWords = phonicsTopic({
         extra: `**${spaced(s.word[0] + "_".repeat(s.word.length - 1))}**`,
         accepted: s.word,
         wrong: nearWords(s),
+        whyNot: (w) => {
+          const entry = s.near.find(([spelling]) => spelling === w);
+          if (!entry) throw new Error(`no near entry for ${w}`);
+          return nearSpellingWhyNot(entry, s);
+        },
       })),
     ),
   ],

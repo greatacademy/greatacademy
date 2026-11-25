@@ -17,7 +17,7 @@ import {
 } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { withRecordings } from "../audio.ts";
-import { heardAs, LANGUAGE } from "../levels/speaking.ts";
+import { cutShort, heardAs, LANGUAGE } from "../levels/speaking.ts";
 import type { Pack } from "../pack.ts";
 import { watched } from "../watch.ts";
 import { type AuralIntro, auralIntro } from "./aural-intros.ts";
@@ -236,6 +236,7 @@ function readProblem(prompt: Text, text: string, band: Band, isStretch: boolean)
     },
     canonical: heardAs(text),
     wrong: [heardAs(half)],
+    mistakes: [{ response: heardAs(half), feedback: cutShort(text, half) }],
   };
 }
 

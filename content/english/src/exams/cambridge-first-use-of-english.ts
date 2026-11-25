@@ -3,7 +3,7 @@
 // is one gap in a sentence or two, so that each can be explained on its own. Every sentence is written for this course.
 
 import { type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
-import { expandPattern, point } from "@ga/subject-english";
+import { expandPattern, point, typedWhyNot } from "@ga/subject-english";
 import { examTopic, quote, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
 import { moreConditionalsAndModals, moreGrammarWords, moreLinkingWords, morePassivesAndComparisons } from "./more-gaps.ts";
 
@@ -34,6 +34,7 @@ export function gapGenerator(checker: "word-form" | "sentence-pattern", question
       solution: item.solution,
       canonical: item.canonical,
       wrong: [...item.wrong],
+      mistakes: item.wrong.map((w, i) => ({ response: w, feedback: typedWhyNot(checker)(w, item.canonical, item.shown, i) })),
     };
   };
 }

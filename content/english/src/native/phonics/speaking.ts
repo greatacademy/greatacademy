@@ -6,7 +6,7 @@
 import { type Generator, type Rng, spokenWords, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { spoken, withSounds } from "../../audio.ts";
-import { readSeconds, spokenProblem } from "../../levels/speaking.ts";
+import { cutShort, readSeconds, soundsLike, spokenProblem } from "../../levels/speaking.ts";
 import { blendContrast } from "./blends.ts";
 import { digraphContrast } from "./digraphs.ts";
 import { soundLabel, spellings } from "./kit.ts";
@@ -49,7 +49,7 @@ function wordsAloud(words: readonly string[], contrasts: ReadonlyMap<string, str
       "read",
       word,
       [],
-      [near],
+      [[near, soundsLike(word, near)]],
       5,
     );
   };
@@ -185,7 +185,7 @@ const sentencesAloud: Generator = (rng: Rng) => {
     "read",
     s.text,
     [],
-    [half],
+    [[half, cutShort(s.text, half)]],
     readSeconds(s.text),
   );
 };

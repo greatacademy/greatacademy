@@ -236,6 +236,7 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   word: s.word,
   accepted: [s.word],
   wrong: [s.drop, s.change, s.vowel],
+  whyNot: whyNot(s),
   solution: t(
     `${picture(s.word).alt.en} Say **${s.word}** slowly, one sound at a time, and write both letters of **${s.blend}**: *${letters(s.word)}* gives **${s.word}**.\n\n**Check.** Read your letters back one by one—leaving out a letter of **${s.blend}** would spell *${s.drop}*, while all ${s.word.length} letters spell **${s.word}**.`,
     `${picture(s.word).alt["zh-CN"]}慢慢地一个音一个音说出 **${s.word}**，**${s.blend}** 两个字母都要写上：*${letters(s.word)}*，写成 **${s.word}**。\n\n**检验。** 逐个字母反过来读一遍：少了 **${s.blend}** 里的一个字母会写成 *${s.drop}*，${s.word.length} 个字母全在才是 **${s.word}**。`,

@@ -215,6 +215,7 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   word: s.word,
   accepted: [s.word],
   wrong: [s.half, s.alike, s.other],
+  whyNot: whyNot(s),
   solution: t(
     `${picture(s.word).alt.en} Say **${s.word}** sound by sound—*${teamParts(s.word, s.team)}*—and write its long vowel with **${s.team}**: **${s.word}**.\n\n**Check.** Read back *${letters(s.word)}*: with only one vowel letter it would read short *${s.half}*, while **${s.team}** gives the long sound in **${s.word}**.`,
     `${picture(s.word).alt["zh-CN"]}一个音一个音地说 **${s.word}**——*${teamParts(s.word, s.team)}*——长元音用 **${s.team}** 来写，写成 **${s.word}**。\n\n**检验。** 核对 *${letters(s.word)}*：只写一个元音字母会读成短音 *${s.half}*，写上 **${s.team}** 才读出 **${s.word}** 的长音。`,

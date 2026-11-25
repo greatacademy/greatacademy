@@ -153,6 +153,13 @@ const missingWord = (rng: Rng): Problem => {
     ...sentenceSounds.get(s.text),
     canonical: s.word,
     wrong: [...s.others],
+    mistakes: s.others.map((o) => ({
+      response: o,
+      feedback: t(
+        `*${o}* names ${pictureNoun(o)}, a different picture. Look at the picture again and put its word in the blank.`,
+        `*${o}* 指的是另一张图片（${o}）。再看看这张图片，把它的词填进横线。`,
+      ),
+    })),
   };
 };
 
@@ -187,6 +194,20 @@ const fullSentence = (rng: Rng): Problem => {
     ...sentenceSounds.get(s.text),
     canonical: s.text,
     wrong: [...new Set([`${bare.charAt(0).toLowerCase()}${bare.slice(1)}.`, bare])].filter((w) => w !== s.text),
+    mistakes: [...new Set([`${bare.charAt(0).toLowerCase()}${bare.slice(1)}.`, bare])]
+      .filter((w) => w !== s.text)
+      .map((w) => ({
+        response: w,
+        feedback: w.endsWith(".")
+          ? t(
+              `*${w}* ends with a full stop, but it starts with a small letter. A sentence starts with a capital letter.`,
+              `*${w}* 结尾有句号，但开头是小写字母。句子要以大写字母开头。`,
+            )
+          : t(
+              `*${w}* starts with a capital letter, but nothing shows where it ends. A sentence ends with a full stop.`,
+              `*${w}* 开头是大写字母，但没有标出句子在哪里结束。句子结尾要加句号。`,
+            ),
+      })),
   };
 };
 

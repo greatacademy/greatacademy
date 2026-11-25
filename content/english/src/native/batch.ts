@@ -2,7 +2,7 @@
 // that needs it and two words of the same batch a reader might take for it.
 
 import { type Text, type TopicDef, t } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
+import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WhyNot } from "@ga/subject-english";
 import type { WordBatch } from "../pack.ts";
 
 /** BatchWord is one word of a batch. */
@@ -107,6 +107,25 @@ function buildBatchTopic(spec: BatchSpec, pool?: ReadonlyMap<string, BatchWord>)
       instruction: t(`It means: ${w.meaning[0]}.`, `意思是：${w.meaning[0]}（${w.meaning[1]}）。`),
     })),
   );
+  /** fitsNot says why a confusion of a batch word does not fit its sentence, for choosing and for spelling alike. */
+  const fitsNot: WhyNot = (wrong, _right, shown, position) => {
+    const w = find(wrong);
+    const meta = useMeta.get(shown);
+    const conflict = meta?.word.conflicts?.[position];
+    if (conflict) {
+      return t(`${capFirst(stripEnd(conflict[0]))}.`, `${stripEnd(conflict[1])}。`);
+    }
+    if (meta?.clue) {
+      return t(
+        `**${wrong}** means *${w.meaning[0]}*, which does not match ${meta.clue}.`,
+        `**${wrong}** 指“${w.meaning[1]}”，和句中描写的“${meta.clue}”对不上。`,
+      );
+    }
+    return t(
+      `**${wrong}** means *${w.meaning[0]}*, which does not match what this sentence describes.`,
+      `**${wrong}** 的意思是“${w.meaning[1]}”，放进这个句子里和上下文意思不符。`,
+    );
+  };
   const findByMeaning = (en: string): BatchWord | undefined => {
     const local = spec.words.find((w) => w.meaning[0] === en);
     if (local) return local;
@@ -257,24 +276,7 @@ function buildBatchTopic(spec: BatchSpec, pool?: ReadonlyMap<string, BatchWord>)
               `${completed}\n\n**${right}** 的意思是“${w.meaning[1]}”，正好补全句意。\n\n**检验。** 带着词义再读一遍 *${completed}*：意思通顺；而 *${c0.word}*（${c0.meaning[1]}）和 *${c1.word}*（${c1.meaning[1]}）放进去都说不通。`,
             );
           },
-          (wrong, _right, shown, position) => {
-            const w = find(wrong);
-            const meta = useMeta.get(shown);
-            const conflict = meta?.word.conflicts?.[position];
-            if (conflict) {
-              return t(`${capFirst(stripEnd(conflict[0]))}.`, `${stripEnd(conflict[1])}。`);
-            }
-            if (meta?.clue) {
-              return t(
-                `**${wrong}** means *${w.meaning[0]}*, which does not match ${meta.clue}.`,
-                `**${wrong}** 指“${w.meaning[1]}”，和句中描写的“${meta.clue}”对不上。`,
-              );
-            }
-            return t(
-              `**${wrong}** means *${w.meaning[0]}*, which does not match what this sentence describes.`,
-              `**${wrong}** 的意思是“${w.meaning[1]}”，放进这个句子里和上下文意思不符。`,
-            );
-          },
+          fitsNot,
         ),
       ),
       point(
@@ -301,6 +303,7 @@ function buildBatchTopic(spec: BatchSpec, pool?: ReadonlyMap<string, BatchWord>)
               `${completed}\n\n空格需要意思是“${w.meaning[1]}”的词，拼作 **${right}**。\n\n**检验。** 逐字母核对拼写：**${right}** 共 ${right.length} 个字母，以 **${right[0]}** 开头、以 **${right.at(-1)}** 结尾。`,
             );
           },
+          fitsNot,
         ),
       ),
     ],

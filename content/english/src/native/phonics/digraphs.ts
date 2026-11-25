@@ -225,6 +225,7 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => {
     word: s.word,
     accepted: [s.word],
     wrong: [s.swap, s.half, s.vowel],
+    whyNot: whyNot(s),
     solution: t(
       `${picture(s.word).alt.en} Say **${s.word}** sound by sound—*${parts}*—and write **${s.digraph}** with both letters: **${s.word}**.\n\n**Check.** Read back *${letters(s.word)}* from left to right: **${s.digraph}** is both letters together, and blending *${parts}* gives **${s.word}**.`,
       `${picture(s.word).alt["zh-CN"]}一个音一个音地说 **${s.word}**——*${parts}*——**${s.digraph}** 两个字母都要写上，写成 **${s.word}**。\n\n**检验。** 从左到右核对 *${letters(s.word)}*：**${s.digraph}** 两个字母都在，连读 *${parts}* 正是 **${s.word}**。`,
