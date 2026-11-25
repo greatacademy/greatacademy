@@ -1,6 +1,7 @@
 // Grade 10: the batches of words of courses and campus, of college life, of crime, of travel, of the city, of
 // the office, of media and of amounts and cases.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const courses = batch(
   ["Words of Courses and Campus", "课程与校园的词"],
   ["what is taught, when and where in a school or college", "学校或大学里教什么、何时与何地"],
   `
-  curriculum|the subjects that make up a course of study|课程(总体)|Music is part of the ___.|The new ___ starts next year.|Schools follow a national ___.|enroll,dormitory|curricula,curriculums
-  syllabus|an outline of the topics in one course|教学大纲|Read the ___ before class.|The exam covers the whole ___.|The ___ lists every book.|dormitory,enroll|syllabi,syllabuses
-  seminar|a class at which a small group discusses a topic|研讨课|She led a ___ on poetry.|The ___ meets on Fridays.|We have a history ___.|enroll,dormitory|seminars
-  tutorial|a period of teaching given to one student or a small group; a guide that explains how to do something|个别辅导；教程|I have a ___ with my professor.|Watch the video ___.|The ___ explains each step.|enroll,campus|tutorials
-  semester|half of a school or college year|学期|The ___ starts in September.|She studied abroad for a ___.|Finals come at the end of the ___.|tutorial,enroll|semesters
-  enroll|to officially register as a member of a course or school|注册，入学|You must ___ by Friday.|She chose to ___ in a dance class.|Thousands ___ each year.|semester,faculty|enrolled,enrollment
-  faculty|the teaching staff of a college; a natural ability|全体教员；能力|The ___ met to vote.|He lost the ___ of speech.|She joined the ___ last year.|campus,enroll|faculties
-  campus|the grounds and buildings of a college|校园|She lives on ___.|The ___ is near the sea.|We toured the ___.|dormitory,faculty|campuses
-  dormitory|a building where students live|宿舍|First-year students live in a ___.|The ___ was noisy.|Lights go out in the ___ at ten.|campus,transcript|dormitories
-  transcript|an official record of a student's grades; a written copy of speech|成绩单；文字记录|Send your ___ with the form.|Read the ___ of the speech.|Her ___ shows straight A's.|syllabus,dormitory|transcripts
+  curriculum|the subjects that make up a course of study|课程(总体)|The national ___ sets out every subject that schools must teach, from maths and science to art and music.|The school has added coding to its ___, so every pupil now learns it alongside maths, English and science.|A good ___ balances many subjects, giving time to sport and the arts as well as reading and maths.|syllabus,transcript|curricula,curriculums
+  syllabus|an outline of the topics in one course|教学大纲|The ___ for the history course lists the topic for each week and the books we must read.|The final exam will cover every topic on the ___, from the first week of the course to the last.|Before the first class, the professor handed out a one-page ___ listing the readings and the dates of each test.|transcript,diploma|syllabi,syllabuses
+  seminar|a class at which a small group discusses a topic|研讨课|In the ___, twelve students sat round a table and discussed the poem with their professor.|The history ___ meets on Friday afternoons, when a small group talks over the week's reading.|She led a lively ___ on climate change, asking each of the eight students to share their ideas.|semester,campus|seminars
+  tutorial|a period of teaching given to one student or a small group; a guide that explains how to do something|个别辅导；教程|Once a week I have a ___ alone with my professor, who goes through my essay line by line.|Watch the video ___ to learn how to set up the camera, step by step.|The online ___ shows you how to build a website, one easy step at a time.|syllabus,transcript|tutorials
+  semester|half of a school or college year|学期|She studied in Spain for a whole ___, from September until the end of January.|Final exams come at the end of the ___, after about four months of classes.|The college year is split into two halves, and the second ___ begins after the winter break.|tutorial,curriculum|semesters
+  enroll|to officially register as a member of a course or school|注册，入学|You must ___ by Friday if you want a place on the course; after that, the list is closed.|She decided to ___ in a dance class at the community centre and went to her first lesson on Monday.|Thousands of new students ___ at the university each autumn, signing up for their first courses.|graduate,resign|enrolled,enrollment
+  faculty|the teaching staff of a college; a natural ability|全体教员；能力|The ___ met to vote on the new exam rules, and most of the professors agreed.|She joined the ___ of the music school last year and now teaches piano to thirty students.|Members of the ___ must hold office hours so that students can ask their teachers questions.|campus,curriculum|faculties
+  campus|the grounds and buildings of a college|校园|First-year students must live on ___, in rooms only a short walk from their classes.|The college ___ sits beside the sea, with its library, labs and halls spread across green lawns.|On our visit, a student guide showed us round the whole ___, from the sports hall to the science buildings.|dormitory,faculty|campuses
+  dormitory|a building where students live|宿舍|The college ___ is a four-storey building with two hundred bedrooms and a shared kitchen on every floor.|The boarding school's ___ has rows of beds in one long room, where thirty boys sleep.|Lights go out at ten in the ___, and the house parent checks that every student is in bed.|campus,transcript|dormitories
+  transcript|an official record of a student's grades; a written copy of speech|成绩单；文字记录|Send your ___ with the application form so that we can see your grades in every subject.|The newspaper printed a full ___ of the president's speech, word for word.|Her high school ___ shows straight A's in every subject for all four years.|syllabus,diploma|transcripts
   `,
+  "context-clues",
+  {
+    intro: t(
+      "In my first **semester**, I lived in a **dormitory** at the edge of the **campus** and took a small **seminar** on poetry. These ten words help you talk about what is taught in a school or college, and when and where.",
+      "第一个学期（**semester**），我住在校园（**campus**）边上的宿舍（**dormitory**）里，还上了一门关于诗歌的小型研讨课（**seminar**）。这十个词帮你谈论学校或大学里教什么，以及何时何地上课。",
+    ),
+    watchOut: {
+      meanings: t(
+        "The **curriculum** is every subject a school teaches; a **syllabus** is the list of topics for just one course.",
+        "**curriculum** 是学校所教的全部科目；**syllabus** 只是某一门课的内容大纲。",
+      ),
+      use: t(
+        "Students live **on campus**, with no a or the, but they live **in a dormitory**, which is one building.",
+        "学生住在学校里说 **on campus**，前面不加 a 或 the；住在某一栋宿舍楼里说 **in a dormitory**。",
+      ),
+      spelling: t(
+        "**Syllabus** has a y and a double l, **curriculum** has a double r, and **enroll** keeps its double l in American spelling.",
+        "**syllabus** 中有 y，并双写 l；**curriculum** 双写 r；美式拼写的 **enroll** 结尾双写 l。",
+      ),
+    },
+    notes: `
+      curriculum|a national list of every subject schools must teach|a school adding coding alongside maths, English and science|a balance of many subjects including sport and the arts|the curriculum is all the subjects a school teaches; a syllabus is the topics of one course|curriculum 是学校所教的全部科目；syllabus 是一门课的内容大纲|a syllabus lists the topics of one course, not every subject a school teaches|syllabus 列出的是一门课的内容，不是学校所教的全部科目|a transcript is a record of one student's grades, not the set of subjects a school teaches|transcript 是某个学生的成绩记录，不是学校开设的科目|cur · ric · u · lum|the double r and the -um ending|双写 r，结尾是 -um
+      syllabus|a history course's list of weekly topics and books|every topic a final exam will cover|a one-page list of readings and test dates handed out by a professor|a syllabus is the plan of one course; the curriculum is all the subjects taught|syllabus 是一门课的计划；curriculum 是所教的全部科目|a transcript is a record of a student's grades, not a plan of what one course will cover|transcript 是学生的成绩记录，不是一门课要讲的内容|a diploma is a certificate for finishing a course, not a list of its topics and readings|diploma 是结业证书，不是课程的内容和阅读书目|syl · la · bus|the y after s and the double l|s 后面是 y，并双写 l
+      seminar|twelve students round a table discussing a poem with their professor|a small history group meeting on Fridays to talk over the reading|a class on climate change where each of eight students shares ideas|a seminar is a class where a small group discusses a topic; a semester is half a school year|seminar 是小组讨论课；semester 是半个学年|a semester is half of a school year, not a class where a group discusses a topic|semester 是半个学年，不是小组讨论课|a campus is the grounds and buildings of a college, not a class that meets to discuss|campus 是大学的校园，不是开会讨论的课|sem · i · nar|the -ar ending|结尾是 -ar
+      tutorial|a student alone with a professor going through an essay|a video showing how to set up a camera step by step|an online guide to building a website one step at a time|a tutorial is teaching for one student or a few, or a step-by-step guide; a syllabus is a list of topics|tutorial 是个别辅导或分步教程；syllabus 是课程大纲|a syllabus lists the topics of a course, not teaching or step-by-step help|syllabus 列出课程的内容，不是辅导或分步教学|a transcript is a record of grades or a written copy of a speech, not a guide that teaches you how to do something|transcript 是成绩单或讲话的文字记录，不是教你做事的教程|tu · to · ri · al|the -ial ending|结尾是 -ial
+      semester|a student spending September to January in Spain|final exams after about four months of classes|the second half of the college year beginning after winter break|a semester is half a school year; a tutorial is a lesson for one or a few students|semester 是半个学年；tutorial 是个别辅导课|a tutorial is a lesson or a guide, not half of a school year|tutorial 是辅导课或教程，不是半个学年|the curriculum is all the subjects taught, not a stretch of months in the school year|curriculum 是所教的全部科目，不是学年中的一段时间|se · mes · ter|three e's, one in each part|每段各有一个 e，共三个 e
+      enroll|signing up for a course before the list closes on Friday|a woman joining a dance class and going to her first lesson|thousands of new students signing up for courses each autumn|enroll means to sign up for a course or school; graduate means to finish one|enroll 是注册入学；graduate 是毕业|graduate means to finish a course and get a degree, not to sign up at the start|graduate 是完成学业、获得学位，不是一开始注册入学|resign means to give up a job, not to sign up for a course|resign 是辞去工作，不是报名上课|en · roll|the double l at the end in American spelling|美式拼写结尾双写 l
+      faculty|professors meeting to vote on exam rules|a woman who joined a music school and teaches piano|teachers holding office hours for students' questions|the faculty is the teachers of a college; the campus is its grounds and buildings|faculty 是大学的全体教员；campus 是校园|a campus is the grounds and buildings of a college, and it cannot meet, vote or teach|campus 是校园，不能开会、投票或教课|the curriculum is the subjects taught, not the people who teach them|curriculum 是所教的科目，不是教课的人|fac · ul · ty|the -ulty ending|结尾是 -ulty
+      campus|first-year students living a short walk from their classes|a college by the sea with buildings across green lawns|a tour of a college from the sports hall to the science buildings|the campus is all the grounds and buildings of a college; a dormitory is one building where students sleep|campus 是大学的全部校园；dormitory 是学生住的一栋楼|a dormitory is one building where students sleep, not all the grounds with labs and halls|dormitory 是学生住的一栋楼，不是包括实验室和礼堂的整个校园|the faculty is the teaching staff of a college, not its grounds and buildings|faculty 是全体教员，不是校园|cam · pus|the -us ending; the plural is campuses|结尾是 -us；复数是 campuses
+      dormitory|a four-storey college building with two hundred bedrooms|a boarding school's long room with rows of beds|a building where a house parent checks every student is in bed|a dormitory is a building where students sleep; the campus is all the grounds of a college|dormitory 是学生住宿的楼；campus 是整个校园|a campus is all the grounds and buildings of a college, not one building of bedrooms|campus 是整个校园，不是一栋有卧室的楼|a transcript is a record of grades, not a place where students sleep|transcript 是成绩记录，不是学生睡觉的地方|dor · mi · to · ry|the -ory ending, which becomes -ories in the plural|结尾是 -ory，复数变成 -ories
+      transcript|grades in every subject sent with an application form|a newspaper printing a speech word for word|a record showing straight A's for four years|a transcript is an official record of grades or of spoken words; a diploma is a certificate for finishing a course|transcript 是成绩或讲话的正式记录；diploma 是结业证书|a syllabus lists the topics of a course, not a student's grades or the words of a speech|syllabus 列出课程内容，不是学生的成绩或讲话的文字|a diploma shows that you finished a course, not your grade in every subject or the words of a speech|diploma 证明你完成了学业，不显示每门课的成绩，也不是讲话的文字|tran · script|the word script at the end|结尾是 script
+    `,
+  },
 );
 
 const college = batch(
@@ -27,17 +61,50 @@ const college = batch(
   ["Words of College Life", "大学生活的词"],
   ["paying for study, the years of college, finishing and cheating", "求学费用、大学各年级、毕业与作弊"],
   `
-  tuition|money paid for teaching; teaching|学费；教学|___ rises every year.|She gets private ___ in math.|Who pays your ___?|scholarship,diploma|
-  scholarship|money given to support a student; serious study|奖学金；学问|She won a ___ to Oxford.|His ___ is admired.|The ___ covers her fees.|tuition,diploma|scholarships
-  freshman|a first-year student|一年级学生|She is a ___ at college.|___ year was hard.|The ___ got lost on campus.|alumni,plagiarism|freshmen
-  sophomore|a second-year student|二年级学生|He is a ___ in high school.|My ___ year was the best.|The ___ class won.|plagiarism,diploma|sophomores
-  undergraduate|a student studying for a first degree|本科生|She is an ___ at Yale.|___ courses are full.|He teaches ___ students.|diploma,plagiarism|undergraduates
-  graduate|to complete a degree; a person who has one|毕业；毕业生|She will ___ in June.|He is a law ___.|Few ___ without debt.|undergraduate,dropout|graduated,graduation
-  dropout|a person who leaves school before finishing|辍学者|He was a high school ___.|The ___ rate is falling.|She is a college ___.|plagiarism,tuition|dropouts
-  alumni|former students of a school or college|校友(复数)|The ___ gave money to the school.|She met ___ at the party.|Famous ___ include two presidents.|dropout,sophomore|alumnus
-  diploma|a certificate given for completing a course|毕业证书|She received her ___.|He framed his ___.|A ___ in nursing.|scholarship,tuition|diplomas
-  plagiarism|taking someone else's work and passing it off as one's own|剽窃|___ is cheating.|He was expelled for ___.|Software checks for ___.|dropout,diploma|plagiarize,plagiarized
+  tuition|money paid for teaching; teaching|学费；教学|College ___ rises every year, so families must save more and more to pay for classes.|She gets private ___ in maths from a teacher who comes to the house every Tuesday.|His parents pay his ___ each term, and he pays for his own books and rent.|scholarship,diploma|
+  scholarship|money given to support a student; serious study|奖学金；学问|She won a ___ to study at Oxford, so she will not have to pay any fees at all.|The ___ covers all her fees and gives her money for books, because her grades were the best in the country.|Without a sports ___, he could never have afforded to go to college.|tuition,diploma|scholarships
+  freshman|a first-year student|一年级学生|As a ___ in her first week at college, she got lost three times looking for the library.|Every new ___ starts the first year of high school with a welcome day and a tour of the building.|The nervous ___ had only been at the university for two days and did not yet know anyone.|sophomore,dropout|freshmen
+  sophomore|a second-year student|二年级学生|Now a ___, he knew his way around the high school far better than he had in his first year.|In her second year of college, the ___ year, she finally chose to study biology.|After a year as a freshman, a student becomes a ___ and still has two more years to go.|freshman,dropout|sophomores
+  undergraduate|a student studying for a first degree|本科生|The university has twenty thousand ___ students, all studying for their first degree.|My cousin is a third-year ___ studying history in Boston, hoping to earn her first degree next year.|Most ___ courses take three or four years and end with a bachelor's degree.|alumni,dropout|undergraduates
+  graduate|to complete a degree; a person who has one|毕业；毕业生|She will ___ from university in June, after four years of study, and then start her first job.|Students who ___ with top grades at the end of their course often find good jobs quickly.|Few students ___ without some debt, since the costs of four years at college are so high.|enroll,retire|graduated,graduation
+  dropout|a person who leaves school before finishing|辍学者|A high school ___, he left at sixteen and never went back to finish his studies.|The school's ___ rate has fallen, as fewer students now leave before they finish.|He is a college ___ who left after one year to start his own company.|freshman,truant|dropouts
+  alumni|former students of a school or college|校友(复数)|Famous ___ of the college include two presidents and a Nobel Prize winner.|At the reunion, ___ from the class of 1990 met to talk about their school days.|Many ___ come back each year to visit the college where they studied long ago.|freshman,dropout|alumnus
+  diploma|a certificate given for completing a course|毕业证书|At the graduation ceremony, each student walked across the stage to receive a ___ from the head teacher.|He framed his ___ and hung it on the wall, proud to show that he had finished the course.|With a ___ in nursing, she was able to get a job at the city hospital.|transcript,tuition|diplomas
+  plagiarism|taking someone else's work and passing it off as one's own|剽窃|Copying an essay from the internet and handing it in as your own is ___, and it can get you thrown out of college.|The teacher's software checks every essay for ___, finding any sentences copied from books or websites.|The writer was accused of ___ when parts of his novel turned out to be copied word for word from another author's book.|forgery,smuggling|plagiarize,plagiarized
   `,
+  "context-clues",
+  {
+    intro: t(
+      "As a **freshman**, Mia won a **scholarship** that paid her **tuition**, and four years later she walked across the stage for her **diploma**. These ten words help you talk about paying for study, the years of college, finishing and cheating.",
+      "米娅读大一（**freshman**）时获得了奖学金（**scholarship**），用来支付学费（**tuition**）；四年后，她走上台领取了毕业证书（**diploma**）。这十个词帮你谈论学费、大学各年级、毕业和作弊。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Tuition** is what you pay for classes, while a **scholarship** is money given to you so that you do not have to pay it all yourself.",
+        "**tuition** 是你为上课付的学费；**scholarship** 是别人发给你的钱，让你不必全部自己付。",
+      ),
+      use: t(
+        "**Alumni** is a plural word for many former students, so it takes a plural verb: the alumni are, not the alumni is.",
+        "**alumni** 是复数，指许多校友，所以要用复数动词：the alumni are，而不是 the alumni is。",
+      ),
+      spelling: t(
+        "**Sophomore** has ph and ends in -more, **plagiarism** keeps an i after the g, and **freshman** becomes **freshmen** in the plural.",
+        "**sophomore** 中有 ph，以 -more 结尾；**plagiarism** 的 g 后面有 i；**freshman** 的复数是 **freshmen**。",
+      ),
+    },
+    notes: `
+      tuition|college fees that rise every year|private maths lessons at home every Tuesday|parents paying the fees for classes each term|tuition is the money paid for teaching, or the teaching itself; a scholarship is money given to a student|tuition 是学费或教学本身；scholarship 是发给学生的钱|a scholarship is money given to a student, not the fee families pay or the lessons a teacher gives|scholarship 是发给学生的钱，不是家庭支付的学费或老师上的课|a diploma is a certificate for finishing a course, not the fee or the teaching|diploma 是结业证书，不是学费或教学|tu · i · tion|the ui and the -tion ending|ui 加结尾 -tion
+      scholarship|a student who will pay no fees at Oxford|money for fees and books given for the best grades in the country|a sports award without which he could not afford college|a scholarship is money given to support a student; tuition is the fee a student pays|scholarship 是资助学生的钱；tuition 是学生交的学费|tuition is the fee a student pays for classes, not money a student wins or is given|tuition 是学生交的学费，不是学生赢得或获得的钱|a diploma is a certificate for finishing a course, not money to pay for one|diploma 是结业证书，不是用来支付学业的钱|schol · ar · ship|the sch at the start, said like *school*, and the -ship ending|开头 sch 读音同 *school*，结尾是 -ship
+      freshman|a student getting lost in her first week at college|new students on a welcome day in the first year of high school|a nervous student who has been at the university for two days|a freshman is a first-year student; a sophomore is a second-year student|freshman 是一年级学生；sophomore 是二年级学生|a sophomore is in the second year, not a new student in the first week or first year|sophomore 是二年级学生，不是刚入学一两周的新生|a dropout has left school before finishing, not a new student who has just arrived|dropout 是中途辍学的人，不是刚入学的新生|fresh · man|fresh and man joined; the plural is freshmen|fresh 加 man；复数是 freshmen
+      sophomore|a student who knows the school better than in his first year|a woman choosing biology in her second year of college|a student who has finished the first year and has two more to go|a sophomore is a second-year student; a freshman is a first-year student|sophomore 是二年级学生；freshman 是一年级学生|a freshman is in the first year, not a student who has already finished one year|freshman 是一年级新生，不是已经读完一年的学生|a dropout has left school for good, not a student moving on to the next year|dropout 是已经辍学的人，不是升入下一年级的学生|soph · o · more|the ph, said like f, and the -more ending|ph 读作 f，结尾是 -more
+      undergraduate|twenty thousand students studying for their first degree|a third-year history student hoping to earn her first degree|courses that end with a bachelor's degree|an undergraduate is a student working for a first degree; a graduate already has one|undergraduate 是在读本科生；graduate 是已经毕业的人|alumni are former students who have left, not students still studying for a first degree|alumni 是已经离校的校友，不是在读本科的学生|a dropout has left before finishing, not a student working towards a degree|dropout 是中途辍学的人，不是正在攻读学位的学生|un · der · grad · u · ate|under joined to graduate|under 加 graduate
+      graduate|a student finishing university in June after four years|students finishing their course with top grades|students finishing four costly years of college|graduate means to finish a course and get a degree; enroll means to sign up at the start|graduate 是完成学业毕业；enroll 是一开始注册入学|enroll means to sign up at the start of a course, not to finish it|enroll 是在开始时报名注册，不是完成学业|retire means to stop working because of age, not to finish a course of study|retire 是因年龄而退休，不是完成学业|grad · u · ate|the -uate ending|结尾是 -uate
+      dropout|a boy who left high school at sixteen and never went back|the rate of students leaving before they finish|a man who left college after one year to start a company|a dropout leaves school for good before finishing; a truant only skips lessons|dropout 是中途彻底离开学校的人；truant 只是逃课|a freshman is a new first-year student, not someone who has left school|freshman 是一年级新生，不是离开学校的人|a truant skips lessons but is still at school, not someone who has left for good|truant 是逃课但仍在读的学生，不是彻底离校的人|drop · out|drop and out joined into one word|drop 和 out 合成一个词
+      alumni|two presidents and a Nobel Prize winner who studied at a college|former classmates from 1990 meeting at a reunion|former students visiting the college where they studied long ago|alumni are former students of a school, a plural word; a freshman is a new student|alumni 是校友，为复数；freshman 是新生|a freshman is one new student, not many former students|freshman 是一名新生，不是许多以前的学生|a dropout is one person who left early, and it is not a plural word for former students|dropout 是一个中途退学的人，不是表示众多校友的复数词|a · lum · ni|the i at the end for the plural; one is an alumnus|复数以 i 结尾；单数是 alumnus
+      diploma|students receiving a certificate on stage at graduation|a man framing proof that he finished the course|a nurse's qualification that gets her a hospital job|a diploma is a certificate for finishing a course; a transcript is a record of grades|diploma 是结业证书；transcript 是成绩记录|a transcript is a record of grades, not the certificate handed over on stage or framed on the wall|transcript 是成绩记录，不是台上颁发或挂在墙上的证书|tuition is the money paid for classes, not a certificate|tuition 是学费，不是证书|di · plo · ma|the a at the end|结尾是 a
+      plagiarism|handing in an essay copied from the internet as your own|software finding sentences copied from books or websites|a novelist copying parts of another author's book word for word|plagiarism is passing off someone else's words or ideas as your own; forgery is making a fake document or painting|plagiarism 是把别人的作品当成自己的；forgery 是伪造文件或画作|forgery is making a fake copy of a document or painting to fool people, not handing in someone else's words as your own|forgery 是伪造文件或画作，不是把别人的文字当成自己的交上去|smuggling is moving goods secretly across a border, not copying someone's words|smuggling 是偷运货物过境，不是抄袭别人的文字|pla · gia · rism|the gi after pla and the -ism ending|pla 后面是 gi，结尾是 -ism
+    `,
+  },
 );
 
 const crime = batch(
@@ -45,17 +112,50 @@ const crime = batch(
   ["Words of Crime", "犯罪的词"],
   ["stealing, damaging, fire, taking people and getting out", "偷窃、破坏、纵火、劫持与释放"],
   `
-  theft|the action of stealing|盗窃|He was charged with ___.|Car ___ is rising.|Report the ___ to the police.|burglar,hostage|thefts
-  burglar|a person who breaks into a building to steal|入室窃贼|A ___ broke into our house.|The ___ took the TV.|Lock the door to stop a ___.|theft,ransom|burglars,burglary
-  shoplift|to steal goods from a shop|在商店行窃|Kids may ___ for fun.|It is a crime to ___.|She was caught trying to ___.|theft,smuggling|shoplifted,shoplifter,shoplifting
-  vandal|a person who deliberately damages property|破坏公物者|A ___ smashed the window.|Who is the ___?|The ___ sprayed paint.|arson,ransom|vandals,vandalism,vandalize
-  arson|the crime of deliberately setting fire to property|纵火罪|Police suspect ___.|He was jailed for ___.|The fire was ___.|vandal,ransom|arsonist
-  smuggling|moving goods illegally into or out of a country|走私|Drug ___ is a serious crime.|They were caught ___ cigarettes.|___ is common at the border.|shoplift,forgery|smuggle,smuggler,smuggled
-  forgery|making a false copy of a document or painting; such a copy|伪造；伪造品|The painting was a ___.|He was jailed for ___.|The ___ fooled the bank.|hostage,parole|forger
-  ransom|money demanded for the release of a captive|赎金|They paid a ___.|The kidnappers demanded a ___.|He was held for ___.|hostage,parole|ransoms
-  hostage|a person held captive to force others to act|人质|Rebels took a ___.|The ___ was set free.|Two ___ are still held.|ransom,parole|hostages
-  parole|the release of a prisoner before the end of a sentence|假释|He was released on ___.|She broke her ___.|The board denied ___.|hostage,arson|paroled
+  theft|the action of stealing|盗窃|He was charged with ___ after he was caught riding away on a bike that was not his.|Report the ___ of your wallet to the police so that they can try to find out who took it.|Bike ___ is so common in the city that people use two locks to keep their bikes from being taken.|arson,forgery|thefts
+  burglar|a person who breaks into a building to steal|入室窃贼|A ___ broke into our house in the night and stole the TV and my mother's jewellery.|Lock every window before you go away, so that no ___ can climb in and steal your things.|The ___ crept through the dark house, filling a bag with rings and watches from the bedroom.|vandal,hostage|burglars,burglary
+  shoplift|to steal goods from a shop|在商店行窃|She was caught trying to ___ a lipstick by slipping it into her coat pocket in the chemist's.|Cameras watch every aisle of the supermarket to catch anyone who tries to ___ goods without paying.|Some teenagers ___ sweets from the corner shop's shelves just for the thrill, hiding them in their sleeves before walking out.|bribe,kidnap|shoplifted,shoplifter,shoplifting
+  vandal|a person who deliberately damages property|破坏公物者|A ___ smashed every window of the bus shelter and sprayed paint all over the walls.|The park bench had been broken in half by a ___ who seemed to enjoy wrecking things for fun.|Police caught the ___ who had scratched rude words into the paint of a dozen parked cars.|burglar,hostage|vandals,vandalism,vandalize
+  arson|the crime of deliberately setting fire to property|纵火罪|Police suspect ___, because the fire started in three places at once and the room smelled of petrol.|He was sent to prison for ___ after he set fire to his neighbour's barn.|The burnt-out warehouse was a clear case of ___: someone had lit the fire on purpose.|theft,forgery|arsonist
+  smuggling|moving goods illegally into or out of a country|走私|Drug ___ across the border is a serious crime, so the guards search every truck that crosses.|Customs officers found thousands of untaxed cigarettes hidden under the floor of a boat from abroad and charged the crew with ___.|The pirates grew rich from ___, sneaking silk and tea past the king's tax collectors at night.|theft,forgery|smuggle,smuggler,smuggled
+  forgery|making a false copy of a document or painting; such a copy|伪造；伪造品|The famous painting turned out to be a ___, a clever fake made only twenty years ago.|He was jailed for ___ after he made fake passports and sold them to strangers.|The bank saw that the signature on the letter was a ___, because it did not match the real one.|plagiarism,theft|forger
+  ransom|money demanded for the release of a captive|赎金|The kidnappers demanded a ___ of a million dollars for the safe return of the boy.|The family paid the ___, and the next day their daughter was set free unharmed.|Pirates held the ship's crew for ___, refusing to free them until the money arrived.|hostage,parole|ransoms
+  hostage|a person held captive to force others to act|人质|The robbers took a bank clerk ___ and threatened to hurt her unless the police backed away.|After three days in a locked cellar, the ___ was set free and ran into the arms of his waiting family.|Each ___ was kept in a dark room while the rebels made their demands to the government.|ransom,parole|hostages
+  parole|the release of a prisoner before the end of a sentence|假释|He was released on ___ after serving five years of a ten-year sentence, as long as he kept out of trouble.|She broke the rules of her ___ by leaving the city without telling her officer, so she was sent back to prison.|The board refused him ___, saying he must stay in prison until his full sentence was over.|ransom,hostage|paroled
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The film is about a **burglar** who turns to **forgery**, gets caught, and then earns **parole** by helping the police free a **hostage**. These ten words help you talk about stealing, damaging, setting fires, taking people and getting out of prison.",
+      "这部电影讲的是一个入室窃贼（**burglar**）转行搞伪造（**forgery**），被抓后又因帮警察解救一名人质（**hostage**）而获得假释（**parole**）。这十个词帮你谈论偷窃、破坏、纵火、劫持以及出狱。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **hostage** is the person who is held; a **ransom** is the money paid to get that person back.",
+        "**hostage** 是被扣押的人；**ransom** 是为把这个人赎回来而付的钱。",
+      ),
+      use: t(
+        "**Theft**, **arson** and **forgery** name crimes, but a **burglar** and a **vandal** are people, so you say a burglar broke in, not a theft broke in.",
+        "**theft**、**arson** 和 **forgery** 是罪名；**burglar** 和 **vandal** 是人，所以说 a burglar broke in，不能说 a theft broke in。",
+      ),
+      spelling: t(
+        "**Burglar** ends in -ar, not -er, **shoplift** is one word, and **smuggling** has a double g.",
+        "**burglar** 以 -ar 结尾，不是 -er；**shoplift** 写成一个词；**smuggling** 双写 g。",
+      ),
+    },
+    notes: `
+      theft|a boy caught riding away on a bike that was not his|a stolen wallet reported to the police|bikes taken so often that people use two locks|theft is the crime of stealing; arson is the crime of setting fire to property|theft 是偷窃罪；arson 是纵火罪|arson is the crime of setting fire to a building on purpose, not taking something that belongs to someone else|arson 是故意放火烧建筑，不是拿走别人的东西|forgery is making a fake document or painting, not taking a bike or a wallet|forgery 是伪造文件或画作，不是拿走自行车或钱包|theft|the th at the start and the ft at the end|开头 th，结尾 ft
+      burglar|a person who broke into a house at night and stole a TV|someone who could climb in through an unlocked window|a person filling a bag with rings and watches in a dark house|a burglar breaks into a building to steal; a vandal damages things on purpose|burglar 闯入建筑行窃；vandal 故意破坏东西|a vandal damages things for fun, not someone who breaks in to steal|vandal 是为了好玩破坏东西的人，不是闯进来偷东西的人|a hostage is a person held prisoner by others, not someone who breaks in to steal|hostage 是被别人扣押的人，不是闯入行窃的人|bur · glar|the -ar ending, not -er|结尾是 -ar，不是 -er
+      shoplift|a girl slipping a lipstick into her coat pocket in a shop|cameras watching supermarket aisles for people taking goods|teenagers hiding sweets from a shop in their sleeves|shoplift means to steal goods from a shop; bribe means to pay someone to do something wrong|shoplift 是在商店偷东西；bribe 是行贿|bribe means to give someone money to make them do something wrong, not to steal from a shop|bribe 是给人钱让他做坏事，不是在商店偷东西|kidnap means to take a person away by force, not to take goods from a shop|kidnap 是强行掳走某人，不是拿走商店的货物|shop · lift|shop and lift joined into one word|shop 和 lift 合成一个词
+      vandal|someone smashing bus shelter windows and spraying paint|someone breaking a park bench in half for fun|someone scratching rude words into a dozen parked cars|a vandal damages things on purpose; a burglar breaks in to steal|vandal 故意破坏东西；burglar 闯入行窃|a burglar breaks into buildings to steal, not to smash or scratch things for fun|burglar 闯入建筑是为了偷东西，不是为了好玩砸坏或刮花东西|a hostage is a person held prisoner, not someone who damages things|hostage 是被扣押的人，不是破坏东西的人|van · dal|the -al ending, not -le|结尾是 -al，不是 -le
+      arson|a fire that started in three places and smelled of petrol|a man jailed for setting fire to his neighbour's barn|a warehouse burnt down by someone on purpose|arson is the crime of setting fire to property on purpose; theft is the crime of stealing|arson 是故意纵火罪；theft 是偷窃罪|theft is the crime of stealing, not of starting a fire|theft 是偷窃罪，不是纵火|forgery is making fakes of papers or paintings, not starting a fire|forgery 是伪造文件或画作，不是纵火|ar · son|the word son at the end|结尾是 son
+      smuggling|drugs carried across a border hidden in trucks|cigarettes hidden in a boat and brought into a country in secret|pirates sneaking silk and tea past tax collectors|smuggling is moving goods secretly across a border; theft is taking what belongs to someone else|smuggling 是偷运货物过境；theft 是偷别人的东西|theft is taking something that belongs to someone else, not secretly moving goods into a country|theft 是拿走别人的东西，不是把货物偷偷运进国内|forgery is making fake papers or paintings, not sneaking goods past border guards|forgery 是伪造文件或画作，不是偷运货物躲过边检|smug · gling|the double g before -ling|-ling 前双写 g
+      forgery|a famous painting found to be a clever fake|a man making and selling fake passports|a signature on a letter that does not match the real one|forgery is making a fake document or painting; plagiarism is passing off someone's words as your own|forgery 是伪造文件或画作；plagiarism 是抄袭别人的文字|plagiarism is copying someone's words or ideas into your own work, not making a fake painting, passport or signature|plagiarism 是抄袭别人的文字或观点，不是伪造画作、护照或签名|theft is the crime of stealing something, not of making a fake copy|theft 是偷窃，不是伪造|for · ger · y|the soft g before -ery|g 发软音，后接 -ery
+      ransom|kidnappers asking a million dollars to return a boy|a family paying money to get their daughter set free|pirates holding a crew until money arrives|a ransom is the money paid to free someone; a hostage is the person held|ransom 是赎人的钱；hostage 是被扣押的人|a hostage is the person held prisoner, not the money paid to free them|hostage 是被扣押的人，不是赎人的钱|parole is the early release of a prisoner for good behaviour, not money demanded by kidnappers|parole 是犯人因表现好而提前获释，不是绑匪索要的钱|ran · som|the -som ending, like the end of *handsome*|结尾 -som，同 *handsome* 的结尾
+      hostage|a bank clerk taken by robbers to keep the police away|a man set free after three days in a locked cellar|prisoners kept in a dark room while rebels make demands|a hostage is a person held to force others to act; a ransom is the money paid to free them|hostage 是被扣押用来要挟的人；ransom 是赎金|a ransom is money demanded to free someone, not the person who is held|ransom 是赎人的钱，不是被扣押的人|parole is the early release of a prisoner, not a person held by robbers or rebels|parole 是犯人提前获释，不是被劫匪或叛军扣押的人|hos · tage|the -age ending, said like the end of *cottage*|结尾 -age，同 *cottage* 的结尾
+      parole|a prisoner let out after five years of a ten-year sentence|a woman sent back to prison for leaving the city without telling her officer|a prisoner refused early release and kept until his sentence ends|parole is the early release of a prisoner on conditions; a ransom is money paid to free a captive|parole 是附条件提前释放犯人；ransom 是为释放被扣押者付的钱|a ransom is money paid to kidnappers, not the early release of a prisoner by the law|ransom 是付给绑匪的钱，不是依法提前释放犯人|a hostage is a person held by criminals, not the early release of a prisoner|hostage 是被罪犯扣押的人，不是犯人的提前释放|pa · role|the -role ending, like the word *role*|结尾 -role，同 *role*
+    `,
+  },
 );
 
 const travel = batch(
@@ -63,17 +163,50 @@ const travel = batch(
   ["Words of Travel", "旅行的词"],
   ["plans, bags, leaving, trips, stops and tiredness from flying", "行程、行李、出发、出游、中转与时差"],
   `
-  itinerary|a planned route or journey|旅行计划|Check the ___ before you go.|Our ___ includes Rome.|The guide gave us an ___.|excursion,layover|itineraries
-  luggage|suitcases and bags for travel|行李|Don't leave your ___ alone.|My ___ was lost.|Put the ___ in the trunk.|cabin,hostel|
-  departure|the act of leaving; a change from the usual|离开；背离|Check the ___ time.|The new plan is a ___ from the past.|Her ___ was sudden.|layover,disembark|departures
-  excursion|a short journey for pleasure|远足，短途旅行|We went on an ___ to the lake.|The school ___ is next week.|The ship offers an ___.|cruise,itinerary|excursions
-  cruise|a voyage on a ship for pleasure; to sail or drive at a steady speed|乘船游览；巡航|We went on a ___.|Cars ___ along the coast.|The ___ ship docked.|excursion,cabin|cruised,cruising
-  cabin|a small wooden house; a room on a ship or plane|小木屋；船舱|We stayed in a ___ by the lake.|The ___ crew served drinks.|Go to your ___.|luggage,jet lag|cabins
-  hostel|a cheap place for travelers to stay|旅舍|We slept in a youth ___.|The ___ was full.|A ___ is cheap.|jet lag,luggage|hostels
-  layover|a short stay at a place on a long journey|中途停留|We have a ___ in Dubai.|The ___ lasted six hours.|A long ___ is tiring.|departure,jet lag|layovers
-  disembark|to leave a ship or plane|下船，下飞机|Passengers may now ___.|We ___ at the port.|Please wait to ___.|departure,layover|disembarked
-  jet lag|tiredness after a long flight across time zones|时差反应|I had bad ___.|___ kept me awake.|Drink water to fight ___.|layover,luggage|
+  itinerary|a planned route or journey|旅行计划|Check the ___ to see which cities we visit on each day of the tour.|Our ___ includes three days in Rome, two in Florence and a final night in Venice.|The travel agent emailed us a day-by-day ___ with every flight, hotel and museum visit.|excursion,layover|itineraries
+  luggage|suitcases and bags for travel|行李|Never leave your ___ alone at the airport; keep your suitcases with you at all times.|The airline lost my ___, so I arrived in Paris with no bags and no clean clothes.|We packed the ___ into the boot of the car: two big suitcases and a backpack.|cabin,hostel|
+  departure|the act of leaving; a change from the usual|离开；背离|Check the ___ time on your ticket; the train leaves at 8:15 sharp.|Please be at the gate thirty minutes before ___, or the plane may leave without you.|The ___ board at the station showed that our train to London would leave from platform four.|layover,itinerary|departures
+  excursion|a short journey for pleasure|远足，短途旅行|The school is planning a day ___ to the science museum, leaving at nine and coming back by four.|From the hotel, guests can take a short ___ by bus to the waterfall and be back in time for lunch.|Our class trip was a fun ___ to the zoo that lasted only one afternoon.|cruise,itinerary|excursions
+  cruise|a voyage on a ship for pleasure; to sail or drive at a steady speed|乘船游览；巡航|We went on a ten-day ___ around the Greek islands, sleeping on the ship every night.|Grandma saved for years for the two-week ___ across the Atlantic, sleeping every night on a huge ship far out at sea.|On the ___, we ate dinner on deck every night as the ship sailed from port to port.|excursion,cabin|cruised,cruising
+  cabin|a small wooden house; a room on a ship or plane|小木屋；船舱|We stayed in a little wooden ___ by the lake, with a fireplace and two bunk beds.|On the overnight ferry, we slept in a tiny ___ with a round window looking out to sea.|The ___ crew on the plane served drinks and showed us how to use the life jackets.|luggage,hostel|cabins
+  hostel|a cheap place for travelers to stay|旅舍|Backpackers often sleep in a youth ___, where a bed in a shared room costs very little.|The city-centre ___ was full of students sharing bunk rooms because the hotels cost too much.|Staying in a ___ costs much less than a hotel, but you may have to share a bathroom with strangers.|luggage,layover|hostels
+  layover|a short stay at a place on a long journey|中途停留|On the flight to Sydney, we have a six-hour ___ in Dubai before we catch the next plane.|During the ___, we left the airport and saw the city before flying on that evening.|A long ___ between flights is tiring, especially when the airport has nowhere to sleep.|departure,jet lag|layovers
+  disembark|to leave a ship or plane|下船，下飞机|The plane has landed, and passengers may now ___ by the front door and walk down the steps.|Once the ship had docked, we were allowed to ___ and explore the port for the day.|Please stay in your seats until the captain tells you it is safe to ___ from the aircraft.|cruise,linger|disembarked
+  jet lag|tiredness after a long flight across time zones|时差反应|After flying from London to Tokyo, I had such bad ___ that I was wide awake at three in the morning.|Drink lots of water and sleep at local times to fight ___ after a long flight across time zones.|Her ___ was so bad that she fell asleep at lunch on her first day in New York.|layover,luggage|
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Our **itinerary** had a long **layover** in Singapore, so by the time we could **disembark** in Sydney, we all had terrible **jet lag**. These ten words help you talk about travel plans, bags, leaving, trips, stops and tiredness from flying.",
+      "我们的行程（**itinerary**）里要在新加坡长时间中转（**layover**），所以等到在悉尼下飞机（**disembark**）时，大家都被时差（**jet lag**）折腾得够呛。这十个词帮你谈论旅行计划、行李、出发、出游、中转和飞行后的疲倦。",
+    ),
+    watchOut: {
+      meanings: t(
+        "An **excursion** is a short trip of a day or less, while a **cruise** is a holiday of many days spent sleeping on a ship.",
+        "**excursion** 是一天之内的短途游玩；**cruise** 是在船上住好几天的度假旅行。",
+      ),
+      use: t(
+        "**Luggage** cannot be counted, so you say a lot of luggage or two pieces of luggage, never two luggages.",
+        "**luggage** 是不可数名词，要说 a lot of luggage 或 two pieces of luggage，不能说 two luggages。",
+      ),
+      spelling: t(
+        "**Itinerary** ends in -ary (i · tin · er · ar · y), **jet lag** is two words, and **layover** is one.",
+        "**itinerary** 以 -ary 结尾，拆开是 i · tin · er · ar · y；**jet lag** 是两个词，**layover** 是一个词。",
+      ),
+    },
+    notes: `
+      itinerary|a tour plan showing which cities are visited each day|a plan of three days in Rome, two in Florence and a night in Venice|a day-by-day plan of flights, hotels and museum visits|an itinerary is the whole plan of a journey; an excursion is one short trip|itinerary 是整个旅程的计划；excursion 是一次短途出游|an excursion is one short trip for pleasure, not a day-by-day plan of a whole journey|excursion 是一次短途游玩，不是整段旅程的逐日安排|a layover is a short stop between flights, not the plan of a whole tour|layover 是航班之间的短暂停留，不是整个旅行的计划|i · tin · er · ar · y|the -ary ending after itiner|itiner 后面接 -ary
+      luggage|suitcases that should never be left alone at an airport|bags lost by an airline on the way to Paris|two suitcases and a backpack packed into the car|luggage means the bags and suitcases you take on a trip; a cabin is a small room or house|luggage 是旅行带的箱包；cabin 是小屋或船舱|a cabin is a small room on a ship or a small wooden house, not bags you carry|cabin 是船舱或小木屋，不是随身携带的箱包|a hostel is a cheap place to stay, not the bags you take with you|hostel 是便宜的住处，不是随身带的箱包|lug · gage|the double g and the -age ending|双写 g，结尾是 -age
+      departure|a train leaving at 8:15 sharp|passengers at the gate before a plane leaves|a station board showing where a train will leave from|departure means leaving at the start of a journey; a layover is a stop partway through|departure 是出发离开；layover 是途中的停留|a layover is a stop partway through a journey, not the moment a train or plane leaves|layover 是途中的停留，不是火车或飞机出发的时刻|an itinerary is the plan of a whole journey, not the moment of leaving|itinerary 是整个旅程的计划，不是出发的时刻|de · par · ture|the -ture ending|结尾是 -ture
+      excursion|a school day trip to a science museum|a short bus trip from a hotel to a waterfall and back by lunch|an afternoon class trip to the zoo|an excursion is a short trip for pleasure; a cruise is a holiday of many days on a ship|excursion 是短途游玩；cruise 是在船上度过多日的旅行|a cruise is a holiday of many days at sea on a ship, not a short trip by bus or on foot|cruise 是在海上航行多日的度假，不是乘大巴或步行的短途游|an itinerary is the plan of a journey, not the trip itself|itinerary 是旅程的计划，不是出游本身|ex · cur · sion|the -sion ending|结尾是 -sion
+      cruise|ten days at sea around the Greek islands, sleeping on the ship|two weeks crossing the Atlantic on a huge ship|dinner on deck each night as a ship sails from port to port|a cruise is a holiday of many days on a ship; an excursion is a short trip|cruise 是在船上度过多日的旅行；excursion 是短途出游|an excursion is a short trip of a day or less, not many days and nights at sea|excursion 是一天之内的短途游，不是在海上度过许多日夜|a cabin is a room on a ship, not the whole holiday at sea|cabin 是船上的房间，不是整趟海上旅行|cruise|the ui, said like the oo in *moose*|ui 读音同 *moose* 中的 oo
+      cabin|a little wooden house by a lake with a fireplace|a tiny room with a round window on an overnight ferry|the crew who serve drinks on a plane|a cabin is a small wooden house or a room on a ship or plane; a hostel is a cheap place for travellers to stay|cabin 是小木屋或船舱、机舱；hostel 是便宜的旅舍|luggage means bags and suitcases, not a house or a room on a ship|luggage 是箱包，不是小屋或船舱|a hostel is a cheap building for many travellers, not a small wooden house or a room on a ship or plane|hostel 是供许多旅客住的便宜旅舍，不是小木屋或船舱机舱|cab · in|the -in ending, not -ine|结尾是 -in，不是 -ine
+      hostel|backpackers paying very little for a bed in a shared room|students sharing bunk rooms in the city centre because hotels cost too much|a cheap place where you may share a bathroom with strangers|a hostel is a cheap place for travellers to stay; a cabin is a small house or a room on a ship|hostel 是便宜的旅舍；cabin 是小木屋或船舱|luggage means bags and suitcases, not a place to sleep|luggage 是箱包，不是住的地方|a layover is a short stop between flights, not a building where travellers sleep|layover 是航班之间的短暂停留，不是旅客住宿的地方|hos · tel|the -tel ending, as in *hotel*|结尾是 -tel，同 *hotel*
+      layover|six hours in Dubai before the next plane to Sydney|leaving the airport to see a city before flying on|a long wait between flights at an airport with nowhere to sleep|a layover is a stop partway through a journey; departure is the moment of leaving|layover 是途中的停留；departure 是出发|departure means leaving at the start of a journey, not a stop between two flights|departure 是出发离开，不是两个航班之间的停留|jet lag is tiredness after flying across time zones, not a stop between flights|jet lag 是跨时区飞行后的疲倦，不是航班间的停留|lay · o · ver|lay and over joined into one word|lay 和 over 合成一个词
+      disembark|passengers leaving a plane by the front door|people leaving a docked ship to explore a port|passengers waiting for the captain before leaving an aircraft|disembark means to get off a ship or plane; cruise means to sail along at a steady speed|disembark 是下船或下飞机；cruise 是平稳地航行|cruise means to sail or drive along at a steady speed, not to get off a ship or plane|cruise 是平稳地航行或行驶，不是下船或下飞机|linger means to stay somewhere longer than needed, not to get off a ship or plane|linger 是逗留不走，不是下船或下飞机|dis · em · bark|the prefix dis- before embark|embark 前加前缀 dis-
+      jet lag|a traveller wide awake at three in the morning after flying to Tokyo|drinking water and sleeping at local times after a long flight|a woman falling asleep at lunch on her first day in New York|jet lag is tiredness after flying across time zones; a layover is a stop between flights|jet lag 是跨时区飞行后的疲倦；layover 是航班间的停留|a layover is a stop partway through a journey, not tiredness after it|layover 是途中的停留，不是旅途后的疲倦|luggage means bags and suitcases, not tiredness after a flight|luggage 是箱包，不是飞行后的疲倦|jet · lag|two separate words: jet and lag|两个分开的词：jet 和 lag
+    `,
+  },
 );
 
 const city = batch(
@@ -81,17 +214,50 @@ const city = batch(
   ["Words of the City", "城市的词"],
   ["the center, the edges, traffic, police areas and renting", "市中心、市郊、交通、警区与租房"],
   `
-  downtown|the central area of a city|市中心(的)|Let's go ___.|The ___ shops close early.|She works ___.|suburban,boulevard|
-  suburban|relating to the area at the edge of a city|郊区的|They live in a ___ house.|___ life is quiet.|___ trains are crowded.|downtown,sprawl|
-  sprawl|the spread of a city into the countryside; to sit or lie with limbs spread out|扩张；四肢摊开|Urban ___ eats up farmland.|He chose to ___ on the sofa.|The city continues to ___.|congestion,suburban|sprawled,sprawling
-  congestion|overcrowding, especially of traffic|拥堵|Traffic ___ is bad today.|A tax may cut ___.|Nasal ___ is a cold sign.|sprawl,commuter|congested
-  commuter|a person who travels regularly to work|通勤者|The ___ took the 7:15 train to work.|A ___ may spend hours on the road.|Every ___ hates delays.|congestion,tenant|commuters
-  boulevard|a wide street, often lined with trees|林荫大道|They walked along the ___.|The ___ was lit up.|Shops line the ___.|downtown,precinct|boulevards
-  precinct|a district of a city for police; an area closed to traffic|警区；步行区|The ___ has a new chief.|Shoppers fill the ___.|Each ___ has a station.|zoning,boulevard|precincts
-  zoning|dividing land into areas for different uses|分区规划|___ laws ban factories here.|The ___ board met.|Change the ___ to build homes.|precinct,landlord|zoned
-  tenant|a person who rents a place from a landlord|房客|The ___ pays rent each month.|She is a good ___.|The new ___ moved in.|landlord,commuter|tenants
-  landlord|a person who rents out property|房东|The ___ raised the rent.|Call the ___ about the leak.|Our ___ is kind.|tenant,zoning|landlords,landlady
+  downtown|the central area of a city|市中心(的)|The ___ office towers rise forty floors above the busy streets in the very centre of the city.|The ___ business district is packed with office workers by day but empty at night, when everyone goes home to the suburbs.|She works in a ___ office block in the city centre, among the banks and the big department stores.|suburban,quaint|
+  suburban|relating to the area at the edge of a city|郊区的|They moved to a ___ house with a garden and a driveway on a quiet street at the edge of the city.|Every morning the ___ trains are packed with people travelling from the outer towns into the city.|Life in the ___ streets at the city's edge is quiet, with lawns, driveways and few shops.|downtown,virtual|
+  sprawl|the spread of a city into the countryside; to sit or lie with limbs spread out|扩张；四肢摊开|Urban ___ is eating up farmland as new housing estates spread further into the countryside every year.|The city's ___ now stretches thirty miles out, swallowing villages that were once surrounded by fields.|To stop the endless ___ of new suburbs, the council has made a green belt where no one may build.|congestion,zoning|sprawled,sprawling
+  congestion|overcrowding, especially of traffic|拥堵|Traffic ___ is so bad at rush hour that it takes an hour to drive two miles.|The city charges drivers a fee to enter the centre, hoping to cut ___ on its crowded roads.|A bad cold can cause ___ in your nose, so that it feels blocked and you can only breathe through your mouth.|sprawl,commuter|congested
+  commuter|a person who travels regularly to work|通勤者|Every working day, the ___ catches the 7:15 train into the city and the 6:30 train home again.|A ___ who drives to work may spend two hours a day stuck on the road between home and the office.|Every ___ hates train delays, because a late train means arriving late at work.|congestion,layover|commuters
+  boulevard|a wide street, often lined with trees|林荫大道|They strolled along the wide, tree-lined ___, past cafés and grand old buildings.|At night the long ___ was lit by rows of lamps between its tall plane trees.|Smart shops line both sides of the ___, which is wide enough for four lanes of traffic.|precinct,sprawl|boulevards
+  precinct|a district of a city for police; an area closed to traffic|警区；步行区|The ___ has a new police chief, who has promised more officers on the streets of his district.|On Saturdays, shoppers fill the pedestrian ___, where no cars are allowed.|Each police ___ in the city has its own station and its own officers.|zoning,boulevard|precincts
+  zoning|dividing land into areas for different uses|分区规划|Local ___ laws ban factories in this area, so only homes and shops may be built here.|The council changed the ___ of the old factory site so that houses could be built on it.|Under the city's ___ plan, the north is for homes, the east for offices and the south for factories.|sprawl,precinct|zoned
+  tenant|a person who rents a place from a landlord|房客|The ___ pays rent to the owner of the flat on the first day of every month.|When the old ___ moved out, the owner painted the rooms and looked for someone new to rent them.|As a ___, you must ask the owner before you paint the walls of the house you rent.|landlord,commuter|tenants
+  landlord|a person who rents out property|房东|The ___ raised the rent again, so the family living in his flat must pay more each month.|Call the ___ about the leaking roof; it is his house, so he must pay to fix it.|Our ___ owns six flats in this building and rents them all out to students.|tenant,supervisor|landlords,landlady
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Every morning the **commuter** trains crawl in from the **suburban** towns, and the roads into the **downtown** area are thick with **congestion**. These ten words help you talk about the city centre and its edges, traffic, police areas and renting a home.",
+      "每天早上，通勤（**commuter**）列车从郊区（**suburban**）小镇缓缓驶来，通往市中心（**downtown**）的道路堵得水泄不通（**congestion**）。这十个词帮你谈论市中心和城郊、交通、警区以及租房。",
+    ),
+    watchOut: {
+      meanings: t(
+        "The **tenant** is the person who rents and pays; the **landlord** is the person who owns the place and collects the rent.",
+        "**tenant** 是租房付租金的人；**landlord** 是拥有房子、收租金的人。",
+      ),
+      use: t(
+        "**Sprawl** is the city spreading outward over the land, while **congestion** is too many cars or people packed into the space that is already there.",
+        "**sprawl** 是城市向外蔓延、占用更多土地；**congestion** 是已有的空间里挤满了车或人。",
+      ),
+      spelling: t(
+        "**Boulevard** has ou and ends in -ard, **precinct** hides a c before the t, and **commuter** has a double m.",
+        "**boulevard** 中有 ou，以 -ard 结尾；**precinct** 的 t 前藏着一个 c；**commuter** 双写 m。",
+      ),
+    },
+    notes: `
+      downtown|office towers forty floors high in the very centre of a city|a business district in the centre that empties at night|an office block among the banks and department stores of the city centre|downtown means in the centre of a city; suburban means at its edge|downtown 是市中心的；suburban 是郊区的|suburban means at the quiet edge of a city, not in its busy centre|suburban 是在城市安静的边缘，不是在繁忙的中心|quaint means charmingly old-fashioned, not in the centre of a city|quaint 是古色古香、别有韵味的，不是位于市中心的|down · town|down and town joined into one word|down 和 town 合成一个词
+      suburban|a house with a garden and a driveway at the edge of a city|trains packed with people from the outer towns|quiet streets with lawns and few shops at the city's edge|suburban means at the edge of a city; downtown means in its centre|suburban 是郊区的；downtown 是市中心的|downtown means in the busy centre of a city, not at its quiet edge|downtown 是在繁忙的市中心，不是在安静的城市边缘|virtual means existing on computers or almost real, not a real place at the edge of a city|virtual 是电脑里的或近乎实际的，不是城市边缘的真实地方|sub · ur · ban|the prefix sub- before urban|urban 前加前缀 sub-
+      sprawl|housing estates spreading into farmland every year|a city stretching thirty miles out and swallowing villages|new suburbs that a green belt is meant to stop|sprawl is a city spreading out over the land; congestion is crowding on roads that already exist|sprawl 是城市向外蔓延；congestion 是现有道路上的拥堵|congestion is overcrowding on roads, not a city spreading out over farmland|congestion 是道路拥堵，不是城市向农田蔓延|zoning is the planning of what may be built where, not the spread of a city|zoning 是规划哪里能建什么，不是城市的蔓延|sprawl|the aw, as in *crawl*|aw 读音同 *crawl*
+      congestion|an hour to drive two miles at rush hour|a fee for driving into the centre to cut crowding on the roads|a blocked nose from a bad cold|congestion is overcrowding or blocking, especially of traffic; sprawl is a city spreading out|congestion 是拥挤堵塞，尤指交通；sprawl 是城市蔓延|sprawl is a city spreading out into the countryside, not roads or a nose being blocked|sprawl 是城市向乡村蔓延，不是道路或鼻子堵塞|a commuter is a person who travels to work, not a blocking or overcrowding|commuter 是通勤的人，不是拥堵|con · ges · tion|the -tion ending after the soft g|g 发软音，结尾是 -tion
+      commuter|a man taking the 7:15 train in and the 6:30 train home|a driver stuck on the road for two hours a day between home and work|people who hate late trains because they arrive late at work|a commuter is a person who travels to work and back; congestion is crowding on the roads|commuter 是通勤上班的人；congestion 是道路拥堵|congestion is crowded traffic, not a person who travels to work|congestion 是交通拥堵，不是通勤的人|a layover is a stop on a long journey, not a person who travels to work each day|layover 是长途旅行中的停留，不是每天通勤的人|com · mut · er|the double m in the middle|中间双写 m
+      boulevard|a wide, tree-lined street with cafés and grand buildings|a long street lit by lamps between plane trees|a street lined with smart shops and four lanes of traffic|a boulevard is a wide street lined with trees; a precinct is a police district or a car-free shopping area|boulevard 是宽阔的林荫大道；precinct 是警区或步行街区|a precinct is a police district or an area closed to cars, not a wide street with lanes of traffic|precinct 是警区或禁止车辆的区域，不是有多条车道的大街|sprawl is a city spreading out into the countryside, not one wide street|sprawl 是城市向乡村蔓延，不是一条宽阔的街道|bou · le · vard|the ou at the start and the -ard ending|开头是 ou，结尾是 -ard
+      precinct|a new police chief for one district|shoppers in an area where no cars are allowed|a police district with its own station and officers|a precinct is a police district or a car-free area; zoning is the plan of how land may be used|precinct 是警区或禁车区；zoning 是土地用途规划|zoning is a plan for what may be built where, not a district with its own police|zoning 是建筑用途规划，不是有自己警察的辖区|a boulevard is a wide street for traffic, not an area closed to cars or a police district|boulevard 是供车辆通行的宽阔街道，不是禁车区或警区|pre · cinct|the c before the t at the end|结尾 t 前有 c
+      zoning|laws that ban factories and allow only homes and shops|a council changing the use of an old factory site to allow houses|a plan setting land for homes, offices and factories|zoning is dividing land into areas for different uses; a precinct is one district of a city|zoning 是划分土地用途；precinct 是城市的一个辖区|sprawl is a city spreading out without a plan, not the rules for what may be built where|sprawl 是城市无序蔓延，不是规定哪里能建什么|a precinct is one district of a city, not the rules for how land is used|precinct 是城市的一个辖区，不是土地用途的规定|zon · ing|the silent e of zone drops before -ing|zone 去掉 e 再加 -ing
+      tenant|a man paying rent to the owner of a flat every month|a renter moving out so the owner looks for someone new|a renter who must ask the owner before painting the walls|a tenant rents a home from its owner; a landlord owns it and collects the rent|tenant 是租房的人；landlord 是拥有房子、收租金的房东|a landlord owns the home and collects the rent, not the person who pays it|landlord 是拥有房子、收租金的人，不是交租金的人|a commuter is a person who travels to work, not someone who rents a home|commuter 是通勤的人，不是租房的人|ten · ant|the -ant ending|结尾是 -ant
+      landlord|an owner raising the rent for the family in his flat|an owner who must pay to fix the leaking roof of his house|a man who owns six flats and rents them to students|a landlord owns a place and rents it out; a tenant pays rent to live there|landlord 是出租房子的房东；tenant 是付租金居住的房客|a tenant pays rent to live in a home, not the owner who raises the rent or fixes the roof|tenant 是付租金居住的人，不是涨房租或修屋顶的房主|a supervisor oversees people at work, not someone who owns and rents out homes|supervisor 是工作中管人的主管，不是拥有并出租房子的人|land · lord|land and lord joined into one word|land 和 lord 合成一个词
+    `,
+  },
 );
 
 const office = batch(
@@ -99,17 +265,50 @@ const office = batch(
   ["Words of the Office", "职场的词"],
   ["bosses, notes, pay, rising up and leaving work", "上司、便条、薪水、晋升与离职"],
   `
-  supervisor|a person who oversees work|主管|Ask your ___ for help.|The ___ checked our work.|She was made ___.|intern,payroll|supervisors,supervise
-  intern|a student or trainee who works to gain experience|实习生|She is an ___ at the bank.|The ___ made coffee.|Each summer we hire an ___.|memo,payroll|interns,internship
-  memo|a short written message in an office|备忘录|Read the ___ from the boss.|She sent a ___ to all staff.|The ___ was leaked.|payroll,workload|memos
-  workload|the amount of work to be done|工作量|My ___ is heavy.|They shared the ___.|Cut your ___.|memo,payroll|workloads
-  schedule|a plan of times for events; to arrange for a time|日程表；安排|Check the train ___.|Let's ___ a meeting.|We are behind ___.|workload,promotion|scheduled,schedules
-  payroll|a list of employees and what they are paid|工资单|There are 50 people on the ___.|The ___ is done monthly.|___ costs are high.|memo,supervisor|payrolls
-  promotion|being raised to a higher position; publicity for a product|升职；促销|She got a ___.|The ___ boosted sales.|He hopes for a ___.|schedule,resign|promotions
-  resign|to give up a job|辞职|He chose to ___ after the scandal.|She may ___ next week.|Why did you ___?|promotion,payroll|resigned,resignation
-  retire|to leave one's job and stop working, usually because of age|退休|He plans to ___ at sixty.|She chose to ___ early.|Most people ___ later now.|intern,memo|retired,retirement
-  task|a piece of work to be done|任务|Finish each ___ on time.|It was a hard ___.|She gave me a ___.|workload,supervisor|tasks
+  supervisor|a person who oversees work|主管|Ask your ___ for help if you are not sure how to do the job; she checks everyone's work.|The ___ walked round the factory floor, checking that each worker was doing the job properly.|After ten years on the team, she was made ___, in charge of twelve other workers.|intern,payroll|supervisors,supervise
+  intern|a student or trainee who works to gain experience|实习生|This summer the law firm took on a college student as its ___ to learn how the office works.|The new ___ spent his first week making coffee and filing papers, learning the job from the bottom up.|Each summer the hospital takes a medical student as its ___ so that she can gain experience on the wards.|supervisor,freshman|interns,internship
+  memo|a short written message in an office|备忘录|The boss sent a short ___ to all staff saying the office would close early on Friday.|Read the ___ pinned to the noticeboard: the meeting has moved to Room 4.|Someone leaked the private ___ about job cuts to the newspapers before the staff had even seen it.|workload,editorial|memos
+  workload|the amount of work to be done|工作量|With three big projects due this month, my ___ is so heavy that I work late every night.|When Sam was off sick, the rest of the team shared his ___ so that nothing was left undone.|Teachers say their ___ has grown, with more marking and more meetings every year.|memo,payroll|workloads
+  schedule|a plan of times for events; to arrange for a time|日程表；安排|Check the train ___ to see what time the next one leaves for the coast.|The builders are behind ___, so the new school will not open until December.|My ___ for Monday is packed: meetings at nine, eleven and three, and a dentist at five.|workload,promotion|scheduled,schedules
+  payroll|a list of employees and what they are paid|工资单|There are fifty people on the company's ___, and each one is paid on the last day of the month.|The office manager runs the ___ every month, working out what each worker is owed.|The firm cut ten jobs to make its ___ smaller and save money on wages.|memo,supervisor|payrolls
+  promotion|being raised to a higher position; publicity for a product|升职；促销|After years of hard work, she got a ___ to head of sales, with a bigger office and more responsibility.|He hopes for a ___ this year so that he can move up from assistant to manager.|The shop's summer ___ for the new drink, with free samples and posters everywhere, boosted sales.|bonus,schedule|promotions
+  resign|to give up a job|辞职|After the scandal, the minister chose to ___, saying he could no longer do the job honestly.|She may ___ next week and take a better job at another company.|Unhappy with the long hours, he decided to ___ and handed his letter to the boss.|abdicate,enroll|resigned,resignation
+  retire|to leave one's job and stop working, usually because of age|退休|Grandpa plans to ___ at sixty-five and spend his days fishing after forty years at the factory.|Most people now ___ later than their parents did, working until they are nearly seventy.|After thirty years of teaching, Mrs Lee will ___ this summer and finally have time to travel.|graduate,enroll|retired,retirement
+  task|a piece of work to be done|任务|Finish each ___ on the list before you start the next one, and tick it off when it is done.|Moving the piano upstairs was a hard ___ that took four people an hour.|The teacher gave each group a ___: one had to build a bridge, the other a tower.|workload,schedule|tasks
   `,
+  "context-clues",
+  {
+    intro: t(
+      "On her first day, the new **intern** read a **memo** from her **supervisor** listing every **task** she had to finish by Friday. These ten words help you talk about bosses, office notes, pay, moving up and leaving work.",
+      "上班第一天，新来的实习生（**intern**）读了主管（**supervisor**）写的一份备忘录（**memo**），上面列着她周五前要完成的每一项任务（**task**）。这十个词帮你谈论上司、办公室便条、薪水、晋升和离职。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **resign** is to choose to leave a job at any age; to **retire** is to stop working for good, usually because you are old enough.",
+        "**resign** 是在任何年龄主动辞职；**retire** 是永久停止工作，通常是因为到了年龄。",
+      ),
+      use: t(
+        "A **task** is one piece of work, while your **workload** is the whole amount of work you have, so you finish a task but share or cut a workload.",
+        "**task** 是一项具体的工作；**workload** 是你全部的工作量，所以说完成一项任务，但分担或减轻工作量。",
+      ),
+      spelling: t(
+        "**Resign** has a silent g, **payroll** joins *pay* and *roll* with a double l, and **schedule** starts with sch.",
+        "**resign** 中的 g 不发音；**payroll** 是 *pay* 加 *roll*，双写 l；**schedule** 以 sch 开头。",
+      ),
+    },
+    notes: `
+      supervisor|a boss who checks everyone's work and helps when you are unsure|a boss walking the factory floor checking each worker|a woman put in charge of twelve workers after ten years|a supervisor oversees other people's work; an intern is a trainee who is learning|supervisor 是监督他人工作的主管；intern 是在学习的实习生|an intern is a trainee learning the job, not the person who checks everyone's work|intern 是学习工作的实习生，不是检查大家工作的人|a payroll is a list of workers and their pay, not a person in charge|payroll 是员工工资名单，不是负责人|su · per · vi · sor|the -or ending, not -er|结尾是 -or，不是 -er
+      intern|a college student at a law firm learning how the office works|a newcomer making coffee and filing papers in his first week|a medical student gaining experience on hospital wards|an intern is a student or trainee working to learn; a supervisor is in charge of others|intern 是边工作边学习的学生或学员；supervisor 是管理他人的主管|a supervisor is in charge of other workers, not a student learning the job|supervisor 是管理别人的主管，不是学习工作的学生|a freshman is a first-year student at school or college, not a trainee at an office or hospital|freshman 是学校里的一年级学生，不是办公室或医院里的实习生|in · tern|the -ern ending|结尾是 -ern
+      memo|a note to all staff about closing early on Friday|a note on a noticeboard about a meeting moving room|a private note about job cuts leaked to the newspapers|a memo is a short written message inside an office; an editorial is a newspaper article giving the editor's opinion|memo 是公司内部的简短书面通知；editorial 是报纸的社论|a workload is the amount of work you have, not a written message|workload 是工作量，不是书面通知|an editorial is a newspaper's opinion article for the public, not a short note to staff|editorial 是报纸面向公众的社论，不是给员工的简短通知|mem · o|the o at the end; the plural is memos|结尾是 o；复数是 memos
+      workload|three big projects that keep someone working late every night|a team sharing a sick worker's jobs|teachers with more marking and meetings every year|a workload is the whole amount of work to do; a task is one piece of work|workload 是全部工作量；task 是一项具体任务|a memo is a short written message, not the amount of work you have|memo 是简短的书面通知，不是工作量|a payroll is a list of workers and their pay, not the amount of work to be done|payroll 是员工工资名单，不是要做的工作量|work · load|work and load joined into one word|work 和 load 合成一个词
+      schedule|a train timetable showing when the next train leaves|builders running late on a new school|a Monday packed with meetings at set times|a schedule is a plan of times; a workload is how much work there is|schedule 是时间安排表；workload 是工作量|a workload is the amount of work, not a list of the times when things happen|workload 是工作量，不是事情发生时间的安排|a promotion is a move to a higher job or an advert for a product, not a plan of times|promotion 是升职或促销，不是时间安排|sched · ule|the sch at the start and the -ule ending|开头是 sch，结尾是 -ule
+      payroll|fifty people paid on the last day of each month|an office manager working out what each worker is owed|a firm cutting jobs to save money on wages|a payroll is the list of workers and what they are paid; a supervisor is a boss|payroll 是员工工资名单；supervisor 是主管|a memo is a short note, not a list of workers and their pay|memo 是简短的通知，不是员工工资名单|a supervisor is one person who oversees work, not a list of everyone who is paid|supervisor 是监督工作的人，不是所有领工资的人的名单|pay · roll|pay and roll joined, with a double l|pay 加 roll，双写 l
+      promotion|a woman made head of sales with a bigger office|a man hoping to move up from assistant to manager|a summer push for a new drink with free samples and posters|a promotion is a move up to a higher job, or a push to sell a product; a bonus is extra money|promotion 是升职或促销；bonus 是额外的奖金|a bonus is extra money on top of your pay, not a move to a higher job or an advert for a drink|bonus 是工资外的奖金，不是升职或饮料促销|a schedule is a plan of times, not a move up to a better job|schedule 是时间安排，不是升职|pro · mo · tion|the -tion ending|结尾是 -tion
+      resign|a minister leaving his job after a scandal|a woman leaving to take a better job elsewhere|a man handing his letter to the boss because of long hours|resign means to choose to leave your job; retire means to stop working for good, usually because of age|resign 是主动辞职；retire 是因年龄等原因永久停止工作|abdicate means for a king or queen to give up the throne, not for a worker or a minister to leave a job|abdicate 是国王或女王退位，不是员工或部长辞职|enroll means to sign up for a course, the opposite of leaving|enroll 是报名注册，和离开正好相反|re · sign|the silent g before the n|n 前的 g 不发音
+      retire|a grandfather stopping work at sixty-five to go fishing|people working until nearly seventy before they stop|a teacher stopping work after thirty years to travel|retire means to stop working for good, usually because of age; resign means to leave one job|retire 是退休、不再工作；resign 是辞去某份工作|graduate means to finish school or college, not to stop working at the end of a career|graduate 是从学校毕业，不是职业生涯结束时退休|enroll means to sign up for a course or school, not to stop work|enroll 是报名入学，不是停止工作|re · tire|the word tire after re-|re- 后面接 tire
+      task|a list of jobs to finish one by one and tick off|moving a piano upstairs with four people|a group's job of building a bridge or a tower|a task is one piece of work; a workload is the whole amount of work|task 是一项具体任务；workload 是全部工作量|a workload is the whole amount of work you have, not one job you finish and tick off|workload 是全部工作量，不是完成后能勾掉的一项工作|a schedule is a plan of times, not a job to be done|schedule 是时间安排，不是要做的工作|task|the sk at the end|结尾是 sk
+    `,
+  },
 );
 
 const media = batch(
@@ -117,17 +316,50 @@ const media = batch(
   ["Words of Media", "媒体的词"],
   ["newspapers, shows, attention and online worlds", "报纸、节目、关注与网络世界"],
   `
-  editorial|a newspaper article giving the editor's opinion|社论|The ___ attacked the plan.|She writes the ___.|Read today's ___.|columnist,publicity|editorials
-  columnist|a journalist who writes a regular column|专栏作家|The ___ writes on sport.|A famous ___ came to school.|The ___ was fired.|editorial,subscriber|columnists
-  subscriber|a person who pays to receive a publication or service|订户|The paper lost a ___ last week.|Each ___ gets a free gift.|She is a ___ to the magazine.|columnist,podcast|subscribers,subscribe,subscription
-  podcast|a digital audio program one can download|播客|I listen to a ___ on the bus.|She hosts a ___.|The ___ is about history.|subscriber,label|podcasts
-  series|a number of similar things coming one after another; a set of TV shows|系列；连续剧|The TV ___ has ten episodes.|A ___ of events led to war.|He wrote a ___ of books.|podcast,medium|
-  medium|a means of sending information; middle in size|媒介；中等的|TV is a powerful ___.|I'd like a ___ coffee.|Clay is her favorite ___.|series,virtual|media
-  publicity|notice or attention given by the media|宣传，名声|The film got lots of ___.|She hates ___.|Bad ___ hurt sales.|editorial,label|publicize
-  label|a piece of paper attached to something giving information; to describe unfairly|标签；贴标签|Read the ___ on the bottle.|Don't ___ people.|The ___ shows the price.|publicity,device|labeled,labels
-  device|a thing made for a particular purpose|装置，设备|Turn off every ___.|A clever ___ opens cans.|Phones are a useful ___.|label,virtual|devices
-  virtual|almost as described; existing on computers|实际上的；虚拟的|We had a ___ meeting.|It was a ___ certainty.|She visited a ___ museum.|medium,device|virtually
+  editorial|a newspaper article giving the editor's opinion|社论|Today's ___ on page two gives the newspaper's own view: the editors think the new tax is unfair.|The editor writes the ___ herself each Sunday, setting out what the paper believes about the week's big story.|In a strongly worded ___, the paper told its readers to vote against the new airport.|memo,podcast|editorials
+  columnist|a journalist who writes a regular column|专栏作家|The ___ writes about football every Saturday on the back page, under her own photo and name.|A famous newspaper ___ visited our school to talk about writing a weekly piece for millions of readers.|Readers love the ___ for her funny weekly piece about family life.|editorial,subscriber|columnists
+  subscriber|a person who pays to receive a publication or service|订户|As a ___ to the magazine, she pays once a year and gets a copy through the door every month.|Each new ___ who signs up this month will get a free gift with the first box.|When the newspaper raised its price, thousands of readers stopped paying for it, and each ___ who left had to be replaced.|columnist,podcast|subscribers,subscribe,subscription
+  podcast|a digital audio program one can download|播客|I listen to a history ___ on my headphones on the bus every morning.|She hosts a weekly ___ about science, recording each episode in her bedroom with a microphone.|You can download the ___ for free and listen to it on your phone whenever you like.|editorial,subscriber|podcasts
+  series|a number of similar things coming one after another; a set of TV shows|系列；连续剧|The TV ___ has ten episodes, and a new one is shown every Sunday night.|A ___ of bad decisions, one after another, led to the company's collapse.|He wrote a ___ of seven books about the same young wizard.|podcast,medium|
+  medium|a means of sending information; middle in size|媒介；中等的|Clay is the sculptor's favourite ___; she makes almost all her work from it.|Watercolour is a hard ___ to work in, because mistakes cannot be painted over.|Television is a powerful ___ for spreading news, reaching millions of homes at the same moment.|series,label|media
+  publicity|notice or attention given by the media|宣传，名声|The film got lots of ___ when its stars appeared on every TV chat show that week.|The shy actor hates ___ and refuses to speak to reporters or be photographed.|The bad ___ from the food scandal, all over the papers, hurt the restaurant's sales.|editorial,label|publicize
+  label|a piece of paper attached to something giving information; to describe unfairly|标签；贴标签|Read the ___ on the bottle carefully: it tells you how many pills to take.|The ___ sewn into my shirt says it must be washed in cold water.|The price is printed on the small ___ stuck to the back of the book.|publicity,device|labeled,labels
+  device|a thing made for a particular purpose|装置，设备|Please turn off every electronic ___, including phones and tablets, before the film starts.|My uncle invented a clever ___ that opens tins with the push of a button.|A smoke alarm is a small ___ that beeps loudly when it senses smoke.|label,medium|devices
+  virtual|almost as described; existing on computers|实际上的；虚拟的|Because of the snow, the class met online for ___ lessons, each pupil at home in front of a screen.|With the headset on, you can walk through the ___ museum and see paintings that exist only on the computer.|The video game lets you build your own ___ city on the screen, with roads and houses that are not real.|medium,ubiquitous|virtually
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **columnist** who wrote a sharp **editorial** about the mayor now hosts a **podcast**, and the **publicity** has won her thousands of new listeners. These ten words help you talk about newspapers, shows, attention and online worlds.",
+      "那位写过一篇抨击市长的尖锐社论（**editorial**）的专栏作家（**columnist**），如今主持一档播客（**podcast**），这番宣传（**publicity**）为她赢得了成千上万的新听众。这十个词帮你谈论报纸、节目、关注和网络世界。",
+    ),
+    watchOut: {
+      meanings: t(
+        "An **editorial** gives the newspaper's own opinion and is usually unsigned, while a **columnist** is a named writer who gives a personal view in a regular column.",
+        "**editorial** 代表报社自己的观点，通常不署名；**columnist** 是在固定专栏里发表个人看法、署名的作者。",
+      ),
+      use: t(
+        "**Series** is the same in the singular and the plural—one TV series, two TV series—and the plural of **medium** in news is **media**.",
+        "**series** 单复数同形：one TV series、two TV series；**medium** 表示传媒时复数是 **media**。",
+      ),
+      spelling: t(
+        "**Publicity** ends in -city, **device** ends in -ice (but the verb *devise* ends in -ise), and **label** ends in -el, not -le.",
+        "**publicity** 以 -city 结尾；名词 **device** 以 -ice 结尾，动词 *devise* 才是 -ise；**label** 以 -el 结尾，不是 -le。",
+      ),
+    },
+    notes: `
+      editorial|a page-two piece giving the newspaper's own view on a tax|an editor setting out each Sunday what the paper believes|a paper telling its readers to vote against a new airport|an editorial is a newspaper's own opinion piece; a columnist is a named writer with a regular column|editorial 是报社自己的评论文章；columnist 是有固定专栏的署名作者|a memo is a short note sent inside an office, not a newspaper's opinion printed for readers|memo 是公司内部的简短通知，不是刊登给读者看的报纸评论|a podcast is a recorded show you listen to, not an article printed on a page|podcast 是录制好用来收听的节目，不是印在版面上的文章|ed · i · to · ri · al|editor plus -ial|editor 加 -ial
+      columnist|a football writer with her own photo on the back page every Saturday|a famous writer of a weekly piece visiting a school|a writer loved for her funny weekly piece on family life|a columnist is a person who writes a regular column; an editorial is an opinion article|columnist 是写固定专栏的人；editorial 是社论文章|an editorial is an article, not a person who writes every week|editorial 是一篇文章，不是每周写稿的人|a subscriber pays to receive a paper, not the person who writes in it|subscriber 是付费订阅的人，不是在报上写文章的人|col · um · nist|the silent n of column is said in columnist|column 中不发音的 n 在 columnist 里要发音
+      subscriber|a reader who pays once a year and gets a magazine every month|a new customer who signs up and gets a free gift|readers who stopped paying for a newspaper when its price rose|a subscriber pays to receive something regularly; a columnist writes for it|subscriber 是付费订阅的人；columnist 是为报刊写稿的人|a columnist writes for a newspaper or magazine, not someone who pays to receive it|columnist 为报刊写稿，不是付费订阅的人|a podcast is a show you listen to, not a person who pays for something|podcast 是收听的节目，不是付费的人|sub · scrib · er|the prefix sub- and the -er ending|前缀 sub- 和结尾 -er
+      podcast|a history show heard on headphones on the bus|a weekly science show recorded in a bedroom with a microphone|a free show downloaded and played on a phone|a podcast is a recorded audio show you can download; an editorial is a printed opinion article|podcast 是可下载收听的音频节目；editorial 是印刷的评论文章|an editorial is a printed article in a newspaper, not a show you listen to|editorial 是报纸上的评论文章，不是收听的节目|a subscriber is a person who pays for a service, not a show you listen to|subscriber 是付费订阅的人，不是收听的节目|pod · cast|pod and cast joined into one word|pod 和 cast 合成一个词
+      series|a TV show with ten episodes shown each Sunday|bad decisions one after another leading to collapse|seven books about the same young wizard|a series is a set of similar things that come one after another; a podcast is one kind of audio show|series 是一个接一个的同类事物；podcast 是一种音频节目|a podcast is an audio show you download, not a set of TV episodes, events or books|podcast 是可下载的音频节目，不是一套电视剧、一连串事件或系列书|a medium is a way of sending information or a material for art, not a set of things one after another|medium 是传播信息的媒介或艺术材料，不是一个接一个的事物|se · ries|the -ies ending, the same in singular and plural|结尾 -ies，单复数同形
+      medium|clay that a sculptor uses for almost all her work|watercolour, where mistakes cannot be painted over|television spreading news to millions of homes at once|a medium is a material for art or a way of sending information; a series is a set of things one after another|medium 是艺术材料或传播媒介；series 是一系列事物|a series is a set of things coming one after another, not a material or a way of sending news|series 是一系列事物，不是材料或传播消息的方式|a label is a small paper with information on it, not a material for art or a way to reach millions|label 是写有信息的小纸片，不是艺术材料或触及千万人的媒介|me · di · um|the -ium ending; the plural is media|结尾是 -ium；复数是 media
+      publicity|film stars appearing on every TV chat show in one week|a shy actor refusing to speak to reporters|a food scandal in every paper hurting a restaurant|publicity is the attention given by the media; an editorial is one opinion article|publicity 是媒体给予的关注；editorial 是一篇社论|an editorial is one opinion article in a newspaper, not attention from all the media|editorial 是报纸上的一篇评论，不是来自各家媒体的关注|a label is a small paper with information on it, not attention from the media|label 是写有信息的小纸片，不是媒体关注|pub · lic · i · ty|public plus -ity|public 加 -ity
+      label|a bottle telling you how many pills to take|a tag sewn into a shirt about washing it|a price printed on a sticker on a book|a label is a small piece of paper or cloth with information on it; publicity is attention from the media|label 是写有信息的小纸片或布条；publicity 是媒体关注|publicity is attention from the media, not a piece of paper with information|publicity 是媒体关注，不是写有信息的纸片|a device is a machine or tool, not a small piece of paper with information on it|device 是装置或工具，不是写有信息的小纸片|la · bel|the -el ending, not -le|结尾是 -el，不是 -le
+      device|phones and tablets switched off before a film|a machine that opens tins at the push of a button|a smoke alarm that beeps when it senses smoke|a device is a machine or tool made for a purpose; a label is a paper giving information|device 是有专门用途的装置；label 是写有信息的标签|a label is a piece of paper with information, not a machine or a tool|label 是写有信息的纸片，不是机器或工具|a medium is a way of sending information or a material for art, not a machine that opens tins or beeps|medium 是传播媒介或艺术材料，不是开罐头或会响的机器|de · vice|the -ice ending of the noun; the verb devise ends in -ise|名词结尾是 -ice；动词 devise 结尾是 -ise
+      virtual|lessons held online with each pupil at home|a museum of paintings that exist only on a computer|a city of roads and houses that are not real, built in a game|virtual means existing on a computer rather than in real life; medium means middle in size|virtual 是存在于电脑里的、虚拟的；medium 是中等大小的|medium means middle in size, not existing only on a computer|medium 是中等大小的，不是只存在于电脑里的|ubiquitous means found everywhere, not existing only on a screen|ubiquitous 是无处不在的，不是只存在于屏幕上的|vir · tu · al|the -ual ending|结尾是 -ual
+    `,
+  },
 );
 
 const amounts = batch(
@@ -135,17 +367,50 @@ const amounts = batch(
   ["Academic Words of Amounts and Cases", "数量与事例的学术词"],
   ["size, how often, examples, rules and stress", "规模、频率、例子、规范与强调"],
   `
-  bulk|the mass or size of something large; the greater part|大量；大部分|Buy rice in ___.|The ___ of the work is done.|His ___ filled the door.|capacity,incidence|bulky
-  capacity|the maximum amount something can hold; ability|容量；能力|The hall has a ___ of 500.|She has a ___ for hard work.|The tank is at full ___.|bulk,mode|capacities
-  incidence|the rate at which something happens|发生率|The ___ of crime is falling.|There is a high ___ of flu.|Study the ___ of the disease.|instance,bulk|
-  instance|an example of something|实例|For ___, take apples.|This is an ___ of bad luck.|In this ___ we agree.|incidence,guideline|instances
-  guideline|a general rule or principle|指导方针|Follow the safety ___.|The school gave us a ___.|Each ___ is clear.|instance,emphasis|guidelines
-  emphasis|special importance given to something|强调|The ___ is on safety.|She spoke with ___.|Put the ___ on the first word.|guideline,ignorance|emphasize,emphases
-  mode|a way in which something is done; a setting on a device|方式；模式|Put your phone in silent ___.|Travel by ___ of transport.|The camera has a night ___.|capacity,dispose|modes
-  dispose|to get rid of; to throw away|处理，丢弃|___ of waste safely.|How do we ___ of old phones?|Please ___ of your trash.|mode,implicate|disposed,disposal,disposable
-  implicate|to show someone to be involved in a crime|牵连|The letter may ___ the mayor.|Evidence will ___ him.|Don't ___ me.|dispose,ignorance|implicated
-  ignorance|lack of knowledge|无知|___ of the law is no excuse.|His ___ shocked us.|Fear comes from ___.|emphasis,implicate|ignorant,ignore
+  bulk|the mass or size of something large; the greater part|大量；大部分|It is cheaper to buy rice in ___, so we get one huge sack that lasts the whole year.|The ___ of the work is now done; only a few small jobs are left.|The wrestler's huge ___ filled the whole doorway, and he had to turn sideways to get through.|capacity,incidence|bulky
+  capacity|the maximum amount something can hold; ability|容量；能力|The concert hall has a ___ of five hundred, so no more tickets can be sold once that many are gone.|The water tank is filled to full ___ and cannot hold another drop.|She has an amazing ___ for hard work, often studying ten hours a day.|bulk,mode|capacities
+  incidence|the rate at which something happens|发生率|The ___ of flu is highest in winter, when more people in every thousand fall ill.|Doctors are studying why the ___ of the disease is rising, with twice as many cases as ten years ago.|Better street lighting has lowered the ___ of crime in the town centre.|instance,bulk|
+  instance|an example of something|实例|Many fruits keep well in a cool room—apples and pears, for ___.|This is one more ___ of bad luck: the bus broke down on the way to the final.|In this ___, the referee was right to give a penalty, though in most cases I would disagree with him.|incidence,guideline|instances
+  guideline|a general rule or principle|指导方针|Follow the safety ___: always wear a helmet, and never ride without lights at night.|The teacher's main ___ for the essay was simple: no more than a thousand words, written in pen.|Each ___ in the booklet tells new staff how they should handle a complaint.|instance,emphasis|guidelines
+  emphasis|special importance given to something|强调|At this school the ___ is on safety, so every lab lesson starts with a talk about goggles.|She said the word "never" with great ___, so we knew how serious she was.|In "record" as a noun, the ___ falls on the first part of the word.|guideline,ignorance|emphasize,emphases
+  mode|a way in which something is done; a setting on a device|方式；模式|Put your phone in silent ___ so that it will not ring during the film.|For many city workers, the bicycle is the cheapest ___ of transport.|Switch the camera to its night ___ to take clear photos in the dark.|capacity,device|modes
+  dispose|to get rid of; to throw away|处理，丢弃|Please ___ of your rubbish in the bins by the gate.|How should we ___ of old batteries without harming the environment?|The hospital must ___ of used needles safely in special yellow boxes.|discard,implicate|disposed,disposal,disposable
+  implicate|to show someone to be involved in a crime|牵连|The letters found in his desk may ___ the mayor in the bribery scandal.|If the fingerprints match, they will ___ him in the robbery.|Please don't ___ me in your plan; if it goes wrong, I don't want to be blamed.|dispose,allege|implicated
+  ignorance|lack of knowledge|无知|The judge said that ___ of the law is no excuse for breaking it.|His ___ of history shocked us: he did not even know who the first president was.|Much fear of strangers comes from ___, from simply not knowing anything about them.|emphasis,incidence|ignorant,ignore
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The report put its **emphasis** on one **guideline**: the **incidence** of accidents drops when the **bulk** of drivers slow down. These ten words help you talk about size, how often things happen, examples, rules and stress.",
+      "这份报告强调（**emphasis**）了一条指导原则（**guideline**）：只要大部分（**bulk**）司机放慢车速，事故的发生率（**incidence**）就会下降。这十个词帮你谈论规模、频率、例子、规范和强调。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Incidence** is how often something happens across many people, while an **instance** is one single example of it.",
+        "**incidence** 是某事在众多人中发生的频率；**instance** 是其中的一个具体例子。",
+      ),
+      use: t(
+        "You **dispose of** rubbish, always with of, but you **discard** it with no of at all.",
+        "处理垃圾说 **dispose of**，一定要加 of；而 **discard** 后面直接接宾语，不加 of。",
+      ),
+      spelling: t(
+        "**Incidence** ends in -ence, but **instance** and **ignorance** end in -ance, and **emphasis** has ph.",
+        "**incidence** 以 -ence 结尾，**instance** 和 **ignorance** 却以 -ance 结尾；**emphasis** 中有 ph。",
+      ),
+    },
+    notes: `
+      bulk|buying rice in one huge sack that lasts a year|most of a job finished with only small tasks left|a wrestler so big he fills a doorway|bulk is a large amount or the greater part; capacity is the most something can hold|bulk 是大量或大部分；capacity 是最大容量|capacity is the most that something can hold, not a large amount bought at once or most of a job|capacity 是最多能容纳的量，不是一次买的大量货物或工作的大部分|incidence is how often something happens, not the size of a sack or a person|incidence 是发生的频率，不是一袋货物或一个人的块头|bulk|the lk at the end|结尾是 lk
+      capacity|a hall that can hold five hundred people|a tank so full it cannot hold another drop|a woman able to study ten hours a day|capacity is the most something can hold, or an ability; bulk is a large mass or amount|capacity 是最大容量或能力；bulk 是大量或庞大的体积|bulk means a large mass or the greater part, not the most that a hall or tank can hold|bulk 是大量或大部分，不是礼堂或水箱的最大容量|a mode is a way of doing something or a setting, not the amount something can hold|mode 是方式或模式，不是能容纳的量|ca · pac · i · ty|the -city ending|结尾是 -city
+      incidence|more people in every thousand falling ill with flu in winter|twice as many cases of a disease as ten years ago|crime in a town centre falling after better lighting|incidence is how often something happens; an instance is one example of it|incidence 是发生率；instance 是一个例子|an instance is one example, not how often something happens across many people|instance 是一个例子，不是在众人中发生的频率|bulk means a large amount or most of something, not how often it happens|bulk 是大量或大部分，不是发生的频率|in · ci · dence|the -ence ending|结尾是 -ence
+      instance|apples and pears given as examples of fruit that keeps well|a bus breaking down as one more example of bad luck|one case where the referee was right to give a penalty|an instance is one example or case; incidence is how often something happens|instance 是一个例子或情况；incidence 是发生率|incidence is how often something happens, not a single example or case|incidence 是发生的频率，不是单个例子或情况|a guideline is a rule to follow, not an example or a single case|guideline 是要遵守的准则，不是例子或个别情况|in · stance|the -ance ending|结尾是 -ance
+      guideline|safety rules about helmets and lights|a rule for an essay of no more than a thousand words in pen|a booklet telling new staff how to handle a complaint|a guideline is a rule that tells you what to do; an instance is one example|guideline 是告诉你该怎么做的准则；instance 是一个例子|an instance is one example, not a rule to follow|instance 是一个例子，不是要遵守的准则|emphasis is special importance given to something, not a rule that tells you what to do|emphasis 是对某事的特别重视，不是告诉你怎么做的准则|guide · line|guide and line joined into one word|guide 和 line 合成一个词
+      emphasis|a school that puts safety first in every lab lesson|a woman stressing the word "never"|the stress falling on the first part of "record"|emphasis is special importance or stress on something; a guideline is a rule to follow|emphasis 是特别重视或重音；guideline 是准则|a guideline is a rule to follow, not the stress on a word or the importance given to something|guideline 是准则，不是单词的重音或对某事的重视|ignorance is a lack of knowledge, not stress or importance given to something|ignorance 是无知，不是重音或重视|em · pha · sis|the ph, said like f|ph 读作 f
+      mode|a phone set to silent so it will not ring|the bicycle as a cheap way to get around the city|a camera setting for clear photos in the dark|a mode is a way of doing something or a setting; a device is a machine itself|mode 是方式或设置；device 是机器本身|capacity is the most something can hold, not a setting or a way of travelling|capacity 是最大容量，不是设置或出行方式|a device is a machine or tool, not a setting on it or a way of travelling|device 是机器或工具，不是它的设置或出行方式|mode|the silent e at the end|结尾 e 不发音
+      dispose|rubbish put in the bins by the gate|old batteries got rid of without harming the environment|used needles put safely in yellow boxes|dispose of means to get rid of something, always with of; discard means to throw away, with no of|dispose of 是处理掉，必须加 of；discard 是扔掉，不加 of|discard means to throw away, but it is never followed by of|discard 是扔掉，但后面从不加 of|implicate means to show that someone is involved in a crime, not to get rid of rubbish|implicate 是牵连某人涉案，不是处理垃圾|dis · pose|the word pose after dis-|dis- 后面接 pose
+      implicate|letters that may show a mayor was part of a bribery scandal|fingerprints that may show a man took part in a robbery|someone not wanting to be dragged into a plan|implicate means to show that someone is involved in a crime; allege means to claim something without proof|implicate 是表明某人牵涉其中；allege 是在无证据时声称|dispose means to get rid of something, and it is used with of, not with a person|dispose 是处理掉东西，后接 of，不接人|allege means to claim that something is true without proof, and it does not take a person followed by in|allege 是无证据地声称，不用“某人 + in”的结构|im · pli · cate|the -ate ending|结尾是 -ate
+      ignorance|a judge saying not knowing the law is no excuse|a man who does not know who the first president was|fear of strangers that comes from knowing nothing about them|ignorance is a lack of knowledge; emphasis is special importance given to something|ignorance 是无知；emphasis 是强调|emphasis means special importance given to something, not a lack of knowledge|emphasis 是特别重视，不是缺乏知识|incidence is how often something happens, not a lack of knowledge|incidence 是发生的频率，不是缺乏知识|ig · no · rance|the -ance ending|结尾是 -ance
+    `,
+  },
 );
 
 /** batchesF are the batches of courses, college, crime, travel, the city, the office, media and amounts. */

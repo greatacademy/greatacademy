@@ -1,6 +1,7 @@
 // Grade 10: the batches of words of hard effort, of gathering and throwing away, of skill and showing off, of
 // copying and zest, of grief, of moaning and mumbling, of chatter and of rules.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const effort = batch(
   ["Words of Hard Effort", "艰苦努力的词"],
   ["working hard, trying, pulling and lifting heavy things", "辛勤工作、尽力、拖拉与举起重物"],
   `
-  strive|to make great efforts to achieve something|努力|We ___ to do our best.|She would ___ for perfection.|Many ___ to be free.|haul,lug|strove,striven,striving
-  endeavor|an attempt to achieve a goal; to try hard|努力；尽力|We will ___ to help.|It was a bold ___.|Every ___ failed.|lug,grapple|endeavored,endeavors
-  toil|to work extremely hard; exhausting work|辛劳|Farmers ___ in the fields.|Years of ___ paid off.|They ___ all day.|lug,exert|toiled
-  labor|work, especially hard physical work; to work hard|劳动；苦干|Manual ___ is tiring.|They ___ in the mines.|The cost of ___ is rising.|exert,lug|labored,laborious
-  slog|to work hard over a period; a long tiring walk or task|苦干；艰难跋涉|It was a long ___ up the hill.|Students ___ through exams.|We had to ___ through the mud.|exert,grapple|slogged
-  exert|to apply force or influence; to make a great effort|施加；努力|Don't ___ yourself.|She tried to ___ pressure on him.|The moon can ___ a pull on the sea.|grapple,endeavor|exerted,exertion
-  grapple|to struggle physically; to work hard to deal with a problem|扭打；努力解决|Police had to ___ with the thief.|We ___ with hard questions.|The nation must ___ with debt.|exert,heave|grappled
-  haul|to pull or drag with effort; an amount gained|拖运；收获|They had to ___ the boat ashore.|Thieves made off with a big ___.|Trucks ___ goods.|exert,strive|hauled
-  lug|to carry or drag with great effort|费力地拖|I had to ___ my bags upstairs.|Don't ___ that heavy box.|She would ___ her books to school.|strive,endeavor|lugged
-  heave|to lift or pull with great effort; to rise and fall|举起；起伏|We had to ___ the sofa into the van.|Her chest began to ___.|___ on the rope!|strive,toil|heaved
+  strive|to make great efforts to achieve something|努力|Though she had never won a race, she kept training every season to ___ for first place.|The young scientists ___ to find a cure, working long hours in the hope of one day succeeding.|Good writers ___ for clear sentences, rewriting each page many times until every word is right.|grapple,heave|strove,striven,striving
+  endeavor|an attempt to achieve a goal; to try hard|努力；尽力|The shop will ___ to answer every letter within a week, though it cannot promise to reply sooner.|In his first speech, the new mayor promised to ___ to make the streets safer for every family.|Our builders will ___ to finish the bridge on time, despite the storms of the last month.|exert,haul|endeavored,endeavors
+  toil|to work extremely hard; exhausting work|辛劳|Farmers ___ in the hot fields from sunrise to sunset, bent over the crops with aching backs.|The miners would ___ deep underground for twelve hours a day, digging coal in the dark.|Thousands of workers had to ___ for years, digging by hand, to cut the great canal through the hills.|lug,heave|toiled
+  labor|work, especially hard physical work; to work hard|劳动；苦干|The cost of ___ has gone up, so the factory must pay its workers more for every hour they spend on the job.|Farm machines have replaced much of the manual ___ that once needed dozens of workers in every field.|Laws now ban child ___, so no child under fourteen may be made to work in a mine or a factory.|slog,haul|labored,laborious
+  slog|to work hard over a period; a long tiring walk or task|苦干；艰难跋涉|The walk to the top of the hill was a tiring ___ through deep mud, and our boots grew heavier with every step.|After a six-hour ___ on foot through deep snow, the hikers dragged themselves into the hut.|The march back to camp was a wet, weary ___ along a flooded road that seemed to have no end.|labor,endeavor|slogged
+  exert|to apply force or influence; to make a great effort|施加；努力|She had to ___ all her strength to push the heavy door open against the wind.|The moon's gravity can ___ a pull on the oceans that raises the tides twice a day.|Some parents ___ too much pressure on their children by demanding top marks in every test.|grapple,endeavor|exerted,exertion
+  grapple|to struggle physically; to work hard to deal with a problem|扭打；努力解决|Two police officers had to ___ with the thief on the ground before they could put on the handcuffs.|Scientists still ___ with the hard problem of how to store energy from the sun for cloudy days.|The new government must ___ with rising prices and a shortage of homes.|exert,heave|grappled
+  haul|to pull or drag with effort; an amount gained|拖运；收获|At dawn the fishermen ___ their nets onto the deck, heavy with silver fish.|Big trucks ___ loads of timber from the forest to the sawmill every day.|We had to ___ the rowing boat up the beach with a rope so the tide would not carry it away.|exert,strive|hauled
+  lug|to carry or drag with great effort|费力地拖|I had to ___ my heavy suitcase up four flights of stairs because the lift was broken.|Why do you ___ that huge bag of books to school every day when you only need one of them?|She would ___ the full bucket of water from the well back to the house, resting halfway.|strive,endeavor|lugged
+  heave|to lift or pull with great effort; to rise and fall|举起；起伏|It took four of us to ___ the old sofa into the back of the van.|The sailors had to ___ the anchor up from the sea bed by pulling on its heavy chain.|With a loud grunt, he managed to ___ the sack of potatoes onto his shoulder.|strive,toil|heaved
   `,
+  "context-clues",
+  {
+    intro: t(
+      "All summer the builders would **toil** in the heat, **haul** stones up the slope and **heave** beams onto the roof, and they still **strive** to finish before winter. These ten words help you talk about hard work, trying your best and moving heavy things.",
+      "整个夏天，工人们在酷暑中辛劳（**toil**），把石头拖（**haul**）上坡，把梁木举（**heave**）上屋顶，至今仍在努力（**strive**）赶在冬天前完工。这十个词帮你谈论辛苦工作、尽力而为和搬动重物。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **haul** or **lug** is to move something heavy with your body; to **strive** or **endeavor** is to try hard to reach a goal, with no heavy load at all.",
+        "**haul** 和 **lug** 是用身体搬动重物；**strive** 和 **endeavor** 是努力达成目标，根本不涉及重物。",
+      ),
+      use: t(
+        "You **exert** something—strength, force or pressure—so the verb needs an object; you **grapple with** a person or a problem, never grapple a goal.",
+        "**exert** 后面要接宾语，如力气、力量或压力；**grapple** 要说 grapple with 某人或某个难题，不能直接接目标。",
+      ),
+      spelling: t(
+        "**Heave** keeps the ea of *leave*, while **endeavor** hides its ea in the middle and ends in -or in American spelling.",
+        "**heave** 和 *leave* 一样写 ea；**endeavor** 的 ea 藏在中间，美式拼写以 -or 结尾。",
+      ),
+    },
+    notes: `
+      strive|a runner who has never won but keeps training to come first|young scientists working long hours to find a cure|good writers rewriting each page until every sentence is clear|strive means to try very hard to reach a goal; grapple means to struggle with a person or a problem|strive 是努力达成目标；grapple 是与人扭打或与难题搏斗|grapple means to wrestle with a person or a hard problem, and it is used with with, not with for or to and a goal|grapple 是与人扭打或与难题搏斗，后接 with，不接 for 或 to 加目标|heave means to lift or pull a heavy thing, not to try hard to reach a goal|heave 是举起或拉动重物，不是努力达成目标|strive|the long i and the silent e at the end; the past is strove|长音 i 和结尾不发音的 e；过去式是 strove
+      endeavor|a shop promising to answer every letter within a week|a new mayor promising to make the streets safer|builders trying to finish a bridge on time despite storms|endeavor means to try hard to do something; exert means to put force or pressure on something|endeavor 是尽力去做某事；exert 是施加力量或压力|exert means to apply force or pressure, and it needs an object such as strength, not to plus a goal|exert 是施加力量或压力，后面要接力气之类的宾语，不接 to 加目标|haul means to drag a heavy load, not to try hard to reach a goal|haul 是拖拉重物，不是尽力达成目标|en · dea · vor|the ea in the middle and the -or ending|中间的 ea 和结尾的 -or
+      toil|farmers bent over crops in hot fields from sunrise to sunset|miners digging coal underground twelve hours a day|thousands of workers digging a canal by hand for years|toil means to work very hard for a long time; lug means to carry one heavy thing|toil 是长时间辛苦劳作；lug 是费力地搬一样重物|lug means to carry a heavy thing from place to place, and it needs an object, not long hours of work|lug 是把重物搬来搬去，后面要接宾语，不是长时间劳作|heave means to lift something heavy in one great push, not to work hard for hours or years|heave 是一下子用力举起重物，不是连续几小时、几年地劳作|toil|the oi as in *boil*|oi 读音同 *boil*
+      labor|a factory paying its workers more for every hour on the job|machines replacing manual work that once needed dozens of farm workers|laws stopping children from working in mines and factories|labor means hard work done by workers; slog means one long, tiring walk or task|labor 是工人的劳动；slog 是一段漫长累人的跋涉或苦差|slog means one long, tiring walk or task, not the paid work of many workers|slog 是一段漫长累人的跋涉或苦差，不是众多工人的有偿劳动|haul means an amount gained, such as a catch or stolen goods, not work done for pay|haul 是收获的量，如捕获物或赃物，不是有偿的劳动|la · bor|the -or ending in American spelling|美式拼写以 -or 结尾
+      slog|a tiring walk up a hill through deep mud|six hours on foot through deep snow to a hut|a wet march back to camp along a flooded road|slog means a long, tiring walk or task; labor means hard work done by workers in general|slog 是漫长累人的跋涉；labor 泛指工人的劳动|labor means the hard work of workers in general, not one long, tiring walk|labor 泛指工人的辛苦劳动，不是一段漫长累人的跋涉|endeavor means an attempt to reach a goal, not a tiring walk through mud or snow|endeavor 是为达成目标所作的尝试，不是在泥里或雪里艰难跋涉|slog|the short o and the g at the end; the past is slogged with a double g|短音 o，结尾是 g；过去式双写 g：slogged
+      exert|someone pushing a heavy door open against the wind with all her strength|the moon's gravity pulling on the oceans to make tides|parents putting too much pressure on their children for top marks|exert means to put force or pressure on something; endeavor means to try hard to do something|exert 是施加力量或压力；endeavor 是努力去做某事|grapple means to wrestle with a person or a problem, not to put force or pressure on something|grapple 是与人扭打或与难题搏斗，不是施加力量或压力|endeavor means to try hard to do something, and it is followed by to plus an action, not by a force or pressure|endeavor 是努力做某事，后接 to 加动作，不接力量或压力|ex · ert|the x followed straight by e, with no z sound written|x 后面直接跟 e，没有写出 z
+      grapple|police officers wrestling a thief to the ground|scientists struggling with how to store the sun's energy|a new government dealing with rising prices and too few homes|grapple with means to struggle with a person or a hard problem; exert means to put force on something|grapple with 是与人扭打或与难题搏斗；exert 是施加力量|exert means to apply force or pressure, not to wrestle with a person or a problem|exert 是施加力量或压力，不是与人扭打或与难题搏斗|heave means to lift something heavy, not to struggle with a person or a problem|heave 是举起重物，不是与人扭打或与难题搏斗|grap · ple|the double p and the -le ending|双写 p 和结尾 -le
+      haul|fishermen dragging heavy nets full of fish onto the deck|trucks carrying loads of timber to the sawmill|a rowing boat pulled up the beach with a rope|haul means to pull or carry a heavy load; strive means to try hard for a goal|haul 是拖运重物；strive 是努力追求目标|exert means to apply force or pressure, and it is not used with a net, a load or a boat as its object|exert 是施加力量或压力，不能以渔网、货物或船作宾语|strive means to try hard to reach a goal, not to drag a heavy thing|strive 是努力达成目标，不是拖拉重物|haul|the au, which sounds like the aw in *crawl*|au 读音同 *crawl* 中的 aw
+      lug|someone carrying a heavy suitcase up four flights of stairs|a student carrying a huge bag of books to school|someone carrying a full bucket of water home from a well|lug means to carry something heavy with effort; strive means to try hard for a goal|lug 是费力地搬运重物；strive 是努力追求目标|strive means to try hard to reach a goal, not to carry a heavy bag or bucket|strive 是努力达成目标，不是搬运沉重的包或水桶|endeavor means to try hard to do something, and it never takes a suitcase or a bucket as its object|endeavor 是尽力做某事，不能以箱子或水桶作宾语|lug|the past is lugged with a double g|过去式双写 g：lugged
+      heave|four people lifting an old sofa into a van|sailors pulling an anchor up from the sea bed|a man lifting a sack of potatoes onto his shoulder with a grunt|heave means to lift or pull something heavy with great effort; toil means to work hard for a long time|heave 是用力举起或拉起重物；toil 是长时间辛苦劳作|strive means to try hard to reach a goal, not to lift a heavy thing|strive 是努力达成目标，不是举起重物|toil means to work hard for a long time, and it takes no object like a sofa or an anchor|toil 是长时间辛苦劳作，不能接沙发或锚这样的宾语|heave|the ea as in *leave*, and the silent e at the end|ea 读音同 *leave*，结尾的 e 不发音
+    `,
+  },
 );
 
 const gathering = batch(
@@ -27,17 +61,50 @@ const gathering = batch(
   ["Words of Gathering and Discarding", "收集与丢弃的词"],
   ["collecting, storing, piling up and throwing away", "收集、储存、堆积与扔掉"],
   `
-  amass|to gather a large amount over time|积累|He managed to ___ a fortune.|They ___ evidence.|She began to ___ stamps.|forage,scavenge|amassed
-  stockpile|a large stock of goods kept for future use; to build one|储备|They kept a ___ of food.|Nations ___ weapons.|We had to ___ fuel.|forage,discard|stockpiled
-  stash|to store safely in a hidden place; a secret store|藏匿；秘藏|She chose to ___ the money under the bed.|They found his ___ of sweets.|Don't ___ food in your room.|forage,scavenge|stashed
-  glean|to gather information or material bit by bit|搜集|We ___ facts from many sources.|Little can be ___ from it.|Try to ___ what you can.|dump,pile|gleaned
-  forage|to search widely for food|觅食|Deer ___ in the woods.|Pigs ___ for roots.|They had to ___ for supplies.|heap,pile|foraged
-  scavenge|to search for and collect anything usable from waste|捡破烂，觅食腐肉|Gulls ___ at the dump.|Children ___ for scraps.|Foxes ___ in the bins.|heap,stash|scavenged
-  heap|an untidy pile; to pile up|堆|Clothes lay in a ___.|___ the plates with food.|There is a ___ of work to do.|forage,glean|heaped,heaps
-  pile|a neat stack of things; to place things one on another|摞；堆放|A ___ of books sat on the desk.|___ the boxes in the corner.|She has a ___ of homework.|forage,glean|piled,piles
-  discard|to get rid of as no longer useful|丢弃|___ any old food.|She chose to ___ the letter.|Don't ___ the receipt.|forage,glean|discarded
-  dump|to drop or throw away carelessly; a place for rubbish|倾倒；垃圾场|Don't ___ rubbish in the river.|They took the junk to the ___.|She would ___ her bag on the floor.|forage,glean|dumped,dumping
+  amass|to gather a large amount over time|积累|Over forty years of careful saving, the shopkeeper managed to ___ a huge fortune.|The team went on to ___ more points in one season than any other side in its long history.|Over the years, the collector would ___ more than ten thousand stamps from every country in the world.|glean,forage|amassed
+  stockpile|a large stock of goods kept for future use; to build one|储备|Before the hurricane, families rushed to the shops to ___ bottled water, tinned food and batteries for the days ahead.|The country began to ___ grain in huge warehouses in case a bad harvest led to famine.|The hospital likes to ___ masks and gloves in its storerooms, keeping enough for a whole year of emergencies.|discard,scavenge|stockpiled
+  stash|to store safely in a hidden place; a secret store|藏匿；秘藏|She would ___ her savings under a loose floorboard, where no one would find them, so she could take them out later.|The thieves meant to ___ the stolen jewels in a cave in the hills and come back for them once the search was over.|My brother likes to ___ chocolate bars at the back of his sock drawer so that nobody else will eat them.|amass,discard|stashed
+  glean|to gather information or material bit by bit|搜集|From old letters and diaries, the historian was able to ___ a few facts about the poet's childhood.|By listening closely to the guide, we managed to ___ some useful facts about the history of the castle.|Read the article twice and try to ___ the main idea from each paragraph.|scavenge,forage|gleaned
+  forage|to search widely for food|觅食|In autumn, deer ___ for acorns and fresh green shoots under the oak trees.|Wild pigs ___ in the forest, digging up roots and mushrooms with their snouts.|Lost in the jungle for a week, the explorers had to ___ for wild fruit and berries to stay alive.|scavenge,glean|foraged
+  scavenge|to search for and collect anything usable from waste|捡破烂，觅食腐肉|Gulls ___ at the rubbish dump, pecking through torn bags of thrown-away food.|After the flood, families had to ___ through the ruins of their homes for anything they could still use.|At night, foxes ___ in the bins behind the restaurant for leftover scraps of meat.|glean,stash|scavenged
+  heap|an untidy pile; to pile up|堆|Her dirty clothes lay in an untidy ___ on the bedroom floor, thrown down one on top of another.|The gardener raked the dead leaves into a big ___ beside the shed, ready to be burned.|He tipped the bag upside down, and the coins landed in a messy ___ on the table.|rubble,remnant|heaped,heaps
+  pile|a neat stack of things; to place things one on another|摞；堆放|A neat ___ of books sat on the corner of the desk, with the biggest one at the bottom.|Please stack the clean plates in a ___ by the sink, one on top of another.|She keeps her ironed shirts folded in a tidy ___ on the shelf.|scrap,remnant|piled,piles
+  discard|to get rid of as no longer useful|丢弃|Check the fridge and ___ any food that has gone mouldy, since it is no longer safe to eat.|Moving house is a good time to ___ the old clothes you no longer wear, giving them to charity or recycling them.|The card player chose to ___ the useless two of clubs, laying it face up on the table.|stash,amass|discarded
+  dump|to drop or throw away carelessly; a place for rubbish|倾倒；垃圾场|It is against the law to ___ old tyres and rubbish in the river.|Every afternoon he would ___ his schoolbag on the hall floor and run straight out to play.|The truck tipped up its back to ___ a load of sand in the middle of the yard.|stash,amass|dumped,dumping
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The squirrel spent all autumn trying to **forage** for nuts and **stash** them in a hollow tree, while the crows would **scavenge** in the bins we left by the road. These ten words help you talk about gathering, storing, piling up and throwing away.",
+      "整个秋天，松鼠都在觅食（**forage**）坚果，把它们藏（**stash**）进树洞；乌鸦则在我们放在路边的垃圾桶里翻找（**scavenge**）吃的。这十个词帮你谈论收集、储存、堆放和扔掉东西。",
+    ),
+    watchOut: {
+      meanings: t(
+        "Animals **forage** for food that grows in the wild, but they **scavenge** through waste that someone has thrown away.",
+        "动物 **forage** 是在野外寻找天然的食物；**scavenge** 是在别人扔掉的废物里翻找。",
+      ),
+      use: t(
+        "A **heap** is an untidy mound, while a **pile** is a neat stack, one thing placed on top of another.",
+        "**heap** 是乱糟糟的一堆；**pile** 是一件叠一件、整整齐齐的一摞。",
+      ),
+      spelling: t(
+        "**Scavenge** and **forage** both end in a soft -ge, and **stockpile** joins *stock* and *pile* into one word with no space.",
+        "**scavenge** 和 **forage** 都以发软音的 -ge 结尾；**stockpile** 把 *stock* 和 *pile* 合成一个词，中间没有空格。",
+      ),
+    },
+    notes: `
+      amass|a shopkeeper saving carefully for forty years until he has a huge fortune|a team winning more points in one season than ever before|a collector gathering more than ten thousand stamps over the years|amass means to build up a large amount over time; glean means to gather small bits of information|amass 是日积月累攒下大量的东西；glean 是一点一点搜集信息|glean means to gather facts or information bit by bit, not to build up a fortune, points or a huge collection|glean 是一点一点搜集事实或信息，不是积攒财富、分数或大批收藏|forage means to search the wild for food, not to build up money, points or stamps|forage 是在野外寻找食物，不是积攒钱、分数或邮票|a · mass|the double s at the end|结尾双写 s
+      stockpile|families buying water, tinned food and batteries before a hurricane|a country storing grain in warehouses in case of famine|a hospital keeping a year's supply of masks and gloves|stockpile means to build up a large store for later; discard means to throw things away|stockpile 是大量储备以备后用；discard 是把东西扔掉|discard means to throw away what is no longer useful, the opposite of storing supplies for later|discard 是丢弃没用的东西，和储备物资以备后用正好相反|scavenge means to pick through waste for anything usable, not to store new supplies bought or grown for later|scavenge 是在废物里翻找能用的东西，不是储备买来或种出来的物资|stock · pile|two words joined with no space: stock and pile|两个词 stock 和 pile 连写，中间没有空格
+      stash|savings hidden under a loose floorboard to be taken out later|thieves hiding stolen jewels in a cave until the search is over|chocolate hidden at the back of a sock drawer so nobody else eats it|stash means to hide something away to use later; discard means to throw it away|stash 是把东西藏起来以后再用；discard 是扔掉|amass means to build up a large amount over time, not to hide something in a secret place|amass 是日积月累攒下大量的东西，不是把东西藏到秘密的地方|discard means to throw away something no longer wanted, not to hide it so you can take it out again|discard 是扔掉不要的东西，不是藏起来留着以后再拿|stash|the sh at the end|结尾是 sh
+      glean|a historian finding a few facts about a poet in old letters and diaries|visitors picking up useful facts by listening to a castle guide|a reader picking out the main idea of each paragraph|glean means to gather facts bit by bit; scavenge means to search waste for usable things|glean 是一点一点搜集事实；scavenge 是在废物里翻找能用的东西|scavenge means to search through waste for things to use, not to gather facts from letters, a guide or an article|scavenge 是在废物里翻找能用的东西，不是从信件、讲解或文章里搜集事实|forage means to search for food in the wild, not to gather facts or ideas|forage 是在野外寻找食物，不是搜集事实或观点|glean|the ea as in *clean*|ea 读音同 *clean*
+      forage|deer looking for acorns and green shoots under oak trees|wild pigs digging up roots and mushrooms in the forest|lost explorers looking for wild fruit and berries to stay alive|forage means to search the wild for food; scavenge means to search through waste|forage 是在野外寻找食物；scavenge 是在废物中翻找|scavenge means to pick through rubbish or ruins, not to look for food growing in the wild|scavenge 是在垃圾或废墟中翻找，不是寻找野外生长的食物|glean means to gather information bit by bit, not to look for food|glean 是一点一点搜集信息，不是寻找食物|for · age|the -age ending, said like the end of *porridge*|结尾 -age，读音同 *porridge* 的结尾
+      scavenge|gulls pecking through torn bags of thrown-away food at a dump|families searching the ruins after a flood for things they can still use|foxes searching restaurant bins for scraps of meat|scavenge means to search waste for anything usable; glean means to gather facts bit by bit|scavenge 是在废物中翻找能用的东西；glean 是一点一点搜集事实|glean means to gather facts or information bit by bit, not to pick through rubbish for food or things to use|glean 是一点一点搜集事实或信息，不是在垃圾里找吃的或能用的东西|stash means to hide something away in a secret place, not to search through waste|stash 是把东西藏到秘密的地方，不是在废物里翻找|scav · enge|the -enge ending with a soft g|结尾 -enge，g 发软音
+      heap|dirty clothes thrown down on a bedroom floor|dead leaves raked together beside a shed|coins tipped out of a bag onto a table|heap means an untidy mound of things; pile means a neat stack|heap 是乱糟糟的一堆；pile 是整齐的一摞|rubble means broken stone and brick from a fallen building, not a mound of clothes, leaves or coins|rubble 是建筑倒塌后的碎石碎砖，不是一堆衣服、落叶或硬币|remnant means a small part left over from something bigger, not a mound of many things thrown together|remnant 是剩下的一小部分，不是许多东西乱堆成的一堆|heap|the ea as in *leap*|ea 读音同 *leap*
+      pile|books stacked neatly on a desk with the biggest at the bottom|clean plates stacked one on top of another by the sink|ironed shirts folded on a shelf|pile means a neat stack; heap means an untidy mound|pile 是整齐的一摞；heap 是乱糟糟的一堆|scrap means a small, loose piece of something, not a stack of things laid one on another|scrap 是零碎的一小片，不是一件件叠起来的一摞|remnant means a small part left over from something, not a neat stack|remnant 是剩下的一小部分，不是整齐的一摞|pile|the long i and the silent e at the end|长音 i，结尾 e 不发音
+      discard|mouldy food taken out of the fridge because it is unsafe|old clothes given to charity when moving house|a useless card laid face up on the table|discard means to get rid of something no longer useful; stash means to hide it away|discard 是丢掉没用的东西；stash 是把东西藏起来|stash means to hide something to use later, not to get rid of it for good|stash 是藏起来以后再用，不是彻底丢掉|amass means to build up a large amount, the opposite of getting rid of things|amass 是攒下大量的东西，和丢弃正好相反|dis · card|the prefix dis- and the word card|前缀 dis- 加上 card
+      dump|tyres and rubbish thrown into a river against the law|a schoolbag dropped on the hall floor|a truck tipping a load of sand into a yard|dump means to drop or throw something down carelessly; stash means to hide it carefully|dump 是随手乱扔乱放；stash 是小心地藏好|stash means to hide something carefully, not to drop it carelessly where everyone can see it|stash 是小心藏好，不是随手扔在大家都看得见的地方|amass means to build up a large amount over time, not to drop a load all at once|amass 是日积月累攒下大量的东西，不是一下子倒下一堆|dump|the mp at the end|结尾是 mp
+    `,
+  },
 );
 
 const skill = batch(
@@ -45,17 +112,50 @@ const skill = batch(
   ["Words of Skill and Showing Off", "才能与炫耀的词"],
   ["talent, quick bodies and boasting about them", "天赋、敏捷与吹嘘"],
   `
-  gifted|having exceptional talent|有天赋的|She is a ___ singer.|The school is for ___ children.|He is ___ in math.|flaunt,boast|
-  knack|an acquired or natural skill at doing something|诀窍|She has a ___ for languages.|There's a ___ to it.|He had the ___ of making friends.|prowess,gifted|
-  prowess|skill or expertise in a particular activity|高超技艺|His ___ at chess is famous.|She showed great ___.|Their military ___ was feared.|knack,flaunt|
-  versatile|able to adapt to many different functions|多才多艺的；多功能的|She is a ___ actress.|Eggs are ___.|A ___ tool is useful.|flaunt,boast|versatility
-  agile|able to move quickly and easily|敏捷的|Cats are ___.|An ___ mind solves problems.|The ___ player dodged.|boast,flaunt|
-  nimble|quick and light in movement; quick to understand|灵巧的|Her ___ fingers flew over the keys.|He has a ___ mind.|Goats are ___ climbers.|boast,flaunt|nimbly
-  boast|to talk with too much pride about oneself|自夸|He likes to ___ about his car.|Don't ___.|The town can ___ a fine park.|prowess,knack|boasted
-  flaunt|to display something ostentatiously|炫耀|She liked to ___ her wealth.|Don't ___ your grades.|They ___ their new phones.|knack,gifted|flaunted
-  showoff|a person who acts to attract attention|爱炫耀的人|Don't be such a ___.|He's a real ___ on the court.|Nobody likes a ___.|boast,flamboyant|
-  flamboyant|tending to attract attention by confidence and stylishness|艳丽的；张扬的|He wore a ___ suit.|She is a ___ dancer.|His ___ style drew crowds.|showoff,nimble|flamboyance
+  gifted|having exceptional talent|有天赋的|Even at five, the ___ girl could play any tune on the piano after hearing it only once, though no one had taught her.|The school runs a special summer camp for ___ children who are years ahead of others their age in maths.|Born with a rare talent for drawing, the ___ young artist sold her first painting at the age of twelve.|agile,flamboyant|
+  knack|an acquired or natural skill at doing something|诀窍|My grandmother has a real ___ for growing roses; everything she plants seems to bloom.|Opening a stiff jar is easy once you learn the ___: tap the edge of the lid on the table first.|He had a ___ for making friends wherever he went, and strangers soon felt at ease with him.|prowess,showoff|
+  prowess|skill or expertise in a particular activity|高超技艺|The army's military ___ was feared across the whole continent, and few kings dared to attack it.|The young striker showed her athletic ___ by scoring three goals in the final.|The swimmer's great physical ___ won her four gold medals at a single Olympics.|knack,showoff|
+  versatile|able to adapt to many different functions|多才多艺的；多功能的|Eggs are so ___ that you can boil, fry or scramble them, or bake them into cakes.|A Swiss army knife is a handy, ___ tool that can cut, saw, open tins and drive screws.|The ___ actor could play a king one night and a clown the next, and he was just as good in both.|agile,flamboyant|versatility
+  agile|able to move quickly and easily|敏捷的|Cats are so ___ that they can twist in mid-air and land on their feet.|The ___ goalkeeper dived to the left and sprang back up in a flash to stop the second shot.|Mountain goats are ___ climbers, leaping from one narrow ledge to the next without slipping.|versatile,flamboyant|
+  nimble|quick and light in movement; quick to understand|灵巧的|Her ___ fingers flew over the keys, playing the fast piece without a single slip.|The ___ old tailor could thread a needle in a second, his quick, light fingers never fumbling.|The ___ squirrel ran lightly along the thin washing line without once falling off.|flamboyant,versatile|nimbly
+  boast|to talk with too much pride about oneself|自夸|He likes to ___ about his new car to anyone who will listen, telling them how fast and costly it is.|She never needs to ___ about her own top marks; her quiet hard work speaks for itself.|Before the match, the players began to ___ that they would win easily, saying no team was as good as theirs.|flaunt,flatter|boasted
+  flaunt|to display something ostentatiously|炫耀|She liked to ___ her wealth by wearing huge diamond rings to every party.|It is unkind to ___ your new phone in front of friends who cannot afford one, waving it under their noses.|The rich boys would ___ their designer trainers, sticking their feet out so everyone could see the labels.|stash,flatter|flaunted
+  showoff|a person who acts to attract attention|爱炫耀的人|Stop doing handstands every time the girls walk past—don't be such a ___!|He is a real ___ on the court, spinning the ball on his finger and waving to the crowd after every basket.|Nobody likes a ___ who keeps telling everyone how rich and clever he is.|copycat,truant|
+  flamboyant|tending to attract attention by confidence and stylishness|艳丽的；张扬的|He wore a ___ purple suit with a gold silk scarf and a feathered hat that made everyone turn and stare.|Known for her ___ style, the singer always came on stage in a sparkling cape and huge glittering boots.|The house was painted in ___ colours—bright pink, orange and gold—so that it stood out on the quiet street.|nimble,gifted|flamboyance
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **gifted** gymnast was so **agile** that she flipped across the mat, yet she never stopped to **boast** about her medals. These ten words help you talk about talent, quick bodies and showing off.",
+      "那位有天赋（**gifted**）的体操运动员身手敏捷（**agile**），在垫子上连翻跟头，却从不停下来吹嘘（**boast**）自己的奖牌。这十个词帮你谈论天赋、灵巧的身体和炫耀。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **knack** is a small, handy skill or trick, like opening a stiff jar; **prowess** is great skill in a big field such as sport or war.",
+        "**knack** 是小巧实用的诀窍，比如打开拧紧的罐子；**prowess** 是在体育、战争等大领域里的高超本领。",
+      ),
+      use: t(
+        "You **boast about** something you have done, but you **flaunt** a thing itself, such as wealth or new clothes, with no about.",
+        "吹嘘某事用 **boast about**；炫耀财富、新衣服等东西本身用 **flaunt**，后面直接接宾语，不加 about。",
+      ),
+      spelling: t(
+        "**Showoff** is written here as one word, **flamboyant** ends in -ant, and **versatile** and **agile** both end in -ile.",
+        "这里的 **showoff** 写成一个词；**flamboyant** 以 -ant 结尾；**versatile** 和 **agile** 都以 -ile 结尾。",
+      ),
+    },
+    notes: `
+      gifted|a five-year-old who plays any tune after hearing it once, without lessons|a summer camp for children years ahead in maths|a young artist with a rare talent selling a painting at twelve|gifted means born with great talent; flamboyant means bold and showy in style|gifted 是天赋过人；flamboyant 是风格张扬、引人注目|agile means able to move the body quickly and easily, not having a great talent for music, maths or art|agile 是身体灵活敏捷，不是在音乐、数学或艺术上有天赋|flamboyant means showy and bold in style, not born with great talent|flamboyant 是风格张扬，不是天赋过人|gift · ed|the -ed ending on gift|gift 后加 -ed
+      knack|a grandmother whose roses always bloom|the trick of tapping a stiff lid on the table to open a jar|a man who makes friends easily wherever he goes|a knack is a handy skill or trick; prowess is great skill in a big field such as sport or war|knack 是实用的小诀窍；prowess 是在体育、战争等领域的高超本领|prowess means great skill in war or sport, and it never takes a in front of it|prowess 是战争或体育方面的高超本领，前面不能加 a|a showoff is a person who acts to get attention, not a skill or trick|showoff 是爱出风头的人，不是技能或诀窍|knack|the silent k at the start and the ck at the end|开头的 k 不发音，结尾是 ck
+      prowess|an army whose military strength frightened every king|a striker scoring three goals in a final|a swimmer winning four gold medals at one Olympics|prowess means great skill in war or sport; a knack is a small, handy skill|prowess 是战争或体育方面的高超本领；knack 是小巧的诀窍|a knack is a small, handy skill or trick, not the great military or athletic power of an army or a champion|knack 是小巧实用的诀窍，不是军队或冠军那样强大的军事或运动实力|a showoff is a person who acts to get attention, not a skill in war or sport|showoff 是爱出风头的人，不是战争或体育方面的本领|prow · ess|the ow as in *cow* and the double s at the end|ow 读音同 *cow*，结尾双写 s
+      versatile|eggs that can be boiled, fried, scrambled or baked|a pocket knife that cuts, saws, opens tins and drives screws|an actor who is equally good as a king and as a clown|versatile means able to do many different things; agile means able to move quickly|versatile 是多才多艺、多功能；agile 是动作敏捷|agile means quick and easy in movement, not useful in many different ways|agile 是动作敏捷，不是有多种用途|flamboyant means bold and showy in style, not able to do many different jobs|flamboyant 是风格张扬，不是能胜任多种用途|ver · sa · tile|the -ile ending, said like *tile*|结尾 -ile，读音同 *tile*
+      agile|cats twisting in mid-air to land on their feet|a goalkeeper diving and springing back up in a flash|mountain goats leaping from ledge to ledge without slipping|agile means quick and easy in movement; versatile means able to do many things|agile 是动作敏捷；versatile 是多才多艺|versatile means able to do many different things, not quick and easy in movement|versatile 是能做许多不同的事，不是动作敏捷|flamboyant means bold and showy in style, not quick and light on your feet|flamboyant 是风格张扬，不是身手轻快|ag · ile|the g sounds like j, and the word ends in -ile|g 读作 j 的音，结尾是 -ile
+      nimble|fingers playing a fast piece without a slip|an old tailor threading a needle in a second|a squirrel running along a thin washing line|nimble means quick and light, especially with the hands or feet; versatile means able to do many things|nimble 是轻巧灵活，尤其指手脚；versatile 是多才多艺|flamboyant means bold and showy in style, not quick and light in movement|flamboyant 是风格张扬，不是动作轻巧|versatile means able to do many different things, not quick and light with the hands or feet|versatile 是能做许多不同的事，不是手脚轻快|nim · ble|the -ble ending|结尾是 -ble
+      boast|a man telling everyone how fast and costly his car is|a student whose hard work speaks without praising herself|players saying before a match that no team is as good as theirs|boast means to talk proudly about yourself; flaunt means to show off a thing for people to see|boast 是夸耀自己；flaunt 是把东西亮出来炫耀|flaunt means to show off a thing for people to look at, and it is not followed by about or by that and a claim|flaunt 是把东西亮出来炫耀，后面不接 about，也不接 that 引出的说法|flatter means to praise someone else too much, not to praise yourself|flatter 是过分夸奖别人，不是夸耀自己|boast|the oa as in *coast*|oa 读音同 *coast*
+      flaunt|a woman wearing huge diamond rings to every party|someone waving a new phone in front of friends who cannot afford one|rich boys sticking out their feet to show off designer labels|flaunt means to show off a thing so people see it; boast means to talk proudly about yourself|flaunt 是把东西亮出来炫耀；boast 是用嘴夸耀自己|stash means to hide something away, the opposite of showing it off|stash 是把东西藏起来，和炫耀正好相反|flatter means to praise someone else too much, not to show off your own things|flatter 是过分夸奖别人，不是炫耀自己的东西|flaunt|the au as in *haunt*|au 读音同 *haunt*
+      showoff|a boy doing handstands every time the girls walk past|a player spinning the ball and waving to the crowd after every basket|someone who keeps telling everyone how rich and clever he is|a showoff is a person who acts to get attention; a copycat copies others|showoff 是爱出风头的人；copycat 是模仿别人的人|a copycat is a person who copies what others do, not one who acts to get attention|copycat 是模仿别人的人，不是爱出风头的人|a truant is a pupil who stays away from school without leave, not a person who shows off|truant 是逃学的学生，不是爱炫耀的人|show · off|written here as one word, with a double f at the end|这里写成一个词，结尾双写 f
+      flamboyant|a purple suit with a gold scarf and a feathered hat|a singer in a sparkling cape and glittering boots|a house painted bright pink, orange and gold|flamboyant means bold and showy in style; gifted means born with great talent|flamboyant 是风格张扬；gifted 是天赋过人|nimble means quick and light in movement, not bold and showy in style|nimble 是动作轻巧，不是风格张扬|gifted means having great talent, not bold and showy in look or colour|gifted 是天赋过人，不是外观或颜色张扬|flam · boy · ant|the oy in the middle and the -ant ending|中间的 oy 和结尾的 -ant
+    `,
+  },
 );
 
 const copying = batch(
@@ -63,17 +163,50 @@ const copying = batch(
   ["Words of Copying and Zest", "模仿与热情的词"],
   ["imitating others and doing things with energy", "模仿他人与充满活力地做事"],
   `
-  mimic|to imitate someone, often to make fun of them|模仿|He likes to ___ the teacher.|Parrots ___ human speech.|Some insects ___ leaves.|zest,gusto|mimicked,mimicry
-  impersonate|to pretend to be another person|假冒|It is a crime to ___ a police officer.|He can ___ the president.|She tried to ___ her sister on the phone.|zest,verve|impersonated,impersonation
-  parrot|a bright tropical bird; to repeat without understanding|鹦鹉；鹦鹉学舌|The ___ can say hello.|Don't just ___ what the book says.|Students ___ the answers.|zest,vigor|parrots
-  copycat|a person who copies another|模仿者|Don't be a ___.|Police feared a ___ crime.|My little brother is a ___.|zest,gusto|copycats
-  zest|great enthusiasm and energy; the outer skin of citrus|热情；柑橘皮|She has a ___ for life.|Add the ___ of a lemon.|He ate with ___.|mimic,parrot|
-  gusto|enjoyment and vigor in doing something|兴致勃勃|They sang with ___.|He ate with great ___.|She told the story with ___.|mimic,copycat|
-  verve|vigor and spirit or enthusiasm|活力，神韵|The band played with ___.|Her painting has ___.|He spoke with ___.|mimic,impersonate|
-  vigor|physical strength and good health; effort and energy|活力|He was full of ___.|They worked with ___.|She ran with youthful ___.|parrot,mimic|vigorous,vigorously
-  eagerness|strong desire to do or have something|渴望|Her ___ to learn was clear.|In his ___ he fell.|They showed great ___.|copycat,mimic|
-  enthusiasm|intense and eager enjoyment or interest|热情|She has ___ for music.|The plan met with ___.|His ___ was catching.|copycat,impersonate|enthusiastic,enthusiast
+  mimic|to imitate someone, often to make fun of them|模仿|Some insects ___ dead leaves so well that hungry birds fly straight past them.|The class clown would ___ the teacher's walk and voice behind her back, making everyone giggle.|Young children often ___ the way their parents walk and talk, copying every little move.|impersonate,parrot|mimicked,mimicry
+  impersonate|to pretend to be another person|假冒|It is a crime to ___ a police officer by wearing a fake uniform and badge to fool people.|On the phone, she tried to ___ her older sister, putting on a deeper voice so the shop would think she was eighteen.|The spy had to ___ a German officer for months, living under a false name so that no one would guess who he really was.|parrot,mimic|impersonated,impersonation
+  parrot|a bright tropical bird; to repeat without understanding|鹦鹉；鹦鹉学舌|Don't just ___ what the textbook says; explain the idea in your own words.|The pupils would ___ the answers they had learned by heart without understanding a word of them.|Instead of forming his own opinions, he would simply ___ the views of whoever he had last spoken to.|impersonate,mimic|parrots
+  copycat|a person who copies another|模仿者|Don't be such a ___—stop copying everything I wear!|After the first robbery was on the news, police feared a ___ crime by someone who had seen the report.|My little sister is a real ___: whatever game I play, she wants to play exactly the same one.|showoff,truant|copycats
+  zest|great enthusiasm and energy; the outer skin of citrus|热情；柑橘皮|Grate the ___ of one lemon into the cake mix to give it a fresh, sharp taste.|For the sauce, you need the juice and the finely grated ___ of two oranges.|Even at ninety, Grandpa had such a ___ for life that he took up a new hobby every year.|gusto,vigor|
+  gusto|enjoyment and vigor in doing something|兴致勃勃|The hungry boys ate their pizza with ___, licking their fingers and asking for more.|The fans cheered with ___ as their team scored, jumping up and down and hugging strangers.|After a long walk in the cold, we tucked into the hot stew with real ___.|verve,sorrow|
+  verve|vigor and spirit or enthusiasm|活力，神韵|Her paintings have real ___: bold strokes and bright colours that seem to leap off the canvas.|The young pianist played the lively piece with such ___ and style that the audience rose to cheer.|The writer's lively ___ makes even a dull subject like tax fun to read.|fatigue,sorrow|
+  vigor|physical strength and good health; effort and energy|活力|After a week of rest, Grandpa was full of ___ again, digging the garden and chopping wood all morning.|The old oak still grows with great ___, putting out thick new branches every spring.|Regular exercise and good sleep keep the body strong and healthy, full of ___.|fatigue,anguish|vigorous,vigorously
+  eagerness|strong desire to do or have something|渴望|In her ___ to learn, she read every book in the school library and still asked for more.|In his ___ to be first in line, he tripped over his own feet and fell.|The puppy's ___ to please made it easy to train; it would do anything for a pat on the head.|gusto,vigor|
+  enthusiasm|intense and eager enjoyment or interest|热情|She has a lot of ___ for music and spends every spare hour practising the violin.|The plan for a new skate park was met with great ___ by the town's teenagers, who cheered when they heard.|His ___ for football was catching, and soon the whole family was watching every match with him.|gusto,vigor|enthusiastic,enthusiast
   `,
+  "context-clues",
+  {
+    intro: t(
+      "My brother likes to **mimic** our teacher's voice, and he does it with such **gusto** and **verve** that even she laughs. These ten words help you talk about copying other people and doing things with energy.",
+      "我弟弟喜欢模仿（**mimic**）老师的声音，而且学得兴致勃勃（**gusto**）、神气活现（**verve**），连老师自己都笑了。这十个词帮你谈论模仿别人和充满活力地做事。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **mimic** is to copy how someone looks, moves or sounds; to **impersonate** is to pretend to be that person so others are fooled; to **parrot** is to repeat words without understanding them.",
+        "**mimic** 是模仿别人的样子、动作或声音；**impersonate** 是冒充那个人来骗人；**parrot** 是不理解地照搬别人的话。",
+      ),
+      use: t(
+        "**Gusto** and **verve** are used after with—with gusto, with verve—while **eagerness** is followed by to plus a verb: eagerness to learn.",
+        "**gusto** 和 **verve** 常放在 with 后面：with gusto、with verve；**eagerness** 后面接 to 加动词：eagerness to learn。",
+      ),
+      spelling: t(
+        "**Mimic** adds a k before -ed: mimicked; **vigor** ends in -or in American spelling, and **enthusiasm** has th and ends in -iasm.",
+        "**mimic** 加 -ed 前要加 k：mimicked；**vigor** 美式拼写以 -or 结尾；**enthusiasm** 中有 th，结尾是 -iasm。",
+      ),
+    },
+    notes: `
+      mimic|insects that look so like dead leaves that birds fly past|a class clown copying the teacher's walk and voice to make people giggle|young children copying how their parents walk and talk|mimic means to copy how someone looks, moves or sounds; impersonate means to pretend to be that person|mimic 是模仿外表、动作或声音；impersonate 是冒充某人|impersonate means to pretend to be another person so that others are fooled, not to copy the look of leaves or someone's way of walking|impersonate 是冒充别人来骗人，不是模仿树叶的样子或别人走路的姿态|parrot means to repeat words without understanding them, not to copy a look or a way of moving|parrot 是不理解地照搬话语，不是模仿外表或动作|mim · ic|add a k before -ed or -ing: mimicked, mimicking|加 -ed 或 -ing 前要加 k：mimicked、mimicking
+      impersonate|a criminal in a fake police uniform fooling people|a girl on the phone pretending to be her older sister|a spy living for months under a false name as a German officer|impersonate means to pretend to be someone else; mimic means only to copy how they look or sound|impersonate 是冒充别人；mimic 只是模仿外表或声音|parrot means to repeat words without understanding them, not to pass yourself off as another person|parrot 是不理解地照搬话语，不是冒充他人|mimic means to copy someone's manner, often for fun, not to pass yourself off as that person to fool others|mimic 是模仿别人的样子，多为逗乐，不是冒充对方去骗人|im · per · son · ate|the word person hidden inside, with im- before it and -ate after it|中间藏着 person，前加 im-，后加 -ate
+      parrot|a student repeating the textbook instead of explaining the idea|pupils repeating answers learned by heart without understanding them|a man repeating the views of whoever he last spoke to|parrot means to repeat words without understanding; mimic means to copy how someone looks or sounds|parrot 是不理解地照搬话语；mimic 是模仿外表或声音|impersonate means to pretend to be another person, not to repeat words or answers|impersonate 是冒充别人，不是照搬话语或答案|mimic means to copy a person's looks, voice or moves, not to repeat words, answers or views without thinking|mimic 是模仿人的样子、声音或动作，不是不加思考地照搬话语、答案或观点|par · rot|the double r in the middle|中间双写 r
+      copycat|someone who copies everything a friend wears|a crime copied from one seen on the news|a little sister who wants to play exactly the same game|a copycat is a person who copies others; a showoff acts to get attention|copycat 是模仿别人的人；showoff 是爱出风头的人|a showoff is a person who acts to get attention, not one who copies others|showoff 是爱出风头的人，不是模仿别人的人|a truant is a pupil who skips school without leave, not one who copies others|truant 是逃学的学生，不是模仿别人的人|copy · cat|two words joined: copy and cat; the plural is copycats|copy 和 cat 合成一个词；复数是 copycats
+      zest|lemon peel grated into a cake mix|grated orange peel for a sauce|a grandfather of ninety who keeps taking up new hobbies|zest is the grated peel of a lemon or orange, or a strong love of life; gusto is enjoyment in doing something|zest 是柠檬或橙子的皮屑，或对生活的热爱；gusto 是做事时的兴致|gusto means enjoyment while you are doing one thing, such as eating, not the peel of a fruit or a love of life as a whole|gusto 是做某件事（如吃东西）时的兴致，不是水果皮，也不是对整个生活的热爱|vigor means physical strength and health, not the peel of a fruit|vigor 是体力与健康，不是水果皮|zest|the st at the end|结尾是 st
+      gusto|hungry boys licking their fingers after pizza|fans jumping and hugging strangers when their team scores|walkers tucking into hot stew after a cold walk|gusto means great enjoyment while doing something; verve means lively spirit and style in a performance or work of art|gusto 是做事时的极大兴致；verve 是表演或作品中的活力与神韵|verve means lively style in art, music or writing, not the enjoyment of eating or cheering|verve 是艺术、音乐或写作中的活力与风格，不是吃东西或欢呼时的兴致|sorrow means deep sadness, the opposite of the joy of eating or cheering|sorrow 是深切的悲伤，和吃喝或欢呼时的快乐相反|gus · to|the o at the end, as in *potato*|结尾是 o，同 *potato*
+      verve|paintings with bold strokes and bright colours|a pianist playing a lively piece with style|a writer who makes even tax fun to read|verve means lively spirit and style in art or performance; gusto means enjoyment while doing something|verve 是艺术或表演中的活力与神韵；gusto 是做事时的兴致|fatigue means great tiredness, the opposite of lively spirit|fatigue 是极度疲倦，和活力正好相反|sorrow means deep sadness, not the lively, bright spirit of a painting, a piece of music or a book|sorrow 是深切的悲伤，不是画作、乐曲或书中明快的活力|verve|the v at both ends and the silent e|首尾都是 v，结尾 e 不发音
+      vigor|a grandfather digging and chopping wood after a week of rest|an old oak putting out thick new branches every spring|a body kept strong by exercise and sleep|vigor means physical strength and energy; fatigue means great tiredness|vigor 是体力与活力；fatigue 是极度疲倦|fatigue means great tiredness, the opposite of strength and energy|fatigue 是极度疲倦，和体力充沛正好相反|anguish means great pain of mind or body, not strength and good health|anguish 是身心的极度痛苦，不是强健的体力|vig · or|the -or ending in American spelling, and the adjective vigorous|美式拼写以 -or 结尾，形容词是 vigorous
+      eagerness|a girl reading every book in the library to learn|a boy tripping in his hurry to be first in line|a puppy that will do anything for a pat|eagerness means a strong wish to do something; enthusiasm means delight and interest in something|eagerness 是急切想做某事；enthusiasm 是对某事的热情与兴趣|gusto means enjoyment while doing something, and it is not followed by to and a verb|gusto 是做事时的兴致，后面不接 to 加动词|vigor means strength and energy of the body, not a strong wish to do something|vigor 是身体的力量与活力，不是急切的愿望|ea · ger · ness|the ea at the start and the -ness ending|开头是 ea，结尾是 -ness
+      enthusiasm|a girl spending every spare hour on the violin|teenagers cheering at the plan for a skate park|a boy whose love of football spreads to his family|enthusiasm means strong interest and delight in something; eagerness means a strong wish to do something|enthusiasm 是对某事的浓厚兴趣与热情；eagerness 是急切想做某事|gusto means enjoyment while doing something, and it is not followed by for and a subject such as music|gusto 是做事时的兴致，后面不接 for 加音乐之类的对象|vigor means strength and energy of the body, not interest in music, a plan or a sport|vigor 是身体的力量与活力，不是对音乐、计划或运动的兴趣|en · thu · si · asm|the th after en and the -iasm ending|en 后面是 th，结尾是 -iasm
+    `,
+  },
 );
 
 const grief = batch(
@@ -81,17 +214,50 @@ const grief = batch(
   ["Words of Grief and Comfort", "悲伤与安慰的词"],
   ["deep pain, sadness, crying and comforting", "深切的痛苦、悲伤、哭泣与安慰"],
   `
-  anguish|severe mental or physical pain|极度痛苦|She cried out in ___.|He felt ___ at the loss.|Their ___ was clear.|weep,console|anguished
-  agony|extreme physical or mental suffering|剧痛|He was in ___ with his leg.|The wait was ___.|She screamed in ___.|weep,console|agonizing
-  torment|severe suffering; to cause it|折磨|The pain was a ___.|Bullies ___ him daily.|She lived in ___.|console,sob|tormented,tormentor
-  distress|extreme anxiety, sorrow or pain; to cause it|苦恼；使痛苦|The news caused ___.|The ship sent a ___ call.|Don't ___ yourself.|weep,sob|distressed,distressing
-  sorrow|a feeling of deep sadness|悲伤|She felt ___ at his death.|They shared their ___.|To my ___, he left.|weep,console|sorrowful,sorrows
-  woe|great sorrow; troubles|悲哀；困难|Tales of ___ filled the book.|Money ___ plagued them.|___ is me!|console,sob|woes,woeful
-  heartache|emotional anguish or grief|心痛|The breakup caused much ___.|She suffered years of ___.|Love can bring ___.|weep,console|
-  weep|to shed tears|哭泣|She began to ___ at the news.|Don't ___ for me.|He would ___ in private.|console,anguish|wept,weeping
-  sob|to cry noisily with gasps|啜泣|The child began to ___.|I heard a ___ from the room.|She would ___ into her pillow.|console,woe|sobbed
-  console|to comfort someone at a time of grief|安慰|Friends tried to ___ her.|Nothing could ___ him.|She managed to ___ the child.|weep,distress|consoled,consolation
+  anguish|severe mental or physical pain|极度痛苦|Waiting all night for news of her missing son, the mother paced the floor, her face twisted in ___.|He cried out in ___ when the doctor told him that his best friend had died in the crash.|The prisoner's letters home were full of ___ at being kept from his children for so many years.|enthusiasm,vigor|anguished
+  agony|extreme physical or mental suffering|剧痛|He lay in ___ on the pitch, clutching his broken leg and groaning.|She screamed in ___ as the boiling water splashed over her bare arm.|The pain of the toothache was such ___ that he could not eat or sleep for two days.|sorrow,heartache|agonizing
+  torment|severe suffering; to cause it|折磨|The bullies would ___ the new boy every day, hiding his bag and calling him cruel names.|Guilt over the lie continued to ___ her for years, keeping her awake at night.|Some cruel children like to ___ animals, pulling the cat's tail just to hear it cry.|console,weep|tormented,tormentor
+  distress|extreme anxiety, sorrow or pain; to cause it|苦恼；使痛苦|The sinking ship sent out a ___ signal, and the coastguard rushed to rescue the crew.|The kitten was clearly in ___, mewing loudly and trembling as it clung to the top of the tall tree.|Loud bangs cause the old dog great ___, and he hides under the bed shaking whenever there are fireworks.|sorrow,heartache|distressed,distressing
+  sorrow|a feeling of deep sadness|悲伤|To our great ___, the old oak tree we had climbed as children had to be cut down.|With quiet ___, she packed away her late husband's coats and gave them to charity.|The old song was full of ___ for a lost love, and it made the listeners feel gently sad.|agony,vigor|sorrowful,sorrows
+  woe|great sorrow; troubles|悲哀；困难|The old sailor told a long tale of ___: storms, shipwrecks and friends lost at sea.|The king cried out in ___ when he learned that his only son had drowned.|Her letter was full of ___: a leaking roof, a lost job and a sick child to care for.|gusto,zest|woes,woeful
+  heartache|emotional anguish or grief|心痛|The breakup with her first boyfriend caused her months of ___, and she cried herself to sleep each night.|Moving away from her best friend brought years of ___ that a weekly phone call could not ease.|Many love songs are about ___, the deep sadness of being left by someone you love.|vigor,zest|
+  weep|to shed tears|哭泣|She began to ___ quietly at the sad news, tears rolling silently down her cheeks.|Don't ___ for me when I'm gone; remember the happy times we had instead.|He would only ___ in private, where no one could see the tears on his face.|console,torment|wept,weeping
+  sob|to cry noisily with gasps|啜泣|The lost child began to ___, gasping loudly between her cries for her mother.|Through the wall I could hear her ___, loud, gulping cries that went on for an hour.|She would ___ into her pillow so hard that her whole body shook with each gasp.|console,torment|sobbed
+  console|to comfort someone at a time of grief|安慰|Her friends tried to ___ her after her dog died, hugging her and telling her it was not her fault.|Nothing could ___ the boy after his team lost the final; he would not stop crying.|The nurse knelt down to ___ the frightened child, stroking her hair and speaking softly.|torment,weep|consoled,consolation
   `,
+  "context-clues",
+  {
+    intro: t(
+      "When the old dog died, my sister began to **sob**, and the **sorrow** in the house was heavy, so Grandma sat with us to **console** everyone. These ten words help you talk about deep pain, sadness, crying and comfort.",
+      "老狗去世时，妹妹抽泣（**sob**）起来，家里满是悲伤（**sorrow**），于是奶奶陪我们坐着，安慰（**console**）每一个人。这十个词帮你谈论深切的痛苦、悲伤、哭泣和安慰。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Agony** is usually terrible pain in the body, as from a broken leg, while **heartache** is pain of the heart, as when someone you love leaves.",
+        "**agony** 通常指身体上的剧痛，比如腿骨折；**heartache** 是心里的痛，比如所爱的人离开。",
+      ),
+      use: t(
+        "To **weep** is to cry quietly with tears; to **sob** is to cry noisily with gasps; to **console** someone is to comfort them, so console needs a person after it.",
+        "**weep** 是默默流泪；**sob** 是抽抽噎噎地大声哭；**console** 是安慰别人，后面要接人。",
+      ),
+      spelling: t(
+        "**Anguish** hides a gu like *language*, **heartache** joins *heart* and *ache*, and **weep** becomes **wept** in the past.",
+        "**anguish** 中间的 gu 和 *language* 一样；**heartache** 是 *heart* 加 *ache*；**weep** 的过去式是 **wept**。",
+      ),
+    },
+    notes: `
+      anguish|a mother pacing all night waiting for news of her missing son|a man crying out at the news that his best friend has died|a prisoner's letters about being kept from his children for years|anguish means terrible pain of the mind; agony is mostly terrible pain of the body|anguish 多指内心的极度痛苦；agony 多指身体的剧痛|enthusiasm means eager delight and interest, the opposite of terrible pain of the mind|enthusiasm 是热切的兴趣，和内心的极度痛苦正好相反|vigor means strength and good health, not terrible pain at bad news|vigor 是体力与健康，不是听到噩耗时的极度痛苦|an · guish|the gu in the middle, as in *language*|中间的 gu，同 *language*
+      agony|a player clutching his broken leg on the pitch|a girl screaming as boiling water splashes her arm|a toothache so bad he cannot eat or sleep|agony means terrible pain, especially of the body; heartache means pain of the heart|agony 多指身体的剧痛；heartache 是心痛|sorrow means deep sadness, not the terrible pain of a broken leg, a burn or a toothache|sorrow 是深切的悲伤，不是骨折、烫伤或牙痛那样的剧痛|heartache means sadness of the heart, as over lost love, not pain in the body|heartache 是心里的痛，比如失恋，不是身体上的疼痛|ag · o · ny|the y at the end, which changes to i in agonizing|结尾是 y，变成 agonizing 时改为 i
+      torment|bullies hiding a new boy's bag and calling him names|guilt over a lie keeping a woman awake for years|cruel children pulling a cat's tail to hear it cry|torment means to make someone suffer again and again; console means to comfort them|torment 是一再折磨人；console 是安慰人|console means to comfort someone, the opposite of making them suffer|console 是安慰人，和折磨人正好相反|weep means to cry with tears, and it does not take a person or an animal as its object|weep 是流泪哭泣，后面不能接人或动物作宾语|tor · ment|the -ment ending|结尾是 -ment
+      distress|a sinking ship calling for help|a frightened kitten trembling at the top of a tall tree|an old dog shaking under the bed during fireworks|distress means fear and worry in a moment of danger; sorrow means deep sadness over a loss|distress 是危急时的恐惧与焦虑；sorrow 是因失去而深感悲伤|sorrow means deep sadness over a loss, not the fear of being in danger or trapped|sorrow 是因失去而感到的深切悲伤，不是遇险或被困时的恐惧|heartache means sadness of the heart, as over lost love, not fear in a moment of danger|heartache 是心里的痛，比如失恋，不是危急时的恐惧|dis · tress|the double s at the end|结尾双写 s
+      sorrow|people sad that an old oak tree from their childhood has been cut down|a widow quietly packing away her late husband's coats|an old song about a lost love that makes people gently sad|sorrow means deep, quiet sadness; agony means terrible pain|sorrow 是深沉安静的悲伤；agony 是剧烈的痛苦|agony means terrible pain, often of the body, not a quiet, gentle sadness|agony 是剧烈的痛苦，多指身体，不是安静温和的悲伤|vigor means strength and energy, not sadness over a loss|vigor 是体力与活力，不是因失去而感到的悲伤|sor · row|the double r and the ow at the end|双写 r，结尾是 ow
+      woe|an old sailor's tale of storms, shipwrecks and lost friends|a king crying out when his only son has drowned|a letter about a leaking roof, a lost job and a sick child|woe means great sadness and trouble; gusto means great enjoyment|woe 是深深的悲哀与苦难；gusto 是极大的兴致|gusto means great enjoyment, the opposite of sadness and trouble|gusto 是极大的兴致，和悲哀与苦难正好相反|zest means strong love of life or the peel of a lemon, not sadness and trouble|zest 是对生活的热爱或柠檬皮，不是悲哀与苦难|woe|the oe at the end, as in *toe*|结尾是 oe，同 *toe*
+      heartache|a girl crying herself to sleep after a breakup|years of missing a best friend who moved away|love songs about being left by someone you love|heartache means pain of the heart over love or loss; agony means terrible pain, often of the body|heartache 是因爱或失去而心痛；agony 多指身体的剧痛|vigor means strength and energy, not sadness over lost love or friendship|vigor 是体力与活力，不是因失恋或失去朋友而难过|zest means strong love of life, the opposite of the sadness of being left|zest 是对生活的热爱，和被抛下的悲伤正好相反|heart · ache|two words joined: heart and ache, with ache spelled with ch|heart 和 ache 合成一个词，ache 中是 ch
+      weep|tears rolling silently down a woman's cheeks|someone asking others not to cry for him when he is gone|a man crying only where no one can see his tears|weep means to cry with tears, often quietly; sob means to cry noisily with gasps|weep 是流泪，常是默默地哭；sob 是抽抽噎噎地大声哭|console means to comfort someone else, and it needs a person after it|console 是安慰别人，后面要接人|torment means to make someone suffer, and it needs a person or an animal after it|torment 是折磨别人，后面要接人或动物|weep|the double e; the past is wept|双写 e；过去式是 wept
+      sob|a lost child gasping between cries for her mother|loud, gulping cries heard through a wall for an hour|someone crying into her pillow so hard her body shakes|sob means to cry noisily with gasps; weep means to cry with tears, often quietly|sob 是抽抽噎噎地大声哭；weep 是流泪，常是默默地哭|console means to comfort someone else, not to cry noisily yourself|console 是安慰别人，不是自己大声哭|torment means to make someone else suffer, not to cry noisily yourself|torment 是折磨别人，不是自己大声哭|sob|the b doubles in the past: sobbed|过去式双写 b：sobbed
+      console|friends hugging a girl whose dog has died|a boy who will not stop crying after his team loses|a nurse stroking a frightened child's hair|console means to comfort someone who is sad; torment means to make them suffer|console 是安慰难过的人；torment 是折磨人|torment means to make someone suffer, the opposite of comforting them|torment 是折磨人，和安慰正好相反|weep means to cry yourself, and it takes no person after it|weep 是自己流泪，后面不接人|con · sole|the -sole ending, said like *soul*|结尾 -sole，读音同 *soul*
+    `,
+  },
 );
 
 const noises = batch(
@@ -99,17 +265,50 @@ const noises = batch(
   ["Words of Moaning and Mumbling", "呻吟与嘟囔的词"],
   ["sounds of pain and complaint, and unclear speech", "痛苦与抱怨的声音以及含糊的话"],
   `
-  moan|a long low sound of pain; to complain|呻吟；抱怨|He let out a ___ of pain.|Listen to the wind ___ in the trees.|They ___ about the weather.|stammer,holler|moaned
-  groan|a deep sound of pain or despair; to make one|呻吟|The class let out a ___.|The old floor began to ___.|He would ___ when he stood.|stammer,mutter|groaned
-  whine|a high complaining cry; to complain in a childish way|哀鸣；发牢骚|The dog began to ___.|Don't ___ about homework.|We heard the ___ of an engine.|stammer,mumble|whined,whiny
-  howl|a long loud cry, as of a dog or wolf; to make one|嚎叫|Wolves ___ at the moon.|The wind began to ___.|A ___ of laughter came from the room.|mumble,stammer|howled
-  yell|to shout loudly; a loud cry|大喊|Don't ___ at me.|She gave a ___ of joy.|He had to ___ to be heard.|mumble,stammer|yelled
-  holler|to shout or call loudly|喊叫|___ if you need me.|Kids ___ in the park.|She gave a ___ from the porch.|mumble,stammer|hollered
-  grunt|a low short sound like that of a pig; to make one|咕哝|He gave a ___ of agreement.|Pigs ___ in the mud.|She would ___ as she lifted the box.|howl,stammer|grunted
-  mutter|to say something in a low voice, often in complaint|嘀咕|He began to ___ under his breath.|I heard her ___ something.|They ___ about the rules.|howl,holler|muttered
-  mumble|to say something indistinctly|含糊地说|Don't ___; speak up.|He tends to ___ his answers.|She gave a ___ of thanks.|howl,yell|mumbled
-  stammer|to speak with sudden pauses and repeated sounds; this habit|结巴|Fear made him ___: "I-I-I don't know."|She tried to ___ an excuse.|He has a slight ___.|howl,holler|stammered
+  moan|a long low sound of pain; to complain|呻吟；抱怨|Lying in bed with a high fever, he would ___ softly with pain through the night.|On stormy nights we could hear the wind ___ through the gaps in the old windows, a long, low, sad sound.|Every morning the old man would ___ quietly about his aching back as he climbed out of bed.|holler,stammer|moaned
+  groan|a deep sound of pain or despair; to make one|呻吟|The old wooden floor would ___ under his heavy boots as he crossed the room.|When the teacher announced a surprise test, the whole class began to ___ loudly, a deep, long sound of dismay.|With his bad back, Grandpa would ___ with pain every time he bent down to tie his shoes.|mutter,stammer|groaned
+  whine|a high complaining cry; to complain in a childish way|哀鸣；发牢骚|The puppy began to ___ at the door, a high, thin cry that meant it wanted to go out.|Don't ___ about your homework in that high, childish voice; just sit down and get it done.|As the jet engine started up, we heard it ___, a high sound that grew louder and louder.|mumble,stammer|whined,whiny
+  howl|a long loud cry, as of a dog or wolf; to make one|嚎叫|At night the wolves ___ at the moon, their long, loud cries echoing over the hills.|The wind began to ___ around the house, so loudly that we could hardly hear each other speak.|The dog would ___ for hours when its owners left, a long, sad cry the neighbours could hear down the street.|mumble,stammer|howled
+  yell|to shout loudly; a loud cry|大喊|Don't ___ at me! I can hear you perfectly well if you speak in a normal voice.|He had to ___ to be heard over the roar of the crowd at the match.|The coach would ___ instructions from the side of the pitch at the top of his voice.|mumble,stammer|yelled
+  holler|to shout or call loudly|喊叫|If you need any help in the garden, just ___ and I'll come running from the house.|On summer evenings, the kids ___ to each other across the park at the top of their voices.|Mom would ___ up the stairs that dinner was ready, loud enough to be heard in every room.|mumble,mutter|hollered
+  grunt|a low short sound like that of a pig; to make one|咕哝|The pigs ___ happily as they root about in the mud for food.|He would ___ as he lifted the heavy box, a short, low sound from deep in his throat.|When I ask my teenage brother how school was, he will only ___ in reply, too lazy to say a real word.|howl,stammer|grunted
+  mutter|to say something in a low voice, often in complaint|嘀咕|He began to ___ angrily under his breath when the teacher gave him extra homework.|I heard her ___ something about the rain as she hurried past, too quietly for me to catch the words.|The workers would ___ about the new rules among themselves, in low voices so that the boss would not hear.|howl,holler|muttered
+  mumble|to say something indistinctly|含糊地说|Don't ___ into your collar—speak up so that everyone at the back can hear the words.|He tends to ___ his answers so unclearly that the teacher has to ask him to repeat them.|Half asleep, she would ___ a few words nobody could make out and then roll over.|howl,yell|mumbled
+  stammer|to speak with sudden pauses and repeated sounds; this habit|结巴|Fear made him ___: "I-I-I don't know where the m-money went."|Red in the face, she began to ___ an excuse, stopping and starting again every few words.|Nervous children sometimes ___ when they read aloud, repeating the first sound of a word again and again.|howl,holler|stammered
   `,
+  "context-clues",
+  {
+    intro: t(
+      "From the next room I heard my brother **groan** over his maths, **mutter** about his teacher and then **holler** for help. These ten words help you talk about sounds of pain and complaint, shouting and unclear speech.",
+      "我听见隔壁房间的弟弟对着数学题直叹气（**groan**），嘀咕（**mutter**）着抱怨老师，然后大喊（**holler**）求救。这十个词帮你谈论痛苦与抱怨的声音、喊叫以及含糊的话语。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **mutter** is to speak in a low voice, often to complain; to **mumble** is to speak so unclearly that others cannot make out the words.",
+        "**mutter** 是低声说话，常带着抱怨；**mumble** 是说得含糊不清，别人听不清字句。",
+      ),
+      use: t(
+        "A **howl** is long and loud, like a wolf's cry, while a **grunt** is short and low, like a pig's—so a howl can echo over the hills, but a grunt cannot.",
+        "**howl** 又长又响，像狼嚎；**grunt** 又短又低，像猪哼——所以嚎叫能在山间回荡，哼声却不能。",
+      ),
+      spelling: t(
+        "**Holler** and **mutter** have a double letter before -er, **stammer** has a double m, and **whine** starts with wh, like *white*.",
+        "**holler** 和 **mutter** 在 -er 前双写字母，**stammer** 双写 m，**whine** 和 *white* 一样以 wh 开头。",
+      ),
+    },
+    notes: `
+      moan|a man with a fever making soft sounds of pain through the night|the wind making a long, low, sad sound through old windows|an old man complaining quietly about his aching back each morning|moan means to make a long, low sound of pain or to complain; holler means to shout loudly|moan 是发出低长的呻吟或抱怨；holler 是大声喊叫|holler means to shout loudly, not to make a soft, low sound of pain or complaint|holler 是大声喊叫，不是发出低柔的痛苦或抱怨声|stammer means to speak with sudden pauses and repeated sounds, not to make a long, low sound of pain|stammer 是说话结巴、重复字音，不是发出低长的痛苦声|moan|the oa as in *loan*|oa 读音同 *loan*
+      groan|an old wooden floor creaking under heavy boots|a class making a deep sound of dismay at a surprise test|a grandfather with a bad back making sounds of pain as he bends|groan means to make a deep sound of pain or dismay; mutter means to speak quietly, often to complain|groan 是发出低沉的痛苦或失望声；mutter 是低声嘀咕|mutter means to speak words quietly under your breath, not to make a loud, deep sound with no words|mutter 是低声说话，不是发出响亮低沉、没有字句的声音|stammer means to speak with pauses and repeated sounds, not to make a deep sound of pain|stammer 是说话结巴，不是发出低沉的痛苦声|groan|the oa as in *loan*, after gr|gr 后面是 oa，读音同 *loan*
+      whine|a puppy making a high, thin cry at the door|a child complaining about homework in a high voice|a jet engine making a high sound that grows louder|whine means to make a high, thin cry or to complain like a child; mumble means to speak unclearly|whine 是发出尖细的哀叫或像孩子一样发牢骚；mumble 是说话含糊|mumble means to speak unclearly, not to make a high, thin cry|mumble 是说话含糊，不是发出尖细的哀叫|stammer means to speak with pauses and repeated sounds, not to make a high, complaining cry|stammer 是说话结巴，不是发出尖细的抱怨声|whine|the wh at the start and the silent e at the end|开头是 wh，结尾 e 不发音
+      howl|wolves crying at the moon with echoes over the hills|wind roaring around a house so loudly people cannot hear|a dog crying for hours when its owners leave|howl means to make a long, loud cry like a wolf; mumble means to speak unclearly|howl 是像狼一样长声嚎叫；mumble 是说话含糊|mumble means to speak words unclearly, not to make a long, loud cry like a wolf or the wind|mumble 是说话含糊，不是像狼或风那样长声嚎叫|stammer means to speak with pauses and repeated sounds, not to make a long, loud cry|stammer 是说话结巴，不是长声嚎叫|howl|the ow as in *owl*|ow 读音同 *owl*
+      yell|someone shouting at a person who can hear perfectly well|a man shouting over the roar of a crowd|a coach shouting instructions from the side of the pitch|yell means to shout loudly; mumble means to speak unclearly and quietly|yell 是大声喊叫；mumble 是含糊低声地说|mumble means to speak quietly and unclearly, the opposite of shouting|mumble 是含糊低声地说话，和大喊正好相反|stammer means to speak with pauses and repeated sounds, not to shout loudly|stammer 是说话结巴，不是大声喊叫|yell|the double l at the end|结尾双写 l
+      holler|someone offering to come running from the house if called|kids shouting to each other across a park|a mother calling up the stairs that dinner is ready|holler means to shout or call loudly; mutter means to speak quietly|holler 是大声叫喊；mutter 是低声嘀咕|mumble means to speak quietly and unclearly, not to call out loudly|mumble 是含糊低声地说，不是大声呼喊|mutter means to speak under your breath, not to call out across a park or up the stairs|mutter 是低声嘀咕，不是隔着公园或朝楼上大声喊|hol · ler|the double l before -er|-er 前双写 l
+      grunt|pigs making happy sounds as they root in the mud|a man making a short, low sound as he lifts a heavy box|a teenager answering with a sound instead of words|grunt means to make a short, low sound; howl means to make a long, loud cry|grunt 是发出短促低沉的声音；howl 是长声嚎叫|howl means to make a long, loud cry, not a short, low sound|howl 是长声嚎叫，不是短促低沉的声音|stammer means to speak words with pauses and repeats, not to make a sound with no words|stammer 是说话结巴，不是发出没有字句的声音|grunt|the u as in *hunt*|u 读音同 *hunt*
+      mutter|a boy speaking angrily under his breath about extra homework|a woman saying something about the rain too quietly to catch|workers complaining in low voices so the boss does not hear|mutter means to speak in a low voice, often to complain; mumble means to speak unclearly|mutter 是低声嘀咕，常带抱怨；mumble 是说得含糊不清|howl means to make a long, loud cry, not to speak in a low voice|howl 是长声嚎叫，不是低声说话|holler means to shout loudly, the opposite of speaking under your breath|holler 是大声喊叫，和低声嘀咕正好相反|mut · ter|the double t before -er|-er 前双写 t
+      mumble|someone speaking into his collar so the people at the back cannot hear|a boy giving answers so unclearly that the teacher asks again|a girl half asleep saying words nobody can make out|mumble means to speak unclearly; mutter means to speak quietly, often to complain|mumble 是说话含糊；mutter 是低声嘀咕，常带抱怨|howl means to make a long, loud cry, not to speak unclearly|howl 是长声嚎叫，不是含糊地说话|yell means to shout loudly, the opposite of speaking too unclearly to be heard|yell 是大喊，和说得含糊听不清正好相反|mum · ble|the mb followed by -le|mb 后接 -le
+      stammer|a frightened man repeating sounds as he speaks|a girl stopping and starting as she makes an excuse|nervous children repeating the first sound of words when reading aloud|stammer means to speak with sudden pauses and repeated sounds; mumble means to speak unclearly|stammer 是说话结巴、重复字音；mumble 是说话含糊|howl means to make a long, loud cry, not to speak with pauses and repeats|howl 是长声嚎叫，不是说话结巴|holler means to shout loudly, not to speak with stops and repeated sounds|holler 是大声喊叫，不是说话断断续续、重复字音|stam · mer|the double m before -er|-er 前双写 m
+    `,
+  },
 );
 
 const chatter = batch(
@@ -117,17 +316,50 @@ const chatter = batch(
   ["Words of Chatter and Gossip", "闲聊与八卦的词"],
   ["light talk, idle talk, quick replies and angry speeches", "轻松谈话、闲扯、机智回答与激烈言辞"],
   `
-  chatter|to talk rapidly about unimportant matters|喋喋不休|The kids ___ all the way home.|Stop the ___.|Birds ___ in the trees.|quip,retort|chattered
-  prattle|to talk at length in a foolish way|胡扯|He likes to ___ about nothing.|I'm tired of his ___.|They ___ on for hours.|quip,retort|prattled
-  babble|to talk rapidly in a confused way; the sound of a stream|含糊不清地说；潺潺声|Babies ___ before they talk.|We heard the ___ of a brook.|Don't ___; slow down.|quip,banter|babbled
-  jabber|to talk rapidly in a way hard to understand|急促不清地说|Tourists ___ in many languages.|Stop your ___.|They ___ on their phones.|quip,banter|jabbered
-  gossip|casual talk about other people's private lives; to engage in it|闲话；说长道短|Don't listen to ___.|They like to ___ about the neighbors.|She is a terrible ___.|quip,retort|gossiped,gossips
-  blab|to reveal secrets by careless talk|泄密|Don't ___ to the teacher.|He may ___ the news.|Someone chose to ___.|banter,quip|blabbed
-  banter|playful teasing talk|打趣|They traded friendly ___.|The ___ in the office was fun.|We enjoyed his ___.|rant,blab|
-  quip|a witty remark; to make one|俏皮话|He made a clever ___.|"Nice hat," she was quick to ___.|His ___ made us laugh.|babble,jabber|quipped,quips
-  retort|to answer sharply or wittily; such an answer|反驳|She was quick to ___.|He gave an angry ___.|"Not likely," he would ___.|babble,jabber|retorted
-  rant|to speak at length in an angry way; such a speech|大声斥责|He began to ___ about taxes.|We heard a long ___.|Don't ___ at me.|babble,quip|ranted
+  chatter|to talk rapidly about unimportant matters|喋喋不休|The girls would ___ happily all the way home about clothes, pop songs and who sat next to whom.|Monkeys ___ noisily in the treetops, calling back and forth to each other all morning.|Instead of listening to the lesson, the two friends would ___ at the back of the class about the weekend.|quip,retort|chattered
+  prattle|to talk at length in a foolish way|胡扯|He would ___ on for hours about nothing at all, never noticing that we had stopped listening.|The little boy would ___ away to his toy bear about dragons, spaceships and talking cats.|At the party, a bored guest had to listen to a stranger ___ on about the price of parking for an hour.|quip,retort|prattled
+  babble|to talk rapidly in a confused way; the sound of a stream|含糊不清地说；潺潺声|Babies ___ happily long before they can say real words, making sounds like "ba-ba" and "da-da".|We could hear the little stream ___ over the stones as we walked through the wood.|So excited she could hardly breathe, she began to ___ so fast that none of us could follow what she meant.|quip,retort|babbled
+  jabber|to talk rapidly in a way hard to understand|急促不清地说|The tourists would ___ away in a dozen languages, too fast for anyone at the station to understand.|The excited parrots ___ in their cage, making a noisy stream of sounds that nobody can make sense of.|On the bus, two men would ___ on their phones so fast and loud that the words ran together.|quip,blab|jabbered
+  gossip|casual talk about other people's private lives; to engage in it|闲话；说长道短|The women at the bus stop like to ___ about the neighbours: who has a new car and whose son is in trouble.|It is unkind to ___ about a classmate's private family troubles behind her back.|Office workers often ___ about who is dating whom and who is about to lose a job, spreading stories that may not be true.|quip,retort|gossiped,gossips
+  blab|to reveal secrets by careless talk|泄密|Please don't ___ to the teacher about our surprise party; it is supposed to be a secret.|We knew he would ___ the news to the whole school as soon as he heard it, since he can never keep a secret.|If anyone were to ___ our hiding place to the other team, the whole game would be ruined.|quip,retort|blabbed
+  banter|playful teasing talk|打趣|The two old friends traded friendly ___ across the table, teasing each other about their bad cooking.|The lively ___ between the two radio hosts, full of jokes and gentle teasing, made the show fun to listen to.|There was always cheerful ___ in the changing room before a match, with players joking about each other's haircuts.|rant,quip|
+  quip|a witty remark; to make one|俏皮话|He made a clever ___ about the teacher's bright yellow tie, and the whole class burst out laughing.|Before the show began, the host opened with a funny ___ about the long queue outside.|The speaker began with a witty ___ about her own age to help the nervous audience relax.|rant,retort|quipped,quips
+  retort|to answer sharply or wittily; such an answer|反驳|When her brother called her lazy, she was quick to ___ that at least she had done her homework.|"That's not fair!" he would ___ every time his sister was given the bigger slice.|Asked by the reporter why he had lost, the boxer chose to ___ angrily that the judges were blind.|babble,blab|retorted
+  rant|to speak at length in an angry way; such a speech|大声斥责|Grandpa began to ___ about taxes again, shouting at the newspaper for half an hour.|Every time his team loses, my uncle will ___ for ages about the useless referee.|Instead of calmly explaining the problem, the customer began to ___ angrily at the shop assistant.|babble,quip|ranted
   `,
+  "context-clues",
+  {
+    intro: t(
+      "At lunch my friends **chatter** about films, share some **gossip** about the new teacher and trade friendly **banter** about who eats the most. These ten words help you talk about light talk, idle talk, quick replies and angry speeches.",
+      "午饭时，朋友们叽叽喳喳地闲聊（**chatter**）电影，说说新老师的八卦（**gossip**），还互相打趣（**banter**）谁吃得最多。这十个词帮你谈论轻松的闲聊、无聊的废话、机智的回答和愤怒的长篇大论。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **gossip** is to talk about other people's private lives; to **blab** is to give away a secret you were meant to keep.",
+        "**gossip** 是议论别人的私事；**blab** 是把本该保守的秘密说漏出去。",
+      ),
+      use: t(
+        "A **quip** is a short, witty remark you can make at any time, while a **retort** is a sharp answer to something someone has just said to you.",
+        "**quip** 是随时可说的简短俏皮话；**retort** 是针对别人刚说的话所作的尖锐回答。",
+      ),
+      spelling: t(
+        "**Blab** and **quip** double their last letter before -ed (blabbed, quipped), but **gossip** does not: gossiped.",
+        "**blab** 和 **quip** 加 -ed 时双写末尾字母（blabbed、quipped），**gossip** 却不双写：gossiped。",
+      ),
+    },
+    notes: `
+      chatter|girls talking happily all the way home about clothes and songs|monkeys calling back and forth in the treetops|two friends talking about the weekend at the back of the class|chatter means to talk quickly and cheerfully about small things; prattle means to talk on foolishly|chatter 是轻快地闲聊琐事；prattle 是没完没了地说傻话|a quip is one short, witty remark, not a long stream of happy talk|quip 是一句简短俏皮的话，不是一长串开心的闲聊|retort means to answer someone sharply, not to talk cheerfully about small things|retort 是尖锐地回嘴，不是轻快地闲聊琐事|chat · ter|the double t before -er|-er 前双写 t
+      prattle|a man talking for hours about nothing while no one listens|a little boy telling his toy bear about dragons and spaceships|a stranger at a party talking for an hour about parking prices|prattle means to talk on and on about silly things; chatter means to talk quickly and cheerfully|prattle 是没完没了地说傻话；chatter 是轻快地闲聊|a quip is one short, clever remark, not hours of foolish talk|quip 是一句简短机智的话，不是几个小时的废话|retort means to give a sharp answer to someone, not to talk on and on about nothing|retort 是尖锐地回嘴，不是没完没了地说废话|prat · tle|the double t and the -le ending|双写 t，结尾是 -le
+      babble|babies making sounds before they can say real words|a little stream running over stones|an excited girl talking so fast nobody can follow|babble means to make quick, confused sounds, or the sound of a stream; jabber means to talk fast in a way hard to understand|babble 是发出急促含混的声音，也指溪水声；jabber 是说得又快又难懂|a quip is a short, witty remark, not the sounds of a baby or a stream|quip 是简短俏皮的话，不是婴儿的咿呀声或溪水声|retort means to answer someone sharply, not to make confused sounds|retort 是尖锐地回嘴，不是发出含混的声音|bab · ble|the double b and the -le ending|双写 b，结尾是 -le
+      jabber|tourists talking in a dozen languages too fast to understand|excited parrots making a stream of sounds|two men talking on their phones so fast their words run together|jabber means to talk fast in a way hard to understand; babble means to make quick, confused sounds|jabber 是说得又快又难懂；babble 是发出急促含混的声音|a quip is a short, clever remark, not a fast stream of words nobody can follow|quip 是简短机智的话，不是一连串听不懂的快话|blab means to give away a secret, not to talk fast in a way hard to understand|blab 是泄露秘密，不是说得又快又难懂|jab · ber|the double b before -er|-er 前双写 b
+      gossip|women at a bus stop talking about the neighbours' cars and sons|people talking about a classmate's family troubles behind her back|office workers spreading stories about who is dating whom|gossip means to talk about other people's private lives; blab means to give away a secret|gossip 是议论别人的私事；blab 是泄露秘密|a quip is one witty remark, not talk about other people's private lives|quip 是一句俏皮话，不是议论别人的私事|retort means to answer someone sharply, not to talk about other people behind their backs|retort 是尖锐地回嘴，不是背后议论别人|gos · sip|the double s, and no double p before -ed: gossiped|双写 s；加 -ed 时 p 不双写：gossiped
+      blab|someone telling the teacher about a surprise party|a boy who tells the whole school news he should keep secret|someone giving away a hiding place to the other team|blab means to give away a secret; gossip means to talk about other people's private lives|blab 是泄露秘密；gossip 是议论别人的私事|a quip is a witty remark, not the careless telling of a secret|quip 是俏皮话，不是不小心说出秘密|retort means to answer someone sharply, not to tell a secret|retort 是尖锐地回嘴，不是说出秘密|blab|the b doubles in the past: blabbed|过去式双写 b：blabbed
+      banter|old friends teasing each other about their cooking|two radio hosts joking and gently teasing each other|players joking about each other's haircuts before a match|banter means friendly, teasing talk between people; a rant is a long, angry speech|banter 是朋友间友好的打趣；rant 是愤怒的长篇大论|a rant is a long, angry speech, not friendly, teasing talk|rant 是愤怒的长篇大论，不是友好的打趣|a quip is one short, witty remark, not friendly talk that goes back and forth between people|quip 是一句简短的俏皮话，不是人与人之间你来我往的打趣|ban · ter|the -er ending after the t|t 后面是 -er
+      quip|a clever remark about a teacher's yellow tie|a host's funny remark about a long queue|a speaker's witty remark about her own age|a quip is a short, witty remark; a retort is a sharp answer to what someone has said|quip 是简短的俏皮话；retort 是针对别人的话所作的尖锐回答|a rant is a long, angry speech, not a short, funny remark|rant 是愤怒的长篇大论，不是简短有趣的话|a retort is a sharp answer to what someone has just said, not a joke made on its own|retort 是针对别人刚说的话的尖锐回答，不是自己主动开的玩笑|quip|the qu at the start, said like kw|开头的 qu 读作 kw
+      retort|a girl answering her brother who has called her lazy|a boy saying "That's not fair!" when his sister gets more|a boxer answering a reporter that the judges were blind|retort means to answer someone sharply; a quip is a witty remark at any time|retort 是尖锐地回嘴；quip 是随时可说的俏皮话|babble means to make quick, confused sounds, not to give a sharp answer|babble 是发出急促含混的声音，不是尖锐地回答|blab means to give away a secret, not to answer someone sharply|blab 是泄露秘密，不是尖锐地回嘴|re · tort|the prefix re- and the -ort ending|前缀 re- 和结尾 -ort
+      rant|a grandfather shouting at the newspaper about taxes|an uncle complaining for ages about the referee|a customer speaking angrily at a shop assistant|rant means to speak angrily for a long time; babble means to make quick, confused sounds|rant 是长时间愤怒地叫嚷；babble 是发出急促含混的声音|babble means to talk quickly in a confused way, not to speak angrily for a long time|babble 是急促含混地说话，不是长时间愤怒地叫嚷|quip means to make a short, witty remark, not to speak angrily for a long time|quip 是说简短的俏皮话，不是长时间愤怒地叫嚷|rant|the nt at the end|结尾是 nt
+    `,
+  },
 );
 
 const rules = batch(
@@ -135,17 +367,50 @@ const rules = batch(
   ["Words of Rules and Orders", "规则与命令的词"],
   ["keeping or breaking rules, calling people and letting them off", "遵守或违反规则、召唤与免除"],
   `
-  adhere|to stick fast; to follow a rule or belief closely|黏附；遵守|Please ___ to the rules.|The label will not ___.|We ___ to our plan.|abide,heed|adhered,adherence,adherent
-  abide|to accept or act in agreement with; to tolerate|遵守；忍受|You must ___ by the law.|I can't ___ rudeness.|They agreed to ___ by the vote.|adhere,obedient|abided
-  heed|to pay attention to; careful attention|留心|___ my warning.|They took no ___ of the danger.|Few chose to ___ the advice.|adhere,summon|heeded
-  obedient|willing to do what one is told|顺从的|The dog is very ___.|She was an ___ child.|___ soldiers follow orders.|abide,truant|obediently
-  forbid|to refuse to allow|禁止|I ___ you to go.|The rules ___ phones in class.|Her parents ___ the trip.|waive,breach|forbade,forbidden
-  breach|an act of breaking a rule or agreement; a gap made in a wall; to break|违反；缺口|That is a ___ of contract.|The army made a ___ in the wall.|Water may ___ the dam.|forbid,waive|breached
-  waive|to choose not to insist on a right or rule|放弃，免除|The school will ___ the fee.|She chose to ___ her right to a lawyer.|They ___ the rules for him.|forbid,allowance|waived,waiver
-  allowance|money given regularly; the amount allowed|零用钱；限额|She gets a weekly ___.|The baggage ___ is 20 kilos.|Make ___ for delays.|waive,summon|allowances
-  summon|to order someone to come; to gather one's strength|召唤；鼓起|The king chose to ___ his knights.|She tried to ___ her courage.|They ___ a doctor.|heed,obedient|summoned,summons
-  truant|a pupil who stays away from school without leave|旷课者|The ___ was caught at the mall.|He played ___ often.|Police brought back the ___.|obedient,breach|truancy,truants
+  adhere|to stick fast; to follow a rule or belief closely|黏附；遵守|All players must ___ to the rules of the game, or the referee will send them off.|This sticker will not ___ to a wet surface, so dry the glass before you press it on.|The family continued to ___ to the old customs, cooking the same dishes every new year.|abide,heed|adhered,adherence,adherent
+  abide|to accept or act in agreement with; to tolerate|遵守；忍受|Everyone who joins the club must ___ by its rules and pay the yearly fee.|I can't ___ people who are rude to waiters; it makes me so angry that I want to leave.|Both teams agreed to ___ by the referee's decision, whatever it turned out to be.|adhere,heed|abided
+  heed|to pay attention to; careful attention|留心|If only the sailors had stopped to ___ the warning about the storm, they would never have set out.|Few hikers chose to ___ the signs telling them to stay on the path, and many got lost in the fog.|Wise students ___ their teacher's advice and start revising weeks before the exam.|adhere,summon|heeded
+  obedient|willing to do what one is told|顺从的|The dog is so ___ that it sits, stays and comes back the moment its owner calls.|As a child she was always ___, doing exactly what her parents told her without arguing.|Well-trained soldiers are ___ and carry out every order from their officers at once.|fickle,gullible|obediently
+  forbid|to refuse to allow|禁止|The school rules ___ the use of phones in class, so they must stay switched off in our bags.|Her parents ___ her to go to parties on school nights, saying she must stay at home and rest.|Since his heart attack, his doctors ___ him to eat salty food of any kind.|waive,breach|forbade,forbidden
+  breach|an act of breaking a rule or agreement; a gap made in a wall; to break|违反；缺口|If the river rises any higher, the water may ___ the wall of the dam and flood the town.|By selling the secret plans to a rival, the worker chose to ___ his contract with the company.|The army used cannons to ___ the castle walls and then poured in through the gap.|forbid,waive|breached
+  waive|to choose not to insist on a right or rule|放弃，免除|The school will ___ the trip fee for families who cannot afford it, so that every child can go.|She chose to ___ her right to a lawyer and answered the police questions on her own.|The bank agreed to ___ the late fee this once, since he had never missed a payment before.|forbid,breach|waived,waiver
+  allowance|money given regularly; the amount allowed|零用钱；限额|Her parents give her a weekly ___ of ten dollars, which she can spend however she likes.|The airline's baggage ___ is twenty kilos, so any extra weight costs more.|Each soldier received a daily ___ of bread, meat and water for the long march.|salary,voucher|allowances
+  summon|to order someone to come; to gather one's strength|召唤；鼓起|The king decided to ___ all his knights to the castle for a council of war.|She had to ___ all her courage to stand up and sing in front of the whole school.|When the old man fell in the street, a neighbour ran to ___ a doctor from the village.|heed,waive|summoned,summons
+  truant|a pupil who stays away from school without leave|旷课者|The ___ was caught at the shopping centre at ten in the morning, when he should have been sitting in maths class.|Police walking past the arcade picked up a young ___ who had skipped school all week and took him back to his class.|He was a regular ___, skipping lessons so often that the school wrote to his parents.|dropout,vandal|truancy,truants
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Our coach will **forbid** phones at practice, expects us to **adhere** to every rule and may **summon** a parent if anyone breaks one. These ten words help you talk about keeping and breaking rules, calling people and letting them off.",
+      "我们的教练禁止（**forbid**）训练时用手机，要求大家遵守（**adhere**）每一条规定，谁要是违反了，他可能会叫（**summon**）家长来。这十个词帮你谈论遵守和违反规则、召唤别人以及免除规定。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **waive** a fee or a rule is to choose not to make someone pay or obey it; to **forbid** something is the opposite—to say it is not allowed.",
+        "**waive** 费用或规定是决定不收或不要求遵守；**forbid** 正好相反，是说不准做。",
+      ),
+      use: t(
+        "You **adhere to** a rule but **abide by** it, and you **heed** a warning with no little word after the verb at all.",
+        "遵守规则说 **adhere to** 或 **abide by**；留意警告说 **heed**，动词后面不加任何介词。",
+      ),
+      spelling: t(
+        "**Waive** a fee is spelled with ai, not like *wave* your hand, and **forbid** becomes **forbade** and **forbidden**.",
+        "免除费用的 **waive** 写作 ai，别写成挥手的 *wave*；**forbid** 的变化形式是 **forbade** 和 **forbidden**。",
+      ),
+    },
+    notes: `
+      adhere|players following the rules of the game or being sent off|a sticker that will not stick to wet glass|a family keeping the old customs every new year|adhere to means to stick to something or follow a rule closely; abide by means to accept and obey a rule or decision|adhere to 是黏住或严格遵守；abide by 是接受并服从规则或决定|abide is used with by, not to, and it never means to stick to a surface|abide 后接 by 而不接 to，也没有黏住表面的意思|heed means to pay attention to a warning, and it takes no to after it|heed 是留意警告，后面不加 to|ad · here|the -here ending, like the word *here*|结尾 -here，同 *here*
+      abide|club members obeying its rules and paying the yearly fee|someone who cannot bear people being rude to waiters|two teams agreeing to accept the referee's decision|abide by means to accept and obey; adhere to means to stick to or follow closely|abide by 是接受并服从；adhere to 是黏住或严格遵守|adhere is used with to, not by, and it does not mean to put up with people|adhere 后接 to 而不接 by，也没有忍受某人的意思|heed means to pay attention to advice, and it is not used with by or to mean putting up with people|heed 是留意建议，不接 by，也没有忍受某人的意思|a · bide|the long i and the silent e at the end|长音 i，结尾 e 不发音
+      heed|sailors who ignored a storm warning and set out|hikers who ignored signs telling them to stay on the path|wise students following their teacher's advice to revise early|heed means to pay attention to a warning or advice; adhere to means to follow a rule closely|heed 是留意警告或建议；adhere to 是严格遵守规则|adhere needs to after it and means to stick to or follow a rule, not to listen to a warning|adhere 后面要接 to，是黏住或遵守规则，不是听从警告|summon means to order someone to come, not to pay attention to a warning or advice|summon 是召唤某人前来，不是留意警告或建议|heed|the double e, as in *need*|双写 e，同 *need*
+      obedient|a dog that sits, stays and comes the moment it is called|a girl who always does what her parents tell her|soldiers carrying out every order at once|obedient means willing to do what you are told; fickle means changing your mind or loyalty often|obedient 是听话、顺从；fickle 是反复无常、用情不专|fickle means often changing your mind or loyalty, not always doing what you are told|fickle 是反复无常，不是总是听从命令|gullible means easily tricked into believing things, not willing to follow orders|gullible 是容易上当受骗，不是愿意服从命令|o · be · di · ent|the -ient ending|结尾是 -ient
+      forbid|school rules that keep phones switched off in class|parents telling a girl she cannot go to parties on school nights|doctors telling a man with a weak heart not to eat salty food|forbid means to say that something is not allowed; waive means to choose not to make someone follow a rule or pay a fee|forbid 是禁止；waive 是免除规定或费用|waive means to let someone off a rule or fee, the opposite of not allowing something|waive 是免除规定或费用，和禁止正好相反|breach means to break a rule or a wall, not to tell someone they may not do something|breach 是违反规定或冲破墙体，不是禁止别人做事|for · bid|the past is forbade, and forbidden has a double d|过去式是 forbade，forbidden 双写 d
+      breach|river water breaking through the wall of a dam|a worker breaking his contract by selling secret plans|an army breaking a gap in castle walls with cannons|breach means to break through a wall or break an agreement; forbid means to not allow something|breach 是冲破墙体或违反协议；forbid 是禁止|forbid means to say something is not allowed, not to break through a wall or an agreement|forbid 是禁止，不是冲破墙体或违反协议|waive means to give up a right or let someone off a fee, not to break through a wall or a promise|waive 是放弃权利或免除费用，不是冲破墙体或违背承诺|breach|the ea and the ch at the end, as in *reach*|ea 加结尾 ch，同 *reach*
+      waive|a school letting poorer families off the trip fee|a woman giving up her right to a lawyer|a bank letting a customer off a late fee once|waive means to choose not to insist on a fee, rule or right; forbid means to not allow something|waive 是不坚持收费、规定或权利；forbid 是禁止|forbid means to say something is not allowed, the opposite of letting someone off|forbid 是禁止，和免除正好相反|breach means to break a rule or an agreement, not to let someone off a fee or give up a right|breach 是违反规定或协议，不是免除费用或放弃权利|waive|the ai, not the a of *wave*|写作 ai，不是 *wave* 中的 a
+      allowance|ten dollars a week from her parents to spend as she likes|twenty kilos of luggage allowed by an airline|bread, meat and water given to each soldier every day|an allowance is money or an amount given or allowed regularly; a salary is pay from an employer for a job|allowance 是定期给的钱或允许的量；salary 是雇主为工作支付的薪水|salary means pay from an employer for doing a job, not pocket money, a luggage limit or food rations|salary 是雇主为工作支付的薪水，不是零用钱、行李限额或口粮|a voucher is a ticket that can be swapped for goods or used to pay, not a regular amount given or allowed|voucher 是可兑换商品或抵钱的券，不是定期给的钱或允许的量|al · low · ance|the double l and the -ance ending|双写 l，结尾是 -ance
+      summon|a king calling all his knights to a council of war|a girl gathering her courage to sing before the school|a neighbour running to call a doctor for a fallen man|summon means to order someone to come or to gather your courage; heed means to pay attention to something|summon 是召唤某人前来或鼓起勇气；heed 是留意|heed means to pay attention to a warning or advice, not to call someone to come|heed 是留意警告或建议，不是召唤某人前来|waive means to give up a right or let someone off a fee, not to call someone to come|waive 是放弃权利或免除费用，不是召唤某人前来|sum · mon|the double m in the middle|中间双写 m
+      truant|a boy found at a shopping centre during maths class|a boy picked up by police after skipping school all week|a boy who skips lessons so often the school writes home|a truant stays away from school without leave but is still a pupil; a dropout has left school for good|truant 是还在读书却旷课的学生；dropout 是已经辍学的人|a dropout has left school for good, so he has no class he should be in|dropout 已经彻底离开学校，没有该去上的课|a vandal is a person who damages property on purpose, not a pupil skipping school|vandal 是故意破坏财物的人，不是逃学的学生|tru · ant|the u followed by the -ant ending|u 后面接 -ant
+    `,
+  },
 );
 
 /** batchesE are the batches of effort, gathering, skill, copying, grief, noises, chatter and rules. */
