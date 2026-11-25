@@ -11,6 +11,20 @@ import "./topics.ts";
 export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a2-speaking-last-weekend",
+    watchOut: {
+      repeat: t(
+        "*cousin* is *KUZ-in*. *daughter* is *DAW-ter*; the *gh* is silent. *suddenly* has three beats, *SUD-un-lee*.",
+        "*cousin* 读作 *KUZ-in*。*daughter* 读作 *DAW-ter*，*gh* 不发音。*suddenly* 读三拍，*SUD-un-lee*。",
+      ),
+      read: t(
+        "Say the past endings: *visited* has an extra beat, *watched* ends in a short *t*, *played* in a short *d*. Do not read them as the present.",
+        "过去式词尾要读出来：*visited* 多一拍，*watched* 结尾是短促的 *t*，*played* 是短促的 *d*。不要读成现在时。",
+      ),
+      say: t(
+        "Answer in the past: *I went*, *I ate*, *I saw*, *I felt*. These irregular forms carry the meaning, so say them clearly.",
+        "用过去时回答：*I went*、*I ate*、*I saw*、*I felt*。这些不规则形式承载意思，要说清楚。",
+      ),
+    },
     title: t("Speaking: Last Weekend", "口语：上个周末"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“上个周末”的词汇，并朗读句子。"),
     listening: "a2-listening-last-weekend",
@@ -41,6 +55,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-health-and-the-body",
+    watchOut: {
+      repeat: t(
+        "*stomach* is *STUM-uk*. *medicine* is *MED-ih-sin*. *temperature* is *TEM-pruh-cher*, three beats in fast speech.",
+        "*stomach* 读作 *STUM-uk*。*medicine* 读作 *MED-ih-sin*。*temperature* 读作 *TEM-pruh-cher*，快读时三拍。",
+      ),
+      read: t(
+        "Keep *should* light, with a silent *l*: *shud*. Say *hurts* with the *s* after a singular part: *My knee hurts*.",
+        "*should* 轻读，*l* 不发音：*shud*。单数部位后的 *hurts* 要带 *s*：*My knee hurts*。",
+      ),
+      say: t(
+        "Say *I have a*, then the problem: *I have a cough*. For advice, start with *You should*. Say *twice* and *three times* clearly.",
+        "先说 *I have a* 再说症状：*I have a cough*。给建议以 *You should* 开头。*twice*、*three times* 要说清楚。",
+      ),
+    },
     title: t("Speaking: Health and the Body", "口语：健康和身体"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“健康和身体”的词汇，并朗读句子。"),
     listening: "a2-listening-health-and-the-body",
@@ -56,6 +84,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-neighbors-and-community",
+    watchOut: {
+      repeat: t(
+        "*volunteer* is stressed at the end, *vol-un-TEER*. *crowded* has two beats, *KROW-did*. *themselves* ends in *selvz*.",
+        "*volunteer* 重音在后，*vol-un-TEER*。*crowded* 读两拍，*KROW-did*。*themselves* 结尾读 *selvz*。",
+      ),
+      read: t(
+        "Do not drop the *-ed* beat of *crowded* or *organized*. Link *next to* and *in front of* into one smooth phrase.",
+        "*crowded*、*organized* 的 *-ed* 不要丢。*next to*、*in front of* 要连成一个短语读。",
+      ),
+      say: t(
+        "Keep *the* after *opposite* and *behind*: *opposite the bank*. Before a vowel, say *an*: *An old man lives next door*.",
+        "*opposite*、*behind* 后面保留 *the*：*opposite the bank*。元音前用 *an*：*An old man lives next door*。",
+      ),
+    },
     title: t("Speaking: Neighbors and Community", "口语：邻里和社区"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“邻里和社区”的词汇，并朗读句子。"),
     listening: "a2-listening-neighbors-and-community",
@@ -90,6 +132,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-cooking",
+    watchOut: {
+      repeat: t(
+        "*recipe* is *RES-ih-pee*, three beats. *onion* is *UN-yun*. *garlic* and *carrot* are stressed at the start.",
+        "*recipe* 读作 *RES-ih-pee*，三拍。*onion* 读作 *UN-yun*。*garlic* 和 *carrot* 重音在前。",
+      ),
+      read: t(
+        "Read the instructions with a firm verb at the start: *Mix*, *Add*, *Pour*. Say *degrees* with the *z* at the end.",
+        "读步骤时开头的动词要有力：*Mix*、*Add*、*Pour*。*degrees* 结尾带 *z*。",
+      ),
+      say: t(
+        "Start with *First* or *Next*, then the verb: *Next, we boil the water*. For taste, say *It tastes* with the *s*: *It tastes sour*.",
+        "以 *First* 或 *Next* 开头再接动词：*Next, we boil the water*。说味道用 *It tastes*，带 *s*：*It tastes sour*。",
+      ),
+    },
     title: t("Speaking: Cooking", "口语：烹饪"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“烹饪”的词汇，并朗读句子。"),
     listening: "a2-listening-cooking",
@@ -113,6 +169,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-sports-and-games",
+    watchOut: {
+      repeat: t(
+        "*badminton* is *BAD-min-tun*. *champion* is *CHAM-pee-un*. *carefully* has three beats, *KAIR-fuh-lee*.",
+        "*badminton* 读作 *BAD-min-tun*。*champion* 读作 *CHAM-pee-un*。*carefully* 读三拍，*KAIR-fuh-lee*。",
+      ),
+      read: t(
+        "Keep the *-ly* of *quickly* and *slowly*; it changes the word. Say *won* like *one*, not like *woman*.",
+        "*quickly*、*slowly* 的 *-ly* 要保留，它改变了词义。*won* 读得像 *one*，不像 *woman* 的开头。",
+      ),
+      say: t(
+        "Say *I am good at*, then the sport, with *at*. For the result, use the past: *The blue team won*.",
+        "说 *I am good at* 再接运动，别漏 *at*。说结果用过去时：*The blue team won*。",
+      ),
+    },
     title: t("Speaking: Sports and Games", "口语：运动和游戏"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“运动和游戏”的词汇，并朗读句子。"),
     listening: "a2-listening-sports-and-games",
@@ -128,6 +198,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-animals-and-pets",
+    watchOut: {
+      repeat: t(
+        "*parrot* and *hamster* are stressed at the start. *giraffe* is stressed at the end. Say *wolf* with a round *oo*, *wulf*.",
+        "*parrot*、*hamster* 重音在前。*giraffe* 重音在后。*wolf* 读圆唇的 *oo*，*wulf*。",
+      ),
+      read: t(
+        "Plural animals keep their endings: *wolves* with *vz*, *foxes* with an extra beat. Say *feeds* and *lays* with the *z*.",
+        "动物复数要保留词尾：*wolves* 读 *vz*，*foxes* 多一拍。*feeds*、*lays* 结尾读 *z*。",
+      ),
+      say: t(
+        "Say *I would like a*, then the pet. For the biggest, say *The whale is the biggest*, with *the* twice.",
+        "先说 *I would like a* 再说宠物。说最大的用 *The whale is the biggest*，两个 *the* 都要说。",
+      ),
+    },
     title: t("Speaking: Animals and Pets", "口语：动物和宠物"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“动物和宠物”的词汇，并朗读句子。"),
     listening: "a2-listening-animals-and-pets",
@@ -151,6 +235,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-travel-and-holidays",
+    watchOut: {
+      repeat: t(
+        "*souvenir* is *soo-vuh-NEER*, stressed at the end. *luggage* is *LUG-ij*. *helicopter* has four beats.",
+        "*souvenir* 读作 *soo-vuh-NEER*，重音在后。*luggage* 读作 *LUG-ij*。*helicopter* 读四拍。",
+      ),
+      read: t(
+        "Say *will* clearly or as *'ll*; do not drop it, or the sentence becomes present. *passport* and *postcard* are stressed at the start.",
+        "*will* 要说清楚或缩成 *'ll*，不要丢，否则句子就成了现在时。*passport*、*postcard* 重音在前。",
+      ),
+      say: t(
+        "Use *by* for transport and *to* for places: *We are going by plane*, *I am going to Paris*. Past trips take *stayed*, *took*, *saw*.",
+        "交通用 *by*，地点用 *to*：*We are going by plane*、*I am going to Paris*。说过去的旅行用 *stayed*、*took*、*saw*。",
+      ),
+    },
     title: t("Speaking: Travel and Holidays", "口语：旅行和假期"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“旅行和假期”的词汇，并朗读句子。"),
     listening: "a2-listening-travel-and-holidays",
@@ -174,6 +272,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-the-natural-world",
+    watchOut: {
+      repeat: t(
+        "*lightning* has no *e*: *LYT-ning*. *waterfall* is stressed at the start. Say *earth* with the *ur* of *bird* and a soft *th*.",
+        "*lightning* 中间没有 *e*：*LYT-ning*。*waterfall* 重音在前。*earth* 的 *ur* 同 *bird*，结尾是轻柔的 *th*。",
+      ),
+      read: t(
+        "*through* is *throo*; do not read the *gh*. Keep *could* light, with a silent *l*: *kud*.",
+        "*through* 读作 *throo*，*gh* 不发音。*could* 轻读，*l* 不发音：*kud*。",
+      ),
+      say: t(
+        "For the future say *It will be*, and for yesterday *It was*; the verb carries the time. Plural animals take *live*, not *lives*.",
+        "说明天用 *It will be*，说昨天用 *It was*，动词表示时间。复数动物后面用 *live*，不是 *lives*。",
+      ),
+    },
     title: t("Speaking: The Natural World", "口语：自然世界"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“自然世界”的词汇，并朗读句子。"),
     listening: "a2-listening-the-natural-world",
@@ -193,6 +305,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-shopping-and-money",
+    watchOut: {
+      repeat: t(
+        "*leather* has a soft *th*: *LETH-er*. *supermarket* is stressed at the start. *wooden* is *WUD-un*.",
+        "*leather* 中间是轻柔的 *th*：*LETH-er*。*supermarket* 重音在前。*wooden* 读作 *WUD-un*。",
+      ),
+      read: t(
+        "Say *costs* with all three end sounds, *sts*. *bought* is *bawt*; do not read the *gh*.",
+        "*costs* 结尾三个音 *sts* 都要读出来。*bought* 读作 *bawt*，*gh* 不发音。",
+      ),
+      say: t(
+        "Say *It costs*, then the number and *dollars*. Materials take *made of*: *It is made of wool*. Paying takes *by card* or *in cash*.",
+        "说 *It costs* 再接数字和 *dollars*。材料用 *made of*：*It is made of wool*。付款用 *by card* 或 *in cash*。",
+      ),
+    },
     title: t("Speaking: Shopping and Money", "口语：购物和金钱"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“购物和金钱”的词汇，并朗读句子。"),
     listening: "a2-listening-shopping-and-money",
@@ -208,6 +334,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-technology",
+    watchOut: {
+      repeat: t(
+        "*password* is stressed at the start. *keyboard* is *KEE-bord*. *electric* is *ih-LEK-trik*.",
+        "*password* 重音在前。*keyboard* 读作 *KEE-bord*。*electric* 读作 *ih-LEK-trik*。",
+      ),
+      read: t(
+        "Keep the *-ed* of *deleted* and *downloaded* as an extra beat. Say *messages* with three beats, *MES-ij-iz*.",
+        "*deleted*、*downloaded* 的 *-ed* 要多读一拍。*messages* 读三拍，*MES-ij-iz*。",
+      ),
+      say: t(
+        "Say *I use it to*, then a verb, or *I use it for*, then a noun: *to take photos*, *for homework*. Keep *hours* after the number.",
+        "*I use it to* 后接动词，*I use it for* 后接名词：*to take photos*、*for homework*。数字后要说 *hours*。",
+      ),
+    },
     title: t("Speaking: Technology", "口语：科技"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“科技”的词汇，并朗读句子。"),
     listening: "a2-listening-technology",
@@ -243,6 +383,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-festivals-and-celebrations",
+    watchOut: {
+      repeat: t(
+        "*congratulations* has five beats, *kun-grach-uh-LAY-shunz*. *traditional* is *truh-DISH-uh-nul*. *anniversary* is *an-ih-VER-suh-ree*.",
+        "*congratulations* 读五拍，*kun-grach-uh-LAY-shunz*。*traditional* 读作 *truh-DISH-uh-nul*。*anniversary* 读作 *an-ih-VER-suh-ree*。",
+      ),
+      read: t(
+        "Keep the *-ed* endings: *celebrated* with a beat, *decorated* with a beat. Say *embarrassed* as *im-BAR-ust*.",
+        "保留 *-ed* 词尾：*celebrated*、*decorated* 都多一拍。*embarrassed* 读作 *im-BAR-ust*。",
+      ),
+      say: t(
+        "Say *We eat*, *I give them*, *They wear*, then the thing. For the month, use *in*: *It is in February*.",
+        "先说 *We eat*、*I give them*、*They wear*，再说东西。月份用 *in*：*It is in February*。",
+      ),
+    },
     title: t("Speaking: Festivals and Celebrations", "口语：节日和庆祝"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“节日和庆祝”的词汇，并朗读句子。"),
     listening: "a2-listening-festivals-and-celebrations",
@@ -266,6 +420,20 @@ export const topics: readonly TopicDef[] = [
   }),
   unitSpeaking({
     id: "a2-speaking-jobs-and-dreams",
+    watchOut: {
+      repeat: t(
+        "*engineer* is stressed at the end, *en-juh-NEER*. *mechanic* is *muh-KAN-ik*. *scientist* is *SY-un-tist*.",
+        "*engineer* 重音在后，*en-juh-NEER*。*mechanic* 读作 *muh-KAN-ik*。*scientist* 读作 *SY-un-tist*。",
+      ),
+      read: t(
+        "Say *university* in five beats, *yoo-nih-VER-sih-tee*. Keep the *s* of *works* and *earns* after *he* or *she*.",
+        "*university* 读五拍，*yoo-nih-VER-sih-tee*。*he*、*she* 后的 *works*、*earns* 要带 *s*。",
+      ),
+      say: t(
+        "Say *I want to be a*, then the job. For reasons, start with *Because I want to*. Workplaces keep *a* or *an*: *in an office*.",
+        "先说 *I want to be a* 再说职业。说原因以 *Because I want to* 开头。工作地点保留 *a* 或 *an*：*in an office*。",
+      ),
+    },
     title: t("Speaking: Jobs and Dreams", "口语：工作和梦想"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“工作和梦想”的词汇，并朗读句子。"),
     listening: "a2-listening-jobs-and-dreams",

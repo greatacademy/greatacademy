@@ -4,7 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { type SayFrame, say, unitSpeaking } from "../speaking.ts";
+import { type SayFrame, say, type UnitSpeakingSpec, unitSpeaking } from "../speaking.ts";
 import { units } from "./listening.ts";
 
 const frames: Record<(typeof units)[number]["slug"], readonly SayFrame[]> = {
@@ -330,6 +330,150 @@ const frames: Record<(typeof units)[number]["slug"], readonly SayFrame[]> = {
   ],
 };
 
+/** watchOuts are the Watch outs of the speaking topics, by unit. */
+const watchOuts: Record<(typeof units)[number]["slug"], NonNullable<UnitSpeakingSpec["watchOut"]>> = {
+  "society-and-change": {
+    repeat: t(
+      "*discrimination* is *dis-krim-ih-NAY-shun*. *demographic* is *dem-uh-GRAF-ik*. *civilization* is *siv-ih-lih-ZAY-shun*.",
+      "*discrimination* 读作 *dis-krim-ih-NAY-shun*。*demographic* 读作 *dem-uh-GRAF-ik*。*civilization* 读作 *siv-ih-lih-ZAY-shun*。",
+    ),
+    read: t(
+      "Stress can move inside a word family: *migrate* is *MY-grate*, *migration* is *my-GRAY-shun*. *inhabitant* is *in-HAB-ih-tunt*. *vulnerable* is *VUL-ner-uh-bul*.",
+      "同族词的重音会移动：*migrate* 读作 *MY-grate*，*migration* 读作 *my-GRAY-shun*。*inhabitant* 读作 *in-HAB-ih-tunt*。*vulnerable* 读作 *VUL-ner-uh-bul*。",
+    ),
+    say: t(
+      "Groups with *the* take a plural verb: *The unemployed need more support*. Say *deal with* together: *Governments should deal with poverty first*.",
+      "*the* 加形容词表示群体，动词用复数：*The unemployed need more support*。*deal with* 连在一起说：*Governments should deal with poverty first*。",
+    ),
+  },
+  "work-and-the-economy": {
+    repeat: t(
+      "*enterprise* is *EN-ter-prize*. *mortgage* has a silent *t*: *MOR-gij*. *bankrupt* is *BANK-rupt*. *monopoly* is *muh-NOP-uh-lee*.",
+      "*enterprise* 读作 *EN-ter-prize*。*mortgage* 的 *t* 不发音：*MOR-gij*。*bankrupt* 读作 *BANK-rupt*。*monopoly* 读作 *muh-NOP-uh-lee*。",
+    ),
+    read: t(
+      "*economic* is *ee-kuh-NOM-ik*, unlike *ih-KON-uh-mee*. *redundant* is *rih-DUN-dunt*. *recruited* and *dismissed* differ: *-id* and *-t*.",
+      "*economic* 读作 *ee-kuh-NOM-ik*，与 *economy* 的 *ih-KON-uh-mee* 不同。*redundant* 读作 *rih-DUN-dunt*。*recruited* 和 *dismissed* 词尾不同：*-id* 和 *-t*。",
+    ),
+    say: t(
+      "After *I'd rather* comes the plain verb: *I'd rather work from home*. *I would prefer to* keeps *to*. After *They should* use the plain verb: *They should volunteer*.",
+      "*I'd rather* 后接动词原形：*I'd rather work from home*。*I would prefer to* 要保留 *to*。*They should* 后接动词原形：*They should volunteer*。",
+    ),
+  },
+  "science-ethics-and-medicine": {
+    repeat: t(
+      "*epidemic* is *ep-ih-DEM-ik*. *antibiotic* is *an-tee-by-OT-ik*. *dilemma* is *dih-LEM-uh*. *resilience* is *rih-ZIL-yuns*.",
+      "*epidemic* 读作 *ep-ih-DEM-ik*。*antibiotic* 读作 *an-tee-by-OT-ik*。*dilemma* 读作 *dih-LEM-uh*。*resilience* 读作 *rih-ZIL-yuns*。",
+    ),
+    read: t(
+      "*controversial* is *kon-truh-VER-shul*, but *controversy* is *KON-truh-ver-see*. *bacteria* is plural. *embryo* is *EM-bree-oh*.",
+      "*controversial* 读作 *kon-truh-VER-shul*，而 *controversy* 读作 *KON-truh-ver-see*。*bacteria* 是复数。*embryo* 读作 *EM-bree-oh*。",
+    ),
+    say: t(
+      "After *by* use the *-ing* form: *by getting enough sleep*. Say *I would most like to see cancer cured*, with *cured* at the end.",
+      "*by* 后用 *-ing* 形式：*by getting enough sleep*。说 *I would most like to see cancer cured*，*cured* 放在最后。",
+    ),
+  },
+  "climate-and-sustainability": {
+    repeat: t(
+      "*biodiversity* is *by-oh-dy-VER-sih-tee*. *deforestation* is *dee-for-ih-STAY-shun*. *biodegradable* is *by-oh-dih-GRAY-duh-bul*.",
+      "*biodiversity* 读作 *by-oh-dy-VER-sih-tee*。*deforestation* 读作 *dee-for-ih-STAY-shun*。*biodegradable* 读作 *by-oh-dih-GRAY-duh-bul*。",
+    ),
+    read: t(
+      "*nuclear* is *NOO-klee-er*, not *NOO-kyuh-ler*. *generate* is *JEN-uh-rate*. *atmosphere* is *AT-mus-feer*.",
+      "*nuclear* 读作 *NOO-klee-er*，不是 *NOO-kyuh-ler*。*generate* 读作 *JEN-uh-rate*。*atmosphere* 读作 *AT-mus-feer*。",
+    ),
+    say: t(
+      "After *is to* use the plain verb: *The most effective thing is to fly less*. After *if I* say *fly less*, not *will fly less*.",
+      "*is to* 后接动词原形：*The most effective thing is to fly less*。*if I* 后说 *fly less*，不说 *will fly less*。",
+    ),
+  },
+  "media-and-persuasion": {
+    repeat: t(
+      "*correspondent* is *kor-ih-SPON-dunt*. *algorithm* is *AL-guh-rith-um*. *propaganda* is *prop-uh-GAN-duh*.",
+      "*correspondent* 读作 *kor-ih-SPON-dunt*。*algorithm* 读作 *AL-guh-rith-um*。*propaganda* 读作 *prop-uh-GAN-duh*。",
+    ),
+    read: t(
+      "*exaggerate* is *ig-ZAJ-uh-rate*; the double *g* is one *j*. *rhetoric* is *RET-er-ik*. *manipulate* is *muh-NIP-yuh-late*.",
+      "*exaggerate* 读作 *ig-ZAJ-uh-rate*，双 *g* 只读一个 *j*。*rhetoric* 读作 *RET-er-ik*。*manipulate* 读作 *muh-NIP-yuh-late*。",
+    ),
+    say: t(
+      "Plural adverts take a plural verb: *Pop-up adverts annoy me most*. *I think it should be regulated* keeps *be*. Possessives keep *'s*: *Mandela's speech*.",
+      "复数的广告用复数动词：*Pop-up adverts annoy me most*。*I think it should be regulated* 别漏 *be*。所有格保留 *'s*：*Mandela's speech*。",
+    ),
+  },
+  "education-and-opportunity": {
+    repeat: t(
+      "*dissertation* is *dis-er-TAY-shun*. *comprehension* is *kom-prih-HEN-shun*. *plagiarism* is *PLAY-juh-riz-um*.",
+      "*dissertation* 读作 *dis-er-TAY-shun*。*comprehension* 读作 *kom-prih-HEN-shun*。*plagiarism* 读作 *PLAY-juh-riz-um*。",
+    ),
+    read: t(
+      "*academic* is *ak-uh-DEM-ik*, unlike *uh-KAD-uh-mee*. *criterion* is singular and *criteria* plural. *eligible* is *EL-ih-juh-bul*.",
+      "*academic* 读作 *ak-uh-DEM-ik*，与 *academy* 的 *uh-KAD-uh-mee* 不同。*criterion* 是单数，*criteria* 是复数。*eligible* 读作 *EL-ih-juh-bul*。",
+    ),
+    say: t(
+      "Subjects take no article: *I would like to study medicine*. After *Schools can* use the plain verb: *Schools can lend laptops*.",
+      "学科前不加冠词：*I would like to study medicine*。*Schools can* 后接动词原形：*Schools can lend laptops*。",
+    ),
+  },
+  "culture-identity-and-globalization": {
+    repeat: t(
+      "*indigenous* is *in-DIJ-ih-nus*. *diaspora* is *dy-AS-puh-ruh*. *cosmopolitan* is *koz-muh-POL-ih-tun*.",
+      "*indigenous* 读作 *in-DIJ-ih-nus*。*diaspora* 读作 *dy-AS-puh-ruh*。*cosmopolitan* 读作 *koz-muh-POL-ih-tun*。",
+    ),
+    read: t(
+      "*ethnic* has a soft *th*. *pronunciation* is *pruh-nun-see-AY-shun*; there is no *noun* in it. *superstitious* is *soo-per-STISH-us*.",
+      "*ethnic* 中间是轻柔的 *th*。*pronunciation* 读作 *pruh-nun-see-AY-shun*，里面没有 *noun*。*superstitious* 读作 *soo-per-STISH-us*。",
+    ),
+    say: t(
+      "*It has changed what I eat* keeps *has*. Say *I am proud of*, with *of*. Festivals keep *the*: *the Day of the Dead*.",
+      "*It has changed what I eat* 别漏 *has*。说 *I am proud of*，别漏 *of*。节日保留 *the*：*the Day of the Dead*。",
+    ),
+  },
+  "technology-and-the-future": {
+    repeat: t(
+      "*autonomous* is *aw-TON-uh-mus*. *encryption* is *en-KRIP-shun*. *extraterrestrial* is *ek-struh-tuh-RES-tree-ul*.",
+      "*autonomous* 读作 *aw-TON-uh-mus*。*encryption* 读作 *en-KRIP-shun*。*extraterrestrial* 读作 *ek-struh-tuh-RES-tree-ul*。",
+    ),
+    read: t(
+      "*sophisticated* is *suh-FIS-tih-kay-tid*. *obsolete* is stressed on the last beat in British and the first in American; keep one. *phishing* says *f*.",
+      "*sophisticated* 读作 *suh-FIS-tih-kay-tid*。*obsolete* 英式重音在后、美式在前，选一种保持一致。*phishing* 读 *f*。",
+    ),
+    say: t(
+      "*I think robots will drive taxis first* puts *first* at the end. Say *travel by electric car*, with no *an*. After *ask it to* use the plain verb.",
+      "*I think robots will drive taxis first* 把 *first* 放在句末。说 *travel by electric car*，不加 *an*。*ask it to* 后接动词原形。",
+    ),
+  },
+  "law-rights-and-justice": {
+    repeat: t(
+      "*prosecutor* is *PROS-ih-kyoo-ter*. *constitution* is *kon-stih-TOO-shun*. *humanitarian* is *hyoo-man-ih-TAIR-ee-un*.",
+      "*prosecutor* 读作 *PROS-ih-kyoo-ter*。*constitution* 读作 *kon-stih-TOO-shun*。*humanitarian* 读作 *hyoo-man-ih-TAIR-ee-un*。",
+    ),
+    read: t(
+      "*permit* is *PER-mit* as a noun and *per-MIT* as a verb. *testimony* is *TES-tih-moh-nee*. *burglary* is *BUR-gluh-ree*.",
+      "*permit* 作名词读 *PER-mit*，作动词读 *per-MIT*。*testimony* 读作 *TES-tih-moh-nee*。*burglary* 读作 *BUR-gluh-ree*。",
+    ),
+    say: t(
+      "Say *at sixteen* for an age. *I would introduce a law against plastic bags* keeps *a law* before *against* or *for*. After *should* use the plain verb.",
+      "年龄用 *at sixteen*。*I would introduce a law against plastic bags* 在 *against* 或 *for* 前保留 *a law*。*should* 后接动词原形。",
+    ),
+  },
+  "mind-and-behavior": {
+    repeat: t(
+      "*subconscious* is *sub-KON-shus*. *procrastinate* is *proh-KRAS-tih-nate*. *nostalgia* is *nos-TAL-juh*. *insomnia* is *in-SOM-nee-uh*.",
+      "*subconscious* 读作 *sub-KON-shus*。*procrastinate* 读作 *proh-KRAS-tih-nate*。*nostalgia* 读作 *nos-TAL-juh*。*insomnia* 读作 *in-SOM-nee-uh*。",
+    ),
+    read: t(
+      "*deliberate* is *dih-LIB-er-ut* as an adjective and *dih-LIB-uh-rate* as a verb. *irrational* is *ih-RASH-uh-nul*. *exhausted* has a silent *h*.",
+      "*deliberate* 作形容词读 *dih-LIB-er-ut*，作动词读 *dih-LIB-uh-rate*。*irrational* 读作 *ih-RASH-uh-nul*。*exhausted* 的 *h* 不发音。",
+    ),
+    say: t(
+      "After *by* and *stop* use the *-ing* form: *by making a list*, *I'd like to stop checking my phone*. Say *a morning person* with *a*.",
+      "*by* 和 *stop* 后用 *-ing* 形式：*by making a list*、*I'd like to stop checking my phone*。说 *a morning person*，别漏 *a*。",
+    ),
+  },
+};
+
 /** topics are the speaking topics of the units of B2, two to a unit, in their order. */
 export const topics: readonly TopicDef[] = units.flatMap((u) =>
   unitSpeaking({
@@ -339,5 +483,6 @@ export const topics: readonly TopicDef[] = units.flatMap((u) =>
     listening: `b2-listening-${u.slug}`,
     words: u.words,
     frames: frames[u.slug],
+    watchOut: watchOuts[u.slug],
   }),
 );

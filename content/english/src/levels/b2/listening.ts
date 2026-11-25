@@ -4,7 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { frame, unitListening } from "../listening.ts";
+import { frame, type UnitListeningSpec, unitListening } from "../listening.ts";
 // The modules whose vocabulary topics the listening plays, built before it.
 import "./topics.ts";
 
@@ -377,6 +377,110 @@ const frames: Record<Slug, ReturnType<typeof frame>[]> = {
   ],
 };
 
+/** watchOuts are the Watch outs of the listening topics, by unit. */
+const watchOuts: Record<(typeof units)[number]["slug"], NonNullable<UnitListeningSpec["watchOut"]>> = {
+  "society-and-change": {
+    words: t(
+      "*emigrate* and *immigrate* differ only in the first vowel: *EM-* leaves, *IM-* arrives. *era* and *error* are close. *century* is *SEN-chuh-ree*.",
+      "*emigrate* 和 *immigrate* 只差第一个元音：*EM-* 是移出，*IM-* 是移入。*era* 和 *error* 很接近。*century* 读作 *SEN-chuh-ree*。",
+    ),
+    dialogues: t(
+      "Figures and dates come in pairs: *Twenty years ago* and *today*, *Most guidebooks say* and *the records show*, *compared with ... ten years ago*. *Many people would say* introduces a view the speaker does not hold.",
+      "数字和年代成对出现：*Twenty years ago* 与 *today*、*Most guidebooks say* 与 *the records show*、*compared with ... ten years ago*。*Many people would say* 引出的是说话人并不认同的看法。",
+    ),
+  },
+  "work-and-the-economy": {
+    words: t(
+      "*export* and *import* stress the first beat as nouns and the second as verbs. *firm* and *farm*, *boom* and *broom* are close. *audit* is *AW-dit*.",
+      "*export*、*import* 作名词重音在前，作动词重音在后。*firm* 和 *farm*、*boom* 和 *broom* 很接近。*audit* 读作 *AW-dit*。",
+    ),
+    dialogues: t(
+      "Expected and real figures sit together: shares fell by one number, profits were expected at another. *Are we still ... in*, *The first plan was* and *Not ..., to be honest* name the decoy.",
+      "预期和实际数字放在一起：股价跌了一个数，利润预期是另一个数。*Are we still ... in*、*The first plan was* 和 *Not ..., to be honest* 后面是干扰项。",
+    ),
+  },
+  "science-ethics-and-medicine": {
+    words: t(
+      "*chronic* and *acute* are opposites; *chronic* starts with *k*. *dose* rhymes with *close*. *moral* and *morale* differ in stress: *MOR-ul*, *muh-RAL*.",
+      "*chronic* 和 *acute* 意思相反；*chronic* 以 *k* 开头。*dose* 与 *close* 押韵。*moral* 和 *morale* 重音不同：*MOR-ul*、*muh-RAL*。",
+    ),
+    dialogues: t(
+      "Fractions and periods come in pairs: the new drug and the older treatment, years on mental health and years in a hospital. *Is the main risk ...?* is a wrong guess; *actually* brings the answer.",
+      "分数和时长成对出现：新药与旧疗法，从事心理健康的年数与在医院的年数。*Is the main risk ...?* 是猜错的；*actually* 后面才是答案。",
+    ),
+  },
+  "climate-and-sustainability": {
+    words: t(
+      "*methane* is *METH-ane*. *ozone* is *OH-zone*. *reef* and *leaf*, *marsh* and *mash* are close. *emit* is stressed at the end.",
+      "*methane* 读作 *METH-ane*。*ozone* 读作 *OH-zone*。*reef* 和 *leaf*、*marsh* 和 *mash* 很接近。*emit* 重音在后。",
+    ),
+    dialogues: t(
+      "Percentages pair *last year* with *the year before*; targets pair *now* with *Its earlier target*. *We discussed* and *Some blamed* name the decoy; *agreed* and *found* name the answer.",
+      "百分比把 *last year* 和 *the year before* 配在一起；目标把现在和 *Its earlier target* 配在一起。*We discussed*、*Some blamed* 后是干扰项；*agreed*、*found* 后是答案。",
+    ),
+  },
+  "media-and-persuasion": {
+    words: t(
+      "*column* has a silent *n*: *KOL-um*. *tabloid* is *TAB-loyd*. *viral* is *VY-rul*. *meme* rhymes with *team*.",
+      "*column* 的 *n* 不发音：*KOL-um*。*tabloid* 读作 *TAB-loyd*。*viral* 读作 *VY-rul*。*meme* 与 *team* 押韵。",
+    ),
+    dialogues: t(
+      "*Everyone thinks it was*, *It isn't really*, *compared with ... five years ago* and *Not on ..., as we'd hoped* name the decoy. The answer follows *actually*, *because of*, *now* or *It'll go out on*.",
+      "*Everyone thinks it was*、*It isn't really*、*compared with ... five years ago* 和 *Not on ..., as we'd hoped* 后面是干扰项。答案在 *actually*、*because of*、*now* 或 *It'll go out on* 之后。",
+    ),
+  },
+  "education-and-opportunity": {
+    words: t(
+      "*thesis* is *THEE-sis*. *faculty* is *FAK-ul-tee*. *grasp* and *grass* differ at the end. *merit* and *married* are close.",
+      "*thesis* 读作 *THEE-sis*。*faculty* 读作 *FAK-ul-tee*。*grasp* 和 *grass* 结尾不同。*merit* 和 *married* 很接近。",
+    ),
+    dialogues: t(
+      "*My parents wanted me to*, *the ... deadline for other courses*, *There used to be* and *The ... is good, but* name the decoy. Dates use ordinals: *the fifteenth of March*.",
+      "*My parents wanted me to*、*the ... deadline for other courses*、*There used to be* 和 *The ... is good, but* 后面是干扰项。日期用序数词：*the fifteenth of March*。",
+    ),
+  },
+  "culture-identity-and-globalization": {
+    words: t(
+      "*myth* has a soft *th*. *ritual* is *RICH-oo-ul*. *idiom* is *ID-ee-um*. *taboo* is stressed at the end, *tuh-BOO*.",
+      "*myth* 结尾是轻柔的 *th*。*ritual* 读作 *RICH-oo-ul*。*idiom* 读作 *ID-ee-um*。*taboo* 重音在后，*tuh-BOO*。",
+    ),
+    dialogues: t(
+      "*to each other* and *with us* split the parents' two languages. *People expect it to be* and *Not ..., really* name the decoy. In the festival report, the year it began is not the number asked.",
+      "*to each other* 和 *with us* 把父母的两种语言分开。*People expect it to be* 和 *Not ..., really* 后面是干扰项。节日报道里，开始的年份不是所问的数字。",
+    ),
+  },
+  "technology-and-the-future": {
+    words: t(
+      "*neural* is *NOOR-ul*. *lunar* is *LOO-ner*. *breach* sounds like *breech*. *hack* and *heck* differ in the vowel.",
+      "*neural* 读作 *NOOR-ul*。*lunar* 读作 *LOO-ner*。*breach* 与 *breech* 同音。*hack* 和 *heck* 元音不同。",
+    ),
+    dialogues: t(
+      "*I tried it for*, *not the ... reported earlier*, *first planned for* and *People talk a lot about* name the decoy. Big numbers and years in words need the whole phrase: *twenty thirty-four*.",
+      "*I tried it for*、*not the ... reported earlier*、*first planned for* 和 *People talk a lot about* 后面是干扰项。用英文说的大数和年份要听完整：*twenty thirty-four*。",
+    ),
+  },
+  "law-rights-and-justice": {
+    words: t(
+      "*jury* is *JOOR-ee*. *verdict* is *VER-dikt*. *fraud* is *frawd*. *civil* and *evil* rhyme only in spelling: *SIV-ul*, *EE-vul*.",
+      "*jury* 读作 *JOOR-ee*。*verdict* 读作 *VER-dikt*。*fraud* 读作 *frawd*。*civil* 和 *evil* 只是拼写相似：*SIV-ul*、*EE-vul*。",
+    ),
+    dialogues: t(
+      "Sentences and fines come in pairs: what was ordered and what the prosecution asked for, the sentence and the most he could have received. *It was meant to be* and *Many people would say* name the decoy.",
+      "刑期和罚款成对出现：判了多少与检方要求多少，判了几年与最多可判几年。*It was meant to be* 和 *Many people would say* 后面是干扰项。",
+    ),
+  },
+  "mind-and-behavior": {
+    words: t(
+      "*doze* and *dose* differ only in *z* and *s*. *tend* and *tent* differ at the end. *nightmare* is stressed at the start. *psychologist* has a silent *p*.",
+      "*doze* 和 *dose* 只差 *z* 和 *s*。*tend* 和 *tent* 结尾不同。*nightmare* 重音在前。*psychologist* 的 *p* 不发音。",
+    ),
+    dialogues: t(
+      "Two sleep times are compared; the question asks about those who remembered *the most*. *I used to rely on*, *It's partly* and *moved from room* name the decoy; *now*, *mostly* and *to room* bring the answer.",
+      "比较两个睡眠时长，问题问的是记住 *the most* 的那组。*I used to rely on*、*It's partly*、*moved from room* 后是干扰项；*now*、*mostly*、*to room* 后是答案。",
+    ),
+  },
+};
+
 /** topics are the listening topics of the units of B2, in their order. */
 export const topics: readonly TopicDef[] = units.map((u) =>
   unitListening({
@@ -385,5 +489,6 @@ export const topics: readonly TopicDef[] = units.map((u) =>
     summary: t(summaries[u.slug][0], summaries[u.slug][1]),
     words: u.words,
     frames: frames[u.slug],
+    watchOut: watchOuts[u.slug],
   }),
 );

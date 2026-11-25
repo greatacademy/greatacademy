@@ -11,6 +11,16 @@ import "./topics.ts";
 export const topics: readonly TopicDef[] = [
   unitListening({
     id: "a2-listening-last-weekend",
+    watchOut: {
+      words: t(
+        "Past forms hide in fast speech: the *-ed* of *decided* is a clear extra beat, but in *dropped* and *hurried* it is only a short *t* or *d*. *won* sounds like *one*.",
+        "过去式在快语速里容易藏起来：*decided* 的 *-ed* 多出一拍，*dropped*、*hurried* 里只是短短的 *t* 或 *d*。*won* 和 *one* 读音相同。",
+      ),
+      dialogues: t(
+        "Each answer has a second day or place: *On Sunday*, *We wanted to go to*, *My sister got home at*. In Dan's message, the party day he *missed* is the decoy.",
+        "每个回答都有第二个日子或地点：*On Sunday*、*We wanted to go to*、*My sister got home at*。丹的留言里，他 *missed* 的派对那天是干扰项。",
+      ),
+    },
     title: t("Listening: Last Weekend", "听力：上个周末"),
     summary: t(
       "Hear what people did last weekend, where they went and when they got home.",
@@ -53,6 +63,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-health-and-the-body",
+    watchOut: {
+      words: t(
+        "*headache* and *toothache* end in *ake*, not *ach*. *cough* is *kof* and *throat* has a long *oh*. *knee* has a silent *k*.",
+        "*headache*、*toothache* 结尾读 *ake*，不是 *ach*。*cough* 读作 *kof*，*throat* 是长 *oh*。*knee* 的 *k* 不发音。",
+      ),
+      dialogues: t(
+        "*Yesterday I had* and *is fine now* point to the old problem, not today's. For the medicine, the answer comes before *not*; for the doctor, *She's busy at* is the decoy.",
+        "*Yesterday I had* 和 *is fine now* 说的是之前的问题，不是今天的。吃药那段答案在 *not* 前面；看医生那段，*She's busy at* 后的时间是干扰项。",
+      ),
+    },
     title: t("Listening: Health and the Body", "听力：健康和身体"),
     summary: t(
       "Hear what is wrong, how often to take medicine and when the doctor is free.",
@@ -88,6 +108,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-neighbors-and-community",
+    watchOut: {
+      words: t(
+        "*neighbor* has a silent *gh*: *NAY-ber*. *raise* and *race*, *notice* and *nervous* share starts. *hers* and *ours* sound close to *her* and *hour*.",
+        "*neighbor* 的 *gh* 不发音：*NAY-ber*。*raise* 和 *race*、*notice* 和 *nervous* 开头相同。*hers*、*ours* 和 *her*、*hour* 听起来很像。",
+      ),
+      dialogues: t(
+        "*Last year it was*, *across the street*, *On Sunday we will* and *near* each bring a second answer. Hold the one that fits the question's words.",
+        "*Last year it was*、*across the street*、*On Sunday we will* 和 *near* 都会带出第二个答案。要抓住与问题字眼相符的那个。",
+      ),
+    },
     title: t("Listening: Neighbors and Community", "听力：邻里和社区"),
     summary: t(
       "Hear about street parties, neighbors, volunteering and new places on the street.",
@@ -130,6 +160,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-cooking",
+    watchOut: {
+      words: t(
+        "*boil* and *bowl*, *fry* and *fly*, *pour* and *poor* are easy to swap. *flour* sounds exactly like *flower*; the kitchen tells you which.",
+        "*boil* 和 *bowl*、*fry* 和 *fly*、*pour* 和 *poor* 很容易弄混。*flour* 与 *flower* 读音完全相同，要看是不是在厨房。",
+      ),
+      dialogues: t(
+        "*Not ten, twelve* style corrections put the right number last. *We already have* and *Tomorrow I'm going to* mark what is not the answer; *that is for bread* rules out the second heat.",
+        "*Not ..., ...* 这类更正，正确的数字在最后。*We already have* 和 *Tomorrow I'm going to* 后面不是答案；*that is for bread* 排除了第二个温度。",
+      ),
+    },
     title: t("Listening: Cooking", "听力：烹饪"),
     summary: t("Hear recipes: how long to cook, what to buy and how hot the oven should be.", "听菜谱：煮多久、买什么、烤箱要多热。"),
     words: ["a2-words-cooking", "a2-words-ingredients", "a2-words-taste", "a2-words-quantities"],
@@ -162,6 +202,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-sports-and-games",
+    watchOut: {
+      words: t(
+        "*beat* and *bit*, *hit* and *heat* need the long and short vowel. *quite* and *quiet* differ by a beat. *coach* and *couch* sound close.",
+        "*beat* 和 *bit*、*hit* 和 *heat* 要分清长短元音。*quite* 和 *quiet* 差一拍。*coach* 和 *couch* 很接近。",
+      ),
+      dialogues: t(
+        "A score is said as *three to one*; *At half time* gives an earlier score that is not final. *lost*, *The tennis class* and *more boring* point to the decoys.",
+        "比分读作 *three to one*；*At half time* 给出的是中场比分，不是最终比分。*lost*、*The tennis class* 和 *more boring* 指向干扰项。",
+      ),
+    },
     title: t("Listening: Sports and Games", "听力：运动和游戏"),
     summary: t(
       "Hear who won, the score, when classes start and which sport people prefer.",
@@ -197,6 +247,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-animals-and-pets",
+    watchOut: {
+      words: t(
+        "*bee* and *beak*, *ant* and *aunt* can sound alike. *owl* rhymes with *towel*. Listen for the end of *puppy* and *kitten*.",
+        "*bee* 和 *beak*、*ant* 和 *aunt* 可能很像。*owl* 与 *towel* 押韵。*puppy*、*kitten* 要听到词尾。",
+      ),
+      dialogues: t(
+        "The second animal belongs to someone else: *My sister has*, *Our cat is*. At the zoo, two times are given; in the rabbit dialogue, *It doesn't eat* names the decoy.",
+        "第二种动物属于别人：*My sister has*、*Our cat is*。动物园有两个喂食时间；兔子那段里，*It doesn't eat* 后面是干扰项。",
+      ),
+    },
     title: t("Listening: Animals and Pets", "听力：动物和宠物"),
     summary: t("Hear about pets, what animals eat and feeding times at the zoo.", "听有关宠物、动物吃什么和动物园喂食时间的内容。"),
     words: ["a2-words-pets", "a2-words-wildlife", "a2-words-animal-life", "a2-words-farm-and-care"],
@@ -229,6 +289,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-travel-and-holidays",
+    watchOut: {
+      words: t(
+        "*flight* and *fright*, *desert* and *dessert* are easy to mix: *DEZ-ert* is stressed at the start. *coast* and *cost* differ in the vowel.",
+        "*flight* 和 *fright*、*desert* 和 *dessert* 容易混：*DEZ-ert* 重音在前。*coast* 和 *cost* 元音不同。",
+      ),
+      dialogues: t(
+        "Announcements correct themselves: *gate twelve, not gate fourteen*. *Last year*, *My parents are staying* and *Coming back* each bring a decoy.",
+        "广播会自我更正：*gate twelve, not gate fourteen*。*Last year*、*My parents are staying* 和 *Coming back* 都带出干扰项。",
+      ),
+    },
     title: t("Listening: Travel and Holidays", "听力：旅行和假期"),
     summary: t("Hear gates, places, how long people stay and how they travel.", "听登机口、地点、停留多久和怎么出行。"),
     words: ["a2-words-holidays", "a2-words-places-to-visit", "a2-words-transport", "a2-words-future"],
@@ -261,6 +331,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-the-natural-world",
+    watchOut: {
+      words: t(
+        "*thunder* and *under*, *rock* and *lock*, *path* and *pass* test old sounds. *million* and *melon* are close; listen for *-yun*.",
+        "*thunder* 和 *under*、*rock* 和 *lock*、*path* 和 *pass* 考验之前学过的音。*million* 和 *melon* 很像，注意 *-yun*。",
+      ),
+      dialogues: t(
+        "Big numbers come in pairs: *about*, then *The hill next to it is*. *near the river* and *in the trees*, *north* and *south* split the answers; match the question's place.",
+        "大数字成对出现：先 *about*，再 *The hill next to it is*。*near the river* 和 *in the trees*、*north* 和 *south* 把答案分开，要对上问题里的地点。",
+      ),
+    },
     title: t("Listening: The Natural World", "听力：自然世界"),
     summary: t(
       "Hear about mountains, rivers, animals on a walk and the weather in different places.",
@@ -296,6 +376,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-shopping-and-money",
+    watchOut: {
+      words: t(
+        "*cost* and *coast*, *coin* and *corn*, *lend* and *land* are close. *receipt* has a silent *p*: *rih-SEET*.",
+        "*cost* 和 *coast*、*coin* 和 *corn*、*lend* 和 *land* 很接近。*receipt* 的 *p* 不发音：*rih-SEET*。",
+      ),
+      dialogues: t(
+        "*last week*, *doesn't sell them*, *is closed* and *more expensive* mark the decoys. For the floor, listen for the ordinal: *first*, *second*, *third*.",
+        "*last week*、*doesn't sell them*、*is closed* 和 *more expensive* 标出干扰项。楼层要听序数词：*first*、*second*、*third*。",
+      ),
+    },
     title: t("Listening: Shopping and Money", "听力：购物和金钱"),
     summary: t("Hear prices, where to buy things and which floor has a sale.", "听价格、在哪里买东西、哪一层在打折。"),
     words: ["a2-words-money", "a2-words-shops", "a2-words-things-we-buy", "a2-words-materials"],
@@ -328,6 +418,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-technology",
+    watchOut: {
+      words: t(
+        "*type* and *tip*, *switch* and *which*, *mean* and *men* test vowel sounds. *download* and *upload* share an end; listen to the first beat.",
+        "*type* 和 *tip*、*switch* 和 *which*、*mean* 和 *men* 考验元音。*download* 和 *upload* 结尾相同，要听第一拍。",
+      ),
+      dialogues: t(
+        "*The old one was*, *My old phone lasted*, *Yesterday I got* and *tomorrow* each give the past or another day. The answer is about now and today.",
+        "*The old one was*、*My old phone lasted*、*Yesterday I got* 和 *tomorrow* 说的是过去或别的日子。答案是关于现在和今天的。",
+      ),
+    },
     title: t("Listening: Technology", "听力：科技"),
     summary: t("Hear passwords, batteries, messages and when the computer room opens.", "听密码、电池、消息以及电脑室几点开门。"),
     words: ["a2-words-technology", "a2-words-using-tech", "a2-words-communication", "a2-words-machines", "a2-words-sounds-and-messages"],
@@ -360,6 +460,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-festivals-and-celebrations",
+    watchOut: {
+      words: t(
+        "*lantern* and *lunch*, *candle* and *handle* share sounds. *proud* and *loud*, *calm* with its silent *l*, need care.",
+        "*lantern* 和 *lunch*、*candle* 和 *handle* 有相同的音。*proud* 和 *loud* 押韵，*calm* 的 *l* 不发音，都要留心。",
+      ),
+      dialogues: t(
+        "The festival and the music start on different days, and the fireworks and parade at different times. *My brother is going as* and *from my sister* belong to someone else.",
+        "节日和音乐会的开始日期不同，烟花和游行的时间也不同。*My brother is going as* 和 *from my sister* 说的是别人。",
+      ),
+    },
     title: t("Listening: Festivals and Celebrations", "听力：节日和庆祝"),
     summary: t("Hear when festivals start, costumes, fireworks and presents.", "听节日什么时候开始、装扮、烟花和礼物。"),
     words: ["a2-words-festivals", "a2-words-wishes", "a2-words-feelings-2", "a2-words-people-together"],
@@ -392,6 +502,16 @@ export const topics: readonly TopicDef[] = [
   }),
   unitListening({
     id: "a2-listening-jobs-and-dreams",
+    watchOut: {
+      words: t(
+        "*chef* starts with *sh*. *earn* sounds like *urn*. *career* is *kuh-REER*, not *carrier*. *graduate* is stressed at the start.",
+        "*chef* 以 *sh* 开头。*earn* 与 *urn* 同音。*career* 读作 *kuh-REER*，不是 *carrier*。*graduate* 重音在前。",
+      ),
+      dialogues: t(
+        "*My friend wants*, *On Saturdays* and *My brother studied* bring answers for others. In the interview message, *Not on* names the wrong day; the right one is repeated.",
+        "*My friend wants*、*On Saturdays* 和 *My brother studied* 说的是别人。面试通知里，*Not on* 后面是错的那天，正确的日子会重复一遍。",
+      ),
+    },
     title: t("Listening: Jobs and Dreams", "听力：工作和梦想"),
     summary: t(
       "Hear what people want to be, how long they work and when interviews are.",

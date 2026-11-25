@@ -4,7 +4,7 @@
 
 import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { frame, unitListening } from "../listening.ts";
+import { frame, type UnitListeningSpec, unitListening } from "../listening.ts";
 // The modules whose vocabulary topics the listening plays, built before it.
 import "./topics.ts";
 
@@ -441,6 +441,130 @@ const frames: Record<(typeof units)[number]["slug"], ReturnType<typeof frame>[]>
   ],
 };
 
+/** watchOuts are the Watch outs of the listening topics, by unit. */
+const watchOuts: Record<(typeof units)[number]["slug"], NonNullable<UnitListeningSpec["watchOut"]>> = {
+  "education-and-learning": {
+    words: t(
+      "*essay* is stressed at the start, *ES-ay*. *revise* ends in *z*. *principal* sounds just like *principle*. *pupil* and *people* share a start.",
+      "*essay* 重音在前，*ES-ay*。*revise* 结尾读 *z*。*principal* 与 *principle* 读音相同。*pupil* 和 *people* 开头相同。",
+    ),
+    dialogues: t(
+      "Changes are said as *It was due on ..., but now*, *I thought about ..., but in the end*, *not in ... as it says*, *I used to ..., but these days*. The answer follows *now*, *in the end* or *these days*.",
+      "变化都这样说：*It was due on ..., but now*、*I thought about ..., but in the end*、*not in ... as it says*、*I used to ..., but these days*。答案在 *now*、*in the end*、*these days* 之后。",
+    ),
+  },
+  "work-and-careers": {
+    words: t(
+      "*employer* and *employee* differ in the last beat: *em-PLOY-er*, *em-ploy-EE*. *loss* and *lost* are close. *profit* sounds like *prophet*.",
+      "*employer* 和 *employee* 差在最后一拍：*em-PLOY-er*、*em-ploy-EE*。*loss* 和 *lost* 很接近。*profit* 与 *prophet* 同音。",
+    ),
+    dialogues: t(
+      "*It was going to be*, *moved from*, *I started in* and *I've already sent it to* all give the old answer first. The new one follows *changed it to*, *to*, *for the last two years* or *now*.",
+      "*It was going to be*、*moved from*、*I started in*、*I've already sent it to* 先说旧答案。新答案在 *changed it to*、*to*、*for the last two years* 或 *now* 之后。",
+    ),
+  },
+  "health-and-fitness": {
+    words: t(
+      "*virus* is *VY-rus*. *allergy* is *AL-er-jee*. *muscle* has a silent *c*, like *mussel*. *weight* sounds like *wait*.",
+      "*virus* 读作 *VY-rus*。*allergy* 读作 *AL-er-jee*。*muscle* 的 *c* 不发音，与 *mussel* 同音。*weight* 与 *wait* 同音。",
+    ),
+    dialogues: t(
+      "*it isn't ...*, *instead of*, *I used to* and *You eat enough* each name the wrong one first. The answer follows *It's just*, *we open at*, *now* or *eat less*.",
+      "*it isn't ...*、*instead of*、*I used to*、*You eat enough* 先说错的。答案在 *It's just*、*we open at*、*now* 或 *eat less* 之后。",
+    ),
+  },
+  "the-environment": {
+    words: t(
+      "*climate* is *KLY-mut*. *species* is *SPEE-sheez*. *coral* and *choral* sound alike. *waste* sounds like *waist*.",
+      "*climate* 读作 *KLY-mut*。*species* 读作 *SPEE-sheez*。*coral* 和 *choral* 读音相同。*waste* 与 *waist* 同音。",
+    ),
+    dialogues: t(
+      "Two things share a sentence: one collected on Tuesdays and one *still* on Fridays. *already*, *Last month* and *Last year* point to the decoy; *started*, *This time* and *this year* to the answer.",
+      "一句话里有两样东西：一样周二收，另一样 *still* 周五收。*already*、*Last month*、*Last year* 指向干扰项；*started*、*This time*、*this year* 指向答案。",
+    ),
+  },
+  "media-and-news": {
+    words: t(
+      "*bulletin* is *BUL-ih-tin*. *steal* sounds like *steel*. *court* and *caught* are close. *whisper* starts with *w*, not *v*.",
+      "*bulletin* 读作 *BUL-ih-tin*。*steal* 与 *steel* 同音。*court* 和 *caught* 很接近。*whisper* 以 *w* 开头，不是 *v*。",
+    ),
+    dialogues: t(
+      "News reports pack two facts in one sentence: what was stolen and when, where a fire started and where it spread. Today's and tomorrow's weather are both given; match the question's day.",
+      "新闻一句话里装两个事实：偷了什么、什么时候，火从哪里起、蔓延到哪里。今天和明天的天气都说了，要对上问题里的日子。",
+    ),
+  },
+  "technology-in-our-lives": {
+    words: t(
+      "*data* can be *DAY-tuh* or *DAH-tuh*. *device* ends in *s*, *devise* in *z*. *cable* and *table* rhyme. *crash* and *cash* differ by one sound.",
+      "*data* 可读 *DAY-tuh* 或 *DAH-tuh*。*device* 结尾是 *s*，*devise* 是 *z*。*cable* 和 *table* 押韵。*crash* 和 *cash* 只差一个音。",
+    ),
+    dialogues: t(
+      "*The ... is fine*, *To report a problem* and *I liked the ...* name the decoy. Weekdays and the weekend are both given; the question asks about weekdays.",
+      "*The ... is fine*、*To report a problem*、*I liked the ...* 说的是干扰项。工作日和周末都说了，问题问的是工作日。",
+    ),
+  },
+  "travel-and-culture": {
+    words: t(
+      "*custom* is *KUS-tum*, *costume* is *KOS-tyoom*. *queue* is just *kyoo*. *border* and *boarder* sound the same.",
+      "*custom* 读作 *KUS-tum*，*costume* 读作 *KOS-tyoom*。*queue* 就读 *kyoo*。*border* 与 *boarder* 读音相同。",
+    ),
+    dialogues: t(
+      "*not platform*, *At first they said*, *The ... was great, but* and *We booked ..., but it was full* each name the decoy first. The answer follows *but*, *now* or *so*.",
+      "*not platform*、*At first they said*、*The ... was great, but*、*We booked ..., but it was full* 先说干扰项。答案在 *but*、*now* 或 *so* 之后。",
+    ),
+  },
+  relationships: {
+    words: t(
+      "*engaged* ends in a short *d*. *shy* and *sly*, *joy* and *jaw* are close. *twin* and *twine* differ in the vowel. *death* has a soft *th*.",
+      "*engaged* 结尾是短促的 *d*。*shy* 和 *sly*、*joy* 和 *jaw* 很接近。*twin* 和 *twine* 元音不同。*death* 结尾是轻柔的 *th*。",
+    ),
+    dialogues: t(
+      "A question with a wrong guess, *Is he ...?*, is answered *No, he's*. *Not at ..., as people think*, *at first* and *I can't come on ... after all* name the decoys.",
+      "猜错的问题 *Is he ...?* 用 *No, he's* 回答。*Not at ..., as people think*、*at first* 和 *I can't come on ... after all* 后面是干扰项。",
+    ),
+  },
+  "cities-and-transport": {
+    words: t(
+      "*suburb* is *SUB-urb*. *rent* and *rant*, *lane* and *line* are close. *fare* sounds like *fair*. *steel* sounds like *steal*.",
+      "*suburb* 读作 *SUB-urb*。*rent* 和 *rant*、*lane* 和 *line* 很接近。*fare* 与 *fair* 同音。*steel* 与 *steal* 同音。",
+    ),
+    dialogues: t(
+      "*Don't take the*, *Please use the number*, *People complain about* and *Go past the* name the decoy. The bus that *will not stop* is the answer, not the one to use.",
+      "*Don't take the*、*Please use the number*、*People complain about*、*Go past the* 后面是干扰项。*will not stop* 的那路车才是答案，不是要改坐的那路。",
+    ),
+  },
+  "science-and-discovery": {
+    words: t(
+      "*cell* sounds like *sell*. *gene* sounds like *jean*. *comet* and *comment* differ in stress. *steam* and *stem* differ in the vowel.",
+      "*cell* 与 *sell* 同音。*gene* 与 *jean* 同音。*comet* 和 *comment* 重音不同。*steam* 和 *stem* 元音不同。",
+    ),
+    dialogues: t(
+      "*We expected*, *It was planned for* and *Some say* give the guess, not the result. Years are said in words: *two thousand and fifteen*; listen to the end.",
+      "*We expected*、*It was planned for*、*Some say* 说的是预期，不是结果。年份用英文说，如 *two thousand and fifteen*，要听到最后。",
+    ),
+  },
+  "money-and-consumers": {
+    words: t(
+      "*debt* has a silent *b*: *det*. *loan* sounds like *lone*. *fee* and *free*, *worth* and *worse* are close.",
+      "*debt* 的 *b* 不发音：*det*。*loan* 与 *lone* 同音。*fee* 和 *free*、*worth* 和 *worse* 很接近。",
+    ),
+    dialogues: t(
+      "Prices and periods come in pairs: the full price and the sale price, the refund period and the exchange period. *I wanted* and *If you are not at home* point to the decoy.",
+      "价格和期限成对出现：原价和折扣价，退款期限和换货期限。*I wanted* 和 *If you are not at home* 指向干扰项。",
+    ),
+  },
+  "arts-and-entertainment": {
+    words: t(
+      "*choir* is *KWIRE*. *poem* has two beats, *POH-um*. *tale* sounds like *tail*. *plot* and *pot* differ by the *l*.",
+      "*choir* 读作 *KWIRE*。*poem* 读两拍，*POH-um*。*tale* 与 *tail* 同音。*plot* 和 *pot* 差一个 *l*。",
+    ),
+    dialogues: t(
+      "*The ads start at* gives the earlier time; the film *itself* is later. Saturday and Sunday are both listed; *I finished ... last week* names the book that is not the answer.",
+      "*The ads start at* 给的是更早的时间，电影 *itself* 更晚。周六和周日的节目都列出来了；*I finished ... last week* 说的书不是答案。",
+    ),
+  },
+};
+
 /** topics are the listening topics of the units of B1, in their order. */
 export const topics: readonly TopicDef[] = units.map((u) =>
   unitListening({
@@ -449,5 +573,6 @@ export const topics: readonly TopicDef[] = units.map((u) =>
     summary: t(summaries[u.slug][0], summaries[u.slug][1]),
     words: u.words,
     frames: frames[u.slug],
+    watchOut: watchOuts[u.slug],
   }),
 );
