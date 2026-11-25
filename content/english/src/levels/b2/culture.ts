@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { judgedTopic } from "../a2/kit.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
+import { cleftSentencesWriteNot } from "./mistakes.ts";
 
 const identity = vocabularyTopic({
   id: "b2-words-identity",
@@ -1878,6 +1879,7 @@ const cleftSentences: TopicDef = {
         t("Rewrite the sentence to put the words in focus.", "改写句子，突出所给的部分。"),
         cleftTyped,
         cleftWhy,
+        cleftSentencesWriteNot,
       ),
     ),
   ],

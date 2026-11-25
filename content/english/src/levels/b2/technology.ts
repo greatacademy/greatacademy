@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
+import { wishAndIfOnlyWriteNot } from "./mistakes.ts";
 
 const ai = vocabularyTopic({
   id: "b2-words-ai",
@@ -1838,6 +1839,7 @@ const wishAndIfOnly: TopicDef = {
         t("Turn the fact into a wish with the words given.", "用给出的开头把事实改写成愿望。"),
         wishTyped,
         wishWriteWhy,
+        wishAndIfOnlyWriteNot,
       ),
     ),
   ],

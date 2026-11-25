@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyTriple, interleave, vocabularyTopic, word } from "../words.ts";
+import { causativeHaveAndGetWriteNot, passiveWithModalsAndPerfectFormsRewriteNot } from "./mistakes.ts";
 
 const economy = vocabularyTopic({
   id: "b2-words-economy",
@@ -1735,6 +1736,7 @@ const passiveForms: TopicDef = {
         t("Rewrite the sentence in the passive.", "把句子改写成被动语态。"),
         passiveTyped,
         passiveRewriteWhy,
+        passiveWithModalsAndPerfectFormsRewriteNot,
       ),
     ),
   ],
@@ -1949,6 +1951,7 @@ const causative: TopicDef = {
             `${rule["zh-CN"]}：${right}\n\n**检验。** 核对 *have/get* + 事物 + 过去分词的语序，并确认时间或地点短语放在句末。`,
           );
         },
+        causativeHaveAndGetWriteNot,
       ),
     ),
   ],

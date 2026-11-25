@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { futureContinuousAndFuturePerfectWriteNot } from "./mistakes.ts";
 
 const climate = vocabularyTopic({
   id: "b2-words-climate-change",
@@ -1778,6 +1779,7 @@ const futureForms: TopicDef = {
         t("Write the sentence with will have or will be.", "用 will have 或 will be 写出句子。"),
         futureTyped,
         (right) => futureWhy(right, right, right),
+        futureContinuousAndFuturePerfectWriteNot,
       ),
     ),
   ],

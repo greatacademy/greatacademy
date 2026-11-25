@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { vocabularyTopic, word } from "../words.ts";
+import { inversionAfterNegativeAdverbsWriteNot } from "./mistakes.ts";
 
 const psychology = vocabularyTopic({
   id: "b2-words-psychology",
@@ -1786,6 +1787,7 @@ const inversion: TopicDef = {
             `${order["zh-CN"]}。${aux["zh-CN"]}：${right}\n\n**检验。** 核对“助动词 + 主语”倒装语序、没有重复 *not/never*，且助动词后的动词形式正确。`,
           );
         },
+        inversionAfterNegativeAdverbsWriteNot,
       ),
     ),
   ],

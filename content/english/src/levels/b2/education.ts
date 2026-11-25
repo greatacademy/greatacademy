@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
+import { mixedConditionalsWriteNot } from "./mistakes.ts";
 
 const university = vocabularyTopic({
   id: "b2-words-higher-education",
@@ -1828,6 +1829,7 @@ const mixedConditionals: TopicDef = {
         t("Write a mixed conditional sentence from the note.", "根据笔记写一个混合条件句。"),
         mixedTyped,
         (right) => mixedWhy(right.split(", ")[1] ?? "", right),
+        mixedConditionalsWriteNot,
       ),
     ),
   ],

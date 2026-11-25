@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
+import { linkingWordsOfContrastWriteNot } from "./mistakes.ts";
 
 const law = vocabularyTopic({
   id: "b2-words-law",
@@ -1791,6 +1792,7 @@ const linkingWordsOfContrast: TopicDef = {
         t("Join the two sentences with the word in brackets.", "用括号里的词把两个句子连起来。"),
         contrastTyped,
         joinedWhy,
+        linkingWordsOfContrastWriteNot,
       ),
     ),
   ],

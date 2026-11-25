@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
+import { modalsOfDeductionWriteNot, pastModalsWriteNot } from "./mistakes.ts";
 
 const medicine = vocabularyTopic({
   id: "b2-words-medicine",
@@ -1790,6 +1791,7 @@ const deduction: TopicDef = {
             `${rule["zh-CN"]}：${right}\n\n**检验。** 核对情态动词与把握程度一致，且后面直接接原形 *be*。`,
           );
         },
+        modalsOfDeductionWriteNot,
       ),
     ),
   ],
@@ -1986,6 +1988,7 @@ const pastModals: TopicDef = {
             `${rule["zh-CN"]}：${right}\n\n**检验。** 核对情态动词与句意线索一致，且后面是原形 *have* + 过去分词。`,
           );
         },
+        pastModalsWriteNot,
       ),
     ),
   ],

@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
+import { reportingVerbsWriteNot } from "./mistakes.ts";
 
 const journalism = vocabularyTopic({
   id: "b2-words-journalism",
@@ -2259,6 +2260,7 @@ const reportingVerbs: TopicDef = {
         t("Report the quotation with the verb in brackets.", "用括号里的动词转述引语。"),
         reportTyped,
         (right, shown) => reportWhy(right, shown),
+        reportingVerbsWriteNot,
       ),
     ),
   ],

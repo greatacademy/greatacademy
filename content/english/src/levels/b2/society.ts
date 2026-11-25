@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { thirdConditionalWriteNot } from "./mistakes.ts";
 
 const society = vocabularyTopic({
   id: "b2-words-society",
@@ -1731,6 +1732,7 @@ const thirdConditional: TopicDef = {
         t("Write a third conditional sentence from the note.", "根据笔记写一个第三条件句。"),
         pastIfTyped,
         pastIfWriteWhy,
+        thirdConditionalWriteNot,
       ),
     ),
   ],
