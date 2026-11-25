@@ -271,11 +271,22 @@ export const possessiveNot = explain(
   ),
   when(
     (s) => /^(my|your|his|her|its|our|their)$/iu.test(s.wrong),
-    (s) =>
-      t(
-        `*${s.wrong}* points to another owner. *His* is for a man or a boy, *her* for a woman or a girl, *its* for a thing or an animal, *your* for the person you talk to, *our* for you and others, and *their* for other people. Look at who has it in the first sentence.`,
-        `*${s.wrong}* 指的是另一个主人。*his* 指男性，*her* 指女性，*its* 指东西或动物，*your* 指对方，*our* 指包括自己在内的一些人，*their* 指别的一些人。看看第一句里是谁拥有它。`,
-      ),
+    (s) => {
+      const owner: Record<string, readonly [string, string]> = {
+        my: ["the person speaking", "说话的人自己"],
+        your: ["the person you talk to", "对方"],
+        his: ["a man or a boy", "男性"],
+        her: ["a woman or a girl", "女性"],
+        its: ["a thing or an animal", "东西或动物"],
+        our: ["you and others", "包括自己在内的一些人"],
+        their: ["other people", "别的一些人"],
+      };
+      const [en, zh] = owner[s.wrong.toLowerCase()] ?? ["another owner", "另一个主人"];
+      return t(
+        `*${s.wrong}* is for ${en}, but that is not who has it here. Look at who has it in the first sentence, and use the word for that owner.`,
+        `*${s.wrong}* 指${zh}，但这里拥有它的不是这个人或东西。看看第一句里是谁拥有它，再用指这个主人的词。`,
+      );
+    },
   ),
 );
 

@@ -38,6 +38,11 @@ const wrongStretch = (wrong: string, right: string) => {
 const memorized: Case = (s) => {
   const { bad, before } = wrongStretch(s.wrong, s.right);
   if (low(s.wrong) === low(s.right)) return undefined;
+  if (before.length > 0 && before.length >= low(s.right).length)
+    return t(
+      `*${s.wrong}* adds *${bad}* at the end, where this word has nothing more. This part is not decided by a rule, so learn it by sight: say it slowly and picture each letter.`,
+      `*${s.wrong}* 在词尾多加了 *${bad}*，而这个词到这里就结束了。这部分拼写不由规则决定，要靠记忆：慢慢读，想清每个字母。`,
+    );
   return bad === ""
     ? t(
         `*${s.wrong}* leaves out a letter${before ? ` after *${before}*` : " at the start"}. This part of the word is not decided by a rule, so learn it by sight: say it slowly and picture each letter.`,

@@ -294,7 +294,9 @@ const periodFixBank: readonly TypedItem[] = [
   ["The river is low, the boats cannot pass.", "The river is low.", "The boats cannot pass."],
   ["We missed the bus we walked home.", "We missed the bus.", "We walked home."],
   ["The cake looks great, it took all day.", "The cake looks great.", "It took all day."],
-].map(([shown, a, b]) => typed(shown!, `${a} ${b}`, [shown!, `${a!.slice(0, -1)}, ${b!.toLowerCase()}`, `${a} ${b!.toLowerCase()}`]));
+].map(([shown, a, b]) =>
+  typed(shown!, `${a} ${b}`, [...new Set([shown!, `${a!.slice(0, -1)}, ${b!.toLowerCase()}`, `${a} ${b!.toLowerCase()}`])]),
+);
 
 const conjunctionFix = (word: string, shown: string, first: string, second: string): TypedItem =>
   typed(shown, `${first}, ${word} ${second}.`, [shown, `${first} ${word} ${second}.`], [`${first}, ${word} ${second}.`], use(word));

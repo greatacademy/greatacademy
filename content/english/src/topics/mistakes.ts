@@ -101,9 +101,24 @@ export const simpleVerbTensesIrregularPastNot = explain(
   ),
 );
 
+/** movedComma explains a comma put after the wrong word, splitting two words that belong together. */
+const movedComma: Case = (s) => {
+  const [w, r] = [s.wrong.trim().split(/\s+/u), s.right.trim().split(/\s+/u)];
+  const count = (xs: string[]) => xs.filter((x) => x.endsWith(",")).length;
+  if (w.length !== r.length || count(w) === 0 || count(w) !== count(r) || low(s.wrong) !== low(s.right)) return undefined;
+  const i = w.findIndex((x, k) => x.endsWith(",") && !r[k]?.endsWith(","));
+  const [a, b] = [w[i]?.replace(/,$/u, ""), w[i + 1]];
+  if (i < 0 || !a || !b) return undefined;
+  return t(
+    `The comma after *${a}* splits *${a}* from *${b}*, which belong together. The comma goes where the part it sets off ends.`,
+    `*${a}* 后面的逗号把 *${a}* 和 *${b}* 拆开了，而它们是一起的。逗号要放在它所隔开的那部分结束的地方。`,
+  );
+};
+
 /** commasAfterIntroductionsIntroductoryWordsNot explains an opening word with no comma after it. */
 export const commasAfterIntroductionsIntroductoryWordsNot = explain(
   extraComma,
+  movedComma,
   when(
     (s) => low(s.wrong) === low(s.right) && !s.wrong.split(" ")[0]?.endsWith(","),
     (s) =>
@@ -116,6 +131,7 @@ export const commasAfterIntroductionsIntroductoryWordsNot = explain(
 
 /** commasAfterIntroductionsDirectAddressNot explains the name of the person spoken to without commas around it. */
 export const commasAfterIntroductionsDirectAddressNot = explain(
+  movedComma,
   when(
     (s) => low(s.wrong) === low(s.right),
     t(
@@ -250,10 +266,18 @@ export const apostrophesAndPossessivesPluralPossessiveNot = explain(
       ),
   ),
   when(
+    (s) => /'s$/u.test(low(s.right)) && /s'$/u.test(low(s.wrong)) && low(s.wrong).slice(0, -2) !== low(s.right).slice(0, -2),
+    (s) =>
+      t(
+        `*${s.wrong.replace(/'$/u, "")}* is not the plural of this noun. Its plural is irregular and does not end in *-s*, so write that plural first, then add the possessive ending a plural without *s* takes.`,
+        `*${s.wrong.replace(/'$/u, "")}* 不是这个名词的复数。它的复数是不规则的，不以 *-s* 结尾。先写出这个复数，再加上不以 *s* 结尾的复数所用的所有格词尾。`,
+      ),
+  ),
+  when(
     (s) => /'s$/u.test(low(s.right)) && /s'$/u.test(low(s.wrong)),
     t(
-      "This plural does not end in *s* (*children*, *men*, *women*, *mice*), so it takes an apostrophe and *s*, like a single owner.",
-      "这个复数不以 *s* 结尾（*children*、*men*、*women*、*mice*），所以像单数所有者一样加撇号和 *s*。",
+      "This plural does not end in *s*, so the apostrophe does not go after an *s*: it takes an apostrophe and *s*, like a single owner.",
+      "这个复数不以 *s* 结尾，所以撇号不放在 *s* 后面：要像单数所有者一样加撇号和 *s*。",
     ),
   ),
   when(
@@ -279,6 +303,14 @@ export const apostrophesAndPossessivesPluralPossessiveNot = explain(
 
 /** verbTenseConsistencyFixingShiftsNot explains a sentence that changes tense between its verbs. */
 export const verbTenseConsistencyFixingShiftsNot = explain(
+  when(
+    (s) => s.wrong.trim() === s.shown.trim(),
+    t(
+      "That is the sentence as it was given: one of its verbs still shifts to another tense. Find it and bring it into the tense of the others.",
+      "这是题目给出的原句：其中一个动词仍然换了时态。找出它，改成和其他动词一致的时态。",
+    ),
+  ),
+  regularEd,
   when(
     (s) => /^(every|each)\b/iu.test(s.right) && s.wrong !== s.right,
     t(

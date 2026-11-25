@@ -54,8 +54,8 @@ const thirdPersonEs: Case = (s) => {
   }
   if (/ies$/u.test(r) && w === `${r.slice(0, -3)}ys`) {
     return t(
-      `*${s.w}*: after a consonant, a final *y* changes to *i* and takes *-es* (*study* → *studies*, *fly* → *flies*).`,
-      `*${s.w}*：辅音字母后的词尾 *y* 要变成 *i* 再加 *-es*（*study* → *studies*，*fly* → *flies*）。`,
+      `*${s.w}*: after a consonant, a final *y* changes to *i* and takes *-es* (${r === "studies" ? "*cry* → *cries*" : "*study* → *studies*"}, ${r === "flies" ? "*carry* → *carries*" : "*fly* → *flies*"}).`,
+      `*${s.w}*：辅音字母后的词尾 *y* 要变成 *i* 再加 *-es*（${r === "studies" ? "*cry* → *cries*" : "*study* → *studies*"}，${r === "flies" ? "*carry* → *carries*" : "*fly* → *flies*"}）。`,
     );
   }
   if (/[^e]s$/u.test(r) && w === `${r.slice(0, -1)}es`) {
@@ -126,11 +126,17 @@ export const writingSentencesAboutRoutinesWriteNot = explain(timeAtEnd, ...third
 export const prepositionsOfTimeTypeNot = explain(
   when(
     (s) => isWord(s, ["at", "on", "in"]),
-    (s) =>
-      t(
-        `*${s.w}* does not fit this time. *at* is for clock times and *night*; *on* for days and dates (*on Monday*, *on Saturday morning*); *in* for months, years, seasons and the parts of a day (*in the morning*).`,
-        `*${s.w}* 不适合这个时间。*at* 用于钟点和 *night*；*on* 用于具体某天和日期（*on Monday*、*on Saturday morning*）；*in* 用于月份、年份、季节和一天中的时段（*in the morning*）。`,
-      ),
+    (s) => {
+      const use = {
+        at: ["clock times and *night*", "钟点和 *night*"],
+        on: ["days and dates", "具体某天和日期"],
+        in: ["months, years, seasons and the parts of a day", "月份、年份、季节和一天中的时段"],
+      }[s.w.toLowerCase() as "at" | "on" | "in"];
+      return t(
+        `*${s.w}* is for ${use[0]}, and this time is not one of those. Decide what kind of time it is: a clock time, a day or a date, or a longer stretch such as a month, a year, a season or a part of a day. Each kind takes its own preposition.`,
+        `*${s.w}* 用于${use[1]}，而这个时间不属于这一类。先判断它是哪一类时间：钟点、某一天或日期，还是月份、年份、季节、一天中的时段这样更长的时间。每一类都有自己的介词。`,
+      );
+    },
   ),
 );
 

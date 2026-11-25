@@ -252,44 +252,198 @@ export const endMarkMissing: Case = when(
   },
 );
 
+/** shownPairs lists up to n examples of a spelling rule, leaving out any that would show the very word asked for. */
+function shownPairs(right: string, pairs: readonly (readonly [string, string])[], n: number): Text {
+  const kept = pairs.filter(([, b]) => b !== right).slice(0, n);
+  return t(kept.map(([a, b]) => `*${a}* → *${b}*`).join(", "), kept.map(([a, b]) => `*${a}* → *${b}*`).join("，"));
+}
+
 /** spelling explains a misspelled word by the spelling rule it breaks: doubling, *y* to *i*, a silent *e*. */
 export const spelling: Case = (s) => {
   const [w, r] = [lower(s.w), lower(s.r)];
   if (!w || !r || w.includes(" ") || r.includes(" ")) return undefined;
   if (dropsOne(r, w)) {
     return t(
-      `*${s.w}* keeps one consonant where the word doubles it. When a word ends in one short, stressed vowel and one consonant, the consonant doubles before an ending that starts with a vowel (*stop* → *stopped*, *run* → *running*).`,
-      `*${s.w}* 少写了一个辅音字母。词尾是“一个重读短元音 + 一个辅音字母”时，加以元音开头的词尾前要双写这个辅音（*stop* → *stopped*，*run* → *running*）。`,
+      `*${s.w}* keeps one consonant where the word doubles it. When a word ends in one short, stressed vowel and one consonant, the consonant doubles before an ending that starts with a vowel (${
+        shownPairs(
+          r,
+          [
+            ["stop", "stopped"],
+            ["run", "running"],
+            ["big", "bigger"],
+          ],
+          2,
+        ).en
+      }).`,
+      `*${s.w}* 少写了一个辅音字母。词尾是“一个重读短元音 + 一个辅音字母”时，加以元音开头的词尾前要双写这个辅音（${
+        shownPairs(
+          r,
+          [
+            ["stop", "stopped"],
+            ["run", "running"],
+            ["big", "bigger"],
+          ],
+          2,
+        )["zh-CN"]
+      }）。`,
     );
   }
   if (dropsOne(w, r)) {
     return t(
-      `*${s.w}* doubles a consonant that stays single. Only a short, stressed vowel before one final consonant doubles it (*stop* → *stopped*); a long vowel, two vowels, two consonants, or an unstressed ending keep one (*cook* → *cooking*, *watch* → *watching*, *visit* → *visited*).`,
-      `*${s.w}* 把不该双写的辅音双写了。只有“重读短元音 + 一个辅音字母”结尾才双写（*stop* → *stopped*）；长元音、两个元音字母、两个辅音字母或非重读结尾都不双写（*cook* → *cooking*，*watch* → *watching*，*visit* → *visited*）。`,
+      `*${s.w}* doubles a consonant that stays single. Only a short, stressed vowel before one final consonant doubles it (${
+        shownPairs(
+          r,
+          [
+            ["stop", "stopped"],
+            ["sit", "sitting"],
+          ],
+          1,
+        ).en
+      }); a long vowel, two vowels, two consonants, or an unstressed ending keep one (${
+        shownPairs(
+          r,
+          [
+            ["cook", "cooking"],
+            ["watch", "watching"],
+            ["visit", "visited"],
+            ["rain", "rained"],
+            ["open", "opened"],
+          ],
+          3,
+        ).en
+      }).`,
+      `*${s.w}* 把不该双写的辅音双写了。只有“重读短元音 + 一个辅音字母”结尾才双写（${
+        shownPairs(
+          r,
+          [
+            ["stop", "stopped"],
+            ["sit", "sitting"],
+          ],
+          1,
+        )["zh-CN"]
+      }）；长元音、两个元音字母、两个辅音字母或非重读结尾都不双写（${
+        shownPairs(
+          r,
+          [
+            ["cook", "cooking"],
+            ["watch", "watching"],
+            ["visit", "visited"],
+            ["rain", "rained"],
+            ["open", "opened"],
+          ],
+          3,
+        )["zh-CN"]
+      }）。`,
     );
   }
   if (/ing$/u.test(r) && r.includes("ying") && (w === r.replace("ying", "iing") || w === r.replace("ying", "ing"))) {
     return t(
-      `*${s.w}* does not keep the *y*. Before *-ing*, a final *y* always stays as it is (*study* → *studying*, *fly* → *flying*).`,
-      `*${s.w}* 没有保留 *y*。加 *-ing* 时，词尾的 *y* 一律保留（*study* → *studying*，*fly* → *flying*）。`,
+      `*${s.w}* does not keep the *y*. Before *-ing*, a final *y* always stays as it is (${
+        shownPairs(
+          r,
+          [
+            ["study", "studying"],
+            ["fly", "flying"],
+            ["cry", "crying"],
+          ],
+          2,
+        ).en
+      }).`,
+      `*${s.w}* 没有保留 *y*。加 *-ing* 时，词尾的 *y* 一律保留（${
+        shownPairs(
+          r,
+          [
+            ["study", "studying"],
+            ["fly", "flying"],
+            ["cry", "crying"],
+          ],
+          2,
+        )["zh-CN"]
+      }）。`,
     );
   }
   if (/y/u.test(w) && w.replace(/y(?=[a-z]+$)/u, "i") === r) {
     return t(
-      `*${s.w}* keeps the *y*. After a consonant, *y* changes to *i* before most endings (*study* → *studied*, *happy* → *happier*, *city* → *cities*), but stays before *-ing*.`,
-      `*${s.w}* 保留了 *y*。辅音字母后的 *y* 在大多数词尾前要变成 *i*（*study* → *studied*，*happy* → *happier*，*city* → *cities*），只有加 *-ing* 时保留。`,
+      `*${s.w}* keeps the *y*. After a consonant, *y* changes to *i* before most endings (${
+        shownPairs(
+          r,
+          [
+            ["study", "studied"],
+            ["happy", "happier"],
+            ["city", "cities"],
+            ["carry", "carried"],
+            ["easy", "easily"],
+          ],
+          3,
+        ).en
+      }), but stays before *-ing*.`,
+      `*${s.w}* 保留了 *y*。辅音字母后的 *y* 在大多数词尾前要变成 *i*（${
+        shownPairs(
+          r,
+          [
+            ["study", "studied"],
+            ["happy", "happier"],
+            ["city", "cities"],
+            ["carry", "carried"],
+            ["easy", "easily"],
+          ],
+          3,
+        )["zh-CN"]
+      }），只有加 *-ing* 时保留。`,
     );
   }
   if (r.replace(/ie/u, "y") === w.replace(/ie/u, "y") && w.includes("i") && !r.includes("ies") && /ies$|ied$/u.test(w)) {
     return t(
-      `*${s.w}* changes *y* to *i*, but after a vowel the *y* stays (*play* → *plays*, *played*).`,
-      `*${s.w}* 把 *y* 变成了 *i*，但元音字母后的 *y* 不变（*play* → *plays*、*played*）。`,
+      `*${s.w}* changes *y* to *i*, but after a vowel the *y* stays (${
+        shownPairs(
+          r,
+          [
+            ["play", "plays"],
+            ["play", "played"],
+            ["stay", "stays"],
+            ["enjoy", "enjoyed"],
+          ],
+          2,
+        ).en
+      }).`,
+      `*${s.w}* 把 *y* 变成了 *i*，但元音字母后的 *y* 不变（${
+        shownPairs(
+          r,
+          [
+            ["play", "plays"],
+            ["play", "played"],
+            ["stay", "stays"],
+            ["enjoy", "enjoyed"],
+          ],
+          2,
+        )["zh-CN"]
+      }）。`,
     );
   }
   if (w.replace(/e(?=(ing|ed|able|ible|er|est)$)/u, "") === r && w !== r) {
     return t(
-      `*${s.w}* keeps the silent *e*. A word ending in a silent *e* drops it before an ending that starts with a vowel (*make* → *making*, *love* → *lovable*).`,
-      `*${s.w}* 保留了不发音的 *e*。以不发音 *e* 结尾的词，加以元音开头的词尾时要去掉 *e*（*make* → *making*，*love* → *lovable*）。`,
+      `*${s.w}* keeps the silent *e*. A word ending in a silent *e* drops it before an ending that starts with a vowel (${
+        shownPairs(
+          r,
+          [
+            ["make", "making"],
+            ["love", "lovable"],
+            ["write", "writing"],
+          ],
+          2,
+        ).en
+      }).`,
+      `*${s.w}* 保留了不发音的 *e*。以不发音 *e* 结尾的词，加以元音开头的词尾时要去掉 *e*（${
+        shownPairs(
+          r,
+          [
+            ["make", "making"],
+            ["love", "lovable"],
+            ["write", "writing"],
+          ],
+          2,
+        )["zh-CN"]
+      }）。`,
     );
   }
   return undefined;
