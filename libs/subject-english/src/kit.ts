@@ -94,6 +94,80 @@ const bare = (s: string) =>
     .replace(/\s+/gu, " ")
     .trim();
 
+/** Span is where a wrong sentence parts from a right one: the wrong words, the right words they stand for, and the words around. */
+export interface Span {
+  readonly wrong: string;
+  readonly right: string;
+  readonly before: string;
+  readonly after: string;
+}
+
+/** spanOf finds the one stretch of words where a wrong sentence differs from a right one, ignoring case and punctuation. */
+export function spanOf(wrong: string, right: string): Span {
+  const a = words(wrong);
+  const b = words(right);
+  let head = 0;
+  while (head < a.length && head < b.length && bare(a[head]!) === bare(b[head]!)) head++;
+  let tail = 0;
+  while (tail < a.length - head && tail < b.length - head && bare(a[a.length - 1 - tail]!) === bare(b[b.length - 1 - tail]!)) tail++;
+  return {
+    wrong: a.slice(head, a.length - tail).join(" "),
+    right: b.slice(head, b.length - tail).join(" "),
+    before: a[head - 1] ?? "",
+    after: a[a.length - tail] ?? "",
+  };
+}
+
+/** Marks are the differences of capitals and punctuation between two sentences with the same words. */
+export interface Marks {
+  /** lowered are the words of the wrong sentence, without their marks, written small where the right one has a capital. */
+  readonly lowered: readonly string[];
+  /** raised are the words of the wrong sentence written with a capital where the right one has none. */
+  readonly raised: readonly string[];
+  /** missing are the words of the wrong sentence that lack a mark the right one has after them, with that mark. */
+  readonly missing: readonly (readonly [word: string, mark: string])[];
+  /** extra are the words of the wrong sentence followed by a mark the right one does not have, with that mark. */
+  readonly extra: readonly (readonly [word: string, mark: string])[];
+}
+
+/** marksOf compares the capitals and punctuation of two sentences, or is undefined when their words differ. */
+export function marksOf(wrong: string, right: string): Marks | undefined {
+  const a = words(wrong);
+  const b = words(right);
+  if (a.length !== b.length || a.some((w, i) => bare(w) !== bare(b[i]!))) return undefined;
+  const trail = (w: string) => /[^\p{L}\p{N}']*$/u.exec(w)?.[0] ?? "";
+  const letter = (w: string) => /\p{L}/u.exec(w)?.[0] ?? "";
+  const lowered: string[] = [];
+  const raised: string[] = [];
+  const missing: (readonly [string, string])[] = [];
+  const extra: (readonly [string, string])[] = [];
+  a.forEach((full, i) => {
+    const r = b[i]!;
+    const w = full.replace(/[^\p{L}\p{N}']+$/u, "");
+    const [x, y] = [letter(w), letter(r)];
+    if (x !== y && x.toLowerCase() === y.toLowerCase()) (x === x.toLowerCase() ? lowered : raised).push(w);
+    const [m, n] = [trail(full), trail(r)];
+    if (m !== n) {
+      if (n !== "" && !m.includes(n)) missing.push([w, n]);
+      if (m !== "" && !n.includes(m)) extra.push([w, m]);
+    }
+  });
+  return { lowered, raised, missing, extra };
+}
+
+/** reordered is whether a wrong sentence has the same words as a right one in another order. */
+export function reordered(wrong: string, right: string): boolean {
+  const sorted = (s: string) => bare(s).split(" ").sort().join(" ");
+  return bare(wrong) !== bare(right) && sorted(wrong) === sorted(right);
+}
+
+/** listed joins words as *a*, *b* and *c* in English and *a*、*b*、*c* in Chinese. */
+export function listed(items: readonly string[]): Text {
+  const marked = items.map((w) => `*${w}*`);
+  const en = marked.length < 2 ? (marked[0] ?? "") : `${marked.slice(0, -1).join(", ")} and ${marked[marked.length - 1]}`;
+  return t(en, marked.join("、"));
+}
+
 /** wordWhyNot names what is wrong with a typed word form: unchanged, a letter short or over, or a wrong letter, and where. */
 function wordWhyNot(wrong: string, right: string, shown: string): Text {
   if (
