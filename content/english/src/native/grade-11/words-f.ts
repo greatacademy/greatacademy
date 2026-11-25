@@ -1,6 +1,7 @@
 // Grade 11: the batches of words of hazy and sharp thinking, of characters in company, of the passing and the pungent,
 // and of the academic words for beginning and ending, for more and less, for joining and for limiting.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const hazy = batch(
   ["Words of Hazy and Sharp Thinking", "模糊与敏锐思维的词"],
   ["narrow views, empty heads, sharp tongues and loud voices", "短视、空洞、犀利与喧嚣"],
   `
-  myopic|nearsighted; lacking foresight|近视的；目光短浅的|It was a ___ decision to cut the budget.|She is ___ and wears glasses.|The ___ plan ignored the future.|vacuous,trenchant|myopia
-  obfuscate|to make unclear or hard to understand|使模糊，使困惑|The report seems to ___ the facts.|Don't ___ the issue with jargon.|He tried to ___ his role in the affair.|propitious,pliant|obfuscated,obfuscation
-  vacuous|having or showing a lack of thought or intelligence|空洞的，愚蠢的|He gave a ___ grin.|The show was ___ and silly.|Her ___ remarks annoyed us.|myopic,vociferous|vacuously
-  trenchant|vigorous or incisive in expression|尖锐的，犀利的|She made a ___ criticism of the plan.|His ___ wit made him famous.|The editor wrote a ___ reply.|umbrage,veneer|trenchantly
-  vociferous|expressing opinions in a loud and forceful way|大声疾呼的，喧嚷的|She is a ___ critic of the war.|The crowd was ___.|There was ___ opposition to the plan.|umbrage,veneer|vociferously
-  umbrage|offense or annoyance|不快，生气|She took ___ at his remark.|He took ___ at being left out.|Don't take ___; it was a joke.|vicarious,veneer|
-  vicarious|experienced in the imagination through another person|间接感受的|She took ___ pleasure in her son's success.|Films give us ___ thrills.|He lived a ___ life through books.|umbrage,pliant|vicariously
-  veneer|a thin decorative layer; an attractive appearance that hides something|饰面；虚饰|The table has an oak ___.|Beneath his ___ of calm, he was afraid.|A ___ of politeness hid her anger.|vicarious,obfuscate|
-  pliant|easily bent; easily influenced|柔韧的；易受影响的|The willow is ___.|The king wanted a ___ minister.|Leather becomes ___ when oiled.|propitious,myopic|pliancy
-  propitious|giving or indicating a good chance of success|有利的，吉利的|It is a ___ time to buy.|The weather was ___ for sailing.|The signs were not ___.|pliant,umbrage|propitiously
+  myopic|nearsighted; lacking foresight|近视的；目光短浅的|Cutting the repair budget to save a little money this year was a ___ decision, since the leaking roof will cost ten times more to fix later.|Without his glasses he is so ___ that he cannot read the number on a bus until it is right in front of him.|The ___ plan looked only at this year's profits and ignored what the factory would need in ten years' time.|trenchant,propitious|myopia
+  obfuscate|to make unclear or hard to understand|使模糊，使困惑|The minister used so much jargon and so many vague phrases that he seemed to ___ the simple facts instead of explaining them.|Don't ___ the problem with long technical words; your readers need a plain account of what went wrong.|In court he tried to ___ his part in the affair, giving muddled answers so that no one could tell what he had really done.|clarify,specify|obfuscated,obfuscation
+  vacuous|having or showing a lack of thought or intelligence|空洞的，愚蠢的|He gave a ___ smile and stared blankly at the maths question, plainly without a single thought in his head.|The talk show was ___ and silly, two hours of empty chatter without one thoughtful idea.|Her ___ comment on the film—"It was, like, nice"—showed that she had not thought about it at all.|trenchant,myopic|vacuously
+  trenchant|vigorous or incisive in expression|尖锐的，犀利的|In a quiet, carefully argued review, she made a ___ criticism of the plan, cutting straight to its central flaw.|His ___ wit, able to expose a weak argument in a single sentence, made him the most feared critic in London.|The editor wrote a calm but ___ reply that showed, in three short lines, exactly where the letter's argument went wrong.|vociferous,vacuous|trenchantly
+  vociferous|expressing opinions in a loud and forceful way|大声疾呼的，喧嚷的|At every rally she is a ___ critic of the war, shouting through a megaphone until her voice gives out.|The crowd outside the town hall was ___, chanting, booing and waving banners all afternoon.|There was ___ opposition to the plan, with hundreds of residents shouting their objections at the meeting.|quiescent,somnolent|vociferously
+  umbrage|offense or annoyance|不快，生气|She took ___ at his joke about her cooking and refused to speak to him for the rest of the evening.|He took ___ at being left off the guest list and sent the host a stiff, hurt letter.|Please don't take ___; I was only joking, and I never meant to insult you.|antipathy,alacrity|
+  vicarious|experienced in the imagination through another person|间接感受的|Though she never played sport herself, she took ___ pleasure in her son's success, feeling every goal he scored as if it were her own.|Adventure films give us ___ thrills: we feel the danger of the climb without ever leaving our seats.|Too shy to travel, he lived a ___ life through books, sharing the journeys of explorers from his armchair.|pliant,propitious|vicariously
+  veneer|a thin decorative layer; an attractive appearance that hides something|饰面；虚饰|The cheap table has a thin ___ of oak glued over chipboard, so it only looks like solid wood.|Beneath his ___ of calm he was terrified, and his hands shook under the table.|A thin ___ of politeness hid her anger; the moment the guests left, she began to shout.|umbrage,foible|
+  pliant|easily bent; easily influenced|柔韧的；易受影响的|The willow's ___ branches bend low in the storm and spring back without breaking.|The king wanted a ___ minister who would change his views to match each new order without a word of argument.|Rubbed with oil, the stiff old leather became soft and ___ again, easy to fold and stitch.|fractious,hidebound|pliancy
+  propitious|giving or indicating a good chance of success|有利的，吉利的|With prices low and interest rates falling, this is the most ___ moment in years to buy a house.|The weather was ___ for sailing: a steady breeze, clear skies and calm seas.|The signs were not ___: the ship's engine failed twice before it had even left the harbour.|adverse,transitory|propitiously
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **vociferous** crowd booed, but the critic's **trenchant** reply showed that the **myopic** plan saved money today and cost a fortune tomorrow. These ten words help you describe narrow or empty thinking, sharp or loud speech, and hidden feelings.",
+      "喧嚷的（**vociferous**）人群一片嘘声，但评论家犀利的（**trenchant**）回应指出，这个目光短浅的（**myopic**）计划今天省了钱，明天却要花大价钱。这十个词帮你描述狭隘或空洞的思维、犀利或喧闹的言辞，以及被掩盖的情感。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Trenchant** criticism is sharp and to the point, even if spoken quietly; **vociferous** criticism is loud, and it may not be clever at all.",
+        "**trenchant** 的批评一针见血，哪怕说得很平静；**vociferous** 的批评声音大，却未必有见地。",
+      ),
+      use: t(
+        "**Umbrage** almost always comes in the phrase take umbrage at something: you take umbrage at a remark, never feel an umbrage.",
+        "**umbrage** 几乎总用在 take umbrage at something 这个搭配里：take umbrage at a remark，不说 feel an umbrage。",
+      ),
+      spelling: t(
+        "**Vociferous** ends in -ous with an f in the middle, **propitious** ends in -tious, and **veneer** has a double e before the r.",
+        "**vociferous** 中间是 f，结尾 -ous；**propitious** 结尾是 -tious；**veneer** 的 r 前是双写 e。",
+      ),
+    },
+    notes: `
+      myopic|cutting a repair budget now when the leaking roof will cost ten times more later|a man who cannot read a bus number without his glasses|a factory plan that looks only at this year's profits|myopic means seeing only what is close, in the eyes or in time; trenchant means sharp and to the point in speech|myopic 是只看得见眼前（视力或眼光）；trenchant 是言辞犀利、切中要害|trenchant means sharp and to the point in what is said or written, not short-sighted about the future or about what the eyes can see|trenchant 是言辞犀利、切中要害，不是看不远或目光短浅|propitious means giving a good chance of success, the opposite of a choice that will cost far more later|propitious 是有利的、吉利的，和日后要付出更大代价正好相反|my · op · ic|the y that sounds like the i in *eye*|y 读音同 *eye* 中的 i
+      obfuscate|a minister hiding simple facts behind jargon and vague phrases|long technical words that keep readers from a plain account|muddled answers in court so no one can tell what a man did|obfuscate means to make something unclear on purpose; clarify means to make it clearer|obfuscate 是故意把事情搞模糊；clarify 是把事情说清楚|clarify means to make something clearer, the opposite of hiding the facts behind vague or muddled words|clarify 是把事情说清楚，和用含糊混乱的话掩盖事实正好相反|specify means to state something exactly and in detail, not to blur it so that nobody can follow|specify 是明确、具体地说明，不是把事情说得让人看不明白|ob · fus · cate|the f, not ph, and the -ate ending|是 f 而不是 ph，结尾是 -ate
+      vacuous|a blank smile with not a single thought behind it|two hours of empty chatter without one thoughtful idea|a comment on a film that shows no thought at all|vacuous means empty of thought; trenchant means sharp and full of insight|vacuous 是空洞无思想；trenchant 是犀利而有见地|trenchant means sharp and full of insight, the opposite of empty chatter or a blank stare|trenchant 是犀利而有见地，和空洞的闲聊、茫然的眼神正好相反|myopic means short-sighted, in the eyes or about the future, not empty of any thought|myopic 是近视或目光短浅，不是脑子里空无一物|vac · u · ous|the u between c and ous, as in *vacuum*|c 和 ous 之间有个 u，同 *vacuum*
+      trenchant|a quiet, carefully argued criticism that cuts to the central flaw|a wit able to expose a weak argument in one sentence|a calm reply showing in three lines where an argument went wrong|trenchant means sharp and to the point, however quietly said; vociferous means loud and forceful|trenchant 是犀利、切中要害，哪怕说得平静；vociferous 是大声而激烈|vociferous means loud and forceful, which clashes with a calm, quiet and carefully argued point|vociferous 是大声激烈的，和平静、论证严密的观点不相符|vacuous means empty of thought, the opposite of sharp words that find the exact flaw|vacuous 是空洞无思想，和一语中的的犀利言辞正好相反|trench · ant|the ch after n and the -ant ending|n 后面是 ch，结尾是 -ant
+      vociferous|a critic shouting through a megaphone at every rally|a crowd chanting, booing and waving banners all afternoon|hundreds of residents shouting their objections at a meeting|vociferous means loud and forceful in giving opinions; trenchant means sharp, whether loud or quiet|vociferous 是大声激烈地表达意见；trenchant 是犀利，不论声音大小|quiescent means quiet and inactive, the opposite of shouting, chanting and booing|quiescent 是安静、不活跃的，和大喊、齐声高呼、喝倒彩正好相反|somnolent means sleepy and drowsy, not loudly and forcefully giving opinions|somnolent 是昏昏欲睡的，不是大声激烈地发表意见|vo · cif · er · ous|the c that sounds like s and the -ous ending|c 读作 s，结尾是 -ous
+      umbrage|a woman refusing to speak after a joke about her cooking|a man sending a stiff, hurt letter after being left off a guest list|a plea not to feel insulted by a joke|umbrage is hurt offense at something said or done; antipathy is a deep, lasting dislike|umbrage 是因言行而生的不快；antipathy 是根深蒂固的反感|antipathy is a deep, long-held dislike, not sudden hurt at one remark, and you do not take antipathy at something|antipathy 是长久的深刻反感，不是因一句话而生的不快，也不说 take antipathy at|alacrity is cheerful readiness to do something, the opposite of feeling hurt and insulted|alacrity 是欣然乐意，和觉得受了冒犯正好相反|um · brage|the -age ending that sounds like *ij*|-age 结尾读作 *ij*
+      vicarious|a mother feeling her son's goals as if they were her own|feeling the danger of a climb without leaving one's seat|a shy man sharing explorers' journeys from his armchair|vicarious means felt through someone else's experience; pliant means easily bent or led|vicarious 是通过别人的经历间接感受的；pliant 是柔韧或易受摆布的|pliant means easily bent or easily led, not felt through someone else's life|pliant 是柔韧或易受摆布的，不是通过别人间接感受的|propitious means giving a good chance of success, not felt at second hand through another person|propitious 是有利的，不是通过他人间接体验的|vi · car · i · ous|the -ious ending|结尾是 -ious
+      veneer|a thin layer of oak glued over chipboard|a calm look covering real terror|a thin politeness hiding anger until the guests leave|a veneer is a thin outer layer that hides what is beneath; a foible is a small weakness of character|veneer 是掩盖内里的一层薄表面；foible 是性格上的小毛病|umbrage is hurt offense at a remark, not a thin layer or outward look covering something else|umbrage 是被冒犯的不快，不是掩盖内里的一层表面|a foible is a small, harmless weakness of character, not a thin surface that hides the truth|foible 是无伤大雅的小毛病，不是掩盖真相的表面|ve · neer|the double e before the r|r 前双写 e
+      pliant|willow branches bending in a storm and springing back|a minister who changes his views to match every order|stiff leather made soft and easy to fold with oil|pliant means easily bent or easily led; hidebound means stuck in old ways and unwilling to change|pliant 是柔韧或易受摆布的；hidebound 是墨守成规、不肯改变的|fractious means irritable and hard to control, the opposite of bending easily to pressure|fractious 是易怒难管的，和顺从地弯曲、听话正好相反|hidebound means stuck in tradition and unwilling to change, the opposite of bending easily|hidebound 是墨守成规、不肯改变的，和轻易弯曲、改变正好相反|pli · ant|the long i, as in *ply*|长音 i，同 *ply*
+      propitious|low prices and falling interest rates for buying a house|a steady breeze, clear skies and calm seas for sailing|an engine failing twice before a ship leaves harbour|propitious means giving a good chance of success; adverse means working against success|propitious 是有利的、吉利的；adverse 是不利的|adverse means harmful and working against success, the opposite of good chances and helpful conditions|adverse 是不利的，和成功机会大、条件有利正好相反|transitory means lasting only a short time, not giving a good chance of success|transitory 是短暂的，不是有利于成功的|pro · pi · tious|the -tious ending that sounds like *shus*|-tious 结尾读作 *shus*
+    `,
+  },
 );
 
 const characters = batch(
@@ -27,17 +61,50 @@ const characters = batch(
   ["Words for Characters in Company", "社交中人物的词"],
   ["the famous and the new, the clever and the gloomy, the fooled and the fooling", "名人与新手、聪明人与忧郁者、受骗者"],
   `
-  juggernaut|a huge, powerful force or institution that is hard to stop|不可阻挡的力量|The company became a retail ___.|The campaign was a ___.|The team rolled on like a ___.|savant,raconteur|juggernauts
-  lionize|to treat someone as a celebrity|把…捧为名人|The press began to ___ the young singer.|They ___ him as a hero.|Fans ___ every rock star.|dupe,histrionic|lionized
-  neophyte|a person who is new to a subject or activity|新手，初学者|The course is designed for the ___.|He is a ___ in politics.|Even a ___ can make good bread.|savant,misanthrope|neophytes
-  savant|a learned person, especially a distinguished scientist|博学之士|The ___ solved the puzzle in minutes.|She was a ___ of ancient languages.|The ___ lectured on stars.|neophyte,raconteur|savants
-  raconteur|a person who tells stories in a skillful and amusing way|善讲故事的人|Her uncle was a fine ___.|The ___ kept the guests laughing.|As a ___, he had no equal.|savant,jocular|raconteurs
-  misanthrope|a person who dislikes humankind|厌恶人类者|The old ___ lived alone.|He became a ___ after the war.|Only a ___ could hate this party.|neophyte,juggernaut|misanthropic,misanthropy
-  jocular|fond of or characterized by joking|诙谐的|He was in a ___ mood.|She gave a ___ reply.|The ___ host teased his guests.|dupe,lionize|jocularly
-  histrionic|overly theatrical or dramatic in character or style|做作的，演戏似的|Her ___ sobs fooled no one.|He made a ___ display of grief.|The actor's style was ___.|jocular,dupe|histrionics
-  maudlin|sentimental in a self-pitying way|伤感的，自怜的|He became ___ after a few drinks.|The song is ___.|Her ___ speech made us cringe.|histrionic,lionize|
-  dupe|a victim of deception; to deceive|受骗者；欺骗|He was the ___ of a clever trick.|Scammers try to ___ old people.|Don't be a ___.|lionize,neophyte|duped
+  juggernaut|a huge, powerful force or institution that is hard to stop|不可阻挡的力量|The small online bookshop grew into a retail ___, so huge and powerful that it crushed every rival in its path.|Once the campaign became a ___, with millions of supporters and unstoppable momentum, no rival could slow it down.|The champions rolled on like an unstoppable ___, flattening every team they met that season.|savant,raconteur|juggernauts
+  lionize|to treat someone as a celebrity|把…捧为名人|After her first hit, the press began to ___ the young singer, putting her on every cover and hanging on her every word.|When he came home from the rescue, the town chose to ___ him as a hero, with parades, speeches and a statue in the square.|Fans tend to ___ rock stars, treating them like royalty and copying the way they dress.|pillory,dupe|lionized
+  neophyte|a person who is new to a subject or activity|新手，初学者|The cookery course is designed for the complete ___ who has never even boiled an egg.|Though a ___ in politics, elected only last month, he spoke as if he had sat in parliament for years.|Even a ___ who has never baked before can make this bread by following five simple steps.|savant,misanthrope|neophytes
+  savant|a learned person, especially a distinguished scientist|博学之士|The ___, who had spent forty years studying ancient scripts, read the clay tablet in minutes.|She was a ___ of ancient languages, able to read Greek, Hebrew and Sanskrit with ease.|The visiting ___, a scientist famed for her discoveries about distant stars, lectured to a hall of astronomers.|neophyte,raconteur|savants
+  raconteur|a person who tells stories in a skillful and amusing way|善讲故事的人|Her uncle was a fine ___, and his tales of life at sea kept the whole family laughing at dinner.|The ___ kept the guests laughing for hours with funny stories about his travels.|As a ___, he had no equal: no one could tell a story with better timing or a funnier ending.|savant,misanthrope|raconteurs
+  misanthrope|a person who dislikes humankind|厌恶人类者|The old ___ lived alone at the end of the lane, scowling at anyone who came near and hating the whole human race.|Bitter after the war, he became a ___ who believed that all people were selfish and cruel and wanted nothing to do with them.|Only a true ___ who dislikes all people could fail to enjoy this warm and friendly party.|neophyte,juggernaut|misanthropic,misanthropy
+  jocular|fond of or characterized by joking|诙谐的|He was in a ___ mood, cracking jokes and teasing everyone at breakfast.|To lighten the tense meeting, she gave a ___ reply, joking that the budget was as thin as her patience.|The ___ host teased his guests with friendly jokes until the whole table was laughing.|histrionic,maudlin|jocularly
+  histrionic|overly theatrical or dramatic in character or style|做作的，演戏似的|Her ___ sobs, loud and theatrical like an actor's on a stage, fooled no one into thinking she was really hurt.|He made a ___ display of grief, falling to his knees and wailing for the cameras.|The actor's style was so ___—arms flung wide, every line shouted—that the audience laughed at the wrong moments.|maudlin,jocular|histrionics
+  maudlin|sentimental in a self-pitying way|伤感的，自怜的|After a few drinks he grew ___, weeping quietly into his glass about his lost youth and feeling sorry for himself.|The slow, soft song is so ___, full of sighing self-pity about lost love, that I switch it off.|Her ___ speech at the reunion, all quiet tears and sad memories of how hard life had been for her, made us cringe.|jocular,histrionic|
+  dupe|a victim of deception; to deceive|受骗者；欺骗|He was the ___ of a clever trick, handing over his savings to a man who promised to double them.|The scammers needed an easy ___, someone who would believe a stranger's prize was real and pay to claim it.|He was not just foolish but a ___, tricked by a fake letter into sending his bank details to a stranger.|neophyte,misanthrope|duped
   `,
+  "context-clues",
+  {
+    intro: t(
+      "At the party a **jocular** **raconteur** told stories while a lonely **misanthrope** scowled in the corner and a nervous **neophyte** tried to fit in. These ten words help you describe the people you meet: the famous, the new, the learned, the gloomy and the fooled.",
+      "聚会上，一位诙谐的（**jocular**）讲故事高手（**raconteur**）妙语连珠，角落里一个孤僻的厌世者（**misanthrope**）满脸不悦，一个紧张的新手（**neophyte**）则努力融入。这十个词帮你描述遇到的各种人：名人、新手、博学者、阴郁者和受骗者。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Histrionic** feeling is put on for show, loud and theatrical; **maudlin** feeling is real but soft and self-pitying, often after a drink.",
+        "**histrionic** 的情绪是演给人看的，夸张做作；**maudlin** 的情绪是真的，但软绵绵、自怜，常在喝酒之后。",
+      ),
+      use: t(
+        "A **neophyte** is new to something and a **savant** is deeply learned in it, so you are a neophyte in politics but a savant of ancient languages.",
+        "**neophyte** 是某方面的新手，**savant** 是某方面的饱学之士，所以说 a neophyte in politics，却说 a savant of ancient languages。",
+      ),
+      spelling: t(
+        "**Neophyte** and **misanthrope** both hide a Greek ph or th, **raconteur** ends in French -eur, and **juggernaut** has a double g.",
+        "**neophyte** 和 **misanthrope** 都带希腊词源的 ph 或 th；**raconteur** 以法语式的 -eur 结尾；**juggernaut** 双写 g。",
+      ),
+    },
+    notes: `
+      juggernaut|a small bookshop grown so huge it crushes every rival|a campaign with millions of supporters that no rival can slow|champions flattening every team they meet in a season|a juggernaut is a huge force that cannot be stopped; a savant is a learned person|juggernaut 是势不可挡的庞大力量；savant 是博学之士|a savant is a learned person, not a huge, unstoppable force that crushes rivals|savant 是博学之士，不是压倒对手、势不可挡的庞大力量|a raconteur is a person who tells amusing stories, not a huge force that flattens everything|raconteur 是会讲有趣故事的人，不是碾压一切的庞大力量|jug · ger · naut|the double g and the -naut ending, as in *astronaut*|双写 g，结尾 -naut 同 *astronaut*
+      lionize|the press putting a young singer on every cover and hanging on her words|a town giving a hero parades, speeches and a statue|fans treating rock stars like royalty|lionize means to treat someone as a celebrity; pillory means to attack someone publicly|lionize 是把人捧成名人；pillory 是公开抨击|pillory means to attack or mock someone publicly, the opposite of treating them as a hero|pillory 是公开抨击或嘲弄，和把人当英雄捧正好相反|dupe means to trick someone, not to honour them as a famous hero|dupe 是欺骗人，不是把人当名人英雄来推崇|li · on · ize|the -ize ending after *lion*|*lion* 后加 -ize
+      neophyte|a cookery course for someone who has never boiled an egg|a politician elected only last month|a person who has never baked before following five steps|a neophyte is new to an activity; a savant is deeply learned in it|neophyte 是某方面的新手；savant 是某方面的饱学之士|a savant is a deeply learned expert, the opposite of someone who is just starting out|savant 是饱学之士，和刚入门的新手正好相反|a misanthrope is a person who dislikes all people, not someone new to an activity|misanthrope 是厌恶人类的人，不是某方面的新手|ne · o · phyte|the ph that sounds like f and the y like the i in *bite*|ph 读作 f，y 读音同 *bite* 中的 i
+      savant|a scholar of ancient scripts who reads a tablet in minutes|a woman who reads Greek, Hebrew and Sanskrit with ease|a famous scientist lecturing to astronomers|a savant is a deeply learned person; a neophyte is a beginner|savant 是饱学之士；neophyte 是新手|a neophyte is a beginner who is new to a subject, the opposite of someone with years of deep learning|neophyte 是刚入门的新手，和学识深厚的人正好相反|a raconteur is good at telling amusing stories, not known for deep learning or scientific discovery|raconteur 擅长讲有趣的故事，不以学识或科学发现著称|sa · vant|the French -ant ending, said *vahnt*|法语式结尾 -ant，读作 *vahnt*
+      raconteur|an uncle whose tales of the sea keep the family laughing|a guest telling funny travel stories for hours|a man with perfect timing and funny endings in every story|a raconteur tells stories well and amusingly; a savant is learned in a subject|raconteur 擅长讲有趣的故事；savant 是学识渊博的人|a savant is a deeply learned scholar, not a person loved for amusing stories|savant 是学识渊博的学者，不是因会讲故事而受欢迎的人|a misanthrope dislikes people and avoids them, not someone who keeps a table laughing|misanthrope 厌恶并回避他人，不是逗得满桌人发笑的人|ra · con · teur|the French -eur ending|法语式结尾 -eur
+      misanthrope|an old man living alone and hating the whole human race|a bitter man who thinks all people are selfish and cruel|someone who dislikes everyone so much he cannot enjoy a friendly party|a misanthrope dislikes people in general; a neophyte is simply new to something|misanthrope 厌恶整个人类；neophyte 只是新手|a neophyte is a beginner at something, not a person who hates the human race|neophyte 是新手，不是憎恨人类的人|a juggernaut is a huge unstoppable force, not a lonely person who hates others|juggernaut 是势不可挡的力量，不是厌恶他人的孤僻者|mis · an · thrope|the th and the silent e at the end|th 组合，结尾 e 不发音
+      jocular|a man cracking jokes and teasing everyone at breakfast|a joking reply that lightens a tense meeting|a host teasing guests until the table laughs|jocular means fond of joking; histrionic means overly dramatic|jocular 是爱开玩笑的；histrionic 是做作夸张的|histrionic means overly dramatic and theatrical, not light and joking|histrionic 是夸张做作的，不是轻松诙谐的|maudlin means tearful and self-pitying, the opposite of cheerful joking|maudlin 是伤感自怜的，和愉快地开玩笑正好相反|joc · u · lar|the -ar ending, not -er|结尾是 -ar 而不是 -er
+      histrionic|loud, theatrical sobs that fool no one|a man falling to his knees and wailing for cameras|an actor flinging his arms wide and shouting every line|histrionic means theatrical and put on for show; maudlin means tearfully self-pitying|histrionic 是做作、演给人看的；maudlin 是伤感自怜的|maudlin means quietly tearful and sorry for oneself, not loud and theatrical for an audience|maudlin 是默默流泪、自怜，不是夸张地演给观众看|jocular means joking and playful, not loudly dramatic about grief or pain|jocular 是诙谐爱开玩笑的，不是对悲痛夸张做作|his · tri · on · ic|the -ic ending and the i after r|r 后是 i，结尾 -ic
+      maudlin|a man weeping quietly into his glass about his lost youth|a slow song full of sighing self-pity about lost love|a reunion speech of quiet tears about how hard life has been|maudlin means tearfully self-pitying; histrionic means loudly theatrical|maudlin 是伤感自怜的；histrionic 是夸张做作的|jocular means joking and cheerful, the opposite of tearful self-pity|jocular 是诙谐愉快的，和流泪自怜正好相反|histrionic means loud and theatrical for show, not quiet, soft self-pity|histrionic 是夸张做作给人看的，不是安静柔弱的自怜|maud · lin|the au, as in *taught*|au 读音同 *taught*
+      dupe|a man who hands his savings to a trickster|an easy target who believes a stranger's prize is real|a man tricked by a fake letter into sending his bank details|a dupe is a person who has been tricked; a neophyte is just new to something|dupe 是受骗的人；neophyte 只是新手|a neophyte is just new to an activity, not someone who has been fooled by a trick|neophyte 只是新手，不是被骗的人|a misanthrope dislikes people and trusts no one, not a person who is easily fooled|misanthrope 厌恶他人、谁也不信，不是轻易上当的人|dupe|the long u and the silent e|长音 u，结尾 e 不发音
+    `,
+  },
 );
 
 const passing = batch(
@@ -45,17 +112,50 @@ const passing = batch(
   ["Words of the Fleeting and the Sharp", "短暂与刺激之物的词"],
   ["brief things, plenty, health, strong smells and restless moods", "短暂之物、充裕、健康、强烈气味与不安情绪"],
   `
-  transitory|not permanent|短暂的|Fame is ___.|The pain was ___.|They live a ___ life on the road.|profuse,foible|
-  profuse|abundant; plentiful|大量的；毛发的|She offered ___ apologies.|He was bleeding ___.|The roses gave a ___ bloom.|transitory,salubrious|profusely,profusion
-  salubrious|health-giving; healthy; pleasant|有益健康的|They moved to a more ___ climate.|The ___ air of the mountains helped her.|It was not a ___ neighborhood.|pungent,profuse|
-  pungent|having a sharply strong taste or smell|刺鼻的，辛辣的|The ___ smell of garlic filled the room.|Some cheeses are very ___.|He made ___ remarks about the government.|salubrious,fractious|pungency
-  fractious|irritable and quarrelsome; hard to control|易怒的；难以控制的|The ___ child refused to sleep.|The party is ___ and divided.|A ___ horse threw its rider.|alacrity,pungent|fractiously
-  restive|unable to keep still; restless and impatient|焦躁不安的|The crowd grew ___ as the delay went on.|The ___ horse stamped its feet.|Voters are ___.|alacrity,foible|restiveness
-  alacrity|brisk and cheerful readiness|乐意，欣然|She accepted the invitation with ___.|He moved with ___.|They agreed with surprising ___.|restive,antipathy|
-  foible|a minor weakness or eccentricity in someone's character|小缺点|We forgive a friend's every ___.|His one ___ is being late.|She laughed at her own small ___.|antipathy,apocryphal|foibles
-  apocryphal|of doubtful authenticity, although widely circulated as being true|可疑的，杜撰的|The story is probably ___.|An ___ tale says he never slept.|Many quotes are ___.|foible,transitory|
-  antipathy|a deep-seated feeling of dislike|反感，憎恶|She felt ___ toward her rival.|There is a long ___ between the clans.|His ___ to change is well known.|foible,alacrity|antipathies
+  transitory|not permanent|短暂的|Fame on social media is ___, lasting a week at most before the next new star takes your place.|The pain after the injection was ___, gone within a minute or two.|Their happiness that summer was ___, ending when the holidays were over and they went back to their separate cities.|apocryphal,salubrious|
+  profuse|abundant; plentiful|大量的；毛发的|She offered ___ apologies, saying sorry again and again for breaking the vase.|The cut on his forehead caused ___ bleeding, soaking three towels before the doctor arrived.|In June the old bush gives a ___ show of roses, hundreds of blooms covering every branch.|minimal,paltry|profusely,profusion
+  salubrious|health-giving; healthy; pleasant|有益健康的|Doctors told them to move to a more ___ climate, with clean, dry mountain air that would help her weak lungs.|The fresh, clean and ___ air of the mountains helped her recover from the long illness.|It was not a ___ neighbourhood: the streets were dirty, the air was smoky and the drains smelled.|noisome,pungent|
+  pungent|having a sharply strong taste or smell|刺鼻的，辛辣的|The ___ smell of garlic and chilli filled the kitchen, stinging our eyes.|Some blue cheeses are so ___ that their sharp, strong smell fills the whole fridge.|The ___ taste of raw horseradish burns the nose and makes your eyes water.|cloying,salubrious|pungency
+  fractious|irritable and quarrelsome; hard to control|易怒的；难以控制的|The ___ toddler, tired and cross, screamed, kicked and fought every attempt to put him to bed.|The party is ___ and divided, its members quarrelling so bitterly that they cannot agree on a leader.|A ___ horse, bad-tempered and hard to handle, threw its rider into the mud.|pliant,jocular|fractiously
+  restive|unable to keep still; restless and impatient|焦躁不安的|The crowd grew ___ as the delay went on, shuffling, sighing and checking their watches every minute.|The ___ horse stamped its feet and tossed its head, impatient for the race to start.|After months of rising prices and no change, voters are ___, impatient for the government to act.|quiescent,somnolent|restiveness
+  alacrity|brisk and cheerful readiness|乐意，欣然|She accepted the invitation with ___, saying yes before he had even finished asking.|Keen to help, he moved with ___, fetching chairs and laying the tables before anyone asked.|They agreed to the plan with surprising ___, eager to get started at once.|lassitude,antipathy|
+  foible|a minor weakness or eccentricity in someone's character|小缺点|Grandpa's one harmless ___ is humming loudly while he reads the newspaper.|His only ___ is being late, a small fault that his friends have learned to laugh about.|She laughed at her own little ___ of keeping every receipt in a shoebox.|antipathy,umbrage|foibles
+  apocryphal|of doubtful authenticity, although widely circulated as being true|可疑的，杜撰的|The story that he once swam across the frozen lake is probably ___; no one has ever found a witness.|One famous but ___ tale, told often but never proved, says the king never slept more than four hours a night.|Many quotes found online are ___: Einstein never actually said most of the words that are credited to him.|authentic,transitory|
+  antipathy|a deep-seated feeling of dislike|反感，憎恶|She felt a deep ___ toward her rival, a dislike that had grown over many years.|There is a long ___ between the two clans, who have hated each other for centuries.|His ___ to change is well known: he has fought every new idea at the school for twenty years.|foible,alacrity|antipathies
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **restive** passengers waited in the **pungent** smell of diesel, but their bad mood was **transitory**: when the train came, they climbed aboard with **alacrity**. These ten words help you describe brief and lasting things, strong smells, health, restless moods and likes and dislikes.",
+      "焦躁的（**restive**）乘客在刺鼻的（**pungent**）柴油味中等待，但坏心情很短暂（**transitory**）：火车一到，大家都欣然（**alacrity**）上车。这十个词帮你描述短暂与长久之物、强烈气味、健康、不安情绪以及好恶。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **foible** is a small, harmless weakness you can laugh at; an **antipathy** is a deep dislike that may last for years.",
+        "**foible** 是可以一笑置之的小毛病；**antipathy** 是可能持续多年的深刻反感。",
+      ),
+      use: t(
+        "**Alacrity** usually follows with: you accept, agree or move with alacrity, just as you might act with eagerness.",
+        "**alacrity** 通常跟在 with 后面：accept、agree 或 move with alacrity，就像 with eagerness 一样。",
+      ),
+      spelling: t(
+        "**Apocryphal** has a y and a ph, **salubrious** ends in -ious, and **pungent** has a soft g before -ent.",
+        "**apocryphal** 中有 y 和 ph；**salubrious** 结尾是 -ious；**pungent** 中 -ent 前的 g 发软音。",
+      ),
+    },
+    notes: `
+      transitory|fame online lasting a week before the next star arrives|pain gone within a minute or two|a summer's happiness ending when the holidays are over|transitory means lasting only a short time; apocryphal means probably not true|transitory 是短暂的；apocryphal 是可能杜撰的|apocryphal means probably untrue though often told, not lasting only a short time|apocryphal 是常被传说却可能不真实的，不是短暂的|salubrious means healthy and health-giving, not brief and soon gone|salubrious 是有益健康的，不是短暂易逝的|tran · si · to · ry|the -ory ending, not -ary|结尾是 -ory 而不是 -ary
+      profuse|apologies said again and again for a broken vase|bleeding that soaks three towels|hundreds of roses covering every branch|profuse means pouring out in great amounts; minimal means the smallest possible amount|profuse 是大量涌出的；minimal 是极少的|minimal means the smallest possible amount, the opposite of pouring out again and again|minimal 是极少的，和一遍又一遍、大量涌出正好相反|paltry means small and worthless, not great and overflowing in amount|paltry 是微不足道的，不是大量的|pro · fuse|the long u and the silent e at the end|长音 u，结尾 e 不发音
+      salubrious|clean, dry mountain air that helps weak lungs|fresh mountain air helping someone recover from illness|dirty streets, smoky air and smelly drains that are not healthy|salubrious means healthy and pleasant to live in; noisome means foul-smelling and nasty|salubrious 是有益健康、宜居的；noisome 是恶臭讨厌的|noisome means foul-smelling and unpleasant, the opposite of clean, healthy air|noisome 是恶臭讨厌的，和清新健康的空气正好相反|pungent means sharply strong in smell or taste, not good for health|pungent 是气味或味道刺激的，不是有益健康的|sa · lu · bri · ous|the -ious ending|结尾是 -ious
+      pungent|garlic and chilli smells stinging the eyes in a kitchen|blue cheese whose sharp smell fills a fridge|raw horseradish that burns the nose|pungent means sharply strong in smell or taste; cloying means too sweet|pungent 是辛辣刺鼻的；cloying 是甜得发腻的|cloying means sickly sweet, not sharp and stinging like garlic or horseradish|cloying 是甜得发腻的，不是像大蒜、辣根那样辛辣刺激|salubrious means healthy and pleasant, not a sharp smell or taste that stings|salubrious 是有益健康的，不是刺鼻辛辣的气味|pun · gent|the soft g before -ent|-ent 前的 g 发软音
+      fractious|a tired toddler screaming and fighting bedtime|party members quarrelling too bitterly to agree on a leader|a bad-tempered horse that throws its rider|fractious means irritable and hard to control; pliant means easily bent or led|fractious 是易怒难管的；pliant 是柔顺听话的|pliant means easily bent or led, the opposite of cross, quarrelsome and hard to handle|pliant 是柔顺听话的，和暴躁、爱争吵、难以驾驭正好相反|jocular means playful and joking, not cross and quarrelsome|jocular 是诙谐爱开玩笑的，不是暴躁爱争吵的|frac · tious|the -tious ending that sounds like *shus*|-tious 结尾读作 *shus*
+      restive|a crowd shuffling and checking watches during a delay|a horse stamping and tossing its head before a race|voters impatient for the government to act|restive means restless and impatient; fractious means cross and quarrelsome|restive 是焦躁不安的；fractious 是暴躁爱争吵的|quiescent means quiet and still, the opposite of shuffling, stamping and impatience|quiescent 是安静不动的，和来回走动、跺脚、不耐烦正好相反|somnolent means sleepy and drowsy, not restless and impatient|somnolent 是昏昏欲睡的，不是焦躁不安的|res · tive|the -ive ending|结尾是 -ive
+      alacrity|saying yes before the question is even finished|fetching chairs and laying tables before anyone asks|eagerness to start a plan at once|alacrity is brisk, cheerful readiness; lassitude is tired lack of energy|alacrity 是欣然、敏捷的乐意；lassitude 是倦怠无力|lassitude is weariness and lack of energy, the opposite of eager, quick readiness|lassitude 是倦怠无力，和积极爽快正好相反|antipathy is deep dislike, the opposite of eagerly saying yes|antipathy 是深刻的反感，和欣然答应正好相反|a · lac · ri · ty|the -ity ending|结尾是 -ity
+      foible|an old man humming loudly while he reads|always being late, a small fault friends laugh about|keeping every receipt in a shoebox|a foible is a small, harmless weakness; antipathy is a deep dislike|foible 是无伤大雅的小毛病；antipathy 是深刻的反感|antipathy is a deep, lasting dislike of someone, not a small, harmless habit of one's own|antipathy 是对他人深刻持久的反感，不是自己无伤大雅的小习惯|umbrage is hurt offense at a remark, not a little habit people laugh about|umbrage 是被冒犯的不快，不是让人一笑的小习惯|foi · ble|the oi, as in *coin*, and the -le ending|oi 读音同 *coin*，结尾是 -le
+      apocryphal|a tale of swimming a frozen lake that no witness backs up|a famous story told often but never proved|quotes credited to Einstein that he never said|apocryphal means widely told but probably untrue; authentic means genuine|apocryphal 是广为流传却可能杜撰的；authentic 是真实可信的|authentic means genuine and proved, the opposite of a tale that no one can back up|authentic 是真实可信的，和无人能证实的传说正好相反|transitory means lasting only a short time, not doubtful or probably untrue|transitory 是短暂的，不是真假存疑的|a · poc · ry · phal|the y after r and the ph that sounds like f|r 后是 y，ph 读作 f
+      antipathy|a dislike of a rival grown over many years|two clans who have hated each other for centuries|a man who has fought every new idea for twenty years|antipathy is a deep, lasting dislike; a foible is a small weakness|antipathy 是深刻持久的反感；foible 是小毛病|a foible is a small, harmless weakness, not a deep hatred that lasts for years|foible 是无伤大雅的小毛病，不是持续多年的深刻憎恶|alacrity is cheerful readiness, the opposite of a deep dislike|alacrity 是欣然乐意，和深刻的反感正好相反|an · tip · a · thy|the th and the y at the end|th 组合，结尾是 y
+    `,
+  },
 );
 
 const startEnd = batch(
@@ -63,17 +163,50 @@ const startEnd = batch(
   ["Words for Starting and Finishing", "开始与完成的词"],
   ["academic words for beginnings, steps and endings", "表示开端、步骤和结束的学术词"],
   `
-  commence|to begin|开始|The ceremony will ___ at noon.|Work will ___ next week.|Let the games ___.|precede,undertake|commenced,commencement
-  initiate|to cause a process or action to begin|发起，开始|They will ___ talks next month.|Who will ___ the project?|The club will ___ new members tonight.|eventual,preliminary|initiated,initiation,initiative
-  cease|to come to an end; to stop|停止|The firing must ___ at once.|The rain did not ___ all day.|The company will ___ trading.|precede,eventual|ceased,ceaseless
-  terminate|to bring to an end|终止|They decided to ___ the contract.|The train will ___ at the next station.|The boss may ___ his employment.|proceed,eventual|terminated,termination
-  proceed|to begin or continue a course of action|继续进行|Please ___ to gate five.|We will ___ with the plan.|Let's ___ with caution.|precede,undertake|proceeded,proceedings
-  precede|to come before in time or order|在…之前|A short film will ___ the main feature.|Thunder will ___ the storm.|A speech will ___ the dinner.|proceed,commence|preceded,preceding
-  undertake|to commit oneself to and begin a task|承担，着手|She agreed to ___ the research.|He will ___ the journey alone.|We ___ to finish by Friday.|precede,eventual|undertook,undertaken,undertaking
-  eventual|occurring at the end of a process|最终的|The ___ winner was a young skater.|Her ___ goal is to be a doctor.|The ___ cost was huge.|preliminary,cease|eventually
-  ultimate|being the best or most extreme; final|最终的；极致的|Their ___ aim is peace.|It is the ___ sports car.|Who bears ___ responsibility?|preliminary,commence|ultimately
-  preliminary|coming before a more important action or event|初步的，预备的|The ___ results look good.|They held ___ talks.|After a few ___ remarks, she began.|commence,cease|preliminaries
+  commence|to begin|开始|The graduation ceremony will ___ at noon sharp, so please be in your seats by a quarter to twelve.|Building work will ___ next Monday, when the first diggers arrive on the empty site.|The judge rang the bell to let the race ___, and the first runners sprang from the line.|precede,undertake|commenced,commencement
+  initiate|to cause a process or action to begin|发起，开始|The two countries will ___ peace talks next month, the first time they have spoken in ten years.|She was the first to ___ the recycling project, getting it off the ground with a letter to every family.|The club will ___ new members tonight with a secret ceremony that welcomes them in.|terminate,precede|initiated,initiation,initiative
+  cease|to come to an end; to stop|停止|The general ordered that the firing must ___ at once, and the guns fell silent.|The rain did not ___ all day; it poured from dawn until dark.|The company will ___ trading at the end of the month and close all its shops for good.|proceed,commence|ceased,ceaseless
+  terminate|to bring to an end|终止|They decided to ___ the contract early, ending the deal two years before it was due to run out.|This train will ___ at the next station, so all passengers must get off there.|The manager may ___ his employment if he keeps arriving late, and he will lose his job.|commence,initiate|terminated,termination
+  proceed|to begin or continue a course of action|继续进行|Passengers for Paris should now ___ to gate five, where the plane is ready for boarding.|After a short break, we will ___ with the rest of the meeting from where we left off.|Drivers should ___ with caution on the icy road ahead.|precede,undertake|proceeded,proceedings
+  precede|to come before in time or order|在…之前|A short cartoon will ___ the main film, so the feature itself begins at eight.|A flash of lightning will usually ___ the roll of thunder by a few seconds.|A welcome speech will ___ the dinner, and the food will be served once it ends.|proceed,commence|preceded,preceding
+  undertake|to commit oneself to and begin a task|承担，着手|She agreed to ___ the research, a task that will take her three years to finish.|He will ___ the long journey across the desert alone, carrying everything he needs on one camel.|We ___ to finish the work by Friday, and we will keep that promise.|precede,terminate|undertook,undertaken,undertaking
+  eventual|occurring at the end of a process|最终的|After three long rounds, the ___ winner was a young skater nobody had heard of.|Her ___ goal, after years of study, is to become a doctor.|The ___ cost of the bridge, once it was finally finished, was three times the first estimate.|preliminary,initial|eventually
+  ultimate|being the best or most extreme; final|最终的；极致的|Their ___ aim, the final goal behind all their smaller steps, is lasting peace.|Fast, beautiful and very expensive, it is the ___ sports car, the best that money can buy.|As head of the company, she bears ___ responsibility, and the final blame rests with her.|preliminary,initial|ultimately
+  preliminary|coming before a more important action or event|初步的，预备的|The ___ results, based only on the first week of testing, look good.|They held ___ talks to prepare the ground before the main meeting in June.|After a few ___ remarks to welcome everyone, she began the real lecture.|eventual,ultimate|preliminaries
   `,
+  "context-clues",
+  {
+    intro: t(
+      "After some **preliminary** checks, the race will **commence** at nine and **cease** only when the last runner crosses the line. These ten words help you talk, in formal and academic English, about beginnings, the steps that follow and endings.",
+      "经过一些初步的（**preliminary**）检查，比赛将于九点开始（**commence**），直到最后一名选手冲线才会停止（**cease**）。这十个词帮你用正式的学术英语谈论开端、后续步骤与结束。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Precede** means to come before, while **proceed** means to go on; one letter pattern separates *before* from *forward*.",
+        "**precede** 是在……之前，**proceed** 是继续进行；拼写只差一点，意思却是“之前”和“向前”。",
+      ),
+      use: t(
+        "**Undertake to** do something means to promise to do it, as in we undertake to finish by Friday, not only to begin it.",
+        "**undertake to** do something 是承诺做某事，如 we undertake to finish by Friday，不只是开始做。",
+      ),
+      spelling: t(
+        "**Proceed** ends in -ceed but **precede** ends in -cede, and **preliminary** has an i before -nary.",
+        "**proceed** 结尾是 -ceed，**precede** 结尾是 -cede；**preliminary** 中 -nary 前是 i。",
+      ),
+    },
+    notes: `
+      commence|a graduation ceremony starting at noon sharp|building work starting when the first diggers arrive|a race starting when the judge rings the bell|commence is a formal word for to begin; precede means to come before something else|commence 是“开始”的正式说法；precede 是在某事之前|precede means to come before something else, and it needs that other thing after it, not a start time on its own|precede 是在某事之前，后面要接另一件事，不能单独接开始时间|undertake means to take on a task, and it needs the task after it, so it is not simply to begin|undertake 是承担任务，后面要接任务，不是单纯的“开始”|com · mence|the double m and the -ence ending|双写 m，结尾是 -ence
+      initiate|two countries starting peace talks for the first time in ten years|the first person getting a recycling project off the ground|a club welcoming new members with a secret ceremony|initiate means to start something or bring someone in; terminate means to end it|initiate 是发起或接纳入会；terminate 是终止|terminate means to bring something to an end, the opposite of starting it or welcoming people in|terminate 是终止，和发起或接纳新人正好相反|precede means to come before something, not to start a process or welcome members|precede 是在某事之前，不是发起或接纳成员|in · i · ti · ate|the t that sounds like *sh*|t 读作 *sh*
+      cease|guns falling silent when the firing must stop|rain that pours from dawn until dark without stopping|a company closing all its shops for good|cease means to stop; proceed means to go on|cease 是停止；proceed 是继续进行|proceed means to go on, the opposite of falling silent or closing for good|proceed 是继续进行，和停下、永久关闭正好相反|commence means to begin, the opposite of stopping|commence 是开始，和停止正好相反|cease|the ea and the soft c, as in *crease*|ea 组合，c 读作 s，同 *crease*
+      terminate|a contract ended two years early|a train whose journey ends at the next station|a manager ending a man's job for lateness|terminate means to bring something to an end; initiate means to start it|terminate 是终止；initiate 是发起|commence means to begin, the opposite of ending a deal or a journey|commence 是开始，和结束交易或行程正好相反|initiate means to start something, the opposite of ending it|initiate 是发起，和终止正好相反|ter · mi · nate|the -ate ending, as in *late*|结尾 -ate 读音同 *late*
+      proceed|passengers going on to gate five for boarding|a meeting going on after a break|drivers going forward with caution on an icy road|proceed means to go on or go forward; precede means to come before|proceed 是继续、前往；precede 是在……之前|precede means to come before something, not to go on to a gate or carry on with a meeting|precede 是在……之前，不是前往登机口或继续开会|undertake means to take on a task, not to move forward to a place or carry on|undertake 是承担任务，不是前往某处或继续进行|pro · ceed|the -ceed ending with a double e|结尾 -ceed 双写 e
+      precede|a cartoon shown before the main film|lightning coming a few seconds before thunder|a speech given before the dinner is served|precede means to come before; proceed means to go on|precede 是在……之前；proceed 是继续进行|proceed means to go on with something, not to come before another event|proceed 是继续进行，不是发生在另一件事之前|commence means to begin, not to come earlier than something else|commence 是开始，不是比另一件事更早|pre · cede|the -cede ending with one e in the middle|结尾 -cede，中间只有一个 e
+      undertake|agreeing to take on three years of research|setting off alone across a desert with one camel|promising to finish the work by Friday|undertake means to take on a task or promise to do it; precede means to come before|undertake 是承担任务或承诺；precede 是在……之前|precede means to come before something, not to take on a task or make a promise|precede 是在……之前，不是承担任务或作出承诺|terminate means to end something, the opposite of taking on a new task|terminate 是终止，和承担新任务正好相反|un · der · take|the two parts *under* and *take*|由 *under* 和 *take* 两部分组成
+      eventual|the winner after three long rounds|a goal reached after years of study|the cost of a bridge once it is finally finished|eventual means coming at the end of a process; preliminary means coming before the main part|eventual 是最终的；preliminary 是初步的|preliminary means coming first, before the main part, the opposite of what comes at the end|preliminary 是初步的、在主体之前，和最终的正好相反|initial means at the beginning, the opposite of what happens at the end|initial 是起初的，和最终的正好相反|e · ven · tu · al|the tu that sounds like *chew*|tu 读音同 *chew*
+      ultimate|the final goal behind all smaller steps|the best sports car money can buy|the final blame resting with the head of a company|ultimate means final or the very best; preliminary means coming first, before the main part|ultimate 是最终的或极致的；preliminary 是初步的|preliminary means early and preparing for something, not final or the very best|preliminary 是初步的、预备的，不是最终的或极致的|initial means at the very start, not final and not the best of all|initial 是起初的，不是最终的或最好的|ul · ti · mate|the -ate ending that sounds like *it*|结尾 -ate 读作 *it*
+      preliminary|results based only on the first week of testing|talks preparing the ground before a main meeting|welcoming remarks before the real lecture|preliminary means coming before the main event; eventual means coming at the end|preliminary 是初步的；eventual 是最终的|eventual means coming at the end, not early and preparing the way|eventual 是最终的，不是初步的、准备性的|ultimate means final or the very best, not a first step before the main part|ultimate 是最终的或极致的，不是主体之前的第一步|pre · lim · i · nar · y|the i before -nary|-nary 前是 i
+    `,
+  },
 );
 
 const moreLess = batch(
@@ -81,17 +214,50 @@ const moreLess = batch(
   ["Words for More and Less", "增多与减少的词"],
   ["academic words for growing, shrinking and being enough", "表示增长、缩小和足够的学术词"],
   `
-  accumulate|to gather or build up over time|积累|Dust will ___ on the shelves.|She managed to ___ a fortune.|Snow began to ___ on the roads.|exceed,diminish|accumulated,accumulation
-  exceed|to be greater than; to go beyond a limit|超过|The cost may ___ our budget.|Don't ___ the speed limit.|Her results ___ our hopes.|accumulate,minimize|exceeded,exceedingly
-  maximize|to make as large or great as possible|最大化|Firms try to ___ profits.|She tried to ___ her chances.|Open the curtains to ___ the light.|minimize,accumulate|maximized
-  minimize|to reduce to the smallest possible amount|最小化；轻视|Wash your hands to ___ the risk.|He tried to ___ his mistakes.|Close the window to ___ the noise.|maximize,accentuate|minimized
-  diminish|to make or become less|减少，减弱|The pain will ___ over time.|Nothing can ___ her success.|Supplies began to ___.|accumulate,enhance|diminished,diminishing
-  enhance|to improve the quality, value or extent of|提高，增强|Good lighting can ___ a room.|The scandal did not ___ his reputation.|Spices ___ the flavor.|diminish,exceed|enhanced,enhancement
-  accentuate|to make more noticeable|强调，使突出|The dress will ___ her waist.|The music seemed to ___ the sadness.|Bold lines ___ the shape.|minimize,exceed|accentuated
-  appreciable|large or important enough to be noticed|可观的，明显的|There was an ___ drop in crime.|The change made no ___ difference.|An ___ number of people agreed.|minimal,sufficient|appreciably
-  minimal|of a minimum amount, quantity or degree|最小的，极少的|The damage was ___, just a scratch.|They live on ___ income.|The work needs only ___ effort.|appreciable,sufficient|minimally
-  sufficient|enough; adequate|足够的|Do we have ___ food for the trip?|One example is ___.|There was not ___ evidence.|minimal,appreciable|sufficiently,sufficiency
+  accumulate|to gather or build up over time|积累|If you never dust, a grey layer will slowly ___ on the shelves.|Over forty years of careful saving, she managed to ___ a small fortune, adding a little to it every month.|Snow began to ___ on the roads, growing deeper every hour.|exceed,diminish|accumulated,accumulation
+  exceed|to be greater than; to go beyond a limit|超过|The repairs may ___ our budget, costing more than the total we have to spend.|Drivers who ___ the speed limit, going faster than the law allows, will be fined.|Her exam results ___ even our highest hopes; she did far better than anyone expected.|accumulate,minimize|exceeded,exceedingly
+  maximize|to make as large or great as possible|最大化|Firms try to ___ profits, making them as large as they possibly can.|She took every practice test to ___ her chances of getting the highest possible score.|Open all the curtains wide to ___ the light in this dark room.|minimize,exceed|maximized
+  minimize|to reduce to the smallest possible amount|最小化；轻视|Wash your hands often to ___ the risk of catching a cold, keeping it as small as possible.|He tried to ___ his mistakes, saying they were tiny and did not matter.|Close the windows to ___ the noise from the busy road outside.|maximize,accentuate|minimized
+  diminish|to make or become less|减少，减弱|The pain will slowly ___ over the next few days until it is gone.|Rumours that she cheated cannot ___ her success, for she earned every prize fairly.|As the siege went on, food supplies began to ___ until only a few sacks of rice were left.|accumulate,enhance|diminished,diminishing
+  enhance|to improve the quality, value or extent of|提高，增强|Soft, warm lighting can ___ a room, making it look cosier and more inviting.|The scandal did nothing to ___ his reputation; in fact, it badly damaged it.|A pinch of salt and some fresh herbs will ___ the flavour of the soup.|diminish,exceed|enhanced,enhancement
+  accentuate|to make more noticeable|强调，使突出|The tight belt will ___ her narrow waist, drawing the eye straight to it.|The slow, sad music seemed to ___ the gloom of the scene, making it even more noticeable.|In the drawing, bold black lines ___ the shape of the building.|minimize,exceed|accentuated
+  appreciable|large or important enough to be noticed|可观的，明显的|After the new street lights went up, there was a clear and ___ drop in crime that everyone noticed.|The new glasses made no ___ difference to his reading: he still could not see the small print.|The heavy rain caused ___ damage to the crops, a loss that farmers could see at a glance across every field.|minimal,sufficient|appreciably
+  minimal|of a minimum amount, quantity or degree|最小的，极少的|The damage was ___, just one small scratch on the bumper.|They lived on an income so ___ that they often skipped meals and wore their coats indoors.|The puzzle needs only ___ effort; a child could solve it in a minute.|appreciable,sufficient|minimally
+  sufficient|enough; adequate|足够的|Do we have ___ food for the trip, enough to feed six people for three days?|One clear example is ___ to make the point; you don't need ten.|The case was dropped because there was not ___ evidence to prove he was guilty.|minimal,appreciable|sufficiently,sufficiency
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Small savings **accumulate**, and if you **minimize** waste, you will soon have **sufficient** money for the trip. These ten words help you talk, in formal and academic English, about growing, shrinking, going beyond a limit and having enough.",
+      "小额储蓄会慢慢积累（**accumulate**），如果你把浪费降到最低（**minimize**），很快就会有足够的（**sufficient**）钱去旅行。这十个词帮你用正式的学术英语谈论增长、缩小、超出限度和足够。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Enhance** means to make something better, while **accentuate** means only to make it stand out; you can accentuate a flaw, but you would not want to enhance one.",
+        "**enhance** 是使更好，**accentuate** 只是使更突出；可以说 accentuate a flaw（让缺点更显眼），但没人想 enhance 缺点。",
+      ),
+      use: t(
+        "**Exceed** takes a limit or amount straight after it, as in exceed the speed limit, so never say exceed over or exceed than.",
+        "**exceed** 后面直接接限度或数量，如 exceed the speed limit，不说 exceed over 或 exceed than。",
+      ),
+      spelling: t(
+        "**Accumulate** has a double c but one m, **appreciable** has a double p, and **sufficient** has a double f and -cient.",
+        "**accumulate** 双写 c、单写 m；**appreciable** 双写 p；**sufficient** 双写 f，结尾是 -cient。",
+      ),
+    },
+    notes: `
+      accumulate|a grey layer of dust building up on shelves|a fortune saved a little at a time over forty years|snow growing deeper on the roads every hour|accumulate means to build up little by little; diminish means to become less|accumulate 是逐渐积累；diminish 是减少|exceed means to go beyond a limit, not to build up slowly little by little|exceed 是超出限度，不是一点点积累|diminish means to become less, the opposite of building up|diminish 是减少，和积累正好相反|ac · cu · mu · late|the double c and the single m|双写 c，单写 m
+      exceed|repairs costing more than the total budget|drivers going faster than the law allows|exam results better than anyone hoped|exceed means to go beyond a limit or amount; accumulate means to build up over time|exceed 是超过；accumulate 是逐渐积累|accumulate means to build up slowly over time, not to go past a limit or a hope|accumulate 是慢慢积累，不是超过限度或期望|minimize means to make something as small as possible, the opposite of going beyond a limit|minimize 是使最小化，和超过限度正好相反|ex · ceed|the -ceed ending with a double e|结尾 -ceed 双写 e
+      maximize|firms making profits as large as they can|a student taking every test to get the highest score|curtains opened wide to let in as much light as possible|maximize means to make as large as possible; minimize means to make as small as possible|maximize 是使最大化；minimize 是使最小化|minimize means to make something as small as possible, the opposite of making it as large as possible|minimize 是使最小化，和使最大化正好相反|exceed means to go beyond a limit, not to make something as large as it can be|exceed 是超过限度，不是使尽可能大|max · i · mize|the x and the -ize ending|x 和 -ize 结尾
+      minimize|washing hands to keep the risk of a cold small|a man saying his mistakes were tiny and did not matter|closing windows to keep out road noise|minimize means to make as small as possible; maximize means to make as large as possible|minimize 是使最小化；maximize 是使最大化|maximize means to make something as large as possible, the opposite of keeping it small|maximize 是使最大化，和使之最小正好相反|accentuate means to make something stand out more, the opposite of playing it down|accentuate 是使更突出，和淡化正好相反|min · i · mize|the -ize ending|结尾是 -ize
+      diminish|pain fading over a few days until it is gone|rumours of cheating that cannot take away fairly earned success|food supplies shrinking until only a few sacks are left|diminish means to make or become less; enhance means to make better or greater|diminish 是减少、减弱；enhance 是提高、增强|accumulate means to build up over time, the opposite of becoming less|accumulate 是逐渐积累，和减少正好相反|enhance means to make something better or greater, the opposite of making it less|enhance 是使更好更大，和减弱正好相反|di · min · ish|the -ish ending|结尾是 -ish
+      enhance|warm lighting making a room look cosier|a scandal that damaged a reputation instead of improving it|salt and herbs making soup taste better|enhance means to make something better; diminish means to make it less|enhance 是使更好；diminish 是使减少|diminish means to make something less, the opposite of making it better or more attractive|diminish 是使减少，和使更好、更吸引人正好相反|exceed means to go beyond a limit, not to improve the quality of something|exceed 是超过限度，不是提升质量|en · hance|the -ance ending|结尾是 -ance
+      accentuate|a tight belt drawing the eye to a narrow waist|sad music making the gloom of a scene more noticeable|bold lines making a building's shape stand out|accentuate means to make something stand out more; minimize means to make it seem as small as possible|accentuate 是使突出；minimize 是使显得尽量小|minimize means to make something as small or unimportant as possible, the opposite of making it stand out|minimize 是使尽量小或不重要，和使之突出正好相反|exceed means to go beyond a limit, not to draw attention to something|exceed 是超过限度，不是使某物引人注目|ac · cen · tu · ate|the double c and the tu that sounds like *chew*|双写 c，tu 读音同 *chew*
+      appreciable|a drop in crime that everyone notices after new street lights|glasses that make no noticeable difference to reading|crop damage farmers can see at a glance|appreciable means large enough to be noticed; minimal means very small|appreciable 是明显的、可观的；minimal 是极少的|minimal means so small that it hardly counts, the opposite of a change everyone notices|minimal 是极少、几乎不算数的，和人人都注意到的变化正好相反|sufficient means enough for a purpose, not large enough to be noticed|sufficient 是足够某种用途，不是大到能被注意到|ap · pre · ci · a · ble|the double p and the c that sounds like *sh*|双写 p，c 读作 *sh*
+      minimal|damage that is just one small scratch|an income so small that meals are skipped|a puzzle a child could solve in a minute|minimal means very small, the least possible; appreciable means large enough to notice|minimal 是极少的；appreciable 是明显可观的|appreciable means large enough to be noticed, the opposite of just one small scratch|appreciable 是大到能被注意到的，和一道小划痕正好相反|sufficient means enough, which an income too small for meals is not|sufficient 是足够的，而连饭都吃不上的收入并不够|min · i · mal|the -al ending|结尾是 -al
+      sufficient|enough food to feed six people for three days|one example that is enough to make a point|not enough evidence to prove a man guilty|sufficient means enough for a purpose; minimal means very small|sufficient 是足够的；minimal 是极少的|minimal means very small, which is not the same as enough for a purpose|minimal 是极少的，不等于足够某种用途|appreciable means large enough to notice, not enough for a purpose such as feeding six people or proving guilt|appreciable 是明显可观的，不是足够养活六个人或证明有罪|suf · fi · cient|the double f and the -cient ending|双写 f，结尾是 -cient
+    `,
+  },
 );
 
 const joining = batch(
@@ -99,17 +265,50 @@ const joining = batch(
   ["Words for Joining and Matching", "结合与相合的词"],
   ["academic words for putting together and running side by side", "表示组合与并行的学术词"],
   `
-  assemble|to gather together; to fit together the parts of|集合；装配|The crowd began to ___ in the square.|It takes an hour to ___ the desk.|She will ___ a team.|compile,unify|assembled
-  compile|to produce something by collecting information|编纂，汇编|They will ___ a list of names.|She took years to ___ the dictionary.|We must ___ the data.|integral,concurrent|compiled,compilation
-  incorporate|to take in as part of a whole|包含，并入|The design will ___ your ideas.|The new law will ___ older rules.|They hope to ___ music into the lesson.|integral,compile|incorporated,incorporation
-  integral|necessary to make a whole complete|不可或缺的|Music is ___ to the film.|She is an ___ part of the team.|Exercise is ___ to good health.|incorporate,concurrent|integrally
-  unify|to make or become united|统一|The war helped ___ the country.|A common enemy can ___ rivals.|They tried to ___ the two systems.|assemble,coincide|unified,unification
-  coincide|to happen at the same time; to agree|同时发生；一致|My birthday will ___ with the holiday.|Our views ___ on most issues.|The two events ___.|parallel,integral|coincided,coincidence
-  concurrent|existing or happening at the same time|同时发生的|He is serving two ___ sentences.|There were ___ strikes in three cities.|The ___ events confused reporters.|integral,unify|concurrently
-  consecutive|following continuously, one after another|连续的|It rained for five ___ days.|They won three ___ titles.|Number the pages in ___ order.|concurrent,parallel|consecutively
-  overlap|to extend over and cover part of; to have things in common|重叠|The two roles ___ a great deal.|Lay the tiles so they ___.|Our holidays ___ by a week.|coincide,consecutive|overlapped,overlapping
-  parallel|side by side and having the same distance between; similar|平行的；相似的|Draw two ___ lines.|The road runs ___ to the river.|There are ___ features in the two cases.|overlap,unify|parallels
+  assemble|to gather together; to fit together the parts of|集合；装配|The crowd began to ___ in the square an hour before the speech, gathering in their hundreds.|It takes an hour to ___ the flat-pack desk from its forty separate pieces.|She will ___ a team of six engineers, bringing them together from three different offices.|compile,unify|assembled
+  compile|to produce something by collecting information|编纂，汇编|The secretary will ___ a list of names from the school records.|She took twenty years to ___ the dictionary, collecting words and their meanings one by one.|Before the meeting, we must ___ a table of figures, collecting the results of all ten surveys.|incorporate,unify|compiled,compilation
+  incorporate|to take in as part of a whole|包含，并入|The final design will ___ your ideas, taking them in as part of the whole plan.|The new law will ___ several older rules, bringing them inside a single act.|They hope to ___ music and dance into the maths lesson.|exclude,assemble|incorporated,incorporation
+  integral|necessary to make a whole complete|不可或缺的|Music is ___ to the film: without the score, half its power would be lost.|She has become so ___ to the team that we could not win a match without her.|Regular exercise is ___ to good health, as necessary as sleep and a healthy diet.|concurrent,consecutive|integrally
+  unify|to make or become united|统一|The long war helped ___ the country, bringing its quarrelling regions together as one nation.|A common enemy can ___ old rivals, turning them into allies.|They tried to ___ the two computer systems into a single one that every office could use.|coincide,overlap|unified,unification
+  coincide|to happen at the same time; to agree|同时发生；一致|This year my birthday will ___ with the national holiday, so I get the day off anyway.|Our views ___ on most issues, so we rarely argue.|The two concerts ___, both starting at exactly eight o'clock on Saturday.|precede,unify|coincided,coincidence
+  concurrent|existing or happening at the same time|同时发生的|He is serving two ___ sentences at the same time, so he will be free after five years, not ten.|There were ___ strikes in three cities, all happening on the same day.|The ___ events, all taking place at the same moment, confused the reporters.|consecutive,integral|concurrently
+  consecutive|following continuously, one after another|连续的|It rained for five ___ days, one after another without a single dry one.|They won three ___ titles, in 2019, 2020 and 2021.|Number the pages in ___ order: 1, 2, 3 and so on.|concurrent,parallel|consecutively
+  overlap|to extend over and cover part of; to have things in common|重叠|The two jobs ___ a great deal, sharing many of the same tasks.|Lay the roof tiles so that they ___, each one covering the edge of the one below.|Our holidays ___ by a week, so we will both be away for the same seven days.|coincide,unify|overlapped,overlapping
+  parallel|side by side and having the same distance between; similar|平行的；相似的|Draw two ___ lines, always the same distance apart, that never meet.|The road runs ___ to the river, keeping close beside the water for ten miles.|There are ___ features in the two cases: both men lied and both used false names.|concurrent,consecutive|parallels
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The editors will **compile** the reports, **incorporate** every team's ideas and **assemble** them into one book, so the two projects no longer **overlap**. These ten words help you talk, in formal and academic English, about putting things together and about things that happen side by side.",
+      "编辑们会汇编（**compile**）各份报告，纳入（**incorporate**）每个小组的想法，再把它们组合（**assemble**）成一本书，这样两个项目就不再重叠（**overlap**）。这十个词帮你用正式的学术英语谈论组合事物以及并行发生的事。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Concurrent** things happen at the same time, but **consecutive** things come one after another; two concurrent five-year sentences mean five years, two consecutive ones mean ten.",
+        "**concurrent** 是同时发生的，**consecutive** 是一个接一个的；两个 concurrent 的五年刑期共五年，两个 consecutive 的则是十年。",
+      ),
+      use: t(
+        "**Integral** is followed by to, as in integral to the team, and **coincide** by with, as in coincide with the holiday.",
+        "**integral** 后接 to，如 integral to the team；**coincide** 后接 with，如 coincide with the holiday。",
+      ),
+      spelling: t(
+        "**Parallel** has a double l in the middle and one l at the end, and **coincide** keeps the ci of *circle* after co-.",
+        "**parallel** 中间双写 l，结尾单写 l；**coincide** 在 co- 后是 ci，同 *circle*。",
+      ),
+    },
+    notes: `
+      assemble|a crowd gathering in a square before a speech|a flat-pack desk put together from forty pieces|engineers brought together from three offices|assemble means to gather people or fit parts together; compile means to collect information into a list or book|assemble 是集合人或装配零件；compile 是把资料汇编成清单或书|compile means to collect information into a list or book, not to gather a crowd or fit pieces together|compile 是汇编资料，不是聚集人群或拼装零件|unify means to make separate groups into one united whole, not to gather in a place or fit parts together|unify 是把分散的群体统一起来，不是聚集或装配|as · sem · ble|the double s and the -ble ending|双写 s，结尾是 -ble
+      compile|a list of names taken from school records|a dictionary built by collecting words one by one|a table of figures made from ten surveys|compile means to collect information into one list or book; incorporate means to take something in as part of a whole|compile 是汇编资料；incorporate 是并入整体|incorporate means to take something in as part of a larger whole, not to collect facts into a list or book|incorporate 是把某物并入整体，不是把资料汇编成清单或书|unify means to make separate parts one, not to gather facts into a list|unify 是统一，不是汇编资料|com · pile|the long i and the silent e|长音 i，结尾 e 不发音
+      incorporate|ideas taken in as part of a whole design|older rules brought inside a single new law|music and dance made part of a maths lesson|incorporate means to take something in as part of a whole; exclude means to leave it out|incorporate 是纳入；exclude 是排除|exclude means to leave something out, the opposite of taking it in as part of the whole|exclude 是排除在外，和纳入整体正好相反|assemble means to gather people or fit parts together, not to make ideas or rules part of a larger whole|assemble 是集合或装配，不是把想法、规则纳入整体|in · cor · po · rate|the -ate ending after *corpor*|*corpor* 后接 -ate
+      integral|music without which a film loses half its power|a player the team cannot win without|exercise as necessary to health as sleep|integral means so necessary that the whole is incomplete without it; concurrent means happening at the same time|integral 是不可或缺的；concurrent 是同时发生的|concurrent means happening at the same time, not necessary to make something complete|concurrent 是同时发生的，不是使整体完整所必需的|consecutive means coming one after another, not a necessary part of a whole|consecutive 是连续的，不是整体中必不可少的部分|in · te · gral|the -gral ending, not -gal|结尾是 -gral 而不是 -gal
+      unify|a war bringing quarrelling regions together as one nation|a common enemy turning old rivals into allies|two computer systems made into one|unify means to make separate parts into one whole; overlap means to cover part of something|unify 是统一；overlap 是部分重叠|coincide means to happen at the same time or to agree, not to make separate parts one|coincide 是同时发生或一致，不是把分散的部分统一起来|overlap means to cover part of something, not to join separate parts into one whole|overlap 是部分重叠，不是把分散的部分合为一体|u · ni · fy|the -ify ending|结尾是 -ify
+      coincide|a birthday falling on the same day as a national holiday|two people whose views agree on most issues|two concerts both starting at eight on Saturday|coincide means to happen at the same time or to agree; precede means to come before|coincide 是同时发生或一致；precede 是在……之前|precede means to come before something else, not to happen at the same time|precede 是在……之前，不是同时发生|unify means to make separate parts into one, not to happen at the same time or to agree|unify 是统一，不是同时发生或意见一致|co · in · cide|the ci after co-, as in *circle*|co- 后是 ci，同 *circle*
+      concurrent|two prison sentences served at the same time|strikes in three cities on the same day|events all taking place at the same moment|concurrent means happening at the same time; consecutive means one after another|concurrent 是同时发生的；consecutive 是一个接一个的|consecutive means one after another, the opposite of happening at the same time|consecutive 是一个接一个的，和同时发生正好相反|integral means necessary to make a whole complete, not happening at the same time|integral 是不可或缺的，不是同时发生的|con · cur · rent|the double r|双写 r
+      consecutive|five rainy days one after another|titles won in 2019, 2020 and 2021|pages numbered 1, 2, 3 and so on|consecutive means one after another without a break; concurrent means at the same time|consecutive 是连续的；concurrent 是同时的|concurrent means happening at the same time, not one after another|concurrent 是同时发生的，不是一个接一个|parallel means side by side or alike, not following one after another in order|parallel 是平行或相似的，不是依次相连|con · sec · u · tive|the -tive ending|结尾是 -tive
+      overlap|two jobs sharing many of the same tasks|roof tiles each covering the edge of the one below|two holidays sharing the same seven days|overlap means to cover part of something or share part of it; coincide means to happen at exactly the same time|overlap 是部分重叠；coincide 是完全同时发生|coincide means to happen at the same moment or to agree, not to cover part of something|coincide 是同时发生或一致，不是部分覆盖|unify means to make separate parts into one, not to cover part of each other|unify 是合为一体，不是彼此部分覆盖|o · ver · lap|*over* and *lap* joined together|*over* 和 *lap* 合成
+      parallel|two lines always the same distance apart that never meet|a road running beside a river for ten miles|two cases in which both men lied and used false names|parallel means side by side or very alike; concurrent means happening at the same time|parallel 是平行或相似的；concurrent 是同时发生的|concurrent means happening at the same time, not side by side at the same distance or alike|concurrent 是同时发生的，不是等距并排或相似|consecutive means one after another, not side by side|consecutive 是依次相连的，不是并排的|par · al · lel|the double l in the middle and one l at the end|中间双写 l，结尾单写 l
+    `,
+  },
 );
 
 const limiting = batch(
@@ -117,17 +316,50 @@ const limiting = batch(
   ["Words for Limiting and Keeping", "限制与保留的词"],
   ["academic words for holding back, leaving out and keeping", "表示约束、排除和保留的学术词"],
   `
-  constrain|to compel or force; to limit severely|约束；强迫|Lack of money may ___ our plans.|Laws ___ what companies can do.|She felt ___ to agree.|restrain,impose|constrained
-  restrain|to prevent from doing something; to hold back|抑制，阻止|Police had to ___ the angry fans.|She could barely ___ her laughter.|Try to ___ your spending.|constrain,inhibit|restrained,restraint
-  restrict|to put a limit on|限制|The new rules ___ parking.|They ___ the number of visitors.|Don't ___ yourself to one idea.|inhibit,exclude|restricted,restriction,restrictive
-  inhibit|to hinder or prevent an action or process|抑制，阻碍|Fear can ___ learning.|The drug may ___ growth.|Shyness can ___ a child.|restrain,retain|inhibited,inhibition
-  exclude|to keep out or leave out|排除|The club tries to ___ new members.|Don't ___ anyone from the game.|Some old clubs ___ women.|eliminate,restrict|excluded,exclusion,exclusive
-  eliminate|to remove completely; to knock out of a competition|消除；淘汰|We aim to ___ waste.|The team may ___ the champions.|The new test will ___ errors.|exclude,reject|eliminated,elimination
-  impose|to force something unwelcome on; to take advantage of|强加；占便宜|The state will ___ a new tax.|I don't want to ___ on you.|They tried to ___ their views.|constrain,retain|imposed,imposition
-  retain|to keep possession of; to continue to have|保留，保持|The house will ___ its old charm.|She managed to ___ her title.|Clay soil tends to ___ water.|reject,impose|retained,retention
-  reject|to refuse to accept|拒绝|They might ___ the offer.|The body may ___ the new kidney.|Voters will ___ the plan.|retain,eliminate|rejected,rejection
-  withhold|to refuse to give something that is due or wanted|扣留，拒给|The firm may ___ his pay.|She chose to ___ her name.|Don't ___ information from the police.|restrain,impose|withheld
+  constrain|to compel or force; to limit severely|约束；强迫|Lack of money may ___ our plans, forcing us to choose a smaller hall.|Strict laws ___ what companies can do with our personal data, setting tight limits on its use.|Her contract may ___ her to work every weekend, whether she likes it or not.|impose,withhold|constrained
+  restrain|to prevent from doing something; to hold back|抑制，阻止|Police had to ___ the angry fans, holding them back from the pitch.|She could barely ___ her laughter, biting her lip to keep from giggling.|Try to ___ your spending this month, holding back on treats and taxis.|impose,eliminate|restrained,restraint
+  restrict|to put a limit on|限制|The new rules ___ parking in the high street to two hours.|They ___ the number of visitors to fifty a day to protect the old paintings.|Don't ___ yourself to one idea; try several before you choose.|inhibit,exclude|restricted,restriction,restrictive
+  inhibit|to hinder or prevent an action or process|抑制，阻碍|Fear of making mistakes can ___ learning, stopping students from trying new things.|The drug may ___ the growth of cancer cells, slowing or stopping it.|Shyness can ___ a child, making her afraid to speak up in class.|retain,impose|inhibited,inhibition
+  exclude|to keep out or leave out|排除|Some old golf clubs still ___ women, refusing to let them join.|Don't ___ anyone from the game; let every child have a turn.|The price of the holiday will ___ meals, so you must pay for your own food.|incorporate,retain|excluded,exclusion,exclusive
+  eliminate|to remove completely; to knock out of a competition|消除；淘汰|The factory aims to ___ waste completely, so that nothing ends up in landfill.|A win tonight would ___ the champions, knocking them out of the cup in the first round.|The new spell-checker will ___ almost every typing error before the report is printed.|exclude,retain|eliminated,elimination
+  impose|to force something unwelcome on; to take advantage of|强加；占便宜|The government will ___ a new tax on sugary drinks, whether shoppers like it or not.|I don't want to ___ on you, so I'll stay at a hotel instead of your flat.|They tried to ___ their views on everyone, forcing others to agree.|constrain,retain|imposed,imposition
+  retain|to keep possession of; to continue to have|保留，保持|The old house will ___ its charm after the repairs, keeping all its wooden beams.|She managed to ___ her title, winning the championship for the second year running.|Clay soil tends to ___ water, staying wet long after the rain has stopped.|reject,impose|retained,retention
+  reject|to refuse to accept|拒绝|They might ___ the offer, saying it is far too low to accept.|The body may ___ the new kidney, attacking it as something foreign.|Voters are likely to ___ the plan, refusing to accept the new tax.|retain,withhold|rejected,rejection
+  withhold|to refuse to give something that is due or wanted|扣留，拒给|The firm may ___ his pay until he returns the company car.|She chose to ___ her name, so the letter was printed as "from a reader".|It is a crime to ___ information from the police during an investigation.|restrain,impose|withheld
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The new rules **restrict** visits to an hour, **exclude** pets and let the museum **retain** the right to **reject** any bag. These ten words help you talk, in formal and academic English, about holding back, leaving out, keeping and refusing.",
+      "新规定把参观限制（**restrict**）在一小时内，禁止（**exclude**）带宠物，并让博物馆保留（**retain**）拒绝（**reject**）任何包的权利。这十个词帮你用正式的学术英语谈论约束、排除、保留与拒绝。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **retain** something is to keep what you have, but to **withhold** it is to refuse to give what someone else is owed.",
+        "**retain** 是保住自己拥有的东西；**withhold** 是扣着别人应得的东西不给。",
+      ),
+      use: t(
+        "**Restrict** takes to before the limit, as in restrict parking to two hours, and **impose** takes on before the person, as in impose a tax on drinks.",
+        "**restrict** 用 to 引出限度，如 restrict parking to two hours；**impose** 用 on 引出对象，如 impose a tax on drinks。",
+      ),
+      spelling: t(
+        "**Withhold** keeps both h's, one from *with* and one from *hold*, and **eliminate** has one l and one m.",
+        "**withhold** 保留两个 h，一个来自 *with*，一个来自 *hold*；**eliminate** 只有一个 l 和一个 m。",
+      ),
+    },
+    notes: `
+      constrain|a lack of money forcing a smaller hall|strict laws setting tight limits on personal data|a contract forcing someone to work every weekend|constrain means to limit someone or force them to act; impose means to force something unwelcome on others|constrain 是限制或迫使；impose 是把不受欢迎的东西强加于人|impose means to force something unwelcome such as a tax on others, and it needs on, not to limit plans or force a person to act|impose 是把税等强加于人，要用 on，不是限制计划或迫使某人去做|withhold means to refuse to give something, not to limit or force|withhold 是扣着不给，不是限制或迫使|con · strain|the -ain ending, as in *rain*|结尾 -ain，同 *rain*
+      restrain|police holding angry fans back from a pitch|a woman biting her lip to keep from giggling|holding back on treats and taxis to save money|restrain means to hold someone or something back; impose means to force something on others|restrain 是阻止、克制；impose 是强加|impose means to force something unwelcome on others, not to hold fans or feelings back|impose 是强加于人，不是拦住人群或克制情绪|eliminate means to remove something completely, not to hold it back|eliminate 是彻底消除，不是加以克制|re · strain|re- followed by *strain*|re- 后接 *strain*
+      restrict|parking in a high street limited to two hours|visitors limited to fifty a day|someone limiting himself to one idea|restrict means to put a limit on; exclude means to keep out completely|restrict 是加以限制；exclude 是完全排除|inhibit means to slow or stop a process, and it does not take a limit such as two hours or fifty a day|inhibit 是抑制某个过程，不接“两小时”“每天五十人”这样的限度|exclude means to keep something out completely, not to set a limit on how much is allowed|exclude 是完全排除，不是限定数量|re · strict|the -ict ending|结尾是 -ict
+      inhibit|fear of mistakes stopping students from trying new things|a drug slowing the growth of cancer cells|shyness making a child afraid to speak up|inhibit means to hold back or slow a process; restrain means to hold someone back by force or effort|inhibit 是抑制、阻碍；restrain 是用力或克制地阻止|retain means to keep something, not to slow or stop a process|retain 是保留，不是抑制或阻碍|impose means to force something unwelcome on others, not to slow down learning or growth|impose 是强加于人，不是阻碍学习或生长|in · hib · it|the h after in-|in- 后是 h
+      exclude|golf clubs refusing to let women join|a game that every child should be allowed to play|a holiday price that leaves meals out|exclude means to keep or leave out; incorporate means to take in as part of a whole|exclude 是排除；incorporate 是纳入|incorporate means to take something in as part of the whole, the opposite of leaving it out|incorporate 是纳入整体，和排除在外正好相反|retain means to keep something you have, not to leave it out|retain 是保留，不是排除在外|ex · clude|the cl and the silent e|cl 组合，结尾 e 不发音
+      eliminate|a factory removing all its waste|a win that knocks the champions out of the cup|a spell-checker removing typing errors|eliminate means to remove completely or knock out; exclude means to keep out from the start|eliminate 是彻底消除或淘汰；exclude 是一开始就拒之门外|exclude means to keep someone out from the start, not to remove what is already there or knock a team out|exclude 是一开始就拒之门外，不是清除已有之物或淘汰球队|retain means to keep something, the opposite of removing it completely|retain 是保留，和彻底清除正好相反|e · lim · i · nate|one l and one m|只有一个 l 和一个 m
+      impose|a government adding a new tax that shoppers must pay|staying at a hotel so as not to be a burden on a friend|forcing one's views on everyone|impose means to force something unwelcome on others; constrain means to limit or force|impose 是强加于人；constrain 是限制或迫使|constrain means to limit or force someone, and it is not used with on to put a tax or a view on people|constrain 是限制或迫使，不用 on 把税或观点强加于人|retain means to keep what one has, not to force something on others|retain 是保留自己的东西，不是强加于人|im · pose|the -ose ending with a silent e|结尾 -ose，e 不发音
+      retain|an old house keeping its wooden beams after repairs|a champion keeping her title for a second year|clay soil holding water long after rain|retain means to keep; reject means to refuse to accept|retain 是保留；reject 是拒绝接受|reject means to refuse to accept, the opposite of keeping something|reject 是拒绝接受，和保留正好相反|impose means to force something on others, not to keep what one has|impose 是强加于人，不是保留自己拥有的|re · tain|the -ain ending, as in *rain*|结尾 -ain，同 *rain*
+      reject|turning down an offer that is far too low|a body attacking a new kidney as foreign|voters refusing to accept a new tax|reject means to refuse to accept; retain means to keep|reject 是拒绝接受；retain 是保留|retain means to keep something, the opposite of refusing to accept it|retain 是保留，和拒绝接受正好相反|withhold means to refuse to give something, not to refuse to accept what is offered|withhold 是扣着不给，不是拒绝接受别人提供的东西|re · ject|the soft j sound after re-|re- 后的 j 发音
+      withhold|a firm keeping back pay until a car is returned|a writer keeping her name off a printed letter|keeping information from the police|withhold means to refuse to give what is owed or wanted; retain means to keep what one has|withhold 是扣着不给；retain 是保留自己的东西|restrain means to hold someone back from acting, not to keep back pay, a name or information|restrain 是阻止某人行动，不是扣留工资、名字或信息|impose means to force something on others, the opposite of keeping something back from them|impose 是强加于人，和扣着不给正好相反|with · hold|both h's, one from *with* and one from *hold*|两个 h，一个来自 *with*，一个来自 *hold*
+    `,
+  },
 );
 
 /** batchesF are the batches of hazy thinking, characters, the fleeting, starting and finishing, more and less, joining and limiting. */

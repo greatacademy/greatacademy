@@ -1,6 +1,7 @@
 // Grade 11: the batches of words of easing and stopping, of sociable and solitary people, of nerve and rudeness, of
 // skill, of dullness, of scolding, of harm and trickery, and of care and carelessness.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const easing = batch(
   ["Words of Easing and Stopping", "缓解与制止的词"],
   ["making troubles smaller or ending them", "让麻烦变小或结束"],
   `
-  abate|to become less strong or intense|减弱，减轻|We waited for the storm to ___.|The pain began to ___ after an hour.|His anger did not ___.|allay,curtail|abated
-  allay|to make a fear or doubt less|减轻(恐惧、疑虑)|The doctor tried to ___ her fears.|The report should ___ our doubts.|Nothing could ___ his suspicion.|rectify,facilitate|allayed
-  alleviate|to make pain or a problem less severe|缓解，减轻|The drug will ___ the pain.|New roads may ___ traffic jams.|Aid will ___ hunger in the region.|facilitate,rectify|alleviated,alleviation
-  quell|to put an end to a rebellion or a feeling, usually by force|镇压；平息|Troops were sent to ___ the riot.|She tried to ___ her nerves.|The coach tried to ___ the rumors.|deter,dissipate|quelled
-  dispel|to make a doubt, feeling or belief go away|驱散，消除|The sun will soon ___ the fog.|His words did little to ___ our fears.|The study helped ___ an old myth.|facilitate,curtail|dispelled
-  dissipate|to disappear or scatter; to waste|消散；浪费|The crowd began to ___.|The mist will ___ by noon.|He would ___ his fortune on cards.|dispel,curtail|dissipated,dissipation
-  curtail|to cut short or reduce|削减，缩短|The rain forced us to ___ our trip.|The law aims to ___ smoking.|They had to ___ spending.|abate,facilitate|curtailed
-  deter|to discourage someone from doing something|阻止，威慑|High fines ___ people from littering.|Nothing would ___ her from trying.|Cameras ___ thieves.|quell,facilitate|deterred,deterrent
-  rectify|to put right; to correct|纠正，矫正|We must ___ the error at once.|The firm promised to ___ the fault.|Can you ___ the situation?|alleviate,deter|rectified
-  facilitate|to make an action or process easier|促进，使便利|A good map will ___ the search.|The new software will ___ online sales.|She was hired to ___ the talks.|rectify,curtail|facilitated,facilitator
+  abate|to become less strong or intense|减弱，减轻|We waited in the cabin for the storm to ___, and by morning the wind had grown much weaker on its own.|After an hour the pain began to ___, growing less sharp by itself.|His anger did not ___ for days; it stayed just as fierce as on the first night.|allay,curtail|abated
+  allay|to make a fear or doubt less|减轻(恐惧、疑虑)|The doctor's calm words helped ___ her fears a little, though some worry remained.|The report should ___ our doubts somewhat, though it cannot remove them all.|Her gentle answer did ___ his suspicion a little, though he still watched her closely.|dispel,curtail|allayed
+  alleviate|to make pain or a problem less severe|缓解，减轻|The drug will ___ the pain, making it less severe, though it cannot cure the illness.|New roads may ___ traffic jams, making them less bad, though they will never fix the problem completely.|Food aid will ___ hunger in the region, easing its worst effects for now.|facilitate,rectify|alleviated,alleviation
+  quell|to put an end to a rebellion or a feeling, usually by force|镇压；平息|Troops were sent to ___ the riot, crushing it by force after it had begun.|She took a deep breath to ___ her nerves, forcing her fear down before she walked on stage.|The coach called a meeting to ___ the rumors, putting an end to them once and for all.|deter,dissipate|quelled
+  dispel|to make a doubt, feeling or belief go away|驱散，消除|The study helped ___ an old myth, showing it to be false so that no one believed it any longer.|His clear answers did ___ our fears completely; not one doubt was left.|The bright morning sun will soon ___ the fog, driving it away entirely.|allay,curtail|dispelled
+  dissipate|to disappear or scatter; to waste|消散；浪费|After the match, the crowd began to ___, scattering slowly in every direction.|The mist will ___ on its own by noon, simply fading away.|He would ___ his fortune on cards, wasting every penny of it.|dispel,curtail|dissipated,dissipation
+  curtail|to cut short or reduce|削减，缩短|The heavy rain forced us to ___ our trip, cutting it short by three days.|The new law aims to ___ smoking, cutting it back in public places.|Short of money, they had to ___ spending, reducing it by half.|abate,facilitate|curtailed
+  deter|to discourage someone from doing something|阻止，威慑|High fines ___ people from littering, discouraging them before they even try.|Nothing would ___ her from trying again; no warning could put her off.|Cameras at the door ___ thieves, who are discouraged from even attempting a break-in.|quell,facilitate|deterred,deterrent
+  rectify|to put right; to correct|纠正，矫正|We must ___ the error at once and correct every wrong figure in the report.|The firm promised to ___ the fault in the brakes, fixing it completely.|Can you ___ the mistake in the schedule by putting in the right dates?|alleviate,deter|rectified
+  facilitate|to make an action or process easier|促进，使便利|A good map will ___ the search, making it much easier.|The new software will ___ online sales, making buying simpler for customers.|She was hired to ___ the peace talks, helping them run more smoothly.|rectify,curtail|facilitated,facilitator
   `,
+  "context-clues",
+  {
+    intro: t(
+      "When the riot began, the police tried to **quell** it, the mayor spoke to **allay** people's fears, and by dawn the anger had started to **abate**. These ten words help you describe making troubles smaller, putting them right, or ending them.",
+      "骚乱一爆发，警察就设法平息（**quell**），市长出面讲话以减轻（**allay**）人们的恐惧，到黎明时分，愤怒开始减弱（**abate**）。这十个词帮你描写让麻烦变小、把错误纠正或彻底结束麻烦。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **allay** a fear makes it *smaller*; to **dispel** it makes it *go away* completely; to **alleviate** pain eases it without curing it; to **rectify** a mistake corrects it fully.",
+        "**allay** 恐惧是让它*变小*；**dispel** 是让它*完全消失*；**alleviate** 疼痛是缓解而非治愈；**rectify** 错误是彻底改正。",
+      ),
+      use: t(
+        "**Abate** and **dissipate** happen by themselves (*the storm abated*, *the crowd dissipated*); **quell**, **curtail** and **deter** are things people do to something (*quell a riot*, *deter thieves*).",
+        "**abate** 和 **dissipate** 是自行发生的（the storm abated、the crowd dissipated）；**quell**、**curtail** 和 **deter** 是人对某事采取的行动（quell a riot、deter thieves）。",
+      ),
+      spelling: t(
+        "Watch the double *l* of **allay** and **alleviate**, the double *s* of **dissipate**, the single *r* of **deter** (but *deterred* doubles it), and the *-ate* of **facilitate**.",
+        "注意 **allay** 和 **alleviate** 的双写 l、**dissipate** 的双写 s、**deter** 只有一个 r（但 deterred 要双写），以及 **facilitate** 结尾的 -ate。",
+      ),
+    },
+    notes: `
+      abate|a storm whose wind grew weaker on its own by morning|pain growing less sharp by itself after an hour|anger that stayed just as fierce for days|abate means to grow weaker by itself; curtail means to cut something short on purpose|abate 指自行减弱；curtail 指有意缩减|allay means to make someone's fear or doubt smaller, not for something to grow weaker on its own|allay 指减轻别人的恐惧或疑虑，不是某物自己减弱|curtail means to cut something short on purpose, not to die down by itself|curtail 指有意削减，不是自行减弱|a · bate|a single b and the -ate ending|只有一个 b，结尾是 -ate
+      allay|calm words that eased a woman's fears a little|a report that should ease doubts somewhat but not remove them all|a gentle answer that eased a man's suspicion a little|allay makes a fear smaller; dispel makes it vanish|allay 让恐惧变小；dispel 让它消失|dispel means to make a fear or doubt go away completely, not to ease it a little while some remains|dispel 指让恐惧或疑虑完全消失，不是减轻一些、仍有残留|curtail means to cut short or reduce an activity, not to calm someone's fears|curtail 指缩减某项活动，不是安抚恐惧|al · lay|the double l and the -ay ending|双写 l，结尾是 -ay
+      alleviate|a drug that makes pain less severe but cannot cure the illness|new roads making traffic jams less bad without fixing them|food aid easing the worst effects of hunger for now|alleviate makes pain less severe; rectify puts a problem fully right|alleviate 减轻痛苦；rectify 彻底纠正|facilitate means to make a process easier, not to make pain or hunger less severe|facilitate 指让过程更容易，不是减轻痛苦或饥饿|rectify means to correct something fully, not to ease it while it remains|rectify 指彻底纠正，不是在问题仍存在时加以缓解|al · le · vi · ate|the double l and the -iate ending|双写 l，结尾是 -iate
+      quell|troops crushing a riot by force after it began|a deep breath forcing fear down before going on stage|a meeting putting an end to rumors once and for all|quell crushes something that has started; deter discourages it before it starts|quell 镇压已发生的事；deter 在事发前加以阻止|deter means to discourage something before it starts, not to crush it after it has begun|deter 指事前威慑阻止，不是事后镇压|dissipate means to fade or scatter on its own, not to be crushed by force|dissipate 指自行消散，不是被强力镇压|quell|qu followed by the double l|qu 后面双写 l
+      dispel|a study showing an old myth false so no one believed it|clear answers that left not one doubt|morning sun driving the fog away entirely|dispel makes a doubt vanish completely; allay only makes it smaller|dispel 让疑虑完全消失；allay 只是让它变小|allay means to make a fear smaller, not to make it go away completely|allay 指减轻恐惧，不是让它完全消失|curtail means to cut an activity short, not to drive away a belief, fear or fog|curtail 指缩短某项活动，不是驱散信念、恐惧或雾气|dis · pel|dis- plus pel, with one l|dis- 加 pel，只有一个 l
+      dissipate|a crowd scattering slowly in every direction after a match|mist fading away on its own by noon|a man wasting every penny of his fortune on cards|dissipate scatters or fades on its own; dispel drives something away|dissipate 自行消散；dispel 是主动驱散|dispel means to drive a doubt or fear away, not for a crowd or mist to scatter on its own or for money to be wasted|dispel 指驱散疑虑恐惧，不是人群、雾气自行散去或钱被挥霍|curtail means to cut something short on purpose, not to scatter or waste it|curtail 指有意削减，不是散去或挥霍|dis · si · pate|the double s and the single p|双写 s，只有一个 p
+      curtail|heavy rain cutting a trip short by three days|a law cutting back smoking in public places|people short of money reducing spending by half|curtail cuts something short on purpose; abate grows weaker by itself|curtail 有意缩减；abate 自行减弱|abate means to grow weaker on its own, not for people to cut a trip or spending short|abate 指自行减弱，不是人们有意缩短行程或削减开支|facilitate means to make something easier, the opposite of cutting it back|facilitate 指使之更容易，和削减正相反|cur · tail|cur plus tail|cur 加 tail
+      deter|fines discouraging people from littering before they try|no warning able to put a woman off trying again|cameras discouraging thieves from attempting a break-in|deter discourages before an act; quell crushes after it starts|deter 事前劝阻；quell 事后镇压|quell means to crush something that has already begun, not to discourage it beforehand|quell 指镇压已发生的事，不是事先劝阻|facilitate means to make an act easier, the opposite of discouraging it|facilitate 指使之更容易，和劝阻正相反|de · ter|a single r, doubled only in deterred|只有一个 r，只在 deterred 中双写
+      rectify|correcting every wrong figure in a report at once|fixing a fault in the brakes completely|putting the right dates into a wrong schedule|rectify puts something fully right; alleviate only eases it|rectify 彻底纠正；alleviate 只是缓解|alleviate means to make pain or a problem less severe, not to correct it completely|alleviate 指减轻痛苦或问题，不是彻底改正|deter means to discourage someone from acting, not to correct a mistake|deter 指劝阻某人行动，不是改正错误|rec · ti · fy|the -ify ending, as in simplify|结尾是 -ify，同 simplify
+      facilitate|a good map making a search much easier|software making buying simpler for customers|a woman hired to help peace talks run smoothly|facilitate makes a process easier; rectify corrects a mistake|facilitate 使过程更容易；rectify 纠正错误|rectify means to correct a mistake, not to make a search, sale or talk easier|rectify 指纠正错误，不是让搜索、销售或谈判更顺利|curtail means to cut something back, the opposite of making it easier|curtail 指削减，和使之更容易正相反|fa · cil · i · tate|the -cil- in the middle and the -ate ending|中间是 -cil-，结尾是 -ate
+    `,
+  },
 );
 
 const sociable = batch(
@@ -27,17 +61,50 @@ const sociable = batch(
   ["Words of Sociable and Solitary People", "合群者与孤僻者的词"],
   ["people who enjoy company and people who avoid it", "喜欢交往的人与回避交往的人"],
   `
-  amiable|friendly and pleasant|和蔼可亲的|Our ___ neighbor waved every morning.|He was an ___ host.|They had an ___ chat.|provincial,standoffish|amiably
-  amicable|having a spirit of friendliness; without quarrel|友好的，和睦的|They reached an ___ agreement.|The divorce was ___.|Relations between the towns are ___.|insular,reclusive|amicably
-  convivial|friendly, lively and enjoyable|欢乐的，好交际的|It was a ___ evening of food and songs.|The ___ host poured more wine.|The pub had a ___ atmosphere.|reclusive,insular|
-  ebullient|cheerful and full of energy|热情洋溢的|The ___ coach hugged every player.|She was in an ___ mood.|His ___ laugh filled the room.|reclusive,insular|ebullience
-  vivacious|attractively lively and animated|活泼的|The ___ girl was the life of the party.|She has a ___ personality.|A ___ dancer led the parade.|reclusive,provincial|vivacity
-  boisterous|noisy, energetic and cheerful|喧闹的，活跃的|The ___ boys raced down the hall.|A ___ crowd cheered the band.|The party grew ___ after midnight.|reclusive,provincial|boisterously
-  reclusive|avoiding the company of other people|隐居的，孤独的|The ___ writer never gave interviews.|He became ___ after his wife died.|A ___ billionaire lived on the island.|insular,convivial|recluse
-  insular|interested only in one's own small group; isolated|狭隘的；孤立的|The village was ___ and suspicious of strangers.|Their ___ views shocked us.|An ___ team rarely shares ideas.|amiable,convivial|insularity
-  provincial|of the regions outside the capital; narrow-minded|外省的；狭隘的|He worked for the ___ government.|Her ___ attitudes annoyed her city cousins.|They ran a ___ newspaper.|vivacious,ebullient|
-  standoffish|distant and cold in manner; unfriendly|冷淡的，不友好的|The new boss seemed ___ at first.|She is ___ with people she doesn't know.|His ___ manner kept people away.|reclusive,amiable|standoffishness
+  amiable|friendly and pleasant|和蔼可亲的|Our ___ neighbor, a warm and pleasant man, waved and smiled every morning.|As host he was warm and ___, greeting every guest with a friendly smile.|Everyone liked her ___ grandmother, a gentle, friendly woman who chatted with all the children.|amicable,standoffish|amiably
+  amicable|having a spirit of friendliness; without quarrel|友好的，和睦的|After long talks, the two companies' agreement was ___, settled without a single quarrel.|Their divorce was ___: they split everything fairly and stayed on friendly terms.|Relations between the two towns are ___, settled by friendly talks rather than fights.|amiable,contentious|amicably
+  convivial|friendly, lively and enjoyable|欢乐的，好交际的|The evening was ___, full of good food, friendly talk and songs shared around the table.|The ___ host poured more wine and kept every guest laughing and talking.|The pub's ___ atmosphere, warm and full of chatter, drew neighbors in every night.|reclusive,insular|
+  ebullient|cheerful and full of energy|热情洋溢的|The ___ coach, bursting with joy and energy, hugged every player.|Her mood that morning was ___, so cheerful and full of energy that she sang all the way to school.|His ___ laugh, loud and full of happy energy, filled the room.|reclusive,standoffish|ebullience
+  vivacious|attractively lively and animated|活泼的|The ___ girl, lively and full of sparkle, was the life of the party.|She has a ___ personality, bright and lively, that draws people to her.|A ___ dancer, smiling and full of lively charm, led the parade.|standoffish,reclusive|vivacity
+  boisterous|noisy, energetic and cheerful|喧闹的，活跃的|The ___ boys raced shouting and laughing down the hall, banging every locker.|A ___ crowd, cheering, stamping and singing loudly, greeted the band.|The party grew ___ after midnight, with loud music, shouting and dancing on the tables.|reclusive,demure|boisterously
+  reclusive|avoiding the company of other people|隐居的，孤独的|The ___ writer lived alone in the woods and never gave interviews or saw visitors.|After his wife died, he became ___, hiding in his house and avoiding everyone.|The ___ billionaire lived alone on the island, refusing to meet anyone at all.|insular,convivial|recluse
+  insular|interested only in one's own small group; isolated|狭隘的；孤立的|The village was ___, its people caring only about their own small group and suspicious of every stranger.|Their ___ club, interested only in its own members, never welcomed outsiders.|The ___ team rarely shares ideas with other departments, keeping to its own small circle.|reclusive,amiable|insularity
+  provincial|of the regions outside the capital; narrow-minded|外省的；狭隘的|He worked for the ___ government in a city far from the capital.|Her narrow, ___ attitudes, formed in a small country town, annoyed her city cousins.|They ran a small ___ newspaper, read only in the towns of one region far from the capital.|cosmopolitan,reclusive|
+  standoffish|distant and cold in manner; unfriendly|冷淡的，不友好的|The new boss seemed ___ at first, nodding coldly and keeping her distance, though she came to every staff party.|She is cool and ___ with people she doesn't know, though she goes out with friends every night.|His ___ manner, cold and distant, kept the other guests at the party away from him.|reclusive,amiable|standoffishness
   `,
+  "context-clues",
+  {
+    intro: t(
+      "At the **convivial** dinner, the **ebullient** host told jokes, the **vivacious** twins danced, and only one **standoffish** guest sat apart. These ten words help you describe people who love company and people who keep away from it.",
+      "在那场欢乐的（**convivial**）晚宴上，热情洋溢的（**ebullient**）主人讲着笑话，活泼的（**vivacious**）双胞胎跳着舞，只有一位冷淡的（**standoffish**）客人独自坐在一旁。这十个词帮你描写喜欢热闹的人和远离人群的人。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **reclusive** person avoids everyone; an **insular** group cares only about its own members; a **standoffish** person goes out among people but stays cold and distant.",
+        "**reclusive** 的人谁都不见；**insular** 的群体只关心自己人；**standoffish** 的人虽然出现在人群中，态度却冷淡疏远。",
+      ),
+      use: t(
+        "**Amiable** describes a friendly *person*; **amicable** describes friendly *dealings*, such as an agreement, a divorce or relations between towns.",
+        "**amiable** 形容友善的*人*；**amicable** 形容友好的*关系或处理方式*，比如协议、离婚或两镇之间的关系。",
+      ),
+      spelling: t(
+        "Watch the *-ia-* of **amiable** against the *-ica-* of **amicable**, the double *l* of **ebullient**, the *-oi-* of **boisterous**, and the double *f* of **standoffish**.",
+        "注意 **amiable** 的 -ia- 和 **amicable** 的 -ica-、**ebullient** 的双写 l、**boisterous** 的 -oi-，以及 **standoffish** 的双写 f。",
+      ),
+    },
+    notes: `
+      amiable|a warm, pleasant neighbor who waved and smiled every morning|a warm host greeting every guest with a smile|a gentle, friendly grandmother who chatted with the children|amiable describes a friendly person; amicable describes friendly dealings|amiable 形容友善的人；amicable 形容友好的关系或处理方式|amicable describes friendly dealings such as agreements, not a warm and pleasant person|amicable 形容协议等友好的处理，不是形容温和可亲的人|standoffish means cold and distant, the opposite of warm and friendly|standoffish 指冷淡疏远，和温和友善正相反|a · mi · a · ble|the -iable ending, with ia|结尾是 -iable，中间是 ia
+      amicable|an agreement between two companies settled without a quarrel|a divorce in which a couple split things fairly and stayed friendly|relations between two towns settled by friendly talks|amicable describes friendly dealings; amiable describes a friendly person|amicable 形容友好的处理；amiable 形容友善的人|amiable describes a warm and pleasant person, not an agreement, divorce or set of relations|amiable 形容温和可亲的人，不是形容协议、离婚或关系|contentious means full of argument, the opposite of settled without a quarrel|contentious 指争议不断，和没有争吵正相反|am · i · ca · ble|the -icable ending, with ica|结尾是 -icable，中间是 ica
+      convivial|an evening of good food, friendly talk and songs at a table|a host keeping every guest laughing and talking|a warm pub full of chatter that drew neighbors in|convivial is friendly and lively in company; reclusive avoids company|convivial 是热闹友好的聚会气氛；reclusive 是回避交往|reclusive means avoiding other people, the opposite of a lively evening shared with friends|reclusive 指回避他人，和与朋友共度热闹夜晚正相反|insular means caring only about one's own small group, not warm and open to all|insular 指只关心自己的小圈子，不是对所有人热情开放|con · viv · i · al|the -ivial ending, from vivid life|结尾是 -ivial，与表示生活的 viv 有关
+      ebullient|a coach bursting with joy who hugged every player|a mood so cheerful and energetic she sang all the way to school|a loud laugh full of happy energy|ebullient is bubbling with cheerful energy; standoffish is cold and distant|ebullient 热情洋溢；standoffish 冷淡疏远|reclusive means avoiding other people, not bursting with joy and energy|reclusive 指回避他人，不是满怀喜悦和活力|standoffish means cold and distant, the opposite of bursting with cheerful energy|standoffish 指冷淡疏远，和热情洋溢正相反|e · bul · lient|the double l and the -ient ending|双写 l，结尾是 -ient
+      vivacious|a girl full of sparkle who was the life of the party|a bright, lively personality that draws people|a smiling dancer full of lively charm leading a parade|vivacious is attractively lively; standoffish is cold and distant|vivacious 活泼迷人；standoffish 冷淡疏远|standoffish means cold and distant, not bright and lively|standoffish 指冷淡疏远，不是活泼开朗|reclusive means avoiding other people, not being the life of the party|reclusive 指回避他人，不是聚会的焦点|vi · va · cious|the -cious ending, as in delicious|结尾是 -cious，同 delicious
+      boisterous|boys racing down a hall shouting, laughing and banging lockers|a crowd cheering, stamping and singing loudly|a party with loud music and dancing on the tables after midnight|boisterous is noisy and energetic; demure is quiet and modest|boisterous 喧闹活跃；demure 安静端庄|reclusive means avoiding people, not noisy and energetic among them|reclusive 指回避他人，不是在人群中喧闹|demure means quiet, shy and modest, the opposite of loud and wild|demure 指安静端庄、腼腆，和吵闹狂欢正相反|bois · ter · ous|the oi of bois- and the -ous ending|bois- 里是 oi，结尾是 -ous
+      reclusive|a writer living alone in the woods who saw no visitors|a widower hiding in his house and avoiding everyone|a billionaire living alone on an island who would meet no one|reclusive avoids all company; insular keeps to its own small group|reclusive 回避所有人；insular 只守着自己的小圈子|insular means caring only about one's own group, not living completely alone and seeing no one|insular 指只关心自己的群体，不是完全独居、谁也不见|convivial means lively and sociable, the opposite of avoiding everyone|convivial 指热闹好交际，和回避所有人正相反|re · clu · sive|the -sive ending, as in massive|结尾是 -sive，同 massive
+      insular|a village caring only about its own group and suspicious of strangers|a club interested only in its own members|a team keeping to its own small circle|insular keeps to its own small group; reclusive avoids everyone|insular 只守着自己的小圈子；reclusive 谁都不见|reclusive means avoiding all company, not keeping to one's own group of members|reclusive 指回避一切交往，不是只和自己圈子里的人来往|amiable means friendly and pleasant, not suspicious of outsiders|amiable 指友善可亲，不是对外人心存戒备|in · su · lar|the -ar ending, as in island words|结尾是 -ar
+      provincial|a government in a city far from the capital|narrow attitudes formed in a small country town|a newspaper read only in one region far from the capital|provincial is narrow and far from the capital; cosmopolitan is open to the whole world|provincial 偏远狭隘；cosmopolitan 胸怀世界|cosmopolitan means open to people and ideas from many countries, the opposite of narrow and local|cosmopolitan 指接纳各国的人和思想，和狭隘地方性正相反|reclusive means avoiding other people, not belonging to a region outside the capital|reclusive 指回避他人，不是属于首都以外的地区|pro · vin · cial|the -cial ending, said like shul|结尾 -cial 读作 shul
+      standoffish|a boss who nodded coldly but came to every staff party|a woman cool with strangers who goes out with friends every night|a cold, distant manner that kept party guests away|standoffish is cold among people; reclusive avoids people entirely|standoffish 在人群中态度冷淡；reclusive 完全回避人群|reclusive means avoiding company entirely, not going to parties and staying cold there|reclusive 指完全回避交往，不是参加聚会却态度冷淡|amiable means warm and friendly, the opposite of cold and distant|amiable 指温和友善，和冷淡疏远正相反|stand · off · ish|stand plus off plus -ish, with the double f|stand 加 off 再加 -ish，双写 f
+    `,
+  },
 );
 
 const nerve = batch(
@@ -45,17 +112,50 @@ const nerve = batch(
   ["Words of Nerve and Offense", "胆大妄为与冒犯的词"],
   ["shameless boldness and open wrongs", "厚颜无耻与公然的错误"],
   `
-  brazen|bold and without shame|厚颜无耻的|It was a ___ lie.|The thieves made a ___ raid in daylight.|She gave a ___ smile.|impetuous,rash|brazenly
-  effrontery|insolent or shameless boldness|厚颜无耻，放肆|He had the ___ to ask for more money.|Her ___ shocked the committee.|The ___ of the demand was breathtaking.|impertinent,rash|
-  temerity|excessive confidence or boldness; nerve|鲁莽，冒失|Nobody had the ___ to question the boss.|She had the ___ to correct the professor.|What ___ to ask for a raise on your first day!|impertinent,rash|
-  impertinent|not showing proper respect; rude|无礼的，冒失的|The child asked an ___ question.|Don't be ___ to your grandmother.|His ___ remarks offended her.|gratuitous,flagrant|impertinence
-  impetuous|acting quickly without thought or care|冲动的，鲁莽的|An ___ decision cost him his job.|The ___ youth jumped into the river.|Her ___ nature led to trouble.|flagrant,blatant|impetuously
-  rash|acting without careful thought; a red patch on the skin|轻率的；皮疹|It was ___ to quit without a plan.|Don't make a ___ promise.|The baby had a ___ on her arm.|blatant,flagrant|rashly
-  blatant|done openly and unashamedly; very obvious|公然的，明目张胆的|It was a ___ attempt to cheat.|The report shows ___ bias.|He told a ___ lie.|temerity,impertinent|blatantly
-  flagrant|conspicuously and shockingly wrong|公然的，恶劣的|It was a ___ breach of the rules.|The referee punished the ___ foul.|They showed a ___ disregard for safety.|temerity,effrontery|flagrantly
-  presumptuous|failing to observe the limits of what is proper; too bold|放肆的，冒昧的|It would be ___ to call him by his first name.|Her ___ question annoyed the host.|It was ___ of him to assume he had won.|flagrant,temerity|presumptuously
-  gratuitous|done without good reason; uncalled for|无端的，不必要的|The film had ___ violence.|His ___ insults hurt her.|That was a ___ remark.|presumptuous,impertinent|gratuitously
+  brazen|bold and without shame|厚颜无耻的|After weeks of careful thought, he told the ___ lie to the judge's face, without a trace of shame.|The thieves planned their ___ raid for months and carried it out in broad daylight, without a hint of shame.|Caught in the act, she gave the teacher a calm, ___ smile, with no shame and no haste at all.|impetuous,rash|brazenly
+  effrontery|insolent or shameless boldness|厚颜无耻，放肆|He had the ___ to ask for more money after stealing from us, a shameless nerve that stunned everyone.|Her ___, shamelessly insulting the judges to their faces, shocked the committee.|The shameless ___ of the demand, made by the very man who had caused the damage, was breathtaking.|candor,decorum|
+  temerity|excessive confidence or boldness; nerve|鲁莽，冒失|Nobody had the ___ to question the boss, since such boldness could cost a job.|As a first-year student, she had the ___ to correct the professor in front of everyone, a boldness many thought went too far.|What ___, to ask for a raise on your very first day—far too bold!|candor,decorum|
+  impertinent|not showing proper respect; rude|无礼的，冒失的|The child's ___ question about the visitor's age, rude and not at all respectful, embarrassed his mother.|Don't be ___ to your grandmother; speak to her with respect.|His ___ remarks, mocking the teacher to her face, showed no respect at all.|demure,amiable|impertinence
+  impetuous|acting quickly without thought or care|冲动的，鲁莽的|His ___ decision to quit the job, made in a single angry second, cost him dearly.|Without a moment's thought, the ___ youth jumped into the icy river to fetch his hat.|Her ___ nature, always acting in a flash before thinking, led her into trouble.|brazen,flagrant|impetuously
+  rash|acting without careful thought; a red patch on the skin|轻率的；皮疹|It was ___ to quit without a plan, a choice made without careful thought.|Don't make a ___ promise without thinking about whether you can keep it.|Buying the house after one quick look was ___; he never stopped to think it through.|presumptuous,blatant|rashly
+  blatant|done openly and unashamedly; very obvious|公然的，明目张胆的|It was a ___ attempt to cheat, so obvious that everyone in the room saw it.|The report shows ___ bias, plain for anyone to see on every page.|He told a ___ lie, so obvious that even the children knew it was false.|tacit,gratuitous|blatantly
+  flagrant|conspicuously and shockingly wrong|公然的，恶劣的|It was a ___ breach of the rules, shockingly and plainly wrong.|The referee sent off the player for the ___ foul, a shocking, deliberate kick.|The owners showed a ___ disregard for safety, a shocking wrong that cost lives.|gratuitous,presumptuous|flagrantly
+  presumptuous|failing to observe the limits of what is proper; too bold|放肆的，冒昧的|It would be ___ to book the wedding hall before she had even agreed to marry you.|It was ___ of the new employee to move into the empty corner office, assuming it was his without asking.|It was ___ of him to assume he had won before the votes were counted.|impertinent,gratuitous|presumptuously
+  gratuitous|done without good reason; uncalled for|无端的，不必要的|The film was full of ___ violence that served no purpose in the story.|The report added ___ detail, pages of figures that had no purpose and that no one needed.|Cutting down the healthy old tree was ___: there was no reason for it at all.|presumptuous,impertinent|gratuitously
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **brazen** thief smiled at the camera, had the **effrontery** to wave, and committed a **flagrant** crime in front of a hundred people. These ten words help you describe shameless boldness, rude behavior and wrongs done in the open.",
+      "那个厚颜无耻的（**brazen**）小偷对着摄像头微笑，竟然放肆（**effrontery**）地挥手，在上百人面前公然（**flagrant**）作案。这十个词帮你描写不知羞耻的胆大妄为、无礼的言行和公开的过错。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Effrontery** is boldness without *shame*; **temerity** is boldness that goes *too far*, even if it is not shameful; **candor** is mere honesty and is not boldness at all.",
+        "**effrontery** 是不知*羞耻*的放肆；**temerity** 是*过分*的胆大，未必可耻；**candor** 只是坦率，根本谈不上胆大妄为。",
+      ),
+      use: t(
+        "**Rash** and **impetuous** describe acting without thought; **brazen** describes acting without shame, even after careful planning; **blatant** describes something wrong that is plain to see, and **flagrant** something shockingly wrong.",
+        "**rash** 和 **impetuous** 形容不假思索地行动；**brazen** 形容不知羞耻，哪怕事先精心策划；**blatant** 形容错得明明白白，**flagrant** 形容错得令人震惊。",
+      ),
+      spelling: t(
+        "Watch the double *f* of **effrontery**, the *-ous* of **impetuous** and **presumptuous** with a *u* before it, the *-ent* of **impertinent**, and the *-ant* of **blatant** and **flagrant**.",
+        "注意 **effrontery** 的双写 f、**impetuous** 和 **presumptuous** 结尾 -ous 前的 u、**impertinent** 的 -ent，以及 **blatant** 和 **flagrant** 的 -ant。",
+      ),
+    },
+    notes: `
+      brazen|a lie told to a judge's face after weeks of careful thought|a daylight raid planned for months and done without shame|a calm, shameless smile from someone caught in the act|brazen is bold without shame; rash is acting without thought|brazen 是厚颜无耻；rash 是不假思索|impetuous means acting in a flash without thought, not a calm, carefully planned act|impetuous 指一时冲动、不假思索，不是冷静、精心策划的行为|rash means acting without careful thought, not something planned for weeks or months|rash 指考虑不周，不是筹划了几周几个月的事|bra · zen|the z and the -en ending|中间是 z，结尾是 -en
+      effrontery|a thief shamelessly asking for more money after stealing|a woman shamelessly insulting judges to their faces|a shameless demand made by the man who caused the damage|effrontery is shameless nerve; candor is honest frankness|effrontery 是厚颜无耻；candor 是坦率真诚|candor is honest, open speech, not shameless nerve that stuns everyone|candor 是坦诚直言，不是令人震惊的厚颜无耻|decorum is polite, proper behavior, the opposite of shameless insult|decorum 是得体的举止，和厚颜无耻的冒犯正相反|ef · fron · ter · y|the double f, from front|双写 f，来自 front
+      temerity|boldness to question a boss that could cost a job|a first-year student correcting a professor in public|asking for a raise on the very first day|temerity is boldness that goes too far; effrontery is shameless boldness|temerity 是过分的胆大；effrontery 是不知羞耻的放肆|candor is simple honesty, not boldness that goes too far|candor 只是坦率，不是过分的胆大|decorum is proper, polite behavior, the opposite of going too far|decorum 是得体的举止，和越界冒失正相反|te · mer · i · ty|te-mer at the start and the -ity ending|开头是 te-mer，结尾是 -ity
+      impertinent|a rude question about a visitor's age|speaking without respect to a grandmother|remarks mocking a teacher to her face|impertinent is rude and disrespectful; demure is shy and modest|impertinent 无礼；demure 腼腆端庄|demure means shy, quiet and modest, the opposite of rude|demure 指腼腆端庄，和无礼正相反|amiable means friendly and pleasant, not rude and disrespectful|amiable 指友善可亲，不是粗鲁无礼|im · per · ti · nent|im- plus pertinent, with the -ent ending|im- 加 pertinent，结尾是 -ent
+      impetuous|a decision to quit made in a single angry second|a youth jumping into an icy river without a moment's thought|a nature always acting in a flash before thinking|impetuous acts in a flash without thought; brazen acts without shame|impetuous 一时冲动；brazen 不知羞耻|brazen means bold without shame, not acting in a flash without thinking|brazen 指厚颜无耻，不是一时冲动、不假思索|flagrant describes a shockingly wrong act, not a person who acts too quickly|flagrant 形容恶劣的错误，不是形容行动太快的人|im · pet · u · ous|the u before the -ous ending|结尾 -ous 前有 u
+      rash|quitting a job without a plan or careful thought|a promise made without thinking whether it can be kept|buying a house after one quick look|rash is acting without thought; presumptuous is overstepping one's place|rash 指考虑不周；presumptuous 指越分冒昧|presumptuous means too bold in assuming one's rights, not acting without careful thought|presumptuous 指自以为是、越分，不是考虑不周|blatant means very obvious, not done without thinking|blatant 指明目张胆，不是不假思索|rash|the sh at the end, as in cash|结尾是 sh，同 cash
+      blatant|a cheating attempt so obvious that everyone saw it|bias plain for anyone to see on every page|a lie so obvious that even children knew it was false|blatant is plain for all to see; tacit is understood without words|blatant 是明目张胆；tacit 是心照不宣|tacit means understood without being said, the opposite of plain for all to see|tacit 指心照不宣，和人人看得见正相反|gratuitous means done for no reason, not obvious to everyone|gratuitous 指无端的，不是人人看得出的|bla · tant|the -ant ending, not -ent|结尾是 -ant，不是 -ent
+      flagrant|a shockingly and plainly wrong breach of the rules|a shocking, deliberate kick that got a player sent off|a disregard for safety that cost lives|flagrant is shockingly wrong; gratuitous is done for no reason|flagrant 是恶劣的错误；gratuitous 是无端的|gratuitous means done for no reason, not shockingly wrong|gratuitous 指无端的，不是错得令人震惊|presumptuous means too bold in assuming, not a shocking breach of rules or safety|presumptuous 指自以为是，不是对规则或安全的恶劣违犯|fla · grant|the -grant ending, as in fragrant|结尾是 -grant，同 fragrant
+      presumptuous|booking a wedding hall before she agreed to marry|a new employee moving into the corner office without asking|assuming victory before the votes were counted|presumptuous assumes too much; impertinent is simply rude|presumptuous 是自以为是；impertinent 只是无礼|impertinent means rude and disrespectful in speech, not assuming one has a right before it is given|impertinent 指言语无礼，不是还没获准就自以为有权|gratuitous means done for no reason, not assuming too much|gratuitous 指无端的，不是自以为是|pre · sump · tu · ous|the -tuous ending, with u before -ous|结尾是 -tuous，-ous 前有 u
+      gratuitous|violence in a film that served no purpose|pages of figures that had no purpose|cutting down a healthy tree for no reason|gratuitous is done for no reason; presumptuous is too bold|gratuitous 无端；presumptuous 冒昧|presumptuous means too bold in assuming, not done for no reason at all|presumptuous 指自以为是，不是毫无理由|impertinent means rude and disrespectful, not useless and without purpose|impertinent 指无礼，不是无用、没有目的|gra · tu · i · tous|the -uitous ending, with ui|结尾是 -uitous，中间是 ui
+    `,
+  },
 );
 
 const skill = batch(
@@ -63,17 +163,50 @@ const skill = batch(
   ["Words of Skill and Clumsiness", "技艺与笨拙的词"],
   ["doing things well and doing them badly", "做得好与做得差"],
   `
-  adept|very skilled or proficient|熟练的，内行的|She is ___ at solving puzzles; she finishes them in minutes.|He became ___ in three languages.|An ___ cook works quickly.|inept,novice|
-  adroit|clever or skillful in using the hands or mind|灵巧的，机敏的|The ___ lawyer won the case.|She made an ___ move in the game.|His ___ fingers fixed the watch.|rudimentary,novice|adroitly
-  deft|neatly skillful and quick|灵巧的，熟练的|With a ___ flick, she tied the knot.|His ___ touch calmed the horse.|The ___ editor cut the story.|novice,rudimentary|deftly
-  dexterity|skill in using one's hands or mind|灵巧，敏捷|Juggling requires great ___.|She showed ___ with the scissors.|His mental ___ impressed the panel.|novice,erudite|dexterous
-  acumen|the ability to make good judgments and quick decisions|敏锐，聪明|Her business ___ made her rich.|He lacked political ___.|Investors admire her ___.|erudite,dexterity|
-  erudite|having or showing great knowledge from study|博学的|The ___ professor quoted Latin poets.|It is an ___ book.|Her ___ lecture impressed us.|prodigious,inept|erudition
-  novice|a person new to an activity|新手|The course is for every ___.|A ___ climber should not go alone.|He is a ___ at chess.|adept,prodigious|novices
-  inept|having no skill; clumsy|笨拙的，无能的|The ___ thief dropped the jewels.|They hired an ___ manager who lost the firm a fortune.|His ___ apology made things worse.|adept,deft|ineptly,ineptitude
-  rudimentary|involving only basic principles; undeveloped|基础的，初步的|He has a ___ knowledge of French.|The hut had ___ furniture.|They used ___ tools.|prodigious,adroit|
-  prodigious|remarkably great in size, amount or degree|巨大的，惊人的|She has a ___ memory.|The boy showed ___ talent.|They ate a ___ amount of food.|erudite,rudimentary|prodigiously,prodigy
+  adept|very skilled or proficient|熟练的，内行的|She is ___ at solving puzzles, finishing even the hardest in minutes, though she has never studied mathematics.|After years of living abroad rather than any study, he became ___ in three languages, speaking each with real skill.|An ___ cook works quickly and skillfully, never wasting a move, though she may never have read a cookbook.|inept,erudite|
+  adroit|clever or skillful in using the hands or mind|灵巧的，机敏的|The ___ lawyer cleverly turned the witness's own words against him and won the case.|Her ___ move, a clever trap set three turns ahead, won the game.|His ___ fingers skillfully fixed the tiny watch in minutes.|inept,rudimentary|adroitly
+  deft|neatly skillful and quick|灵巧的，熟练的|Her ___ fingers tied the knot with one quick, neat flick.|His ___ touch, light and sure, calmed the frightened horse.|The ___ editor cut the story neatly and quickly, removing every extra word.|inept,rudimentary|deftly
+  dexterity|skill in using one's hands or mind|灵巧，敏捷|Juggling five balls requires great ___, quick and skillful hands.|She cut out the paper shapes with ___, her fingers moving skillfully around every curve.|The surgeon's ___, the steady skill of her hands, saved the patient.|acumen,novice|dexterous
+  acumen|the ability to make good judgments and quick decisions|敏锐，聪明|Her business ___, the ability to judge deals well and decide quickly, made her rich.|He lacked political ___, misjudging every vote he faced.|Investors admire her ___, her sharp judgment in choosing which companies will grow.|dexterity,novice|
+  erudite|having or showing great knowledge from study|博学的|The ___ professor, who had studied ancient languages for forty years, quoted Latin poets from memory.|The book is deeply ___, full of learning gathered from a lifetime of reading.|Her ___ lecture, packed with knowledge from years of research, impressed us.|adept,rudimentary|erudition
+  novice|a person new to an activity|新手|The course is for any ___ who has never played before.|A ___ climber, new to the sport, should not go alone.|He is still a ___ at chess, having learned the moves only last week.|savant,subordinate|novices
+  inept|having no skill; clumsy|笨拙的，无能的|The ___ thief dropped the jewels and tripped over the alarm wire.|The ___ manager they hired lost the firm a fortune through one clumsy mistake after another.|His ___ apology, clumsy and badly worded, made things worse.|adept,deft|ineptly,ineptitude
+  rudimentary|involving only basic principles; undeveloped|基础的，初步的|His knowledge of French is ___, enough to order coffee but no more.|The hut had only ___ furniture: a plank for a bed and a box for a table.|They built the shelter with ___ tools, simple stone axes and sticks.|prodigious,erudite|
+  prodigious|remarkably great in size, amount or degree|巨大的，惊人的|Her memory is ___, able to recite whole books after one reading.|The boy showed ___ talent, playing concerts at six that grown pianists found hard.|The amount of food they ate was ___: ten pizzas and three cakes between four people.|erudite,rudimentary|prodigiously,prodigy
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **novice** watched the old carpenter's **deft** hands with wonder; his own were still **inept**, but he hoped that years of practice would make him **adept**. These ten words help you describe skill, knowledge and clumsiness.",
+      "这位新手（**novice**）惊叹地看着老木匠那双灵巧的（**deft**）手；他自己的手还很笨拙（**inept**），但他希望多年的练习能让自己变得熟练（**adept**）。这十个词帮你描写技艺、学识和笨拙。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Dexterity** is skill of the hands; **acumen** is sharp judgment in deciding; an **erudite** person has great knowledge from study, which is not the same as being **adept** at doing something.",
+        "**dexterity** 是手上的灵巧；**acumen** 是判断决策的敏锐；**erudite** 的人学识渊博，这和擅长做某事（**adept**）并不一样。",
+      ),
+      use: t(
+        "**Adept** and **inept** look alike but mean the opposite: an *adept* worker is very skilled, an *inept* one clumsy. **Rudimentary** means only basic, while **prodigious** means remarkably great.",
+        "**adept** 和 **inept** 长得很像，意思却相反：adept 的工人技艺精湛，inept 的工人笨手笨脚。**rudimentary** 指只是初步的，**prodigious** 则指大得惊人。",
+      ),
+      spelling: t(
+        "Watch the *oi* of **adroit**, the *-ity* of **dexterity** (from *dexter*), the *-umen* of **acumen**, and the *-gious* of **prodigious**.",
+        "注意 **adroit** 里的 oi、**dexterity** 结尾的 -ity（来自 dexter）、**acumen** 的 -umen，以及 **prodigious** 的 -gious。",
+      ),
+    },
+    notes: `
+      adept|a woman who finishes the hardest puzzles in minutes without studying mathematics|a man skilled in three languages from living abroad, not from study|a cook working quickly and skillfully who never read a cookbook|adept is skilled at doing something; erudite is learned from study|adept 指擅长做事；erudite 指博学|inept means clumsy and without skill, the opposite of very skilled|inept 指笨拙无能，和技艺精湛正相反|erudite means having great knowledge from study, not skill gained without study|erudite 指学识来自苦读，不是未经研读而得的技能|a · dept|a plus dept, with the -ept ending|a 加 dept，结尾是 -ept
+      adroit|a lawyer cleverly turning a witness's words against him|a clever trap set three turns ahead that won a game|fingers that skillfully fixed a tiny watch|adroit is clever and skillful; rudimentary is only basic|adroit 灵巧机敏；rudimentary 只是初步的|inept means clumsy and unskilled, the opposite of clever and skillful|inept 指笨拙，和灵巧机敏正相反|rudimentary means only basic and undeveloped, not clever and skillful|rudimentary 指初步、粗浅，不是灵巧机敏|a · droit|the oi of -droit|-droit 里是 oi
+      deft|fingers tying a knot with one quick, neat flick|a light, sure touch that calmed a horse|an editor cutting a story neatly and quickly|deft is quick and neat; inept is clumsy|deft 快而利落；inept 笨拙|inept means clumsy and unskilled, the opposite of quick and neat|inept 指笨拙，和快而利落正相反|rudimentary means basic and undeveloped, not neat and skillful|rudimentary 指初步粗浅，不是利落熟练|deft|the -ft ending, as in left|结尾是 -ft，同 left
+      dexterity|quick, skillful hands needed to juggle five balls|fingers moving skillfully around every curve of paper shapes|the steady skill of a surgeon's hands|dexterity is skill with the hands; acumen is skill in judging|dexterity 是手巧；acumen 是判断敏锐|acumen is sharp judgment in making decisions, not skill with the hands|acumen 是判断决策的敏锐，不是手上的灵巧|novice is a beginner, not a skill|novice 是新手，不是一种技能|dex · ter · i · ty|dexter- plus -ity|dexter- 加 -ity
+      acumen|the ability to judge deals and decide quickly in business|political judgment a man lacked as he misjudged every vote|sharp judgment in choosing companies that will grow|acumen is sharp judgment; dexterity is skill of the hands|acumen 是判断敏锐；dexterity 是手巧|dexterity is skill in using the hands, not sharp judgment in business or politics|dexterity 是手上的技巧，不是商业或政治上的判断力|novice is a person new to an activity, not an ability to judge well|novice 是初学者，不是判断力|ac · u · men|a single c and the -men ending|只有一个 c，结尾是 -men
+      erudite|a professor who studied ancient languages for forty years|a book full of learning from a lifetime of reading|a lecture packed with knowledge from years of research|erudite is learned from study; adept is skilled at doing|erudite 指博学；adept 指熟练|adept means skilled at doing something, not full of knowledge from long study|adept 指擅长做事，不是饱读诗书|rudimentary means only basic, the opposite of deep learning|rudimentary 指初步粗浅，和学识渊博正相反|er · u · dite|the -dite ending, said like dight|结尾是 -dite，读作 dight
+      novice|a course for anyone who has never played before|a climber new to the sport who should not go alone|a chess player who learned the moves only last week|a novice is a beginner; a savant is an expert|novice 是新手；savant 是学者专家|savant is a person of great learning or skill, the opposite of someone new to an activity|savant 是学识或技艺高深的人，和新手正相反|subordinate is someone of lower rank under another, not someone new to an activity|subordinate 是职位较低的下属，不是刚接触某事的人|nov · ice|nov plus -ice, as in notice|nov 加 -ice，同 notice
+      inept|a thief who dropped the jewels and tripped the alarm|a manager who lost a fortune through clumsy mistakes|a clumsy, badly worded apology|inept is clumsy; adept is very skilled|inept 笨拙；adept 熟练|adept means very skilled, the opposite of clumsy|adept 指技艺精湛，和笨拙正相反|deft means quick and neat, the opposite of clumsy|deft 指利落灵巧，和笨拙正相反|in · ept|the prefix in- meaning not, where adept starts with ad-|开头是表示否定的 in-，而 adept 开头是 ad-
+      rudimentary|French enough to order coffee but no more|a hut with only a plank bed and a box table|simple stone axes and sticks used to build a shelter|rudimentary is only basic; prodigious is remarkably great|rudimentary 只是初步的；prodigious 大得惊人|prodigious means remarkably great, the opposite of only basic|prodigious 指大得惊人，和仅仅初步正相反|erudite means deeply learned, not basic and undeveloped|erudite 指学识渊博，不是粗浅初步|ru · di · men · ta · ry|the -mentary ending, as in elementary|结尾是 -mentary，同 elementary
+      prodigious|a memory able to recite whole books after one reading|a talent playing hard concerts at age six|ten pizzas and three cakes eaten by four people|prodigious is remarkably great; rudimentary is only basic|prodigious 大得惊人；rudimentary 只是初步|erudite means learned from study, not remarkably great in size or amount|erudite 指博学，不是规模或数量大得惊人|rudimentary means basic and undeveloped, the opposite of remarkably great|rudimentary 指初步粗浅，和大得惊人正相反|pro · di · gious|the -gious ending, as in religious|结尾是 -gious，同 religious
+    `,
+  },
 );
 
 const dullness = batch(
@@ -81,17 +214,50 @@ const dullness = batch(
   ["Words of Dull and Stale Things", "乏味与陈腐之物的词"],
   ["the boring, the bland and the worn out", "无聊、平淡与陈旧"],
   `
-  banal|so lacking in originality as to be boring|陈腐的，平庸的|The song had ___ lyrics.|He made a ___ remark about the weather.|The plot was ___.|jaded,soporific|banality
-  bland|lacking strong features; without much flavor|平淡的；无味的|The soup was ___ without salt.|He gave a ___ answer.|The hotel had ___ walls.|jaded,tedious|blandly
-  hackneyed|used so often that it has lost its effect|陈词滥调的|The speech was full of ___ phrases.|It is a ___ story of love and war.|Avoid ___ images in your poem.|jaded,soporific|
-  trite|overused and lacking original thought|陈腐的|"Time heals all wounds" sounds ___.|Her advice was ___.|The film ends with a ___ twist.|jaded,soporific|
-  prosaic|lacking poetic beauty; ordinary|平凡的，乏味的|The reason was ___: he missed the bus.|Their ___ lives seemed dull to him.|The poem's ___ style disappointed us.|jaded,soporific|
-  mundane|lacking interest; of this world|单调的；世俗的|He hated ___ chores like ironing.|Her job was ___.|The ___ details of life bore him.|soporific,hackneyed|
-  vapid|offering nothing interesting or challenging|乏味的，空洞的|The film's ___ dialogue bored us.|He gave a ___ smile.|The show was ___ and silly.|jaded,soporific|
-  tedious|too long, slow or dull; tiresome|冗长乏味的|Filling in forms is ___.|It was a ___ journey.|The lecture was ___.|jaded,hackneyed|tediously,tedium
-  soporific|tending to cause sleep|催眠的|The ___ hum of the engine made him drowsy.|The speech was ___.|This tea has a ___ effect.|jaded,hackneyed|
-  jaded|tired and bored after having too much of something|厌倦的，腻烦的|The ___ critic had seen too many films.|He felt ___ after years of travel.|Nothing could please her ___ taste.|mundane,hackneyed|
+  banal|so lacking in originality as to be boring|陈腐的，平庸的|The song's ___ lyrics, the same unoriginal rhymes about love found in a thousand others, bored us, though its fast beat kept everyone awake.|Stuck for something to say, he made a ___ remark about the weather, as dull and unoriginal as could be.|The plot was ___, the same tired story of a lost dog finding its way home, though the young audience never felt sleepy.|jaded,soporific|banality
+  bland|lacking strong features; without much flavor|平淡的；无味的|Without salt or spice, the soup was ___, with almost no flavor at all.|He gave a ___ answer, so careful and featureless that it said nothing at all, and it took only a second.|The hotel's ___ beige walls had no color or pattern to catch the eye.|jaded,tedious|blandly
+  hackneyed|used so often that it has lost its effect|陈词滥调的|The speech was full of ___ phrases like "at the end of the day," used so often they meant nothing, yet it was short and lively.|It is a ___ story of love and war, told so many times that it has lost all its power.|Avoid ___ images like "red as a rose" in your poem; they have been used so often they no longer move anyone.|jaded,soporific|
+  trite|overused and lacking original thought|陈腐的|"Time heals all wounds" sounds ___ to someone grieving, an overused saying with no fresh thought in it.|Her advice was ___, the same worn-out sayings everyone had heard before.|The film ends with a ___ twist, the overused "it was all a dream," that wakes the audience up with groans.|jaded,soporific|
+  prosaic|lacking poetic beauty; ordinary|平凡的，乏味的|The reason he was late was ___: he simply missed the bus, nothing dramatic at all.|Their ___ lives, plain and ordinary, seemed dull to their adventurous son.|The poem's flat, ___ style, more like a shopping list than poetry, disappointed us.|jaded,soporific|
+  mundane|lacking interest; of this world|单调的；世俗的|He hated ___ chores like ironing and washing dishes, the dull, everyday work of the house.|Her job was ___, the same ordinary, everyday tasks of filing and copying.|The ___ details of daily life, such as paying bills and buying bread, bored him.|soporific,hackneyed|
+  vapid|offering nothing interesting or challenging|乏味的，空洞的|The film's ___ dialogue, empty of any idea or wit, bored us, though the loud action kept us wide awake.|The host's ___ chatter, empty of any interesting idea, filled the pauses on the lively show.|The show was ___ and silly, with nothing interesting or challenging in it, yet loud enough to keep anyone awake.|jaded,soporific|
+  tedious|too long, slow or dull; tiresome|冗长乏味的|Filling in the forty pages of forms was ___, slow, long and tiresome.|It was a ___ journey of twelve slow hours on a crowded bus.|The lecture was ___, dragging on for three slow, tiresome hours.|jaded,hackneyed|tediously,tedium
+  soporific|tending to cause sleep|催眠的|The ___ hum of the engine made him drowsy, and soon he was fast asleep.|The speech was so ___ that half the audience fell asleep in their seats.|This herbal tea has a ___ effect, helping you fall asleep at night.|jaded,hackneyed|
+  jaded|tired and bored after having too much of something|厌倦的，腻烦的|The ___ critic, tired and bored after seeing too many films, yawned through the premiere.|He felt ___ after years of travel, so tired of new places that nothing excited him.|Nothing could please her ___ taste; she had eaten at every fine restaurant and grown bored with them all.|mundane,hackneyed|
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **jaded** critic sat through a **tedious** three-hour film full of **hackneyed** lines and **bland** jokes, and its **soporific** music nearly put him to sleep. These ten words help you say exactly why something is dull: worn out, flavorless, empty, ordinary or sleep-making.",
+      "那位厌倦的（**jaded**）影评人坐着看完了一部冗长乏味的（**tedious**）三小时电影，满是陈词滥调的（**hackneyed**）台词和平淡的（**bland**）笑话，催眠的（**soporific**）配乐差点让他睡着。这十个词帮你准确说出一样东西为什么乏味：陈旧、平淡、空洞、平凡，还是让人犯困。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Jaded** describes a *person* tired of too much of something; **soporific** describes a thing that makes you *sleepy*; **banal**, **trite** and **hackneyed** describe words or ideas that are unoriginal or worn out.",
+        "**jaded** 形容对某物腻烦的*人*；**soporific** 形容让人*犯困*的东西；**banal**、**trite** 和 **hackneyed** 则形容缺乏新意或用滥了的言辞和想法。",
+      ),
+      use: t(
+        "**Tedious** means boring because it is too *long* or slow; **mundane** and **prosaic** mean boring because they are *ordinary*; **vapid** means boring because it is *empty* of ideas; **bland** means without strong flavor or features.",
+        "**tedious** 是因为太*长*太慢而乏味；**mundane** 和 **prosaic** 是因为太*平凡*而乏味；**vapid** 是因为*空洞*无物而乏味；**bland** 是没有鲜明的味道或特点。",
+      ),
+      spelling: t(
+        "Watch the *ck* of **hackneyed** and its *-eyed* ending, the *-ious* of **tedious**, the *-ific* of **soporific**, and the single *n* of **banal**.",
+        "注意 **hackneyed** 里的 ck 和结尾 -eyed、**tedious** 的 -ious、**soporific** 的 -ific，以及 **banal** 只有一个 n。",
+      ),
+    },
+    notes: `
+      banal|lyrics with the same unoriginal rhymes as a thousand others|a dull, unoriginal remark about the weather|the same tired story of a lost dog finding its way home|banal is unoriginal and boring; soporific makes you sleepy|banal 缺乏新意而乏味；soporific 让人犯困|jaded describes a person tired of too much of something, not lyrics, remarks or plots|jaded 形容腻烦的人，不是形容歌词、话语或情节|soporific means causing sleep, which these unoriginal things do not do|soporific 指催人入睡，而这些缺乏新意的东西并没有让人犯困|ba · nal|a single n and the -al ending|只有一个 n，结尾是 -al
+      bland|soup without salt or spice that had almost no flavor|a careful, featureless answer that took only a second|beige hotel walls with no color or pattern|bland lacks flavor or strong features; tedious is long and tiresome|bland 平淡无味；tedious 冗长乏味|jaded describes a tired, bored person, not food, answers or walls without features|jaded 形容腻烦的人，不是形容没有特点的食物、回答或墙壁|tedious means too long or slow, not without flavor or strong features|tedious 指冗长缓慢，不是平淡无味|bland|bl plus and|bl 加 and
+      hackneyed|phrases used so often they meant nothing in a short, lively speech|a story of love and war told so many times it lost its power|images like red as a rose that no longer move anyone|hackneyed is worn out by overuse; soporific makes people sleepy|hackneyed 用滥了；soporific 催人入睡|jaded describes a person who is tired of something, not phrases or images worn out by use|jaded 形容腻烦的人，不是形容用滥了的词句或意象|soporific means causing sleep, not losing effect through overuse|soporific 指催人入睡，不是因用滥而失效|hack · neyed|the ck and the -eyed ending|中间是 ck，结尾是 -eyed
+      trite|a saying with no fresh thought offered to someone grieving|advice made of worn-out sayings everyone had heard|an overused it-was-all-a-dream twist that made the audience groan|trite is overused and unoriginal; soporific causes sleep|trite 陈腐；soporific 催眠|jaded describes a person bored by too much, not a saying or a twist|jaded 形容腻烦的人，不是形容一句话或一个情节转折|soporific means making people sleepy, not overused and unoriginal|soporific 指让人犯困，不是陈腐老套|trite|tr plus ite, with a silent final e|tr 加 ite，结尾 e 不发音
+      prosaic|a plain reason for being late: missing the bus|plain, ordinary lives that bored an adventurous son|a flat poem more like a shopping list than poetry|prosaic is plain and ordinary; soporific makes you sleepy|prosaic 平凡无奇；soporific 让人犯困|jaded describes a tired, bored person, not a plain reason, life or style|jaded 形容腻烦的人，不是形容平淡的理由、生活或文风|soporific means causing sleep, not plain and ordinary|soporific 指催人入睡，不是平凡普通|pro · sa · ic|prosa- from prose plus -ic|来自 prose 的 prosa- 加 -ic
+      mundane|everyday chores like ironing and washing dishes|a job of the same ordinary filing and copying|daily details like paying bills and buying bread|mundane is ordinary and everyday; hackneyed is worn out by overuse|mundane 平凡日常；hackneyed 用滥了|soporific means making people sleepy, not ordinary everyday work|soporific 指让人犯困，不是平凡的日常事务|hackneyed describes words or ideas worn out by use, not ordinary chores and details|hackneyed 形容用滥了的言辞或想法，不是平凡的家务琐事|mun · dane|the -dane ending, said like dane|结尾是 -dane
+      vapid|dialogue empty of any idea or wit in a loud action film|a host's empty chatter on a lively show|a silly show with nothing interesting in it, loud enough to keep anyone awake|vapid is empty of ideas; soporific makes you sleepy|vapid 空洞无物；soporific 催人入睡|jaded describes a person bored by too much, not dialogue, chatter or a show|jaded 形容腻烦的人，不是形容对白、闲聊或节目|soporific means making people sleepy, while these empty things kept people wide awake|soporific 指让人犯困，而这些空洞的东西反而让人清醒|vap · id|a single p and the -id ending|只有一个 p，结尾是 -id
+      tedious|forty pages of forms that were slow and tiresome|a twelve-hour journey on a crowded bus|a lecture dragging on for three slow hours|tedious is tiresome because it is long and slow; jaded is how a tired, bored person feels|tedious 是因冗长缓慢而乏味；jaded 是人腻烦的感受|jaded describes a person who is bored, not a task, journey or lecture that is too long|jaded 形容腻烦的人，不是形容太长的任务、旅程或讲座|hackneyed means worn out by overuse, not too long and slow|hackneyed 指用滥了，不是冗长缓慢|te · di · ous|the -dious ending, with an i|结尾是 -dious，有 i
+      soporific|an engine hum that put a man fast asleep|a speech that sent half the audience to sleep|herbal tea that helps you fall asleep|soporific causes sleep; hackneyed is worn out|soporific 催人入睡；hackneyed 用滥了|jaded describes a tired, bored person, not something that makes others fall asleep|jaded 形容腻烦的人，不是让别人睡着的东西|hackneyed means used so often it has lost its effect, not causing sleep|hackneyed 指用滥失效，不是催人入睡|sop · o · rif · ic|sopor- plus -ific|sopor- 加 -ific
+      jaded|a critic tired of too many films yawning at a premiere|a traveler so tired of new places that nothing excited him|a taste bored by every fine restaurant|jaded is tired from too much; mundane is ordinary|jaded 是因太多而腻烦；mundane 是平凡普通|mundane describes ordinary everyday things, not a person bored from having too much|mundane 形容平凡的日常事物，不是因太多而腻烦的人|hackneyed describes words worn out by use, not a person or taste grown bored|hackneyed 形容用滥了的言辞，不是腻烦的人或口味|ja · ded|jade plus d, with one d in the middle|jade 加 d，中间只有一个 d
+    `,
+  },
 );
 
 const scolding = batch(
@@ -99,17 +265,50 @@ const scolding = batch(
   ["Words of Scolding and Scorn", "斥责与蔑视的词"],
   ["harsh words and cold rejection", "严厉的言辞与冷漠的排斥"],
   `
-  chastise|to scold or punish severely|斥责，惩罚|The coach will ___ the late players.|She would ___ her son for lying.|Critics ___ the minister for his silence.|ostracize,tirade|chastised
-  upbraid|to scold or criticize someone sharply|严厉批评|His mother began to ___ him for his rudeness.|The judge will ___ the lawyer.|Do not ___ her in public.|tirade,disdain|upbraided
-  denounce|to publicly declare to be wrong or evil|谴责，公开指责|Leaders rushed to ___ the attack.|He would ___ his former friends.|The bishop will ___ the new law.|ostracize,tirade|denounced,denunciation
-  deplore|to feel or express strong disapproval of|强烈反对，谴责|We ___ violence of every kind.|Many ___ the decision to close the library.|Teachers ___ the cuts.|tirade,ostracize|deplored,deplorable
-  tirade|a long, angry speech of criticism|长篇激烈的指责|He launched into a ___ against the referee.|Her ___ lasted ten minutes.|The ___ ended in tears.|vitriolic,disdain|tirades
-  vitriolic|filled with bitter criticism or malice|尖刻的，恶毒的|She wrote a ___ review of the play.|The debate became ___.|His ___ letters upset the staff.|truculent,tirade|
-  disdain|the feeling that someone is unworthy of respect; to feel this|鄙视，蔑视|She looked at the mess with ___.|He seemed to ___ ordinary people.|They treated the rules with ___.|repudiate,deplore|disdained,disdainful
-  repudiate|to refuse to accept or be associated with|否认；拒绝接受|The party will ___ the extremists.|She chose to ___ the claims.|He would ___ the debt.|tirade,vitriolic|repudiated,repudiation
-  ostracize|to exclude from a society or group|排斥，放逐|The village chose to ___ the family.|Children often ___ those who are different.|They would ___ anyone who spoke out.|tirade,vitriolic|ostracized,ostracism
-  truculent|eager to argue or fight; aggressively defiant|好斗的，粗暴的|The ___ teenager refused to apologize.|He gave a ___ reply.|A ___ customer shouted at the staff.|vitriolic,disdain|truculence
+  chastise|to scold or punish severely|斥责，惩罚|The coach will ___ the late players, scolding them hard and making them run extra laps.|She would ___ her son for lying, scolding him sharply and taking away his phone.|The teacher chose to ___ the boys for cheating, punishing them with a week of detention.|ostracize,repudiate|chastised
+  upbraid|to scold or criticize someone sharply|严厉批评|His mother began to ___ him for his rudeness, scolding him sharply in front of his friends.|The judge will ___ the lawyer, criticizing her sharply to her face for arriving late.|Do not ___ her in public; if you must scold her sharply, do it privately.|deplore,ostracize|upbraided
+  denounce|to publicly declare to be wrong or evil|谴责，公开指责|Leaders rushed to ___ the attack, publicly calling it evil on every channel.|In his speech he would ___ his former friends, declaring publicly that they were traitors.|The bishop will ___ the new law from the pulpit, publicly declaring it wicked.|repudiate,ostracize|denounced,denunciation
+  deplore|to feel or express strong disapproval of|强烈反对，谴责|We ___ violence of every kind and feel deeply sad whenever it happens.|Many readers ___ the decision to close the library, saying how strongly they disapprove of it.|Teachers ___ the cuts to school budgets, expressing deep disapproval.|chastise,ostracize|deplored,deplorable
+  tirade|a long, angry speech of criticism|长篇激烈的指责|He launched into a ___ against the referee, ten minutes of furious shouting.|Her angry ___, a long speech attacking every member of the board, lasted ten minutes.|The coach's long, furious ___ at the players ended only when he lost his voice.|platitude,disdain|tirades
+  vitriolic|filled with bitter criticism or malice|尖刻的，恶毒的|Her review of the play was ___, full of bitter, cruel criticism of every actor.|The debate grew ___, as each speaker poured bitter, hateful criticism on the other.|His ___ letters, filled with bitter insults about his boss, upset the staff.|truculent,acrid|
+  disdain|the feeling that someone is unworthy of respect; to feel this|鄙视，蔑视|She looked down her nose at the cheap food with ___, as if it were beneath someone of her standing.|He seemed to regard ordinary people with ___, treating them as unworthy of his respect.|They treated the rules with ___, sneering at them as beneath their notice.|apathy,tirade|disdained,disdainful
+  repudiate|to refuse to accept or be associated with|否认；拒绝接受|Without a word of criticism, the party chose to ___ the extremists, simply refusing to be associated with them.|She chose to ___ the claims, flatly refusing to accept that any of them were true.|He would ___ the debt, refusing to accept that he had ever owed it.|deplore,chastise|repudiated,repudiation
+  ostracize|to exclude from a society or group|排斥，放逐|The village chose to ___ the family, shutting them out of every gathering and refusing to speak to them.|Children often ___ those who are different, leaving them out of games and groups.|The club would ___ anyone who spoke out, banning them from every meeting.|repudiate,chastise|ostracized,ostracism
+  truculent|eager to argue or fight; aggressively defiant|好斗的，粗暴的|The ___ teenager, fists clenched and ready for a fight, refused to apologize.|He gave a ___ reply, glaring and daring the officer to do something about it.|A ___ customer, spoiling for a fight, shoved the counter and shouted at the staff.|vitriolic,demure|truculence
   `,
+  "context-clues",
+  {
+    intro: t(
+      "After the scandal, the newspapers began to **denounce** the mayor, one columnist wrote a **vitriolic** attack, and his old friends chose to **ostracize** him. These ten words help you describe scolding, bitter criticism, scorn and cold rejection.",
+      "丑闻曝光后，各家报纸开始公开谴责（**denounce**）市长，一位专栏作家写了篇尖刻的（**vitriolic**）抨击文章，他的老朋友们也决定排斥（**ostracize**）他。这十个词帮你描写斥责、尖刻的批评、蔑视和冷漠的排斥。",
+    ),
+    watchOut: {
+      meanings: t(
+        "You **chastise** or **upbraid** a *person* by scolding him; you **deplore** a *thing* you disapprove of; you **denounce** something publicly as evil; you **repudiate** a claim or a group by refusing to accept it.",
+        "**chastise** 和 **upbraid** 是斥责*人*；**deplore** 是对*事*表示强烈不满；**denounce** 是公开指斥为邪恶；**repudiate** 是拒不接受某种说法或某个群体。",
+      ),
+      use: t(
+        "**Vitriolic** describes bitter, cruel *words*; **truculent** describes a *person* eager to fight; **disdain** is the feeling of looking down on something, not anger and not mere lack of interest.",
+        "**vitriolic** 形容尖刻恶毒的*言辞*；**truculent** 形容好斗的*人*；**disdain** 是看不起某物的感受，既不是愤怒，也不只是缺乏兴趣。",
+      ),
+      spelling: t(
+        "Watch the *-ise* of **chastise**, the *-ize* of **ostracize**, the *ai* of **upbraid** and **disdain**, and the *-iol-* of **vitriolic**.",
+        "注意 **chastise** 结尾是 -ise、**ostracize** 结尾是 -ize、**upbraid** 和 **disdain** 里的 ai，以及 **vitriolic** 中间的 -iol-。",
+      ),
+    },
+    notes: `
+      chastise|a coach scolding late players and making them run extra laps|a mother scolding her son and taking away his phone|a teacher punishing cheating boys with detention|chastise scolds or punishes someone; ostracize shuts someone out|chastise 斥责或惩罚；ostracize 排斥|ostracize means to shut someone out of a group, not to scold and punish him while he stays|ostracize 指把人排斥出群体，不是在他留下时斥责惩罚|repudiate means to refuse to accept something, not to scold or punish a person|repudiate 指拒绝接受，不是斥责或惩罚人|chas · tise|chas- plus -tise, ending in -ise|chas- 加 -tise，结尾是 -ise
+      upbraid|a mother scolding her son sharply in front of his friends|a judge criticizing a lawyer sharply to her face|a warning to scold someone sharply only in private|upbraid scolds a person sharply; deplore disapproves of a thing|upbraid 严厉斥责人；deplore 对事表示不满|deplore means to disapprove strongly of a thing, not to scold a person to his face|deplore 指对事强烈不满，不是当面斥责人|ostracize means to shut someone out of a group, not to scold him sharply|ostracize 指排斥某人，不是严厉斥责|up · braid|up plus braid, with ai|up 加 braid，中间是 ai
+      denounce|leaders publicly calling an attack evil on every channel|a speech publicly declaring former friends traitors|a bishop publicly declaring a new law wicked from the pulpit|denounce publicly declares something wrong; repudiate refuses to accept it|denounce 公开指斥；repudiate 拒绝接受|repudiate means to refuse to accept or be linked with something, not to declare it evil in public|repudiate 指拒绝接受或撇清关系，不是公开指斥其邪恶|ostracize means to shut someone out of a group, not to declare something wicked|ostracize 指排斥某人，不是宣布某事邪恶|de · nounce|de- plus nounce, with ou|de- 加 nounce，中间是 ou
+      deplore|feeling deep sadness and disapproval at violence of every kind|readers saying how strongly they disapprove of closing a library|teachers expressing deep disapproval of budget cuts|deplore disapproves of a thing; chastise scolds a person|deplore 对事表示不满；chastise 斥责人|chastise means to scold or punish a person, not to disapprove of violence, a decision or cuts|chastise 指斥责惩罚人，不是对暴力、决定或削减表示不满|ostracize means to shut a person out of a group, not to disapprove of a decision|ostracize 指排斥人，不是对决定表示不满|de · plore|de- plus plore, as in explore|de- 加 plore，同 explore
+      tirade|ten minutes of furious shouting at a referee|a long speech attacking every member of a board|a coach's long, furious speech that ended when he lost his voice|a tirade is a long, angry speech; a platitude is a dull, overused remark|tirade 是长篇怒斥；platitude 是陈词滥调|platitude is a dull, overused remark, not a long, furious speech|platitude 是陈腐的套话，不是长篇的愤怒斥责|disdain is a feeling of looking down on something, not a speech of shouted criticism|disdain 是看不起的感受，不是高声斥责的讲话|ti · rade|ti plus rade, with one r|ti 加 rade，只有一个 r
+      vitriolic|a review full of bitter, cruel criticism of every actor|a debate in which speakers poured hateful criticism on each other|letters filled with bitter insults about a boss|vitriolic describes bitter, cruel words; truculent describes a person eager to fight|vitriolic 形容尖刻恶毒的言辞；truculent 形容好斗的人|truculent describes a person eager to fight, not bitter, cruel writing or speech|truculent 形容好斗的人，不是尖刻恶毒的文字或言论|acrid describes a sharp, bitter smell or taste, not cruel criticism|acrid 形容刺鼻的气味或味道，不是恶毒的批评|vit · ri · ol · ic|the -iol- in the middle and the -ic ending|中间是 -iol-，结尾是 -ic
+      disdain|a woman looking down her nose at cheap food as beneath her|a man treating ordinary people as unworthy of respect|people sneering at rules as beneath their notice|disdain looks down on something as unworthy; apathy simply does not care|disdain 是看不起；apathy 只是漠不关心|apathy is a lack of interest or feeling, not looking down on something as beneath one|apathy 是缺乏兴趣或感情，不是把东西看得低人一等|tirade is a long, angry speech, not a cold feeling of looking down on someone|tirade 是长篇怒斥，不是冷冷地看不起人|dis · dain|dis- plus dain, with ai|dis- 加 dain，中间是 ai
+      repudiate|a party refusing, without criticism, to be associated with extremists|a woman flatly refusing to accept that the claims were true|a man refusing to accept that he ever owed a debt|repudiate refuses to accept something; deplore strongly disapproves of it|repudiate 拒绝接受；deplore 强烈不满|deplore means to express strong disapproval, not to refuse to accept a claim or debt without criticism|deplore 指表示强烈不满，不是不加批评地拒绝接受说法或债务|chastise means to scold or punish a person, not to refuse to accept a claim|chastise 指斥责惩罚人，不是拒绝接受说法|re · pu · di · ate|re- plus pudi- plus -ate|re- 加 pudi- 再加 -ate
+      ostracize|a village shutting a family out of every gathering|children leaving those who are different out of games|a club banning anyone who spoke out from every meeting|ostracize shuts someone out; repudiate refuses to accept a claim or link|ostracize 把人排斥在外；repudiate 拒绝接受说法或关系|repudiate means to refuse to accept a claim or a link, not to shut a person out of gatherings and games|repudiate 指拒绝接受说法或关系，不是把人排斥在聚会和游戏之外|chastise means to scold or punish someone, not to shut him out|chastise 指斥责惩罚，不是排斥|os · tra · cize|the -cize ending, with c|结尾是 -cize，用 c
+      truculent|a teenager with clenched fists ready for a fight|a glaring reply daring an officer to act|a customer spoiling for a fight who shoved the counter|truculent is eager to fight; vitriolic is bitter in words|truculent 好斗；vitriolic 言辞尖刻|vitriolic describes bitter, cruel words, not a person ready to fight|vitriolic 形容尖刻的言辞，不是准备动手的人|demure means quiet and modest, the opposite of eager to fight|demure 指端庄安静，和好斗正相反|truc · u · lent|the -ulent ending, as in fraudulent|结尾是 -ulent，同 fraudulent
+    `,
+  },
 );
 
 const harm = batch(
@@ -117,17 +316,50 @@ const harm = batch(
   ["Words of Harm and Trickery", "伤害与欺诈的词"],
   ["coaxing, cheating, stirring up and slowly hurting", "哄骗、欺诈、煽动和慢慢伤害"],
   `
-  cajole|to persuade by flattery or gentle urging|哄骗，劝诱|She tried to ___ her father into buying a dog.|He managed to ___ them into helping.|Don't try to ___ me.|instigate,foment|cajoled
-  chicanery|the use of tricks to deceive|诡计，欺骗|The election was full of ___.|They won the case by legal ___.|He was accused of financial ___.|nefarious,illicit|
-  nefarious|wicked or criminal|邪恶的，不法的|The gang had ___ plans.|He was involved in ___ activities.|A ___ plot was uncovered.|cajole,foment|
-  unscrupulous|having no moral principles; not honest or fair|不讲道德的，无耻的|An ___ landlord raised the rent.|___ dealers cheated the tourists.|He was ___ in business.|cajole,deleterious|unscrupulously
-  insidious|proceeding in a gradual, subtle way but with harmful effects|暗中为害的，潜伏的|The disease is ___ and slow.|Rumors had an ___ effect on morale.|It is an ___ form of control.|cajole,chicanery|insidiously
-  pernicious|having a harmful effect, especially in a gradual way|有害的|Lies have a ___ effect on trust.|The ___ influence of gambling spread.|It is a ___ myth.|cajole,chicanery|
-  deleterious|causing harm or damage|有害的|Smoking has ___ effects on health.|The drought had a ___ impact on crops.|Noise is ___ to sleep.|cajole,chicanery|
-  illicit|forbidden by law, rules or custom|非法的，违禁的|Police seized ___ drugs.|They ran an ___ trade in ivory.|The affair was ___.|nefarious,chicanery|illicitly
-  foment|to stir up trouble or violence|煽动，挑起|Agents tried to ___ unrest.|He was accused of trying to ___ a strike.|Rumors can ___ hatred.|cajole,chicanery|fomented
-  instigate|to bring about or start an action or event|发起，煽动|Who will ___ the inquiry?|They tried to ___ a rebellion.|She would ___ the change.|cajole,chicanery|instigated,instigator
+  cajole|to persuade by flattery or gentle urging|哄骗，劝诱|With sweet words and promises of help with the chores, she tried to ___ her father into buying a dog.|Rather than begging or bullying, he managed to ___ them into helping by praising their skill and smiling warmly.|Don't try to ___ me with compliments and gentle coaxing; flattery will not change my mind.|goad,entreat|cajoled
+  chicanery|the use of tricks to deceive|诡计，欺骗|The election was full of ___: forged ballots, false names and secret tricks to fool the voters.|They won the case by legal ___, tricking the court with clever but dishonest maneuvers.|He was accused of financial ___, using false accounts to deceive his investors.|transparency,candor|
+  nefarious|wicked or criminal|邪恶的，不法的|The gang's ___ plan, a wicked scheme to poison the city's water, could have killed thousands.|He was caught in ___ dealings, criminal schemes of theft and blackmail that ruined many families.|Detectives uncovered the ___ plot, an evil, criminal plan to kidnap the mayor's daughter.|innocuous,exemplary|
+  unscrupulous|having no moral principles; not honest or fair|不讲道德的，无耻的|The ___ landlord cheated his tenants out of their deposits with forged bills, caring nothing for honesty.|Dishonest and ___, the dealers sold fake watches to tourists and lied about their worth.|Being ___ in business, he would lie, cheat and break any promise to make a profit.|impeccable,punctilious|unscrupulously
+  insidious|proceeding in a gradual, subtle way but with harmful effects|暗中为害的，潜伏的|The disease is ___, spreading slowly and silently for years before anyone notices the harm.|The effect of the rumors on morale was ___, quietly and gradually turning the team against itself.|Such control is ___, so subtle that its victims do not see how it slowly harms them.|blatant,innocuous|insidiously
+  pernicious|having a harmful effect, especially in a gradual way|有害的|The effect of lies on trust is ___, slowly destroying it until nothing is left.|The ___ influence of gambling spread through the town, ruining one family after another.|The myth that girls cannot do math is ___; it has done great harm to many students over the years.|innocuous,inconsequential|
+  deleterious|causing harm or damage|有害的|Smoking is ___ to health, damaging the heart and lungs.|The long drought was ___ to the crops, leaving half of them withered and dead.|Loud noise at night is ___ to sleep, harming both its length and its depth.|innocuous,conducive|
+  illicit|forbidden by law, rules or custom|非法的，违禁的|Police seized the ___ drugs, which the law forbids anyone to sell.|They ran an ___ trade in ivory, carried on in secret because the law bans it.|The ___ meetings, which their families had forbidden, took place in secret at night.|overt,unregulated|illicitly
+  foment|to stir up trouble or violence|煽动，挑起|Foreign agents tried to ___ unrest, stirring up anger and riots in the streets.|He was accused of trying to ___ a strike, urging angry workers to walk out and fight.|Hateful rumors can ___ violence, stirring up crowds until they attack their neighbors.|quell,allay|fomented
+  instigate|to bring about or start an action or event|发起，煽动|The new minister will ___ an inquiry, starting a full investigation into the scandal next week.|Rebel leaders tried to ___ an uprising, getting it started by calling the people to arms.|She hoped to ___ change at the school, setting a new program in motion herself.|rescind,forestall|instigated,instigator
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **unscrupulous** official used **chicanery** to win votes, tried to **cajole** his rivals into silence, and spread **insidious** rumors that slowly did **pernicious** harm. These ten words help you describe coaxing, cheating, stirring up trouble and slow, hidden damage.",
+      "那个不讲道德的（**unscrupulous**）官员用诡计（**chicanery**）拉票，试图哄骗（**cajole**）对手闭嘴，还散布暗中为害的（**insidious**）谣言，慢慢造成有害的（**pernicious**）影响。这十个词帮你描写哄骗、欺诈、煽动和缓慢而隐蔽的伤害。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Foment** means to *stir up* trouble that grows; **instigate** means to *start* an action, good or bad, such as an inquiry; **cajole** means to win someone over with flattery, not to stir anyone up.",
+        "**foment** 是*煽动*不断滋长的麻烦；**instigate** 是*发起*某个行动，好坏皆可，比如一项调查；**cajole** 是用奉承把人哄过来，不是煽动别人。",
+      ),
+      use: t(
+        "**Insidious** stresses that harm is *hidden* and gradual; **pernicious** stresses that harm is *great* and spreading; **deleterious** simply means *harmful to* something, as in *deleterious to health*. **Illicit** means forbidden by law, while **nefarious** means wicked.",
+        "**insidious** 强调伤害*隐蔽*而缓慢；**pernicious** 强调伤害*严重*且蔓延；**deleterious** 只是*对……有害*，如 deleterious to health。**illicit** 指法律禁止，**nefarious** 指邪恶。",
+      ),
+      spelling: t(
+        "Watch the *ch* at the start of **chicanery**, the *-scrup-* of **unscrupulous**, the *-ter-* in the middle of **deleterious**, and the *-licit* of **illicit**, which sounds like *elicit* but means something else.",
+        "注意 **chicanery** 开头的 ch、**unscrupulous** 中间的 -scrup-、**deleterious** 中间的 -ter-，以及 **illicit** 结尾的 -licit，它和 elicit 读音相近，意思却完全不同。",
+      ),
+    },
+    notes: `
+      cajole|sweet words and promises used to win a dog from a father|praise and warm smiles used instead of begging or bullying|compliments and gentle coaxing that will not change a mind|cajole wins someone over with flattery; entreat begs earnestly|cajole 是用奉承哄劝；entreat 是恳求|goad means to provoke or needle someone into acting, not to win him with sweet words and praise|goad 指刺激、激怒别人去做事，不是用甜言蜜语和夸奖打动他|entreat means to beg earnestly, not to coax with flattery instead of begging|entreat 指恳切哀求，不是不求人而用奉承去哄|ca · jole|the j in the middle and the -ole ending|中间是 j，结尾是 -ole
+      chicanery|forged ballots, false names and secret tricks in an election|clever but dishonest maneuvers that tricked a court|false accounts used to deceive investors|chicanery is trickery to deceive; candor is honest frankness|chicanery 是欺诈的诡计；candor 是坦诚直率|transparency is openness for all to see, the opposite of secret tricks and false accounts|transparency 是公开透明，和暗中的诡计、假账正相反|candor is honest, open speech, not dishonest tricks to deceive|candor 是坦诚直言，不是欺骗人的诡计|chi · can · er · y|the ch at the start, said like sh|开头 ch 读作 sh
+      nefarious|a wicked scheme to poison a city's water|criminal schemes of theft and blackmail that ruined families|an evil plan to kidnap a mayor's daughter|nefarious is wicked and criminal; innocuous is harmless|nefarious 邪恶不法；innocuous 无害|innocuous means harmless, the opposite of a plan that could kill or ruin people|innocuous 指无害，和可能害死人、毁掉人的计划正相反|exemplary means good enough to be copied, the opposite of wicked and criminal|exemplary 指可作楷模，和邪恶不法正相反|ne · far · i · ous|the -arious ending, as in various|结尾是 -arious，同 various
+      unscrupulous|a landlord cheating tenants with forged bills|dealers selling fake watches and lying about their worth|a businessman who would lie, cheat and break promises for profit|unscrupulous has no moral principles; punctilious is careful to behave correctly|unscrupulous 毫无道德准则；punctilious 讲究举止规矩|impeccable means without any fault, the opposite of lying and cheating|impeccable 指无可挑剔，和撒谎欺骗正相反|punctilious means very careful about correct behavior, the opposite of breaking every rule of honesty|punctilious 指严守礼节规矩，和毫无诚信正相反|un · scru · pu · lous|un- plus scrupulous, with -pulous|un- 加 scrupulous，结尾是 -pulous
+      insidious|a disease spreading slowly and silently for years|rumors quietly and gradually turning a team against itself|control so subtle its victims do not see the harm|insidious is hidden and gradual; blatant is plain for all to see|insidious 隐蔽而缓慢；blatant 明目张胆|blatant means very obvious, the opposite of slow, silent and subtle|blatant 指明目张胆，和缓慢、无声、隐蔽正相反|innocuous means harmless, the opposite of something that slowly harms|innocuous 指无害，和慢慢造成伤害正相反|in · sid · i · ous|in- plus sid- plus -ious|in- 加 sid- 再加 -ious
+      pernicious|lies slowly destroying trust until nothing is left|gambling ruining one family after another in a town|a myth that has done great harm to many students|pernicious is greatly harmful; innocuous is harmless|pernicious 危害极大；innocuous 无害|innocuous means harmless, the opposite of destroying trust and ruining families|innocuous 指无害，和摧毁信任、毁掉家庭正相反|inconsequential means unimportant and without effect, not causing great harm|inconsequential 指无关紧要、毫无影响，不是造成巨大伤害|per · ni · cious|the -cious ending, as in vicious|结尾是 -cious，同 vicious
+      deleterious|smoking that damages the heart and lungs|a drought that left half the crops withered and dead|noise at night that harms sleep|deleterious is harmful to something; conducive is helpful to it|deleterious 对……有害；conducive 对……有利|innocuous means harmless, not damaging health, crops or sleep|innocuous 指无害，不会损害健康、庄稼或睡眠|conducive means helping something happen, the opposite of damaging it|conducive 指有助于某事，和损害它正相反|del · e · te · ri · ous|the -ter- in the middle and the -ious ending|中间是 -ter-，结尾是 -ious
+      illicit|drugs that the law forbids anyone to sell|an ivory trade carried on in secret because the law bans it|meetings forbidden by families and held in secret at night|illicit is forbidden; overt is done openly|illicit 被禁止的；overt 公开的|overt means done openly, not carried on in secret|overt 指公开进行，不是暗中进行|unregulated means without rules or control, not forbidden by law or by families|unregulated 指没有监管，不是被法律或家人禁止|il · li · cit|the double l of il- and the -licit ending|il- 里双写 l，结尾是 -licit
+      foment|foreign agents stirring up anger and riots in the streets|urging angry workers to walk out and fight|hateful rumors stirring up crowds to attack neighbors|foment stirs up trouble; quell puts it down|foment 煽动骚乱；quell 平息骚乱|quell means to put down unrest, the opposite of stirring up anger and riots|quell 指平息骚乱，和煽动愤怒与暴乱正相反|allay means to calm fears or anger, the opposite of stirring them up|allay 指减轻恐惧或怒气，和煽动正相反|fo · ment|fo plus ment, as in moment|fo 加 ment，同 moment
+      instigate|a minister starting a full investigation into a scandal|rebel leaders getting an uprising started|a woman setting a new program in motion at a school|instigate starts something; forestall prevents it|instigate 发起；forestall 预先阻止|rescind means to cancel something already decided, not to start a new action|rescind 指撤销已定之事，不是发起新行动|forestall means to prevent something before it happens, the opposite of getting it started|forestall 指事先阻止，和发起正相反|in · sti · gate|in- plus sti- plus -gate|in- 加 sti- 再加 -gate
+    `,
+  },
 );
 
 const care = batch(
@@ -135,17 +367,50 @@ const care = batch(
   ["Words of Care and Carelessness", "细心与粗心的词"],
   ["working with great care and working with too little", "非常仔细与不够仔细"],
   `
-  fastidious|very attentive to detail; hard to please|一丝不苟的；挑剔的|He is ___ about his clothes.|The ___ cook weighed every gram.|She was too ___ to eat there.|inadvertent,perfunctory|fastidiously
-  punctilious|showing great attention to detail or correct behavior|拘泥细节的，一丝不苟的|The ___ butler served the tea.|She was ___ about paying debts.|He was ___ in keeping records.|inadvertent,perfunctory|punctiliously
-  painstaking|done with great care and thoroughness|煞费苦心的，仔细的|The restoration was ___ work.|They made a ___ search of the area.|___ research proved her right.|inadvertent,negligent|painstakingly
-  exhaustive|including all elements or aspects; thorough|详尽的，彻底的|The police made an ___ search.|It is an ___ list.|They ran ___ tests.|inadvertent,officious|exhaustively
-  circumspect|wary and unwilling to take risks|谨慎的，小心的|She was ___ in her remarks to the press.|Investors are ___ now.|Be ___ about whom you trust.|fastidious,inadvertent|circumspection
-  negligent|failing to take proper care|疏忽的，玩忽职守的|The ___ driver caused the crash.|The school was found ___.|A ___ guard let him escape.|officious,circumspect|negligently,negligence
-  lax|not strict or careful enough|松懈的，不严格的|Security at the gate was ___.|They have ___ rules on parking.|He was ___ about checking facts.|inadvertent,officious|laxity
-  perfunctory|carried out with minimum effort|敷衍的|He gave a ___ nod.|The guard made a ___ check of our bags.|Her ___ apology fooled nobody.|lax,exhaustive|perfunctorily
-  inadvertent|not resulting from or achieved through deliberate planning|无意的，疏忽的|It was an ___ mistake.|The leak was ___.|An ___ remark caused offense.|negligent,circumspect|inadvertently
-  officious|too eager to tell people what to do; interfering|爱管闲事的，好发号施令的|An ___ guard ordered us to move.|The ___ clerk read every rule aloud.|She found him ___ and rude.|fastidious,negligent|officiously
+  fastidious|very attentive to detail; hard to please|一丝不苟的；挑剔的|He is ___ about his clothes, ironing every shirt twice and refusing to wear anything with the smallest crease.|The ___ cook weighed every gram of flour and threw out any dish that was not exactly right.|She was too ___ to eat there, put off by a single smudge on her fork.|perfunctory,lax|fastidiously
+  punctilious|showing great attention to detail or correct behavior|拘泥细节的，一丝不苟的|The ___ butler served the tea exactly as etiquette demands, never missing a single rule of manners.|She was ___ about paying debts, settling every bill on the very day it was due.|He was ___ in keeping records, noting every payment correctly and on time.|lax,nonchalant|punctiliously
+  painstaking|done with great care and thoroughness|煞费苦心的，仔细的|Restoring the old painting was ___ work, cleaning it inch by inch with tiny brushes for two years.|They made a ___ search of the field, combing every patch of grass by hand for the lost ring.|Years of ___ research, checking every source with great care, proved her right.|perfunctory,negligent|painstakingly
+  exhaustive|including all elements or aspects; thorough|详尽的，彻底的|The police search was ___, covering every room, drawer and cupboard in the house.|The list is ___, naming every single plant that grows on the island.|Their tests were ___, checking every possible cause until none was left.|superficial,perfunctory|exhaustively
+  circumspect|wary and unwilling to take risks|谨慎的，小心的|She was ___ in her remarks to the press, thinking carefully before each word and taking no risks.|After the crash, investors are ___, moving slowly and avoiding every risky deal.|Be ___ about whom you trust; check carefully before you share your secrets.|impetuous,rash|circumspection
+  negligent|failing to take proper care|疏忽的，玩忽职守的|The ___ driver, looking at his phone instead of the road, caused the crash.|The court found the school ___, since no one had checked the broken fire alarms for years.|The ___ guard, asleep at his post, let the prisoner escape.|vigilant,circumspect|negligently,negligence
+  lax|not strict or careful enough|松懈的，不严格的|Security at the gate was ___; the guards waved everyone through without checking a single bag.|Their rules on parking are ___, so people leave their cars wherever they like.|He was ___ about checking facts, printing rumors without bothering to confirm them.|stringent,vigilant|laxity
+  perfunctory|carried out with minimum effort|敷衍的|Without looking up from his phone, he gave the visitor only the most ___ nod, the least effort he could make.|The guard's check of our bags was ___: he glanced at one and waved us on.|Her ___ apology, two mumbled words with no real effort behind them, fooled nobody.|painstaking,exhaustive|perfunctorily
+  inadvertent|not resulting from or achieved through deliberate planning|无意的，疏忽的|The mistake was ___: he never meant to delete the file, and it happened while he was carefully trying to save it.|The leak of the plans was ___, caused by an email sent by accident to the wrong person despite every care taken.|His remark was ___ but still caused offense; though he had chosen his words with care, he had no idea the topic was painful.|negligent,circumspect|inadvertently
+  officious|too eager to tell people what to do; interfering|爱管闲事的，好发号施令的|Bossy and ___, the guard kept ordering us to move although we were doing nothing wrong.|The ___ clerk kept interfering, telling every customer how to fill in forms they had already filled in correctly.|She found her neighbor ___, always telling her how to raise her children and run her house.|indulgent,nonchalant|officiously
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **painstaking** detective made an **exhaustive** search of the house, while his **negligent** partner gave only a **perfunctory** glance at the garden. These ten words help you describe great care, too much care and too little.",
+      "那位煞费苦心的（**painstaking**）侦探把房子搜了个遍（**exhaustive**），而他那位疏忽的（**negligent**）搭档只敷衍地（**perfunctory**）扫了一眼花园。这十个词帮你描写非常仔细、过分讲究和不够仔细。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Negligent** means failing to take the care one *should*, so it carries blame; **inadvertent** means *not intended*, even when great care was taken; **lax** means not strict enough about rules.",
+        "**negligent** 指没尽到*应尽*的注意，带有责备；**inadvertent** 指*并非有意*，哪怕已经很小心；**lax** 指对规则不够严格。",
+      ),
+      use: t(
+        "**Fastidious** is about being hard to please over small details; **punctilious** is about following correct rules and manners exactly; **officious** is about bossing *other people* around, not about care at all.",
+        "**fastidious** 指在细节上难以满足；**punctilious** 指严格遵守规矩和礼节；**officious** 指对*别人*发号施令，根本不是细心。",
+      ),
+      spelling: t(
+        "Watch the *-tidious* of **fastidious**, the *punct-* of **punctilious** (as in *punctual*), the *-ive* of **exhaustive** with its silent *h*, and the *-tory* of **perfunctory**.",
+        "注意 **fastidious** 的 -tidious、**punctilious** 开头的 punct-（同 punctual）、**exhaustive** 不发音的 h 和结尾 -ive，以及 **perfunctory** 的 -tory。",
+      ),
+    },
+    notes: `
+      fastidious|a man ironing every shirt twice and refusing the smallest crease|a cook weighing every gram and throwing out imperfect dishes|a woman put off by a single smudge on her fork|fastidious is hard to please over details; lax is not strict enough|fastidious 在细节上挑剔；lax 不够严格|perfunctory means done with minimum effort, the opposite of ironing every shirt twice|perfunctory 指敷衍了事，和衬衫要熨两遍正相反|lax means not careful or strict enough, the opposite of refusing the smallest flaw|lax 指不够认真严格，和容不下一点瑕疵正相反|fas · tid · i · ous|the -tidious ending, with i twice|结尾是 -tidious，有两个 i
+      punctilious|a butler serving tea exactly as etiquette demands|a woman settling every bill on the day it was due|a man noting every payment correctly and on time|punctilious follows correct rules exactly; nonchalant is calmly unconcerned|punctilious 严守规矩；nonchalant 漫不经心|lax means not strict enough, the opposite of never missing a single rule or date|lax 指不够严格，和从不漏掉任何规矩或日期正相反|nonchalant means calm and unconcerned, not exact about rules and dates|nonchalant 指若无其事、不在意，不是对规矩和日期一丝不苟|punc · til · i · ous|punct- as in punctual, then -ilious|开头是 punct-，同 punctual，结尾是 -ilious
+      painstaking|cleaning an old painting inch by inch for two years|combing every patch of grass by hand for a lost ring|research checking every source with great care|painstaking takes great care; perfunctory takes the least effort|painstaking 煞费苦心；perfunctory 敷衍了事|perfunctory means done with minimum effort, not two years of inch-by-inch work|perfunctory 指敷衍了事，不是两年一寸一寸的工作|negligent means failing to take proper care, the opposite of great care|negligent 指疏忽大意，和非常仔细正相反|pains · tak · ing|pains plus taking, with the s kept|pains 加 taking，保留 s
+      exhaustive|a search covering every room, drawer and cupboard|a list naming every single plant on an island|tests checking every possible cause until none was left|exhaustive covers everything; superficial covers only the surface|exhaustive 面面俱到；superficial 浮于表面|superficial means dealing only with the surface, not covering every room or every cause|superficial 指浮于表面，不是覆盖每个房间、每种原因|perfunctory means done with minimum effort, not checking every single thing|perfunctory 指敷衍了事，不是逐一检查|ex · haus · tive|the silent h after ex-|ex- 后面有不发音的 h
+      circumspect|a woman thinking before each word to the press|investors moving slowly and avoiding risky deals|checking carefully before sharing secrets|circumspect is wary and careful; rash acts without thought|circumspect 谨慎小心；rash 轻率|impetuous means acting quickly without thought, the opposite of thinking before each word|impetuous 指一时冲动、不假思索，和字斟句酌正相反|rash means acting without careful thought, the opposite of moving slowly and avoiding risk|rash 指考虑不周，和步步谨慎、规避风险正相反|cir · cum · spect|circum- as in circumference, plus spect|circum- 同 circumference，加 spect
+      negligent|a driver looking at his phone instead of the road|a school that never checked broken fire alarms|a guard asleep at his post|negligent fails to take proper care; vigilant keeps careful watch|negligent 疏忽大意；vigilant 警惕留心|vigilant means keeping careful watch, the opposite of asleep or looking away|vigilant 指保持警惕，和睡着或不看路正相反|circumspect means wary and careful, the opposite of failing to check|circumspect 指谨慎小心，和疏于检查正相反|neg · li · gent|the -gent ending, with g|结尾是 -gent，用 g
+      lax|guards waving everyone through without checking a bag|parking rules that let people leave cars anywhere|printing rumors without confirming them|lax is not strict enough; stringent is very strict|lax 不够严格；stringent 非常严格|stringent means very strict, the opposite of letting everyone through unchecked|stringent 指非常严格，和不检查就放行正相反|vigilant means keeping careful watch, the opposite of not bothering to check|vigilant 指保持警惕，和懒得检查正相反|lax|the x at the end, as in relax|结尾是 x，同 relax
+      perfunctory|a nod given without looking up from a phone|a guard glancing at one bag and waving people on|an apology of two mumbled words|perfunctory is done with the least effort; painstaking is done with great care|perfunctory 敷衍了事；painstaking 煞费苦心|painstaking means done with great care, the opposite of the least effort one can make|painstaking 指煞费苦心，和尽可能少花力气正相反|exhaustive means covering everything, not glancing at one bag|exhaustive 指面面俱到，不是只瞥一眼|per · func · to · ry|the -tory ending, as in factory|结尾是 -tory，同 factory
+      inadvertent|a file deleted while trying carefully to save it|an email sent by accident despite every care taken|a remark chosen with care that touched a painful topic by chance|inadvertent is not intended; negligent fails to take care|inadvertent 是无意的；negligent 是疏忽的|negligent means failing to take proper care, not a mistake made in spite of great care|negligent 指疏忽大意，不是尽管十分小心却仍出的差错|circumspect means wary and careful, which describes a person, not an accident or a mistake|circumspect 指谨慎小心，形容人，不形容意外或差错|in · ad · ver · tent|in- plus ad- plus -vertent|in- 加 ad- 再加 -vertent
+      officious|a bossy guard ordering people to move for no reason|a clerk interfering with forms already filled in correctly|a neighbor telling a woman how to run her house|officious bosses others around; indulgent lets others do as they like|officious 好管闲事、发号施令；indulgent 宽容放任|indulgent means letting others do as they wish, the opposite of always telling them what to do|indulgent 指宽容放任，和总是对人指手画脚正相反|nonchalant means calm and unconcerned, not eager to interfere|nonchalant 指漫不经心，不是热衷于插手|of · fi · cious|the double f and the -cious ending|双写 f，结尾是 -cious
+    `,
+  },
 );
 
 /** batchesC are the batches of easing, sociable people, nerve, skill, dullness, scolding, harm and care. */

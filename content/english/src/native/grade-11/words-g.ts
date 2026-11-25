@@ -1,6 +1,7 @@
 // Grade 11: the batches of academic words for showing, for sorting and differing, for supporting, for research, for
 // roles in institutions, for thinking ahead and for places and moving.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const showing = batch(
   ["Words for Showing and Seeing", "展示与看见的词"],
   ["academic words for pictures, sight and what is plain to see", "表示图像、视觉和显而易见的学术词"],
   `
-  depict|to show or represent in a picture or in words|描绘，描述|The painting will ___ a battle.|The film tries to ___ life in prison.|How does the poet ___ the sea?|expose,evident|depicted,depiction
-  illustrate|to explain by examples or pictures|说明，图解|Let me ___ my point with a story.|She was hired to ___ the book.|The chart helps ___ the trend.|expose,visible|illustrated,illustration
-  highlight|to draw special attention to; the best part|强调；最精彩部分|The report will ___ three problems.|The goal was the ___ of the match.|Use a pen to ___ key words.|visible,evident|highlighted
-  visible|able to be seen|可见的|The stars are ___ tonight.|The mountain is ___ from the town.|There was no ___ damage.|visual,vision|visibly,visibility
-  visual|relating to seeing or sight|视觉的|The film has great ___ effects.|She has a strong ___ memory.|Use ___ aids in your talk.|visible,vision|visually
-  vision|the ability to see; an idea of the future|视力；远见|He has poor ___ in one eye.|The leader had a ___ of a fairer society.|She saw a ___ in her dream.|image,visual|visions,visionary
-  image|a picture or likeness; the way something is seen by the public|图像；形象|The ___ on the screen was blurred.|The firm wants to improve its ___.|She is the ___ of her mother.|vision,depict|images,imagery
-  expose|to uncover; to make something secret known|暴露；揭露|The reporter wanted to ___ the fraud.|Don't ___ your skin to the sun too long.|The test will ___ any weakness.|depict,visual|exposed,exposure
-  evident|plain or obvious|明显的|It was ___ that she was tired.|Her joy was ___ to everyone.|The damage is ___.|visual,vision|evidently
-  apparent|clearly visible or understood; seeming real but perhaps not|明显的；表面上的|For no ___ reason, he left.|It soon became ___ that we were lost.|Her ___ calm hid her fear.|visual,vision|apparently
+  depict|to show or represent in a picture or in words|描绘，描述|The huge painting on the wall is meant to ___ a famous sea battle, with burning ships and tiny sailors in every corner.|In her novel she uses rich, careful words to ___ the sea at dawn, so readers can almost see the pink light on the waves.|The children's drawings ___ their families, with stick figures of parents, pets and grandparents.|expose,highlight|depicted,depiction
+  illustrate|to explain by examples or pictures|说明，图解|Let me ___ my point with a short story about my grandmother.|She was hired to ___ the children's book, drawing a picture for every page.|The teacher gave three examples to ___ the rule, so that everyone could see how it worked.|depict,expose|illustrated,illustration
+  highlight|to draw special attention to; the best part|强调；最精彩部分|The report will ___ three serious problems, drawing special attention to each one in a red box.|In her speech, the head teacher chose to ___ the pupils' charity work, praising it above everything else they had done.|Use a yellow pen to ___ the key words so they stand out on the page.|minimize,depict|highlighted
+  visible|able to be seen|可见的|On a clear night far from the city, thousands of stars are ___ to the naked eye.|The snowy mountain is ___ from the town on clear days, shining above the rooftops.|Through a telescope, the rings of Saturn are clearly ___, like a thin hat brim around the planet.|visual,overt|visibly,visibility
+  visual|relating to seeing or sight|视觉的|The film is famous for its ___ effects: exploding planets, glowing cities and dragons in the sky.|She has a strong ___ memory: she remembers faces and pictures far better than names.|Use ___ aids such as charts, photos and slides to help your audience follow the talk.|visible,external|visually
+  vision|the ability to see; an idea of the future|视力；远见|He has poor ___ in his left eye and must wear glasses to drive.|The leader shared her ___ of a fairer society, a clear idea of how the country could look in twenty years.|She woke up sure she had seen a ghostly ___ of her late grandfather standing by the bed.|insight,prospect|visions,visionary
+  image|a picture or likeness; the way something is seen by the public|图像；形象|The ___ on the screen was blurred, so we could hardly make out the faces in the photo.|After the scandal, the firm hired experts to improve its public ___ and win back customers' trust.|She is the very ___ of her mother, with the same eyes, the same smile and the same laugh.|vision,insight|images,imagery
+  expose|to uncover; to make something secret known|暴露；揭露|The reporter worked for a year to ___ the fraud, revealing the secret to the whole country.|Don't ___ your skin to the strong midday sun for too long.|The hard test will ___ any weakness in the bridge, bringing hidden faults out into the open.|depict,withhold|exposed,exposure
+  evident|plain or obvious|明显的|It was ___ that she was tired: she yawned all through dinner and almost fell asleep at the table.|Her joy was ___ to everyone in the room, written all over her face.|The need for more teachers is ___ from the figures: classes have doubled in size in five years.|covert,apocryphal|evidently
+  apparent|clearly visible or understood; seeming real but perhaps not|明显的；表面上的|For no ___ reason, he got up and left in the middle of the meal.|It soon became ___ that we were lost, as we passed the same tree for the third time.|Her ___ calm hid her fear; underneath the smile, she was shaking.|covert,authentic|apparently
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The photo **exposed** the damage, the chart helped **illustrate** how bad it was, and soon it was **evident** to everyone that the bridge was unsafe. These ten words help you talk, in formal and academic English, about showing, picturing, seeing and what is plain to see.",
+      "照片暴露（**expose**）了损坏情况，图表帮助说明（**illustrate**）了问题有多严重，很快人人都明白（**evident**）这座桥不安全。这十个词帮你用正式的学术英语谈论展示、描绘、看见和显而易见的事。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Visible** means able to be seen, while **visual** means to do with sight; stars are visible, but a film has visual effects.",
+        "**visible** 是看得见的，**visual** 是与视觉有关的；说 stars are visible，但说 visual effects。",
+      ),
+      use: t(
+        "**Apparent** can mean only seeming, as in her apparent calm hid her fear, but **evident** always means truly plain to see.",
+        "**apparent** 可以表示“表面上的”，如 her apparent calm hid her fear；而 **evident** 总是指确实显而易见。",
+      ),
+      spelling: t(
+        "**Visible** ends in -ible, not -able, **illustrate** has a double l, and **apparent** has a double p and -ent.",
+        "**visible** 结尾是 -ible 而不是 -able；**illustrate** 双写 l；**apparent** 双写 p，结尾是 -ent。",
+      ),
+    },
+    notes: `
+      depict|a painting of a sea battle with burning ships|careful words picturing the sea at dawn|children's drawings of parents, pets and grandparents|depict means to show something in a picture or in words; expose means to uncover something hidden|depict 是用图画或文字描绘；expose 是揭露隐藏之事|expose means to uncover something hidden or secret, not to paint or describe a scene|expose 是揭露隐藏或秘密的东西，不是描绘某个场景|highlight means to draw special attention to something, not to paint or describe a whole scene|highlight 是特别强调，不是描绘整个场景|de · pict|the ct at the end|结尾是 ct
+      illustrate|a short story used to explain a point|pictures drawn for every page of a children's book|three examples given to explain a rule|illustrate means to explain with examples or to add pictures to a text; depict means to show a scene|illustrate 是用例子或插图说明；depict 是描绘某个场景|depict means to show or describe a scene, not to explain a point or rule with examples|depict 是描绘场景，不是用例子解释观点或规则|expose means to uncover something hidden, not to explain with examples or pictures|expose 是揭露隐情，不是用例子或图画说明|il · lus · trate|the double l|双写 l
+      highlight|a report marking three problems in red boxes|a head teacher praising charity work above everything else|a yellow pen making key words stand out|highlight means to draw special attention to something; minimize means to make it seem small|highlight 是特别强调；minimize 是轻描淡写|minimize means to make something seem small and unimportant, the opposite of drawing attention to it|minimize 是使显得微不足道，和特别强调正好相反|depict means to show something in a picture or words, not to make it stand out above the rest|depict 是描绘，不是让某物从其他内容中突显出来|high · light|the silent gh in both halves|前后两半中的 gh 都不发音
+      visible|stars seen with the naked eye far from the city|a snowy mountain seen from a town|the rings of Saturn seen through a telescope|visible means able to be seen; visual means to do with sight|visible 是看得见的；visual 是与视觉有关的|visual means to do with sight, describing things like effects or memory, not whether something can be seen|visual 是与视觉有关的，用来形容效果、记忆等，不表示能否看见|overt means done openly rather than in secret, not able to be seen with the eyes|overt 是公开的、不加掩饰的，不是肉眼看得见|vis · i · ble|the -ible ending, not -able|结尾是 -ible 而不是 -able
+      visual|a film's exploding planets and glowing cities|a memory for faces and pictures|charts, photos and slides that help an audience|visual means to do with seeing; visible means able to be seen|visual 是视觉的；visible 是看得见的|visible means able to be seen, not a kind of effect, memory or aid connected with sight|visible 是看得见的，不是指与视觉有关的效果、记忆或辅助工具|external means on the outside, not connected with seeing|external 是外部的，与视觉无关|vis · u · al|the u that sounds like *zh-oo*|u 读作 *zh-oo*
+      vision|a man with poor sight in his left eye|a leader's clear idea of a fairer society|a ghostly sight of a dead grandfather by the bed|vision is the power to see, an idea of the future or something seen as in a dream; insight is a deep understanding|vision 是视力、远景或幻象；insight 是深刻的洞察|insight is a deep understanding of something, not the power of sight or a ghostly figure seen in the night|insight 是深刻的理解，不是视力或夜里看到的幻影|a prospect is a likely future event, not eyesight or a ghostly figure|prospect 是可能的前景，不是视力或幽灵般的身影|vi · sion|the -sion ending that sounds like *zhun*|-sion 结尾读作 *zhun*
+      image|a blurred picture on a screen|a firm trying to improve how the public sees it|a daughter who looks just like her mother|an image is a picture, a likeness or the way people see someone; a vision is sight or an idea of the future|image 是图像、相似的人或公众形象；vision 是视力或远景|a vision is sight or an idea of the future, not a picture on a screen or how a firm is seen|vision 是视力或远景，不是屏幕上的画面或公司形象|insight is a deep understanding, not a picture or a likeness|insight 是深刻的理解，不是图像或相像之人|im · age|the -age ending that sounds like *ij*|-age 结尾读作 *ij*
+      expose|a reporter revealing a fraud to the whole country|skin left open to the strong midday sun|a test bringing hidden faults in a bridge into the open|expose means to uncover something hidden; depict means to show it in a picture or words|expose 是揭露、暴露；depict 是描绘|depict means to paint or describe a scene, not to bring a hidden secret or fault into the open|depict 是描绘场景，不是把隐藏的秘密或缺陷公之于众|withhold means to keep something back, the opposite of bringing it into the open|withhold 是扣着不给，和公之于众正好相反|ex · pose|the -ose ending with a silent e|结尾 -ose，e 不发音
+      evident|a woman yawning all through dinner|joy written all over a woman's face|class sizes that have doubled in five years|evident means plain and obvious; apocryphal means probably untrue|evident 是明显的；apocryphal 是可能杜撰的|covert means secret and hidden, the opposite of plain for everyone to see|covert 是秘密隐蔽的，和人人都看得出正好相反|apocryphal means probably untrue though often told, not plain and obvious from what is seen|apocryphal 是常被传说却可能不真实的，不是一眼就看得出的|ev · i · dent|the -ent ending|结尾是 -ent
+      apparent|a man leaving a meal for no reason anyone can see|walkers passing the same tree for the third time|a calm smile hiding real fear|apparent means plain to see, or only seeming; covert means hidden|apparent 是明显的或表面上的；covert 是隐蔽的|covert means secret and hidden, not clear to see or only seeming|covert 是秘密隐蔽的，不是明显的或表面上的|authentic means genuine and real, the opposite of a calm that only seems real|authentic 是真实的，和只是表面上的镇定正好相反|ap · par · ent|the double p and the -ent ending|双写 p，结尾是 -ent
+    `,
+  },
 );
 
 const sorting = batch(
@@ -27,17 +61,50 @@ const sorting = batch(
   ["Words for Sorting and Differing", "分类与差异的词"],
   ["academic words for telling things apart and for sameness", "表示区分与相同的学术词"],
   `
-  distinct|recognizably different; clear|截然不同的；清楚的|The two words have ___ meanings.|There was a ___ smell of gas.|She has a ___ accent.|discrete,diverse|distinctly,distinction
-  discrete|separate and distinct|分离的，不连续的|The course has five ___ parts.|Count the ___ steps.|The data fall into ___ groups.|equate,vary|discretely
-  differentiate|to recognize or show what makes things different|区分，区别|Can you ___ the twins?|Color helps ___ the species.|The firm tries to ___ its products.|discriminate,equate|differentiated,differentiation
-  discriminate|to recognize a difference; to treat people unfairly|区别；歧视|It is illegal to ___ against women.|Bats can ___ between sounds.|Banks must not ___ on age.|differentiate,distort|discriminated
-  diverse|showing a great deal of variety|多种多样的|The city has a ___ population.|They have ___ interests.|The forest is home to ___ birds.|uniform,equate|diversity,diversify
-  vary|to differ in size, amount or degree|变化，不同|Prices ___ from shop to shop.|The weather may ___ by the hour.|Try to ___ your diet.|reverse,distort|variety
-  uniform|remaining the same in all cases; a set of special clothes|一致的；制服|The rooms are of ___ size.|Pupils must wear a ___.|Rules should be ___ across schools.|diverse,discrete|
-  equate|to consider one thing to be the same as another|等同|Don't ___ wealth with happiness.|Many ___ silence with agreement.|We cannot ___ the two crimes.|differentiate,vary|equated,equation
-  distort|to pull out of shape; to give a false account of|扭曲；歪曲|The mirror will ___ your face.|The press may ___ the facts.|Heat can ___ plastic.|reverse,discriminate|distorted,distortion
-  reverse|to move backward; to change to the opposite|倒车；推翻|She had to ___ the car out of the drive.|The court may ___ the decision.|The trend began to ___.|distort,vary|reversed,reversal
+  distinct|recognizably different; clear|截然不同的；清楚的|Each of the twins has a ___ laugh, so clearly different that you can tell who is laughing from the next room.|There was a ___ smell of gas in the kitchen, so strong and clear that we opened every window.|She has a ___ Scottish accent, easy to recognize the moment she speaks.|discrete,diverse|distinctly,distinction
+  discrete|separate and distinct|分离的，不连续的|The course is split into ten ___ units of different lengths, each complete on its own and taken in any order.|The census sorts people into ___ age groups, and nobody can belong to two of them at once.|The range is not one ridge but a row of ___ peaks of very different heights, each standing apart from its neighbours.|integral,uniform|discretely
+  differentiate|to recognize or show what makes things different|区分，区别|Young children cannot always ___ between a real danger and an imaginary one.|What will ___ our café from the dozen others on the street is its home-made bread.|The test helps doctors ___ a cold from the flu by showing which virus is present.|equate,distort|differentiated,differentiation
+  discriminate|to recognize a difference; to treat people unfairly|区别；歧视|It is against the law to ___ against job applicants because of their age or religion.|Landlords must not ___ against families with children by refusing to rent to them.|The old rule seemed to ___ against women, who were paid less for the same work.|differentiate,distort|discriminated
+  diverse|showing a great deal of variety|多种多样的|London is a ___ city, home to people from more than two hundred countries.|The pupils have widely ___ interests, from rock climbing to chess to ballet.|A rain forest supports a ___ range of life, with thousands of kinds of plants and animals.|uniform,discrete|diversity,diversify
+  vary|to differ in size, amount or degree|变化，不同|Prices ___ from shop to shop, so compare them before you buy.|In the desert the temperature can ___ by twenty degrees between day and night.|Try to ___ your meals through the week, eating different foods each day.|reverse,distort|variety
+  uniform|remaining the same in all cases; a set of special clothes|一致的；制服|The houses on the new estate are ___, all the same size, shape and colour.|Bake the cake at a ___ temperature, keeping the heat exactly the same all the way through.|The rules must be ___ for all players, the same for every team in the league.|diverse,discrete|
+  equate|to consider one thing to be the same as another|等同|Many people ___ wealth with happiness, as if the two were the same thing.|You cannot ___ a quick online quiz with a three-hour exam; they are not the same at all.|Some parents ___ a messy bedroom with laziness, assuming one always means the other.|differentiate,vary|equated,equation
+  distort|to pull out of shape; to give a false account of|扭曲；歪曲|The curved mirror at the fair will ___ your face, stretching it into a funny shape.|The newspaper tried to ___ the facts, twisting her words to make her sound cruel.|Cheap speakers will often ___ loud music, making it crackle and buzz.|reverse,discriminate|distorted,distortion
+  reverse|to move backward; to change to the opposite|倒车；推翻|The driver had to ___ the car out of the narrow lane, moving slowly backwards.|The higher court may ___ the decision, changing guilty to not guilty.|If you ___ the order of the letters in "stop", you get "pots".|distort,vary|reversed,reversal
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The class is **diverse**, so tastes **vary**, but the teacher helps us **differentiate** good arguments from weak ones without letting anyone **distort** the facts. These ten words help you talk, in formal and academic English, about telling things apart, variety, sameness and change.",
+      "这个班级多元（**diverse**），口味各异（**vary**），但老师帮助我们区分（**differentiate**）有力和薄弱的论点，不让任何人歪曲（**distort**）事实。这十个词帮你用正式的学术英语谈论区分、多样、一致与变化。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Distinct** means clearly different or easy to notice, while **discrete** means separate, each part standing on its own; a discrete unit, but a distinct smell.",
+        "**distinct** 是明显不同、清晰可辨的；**discrete** 是彼此分开、各自独立的；说 a discrete unit，但说 a distinct smell。",
+      ),
+      use: t(
+        "**Discriminate against** people means to treat them unfairly, but to **differentiate between** things only means to tell them apart.",
+        "**discriminate against** 某人是歧视；**differentiate between** 两样东西只是区分它们。",
+      ),
+      spelling: t(
+        "**Discrete** ends in -ete and **discreet** in -eet, two different words, and **differentiate** has a double f and a t before -iate.",
+        "**discrete** 结尾是 -ete，**discreet** 结尾是 -eet，是两个不同的词；**differentiate** 双写 f，-iate 前是 t。",
+      ),
+    },
+    notes: `
+      distinct|twins whose laughs are so different you can tell them apart|a clear, strong smell of gas in a kitchen|a Scottish accent easy to recognize|distinct means clearly different or easy to notice; discrete means separate and standing apart|distinct 是明显不同、清晰的；discrete 是彼此分离的|discrete means separate and standing apart, not clearly noticeable like a strong smell or an accent|discrete 是彼此分离的，不是像浓烈气味或口音那样清晰可辨|diverse means full of variety, not one clear and recognizable thing|diverse 是多种多样的，不是单一而清晰可辨的东西|dis · tinct|the ct at the end|结尾是 ct
+      discrete|a course in separate units taken in any order|age groups that nobody can belong to two of|a row of separate peaks of different heights|discrete means separate, each part on its own; uniform means all the same|discrete 是各自分离的；uniform 是完全一致的|integral means necessary to make a whole complete, not separate and complete on its own|integral 是整体中不可或缺的，不是各自独立完整的|uniform means all the same, which units of different lengths or peaks of different heights are not|uniform 是完全一样的，而长度、高度各不相同的单元或山峰并不一样|dis · crete|the -ete ending, not -eet as in *discreet*|结尾是 -ete，不是 *discreet* 的 -eet
+      differentiate|children telling a real danger from an imaginary one|home-made bread that sets one café apart from the rest|a test telling a cold from the flu|differentiate means to tell things apart; equate means to treat them as the same|differentiate 是区分；equate 是等同看待|equate means to treat two things as the same, the opposite of telling them apart|equate 是把两样东西等同，和区分它们正好相反|distort means to twist something out of shape or give a false account, not to tell things apart|distort 是扭曲或歪曲，不是区分|dif · fer · en · ti · ate|the double f and the t before -iate|双写 f，-iate 前是 t
+      discriminate|refusing jobs to people because of age or religion|landlords refusing to rent to families with children|women paid less for the same work|discriminate against means to treat people unfairly; differentiate means only to tell things apart|discriminate against 是歧视；differentiate 只是区分|differentiate means to tell things apart, and it is never used with against for unfair treatment|differentiate 是区分，不和 against 连用表示不公平对待|distort means to twist out of shape or give a false account, not to treat people unfairly|distort 是扭曲或歪曲，不是不公平地对待人|dis · crim · i · nate|the -ate ending, as in *late*|结尾 -ate 读音同 *late*
+      diverse|a city home to people from two hundred countries|pupils whose interests run from climbing to ballet|a rain forest with thousands of kinds of plants and animals|diverse means full of variety; uniform means all the same|diverse 是多种多样的；uniform 是完全一致的|uniform means all the same, the opposite of full of variety|uniform 是完全一致的，和多种多样正好相反|discrete means separate and standing apart, not made up of many different kinds|discrete 是各自分离的，不是由许多不同种类构成|di · verse|the -erse ending, as in *verse*|结尾 -erse，同 *verse*
+      vary|prices that differ from shop to shop|desert temperatures that change by twenty degrees|eating different foods each day|vary means to be different or to change in amount or kind; reverse means to turn to the opposite|vary 是变化、各不相同；reverse 是颠倒|reverse means to turn something to its opposite or move it backwards, not to differ in amount or kind|reverse 是颠倒或倒退，不是数量或种类上的不同|distort means to twist something out of shape, not to differ from place to place or day to day|distort 是扭曲，不是因地因时而不同|var · y|the y at the end, which becomes i in *varied*|结尾是 y，变成 *varied* 时改为 i
+      uniform|houses all the same size, shape and colour|heat kept exactly the same while a cake bakes|rules the same for every team in a league|uniform means the same in every case; diverse means full of variety|uniform 是一致的；diverse 是多样的|diverse means full of variety, the opposite of all the same|diverse 是多种多样的，和完全一致正好相反|discrete means separate and standing apart, not the same in every case|discrete 是各自分离的，不是处处一致|u · ni · form|*uni* for one and *form* for shape|*uni* 表示“一”，*form* 表示“形”
+      equate|people treating wealth and happiness as the same thing|a quiz and a three-hour exam that are not the same|parents thinking a messy room always means laziness|equate means to treat two things as the same; differentiate means to tell them apart|equate 是等同看待；differentiate 是区分|differentiate means to tell things apart, the opposite of treating them as the same|differentiate 是区分，和等同看待正好相反|vary means to be different or to change, not to treat two things as the same|vary 是变化或不同，不是把两样东西等同|e · quate|the qu and the -ate ending|qu 组合，结尾是 -ate
+      distort|a curved mirror stretching a face into a funny shape|a newspaper twisting a woman's words|cheap speakers making loud music crackle|distort means to twist out of shape or give a false picture; reverse means to turn to the opposite|distort 是扭曲、歪曲；reverse 是颠倒|reverse means to turn something to its opposite or move backwards, not to stretch or twist it|reverse 是颠倒或倒退，不是拉伸或扭曲|discriminate means to treat people unfairly or tell things apart, not to twist a shape or the facts|discriminate 是歧视或区分，不是扭曲形状或歪曲事实|dis · tort|the -ort ending, as in *sort*|结尾 -ort，同 *sort*
+      reverse|a car backed slowly out of a narrow lane|a court changing guilty to not guilty|letters in a word put in the opposite order|reverse means to go backwards or turn to the opposite; distort means to twist out of shape|reverse 是倒退或颠倒；distort 是扭曲|distort means to twist something out of shape, not to move it backwards or turn it to the opposite|distort 是扭曲，不是倒退或颠倒|vary means to differ or change a little, not to turn something to its exact opposite|vary 是有所不同或变化，不是完全颠倒|re · verse|re- followed by *verse*|re- 后接 *verse*
+    `,
+  },
 );
 
 const support = batch(
@@ -45,17 +112,50 @@ const support = batch(
   ["Words for Supporting and Making Up", "支持与补足的词"],
   ["academic words for helping, adding and standing in", "表示帮助、补充和替代的学术词"],
   `
-  accommodate|to provide room for; to fit in with someone's wishes|容纳；迁就|The hall can ___ five hundred people.|We will try to ___ your needs.|The hotel can ___ pets.|equip,compensate|accommodated,accommodation
-  compensate|to make up for something; to pay for a loss|补偿，弥补|Nothing can ___ for the loss of a child.|The firm must ___ the workers.|Hard work can ___ for lack of talent.|supplement,mediate|compensated,compensation
-  complement|to add to something in a way that improves it|补充，衬托|The wine will ___ the fish.|Her skills ___ his.|The colors ___ each other.|supplement,substitute|complemented
-  supplement|something added to complete or improve; to add to|补充(物)|She takes a vitamin ___.|He works at night to ___ his income.|The paper has a Sunday ___.|complement,substitute|supplemented,supplementary
-  substitute|a person or thing acting in place of another; to use instead|替代者；代替|There is no ___ for hard work.|You can ___ honey for sugar.|The ___ scored the winning goal.|supplement,guarantee|substituted,substitution
-  equip|to supply with the necessary items|装备|We will ___ the lab with new tools.|School should ___ children for life.|They had to ___ the army.|enable,accommodate|equipped
-  enable|to give the means or ability to do something|使能够|The loan will ___ her to buy a house.|The app can ___ users to share files.|Practice will ___ you to improve.|equip,sustain|enabled
-  sustain|to keep something going over time; to suffer|维持；遭受|We cannot ___ this pace.|The driver did ___ serious injuries.|Food and water ___ life.|enable,guarantee|sustained
-  guarantee|a formal promise; to promise with certainty|保证|The watch has a two-year ___.|I can ___ you will enjoy it.|Money does not ___ happiness.|sustain,mediate|guaranteed
-  mediate|to try to settle a dispute between others|调解|The UN offered to ___ in the conflict.|A teacher will ___ between the boys.|She was asked to ___ the talks.|compensate,accommodate|mediated,mediation,mediator
+  accommodate|to provide room for; to fit in with someone's wishes|容纳；迁就|The new hotel can ___ up to five hundred guests in its rooms.|The hall is big enough to ___ the whole school for morning assembly.|The airline did its best to ___ our wishes, giving us seats together near the window.|equip,compensate|accommodated,accommodation
+  compensate|to make up for something; to pay for a loss|补偿，弥补|The airline will ___ passengers for their lost bags, paying them up to a thousand pounds each.|Hard work can ___ for a lack of talent, making up for what you were not born with.|Nothing can ___ the family for the loss of their home in the fire.|supplement,mediate|compensated,compensation
+  complement|to add to something in a way that improves it|补充，衬托|A crisp white wine will ___ the fish perfectly, bringing out its delicate flavour.|Her quiet calm and his bold ideas ___ each other, so together they make a perfect team.|Choose a scarf whose colours ___ your coat, making the whole outfit look better.|substitute,compensate|complemented
+  supplement|something added to complete or improve; to add to|补充(物)|She gives piano lessons in the evening to ___ her small income from the shop.|Doctors say you should ___ a healthy diet with vitamin D in the dark winter months.|The teacher used videos to ___ the textbook, adding extra examples it did not contain.|substitute,accommodate|supplemented,supplementary
+  substitute|a person or thing acting in place of another; to use instead|替代者；代替|You can ___ honey for sugar in this recipe, using the same amount.|When the goalkeeper was injured, the coach had to ___ the young reserve for him.|Try to ___ water for fizzy drinks, drinking it instead with every meal.|supplement,guarantee|substituted,substitution
+  equip|to supply with the necessary items|装备|The school will ___ every classroom with a new computer and a large screen.|Climbers must ___ themselves with ropes, helmets and warm clothes before the ascent.|The course aims to ___ young people with the skills they need for work.|enable,accommodate|equipped
+  enable|to give the means or ability to do something|使能够|The new ramp will ___ wheelchair users to enter the library without help.|A scholarship would ___ her to study abroad for a year.|Strong reading glasses ___ him to read even the smallest print.|equip,sustain|enabled
+  sustain|to keep something going over time; to suffer|维持；遭受|The runners ate bananas to ___ their energy through the long race.|The village cannot ___ such a large population without a new source of water.|He managed to ___ the effort for three hours without a single break.|enable,guarantee|sustained
+  guarantee|a formal promise; to promise with certainty|保证|The shop will ___ the washing machine for two years, repairing it free if it breaks.|No one can ___ that it will be sunny on the day of the wedding.|The hotel will ___ you a room if you book by Friday, promising one in writing.|sustain,mediate|guaranteed
+  mediate|to try to settle a dispute between others|调解|A teacher was asked to ___ between the two pupils who had been fighting.|The UN sent a diplomat to ___ in the border dispute, trying to bring both sides to an agreement.|She offered to ___ the quarrel between her brothers, listening to both and suggesting a fair deal.|compensate,accommodate|mediated,mediation,mediator
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The new library will **accommodate** two hundred readers, **equip** every desk with a lamp and **enable** pupils to study late, while the café's snacks **complement** the quiet. These ten words help you talk, in formal and academic English, about making room, making up for things, adding, replacing and keeping things going.",
+      "新图书馆能容纳（**accommodate**）两百名读者，给每张书桌配备（**equip**）台灯，使（**enable**）学生能学到很晚，而咖啡角的点心也与安静的氛围相得益彰（**complement**）。这十个词帮你用正式的学术英语谈论提供空间、弥补、补充、替代和维持。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **complement** is to go well with something and make it better, while to **supplement** is to add more because there is not enough.",
+        "**complement** 是与某物相配、使之更好；**supplement** 是因为不够而额外补充。",
+      ),
+      use: t(
+        "You **substitute** the new thing for the old, as in substitute honey for sugar, and you **compensate** someone for a loss.",
+        "**substitute** 的用法是 substitute 新的 for 旧的，如 substitute honey for sugar；**compensate** 是 compensate someone for a loss。",
+      ),
+      spelling: t(
+        "**Accommodate** has a double c and a double m, **complement** has an e after the l, unlike *compliment*, and **guarantee** has a silent u.",
+        "**accommodate** 双写 c、双写 m；**complement** 的 l 后是 e，和 *compliment* 不同；**guarantee** 中的 u 不发音。",
+      ),
+    },
+    notes: `
+      accommodate|a hotel with rooms for five hundred guests|a hall big enough for the whole school|an airline giving a family seats together as they wished|accommodate means to have room for people or to meet their wishes; equip means to give people the tools they need|accommodate 是容纳或迁就；equip 是配备|equip means to supply tools or gear, not to have room for guests or meet their wishes|equip 是配备工具或装备，不是容纳客人或满足愿望|compensate means to pay or make up for a loss, not to have room for people|compensate 是赔偿或弥补，不是容纳人|ac · com · mo · date|the double c and the double m|双写 c，双写 m
+      compensate|an airline paying passengers for lost bags|hard work making up for a lack of talent|a family that has lost its home in a fire|compensate means to make up for a loss or lack; supplement means to add more to something|compensate 是赔偿、弥补；supplement 是补充|supplement means to add extra to something, not to pay someone back for a loss|supplement 是额外补充，不是赔偿损失|mediate means to help two sides settle a quarrel, not to make up for a loss|mediate 是调解，不是弥补损失|com · pen · sate|the -ate ending after *pens*|*pens* 后接 -ate
+      complement|a white wine bringing out the flavour of fish|calm and bold ideas that together make a perfect team|a scarf whose colours make an outfit look better|complement means to go well with something and make it better; supplement means to add more because there is not enough|complement 是相得益彰；supplement 是因不足而补充|substitute means to use one thing instead of another, not to go well alongside it|substitute 是替代，不是与之相配|compensate means to make up for a loss, not to go well with something and improve it|compensate 是弥补损失，不是与之相配、使之更好|com · ple · ment|the e after the l, unlike *compliment*|l 后是 e，和 *compliment* 不同
+      supplement|piano lessons adding to a small income|vitamin D added to a diet in winter|videos adding examples a textbook lacks|supplement means to add extra because there is not enough; substitute means to use instead|supplement 是额外补充；substitute 是替代|substitute means to use one thing instead of another, not to add extra to what is already there|substitute 是替代，不是在原有基础上额外补充|accommodate means to have room for people or meet their wishes, not to add to an income or a diet|accommodate 是容纳或迁就，不是补充收入或饮食|sup · ple · ment|the double p|双写 p
+      substitute|honey used instead of sugar in a recipe|a young reserve sent on instead of an injured goalkeeper|water drunk instead of fizzy drinks|substitute means to use one thing instead of another; supplement means to add more to it|substitute 是替代；supplement 是补充|supplement means to add extra to something, not to put one thing in place of another|supplement 是额外补充，不是用一样东西代替另一样|guarantee means to promise something for certain, not to use one thing instead of another|guarantee 是保证，不是替代|sub · sti · tute|the -tute ending|结尾是 -tute
+      equip|classrooms supplied with computers and screens|climbers supplied with ropes and helmets|young people given the skills they need for work|equip means to supply with what is needed; enable means to make something possible|equip 是配备；enable 是使能够|enable means to make it possible for someone to do something, and it is followed by to, not by with and a list of things|enable 是使能够，后接 to，而不是 with 加一串东西|accommodate means to have room for people, not to supply them with tools or skills|accommodate 是容纳，不是配备工具或技能|e · quip|the qu after e and one p|e 后是 qu，只有一个 p
+      enable|a ramp letting wheelchair users enter a library|a scholarship letting a girl study abroad|reading glasses letting a man read small print|enable means to make it possible for someone to do something; equip means to supply them with things|enable 是使能够；equip 是配备|equip means to supply someone with tools, and it takes with, not to and a verb|equip 是配备，后接 with，而不接 to 加动词|sustain means to keep something going, not to make it possible for someone to do something|sustain 是维持，不是使某人能够做某事|en · a · ble|the -able ending|结尾是 -able
+      sustain|bananas keeping runners' energy up through a race|a village that cannot support a large population without water|a man keeping up an effort for three hours|sustain means to keep something going; enable means to make something possible|sustain 是维持；enable 是使能够|enable means to make it possible for someone to do something, and it is not used for keeping energy or effort going|enable 是使能够做某事，不用于维持体力或努力|guarantee means to promise something for certain, not to keep energy or effort going|guarantee 是保证，不是维持体力或努力|sus · tain|the -ain ending, as in *rain*|结尾 -ain，同 *rain*
+      guarantee|a shop promising free repairs for two years|nobody being able to promise a sunny wedding day|a hotel promising a room in writing|guarantee means to promise for certain; sustain means to keep something going|guarantee 是保证；sustain 是维持|sustain means to keep something going over time, not to promise something will happen|sustain 是长期维持，不是承诺某事一定发生|mediate means to help two sides settle a quarrel, not to promise something for certain|mediate 是调解，不是保证|guar · an · tee|the silent u after g and the double e|g 后的 u 不发音，结尾双写 e
+      mediate|a teacher settling a fight between two pupils|a diplomat helping both sides reach an agreement on a border|a sister listening to both brothers and suggesting a fair deal|mediate means to help two sides settle a quarrel; compensate means to make up for a loss|mediate 是调解；compensate 是弥补|compensate means to pay or make up for a loss, not to bring two quarrelling sides together|compensate 是赔偿或弥补，不是让争执双方和解|accommodate means to have room for people or meet their wishes, not to settle a dispute between two sides|accommodate 是容纳或迁就，不是调解双方争端|me · di · ate|the -ate ending after *medi*|*medi* 后接 -ate
+    `,
+  },
 );
 
 const research = batch(
@@ -63,17 +163,50 @@ const research = batch(
   ["Words for Research and Numbers", "研究与数据的词"],
   ["academic words for studying, counting and predicting", "表示研究、计数和预测的学术词"],
   `
-  survey|a study of opinions or behavior made by asking people; to look over|调查；审视|A ___ of students found most liked the food.|She stood on the hill to ___ the land.|The ___ asked about sleep.|statistic,thesis|surveyed,surveys
-  statistic|a fact or piece of data from a study of numbers|统计数字|One ___ shows that crime has fallen.|That ___ shocked the minister.|Each ___ was checked twice.|ratio,survey|statistics,statistical
-  ratio|the relation between two amounts|比率，比例|The ___ of boys to girls is two to one.|Mix sand and cement in a ___ of three to one.|The ___ of teachers to pupils is low.|index,formula|ratios
-  simulate|to imitate the appearance or character of|模拟|The game will ___ flying a plane.|They ___ an earthquake in the lab.|He tried to ___ interest.|predict,random|simulated,simulation
-  predict|to say that something will happen in the future|预测|It is hard to ___ the weather.|Experts ___ a fall in prices.|Who could ___ the result?|simulate,survey|predicted,prediction,predictable
-  formula|a rule written in symbols; a fixed method|公式；方案|Learn the ___ for the area of a circle.|There is no ___ for success.|The chemical ___ for water is H2O.|ratio,thesis|formulas,formulae
-  index|an alphabetical list at the back of a book; a measure of change|索引；指数|Look up the word in the ___.|The price ___ rose last month.|The book has no ___.|formula,insight|indexes,indices
-  thesis|a statement put forward to be argued; a long essay for a degree|论点；论文|State your ___ in the first paragraph.|She wrote her ___ on bees.|His ___ is that cities make people lonely.|insight,survey|theses
-  insight|a deep understanding of a person or thing|洞察力|The book gives ___ into life in prison.|She has great ___.|The study offers new ___.|thesis,index|insights,insightful
-  random|made or happening without method or conscious decision|随机的|Pick a ___ number.|The winners were chosen at ___.|He made a ___ guess.|simulate,predict|randomly
+  survey|a study of opinions or behavior made by asking people; to look over|调查；审视|A ___ of five hundred pupils asked how much sleep they get on school nights.|The council sent out a ___ asking every household what it thought of the new bus routes.|According to a recent ___ in which a thousand adults answered questions about their reading, most read fewer than five books a year.|statistic,thesis|surveyed,surveys
+  statistic|a fact or piece of data from a study of numbers|统计数字|One shocking ___ stood out from the report: forty per cent of the city's trees have died since 2010.|Every ___ in the report, from the number of road deaths to the average speed, came from police records.|The most worrying ___ in the study is that sales of fresh fruit have fallen by half.|formula,thesis|statistics,statistical
+  ratio|the relation between two amounts|比率，比例|The ___ of boys to girls in the class is two to one.|Mix the paint and water in the ___ of three parts to one, as it says on the tin.|The school aims to keep the ___ of teachers to pupils at one to twenty.|index,formula|ratios
+  simulate|to imitate the appearance or character of|模拟|The machine can ___ the feeling of flying a plane, so pilots can train safely on the ground.|The actor had to ___ a heart attack, falling to the floor and clutching his chest.|In the lab, a moving platform is used to ___ an earthquake, shaking the model building as a real one would.|predict,survey|simulated,simulation
+  predict|to say that something will happen in the future|预测|Experts ___ that house prices will rise again next year.|It is hard to ___ who will win the final, because both teams are so strong.|The app uses weather data to ___ when it will rain over the next hour.|simulate,survey|predicted,prediction,predictable
+  formula|a rule written in symbols; a fixed method|公式；方案|The ___ for the area of a circle is pi times the radius squared.|Scientists write the ___ for water as H2O, two parts hydrogen to one part oxygen.|There is no magic ___ for success; it takes years of hard work.|ratio,thesis|formulas,formulae
+  index|an alphabetical list at the back of a book; a measure of change|索引；指数|Look up "volcano" in the ___ at the back of the book to find the right page.|The price ___ rose by three per cent, showing that the cost of living had gone up.|The ___ lists every name in the book in alphabetical order with its page number.|formula,insight|indexes,indices
+  thesis|a statement put forward to be argued; a long essay for a degree|论点；论文|Her ___, which she spent three years writing for her degree, is two hundred pages long.|The central ___ of the essay is that cities should ban cars from their centres, and every paragraph argues for it.|He defended his ___ before a panel of professors, answering their questions for two hours.|insight,formula|theses
+  insight|a deep understanding of a person or thing|洞察力|The book gives a rare ___ into the life of a nurse during the war.|Her years as a teacher gave her deep ___ into how children learn.|In a flash of ___, he suddenly understood why the machine kept failing.|thesis,index|insights,insightful
+  random|made or happening without method or conscious decision|随机的|The winners were picked in a ___ draw, with names pulled from a hat without looking.|The computer chooses ___ numbers that follow no pattern at all.|Police stopped drivers for ___ checks, choosing cars by chance rather than for any reason.|specific,consecutive|randomly
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **survey** asked a **random** sample of two thousand people, and its key **statistic** showed a **ratio** of three readers to every non-reader. These ten words help you talk, in formal and academic English, about studies, numbers, models and ideas.",
+      "这项调查（**survey**）随机（**random**）抽取了两千人，其中的关键统计数据（**statistic**）显示读书者与不读书者的比例（**ratio**）是三比一。这十个词帮你用正式的学术英语谈论研究、数字、模型和观点。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **ratio** compares two amounts, as in two to one, while a **statistic** is any single number from a study, such as forty per cent.",
+        "**ratio** 是两个数量之比，如二比一；**statistic** 是研究得出的单个数字，如百分之四十。",
+      ),
+      use: t(
+        "You gain **insight into** something, as in insight into how children learn, never insight of or insight on.",
+        "要说 **insight into** something，如 insight into how children learn，不说 insight of 或 insight on。",
+      ),
+      spelling: t(
+        "**Thesis** becomes *theses* and **index** becomes *indexes* or *indices* in the plural, and **simulate** has one m and one l.",
+        "**thesis** 的复数是 *theses*，**index** 的复数是 *indexes* 或 *indices*；**simulate** 只有一个 m 和一个 l。",
+      ),
+    },
+    notes: `
+      survey|five hundred pupils asked how much they sleep|every household asked about new bus routes|a thousand adults answering questions about their reading|a survey is a study made by asking many people questions; a statistic is one number that comes out of a study|survey 是向许多人提问的调查；statistic 是研究得出的一个数字|a statistic is a single number from a study, not the study in which people are asked questions|statistic 是研究得出的单个数字，不是向人提问的调查本身|a thesis is a long essay or argument put forward, not a set of questions sent out to people|thesis 是论文或论点，不是发给人们的一组问题|sur · vey|the ey at the end, as in *they*|结尾 ey，读音同 *they*
+      statistic|forty per cent of a city's trees dying since 2010|figures on road deaths and average speed from police records|sales of fresh fruit falling by half|a statistic is a single fact in numbers; a formula is a rule written in symbols|statistic 是一个统计数据；formula 是用符号写成的公式|a formula is a rule written in symbols, not a single number found in a report|formula 是用符号写的规则，不是报告中的一个数字|a thesis is an argument or long essay, not a single number from a study|thesis 是论点或论文，不是研究得出的一个数字|sta · tis · tic|the two t's and the -ic ending|两个 t，结尾是 -ic
+      ratio|two boys for every girl in a class|three parts paint to one part water|one teacher for every twenty pupils|a ratio compares two amounts, such as two to one; an index is a list or a measure of change|ratio 是两个数量之比；index 是索引或指数|an index is a list at the back of a book or a measure of change, not a comparison of two amounts|index 是书后索引或变化指数，不是两个数量之比|a formula is a rule written in symbols, not a simple comparison such as three to one|formula 是用符号写的规则，不是三比一这样的比例|ra · ti · o|the t that sounds like *sh*|t 读作 *sh*
+      simulate|a machine giving pilots the feeling of flying|an actor pretending to have a heart attack|a moving platform shaking a model building like an earthquake|simulate means to imitate something real; predict means to say what will happen|simulate 是模拟；predict 是预测|predict means to say what will happen in future, not to copy how something feels or looks|predict 是预测未来，不是模仿某事的感觉或样子|survey means to study people by asking them questions, not to imitate something real|survey 是调查，不是模仿真实的东西|sim · u · late|one m and the -ate ending|只有一个 m，结尾是 -ate
+      predict|experts saying house prices will rise next year|nobody knowing who will win a final|an app saying when it will rain in the next hour|predict means to say what will happen; simulate means to imitate|predict 是预测；simulate 是模拟|simulate means to imitate something, not to say what will happen in future|simulate 是模仿，不是预言将来的事|survey means to study people by asking them questions, and it is not followed by that and a future event|survey 是调查，后面不接 that 加未来的事|pre · dict|pre- meaning before, and the ct at the end|pre- 表示“预先”，结尾是 ct
+      formula|pi times the radius squared for the area of a circle|H2O written for water|no magic rule for success|a formula is a rule written in symbols or a fixed method; a ratio compares two amounts|formula 是公式或固定方法；ratio 是比例|a ratio compares two amounts, not a rule for working out an area or a method for success|ratio 是两个数量之比，不是求面积的规则或成功的方法|a thesis is an argument or a long essay, not a rule written in symbols|thesis 是论点或论文，不是用符号写的规则|for · mu · la|the -a ending; its plural is *formulas* or *formulae*|结尾是 -a，复数是 *formulas* 或 *formulae*
+      index|a list at the back of a book used to find a page|a price measure that rises by three per cent|every name listed alphabetically with its page|an index is an alphabetical list in a book or a measure of change; a formula is a rule in symbols|index 是索引或指数；formula 是公式|a formula is a rule written in symbols, not a list at the back of a book or a price measure|formula 是用符号写的规则，不是书后索引或价格指数|an insight is a deep understanding, not a list of names and pages or a price measure|insight 是深刻的理解，不是名单页码或价格指数|in · dex|the x at the end; its plural is *indexes* or *indices*|结尾是 x，复数是 *indexes* 或 *indices*
+      thesis|a two-hundred-page piece of writing for a degree|the central argument of an essay|a long piece of work defended before professors|a thesis is an argument put forward or a long essay for a degree; an insight is a sudden deep understanding|thesis 是论点或学位论文；insight 是深刻的理解|an insight is a deep understanding, not a long piece of writing or an argument defended before others|insight 是深刻的理解，不是长篇论文或需要答辩的论点|a formula is a rule written in symbols, not an argument or a long essay|formula 是用符号写的规则，不是论点或论文|the · sis|the th and the -sis ending; its plural is *theses*|th 开头，结尾是 -sis，复数是 *theses*
+      insight|a rare look into a war nurse's life|a teacher's deep understanding of how children learn|a flash of sudden understanding about a broken machine|an insight is a deep understanding; a thesis is an argument put forward|insight 是深刻的理解；thesis 是论点|a thesis is an argument put forward or a long essay, not a sudden or deep understanding|thesis 是论点或论文，不是突然的或深刻的领悟|an index is a list at the back of a book, not an understanding of people or things|index 是书后索引，不是对人或事的理解|in · sight|*in* plus *sight* with its silent gh|*in* 加 *sight*，gh 不发音
+      random|names pulled from a hat without looking|numbers that follow no pattern|cars stopped by chance for checks|random means by chance, with no plan or pattern; specific means clearly chosen and particular|random 是随机的；specific 是特定的|specific means clearly chosen and particular, the opposite of picked by chance|specific 是特定的，和随机挑选正好相反|consecutive means one after another in order, the opposite of following no pattern|consecutive 是依次相连的，和毫无规律正好相反|ran · dom|the -om ending|结尾是 -om
+    `,
+  },
 );
 
 const roles = batch(
@@ -81,17 +214,50 @@ const roles = batch(
   ["Words for Roles and Institutions", "角色与机构的词"],
   ["academic words for people at work and the bodies they serve", "表示工作者及其所服务机构的学术词"],
   `
-  practitioner|a person actively engaged in an art or profession|从业者|She is a medical ___.|Every ___ needs a license.|The workshop is for every ___ of yoga.|successor,welfare|practitioners
-  professional|relating to a job that needs special training; a person in such a job|职业的；专业人士|She is a ___ singer.|Seek ___ advice.|He acted like a true ___.|practitioner,corporate|professionally,professionalism
-  successor|a person or thing that follows another|继任者|The king named his ___.|Who will be her ___ as head?|The new phone is the ___ to the old model.|affiliate,practitioner|successors
-  affiliate|a person or group officially attached to a larger body; to attach|附属机构；使隶属|The station is an ___ of the network.|The club chose to ___ with the national body.|Each ___ pays a fee.|institute,successor|affiliated,affiliation
-  panel|a small group of people brought together to discuss or judge|小组，评审团|A ___ of experts judged the contest.|She sat on the ___.|The ___ will decide tomorrow.|institute,ministry|panels
-  institute|an organization for a particular purpose; to set up|研究所；建立|She works at a research ___.|They will ___ new rules.|The ___ trains nurses.|panel,ministry|instituted
-  ministry|a government department headed by a minister|(政府)部|The ___ of health issued a warning.|He works for the ___.|The ___ will fund new schools.|sector,institute|ministries
-  sector|a distinct part of the economy or of an area|部门；区域|The public ___ employs many people.|Jobs in the farming ___ are falling.|The army controls the northern ___.|ministry,welfare|sectors
-  corporate|relating to a large company|公司的|She works in ___ law.|The firm has a ___ office in London.|___ greed caused the crisis.|professional,welfare|
-  welfare|health, happiness and fortunes; aid given by the state|福利|We care about the ___ of our pupils.|They lived on ___.|The state spends a lot on ___.|sector,corporate|
+  practitioner|a person actively engaged in an art or profession|从业者|A general ___, the family doctor who works in the village, sees about thirty patients a day.|She is a skilled ___ of yoga, teaching it and doing it every day for twenty years.|Every ___ of the law, from judges to solicitors, must follow the same code of conduct.|successor,affiliate|practitioners
+  professional|relating to a job that needs special training; a person in such a job|职业的；专业人士|Leave the wiring to a ___, a qualified electrician who does this work for a living.|He played as an amateur for years before becoming a ___, paid to play for a top club.|Only a trained ___ who does this job for a living should repair the gas boiler.|neophyte,successor|professionally,professionalism
+  successor|a person or thing that follows another|继任者|The queen named her eldest son as her ___, the one who would rule after her.|This new phone is the ___ to last year's model, replacing it in the shops.|When the head teacher retires, her ___ will take over in September.|affiliate,practitioner|successors
+  affiliate|a person or group officially attached to a larger body; to attach|附属机构；使隶属|The local radio station is an official ___ of the national network, sharing its news and its name.|Each local club joined the national federation as an official ___, taking part in its events and votes.|The charity's ___ in Kenya, attached to the main office in London, runs three schools.|panel,successor|affiliated,affiliation
+  panel|a small group of people brought together to discuss or judge|小组，评审团|A ___ of five judges will choose the winner of the baking contest.|The TV debate had a ___ of four experts who answered questions from the audience.|A ___ of doctors met for a day to discuss the new treatment and give their verdict.|ministry,successor|panels
+  institute|an organization for a particular purpose; to set up|研究所；建立|She works at a research ___ that studies diseases of the heart.|The ___ of Art, founded in 1880, trains young painters and sculptors.|He studied engineering at a famous technical ___ in Zurich.|panel,ministry|instituted
+  ministry|a government department headed by a minister|(政府)部|The ___ of Health, the government department led by the health minister, announced the new rules.|He works for the ___ of Defence, helping the minister plan the army's budget.|The government's education ___, headed by a minister, sets the exams for every school in the country.|sector,institute|ministries
+  sector|a distinct part of the economy or of an area|部门；区域|The banking ___ employs a million people in this part of the economy.|Jobs in the public ___, such as nursing and teaching, are paid for by the state.|The farming ___ has shrunk as more people move to the cities.|ministry,welfare|sectors
+  corporate|relating to a large company|公司的|The ___ headquarters of the oil company, a tower of glass, rises over the city.|Big firms pay for ___ events, such as staff dinners and team trips.|The law raised taxes on ___ profits, the money that large companies make.|professional,domestic|
+  welfare|health, happiness and fortunes; aid given by the state|福利|Parents are responsible for the ___ of their children, keeping them healthy, safe and happy.|After losing his job, he lived on ___, the money paid by the state to people in need.|The charity looks after the ___ of old horses, giving them food, shelter and a vet.|sector,ministry|
   `,
+  "context-clues",
+  {
+    intro: t(
+      "A **panel** from the **ministry** visited the research **institute** to see how its work helps the **welfare** of patients. These ten words help you talk, in formal and academic English, about people in jobs and the bodies they work for.",
+      "部委（**ministry**）的一个专家小组（**panel**）走访了这家研究所（**institute**），了解它的工作如何增进病人的福祉（**welfare**）。这十个词帮你用正式的学术英语谈论从业者以及他们所在的机构。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **ministry** is one government department run by a minister, while a **sector** is a whole part of the economy, such as banking or farming.",
+        "**ministry** 是由部长领导的政府部门；**sector** 是经济中的一整个领域，如银行业或农业。",
+      ),
+      use: t(
+        "You are the **successor to** a job or a thing, as in the successor to last year's model, and an **affiliate of** a larger body.",
+        "说 **successor to** 某职位或某物，如 the successor to last year's model；说 an **affiliate of** 某个更大的组织。",
+      ),
+      spelling: t(
+        "**Successor** has a double c and a double s and ends in -or, and **affiliate** has a double f and one l.",
+        "**successor** 双写 c、双写 s，结尾是 -or；**affiliate** 双写 f，只有一个 l。",
+      ),
+    },
+    notes: `
+      practitioner|a village family doctor seeing thirty patients a day|a woman who has taught and done yoga for twenty years|judges and solicitors who work in the law|a practitioner is someone who actively works in a profession or art; a successor is someone who comes after another|practitioner 是从业者；successor 是继任者|a successor is a person who comes after another in a job, not someone who works in a profession or art|successor 是继任者，不是某个行业或技艺的从业者|an affiliate is a group or person officially linked to a larger body, not someone who works as a doctor or lawyer|affiliate 是附属成员或机构，不是医生、律师等从业者|prac · ti · tion · er|the -tion before -er|-er 前是 -tion
+      professional|a qualified electrician who wires houses for a living|an amateur player who starts being paid by a top club|a trained worker who repairs gas boilers for a living|a professional is someone trained and paid to do a job; a neophyte is a beginner|professional 是受过训练、以此为业的人；neophyte 是新手|a neophyte is a beginner who is new to something, the opposite of a trained person who does the job for a living|neophyte 是新手，和以此为生的专业人士正好相反|a successor is a person who comes after another in a job, not someone trained and paid to do it|successor 是继任者，不是受过训练、领报酬做这份工作的人|pro · fes · sion · al|one f and a double s|一个 f，双写 s
+      successor|a son named to rule after the queen|a new phone that replaces last year's model|a new head teacher who takes over in September|a successor is a person or thing that comes after another; a practitioner is someone who works in a profession|successor 是继任者或后继之物；practitioner 是从业者|an affiliate is a member officially linked to a larger body, not the one who comes after another|affiliate 是附属成员，不是接替前任的人|a practitioner is someone who works in a profession, not the person or thing that comes next|practitioner 是从业者，不是接替者或后继之物|suc · ces · sor|the double c, the double s and the -or ending|双写 c、双写 s，结尾是 -or
+      affiliate|a local radio station officially linked to a national network|a local club joining a national federation|a Kenyan branch attached to a London charity|an affiliate is a person or group officially linked to a larger body; a panel is a small group that discusses or judges|affiliate 是附属成员或机构；panel 是讨论或评审小组|a panel is a small group that discusses or judges something, not a branch linked to a larger body|panel 是讨论或评审小组，不是隶属于大组织的分支|a successor is the one who comes after another, not a group linked to a larger body|successor 是继任者，不是附属于大组织的团体|af · fil · i · ate|the double f and one l|双写 f，只有一个 l
+      panel|five judges choosing the winner of a baking contest|four experts answering questions in a TV debate|doctors meeting for a day to give a verdict on a treatment|a panel is a small group brought together to discuss or judge; a ministry is a government department|panel 是讨论或评审小组；ministry 是政府部门|a ministry is a government department, not a small group brought together to judge or discuss|ministry 是政府部门，不是临时组成的评审或讨论小组|a successor is one person who comes after another, not a group of judges or experts|successor 是一个继任者，不是一组评委或专家|pan · el|the -el ending, not -le|结尾是 -el 而不是 -le
+      institute|a research centre that studies heart disease|a school of art founded in 1880|a technical college in Zurich|an institute is an organization for study or teaching; a panel is a small group that meets to judge|institute 是研究或教学机构；panel 是评审小组|a panel is a small group that meets to discuss or judge, not a place where people study or work|panel 是开会讨论或评审的小组，不是供人学习或工作的机构|a ministry is a government department run by a minister, not a centre for research or teaching|ministry 是部长领导的政府部门，不是研究或教学机构|in · sti · tute|the -tute ending|结尾是 -tute
+      ministry|the government department led by the health minister|a department helping the minister plan the army's budget|a department headed by a minister that sets the exams|a ministry is a government department led by a minister; a sector is a part of the economy|ministry 是政府部门；sector 是经济领域|a sector is a whole part of the economy such as banking, not a department run by a minister|sector 是银行业等经济领域，不是部长领导的部门|an institute is a place for research or teaching, not a government department|institute 是研究或教学机构，不是政府部门|min · is · try|the -try ending|结尾是 -try
+      sector|a million people working in banking|nursing and teaching jobs paid for by the state|farming shrinking as people move to cities|a sector is a part of the economy; a ministry is a government department|sector 是经济领域；ministry 是政府部门|a ministry is one government department run by a minister, not a whole part of the economy|ministry 是部长领导的一个政府部门，不是一整个经济领域|welfare is health and happiness or state aid, not a part of the economy|welfare 是福祉或救济金，不是经济领域|sec · tor|the -or ending|结尾是 -or
+      corporate|an oil company's glass tower headquarters|staff dinners and team trips paid for by big firms|profits made by large companies|corporate means to do with a large company; professional means to do with a skilled job|corporate 是公司的；professional 是职业的、专业的|professional means to do with a skilled job or its workers, not belonging to a large company|professional 是与专业工作有关的，不是属于大公司的|domestic means to do with the home or one's own country, not with a large company|domestic 是家庭的或国内的，与大公司无关|cor · po · rate|the -ate ending after *corpor*|*corpor* 后接 -ate
+      welfare|parents keeping their children healthy, safe and happy|money paid by the state to people in need|a charity giving old horses food, shelter and a vet|welfare is health, safety and happiness, or help given by the state; a sector is a part of the economy|welfare 是福祉或救济；sector 是经济领域|a sector is a part of the economy, not the health and happiness of children or money given to the poor|sector 是经济领域，不是孩子的福祉或救济穷人的钱|a ministry is a government department, not the wellbeing of people or animals|ministry 是政府部门，不是人或动物的福祉|wel · fare|one l in *wel*, unlike *well*|*wel* 只有一个 l，和 *well* 不同
+    `,
+  },
 );
 
 const ahead = batch(
@@ -99,17 +265,50 @@ const ahead = batch(
   ["Words for Thinking Ahead", "预想与观念的词"],
   ["academic words for assuming, expecting, believing and leaning", "表示假定、预期、信念和倾向的学术词"],
   `
-  presume|to suppose that something is true without proof|假定，认为|I ___ you have eaten.|We must not ___ guilt.|Don't ___ to know what I think.|anticipate,incline|presumed,presumably,presumption
-  anticipate|to expect or predict; to act in advance|预期；预料|We ___ a large crowd.|She tried to ___ every question.|Nobody could ___ the storm.|presume,prospect|anticipated,anticipation
-  notion|a belief or idea|观念，想法|She had no ___ of what to do.|The ___ that money buys happiness is false.|He had a vague ___ of the answer.|ideology,norm|notions
-  ideology|a system of ideas, especially political ones|意识形态|The party has a clear ___.|They fought over ___.|Each ___ claims to know the truth.|notion,ethic|ideologies,ideological
-  rational|based on reason or logic|理性的|There must be a ___ explanation.|She made a ___ choice.|Try to stay ___.|norm,scenario|rationally,rationality
-  norm|something usual, typical or standard|规范，常态|Working from home is now the ___.|Each culture has its own ___ of dress.|Such rudeness is not the ___.|ethic,notion|norms
-  ethic|a set of moral principles|道德规范|She has a strong work ___.|The medical ___ forbids it.|Each profession has its own ___.|norm,ideology|
-  scenario|a possible series of events|设想，情况|In the worst ___, we lose everything.|Let's imagine a ___.|The best ___ is a quick recovery.|prospect,rational|scenarios
-  prospect|the possibility of some future event; a likely candidate|前景；可能的人选|There is little ___ of rain.|The ___ of a new job excited her.|He is a bright ___ for the team.|scenario,anticipate|prospects,prospective
-  incline|to feel willing or favorably disposed; a slope|倾向于；斜坡|I ___ to agree with you.|The road runs up a steep ___.|They ___ toward the left.|presume,anticipate|inclined,inclination
+  presume|to suppose that something is true without proof|假定，认为|Since all the lights were off, I ___ that nobody was at home, though I had no proof.|Don't ___ that he is guilty just because he looks nervous in court.|We ___ the old map is accurate, but no one has checked it for years.|anticipate,incline|presumed,presumably,presumption
+  anticipate|to expect or predict; to act in advance|预期；预料|The organizers ___ a crowd of ten thousand, so they have ordered extra buses in advance.|A good chess player tries to ___ her opponent's next move and plan for it.|We did not ___ any trouble on the trip, so we were caught out when the van broke down.|presume,incline|anticipated,anticipation
+  notion|a belief or idea|观念，想法|She had no ___ of how far it was to the coast; she thought it was a short walk.|The ___ that money always brings happiness is popular, but many studies doubt it.|He had a romantic ___ of life in the country, imagining sunny days and no hard work.|ideology,norm|notions
+  ideology|a system of ideas, especially political ones|意识形态|Communism is a political ___, a whole system of ideas about how a society should be run.|The party's ___, its full set of political beliefs, shapes every policy it makes, from taxes to schools.|Young people were taught the ___ of the ruling party at school, learning its beliefs by heart.|notion,norm|ideologies,ideological
+  rational|based on reason or logic|理性的|Try to make a ___ decision based on the facts, not on how you happen to feel today.|There must be a ___ explanation for the strange noise, such as the wind or a loose window.|Humans are not always ___; we often act on fear or anger rather than logic.|random,fatuous|rationally,rationality
+  norm|something usual, typical or standard|规范，常态|In this town it is the ___ for shops to close on Sunday afternoons; almost all of them do.|Working from home has become the ___ for many office staff, the usual way of doing things.|Her height is well above the ___ for a girl of her age.|ethic,notion|norms
+  ethic|a set of moral principles|道德规范|He has a strong work ___, believing it is right to work hard and never cut corners.|A strict medical ___, a moral rule every doctor learns, forbids them to share a patient's secrets.|Her personal ___ would not let her lie, even to protect a friend.|norm,ideology|
+  scenario|a possible series of events|设想，情况|In the worst ___, the river will flood and hundreds of homes will be lost.|The pilots practised every ___ in the simulator, from engine failure to a fire on board.|Let's imagine a ___ in which the power goes off for a week: how would we cope?|prospect,notion|scenarios
+  prospect|the possibility of some future event; a likely candidate|前景；可能的人选|The ___ of a long summer holiday cheered her up all through the cold spring.|There is little ___ of rain this week, so the farmers are worried about their crops.|Her job ___ improved after she learned to code, and many firms were keen to hire her.|scenario,norm|prospects,prospective
+  incline|to feel willing or favorably disposed; a slope|倾向于；斜坡|I ___ to agree with you, though I would like to hear more before I decide.|Her long experience will ___ the judges to trust her evidence.|Cats ___ to sleep through the hottest part of the day.|presume,anticipate|inclined,inclination
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The planners **anticipate** heavy rain, so they have drawn up a worst-case **scenario**; the **prospect** of floods makes a **rational** plan more urgent than ever. These ten words help you talk, in formal and academic English, about expecting, supposing, ideas, beliefs and what is usual.",
+      "规划者预计（**anticipate**）会有大雨，于是制定了最坏情况下的预案（**scenario**）；洪水的可能（**prospect**）让一个理性的（**rational**）计划显得前所未有地紧迫。这十个词帮你用正式的学术英语谈论预期、假定、想法、信念和常态。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **norm** is what people usually do, while an **ethic** is what they believe is right; staying late may be the norm in an office without being anyone's ethic.",
+        "**norm** 是人们通常的做法，**ethic** 是人们认为正确的原则；加班可能是办公室的常态，却不是任何人的道德准则。",
+      ),
+      use: t(
+        "**Presume** is followed by a that clause about what is true now, while **anticipate** takes what you expect to come, as in anticipate a crowd.",
+        "**presume** 后接 that 从句，说明现在认定的事实；**anticipate** 后接预计会来的事，如 anticipate a crowd。",
+      ),
+      spelling: t(
+        "**Scenario** keeps the Italian sc and -io, **ideology** has -ology, and **rational** has one t and one n before -al.",
+        "**scenario** 保留意大利语的 sc 和 -io；**ideology** 以 -ology 结尾；**rational** 的 -al 前只有一个 t、一个 n。",
+      ),
+    },
+    notes: `
+      presume|supposing nobody is home because the lights are off|deciding a nervous man is guilty without proof|trusting an old map that no one has checked|presume means to suppose something is true without proof; anticipate means to expect something to come|presume 是未经证实就认定；anticipate 是预期将来的事|anticipate means to expect a future event and get ready for it, not to suppose that something is already true|anticipate 是预料将来的事并做准备，不是认定某事已经属实|incline means to lean towards an opinion, and it is followed by to, not by that and a fact|incline 是倾向于，后接 to，而不是 that 加事实|pre · sume|the long u and the silent e|长音 u，结尾 e 不发音
+      anticipate|organizers ordering extra buses for an expected crowd|a chess player planning for the next move|a family not expecting trouble before a van breaks down|anticipate means to expect something and prepare for it; presume means to suppose something is true|anticipate 是预料并做准备；presume 是认定|presume means to suppose something is true now, not to expect a coming event and prepare for it|presume 是认定现在的情况，不是预料将来的事并做准备|incline means to lean towards an opinion or make someone lean that way, not to expect a future event|incline 是倾向于，不是预料将来的事|an · tic · i · pate|the c that sounds like s and the -ate ending|c 读作 s，结尾是 -ate
+      notion|having no idea how far it is to the coast|a popular belief that money brings happiness|a romantic idea of life in the country|a notion is a single idea or belief; an ideology is a whole system of ideas|notion 是一个想法；ideology 是一整套思想体系|an ideology is a whole system of political ideas, not a single idea about a walk or about country life|ideology 是整套政治思想体系，不是关于路程或乡村生活的一个想法|a norm is what is usual or standard, not an idea someone has in mind|norm 是常态或标准，不是某人脑中的想法|no · tion|the -tion ending|结尾是 -tion
+      ideology|communism as a whole system of political ideas|a party's full set of political beliefs|the beliefs of a ruling party learned by heart|an ideology is a whole system of ideas, especially political ones; a notion is a single idea|ideology 是思想体系；notion 是一个想法|a notion is a single idea, not a whole system of beliefs about how a society should be run|notion 是一个想法，不是关于社会如何运行的整套信念|a norm is what is usual or typical, not a system of political beliefs|norm 是常态，不是政治信念体系|i · de · ol · o · gy|the -ology ending|结尾是 -ology
+      rational|a decision based on facts rather than feelings|a sensible explanation such as the wind for a strange noise|people acting on fear rather than logic|rational means based on reason; random means by chance|rational 是理性的；random 是随机的|random means by chance with no plan, the opposite of a choice made by reason|random 是随机的，和经过理性判断正好相反|fatuous means silly and pointless, the opposite of sensible and logical|fatuous 是愚蠢无聊的，和合乎逻辑正好相反|ra · tion · al|the -tion before -al|-al 前是 -tion
+      norm|almost all shops closing on Sunday afternoons|working from home becoming the usual way for office staff|the usual height for a girl of a certain age|a norm is what is usual or standard; an ethic is a moral principle|norm 是常态；ethic 是道德准则|an ethic is a moral belief about what is right, not what most people or shops usually do|ethic 是关于对错的道德信念，不是大多数人通常的做法|a notion is an idea or belief, not the usual way things are done|notion 是想法，不是通常的做法|norm|the -orm ending, as in *form*|结尾 -orm，同 *form*
+      ethic|a man who believes it is right to work hard|a moral rule that forbids doctors to share secrets|a woman whose principles will not let her lie|an ethic is a set of moral principles; a norm is what is usual|ethic 是道德准则；norm 是常态|a norm is what most people usually do, not a moral belief about what is right|norm 是大多数人通常的做法，不是关于对错的道德信念|an ideology is a system of political ideas, not a personal rule about honesty or hard work|ideology 是政治思想体系，不是关于诚实或勤劳的个人准则|eth · ic|the th and the -ic ending|th 组合，结尾是 -ic
+      scenario|a river flooding hundreds of homes in the worst case|pilots practising engine failure and fire in a simulator|imagining a week without power|a scenario is a possible series of events; a prospect is the chance of something happening|scenario 是可能出现的情形；prospect 是某事发生的可能|a prospect is the chance or hope of something, not a series of events to imagine or practise|prospect 是可能性或前景，不是可以设想或演练的一系列事件|a notion is a single idea, not a series of events that might happen|notion 是一个想法，不是可能发生的一系列事件|sce · nar · i · o|the sc that sounds like *s* and the -io ending|sc 读作 *s*，结尾是 -io
+      prospect|a long summer holiday to look forward to|little chance of rain for worried farmers|better chances of a job after learning to code|a prospect is the chance or hope of something in the future; a scenario is a possible series of events|prospect 是前景或可能性；scenario 是设想的情形|a scenario is a possible series of events to plan for, not the hope or chance of something good or bad|scenario 是要预先设想的情形，不是某事的希望或可能|a norm is what is usual, not the chance of something happening later|norm 是常态，不是将来某事发生的可能|pros · pect|the ct at the end|结尾是 ct
+      incline|leaning towards agreeing but wanting to hear more|long experience making judges lean towards trust|cats tending to sleep in the hottest part of the day|incline means to lean towards an opinion or habit; presume means to suppose something is true|incline 是倾向于；presume 是认定|presume means to suppose something is true, and it is not used with to for a habit or a leaning|presume 是认定某事属实，不用 to 表示习惯或倾向|anticipate means to expect a coming event, not to lean towards an opinion or habit|anticipate 是预期将来的事，不是倾向于某种看法或习惯|in · cline|the long i and the silent e|长音 i，结尾 e 不发音
+    `,
+  },
 );
 
 const places = batch(
@@ -117,17 +316,50 @@ const places = batch(
   ["Words for Places and Moving", "地点与迁移的词"],
   ["academic words for being somewhere and going elsewhere", "表示所在之处与去往他处的学术词"],
   `
-  transfer|to move from one place to another|转移，调动|She asked to ___ to another school.|You can ___ money online.|The player will ___ to a new club.|transit,displace|transferred
-  transit|the carrying of people or goods from one place to another|运输，中转|The parcel was lost in ___.|Public ___ is cheap here.|We were in ___ for two days.|transfer,overseas|
-  displace|to force someone to leave home; to take the place of|使离开家园；取代|The war will ___ millions.|Robots may ___ many workers.|The dam would ___ three villages.|transfer,occupy|displacement
-  immigrate|to come to live permanently in a foreign country|移民(入境)|Her family chose to ___ to Canada.|Many hoped to ___ after the war.|They plan to ___ next year.|reside,locate|
-  locate|to discover the exact place of; to place|找到；位于|We could not ___ the file.|The firm will ___ its office downtown.|Can you ___ the town on the map?|orient,reside|located
-  reside|to have one's permanent home in a place|居住|They ___ in Paris.|The power will ___ with the board.|He used to ___ abroad.|occupy,immigrate|resided,resident,residence
-  occupy|to live in or use a place; to take control of; to keep busy|占据；使忙碌|Soldiers began to ___ the town.|The tenants ___ the top floor.|Games ___ the children.|reside,displace|occupied,occupation,occupant
-  orient|to find one's position; to aim something at a group|确定方位；使适应|Use the map to ___ yourself.|The course will ___ new students.|They ___ the program toward teens.|locate,transfer|oriented,orientation
-  overseas|in or to a foreign country, especially across the sea|海外的|She studied ___ for a year.|___ sales rose.|He took a job ___.|domestic,transit|
-  domestic|relating to the home; of one's own country|家庭的；国内的|They shared the ___ chores.|___ flights are cheaper.|The cat is a ___ animal.|overseas,transit|domestically
+  transfer|to move from one place to another|转移，调动|The bank will ___ the money from my account to yours by tomorrow morning.|After a year in Leeds, she asked to ___ to the London office of the same company.|Nurses will ___ the patient from the ambulance to a ward on the third floor.|displace,locate|transferred
+  transit|the carrying of people or goods from one place to another|运输，中转|The parcel was damaged in ___, somewhere between the factory and our front door.|Passengers in ___ to Sydney must stay in the airport lounge while their plane refuels.|The ___ of goods by rail from the port to the city takes about six hours.|infrastructure,expulsion|
+  displace|to force someone to leave home; to take the place of|使离开家园；取代|The flood will ___ thousands of families, forcing them to leave their homes.|The new dam will ___ three villages, whose people must move elsewhere.|Robots may ___ many factory workers, taking over the jobs that people used to do.|occupy,reside|displacement
+  immigrate|to come to live permanently in a foreign country|移民(入境)|Her grandparents decided to ___ to Canada in 1960, leaving Italy to start a new life.|Many doctors ___ to countries where they can earn more and settle for good.|To ___ to Australia, you must apply for a visa that lets you live there permanently.|reside,locate|
+  locate|to discover the exact place of; to place|找到；位于|Divers managed to ___ the wreck of the ship, finding it two miles off the coast.|Can you ___ Peru on this map of South America?|The company chose to ___ its new factory near the port, where ships could unload easily.|orient,reside|located
+  reside|to have one's permanent home in a place|居住|The president will ___ in the palace during her time in office.|Most of the island's people ___ in the small town by the harbour.|Students must ___ in the country for three years before they can apply for free tuition.|occupy,immigrate|resided,resident,residence
+  occupy|to live in or use a place; to take control of; to keep busy|占据；使忙碌|Soldiers moved in to ___ the city, taking control of its streets and bridges.|This puzzle book will ___ the children for hours on the long drive.|Our family will ___ the top flat, and my aunt will live downstairs.|reside,displace|occupied,occupation,occupant
+  orient|to find one's position; to aim something at a group|确定方位；使适应|Lost in the forest, the climbers used the sun to ___ themselves, working out which way was north.|The new magazine will ___ its stories towards teenage readers.|Turn the map to ___ it, so that its north points the same way as the real north.|transfer,displace|oriented,orientation
+  overseas|in or to a foreign country, especially across the sea|海外的|The university welcomes many ___ students from China, India and Brazil.|Her new job in Singapore is her first ___ post, far across the ocean from her family.|The company earns most of its money from ___ sales in America and Japan.|domestic,internal|
+  domestic|relating to the home; of one's own country|家庭的；国内的|The airline runs ___ flights between cities in the same country.|She does most of the ___ chores, such as cooking, cleaning and washing at home.|The government wants to help ___ farmers by buying food grown in this country.|overseas,external|domestically
   `,
+  "context-clues",
+  {
+    intro: t(
+      "After her family chose to **immigrate**, they had to **locate** a flat, **transfer** their savings and learn to **orient** themselves in a new city. These ten words help you talk, in formal and academic English, about places, homes and moving people and goods.",
+      "家人决定移民（**immigrate**）后，他们得找到（**locate**）一套公寓，转移（**transfer**）积蓄，还要学会在新城市里辨明方向（**orient**）。这十个词帮你用正式的学术英语谈论地点、住所以及人和货物的移动。",
+    ),
+    watchOut: {
+      meanings: t(
+        "You **reside** in a place where you live, but you **occupy** a place by living in it, using it or taking control of it, as soldiers occupy a city.",
+        "**reside** 是在某地居住；**occupy** 是居住、使用或占领某处，如士兵 occupy 一座城市。",
+      ),
+      use: t(
+        "You **immigrate to** a new country and emigrate from your old one, and you **reside in** a place, never reside a place.",
+        "说 **immigrate to** 新国家、emigrate from 原来的国家；说 **reside in** 某地，不说 reside 某地。",
+      ),
+      spelling: t(
+        "**Immigrate** has a double m, **transfer** doubles its r in *transferred*, and **overseas** is one word.",
+        "**immigrate** 双写 m；**transfer** 变成 *transferred* 时双写 r；**overseas** 是一个词。",
+      ),
+    },
+    notes: `
+      transfer|money moved from one bank account to another|a worker moving to another office of the same firm|a patient moved from an ambulance to a ward|transfer means to move someone or something from one place to another; displace means to force people out of their homes|transfer 是转移；displace 是迫使离开家园|displace means to force people out or take their place, not to send money or move a patient|displace 是迫使离开或取而代之，不是转账或转送病人|locate means to find or place something, not to move it from one place to another|locate 是找到或安置，不是从一处移到另一处|trans · fer|the r is doubled in *transferred*|变成 *transferred* 时双写 r
+      transit|a parcel damaged between factory and door|passengers waiting in an airport lounge on the way to Sydney|goods carried by rail from port to city|transit is the carrying of people or goods from place to place; infrastructure is the roads and systems a society needs|transit 是运输、途中；infrastructure 是基础设施|infrastructure is the roads, power and systems a society needs, not the journey of a parcel or a passenger|infrastructure 是道路、电力等基础设施，不是包裹或乘客的旅途|expulsion is the act of forcing someone out, not the carrying of goods or people on a journey|expulsion 是驱逐，不是运送货物或乘客|tran · sit|the s that sounds like *z*|s 读作 *z*
+      displace|a flood forcing thousands of families from their homes|a dam forcing three villages to move|robots taking over the jobs of factory workers|displace means to force people out or take their place; occupy means to live in or take control of a place|displace 是迫使离开或取代；occupy 是居住或占领|occupy means to live in or take control of a place, not to force families out of their homes|occupy 是居住或占领某地，不是迫使人们离开家园|reside means to live in a place, and it is not used with families or villages after it|reside 是居住，后面不直接接家庭或村庄|dis · place|dis- followed by *place*|dis- 后接 *place*
+      immigrate|grandparents moving from Italy to start a new life in Canada|doctors moving to settle in countries where they earn more|applying for a visa to live in Australia permanently|immigrate means to come to live in a new country; reside means to live somewhere|immigrate 是移民入境；reside 是居住|reside means to live in a place, and it is not followed by to and a new country|reside 是居住，后面不接 to 加新的国家|locate means to find or place something, not to move to live in a new country|locate 是找到或安置，不是移居他国|im · mi · grate|the double m|双写 m
+      locate|divers finding a shipwreck off the coast|finding Peru on a map|placing a new factory near a port|locate means to find or put in a place; orient means to work out where you are or aim at a group|locate 是找到或安置；orient 是辨明方向或面向|orient means to work out one's direction or aim something at a group, not to find a wreck or a country on a map|orient 是辨明方向或面向某群体，不是找到沉船或地图上的国家|reside means to live in a place, not to find something or put a factory somewhere|reside 是居住，不是寻找或安置工厂|lo · cate|the -ate ending, as in *late*|结尾 -ate，同 *late*
+      reside|a president living in a palace while in office|most islanders living in a harbour town|students living in a country for three years|reside means to live in a place; occupy means to live in, use or take control of it|reside 是居住；occupy 是居住、占用或占领|occupy means to use or take control of a place, and it takes no in after it|occupy 是占用或占领，后面不加 in|immigrate means to move to a new country, not to live in a place for a time|immigrate 是移民入境，不是在某地居住一段时间|re · side|the s that sounds like *z* and the silent e|s 读作 *z*，结尾 e 不发音
+      occupy|soldiers taking control of a city's streets and bridges|a puzzle book keeping children busy for hours|a family living in the top flat|occupy means to live in, use or take control of a place, or to keep busy; reside means only to live somewhere|occupy 是居住、占用、占领或使忙碌；reside 只是居住|reside means to live in a place, and it needs in, not a city, a child or a flat straight after it|reside 是居住，需要接 in，不能直接接城市、孩子或公寓|displace means to force people out, not to take control of a city or keep children busy|displace 是迫使离开，不是占领城市或让孩子忙碌|oc · cu · py|the double c and the y at the end|双写 c，结尾是 y
+      orient|lost climbers using the sun to find north|a magazine aiming its stories at teenagers|a map turned so its north matches the real north|orient means to work out one's position or aim something at a group; locate means to find the place of something|orient 是辨明方向或面向；locate 是找到位置|transfer means to move something from one place to another, not to work out direction or aim at readers|transfer 是转移，不是辨明方向或面向读者|displace means to force out or take the place of, not to find one's way or turn a map|displace 是迫使离开或取代，不是辨明方向或转动地图|o · ri · ent|the -ent ending|结尾是 -ent
+      overseas|students coming from China, India and Brazil|a job in Singapore far across the ocean|sales in America and Japan|overseas means in or from a foreign country across the sea; domestic means of one's own country|overseas 是海外的；domestic 是国内的|domestic means of one's own country or home, the opposite of from far across the sea|domestic 是本国的或家庭的，和远隔重洋正好相反|internal means on the inside, not in or from a foreign country|internal 是内部的，不是外国的|o · ver · seas|one word made of *over* and *seas*|由 *over* 和 *seas* 合成一个词
+      domestic|flights between cities in the same country|cooking, cleaning and washing at home|farmers who grow food in this country|domestic means of the home or of one's own country; overseas means abroad|domestic 是家庭的或国内的；overseas 是海外的|overseas means in a foreign country across the sea, the opposite of within one's own country or home|overseas 是海外的，和国内或家里正好相反|external means on the outside, not to do with the home or one's own country|external 是外部的，与家庭或本国无关|do · mes · tic|the -ic ending|结尾是 -ic
+    `,
+  },
 );
 
 /** batchesG are the academic words for showing, sorting, supporting, research, roles, thinking ahead and places. */
