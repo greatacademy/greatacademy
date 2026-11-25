@@ -401,3 +401,80 @@ export const raisedCapitals: Case = when(
     );
   },
 );
+
+/** pastTimeOf finds the words of a text that place it in the past, such as *yesterday* or *last week*. */
+export const pastTimeOf = (text: string) =>
+  /\b(yesterday|last (?:night|week|month|year|summer|winter|weekend|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|(?:\w+ )?(?:days?|weeks?|years?|hours?|minutes?) ago|this morning|on (?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|when (?:i|he|she|we|they|you) (?:was|were) \w+)\b/iu.exec(
+    text,
+  )?.[0];
+
+/** pastNeeded explains a present or base form of a verb in a sentence that a time word places in the past. */
+export const pastNeeded: Case = when(
+  (s) => s.w !== "" && s.r !== "" && !s.w.includes(" ") && !s.r.includes(" ") && pastTimeOf(`${s.wrong} ${s.shown}`) !== undefined,
+  (s) => {
+    const time = pastTimeOf(`${s.wrong} ${s.shown}`) ?? "";
+    return t(
+      `*${time}* places this in the past, so the verb takes its past form. *${s.w}* is a present form.`,
+      `*${time}* 说明这是过去的事，所以动词要用过去式。*${s.w}* 是现在时的形式。`,
+    );
+  },
+);
+
+/** baseAfterDo explains a verb that is not in its base form after *do*, *does* or *did* earlier in the sentence. */
+export const baseAfterDo: Case = (s) => {
+  if (s.w === "" || s.r === "" || s.w.includes(" ") || s.r.includes(" ")) return undefined;
+  const at = s.wrong.toLowerCase().indexOf(` ${lower(s.w)}`);
+  const helper = /\b(do|does|did|don't|doesn't|didn't)\b/iu.exec(s.wrong.slice(0, Math.max(at, 0)))?.[1];
+  if (!helper) return undefined;
+  return /^did/iu.test(helper)
+    ? t(
+        `*${helper}* already shows that this happened in the past, so the verb after it goes back to its base form. *${s.w}* is a past form.`,
+        `*${helper}* 已经表示过去，所以它后面的动词要还原成原形。*${s.w}* 是过去式。`,
+      )
+    : t(
+        `*${helper}* already shows the person and the time, so the verb after it goes back to its base form. *${s.w}* is not that form.`,
+        `*${helper}* 已经表示了人称和时间，所以它后面的动词要还原成原形。*${s.w}* 不是原形。`,
+      );
+};
+
+/** doWithModal explains *do*, *does* or *did* put before *can*, *should*, *must* or *will* to make a negative. */
+export const doWithModal: Case = when(
+  (s) => /\b(don't|doesn't|didn't|do not|does not) (can|could|should|must|will|would)\b/iu.test(s.wrong),
+  (s) => {
+    const modal = /\b(?:don't|doesn't|didn't|do not|does not) (\w+)/iu.exec(s.wrong)?.[1] ?? "";
+    return t(
+      `*${modal}* makes its own negative: *not* joins *${modal}* itself. It never takes *do*, *does* or *did*.`,
+      `*${modal}* 自己构成否定：*not* 直接加在 *${modal}* 上。它前面从不加 *do*、*does* 或 *did*。`,
+    );
+  },
+);
+
+/** notAlone explains *not* put straight before a verb that is not *be* or a modal. */
+export const notAlone: Case = when(
+  (s) =>
+    /\bnot\b/iu.test(s.wrong) &&
+    !/\b(do|does|did|is|are|am|was|were|can|could|should|must|will|would|have|has) not\b/iu.test(s.wrong) &&
+    /\b(don't|doesn't|didn't)\b/iu.test(s.right),
+  (s) =>
+    /\bdidn't\b/iu.test(s.right)
+      ? t(
+          "*not* cannot stand alone before the verb. English makes a past-simple verb negative with *did* and *not*, usually as one short word, followed by the base verb.",
+          "*not* 不能直接放在动词前面。英语一般过去时的否定用 *did* 加 *not*（通常缩写成一个词），后面接动词原形。",
+        )
+      : t(
+          "*not* cannot stand alone before a present-simple verb. English makes such a verb negative with *do* or *does* and *not*, usually as one short word.",
+          "*not* 不能直接放在一般现在时的动词前面。英语用 *do* 或 *does* 加 *not*（通常缩写成一个词）来构成否定。",
+        ),
+);
+
+/** participleNeeded explains a verb after *have* or *has* that is not the past participle. */
+export const participleNeeded: Case = (s) => {
+  if (s.w === "" || s.r === "" || s.w.includes(" ") || s.r.includes(" ")) return undefined;
+  const at = s.wrong.toLowerCase().indexOf(` ${lower(s.w)}`);
+  const helper = /\b(have|has|haven't|hasn't|had)\b/iu.exec(s.wrong.slice(0, Math.max(at, 0)))?.[1];
+  if (!helper || /^(have|has|had|already|yet|just|ever|never|not)$/u.test(lower(s.w))) return undefined;
+  return t(
+    `After *${helper}*, the verb takes its past participle, the third form (*go – went – gone*). *${s.w}* is not that form.`,
+    `在 *${helper}* 后面，动词要用过去分词，即第三种形式（*go – went – gone*）。*${s.w}* 不是这个形式。`,
+  );
+};

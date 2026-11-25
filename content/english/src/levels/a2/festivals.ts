@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
 import { combos, fill, judgedTopic } from "./kit.ts";
+import { verbsFollowedByToWriteNot } from "./mistakes.ts";
 
 const festivalWords = vocabularyTopic({
   id: "a2-words-festivals",
@@ -673,18 +674,24 @@ const verbsFollowedByTo: TopicDef = {
         "Write the sentence from the note. The first verb changes: *-s* after *he*, *she* and one person (*She wants*), *-ed* for the past (*We decided*). The second verb never changes: *to* and its first form.\n\n*She wants to visit the castle. They decided to stay at home yesterday.*\n\n> **Watch out.** Put the *-s* or *-ed* only on the first verb—never on the verb after *to* (*She wants to visits* is wrong).",
         "根据笔记写句子。第一个动词要变：*he*、*she* 和单个人后面加 *-s*（*She wants*），过去的事加 *-ed*（*We decided*）。第二个动词永远不变：*to* 加原形。\n\n*She wants to visit the castle. They decided to stay at home yesterday.*\n\n> **注意。** 只有第一个动词随主语或时态变化，*to* 后面的动词永远保持原形（*She wants to visits* 是错的）。",
       ),
-      typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), toTypedBank, (right) => {
-        const first = firstToVerb(right);
-        const how = right.includes("yesterday")
-          ? t("takes *-ed* for the past", "因为是过去的事，加 *-ed*")
-          : first.endsWith("s")
-            ? t("takes *-s* after one person", "单个人作主语时加 *-s*")
-            : t("stays plain after this subject", "在这个主语后面用原形");
-        return t(
-          `The first verb ${how.en} (*${first}*), and the second is always *to* with its first form: ${right}\n\n**Check.** Check both verbs: the first (*${first}*) matches the subject and tense, and the second stays *to* + plain verb.`,
-          `第一个动词${how["zh-CN"]}（*${first}*），第二个动词总是 *to* 加原形：${right}\n\n**检验。** 核对两个动词：第一个（*${first}*）符合主语和时态，第二个保持 *to* + 动词原形。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        toTypedBank,
+        (right) => {
+          const first = firstToVerb(right);
+          const how = right.includes("yesterday")
+            ? t("takes *-ed* for the past", "因为是过去的事，加 *-ed*")
+            : first.endsWith("s")
+              ? t("takes *-s* after one person", "单个人作主语时加 *-s*")
+              : t("stays plain after this subject", "在这个主语后面用原形");
+          return t(
+            `The first verb ${how.en} (*${first}*), and the second is always *to* with its first form: ${right}\n\n**Check.** Check both verbs: the first (*${first}*) matches the subject and tense, and the second stays *to* + plain verb.`,
+            `第一个动词${how["zh-CN"]}（*${first}*），第二个动词总是 *to* 加原形：${right}\n\n**检验。** 核对两个动词：第一个（*${first}*）符合主语和时态，第二个保持 *to* + 动词原形。`,
+          );
+        },
+        verbsFollowedByToWriteNot,
+      ),
     ),
   ],
 };

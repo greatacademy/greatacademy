@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { combos, fill, judgedTopic } from "./kit.ts";
+import { adverbsOfMannerWriteNot, couldForPastAbilityWriteNot } from "./mistakes.ts";
 
 const sports = vocabularyTopic({
   id: "a2-words-sports",
@@ -807,6 +808,7 @@ const adverbsOfManner: TopicDef = {
             `用动词表达时，说明怎样做的词是副词，放在动词后面；${rule["zh-CN"]}：${right}\n\n**检验。** 确认原句的名词短语（*a ${adjective} ...*）已完整改写成“动词 + 副词 *${adverb}*”。`,
           );
         },
+        adverbsOfMannerWriteNot,
       ),
     ),
   ],
@@ -935,7 +937,13 @@ const couldForPastAbility: TopicDef = {
         "Write a sentence from the note with *could* or *couldn't*, and the verb in its first form: *Tom / ride a bike / when he was five* → *Tom could ride a bike when he was five.* *not* in the note means *couldn't*.\n\n> **Watch out.** Keep the action verb plain after *could / couldn't* (no *-ed* and no *to*), and end with a period.",
         "根据笔记用 *could* 或 *couldn't* 写句子，动词用原形：*Tom / ride a bike / when he was five* → *Tom could ride a bike when he was five.* 笔记里有 *not* 就用 *couldn't*。\n\n> **注意。** *could / couldn't* 后面的动词保持原形（不加 *-ed* 也不加 *to*），句末加句号。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), couldTypedBank, couldWhy),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        couldTypedBank,
+        couldWhy,
+        couldForPastAbilityWriteNot,
+      ),
     ),
   ],
 };

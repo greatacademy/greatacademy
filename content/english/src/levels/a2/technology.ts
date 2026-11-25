@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
+import { presentPerfectWithJustAlreadyAndYetWriteNot } from "./mistakes.ts";
 
 const devices = vocabularyTopic({
   id: "a2-words-technology",
@@ -696,14 +697,20 @@ const presentPerfectJustAlreadyYet: TopicDef = {
         "Write the sentence from the note with *have* or *has* and the past participle. *just* and *already* go before the participle: *She has just sent the email.* *yet* goes at the end of a question or a sentence with *not*: *Have you paid the bill yet? Tom hasn't read the instructions yet.*\n\n> **Watch out.** Never use *did* with a past participle (*Did you paid...?* is wrong), and match *have* vs. *has* to the subject.",
         "根据笔记写句子，用 *have / has* 加过去分词。*just* 和 *already* 放在过去分词前面：*She has just sent the email.* *yet* 放在疑问句或否定句的末尾：*Have you paid the bill yet? Tom hasn't read the instructions yet.*\n\n> **注意。** 不要把 *did* 和过去分词混用（*Did you paid...?* 是错的），并核对主语该配 *have* 还是 *has*。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), jayTypedBank, (right) => {
-        const word = right.includes(" just ") ? "just" : right.includes(" already ") ? "already" : "yet";
-        const reason = jayReason(word, right);
-        return t(
-          `${reason.en}, and the verb is *have* or *has* with the past participle: ${right}\n\n**Check.** Verify three things: *have/has* agrees with the subject, the verb is a past participle, and *${word}* sits in its proper slot.`,
-          `${reason["zh-CN"]}，动词用 *have / has* 加过去分词：${right}\n\n**检验。** 核对三处：*have/has* 与主语一致、动词用过去分词、*${word}* 放对了位置。`,
-        );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        jayTypedBank,
+        (right) => {
+          const word = right.includes(" just ") ? "just" : right.includes(" already ") ? "already" : "yet";
+          const reason = jayReason(word, right);
+          return t(
+            `${reason.en}, and the verb is *have* or *has* with the past participle: ${right}\n\n**Check.** Verify three things: *have/has* agrees with the subject, the verb is a past participle, and *${word}* sits in its proper slot.`,
+            `${reason["zh-CN"]}，动词用 *have / has* 加过去分词：${right}\n\n**检验。** 核对三处：*have/has* 与主语一致、动词用过去分词、*${word}* 放对了位置。`,
+          );
+        },
+        presentPerfectWithJustAlreadyAndYetWriteNot,
+      ),
     ),
   ],
 };

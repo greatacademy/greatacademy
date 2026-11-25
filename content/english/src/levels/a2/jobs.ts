@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { judgedTopic } from "./kit.ts";
+import { subjectAndObjectQuestionsWriteNot } from "./mistakes.ts";
 
 const jobs2 = vocabularyTopic({
   id: "a2-words-jobs-2",
@@ -588,7 +589,13 @@ const subjectAndObjectQuestions: TopicDef = {
         "Write a question about the words in bold. If they did the action, put *who* or *what* in their place: *Who called Sam?* If the action was done to them, use *did* + subject + plain verb: *Who did Lily call?*\n\n> **Watch out.** Check whether the bold words are a person (*Who*) or a thing (*What*), and drop the bold words from the question itself.",
         "就加粗部分写一个问句。如果加粗部分是动作的发出者，用 *who* 或 *what* 代替它：*Who called Sam?* 如果加粗部分是动作的对象，用 *did* + 主语 + 动词原形：*Who did Lily call?*\n\n> **注意。** 先分清加粗部分是人（*Who*）还是物（*What*），并确保加粗部分不再出现在问句里。",
       ),
-      typedGenerator("sentence", t("Write a question about the words in bold.", "就加粗部分写一个问句。"), askTypedBank, askWhy),
+      typedGenerator(
+        "sentence",
+        t("Write a question about the words in bold.", "就加粗部分写一个问句。"),
+        askTypedBank,
+        askWhy,
+        subjectAndObjectQuestionsWriteNot,
+      ),
     ),
   ],
 };

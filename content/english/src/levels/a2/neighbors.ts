@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
+import { possessivePronounsFixNot, writingComparisonsMostNot, writingComparisonsWriteNot } from "./mistakes.ts";
 
 const neighborhood = vocabularyTopic({
   id: "a2-words-neighborhood",
@@ -763,21 +764,27 @@ const possessivePronouns: TopicDef = {
         "Each sentence uses the wrong form: *This bag is my.* → *This bag is mine.* *Is this mine bag?* → *Is this my bag?* Check whether a noun follows the possessive word.\n\n> **Watch out.** For *he*, *his* works in both places (*his bag* and *This bag is his*), never *him*.",
         "每个句子都用错了词：*This bag is my.* → *This bag is mine.* *Is this mine bag?* → *Is this my bag?* 看物主词后面有没有名词来判断。\n\n> **注意。** *he* 对应的物主词在两个位置都是 *his*（*his bag* 和 *This bag is his*），不要写成 *him*。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), possessiveFixBank, (right) => {
-        if (right.startsWith("Is this")) {
-          const word = right.split(" ")[2] ?? "";
-          const alone = ownerOf(word)?.[1] ?? word;
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        possessiveFixBank,
+        (right) => {
+          if (right.startsWith("Is this")) {
+            const word = right.split(" ")[2] ?? "";
+            const alone = ownerOf(word)?.[1] ?? word;
+            return t(
+              `A noun follows, so it needs the word that goes before a noun: *${word}*, not *${alone}*: ${right}\n\n**Check.** Spot the noun right after *${word}*—because a noun follows, the before-noun form is required.`,
+              `后面有名词，所以要用放在名词前的词：*${word}*，不用 *${alone}*：${right}\n\n**检验。** 看 *${word}* 后面紧跟着一个名词——有名词时必须用名词前的形式。`,
+            );
+          }
+          const word = /(\w+)\.$/u.exec(right)?.[1] ?? "";
           return t(
-            `A noun follows, so it needs the word that goes before a noun: *${word}*, not *${alone}*: ${right}\n\n**Check.** Spot the noun right after *${word}*—because a noun follows, the before-noun form is required.`,
-            `后面有名词，所以要用放在名词前的词：*${word}*，不用 *${alone}*：${right}\n\n**检验。** 看 *${word}* 后面紧跟着一个名词——有名词时必须用名词前的形式。`,
+            `No noun follows, so it needs the word that stands alone: *${word}*: ${right}\n\n**Check.** Look after *${word}*: the sentence ends right there with no noun, so the standalone possessive form fits.`,
+            `后面没有名词，所以要用单独使用的词 *${word}*：${right}\n\n**检验。** 看 *${word}* 后面：句子直接结束、没有名词，所以要用独立使用的物主代词。`,
           );
-        }
-        const word = /(\w+)\.$/u.exec(right)?.[1] ?? "";
-        return t(
-          `No noun follows, so it needs the word that stands alone: *${word}*: ${right}\n\n**Check.** Look after *${word}*: the sentence ends right there with no noun, so the standalone possessive form fits.`,
-          `后面没有名词，所以要用单独使用的词 *${word}*：${right}\n\n**检验。** 看 *${word}* 后面：句子直接结束、没有名词，所以要用独立使用的物主代词。`,
-        );
-      }),
+        },
+        possessivePronounsFixNot,
+      ),
     ),
   ],
 };
@@ -956,7 +963,13 @@ const writingComparisons: TopicDef = {
         "Write the sentence for the notes: the first place, *is*, the comparative of the adjective and *than*, then the second place. For example: *the market / the mall / crowded* → *The market is more crowded than the mall.*\n\n> **Watch out.** Do not forget *than* between the comparative and the second place, and watch spelling changes like *big* → *bigger* and *busy* → *busier*.",
         "根据笔记写出比较句：第一个地方、*is*、形容词的比较级和 *than*，再写第二个地方。例如：*the market / the mall / crowded* → *The market is more crowded than the mall.*\n\n> **注意。** 比较级和第二个地方之间别漏掉 *than*，并留意拼写变化（*big* → *bigger*、*busy* → *busier*）。",
       ),
-      typedGenerator("sentence", t("Write a sentence from the notes.", "根据笔记写一个句子。"), comparisonTypedBank, comparisonWhy),
+      typedGenerator(
+        "sentence",
+        t("Write a sentence from the notes.", "根据笔记写一个句子。"),
+        comparisonTypedBank,
+        comparisonWhy,
+        writingComparisonsWriteNot,
+      ),
     ),
     point(
       "most",
@@ -978,6 +991,7 @@ const writingComparisons: TopicDef = {
             `这个地方在所有地方中“最……”，所以用 *the* 加最高级，再说范围；${rule["zh-CN"]}：${right}\n\n**检验。** 核对三处：*${form}* 前有 *the*、最高级拼写正确、句末写明了范围。`,
           );
         },
+        writingComparisonsMostNot,
       ),
     ),
   ],

@@ -5,6 +5,13 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import {
+  haveToWriteNot,
+  shouldAndMustFixNot,
+  writingAdviceWithShouldAdviceNot,
+  writingAdviceWithShouldNotNot,
+  writingAdviceWithShouldTwoNot,
+} from "./mistakes.ts";
 
 const health = vocabularyTopic({
   id: "a2-words-health",
@@ -636,7 +643,7 @@ const shouldAndMust: TopicDef = {
         "Each sentence has *to* or an *-s* after *should* or *must*: *He should to drink water.* → *He should drink water.* *She must rests.* → *She must rest.* Rewrite it cleanly with the plain verb.\n\n> **Watch out.** Remove the extra *to* or *-s* only, and keep the subject, the modal (*should* or *must*), and the rest of the sentence intact.",
         "每个句子在 *should* 或 *must* 后面多了 *to* 或 *-s*：*He should to drink water.* → *He should drink water.* *She must rests.* → *She must rest.* 用动词原形重写句子。\n\n> **注意。** 只去掉多余的 *to* 或 *-s*，保留主语、情态动词（*should* 或 *must*）以及句子的其余部分。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), modalFixBank, modalWhy),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), modalFixBank, modalWhy, shouldAndMustFixNot),
     ),
   ],
 };
@@ -854,21 +861,26 @@ const haveTo: TopicDef = {
         "*Have to* changes like an ordinary verb: *she has to stay in bed*, *she doesn't have to stay in bed*, *does she have to stay in bed?*\n\n> **Watch out.** Never write *she doesn't has to* or *has she to?*—after *doesn't* or *Does*, *have* always returns to its plain form.",
         "*have to* 像普通动词一样变化：*she has to stay in bed*、*she doesn't have to stay in bed*、*does she have to stay in bed?*\n\n> **注意。** 不要写 *she doesn't has to* 或 *has she to?*——在 *doesn't* 或 *Does* 后面，*have* 必须还原为原形。",
       ),
-      typedGenerator("sentence-pattern", t("Write the sentence again.", "改写句子。"), haveToTypedBank, (right) =>
-        right.endsWith("?")
-          ? t(
-              `*Have to* makes a question like any verb: *Do* or *Does* first, then the subject and *have to* with a plain *have*: ${right}\n\n**Check.** Verify the front (*Do/Does* + subject + *have to*) and make sure *have* is plain, never *has*.`,
-              `*have to* 像普通动词一样构成疑问句：先写 *Do* 或 *Does*，再写主语和 *have to*，*have* 用原形：${right}\n\n**检验。** 核对句首结构（*Do/Does* + 主语 + *have to*），确认 *have* 用原形而不是 *has*。`,
-            )
-          : /n't have to/u.test(right)
+      typedGenerator(
+        "sentence-pattern",
+        t("Write the sentence again.", "改写句子。"),
+        haveToTypedBank,
+        (right) =>
+          right.endsWith("?")
             ? t(
-                `*Have to* makes its negative like any verb, with *don't* or *doesn't*, and *have* stays plain after it: ${right}\n\n**Check.** Verify that *don't/doesn't* agrees with the subject and is followed by plain *have to*.`,
-                `*have to* 像普通动词一样用 *don't* 或 *doesn't* 构成否定，后面的 *have* 用原形：${right}\n\n**检验。** 确认 *don't/doesn't* 与主语一致，后面紧接原形 *have to*。`,
+                `*Have to* makes a question like any verb: *Do* or *Does* first, then the subject and *have to* with a plain *have*: ${right}\n\n**Check.** Verify the front (*Do/Does* + subject + *have to*) and make sure *have* is plain, never *has*.`,
+                `*have to* 像普通动词一样构成疑问句：先写 *Do* 或 *Does*，再写主语和 *have to*，*have* 用原形：${right}\n\n**检验。** 核对句首结构（*Do/Does* + 主语 + *have to*），确认 *have* 用原形而不是 *has*。`,
               )
-            : t(
-                `*Must* becomes *have to*, and *have* takes *-s* as *has* after one person: ${right}\n\n**Check.** Match the subject to *has to* (singular third person) or *have to* (all others), with the plain verb right after *to*.`,
-                `*must* 改为 *have to*；单个的人作主语时，*have* 变成 *has*：${right}\n\n**检验。** 核对主语对应 *has to*（三单）还是 *have to*（其余主语），*to* 后面接动词原形。`,
-              ),
+            : /n't have to/u.test(right)
+              ? t(
+                  `*Have to* makes its negative like any verb, with *don't* or *doesn't*, and *have* stays plain after it: ${right}\n\n**Check.** Verify that *don't/doesn't* agrees with the subject and is followed by plain *have to*.`,
+                  `*have to* 像普通动词一样用 *don't* 或 *doesn't* 构成否定，后面的 *have* 用原形：${right}\n\n**检验。** 确认 *don't/doesn't* 与主语一致，后面紧接原形 *have to*。`,
+                )
+              : t(
+                  `*Must* becomes *have to*, and *have* takes *-s* as *has* after one person: ${right}\n\n**Check.** Match the subject to *has to* (singular third person) or *have to* (all others), with the plain verb right after *to*.`,
+                  `*must* 改为 *have to*；单个的人作主语时，*have* 变成 *has*：${right}\n\n**检验。** 核对主语对应 *has to*（三单）还是 *have to*（其余主语），*to* 后面接动词原形。`,
+                ),
+        haveToWriteNot,
       ),
     ),
   ],
@@ -961,11 +973,16 @@ const writingAdvice: TopicDef = {
         "Start with a pronoun for the person: *Tom* → *He*, *Anna* → *She*, *my parents* → *They*. Then *should* and the plain verb from the note:\n\n*Tom has a headache. (drink some water)* → *He should drink some water.*\n\n> **Watch out.** Do not drop the subject (*Should drink water* is wrong) and do not insert *to* after *should*.",
         "先用代词指这个人：*Tom* → *He*，*Anna* → *She*，*my parents* → *They*。然后写 *should* 和提示里的动词原形：\n\n*Tom has a headache. (drink some water)* → *He should drink some water.*\n\n> **注意。** 英语句子不能像中文“应该多喝水”那样省主语，也不要在 *should* 后面多加 *to*。",
       ),
-      typedGenerator("sentence", t("Write a sentence of advice.", "写一句建议。"), adviceBank, (right, shown) =>
-        t(
-          `Advice starts with a pronoun for the person (${adviceWho(shown, right)}), then *should* and the plain verb from the note, with no *to*: ${right}\n\n**Check.** Verify all three parts: the matching pronoun at the start, *should* + plain verb (no *to*), and a period at the end.`,
-          `建议以指这个人的代词开头（${adviceWho(shown, right)}），再写 *should* 和提示里的动词原形，不加 *to*：${right}\n\n**检验。** 核对三处：句首代词与人物对应、*should* 后接不带 *to* 的动词原形、句末有句号。`,
-        ),
+      typedGenerator(
+        "sentence",
+        t("Write a sentence of advice.", "写一句建议。"),
+        adviceBank,
+        (right, shown) =>
+          t(
+            `Advice starts with a pronoun for the person (${adviceWho(shown, right)}), then *should* and the plain verb from the note, with no *to*: ${right}\n\n**Check.** Verify all three parts: the matching pronoun at the start, *should* + plain verb (no *to*), and a period at the end.`,
+            `建议以指这个人的代词开头（${adviceWho(shown, right)}），再写 *should* 和提示里的动词原形，不加 *to*：${right}\n\n**检验。** 核对三处：句首代词与人物对应、*should* 后接不带 *to* 的动词原形、句末有句号。`,
+          ),
+        writingAdviceWithShouldAdviceNot,
       ),
     ),
     point(
@@ -975,11 +992,16 @@ const writingAdvice: TopicDef = {
         "For something that is a bad idea, write *shouldn't* (*should not*) and the plain verb: *He shouldn't watch TV.*\n\n> **Watch out.** Never put *don't* or *doesn't* in front of *should* (*He don't should* is wrong), and never add *to* after *shouldn't*.",
         "表示不该做的事，用 *shouldn't*（*should not*）加动词原形：*He shouldn't watch TV.*\n\n> **注意。** 不要在 *should* 前面加 *don't* 或 *doesn't*（*He don't should* 是错的），也不要在 *shouldn't* 后面加 *to*。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence of advice.", "写一句建议。"), notBank, (right, shown) =>
-        t(
-          `The note says *not*, so after the pronoun (${adviceWho(shown, right)}) write *shouldn't* and the plain verb; *should* never takes *don't*: ${right}\n\n**Check.** Confirm the order: pronoun + *shouldn't* (or *should not*) + plain verb, with no *don't* and no *to*.`,
-          `提示里有 *not*，所以在代词（${adviceWho(shown, right)}）后面写 *shouldn't* 和动词原形；*should* 从不与 *don't* 连用：${right}\n\n**检验。** 确认语序：代词 + *shouldn't*（或 *should not*）+ 动词原形，没有 *don't* 也没有 *to*。`,
-        ),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence of advice.", "写一句建议。"),
+        notBank,
+        (right, shown) =>
+          t(
+            `The note says *not*, so after the pronoun (${adviceWho(shown, right)}) write *shouldn't* and the plain verb; *should* never takes *don't*: ${right}\n\n**Check.** Confirm the order: pronoun + *shouldn't* (or *should not*) + plain verb, with no *don't* and no *to*.`,
+            `提示里有 *not*，所以在代词（${adviceWho(shown, right)}）后面写 *shouldn't* 和动词原形；*should* 从不与 *don't* 连用：${right}\n\n**检验。** 确认语序：代词 + *shouldn't*（或 *should not*）+ 动词原形，没有 *don't* 也没有 *to*。`,
+          ),
+        writingAdviceWithShouldNotNot,
       ),
     ),
     point(
@@ -998,6 +1020,7 @@ const writingAdvice: TopicDef = {
             `*Should* is written once, and *and* joins the two plain verbs after it, with no *to* before the second: ${right}\n\n**Check.** Read both actions after *should*: they are linked by *and*, and neither verb has *to* or *-s*.`,
             `*should* 只写一次，用 *and* 连接后面两个动词原形，第二个动词前不加 *to*：${right}\n\n**检验。** 读一遍 *should* 后面的两个动作：中间用 *and* 连接，两个动词都没有 *to* 或 *-s*。`,
           ),
+        writingAdviceWithShouldTwoNot,
       ),
     ),
   ],

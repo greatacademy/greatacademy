@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 import { combos, fill, judgedTopic } from "./kit.ts";
+import { beGoingToQuestionNot, beGoingToWriteNot, willForTheFutureWriteNot } from "./mistakes.ts";
 
 const holidays = vocabularyTopic({
   id: "a2-words-holidays",
@@ -640,7 +641,13 @@ const beGoingTo: TopicDef = {
         "Write the plan in the note with *going to*: *We / visit the castle / next Sunday* → *We are going to visit the castle next Sunday.* You may use the short forms *I'm*, *we're*, *they're* and *she's*.\n\n> **Watch out.** Check that *am/is/are* matches the subject and that *going to* is followed by the plain verb.",
         "用 *going to* 写出笔记里的计划：*We / visit the castle / next Sunday* → *We are going to visit the castle next Sunday.* 可以用缩写 *I'm*、*we're*、*they're* 和 *she's*。\n\n> **注意。** 核对 *am/is/are* 与主语一致，并且 *going to* 后面接动词原形。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), goTypedBank, goWhy),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        goTypedBank,
+        goWhy,
+        beGoingToWriteNot,
+      ),
     ),
     point(
       "question",
@@ -649,13 +656,19 @@ const beGoingTo: TopicDef = {
         "To ask about a plan, put *am*, *is* or *are* before the subject: *You are going to fly.* → *Are you going to fly?* *Tom is going to stay.* → *Is Tom going to stay?*\n\n> **Watch out.** Do not use *Do* or *Does* (*Do you going to fly?* is wrong)—simply move *am/is/are* to the front and end with a question mark.",
         "询问计划时，把 *am / is / are* 放到主语前面：*You are going to fly.* → *Are you going to fly?* *Tom is going to stay.* → *Is Tom going to stay?*\n\n> **注意。** 不要用 *Do* 或 *Does*（*Do you going to fly?* 是错的）——直接把 *am/is/are* 移到句首，句末加问号。",
       ),
-      typedGenerator("sentence", t("Make the sentence a question.", "把句子改成疑问句。"), goQuestionBank, (right) => {
-        const be = right.split(" ")[0] ?? "";
-        return t(
-          `To ask about a plan, move *${be.toLowerCase()}* before the subject and keep *going to* and the verb after it, with no *do*: ${right}\n\n**Check.** Verify the front order (*${be}* + subject + *going to* + verb) and the closing question mark.`,
-          `询问计划时，把 *${be.toLowerCase()}* 移到主语前面，后面保留 *going to* 和动词，不用 *do*：${right}\n\n**检验。** 核对句首语序（*${be}* + 主语 + *going to* + 动词）和句末问号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Make the sentence a question.", "把句子改成疑问句。"),
+        goQuestionBank,
+        (right) => {
+          const be = right.split(" ")[0] ?? "";
+          return t(
+            `To ask about a plan, move *${be.toLowerCase()}* before the subject and keep *going to* and the verb after it, with no *do*: ${right}\n\n**Check.** Verify the front order (*${be}* + subject + *going to* + verb) and the closing question mark.`,
+            `询问计划时，把 *${be.toLowerCase()}* 移到主语前面，后面保留 *going to* 和动词，不用 *do*：${right}\n\n**检验。** 核对句首语序（*${be}* + 主语 + *going to* + 动词）和句末问号。`,
+          );
+        },
+        beGoingToQuestionNot,
+      ),
     ),
   ],
 };
@@ -946,16 +959,21 @@ const willForTheFuture: TopicDef = {
         "Write the prediction with *will* and *probably*. *probably* goes after *will* but before *won't*: *We will probably win. We probably won't win.*\n\n> **Watch out.** Watch the position of *probably*: *will probably* (positive) vs. *probably won't* (negative)—do not write *won't probably*.",
         "用 *will* 和 *probably* 写出预测。*probably* 放在 *will* 后面，但放在 *won't* 前面：*We will probably win. We probably won't win.*\n\n> **注意。** 留意 *probably* 的位置：肯定句是 *will probably*，否定句是 *probably won't*——不要写成 *won't probably*。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), willTypedBank, (right) =>
-        /won't/u.test(right)
-          ? t(
-              `A prediction takes *will*, and its negative is *won't*; *probably* goes before *won't*, and the verb stays in its first form: ${right}\n\n**Check.** Verify the order: subject + *probably won't* + plain verb (no *to*).`,
-              `预测用 *will*，否定是 *won't*；*probably* 放在 *won't* 前面，动词用原形：${right}\n\n**检验。** 核对语序：主语 + *probably won't* + 动词原形（不加 *to*）。`,
-            )
-          : t(
-              `A prediction takes *will*; *probably* goes after *will*, and the verb stays in its first form: ${right}\n\n**Check.** Verify the order: subject + *will probably* (or *'ll probably*) + plain verb (no *to*).`,
-              `预测用 *will*；*probably* 放在 *will* 后面，动词用原形：${right}\n\n**检验。** 核对语序：主语 + *will probably*（或 *'ll probably*）+ 动词原形（不加 *to*）。`,
-            ),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        willTypedBank,
+        (right) =>
+          /won't/u.test(right)
+            ? t(
+                `A prediction takes *will*, and its negative is *won't*; *probably* goes before *won't*, and the verb stays in its first form: ${right}\n\n**Check.** Verify the order: subject + *probably won't* + plain verb (no *to*).`,
+                `预测用 *will*，否定是 *won't*；*probably* 放在 *won't* 前面，动词用原形：${right}\n\n**检验。** 核对语序：主语 + *probably won't* + 动词原形（不加 *to*）。`,
+              )
+            : t(
+                `A prediction takes *will*; *probably* goes after *will*, and the verb stays in its first form: ${right}\n\n**Check.** Verify the order: subject + *will probably* (or *'ll probably*) + plain verb (no *to*).`,
+                `预测用 *will*；*probably* 放在 *will* 后面，动词用原形：${right}\n\n**检验。** 核对语序：主语 + *will probably*（或 *'ll probably*）+ 动词原形（不加 *to*）。`,
+              ),
+        willForTheFutureWriteNot,
       ),
     ),
   ],

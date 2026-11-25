@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { vocabularyTopic, word } from "../words.ts";
 import { combos, fill } from "./kit.ts";
+import { pastContinuousWriteNot } from "./mistakes.ts";
 
 const pets = vocabularyTopic({
   id: "a2-words-pets",
@@ -683,13 +684,19 @@ const pastContinuous: TopicDef = {
         "Write one sentence from the note. The first action was going on, so it takes *was* or *were* with *-ing*; the action after *when* takes the past simple. You may also start with *When*: *When the phone rang, I was reading a book.*\n\n> **Watch out.** Double-check the *-ing* spelling (*run* → *running*, *make* → *making*) and use the past simple (not *was/were + -ing*) after *when*.",
         "根据笔记写一个句子。第一个动作当时正在进行，用 *was / were* 加 *-ing*；*when* 后面的动作用一般过去时。也可以用 *When* 开头：*When the phone rang, I was reading a book.*\n\n> **注意。** 核对 *-ing* 拼写（如 *run* → *running*、*make* → *making*），并且 *when* 后面用一般过去时，不要也写成过去进行时。",
       ),
-      typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcTypedBank, (right) => {
-        const rule = beRule(right.replace(/^\S+ (\S+ )?(?=was|were)/u, ""));
-        return t(
-          `The first action was going on, so it takes *was* or *were* with *-ing* (${rule.en}); the short action after *when* takes the past simple: ${right}\n\n**Check.** Check both clauses: the ongoing clause has *was/were + -ing*, and the *when* clause has a past-simple verb.`,
-          `第一个动作当时正在进行，用 *was* 或 *were* 加 *-ing*（${rule["zh-CN"]}）；*when* 后面的短动作用一般过去时：${right}\n\n**检验。** 检查两个分句：背景句是 *was/were + -ing*，*when* 从句是一般过去时。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        pcTypedBank,
+        (right) => {
+          const rule = beRule(right.replace(/^\S+ (\S+ )?(?=was|were)/u, ""));
+          return t(
+            `The first action was going on, so it takes *was* or *were* with *-ing* (${rule.en}); the short action after *when* takes the past simple: ${right}\n\n**Check.** Check both clauses: the ongoing clause has *was/were + -ing*, and the *when* clause has a past-simple verb.`,
+            `第一个动作当时正在进行，用 *was* 或 *were* 加 *-ing*（${rule["zh-CN"]}）；*when* 后面的短动作用一般过去时：${right}\n\n**检验。** 检查两个分句：背景句是 *was/were + -ing*，*when* 从句是一般过去时。`,
+          );
+        },
+        pastContinuousWriteNot,
+      ),
     ),
   ],
 };

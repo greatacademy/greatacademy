@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
+import { oneAndOnesWriteNot, tooAndEnoughWriteNot } from "./mistakes.ts";
 
 const money = vocabularyTopic({
   id: "a2-words-money",
@@ -800,16 +801,21 @@ const tooAndEnough: TopicDef = {
         "Write the sentence from the note. *too* goes before the adjective: *The jacket is too small.* *not ... enough* puts *not* after *is* or *are* and *enough* after the adjective: *The bag isn't big enough.*\n\n> **Watch out.** Check both the verb (*is* vs. *are* for plural clothes like *shoes* or *jeans*) and the placement of *enough* after the adjective.",
         "根据笔记写句子。*too* 放在形容词前面：*The jacket is too small.* *not ... enough* 把 *not* 放在 *is / are* 后面，*enough* 放在形容词后面：*The bag isn't big enough.*\n\n> **注意。** 既要核对 *is* 与 *are*（如 *shoes*、*jeans* 用 *are*），也要确认 *enough* 放在形容词后面。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), tooTypedBank, (right) =>
-        / too /u.test(right)
-          ? t(
-              `The note says *too*, so it goes after *is* or *are* and before the adjective: ${right}\n\n**Check.** Verify the order: subject + *is/are* + *too* + adjective.`,
-              `笔记里是 *too*，所以放在 *is / are* 后面、形容词前面：${right}\n\n**检验。** 核对语序：主语 + *is/are* + *too* + 形容词。`,
-            )
-          : t(
-              `The note says *not enough*, so *not* goes with *is* or *are* and *enough* goes after the adjective: ${right}\n\n**Check.** Verify the order: subject + *isn't/aren't* (or *is/are not*) + adjective + *enough*.`,
-              `笔记里是 *not enough*，所以 *not* 跟在 *is / are* 后面，*enough* 放在形容词后面：${right}\n\n**检验。** 核对语序：主语 + *isn't/aren't*（或 *is/are not*）+ 形容词 + *enough*。`,
-            ),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        tooTypedBank,
+        (right) =>
+          / too /u.test(right)
+            ? t(
+                `The note says *too*, so it goes after *is* or *are* and before the adjective: ${right}\n\n**Check.** Verify the order: subject + *is/are* + *too* + adjective.`,
+                `笔记里是 *too*，所以放在 *is / are* 后面、形容词前面：${right}\n\n**检验。** 核对语序：主语 + *is/are* + *too* + 形容词。`,
+              )
+            : t(
+                `The note says *not enough*, so *not* goes with *is* or *are* and *enough* goes after the adjective: ${right}\n\n**Check.** Verify the order: subject + *isn't/aren't* (or *is/are not*) + adjective + *enough*.`,
+                `笔记里是 *not enough*，所以 *not* 跟在 *is / are* 后面，*enough* 放在形容词后面：${right}\n\n**检验。** 核对语序：主语 + *isn't/aren't*（或 *is/are not*）+ 形容词 + *enough*。`,
+              ),
+        tooAndEnoughWriteNot,
       ),
     ),
     point(
@@ -977,6 +983,7 @@ const oneAndOnes: TopicDef = {
           const [noun, plural] = oneNoun(shown);
           return oneWhy(plural ? "ones" : "one", noun, right);
         },
+        oneAndOnesWriteNot,
       ),
     ),
   ],

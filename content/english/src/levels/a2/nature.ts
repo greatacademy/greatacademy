@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
+import { presentPerfectWithEverAndNeverWriteNot } from "./mistakes.ts";
 
 const landscape = vocabularyTopic({
   id: "a2-words-landscape",
@@ -888,19 +889,25 @@ const presentPerfectEverNever: TopicDef = {
         "Write the sentence from the note. *never* makes a statement: *My brother has never ridden a horse.* *ever* makes a question: *Have you ever ridden a horse?* Use the past participle of the verb.\n\n> **Watch out.** Put *ever* or *never* right before the past participle (not at the end of the sentence), and match *have/has* to the subject.",
         "根据笔记写句子。有 *never* 就写陈述句：*My brother has never ridden a horse.* 有 *ever* 就写疑问句：*Have you ever ridden a horse?* 动词用过去分词。\n\n> **注意。** *ever* 或 *never* 放在过去分词前面（不要放到句末），同时核对 *have/has* 与主语一致。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), ppTypedBank, (right) => {
-        const found = experiences.find(([, , participle, rest]) => right.includes(` ${participle} ${rest}`));
-        const forms = found ? formsOf(found[0]) : "";
-        return right.endsWith("?")
-          ? t(
-              `The note has *ever*, so it is a question: *Have* or *Has* first, then the subject, *ever* and the past participle (*${forms}*): ${right}\n\n**Check.** Confirm the order (*Have/Has* + subject + *ever* + past participle) and the closing question mark.`,
-              `笔记里有 *ever*，所以写疑问句：先写 *Have* 或 *Has*，再写主语、*ever* 和过去分词（*${forms}*）：${right}\n\n**检验。** 核对语序（*Have/Has* + 主语 + *ever* + 过去分词）和句末问号。`,
-            )
-          : t(
-              `The note has *never*, so it is a statement: the subject, *have* or *has*, *never* and the past participle (*${forms}*): ${right}\n\n**Check.** Confirm the order (subject + *have/has* + *never* + past participle) with no extra *not*.`,
-              `笔记里有 *never*，所以写陈述句：主语、*have* 或 *has*、*never* 和过去分词（*${forms}*）：${right}\n\n**检验。** 核对语序（主语 + *have/has* + *never* + 过去分词），且没有多余的 *not*。`,
-            );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        ppTypedBank,
+        (right) => {
+          const found = experiences.find(([, , participle, rest]) => right.includes(` ${participle} ${rest}`));
+          const forms = found ? formsOf(found[0]) : "";
+          return right.endsWith("?")
+            ? t(
+                `The note has *ever*, so it is a question: *Have* or *Has* first, then the subject, *ever* and the past participle (*${forms}*): ${right}\n\n**Check.** Confirm the order (*Have/Has* + subject + *ever* + past participle) and the closing question mark.`,
+                `笔记里有 *ever*，所以写疑问句：先写 *Have* 或 *Has*，再写主语、*ever* 和过去分词（*${forms}*）：${right}\n\n**检验。** 核对语序（*Have/Has* + 主语 + *ever* + 过去分词）和句末问号。`,
+              )
+            : t(
+                `The note has *never*, so it is a statement: the subject, *have* or *has*, *never* and the past participle (*${forms}*): ${right}\n\n**Check.** Confirm the order (subject + *have/has* + *never* + past participle) with no extra *not*.`,
+                `笔记里有 *never*，所以写陈述句：主语、*have* 或 *has*、*never* 和过去分词（*${forms}*）：${right}\n\n**检验。** 核对语序（主语 + *have/has* + *never* + 过去分词），且没有多余的 *not*。`,
+              );
+        },
+        presentPerfectWithEverAndNeverWriteNot,
+      ),
     ),
   ],
 };

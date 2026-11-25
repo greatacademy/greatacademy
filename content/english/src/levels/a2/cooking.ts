@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
+import { quantifiersAFewAndALittleFixNot, writingStepsInOrderWriteNot } from "./mistakes.ts";
 
 const cooking = vocabularyTopic({
   id: "a2-words-cooking",
@@ -678,15 +679,21 @@ const quantifiers: TopicDef = {
         "Each sentence pairs the wrong quantifier with its noun: *Add a few oil.* → *Add a little oil.* *We need a little onions.* → *We need a few onions.* Rewrite the sentence with the matching quantifier.\n\n> **Watch out.** Change only *a few* ↔ *a little* (do not drop *a*, and do not change the noun itself).",
         "每个句子都把量词配错了：*Add a few oil.* → *Add a little oil.* *We need a little onions.* → *We need a few onions.* 用正确的量词重写句子。\n\n> **注意。** 只替换 *a few* ↔ *a little*（别漏掉 *a*，也不要改动后面的名词）。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), quantFixBank, (right) => {
-        const noun = quantNoun(right);
-        const reason = countReason(noun);
-        const countable = counted.includes(noun);
-        return t(
-          `${reason.en}: ${right}\n\n**Check.** Test *${noun}* with *two*: ${countable ? `countable → *a few*` : `uncountable → *a little*`}, and the rest of the sentence stays unchanged.`,
-          `${reason["zh-CN"]}：${right}\n\n**检验。** 用 *two* 测试 *${noun}*：${countable ? `可数 → *a few*` : `不可数 → *a little*`}，句子的其余部分保持不变。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        quantFixBank,
+        (right) => {
+          const noun = quantNoun(right);
+          const reason = countReason(noun);
+          const countable = counted.includes(noun);
+          return t(
+            `${reason.en}: ${right}\n\n**Check.** Test *${noun}* with *two*: ${countable ? `countable → *a few*` : `uncountable → *a little*`}, and the rest of the sentence stays unchanged.`,
+            `${reason["zh-CN"]}：${right}\n\n**检验。** 用 *two* 测试 *${noun}*：${countable ? `可数 → *a few*` : `不可数 → *a little*`}，句子的其余部分保持不变。`,
+          );
+        },
+        quantifiersAFewAndALittleFixNot,
+      ),
     ),
   ],
 };
@@ -818,14 +825,20 @@ const writingStepsInOrder: TopicDef = {
         "Write the step as an instruction with the word for its place: *First,* for step 1 (*First, wash the fruit.*), *Then* or *Next,* in the middle (*Next, cut it into small pieces.*), and *Finally,* for the last step (*Finally, mix well.*).\n\n> **Watch out.** Start the sentence with the order word (capitalized), keep the action verb in its plain imperative form, and end with a period.",
         "把这一步写成指令，并加上表示顺序的词：第 1 步用 *First,*（*First, wash the fruit.*），中间步骤用 *Then* 或 *Next,*（*Next, cut it into small pieces.*），最后一步用 *Finally,*（*Finally, mix well.*）。\n\n> **注意。** 顺序词放句首且首字母大写，后面的动作保持动词原形祈使句，句末加句号。",
       ),
-      typedGenerator("sentence-pattern", t("Write the step.", "写出这个步骤。"), stepTypedBank, (right) => {
-        const word = right.split(/[ ,]/u)[0] ?? "";
-        const place = stepPlace[word] ?? t(`*${word}*`, `*${word}*`);
-        return t(
-          `${place.en}, and the step itself is an instruction that starts with the verb: ${right}\n\n**Check.** Verify three things: the order word (*${word}*) matches the step number, the action starts with a plain verb, and the sentence ends with a period.`,
-          `${place["zh-CN"]}，步骤本身是以动词开头的指令：${right}\n\n**检验。** 核对三处：顺序词 *${word}* 与步骤序号匹配、动作以动词原形开头、句末有句号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write the step.", "写出这个步骤。"),
+        stepTypedBank,
+        (right) => {
+          const word = right.split(/[ ,]/u)[0] ?? "";
+          const place = stepPlace[word] ?? t(`*${word}*`, `*${word}*`);
+          return t(
+            `${place.en}, and the step itself is an instruction that starts with the verb: ${right}\n\n**Check.** Verify three things: the order word (*${word}*) matches the step number, the action starts with a plain verb, and the sentence ends with a period.`,
+            `${place["zh-CN"]}，步骤本身是以动词开头的指令：${right}\n\n**检验。** 核对三处：顺序词 *${word}* 与步骤序号匹配、动作以动词原形开头、句末有句号。`,
+          );
+        },
+        writingStepsInOrderWriteNot,
+      ),
     ),
   ],
 };

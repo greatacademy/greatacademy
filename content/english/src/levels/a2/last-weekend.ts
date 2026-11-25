@@ -6,6 +6,14 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { everyTriple, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
+import {
+  pastSimpleIrregularSpellNot,
+  pastSimpleQuestionsAndNegativesWriteNegativeNot,
+  pastSimpleQuestionsAndNegativesWriteQuestionNot,
+  pastSimpleRegularFixNot,
+  pastSimpleRegularSpellNot,
+  writingSentencesInThePastWriteNot,
+} from "./mistakes.ts";
 
 const pastTime = vocabularyTopic({
   id: "a2-words-past-time",
@@ -788,7 +796,13 @@ const pastSimpleRegular: TopicDef = {
         "Type the past form of the verb in brackets. Check the ending before adding *-ed*: an *e* at the end adds only *-d* (*danced*), a consonant and *y* becomes *-ied* (*studied*), one short vowel and one consonant doubles (*stopped*), and a vowel and *y* just adds *-ed* (*played*).\n\n> **Watch out.** Do not double the final letter after a vowel + *y* (*played*, never *playyed*), and do not write *-eed* after silent *-e* (*danced*, never *danceed*).",
         "写出括号里动词的过去式，动笔前先看词尾：以 *e* 结尾只加 *-d*（*danced*），辅音字母加 *y* 变成 *-ied*（*studied*），一个短元音加一个辅音字母要双写（*stopped*），元音字母加 *y* 直接加 *-ed*（*played*）。\n\n> **注意。** 元音加 *y* 结尾不要双写（*played*，不要写成 *playyed*），以不发音 *e* 结尾也不要多加一个 *e*（*danced*，不要写成 *danceed*）。",
       ),
-      typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), regularTypedBank, regularWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the verb in the past.", "输入动词的过去式。"),
+        regularTypedBank,
+        regularWhy,
+        pastSimpleRegularSpellNot,
+      ),
     ),
     point(
       "fix",
@@ -797,14 +811,20 @@ const pastSimpleRegular: TopicDef = {
         "Each sentence starts with a time in the past, but its verb is still in the present: *Yesterday, she visits her aunt.* → *Yesterday, she visited her aunt.* Rewrite the whole sentence with the past form.\n\n> **Watch out.** Drop any present *-s*/*-es* before adding *-ed* (*watches* → *watched*, *studies* → *studied*), and keep the rest of the sentence unchanged.",
         "每个句子开头都是过去的时间，但动词还留在现在时：*Yesterday, she visits her aunt.* → *Yesterday, she visited her aunt.* 用过去式重写整个句子。\n\n> **注意。** 先去掉现在时的 *-s*/*-es* 再变过去式（*watches* → *watched*，*studies* → *studied*），句子的其余部分保持不变。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), regularFixBank, (right) => {
-        const [verb = "", past = ""] = regulars.find(([, p]) => new RegExp(`\\b${p}\\b`, "u").test(right)) ?? [];
-        const rule = regularRule(verb, past);
-        return t(
-          `*${timeOf(right)}* is in the past, so the verb is in the past too, whoever the subject is, and ${rule.en}: ${right}\n\n**Check.** Read the time phrase at the start and the verb (*${past}*): both now point to the past, with no present *-s* left behind.`,
-          `*${timeOf(right)}* 表示过去，所以无论主语是谁，动词都用过去式；${rule["zh-CN"]}：${right}\n\n**检验。** 对照句首的时间词和动词 *${past}*：两者现在都指向过去，且没有残留现在时的 *-s*。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        regularFixBank,
+        (right) => {
+          const [verb = "", past = ""] = regulars.find(([, p]) => new RegExp(`\\b${p}\\b`, "u").test(right)) ?? [];
+          const rule = regularRule(verb, past);
+          return t(
+            `*${timeOf(right)}* is in the past, so the verb is in the past too, whoever the subject is, and ${rule.en}: ${right}\n\n**Check.** Read the time phrase at the start and the verb (*${past}*): both now point to the past, with no present *-s* left behind.`,
+            `*${timeOf(right)}* 表示过去，所以无论主语是谁，动词都用过去式；${rule["zh-CN"]}：${right}\n\n**检验。** 对照句首的时间词和动词 *${past}*：两者现在都指向过去，且没有残留现在时的 *-s*。`,
+          );
+        },
+        pastSimpleRegularFixNot,
+      ),
     ),
   ],
 };
@@ -910,7 +930,13 @@ const pastSimpleIrregular: TopicDef = {
         "Type the past form of the verb in brackets. Each one is irregular, so recall its exact spelling—for example, *go* → *went*, *buy* → *bought*, *catch* → *caught*, *write* → *wrote*.\n\n> **Watch out.** Pay close attention to tricky vowel changes and silent letters (*bought*, *caught*, *slept*, *left*) instead of guessing by sound alone.",
         "写出括号里动词的过去式。它们都是不规则动词，需要准确拼写——例如 *go* → *went*、*buy* → *bought*、*catch* → *caught*、*write* → *wrote*。\n\n> **注意。** 留意元音变化和不发音字母（如 *bought*、*caught*、*slept*、*left*），不要只凭读音猜测拼写。",
       ),
-      typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), irregularTypedBank, irregularWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the verb in the past.", "输入动词的过去式。"),
+        irregularTypedBank,
+        irregularWhy,
+        pastSimpleIrregularSpellNot,
+      ),
     ),
   ],
 };
@@ -1051,7 +1077,13 @@ const pastQuestionsAndNegatives: TopicDef = {
         "Write the sentence again with *didn't* before the verb, and change the verb back to its plain form: *I went to the zoo.* → *I didn't go to the zoo.* Keep the rest of the sentence as it is.\n\n> **Watch out.** Remember to change irregular past forms all the way back to their base form (*saw* → *see*, *bought* → *buy*, *ate* → *eat*) after *didn't*.",
         "在动词前加 *didn't* 把句子改成否定句，并把动词变回原形：*I went to the zoo.* → *I didn't go to the zoo.* 句子的其他部分不变。\n\n> **注意。** 在 *didn't* 后面，要把不规则过去式完整还原成原形（*saw* → *see*、*bought* → *buy*、*ate* → *eat*）。",
       ),
-      typedGenerator("sentence-pattern", t("Make the sentence negative.", "把句子改成否定句。"), negativeTypedBank, negativeWhy),
+      typedGenerator(
+        "sentence-pattern",
+        t("Make the sentence negative.", "把句子改成否定句。"),
+        negativeTypedBank,
+        negativeWhy,
+        pastSimpleQuestionsAndNegativesWriteNegativeNot,
+      ),
     ),
     point(
       "question",
@@ -1069,7 +1101,13 @@ const pastQuestionsAndNegatives: TopicDef = {
         "Turn the sentence into a question with *Did* and the plain verb: *I saw a fox yesterday.* → *Did you see a fox yesterday?* Ask about the same person: *I* and *we* become *you*, and *my* becomes *your*.\n\n> **Watch out.** Do not forget to change the verb back to its plain form, switch *I/we* to *you*, and end with a question mark.",
         "用 *Did* 加动词原形把句子改成问句：*I saw a fox yesterday.* → *Did you see a fox yesterday?* 问同一个人时，*I* 和 *we* 变成 *you*，*my* 变成 *your*。\n\n> **注意。** 别忘了把动词变回原形、把 *I/we* 换成 *you*，并在句末加上问号。",
       ),
-      typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), questionTypedBank, questionWhy),
+      typedGenerator(
+        "sentence",
+        t("Make a question.", "把句子改成疑问句。"),
+        questionTypedBank,
+        questionWhy,
+        pastSimpleQuestionsAndNegativesWriteQuestionNot,
+      ),
     ),
   ],
 };
@@ -1171,7 +1209,13 @@ const writingSentencesInThePast: TopicDef = {
         "Write a whole sentence for the note, in the past. You can put the day at the end (*Sam went to the zoo on Saturday.*) or at the start (*On Saturday, Sam went to the zoo.*).\n\n> **Watch out.** Remember *on* (or *last*) before the day of the week, capitalize the day, and end the sentence with a period.",
         "根据笔记用过去时写一个完整的句子。时间可以放在句末（*Sam went to the zoo on Saturday.*），也可以放在句首（*On Saturday, Sam went to the zoo.*）。\n\n> **注意。** 星期前别漏掉 *on*（或 *last*），星期首字母要大写，句末加句号。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), noteTypedBank, noteWhy),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        noteTypedBank,
+        noteWhy,
+        writingSentencesInThePastWriteNot,
+      ),
     ),
   ],
 };
