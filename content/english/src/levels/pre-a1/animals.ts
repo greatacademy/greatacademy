@@ -4,6 +4,7 @@ import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { beQuestionNot, canNot } from "./mistakes.ts";
 
 const animals = vocabularyTopic({
   id: "pre-a1-words-animals",
@@ -506,6 +507,7 @@ const canForAbility: TopicDef = {
                 `The note says no, so write *can't*, never *don't can*, and the verb after it stays plain: ${right}\n\n**Check.** Verify the pattern *[Subject] + can't + [plain verb]* (not *don't can* or *not can*) with no *-s* or *to*.`,
                 `提示是 no，所以用 *can't*，不能说 *don't can*，后面的动词用原形：${right}\n\n**检验。** 核对结构“主语 + *can't* + 动词原形”（不是 *don't can* 或 *not can*），且没有 *-s* 或 *to*。`,
               ),
+        canNot,
       ),
     ),
   ],
@@ -661,11 +663,16 @@ const questionsWithBe: TopicDef = {
         "Turn the sentence into a question: the verb goes first, and the end is a question mark. For example: *Tom is at school.* → *Is Tom at school?*\n\n> **Watch out.** Remember to capitalize the moved verb (*Is* / *Are*), lower-case the subject unless it is *I* or a name (*The dog* -> *the dog*, but *Tom* stays *Tom*), and end with `?`.",
         "把陈述句改成问句：动词放在最前面，句末用问号。例如：*Tom is at school.* → *Is Tom at school?*\n\n> **注意。** 移到句首的动词要大写（*Is* / *Are*），原主语除 *I* 和人名外改为小写（如 *The dog* -> *the dog*，但 *Tom* 仍大写），句末加 `?`。",
       ),
-      typedGenerator("sentence", t("Write the sentence as a question.", "把这个句子改成问句。"), questionTypedBank, (right, shown) =>
-        t(
-          `Move *${right.split(" ")[0]?.toLowerCase()}* to the front, before the subject, and end with a question mark: ${shown} → ${right}\n\n**Check.** Swap the first two blocks back mentally (*${right}* -> *${shown}*)—you should recover the original statement cleanly, with the question mark replaced by a period.`,
-          `把 *${right.split(" ")[0]?.toLowerCase()}* 移到句首、主语前面，句末用问号：${shown} → ${right}\n\n**检验。** 在心里把句首动词和主语换回原位，应能完整还原原陈述句，并把句末的问号换回句号。`,
-        ),
+      typedGenerator(
+        "sentence",
+        t("Write the sentence as a question.", "把这个句子改成问句。"),
+        questionTypedBank,
+        (right, shown) =>
+          t(
+            `Move *${right.split(" ")[0]?.toLowerCase()}* to the front, before the subject, and end with a question mark: ${shown} → ${right}\n\n**Check.** Swap the first two blocks back mentally (*${right}* -> *${shown}*)—you should recover the original statement cleanly, with the question mark replaced by a period.`,
+            `把 *${right.split(" ")[0]?.toLowerCase()}* 移到句首、主语前面，句末用问号：${shown} → ${right}\n\n**检验。** 在心里把句首动词和主语换回原位，应能完整还原原陈述句，并把句末的问号换回句号。`,
+          ),
+        beQuestionNot,
       ),
     ),
   ],

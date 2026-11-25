@@ -4,6 +4,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { aboutYourselfNot, adjectiveNot } from "./mistakes.ts";
 
 const body = vocabularyTopic({
   id: "pre-a1-words-body",
@@ -253,13 +254,19 @@ const adjectivesBeforeNouns: TopicDef = {
         "Put the describing word right before the noun, after any number: *two eyes* → *two blue eyes*.\n\n> **Watch out.** Slide the describing word *between* the article or number (*a*, *two*, *four*) and the noun—never put it before *a* or after the noun.",
         "把形容词放在名词正前方，数字后面：*two eyes* → *two blue eyes*。\n\n> **注意。** 把形容词插在冠词或数字（*a*、*two*、*four*）与名词*之间*——不要放在 *a* 前面，也不要放在名词后面。",
       ),
-      typedGenerator("sentence", t("Write the sentence again.", "重写这个句子。"), adjectiveTypedBank, (right, shown) => {
-        const adjective = shown.match(/\((.*)\)$/u)?.[1] ?? "";
-        return t(
-          `*${adjective}* goes right before the noun, after any number, and takes no *-s*: ${right}\n\n**Check.** Verify the order *[a / number] + ${adjective} + [noun]* and confirm *${adjective}* has no *-s*.`,
-          `*${adjective}* 放在名词正前方、数字后面，不加 *-s*：${right}\n\n**检验。** 核对语序“*[a / 数字] + ${adjective} + [名词]*”，并确认 *${adjective}* 没有加 *-s*。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Write the sentence again.", "重写这个句子。"),
+        adjectiveTypedBank,
+        (right, shown) => {
+          const adjective = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+          return t(
+            `*${adjective}* goes right before the noun, after any number, and takes no *-s*: ${right}\n\n**Check.** Verify the order *[a / number] + ${adjective} + [noun]* and confirm *${adjective}* has no *-s*.`,
+            `*${adjective}* 放在名词正前方、数字后面，不加 *-s*：${right}\n\n**检验。** 核对语序“*[a / 数字] + ${adjective} + [名词]*”，并确认 *${adjective}* 没有加 *-s*。`,
+          );
+        },
+        adjectiveNot,
+      ),
     ),
   ],
 };
@@ -419,6 +426,7 @@ const writingAboutYourself: TopicDef = {
             `${rule?.["zh-CN"]}，写成完整的句子，大写开头，句号结尾：${right}\n\n**检验。** 核对四处：句首大写、动词与提示类型相符、形容词在名词前，以及句末句号。`,
           );
         },
+        aboutYourselfNot,
       ),
     ),
   ],

@@ -4,6 +4,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { haveNot, heSheItNot, possessiveNot } from "./mistakes.ts";
 
 const family = vocabularyTopic({
   id: "pre-a1-words-family",
@@ -495,6 +496,7 @@ const heSheAndIt: TopicDef = {
             `*${referentIn(shown)}* 是${pronounFor[pronoun]?.["zh-CN"]}，所以用 *${pronoun.toLowerCase()}* 代替：${shown} → ${right}\n\n**检验。** 确认 *is* 前面的整个主语都换成了大写的 *${pronoun}*，且 *is* 及后面的内容保持原样。`,
           );
         },
+        heSheItNot,
       ),
     ),
   ],
@@ -638,11 +640,16 @@ const myYourHisHer: TopicDef = {
         "Look at who has the thing, then write *my*, *your*, *his*, *her*, *its*, *our* or *their*: *Ben and Sam have a kite.* → *Their kite is pink.*\n\n> **Watch out.** Check spelling on the tricky pairs: *Your* (not *You're*), *Its* (not *It's*), and *Their* (not *There*), and capitalize the word when it begins the sentence.",
         "看看东西是谁的，再写出 *my*、*your*、*his*、*her*、*its*、*our* 或 *their*：*Ben and Sam have a kite.* → *Their kite is pink.*\n\n> **注意。** 留心三组易混拼写：*Your*（不是 *You're*）、*Its*（不是 *It's*）、*Their*（不是 *There*）；位于句首时首字母大写。",
       ),
-      typedGenerator("word-form", t("Type the missing word.", "输入缺少的词。"), whoseTypedBank, (right, shown) =>
-        t(
-          `The owner in the sentence is *${ownerIn(shown)}*, and ${whoseOf[right]?.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Match the owner *${ownerIn(shown)}* to its possessive word and double-check the spelling of *${right}* (no apostrophe, capital first letter).`,
-          `东西是 *${ownerIn(shown)}* 的，${whoseOf[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 对照主人 *${ownerIn(shown)}* 核实对应的物主词，并检查 *${right}* 的拼写（不带撇号、句首大写）。`,
-        ),
+      typedGenerator(
+        "word-form",
+        t("Type the missing word.", "输入缺少的词。"),
+        whoseTypedBank,
+        (right, shown) =>
+          t(
+            `The owner in the sentence is *${ownerIn(shown)}*, and ${whoseOf[right]?.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Match the owner *${ownerIn(shown)}* to its possessive word and double-check the spelling of *${right}* (no apostrophe, capital first letter).`,
+            `东西是 *${ownerIn(shown)}* 的，${whoseOf[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 对照主人 *${ownerIn(shown)}* 核实对应的物主词，并检查 *${right}* 的拼写（不带撇号、句首大写）。`,
+          ),
+        possessiveNot,
       ),
     ),
   ],
@@ -760,13 +767,19 @@ const haveAndHas: TopicDef = {
         "Each sentence has the wrong one of *have* and *has*. Look at the words before it and fix it: *My mom have long hair.* → *My mom has long hair.*\n\n> **Watch out.** Check compound subjects like *Anna and Ben* carefully—two people together equal *they*, so they take *have*, not *has*.",
         "每个句子里的 *have* 或 *has* 用错了。看看它前面的词，把它改正：*My mom have long hair.* → *My mom has long hair.*\n\n> **注意。** 留心像 *Anna and Ben* 这样的并列主语——两个人合在一起相当于 *they*，后面要用 *have*，不能用 *has*。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), haveTypedBank, (right) => {
-        const [subject, verb] = right.split(/ (have|has) /u);
-        return t(
-          `The subject is *${subject}*, and ${haveRule[verb ?? ""]?.en}: ${right}\n\n**Check.** Replace *${subject}* mentally with a pronoun—*he/she/it* pairs with *has*, while *I/you/we/they* pairs with *have*.`,
-          `主语是 *${subject}*，${haveRule[verb ?? ""]?.["zh-CN"]}：${right}\n\n**检验。** 在心里把 *${subject}* 换成代词——*he/she/it* 配 *has*，*I/you/we/they* 配 *have*。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        haveTypedBank,
+        (right) => {
+          const [subject, verb] = right.split(/ (have|has) /u);
+          return t(
+            `The subject is *${subject}*, and ${haveRule[verb ?? ""]?.en}: ${right}\n\n**Check.** Replace *${subject}* mentally with a pronoun—*he/she/it* pairs with *has*, while *I/you/we/they* pairs with *have*.`,
+            `主语是 *${subject}*，${haveRule[verb ?? ""]?.["zh-CN"]}：${right}\n\n**检验。** 在心里把 *${subject}* 换成代词——*he/she/it* 配 *has*，*I/you/we/they* 配 *have*。`,
+          );
+        },
+        haveNot,
+      ),
     ),
   ],
 };

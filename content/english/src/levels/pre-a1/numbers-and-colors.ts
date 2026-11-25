@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { articleNot, capitalsNot, pluralNot } from "./mistakes.ts";
 
 const numbers = vocabularyTopic({
   id: "pre-a1-words-numbers",
@@ -447,6 +448,7 @@ const aAndAn: TopicDef = {
             `*${shown}* 说的是单个的东西，所以要有 *a* 或 *an*；${sound["zh-CN"]}：${right}\n\n**检验。** 确认 *${article}* 放在单数名词短语前面，并且与 *${next}* 的开头音一致。`,
           );
         },
+        articleNot,
       ),
     ),
   ],
@@ -542,13 +544,19 @@ const pluralNouns: TopicDef = {
         "Write the noun for more than one. Most nouns add *-s* (*two books*); nouns that end in *s*, *x*, *ch* or *sh* add *-es* (*three buses*).\n\n> **Watch out.** Check the final letters before you type *-s* or *-es*: words like *bus*, *glass*, *box*, *watch*, and *dish* need *-es*, not just *-s*.",
         "写出名词的复数。大多数名词加 *-s*（*two books*）；以 *s*、*x*、*ch*、*sh* 结尾的名词加 *-es*（*three buses*）。\n\n> **注意。** 输入前先看末尾字母：*bus*、*glass*、*box*、*watch*、*dish* 这类词要加 *-es*，不能只加 *-s*。",
       ),
-      typedGenerator("word-form", t("Type the missing word.", "输入缺少的词。"), pluralTypedBank, (right, shown) => {
-        const rule = pluralRule(right);
-        return t(
-          `More than one needs the plural, and ${rule.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Verify the base spelling is untouched and that the ending matches the final letters (*-es* after *s/x/ch/sh*, *-s* otherwise).`,
-          `多于一个要用复数；${rule["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 确认原词拼写未改动，且词尾与末尾字母匹配（*s/x/ch/sh* 后加 *-es*，其余加 *-s*）。`,
-        );
-      }),
+      typedGenerator(
+        "word-form",
+        t("Type the missing word.", "输入缺少的词。"),
+        pluralTypedBank,
+        (right, shown) => {
+          const rule = pluralRule(right);
+          return t(
+            `More than one needs the plural, and ${rule.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Verify the base spelling is untouched and that the ending matches the final letters (*-es* after *s/x/ch/sh*, *-s* otherwise).`,
+            `多于一个要用复数；${rule["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 确认原词拼写未改动，且词尾与末尾字母匹配（*s/x/ch/sh* 后加 *-es*，其余加 *-s*）。`,
+          );
+        },
+        pluralNot,
+      ),
     ),
   ],
 };
@@ -682,6 +690,7 @@ const capitalsAndPeriods: TopicDef = {
             `句首大写，*I* 和名字大写，句末用${end["zh-CN"]}：${right}\n\n**检验。** 核对句子里的三处：首字母大写、句中 *I* 和人名大写，以及末尾的句号或问号。`,
           );
         },
+        capitalsNot,
       ),
     ),
   ],

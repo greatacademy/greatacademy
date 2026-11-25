@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { leaveOutBeNot } from "./mistakes.ts";
 
 const hello = vocabularyTopic({
   id: "pre-a1-words-hello",
@@ -392,6 +393,7 @@ const theVerbBe: TopicDef = {
             `*${shown}* has no verb, and an English sentence needs one. To say how or where someone is, add *am*, *is* or *are*: ${right}\n\n**Check.** Find the verb right after the subject in your sentence—confirm *am*, *is*, or *are* is there and matches the subject.`,
             `*${shown}* 没有动词，而英语句子必须有动词。说明人怎么样或在哪里，要加上 *am*、*is* 或 *are*：${right}\n\n**检验。** 检查主语后面紧跟着的词——确认已经补上与主语相配的 *am*、*is* 或 *are*。`,
           ),
+        leaveOutBeNot,
       ),
     ),
     point(
