@@ -5,6 +5,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, typed } from "@ga/subject-english";
 import { everyPair } from "../../levels/words.ts";
+import { typingAntAndEntWordsNot } from "../mistakes.ts";
 import { choose, field, type Label, label, type Pair, rows, topic, type } from "./kit.ts";
 
 const items = (lines: string, shown?: string): ChoiceItem[] =>
@@ -330,6 +331,7 @@ const antAndEnt = topic("grammar", {
         ),
       ]),
       (right) => antWhy(right, relatedOf(right)),
+      typingAntAndEntWordsNot,
     ),
   ],
 });

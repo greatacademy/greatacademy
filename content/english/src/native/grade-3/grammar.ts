@@ -5,6 +5,14 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { point, typed, typedGenerator } from "@ga/subject-english";
 import { everyPair, everyTriple } from "../../levels/words.ts";
 import { labelChoice } from "../../topics/steps.ts";
+import {
+  changingTheKindNot,
+  commasInDatesAndPlacesNot,
+  formingAbstractNounsNot,
+  formingContractionsNot,
+  typingTheEndingNot,
+  typingTheWordNot,
+} from "../mistakes.ts";
 import { type Ask, askGenerator, gapFill, kinded, need, rows, topic } from "./kit.ts";
 
 // Lines built from frames, so that each bank has a hundred sentences or more. Each is joined to the hand-written lines
@@ -1566,6 +1574,7 @@ export const grammarTopics: readonly TopicDef[] = [
               `由 *${base}* 构成的抽象名词是 **${right}**。\n\n**检验。** 把 **${right}** 放回句中大声读一遍（*${shown.replace("___", `**${right}**`)}*）：它表示一种品质或概念，在名词位置上通顺自然。`,
             );
           },
+          formingAbstractNounsNot,
         ),
       ),
     ],
@@ -1634,14 +1643,20 @@ export const grammarTopics: readonly TopicDef[] = [
           "Decide which ending rule the last letters call for before typing: double after one short vowel (*plan* → *planned*), drop a silent *e* (*smile* → *smiling*), change consonant + *y* to *i* before *-ed* (*study* → *studied*), or add the ending directly (*look* → *looked*).\n\n> **Watch out.** Check the two letters right before the ending—words ending in two consonants like *jump* never double.",
           "动笔前先看原词最后两个字母该套哪条规则：单短元音后双写（*plan* → *planned*）、去掉不发音 *e*（*smile* → *smiling*）、辅音加 *y* 在 *-ed* 前变 *i*（*study* → *studied*），其他直接加（*look* → *looked*）。\n\n> **注意。** 像 *jump* 这样末尾本来就有两个辅音的词，绝不要再双写。",
         ),
-        typedGenerator("word-form", t("Type the verb with its ending.", "写出加上词尾后的动词。"), endingTypedBank, (right) => {
-          const item = endingRuleOf.get(right);
-          const [en, zh] = endingRule(item?.verb ?? "", item?.rule ?? "", item?.ending ?? "");
-          return t(
-            `It is spelled **${right}**. ${en}\n\n**Check.** Read **${right}** aloud and inspect the join between *${item?.verb ?? ""}* and ${item?.ending ?? ""}: the vowel sound stays accurate and there is no doubled *ii* or stray silent *e*.`,
-            `正确拼写是 **${right}**。${zh}\n\n**检验。** 读出 **${right}** 并检查 *${item?.verb ?? ""}* 与 ${item?.ending ?? ""} 的衔接处：元音读法不变，没有多余的 *e* 或错变的 *ii*。`,
-          );
-        }),
+        typedGenerator(
+          "word-form",
+          t("Type the verb with its ending.", "写出加上词尾后的动词。"),
+          endingTypedBank,
+          (right) => {
+            const item = endingRuleOf.get(right);
+            const [en, zh] = endingRule(item?.verb ?? "", item?.rule ?? "", item?.ending ?? "");
+            return t(
+              `It is spelled **${right}**. ${en}\n\n**Check.** Read **${right}** aloud and inspect the join between *${item?.verb ?? ""}* and ${item?.ending ?? ""}: the vowel sound stays accurate and there is no doubled *ii* or stray silent *e*.`,
+              `正确拼写是 **${right}**。${zh}\n\n**检验。** 读出 **${right}** 并检查 *${item?.verb ?? ""}* 与 ${item?.ending ?? ""} 的衔接处：元音读法不变，没有多余的 *e* 或错变的 *ii*。`,
+            );
+          },
+          typingTheEndingNot,
+        ),
       ),
     ],
     14,
@@ -1675,6 +1690,7 @@ export const grammarTopics: readonly TopicDef[] = [
               `**${right}**\n\nCommas separate the day from the year, follow a weekday, and separate a city from its state or country.\n\n**Check.** Scan every comma in **${right}**: each comma separates two numbers (day and year) or two geographic levels (city and state/country), with no comma between a month and its day.`,
               `**${right}**\n\n逗号把日和年隔开，跟在星期几后面，并把城市和州或国家隔开。\n\n**检验。** 逐一检查 **${right}** 里的每个逗号：要么隔开日与年两个数字，要么隔开城市与州/国家，月份和日之间没有多余逗号。`,
             ),
+          commasInDatesAndPlacesNot,
         ),
       ),
       point(
@@ -1709,11 +1725,16 @@ export const grammarTopics: readonly TopicDef[] = [
           "A **contraction** squeezes two words into one and puts an apostrophe exactly where letters are left out: *do not* → *don't* (missing *o*), *I am* → *I'm*, *they are* → *they're*, *we have* → *we've*. Two special ones are *will not* → *won't* and *cannot* → *can't*.\n\n> **Watch out.** Put the apostrophe where the letters vanished, not between the two original words (*don't*, never *do'nt*).",
           "**缩约形式**把两个词合在一起，撇号准确放在省略字母的原位置：*do not* → *don't*（省了 *o*）、*I am* → *I'm*、*they are* → *they're*、*we have* → *we've*。两个特殊的是 *will not* → *won't* 和 *cannot* → *can't*。\n\n> **注意。** 撇号放在字母消失的位置，不要放在原词的分界处（写 *don't*，不写 *do'nt*）。",
         ),
-        typedGenerator("word-form", t("Type the contraction of these words.", "输入这些词的缩约形式。"), contractionBank, (right, shown) =>
-          t(
-            `*${wordsOf(shown)}* becomes **${right}**: the apostrophe stands in for the omitted letter(s).\n\n**Check.** Put the missing letter(s) back at the apostrophe in **${right}**: it expands straight back to *${wordsOf(shown)}*.`,
-            `*${wordsOf(shown)}* 缩约成 **${right}**：撇号代替了省略的字母。\n\n**检验。** 把省掉的字母填回 **${right}** 的撇号处，正好还原成 *${wordsOf(shown)}*。`,
-          ),
+        typedGenerator(
+          "word-form",
+          t("Type the contraction of these words.", "输入这些词的缩约形式。"),
+          contractionBank,
+          (right, shown) =>
+            t(
+              `*${wordsOf(shown)}* becomes **${right}**: the apostrophe stands in for the omitted letter(s).\n\n**Check.** Put the missing letter(s) back at the apostrophe in **${right}**: it expands straight back to *${wordsOf(shown)}*.`,
+              `*${wordsOf(shown)}* 缩约成 **${right}**：撇号代替了省略的字母。\n\n**检验。** 把省掉的字母填回 **${right}** 的撇号处，正好还原成 *${wordsOf(shown)}*。`,
+            ),
+          formingContractionsNot,
         ),
       ),
       point(
@@ -1802,6 +1823,7 @@ export const grammarTopics: readonly TopicDef[] = [
           t("Rewrite the sentence as the kind asked for, with the right end mark.", "按要求把句子改写成另一种句子，并用正确的结尾标点。"),
           rewriteBank,
           rewriteWhy,
+          changingTheKindNot,
         ),
       ),
     ],
@@ -1849,6 +1871,7 @@ export const grammarTopics: readonly TopicDef[] = [
               `这个词是 **${right}**。${zh}\n\n**检验。** 读出 **${right}**，听词尾前的音：${shortRule ? "前面是单个短元音，所以需要多加一个保护字母（*c*、*t* 或 *d*）。" : "前面是长元音或辅音，不需要多加保护字母。"}`,
             );
           },
+          typingTheWordNot,
         ),
       ),
     ],

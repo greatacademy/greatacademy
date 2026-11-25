@@ -2,7 +2,7 @@
 // explanations and its banks.
 
 import { type KnowledgePointDef, type TopicDef, t } from "@ga/content";
-import { type ChoiceItem, point, type TypedItem, typedGenerator } from "@ga/subject-english";
+import { type ChoiceItem, point, type TypedItem, typedGenerator, type WhyNot } from "@ga/subject-english";
 import type { Strand } from "../../pack.ts";
 import { bars, kindedChoice, type Label, labelChoice, type Pair } from "../../topics/steps.ts";
 import { after, covers } from "./links.ts";
@@ -68,12 +68,20 @@ export const label = (
 ): KnowledgePointDef => point(id, t(...title), t(...explanation), labelChoice(question, lines, labels, why));
 
 /** type builds a knowledge point of typed words, checked by their form. */
-export const type = (id: string, title: Pair, explanation: Pair, question: Pair, bank: readonly TypedItem[], why: Why): KnowledgePointDef =>
+export const type = (
+  id: string,
+  title: Pair,
+  explanation: Pair,
+  question: Pair,
+  bank: readonly TypedItem[],
+  why: Why,
+  whyNot?: WhyNot,
+): KnowledgePointDef =>
   point(
     id,
     t(...title),
     t(...explanation),
-    typedGenerator("word-form", t(...question), bank, (r, s) => t(...why(r, s))),
+    typedGenerator("word-form", t(...question), bank, (r, s) => t(...why(r, s)), whyNot),
   );
 
 /** rows splits lines of fields separated by bars, dropping blank lines. */

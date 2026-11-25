@@ -3,6 +3,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { choiceGenerator, point, typedGenerator } from "@ga/subject-english";
+import { pastParticiplesNot, spellingPluralsNot } from "../mistakes.ts";
 import {
   adjectiveOrderBank,
   irregularPluralBank,
@@ -199,7 +200,13 @@ export const grammarTopics35: readonly TopicDef[] = [
           "Most nouns add *-s*: *cat, cats*. Nouns ending in *s, x, ch, sh* or *z* add *-es*, because you hear an extra sound: *box, boxes*; *bench, benches*.\n\nA consonant before a final *y* turns the *y* into *i* and adds *-es*: *city, cities*. A vowel before the *y* keeps it: *monkey, monkeys*.\n\nMany nouns ending in *f* or *fe* change it to *v* and add *-es*: *leaf, leaves*; *wolf, wolves*.\n\n> **Watch out.** Check the letter right before a final *y*—*city* changes to *cities*, while *monkey* keeps the *y* and becomes *monkeys*.",
           "大多数名词加 *-s*：*cat, cats*。以 *s、x、ch、sh* 或 *z* 结尾的名词加 *-es*，因为读起来多了一个音：*box, boxes*；*bench, benches*。\n\n词尾 *y* 前是辅音时，把 *y* 变成 *i* 再加 *-es*：*city, cities*。*y* 前是元音时保留 *y*：*monkey, monkeys*。\n\n许多以 *f* 或 *fe* 结尾的名词把它变成 *v* 再加 *-es*：*leaf, leaves*；*wolf, wolves*。\n\n> **注意。**一定要看词尾 *y* 前面的字母——*city* 变成 *cities*，而 *monkey* 保留 *y*，变成 *monkeys*。",
         ),
-        typedGenerator("word-form", t("Type the plural of the noun.", "输入这个名词的复数形式。"), regularPluralBank, spellingWhy),
+        typedGenerator(
+          "word-form",
+          t("Type the plural of the noun.", "输入这个名词的复数形式。"),
+          regularPluralBank,
+          spellingWhy,
+          spellingPluralsNot,
+        ),
       ),
       point(
         "irregular-plurals",
@@ -449,6 +456,7 @@ export const grammarTopics35: readonly TopicDef[] = [
               `${sentence} *has、have* 或 *had* 后面接过去分词。*${plain}* 是不规则动词：它的过去式是 *${past}*，过去分词却是 *${right}*。\n\n**检验。** 默念 *${plain}* 的三种形式（*${plain}、${past}、${right}*）——排在第三位的过去分词才和 *has、have、had* 搭配。`,
             );
           },
+          pastParticiplesNot,
         ),
       ),
       point(

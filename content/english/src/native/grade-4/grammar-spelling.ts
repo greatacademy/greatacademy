@@ -3,6 +3,7 @@
 
 import { type Text, type TopicDef, t } from "@ga/content";
 import { point, type TypedItem, typedGenerator } from "@ga/subject-english";
+import { typingIeAndEiWordsNot, typingTionAndSionNounsNot } from "../mistakes.ts";
 import { fields, fill, type Item, itemGenerator } from "./kit.ts";
 import { after } from "./prior.ts";
 
@@ -492,6 +493,7 @@ export const spellingTopics4: readonly TopicDef[] = [
             const row = nounRows.find((r) => r.noun === right);
             return row ? nounWhy(row, shown) : t(fill(shown, right), fill(shown, right));
           },
+          typingTionAndSionNounsNot,
         ),
       ),
     ],
@@ -572,6 +574,7 @@ export const spellingTopics4: readonly TopicDef[] = [
             const row = ieRowOf(right);
             return row ? ieWhy(row, shown) : t(right, right);
           },
+          typingIeAndEiWordsNot,
         ),
       ),
     ],

@@ -3,6 +3,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { point, typedGenerator } from "@ga/subject-english";
+import { explain, when } from "../../why-not.ts";
 import { type Arrange, type Ask, arrangeGenerator, askGenerator, gapFill, need, rows, topic } from "./kit.ts";
 
 // Synonyms and antonyms: sentence with the word in bold|word|synonym|antonym|a word of neither kind.
@@ -239,6 +240,20 @@ const homophoneFixBank = [0, 1].flatMap((r) =>
       other,
     };
   }),
+);
+
+/** fixingTheHomophoneNot explains a response that keeps the sound-alike word the sentence already has. */
+const fixingTheHomophoneNot = explain(
+  when(
+    (s) => meaningOf.has(s.wrong.trim().toLowerCase()),
+    (s) => {
+      const [en, zh] = meaningOf.get(s.wrong.trim().toLowerCase()) ?? ["", ""];
+      return t(
+        `*${s.wrong.trim()}* is the word the sentence already has. It sounds right, but it means ${en}, which does not fit here; its sound-alike twin is spelled differently.`,
+        `*${s.wrong.trim()}* 正是句子里原来的那个词。它读音没错，但意思是“${zh}”，放在这里说不通；与它同音的另一个词拼法不同。`,
+      );
+    },
+  ),
 );
 
 const homophoneFixWhy = new Map(homophoneFixBank.map((i) => [`${i.canonical}|${i.shown}`, i] as const));
@@ -717,6 +732,7 @@ export const wordStudyTopics: readonly TopicDef[] = [
               `应该改成 **${right}**（“${item?.zh ?? ""}”），而不是 *${item?.other ?? ""}*（“${item?.ozh ?? ""}”）。\n\n**检验。** 把 **${right}** 的意思（“${item?.zh ?? ""}”）代回原句读一遍：句意通顺，而 *${item?.other ?? ""}* 说不通。`,
             );
           },
+          fixingTheHomophoneNot,
         ),
       ),
     ],

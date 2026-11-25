@@ -4,6 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, typed } from "@ga/subject-english";
 import { everyPair } from "../../levels/words.ts";
+import { formingTheFuturePerfectNot, typingAbleAndIbleWordsNot, typingGreekSpellingsNot } from "../mistakes.ts";
 import { choose, field, type Label, label, type Pair, rows, topic, type } from "./kit.ts";
 
 // Fewer or less.
@@ -287,6 +288,7 @@ const ableOrIble = topic("grammar", {
         ),
       ]),
       (right) => ableWhy(right),
+      typingAbleAndIbleWordsNot,
     ),
   ],
 });
@@ -421,6 +423,7 @@ const greekSpellings = topic("grammar", {
         ];
       }),
       (right) => greekWhy(right),
+      typingGreekSpellingsNot,
     ),
   ],
 });
@@ -794,6 +797,7 @@ const futurePerfect = topic("grammar", {
         `The future perfect is *will have* with the past participle: **${right}**.\n\n**Check.** Verify all three words of **${right}**: *will* + *have* (never *has*) + the verb's past participle.`,
         `将来完成时是 *will have* 加过去分词：**${right}**。\n\n**检验。** 逐词核对 **${right}**：*will* + *have*（绝不用 *has*）+ 该动词的过去分词。`,
       ],
+      formingTheFuturePerfectNot,
     ),
   ],
 });

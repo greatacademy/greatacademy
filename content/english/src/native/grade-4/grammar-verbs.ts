@@ -5,6 +5,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import { everyPair } from "../../levels/words.ts";
+import { writingTheFormThatComparesNot } from "../mistakes.ts";
 import { capital, fields, fill, type Item, itemGenerator, nameKind } from "./kit.ts";
 import { after } from "./prior.ts";
 
@@ -992,6 +993,7 @@ export const verbTopics4: readonly TopicDef[] = [
               `${fill(shown, right)} 句子比较的是${many ? "一整组，所以用 *-est* 或 *most* 形式" : "两个事物，有 *than*，所以用 *-er* 或 *more* 形式"}；${a ? `*${a.plain}* ${a.rule[1]}` : ""}。\n\n**检验。** 把句中的比较线索（${many ? "*of all* / *of the*" : "*than*"}）和副词类型核对一遍——没有出现 *more* 加 *-er* 或 *-lier*。`,
             );
           },
+          writingTheFormThatComparesNot,
         ),
       ),
     ],
