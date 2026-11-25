@@ -29,7 +29,7 @@ const evolution = batch(
     ),
     watchOut: {
       meanings: t(
-        "**Extinction** is a kind dying out for good; **selection** is which living things survive and have young; **lineage** is the line of ancestors a living thing comes from.",
+        "**Extinction** is a whole kind of living thing dying out for good; **selection** is which living things survive and have young; **lineage** is the line of ancestors a living thing comes from.",
         "**extinction** 是一个物种彻底消失；**selection** 是哪些生物能存活并繁衍；**lineage** 是一种生物的祖先世系。",
       ),
       use: t(
