@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
+import { phrasalVerbsPronounNot } from "./mistakes.ts";
 
 const arts = vocabularyTopic({
   id: "b1-words-arts",
@@ -1323,6 +1324,7 @@ const phrasalVerbs: TopicDef = {
             `宾语代词放在动词和小词中间：${fill(shown, right)}\n\n**检验。** 核对三词顺序：动词（*${verb}*）+ 代词（*${pronoun}*）+ 小词（*${particle}*）。`,
           );
         },
+        phrasalVerbsPronounNot,
       ),
     ),
   ],

@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { secondConditionalWriteNot } from "./mistakes.ts";
 
 const digital = vocabularyTopic({
   id: "b1-words-digital",
@@ -1039,6 +1040,7 @@ const secondConditional: TopicDef = {
         t("Write a second conditional sentence from the note.", "根据笔记写一个第二条件句。"),
         imaginedTyped,
         imaginedWriteWhy,
+        secondConditionalWriteNot,
       ),
     ),
   ],

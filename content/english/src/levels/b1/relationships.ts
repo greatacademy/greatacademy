@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { indirectQuestionsWriteNot, questionTagsWriteNot } from "./mistakes.ts";
 
 const relationships = vocabularyTopic({
   id: "b1-words-relationships",
@@ -1223,7 +1224,13 @@ const questionTags: TopicDef = {
         "Write the sentence with a question tag at the end. Put a comma before the tag and a question mark after it: *She plays tennis* → *She plays tennis, doesn't she?*\n\n> **Watch out.** Check the comma, the contracted negative (*isn't, doesn't, didn't, can't, won't*), the pronoun, and the closing question mark.",
         "在句末加上反意疑问，写出整句。反意疑问前加逗号，后面加问号：*She plays tennis* → *She plays tennis, doesn't she?*\n\n> **注意。** 核对逗号、否定缩写（*isn't、doesn't、didn't、can't、won't*）、人称代词和句末问号。",
       ),
-      typedGenerator("sentence", t("Add a question tag and write the whole sentence.", "加上反意疑问，写出整句。"), tagTyped, tagWriteWhy),
+      typedGenerator(
+        "sentence",
+        t("Add a question tag and write the whole sentence.", "加上反意疑问，写出整句。"),
+        tagTyped,
+        tagWriteWhy,
+        questionTagsWriteNot,
+      ),
     ),
   ],
 };
@@ -1521,6 +1528,7 @@ const indirectQuestions: TopicDef = {
         t("Put the question into the sentence that begins after the arrow.", "把问题放进箭头后面开头的句子里。"),
         indirectTyped,
         indirectWriteWhy,
+        indirectQuestionsWriteNot,
       ),
     ),
   ],

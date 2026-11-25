@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyTriple, interleave, vocabularyTopic, word } from "../words.ts";
+import { gerundsAndInfinitivesWriteNot } from "./mistakes.ts";
 
 const finance = vocabularyTopic({
   id: "b1-words-personal-finance",
@@ -946,7 +947,13 @@ const gerundsAndInfinitives: TopicDef = {
         "Type the right form of the verb in brackets: the **-ing** form (*shopping, making, splitting*) or ***to*** + the base form (*to buy, to stay*).\n\nRemember the spelling of *-ing*: drop a final *-e* (*make → making*), and double a final consonant after one short vowel (*split → splitting, get → getting*).\n\n> **Watch out.** Check the word right before the gap first (preposition or *-ing* verb vs. *to*-verb), and verify *-ing* spelling before submitting.",
         "输入括号中动词的正确形式：**-ing** 形式（*shopping, making, splitting*）或 ***to*** + 原形（*to buy, to stay*）。\n\n注意 *-ing* 的拼写：去掉词尾的 *-e*（*make → making*），单个短元音后的词尾辅音要双写（*split → splitting, get → getting*）。\n\n> **注意。** 先看空白前面是什么词（介词/接 *-ing* 的动词，还是接 *to* 的动词），再核对 *-ing* 的拼写变化。",
       ),
-      typedGenerator("word-form", t("Type the right form of the verb in brackets.", "输入括号中动词的正确形式。"), gerundTyped, gerundWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the right form of the verb in brackets.", "输入括号中动词的正确形式。"),
+        gerundTyped,
+        gerundWhy,
+        gerundsAndInfinitivesWriteNot,
+      ),
     ),
   ],
 };

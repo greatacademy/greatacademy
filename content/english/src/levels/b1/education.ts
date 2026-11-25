@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyTriple, interleave, vocabularyTopic, word } from "../words.ts";
+import { presentPerfectOrPastSimpleWriteNot } from "./mistakes.ts";
 
 const schoolLife = vocabularyTopic({
   id: "b1-words-school-life",
@@ -1370,8 +1371,12 @@ const presentPerfectOrPastSimple: TopicDef = {
         "Write the sentence from the note. With *since* or after *This is the first time*, use *have* or *has* and the past participle: *Tom has worked at the hospital since March.* With a finished time, use the past simple: *Tom worked at the hospital two years ago.*\n\n> **Watch out.** Match *have* vs. *has* to the subject in present-perfect sentences, and use the irregular past participle (not the past simple) after *have/has*.",
         "根据笔记写句子。有 *since* 或在 *This is the first time* 后面，用 *have / has* 加过去分词：*Tom has worked at the hospital since March.* 有过去的具体时间，用一般过去时：*Tom worked at the hospital two years ago.*\n\n> **注意。** 现在完成时里要核对主语配 *have* 还是 *has*，并且 *have/has* 后面用过去分词而不是一般过去式。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), ppTypedBank, (right) =>
-        ppWhy(right, right),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        ppTypedBank,
+        (right) => ppWhy(right, right),
+        presentPerfectOrPastSimpleWriteNot,
       ),
     ),
   ],

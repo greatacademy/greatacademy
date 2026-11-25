@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
+import { reportedSpeechWriteNot } from "./mistakes.ts";
 
 const news = vocabularyTopic({
   id: "b1-words-news",
@@ -1181,6 +1182,7 @@ const reportedSpeech: TopicDef = {
         t("Report what the person said. Begin with the person's name and said.", "转述这个人说的话，以人名和 said 开头。"),
         reportTyped,
         reportWhy,
+        reportedSpeechWriteNot,
       ),
     ),
   ],

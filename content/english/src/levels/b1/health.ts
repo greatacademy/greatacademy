@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { firstConditionalWriteNot } from "./mistakes.ts";
 
 const illness = vocabularyTopic({
   id: "b1-words-illness",
@@ -1320,6 +1321,7 @@ const firstConditional: TopicDef = {
         t("Write a first conditional sentence from the note.", "根据笔记写一个第一条件句。"),
         conditionalTyped,
         condWriteWhy,
+        firstConditionalWriteNot,
       ),
     ),
   ],

@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { presentPerfectContinuousWriteNot, usedToWriteNot } from "./mistakes.ts";
 
 const applying = vocabularyTopic({
   id: "b1-words-applying",
@@ -1244,6 +1245,7 @@ const usedTo: TopicDef = {
         t("Write a sentence with used to from the note.", "根据笔记用 used to 写一个句子。"),
         usedToTyped,
         (right) => usedWhy(right, right),
+        usedToWriteNot,
       ),
     ),
   ],
@@ -1479,6 +1481,7 @@ const presentPerfectContinuous: TopicDef = {
         t("Write the sentence in the present perfect continuous.", "用现在完成进行时写出这个句子。"),
         ppcTyped,
         (right) => ppcWhy(right, right),
+        presentPerfectContinuousWriteNot,
       ),
     ),
   ],

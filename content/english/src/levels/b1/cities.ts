@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { mayMightAndCouldWriteNot, soAndSuchThatNot } from "./mistakes.ts";
 
 const cityLife = vocabularyTopic({
   id: "b1-words-city-life",
@@ -1162,6 +1163,7 @@ const soAndSuch: TopicDef = {
                 `*such* replaces *very* before an adjective with a noun, keeping *a* for a singular noun, and *that* brings in the result: ${right}\n\n**Check.** Verify that *very* is gone, *such (a/an)* precedes the noun phrase in the right order, and the result clause follows.`,
                 `用 *such* 替换“形容词加名词”前的 *very*，单数名词保留 *a*，再用 *that* 引出结果：${right}\n\n**检验。** 确认 *very* 已删去、*such (a/an)* 语序正确，且结果分句自然衔接。`,
               ),
+        soAndSuchThatNot,
       ),
     ),
   ],
@@ -1446,6 +1448,7 @@ const mayMightCould: TopicDef = {
         t("Write the sentence again with might, may or could instead of perhaps.", "用 might、may 或 could 代替 perhaps 改写句子。"),
         modalTyped,
         (right) => modalWhyText(right, right),
+        mayMightAndCouldWriteNot,
       ),
     ),
   ],

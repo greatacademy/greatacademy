@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { pastPerfectWriteNot } from "./mistakes.ts";
 
 const science = vocabularyTopic({
   id: "b1-words-science",
@@ -1317,6 +1318,7 @@ const pastPerfect: TopicDef = {
             `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 确认 *had / hadn't / had never* 后面接的是 *${verbOf(shown)}* 准确的过去分词。`,
           );
         },
+        pastPerfectWriteNot,
       ),
     ),
   ],

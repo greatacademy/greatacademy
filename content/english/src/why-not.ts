@@ -439,7 +439,7 @@ export const baseAfterDo: Case = (s) => {
 
 /** doWithModal explains *do*, *does* or *did* put before *can*, *should*, *must* or *will* to make a negative. */
 export const doWithModal: Case = when(
-  (s) => /\b(don't|doesn't|didn't|do not|does not) (can|could|should|must|will|would)\b/iu.test(s.wrong),
+  (s) => /\b(don't|doesn't|didn't|do not|does not) (can|could|should|must|will|would|may|might)\b/iu.test(s.wrong),
   (s) => {
     const modal = /\b(?:don't|doesn't|didn't|do not|does not) (\w+)/iu.exec(s.wrong)?.[1] ?? "";
     return t(
@@ -471,7 +471,7 @@ export const notAlone: Case = when(
 export const participleNeeded: Case = (s) => {
   if (s.w === "" || s.r === "" || s.w.includes(" ") || s.r.includes(" ")) return undefined;
   const at = s.wrong.toLowerCase().indexOf(` ${lower(s.w)}`);
-  const helper = /\b(have|has|haven't|hasn't|had)\b/iu.exec(s.wrong.slice(0, Math.max(at, 0)))?.[1];
+  const helper = /\b(have|has|haven't|hasn't|had|hadn't)\b/iu.exec(s.wrong.slice(0, Math.max(at, 0)))?.[1];
   if (!helper || /^(have|has|had|already|yet|just|ever|never|not)$/u.test(lower(s.w))) return undefined;
   return t(
     `After *${helper}*, the verb takes its past participle, the third form (*go – went – gone*). *${s.w}* is not that form.`,

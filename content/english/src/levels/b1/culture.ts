@@ -6,6 +6,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { articlesInGeneralAndSpecificCorrectNot } from "./mistakes.ts";
 
 const culture = vocabularyTopic({
   id: "b1-words-culture",
@@ -1260,6 +1261,7 @@ const articles: TopicDef = {
         t("Correct the mistake with the article and write the sentence.", "改正冠词的错误，写出句子。"),
         articleTyped,
         articleFixWhy,
+        articlesInGeneralAndSpecificCorrectNot,
       ),
     ),
   ],
