@@ -20,6 +20,7 @@ import { withRecordings } from "../audio.ts";
 import { heardAs, LANGUAGE } from "../levels/speaking.ts";
 import type { Pack } from "../pack.ts";
 import { watched } from "../watch.ts";
+import { type AuralIntro, auralIntro } from "./aural-intros.ts";
 import { type AuralWatch, auralWatchOuts } from "./aural-watch.ts";
 
 /** MIN_QUESTIONS is the fewest questions a listening topic may ask. */
@@ -139,29 +140,6 @@ function bandOf(grade: string): Band {
   return "high";
 }
 
-/** listeningIntro builds the topic intro for a grade unit's listening topic. */
-function listeningIntro(band: Band, unit: Text): Text {
-  if (band === "early")
-    return t(
-      `Your teacher reads a short story aloud and asks, "Where did the pup hide?" You did not see the page, so your ears do the work. In *${unit.en}*, you will listen to short passages and answer questions about what you heard.`,
-      `老师大声读了一小段故事，问你：“小狗藏在哪里？”你面前没有书页，全靠耳朵来听。在《${unit["zh-CN"]}》这一单元，你会听几段朗读，再回答听到的内容。`,
-    );
-  if (band === "upper")
-    return t(
-      `When someone reads a story or an article aloud, you cannot skim back over a page. You listen for the key facts as they go by. In *${unit.en}*, you will hear the unit's passages read aloud and answer questions from what you hear.`,
-      `听别人朗读故事或短文时，你没法用眼睛回看书页，要一边听一边抓住关键信息。在《${unit["zh-CN"]}》这一单元，你会听本单元篇章的朗读，并根据听到的内容回答问题。`,
-    );
-  if (band === "middle")
-    return t(
-      `Listening to a talk or a story takes a different habit from reading: you catch the main idea and key details in real time. In *${unit.en}*, you will listen to the unit's passages without the text and answer questions on them.`,
-      `听一段讲解或故事和默读不同，需要边听边抓住主旨和关键细节。在《${unit["zh-CN"]}》这一单元，你将在不看原文的情况下听本单元的篇章，并回答相关问题。`,
-    );
-  return t(
-    `In lectures and discussions, you track an argument or narrative by ear, holding key claims and evidence in mind without a transcript. In *${unit.en}*, you will listen to the unit's passages and answer comprehension questions from the audio alone.`,
-    `在讲座和讨论中，你需要靠耳朵跟住论述或叙述，在没有文字稿的情况下记住核心观点和依据。在《${unit["zh-CN"]}》这一单元，你将只听本单元篇章的录音，并回答理解问题。`,
-  );
-}
-
 /** listeningExplanation builds the KP explanation for a grade unit's listening topic. */
 function listeningExplanation(band: Band): Text {
   if (band === "early")
@@ -182,29 +160,6 @@ function listeningExplanation(band: Band): Text {
   return t(
     `Read the question before playing the audio so you know whether to track an overall claim, a contrast, or a specific piece of evidence. For example, if asked *how the author supports a claim*, listen for data, examples, or concessions that follow it. Replay the relevant segment to verify exact wording.\n\n> **Watch out.** Plausible distractors often echo a detail from the passage while distorting its role in the argument—verify both the detail and what it supports.`,
     `播放前先读题目，明确需要捕捉的是核心论点、对比关系还是具体论据。例如题目问*作者如何支撑某个观点*，就要留意紧随其后的数据、例证或让步。可重播相关片段核对原话。\n\n> **注意。** 迷惑项往往照搬原文里的某个细节，却歪曲了它在论证中的作用——既要核对细节本身，也要核对它支撑的观点。`,
-  );
-}
-
-/** readingAloudIntro builds the topic intro for a grade unit's reading-aloud topic. */
-function readingAloudIntro(band: Band, unit: Text): Text {
-  if (band === "early")
-    return t(
-      `Imagine reading a line from your book to a friend sitting next to you. If you read each word clearly and stop at the period, your friend can picture the story right away. In *${unit.en}*, you will read sentences and short parts of the passages aloud.`,
-      `想象你把书里的一句话念给旁边的朋友听。只要每个词读清楚、到句号停一停，朋友马上就能听明白画面。在《${unit["zh-CN"]}》这一单元，你会大声朗读本单元里的句子和小段落。`,
-    );
-  if (band === "upper")
-    return t(
-      `Reading aloud smoothly helps a listener follow the story without seeing the page. Grouping words into natural phrases and pausing at commas and periods makes the meaning clear. In *${unit.en}*, you will practice reading sentences and short passages aloud at a steady pace.`,
-      `流畅地朗读能让不看书页的听众也轻松听懂。把词按自然的意群连起来读，在逗号和句号处停顿，意思就会很清楚。在《${unit["zh-CN"]}》这一单元，你会练习以稳定的语速朗读句子和短段落。`,
-    );
-  if (band === "middle")
-    return t(
-      `Fluent reading aloud sounds like clear, natural speech rather than one word at a time. Phrasing, punctuation pauses, and steady pacing carry the writer's meaning to the listener. In *${unit.en}*, you will read sentences and short stretches from the unit's passages aloud.`,
-      `流畅的朗读听起来像清晰自然的说话，而不是一个词一个词往外蹦。合理的意群停顿和稳定的语速能把作者的意思准确传给听众。在《${unit["zh-CN"]}》这一单元，你会朗读本单元篇章中的句子和短段落。`,
-    );
-  return t(
-    `Reading complex prose aloud at a natural speaking pace tests both accuracy and phrasing: commas, clauses, and sentence boundaries guide how the voice groups ideas. In *${unit.en}*, you will read sentences and short stretches from the unit's passages clearly and fluently.`,
-    `用自然的语速朗读较复杂的段落，考验的是准确度与意群切分：逗号、从句和句界决定了声音如何组织意思。在《${unit["zh-CN"]}》这一单元，你将清晰、流畅地朗读本单元篇章中的句子和短段落。`,
   );
 }
 
@@ -297,6 +252,7 @@ function listeningTopic(
   prerequisites: readonly string[],
   band: Band,
   watch: AuralWatch | undefined,
+  intro: AuralIntro,
 ): TopicDef {
   const passages = reading.passages.filter((p) => p.audio !== undefined);
   const asked: Asked[] = [];
@@ -343,7 +299,7 @@ function listeningTopic(
       `Listen to the passages of *${reading.title.en}* read aloud, without the text, and answer questions on them.`,
       `不看原文，听《${reading.title["zh-CN"]}》中篇章的朗读，并回答问题。`,
     ),
-    intro: listeningIntro(band, unit),
+    intro: intro.listening,
     prerequisites,
     encompasses: [],
     xp: 15,
@@ -362,6 +318,7 @@ function readingAloudTopic(
   listening: string,
   band: Band,
   watch: AuralWatch | undefined,
+  intro: AuralIntro,
 ): TopicDef {
   const all = reading.passages.map((p) => sentencesOf(spokenOf(p.body)));
   const within = (least: number) => [
@@ -402,7 +359,7 @@ function readingAloudTopic(
       `Read aloud sentences and short stretches of *${reading.title.en}*, fluently and at a speaking pace.`,
       `流畅地、用说话的语速朗读《${reading.title["zh-CN"]}》中的句子和短段落。`,
     ),
-    intro: readingAloudIntro(band, unit),
+    intro: intro.aloud,
     prerequisites: [listening],
     encompasses: [],
     xp: 10,
@@ -444,8 +401,9 @@ export function withAural(pack: Pack, grade: string, readingUnits: readonly Read
         const listening = `${grade}-listening-${s}`;
         const aloud = `${grade}-reading-aloud-${s}`;
         const watch = auralWatchOuts[`${grade}-${s}`];
-        topics.push(listeningTopic(listening, unit.title, reading, prerequisiteOf(unit), band, watch));
-        topics.push(readingAloudTopic(aloud, unit.title, reading, listening, band, watch));
+        const intro = auralIntro(`${grade}-${s}`);
+        topics.push(listeningTopic(listening, unit.title, reading, prerequisiteOf(unit), band, watch, intro));
+        topics.push(readingAloudTopic(aloud, unit.title, reading, listening, band, watch, intro));
         return {
           ...unit,
           modules: [
