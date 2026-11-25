@@ -287,8 +287,8 @@ const countingNestedQuantifiers: KnowledgePointDef = {
   id: "counting-the-values-that-satisfy-a-quantified-condition",
   title: t("Counting the values that satisfy a quantified condition", "数满足量词条件的值"),
   explanation: t(
-    "To decide a statement with an inner quantifier, look for the extreme case. A universal claim must survive its hardest value, while an existential claim only needs its easiest value. Once the inner quantifier has been replaced by this one case, what remains is an ordinary condition on the outer variable, and its values can be counted.",
-    "判断含内层量词的命题时，要找极端情形。全称命题必须经得起最难的值，而存在命题只需要最容易的值。把内层量词换成这一种情形后，剩下的就是关于外层变量的普通条件，可以数出它的取值。",
+    "To decide a statement with an inner quantifier, look for the extreme case. A universal claim must survive its hardest value, while an existential claim only needs its easiest value. Once the inner quantifier has been replaced by this one case, what remains is an ordinary condition on the outer variable, and its values can be counted. For $x \\in \\{1, \\dots, 10\\}$, the statement $(\\forall y \\in \\{1, 2, 3\\})\\; x + y \\le 7$ comes down to its hardest case $y = 3$, that is $x \\le 4$: four values.\n\n> **Watch out.** An inner for all uses the hardest value, an inner there exists the easiest. Using the wrong one gives the count for the other statement.",
+    "判断含内层量词的命题时，要找极端情形。全称命题必须经得起最难的值，而存在命题只需要最容易的值。把内层量词换成这一种情形后，剩下的就是关于外层变量的普通条件，可以数出它的取值。对 $x \\in \\{1, \\dots, 10\\}$，命题 $(\\forall y \\in \\{1, 2, 3\\})\\; x + y \\le 7$ 归结为最难的情形 $y = 3$，即 $x \\le 4$：四个值。\n\n> **注意。** 内层的“对所有”用最难的值，内层的“存在”用最容易的值。用反了，得到的是另一个命题的个数。",
   ),
   generate(rng) {
     const n = rng.int(8, 15);
@@ -298,6 +298,7 @@ const countingNestedQuantifiers: KnowledgePointDef = {
     const universal = rng.pick([true, false]);
     const answer = universal ? room : Math.min(n, k - 1);
     const quantifier = universal ? "\\forall" : "\\exists";
+    const capped = !universal && n <= k - 1;
     return numberProblem({
       prompt: t(
         `For how many $x \\in \\{1, \\dots, ${n}\\}$ is the statement $(${quantifier} y \\in \\{1, \\dots, ${m}\\})\\; x + y \\le ${k}$ true?`,
@@ -305,16 +306,64 @@ const countingNestedQuantifiers: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [universal ? Math.min(n, k - 1) : room, Math.min(n, k), answer + 1],
-      solution: universal
-        ? t(
-            `The hardest value is $y = ${m}$, so the statement says $x \\le ${room}$. That holds for ${answer} values.`,
-            `最难的值是 $y = ${m}$，所以命题就是 $x \\le ${room}$。满足它的有 ${answer} 个值。`,
-          )
-        : t(
-            `The easiest value is $y = 1$, so the statement says $x \\le ${k - 1}$. Within the given range, that holds for ${answer} values.`,
-            `最容易的值是 $y = 1$，所以命题就是 $x \\le ${k - 1}$。在给定范围内，满足它的有 ${answer} 个值。`,
-          ),
+      wrong: [Math.min(n, k), answer + 1],
+      mistakes: [
+        universal
+          ? why(
+              Math.min(n, k - 1),
+              `That uses the easiest value $y = 1$; a for all must hold even for the hardest, $y = ${m}$.`,
+              `这用的是最容易的值 $y = 1$；“对所有”连最难的 $y = ${m}$ 也必须成立。`,
+            )
+          : why(
+              room,
+              `That uses the hardest value $y = ${m}$; a there exists needs only the easiest, $y = 1$.`,
+              `这用的是最难的值 $y = ${m}$；“存在”只需要最容易的 $y = 1$。`,
+            ),
+        why(
+          Math.min(n, k),
+          "That allows $y = 0$, which is not in the domain of $y$; it starts at $1$.",
+          "这相当于允许 $y = 0$，但 $y$ 的论域从 $1$ 开始。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Replace the inner quantifier by its extreme case", "把内层量词换成极端情形"],
+            universal
+              ? t(
+                  `Every $y$ must work, and the hardest is the largest, $y = ${m}$. So the statement says $x + ${m} \\le ${k}$, that is $x \\le ${room}$.`,
+                  `每个 $y$ 都必须成立，最难的是最大的 $y = ${m}$。所以命题就是 $x + ${m} \\le ${k}$，即 $x \\le ${room}$。`,
+                )
+              : t(
+                  `One $y$ is enough, and the easiest is the smallest, $y = 1$. So the statement says $x + 1 \\le ${k}$, that is $x \\le ${k - 1}$.`,
+                  `只要一个 $y$ 就够了，最容易的是最小的 $y = 1$。所以命题就是 $x + 1 \\le ${k}$，即 $x \\le ${k - 1}$。`,
+                ),
+          ],
+          [
+            ["Count the values of $x$", "数出 $x$ 的值"],
+            capped
+              ? t(
+                  `Every $x$ from $1$ to $${n}$ satisfies it: $${answer}$ values.`,
+                  `从 $1$ 到 $${n}$ 的每个 $x$ 都满足：$${answer}$ 个值。`,
+                )
+              : t(`$x = 1, \\dots, ${answer}$: $${answer}$ values.`, `$x = 1, \\dots, ${answer}$：$${answer}$ 个值。`),
+          ],
+        ],
+        universal
+          ? t(
+              `Test the boundary. At $x = ${room}$ the largest sum is $${room} + ${m} = ${k}$, which is allowed; at $x = ${room + 1}$, $y = ${m}$ gives $${k + 1} > ${k}$.`,
+              `检验边界。$x = ${room}$ 时最大的和是 $${room} + ${m} = ${k}$，可以；$x = ${room + 1}$ 时，$y = ${m}$ 得 $${k + 1} > ${k}$。`,
+            )
+          : capped
+            ? t(
+                `Test the largest value: $x = ${n}$ with $y = 1$ gives $${n + 1} \\le ${k}$, so even it counts.`,
+                `检验最大的值：$x = ${n}$ 取 $y = 1$ 得 $${n + 1} \\le ${k}$，所以它也算。`,
+              )
+            : t(
+                `Test the boundary. At $x = ${k - 1}$, $y = 1$ gives $${k}$, which is allowed; at $x = ${k}$, even $y = 1$ gives $${k + 1} > ${k}$.`,
+                `检验边界。$x = ${k - 1}$ 时，$y = 1$ 得 $${k}$，可以；$x = ${k}$ 时，即使 $y = 1$ 也得 $${k + 1} > ${k}$。`,
+              ),
+      ),
     });
   },
 };
@@ -501,14 +550,15 @@ const conditionsOnMultiples: KnowledgePointDef = {
   id: "counting-sufficient-and-necessary-divisibility-conditions",
   title: t("Counting sufficient and necessary divisibility conditions", "数可除性的充分条件和必要条件"),
   explanation: t(
-    "Saying that $P$ is sufficient for $Q$ means $P \\to Q$, and saying that $P$ is necessary for $Q$ means $Q \\to P$. Being a multiple of $a$ implies being a multiple of $k$ exactly when $k$ divides $a$. So these two words turn a question about conditions into one about divisors or about multiples.",
-    "说 $P$ 是 $Q$ 的充分条件，就是 $P \\to Q$；说 $P$ 是 $Q$ 的必要条件，就是 $Q \\to P$。是 $a$ 的倍数蕴涵是 $k$ 的倍数，当且仅当 $k$ 整除 $a$。所以这两个词把关于条件的问题变成了关于因数或倍数的问题。",
+    'Saying that $P$ is sufficient for $Q$ means $P \\to Q$, and saying that $P$ is necessary for $Q$ means $Q \\to P$. Being a multiple of $a$ implies being a multiple of $k$ exactly when $k$ divides $a$. So these two words turn a question about conditions into one about divisors or about multiples. For $a = 6$, "$n$ is a multiple of $6$" is sufficient for "$n$ is a multiple of $k$" when $k$ is $1$, $2$, $3$ or $6$.\n\n> **Watch out.** The two words point in opposite directions. Sufficient leads to the divisors of $a$, necessary to the multiples of $a$; swapping them counts the wrong set.',
+    "说 $P$ 是 $Q$ 的充分条件，就是 $P \\to Q$；说 $P$ 是 $Q$ 的必要条件，就是 $Q \\to P$。是 $a$ 的倍数蕴涵是 $k$ 的倍数，当且仅当 $k$ 整除 $a$。所以这两个词把关于条件的问题变成了关于因数或倍数的问题。对 $a = 6$，当 $k$ 为 $1$、$2$、$3$ 或 $6$ 时，“$n$ 是 $6$ 的倍数”是“$n$ 是 $k$ 的倍数”的充分条件。\n\n> **注意。** 这两个词方向相反。充分条件引向 $a$ 的因数，必要条件引向 $a$ 的倍数；弄反了就数错了集合。",
   ),
   generate(rng) {
     const a = rng.int(6, 60);
     const divisors = divisorsOf(a);
     if (rng.pick([true, false])) {
       const answer = divisors.length;
+      const other = oneTo(a).find((k) => a % k !== 0)!;
       return numberProblem({
         prompt: t(
           `For how many positive integers $k$ is "$n$ is a multiple of ${a}" a sufficient condition for "$n$ is a multiple of $k$"?`,
@@ -517,9 +567,39 @@ const conditionsOnMultiples: KnowledgePointDef = {
         answer,
         form: "integer",
         wrong: [answer - 2, answer - 1, a],
-        solution: t(
-          `The implication holds exactly when $k$ divides ${a}. The divisors are ${divisors.join(", ")}, which is ${answer} numbers.`,
-          `这个蕴涵成立，当且仅当 $k$ 整除 ${a}。因数是 ${divisors.join(", ")}，共 ${answer} 个。`,
+        mistakes: [
+          why(
+            a,
+            `That counts every $k$ up to ${a}; only the divisors of ${a} work.`,
+            `这数的是 ${a} 以内的所有 $k$；只有 ${a} 的因数可以。`,
+          ),
+          why(
+            answer - 2,
+            `That leaves out $1$ and ${a}; both divide ${a}, so both count.`,
+            `这漏掉了 $1$ 和 ${a}；它们都整除 ${a}，都要算。`,
+          ),
+        ],
+        solution: walked(
+          [
+            [
+              ["Write the condition as an implication", "把条件写成蕴涵"],
+              t(
+                `Sufficient means "multiple of ${a}" $\\to$ "multiple of $k$", which holds exactly when $k$ divides ${a}.`,
+                `充分条件即“${a} 的倍数”$\\to$“$k$ 的倍数”，这当且仅当 $k$ 整除 ${a}。`,
+              ),
+            ],
+            [
+              ["Count the divisors", "数出因数"],
+              t(
+                `The divisors of ${a} are ${divisors.join(", ")}: ${answer} numbers.`,
+                `${a} 的因数是 ${divisors.join(", ")}：共 ${answer} 个。`,
+              ),
+            ],
+          ],
+          t(
+            `Try $k = ${other}$, which does not divide ${a}: the number ${a} is a multiple of ${a} but not of ${other}, so the implication fails and ${other} is rightly left out.`,
+            `试不整除 ${a} 的 $k = ${other}$：${a} 是 ${a} 的倍数，却不是 ${other} 的倍数，蕴涵不成立，所以 ${other} 确实不算。`,
+          ),
         ),
       });
     }
@@ -532,10 +612,36 @@ const conditionsOnMultiples: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [divisors.length, top - answer, answer + 1],
-      solution: t(
-        `Necessary means that every multiple of $k$ is a multiple of ${a}, which holds exactly when ${a} divides $k$. There are $\\lfloor ${top} / ${a} \\rfloor = ${answer}$ such $k$.`,
-        `必要条件的意思是 $k$ 的每个倍数都是 ${a} 的倍数，这当且仅当 ${a} 整除 $k$。这样的 $k$ 有 $\\lfloor ${top} / ${a} \\rfloor = ${answer}$ 个。`,
+      wrong: [answer + 1],
+      mistakes: [
+        why(
+          divisors.length,
+          `That counts the divisors of ${a}, which answers the sufficient question; necessary turns the implication around.`,
+          `这数的是 ${a} 的因数，回答的是充分条件的问题；必要条件把蕴涵反过来。`,
+        ),
+        why(top - answer, `That counts the $k$ that are not multiples of ${a}.`, `这数的是不是 ${a} 的倍数的 $k$。`),
+      ],
+      solution: walked(
+        [
+          [
+            ["Write the condition as an implication", "把条件写成蕴涵"],
+            t(
+              `Necessary means "multiple of $k$" $\\to$ "multiple of ${a}": every multiple of $k$, $k$ itself included, is a multiple of ${a}. That holds exactly when ${a} divides $k$.`,
+              `必要条件即“$k$ 的倍数”$\\to$“${a} 的倍数”：$k$ 的每个倍数，包括 $k$ 本身，都是 ${a} 的倍数。这当且仅当 ${a} 整除 $k$。`,
+            ),
+          ],
+          [
+            [`Count the multiples of ${a}`, `数出 ${a} 的倍数`],
+            t(
+              `There are $\\lfloor ${top} / ${a} \\rfloor = ${answer}$ multiples of ${a} from 1 to ${top}.`,
+              `从 1 到 ${top} 中 ${a} 的倍数有 $\\lfloor ${top} / ${a} \\rfloor = ${answer}$ 个。`,
+            ),
+          ],
+        ],
+        t(
+          `Try $k = ${a + 1}$: it is a multiple of itself but not of ${a}, so it is rightly left out. Try $k = ${2 * a}$: every multiple of ${2 * a} is a multiple of ${a}, so it counts.`,
+          `试 $k = ${a + 1}$：它是自身的倍数，却不是 ${a} 的倍数，所以确实不算。试 $k = ${2 * a}$：${2 * a} 的每个倍数都是 ${a} 的倍数，所以它算。`,
+        ),
       ),
     });
   },
@@ -1628,8 +1734,8 @@ const andOrOfDivisibility: KnowledgePointDef = {
   id: "counting-the-truth-set-of-a-divisibility-and-or-or",
   title: t("Counting the truth set of a divisibility AND or OR", "数可除性的合取或析取的真值集"),
   explanation: t(
-    "The truth set of a conjunction is the intersection of the two truth sets, and the truth set of a disjunction is their union. For divisibility predicates, being divisible by both numbers means being divisible by their lcm, not necessarily by their product. The disjunction then follows by inclusion-exclusion, since adding the two counts counts the common multiples twice.",
-    "合取的真值集是两个真值集的交，析取的真值集是它们的并。对可除性谓词，同时被两个数整除就是被它们的最小公倍数整除，而不一定被它们的乘积整除。析取再由容斥原理得出，因为两个个数相加时，公倍数被算了两次。",
+    "The truth set of a conjunction is the intersection of the two truth sets, and the truth set of a disjunction is their union. For divisibility predicates, being divisible by both numbers means being divisible by their lcm, not necessarily by their product. The disjunction then follows by inclusion-exclusion, since adding the two counts counts the common multiples twice. From $1$ to $100$, there are $25$ multiples of $4$ and $16$ of $6$; the $8$ multiples of $\\operatorname{lcm}(4, 6) = 12$ are in both, so $25 + 16 - 8 = 33$ numbers are divisible by $4$ or $6$.\n\n> **Watch out.** The common multiples are the multiples of the lcm, which can be smaller than the product: $12$ is divisible by both $4$ and $6$, though not by $24$.",
+    "合取的真值集是两个真值集的交，析取的真值集是它们的并。对可除性谓词，同时被两个数整除就是被它们的最小公倍数整除，而不一定被它们的乘积整除。析取再由容斥原理得出，因为两个个数相加时，公倍数被算了两次。从 $1$ 到 $100$，$4$ 的倍数有 $25$ 个，$6$ 的倍数有 $16$ 个；$\\operatorname{lcm}(4, 6) = 12$ 的 $8$ 个倍数两边都有，所以被 $4$ 或 $6$ 整除的数有 $25 + 16 - 8 = 33$ 个。\n\n> **注意。** 公倍数是最小公倍数的倍数，最小公倍数可能比乘积小：$12$ 能被 $4$ 和 $6$ 整除，却不能被 $24$ 整除。",
   ),
   generate(rng) {
     const [a, b] = rng.pick(independentDivisors);
@@ -1638,6 +1744,7 @@ const andOrOfDivisibility: KnowledgePointDef = {
     const onA = Math.floor(size / a);
     const onB = Math.floor(size / b);
     const onBoth = Math.floor(size / lcm);
+    const onProduct = Math.floor(size / (a * b));
     const both = rng.pick([true, false]);
     const answer = both ? onBoth : onA + onB - onBoth;
     return numberProblem({
@@ -1652,17 +1759,71 @@ const andOrOfDivisibility: KnowledgePointDef = {
           ),
       answer,
       form: "integer",
-      wrong: both
-        ? [Math.floor(size / (a * b)), Math.min(onA, onB), onBoth + 1, onBoth - 1]
-        : [onA + onB, onA + onB - Math.floor(size / (a * b)), size - onA - onB + onBoth],
+      wrong: both ? [onBoth + 1, onBoth - 1] : [],
+      mistakes: both
+        ? [
+            why(
+              onProduct,
+              `That counts the multiples of $${a} \\cdot ${b}$; the numbers divisible by both are the multiples of the lcm, which is smaller.`,
+              `这数的是 $${a} \\cdot ${b}$ 的倍数；同时被两者整除的是最小公倍数的倍数，它更小。`,
+            ),
+            why(
+              Math.min(onA, onB),
+              "That counts the multiples of one number only; they must be multiples of both.",
+              "这只数了一个数的倍数；它们必须同时是两者的倍数。",
+            ),
+          ]
+        : [
+            why(
+              onA + onB,
+              "That adds the two counts, so the common multiples are counted twice.",
+              "这把两个个数直接相加，公倍数被算了两次。",
+            ),
+            why(
+              onA + onB - onProduct,
+              `That takes away the multiples of $${a} \\cdot ${b}$; the numbers counted twice are the multiples of the lcm.`,
+              `这减去的是 $${a} \\cdot ${b}$ 的倍数；被算了两次的是最小公倍数的倍数。`,
+            ),
+            why(size - onA - onB + onBoth, "That counts the numbers divisible by neither.", "这数的是两者都不能整除的数。"),
+          ],
       solution: both
-        ? t(
-            `Both conditions hold exactly when $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ divides $x$, and $\\lfloor ${size} / ${lcm} \\rfloor = ${answer}$.`,
-            `两个条件同时成立，当且仅当 $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 整除 $x$，而 $\\lfloor ${size} / ${lcm} \\rfloor = ${answer}$。`,
+        ? walked(
+            [
+              [
+                ["Combine the conditions", "合并条件"],
+                t(
+                  `$${a} \\mid x$ and $${b} \\mid x$ hold together exactly when $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ divides $x$.`,
+                  `$${a} \\mid x$ 与 $${b} \\mid x$ 同时成立，当且仅当 $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 整除 $x$。`,
+                ),
+              ],
+              [
+                ["Count the multiples", "数出倍数"],
+                t(`$\\lfloor ${size} / ${lcm} \\rfloor = ${answer}$.`, `$\\lfloor ${size} / ${lcm} \\rfloor = ${answer}$。`),
+              ],
+            ],
+            t(
+              `The last of them is $${lcm} \\cdot ${answer} = ${lcm * answer} \\le ${size}$, and the next, $${lcm * (answer + 1)}$, is beyond ${size}.`,
+              `其中最后一个是 $${lcm} \\cdot ${answer} = ${lcm * answer} \\le ${size}$，下一个 $${lcm * (answer + 1)}$ 超出了 ${size}。`,
+            ),
           )
-        : t(
-            `There are ${onA} multiples of ${a} and ${onB} multiples of ${b}. The ${onBoth} multiples of $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ are counted twice, so the count is $${onA} + ${onB} - ${onBoth} = ${answer}$.`,
-            `${a} 的倍数有 ${onA} 个，${b} 的倍数有 ${onB} 个。$\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 的 ${onBoth} 个倍数被算了两次，所以个数是 $${onA} + ${onB} - ${onBoth} = ${answer}$。`,
+        : walked(
+            [
+              [
+                ["Count each condition", "分别计数"],
+                t(`There are ${onA} multiples of ${a} and ${onB} multiples of ${b}.`, `${a} 的倍数有 ${onA} 个，${b} 的倍数有 ${onB} 个。`),
+              ],
+              [
+                ["Remove the double count", "去掉重复计数"],
+                t(
+                  `The ${onBoth} multiples of $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ were counted twice, so the count is $${onA} + ${onB} - ${onBoth} = ${answer}$.`,
+                  `$\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 的 ${onBoth} 个倍数被算了两次，所以个数是 $${onA} + ${onB} - ${onBoth} = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Count the three separate parts instead: only ${a}, $${onA} - ${onBoth} = ${onA - onBoth}$; only ${b}, $${onB} - ${onBoth} = ${onB - onBoth}$; both, ${onBoth}. Together $${onA - onBoth} + ${onB - onBoth} + ${onBoth} = ${answer}$.`,
+              `改为分三部分数：只被 ${a} 整除的 $${onA} - ${onBoth} = ${onA - onBoth}$ 个；只被 ${b} 整除的 $${onB} - ${onBoth} = ${onB - onBoth}$ 个；两者都整除的 ${onBoth} 个。合计 $${onA - onBoth} + ${onB - onBoth} + ${onBoth} = ${answer}$。`,
+            ),
           ),
     });
   },
@@ -1672,8 +1833,8 @@ const conditionalOfDivisibility: KnowledgePointDef = {
   id: "counting-the-truth-set-of-a-divisibility-conditional",
   title: t("Counting the truth set of a divisibility conditional", "数可除性条件命题的真值集"),
   explanation: t(
-    "A conditional predicate is false only where its hypothesis holds and its conclusion fails. So it is usually easier to count the false values and subtract them than to count the true ones. Here the false values are the multiples of the first number that are not multiples of the second, which means removing the common multiples from the first group.",
-    "条件谓词只在假设成立而结论不成立时为假。所以数出假的值再减去，通常比直接数真的值容易。这里假的值是第一个数的倍数中不是第二个数倍数的那些，也就是从第一组倍数中去掉公倍数。",
+    'A conditional predicate is false only where its hypothesis holds and its conclusion fails. So it is usually easier to count the false values and subtract them than to count the true ones. Here the false values are the multiples of the first number that are not multiples of the second, which means removing the common multiples from the first group. From $1$ to $100$, "if $4 \\mid x$, then $6 \\mid x$" fails for the $25 - 8 = 17$ multiples of $4$ that are not multiples of $12$, so it holds for $83$ values.\n\n> **Watch out.** Every $x$ that is not a multiple of the first number makes the conditional true, whatever happens to the second.',
+    "条件谓词只在假设成立而结论不成立时为假。所以数出假的值再减去，通常比直接数真的值容易。这里假的值是第一个数的倍数中不是第二个数倍数的那些，也就是从第一组倍数中去掉公倍数。从 $1$ 到 $100$，“如果 $4 \\mid x$，那么 $6 \\mid x$”对 $4$ 的倍数中不是 $12$ 的倍数的 $25 - 8 = 17$ 个值为假，所以对 $83$ 个值为真。\n\n> **注意。** 每个不是第一个数倍数的 $x$ 都使条件命题为真，不论第二个条件如何。",
   ),
   generate(rng) {
     const [a, b] = rng.pick(independentDivisors);
@@ -1690,10 +1851,37 @@ const conditionalOfDivisibility: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [onBoth, falseValues, size - onA],
-      solution: t(
-        `The conditional is false for multiples of ${a} that are not multiples of ${b}. There are ${onA} multiples of ${a}, and ${onBoth} of them are multiples of $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$, which leaves ${falseValues} false values. So it is true for $${size} - ${falseValues} = ${answer}$ values.`,
-        `条件命题对是 ${a} 的倍数但不是 ${b} 的倍数的值为假。${a} 的倍数有 ${onA} 个，其中 ${onBoth} 个是 $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 的倍数，所以有 ${falseValues} 个假值。因此它对 $${size} - ${falseValues} = ${answer}$ 个值为真。`,
+      mistakes: [
+        why(
+          onBoth,
+          `That counts only the $x$ where both divisibilities hold; the $x$ that are not multiples of ${a} make the conditional true too.`,
+          `这只数了两个整除都成立的 $x$；不是 ${a} 的倍数的 $x$ 也使条件命题为真。`,
+        ),
+        why(falseValues, "That counts the values where the conditional is false.", "这数的是条件命题为假的值。"),
+        why(
+          size - onA,
+          `That counts only the $x$ where the hypothesis fails; the multiples of ${lcm} make the conditional true as well.`,
+          `这只数了假设不成立的 $x$；${lcm} 的倍数也使条件命题为真。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the false values", "找出假的值"],
+            t(
+              `The conditional fails for multiples of ${a} that are not multiples of ${b}. There are ${onA} multiples of ${a}, and ${onBoth} of them are multiples of $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$, which leaves ${falseValues} false values.`,
+              `条件命题对是 ${a} 的倍数但不是 ${b} 的倍数的值为假。${a} 的倍数有 ${onA} 个，其中 ${onBoth} 个是 $\\operatorname{lcm}(${a}, ${b}) = ${lcm}$ 的倍数，所以有 ${falseValues} 个假值。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(`It is true for $${size} - ${falseValues} = ${answer}$ values.`, `它对 $${size} - ${falseValues} = ${answer}$ 个值为真。`),
+          ],
+        ],
+        t(
+          `Count the true values directly: the hypothesis fails for $${size} - ${onA} = ${size - onA}$ values, and both parts hold for ${onBoth}. Together $${size - onA} + ${onBoth} = ${answer}$.`,
+          `直接数真的值：假设不成立的有 $${size} - ${onA} = ${size - onA}$ 个，两部分都成立的有 ${onBoth} 个。合计 $${size - onA} + ${onBoth} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1703,8 +1891,8 @@ const thresholdOfAQuantifier: KnowledgePointDef = {
   id: "the-threshold-that-makes-a-quantified-statement-true",
   title: t("The threshold that makes a quantified statement true", "使量词命题为真的临界值"),
   explanation: t(
-    "A universal statement over a finite set is a chain of conditions, one for each element, so a bound must beat the largest value of the expression. An existential statement needs only one element to work, so a bound must reach just the smallest value. The same expression and domain can therefore give very different thresholds for the two quantifiers.",
-    "有限集上的全称命题是一串条件，每个元素一个，所以上界必须不小于表达式的最大值。存在命题只需要一个元素成立，所以上界只要达到最小值。因此同样的表达式和定义域，在两种量词下的临界值可能相差很大。",
+    "A universal statement over a finite set is a chain of conditions, one for each element, so a bound must beat the largest value of the expression. An existential statement needs only one element to work, so a bound must reach just the smallest value. The same expression and domain can therefore give very different thresholds for the two quantifiers. On $\\{-1, 0, 1, 2\\}$, $x^2$ takes the values $1, 0, 1, 4$: $(\\forall x)\\; x^2 \\le c$ needs $c \\ge 4$, while $(\\exists x)\\; x^2 \\le c$ needs only $c \\ge 0$.\n\n> **Watch out.** The extreme value need not be at an end of the set. A square is smallest where its base is closest to $0$, which may be in the middle.",
+    "有限集上的全称命题是一串条件，每个元素一个，所以上界必须不小于表达式的最大值。存在命题只需要一个元素成立，所以上界只要达到最小值。因此同样的表达式和定义域，在两种量词下的临界值可能相差很大。在 $\\{-1, 0, 1, 2\\}$ 上，$x^2$ 取值 $1, 0, 1, 4$：$(\\forall x)\\; x^2 \\le c$ 需要 $c \\ge 4$，而 $(\\exists x)\\; x^2 \\le c$ 只需 $c \\ge 0$。\n\n> **注意。** 极值不一定在集合的端点。平方在底数最接近 $0$ 处最小，那可能在中间。",
   ),
   generate(rng) {
     const p = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -1719,6 +1907,8 @@ const thresholdOfAQuantifier: KnowledgePointDef = {
     const at = xs[values.indexOf(answer)] ?? low;
     const square = `(${poly([1, "x"], [-p, ""])})^2`;
     const quantifier = universal ? "\\forall" : "\\exists";
+    const first = values[0] ?? 0;
+    const last = values[values.length - 1] ?? 0;
     return numberProblem({
       prompt: t(
         `What is the smallest integer $c$ for which $(${quantifier} x \\in \\{${low}, ${low + 1}, \\dots, ${high}\\})\\; ${square} \\le c$ is true?`,
@@ -1726,16 +1916,66 @@ const thresholdOfAQuantifier: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [universal ? smallest : largest, answer + 1, values[0] ?? 0, values[values.length - 1] ?? 0],
-      solution: universal
-        ? t(
-            `Every $x$ must satisfy the inequality, so $c$ must be at least the largest value of $${square}$ on the set. That value is ${largest}, reached at $x = ${at}$.`,
-            `每个 $x$ 都必须满足这个不等式，所以 $c$ 至少是 $${square}$ 在这个集合上的最大值。这个值是 ${largest}，在 $x = ${at}$ 处取到。`,
-          )
-        : t(
-            `One $x$ is enough, so $c$ only has to reach the smallest value of $${square}$ on the set. That value is ${smallest}, reached at $x = ${at}$.`,
-            `只要有一个 $x$ 就够了，所以 $c$ 只需达到 $${square}$ 在这个集合上的最小值。这个值是 ${smallest}，在 $x = ${at}$ 处取到。`,
-          ),
+      mistakes: [
+        universal
+          ? why(
+              smallest,
+              "That is the smallest value; for all $x$ the bound must cover the largest.",
+              "这是最小值；对所有 $x$，上界必须盖过最大值。",
+            )
+          : why(
+              largest,
+              "That is the largest value; one $x$ is enough, so the smallest value suffices.",
+              "这是最大值；一个 $x$ 就够了，所以最小值就行。",
+            ),
+        why(
+          answer + 1,
+          "The inequality is $\\le$, so $c$ may equal the extreme value itself.",
+          "不等式是 $\\le$，所以 $c$ 可以等于极值本身。",
+        ),
+        why(
+          first,
+          `That is the value at $x = ${low}$, one end of the set; the ${universal ? "largest" : "smallest"} value is elsewhere.`,
+          `这是端点 $x = ${low}$ 处的值；${universal ? "最大" : "最小"}值在别处。`,
+        ),
+        why(
+          last,
+          `That is the value at $x = ${high}$, one end of the set; the ${universal ? "largest" : "smallest"} value is elsewhere.`,
+          `这是端点 $x = ${high}$ 处的值；${universal ? "最大" : "最小"}值在别处。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Decide which extreme matters", "确定看哪个极值"],
+            universal
+              ? t(
+                  `Every $x$ must satisfy the inequality, so $c$ must be at least the largest value of $${square}$ on the set.`,
+                  `每个 $x$ 都必须满足不等式，所以 $c$ 至少是 $${square}$ 在集合上的最大值。`,
+                )
+              : t(
+                  `One $x$ is enough, so $c$ only has to reach the smallest value of $${square}$ on the set.`,
+                  `一个 $x$ 就够了，所以 $c$ 只需达到 $${square}$ 在集合上的最小值。`,
+                ),
+          ],
+          [
+            ["Find it", "求出它"],
+            t(
+              `For $x = ${low}, \\dots, ${high}$ the values are $${values.join(", ")}$. The ${universal ? "largest" : "smallest"} is $${answer}$, at $x = ${at}$.`,
+              `对 $x = ${low}, \\dots, ${high}$，取值为 $${values.join(", ")}$。${universal ? "最大" : "最小"}的是 $${answer}$，在 $x = ${at}$ 处。`,
+            ),
+          ],
+        ],
+        universal
+          ? t(
+              `With $c = ${answer}$ every value is at most $${answer}$; with $c = ${answer - 1}$ the value at $x = ${at}$ fails.`,
+              `取 $c = ${answer}$，每个值都不超过 $${answer}$；取 $c = ${answer - 1}$，$x = ${at}$ 处的值不满足。`,
+            )
+          : t(
+              `With $c = ${answer}$ the value $x = ${at}$ works; with $c = ${answer - 1}$ no $x$ works, since every value is at least $${answer}$.`,
+              `取 $c = ${answer}$，$x = ${at}$ 满足；取 $c = ${answer - 1}$，没有 $x$ 满足，因为每个值都至少是 $${answer}$。`,
+            ),
+      ),
     });
   },
 };
@@ -1744,8 +1984,8 @@ const implicationChainRows: KnowledgePointDef = {
   id: "the-true-rows-of-an-implication-chain",
   title: t("The true rows of an implication chain", "蕴涵链的真行"),
   explanation: t(
-    "By transitivity, a chain of implications forces every later variable to be true as soon as one variable is true. So along the chain the values can only switch once, from false to true, and they can never switch back. The allowed patterns are therefore fixed by the place where this switch occurs, and there is also the pattern with no switch at all.",
-    "由传递性，蕴涵链一旦有一个变量为真，后面的变量都必须为真。所以沿着链条，取值只能从假变为真一次，不能再变回去。因此允许的模式由这个转变发生的位置决定，此外还有完全不转变的模式。",
+    "By transitivity, a chain of implications forces every later variable to be true as soon as one variable is true. So along the chain the values can only switch once, from false to true, and they can never switch back. The allowed patterns are therefore fixed by the place where this switch occurs, and there is also the pattern with no switch at all. For $(p_1 \\to p_2) \\land (p_2 \\to p_3)$ they are FFF, FFT, FTT and TTT: four rows.\n\n> **Watch out.** The number of falses at the start can be anything from $0$ to $k$, which is $k + 1$ choices, not $k$: both the all-true and the all-false patterns count.",
+    "由传递性，蕴涵链一旦有一个变量为真，后面的变量都必须为真。所以沿着链条，取值只能从假变为真一次，不能再变回去。因此允许的模式由这个转变发生的位置决定，此外还有完全不转变的模式。对 $(p_1 \\to p_2) \\land (p_2 \\to p_3)$，它们是 FFF、FFT、FTT 和 TTT：四行。\n\n> **注意。** 开头假的个数可以是 $0$ 到 $k$ 中任何一个，共 $k + 1$ 种，不是 $k$ 种：全真和全假的模式都要算。",
   ),
   generate(rng) {
     const k = rng.int(3, 8);
@@ -1767,17 +2007,42 @@ const implicationChainRows: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k * each, 2 ** (n - 1), 2 ** n - answer, answer + each],
-      solution:
-        extra === 0
-          ? t(
-              `The values along the chain must be some falses followed by trues. The number of falses can be anything from 0 to ${k}, which gives ${answer} rows.`,
-              `链条上的取值必须是若干个假后面跟着若干个真。假的个数可以是 0 到 ${k} 中的任何一个，所以有 ${answer} 行。`,
-            )
-          : t(
-              `The values along the chain must be some falses followed by trues. The number of falses can be anything from 0 to ${k}, which gives ${patterns} patterns. ${extra === 1 ? "The other variable is free" : `The other ${extra} variables are free`}, so each pattern fills ${each} rows, and $${patterns} \\cdot ${each} = ${answer}$.`,
-              `链条上的取值必须是若干个假后面跟着若干个真。假的个数可以是 0 到 ${k} 中的任何一个，所以有 ${patterns} 种模式。其余 ${extra} 个变量自由，所以每种模式占 ${each} 行，$${patterns} \\cdot ${each} = ${answer}$。`,
+      wrong: [2 ** (n - 1), answer + each],
+      mistakes: [
+        why(
+          k * each,
+          `That misses a pattern: the number of falses can be any of $0, 1, \\dots, ${k}$, which is ${k + 1} choices.`,
+          `这漏了一种模式：假的个数可以是 $0, 1, \\dots, ${k}$ 中任何一个，共 ${k + 1} 种。`,
+        ),
+        why(2 ** n - answer, "That counts the rows where the chain is false.", "这数的是链为假的行。"),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the patterns along the chain", "找出链上的模式"],
+            t(
+              `Once some $p_i$ is true, every later one must be, so the values read some falses followed by trues. The number of falses can be $0, 1, \\dots, ${k}$: ${patterns} patterns.`,
+              `一旦某个 $p_i$ 为真，后面的都必须为真，所以取值是若干个假后面跟着若干个真。假的个数可以是 $0, 1, \\dots, ${k}$：${patterns} 种模式。`,
             ),
+          ],
+          extra === 0
+            ? [
+                ["Count the rows", "数出行数"],
+                t(`There are no other variables, so there are ${answer} rows.`, `没有其他变量，所以有 ${answer} 行。`),
+              ]
+            : [
+                ["Fill in the free variables", "填入自由变量"],
+                t(
+                  `${extra === 1 ? "The other variable is free" : `The other ${extra} variables are free`}, so each pattern fills $2^{${extra}} = ${each}$ rows: $${patterns} \\cdot ${each} = ${answer}$.`,
+                  `其余 ${extra} 个变量自由，所以每种模式占 $2^{${extra}} = ${each}$ 行：$${patterns} \\cdot ${each} = ${answer}$。`,
+                ),
+              ],
+        ],
+        t(
+          "Try the shortest chain, $p_1 \\to p_2 \\to p_3$: the patterns are FFF, FFT, FTT and TTT, while FTF, TFF, TFT and TTF each break a link. That is $4 = 3 + 1$, as the rule says.",
+          "试最短的链 $p_1 \\to p_2 \\to p_3$：模式是 FFF、FFT、FTT 和 TTT，而 FTF、TFF、TFT、TTF 都会断开某一环。共 $4 = 3 + 1$ 种，与规律相符。",
+        ),
+      ),
     });
   },
 };
@@ -2468,8 +2733,8 @@ const quadraticTruthSet: KnowledgePointDef = {
   id: "counting-the-truth-set-of-a-quadratic-inequality",
   title: t("Counting the truth set of a quadratic inequality", "计算二次不等式真值集的大小"),
   explanation: t(
-    "The truth set of a predicate over the integers is often a run of consecutive integers. When a quadratic with positive leading coefficient factors as $(x - r)(x - s)$, it is negative exactly between its roots. The inequality $\\le 0$ includes both roots, and the strict inequality $< 0$ leaves them out. So the two versions differ by exactly two elements, which is why one must read the sign carefully before counting.",
-    "整数上谓词的真值集常常是一段连续的整数。当首项系数为正的二次式分解为 $(x - r)(x - s)$ 时，它恰好在两根之间为负。不等式 $\\le 0$ 包含两个根，严格不等式 $< 0$ 不包含。所以两种情况恰好差两个元素，这就是为什么计数前要仔细看符号。",
+    "The truth set of a predicate over the integers is often a run of consecutive integers. When a quadratic with positive leading coefficient factors as $(x - r)(x - s)$, it is negative exactly between its roots. The inequality $\\le 0$ includes both roots, and the strict inequality $< 0$ leaves them out. So the two versions differ by exactly two elements, which is why one must read the sign carefully before counting. For $x^2 - 5x + 4 = (x - 1)(x - 4)$, the predicate $\\le 0$ holds for $1, 2, 3, 4$ and $< 0$ only for $2, 3$.\n\n> **Watch out.** The integers from $r$ to $s$ number $s - r + 1$, not $s - r$; for the strict inequality take away both roots.",
+    "整数上谓词的真值集常常是一段连续的整数。当首项系数为正的二次式分解为 $(x - r)(x - s)$ 时，它恰好在两根之间为负。不等式 $\\le 0$ 包含两个根，严格不等式 $< 0$ 不包含。所以两种情况恰好差两个元素，这就是为什么计数前要仔细看符号。对 $x^2 - 5x + 4 = (x - 1)(x - 4)$，谓词 $\\le 0$ 对 $1, 2, 3, 4$ 成立，$< 0$ 只对 $2, 3$ 成立。\n\n> **注意。** 从 $r$ 到 $s$ 的整数有 $s - r + 1$ 个，不是 $s - r$ 个；严格不等式还要去掉两个根。",
   ),
   generate(rng) {
     const r = rng.int(-9, 6);
@@ -2477,15 +2742,53 @@ const quadraticTruthSet: KnowledgePointDef = {
     const strict = rng.pick([true, false]);
     const answer = strict ? s - r - 1 : s - r + 1;
     const form = poly([1, "x^2"], [-(r + s), "x"], [r * s, ""]);
+    const factored = `(${poly([1, "x"], [-r, ""])})(${poly([1, "x"], [-s, ""])})`;
     const sign = strict ? "<" : "\\le";
+    const [from, to] = strict ? [r + 1, s - 1] : [r, s];
     return numberProblem({
       prompt: t(`How many integers $x$ make the predicate $${form} ${sign} 0$ true?`, `有多少个整数 $x$ 使谓词 $${form} ${sign} 0$ 为真？`),
       answer,
       form: "integer",
-      wrong: [s - r, strict ? s - r + 1 : s - r - 1, s - r + 2, Math.abs(s) + 1],
-      solution: t(
-        `The quadratic has roots $${r}$ and $${s}$, and it is negative between them. ${strict ? "The roots themselves are excluded" : "The roots themselves are included"}, which leaves $${answer}$ integers.`,
-        `二次式的根是 $${r}$ 和 $${s}$，在它们之间为负。${strict ? "根本身不包含在内" : "根本身包含在内"}，所以有 $${answer}$ 个整数。`,
+      wrong: [s - r + 2, Math.abs(s) + 1],
+      mistakes: [
+        why(
+          s - r,
+          `That subtracts the roots; the integers from $${from}$ to $${to}$ number $${to} - (${from}) + 1$.`,
+          `这只是两根相减；从 $${from}$ 到 $${to}$ 的整数有 $${to} - (${from}) + 1$ 个。`,
+        ),
+        strict
+          ? why(
+              s - r + 1,
+              "That includes the roots, where the quadratic equals $0$ and is not less than $0$.",
+              "这包含了两个根，在那里二次式等于 $0$，并不小于 $0$。",
+            )
+          : why(
+              s - r - 1,
+              "That leaves out the roots, where the quadratic equals $0$ and so satisfies $\\le 0$.",
+              "这漏掉了两个根，在那里二次式等于 $0$，满足 $\\le 0$。",
+            ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Factor", "因式分解"],
+            t(
+              `$${form} = ${factored}$, with roots $${r}$ and $${s}$; it is negative between them and positive outside.`,
+              `$${form} = ${factored}$，根为 $${r}$ 和 $${s}$；在两根之间为负，两根之外为正。`,
+            ),
+          ],
+          [
+            ["Count the integers", "数出整数"],
+            t(
+              `${strict ? "The roots, where it equals $0$, are excluded" : "The roots, where it equals $0$, are included"}, so $x$ runs from $${from}$ to $${to}$: $${to} - (${from}) + 1 = ${answer}$ integers.`,
+              `${strict ? "根处等于 $0$，不包含在内" : "根处等于 $0$，包含在内"}，所以 $x$ 从 $${from}$ 到 $${to}$：$${to} - (${from}) + 1 = ${answer}$ 个整数。`,
+            ),
+          ],
+        ],
+        t(
+          `Try $x = ${r + 1}$: $(${1})(${r + 1 - s}) = ${r + 1 - s} < 0$, so it counts. Try $x = ${s + 1}$: $(${s + 1 - r})(1) = ${s + 1 - r} > 0$, so it does not.`,
+          `试 $x = ${r + 1}$：$(${1})(${r + 1 - s}) = ${r + 1 - s} < 0$，算在内。试 $x = ${s + 1}$：$(${s + 1 - r})(1) = ${s + 1 - r} > 0$，不算。`,
+        ),
       ),
     });
   },
@@ -2495,8 +2798,8 @@ const notBetweenCount: KnowledgePointDef = {
   id: "counting-the-values-outside-a-negated-conjunction",
   title: t("Counting the values outside a negated conjunction", "计算否定合取之外的值"),
   explanation: t(
-    "By De Morgan's law, the negation of $x > a \\land x < b$ is $x \\le a \\lor x \\ge b$. Notice that the strict inequalities become non-strict, so that $a$ and $b$ themselves satisfy the negation. On a finite domain, the truth set of a negation is the complement of the original truth set. So it is usually quickest to count the values that satisfy the conjunction, and then to subtract this from the size of the domain.",
-    "由德摩根律，$x > a \\land x < b$ 的否定是 $x \\le a \\lor x \\ge b$。注意严格不等式变成了非严格的，所以 $a$ 和 $b$ 本身满足否定。在有限论域上，否定的真值集是原真值集的补集。所以通常最快的方法是数满足合取的值，再从论域的大小中减去。",
+    "By De Morgan's law, the negation of $x > a \\land x < b$ is $x \\le a \\lor x \\ge b$. Notice that the strict inequalities become non-strict, so that $a$ and $b$ themselves satisfy the negation. On a finite domain, the truth set of a negation is the complement of the original truth set. So it is usually quickest to count the values that satisfy the conjunction, and then to subtract this from the size of the domain. On $\\{1, \\dots, 20\\}$, $x > 5 \\land x < 9$ holds for $6, 7, 8$, so its negation holds for $20 - 3 = 17$ values.\n\n> **Watch out.** $a$ and $b$ themselves make the negation true: the negation of $x > a$ is $x \\le a$, which includes $a$.",
+    "由德摩根律，$x > a \\land x < b$ 的否定是 $x \\le a \\lor x \\ge b$。注意严格不等式变成了非严格的，所以 $a$ 和 $b$ 本身满足否定。在有限论域上，否定的真值集是原真值集的补集。所以通常最快的方法是数满足合取的值，再从论域的大小中减去。在 $\\{1, \\dots, 20\\}$ 上，$x > 5 \\land x < 9$ 对 $6, 7, 8$ 成立，所以它的否定对 $20 - 3 = 17$ 个值成立。\n\n> **注意。** $a$ 和 $b$ 本身使否定为真：$x > a$ 的否定是 $x \\le a$，包含 $a$。",
   ),
   generate(rng) {
     const n = rng.int(12, 60);
@@ -2511,10 +2814,41 @@ const notBetweenCount: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [inside, answer - 1, answer - 2, n],
-      solution: t(
-        `The conjunction holds for the $${inside}$ integers strictly between ${a} and ${b}. The negation holds for the other $${n} - ${inside} = ${answer}$ values.`,
-        `合取对严格介于 ${a} 和 ${b} 之间的 $${inside}$ 个整数成立。否定对其余 $${n} - ${inside} = ${answer}$ 个值成立。`,
+      mistakes: [
+        why(inside, "That counts the values where the conjunction holds, not its negation.", "这数的是合取成立的值，不是它的否定。"),
+        why(answer - 2, `That leaves out ${a} and ${b}; both satisfy the negation.`, `这漏掉了 ${a} 和 ${b}；它们都满足否定。`),
+        why(
+          answer - 1,
+          `That leaves out one of ${a} and ${b}; both satisfy the negation.`,
+          `这漏掉了 ${a} 和 ${b} 中的一个；它们都满足否定。`,
+        ),
+        why(
+          n,
+          `That counts the whole domain; the values strictly between ${a} and ${b} make the negation false.`,
+          `这数了整个论域；严格介于 ${a} 和 ${b} 之间的值使否定为假。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Count the conjunction", "数出合取的值"],
+            t(
+              `$x > ${a} \\land x < ${b}$ holds for $${a + 1}, \\dots, ${b - 1}$: $${inside}$ values.`,
+              `$x > ${a} \\land x < ${b}$ 对 $${a + 1}, \\dots, ${b - 1}$ 成立：$${inside}$ 个值。`,
+            ),
+          ],
+          [
+            ["Take the complement", "取补集"],
+            t(
+              `The negation holds for the other $${n} - ${inside} = ${answer}$ values.`,
+              `否定对其余 $${n} - ${inside} = ${answer}$ 个值成立。`,
+            ),
+          ],
+        ],
+        t(
+          `Use De Morgan's law instead: $x \\le ${a}$ gives ${a} values and $x \\ge ${b}$ gives $${n} - ${b} + 1 = ${n - b + 1}$, together $${a} + ${n - b + 1} = ${answer}$.`,
+          `改用德摩根律：$x \\le ${a}$ 有 ${a} 个值，$x \\ge ${b}$ 有 $${n} - ${b} + 1 = ${n - b + 1}$ 个，合计 $${a} + ${n - b + 1} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2524,8 +2858,8 @@ const conditionalFromSizes: KnowledgePointDef = {
   id: "the-size-of-the-truth-set-of-a-conditional",
   title: t("The size of the truth set of a conditional", "条件句真值集的大小"),
   explanation: t(
-    "The conditional $P(x) \\Rightarrow Q(x)$ fails only where $P$ holds and $Q$ does not. In terms of sets, its truth set is the complement of $P \\setminus Q$. The number of elements in $P \\setminus Q$ is $|P| - |P \\cap Q|$, so the conditional holds for all the remaining elements of the domain. Elements outside $P$ all count as true, whether or not they lie in $Q$, and that is the easy part to overlook.",
-    "条件句 $P(x) \\Rightarrow Q(x)$ 只在 $P$ 成立而 $Q$ 不成立时为假。用集合的语言，它的真值集是 $P \\setminus Q$ 的补集。$P \\setminus Q$ 的元素个数是 $|P| - |P \\cap Q|$，所以条件句对论域中所有其余元素成立。$P$ 之外的元素都算真，不管它们是否在 $Q$ 中，这是容易忽略的部分。",
+    "The conditional $P(x) \\Rightarrow Q(x)$ fails only where $P$ holds and $Q$ does not. In terms of sets, its truth set is the complement of $P \\setminus Q$. The number of elements in $P \\setminus Q$ is $|P| - |P \\cap Q|$, so the conditional holds for all the remaining elements of the domain. In a domain of $30$ where $P$ holds for $10$ and both hold for $4$, it fails for $6$ elements and holds for $24$.\n\n> **Watch out.** Elements outside $P$ all count as true, whether or not they lie in $Q$; that is the part easy to overlook.",
+    "条件句 $P(x) \\Rightarrow Q(x)$ 只在 $P$ 成立而 $Q$ 不成立时为假。用集合的语言，它的真值集是 $P \\setminus Q$ 的补集。$P \\setminus Q$ 的元素个数是 $|P| - |P \\cap Q|$，所以条件句对论域中所有其余元素成立。在 $30$ 个元素的论域中，若 $P$ 对 $10$ 个成立、两者都对 $4$ 个成立，则它对 $6$ 个元素为假，对 $24$ 个为真。\n\n> **注意。** $P$ 之外的元素都算真，不管它们是否在 $Q$ 中；这是容易忽略的部分。",
   ),
   generate(rng) {
     const both = rng.int(1, 12);
@@ -2543,10 +2877,43 @@ const conditionalFromSizes: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [both, size - p, size - both, size - q + both, onlyP],
-      solution: t(
-        `It fails where $P$ holds without $Q$, which is $${p} - ${both} = ${onlyP}$ elements. So it is true for $${size} - ${onlyP} = ${answer}$.`,
-        `它在 $P$ 成立而 $Q$ 不成立时为假，这样的元素有 $${p} - ${both} = ${onlyP}$ 个。所以它对 $${size} - ${onlyP} = ${answer}$ 个元素为真。`,
+      wrong: [size - q + both],
+      mistakes: [
+        why(
+          both,
+          "That counts only where both hold; the elements outside $P$ make the conditional true as well.",
+          "这只数了两者都成立的元素；$P$ 之外的元素也使条件句为真。",
+        ),
+        why(
+          size - p,
+          "That counts only the elements outside $P$; those where both hold make it true as well.",
+          "这只数了 $P$ 之外的元素；两者都成立的元素也使它为真。",
+        ),
+        why(onlyP, "That counts the elements where the conditional is false.", "这数的是条件句为假的元素。"),
+        why(
+          size - both,
+          "That takes away the elements where both hold, but the conditional is true there; it fails only where $P$ holds without $Q$.",
+          "这去掉了两者都成立的元素，但条件句在那里为真；它只在 $P$ 成立而 $Q$ 不成立时为假。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find where it fails", "找出为假之处"],
+            t(
+              `It fails where $P$ holds without $Q$: $${p} - ${both} = ${onlyP}$ elements.`,
+              `它在 $P$ 成立而 $Q$ 不成立时为假：$${p} - ${both} = ${onlyP}$ 个元素。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(`It is true for $${size} - ${onlyP} = ${answer}$ elements.`, `它对 $${size} - ${onlyP} = ${answer}$ 个元素为真。`),
+          ],
+        ],
+        t(
+          `Count the true elements directly: $${size} - ${p} = ${size - p}$ lie outside $P$ and ${both} satisfy both, together $${size - p} + ${both} = ${answer}$.`,
+          `直接数为真的元素：$P$ 之外有 $${size} - ${p} = ${size - p}$ 个，两者都成立的有 ${both} 个，合计 $${size - p} + ${both} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2556,15 +2923,19 @@ const whereExistsFails: KnowledgePointDef = {
   id: "counting-the-values-where-an-inner-exists-fails",
   title: t("Counting the values where an inner exists fails", "计算内层存在量词不成立的值"),
   explanation: t(
-    "To disprove $\\forall x\\,\\exists y\\,P(x, y)$, one needs an $x$ for which $\\forall y\\,\\neg P(x, y)$ holds, meaning that no $y$ works. So each value of $x$ is tested on its own. When $P$ says that $x + y = k$, the only possible partner is $y = k - x$, and the question is whether this number lies in the domain of $y$. Each $x$ whose partner lies outside is a counterexample to the statement.",
-    "要否定 $\\forall x\\,\\exists y\\,P(x, y)$，需要一个 $x$ 使 $\\forall y\\,\\neg P(x, y)$ 成立，也就是没有 $y$ 可行。所以要逐个检验 $x$ 的每个值。当 $P$ 表示 $x + y = k$ 时，唯一可能的搭档是 $y = k - x$，问题是这个数是否在 $y$ 的论域中。搭档落在论域之外的每个 $x$ 都是这个命题的反例。",
+    "To disprove $\\forall x\\,\\exists y\\,P(x, y)$, one needs an $x$ for which $\\forall y\\,\\neg P(x, y)$ holds, meaning that no $y$ works. So each value of $x$ is tested on its own. When $P$ says that $x + y = k$, the only possible partner is $y = k - x$, and the question is whether this number lies in the domain of $y$. With $x, y \\in \\{1, \\dots, 5\\}$ and $k = 8$, the partners of $x = 1, 2$ would be $7, 6$, outside the domain, so two values of $x$ have none.\n\n> **Watch out.** The partner must lie in the domain at both ends: $k - x$ can be too large as well as too small.",
+    "要否定 $\\forall x\\,\\exists y\\,P(x, y)$，需要一个 $x$ 使 $\\forall y\\,\\neg P(x, y)$ 成立，也就是没有 $y$ 可行。所以要逐个检验 $x$ 的每个值。当 $P$ 表示 $x + y = k$ 时，唯一可能的搭档是 $y = k - x$，问题是这个数是否在 $y$ 的论域中。若 $x, y \\in \\{1, \\dots, 5\\}$，$k = 8$，则 $x = 1, 2$ 的搭档应是 $7, 6$，在论域之外，所以有两个 $x$ 没有搭档。\n\n> **注意。** 搭档必须两头都落在论域内：$k - x$ 可能太大，也可能太小。",
   ),
   generate(rng) {
     const n = rng.int(4, 20);
     const m = rng.int(4, 20);
     const k = rng.int(3, n + m);
-    const good = oneTo(n).filter((x) => k - x >= 1 && k - x <= m).length;
+    const has = (x: number) => k - x >= 1 && k - x <= m;
+    const good = oneTo(n).filter(has).length;
     const answer = n - good;
+    const lo = Math.max(1, k - m);
+    const hi = Math.min(n, k - 1);
+    const without = oneTo(n).find((x) => !has(x));
     return numberProblem({
       prompt: t(
         `Let $x$ range over $\\{1, \\dots, ${n}\\}$ and $y$ over $\\{1, \\dots, ${m}\\}$. For how many values of $x$ is $\\neg\\exists y\\,(x + y = ${k})$ true?`,
@@ -2572,10 +2943,47 @@ const whereExistsFails: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [good, Math.abs(n - m), n, answer + 1],
-      solution: t(
-        `A partner $y = ${k} - x$ exists for $${good}$ of the values of $x$, since it must lie between 1 and ${m}. This leaves $${n} - ${good} = ${answer}$ values without one.`,
-        `$y = ${k} - x$ 必须在 1 和 ${m} 之间，这对 $${good}$ 个 $x$ 成立。所以没有搭档的值有 $${n} - ${good} = ${answer}$ 个。`,
+      wrong: [Math.abs(n - m), answer + 1],
+      mistakes: [
+        why(
+          good,
+          "That counts the $x$ that do have a partner; the statement asks for those without one.",
+          "这数的是有搭档的 $x$；命题问的是没有搭档的。",
+        ),
+        why(
+          n,
+          `That counts every $x$; some have the partner $y = ${k} - x$ in the domain.`,
+          `这数了每个 $x$；有些 $x$ 的搭档 $y = ${k} - x$ 在论域内。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find which $x$ have a partner", "找出有搭档的 $x$"],
+            good === 0
+              ? t(
+                  `The only candidate is $y = ${k} - x$, and it would need $1 \\le ${k} - x \\le ${m}$; no $x$ in the domain manages that.`,
+                  `唯一的候选是 $y = ${k} - x$，需要 $1 \\le ${k} - x \\le ${m}$；论域中没有 $x$ 做得到。`,
+                )
+              : t(
+                  `The only candidate is $y = ${k} - x$, and $1 \\le ${k} - x \\le ${m}$ means $${k - m} \\le x \\le ${k - 1}$. Within the domain that is $x = ${lo}, \\dots, ${hi}$: $${good}$ values.`,
+                  `唯一的候选是 $y = ${k} - x$，而 $1 \\le ${k} - x \\le ${m}$ 即 $${k - m} \\le x \\le ${k - 1}$。在论域内是 $x = ${lo}, \\dots, ${hi}$：$${good}$ 个值。`,
+                ),
+          ],
+          [
+            ["Count the rest", "数出其余的"],
+            t(`$${n} - ${good} = ${answer}$ values of $x$ have no partner.`, `没有搭档的 $x$ 有 $${n} - ${good} = ${answer}$ 个。`),
+          ],
+        ],
+        without === undefined
+          ? t(
+              `Test both ends: $x = 1$ has the partner $y = ${k - 1}$ and $x = ${n}$ has $y = ${k - n}$, both in $\\{1, \\dots, ${m}\\}$, so every $x$ has one.`,
+              `检验两端：$x = 1$ 的搭档是 $y = ${k - 1}$，$x = ${n}$ 的搭档是 $y = ${k - n}$，都在 $\\{1, \\dots, ${m}\\}$ 中，所以每个 $x$ 都有搭档。`,
+            )
+          : t(
+              `Test one of them: $x = ${without}$ would need $y = ${k - without}$, which is not in $\\{1, \\dots, ${m}\\}$, so indeed no $y$ works.`,
+              `检验其中一个：$x = ${without}$ 需要 $y = ${k - without}$，它不在 $\\{1, \\dots, ${m}\\}$ 中，所以确实没有 $y$ 可行。`,
+            ),
       ),
     });
   },

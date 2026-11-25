@@ -26,17 +26,28 @@ export interface SetProblem {
   readonly solution: Text;
   /** wrong are the sets typical mistakes produce; sets equal to the answer are dropped. */
   readonly wrong?: readonly (readonly number[])[];
+  /** mistakes say, in English and Chinese, what is wrong with sets a learner may give; sets equal to the answer are dropped. */
+  readonly mistakes?: readonly (readonly [values: readonly number[], en: string, zh: string])[];
 }
 
 /** setProblem builds a problem whose answer is a finite set of numbers, typed as a list such as "\{2, 4, 6\}", checked by the "solutions" checker. */
 export function setProblem(p: SetProblem): Problem {
   const expected = { var: "x", values: uniqueSorted(p.values).map(String) };
+  const seen = new Set<string>();
+  const mistakes = (p.mistakes ?? []).flatMap(([values, en, zh]) => {
+    // The checker matches a mistake written as a bare list, which any way of writing the same set then matches.
+    const response = values.length === 0 ? "\\varnothing" : uniqueSorted(values).join(", ");
+    if (seen.has(response) || solutionsChecker.check(expected, response).correct) return [];
+    seen.add(response);
+    return [{ response, feedback: t(en, zh) }];
+  });
   return {
     prompt: t(`${p.prompt.en}${SET_HINT.en}`, `${p.prompt["zh-CN"]}${SET_HINT["zh-CN"]}`),
     answer: { checker: "solutions", expected, input: { kind: "math" } },
     solution: p.solution,
     canonical: setTex(p.values),
     wrong: [...new Set((p.wrong ?? []).map(setTex))].filter((w) => !solutionsChecker.check(expected, w).correct),
+    ...(mistakes.length > 0 && { mistakes }),
   };
 }
 

@@ -310,8 +310,8 @@ const negatedConjunctionSet = point(
   "the-size-of-a-negated-conjunction",
   ["The size of a negated conjunction", "否定合取的真值集大小"],
   [
-    "The truth set of a negation is the complement of the original truth set. So to count where a conjunction fails, count where it holds and subtract from the universe. This is usually shorter than working out the disjunction that the negation becomes.",
-    "否定的真值集是原真值集的补集。所以要计算合取不成立的个数，可以先数它成立的个数，再从全集中减去。这通常比求出否定后的析取更简便。",
+    "The truth set of a negation is the complement of the original truth set. So to count where a conjunction fails, count where it holds and subtract from the universe. This is usually shorter than working out the disjunction that the negation becomes. On $\\{1, \\dots, 10\\}$ with $P(x)$: $x > 6$ and $Q(x)$: $x$ is even, the conjunction holds for $8$ and $10$, so its negation holds for $10 - 2 = 8$ elements.\n\n> **Watch out.** $\\neg(P \\wedge Q)$ holds where at least one of $P$, $Q$ fails, not only where both fail: it is $\\neg P \\vee \\neg Q$, not $\\neg P \\wedge \\neg Q$.",
+    "否定的真值集是原真值集的补集。所以要计算合取不成立的个数，可以先数它成立的个数，再从全集中减去。这通常比求出否定后的析取更简便。在 $\\{1, \\dots, 10\\}$ 上，取 $P(x)$：$x > 6$，$Q(x)$：$x$ 是偶数，合取对 $8$ 和 $10$ 成立，所以它的否定对 $10 - 2 = 8$ 个元素成立。\n\n> **注意。** $\\neg(P \\wedge Q)$ 在 $P$、$Q$ 至少有一个不成立时就成立，不只是两者都不成立时：它是 $\\neg P \\vee \\neg Q$，不是 $\\neg P \\wedge \\neg Q$。",
   ],
   (rng) => {
     const n = rng.int(12, 40);
@@ -328,16 +328,31 @@ const negatedConjunctionSet = point(
       if (p && q) both++;
     }
     const answer = n - both;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `Let $U = \\{1, 2, \\dots, ${n}\\}$, $P(x)$ be "$x > ${a}$" and $Q(x)$ be "$x$ is a multiple of $${d}$". How many elements are in the truth set of $\\neg(P(x) \\wedge Q(x))$?`,
+          `设 $U = \\{1, 2, \\dots, ${n}\\}$，$P(x)$ 为“$x > ${a}$”，$Q(x)$ 为“$x$ 是 $${d}$ 的倍数”。$\\neg(P(x) \\wedge Q(x))$ 的真值集有多少个元素？`,
+        ],
+        answer,
+        [both, n - greater - multiples + both, n - greater],
+        [
+          `**Step 1: Count where the conjunction holds.** It holds for the multiples of $${d}$ above $${a}$: there are $${both}$ of them.\n\n**Step 2: Take the complement.** The negation holds for the other $${n} - ${both} = ${answer}$ elements.\n\n**Check.** Count $\\neg P \\vee \\neg Q$ directly: $\\neg P$ holds for the $${a}$ elements up to $${a}$, and among the $${greater}$ elements above $${a}$, $\\neg Q$ holds for $${greater} - ${both} = ${greater - both}$. Together $${a} + ${greater - both} = ${answer}$.`,
+          `**第一步：数合取成立的元素。** 它对大于 $${a}$ 的 $${d}$ 的倍数成立：共 $${both}$ 个。\n\n**第二步：取补集。** 否定对其余 $${n} - ${both} = ${answer}$ 个元素成立。\n\n**检验。** 直接数 $\\neg P \\vee \\neg Q$：$\\neg P$ 对不超过 $${a}$ 的 $${a}$ 个元素成立；大于 $${a}$ 的 $${greater}$ 个元素中，$\\neg Q$ 对 $${greater} - ${both} = ${greater - both}$ 个成立。合计 $${a} + ${greater - both} = ${answer}$。`,
+        ],
+      ),
       [
-        `Let $U = \\{1, 2, \\dots, ${n}\\}$, $P(x)$ be "$x > ${a}$" and $Q(x)$ be "$x$ is a multiple of $${d}$". How many elements are in the truth set of $\\neg(P(x) \\wedge Q(x))$?`,
-        `设 $U = \\{1, 2, \\dots, ${n}\\}$，$P(x)$ 为“$x > ${a}$”，$Q(x)$ 为“$x$ 是 $${d}$ 的倍数”。$\\neg(P(x) \\wedge Q(x))$ 的真值集有多少个元素？`,
-      ],
-      answer,
-      [both, n - greater - multiples + both, n - greater],
-      [
-        `There are $${both}$ multiples of $${d}$ above $${a}$, and those are the elements where the conjunction holds. The complement has $${n} - ${both} = ${answer}$ elements.`,
-        `大于 $${a}$ 的 $${d}$ 的倍数有 $${both}$ 个，这些就是合取成立的元素。补集有 $${n} - ${both} = ${answer}$ 个元素。`,
+        say(String(both), "That counts where the conjunction holds, not its negation.", "这数的是合取成立的元素，不是它的否定。"),
+        say(
+          String(n - greater - multiples + both),
+          "That counts where both $P$ and $Q$ fail; the negation also holds where just one of them fails.",
+          "这数的是 $P$ 与 $Q$ 都不成立的元素；只有一个不成立时否定也成立。",
+        ),
+        say(
+          String(n - greater),
+          "That counts only where $P$ fails; the negation also holds where $Q$ fails.",
+          "这只数了 $P$ 不成立的元素；$Q$ 不成立时否定也成立。",
+        ),
       ],
     );
   },
@@ -347,8 +362,8 @@ const necessarySufficient = point(
   "necessary-and-sufficient-in-symbols",
   ["Necessary and sufficient in symbols", "必要与充分的符号表示"],
   [
-    "Sufficient conditions go in front of the arrow and necessary conditions behind it, which is easy to reverse. The phrase with only if marks the consequent, and the phrase with unless means that the stated condition holds whenever the other one fails.",
-    "充分条件放在箭头前面，必要条件放在箭头后面，这很容易弄反。“只有……才”标出的是必要条件，而“除非”的说法表示另一个条件不成立时所述条件成立。",
+    'Sufficient conditions go in front of the arrow and necessary conditions behind it, which is easy to reverse. The phrase with only if marks the consequent, and the phrase with unless means that the stated condition holds whenever the other one fails. "A number is divisible by $4$ only if it is even" is "divisible by $4$" $\\Rightarrow$ "even": being even is necessary, being divisible by $4$ sufficient.\n\n> **Watch out.** "Only if" introduces the conclusion, not the hypothesis: "$p$ only if $q$" is $p \\Rightarrow q$, the same as "$q$ is necessary for $p$".',
+    "充分条件放在箭头前面，必要条件放在箭头后面，这很容易弄反。“只有……才”标出的是必要条件，而“除非”的说法表示另一个条件不成立时所述条件成立。“只有是偶数，一个数才能被 $4$ 整除”就是“被 $4$ 整除”$\\Rightarrow$“是偶数”：是偶数是必要条件，被 $4$ 整除是充分条件。\n\n> **注意。** “只有 $q$，才 $p$”中 $q$ 是结论，不是前提：它是 $p \\Rightarrow q$，与“$q$ 是 $p$ 的必要条件”相同。",
   ],
   (rng) => {
     const [a, b] = rng.sample(LETTERS, 2) as [string, string];
@@ -356,13 +371,22 @@ const necessarySufficient = point(
     const backward = `${b} \\Rightarrow ${a}`;
     const unless = `\\neg ${b} \\Rightarrow ${a}`;
     const iff = `${a} \\Leftrightarrow ${b}`;
-    const cases: readonly (readonly [string, string, string, string, string])[] = [
+    const readForward: Pair = [
+      `$${forward}$ says that $${a}$ cannot hold without $${b}$, and that $${a}$ alone is enough for $${b}$`,
+      `$${forward}$ 是说没有 $${b}$ 就不会有 $${a}$，且单有 $${a}$ 就足以得到 $${b}$`,
+    ];
+    const readBackward: Pair = [
+      `$${backward}$ says that $${b}$ cannot hold without $${a}$, and that $${b}$ alone is enough for $${a}$`,
+      `$${backward}$ 是说没有 $${a}$ 就不会有 $${b}$，且单有 $${b}$ 就足以得到 $${a}$`,
+    ];
+    const cases: readonly (readonly [string, string, string, string, string, Pair])[] = [
       [
         `$${a}$ is necessary for $${b}$`,
         `$${a}$ 是 $${b}$ 的必要条件`,
         backward,
         `If $${b}$ holds, then the necessary condition $${a}$ must hold`,
         `如果 $${b}$ 成立，那么必要条件 $${a}$ 一定成立`,
+        readBackward,
       ],
       [
         `$${a}$ is sufficient for $${b}$`,
@@ -370,6 +394,7 @@ const necessarySufficient = point(
         forward,
         `Having the sufficient condition $${a}$ already gives $${b}$`,
         `有了充分条件 $${a}$，就能得到 $${b}$`,
+        readForward,
       ],
       [
         `$${a}$ only if $${b}$`,
@@ -377,6 +402,7 @@ const necessarySufficient = point(
         forward,
         `If $${a}$ holds, it can only be because $${b}$ holds`,
         `如果 $${a}$ 成立，那只能是因为 $${b}$ 成立`,
+        readForward,
       ],
       [
         `$${a}$ unless $${b}$`,
@@ -384,6 +410,10 @@ const necessarySufficient = point(
         unless,
         `The statement $${a}$ is guaranteed as soon as $${b}$ fails`,
         `只要 $${b}$ 不成立，$${a}$ 就成立`,
+        [
+          `$${unless}$ is equivalent to its contrapositive $\\neg ${a} \\Rightarrow ${b}$: $${a}$ can fail only when $${b}$ holds, which is what "unless" says`,
+          `$${unless}$ 等价于它的逆否命题 $\\neg ${a} \\Rightarrow ${b}$：只有 $${b}$ 成立时 $${a}$ 才可能不成立，这正是“除非”的意思`,
+        ],
       ],
       [
         `$${b}$ whenever $${a}$`,
@@ -391,6 +421,7 @@ const necessarySufficient = point(
         forward,
         `Each time $${a}$ holds, $${b}$ holds as well`,
         `每当 $${a}$ 成立时，$${b}$ 也成立`,
+        readForward,
       ],
       [
         `$${a}$ whenever $${b}$`,
@@ -398,15 +429,40 @@ const necessarySufficient = point(
         backward,
         `Each time $${b}$ holds, $${a}$ holds as well`,
         `每当 $${b}$ 成立时，$${a}$ 也成立`,
+        readBackward,
       ],
     ];
-    const [en, zh, correct, why, zhWhy] = rng.pick(cases);
-    return choose(
-      rng,
-      [`Which formula says "${en}"?`, `哪个公式表示“${zh}”？`],
-      same(correct),
-      [forward, backward, unless, iff].filter((f) => f !== correct).map(same),
-      [`${why}, so the formula is $${correct}$.`, `${zhWhy}，所以公式是 $${correct}$。`],
+    const [en, zh, correct, why, zhWhy, check] = rng.pick(cases);
+    const reasons: Reason[] = [
+      [
+        same(forward)[0],
+        `That makes $${a}$ the hypothesis: it says $${a}$ is sufficient for $${b}$.`,
+        `这把 $${a}$ 当作前提：它说的是 $${a}$ 是 $${b}$ 的充分条件。`,
+      ],
+      [
+        same(backward)[0],
+        `That makes $${b}$ the hypothesis: it says $${a}$ is necessary for $${b}$.`,
+        `这把 $${b}$ 当作前提：它说的是 $${a}$ 是 $${b}$ 的必要条件。`,
+      ],
+      [
+        same(unless)[0],
+        `That says $${a}$ holds whenever $${b}$ fails, which is "$${a}$ unless $${b}$".`,
+        `这说的是 $${b}$ 不成立时 $${a}$ 成立，即“除非 $${b}$，否则 $${a}$”。`,
+      ],
+      [same(iff)[0], "That claims both directions; the sentence states only one.", "这断言了两个方向；句子只说了一个方向。"],
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [`Which formula says "${en}"?`, `哪个公式表示“${zh}”？`],
+        same(correct),
+        [forward, backward, unless, iff].filter((f) => f !== correct).map(same),
+        [
+          `**Step 1: Find the hypothesis.** ${why}.\n\n**Step 2: Write the arrow.** The hypothesis goes in front, so the formula is $${correct}$.\n\n**Check.** Read the formula back: ${check[0]}, which matches "${en}".`,
+          `**第一步：找出前提。** ${zhWhy}。\n\n**第二步：写出箭头。** 前提放在前面，所以公式是 $${correct}$。\n\n**检验。** 把公式读回去：${check[1]}，与“${zh}”相符。`,
+        ],
+      ),
+      reasons,
     );
   },
 );
@@ -415,8 +471,8 @@ const nestedNegation = point(
   "negating-two-nested-quantifiers",
   ["Negating two nested quantifiers", "否定两层嵌套量词"],
   [
-    "To negate a statement with two quantifiers, flip each quantifier in turn and negate the inner condition. The order of the variables stays the same. A common mistake is to flip just one quantifier, or to negate $<$ as $>$, when the negation of $<$ is $\\ge$.",
-    "否定含两个量词的命题时，要依次翻转每个量词，并否定内层条件。变量的顺序不变。常见的错误是只翻转一个量词，或者把 $<$ 否定成 $>$，而 $<$ 的否定其实是 $\\ge$。",
+    "To negate a statement with two quantifiers, flip each quantifier in turn and negate the inner condition. The order of the variables stays the same. The negation of $\\forall x\\, \\exists y,\\ y < 2x$ is $\\exists x\\, \\forall y,\\ y \\ge 2x$.\n\n> **Watch out.** Flip both quantifiers, not just one, and negate $<$ as $\\ge$, not $>$: the case of equality must land on one side or the other.",
+    "否定含两个量词的命题时，要依次翻转每个量词，并否定内层条件。变量的顺序不变。$\\forall x\\, \\exists y,\\ y < 2x$ 的否定是 $\\exists x\\, \\forall y,\\ y \\ge 2x$。\n\n> **注意。** 两个量词都要翻转，不能只翻转一个；$<$ 的否定是 $\\ge$，不是 $>$：相等的情形必须落在某一边。",
   ],
   (rng) => {
     const k = rng.pick([-7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -425,23 +481,52 @@ const nestedNegation = point(
     const some = "\\exists x \\in \\mathbb{Z},\\ \\forall y \\in \\mathbb{Z},\\ ";
     const twoSame = "\\exists x \\in \\mathbb{Z},\\ \\exists y \\in \\mathbb{Z},\\ ";
     const twoAll = "\\forall x \\in \\mathbb{Z},\\ \\forall y \\in \\mathbb{Z},\\ ";
-    const [rel, neg] = rng.pick([
-      ["<", "\\ge"],
-      ["\\le", ">"],
-      [">", "\\le"],
-      ["\\ge", "<"],
+    const [rel, neg, opposite] = rng.pick([
+      ["<", "\\ge", ">"],
+      ["\\le", ">", "\\ge"],
+      [">", "\\le", "<"],
+      ["\\ge", "<", "\\le"],
     ] as const);
+    const witness = (r: string) => (r === "<" ? `${expr} - 1` : r === ">" ? `${expr} + 1` : expr);
     const startAll = rng.bool();
     const start = startAll ? all : some;
     const flipped = startAll ? some : all;
-    return choose(
-      rng,
-      [`What is the negation of $${start}y ${rel} ${expr}$?`, `$${start}y ${rel} ${expr}$ 的否定是什么？`],
-      same(`${flipped}y ${neg} ${expr}`),
-      [same(`${flipped}y ${rel} ${expr}`), same(`${start}y ${neg} ${expr}`), same(`${startAll ? twoSame : twoAll}y ${neg} ${expr}`)],
+    const noNegate = same(`${flipped}y ${rel} ${expr}`);
+    const noFlip = same(`${start}y ${neg} ${expr}`);
+    const half = same(`${startAll ? twoSame : twoAll}y ${neg} ${expr}`);
+    const strict = same(`${flipped}y ${opposite} ${expr}`);
+    return reasoned(
+      choose(
+        rng,
+        [`What is the negation of $${start}y ${rel} ${expr}$?`, `$${start}y ${rel} ${expr}$ 的否定是什么？`],
+        same(`${flipped}y ${neg} ${expr}`),
+        [noNegate, noFlip, half, strict],
+        [
+          `**Step 1: Flip the quantifiers.** The negation passes through both quantifiers in turn, so $${startAll ? "\\forall x\\, \\exists y" : "\\exists x\\, \\forall y"}$ becomes $${startAll ? "\\exists x\\, \\forall y" : "\\forall x\\, \\exists y"}$, in the same order.\n\n**Step 2: Negate the condition.** $y ${rel} ${expr}$ becomes $y ${neg} ${expr}$.\n\n**Check.** ${
+            startAll
+              ? `The statement is true: for each $x$ take $y = ${witness(rel)}$. So the negation must be false, and it is: for any $x$, that same $y$ breaks $y ${neg} ${expr}$.`
+              : `The statement is false: for any $x$, $y = ${witness(neg)}$ breaks it. So the negation must be true, and it is: for each $x$, that $y$ satisfies $y ${neg} ${expr}$.`
+          }`,
+          `**第一步：翻转量词。** 否定依次穿过两个量词，所以 $${startAll ? "\\forall x\\, \\exists y" : "\\exists x\\, \\forall y"}$ 变为 $${startAll ? "\\exists x\\, \\forall y" : "\\forall x\\, \\exists y"}$，次序不变。\n\n**第二步：否定条件。** $y ${rel} ${expr}$ 变为 $y ${neg} ${expr}$。\n\n**检验。** ${
+            startAll
+              ? `原命题为真：对每个 $x$ 取 $y = ${witness(rel)}$。所以否定必为假，确实如此：对任何 $x$，同一个 $y$ 使 $y ${neg} ${expr}$ 不成立。`
+              : `原命题为假：对任何 $x$，$y = ${witness(neg)}$ 都使它不成立。所以否定必为真，确实如此：对每个 $x$，这个 $y$ 满足 $y ${neg} ${expr}$。`
+          }`,
+        ],
+      ),
       [
-        `Each quantifier flips, in the same order, and the condition $y ${rel} ${expr}$ becomes $y ${neg} ${expr}$.`,
-        `每个量词都翻转，顺序不变，条件 $y ${rel} ${expr}$ 变为 $y ${neg} ${expr}$。`,
+        [noNegate[0], "That flips the quantifiers but does not negate the condition.", "这翻转了量词，却没有否定条件。"],
+        [
+          noFlip[0],
+          "That negates the condition but keeps the quantifiers; both must flip.",
+          "这否定了条件，却保留了量词；两个量词都要翻转。",
+        ],
+        [half[0], "That flips only one of the two quantifiers.", "这只翻转了两个量词中的一个。"],
+        [
+          strict[0],
+          `The negation of $${rel}$ is $${neg}$, not $${opposite}$: equality belongs to the negation.`,
+          `$${rel}$ 的否定是 $${neg}$，不是 $${opposite}$：相等的情形属于否定。`,
+        ],
       ],
     );
   },
@@ -451,8 +536,8 @@ const quantifierOrder = point(
   "why-the-order-of-quantifiers-matters",
   ["Why the order of quantifiers matters", "量词顺序为何重要"],
   [
-    "In $\\forall x\\, \\exists y$, the value of $y$ may change with $x$, but in $\\exists y\\, \\forall x$, one value of $y$ must work for every $x$. So the second statement is stronger: it implies the first, but the first may be true without it.",
-    "在 $\\forall x\\, \\exists y$ 中，$y$ 的值可以随 $x$ 改变，但在 $\\exists y\\, \\forall x$ 中，同一个 $y$ 必须对所有 $x$ 都成立。所以后者更强：它蕴涵前者，但前者可以在它不成立时为真。",
+    'In $\\forall x\\, \\exists y$, the value of $y$ may change with $x$, but in $\\exists y\\, \\forall x$, one value of $y$ must work for every $x$. So the second statement is stronger: it implies the first, but the first may be true without it. Over the integers, $\\forall x\\, \\exists y,\\ x + y = 0$ is true with $y = -x$, while $\\exists y\\, \\forall x,\\ x + y = 0$ is false.\n\n> **Watch out.** Since the second statement implies the first, the answer "only the second is true" is never possible.',
+    "在 $\\forall x\\, \\exists y$ 中，$y$ 的值可以随 $x$ 改变，但在 $\\exists y\\, \\forall x$ 中，同一个 $y$ 必须对所有 $x$ 都成立。所以后者更强：它蕴涵前者，但前者可以在它不成立时为真。在整数范围内，$\\forall x\\, \\exists y,\\ x + y = 0$ 为真，取 $y = -x$；而 $\\exists y\\, \\forall x,\\ x + y = 0$ 为假。\n\n> **注意。** 由于后者蕴涵前者，“只有第二个为真”是不可能的。",
   ],
   (rng) => {
     const k = rng.int(2, 30);
@@ -470,38 +555,118 @@ const quantifierOrder = point(
     const both: Pair = ["Both are true", "两个都为真"];
     const neither: Pair = ["Neither is true", "两个都不为真"];
     const option = kind < 2 ? first : kind < 4 ? both : neither;
-    const whys: Pair[] = [
+    const steps: [Pair, Pair, Pair][] = [
       [
-        `For each $x$, $y = ${k} - x$ works, but no single $y$ works for all $x$.`,
-        `对每个 $x$，$y = ${k} - x$ 都满足，但没有一个 $y$ 对所有 $x$ 都满足。`,
+        [`For each $x$, $y = ${k} - x$ works, so the first is true.`, `对每个 $x$，$y = ${k} - x$ 都满足，所以第一个为真。`],
+        [
+          `A single $y$ would need $x + y = ${k}$ for every $x$, but $x = 0$ needs $y = ${k}$ and $x = 1$ needs $y = ${k - 1}$. So the second is false.`,
+          `一个 $y$ 要对每个 $x$ 都满足 $x + y = ${k}$，但 $x = 0$ 需要 $y = ${k}$，$x = 1$ 需要 $y = ${k - 1}$。所以第二个为假。`,
+        ],
+        [
+          `Try $y = ${k}$: it works for $x = 0$, but $x = 1$ gives $${k + 1} \\ne ${k}$.`,
+          `试 $y = ${k}$：它对 $x = 0$ 成立，但 $x = 1$ 得 $${k + 1} \\ne ${k}$。`,
+        ],
       ],
       [
-        `For each $x$, a large enough $y$ works, but no single $y$ exceeds all of the values $x + ${k}$.`,
-        `对每个 $x$，足够大的 $y$ 都满足，但没有一个 $y$ 大于所有的 $x + ${k}$。`,
-      ],
-      [`The value $y = 0$ works for every $x$, so both statements are true.`, `$y = 0$ 对每个 $x$ 都满足，所以两个命题都为真。`],
-      [
-        `The left side is never negative, so every $y$ works for every $x$, and both statements are true.`,
-        `左边永远不为负，所以每个 $y$ 对每个 $x$ 都满足，两个命题都为真。`,
-      ],
-      [
-        `With $x = 0$ the product is $0$, not $${k}$, so no $y$ works for that $x$, and both statements fail.`,
-        `当 $x = 0$ 时积为 $0$，不等于 $${k}$，所以对这个 $x$ 没有 $y$ 满足，两个命题都不成立。`,
+        [`For each $x$, $y = x + ${k + 1}$ works, so the first is true.`, `对每个 $x$，$y = x + ${k + 1}$ 都满足，所以第一个为真。`],
+        [
+          `A single $y$ would have to exceed $x + ${k}$ for every $x$, but $x = y$ fails, since $y > y + ${k}$ is false. So the second is false.`,
+          `一个 $y$ 要大于每个 $x$ 的 $x + ${k}$，但 $x = y$ 时不成立，因为 $y > y + ${k}$ 为假。所以第二个为假。`,
+        ],
+        [
+          `Try $y = 100$: it is beaten by $x = 100$, since $100 > ${100 + k}$ is false.`,
+          `试 $y = 100$：遇到 $x = 100$ 就不成立，因为 $100 > ${100 + k}$ 为假。`,
+        ],
       ],
       [
-        `With $x^{2} > ${k}$ the left side is too large for every $y$, so no $y$ works for that $x$, and both statements fail.`,
-        `当 $x^{2} > ${k}$ 时，对每个 $y$ 左边都太大，所以对这个 $x$ 没有 $y$ 满足，两个命题都不成立。`,
+        [
+          `$y = 0$ gives $${k}x \\cdot 0 = 0$ for any $x$, so the first is true.`,
+          `$y = 0$ 对任何 $x$ 都得 $${k}x \\cdot 0 = 0$，所以第一个为真。`,
+        ],
+        [
+          `The same $y = 0$ works for every $x$ at once, so the second is true as well.`,
+          `同一个 $y = 0$ 对所有 $x$ 都成立，所以第二个也为真。`,
+        ],
+        [`Try $x = 5$ and $x = -3$ with $y = 0$: both products are $0$.`, `取 $y = 0$，试 $x = 5$ 和 $x = -3$：两个积都是 $0$。`],
+      ],
+      [
+        [
+          `$x^{2} + y^{2} \\ge 0 > -${k}$ for all $x$ and $y$, so the first is true.`,
+          `对所有 $x$、$y$ 都有 $x^{2} + y^{2} \\ge 0 > -${k}$，所以第一个为真。`,
+        ],
+        [
+          `So any one $y$, such as $y = 0$, works for every $x$: the second is true as well.`,
+          `所以任何一个 $y$，例如 $y = 0$，对每个 $x$ 都成立：第二个也为真。`,
+        ],
+        [`Try the smallest case $x = y = 0$: $0 \\ge -${k}$.`, `试最小的情形 $x = y = 0$：$0 \\ge -${k}$。`],
+      ],
+      [
+        [
+          `With $x = 0$, $xy = 0 \\ne ${k}$ for every $y$, so the first is false.`,
+          `当 $x = 0$ 时，对每个 $y$ 都有 $xy = 0 \\ne ${k}$，所以第一个为假。`,
+        ],
+        [
+          "The second implies the first: one $y$ that worked for every $x$ would work for $x = 0$. So the second is false too.",
+          "第二个蕴涵第一个：对每个 $x$ 都成立的 $y$ 也会对 $x = 0$ 成立。所以第二个也为假。",
+        ],
+        [`Try $x = 0$ with $y = ${k}$: the product is $0$, not $${k}$.`, `取 $x = 0$，试 $y = ${k}$：积是 $0$，不是 $${k}$。`],
+      ],
+      [
+        [
+          `With $x = ${k}$, $x^{2} + y^{2} \\ge ${k * k} > ${k}$ for every $y$, so the first is false.`,
+          `当 $x = ${k}$ 时，对每个 $y$ 都有 $x^{2} + y^{2} \\ge ${k * k} > ${k}$，所以第一个为假。`,
+        ],
+        [
+          `The second implies the first: one $y$ that worked for every $x$ would work for $x = ${k}$. So the second is false too.`,
+          `第二个蕴涵第一个：对每个 $x$ 都成立的 $y$ 也会对 $x = ${k}$ 成立。所以第二个也为假。`,
+        ],
+        [
+          `Try $x = ${k}$ with the most favourable $y = 0$: $${k * k} \\ne ${k}$.`,
+          `取 $x = ${k}$，试最有利的 $y = 0$：$${k * k} \\ne ${k}$。`,
+        ],
       ],
     ];
-    return choose(
-      rng,
-      [
-        `Over the integers, consider the first statement $\\forall x\\, \\exists y,\\ ${cond}$ and the second statement $\\exists y\\, \\forall x,\\ ${cond}$. Which are true?`,
-        `在整数范围内，考虑第一个命题 $\\forall x\\, \\exists y,\\ ${cond}$ 和第二个命题 $\\exists y\\, \\forall x,\\ ${cond}$。哪些为真？`,
-      ],
-      option,
-      [first, second, both, neither].filter((o) => o !== option),
-      whys[kind] as Pair,
+    const [s1, s2, check] = steps[kind]!;
+    const reasons: Reason[] = [
+      [second[0], "The second implies the first, so it cannot be true alone.", "第二个蕴涵第一个，所以它不可能单独为真。"],
+      ...(option === first
+        ? ([
+            [
+              both[0],
+              "The second needs one $y$ for every $x$, and no single $y$ works here.",
+              "第二个需要一个对每个 $x$ 都成立的 $y$，这里没有这样的 $y$。",
+            ],
+            [neither[0], "The first is true: for each $x$ a suitable $y$ can be found.", "第一个为真：对每个 $x$ 都能找到合适的 $y$。"],
+          ] as Reason[])
+        : option === both
+          ? ([
+              [first[0], "The second is true as well: one $y$ works for every $x$.", "第二个也为真：有一个 $y$ 对每个 $x$ 都成立。"],
+              [neither[0], "Both are true: a single $y$ works for every $x$.", "两个都为真：有一个 $y$ 对每个 $x$ 都成立。"],
+            ] as Reason[])
+          : ([
+              [first[0], "The first fails: some $x$ has no suitable $y$ at all.", "第一个不成立：某个 $x$ 根本没有合适的 $y$。"],
+              [
+                both[0],
+                "Some $x$ has no suitable $y$ at all, so the first fails, and the second with it.",
+                "某个 $x$ 根本没有合适的 $y$，所以第一个不成立，第二个也随之不成立。",
+              ],
+            ] as Reason[])),
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          `Over the integers, consider the first statement $\\forall x\\, \\exists y,\\ ${cond}$ and the second statement $\\exists y\\, \\forall x,\\ ${cond}$. Which are true?`,
+          `在整数范围内，考虑第一个命题 $\\forall x\\, \\exists y,\\ ${cond}$ 和第二个命题 $\\exists y\\, \\forall x,\\ ${cond}$。哪些为真？`,
+        ],
+        option,
+        [first, second, both, neither].filter((o) => o !== option),
+        [
+          `**Step 1: Decide the first statement.** ${s1[0]}\n\n**Step 2: Decide the second statement.** ${s2[0]}\n\n**Check.** ${check[0]}`,
+          `**第一步：判断第一个命题。** ${s1[1]}\n\n**第二步：判断第二个命题。** ${s2[1]}\n\n**检验。** ${check[1]}`,
+        ],
+      ),
+      reasons,
     );
   },
 );
@@ -510,52 +675,84 @@ const prenexRename = point(
   "renaming-a-repeated-bound-variable",
   ["Renaming a repeated bound variable", "重命名重复的约束变量"],
   [
-    "When both parts of a formula bind the same letter, the two variables are unrelated, so one must be renamed before the quantifiers are pulled out. Merging them into one quantifier would wrongly force a single value to do both jobs.",
-    "当公式的两部分约束同一个字母时，这两个变量互不相关，所以在提出量词之前必须重命名其中一个。把它们合并成一个量词，会错误地要求同一个值同时承担两个作用。",
+    "When both parts of a formula bind the same letter, the two variables are unrelated, so one must be renamed before the quantifiers are pulled out. Merging them into one quantifier would wrongly force a single value to do both jobs. Over the integers, $(\\exists x,\\ x \\text{ is even}) \\wedge (\\exists x,\\ x \\text{ is odd})$ is true, but $\\exists x\\, (x \\text{ is even} \\wedge x \\text{ is odd})$ is false; renaming gives the correct $\\exists x\\, \\exists y\\, (x \\text{ is even} \\wedge y \\text{ is odd})$.\n\n> **Watch out.** The same letter in two separately quantified parts names two different variables. Rename one before pulling out; never merge them into one quantifier.",
+    "当公式的两部分约束同一个字母时，这两个变量互不相关，所以在提出量词之前必须重命名其中一个。把它们合并成一个量词，会错误地要求同一个值同时承担两个作用。在整数范围内，$(\\exists x,\\ x \\text{ 是偶数}) \\wedge (\\exists x,\\ x \\text{ 是奇数})$ 为真，而 $\\exists x\\, (x \\text{ 是偶数} \\wedge x \\text{ 是奇数})$ 为假；重命名后得到正确的 $\\exists x\\, \\exists y\\, (x \\text{ 是偶数} \\wedge y \\text{ 是奇数})$。\n\n> **注意。** 在两个分别量化的部分中，同一个字母表示两个不同的变量。提出量词前先重命名其中一个；绝不能把它们合并成一个量词。",
   ],
   (rng) => {
     const [A, B] = rng.sample(["P", "Q", "R", "S", "T"], 2) as [string, string];
     const kind = rng.int(0, 3);
-    const [formula, right, wrong, why, zhWhy] = [
+    const [formula, renamed, right, wrong, why, zhWhy, check, zhCheck] = [
       [
         `(\\exists x\\, ${A}(x)) \\wedge (\\exists x\\, ${B}(x))`,
+        `(\\exists x\\, ${A}(x)) \\wedge (\\exists y\\, ${B}(y))`,
         `\\exists x\\, \\exists y\\, (${A}(x) \\wedge ${B}(y))`,
         `\\exists x\\, (${A}(x) \\wedge ${B}(x))`,
         "Both parts may have different witnesses",
         "两部分可以有不同的见证",
+        `over the integers let $${A}(x)$ say "$x$ is even" and $${B}(x)$ say "$x$ is odd". The formula is true, and so is the answer, with $x = 2$, $y = 3$`,
+        `在整数范围内，设 $${A}(x)$ 表示“$x$ 是偶数”，$${B}(x)$ 表示“$x$ 是奇数”。原式为真，答案也为真，取 $x = 2$，$y = 3$`,
       ],
       [
         `(\\forall x\\, ${A}(x)) \\vee (\\forall x\\, ${B}(x))`,
+        `(\\forall x\\, ${A}(x)) \\vee (\\forall y\\, ${B}(y))`,
         `\\forall x\\, \\forall y\\, (${A}(x) \\vee ${B}(y))`,
         `\\forall x\\, (${A}(x) \\vee ${B}(x))`,
         "Each universal part ranges separately",
         "每个全称部分分别取值",
+        `over the integers let $${A}(x)$ say "$x$ is even" and $${B}(x)$ say "$x$ is odd". The formula is false, since not every integer is even and not every one is odd, and so is the answer: $x = 1$, $y = 2$ breaks it`,
+        `在整数范围内，设 $${A}(x)$ 表示“$x$ 是偶数”，$${B}(x)$ 表示“$x$ 是奇数”。原式为假，因为整数并非都是偶数，也并非都是奇数；答案也为假：$x = 1$，$y = 2$ 使它不成立`,
       ],
       [
         `(\\exists x\\, ${A}(x)) \\wedge (\\forall x\\, ${B}(x))`,
+        `(\\exists x\\, ${A}(x)) \\wedge (\\forall y\\, ${B}(y))`,
         `\\exists x\\, \\forall y\\, (${A}(x) \\wedge ${B}(y))`,
         `\\exists x\\, (${A}(x) \\wedge ${B}(x))`,
         "The witness of the first part is unrelated to the second variable",
         "第一部分的见证与第二个变量无关",
+        `over the integers let both $${A}(x)$ and $${B}(x)$ say "$x$ is even". The formula is false, since not every integer is even, and so is the answer: for any $x$, $y = 1$ breaks it`,
+        `在整数范围内，设 $${A}(x)$ 与 $${B}(x)$ 都表示“$x$ 是偶数”。原式为假，因为整数并非都是偶数；答案也为假：对任何 $x$，$y = 1$ 都使它不成立`,
       ],
       [
         `(\\forall x\\, ${A}(x)) \\Rightarrow (\\exists x\\, ${B}(x))`,
+        `(\\forall x\\, ${A}(x)) \\Rightarrow (\\exists y\\, ${B}(y))`,
         `\\exists x\\, \\exists y\\, (${A}(x) \\Rightarrow ${B}(y))`,
         `\\forall x\\, \\exists y\\, (${A}(x) \\Rightarrow ${B}(y))`,
         "A quantifier from the antecedent flips, and the two variables are separate",
         "前件中的量词要翻转，并且两个变量相互独立",
+        `over the integers let $${A}(x)$ say "$x$ is even" and $${B}(x)$ say "$x^2 < 0$". The hypothesis is false, so the formula is true, and so is the answer, with $x = 1$, where $${A}(x)$ fails`,
+        `在整数范围内，设 $${A}(x)$ 表示“$x$ 是偶数”，$${B}(x)$ 表示“$x^2 < 0$”。前提为假，所以原式为真；答案也为真，取 $x = 1$，此时 $${A}(x)$ 不成立`,
       ],
-    ][kind] as [string, string, string, string, string];
-    return choose(
-      rng,
-      [`Which is a prenex normal form of $${formula}$?`, `哪个是 $${formula}$ 的前束范式？`],
-      same(right),
+    ][kind] as [string, string, string, string, string, string, string, string];
+    const swapped = same(`\\forall y\\, \\forall x\\, (${A}(x) \\wedge ${B}(y))`);
+    const crossed = same(`\\exists y\\, \\forall x\\, (${A}(y) \\vee ${B}(x))`);
+    const mismatch = "Renaming is allowed, but here the kinds of quantifiers or the connective no longer match the formula.";
+    const zhMismatch = "重命名是允许的，但这里量词的种类或联结词与原式不再相符。";
+    return reasoned(
+      choose(
+        rng,
+        [`Which is a prenex normal form of $${formula}$?`, `哪个是 $${formula}$ 的前束范式？`],
+        same(right),
+        [same(wrong), swapped, crossed],
+        [
+          `**Step 1: Rename.** The two parts bind $x$ separately, so rename the second: $${renamed}$.\n\n**Step 2: Pull out the quantifiers.** ${why}, and each variable now appears in one part only, which gives $${right}$.\n\n**Check.** Try a case: ${check}.`,
+          `**第一步：重命名。** 两部分分别约束 $x$，所以把第二个改名：$${renamed}$。\n\n**第二步：提出量词。** ${zhWhy}，而现在每个变量只出现在一个部分中，得 $${right}$。\n\n**检验。** 试一种情形：${zhCheck}。`,
+        ],
+      ),
       [
-        same(wrong),
-        same(`\\forall y\\, \\forall x\\, (${A}(x) \\wedge ${B}(y))`),
-        same(`\\exists y\\, \\forall x\\, (${A}(y) \\vee ${B}(x))`),
+        kind === 3
+          ? [
+              same(wrong)[0],
+              "That keeps the for all of the antecedent; a quantifier moved out of the hypothesis flips.",
+              "这保留了前件中的“对所有”；从前提中提出的量词要翻转。",
+            ]
+          : [
+              same(wrong)[0],
+              "That merges the two variables into one, forcing a single value to do both jobs.",
+              "这把两个变量合并成一个，要求同一个值承担两个作用。",
+            ],
+        [swapped[0], mismatch, zhMismatch],
+        [crossed[0], mismatch, zhMismatch],
       ],
-      [`${why}, so the second variable is renamed $y$, which gives $${right}$.`, `${zhWhy}，所以把第二个变量改名为 $y$，得 $${right}$。`],
     );
   },
 );
@@ -564,8 +761,8 @@ const chainStatus = point(
   "what-a-chain-of-conditionals-determines",
   ["What a chain of conditionals determines", "条件链能确定什么"],
   [
-    "Affirming a statement in a chain carries truth forward along the arrows, and denying a statement carries falsity backward. Going in the other direction determines nothing: denying the antecedent and affirming the consequent are the two classic fallacies.",
-    "在条件链中，肯定一个命题会使真沿箭头向前传递，否定一个命题会使假沿箭头向后传递。反方向则什么也确定不了：否定前件和肯定后件是两种经典的谬误。",
+    "Affirming a statement in a chain carries truth forward along the arrows, and denying a statement carries falsity backward. Going in the other direction determines nothing: denying the antecedent and affirming the consequent are the two classic fallacies. From $p \\Rightarrow q$, $q \\Rightarrow r$ and $p$, the letter $r$ must be true; from the same arrows and $r$, nothing follows about $p$.\n\n> **Watch out.** Truth travels only forward and falsity only backward. A letter on the other side of the given one is left undetermined.",
+    "在条件链中，肯定一个命题会使真沿箭头向前传递，否定一个命题会使假沿箭头向后传递。反方向则什么也确定不了：否定前件和肯定后件是两种经典的谬误。由 $p \\Rightarrow q$、$q \\Rightarrow r$ 和 $p$，$r$ 一定为真；由同样的箭头和 $r$，关于 $p$ 什么也推不出。\n\n> **注意。** 真只向前传，假只向后传。位于已知字母另一侧的字母无法确定。",
   ],
   (rng) => {
     const names = rng.sample(LETTERS, 3) as [string, string, string];
@@ -601,30 +798,98 @@ const chainStatus = point(
     const targetName = names[target] as string;
     const given = factValue ? factName : `\\neg ${factName}`;
     const list = rows.map(row).join(", ");
-    return choose(
-      rng,
-      [
-        `Suppose $${a} \\Rightarrow ${b}$, $${b} \\Rightarrow ${c}$ and $${given}$ are all true. What can be said about $${targetName}$?`,
-        `设 $${a} \\Rightarrow ${b}$，$${b} \\Rightarrow ${c}$ 和 $${given}$ 都为真。关于 $${targetName}$ 能得出什么结论？`,
-      ],
-      option,
-      [yes, no, open].filter((o) => o !== option),
-      [
-        `In the order $(${a}, ${b}, ${c})$, the rows that satisfy all three premises are: $${list}$. ${
-          always
-            ? `In each of them, $${targetName}$ is true.`
-            : never
-              ? `In each of them, $${targetName}$ is false.`
-              : `$${targetName}$ takes both values among them.`
-        }`,
-        `按 $(${a}, ${b}, ${c})$ 的顺序，满足全部三个条件的行是：$${list}$。${
-          always
-            ? `在每一行中 $${targetName}$ 都为真。`
-            : never
-              ? `在每一行中 $${targetName}$ 都为假。`
-              : `$${targetName}$ 在其中两种值都取到。`
-        }`,
-      ],
+    const withTrue = rows.find((r) => r[target]);
+    const withFalse = rows.find((r) => !r[target]);
+    const direction: Pair = factValue
+      ? [
+          `$${factName}$ is true, and the arrows carry truth forward, so every letter after $${factName}$ is true; they say nothing about the letters before it.`,
+          `$${factName}$ 为真，箭头把真向前传，所以 $${factName}$ 之后的字母都为真；对它之前的字母则什么也没说。`,
+        ]
+      : [
+          `$${factName}$ is false, and the arrows carry falsity backward, so every letter before $${factName}$ is false; they say nothing about the letters after it.`,
+          `$${factName}$ 为假，箭头把假向后传，所以 $${factName}$ 之前的字母都为假；对它之后的字母则什么也没说。`,
+        ];
+    const check: Pair = always
+      ? [
+          `Suppose $${targetName}$ were false. Going backward along the arrows, $${factName}$ would be false as well, against $${given}$.`,
+          `假设 $${targetName}$ 为假。沿箭头向后，$${factName}$ 也会为假，与 $${given}$ 矛盾。`,
+        ]
+      : never
+        ? [
+            `Suppose $${targetName}$ were true. Going forward along the arrows, $${factName}$ would be true as well, against $${given}$.`,
+            `假设 $${targetName}$ 为真。沿箭头向前，$${factName}$ 也会为真，与 $${given}$ 矛盾。`,
+          ]
+        : [
+            `The rows $${row(withTrue!)}$ and $${row(withFalse!)}$ both satisfy every premise, with $${targetName}$ true in one and false in the other.`,
+            `$${row(withTrue!)}$ 与 $${row(withFalse!)}$ 这两行都满足所有前提，$${targetName}$ 在一行为真，在另一行为假。`,
+          ];
+    const fallacy: Pair = factValue
+      ? [
+          `Truth travels only forward; concluding something about a letter before $${factName}$ is affirming the consequent.`,
+          `真只向前传；由此对 $${factName}$ 之前的字母下结论，是肯定后件的谬误。`,
+        ]
+      : [
+          `Falsity travels only backward; concluding something about a letter after $${factName}$ is denying the antecedent.`,
+          `假只向后传；由此对 $${factName}$ 之后的字母下结论，是否定前件的谬误。`,
+        ];
+    const reasons: Reason[] =
+      option === open
+        ? [
+            [yes[0], ...fallacy],
+            [no[0], ...fallacy],
+          ]
+        : option === yes
+          ? [
+              [
+                no[0],
+                `That goes against the chain: the truth of $${factName}$ is carried forward to $${targetName}$.`,
+                `这与链条矛盾：$${factName}$ 的真沿箭头传到了 $${targetName}$。`,
+              ],
+              [
+                open[0],
+                `$${targetName}$ comes after $${factName}$, so the arrows decide it.`,
+                `$${targetName}$ 在 $${factName}$ 之后，箭头确定了它。`,
+              ],
+            ]
+          : [
+              [
+                yes[0],
+                `That goes against the chain: if $${targetName}$ were true, the arrows would make $${factName}$ true.`,
+                `这与链条矛盾：若 $${targetName}$ 为真，箭头会使 $${factName}$ 为真。`,
+              ],
+              [
+                open[0],
+                `$${targetName}$ comes before $${factName}$, so the arrows decide it.`,
+                `$${targetName}$ 在 $${factName}$ 之前，箭头确定了它。`,
+              ],
+            ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          `Suppose $${a} \\Rightarrow ${b}$, $${b} \\Rightarrow ${c}$ and $${given}$ are all true. What can be said about $${targetName}$?`,
+          `设 $${a} \\Rightarrow ${b}$，$${b} \\Rightarrow ${c}$ 和 $${given}$ 都为真。关于 $${targetName}$ 能得出什么结论？`,
+        ],
+        option,
+        [yes, no, open].filter((o) => o !== option),
+        [
+          `**Step 1: Follow the arrows.** ${direction[0]}\n\n**Step 2: List the rows.** In the order $(${a}, ${b}, ${c})$, the rows that satisfy all three premises are: $${list}$. ${
+            always
+              ? `In each of them, $${targetName}$ is true.`
+              : never
+                ? `In each of them, $${targetName}$ is false.`
+                : `$${targetName}$ takes both values among them.`
+          }\n\n**Check.** ${check[0]}`,
+          `**第一步：沿箭头推理。** ${direction[1]}\n\n**第二步：列出各行。** 按 $(${a}, ${b}, ${c})$ 的顺序，满足全部三个条件的行是：$${list}$。${
+            always
+              ? `在每一行中 $${targetName}$ 都为真。`
+              : never
+                ? `在每一行中 $${targetName}$ 都为假。`
+                : `$${targetName}$ 在其中两种值都取到。`
+          }\n\n**检验。** ${check[1]}`,
+        ],
+      ),
+      reasons,
     );
   },
 );
@@ -633,47 +898,137 @@ const combiningRules = point(
   "combining-several-rules-of-inference",
   ["Combining several rules of inference", "组合多条推理规则"],
   [
-    "Real arguments use rules of inference in sequence: the conclusion of one step becomes a premise of the next. Checking which statement follows means building that chain from the premises, not just finding a statement that looks related to them.",
-    "实际论证按顺序使用推理规则：一步的结论成为下一步的前提。判断哪个命题能推出，意味着要从前提构建这条链，而不只是找一个看起来与前提相关的命题。",
+    "Real arguments use rules of inference in sequence: the conclusion of one step becomes a premise of the next. Checking which statement follows means building that chain from the premises, not just finding a statement that looks related to them. From $p \\vee q$, $\\neg p$ and $q \\Rightarrow r$: disjunctive syllogism gives $q$, and then modus ponens gives $r$.\n\n> **Watch out.** A letter that appears in the premises is not a conclusion just because it appears. It follows only if every way of making the premises true makes it true.",
+    "实际论证按顺序使用推理规则：一步的结论成为下一步的前提。判断哪个命题能推出，意味着要从前提构建这条链，而不只是找一个看起来与前提相关的命题。由 $p \\vee q$、$\\neg p$ 和 $q \\Rightarrow r$：选言推理得 $q$，再由肯定前件得 $r$。\n\n> **注意。** 出现在前提中的字母，并不因为出现就是结论。只有使前提为真的每种方式都使它为真，它才能推出。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(LETTERS, 3) as [string, string, string];
     const kind = rng.int(0, 3);
-    const data: readonly (readonly [string, string, readonly string[], string, string])[] = [
+    type Case = readonly [premises: string, right: string, steps: readonly [Pair, Pair, Pair], reasons: readonly Reason[]];
+    const data: readonly Case[] = [
       [
         `${a} \\vee ${b},\\ \\neg ${a},\\ ${b} \\Rightarrow ${c}`,
         c,
-        [a, `\\neg ${b}`, `\\neg ${c}`],
-        `Disjunctive syllogism gives $${b}$, and then modus ponens gives $${c}$`,
-        `析取三段论得 $${b}$，再由肯定前件得 $${c}$`,
+        [
+          [
+            `From $${a} \\vee ${b}$ and $\\neg ${a}$, disjunctive syllogism gives $${b}$.`,
+            `由 $${a} \\vee ${b}$ 与 $\\neg ${a}$，选言推理得 $${b}$。`,
+          ],
+          [
+            `From $${b}$ and $${b} \\Rightarrow ${c}$, modus ponens gives $${c}$.`,
+            `由 $${b}$ 与 $${b} \\Rightarrow ${c}$，肯定前件得 $${c}$。`,
+          ],
+          [
+            `Make $${c}$ false: then $${b} \\Rightarrow ${c}$ forces $${b}$ false, and $${a} \\vee ${b}$ forces $${a}$ true, against $\\neg ${a}$.`,
+            `令 $${c}$ 为假：则 $${b} \\Rightarrow ${c}$ 迫使 $${b}$ 为假，$${a} \\vee ${b}$ 又迫使 $${a}$ 为真，与 $\\neg ${a}$ 矛盾。`,
+          ],
+        ],
+        [
+          [`$${a}$`, `The premise $\\neg ${a}$ says $${a}$ is false.`, `前提 $\\neg ${a}$ 说明 $${a}$ 为假。`],
+          [`$\\neg ${b}$`, `Disjunctive syllogism gives $${b}$, not its negation.`, `选言推理得到的是 $${b}$，不是它的否定。`],
+          [
+            `$\\neg ${c}$`,
+            `Modus ponens gives $${c}$; its negation contradicts the premises.`,
+            `肯定前件得到 $${c}$；它的否定与前提矛盾。`,
+          ],
+        ],
       ],
       [
         `${a} \\vee ${b},\\ ${a} \\Rightarrow ${c},\\ ${b} \\Rightarrow ${c}`,
         c,
-        [a, b, `\\neg ${c}`],
-        `In either case of the disjunction, $${c}$ follows, so this is proof by cases`,
-        `析取的两种情形都能推出 $${c}$，所以这是分情形证明`,
+        [
+          [
+            `If $${a}$ holds, $${a} \\Rightarrow ${c}$ gives $${c}$; if $${b}$ holds, $${b} \\Rightarrow ${c}$ gives $${c}$.`,
+            `若 $${a}$ 成立，由 $${a} \\Rightarrow ${c}$ 得 $${c}$；若 $${b}$ 成立，由 $${b} \\Rightarrow ${c}$ 得 $${c}$。`,
+          ],
+          [
+            `By $${a} \\vee ${b}$ one of the two cases holds, so $${c}$ follows: this is proof by cases.`,
+            `由 $${a} \\vee ${b}$，两种情形必有一种成立，所以得 $${c}$：这是分情形证明。`,
+          ],
+          [
+            `Make $${c}$ false: modus tollens makes both $${a}$ and $${b}$ false, against $${a} \\vee ${b}$.`,
+            `令 $${c}$ 为假：由否定后件，$${a}$ 与 $${b}$ 都为假，与 $${a} \\vee ${b}$ 矛盾。`,
+          ],
+        ],
+        [
+          [
+            `$${a}$`,
+            "The disjunction does not say which case holds, so this part alone does not follow.",
+            "析取没有说明哪种情形成立，所以单独这一部分推不出。",
+          ],
+          [
+            `$${b}$`,
+            "The disjunction does not say which case holds, so this part alone does not follow.",
+            "析取没有说明哪种情形成立，所以单独这一部分推不出。",
+          ],
+          [
+            `$\\neg ${c}$`,
+            `$${c}$ holds in either case, so its negation contradicts the premises.`,
+            `两种情形下 $${c}$ 都成立，所以它的否定与前提矛盾。`,
+          ],
+        ],
       ],
       [
         `${a} \\Rightarrow ${b},\\ \\neg ${b},\\ ${a} \\vee ${c}`,
         c,
-        [a, b, `\\neg ${c}`],
-        `Modus tollens gives $\\neg ${a}$, and then disjunctive syllogism gives $${c}$`,
-        `否定后件得 $\\neg ${a}$，再由析取三段论得 $${c}$`,
+        [
+          [
+            `From $${a} \\Rightarrow ${b}$ and $\\neg ${b}$, modus tollens gives $\\neg ${a}$.`,
+            `由 $${a} \\Rightarrow ${b}$ 与 $\\neg ${b}$，否定后件得 $\\neg ${a}$。`,
+          ],
+          [
+            `From $${a} \\vee ${c}$ and $\\neg ${a}$, disjunctive syllogism gives $${c}$.`,
+            `由 $${a} \\vee ${c}$ 与 $\\neg ${a}$，选言推理得 $${c}$。`,
+          ],
+          [
+            `Make $${c}$ false: then $${a} \\vee ${c}$ needs $${a}$, and $${a} \\Rightarrow ${b}$ gives $${b}$, against $\\neg ${b}$.`,
+            `令 $${c}$ 为假：则 $${a} \\vee ${c}$ 要求 $${a}$ 为真，$${a} \\Rightarrow ${b}$ 又给出 $${b}$，与 $\\neg ${b}$ 矛盾。`,
+          ],
+        ],
+        [
+          [`$${a}$`, `Modus tollens gives $\\neg ${a}$, not $${a}$.`, `否定后件得到的是 $\\neg ${a}$，不是 $${a}$。`],
+          [`$${b}$`, `The premise $\\neg ${b}$ says $${b}$ is false.`, `前提 $\\neg ${b}$ 说明 $${b}$ 为假。`],
+          [
+            `$\\neg ${c}$`,
+            `$${c}$ follows by disjunctive syllogism; its negation contradicts the premises.`,
+            `由选言推理得 $${c}$；它的否定与前提矛盾。`,
+          ],
+        ],
       ],
       [
         `${a} \\Rightarrow ${b},\\ ${b} \\Rightarrow ${c},\\ \\neg ${c}`,
         `\\neg ${a}`,
-        [a, b, c],
-        `The chain gives $${a} \\Rightarrow ${c}$, and then modus tollens gives $\\neg ${a}$`,
-        `由链得 $${a} \\Rightarrow ${c}$，再由否定后件得 $\\neg ${a}$`,
+        [
+          [
+            `$${a} \\Rightarrow ${b}$ and $${b} \\Rightarrow ${c}$ chain to $${a} \\Rightarrow ${c}$.`,
+            `$${a} \\Rightarrow ${b}$ 与 $${b} \\Rightarrow ${c}$ 串联得 $${a} \\Rightarrow ${c}$。`,
+          ],
+          [`With $\\neg ${c}$, modus tollens gives $\\neg ${a}$.`, `结合 $\\neg ${c}$，否定后件得 $\\neg ${a}$。`],
+          [
+            `Make $${a}$ true: the arrows give $${b}$ and then $${c}$, against $\\neg ${c}$.`,
+            `令 $${a}$ 为真：箭头依次给出 $${b}$ 和 $${c}$，与 $\\neg ${c}$ 矛盾。`,
+          ],
+        ],
+        [
+          [`$${a}$`, `Modus tollens gives $\\neg ${a}$, not $${a}$.`, `否定后件得到的是 $\\neg ${a}$，不是 $${a}$。`],
+          [
+            `$${b}$`,
+            `From $\\neg ${c}$ and $${b} \\Rightarrow ${c}$, $${b}$ is false.`,
+            `由 $\\neg ${c}$ 与 $${b} \\Rightarrow ${c}$，$${b}$ 为假。`,
+          ],
+          [`$${c}$`, `The premise $\\neg ${c}$ says $${c}$ is false.`, `前提 $\\neg ${c}$ 说明 $${c}$ 为假。`],
+        ],
       ],
     ];
-    const [premises, right, wrong, why, zhWhy] = data[kind] as (typeof data)[number];
-    return choose(rng, [`Which statement follows from $${premises}$?`, `由 $${premises}$ 能推出哪个命题？`], same(right), wrong.map(same), [
-      `${why}.`,
-      `${zhWhy}。`,
-    ]);
+    const [premises, right, [s1, s2, check], reasons] = data[kind]!;
+    const wrong = reasons.map(([en]) => en.slice(1, -1));
+    return reasoned(
+      choose(rng, [`Which statement follows from $${premises}$?`, `由 $${premises}$ 能推出哪个命题？`], same(right), wrong.map(same), [
+        `**Step 1: Take the first step.** ${s1[0]}\n\n**Step 2: Take the second step.** ${s2[0]}\n\n**Check.** ${check[0]}`,
+        `**第一步：推出第一步。** ${s1[1]}\n\n**第二步：推出第二步。** ${s2[1]}\n\n**检验。** ${check[1]}`,
+      ]),
+      [...reasons],
+    );
   },
 );
 

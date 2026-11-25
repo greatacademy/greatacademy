@@ -11,6 +11,7 @@ import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { chart, intTicks } from "./figure-charts.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
 
@@ -485,8 +486,8 @@ const truthSetLine = point(
   "the-predicate-of-a-drawn-truth-set",
   ["The predicate of a drawn truth set", "所画真值集对应的谓词"],
   [
-    "The truth set of a predicate holds the values that make it true. For $|x - a| < r$ it is the interval of radius $r$ about $a$ with hollow ends, $|x - a| \\le r$ has filled ends, and $|x - a| > r$ is everything outside.",
-    "谓词的真值集由使它为真的值组成。$|x - a| < r$ 的真值集是以 $a$ 为中心、半径为 $r$、两端空心的区间，$|x - a| \\le r$ 两端实心，$|x - a| > r$ 则是外面的全部。",
+    "The truth set of a predicate holds the values that make it true. For $|x - a| < r$ it is the interval of radius $r$ about $a$ with hollow ends, $|x - a| \\le r$ has filled ends, and $|x - a| > r$ is everything outside. The truth set of $|x - 1| \\le 2$ runs from $-1$ to $3$ with filled dots, since $x = 3$ gives $|2| \\le 2$.\n\n> **Watch out.** Read two things from the drawing: whether the colour lies between the ends or outside them, which decides $<$ against $>$, and whether the dots are filled, which decides whether the sign includes equality.",
+    "谓词的真值集由使它为真的值组成。$|x - a| < r$ 的真值集是以 $a$ 为中心、半径为 $r$、两端空心的区间，$|x - a| \\le r$ 两端实心，$|x - a| > r$ 则是外面的全部。$|x - 1| \\le 2$ 的真值集从 $-1$ 到 $3$，两端实心，因为 $x = 3$ 时 $|2| \\le 2$。\n\n> **注意。** 要从图中读出两件事：彩色部分在两端之间还是之外，这决定是 $<$ 还是 $>$；端点是否实心，这决定符号是否含等号。",
   ],
   (rng) => {
     const a = rng.int(-3, 3);
@@ -504,26 +505,54 @@ const truthSetLine = point(
     const shifted = a === 0 ? "|x|" : a > 0 ? `|x - ${a}|` : `|x + ${-a}|`;
     const form = (op: string) => same(`${shifted} ${op} ${r}`);
     const ops = { lt: "<", le: "\\le", gt: ">", ge: "\\ge" } as const;
-    return choose(
-      rng,
-      [
-        "The colored part of the $x$-axis is the truth set of a predicate about a real number $x$, with filled dots for ends it contains and hollow dots for ends it does not. Which predicate is it?",
-        "$x$ 轴的彩色部分是关于实数 $x$ 的谓词的真值集，实心点表示包含该端点，空心点表示不包含。它是哪个谓词？",
-      ],
-      form(ops[kind]),
-      (["lt", "le", "gt", "ge"] as const).filter((k) => k !== kind).map((k) => form(ops[k])),
-      [
-        `The ends are $${a} \\pm ${r}$, so the distance from $${a}$ is compared with $${r}$. The set is ${inside ? "between" : "outside"} the ends, and the ends are ${filled ? "included" : "excluded"}.`,
-        `端点为 $${a} \\pm ${r}$，所以比较的是到 $${a}$ 的距离与 $${r}$。集合在端点${inside ? "之间" : "之外"}，${filled ? "包含" : "不包含"}端点。`,
-      ],
-      drawn(
-        { xMin: -8, xMax: 8, yMin: -2, yMax: 2 },
-        marks,
-        t(
-          `The ${inside ? "part between" : "parts outside"} ${a - r} and ${a + r}, with ${filled ? "filled" : "hollow"} dots at those values.`,
-          `${a - r} 与 ${a + r} ${inside ? "之间" : "之外"}的部分，这两个值处是${filled ? "实心" : "空心"}点。`,
+    const end = a + r;
+    const probe = inside ? a : a + r + 1;
+    const reasons: Reason[] = (["lt", "le", "gt", "ge"] as const)
+      .filter((k) => k !== kind)
+      .map((k): Reason => {
+        const kFilled = k === "le" || k === "ge";
+        const kInside = k === "lt" || k === "le";
+        if (kInside !== inside && kFilled !== filled)
+          return [
+            form(ops[k])[0],
+            "That gets both things wrong: where the colour lies and whether the ends are included.",
+            "这两件事都弄错了：彩色部分的位置和是否包含端点。",
+          ];
+        if (kInside !== inside)
+          return [
+            form(ops[k])[0],
+            `That describes the part ${kInside ? "between" : "outside"} the ends, but the colour is ${inside ? "between" : "outside"} them.`,
+            `这描述的是端点${kInside ? "之间" : "之外"}的部分，但彩色部分在端点${inside ? "之间" : "之外"}。`,
+          ];
+        return [
+          form(ops[k])[0],
+          `That ${kFilled ? "includes" : "excludes"} the ends, but the dots are ${filled ? "filled" : "hollow"}.`,
+          `这${kFilled ? "包含" : "不包含"}端点，但端点是${filled ? "实心" : "空心"}点。`,
+        ];
+      });
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The colored part of the $x$-axis is the truth set of a predicate about a real number $x$, with filled dots for ends it contains and hollow dots for ends it does not. Which predicate is it?",
+          "$x$ 轴的彩色部分是关于实数 $x$ 的谓词的真值集，实心点表示包含该端点，空心点表示不包含。它是哪个谓词？",
+        ],
+        form(ops[kind]),
+        (["lt", "le", "gt", "ge"] as const).filter((k) => k !== kind).map((k) => form(ops[k])),
+        [
+          `**Step 1: Read the ends.** The ends are $${a} \\pm ${r}$, so the predicate compares the distance $${shifted}$ from $${a}$ with $${r}$.\n\n**Step 2: Read the colour and the dots.** The set is ${inside ? "between" : "outside"} the ends, so the distance is ${inside ? "smaller" : "larger"} than $${r}$; the dots are ${filled ? "filled, so the ends are included" : "hollow, so the ends are excluded"}. The predicate is $${shifted} ${ops[kind]} ${r}$.\n\n**Check.** Try $x = ${probe}$, ${inside ? "the centre" : "just outside the ends"}: $${shifted}$ is $${Math.abs(probe - a)}$, and $${Math.abs(probe - a)} ${ops[kind]} ${r}$ holds, as the colour says. Try the end $x = ${end}$: $${r} ${ops[kind]} ${r}$ is ${filled ? "true, matching the filled dot" : "false, matching the hollow dot"}.`,
+          `**第一步：读端点。** 端点为 $${a} \\pm ${r}$，所以谓词比较的是到 $${a}$ 的距离 $${shifted}$ 与 $${r}$。\n\n**第二步：读彩色部分和端点。** 集合在端点${inside ? "之间" : "之外"}，所以距离${inside ? "小于" : "大于"} $${r}$；端点是${filled ? "实心点，包含端点" : "空心点，不包含端点"}。谓词是 $${shifted} ${ops[kind]} ${r}$。\n\n**检验。** 试${inside ? "中心" : "端点之外"}的 $x = ${probe}$：$${shifted}$ 为 $${Math.abs(probe - a)}$，$${Math.abs(probe - a)} ${ops[kind]} ${r}$ 成立，与彩色部分相符。再试端点 $x = ${end}$：$${r} ${ops[kind]} ${r}$ ${filled ? "成立，与实心点相符" : "不成立，与空心点相符"}。`,
+        ],
+        drawn(
+          { xMin: -8, xMax: 8, yMin: -2, yMax: 2 },
+          marks,
+          t(
+            `The ${inside ? "part between" : "parts outside"} ${a - r} and ${a + r}, with ${filled ? "filled" : "hollow"} dots at those values.`,
+            `${a - r} 与 ${a + r} ${inside ? "之间" : "之外"}的部分，这两个值处是${filled ? "实心" : "空心"}点。`,
+          ),
         ),
       ),
+      reasons,
     );
   },
 );
