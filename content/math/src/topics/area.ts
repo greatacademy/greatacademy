@@ -1,5 +1,5 @@
-import type { Figure, Rng, TopicDef } from "@ga/content";
-import { t } from "@ga/content";
+import type { Figure, Problem, ProblemPart, Rng, TopicDef } from "@ga/content";
+import { multistep, t } from "@ga/content";
 import { type Mark, type Point, Q, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
@@ -1374,41 +1374,110 @@ export const compositeShapes: TopicDef = withIntro(
           const p = 2 * (w + h);
           const shown = w + (h - ch) + (w - cw) + h;
           const points = lShape(w, h, cw, ch);
-          return valued(
-            ["All corners of the shape are right angles. Find its perimeter.", "这个图形的所有角都是直角。求它的周长。"],
-            p,
-            [
-              [
-                ["Find the missing sides", "求未知的边"],
-                [
-                  "The top sides add up to the bottom, and the right sides add up to the left:",
-                  "上方的边之和等于底边，右侧的边之和等于左侧：",
-                ],
-                [`${w} - ${w - cw} = ${cw}`, `${h} - ${h - ch} = ${ch}`],
-              ],
-              [
-                ["Add all six sides", "六条边相加"],
-                ["Go around the shape:", "绕图形一圈："],
-                [`P = ${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${tex(p, u)}`],
-              ],
-            ],
-            [
-              `Push the two sides of the notch out to the corner: the path is as long as a $${w}$ by $${h}$ rectangle's, $2(${w} + ${h}) = ${p}$.`,
-              `把缺口的两条边推到角上：路程和 $${w}$ 乘 $${h}$ 的长方形一样长，$2(${w} + ${h}) = ${p}$。`,
-            ],
-            [
-              [shown, "That adds only the four labeled sides and leaves out the notch.", "这只加了标出的四条边，漏掉了缺口的两条边。"],
-              [w * h - cw * ch, "That is the area, not the perimeter.", "这是面积，不是周长。"],
-              [p + cw + ch, "That counts the two sides of the notch twice.", "这是把缺口的两条边算了两遍。"],
-            ],
+          // Asked in three parts about one figure: the two sides of the notch, then the perimeter.
+          const part = (q: Problem): ProblemPart => {
+            const { prompt, answer, solution, canonical, wrong, mistakes } = q;
+            return { prompt, answer, solution, canonical, ...(wrong && { wrong }), ...(mistakes && { mistakes }) };
+          };
+          return multistep(
             {
-              unit: u,
+              prompt: t(
+                "All corners of the shape are right angles; the two sides of its notch are marked $a$ and $b$.",
+                "这个图形的所有角都是直角；缺口的两条边标为 $a$ 和 $b$。",
+              ),
               figure: figure(
-                [{ kind: "polygon", points }, ...sides(points, [len(w, u), len(h - ch, u), null, null, len(w - cw, u), len(h, u)])],
-                `An L-shape: ${w} ${u} wide at the bottom, ${h} ${u} tall on the left, ${w - cw} ${u} wide at the top and ${h - ch} ${u} tall on the right; the two sides of the notch are unlabeled.`,
-                `一个 L 形：底边宽 ${w} ${u}，左边高 ${h} ${u}，顶边宽 ${w - cw} ${u}，右边高 ${h - ch} ${u}；缺口的两条边没有标长度。`,
+                [{ kind: "polygon", points }, ...sides(points, [len(w, u), len(h - ch, u), "a", "b", len(w - cw, u), len(h, u)])],
+                `An L-shape: ${w} ${u} wide at the bottom, ${h} ${u} tall on the left, ${w - cw} ${u} wide at the top and ${h - ch} ${u} tall on the right; the sides of the notch are marked a, across, and b, up.`,
+                `一个 L 形：底边宽 ${w} ${u}，左边高 ${h} ${u}，顶边宽 ${w - cw} ${u}，右边高 ${h - ch} ${u}；缺口的横边标为 a，竖边标为 b。`,
               ),
             },
+            [
+              part(
+                valued(
+                  ["Find $a$.", "求 $a$。"],
+                  cw,
+                  [
+                    [
+                      ["Use the sides along the top", "用上方的水平边"],
+                      [
+                        `The top of the shape, $${w - cw}$ and then $a$, spans the same width as the bottom, $${w}$:`,
+                        `图形上方的 $${w - cw}$ 和 $a$ 合起来，和底边 $${w}$ 一样宽：`,
+                      ],
+                      [`${w - cw} + a = ${w}`, `a = ${w} - ${w - cw} = ${tex(cw, u)}`],
+                    ],
+                  ],
+                  [`$${w - cw} + ${cw} = ${w}$, the bottom.`, `$${w - cw} + ${cw} = ${w}$，正是底边。`],
+                  [
+                    [w, "That is the whole bottom; $a$ is only the part the top side leaves.", "这是整条底边；$a$ 只是顶边剩下的那一段。"],
+                    [w - cw, "That is the top side next to the notch, not the notch itself.", "这是缺口旁边的顶边，不是缺口本身。"],
+                    [
+                      w + (w - cw),
+                      "That adds the top to the bottom; the top fits inside the bottom, so subtract it.",
+                      "这是把顶边加到底边上；顶边包含在底边的宽度里，要减去。",
+                    ],
+                  ],
+                  { unit: u },
+                ),
+              ),
+              part(
+                valued(
+                  ["Find $b$.", "求 $b$。"],
+                  ch,
+                  [
+                    [
+                      ["Use the sides on the right", "用右侧的竖直边"],
+                      [
+                        `The right of the shape, $${h - ch}$ and then $b$, spans the same height as the left, $${h}$:`,
+                        `图形右侧的 $${h - ch}$ 和 $b$ 合起来，和左边 $${h}$ 一样高：`,
+                      ],
+                      [`${h - ch} + b = ${h}`, `b = ${h} - ${h - ch} = ${tex(ch, u)}`],
+                    ],
+                  ],
+                  [`$${h - ch} + ${ch} = ${h}$, the left side.`, `$${h - ch} + ${ch} = ${h}$，正是左边。`],
+                  [
+                    [
+                      h,
+                      "That is the whole left side; $b$ is only the part the right side leaves.",
+                      "这是整条左边；$b$ 只是右边剩下的那一段。",
+                    ],
+                    [h - ch, "That is the right side next to the notch, not the notch itself.", "这是缺口旁边的右边，不是缺口本身。"],
+                    [
+                      h + (h - ch),
+                      "That adds the two sides; the right side fits inside the left, so subtract it.",
+                      "这是把两条边相加；右边包含在左边的高度里，要减去。",
+                    ],
+                  ],
+                  { unit: u },
+                ),
+              ),
+              part(
+                valued(
+                  ["Find the perimeter of the shape.", "求这个图形的周长。"],
+                  p,
+                  [
+                    [
+                      ["Add all six sides", "六条边相加"],
+                      [`Go around the shape, with $a = ${cw}$ and $b = ${ch}$:`, `绕图形一圈，其中 $a = ${cw}$，$b = ${ch}$：`],
+                      [`P = ${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${tex(p, u)}`],
+                    ],
+                  ],
+                  [
+                    `Push the two sides of the notch out to the corner: the path is as long as a $${w}$ by $${h}$ rectangle's, $2(${w} + ${h}) = ${p}$.`,
+                    `把缺口的两条边推到角上：路程和 $${w}$ 乘 $${h}$ 的长方形一样长，$2(${w} + ${h}) = ${p}$。`,
+                  ],
+                  [
+                    [
+                      shown,
+                      "That adds only the four labeled sides and leaves out the notch.",
+                      "这只加了标出的四条边，漏掉了缺口的两条边。",
+                    ],
+                    [w * h - cw * ch, "That is the area, not the perimeter.", "这是面积，不是周长。"],
+                    [p + cw + ch, "That counts the two sides of the notch twice.", "这是把缺口的两条边算了两遍。"],
+                  ],
+                  { unit: u },
+                ),
+              ),
+            ],
           );
         },
         drawn(gradeDrawings4["composite-shapes#perimeter-of-composite-shapes"]),
