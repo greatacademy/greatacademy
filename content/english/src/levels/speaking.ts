@@ -51,6 +51,12 @@ export function say(question: string, answers: string, values: string): SayFrame
   return { question, answers: list, values: vs };
 }
 
+/** fill puts a value into an answer of a frame, capitalizing it when the answer starts with the value. */
+function fill(answer: string, x: string): string {
+  const filled = answer.replaceAll("{x}", x);
+  return filled.charAt(0).toUpperCase() + filled.slice(1);
+}
+
 /** UnitSpeakingSpec is a unit's speaking topic: its listening topic, which comes first, its vocabulary and its frames. */
 export interface UnitSpeakingSpec {
   readonly id: string;
@@ -152,8 +158,8 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       f.values.map((x, i) => ({
         frame: f,
         x,
-        accept: f.answers.map((a) => a.replaceAll("{x}", x)),
-        other: f.answers[0]!.replaceAll("{x}", f.values[(i + 1) % f.values.length]!),
+        accept: f.answers.map((a) => fill(a, x)),
+        other: fill(f.answers[0]!, f.values[(i + 1) % f.values.length]!),
       })),
     ),
   );
@@ -190,7 +196,7 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
   const s1 = sentences[1] ?? s0;
   const f0 = spec.frames[0]!;
   const f0Val = f0.values[0]!;
-  const f0Model = f0.answers[0]!.replaceAll("{x}", f0Val);
+  const f0Model = fill(f0.answers[0]!, f0Val);
 
   const speaking: TopicDef = {
     id: spec.id,
