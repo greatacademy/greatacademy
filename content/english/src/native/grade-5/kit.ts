@@ -75,7 +75,7 @@ export const type = (
   question: Pair,
   bank: readonly TypedItem[],
   why: Why,
-  whyNot?: WhyNot,
+  whyNot: WhyNot,
 ): KnowledgePointDef =>
   point(
     id,

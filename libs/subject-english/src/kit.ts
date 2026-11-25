@@ -54,13 +54,13 @@ export interface TypedItem {
   readonly instruction?: Text;
 }
 
-/** typedGenerator picks an item of a bank by seed; the learner types the answer. Each listed wrong response gets feedback: from whyNot when given, otherwise from typedWhyNot. */
+/** typedGenerator picks an item of a bank by seed; the learner types the answer. Each listed wrong response gets the feedback whyNot gives it, by what went wrong. */
 export function typedGenerator(
   checker: "sentence" | "sentence-pattern" | "word-form",
   question: Text,
   bank: readonly TypedItem[],
   why: Why,
-  whyNot?: WhyNot,
+  whyNot: WhyNot,
 ): Generator {
   return (rng: Rng): Problem => {
     const item = rng.cycle(bank);
@@ -73,7 +73,7 @@ export function typedGenerator(
       wrong: [...item.wrong],
       mistakes: item.wrong.map((w, position) => ({
         response: w,
-        feedback: (whyNot ?? typedWhyNot(checker))(w, canonical, item.shown, position),
+        feedback: whyNot(w, canonical, item.shown, position),
       })),
     };
   };
@@ -166,119 +166,6 @@ export function listed(items: readonly string[]): Text {
   const marked = items.map((w) => `*${w}*`);
   const en = marked.length < 2 ? (marked[0] ?? "") : `${marked.slice(0, -1).join(", ")} and ${marked[marked.length - 1]}`;
   return t(en, marked.join("、"));
-}
-
-/** wordWhyNot names what is wrong with a typed word form: unchanged, a letter short or over, or a wrong letter, and where. */
-function wordWhyNot(wrong: string, right: string, shown: string): Text {
-  if (
-    shown
-      .toLowerCase()
-      .split(/[^\p{L}']+/u)
-      .includes(wrong.toLowerCase()) &&
-    wrong.toLowerCase() !== right.toLowerCase()
-  ) {
-    return t(
-      `*${wrong}* is the word as it was given, unchanged. The sentence needs a different form of it: look at what the rest of the sentence asks for.`,
-      `*${wrong}* 是题目给出的原词，没有变形。这个句子需要它的另一种形式：看看句子其余部分要求的是哪种形式。`,
-    );
-  }
-  if (wrong.toLowerCase() === right.toLowerCase()) {
-    return t(`*${wrong}* has the right letters but the wrong capitals.`, `*${wrong}* 字母对了，但大小写不对。`);
-  }
-  const lower = wrong.toLowerCase();
-  const target = right.toLowerCase();
-  if (target.startsWith(lower)) {
-    return t(
-      `*${wrong}* stops short: the word the sentence needs has more letters after *${wrong}*. Look at what the rest of the sentence asks for.`,
-      `*${wrong}* 没写完：句子需要的词在 *${wrong}* 后面还有字母。看看句子其余部分要求的是哪种形式。`,
-    );
-  }
-  if (lower.startsWith(target)) {
-    return t(
-      `*${wrong}* adds an ending the sentence does not need. Look at what the rest of the sentence asks for.`,
-      `*${wrong}* 多加了句子不需要的词尾。看看句子其余部分要求的是哪种形式。`,
-    );
-  }
-  if (lower.endsWith("ed") && !target.endsWith("ed") && lower.slice(0, 2) === target.slice(0, 2)) {
-    return t(
-      `*${wrong}* adds the regular ending *-ed*, but this word does not take it: its form has to be learned on its own.`,
-      `*${wrong}* 加了规则词尾 *-ed*，但这个词不这样变：它的形式要单独记住。`,
-    );
-  }
-  let start = 0;
-  while (start < wrong.length && wrong[start] === right[start]) start++;
-  if (start < 2) {
-    return t(
-      `*${wrong}* is a different word from the one this sentence needs. Read the words around it again and think which word they go with.`,
-      `*${wrong}* 不是这个句子需要的词。再读一读它前后的词，想想它们和哪个词搭配。`,
-    );
-  }
-  const kept = wrong.slice(0, start);
-  const shape =
-    wrong.length < right.length
-      ? t("is a letter or more short", "少了字母")
-      : wrong.length > right.length
-        ? t("has a letter or more too many", "多了字母")
-        : t("has a wrong letter", "有字母写错了");
-  return t(
-    `*${wrong}* ${shape.en}, going wrong after *${kept}*. Recall the spelling rule for this form and build it again.`,
-    `*${wrong}* ${shape["zh-CN"]}，在 *${kept}* 之后出错。回想这种形式的拼写规则，再写一遍。`,
-  );
-}
-
-/** sentenceWhyNot names the part of a typed sentence that goes wrong, by the words around it, without giving the right words. */
-function sentenceWhyNot(wrong: string, right: string, shown: string): Text {
-  if (wrong.trim() === shown.trim()) {
-    return t(
-      "That is the sentence as it was given, unchanged. Make the change the question asks for.",
-      "这是题目给出的原句，没有改动。按题目要求做出修改。",
-    );
-  }
-  if (bare(wrong) === bare(right)) {
-    return t(
-      `The words of *${wrong}* are right, but check its capital letters and punctuation: where the sentence and any name start, and how it ends.`,
-      `*${wrong}* 的用词没问题，但要检查大写和标点：句子和专有名词的开头，以及句末。`,
-    );
-  }
-  const a = words(wrong);
-  const b = words(right);
-  let head = 0;
-  while (head < a.length && head < b.length && bare(a[head]!) === bare(b[head]!)) head++;
-  let tail = 0;
-  while (tail < a.length - head && tail < b.length - head && bare(a[a.length - 1 - tail]!) === bare(b[b.length - 1 - tail]!)) tail++;
-  const span = a.slice(head, a.length - tail).join(" ");
-  const before = a[head - 1];
-  const after = a[a.length - tail];
-  if (span === "") {
-    const place =
-      before && after
-        ? t(`between *${before}* and *${after}*`, `在 *${before}* 和 *${after}* 之间`)
-        : before
-          ? t(`after *${before}*`, `在 *${before}* 之后`)
-          : t(`before *${after ?? ""}*`, `在 *${after ?? ""}* 之前`);
-    return t(
-      `Something is missing ${place.en}. Read the sentence aloud and listen for the gap.`,
-      `${place["zh-CN"]}少了内容。把句子读出来，听听哪里断了。`,
-    );
-  }
-  if (b.length - head - tail <= 0) {
-    return t(
-      `*${span}* does not belong in this sentence. Take it out and read the sentence again.`,
-      `*${span}* 不应出现在这个句子里。去掉它，再把句子读一遍。`,
-    );
-  }
-  return t(
-    `The sentence goes wrong at *${span}*. Check that part against the rule of this lesson.`,
-    `句子在 *${span}* 这里出错。对照本课的规则检查这一部分。`,
-  );
-}
-
-/** typedWhyNot is the feedback for a listed wrong response of a typed problem whose bank gives none of its own. */
-export function typedWhyNot(checker: "sentence" | "sentence-pattern" | "word-form"): WhyNot {
-  return (wrong, right, shown) =>
-    checker === "word-form" && words(wrong).length === 1 && words(right).length === 1
-      ? wordWhyNot(wrong, right, shown)
-      : sentenceWhyNot(wrong, right, shown);
 }
 
 /** OrderItem is one bank item of an order: the items in a right order, and any other orders that are also right. */
