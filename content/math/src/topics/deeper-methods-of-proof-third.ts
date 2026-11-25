@@ -5,7 +5,9 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { poly } from "@ga/subject-math";
 
+import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 /** gcd gives the greatest common divisor of two integers. */
 export const gcd = (a: number, b: number): number => (b === 0 ? Math.abs(a) : gcd(b, a % b));
@@ -24,8 +26,8 @@ const countTrueRows = point(
   "counting-the-rows-that-make-a-formula-true",
   ["Counting the rows that make a formula true", "计算使公式为真的行数"],
   [
-    "A formula in three letters has eight rows, and the count can be found without writing them all. A conjunction with a literal needs that literal true, which halves the rows, and a disjunction fails only when both of its parts are false.",
-    "三个字母的公式有八行，不必全部写出也能计数。与一个文字作合取时，该文字必须为真，行数减半；而析取只有在两部分都为假时才不成立。",
+    "A formula in three letters has eight rows, and the count can be found without writing them all. A conjunction with a literal needs that literal true, which halves the rows, and a disjunction fails only when both of its parts are false. For $(p \\wedge q) \\vee r$: the bracket is true for $1$ of the $4$ values of $p$ and $q$, so it is false for $3$; the disjunction fails when the bracket is false and $r$ is false, in $3$ rows, so it is true in $8 - 3 = 5$.\n\n> **Watch out.** Do not add the rows of the two parts of a disjunction: the rows where both parts are true would be counted twice. Count the rows where it fails instead.",
+    "三个字母的公式有八行，不必全部写出也能计数。与一个文字作合取时，该文字必须为真，行数减半；而析取只有在两部分都为假时才不成立。对 $(p \\wedge q) \\vee r$：括号在 $p$、$q$ 的 $4$ 种取值中有 $1$ 种为真，所以有 $3$ 种为假；析取在括号为假且 $r$ 为假时不成立，共 $3$ 行，所以有 $8 - 3 = 5$ 行为真。\n\n> **注意。** 不要把析取两部分为真的行数相加：两部分都为真的行会被数两次。应改为数它不成立的行。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(LETTERS, 3) as [string, string, string];
@@ -37,22 +39,48 @@ const countTrueRows = point(
     const outerAnd = rng.bool();
     const inner = innerAnd ? 1 : 3;
     const answer = outerAnd ? inner : 4 + inner;
-    const formula = `(${left} ${innerAnd ? "\\wedge" : "\\vee"} ${right}) ${outerAnd ? "\\wedge" : "\\vee"} ${last}`;
-    return ask(
-      [`In how many of the $8$ rows of the truth table is $${formula}$ true?`, `在真值表的 $8$ 行中，$${formula}$ 有多少行为真？`],
-      answer,
-      [1, 3, 5, 7].filter((v) => v !== answer),
+    const bracket = `(${left} ${innerAnd ? "\\wedge" : "\\vee"} ${right})`;
+    const formula = `${bracket} ${outerAnd ? "\\wedge" : "\\vee"} ${last}`;
+    const otherOuter = outerAnd ? 4 + inner : inner;
+    const otherInner = outerAnd ? 4 - inner : 8 - inner;
+    return withMistakes(
+      ask(
+        [`In how many of the $8$ rows of the truth table is $${formula}$ true?`, `在真值表的 $8$ 行中，$${formula}$ 有多少行为真？`],
+        answer,
+        [1, 3, 5, 7].filter((v) => v !== answer),
+        [
+          `**Step 1: Count the bracket.** $${bracket}$ is ${innerAnd ? "a conjunction, true only when both literals are true" : "a disjunction, false only when both literals are false"}, so it is true for $${inner}$ of the $4$ values of its two letters, in $${2 * inner}$ of the $8$ rows.\n\n**Step 2: Bring in $${last}$.** ${
+            outerAnd
+              ? `The conjunction also needs $${last}$ true, which holds in half of those rows: $${inner}$.`
+              : `The disjunction is false only when the bracket and $${last}$ are both false: $${4 - inner}$ ${inner === 3 ? "row" : "rows"}. So it is true in $8 - ${4 - inner} = ${answer}$.`
+          }\n\n**Check.** ${
+            outerAnd
+              ? `Count directly: fix $${last}$ true, and the bracket's letters must take one of their $${inner}$ true values, so $${inner}$ rows.`
+              : `Count directly: $${last}$ is true in $4$ rows, and with $${last}$ false the bracket must be true, in $${inner}$ more rows: $4 + ${inner} = ${answer}$.`
+          }`,
+          `**第一步：数括号。** $${bracket}$ 是${innerAnd ? "合取，只有两个文字都为真时才为真" : "析取，只有两个文字都为假时才为假"}，所以它在两个字母的 $4$ 种取值中有 $${inner}$ 种为真，即 $8$ 行中的 $${2 * inner}$ 行。\n\n**第二步：加入 $${last}$。** ${
+            outerAnd
+              ? `合取还要求 $${last}$ 为真，这在上述行中占一半：$${inner}$ 行。`
+              : `析取只有在括号和 $${last}$ 都为假时才为假：$${4 - inner}$ 行。所以有 $8 - ${4 - inner} = ${answer}$ 行为真。`
+          }\n\n**检验。** ${
+            outerAnd
+              ? `直接数：固定 $${last}$ 为真，括号的两个字母须取 $${inner}$ 种为真的取值之一，共 $${inner}$ 行。`
+              : `直接数：$${last}$ 在 $4$ 行为真；$${last}$ 为假时括号须为真，又有 $${inner}$ 行：$4 + ${inner} = ${answer}$。`
+          }`,
+        ],
+      ),
       [
-        `The bracket is true for $${inner}$ of the $4$ values of its two letters. ${
-          outerAnd
-            ? `The conjunction also needs $${last}$ true, which leaves $${inner}$ rows.`
-            : `The disjunction is false only when the bracket and $${last}$ are both false, which is $${4 - inner}$ ${inner === 3 ? "row" : "rows"}, so it is true in $${answer}$.`
-        }`,
-        `括号在它的两个字母的 $4$ 种取值中有 $${inner}$ 种为真。${
-          outerAnd
-            ? `合取还要求 $${last}$ 为真，所以剩下 $${inner}$ 行。`
-            : `析取只有在括号和 $${last}$ 都为假时才为假，共 $${4 - inner}$ 行，所以有 $${answer}$ 行为真。`
-        }`,
+        say(String(8 - answer), "That counts the rows where the formula is false.", "这是公式为假的行数。"),
+        say(
+          String(otherOuter),
+          `That treats the outer connective as $${outerAnd ? "\\vee" : "\\wedge"}$.`,
+          `这把外层联结词当成了 $${outerAnd ? "\\vee" : "\\wedge"}$。`,
+        ),
+        say(
+          String(otherInner),
+          `That treats the connective in the bracket as $${innerAnd ? "\\vee" : "\\wedge"}$.`,
+          `这把括号里的联结词当成了 $${innerAnd ? "\\vee" : "\\wedge"}$。`,
+        ),
       ],
     );
   },
@@ -62,20 +90,42 @@ const negatingBetween = point(
   "negating-a-double-inequality",
   ["Negating a double inequality", "否定双重不等式"],
   [
-    "A double inequality is a conjunction of two conditions, so its negation is a disjunction. The number can fail on either side, and each strict inequality turns into a weak one, because the endpoints themselves are not between the two bounds.",
-    "双重不等式是两个条件的合取，所以它的否定是析取。这个数可以在任一侧不满足条件，并且每个严格不等式都变成非严格的，因为端点本身不在两个界之间。",
+    'A double inequality is a conjunction of two conditions, so its negation is a disjunction. The number can fail on either side, and each strict inequality turns into a weak one, because the endpoints themselves are not between the two bounds. The negation of $2 < x < 5$ is $x \\le 2 \\vee x \\ge 5$: the number $2$ is not strictly between $2$ and $5$, so it must satisfy the negation, and it does.\n\n> **Watch out.** Joining the two parts with "and" describes nothing: no number is both at most $2$ and at least $5$. The negation of "and" is "or".',
+    "双重不等式是两个条件的合取，所以它的否定是析取。这个数可以在任一侧不满足条件，并且每个严格不等式都变成非严格的，因为端点本身不在两个界之间。$2 < x < 5$ 的否定是 $x \\le 2 \\vee x \\ge 5$：数 $2$ 不严格位于 $2$ 与 $5$ 之间，所以它必须满足否定，而它确实满足。\n\n> **注意。** 用“且”连接两部分，描述的是空集：没有数既不大于 $2$ 又不小于 $5$。“且”的否定是“或”。",
   ],
   (rng) => {
     const a = rng.int(-20, 20);
     const b = a + rng.int(1, 20);
-    return choose(
-      rng,
-      [`Which statement is the negation of $${a} < x < ${b}$?`, `哪个命题是 $${a} < x < ${b}$ 的否定？`],
-      same(`x \\le ${a} \\vee x \\ge ${b}`),
-      [same(`x \\le ${a} \\wedge x \\ge ${b}`), same(`x < ${a} \\vee x > ${b}`), same(`${a} \\ge x \\ge ${b}`)],
+    const andForm = same(`x \\le ${a} \\wedge x \\ge ${b}`);
+    const strict = same(`x < ${a} \\vee x > ${b}`);
+    const chained = same(`${a} \\ge x \\ge ${b}`);
+    return reasoned(
+      choose(
+        rng,
+        [`Which statement is the negation of $${a} < x < ${b}$?`, `哪个命题是 $${a} < x < ${b}$ 的否定？`],
+        same(`x \\le ${a} \\vee x \\ge ${b}`),
+        [andForm, strict, chained],
+        [
+          `**Step 1: Split the double inequality.** $${a} < x < ${b}$ says $x > ${a}$ and $x < ${b}$: a conjunction.\n\n**Step 2: Negate it.** By De Morgan's law the negation of a conjunction is the disjunction of the negations. The negation of $x > ${a}$ is $x \\le ${a}$, and of $x < ${b}$ is $x \\ge ${b}$, so the negation is $x \\le ${a} \\vee x \\ge ${b}$.\n\n**Check.** Try $x = ${a}$: it is not strictly greater than $${a}$, so the original fails, and $x \\le ${a}$ holds, so the negation is true. Try $x = \\frac{${a + b}}{2}$, between the bounds: the original holds, and neither $x \\le ${a}$ nor $x \\ge ${b}$ does.`,
+          `**第一步：拆开双重不等式。** $${a} < x < ${b}$ 是说 $x > ${a}$ 且 $x < ${b}$：一个合取。\n\n**第二步：取否定。** 由德摩根律，合取的否定是各部分否定的析取。$x > ${a}$ 的否定是 $x \\le ${a}$，$x < ${b}$ 的否定是 $x \\ge ${b}$，所以否定是 $x \\le ${a} \\vee x \\ge ${b}$。\n\n**检验。** 试 $x = ${a}$：它不严格大于 $${a}$，原命题不成立，而 $x \\le ${a}$ 成立，所以否定为真。再试两界之间的 $x = \\frac{${a + b}}{2}$：原命题成立，而 $x \\le ${a}$ 与 $x \\ge ${b}$ 都不成立。`,
+        ],
+      ),
       [
-        `The statement says $x > ${a}$ and $x < ${b}$. Negating the conjunction gives $x \\le ${a}$ or $x \\ge ${b}$, and the endpoints are included.`,
-        `这个命题说 $x > ${a}$ 且 $x < ${b}$。否定这个合取得 $x \\le ${a}$ 或 $x \\ge ${b}$，并且包含端点。`,
+        [
+          andForm[0],
+          `No number is both at most $${a}$ and at least $${b}$, so this is never true; the negation of a conjunction is a disjunction.`,
+          `没有数既不大于 $${a}$ 又不小于 $${b}$，所以它永远不成立；合取的否定是析取。`,
+        ],
+        [
+          strict[0],
+          `This leaves out $x = ${a}$ and $x = ${b}$, which are not strictly between the bounds and so belong to the negation.`,
+          `这漏掉了 $x = ${a}$ 和 $x = ${b}$，它们不严格位于两界之间，所以属于否定。`,
+        ],
+        [
+          chained[0],
+          `This says $x \\le ${a}$ and $x \\ge ${b}$ at once, which no number satisfies; the two parts must be joined by "or".`,
+          `这是说 $x \\le ${a}$ 且 $x \\ge ${b}$ 同时成立，没有数满足；两部分必须用“或”连接。`,
+        ],
       ],
     );
   },
@@ -85,8 +135,8 @@ const mixedGrouping = point(
   "regrouping-across-different-connectives",
   ["Regrouping across different connectives", "跨不同联结词重新分组"],
   [
-    "The associative laws let brackets move only when one connective is used throughout. With a mixed formula, moving the brackets can change the meaning, and a single assignment on which the two versions differ is enough to prove that they are not equivalent.",
-    "结合律只允许在全程使用同一个联结词时移动括号。对于混合的公式，移动括号可能改变含义，只要有一种赋值使两种写法不同，就足以证明它们不等价。",
+    "The associative laws let brackets move only when one connective is used throughout. With a mixed formula, moving the brackets can change the meaning, and a single assignment on which the two versions differ is enough to prove that they are not equivalent. For $(p \\wedge q) \\vee r$ and $p \\wedge (q \\vee r)$, take $p$ false and $r$ true: the first is true because of $r$, and the second is false because of $p$.\n\n> **Watch out.** An assignment on which the two formulas agree proves nothing about equivalence. Only one on which they differ settles the question.",
+    "结合律只允许在全程使用同一个联结词时移动括号。对于混合的公式，移动括号可能改变含义，只要有一种赋值使两种写法不同，就足以证明它们不等价。对 $(p \\wedge q) \\vee r$ 和 $p \\wedge (q \\vee r)$，取 $p$ 为假、$r$ 为真：第一个因 $r$ 而为真，第二个因 $p$ 而为假。\n\n> **注意。** 两个公式取值相同的赋值，对是否等价什么也证明不了。只有使它们取值不同的赋值才能说明问题。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(LETTERS, 3) as [string, string, string];
@@ -94,19 +144,42 @@ const mixedGrouping = point(
     const mid = rng.bool();
     const left = andFirst ? `(${a} \\wedge ${b}) \\vee ${c}` : `(${a} \\vee ${b}) \\wedge ${c}`;
     const right = andFirst ? `${a} \\wedge (${b} \\vee ${c})` : `${a} \\vee (${b} \\wedge ${c})`;
+    const leftValue = (x: boolean, y: boolean, z: boolean) => (andFirst ? (x && y) || z : (x || y) && z);
+    const rightValue = (x: boolean, y: boolean, z: boolean) => (andFirst ? x && (y || z) : x || (y && z));
     const opt = (x: boolean, y: boolean, z: boolean) =>
       same(`${a} = ${x ? "\\text{T}" : "\\text{F}"},\\ ${b} = ${y ? "\\text{T}" : "\\text{F}"},\\ ${c} = ${z ? "\\text{T}" : "\\text{F}"}`);
-    return choose(
-      rng,
-      [`Which assignment shows that $${left}$ and $${right}$ are not equivalent?`, `哪种赋值说明 $${left}$ 与 $${right}$ 不等价？`],
-      andFirst ? opt(false, mid, true) : opt(true, mid, false),
-      andFirst
-        ? [opt(true, true, true), opt(false, false, false), opt(true, false, true)]
-        : [opt(true, true, true), opt(false, false, false), opt(false, true, true)],
-      [
-        `With $${a}$ ${tf(!andFirst)} and $${c}$ ${tf(andFirst)}, the first formula is ${tf(andFirst)} and the second is ${tf(!andFirst)}, whatever $${b}$ is.`,
-        `当 $${a}$ 为${zf(!andFirst)}、$${c}$ 为${zf(andFirst)}时，无论 $${b}$ 取何值，第一个公式为${zf(andFirst)}，第二个公式为${zf(!andFirst)}。`,
-      ],
+    const wrong: (readonly [boolean, boolean, boolean])[] = andFirst
+      ? [
+          [true, true, true],
+          [false, false, false],
+          [true, false, true],
+        ]
+      : [
+          [true, true, true],
+          [false, false, false],
+          [false, true, true],
+        ];
+    const reasons = wrong.map(([x, y, z]): Reason => {
+      const v = leftValue(x, y, z);
+      return [
+        opt(x, y, z)[0],
+        `Here both formulas are ${tf(v)}, so this assignment does not tell them apart.`,
+        `这时两个公式都为${zf(v)}，所以这种赋值区分不了它们。`,
+      ];
+    });
+    const [x0, z0] = andFirst ? [false, true] : [true, false];
+    return reasoned(
+      choose(
+        rng,
+        [`Which assignment shows that $${left}$ and $${right}$ are not equivalent?`, `哪种赋值说明 $${left}$ 与 $${right}$ 不等价？`],
+        opt(x0, mid, z0),
+        wrong.map(([x, y, z]) => opt(x, y, z)),
+        [
+          `**Step 1: Evaluate the first formula.** With $${a}$ ${tf(x0)} and $${c}$ ${tf(z0)}, $${left}$ is ${tf(andFirst)}: ${andFirst ? `the outer disjunction has $${c}$ true` : `the outer conjunction has $${c}$ false`}.\n\n**Step 2: Evaluate the second formula.** $${right}$ is ${tf(!andFirst)}: ${andFirst ? `the outer conjunction has $${a}$ false` : `the outer disjunction has $${a}$ true`}. The two values differ, so the formulas are not equivalent.\n\n**Check.** Neither step used $${b}$. With $${b}$ ${tf(!mid)} instead, the first formula is ${tf(leftValue(x0, !mid, z0))} and the second ${tf(rightValue(x0, !mid, z0))}, still different.`,
+          `**第一步：计算第一个公式。** 当 $${a}$ 为${zf(x0)}、$${c}$ 为${zf(z0)}时，$${left}$ 为${zf(andFirst)}：${andFirst ? `外层析取中 $${c}$ 为真` : `外层合取中 $${c}$ 为假`}。\n\n**第二步：计算第二个公式。** $${right}$ 为${zf(!andFirst)}：${andFirst ? `外层合取中 $${a}$ 为假` : `外层析取中 $${a}$ 为真`}。两个值不同，所以两个公式不等价。\n\n**检验。** 两步都没有用到 $${b}$。改取 $${b}$ 为${zf(!mid)}，第一个公式为${zf(leftValue(x0, !mid, z0))}，第二个为${zf(rightValue(x0, !mid, z0))}，仍然不同。`,
+        ],
+      ),
+      reasons,
     );
   },
 );
@@ -115,8 +188,8 @@ const spottingAbsorption = point(
   "telling-absorption-from-its-lookalikes",
   ["Telling absorption from its lookalikes", "分辨吸收律与相似的形式"],
   [
-    "Absorption needs the same letter both outside the bracket and inside it, with different connectives. Then the bracket adds nothing, and the whole formula reduces to that letter. Formulas that look similar but have a different letter inside the bracket do not simplify this way.",
-    "吸收律要求同一个字母既在括号外又在括号内，且联结词不同。这时括号不起作用，整个公式化简为这个字母。外形相似但括号内字母不同的公式不能这样化简。",
+    "Absorption needs the same letter both outside the bracket and inside it, with different connectives. Then the bracket adds nothing, and the whole formula reduces to that letter. Formulas that look similar but have a different letter inside the bracket do not simplify this way. So $p \\wedge (p \\vee q)$ is equivalent to $p$, but $p \\wedge (q \\vee r)$ is not: with $p$ true and $q$, $r$ false it is false while $p$ is true.\n\n> **Watch out.** The letter outside the bracket must appear again inside it. A different letter inside means there is nothing to absorb.",
+    "吸收律要求同一个字母既在括号外又在括号内，且联结词不同。这时括号不起作用，整个公式化简为这个字母。外形相似但括号内字母不同的公式不能这样化简。所以 $p \\wedge (p \\vee q)$ 与 $p$ 等价，而 $p \\wedge (q \\vee r)$ 不是：$p$ 为真、$q$ 与 $r$ 为假时，它为假而 $p$ 为真。\n\n> **注意。** 括号外的字母必须在括号内再次出现。括号内是别的字母，就没有可吸收的。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(LETTERS, 3) as [string, string, string];
@@ -127,19 +200,37 @@ const spottingAbsorption = point(
       `(${b} \\vee ${a}) \\wedge ${a}`,
       `(${b} \\wedge ${a}) \\vee ${a}`,
     ][form] as string;
-    const verdict =
-      form % 2 === 0
-        ? `$${a}$ true makes the bracket true, and $${a}$ false makes the conjunction false`
-        : `$${a}$ true makes the disjunction true, and $${a}$ false makes the bracket false`;
-    const zhVerdict = form % 2 === 0 ? `$${a}$ 为真时括号为真，$${a}$ 为假时合取为假` : `$${a}$ 为真时析取为真，$${a}$ 为假时括号为假`;
-    return choose(
-      rng,
-      [`Which formula is logically equivalent to the single letter $${a}$?`, `哪个公式与单个字母 $${a}$ 逻辑等价？`],
-      same(formula),
-      [same(`${a} \\wedge (${b} \\vee ${c})`), same(`${a} \\vee (${b} \\wedge ${c})`), same(`${b} \\wedge (${a} \\vee ${b})`)],
+    const conjunction = form % 2 === 0;
+    const andOr = same(`${a} \\wedge (${b} \\vee ${c})`);
+    const orAnd = same(`${a} \\vee (${b} \\wedge ${c})`);
+    const swapped = same(`${b} \\wedge (${a} \\vee ${b})`);
+    return reasoned(
+      choose(
+        rng,
+        [`Which formula is logically equivalent to the single letter $${a}$?`, `哪个公式与单个字母 $${a}$ 逻辑等价？`],
+        same(formula),
+        [andOr, orAnd, swapped],
+        [
+          `**Step 1: Take $${a}$ true.** ${conjunction ? "The bracket is a disjunction containing a true letter, so it is true, and the conjunction is true." : "The outer disjunction contains a true letter, so it is true."}\n\n**Step 2: Take $${a}$ false.** ${conjunction ? "The outer conjunction contains a false letter, so it is false." : "The bracket is a conjunction containing a false letter, so it is false, and the disjunction is false."} In both cases $${formula}$ has the value of $${a}$, which is the absorption law.\n\n**Check.** Try $${a}$ true and $${b}$ false: $${formula}$ is true, the same as $${a}$.`,
+          `**第一步：取 $${a}$ 为真。** ${conjunction ? "括号是含有真字母的析取，所以为真，合取也为真。" : "外层析取含有真字母，所以为真。"}\n\n**第二步：取 $${a}$ 为假。** ${conjunction ? "外层合取含有假字母，所以为假。" : "括号是含有假字母的合取，所以为假，析取也为假。"}两种情形下 $${formula}$ 都与 $${a}$ 取值相同，这就是吸收律。\n\n**检验。** 试 $${a}$ 为真、$${b}$ 为假：$${formula}$ 为真，与 $${a}$ 相同。`,
+        ],
+      ),
       [
-        `In $${formula}$, ${verdict}, so its value always equals that of $${a}$.`,
-        `在 $${formula}$ 中，${zhVerdict}，所以它的值总与 $${a}$ 相同。`,
+        [
+          andOr[0],
+          `With $${a}$ true and $${b}$, $${c}$ false it is false while $${a}$ is true.`,
+          `当 $${a}$ 为真、$${b}$ 与 $${c}$ 为假时，它为假而 $${a}$ 为真。`,
+        ],
+        [
+          orAnd[0],
+          `With $${a}$ false and $${b}$, $${c}$ true it is true while $${a}$ is false.`,
+          `当 $${a}$ 为假、$${b}$ 与 $${c}$ 为真时，它为真而 $${a}$ 为假。`,
+        ],
+        [
+          swapped[0],
+          `This absorbs into $${b}$, not $${a}$: with $${a}$ true and $${b}$ false it is false.`,
+          `它吸收成 $${b}$，而不是 $${a}$：当 $${a}$ 为真、$${b}$ 为假时，它为假。`,
+        ],
       ],
     );
   },
@@ -149,8 +240,8 @@ const falsifyingRows = point(
   "counting-the-rows-that-falsify-an-implication",
   ["Counting the rows that falsify an implication", "计算使蕴涵为假的行数"],
   [
-    "An implication is false only when its antecedent is true and its consequent is false, so only these rows need to be counted. If there are none, the implication is a tautology, which is a quick test that avoids writing the whole table.",
-    "蕴涵只有在前件为真且后件为假时才为假，所以只需计算这些行。如果一行也没有，这个蕴涵就是重言式，这种快速检验不必写出整张表。",
+    "An implication is false only when its antecedent is true and its consequent is false, so only these rows need to be counted. If there are none, the implication is a tautology, which is a quick test that avoids writing the whole table. For $(p \\wedge q) \\Rightarrow r$ the antecedent is true only when $p$ and $q$ are, and then $r$ must be false: one row, $(\\text{T}, \\text{T}, \\text{F})$.\n\n> **Watch out.** A row with a false antecedent makes the implication true, not false. Count only the rows where the antecedent is true.",
+    "蕴涵只有在前件为真且后件为假时才为假，所以只需计算这些行。如果一行也没有，这个蕴涵就是重言式，这种快速检验不必写出整张表。对 $(p \\wedge q) \\Rightarrow r$，前件只有 $p$、$q$ 都为真时才为真，这时 $r$ 须为假：只有一行 $(\\text{T}, \\text{T}, \\text{F})$。\n\n> **注意。** 前件为假的行使蕴涵为真，而不是为假。只数前件为真的行。",
   ],
   (rng) => {
     const [a, b, c] = rng.sample(LETTERS, 3) as [string, string, string];
@@ -169,27 +260,48 @@ const falsifyingRows = point(
     const [A, fa] = rng.pick(antecedents);
     const [B, fb] = rng.pick(consequents);
     const bad: boolean[][] = [];
+    let antecedentFalse = 0;
+    let bothTrue = 0;
     for (const x of [true, false])
-      for (const y of [true, false]) for (const z of [true, false]) if (fa(x, y, z) && !fb(x, y, z)) bad.push([x, y, z]);
+      for (const y of [true, false])
+        for (const z of [true, false]) {
+          if (!fa(x, y, z)) antecedentFalse++;
+          else if (fb(x, y, z)) bothTrue++;
+          else bad.push([x, y, z]);
+        }
     const answer = bad.length;
     const rows = bad.map(row).join(", ");
     const grouped = (part: string) => (part.includes(" ") ? `(${part})` : part);
-    return ask(
+    const antecedentTrue = 8 - antecedentFalse;
+    return withMistakes(
+      ask(
+        [
+          `In how many of the $8$ rows of the truth table is $${grouped(A)} \\Rightarrow ${grouped(B)}$ false?`,
+          `在真值表的 $8$ 行中，$${grouped(A)} \\Rightarrow ${grouped(B)}$ 有多少行为假？`,
+        ],
+        answer,
+        [8 - answer, answer + 1, answer === 0 ? 2 : answer - 1],
+        [
+          `**Step 1: Keep the rows with $${A}$ true.** An implication can be false only where its antecedent is true; $${A}$ is true in $${antecedentTrue}$ of the $8$ rows.\n\n**Step 2: Among them, find $${B}$ false.** ${
+            answer === 0
+              ? `Whenever $${A}$ is true, $${B}$ is true as well, so no row is false and the formula is a tautology.`
+              : `In the order $(${a}, ${b}, ${c})$ these rows are $${rows}$, so there ${answer === 1 ? "is $1$" : `are $${answer}$`}.`
+          }\n\n**Check.** Count the true rows instead: $${A}$ false in $${antecedentFalse}$ rows, and $${A}$, $${B}$ both true in $${bothTrue}$. Then $${antecedentFalse} + ${bothTrue} + ${answer} = 8$, every row counted once.`,
+          `**第一步：保留 $${A}$ 为真的行。** 蕴涵只有在前件为真时才可能为假；$${A}$ 在 $8$ 行中有 $${antecedentTrue}$ 行为真。\n\n**第二步：在其中找 $${B}$ 为假的行。** ${
+            answer === 0
+              ? `每当 $${A}$ 为真时，$${B}$ 也为真，所以没有一行为假，这个公式是重言式。`
+              : `按 $(${a}, ${b}, ${c})$ 的顺序，这些行是 $${rows}$，共 $${answer}$ 行。`
+          }\n\n**检验。** 改数真行：$${A}$ 为假有 $${antecedentFalse}$ 行，$${A}$ 与 $${B}$ 都为真有 $${bothTrue}$ 行。$${antecedentFalse} + ${bothTrue} + ${answer} = 8$，每一行恰好数了一次。`,
+        ],
+      ),
       [
-        `In how many of the $8$ rows of the truth table is $${grouped(A)} \\Rightarrow ${grouped(B)}$ false?`,
-        `在真值表的 $8$ 行中，$${grouped(A)} \\Rightarrow ${grouped(B)}$ 有多少行为假？`,
+        say(String(8 - answer), "That counts the rows where the implication is true.", "这是蕴涵为真的行数。"),
+        say(
+          String(antecedentFalse),
+          "That counts the rows where the antecedent is false; there the implication is true.",
+          "这是前件为假的行数；那些行里蕴涵为真。",
+        ),
       ],
-      answer,
-      [8 - answer, answer + 1, answer === 0 ? 2 : answer - 1],
-      answer === 0
-        ? [
-            `Whenever $${A}$ is true, $${B}$ is true as well, so no row is false and the formula is a tautology.`,
-            `每当 $${A}$ 为真时，$${B}$ 也为真，所以没有一行为假，这个公式是重言式。`,
-          ]
-        : [
-            `The false rows have $${A}$ true and $${B}$ false. In the order $(${a}, ${b}, ${c})$ they are $${rows}$, so there are $${answer}$.`,
-            `为假的行满足 $${A}$ 为真且 $${B}$ 为假。按 $(${a}, ${b}, ${c})$ 的顺序，它们是 $${rows}$，共 $${answer}$ 行。`,
-          ],
     );
   },
 );

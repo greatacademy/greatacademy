@@ -211,7 +211,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 
 | File | Topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
-| `methods-of-proof-logic.ts` | 13 | in progress | coordinator |  |
+| `methods-of-proof-logic.ts` | 13 | done | coordinator | third points in `deeper-methods-of-proof.ts` and `deeper-methods-of-proof-third.ts` too |
 
 ## Open Gaps
 

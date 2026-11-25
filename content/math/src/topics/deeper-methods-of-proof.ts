@@ -7,7 +7,8 @@ import { poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, why } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 /** binom gives the binomial coefficient of n over k. */
 const binom = (n: number, k: number): number => {
@@ -390,8 +391,8 @@ const falseRowsOfAConditional: KnowledgePointDef = {
   id: "the-false-rows-of-a-conditional",
   title: t("The false rows of a conditional", "条件命题的假行"),
   explanation: t(
-    "A conditional is false in only one situation: its hypothesis is true and its conclusion is false. So the false rows of its truth table are easy to count even when the true rows are not. Fix the values that this situation requires, and let every variable that is not mentioned take either value.",
-    "条件命题只在一种情况下为假：前件为真而后件为假。所以即使真行不好数，真值表中的假行也容易数。固定这种情况所要求的值，再让没有出现的变量任意取值。",
+    "A conditional is false in only one situation: its hypothesis is true and its conclusion is false. So its false rows are easy to count even when its true rows are not: fix the values that this situation requires, and let every other variable take either value. In a table of the $5$ variables $p_1$, $p_2$, $q$, $r$, $s$, the conditional $(p_1 \\land p_2) \\to q$ is false only when $p_1$ and $p_2$ are true and $q$ is false. That fixes $3$ variables; $r$ and $s$ are free, so there are $2^{2} = 4$ false rows.\n\n> **Watch out.** $q$ is not free: the false case needs it false. Fix it together with the variables of the hypothesis.",
+    "条件命题只在一种情况下为假：前件为真而后件为假。所以即使真行不好数，假行也容易数：固定这种情况所要求的值，再让其余每个变量任意取值。在 $p_1$、$p_2$、$q$、$r$、$s$ 这 $5$ 个变量的真值表中，$(p_1 \\land p_2) \\to q$ 只在 $p_1$、$p_2$ 为真且 $q$ 为假时为假。这固定了 $3$ 个变量；$r$、$s$ 自由，所以有 $2^{2} = 4$ 个假行。\n\n> **注意。** $q$ 不是自由的：为假的情形要求它为假。要把它和前件中的变量一起固定。",
   ),
   generate(rng) {
     const k = rng.int(1, 4);
@@ -406,9 +407,32 @@ const falseRowsOfAConditional: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 ** n - answer, 2 ** (n - 1), 2 ** (n - k)],
-      solution: t(
-        `It is false only when every $p_i$ is true and $q$ is false, which fixes ${k + 1} variables. The others are free, so the count is $2^{${n - k - 1}} = ${answer}$.`,
-        `只有每个 $p_i$ 为真且 $q$ 为假时才为假，这固定了 ${k + 1} 个变量。其余变量自由，所以行数是 $2^{${n - k - 1}} = ${answer}$。`,
+      mistakes: [
+        why(2 ** n - answer, "That counts the rows where the conditional is true.", "这是条件命题为真的行数。"),
+        why(2 ** (n - 1), "That fixes only $q$; the hypothesis must be true as well.", "这只固定了 $q$；前件也必须为真。"),
+        why(2 ** (n - k), "That lets $q$ vary; the false case needs $q$ false.", "这让 $q$ 任意取值了；为假的情形要求 $q$ 为假。"),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the one false case", "找出唯一为假的情形"],
+            t(
+              `A conditional is false only when its hypothesis is true and its conclusion false: every $p_i$ true and $q$ false. That fixes $${k} + 1 = ${k + 1}$ variables.`,
+              `条件命题只在前件真、后件假时为假：每个 $p_i$ 都为真且 $q$ 为假。这固定了 $${k} + 1 = ${k + 1}$ 个变量。`,
+            ),
+          ],
+          [
+            ["Let the others vary", "其余变量任意取值"],
+            t(
+              `The other $${n - k - 1}$ variables are free, each true or false, so there are $2^{${n - k - 1}} = ${answer}$ false rows.`,
+              `其余 $${n - k - 1}$ 个变量自由，每个可真可假，所以有 $2^{${n - k - 1}} = ${answer}$ 个假行。`,
+            ),
+          ],
+        ],
+        t(
+          `With no free variables there would be exactly one false row, T…T then F for $q$; each of the $${n - k - 1}$ free variables doubles that: $${[1, ...Array.from({ length: n - k - 1 }, (_, i) => 2 ** (i + 1))].join(", ")}$.`,
+          `若没有自由变量，就恰有一个假行：各 $p_i$ 为 T，$q$ 为 F；$${n - k - 1}$ 个自由变量每个使它翻倍：$${[1, ...Array.from({ length: n - k - 1 }, (_, i) => 2 ** (i + 1))].join(", ")}$。`,
+        ),
       ),
     });
   },
@@ -418,8 +442,8 @@ const trueRowsOfBiconditionals: KnowledgePointDef = {
   id: "the-true-rows-of-several-biconditionals",
   title: t("The true rows of several biconditionals", "多个双条件的真行"),
   explanation: t(
-    "A biconditional is true when its two sides have the same value, so it allows only half of the rows. If several biconditionals share no variables, each of them separately halves the rows, because each one ties one variable to another. Requiring all of them therefore divides the number of rows by a power of two.",
-    "双条件在两边取值相同时为真，所以它只允许一半的行。如果几个双条件没有公共变量，每一个都独立地使行数减半，因为每一个都把一个变量绑定到另一个变量。同时要求它们成立，行数就除以二的幂。",
+    "A biconditional is true when its two sides have the same value, which is $2$ of the $4$ value pairs of its two variables, TT and FF. So it allows half of the rows. If several biconditionals share no variables, each separately halves the rows, because each ties one variable to another and leaves the rest alone. In $4$ variables, $(p_1 \\leftrightarrow q_1) \\land (p_2 \\leftrightarrow q_2)$ is true in $16 \\div 2 \\div 2 = 4$ rows: $p_1$ and $p_2$ are free, and each $q_i$ copies its $p_i$.\n\n> **Watch out.** A biconditional does not fix its variables; it allows two of their four value pairs. It halves the rows, it does not quarter them.",
+    "双条件在两边取值相同时为真，这是它两个变量的 $4$ 种取值中的 $2$ 种，TT 与 FF。所以它允许一半的行。如果几个双条件没有公共变量，每一个都独立地使行数减半，因为每一个只把一个变量绑定到另一个变量，不影响其余变量。在 $4$ 个变量中，$(p_1 \\leftrightarrow q_1) \\land (p_2 \\leftrightarrow q_2)$ 在 $16 \\div 2 \\div 2 = 4$ 行为真：$p_1$、$p_2$ 自由，每个 $q_i$ 与对应的 $p_i$ 相同。\n\n> **注意。** 双条件并不固定它的变量；它允许两个变量四种取值中的两种。它使行数减半，而不是变为四分之一。",
   ),
   generate(rng) {
     const k = rng.int(1, 4);
@@ -435,14 +459,44 @@ const trueRowsOfBiconditionals: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 ** n - answer, 2 ** (n - 1), 2 ** (n - 2 * k)],
-      solution: t(
-        `Each biconditional halves the rows, independently of any others. So $2^{${n}} \\div 2^{${k}} = ${answer}$ rows remain.`,
-        `每个双条件都使行数减半，彼此独立。所以剩下 $2^{${n}} \\div 2^{${k}} = ${answer}$ 行。`,
+      mistakes: [
+        why(2 ** n - answer, "That counts the rows where the formula is false.", "这是公式为假的行数。"),
+        why(
+          2 ** (n - 1),
+          "That halves the rows only once; each biconditional halves them again.",
+          "这只减半了一次；每个双条件都要再减半一次。",
+        ),
+        why(
+          2 ** (n - 2 * k),
+          "That fixes both variables of each biconditional, but each allows two value pairs, TT and FF.",
+          "这把每个双条件的两个变量都固定了，但每个双条件允许两种取值，TT 和 FF。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["One biconditional halves the rows", "一个双条件使行数减半"],
+            t(
+              "$p_i \\leftrightarrow q_i$ is true when $q_i$ has the same value as $p_i$: for each choice of the other variables, one of the two values of $q_i$ works.",
+              "$p_i \\leftrightarrow q_i$ 在 $q_i$ 与 $p_i$ 取值相同时为真：其余变量每取定一组值，$q_i$ 的两种取值中恰有一种可行。",
+            ),
+          ],
+          [
+            ["Halve once for each", "每个都减半一次"],
+            t(
+              `The ${count(k, "biconditional shares", "biconditionals share")} no variables, so the halvings are independent: $2^{${n}} \\div 2^{${k}} = ${answer}$.`,
+              `这 ${k} 个双条件没有公共变量，所以每次减半互不影响：$2^{${n}} \\div 2^{${k}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Count another way. Each pair $p_i, q_i$ has $2$ allowed value pairs, and the other $${n - 2 * k}$ variables are free: $2^{${k}} \\cdot 2^{${n - 2 * k}} = ${answer}$.`,
+          `换一种数法。每一对 $p_i, q_i$ 有 $2$ 种允许的取值，其余 $${n - 2 * k}$ 个变量自由：$2^{${k}} \\cdot 2^{${n - 2 * k}} = ${answer}$。`,
+        ),
       ),
     });
   },
 };
-
 const conditionsOnMultiples: KnowledgePointDef = {
   id: "counting-sufficient-and-necessary-divisibility-conditions",
   title: t("Counting sufficient and necessary divisibility conditions", "数可除性的充分条件和必要条件"),
@@ -1180,8 +1234,8 @@ const rowsWithKTrue: KnowledgePointDef = {
   figure: proofDrawings1["truth-tables#rows-with-a-given-number-of-true-variables"],
   title: t("Rows with a given number of true variables", "恰有给定个数变量为真的行"),
   explanation: t(
-    "A row of a truth table is one choice of true or false for every variable, so it is the same thing as the subset of variables that are true. Rows with a fixed number of true variables therefore match subsets of a fixed size. This is why the entries of Pascal's triangle add up to the total number of rows.",
-    "真值表的一行就是给每个变量选定真或假，所以它和取真的变量组成的子集是一回事。因此取真变量个数固定的行，对应大小固定的子集。这就是帕斯卡三角形一行中各数之和等于总行数的原因。",
+    "A row of a truth table is one choice of true or false for every variable, so it is the same thing as the subset of variables that are true. Rows with a fixed number of true variables therefore match subsets of a fixed size. In $4$ variables, the rows with exactly $2$ true are the pairs $\\{p, q\\}$, $\\{p, r\\}$, $\\{p, s\\}$, $\\{q, r\\}$, $\\{q, s\\}$, $\\{r, s\\}$: $\\binom{4}{2} = 6$ rows. This is also why the entries of a row of Pascal's triangle add up to the total number of rows: $1 + 4 + 6 + 4 + 1 = 16$.\n\n> **Watch out.** Exactly $k$ true means the others are all false. Fixing $k$ variables as true and letting the rest vary counts rows with at least $k$ true, several times over.",
+    "真值表的一行就是给每个变量选定真或假，所以它和取真的变量组成的子集是一回事。因此取真变量个数固定的行，对应大小固定的子集。在 $4$ 个变量中，恰有 $2$ 个为真的行就是 $\\{p, q\\}$、$\\{p, r\\}$、$\\{p, s\\}$、$\\{q, r\\}$、$\\{q, s\\}$、$\\{r, s\\}$ 这些对：$\\binom{4}{2} = 6$ 行。这也是帕斯卡三角形一行中各数之和等于总行数的原因：$1 + 4 + 6 + 4 + 1 = 16$。\n\n> **注意。** 恰有 $k$ 个为真，意味着其余变量都为假。固定 $k$ 个变量为真、让其余变量任意取值，数的是至少 $k$ 个为真的行，而且有重复。",
   ),
   generate(rng) {
     const n = rng.int(3, 10);
@@ -1195,9 +1249,36 @@ const rowsWithKTrue: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 ** n, 2 ** (n - k), n * k, binom(n, k - 1)],
-      solution: t(
-        `Such a row is fixed by choosing which ${count(k, "variable is", "variables are")} true, and the others are then false. That gives $\\binom{${n}}{${k}} = ${answer}$ rows.`,
-        `选定哪 ${k} 个变量为真，这样的一行就确定了，其余变量都为假。所以有 $\\binom{${n}}{${k}} = ${answer}$ 行。`,
+      mistakes: [
+        why(2 ** n, "That counts every row, whatever the number of true variables.", "这是全部行数，不论有几个变量为真。"),
+        why(
+          2 ** (n - k),
+          "That fixes some variables as true but lets the others vary; they must all be false.",
+          "这固定了一些变量为真，却让其余变量任意取值；它们必须都为假。",
+        ),
+        why(binom(n, k - 1), `That is the count for ${k - 1} true variables.`, `这是恰有 ${k - 1} 个变量为真的行数。`),
+      ],
+      solution: walked(
+        [
+          [
+            ["Match rows to subsets", "把行对应到子集"],
+            t(
+              `A row with exactly ${count(k, "true variable", "true variables")} is fixed by choosing which ${k === 1 ? "variable is" : "variables are"} true; the others are then false.`,
+              `恰有 ${k} 个变量为真的一行，由选定哪 ${k} 个变量为真而确定；其余变量都为假。`,
+            ),
+          ],
+          [
+            ["Count the choices", "数出选法"],
+            t(
+              `Choose ${k} of the ${n} variables: $\\binom{${n}}{${k}} = ${answer}$ rows.`,
+              `从 ${n} 个变量中选 ${k} 个：$\\binom{${n}}{${k}} = ${answer}$ 行。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing instead the ${n - k} variables that are false fixes the same rows: $\\binom{${n}}{${n - k}} = ${binom(n, n - k)}$, the same number.`,
+          `改为选定为假的 ${n - k} 个变量，确定的是同样的行：$\\binom{${n}}{${n - k}} = ${binom(n, n - k)}$，个数相同。`,
+        ),
       ),
     });
   },
@@ -1207,8 +1288,8 @@ const formulasUpToEquivalence: KnowledgePointDef = {
   id: "counting-formulas-up-to-equivalence",
   title: t("Counting formulas up to equivalence", "在等价意义下数公式"),
   explanation: t(
-    "Infinitely many formulas can be written in a few variables, but two of them are logically equivalent exactly when their truth table columns match. So counting formulas up to equivalence means counting columns. A column is decided by the set of rows in which it is true, and any set of rows is possible, so columns correspond to subsets of the rows.",
-    "几个变量可以写出无穷多个公式，但两个公式逻辑等价，当且仅当它们的真值表列相同。所以在等价意义下数公式，就是数列。一列由它取真的行组成的集合决定，而任何一组行都是可能的，所以列和行的子集一一对应。",
+    "Infinitely many formulas can be written in a few variables, but two of them are logically equivalent exactly when their truth-table columns match. So counting formulas up to equivalence means counting columns. A column is decided by the set of rows in which it is true, and any set of rows is possible, so columns correspond to subsets of the rows. In $2$ variables the table has $4$ rows, and the formulas true in exactly one row are $\\binom{4}{1} = 4$: $p \\land q$, $p \\land \\neg q$, $\\neg p \\land q$ and $\\neg p \\land \\neg q$.\n\n> **Watch out.** Count columns, not ways of writing: $p$ and $\\neg \\neg p$ are two formulas but one column, so they count once.",
+    "几个变量可以写出无穷多个公式，但两个公式逻辑等价，当且仅当它们的真值表列相同。所以在等价意义下数公式，就是数列。一列由它取真的行组成的集合决定，而任何一组行都是可能的，所以列和行的子集一一对应。$2$ 个变量的真值表有 $4$ 行，恰好一行为真的公式有 $\\binom{4}{1} = 4$ 个：$p \\land q$、$p \\land \\neg q$、$\\neg p \\land q$ 和 $\\neg p \\land \\neg q$。\n\n> **注意。** 数的是列，不是写法：$p$ 与 $\\neg \\neg p$ 是两个公式，却是同一列，只算一次。",
   ),
   generate(rng) {
     const n = rng.int(2, 4);
@@ -1229,15 +1310,41 @@ const formulasUpToEquivalence: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 ** rows, required ? binom(rows, k) : binom(rows, k - 1), rows * k],
-      solution: required
-        ? t(
-            `The table has ${rows} rows, and one of the ${k} true rows is already chosen. Choose the other ${count(k - 1, "row", "rows")} from the remaining ${rows - 1} rows: $\\binom{${rows - 1}}{${k - 1}} = ${answer}$.`,
-            `真值表有 ${rows} 行，${k} 个真行中已经选定了一行。再从其余 ${rows - 1} 行中选另外 ${k - 1} 行：$\\binom{${rows - 1}}{${k - 1}} = ${answer}$。`,
-          )
-        : t(
-            `The table has ${rows} rows, and an equivalence class of formulas is fixed by which rows are true. Choosing them gives $\\binom{${rows}}{${k}} = ${answer}$.`,
-            `真值表有 ${rows} 行，一个等价类的公式由哪些行为真决定。选出这些行，得 $\\binom{${rows}}{${k}} = ${answer}$。`,
-          ),
+      mistakes: [
+        why(2 ** rows, "That counts every column, whatever its number of true rows.", "这是全部的列数，不论有几行为真。"),
+        required
+          ? why(binom(rows, k), "That ignores the row that must be among the true ones.", "这忽略了必须为真的那一行。")
+          : why(binom(rows, k - 1), "That chooses one row too few.", "这少选了一行。"),
+      ],
+      solution: walked(
+        [
+          [
+            ["Count the rows", "数出行数"],
+            t(`${n} variables give $2^{${n}} = ${rows}$ rows.`, `${n} 个变量共有 $2^{${n}} = ${rows}$ 行。`),
+          ],
+          [
+            ["Choose the true rows", "选出为真的行"],
+            required
+              ? t(
+                  `A class of equivalent formulas is fixed by its set of true rows. One of the ${k} is already chosen, so choose the other ${count(k - 1, "row", "rows")} from the remaining ${rows - 1}: $\\binom{${rows - 1}}{${k - 1}} = ${answer}$.`,
+                  `一类等价的公式由它为真的行组成的集合决定。${k} 行中已选定一行，再从其余 ${rows - 1} 行中选另外 ${k - 1} 行：$\\binom{${rows - 1}}{${k - 1}} = ${answer}$。`,
+                )
+              : t(
+                  `A class of equivalent formulas is fixed by its set of true rows, so choose ${count(k, "row", "rows")} of the ${rows}: $\\binom{${rows}}{${k}} = ${answer}$.`,
+                  `一类等价的公式由它为真的行组成的集合决定，所以从 ${rows} 行中选 ${k} 行：$\\binom{${rows}}{${k}} = ${answer}$。`,
+                ),
+          ],
+        ],
+        required
+          ? t(
+              `Of all $\\binom{${rows}}{${k}} = ${binom(rows, k)}$ columns with ${k} true rows, the fraction that includes a given row is $\\frac{${k}}{${rows}}$, and $${binom(rows, k)} \\cdot \\frac{${k}}{${rows}} = ${answer}$.`,
+              `在全部 $\\binom{${rows}}{${k}} = ${binom(rows, k)}$ 个有 ${k} 行为真的列中，包含某一给定行的占 $\\frac{${k}}{${rows}}$，而 $${binom(rows, k)} \\cdot \\frac{${k}}{${rows}} = ${answer}$。`,
+            )
+          : t(
+              `Negating a formula turns its ${k} true rows into ${rows - k} true rows, one for one, so the count for ${rows - k} true rows must be the same: $\\binom{${rows}}{${rows - k}} = ${binom(rows, rows - k)}$.`,
+              `对公式取否定，会把 ${k} 个真行一一变成 ${rows - k} 个真行，所以恰有 ${rows - k} 行为真的个数必然相同：$\\binom{${rows}}{${rows - k}} = ${binom(rows, rows - k)}$。`,
+            ),
+      ),
     });
   },
 };
@@ -1246,8 +1353,8 @@ const termsAfterDistributing: KnowledgePointDef = {
   id: "counting-the-terms-after-distributing",
   title: t("Counting the terms after distributing", "数分配后的项数"),
   explanation: t(
-    "Distributing one connective over the other works like multiplying out brackets. Each term of the result takes one variable from every bracket, so the number of terms is the product of the bracket sizes, by the multiplication principle. This is why repeated distribution can make a formula far longer, even though the new formula is logically equivalent to the old one.",
-    "用一个联结词对另一个联结词作分配，就像把括号乘开。结果中的每一项都从每个括号中各取一个变量，所以由乘法原理，项数是各括号大小的乘积。这就是反复分配会使公式变长很多的原因，尽管新公式和原公式逻辑等价。",
+    "Distributing one connective over the other works like multiplying out brackets. Each term of the result takes one variable from every bracket, so by the multiplication principle the number of terms is the product of the bracket sizes. For $(a_1 \\lor a_2) \\land (b_1 \\lor b_2 \\lor b_3)$ the terms are $a_i \\land b_j$ for each of $2$ choices of $i$ and $3$ of $j$: $2 \\cdot 3 = 6$ terms. This is why repeated distribution can make a formula far longer, even though the new formula is logically equivalent to the old one.\n\n> **Watch out.** The sizes multiply; they do not add. Two brackets of $3$ give $9$ terms, not $6$.",
+    "用一个联结词对另一个联结词作分配，就像把括号乘开。结果中的每一项都从每个括号中各取一个变量，所以由乘法原理，项数是各括号大小的乘积。对 $(a_1 \\lor a_2) \\land (b_1 \\lor b_2 \\lor b_3)$，各项是 $a_i \\land b_j$，$i$ 有 $2$ 种取法，$j$ 有 $3$ 种：共 $2 \\cdot 3 = 6$ 项。这就是反复分配会使公式变长很多的原因，尽管新公式和原公式逻辑等价。\n\n> **注意。** 各括号的大小要相乘，而不是相加。两个各有 $3$ 项的括号得 $9$ 项，不是 $6$ 项。",
   ),
   generate(rng) {
     const m = rng.int(2, 7);
@@ -1264,6 +1371,7 @@ const termsAfterDistributing: KnowledgePointDef = {
     const resultZh = outerAnd ? "合取式的析取" : "析取式的合取";
     const termEn = outerAnd ? "conjunctions" : "disjunctions";
     const termZh = outerAnd ? "合取式" : "析取式";
+    const sum = sizes.reduce((s, v) => s + v, 0);
     return numberProblem({
       prompt: t(
         `All the variables in $${brackets.join(` ${outer} `)}$ are different. The formula is distributed fully into a ${resultEn}. How many ${termEn} does the result have?`,
@@ -1271,10 +1379,41 @@ const termsAfterDistributing: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [sizes.reduce((sum, v) => sum + v, 0), m ** n, three ? m * n : m * n * 2, answer + m],
-      solution: t(
-        `Each of the ${termEn} takes one variable from each bracket, so the count is $${sizes.join(" \\cdot ")} = ${answer}$.`,
-        `每个${termZh}都从每个括号中各取一个变量，所以个数是 $${sizes.join(" \\cdot ")} = ${answer}$。`,
+      wrong: [sum, m ** n, three ? m * n : m * n * 2, answer + m],
+      mistakes: [
+        why(
+          sum,
+          "That adds the sizes of the brackets; each term takes one variable from every bracket, so they multiply.",
+          "这是把各括号的大小相加；每一项从每个括号各取一个变量，所以要相乘。",
+        ),
+        why(
+          m ** n,
+          "That raises one size to the power of the other; the sizes multiply.",
+          "这是把一个大小作为另一个的指数；各括号大小应相乘。",
+        ),
+        ...(three ? [why(m * n, "That leaves out the third bracket.", "这漏掉了第三个括号。")] : []),
+      ],
+      solution: walked(
+        [
+          [
+            ["See what a term is", "看一项是什么"],
+            t(
+              `Distributing ${outerAnd ? "$\\land$ over $\\lor$" : "$\\lor$ over $\\land$"} pairs every part of one bracket with every part of the others, so each of the ${termEn} takes one variable from each bracket.`,
+              `把${outerAnd ? " $\\land$ 对 $\\lor$ " : " $\\lor$ 对 $\\land$ "}分配，会使一个括号的每一部分与其他括号的每一部分配对，所以每个${termZh}都从每个括号各取一个变量。`,
+            ),
+          ],
+          [
+            ["Multiply the choices", "把选法相乘"],
+            t(
+              `The brackets have ${sizes.join(", ")} variables, so by the multiplication principle there are $${sizes.join(" \\cdot ")} = ${answer}$ ${termEn}.`,
+              `各括号分别有 ${sizes.join("、")} 个变量，所以由乘法原理，共有 $${sizes.join(" \\cdot ")} = ${answer}$ 个${termZh}。`,
+            ),
+          ],
+        ],
+        t(
+          `Fix the variable taken from the first bracket: each of its $${m}$ choices goes with $${sizes.slice(1).join(" \\cdot ")} = ${answer / m}$ ways to finish the term, and $${m} \\cdot ${answer / m} = ${answer}$.`,
+          `固定从第一个括号取的变量：它的 $${m}$ 种取法，每种都有 $${sizes.slice(1).join(" \\cdot ")} = ${answer / m}$ 种方式补全这一项，$${m} \\cdot ${answer / m} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1284,8 +1423,8 @@ const rowsThroughDeMorgan: KnowledgePointDef = {
   id: "counting-rows-through-de-morgan",
   title: t("Counting rows through De Morgan's laws", "用德摩根律数行"),
   explanation: t(
-    "A negated conjunction becomes a disjunction of negations, and a disjunction is hard to count directly because it is true in so many ways. It is false in only one way, though: every negated variable is false. So count that case and subtract it from all the rows. A negated disjunction is easier still, because it becomes a conjunction that fixes its variables.",
-    "合取的否定变成否定的析取，而析取有太多方式为真，很难直接数。但它只有一种方式为假：每个带否定的变量都为假。所以数出这种情形，再从总行数中减去。析取的否定更简单，因为它变成一个合取，直接固定了其中的变量。",
+    "A negated conjunction becomes a disjunction of negations, and a disjunction is hard to count directly because it is true in so many ways. It is false in only one way, though: every negated variable is false, that is, every original variable true. So count that case and subtract it from all the rows. A negated disjunction is easier still, because it becomes a conjunction that fixes its variables. In $5$ variables, $\\neg(p_1 \\land p_2)$ fails only when $p_1$ and $p_2$ are true, in $2^{3} = 8$ rows, so it is true in $32 - 8 = 24$.\n\n> **Watch out.** For a negated conjunction, the rows you count first are the false ones. Subtract them from the total before answering.",
+    "合取的否定变成否定的析取，而析取有太多方式为真，很难直接数。但它只有一种方式为假：每个带否定的变量都为假，也就是每个原变量都为真。所以数出这种情形，再从总行数中减去。析取的否定更简单，因为它变成一个合取，直接固定了其中的变量。在 $5$ 个变量中，$\\neg(p_1 \\land p_2)$ 只在 $p_1$、$p_2$ 都为真时不成立，共 $2^{3} = 8$ 行，所以它在 $32 - 8 = 24$ 行为真。\n\n> **注意。** 对合取的否定，先数出的是假行。回答之前要从总数中减去它们。",
   ),
   generate(rng) {
     const k = rng.int(2, 5);
@@ -1302,15 +1441,47 @@ const rowsThroughDeMorgan: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [conjunctive ? fixed : 2 ** n - fixed, 2 ** n, 2 ** (n - 1)],
-      solution: conjunctive
-        ? t(
-            `By De Morgan's law, the formula says that at least one $p_i$ is false. It fails only when all ${k} are true, which leaves ${n - k} free variables and $${fixed}$ rows. So it is true in $${2 ** n} - ${fixed} = ${answer}$ rows.`,
-            `由德摩根律，这个公式是说至少有一个 $p_i$ 为假。只有 ${k} 个都为真时它才不成立，这时还有 ${n - k} 个自由变量，共 $${fixed}$ 行。所以它在 $${2 ** n} - ${fixed} = ${answer}$ 行为真。`,
-          )
-        : t(
-            `By De Morgan's law, the formula says that every $p_i$ is false. That fixes ${k} variables and leaves ${n - k} free, so it is true in $2^{${n - k}} = ${answer}$ rows.`,
-            `由德摩根律，这个公式是说每个 $p_i$ 都为假。这固定了 ${k} 个变量，还剩 ${n - k} 个自由变量，所以它在 $2^{${n - k}} = ${answer}$ 行为真。`,
-          ),
+      mistakes: [
+        why(conjunctive ? fixed : 2 ** n - fixed, "That counts the rows where the formula is false.", "这是公式为假的行数。"),
+        why(2 ** n, "That counts every row of the table.", "这是全部行数。"),
+        why(
+          2 ** (n - 1),
+          "That treats the formula as halving the rows; it involves all of its variables, not one.",
+          "这把公式当作只使行数减半；它涉及其中所有变量，而不是一个。",
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Apply De Morgan's law", "用德摩根律"],
+            conjunctive
+              ? t(
+                  `$\\neg(p_1 \\land \\dots \\land p_{${k}})$ is $\\neg p_1 \\lor \\dots \\lor \\neg p_{${k}}$: at least one $p_i$ is false. It fails only when all ${k} are true.`,
+                  `$\\neg(p_1 \\land \\dots \\land p_{${k}})$ 即 $\\neg p_1 \\lor \\dots \\lor \\neg p_{${k}}$：至少有一个 $p_i$ 为假。只有 ${k} 个都为真时它才不成立。`,
+                )
+              : t(
+                  `$\\neg(p_1 \\lor \\dots \\lor p_{${k}})$ is $\\neg p_1 \\land \\dots \\land \\neg p_{${k}}$: every $p_i$ is false.`,
+                  `$\\neg(p_1 \\lor \\dots \\lor p_{${k}})$ 即 $\\neg p_1 \\land \\dots \\land \\neg p_{${k}}$：每个 $p_i$ 都为假。`,
+                ),
+          ],
+          [
+            ["Count", "计数"],
+            conjunctive
+              ? t(
+                  `The failing case fixes ${k} variables and leaves ${n - k} free: $2^{${n - k}} = ${fixed}$ rows. So the formula is true in $2^{${n}} - ${fixed} = ${2 ** n} - ${fixed} = ${answer}$ rows.`,
+                  `不成立的情形固定 ${k} 个变量，剩 ${n - k} 个自由：$2^{${n - k}} = ${fixed}$ 行。所以公式在 $2^{${n}} - ${fixed} = ${2 ** n} - ${fixed} = ${answer}$ 行为真。`,
+                )
+              : t(
+                  `That fixes ${k} variables and leaves ${n - k} free: $2^{${n - k}} = ${answer}$ rows.`,
+                  `这固定了 ${k} 个变量，剩 ${n - k} 个自由：$2^{${n - k}} = ${answer}$ 行。`,
+                ),
+          ],
+        ],
+        t(
+          `The ${k} variables $p_i$ have $2^{${k}} = ${2 ** k}$ value combinations, of which ${conjunctive ? `all but one` : "exactly one"} make the formula true, and each combination fills $2^{${n - k}}$ rows: $${conjunctive ? 2 ** k - 1 : 1} \\cdot ${fixed} = ${answer}$.`,
+          `${k} 个变量 $p_i$ 共有 $2^{${k}} = ${2 ** k}$ 种取值组合，其中${conjunctive ? "除一种外都" : "恰有一种"}使公式为真，每种组合占 $2^{${n - k}}$ 行：$${conjunctive ? 2 ** k - 1 : 1} \\cdot ${fixed} = ${answer}$。`,
+        ),
+      ),
     });
   },
 };
@@ -1319,8 +1490,8 @@ const rowsOfACompoundConclusion: KnowledgePointDef = {
   id: "rows-of-a-conditional-with-a-compound-conclusion",
   title: t("Rows of a conditional with a compound conclusion", "结论为复合命题的条件命题的行"),
   explanation: t(
-    "Rewriting a conditional as a disjunction, $\\neg p \\lor Q$, splits its true rows into two groups that do not overlap: those where $p$ is false, whatever else happens, and those where $p$ is true and $Q$ holds. Counting each group separately is usually simpler than checking rows, and the size of the conclusion only affects the second group.",
-    "把条件命题改写成析取 $\\neg p \\lor Q$，就把它的真行分成不重叠的两组：一组是 $p$ 为假的行，不论其他变量如何；另一组是 $p$ 为真且 $Q$ 成立的行。分别数这两组，通常比逐行检查简单，而结论的大小只影响第二组。",
+    "Rewriting a conditional as a disjunction, $\\neg p \\lor Q$, splits its true rows into two groups that do not overlap: those where $p$ is false, whatever else happens, and those where $p$ is true and $Q$ holds. Counting each group separately is usually simpler than checking rows, and the size of the conclusion only affects the second group. In $4$ variables, $p \\to (q_1 \\land q_2)$ is true in the $8$ rows with $p$ false, and in the $2$ rows with $p$, $q_1$, $q_2$ all true: $10$ rows.\n\n> **Watch out.** Do not forget the rows where $p$ is false: there the conditional is true whatever the conclusion is.",
+    "把条件命题改写成析取 $\\neg p \\lor Q$，就把它的真行分成不重叠的两组：一组是 $p$ 为假的行，不论其他变量如何；另一组是 $p$ 为真且 $Q$ 成立的行。分别数这两组，通常比逐行检查简单，而结论的大小只影响第二组。在 $4$ 个变量中，$p \\to (q_1 \\land q_2)$ 在 $p$ 为假的 $8$ 行为真，在 $p$、$q_1$、$q_2$ 都为真的 $2$ 行也为真：共 $10$ 行。\n\n> **注意。** 不要漏掉 $p$ 为假的行：那里不论结论如何，条件命题都为真。",
   ),
   generate(rng) {
     const k = rng.int(2, 4);
@@ -1330,6 +1501,7 @@ const rowsOfACompoundConclusion: KnowledgePointDef = {
     const fixed = 2 ** (n - 1 - k);
     const second = conjunctive ? fixed : half - fixed;
     const answer = half + second;
+    const falseRows = half - second;
     const formula = `p \\to ${joined("q", k, conjunctive ? "\\land" : "\\lor")}`;
     return numberProblem({
       prompt: t(
@@ -1339,9 +1511,45 @@ const rowsOfACompoundConclusion: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [second, half, 2 ** n - answer],
-      solution: t(
-        `The formula is equivalent to $\\neg p \\lor ${joined("q", k, conjunctive ? "\\land" : "\\lor")}$. It is true in the ${half} rows with $p$ false. With $p$ true, it needs ${conjunctive ? "every $q_i$ true" : "some $q_i$ true"}, which gives ${second} more rows. The total is $${half} + ${second} = ${answer}$.`,
-        `这个公式等价于 $\\neg p \\lor ${joined("q", k, conjunctive ? "\\land" : "\\lor")}$。$p$ 为假的 ${half} 行都为真。$p$ 为真时，需要${conjunctive ? "每个 $q_i$ 都为真" : "某个 $q_i$ 为真"}，又有 ${second} 行。总数是 $${half} + ${second} = ${answer}$。`,
+      mistakes: [
+        why(
+          second,
+          "That counts only the rows with $p$ true; with $p$ false the conditional is true as well.",
+          "这只数了 $p$ 为真的行；$p$ 为假时条件命题也为真。",
+        ),
+        why(half, "That counts only the rows with $p$ false.", "这只数了 $p$ 为假的行。"),
+        why(2 ** n - answer, "That counts the rows where the formula is false.", "这是公式为假的行数。"),
+      ],
+      solution: walked(
+        [
+          [
+            ["Rewrite as a disjunction", "改写成析取"],
+            t(
+              `$${formula}$ is equivalent to $\\neg p \\lor ${joined("q", k, conjunctive ? "\\land" : "\\lor")}$, so it is true when $p$ is false, or when $p$ is true and the conclusion holds.`,
+              `$${formula}$ 等价于 $\\neg p \\lor ${joined("q", k, conjunctive ? "\\land" : "\\lor")}$，所以在 $p$ 为假时为真，或在 $p$ 为真且结论成立时为真。`,
+            ),
+          ],
+          [
+            ["Count the rows with $p$ false", "数 $p$ 为假的行"],
+            t(`Half of the $2^{${n}}$ rows have $p$ false: $${half}$.`, `$2^{${n}}$ 行中有一半 $p$ 为假：$${half}$ 行。`),
+          ],
+          [
+            ["Count the rows with $p$ true", "数 $p$ 为真的行"],
+            conjunctive
+              ? t(
+                  `Then every $q_i$ must be true, which fixes ${k + 1} variables: $2^{${n - 1 - k}} = ${second}$ rows. The total is $${half} + ${second} = ${answer}$.`,
+                  `这时每个 $q_i$ 都必须为真，固定了 ${k + 1} 个变量：$2^{${n - 1 - k}} = ${second}$ 行。总数是 $${half} + ${second} = ${answer}$。`,
+                )
+              : t(
+                  `Then some $q_i$ must be true. Of the $${half}$ rows with $p$ true, only the $2^{${n - 1 - k}} = ${fixed}$ with every $q_i$ false fail, leaving $${second}$. The total is $${half} + ${second} = ${answer}$.`,
+                  `这时某个 $q_i$ 必须为真。$p$ 为真的 $${half}$ 行中，只有每个 $q_i$ 都为假的 $2^{${n - 1 - k}} = ${fixed}$ 行不成立，剩 $${second}$ 行。总数是 $${half} + ${second} = ${answer}$。`,
+                ),
+          ],
+        ],
+        t(
+          `Count the false rows instead: $p$ true and the conclusion false, which is $${falseRows}$ rows. Then $${answer} + ${falseRows} = ${2 ** n} = 2^{${n}}$, every row counted once.`,
+          `改数假行：$p$ 为真且结论为假，共 $${falseRows}$ 行。$${answer} + ${falseRows} = ${2 ** n} = 2^{${n}}$，每一行恰好数了一次。`,
+        ),
       ),
     });
   },
@@ -1351,26 +1559,22 @@ const relatedConditionalRows: KnowledgePointDef = {
   id: "rows-where-a-conditional-and-a-related-statement-compare",
   title: t("Comparing a conditional with a related statement row by row", "逐行比较条件命题和相关命题"),
   explanation: t(
-    "The contrapositive of a conditional is equivalent to it, so the two match in every row. The converse and the inverse are equivalent to each other but not to the conditional. They agree with it only when both of its parts have the same value. A truth table shows at once why a true conditional cannot simply be reversed.",
-    "条件命题的逆否命题和它等价，所以两者在每一行都相同。逆命题和否命题彼此等价，但和条件命题不等价。只有当条件命题的两部分取值相同时，它们才和它一致。真值表立刻说明了为什么真的条件命题不能随便反过来。",
+    'Over the four value pairs TT, TF, FT, FF of $p$ and $q$, the conditional $p \\to q$ takes the values T, F, T, T. Its contrapositive $\\neg q \\to \\neg p$ is equivalent to it and takes the same values. The converse $q \\to p$ and the inverse $\\neg p \\to \\neg q$ are equivalent to each other and take T, T, F, T: they agree with the conditional only in TT and FF, where $p$ and $q$ have the same value. Every other variable of a larger table just repeats each value pair, $2^{n-2}$ times in $n$ variables.\n\n> **Watch out.** "Both true" and "different" are different questions. Count the value pairs for the one asked, then multiply by the rows each pair fills.',
+    "在 $p$、$q$ 的四种取值 TT、TF、FT、FF 下，条件命题 $p \\to q$ 依次为 T、F、T、T。它的逆否命题 $\\neg q \\to \\neg p$ 与它等价，取值相同。逆命题 $q \\to p$ 与否命题 $\\neg p \\to \\neg q$ 彼此等价，依次为 T、T、F、T：它们只在 TT 和 FF，即 $p$ 与 $q$ 取值相同时，与条件命题一致。更大的真值表中，其余每个变量只是把每种取值重复，$n$ 个变量时每种重复 $2^{n-2}$ 次。\n\n> **注意。** “同时为真”和“取值不同”是不同的问题。先数出所问情形的取值组合，再乘以每种组合所占的行数。",
   ),
   generate(rng) {
     const n = rng.int(3, 10);
     const kind = rng.pick([
-      { en: "converse", zh: "逆命题", latex: "q \\to p", both: 2, differ: 2 },
-      { en: "inverse", zh: "否命题", latex: "\\neg p \\to \\neg q", both: 2, differ: 2 },
-      { en: "contrapositive", zh: "逆否命题", latex: "\\neg q \\to \\neg p", both: 3, differ: 0 },
+      { en: "converse", zh: "逆命题", latex: "q \\to p", both: 2, differ: 2, column: "T, T, F, T" },
+      { en: "inverse", zh: "否命题", latex: "\\neg p \\to \\neg q", both: 2, differ: 2, column: "T, T, F, T" },
+      { en: "contrapositive", zh: "逆否命题", latex: "\\neg q \\to \\neg p", both: 3, differ: 0, column: "T, F, T, T" },
     ]);
     const differ = rng.pick([true, false]);
     const each = 2 ** (n - 2);
     const pairs = differ ? kind.differ : kind.both;
     const answer = pairs * each;
-    const whenEn = differ
-      ? "$p$ and $q$ have different values"
-      : pairs === 2
-        ? "$p$ and $q$ have the same value"
-        : "$p$ is false or $q$ is true";
-    const whenZh = differ ? "$p$ 和 $q$ 取值不同" : pairs === 2 ? "$p$ 和 $q$ 取值相同" : "$p$ 为假或 $q$ 为真";
+    const whereEn = differ ? (pairs === 0 ? "none of them" : "TF and FT") : pairs === 2 ? "TT and FF" : "TT, FT and FF";
+    const whereZh = differ ? (pairs === 0 ? "一种也没有" : "TF 和 FT") : pairs === 2 ? "TT 和 FF" : "TT、FT 和 FF";
     return numberProblem({
       prompt: differ
         ? t(
@@ -1384,16 +1588,38 @@ const relatedConditionalRows: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 ** n, 3 * each, 2 ** (n - 1), each],
-      solution:
-        pairs === 0
+      mistakes: [
+        why(2 ** n, "That counts every row of the table.", "这是全部行数。"),
+        why(3 * each, "That counts the rows where $p \\to q$ alone is true.", "这只数了 $p \\to q$ 为真的行。"),
+        why(each, "That counts the rows of a single value pair of $p$ and $q$.", "这只数了 $p$、$q$ 一种取值所占的行。"),
+      ],
+      solution: walked(
+        [
+          [
+            ["Compare the columns", "比较两列"],
+            t(
+              `The ${kind.en} is $${kind.latex}$. Over TT, TF, FT, FF, $p \\to q$ takes T, F, T, T and the ${kind.en} takes ${kind.column}. They are ${differ ? "different" : "both true"} in ${whereEn}: ${pairs} of the 4 value pairs.`,
+              `${kind.zh}是 $${kind.latex}$。在 TT、TF、FT、FF 下，$p \\to q$ 依次为 T、F、T、T，${kind.zh}依次为 ${kind.column}。两者${differ ? "取值不同" : "同时为真"}的是${whereZh}：4 种取值中的 ${pairs} 种。`,
+            ),
+          ],
+          [
+            ["Multiply by the rows of each pair", "乘以每种取值的行数"],
+            t(
+              `The other ${n - 2} variables are free, so each value pair fills $2^{${n - 2}} = ${each}$ rows: $${pairs} \\cdot ${each} = ${answer}$.`,
+              `其余 ${n - 2} 个变量自由，所以每种取值占 $2^{${n - 2}} = ${each}$ 行：$${pairs} \\cdot ${each} = ${answer}$。`,
+            ),
+          ],
+        ],
+        kind.differ === 0
           ? t(
-              `The contrapositive $${kind.latex}$ is logically equivalent to $p \\to q$, so the two have the same value in every row. The count is 0.`,
-              `逆否命题 $${kind.latex}$ 和 $p \\to q$ 逻辑等价，所以两者在每一行取值都相同。行数是 0。`,
+              `The contrapositive is equivalent to $p \\to q$, so they never differ and are both true wherever $p \\to q$ is, in 3 of the 4 value pairs. ${differ ? "The count of 0 fits." : "That is the count found."}`,
+              `逆否命题与 $p \\to q$ 等价，所以它们从不不同，并在 $p \\to q$ 为真的 4 种取值中的 3 种同时为真。${differ ? "行数为 0，相符。" : "与所求一致。"}`,
             )
           : t(
-              `The ${kind.en} is $${kind.latex}$. This happens exactly when ${whenEn}, which is ${pairs} of the 4 value pairs for $p$ and $q$. Each pair fills ${each} rows, so the count is $${pairs} \\cdot ${each} = ${answer}$.`,
-              `${kind.zh}是 $${kind.latex}$。这恰好在${whenZh}时发生，这是 $p$、$q$ 的 4 种取值中的 ${pairs} 种。每种取值占 ${each} 行，所以行数是 $${pairs} \\cdot ${each} = ${answer}$。`,
+              `The 4 value pairs split into those where the two agree, TT and FF, and those where they differ, TF and FT. Where they agree both are T, so "both true" and "different" each take 2 value pairs, $2 \\cdot ${each} = ${2 * each}$ rows, and together they fill all $2^{${n}} = ${2 ** n}$ rows.`,
+              `4 种取值分为两者一致的 TT、FF 和两者不同的 TF、FT。一致时两者都为 T，所以“同时为真”与“取值不同”各占 2 种取值，即 $2 \\cdot ${each} = ${2 * each}$ 行，合起来正好是全部 $2^{${n}} = ${2 ** n}$ 行。`,
             ),
+      ),
     });
   },
 };

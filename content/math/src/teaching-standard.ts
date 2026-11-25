@@ -27,4 +27,18 @@ export const taughtCourses: readonly string[] = [
  * taughtTopics lists further topics written to the standard while their course is still being rewritten; once the
  * course is listed in taughtCourses, its topics leave this list.
  */
-export const taughtTopics: readonly string[] = [];
+export const taughtTopics: readonly string[] = [
+  "the-and-and-or-connectives",
+  "truth-tables",
+  "the-not-connective",
+  "logical-equivalence",
+  "logical-associative-and-commutative-laws",
+  "the-distributive-laws",
+  "the-absorption-laws",
+  "de-morgans-laws-for-logic",
+  "conditional-statements",
+  "logical-equivalence-with-conditional-statements",
+  "biconditional-statements",
+  "tautologies-and-contradictions",
+  "converse-inverse-and-contrapositive",
+];
