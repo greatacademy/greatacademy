@@ -10,6 +10,7 @@ import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts"
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
+import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { chart, intTicks } from "./figure-charts.ts";
@@ -241,8 +242,8 @@ const relationDots = point(
   "the-domain-and-range-of-a-drawn-relation",
   ["The domain and range of a drawn relation", "所画关系的定义域和值域"],
   [
-    "The domain of a relation is the set of first coordinates of its pairs, and the range is the set of second coordinates. Several dots in one column count only once toward the domain.",
-    "关系的定义域是其序对第一坐标的集合，值域是第二坐标的集合。同一列的几个点对定义域只算一次。",
+    "The domain of a relation is the set of first coordinates of its pairs, and the range is the set of second coordinates. Several dots in one column count only once toward the domain. Dots at $(1, 2)$, $(1, 5)$ and $(3, 2)$ give the domain $\\{1, 3\\}$ and the range $\\{2, 5\\}$.\n\n> **Watch out.** The domain is read along the horizontal axis and the range along the vertical one. A coordinate shared by several dots is one element of the set, not several.",
+    "关系的定义域是其序对第一坐标的集合，值域是第二坐标的集合。同一列的几个点对定义域只算一次。点 $(1, 2)$、$(1, 5)$、$(3, 2)$ 给出定义域 $\\{1, 3\\}$ 和值域 $\\{2, 5\\}$。\n\n> **注意。** 定义域沿横轴读，值域沿纵轴读。几个点共有的坐标在集合中只是一个元素，不是几个。",
   ],
   (rng) => {
     const count = rng.int(5, 8);
@@ -255,24 +256,41 @@ const relationDots = point(
     const domain = [...new Set(pts.map((p) => p[0]))].sort((p, q) => p - q);
     const range = [...new Set(pts.map((p) => p[1]))].sort((p, q) => p - q);
     const askDomain = rng.bool();
-    const sum = (askDomain ? domain : range).reduce((n, v) => n + v, 0);
+    const chosen = askDomain ? domain : range;
+    const sum = chosen.reduce((n, v) => n + v, 0);
     const otherSum = (askDomain ? range : domain).reduce((n, v) => n + v, 0);
     const allSum = pts.reduce((n, p) => n + (askDomain ? p[0] : p[1]), 0);
-    return ask(
-      askDomain
-        ? ["The dots show a relation. Find the sum of the elements of its domain.", "这些点表示一个关系。求它的定义域中各元素之和。"]
-        : ["The dots show a relation. Find the sum of the elements of its range.", "这些点表示一个关系。求它的值域中各元素之和。"],
-      sum,
-      [otherSum, allSum, (askDomain ? domain : range).length, sum + 1, count],
-      [
-        `${askDomain ? "The first coordinates" : "The second coordinates"} that occur are $${(askDomain ? domain : range).join(", ")}$, each counted once. Their sum is $${sum}$.`,
-        `出现的${askDomain ? "第一坐标" : "第二坐标"}为 $${(askDomain ? domain : range).join("$、$")}$，每个只算一次。它们的和为 $${sum}$。`,
-      ],
-      drawn(
-        { xMin: 0, xMax: 7, yMin: 0, yMax: 7 },
-        pts.map((at): PlaneMark => ({ kind: "point", at })),
-        t(`Dots at ${pts.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`, `点位于 ${pts.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`),
+    const sorted = [...pts].sort((p, q) => p[0] - q[0] || p[1] - q[1]);
+    return withMistakes(
+      ask(
+        askDomain
+          ? ["The dots show a relation. Find the sum of the elements of its domain.", "这些点表示一个关系。求它的定义域中各元素之和。"]
+          : ["The dots show a relation. Find the sum of the elements of its range.", "这些点表示一个关系。求它的值域中各元素之和。"],
+        sum,
+        [otherSum, allSum, chosen.length, sum + 1, count],
+        [
+          `**Step 1: Read the pairs.** $${sorted.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}$.\n\n**Step 2: Collect the ${askDomain ? "first" : "second"} coordinates.** Each counted once: the ${askDomain ? "domain" : "range"} is $\\{${chosen.join(", ")}\\}$.\n\n**Step 3: Add.** $${chosen.join(" + ")} = ${sum}$.\n\n**Check.** Every dot lies ${askDomain ? "in one of the columns" : "on one of the rows"} $${chosen.join(", ")}$, and each of these has at least one dot.`,
+          `**第一步：读出序对。** $${sorted.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}$。\n\n**第二步：收集${askDomain ? "第一" : "第二"}坐标。** 每个只算一次：${askDomain ? "定义域" : "值域"}是 $\\{${chosen.join(", ")}\\}$。\n\n**第三步：相加。** $${chosen.join(" + ")} = ${sum}$。\n\n**检验。** 每个点都在${askDomain ? "列" : "行"} $${chosen.join(", ")}$ 之一上，而且这些${askDomain ? "列" : "行"}上都至少有一个点。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: 7, yMin: 0, yMax: 7 },
+          pts.map((at): PlaneMark => ({ kind: "point", at })),
+          t(`Dots at ${pts.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`, `点位于 ${pts.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`),
+        ),
       ),
+      [
+        say(
+          String(otherSum),
+          `That adds the ${askDomain ? "second coordinates, the range" : "first coordinates, the domain"}.`,
+          `这加的是${askDomain ? "第二坐标，即值域" : "第一坐标，即定义域"}。`,
+        ),
+        say(
+          String(allSum),
+          "That adds a shared coordinate once for every dot; each element counts once.",
+          "这把共有的坐标按点数重复相加了；每个元素只算一次。",
+        ),
+        say(String(chosen.length), "That counts the elements; the question asks for their sum.", "这数的是元素个数；题目问的是它们的和。"),
+      ],
     );
   },
 );
@@ -346,29 +364,38 @@ const clockWalk = {
     "walking-on-a-residue-clock",
     ["Walking on a residue clock", "在剩余类时钟上行走"],
     [
-      "In $\\mathbb{Z}_n$, adding $k$ means moving $k$ steps clockwise around the circle of residues, wrapping past $0$. Every full turn of $n$ steps changes nothing, so only $k \\bmod n$ matters.",
-      "在 $\\mathbb{Z}_n$ 中，加 $k$ 就是在剩余类的圆上顺时针走 $k$ 步，经过 $0$ 时绕回。每走满 $n$ 步一圈等于没动，所以只有 $k \\bmod n$ 起作用。",
+      "In $\\mathbb{Z}_n$, adding $k$ means moving $k$ steps clockwise around the circle of residues, wrapping past $0$. Every full turn of $n$ steps changes nothing, so only $k \\bmod n$ matters. On the clock of $\\mathbb{Z}_7$, $17$ steps from $3$ are two full turns and $3$ more, landing on $6$.\n\n> **Watch out.** Reduce the sum $\\text{start} + k$, not just $k$: the start counts too. And clockwise is the direction of increasing residues.",
+      "在 $\\mathbb{Z}_n$ 中，加 $k$ 就是在剩余类的圆上顺时针走 $k$ 步，经过 $0$ 时绕回。每走满 $n$ 步一圈等于没动，所以只有 $k \\bmod n$ 起作用。在 $\\mathbb{Z}_7$ 的时钟上，从 $3$ 走 $17$ 步就是走两整圈再走 $3$ 步，到达 $6$。\n\n> **注意。** 要约化的是 $\\text{起点} + k$，而不只是 $k$：起点也要算上。顺时针是剩余类增大的方向。",
     ],
     (rng) => {
       const n = rng.int(5, 12);
       const start = rng.int(0, n - 1);
       const k = rng.int(n + 1, 4 * n);
       const answer = mod(start + k, n);
-      return ask(
+      const turns = Math.floor(k / n);
+      const rest = mod(k, n);
+      return withMistakes(
+        ask(
+          [
+            `The clock shows $\\mathbb{Z}_{${n}}$, with the shaded residue as the start. Where do you land after moving $${k}$ steps clockwise?`,
+            `时钟表示 $\\mathbb{Z}_{${n}}$，有阴影的剩余类是起点。顺时针走 $${k}$ 步后到达哪里？`,
+          ],
+          answer,
+          [mod(start - k, n), mod(k, n), start + k, mod(answer + 1, n)],
+          [
+            `**Step 1: Remove the full turns.** $${k} = ${n} \\cdot ${turns} + ${rest}$, and each turn of $${n}$ steps returns to the start.\n\n**Step 2: Walk the rest.** $${rest}$ steps from $${start}$: $${start} + ${rest} = ${start + rest}${start + rest >= n ? ` \\equiv ${answer}` : ""}$.\n\n**Check.** $${start} + ${k} = ${start + k} = ${n} \\cdot ${Math.floor((start + k) / n)} + ${answer}$, the same residue.`,
+            `**第一步：去掉整圈。** $${k} = ${n} \\cdot ${turns} + ${rest}$，每走 $${n}$ 步一圈都回到起点。\n\n**第二步：走剩下的步数。** 从 $${start}$ 走 $${rest}$ 步：$${start} + ${rest} = ${start + rest}${start + rest >= n ? ` \\equiv ${answer}` : ""}$。\n\n**检验。** $${start} + ${k} = ${start + k} = ${n} \\cdot ${Math.floor((start + k) / n)} + ${answer}$，剩余类相同。`,
+          ],
+          figureOf(clock(n, [start]), [
+            `A clock of the residues 0 to ${n - 1}, with ${start} shaded.`,
+            `0 到 ${n - 1} 的剩余类时钟，${start} 有阴影。`,
+          ]),
+        ),
         [
-          `The clock shows $\\mathbb{Z}_{${n}}$, with the shaded residue as the start. Where do you land after moving $${k}$ steps clockwise?`,
-          `时钟表示 $\\mathbb{Z}_{${n}}$，有阴影的剩余类是起点。顺时针走 $${k}$ 步后到达哪里？`,
+          say(String(mod(start - k, n)), "That walks counterclockwise; adding moves clockwise.", "这是逆时针走的；加法是顺时针走。"),
+          say(String(mod(k, n)), `That starts from $0$; the walk starts at $${start}$.`, `这是从 $0$ 出发的；应从 $${start}$ 出发。`),
+          say(String(start + k), `That is not on the clock; reduce it modulo $${n}$.`, `这不在时钟上；要模 $${n}$ 约化。`),
         ],
-        answer,
-        [mod(start - k, n), mod(k, n), start + k, mod(answer + 1, n)],
-        [
-          `The clock has $${n}$ residues, and $${k} \\equiv ${mod(k, n)} \\pmod{${n}}$. So you land on $${start} + ${mod(k, n)} \\equiv ${answer}$.`,
-          `时钟有 $${n}$ 个剩余类，$${k} \\equiv ${mod(k, n)} \\pmod{${n}}$。所以到达 $${start} + ${mod(k, n)} \\equiv ${answer}$。`,
-        ],
-        figureOf(clock(n, [start]), [
-          `A clock of the residues 0 to ${n - 1}, with ${start} shaded.`,
-          `0 到 ${n - 1} 的剩余类时钟，${start} 有阴影。`,
-        ]),
       );
     },
   ),

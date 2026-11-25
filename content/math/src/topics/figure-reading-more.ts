@@ -2496,8 +2496,8 @@ const relationFromDigraph: KnowledgePointDef = {
   figure: proofDrawings1["symmetric-and-antisymmetric-relations#properties-of-a-relation-from-its-digraph"],
   title: t("Properties of a relation from its digraph", "由有向图判断关系的性质"),
   explanation: t(
-    "A relation on a set can be drawn as a graph with an arrow from x to y whenever x is related to y. It is reflexive when every point has a loop. It is symmetric when every arrow has a partner going back, and antisymmetric when no two different points have arrows in both directions. A property fails as soon as one point or one arrow breaks it.",
-    "集合上的关系可以画成图：x 和 y 有关系时，就画一个从 x 到 y 的箭头。每个点都有自环时，关系是自反的。每个箭头都有一个返回的箭头时，关系是对称的；没有两个不同的点互相有箭头时，关系是反对称的。只要一个点或一个箭头不符合，这个性质就不成立。",
+    "A relation on a set can be drawn as a graph with an arrow from x to y whenever x is related to y. It is reflexive when every point has a loop. It is symmetric when every arrow has a partner going back, and antisymmetric when no two different points have arrows in both directions. A property fails as soon as one point or one arrow breaks it. For example, loops at $a$, $b$, $c$ with arrows $a \\to b$ and $b \\to a$ make a relation that is reflexive and symmetric.\n\n> **Watch out.** Loops do not decide symmetry or antisymmetry: a loop is its own way back. Check the arrows between different points for those two properties, and the loops only for reflexivity.",
+    "集合上的关系可以画成图：x 和 y 有关系时，就画一个从 x 到 y 的箭头。每个点都有自环时，关系是自反的。每个箭头都有一个返回的箭头时，关系是对称的；没有两个不同的点互相有箭头时，关系是反对称的。只要一个点或一个箭头不符合，这个性质就不成立。例如，$a$、$b$、$c$ 处都有自环，再加上箭头 $a \\to b$ 和 $b \\to a$，这个关系就是自反且对称的。\n\n> **注意。** 自环不影响对称性和反对称性：自环本身就是自己的返回箭头。判断这两个性质只看不同点之间的箭头，自环只用来判断自反性。",
   ),
   generate(rng) {
     const c = rng.pick(relationCases);
@@ -2512,18 +2512,75 @@ const relationFromDigraph: KnowledgePointDef = {
     const listZh = c.edges.map(([a, b]) => `${names[a]} 到 ${names[b]}`).join("，");
     const hasLoops = c.key.startsWith("reflexive");
     const isSym = c.key.endsWith("symmetric") && c.key !== "reflexive-antisym";
-    return pickChoice(
-      rng,
-      t("Which describes the relation drawn here?", "哪个说法描述了图中的关系？"),
-      words[c.key],
-      Object.entries(words)
-        .filter(([k]) => k !== c.key)
-        .map(([, w]) => w),
-      t(
-        `${hasLoops ? "Every point has a loop" : "Some point has no loop"}. ${isSym ? "Every arrow has one going back" : "No two different points have arrows both ways"}.`,
-        `${hasLoops ? "每个点都有自环" : "有的点没有自环"}。${isSym ? "每个箭头都有返回的箭头" : "没有两个不同的点互相有箭头"}。`,
+    const has = (a: number, b: number) => c.edges.some(([x, y]) => x === a && y === b);
+    const arrows = c.edges.filter(([a, b]) => a !== b);
+    const name = (i: number) => `$${names[i]}$`;
+    const noLoop = [...Array(c.names).keys()].find((i) => !has(i, i)) ?? 0;
+    const twoWay = arrows.find(([a, b]) => has(b, a)) ?? arrows[0]!;
+    const oneWay = arrows.find(([a, b]) => !has(b, a)) ?? arrows[0]!;
+    const loopsStep = hasLoops
+      ? t(
+          `Every point, ${[...Array(c.names).keys()].map(name).join(", ")}, has a loop, so the relation is reflexive.`,
+          `每个点 ${[...Array(c.names).keys()].map(name).join("、")} 都有自环，所以关系是自反的。`,
+        )
+      : t(`${name(noLoop)} has no loop, so the relation is not reflexive.`, `${name(noLoop)} 没有自环，所以关系不是自反的。`);
+    const arrowsStep = isSym
+      ? t(
+          `Each arrow between different points has one going back, such as ${name(twoWay[0])} to ${name(twoWay[1])} and back, so the relation is symmetric.`,
+          `不同点之间的每个箭头都有返回的箭头，例如 ${name(twoWay[0])} 到 ${name(twoWay[1])} 再返回，所以关系是对称的。`,
+        )
+      : t(
+          `No two different points have arrows both ways, so the relation is antisymmetric.`,
+          `没有两个不同的点互相有箭头，所以关系是反对称的。`,
+        );
+    const reasonsFor = (key: keyof typeof words): [string, string, string] => {
+      const claimLoops = key.startsWith("reflexive");
+      const claimSym = key === "reflexive-symmetric" || key === "symmetric";
+      if (claimLoops !== hasLoops)
+        return claimLoops
+          ? [
+              words[key].en,
+              `${name(noLoop)} has no loop, so the relation is not reflexive.`,
+              `${name(noLoop)} 没有自环，所以关系不是自反的。`,
+            ]
+          : [words[key].en, "Every point has a loop, so the relation is reflexive.", "每个点都有自环，所以关系是自反的。"];
+      return claimSym
+        ? [
+            words[key].en,
+            `The arrow from ${name(oneWay[0])} to ${name(oneWay[1])} has none going back.`,
+            `从 ${name(oneWay[0])} 到 ${name(oneWay[1])} 的箭头没有返回的箭头。`,
+          ]
+        : [
+            words[key].en,
+            `${name(twoWay[0])} and ${name(twoWay[1])} have arrows both ways.`,
+            `${name(twoWay[0])} 与 ${name(twoWay[1])} 互相有箭头。`,
+          ];
+    };
+    const others = (Object.keys(words) as (keyof typeof words)[]).filter((k) => k !== c.key);
+    return reasoned(
+      pickChoice(
+        rng,
+        t("Which describes the relation drawn here?", "哪个说法描述了图中的关系？"),
+        words[c.key],
+        others.map((k) => words[k]),
+        walked(
+          [
+            [["Check the loops", "检查自环"], loopsStep],
+            [["Check the arrows between different points", "检查不同点之间的箭头"], arrowsStep],
+          ],
+          isSym
+            ? t(
+                `Going through the $${arrows.length}$ arrows between different points, each has its reverse drawn as well.`,
+                `逐一检查不同点之间的 $${arrows.length}$ 个箭头，每个的反向箭头也都画出来了。`,
+              )
+            : t(
+                `Going through the $${arrows.length}$ arrows between different points, none has its reverse drawn, for example ${name(oneWay[0])} to ${name(oneWay[1])}.`,
+                `逐一检查不同点之间的 $${arrows.length}$ 个箭头，没有一个的反向箭头也画出来，例如 ${name(oneWay[0])} 到 ${name(oneWay[1])}。`,
+              ),
+        ),
+        graphFigure(names, c.edges, true, t(`A directed graph with arrows ${list}.`, `一个有向图，箭头为：${listZh}。`)),
       ),
-      graphFigure(names, c.edges, true, t(`A directed graph with arrows ${list}.`, `一个有向图，箭头为：${listZh}。`)),
+      others.map(reasonsFor),
     );
   },
 };

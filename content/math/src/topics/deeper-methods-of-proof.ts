@@ -20,10 +20,10 @@ const binom = (n: number, k: number): number => {
 const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
 /** totient counts the integers from 1 to n coprime to n. */
 const totient = (n: number) => [...Array(n).keys()].filter((i) => gcd(i + 1, n) === 1).length;
-/** divisorsOf lists the positive divisors of n in increasing order. */
 /** firstOf keeps the first mistake for each wrong value. */
 const firstOf = <T extends { readonly value: unknown }>(ms: readonly T[]): T[] =>
   ms.filter((m, i) => ms.findIndex((x) => String(x.value) === String(m.value)) === i);
+/** divisorsOf lists the positive divisors of n in increasing order. */
 const divisorsOf = (n: number) => [...Array(n).keys()].map((i) => i + 1).filter((i) => n % i === 0);
 /** count sets a noun beside a number, with its singular for one. */
 const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -1297,21 +1297,44 @@ const countingZeroDivisors: KnowledgePointDef = {
   id: "counting-the-zero-divisors-modulo-n",
   title: t("Counting the zero divisors modulo $n$", "数模 $n$ 的零因子"),
   explanation: t(
-    "In the integers modulo $n$, a nonzero class is either a unit or a zero divisor, and it cannot be both. A class is a unit exactly when it is coprime to $n$. So there are $\\varphi(n)$ units, and the other nonzero classes are all zero divisors, which gives $n - \\varphi(n) - 1$ of them.",
-    "在模 $n$ 的整数中，非零的类要么是单位，要么是零因子，不可能二者都是。一个类是单位，当且仅当它与 $n$ 互素。所以有 $\\varphi(n)$ 个单位，其余非零的类都是零因子，共 $n - \\varphi(n) - 1$ 个。",
+    "In the integers modulo $n$, a nonzero class is either a unit or a zero divisor, and it cannot be both. A class is a unit exactly when it is coprime to $n$. So there are $\\varphi(n)$ units, and the other nonzero classes are all zero divisors, which gives $n - \\varphi(n) - 1$ of them. In $\\mathbb{Z}_{10}$: $\\varphi(10) = 4$, so there are $10 - 4 - 1 = 5$ zero divisors, namely $[2], [4], [5], [6], [8]$.\n\n> **Watch out.** Subtract $1$ for the class $[0]$, which is neither a unit nor counted as a zero divisor here. $n - \\varphi(n)$ counts $[0]$ as well.",
+    "在模 $n$ 的整数中，非零的类要么是单位，要么是零因子，不可能二者都是。一个类是单位，当且仅当它与 $n$ 互素。所以有 $\\varphi(n)$ 个单位，其余非零的类都是零因子，共 $n - \\varphi(n) - 1$ 个。在 $\\mathbb{Z}_{10}$ 中：$\\varphi(10) = 4$，所以零因子有 $10 - 4 - 1 = 5$ 个，即 $[2], [4], [5], [6], [8]$。\n\n> **注意。** 要为类 $[0]$ 减去 $1$：它既不是单位，这里也不算作零因子。$n - \\varphi(n)$ 把 $[0]$ 也算进去了。",
   ),
   generate(rng) {
     const n = rng.pick([...Array(55).keys()].map((i) => i + 6).filter((i) => totient(i) !== i - 1));
     const phi = totient(n);
     const answer = n - phi - 1;
+    const p = divisorsOf(n)[1]!;
     return numberProblem({
       prompt: t(`How many nonzero classes of $\\mathbb{Z}_{${n}}$ are zero divisors?`, `$\\mathbb{Z}_{${n}}$ 中有多少个非零的类是零因子？`),
       answer,
       form: "integer",
-      wrong: [phi, n - phi, divisorsOf(n).length - 2],
-      solution: t(
-        `There are $\\varphi(${n}) = ${phi}$ units. Every other nonzero class is a zero divisor, so the count is $${n} - ${phi} - 1 = ${answer}$.`,
-        `单位有 $\\varphi(${n}) = ${phi}$ 个。其余非零的类都是零因子，所以有 $${n} - ${phi} - 1 = ${answer}$ 个。`,
+      wrong: [divisorsOf(n).length - 2],
+      mistakes: firstOf([
+        why(phi, "That counts the units, the classes coprime to the modulus.", "这数的是单位，即与模互素的类。"),
+        why(n - phi, "That counts $[0]$ as well; only nonzero classes are asked about.", "这把 $[0]$ 也算进去了；题目只问非零的类。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the units", "数单位"],
+            t(
+              `The units are the classes coprime to $${n}$: $\\varphi(${n}) = ${phi}$.`,
+              `单位是与 $${n}$ 互素的类：$\\varphi(${n}) = ${phi}$。`,
+            ),
+          ],
+          [
+            ["Take the rest", "取其余的类"],
+            t(
+              `Every other nonzero class is a zero divisor: $${n} - ${phi} - 1 = ${answer}$.`,
+              `其余非零的类都是零因子：$${n} - ${phi} - 1 = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `For example, $\\gcd(${p}, ${n}) = ${p}$, and $[${p}] \\cdot [${n / p}] = [${n}] = [0]$, so $[${p}]$ is one of the zero divisors.`,
+          `例如 $\\gcd(${p}, ${n}) = ${p}$，且 $[${p}] \\cdot [${n / p}] = [${n}] = [0]$，所以 $[${p}]$ 是零因子之一。`,
+        ),
       ),
     });
   },
@@ -1321,8 +1344,8 @@ const countingPropertyRelations: KnowledgePointDef = {
   id: "counting-relations-with-a-given-property",
   title: t("Counting relations with a given property", "数具有给定性质的关系"),
   explanation: t(
-    "A relation on a set of $n$ elements is a subset of the $n^2$ ordered pairs. A property fixes some pairs and links others, and the free decisions that remain give a power of two. Reflexivity fixes the $n$ diagonal pairs, while symmetry makes each off-diagonal pair and its mirror image into a single decision.",
-    "$n$ 元集合上的关系是 $n^2$ 个有序对的子集。性质固定了一些有序对，又把另一些绑定在一起，剩下的自由选择给出二的幂。自反性固定了对角线上的 $n$ 个有序对，对称性则使每个非对角有序对和它的镜像成为同一个选择。",
+    "A relation on a set of $n$ elements is a subset of the $n^2$ ordered pairs. A property fixes some pairs and links others, and the free decisions that remain give a power of two. Reflexivity fixes the $n$ diagonal pairs, while symmetry makes each off-diagonal pair and its mirror image into a single decision. On a set of $3$ elements there are $2^{9 - 3} = 2^6$ reflexive relations.\n\n> **Watch out.** For symmetry, $(a, b)$ and $(b, a)$ are one decision, not two, but each diagonal pair $(a, a)$ is still a decision of its own.",
+    "$n$ 元集合上的关系是 $n^2$ 个有序对的子集。性质固定了一些有序对，又把另一些绑定在一起，剩下的自由选择给出二的幂。自反性固定了对角线上的 $n$ 个有序对，对称性则使每个非对角有序对和它的镜像成为同一个选择。$3$ 元集合上的自反关系有 $2^{9 - 3} = 2^6$ 个。\n\n> **注意。** 对于对称性，$(a, b)$ 与 $(b, a)$ 是一个选择而不是两个，但每个对角有序对 $(a, a)$ 仍各自是一个选择。",
   ),
   generate(rng) {
     const n = rng.int(2, 9);
@@ -1332,32 +1355,55 @@ const countingPropertyRelations: KnowledgePointDef = {
         en: "reflexive",
         zh: "自反",
         k: offDiagonal,
-        whyEn: `The ${n} diagonal pairs are fixed, which leaves $${n * n} - ${n}$ free pairs`,
-        whyZh: `对角线上的 ${n} 个有序对已固定，剩下 $${n * n} - ${n}$ 个自由的有序对`,
+        stepEn: `The $${n}$ diagonal pairs must all be in, so only the $${n * n} - ${n} = ${offDiagonal}$ other pairs are free.`,
+        stepZh: `对角线上的 $${n}$ 个有序对必须都在其中，所以只有其余 $${n * n} - ${n} = ${offDiagonal}$ 个有序对可以自由选择。`,
       },
       {
         en: "irreflexive",
         zh: "反自反",
         k: offDiagonal,
-        whyEn: `The ${n} diagonal pairs are excluded, which leaves $${n * n} - ${n}$ free pairs`,
-        whyZh: `对角线上的 ${n} 个有序对被排除，剩下 $${n * n} - ${n}$ 个自由的有序对`,
+        stepEn: `The $${n}$ diagonal pairs must all be out, so only the $${n * n} - ${n} = ${offDiagonal}$ other pairs are free.`,
+        stepZh: `对角线上的 $${n}$ 个有序对必须都不在其中，所以只有其余 $${n * n} - ${n} = ${offDiagonal}$ 个有序对可以自由选择。`,
       },
       {
         en: "symmetric",
         zh: "对称",
         k: (n * (n + 1)) / 2,
-        whyEn: `The ${n} diagonal pairs and the ${offDiagonal / 2} mirror couples are each one decision`,
-        whyZh: `对角线上的 ${n} 个有序对和 ${offDiagonal / 2} 组镜像各是一个选择`,
+        stepEn: `Each of the $${n}$ diagonal pairs is one decision, and each of the $${offDiagonal / 2}$ mirror couples is one decision: $${n} + ${offDiagonal / 2} = ${(n * (n + 1)) / 2}$.`,
+        stepZh: `对角线上的 $${n}$ 个有序对各是一个选择，$${offDiagonal / 2}$ 组镜像也各是一个选择：$${n} + ${offDiagonal / 2} = ${(n * (n + 1)) / 2}$。`,
       },
       {
         en: "both reflexive and symmetric",
         zh: "既自反又对称",
         k: offDiagonal / 2,
-        whyEn: `The diagonal is fixed, and each of the ${offDiagonal / 2} mirror couples is one decision`,
-        whyZh: `对角线已固定，${offDiagonal / 2} 组镜像各是一个选择`,
+        stepEn: `The diagonal is fixed, and each of the $${offDiagonal / 2}$ mirror couples is one decision.`,
+        stepZh: `对角线已固定，$${offDiagonal / 2}$ 组镜像各是一个选择。`,
       },
     ];
     const kind = rng.pick(kinds);
+    const mistakes = firstOf([
+      why(n * n, "That leaves every pair free, as if there were no condition.", "这让每个有序对都自由选择，好像没有任何条件。"),
+      ...(kind.k === offDiagonal
+        ? [
+            why(
+              (n * (n + 1)) / 2,
+              "That counts the pairs on or above the diagonal, which is the count for symmetric relations.",
+              "这数的是对角线上及其上方的有序对，那是对称关系的计数。",
+            ),
+          ]
+        : [
+            why(
+              offDiagonal,
+              kind.en === "symmetric"
+                ? "That leaves out the diagonal and counts each mirror couple twice."
+                : "That counts each mirror couple twice; $(a, b)$ and $(b, a)$ are one decision.",
+              kind.en === "symmetric"
+                ? "这漏掉了对角线，又把每组镜像算了两次。"
+                : "这把每组镜像算了两次；$(a, b)$ 与 $(b, a)$ 是一个选择。",
+            ),
+          ]),
+      why(n, "That counts only the diagonal pairs.", "这只数了对角线上的有序对。"),
+    ]);
     return numberProblem({
       prompt: t(
         `The number of ${kind.en} relations on a set of ${n} elements is $2^k$. Find $k$.`,
@@ -1365,8 +1411,23 @@ const countingPropertyRelations: KnowledgePointDef = {
       ),
       answer: kind.k,
       solveFor: "k",
-      wrong: [n * n, kind.k === offDiagonal ? (n * (n + 1)) / 2 : offDiagonal, n],
-      solution: t(`${kind.whyEn}, so $k = ${kind.k}$.`, `${kind.whyZh}，所以 $k = ${kind.k}$。`),
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Count the pairs", "数有序对"],
+            t(
+              `A set of $${n}$ elements has $${n}^2 = ${n * n}$ ordered pairs, $${n}$ of them on the diagonal.`,
+              `$${n}$ 元集合有 $${n}^2 = ${n * n}$ 个有序对，其中 $${n}$ 个在对角线上。`,
+            ),
+          ],
+          [["Count the free decisions", "数自由的选择"], t(kind.stepEn, kind.stepZh)],
+        ],
+        t(
+          `Each free decision is in or out, which makes $2^{${kind.k}}$ relations, so $k = ${kind.k}$.`,
+          `每个自由的选择是放入或不放入，共 $2^{${kind.k}}$ 个关系，所以 $k = ${kind.k}$。`,
+        ),
+      ),
     });
   },
 };
@@ -1375,8 +1436,8 @@ const relationsOfASize: KnowledgePointDef = {
   id: "relations-with-a-given-number-of-pairs",
   title: t("Relations with a given number of pairs", "含给定个数有序对的关系"),
   explanation: t(
-    "A relation from one set to another is any subset of their Cartesian product. So once the number of pairs is fixed, choosing a relation is choosing that many pairs from the product. The count is a binomial coefficient on the size of the product, not on the sizes of the two sets themselves.",
-    "从一个集合到另一个集合的关系，就是它们笛卡儿积的任意子集。所以有序对的个数确定后，选关系就是从笛卡儿积中选出这么多个有序对。个数是以笛卡儿积的大小为上标的二项式系数，而不是以两个集合本身的大小为上标。",
+    "A relation from one set to another is any subset of their Cartesian product. So once the number of pairs is fixed, choosing a relation is choosing that many pairs from the product. The count is a binomial coefficient on the size of the product, not on the sizes of the two sets themselves. From a set of $2$ elements to a set of $3$, the product has $6$ pairs, so $\\binom{6}{2} = 15$ relations have exactly $2$ pairs.\n\n> **Watch out.** The pairs of a relation are chosen without order and without repetition, so the count is $\\binom{mn}{k}$, not $(mn)^k$.",
+    "从一个集合到另一个集合的关系，就是它们笛卡儿积的任意子集。所以有序对的个数确定后，选关系就是从笛卡儿积中选出这么多个有序对。个数是以笛卡儿积的大小为上标的二项式系数，而不是以两个集合本身的大小为上标。从 $2$ 元集合到 $3$ 元集合，笛卡儿积有 $6$ 个有序对，所以恰含 $2$ 个有序对的关系有 $\\binom{6}{2} = 15$ 个。\n\n> **注意。** 关系中的有序对是不计顺序、不重复地选出的，所以个数是 $\\binom{mn}{k}$，而不是 $(mn)^k$。",
   ),
   generate(rng) {
     const m = rng.int(2, 6);
@@ -1391,10 +1452,37 @@ const relationsOfASize: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 ** size, size ** k, binom(m + n, k)],
-      solution: t(
-        `The Cartesian product has $${m} \\cdot ${n} = ${size}$ pairs, and a relation of this size picks ${k} of them: $\\binom{${size}}{${k}} = ${answer}$.`,
-        `笛卡儿积有 $${m} \\cdot ${n} = ${size}$ 个有序对，这样的关系从中选出 ${k} 个：$\\binom{${size}}{${k}} = ${answer}$。`,
+      mistakes: firstOf([
+        why(2 ** size, "That counts all relations, of every size.", "这数的是所有大小的关系。"),
+        why(
+          size ** k,
+          "That picks the pairs in order and allows repeats; a relation is a set of pairs.",
+          "这是按顺序且可重复地选有序对；关系是有序对的集合。",
+        ),
+        why(
+          binom(m + n, k),
+          "That chooses from the elements of the two sets, not from the pairs of their product.",
+          "这是从两个集合的元素中选，而不是从笛卡儿积的有序对中选。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the product", "数笛卡儿积"],
+            t(`The Cartesian product has $${m} \\cdot ${n} = ${size}$ pairs.`, `笛卡儿积有 $${m} \\cdot ${n} = ${size}$ 个有序对。`),
+          ],
+          [
+            ["Choose the pairs", "选出有序对"],
+            t(
+              `A relation with $${k}$ pairs picks $${k}$ of them: $\\binom{${size}}{${k}} = ${answer}$.`,
+              `含 $${k}$ 个有序对的关系从中选出 $${k}$ 个：$\\binom{${size}}{${k}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\binom{${size}}{${k}} = \\dfrac{${[...Array(k).keys()].map((i) => size - i).join(" \\cdot ")}}{${k}!} = ${answer}$.`,
+          `$\\binom{${size}}{${k}} = \\dfrac{${[...Array(k).keys()].map((i) => size - i).join(" \\cdot ")}}{${k}!} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3257,8 +3345,8 @@ const atMostOnePartner: KnowledgePointDef = {
   id: "counting-relations-with-at-most-one-partner",
   title: t("Counting relations with at most one partner", "数至多有一个对应元素的关系"),
   explanation: t(
-    "A relation is a function when each element of the first set has exactly one partner. Relaxing this to at most one partner gives each element one more option, namely having no partner at all. The choices are still independent, so the count is again a power. If the elements that do have partners are specified, choose those first and then their partners.",
-    "当第一个集合的每个元素恰有一个对应元素时，关系就是函数。把条件放宽为至多一个对应元素，每个元素就多了一种选择，也就是没有对应元素。这些选择仍然相互独立，所以个数还是一个幂。如果规定了哪些元素有对应元素的个数，就先选出这些元素，再选它们的对应元素。",
+    'A relation is a function when each element of the first set has exactly one partner. Relaxing this to at most one partner gives each element one more option, namely having no partner at all. The choices are still independent, so the count is again a power. If the elements that do have partners are specified, choose those first and then their partners. From a set of $2$ elements to a set of $3$, there are $(3 + 1)^2 = 16$ such relations.\n\n> **Watch out.** "No partner" is one extra choice per element, so the base is $n + 1$, not $n$. And the exponent is the size of the first set, the one whose elements choose.',
+    "当第一个集合的每个元素恰有一个对应元素时，关系就是函数。把条件放宽为至多一个对应元素，每个元素就多了一种选择，也就是没有对应元素。这些选择仍然相互独立，所以个数还是一个幂。如果规定了哪些元素有对应元素的个数，就先选出这些元素，再选它们的对应元素。从 $2$ 元集合到 $3$ 元集合，这样的关系有 $(3 + 1)^2 = 16$ 个。\n\n> **注意。** “没有对应元素”是每个元素多出的一种选择，所以底数是 $n + 1$ 而不是 $n$。指数是第一个集合的大小，也就是做选择的那些元素的个数。",
   ),
   generate(rng) {
     const m = rng.int(2, 6);
@@ -3272,10 +3360,45 @@ const atMostOnePartner: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [n ** m, 2 ** (m * n), m * n],
-        solution: t(
-          `Each of the ${m} elements either has one of ${n} partners or has none, which is ${n + 1} choices. So the count is $${n + 1}^{${m}} = ${answer}$.`,
-          `${m} 个元素各自要么有 ${n} 个对应元素之一，要么没有，共 ${n + 1} 种选择。所以个数是 $${n + 1}^{${m}} = ${answer}$。`,
+        wrong: [m * n],
+        mistakes: firstOf([
+          why(
+            n ** m,
+            `That counts the functions, where every element has a partner; "no partner" is allowed too.`,
+            "这数的是函数，其中每个元素都有对应元素；但也允许没有对应元素。",
+          ),
+          why(
+            2 ** (m * n),
+            "That counts all relations, including those with two partners for one element.",
+            "这数的是所有关系，包括一个元素有两个对应元素的情形。",
+          ),
+          why(
+            (m + 1) ** n,
+            "The exponent belongs to the first set, whose elements make the choices.",
+            "指数应是第一个集合的大小，是它的元素在做选择。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Count one element's choices", "数一个元素的选择"],
+              t(
+                `Each element picks one of $${n}$ partners or none: $${n} + 1 = ${n + 1}$ choices.`,
+                `每个元素从 $${n}$ 个对应元素中选一个，或者不选：$${n} + 1 = ${n + 1}$ 种选择。`,
+              ),
+            ],
+            [
+              ["Multiply", "相乘"],
+              t(
+                `The $${m}$ elements choose independently: $${n + 1}^{${m}} = ${answer}$.`,
+                `$${m}$ 个元素独立选择：$${n + 1}^{${m}} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Sorting by how many elements have partners: $${[...Array(m + 1).keys()].map((d) => `\\binom{${m}}{${d}} ${n}^{${d}}`).join(" + ")} = ${answer}$, by the binomial theorem.`,
+            `按有对应元素的个数分类：$${[...Array(m + 1).keys()].map((d) => `\\binom{${m}}{${d}} ${n}^{${d}}`).join(" + ")} = ${answer}$，由二项式定理。`,
+          ),
         ),
       });
     }
@@ -3288,10 +3411,41 @@ const atMostOnePartner: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n ** d, (n + 1) ** m, binom(m * n, d)],
-      solution: t(
-        `Choose the elements with partners in $\\binom{${m}}{${d}} = ${binom(m, d)}$ ways. Their partners can then be picked in ${n ** d} ways, so the count is $${binom(m, d)} \\cdot ${n ** d} = ${answer}$.`,
-        `选出有对应元素的元素有 $\\binom{${m}}{${d}} = ${binom(m, d)}$ 种方式。再选它们的对应元素有 ${n ** d} 种方式，所以个数是 $${binom(m, d)} \\cdot ${n ** d} = ${answer}$。`,
+      mistakes: firstOf([
+        why(
+          n ** d,
+          `That fixes which elements have partners; they can be any $${d}$ of the $${m}$.`,
+          `这固定了哪些元素有对应元素；它们可以是 $${m}$ 个中的任意 $${d}$ 个。`,
+        ),
+        why((n + 1) ** m, "That counts the relations with any number of elements having partners.", "这数的是有对应元素的个数任意的关系。"),
+        why(
+          binom(m * n, d),
+          `That chooses $${d}$ pairs freely, which can give one element two partners.`,
+          `这是任意选 $${d}$ 个有序对，可能让一个元素有两个对应元素。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Choose the elements", "选出元素"],
+            t(
+              `The $${d}$ elements with partners: $\\binom{${m}}{${d}} = ${binom(m, d)}$ ways.`,
+              `有对应元素的 $${d}$ 个元素：$\\binom{${m}}{${d}} = ${binom(m, d)}$ 种方式。`,
+            ),
+          ],
+          [
+            ["Choose their partners", "选出对应元素"],
+            t(
+              `Each picks one of $${n}$: $${n}^{${d}} = ${n ** d}$ ways.`,
+              `每个元素从 $${n}$ 个中选一个：$${n}^{${d}} = ${n ** d}$ 种方式。`,
+            ),
+          ],
+          [["Multiply", "相乘"], t(`$${binom(m, d)} \\cdot ${n ** d} = ${answer}$.`, `$${binom(m, d)} \\cdot ${n ** d} = ${answer}$。`)],
+        ],
+        t(
+          `The other $${m - d}$ ${m - d === 1 ? "element has" : "elements have"} no partner, so nothing more is chosen; adding over every number of elements with partners gives the total $${n + 1}^{${m}}$.`,
+          `其余 $${m - d}$ 个元素没有对应元素，不需要再选；对所有可能的个数求和，得到总数 $${n + 1}^{${m}}$。`,
+        ),
       ),
     });
   },
@@ -3301,8 +3455,8 @@ const relationsByClassCount: KnowledgePointDef = {
   id: "equivalence-relations-with-a-given-number-of-classes",
   title: t("Equivalence relations with a given number of classes", "恰有给定个数等价类的等价关系"),
   explanation: t(
-    "Equivalence relations on a set correspond exactly to partitions of it, because a relation's classes form a partition and a partition's blocks define a relation. To count them by number of classes, follow the last element. It either forms a class alone or joins one of the classes of a partition of the other elements. This gives a recurrence that builds the counts.",
-    "集合上的等价关系和它的划分一一对应，因为关系的等价类构成划分，而划分的块定义一个关系。要按等价类的个数来数，就追踪最后一个元素。它要么单独成为一类，要么加入其余元素的某个划分的一类。这就给出了一个递推式，可以逐步算出这些个数。",
+    "Equivalence relations on a set correspond exactly to partitions of it, because a relation's classes form a partition and a partition's blocks define a relation. To count them by number of classes, follow the last element. It either forms a class alone or joins one of the classes of a partition of the other elements. This gives the recurrence $S(n, k) = S(n - 1, k - 1) + k \\cdot S(n - 1, k)$. For example, $S(4, 2) = S(3, 1) + 2 \\cdot S(3, 2) = 1 + 2 \\cdot 3 = 7$.\n\n> **Watch out.** The classes have no labels, so do not multiply by $k!$, and do not count $k^n$ assignments to $k$ labelled boxes, which may leave a box empty.",
+    "集合上的等价关系和它的划分一一对应，因为关系的等价类构成划分，而划分的块定义一个关系。要按等价类的个数来数，就追踪最后一个元素。它要么单独成为一类，要么加入其余元素的某个划分的一类。这就给出递推式 $S(n, k) = S(n - 1, k - 1) + k \\cdot S(n - 1, k)$。例如 $S(4, 2) = S(3, 1) + 2 \\cdot S(3, 2) = 1 + 2 \\cdot 3 = 7$。\n\n> **注意。** 等价类没有标号，所以不要乘以 $k!$，也不要数成把元素放进 $k$ 个有标号盒子的 $k^n$ 种方式，那样还可能有空盒。",
   ),
   generate(rng) {
     const n = rng.int(3, 10);
@@ -3310,6 +3464,7 @@ const relationsByClassCount: KnowledgePointDef = {
     const answer = stirling(n, k);
     const alone = stirling(n - 1, k - 1);
     const joining = stirling(n - 1, k);
+    const surjections = [...Array(k + 1).keys()].reduce((sum, j) => sum + (-1) ** j * binom(k, j) * (k - j) ** n, 0);
     return numberProblem({
       prompt: t(
         `How many equivalence relations on a set of ${n} elements have exactly ${k} equivalence classes?`,
@@ -3317,10 +3472,44 @@ const relationsByClassCount: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [binom(n, k), k ** n, answer * factorial(k)],
-      solution: t(
-        `Let $S(n, k)$ be this count. The last element is alone or joins one of the ${k} classes of the others, so $S(${n}, ${k}) = S(${n - 1}, ${k - 1}) + ${k} \\cdot S(${n - 1}, ${k}) = ${alone} + ${k} \\cdot ${joining} = ${answer}$.`,
-        `设 $S(n, k)$ 是这个个数。最后一个元素要么单独成类，要么加入其余元素的 ${k} 个类之一，所以 $S(${n}, ${k}) = S(${n - 1}, ${k - 1}) + ${k} \\cdot S(${n - 1}, ${k}) = ${alone} + ${k} \\cdot ${joining} = ${answer}$。`,
+      mistakes: firstOf([
+        why(
+          binom(n, k),
+          `That chooses $${k}$ elements; a partition places every element in some class.`,
+          `这是选出 $${k}$ 个元素；划分要把每个元素都放进某个类。`,
+        ),
+        why(
+          k ** n,
+          "That counts assignments to labelled classes, some of which may be empty.",
+          "这数的是放进有标号类的方式，其中有的类可能为空。",
+        ),
+        why(
+          answer * factorial(k),
+          "That labels the classes; the classes of a relation have no order.",
+          "这给类加了标号；关系的等价类没有顺序。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Follow the last element", "追踪最后一个元素"],
+            t(
+              `It is alone, leaving $${k - 1}$ ${k - 1 === 1 ? "class" : "classes"} for the other $${n - 1}$ elements, or it joins one of the $${k}$ classes of a partition of the others: $S(${n}, ${k}) = S(${n - 1}, ${k - 1}) + ${k} \\cdot S(${n - 1}, ${k})$.`,
+              `它要么单独成类，其余 $${n - 1}$ 个元素分成 $${k - 1}$ 类；要么加入其余元素某个划分的 $${k}$ 个类之一：$S(${n}, ${k}) = S(${n - 1}, ${k - 1}) + ${k} \\cdot S(${n - 1}, ${k})$。`,
+            ),
+          ],
+          [
+            ["Use the smaller counts", "代入较小的个数"],
+            t(
+              `$S(${n - 1}, ${k - 1}) = ${alone}$ and $S(${n - 1}, ${k}) = ${joining}$, so $${alone} + ${k} \\cdot ${joining} = ${answer}$.`,
+              `$S(${n - 1}, ${k - 1}) = ${alone}$，$S(${n - 1}, ${k}) = ${joining}$，所以 $${alone} + ${k} \\cdot ${joining} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Onto maps from the $${n}$ elements to $${k}$ labelled classes number $\\sum_{j=0}^{${k}} (-1)^j \\binom{${k}}{j} (${k} - j)^{${n}} = ${surjections}$, and $${k}! \\cdot ${answer} = ${surjections}$ as well.`,
+          `从 $${n}$ 个元素到 $${k}$ 个有标号类的满射有 $\\sum_{j=0}^{${k}} (-1)^j \\binom{${k}}{j} (${k} - j)^{${n}} = ${surjections}$ 个，而 $${k}! \\cdot ${answer} = ${surjections}$，一致。`,
+        ),
       ),
     });
   },
@@ -3957,14 +4146,16 @@ const domainOfSumRelation: KnowledgePointDef = {
   id: "the-domain-of-a-sum-relation",
   title: t("The domain of a sum relation", "和关系的定义域"),
   explanation: t(
-    "The domain of a relation is the set of first coordinates that actually occur. For the relation $x + y = k$ on $\\{1, \\dots, n\\}$, a value of $x$ occurs when its partner $k - x$ is also between 1 and $n$. When $k$ is small, the partner fails to be positive for large $x$. When $k$ is large, the partner is too big for small $x$. So the domain is a run of consecutive integers, and both ends must be checked.",
-    "关系的定义域是实际出现的第一坐标的集合。对 $\\{1, \\dots, n\\}$ 上的关系 $x + y = k$，当搭档 $k - x$ 也在 1 和 $n$ 之间时，$x$ 的值才出现。$k$ 较小时，对大的 $x$，搭档不是正数。$k$ 较大时，对小的 $x$，搭档太大。所以定义域是一段连续的整数，两端都要检查。",
+    "The domain of a relation is the set of first coordinates that actually occur. For the relation $x + y = k$ on $\\{1, \\dots, n\\}$, a value of $x$ occurs when its partner $k - x$ is also between 1 and $n$. When $k$ is small, the partner fails to be positive for large $x$. When $k$ is large, the partner is too big for small $x$. So the domain is a run of consecutive integers, and both ends must be checked. On $\\{1, \\dots, 10\\}$ with $x + y = 14$, the partner $14 - x \\le 10$ needs $x \\ge 4$, so the domain is $\\{4, \\dots, 10\\}$: $7$ elements.\n\n> **Watch out.** Apply both bounds to the partner, $1 \\le k - x \\le n$, and intersect them with $1 \\le x \\le n$. The count is $\\text{last} - \\text{first} + 1$, not $\\text{last} - \\text{first}$.",
+    "关系的定义域是实际出现的第一坐标的集合。对 $\\{1, \\dots, n\\}$ 上的关系 $x + y = k$，当搭档 $k - x$ 也在 1 和 $n$ 之间时，$x$ 的值才出现。$k$ 较小时，对大的 $x$，搭档不是正数。$k$ 较大时，对小的 $x$，搭档太大。所以定义域是一段连续的整数，两端都要检查。在 $\\{1, \\dots, 10\\}$ 上，对 $x + y = 14$，搭档 $14 - x \\le 10$ 要求 $x \\ge 4$，所以定义域是 $\\{4, \\dots, 10\\}$：共 $7$ 个元素。\n\n> **注意。** 对搭档同时用上两个界 $1 \\le k - x \\le n$，再与 $1 \\le x \\le n$ 取交集。个数是 $\\text{末项} - \\text{首项} + 1$，而不是 $\\text{末项} - \\text{首项}$。",
   ),
   generate(rng) {
     const n = rng.int(3, 20);
     const k = rng.int(3, 2 * n - 1);
     const domain = oneTo(n).filter((x) => k - x >= 1 && k - x <= n);
     const answer = domain.length;
+    const first = domain[0]!;
+    const last = domain[domain.length - 1]!;
     return numberProblem({
       prompt: t(
         `The relation $R$ on $\\{1, 2, \\dots, ${n}\\}$ has $(x, y) \\in R$ when $x + y = ${k}$. How many elements does the domain of $R$ have?`,
@@ -3972,10 +4163,32 @@ const domainOfSumRelation: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n, k, k - 1, Math.abs(2 * n - k), answer + 1, answer - 1],
-      solution: t(
-        `The value $${k} - x$ must also lie between 1 and ${n}, so $x$ runs from $${domain[0] ?? 0}$ to $${domain[domain.length - 1] ?? 0}$. That is $${answer}$ values.`,
-        `$${k} - x$ 也必须在 1 和 ${n} 之间，所以 $x$ 从 $${domain[0] ?? 0}$ 取到 $${domain[domain.length - 1] ?? 0}$。共 $${answer}$ 个值。`,
+      wrong: [k, Math.abs(2 * n - k)],
+      mistakes: firstOf([
+        why(answer - 1, "That is the last value minus the first; count both ends.", "这是末项减首项；两端都要算上。"),
+        why(
+          n,
+          `Not every $x$ has a partner: $${k} - x$ must also lie between $1$ and $${n}$.`,
+          `并非每个 $x$ 都有搭档：$${k} - x$ 也必须在 $1$ 与 $${n}$ 之间。`,
+        ),
+        why(k - 1, `That allows partners larger than $${n}$.`, `这允许了大于 $${n}$ 的搭档。`),
+        why(answer + 1, "That counts one value whose partner falls outside the set.", "这多算了一个搭档落在集合之外的值。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Bound the partner", "限定搭档"],
+            t(
+              `$1 \\le ${k} - x \\le ${n}$ means $${k - n} \\le x \\le ${k - 1}$; together with $1 \\le x \\le ${n}$ this gives $${first} \\le x \\le ${last}$.`,
+              `$1 \\le ${k} - x \\le ${n}$ 即 $${k - n} \\le x \\le ${k - 1}$；再结合 $1 \\le x \\le ${n}$，得 $${first} \\le x \\le ${last}$。`,
+            ),
+          ],
+          [["Count", "计数"], t(`$${last} - ${first} + 1 = ${answer}$ values.`, `$${last} - ${first} + 1 = ${answer}$ 个值。`)],
+        ],
+        t(
+          `At the ends, $(${first}, ${k - first})$ and $(${last}, ${k - last})$ are in $R$${first > 1 ? `, while $${first - 1}$ would need the partner $${k - first + 1} > ${n}$` : ""}${last < n ? `, and $${last + 1}$ would need the partner $${k - last - 1} < 1$` : ""}.`,
+          `两端的 $(${first}, ${k - first})$ 与 $(${last}, ${k - last})$ 都在 $R$ 中${first > 1 ? `，而 $${first - 1}$ 需要搭档 $${k - first + 1} > ${n}$` : ""}${last < n ? `，$${last + 1}$ 需要搭档 $${k - last - 1} < 1$` : ""}。`,
+        ),
       ),
     });
   },
@@ -3985,12 +4198,17 @@ const onesInDivisibilityMatrix: KnowledgePointDef = {
   id: "counting-the-ones-in-a-divisibility-matrix",
   title: t("Counting the ones in a divisibility matrix", "计算整除矩阵中 1 的个数"),
   explanation: t(
-    "The matrix of a relation on $\\{1, \\dots, n\\}$ has a 1 in row $i$ and column $j$ when $i$ is related to $j$. So the number of ones is the number of pairs in the relation. For divisibility, row $d$ has a 1 at each multiple of $d$, which gives $\\lfloor \\frac{n}{d} \\rfloor$ ones. Adding along the rows avoids testing every entry, and it also equals the total number of divisors of the numbers up to $n$.",
-    "$\\{1, \\dots, n\\}$ 上关系的矩阵，当 $i$ 与 $j$ 有关系时，第 $i$ 行第 $j$ 列为 1。所以 1 的个数就是关系中数对的个数。对整除关系，第 $d$ 行在 $d$ 的每个倍数处为 1，共 $\\lfloor \\frac{n}{d} \\rfloor$ 个。按行相加就不必检查每个元素，它也等于不超过 $n$ 的各数的因数个数之和。",
+    "The matrix of a relation on $\\{1, \\dots, n\\}$ has a 1 in row $i$ and column $j$ when $i$ is related to $j$. So the number of ones is the number of pairs in the relation. For divisibility, row $d$ has a 1 at each multiple of $d$, which gives $\\lfloor \\frac{n}{d} \\rfloor$ ones. Adding along the rows avoids testing every entry, and it also equals the total number of divisors of the numbers up to $n$. For $n = 6$: $6 + 3 + 2 + 1 + 1 + 1 = 14$.\n\n> **Watch out.** Every row has at least one 1, on the diagonal, since $d \\mid d$. Row $d$ counts multiples of $d$ up to $n$, which is $\\lfloor n/d \\rfloor$, rounded down.",
+    "$\\{1, \\dots, n\\}$ 上关系的矩阵，当 $i$ 与 $j$ 有关系时，第 $i$ 行第 $j$ 列为 1。所以 1 的个数就是关系中数对的个数。对整除关系，第 $d$ 行在 $d$ 的每个倍数处为 1，共 $\\lfloor \\frac{n}{d} \\rfloor$ 个。按行相加就不必检查每个元素，它也等于不超过 $n$ 的各数的因数个数之和。当 $n = 6$ 时：$6 + 3 + 2 + 1 + 1 + 1 = 14$。\n\n> **注意。** 因为 $d \\mid d$，每一行至少在对角线上有一个 1。第 $d$ 行数的是不超过 $n$ 的 $d$ 的倍数，即向下取整的 $\\lfloor n/d \\rfloor$。",
   ),
   generate(rng) {
     const n = rng.int(4, 40);
-    const answer = oneTo(n).reduce((sum, d) => sum + Math.floor(n / d), 0);
+    const rows = oneTo(n).map((d) => Math.floor(n / d));
+    const answer = rows.reduce((sum, r) => sum + r, 0);
+    const divisorCounts = oneTo(n).map((j) => divisorsOf(j).length);
+    const shown = n <= 12 ? rows.join(" + ") : `${rows.slice(0, 6).join(" + ")} + \\dots + ${rows[n - 1]}`;
+    const shownColumns =
+      n <= 12 ? divisorCounts.join(" + ") : `${divisorCounts.slice(0, 6).join(" + ")} + \\dots + ${divisorCounts[n - 1]}`;
     return numberProblem({
       prompt: t(
         `The relation "$i$ divides $j$" on $\\{1, 2, \\dots, ${n}\\}$ is written as a matrix of zeros and ones. How many ones does the matrix have?`,
@@ -3998,10 +4216,31 @@ const onesInDivisibilityMatrix: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n, n * n, (n * (n + 1)) / 2, answer + 1],
-      solution: t(
-        `Row $d$ has $\\lfloor \\frac{${n}}{d} \\rfloor$ ones, one for each multiple of $d$. Adding over all the rows gives $${answer}$.`,
-        `第 $d$ 行有 $\\lfloor \\frac{${n}}{d} \\rfloor$ 个 1，每个 $d$ 的倍数一个。对所有行求和，得 $${answer}$。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(n, "That counts only the diagonal, or only the first row.", "这只数了对角线，或者只数了第一行。"),
+        why(n * n, "That counts every entry; a 1 needs $i \\mid j$.", "这数的是所有元素；只有 $i \\mid j$ 时才是 1。"),
+        why(
+          (n * (n + 1)) / 2,
+          "That counts every entry with $i \\le j$, but $i \\le j$ does not make $i$ divide $j$.",
+          "这数的是所有 $i \\le j$ 的元素，但 $i \\le j$ 并不意味着 $i$ 整除 $j$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count each row", "逐行计数"],
+            t(
+              `Row $d$ has a 1 at each multiple of $d$ up to $${n}$: $\\lfloor ${n}/d \\rfloor$ ones.`,
+              `第 $d$ 行在不超过 $${n}$ 的每个 $d$ 的倍数处为 1：共 $\\lfloor ${n}/d \\rfloor$ 个。`,
+            ),
+          ],
+          [["Add the rows", "各行相加"], t(`$${shown} = ${answer}$.`, `$${shown} = ${answer}$。`)],
+        ],
+        t(
+          `Counting by columns instead, column $j$ has one 1 for each divisor of $j$: $${shownColumns} = ${answer}$.`,
+          `改为按列计数，第 $j$ 列中 $j$ 的每个因数对应一个 1：$${shownColumns} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -4011,13 +4250,14 @@ const closureOfCycleOrChain: KnowledgePointDef = {
   id: "the-size-of-the-transitive-closure-of-a-cycle-or-chain",
   title: t("The size of the transitive closure of a cycle or chain", "环或链的传递闭包的大小"),
   explanation: t(
-    "The transitive closure adds a pair $(a, b)$ whenever there is a path of arrows from $a$ to $b$. On a chain $a_1 \\to a_2 \\to \\dots \\to a_n$, an element reaches only those later in the chain, which gives one pair for each choice of two positions. On a cycle, every element reaches every element, including itself, by going all the way around. So joining up the two ends of a chain enlarges the closure considerably.",
-    "传递闭包在从 $a$ 到 $b$ 有箭头路径时加入数对 $(a, b)$。在链 $a_1 \\to a_2 \\to \\dots \\to a_n$ 上，一个元素只能到达链中在它之后的元素，所以每选两个位置就有一对。在环上，每个元素都能到达每个元素，包括绕一圈回到自身。所以把链的两端连起来会使闭包大大增加。",
+    "The transitive closure adds a pair $(a, b)$ whenever there is a path of arrows from $a$ to $b$. On a chain $a_1 \\to a_2 \\to \\dots \\to a_n$, an element reaches only those later in the chain, which gives one pair for each choice of two positions. On a cycle, every element reaches every element, including itself, by going all the way around. So joining up the two ends of a chain enlarges the closure considerably. A chain of $4$ elements has a closure of $\\binom{4}{2} = 6$ pairs; a cycle of $4$ has $4^2 = 16$.\n\n> **Watch out.** On a cycle, the pairs $(a, a)$ belong to the closure too, since going once around returns to the start. On a chain, they do not.",
+    "传递闭包在从 $a$ 到 $b$ 有箭头路径时加入数对 $(a, b)$。在链 $a_1 \\to a_2 \\to \\dots \\to a_n$ 上，一个元素只能到达链中在它之后的元素，所以每选两个位置就有一对。在环上，每个元素都能到达每个元素，包括绕一圈回到自身。所以把链的两端连起来会使闭包大大增加。$4$ 个元素的链的闭包有 $\\binom{4}{2} = 6$ 个数对；$4$ 个元素的环有 $4^2 = 16$ 个。\n\n> **注意。** 在环上，数对 $(a, a)$ 也属于闭包，因为绕一圈会回到起点。在链上则没有这些数对。",
   ),
   generate(rng) {
     const n = rng.int(5, 20);
     const cycle = rng.pick([true, false]);
     const answer = cycle ? n * n : (n * (n - 1)) / 2;
+    const rowSums = [...Array(n).keys()].map((i) => n - 1 - i);
     return numberProblem({
       prompt: t(
         `A relation consists of the pairs $(a_1, a_2), (a_2, a_3), \\dots, (a_{${n - 1}}, a_{${n}})$${cycle ? `, together with $(a_{${n}}, a_1)$` : ""}, on ${n} different elements. How many pairs does its transitive closure have?`,
@@ -4025,14 +4265,83 @@ const closureOfCycleOrChain: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [cycle ? n : n - 1, n * (n - 1), (n * (n + 1)) / 2, cycle ? (n * (n - 1)) / 2 : n * n],
-      solution: t(
+      wrong: [(n * (n + 1)) / 2],
+      mistakes: firstOf(
         cycle
-          ? `The arrows form a cycle, so every element reaches all ${n} elements, itself included. This gives $${n}^2 = ${answer}$ pairs.`
-          : `Each element reaches exactly those later in the chain, so each pair of positions gives one pair. This makes $\\binom{${n}}{2} = ${answer}$.`,
+          ? [
+              why(
+                n * (n - 1),
+                "That leaves out the pairs $(a, a)$, which going once around the cycle produces.",
+                "这漏掉了数对 $(a, a)$，绕环一圈就会得到它们。",
+              ),
+              why(
+                n,
+                "That counts only the arrows of the cycle; the closure adds every path.",
+                "这只数了环上的箭头；闭包还要加入每条路径。",
+              ),
+              why(
+                (n * (n - 1)) / 2,
+                "That counts only forward pairs, as on a chain; on a cycle every element reaches every element.",
+                "这只数了向前的数对，就像在链上；在环上每个元素都能到达每个元素。",
+              ),
+            ]
+          : [
+              why(
+                n * (n - 1),
+                "That counts backward pairs too; on a chain an element reaches only those after it.",
+                "这把向后的数对也算进去了；在链上一个元素只能到达它之后的元素。",
+              ),
+              why(
+                n - 1,
+                "That counts only the arrows of the chain; the closure adds every path.",
+                "这只数了链上的箭头；闭包还要加入每条路径。",
+              ),
+              why(n * n, "That is the closure of a cycle; a chain has no path back.", "这是环的闭包；链上没有回头的路径。"),
+            ],
+      ),
+      solution: walked(
         cycle
-          ? `箭头构成一个环，所以每个元素都能到达全部 ${n} 个元素，包括它自身。这样得 $${n}^2 = ${answer}$ 个数对。`
-          : `每个元素恰好到达链中在它之后的元素，所以每两个位置给出一个数对。共 $\\binom{${n}}{2} = ${answer}$ 个。`,
+          ? [
+              [
+                ["Follow the arrows", "沿箭头走"],
+                t(
+                  `From any $a_i$, going around the cycle passes through every element and returns to $a_i$.`,
+                  `从任意 $a_i$ 出发，沿环走一圈会经过每个元素并回到 $a_i$。`,
+                ),
+              ],
+              [
+                ["Count", "计数"],
+                t(
+                  `Each of the $${n}$ elements reaches all $${n}$, itself included: $${n}^2 = ${answer}$ pairs.`,
+                  `$${n}$ 个元素中的每一个都能到达全部 $${n}$ 个，包括自身：$${n}^2 = ${answer}$ 个数对。`,
+                ),
+              ],
+            ]
+          : [
+              [
+                ["Follow the arrows", "沿箭头走"],
+                t(
+                  `From $a_i$ the arrows reach exactly $a_{i+1}, \\dots, a_{${n}}$, and never back.`,
+                  `从 $a_i$ 出发，箭头恰好到达 $a_{i+1}, \\dots, a_{${n}}$，不会回头。`,
+                ),
+              ],
+              [
+                ["Count", "计数"],
+                t(
+                  `Each pair of positions $i < j$ gives one pair: $\\binom{${n}}{2} = ${answer}$.`,
+                  `每对位置 $i < j$ 给出一个数对：$\\binom{${n}}{2} = ${answer}$。`,
+                ),
+              ],
+            ],
+        cycle
+          ? t(
+              `The closure is all of $A \\times A$ for a set $A$ of $${n}$ elements, which has $${n} \\cdot ${n} = ${answer}$ pairs.`,
+              `闭包就是 $${n}$ 元集合 $A$ 的全部 $A \\times A$，有 $${n} \\cdot ${n} = ${answer}$ 个数对。`,
+            )
+          : t(
+              `Adding by starting point: $a_1$ reaches $${n - 1}$, $a_2$ reaches $${n - 2}$, and so on: $${rowSums.slice(0, 3).join(" + ")} + \\dots + 0 = ${answer}$.`,
+              `按起点相加：$a_1$ 到达 $${n - 1}$ 个，$a_2$ 到达 $${n - 2}$ 个，依此类推：$${rowSums.slice(0, 3).join(" + ")} + \\dots + 0 = ${answer}$。`,
+            ),
       ),
     });
   },
@@ -4042,13 +4351,16 @@ const classesOfEqualSquares: KnowledgePointDef = {
   id: "counting-the-classes-of-equal-squares",
   title: t("Counting the classes of equal squares", "计算平方相等的等价类"),
   explanation: t(
-    "Any function defines an equivalence relation, by calling two elements related when they have the same image. The classes then correspond one-to-one with the different values that the function takes. So counting classes of $x \\sim y$ when $x^2 \\equiv y^2 \\pmod n$ is the same as counting the different squares modulo $n$. For an odd prime $p$, the residues $x$ and $-x$ pair up, apart from 0, so there are $\\frac{p + 1}{2}$ classes.",
-    "任何函数都定义一个等价关系：两个元素的像相同时称它们相关。于是等价类与函数取到的不同值一一对应。所以当 $x^2 \\equiv y^2 \\pmod n$ 时 $x \\sim y$ 的类的个数，就是模 $n$ 的不同平方数的个数。对奇素数 $p$，除 0 以外，$x$ 和 $-x$ 配对，所以有 $\\frac{p + 1}{2}$ 个类。",
+    "Any function defines an equivalence relation, by calling two elements related when they have the same image. The classes then correspond one-to-one with the different values that the function takes. So counting classes of $x \\sim y$ when $x^2 \\equiv y^2 \\pmod n$ is the same as counting the different squares modulo $n$. For an odd prime $p$, the residues $x$ and $-x$ pair up, apart from 0, so there are $\\frac{p + 1}{2}$ classes. Modulo $8$, the squares of $0, \\dots, 7$ leave $0, 1, 4, 1, 0, 1, 4, 1$: three classes.\n\n> **Watch out.** For a modulus that is not prime, more than two residues can share a square, as $1, 3, 5, 7$ do modulo $8$. List the squares instead of assuming $\\frac{n + 1}{2}$.",
+    "任何函数都定义一个等价关系：两个元素的像相同时称它们相关。于是等价类与函数取到的不同值一一对应。所以当 $x^2 \\equiv y^2 \\pmod n$ 时 $x \\sim y$ 的类的个数，就是模 $n$ 的不同平方数的个数。对奇素数 $p$，除 0 以外，$x$ 和 $-x$ 配对，所以有 $\\frac{p + 1}{2}$ 个类。模 $8$ 时，$0, \\dots, 7$ 的平方余 $0, 1, 4, 1, 0, 1, 4, 1$：共三个类。\n\n> **注意。** 模不是素数时，可能有两个以上的余数平方相同，例如模 $8$ 的 $1, 3, 5, 7$。要列出平方，而不是假定个数是 $\\frac{n + 1}{2}$。",
   ),
   generate(rng) {
     const n = rng.int(5, 60);
-    const squares = new Set([...Array(n).keys()].map((x) => (x * x) % n));
-    const answer = squares.size;
+    const half = Math.floor(n / 2);
+    const firstSquares = [...Array(half + 1).keys()].map((x) => (x * x) % n);
+    const values = [...new Set(firstSquares)].sort((a, b) => a - b);
+    const answer = values.length;
+    const r = half + 1;
     return numberProblem({
       prompt: t(
         `On $\\{0, 1, \\dots, ${n - 1}\\}$, let $x \\sim y$ when $x^2 \\equiv y^2 \\pmod{${n}}$. How many equivalence classes are there?`,
@@ -4056,10 +4368,44 @@ const classesOfEqualSquares: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.floor((n + 1) / 2), n, totient(n), answer + 1],
-      solution: t(
-        `The classes match the different values of $x^2$ modulo ${n}, which are $${[...squares].sort((a, b) => a - b).join(", ")}$. That is $${answer}$ classes.`,
-        `类与 $x^2$ 模 ${n} 的不同值对应，这些值是 $${[...squares].sort((a, b) => a - b).join(", ")}$。共 $${answer}$ 个类。`,
+      wrong: [totient(n), answer + 1],
+      mistakes: firstOf([
+        why(
+          half + 1,
+          "That pairs only $x$ with $-x$; other residues can share a square as well.",
+          "这只把 $x$ 与 $-x$ 配对；其他余数也可能平方相同。",
+        ),
+        why(
+          n,
+          "That counts the elements; elements with the same square share one class.",
+          "这数的是元素个数；平方相同的元素属于同一个类。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Halve the work", "减半"],
+            t(
+              `$x$ and $${n} - x$ have the same square, so squaring $0, \\dots, ${half}$ finds every value.`,
+              `$x$ 与 $${n} - x$ 的平方相同，所以只需把 $0, \\dots, ${half}$ 平方就能找到所有值。`,
+            ),
+          ],
+          [
+            ["Square them", "平方"],
+            t(`Modulo $${n}$, the squares are $${firstSquares.join(", ")}$.`, `模 $${n}$，这些平方为 $${firstSquares.join(", ")}$。`),
+          ],
+          [
+            ["Count the different values", "数不同的值"],
+            t(
+              `The different values are $${values.join(", ")}$, one class each: $${answer}$ classes.`,
+              `不同的值是 $${values.join(", ")}$，每个对应一个类：共 $${answer}$ 个类。`,
+            ),
+          ],
+        ],
+        t(
+          `A residue past $${half}$ adds nothing new: $${r}^2 = ${r * r}$ leaves $${(r * r) % n}$, the same as $${n - r}^2$.`,
+          `超过 $${half}$ 的余数不会带来新值：$${r}^2 = ${r * r}$ 余 $${(r * r) % n}$，与 $${n - r}^2$ 相同。`,
+        ),
       ),
     });
   },
@@ -4184,12 +4530,13 @@ const triplesWithSum: KnowledgePointDef = {
   id: "counting-the-triples-of-a-sum-relation",
   title: t("Counting the triples of a sum relation", "计算和关系中的三元组"),
   explanation: t(
-    "A ternary relation is a set of triples, and its size can sometimes be found by a clever encoding. A triple of positive integers adding to $k$ corresponds to a choice of two cut points among the $k - 1$ gaps between $k$ objects in a row. Each choice gives three nonempty blocks, whose sizes form the triple. So the count is $\\binom{k - 1}{2}$, and the order within the triple is taken into account automatically.",
-    "三元关系是三元组的集合，它的大小有时可以通过巧妙的编码求得。和为 $k$ 的正整数三元组，对应于在一行 $k$ 个对象之间的 $k - 1$ 个空隙中选两个切点。每种选法给出三个非空段，它们的大小构成三元组。所以个数是 $\\binom{k - 1}{2}$，三元组内的顺序也自动考虑在内。",
+    "A ternary relation is a set of triples, and its size can sometimes be found by a clever encoding. A triple of positive integers adding to $k$ corresponds to a choice of two cut points among the $k - 1$ gaps between $k$ objects in a row. Each choice gives three nonempty blocks, whose sizes form the triple. So the count is $\\binom{k - 1}{2}$, and the order within the triple is taken into account automatically. For $k = 5$: $\\binom{4}{2} = 6$ triples, such as $(1, 1, 3)$ and $(3, 1, 1)$.\n\n> **Watch out.** The cuts go in the $k - 1$ gaps between objects, not at the $k + 1$ positions including the ends: a cut at an end would leave an empty block, which is a zero.",
+    "三元关系是三元组的集合，它的大小有时可以通过巧妙的编码求得。和为 $k$ 的正整数三元组，对应于在一行 $k$ 个对象之间的 $k - 1$ 个空隙中选两个切点。每种选法给出三个非空段，它们的大小构成三元组。所以个数是 $\\binom{k - 1}{2}$，三元组内的顺序也自动考虑在内。当 $k = 5$ 时：共 $\\binom{4}{2} = 6$ 个三元组，例如 $(1, 1, 3)$ 和 $(3, 1, 1)$。\n\n> **注意。** 切点放在对象之间的 $k - 1$ 个空隙中，而不是连同两端在内的 $k + 1$ 个位置：切在端点会留下空段，也就是 $0$。",
   ),
   generate(rng) {
     const k = rng.int(4, 40);
     const answer = binom(k - 1, 2);
+    const byX = [...Array(k - 2).keys()].map((i) => k - 2 - i);
     return numberProblem({
       prompt: t(
         `The relation $R$ on the positive integers holds for $(x, y, z)$ when $x + y + z = ${k}$. How many triples does $R$ contain?`,
@@ -4197,10 +4544,30 @@ const triplesWithSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [binom(k, 2), binom(k + 2, 2), k * k, answer + 1],
-      solution: t(
-        `Choosing two of the ${k - 1} gaps between ${k} objects gives the triple. So the count is $\\binom{${k - 1}}{2} = ${answer}$.`,
-        `在 ${k} 个对象之间的 ${k - 1} 个空隙中选两个，就给出三元组。所以个数是 $\\binom{${k - 1}}{2} = ${answer}$。`,
+      wrong: [k * k, answer + 1],
+      mistakes: firstOf([
+        why(
+          binom(k, 2),
+          `That chooses from $${k}$ gaps; between $${k}$ objects there are only $${k - 1}$.`,
+          `这是从 $${k}$ 个空隙中选；$${k}$ 个对象之间只有 $${k - 1}$ 个空隙。`,
+        ),
+        why(binom(k + 2, 2), "That allows zeros; the entries must be positive.", "这允许出现 $0$；三元组的分量必须是正数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Encode the triples", "编码三元组"],
+            t(
+              `Line up $${k}$ objects; two cuts in the $${k - 1}$ gaps split them into blocks of sizes $x$, $y$, $z$, all positive.`,
+              `把 $${k}$ 个对象排成一行；在 $${k - 1}$ 个空隙中切两刀，分成大小为 $x$、$y$、$z$ 的三段，都是正数。`,
+            ),
+          ],
+          [["Count the cuts", "数切法"], t(`$\\binom{${k - 1}}{2} = ${answer}$.`, `$\\binom{${k - 1}}{2} = ${answer}$。`)],
+        ],
+        t(
+          `Fixing $x$ instead: $x = 1$ leaves $${k - 2}$ choices of $y$, $x = 2$ leaves $${k - 3}$, and so on, which gives $${byX.slice(0, 2).join(" + ")} + \\dots + 1 = ${answer}$.`,
+          `改为先固定 $x$：$x = 1$ 时 $y$ 有 $${k - 2}$ 种取法，$x = 2$ 时有 $${k - 3}$ 种，依此类推，得 $${byX.slice(0, 2).join(" + ")} + \\dots + 1 = ${answer}$。`,
+        ),
       ),
     });
   },

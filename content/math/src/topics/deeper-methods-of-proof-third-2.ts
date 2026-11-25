@@ -5,6 +5,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
+import { say, withMistakes } from "../problems.ts";
 import { ask, choose, divisors, point, powMod, same } from "../university-kit.ts";
 import { gcd, lcm } from "./deeper-methods-of-proof-third.ts";
 
@@ -522,23 +523,49 @@ const relatedToN = point(
   "elements-related-to-a-given-number",
   ["Elements related to a given number", "与给定数相关的元素"],
   [
-    "Membership in a relation on an infinite set can define a finite set of elements related to a given number. Under divisibility on the positive integers, the elements related to $n$ are exactly its divisors, so they can be counted by factorizing $n$.",
-    "无限集上的关系可以确定与给定数相关的有限元素集。在正整数的整除关系下，与 $n$ 相关的元素恰好是它的因数，所以可以通过分解 $n$ 来计数。",
+    "Membership in a relation on an infinite set can define a finite set of elements related to a given number. Under divisibility on the positive integers, the elements related to $n$ are exactly its divisors, so they can be counted by factorizing $n$. For $n = 12 = 2^{2} \\cdot 3$: $(2 + 1)(1 + 1) = 6$ divisors, namely $1, 2, 3, 4, 6, 12$.\n\n> **Watch out.** $1$ and $n$ itself are divisors too, so both are related to $n$. Add one to each exponent before multiplying.",
+    "无限集上的关系可以确定与给定数相关的有限元素集。在正整数的整除关系下，与 $n$ 相关的元素恰好是它的因数，所以可以通过分解 $n$ 来计数。对 $n = 12 = 2^{2} \\cdot 3$：共 $(2 + 1)(1 + 1) = 6$ 个因数，即 $1, 2, 3, 4, 6, 12$。\n\n> **注意。** $1$ 和 $n$ 本身也是因数，所以它们都与 $n$ 相关。各指数先加一再相乘。",
   ],
   (rng) => {
     const n = rng.int(12, 240);
     const list = divisors(n);
     const answer = list.length;
-    return ask(
+    const factors: [number, number][] = [];
+    let rest = n;
+    for (let p = 2; rest > 1; p++) {
+      let e = 0;
+      while (rest % p === 0) {
+        rest /= p;
+        e++;
+      }
+      if (e > 0) factors.push([p, e]);
+    }
+    const factored = factors.map(([p, e]) => (e === 1 ? `${p}` : `${p}^{${e}}`)).join(" \\cdot ");
+    const product = factors.map(([, e]) => `(${e} + 1)`).join("");
+    return withMistakes(
+      ask(
+        [
+          `On the positive integers, let $x \\mathrel{R} y \\iff x \\mid y$. How many positive integers $x$ satisfy $x \\mathrel{R} ${n}$?`,
+          `在正整数上，设 $x \\mathrel{R} y \\iff x \\mid y$。有多少个正整数 $x$ 满足 $x \\mathrel{R} ${n}$？`,
+        ],
+        answer,
+        [answer - 1, answer + 1, answer - 2],
+        [
+          `**Step 1: Read the relation.** $x \\mathrel{R} ${n}$ means $x \\mid ${n}$, so the elements are the positive divisors of $${n}$.\n\n**Step 2: Factorize.** ${factored === String(n) ? `$${n}$ is prime, so its exponent $1$ gives $1 + 1 = 2$ divisors.` : `$${n} = ${factored}$, so there are $${product} = ${answer}$ divisors.`}\n\n**Check.** Listing them: $${list.join(", ")}$, which makes $${answer}$.`,
+          `**第一步：理解关系。** $x \\mathrel{R} ${n}$ 即 $x \\mid ${n}$，所以这些元素就是 $${n}$ 的正因数。\n\n**第二步：分解。** ${factored === String(n) ? `$${n}$ 是素数，指数 $1$ 给出 $1 + 1 = 2$ 个因数。` : `$${n} = ${factored}$，所以共有 $${product} = ${answer}$ 个因数。`}\n\n**检验。** 逐个列出：$${list.join(", ")}$，共 $${answer}$ 个。`,
+        ],
+      ),
       [
-        `On the positive integers, let $x \\mathrel{R} y \\iff x \\mid y$. How many positive integers $x$ satisfy $x \\mathrel{R} ${n}$?`,
-        `在正整数上，设 $x \\mathrel{R} y \\iff x \\mid y$。有多少个正整数 $x$ 满足 $x \\mathrel{R} ${n}$？`,
-      ],
-      answer,
-      [answer - 1, answer + 1, answer - 2],
-      [
-        `The elements related to $${n}$ are its divisors: $${list.join(", ")}$. There are $${answer}$ of them.`,
-        `与 $${n}$ 相关的元素就是它的因数：$${list.join(", ")}$。共有 $${answer}$ 个。`,
+        say(
+          String(answer - 1),
+          `That leaves out one divisor; $1$ and $${n}$ both divide $${n}$.`,
+          `这漏掉了一个因数；$1$ 和 $${n}$ 都整除 $${n}$。`,
+        ),
+        say(
+          String(answer - 2),
+          `That leaves out $1$ and $${n}$, which divide $${n}$ as well.`,
+          `这漏掉了 $1$ 和 $${n}$，它们也整除 $${n}$。`,
+        ),
       ],
     );
   },
@@ -548,26 +575,42 @@ const symmetricUnion = point(
   "the-size-of-a-relation-with-its-inverse",
   ["The size of a relation with its inverse", "关系与其逆的并集大小"],
   [
-    "The union $R \\cup R^{-1}$ is the smallest symmetric relation containing $R$. A pair and its reverse may both already be in $R$, and pairs of the form $(a, a)$ are their own reverses, so doubling the size of $R$ overcounts them.",
-    "并集 $R \\cup R^{-1}$ 是包含 $R$ 的最小对称关系。一个序对及其反向可能都已经在 $R$ 中，形如 $(a, a)$ 的序对是自身的反向，所以把 $R$ 的大小加倍会多算它们。",
+    "The union $R \\cup R^{-1}$ is the smallest symmetric relation containing $R$. A pair and its reverse may both already be in $R$, and pairs of the form $(a, a)$ are their own reverses, so doubling the size of $R$ overcounts them. For $R = \\{(1, 2), (2, 1), (1, 3), (2, 2)\\}$, the pairs whose reverse is in $R$ are $(1, 2), (2, 1), (2, 2)$, so the union has $2 \\cdot 4 - 3 = 5$ pairs.\n\n> **Watch out.** Count every pair of $R$ whose reverse is also in $R$, including each $(a, a)$. A pair and its reverse both in $R$ count as two such pairs, not one.",
+    "并集 $R \\cup R^{-1}$ 是包含 $R$ 的最小对称关系。一个序对及其反向可能都已经在 $R$ 中，形如 $(a, a)$ 的序对是自身的反向，所以把 $R$ 的大小加倍会多算它们。对 $R = \\{(1, 2), (2, 1), (1, 3), (2, 2)\\}$，反向也在 $R$ 中的序对是 $(1, 2), (2, 1), (2, 2)$，所以并集有 $2 \\cdot 4 - 3 = 5$ 个序对。\n\n> **注意。** 要数出 $R$ 中反向也在 $R$ 中的每个序对，包括每个 $(a, a)$。一个序对与它的反向都在 $R$ 中时，算作两个这样的序对，而不是一个。",
   ],
   (rng) => {
     const all: [number, number][] = [];
     for (let a = 1; a <= 5; a++) for (let b = 1; b <= 5; b++) all.push([a, b]);
     const R = rng.sample(all, rng.int(5, 9)).sort((p, q) => p[0] - q[0] || p[1] - q[1]);
     const has = (a: number, b: number) => R.some(([x, y]) => x === a && y === b);
-    const overlap = R.filter(([a, b]) => has(b, a)).length;
+    const both = R.filter(([a, b]) => has(b, a));
+    const overlap = both.length;
     const answer = 2 * R.length - overlap;
-    return ask(
+    const added = R.filter(([a, b]) => !has(b, a)).map(([a, b]) => [b, a] as [number, number]);
+    return withMistakes(
+      ask(
+        [
+          `Let $R = \\{${pairs(R)}\\}$. How many pairs are in $R \\cup R^{-1}$?`,
+          `设 $R = \\{${pairs(R)}\\}$。$R \\cup R^{-1}$ 中有多少个序对？`,
+        ],
+        answer,
+        [answer === 2 * R.length ? answer - 1 : 2 * R.length, R.length, answer + 1],
+        [
+          `**Step 1: Find the pairs in both.** The pairs of $R$ whose reverse is also in $R$: ${overlap === 0 ? "there are none" : `$${pairs(both)}$, which makes $${overlap}$`}.\n\n**Step 2: Subtract the overlap.** $R$ and $R^{-1}$ have $${R.length}$ pairs each, so the union has $${2 * R.length} - ${overlap} = ${answer}$.\n\n**Check.** $R^{-1}$ adds the new pairs ${added.length === 0 ? "none" : `$${pairs(added)}$`}, and $${R.length} + ${added.length} = ${answer}$.`,
+          `**第一步：找出两者共有的序对。** $R$ 中反向也在 $R$ 中的序对：${overlap === 0 ? "没有" : `$${pairs(both)}$，共 $${overlap}$ 个`}。\n\n**第二步：减去重叠部分。** $R$ 与 $R^{-1}$ 各有 $${R.length}$ 个序对，所以并集有 $${2 * R.length} - ${overlap} = ${answer}$ 个。\n\n**检验。** $R^{-1}$ 新增的序对是${added.length === 0 ? "零个" : ` $${pairs(added)}$`}，而 $${R.length} + ${added.length} = ${answer}$。`,
+        ],
+      ),
       [
-        `Let $R = \\{${pairs(R)}\\}$. How many pairs are in $R \\cup R^{-1}$?`,
-        `设 $R = \\{${pairs(R)}\\}$。$R \\cup R^{-1}$ 中有多少个序对？`,
-      ],
-      answer,
-      [answer === 2 * R.length ? answer - 1 : 2 * R.length, R.length, answer + 1],
-      [
-        `$R$ and $R^{-1}$ each have $${R.length}$ pairs, and $${overlap}$ pairs are in both. So the union has $${2 * R.length} - ${overlap} = ${answer}$ pairs.`,
-        `$R$ 与 $R^{-1}$ 各有 $${R.length}$ 个序对，其中 $${overlap}$ 个同时属于两者。所以并集有 $${2 * R.length} - ${overlap} = ${answer}$ 个序对。`,
+        say(
+          String(2 * R.length),
+          "That counts the pairs that are in both $R$ and $R^{-1}$ twice.",
+          "这把同时属于 $R$ 与 $R^{-1}$ 的序对算了两次。",
+        ),
+        say(
+          String(R.length),
+          "That counts only $R$; its inverse adds the reverses that are missing.",
+          "这只数了 $R$；它的逆还会加入缺少的反向序对。",
+        ),
       ],
     );
   },
@@ -577,26 +620,39 @@ const reflexiveClosure = point(
   "pairs-needed-to-make-a-relation-reflexive",
   ["Pairs needed to make a relation reflexive", "使关系自反所需的序对"],
   [
-    "A relation on a set is reflexive only if every element is related to itself. To repair a relation, add just the missing pairs of the form $(a, a)$. The other pairs in the relation play no part, so only the diagonal needs to be checked.",
-    "集合上的关系只有在每个元素都与自身相关时才是自反的。要补全一个关系，只需添加缺少的形如 $(a, a)$ 的序对。关系中的其他序对不起作用，所以只需检查对角线。",
+    "A relation on a set is reflexive only if every element is related to itself. To repair a relation, add just the missing pairs of the form $(a, a)$. The other pairs in the relation play no part, so only the diagonal needs to be checked. On $\\{1, 2, 3\\}$, $R = \\{(1, 1), (1, 2), (3, 1)\\}$ needs $(2, 2)$ and $(3, 3)$: two pairs.\n\n> **Watch out.** Pairs such as $(1, 2)$ neither help nor need fixing; only the pairs $(a, a)$ already in $R$ reduce the count.",
+    "集合上的关系只有在每个元素都与自身相关时才是自反的。要补全一个关系，只需添加缺少的形如 $(a, a)$ 的序对。关系中的其他序对不起作用，所以只需检查对角线。在 $\\{1, 2, 3\\}$ 上，$R = \\{(1, 1), (1, 2), (3, 1)\\}$ 需要添加 $(2, 2)$ 和 $(3, 3)$：两个序对。\n\n> **注意。** 像 $(1, 2)$ 这样的序对既无帮助，也不需要修正；只有已在 $R$ 中的 $(a, a)$ 会减少个数。",
   ],
   (rng) => {
     const n = rng.int(3, 7);
     const all: [number, number][] = [];
     for (let a = 1; a <= n; a++) for (let b = 1; b <= n; b++) all.push([a, b]);
     const R = rng.sample(all, rng.int(4, Math.min(9, n * n - 1))).sort((p, q) => p[0] - q[0] || p[1] - q[1]);
-    const loops = R.filter(([a, b]) => a === b).length;
+    const present = R.filter(([a, b]) => a === b).map(([a]) => a);
+    const loops = present.length;
     const answer = n - loops;
-    return ask(
+    const missing = [...Array(n).keys()].map((i) => i + 1).filter((a) => !present.includes(a));
+    const loopsText = (list: readonly number[]) => list.map((a) => `(${a}, ${a})`).join(", ");
+    return withMistakes(
+      ask(
+        [
+          `Let $R = \\{${pairs(R)}\\}$ on $\\{1, 2, \\dots, ${n}\\}$. How many pairs must be added to make $R$ reflexive?`,
+          `$\\{1, 2, \\dots, ${n}\\}$ 上的 $R = \\{${pairs(R)}\\}$。要使 $R$ 自反，必须添加多少个序对？`,
+        ],
+        answer,
+        [n, n * n - R.length, loops === 0 ? n + 1 : loops],
+        [
+          `**Step 1: List what reflexivity needs.** The $${n}$ pairs $(a, a)$ for $a = 1, \\dots, ${n}$.\n\n**Step 2: See which are there.** $R$ contains ${loops === 0 ? "none of them" : `$${loopsText(present)}$`}, so $${n} - ${loops} = ${answer}$ are missing.\n\n**Check.** The missing pairs are ${missing.length === 0 ? "none" : `$${loopsText(missing)}$`}, which makes $${answer}$.`,
+          `**第一步：列出自反性的要求。** 对 $a = 1, \\dots, ${n}$ 的 $${n}$ 个序对 $(a, a)$。\n\n**第二步：看哪些已经存在。** $R$ 包含${loops === 0 ? "其中零个" : ` $${loopsText(present)}$`}，所以缺少 $${n} - ${loops} = ${answer}$ 个。\n\n**检验。** 缺少的序对是${missing.length === 0 ? "零个" : ` $${loopsText(missing)}$`}，共 $${answer}$ 个。`,
+        ],
+      ),
       [
-        `Let $R = \\{${pairs(R)}\\}$ on $\\{1, 2, \\dots, ${n}\\}$. How many pairs must be added to make $R$ reflexive?`,
-        `$\\{1, 2, \\dots, ${n}\\}$ 上的 $R = \\{${pairs(R)}\\}$。要使 $R$ 自反，必须添加多少个序对？`,
-      ],
-      answer,
-      [n, n * n - R.length, loops === 0 ? n + 1 : loops],
-      [
-        `$R$ already contains $${loops}$ of the $${n}$ required pairs of the form $(a, a)$, so $${answer}$ are missing.`,
-        `在所需的 $${n}$ 个形如 $(a, a)$ 的序对中，$R$ 已包含 $${loops}$ 个，所以缺少 $${answer}$ 个。`,
+        say(String(n), `Some pairs $(a, a)$ are already in $R$ and need not be added.`, "有些 $(a, a)$ 已经在 $R$ 中，不必添加。"),
+        say(
+          String(n * n - R.length),
+          "That adds every missing pair; reflexivity needs only the pairs $(a, a)$.",
+          "这添加了所有缺少的序对；自反性只需要 $(a, a)$。",
+        ),
       ],
     );
   },
@@ -606,8 +662,8 @@ const classCount = point(
   "counting-the-classes-of-an-equivalence-relation",
   ["Counting the classes of an equivalence relation", "计算等价关系的类数"],
   [
-    "An equivalence proof can also reveal what the relation really is. When $p + q$ is a multiple of $d$, the condition $d \\mid pa + qb$ is the same as $d \\mid p(a - b)$, which means that $a$ and $b$ are congruent modulo $\\frac{d}{\\gcd(d, p)}$.",
-    "等价关系的证明还能揭示关系的实质。当 $p + q$ 是 $d$ 的倍数时，条件 $d \\mid pa + qb$ 等同于 $d \\mid p(a - b)$，这意味着 $a$ 与 $b$ 模 $\\frac{d}{\\gcd(d, p)}$ 同余。",
+    "An equivalence proof can also reveal what the relation really is. When $p + q$ is a multiple of $d$, the condition $d \\mid pa + qb$ is the same as $d \\mid p(a - b)$, which means that $a$ and $b$ are congruent modulo $\\frac{d}{\\gcd(d, p)}$. For $6 \\mid 2a + 4b$: $2a + 4b = 6b + 2(a - b)$, so the condition is $6 \\mid 2(a - b)$, that is $a \\equiv b \\pmod 3$, with $3$ classes.\n\n> **Watch out.** Cancel the common factor of $d$ and $p$ from the modulus: $6 \\mid 2(a - b)$ means $3 \\mid a - b$, which gives $3$ classes, not $6$.",
+    "等价关系的证明还能揭示关系的实质。当 $p + q$ 是 $d$ 的倍数时，条件 $d \\mid pa + qb$ 等同于 $d \\mid p(a - b)$，这意味着 $a$ 与 $b$ 模 $\\frac{d}{\\gcd(d, p)}$ 同余。对 $6 \\mid 2a + 4b$：$2a + 4b = 6b + 2(a - b)$，所以条件是 $6 \\mid 2(a - b)$，即 $a \\equiv b \\pmod 3$，共 $3$ 个类。\n\n> **注意。** 要从模中约去 $d$ 与 $p$ 的公因数：$6 \\mid 2(a - b)$ 即 $3 \\mid a - b$，有 $3$ 个类，而不是 $6$ 个。",
   ],
   (rng) => {
     const d = rng.int(4, 18);
@@ -615,16 +671,34 @@ const classCount = point(
     const q = d - p;
     const g = gcd(d, p);
     const answer = d / g;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `On $\\mathbb{Z}$, the relation $a \\sim b \\iff ${d} \\mid ${poly([p, "a"], [q, "b"])}$ is an equivalence relation. How many equivalence classes does it have?`,
+          `在 $\\mathbb{Z}$ 上，关系 $a \\sim b \\iff ${d} \\mid ${poly([p, "a"], [q, "b"])}$ 是等价关系。它有多少个等价类？`,
+        ],
+        answer,
+        [answer === d ? d + 1 : d, g === answer ? g + 1 : g, p === answer ? p + 1 : p],
+        [
+          `**Step 1: Rewrite the condition.** $${poly([p, "a"], [q, "b"])} = ${d}b + ${p}(a - b)$, so the condition is $${d} \\mid ${p}(a - b)$.\n\n**Step 2: Cancel the common factor.** $\\gcd(${d}, ${p}) = ${g}$, so this says $${answer} \\mid a - b$, that is $a \\equiv b \\pmod{${answer}}$.\n\n**Step 3: Count.** One class for each remainder modulo $${answer}$: $${answer}$ classes.\n\n**Check.** $0 \\sim ${answer}$: $${p} \\cdot 0 + ${q} \\cdot ${answer} = ${q * answer} = ${d} \\cdot ${(q * answer) / d}$.${answer > 1 ? ` But $0 \\not\\sim 1$: $${q}$ is not a multiple of $${d}$.` : ""}`,
+          `**第一步：改写条件。** $${poly([p, "a"], [q, "b"])} = ${d}b + ${p}(a - b)$，所以条件是 $${d} \\mid ${p}(a - b)$。\n\n**第二步：约去公因数。** $\\gcd(${d}, ${p}) = ${g}$，所以这表示 $${answer} \\mid a - b$，即 $a \\equiv b \\pmod{${answer}}$。\n\n**第三步：计数。** 模 $${answer}$ 的每个余数对应一个类：共 $${answer}$ 个类。\n\n**检验。** $0 \\sim ${answer}$：$${p} \\cdot 0 + ${q} \\cdot ${answer} = ${q * answer} = ${d} \\cdot ${(q * answer) / d}$。${answer > 1 ? `但 $0 \\not\\sim 1$：$${q}$ 不是 $${d}$ 的倍数。` : ""}`,
+        ],
+      ),
       [
-        `On $\\mathbb{Z}$, the relation $a \\sim b \\iff ${d} \\mid ${poly([p, "a"], [q, "b"])}$ is an equivalence relation. How many equivalence classes does it have?`,
-        `在 $\\mathbb{Z}$ 上，关系 $a \\sim b \\iff ${d} \\mid ${poly([p, "a"], [q, "b"])}$ 是等价关系。它有多少个等价类？`,
-      ],
-      answer,
-      [answer === d ? d + 1 : d, g === answer ? g + 1 : g, p === answer ? p + 1 : p],
-      [
-        `Since $${p} + ${q} = ${d}$, the condition is $${d} \\mid ${p}(a - b)$. With $\\gcd(${d}, ${p}) = ${g}$, this says that $a \\equiv b \\pmod{${answer}}$, which gives $${answer}$ classes.`,
-        `由于 $${p} + ${q} = ${d}$，条件变为 $${d} \\mid ${p}(a - b)$。因为 $\\gcd(${d}, ${p}) = ${g}$，这表示 $a \\equiv b \\pmod{${answer}}$，所以有 $${answer}$ 个类。`,
+        say(
+          String(d),
+          `$${d}$ and $${p}$ share the factor $${g}$, which cancels from the modulus.`,
+          `$${d}$ 与 $${p}$ 有公因数 $${g}$，要从模中约去。`,
+        ),
+        ...(g > 1
+          ? [
+              say(
+                String(g),
+                `$${g}$ is the factor that cancels; the modulus left is $${d} / ${g}$.`,
+                `$${g}$ 是约去的因数；剩下的模是 $${d} / ${g}$。`,
+              ),
+            ]
+          : []),
       ],
     );
   },
@@ -634,8 +708,8 @@ const equalClassModuli = point(
   "the-moduli-for-which-two-classes-agree",
   ["The moduli for which two classes agree", "使两个类相同的模"],
   [
-    "Two residue classes $[a]_{m}$ and $[b]_{m}$ are equal exactly when $m$ divides $a - b$. So the moduli that make two given classes equal are the divisors of the difference, and listing them answers the question without testing each modulus separately.",
-    "两个剩余类 $[a]_{m}$ 与 $[b]_{m}$ 相等，当且仅当 $m$ 整除 $a - b$。所以使两个给定类相等的模就是差的因数，列出它们就能回答问题，不必逐一检验每个模。",
+    "Two residue classes $[a]_{m}$ and $[b]_{m}$ are equal exactly when $m$ divides $a - b$. So the moduli that make two given classes equal are the divisors of the difference, and listing them answers the question without testing each modulus separately. For $[3]_{m} = [15]_{m}$: $15 - 3 = 12$, whose divisors above $1$ are $2, 3, 4, 6, 12$, so $5$ moduli.\n\n> **Watch out.** Leave out the divisor $1$, since $m > 1$, but keep the difference itself: $m = 12$ works.",
+    "两个剩余类 $[a]_{m}$ 与 $[b]_{m}$ 相等，当且仅当 $m$ 整除 $a - b$。所以使两个给定类相等的模就是差的因数，列出它们就能回答问题，不必逐一检验每个模。对 $[3]_{m} = [15]_{m}$：$15 - 3 = 12$，大于 $1$ 的因数是 $2, 3, 4, 6, 12$，共 $5$ 个模。\n\n> **注意。** 因为 $m > 1$，要去掉因数 $1$，但差本身要保留：$m = 12$ 也可以。",
   ],
   (rng) => {
     const gap = rng.int(6, 72);
@@ -643,13 +717,29 @@ const equalClassModuli = point(
     const b = a + gap;
     const list = divisors(gap).filter((d) => d > 1);
     const answer = list.length;
-    return ask(
-      [`For how many integers $m > 1$ is $[${a}]_{m} = [${b}]_{m}$?`, `对于多少个大于 $1$ 的整数 $m$，有 $[${a}]_{m} = [${b}]_{m}$？`],
-      answer,
-      [answer + 1, gap, gap - 1],
+    const largest = list[list.length - 1]!;
+    return withMistakes(
+      ask(
+        [`For how many integers $m > 1$ is $[${a}]_{m} = [${b}]_{m}$?`, `对于多少个大于 $1$ 的整数 $m$，有 $[${a}]_{m} = [${b}]_{m}$？`],
+        answer,
+        [answer + 1, gap, gap - 1],
+        [
+          `**Step 1: Take the difference.** $${b} - ${a < 0 ? `(${a})` : a} = ${gap}$, and the classes are equal exactly when $m \\mid ${gap}$.\n\n**Step 2: List the divisors above 1.** $${list.join(", ")}$, which makes $${answer}$.\n\n**Check.** $m = ${largest}$: $[${a}]_{${largest}} = [${b}]_{${largest}}$ since $${gap} = ${largest} \\cdot ${gap / largest}$.`,
+          `**第一步：求差。** $${b} - ${a < 0 ? `(${a})` : a} = ${gap}$，两个类相等当且仅当 $m \\mid ${gap}$。\n\n**第二步：列出大于 1 的因数。** $${list.join(", ")}$，共 $${answer}$ 个。\n\n**检验。** $m = ${largest}$：因为 $${gap} = ${largest} \\cdot ${gap / largest}$，所以 $[${a}]_{${largest}} = [${b}]_{${largest}}$。`,
+        ],
+      ),
       [
-        `The classes are equal exactly when $m \\mid ${gap}$. The divisors above $1$ are $${list.join(", ")}$, so the number of moduli is $${answer}$.`,
-        `这两个类相等当且仅当 $m \\mid ${gap}$。大于 $1$ 的因数是 $${list.join(", ")}$，所以有 $${answer}$ 个模。`,
+        say(String(answer + 1), "That counts $m = 1$, which the question excludes.", "这把 $m = 1$ 也算进去了，而题目排除了它。"),
+        say(
+          String(gap),
+          "That counts every number up to the difference; only its divisors work.",
+          "这数的是不超过差的所有数；只有差的因数才行。",
+        ),
+        say(
+          String(gap - 1),
+          "That counts every number from $2$ to the difference; only its divisors work.",
+          "这数的是从 $2$ 到差的所有数；只有差的因数才行。",
+        ),
       ],
     );
   },

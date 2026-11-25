@@ -8,6 +8,7 @@ import { svgDocument } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 
+import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
@@ -418,47 +419,81 @@ const pairsOfDigraph = point(
   "the-pairs-of-a-drawn-relation",
   ["The pairs of a drawn relation", "图中关系的有序对"],
   [
-    "A digraph draws a relation on a set: an arrow from $a$ to $b$ means that the ordered pair $(a, b)$ is in the relation, and a small loop at $a$ means that $(a, a)$ is in it. The order within a pair matters, so an arrow in one direction does not give the pair in the opposite direction.",
-    "有向图表示集合上的关系：从 $a$ 到 $b$ 的箭头表示有序对 $(a, b)$ 在关系中，$a$ 处的小圈表示 $(a, a)$ 在关系中。有序对的次序很重要，一个方向的箭头不会给出相反方向的有序对。",
+    "A digraph draws a relation on a set: an arrow from $a$ to $b$ means that the ordered pair $(a, b)$ is in the relation, and a small loop at $a$ means that $(a, a)$ is in it. The order within a pair matters, so an arrow in one direction does not give the pair in the opposite direction. An arrow from $1$ to $3$ and a loop at $2$ give the relation $\\{(1, 3), (2, 2)\\}$.\n\n> **Watch out.** Read each arrow from its tail to its head: an arrow from $1$ to $3$ is $(1, 3)$, not $(3, 1)$. Do not forget the loops, which are pairs too.",
+    "有向图表示集合上的关系：从 $a$ 到 $b$ 的箭头表示有序对 $(a, b)$ 在关系中，$a$ 处的小圈表示 $(a, a)$ 在关系中。有序对的次序很重要，一个方向的箭头不会给出相反方向的有序对。从 $1$ 到 $3$ 的箭头和 $2$ 处的小圈给出关系 $\\{(1, 3), (2, 2)\\}$。\n\n> **注意。** 每个箭头都从尾读到头：从 $1$ 到 $3$ 的箭头是 $(1, 3)$，不是 $(3, 1)$。别忘了小圈，它们也是有序对。",
   ],
   (rng) => {
     const n = rng.int(3, 4);
     const pairs = rng.sample(allPairs(n), rng.int(3, 4));
     const off = pairs.filter(([a, b]) => a !== b);
     if (off.length === 0) pairs[0] = [0, 1];
+    const key = ([a, b]: readonly [number, number]) => `${a},${b}`;
+    const inRight = new Set(pairs.map(key));
     const reversed = pairs.map(([a, b]): [number, number] => [b, a]);
-    const someOther = (rngPick: readonly (readonly [number, number])[]) => {
-      const remaining = allPairs(n).filter(([a, b]) => !rngPick.some(([c, d]) => c === a && d === b));
-      return [...rngPick.slice(1), rng.pick(remaining)];
+    const someOther = (from: readonly [number, number][]) => {
+      const remaining = allPairs(n).filter(([a, b]) => !from.some(([c, d]) => c === a && d === b));
+      return [...from.slice(1), rng.pick(remaining)];
     };
     const right = relationText(pairs);
-    const turned = (k: number) => relationText(pairs.map(([a, b]): [number, number] => [(a + k) % n, (b + k) % n]));
-    const candidates = [
-      relationText(reversed),
+    const turned = (k: number) => pairs.map(([a, b]): [number, number] => [(a + k) % n, (b + k) % n]);
+    const candidates: [number, number][][] = [
+      reversed,
       turned(1),
       turned(2),
-      relationText(someOther(pairs)),
-      relationText(someOther(pairs)),
-      relationText(someOther(pairs)),
-      relationText(pairs.slice(1)),
-      relationText(someOther(pairs)),
+      someOther(pairs),
+      someOther(pairs),
+      pairs.slice(1),
+      someOther(pairs),
     ];
-    return choose(
-      rng,
+    const pairTex = ([a, b]: readonly [number, number]) => `(${a + 1}, ${b + 1})`;
+    const reasonFor = (c: readonly [number, number][]) => {
+      const extra = c.find((p) => !inRight.has(key(p)));
+      if (extra !== undefined) {
+        const [a, b] = extra;
+        return a === b
+          ? say(
+              `$${relationText(c)}$`,
+              `It contains $${pairTex(extra)}$, but there is no loop at $${a + 1}$.`,
+              `它包含 $${pairTex(extra)}$，但 $${a + 1}$ 处没有小圈。`,
+            )
+          : say(
+              `$${relationText(c)}$`,
+              `It contains $${pairTex(extra)}$, but no arrow goes from $${a + 1}$ to $${b + 1}$.`,
+              `它包含 $${pairTex(extra)}$，但没有从 $${a + 1}$ 到 $${b + 1}$ 的箭头。`,
+            );
+      }
+      const lost = pairs.find((p) => !c.some((q) => key(q) === key(p))) ?? pairs[0]!;
+      return say(
+        `$${relationText(c)}$`,
+        `It leaves out $${pairTex(lost)}$, which the drawing shows.`,
+        `它漏掉了图中画出的 $${pairTex(lost)}$。`,
+      );
+    };
+    const ordered = [...pairs].sort((p, q) => p[0] - q[0] || p[1] - q[1]);
+    const loops = ordered.filter(([a, b]) => a === b);
+    const arrows = ordered.filter(([a, b]) => a !== b);
+    return withMistakes(
+      choose(
+        rng,
+        [
+          "Which set of ordered pairs is the relation drawn? An arrow from $a$ to $b$ stands for $(a, b)$, and a small loop at a point stands for a pair of the point with itself.",
+          "图中的关系是哪个有序对集合？从 $a$ 到 $b$ 的箭头表示 $(a, b)$，点上的小圈表示该点与自身组成的对。",
+        ],
+        same(right),
+        candidates.map((c) => same(relationText(c))),
+        [
+          `**Step 1: Read the arrows.** From tail to head: $${arrows.map(pairTex).join(", ")}$.\n\n**Step 2: Read the loops.** ${loops.length === 0 ? "There are no loops." : `$${loops.map(pairTex).join(", ")}$.`}\n\n**Check.** The relation is $${right}$, with $${pairs.length}$ pairs, one for each of the $${arrows.length}$ arrows and $${loops.length}$ loops drawn.`,
+          `**第一步：读箭头。** 从尾到头：$${arrows.map(pairTex).join(", ")}$。\n\n**第二步：读小圈。** ${loops.length === 0 ? "没有小圈。" : `$${loops.map(pairTex).join(", ")}$。`}\n\n**检验。** 关系是 $${right}$，共 $${pairs.length}$ 个有序对，对应图中 $${arrows.length}$ 个箭头和 $${loops.length}$ 个小圈。`,
+        ],
+        {
+          svg: relationFigure(n, pairs),
+          alt: t(`A digraph on ${n} points with the pairs ${pairAlt(pairs)}.`, `${n} 个点上的有向图，有序对为 ${pairAlt(pairs)}。`),
+        },
+      ),
       [
-        "Which set of ordered pairs is the relation drawn? An arrow from $a$ to $b$ stands for $(a, b)$, and a small loop at a point stands for a pair of the point with itself.",
-        "图中的关系是哪个有序对集合？从 $a$ 到 $b$ 的箭头表示 $(a, b)$，点上的小圈表示该点与自身组成的对。",
+        say(`$${relationText(reversed)}$`, "That reads every arrow from head to tail.", "这把每个箭头都从头读到了尾。"),
+        ...candidates.slice(1).map(reasonFor),
       ],
-      same(right),
-      [...new Set(candidates)].filter((c) => c !== right).map((c) => same(c)),
-      [
-        `Reading each arrow from its tail to its head, and each loop as a pair of a point with itself, gives exactly the pairs in $${right}$.`,
-        `从箭头尾读到箭头头，把每个小圈读作点与自身的对，恰好得到 $${right}$ 中的有序对。`,
-      ],
-      {
-        svg: relationFigure(n, pairs),
-        alt: t(`A digraph on ${n} points with the pairs ${pairAlt(pairs)}.`, `${n} 个点上的有向图，有序对为 ${pairAlt(pairs)}。`),
-      },
     );
   },
 );
@@ -467,8 +502,8 @@ const missingLoops = point(
   "loops-missing-from-a-reflexive-relation",
   ["Loops missing from a reflexive relation", "自反关系缺少的小圈"],
   [
-    "A relation is reflexive when every point is related to itself, which means every point of its digraph has a loop. It is irreflexive when no point has one. So a relation with some loops and not others is neither. Count the points without a loop to find how many pairs must be added to make it reflexive.",
-    "关系是自反的，是指每一点都与自身相关，也就是有向图的每一点都有小圈。它是反自反的，是指没有一点有小圈。所以有些点有小圈、有些没有的关系两者都不是。数没有小圈的点，就知道要加多少对才能使它自反。",
+    "A relation is reflexive when every point is related to itself, which means every point of its digraph has a loop. It is irreflexive when no point has one. So a relation with some loops and not others is neither. Count the points without a loop to find how many pairs must be added to make it reflexive. On $4$ points with loops at $1$ and $3$, the pairs $(2, 2)$ and $(4, 4)$ must be added.\n\n> **Watch out.** Arrows between different points do not count toward reflexivity, however many there are. Count the points that have no loop.",
+    "关系是自反的，是指每一点都与自身相关，也就是有向图的每一点都有小圈。它是反自反的，是指没有一点有小圈。所以有些点有小圈、有些没有的关系两者都不是。数没有小圈的点，就知道要加多少对才能使它自反。在 $4$ 个点上，若 $1$ 和 $3$ 处有小圈，就必须添加 $(2, 2)$ 和 $(4, 4)$。\n\n> **注意。** 不同点之间的箭头无论有多少，都与自反性无关。要数的是没有小圈的点。",
   ],
   (rng) => {
     const n = rng.int(3, 6);
@@ -482,21 +517,33 @@ const missingLoops = point(
     );
     const pairs = [...others, ...looped.map((i): [number, number] => [i, i])];
     const missing = n - looped.length;
-    return ask(
+    const without = Array.from({ length: n }, (_, i) => i).filter((i) => !looped.includes(i));
+    const loopsTex = (list: readonly number[]) => list.map((i) => `(${i + 1}, ${i + 1})`).join(", ");
+    return withMistakes(
+      ask(
+        [
+          "A small loop at a point stands for a pair of the point with itself. How many pairs must be added to make the relation drawn reflexive?",
+          "点上的小圈表示该点与自身组成的对。要使图中的关系自反，必须添加多少对？",
+        ],
+        missing,
+        [looped.length === missing ? missing + 1 : looped.length, n === missing ? missing + 2 : n, missing === 1 ? 2 : missing - 1],
+        [
+          `**Step 1: Count the loops needed.** Reflexivity needs a loop at each of the $${n}$ points.\n\n**Step 2: Count the loops drawn.** There ${looped.length === 1 ? "is $1$ loop" : `are $${looped.length}$ loops`}, so $${n} - ${looped.length} = ${missing}$ pairs must be added; the arrows between different points play no part.\n\n**Check.** The points without a loop are $${without.map((i) => i + 1).join(", ")}$, so the pairs to add are $${loopsTex(without)}$.`,
+          `**第一步：数需要的小圈。** 自反性要求 $${n}$ 个点每个都有小圈。\n\n**第二步：数画出的小圈。** 有 $${looped.length}$ 个小圈，所以必须添加 $${n} - ${looped.length} = ${missing}$ 对；不同点之间的箭头不起作用。\n\n**检验。** 没有小圈的点是 $${without.map((i) => i + 1).join(", ")}$，所以要添加的对是 $${loopsTex(without)}$。`,
+        ],
+        {
+          svg: relationFigure(n, pairs),
+          alt: t(`A digraph on ${n} points with the pairs ${pairAlt(pairs)}.`, `${n} 个点上的有向图，有序对为 ${pairAlt(pairs)}。`),
+        },
+      ),
       [
-        "A small loop at a point stands for a pair of the point with itself. How many pairs must be added to make the relation drawn reflexive?",
-        "点上的小圈表示该点与自身组成的对。要使图中的关系自反，必须添加多少对？",
+        say(
+          String(looped.length),
+          "That counts the loops already drawn; the question asks for the ones missing.",
+          "这数的是已画出的小圈；题目问的是缺少的。",
+        ),
+        say(String(n), "Some points already have loops, and those pairs need not be added.", "有些点已经有小圈，这些对不必添加。"),
       ],
-      missing,
-      [looped.length === missing ? missing + 1 : looped.length, n === missing ? missing + 2 : n, missing === 1 ? 2 : missing - 1],
-      [
-        `Reflexivity requires a loop at each of the $${n}$ points. There are $${looped.length}$ loops already, so $${missing}$ pairs must be added, and the arrows between different points play no part.`,
-        `自反性要求 $${n}$ 个点每个都有小圈。已经有 $${looped.length}$ 个小圈，所以必须添加 $${missing}$ 对，不同点之间的箭头不起作用。`,
-      ],
-      {
-        svg: relationFigure(n, pairs),
-        alt: t(`A digraph on ${n} points with the pairs ${pairAlt(pairs)}.`, `${n} 个点上的有向图，有序对为 ${pairAlt(pairs)}。`),
-      },
     );
   },
 );
@@ -505,8 +552,8 @@ const transitiveClosurePair = point(
   "the-arrow-that-transitivity-demands",
   ["The arrow that transitivity demands", "传递性要求的箭头"],
   [
-    "A relation is transitive when arrows from $a$ to $b$ and from $b$ to $c$ always come with an arrow from $a$ to $c$. So search the digraph for a path of two arrows with no shortcut. Any such missing shortcut is a counterexample to transitivity, and adding it is a step toward making the relation transitive.",
-    "关系是传递的，是指从 $a$ 到 $b$ 和从 $b$ 到 $c$ 的箭头总伴随从 $a$ 到 $c$ 的箭头。所以在有向图中寻找没有捷径的两步路径。任何这样缺失的捷径都是传递性的反例，添加它是使关系传递的一步。",
+    "A relation is transitive when arrows from $a$ to $b$ and from $b$ to $c$ always come with an arrow from $a$ to $c$. So search the digraph for a path of two arrows with no shortcut. Any such missing shortcut is a counterexample to transitivity, and adding it is a step toward making the relation transitive. With arrows $1 \\to 2$ and $2 \\to 3$ but none from $1$ to $3$, the pair $(1, 3)$ must be added.\n\n> **Watch out.** The shortcut goes from the start of the path to its end, in the same direction: for $a \\to b \\to c$ it is $(a, c)$, not $(c, a)$.",
+    "关系是传递的，是指从 $a$ 到 $b$ 和从 $b$ 到 $c$ 的箭头总伴随从 $a$ 到 $c$ 的箭头。所以在有向图中寻找没有捷径的两步路径。任何这样缺失的捷径都是传递性的反例，添加它是使关系传递的一步。有箭头 $1 \\to 2$ 和 $2 \\to 3$，却没有从 $1$ 到 $3$ 的箭头，就必须添加 $(1, 3)$。\n\n> **注意。** 捷径从路径的起点指向终点，方向相同：对 $a \\to b \\to c$ 是 $(a, c)$，不是 $(c, a)$。",
   ],
   (rng) => {
     const n = rng.int(4, 5);
@@ -520,20 +567,37 @@ const transitiveClosurePair = point(
       [d, b],
       [d, c],
     ];
-    const pair = (x: number, y: number) => same(`(${x + 1}, ${y + 1})`);
-    return choose(
-      rng,
-      ["For the relation drawn to be transitive, which pair must be added?", "要使图中的关系传递，必须添加哪一对？"],
-      pair(a, c),
-      [pair(c, a), pair(a, d), pair(c, b), pair(b, d)],
+    const tex = (x: number, y: number) => `(${x + 1}, ${y + 1})`;
+    const pair = (x: number, y: number) => same(tex(x, y));
+    return withMistakes(
+      choose(
+        rng,
+        ["For the relation drawn to be transitive, which pair must be added?", "要使图中的关系传递，必须添加哪一对？"],
+        pair(a, c),
+        [pair(c, a), pair(a, d), pair(c, b), pair(b, d)],
+        [
+          `**Step 1: Find the two-arrow paths.** $${a + 1} \\to ${b + 1} \\to ${c + 1}$ and $${d + 1} \\to ${b + 1} \\to ${c + 1}$.\n\n**Step 2: Look for their shortcuts.** The path from $${d + 1}$ already has the arrow $${d + 1} \\to ${c + 1}$, but there is no arrow from $${a + 1}$ to $${c + 1}$, so $${tex(a, c)}$ must be added.\n\n**Check.** No other path of two arrows exists: nothing leaves $${c + 1}$, and only $${b + 1}$ is reached in the middle.`,
+          `**第一步：找两步路径。** $${a + 1} \\to ${b + 1} \\to ${c + 1}$ 和 $${d + 1} \\to ${b + 1} \\to ${c + 1}$。\n\n**第二步：找它们的捷径。** 从 $${d + 1}$ 出发的路径已有箭头 $${d + 1} \\to ${c + 1}$，但没有从 $${a + 1}$ 到 $${c + 1}$ 的箭头，所以必须添加 $${tex(a, c)}$。\n\n**检验。** 没有其他两步路径：没有箭头从 $${c + 1}$ 出发，作为中间点的只有 $${b + 1}$。`,
+        ],
+        {
+          svg: relationFigure(n, pairs),
+          alt: t(`A digraph on ${n} points with the pairs ${pairAlt(pairs)}.`, `${n} 个点上的有向图，有序对为 ${pairAlt(pairs)}。`),
+        },
+      ),
       [
-        `The arrows from $${a + 1}$ to $${b + 1}$ and from $${b + 1}$ to $${c + 1}$ form a path with no shortcut. So $(${a + 1}, ${c + 1})$ must be added, while the path from $${d + 1}$ already has its shortcut.`,
-        `从 $${a + 1}$ 到 $${b + 1}$ 和从 $${b + 1}$ 到 $${c + 1}$ 的箭头构成没有捷径的路径。所以必须添加 $(${a + 1}, ${c + 1})$，而从 $${d + 1}$ 出发的路径已经有捷径。`,
+        say(
+          pair(c, a)[0],
+          `That points backward; the path $${a + 1} \\to ${b + 1} \\to ${c + 1}$ needs a shortcut from $${a + 1}$ to $${c + 1}$.`,
+          `方向反了；路径 $${a + 1} \\to ${b + 1} \\to ${c + 1}$ 需要从 $${a + 1}$ 到 $${c + 1}$ 的捷径。`,
+        ),
+        say(pair(a, d)[0], `No path of arrows leads from $${a + 1}$ to $${d + 1}$.`, `没有从 $${a + 1}$ 到 $${d + 1}$ 的箭头路径。`),
+        say(
+          pair(c, b)[0],
+          `No arrow leaves $${c + 1}$, so transitivity asks for nothing from it.`,
+          `没有箭头从 $${c + 1}$ 出发，所以传递性对它没有要求。`,
+        ),
+        say(pair(b, d)[0], `No path of arrows leads from $${b + 1}$ to $${d + 1}$.`, `没有从 $${b + 1}$ 到 $${d + 1}$ 的箭头路径。`),
       ],
-      {
-        svg: relationFigure(n, pairs),
-        alt: t(`A digraph on ${n} points with the pairs ${pairAlt(pairs)}.`, `${n} 个点上的有向图，有序对为 ${pairAlt(pairs)}。`),
-      },
     );
   },
 );
@@ -542,8 +606,8 @@ const equivalenceClasses = point(
   "equivalence-classes-from-a-drawing",
   ["Equivalence classes from a drawing", "由图读等价类"],
   [
-    "The digraph of an equivalence relation breaks into separate clusters, and within a cluster every point is joined to every other. Each cluster is an equivalence class, so the number of clusters is the number of classes, and the class of a point is the cluster that contains it. Lines here stand for arrows in both directions.",
-    "等价关系的有向图分成互不相连的几团，每一团内每一点都与其他各点相连。每一团就是一个等价类，所以团的个数就是等价类的个数，一点的等价类就是包含它的那一团。这里的线段表示两个方向的箭头。",
+    "The digraph of an equivalence relation breaks into separate clusters, and within a cluster every point is joined to every other. Each cluster is an equivalence class, so the number of clusters is the number of classes, and the class of a point is the cluster that contains it. Lines here stand for arrows in both directions. If $1, 4$ are joined, $2, 5, 6$ are joined and $3$ stands alone, there are three classes, and $[3] = \\{3\\}$.\n\n> **Watch out.** A point with no lines is still a class of its own, since it is related to itself. And the class of a point includes the point.",
+    "等价关系的有向图分成互不相连的几团，每一团内每一点都与其他各点相连。每一团就是一个等价类，所以团的个数就是等价类的个数，一点的等价类就是包含它的那一团。这里的线段表示两个方向的箭头。若 $1, 4$ 相连，$2, 5, 6$ 相连，$3$ 单独一点，则有三个等价类，且 $[3] = \\{3\\}$。\n\n> **注意。** 没有线段的点自己也是一个类，因为它与自身相关。一个点的等价类包含这个点本身。",
   ],
   (rng) => {
     const n = rng.int(6, 9);
@@ -575,36 +639,50 @@ const equivalenceClasses = point(
     body += at.map((p, i) => node(p, String(labels[i]))).join("");
     const askCount = rng.bool();
     const target = rng.int(1, n);
-    const size = (groups.find((g) => g.includes(target)) as number[]).length;
+    const own = groups.find((g) => g.includes(target)) as number[];
+    const size = own.length;
     const value = askCount ? groups.length : size;
-    return ask(
+    const listed = groups.map((g) => `\\{${[...g].sort((x, y) => x - y).join(", ")}\\}`).join(", ");
+    const sizesText = groups.map((g) => g.length).join(" + ");
+    return withMistakes(
+      ask(
+        askCount
+          ? [
+              "The lines join related points of an equivalence relation, with every point also related to itself. How many equivalence classes are there?",
+              "线段连接等价关系中相关的点，每一点也与自身相关。有多少个等价类？",
+            ]
+          : [
+              `The lines join related points of an equivalence relation, with every point also related to itself. How many elements does the class of $${target}$ have?`,
+              `线段连接等价关系中相关的点，每一点也与自身相关。$${target}$ 的等价类有多少个元素？`,
+            ],
+        value,
+        [value + 1, n === value ? value + 2 : n, value === 1 ? 2 : value - 1],
+        askCount
+          ? [
+              `**Step 1: Find the clusters.** Following the lines, the points split into $${listed}$, with no line between clusters.\n\n**Step 2: Count.** Each cluster is one class: $${groups.length}$ classes.\n\n**Check.** The cluster sizes $${sizesText}$ add up to $${n}$, so every point lies in exactly one class.`,
+              `**第一步：找出各团。** 沿线段看，这些点分成 $${listed}$，团之间没有线段。\n\n**第二步：计数。** 每一团是一个类：共 $${groups.length}$ 个类。\n\n**检验。** 各团大小 $${sizesText}$ 加起来是 $${n}$，所以每个点恰好在一个类中。`,
+            ]
+          : [
+              `**Step 1: Find the cluster of ${target}.** The lines from $${target}$ reach ${size === 1 ? "no other point" : `$${own.filter((x) => x !== target).join(", ")}$`}, so its class is $\\{${[...own].sort((x, y) => x - y).join(", ")}\\}$.\n\n**Step 2: Count.** Including $${target}$ itself, the class has $${size}$ ${size === 1 ? "element" : "elements"}.\n\n**Check.** ${size === 1 ? `$${target}$ has no lines, and it is related to itself, so its class is $\\{${target}\\}$.` : `Every two points of the cluster are joined by a line, as an equivalence class requires: $\\binom{${size}}{2} = ${(size * (size - 1)) / 2}$ ${size === 2 ? "line" : "lines"}.`}`,
+              `**第一步：找出 ${target} 所在的团。** 从 $${target}$ 出发的线段到达${size === 1 ? "其他任何点都没有" : ` $${own.filter((x) => x !== target).join(", ")}$`}，所以它的类是 $\\{${[...own].sort((x, y) => x - y).join(", ")}\\}$。\n\n**第二步：计数。** 算上 $${target}$ 本身，这个类有 $${size}$ 个元素。\n\n**检验。** ${size === 1 ? `$${target}$ 没有线段，而它与自身相关，所以它的类是 $\\{${target}\\}$。` : `团中每两点之间都有线段，符合等价类的要求：共 $\\binom{${size}}{2} = ${(size * (size - 1)) / 2}$ 条线段。`}`,
+            ],
+        {
+          svg: svgDocument(220, body),
+          alt: t(
+            `Clusters of joined points: ${groups.map((g) => `{${g.join(", ")}}`).join(", ")}.`,
+            `相连的点构成的团：${groups.map((g) => `{${g.join(", ")}}`).join("，")}。`,
+          ),
+        },
+      ),
       askCount
         ? [
-            "The lines join related points of an equivalence relation, with every point also related to itself. How many equivalence classes are there?",
-            "线段连接等价关系中相关的点，每一点也与自身相关。有多少个等价类？",
+            say(
+              String(n),
+              "That counts the points; the points of one cluster share a class.",
+              "这数的是点的个数；同一团中的点属于同一个类。",
+            ),
           ]
-        : [
-            `The lines join related points of an equivalence relation, with every point also related to itself. How many elements does the class of $${target}$ have?`,
-            `线段连接等价关系中相关的点，每一点也与自身相关。$${target}$ 的等价类有多少个元素？`,
-          ],
-      value,
-      [value + 1, n === value ? value + 2 : n, value === 1 ? 2 : value - 1],
-      askCount
-        ? [
-            `The points split into $${groups.length}$ separate clusters, with no line between clusters, and each cluster is one class.`,
-            `这些点分成 $${groups.length}$ 个互不相连的团，团之间没有线段，每一团是一个等价类。`,
-          ]
-        : [
-            `The point $${target}$ lies in the cluster $\\{${(groups.find((g) => g.includes(target)) as number[]).join(", ")}\\}$, which includes the point itself, so its class has $${size}$ elements.`,
-            `点 $${target}$ 所在的团是 $\\{${(groups.find((g) => g.includes(target)) as number[]).join(", ")}\\}$，包括它本身，所以它的等价类有 $${size}$ 个元素。`,
-          ],
-      {
-        svg: svgDocument(220, body),
-        alt: t(
-          `Clusters of joined points: ${groups.map((g) => `{${g.join(", ")}}`).join(", ")}.`,
-          `相连的点构成的团：${groups.map((g) => `{${g.join(", ")}}`).join("，")}。`,
-        ),
-      },
+        : [say(String(size - 1), `The class of $${target}$ includes $${target}$ itself.`, `$${target}$ 的等价类包含 $${target}$ 本身。`)],
     );
   },
 );
@@ -613,8 +691,8 @@ const compositionOfRelations = point(
   "composing-relations-through-three-columns",
   ["Composing relations through three columns", "通过三列复合关系"],
   [
-    "To compose two relations, chain their arrows: a pair $(x, z)$ belongs to the composition exactly when an arrow from $x$ reaches some middle point $y$ and an arrow from $y$ reaches $z$. In a three-column drawing, each path from the left column through the middle to the right column gives one pair, and several paths may give the same pair.",
-    "复合两个关系就是把箭头接起来：有序对 $(x, z)$ 属于复合，当且仅当从 $x$ 的箭头到达某个中间点 $y$，从 $y$ 的箭头到达 $z$。在三列图中，从左列经中间列到右列的每条路径给出一对，几条路径可能给出同一对。",
+    "To compose two relations, chain their arrows: a pair $(x, z)$ belongs to the composition exactly when an arrow from $x$ reaches some middle point $y$ and an arrow from $y$ reaches $z$. In a three-column drawing, each path from the left column through the middle to the right column gives one pair, and several paths may give the same pair. With $1 \\to x \\to A$ and $1 \\to y \\to A$, the two paths give the single pair $(1, A)$.\n\n> **Watch out.** Count pairs of ends, not paths: two paths with the same start and finish give one pair. An arrow into a middle point with no arrow out of it gives nothing.",
+    "复合两个关系就是把箭头接起来：有序对 $(x, z)$ 属于复合，当且仅当从 $x$ 的箭头到达某个中间点 $y$，从 $y$ 的箭头到达 $z$。在三列图中，从左列经中间列到右列的每条路径给出一对，几条路径可能给出同一对。若有 $1 \\to x \\to A$ 和 $1 \\to y \\to A$，两条路径只给出一对 $(1, A)$。\n\n> **注意。** 数的是端点对，不是路径：起点和终点相同的两条路径只给出一对。指向中间点而没有后续箭头的箭头什么也不给出。",
   ],
   (rng) => {
     const col = (x: number, count: number, i: number): Point => [x, 110 + (i - (count - 1) / 2) * 44];
@@ -627,11 +705,15 @@ const compositionOfRelations = point(
     const second = pick(m, r);
     const composition = new Set<string>();
     const pairs: [number, number][] = [];
+    let paths = 0;
     for (const [a, b] of first)
       for (const [c, d] of second)
-        if (b === c && !composition.has(`${a},${d}`)) {
-          composition.add(`${a},${d}`);
-          pairs.push([a, d]);
+        if (b === c) {
+          paths++;
+          if (!composition.has(`${a},${d}`)) {
+            composition.add(`${a},${d}`);
+            pairs.push([a, d]);
+          }
         }
     const wrong = [first.length * second.length, first.length + second.length, pairs.length + 1].filter((v) => v !== pairs.length);
     let body = "";
@@ -641,24 +723,54 @@ const compositionOfRelations = point(
     for (let i = 0; i < l; i++) body += node(col(50, l, i), `${i + 1}`);
     for (let i = 0; i < m; i++) body += node(col(160, m, i), names[i] as string);
     for (let i = 0; i < r; i++) body += node(col(270, r, i), LETTERS[i] as string);
-    return ask(
+    const endsTex = pairs
+      .sort((p, q) => p[0] - q[0] || p[1] - q[1])
+      .map(([a, d]) => `(${a + 1}, ${LETTERS[d] as string})`)
+      .join(", ");
+    const pathList = first.flatMap(([a, b]) =>
+      second.filter(([c]) => c === b).map(([, d]) => `${a + 1} \\to ${names[b] as string} \\to ${LETTERS[d] as string}`),
+    );
+    return withMistakes(
+      ask(
+        [
+          "The left arrows show a relation $R$ and the right arrows show a relation $S$. How many ordered pairs are in the composition of $S$ with $R$, which goes from the left column to the right column?",
+          "左边的箭头表示关系 $R$，右边的箭头表示关系 $S$。从左列到右列的复合关系有多少个有序对？",
+        ],
+        pairs.length,
+        wrong,
+        [
+          `**Step 1: Trace the paths.** ${paths === 0 ? "No arrow of $R$ ends where an arrow of $S$ starts, so there are no paths." : `Through the middle column: $${pathList.join(",\\ ")}$.`}\n\n**Step 2: Keep the pairs of ends.** ${pairs.length === 0 ? "There are none, so the composition is empty." : `$${endsTex}$, which makes $${pairs.length}$.`}\n\n**Check.** ${paths === pairs.length ? `Each of the $${paths}$ paths has different ends, so no pair is counted twice.` : `The $${paths}$ paths give only $${pairs.length}$ pairs, because some share both ends.`}`,
+          `**第一步：追踪路径。** ${paths === 0 ? "$R$ 的箭头都不终止于 $S$ 的箭头起点，所以没有路径。" : `经过中间列：$${pathList.join(",\\ ")}$。`}\n\n**第二步：保留端点对。** ${pairs.length === 0 ? "没有端点对，所以复合关系是空的。" : `$${endsTex}$，共 $${pairs.length}$ 个。`}\n\n**检验。** ${paths === pairs.length ? `$${paths}$ 条路径的端点各不相同，所以没有重复计数。` : `$${paths}$ 条路径只给出 $${pairs.length}$ 对，因为有些路径的两端相同。`}`,
+        ],
+        {
+          svg: svgDocument(220, body),
+          alt: t(
+            `Three columns of ${l}, ${m} and ${r} points. The first relation joins ${pairAlt(first)} and the second joins ${pairAlt(second)}, numbering each column from the top.`,
+            `三列，分别有 ${l}、${m}、${r} 个点。第一个关系连接 ${pairAlt(first)}，第二个连接 ${pairAlt(second)}，每列从上往下编号。`,
+          ),
+        },
+      ),
       [
-        "The left arrows show a relation $R$ and the right arrows show a relation $S$. How many ordered pairs are in the composition of $S$ with $R$, which goes from the left column to the right column?",
-        "左边的箭头表示关系 $R$，右边的箭头表示关系 $S$。从左列到右列的复合关系有多少个有序对？",
-      ],
-      pairs.length,
-      wrong,
-      [
-        `Each path through a middle point gives a pair, and paths with the same ends give the same pair. The distinct pairs of ends number $${pairs.length}$.`,
-        `经过中间点的每条路径给出一对，端点相同的路径给出同一对。不同的端点对共有 $${pairs.length}$ 个。`,
-      ],
-      {
-        svg: svgDocument(220, body),
-        alt: t(
-          `Three columns of ${l}, ${m} and ${r} points. The first relation joins ${pairAlt(first)} and the second joins ${pairAlt(second)}, numbering each column from the top.`,
-          `三列，分别有 ${l}、${m}、${r} 个点。第一个关系连接 ${pairAlt(first)}，第二个连接 ${pairAlt(second)}，每列从上往下编号。`,
+        ...(paths !== pairs.length
+          ? [
+              say(
+                String(paths),
+                "That counts paths; paths with the same two ends give one pair.",
+                "这数的是路径；两端相同的路径只给出一对。",
+              ),
+            ]
+          : []),
+        say(
+          String(first.length * second.length),
+          "That pairs every arrow of $R$ with every arrow of $S$; they must meet at the same middle point.",
+          "这把 $R$ 的每个箭头与 $S$ 的每个箭头都配对了；它们必须在同一个中间点相接。",
         ),
-      },
+        say(
+          String(first.length + second.length),
+          "That counts the arrows; the composition counts pairs of ends of joined paths.",
+          "这数的是箭头；复合关系数的是相接路径的端点对。",
+        ),
+      ],
     );
   },
 );
