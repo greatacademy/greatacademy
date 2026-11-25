@@ -2,6 +2,12 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
+import {
+  baseWordsAndAffixesBuildingWordsNot,
+  commonPrefixesWritingWithPrefixesNot,
+  commonSuffixesSpellingWithSuffixesNot,
+  suffixesThatChangeWordClassChoosingTheFormNot,
+} from "./mistakes.ts";
 import { academicSentenceBanks, academicSentences1 } from "./words-academic-sentences.ts";
 
 const spelled = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => ({
@@ -1140,6 +1146,7 @@ export const wordTopics: readonly TopicDef[] = [
               `The word is **${right}**. Its parts join without losing any letters.\n\n**Check.** Split **${right}** back into its two pieces—they match *${shown}* letter for letter.`,
               `这个词是 **${right}**。各部分相连时没有丢失字母。\n\n**检验。**把 **${right}** 拆回两部分——正好逐字对应 *${shown}*。`,
             ),
+          baseWordsAndAffixesBuildingWordsNot,
         ),
       ),
     ],
@@ -1208,6 +1215,7 @@ export const wordTopics: readonly TopicDef[] = [
               `The word is **${right}**. This base word takes this prefix to express *${shown}*.\n\n**Check.** Say **${right}** aloud and split off its prefix—both the meaning and the spelling match *${shown}*.`,
               `这个词是 **${right}**。这个基础词搭配这个前缀正好表示 *${shown}*。\n\n**检验。**把 **${right}** 读一遍并拆出前缀——意思和拼写都完全对应 *${shown}*。`,
             ),
+          commonPrefixesWritingWithPrefixesNot,
         ),
       ),
     ],
@@ -1276,6 +1284,7 @@ export const wordTopics: readonly TopicDef[] = [
               `The word is **${right}**. One of the three spelling rules applies at the seam of *${shown}*.\n\n**Check.** Look at the seam in **${right}**—the *y→i*, drop-*e*, or double-consonant rule is applied cleanly.`,
               `这个词是 **${right}**。在 *${shown}* 的接缝处用到了三条拼写规则之一。\n\n**检验。**检查 **${right}** 的接缝处——*y* 变 *i*、去 *e* 或双写辅音的规则都用对了。`,
             ),
+          commonSuffixesSpellingWithSuffixesNot,
         ),
       ),
     ],
@@ -1326,6 +1335,7 @@ export const wordTopics: readonly TopicDef[] = [
               `The word is **${right}**. The place in the sentence calls for this class.\n\n**Check.** Read the completed sentence aloud with **${right}** in the blank of “${shown}”—its suffix matches the word class the slot requires.`,
               `这个词是 **${right}**。它在句中的位置要求这种词性。\n\n**检验。**把 **${right}** 填入“${shown}”的空格再通读一遍——它的后缀正好符合空格需要的词性。`,
             ),
+          suffixesThatChangeWordClassChoosingTheFormNot,
         ),
       ),
     ],

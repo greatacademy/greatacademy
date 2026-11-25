@@ -3,6 +3,12 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-english";
 import { everyPair } from "../levels/words.ts";
+import {
+  apostrophesAndPossessivesPluralPossessiveNot,
+  apostrophesAndPossessivesSingularPossessiveNot,
+  comparativesAndSuperlativesErAndEstNot,
+  verbTenseConsistencyFixingShiftsNot,
+} from "./mistakes.ts";
 
 const form = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => ({
   shown,
@@ -1115,6 +1121,7 @@ export const usageTopics: readonly TopicDef[] = [
               `**${right}**. ${shown.includes("comparing two") ? "Two things are compared, so the word takes the *-er* form." : "One stands out from a whole group, so the word takes the *-est* form."}\n\n**Check.** Check two things: count how many are compared (${shown.includes("comparing two") ? "two → *-er*" : "three or more → *-est*"}), and confirm any spelling change at the end of the base word.`,
               `**${right}**。${shown.includes("comparing two") ? "比较的是两个事物，所以用 *-er* 形式。" : "从一组中突出一个，所以用 *-est* 形式。"}\n\n**检验。**核对两件事：先数比较对象的数量（${shown.includes("comparing two") ? "两个 → *-er*" : "三个或更多 → *-est*"}），再检查原词词尾的拼写变化。`,
             ),
+          comparativesAndSuperlativesErAndEstNot,
         ),
       ),
       point(
@@ -1193,6 +1200,7 @@ export const usageTopics: readonly TopicDef[] = [
               `**${right}**. There is one owner, so the word takes an apostrophe and then *s*, even after a final *s*.\n\n**Check.** Cover the *'s* at the end of **${right}**—what stays visible is the exact singular owner.`,
               `**${right}**。所有者只有一个，所以加撇号再加 *s*，即使词尾已经是 *s* 也一样。\n\n**检验。**遮住 **${right}** 末尾的 *'s*——露出来的正好是那个单数所有者。`,
             ),
+          apostrophesAndPossessivesSingularPossessiveNot,
         ),
       ),
       point(
@@ -1215,6 +1223,7 @@ export const usageTopics: readonly TopicDef[] = [
                 ? `**${right}**。复数已经以 *s* 结尾，所以只加撇号。\n\n**检验。**看 **${right}** 撇号左边的部分——正是以 *s* 结尾的完整复数名词。`
                 : `**${right}**。复数不以 *s* 结尾，所以加 *'s*。\n\n**检验。**看 **${right}** 撇号左边的部分——正是不规则复数名词，后面加上 *'s*。`,
             ),
+          apostrophesAndPossessivesPluralPossessiveNot,
         ),
       ),
       point(
@@ -1388,6 +1397,7 @@ export const usageTopics: readonly TopicDef[] = [
               `**${right}** The time is past, so the second verb is past as well.\n\n**Check.** Read **${right}** and compare the two verbs—both now match the past time of the sentence.`,
               `**${right}** 时间是过去，所以第二个动词也用过去时。\n\n**检验。**通读 **${right}** 并对比两个动词——现在两个动词都与句子的过去时间一致。`,
             ),
+          verbTenseConsistencyFixingShiftsNot,
         ),
       ),
     ],

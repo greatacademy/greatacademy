@@ -3,6 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, typed, typedGenerator } from "@ga/subject-english";
 import { everyPair } from "../levels/words.ts";
+import { simpleVerbTensesIrregularPastNot } from "./mistakes.ts";
 
 const subjectBank: readonly ChoiceItem[] = [
   ["The tired farmer fed the horses.", "The tired farmer", ["fed the horses", "the horses"]],
@@ -1452,6 +1453,7 @@ export const sentenceTopics: readonly TopicDef[] = [
               `The past form is **${right}**. This verb is irregular and does not add *-ed*.\n\n**Check.** Read the second sentence aloud: “${shown.split(". ")[1]?.replace("___", right) ?? right}” It sounds natural without *have* or *had* in front of it.`,
               `过去式是 **${right}**。这个动词不规则，不加 *-ed*。\n\n**检验。**朗读第二句：“${shown.split(". ")[1]?.replace("___", right) ?? right}” 前面不加 *have* 或 *had* 也完全通顺。`,
             ),
+          simpleVerbTensesIrregularPastNot,
         ),
       ),
     ],

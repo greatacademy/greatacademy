@@ -2,6 +2,12 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-english";
+import {
+  commasAfterIntroductionsDirectAddressNot,
+  commasAfterIntroductionsIntroductoryWordsNot,
+  punctuatingDialogueSpeakerAfterNot,
+  punctuatingDialogueSpeakerBeforeNot,
+} from "./mistakes.ts";
 
 const fixed = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => typed(shown, right, wrong);
 
@@ -509,6 +515,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
               `**${right}** The comma follows the opening word.\n\n**Check.** Cover the first word and comma in **${right}**—what remains is a complete sentence on its own.`,
               `**${right}** 逗号放在句首引导词之后。\n\n**检验。** 遮住 **${right}** 句首的引导词和逗号——剩下的部分依然是一个完整的句子。`,
             ),
+          commasAfterIntroductionsIntroductoryWordsNot,
         ),
       ),
       point(
@@ -554,6 +561,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
               `**${right}** The name of the person spoken to is set off with commas.\n\n**Check.** Temporarily remove the name and its comma(s) from **${right}**—the remaining sentence still reads smoothly.`,
               `**${right}** 被称呼者的名字要用逗号隔开。\n\n**检验。** 把 **${right}** 里的称呼和逗号暂时拿掉——剩下的句子依然通顺完整。`,
             ),
+          commasAfterIntroductionsDirectAddressNot,
         ),
       ),
     ],
@@ -589,6 +597,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
               `**${right}** The speaker's exact words go inside quotation marks, and the comma sits inside the closing quotation mark.\n\n**Check.** Check three spots: opening quote before the first spoken word, comma right before the closing quote, and a period at the very end after the speaker.`,
               `**${right}** 说话人的原话放进引号里，逗号紧贴在后引号里面。\n\n**检验。**检查三个位置：第一句原话前有前引号，后引号里面是逗号，最后说话人后面是句号。`,
             ),
+          punctuatingDialogueSpeakerAfterNot,
         ),
       ),
       point(
@@ -607,6 +616,7 @@ export const mechanicsTopics: readonly TopicDef[] = [
               `**${right}** A comma introduces the quotation, which starts with a capital and ends inside the quotation marks.\n\n**Check.** Trace from left to right: comma after the speaking verb, opening quote + capital letter, and period inside the closing quote.`,
               `**${right}** 用逗号引出引语，引语首字母大写，句末标点放在引号里面。\n\n**检验。**从左往右核对：说话动词后有逗号，前引号后首字母大写，句号留在后引号里面。`,
             ),
+          punctuatingDialogueSpeakerBeforeNot,
         ),
       ),
       point(
