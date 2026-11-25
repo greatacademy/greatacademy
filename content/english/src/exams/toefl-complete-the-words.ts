@@ -3,8 +3,9 @@
 // sentence needs. Every text is written for this course.
 
 import { joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
-import { point, typedWhyNot } from "@ga/subject-english";
+import { point } from "@ga/subject-english";
 import { examTopic, quote } from "./kit.ts";
+import { completeMistakes } from "./mistakes.ts";
 
 /** Form is why a longer word takes its form in its sentence. */
 type Form =
@@ -90,7 +91,7 @@ function completeGenerator(question: Text, bank: readonly Cut[]): (rng: Rng) => 
       ]),
       canonical: word,
       wrong: [...item.wrong],
-      mistakes: item.wrong.map((w, i) => ({ response: w, feedback: typedWhyNot("word-form")(w, word, full, i) })),
+      mistakes: item.wrong.map((w, i) => ({ response: w, feedback: completeMistakes(item.form)(w, word, full, i) })),
     };
   };
 }

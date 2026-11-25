@@ -3,8 +3,9 @@
 // is one gap in a sentence or two, so that each can be explained on its own. Every sentence is written for this course.
 
 import { type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
-import { expandPattern, point, typedWhyNot } from "@ga/subject-english";
+import { expandPattern, point, type WhyNot } from "@ga/subject-english";
 import { examTopic, quote, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
+import { clozeMistakes, formMistakes, mistakesOf, transformMistakes } from "./mistakes.ts";
 import { moreConditionalsAndModals, moreGrammarWords, moreLinkingWords, morePassivesAndComparisons } from "./more-gaps.ts";
 
 /** gap is how a gap is shown: a line the reader can see, escaped for Markdown. */
@@ -15,13 +16,14 @@ export const shownGap = (s: string) => s.replace("___", gap);
 /** filled shows a sentence with its gap filled in bold. */
 export const filled = (s: string, word: string) => s.replace("___", `**${word}**`);
 
-/** GapItem is one typed item: what to show, what the checker accepts, the answer to show, wrong responses and the solution. */
+/** GapItem is one typed item: what to show, what the checker accepts, the answer to show, wrong responses, the solution and the feedback of the wrong responses. */
 export interface GapItem {
   readonly shown: string;
   readonly accepted: readonly string[];
   readonly canonical: string;
   readonly wrong: readonly string[];
   readonly solution: Text;
+  readonly whyNot: WhyNot;
 }
 
 /** gapGenerator picks an item by seed; the learner types what fills its gap. */
@@ -34,7 +36,7 @@ export function gapGenerator(checker: "word-form" | "sentence-pattern", question
       solution: item.solution,
       canonical: item.canonical,
       wrong: [...item.wrong],
-      mistakes: item.wrong.map((w, i) => ({ response: w, feedback: typedWhyNot(checker)(w, item.canonical, item.shown, i) })),
+      mistakes: item.wrong.map((w, i) => ({ response: w, feedback: item.whyNot(w, item.canonical, item.shown, i) })),
     };
   };
 }
@@ -440,6 +442,7 @@ const openGap = ([shown, accepted, wrong, kind]: OpenGap): GapItem => {
     accepted,
     canonical: word,
     wrong,
+    whyNot: mistakesOf(clozeMistakes, kind),
     solution: joinText([
       t(`The word is **${shownWord}**.`, `这个词是 **${shownWord}**。`),
       clozeWhy[kind],
@@ -636,6 +639,7 @@ const formGap = ([shown, stem, accepted, wrong, kind]: FormGap): GapItem => {
     accepted,
     canonical: word,
     wrong,
+    whyNot: mistakesOf(formMistakes, kind),
     solution: joinText([
       t(`From *${stem.toLowerCase()}*: **${shownWord}**.`, `由 *${stem.toLowerCase()}* 变成：**${shownWord}**。`),
       formWhy[kind],
@@ -1272,6 +1276,7 @@ const transformation = ([first, key, second, accepted, wrong, kind]: Transformat
     accepted,
     canonical,
     wrong,
+    whyNot: mistakesOf(transformMistakes, kind),
     solution: joinText([
       t(`The gap is **${canonical}**.`, `空格处是 **${canonical}**。`),
       transformWhy[kind],

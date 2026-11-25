@@ -5,6 +5,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import { examTopic, interleave } from "./kit.ts";
+import { copiedMistakes } from "./mistakes.ts";
 
 /** Asked is a note line with a gap or a question, the accepted answers with the best first, likely wrong ones, and the words of the text that decide it. */
 type Asked = readonly [asked: string, accepted: readonly string[], wrong: readonly string[], evidence: string];
@@ -444,6 +445,7 @@ export const notesAndShortAnswers: TopicDef = examTopic({
             `**${right}**。原文是："${evidence}${end(evidence)}" 笔记用更少的词说了同一件事，空格里要填原文中拼写完全一样的那个词。\n\n**检验。** 确认 *${right}* 是从原文“${evidence}${end(evidence)}”原样抄下的单个词，且符合笔记的语法。`,
           );
         },
+        copiedMistakes("one"),
       ),
     ),
     point(
@@ -467,6 +469,7 @@ export const notesAndShortAnswers: TopicDef = examTopic({
             `**${right}**。原文是："${evidence}${end(evidence)}" 只抄写回答问题的词，不要超过字数限制。\n\n**检验。** 数一下 *${right}* 的词数（不超过两个词和/或一个数字），并核对拼写与原文一致。`,
           );
         },
+        copiedMistakes("two"),
       ),
     ),
   ],

@@ -3,9 +3,10 @@
 // is written for this course in the words of B1 and below.
 
 import { joinText, same, type Text, type TopicDef, t } from "@ga/content";
-import { point } from "@ga/subject-english";
+import { point, type WhyNot } from "@ga/subject-english";
 import { filled, type GapItem, gapGenerator, shownGap } from "./cambridge-first-use-of-english.ts";
 import { examTopic, quote, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
+import { freeMistakes, givenMistakes } from "./mistakes.ts";
 import { moreGivenWords, moreNoWordGiven } from "./more-gaps.ts";
 
 // Seven-from-five.
@@ -1062,7 +1063,7 @@ const noWordGiven: readonly FillItem<FreeKind>[] = [
 ];
 
 /** fillItem turns a gap of grammar filling into a typed item whose solution explains its kind. */
-function fillItem<K extends string>(why: Record<K, Text>) {
+function fillItem<K extends string>(why: Record<K, Text>, whyNot: Record<K, WhyNot>) {
   return ([shown, accepted, wrong, kind]: FillItem<K>): GapItem => {
     const canonical = accepted[0] as string;
     return {
@@ -1070,6 +1071,7 @@ function fillItem<K extends string>(why: Record<K, Text>) {
       accepted,
       canonical,
       wrong,
+      whyNot: whyNot[kind],
       solution: joinText([
         why[kind],
         t(`The answer is **${canonical}**.`, `答案是 **${canonical}**。`),
@@ -1114,7 +1116,7 @@ export const grammarFilling: TopicDef = examTopic({
       gapGenerator(
         "word-form",
         t("Type the right form of the word in brackets.", "填入括号中所给词的正确形式。"),
-        [...givenWords, ...moreGivenWords].map(fillItem(formWhy)),
+        [...givenWords, ...moreGivenWords].map(fillItem(formWhy, givenMistakes)),
       ),
     ),
     point(
@@ -1127,7 +1129,7 @@ export const grammarFilling: TopicDef = examTopic({
       gapGenerator(
         "word-form",
         t("Type the one word that fills the gap.", "填入一个适当的词。"),
-        [...noWordGiven, ...moreNoWordGiven].map(fillItem(freeWhy)),
+        [...noWordGiven, ...moreNoWordGiven].map(fillItem(freeWhy, freeMistakes)),
       ),
     ),
   ],
