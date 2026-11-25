@@ -343,6 +343,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
         text(`${qPath} › solution`, q.solution);
         if (q.wrong.length === 0) error(qPath, "a question needs at least one wrong option");
         for (const wrong of q.wrong) text(`${qPath} › wrong`, wrong);
+        if (q.why !== undefined && q.why.length !== q.wrong.length) error(qPath, "a question needs one reason for each wrong option");
+        for (const why of q.why ?? []) text(`${qPath} › why`, why);
       });
       const previous = unit.passages[position - 1]?.id;
       graphPassages.set(passage.id, {

@@ -9,6 +9,7 @@
 import { type Generator, heardResponse, type Json, type Problem, type Rng, spokenWords, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { heard, spoken, withSounds } from "../audio.ts";
+import { watched } from "../watch.ts";
 import { heteronyms, interleave, type WordDef, wordsOf } from "./words.ts";
 
 /** LANGUAGE is the language the levels' speaking is heard in: the accent of their recordings. */
@@ -59,6 +60,8 @@ export interface UnitSpeakingSpec {
   readonly listening: string;
   readonly words: readonly string[];
   readonly frames: readonly SayFrame[];
+  /** watchOut is the topics' own Watch out for saying the words, reading sentences aloud, and answering aloud. */
+  readonly watchOut?: { readonly repeat: Text; readonly read: Text; readonly say: Text };
 }
 
 /** spokenProblem is a problem answered by speaking: the prompt, what is said, and the text shown to repeat or read. */
@@ -206,18 +209,24 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       point(
         "repeat",
         t("Say the words", "说单词"),
-        t(
-          `Play the word—such as *${w1.head}*—then press record and say it as you heard it. You do not need to lose your accent: what counts is that the word is clear. Listen to the recording as often as you like before you speak.\n\n> **Watch out.** Speak at a clear, steady volume and finish the final consonant so the word is not mistaken for a similar-sounding word.`,
-          `先播放这个词（例如 *${w1.head}*），再按下录音，照着听到的说出来。不需要改掉口音，关键是让人听清。开口之前，录音可以反复听。\n\n> **注意。** 用清晰平稳的音量说出每个词，尤其要把词尾辅音发完整，避免听起来像另一个相近的词。`,
+        watched(
+          t(
+            `Play the word—such as *${w1.head}*—then press record and say it as you heard it. You do not need to lose your accent: what counts is that the word is clear. Listen to the recording as often as you like before you speak.\n\n> **Watch out.** Speak at a clear, steady volume and finish the final consonant so the word is not mistaken for a similar-sounding word.`,
+            `先播放这个词（例如 *${w1.head}*），再按下录音，照着听到的说出来。不需要改掉口音，关键是让人听清。开口之前，录音可以反复听。\n\n> **注意。** 用清晰平稳的音量说出每个词，尤其要把词尾辅音发完整，避免听起来像另一个相近的词。`,
+          ),
+          spec.watchOut?.repeat,
         ),
         repeat,
       ),
       point(
         "read",
         t("Read aloud", "朗读"),
-        t(
-          `Read the sentence aloud at a calm speed—for example: *${s1}* Read every word as it is written, small words too, and say each one clearly. If a word is new, listen to it in the solution and read again.\n\n> **Watch out.** Do not skip small words (*a*, *the*, *is*, *to*) or swallow plural *-s* endings; read every word on the screen cleanly.`,
-          `用平稳的语速大声朗读，例如：*${s1}* 每个词都要照原文读出来，小词也不能漏，每个词都要读清楚。遇到生词，可以在解答里听它的读音再读一遍。\n\n> **注意。** 不要漏读 *a*、*the*、*is*、*to* 等小词，也不要吞掉复数 *-s* 词尾；把屏幕上的每个词都读清楚。`,
+        watched(
+          t(
+            `Read the sentence aloud at a calm speed—for example: *${s1}* Read every word as it is written, small words too, and say each one clearly. If a word is new, listen to it in the solution and read again.\n\n> **Watch out.** Do not skip small words (*a*, *the*, *is*, *to*) or swallow plural *-s* endings; read every word on the screen cleanly.`,
+            `用平稳的语速大声朗读，例如：*${s1}* 每个词都要照原文读出来，小词也不能漏，每个词都要读清楚。遇到生词，可以在解答里听它的读音再读一遍。\n\n> **注意。** 不要漏读 *a*、*the*、*is*、*to* 等小词，也不要吞掉复数 *-s* 词尾；把屏幕上的每个词都读清楚。`,
+          ),
+          spec.watchOut?.read,
         ),
         read,
       ),
@@ -244,9 +253,12 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       point(
         "say",
         t("Answer aloud", "开口回答"),
-        t(
-          "Listen to the question and answer it in a full sentence, with the word you are given. Say the whole sentence, not only the word, and use the question's own words: *Where do you live?* — *I live in Paris.*\n\n> **Watch out.** Never answer with just the single given word—speak a full sentence with a subject and the right verb form.",
-          "听问题，用给出的词完整地回答。要说出整句话，而不只是那个词，并借用问题里的说法：*Where do you live?* — *I live in Paris.*\n\n> **注意。** 不要只说出给出的单个词——要说出包含主语和正确动词形式的完整句子。",
+        watched(
+          t(
+            "Listen to the question and answer it in a full sentence, with the word you are given. Say the whole sentence, not only the word, and use the question's own words: *Where do you live?* — *I live in Paris.*\n\n> **Watch out.** Never answer with just the single given word—speak a full sentence with a subject and the right verb form.",
+            "听问题，用给出的词完整地回答。要说出整句话，而不只是那个词，并借用问题里的说法：*Where do you live?* — *I live in Paris.*\n\n> **注意。** 不要只说出给出的单个词——要说出包含主语和正确动词形式的完整句子。",
+          ),
+          spec.watchOut?.say,
         ),
         answer,
       ),

@@ -329,6 +329,8 @@ export interface PassageQuestionDef {
   readonly right: Text;
   /** wrong are plausible wrong options, each a misreading of the passage. */
   readonly wrong: readonly Text[];
+  /** why, when given, says for each wrong option in order what the passage says instead, shown when it is chosen. */
+  readonly why?: readonly Text[];
   /** solution says where the passage gives the answer. */
   readonly solution: Text;
 }

@@ -8,12 +8,22 @@ type QuestionDef = PassageDef["questions"][number];
 type TopicEdge = PassageDef["topics"][number];
 type Pair = readonly [en: string, zh: string];
 
-/** ask builds a passage question from its prompt, right answer, three wrong answers and solution, each a pair. */
-export const ask = (prompt: Pair, right: Pair, wrong: readonly [Pair, Pair, Pair], solution: Pair): QuestionDef => ({
+/**
+ * ask builds a passage question from its prompt, right answer, three wrong answers and solution, each a pair, and
+ * optionally a reason for each wrong answer, in order.
+ */
+export const ask = (
+  prompt: Pair,
+  right: Pair,
+  wrong: readonly [Pair, Pair, Pair],
+  solution: Pair,
+  why?: readonly [Pair, Pair, Pair],
+): QuestionDef => ({
   prompt: t(...prompt),
   right: t(...right),
   wrong: wrong.map((w) => t(...w)),
   solution: t(...solution),
+  ...(why && { why: why.map((w) => t(...w)) }),
 });
 
 /** passage builds a passage worth 4 XP, with the proper names and the explained terms it uses outside the lexicon. */

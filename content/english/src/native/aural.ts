@@ -19,6 +19,8 @@ import { point } from "@ga/subject-english";
 import { withRecordings } from "../audio.ts";
 import { heardAs, LANGUAGE } from "../levels/speaking.ts";
 import type { Pack } from "../pack.ts";
+import { watched } from "../watch.ts";
+import { type AuralWatch, auralWatchOuts } from "./aural-watch.ts";
 
 /** MIN_QUESTIONS is the fewest questions a listening topic may ask. */
 const MIN_QUESTIONS = 8;
@@ -106,7 +108,13 @@ function stretchesOf(sentences: readonly string[], overlap = false): readonly st
 }
 
 /** choiceOf is a choice problem among Text options, the right one placed by the seed. */
-function choiceOf(fields: Omit<Problem, "answer" | "canonical" | "wrong">, right: Text, wrong: readonly Text[], at: number): Problem {
+function choiceOf(
+  fields: Omit<Problem, "answer" | "canonical" | "wrong" | "mistakes">,
+  right: Text,
+  wrong: readonly Text[],
+  at: number,
+  why: (wrong: Text) => Text,
+): Problem {
   const options = [...wrong];
   options.splice(at % (wrong.length + 1), 0, right);
   const index = options.indexOf(right);
@@ -115,6 +123,7 @@ function choiceOf(fields: Omit<Problem, "answer" | "canonical" | "wrong">, right
     answer: { checker: "choice", expected: index, input: { kind: "choice", options } },
     canonical: String(index),
     wrong: options.map((_, i) => String(i)).filter((i) => i !== String(index)),
+    mistakes: wrong.map((w) => ({ response: String(options.indexOf(w)), feedback: why(w) })),
   };
 }
 
@@ -281,7 +290,14 @@ interface Asked {
 }
 
 /** listeningTopic plays the recorded passages of a reading unit and asks their questions, the text unseen. */
-function listeningTopic(id: string, unit: Text, reading: ReadingUnitDef, prerequisites: readonly string[], band: Band): TopicDef {
+function listeningTopic(
+  id: string,
+  unit: Text,
+  reading: ReadingUnitDef,
+  prerequisites: readonly string[],
+  band: Band,
+  watch: AuralWatch | undefined,
+): TopicDef {
   const passages = reading.passages.filter((p) => p.audio !== undefined);
   const asked: Asked[] = [];
   const most = Math.max(0, ...passages.map((p) => p.questions.length));
@@ -312,6 +328,12 @@ function listeningTopic(id: string, unit: Text, reading: ReadingUnitDef, prerequ
       question.right,
       question.wrong,
       rng.int(0, question.wrong.length),
+      (w) =>
+        question.why?.[question.wrong.indexOf(w)] ??
+        t(
+          `*${w.en}* is not what *${passage.title.en}* says; listen again for the part that answers the question.`,
+          `“${w["zh-CN"]}”不是《${passage.title["zh-CN"]}》里说的，再听一遍回答这个问题的那部分。`,
+        ),
     );
   };
   return {
@@ -326,12 +348,21 @@ function listeningTopic(id: string, unit: Text, reading: ReadingUnitDef, prerequ
     encompasses: [],
     xp: 15,
     strand: "listening",
-    knowledgePoints: [point("passages", t("Passages you hear", "听到的篇章"), listeningExplanation(band), listen)],
+    knowledgePoints: [
+      point("passages", t("Passages you hear", "听到的篇章"), watched(listeningExplanation(band), watch?.passages), listen),
+    ],
   };
 }
 
 /** readingAloudTopic reads aloud sentences, then stretches of sentences, of a reading unit's passages. */
-function readingAloudTopic(id: string, unit: Text, reading: ReadingUnitDef, listening: string, band: Band): TopicDef {
+function readingAloudTopic(
+  id: string,
+  unit: Text,
+  reading: ReadingUnitDef,
+  listening: string,
+  band: Band,
+  watch: AuralWatch | undefined,
+): TopicDef {
   const all = reading.passages.map((p) => sentencesOf(spokenOf(p.body)));
   const within = (least: number) => [
     ...new Set(
@@ -378,8 +409,8 @@ function readingAloudTopic(id: string, unit: Text, reading: ReadingUnitDef, list
     strand: "speaking",
     spoken: LANGUAGE,
     knowledgePoints: [
-      point("sentences", t("Sentences", "句子"), readingAloudSentenceExplanation(band), sentence),
-      point("stretches", t("Short passages", "短段落"), readingAloudStretchExplanation(band), stretch),
+      point("sentences", t("Sentences", "句子"), watched(readingAloudSentenceExplanation(band), watch?.sentences), sentence),
+      point("stretches", t("Short passages", "短段落"), watched(readingAloudStretchExplanation(band), watch?.stretches), stretch),
     ],
   };
 }
@@ -412,8 +443,9 @@ export function withAural(pack: Pack, grade: string, readingUnits: readonly Read
         seen.add(s);
         const listening = `${grade}-listening-${s}`;
         const aloud = `${grade}-reading-aloud-${s}`;
-        topics.push(listeningTopic(listening, unit.title, reading, prerequisiteOf(unit), band));
-        topics.push(readingAloudTopic(aloud, unit.title, reading, listening, band));
+        const watch = auralWatchOuts[`${grade}-${s}`];
+        topics.push(listeningTopic(listening, unit.title, reading, prerequisiteOf(unit), band, watch));
+        topics.push(readingAloudTopic(aloud, unit.title, reading, listening, band, watch));
         return {
           ...unit,
           modules: [

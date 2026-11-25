@@ -7,12 +7,22 @@ type PassageDef = ReadingUnitDef["passages"][number];
 type QuestionDef = PassageDef["questions"][number];
 type TopicEdge = PassageDef["topics"][number];
 
-/** ask builds a passage question from its prompt, right answer, three wrong answers and solution. */
-export const ask = (prompt: Text, right: Text, wrong: readonly [Text, Text, Text], solution: Text): QuestionDef => ({
+/**
+ * ask builds a passage question from its prompt, right answer, three wrong answers and solution, and optionally a
+ * reason for each wrong answer, in order.
+ */
+export const ask = (
+  prompt: Text,
+  right: Text,
+  wrong: readonly [Text, Text, Text],
+  solution: Text,
+  why?: readonly [Text, Text, Text],
+): QuestionDef => ({
   prompt,
   right,
   wrong,
   solution,
+  ...(why && { why }),
 });
 
 /** passage builds a passage worth 4 XP, with the proper names it uses outside the lexicon. */

@@ -6,6 +6,7 @@
 import { type Generator, type Mistake, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { heard, type Line, spoken, withSounds } from "../audio.ts";
+import { watched } from "../watch.ts";
 import { heteronyms, interleave, latestOf, type WordDef, wordsOf } from "./words.ts";
 
 /** minItems is the fewest distinct items a listening knowledge point may have. */
@@ -48,6 +49,8 @@ export interface PairSpec {
   /** sounds explains how the two sounds differ and how to hear it. */
   readonly sounds: Text;
   readonly pairs: string;
+  /** watchOut is the topic's own Watch out for telling which word is heard, and whether two words are the same. */
+  readonly watchOut?: { readonly which: Text; readonly same: Text };
 }
 
 /** pairTopic builds a topic that tells apart two sounds, from pairs of words that differ only in them. */
@@ -83,6 +86,15 @@ export function pairTopic(spec: PairSpec): TopicDef {
       },
       options.map(same),
       right,
+      [
+        {
+          response: String(options.indexOf(other)),
+          feedback: t(
+            `*${other}* is the other word of the pair: it has the other sound. Replay the clip and listen for the sound that changes.`,
+            `*${other}* 是这一对里的另一个词，用的是另一个音。重放录音，注意听那个变化的音。`,
+          ),
+        },
+      ],
     );
   };
 
@@ -118,6 +130,20 @@ export function pairTopic(spec: PairSpec): TopicDef {
       },
       [t("The same word", "同一个词"), t("Two different words", "两个不同的词")],
       alike ? 0 : 1,
+      [
+        {
+          response: alike ? "1" : "0",
+          feedback: alike
+            ? t(
+                "Nothing changes between the two clips: the sound you listen for is the same both times.",
+                "两段录音之间没有变化：你要听的那个音两次都一样。",
+              )
+            : t(
+                "The two clips differ in the very sound this topic contrasts, while the rest of the word stays alike.",
+                "两段录音恰好在本主题对比的那个音上不同，词的其余部分一样。",
+              ),
+        },
+      ],
     );
   };
 
@@ -139,18 +165,24 @@ export function pairTopic(spec: PairSpec): TopicDef {
       point(
         "which",
         t("Which word?", "哪个词？"),
-        t(
-          `${spec.sounds.en}\n\n> **Watch out.** Focus on the contrasting sound itself rather than guessing from spelling—replay the clip whenever the two words feel close.`,
-          `${spec.sounds["zh-CN"]}\n\n> **注意。** 专注辨认相区别的那个音，不要凭拼写猜测——拿不准时可以随时重放录音。`,
+        watched(
+          t(
+            `${spec.sounds.en}\n\n> **Watch out.** Focus on the contrasting sound itself rather than guessing from spelling—replay the clip whenever the two words feel close.`,
+            `${spec.sounds["zh-CN"]}\n\n> **注意。** 专注辨认相区别的那个音，不要凭拼写猜测——拿不准时可以随时重放录音。`,
+          ),
+          spec.watchOut?.which,
         ),
         whichWord,
       ),
       point(
         "same",
         t("The same or different?", "相同还是不同？"),
-        t(
-          `Two words are played one after the other, such as *${a1}* and *${b1}*. Some pairs are the same word twice; others differ only in these two sounds. Listen for the sound, not for the rest of the word.\n\n> **Watch out.** Do not let matching letters at the start or end fool you—compare the exact contrasting sound in both clips.`,
-          `依次播放两个词，例如 *${a1}* 和 *${b1}*。有的是同一个词说两遍，有的只在这两个音上不同。注意听这个音，而不是词的其他部分。\n\n> **注意。** 不要被开头或结尾相同的辅音迷惑——专门对比两段录音里相区别的那个音。`,
+        watched(
+          t(
+            `Two words are played one after the other, such as *${a1}* and *${b1}*. Some pairs are the same word twice; others differ only in these two sounds. Listen for the sound, not for the rest of the word.\n\n> **Watch out.** Do not let matching letters at the start or end fool you—compare the exact contrasting sound in both clips.`,
+            `依次播放两个词，例如 *${a1}* 和 *${b1}*。有的是同一个词说两遍，有的只在这两个音上不同。注意听这个音，而不是词的其他部分。\n\n> **注意。** 不要被开头或结尾相同的辅音迷惑——专门对比两段录音里相区别的那个音。`,
+          ),
+          spec.watchOut?.same,
         ),
         sameOrNot,
       ),
@@ -192,6 +224,8 @@ export interface UnitListeningSpec {
   /** words are the unit's vocabulary topics; those that no other one needs are the topic's prerequisites. */
   readonly words: readonly string[];
   readonly frames: readonly Frame[];
+  /** watchOut is the topic's own Watch out for hearing the unit's words, and for its dialogues. */
+  readonly watchOut?: { readonly words: Text; readonly dialogues: Text };
 }
 
 /** fill puts the values of a frame's slots into a line. */
@@ -233,6 +267,7 @@ function hearItems(words: readonly WordDef[]): readonly HearItem[] {
 export function unitListening(spec: UnitListeningSpec): TopicDef {
   const words = spec.words.flatMap(wordsOf);
   const hear = hearItems(words);
+  const byHead = new Map(words.map((w) => [w.head, w]));
   ensureItems(spec.id, "words", new Set(hear.map((h) => h.sentence)).size);
   for (const item of hear) heard(item.sentence);
   const hearWord: Generator = (rng) => {
@@ -249,6 +284,16 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
       },
       options.map(same),
       right,
+      item.wrong.map((w) => {
+        const meaning = byHead.get(w)?.meaning;
+        return {
+          response: String(options.indexOf(w)),
+          feedback: t(
+            `*${w}*${meaning ? ` (${meaning.en.replace(/[.。]+$/u, "")})` : ""} is another word of the unit, and the sentence does not say it.`,
+            `*${w}*${meaning ? `（${meaning["zh-CN"].replace(/[.。]+$/u, "")}）` : ""}是本单元的另一个词，这句话里没有说到它。`,
+          ),
+        };
+      }),
     );
   };
 
@@ -290,6 +335,13 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
             `录音里也说到了 *${item.y}*，但它不是这个问题的答案。再听一遍，注意问题问的是什么。`,
           ),
         },
+        {
+          response: String(options.indexOf(item.z)),
+          feedback: t(
+            `The recording never says *${item.z}*; choose only what you hear.`,
+            `录音里根本没有说到 *${item.z}*；只选你听到的内容。`,
+          ),
+        },
       ],
     );
   };
@@ -313,18 +365,24 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
       point(
         "words",
         t("Words you hear", "听到的词"),
-        t(
-          `A sentence with the words of this unit is played, such as one using *${w1.head}*; you do not see it. Listen to the whole sentence, then choose the one word of the three that it says.\n\n> **Watch out.** Listen all the way to the end of the sentence before choosing—the word you need may appear at the start, middle, or end.`,
-          `播放一个含有本单元词汇的句子（例如包含 *${w1.head}*），你看不到句子。听完整个句子，再从三个词中选出句子里说到的那一个。\n\n> **注意。** 听完整句话再选——目标词可能出现在句首、句中或句尾。`,
+        watched(
+          t(
+            `A sentence with the words of this unit is played, such as one using *${w1.head}*; you do not see it. Listen to the whole sentence, then choose the one word of the three that it says.\n\n> **Watch out.** Listen all the way to the end of the sentence before choosing—the word you need may appear at the start, middle, or end.`,
+            `播放一个含有本单元词汇的句子（例如包含 *${w1.head}*），你看不到句子。听完整个句子，再从三个词中选出句子里说到的那一个。\n\n> **注意。** 听完整句话再选——目标词可能出现在句首、句中或句尾。`,
+          ),
+          spec.watchOut?.words,
         ),
         hearWord,
       ),
       point(
         "dialogues",
         t("Dialogues and announcements", "对话和通知"),
-        t(
-          `Read the question first—such as *${f0.question.en}*—so that you know what to listen for. The recording often names more than one time, place or thing: only one answers the question. You can play it again as often as you like.\n\n> **Watch out.** Do not pick the first familiar option you hear—dialogues often mention a second, decoy detail alongside the real answer.`,
-          `先读问题（例如“${f0.question["zh-CN"]}”），知道要听什么。录音里常常说到不止一个时间、地点或事物，只有一个能回答问题。录音可以反复播放。\n\n> **注意。** 不要一听到熟悉的词就选——对话里常常同时提到一个干扰项，要确认它回答的是问题问的那一项。`,
+        watched(
+          t(
+            `Read the question first—such as *${f0.question.en}*—so that you know what to listen for. The recording often names more than one time, place or thing: only one answers the question. You can play it again as often as you like.\n\n> **Watch out.** Do not pick the first familiar option you hear—dialogues often mention a second, decoy detail alongside the real answer.`,
+            `先读问题（例如“${f0.question["zh-CN"]}”），知道要听什么。录音里常常说到不止一个时间、地点或事物，只有一个能回答问题。录音可以反复播放。\n\n> **注意。** 不要一听到熟悉的词就选——对话里常常同时提到一个干扰项，要确认它回答的是问题问的那一项。`,
+          ),
+          spec.watchOut?.dialogues,
         ),
         dialogue,
       ),

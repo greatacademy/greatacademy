@@ -32,12 +32,14 @@ export function passageProblem(passage: PassageDef, question: number, rng: Rng):
   if (!q) throw new Error(`passage ${passage.id} has no question ${question}`);
   const options = rng.shuffle([q.right, ...q.wrong]);
   const answer = options.indexOf(q.right);
+  const why = q.why;
   return {
     prompt: q.prompt,
     answer: { checker: "choice", expected: answer, input: { kind: "choice", options } },
     solution: q.solution,
     canonical: String(answer),
     wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
+    ...(why && { mistakes: q.wrong.map((w, i) => ({ response: String(options.indexOf(w)), feedback: why[i]! })) }),
   };
 }
 
