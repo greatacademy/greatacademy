@@ -10,6 +10,7 @@ import { type Generator, heardResponse, type Json, type Problem, type Rng, spoke
 import { point } from "@ga/subject-english";
 import { heard, spoken, withSounds } from "../audio.ts";
 import { watched } from "../watch.ts";
+import { levelAuralIntro } from "./intros.ts";
 import { heteronyms, interleave, type WordDef, wordsOf } from "./words.ts";
 
 /** LANGUAGE is the language the levels' speaking is heard in: the accent of their recordings. */
@@ -194,18 +195,12 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
   const w1 = said[1] ?? w0;
   const s0 = sentences[0]!;
   const s1 = sentences[1] ?? s0;
-  const f0 = spec.frames[0]!;
-  const f0Val = f0.values[0]!;
-  const f0Model = fill(f0.answers[0]!, f0Val);
 
   const speaking: TopicDef = {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
-    intro: t(
-      `Start by hearing *${w0.head}* clearly and saying it aloud, then move up to reading a full sentence such as: *${s0}* In this topic, you repeat this unit's key words after a model recording and read complete sentences aloud at a steady pace.`,
-      `先听清 *${w0.head}* 并大声跟读，再进阶到完整朗读句子，例如：*${s0}* 本主题带你先跟读本单元核心词汇，再以平稳语速朗读完整句子。`,
-    ),
+    intro: levelAuralIntro(spec.id),
     prerequisites: [spec.listening],
     encompasses: [],
     xp: 12,
@@ -245,10 +240,7 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       "Answer questions on the unit's theme aloud, in a full sentence with a given word.",
       "用给出的词，完整地大声回答本单元主题的问题。",
     ),
-    intro: t(
-      `When someone asks *${f0.question}* and gives you *${f0Val}*, a full spoken answer sounds like: *${f0Model}* In this topic, you listen to questions on this unit's theme and answer aloud in complete sentences.`,
-      `当别人问 *${f0.question}* 并给出提示词 *${f0Val}* 时，完整的口语回答是：*${f0Model}* 本主题带你听懂本单元主题的问题，并用完整句子大声作答。`,
-    ),
+    intro: levelAuralIntro(answeringId(spec.id)),
     prerequisites: [spec.id],
     encompasses: [],
     xp: 8,

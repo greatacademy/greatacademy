@@ -7,6 +7,7 @@ import { type Generator, type Mistake, type Problem, type Rng, same, type Text, 
 import { point } from "@ga/subject-english";
 import { heard, type Line, spoken, withSounds } from "../audio.ts";
 import { watched } from "../watch.ts";
+import { levelAuralIntro } from "./intros.ts";
 import { heteronyms, interleave, latestOf, type WordDef, wordsOf } from "./words.ts";
 
 /** minItems is the fewest distinct items a listening knowledge point may have. */
@@ -147,16 +148,12 @@ export function pairTopic(spec: PairSpec): TopicDef {
     );
   };
 
-  const [a0, b0] = pairs[0]!;
   const [a1, b1] = pairs[1] ?? pairs[0]!;
   return {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
-    intro: t(
-      `Compare *${a0}* and *${b0}*: they differ by just one sound, yet swapping that sound turns one word into another. In this topic, you train your ear to tell the two sounds apart—first by picking the word you hear, then by judging whether two spoken words are the same or different.`,
-      `比较 *${a0}* 和 *${b0}*：两个词只差一个音，却变成了完全不同的词。本主题专门训练耳朵分辨这两个音——先听音选词，再判断连续听到的两个词是相同还是不同。`,
-    ),
+    intro: levelAuralIntro(spec.id),
     prerequisites: spec.prerequisites,
     encompasses: [],
     xp: 10,
@@ -353,10 +350,7 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
-    intro: t(
-      `In spoken English, familiar words like *${w0.head}* arrive at natural speed inside a whole sentence—for example: *${w0.sentences[0]?.full ?? ""}* In this topic, you first catch this unit's words inside spoken sentences, then follow short dialogues and announcements to pick out the exact detail asked.`,
-      `在真实口语中，像 *${w0.head}* 这样的熟悉词会以自然语速出现在整句话里，例如：*${w0.sentences[0]?.full ?? ""}* 本主题先训练你在听到的句子里捕捉本单元词汇，再听懂简短对话与通知，抓住问题所问的具体信息。`,
-    ),
+    intro: levelAuralIntro(spec.id),
     prerequisites: latestOf(spec.words),
     encompasses: [],
     xp: 12,
