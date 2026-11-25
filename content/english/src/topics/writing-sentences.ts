@@ -17,6 +17,22 @@ import {
   relativeSentence,
   voiceRecords,
 } from "./grammar-clauses-more.ts";
+import {
+  activeNot,
+  addingNot,
+  appositiveEndNot,
+  appositiveNot,
+  becauseNot,
+  capitalsNot,
+  conjunctionFixNot,
+  identifyingNot,
+  joinedNot,
+  openingPhraseNot,
+  participleNot,
+  periodFixNot,
+  seriesNot,
+  subordinatedNot,
+} from "./writing-sentences-why-not.ts";
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const use = (word: string): Text => t(`Use *${word}*.`, `使用 *${word}*。`);
@@ -1104,6 +1120,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** Capitalize the first word, the pronoun *I*, and every proper name.\n\n**Check.** Scan every word in **${right}**: the first word and every specific person, place, day, month, language, or *I* starts with a capital, and common words stay lower case.`,
               `**${right}** 第一个词、代词 *I* 和所有专有名称都要大写。\n\n**检验。**逐词检查 **${right}**：句首词以及特定人名、地名、星期、月份、语言和 *I* 都大写了，普通词保持小写。`,
             ),
+          capitalsNot,
         ),
       ),
       point(
@@ -1154,6 +1171,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** Commas separate the items and do not come before the first or after the last.\n\n**Check.** Point to each item in the list of **${right}**—commas sit only *between* the listed items, never before the first or after the last.`,
               `**${right}** 逗号分隔各项，不放在第一项之前或最后一项之后。\n\n**检验。** 逐个点出 **${right}** 里的并列项——逗号只出现在各项*之间*，首项前和末项后都没有逗号。`,
             ),
+          seriesNot,
         ),
       ),
       point(
@@ -1231,6 +1249,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** A comma and the conjunction join the two complete sentences.\n\n**Check.** Check the seam: comma right before *but* or *so*, lower-case start on the second clause (unless *I* or a name), and one period at the end.`,
               `**${right}** 用逗号和连词把两个完整句子连成一句。\n\n**检验。**检查衔接处：*but* 或 *so* 前面有逗号，第二句开头改成小写（*I* 或人名除外），句末保留一个句号。`,
             ),
+          joinedNot,
         ),
       ),
       point(
@@ -1249,6 +1268,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The word *because* comes right before the reason.\n\n**Check.** Read the part right after *because*—it must explain *why* the other part happened, not the other way around.`,
               `**${right}** *because* 紧接在原因之前。\n\n**检验。**读一读 *because* 后面的部分——它必须解释另一半*为什么*发生，不能因果倒置。`,
             ),
+          becauseNot,
         ),
       ),
     ],
@@ -1284,6 +1304,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** A comma and a conjunction join the two complete sentences.\n\n**Check.** Verify that both sides could still stand alone as full sentences, and that one comma sits right before the conjunction.`,
               `**${right}** 用逗号加连词连接两个完整句子。\n\n**检验。**确认前后两半各自都能独立成句，而且连词前面恰好有一个逗号。`,
             ),
+          joinedNot,
         ),
       ),
       point(
@@ -1302,6 +1323,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The conjunction opens the dependent clause, and that clause takes a comma only if it comes first.\n\n**Check.** Confirm the conjunction sits in front of the second idea, and check the comma rule: comma after a front clause, no comma before an end clause.`,
               `**${right}** 连词引导从句；只有从句在前时才加逗号。\n\n**检验。**确认连词放在第二个意思前面，再核对逗号规则：从句在前加逗号，从句在后不加逗号。`,
             ),
+          subordinatedNot,
         ),
       ),
     ],
@@ -1334,6 +1356,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** Each complete sentence now has its own capital and period.\n\n**Check.** Read the two sentences in **${right}** one by one—each has its own subject and verb, starts with a capital letter, and ends with a period.`,
               `**${right}** 每个完整句子现在都有自己的大写字母和句号。\n\n**检验。**逐句读一遍 **${right}**——每句都有自己的主语和动词，以大写字母开头，以句号结尾。`,
             ),
+          periodFixNot,
         ),
       ),
       point(
@@ -1352,6 +1375,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The comma and the conjunction work together.\n\n**Check.** Look at the join in **${right}**—both sides could stand alone as sentences, and a comma plus a matching conjunction sits neatly between them.`,
               `**${right}** 逗号和连词要一起使用。\n\n**检验。**检查 **${right}** 的连接处——两边都能独立成句，中间恰好有一个逗号加合适的并列连词。`,
             ),
+          conjunctionFixNot,
         ),
       ),
     ],
@@ -1387,6 +1411,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The clause sits right after the noun it describes, and the old pronoun is gone.\n\n**Check.** Verify that the relative clause immediately follows its noun, uses *who* or *that* with no leftover pronoun, and takes no commas.`,
               `**${right}** 从句紧跟所修饰的名词，原来的代词已去掉。\n\n**检验。** 确认关系从句紧跟所修饰的名词、用 *who* 或 *that* 且没有残留原代词，而且不加逗号。`,
             ),
+          identifyingNot,
         ),
       ),
       point(
@@ -1405,6 +1430,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** Two commas set off the added information.\n\n**Check.** Cover the words between the two commas and read the sentence—the main sentence still reads cleanly, and the clause uses *who* or *which*.`,
               `**${right}** 用两个逗号隔开补充信息。\n\n**检验。** 遮住两个逗号之间的内容通读全句——主句依然完整通顺，且从句用的是 *who* 或 *which*。`,
             ),
+          addingNot,
         ),
       ),
     ],
@@ -1440,6 +1466,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The phrase renames the noun, with a comma on each side.\n\n**Check.** Drop the phrase between the two commas—the remaining words form the complete original first sentence.`,
               `**${right}** 短语为名词换了个说法，两边各有一个逗号。\n\n**检验。** 去掉两个逗号之间的短语——剩下的部分正好是完整的第一句。`,
             ),
+          appositiveNot,
         ),
       ),
       point(
@@ -1458,6 +1485,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** One comma sets off an appositive that ends the sentence.\n\n**Check.** Read the words before the comma—they form a complete sentence, and the noun phrase after the comma renames its final noun.`,
               `**${right}** 位于句末的同位语只用一个逗号隔开。\n\n**检验。** 读逗号前面的部分——它本身是完整的句子，而逗号后的名词短语正好重命名句末的名词。`,
             ),
+          appositiveEndNot,
         ),
       ),
     ],
@@ -1493,6 +1521,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The meaning is the same, and the sentence opens differently.\n\n**Check.** Verify the opening phrase is followed by a comma, the main subject and verb remain intact, and capitalization is adjusted.`,
               `**${right}** 意思不变，只是开头不同。\n\n**检验。** 确认句首短语后加了逗号、主句主谓完整，且大小写已相应调整。`,
             ),
+          openingPhraseNot,
         ),
       ),
       point(
@@ -1511,6 +1540,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `**${right}** The doer of the action follows the comma.\n\n**Check.** Ask who performs the opening *-ing* action—that exact subject stands immediately after the comma, and the extra *and* is gone.`,
               `**${right}** 动作的发出者紧跟逗号。\n\n**检验。** 问一句句首 *-ing* 动作是谁做的——这位主语正好紧挨逗号之后，且多余的 *and* 已删去。`,
             ),
+          participleNot,
         ),
       ),
     ],
@@ -1587,6 +1617,7 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
               `In active voice: **${right}** The doer leads the sentence and the extra passive words are gone.\n\n**Check.** Count the words and check the tense: **${right}** uses fewer words than the passive original while keeping the same doer, receiver, and time.`,
               `改为主动语态：**${right}** 动作发出者作主语，多余的被动结构全部去掉了。\n\n**检验。** 数一下词数并核对时态：**${right}** 比原被动句更简短，同时动作发出者、承受者和时态完全一致。`,
             ),
+          activeNot,
         ),
       ),
     ],
