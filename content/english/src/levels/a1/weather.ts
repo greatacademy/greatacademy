@@ -14,6 +14,7 @@ import {
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { itForWeatherFixNot } from "./mistakes.ts";
 
 const weather = vocabularyTopic({
   id: "a1-words-weather",
@@ -655,7 +656,7 @@ const itForWeather: TopicDef = {
         "Each sentence leaves out the subject (or both subject and verb). Write it again with *It is* or *It's* at the start: *Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*\n\n> **Watch out.** When you add *It's*, change the old first word to lowercase (unless it is a day or month like *Monday* or *June*) and keep the period at the end.",
         "每个句子都漏掉了主语（甚至连动词一起漏掉了）。在句首补上 *It is* 或 *It's* 重写句子：*Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*\n\n> **注意。** 补上 *It's* 后，原来句首的词要改成小写（除非是 *Monday*、*June* 这样的专有名词），句末保留句号。",
       ),
-      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), itFixBank, itWhy),
+      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), itFixBank, itWhy, itForWeatherFixNot),
     ),
   ],
 };

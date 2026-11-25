@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { prepositionsOfTimeNoWordNot, prepositionsOfTimeTypeNot, writingCapitalLettersForNamesWriteNot } from "./mistakes.ts";
 
 const time = vocabularyTopic({
   id: "a1-words-time",
@@ -653,7 +654,13 @@ const prepositionsOfTime: TopicDef = {
         "Type the word: *at* for the clock (*at noon*), *on* for a day (*on June 1st*), *in* for a month, a season or a part of the day (*in spring*).\n\n> **Watch out.** Check whether the phrase names a specific day/date (*on*) versus just a month or part of the day (*in*): *on May 5th*, but *in May*.",
         "输入这个词：钟点用 *at*（*at noon*），某一天用 *on*（*on June 1st*），月份、季节和一天中的时段用 *in*（*in spring*）。\n\n> **注意。** 区分“具体某一天/日期”（*on*）和“整个月份/时段”（*in*）：*on May 5th* 用 *on*，单说 *in May* 用 *in*。",
       ),
-      typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), prepTypedBank, prepWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the word for the gap.", "输入填入空白处的词。"),
+        prepTypedBank,
+        prepWhy,
+        prepositionsOfTimeTypeNot,
+      ),
     ),
     point(
       "no-word",
@@ -662,14 +669,20 @@ const prepositionsOfTime: TopicDef = {
         "Before *next*, *last*, *this* and *every*, there is no *at*, *on* or *in*: *We have a test next Monday.* *I visit my grandma every Sunday.*\n\n> **Watch out.** Do not replace the wrong preposition with another preposition (like changing *in next week* to *at next week*)—delete the preposition completely.",
         "在 *next*、*last*、*this*、*every* 前面不用 *at*、*on*、*in*：*We have a test next Monday.* *I visit my grandma every Sunday.* 不要说 *on next Monday*。\n\n> **注意。** 不要把错误的介词换成另一个介词（如把 *in next week* 改成 *at next week*）——直接彻底删掉介词。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), noPrepBank, (right) => {
-        const phrase = /(next|this|every) \w+/u.exec(right)?.[0] ?? "next week";
-        const first = phrase.split(" ")[0] ?? "next";
-        return t(
-          `*${phrase}* starts with *${first}*, and a time that starts with *next*, *last*, *this* or *every* takes no *at*, *on* or *in*: ${right}\n\n**Check.** Look right before *${first}* in your fixed sentence—confirm that *at*, *on*, and *in* are completely gone.`,
-          `*${phrase}* 以 *${first}* 开头；以 *next*、*last*、*this*、*every* 开头的时间前不加 *at*、*on*、*in*：${right}\n\n**检验。** 检查改后句子里 *${first}* 前面的位置——确认 *at*、*on*、*in* 都已彻底去掉。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        noPrepBank,
+        (right) => {
+          const phrase = /(next|this|every) \w+/u.exec(right)?.[0] ?? "next week";
+          const first = phrase.split(" ")[0] ?? "next";
+          return t(
+            `*${phrase}* starts with *${first}*, and a time that starts with *next*, *last*, *this* or *every* takes no *at*, *on* or *in*: ${right}\n\n**Check.** Look right before *${first}* in your fixed sentence—confirm that *at*, *on*, and *in* are completely gone.`,
+            `*${phrase}* 以 *${first}* 开头；以 *next*、*last*、*this*、*every* 开头的时间前不加 *at*、*on*、*in*：${right}\n\n**检验。** 检查改后句子里 *${first}* 前面的位置——确认 *at*、*on*、*in* 都已彻底去掉。`,
+          );
+        },
+        prepositionsOfTimeNoWordNot,
+      ),
     ),
   ],
 };
@@ -794,6 +807,7 @@ const capitalLettersForNames: TopicDef = {
         t("Write the sentence again with the right capital letters.", "用正确的大写字母重写句子。"),
         namesTypedBank,
         namesWhy,
+        writingCapitalLettersForNamesWriteNot,
       ),
     ),
   ],

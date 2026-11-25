@@ -256,18 +256,22 @@ export const endMarkMissing: Case = when(
 export const spelling: Case = (s) => {
   const [w, r] = [lower(s.w), lower(s.r)];
   if (!w || !r || w.includes(" ") || r.includes(" ")) return undefined;
-  const undoubled = r.replace(/([bcdfgklmnprstvz])\1/u, "$1");
-  if (undoubled !== r && w === undoubled) {
+  if (dropsOne(r, w)) {
     return t(
       `*${s.w}* keeps one consonant where the word doubles it. When a word ends in one short, stressed vowel and one consonant, the consonant doubles before an ending that starts with a vowel (*stop* → *stopped*, *run* → *running*).`,
       `*${s.w}* 少写了一个辅音字母。词尾是“一个重读短元音 + 一个辅音字母”时，加以元音开头的词尾前要双写这个辅音（*stop* → *stopped*，*run* → *running*）。`,
     );
   }
-  const doubled = w.replace(/([bcdfgklmnprstvz])\1/u, "$1");
-  if (doubled !== w && doubled === r) {
+  if (dropsOne(w, r)) {
     return t(
-      `*${s.w}* doubles a consonant that stays single. Only a short, stressed vowel before one final consonant doubles it (*stop* → *stopped*); a long vowel, two vowels, or an unstressed ending keep one (*cook* → *cooking*, *visit* → *visited*).`,
-      `*${s.w}* 把不该双写的辅音双写了。只有“重读短元音 + 一个辅音字母”结尾才双写（*stop* → *stopped*）；长元音、两个元音字母或非重读结尾都不双写（*cook* → *cooking*，*visit* → *visited*）。`,
+      `*${s.w}* doubles a consonant that stays single. Only a short, stressed vowel before one final consonant doubles it (*stop* → *stopped*); a long vowel, two vowels, two consonants, or an unstressed ending keep one (*cook* → *cooking*, *watch* → *watching*, *visit* → *visited*).`,
+      `*${s.w}* 把不该双写的辅音双写了。只有“重读短元音 + 一个辅音字母”结尾才双写（*stop* → *stopped*）；长元音、两个元音字母、两个辅音字母或非重读结尾都不双写（*cook* → *cooking*，*watch* → *watching*，*visit* → *visited*）。`,
+    );
+  }
+  if (/ing$/u.test(r) && r.includes("ying") && (w === r.replace("ying", "iing") || w === r.replace("ying", "ing"))) {
+    return t(
+      `*${s.w}* does not keep the *y*. Before *-ing*, a final *y* always stays as it is (*study* → *studying*, *fly* → *flying*).`,
+      `*${s.w}* 没有保留 *y*。加 *-ing* 时，词尾的 *y* 一律保留（*study* → *studying*，*fly* → *flying*）。`,
     );
   }
   if (/y/u.test(w) && w.replace(/y(?=[a-z]+$)/u, "i") === r) {
@@ -290,6 +294,15 @@ export const spelling: Case = (s) => {
   }
   return undefined;
 };
+
+/** dropsOne tells whether removing one letter of a doubled pair in a word gives another. */
+function dropsOne(long: string, short: string) {
+  for (let i = 0; i + 1 < long.length; i++) {
+    if (long[i] === long[i + 1] && /[bcdfghjklmnpqrstvwxz]/u.test(long[i] ?? "") && long.slice(0, i) + long.slice(i + 1) === short)
+      return true;
+  }
+  return false;
+}
 
 /** word is a case for a typed word whose response is one particular wrong word. */
 export const word = (wrong: string, say: Text | ((s: Seen) => Text)): Case => when((s) => lower(s.wrong) === lower(wrong), say);
@@ -320,8 +333,8 @@ export const capitalsAndEnd: Case = (s) => {
     const list = names.map((n) => `*${n}*`);
     parts.push(
       t(
-        `${list.join(", ")} ${names.length === 1 ? "is a name" : "are names"} of a particular person, place, day or month, so ${names.length === 1 ? "it starts" : "each starts"} with a capital letter.`,
-        `${list.join("、")} 是特定的人、地方、星期或月份的名称，要大写首字母。`,
+        `${list.join(", ")} ${names.length === 1 ? "is a name" : "are names"} of a particular person, place, language, day or month, so ${names.length === 1 ? "it starts" : "each starts"} with a capital letter.`,
+        `${list.join("、")} 是特定的人、地方、语言、星期或月份的名称，要大写首字母。`,
       ),
     );
   }
@@ -375,4 +388,16 @@ export const noSubject: Case = when(
     "This statement has no subject. Even when it is clear who is meant, an English statement names who does the action before the verb.",
     "这个陈述句没有主语。即使知道说的是谁，英语陈述句也要在动词前说出做事的人。",
   ),
+);
+
+/** raisedCapitals explains capital letters put on ordinary words in the middle of a sentence. */
+export const raisedCapitals: Case = when(
+  (s) => !!s.marks && s.marks.raised.length > 0 && s.marks.lowered.length === 0,
+  (s) => {
+    const raised = (s.marks?.raised ?? []).slice(0, 3).map((w) => `*${w}*`);
+    return t(
+      `${raised.join(", ")} ${raised.length === 1 ? "is an ordinary word, not a name" : "are ordinary words, not names"}, so ${raised.length === 1 ? "it stays" : "they stay"} small. Only the first word of a sentence, *I* and names take a capital letter.`,
+      `${raised.join("、")} 是普通词，不是名称，要小写。只有句首的词、*I* 和名称才大写首字母。`,
+    );
+  },
 );

@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { adverbsOfFrequencyWriteNot, thirdPersonSFixNot, thirdPersonSSpellNot, writingSentencesAboutRoutinesWriteNot } from "./mistakes.ts";
 
 const myDay = vocabularyTopic({
   id: "a1-words-my-day",
@@ -601,7 +602,13 @@ const thirdPersonS: TopicDef = {
         "Type the verb with its ending after one person: most verbs add *-s* (*works*), verbs that end in *ch*, *sh*, *s*, *x* or *o* add *-es* (*finishes*, *goes*), a consonant and *y* becomes *-ies* (*studies*), and *have* becomes *has*.\n\n> **Watch out.** Never write *haves*, *gos*, or *dos*—remember the special spellings *has*, *goes*, and *does*.",
         "写出单数第三人称后加了词尾的动词：大多数动词加 *-s*（*works*）；以 *ch*、*sh*、*s*、*x*、*o* 结尾的加 *-es*（*finishes*、*goes*）；辅音字母加 *y* 结尾的变成 *-ies*（*studies*）；*have* 变成 *has*。\n\n> **注意。** 切勿写成 *haves*、*gos* 或 *dos*——牢记特殊拼写 *has*、*goes* 和 *does*。",
       ),
-      typedGenerator("word-form", t("Type the verb in the right form.", "输入动词的正确形式。"), thirdTypedBank, thirdWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the verb in the right form.", "输入动词的正确形式。"),
+        thirdTypedBank,
+        thirdWhy,
+        thirdPersonSSpellNot,
+      ),
     ),
     point(
       "fix",
@@ -610,16 +617,22 @@ const thirdPersonS: TopicDef = {
         "Each sentence is about one person, like *Tom* or *my mom*, but its verb has no ending, the way a Chinese verb never changes: *Ben finish work at five.* → *Ben finishes work at five.* Give the verb the ending it needs and write the sentence again.\n\n> **Watch out.** Change only the verb's ending—keep the subject, the rest of the sentence, the capital letter, and the period intact.",
         "每个句子说的都是一个人，比如 *Tom* 或 *my mom*，但动词像中文一样没有变化：*Ben finish work at five.* → *Ben finishes work at five.* 给动词加上需要的词尾，把句子重写一遍。\n\n> **注意。** 只改动词词尾——主语、其余部分、句首大写和句末句号都保持不变。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), thirdFixBank, (right, shown) => {
-        const subject = singleSubjects.find((s) => shown.startsWith(`${s} `)) ?? "";
-        const verb = shown.slice(subject.length + 1).split(" ")[0] ?? "";
-        const third = right.slice(subject.length + 1).split(" ")[0] ?? "";
-        const rule = thirdRule(verb, third);
-        return t(
-          `*${subject}* is one person, so the verb needs an ending, and ${rule.en}: ${shown} → ${right}\n\n**Check.** Verify that *${verb}* changed to *${third}* after singular subject *${subject}* while every other word stayed unchanged.`,
-          `*${subject}* 是单个的人，动词要加词尾；${rule["zh-CN"]}：${shown} → ${right}\n\n**检验。** 确认单数主语 *${subject}* 后的 *${verb}* 已改为 *${third}*，句子其余部分保持不变。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        thirdFixBank,
+        (right, shown) => {
+          const subject = singleSubjects.find((s) => shown.startsWith(`${s} `)) ?? "";
+          const verb = shown.slice(subject.length + 1).split(" ")[0] ?? "";
+          const third = right.slice(subject.length + 1).split(" ")[0] ?? "";
+          const rule = thirdRule(verb, third);
+          return t(
+            `*${subject}* is one person, so the verb needs an ending, and ${rule.en}: ${shown} → ${right}\n\n**Check.** Verify that *${verb}* changed to *${third}* after singular subject *${subject}* while every other word stayed unchanged.`,
+            `*${subject}* 是单个的人，动词要加词尾；${rule["zh-CN"]}：${shown} → ${right}\n\n**检验。** 确认单数主语 *${subject}* 后的 *${verb}* 已改为 *${third}*，句子其余部分保持不变。`,
+          );
+        },
+        thirdPersonSFixNot,
+      ),
     ),
   ],
 };
@@ -778,7 +791,13 @@ const adverbsOfFrequency: TopicDef = {
         "Write the sentence with the word: before a verb like *get* or *walk* (*Tom usually eats rice*), and after *am*, *is* or *are* (*My room is always clean*).\n\n> **Watch out.** Keep every other word in the sentence unchanged—just drop the bracketed adverb into the one right slot next to the verb.",
         "把这个词放进句子：放在 *get*、*walk* 这样的动词前（*Tom usually eats rice*），放在 *am*、*is*、*are* 后（*My room is always clean*）。\n\n> **注意。** 句子其余词保持不变，只需把括号里的频度副词准确放进紧挨动词的那一侧。",
       ),
-      typedGenerator("sentence", t("Write the sentence again.", "重写这个句子。"), frequencyTypedBank, frequencyWhy),
+      typedGenerator(
+        "sentence",
+        t("Write the sentence again.", "重写这个句子。"),
+        frequencyTypedBank,
+        frequencyWhy,
+        adverbsOfFrequencyWriteNot,
+      ),
     ),
   ],
 };
@@ -905,7 +924,13 @@ const routinesWriting: TopicDef = {
         "Write a whole sentence for the note, such as *Ben / do homework / 5:00* → *Ben does homework at five o'clock.* You can write the time in words or in numbers: *at seven o'clock* or *at 7:00*.\n\n> **Watch out.** Do not copy the base verb unchanged (*have* -> *has*, *go* -> *goes*, *do* -> *does*, *finish* -> *finishes*), and remember *at* before the time.",
         "根据笔记写一个完整的句子，例如 *Ben / do homework / 5:00* → *Ben does homework at five o'clock.* 时间可以用英文单词或数字表示：*at seven o'clock* 或 *at 7:00*。\n\n> **注意。** 不要直接照抄原形动词（*have* -> *has*、*go* -> *goes*、*do* -> *does*、*finish* -> *finishes*），也别漏掉时间前的 *at*。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), routineTypedBank, routineWhy),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        routineTypedBank,
+        routineWhy,
+        writingSentencesAboutRoutinesWriteNot,
+      ),
     ),
   ],
 };

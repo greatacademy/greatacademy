@@ -14,6 +14,7 @@ import {
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { canForRequestsAskNot, whQuestionsAskNot } from "./mistakes.ts";
 
 const town = vocabularyTopic({
   id: "a1-words-town",
@@ -619,7 +620,7 @@ const whQuestions: TopicDef = {
         "Put the question word first, then the question order you already know: *Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\nWhen *who* or *how many people* is the subject itself, there is no *do*: *Who drives the bus?*\n\n> **Watch out.** Do not keep statement order after a question word (*Where Tom lives?* is wrong; say *Where does Tom live?*), and drop the *-s* from the main verb after *does*.",
         "先写疑问词，再接一般疑问句的语序：*Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\n如果 *who* 或 *how many people* 本身就是主语，就不用 *do*：*Who drives the bus?*\n\n> **注意。** 中文把疑问词留在原位（“汤姆住在哪里？”），英语要把疑问词放句首并倒装（不能写 *Where Tom lives?*，要写 *Where does Tom live?*），且 *does* 后面的实义动词要还原。",
       ),
-      typedGenerator("sentence-pattern", t("Write the question.", "写出问句。"), whAskBank, whAskWhy),
+      typedGenerator("sentence-pattern", t("Write the question.", "写出问句。"), whAskBank, whAskWhy, whQuestionsAskNot),
     ),
   ],
 };
@@ -791,10 +792,16 @@ const canForRequests: TopicDef = {
         "An order like *Open the door.* can sound rude. Make it a question with *Can you …?* and add *please*: *Can you open the door, please?* For yourself, *I want to sit here.* becomes *Can I sit here, please?*\n\n> **Watch out.** Drop *I want to* or *I'd like to* completely before writing *Can I …?*, and end with a question mark instead of a period.",
         "*Open the door.* 这样的祈使句听起来可能不礼貌。把它改成 *Can you …?* 的问句，再加上 *please*：*Can you open the door, please?* 为自己请求时，*I want to sit here.* 变成 *Can I sit here, please?*\n\n> **注意。** 改写成 *Can I …?* 时要把 *I want to* 或 *I'd like to* 全部去掉，句末用问号而不是句号。",
       ),
-      typedGenerator("sentence-pattern", t("Make it a polite request.", "改成礼貌的请求。"), requestTypedBank, (right) => {
-        const why = requestWhy(right);
-        return t(`Add *please* to sound polite. ${why.en}`, `加上 *please* 更礼貌。${why["zh-CN"]}`);
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Make it a polite request.", "改成礼貌的请求。"),
+        requestTypedBank,
+        (right) => {
+          const why = requestWhy(right);
+          return t(`Add *please* to sound polite. ${why.en}`, `加上 *please* 更礼貌。${why["zh-CN"]}`);
+        },
+        canForRequestsAskNot,
+      ),
     ),
   ],
 };

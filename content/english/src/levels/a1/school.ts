@@ -5,6 +5,12 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import {
+  presentSimpleNegativesFixNot,
+  presentSimpleNegativesMakeNot,
+  presentSimpleQuestionsWriteNot,
+  writingQuestionsWriteNot,
+} from "./mistakes.ts";
 
 const schoolSubjects = vocabularyTopic({
   id: "a1-words-school-subjects",
@@ -550,7 +556,7 @@ const presentSimpleNegatives: TopicDef = {
         "After *doesn't* the verb has no *-s*: *She doesn't like*, not *She doesn't likes*. The *-s* is already in *does*.\n\nAnd *not* alone is not enough: *They don't eat meat*, not *They not eat meat*.\n\n> **Watch out.** Check *every* piece of a broken negative: *does* carries the *-s* so the main verb must return to its plain form (*has* -> *have*, *studies* -> *study*, *watches* -> *watch*).",
         "*doesn't* 后面的动词不加 *-s*：说 *She doesn't like*，不说 *She doesn't likes*，因为 *-s* 已经在 *does* 里了。\n\n只用 *not* 也不行：说 *They don't eat meat*，不说 *They not eat meat*。\n\n> **注意。** 改错时检查整个谓语：*does* 已经承担了单三变化，后面的实义动词必须恢复原形（*has* -> *have*、*studies* -> *study*、*watches* -> *watch*）。",
       ),
-      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), negFixBank, negWhy),
+      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), negFixBank, negWhy, presentSimpleNegativesFixNot),
     ),
     point(
       "make",
@@ -559,21 +565,25 @@ const presentSimpleNegatives: TopicDef = {
         "To make a sentence negative, put *don't* or *doesn't* before the verb and take the *-s* off the verb: *Tom plays football.* → *Tom doesn't play football.* *We eat meat.* → *We don't eat meat.*\n\n> **Watch out.** Watch irregular *has* in particular: *She has a computer.* becomes *She doesn't have a computer.* (never *doesn't has*).",
         "把句子改成否定句时，在动词前加 *don't* 或 *doesn't*，并去掉动词的 *-s*：*Tom plays football.* → *Tom doesn't play football.* *We eat meat.* → *We don't eat meat.* 注意：*plays* 变回 *play*。\n\n> **注意。** 特别留心不规则动词 *has*：*She has a computer.* 要改成 *She doesn't have a computer.*（绝不是 *doesn't has*）。",
       ),
-      typedGenerator("sentence-pattern", t("Change the sentence.", "改写这个句子。"), negMakeBank, negWhy),
+      typedGenerator("sentence-pattern", t("Change the sentence.", "改写这个句子。"), negMakeBank, negWhy, presentSimpleNegativesMakeNot),
     ),
   ],
 };
 
 // Do and does questions.
 
-const lowerSubject = (subject: string) => (subject === "I" ? "I" : subject.charAt(0).toLowerCase() + subject.slice(1));
+/** lowerSubject is a subject as it stands inside a sentence: names keep their capital, other words lose it. */
+const lowerSubject = (subject: string) =>
+  /^(He|She|It|We|They|You|Our|My|Your|His|Her|Their|The|A|An)\b/u.test(subject)
+    ? subject.charAt(0).toLowerCase() + subject.slice(1)
+    : subject;
 
 /** askedSubject is the subject of a question to the person who said the sentence: I becomes you. */
 const askedSubject = (subject: string) => (subject === "I" ? "you" : lowerSubject(subject));
 
 /** replyPronoun is the pronoun of a short answer to a question about asked. */
 const replyPronoun = (asked: string, single: boolean): string =>
-  asked === "you" ? "I" : asked === "we" ? "we" : !single ? "they" : /^(she|lily)$/u.test(asked) ? "she" : "he";
+  asked === "you" ? "I" : asked === "we" ? "we" : !single ? "they" : /^(she|Lily)$/u.test(asked) ? "she" : "he";
 
 const questionChoiceBank: readonly ChoiceItem[] = deedItems(3).map(
   ({ subject, single, verb, rest }): ChoiceItem => [
@@ -679,13 +689,19 @@ const presentSimpleQuestions: TopicDef = {
         "Put *Do* or *Does* first, then the subject, then the verb with no *-s*: *Tom plays football.* → *Does Tom play football?*\n\n> **Watch out.** Remember three shifts when turning a statement into a question: add *Do/Does* at the front, drop *-s* from the verb (*has* -> *have*, *studies* -> *study*), and change *I* to *you* when asking the speaker.",
         "先写 *Do* 或 *Does*，再写主语，然后写不加 *-s* 的动词：*Tom plays football.* → *Does Tom play football?* *plays* 要变回 *play*。\n\n> **注意。** 陈述句改疑问句时记住三处变化：句首加 *Do/Does*、实义动词去掉 *-s* 恢复原形（*has* -> *have*、*studies* -> *study*），以及向说话人发问时把 *I* 改成 *you*。",
       ),
-      typedGenerator("sentence", t("Write the question.", "写出疑问句。"), questionWriteBank, (right) => {
-        const aux = right.split(" ")[0] ?? "Do";
-        return t(
-          `Put *${aux}* first, then the subject, then the verb with no *-s*, and end with a question mark: ${right}\n\n**Check.** Verify all four parts: *${aux}* at the front, the matching subject, the plain base verb with no *-s*, and a question mark (?) at the end.`,
-          `先写 *${aux}*，再写主语，然后写不加 *-s* 的动词原形，句末用问号：${right}\n\n**检验。** 核对四处：句首 *${aux}*、对应主语、不带 *-s* 的动词原形，以及句末问号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Write the question.", "写出疑问句。"),
+        questionWriteBank,
+        (right) => {
+          const aux = right.split(" ")[0] ?? "Do";
+          return t(
+            `Put *${aux}* first, then the subject, then the verb with no *-s*, and end with a question mark: ${right}\n\n**Check.** Verify all four parts: *${aux}* at the front, the matching subject, the plain base verb with no *-s*, and a question mark (?) at the end.`,
+            `先写 *${aux}*，再写主语，然后写不加 *-s* 的动词原形，句末用问号：${right}\n\n**检验。** 核对四处：句首 *${aux}*、对应主语、不带 *-s* 的动词原形，以及句末问号。`,
+          );
+        },
+        presentSimpleQuestionsWriteNot,
+      ),
     ),
     point(
       "answer",
@@ -844,6 +860,7 @@ const writingQuestions: TopicDef = {
         t("Write the question that this answer replies to.", "写出这个回答对应的问句。"),
         writeQuestionTypedBank,
         askedWhy,
+        writingQuestionsWriteNot,
       ),
     ),
   ],

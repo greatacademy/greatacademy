@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { countableAndUncountableNounsFixNot, joiningWithAndButOrJoinNot, someAndAnyChangeNot, someAndAnyTypeNot } from "./mistakes.ts";
 
 const food = vocabularyTopic({
   id: "a1-words-food",
@@ -687,16 +688,22 @@ const countableAndUncountable: TopicDef = {
         "Find the noun that is wrong: *rices*, *a bread* and *two apple* are all mistakes. Write the sentence right.\n\n> **Watch out.** For an uncountable noun with *a/an* (like *a bread*), replace *a/an* with *some* or drop it; for a countable noun after a number (*two*, *three*, *five*), add the right plural ending (*-s*, *-es*, or *-ies*).",
         "找出用错的名词：*rices*、*a bread* 和 *two apple* 都是错的。把句子改正。\n\n> **注意。** 不可数名词前误加了 *a/an*（如 *a bread*）时，把 *a/an* 去掉或换成 *some*；数字（*two*、*three*、*five*）后的可数名词则要补上正确的复数词尾（*-s*、*-es* 或 *-ies*）。",
       ),
-      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), countFixBank, (right) => {
-        const words = right.replace(/[.,?]/gu, "").split(" ");
-        const uncountable = uncountables.find((u) => words.includes(u));
-        const counted = countables.find(([, many]) => words.includes(many));
-        const reason = uncountable ? countReason(uncountable, uncountable) : countReason(counted?.[0] ?? "", counted?.[1] ?? "");
-        return t(
-          `${reason.en}: ${right}\n\n**Check.** Verify the noun form in your fixed sentence—no *-s* or *a/an* on an uncountable noun, and the right plural spelling after a number greater than one.`,
-          `${reason["zh-CN"]}：${right}\n\n**检验。** 复查改后句子里的名词形式——不可数名词不带 *-s* 或 *a/an*，大于 1 的数字后面的可数名词拼写出正确的复数。`,
-        );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Fix the sentence.", "改正这个句子。"),
+        countFixBank,
+        (right) => {
+          const words = right.replace(/[.,?]/gu, "").split(" ");
+          const uncountable = uncountables.find((u) => words.includes(u));
+          const counted = countables.find(([, many]) => words.includes(many));
+          const reason = uncountable ? countReason(uncountable, uncountable) : countReason(counted?.[0] ?? "", counted?.[1] ?? "");
+          return t(
+            `${reason.en}: ${right}\n\n**Check.** Verify the noun form in your fixed sentence—no *-s* or *a/an* on an uncountable noun, and the right plural spelling after a number greater than one.`,
+            `${reason["zh-CN"]}：${right}\n\n**检验。** 复查改后句子里的名词形式——不可数名词不带 *-s* 或 *a/an*，大于 1 的数字后面的可数名词拼写出正确的复数。`,
+          );
+        },
+        countableAndUncountableNounsFixNot,
+      ),
     ),
   ],
 };
@@ -837,11 +844,16 @@ const someAndAny: TopicDef = {
         "First see what kind of sentence it is. Type *some* when it is a statement (*There is some soup.*), and *any* when it is a question (*Is there any soup?*) or has *not* or *n't* in it (*There isn't any soup.*).\n\n> **Watch out.** Look closely at *isn't* / *aren't*—it is easy to miss *n't* when reading fast and type *some* by habit.",
         "先看句子是哪一种。肯定句写 *some*（*There is some soup.*）；疑问句（*Is there any soup?*），或者句子里有 *not*、*n't*（*There isn't any soup.*）时，写 *any*。\n\n> **注意。** 留心动词里的 *isn't* / *aren't*——读得太快容易看漏 *n't*，习惯性敲成 *some*。",
       ),
-      typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), someTypedBank, (right, shown) =>
-        t(
-          `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Scan for a question mark (?) or *n't*/*not*: if either appears, *any* is required; if neither appears, *some* fits.`,
-          `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 扫一眼句中有没有问号（?）或 *n't*/*not*：有其一就用 *any*，都没有就用 *some*。`,
-        ),
+      typedGenerator(
+        "word-form",
+        t("Type the word for the gap.", "输入填入空白处的词。"),
+        someTypedBank,
+        (right, shown) =>
+          t(
+            `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Scan for a question mark (?) or *n't*/*not*: if either appears, *any* is required; if neither appears, *some* fits.`,
+            `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 扫一眼句中有没有问号（?）或 *n't*/*not*：有其一就用 *any*，都没有就用 *some*。`,
+          ),
+        someAndAnyTypeNot,
       ),
     ),
     point(
@@ -851,16 +863,21 @@ const someAndAny: TopicDef = {
         "When a statement becomes a question or a negative, *some* becomes *any*: *There is some milk.* → *Is there any milk?* → *There isn't any milk.*\n\n> **Watch out.** Make *both* changes together: flip *There is/are* to *Is/Are there* (with `?`) or add *n't/not*, AND change *some* to *any*.",
         "肯定句变成疑问句或否定句时，*some* 要变成 *any*：*There is some milk.* → *Is there any milk?* → *There isn't any milk.*\n\n> **注意。** 两处变化要一起做：既要把 *There is/are* 改成 *Is/Are there*（配 `?`）或加上 *n't/not*，又要同时把 *some* 换成 *any*。",
       ),
-      typedGenerator("sentence-pattern", t("Change the sentence.", "改写这个句子。"), changeBank, (right) =>
-        right.endsWith("?")
-          ? t(
-              `A question puts *${right.split(" ")[0]}* before *there*, and in a question *some* becomes *any*: ${right}\n\n**Check.** Verify all three marks of the question: *${right.split(" ")[0]} there* at the start, *any* instead of *some*, and a question mark (?) at the end.`,
-              `疑问句把 *${right.split(" ")[0]}* 放在 *there* 前面，疑问句里的 *some* 要变成 *any*：${right}\n\n**检验。** 核对问句的三处：句首是 *${right.split(" ")[0]} there*，*some* 已换成 *any*，句末是问号（?）。`,
-            )
-          : t(
-              `A negative adds *n't* to *is* or *are*, and after *not* the word *some* becomes *any*: ${right}\n\n**Check.** Verify both negative changes: *isn't*/*aren't* (or *is/are not*) in the verb, and *any* in place of *some*.`,
-              `否定句在 *is* 或 *are* 后加 *n't*，在否定句里 *some* 要变成 *any*：${right}\n\n**检验。** 核对否定句的两处变化：动词里已有 *isn't*/*aren't*（或 *is/are not*），且 *some* 已换成 *any*。`,
-            ),
+      typedGenerator(
+        "sentence-pattern",
+        t("Change the sentence.", "改写这个句子。"),
+        changeBank,
+        (right) =>
+          right.endsWith("?")
+            ? t(
+                `A question puts *${right.split(" ")[0]}* before *there*, and in a question *some* becomes *any*: ${right}\n\n**Check.** Verify all three marks of the question: *${right.split(" ")[0]} there* at the start, *any* instead of *some*, and a question mark (?) at the end.`,
+                `疑问句把 *${right.split(" ")[0]}* 放在 *there* 前面，疑问句里的 *some* 要变成 *any*：${right}\n\n**检验。** 核对问句的三处：句首是 *${right.split(" ")[0]} there*，*some* 已换成 *any*，句末是问号（?）。`,
+              )
+            : t(
+                `A negative adds *n't* to *is* or *are*, and after *not* the word *some* becomes *any*: ${right}\n\n**Check.** Verify both negative changes: *isn't*/*aren't* (or *is/are not*) in the verb, and *any* in place of *some*.`,
+                `否定句在 *is* 或 *are* 后加 *n't*，在否定句里 *some* 要变成 *any*：${right}\n\n**检验。** 核对否定句的两处变化：动词里已有 *isn't*/*aren't*（或 *is/are not*），且 *some* 已换成 *any*。`,
+              ),
+        someAndAnyChangeNot,
       ),
     ),
   ],
@@ -1012,18 +1029,24 @@ const joiningWithAndButOr: TopicDef = {
         "Take away the period of the first sentence, put a comma and the joining word, and start the second part with a small letter, unless it begins with *I* or a name: *My mom is a doctor, and my dad is a teacher.*\n\nTwo questions about a choice become one: *Do you want tea or coffee?*\n\n> **Watch out.** Do not keep the first period or question mark in the middle of the joined sentence (*I like tea. but…* and *Do you want tea? or coffee?* are both wrong).",
         "去掉第一个句子的句号，加上逗号和连接词，第二部分以小写字母开头，除非它以 *I* 或名字开头：*My mom is a doctor, and my dad is a teacher.*\n\n两个关于选择的问句合成一个：*Do you want tea or coffee?*\n\n> **注意。** 不要把第一句的句号或问号留在合并后的句子中间（*I like tea. but…* 和 *Do you want tea? or coffee?* 都不对）。",
       ),
-      typedGenerator("sentence-pattern", t("Join the sentences.", "把句子连起来。"), joinTypedBank, (right, shown) => {
-        const joiner = shown.match(/\((\w+)\)$/u)?.[1] ?? "";
-        return joiner === "or"
-          ? t(
-              `Two questions about a choice become one: keep the first question and add *or* and the other choice: ${right}\n\n**Check.** Verify there is only one question mark at the very end and *or* links the two choices cleanly without repeating the stem.`,
-              `两个关于选择的问句合成一个：保留第一个问句，再加 *or* 和另一个选项：${right}\n\n**检验。** 确认句末只有一个问号，且 *or* 直接连接两个选项，没有重复前半截问句。`,
-            )
-          : t(
-              `Drop the period of the first sentence, add a comma and *${joiner}*, and go on with a small letter unless it is *I* or a name: ${right}\n\n**Check.** Check the joint in the middle: the first period is replaced by a comma and *${joiner}*, the second part starts lowercase (unless *I* or a name), and one period closes the sentence.`,
-              `去掉第一句的句号，加逗号和 *${joiner}*，后半句以小写字母开头，除非是 *I* 或名字：${right}\n\n**检验。** 检查中间的连接处：第一句的句号已换成逗号加 *${joiner}*，后半句首字母改为小写（*I* 或人名除外），全句以一个句号结尾。`,
-            );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Join the sentences.", "把句子连起来。"),
+        joinTypedBank,
+        (right, shown) => {
+          const joiner = shown.match(/\((\w+)\)$/u)?.[1] ?? "";
+          return joiner === "or"
+            ? t(
+                `Two questions about a choice become one: keep the first question and add *or* and the other choice: ${right}\n\n**Check.** Verify there is only one question mark at the very end and *or* links the two choices cleanly without repeating the stem.`,
+                `两个关于选择的问句合成一个：保留第一个问句，再加 *or* 和另一个选项：${right}\n\n**检验。** 确认句末只有一个问号，且 *or* 直接连接两个选项，没有重复前半截问句。`,
+              )
+            : t(
+                `Drop the period of the first sentence, add a comma and *${joiner}*, and go on with a small letter unless it is *I* or a name: ${right}\n\n**Check.** Check the joint in the middle: the first period is replaced by a comma and *${joiner}*, the second part starts lowercase (unless *I* or a name), and one period closes the sentence.`,
+                `去掉第一句的句号，加逗号和 *${joiner}*，后半句以小写字母开头，除非是 *I* 或名字：${right}\n\n**检验。** 检查中间的连接处：第一句的句号已换成逗号加 *${joiner}*，后半句首字母改为小写（*I* 或人名除外），全句以一个句号结尾。`,
+              );
+        },
+        joiningWithAndButOrJoinNot,
+      ),
     ),
   ],
 };

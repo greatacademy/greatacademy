@@ -14,6 +14,7 @@ import {
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { objectPronounsReplaceNot, theArticleTheTypeNot } from "./mistakes.ts";
 
 const library = vocabularyTopic({
   id: "a1-words-library",
@@ -410,14 +411,20 @@ const objectPronouns: TopicDef = {
         "Once we know who or what we are talking about, we can replace the noun after the verb with an object pronoun: *I see Tom every day.* → *I see him every day.* One man or boy: *him*. One woman or girl: *her*. More than one person or thing: *them*. You and others: *us*.\n\n> **Watch out.** Plural things also take *them* after a verb—say *Put them on the desk*, not *Put they on the desk*.",
         "知道说的是谁或什么之后，就可以用宾格代词代替动词后面的名词：*I see Tom every day.* → *I see him every day.* 一个男性：*him*；一个女性：*her*；多个人或物：*them*；包括自己在内的几个人：*us*。\n\n> **注意。** 复数事物在动词后面同样用 *them*——要说 *Put them on the desk*，不要说 *Put they on the desk*。",
       ),
-      typedGenerator("sentence", t("Use a pronoun.", "使用代词。"), replaceBank, (right, shown) => {
-        const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
-        const object = [...namedPeople, ...namedThings].find(([n]) => n === noun)?.[1] ?? "";
-        return t(
-          `*${noun}* is ${objectFor[object]?.en}, and after a verb or a word like *to* that is *${object}*: ${right}\n\n**Check.** Confirm that *${noun}* is completely replaced by *${object}* (not *${object === "him" ? "he" : object === "her" ? "she" : object === "us" ? "we" : "they"}*) and that the rest of the sentence stays unchanged.`,
-          `*${noun}* 指${objectFor[object]?.["zh-CN"]}，在动词或 *to* 这样的词后面用 *${object}*：${right}\n\n**检验。** 确认 *${noun}* 已经完整替换成宾格 *${object}*（而不是主格 *${object === "him" ? "he" : object === "her" ? "she" : object === "us" ? "we" : "they"}*），并且句子的其余部分保持不变。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Use a pronoun.", "使用代词。"),
+        replaceBank,
+        (right, shown) => {
+          const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+          const object = [...namedPeople, ...namedThings].find(([n]) => n === noun)?.[1] ?? "";
+          return t(
+            `*${noun}* is ${objectFor[object]?.en}, and after a verb or a word like *to* that is *${object}*: ${right}\n\n**Check.** Confirm that *${noun}* is completely replaced by *${object}* (not *${object === "him" ? "he" : object === "her" ? "she" : object === "us" ? "we" : "they"}*) and that the rest of the sentence stays unchanged.`,
+            `*${noun}* 指${objectFor[object]?.["zh-CN"]}，在动词或 *to* 这样的词后面用 *${object}*：${right}\n\n**检验。** 确认 *${noun}* 已经完整替换成宾格 *${object}*（而不是主格 *${object === "him" ? "he" : object === "her" ? "she" : object === "us" ? "we" : "they"}*），并且句子的其余部分保持不变。`,
+          );
+        },
+        objectPronounsReplaceNot,
+      ),
     ),
   ],
 };
@@ -601,7 +608,13 @@ const theArticleThe: TopicDef = {
         "When you type *a*, *an* or *the*, decide in two steps: first ask if the listener already knows which one (*There is an apple on the desk. The apple is red.*), and if not, check the first sound of the next word (*an egg*, *a story*).\n\n> **Watch out.** At the start of a sentence, capitalize the article (*The sky is blue*, not *the sky is blue*), and match *an* to a vowel sound (*an old map*).",
         "输入 *a*、*an* 或 *the* 时分两步判断：先看听话人是否已经知道指哪一个（*There is an apple on the desk. The apple is red.*）；如果是首次提到，再看后面词的开头发音（*an egg*、*a story*）。\n\n> **注意。** 句首的冠词要大写（*The sky is blue*，不要写成 *the sky is blue*），*an* 要根据紧跟其后的词的开头元音来选（*an old map*）。",
       ),
-      typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), articleTypedBank, articleWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the word for the gap.", "输入填入空白处的词。"),
+        articleTypedBank,
+        articleWhy,
+        theArticleTheTypeNot,
+      ),
     ),
   ],
 };

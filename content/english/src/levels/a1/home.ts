@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { prepositionsOfPlaceTypeNot, thereIsAndThereAreAskNot, thereIsAndThereAreFixNot, writingAboutARoomWriteNot } from "./mistakes.ts";
 
 const home = vocabularyTopic({
   id: "a1-words-home",
@@ -522,6 +523,7 @@ const thereIsAndThereAre: TopicDef = {
             `英语里地点不能 *have* 东西；说某处有什么，要以 *There* 开头。${reason["zh-CN"]}：${right}\n\n**检验。** 确认 *have* 已去掉，且 *There ${be}* 与 *${thing}* 的单复数一致。`,
           );
         },
+        thereIsAndThereAreFixNot,
       ),
     ),
     point(
@@ -531,14 +533,20 @@ const thereIsAndThereAre: TopicDef = {
         "For a question, put *is* or *are* first: *Is there a lamp in your room? Are there any toys?* In a question, *some* and a number become *any*.\n\n> **Watch out.** Make *all* required changes together: swap *There is/are* to *Is/Are there*, switch *some* or a plural number (*two*, *three*) to *any*, and end with a question mark.",
         "疑问句把 *is* 或 *are* 放到句首：*Is there a lamp in your room? Are there any toys?* 疑问句中，*some* 和数字要换成 *any*。\n\n> **注意。** 几处改动要一起做：把 *There is/are* 倒装成 *Is/Are there*，把复数前的 *some* 或数字（*two*、*three*）换成 *any*，句末加问号。",
       ),
-      typedGenerator("sentence", t("Make the sentence a question.", "把句子改成疑问句。"), thereQuestionBank, (right, shown) => {
-        const be = right.split(" ")[0] ?? "";
-        const changed = / any /u.test(right) && !/ any /u.test(shown);
-        return t(
-          `For a question, put *${be}* before *there*${changed ? ", and *some* or a number becomes *any*" : " and end with a question mark"}: ${right}\n\n**Check.** Verify the question frame: *${be} there* at the front, ${changed ? "*any* before the plural noun, " : ""}and a question mark at the end.`,
-          `疑问句把 *${be}* 放到 *there* 前面${changed ? "，*some* 或数字要换成 *any*" : "，句末用问号"}：${right}\n\n**检验。** 核对问句结构：句首是 *${be} there*，${changed ? "复数名词前已换成 *any*，" : ""}句末是问号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Make the sentence a question.", "把句子改成疑问句。"),
+        thereQuestionBank,
+        (right, shown) => {
+          const be = right.split(" ")[0] ?? "";
+          const changed = / any /u.test(right) && !/ any /u.test(shown);
+          return t(
+            `For a question, put *${be}* before *there*${changed ? ", and *some* or a number becomes *any*" : " and end with a question mark"}: ${right}\n\n**Check.** Verify the question frame: *${be} there* at the front, ${changed ? "*any* before the plural noun, " : ""}and a question mark at the end.`,
+            `疑问句把 *${be}* 放到 *there* 前面${changed ? "，*some* 或数字要换成 *any*" : "，句末用问号"}：${right}\n\n**检验。** 核对问句结构：句首是 *${be} there*，${changed ? "复数名词前已换成 *any*，" : ""}句末是问号。`,
+          );
+        },
+        thereIsAndThereAreAskNot,
+      ),
     ),
   ],
 };
@@ -668,7 +676,13 @@ const prepositionsOfPlace: TopicDef = {
         "Read where the things are and type the word or words: *behind*, *in front of*, *next to*, *between*, *near*, *on* or *under*—for example, *The shop is two minutes from my home. It's **near** my home.*\n\n> **Watch out.** Do not drop small words in multi-word prepositions: write all three words of *in front of* and both words of *next to*.",
         "读一读东西的位置，输入方位词：*behind*、*in front of*、*next to*、*between*、*near*、*on* 或 *under*，例如 *The shop is two minutes from my home. It's **near** my home.*\n\n> **注意。** 多词方位短语不要漏词：*in front of* 三个词要写全，*next to* 两个词要写全。",
       ),
-      typedGenerator("word-form", t("Type the word or words for the gap.", "输入填入空白处的词。"), placeTypedBank, placeWhy),
+      typedGenerator(
+        "word-form",
+        t("Type the word or words for the gap.", "输入填入空白处的词。"),
+        placeTypedBank,
+        placeWhy,
+        prepositionsOfPlaceTypeNot,
+      ),
     ),
   ],
 };
@@ -769,7 +783,13 @@ const writingAboutARoom: TopicDef = {
         "Write a whole sentence for the note: *There is* for one thing or *There are* for more, then the thing, then the place—for example, *some books / under the window* → *There are some books under the window.* Start with a capital letter and end with a period.\n\n> **Watch out.** Keep every word of the note's item and place phrase intact, and put the place phrase at the end of the sentence.",
         "根据笔记写一个完整的句子：一样东西用 *There is*，多样东西用 *There are*，后面先写东西，再写位置，例如 *some books / under the window* → *There are some books under the window.* 句首大写，句末加句号。\n\n> **注意。** 完整保留笔记中的物品和方位短语，并把方位短语放在句末。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), roomTypedBank, roomWhy),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        roomTypedBank,
+        roomWhy,
+        writingAboutARoomWriteNot,
+      ),
     ),
   ],
 };

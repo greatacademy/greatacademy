@@ -14,6 +14,7 @@ import {
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
+import { wasAndWereAskNot, wasAndWereFixNot } from "./mistakes.ts";
 
 const jobs = vocabularyTopic({
   id: "a1-words-jobs",
@@ -513,14 +514,20 @@ const wasAndWere: TopicDef = {
         "Each sentence has the wrong form of *be*: *were* for *was*, *was* for *were*, or a present form (*am, is, are*) where the time is past. For example: *The farmers was busy last week.* → *The farmers were busy last week.*\n\n> **Watch out.** Check both tense and subject—a plural noun like *Tom and Ben* needs *were*, even though *Ben* is right next to the verb.",
         "每个句子里 *be* 的形式都错了：该用 *was* 的用了 *were*，该用 *were* 的用了 *was*，或者时间是过去却用了 *am/is/are*。例如：*The farmers was busy last week.* → *The farmers were busy last week.*\n\n> **注意。** 时态和主语单复数都要查——像 *Tom and Ben* 这样的复数主语要用 *were*，不要只看紧挨着动词的 *Ben*。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), pastFixBank, (right) => {
-        const [who = "", be = ""] = right.split(/ (was|were) /u);
-        const reason = wasReason(who, be);
-        return t(
-          `The time is past, and ${reason.en}: ${right}\n\n**Check.** Verify that the verb is now past tense (*${be}*), agrees with *${who}*, and leaves the rest of the sentence intact.`,
-          `时间是过去，${reason["zh-CN"]}：${right}\n\n**检验。** 确认动词已改成过去式 *${be}*、与主语 *${who}* 一致，且句子其余部分保持不变。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        pastFixBank,
+        (right) => {
+          const [who = "", be = ""] = right.split(/ (was|were) /u);
+          const reason = wasReason(who, be);
+          return t(
+            `The time is past, and ${reason.en}: ${right}\n\n**Check.** Verify that the verb is now past tense (*${be}*), agrees with *${who}*, and leaves the rest of the sentence intact.`,
+            `时间是过去，${reason["zh-CN"]}：${right}\n\n**检验。** 确认动词已改成过去式 *${be}*、与主语 *${who}* 一致，且句子其余部分保持不变。`,
+          );
+        },
+        wasAndWereFixNot,
+      ),
     ),
     point(
       "ask",
@@ -529,13 +536,19 @@ const wasAndWere: TopicDef = {
         "To ask a question, put *was* or *were* before the subject, as with *is* and *are*: *He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*\n\n> **Watch out.** Do not add *did* in front of *was* or *were*—simply move *was* or *were* to the front and end with a question mark.",
         "提问时，把 *was* 或 *were* 放到主语前面，和 *is*、*are* 一样：*He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*\n\n> **注意。** 不要在 *was* 或 *were* 前面加 *did*——直接把 *was* 或 *were* 移到句首，句末加上问号即可。",
       ),
-      typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), pastAskBank, (right) => {
-        const be = right.split(" ")[0] ?? "";
-        return t(
-          `As with *is* and *are*, a question puts *${be}* before the subject and ends with a question mark: ${right}\n\n**Check.** Read the first two parts: *${be}* comes first, the subject follows immediately, and the sentence ends with a question mark.`,
-          `和 *is*、*are* 一样，疑问句把 *${be}* 放到主语前面，句末用问号：${right}\n\n**检验。** 检查句首和句尾：*${be}* 在最前面，紧接着主语，句末是问号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Make a question.", "把句子改成疑问句。"),
+        pastAskBank,
+        (right) => {
+          const be = right.split(" ")[0] ?? "";
+          return t(
+            `As with *is* and *are*, a question puts *${be}* before the subject and ends with a question mark: ${right}\n\n**Check.** Read the first two parts: *${be}* comes first, the subject follows immediately, and the sentence ends with a question mark.`,
+            `和 *is*、*are* 一样，疑问句把 *${be}* 放到主语前面，句末用问号：${right}\n\n**检验。** 检查句首和句尾：*${be}* 在最前面，紧接着主语，句末是问号。`,
+          );
+        },
+        wasAndWereAskNot,
+      ),
     ),
   ],
 };

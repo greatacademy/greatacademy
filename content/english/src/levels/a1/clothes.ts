@@ -5,6 +5,12 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import {
+  howMuchAndHowManyAskNot,
+  presentContinuousSpellNot,
+  presentContinuousWriteNot,
+  writingWhatPeopleAreWearingWriteNot,
+} from "./mistakes.ts";
 
 const clothes = vocabularyTopic({
   id: "a1-words-clothes",
@@ -537,15 +543,21 @@ const presentContinuous: TopicDef = {
         "Most verbs just add *-ing*: *read → reading*. A verb that ends in *e* loses it: *make → making*. A short verb that ends in one vowel and one consonant doubles it: *run → running*, *swim → swimming*, *sit → sitting*.\n\n> **Watch out.** Only double the final consonant when the verb ends in *one* short vowel + *one* consonant (*run* -> *running*, *get* -> *getting*)—not after two vowels (*read* -> *reading*, *eat* -> *eating*) or two consonants (*drink* -> *drinking*).",
         "大多数动词直接加 *-ing*：*read → reading*。以不发音的 *e* 结尾的去 *e* 再加：*make → making*。以一个元音加一个辅音结尾的短动词，双写辅音再加：*run → running*、*swim → swimming*、*sit → sitting*。\n\n> **注意。** 只有以*一个*短元音加*一个*辅音结尾的短词才双写词尾（*run* -> *running*、*get* -> *getting*）——两个元音（*read* -> *reading*、*eat* -> *eating*）或两个辅音（*drink* -> *drinking*）结尾时绝不双写。",
       ),
-      typedGenerator("word-form", t("Type the verb with -ing.", "输入动词的 -ing 形式。"), pcSpellBank, (right, shown) => {
-        const verb = shown.match(/\((.*)\)$/u)?.[1] ?? "";
-        const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-        const rule = ingRule(verb, right);
-        return t(
-          `${rule.en}: ${sentence}\n\n**Check.** Inspect the end of *${verb}*—confirm whether it drops a silent *e*, doubles a single final consonant after one short vowel, or simply adds *-ing*.`,
-          `${rule["zh-CN"]}：${sentence}\n\n**检验。** 看看原形 *${verb}* 的结尾——确认该去不发音的 *e*、双写单辅音，还是直接加 *-ing*。`,
-        );
-      }),
+      typedGenerator(
+        "word-form",
+        t("Type the verb with -ing.", "输入动词的 -ing 形式。"),
+        pcSpellBank,
+        (right, shown) => {
+          const verb = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+          const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
+          const rule = ingRule(verb, right);
+          return t(
+            `${rule.en}: ${sentence}\n\n**Check.** Inspect the end of *${verb}*—confirm whether it drops a silent *e*, doubles a single final consonant after one short vowel, or simply adds *-ing*.`,
+            `${rule["zh-CN"]}：${sentence}\n\n**检验。** 看看原形 *${verb}* 的结尾——确认该去不发音的 *e*、双写单辅音，还是直接加 *-ing*。`,
+          );
+        },
+        presentContinuousSpellNot,
+      ),
     ),
     point(
       "write",
@@ -554,16 +566,22 @@ const presentContinuous: TopicDef = {
         "Write a sentence from the note with *am*, *is* or *are* and the *-ing* form: *We / swim in the sea / now* → *We are swimming in the sea.* Short forms like *She's* are fine.\n\n> **Watch out.** Never drop *am/is/are* before the *-ing* verb, and check the spelling of tricky *-ing* forms like *writing*, *making*, *running*, and *getting*.",
         "根据笔记用 *am*、*is* 或 *are* 加 *-ing* 形式写一个句子：*We / swim in the sea / now* → *We are swimming in the sea.* 也可以用 *She's* 这样的缩写。\n\n> **注意。** 切勿漏掉 *-ing* 动词前的 *am/is/are*，同时核对 *writing*、*making*、*running*、*getting* 等易错拼写。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcWriteBank, (right, shown) => {
-        const { subject, be } = beOf(right);
-        const verb = shown.split(" / ")[1]?.split(" ")[0] ?? "";
-        const ing = right.split(` ${be} `)[1]?.split(" ")[0] ?? "";
-        const rule = ingRule(verb, ing);
-        return t(
-          `The note says *now*, so use *${be}*, the form for *${subject}*, and the *-ing* form; ${rule.en}: ${right}\n\n**Check.** Verify all three checkpoints: *${be}* matches *${subject}*, *${ing}* is spelled right, and the sentence begins with a capital and ends with a period.`,
-          `笔记写着 *now*，所以用跟 *${subject}* 搭配的 *${be}* 加 *-ing* 形式；${rule["zh-CN"]}：${right}\n\n**检验。** 核对三处：*${be}* 与主语 *${subject}* 搭配、*${ing}* 拼写准确，且句首大写、句末有句号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        pcWriteBank,
+        (right, shown) => {
+          const { subject, be } = beOf(right);
+          const verb = shown.split(" / ")[1]?.split(" ")[0] ?? "";
+          const ing = right.split(` ${be} `)[1]?.split(" ")[0] ?? "";
+          const rule = ingRule(verb, ing);
+          return t(
+            `The note says *now*, so use *${be}*, the form for *${subject}*, and the *-ing* form; ${rule.en}: ${right}\n\n**Check.** Verify all three checkpoints: *${be}* matches *${subject}*, *${ing}* is spelled right, and the sentence begins with a capital and ends with a period.`,
+            `笔记写着 *now*，所以用跟 *${subject}* 搭配的 *${be}* 加 *-ing* 形式；${rule["zh-CN"]}：${right}\n\n**检验。** 核对三处：*${be}* 与主语 *${subject}* 搭配、*${ing}* 拼写准确，且句首大写、句末有句号。`,
+          );
+        },
+        presentContinuousWriteNot,
+      ),
     ),
   ],
 };
@@ -716,14 +734,20 @@ const howMuchAndHowMany: TopicDef = {
         "Write the question that the answer replies to. *There are three apples.* → *How many apples are there?* *It's five dollars.* → *How much is it?*\n\n> **Watch out.** Match the verb *is/are* to the noun: *How many [plural] are there?*, *How much [uncountable] is there?*, and for prices *How much is [one item]?* vs. *How much are [plural items]?*",
         "写出与回答对应的问句。*There are three apples.* → *How many apples are there?* *It's five dollars.* → *How much is it?*\n\n> **注意。** 核对动词 *is/are* 与名词的搭配：*How many [复数] are there?*、*How much [不可数] is there?*；问价钱时单数用 *How much is…?*，复数用 *How much are…?*（不要对复数衣物误用 *is*）。",
       ),
-      typedGenerator("sentence", t("Write the question.", "写出问句。"), howTypedBank, (right) => {
-        const reason = howReason(right.replace(/^How (much|many)/u, "How ___"));
-        const be = right.match(/ (is|are) /u)?.[1] ?? "";
-        return t(
-          `${reason.en}, and *${be}* agrees with what follows: ${right}\n\n**Check.** Verify three things: *How many* vs. *How much*, *is* vs. *are*, and the closing question mark.`,
-          `${reason["zh-CN"]}，*${be}* 要与后面的词一致：${right}\n\n**检验。** 核对三处：*How many* 还是 *How much*、*is* 还是 *are*，以及句末问号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Write the question.", "写出问句。"),
+        howTypedBank,
+        (right) => {
+          const reason = howReason(right.replace(/^How (much|many)/u, "How ___"));
+          const be = right.match(/ (is|are) /u)?.[1] ?? "";
+          return t(
+            `${reason.en}, and *${be}* agrees with what follows: ${right}\n\n**Check.** Verify three things: *How many* vs. *How much*, *is* vs. *are*, and the closing question mark.`,
+            `${reason["zh-CN"]}，*${be}* 要与后面的词一致：${right}\n\n**检验。** 核对三处：*How many* 还是 *How much*、*is* 还是 *are*，以及句末问号。`,
+          );
+        },
+        howMuchAndHowManyAskNot,
+      ),
     ),
   ],
 };
@@ -844,13 +868,19 @@ const whatPeopleAreWearing: TopicDef = {
         "Write a whole sentence for the note: the person, then *am*, *is* or *are* to match, then *wearing* and the clothes—for example, *The girls / red socks* → *The girls are wearing red socks.* Start with a capital letter and end with a period.\n\n> **Watch out.** Do not drop *am/is/are* before *wearing*, and remember to keep the article (*a*/*an*) from the note when there is one.",
         "根据笔记写一个完整的句子：先写人，再写与之搭配的 *am*、*is* 或 *are*，然后是 *wearing* 和衣服，例如 *The girls / red socks* → *The girls are wearing red socks.* 句首大写，句末加句号。\n\n> **注意。** 不要漏掉 *wearing* 前的 *am/is/are*，笔记里若有冠词（*a*/*an*）也要完整保留。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), wearTypedBank, (right) => {
-        const { subject, be } = beOf(right);
-        return t(
-          `Write the person, *${be}* to match *${subject}*, then *wearing* and the clothes, with a capital and a period: ${right}\n\n**Check.** Check all four items: capital first letter, *${be}* matching *${subject}*, *wearing* spelled with *-ing*, and a closing period.`,
-          `先写人，再写与 *${subject}* 搭配的 *${be}*，然后是 *wearing* 和衣服，句首大写，句末加句号：${right}\n\n**检验。** 核对四项：句首大写、*${be}* 与 *${subject}* 搭配、*wearing* 带 *-ing*，以及句末句号。`,
-        );
-      }),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        wearTypedBank,
+        (right) => {
+          const { subject, be } = beOf(right);
+          return t(
+            `Write the person, *${be}* to match *${subject}*, then *wearing* and the clothes, with a capital and a period: ${right}\n\n**Check.** Check all four items: capital first letter, *${be}* matching *${subject}*, *wearing* spelled with *-ing*, and a closing period.`,
+            `先写人，再写与 *${subject}* 搭配的 *${be}*，然后是 *wearing* 和衣服，句首大写，句末加句号：${right}\n\n**检验。** 核对四项：句首大写、*${be}* 与 *${subject}* 搭配、*wearing* 带 *-ing*，以及句末句号。`,
+          );
+        },
+        writingWhatPeopleAreWearingWriteNot,
+      ),
     ),
   ],
 };

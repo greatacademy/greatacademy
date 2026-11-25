@@ -5,6 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
+import { likeAndLoveWithIngFixNot, likeAndLoveWithIngSpellNot, writingAboutLikesWriteNot } from "./mistakes.ts";
 
 const sportsAndMusic = vocabularyTopic({
   id: "a1-words-sports-and-music",
@@ -673,15 +674,21 @@ const likeAndLove: TopicDef = {
         "Add *-ing*: *read → reading*. Drop a last *e*: *dance → dancing*, *ride → riding*. Double one last consonant after one short vowel: *swim → swimming*, *run → running*.\n\n> **Watch out.** Do not double a consonant after two vowels (*read* -> *reading*, *paint* -> *painting*, *cook* -> *cooking*) or drop *y* before *-ing* (*play* -> *playing*, *fly* -> *flying*).",
         "直接加 *-ing*：*read → reading*。以不发音的 *e* 结尾的去 *e*：*dance → dancing*、*ride → riding*。以一个短元音加一个辅音结尾的双写辅音：*swim → swimming*、*run → running*。\n\n> **注意。** 两个元音字母后面不要双写（*read* -> *reading*、*paint* -> *painting*、*cook* -> *cooking*），以 *y* 结尾的词也不要去 *y*（*play* -> *playing*、*fly* -> *flying*）。",
       ),
-      typedGenerator("word-form", t("Type the verb with -ing.", "输入动词的 -ing 形式。"), likeSpellBank, (right, shown) => {
-        const base = shown.match(/\((.*)\)$/u)?.[1] ?? "";
-        const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-        const rule = ingRule(base, right);
-        return t(
-          `${rule.en}: ${sentence}\n\n**Check.** Check the ending of *${base}*—verify whether it drops silent *e*, doubles one final consonant after one short vowel, or just adds *-ing*.`,
-          `${rule["zh-CN"]}：${sentence}\n\n**检验。** 核对原形 *${base}* 的词尾——确认该去不发音的 *e*、双写单辅音，还是直接加 *-ing*。`,
-        );
-      }),
+      typedGenerator(
+        "word-form",
+        t("Type the verb with -ing.", "输入动词的 -ing 形式。"),
+        likeSpellBank,
+        (right, shown) => {
+          const base = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+          const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
+          const rule = ingRule(base, right);
+          return t(
+            `${rule.en}: ${sentence}\n\n**Check.** Check the ending of *${base}*—verify whether it drops silent *e*, doubles one final consonant after one short vowel, or just adds *-ing*.`,
+            `${rule["zh-CN"]}：${sentence}\n\n**检验。** 核对原形 *${base}* 的词尾——确认该去不发音的 *e*、双写单辅音，还是直接加 *-ing*。`,
+          );
+        },
+        likeAndLoveWithIngSpellNot,
+      ),
     ),
     point(
       "fix",
@@ -690,11 +697,16 @@ const likeAndLove: TopicDef = {
         "Each sentence puts two verbs side by side, as Chinese does: *We enjoy play chess.* → *We enjoy playing chess.* Give the second one *-ing*. After *like* and *love* you may also write *to* and the verb (*I like to swim*), but after *enjoy* only *-ing* is right.\n\n> **Watch out.** Never write *enjoy to [verb]*—*enjoy* always takes *-ing*—and never write *to* + *-ing* together.",
         "每个句子都像中文一样把两个动词直接连在一起：*We enjoy play chess.* → *We enjoy playing chess.* 把第二个动词改成 *-ing* 形式。在 *like* 和 *love* 后面也可以用 *to* 加动词（*I like to swim*），但 *enjoy* 后面只能用 *-ing*。\n\n> **注意。** 绝不能写 *enjoy to [动词]*（*enjoy* 后面只能用 *-ing*），也绝不能把 *to* 和 *-ing* 混在一起用。",
       ),
-      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), likeFixBank, (right, shown) =>
-        t(
-          `Two verbs cannot stand side by side: after *${likeVerbOf(shown)}*, the second verb takes *-ing*: ${shown} → ${right}\n\n**Check.** Confirm that *${likeVerbOf(shown)}* kept its right subject agreement while the activity verb directly after it now carries *-ing*.`,
-          `两个动词不能直接连在一起：*${likeVerbOf(shown)}* 后面的第二个动词要用 *-ing* 形式：${shown} → ${right}\n\n**检验。** 确认 *${likeVerbOf(shown)}* 与主语保持一致，紧随其后的活动动词已改为正确的 *-ing* 形式。`,
-        ),
+      typedGenerator(
+        "sentence-pattern",
+        t("Fix the sentence.", "改正这个句子。"),
+        likeFixBank,
+        (right, shown) =>
+          t(
+            `Two verbs cannot stand side by side: after *${likeVerbOf(shown)}*, the second verb takes *-ing*: ${shown} → ${right}\n\n**Check.** Confirm that *${likeVerbOf(shown)}* kept its right subject agreement while the activity verb directly after it now carries *-ing*.`,
+            `两个动词不能直接连在一起：*${likeVerbOf(shown)}* 后面的第二个动词要用 *-ing* 形式：${shown} → ${right}\n\n**检验。** 确认 *${likeVerbOf(shown)}* 与主语保持一致，紧随其后的活动动词已改为正确的 *-ing* 形式。`,
+          ),
+        likeAndLoveWithIngFixNot,
       ),
     ),
   ],
@@ -810,8 +822,12 @@ const writingAboutLikes: TopicDef = {
         "Write a whole sentence for the note: the person, *like*, *love* or *enjoy* with *-s* after one person, and each activity with *-ing*, joined by *and*—for example, *My friends / love / swim + sing songs* → *My friends love swimming and singing songs.* Start with a capital letter and end with a period.\n\n> **Watch out.** Check the subject first (*I* and *My friends* take *no -s*; *Ben*, *Mia*, *Grandpa*, and *My brother* take *-s*), then check every *-ing* spelling.",
         "根据笔记写一个完整的句子：先写人，再写 *like*、*love* 或 *enjoy*（单数第三人称主语后加 *-s*），每项活动用 *-ing* 形式，用 *and* 连接，例如 *My friends / love / swim + sing songs* → *My friends love swimming and singing songs.* 句首大写，句末加句号。\n\n> **注意。** 先核对主语（*I*、*My friends* 不加 *-s*；*Ben*、*Mia*、*Grandpa*、*My brother* 加 *-s*），再逐一核对 *-ing* 拼写。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), likesTypedBank, (right) =>
-        likesWhy(right),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the note.", "根据笔记写一个句子。"),
+        likesTypedBank,
+        (right) => likesWhy(right),
+        writingAboutLikesWriteNot,
       ),
     ),
   ],

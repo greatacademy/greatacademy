@@ -5,6 +5,7 @@ import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { everyPair, vocabularyTopic, word } from "../words.ts";
+import { presentSimpleNoBeNot } from "./mistakes.ts";
 
 const numbers = vocabularyTopic({
   id: "a1-words-numbers-to-hundred",
@@ -618,14 +619,20 @@ const presentSimple: TopicDef = {
         "A sentence with a verb like *live*, *speak* or *like* needs no *am*, *is* or *are*. Not *I am live in Beijing.* but *I live in Beijing.*\n\n> **Watch out.** Remove *am* or *are* and leave the action verb completely plain—do not add *-s* after *I*, *you*, *we*, *they*, or plural subjects.",
         "句子里已经有 *live*、*speak*、*like* 这样的动词时，就不再需要 *am*、*is*、*are*。说中文的人学了 *I am* 以后，常写出 *I am live in Beijing.*，正确的是 *I live in Beijing.*\n\n> **注意。** 删掉多余的 *am* 或 *are* 后，实义动词保持原形——在 *I*、*you*、*we*、*they* 或复数主语后不要多加 *-s*。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), presentTypedBank, (right, shown) => {
-        const be = shown.includes(" am ") ? "am" : "are";
-        const verb = shown.split(` ${be} `)[1]?.split(" ")[0] ?? "";
-        return t(
-          `The sentence already has the verb *${verb}*, so *${be}* must go: ${shown} → ${right}\n\n**Check.** Read the fixed sentence—there is now just one verb (*${verb}*) directly after the subject, with no *${be}* in front of it.`,
-          `句子里已经有动词 *${verb}*，所以要去掉 *${be}*：${shown} → ${right}\n\n**检验。** 读一遍改后的句子——主语后面现在只有一个实义动词 *${verb}*，前面没有多余的 *${be}*。`,
-        );
-      }),
+      typedGenerator(
+        "sentence",
+        t("Fix the sentence.", "改正这个句子。"),
+        presentTypedBank,
+        (right, shown) => {
+          const be = shown.includes(" am ") ? "am" : "are";
+          const verb = shown.split(` ${be} `)[1]?.split(" ")[0] ?? "";
+          return t(
+            `The sentence already has the verb *${verb}*, so *${be}* must go: ${shown} → ${right}\n\n**Check.** Read the fixed sentence—there is now just one verb (*${verb}*) directly after the subject, with no *${be}* in front of it.`,
+            `句子里已经有动词 *${verb}*，所以要去掉 *${be}*：${shown} → ${right}\n\n**检验。** 读一遍改后的句子——主语后面现在只有一个实义动词 *${verb}*，前面没有多余的 *${be}*。`,
+          );
+        },
+        presentSimpleNoBeNot,
+      ),
     ),
   ],
 };
