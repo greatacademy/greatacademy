@@ -1,6 +1,7 @@
 // Grade 9: the batches of words of injuries, of illness, of sport, of cooking, of taste, of weather, of pets and
 // of clothes.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const injuries = batch(
   ["Words of Injuries", "受伤的词"],
   ["hurts to the body and what doctors use to treat them", "身体的伤及医生的治疗用品"],
   `
-  bruise|a dark mark on the skin from a blow; to cause one|瘀伤；碰伤|After the fall, a dark ___ appeared on his arm.|Apples ___ easily.|The ___ turned purple.|scar,swollen|bruised,bruises
-  scar|a mark left on the skin after a wound heals|伤疤|The cut left a ___.|He has an old ___ on his chin from a fall years ago.|The war left a deep ___ on the nation.|bruise,splinter|scarred,scars
-  splinter|a small sharp piece of wood stuck in the skin|木刺|I got a ___ in my finger.|Pull out the ___ with tweezers.|A ___ of glass cut her.|scar,splint|splinters
-  fracture|a crack or break in a bone; to break|骨折；断裂|She had a ___ in her wrist.|The fall may ___ his leg.|The X-ray showed a ___.|concussion,sling|fractured
-  concussion|a brain injury from a blow to the head|脑震荡|He hit his head and got a ___ in the game.|Helmets help prevent a ___.|A ___ can cause headaches.|fracture,swollen|concussions
-  swollen|larger than normal because of injury or illness|肿胀的|Her ankle was ___.|The river was ___ with rain.|His eyes were ___ from crying.|bruise,concussion|swelling
-  bandage|a strip of cloth for covering a wound; to cover one|绷带；用绷带包扎|Put a ___ on the cut.|The nurse began to ___ his arm.|Change the ___ daily.|splint,sling|bandaged,bandages
-  splint|a strip of rigid material used to hold a broken bone still|夹板|The doctor put a ___ on her broken finger to keep it straight.|Use a stick as a ___.|A stiff ___ held his broken finger still for weeks.|bandage,crutch|splints
-  sling|a strap that supports an injured arm; to throw|吊带；抛掷|Her arm hung in a ___ around her neck.|Don't ___ your bag on the bed.|He wore his arm in a ___ after the fall.|crutch,splint|slung
-  crutch|a stick that helps an injured person walk|拐杖|He walked with a ___.|With a broken leg, she must lean on a ___ for a month.|Don't use TV as a ___.|sling,bandage|crutches
+  bruise|a dark mark on the skin from a blow; to cause one|瘀伤；碰伤|After he bumped into the table, a dark purple ___ spread under the unbroken skin of his thigh.|Over the week after the ball hit her, the ___ on her shin faded from purple to yellow-green.|Ice on the spot where the ball struck him kept the ___ under his skin from turning dark blue.|scar,fracture|bruised,bruises
+  scar|a mark left on the skin after a wound heals|伤疤|Years after the cut healed, a thin white ___ still ran across his chin.|The burn healed, but it left a shiny ___ on the back of her hand that never went away.|The surgeon stitched the cut neatly so that, once it healed, it would leave only a faint ___.|bruise,splinter|scarred,scars
+  splinter|a small sharp piece of wood stuck in the skin|木刺|Sliding his hand along the rough wooden fence, he got a ___ stuck under his skin.|Mom used tweezers to pull the tiny ___ of wood out of my thumb.|Walking barefoot on the old deck, she got a sharp ___ in her heel, and it had to be dug out with a needle.|scar,splint|splinters
+  fracture|a crack or break in a bone; to break|骨折；断裂|The X-ray showed a thin ___ running across the bone of her wrist.|He landed hard, and the doctor found a ___ in one of the small bones of his foot, so it went into a cast.|A ___ of the leg bone takes about six weeks to knit back together.|concussion,bruise|fractured
+  concussion|a brain injury from a blow to the head|脑震荡|He was confused and sleepy after the blow to his head, and the doctor said the injury to his brain was a ___.|Riders wear helmets because a fall onto the road can shake the brain inside the skull and cause a ___.|The knock to her head caused a brain injury called a ___, so she had to rest and stay off the field for two weeks.|fracture,migraine|concussions
+  swollen|larger than normal because of injury or illness|肿胀的|Her twisted ankle was so ___ that it had puffed up to twice its size, and her shoe would not go on.|A bee stung his lip, and within minutes it was red, puffy and ___.|After the punch, his eye was ___ shut, puffed up so much that he could not open it.|dizzy,hollow|swelling
+  bandage|a strip of cloth for covering a wound; to cover one|绷带；用绷带包扎|The nurse wrapped a clean white ___ of soft cloth around the cut on his arm.|Change the ___ on the scraped knee every day so that the wound stays covered and clean.|She wound a soft, stretchy ___ round and round the cut on her wrist to keep the dirt out.|splint,sling|bandaged,bandages
+  splint|a strip of rigid material used to hold a broken bone still|夹板|The doctor taped a stiff ___ along her broken finger to keep it straight.|On the hike, they tied a straight stick along his broken leg as a ___ to hold the bone still.|A rigid ___ of plastic held his broken thumb still for weeks while the bone healed.|bandage,crutch|splints
+  sling|a strap that supports an injured arm; to throw|吊带；抛掷|With her broken arm resting in a ___ tied around her neck, she could not raise her hand in class.|The nurse folded a large triangle of cloth into a ___ that held his injured arm up against his chest.|He wore his arm in a ___ hung from his shoulder so that it would not swing while the bone healed.|crutch,splint|slung
+  crutch|a stick that helps an injured person walk|拐杖|With his leg in a cast, he hopped down the hall leaning on a ___ under one arm.|She could not put any weight on her sprained ankle, so she walked with a ___ for a month.|The metal ___ had a padded top that fit under his armpit and a rubber foot that gripped the floor as he walked.|sling,splint|crutches
   `,
+  "context-clues",
+  {
+    intro: t(
+      "At the clinic, Lena got a cast for the **fracture** in her ankle, a **crutch** to lean on and a **bandage** over the cut on her knee. These ten words help you name hurts to the body and the things doctors use to treat them.",
+      "在诊所里，莉娜脚踝的骨折（**fracture**）打上了石膏，拿到一根拐杖（**crutch**）撑着走，膝盖上的伤口也缠上了绷带（**bandage**）。这十个词帮你说出身体受的伤，以及医生用来治疗的东西。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **bruise** is a dark mark under the skin that fades in days; a **scar** is the lasting mark a healed cut leaves; a **fracture** is a crack in the bone itself.",
+        "**bruise** 是皮肤下几天就会消退的深色瘀斑；**scar** 是伤口愈合后长期留下的疤；**fracture** 是骨头本身的裂缝。",
+      ),
+      use: t(
+        "**Splint** and **splinter** look alike: a splint is a stiff strip that holds a broken bone still, while a splinter is a sliver of wood stuck in the skin.",
+        "**splint** 和 **splinter** 长得像：splint 是固定断骨的硬夹板，splinter 是扎进皮肤的小木刺。",
+      ),
+      spelling: t(
+        "Watch the **ui** and the final **e** in **bruise**, the double **l** in **swollen**, the **-ture** of **fracture** and the double **s** in **concussion**.",
+        "注意 **bruise** 中的 **ui** 和结尾的 **e**、**swollen** 的双写 **l**、**fracture** 的 **-ture**，以及 **concussion** 的双写 **s**。",
+      ),
+    },
+    notes: `
+      bruise|a dark purple mark spreading under unbroken skin after a bump|a mark on the shin fading from purple to yellow-green|ice on the spot to keep the mark under the skin from turning dark blue|bruise is a dark mark under unbroken skin that fades; scar is a lasting mark where the skin was cut|bruise 是皮肤完好、会消退的深色瘀斑；scar 是皮肤破过后留下的长久痕迹|scar is the pale mark a cut leaves once it heals, not a dark patch of color under skin that was never broken|scar 是伤口愈合后留下的浅色疤痕，不是皮肤没破、皮下出现的深色斑块|fracture is a crack in a bone, not a colored patch under the skin that fades|fracture 是骨头上的裂缝，不是皮下会褪色的色斑|bruise|the ui vowel team and the silent e at the end|元音组合 ui，以及结尾不发音的 e
+      scar|a thin white mark still on the chin years after a cut healed|a shiny mark that never went away after a burn healed|the faint mark a neatly stitched cut leaves once it heals|scar is a lasting mark left after a wound heals; bruise is a dark patch that fades within weeks|scar 是伤口愈合后长久留下的痕迹；bruise 是几周内会消退的深色斑块|bruise is a dark patch from a blow that fades in a week or two, not the lasting mark a healed wound leaves|bruise 是撞击造成、一两周就消退的深色斑块，不是伤口愈合后长期留下的痕迹|splinter is a sharp sliver of wood stuck in the skin, not a mark left after a wound heals|splinter 是扎进皮肤的尖木刺，不是伤口愈合后留下的痕迹|scar|the c, not k, after s, and the ar sound spelled ar|s 后面是 c 不是 k，ar 读 /ɑː/
+      splinter|a sliver from a rough wooden fence stuck under the skin|a tiny piece of wood pulled out of a thumb with tweezers|a sharp sliver in a bare heel that had to be dug out|splinter is a sliver of wood in the skin; splint is a stiff strip that holds a bone still|splinter 是扎进皮肤的木刺；splint 是固定骨头的硬夹板|scar is the mark a healed wound leaves, not a sliver that can be pulled out of the skin|scar 是伤口愈合后留下的痕迹，不是能从皮肤里拔出来的刺|splint is a long stiff strip tied along a broken bone, not a tiny sliver stuck in the skin|splint 是绑在断骨旁的长条硬板，不是扎进皮肤的小刺|splin · ter|the spl blend and the -er ending that splint does not have|开头的 spl 组合，以及 splint 没有的 -er 结尾
+      fracture|a thin crack across the wrist bone on an X-ray|a break in a small bone of the foot that went into a cast|a broken leg bone that takes six weeks to knit together|fracture is a break in a bone; concussion is an injury to the brain|fracture 是骨头断裂；concussion 是大脑受伤|concussion is an injury to the brain from a blow to the head, not a crack in a bone|concussion 是头部受撞击造成的大脑损伤，不是骨头上的裂缝|bruise is a dark mark in the skin and flesh, not a break in the bone itself|bruise 是皮肉上的深色瘀伤，不是骨头本身断裂|frac · ture|the -ture ending, said like the end of picture|结尾 -ture，读音同 picture 的结尾
+      concussion|confusion and sleepiness from an injury to the brain after a blow to the head|a fall that shakes the brain inside the skull, which helmets guard against|a brain injury from a knock to the head that means two weeks of rest|concussion is a brain injury from a blow; migraine is a bad headache that comes on by itself|concussion 是撞击造成的脑损伤；migraine 是自己发作的剧烈头痛|fracture is a crack in a bone, not an injury to the brain|fracture 是骨头上的裂缝，不是大脑的损伤|migraine is a severe headache that comes on by itself, often with sickness, not an injury caused by a blow|migraine 是自己发作、常伴恶心的剧烈头痛，不是撞击造成的损伤|con · cus · sion|the double s before -ion, said /sh/|-ion 前双写 s，读 /ʃ/
+      swollen|an ankle puffed up to twice its size so a shoe will not go on|a lip that turns red and puffy minutes after a bee sting|an eye puffed up so much after a punch that it cannot open|swollen means puffed up bigger than normal; hollow means empty inside|swollen 是比平常肿大；hollow 是里面空的|dizzy describes a person who feels the room spinning, not a part of the body that has puffed up|dizzy 形容人感到天旋地转，不是身体部位肿起来|hollow means empty inside, the opposite of a part of the body puffed up and full|hollow 意思是里面空的，正好和身体部位鼓胀肿起相反|swol · len|the double l and the -en ending, as in swell, swollen|双写 l 和 -en 结尾（swell → swollen）
+      bandage|a strip of soft white cloth wrapped around a cut|a covering changed every day to keep a scraped knee clean|a soft, stretchy strip wound round a cut to keep the dirt out|bandage is soft cloth that covers a wound; splint is a stiff strip that holds a bone still|bandage 是包住伤口的软布；splint 是固定骨头的硬板|splint is a stiff strip tied along a broken bone to keep it still, not a soft strip of cloth that covers a wound|splint 是绑在断骨旁使其固定的硬板，不是包住伤口的软布条|sling is a strap that hangs from the neck to hold up an injured arm, not cloth wrapped around a wound|sling 是挂在脖子上托住伤臂的吊带，不是缠在伤口上的布|ban · dage|the -age ending, said like the end of cabbage|结尾 -age，读音同 cabbage 的结尾
+      splint|a stiff strip taped along a broken finger to keep it straight|a straight stick tied along a broken leg to hold the bone still|a rigid piece of plastic holding a broken thumb still while it heals|splint holds a broken bone still; bandage covers a wound|splint 固定断骨；bandage 包住伤口|bandage is a soft strip of cloth that covers a wound, not a stiff piece that holds a broken bone still|bandage 是包伤口的软布条，不是固定断骨的硬板|crutch is a stick you lean on under your arm to walk, not something fixed along a broken bone|crutch 是夹在腋下、走路时撑着的拐杖，不是固定在断骨旁的东西|splint|the spl blend and the -nt ending, with no -er|开头 spl 组合，结尾 -nt，没有 -er
+      sling|a strap tied around the neck that holds a broken arm|a triangle of cloth folded to hold an injured arm against the chest|a strap hung from the shoulder so that a healing arm does not swing|sling holds up an injured arm; crutch helps an injured leg walk|sling 托住受伤的手臂；crutch 帮受伤的腿走路|crutch is a stick that helps you walk on an injured leg, not a strap that holds up an arm|crutch 是帮伤腿走路的拐杖，不是托住手臂的吊带|splint is a stiff strip fixed along the bone itself, not a cloth strap that hangs from the neck|splint 是固定在骨头旁的硬板，不是挂在脖子上的布带|sling|the -ing here is part of the word itself, not a verb ending|这里的 -ing 是单词本身的一部分，不是动词词尾
+      crutch|a stick under one arm to lean on while a leg is in a cast|a stick to walk with for a month on a sprained ankle|a metal stick with a padded top under the armpit and a rubber foot|crutch is a stick for walking; sling is a strap for an arm|crutch 是走路用的拐杖；sling 是托手臂的吊带|sling holds up an injured arm from the neck; you cannot lean on it to walk|sling 是从脖子上托住伤臂的吊带，走路时不能靠它支撑|splint is a stiff strip fixed along a broken bone, not a long stick you lean on as you walk|splint 是固定在断骨旁的硬板，不是走路时撑着的长拐杖|crutch|the tch ending, where the t is not heard on its own|结尾 tch，其中 t 不单独发音
+    `,
+  },
 );
 
 const illness = batch(
@@ -27,17 +61,50 @@ const illness = batch(
   ["Words of Illness", "生病的词"],
   ["the signs of being unwell", "身体不适的症状"],
   `
-  fever|an abnormally high body temperature|发烧|She has a high ___.|The ___ broke in the night.|A ___ is a sign of infection.|cough,migraine|feverish,fevers
-  cough|to push air out of the lungs with a sudden noise|咳嗽|Cover your mouth when you ___.|His dry ___ kept everyone awake.|The smoke made me ___.|sneeze,ache|coughed,coughing
-  sneeze|to blow air out of the nose suddenly|打喷嚏|Dust tickles my nose and makes me ___.|She gave a loud ___.|Cats make him ___ again and again: achoo!|cough,itch|sneezed,sneezing
-  itch|an uncomfortable feeling that makes one want to scratch|痒|Mosquito bites ___.|I have an ___ on my back.|Don't scratch the ___.|ache,sneeze|itchy,itched
-  ache|a continuous dull pain; to feel it|疼痛；疼|My legs ___ after the run.|She has a tooth ___.|His heart began to ___ for home.|itch,dizzy|ached,aching
-  migraine|a severe headache, often with sickness|偏头痛|She gets a ___ from bright light.|A pounding ___ kept him in a dark room all day.|Stress may cause a ___.|fever,nausea|migraines
-  nausea|a feeling of sickness with an urge to vomit|恶心|Boats give me ___.|The drug may cause ___.|A wave of ___ hit her.|migraine,dizzy|nauseous
-  dizzy|having a feeling of spinning and losing balance|头晕的|I feel ___.|The ride made me ___.|She got ___ at the top.|nausea,ache|dizziness
-  allergy|a bad reaction of the body to a substance|过敏|He has a nut ___.|My ___ to cats is bad.|An ___ can be dangerous.|fever,stitches|allergic,allergies
-  stitches|loops of thread used to close a wound|缝针|He needed ten ___.|The nurse took out the ___.|The ___ will heal in a week.|fever,allergy|
+  fever|an abnormally high body temperature|发烧|The thermometer read 39 degrees, so the doctor said her ___ was too high for her to go to school.|His forehead felt burning hot, and the ___ did not break until he had sweated through the night.|Shivering under three blankets though his skin was hot, he took medicine to bring his ___ down.|migraine,allergy|feverish,fevers
+  cough|to push air out of the lungs with a sudden noise|咳嗽|The smoke filled his lungs and made him ___ again and again with a dry, hacking sound from his chest.|A crumb went down the wrong way, and she began to ___ hard to clear it out of her throat.|All night his chest hurt as he had to ___ up thick mucus from his lungs.|sneeze,sigh|coughed,coughing
+  sneeze|to blow air out of the nose suddenly|打喷嚏|Pepper got up her nose and made her ___ loudly: achoo!|Pollen tickles the inside of his nose and makes him ___ again and again every spring.|When the dust tickled her nose, she felt she was about to ___ and grabbed a tissue.|cough,sigh|sneezed,sneezing
+  itch|an uncomfortable feeling that makes one want to scratch|痒|She scratched and scratched, but the tickling ___ from the mosquito bite would not go away.|The ___ of the healing scab drove him mad, but he knew scratching would open the cut again.|The cream calms the ___ of a rash so that you stop wanting to scratch it.|sting,ache|itchy,itched
+  ache|a continuous dull pain; to feel it|疼痛；疼|After the long hike, she felt a dull ___ in her legs that lasted all evening.|The tooth did not hurt sharply, but a steady ___ in his jaw kept him awake.|Lifting boxes all day left a dull ___ in her lower back.|itch,migraine|ached,aching
+  migraine|a severe headache, often with sickness|偏头痛|A pounding ___ on one side of his head kept him lying in a dark room all day.|Bright, flashing lights can bring on her ___, a severe headache that lasts for hours.|When his ___ starts, the throbbing pain in his head is so bad that he cannot read or bear any noise.|fever,nausea|migraines
+  nausea|a feeling of sickness with an urge to vomit|恶心|On the rocking boat, a wave of ___ rose in her stomach, and she leaned over the side, sure she would be sick.|The smell of the rotten fish filled him with ___, and he had to rush to the bathroom to throw up.|The medicine can cause ___, so take it with food to keep from feeling sick to your stomach.|migraine,fever|nauseous
+  dizzy|having a feeling of spinning and losing balance|头晕的|After spinning around ten times, the boy felt so ___ that the room seemed to whirl and he fell over.|Standing up too fast made her ___, and she had to grab a chair until the world stopped spinning.|Looking down from the top of the tower, he felt ___, as if the ground were turning under his feet.|clumsy,jittery|dizziness
+  allergy|a bad reaction of the body to a substance|过敏|Because of his peanut ___, even a crumb of peanut makes his throat swell, so he carries medicine.|Her ___ to cats makes her eyes stream and her nose run whenever a cat is in the room.|Before giving any drug, the nurse checked the chart for any ___ the patient had to medicines such as penicillin.|itch,fever|allergic,allergies
+  stitches|loops of thread used to close a wound|缝针|The doctor closed the deep cut with six neat ___ of thread.|A week later, the nurse snipped and pulled out the ___ that had held the edges of the wound together.|He needed ___ in his forehead, so the doctor sewed the cut shut with a curved needle.|bandage,splint|
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Mia woke with a **fever**, began to **cough** and **sneeze**, and felt **dizzy** when she stood up. These ten words help you describe the signs of being unwell, to a doctor or in a story.",
+      "米娅醒来时发烧（**fever**），开始咳嗽（**cough**）、打喷嚏（**sneeze**），一站起来就头晕（**dizzy**）。这十个词帮你描述身体不适的症状，无论是对医生说还是写进故事。",
+    ),
+    watchOut: {
+      meanings: t(
+        "An **ache** is a dull pain, an **itch** is a tickle that makes you want to scratch, and a **migraine** is a severe headache that can make you feel sick.",
+        "**ache** 是隐隐的钝痛，**itch** 是让人想挠的痒，**migraine** 是会让人想吐的剧烈头痛。",
+      ),
+      use: t(
+        "**Cough** pushes air out of the chest through the mouth, **sneeze** blows it suddenly out of the nose, and **sigh** is a long breath out from sadness or relief.",
+        "**cough** 是从胸腔经嘴把气冲出来，**sneeze** 是气突然从鼻子喷出，**sigh** 是因难过或放松而长长地呼一口气。",
+      ),
+      spelling: t(
+        "Watch the **ough** that says /off/ in **cough**, the **ai** and final **e** in **migraine**, the **au** in **nausea** and the double **z** in **dizzy**.",
+        "注意 **cough** 中读 /ɒf/ 的 **ough**、**migraine** 的 **ai** 和结尾的 **e**、**nausea** 的 **au**，以及 **dizzy** 的双写 **z**。",
+      ),
+    },
+    notes: `
+      fever|a temperature of 39 degrees, too high for school|a burning-hot forehead that breaks after a night of sweating|shivering under blankets with hot skin until medicine brings the temperature down|fever is a body temperature that is too high; migraine is a severe headache|fever 是体温过高；migraine 是剧烈头痛|migraine is a severe headache, not a body temperature that a thermometer reads as too high|migraine 是剧烈头痛，不是体温计量出的过高体温|allergy is the body reacting badly to something such as nuts or cats, not a high temperature that sweats away|allergy 是身体对坚果、猫等东西的不良反应，不是会随出汗退下去的高温|fe · ver|the long e in the first part and the -er ending|第一部分的 e 读长音，结尾是 -er
+      cough|smoke in the lungs causing a dry, hacking sound from the chest|a crumb gone the wrong way, forced out of the throat|a sore chest from bringing up thick mucus from the lungs|cough pushes air out of the chest through the mouth; sneeze blows it out of the nose|cough 是气从胸腔经嘴冲出；sneeze 是气从鼻子喷出|sneeze blows air suddenly out of the nose, not out of the chest and throat|sneeze 是气突然从鼻子喷出，不是从胸腔和喉咙冲出|sigh is a long, slow breath out from sadness or relief, not a sudden noisy push to clear the throat or lungs|sigh 是因难过或放松而缓缓呼出的长气，不是为清喉咙或肺而突然用力冲出的气|cough|the ough that says /off/|ough 读 /ɒf/
+      sneeze|pepper up the nose causing a loud achoo|pollen tickling the inside of the nose every spring|dust tickling the nose so that a tissue is needed|sneeze blows air out of the nose; cough pushes it out of the chest|sneeze 是气从鼻子喷出；cough 是气从胸腔冲出|cough pushes air out of the chest through the mouth, not a burst out of a tickled nose|cough 是气从胸腔经嘴冲出，不是鼻子发痒时喷出的一股气|sigh is a slow breath out from sadness or relief, not a sudden burst that a tickle in the nose sets off|sigh 是因难过或放松缓缓呼出的气，不是鼻子发痒引起的突然喷气|sneeze|the ee vowel team and the z sound with a silent e at the end|元音组合 ee，z 后结尾的 e 不发音
+      itch|a tickling feeling from a mosquito bite that makes someone keep scratching|a healing scab that tempts someone to scratch|a rash calmed by cream so that the urge to scratch stops|itch makes you want to scratch; ache is a dull pain|itch 让人想挠；ache 是隐隐的钝痛|sting is a sudden sharp pain, like a bee's, not a tickling feeling that makes you want to scratch|sting 是像被蜂蜇那样突然的刺痛，不是让人想挠的痒|ache is a steady dull pain, not a tickle on the skin that you want to scratch|ache 是持续的钝痛，不是皮肤上让人想挠的痒|itch|the tch ending, where the t is not heard on its own|结尾 tch，其中 t 不单独发音
+      ache|a dull pain in the legs after a long hike|a steady, not sharp, pain in the jaw that keeps someone awake|a dull pain in the lower back after a day of lifting|ache is a dull steady pain anywhere; migraine is a severe headache|ache 是身体任何部位的持续钝痛；migraine 是剧烈头痛|itch is a tickle on the skin that makes you want to scratch, not a dull pain deep in the body|itch 是皮肤上让人想挠的痒，不是身体深处的钝痛|migraine is a severe pounding headache, not a dull pain in the legs, back or jaw|migraine 是剧烈、搏动的头痛，不是腿、背或下巴的钝痛|ache|the ch that says /k/ and the silent e at the end|ch 读 /k/，结尾 e 不发音
+      migraine|a pounding pain on one side of the head that keeps someone in a dark room|a severe headache lasting hours that flashing lights bring on|throbbing pain in the head so bad that someone cannot read or bear noise|migraine is a severe headache; fever is a high body temperature|migraine 是剧烈头痛；fever 是体温过高|fever is a high body temperature, not a pounding pain inside the head|fever 是体温过高，不是头里的剧烈搏动痛|nausea is a sick feeling in the stomach, not pain in the head|nausea 是胃里想吐的感觉，不是头痛|mi · graine|the ai vowel team followed by a silent e|元音组合 ai，后面跟不发音的 e
+      nausea|a wave of sickness in the stomach on a rocking boat|a smell of rotten fish that makes someone rush to throw up|a medicine that can make you feel sick to your stomach|nausea is a sick feeling in the stomach; migraine is a severe headache|nausea 是胃里想吐的感觉；migraine 是剧烈头痛|migraine is a severe headache, not the sick feeling in the stomach that makes you want to throw up|migraine 是剧烈头痛，不是胃里想吐的感觉|fever is a high body temperature, not a sick feeling in the stomach|fever 是体温过高，不是胃里恶心的感觉|nau · se · a|the au vowel team and the -ea ending|元音组合 au，结尾是 -ea
+      dizzy|a whirling room after spinning around ten times|grabbing a chair until the world stops spinning after standing too fast|a feeling that the ground is turning while looking down from a tower|dizzy means the world seems to spin; clumsy means moving carelessly|dizzy 是觉得天旋地转；clumsy 是动作笨拙|clumsy means always moving awkwardly and dropping things, not a feeling that the world is spinning|clumsy 是动作总是笨拙、常掉东西，不是觉得天旋地转|jittery means nervous and unable to sit still, not feeling that the ground is turning|jittery 是紧张得坐立不安，不是觉得地面在转|diz · zy|the double z and the y ending|双写 z，结尾是 y
+      allergy|a reaction to peanuts so strong that one crumb makes the throat swell|streaming eyes and a runny nose whenever a cat is near|a bad reaction to medicines that a nurse checks for before giving a drug|allergy is the body's bad reaction to something; itch is one feeling it can cause|allergy 是身体对某物的不良反应；itch 只是它可能引起的一种感觉|itch is a tickle on the skin, not the body's whole reaction to a food, an animal or a medicine|itch 只是皮肤上的痒，不是身体对食物、动物或药物的整体反应|fever is a high body temperature, not a reaction set off by a particular food, animal or drug|fever 是体温过高，不是由某种食物、动物或药物引起的反应|al · ler · gy|the double l and the soft g of -gy|双写 l，-gy 中 g 读软音 /dʒ/
+      stitches|six neat loops of thread closing a deep cut|loops snipped and pulled out once the edges of a wound have joined|thread sewn with a curved needle to shut a cut in the forehead|stitches are thread sewn into a wound; a bandage only covers it|stitches 是缝进伤口的线；bandage 只是包在外面|bandage is a strip of cloth wrapped over a wound, not loops of thread sewn through the skin|bandage 是包在伤口外的布条，不是缝进皮肤的线|splint is a stiff strip that holds a broken bone still, not thread sewn into a cut|splint 是固定断骨的硬板，不是缝合伤口的线|stitch · es|the tch before the -es ending|-es 结尾前是 tch
+    `,
+  },
 );
 
 const sport = batch(
@@ -45,17 +112,50 @@ const sport = batch(
   ["Words of Sport", "体育的词"],
   ["games, the people in them, the prizes and the places", "比赛、参赛者、奖杯与场地"],
   `
-  coach|a person who trains a team; to train|教练；训练|The ___ shouted from the side.|She will ___ the girls' team.|Listen to your ___.|umpire,underdog|coached,coaching
-  umpire|an official who watches a game to enforce the rules|裁判|The ___ called him out.|Don't argue with the ___.|The ___ stopped play.|coach,trophy|umpires
-  trophy|a cup or prize for winning|奖杯|The team won the ___.|The ___ sits on the shelf.|She lifted the ___.|stadium,relay|trophies
-  stadium|a large sports ground with seats|体育场|The ___ holds 50,000.|We went to the ___.|The ___ was packed.|trophy,knockout|stadiums
-  tackle|to try to take the ball from; to deal with a problem|抢断；处理|He made a hard ___.|We must ___ the problem.|Don't ___ from behind.|dribble,rematch|tackled
-  dribble|to move a ball with small kicks or bounces; to let liquid run from the mouth|运球；流口水|He likes to ___ past players.|Babies ___.|She can ___ with both feet.|tackle,relay|dribbled
-  relay|a race in which team members take turns; to pass on|接力赛；传达|Our four runners won the ___.|Please ___ the message.|She ran the last leg of the ___.|dribble,trophy|relayed,relays
-  knockout|a blow that ends a fight; a contest in which losers leave|击倒；淘汰赛|He won by a ___.|The ___ stage begins today.|The dress is a ___.|rematch,stadium|knockouts
-  rematch|a second game between the same opponents|复赛|They asked for a ___.|The ___ is in May.|She lost the first game but won the ___.|knockout,underdog|rematches
-  underdog|a competitor thought to have little chance of winning|劣势一方|Everyone loves the ___.|The ___ won the cup.|We were the ___.|rematch,coach|underdogs
+  coach|a person who trains a team; to train|教练；训练|Before the match, the ___ drew the team's plays on a whiteboard and told each player where to stand.|Our swimming ___ makes us train at six every morning and times each lap to help us get faster.|The players lifted their ___ onto their shoulders, thanking her for a whole season of training them.|umpire,sergeant|coached,coaching
+  umpire|an official who watches a game to enforce the rules|裁判|The ___ behind home plate called the pitch a strike, and the batter had to accept the ruling.|In tennis, the ___ sits in a tall chair beside the net and decides whether a ball was in or out.|The ___ stopped play, read out the rule and settled the argument between the two captains.|coach,underdog|umpires
+  trophy|a cup or prize for winning|奖杯|The captain raised the big silver ___, a tall cup with two handles, above her head as the team cheered.|The shiny golden cup, the ___ for first place, now stands in a glass case in the school hall.|Each year the winning team keeps the heavy silver cup, the league's ___, until the next season.|medal,stadium|trophies
+  stadium|a large sports ground with seats|体育场|Fifty thousand fans filled the seats of the ___ to watch the final.|The new football ___ has a roof that slides open over the field and rows of seats all around it.|The roar of the crowd in the ___ grew louder as the runners came round the track toward the finish line.|terminal,barracks|stadiums
+  tackle|to try to take the ball from; to deal with a problem|抢断；处理|The defender slid in to ___ the striker and took the ball cleanly off her feet.|In rugby, you may ___ the player carrying the ball by grabbing him and pulling him to the ground.|The coach taught us to ___ from the side, winning the ball away without kicking the other player.|dribble,kick off|tackled
+  dribble|to move a ball with small kicks or bounces; to let liquid run from the mouth|运球；流口水|She likes to ___ the ball past defenders with quick little taps of her feet.|In basketball, you must ___ by bouncing the ball as you run; you cannot just carry it.|He learned to ___ with both feet, keeping the ball close to him as he ran up the field.|tackle,kick off|dribbled
+  relay|a race in which team members take turns; to pass on|接力赛；传达|In the ___, each of the four runners carried the baton for one lap before passing it to a teammate.|Our swim team won the ___ because each swimmer touched the wall just before the next one dived in.|She ran the last leg of the ___, taking the baton from her teammate and sprinting for the line.|rematch,knockout|relayed,relays
+  knockout|a blow that ends a fight; a contest in which losers leave|击倒；淘汰赛|The boxer won by a ___ in the third round, when his rival fell and could not get up before the count of ten.|One punch to the jaw ended the fight with a ___, and the referee raised the winner's arm.|Fans expected a long fight, but a ___ in the first minute left the champion flat on the mat.|rematch,relay|knockouts
+  rematch|a second game between the same opponents|复赛|After losing the final by one point, the team asked for a ___ against the same rivals.|She lost their first game, but she beat the same player in the ___ a month later.|The first fight ended in a draw, so the two boxers agreed to meet again in a ___ in the spring.|knockout,relay|rematches
+  underdog|a competitor thought to have little chance of winning|劣势一方|Nobody expected the small village team, the ___, to beat the champions.|As the ___, with odds of a hundred to one against him, the young boxer had nothing to lose.|The crowd cheered for the ___, the little team that everyone said had no chance of winning.|coach,umpire|underdogs
   `,
+  "context-clues",
+  {
+    intro: t(
+      "In the packed **stadium**, the **underdog** won the **relay** and lifted the **trophy** while its **coach** cheered from the side. These ten words help you talk about games, the people in them, the prizes and the places they are played.",
+      "在座无虚席的体育场（**stadium**）里，不被看好的一方（**underdog**）赢下了接力赛（**relay**），举起了奖杯（**trophy**），教练（**coach**）在场边欢呼。这十个词帮你谈论比赛、参赛的人、奖品和比赛场地。",
+    ),
+    watchOut: {
+      meanings: t(
+        "The **coach** trains a team, the **umpire** enforces the rules during a game, and the **underdog** is the side nobody expects to win.",
+        "**coach** 负责训练队伍，**umpire** 在比赛中执行规则，**underdog** 是没人看好会赢的一方。",
+      ),
+      use: t(
+        "**Tackle** means taking the ball away from another player; **dribble** means keeping the ball yourself with small taps or bounces.",
+        "**tackle** 是从对方脚下把球抢走；**dribble** 是自己用小步轻触或拍打控着球走。",
+      ),
+      spelling: t(
+        "Watch the **ph** and the **y** of **trophy**, the **-ium** of **stadium**, the double **b** in **dribble** and the silent **k** in **knockout**.",
+        "注意 **trophy** 的 **ph** 和 **y**、**stadium** 的 **-ium**、**dribble** 的双写 **b**，以及 **knockout** 中不发音的 **k**。",
+      ),
+    },
+    notes: `
+      coach|someone drawing the team's plays on a whiteboard before a match|someone who makes swimmers train at six and times each lap|someone carried on the players' shoulders for a season of training them|coach trains a team; umpire enforces the rules during a game|coach 负责训练队伍；umpire 在比赛中执行规则|umpire is the official who enforces the rules during a game, not the person who trains and plans for a team|umpire 是比赛中执行规则的裁判，不是训练队伍、制定打法的人|sergeant gives orders to soldiers in the army, not training to a sports team|sergeant 是在军队里给士兵下命令的人，不是训练运动队的人|coach|the oa vowel team and the ch ending|元音组合 oa，结尾是 ch
+      umpire|an official behind home plate calling a pitch a strike|an official in a tall chair deciding whether a tennis ball was in or out|an official stopping play and reading out the rule to settle an argument|umpire enforces the rules; coach trains the team|umpire 执行规则；coach 训练队伍|coach trains one team and plans its plays, not an official who decides what the rules allow|coach 训练一支队伍、安排打法，不是判定规则的裁判|underdog is a competitor expected to lose, not the official who rules on play|underdog 是被认为会输的参赛者，不是判定比赛的裁判|um · pire|the -pire ending, said like the end of fire|结尾 -pire，读音同 fire 的结尾
+      trophy|a tall silver cup with two handles raised by a captain|a golden cup for first place kept in a glass case|a heavy silver cup a winning team keeps until the next season|trophy is a cup for the winners; medal is a small disk worn on a ribbon|trophy 是给获胜者的奖杯；medal 是挂在绶带上的小圆牌|medal is a small metal disk worn on a ribbon, not a large cup with handles|medal 是挂在绶带上的小金属牌，不是带把手的大杯|stadium is a huge sports ground with seats, not a prize that someone can lift or keep|stadium 是有座位的大型运动场，不是可以举起或保存的奖品|tro · phy|the ph that says /f/ and the y ending|ph 读 /f/，结尾是 y
+      stadium|fifty thousand fans in the seats watching a final|a football ground with a sliding roof and rows of seats all around|a roaring crowd around a track as runners near the finish line|stadium is a sports ground with seats for a crowd; terminal is a building where travelers come and go|stadium 是供观众看比赛的运动场；terminal 是旅客进出的建筑|terminal is a building where travelers arrive and leave, not a sports ground where crowds watch games|terminal 是旅客出发和到达的建筑，不是观众看比赛的运动场|barracks are buildings where soldiers live, not a sports ground with seats for fans|barracks 是士兵居住的营房，不是给球迷坐的运动场|sta · di · um|the -ium ending|结尾是 -ium
+      tackle|a defender sliding in to take the ball off a striker's feet|grabbing the rugby player carrying the ball and pulling him down|winning the ball from the side without kicking the other player|tackle takes the ball from another player; dribble keeps it yourself|tackle 是从别人那里抢球；dribble 是自己控球|dribble means moving the ball along yourself with small taps or bounces, not taking it from another player|dribble 是自己用小步轻触或拍打带球，不是从别人那里抢球|kick off means starting a game with the first kick, not taking the ball from an opponent|kick off 是开球开始比赛，不是从对手那里抢球|tack · le|the ck before the -le ending|-le 结尾前是 ck
+      dribble|quick little taps that take the ball past defenders|bouncing a basketball while running instead of carrying it|keeping the ball close with both feet while running up the field|dribble keeps the ball yourself; tackle takes it from someone else|dribble 是自己控球；tackle 是从别人那里抢球|tackle means taking the ball away from another player, not moving it along yourself|tackle 是从别人那里把球抢走，不是自己带球前进|kick off means starting a game with one kick, not keeping the ball close as you run|kick off 是一脚开球开始比赛，不是跑动中把球控在脚下|drib · ble|the double b before -le|-le 前双写 b
+      relay|four runners each carrying the baton for one lap|swimmers each touching the wall before the next one dives in|the last leg of a race, run after taking the baton from a teammate|relay is a race in which teammates take turns; rematch is a second game between the same rivals|relay 是队友轮流完成的比赛；rematch 是同一对手的第二场比赛|rematch is a second game between the same rivals, not a race in which teammates take turns|rematch 是同一对手之间的第二场比赛，不是队友轮流的赛跑|knockout is a blow that ends a fight, not a race passed from teammate to teammate|knockout 是结束比赛的一击，不是队友之间接力的比赛|re · lay|the ay vowel team at the end|结尾是元音组合 ay
+      knockout|a rival falling in the third round and not getting up before ten|a single punch to the jaw that ends a fight|a champion left flat on the mat in the first minute|knockout ends a fight with one blow; rematch is a second fight between the same rivals|knockout 是一击结束比赛；rematch 是同一对手的再次交锋|rematch is a second game between the same rivals, not a blow that ends a fight on the spot|rematch 是同一对手之间的第二场比赛，不是当场结束比赛的一击|relay is a race in which teammates take turns, not a blow struck in a fight|relay 是队友轮流完成的赛跑，不是格斗中的一击|knock · out|the silent k at the start|开头的 k 不发音
+      rematch|a team asking to play the same rivals again after losing by one point|beating the same player a month after losing the first game|two boxers agreeing to meet again after a draw|rematch is a second game between the same rivals; relay is a race with teammates taking turns|rematch 是同一对手的第二场比赛；relay 是队友轮流的比赛|knockout is a blow that ends a fight, not a second meeting of the same rivals|knockout 是结束比赛的一击，不是同一对手的再次交锋|relay is a race in which teammates take turns, not a second game against the same opponent|relay 是队友轮流完成的比赛，不是与同一对手的第二场比赛|re · match|the re- start and the tch ending|开头 re-，结尾 tch
+      underdog|a small village team nobody expected to beat the champions|a young boxer with odds of a hundred to one against him|a little team everyone said had no chance of winning|underdog is the side expected to lose; coach is the person who trains a side|underdog 是被认为会输的一方；coach 是训练队伍的人|coach is the person who trains a team, not a player or team expected to lose|coach 是训练队伍的人，不是被认为会输的选手或队伍|umpire is the official who enforces the rules, not a competitor with little chance of winning|umpire 是执行规则的裁判，不是获胜希望渺茫的参赛者|un · der · dog|three short parts joined as one word, with no space or hyphen|由三部分连成一个词，中间没有空格或连字符
+    `,
+  },
 );
 
 const cooking = batch(
@@ -63,17 +163,50 @@ const cooking = batch(
   ["Words of Cooking", "烹饪的词"],
   ["ways of cooking, mixing and preparing food", "烹调、搅拌与备餐"],
   `
-  roast|to cook in an oven or over a fire; meat cooked this way|烤；烤肉|___ the chicken in the oven for an hour.|We had a Sunday ___.|They ___ nuts on the fire.|grill,marinate|roasted
-  grill|to cook on a metal frame over heat; such a frame|烧烤；烤架|___ the fish on the barbecue for five minutes.|Light the ___.|They ___ burgers in the yard.|roast,skewer|grilled
-  marinate|to soak food in a sauce before cooking|腌泡|___ the meat overnight.|She likes to ___ chicken in lemon.|Let it ___ in the sauce for an hour.|roast,whisk|marinated,marinade
-  skewer|a long pin used to hold food while cooking|烤肉签|Put the meat on a ___.|Test the cake with a ___.|Thread the onions onto a ___.|grill,whisk|skewers,skewered
-  whisk|a tool for beating eggs or cream; to beat|打蛋器；搅打|___ the eggs well.|Use a ___ for the cream.|She would ___ the sauce.|batter,dough|whisked
-  batter|a mix of flour, eggs and milk; to hit hard|面糊；猛击|Pour the ___ into the pan.|Waves ___ the coast.|Fish in ___ is tasty.|dough,whisk|battered
-  dough|a thick mix of flour and water for baking|面团|Knead the ___.|The ___ must rise.|Roll out the ___.|batter,garnish|
-  garnish|a small piece of food used to decorate a dish; to decorate|装饰菜；点缀|Add a ___ of parsley.|___ the soup with cream.|The ___ looked nice.|seasoning,dough|garnished
-  seasoning|salt, pepper or spices added to food|调味品|Add ___ to taste.|The soup needs more ___.|She used little ___, just a pinch of salt.|garnish,utensil|season
-  utensil|a tool used in the kitchen|器皿|A spoon is a ___.|Wash every ___ in the drawer: forks, knives and spoons.|Each ___ has its place.|seasoning,skewer|utensils
+  roast|to cook in an oven or over a fire; meat cooked this way|烤；烤肉|Put the whole chicken in a hot oven and ___ it for an hour and a half, basting it with its own juices.|On cold nights we ___ chestnuts in a pan over the open fire until their shells split.|Grandma likes to ___ potatoes in the oven beside the meat until they turn golden and crisp.|grill,marinate|roasted
+  grill|to cook on a metal frame over heat; such a frame|烧烤；烤架|Lay the burgers on the hot metal bars of the barbecue and ___ them for four minutes on each side.|Every summer we ___ fish on the barbecue, and it comes off with dark stripes from the hot bars.|Brush the corn with butter and ___ it on the rack over the glowing coals, turning it until it is charred.|roast,marinate|grilled
+  marinate|to soak food in a sauce before cooking|腌泡|Leave the chicken to ___ overnight in a bowl of yogurt and spices so that it soaks up the flavor before cooking.|The chef lets the beef ___ in soy sauce and garlic for two hours before it goes anywhere near the heat.|She likes to ___ the tofu in lemon juice so that the sauce seeps into it before she fries it.|roast,whisk|marinated,marinade
+  skewer|a long pin used to hold food while cooking|烤肉签|Thread the chunks of meat and onion onto a long metal ___ before laying it across the grill.|To test the cake, push a thin wooden ___ into the middle; if it comes out clean, the cake is done.|At the night market, he bought a bamboo ___ with five grilled shrimps pushed onto it.|splinter,splint|skewers,skewered
+  whisk|a tool for beating eggs or cream; to beat|打蛋器；搅打|Crack the eggs into a bowl and ___ them quickly with a fork until they turn frothy.|To make the cream thick and fluffy, you must ___ it fast until it stands up in soft peaks.|Use a fork to ___ the milk and the eggs together briskly until no streaks of yolk are left.|marinate,roast|whisked
+  batter|a mix of flour, eggs and milk; to hit hard|面糊；猛击|Pour the runny ___ of flour, eggs and milk into the hot pan to make pancakes.|Dip each piece of fish in the thin, creamy ___ before frying it so that it gets a crisp coat.|She stirred the ___ until it was smooth enough to pour into the cake tin.|dough,seasoning|battered
+  dough|a thick mix of flour and water for baking|面团|Knead the stiff ___ of flour and water on the table for ten minutes until it is smooth and stretchy.|Cover the bread ___ with a cloth and leave it somewhere warm to rise for an hour.|Roll out the ___ with a rolling pin and cut it into circles for the dumplings.|batter,garnish|
+  garnish|a small piece of food used to decorate a dish; to decorate|装饰菜；点缀|The chef laid a sprig of green parsley on top of the fish as a ___, just to make the plate look pretty.|A thin slice of lemon perched on the rim of the glass served as a bright ___.|She scattered a few mint leaves over the dessert as a ___ so that it would look fresh and colorful.|seasoning,skewer|garnished
+  seasoning|salt, pepper or spices added to food|调味品|The soup tasted flat, so he stirred in more ___: a pinch of salt, some pepper and a little cumin.|She rubbed salt, pepper and dried herbs into the steak, and this simple ___ made every bite taste better.|Taste the stew before serving and adjust the ___, adding salt if it is too bland.|garnish,dough|season
+  utensil|a tool used in the kitchen|器皿|A spatula is a kitchen ___ with a flat blade for turning pancakes.|Forks, ladles, tongs and every other ___ go back in the drawer once they are washed.|The cook hung each ___ on a hook above the stove: the ladle, the strainer and the big slotted spoon.|skewer,bucket|utensils
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Dad left the chicken to **marinate** in lemon and garlic, then set it to **roast**, while I began to **whisk** eggs for the pancake **batter**. These ten words help you follow a recipe and describe how food is cooked, mixed and prepared.",
+      "爸爸把鸡肉放进柠檬和蒜汁里腌（**marinate**），然后放进烤箱烤（**roast**），我则开始打（**whisk**）鸡蛋，准备做煎饼的面糊（**batter**）。这十个词帮你看懂菜谱，说清食物怎样烹调、搅拌和准备。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Batter** is runny enough to pour into a pan; **dough** is stiff enough to knead and roll out.",
+        "**batter** 稀得可以倒进锅里；**dough** 硬得可以揉、可以擀。",
+      ),
+      use: t(
+        "A **garnish** is placed on top so that a dish looks good; **seasoning** is mixed in so that it tastes good.",
+        "**garnish** 放在菜的表面让它好看；**seasoning** 拌进菜里让它好吃。",
+      ),
+      spelling: t(
+        "Watch the silent **gh** in **dough**, the double **t** in **batter**, the **-ate** of **marinate** and the **-sil** ending of **utensil**.",
+        "注意 **dough** 中不发音的 **gh**、**batter** 的双写 **t**、**marinate** 的 **-ate**，以及 **utensil** 的 **-sil** 结尾。",
+      ),
+    },
+    notes: `
+      roast|a whole chicken cooked in a hot oven for an hour and a half|chestnuts cooked in a pan over an open fire until their shells split|potatoes cooked in the oven beside the meat until golden|roast cooks food in an oven or over a fire; grill cooks it on metal bars right over the heat|roast 是在烤箱里或火上烤；grill 是放在金属烤架上直接受热烤|grill means to cook on a frame of metal bars right over the heat, not slowly in an oven or a pan|grill 是放在金属烤架上直接受热烤，不是在烤箱或锅里慢慢烤|marinate means to soak food in a sauce before cooking, not to cook it with heat|marinate 是烹调前把食物泡在酱汁里，不是用火加热|roast|the oa vowel team before st|st 前是元音组合 oa
+      grill|burgers on the hot metal bars of a barbecue, four minutes a side|fish that comes off the barbecue with dark stripes from the bars|buttered corn turned on a rack over glowing coals until charred|grill cooks on metal bars over direct heat; roast cooks in an oven|grill 是在金属架上直接受热烤；roast 是在烤箱里烤|roast means to cook in an oven or by a fire, not on a rack of hot bars that leaves stripes|roast 是在烤箱里或火边烤，不是放在会留下烤纹的金属架上烤|marinate means to soak food in a sauce before cooking, not to cook it over heat|marinate 是烹调前把食物泡在酱汁里，不是放在火上烤|grill|the double l at the end|结尾双写 l
+      marinate|chicken left overnight in yogurt and spices to soak up flavor|beef left in soy sauce and garlic for two hours before any heat|tofu soaked in lemon juice before it is fried|marinate soaks food before cooking; roast cooks it with heat|marinate 是烹调前浸泡；roast 是加热烤熟|roast means to cook food in an oven or by a fire, not to leave it soaking in a sauce|roast 是用烤箱或火把食物烤熟，不是把它泡在酱汁里|whisk means to beat eggs or cream fast, not to leave food soaking for hours|whisk 是快速搅打鸡蛋或奶油，不是把食物泡上几个小时|ma · ri · nate|the -ate ending, with a silent e|结尾 -ate，e 不发音
+      skewer|chunks of meat and onion threaded on a long metal pin for the grill|a thin wooden stick pushed into a cake to test it|a bamboo stick with five grilled shrimps pushed onto it|skewer is a long pin you push food onto; splinter is a tiny sliver stuck in the skin|skewer 是串食物的长签；splinter 是扎进皮肤的小木刺|splinter is a tiny sliver of wood stuck in the skin, not a long pin you thread food onto|splinter 是扎进皮肤的小木刺，不是用来串食物的长签|splint is a stiff strip tied along a broken bone, not a pin for holding food|splint 是绑在断骨旁的硬板，不是串食物的签子|skew · er|the ew vowel team before the -er ending|-er 结尾前是元音组合 ew
+      whisk|eggs beaten quickly with a fork until frothy|cream beaten fast until it stands in soft peaks|milk and eggs beaten briskly until no streaks of yolk are left|whisk beats food fast to mix in air; marinate leaves it soaking|whisk 是快速搅打、打进空气；marinate 是让食物浸泡|marinate means to leave food soaking in a sauce, not to beat it fast until it is frothy|marinate 是把食物泡在酱汁里，不是快速搅打到起泡|roast means to cook food with heat in an oven or by a fire, not to beat it with a fork|roast 是用烤箱或火加热烤，不是用叉子搅打|whisk|the wh at the start and the sk at the end|开头 wh，结尾 sk
+      batter|a runny mix of flour, eggs and milk poured into a pan for pancakes|a thin, creamy coating for fish before it is fried|a smooth mix poured into a cake tin|batter is runny and pours; dough is stiff and is kneaded|batter 是稀的、能倒；dough 是硬的、要揉|dough is a stiff mix that you knead and roll, not a runny one you pour or dip food in|dough 是要揉、要擀的硬面团，不是可以倒或拿来裹食物的稀面糊|seasoning is salt, pepper or spices for flavor, not a mix of flour and eggs|seasoning 是盐、胡椒或香料等调味品，不是面粉和鸡蛋的混合物|bat · ter|the double t before the -er ending|-er 结尾前双写 t
+      dough|a stiff mix of flour and water kneaded for ten minutes|a bread mix left under a cloth in a warm place to rise|a mix rolled out with a rolling pin and cut into circles|dough is stiff and kneaded; batter is runny and poured|dough 是硬的、要揉；batter 是稀的、能倒|batter is a runny mix that you pour, too wet to knead or roll out|batter 是可以倒的稀面糊，湿得没法揉或擀|garnish is a small piece of food laid on a dish to decorate it, not a flour mix|garnish 是摆在菜上装饰的小块食物，不是面粉做的混合物|dough|the ou and the silent gh, as in though|ou 和不发音的 gh（同 though）
+      garnish|a sprig of parsley laid on fish just to make the plate pretty|a thin slice of lemon perched on the rim of a glass|a few mint leaves scattered over a dessert so it looks fresh|garnish goes on top to look good; seasoning goes in to taste good|garnish 放在表面让菜好看；seasoning 拌进去让菜好吃|seasoning is salt or spice mixed in for taste, not something laid on top to make a dish look pretty|seasoning 是拌进去调味的盐或香料，不是摆在上面装饰的东西|skewer is a long pin for holding food while it cooks, not a decoration on a plate|skewer 是烹调时串食物的长签，不是盘子上的装饰|gar · nish|the ar sound and the -ish ending|ar 读 /ɑː/，结尾是 -ish
+      seasoning|salt, pepper and cumin stirred into a flat-tasting soup|salt, pepper and herbs rubbed into a steak to make it taste better|salt added to a bland stew after tasting it|seasoning is mixed in for taste; garnish is placed on top for looks|seasoning 拌进去调味；garnish 放在上面装饰|garnish is a small piece laid on top to make a dish look pretty, not salt or spice that changes the taste|garnish 是摆在表面装饰的小东西，不是改变味道的盐或香料|dough is a stiff mix of flour and water, not salt or spice added for flavor|dough 是面粉和水揉成的面团，不是为了调味加的盐或香料|sea · son · ing|the ea vowel team and the -ing ending|元音组合 ea，结尾 -ing
+      utensil|a spatula with a flat blade for turning pancakes|forks, ladles and tongs put back in the drawer after washing|a ladle, a strainer and a slotted spoon hung above the stove|utensil is any kitchen tool; skewer is one kind, a long pin for holding food|utensil 泛指厨房工具；skewer 只是其中一种，用来串食物的长签|skewer is only a long pin for holding food, not a word for every kitchen tool such as spoons and spatulas|skewer 只是串食物的长签，不能泛指勺子、锅铲等各种厨具|bucket is a large pail for carrying water, not a small tool for cooking and serving|bucket 是提水的大桶，不是做饭盛菜用的小工具|u · ten · sil|the -sil ending, not -cil|结尾是 -sil，不是 -cil
+    `,
+  },
 );
 
 const taste = batch(
@@ -81,17 +214,50 @@ const taste = batch(
   ["Words of Taste and Texture", "味道与口感的词"],
   ["how food tastes and feels in the mouth", "食物的味道与口感"],
   `
-  spicy|strongly flavored with spice|辣的|I like ___ food with lots of chili.|The curry is ___.|Is the chili too ___ for you?|tangy,savory|
-  tangy|having a strong sharp taste|味道浓烈的|The lemon sauce is ___.|Orange juice has a ___, fresh taste.|The lime drink was sour and ___.|spicy,bitter|
-  savory|salty or spicy rather than sweet|咸香的|I prefer ___ snacks like cheese to sweet ones.|A ___ pie of meat and onions.|The dish is ___, salty rather than sweet.|tangy,juicy|
-  bitter|having a sharp unpleasant taste; angry and hurt|苦的；怨恨的|Black coffee without sugar tastes ___.|She was ___ about losing.|A ___ wind blew.|tangy,stale|bitterly,bitterness
-  juicy|full of juice|多汁的|The ripe peach is so ___ it drips.|A ___ orange dripped down my chin.|She heard some ___ gossip.|tender,crispy|juicier
-  tender|soft and easy to cut or chew; gentle; painful|嫩的；温柔的；疼痛的|The meat is so ___ it falls apart.|She gave a ___ smile.|My knee is ___.|juicy,soggy|tenderly,tenderness
-  crispy|firm and pleasantly crunchy|酥脆的|I like my bacon ___, so it crunches.|The fries are golden and ___.|A ___ crust cracks when you bite it.|soggy,greasy|crispier
-  soggy|wet and soft|湿软的|The cereal went ___ in the milk.|My shoes were ___.|Nobody likes wet, ___ chips.|crispy,stale|
-  stale|no longer fresh|不新鲜的|The old bread is hard and ___.|The air was ___.|His jokes are ___.|soggy,bitter|
-  greasy|covered with or full of fat or oil|油腻的|The food was ___ with too much oil.|Wash your ___ hands.|He has ___ hair.|crispy,savory|grease
+  spicy|strongly flavored with spice|辣的|Chili peppers make the curry so ___ that it burns my tongue.|The ___ noodles, red with chili, made his mouth burn and his eyes water.|If the salsa is too ___ for you, take out the hot peppers and cool your mouth with milk.|tangy,savory|
+  tangy|having a strong sharp taste|味道浓烈的|The lemon sauce is sharp and sour, with a fresh, ___ taste that makes your mouth pucker.|Orange juice with a squeeze of lime has a bright, ___ flavor, sour in a pleasant way.|The yogurt dressing was cool and pleasantly sour, a ___ contrast to the sweet roasted vegetables.|spicy,bitter|
+  savory|salty or spicy rather than sweet|咸香的|She prefers ___ snacks like cheese crackers and salted nuts to sweet ones like cookies.|For lunch she baked a ___ pie of beef, onions and gravy instead of a sweet fruit one.|He likes his breakfast ___ rather than sweet, so he eats eggs with ham and cheese instead of toast with jam.|tangy,bitter|
+  bitter|having a sharp unpleasant taste; angry and hurt|苦的；怨恨的|Black coffee with no sugar tastes ___, and the harsh flavor makes her screw up her face.|Medicine for children is often mixed with syrup to hide its harsh, ___ taste.|The dark green leaves of the plant were so ___ that even the goats spat them out.|tangy,stale|bitterly,bitterness
+  juicy|full of juice|多汁的|The ripe peach was so ___ that sweet liquid ran down my chin with the first bite.|Choose the heavy oranges, since they are the ___ ones, full of sweet liquid.|When she cut the ___ watermelon, pink liquid spilled all over the board.|tender,crispy|juicier
+  tender|soft and easy to cut or chew; gentle; painful|嫩的；温柔的；疼痛的|The beef had cooked slowly for six hours and was so ___ that it fell apart under a fork.|Young spinach leaves are ___ enough to eat raw, soft and easy to chew.|Pound the tough steak with a mallet to make it ___ and easy to cut.|juicy,soggy|tenderly,tenderness
+  crispy|firm and pleasantly crunchy|酥脆的|Fry the bacon until it is ___ and snaps in half with a crunch.|The fries came out of the oven golden and ___, crunching loudly with every bite.|The cracker stayed ___ until it sat in the soup; then it went soft.|soggy,greasy|crispier
+  soggy|wet and soft|湿软的|Leave cereal in the milk too long and it goes soft and ___.|The sandwich sat in a wet lunch box all morning, and by noon the bread was ___ and falling apart.|Rain had soaked through the paper bag, so the fries inside were cold and ___.|crispy,stale|
+  stale|no longer fresh|不新鲜的|The bread left out all week was dry, hard and ___.|The crackers had been open for a month and tasted ___, no longer fresh or crisp.|The cake was baked a week ago, and now it is ___ and crumbly instead of soft and fresh.|soggy,bitter|
+  greasy|covered with or full of fat or oil|油腻的|The fried chicken was so ___ that it left a shiny film of oil on our fingers.|He wiped the ___ pan with paper towels to soak up the leftover fat.|The kitchen walls near the fryer were ___, coated with a sticky layer of old cooking oil.|crispy,juicy|grease
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **crispy** fries were perfect, but the **soggy** bun and the **stale** bread spoiled the meal, and the **spicy** sauce made us gasp. These ten words help you say exactly how food tastes and how it feels in your mouth.",
+      "薯条酥脆（**crispy**）得刚好，可湿软（**soggy**）的面包和不新鲜（**stale**）的吐司毁了这顿饭，辣（**spicy**）酱更让我们直吸气。这十个词帮你准确说出食物的味道和在嘴里的口感。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Tangy** is sharp and pleasantly sour, like lemon; **bitter** is harsh, like black coffee; **spicy** burns, like chili.",
+        "**tangy** 是柠檬那样爽口的酸；**bitter** 是黑咖啡那样难受的苦；**spicy** 是辣椒那样烧口的辣。",
+      ),
+      use: t(
+        "**Soggy** food is wet and limp, **stale** food is old and dry, and **crispy** food snaps with a crunch.",
+        "**soggy** 是湿软塌掉，**stale** 是放久变干变硬，**crispy** 是咬下去咔嚓脆。",
+      ),
+      spelling: t(
+        "Watch the double **g** in **soggy**, the **ui** and the **-cy** of **juicy**, the double **t** in **bitter** and the **-ory** ending of **savory**.",
+        "注意 **soggy** 的双写 **g**、**juicy** 的 **ui** 和 **-cy**、**bitter** 的双写 **t**，以及 **savory** 的 **-ory** 结尾。",
+      ),
+    },
+    notes: `
+      spicy|chili in a curry burning the tongue|noodles red with chili that make the mouth burn and the eyes water|a salsa so hot that its peppers must come out and milk must cool the mouth|spicy burns like chili; tangy is sharp and sour like lemon|spicy 像辣椒一样烧口；tangy 像柠檬一样酸爽|tangy means sharp and pleasantly sour like lemon, not hot enough to burn the mouth|tangy 是柠檬那样爽口的酸，不是辣得烧嘴|savory means salty rather than sweet, which does not make a mouth burn or eyes water|savory 是咸而不甜，不会让嘴发烫、眼睛流泪|spi · cy|the long i and the -cy ending, where c says /s/|i 读长音，结尾 -cy 中 c 读 /s/
+      tangy|a fresh, sharp lemon sauce that makes the mouth pucker|orange juice with lime, sour in a pleasant way|a cool, pleasantly sour yogurt dressing against sweet vegetables|tangy is pleasantly sharp and sour; bitter is harsh and unpleasant|tangy 是爽口的酸；bitter 是难受的苦|spicy means hot like chili, burning the mouth, not fresh and pleasantly sour|spicy 是辣椒那样烧口的辣，不是清爽宜人的酸|bitter means harsh and unpleasant like black coffee, not fresh and pleasantly sour|bitter 是黑咖啡那样难受的苦，不是清爽宜人的酸|tan · gy|the soft g before y|y 前的 g 读软音 /dʒ/
+      savory|cheese crackers and salted nuts preferred to sweet cookies|a pie of beef, onions and gravy instead of a sweet fruit one|a breakfast of eggs, ham and cheese instead of toast with jam|savory means salty and meaty rather than sweet; tangy means sharp and sour|savory 是咸香而不甜；tangy 是酸爽|tangy means sharp and sour like lemon, not salty and meaty instead of sweet|tangy 是柠檬那样的酸，不是不甜而咸香|bitter means harsh like black coffee, not the pleasant salty taste chosen instead of sweet food|bitter 是黑咖啡那样难受的苦，不是代替甜食的咸香味|sa · vor · y|the -ory ending; British English writes savoury|结尾 -ory；英式拼写是 savoury
+      bitter|black coffee with no sugar that makes someone screw up her face|a harsh medicine taste hidden with syrup|green leaves so harsh that goats spat them out|bitter is harsh like black coffee; tangy is pleasantly sour|bitter 是难受的苦；tangy 是爽口的酸|tangy means pleasantly sharp and sour, not harsh enough to make someone spit food out|tangy 是爽口的酸，不是难受到让人吐出来的味道|stale means no longer fresh because it is old, not a harsh taste that something has even when fresh|stale 是放久了不新鲜，不是食物新鲜时本来就有的苦味|bit · ter|the double t before the -er ending|-er 结尾前双写 t
+      juicy|a ripe peach whose sweet liquid runs down the chin|heavy oranges full of sweet liquid|a watermelon that spills pink liquid all over the board|juicy means full of liquid; tender means soft and easy to chew|juicy 是汁水多；tender 是软嫩好嚼|tender means soft and easy to cut or chew, not full of liquid that runs out|tender 是软嫩好切好嚼，不是汁水多得往外流|crispy means firm and crunchy, not full of liquid that spills out|crispy 是硬脆，不是汁水多得往外流|jui · cy|the ui vowel team and the -cy ending|元音组合 ui，结尾是 -cy
+      tender|beef cooked six hours until it falls apart under a fork|young spinach leaves soft enough to eat raw|a tough steak pounded until it is easy to cut|tender is soft and easy to chew; soggy is wet and limp|tender 是软嫩好嚼；soggy 是湿软塌掉|juicy means full of liquid, not soft and easy to cut or chew|juicy 是汁水多，不是软嫩好切好嚼|soggy means unpleasantly wet and limp, like cereal left in milk, not pleasantly soft to chew|soggy 是像泡久的麦片那样湿软塌掉，不是软嫩好嚼|ten · der|the -er ending after nd|nd 之后是 -er 结尾
+      crispy|bacon fried until it snaps in half with a crunch|golden fries crunching loudly with every bite|a cracker that stays crunchy until it sits in soup|crispy is firm and crunchy; soggy is wet and limp|crispy 是硬脆；soggy 是湿软|soggy means wet and soft, the opposite of something that snaps with a crunch|soggy 是湿软，和咬起来咔嚓脆正好相反|greasy means covered in oil, not firm and crunchy|greasy 是沾满油，不是硬脆|cris · py|the sp in the middle and the y ending|中间是 sp，结尾是 y
+      soggy|cereal left in milk until it goes soft|bread in a wet lunch box falling apart by noon|fries in a rain-soaked bag, cold and limp|soggy is wet and limp; stale is old and dry|soggy 是湿软；stale 是放久变干|crispy means firm and crunchy, the opposite of wet and limp|crispy 是硬脆，和湿软正好相反|stale means old, dry and hard, not soaked and soft|stale 是放久了又干又硬，不是泡得湿软|sog · gy|the double g before y|y 前双写 g
+      stale|bread left out all week, dry and hard|crackers open for a month, no longer fresh or crisp|a week-old cake gone crumbly instead of soft and fresh|stale is old and dry; soggy is wet and soft|stale 是放久了变干；soggy 是湿软|soggy means wet and soft, not dry and hard from being left out too long|soggy 是湿软，不是放久了变得干硬|bitter is a harsh taste like black coffee, not what happens to food left out too long|bitter 是黑咖啡那样的苦味，不是食物放太久后的变化|stale|the long a with a silent e at the end|a 读长音，结尾 e 不发音
+      greasy|fried chicken leaving a shiny film of oil on the fingers|a pan wiped with paper towels to soak up leftover fat|kitchen walls coated with sticky old cooking oil|greasy means coated with oil or fat; crispy means crunchy|greasy 是沾满油脂；crispy 是脆|crispy means firm and crunchy, not coated in a film of oil|crispy 是硬脆，不是沾着一层油|juicy means full of sweet liquid like fruit, not coated with oil or fat|juicy 是像水果一样多汁，不是沾满油脂|grea · sy|the ea vowel team and the s that says /s/ before y|元音组合 ea，y 前的 s 读 /s/
+    `,
+  },
 );
 
 const weather = batch(
@@ -99,17 +265,50 @@ const weather = batch(
   ["Words of Weather", "天气的词"],
   ["storms, rain, heat and cold", "风暴、雨、炎热与寒冷"],
   `
-  thunder|the loud noise after lightning|雷声|We heard ___ in the distance.|The ___ shook the house.|Dogs fear the loud boom of ___.|lightning,hail|thundered,thunderous
-  lightning|a flash of light in the sky in a storm|闪电|___ lit up the sky.|A tree was hit by ___.|She ran like ___.|thunder,downpour|
-  hail|small balls of ice falling like rain; to call out to|冰雹；招呼|___ broke the windows.|She tried to ___ a taxi.|The ___ hurt the crops.|icicle,thunder|hailed,hailstone
-  downpour|a heavy fall of rain|倾盆大雨|We got caught in a ___.|The ___ flooded the road.|A sudden ___ began.|hail,damp|downpours
-  damp|slightly wet|潮湿的|The towel is ___.|The ___ air in the cellar smells of mold.|Wipe it with a ___ cloth.|muggy,chilly|dampness,dampen
-  muggy|unpleasantly warm and wet|闷热的|It's hot and ___ today.|The ___ air made us tired.|A ___ summer night.|damp,heatwave|
-  heatwave|a period of very hot weather|热浪|The ___ lasted a week.|Crops died in the ___.|Stay cool in a ___.|muggy,downpour|heatwaves
-  chilly|uncomfortably cool|寒冷的|It's ___ outside, so wear a sweater.|She gave him a ___ look.|Wear gloves; it's ___ this morning.|breezy,damp|chill,chillier
-  breezy|pleasantly windy; relaxed and cheerful|有微风的；轻松愉快的|It was a ___ day, good for flying kites.|She has a ___ manner.|The ___ coast kept the sails full.|chilly,icicle|
-  icicle|a hanging spike of ice|冰柱|An ___ hung from the roof.|The ___ began to melt.|Kids broke off an ___.|hail,breezy|icicles
+  thunder|the loud noise after lightning|雷声|A few seconds after the flash, we heard the deep rumble of ___ rolling across the hills.|The boom of ___ overhead was so loud that the dog hid under the bed.|Count the seconds between the flash and the ___ to tell how far away the storm is.|lightning,hail|thundered,thunderous
+  lightning|a flash of light in the sky in a storm|闪电|A bright fork of ___ lit up the whole sky for a second.|The tall tree was struck by ___ and split down the middle in a burst of light.|During the storm, jagged flashes of ___ zigzagged across the black clouds.|thunder,downpour|
+  hail|small balls of ice falling like rain; to call out to|冰雹；招呼|Balls of ice as big as marbles fell from the sky, and the ___ dented cars and broke windows.|The farmer's corn was flattened when the storm dropped ___, small lumps of ice, on his fields.|We heard ___ rattling on the tin roof like a shower of icy pebbles.|icicle,downpour|hailed,hailstone
+  downpour|a heavy fall of rain|倾盆大雨|We got caught in a sudden ___ and were soaked to the skin by the heavy rain within a minute.|The ___ was so heavy that the streets filled with rushing rainwater in ten minutes.|Rain fell in a steady ___ all afternoon, drumming on the roof and flooding the garden.|hail,heatwave|downpours
+  damp|slightly wet|潮湿的|The towel was still a little ___ from my shower, not dripping, just slightly wet.|The cellar walls were ___, slightly wet to the touch, and they smelled of mold.|Wipe the table with a ___ cloth, wrung out so that it is only slightly wet.|muggy,chilly|dampness,dampen
+  muggy|unpleasantly warm and wet|闷热的|The air was hot and ___, so heavy and still that our shirts stuck to our backs.|On ___ summer nights, the warm, sticky air makes it hard to sleep without a fan.|Before the storm, the afternoon grew ___: hot, sticky and without a breath of wind.|chilly,breezy|
+  heatwave|a period of very hot weather|热浪|During the ___, the temperature stayed above 40 degrees for nine days in a row.|Old people are told to stay indoors and drink water during a ___, when the days are dangerously hot.|The long ___ dried up the rivers and turned the lawns brown under a burning sun.|downpour,thunder|heatwaves
+  chilly|uncomfortably cool|寒冷的|There is no wind, but it is ___ this morning, so wear a sweater and gloves until the sun warms things up.|The still evening turned ___ after sunset, and we moved closer to the fire to keep warm.|Even in May the mountain air was ___, cool enough that we could see our breath.|breezy,muggy|chill,chillier
+  breezy|pleasantly windy; relaxed and cheerful|有微风的；轻松愉快的|It was a warm, ___ day, perfect for flying kites, with a light wind blowing off the sea.|On the ___ hilltop, a gentle wind ruffled our hair and kept the warm afternoon pleasant.|The warm, ___ coast was ideal for sailing, with a steady light wind filling the sails.|chilly,muggy|
+  icicle|a hanging spike of ice|冰柱|A long ___ hung from the edge of the roof, dripping as the sun began to melt it.|Water dripping from the gutter froze into a pointed ___ as long as my arm.|The children snapped a clear ___ off the frozen waterfall and pretended it was a sword.|hail,splinter|icicles
   `,
+  "context-clues",
+  {
+    intro: t(
+      "First came a flash of **lightning**, then the boom of **thunder**, and then a **downpour** so heavy that the streets flooded. These ten words help you describe storms, rain, heat and cold, and how the air feels.",
+      "先是一道闪电（**lightning**），接着一声雷鸣（**thunder**），然后一场倾盆大雨（**downpour**）把街道都淹了。这十个词帮你描述风暴、雨水、炎热与寒冷，以及空气给人的感觉。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Lightning** is the flash you see in the sky; **thunder** is the boom you hear after it.",
+        "**lightning** 是天上看到的闪光；**thunder** 是随后听到的轰鸣。",
+      ),
+      use: t(
+        "**Muggy** air is hot, wet and still; **breezy** weather has a light, pleasant wind; **chilly** weather is cool enough to need a sweater.",
+        "**muggy** 是又热又湿又闷；**breezy** 是有舒服的微风；**chilly** 是凉到要穿毛衣。",
+      ),
+      spelling: t(
+        "**Lightning** has no **e** after the **t** (lightening means making lighter); watch also the **-cle** of **icicle** and the double **g** of **muggy**.",
+        "**lightning** 的 **t** 后面没有 **e**（lightening 是“变亮、减轻”）；还要注意 **icicle** 的 **-cle** 和 **muggy** 的双写 **g**。",
+      ),
+    },
+    notes: `
+      thunder|a deep rumble rolling across the hills seconds after a flash|a boom overhead so loud that the dog hides|the sound after the flash, counted to tell how far away a storm is|thunder is the boom you hear; lightning is the flash you see|thunder 是听到的轰鸣；lightning 是看到的闪光|lightning is the flash of light you see in a storm, not the rumbling noise that follows it|lightning 是暴风雨中看到的闪光，不是随后传来的隆隆声|hail is balls of ice falling from the sky, not a deep booming sound|hail 是从天上落下的冰球，不是低沉的轰鸣声|thun · der|the -der ending after n|n 之后是 -der 结尾
+      lightning|a bright fork lighting up the whole sky for a second|a tall tree struck and split in a burst of light|jagged flashes zigzagging across black clouds|lightning is the flash; thunder is the sound after it|lightning 是闪光；thunder 是随后的声音|thunder is the booming sound after the flash; it cannot light up the sky or strike a tree|thunder 是闪电后的轰鸣声，不会照亮天空，也不会击中树木|downpour is heavy rain, not a flash of light across the sky|downpour 是倾盆大雨，不是划过天空的闪光|light · ning|no e after the t: lightning, not lightening|t 后面没有 e：lightning，不是 lightening
+      hail|marble-sized balls of ice denting cars and breaking windows|small lumps of ice flattening a farmer's corn|icy pebbles rattling on a tin roof|hail is ice that falls from the sky; icicle is ice that hangs from a roof|hail 是从天上落下的冰；icicle 是挂在屋檐下的冰|icicle is a spike of ice that hangs from a roof, not lumps of ice falling from the sky|icicle 是挂在屋檐下的冰柱，不是从天上落下的冰块|downpour is heavy rain, which is water, not hard lumps of ice|downpour 是倾盆大雨，是水而不是硬冰块|hail|the ai vowel team|元音组合 ai
+      downpour|a sudden heavy rain that soaks people to the skin in a minute|rain so heavy that streets fill with rushing water|a steady heavy rain drumming on the roof and flooding the garden|downpour is a heavy fall of rain; hail is a fall of ice|downpour 是大雨；hail 是冰雹|hail is lumps of ice, not heavy rain that soaks you and floods the streets|hail 是冰块，不是把人淋透、淹没街道的大雨|heatwave is a long spell of very hot weather, not a fall of rain|heatwave 是持续的酷热天气，不是降雨|down · pour|the two words down and pour joined into one|由 down 和 pour 两个词连成一个
+      damp|a towel still slightly wet after a shower|cellar walls slightly wet to the touch and smelling of mold|a cloth wrung out so that it is only slightly wet|damp means slightly wet; muggy describes hot, sticky air|damp 是有点湿；muggy 形容又热又黏的空气|muggy describes hot, sticky weather, not a thing such as a cloth or a wall that is slightly wet|muggy 形容闷热潮湿的天气，不是形容微湿的布或墙|chilly means cool enough to make you shiver, not slightly wet|chilly 是凉得让人发抖，不是有点湿|damp|the mp ending|结尾是 mp
+      muggy|hot, heavy, still air that makes shirts stick to backs|warm, sticky summer nights when it is hard to sleep|a hot, sticky afternoon without a breath of wind before a storm|muggy is hot, wet and still; breezy has a light wind|muggy 是又热又湿又闷；breezy 是有微风|chilly means uncomfortably cool, not hot and sticky|chilly 是冷得不舒服，不是又热又黏|breezy means pleasantly windy, the opposite of heavy, still air|breezy 是有舒服的微风，和沉闷不动的空气正好相反|mug · gy|the double g before y|y 前双写 g
+      heatwave|temperatures above 40 degrees for nine days in a row|dangerously hot days when old people should stay inside|a long spell under a burning sun that dries up rivers|heatwave is a long spell of very hot weather; downpour is a heavy rain|heatwave 是持续的酷热；downpour 是一场大雨|downpour is a heavy fall of rain, not days of dangerous heat|downpour 是一场大雨，不是持续多天的酷热|thunder is the boom after lightning, not days of burning heat|thunder 是闪电后的雷声，不是持续多天的酷热|heat · wave|heat and wave joined into one word|heat 和 wave 连成一个词
+      chilly|a still morning cold enough for a sweater and gloves|a still evening turning cold after sunset, sending people to the fire|mountain air in May cool enough to see your breath|chilly is uncomfortably cool; breezy is pleasantly windy|chilly 是冷得不舒服；breezy 是有舒服的风|breezy means pleasantly windy, not cold enough to need gloves or a fire|breezy 是有舒服的微风，不是冷到需要手套或烤火|muggy means hot and sticky, the opposite of cold enough to see your breath|muggy 是又热又黏，和冷得能看见呼出的白气正好相反|chil · ly|the double l before y|y 前双写 l
+      breezy|a warm day with a light sea wind, perfect for kites|a hilltop where a gentle wind keeps a warm afternoon pleasant|a warm coast with a steady light wind filling the sails|breezy has a light, pleasant wind; muggy has none|breezy 有舒服的微风；muggy 闷而无风|chilly means uncomfortably cold, which does not fit a warm, pleasant day|chilly 是冷得不舒服，和温暖宜人的天气不符|muggy means hot, sticky and still, not pleasantly windy|muggy 是又热又黏又闷，不是有舒服的风|bree · zy|the ee vowel team and the z sound spelled z|元音组合 ee，/z/ 音写作 z
+      icicle|a long spike of ice hanging from the edge of a roof|water from a gutter frozen into a pointed spike as long as an arm|a clear spike of ice snapped off a frozen waterfall like a sword|icicle hangs from a roof; hail falls from the sky|icicle 挂在屋檐下；hail 从天上落下|hail is small balls of ice falling from the sky, not one long spike that hangs and drips|hail 是从天上落下的小冰球，不是挂着滴水的长冰柱|splinter is a small sliver of wood stuck in the skin, not a spike of ice|splinter 是扎进皮肤的小木刺，不是冰柱|i · ci · cle|the -cle ending, where c says /k/, after a c that says /s/|结尾 -cle 中 c 读 /k/，前面的 c 读 /s/
+    `,
+  },
 );
 
 const pets = batch(
@@ -117,17 +316,50 @@ const pets = batch(
   ["Words of Pets", "宠物的词"],
   ["caring for animals and the sounds they make", "照顾动物与它们的叫声"],
   `
-  leash|a strap for leading a dog|狗绳|Keep your dog on a ___.|She held the ___ tight.|The dog pulled at the ___ in my hand.|collar,muzzle|leashes
-  collar|a band around an animal's neck; the part of a shirt around the neck|项圈；衣领|The dog's ___ has a tag.|Turn up your ___.|Her shirt ___ was dirty.|leash,muzzle|collars
-  muzzle|the nose and mouth of an animal; a guard over it|口鼻；口套|The dog must wear a ___ so it can't bite.|The horse's ___ was soft.|Put a ___ over his mouth.|leash,kennel|muzzled
-  kennel|a small shelter for a dog; a place where dogs are kept|狗窝；寄养所|The dog sleeps in a ___.|We left him at the ___.|Build the dog a wooden ___.|muzzle,stray|kennels
-  stray|an animal with no home; to move away from the right place|流浪动物；偏离|We fed a ___ cat.|Don't ___ from the path.|The ___ followed us home.|tame,kennel|strayed,strays
-  tame|not wild; to make gentle|驯服的；驯服|The fox was ___.|It is hard to ___ a horse.|The party was ___.|stray,groom|tamed
-  groom|to clean an animal's fur; a man about to marry|梳理(毛)；新郎|___ your dog each week.|The ___ kissed the bride.|Cats ___ themselves.|tame,veterinarian|groomed,grooming
-  veterinarian|a doctor for animals|兽医|Take the cat to the ___.|She wants to be a ___.|The ___ checked the horse.|groom,purr|vet,veterinarians
-  purr|the low sound a happy cat makes; to make it|呼噜声|The cat began to ___.|I love the ___ of a kitten.|The engine began to ___.|growl,leash|purred
-  growl|a low angry sound; to make it|咆哮|The dog began to ___.|We heard an angry ___.|My stomach began to ___.|purr,collar|growled
+  leash|a strap for leading a dog|狗绳|Keep your dog on a ___ in the park, holding the end of the strap so that it cannot run off.|The puppy tugged at the ___ in my hand, pulling me down the street after a squirrel.|She clipped the long ___ to the dog's collar and walked him to the park.|collar,muzzle|leashes
+  collar|a band around an animal's neck; the part of a shirt around the neck|项圈；衣领|The dog's leather ___ fits snugly around its neck and holds a tag with our phone number.|He buckled a bright red ___ around the kitten's neck, with a little bell on it.|The tag on the ___ around the stray's neck showed that it had an owner after all.|leash,muzzle|collars
+  muzzle|the nose and mouth of an animal; a guard over it|口鼻；口套|The dog had to wear a wire ___ over its mouth and nose so that it could not bite anyone at the clinic.|A ___ strapped over its jaws stops a nervous dog from biting, though it can still pant and drink.|Dogs on the bus must wear a ___ so that their mouths are covered and they cannot bite anyone.|collar,leash|muzzled
+  kennel|a small shelter for a dog; a place where dogs are kept|狗窝；寄养所|Our dog sleeps in the wooden ___ in the yard, a little house with a roof to keep off the rain.|While we were on holiday, we left the dog at the ___, where workers fed and walked him every day.|Dad built the ___ for the new puppy out of boards, with a doorway just big enough for her to crawl in.|barracks,muzzle|kennels
+  stray|an animal with no home; to move away from the right place|流浪动物；偏离|The thin ___ had no home and no collar, so we fed it scraps behind the shop.|A hungry ___ followed us home from the park, a little dog that belonged to no one.|The shelter rescues every ___ it finds roaming the streets, any cat or dog with no owner to take it home.|orphan,kennel|strayed,strays
+  tame|not wild; to make gentle|驯服的；驯服|The fox had been raised by people, so it was ___ enough to eat from my hand without running away.|The ___ ducks in the park waddle right up to children for bread instead of flying away from people.|After months of gentle handling, the wild horse became ___ and let the girl ride it.|jittery,cranky|tamed
+  groom|to clean an animal's fur; a man about to marry|梳理(毛)；新郎|Use a soft brush to ___ the horse every morning, cleaning the dirt and loose hair from its coat.|Cats lick their fur to ___ themselves, keeping their coats clean and smooth.|At the pet salon, workers wash, brush and trim the dogs' fur to ___ them for the show.|polish,sweep|groomed,grooming
+  veterinarian|a doctor for animals|兽医|When the cat stopped eating, we took her to the ___, who checked her teeth and gave her medicine.|She wants to be a ___ when she grows up, so that she can treat sick and injured animals.|The ___ set the horse's broken leg and gave it a shot for the pain.|kennel,coach|vet,veterinarians
+  purr|the low sound a happy cat makes; to make it|呼噜声|When I stroked the kitten's back, she began to ___ softly, a happy rumble in her throat.|The old cat curled up on my lap and started to ___ with pleasure, her whole body vibrating.|Cats often ___ when they are content, making a low, steady, rumbling sound.|growl,sigh|purred
+  growl|a low angry sound; to make it|咆哮|The guard dog bared its teeth and began to ___ at the stranger by the gate.|If you take away a dog's bone, it may ___ deep in its throat as a warning.|The bear rose on its back legs and started to ___ angrily when the hikers came too close.|purr,sigh|growled
   `,
+  "context-clues",
+  {
+    intro: t(
+      "At the shelter we found a shy **stray**, bought him a **collar** and a **leash**, and took him to the **veterinarian** for a checkup. These ten words help you talk about caring for animals and the sounds they make.",
+      "我们在收容所找到一只怕生的流浪狗（**stray**），给它买了项圈（**collar**）和狗绳（**leash**），又带它去兽医（**veterinarian**）那里做检查。这十个词帮你谈论照顾动物以及动物发出的声音。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **collar** goes around a dog's neck, a **leash** is the strap you hold, and a **muzzle** covers its mouth so that it cannot bite.",
+        "**collar** 套在狗脖子上，**leash** 是你手里牵的绳，**muzzle** 罩住狗嘴让它咬不了人。",
+      ),
+      use: t(
+        "A cat may **purr** when it is happy and content; a dog may **growl** when it is angry or warning you to stay away.",
+        "猫开心满足时会 **purr**（打呼噜）；狗生气或警告你别靠近时会 **growl**（低吼）。",
+      ),
+      spelling: t(
+        "Watch the long **veterinarian** (ve · ter · i · nar · i · an), the double **z** in **muzzle**, the double **n** in **kennel** and the **ea** in **leash**.",
+        "注意长词 **veterinarian**（ve · ter · i · nar · i · an）、**muzzle** 的双写 **z**、**kennel** 的双写 **n**，以及 **leash** 的 **ea**。",
+      ),
+    },
+    notes: `
+      leash|a strap whose end you hold so that a dog cannot run off in the park|a strap tugged by a puppy chasing a squirrel|a long strap clipped to a dog's collar for a walk|leash is the strap you hold; collar is the band around the neck|leash 是手里牵的绳；collar 是套在脖子上的圈|collar is the band that stays around the dog's neck, not the long strap you hold in your hand|collar 是套在狗脖子上的圈，不是拿在手里的长绳|muzzle is a guard over a dog's mouth to stop it biting, not a strap for leading it|muzzle 是罩住狗嘴防止咬人的口套，不是牵狗的绳|leash|the ea vowel team and the sh ending|元音组合 ea，结尾 sh
+      collar|a leather band snug around a dog's neck holding a tag|a red band with a little bell buckled around a kitten's neck|a band around a stray's neck with a tag showing an owner|collar goes around the neck; leash is the strap clipped to it|collar 套在脖子上；leash 是扣在它上面的绳|leash is the long strap you hold to lead a dog, not the band that fits around its neck|leash 是牵狗的长绳，不是套在脖子上的圈|muzzle covers a dog's mouth and nose, not its neck|muzzle 罩住狗的嘴和鼻子，不是套在脖子上|col · lar|the double l and the -ar ending, not -er|双写 l，结尾是 -ar 不是 -er
+      muzzle|a wire guard over a dog's mouth and nose so that it cannot bite|a strap over a nervous dog's jaws that still lets it pant and drink|a cover over dogs' mouths on a bus so that they cannot bite|muzzle covers the mouth; collar goes around the neck|muzzle 罩住嘴；collar 套在脖子上|collar is a band around the neck, which does nothing to stop a dog from biting|collar 是套在脖子上的圈，不能阻止狗咬人|leash is the strap you hold to lead a dog, not a cover over its mouth|leash 是牵狗的绳，不是罩住狗嘴的东西|muz · zle|the double z before -le|-le 前双写 z
+      kennel|a little wooden house with a roof where a dog sleeps in the yard|a place where workers feed and walk a dog during a holiday|a shelter of boards with a doorway just big enough for a puppy|kennel is a shelter for dogs; barracks are buildings for soldiers|kennel 是狗住的地方；barracks 是士兵住的营房|barracks are buildings where soldiers live, not a shelter for a dog|barracks 是士兵居住的营房，不是狗住的地方|muzzle is a guard over a dog's mouth, not a place where it sleeps or stays|muzzle 是罩在狗嘴上的口套，不是狗睡觉或寄住的地方|ken · nel|the double n before the -el ending|-el 结尾前双写 n
+      stray|a thin animal with no home and no collar fed behind a shop|a hungry little dog that belonged to no one following people home|cats and dogs roaming the streets with no owner|stray is an animal with no home; orphan is a child whose parents have died|stray 是无家可归的动物；orphan 是父母双亡的孩子|orphan is a child whose parents have died, not an animal with no owner|orphan 是父母双亡的孩子，不是没有主人的动物|kennel is a shelter where dogs are kept, not an animal that has no home|kennel 是养狗的地方，不是无家可归的动物|stray|the ay vowel team after the str blend|str 组合之后是元音组合 ay
+      tame|a fox raised by people that eats from a hand|ducks in a park that waddle up to children for bread|a wild horse that lets a girl ride it after months of gentle handling|tame means calm and used to people; jittery means nervous and jumpy|tame 是温顺、习惯与人相处；jittery 是紧张不安|jittery means nervous and jumpy, which would make an animal run away, not come close|jittery 是紧张不安，这样的动物会逃走，不会靠近人|cranky means bad-tempered and easily annoyed, not calm and gentle with people|cranky 是脾气坏、容易烦躁，不是温顺地亲近人|tame|the long a with a silent e at the end|a 读长音，结尾 e 不发音
+      groom|brushing dirt and loose hair from a horse's coat every morning|cats licking their fur to keep it clean and smooth|washing, brushing and trimming dogs' fur for a show|groom cleans and brushes an animal's fur; polish rubs a hard surface until it shines|groom 是清洁梳理动物的毛；polish 是把硬的表面擦亮|polish means to rub a hard surface such as shoes until it shines, not to clean and brush fur|polish 是把鞋子等硬表面擦亮，不是清洁梳理动物的毛|sweep means to clean a floor with a broom, not to brush an animal's coat|sweep 是用扫帚扫地，不是梳理动物的皮毛|groom|the oo vowel team between r and m|r 和 m 之间是元音组合 oo
+      veterinarian|a doctor who checks a cat's teeth and gives it medicine|someone who treats sick and injured animals as a job|a doctor who sets a horse's broken leg and gives it a shot|veterinarian is a doctor for animals; kennel is a place where dogs are kept|veterinarian 是给动物看病的医生；kennel 是养狗的地方|kennel is a place where dogs stay or sleep, not a person who treats sick animals|kennel 是狗寄住或睡觉的地方，不是给动物治病的人|coach trains people for a sport, not a doctor who treats animals|coach 是训练运动员的人，不是给动物看病的医生|vet · er · i · nar · i · an|six parts, with -ar- in the middle (often shortened to vet)|共六部分，中间是 -ar-（常简称 vet）
+      purr|a kitten making a happy rumble in her throat when stroked|an old cat on a lap vibrating with pleasure|a low, steady rumbling a content cat makes|purr is the soft sound of a happy cat; growl is the low sound of an angry animal|purr 是猫开心时的呼噜声；growl 是动物生气时的低吼|growl is a low angry sound that warns others away, not a happy rumble of pleasure|growl 是警告别人走开的低沉怒吼，不是开心的呼噜声|sigh is a long breath out from sadness or relief, not a steady rumbling in the throat|sigh 是因难过或放松而长长呼气，不是喉咙里持续的呼噜声|purr|the ur sound and the double r at the end|ur 读 /ɜː/，结尾双写 r
+      growl|a guard dog baring its teeth at a stranger|a dog warning deep in its throat when its bone is taken|a bear rising on its back legs angrily as hikers come close|growl is an angry warning sound; purr is a happy sound|growl 是生气警告的声音；purr 是开心的声音|purr is the soft rumble of a happy, content cat, not an angry warning|purr 是猫开心满足时的呼噜声，不是生气的警告|sigh is a long breath out from sadness or relief, not an angry sound that warns others away|sigh 是因难过或放松而长呼一口气，不是警告别人的怒声|growl|the ow that says /ow/, as in owl|ow 读 /aʊ/（同 owl）
+    `,
+  },
 );
 
 const clothes = batch(
@@ -135,17 +367,50 @@ const clothes = batch(
   ["Words of Clothes", "衣物的词"],
   ["parts of clothes, cloth and what we wear", "衣服的部件、布料与穿着"],
   `
-  sleeve|the part of a garment covering the arm|袖子|Roll up your ___.|The ___ is torn at the elbow.|She wiped her nose on her ___.|zipper,seam|sleeves,sleeveless
-  zipper|a fastener of two rows of teeth|拉链|The ___ on my jacket is stuck halfway.|Pull up your ___ to close your coat.|My bag's ___ broke.|buckle,sleeve|zippers
-  buckle|a clasp for a belt; to fasten; to bend under pressure|扣环；扣上；弯曲|___ your seat belt.|The ___ on his belt is gold.|His knees began to ___.|zipper,seam|buckled
-  seam|a line where two pieces of cloth are sewn|接缝|The ___ where the cloth was sewn split.|Sew along the ___.|A ___ of coal ran through the rock.|sleeve,tailor|seams
-  fabric|cloth|布料|The silk ___ is soft.|They sell ___ by the meter.|The ___ of society.|denim,outfit|fabrics
-  denim|a strong cotton cloth used for jeans|牛仔布|He wore a ___ jacket.|Blue jeans are made of ___.|Cowboys wore tough ___ trousers.|fabric,fashion|
-  tailor|a person who makes clothes; to make to fit|裁缝；定制|The ___ made his suit.|We can ___ the course to you.|Ask the ___ to take in your trousers.|outfit,seam|tailored,tailors
-  outfit|a set of clothes worn together|全套服装|What a nice ___ for the party: dress, hat and shoes.|She bought a new ___.|He wore a cowboy ___.|wardrobe,fabric|outfits
-  wardrobe|a cupboard for clothes; one's collection of clothes|衣柜；全部衣服|Hang it in the ___.|She has a big ___.|Update your ___ with clothes for the new season.|outfit,fashion|wardrobes
-  fashion|a popular style; a way of doing|时尚；方式|It is the latest ___.|She studies ___.|He spoke in a strange ___.|wardrobe,denim|fashionable
+  sleeve|the part of a garment covering the arm|袖子|Roll up each ___ to your elbow before you wash your hands.|The ___ of his jacket was torn at the elbow, so his arm showed through.|She wore a summer dress with not a single ___, so her arms were bare.|collar,seam|sleeves,sleeveless
+  zipper|a fastener of two rows of teeth|拉链|The ___ on my jacket is stuck halfway, and its little metal teeth will not close.|Pull the tab of the ___ up to close your coat, joining the two rows of teeth.|My backpack's ___ broke, so the two rows of teeth no longer met and my books fell out.|buckle,seam|zippers
+  buckle|a clasp for a belt; to fasten; to bend under pressure|扣环；扣上；弯曲|The gold ___ on his belt has a metal prong that goes through one of the holes.|Push the metal tongue of the seat belt into the ___ until it clicks shut.|Her shoes fasten with a small silver ___ on the strap instead of laces.|zipper,collar|buckled
+  seam|a line where two pieces of cloth are sewn|接缝|The ___ down the side of my jeans split where the two pieces of cloth were sewn together.|Sew along the ___ with tiny stitches so that the two pieces of cloth stay joined.|Turn the shirt inside out and you can see the ___ where the front and the back were stitched together.|zipper,sleeve|seams
+  fabric|cloth|布料|She bought three meters of soft silk ___ to sew into curtains.|The shop sells cotton, wool and linen ___ by the meter for people who sew their own clothes.|Wool is a warm ___ made from sheep's hair, and it is woven into coats and blankets.|denim,outfit|fabrics
+  denim|a strong cotton cloth used for jeans|牛仔布|The tough blue cotton cloth that jeans are made of is called ___.|His jacket and jeans were both ___, the same rough blue cotton, so he was blue from head to toe.|The jeans faded because ___, the blue cotton cloth they are made of, loses its dye in the wash.|fabric,fashion|
+  tailor|a person who makes clothes; to make to fit|裁缝；定制|The ___ measured his chest and arms, then cut and sewed the suit to fit him exactly.|Ask the ___ to take in your trousers at the waist, since she can alter clothes by hand.|The old ___ sat cross-legged with a needle and thread, sewing a wedding dress for a customer.|cashier,shopper|tailored,tailors
+  outfit|a set of clothes worn together|全套服装|For the party she chose her ___: a green dress, a matching hat and silver shoes, all worn together.|His cowboy ___ was complete, from the boots and jeans to the hat and the belt, all on at once.|The team wore the same ___ for the photo: white shirts, blue shorts and red socks.|wardrobe,fabric|outfits
+  wardrobe|a cupboard for clothes; one's collection of clothes|衣柜；全部衣服|Hang your coat in the ___ and close its doors so that the clothes do not get dusty.|The tall wooden ___ in her bedroom has a rail for dresses and two drawers for socks.|The children hid inside the big ___ among the hanging coats and shut the door behind them.|outfit,trolley|wardrobes
+  fashion|a popular style; a way of doing|时尚；方式|Wide trousers are the latest ___; everyone in the city seems to be wearing them this year.|She studies ___ at college, learning how styles of clothing change and why people follow them.|Short hair for women came into ___ in the 1920s, when it suddenly became popular.|outfit,wardrobe|fashionable
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **tailor** pinned the **sleeve** of my jacket, sewed in a new **zipper** and checked every **seam**. These ten words help you name the parts of clothes, the cloth they are made from and what people choose to wear.",
+      "裁缝（**tailor**）把我外套的袖子（**sleeve**）别好，缝上一条新拉链（**zipper**），又检查了每一道接缝（**seam**）。这十个词帮你说出衣服的部件、做衣服的布料，以及人们选择穿什么。",
+    ),
+    watchOut: {
+      meanings: t(
+        "An **outfit** is one set of clothes worn together; a **wardrobe** is the cupboard where all your clothes hang.",
+        "**outfit** 是一起穿的一整套衣服；**wardrobe** 是挂所有衣服的衣柜。",
+      ),
+      use: t(
+        "**Fabric** is any cloth at all; **denim** is one tough blue cotton fabric, the kind used for jeans.",
+        "**fabric** 泛指一切布料；**denim** 只是其中一种结实的蓝色棉布，用来做牛仔裤。",
+      ),
+      spelling: t(
+        "Watch the **ee** in **sleeve** and the **ea** in **seam**, the double **p** in **zipper**, the **-ckle** of **buckle** and the **-ric** ending of **fabric**.",
+        "注意 **sleeve** 的 **ee** 和 **seam** 的 **ea**、**zipper** 的双写 **p**、**buckle** 的 **-ckle**，以及 **fabric** 的 **-ric** 结尾。",
+      ),
+    },
+    notes: `
+      sleeve|the part of a shirt rolled up to the elbow before washing hands|the part of a jacket torn at the elbow so that the arm shows|a summer dress with nothing covering the arms|sleeve covers the arm; collar goes around the neck|sleeve 包住手臂；collar 围着脖子|collar is the part of a shirt around the neck, not the part that covers the arm|collar 是衣服围着脖子的部分，不是包住手臂的部分|seam is the line where two pieces of cloth are sewn, not a whole part that covers the arm|seam 是两块布缝合的线，不是包住手臂的一整块|sleeve|the ee vowel team and the silent e after v|元音组合 ee，v 后的 e 不发音
+      zipper|a jacket fastener stuck halfway with metal teeth that will not close|a tab pulled up to join two rows of teeth on a coat|a broken backpack fastener whose teeth no longer meet|zipper closes with two rows of teeth; buckle closes with a clasp|zipper 靠两排齿合上；buckle 靠扣环扣住|buckle is a clasp with a prong or tongue, not two rows of teeth that slide together|buckle 是带扣针或扣舌的扣环，不是两排滑动咬合的齿|seam is a sewn line where two pieces of cloth meet, not a fastener that opens and closes|seam 是两块布缝合的线，不是能开能合的扣件|zip · per|the double p before the -er ending|-er 结尾前双写 p
+      buckle|a gold clasp on a belt with a prong that goes through a hole|the clasp a seat-belt tongue clicks into|a small silver clasp fastening a shoe strap instead of laces|buckle is a clasp on a belt or strap; zipper is two rows of teeth|buckle 是皮带或带子上的扣环；zipper 是两排齿的拉链|zipper is two rows of teeth that slide together, not a clasp with a prong on a belt or strap|zipper 是两排滑动咬合的齿，不是皮带或带子上带扣针的扣环|collar is the band around a neck, not a clasp that fastens a belt or a strap|collar 是围在脖子上的圈，不是扣住皮带或带子的扣环|buck · le|the ck before the -le ending|-le 结尾前是 ck
+      seam|the sewn line down the side of jeans that split|a line sewn with tiny stitches to keep two pieces of cloth joined|the stitched line inside a shirt where the front and back meet|seam is the sewn line where two pieces meet; zipper is a fastener that opens|seam 是两块布缝合的线；zipper 是可以拉开的拉链|zipper is a fastener with teeth that opens and closes, not a line of sewing|zipper 是能开能合的带齿拉链，不是一道缝线|sleeve is the part of a garment that covers the arm, not a line where cloth is sewn|sleeve 是衣服包住手臂的部分，不是布料缝合的线|seam|the ea vowel team; do not confuse it with seem|元音组合 ea；别和 seem 混淆
+      fabric|three meters of silk to be sewn into curtains|cotton, wool and linen sold by the meter|wool woven into coats and blankets|fabric is any kind of cloth; denim is one kind|fabric 泛指任何布料；denim 只是其中一种|denim is only the tough blue cotton used for jeans, not a word for silk, wool or any cloth|denim 只是做牛仔裤的结实蓝棉布，不能泛指丝绸、羊毛等布料|outfit is a set of clothes worn together, not cloth sold by length or woven from fibers|outfit 是一起穿的一套衣服，不是按长度卖或用纤维织成的布|fab · ric|the -ric ending, not -rick|结尾是 -ric，不是 -rick
+      denim|the tough blue cotton cloth that jeans are made of|rough blue cotton for a jacket and jeans worn together|blue cotton cloth that loses its dye in the wash|denim is the blue cotton cloth of jeans; fabric is any cloth at all|denim 是做牛仔裤的蓝棉布；fabric 泛指任何布料|fabric is the general word for any cloth, not the name of the tough blue cotton of jeans|fabric 是布料的统称，不是牛仔裤那种结实蓝棉布的名称|fashion is a popular style of the time, not a kind of cloth|fashion 是一时流行的风格，不是一种布料|den · im|the -im ending, not -um|结尾是 -im，不是 -um
+      tailor|someone who measures, cuts and sews a suit to fit|someone who takes in trousers at the waist by hand|someone sewing a wedding dress with a needle and thread|tailor makes and alters clothes; cashier takes payments|tailor 做衣服、改衣服；cashier 收款|cashier takes payments at a shop counter, not someone who cuts and sews clothes|cashier 是在柜台收钱的人，不是裁剪缝制衣服的人|shopper is a person buying things in a shop, not someone who makes clothes to fit|shopper 是在商店买东西的人，不是量体做衣服的人|tai · lor|the ai vowel team and the -or ending|元音组合 ai，结尾是 -or
+      outfit|a dress, a matching hat and shoes worn together for a party|boots, jeans, a hat and a belt all on at once|white shirts, blue shorts and red socks worn by a team|outfit is one set of clothes worn together; wardrobe is where all your clothes hang|outfit 是一起穿的一整套衣服；wardrobe 是挂所有衣服的衣柜|wardrobe is the cupboard where all your clothes hang, not one set of clothes worn at the same time|wardrobe 是挂所有衣服的衣柜，不是同时穿的一套衣服|fabric is cloth that clothes are made from, not a set of clothes worn together|fabric 是做衣服的布料，不是一起穿的一套衣服|out · fit|out and fit joined into one word|out 和 fit 连成一个词
+      wardrobe|a cupboard with doors to keep coats from getting dusty|a tall wooden cupboard with a rail for dresses and drawers for socks|a big cupboard full of hanging coats that children hide in|wardrobe is a cupboard for clothes; outfit is a set of clothes|wardrobe 是衣柜；outfit 是一套衣服|outfit is a set of clothes you wear, not a cupboard with doors to hang them in|outfit 是穿在身上的一套衣服，不是有门可以挂衣服的柜子|trolley is a cart on wheels for carrying shopping, not a cupboard for hanging clothes|trolley 是装购物商品的手推车，不是挂衣服的柜子|ward · robe|ward and robe joined, with a silent e at the end|ward 与 robe 相连，结尾 e 不发音
+      fashion|wide trousers that everyone in the city is wearing this year|how styles of clothing change and why people follow them|short hair for women suddenly becoming popular in the 1920s|fashion is the popular style of a time; outfit is one set of clothes|fashion 是一时流行的风格；outfit 是一套衣服|outfit is one set of clothes worn together, not a style that is popular with everyone at a time|outfit 是一起穿的一套衣服，不是某个时期大家都追随的流行风格|wardrobe is a cupboard for clothes, not a style that becomes popular|wardrobe 是衣柜，不是流行起来的风格|fash · ion|the sh sound and the -ion ending|sh 音，结尾是 -ion
+    `,
+  },
 );
 
 /** batchesC are the batches of injuries, illness, sport, cooking, taste, weather, pets and clothes. */

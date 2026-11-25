@@ -1,6 +1,7 @@
 // Grade 9: the batches of phrasal verbs: of starting and stopping, of solving problems, of people, of more and
 // less, of breaking and building, of meeting and arriving, of coping and of papers and things.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const starting = batch(
   ["Phrasal Verbs of Starting and Stopping", "开始与停止的短语动词"],
   ["beginning, leaving, delaying, cancelling and quitting", "开始、出发、推迟、取消与放弃"],
   `
-  set off|to begin a journey; to cause to go off|出发；引发|We ___ at dawn.|Smoke may ___ the alarm.|They ___ for the coast.|put off,give in|setting off
-  kick off|to start a football game; to begin|开球；开始|The match will ___ at three.|Let's ___ the meeting.|We ___ the year with a party.|set off,take off|kicked off,kicking off
-  take off|to leave the ground; to remove clothes; to succeed suddenly|起飞；脱下；走红|The plane will ___ soon.|___ your shoes.|Her career began to ___.|kick off,drop out|took off,taken off,taking off
-  put off|to delay; to make someone dislike|推迟；使反感|Don't ___ your homework.|The smell may ___ diners.|We had to ___ the trip.|give in,step down|putting off
-  call off|to cancel|取消|They had to ___ the game.|Don't ___ the wedding.|Rain made us ___ the picnic.|back down,step down|called off,calling off
-  give up|to stop trying; to stop a habit|放弃；戒除|Never ___.|He chose to ___ smoking.|Don't ___ on your dreams.|kick off,call off|gave up,given up,giving up
-  give in|to stop resisting; to hand in work|屈服；交上|We will never ___.|Don't ___ to their demands.|Please ___ your essays.|kick off,call off|gave in,given in,giving in
-  drop out|to leave school or a race before the end|退学；退出|He chose to ___ of college.|Two runners had to ___.|Don't ___ now.|put off,call off|dropped out,dropping out
-  step down|to resign from a job or position|辞职，下台|The mayor chose to ___.|She will ___ as captain.|He refused to ___.|kick off,put off|stepped down,stepping down
-  back down|to give up a claim or argument|让步|Neither side would ___.|The boss had to ___.|Don't ___ now.|kick off,take off|backed down,backing down
+  set off|to begin a journey; to cause to go off|出发；引发|We packed the car the night before so that we could ___ for the coast at first light.|The hikers will ___ from the village at dawn and walk until they reach the hut by nightfall.|The explorers waved goodbye from the dock as they got ready to ___ on their long journey south.|put off,kick off|setting off
+  kick off|to start a football game; to begin|开球；开始|The football match will ___ at three o'clock, when the referee blows the whistle to start play.|The festival will ___ on Friday night with an opening concert, and the music will go on all weekend.|The second half will ___ after a fifteen-minute break, with the home team starting with the ball.|set off,take off|kicked off,kicking off
+  take off|to leave the ground; to remove clothes; to succeed suddenly|起飞；脱下；走红|Fasten your seat belts, as the plane is about to ___ and climb into the sky.|The rocket roared and began to ___, rising slowly off the launch pad.|The geese ran across the water, flapping hard, until they could ___ and fly south.|kick off,drop out|took off,taken off,taking off
+  put off|to delay; to make someone dislike|推迟；使反感|Don't ___ your homework until Sunday night; do it today while you still have time.|We had to ___ the trip until next month because Dad was ill; we will still go, just later.|They decided to ___ the wedding until the summer, moving it to a later date.|call off,give up|putting off
+  call off|to cancel|取消|The rain was so heavy that they had to ___ the game, and it will not be played at all.|They decided to ___ the wedding for good and sent the guests a note saying it would not happen.|The police chose to ___ the search once the lost boy was found safe at home.|put off,back down|called off,calling off
+  give up|to stop trying; to stop a habit|放弃；戒除|Grandpa decided to ___ smoking after forty years, and he has not touched a cigarette since.|You should never ___ on your dreams, even when they seem far away.|He plans to ___ sugar for a month, eating no sweets or cakes at all.|give in,drop out|gave up,given up,giving up
+  give in|to stop resisting; to hand in work|屈服；交上|The parents refused to ___ to the crying child's demands for sweets.|After an hour of begging, Mom finally agreed to ___ to us and let us stay up late.|Don't ___ to pressure from friends who want you to do something you know is wrong.|give up,call off|gave in,given in,giving in
+  drop out|to leave school or a race before the end|退学；退出|He decided to ___ of college after one year to start his own business.|Two runners hurt their legs and had to ___ of the race before the finish line.|The school is trying to help students who might ___ of school before they finish.|step down,call off|dropped out,dropping out
+  step down|to resign from a job or position|辞职，下台|The mayor will ___ next month and let someone else run the city.|After ten years in charge, the captain chose to ___ and hand the job to a younger player.|The head teacher will ___ from her post at the end of the year.|back down,drop out|stepped down,stepping down
+  back down|to give up a claim or argument|让步|Neither side would ___ in the argument, and both kept insisting they were right.|The boss had to ___ when the workers proved she was wrong, and she took back her demand.|He refused to ___ from his claim that he had seen a ghost, no matter how much we laughed.|step down,call off|backed down,backing down
   `,
+  "context-clues",
+  {
+    intro: t(
+      "We meant to **set off** at dawn, but the storm made us **put off** the trip, and in the end we had to **call off** the whole holiday. These ten phrasal verbs help you talk about starting, leaving, delaying, cancelling and giving up.",
+      "我们本打算黎明出发（**set off**），可暴风雨让我们推迟（**put off**）了行程，最后只好取消（**call off**）整个假期。这十个短语动词帮你谈论开始、出发、推迟、取消和放弃。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **put off** a plan is to move it to a later time; to **call off** a plan is to cancel it so that it never happens.",
+        "**put off** 一个计划是把它改到以后；**call off** 一个计划是取消它，让它根本不发生。",
+      ),
+      use: t(
+        "You **give in to** a person or a demand when you stop resisting; you **give up** a habit or a hard task when you stop trying.",
+        "停止抵抗、向某人或某个要求屈服用 **give in to**；不再尝试某件难事或戒掉习惯用 **give up**。",
+      ),
+      spelling: t(
+        "Keep each phrasal verb as two separate words, and remember that **set off** and **put off** do not change in the past, while **take off** becomes **took off**.",
+        "每个短语动词都写成分开的两个词；记住 **set off** 和 **put off** 的过去式不变，而 **take off** 变成 **took off**。",
+      ),
+    },
+    notes: `
+      set off|packing the car the night before to leave for the coast at first light|hikers leaving a village at dawn to reach a hut by nightfall|explorers waving goodbye from the dock before a long journey south|set off means to start a journey; put off means to delay something|set off 是踏上旅程；put off 是推迟某事|put off means to delay a plan until later, not to start out on a journey|put off 是把计划推迟，不是踏上旅程|kick off means to start a match or an event, not to leave on a journey|kick off 是比赛或活动开始，不是动身上路|set · off|set stays set in the past: set off, not setted off|过去式仍是 set off，不是 setted off
+      kick off|a football match starting when the referee blows the whistle at three o'clock|a festival starting on Friday night with an opening concert|the second half starting after a fifteen-minute break|kick off means to start a game or an event; set off means to start a journey|kick off 是比赛或活动开始；set off 是出发旅行|set off means to begin a journey, not to begin a match or a festival|set off 是出发上路，不是比赛或节日开始|take off means to leave the ground and rise into the air, not to start a match or a concert|take off 是离地升空，不是比赛或音乐会开始|kick · off|the ck at the end of kick|kick 结尾是 ck
+      take off|a plane about to climb into the sky|a rocket rising slowly off the launch pad|geese running across the water until they rise and fly|take off means to leave the ground and fly; kick off means to begin a match|take off 是离地起飞；kick off 是比赛开球|kick off means to start a match or an event, not to rise into the air|kick off 是比赛或活动开始，不是升上天空|drop out means to leave a school or a race before the end, not to rise off the ground|drop out 是中途退学或退赛，不是离地升空|take · off|take becomes took in the past: took off|过去式是 took off
+      put off|homework left until Sunday night instead of done today|a trip moved to next month because Dad was ill, though it will still happen|a wedding moved to a later date in the summer|put off means to delay; call off means to cancel|put off 是推迟；call off 是取消|call off means to cancel so that something never happens, not to move it to a later time|call off 是取消、不再进行，不是改到以后|give up means to stop trying for good, not to move a plan to a later date|give up 是彻底放弃，不是把计划改到以后|put · off|put stays put in the past: put off|过去式仍是 put off
+      call off|a game cancelled by heavy rain and never played at all|a wedding cancelled for good with a note to the guests|a search stopped once the lost boy is found safe|call off means to cancel; put off means to delay|call off 是取消；put off 是推迟|put off means to move something to later, not to cancel it so that it will not happen at all|put off 是改到以后，不是彻底取消|back down means to stop insisting in an argument, not to cancel a game or a search|back down 是在争论中让步，不是取消比赛或搜寻|call · off|the double l in call|call 中双写 l
+      give up|stopping smoking after forty years and never touching a cigarette since|never stopping trying for your dreams, even when they seem far away|eating no sweets or cakes for a month|give up means to stop doing or trying something; give in means to stop resisting someone|give up 是放弃做某事；give in 是不再抵抗某人|give in is used with to a person or demand, not with a habit like smoking or with your dreams|give in 后接 to 加人或要求，不接吸烟这样的习惯或梦想|drop out means to leave a school or a race before the end, not to stop a habit|drop out 是中途退学或退赛，不是戒掉习惯|give · up|give becomes gave in the past: gave up|过去式是 gave up
+      give in|parents refusing to let a crying child's demands win|Mom finally agreeing to let her begging children stay up late|friends pressuring you to do something you know is wrong|give in to someone means to stop resisting them; give up means to stop trying|give in to 某人是不再抵抗、屈服；give up 是放弃尝试|give up is not followed by to a person or a demand; it means to stop trying or stop a habit|give up 后面不接 to 加人或要求，它的意思是放弃尝试或戒掉习惯|call off means to cancel a plan, not to stop resisting a demand|call off 是取消计划，不是屈服于要求|give · in|give becomes gave in the past: gave in|过去式是 gave in
+      drop out|leaving college after one year to start a business|runners with hurt legs leaving a race before the finish line|students who might leave school before they finish|drop out means to leave a school or a race before the end; step down means to leave a top job|drop out 是中途退学或退赛；step down 是辞去高位|step down means to leave a job or a post in charge, not to leave a school or a race before the end|step down 是辞去职位，不是中途离开学校或比赛|call off means to cancel something, not to leave a school or a race yourself|call off 是取消某事，不是自己中途退出|drop · out|the p doubles in the past: dropped out|过去式双写 p：dropped out
+      step down|a mayor letting someone else run the city|a captain handing the job to a younger player after ten years in charge|a head teacher leaving her post at the end of the year|step down means to leave a job in charge; back down means to stop insisting in an argument|step down 是辞去要职；back down 是在争论中让步|back down means to stop insisting in an argument, not to leave a job in charge|back down 是在争论中让步，不是辞去要职|drop out means to leave a school or a race before the end, not to leave a top job|drop out 是中途退学或退赛，不是辞去要职|step · down|the p doubles in the past: stepped down|过去式双写 p：stepped down
+      back down|two sides in an argument both insisting they are right|a boss taking back her demand after workers prove her wrong|someone keeping his claim about a ghost while everyone laughs|back down means to stop insisting you are right; step down means to leave a job|back down 是不再坚持己见；step down 是辞职|step down means to leave a job or post, not to stop insisting in an argument|step down 是辞去职位，不是在争论中让步|call off means to cancel an event, not to give up a claim in an argument|call off 是取消活动，不是在争论中放弃主张|back · down|the ck at the end of back|back 结尾是 ck
+    `,
+  },
 );
 
 const solving = batch(
@@ -27,17 +61,50 @@ const solving = batch(
   ["Phrasal Verbs of Solving Problems", "解决问题的短语动词"],
   ["understanding, finding, checking and thinking up", "弄懂、发现、调查与想出"],
   `
-  figure out|to come to understand; to solve|弄清楚|I can't ___ this puzzle.|Let's ___ a plan.|She tried to ___ what he meant.|point out,rule out|figured out,figuring out
-  work out|to solve; to exercise; to turn out well|解决；锻炼；进展顺利|___ the answer to the sum in your head.|He likes to ___ at the gym.|I hope it will ___.|point out,rule out|worked out,working out
-  sort out|to organize; to resolve a problem|整理；解决|We need to ___ this mess.|___ your desk.|Let's ___ the quarrel.|point out,rule out|sorted out,sorting out
-  deal with|to take action to solve; to handle|处理|We must ___ the problem.|How do you ___ stress?|I'll ___ it later.|rule out,come up with|dealt with,dealing with
-  find out|to discover a fact|查明，发现|Did you ___ his name?|We'll soon ___.|___ when the bus leaves.|rule out,think over|found out,finding out
-  look into|to investigate|调查|Police will ___ the case.|I'll ___ it for you.|We need to ___ the cost.|point out,come up with|looked into,looking into
-  rule out|to exclude as a possibility|排除|We can't ___ rain.|Doctors were able to ___ cancer.|Don't ___ anything yet.|come up with,think over|ruled out,ruling out
-  point out|to draw attention to|指出|She was quick to ___ the error.|Let me ___ one thing you missed.|He tried to ___ the danger.|come up with,think over|pointed out,pointing out
-  think over|to consider carefully|仔细考虑|Let me ___ the offer.|___ what I said.|She asked for time to ___ it.|come up with,figure out|thought over,thinking over
-  come up with|to produce an idea or plan|想出|Can you ___ a better idea?|She tried to ___ the money.|We must ___ a name.|think over,find out|came up with,coming up with
+  figure out|to come to understand; to solve|弄清楚|I've stared at this puzzle for an hour, and I still can't ___ how to solve it in my head.|She read his strange note three times before she could ___ what on earth he meant.|It took me a while to ___ how the new remote works, but now I can use every button.|point out,look into|figured out,figuring out
+  work out|to solve; to exercise; to turn out well|解决；锻炼；进展顺利|He goes to the gym to ___ three times a week, lifting weights to keep fit.|Don't worry so much; I'm sure everything will ___ fine in the end.|My first plan didn't ___, so I tried a different way and it went well.|sort out,figure out|worked out,working out
+  sort out|to organize; to resolve a problem|整理；解决|Your desk is a mess, so please ___ all those papers into neat piles.|My two friends had a quarrel, and I helped them ___ their argument so that they were friends again.|She spent the afternoon trying to ___ the tangle of wires behind the TV, untangling and labelling each one.|look into,point out|sorted out,sorting out
+  deal with|to take action to solve; to handle|处理|How do you ___ stress before a big exam: do you go for a run or listen to music?|The shop assistant was trained to ___ angry customers, listening calmly and fixing their complaints.|I'm too busy now, but I'll ___ the leaking tap myself tomorrow, fixing it with a new washer.|come up with,point out|dealt with,dealing with
+  find out|to discover a fact|查明，发现|I rang the station to ___ when the next bus leaves.|Did you ever ___ the name of the girl who sent the card, or is it still a mystery?|We will ___ our exam results next week, when the school sends them home.|think over,point out|found out,finding out
+  look into|to investigate|调查|The police promised to ___ the robbery, questioning every neighbor and checking the cameras.|The council will ___ the complaints about noise and decide what can be done.|Before you buy a used car, it is wise to ___ its history and see whether it has been in a crash.|point out,come up with|looked into,looking into
+  rule out|to exclude as a possibility|排除|Tests helped the doctors ___ a broken bone, so they knew it was only a sprain.|The sky is grey, so we can't ___ rain this afternoon; take an umbrella just in case.|The police were able to ___ the gardener, since he was abroad on the night of the crime.|point out,think over|ruled out,ruling out
+  point out|to draw attention to|指出|The teacher was quick to ___ the spelling mistake, circling it in red so that I could see it.|Let me ___ the castle on the hill, just over there to the left of the church.|The guide stopped to ___ a rare bird in the tree so that the whole group could see it.|rule out,come up with|pointed out,pointing out
+  think over|to consider carefully|仔细考虑|Thanks for the offer; let me ___ it for a few days before I decide.|She asked for a week to ___ the job offer carefully before she said yes or no.|Before you answer, sit quietly and ___ what I have said, weighing each point before you decide.|come up with,figure out|thought over,thinking over
+  come up with|to produce an idea or plan|想出|Can you ___ a better name for the team, one that nobody has ever used before?|The class had to ___ a plan to raise money, and Tom invented a cake sale.|She tried to ___ a clever excuse for being late, but she could not invent one.|think over,find out|came up with,coming up with
   `,
+  "context-clues",
+  {
+    intro: t(
+      "When the class pet went missing, we had to **find out** where it went, **rule out** the open window and **come up with** a plan to catch it. These ten phrasal verbs help you talk about understanding, discovering, checking and thinking up answers.",
+      "班里的宠物不见了，我们得查明（**find out**）它去了哪儿，排除（**rule out**）开着的窗户，再想出（**come up with**）一个抓它的办法。这十个短语动词帮你谈论弄懂、发现、调查和想出答案。",
+    ),
+    watchOut: {
+      meanings: t(
+        "You **find out** a fact by asking, reading or waiting to be told; you **figure out** an answer by thinking hard about it yourself.",
+        "通过询问、阅读或等别人告诉你而得知事实用 **find out**；靠自己动脑想出答案用 **figure out**。",
+      ),
+      use: t(
+        "To **rule out** something is to decide that it cannot be the answer; to **point out** something is to make others notice it.",
+        "**rule out** 是认定某事不可能是答案而排除它；**point out** 是让别人注意到某事。",
+      ),
+      spelling: t(
+        "Write **come up with** as three separate words, and remember the past forms **dealt with**, **found out** and **thought over**.",
+        "**come up with** 要写成分开的三个词，并记住过去式 **dealt with**、**found out** 和 **thought over**。",
+      ),
+    },
+    notes: `
+      figure out|staring at a puzzle for an hour trying to solve it in your head|reading a strange note three times to understand what he meant|learning how the new remote works until you can use every button|figure out means to understand by thinking; point out means to show something to others|figure out 是自己想明白；point out 是指给别人看|point out means to make others notice something you already see, not to understand something you are stuck on|point out 是让别人注意到你已看到的东西，不是弄懂让你卡住的事|look into means to investigate a matter by checking facts, not to understand something in your own head|look into 是通过核查事实来调查，不是在自己脑子里弄懂|fig · ure · out|the ure in figure; past figured out|figure 中的 ure；过去式 figured out
+      work out|going to the gym three times a week and lifting weights|everything ending fine in the end|a first plan that failed before a different way went well|work out can mean to exercise or to end well; sort out means to put things in order|work out 可指锻炼或结果顺利；sort out 是整理好|sort out needs something to put in order, like papers or a quarrel; it does not mean to exercise or to end well|sort out 要带上整理的对象，如文件或争吵，不是锻炼或结果顺利|figure out needs something to understand, like a puzzle; it does not mean to exercise or to turn out fine|figure out 要带上要弄懂的东西，如谜题，不是锻炼或结果顺利|work · out|the or in work that sounds like /er/|work 中的 or 读 /ɜː/
+      sort out|messy papers put into neat piles|a quarrel between two friends settled so that they are friends again|a tangle of wires behind the TV untangled and labelled|sort out means to put in order or settle; look into means to investigate|sort out 是整理或解决；look into 是调查|look into means to investigate and gather facts, not to put papers into piles or settle a quarrel|look into 是调查收集事实，不是把文件整理成堆或平息争吵|point out means to make others notice something, not to put a mess in order|point out 是让别人注意，不是把乱糟糟的东西理顺|sort · out|the or in sort|sort 中的 or
+      deal with|handling stress before a big exam with a run or music|handling angry customers by listening calmly and fixing complaints|fixing a leaking tap yourself with a new washer|deal with means to handle a problem yourself; point out means only to show it to someone|deal with 是亲自处理问题；point out 只是把它指给别人看|come up with means to think up a new idea, not to handle stress, customers or a broken tap|come up with 是想出新主意，不是应对压力、顾客或漏水的龙头|point out means only to show something to others, not to handle it and fix it|point out 只是指给别人看，不是处理并修好它|deal · with|the past is dealt with, with a t|过去式是带 t 的 dealt with
+      find out|ringing the station to learn when the next bus leaves|learning the name of the girl who sent a card|learning exam results when the school sends them home|find out means to learn a fact; think over means to consider something carefully|find out 是得知事实；think over 是仔细考虑|think over means to consider something carefully before deciding, not to learn a fact from someone|think over 是做决定前仔细考虑，不是从别人那里得知事实|point out means to make others notice something, not to learn a fact you did not know|point out 是让别人注意，不是得知你原本不知道的事|find · out|the past is found out|过去式是 found out
+      look into|police questioning neighbors and checking cameras after a robbery|a council examining complaints about noise to decide what to do|checking a used car's history to see whether it has crashed|look into means to investigate; point out means to make someone notice|look into 是调查；point out 是让人注意到|point out means to make others notice something, not to check facts and question people|point out 是让别人注意，不是核查事实、询问他人|come up with means to think up a new idea, not to examine something that already happened|come up with 是想出新主意，不是调查已经发生的事|look · in · to|into is one word after look|look 之后的 into 是一个词
+      rule out|tests showing a broken bone is not the cause, so it is only a sprain|grey skies meaning rain is still possible this afternoon|a gardener who cannot be guilty because he was abroad|rule out means to decide something is not possible; point out means to show it|rule out 是认定不可能而排除；point out 是指出|point out means to draw attention to something, not to decide that it cannot be true|point out 是让人注意某事，不是认定它不可能|think over means to consider carefully, not to decide that something is impossible|think over 是仔细考虑，不是认定某事不可能|rule · out|the silent e of rule; past ruled out|rule 结尾的 e 不发音；过去式 ruled out
+      point out|a spelling mistake circled in red so that it can be seen|a castle on the hill just to the left of the church|a rare bird in a tree shown to the whole group|point out means to make others notice; rule out means to decide something is impossible|point out 是让人注意；rule out 是认定不可能|rule out means to decide that something is not possible, not to show it to other people|rule out 是认定不可能，不是指给别人看|come up with means to think up a new idea, not to show people something already there|come up with 是想出新主意，不是把已有的东西指给人看|point · out|the oi vowel team in point|point 中的元音组合 oi
+      think over|asking for a few days before deciding about an offer|a week to weigh a job offer before saying yes or no|sitting quietly and weighing each point before deciding|think over means to consider carefully; come up with means to produce a new idea|think over 是仔细考虑；come up with 是想出新主意|come up with means to invent something new, not to weigh an offer you already have|come up with 是想出新东西，不是权衡已有的提议|figure out means to solve something puzzling, not to weigh the good and bad points before deciding|figure out 是弄懂令人困惑的事，不是做决定前权衡利弊|think · o · ver|the past is thought over, with ough|过去式 thought over 中有 ough
+      come up with|inventing a team name nobody has ever used before|a class inventing a plan to raise money, such as a cake sale|trying and failing to invent a clever excuse for being late|come up with means to think of a new idea; think over means to consider one you already have|come up with 是想出新主意；think over 是考虑已有的事|think over means to consider something you already have, not to invent a new name or plan|think over 是考虑已有的东西，不是发明新名字或新计划|find out means to learn a fact that already exists, not to invent an idea that is new|find out 是得知已存在的事实，不是想出新主意|come · up · with|three separate words: come, up and with|分开的三个词：come、up、with
+    `,
+  },
 );
 
 const people = batch(
@@ -45,17 +112,50 @@ const people = batch(
   ["Phrasal Verbs of People", "人际关系的短语动词"],
   ["caring, resembling, raising, trusting and quarrelling", "照顾、相像、抚养、信赖与争吵"],
   `
-  get along|to have a friendly relationship|相处融洽|Do you ___ with your sister?|The two dogs ___ well.|We ___ fine.|make up,count on|got along,getting along
-  look after|to take care of|照顾|Can you ___ my cat?|She has to ___ her brother while Mom is at work.|___ yourself.|bring up,take after|looked after,looking after
-  take after|to resemble a parent or relative|长得像|You ___ your father.|She seems to ___ her aunt.|Which parent do you ___?|look after,bring up|took after,taking after
-  bring up|to raise a child; to mention a subject|抚养；提出|Her grandmother had to ___ her.|Don't ___ politics.|It is hard to ___ twins.|take after,get along|brought up,bringing up
-  let down|to disappoint; to fail to support|使失望|Don't ___ your team.|I won't ___ you.|He would never ___ a friend.|get along,take after|letting down
-  count on|to rely on|依靠|You can ___ me.|Don't ___ good weather.|We ___ your help.|stand up for,let down|counted on,counting on
-  stand up for|to defend or support|维护|___ your rights.|She chose to ___ her friend.|He would always ___ the weak.|count on,look down on|stood up for,standing up for
-  look down on|to think oneself better than|看不起|Don't ___ others.|They tend to ___ the poor.|She would never ___ anyone.|get along,take after|looked down on,looking down on
-  tell off|to scold|责骂|Mom had to ___ me.|The coach began to ___ the team.|Don't ___ the child.|get along,take after|told off,telling off
-  make up|to become friends again after a quarrel; to invent|和好；编造|Let's kiss and ___.|Don't ___ stories.|She tried to ___ an excuse.|get along,let down|made up,making up
+  get along|to have a friendly relationship|相处融洽|My sister and I ___ well and almost never argue.|The new cat and the old dog ___ fine, sleeping side by side by the fire.|Do you ___ with your new classmates, or do you still feel left out?|make up,count on|got along,getting along
+  look after|to take care of|照顾|Can you ___ my cat while I'm away, feeding her and cleaning her bowl every day?|She has to ___ her little brother after school until Mom comes home from work.|The nurses ___ the patients on the ward day and night, giving them food and medicine.|take after,bring up|looked after,looking after
+  take after|to resemble a parent or relative|长得像|You ___ your father, with the same red hair and the same loud laugh.|She seems to ___ her aunt, who is also tall, musical and good at chess.|Which of your parents do you ___ more in looks, your mother or your father?|look after,bring up|took after,taking after
+  bring up|to raise a child; to mention a subject|抚养；提出|Please don't ___ politics at dinner, or Grandpa will start arguing again.|She was too shy to ___ the subject of her pocket money with her parents.|At the meeting, he decided to ___ the problem of the broken lockers so that everyone would hear about it.|take after,look after|brought up,bringing up
+  let down|to disappoint; to fail to support|使失望|I promised to help, and I won't ___ you; I'll be there at six as I said.|He would never ___ a friend by breaking a promise.|Please don't ___ your team by skipping practice the week before the final.|count on,stand up for|letting down
+  count on|to rely on|依靠|You can always ___ me to help; just call and I'll come.|We can't ___ good weather in April, so pack a raincoat.|The team will ___ its goalkeeper to save the penalty, as she always does.|let down,stand up for|counted on,counting on
+  stand up for|to defend or support|维护|When the bullies teased him, she was brave enough to ___ her friend and tell them to stop.|You should always ___ your rights, even when others try to take them away.|He would always ___ the weakest children in the class, protecting them from anyone who picked on them.|count on,look down on|stood up for,standing up for
+  look down on|to think oneself better than|看不起|Rich people should not ___ others just because they have less money.|She was a kind girl who would never ___ anyone for wearing old clothes.|The older boys tend to ___ the younger ones, treating them as if they were silly and worth less.|stand up for,let down|looked down on,looking down on
+  tell off|to scold|责骂|Mom had to ___ me for drawing on the wall, and she made me scrub it clean.|The coach began to ___ the team for being lazy, shouting until they ran faster.|The teacher will ___ anyone who talks during the test, sharply and in front of the whole class.|let down,look down on|told off,telling off
+  make up|to become friends again after a quarrel; to invent|和好；编造|She tried to ___ an excuse for being late, inventing a story about a flat tyre.|Don't ___ stories; tell me what really happened.|The children love to ___ songs about their dog, inventing new words every day.|get along,let down|made up,making up
   `,
+  "context-clues",
+  {
+    intro: t(
+      "I **take after** my mother, who loves to **look after** everyone; we **get along** well, and I know I can always **count on** her. These ten phrasal verbs help you talk about caring, resembling, trusting, quarrelling and making friends again.",
+      "我长得像（**take after**）妈妈，她喜欢照顾（**look after**）每个人；我们相处融洽（**get along**），我知道自己随时可以依靠（**count on**）她。这十个短语动词帮你谈论照顾、相像、信赖、争吵与和好。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **look after** someone is to take care of them; to **take after** someone is to look or act like them, usually a parent or a relative.",
+        "**look after** 某人是照顾他；**take after** 某人是长得或性格像他，通常是父母或亲戚。",
+      ),
+      use: t(
+        "You **count on** someone you trust; if they fail you when you need them, they **let** you **down**.",
+        "你信赖某人用 **count on**；如果他在你需要时没做到，就是 **let** you **down**（让你失望）。",
+      ),
+      spelling: t(
+        "Write **stand up for** and **look down on** as three separate words, and remember the past forms **stood up for**, **brought up** and **told off**.",
+        "**stand up for** 和 **look down on** 都要写成分开的三个词，并记住过去式 **stood up for**、**brought up** 和 **told off**。",
+      ),
+    },
+    notes: `
+      get along|two sisters who almost never argue|a cat and a dog sleeping side by side by the fire|new classmates you either fit in with or feel left out by|get along means to be friendly all the time; make up means to become friends again after a quarrel|get along 是一直相处融洽；make up 是吵架后和好|make up means to end a quarrel or to invent something, not to stay friendly without arguing|make up 是吵架后和好或编造，不是一直和睦不吵|count on means to rely on someone, not to be friendly with them day to day|count on 是依靠某人，不是日常相处融洽|get · a · long|along is one word after get|get 之后的 along 是一个词
+      look after|feeding a cat and cleaning her bowl while its owner is away|caring for a little brother after school until Mom comes home|nurses giving patients food and medicine day and night|look after means to take care of; take after means to look like|look after 是照顾；take after 是长得像|take after means to look or act like a relative, not to feed or care for someone|take after 是长得或性格像亲人，不是喂养照料|bring up means to raise a child for years or to mention a subject, not to care for someone for a few hours or days|bring up 是多年抚养孩子或提起话题，不是一时照料某人|look · af · ter|the double o in look and the -er of after|look 的双写 o，after 的 -er
+      take after|a son with his father's red hair and loud laugh|a niece who is tall, musical and good at chess like her aunt|being more like your mother or your father in looks|take after means to resemble a relative; look after means to care for someone|take after 是像亲人；look after 是照顾某人|look after means to take care of someone, not to have the same hair or laugh as them|look after 是照顾某人，不是和他头发、笑声一样|bring up means to raise a child or mention a subject, not to look like a relative|bring up 是抚养孩子或提起话题，不是长得像亲人|take · af · ter|take becomes took in the past: took after|过去式是 took after
+      bring up|politics mentioned at dinner that sets Grandpa arguing|the subject of pocket money raised with parents|the problem of broken lockers raised at a meeting|bring up a subject means to mention it; look after means to take care of someone|bring up 话题是提起它；look after 是照顾某人|take after means to look like a relative, not to mention a subject|take after 是长得像亲人，不是提起话题|look after means to take care of someone, not to raise a subject for people to talk about|look after 是照顾某人，不是提出话题让大家讨论|bring · up|bring becomes brought in the past: brought up|过去式是 brought up
+      let down|keeping a promise to help and turning up at six|breaking a promise to a friend|skipping practice the week before the final|let down means to disappoint someone who trusted you; count on means to trust them|let down 是让信任你的人失望；count on 是信任依靠|count on means to rely on someone, not to disappoint them by breaking a promise|count on 是依靠某人，不是失信让人失望|stand up for means to defend someone, not to fail them by breaking a promise|stand up for 是维护某人，不是失信辜负他|let · down|let stays let in the past: let down|过去式仍是 let down
+      count on|someone who always comes when you call for help|weather in April that cannot be relied on|a goalkeeper the team trusts to save a penalty|count on means to rely on; let down means to disappoint|count on 是依靠；let down 是使失望|let down means to disappoint someone, not to trust them to help|let down 是使人失望，不是信任别人会帮忙|stand up for means to defend someone, not to rely on them or on the weather|stand up for 是维护某人，不是依靠他或指望天气|count · on|the ou vowel team in count|count 中的元音组合 ou
+      stand up for|a girl bravely telling bullies to stop teasing her friend|your rights when others try to take them away|protecting the weakest children from anyone who picks on them|stand up for means to defend; look down on means to think someone is worth less|stand up for 是维护；look down on 是看不起|count on means to rely on someone, not to defend them from bullies or protect them|count on 是依靠某人，不是保护他免受欺负|look down on means to think someone is worth less, the opposite of defending and protecting them|look down on 是看不起别人，和维护保护正好相反|stand · up · for|three separate words; past stood up for|分开的三个词；过去式 stood up for
+      look down on|rich people treating others as worth less because they have less money|a kind girl who never thinks less of anyone for old clothes|older boys treating younger ones as silly and worth less|look down on means to think yourself better than someone; stand up for means to defend them|look down on 是自以为比别人强；stand up for 是维护别人|stand up for means to defend someone, not to treat them as worth less|stand up for 是维护某人，不是看不起他|let down means to disappoint someone, not to think yourself better than them|let down 是让人失望，不是自以为比人强|look · down · on|three separate words|分开的三个词
+      tell off|a mom scolding her child for drawing on the wall|a coach shouting at a lazy team until they run faster|a teacher sharply scolding anyone who talks during a test|tell off means to scold someone for doing wrong; let down means to disappoint them|tell off 是因做错事而责骂；let down 是让人失望|let down means to disappoint someone by failing them, not to scold them for what they did|let down 是辜负别人让他失望，不是责骂别人做的事|look down on means to quietly think someone is worth less, not to scold them out loud for one thing they did|look down on 是心里看不起别人，不是为某件事大声责骂|tell · off|tell becomes told in the past: told off|过去式是 told off
+      make up|inventing a story about a flat tyre as an excuse for being late|stories instead of what really happened|inventing new words for songs about a dog every day|make up means to invent; get along means to be friendly with someone|make up 是编造；get along 是与人相处融洽|get along means to be friendly with someone, not to invent excuses, stories or songs|get along 是与人相处融洽，不是编造借口、故事或歌曲|let down means to disappoint someone, not to invent a story or a song|let down 是让人失望，不是编故事或编歌|make · up|make becomes made in the past: made up|过去式是 made up
+    `,
+  },
 );
 
 const less = batch(
@@ -63,17 +163,50 @@ const less = batch(
   ["Phrasal Verbs of More and Less", "增减的短语动词"],
   ["using up, running short, wearing out, dying out and keeping pace", "用完、短缺、磨损、灭绝与跟上"],
   `
-  cut down|to reduce; to fell a tree|削减；砍倒|Try to ___ on sugar.|They chose to ___ the old oak.|We must ___ costs.|use up,wipe out|cutting down
-  use up|to finish a supply of something|用完|Don't ___ all the milk.|We may ___ our savings.|She began to ___ the paper.|run out,fill up|used up,using up
-  run out|to have no more left|耗尽|We'll ___ of time.|Don't let the gas ___.|Food may ___ soon.|fill up,keep up|ran out,running out
-  sell out|to sell all of something; to betray|售罄；出卖|Tickets will ___ fast.|He chose to ___ his friends.|The shop may ___ of bread.|die out,wipe out|sold out,selling out
-  wear out|to become useless from use; to exhaust|磨损；使筋疲力尽|My shoes began to ___.|The kids may ___ their mom.|Batteries ___.|die out,use up|wore out,worn out,wearing out
-  die out|to disappear completely|灭绝|Many species ___.|The custom began to ___.|The fire began to ___.|wipe out,wear out|died out,dying out
-  wipe out|to destroy completely|彻底摧毁|The flood may ___ the village.|Disease began to ___ the herd.|We hope to ___ hunger.|die out,cut down|wiped out,wiping out
-  fill up|to make or become full|装满|___ the tank.|The room began to ___.|___ your glass.|use up,keep up|filled up,filling up
-  catch up|to reach someone ahead; to do work one has missed|赶上|Wait for me to ___.|I need to ___ on my reading.|She ran to ___ with us.|sell out,fill up|caught up,catching up
-  keep up|to move at the same speed; to continue|跟上；保持|Try to ___ with the class.|___ the good work.|I can't ___.|die out,wipe out|kept up,keeping up
+  cut down|to reduce; to fell a tree|削减；砍倒|The doctor told him to ___ on sugar, eating fewer sweets each week.|The woodcutters had to ___ the old oak tree, sawing through its trunk until it fell.|To save money, the family decided to ___ on meals in restaurants, going only once a month.|use up,wipe out|cutting down
+  use up|to finish a supply of something|用完|Don't ___ all the milk; leave some for Dad's coffee.|The children will ___ a whole box of crayons, drawing until every crayon is a tiny stub.|If we ___ our savings on a new car, we will have no money left for a holiday.|run out,fill up|used up,using up
+  run out|to have no more left|耗尽|Hurry up, or we'll ___ of time before the test ends.|The car stopped in the desert because we let the petrol ___ and the tank was empty.|The milk will ___ by Friday, so we must buy more before then.|use up,fill up|ran out,running out
+  sell out|to sell all of something; to betray|售罄；出卖|Tickets for the concert will ___ within an hour, so buy yours early.|The bakery will ___ of bread by noon, as customers buy every loaf on its shelves.|The new phone was so popular that shops began to ___ of it on the very first day.|die out,wear out|sold out,selling out
+  wear out|to become useless from use; to exhaust|磨损；使筋疲力尽|If you run every day in those cheap trainers, you'll ___ them in a month and need new ones.|The children will ___ their grandma, who is tired after an hour of playing with them.|Even the best tyres ___ after years of rubbing on the road.|use up,die out|wore out,worn out,wearing out
+  die out|to disappear completely|灭绝|Many kinds of animals ___ when their forests are cut down and they have nowhere to live.|The old custom of dancing round the maypole began to ___, and now few villages keep it.|The dinosaurs began to ___ about sixty-six million years ago and left only their bones behind.|wipe out,wear out|died out,dying out
+  wipe out|to destroy completely|彻底摧毁|The flood could ___ the whole village, sweeping away every house.|Doctors hope to ___ the disease completely, so that no one ever catches it again.|One huge wave can ___ a beach town, leaving nothing standing.|die out,cut down|wiped out,wiping out
+  fill up|to make or become full|装满|Stop at the garage to ___ the tank so that we have enough petrol for the trip.|The hall began to ___ with people until every seat was taken.|Let me ___ your glass with more juice; it's nearly empty.|use up,keep up|filled up,filling up
+  catch up|to reach someone ahead; to do work one has missed|赶上|She ran faster to ___ with her friends, who were a long way ahead.|I was ill for a week, so I need to ___ on the reading I missed.|The tortoise was far behind, but it plodded on and managed to ___ with the sleeping hare.|keep up,fill up|caught up,catching up
+  keep up|to move at the same speed; to continue|跟上；保持|Your work is excellent, so please ___ the good work.|Walk a bit slower, as my little legs can't ___ with your long strides.|The runners tried to ___ the same fast pace all the way to the finish.|catch up,die out|kept up,keeping up
   `,
+  "context-clues",
+  {
+    intro: t(
+      "If we **use up** the water and **run out** of food, our hike will **wear** us **out**, so let's **fill up** our bottles and **keep up** a steady pace. These ten phrasal verbs help you talk about using things up, running short, wearing out, dying out and keeping pace.",
+      "如果我们用完（**use up**）了水、吃完（**run out**）了食物，这次远足就会让我们筋疲力尽（**wear out**），所以先把水壶装满（**fill up**），再保持（**keep up**）稳定的步伐。这十个短语动词帮你谈论用完、短缺、磨损、灭绝和跟上。",
+    ),
+    watchOut: {
+      meanings: t(
+        "You **use up** something yourself until none is left; time or food **runs out**, or you **run out of** it, when there is no more.",
+        "**use up** 是你自己把某物用光；时间或食物没了，用 **run out**，或说你 **run out of** 它。",
+      ),
+      use: t(
+        "Animals and customs **die out** by themselves over time; a flood or a disease **wipes out** something, destroying it all at once.",
+        "动物和习俗随时间自行 **die out**（消失）；洪水或疾病 **wipe out** 某物，是一下子把它全部毁掉。",
+      ),
+      spelling: t(
+        "Remember the past forms **wore out** and **worn out**, **sold out**, **ran out** and **caught up**, with its silent **gh**.",
+        "记住过去式 **wore out** 和 **worn out**、**sold out**、**ran out**，以及 **gh** 不发音的 **caught up**。",
+      ),
+    },
+    notes: `
+      cut down|eating fewer sweets each week on a doctor's advice|sawing through an oak's trunk until it falls|going to restaurants only once a month to save money|cut down means to have less of something or to fell a tree; use up means to finish it all|cut down 是减少或砍倒树；use up 是全部用光|use up means to finish all of something, not to have a bit less of it or to fell a tree|use up 是全部用完，不是少用一点或砍倒树|wipe out means to destroy something completely, not to have a bit less of it or saw down one tree|wipe out 是彻底摧毁，不是少用一点或锯倒一棵树|cut · down|cut stays cut in the past: cut down|过去式仍是 cut down
+      use up|milk all drunk with none left for Dad's coffee|crayons drawn until every one is a tiny stub|savings spent on a car with no money left|use up means to finish a supply yourself; run out means that there is none left|use up 是自己把东西用光；run out 是东西没有了|run out is followed by of, or has no object, as in time runs out; you cannot run out the milk|run out 后接 of 或不带宾语，如 time runs out；不能说 run out the milk|fill up means to make something full, the opposite of finishing it|fill up 是装满，和用光正好相反|use · up|the silent e of use; past used up|use 结尾的 e 不发音；过去式 used up
+      run out|time ending before a test is over|petrol all gone in the desert so that the car stops|milk that will be gone by Friday|run out means that there is none left; use up means to finish something yourself|run out 是东西没有了；use up 是自己把东西用光|use up needs an object, as in use up the milk; it is not followed by of|use up 要带宾语，如 use up the milk，后面不接 of|fill up means to make something full, the opposite of having none left|fill up 是装满，和一点也不剩正好相反|run · out|run becomes ran in the past: ran out|过去式是 ran out
+      sell out|concert tickets all gone within an hour|a bakery with every loaf bought by noon|shops with no new phones left on the very first day|sell out means that a shop sells every one; wear out means that something gets useless from use|sell out 是全部卖光；wear out 是用坏|die out means to disappear completely over time, like an animal, not to be all bought from a shop|die out 是随时间完全消失，比如动物，不是被买光|wear out means to become useless from use, not to be all bought by customers|wear out 是用坏了，不是被顾客买光|sell · out|sell becomes sold in the past: sold out|过去式是 sold out
+      wear out|cheap trainers that need replacing after a month of running|a grandma tired after an hour of playing with children|tyres rubbed thin after years on the road|wear out means to make useless or tired through use; use up means to finish a supply|wear out 是用坏或使疲惫；use up 是把存量用光|use up means to finish a supply like milk, not to make shoes useless or a person tired|use up 是用光牛奶之类的东西，不是把鞋穿坏或把人累坏|die out means to disappear completely, like an animal or a custom, not to become thin and useless from use|die out 是动物或习俗完全消失，不是用得磨损报废|wear · out|wear becomes wore and worn: wore out, worn out|过去式 wore out，过去分词 worn out
+      die out|animals vanishing when their forests are cut down|a maypole dance that few villages still keep|dinosaurs vanishing millions of years ago and leaving only bones|die out means to disappear slowly by itself; wipe out means to destroy something|die out 是自行慢慢消失；wipe out 是摧毁某物|wipe out needs something to destroy, as in wipe out a village; animals do not wipe out by themselves|wipe out 要带被摧毁的对象，如 wipe out a village；动物不会自己 wipe out|wear out means to become useless from use, like shoes, not for animals or customs to vanish|wear out 是像鞋一样用坏，不是动物或习俗消失|die · out|die becomes dying: dying out, with y|die 的 -ing 形式是 dying out，ie 变 y
+      wipe out|a flood sweeping away every house in a village|a disease ended completely so that no one catches it again|a huge wave leaving nothing standing in a beach town|wipe out means to destroy completely; die out means to disappear by itself over time|wipe out 是彻底摧毁；die out 是随时间自行消失|die out happens by itself and takes no object; nothing can die out a village or a disease|die out 是自行发生，不带宾语；不能说 die out a village|cut down means to reduce or fell, not to destroy every single thing|cut down 是减少或砍倒，不是全部毁掉|wipe · out|one p in wiped out, since the i in wipe is long|wipe 中 i 是长音，过去式 wiped out 只有一个 p
+      fill up|a petrol tank made full for a trip|a hall with every seat taken|a nearly empty glass topped up with juice|fill up means to make full; use up means to make empty|fill up 是装满；use up 是用光|use up means to finish a supply until none is left, the opposite of making something full|use up 是把东西用光，和装满正好相反|keep up means to stay level or keep going, not to make something full|keep up 是跟上或继续，不是装满|fill · up|the double l in fill|fill 中双写 l
+      catch up|running faster to reach friends a long way ahead|doing the reading missed during a week of illness|a tortoise far behind that reaches the sleeping hare|catch up means to reach someone ahead; keep up means to stay level with them|catch up 是追上前面的人；keep up 是与人保持同速|keep up means to stay level with someone you are already beside, not to reach someone a long way ahead|keep up 是与身旁的人保持同步，不是追上远在前面的人|fill up means to make something full, not to reach someone ahead|fill up 是装满，不是追上前面的人|catch · up|catch becomes caught, with a silent gh: caught up|过去式 caught up，gh 不发音
+      keep up|excellent work that should go on being just as good|little legs trying to stay level with long strides|runners holding the same fast pace to the finish|keep up means to stay level or carry on; catch up means to reach someone who is ahead|keep up 是保持同步或继续；catch up 是追上领先的人|catch up means to reach someone ahead after falling behind, not to carry on doing good work or hold a pace|catch up 是落后后追上别人，不是继续做好或保持速度|die out means to disappear completely, the opposite of carrying on|die out 是完全消失，和继续保持正好相反|keep · up|keep becomes kept in the past: kept up|过去式是 kept up
+    `,
+  },
 );
 
 const breaking = batch(
@@ -81,17 +214,50 @@ const breaking = batch(
   ["Phrasal Verbs of Breaking and Building", "破坏与建立的短语动词"],
   ["breaking, exploding, knocking down, setting up and turning into", "坏掉、爆炸、拆除、建立与变成"],
   `
-  break down|to stop working; to lose control of one's feelings|出故障；情绪崩溃|Our car may ___.|She began to ___ in tears.|Talks may ___.|tear down,turn into|broke down,broken down,breaking down
-  break out|to start suddenly; to escape|爆发；逃脱|War may ___.|Two men tried to ___ of jail.|A fire may ___.|break into,blow up|broke out,breaking out
-  break into|to enter by force; to suddenly start|闯入；突然开始|Thieves tried to ___ the house.|She began to ___ song.|Don't ___ my car.|break out,tear down|broke into,breaking into
-  blow up|to explode; to fill with air; to become angry|爆炸；充气；发怒|The bomb may ___.|___ the balloons.|Dad began to ___ at us.|break down,put out|blew up,blown up,blowing up
-  tear down|to demolish|拆毁|They will ___ the old mall.|Don't ___ the poster.|They chose to ___ the wall.|set up,break into|tore down,torn down,tearing down
-  fall apart|to break into pieces; to stop working well|散架；崩溃|The old book began to ___.|Their marriage may ___.|My shoes ___.|turn into,put out|fell apart,fallen apart,falling apart
-  set up|to establish; to arrange; to trick|建立；安排；陷害|They chose to ___ a business.|___ the chairs.|I was ___!|tear down,turn into|setting up
-  put out|to extinguish; to inconvenience|扑灭；给…添麻烦|Firemen tried to ___ the blaze.|I don't want to ___ you.|___ the candles.|blow up,set up|putting out
-  turn into|to change into|变成|Water may ___ ice.|The caterpillar will ___ a butterfly.|Don't let a quarrel ___ a fight.|turn out,set up|turned into,turning into
-  turn out|to happen in the end; to come to an event; to switch off|结果是；出席；关掉|Things may ___ well.|Thousands ___ to vote.|___ the lights.|turn into,fall apart|turned out,turning out
+  break down|to stop working; to lose control of one's feelings|出故障；情绪崩溃|Our old car may ___ on the motorway, so we always carry a phone to call for help.|When she heard the sad news, she began to ___ and cry, unable to hold back her tears.|The washing machine is likely to ___ again, since it stopped working twice last month.|tear down,turn into|broke down,broken down,breaking down
+  break out|to start suddenly; to escape|爆发；逃脱|Two prisoners tried to ___ of jail by digging a tunnel under the wall.|Chickenpox can ___ in a school, spreading suddenly from child to child.|The lion managed to ___ of its cage during the night and roamed the zoo.|break into,blow up|broke out,breaking out
+  break into|to enter by force; to suddenly start|闯入；突然开始|Thieves tried to ___ the house through a back window while the family was away.|Someone tried to ___ my car last night and smashed the lock on the door.|Burglars may try to ___ an empty flat, so lock every door before you go on holiday.|break out,tear down|broke into,breaking into
+  blow up|to explode; to fill with air; to become angry|爆炸；充气；发怒|The soldiers planned to ___ the bridge with dynamite so that the enemy could not cross.|Please help me ___ the balloons for the party, puffing air into each one.|The old gas tank could ___ at any moment with a huge bang.|break down,put out|blew up,blown up,blowing up
+  tear down|to demolish|拆毁|They will ___ the old shopping mall and build a park in its place.|Workers came with a crane to ___ the crumbling factory wall, brick by brick.|The town plans to ___ the empty office block, knocking it to the ground.|set up,break into|tore down,torn down,tearing down
+  fall apart|to break into pieces; to stop working well|散架；崩溃|The old book began to ___, its pages coming loose and its cover dropping off.|My shoes are so old that they will soon ___, with the soles already coming away.|The cheap chair began to ___ as soon as he sat on it, its legs splitting off one by one.|turn into,put out|fell apart,fallen apart,falling apart
+  set up|to establish; to arrange; to trick|建立；安排；陷害|They saved for years to ___ their own bakery in the town centre.|Please help me ___ the chairs in rows before the guests arrive.|The campers began to ___ their tent before dark, hammering in the pegs.|tear down,turn into|setting up
+  put out|to extinguish; to inconvenience|扑灭；给…添麻烦|Firefighters worked all night to ___ the blaze, spraying it with water.|Remember to ___ the candles before you go to bed, so that nothing catches fire.|He used a wet blanket to ___ the small fire in the frying pan.|blow up,set up|putting out
+  turn into|to change into|变成|When water freezes, it will ___ ice.|The caterpillar will ___ a butterfly inside its cocoon.|Don't let a small quarrel ___ a big fight.|turn out,set up|turned into,turning into
+  turn out|to happen in the end; to come to an event; to switch off|结果是；出席；关掉|I was worried about the test, but things may ___ well after all.|Thousands of people are expected to ___ to vote on Sunday.|Remember to ___ the lights when you leave, to save electricity.|turn into,fall apart|turned out,turning out
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Thieves tried to **break into** the old factory, a fire **broke out**, and after the firefighters **put** it **out**, the town decided to **tear down** what was left. These ten phrasal verbs help you talk about breaking, exploding, knocking down, setting up and changing.",
+      "小偷想闯入（**break into**）那座旧工厂，结果起了火（**break out**）；消防员把火扑灭（**put out**）后，镇上决定拆掉（**tear down**）剩下的部分。这十个短语动词帮你谈论坏掉、爆炸、拆除、建立和变化。",
+    ),
+    watchOut: {
+      meanings: t(
+        "Thieves **break into** a place to get in; prisoners **break out of** a place to get away; a fire or a war **breaks out** when it suddenly starts.",
+        "小偷 **break into** 某处是闯进去；囚犯 **break out of** 某处是逃出来；火灾或战争突然发生用 **break out**。",
+      ),
+      use: t(
+        "Something **turns into** something else when it changes, as water turns into ice; things **turn out** well or badly when you see how they end.",
+        "一物变成另一物用 **turn into**，如水变成冰；事情最终结果好或坏用 **turn out**。",
+      ),
+      spelling: t(
+        "Remember the past forms **blew up** and **blown up**, **tore down** and **torn down**, and **fell apart** and **fallen apart**.",
+        "记住过去式和过去分词：**blew up** 与 **blown up**、**tore down** 与 **torn down**、**fell apart** 与 **fallen apart**。",
+      ),
+    },
+    notes: `
+      break down|an old car that may stop working on the motorway|someone hearing sad news and crying without holding back|a washing machine that stopped working twice last month|break down means to stop working or to lose control and cry; tear down means to knock a building to the ground|break down 是坏掉或情绪崩溃；tear down 是把建筑拆平|tear down needs a building or wall to knock down; a car or a washing machine does not tear down|tear down 要带被拆的建筑或墙；汽车或洗衣机不会 tear down|turn into needs what something becomes, as in turn into ice; it does not mean to stop working or cry|turn into 要带变成的东西，如 turn into ice，不是坏掉或哭|break · down|the ea in break that says a long a|break 中 ea 读长音 a
+      break out|prisoners digging a tunnel under the jail wall to get away|chickenpox spreading suddenly from child to child in a school|a lion getting free of its cage at night|break out means to escape or to start suddenly; break into means to get inside by force|break out 是逃出或突然爆发；break into 是强行闯入|break into means to force your way inside a place, not to get out of a jail or a cage|break into 是强行进入某处，不是逃出监狱或笼子|blow up means to explode, not to escape or to spread suddenly|blow up 是爆炸，不是逃脱或突然蔓延|break · out|break becomes broke in the past: broke out|过去式是 broke out
+      break into|thieves getting in through a back window while a family is away|someone smashing a car's lock at night|burglars getting into an empty flat while its owners are on holiday|break into means to force your way in; break out means to force your way out|break into 是强行闯入；break out 是强行逃出|break out is used with of to get out of a place, as in break out of jail, not to get into a house or a car|break out 和 of 连用表示逃出，如 break out of jail，不是闯进房子或汽车|tear down means to knock a building to the ground, not to get inside it to steal|tear down 是把建筑拆倒，不是闯进去偷东西|break · in · to|into is one word|into 是一个词
+      blow up|soldiers using dynamite on a bridge so that the enemy cannot cross|balloons for a party filled by puffing air into each one|an old gas tank that could explode with a huge bang|blow up means to explode or to fill with air; put out means to stop a fire|blow up 是爆炸或充气；put out 是灭火|put out means to stop a fire burning, not to explode something or fill it with air|put out 是把火扑灭，不是炸毁东西或给它充气|break down means to stop working, not to explode with a bang or be filled with air|break down 是出故障，不是轰然爆炸或充气|blow · up|blow becomes blew and blown: blew up, blown up|过去式 blew up，过去分词 blown up
+      tear down|an old mall knocked down to make room for a park|a crumbling factory wall taken down brick by brick with a crane|an empty office block knocked to the ground|tear down means to knock a building down; set up means to start or build something|tear down 是拆除建筑；set up 是建立、搭起|set up means to start or build something new, the opposite of knocking it to the ground|set up 是建立新东西，和拆平正好相反|break into means to get inside by force to steal, not to knock a building to the ground|break into 是强行闯入偷东西，不是把建筑拆平|tear · down|tear here rhymes with care; past tore down, torn down|这里的 tear 与 care 押韵；过去式 tore down，过去分词 torn down
+      fall apart|an old book with loose pages and a cover dropping off|old shoes whose soles are already coming away|a cheap chair whose legs split off one by one when someone sits on it|fall apart means to break into pieces by itself; put out means to stop a fire|fall apart 是自己散架；put out 是灭火|turn into needs what something becomes, as in turn into a butterfly; it does not mean to break into pieces|turn into 要带变成的东西，如 turn into a butterfly，不是散成碎片|put out means to stop a fire or a light, not to break into pieces from age|put out 是熄灭火或灯，不是因为老旧而散架|fall · a · part|apart is one word; past fell apart, fallen apart|apart 是一个词；过去式 fell apart，过去分词 fallen apart
+      set up|saving for years to start a bakery in the town centre|chairs arranged in rows before guests arrive|a tent put up before dark with its pegs hammered in|set up means to start or put something in place; tear down means to knock it down|set up 是建立、摆放好；tear down 是拆除|tear down means to knock something to the ground, not to start a business or put up a tent|tear down 是拆平，不是开店或搭帐篷|turn into means to change into something else, not to start a business or arrange chairs|turn into 是变成别的东西，不是开店或摆椅子|set · up|set stays set in the past: set up|过去式仍是 set up
+      put out|firefighters spraying a blaze with water all night|candles that must be stopped burning before bed|a wet blanket thrown over a small fire in a frying pan|put out means to stop a fire burning; blow up means to explode|put out 是扑灭火；blow up 是爆炸|blow up means to explode or fill with air, the opposite of stopping a fire|blow up 是爆炸或充气，和灭火正好相反|set up means to start or arrange something, not to stop a fire burning|set up 是建立或安排，不是灭火|put · out|put stays put in the past: put out|过去式仍是 put out
+      turn into|water freezing to become ice|a caterpillar becoming a butterfly in its cocoon|a small quarrel becoming a big fight|turn into means to change into something else; turn out means to end in a certain way|turn into 是变成另一物；turn out 是结果怎样|turn out means to end in a certain way or switch off, not to change from one thing into another|turn out 是结果如何或关灯，不是从一物变成另一物|set up means to start or arrange something, not to change into something else|set up 是建立或安排，不是变成别的东西|turn · in · to|into is one word|into 是一个词
+      turn out|a worrying test that may end well after all|thousands of people coming to vote on Sunday|lights switched off on leaving to save electricity|turn out means to end in a certain way, to come to an event or to switch off; turn into means to become something else|turn out 是结果如何、到场或关掉；turn into 是变成别的东西|turn into needs what something becomes, as in turn into ice, not well, a vote or the lights|turn into 要带变成的东西，如 turn into ice，不能接 well、投票或电灯|fall apart means to break into pieces, not to end well, come to vote or switch off|fall apart 是散架，不是结果好、来投票或关灯|turn · out|the ur in turn that says /er/|turn 中 ur 读 /ɜː/
+    `,
+  },
 );
 
 const meeting = batch(
@@ -99,17 +265,50 @@ const meeting = batch(
   ["Phrasal Verbs of Meeting and Arriving", "相遇与到达的短语动词"],
   ["arriving, finding by chance, spending time, waking and calls", "到场、偶遇、闲逛、醒来与电话"],
   `
-  show up|to arrive; to be seen clearly|出现；显现|He didn't ___ for class.|The stain may ___ in the light.|Guests began to ___.|hang up,hold on|showed up,shown up,showing up
-  turn up|to arrive, often unexpectedly; to increase volume; to be found|露面；调大；找到|She may ___ late.|___ the music.|The keys will ___.|hang up,hold on|turned up,turning up
-  come across|to find or meet by chance; to seem|偶然发现；给人印象|I may ___ an old photo.|She tends to ___ as shy.|Did you ___ my keys?|run into,show up|came across,coming across
-  run into|to meet by chance; to crash into; to meet a problem|偶遇；撞上；遭遇|I hope to ___ her at the mall.|The car may ___ a tree.|We may ___ trouble.|hang out,wake up|ran into,running into
-  hang out|to spend time relaxing|闲逛|We ___ at the mall.|Let's ___ this weekend.|They like to ___ together.|hang up,run into|hung out,hanging out
-  hang up|to end a phone call; to put on a hook|挂电话；挂起|Don't ___ on me.|___ your coat.|She chose to ___ the phone and end the call.|hang out,hold on|hung up,hanging up
-  hold on|to wait; to grip tightly|稍等；抓紧|___ a minute.|___ to the rail.|Please ___ while I check.|hang up,wake up|held on,holding on
-  wake up|to stop sleeping|醒来|I ___ at seven.|___; it's late!|The noise may ___ the baby.|hold on,check in|woke up,woken up,waking up
-  check in|to register at a hotel or airport|登记入住；办理登机|We ___ at the hotel desk at noon.|___ two hours before your flight.|Where do we ___?|show up,pick up|checked in,checking in
-  pick up|to lift; to collect; to learn without trying|捡起；接；学会|___ your toys.|I'll ___ you at six.|Kids ___ languages fast.|turn up,check in|picked up,picking up
+  show up|to arrive; to be seen clearly|出现；显现|He didn't ___ for class, so the teacher marked him absent.|The guests began to ___ at seven, ringing the doorbell one after another.|The stain will ___ more clearly in bright light, so check the shirt by the window.|hang up,hold on|showed up,shown up,showing up
+  turn up|to arrive, often unexpectedly; to increase volume; to be found|露面；调大；找到|Could you ___ the music? I can hardly hear it.|Don't worry about your lost keys; they will ___ somewhere, probably in a coat pocket.|My cousin may ___ at our door without warning, as he often does.|hang up,hold on|turned up,turning up
+  come across|to find or meet by chance; to seem|偶然发现；给人印象|While clearing the attic, I may ___ some old photos of Grandma as a girl.|She tends to ___ as shy, but she is really just quiet and thoughtful.|If you ___ my glasses while you're tidying, please put them on my desk.|run into,show up|came across,coming across
+  run into|to meet by chance; to crash into; to meet a problem|偶遇；撞上；遭遇|The car skidded on the ice and might ___ a tree.|We may ___ trouble on the mountain if the weather turns bad.|I didn't expect to ___ my old teacher at the station, but there she was.|hang out,wake up|ran into,running into
+  hang out|to spend time relaxing|闲逛|On Saturdays we like to ___ at the park, chatting and eating ice cream for hours.|Let's ___ at my house this weekend and play video games.|The teenagers ___ together by the river most evenings, just talking and relaxing.|hang up,run into|hung out,hanging out
+  hang up|to end a phone call; to put on a hook|挂电话；挂起|Please don't ___ on me; I haven't finished talking!|When you come in, ___ your coat on the hook by the door.|She said goodbye and chose to ___ the phone, ending the call.|hang out,hold on|hung up,hanging up
+  hold on|to wait; to grip tightly|稍等；抓紧|Please ___ a minute while I fetch a pen to write down your number.|On the bumpy bus, always ___ to the rail so that you don't fall.|Can you ___ while I check whether the doctor is free to speak to you?|hang up,wake up|held on,holding on
+  wake up|to stop sleeping|醒来|I usually ___ at seven, when my alarm rings.|Try not to ___ the baby; she has only just fallen asleep.|The loud thunder made everyone in the house ___ in the middle of the night.|hold on,check in|woke up,woken up,waking up
+  check in|to register at a hotel or airport|登记入住；办理登机|Please ___ your suitcase at the desk so that it goes in the plane's hold.|Guests must ___ at reception, giving their names and signing the hotel register.|Where do we ___ for our flight, and which desk takes the bags?|wake up,pick up|checked in,checking in
+  pick up|to lift; to collect; to learn without trying|捡起；接；学会|Please ___ your toys from the floor before someone trips over them.|I'll ___ you from school at six in the car.|Young children ___ new languages quickly, just by hearing them every day.|turn up,check in|picked up,picking up
   `,
+  "context-clues",
+  {
+    intro: t(
+      "I **woke up** late, **ran into** my friend at the bus stop, and we decided to **hang out** at the park until the others **showed up**. These ten phrasal verbs help you talk about arriving, meeting by chance, spending time together, waking and phone calls.",
+      "我起晚了（**wake up**），在公交站碰到了（**run into**）朋友，我们决定在公园里闲逛（**hang out**），等其他人来（**show up**）。这十个短语动词帮你谈论到场、偶遇、一起消磨时光、醒来和打电话。",
+    ),
+    watchOut: {
+      meanings: t(
+        "To **hang out** is to spend relaxed time with friends; to **hang up** is to end a phone call or put a coat on a hook.",
+        "**hang out** 是和朋友一起轻松地消磨时间；**hang up** 是挂断电话或把外套挂到钩子上。",
+      ),
+      use: t(
+        "You **come across** a thing, like an old photo, by chance; you **run into** a person by chance, or into trouble, or into a tree when you crash.",
+        "偶然发现某样东西（如旧照片）用 **come across**；偶然碰到某人、遇到麻烦或撞上树用 **run into**。",
+      ),
+      spelling: t(
+        "Remember the past forms **hung up**, **held on**, **woke up** and **woken up**, and **ran into**.",
+        "记住过去式 **hung up**、**held on**、**woke up** 与 **woken up**，以及 **ran into**。",
+      ),
+    },
+    notes: `
+      show up|a student who is marked absent for not coming to class|guests arriving at seven and ringing the doorbell one by one|a stain seen more clearly in bright light by the window|show up means to arrive or be seen; hang up means to end a call|show up 是到场或显现；hang up 是挂电话|hang up means to end a phone call or put a coat on a hook, not to arrive or to be seen|hang up 是挂电话或挂外套，不是到场或显现|hold on means to wait or to grip, not to arrive or to become easy to see|hold on 是等一下或抓紧，不是到场或显现|show · up|show becomes shown: shown up|过去分词是 shown up
+      turn up|music made louder because it can hardly be heard|lost keys likely to be found in a coat pocket|a cousin arriving at the door without warning|turn up means to arrive, to be found or to make louder; hang up means to end a call|turn up 是露面、找到或调大；hang up 是挂电话|hang up means to end a call or put a coat on a hook, not to make music louder or for keys to be found|hang up 是挂电话或挂外套，不是调大音乐或找到钥匙|hold on means to wait or grip, not to make something louder or for something lost to be found|hold on 是等一下或抓紧，不是调大声音或失物找到|turn · up|the ur in turn that says /er/|turn 中 ur 读 /ɜː/
+      come across|old photos of Grandma found while clearing an attic|a quiet person who seems shy to others|glasses found by chance while tidying|come across means to find a thing by chance or to seem; run into means to meet a person by chance or crash|come across 是偶然发现东西或给人印象；run into 是偶遇某人或撞上|run into is for meeting a person, meeting trouble or crashing, not for finding an old photo or seeming shy|run into 用于偶遇某人、遇到麻烦或撞上，不用于找到旧照片或显得害羞|show up means to arrive, not to find photos or glasses by chance|show up 是到场，不是偶然找到照片或眼镜|come · a · cross|across has one c and a double s|across 一个 c，双写 s
+      run into|a car skidding on ice toward a tree|trouble on a mountain when the weather turns bad|meeting an old teacher at the station by chance|run into means to crash into, meet trouble or meet someone by chance; hang out means to spend relaxed time|run into 是撞上、遇到麻烦或偶遇；hang out 是闲逛|hang out means to spend relaxed time with friends, not to crash into a tree or meet trouble|hang out 是和朋友闲逛，不是撞树或遇到麻烦|wake up means to stop sleeping, not to crash or meet someone by chance|wake up 是醒来，不是撞上或偶遇|run · in · to|run becomes ran in the past: ran into|过去式是 ran into
+      hang out|friends chatting and eating ice cream in the park for hours|playing video games at a friend's house at the weekend|teenagers talking and relaxing by the river most evenings|hang out means to spend relaxed time with friends; hang up means to end a call|hang out 是和朋友闲逛；hang up 是挂电话|hang up means to end a phone call or put a coat on a hook, not to spend relaxed time with friends|hang up 是挂电话或挂外套，不是和朋友消磨时光|run into means to meet someone by chance or crash, not to spend a whole afternoon relaxing|run into 是偶遇或撞上，不是消磨一下午|hang · out|hang becomes hung in the past: hung out|过去式是 hung out
+      hang up|someone ending a call before the other person has finished talking|a coat put on the hook by the door|saying goodbye and ending a phone call|hang up means to end a call or put a coat on a hook; hold on means to wait on the phone|hang up 是挂电话或挂外套；hold on 是在电话里稍等|hang out means to spend relaxed time with friends, not to end a call or put a coat on a hook|hang out 是和朋友闲逛，不是挂电话或挂外套|hold on means to wait on the line, the opposite of ending the call|hold on 是在电话里等着，和挂断正好相反|hang · up|hang becomes hung in the past: hung up|过去式是 hung up
+      hold on|waiting a minute while someone fetches a pen to write down a number|gripping the rail on a bumpy bus so as not to fall|waiting on the phone while someone checks whether the doctor is free|hold on means to wait or to grip; hang up means to end a call|hold on 是稍等或抓紧；hang up 是挂电话|hang up means to end the call, not to wait while someone fetches a pen or to grip a rail|hang up 是挂断电话，不是等人拿笔或抓住扶手|wake up means to stop sleeping, not to wait or to grip a rail|wake up 是醒来，不是等待或抓住扶手|hold · on|hold becomes held in the past: held on|过去式是 held on
+      wake up|getting out of sleep at seven when the alarm rings|a baby who has only just fallen asleep|everyone in a house roused by loud thunder in the night|wake up means to stop sleeping; hold on means to wait|wake up 是醒来；hold on 是等一下|hold on means to wait or grip, not to stop sleeping when an alarm rings|hold on 是等一下或抓紧，不是闹钟响时醒来|check in means to register at a hotel or an airport, not to stop sleeping|check in 是在酒店或机场登记，不是醒来|wake · up|wake becomes woke and woken: woke up, woken up|过去式 woke up，过去分词 woken up
+      check in|a suitcase handed over at a desk to go in a plane's hold|guests giving their names and signing a hotel register|finding the desk for a flight that takes the bags|check in means to register at a hotel or an airport; pick up means to collect|check in 是在酒店或机场登记；pick up 是取走、接走|pick up means to collect or lift something, not to hand in a bag or sign a hotel register|pick up 是取走或拿起东西，不是交行李或登记入住|wake up means to stop sleeping, not to register at a desk|wake up 是醒来，不是在柜台登记|check · in|the ck at the end of check|check 结尾是 ck
+      pick up|toys lifted off the floor before someone trips over them|a child collected from school at six in the car|new languages learned just by hearing them every day|pick up means to lift, collect or learn easily; check in means to register|pick up 是拿起、接走或轻松学会；check in 是登记|turn up means to arrive or to make louder, not to lift toys, collect a child or learn a language|turn up 是露面或调大，不是捡玩具、接孩子或学语言|check in means to register at a hotel or an airport, not to lift or collect something|check in 是在酒店或机场登记，不是捡起或接走|pick · up|the ck at the end of pick|pick 结尾是 ck
+    `,
+  },
 );
 
 const coping = batch(
@@ -117,17 +316,50 @@ const coping = batch(
   ["Phrasal Verbs of Coping", "应对的短语动词"],
   ["recovering, managing, tolerating, calming and admitting", "康复、勉强维持、忍受、平静与承认"],
   `
-  get over|to recover from|从…中恢复|It took months to ___ the flu.|She can't ___ her loss.|You'll ___ it.|pull through,get by|got over,gotten over,getting over
-  pull through|to survive a serious illness or difficulty|渡过难关|Doctors say he will ___.|We'll ___ somehow.|The firm may ___.|get over,live up to|pulled through,pulling through
-  get by|to manage with difficulty|勉强维持|We ___ on little money.|I can ___ in French.|How do they ___?|do without,put up with|got by,getting by
-  do without|to manage without something|没有…也行|We can ___ a car.|I can't ___ coffee.|There's no milk, so you'll have to ___ it.|get by,own up|did without,done without,doing without
-  put up with|to tolerate|忍受|I can't ___ the noise.|She has to ___ a lot.|Why ___ his rudeness?|do without,calm down|putting up with
-  calm down|to become quiet and relaxed|冷静下来|___; it's okay.|The sea began to ___.|Try to ___ before you speak.|get by,live up to|calmed down,calming down
-  cheer up|to become or make happier|振作起来|___; it's not so bad.|The gift may ___ her.|Flowers ___ a room.|live up to,own up|cheered up,cheering up
-  settle down|to become calm; to start a quiet stable life|安静下来；安顿下来|Class, ___!|They hope to ___ and have kids.|The baby began to ___.|get by,own up|settled down,settling down
-  live up to|to be as good as expected|不辜负|The film did not ___ the hype.|Try to ___ your name.|It's hard to ___ such praise.|settle down,pull through|lived up to,living up to
-  own up|to admit to a wrongdoing|坦白承认|He chose to ___ to the theft.|Nobody would ___.|You should ___.|cheer up,put up with|owned up,owning up
+  get over|to recover from|从…中恢复|It took her weeks to ___ the flu, and she still feels tired.|He was sad for months and couldn't ___ the loss of his dog.|Don't worry about failing the test; you'll ___ it soon and try again.|pull through,get by|got over,gotten over,getting over
+  pull through|to survive a serious illness or difficulty|渡过难关|The doctors say that, after the operation, he will ___ and be home in a month.|The small shop nearly closed in the hard winter, but it managed to ___ and is busy again.|She was very ill in hospital, but she was strong enough to ___.|get over,live up to|pulled through,pulling through
+  get by|to manage with difficulty|勉强维持|We have very little money, but we ___ on rice and vegetables.|I know only a few words of French, but I can ___ when I order food in Paris.|How do they ___ on such a small wage with three children to feed?|do without,put up with|got by,getting by
+  do without|to manage without something|没有…也行|We can ___ a car, since we live near the bus station and walk everywhere.|There's no milk, so you'll have to ___ it in your tea this morning.|I can't ___ my morning coffee; I'm grumpy all day if I miss it.|get by,own up|did without,done without,doing without
+  put up with|to tolerate|忍受|I can't ___ the noise from next door any longer, so I'm going to complain.|She has to ___ her brother's rudeness every day, saying nothing to avoid a fight.|Why should we ___ a leaking roof when the landlord promised to fix it?|do without,calm down|putting up with
+  calm down|to become quiet and relaxed|冷静下来|Try to ___ before you speak, breathing slowly until your anger passes.|After the storm, the sea began to ___, its huge waves becoming gentle ripples.|The angry crowd began to ___ and stopped shouting when the police spoke to them quietly.|cheer up,own up|calmed down,calming down
+  cheer up|to become or make happier|振作起来|She was sad all week, so we bought her flowers to ___ her and make her smile again.|Bright yellow curtains will ___ this dull, grey room.|He was gloomy after losing the match, but a joke from his friend helped him ___ and laugh again.|calm down,own up|cheered up,cheering up
+  settle down|to become calm; to start a quiet stable life|安静下来；安顿下来|Class, please ___ and sit quietly so that we can start the lesson.|After years of travelling, they hope to ___ in a small town and raise a family.|The baby began to ___ after her feed and soon fell asleep.|get by,own up|settled down,settling down
+  live up to|to be as good as expected|不辜负|The film did not ___ all the praise; it was much worse than people said.|She worked hard to ___ her parents' hopes and become a doctor.|It's hard to ___ such a famous older sister, who won every prize at school.|settle down,pull through|lived up to,living up to
+  own up|to admit to a wrongdoing|坦白承认|He chose to ___ to breaking the window and offered to pay for it.|Nobody would ___ to eating the cake, though someone had crumbs on their face.|If you made the mistake, you should ___ and say sorry.|cheer up,put up with|owned up,owning up
   `,
+  "context-clues",
+  {
+    intro: t(
+      "After a hard year, our family had to **get by** on less money and **do without** holidays, but we **pulled through**, and Mom says we will soon **get over** it. These ten phrasal verbs help you talk about recovering, managing, putting up with things, calming down and owning up.",
+      "经历了艰难的一年，我们家只能靠更少的钱勉强维持（**get by**），没有假期也得过下去（**do without**），可我们挺了过来（**pull through**），妈妈说我们很快就会走出来（**get over**）。这十个短语动词帮你谈论康复、勉强维持、忍受、冷静下来和坦白承认。",
+    ),
+    watchOut: {
+      meanings: t(
+        "You **get over** an illness or a sadness when you recover from it; you **pull through** when you survive something so serious that you might not have.",
+        "从疾病或伤心中恢复过来用 **get over**；挺过可能熬不过去的严重困境用 **pull through**。",
+      ),
+      use: t(
+        "You **do without** a thing you do not have; you **get by** on the little you do have, as in get by on a small wage.",
+        "没有某样东西也能过用 **do without**；靠仅有的一点东西勉强过活用 **get by**，如 get by on a small wage。",
+      ),
+      spelling: t(
+        "Write **put up with** and **live up to** as three separate words, and remember the past forms **got over**, **did without** and **done without**.",
+        "**put up with** 和 **live up to** 都要写成分开的三个词，并记住过去式 **got over**、**did without** 和过去分词 **done without**。",
+      ),
+    },
+    notes: `
+      get over|weeks of recovering from the flu|months of sadness at the loss of a dog|failing a test and soon feeling fine enough to try again|get over means to recover from an illness or a sadness; pull through means to survive something serious|get over 是从病痛或伤心中恢复；pull through 是挺过严重的困境|pull through takes no object; you pull through, but you get over the flu or a loss|pull through 不带宾语；可以说 you pull through，但 get over 才能接 the flu 或 a loss|get by means to manage with little money, not to recover from flu or sadness|get by 是靠很少的钱勉强维持，不是从流感或伤心中恢复|get · o · ver|get becomes got in the past: got over|过去式是 got over
+      pull through|a patient expected to survive an operation and be home in a month|a small shop that nearly closed but survived the winter|someone very ill in hospital who is strong enough to survive|pull through means to survive a serious danger; get over means to recover from something|pull through 是挺过严重危险；get over 是从某事中恢复|get over needs what you recover from, as in get over the flu; it cannot end a sentence on its own|get over 要带恢复的对象，如 get over the flu，不能单独放在句末|live up to means to be as good as people expect, not to survive an illness|live up to 是达到别人的期望，不是挺过疾病|pull · through|the ough in through that says /oo/|through 中 ough 读 /uː/
+      get by|a family managing on rice and vegetables with very little money|ordering food in Paris with only a few words of French|feeding three children on a small wage|get by means to manage with the little you have; do without means to manage without something at all|get by 是靠仅有的一点勉强维持；do without 是完全没有某物也行|do without needs the thing you go without, as in do without a car; it does not take on|do without 要带没有的东西，如 do without a car，不接 on|put up with needs something you tolerate, like noise, not the little money or French you manage on|put up with 要带忍受的对象，如噪音，不是勉强够用的钱或法语|get · by|get becomes got in the past: got by|过去式是 got by
+      do without|a family living near the bus station that needs no car|tea with no milk this morning|morning coffee someone cannot manage without|do without means to manage with none of something; get by means to manage on very little|do without 是没有某物也能过；get by 是靠很少的东西勉强过|get by is followed by on or nothing, not by the thing you lack, as in get by on little money|get by 后接 on 或不接宾语，不接所缺的东西，如 get by on little money|own up means to admit something wrong you did, not to manage without a car, milk or coffee|own up 是承认做错的事，不是没有汽车、牛奶或咖啡也能过|do · with · out|without is one word; past did without, done without|without 是一个词；过去式 did without，过去分词 done without
+      put up with|loud noise from next door that someone will complain about|a brother's rudeness borne in silence to avoid a fight|a leaking roof the landlord promised to fix|put up with means to bear something unpleasant; do without means to manage when something is missing|put up with 是忍受讨厌的事；do without 是缺了某物也能过|do without means to manage when something is missing, not to bear noise or rudeness that is there|do without 是缺了某物也能过，不是忍受存在的噪音或无礼|calm down means to become quiet and relaxed yourself, not to bear something annoying|calm down 是自己平静下来，不是忍受烦人的事|put · up · with|three separate words; put stays put in the past|分开的三个词；过去式仍是 put
+      calm down|breathing slowly before speaking until anger passes|a sea whose huge waves become gentle ripples after a storm|an angry crowd that stops shouting when the police speak quietly|calm down means to stop being angry or wild; cheer up means to stop being sad|calm down 是不再愤怒或激动；cheer up 是不再难过|cheer up means to stop being sad and become happy, not to stop being angry or wild|cheer up 是由难过变开心，不是从愤怒或激动中平静下来|own up means to admit a wrong, not to grow quiet and relaxed|own up 是承认错误，不是平静放松下来|calm · down|the silent l in calm|calm 中 l 不发音
+      cheer up|flowers bought for a sad friend to make her smile again|bright yellow curtains in a dull, grey room|a joke that helps a gloomy player laugh again|cheer up means to make someone happier; calm down means to make someone less angry|cheer up 是让人更开心；calm down 是让人不那么激动|calm down means to make someone less angry or excited, not to make a sad person smile|calm down 是让人不再生气或激动，不是让难过的人笑起来|own up means to admit something wrong you did, not to make someone or a room brighter|own up 是承认做错的事，不是让人或房间明快起来|cheer · up|the double e in cheer|cheer 中双写 e
+      settle down|a class asked to sit quietly so that a lesson can start|travellers hoping to live in one small town and raise a family|a baby growing quiet after her feed and falling asleep|settle down means to become calm or to start a steady life in one place; get by means to manage with little|settle down 是安静下来或定居；get by 是勉强维持|get by means to manage with little money, not to sit quietly or make a home in one place|get by 是靠很少的钱勉强维持，不是安静坐好或在一个地方安家|own up means to admit a wrong, not to grow calm or make a home|own up 是承认错误，不是安静下来或安家|set · tle · down|the double t and the -le ending of settle|settle 双写 t，结尾是 -le
+      live up to|a film much worse than all the praise it got|working hard to become the doctor her parents hoped for|a younger sibling trying to match a famous sister who won every prize|live up to means to be as good as people expect; settle down means to become calm|live up to 是达到期望；settle down 是安静下来|settle down means to become calm or start a steady life, not to be as good as people expect|settle down 是安静下来或安定生活，不是达到期望|pull through means to survive a serious illness, not to match praise or hopes|pull through 是挺过重病，不是配得上赞扬或期望|live · up · to|three separate words|分开的三个词
+      own up|admitting to breaking a window and offering to pay|nobody admitting to eating the cake despite crumbs on someone's face|admitting a mistake and saying sorry|own up means to admit a wrong; cheer up means to become happier|own up 是承认错误；cheer up 是开心起来|cheer up means to become happier, not to admit something wrong you did|cheer up 是开心起来，不是承认做错的事|put up with means to bear something unpleasant, not to admit a wrong of your own|put up with 是忍受讨厌的事，不是承认自己的错|own · up|the ow in own that says a long o|own 中 ow 读长音 o
+    `,
+  },
 );
 
 const papers = batch(
@@ -135,17 +367,50 @@ const papers = batch(
   ["Phrasal Verbs of Papers and Things", "文件与物品的短语动词"],
   ["handing in, filling in, getting rid of, saving and giving", "上交、填写、丢掉、保存与赠送"],
   `
-  hand in|to give work to a teacher or official|上交|___ your essays by Friday.|She chose to ___ her notice.|Please ___ the forms at the desk when you finish.|fill in,give away|handed in,handing in
-  fill in|to complete a form; to substitute|填写；代替|___ the blanks.|Can you ___ for me today?|___ your name here.|hand in,cross out|filled in,filling in
-  cross out|to draw a line through words|划掉|___ the wrong answer.|She chose to ___ his name.|Don't ___ too much.|fill in,look up|crossed out,crossing out
-  look up|to search for a word or fact; to improve|查找；好转|___ the word in a dictionary.|Things began to ___.|I'll ___ his number.|cross out,back up|looked up,looking up
-  back up|to support; to make a copy of computer data; to reverse|支持；备份；倒车|My friends will ___ me.|___ your files.|___ the car slowly.|look up,set aside|backed up,backing up
-  set aside|to save for a purpose; to ignore|留出；搁置|___ some money each week.|Let's ___ our differences.|She chose to ___ time to read.|back up,chip in|setting aside
-  give away|to give for free; to reveal a secret|赠送；泄露|They ___ free samples.|Don't ___ the ending.|She chose to ___ her old toys to poor children.|throw away,get rid of|gave away,given away,giving away
-  throw away|to put in the trash; to waste|扔掉；浪费|Don't ___ the box.|Don't ___ your chance.|___ the old milk.|chip in,look up|threw away,thrown away,throwing away
-  get rid of|to remove or throw away something unwanted|除掉|We must ___ the mice.|___ that old sofa.|I can't ___ this cold.|chip in,look up|got rid of,getting rid of
-  chip in|to contribute money or help|凑钱；插话|We all ___ for the gift.|Can you ___ five dollars?|Everyone will ___.|set aside,hand in|chipped in,chipping in
+  hand in|to give work to a teacher or official|上交|Please ___ your essays by Friday so that the teacher can mark them.|When you finish the test, ___ your paper to the teacher at the front.|She decided to ___ her notice and leave the job at the end of the month.|fill in,give away|handed in,handing in
+  fill in|to complete a form; to substitute|填写；代替|Please ___ the blanks in each sentence with the right word.|Can you ___ for me at the shop today while I go to the dentist?|Write clearly when you ___ your name and address on the form.|hand in,cross out|filled in,filling in
+  cross out|to draw a line through words|划掉|If you make a mistake, ___ the wrong answer with one neat line.|She chose to ___ his name on the guest list, drawing a line through it.|Don't ___ too many words, or your page will be covered in lines and hard to read.|fill in,look up|crossed out,crossing out
+  look up|to search for a word or fact; to improve|查找；好转|If you don't know a word, you can ___ it in the dictionary to find what it means.|Things began to ___ when Dad found a new job, and we all felt happier.|I'll ___ the train times online and tell you when the next one leaves.|cross out,back up|looked up,looking up
+  back up|to support; to make a copy of computer data; to reverse|支持；备份；倒车|If the others don't believe me, will you ___ my story and say you saw it too?|Always ___ your files on a second drive in case your computer breaks.|The driver had to ___ the lorry slowly into the narrow yard, reversing inch by inch.|look up,set aside|backed up,backing up
+  set aside|to save for a purpose; to ignore|留出；搁置|Try to ___ some money each week for your own holiday.|Let's ___ our differences and work together to win the match.|She tries to ___ an hour every evening for reading, keeping it free of other jobs.|back up,chip in|setting aside
+  give away|to give for free; to reveal a secret|赠送；泄露|The shop will ___ free samples of the new cheese to every customer.|Please don't ___ the ending of the film; I haven't seen it yet.|She decided to ___ her old toys to children who had none.|throw away,get rid of|gave away,given away,giving away
+  throw away|to put in the trash; to waste|扔掉；浪费|Please ___ the old milk; it smells sour and has gone bad.|Rinse the empty cans and ___ them in the recycling bin.|It's a shame to ___ food that is still good when so many people are hungry.|give away,chip in|threw away,thrown away,throwing away
+  get rid of|to remove or throw away something unwanted|除掉|We must ___ the mice in the kitchen before they eat all the bread.|We need to ___ that old sofa, since it's broken and takes up too much room.|I can't ___ this cold; I've been sneezing for two weeks.|chip in,look up|got rid of,getting rid of
+  chip in|to contribute money or help|凑钱；插话|If everyone will ___ a little, the class can share the cost of the trip between us.|Can you ___ toward Mum's birthday present? Dad and I are paying for most of it.|Everyone in the street will ___ to pay for the new swing in the park.|set aside,hand in|chipped in,chipping in
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Before I **hand in** the form, I **fill in** my name, **cross out** a mistake and **look up** a word I'm not sure of. These ten phrasal verbs help you talk about papers and things: handing in, filling in, getting rid of, saving and giving.",
+      "交上（**hand in**）表格之前，我填写（**fill in**）了名字，划掉（**cross out**）一处错误，又查了（**look up**）一个拿不准的词。这十个短语动词帮你谈论文件和物品：上交、填写、丢掉、保存和赠送。",
+    ),
+    watchOut: {
+      meanings: t(
+        "You **give away** things that someone else can still use; you **throw away** things that are rubbish and belong in the bin.",
+        "把别人还能用的东西送人用 **give away**；把属于垃圾桶的废物扔掉用 **throw away**。",
+      ),
+      use: t(
+        "You **fill in** a form first, writing your answers in its spaces; then you **hand in** the finished form to the teacher or the office.",
+        "先 **fill in** 表格，把答案写进空格；再把填好的表格 **hand in** 给老师或办公室。",
+      ),
+      spelling: t(
+        "Write **get rid of** as three separate words, double the **p** in **chipped in**, and remember **threw away** and **thrown away**.",
+        "**get rid of** 要写成分开的三个词，**chipped in** 双写 **p**，并记住 **threw away** 与 **thrown away**。",
+      ),
+    },
+    notes: `
+      hand in|essays given to the teacher by Friday for marking|a finished test paper given to the teacher at the front|a letter giving notice before leaving a job|hand in means to give finished work to someone in charge; fill in means to write answers in the spaces of a form|hand in 是把完成的作业交给负责人；fill in 是在表格空格里填写|fill in means to write in the spaces of a form or take someone's place, not to give finished work to a teacher|fill in 是在表格空格里填写或代班，不是把完成的作业交给老师|give away means to give something free to anyone, not to give work to a teacher for marking|give away 是把东西白送给别人，不是交作业给老师批改|hand · in|the nd at the end of hand|hand 结尾是 nd
+      fill in|blanks in sentences filled with the right words|taking someone's place at the shop during a dentist visit|a name and address written clearly on a form|fill in means to write in spaces or take someone's place; hand in means to give finished work|fill in 是填空或代班；hand in 是上交|hand in means to give finished work to someone in charge, not to write words in blanks or work for someone|hand in 是上交完成的作业，不是填空或替人上班|cross out means to draw a line through words, not to write them neatly into a space|cross out 是划掉字，不是把字工整地填进空格|fill · in|the double l in fill|fill 中双写 l
+      cross out|a wrong answer marked with one neat line|a name on a guest list with a line drawn through it|a page covered in lines and hard to read|cross out means to draw a line through words; fill in means to write words into spaces|cross out 是划掉字；fill in 是把字填进空格|fill in means to write words into blanks, not to draw lines through them|fill in 是往空里填字，不是在字上画线|look up means to search for a word, not to draw a line through it|look up 是查词，不是把它划掉|cross · out|the double s at the end of cross|cross 结尾双写 s
+      look up|a word found in the dictionary to learn what it means|things getting better when Dad finds a new job|train times searched online to tell someone when the next one leaves|look up means to search for a fact or to get better; back up means to support or copy|look up 是查找或好转；back up 是支持或备份|cross out means to draw a line through words, not to search for a fact or for things to get better|cross out 是划掉字，不是查找事实或情况好转|back up means to support someone or copy files, not to search for a meaning or a train time|back up 是支持某人或备份文件，不是查词义或火车时刻|look · up|the double o in look|look 中双写 o
+      back up|someone who saw it too supporting a story others don't believe|files copied to a second drive in case the computer breaks|a lorry reversed inch by inch into a narrow yard|back up means to support, to copy files or to reverse; set aside means to save for later|back up 是支持、备份或倒车；set aside 是留出|look up means to search for a fact, not to support a story, copy files or reverse a lorry|look up 是查找，不是支持说法、备份文件或倒车|set aside means to save something for later use, not to support a story, make a copy or reverse a lorry|set aside 是留着以后用，不是支持说法、做备份或倒车|back · up|the ck at the end of back|back 结尾是 ck
+      set aside|money saved each week for your own holiday|differences put to one side to work together|an hour kept free every evening for reading|set aside means to save for your own later use or to put out of mind; chip in means to give money to a shared cost|set aside 是留给自己以后用或暂且搁置；chip in 是为共同的花销凑钱|chip in means to give money to a shared cost, not to save it for your own holiday or keep time free|chip in 是为共同花销出钱，不是给自己存钱度假或留出时间|back up means to support or copy, not to save money or time for later|back up 是支持或备份，不是存下钱或留出时间|set · a · side|aside is one word; set stays set in the past|aside 是一个词；过去式仍是 set
+      give away|free samples of cheese handed to every customer|the ending of a film told to someone who has not seen it|old toys given to children who had none|give away means to give something free or tell a secret; throw away means to put something in the bin|give away 是白送或泄露秘密；throw away 是扔进垃圾桶|throw away means to put something in the bin, not to hand it free to someone or tell a secret|throw away 是扔进垃圾桶，不是白送给人或泄露秘密|get rid of means to remove something unwanted, not to hand out free gifts or tell how a film ends|get rid of 是除掉不要的东西，不是派发赠品或说出电影结局|give · a · way|away is one word; past gave away, given away|away 是一个词；过去式 gave away，过去分词 given away
+      throw away|sour milk that has gone bad|rinsed empty cans put in the recycling bin|good food wasted while many people are hungry|throw away means to put in the bin or to waste; give away means to give to someone who can use it|throw away 是扔掉或浪费；give away 是送给用得着的人|give away means to hand something to someone who can still use it, not to put sour milk or empty cans in the bin|give away 是把东西送给还能用的人，不是把酸牛奶或空罐扔进垃圾桶|chip in means to give money to a shared cost, not to put things in a bin|chip in 是为共同花销凑钱，不是把东西扔进垃圾桶|throw · a · way|throw becomes threw and thrown: threw away, thrown away|过去式 threw away，过去分词 thrown away
+      get rid of|mice in the kitchen that must go before they eat the bread|an old broken sofa that takes up too much room|a cold that has lasted two weeks of sneezing|get rid of means to remove something unwanted; chip in means to give money to a shared cost|get rid of 是除掉不要的东西；chip in 是凑钱|chip in means to give money to a shared cost, not to remove mice, a sofa or a cold|chip in 是凑钱，不是除掉老鼠、沙发或感冒|look up means to search for a fact, not to remove something unwanted|look up 是查找，不是除掉不要的东西|get · rid · of|three separate words: get, rid and of|分开的三个词：get、rid、of
+      chip in|a class sharing the cost of a trip with everyone giving a little|helping pay for Mum's birthday present that Dad pays most of|everyone in a street paying toward a new swing in the park|chip in means to give your share toward a shared cost; set aside means to save money for your own later use|chip in 是为共同花销出自己那份；set aside 是给自己留钱以后用|set aside means to save money for your own later use, not to give your share toward a shared cost|set aside 是给自己存钱以后用，不是为共同花销出份子|hand in means to give finished work to a teacher, not to give money toward a shared cost|hand in 是把作业交给老师，不是为共同花销出钱|chip · in|the p doubles in the past: chipped in|过去式双写 p：chipped in
+    `,
+  },
 );
 
 /** batchesE are the batches of phrasal verbs of starting, solving, people, more and less, breaking, meeting, coping and papers. */

@@ -1,6 +1,7 @@
 // Grade 9: the batches of words of computers, of family, of shopping, of the army, of getting around, of moods,
 // of how things are and of staying safe.
 
+import { t } from "@ga/content";
 import type { BatchSpec } from "../batch.ts";
 import { batch } from "../grade-5/batches.ts";
 
@@ -9,17 +10,50 @@ const computers = batch(
   ["Words of Software and Security", "软件与安全的词"],
   ["programs, connections and dangers online", "程序、连接与网络危险"],
   `
-  software|the programs used by a computer|软件|Install the new ___.|The ___ crashed.|She writes ___ for a living.|server,malware|
-  server|a computer that provides data to other computers; a person who serves|服务器；服务员|The ___ is down.|Data is stored on a ___.|The ___ brought our food.|software,cursor|servers
-  cursor|a moving mark on a screen showing where you are|光标|Move the ___ to the box.|The ___ is blinking.|Click where the ___ is.|server,charger|cursors
-  browse|to look through casually; to look at websites|浏览|I like to ___ in bookshops.|___ the web for ideas.|We ___ the shelves.|update,hack|browsed
-  update|to make current; the latest news or version|更新|___ your phone.|Here is an ___ on the storm.|The ___ fixed the bug.|browse,firewall|updated,updates
-  charger|a device for charging a battery|充电器|I forgot my phone ___.|Plug in the ___.|The phone ___ is broken, so the battery is dead.|wireless,cursor|chargers
-  wireless|without wires; using radio signals|无线的|We have ___ internet.|The ___ speaker is loud.|Use a ___ mouse.|charger,software|
-  firewall|a system that protects a computer network from attack|防火墙|The ___ blocked the virus.|Turn on your ___.|A strong ___ keeps out hackers.|malware,update|firewalls
-  malware|software designed to damage a computer|恶意软件|The ___ stole passwords.|Scan your laptop for ___.|Don't click links that may hide ___.|firewall,hack|
-  hack|to gain unauthorized access to data; a clever trick|侵入(电脑)；妙招|Someone tried to ___ the bank.|Here's a useful kitchen ___.|They ___ into the system.|malware,browse|hacked,hacker,hacking
+  software|the programs used by a computer|软件|Install the new photo-editing ___ so that the computer can open and change your pictures.|She writes ___ for a living, coding the useful programs and apps that people choose to put on their phones.|The laptop came with ___ for writing letters and making slideshows already installed.|server,malware|
+  server|a computer that provides data to other computers; a person who serves|服务器；服务员|The website went down because the ___, the powerful computer in the data center that sends out its pages, overheated.|All the company's files are stored on one ___ in the basement, and every office computer connects to it to fetch them.|The ___ holding the ticket website could not handle so many requests from other computers and crashed.|software,firewall|servers
+  cursor|a moving mark on a screen showing where you are|光标|Move the mouse until the blinking ___ sits inside the box, then click.|The ___ flashed at the end of the last line, marking where the next letter I typed would appear.|Drag the little arrow of the ___ across the screen to the button you want to press.|interface,server|cursors
+  browse|to look through casually; to look at websites|浏览|On rainy afternoons I like to ___ in the bookshop, looking at covers without planning to buy anything.|She liked to ___ the online shop for an hour, clicking from page to page just to see what was there.|We had no list, so we began to ___ the market stalls, looking casually at whatever caught our eye.|update,hack|browsed
+  update|to make current; the latest news or version|更新|Please ___ your phone tonight so that it has the newest version of its system.|The weather service will ___ the storm map every hour with the latest information.|If you ___ the app, the new version will fix the bug that made it crash.|browse,hack|updated,updates
+  charger|a device for charging a battery|充电器|My phone battery was dead because I had left my ___ at home and had nothing to plug the phone into.|Plug the ___ into the wall and the other end into the laptop to fill its battery.|The cable of her phone ___ is broken, so the battery cannot fill up overnight.|cursor,server|chargers
+  wireless|without wires; using radio signals|无线的|The ___ speaker plays music from my phone with no cable connecting the two.|Our school has ___ internet, so laptops connect by radio signal from any room.|With a ___ mouse, there is no cord trailing across the desk.|programmable,synthetic|
+  firewall|a system that protects a computer network from attack|防火墙|The ___ blocked the attack, refusing to let the stranger's computer into our network.|Turn on your ___ so that it can guard the network and stop intruders from getting in.|A strong ___ stands between the school's computers and the internet, checking everything that tries to come in.|malware,server|firewalls
+  malware|software designed to damage a computer|恶意软件|The ___ hidden in the email secretly stole her passwords and sent them to criminals.|Scan your laptop for ___, harmful programs that criminals sneak in to damage it.|Don't click strange links, which may download ___ that wrecks your files on purpose.|firewall,glitch|
+  hack|to gain unauthorized access to data; a clever trick|侵入(电脑)；妙招|Criminals tried to ___ the bank's computers to steal money from customers' accounts.|The student broke the rules when he managed to ___ the school system and change his grades.|Use a strong password so that no one can ___ your account and read your messages without permission.|browse,update|hacked,hacker,hacking
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **firewall** stopped most attacks, but **malware** slipped in through a strange link, so we had to **update** every piece of **software** on the network. These ten words help you talk about programs, connections and the dangers online.",
+      "防火墙（**firewall**）挡住了大部分攻击，可恶意软件（**malware**）还是通过一个奇怪的链接钻了进来，我们只好把网络上的每个软件（**software**）都更新（**update**）一遍。这十个词帮你谈论程序、连接和网络上的危险。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Software** is any program; **malware** is software made to do harm; a **firewall** is the guard that keeps harm out of a network.",
+        "**software** 泛指各种程序；**malware** 是专门搞破坏的软件；**firewall** 是把危害挡在网络外的守卫。",
+      ),
+      use: t(
+        "To **browse** is to look around casually; to **hack** is to break into a system without permission; to **update** is to bring something up to its newest version.",
+        "**browse** 是随便看看；**hack** 是未经允许闯入系统；**update** 是把东西更新到最新版本。",
+      ),
+      spelling: t(
+        "Watch the **-or** of **cursor**, the **-ger** of **charger**, the double **s** in **wireless** and the double **l** in **firewall**.",
+        "注意 **cursor** 的 **-or**、**charger** 的 **-ger**、**wireless** 的双写 **s**，以及 **firewall** 的双写 **l**。",
+      ),
+    },
+    notes: `
+      software|a photo-editing program installed so that a computer can change pictures|useful programs and apps people choose to put on their phones|programs for writing letters and making slideshows already on a laptop|software is any useful program; malware is a program made to do harm|software 泛指各种有用的程序；malware 是专门搞破坏的程序|server is a powerful computer that sends data to other computers, not the programs installed on one|server 是向其他电脑传送数据的大型计算机，不是装在电脑上的程序|malware is a harmful program sneaked in by criminals, not a useful one that people choose to install|malware 是罪犯偷偷植入的有害程序，不是人们自愿安装的有用程序|soft · ware|soft and ware joined; ware without an h|soft 与 ware 相连；ware 里没有 h
+      server|a powerful computer in a data center sending out a website's pages|one computer in a basement storing files that every office computer fetches|a computer holding a ticket website that crashes under too many requests|server is a machine that hands data to other computers; software is the programs that run on machines|server 是向其他电脑提供数据的机器；software 是在机器上运行的程序|software is the programs a computer runs, not a machine that stores files and sends them to other computers|software 是电脑运行的程序，不是存储文件并发给其他电脑的机器|firewall is a guard that blocks attacks, not a computer that stores files and sends out pages|firewall 是阻挡攻击的屏障，不是存储文件、发送网页的计算机|ser · ver|the -er ending after v|v 之后是 -er 结尾
+      cursor|a blinking mark placed inside a box before clicking|a flashing mark at the end of a line showing where the next letter will appear|a little arrow dragged across the screen to a button|cursor is the small moving mark on a screen; interface is the whole way you work with a machine|cursor 是屏幕上移动的小标记；interface 是人与机器交流的整套方式|interface is the whole way a person works with a machine, not the small mark that shows where you are on the screen|interface 是人与机器交流的整套方式，不是屏幕上指示位置的小标记|server is a powerful computer that sends data, not a mark that moves on a screen|server 是传送数据的大型计算机，不是屏幕上移动的标记|cur · sor|the -or ending, not -er|结尾是 -or，不是 -er
+      browse|looking at book covers without planning to buy anything|clicking from page to page of an online shop just to see what is there|looking casually at market stalls with no list|browse means to look around casually; hack means to break in without permission|browse 是随便看看；hack 是未经允许闯入|update means to bring something to its newest version, not to look around casually|update 是把东西更新到最新版本，不是随便看看|hack means to break into a computer system without permission, not to look around a shop or stall for fun|hack 是未经允许闯入电脑系统，不是随意逛商店或摊位|browse|the ow sound and the silent e after s|ow 读 /aʊ/，s 后的 e 不发音
+      update|giving a phone the newest version of its system|adding the latest information to a storm map every hour|getting the new version of an app that fixes a bug|update brings something to its newest version; browse just looks around|update 是更新到最新版本；browse 只是随便看看|browse means to look around casually, which changes nothing and adds no new version|browse 是随便看看，不会改变任何东西，也不会装上新版本|hack means to break into a system without permission, not to bring it up to date|hack 是未经允许闯入系统，不是把它更新|up · date|up and date joined, with a silent e|up 与 date 相连，结尾 e 不发音
+      charger|something left at home so a dead phone cannot be plugged in|something plugged into the wall and a laptop to fill its battery|a phone cable that is broken so the battery cannot fill overnight|charger fills a battery with power; cursor is a mark on a screen|charger 给电池充电；cursor 是屏幕上的标记|cursor is a mark that moves on a screen, not a device that fills a battery|cursor 是屏幕上移动的标记，不是给电池充电的设备|server is a powerful computer that sends out data, not a small plug that fills a battery|server 是传送数据的大型计算机，不是给电池充电的小插头|char · ger|the soft g of -ger, as in danger|-ger 中 g 读软音（同 danger）
+      wireless|a speaker that plays music from a phone with no cable|school internet that reaches laptops by radio signal|a mouse with no cord trailing across the desk|wireless means connected without wires; programmable means able to follow instructions|wireless 是不用线连接；programmable 是能按指令运行|programmable means it can be given instructions to carry out tasks, not that it connects without a cable|programmable 是可以输入指令让它自动执行任务，不是不用线连接|synthetic means made by people as a copy of something natural, not connected without wires|synthetic 是人造的、仿天然的，不是不用线连接|wire · less|wire plus the suffix -less, with a double s|wire 加后缀 -less，双写 s
+      firewall|a guard refusing to let a stranger's computer into a network|something turned on to stop intruders getting into a network|a barrier between school computers and the internet checking all that comes in|firewall keeps attacks out; malware is the attack itself|firewall 把攻击挡在外面；malware 本身就是攻击|malware is harmful software that attacks a computer, not the guard that keeps attacks out|malware 是攻击电脑的有害软件，不是把攻击挡在外面的屏障|server is a computer that stores and sends data, not a barrier that blocks intruders|server 是存储和传送数据的计算机，不是阻挡入侵者的屏障|fire · wall|fire and wall joined, with a double l at the end|fire 与 wall 相连，结尾双写 l
+      malware|a hidden program that secretly steals passwords for criminals|harmful programs that criminals sneak onto a laptop|something downloaded from a strange link that wrecks files on purpose|malware is software made to do harm on purpose; a glitch is an accidental fault|malware 是故意搞破坏的软件；glitch 是意外的小故障|firewall is the guard that keeps attacks out, not the harmful program that attacks|firewall 是阻挡攻击的屏障，不是发动攻击的有害程序|glitch is a small accidental fault in a machine, not a program that criminals make to steal or destroy on purpose|glitch 是机器意外出现的小故障，不是罪犯故意编写来偷窃或破坏的程序|mal · ware|mal-, meaning bad, joined to ware|表示“坏”的前缀 mal- 加 ware
+      hack|criminals breaking into a bank's computers to steal money|a student breaking into a school system to change grades|someone getting into an account to read messages without permission|hack means to break into a system without permission; browse means to look around freely|hack 是未经允许闯入系统；browse 是自由地随便看|browse means to look around casually at what anyone may see, not to break in without permission|browse 是随便看看谁都能看的东西，不是未经允许闯入|update means to bring a system to its newest version, not to break into it|update 是把系统更新到最新版本，不是闯入它|hack|the ck ending after a short a|短元音 a 后是 ck 结尾
+    `,
+  },
 );
 
 const family = batch(
@@ -27,17 +61,50 @@ const family = batch(
   ["Words of Family", "家庭的词"],
   ["relatives, marriage and family loss", "亲戚、婚姻与家庭的失去"],
   `
-  cousin|a child of one's aunt or uncle|堂(表)兄弟姐妹|My aunt's son is my ___; he lives in Spain.|She is my second ___.|We played with our ___ Ann, Uncle Tom's daughter.|nephew,in-law|cousins
-  nephew|a son of one's brother or sister|侄子；外甥|My sister's son, my ___, is five.|She took her ___ to the zoo.|Her brother's boy, her ___, is tall.|cousin,toddler|nephews
-  toddler|a young child who is learning to walk|学步的孩子|The ___ fell over.|Watch the ___; he just learned to walk.|A ___ needs naps.|orphan,nephew|toddlers
-  orphan|a child whose parents are dead|孤儿|The ___ was taken in.|He was an ___ at six.|They adopted an ___.|widow,toddler|orphans,orphanage,orphaned
-  stepfather|the husband of one's mother who is not one's father|继父|Her ___ is kind.|My ___ taught me to fish.|He met his ___ when his mother remarried.|spouse,fiance|stepfathers
-  spouse|a husband or wife|配偶|Married guests may bring their ___.|Her ___ works abroad.|Each ___ signed the form.|fiance,newlywed|spouses
-  fiance|a man one is engaged to marry|未婚夫|Her ___, whom she will marry next year, is a doctor.|She met her ___ at school, and now they are engaged.|My ___ and I will marry in May.|spouse,stepfather|fiancee
-  newlywed|a person who has recently married|新婚者|The ___ couple went to Paris.|Each ___ got a gift.|The ___ pair smiled.|fiance,widow|newlyweds
-  widow|a woman whose husband has died|寡妇|Since her husband died, the ___ lives alone.|Her husband died, and she became a ___ young.|At her husband's funeral the ___ wore black.|orphan,spouse|widowed,widower
-  in-law|a relative by marriage|姻亲|My mother-___ is coming.|She gets on with each ___ in her husband's family.|Each ___ was invited.|cousin,newlywed|in-laws
+  cousin|a child of one's aunt or uncle|堂(表)兄弟姐妹|My aunt's son is my ___, and we spend every summer together at our grandparents' farm.|Uncle Tom's daughter Ann is my ___, since her father is my father's brother.|At the family reunion I met another ___, the son of my mother's sister, whom I had never seen before.|nephew,in-law|cousins
+  nephew|a son of one's brother or sister|侄子；外甥|My sister's son is my ___, so I am his aunt.|She took her ___, her brother's little boy, to the zoo for his birthday.|As an uncle, he spoiled his only ___, his sister's son, with presents.|cousin,in-law|nephews
+  toddler|a young child who is learning to walk|学步的孩子|While her parents clapped, the ___ took a few wobbly steps across the room and sat down hard on the carpet.|At two years old, the ___ was just learning to walk, and her mother held her hands as she stepped.|Every ___ in the playgroup, unsteady on little legs, was picked up by a parent at noon.|orphan,newlywed|toddlers
+  orphan|a child whose parents are dead|孤儿|Both her parents died in the flood, so the young ___ went to live with her grandmother.|The ___ had never known his parents, who both died when he was a baby.|The family adopted the ___, a boy of six whose mother and father had both died.|widow,stray|orphans,orphanage,orphaned
+  stepfather|the husband of one's mother who is not one's father|继父|When her mother married again, her mother's new husband became the girl's ___.|My ___, my mother's husband, taught me to fish, though he is not my real father.|He was five when his mother remarried, and his ___ raised him as if he were his own son.|in-law,spouse|stepfathers
+  spouse|a husband or wife|配偶|Married staff may bring their ___, a husband or wife, to the dinner.|After forty years of marriage, she still calls her ___ her best friend.|On the form, write the name of your ___, the person you are married to.|fiance,newlywed|spouses
+  fiance|a man one is engaged to marry|未婚夫|Her ___, whom she will marry next June, is a doctor.|He asked her to marry him, and until the wedding she proudly introduces him as her ___.|The engaged woman and her ___ are still choosing a date for their wedding.|spouse,newlywed|fiancee
+  newlywed|a person who has recently married|新婚者|Just married last week, the ___ couple flew to Paris for their honeymoon.|Each ___ at the hotel, married only days before, got a free cake.|As a ___, married just a month, she was still getting used to her new last name.|fiance,widow|newlyweds
+  widow|a woman whose husband has died|寡妇|Since her husband died last year, the ___ has lived alone in their big house.|His wife lived on for twenty years after his death and, as his ___, never married again.|At her husband's funeral, the ___ wore black and thanked everyone for coming.|orphan,spouse|widowed,widower
+  in-law|a relative by marriage|姻亲|When she married Tom, every ___ in his big family welcomed her, from his parents to his sisters.|Each ___ is a relative you gain by marriage, such as your husband's parents or your wife's sisters.|She gets along well with every ___ on her husband's side of the family, especially his mother.|cousin,spouse|in-laws
   `,
+  "context-clues",
+  {
+    intro: t(
+      "At the wedding, the bride's **nephew** carried the rings, a **toddler** cousin danced, and the new **spouse** met every **in-law** for the first time. These ten words help you name relatives, talk about marriage and describe the losses families face.",
+      "婚礼上，新娘的外甥（**nephew**）捧着戒指，一个学步的小娃娃（**toddler**）在跳舞，新婚的配偶（**spouse**）第一次见到了每一位姻亲（**in-law**）。这十个词帮你说出亲戚的称呼，谈论婚姻，也描述家庭遭遇的失去。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **fiance** is someone you are engaged to and will marry; a **spouse** is someone you are already married to; a **newlywed** married only recently.",
+        "**fiance** 是已订婚、将要结婚的人；**spouse** 是已经结婚的配偶；**newlywed** 是刚结婚不久的人。",
+      ),
+      use: t(
+        "A **cousin** is your aunt's or uncle's child, a **nephew** is your brother's or sister's son, and an **in-law** is a relative you gain by marriage.",
+        "**cousin** 是姑姨叔舅的孩子，**nephew** 是兄弟姐妹的儿子，**in-law** 是因婚姻而有的亲戚。",
+      ),
+      spelling: t(
+        "Watch the **ph** that says /f/ in **nephew** and **orphan**, the **ou** in **cousin**, the double **d** in **toddler** and the hyphen in **in-law**.",
+        "注意 **nephew** 和 **orphan** 中读 /f/ 的 **ph**、**cousin** 的 **ou**、**toddler** 的双写 **d**，以及 **in-law** 中的连字符。",
+      ),
+    },
+    notes: `
+      cousin|an aunt's son who spends every summer on the grandparents' farm|the daughter of a father's brother|the son of a mother's sister met for the first time at a reunion|cousin is your aunt's or uncle's child; nephew is your brother's or sister's son|cousin 是姑姨叔舅的孩子；nephew 是兄弟姐妹的儿子|nephew is the son of your brother or sister, not the child of your aunt or uncle|nephew 是兄弟姐妹的儿子，不是姑姨叔舅的孩子|in-law is a relative you gain by marriage, not a child of your aunt or uncle|in-law 是因婚姻而有的亲戚，不是姑姨叔舅的孩子|cous · in|the ou that says a short u, as in touch|ou 读短音 u（同 touch）
+      nephew|a sister's son, whose aunt is the speaker|a brother's little boy taken to the zoo|a sister's son spoiled by his uncle with presents|nephew is your brother's or sister's son; cousin is your aunt's or uncle's child|nephew 是兄弟姐妹的儿子；cousin 是姑姨叔舅的孩子|cousin is the child of your aunt or uncle, not the son of your brother or sister|cousin 是姑姨叔舅的孩子，不是兄弟姐妹的儿子|in-law is a relative by marriage, not the son of your own brother or sister|in-law 是因婚姻而有的亲戚，不是自己兄弟姐妹的儿子|neph · ew|the ph that says /f/ and the -ew ending|ph 读 /f/，结尾是 -ew
+      toddler|a child taking wobbly first steps while the parents clap|a two-year-old learning to walk with a mother holding her hands|little children in a playgroup, unsteady on their legs|toddler is a small child learning to walk; orphan is a child whose parents have died|toddler 是学走路的小孩；orphan 是父母双亡的孩子|orphan is a child whose parents have died, not a little child whose parents are right there helping it walk|orphan 是父母双亡的孩子，不是父母就在身边扶着学走路的小孩|newlywed is an adult who has just married, not a little child learning to walk|newlywed 是刚结婚的成年人，不是学走路的小孩|tod · dler|the double d before -ler|-ler 前双写 d
+      orphan|a girl sent to her grandmother after both parents died in a flood|a boy who never knew his parents, who died when he was a baby|a six-year-old adopted after his mother and father died|orphan is a child whose parents have died; widow is a woman whose husband has died|orphan 是父母双亡的孩子；widow 是丈夫去世的女人|widow is a woman whose husband has died, not a child who has lost both parents|widow 是丈夫去世的女人，不是失去双亲的孩子|stray is an animal with no home, not a child whose parents have died|stray 是无家可归的动物，不是父母双亡的孩子|or · phan|the ph that says /f/|ph 读 /f/
+      stepfather|a mother's new husband after she marries again|a mother's husband who teaches fishing but is not the real father|a man who raised a boy as his own after the mother remarried|stepfather is your mother's husband who is not your father; in-law is a relative of the person you marry|stepfather 是母亲的丈夫但不是生父；in-law 是配偶那边的亲戚|in-law is a relative of the person you married, not your mother's new husband|in-law 是你配偶那边的亲戚，不是你母亲的新丈夫|spouse is your own husband or wife, not the man your mother married|spouse 是你自己的丈夫或妻子，不是你母亲嫁的人|step · fa · ther|step joined to father with no space or hyphen|step 与 father 直接相连，没有空格或连字符
+      spouse|the husband or wife that married staff may bring to a dinner|the husband a woman calls her best friend after forty years of marriage|the person you are married to, written on a form|spouse is a husband or wife already married to you; fiance is someone you will marry|spouse 是已与你结婚的丈夫或妻子；fiance 是将要与你结婚的人|fiance is a man someone is engaged to and has not yet married, not a husband or wife already married|fiance 是已订婚但尚未结婚的男子，不是已经结婚的配偶|newlywed is someone who married only days or weeks ago, not a husband or wife of many years|newlywed 是刚结婚几天或几周的人，不是结婚多年的配偶|spouse|the ou vowel team and the silent e after s|元音组合 ou，s 后的 e 不发音
+      fiance|a man she will marry next June|a man introduced as her husband-to-be until the wedding|the man an engaged woman is still choosing a wedding date with|fiance is someone you will marry; spouse is someone you have married|fiance 是将要结婚的对象；spouse 是已经结婚的配偶|spouse is a husband or wife you are already married to, not someone you will marry later|spouse 是已经结婚的丈夫或妻子，不是以后才结婚的人|newlywed is someone who has just married, not someone still waiting for the wedding|newlywed 是刚刚结婚的人，不是还在等婚礼的人|fi · an · ce|one e for the man and two e's (fiancee) for the woman|指男方用一个 e，指女方（fiancee）用两个 e
+      newlywed|a couple married last week flying off on their honeymoon|hotel guests married only days before|a woman married just a month, still getting used to a new last name|newlywed has just married; fiance has not married yet|newlywed 刚刚结婚；fiance 还没有结婚|fiance is someone engaged and not yet married, not someone who married days or weeks ago|fiance 是订了婚但还没结婚的人，不是几天或几周前刚结婚的人|widow is a woman whose husband has died, not someone just married|widow 是丈夫去世的女人，不是刚结婚的人|new · ly · wed|new, -ly and wed joined into one word|new、-ly 和 wed 连成一个词
+      widow|a woman living alone in a big house since her husband died|a wife who lived on twenty years after her husband's death|a woman in black at her husband's funeral|widow is a woman whose husband has died; spouse is a husband or wife who is living|widow 是丈夫去世的女人；spouse 是健在的丈夫或妻子|orphan is a child whose parents have died, not a woman whose husband has died|orphan 是父母双亡的孩子，不是丈夫去世的女人|spouse is a husband or wife in a marriage that goes on, not a woman left alone after her husband's death|spouse 是婚姻中的丈夫或妻子，不是丈夫去世后独自留下的女人|wid · ow|the ow ending that says a long o|结尾 ow 读长音 o
+      in-law|everyone in a husband's family who welcomes a new wife|a relative gained by marriage, such as a husband's parents|the members of a husband's side of the family, especially his mother|in-law is a relative you gain by marriage; cousin is a relative by birth|in-law 是因婚姻而有的亲戚；cousin 是有血缘的亲戚|cousin is a relative by birth, your aunt's or uncle's child, not one you gain by marrying|cousin 是有血缘的亲戚，即姑姨叔舅的孩子，不是因结婚而有的亲戚|spouse is the one person you married, not the relatives you gain through that person|spouse 是与你结婚的那个人，不是你因他或她而有的亲戚|in · law|the hyphen between in and law, and the plural in-laws|in 与 law 之间的连字符，复数是 in-laws
+    `,
+  },
 );
 
 const shopping = batch(
@@ -45,17 +112,50 @@ const shopping = batch(
   ["Words of Shopping", "购物的词"],
   ["the shop, the people in it and paying", "商店、店里的人与付款"],
   `
-  aisle|a passage between rows of seats or shelves|过道|The milk is in ___ five.|Walk down the ___.|She took a seat by the ___.|queue,checkout|aisles
-  queue|a line of people waiting; to wait in one|队；排队|Join the ___.|We had to ___ for an hour.|The ___ of people at the till was long.|aisle,trolley|queued,queuing
-  trolley|a cart on wheels for carrying shopping|手推车|Push the ___.|The ___ was full.|Return the ___.|shopper,queue|trolleys
-  shopper|a person who is shopping|购物者|The ___ paid in cash.|Every ___ got a bag.|A busy ___ filled her cart.|cashier,trolley|shoppers
-  cashier|a person who takes payments in a shop|收银员|Pay the ___.|She works as a ___.|The ___ gave me change.|shopper,checkout|cashiers
-  checkout|the place where goods are paid for|收银台|Take your items to the ___ to pay.|The ___ line was long.|Pay at the ___.|cashier,aisle|checkouts
-  coupon|a ticket giving money off|优惠券|Use this ___ to save money.|She clipped a ___.|The ___ for 20% off ends soon.|warranty,tip|coupons
-  warranty|a written promise to repair or replace a product|保修单|The TV has a two-year ___.|Keep the ___ in case it breaks.|Is it under ___?|coupon,stock|warranties
-  stock|goods kept for sale; to keep for sale|存货；进货|The shop is out of ___.|We ___ fresh bread.|Check how much ___ is left in the store room.|warranty,shopper|stocked,stocks
-  tip|money given for service; a useful hint; the pointed end|小费；提示；尖端|Leave a ___ for the waiter.|Here's a ___: soak the pan first.|The ___ of a pen.|coupon,stock|tipped,tips
+  aisle|a passage between rows of seats or shelves|过道|The milk is in ___ five, the passage between the shelves of cheese and the shelves of yogurt.|Push your trolley down the ___ between the tall shelves until you reach the cereal.|On the plane, she chose a seat next to the ___ so that she could walk between the rows easily.|queue,checkout|aisles
+  queue|a line of people waiting; to wait in one|队；排队|Join the end of the ___ and wait your turn behind the other people.|The ___ of people waiting to pay stretched from the till all the way to the door.|We stood in a long ___ for an hour, one behind the other, to buy concert tickets.|aisle,checkout|queued,queuing
+  trolley|a cart on wheels for carrying shopping|手推车|Push the ___ full of groceries out to the car, steering its squeaky front wheels.|She loaded the heavy bags into the ___ and wheeled them across the shop instead of carrying them.|Return the ___ to the rack by the door when you have unloaded it, and roll it in line with the others.|bucket,aisle|trolleys
+  shopper|a person who is shopping|购物者|Every ___ who spent more than fifty dollars got a free bag.|A busy ___ pushed her full cart toward the till, ticking items off her list.|Each ___ on sale day hurried through the doors to grab a bargain.|cashier,tailor|shoppers
+  cashier|a person who takes payments in a shop|收银员|Pay the ___ at the till, and she will give you your change and a receipt.|She works as a ___, scanning customers' items and taking their money all day.|The ___ counted the coins I handed over and gave me two dollars back.|shopper,checkout|cashiers
+  checkout|the place where goods are paid for|收银台|Take your basket to the ___, the counter at the front of the shop where you pay.|The self-service ___ lets you scan your own items and pay with a card, with no staff to help.|At the ___, the moving belt carried my groceries toward the scanner so that I could pay.|cashier,aisle|checkouts
+  coupon|a ticket giving money off|优惠券|Cut the ___ out of the newspaper and hand it in to get twenty percent off your shopping.|With this ___, you can buy one pizza and get a second one free.|She clipped a ___ for money off soap from the back of the cereal box.|warranty,tip|coupons
+  warranty|a written promise to repair or replace a product|保修单|The TV has a two-year ___, so if it breaks before then, the maker will fix it free.|Keep the ___ in a safe place in case the washing machine stops working and needs repairs.|The repair cost nothing because the laptop was still under ___, which promised free fixes for a year.|coupon,stock|warranties
+  stock|goods kept for sale; to keep for sale|存货；进货|Sorry, that shoe is out of ___ in your size; we have sold every pair we had.|The shopkeeper counted the ___ in the store room to see how many boxes of each item were left to sell.|When new ___ arrived from the warehouse, the workers filled the empty shelves with fresh goods to sell.|aisle,warranty|stocked,stocks
+  tip|money given for service; a useful hint; the pointed end|小费；提示；尖端|We left a ___ of five dollars on the table to thank the waiter for his good service.|The taxi driver was so helpful that we gave her a ___ on top of the price of the ride.|Hotel porters often get a small ___ from guests as thanks for carrying their bags.|coupon,fare|tipped,tips
   `,
+  "context-clues",
+  {
+    intro: t(
+      "I pushed my **trolley** down the **aisle**, joined the **queue** and handed the **cashier** a **coupon** for ten percent off. These ten words help you talk about the shop, the people in it and the ways you pay.",
+      "我推着手推车（**trolley**）走过过道（**aisle**），排进队（**queue**）里，把一张九折优惠券（**coupon**）递给收银员（**cashier**）。这十个词帮你谈论商店、店里的人和付钱的方式。",
+    ),
+    watchOut: {
+      meanings: t(
+        "The **cashier** is the person who takes your money; the **checkout** is the place where you pay; a **shopper** is anyone buying things.",
+        "**cashier** 是收钱的人；**checkout** 是付钱的地方；**shopper** 是买东西的人。",
+      ),
+      use: t(
+        "A **coupon** gives you money off before you pay; a **warranty** promises free repairs after you buy; a **tip** is extra money you give for good service.",
+        "**coupon** 让你付钱时少付；**warranty** 承诺买后免费维修；**tip** 是为好服务额外给的钱。",
+      ),
+      spelling: t(
+        "Watch the silent **s** in **aisle**, the **ueue** of **queue**, the double **r** in **warranty** and the double **l** in **trolley**.",
+        "注意 **aisle** 中不发音的 **s**、**queue** 的 **ueue**、**warranty** 的双写 **r**，以及 **trolley** 的双写 **l**。",
+      ),
+    },
+    notes: `
+      aisle|aisle five, the passage between the shelves of cheese and yogurt|the passage between tall shelves leading to the cereal|the passage between the rows of seats on a plane|aisle is a passage between shelves or seats; queue is a line of people|aisle 是货架或座位间的过道；queue 是排成一行的人|queue is a line of people waiting their turn, not a passage between shelves or seats|queue 是排队等候的人，不是货架或座位之间的通道|checkout is the counter where you pay, not a passage between shelves or rows of seats|checkout 是付钱的柜台，不是货架或座位之间的通道|aisle|the silent s; it sounds just like isle|s 不发音，读音和 isle 一样
+      queue|people waiting their turn at the end of a line|people waiting to pay stretching from the till to the door|standing one behind the other for an hour to buy tickets|queue is a line of people; aisle is a passage you walk down|queue 是排队的人；aisle 是走过的通道|aisle is a passage between shelves or seats, not a line of people waiting their turn|aisle 是货架或座位之间的通道，不是排队等候的人|checkout is the counter where people pay, not the line of people waiting to reach it|checkout 是付钱的柜台，不是排着等候的人|queue|the q followed by ueue, four silent-looking vowels|q 后面跟着 ueue 四个元音字母
+      trolley|a cart full of groceries with squeaky front wheels pushed to the car|a cart loaded with heavy bags and wheeled across the shop|a cart returned to the rack by the door and rolled in line|trolley is a cart on wheels for shopping; bucket is a pail you carry by its handle|trolley 是有轮子的购物车；bucket 是提着的桶|bucket is a pail with a handle that you carry, not a cart with wheels that you push|bucket 是提在手里的桶，不是推着走的带轮子的车|aisle is a passage between shelves, not a cart that holds groceries|aisle 是货架之间的通道，不是装商品的车|trol · ley|the double l and the -ey ending|双写 l，结尾是 -ey
+      shopper|someone who spent more than fifty dollars and got a free bag|someone pushing a full cart to the till and ticking off a list|people hurrying through the doors on sale day for bargains|shopper buys things; cashier takes the money|shopper 买东西；cashier 收钱|cashier is the person who takes payments, not someone who spends money buying things|cashier 是收钱的人，不是花钱买东西的人|tailor is someone who makes and alters clothes, not a person buying groceries and bargains|tailor 是做衣服、改衣服的人，不是买东西的顾客|shop · per|the double p before -er|-er 前双写 p
+      cashier|the person at the till who gives change and a receipt|someone whose job is scanning items and taking money all day|someone who counts the coins handed over and gives two dollars back|cashier is the person who takes payment; checkout is the place where it happens|cashier 是收款的人；checkout 是付款的地方|shopper is the person paying, not the one who takes the money and gives change|shopper 是付钱的顾客，不是收钱找零的人|checkout is the counter where you pay, not a person who counts coins and hands back change|checkout 是付钱的柜台，不是数钱找零的人|cash · ier|cash plus -ier, said /ear/|cash 加 -ier，读作 /ɪə/
+      checkout|the counter at the front of the shop where you pay|a self-service place to scan items and pay by card with no staff|a moving belt carrying groceries to the scanner for paying|checkout is the place where you pay; cashier is the person there|checkout 是付钱的地方；cashier 是那里的人|cashier is a person who takes payment, not a counter or a machine that has no staff|cashier 是收款的人，不是柜台，也不是无人看管的机器|aisle is a passage between shelves, not the place where you pay|aisle 是货架之间的通道，不是付钱的地方|check · out|check and out joined into one word|check 与 out 连成一个词
+      coupon|a newspaper cutting handed in for twenty percent off|a ticket that gives a second pizza free|a money-off ticket for soap clipped from a cereal box|coupon takes money off what you pay; warranty promises free repairs|coupon 让你少付钱；warranty 承诺免费维修|warranty is a promise to repair a product that breaks, not a ticket that takes money off the price|warranty 是产品坏了负责维修的承诺，不是减价的票券|tip is extra money you give for service, not a ticket that lowers the price you pay|tip 是为服务额外给的钱，不是让你少付钱的票券|cou · pon|the ou that says /oo/|ou 读 /uː/
+      warranty|a two-year promise that the maker will fix a broken TV free|a paper kept safe in case a washing machine needs repairs|a laptop still covered by a year's promise of free fixes|warranty promises free repairs; coupon gives money off|warranty 承诺免费维修；coupon 给你减价|coupon is a ticket for money off when you buy, not a promise to repair something that breaks later|coupon 是买东西时减价的票券，不是东西坏了负责维修的承诺|stock is goods kept for sale, not a promise to fix what you bought|stock 是待售的存货，不是对已买商品的维修承诺|war · ran · ty|the double r and the ar that sounds like or|双写 r，ar 读作 /ɒr/
+      stock|shoes sold out so none are left in a size|boxes counted in a store room to see how many are left to sell|new goods from the warehouse that fill empty shelves|stock is the goods a shop has to sell; aisle is the passage between its shelves|stock 是商店待售的货物；aisle 是货架之间的通道|aisle is a passage between shelves, not the goods that are kept to be sold|aisle 是货架之间的通道，不是存着待卖的货物|warranty is a promise to repair a product, not goods waiting on shelves to be sold|warranty 是维修承诺，不是货架上待售的商品|stock|the ck ending after a short o|短元音 o 后是 ck 结尾
+      tip|five dollars left on the table to thank a waiter|extra money given to a helpful taxi driver on top of the price|a small sum guests give porters for carrying their bags|tip is extra money given for good service; fare is the price of the ride itself|tip 是为好服务额外给的钱；fare 是乘车本身的费用|coupon is a ticket that takes money off a price, not money you give to thank someone|coupon 是减价的票券，不是为了答谢别人而给的钱|fare is the set price of a journey, not extra money given on top of it as thanks|fare 是乘车的规定价格，不是在此之外为表感谢多给的钱|tip|one short i between t and p|t 和 p 之间是一个短元音 i
+    `,
+  },
 );
 
 const army = batch(
@@ -63,17 +163,50 @@ const army = batch(
   ["Words of the Army", "军队的词"],
   ["soldiers, their ranks, their homes and their weapons", "士兵、军衔、营房与武器"],
   `
-  soldier|a person who serves in an army|士兵|The ___ stood guard.|Her son is a ___.|Each ___ carried a pack.|sergeant,recruit|soldiers
-  sergeant|a soldier of middle rank; a police officer|中士；警官|The ___ gave orders.|___ Smith shouted.|He was made ___.|soldier,platoon|sergeants
-  recruit|a new member of the army; to get new members|新兵；招募|The ___ was nervous.|They ___ young people.|Each ___ trains for weeks.|soldier,infantry|recruited,recruitment
-  platoon|a small unit of soldiers|排(部队单位)|The ___ marched off.|He led a ___.|The ___ camped by the river.|sergeant,barracks|platoons
-  barracks|buildings where soldiers live|营房|They slept in the ___.|The ___ were cold.|Soldiers returned to ___.|platoon,tank|
-  infantry|soldiers who fight on foot|步兵|The ___ advanced on foot.|He served in the ___.|The ___ dug in.|artillery,recruit|
-  artillery|large guns used in war|大炮|The ___ fired all night.|They lost their ___.|We heard the ___ boom all night.|infantry,tank|
-  tank|a large armored vehicle; a container for liquid|坦克；箱，罐|The ___ rolled into town.|Fill the gas ___.|Fish swim in the ___.|artillery,barracks|tanks
-  retreat|to move back from the enemy; a quiet place|撤退；静修处|The army had to ___.|The cabin is our ___.|They began a ___.|medal,infantry|retreated
-  medal|a metal disk given as an award|奖牌|She won a gold ___.|He got a ___ for bravery.|They gave each soldier a ___.|retreat,platoon|medals,medalist
+  soldier|a person who serves in an army|士兵|A single ___ stood guard at the gate all night, his rifle on his shoulder.|Her son is the only ___ in our family, serving in the army with thousands of other men and women.|Each ___ in the long line carried his own heavy pack and his own rifle.|platoon,infantry|soldiers
+  sergeant|a soldier of middle rank; a police officer|中士；警官|The ___, a soldier of middle rank, shouted orders at the new recruits on the parade ground.|After ten years of service, he was promoted to ___ and put in charge of twelve soldiers.|The ___ stood in front of the line of privates and barked out commands for them to obey.|recruit,platoon|sergeants
+  recruit|a new member of the army; to get new members|新兵；招募|The nervous ___ had joined the army only a week ago and still did not know how to salute.|Each new ___ gets his own boots and rifle on his first day and then spends ten weeks in basic training.|On his first day in the army, the young ___ was given a uniform and a short haircut.|sergeant,platoon|recruited,recruitment
+  platoon|a small unit of soldiers|排(部队单位)|The ___ of about thirty soldiers marched off together behind its young lieutenant.|The captain split his company into three small groups, and each ___ was led by a young officer.|Our ___, one small unit of the regiment, camped by the river for the night.|infantry,sergeant|platoons
+  barracks|buildings where soldiers live|营房|The soldiers slept in long rows of bunk beds in the ___ at the edge of the base.|After the march, the tired troops returned to the ___ to eat, wash and sleep.|The army built new ___ of brick to house two hundred soldiers.|kennel,platoon|
+  infantry|soldiers who fight on foot|步兵|The ___ marched forward on foot, rifles in hand, while the big guns stayed far behind.|He served in the ___, walking hundreds of miles with a pack instead of riding in an armored vehicle.|Soldiers on foot, the ___, followed behind the big guns and the armored vehicles.|artillery,tank|
+  artillery|large guns used in war|大炮|The ___ fired huge shells all night from big guns far behind the front line.|The ___, huge guns towed into place by trucks, fired at the enemy across the valley.|When the ___ opened fire, the big cannons shook the ground for miles.|infantry,tank|
+  tank|a large armored vehicle; a container for liquid|坦克；箱，罐|The ___ rolled into town on metal tracks, its thick armor stopping every bullet.|Inside the ___, four soldiers drove the armored vehicle and aimed its gun.|A single armored ___ crushed the fence under its tracks and drove on.|artillery,infantry|tanks
+  retreat|to move back from the enemy; a quiet place|撤退；静修处|Outnumbered by the enemy, the army had to ___ across the river to safer ground.|When the enemy's guns opened up, the general ordered his troops to ___ to the hills behind them.|The soldiers began to ___, moving back step by step as the enemy pushed forward.|back down,forsake|retreated
+  medal|a metal disk given as an award|奖牌|He was awarded a ___ for bravery, a small metal disk that hangs from a ribbon on his chest.|She won a gold ___ in the race and wore it around her neck on a ribbon.|The general pinned a silver ___ to each brave soldier's uniform.|trophy,talisman|medals,medalist
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **sergeant** led his **platoon** of **infantry** out of the **barracks** while the **artillery** fired from the hills. These ten words help you talk about soldiers, their ranks, the places they live and the weapons they use.",
+      "中士（**sergeant**）带着他那一排（**platoon**）步兵（**infantry**）走出营房（**barracks**），大炮（**artillery**）在山上开火。这十个词帮你谈论士兵、他们的军衔、住的地方和使用的武器。",
+    ),
+    watchOut: {
+      meanings: t(
+        "The **infantry** are soldiers who fight on foot, the **artillery** are the big guns, and a **tank** is one armored vehicle on tracks.",
+        "**infantry** 是徒步作战的步兵，**artillery** 是大炮，**tank** 是一辆装着履带的装甲车。",
+      ),
+      use: t(
+        "A **soldier** is one person, a **platoon** is a small group of about thirty soldiers, and a **recruit** is a soldier who has only just joined.",
+        "**soldier** 是一个士兵，**platoon** 是约三十人的小分队，**recruit** 是刚入伍的新兵。",
+      ),
+      spelling: t(
+        "Watch the **di** that says /j/ in **soldier**, the **ser-** that sounds like /sar/ in **sergeant**, the silent **u** in **recruit** and the double **l** in **artillery**.",
+        "注意 **soldier** 中读 /dʒ/ 的 **di**、**sergeant** 开头读作 /sɑː/ 的 **ser-**、**recruit** 中不发音的 **u**，以及 **artillery** 的双写 **l**。",
+      ),
+    },
+    notes: `
+      soldier|one person standing guard at a gate all night with a rifle|the only member of a family serving in the army with thousands of others|each person in a line carrying a pack and rifle of his own|soldier is one person in the army; platoon is a group of about thirty|soldier 是军队中的一个人；platoon 是约三十人的小队|platoon is a group of about thirty soldiers, not one single person|platoon 是约三十名士兵组成的小队，不是单独一个人|infantry is the whole body of soldiers who fight on foot, not one single person|infantry 是全体徒步作战的士兵，不是单独一个人|sol · dier|the di that says /j/|di 读 /dʒ/
+      sergeant|a soldier of middle rank shouting orders at new recruits|a rank someone is promoted to after ten years, in charge of twelve soldiers|someone in front of a line of privates barking commands|sergeant is a soldier of middle rank who gives orders; recruit is a brand-new soldier who takes them|sergeant 是发号施令的中级军士；recruit 是听令的新兵|recruit is a brand-new soldier who takes orders, not a soldier of middle rank who gives them|recruit 是听从命令的新兵，不是发号施令的中级军士|platoon is a group of about thirty soldiers, not one officer who gives orders|platoon 是约三十人的小队，不是一个下命令的军官|ser · geant|ser- said /sar/, and the e before a in -geant|ser- 读 /sɑː/，-geant 中 a 前有 e
+      recruit|a nervous soldier who joined a week ago and cannot yet salute|a new soldier given his own boots and rifle before ten weeks of basic training|a young soldier given a uniform and haircut on the first day|recruit has just joined; sergeant has served for years and gives orders|recruit 刚刚入伍；sergeant 服役多年、发号施令|sergeant is an experienced soldier of middle rank, not someone who joined only days ago|sergeant 是有经验的中级军士，不是几天前才入伍的人|platoon is a whole group of soldiers, not one new member|platoon 是一整个小队，不是一名新成员|re · cruit|the ui that says /oo/, with the u doing the work|ui 读 /uː/
+      platoon|about thirty soldiers marching together behind a lieutenant|one of three small groups a company is split into|one small unit of a regiment camping by a river|platoon is one small unit of soldiers; infantry is the whole branch that fights on foot|platoon 是一个小分队；infantry 是整个步兵兵种|infantry is the whole branch of soldiers who fight on foot, not one small unit of about thirty|infantry 是整个步兵兵种，不是约三十人的小分队|sergeant is one soldier of middle rank, not a group of soldiers|sergeant 是一名中级军士，不是一群士兵|pla · toon|the double o at the end|结尾双写 o
+      barracks|buildings with rows of bunk beds at the edge of a base|buildings tired troops return to after a march to eat and sleep|new brick buildings to house two hundred soldiers|barracks are buildings where soldiers live; kennel is a shelter for a dog|barracks 是士兵住的营房；kennel 是狗住的窝|kennel is a small shelter for a dog, not buildings where soldiers eat and sleep|kennel 是狗住的小窝，不是士兵吃住的营房|platoon is a group of soldiers, not the buildings they live in|platoon 是一群士兵，不是他们住的房子|bar · racks|the double r and the -cks ending, with an s even for one building|双写 r，结尾 -cks，单数也有 s
+      infantry|soldiers marching forward on foot with rifles while the guns stay back|soldiers walking hundreds of miles instead of riding in vehicles|soldiers on foot following the big guns and armored vehicles|infantry fight on foot; artillery are the big guns|infantry 徒步作战；artillery 是大炮|artillery is the big guns of an army, not soldiers who march on foot|artillery 是军队的大炮，不是徒步行军的士兵|tank is one armored vehicle on tracks, not soldiers who walk|tank 是一辆履带式装甲车，不是步行的士兵|in · fan · try|the -try ending|结尾是 -try
+      artillery|big guns firing huge shells all night far behind the front line|huge guns towed into place by trucks firing across a valley|big cannons shaking the ground for miles|artillery are the big guns; infantry are soldiers on foot|artillery 是大炮；infantry 是步兵|infantry are soldiers who march and fight on foot, not big guns that fire shells|infantry 是徒步行军作战的士兵，不是发射炮弹的大炮|tank is a single armored vehicle that drives on tracks, not big guns towed into place|tank 是靠履带行驶的一辆装甲车，不是被拖到位的大炮|ar · til · ler · y|the double l and the -ery ending|双写 l，结尾是 -ery
+      tank|an armored vehicle rolling into town on metal tracks|an armored vehicle driven by four soldiers who aim its gun|one armored vehicle crushing a fence under its tracks|tank is one armored vehicle; artillery is a group of big guns|tank 是一辆装甲车；artillery 是一批大炮|artillery is big guns that fire from far away, not a vehicle that drives on tracks with soldiers inside|artillery 是远程开火的大炮，不是载着士兵、靠履带行驶的车|infantry are soldiers on foot, not a vehicle with armor|infantry 是步行的士兵，不是装甲车辆|tank|the nk ending|结尾是 nk
+      retreat|an outnumbered army moving back across a river to safety|troops ordered back to the hills when the enemy fires|soldiers moving back step by step as the enemy pushes forward|retreat means to move back away from the enemy; back down means to give up in an argument|retreat 是从敌人面前撤退；back down 是在争论中让步|back down means to give up a claim in an argument, not to move an army back from the enemy|back down 是在争论中放弃主张，不是军队从敌人面前后撤|forsake means to abandon someone or something for good, not to move back for a while to safer ground|forsake 是彻底抛弃某人或某物，不是暂时撤到更安全的地方|re · treat|the ea vowel team after re-|re- 之后是元音组合 ea
+      medal|a small metal disk on a ribbon awarded for bravery|a gold disk won in a race and worn around the neck|a silver disk pinned to each brave soldier's uniform|medal is a small disk worn on a ribbon; trophy is a big cup|medal 是挂在绶带上的小圆牌；trophy 是大奖杯|trophy is a large cup that stands on a shelf, not a small disk worn on a ribbon or pinned to a uniform|trophy 是放在架子上的大奖杯，不是挂在绶带上或别在军装上的小圆牌|talisman is an object thought to bring luck by magic, not an award for bravery or winning|talisman 是被认为有魔力、能带来好运的东西，不是奖励勇敢或获胜的奖章|med · al|the -al ending; do not confuse it with meddle|结尾是 -al；别和 meddle 混淆
+    `,
+  },
 );
 
 const transport = batch(
@@ -81,17 +214,50 @@ const transport = batch(
   ["Words of Getting Around", "出行的词"],
   ["boats, trains, roads and paying to travel", "船、电车、道路与车费"],
   `
-  ferry|a boat for carrying people across water; to carry|渡轮；摆渡|We took the ___ across the lake.|The ___ crosses every hour.|They ___ people to the island.|tram,subway|ferried,ferries
-  tram|a passenger vehicle running on rails in a street|有轨电车|Take the ___ that runs along the street.|The ___ stopped in the middle of the street.|Ride the old electric ___ down Main Street.|ferry,subway|trams
-  subway|an underground railway|地铁|We took the ___ under the city.|The underground ___ is fast.|The ___ station is near.|tram,terminal|subways
-  terminal|a building where travelers arrive and leave; fatal|航站楼；晚期的|Meet me at the airport ___.|He has ___ cancer.|The bus ___ is busy.|subway,toll|terminals
-  fare|the money paid for a journey|车费|The bus ___ is two dollars.|Pay your ___.|___ will rise.|toll,lane|fares
-  toll|a charge to use a road or bridge; the number of deaths|通行费；伤亡人数|Pay the ___ to use the bridge.|The death ___ rose.|The bridge has a ___.|fare,highway|tolls
-  highway|a main road|公路|The six-lane ___ was busy.|Take the ___ north.|There was a crash on the ___ between the cities.|lane,detour|highways
-  lane|a narrow road; a division of a road|小路；车道|Drive in the left ___.|We walked down the ___.|The ___ was muddy.|highway,roundabout|lanes
-  detour|a longer route taken to avoid something|绕道|The road was closed, so we took a ___.|The ___ added an hour.|A ___ was set up around the roadworks.|roundabout,highway|detours
-  roundabout|a circular road junction; indirect|环岛；迂回的|Turn left at the ___.|He spoke in a ___ way.|Cars circled the busy ___.|detour,lane|roundabouts
+  ferry|a boat for carrying people across water; to carry|渡轮；摆渡|We took the ___ across the lake, standing on the deck as the boat crossed the water.|The car ___ carries cars and their passengers over the bay to the island every hour.|A small ___ crossed the river every twenty minutes, taking people from one bank to the other.|tram,subway|ferried,ferries
+  tram|a passenger vehicle running on rails in a street|有轨电车|The old electric ___ rattled along rails set into the middle of the street.|Take the ___ that runs on tracks along the main street, past the shops and the market.|We waited at the stop on the pavement until the ___ came clanging along its street rails.|ferry,subway|trams
+  subway|an underground railway|地铁|We took the ___, riding trains through tunnels deep under the city.|The ___ is the fastest way across town, since its trains run underground below the traffic.|Walk down the stairs from the street to the ___ station, where the trains run beneath the ground.|tram,terminal|subways
+  terminal|a building where travelers arrive and leave; fatal|航站楼；晚期的|Meet me at the airport ___, the building where passengers check in and collect their bags.|The bus ___ was crowded with travelers waiting in its hall for their buses to leave.|Our flight leaves from the new ___, a huge glass building at the far end of the airport.|subway,stadium|terminals
+  fare|the money paid for a journey|车费|The bus ___ is two dollars, which every passenger pays when getting on.|Children ride the train for half the adult ___.|The taxi driver told us the price of the ride to the airport, a ___ of thirty dollars, before we set off.|toll,tip|fares
+  toll|a charge to use a road or bridge; the number of deaths|通行费；伤亡人数|Drivers pay a ___ at the booth before they can drive across the bridge.|The new road has a ___ of three dollars for every car that uses it.|Trucks pay a higher ___ than cars to drive on the motorway.|fare,tip|tolls
+  highway|a main road|公路|The six-lane ___ between the two cities was busy with fast traffic all day.|Take the main ___ north for two hundred miles until you reach the capital.|A crash on the main ___ joining the two cities stopped traffic for miles in both directions.|lane,detour|highways
+  lane|a narrow road; a division of a road|小路；车道|Drive in the left ___ to pass the slow truck, then move back to the right one.|The narrow country ___ was just wide enough for one car between the hedges.|Bicycles must stay in the bike ___ painted along the edge of the road.|highway,roundabout|lanes
+  detour|a longer route taken to avoid something|绕道|The bridge was closed for repairs, so we took a ___ that added twenty minutes to the trip.|Signs pointed drivers along a ___ through the next village to get around the flooded road.|Because of the roadworks, the bus followed a long ___ through the back streets instead of its usual route.|roundabout,highway|detours
+  roundabout|a circular road junction; indirect|环岛；迂回的|Turn left at the ___, the circle where four roads meet.|Cars drove around the busy ___ until they reached the exit they wanted.|In the middle of the ___ there was a round garden, and traffic circled it before turning off.|detour,lane|roundabouts
   `,
+  "context-clues",
+  {
+    intro: t(
+      "We crossed the bay by **ferry**, rode the **subway** under the city, then took a **detour** around a closed **highway**. These ten words help you talk about boats, trains, roads and paying to travel.",
+      "我们乘渡轮（**ferry**）过了海湾，坐地铁（**subway**）穿过城市地下，又因为公路（**highway**）封闭而绕道（**detour**）。这十个词帮你谈论船、电车、道路和出行要付的钱。",
+    ),
+    watchOut: {
+      meanings: t(
+        "A **tram** runs on rails along the street, a **subway** runs in tunnels under the ground, and a **ferry** carries people across water.",
+        "**tram** 在街面的轨道上行驶，**subway** 在地下隧道里行驶，**ferry** 载人渡水。",
+      ),
+      use: t(
+        "A **fare** is what a passenger pays for a ride; a **toll** is what a driver pays to use a road or bridge.",
+        "**fare** 是乘客乘车付的钱；**toll** 是司机使用道路或桥梁付的钱。",
+      ),
+      spelling: t(
+        "Watch the double **r** in **ferry**, the **ou** in **detour** and **roundabout**, the **-are** of **fare** and the double **l** in **toll**.",
+        "注意 **ferry** 的双写 **r**、**detour** 和 **roundabout** 中的 **ou**、**fare** 的 **-are**，以及 **toll** 的双写 **l**。",
+      ),
+    },
+    notes: `
+      ferry|a boat crossing a lake with people standing on its deck|a boat carrying cars and passengers over a bay to an island|a small boat taking people from one river bank to the other|ferry carries people across water; tram runs on rails in the street|ferry 载人渡水；tram 在街道的轨道上行驶|tram is a vehicle on rails in a city street, not a boat that crosses water|tram 是在城市街道轨道上行驶的电车，不是渡水的船|subway is a railway in tunnels under a city, not a boat that crosses water|subway 是城市地下隧道里的铁路，不是渡水的船|fer · ry|the double r before y|y 前双写 r
+      tram|an electric vehicle rattling along rails set into a street|a vehicle on tracks along the main street past the shops|a vehicle clanging along street rails to a stop on the pavement|tram runs on rails along the street; subway runs under the ground|tram 在街面轨道上行驶；subway 在地下行驶|ferry is a boat that crosses water, not a vehicle on rails in a street|ferry 是渡水的船，不是在街道轨道上行驶的车|subway runs in tunnels under the ground, not on rails along the middle of a street|subway 在地下隧道里行驶，不在街道中间的轨道上|tram|the short a between tr and m|tr 与 m 之间是短元音 a
+      subway|trains through tunnels deep under the city|trains running underground below the traffic|a station reached by stairs down from the street|subway runs underground; tram runs on the street|subway 在地下行驶；tram 在街面行驶|tram runs on rails in the street, not through tunnels under the ground|tram 在街面的轨道上行驶，不在地下隧道里|terminal is a building where travelers arrive and leave, not trains that run in tunnels|terminal 是旅客出发和到达的建筑，不是在隧道里跑的火车|sub · way|sub- meaning under, joined to way|表示“在下面”的 sub- 加 way
+      terminal|the airport building where passengers check in and collect bags|a bus building crowded with travelers waiting in its hall|a huge glass building at the far end of an airport|terminal is a building where journeys start and end; subway is a railway under the city|terminal 是旅程起点和终点的建筑；subway 是城市地下的铁路|subway is a railway that runs under a city, not a building where travelers check in and wait|subway 是城市地下的铁路，不是旅客办手续、候车的建筑|stadium is a sports ground where crowds watch games, not a building where travelers come and go|stadium 是观众看比赛的运动场，不是旅客来往的建筑|ter · mi · nal|the -al ending|结尾是 -al
+      fare|two dollars every bus passenger pays when getting on|the price a child pays to ride a train, half of an adult's|the thirty-dollar price of a taxi ride told before setting off|fare is the price a passenger pays for a ride; toll is a charge for using a road|fare 是乘客乘车的价钱；toll 是使用道路的费用|toll is a charge drivers pay to use a road or bridge, not the price of a seat on a bus, train or taxi|toll 是司机使用道路或桥梁的费用，不是乘公交、火车或出租车的票价|tip is extra money given as thanks, not the set price of the journey|tip 是表示感谢的额外的钱，不是乘车的规定价格|fare|the -are ending; do not confuse it with fair|结尾是 -are；别和 fair 混淆
+      toll|a charge paid at a booth to drive across a bridge|three dollars for every car that uses a new road|a higher charge for trucks than cars on a motorway|toll is paid by drivers for a road or bridge; fare is paid by passengers for a ride|toll 是司机为道路或桥梁付的钱；fare 是乘客为乘车付的钱|fare is the price a passenger pays to ride a bus, train or taxi, not a charge a driver pays to use a road|fare 是乘客坐车的票价，不是司机使用道路的费用|tip is extra money given for good service, not a fixed charge for using a road|tip 是为好服务额外给的钱，不是使用道路的固定收费|toll|the double l after a long o|长元音 o 后双写 l
+      highway|a busy six-lane road between two cities|a main road north for two hundred miles to the capital|a main road joining two cities where a crash stopped traffic|highway is a main road; lane is one strip of a road or a narrow road|highway 是主干公路；lane 是道路中的一条车道或一条小路|lane is one narrow strip of a road or a small country road, not a big main road with six lanes|lane 是道路中的一条车道或乡间小路，不是有六条车道的主干道|detour is a longer route taken to avoid something, not the main road itself|detour 是为避开某处而走的较远路线，不是主干道本身|high · way|the silent gh in high|high 中的 gh 不发音
+      lane|the left strip of a road used to pass a slow truck|a narrow country road just wide enough for one car|a strip painted along the edge of a road for bicycles|lane is one strip of a road or a narrow road; highway is a whole main road|lane 是一条车道或小路；highway 是一整条主干道|highway is a big main road between cities, not a narrow road or one strip of a road|highway 是城市之间的主干公路，不是窄路或其中一条车道|roundabout is a circle where roads meet, not a strip or narrow road you drive along|roundabout 是几条路交汇的环形路口，不是一条车道或窄路|lane|the long a with a silent e|a 读长音，结尾 e 不发音
+      detour|a longer route around a bridge closed for repairs|a route through the next village around a flooded road|a long route through back streets because of roadworks|detour is a longer way around a problem; roundabout is a circle where roads meet|detour 是绕开问题的较远路线；roundabout 是道路交汇的环形路口|roundabout is a circle where several roads meet, not a longer route taken to get around a closed road|roundabout 是几条路交汇的环形路口，不是为绕开封路而走的远路|highway is a main road, not a longer way around a road that is blocked|highway 是主干公路，不是绕开封路的远路|de · tour|the ou that says /oor/, as in tour|ou 读 /ʊə/（同 tour）
+      roundabout|the circle where four roads meet and drivers turn left|a busy circle cars drive around until they reach their exit|a circle with a round garden in the middle that traffic goes around|roundabout is a circular junction; detour is a longer route|roundabout 是环形路口；detour 是绕远的路线|detour is a longer route around a blocked road, not a circle where roads meet|detour 是绕开封路的远路，不是道路交汇的环形路口|lane is one strip of a road or a narrow road, not a circle that traffic drives around|lane 是一条车道或窄路，不是车辆绕行的环形路口|round · a · bout|round, a and bout joined into one word|round、a 和 bout 连成一个词
+    `,
+  },
 );
 
 const moods = batch(
@@ -99,17 +265,50 @@ const moods = batch(
   ["Words of Moods", "情绪的词"],
   ["feeling cheerful, lonely, nervous, shamed, bored or cross", "开心、孤独、紧张、羞愧、无聊或烦躁"],
   `
-  cheerful|noticeably happy and optimistic|愉快的|She is always ___ and smiling.|A happy, ___ song.|The bright yellow room is ___.|moody,bored|cheerfully,cheerfulness
-  lonely|sad because one has no friends or company|孤独的|He had no friends and felt ___ at the new school.|A ___ road.|She missed him and was ___ after he left.|ashamed,bored|loneliness,lonelier
-  nervous|easily worried; anxious|紧张的|I'm ___ about the test tomorrow; my hands shake.|He gave a ___ laugh and bit his nails.|Dogs get ___ in storms.|cheerful,ashamed|nervously,nervousness
-  jittery|nervous and unable to relax|心神不宁的|Coffee makes me ___.|The market was ___.|She felt ___ before the race.|cheerful,lonely|
-  ashamed|feeling shame|羞愧的|I'm ___ of what I did.|Don't be ___ of your mistakes.|He was ___ of himself for lying.|lonely,nervous|
-  bored|tired because one has nothing interesting to do|无聊的|I'm ___; there's nothing to do at home.|The kids got ___.|She looked ___ and yawned.|cheerful,sulky|boredom
-  grumpy|bad-tempered|脾气坏的|Dad is ___ in the morning.|The ___ old man shouted.|Don't be so ___.|cheerful,lonely|grumpily
-  cranky|irritable, especially from tiredness|易怒的|The baby is ___.|He gets ___ when hungry.|A ___ old car.|cheerful,ashamed|
-  moody|having changing moods; often sulky|喜怒无常的|Teenagers can be ___.|She is ___ today.|The film was dark and ___.|cheerful,ashamed|moodily
-  sulky|silent and bad-tempered|闷闷不乐的|He was ___ all day and wouldn't speak after we said no.|A ___ child pouts when he can't have his way.|She gave a ___ look and stomped off.|cheerful,nervous|sulk,sulked
+  cheerful|noticeably happy and optimistic|愉快的|She is always ___, humming happily and smiling at everyone she meets.|The bright yellow kitchen felt ___ and put everyone in a happy mood each morning.|Even in the rain he stayed ___, whistling a happy tune and joking with everyone.|grumpy,moody|cheerfully,cheerfulness
+  lonely|sad because one has no friends or company|孤独的|He had no friends at the new school and felt sad and ___, wishing someone would sit with him at lunch.|After her best friend moved away, she was ___ and missed having someone to talk to.|Since his wife died, the old man had no one to talk to and felt ___, so he loved it when his grandchildren came to visit.|bored,ashamed|loneliness,lonelier
+  nervous|easily worried; anxious|紧张的|I'm ___ about the test tomorrow; my hands are shaking and my stomach is in knots.|Before her first speech, she felt so ___ that her voice trembled and she kept checking her notes.|Dogs get ___ during storms, hiding under the bed and shaking at every crash of thunder.|cheerful,ashamed|nervously,nervousness
+  jittery|nervous and unable to relax|心神不宁的|Three cups of coffee left him ___, tapping his foot and unable to sit still.|She felt ___ before the race, bouncing on her toes and shaking out her hands.|The horses were ___ in the storm, stamping and twitching at every sound.|bored,sulky|
+  ashamed|feeling shame|羞愧的|I'm ___ of what I did; I should not have lied to my friend.|He was ___ of himself for cheating and could not look his teacher in the eye.|Don't be ___ of your mistakes, since everyone gets things wrong while learning.|lonely,nervous|
+  bored|tired because one has nothing interesting to do|无聊的|With nothing to do on the long rainy afternoon, the kids got ___ and yawned.|The lesson was so dull that she looked ___ and kept glancing at the clock.|I'm ___, since I've read every book in the house and there's nothing left to do.|lonely,sulky|boredom
+  grumpy|bad-tempered|脾气坏的|Dad is always ___ in the morning until he has his coffee, snapping at anyone who speaks to him.|The ___ old man shouted at the children to get off his lawn.|Don't be so ___; stop complaining and frowning, and come and join the fun.|cheerful,lonely|grumpily
+  cranky|irritable, especially from tiredness|易怒的|The baby missed her nap and was ___, crying and fussing at everything.|He gets ___ when he is hungry and tired, snapping at his little brother over nothing.|After the long, tiring drive, the children were ___ and quarreled in the back seat.|cheerful,ashamed|
+  moody|having changing moods; often sulky|喜怒无常的|Teenagers can be ___, happy one minute and angry the next.|She is so ___ that you never know whether she will laugh or snap at you.|His ___ temper changed from bright to gloomy several times a day.|cheerful,ashamed|moodily
+  sulky|silent and bad-tempered|闷闷不乐的|He was ___ all day after we said no, refusing to speak and scowling at everyone.|A ___ child pouts in silence when she can't have her way.|She gave a ___ look, said nothing and stomped off to her room.|cheerful,nervous|sulk,sulked
   `,
+  "context-clues",
+  {
+    intro: t(
+      "On the first day at her new school, Mia felt **nervous** in the morning and **lonely** at lunch, but by the afternoon she was **cheerful** again. These ten words help you describe moods exactly, from happy to cross.",
+      "到新学校的第一天，米娅早上很紧张（**nervous**），午饭时觉得孤独（**lonely**），可到了下午她又开心（**cheerful**）起来。这十个词帮你准确描述各种心情，从快乐到烦躁。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Lonely** means sad for lack of company; **bored** means tired of having nothing to do. You can be bored with friends around and lonely with plenty to do.",
+        "**lonely** 是因为没人陪伴而难过；**bored** 是因为无事可做而厌烦。和朋友在一起也可能无聊，有很多事做也可能孤独。",
+      ),
+      use: t(
+        "**Grumpy** and **cranky** people snap at others, a **sulky** person goes silent, and a **moody** person keeps changing from one feeling to another.",
+        "**grumpy** 和 **cranky** 的人会冲别人发火，**sulky** 的人一声不吭，**moody** 的人情绪变来变去。",
+      ),
+      spelling: t(
+        "Watch the double **t** in **jittery**, the **-ful** with one **l** in **cheerful**, the silent **e** kept in **lonely** and the **-ous** of **nervous**.",
+        "注意 **jittery** 的双写 **t**、**cheerful** 结尾只有一个 **l** 的 **-ful**、**lonely** 中保留的不发音 **e**，以及 **nervous** 的 **-ous**。",
+      ),
+    },
+    notes: `
+      cheerful|someone always humming happily and smiling at everyone|a bright yellow kitchen that puts everyone in a happy mood|someone whistling and joking happily even in the rain|cheerful stays happy; moody keeps changing|cheerful 一直开心；moody 情绪变来变去|grumpy means bad-tempered and complaining, the opposite of happily smiling and joking|grumpy 是脾气坏、爱抱怨，和开心地微笑说笑正好相反|moody means changing from happy to angry without warning, not happy all the time|moody 是忽喜忽怒，不是一直开心|cheer · ful|the -ful ending with one l|结尾 -ful 只有一个 l
+      lonely|a boy with no friends wishing someone would sit with him at lunch|a girl missing someone to talk to after her best friend moved away|an old man with no one to talk to since his wife died|lonely means sad for lack of company; bored means tired of having nothing to do|lonely 是缺少陪伴而难过；bored 是无事可做而厌烦|bored means tired of having nothing interesting to do, not sad because no one is with you|bored 是无事可做而厌烦，不是因为没人陪伴而难过|ashamed means feeling bad about something wrong you did, not sad for lack of friends|ashamed 是为做错事而羞愧，不是因没有朋友而难过|lone · ly|lone plus -ly, keeping the e|lone 加 -ly，保留 e
+      nervous|shaking hands and a knotted stomach before a test|a trembling voice before a first speech|dogs hiding under the bed and shaking during a storm|nervous means worried about what may happen; ashamed means sorry about what you did|nervous 是担心将要发生的事；ashamed 是为做过的事羞愧|cheerful means happy and relaxed, not worried and shaking|cheerful 是开心放松，不是担心发抖|ashamed means feeling bad about something wrong you have done, not worried about something still to come|ashamed 是为做过的错事难受，不是担心将要发生的事|ner · vous|the -ous ending|结尾是 -ous
+      jittery|someone tapping a foot and unable to sit still after three coffees|a runner bouncing on her toes and shaking out her hands before a race|horses stamping and twitching at every sound in a storm|jittery means too restless to keep still; bored means dull and listless|jittery 是坐立不安、停不下来；bored 是无精打采|bored means dull and listless with nothing to do, not too restless to sit still|bored 是无事可做、无精打采，不是坐立不安|sulky means silent and bad-tempered, not twitchy and unable to keep still|sulky 是不吭声地生闷气，不是心神不宁、动个不停|jit · ter · y|the double t and the y ending|双写 t，结尾是 y
+      ashamed|feeling bad about lying to a friend|someone who cheated and cannot look his teacher in the eye|feeling bad about mistakes made while learning|ashamed means sorry and embarrassed about what you did; nervous means worried about what is coming|ashamed 是为做过的事羞愧；nervous 是担心将来的事|lonely means sad for lack of company, not feeling bad about something wrong you did|lonely 是因缺少陪伴而难过，不是为做错事而难受|nervous means worried about something still to come, not feeling bad about something already done|nervous 是担心还没发生的事，不是为已经做过的事难受|a · shamed|a- before shame, plus -d|a- 加 shame，再加 -d
+      bored|kids yawning on a long rainy afternoon with nothing to do|someone in a dull lesson glancing at the clock|someone who has read every book in the house with nothing left to do|bored means tired of having nothing to do; lonely means sad for lack of company|bored 是无事可做而厌烦；lonely 是缺少陪伴而难过|lonely means sad for lack of company, not tired because there is nothing interesting to do|lonely 是缺少陪伴而难过，不是因无事可做而厌烦|sulky means silent and cross after not getting your way, not dull and yawning|sulky 是没如愿后生闷气，不是无聊得打哈欠|bored|the -ed ending; do not confuse it with board|结尾是 -ed；别和 board 混淆
+      grumpy|a dad snapping at anyone until he has his coffee|an old man shouting at children to get off his lawn|someone complaining and frowning instead of joining the fun|grumpy means bad-tempered; cheerful means happy|grumpy 是脾气坏；cheerful 是开心|cheerful means happy and smiling, the opposite of complaining and snapping at people|cheerful 是开心微笑，和抱怨、冲人发火正好相反|lonely means sad for lack of company, not bad-tempered and snappy|lonely 是缺少陪伴而难过，不是脾气坏、爱发火|grum · py|the -py ending after m|m 之后是 -py 结尾
+      cranky|a baby who missed her nap, crying and fussing|someone hungry and tired snapping at his little brother|children quarreling in the back seat after a tiring drive|cranky means irritable, often from being tired or hungry; cheerful means happy|cranky 常因累或饿而烦躁；cheerful 是开心|cheerful means happy and in a good mood, not fussing and snapping|cheerful 是开心、心情好，不是哭闹发火|ashamed means sorry for something you did wrong, not cross because you are tired or hungry|ashamed 是为做错事而羞愧，不是因为累或饿而烦躁|cran · ky|the nk sound and the y ending|nk 的读音，结尾是 y
+      moody|teenagers happy one minute and angry the next|someone who may laugh or snap at you without warning|a temper changing from bright to gloomy several times a day|moody keeps changing; cheerful stays happy|moody 情绪多变；cheerful 一直开心|cheerful means happy all the time, not changing suddenly from happy to angry|cheerful 是一直开心，不是忽然由喜转怒|ashamed means sorry for something you did, not changing from one mood to another|ashamed 是为做过的事羞愧，不是情绪变来变去|mood · y|mood plus y|mood 加 y
+      sulky|someone refusing to speak and scowling all day after being told no|a child pouting in silence when she can't have her way|someone giving a cross look, saying nothing and stomping off|sulky means silently cross; nervous means worried|sulky 是不吭声地生闷气；nervous 是紧张担心|cheerful means happy and friendly, not silent and scowling|cheerful 是开心友好，不是不吭声、板着脸|nervous means worried and shaky, not silently cross about not getting your way|nervous 是紧张发抖，不是没如愿而生闷气|sul · ky|the lk in the middle and the y ending|中间是 lk，结尾是 y
+    `,
+  },
 );
 
 const states = batch(
@@ -117,17 +316,50 @@ const states = batch(
   ["Words of How Things Are", "事物状态的词"],
   ["clumsy, casual, eager, old, breakable, empty and wet", "笨拙、随意、热切、年长、易碎、空与湿"],
   `
-  awkward|causing difficulty; uncomfortable; clumsy|尴尬的；棘手的|There was an ___ silence.|The box is an ___ shape.|He felt ___ at the party.|clumsy,casual|awkwardly
-  clumsy|careless and awkward in movement|笨手笨脚的|I'm so ___; I broke the cup.|He made a ___ excuse.|The ___ puppy fell.|awkward,fragile|clumsily
-  casual|relaxed; not formal; not regular|随意的；临时的|Wear ___ clothes.|It was a ___ remark.|She has a ___ job.|eager,awkward|casually
-  eager|wanting very much to do or have something|渴望的|She was ___ to learn.|___ fans waited.|He is ___ to please.|casual,elderly|eagerly
-  elderly|old or aging|上了年纪的|Help the ___ man.|Our ___ neighbor lives alone.|The ___ need care.|eager,vacant|
-  fragile|easily broken|易碎的|Handle the box with care; it is ___.|Her health is ___.|The peace was ___.|hollow,clumsy|fragility
-  hollow|having an empty space inside; empty of meaning|空心的；空洞的|The tree is ___.|It was a ___ promise.|Owls live in the ___ log.|vacant,fragile|hollowed
-  vacant|empty; not occupied|空着的|The house is ___.|He had a ___ look.|Is this seat ___?|hollow,stained|vacancy
-  moist|slightly wet|湿润的|The cake is ___.|Keep the soil ___.|Her eyes were ___.|stained,hollow|
-  stained|marked with dirt or color that is hard to remove|有污渍的|His shirt was ___.|The ___ glass window glowed.|The cup is ___ with tea.|moist,vacant|stains
+  awkward|causing difficulty; uncomfortable; clumsy|尴尬的；棘手的|After his rude question, the silence was ___, and nobody knew where to look or what to say.|She felt ___ at the party, where she knew no one and could not think of anything to say.|It was ___ to meet my teacher in the street just after I had skipped her class, and we both blushed.|clumsy,casual|awkwardly
+  clumsy|careless and awkward in movement|笨手笨脚的|He has always been ___, tripping over his own feet and dropping whatever he carries.|The ___ puppy, too big for its own paws, knocked over every vase it walked past.|With his ___ fingers, he spilled the paint and smudged every picture he touched.|dizzy,fragile|clumsily
+  casual|relaxed; not formal; not regular|随意的；临时的|The party is ___, so wear jeans and a T-shirt rather than a suit.|On Fridays the office lets staff wear ___ clothes instead of their formal suits.|His comment about the weather was ___, just a relaxed remark to start a chat.|eager,awkward|casually
+  eager|wanting very much to do or have something|渴望的|She was ___ to learn to swim and asked for lessons every single day.|The ___ fans had waited all night, excited and impatient for the doors to open.|He is ___ to please his new coach and is always the first to volunteer for any task.|nervous,casual|eagerly
+  elderly|old or aging|上了年纪的|We helped the ___ man across the street; he was over eighty and walked with a cane.|Our ___ neighbor, now in her nineties, still grows tomatoes in her garden.|The bus has seats saved for ___ passengers, who are old and may find standing hard.|juvenile,ancestral|
+  fragile|easily broken|易碎的|The old vase is so ___ that it might crack if you even breathe on it.|Eggshells are thin and ___, cracking at the lightest tap.|The butterfly's wings were so ___ that a single touch could tear them.|intact,clumsy|fragility
+  hollow|having an empty space inside; empty of meaning|空心的；空洞的|The old tree is ___, and an owl lives in the empty space inside its trunk.|Tap the chocolate egg and you will hear that it is ___, with nothing inside but air.|The pipe is ___, a tube with an empty middle that water can flow through.|vacant,swollen|hollowed
+  vacant|empty; not occupied|空着的|The house next door has been ___ for a year, since nobody lives there now.|Is this seat ___, or is someone sitting here?|The parking space was ___, so we pulled in before anyone else could take it.|hollow,stained|vacancy
+  moist|slightly wet|湿润的|The chocolate cake was soft and ___, slightly wet inside rather than dry and crumbly.|Keep the soil ___ by watering it a little every day so that the seeds can sprout.|The grass was still ___ with dew early in the morning, slightly wet under our bare feet.|stained,stale|
+  stained|marked with dirt or color that is hard to remove|有污渍的|His white shirt was ___ with a brown mark from the coffee that would not wash out.|The cup is ___ inside with brown rings left by years of tea.|Her fingers were ___ purple from picking blackberries, and the color would not scrub off.|moist,vacant|stains
   `,
+  "context-clues",
+  {
+    intro: t(
+      "The **elderly** woman handed me a **fragile** teacup, but I was so **clumsy** that I dropped it, and the silence that followed was **awkward**. These ten words help you describe how people and things are: clumsy or relaxed, old or new, whole or empty, dry or wet.",
+      "那位上了年纪（**elderly**）的老太太递给我一只易碎（**fragile**）的茶杯，可我笨手笨脚（**clumsy**）地把它摔了，接下来的沉默好尴尬（**awkward**）。这十个词帮你描述人和东西的状态：笨拙还是放松，年老还是年轻，完整还是空心，干还是湿。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Hollow** means empty inside, like a tree trunk or a pipe; **vacant** means not being used, like a seat or a house no one is in.",
+        "**hollow** 是里面空的，像树干或管子；**vacant** 是没人占用，像空座位或没人住的房子。",
+      ),
+      use: t(
+        "**Clumsy** describes careless movements that knock things over; **awkward** describes a moment or a feeling that is uncomfortable and embarrassing.",
+        "**clumsy** 形容动作笨拙、碰翻东西；**awkward** 形容场面或感受别扭、尴尬。",
+      ),
+      spelling: t(
+        "Watch the **w** that comes twice in **awkward**, the **-ile** ending of **fragile**, the double **l** in **hollow** and the order of **-er-** and **-ly** in **elderly**.",
+        "注意 **awkward** 中出现两次的 **w**、**fragile** 的 **-ile** 结尾、**hollow** 的双写 **l**，以及 **elderly** 中 **-er-** 和 **-ly** 的顺序。",
+      ),
+    },
+    notes: `
+      awkward|a silence after a rude question when nobody knows where to look|feeling uncomfortable at a party where you know no one|meeting a teacher just after skipping her class so that both blush|awkward means uncomfortable and embarrassing; clumsy means careless in movement|awkward 是别扭尴尬；clumsy 是动作笨拙|clumsy describes careless movements that knock things over, not an uncomfortable moment when no one knows what to say|clumsy 形容动作笨拙、碰翻东西，不是没人知道说什么的尴尬场面|casual means relaxed and easy, the opposite of an uncomfortable, embarrassing moment|casual 是轻松随意，和别扭尴尬的时刻正好相反|awk · ward|the aw and the ward, with w twice|aw 加 ward，w 出现两次
+      clumsy|someone who has always tripped over his feet and dropped things|a puppy too big for its paws knocking over vases|fingers that spill paint and smudge every picture|clumsy means moving carelessly; dizzy means feeling the world spin for a while|clumsy 是动作笨拙；dizzy 是一时觉得天旋地转|dizzy is a short spell of feeling the world spin, not a lasting habit of careless movement|dizzy 是一阵子的天旋地转，不是长期动作笨拙的毛病|fragile means easily broken, which describes the thing that is dropped, not the one who drops it|fragile 是容易碎，形容被摔的东西，不是摔东西的人|clum · sy|the s that says /z/ before y|y 前的 s 读 /z/
+      casual|a party where jeans and a T-shirt suit better than a suit|relaxed clothes staff may wear on Fridays instead of formal suits|a relaxed remark about the weather to start a chat|casual means relaxed and informal; awkward means uncomfortable|casual 是轻松随意；awkward 是别扭不自在|eager means wanting something very much, not relaxed and informal|eager 是非常渴望，不是轻松随意|awkward means uncomfortable and embarrassing, not relaxed and easy|awkward 是别扭尴尬，不是轻松自在|ca · su · al|the s that says /zh/, as in usual|s 读 /ʒ/（同 usual）
+      eager|asking for swimming lessons every single day|fans waiting all night, excited and impatient for the doors to open|someone always first to volunteer to please a new coach|eager means keen and excited for something; nervous means worried about it|eager 是热切期待；nervous 是紧张担心|nervous means worried and afraid of what is coming, not excited and keen to have it|nervous 是对将来的事担心害怕，不是热切盼望|casual means relaxed and not bothered, the opposite of wanting something very much|casual 是轻松随意、不在意，和非常渴望正好相反|ea · ger|the ea vowel team and the -ger ending|元音组合 ea，结尾是 -ger
+      elderly|a man over eighty walking with a cane|a neighbor in her nineties still growing tomatoes|bus passengers who are old and find standing hard|elderly means old; juvenile means young|elderly 是年老；juvenile 是年轻|juvenile means young or childish, the opposite of someone over eighty|juvenile 是年轻或幼稚，和八十多岁的老人正好相反|ancestral means handed down from your ancestors, not describing a living person who is old|ancestral 是祖传的，不是形容上了年纪的活人|el · der · ly|elder plus -ly|elder 加 -ly
+      fragile|a vase so delicate it might crack if you breathe on it|thin eggshells cracking at the lightest tap|butterfly wings that a single touch could tear|fragile means easily broken; intact means not broken at all|fragile 是容易碎；intact 是完好无损|intact means whole and undamaged, not so delicate that a touch could break it|intact 是完好无损，不是一碰就坏|clumsy describes someone who moves carelessly, not a thing that breaks easily|clumsy 形容动作笨拙的人，不是容易碎的东西|frag · ile|the -ile ending, said like ill or like isle|结尾是 -ile
+      hollow|an old tree with an owl living in the empty space in its trunk|a chocolate egg with nothing inside but air|a pipe with an empty middle that water flows through|hollow means empty inside; vacant means not being used by anyone|hollow 是里面空的；vacant 是没人使用|vacant means not being used or lived in, like a seat or a house, not having an empty space inside it|vacant 是没人使用或居住，像空座位或空房子，不是内部空心|swollen means puffed up bigger than normal, the opposite of empty inside|swollen 是比平常肿大，和内部空心正好相反|hol · low|the double l and the ow that says a long o|双写 l，ow 读长音 o
+      vacant|a house next door that nobody has lived in for a year|a seat that may have no one sitting in it|a parking space with no car in it|vacant means not in use; hollow means empty inside|vacant 是没人使用；hollow 是内部空心|hollow means having an empty space inside, like a pipe, not a seat or house that no one is using|hollow 是内部空心，像管子，不是没人用的座位或房子|stained means marked with dirt or color, not empty and unused|stained 是有污渍，不是空着没人用|va · cant|the -ant ending, not -ent|结尾是 -ant，不是 -ent
+      moist|a cake slightly wet inside rather than dry and crumbly|soil watered a little each day so that seeds sprout|grass slightly wet with morning dew|moist means slightly wet; stale means old and dried out|moist 是微湿；stale 是放久变干|stained means marked with color that will not come off, not slightly wet|stained 是沾上洗不掉的颜色，不是微湿|stale means old, dry and hard, the opposite of soft and slightly wet|stale 是放久了又干又硬，和柔软微湿正好相反|moist|the oi vowel team before st|st 前是元音组合 oi
+      stained|a white shirt with a coffee mark that will not wash out|a cup with brown rings from years of tea|fingers purple from blackberries that will not scrub off|stained means marked with color that will not come off; moist means slightly wet|stained 是有洗不掉的污渍；moist 是微湿|moist means slightly wet, not marked with a color that will not wash off|moist 是微湿，不是沾上洗不掉的颜色|vacant means empty and unused, not marked with dirt or color|vacant 是空着没人用，不是沾上了污渍|stain · ed|the ai vowel team and the -ed ending|元音组合 ai，结尾是 -ed
+    `,
+  },
 );
 
 const safety = batch(
@@ -135,17 +367,50 @@ const safety = batch(
   ["Words of Staying Safe", "保持安全的词"],
   ["danger, warnings, pain, getting through unhurt and staying calm", "危险、警告、疼痛、安然无恙与镇定"],
   `
-  emergency|a serious, unexpected and dangerous situation|紧急情况|Call 911 in an ___.|This is an ___!|The plane made an ___ landing.|warn,sting|emergencies
-  warn|to tell someone of danger|警告|I ___ you; it's hot.|Signs ___ of the cliff.|She tried to ___ him.|emergency,heal|warned,warning
-  sting|a sharp pain from an insect or plant; to cause it|刺；蜇|A bee may ___ you.|The ___ hurt.|Smoke made my eyes ___.|sigh,warn|stung,stinging
-  heal|to become healthy again|愈合|The cut will ___.|Time can ___.|Doctors ___ the sick.|intact,sting|healed,healing
-  unharmed|not hurt or damaged|未受伤的|The child was ___.|All the passengers are ___.|She walked away ___.|sigh,composure|
-  unscathed|without suffering any injury or damage|毫发无损的|He escaped ___.|No one came out of the scandal ___.|The town was left ___.|sigh,poise|
-  intact|not damaged; whole|完整无损的|The vase was ___.|Her pride stayed ___.|The old wall is still ___.|sigh,composure|
-  composure|the state of being calm|镇定|She kept her ___.|He lost his ___.|With great ___, she spoke.|sting,sigh|
-  poise|graceful and calm manner; to be ready|镇定；做好准备|She spoke with ___.|She has natural ___.|Her ___ impressed us.|sting,sigh|poised
-  sigh|to breathe out long and loudly in sadness or relief|叹气|She gave a ___ of relief.|He began to ___.|"Oh well," she would ___.|sting,composure|sighed
+  emergency|a serious, unexpected and dangerous situation|紧急情况|The ambulance rushed him to the ___ room, where doctors treat people whose lives are in danger.|The engine caught fire, so the pilot landed in a field; it was a real ___, and every second counted.|Keep a torch, water and a first-aid kit at home in case of ___, such as a flood or an earthquake.|mishap,sting|emergencies
+  warn|to tell someone of danger|警告|Signs along the cliff ___ walkers that the edge could crumble at any moment.|I tried to ___ him that the ice was thin, but he skated out onto the pond anyway.|The weather service will ___ people of the storm so that they have time to get ready.|tell off,coerce|warned,warning
+  sting|a sharp pain from an insect or plant; to cause it|刺；蜇|The bee left its ___ in my arm, a sharp pain that swelled into a red bump.|A jellyfish ___ burns like fire, so pour vinegar on it at once.|The nettle's ___ was a sudden, sharp, burning pain from the tiny hairs on its leaves.|itch,bruise|stung,stinging
+  heal|to become healthy again|愈合|Keep the cut clean and covered, and it will ___ in about a week, leaving only a thin line.|The broken bone took six weeks to ___, joining back together inside the cast.|Aloe helps burns ___ faster, so that new skin grows over the sore place.|get over,pull through|healed,healing
+  unharmed|not hurt or damaged|未受伤的|The car was wrecked, but the driver climbed out ___, without a single scratch and steady on her feet.|All the passengers were ___; not one of them was hurt in any way when the boat ran aground.|The kitten fell from the tree but landed ___, not hurt or even shaken, and ran off to play.|swollen,dizzy|
+  unscathed|without suffering any injury or damage|毫发无损的|The town came through the storm ___, without a single roof torn off or window broken.|He fell off his bike at full speed but got up ___, without so much as a scratch.|Only one house in the street escaped the fire ___, with not even a scorch mark on its walls.|fragile,stained|
+  intact|not damaged; whole|完整无损的|The parcel was dropped down the stairs, but the vase inside arrived ___, with not a single piece broken.|After a thousand years, the old castle wall is still ___, with every stone in its place.|The seal on the jar was ___, so no one had opened it since it left the factory.|hollow,vacant|
+  composure|the state of being calm|镇定|Even when the crowd booed, the singer kept her ___ and finished the song calmly.|He lost his ___ and began shouting and shaking when the judges ruled against him.|The pilot's steady ___ during the storm kept every passenger from panicking.|trepidation,audacity|
+  poise|graceful and calm manner; to be ready|镇定；做好准备|The dancer moved with ___, calm and graceful, gliding across the stage as smoothly as a swan.|Years on the stage gave her ___, so she walks and stands gracefully and calmly in front of any crowd.|The young speaker showed great ___, standing gracefully and speaking calmly and politely without a trace of nerves.|audacity,trepidation|poised
+  sigh|to breathe out long and loudly in sadness or relief|叹气|When she heard the test was cancelled, she let her shoulders drop and began to ___ with relief, breathing out long and slow.|He would ___ deeply, letting out a long, sad breath, whenever he thought of his old dog.|"Oh well," she would ___, breathing out slowly as she gave up on the broken kite.|cough,growl|sighed
   `,
+  "context-clues",
+  {
+    intro: t(
+      "Signs **warn** you of danger, and in an **emergency** the brave keep their **composure**. With luck you walk away **unharmed**, and any **sting** or cut soon starts to **heal**. These ten words help you talk about danger, pain, getting through it safely and staying calm.",
+      "标志警告（**warn**）你有危险；遇到紧急情况（**emergency**）时，勇敢的人能保持镇定（**composure**）。运气好的话，你会安然无恙（**unharmed**），被蜇（**sting**）或划伤的地方很快就会愈合（**heal**）。这十个词帮你谈论危险、疼痛、平安脱险和保持冷静。",
+    ),
+    watchOut: {
+      meanings: t(
+        "**Unharmed** and **unscathed** describe people or places that came through danger without hurt; **intact** describes a thing that is still whole, with no part broken or missing.",
+        "**unharmed** 和 **unscathed** 形容人或地方经历危险后没受伤害；**intact** 形容东西仍然完整，没有一处破损或缺失。",
+      ),
+      use: t(
+        "You **keep** or **lose** your **composure** when something upsets you; **poise** is a graceful, calm way of moving and standing that you have all the time.",
+        "遇到让人心烦的事时，你会保持（keep）或失去（lose）**composure**；**poise** 是一直都有的优雅、从容的举止和姿态。",
+      ),
+      spelling: t(
+        "Watch the **-ency** ending of **emergency**, the silent **gh** in **sigh**, the **sc** in **unscathed** and the **-ure** of **composure**.",
+        "注意 **emergency** 的 **-ency** 结尾、**sigh** 中不发音的 **gh**、**unscathed** 中的 **sc**，以及 **composure** 的 **-ure**。",
+      ),
+    },
+    notes: `
+      emergency|a hospital room where doctors treat people whose lives are in danger|an engine fire that forces a landing in a field when every second counts|a flood or an earthquake you keep a torch and first-aid kit ready for|emergency is a serious, dangerous situation; mishap is a small unlucky accident|emergency 是严重危险的情况；mishap 是小小的不幸意外|mishap is a small unlucky accident like a spilled drink, not a serious danger where lives are at stake|mishap 是像洒了饮料那样的小意外，不是危及生命的严重险情|sting is a sharp pain from an insect or plant, not a dangerous situation that needs fast action|sting 是昆虫或植物造成的刺痛，不是需要紧急应对的危险情况|e · mer · gen · cy|the soft g and the -ency ending|g 读软音，结尾是 -ency
+      warn|signs telling walkers the cliff edge could crumble|trying to tell someone that the ice is thin before he skates out|a weather service telling people a storm is coming so that they can get ready|warn means to tell someone of danger before it happens; tell off means to scold someone after they did wrong|warn 是事先提醒有危险；tell off 是事后责骂做错的人|tell off means to scold someone for something wrong already done, not to tell them of a danger ahead|tell off 是为已做的错事责骂某人，不是提醒前方有危险|coerce means to force someone to do something by threats, not to tell them about a danger|coerce 是用威胁强迫某人做事，不是告诉他们有危险|warn|the ar that says /or/ after w|w 后的 ar 读 /ɔː/
+      sting|a sharp pain from a bee that swells into a red bump|a jellyfish's burning pain that needs vinegar|a sudden burning pain from the tiny hairs on a nettle's leaves|sting is a sudden sharp pain from an insect or plant; itch makes you want to scratch|sting 是昆虫或植物造成的突然刺痛；itch 让你想挠|itch is a tickly feeling that makes you want to scratch, not a sudden sharp burning pain|itch 是让人想挠的痒，不是突然的灼痛|bruise is a dark mark from a knock, not a sharp burning pain from an insect or plant|bruise 是磕碰留下的青紫，不是昆虫或植物造成的灼痛|sting|the ng ending after a short i|短元音 i 后是 ng 结尾
+      heal|a clean, covered cut that closes in about a week|a broken bone joining back together inside a cast|burns growing new skin faster with aloe|heal is what a wound or bone does as it mends; get over is what a person does after an illness or a sadness|heal 是伤口或骨头愈合；get over 是人从病痛或伤心中恢复|get over needs a person and the thing they recover from, as in get over a cold, not a cut or a bone mending by itself|get over 要有人做主语并带上所克服的事，如 get over a cold，不是伤口或骨头自己愈合|pull through means a very sick person survives, not a cut or burn closing up with new skin|pull through 是重病的人挺过来，不是伤口或烧伤长出新皮|heal|the ea vowel team; do not confuse it with heel|元音组合 ea；别和 heel 混淆
+      unharmed|a driver climbing out of a wrecked car without a scratch and steady on her feet|passengers not hurt in any way when a boat runs aground|a kitten landing from a tree not hurt or even shaken|unharmed means not hurt at all; swollen means puffed up from an injury|unharmed 是完全没受伤；swollen 是因受伤而肿起来|swollen means puffed up from an injury, the opposite of coming through without a scratch|swollen 是受伤后肿起来，和毫发无伤正好相反|dizzy means feeling the world spin and being unsteady, not coming through calm, steady and unhurt|dizzy 是天旋地转、站不稳，不是平安无事、稳稳当当|un · harm · ed|un- before harm, plus -ed|un- 加 harm，再加 -ed
+      unscathed|a town coming through a storm without a roof torn off or a window broken|a rider getting up after a fall without even a scratch|one house escaping a fire without even a scorch mark|unscathed means without a scratch or a mark after danger; fragile means easily broken|unscathed 是经历危险后毫发无损；fragile 是容易碎|fragile means easily broken, not coming safely through a storm, a crash or a fire|fragile 是容易碎，不是在风暴、事故或火灾中平安无事|stained means marked with dirt or color, the opposite of having not even a scorch mark|stained 是有污渍，和连一点烧痕都没有正好相反|un · scathed|un- before scathe, with sc and th|un- 加 scathe，含 sc 和 th
+      intact|a vase arriving with not a single piece broken after a fall down the stairs|a castle wall still with every stone in its place after a thousand years|a jar seal unbroken since it left the factory|intact means whole, with nothing broken or missing; hollow means empty inside|intact 是完整无缺；hollow 是里面空的|hollow means empty inside, not whole with no piece broken|hollow 是里面空的，不是完整没有破损|vacant means not being used by anyone, not whole and unbroken|vacant 是没人使用，不是完整没有破损|in · tact|in- before tact|in- 加 tact
+      composure|a singer staying calm and finishing her song while the crowd boos|someone shouting and shaking once he loses his calm|a pilot's steady calm that keeps passengers from panicking|composure is staying calm under pressure; trepidation is fear of what may happen|composure 是压力下保持冷静；trepidation 是对可能发生的事的恐惧|trepidation means fear and worry about what may happen, the opposite of staying calm|trepidation 是对可能发生之事的恐惧担忧，和保持冷静正好相反|audacity means rude, daring boldness, not staying calm when things go wrong|audacity 是无礼大胆，不是出事时保持冷静|com · pos · ure|the s that says /zh/ and the -ure ending|s 读 /ʒ/，结尾是 -ure
+      poise|a dancer gliding across the stage calm and graceful like a swan|years on the stage giving someone a graceful, calm way of walking and standing|a young speaker standing gracefully and speaking calmly and politely|poise is graceful, calm bearing; audacity is rude, daring boldness|poise 是优雅从容的仪态；audacity 是无礼的大胆|audacity is rude, daring boldness, not a graceful, calm and polite way of moving|audacity 是无礼的大胆，不是优雅、从容、有礼的举止|trepidation is nervous fear, the opposite of moving calmly without a trace of nerves|trepidation 是紧张恐惧，和毫不紧张、从容行动正好相反|poise|the oi vowel team and the s that says /z/|元音组合 oi，s 读 /z/
+      sigh|someone dropping her shoulders and breathing out long and slow with relief|a long, sad breath let out at the thought of an old dog|breathing out slowly while saying "Oh well" and giving up on a broken kite|sigh means to breathe out long and slow in sadness or relief; cough means to push air out of the throat in short, noisy bursts|sigh 是因难过或宽慰长长地呼气；cough 是一下一下地咳出声|cough is short, noisy bursts of air from a sore throat, not a long slow breath of relief or sadness|cough 是嗓子不舒服而一阵阵咳嗽，不是宽慰或难过时长长的呼气|growl is the low, angry sound of a dog, not a long slow breath let out in sadness or relief|growl 是狗低沉愤怒的吼声，不是难过或宽慰时长长的呼气|sigh|the silent gh after i|i 后的 gh 不发音
+    `,
+  },
 );
 
 /** batchesD are the batches of computers, family, shopping, the army, transport, moods, states and safety. */
