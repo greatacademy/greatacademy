@@ -22,93 +22,127 @@ const library = vocabularyTopic({
     "Borrowing and returning books, shelves, library cards, due dates, stories and the librarian.",
     "借书和还书、书架、借书证、到期日、故事和图书管理员。",
   ),
+  intro: t(
+    "At the **library**, I show my **card** and **borrow** two books. The **librarian** says they are **due** in two weeks. These words help you take books home and bring them back on time.",
+    "在 **library**（图书馆），我出示 **card**（借书证），**borrow**（借）了两本书。**librarian**（图书管理员）说两周后 **due**（到期）。这些词帮你把书借回家并按时归还。",
+  ),
   prerequisites: ["a1-words-schoolwork"],
   words: [
     word(
       "library libraries",
       "a place with many books that you can read or borrow",
       "图书馆",
-      "I borrow books from the {library}.|shelf card | The school {library} has ten thousand books.|shelf story | Be quiet in the {library}, please.|shelf card",
-      "shelf story",
+      "I borrow books from the {library}. | The school {library} has ten thousand books to borrow. | Be quiet in the {library}, please. People are reading and borrowing books.",
+      "shop farm",
     ),
     word(
       "borrow borrows borrowed borrowing",
       "to take something for a time and then give it back",
       "借（入）",
-      "Can I {borrow} your pen? I'll give it back after class.|return find | I {borrowed} three books from the library.|returned found | You can {borrow} a book for two weeks.|return need",
+      "Can I {borrow} your pen? I'll give it back after class. | I {borrowed} three books from the library.|returned found | You can {borrow} a book for two weeks.",
       "return find",
     ),
     word(
       "return returns returned returning",
       "to give something back; to go back",
       "归还；返回",
-      "Please {return} the book by Friday.|borrow find | I {returned} my library books today.|borrowed found | We {return} home at six.|borrow need",
+      "Please {return} the book to the library by Friday. | I {returned} my books to the library today.|borrowed found | We {return} home at six.",
       "borrow find",
     ),
     word(
       "shelf shelves",
       "a flat board on a wall or in a cupboard for putting things on",
       "架子；书架",
-      "Put the book back on the {shelf}.|card story | The comics are on the top {shelf}.|card librarian | There are five {shelves} in my bookcase.|cards stories",
+      "Put the book back on the {shelf}. | The comics are on the top {shelf}. | My bookcase has five {shelves} to put books on.|cards stories",
       "card story",
     ),
     word(
       "card cards",
       "a small piece of stiff paper; you need a library one to borrow books",
       "卡片；借书证",
-      "You need a library {card} to borrow books.|shelf story | I made a birthday {card} for Mom.|shelf librarian | Let's play a {card} game.|shelf story",
+      "You need a library {card} to borrow books. | I made a birthday {card} for Mom and wrote on it. | Show your library {card}, and you can take the books home.",
       "shelf story",
     ),
     word(
       "due",
       "expected or needed by a certain time",
       "到期的",
-      "This book is {due} back on May 5th.|quiet back | When is the homework {due}? — On Monday.|quiet back | My library books are {due} tomorrow.|quiet back",
-      "quiet back",
+      "This book is {due} back on May 5th. | When is the homework {due}? — On Monday. | My library books are {due} tomorrow, so I must return them.",
+      "quiet free",
     ),
     word(
       "story stories",
       "words that tell what happened to someone, true or made up",
       "故事",
-      "Grandpa tells me a {story} every night.|shelf card | This {story} is about a brave little mouse.|shelf card | I like funny {stories}.|shelves cards",
+      "Grandpa tells me a {story} every night. | This {story} in my book is about a brave little mouse. | Mom reads me funny {stories} at bedtime.|shelves cards",
       "shelf card",
     ),
     word(
       "librarian librarians",
       "a person who works in a library",
       "图书管理员",
-      "Ask the {librarian}. She knows where every book is.|shelf story | The {librarian} stamps the date in my book.|shelf card | Our school {librarian} reads stories to us.|shelf card",
-      "shelf student",
+      "Ask the {librarian}. She knows where every book is. | The {librarian} stamps the date in my book. | Our school {librarian} reads stories to us in the library.",
+      "library nurse",
     ),
     word(
       "quiet quieter quietest",
       "making little or no noise",
       "安静的",
-      "Please be {quiet}. The baby is sleeping.|due back | The library is a {quiet} place.|due back | The classroom is very {quiet} during the test.|due back",
-      "due back",
+      "Please be {quiet}. The baby is sleeping. | The library is a {quiet} place where nobody talks. | The classroom is very {quiet} during the test. We can't hear a sound.",
+      "loud noisy",
     ),
     word(
       "find finds found finding",
       "to see or get something you were looking for",
       "找到",
-      "I can't {find} my library card. Where is it?|borrow need | She {found} her keys under the sofa.|borrowed needed | Can you help me {find} a book about cats?|borrow return",
+      "I can't {find} my library card. Where is it? | She {found} her keys under the sofa.|borrowed needed | Can you help me {find} my lost pen?",
       "borrow need",
     ),
     word(
       "need needs needed needing",
       "to have to have something",
       "需要",
-      "I {need} a pencil. Can I borrow one?|find return | Plants {need} water to grow.|find borrow | Do you {need} help?|find return",
+      "I {need} a pencil. Can I borrow one? | Plants {need} water to grow. | Do you {need} help?",
       "find return",
     ),
     word(
       "back",
       "to the place where something was before; the part behind",
       "回到原处；后面",
-      "Put the book {back} on the shelf.|due quiet | I'll be {back} in five minutes.|due quiet | The cat is sleeping at the {back} of the room.|due quiet",
-      "due quiet",
+      "Put the book {back} on the shelf where it was. | I'm going out now, but I'll be {back} in five minutes. | The cat is sleeping at the {back} of the room, behind the sofa.",
+      "away front",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Borrow* is taking a book home; *return* is bringing it back to the library. Look for *from* (borrow from) or *to* (return to) and for words like *by Friday*.",
+        "*borrow* 是把书借回家，*return* 是把书还回图书馆。留意 *from*（borrow from）和 *to*（return to），以及 *by Friday* 这样的词。",
+      ),
+      meaning: t(
+        "A *library* is the place, and the *librarian* is the person who works there. A book that is *due* on Friday must be back by Friday.",
+        "*library* 是地方，*librarian* 是在那里工作的人。书 *due* on Friday，就是星期五前必须还回来。",
+      ),
+      spell: t(
+        "*Library* has r after the b, so not *libary*; *librarian* adds -ian. *Shelf* becomes *shelves* and *story* becomes *stories*.",
+        "*library* 的 b 后面有 r，不是 *libary*；*librarian* 是加 -ian。*shelf* 的复数是 *shelves*，*story* 的复数是 *stories*。",
+      ),
+    },
+    notes: `
+      library|borrowing books there;ten thousand books to borrow;people reading and borrowing|you borrow books from a library; you buy things in a shop|library 借书；shop 买东西|shop=shop sells things, so you buy there and do not borrow books=shop 卖东西，在那里是买，不是借书;farm=farm has animals and plants, not books to read or borrow=farm 有动物和庄稼，没有可读可借的书|li · brar · y|r after the b, so not *libary*|b 后面有 r，不是 *libary*
+      borrow|giving the pen back after class;three books from the library;two weeks|you borrow a thing to give back later; you return it when you give it back|borrow 是借来；return 是还回去|return/returned=return means to give back, but here you get the pen or the books first and give them back later=return 是还，可这里是先拿到笔或书，以后再还;find/found=find means to get something you were looking for, not to have it for a time and give it back=find 是找到，不是借一段时间再还|bor · row|a double r, and ow at the end|双写 r，结尾是 ow
+      return|to the library by Friday;to the library today;home at six|you return a book to the library; you borrow it from the library|return 是还给图书馆；borrow 是从图书馆借|borrow/borrowed=borrow goes with *from*, not with *to the library* or *home*=borrow 和 *from* 连用，不和 *to the library* 或 *home* 连用;find/found=find means to get something you were looking for, not to take it to the library or go home=find 是找到，不是送回图书馆或回家|re · turn|*re-* means again, and ur said like *er*|*re-* 表示“再、回”，ur 读作 *er*
+      shelf|putting the book back on it;the top one;five in my bookcase|a shelf is a board you put books on; a card is a small piece of paper|shelf 是放书的板子；card 是小卡片|card/cards=card is a small piece of paper, so books do not go on it and a bookcase does not have cards to put books on=card 是小卡片，书不放在卡片上，书架上也没有放书的卡片;story/stories=story is words that tell what happened, not a place to put books=story 是讲发生了什么的话，不是放书的地方|shelf|f changing to -ves in *shelves*|复数 *shelves* 里 f 变成 -ves
+      card|a library one to borrow books;a birthday one I wrote on;showing it to take books home|a card is a small piece of stiff paper; a shelf is a board for books|card 是硬纸卡片；shelf 是放书的板子|shelf=shelf is a board on a wall, not something you show, make for Mom or need in your pocket to borrow books=shelf 是墙上的板子，不能出示、送给妈妈，也不是借书要带的东西;story=story is words that tell what happened, and there is no *library story* you show to borrow books=story 是讲发生了什么的话，没有出示后能借书的 *library story*|card|ar said like *car*|ar 读作 *car* 里的音
+      due|back on May 5th;homework on Monday;library books tomorrow so I must return them|due tells you when something must be back or done; free means it costs nothing or you have time|due 说的是什么时候必须交还或完成；free 是免费或有空|quiet=quiet means with little noise, not the day a book or homework must be back=quiet 是安静，不说书或作业哪天必须交;free=free means it costs nothing or you have time, not the day you must return or hand in something=free 是免费或有空，不说哪天必须交还|due|ue said like *you*, the same sound as *dew*|ue 读作 *you*，和 *dew* 同音
+      story|told by Grandpa every night;about a brave little mouse;funny ones at bedtime|a story tells what happened; a card is a small piece of paper|story 讲发生了什么；card 是小卡片|shelf/shelves=shelf is a board for books, so nobody tells or reads you one=shelf 是放书的板子，没人给你讲或读一个架子;card/cards=card is a small piece of paper, not something Grandpa tells or Mom reads at bedtime about a mouse=card 是小卡片，爷爷不会讲、妈妈睡前也不会读一张关于老鼠的卡片|sto · ry|y changing to -ies in *stories*|复数 *stories* 里 y 变成 -ies
+      librarian|a she who knows where every book is;someone who stamps the date;someone reading to us in the library|a librarian is a person; a library is a place|librarian 是人；library 是地方|library=library is a place, so it is not a she, cannot stamp a date and cannot read stories to us=library 是地方，不是“她”，不会盖日期，也不会给我们读故事;nurse=nurse looks after sick people, not books, dates in books or reading in the library=nurse 照顾病人，不管书、不在书上盖日期，也不在图书馆读故事|li · brar · i · an|*library* with y changing to -ian|*library* 的 y 变成 -ian
+      quiet|a sleeping baby;nobody talks;we can't hear a sound|quiet means with little noise; loud means with a lot of noise|quiet 是安静；loud 是大声|loud=loud means with a lot of noise, but a sleeping baby, nobody talking and no sound all mean no noise=loud 是声音大，可婴儿在睡、没人说话、听不到声音都是没有噪音;noisy=noisy means full of noise, but here there is no noise at all=noisy 是很吵，可这里一点声音都没有|qui · et|ie in the middle, so not *quite*|中间是 ie，不是 *quite*
+      find|a library card I can't see;keys under the sofa;my lost pen|you find something you were looking for; you borrow something to give back|find 是找到；borrow 是借|borrow/borrowed=borrow means to have something for a time and give it back, not to look for your own lost card, keys or pen=borrow 是借来再还，不是找自己丢的卡、钥匙或笔;need/needed=need means to have to have something, and *can't need* or *help me need* is not English=need 是需要，没有 *can't need* 或 *help me need* 的说法|find|i said like *eye*, and the past *found*|i 读作 *eye*，过去式是 *found*
+      need|a pencil to borrow;water to grow;help|you need what you must have; you find what you were looking for|need 是需要；find 是找到|find=find means to see something you looked for, and plants do not find water to grow=find 是找到，植物不是“找到”水才长大;return=return means to give back, but you do not give back a pencil you want to borrow, water for plants or help=return 是还，可想借的铅笔、植物要的水和帮助都谈不上“还”|need|a double e|双写 e
+      back|the shelf where it was;five minutes after going out;behind the sofa|back means where something was before, or the part behind; front is the part ahead|back 是回到原处或后面；front 是前面|away=away means to another place, not to the place where it was before or coming home soon=away 是去别处，不是回到原处或马上回来;front=front is the part ahead, so *behind the sofa* cannot be the front=front 是前面，*behind the sofa* 不会是前面|back|ck at the end|结尾是 ck
+    `,
+  },
 });
 
 const books = vocabularyTopic({
@@ -118,79 +152,111 @@ const books = vocabularyTopic({
     "Comics, dictionaries, titles and projects; bringing, taking and giving; must and when.",
     "漫画、词典、书名和课题；带来、拿走和给；must 和 when。",
   ),
+  intro: t(
+    "I **bring** a **dictionary** and two **comics** to school, and I **give** one comic to my friend. These words help you talk about books and pass them to people.",
+    "我 **bring**（带来）一本 **dictionary**（词典）和两本 **comics**（漫画）到学校，又 **give**（给）朋友一本漫画。这些词帮你谈论书，并把书递给别人。",
+  ),
   prerequisites: ["a1-words-library"],
   words: [
     word(
       "comic comics",
       "a magazine or book of stories told in pictures",
       "漫画",
-      "I read {comics} about superheroes.|dictionaries titles | This {comic} has funny pictures.|dictionary title | My brother draws his own {comics}.|dictionaries projects",
+      "I read {comics} about superheroes. | This {comic} tells its story in funny pictures. | My brother draws his own {comics}.",
       "dictionary title",
     ),
     word(
       "dictionary dictionaries",
       "a book that tells you what words mean",
       "词典",
-      "I don't know this word. Let's look in the {dictionary}.|comic title | An English-Chinese {dictionary} is very useful.|comic title | There are many {dictionaries} in the library.|comics titles",
+      "I don't know this word. Let's look in the {dictionary}. | An English-Chinese {dictionary} is very useful. | {Dictionaries} tell you what words mean.",
       "comic title",
     ),
     word(
       "title titles",
       "the name of a book, a movie or a song",
       "标题；书名",
-      'The {title} of the book is "The Lost Cat".|project comic | What\'s the {title} of your story?|project comic | Write the {title} at the top of the page.|project comic',
+      'The {title} of the book is "The Lost Cat". | What\'s the {title} of your story? | Write the {title} at the top of the page.',
       "project comic",
     ),
     word(
       "about",
       "on the subject of",
       "关于",
-      "This book is {about} dinosaurs.|when must | What is the movie {about}?|when must | Tell me {about} your family.|when must",
-      "when must",
+      "This book is {about} dinosaurs. | What is your story {about}? — A brave dog. | Tell me {about} your family.",
+      "from with",
     ),
     word(
       "project projects",
       "a piece of school work that you do over some time",
       "项目；课题",
-      "Our class {project} is about the sea.|title comic | I need books for my science {project}.|title comic | We made a poster for our art {project}.|title dictionary",
-      "title comic",
+      "Our class {project} is about the sea. We made a big poster. | I need books for my science {project}. | We made a poster for our art {project}.",
+      "title dictionary",
     ),
     word(
       "bring brings brought bringing",
       "to come with something",
       "带来",
-      "Please {bring} your library card tomorrow.|take give | Can I {bring} a friend to your party?|take give | She {brought} a cake to school.|took gave",
+      "Please {bring} your library card when you come here tomorrow. | Can I {bring} a friend with me when I come to your party? | She {brought} a cake here to share with us.|took gave",
       "take give",
     ),
     word(
       "take takes took taken taking",
       "to carry something with you to another place; to get and hold",
       "拿走；带走",
-      "Don't forget to {take} your umbrella.|bring give | I {take} the bus to school.|bring give | Who {took} my pencil?|brought gave",
+      "Don't forget to {take} your umbrella when you go out. | I {take} the bus to school. | Who {took} my pencil away from my desk?|brought gave",
       "bring give",
     ),
     word(
       "give gives gave given giving",
       "to let someone have something",
       "给",
-      "Please {give} me the book.|take bring | I {gave} Mom flowers for her birthday.|took brought | {Give} the ball to your sister.|Take Bring",
+      "You're next to me. Please {give} me the book. | I {gave} my sister my old bike, so now it's hers.|took brought | {Give} your sister a turn on the swing.",
       "take bring",
     ),
     word(
       "must",
       "used to say that something is necessary",
       "必须",
-      "You {must} return the book by Friday.|when about | We {must} be quiet in the library.|when about | You {must} wear a helmet on your bike.|when about",
-      "when about",
+      "You {must} return the book by Friday. Don't be late! | We {must} be quiet in the library. | You {must} wear a helmet on your bike. It keeps you safe.",
+      "can't mustn't",
     ),
     word(
       "when",
       "at what time; at the time that",
       "什么时候；当……时",
-      "{When} is the book due? — Next Monday.|About Must | I read {when} I'm in bed.|about must | {When} I was little, I loved comics.|About Must",
-      "about must",
+      "{When} is the book due? — Next Monday. | I read {when} I'm in bed. | {When} I was little, I loved comics.",
+      "where what",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Use *bring* when something comes here with you, *take* when it goes away from here, and *give* when another person gets to keep it. Look for *here*, *come*, *go out* and who has it at the end.",
+        "东西跟你来到这里用 *bring*，从这里带走用 *take*，交给别人让他拥有用 *give*。留意 *here*、*come*、*go out*，以及最后东西在谁手里。",
+      ),
+      meaning: t(
+        "A *title* is the name of a book, but a *comic* is a book of stories in pictures. *You must* means it is necessary; *you mustn't* means do not do it.",
+        "*title* 是书的名字，*comic* 是用图画讲故事的书。*you must* 表示必须做；*you mustn't* 表示不许做。",
+      ),
+      spell: t(
+        "*Dictionary* ends in -ary and becomes *dictionaries*. *Bring* becomes *brought*, *take* becomes *took* and *give* becomes *gave*.",
+        "*dictionary* 以 -ary 结尾，复数是 *dictionaries*。*bring* 的过去式是 *brought*，*take* 是 *took*，*give* 是 *gave*。",
+      ),
+    },
+    notes: `
+      comic|superheroes;a story in funny pictures;ones my brother draws|a comic tells a story in pictures; a dictionary tells you what words mean|comic 用图画讲故事；dictionary 解释词义|dictionary/dictionaries=dictionary tells you what words mean, not stories about superheroes in pictures=dictionary 解释词义，不讲画出来的超级英雄故事;title/titles=title is just the name of a book, so you cannot read one about superheroes or tell a story in pictures=title 只是书名，不能读一本关于超级英雄的书名，也不用图画讲故事|com · ic|one m, and c at the end|只有一个 m，结尾是 c
+      dictionary|looking up a word I don't know;English-Chinese;telling what words mean|a dictionary tells you what words mean; a comic tells a story in pictures|dictionary 解释词义；comic 用图画讲故事|comic/comics=comic tells a story in pictures, not what a word means=comic 用图画讲故事，不解释词义;title/titles=title is the name of a book, so you cannot look a word up in it=title 是书名，不能在书名里查词|dic · tion · ar · y|-ary at the end, and y changing to -ies|结尾是 -ary，复数 y 变 -ies
+      title|the name The Lost Cat;the name of your story;at the top of the page|a title is the name of a book or story; a project is school work|title 是书或故事的名字；project 是课题|project=project is school work you do over time, not a name like *The Lost Cat* written at the top=project 是一段时间做的课题，不是写在顶上的 *The Lost Cat* 这种名字;comic=comic is a book of picture stories, so a book or a story does not have a comic as its name=comic 是图画故事书，书或故事的名字不是漫画|ti · tle|i said like *eye*, and -le at the end|i 读作 *eye*，结尾是 -le
+      about|dinosaurs as the subject;a brave dog as the answer;my family|about tells the subject; from tells where something starts|about 说的是内容；from 说的是来自哪里|from=from tells where something comes from, not what a book, a story or a talk is on=from 说来自哪里，不说书、故事或谈话的内容;with=with means together with, not what a book, a story or a talk is on=with 是和……一起，不说书、故事或谈话的内容|a · bout|ou said like *out*|ou 读作 *out*
+      project|the sea with a big poster;science books;an art poster|a project is school work over some time; a title is a name|project 是一段时间完成的课题；title 是名字|title=title is the name of a book, not work for which you make a poster or need books=title 是书名，不是要做海报或要用书的功课;dictionary=dictionary tells what words mean, not class work about the sea or art with a poster=dictionary 解释词义，不是关于大海或美术、要做海报的课题|proj · ect|j in the middle, and ct at the end|中间是 j，结尾是 ct
+      bring|coming here tomorrow;coming to your party;a cake here to share|bring means you come here with it; take means you go away with it|bring 是带来这里；take 是带离这里|take/took=take is for going away from here, but *come* and *here* call for bring=take 用于从这里带走，可 *come* 和 *here* 要用 bring;give/gave=give means another person gets it, and *give a friend with me* or *gave a cake here* is not English=give 是让别人得到，没有 *give a friend with me* 或 *gave a cake here* 的说法|bring|the past *brought*, with ough|过去式是 *brought*，中间是 ough
+      take|an umbrella when I go out;the bus;my pencil away from my desk|take means away from here; bring means to here|take 是带离这里；bring 是带来这里|bring/brought=bring is for coming here, but going out, riding the bus and *away* go away from here=bring 用于来这里，可出门、坐公交车和 *away* 都是离开这里;give/gave=give means another person gets it, but nobody gets the umbrella, the bus or the pencil here=give 是让别人得到，可这里雨伞、公交车和铅笔都没交给别人|take|the past *took*|过去式是 *took*
+      give|the book from right next to me;my old bike so now it's hers;a turn on the swing|give means another person gets it; bring means you come here with it|give 是让别人得到；bring 是带来这里|take/took=take means you get it or carry it away, but here the book, the bike and the turn go to another person=take 是自己拿或带走，可这里书、自行车和机会都给了别人;bring/brought=bring means to come here with it, but the book is already next to me, the bike now belongs to her and a turn cannot be carried=bring 是带来这里，可书就在旁边，自行车已经归她了，机会也没法带来|give|a silent e, and the past *gave*|词尾 e 不发音，过去式是 *gave*
+      must|returning by Friday without being late;being quiet in the library;a helmet that keeps you safe|must means it is necessary; mustn't means do not do it|must 表示必须；mustn't 表示不许|can't=can't means it is not possible, but you are able to return a book, be quiet and wear a helmet=can't 是做不到，可还书、安静和戴头盔都做得到;mustn't=mustn't means do not do it, but being on time, being quiet and staying safe are things to do=mustn't 是不许做，可按时、安静和注意安全都是该做的|must|u said like the u in *up*|u 读作 *up* 里的 u
+      when|next Monday as the answer;bedtime;being little|when asks or tells about a time; where asks or tells about a place|when 问或说时间；where 问或说地点|where=where is about a place, but *next Monday*, *in bed* as a time and *I was little* are about time=where 说地点，可 *next Monday*、在床上的时候和 *I was little* 都是时间;what=what asks about a thing, and *what is the book due* or *what I was little* is not English=what 问东西，没有 *what is the book due* 或 *what I was little* 的说法|when|wh at the start, with a silent h|开头是 wh，h 不发音
+    `,
+  },
 });
 
 // Me, him, her and them.

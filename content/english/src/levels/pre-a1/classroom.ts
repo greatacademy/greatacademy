@@ -10,165 +10,230 @@ const classroom = vocabularyTopic({
   id: "pre-a1-words-classroom",
   title: t("The Classroom", "教室"),
   summary: t("The things and people of a classroom.", "教室里的东西和人。"),
+  intro: t(
+    'In the **classroom**, the **teacher** says: "Take out a **pencil** and a **ruler**, and draw a straight line." These words help you name the things and people you meet at school.',
+    "在 **classroom**（教室）里，**teacher**（老师）说：“拿出 **pencil**（铅笔）和 **ruler**（尺子），画一条直线。”这些词帮你说出在学校遇到的东西和人。",
+  ),
   prerequisites: [],
   words: [
     word(
       "book books",
       "pages with words and pictures to read, inside a cover",
       "书",
-      "I read a {book} about cats.|pen chair | Open your {books} to page ten.|pens chairs | This {book} has many pictures and stories.|ruler chair",
+      "I read a {book} about cats. | Open your {books} to page ten.|pens chairs | This {book} has many pictures and stories.",
       "pen chair",
     ),
     word(
       "pen pens",
       "a thing you write with in ink",
       "钢笔；笔",
-      "I write my name with a {pen}.|desk book | My {pen} has blue ink.|ruler desk | Can I have a {pen}? I want to write.|chair desk",
-      "desk book",
+      "I write my name in ink with a {pen}. | My {pen} has blue ink. | Can I have a {pen}? Mine has no ink.",
+      "pencil ruler",
     ),
     word(
       "pencil pencils",
       "a thing you write or draw with; you can rub out what it makes",
       "铅笔",
-      "I draw with a {pencil}.|chair bag | Use a {pencil}, so you can rub it out.|pen ruler | My {pencils} are in my bag. They are not sharp.|chairs desks",
-      "chair bag",
+      "My {pencil} is gray and has an eraser at the end. | Use a {pencil}, so you can rub it out. | My {pencils} are in my bag. They are not sharp.|pens erasers",
+      "pen eraser",
     ),
     word(
       "bag bags",
       "a thing you carry your books in",
       "书包；包",
-      "Put your books in your {bag}.|desk pen | My school {bag} is heavy.|ruler pencil | I carry my {bag} to school.|desk chair",
-      "desk pen",
+      "Put your books in your {bag}, and take it home. | My school {bag} is heavy on my back. | I carry my {bag} to school.",
+      "desk chair",
     ),
     word(
       "desk desks",
       "a table you work or write at",
       "书桌；课桌",
-      "My book is on my {desk}.|pen ruler | Sit at your {desk}, please.|bag pencil | There are thirty {desks} in our classroom.|teachers schools",
-      "pen ruler",
+      "I do my homework at my {desk}. | Sit at your {desk}, please. | There are thirty {desks} in our classroom, and each one has a chair.|chairs bags",
+      "chair bag",
     ),
     word(
       "chair chairs",
       "a seat for one person, with legs and a back",
       "椅子",
-      "Sit on the {chair}.|pen ruler | The {chair} has four legs and a back.|pen ruler | Please put your {chair} under the desk.|teacher school",
-      "pen ruler",
+      "Sit on the {chair}, not on the desk. | The {chair} has four legs and a back. | Please put your {chair} under the desk.",
+      "desk bag",
     ),
     word(
       "ruler rulers",
       "a long, flat thing for drawing straight lines",
       "尺子",
-      "Draw a line with a {ruler}.|chair bag | Use a {ruler} to draw a straight line.|chair teacher | This {ruler} is long and flat. It has numbers on it.|chair bag",
-      "chair bag",
+      "Put your {ruler} on the paper and draw a straight line along it. | How long is your book? Use a {ruler}. | This {ruler} is long and flat. It has numbers on it.",
+      "eraser pencil",
     ),
     word(
       "eraser erasers",
       "a small thing for rubbing out pencil marks",
       "橡皮",
-      "Oops! A mistake. Can I use your {eraser}?|ruler chair | Rub it out with an {eraser}.|ruler desk | My {eraser} is small and pink. It rubs out pencil.|ruler desk",
-      "ruler chair",
+      "Oops! A mistake. Can I use your {eraser} to rub it out? | Rub it out with an {eraser}. | My {eraser} is small and pink. It rubs out pencil.",
+      "ruler pencil",
     ),
     word(
       "teacher teachers",
       "a person who helps you learn at school",
       "老师",
-      "Ms. Li is our English {teacher}.|book school | Listen to your {teacher}.|book desk | The {teachers} are in the classroom with the children.|books schools",
+      "Ms. Li is our English {teacher}. | Listen to your {teacher}. | The {teachers} are in the classroom with the children.|books schools",
       "book school",
     ),
     word(
       "school schools",
       "a place where children go to learn",
       "学校",
-      "I go to {school} at eight.|teacher desk | My {school} is big. It has many classrooms.|teacher desk | Children learn at {school}.|teacher desk",
-      "teacher desk",
+      "I go to {school} at eight. | My {school} is big. It has many classrooms. | Children learn at {school}.",
+      "classroom teacher",
     ),
     word(
       "classroom classrooms",
       "a room in a school where a class learns",
       "教室",
-      "Our {classroom} has thirty desks.|teacher pen | The children are in the {classroom}.|teacher pencil | Our school has twenty {classrooms} for twenty classes.|pens rulers",
-      "teacher pen",
+      "Our {classroom} is room 5 in the school. | This {classroom} is for our class, and that one is for Class 2. | Our school has twenty {classrooms} for twenty classes.|schools teachers",
+      "school teacher",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Read what the thing is used for: you write in ink with a *pen*, rub out with an *eraser*, draw straight lines with a *ruler* and carry books in a *bag*.",
+        "看清东西的用途：用 *pen* 写出墨水字，用 *eraser* 擦掉，用 *ruler* 画直线，用 *bag* 装书。",
+      ),
+      meaning: t(
+        "*School* is the whole place; a *classroom* is one room in it. A *desk* is where you work, a *chair* where you sit.",
+        "*school* 是整个学校；*classroom* 是其中的一个房间。*desk* 是做功课的桌子，*chair* 是坐的椅子。",
+      ),
+      spell: t(
+        "*Pencil* ends in -cil, not -sil; *eraser* has an s said like z; and *classroom* is one word with a double s.",
+        "*pencil* 结尾是 -cil，不是 -sil；*eraser* 里的 s 读作 z；*classroom* 是一个词，有双写 s。",
+      ),
+    },
+    notes: `
+      book|a story about cats;pages to open to page ten;pictures and stories inside a cover|a book has pages to read; a pen is for writing|book 有页可以读；pen 用来写字|pen=pen is a thing you write with, not pages with words and pictures to read=pen 是写字用的笔，不是有字有图可以读的书;chair=chair is a seat for one person, not pages to read=chair 是一个人坐的椅子，不是可以读的书|book|the double o, said like the oo in *look*|两个 o，读音和 *look* 里的 oo 一样
+      pen|writing a name in ink;blue ink;a thing with no ink left|a pen writes in ink; a pencil writes in gray and can be rubbed out|pen 写出墨水字；pencil 写出灰色的字，可以擦掉|pencil=pencil writes in gray that you can rub out, not in ink=pencil 写出可以擦掉的灰色字，不用墨水;ruler=ruler is a flat thing for drawing straight lines, not a thing with ink=ruler 是画直线的扁平尺子，里面没有墨水|pen|the short e, as in *ten*|短元音 e，和 *ten* 一样
+      pencil|a gray thing with an eraser at the end;something you can rub out;things in a bag that are not sharp|you can rub out what a pencil makes; a pen writes in ink that stays|pencil 写的可以擦掉；pen 写的是擦不掉的墨水字|pen=pen writes in ink, so you cannot rub out what it makes, and it is never sharp=pen 写的是墨水字，擦不掉，也不会是尖的;eraser=eraser rubs marks out, it does not write or draw them=eraser 是擦掉痕迹的，不能写字画画|pen · cil|the ending -cil, not -sil|结尾是 -cil，不是 -sil
+      bag|putting books in it to take home;a heavy one on your back;carrying it to school|a bag is for carrying books; a desk is a table that stays in the classroom|bag 用来装书带着走；desk 是留在教室里的桌子|desk=desk is a table you work at, too big to carry or wear on your back=desk 是做功课的桌子，太大了，不能背着带走;chair=chair is a seat for one person, not a thing you carry books in=chair 是一个人坐的椅子，不是装书的东西|bag|the short a, and g at the end|短元音 a，结尾是 g
+      desk|doing homework;where you sit at, please;thirty of them, each with a chair|you work at a desk; you sit on a chair|desk 是做功课的桌子；chair 是坐的椅子|chair=chair is the seat you sit on, not the table you work and write at=chair 是坐的椅子，不是写字做功课的桌子;bag=bag is a thing you carry books in, not a table you work at=bag 是装书的包，不是做功课的桌子|desk|sk at the end|结尾是 sk
+      chair|a seat, not a desk;four legs and a back;something put under a desk|a chair is a seat with a back; a desk is a table|chair 是有靠背的椅子；desk 是桌子|desk=desk is a table you work at, with no back to lean on, not a seat=desk 是做功课的桌子，没有靠背，不是坐的;bag=bag is a thing you carry books in, not a seat with legs=bag 是装书的包，不是有腿的椅子|chair|ch at the start and air at the end|开头是 ch，结尾是 air
+      ruler|a straight line drawn along it;finding how long a book is;a long, flat thing with numbers|a ruler draws straight lines; an eraser rubs lines out|ruler 用来画直线；eraser 用来擦掉线|eraser=eraser rubs pencil marks out, it does not draw lines or have numbers=eraser 用来擦掉铅笔痕迹，不能画线，上面也没有数字;pencil=pencil writes and draws, but it has no numbers to show how long things are=pencil 用来写和画，上面没有显示长度的数字|ru · ler|the ending -er, not -ar|结尾是 -er，不是 -ar
+      eraser|rubbing out a mistake;rubbing something out;a small pink thing that rubs out pencil|an eraser rubs marks out; a pencil makes them|eraser 擦掉痕迹；pencil 写出痕迹|ruler=ruler is for drawing straight lines, not for rubbing marks out=ruler 用来画直线，不是擦痕迹的;pencil=pencil makes marks, it does not rub them out=pencil 写出痕迹，不能擦掉痕迹|e · ra · ser|the s in the middle, said like z|中间的 s 读作 z
+      teacher|our English one, Ms. Li;someone you listen to;people in the classroom with the children|a teacher is a person; a school is a place|teacher 是人；school 是地方|book=book is a thing with pages to read, not a person who helps you learn=book 是可以读的书，不是帮你学习的人;school=school is a place, not a person who helps you learn=school 是地方，不是帮你学习的人|tea · cher|ea in the middle and -er at the end|中间是 ea，结尾是 -er
+      school|going there at eight;a big place with many classrooms;where children learn|a school is the whole place; a classroom is one room in it|school 是整个学校；classroom 是其中一间|classroom=classroom is one room in a school, and it needs *the* or *my* before it, not the whole place you go to=classroom 只是学校里的一间教室，前面要加 *the* 或 *my*，不是你去上学的整个地方;teacher=teacher is a person who helps you learn, not a place=teacher 是帮你学习的人，不是地方|school|sch said like *sk*|sch 读作 *sk*
+      classroom|room 5 in the school;a room for our class and one for Class 2;twenty rooms for twenty classes|a classroom is one room; a school has many of them|classroom 是一间教室；school 里有很多间|school=school is the whole place with many rooms, not one room for a class=school 是有很多房间的整个学校，不是一个班的一间教室;teacher=teacher is a person, not a room=teacher 是人，不是房间|class · room|one word: *class* with a double s, then *room*|是一个词：双写 s 的 *class* 加上 *room*
+    `,
+  },
 });
 
 const thisAndThat = vocabularyTopic({
   id: "pre-a1-words-this-and-that",
   title: t("This, That, Here and There", "this、that、here 和 there"),
   summary: t("Words for near and far, and for places: in, on, under and where.", "表示远近和位置的词：in、on、under 和 where。"),
+  intro: t(
+    "**This** is my pen, **here** in my hand, and **that** is your bag, over **there** by the door. These words help you show what is near and far and where things are.",
+    "**This**（这）是我的笔，**here**（这里）在我手里；**that**（那）是你的包，在门边 **there**（那里）。这些词帮你指出远近，说出东西在哪里。",
+  ),
   prerequisites: ["pre-a1-words-i-and-you"],
   words: [
     word(
       "this",
       "the one thing near you",
       "这；这个",
-      "{This} is my pen, here in my hand.|Those These | Look at {this} book in my hand.|these those | {This} is my friend Sam, next to me.|These Those",
-      "those these",
+      "{This} is my pen, here in my hand. | Look at {this} book in my hand. | {This} is my friend Sam, next to me.",
+      "that these",
     ),
     word(
       "that that's",
       "the one thing over there, not near you",
       "那；那个",
-      "Look at {that} bird up in the sky!|these this | {That's} my house, over there.|These Those | What is {that}, over there?|these this",
-      "these this",
+      "Look at {that} bird up in the sky! | {That} is my house, over there.|This Those | What is {that}, over there?",
+      "this those",
     ),
     word(
       "these",
       "the things near you, more than one",
       "这些",
-      "{These} are my pens, here on my desk.|That This | Look at {these} pictures in my book.|that this | Are {these} your shoes, here by the door?|that this",
-      "that this",
+      "{These} are my pens, here on my desk. | Look at {these} pictures here in my book. | Are {these} your shoes, here by the door?",
+      "those this",
     ),
     word(
       "those",
       "the things over there, more than one",
       "那些",
-      "{Those} are my friends, over there.|This That | Look at {those} birds in the tree!|this that | Are {those} your bags, over there?|this that",
-      "this that",
+      "{Those} are my friends, over there. | Look at {those} birds, far away in the tree! | Are {those} your bags, over there?",
+      "these that",
     ),
     word(
       "here",
       "in this place, near me",
       "这里",
-      "Come {here}, please. Sit next to me.|there under | Your pen is {here}, in my hand.|there under | {Here} is your book.|Under Where",
-      "there under",
+      "Come {here}, please. Sit next to me. | Your pen is {here}, in my hand. | {Here} is your book. Take it from my hand.",
+      "there where",
     ),
     word(
       "there there's",
       "in that place, not near me; also in *there is* and *there are*",
       "那里；（用在 there is 中）有",
-      "Your bag is over {there}, by the door.|here this | {There's} a cat on the bed.|Where's Its | Look over {there}! It's a big bird.|here this",
-      "here this",
+      "Your bag is not here. It is over {there}, by the door. | {There's} a cat on the bed.|Here's Where's | Look over {there}, far away! It's a big bird.",
+      "here where",
     ),
     word(
       "in",
       "inside something",
       "在……里面",
-      "I am {in} the classroom.|on under | The milk is {in} the cup.|under at | Ben is {in} bed. He is sleeping.|on under",
+      "I am {in} the classroom. | The milk is {in} the cup. | Ben is {in} bed. He is sleeping.",
       "on under",
     ),
     word(
       "on",
       "touching the top or the side of something",
       "在……上面",
-      "The picture is {on} the wall.|in under | There is a hat {on} his head.|in under | Write your name {on} the paper.|in under",
+      "The picture is {on} the wall. | There is a hat {on} his head. | Write your name {on} the paper.",
       "in under",
     ),
     word(
       "under",
       "below something",
       "在……下面",
-      "The dog sleeps {under} the table. It's dark there.|on at | My feet are {under} the desk.|on of | It's raining! Come {under} my umbrella.|on at",
+      "The dog sleeps {under} the table. It's dark there. | My feet are {under} the desk, on the floor. | It's raining! Come {under} my umbrella.",
       "on in",
     ),
     word(
       "where where's",
       "the word you use to ask about a place",
       "在哪里",
-      "{Where} is my pen? It's in your bag.|What Who | {Where's} Dad? He's in the garden.|What's Who's | {Where} are you? I'm here!|What Who",
+      "{Where} is my pen? It's in your bag. | {Where's} Dad? He's in the garden.|What's Who's | {Where} are you? I'm here!",
       "what who",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Look for *here* or *over there* in the sentence: near things take *this* and *these*, far things take *that* and *those*.",
+        "找句子里的 *here* 或 *over there*：近处的用 *this*、*these*，远处的用 *that*、*those*。",
+      ),
+      meaning: t(
+        "*This* and *that* are for one thing, *these* and *those* for more than one. Check two things in the meaning: near or far, and one or more.",
+        "*this* 和 *that* 指一个，*these* 和 *those* 指多个。看释义里的两点：近还是远，一个还是多个。",
+      ),
+      spell: t(
+        "*These* and *those* both end in a silent e, and *there* and *where* both end in -ere, not -air.",
+        "*these* 和 *those* 都以不发音的 e 结尾，*there* 和 *where* 都以 -ere 结尾，不是 -air。",
+      ),
+    },
+    notes: `
+      this|one pen here in my hand;one book in my hand;one friend next to me|this is one thing near you; that is one thing far away|this 指近处的一个；that 指远处的一个|that=that is for one thing over there, but this thing is near you=that 指远处的一个，可这个东西就在你身边;these=these is for more than one thing, but here there is only one=these 指多个，可这里只有一个|this|th at the start and s at the end|开头是 th，结尾是 s
+      that|one bird up in the sky;one house over there;one thing over there|that is one thing far away; this is one thing near you|that 指远处的一个；this 指近处的一个|this=this is for one thing near you, but this thing is far away=this 指近处的一个，可这个东西在远处;those=those is for more than one thing, but here there is only one=those 指多个，可这里只有一个|that|th at the start and a short a|开头是 th，a 发短音
+      these|pens here on my desk;pictures here in my book;shoes here by the door|these are things near you; those are things far away|these 指近处的多个；those 指远处的多个|those=those is for things over there, but these things are near you=those 指远处的多个，可这些东西就在身边;this=this is for one thing, but here there are more than one=this 只指一个，可这里不止一个|these|ee said as long e, spelled e and a silent e at the end|长 e 音拼作 e，词尾 e 不发音
+      those|friends over there;birds far away in a tree;bags over there|those are things far away; these are things near you|those 指远处的多个；these 指近处的多个|these=these is for things near you, but these things are far away=these 指近处的多个，可这些东西在远处;that=that is for one thing, but here there are more than one=that 只指一个，可这里不止一个|those|o says its name, with a silent e at the end|o 读字母本音，词尾 e 不发音
+      here|coming to sit next to me;a pen in my hand;a book I give from my hand|here is the place near me; there is a place away from me|here 是我身边；there 是离我远的地方|there=there is a place away from me, not right next to me or in my hand=there 是离我远的地方，不是我身边或我手里;where=where asks about a place, it does not tell one=where 是问地点的，不是说出地点|here|ere at the end, said like *ear*|结尾是 ere，读音像 *ear*
+      there|a bag by the door, not here;a cat on the bed;a big bird far away|there is a place away from me; here is near me|there 是远处；here 是我身边|here/here's=here is the place near me, not a place far away=here 是我身边，不是远处;where/where's=where asks about a place, it does not tell one or say that something is there=where 是问地点的，不是说出地点，也不表示有什么东西|there|t and h, then ere, the same ending as *where*|t 和 h 后面是 ere，结尾和 *where* 一样
+      in|being inside the classroom;milk inside a cup;lying in bed asleep|in means inside; on means on top|in 是在里面；on 是在上面|on=on means touching the top of something, not inside it=on 是在东西的表面上，不是在里面;under=under means below something, not inside it=under 是在东西下面，不是在里面|in|just i and n|只有 i 和 n
+      on|a picture touching the wall;a hat on top of a head;a name on paper|on means touching the top or side; in means inside|on 是在表面上；in 是在里面|in=in means inside something, not touching its top or side=in 是在里面，不是在表面上;under=under means below something, not on its top=under 是在下面，不是在上面|on|just o and n, not *no*|只有 o 和 n，别写成 *no*
+      under|a dog in the dark below a table;feet on the floor below a desk;keeping dry below an umbrella|under means below; on means on top|under 是在下面；on 是在上面|on=on means touching the top of something, not below it=on 是在东西上面，不是在下面;in=in means inside something, not below it=in 是在里面，不是在下面|un · der|the ending -er|结尾是 -er
+      where|asking for a pen's place;asking for Dad's place;asking for your place|where asks about a place; what asks about a thing|where 问地点；what 问东西|what/what's=what asks about a thing, but the answer here tells a place=what 问的是东西，可回答说的是地点;who/who's=who asks about a person, but the answer here tells a place=who 问的是人，可回答说的是地点|where|wh at the start, with a silent h, and ere at the end|开头是 wh，h 不发音，结尾是 ere
+    `,
+  },
 });
 
 const classroomActions = vocabularyTopic({
@@ -178,79 +243,111 @@ const classroomActions = vocabularyTopic({
     "The verbs of classroom commands: open, close, sit, stand, look, listen, read, write, draw and do.",
     "课堂指令中的动词：open、close、sit、stand、look、listen、read、write、draw 和 do。",
   ),
+  intro: t(
+    '"**Stand** up, please. **Open** your books and **look** at page six!" These words help you follow what the teacher asks you to do in class.',
+    "“请 **stand**（站）起来。**open**（打开）书，**look**（看）第六页！”这些词帮你听懂老师在课上让你做什么。",
+  ),
   prerequisites: ["pre-a1-words-classroom"],
   words: [
     word(
       "open opens opened opening",
       "to move a door, a book or a box so you can go in or see inside",
       "打开",
-      "{Open} your books to page five.|Close Sit | It's hot. Please {open} the window.|close sit | She {opens} the box and finds a cat inside.|closes sits",
+      "{Open} your books to page five. | It's hot. Please {open} the window. | She {opens} the box and finds a cat inside.|closes sits",
       "close sit",
     ),
     word(
       "close closes closed closing",
       "to shut a door, a book or a box",
       "关上；合上",
-      "It's cold. Please {close} the door.|open stand | {Close} your eyes and go to sleep.|Open Draw | The shop {closes} at six. Then it is not open.|opens sits",
+      "It's cold. Please {close} the door. | {Close} your eyes and go to sleep. | The shop {closes} at six. Then it is not open.|opens stands",
       "open stand",
     ),
     word(
       "sit sits sat sitting",
       "to rest on a chair",
       "坐",
-      "{Sit} down on your chair, please.|Stand Look | I {sit} next to Lily in class.|open close | The cat is {sitting} on the chair.|opening closing",
+      "{Sit} down on your chair, please. | I {sit} on a chair next to Lily in class. | The tired cat is {sitting} down on the chair.|standing opening",
       "stand open",
     ),
     word(
       "stand stands stood standing",
       "to be on your feet",
       "站",
-      "{Stand} up, please, and say your name.|Sit Close | We {stand} in a line at the door.|close open | Tom is {standing} on one leg.|closing opening",
+      "{Stand} up, please, and say your name. | We {stand} in a line at the door, ready to go out. | Tom is {standing} on one leg.|sitting closing",
       "sit close",
     ),
     word(
       "look looks looked looking",
       "to turn your eyes to see something",
       "看",
-      "{Look} at the picture on page six.|Listen Sit | {Look}! A big bird in the sky!|Sit Close | She {looks} at the board.|listens opens",
-      "listen sit",
+      "{Look} at the picture on page six. | {Look} up! A big bird in the sky! | She {looks} at the board.|listens sees",
+      "listen see",
     ),
     word(
       "listen listens listened listening",
       "to try to hear something",
       "听",
-      "{Listen} to the song.|Look Open | Please {listen} to your teacher.|look draw | I {listen} to music in my room.|look sit",
+      "{Listen} to the song. | Please {listen} to your teacher. | I {listen} to music in my room.",
       "look open",
     ),
     word(
       "read reads reading",
       "to look at words and understand them",
       "读；阅读",
-      "I {read} a book before bed.|listen sit | Can you {read} this word?|listen sit | She is {reading} a story.|listening sitting",
-      "listen sit",
+      "I {read} a book before bed. | Please {read} this word out loud. | She is {reading} a story that her grandpa wrote.|writing listening",
+      "write listen",
     ),
     word(
       "write writes wrote written writing",
       "to make letters and words with a pen or pencil",
       "写",
-      "{Write} your name at the top.|Sit Listen | I {write} with my right hand.|listen sit | Tom {wrote} a letter to his grandma.|sat stood",
-      "listen sit",
+      "{Write} your name at the top. | I {write} words with my pen. | Tom {wrote} a letter and sent it to his grandma.|drew read",
+      "draw read",
     ),
     word(
       "draw draws drew drawn drawing",
       "to make a picture with a pencil or pen",
       "画",
-      "{Draw} a cat in your book.|Listen Sit | I like to {draw} pictures of animals.|listen sit | She {drew} a big red sun.|read sat",
-      "listen sit",
+      "{Draw} a cat in your book. | I like to {draw} pictures of animals. | She {drew} a big red sun.|wrote read",
+      "write read",
     ),
     word(
       "do does did done doing don't doesn't didn't",
       "to act, or to make something happen",
       "做；干",
-      "What are you {doing}? I'm reading.|sitting looking | I {do} my homework after school.|sit look | {Don't} run in the classroom!|Doesn't Isn't | She {doesn't} like milk.|don't isn't",
-      "sit look",
+      "What are you {doing}? I'm reading.|making being | I {do} my homework after school.|make am | {Don't} run in the classroom!|Doesn't Isn't | She {doesn't} like milk.|don't isn't",
+      "make be",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Many orders start with the verb, so check what comes after it: *the door* goes with *open* or *close*, *to the song* with *listen*, *at the picture* with *look*.",
+        "很多指令以动词开头，所以要看它后面的词：*the door* 搭配 *open* 或 *close*，*to the song* 搭配 *listen*，*at the picture* 搭配 *look*。",
+      ),
+      meaning: t(
+        "*Look* and *listen* are a pair: *look* uses your eyes, *listen* your ears. *Read* is for words someone wrote, *draw* is for making pictures.",
+        "*look* 和 *listen* 是一对：*look* 用眼睛，*listen* 用耳朵。*read* 是读别人写的字，*draw* 是画画。",
+      ),
+      spell: t(
+        "Several of these verbs change in the past: *sat*, *stood*, *wrote*, *drew*, *did*. *Listen* has a silent t and *write* a silent w.",
+        "这些动词有几个过去式不规则：*sat*、*stood*、*wrote*、*drew*、*did*。*listen* 里的 t 不发音，*write* 里的 w 不发音。",
+      ),
+    },
+    notes: `
+      open|books turned to page five;a window on a hot day;a box with a cat inside|you open something to see or go inside; you close it to shut it|open 是打开；close 是关上|close/closes=close means to shut something, the opposite of open=close 是关上，和 open 意思相反;sit/sits=sit means to rest on a chair, not to move a door, a book or a box=sit 是坐在椅子上，不是打开门、书或盒子|o · pen|o says its name, and the ending -en|o 读字母本音，结尾是 -en
+      close|a door on a cold day;eyes before sleep;a shop at six that is not open|close means to shut; open means the opposite|close 是关上；open 正好相反|open/opens=open means to move something so you can see or go inside, the opposite of close=open 是打开，和 close 意思相反;stand/stands=stand means to be on your feet, not to shut a door, a book or a box=stand 是站着，不是关上门、书或盒子|close|s said like z, and a silent e at the end|s 读作 z，词尾 e 不发音
+      sit|sitting down on a chair;a chair next to Lily;a tired cat on a chair|you sit on a chair; you stand on your feet|sit 是坐在椅子上；stand 是站着|stand/standing=stand means to be up on your feet, not to rest on a chair=stand 是站着，不是坐在椅子上;open/opening=open means to move a door or a book so you can see inside, not to rest on a chair=open 是打开门或书，不是坐着|sit|the past *sat*, and the double t in *sitting*|过去式是 *sat*，*sitting* 双写 t
+      stand|getting up to say your name;a line at the door, ready to go out;Tom on one leg|you stand on your feet; you sit on a chair|stand 是站着；sit 是坐在椅子上|sit/sitting=sit means to rest on a chair, not to be up on your feet=sit 是坐在椅子上，不是站着;close/closing=close means to shut a door or a book, not to be on your feet=close 是关上门或书，不是站着|stand|nd at the end, and the past *stood*|结尾是 nd，过去式是 *stood*
+      look|a picture on page six;a big bird up in the sky;the board|you look with your eyes; you listen with your ears|look 用眼睛看；listen 用耳朵听|listen/listens=listen means to try to hear something with your ears, not to turn your eyes to it=listen 是用耳朵听，不是用眼睛看;see/sees=see means something comes into your eyes, and it does not go with *at* or *up* the way look does=see 是看见，不能像 look 那样搭配 *at* 或 *up*|look|the double o, said like the oo in *book*|两个 o，读音和 *book* 里的 oo 一样
+      listen|a song;your teacher;music in my room|you listen with your ears; you look with your eyes|listen 用耳朵听；look 用眼睛看|look=look means to turn your eyes to something, not to try to hear it=look 是用眼睛看，不是用耳朵听;open=open means to move a door or a book so you can see inside, not to hear something=open 是打开门或书，不是听|lis · ten|the silent t in the middle|中间的 t 不发音
+      read|a book before bed;a word said out loud;a story her grandpa wrote|you read words that are already there; you write new ones|read 是读已有的字；write 是写新的字|write/writing=write means to make new letters and words, not to look at words and understand them=write 是写出新的字，不是读懂已有的字;listen/listening=listen means to try to hear something, not to look at words=listen 是用耳朵听，不是看字|read|ea for the long e sound now; in the past it is spelled the same but said *red*|ea 发长 e 音；过去式拼法不变，但读作 *red*
+      write|your name at the top;words made with a pen;a letter sent to grandma|you write letters and words; you draw pictures|write 写字；draw 画画|draw/drew=draw means to make a picture, not letters and words=draw 是画画，不是写字;read=read means to look at words and understand them, not to make them=read 是读懂字，不是写字|write|the silent w at the start, and the past *wrote*|开头的 w 不发音，过去式是 *wrote*
+      draw|a cat in your book;pictures of animals;a big red sun|you draw pictures; you write words|draw 画画；write 写字|write/wrote=write means to make letters and words, not a picture=write 是写字，不是画画;read=read means to look at words and understand them, not to make a picture=read 是读懂字，不是画画|draw|aw at the end, and the past *drew*|结尾是 aw，过去式是 *drew*
+      do|what you are busy with now;homework after school;an order not to run;milk she does not like|you do homework and actions; you make things like a cake|do 用于做作业和做事；make 用于做出东西，比如蛋糕|make/making=make means to build or cook something new, and we say *do my homework*, not *make my homework*=make 是做出新东西，作业要说 *do my homework*，不说 *make my homework*;be/am/being/is/isn't=be tells what or how someone is, and it cannot go before a doing word like *run* or *like*=be 说的是是什么或怎么样，不能放在 *run*、*like* 这类动作词前面;doesn't=doesn't goes with he, she or it, but an order is said to you=doesn't 跟 he、she、it 连用，可命令是对 you 说的;don't=don't goes with I, you, we and they, but here the person is she=don't 跟 I、you、we、they 连用，可这里的人是 she|do|*does* for he, she and it, and the apostrophe in *don't* and *doesn't*|he、she、it 后面用 *does*；*don't* 和 *doesn't* 要加撇号
+    `,
+  },
 });
 
 // This, that, these and those.

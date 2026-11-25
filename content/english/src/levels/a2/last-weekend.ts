@@ -14,27 +14,31 @@ const pastTime = vocabularyTopic({
     "Yesterday, ago, once, recently, soon, suddenly, finally, during, while and until.",
     "yesterday、ago、once、recently、soon、suddenly、finally、during、while 和 until。",
   ),
+  intro: t(
+    "**Yesterday** we waited an hour for the bus, and it **finally** came; then **suddenly** it started to rain, so we stayed inside **until** it stopped. These words help you say when things happened and in what order.",
+    "**Yesterday**（昨天）我们等了一个小时公交车，车 **finally**（终于）来了；接着 **suddenly**（突然）下起雨来，我们就待在屋里，**until**（直到）雨停。这些词帮你说出事情是什么时候、按什么顺序发生的。",
+  ),
   prerequisites: ["a1-words-time"],
   words: [
     word(
       "yesterday",
       "the day before today",
       "昨天",
-      "I saw Tom {yesterday}.|tomorrow ago | {Yesterday} was Sunday, so today is Monday.|Tomorrow Soon | Where were you {yesterday} afternoon?|tomorrow soon",
+      "I saw Tom {yesterday}. | {Yesterday} was Sunday, so today is Monday. | Where were you {yesterday} afternoon?",
       "tomorrow ago",
     ),
     word(
       "ago",
       "back in time from now, after a number of days or years",
       "以前",
-      "We moved here two years {ago}.|until during | I had lunch an hour {ago}.|until soon | My grandpa was born a long time {ago}.|until while",
+      "We moved here two years {ago}. | I had lunch an hour {ago}. | My grandpa was born a long time {ago}.",
       "until soon",
     ),
     word(
       "once",
       "one time; at one time in the past",
       "一次；曾经",
-      "I went to Beijing {once}, when I was six.|ago until | We eat out {once} a week.|ago during | {Once}, a man lived in a small house by the sea.|Ago Until",
+      "I went to Beijing {once}, when I was six. | We eat out {once} a week. | {Once}, a man lived in a small house by the sea.",
       "ago until",
       "recently",
     ),
@@ -42,53 +46,81 @@ const pastTime = vocabularyTopic({
       "recently",
       "not long ago",
       "最近",
-      "Have you seen any good films {recently}?|soon tomorrow | We {recently} moved to a new flat.|tomorrow ago | My aunt got married {recently}, in May.|tomorrow until",
+      "Have you seen any good films {recently}? | We have {recently} moved to a new flat, and we love it. | My aunt got married {recently}: just last month.",
       "tomorrow soon",
     ),
     word(
       "soon",
       "in a short time from now",
       "很快；不久",
-      "Hurry up! The bus will come {soon}.|ago yesterday | See you {soon}!|ago yesterday | It will be dark {soon}, so let's go home.|ago yesterday",
+      "Hurry up! The bus will come {soon}. | See you {soon}! | It will be dark {soon}, so let's go home.",
       "ago yesterday",
     ),
     word(
       "suddenly",
       "quickly, when you do not expect it",
       "突然",
-      "We were walking home when {suddenly} it started to rain.|once ago | The lights went out {suddenly}.|ago until | The dog {suddenly} ran into the road.|ago until",
-      "ago until",
+      "We were walking home when {suddenly}, with no warning, it started to rain. | The lights went out {suddenly}, and we were all surprised. | The dog {suddenly} ran into the road, and the driver didn't expect it.",
+      "finally recently",
     ),
     word(
       "finally",
       "at the end, after a long time",
       "终于；最后",
-      "We waited an hour, and the bus {finally} came.|ago until | After three tries, she {finally} passed the test.|ago until | {Finally}, we got home at midnight.|Ago Until",
-      "ago during",
+      "We waited and waited, and after an hour the bus {finally} came. | After three tries, she {finally} passed the test. | {Finally}, after a long drive, we got home at midnight.",
+      "suddenly soon",
     ),
     word(
       "during",
       "in the time of something",
       "在……期间",
-      "Don't talk {during} the test.|while ago | I fell asleep {during} the film.|while until | We stayed inside {during} the rain.|while ago",
-      "while ago",
+      "Don't talk {during} the test: stay quiet from start to end. | I fell asleep {during} the film. | We stayed inside {during} the rain and went out after it stopped.",
+      "while until",
       "while",
     ),
     word(
       "while",
       "in the time that something else is happening",
       "当……的时候",
-      "I listen to music {while} I cook.|during ago | Someone called {while} you were out.|during ago | Please wait here {while} I buy the tickets.|during ago",
-      "during ago",
+      "I listen to music {while} I cook, so I do both at the same time. | Someone called {while} you were out. | Can you watch the children {while} I am in the shop?",
+      "during until",
     ),
     word(
       "until",
       "up to the time when",
       "直到",
-      "Wait here {until} I come back.|during ago | The shop is open {until} nine o'clock.|during ago | We played {until} it got dark.|during ago",
-      "during ago",
+      "Wait here {until} I come back. | The shop is open {until} nine o'clock. | We played outside {until} it got dark, and then we went home.",
+      "while since",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*During* comes before a noun, as in *during the film*, and *while* comes before a whole action with its own doer, as in *while I cook*. Check what follows the gap.",
+        "*during* 后面接名词，如 *during the film*；*while* 后面接带主语的完整动作，如 *while I cook*。看空格后面接的是什么。",
+      ),
+      meaning: t(
+        "*Suddenly* and *finally* both tell when something happened: *suddenly* is when nobody expected it, and *finally* is at the end of a long wait or many tries.",
+        "*suddenly* 和 *finally* 都说明事情发生的时间：*suddenly* 是谁都没想到的时候，*finally* 是等了很久或试了很多次之后。",
+      ),
+      spell: t(
+        "*Recently* keeps the t of *recent* before -ly, and *suddenly* has a double d but one l: sud · den · ly.",
+        "*recently* 在 -ly 前保留 *recent* 的 t；*suddenly* 双写 d，结尾只有一个 l：sud · den · ly。",
+      ),
+    },
+    notes: `
+      yesterday|seeing Tom;Sunday before Monday;where someone was in the afternoon|yesterday is the day before today; tomorrow is the day after|yesterday 是昨天；tomorrow 是明天|tomorrow=tomorrow is the day after today, so it never goes with past words like *saw*, *was* or *were*=tomorrow 是明天，不和 *saw*、*was*、*were* 这类过去的词连用;ago=ago comes after a length of time, as in *two days ago*, and never stands alone=ago 放在一段时间后面，如 *two days ago*，不能单独用|yesterday afternoon · the day before yesterday|yes + ter + day, with -day at the end|yes + ter + day，结尾是 -day
+      ago|moving two years back;lunch an hour back;a grandpa born long back|ago comes after a length of time back from now; until means up to a time|ago 放在一段时间后，表示多久以前；until 是直到|until=until means up to a time and comes before it, as in *until nine*, never after *two years* or *an hour*=until 是直到，放在时间前面，如 *until nine*，不放在 *two years*、*an hour* 后面;soon=soon means in a short time from now, so it never goes with past words like *moved*, *had* or *was born*=soon 是不久以后，不和 *moved*、*had*、*was born* 这类过去的词连用|two years ago · a long time ago|a said like *uh*, and go at the end|a 读作 *uh*，结尾是 go
+      once|Beijing at six;eating out every week;the start of a story|once means one time, or at one time in the past; ago needs a length of time before it|once 是一次或曾经；ago 前面要有一段时间|ago=ago needs a length of time before it, as in *two years ago*, and cannot mean one time=ago 前面要有一段时间，如 *two years ago*，不能表示一次;until=until means up to a time, not one time=until 是直到某时，不是一次|once a week · once upon a time|o said like *w*: once|o 读作 *w*：once
+      recently|seeing good films;a new flat;a wedding last month|recently means not long ago; soon means not long from now|recently 是不久以前；soon 是不久以后|tomorrow=tomorrow is the day after today, so it never goes with *have seen*, *have moved* or *got married*=tomorrow 是明天，不和 *have seen*、*have moved*、*got married* 连用;soon=soon means a short time from now, not a short time back in the past=soon 是不久以后，不是不久以前|recently · have recently moved|recent + -ly, keeping the t|recent 加 -ly，保留 t
+      soon|a bus coming;saying goodbye;darkness coming|soon means in a short time from now; ago means back in the past|soon 是不久以后；ago 是以前|ago=ago means back in the past after a length of time, so it never goes with *will* or *see you*=ago 是若干时间以前，不和 *will*、*see you* 连用;yesterday=yesterday is the day before today, so it never goes with *will* or *see you*=yesterday 是昨天，不和 *will*、*see you* 连用|See you soon! · will come soon|the double o: s-o-o-n|两个 o：s-o-o-n
+      suddenly|rain with no warning;lights going out by surprise;a dog the driver didn't expect|suddenly means quickly and not expected; finally means at the end of a long wait|suddenly 是突然、没想到；finally 是等了很久之后终于|finally=finally means at the end of a long wait, but nobody was waiting for this=finally 是等了很久之后，而这件事没有人在等;recently=recently means not long ago, and it does not say that something was a surprise=recently 是不久以前，并不表示出人意料|suddenly it started to rain|sud · den · ly, with the double d|sud · den · ly，双写 d
+      finally|waiting an hour for a bus;three tries at a test;a long drive home|finally means at the end, after a long time; suddenly means not expected|finally 是终于、最后；suddenly 是突然|suddenly=suddenly means quickly when nobody expects it, not at the end of a long wait or many tries=suddenly 是谁都没想到的时候突然发生，不是等了很久或试了很多次之后;soon=soon means a short time from now, not at the end of something that took a long time=soon 是不久以后，不是花了很长时间之后|finally came · finally passed|final + -ly, with the double l|final 加 -ly，双写 l
+      during|quiet from start to end of a test;falling asleep in a film;going out after the rain stopped|during comes before a noun, as in *during the film*; while comes before an action with a doer|during 后接名词，如 *during the film*；while 后接带主语的动作|while=while comes before a whole action like *I cook*, not before a noun like *the test* or *the rain*=while 后面接 *I cook* 这样的完整动作，不接 *the test*、*the rain* 这样的名词;until=until means up to a time and then stopping, not all through something=until 是到某时为止，不是整个过程当中|during the film · during the night|dur · ing, with u said like *yoo* or *oo*|dur · ing，u 读作 *yoo* 或 *oo*
+      while|doing two things at the same time;a call when you were out;watching children when I'm in a shop|while means in the same time as another action; until means up to a time|while 是在另一个动作进行的同时；until 是直到|during=during comes before a noun like *the film*, not before an action like *I cook* or *you were out*=during 后面接 *the film* 这样的名词，不接 *I cook*、*you were out* 这样的动作;until=until means up to the moment something happens and then stopping, not at the same time as it=until 是到某事发生为止，不是和它同时|while I cook · while you were out|wh said like w, and the silent e at the end|wh 读作 w，词尾 e 不发音
+      until|waiting for someone to come back;nine o'clock closing;going home when it got dark|until means up to a time and then stopping; since means from a time in the past|until 是到某时为止；since 是从过去某时起|while=while means at the same time as an action, not up to a time and then stopping=while 是与某个动作同时，不是到某时为止;since=since means from a time in the past until now, not up to a time ahead=since 是从过去某时到现在，不是到将来某时为止|until nine o'clock · wait until|one l at the end: un · til|结尾只有一个 l：un · til
+    `,
+  },
 });
 
 const relatives = vocabularyTopic({
@@ -98,93 +130,127 @@ const relatives = vocabularyTopic({
     "Uncles, aunts, cousins, parents, grandparents, sons, daughters, husbands and wives, and being married or born.",
     "叔叔阿姨、堂表兄弟姐妹、父母、祖父母、儿子、女儿、丈夫和妻子，以及结婚和出生。",
   ),
+  intro: t(
+    "At Grandma's birthday, all our **relatives** came: my **uncle** and **aunt**, their two children, who are my **cousins**, and my **grandparents** at the head of the table. These words help you name the people in your family and say how they are related.",
+    "奶奶过生日那天，所有 **relatives**（亲戚）都来了：我的 **uncle**（舅舅）和 **aunt**（舅妈），他们的两个孩子，也就是我的 **cousins**（表兄妹），还有坐在桌子上首的 **grandparents**（祖父母）。这些词帮你说出家里的人，以及他们之间是什么关系。",
+  ),
   prerequisites: ["pre-a1-words-family"],
   words: [
     word(
       "uncle uncles",
       "the brother of your mother or father",
       "叔叔；舅舅；伯伯",
-      "My mom's brother is my {uncle}.|aunt cousin | {Uncle} Jack lives on a farm, and he has a lot of cows.|Aunt Daughter | My {uncle} and his wife have two children.|aunt daughter",
+      "My mom's brother is my {uncle}. | {Uncle} Jack, my dad's brother, lives on a farm with a lot of cows. | My {uncle} and his wife, my aunt, have two children: my cousins.",
       "aunt cousin",
     ),
     word(
       "aunt aunts",
       "the sister of your mother or father",
       "阿姨；姑姑",
-      "My dad's sister is my {aunt}.|uncle son | {Aunt} Mary gave me a dress for my birthday.|Uncle Son | My {aunt} and her husband live in Shanghai.|uncle son",
-      "uncle son",
+      "My dad's sister is my {aunt}. | {Aunt} Mary, my mom's sister, gave me a dress for my birthday. | My {aunt} and her husband, my uncle, live in Shanghai.",
+      "uncle cousin",
     ),
     word(
       "cousin cousins",
       "a child of your uncle or aunt",
       "堂兄弟姐妹；表兄弟姐妹",
-      "My uncle's son is my {cousin}.|aunt husband | Lily and I are {cousins}: our mothers are sisters.|aunts husbands | My {cousin} Tom is my age. His mother is my aunt.|uncle husband",
-      "aunt husband",
+      "My uncle's son is my {cousin}. | Lily and I are {cousins}: our mothers are sisters.|aunts uncles | My {cousin} Tom is my age. His mother is my aunt.",
+      "aunt uncle",
     ),
     word(
       "parent parents",
       "a mother or a father",
       "父亲或母亲",
-      "Your mother and father are your {parents}.|cousins grandparents | Kids, ask your {parents} before you go out.|husbands wives | Each child has two {parents}: a mother and a father.|cousins sons",
-      "cousin son",
+      "Your mother and father are your {parents}.|cousins grandparents | Kids, ask your {parents} before you go out: your mom or your dad must say yes.|cousins grandparents | Each child has two {parents}: a mother and a father.|cousins grandparents",
+      "cousin grandparent",
     ),
     word(
       "grandparent grandparents",
       "the mother or father of your mother or father",
       "祖父母；外祖父母",
-      "My mom's parents are my {grandparents}.|cousins uncles | Grandma and Grandpa are my {grandparents}.|parents cousins | My {grandparents} are seventy years old, and they have six grandchildren.|cousins sons",
-      "cousin uncle",
+      "My mom's parents are my {grandparents}.|parents cousins | Grandma and Grandpa are my {grandparents}.|parents cousins | My {grandparents} are seventy years old, and they have six grandchildren.|parents cousins",
+      "parent cousin",
     ),
     word(
       "son sons",
       "a boy or man, when you talk about his mother or father",
       "儿子",
-      "Mr. and Mrs. Wang have a {son} and a daughter.|husband aunt | Tom is Mrs. Green's {son}.|daughter wife | Their {son} is ten, and he likes football.|daughter wife",
+      "Mr. and Mrs. Wang have a {son} and a daughter. | Tom is Mrs. Green's {son}. | Their {son} is ten, and he likes football.",
       "daughter wife",
     ),
     word(
       "daughter daughters",
       "a girl or woman, when you talk about her mother or father",
       "女儿",
-      "Lily is Mr. Li's {daughter}.|son husband | They have one {daughter}. She is a doctor.|son husband | My {daughter} is five, and she goes to school now. She loves it.|son husband",
+      "Lily is Mr. Li's {daughter}. | They have one {daughter}. She is a doctor. | My {daughter} is five, and she goes to school now. She loves it.",
       "son husband",
     ),
     word(
       "husband husbands",
       "the man a woman is married to",
       "丈夫",
-      "Mrs. Brown's {husband} is a doctor. He works at the hospital.|wife daughter | She met her {husband} at university, and they got married in 2010.|daughter son | Ann is Tom's wife, and Tom is Ann's {husband}.|wife son",
-      "wife daughter",
+      "Mrs. Brown's {husband} is a doctor: she married him in 2005. | She met her {husband} at university, and they got married in 2010. | Ann is Tom's wife, and Tom is Ann's {husband}.",
+      "wife son",
     ),
     word(
       "wife wives",
       "the woman a man is married to",
       "妻子",
-      "Mr. Smith and his {wife} have two sons.|husband daughter | Tom is Ann's husband, and Ann is Tom's {wife}.|husband son | My uncle's {wife} is my aunt.|husband son",
-      "husband son",
+      "Mr. Smith and his {wife} got married ten years ago, and they have two sons. | Tom is Ann's husband, and Ann is Tom's {wife}. | My uncle's {wife} is my aunt.",
+      "husband daughter",
     ),
     word(
       "relative relatives",
       "a person in your family",
       "亲戚",
-      "Uncles, aunts and cousins are all {relatives}.|parents sons | Is she your sister? — No, but she is a {relative}: she's my mom's cousin.|son husband | We have {relatives} in Canada, so we visit them every summer.|husbands wives",
+      "Uncles, aunts and cousins are all {relatives}.|parents sons | Is she your sister? — No, but she is a {relative}: she's my mom's cousin. | We have {relatives} in Canada, like my aunt and two cousins.|parents sons",
       "parent son",
     ),
     word(
       "married",
       "having a husband or a wife",
       "已婚的",
-      "My sister got {married} last year.|born relative | Are you {married}? — Yes, this is my husband.|born relative | My uncle is not {married}. He lives alone.|born relative",
-      "born relative",
+      "My sister got {married} last year, and her husband is very kind. | Are you {married}? — Yes, this is my husband. | My uncle is not {married}: he has no wife.",
+      "born ill",
     ),
     word(
       "born",
       "come into the world as a baby",
       "出生",
-      "The baby was {born} last night.|married relative | My cat was {born} in May, so she is very young.|married relative | My little brother was {born} three days ago, and he's very small.|married relative",
-      "married relative",
+      "The baby was {born} at two in the morning, so today is her birthday. | My cat was {born} in May, so she is very young. | My little brother was {born} three days ago, so he is only three days old.",
+      "married ill",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Uncle* and *aunt* are your parents' brother and sister, and their children are your *cousins*. Look for *brother*, *sister*, *son*, *mother* or *wife* in the sentence to find who the person is.",
+        "*uncle* 和 *aunt* 是父母的兄弟和姐妹，他们的孩子是你的 *cousins*。在句子里找 *brother*、*sister*、*son*、*mother* 或 *wife*，判断说的是谁。",
+      ),
+      meaning: t(
+        "*Parents* are only your mother and father, but *relatives* are all the people in your family, like uncles, aunts and cousins.",
+        "*parents* 只指爸爸妈妈，*relatives* 则是家里所有的人，比如叔叔、阿姨和堂表兄弟姐妹。",
+      ),
+      spell: t(
+        "*Daughter* has a silent gh: d-a-u-g-h-t-e-r, and *wife* has the irregular plural *wives*.",
+        "*daughter* 里的 gh 不发音：d-a-u-g-h-t-e-r；*wife* 的复数不规则，是 *wives*。",
+      ),
+    },
+    notes: `
+      uncle|a mom's brother;a dad's brother;the husband of an aunt|an uncle is a man, the brother of a parent; an aunt is a woman|uncle 是父母的兄弟，男性；aunt 是女性|aunt=aunt is a woman, the sister of a parent or the wife of an uncle, not a brother=aunt 是女性，是父母的姐妹或叔叔的妻子，不是兄弟;cousin=cousin is a child of your uncle or aunt, not your parent's brother=cousin 是叔叔阿姨的孩子，不是父母的兄弟|my uncle · Uncle Jack|-cle at the end, said like *kl*|结尾 -cle 读作 *kl*
+      aunt|a dad's sister;a mom's sister;the wife of an uncle|an aunt is a woman, the sister of a parent; an uncle is a man|aunt 是父母的姐妹，女性；uncle 是男性|uncle=uncle is a man, the brother of a parent or the husband of an aunt, not a sister=uncle 是男性，是父母的兄弟或阿姨的丈夫，不是姐妹;cousin=cousin is a child of your uncle or aunt, not your parent's sister=cousin 是叔叔阿姨的孩子，不是父母的姐妹|my aunt · Aunt Mary|au, said like *ah* or like *ant*|au 读作 *ah* 或像 *ant*
+      cousin|an uncle's son;mothers who are sisters;someone whose mother is my aunt|a cousin is the child of your uncle or aunt; an aunt is your parent's sister|cousin 是叔叔阿姨的孩子；aunt 是父母的姐妹|aunt=aunt is your parent's sister, one generation older, not the child of your uncle or aunt=aunt 是父母的姐妹，比你大一辈，不是叔叔阿姨的孩子;uncle=uncle is your parent's brother, one generation older, not the child of your uncle or aunt=uncle 是父母的兄弟，比你大一辈，不是叔叔阿姨的孩子|my cousin Tom|ou said like short u: cous · in|ou 读短元音 u：cous · in
+      parent|a mother and a father;a mom or dad saying yes;two for each child|your parents are your mother and father; your grandparents are their parents|parents 是爸爸妈妈；grandparents 是爸爸妈妈的父母|cousin/cousins=cousin is a child of your uncle or aunt, not your mother or father=cousin 是叔叔阿姨的孩子，不是爸爸妈妈;grandparent/grandparents=grandparent is the mother or father of your mother or father, not your own mom or dad=grandparent 是爸爸妈妈的父母，不是自己的爸爸妈妈|ask your parents|par · ent, with -ent at the end|par · ent，结尾是 -ent
+      grandparent|a mom's parents;Grandma and Grandpa;six grandchildren|grandparents are your parents' parents; parents are your mother and father|grandparents 是父母的父母；parents 是爸爸妈妈|parent/parents=parent is your own mother or father, not the parents of your mom or dad=parent 是自己的爸爸妈妈，不是爸爸妈妈的父母;cousin/cousins=cousin is a child of your uncle or aunt, not Grandma or Grandpa=cousin 是叔叔阿姨的孩子，不是爷爷奶奶|my grandparents|grand + parent, one word|grand + parent，合成一个词
+      son|a brother for a daughter;Tom and his mother;a ten-year-old boy|a son is a boy; a daughter is a girl|son 是儿子；daughter 是女儿|daughter=daughter is a girl or woman, not a boy like Tom=daughter 是女孩或女人，不是 Tom 这样的男孩;wife=wife is the woman a man is married to, not a child=wife 是男人的妻子，不是孩子|a son and a daughter|o said like short u, the same sound as *sun*|o 读短元音 u，和 *sun* 同音
+      daughter|Lily and her father;a child who is a doctor;a five-year-old girl|a daughter is a girl; a son is a boy|daughter 是女儿；son 是儿子|son=son is a boy or man, not a girl called *she*=son 是男孩或男人，不是用 *she* 指的女孩;husband=husband is the man a woman is married to, not a child=husband 是女人的丈夫，不是孩子|one daughter · my daughter|a silent gh: daugh · ter|gh 不发音：daugh · ter
+      husband|the man Mrs. Brown married;a wedding in 2010;Ann and Tom|a husband is the man a woman is married to; a wife is the woman|husband 是丈夫；wife 是妻子|wife=wife is the woman a man is married to, not the man=wife 是男人的妻子，不是男的;son=son is a child, not the man a woman married=son 是孩子，不是女人嫁的人|her husband|hus · band, with s said like z|hus · band，s 读作 z
+      wife|a wedding ten years ago;Tom and Ann;an aunt married to an uncle|a wife is the woman a man is married to; a husband is the man|wife 是妻子；husband 是丈夫|husband=husband is the man a woman is married to, not the woman=husband 是女人的丈夫，不是女的;daughter=daughter is a child, not the woman a man married=daughter 是孩子，不是男人娶的人|his wife|one *wife*, two *wives*|一位 *wife*，两位 *wives*
+      relative|uncles, aunts and cousins;a mom's cousin;an aunt and two cousins|relatives are all the people in your family; parents are only your mother and father|relatives 是所有亲戚；parents 只指爸爸妈妈|parent/parents=parent is only your mother or father, not uncles, aunts or cousins=parent 只指爸爸妈妈，不包括叔叔、阿姨或堂表兄弟姐妹;son/sons=son is a boy or man in relation to his parents, not uncles, aunts or cousins=son 是儿子，不是叔叔、阿姨或堂表兄弟姐妹|a relative · relatives in Canada|rel · a · tive, with -tive at the end|rel · a · tive，结尾是 -tive
+      married|a sister's kind husband;this is my husband;an uncle with no wife|married means having a husband or a wife; born means come into the world|married 是已婚；born 是出生|born=born means coming into the world as a baby, not having a husband or a wife=born 是出生，不是有丈夫或妻子;ill=ill means not well, not having a husband or a wife=ill 是生病，不是有丈夫或妻子|get married · be married|the double r, and -ied at the end|双写 r，结尾是 -ied
+      born|a birthday at two in the morning;a young cat born in May;a brother only three days old|born means come into the world as a baby; married means having a husband or a wife|born 是出生；married 是已婚|married=married means having a husband or a wife, not coming into the world=married 是有丈夫或妻子，不是出生;ill=ill means not well, and it does not tell how old someone is or when their birthday is=ill 是生病，不表示几岁或哪天生日|be born in May|always *was born* or *were born*, never *borned*|总是说 *was born* 或 *were born*，没有 *borned*
+    `,
+  },
 });
 
 const events = vocabularyTopic({
@@ -194,93 +260,127 @@ const events = vocabularyTopic({
     "Happen, plan, decide, forget, remember, lose, win, break, catch, drop and hurry, and events.",
     "happen、plan、decide、forget、remember、lose、win、break、catch、drop、hurry 和 event。",
   ),
+  intro: t(
+    "On sports day, I **hurried** to the field, **caught** the ball in the last minute and helped our team **win**, but then I **dropped** my medal in the mud! These words help you tell what happened, what you decided and what went wrong.",
+    "运动会那天，我 **hurried**（匆匆）赶到操场，在最后一分钟 **caught**（接住）了球，帮我们队 **win**（赢）了比赛，可接着我把奖牌 **dropped**（掉）进了泥里！这些词帮你讲述发生了什么、你做了什么决定，以及出了什么差错。",
+  ),
   prerequisites: ["a2-words-past-time"],
   words: [
     word(
       "happen happens happened happening",
       "to take place",
       "发生",
-      "What {happened}? Why are you crying?|decided planned | The story {happened} a long time ago.|decided forgot | Strange things {happen} in this house.|decide remember",
+      "What {happened}? Why are you crying?|decided planned | The story {happened} a long time ago.|decided planned | Strange things {happen} in this house.",
       "decide plan",
     ),
     word(
       "event events",
       "something important or interesting that happens",
       "事件；活动",
-      "The school sports day is a big {event}.|hurry drop | The festival is the biggest {event} of the year in our town.|hurry drop | There are many {events} at the library this month, like talks and games.|hurries drops",
-      "hurry drop",
+      "The school sports day is a big {event}: everyone comes to watch. | The festival is the biggest {event} of the year in our town. | There are many {events} at the library this month, like talks and games.|plans accidents",
+      "plan accident",
     ),
     word(
       "plan plans planned planning",
       "to think about what you will do and how; an idea of what you will do",
       "计划",
-      "We {planned} a picnic for Saturday.|happened hurried | What are your {plans} for the summer?|drops hurries | Let's {plan} our trip together.|happen hurry",
+      "We {planned} a picnic for Saturday.|happened hurried | What are your {plans} for the summer?|events accidents | Let's {plan} our trip together: where to go, and what to do each day.",
       "happen hurry",
     ),
     word(
       "decide decides decided deciding",
       "to choose what to do after thinking",
       "决定",
-      "We {decided} to go to the beach.|happened dropped | I can't {decide} which dress to buy.|happen drop | She {decided} to learn the piano.|happened dropped",
-      "happen drop",
+      "We {decided} to go to the beach after we thought about it for a while.|happened hurried | I can't {decide} which dress to buy. | After thinking about it, she {decided} to learn the piano.|happened hurried",
+      "happen hurry",
     ),
     word(
       "forget forgets forgot forgotten forgetting",
       "to not remember",
       "忘记",
-      "I {forgot} my keys, so I couldn't open the door.|remembered won | Don't {forget} your umbrella. It's raining!|remember win | Sorry, I {forgot} your birthday!|remembered won",
-      "remember win",
+      "I {forgot} my keys at home, so I couldn't open the office door.|remembered lost | Don't {forget} to take your umbrella. It's raining! | Sorry, I {forgot} your birthday!|remembered lost",
+      "remember lose",
     ),
     word(
       "remember remembers remembered remembering",
       "to keep in your mind; to bring back to your mind",
       "记得；想起",
-      "Do you {remember} my name? We met last year.|forget lose | I {remember} my first day at school very well.|forget lose | {Remember} to close the window!|Forget Lose",
+      "Do you {remember} my name? We met last year. | I {remember} my first day at school very well. | {Remember} to close the window!",
       "forget lose",
     ),
     word(
       "lose loses lost losing",
       "to not have something any more; to not win",
       "丢失；输",
-      "I {lost} my bag on the bus.|won hurried | Our team {lost} the game, 0 to 3.|won dropped | Don't {lose} your ticket!|win catch",
+      "I {lost} my bag on the bus.|won caught | Our team {lost} the game, 0 to 3.|won caught | Don't {lose} your ticket, or you can't get on the train!",
       "win catch",
     ),
     word(
       "win wins won winning",
       "to be first or best in a game or race",
       "赢",
-      "Who {won} the race?|broke dropped | Our team {won} the game, 3 to 0.|lost dropped | I hope we {win} tomorrow!|lose break",
-      "lose break",
+      "Who {won} the race and got the gold medal?|lost caught | Our team {won} the game, 3 to 0.|lost caught | I hope we {win} tomorrow!",
+      "lose catch",
     ),
     word(
       "break breaks broke broken breaking",
       "to make something go into pieces or stop working",
       "打破；弄坏",
-      "Be careful! Don't {break} the glass.|win happen | My phone is {broken}. It doesn't work.|caught won | He fell and {broke} his arm.|caught won",
+      "Be careful! Don't {break} the glass into pieces. | My phone is {broken}. It doesn't work.|caught won | He fell and {broke} his arm.|caught won",
       "catch win",
     ),
     word(
       "catch catches caught catching",
       "to take and hold something that is moving; to get on a bus or train",
       "接住；赶上",
-      "{Catch} the ball!|Win Happen | We {caught} the last bus home.|won broke | The cat {caught} a mouse.|won forgot",
+      "{Catch} the ball with both hands! | We {caught} the last bus home.|won broke | The cat {caught} a mouse.|won broke",
       "win break",
     ),
     word(
       "drop drops dropped dropping",
       "to let something fall",
       "掉下；使落下",
-      "I {dropped} my phone, and now the screen is broken.|caught won | Don't {drop} the eggs!|win happen | She {dropped} her ice cream on the floor.|caught won",
+      "I {dropped} my phone, and now the screen is broken.|caught won | Don't {drop} the eggs! | She {dropped} her ice cream on the floor.|caught won",
       "catch win",
     ),
     word(
       "hurry hurries hurried hurrying",
       "to do something or go somewhere quickly",
       "赶快；匆忙",
-      "{Hurry} up! The bus is coming!|Drop Happen | We {hurried} to the station.|dropped decided | There's lots of time. Don't {hurry}.|drop happen",
+      "{Hurry} up! The bus is coming! | We {hurried} to the station.|dropped happened | There's lots of time. Don't {hurry}.",
       "drop happen",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Win* and *lose* are opposites in a game: you *win* when your team scores more, and you *lose* when the other team does. Read the score or the medal in the sentence before you choose.",
+        "*win* 和 *lose* 在比赛中意思相反：自己队得分多是 *win*，对方得分多是 *lose*。先看句子里的比分或奖牌，再作选择。",
+      ),
+      meaning: t(
+        "*Forget* and *lose* are different: you *forget* something when it goes out of your mind, like a birthday or your keys at home, and you *lose* a thing, like a bag or a ticket, when you cannot find it any more.",
+        "*forget* 和 *lose* 不一样：*forget* 是忘记，比如忘了生日或把钥匙落在家里；*lose* 是丢失，比如包或票找不到了。",
+      ),
+      spell: t(
+        "*Forget*, *win* and *catch* are irregular: *forgot*, *won* and *caught*, never *forgetted*, *winned* or *catched*.",
+        "*forget*、*win* 和 *catch* 是不规则动词，过去式是 *forgot*、*won* 和 *caught*，不能写成 *forgetted*、*winned* 或 *catched*。",
+      ),
+    },
+    notes: `
+      happen|crying;a story long ago;strange things in a house|happen means to take place; decide means to choose after thinking|happen 是发生；decide 是想好后决定|decide/decided=decide means a person chooses after thinking, and a story or a thing cannot decide=decide 是人想好后作选择，故事或事情不会作决定;plan/planned=plan means a person thinks about what to do, and a story or a thing cannot plan=plan 是人考虑要做什么，故事或事情不会计划|What happened? · happen a long time ago|the double p: hap · pen|双写 p：hap · pen
+      event|everyone watching sports day;the biggest thing in a town's year;talks and games at a library|an event is something important that happens; a plan is an idea of what you will do|event 是重要的活动或事件；plan 是打算|plan/plans=plan is an idea of what someone will do, not something big that people come to watch or take part in=plan 是某人的打算，不是大家来看、来参加的大活动;accident/accidents=accident is something bad that happens by chance, not a big day people look forward to=accident 是偶然发生的坏事，不是大家盼望的大日子|a big event · events at the library|e · vent, with the stress on -vent|e · vent，重音在 -vent
+      plan|a picnic for Saturday;the summer;a trip together|you plan what you will do; things happen without anyone planning them|plan 是计划；happen 是发生|happen/happened=happen means to take place, and nobody can happen a picnic or a trip=happen 是发生，不能“发生”一次野餐或旅行;hurry/hurried=hurry means doing something quickly, not thinking about what you will do and how=hurry 是赶快，不是考虑要做什么、怎么做;event/events=event is something that happens, not an idea of what you will do=event 是发生的活动，不是你的打算;accident/accidents=accident is something bad that happens by chance, not an idea of what you will do=accident 是偶然发生的坏事，不是你的打算|plan a trip · plans for the summer|the n doubles: planned, planning|n 要双写：planned、planning
+      decide|thinking for a while about the beach;choosing a dress;thinking about the piano|you decide when you choose after thinking; things happen by themselves|decide 是想好后选择；happen 是事情自己发生|happen/happened=happen means to take place by itself, not to choose after thinking=happen 是自己发生，不是想好后选择;hurry/hurried=hurry means doing something quickly, not choosing after thinking=hurry 是赶快，不是想好后选择|decide to go · can't decide which|c said like s, and d before -ide: de · cide|c 读作 s：de · cide
+      forget|keys left at home;rain and an umbrella;a birthday|forget means to not remember; lose means to not be able to find a thing|forget 是忘记；lose 是丢失|remember/remembered=remember means keeping something in your mind, the opposite of forget=remember 是记得，和 forget 意思相反;lose/lost=lose means you cannot find a thing any more, not that it went out of your mind=lose 是东西找不到了，不是忘记|forget your keys · forget to take|the past is *forgot*, and the t doubles in *forgetting*|过去式是 *forgot*，*forgetting* 双写 t
+      remember|a name from last year;a first day at school;closing the window|remember means to keep in your mind; forget means to not remember|remember 是记得；forget 是忘记|forget=forget means not keeping something in your mind, the opposite of remember=forget 是忘记，和 remember 意思相反;lose=lose means not being able to find a thing, not keeping something in your mind=lose 是丢东西，不是记在心里|remember to close · remember my name|re · mem · ber, with -ber at the end|re · mem · ber，结尾是 -ber
+      lose|a bag on a bus;a score of 0 to 3;a ticket for a train|lose means to not have something any more, or to not win; win is the opposite|lose 是丢失或输掉；win 意思相反|win/won=win means being first or scoring more, not losing a thing or scoring less=win 是第一名或得分多，不是丢东西或得分少;catch/caught=catch means taking and holding something moving, not losing it=catch 是接住移动的东西，不是丢失|lose a game · lose your ticket|one o, not *loose*: lose, lost|只有一个 o，不是 *loose*：lose、lost
+      win|a gold medal;3 to 0;hoping for tomorrow|win means to be first or score more; lose is the opposite|win 是赢；lose 是输|lose/lost=lose means scoring less or not being first, the opposite of win=lose 是得分少或没得第一，和 win 意思相反;catch/caught=catch means taking and holding something moving, not being first in a game or race=catch 是接住移动的东西，不是比赛得第一|win a race · win the game|the past is *won*, said like *one*|过去式是 *won*，读音和 *one* 一样
+      break|a glass in pieces;a phone that doesn't work;an arm after a fall|break means to make something go into pieces or stop working; catch means to take and hold|break 是打破、弄坏；catch 是接住|catch/caught=catch means taking and holding something moving, not making it go into pieces or stop working=catch 是接住移动的东西，不是把它打碎或弄坏;win/won=win means being first in a game, not making something go into pieces=win 是比赛得第一，不是把东西打碎|break the glass · broken phone|*broke*, then *broken*|过去式 *broke*，过去分词 *broken*
+      catch|a ball and both hands;the last bus home;a cat and a mouse|catch means to take and hold something moving, or to get on a bus; win means to be first|catch 是接住或赶上；win 是赢|win/won=win means being first in a game or race, not taking and holding a ball or a mouse=win 是比赛得第一，不是接住球或抓住老鼠;break/broke=break means making something go into pieces, not taking and holding it=break 是把东西打碎，不是接住它|catch the ball · catch a bus|tch at the end, and the past is *caught*|结尾是 tch，过去式是 *caught*
+      drop|a broken screen;eggs;ice cream on the floor|drop means to let something fall; catch means to take and hold it|drop 是失手掉下；catch 是接住|catch/caught=catch means taking and holding something, the opposite of letting it fall=catch 是接住东西，和让它掉下去正相反;win/won=win means being first in a game, not letting something fall=win 是比赛得第一，不是让东西掉下去|drop the eggs · drop it on the floor|the p doubles: dropped, dropping|p 要双写：dropped、dropping
+      hurry|a bus coming;going quickly to a station;having lots of time|hurry means to go or do something quickly; drop means to let something fall|hurry 是赶快；drop 是失手掉下|drop/dropped=drop means letting something fall, not going quickly=drop 是让东西掉下去，不是赶快走;happen/happened=happen means to take place, and a person cannot happen to a station=happen 是发生，人不能“发生”到车站|Hurry up! · hurry to the station|the double r, and y becomes ie: hurried|双写 r，y 变 ie：hurried
+    `,
+  },
 });
 
 const weekend = vocabularyTopic({
@@ -290,13 +390,17 @@ const weekend = vocabularyTopic({
     "Relaxing, resting, spending time, picnics, camping, hiking and galleries, and being bored or interested.",
     "放松、休息、度过时光、野餐、露营、徒步和美术馆，以及无聊和有趣。",
   ),
+  intro: t(
+    "Last weekend we went **camping** by a lake: we put up our **tent**, had a **picnic** on the grass and went for a long **hike** in the hills. These words help you talk about what you do in your free time and how it feels.",
+    "上周末我们去湖边 **camping**（露营）：搭起 **tent**（帐篷），在草地上吃了顿 **picnic**（野餐），还去山里走了很长一段 **hike**（徒步）。这些词帮你谈论空闲时做什么，以及感觉怎么样。",
+  ),
   prerequisites: ["a2-words-events"],
   words: [
     word(
       "relax relaxes relaxed relaxing",
       "to rest and not worry",
       "放松",
-      "On Sunday I {relax} at home and read.|camp hike | Take a deep breath and {relax}.|camp hike | We {relaxed} by the pool all afternoon.|hiked spent",
+      "On Sunday I {relax} at home and read. | Take a deep breath and {relax}. | We {relaxed} by the pool all afternoon, lying in the sun.|camped hiked",
       "camp hike",
       "rest",
     ),
@@ -304,14 +408,14 @@ const weekend = vocabularyTopic({
       "spend spends spent spending",
       "to use time or money",
       "度过；花费",
-      "We {spent} the weekend at Grandma's.|relaxed rested | How much money did you {spend}?|relax rest | I {spend} an hour on my homework every day.|relax rest",
+      "We {spent} the weekend at Grandma's.|relaxed rested | How much money did you {spend}? | I {spend} an hour on my homework every day.",
       "relax rest",
     ),
     word(
       "rest rests rested resting",
       "to stop working and relax; time when you do this",
       "休息",
-      "You look tired. Sit down and {rest}.|spend camp | Let's stop and have a {rest}.|tent crowd | After the long walk, we {rested} under a tree.|spent bored",
+      "You look tired. Sit down and {rest}. | Let's stop walking and have a {rest}.|hike crowd | After the long walk, we {rested} under a tree for ten minutes.|spent camped",
       "spend camp",
       "relax",
     ),
@@ -319,66 +423,96 @@ const weekend = vocabularyTopic({
       "picnic picnics",
       "a meal you eat outside, often in a park",
       "野餐",
-      "We had a {picnic} by the river.|tent gallery | Let's take some sandwiches and have a {picnic}!|crowd tent | It rained, so we had our {picnic} in the car.|gallery crowd",
+      "We had a {picnic} by the river and ate sandwiches on the grass. | Let's take some sandwiches and have a {picnic}! | It rained, so we ate our {picnic} in the car.",
       "tent gallery",
     ),
     word(
       "camp camps camped camping",
       "to sleep outside in a tent",
       "露营",
-      "We {camped} in the mountains and slept in a tent.|spent happened | Do you like {camping}?|spending happening | Last summer we went {camping} in the forest.|spending happening",
-      "spend rest",
+      "We {camped} in the mountains: we slept in a tent for three nights.|hiked relaxed | Do you like {camping}, sleeping outside in a tent?|hiking relaxing | Last summer we went {camping} in the forest and put up our tent by a river.|hiking relaxing",
+      "hike relax",
     ),
     word(
       "tent tents",
       "a small house of cloth that you sleep in outside",
       "帐篷",
-      "We slept in a {tent} by the lake.|picnic gallery | Our {tent} is big enough for four people.|picnic crowd | It rained all night, but we were dry in the {tent}.|picnic crowd",
+      "We slept in a {tent} by the lake. | Our {tent} is big enough for four people to sleep in. | It rained all night, but we were dry in our {tent} by the lake.",
       "picnic gallery",
     ),
     word(
       "hike hikes hiked hiking",
       "to go for a long walk in the country or the mountains; a walk like this",
       "徒步旅行",
-      "We {hiked} up the mountain.|relaxed spent | Wear good shoes for the {hike}.|picnic gallery | Do you like {hiking}? — Yes, I walk in the hills every weekend.|gallery crowd",
-      "rest spend",
+      "We {hiked} up the mountain.|rested relaxed | Wear good walking shoes for the {hike}.|picnic crowd | Do you like {hiking}? — Yes, I walk in the hills every weekend.|resting relaxing",
+      "rest relax",
     ),
     word(
       "gallery galleries",
       "a building where you can look at paintings and other art",
       "美术馆；画廊",
-      "We saw some famous paintings at the {gallery}.|tent crowd | The {gallery} is open from ten to five.|tent picnic | There are many art {galleries} in Paris.|tents crowds",
+      "We saw some famous paintings at the {gallery}. | The {gallery} is open from ten to five. | There are many art {galleries} in Paris.|tents crowds",
       "tent crowd",
     ),
     word(
       "crowd crowds",
       "a lot of people together in one place",
       "人群",
-      "There was a big {crowd} at the football game.|gallery tent | We couldn't see the singer because of the {crowd}.|tent picnic | {Crowds} of people come to the beach in summer.|Tents Galleries",
+      "There was a big {crowd} at the football game. | We couldn't see the singer because of the {crowd}. | {Crowds} of people come to the beach in summer.|Galleries Tents",
       "gallery tent",
     ),
     word(
       "bored",
       "not interested; feeling there is nothing to do",
       "感到无聊的",
-      "I'm {bored}. There's nothing to do!|boring interesting | The children were {bored} in the long meeting.|boring interesting | Are you {bored}? Let's play a game.|boring interesting",
+      "I'm {bored}. There's nothing to do! | The children felt {bored} in the long meeting. | Are you {bored}? Let's play a game.",
       "boring interesting",
     ),
     word(
       "boring",
       "not interesting",
       "无聊的；乏味的",
-      "This film is {boring}. Let's watch another one.|bored interesting | The lesson was so {boring} that I fell asleep.|bored interesting | I don't like {boring} books.|bored interesting",
+      "This film is {boring}. Let's watch another one. | The lesson was so {boring} that I fell asleep. | I don't like {boring} books.",
       "bored interesting",
     ),
     word(
       "interesting",
       "making you want to know more",
       "有趣的",
-      "This book is very {interesting}. I can't stop reading it.|boring bored | The museum was {interesting}, and we learned a lot.|boring bored | What an {interesting} idea!|boring bored",
+      "This book is very {interesting}. I can't stop reading it. | The museum was {interesting}, and we learned a lot. | That's a really {interesting} idea: tell me more!",
       "boring bored",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Bored* and *boring* look alike: a person feels *bored*, and the film, the lesson or the book that makes them feel that way is *boring*. Ask whether the gap describes a person or a thing.",
+        "*bored* 和 *boring* 长得很像：人感到 *bored*（无聊的），让人觉得无聊的电影、课或书是 *boring*（乏味的）。想想空格描述的是人还是事物。",
+      ),
+      meaning: t(
+        "*Camp* and *hike* are both things you do outside: you *camp* when you sleep in a tent, and you *hike* when you take a long walk in the hills or the mountains.",
+        "*camp* 和 *hike* 都是户外活动：*camp* 是睡在帐篷里，*hike* 是在山里长途步行。",
+      ),
+      spell: t(
+        "*Gallery* has a double l and ends in -ery, with the plural *galleries*; *picnic* ends in c, but *picnicking* adds a k.",
+        "*gallery* 双写 l，以 -ery 结尾，复数是 *galleries*；*picnic* 以 c 结尾，但 *picnicking* 要加 k。",
+      ),
+    },
+    notes: `
+      relax|staying home and reading;a deep breath;lying by a pool|you relax when you rest and stop worrying; you camp when you sleep in a tent|relax 是放松休息；camp 是睡帐篷露营|camp/camped=camp means sleeping outside in a tent, not resting at home, by a pool or with a deep breath=camp 是睡在户外帐篷里，不是在家、泳池边休息或深呼吸放松;hike/hiked=hike means taking a long walk in the hills, the opposite of resting=hike 是在山里长途步行，和休息正相反|relax at home · relax by the pool|-ax at the end, said like *ks*|结尾 -ax 读作 *ks*
+      spend|a weekend at Grandma's;money;an hour on homework|you spend time or money; you relax when you rest|spend 是花时间或花钱；relax 是放松|relax/relaxed=relax means resting, and it cannot take *the weekend*, *money* or *an hour* after it=relax 是休息，后面不能直接接 *the weekend*、*money*、*an hour*;rest/rested=rest means stopping work, and it cannot take *the weekend*, *money* or *an hour* after it=rest 是停下休息，后面不能直接接 *the weekend*、*money*、*an hour*|spend money · spend the weekend|the past is *spent*, not *spended*|过去式是 *spent*，不是 *spended*
+      rest|being tired;stopping walking;ten minutes under a tree|you rest when you stop and relax; you spend time or money|rest 是停下休息；spend 是花时间或钱|spend/spent=spend means using time or money, and it needs something after it like *an hour*=spend 是花时间或钱，后面要接 *an hour* 这类词;camp/camped=camp means sleeping outside in a tent for the night, not stopping for a short time=camp 是在户外帐篷里过夜，不是停下来歇一会儿;hike=hike is a long walk, the opposite of stopping to rest=hike 是长途步行，和停下休息正相反;crowd=crowd is a lot of people in one place, not a short time when you stop=crowd 是一大群人，不是停下来歇一会儿|have a rest · sit down and rest|-st at the end|结尾是 -st
+      picnic|sandwiches on the grass;taking sandwiches;eating in the car|a picnic is a meal outside; a tent is a cloth house you sleep in|picnic 是户外野餐；tent 是睡觉的帐篷|tent=tent is a small cloth house you sleep in, not a meal you eat=tent 是睡觉的布帐篷，不是吃的饭;gallery=gallery is a building with paintings, not a meal you eat=gallery 是放画的美术馆，不是吃的饭|have a picnic|pic + nic, with c at both ends|pic + nic，两头都是 c
+      camp|three nights in a tent;sleeping outside;putting up a tent|you camp when you sleep in a tent; you hike when you walk a long way|camp 是睡帐篷露营；hike 是长途步行|hike/hiked/hiking=hike means walking a long way in the hills, not sleeping in a tent=hike 是在山里长途步行，不是睡帐篷;relax/relaxed/relaxing=relax means resting and not worrying, and it says nothing about a tent=relax 是放松休息，和帐篷无关|go camping · camp in the mountains|-mp at the end|结尾是 -mp
+      tent|sleeping by a lake;four people sleeping;a rainy night by a lake|a tent is a cloth house you sleep in; a picnic is a meal outside|tent 是睡觉的帐篷；picnic 是户外野餐|picnic=picnic is a meal you eat outside, not a cloth house you sleep in=picnic 是户外吃的饭，不是睡觉的布帐篷;gallery=gallery is a building with paintings, not a cloth house you sleep in by a lake=gallery 是放画的建筑，不是湖边睡觉的布帐篷|put up a tent · sleep in a tent|e said like short e, and -nt at the end|e 读短元音 e，结尾是 -nt
+      hike|climbing a mountain;good walking shoes;walking in the hills|a hike is a long walk in the country; a rest is a stop|hike 是长途步行；rest 是停下休息|rest/rested/resting=rest means stopping and relaxing, the opposite of walking a long way=rest 是停下休息，和长途步行正相反;relax/relaxed/relaxing=relax means resting and not worrying, the opposite of walking up a mountain=relax 是放松休息，和爬山步行正相反;picnic=picnic is a meal outside, not a long walk you need good shoes for=picnic 是户外野餐，不是要穿好鞋的长途步行;crowd=crowd is a lot of people, not a long walk=crowd 是一大群人，不是长途步行|go hiking · hike up the mountain|i that says its name before the silent e|不发音的 e 前面，i 读字母本音
+      gallery|famous paintings;opening hours;art in Paris|a gallery is a building with art; a crowd is a lot of people|gallery 是美术馆；crowd 是一大群人|tent=tent is a small cloth house for sleeping, not a building with paintings=tent 是睡觉的小布帐篷，不是放画的建筑;crowd=crowd is a lot of people together, not a building with paintings=crowd 是聚在一起的一大群人，不是放画的建筑|an art gallery|the double l, and -ery at the end|双写 l，结尾是 -ery
+      crowd|a football game;not being able to see a singer;people at the beach in summer|a crowd is a lot of people together; a gallery is a building|crowd 是一大群人；gallery 是建筑|gallery=gallery is a building with paintings, not a lot of people together=gallery 是放画的建筑，不是一大群人;tent=tent is a small cloth house, not a lot of people together=tent 是小布帐篷，不是一大群人|a big crowd · crowds of people|ow said like *now*|ow 和 *now* 里的一样
+      bored|nothing to do;a long meeting;wanting to play a game|bored is how a person feels; boring describes the thing|bored 描述人的感受；boring 描述事物|boring=boring describes a thing like a film or a lesson, not how a person feels=boring 描述电影、课这类事物，不描述人的感受;interesting=interesting means making you want to know more, the opposite of feeling there is nothing to do=interesting 是让人想多了解，和觉得无事可做正相反|I'm bored · feel bored|-ed at the end for the feeling|表示感受的结尾是 -ed
+      boring|watching another film;falling asleep in a lesson;books I don't like|boring describes a thing; bored describes a person|boring 描述事物；bored 描述人|bored=bored describes how a person feels, not a film, a lesson or a book=bored 描述人的感受，不描述电影、课或书;interesting=interesting describes something you want to know more about, the opposite of boring=interesting 描述让人想多了解的东西，和 boring 意思相反|a boring film · so boring that|-ing at the end for the thing|表示事物的结尾是 -ing
+      interesting|a book I can't stop reading;learning a lot in a museum;wanting to hear more|interesting means making you want to know more; boring is the opposite|interesting 是有趣、让人想多了解；boring 意思相反|boring=boring means not interesting, the opposite of making you want to know more=boring 是乏味，和让人想多了解正相反;bored=bored describes how a person feels, not a book, a museum or an idea=bored 描述人的感受，不描述书、博物馆或想法|very interesting · an interesting idea|in · ter · est · ing, with the middle e often quiet|in · ter · est · ing，中间的 e 常常读得很轻
+    `,
+  },
 });
 
 const useful = vocabularyTopic({
@@ -388,93 +522,127 @@ const useful = vocabularyTopic({
     "Important, reason, moment, follow, possible and impossible, able, whole, side, sentence, example and difference.",
     "important、reason、moment、follow、possible 和 impossible、able、whole、side、sentence、example 和 difference。",
   ),
+  intro: t(
+    'Our teacher said, "It\'s **important** to read the rules, and **follow** them. If something is not clear, ask for an **example**, and tell me the **reason** for any question." These words help you explain, give reasons and say what can and cannot be done.',
+    "老师说：“读规则是很 **important**（重要的），还要 **follow**（遵守）它们。哪里不清楚，就请人举个 **example**（例子）；有什么问题，告诉我 **reason**（原因）。”这些词帮你解释、说明理由，以及说出什么能做、什么不能做。",
+  ),
   prerequisites: ["a2-words-weekend"],
   words: [
     word(
       "important",
       "that matters a lot",
       "重要的",
-      "It's {important} to drink water every day.|whole able | This is an {important} test, so study hard.|whole able | Sleep is very {important} for children.|whole able",
-      "whole able",
+      "It's {important} to drink water every day, because your body needs it. | This test really matters, so study hard: it's very {important}. | Sleep is very {important} for children.",
+      "possible impossible",
     ),
     word(
       "reason reasons",
       "why something happens or why you do something",
       "原因；理由",
-      "What's the {reason} for your call?|side moment | Tell me the {reason} you were late.|side difference | There's no {reason} to be scared.|side example",
-      "side moment",
+      "What's the {reason} for your call? | Tell me the {reason} why you were late. | There's no {reason} to be scared.",
+      "moment example",
     ),
     word(
       "moment moments",
       "a very short time",
       "片刻；时刻",
-      "Wait a {moment}, please.|reason side | At that {moment}, the phone rang.|reason example | I'm busy at the {moment}. Can I call you later?|reason side",
+      "Wait a {moment}, please. | At that {moment}, the phone rang. | I'm busy at the {moment}. Can I call you later?",
       "reason side",
     ),
     word(
       "follow follows followed following",
       "to go after someone or something; to do what something says",
       "跟随；遵循",
-      "{Follow} me. I'll show you the way.|Able Side | The dog {followed} us home.|remembered decided | Please {follow} the rules of the game.|happen drop",
-      "able side",
+      "{Follow} me. I'll show you the way.|Catch Forget | The dog {followed} us home.|caught forgot | Please {follow} the rules of the game.",
+      "catch forget",
     ),
     word(
       "possible",
       "that can happen or be done",
       "可能的",
-      "Is it {possible} to swim here?|able whole | Come as soon as {possible}.|able whole | It's {possible} that it will rain later.|able whole",
-      "able whole",
+      "The water is safe, so it's {possible} to swim here. | Come as soon as {possible}. | Take an umbrella: it's {possible} that it will rain later.",
+      "impossible important",
     ),
     word(
       "impossible",
       "that cannot happen or be done",
       "不可能的",
-      "It's {impossible} to see the stars tonight. There are too many clouds.|possible able | I can't do this puzzle. It's {impossible}!|possible able | It's {impossible} to run 100 km in an hour.|possible important",
-      "possible able",
+      "It's {impossible} to see the stars tonight. There are too many clouds. | I can't do this puzzle. It's {impossible}! | It's {impossible} to run 100 km in an hour.",
+      "possible important",
     ),
     word(
       "able",
       "can do something",
       "能够",
-      "Will you be {able} to come to my party?|possible important | She was {able} to swim when she was four.|possible important | I wasn't {able} to sleep because of the noise.|possible whole",
+      "Will you be {able} to come to my party? | She was {able} to swim when she was four. | I wasn't {able} to sleep because of the noise.",
       "possible important",
     ),
     word(
       "whole",
       "all of something",
       "整个的",
-      "I ate the {whole} cake by myself!|able important | We stayed at home the {whole} day.|able possible | The {whole} class went to the zoo.|able possible",
-      "able possible",
+      "I ate the {whole} cake by myself! | We stayed at home the {whole} day, from morning to night. | The {whole} class, all forty students, went to the zoo.",
+      "important possible",
     ),
     word(
       "side sides",
       "the left or right part of something; one of the flat parts of something",
       "边；侧面",
-      "Drive on the right {side} of the road.|reason moment | A box has six {sides}.|reasons moments | Come and sit by my {side}.|reason example",
+      "Drive on the right {side} of the road. | A box has six {sides}.|reasons moments | Come and sit by my {side}.",
       "reason moment",
     ),
     word(
       "sentence sentences",
       "a group of words that starts with a capital letter and ends with a period",
       "句子",
-      "Write a {sentence} with the word 'happy'.|difference reason | This {sentence} has five words.|reason moment | Start every {sentence} with a capital letter.|example reason",
-      "example reason",
+      "Read the {sentence} on the board aloud: it has six words. | This {sentence} has five words. | Start every {sentence} with a capital letter and end it with a period.",
+      "word example",
     ),
     word(
       "example examples",
       "something that shows what other things of its kind are like",
       "例子",
-      "Can you give me an {example}?|sentence reason | Apples and pears, for {example}, are fruits.|sentence difference | Look at the {example} first, then do the rest.|difference reason",
+      "Can you give me one {example} of a fruit? — An apple. | Apples and pears, for {example}, are fruits. | The teacher did number one on the board, and we used the {example} to do the rest.",
       "sentence reason",
     ),
     word(
       "difference differences",
       "the way two things are not the same",
       "差别；不同",
-      "What's the {difference} between a lake and a sea?|reason example | I can't see any {difference} between the two pictures.|reason sentence | There's a big {difference} in age between me and my cousin.|reason example",
+      "What's the {difference} between a lake and a sea? | I can't see any {difference} between the two pictures. | There's a big {difference} in age between me and my cousin.",
       "reason example",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Possible* and *able* both talk about what can be done: *possible* describes a thing, as in *it's possible to swim here*, and *able* describes a person, as in *she was able to swim*. Look at who or what comes before the gap.",
+        "*possible* 和 *able* 都说能不能做：*possible* 形容事情，如 *it's possible to swim here*；*able* 形容人，如 *she was able to swim*。看空格前面是人还是事情。",
+      ),
+      meaning: t(
+        "*Reason*, *example* and *difference* each answer a different question: a *reason* answers *why?*, an *example* shows what things of one kind are like, and a *difference* answers *how are they not the same?*",
+        "*reason*、*example* 和 *difference* 各回答不同的问题：*reason* 回答“为什么”，*example* 说明一类东西是什么样的，*difference* 回答“哪里不一样”。",
+      ),
+      spell: t(
+        "*Impossible* is im- + *possible*, with a double s: im · pos · si · ble. *Whole* has a silent w and sounds like *hole*.",
+        "*impossible* 是 im- 加 *possible*，双写 s：im · pos · si · ble。*whole* 里的 w 不发音，读音和 *hole* 一样。",
+      ),
+    },
+    notes: `
+      important|a body needing water;a test that really matters;sleep for children|important means it matters a lot; possible means it can happen|important 是很重要；possible 是可能发生|possible=possible means that something can happen or be done, not that it matters a lot=possible 是能发生、能做到，不是很重要;impossible=impossible means that something cannot happen or be done, not that it matters a lot=impossible 是不能发生、做不到，不是很重要|It's important to · an important test|im · por · tant, with -ant at the end|im · por · tant，结尾是 -ant
+      reason|a phone call;being late;nothing to be scared of|a reason answers *why?*; a moment is a short time|reason 回答“为什么”；moment 是片刻|moment=moment is a very short time, and it does not answer *why?*=moment 是片刻，不回答“为什么”;example=example shows what things of one kind are like, and it does not answer *why?*=example 说明一类东西是什么样的，不回答“为什么”|the reason for · no reason to|ea for the long e, and s said like z|ea 发长 e 音，s 读作 z
+      moment|waiting a little;the phone ringing just then;being busy now|a moment is a very short time; a reason answers *why?*|moment 是片刻；reason 回答“为什么”|reason=reason answers *why?*, not a very short time=reason 回答“为什么”，不是片刻;side=side is the left or right part of something, not a short time=side 是左边或右边，不是片刻|Wait a moment · at the moment|mo · ment, with o that says its name|mo · ment，o 读字母本音
+      follow|being shown the way;a dog walking behind us home;the rules of a game|follow means to go after someone or do what something says; catch means to take and hold|follow 是跟随或遵守；catch 是接住|catch/caught=catch means taking and holding something moving, not going after someone or doing what rules say=catch 是接住移动的东西，不是跟着走或照规则做;forget/forgot=forget means not remembering, not going after someone or doing what rules say=forget 是忘记，不是跟着走或照规则做|follow me · follow the rules|the double l, and -ow at the end|双写 l，结尾是 -ow
+      possible|safe water;as soon as you can;an umbrella for later|possible means it can happen or be done; impossible means it cannot|possible 是可能；impossible 是不可能|impossible=impossible means that something cannot happen or be done, the opposite of possible=impossible 是不可能，和 possible 意思相反;important=important means that something matters a lot, not that it can happen=important 是很重要，不是能发生|as soon as possible · it's possible that|the double s: pos · si · ble|双写 s：pos · si · ble
+      impossible|stars behind too many clouds;a puzzle I can't do;running 100 km in an hour|impossible means it cannot happen; possible means it can|impossible 是不可能；possible 是可能|possible=possible means that something can happen or be done, the opposite of impossible=possible 是可能，和 impossible 意思相反;important=important means that something matters a lot, not that it cannot happen=important 是很重要，不是不可能|It's impossible to|im- before p, never in-|p 前面用 im-，不用 in-
+      able|coming to a party;swimming at four;sleeping through a noise|able says that a person can do something; possible says that a thing can happen|able 说人能做某事；possible 说事情可能发生|possible=possible describes a thing that can happen, as in *it is possible*, not a person who can do something=possible 形容可能发生的事，如 *it is possible*，不形容能做某事的人;important=important means that something matters a lot, not that a person can do something=important 是很重要，不是人能做某事|be able to|always *be able to*: a · ble|总是 *be able to*：a · ble
+      whole|a cake eaten alone;from morning to night;all forty students|whole means all of something; important means it matters|whole 是全部、整个；important 是重要|important=important means that something matters a lot, not all of something=important 是很重要，不是全部;possible=possible means that something can happen, not all of something=possible 是可能，不是全部|the whole day · the whole class|a silent w: whole, said like *hole*|w 不发音：whole 读作 *hole*
+      side|the right of a road;six on a box;sitting next to me|a side is the left or right part, or a flat part; a reason answers *why?*|side 是边或面；reason 回答“为什么”|reason=reason answers *why?*, not a part of a road, a box or a place next to you=reason 回答“为什么”，不是路边、盒子的面或你身边的位置;moment=moment is a very short time, not a part of something=moment 是片刻，不是东西的一部分|the right side · by my side|i that says its name before the silent e|不发音的 e 前面，i 读字母本音
+      sentence|reading the board aloud;five words;a capital letter and a period|a sentence is a group of words; a word is one of them|sentence 是一组词构成的句子；word 是其中一个词|word=word is one part of a sentence, so it cannot have words in it or end with a period=word 是句子里的一个词，里面不能有好几个词，也不以句号结尾;example=example shows what things of one kind are like, not a group of words that starts with a capital letter=example 说明一类东西是什么样的，不是以大写字母开头的一组词|write a sentence|sen · tence, with -ence at the end|sen · tence，结尾是 -ence
+      example|an apple as a fruit;apples and pears;number one on the board|an example shows what things of one kind are like; a sentence is a group of words|example 说明一类东西是什么样的；sentence 是句子|sentence=sentence is a group of words ending with a period, not something that shows what others of its kind are like=sentence 是以句号结尾的一组词，不是说明同类东西的例子;reason=reason answers *why?*, not something that shows what others of its kind are like=reason 回答“为什么”，不是说明同类东西的例子|for example · give an example|x said like *gz*: ex · am · ple|x 读作 *gz*：ex · am · ple
+      difference|a lake and a sea;two pictures;age between cousins|a difference is how two things are not the same; a reason answers *why?*|difference 是不同之处；reason 回答“为什么”|reason=reason answers *why?*, not how two things are not the same=reason 回答“为什么”，不是两样东西哪里不同;example=example shows what things of one kind are like, not how two things are not the same=example 说明同类东西是什么样的，不是两样东西哪里不同|the difference between|the double f, and -ence at the end|双写 f，结尾是 -ence
+    `,
+  },
 });
 
 // The past simple of regular verbs.

@@ -9,179 +9,246 @@ const animals = vocabularyTopic({
   id: "pre-a1-words-animals",
   title: t("Animals", "动物"),
   summary: t("Pets and farm animals.", "宠物和农场动物。"),
+  intro: t(
+    "On the farm, a **cow** says moo, a **pig** rolls in the mud and a **duck** swims on the pond. These words help you name the animals you see at home and on a farm.",
+    "农场上，**cow**（奶牛）哞哞叫，**pig**（猪）在泥里打滚，**duck**（鸭子）在池塘里游。这些词帮你说出家里和农场上的动物。",
+  ),
   prerequisites: [],
   words: [
     word(
       "animal animals",
       "a living thing that can move, like a dog or a bird",
       "动物",
-      "A cat is an {animal}.|color name | The zoo has many {animals}.|colors names | What is your best {animal}? The panda!|color name",
-      "color name",
+      "A cat is an {animal}. | Cats, dogs and birds are all {animals}.|birds fish | What is your best {animal}? The panda!",
+      "bird fish",
     ),
     word(
       "cat cats",
       "a small animal with soft fur that says meow",
       "猫",
-      "My {cat} says meow.|dog cow | The {cat} likes to catch mice.|duck frog | Our {cat} sleeps on my bed and purrs.|cow horse",
+      "My {cat} says meow. | The {cat} likes to climb trees and catch mice. | Our {cat} sleeps on my bed and purrs.",
       "dog cow",
     ),
     word(
       "dog dogs",
       "an animal that says woof and is a good friend to people",
       "狗",
-      "My {dog} says woof.|cat duck | I walk my {dog} in the park every day.|fish frog | The {dog} wags its tail. It is happy.|fish frog",
-      "cat duck",
+      "My {dog} says woof. | I walk my {dog} in the park every day. | The {dog} wags its tail. It is happy.",
+      "cat cow",
     ),
     word(
       "bird birds",
       "an animal with wings and feathers that can usually fly",
       "鸟",
-      "A {bird} can fly in the sky.|fish pig | The {bird} sings in the tree.|pig cow | {Birds} make nests in trees.|Pigs Cows",
+      "A {bird} can fly in the sky. | The {bird} sings in the tree. | {Birds} make nests in trees.|Fish Pigs",
       "fish pig",
     ),
     word(
       "fish",
       "an animal that lives and swims in water",
       "鱼",
-      "A {fish} lives in water.|bird horse | {Fish} can swim, but they can't walk.|Birds Horses | There are three {fish} in the pond.|horses cows",
+      "A {fish} lives in water. | {Fish} can swim, but they can't walk.|Birds Horses | Three little {fish} swim under the water.|birds horses",
       "bird horse",
     ),
     word(
       "horse horses",
       "a big animal that people can ride",
       "马",
-      "I can ride a {horse}.|duck mouse | A {horse} can run very fast.|frog mouse | The {horse} eats grass in the field.|frog cat",
-      "duck mouse",
+      "I can ride a {horse}. | A {horse} can run very fast. | The {horse} can jump over the fence.",
+      "cow pig",
     ),
     word(
       "cow cows",
       "a big farm animal that gives us milk",
       "奶牛；母牛",
-      "We get milk from a {cow}.|pig duck | The {cow} says moo.|pig dog | There are ten {cows} on the farm. They give us milk.|frogs ducks",
+      "We get milk from a {cow}. | The {cow} says moo. | There are ten {cows} on the farm. They give us milk.|pigs ducks",
       "pig duck",
     ),
     word(
       "pig pigs",
       "a pink farm animal with a short nose and a curly tail",
       "猪",
-      "A {pig} is pink and fat.|cow frog | The {pig} says oink.|cow duck | {Pigs} like to roll in mud.|Birds Fish",
+      "A {pig} is pink and fat. | The {pig} says oink. | {Pigs} like to roll in mud.|Cows Frogs",
       "cow frog",
     ),
     word(
       "duck ducks",
       "a bird that swims and says quack",
       "鸭子",
-      "The {duck} says quack.|cow pig | A {duck} can swim and fly.|pig horse | The {ducks} swim on the lake.|pigs cows",
+      "The {duck} says quack. | A {duck} can swim and fly. | The {ducks} swim on the lake.|cows pigs",
       "cow pig",
     ),
     word(
       "rabbit rabbits",
       "a small animal with long ears that jumps",
       "兔子",
-      "A {rabbit} has long ears.|fish frog | My {rabbit} eats carrots.|fish bird | The {rabbit} jumps across the grass.|fish cow",
-      "fish frog",
+      "A {rabbit} has long ears. | My {rabbit} eats carrots. | The {rabbit} with long ears jumps across the grass.",
+      "frog cat",
     ),
     word(
       "mouse mice",
       "a very small gray animal with a long tail",
       "老鼠",
-      "A {mouse} is small and gray.|horse cow | The cat runs after the {mouse}.|horse cow | Two little {mice} live under the floor.|horses cows",
+      "A {mouse} is small and gray. | The cat runs after the {mouse}. | Two little {mice} live under the floor.|horses cows",
       "horse cow",
     ),
     word(
       "frog frogs",
       "a small green animal that jumps and lives near water",
       "青蛙",
-      "A {frog} is green and jumps.|pig cow | The {frog} says ribbit.|pig cow | {Frogs} live near ponds and eat flies.|Cows Horses",
+      "A {frog} is green and jumps. | The {frog} says ribbit. | {Frogs} live near ponds and eat flies.|Pigs Cows",
       "pig cow",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Listen for the animal's sound or what it does: *meow* is a cat, *woof* a dog, *moo* a cow, *oink* a pig and *quack* a duck.",
+        "留意句子里动物的叫声或动作：*meow* 是猫，*woof* 是狗，*moo* 是奶牛，*oink* 是猪，*quack* 是鸭子。",
+      ),
+      meaning: t(
+        "*Animal* is the word for all of them; *cat*, *cow* or *bird* names one kind. If the meaning says milk, it is a *cow*; if it says wings and feathers, a *bird*.",
+        "*animal* 是所有动物的总称；*cat*、*cow*、*bird* 是某一种动物。释义说到牛奶就是 *cow*，说到翅膀和羽毛就是 *bird*。",
+      ),
+      spell: t(
+        "Two animal words do not add -s for more than one: one *mouse*, two *mice*; one *fish*, three *fish*.",
+        "有两个动物词表示多个时不加 -s：one *mouse*，two *mice*；one *fish*，three *fish*。",
+      ),
+    },
+    notes: `
+      animal|a cat as one kind of living thing;cats, dogs and birds all together;a favorite living thing, the panda|animal is the word for every kind; a bird is one kind with wings|animal 是所有动物的总称；bird 只是长翅膀的一种|bird=bird is one kind of animal with wings and feathers, not the word for every living thing that moves=bird 只是长翅膀和羽毛的一种动物，不是所有动物的总称;fish=fish is one kind of animal that lives in water, not the word for every living thing that moves=fish 只是生活在水里的一种动物，不是所有动物的总称|an · i · mal|the i in the middle, not an a: an-i-mal|中间是 i，不是 a：an-i-mal
+      cat|a pet that says meow;a pet that climbs trees and catches mice;a pet that sleeps on a bed and purrs|a cat says meow; a dog says woof|cat 喵喵叫；dog 汪汪叫|dog=dog says woof and cannot climb trees or purr, so it is not the small pet that says meow=dog 汪汪叫，不会爬树也不会打呼噜，不是喵喵叫的小动物;cow=cow is a big farm animal that says moo, not a small pet that says meow=cow 是哞哞叫的大农场动物，不是喵喵叫的小宠物|cat|c at the start, not k|开头是 c，不是 k
+      dog|a pet that says woof;a pet you walk in the park;a happy pet wagging its tail|a dog says woof; a cat says meow|dog 汪汪叫；cat 喵喵叫|cat=cat says meow and does not go for walks or wag its tail when it is happy=cat 喵喵叫，不会被牵着散步，高兴时也不摇尾巴;cow=cow is a big farm animal that says moo, not a pet that says woof=cow 是哞哞叫的大农场动物，不是汪汪叫的宠物|dog|the short o, and just -s for more than one: dogs|短元音 o，复数只加 -s：dogs
+      bird|an animal flying in the sky;an animal singing in a tree;animals making nests in trees|a bird has wings and flies; a fish swims in water|bird 有翅膀会飞；fish 在水里游|fish=fish lives and swims in water and has no wings to fly=fish 生活在水里游，没有翅膀，不会飞;pig=pig is a pink farm animal with no wings, so it cannot fly or sing in trees=pig 是粉色的农场动物，没有翅膀，不会飞也不会在树上唱歌|bird|ir for the sound in the middle, not ur or er|中间的音拼作 ir，不是 ur 或 er
+      fish|an animal living in water;animals that swim but cannot walk;little animals swimming under the water|a fish lives in water; a bird flies in the sky|fish 生活在水里；bird 在天上飞|bird=bird has wings and lives in the air and in trees, not under the water=bird 有翅膀，生活在空中和树上，不在水下;horse=horse is a big animal that walks and runs on land, not one that lives in water=horse 是在陆地上走和跑的大动物，不生活在水里|fish|sh at the end, and the same word for more than one: three fish|结尾是 sh，表示多条时还是 fish
+      horse|an animal people ride;an animal running very fast;an animal jumping over a fence|a horse is big and fast and people ride it; a cow is slow and gives milk|horse 高大、跑得快，人可以骑；cow 走得慢，产奶|cow=cow is a slow farm animal that gives milk, not one that people ride or that runs and jumps fast=cow 是产奶、走得慢的农场动物，不是人骑的、跑跳很快的动物;pig=pig is a short, fat farm animal, too small to ride and not fast=pig 是又矮又胖的农场动物，不能骑，也跑不快|horse|or in the middle and a silent e at the end|中间是 or，词尾的 e 不发音
+      cow|the animal we get milk from;an animal that says moo;ten farm animals that give us milk|a cow gives milk and says moo; a pig says oink|cow 产奶、哞哞叫；pig 哼哼叫|pig=pig says oink and does not give us milk=pig 哼哼叫，不给我们产奶;duck=duck is a bird that says quack and swims, not the big animal that gives milk=duck 是嘎嘎叫、会游泳的鸟，不是产奶的大动物|cow|ow, said as in *now*|ow 的读音和 *now* 一样
+      pig|a pink, fat farm animal;an animal that says oink;animals rolling in mud|a pig is pink and says oink; a cow says moo and gives milk|pig 是粉色的，哼哼叫；cow 哞哞叫，产奶|cow=cow is a big black and white animal that says moo, not a pink one that says oink=cow 是哞哞叫的黑白大动物，不是哼哼叫的粉色动物;frog=frog is a small green animal that jumps, not a pink, fat one that rolls in mud=frog 是会跳的绿色小动物，不是在泥里打滚的粉色胖动物|pig|the short i; just -s for more than one: pigs|短元音 i，复数只加 -s：pigs
+      duck|a bird that says quack;a bird that can swim and fly;birds swimming on a lake|a duck is a bird that swims and flies; a cow is a big animal on land|duck 是会游泳也会飞的鸟；cow 是陆地上的大动物|cow=cow says moo and cannot swim or fly=cow 哞哞叫，不会游泳也不会飞;pig=pig says oink and has no wings, so it cannot fly=pig 哼哼叫，没有翅膀，不会飞|duck|ck at the end, not k|结尾是 ck，不只是 k
+      rabbit|an animal with long ears;a pet eating carrots;an animal with long ears jumping across the grass|a rabbit has long ears; a frog is green and has no ears you can see|rabbit 耳朵长；frog 是绿色的，看不到耳朵|frog=frog is a small green animal with no long ears, and it eats flies, not carrots=frog 是绿色小动物，没有长耳朵，吃苍蝇不吃胡萝卜;cat=cat has short ears and says meow, and it does not eat carrots=cat 耳朵短、喵喵叫，不吃胡萝卜|rab · bit|the double b in the middle|中间双写 b
+      mouse|a small, gray animal;the animal a cat runs after;two little animals living under the floor|a mouse is very small; a horse is very big|mouse 很小；horse 很大|horse=horse is a very big animal that people ride, too big to live under a floor or be small and gray=horse 是人骑的大动物，太大了，不会是灰色小动物，也住不到地板下;cow=cow is a very big farm animal that gives milk, not a tiny one a cat runs after=cow 是产奶的大农场动物，不是猫追的小动物|mouse|ou in the middle, and *mice*, not *mouses*, for more than one|中间是 ou，复数是 *mice*，不是 *mouses*
+      frog|a small green animal that jumps;an animal that says ribbit;animals living near ponds and eating flies|a frog is green and lives near water; a pig is pink and lives on a farm|frog 是绿色的，生活在水边；pig 是粉色的，生活在农场|pig=pig is a pink, fat farm animal that says oink, not a small green one that jumps=pig 是哼哼叫的粉色胖动物，不是会跳的绿色小动物;cow=cow is a big farm animal that says moo, not a small green one near water=cow 是哞哞叫的大农场动物，不是水边的绿色小动物|frog|fr at the start|开头是 fr
+    `,
+  },
 });
 
 const canAndLike = vocabularyTopic({
   id: "pre-a1-words-can-and-like",
   title: t("Can, Like and Actions", "can、like 和动作"),
   summary: t("What animals and people can do, what they like, and big and small.", "动物和人能做什么、喜欢什么，以及 big 和 small。"),
+  intro: t(
+    "A fish can **swim**, a bird can **fly** and a horse can **run** very fast. These words help you say what animals and people can do and what they **like**.",
+    "鱼会 **swim**（游泳），鸟会 **fly**（飞），马 **run**（跑）得很快。这些词帮你说出动物和人能做什么、**like**（喜欢）什么。",
+  ),
   prerequisites: ["pre-a1-words-animals"],
   words: [
     word(
       "can can't cannot",
       "to be able to",
       "能；会",
-      "A bird {can} fly.|is like | I {can't} fly. I am not a bird.|isn't aren't | {Can} you swim? Yes, I can.|Are Is",
-      "is like",
+      "Birds {can} fly, but fish can't. | {Can} you swim? Yes, I can.|Do Will | Can a fish walk? No, it {can't}.|doesn't won't",
+      "do will",
     ),
     word(
       "like likes liked liking",
       "to think something is good or nice",
       "喜欢",
-      "I {like} cats. They are nice.|can is | Do you {like} apples? Yes, I love them.|can is | She {likes} her new bag.|can is",
-      "can is",
+      "I {like} cats very much. They are nice. | Do you {like} the color red? Yes, I love it. | She {likes} her new bag very much.|sees eats",
+      "see eat",
     ),
     word(
       "see sees saw seen seeing",
       "to notice something with your eyes",
       "看见",
-      "I can {see} a bird in the tree.|eat swim | Close your eyes. Now you can't {see} anything.|jump swim | I {saw} a big dog yesterday.|ran swam",
+      "I can {see} a bird in the tree. | Close your eyes. Now you can't {see} anything. | I {saw} a big dog in the park yesterday.|ate swam",
       "eat swim",
     ),
     word(
       "run runs ran running",
       "to move fast on your feet",
       "跑",
-      "Horses can {run} very fast.|swim fly | Don't {run} in the classroom.|fly see | The dog {ran} after the ball.|flew swam",
+      "Horses can {run} very fast. | Don't {run} in the classroom. | The dog {ran} after the ball.|swam flew",
       "swim fly",
     ),
     word(
       "jump jumps jumped jumping",
       "to push yourself up into the air with your legs",
       "跳",
-      "Rabbits {jump} with their long back legs.|fly swim | {Jump} up and down!|Swim Eat | The cat {jumped} onto the table.|swam flew",
+      "Rabbits {jump} with their long back legs. | {Jump} up and down on the bed! | The cat {jumped} onto the table.|swam flew",
       "fly swim",
     ),
     word(
       "swim swims swam swum swimming",
       "to move through water",
       "游泳",
-      "Fish {swim} in the water.|fly walk | Can you {swim}? Yes, I go to the pool every week.|fly eat | We are {swimming} in the sea.|flying eating",
+      "Fish {swim} in the water. | Can you {swim}? Yes, I go to the pool every week. | We are {swimming} like fish in the sea.|flying walking",
       "fly walk",
     ),
     word(
       "fly flies flew flown flying",
       "to move through the air",
       "飞",
-      "Birds {fly} in the sky.|swim walk | A plane can {fly}.|swim eat | The bird {flew} away.|swam ate",
+      "Birds {fly} in the sky. | A plane can {fly}. | The bird {flew} up into the sky.|swam walked",
       "swim walk",
     ),
     word(
       "walk walks walked walking",
       "to move on your feet, not fast",
       "走；步行",
-      "I {walk} to school with my friend.|fly swim | Babies can't {walk}. They are too small.|see eat | Let's {walk} in the park.|fly swim",
+      "I {walk} to school with my friend. | Babies can't {walk} yet. They are too small to stand. | Let's {walk} in the park.",
       "fly swim",
     ),
     word(
       "eat eats ate eaten eating",
       "to put food in your mouth",
       "吃",
-      "I {eat} rice for lunch.|see fly | Cows {eat} grass.|fly swim | Don't talk when you are {eating}.|flying swimming",
+      "I {eat} rice for lunch. | Cows {eat} grass with their big mouths. | Don't talk when you are {eating} your food.|seeing flying",
       "see fly",
     ),
     word(
       "big bigger biggest",
       "large; not small",
       "大的",
-      "An elephant is very {big}.|small sad | A horse is {bigger} than a dog.|smaller sadder | Our house is {big}. It has ten rooms.|small sad",
+      "An elephant is very {big}. | A horse is {bigger} than a dog.|smaller sadder | Our house is {big}. It has ten rooms.",
       "small sad",
     ),
     word(
       "small smaller smallest",
       "little; not big",
       "小的",
-      "A mouse is very {small}.|big long | A mouse is {smaller} than a cat.|bigger longer | My room is {small}. It has one bed and one chair.|big long",
+      "A mouse is very {small}. | A mouse is {smaller} than a cat.|bigger longer | My room is {small}. It has one bed and one chair.",
       "big long",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Swim*, *fly*, *walk* and *run* all mean moving, so look for the place or the speed: water for *swim*, the sky for *fly*, slow feet for *walk*, fast feet for *run*.",
+        "*swim*、*fly*、*walk*、*run* 都表示移动，所以要看地点或快慢：水里是 *swim*，天上是 *fly*，慢慢走是 *walk*，跑得快是 *run*。",
+      ),
+      meaning: t(
+        "*Can* says what you are able to do; *like* says what you think is nice. *Big* and *small* are opposites, so read whether the meaning says large or little.",
+        "*can* 说的是能做什么；*like* 说的是觉得什么好。*big* 和 *small* 意思相反，看清释义说的是大还是小。",
+      ),
+      spell: t(
+        "Many action words change in the past: *ran*, *swam*, *flew*, *saw*, *ate*, not *runned* or *flyed*. *Swimming* and *running* double the last consonant.",
+        "不少动作词的过去式不规则：*ran*、*swam*、*flew*、*saw*、*ate*，不是 *runned* 或 *flyed*。*swimming*、*running* 要双写词尾辅音。",
+      ),
+    },
+    notes: `
+      can|birds that fly and fish that can't;a question about swimming answered with I can;a question about a fish walking answered with it can't|can is about being able to; do asks what you usually do|can 说的是能不能；do 问的是平常做不做|do/does/doesn't=do asks or tells what you usually do, not what you are able to do, so it does not match can or can't next to it=do 问或说的是平常做不做，不是能不能，和旁边的 can 或 can't 对不上;will/won't=will talks about the future, not about what you are able to do, so it does not match can or can't next to it=will 说的是将来，不是能不能，和旁边的 can 或 can't 对不上|can|a for the short sound, and *can't* with an apostrophe for *cannot*|a 发短音；*can't* 是 *cannot* 的缩写，要加撇号
+      like|cats that are nice;the color red you love;a new bag she thinks is nice|you like what you think is nice; you see what is in front of your eyes|like 是觉得好；see 是眼睛看到|see=see means to notice with your eyes, not to think something is nice=see 是用眼睛看到，不是觉得某样东西好;eat=eat means to put food in your mouth, not to think something is nice=eat 是把食物放进嘴里，不是觉得某样东西好|like|the silent e at the end that makes i say its name|词尾不发音的 e 让 i 读字母本音
+      see|a bird in a tree that your eyes find;closed eyes that notice nothing;a big dog in the park yesterday|you see with your eyes; you eat with your mouth|see 用眼睛；eat 用嘴巴|eat=eat means to put food in your mouth, not to notice something with your eyes=eat 是把食物放进嘴里，不是用眼睛看到;swim=swim means to move through water, not to notice something with your eyes=swim 是在水里游，不是用眼睛看到|see|the double e, and the past *saw*, not *seed*|两个 e；过去式是 *saw*，不是 *seed*
+      run|horses moving very fast;moving fast in the classroom;a dog going fast after a ball|you run fast on your feet; you swim in water|run 是用脚快跑；swim 是在水里游|swim=swim means to move through water, not to move fast on your feet=swim 是在水里游，不是用脚快跑;fly=fly means to move through the air, not to move fast on your feet=fly 是在空中飞，不是用脚快跑|run|the past *ran*, not *runned*, and the double n in *running*|过去式是 *ran*，不是 *runned*；*running* 双写 n
+      jump|rabbits with long back legs;going up and down on the bed;a cat going onto a table|you jump up into the air with your legs; you fly with wings|jump 是用腿跳起来；fly 是用翅膀飞|fly=fly means to move through the air with wings, not to push up with your legs=fly 是用翅膀在空中飞，不是用腿跳起来;swim=swim means to move through water, not to push up into the air with your legs=swim 是在水里游，不是用腿跳到空中|jump|u for the short sound, then mp|u 发短音，后面是 mp
+      swim|fish in the water;going to the pool every week;moving like fish in the sea|you swim in water; you fly in the air|swim 在水里；fly 在空中|fly=fly means to move through the air, not through water=fly 是在空中飞，不是在水里;walk=walk means to move on your feet on land, not through water=walk 是在陆地上用脚走，不是在水里|swim|sw at the start, the past *swam*, and the double m in *swimming*|开头是 sw，过去式是 *swam*，*swimming* 双写 m
+      fly|birds in the sky;a plane;a bird going up into the sky|you fly through the air; you swim through water|fly 在空中；swim 在水里|swim=swim means to move through water, not through the air=swim 是在水里游，不是在空中;walk=walk means to move on your feet on the ground, not through the air=walk 是在地上用脚走，不是在空中|fly|y at the end, which changes in *flies* and *flew*|词尾是 y，在 *flies* 和 *flew* 中会变化
+      walk|going to school with a friend;babies too small to stand;going to the park together|you walk on your feet, not fast; you fly in the air|walk 是用脚慢慢走；fly 在空中|fly=fly means to move through the air, not on your feet=fly 是在空中飞，不是用脚走;swim=swim means to move through water, not on your feet=swim 是在水里游，不是用脚走|walk|the silent l: walk sounds like *wok*|l 不发音：walk 读起来像 *wok*
+      eat|rice for lunch;cows and grass;talking while you have your food|you eat food with your mouth; you see with your eyes|eat 是用嘴吃东西；see 是用眼睛看|see=see means to notice with your eyes, not to put food in your mouth=see 是用眼睛看，不是把食物放进嘴里;fly=fly means to move through the air, not to put food in your mouth=fly 是在空中飞，不是把食物放进嘴里|eat|ea for the long e sound, and the past *ate*|ea 发长 e 音，过去式是 *ate*
+      big|a very large elephant;a horse and a dog;a house with ten rooms|big means large; small means little|big 是大；small 是小|small/smaller=small means little, the opposite of big=small 是小，和 big 意思相反;sad/sadder=sad means feeling bad, not large in size=sad 是难过，不是个头大|big|the double g in *bigger* and *biggest*|*bigger*、*biggest* 双写 g
+      small|a very little mouse;a mouse and a cat;a room with one bed and one chair|small means little; big means large|small 是小；big 是大|big/bigger=big means large, the opposite of small=big 是大，和 small 意思相反;long/longer=long means big from one end to the other, not little in size=long 是长，不是小|small|the double l at the end|结尾双写 l
+    `,
+  },
 });
 
 const littleWords = vocabularyTopic({
@@ -191,86 +258,119 @@ const littleWords = vocabularyTopic({
     "But, or, very, to, at and of, and good, bad, happy, sad and long.",
     "but、or、very、to、at、of，以及 good、bad、happy、sad、long。",
   ),
+  intro: t(
+    "It is Lily's birthday, and she is **very** **happy**. She can have cake **or** ice cream, **but** not both! These little words help you join ideas and say how things and people are.",
+    "今天是莉莉的生日，她 **very**（非常）**happy**（开心）。她可以吃蛋糕 **or**（或者）冰激凌，**but**（但是）不能两样都要！这些小词帮你把意思连起来，说出东西和人怎么样。",
+  ),
   prerequisites: ["pre-a1-words-how-many"],
   words: [
     word(
       "but",
       "a word that joins two different ideas",
       "但是",
-      "I like cats, {but} I don't like dogs.|or to | Birds can fly, {but} fish can't.|or of | It is small, {but} it is very fast.|or of",
-      "or to",
+      "I like cats, {but} I don't like dogs. | Birds can fly, {but} fish can't. | The box is small, {but} it is very heavy.",
+      "or so",
     ),
     word(
       "or",
       "a word that gives a choice",
       "或者；还是",
-      "Is it a cat {or} a dog?|but very | Do you want milk {or} water?|but of | Is your bag red {or} blue?|but at",
-      "but very",
+      "Is it a cat {or} a dog? It's a dog. | Do you want milk {or} water? Milk, please. | Is your bag red {or} blue? It's blue.",
+      "and but",
     ),
     word(
       "very",
       "more than usual",
       "很；非常",
-      "The elephant is {very} big.|to or | Thank you {very} much!|to of | I am {very} happy today.|or of",
-      "to or",
+      "The elephant is {very} big. | Thank you {very} much! | I am {very} happy today.",
+      "much many",
     ),
     word(
       "to",
       "in the direction of; toward",
       "到；去；向",
-      "I go {to} school by bus.|at of | Say hello {to} your mom.|of at | Give the book {to} me.|of at",
+      "I go {to} school by bus. | Say hello {to} your mom. | Give the book {to} me.",
       "at of",
     ),
     word(
       "at",
       "in or near a place; at a time",
       "在（某地或某时）",
-      "I am {at} school.|to of | Look {at} me!|to of | We eat lunch {at} twelve.|of to",
+      "I am {at} school. | Look {at} me! | We eat lunch {at} twelve.",
       "to of",
     ),
     word(
       "of",
       "that belongs to; that is part of",
       "……的",
-      "This is a picture {of} my family.|at to | A cup {of} tea, please.|at to | He is the father {of} two girls.|at to",
+      "This is a picture {of} my family. | A cup {of} tea, please. | One {of} my friends is from China.",
       "at to",
     ),
     word(
       "good better best",
       "nice, or done well",
       "好的",
-      "Well done! Your picture is very {good}.|bad sad | Lily is my {best} friend.|worst saddest | Have a {good} day!|bad sad",
+      "Well done! You are very {good} at drawing. | Lily is my {best} friend. I love playing with her.|worst saddest | Have a {good} day!",
       "bad sad",
     ),
     word(
       "bad worse worst",
       "not good",
       "坏的；糟糕的",
-      "Oh no! The milk is {bad}. Don't drink it.|good happy | It's a {bad} day. It is raining and I am sick.|good happy | Oh no! This is the {worst} day ever!|best happiest",
+      "Oh no! The milk is {bad}. Don't drink it. | It's a {bad} day. It is raining and I am sick. | Oh no! This is the {worst} day ever!|best happiest",
       "good happy",
     ),
     word(
       "happy happier happiest",
       "feeling good and glad",
       "快乐的；高兴的",
-      "It's my birthday! I am very {happy}.|sad bad | The children are {happy}. They are laughing.|sad bad | {Happy} birthday, Tom!|Sad Long",
+      "It's my birthday! I am very {happy}. | The children are {happy}. They are laughing. | {Happy} birthday, Tom!",
       "sad bad",
     ),
     word(
       "sad sadder saddest",
       "feeling bad, maybe crying",
       "难过的；伤心的",
-      "My dog is sick. I am {sad}.|happy good | Why are you crying? Are you {sad}?|happy long | The {sad} girl is crying.|happy long",
+      "My dog is sick. I am {sad}. | Why are you crying? Are you {sad}? | The girl is {sad}, so she is crying.",
       "happy good",
     ),
     word(
       "long longer longest",
       "big from one end to the other",
       "长的",
-      "A giraffe has a {long} neck.|sad bad | My sister has {long} hair.|sad bad | A snake is {long} and thin.|happy good",
-      "sad bad",
+      "A giraffe has a {long} neck. | My sister's hair is so {long} that it touches the floor. | The train is very {long}. It has twenty cars.",
+      "short small",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*But* joins two ideas that go against each other; *or* gives a choice, so it often sits in a question with two things and an answer that picks one.",
+        "*but* 连接意思相反的两件事；*or* 表示选择，常用在问两样东西、回答只选一样的问句里。",
+      ),
+      meaning: t(
+        "*Good* and *bad* say how nice something is; *happy* and *sad* say how a person feels. Check whether the meaning talks about a thing or a feeling.",
+        "*good* 和 *bad* 说东西好不好；*happy* 和 *sad* 说人的心情。看清释义说的是东西还是感受。",
+      ),
+      spell: t(
+        "*Good* and *bad* change completely: *better*, *best* and *worse*, *worst*. *Sad* doubles its d in *sadder*, and *happy* changes y to i in *happier*.",
+        "*good* 和 *bad* 的变化完全不规则：*better*、*best*，*worse*、*worst*。*sad* 变 *sadder* 要双写 d，*happy* 变 *happier* 要把 y 改成 i。",
+      ),
+    },
+    notes: `
+      but|liking cats and not liking dogs;birds that fly and fish that can't;a small box that is very heavy|but joins two ideas that go against each other; or gives a choice|but 连接相反的两件事；or 表示选择|or=or gives a choice between two things, not two ideas that go against each other=or 表示在两样东西中选一个，不是连接相反的两件事;so=so tells what happens because of the first idea, not an idea that goes against it=so 说的是因为前一件事而产生的结果，不是相反的事|but|the short u, as in *bus*|u 发短音，和 *bus* 一样
+      or|a cat or a dog, answered with a dog;milk or water, answered with milk;a red or blue bag, answered with blue|or gives a choice; and puts two things together|or 表示选一个；and 是两个都要|and=and puts two things together, but the answer picks only one=and 是把两样东西放在一起，可回答只选了一样;but=but joins two ideas that go against each other, not a choice between two things=but 连接相反的两件事，不是在两样东西中选择|or|just o and r, said like *oar*|只有 o 和 r，读音像 *oar*
+      very|a big elephant;saying thank you;a happy day|very goes before a describing word like *big*; much goes after *thank you* or a verb|very 放在 *big* 这类形容词前面；much 放在 *thank you* 或动词后面|much=much tells how much of something, and it cannot go straight before a describing word like big or happy=much 说的是数量多少，不能直接放在 big、happy 这类形容词前面;many=many tells how many things there are, and it needs a noun like *cats* after it=many 说的是东西有多少个，后面要跟 *cats* 这样的名词|ve · ry|one r and y at the end|只有一个 r，词尾是 y
+      to|going to school by bus;saying hello to mom;giving a book to me|to shows where something goes; at shows where something is|to 表示去向；at 表示在哪里|at=at tells where something is or when, not where it goes=at 说的是在哪里或在什么时候，不是去向哪里;of=of tells what something belongs to or is part of, not where it goes=of 说的是属于或属于其中的一部分，不是去向|to|just t and o, not *too* or *two*|只有 t 和 o，不是 *too* 或 *two*
+      at|being in a place called school;looking at me;the time for lunch|at shows where or when; to shows where something goes|at 表示在哪里或什么时候；to 表示去向|to=to tells where something goes, not where it is or at what time=to 说的是去向，不是在哪里或在几点;of=of tells what something belongs to, not a place or a time=of 说的是属于什么，不是地点或时间|at|just a and t|只有 a 和 t
+      of|a picture of a family;a cup of tea;one of my friends|of shows what something belongs to or is part of; at shows a place or a time|of 表示属于或其中一部分；at 表示地点或时间|at=at tells a place or a time, not what something belongs to or is part of=at 说的是地点或时间，不是属于什么;to=to tells where something goes, not what something belongs to or is part of=to 说的是去向，不是属于什么|of|f said like v: *of* sounds like *ov*|f 读作 v：*of* 读起来像 *ov*
+      good|being very good at drawing;my best friend I love playing with;wishing someone a nice day|good means nice or done well; bad means not good|good 是好；bad 是不好|bad/worst=bad means not good, the opposite of good=bad 是不好，和 good 意思相反;sad/saddest=sad means feeling bad and maybe crying, not nice or done well=sad 是难过、想哭，不是好或做得好|good|the double o, and the forms *better* and *best*|两个 o；比较级和最高级是 *better*、*best*
+      bad|milk you must not drink;a day of rain and being sick;the worst day ever|bad means not good; good means nice|bad 是不好；good 是好|good/best=good means nice or done well, the opposite of bad=good 是好，和 bad 意思相反;happy/happiest=happy means feeling glad, not something that is not good=happy 是开心，不是糟糕|bad|the forms *worse* and *worst*, not *badder*|比较级和最高级是 *worse*、*worst*，不是 *badder*
+      happy|a birthday that makes me glad;children laughing;a birthday wish for Tom|happy means feeling glad; sad means feeling bad|happy 是开心；sad 是难过|sad=sad means feeling bad and maybe crying, the opposite of happy=sad 是难过、想哭，和 happy 意思相反;bad=bad means not good, and it describes things, not a glad feeling=bad 是不好，多用来说东西，不是开心的心情|hap · py|the double p, and y changing to i in *happier*|双写 p；*happier* 要把 y 改成 i
+      sad|a sick dog and how I feel;crying and how you feel;a girl crying|sad means feeling bad; happy means feeling glad|sad 是难过；happy 是开心|happy=happy means feeling glad, the opposite of sad, so it does not go with crying=happy 是开心，和 sad 意思相反，跟哭对不上;good=good means nice or done well, not feeling bad and crying=good 是好或做得好，不是难过想哭|sad|the double d in *sadder* and *saddest*|*sadder*、*saddest* 双写 d
+      long|a giraffe's neck;hair that touches the floor;a train with twenty cars|long means big from one end to the other; short means the opposite|long 是长；short 是短|short=short means not long, the opposite of long=short 是短，和 long 意思相反;small=small means little all over, not big from one end to the other=small 是整体小，不是从一头到另一头很长|long|ng at the end, said together|结尾的 ng 连在一起读
+    `,
+  },
 });
 
 // Can and can't.

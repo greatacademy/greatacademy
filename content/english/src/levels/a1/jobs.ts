@@ -22,93 +22,127 @@ const jobs = vocabularyTopic({
     "Doctors, nurses, farmers, drivers and police officers, and the places where people work.",
     "医生、护士、农民、司机和警察，以及人们工作的地方。",
   ),
+  intro: t(
+    "My mom is a **doctor** at the **hospital**, and my uncle is a **farmer** with cows on his **farm**. These words help you say what people do and where they work.",
+    "我妈妈是 **hospital**（医院）的 **doctor**（医生），我叔叔是 **farmer**（农民），他的 **farm**（农场）上有奶牛。这些词帮你说出人们做什么工作、在哪里工作。",
+  ),
   prerequisites: ["pre-a1-words-people"],
   words: [
     word(
       "job jobs",
       "the work that a person does to get money",
       "工作；职业",
-      "My mom has a new {job} at the hospital.|farm factory | What's your dad's {job}? — He's a driver.|farm office | Teaching is a hard {job}.|farm factory",
+      "My mom has a new {job}: she is a nurse at the hospital. | What's your dad's {job}? — He's a driver. | Teaching is a hard {job}.",
       "office worker",
     ),
     word(
       "doctor doctors",
       "a person whose job is to help sick people get better",
       "医生",
-      "I'm ill. I need to see a {doctor}.|farmer driver | The {doctor} looks at my throat.|farmer driver | My aunt is a {doctor} at the hospital.|farmer factory",
-      "nurse driver",
+      "I'm ill. I need to see a {doctor}. | The {doctor} looks at my throat. | My aunt is a {doctor}. She helps sick people get better.",
+      "farmer driver",
     ),
     word(
       "nurse nurses",
       "a person whose job is to look after sick people, often in a hospital",
       "护士",
-      "The {nurse} gives me some medicine.|farmer driver | {Nurses} work in hospitals day and night.|Farmers Drivers | The {nurse} is kind and helps the old man.|farm factory",
-      "doctor driver",
+      "The {nurse} gives me some medicine. | {Nurses} work in hospitals day and night.|Farmers Drivers | The {nurse} is kind and looks after the old man in the hospital.",
+      "farmer driver",
     ),
     word(
       "farmer farmers",
       "a person whose job is to grow food or keep animals on a farm",
       "农民",
-      "The {farmer} gets up at five to feed the cows.|nurse office | {Farmers} grow rice in the south of China.|Nurses Offices | My grandpa is a {farmer}. He grows apples.|nurse doctor",
-      "driver worker",
+      "The {farmer} gets up at five to feed the cows. | {Farmers} grow rice in the south of China.|Nurses Drivers | My grandpa is a {farmer}. He grows apples.",
+      "nurse driver",
     ),
     word(
       "driver drivers",
       "a person whose job is to drive a car, a bus or a train",
       "司机",
-      "The bus {driver} says good morning to us.|nurse farmer | Taxi {drivers} know every street in the city.|nurses farmers | My uncle is a truck {driver}.|nurse hospital",
+      "The bus {driver} says good morning to us. | Taxi {drivers} know every street in the city.|doctors farmers | My uncle is a truck {driver}.",
       "doctor farmer",
     ),
     word(
       "police",
       "the people whose job is to keep a town safe",
       "警察（总称）",
-      "Call the {police}! Someone is in the house!|farm factory | The {police} are looking for the thief.|farm office | There is a {police} car outside the bank.|farm office",
+      "Call the {police}! They will come and help us. | The {police} are looking for the thief. | There is a {police} car outside the bank.",
       "officer office",
     ),
     word(
       "officer officers",
       "a person in the police or the army; a police officer",
       "警官；官员",
-      "The police {officer} helps the children cross the road.|office factory | My mom is a police {officer}.|office farm | Two {officers} came to our school to talk about safety.|offices farms",
+      "The police {officer} helps the children cross the road. | My mom is a police {officer}. | Two {officers} came to our school to talk about safety.|offices workers",
       "office worker",
     ),
     word(
       "worker workers",
       "a person who works, often with their hands",
       "工人；工作者",
-      "The {workers} are building a new school.|offices doctors | My dad is a factory {worker}.|office doctor | She is a hard {worker}. She never stops.|office hospital",
+      "The {workers} are building a new school.|farmers officers | My dad is a factory {worker}. | She is a hard {worker}. She never stops.",
       "farmer officer",
     ),
     word(
       "office offices",
       "a room or building where people work at desks",
       "办公室",
-      "My mom works in an {office} in the city.|officer nurse | The teachers' {office} is on the second floor.|officer farmer | There are ten desks in the {office}.|nurse farmer",
+      "My mom works at a desk in an {office}. | The teachers' {office} is on the second floor. | There are ten desks in the {office}.",
       "officer factory",
     ),
     word(
       "hospital hospitals",
       "a building where sick people go to get better",
       "医院",
-      "He broke his arm, so he went to the {hospital}.|office factory | Doctors and nurses work in a {hospital}.|office factory | I was born in this {hospital}.|office factory",
+      "He broke his arm, so he went to the {hospital}. | Doctors and nurses work in a {hospital}. | I was born in this {hospital}.",
       "office farm",
     ),
     word(
       "farm farms",
       "land where people grow food and keep animals",
       "农场",
-      "There are cows and pigs on the {farm}.|office hospital | My grandpa lives on a {farm}.|hospital office | We buy eggs from the {farm} near our house.|hospital office",
+      "There are cows and pigs on the {farm}. | My grandpa lives on a {farm}. | We buy eggs from the {farm} near our house, where the chickens live.",
       "factory office",
     ),
     word(
       "factory factories",
       "a building where people make things with machines",
       "工厂",
-      "They make cars in that {factory}.|hospital farm | My aunt works in a toy {factory}.|hospital farm | There are many {factories} near the river.|hospitals farms",
+      "They make cars in that {factory}. | My aunt works in a toy {factory}. | There are many {factories} near the river, with big machines.|farms offices",
       "farm office",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Match the person to the place: a *doctor* and a *nurse* work in a *hospital*, a *farmer* on a *farm*, and a *worker* often in a *factory*. An *officer* is a person, but an *office* is a room.",
+        "把人和地方对上：*doctor* 和 *nurse* 在 *hospital* 工作，*farmer* 在 *farm*，*worker* 常在 *factory*。*officer* 是人，*office* 是房间。",
+      ),
+      meaning: t(
+        "*Police* means the whole group and takes *are*; one person is a *police officer*. Your *job* is the work you do to get money.",
+        "*police* 指整个警察群体，动词用 *are*；一个警察叫 *police officer*。*job* 是你为挣钱做的工作。",
+      ),
+      spell: t(
+        "*Officer* is *office* + *r*; *factory* becomes *factories*; *doctor* ends in -or, but *farmer*, *driver* and *worker* end in -er.",
+        "*officer* 是 *office* 加 *r*；*factory* 的复数是 *factories*；*doctor* 以 -or 结尾，*farmer*、*driver*、*worker* 以 -er 结尾。",
+      ),
+    },
+    notes: `
+      job|a new place as a nurse;what dad does;teaching|a job is the work you do; an office is a room where some people work|job 是做的工作；office 是有些人工作的房间|office=office is a room with desks, not the work you do, and a driver or teaching is not an office=office 是有桌子的房间，不是你做的工作，司机或教书也不是办公室;worker=worker is a person, not the work itself=worker 是人，不是工作本身|job|a short o, and b at the end|短元音 o，结尾是 b
+      doctor|someone to see when ill;someone who looks at my throat;someone who helps sick people get better|a doctor helps sick people get better; a farmer grows food|doctor 帮病人治病；farmer 种粮食|farmer=farmer grows food and keeps animals, not someone who looks at a sick person's throat=farmer 种粮食、养动物，不给病人看喉咙;driver=driver drives a car or a bus, not someone who makes sick people better=driver 开车，不给病人治病|doc · tor|-or at the end, so not *docter*|结尾是 -or，不是 *docter*
+      nurse|someone giving medicine;hospital work day and night;looking after an old man in hospital|a nurse looks after sick people; a farmer looks after animals and plants|nurse 照顾病人；farmer 照料动物和庄稼|farmer/farmers=farmer works on a farm with animals and plants, not in a hospital with sick people=farmer 在农场里照料动植物，不在医院照顾病人;driver/drivers=driver drives a car or a bus, not someone who gives medicine or looks after sick people=driver 开车，不给药，也不照顾病人|nurse|ur said like *er*, and a silent e|ur 读作 *er*，词尾 e 不发音
+      farmer|feeding cows at five;growing rice;growing apples|a farmer grows food on a farm; a driver drives a car or a bus|farmer 在农场种粮食；driver 开车|nurse/nurses=nurse looks after sick people, not cows, rice or apples=nurse 照顾病人，不照料奶牛、水稻或苹果;driver/drivers=driver drives a car or a bus, not someone who grows food or feeds cows=driver 开车，不种粮食，也不喂牛|farm · er|*farm* + *-er*|*farm* 加 *-er*
+      driver|a bus;a taxi on every street;a truck|a driver drives; a doctor helps sick people|driver 开车；doctor 治病|doctor/doctors=doctor helps sick people, not someone who drives a bus, a taxi or a truck=doctor 给病人治病，不开公交车、出租车或卡车;farmer/farmers=farmer grows food, not someone who drives a bus, a taxi or a truck=farmer 种粮食，不开公交车、出租车或卡车|driv · er|the e of *drive* dropped before -er|*drive* 的 e 去掉，再加 -er
+      police|calling them for help;looking for a thief;their car outside the bank|the police are the whole group; an officer is one person|police 是整个警察群体；officer 是一个人|officer=officer is one person, so it does not go with *they* or *are*, and an *officer car* is not English=officer 是一个人，不和 *they*、*are* 连用，也没有 *officer car* 的说法;office=office is a room with desks, not people who help or look for a thief=office 是有桌子的房间，不是帮忙或抓小偷的人|po · lice|-ice at the end, said like *peace*|结尾是 -ice，读作 *peace*
+      officer|helping children cross the road;my mom's police job;two who talked about safety|an officer is a person; an office is a room|officer 是人；office 是房间|office/offices=office is a room, so it cannot help children, be your mom or come to school to talk=office 是房间，不会帮孩子、不会是你妈妈，也不会来学校讲话;worker/workers=worker is a person who works with their hands, but *police worker* is not English=worker 是用手干活的人，没有 *police worker* 的说法|of · fi · cer|*office* + *r*, with a double f|*office* 加 *r*，双写 f
+      worker|people building a school;a factory job;someone who never stops|a worker is a person who works with their hands; a farmer works on a farm|worker 是用手干活的人；farmer 在农场工作|farmer/farmers=farmer works on a farm, not building a school or in a factory=farmer 在农场工作，不盖学校，也不在工厂里;officer/officers=officer is in the police or the army, not building a school or in a factory=officer 在警队或军队里，不盖学校，也不在工厂里|work · er|or said like *er*, then -er|or 读作 *er*，后面加 -er
+      office|a desk at work;the teachers' room;ten desks|an office is a room with desks; an officer is a person|office 是有桌子的房间；officer 是人|officer=officer is a person, so you do not work *in* one or put desks in one=officer 是人，不能在人“里面”工作或放桌子;factory=factory is a big building with machines, not a room with desks, and it takes *a*, not *an*=factory 是有机器的大厂房，不是放桌子的房间，前面用 *a* 不用 *an*|of · fice|a double f, and -ice at the end|双写 f，结尾是 -ice
+      hospital|a broken arm;where doctors and nurses work;where I was born|a hospital is where sick people get better; an office is where people work at desks|hospital 是看病的地方；office 是坐办公桌的地方|office=office is for desk work, not where you go with a broken arm or where doctors and nurses work=office 是坐办公桌的地方，断了胳膊不去那里，医生护士也不在那里工作;farm=farm is land with animals and plants, not where sick people get better=farm 是有动物和庄稼的地方，不是治病的地方|hos · pi · tal|-tal at the end, so not *hospitel*|结尾是 -tal，不是 *hospitel*
+      farm|cows and pigs;grandpa's home;eggs from the chickens|a farm is land with animals and plants; a factory makes things with machines|farm 是有动物和庄稼的地方；factory 是用机器造东西的地方|factory=factory is a building with machines, not land with cows, pigs and chickens=factory 是有机器的厂房，不是养牛、猪和鸡的土地;office=office is a room with desks, not land with animals=office 是有桌子的房间，不是养动物的土地|farm|ar said like *car*|ar 读作 *car* 里的音
+      factory|making cars;making toys;big machines by the river|a factory makes things with machines; a farm grows food|factory 用机器造东西；farm 种粮食|farm/farms=farm grows food and keeps animals, not making cars or toys with machines=farm 种粮食、养动物，不用机器造汽车或玩具;office/offices=office is for desk work, not making cars or toys with big machines=office 是坐办公桌的地方，不用大机器造汽车或玩具|fac · to · ry|y changing to -ies in *factories*|复数 *factories* 里 y 变成 -ies
+    `,
+  },
 });
 
 const describingPeople = vocabularyTopic({
@@ -118,93 +152,127 @@ const describingPeople = vocabularyTopic({
     "Young, tall, short, beautiful, kind, funny and friendly, and the words also and both.",
     "年轻、高、矮、美丽、善良、有趣和友好，还有 also 和 both。",
   ),
+  intro: t(
+    "My uncle is **tall** and **funny**, and my aunt is **short** and very **kind**. They **both** **smile** a lot. These words help you say what people look like and what they are like.",
+    "我叔叔 **tall**（高）而且 **funny**（风趣），婶婶 **short**（矮）而且很 **kind**（善良）。他们 **both**（俩都）常常 **smile**（微笑）。这些词帮你描述人的长相和性格。",
+  ),
   prerequisites: ["a1-words-jobs"],
   words: [
     word(
       "young younger youngest",
       "not old; having lived only a short time",
       "年轻的；年幼的",
-      "My mom is {young}. She's only twenty-five.|old busy | My little brother is the {youngest} in our family.|tallest funniest | My {younger} brother is five, and I'm eight.|taller busier",
-      "tall short",
+      "My mom is {young}. She's only twenty-five. | My little brother is the {youngest} in our family. He was born last.|oldest tallest | My {younger} brother is five, and I'm eight.|older taller",
+      "old tall",
     ),
     word(
       "tall taller tallest",
       "high from the feet to the head",
       "高的",
-      "My dad is very {tall}. He can touch the ceiling.|young short | Ben is {taller} than me.|younger shorter | Giraffes are {tall} animals.|young short",
+      "My dad is very {tall}. He can touch the ceiling. | Ben is {taller} than me. His head is above mine.|younger shorter | Giraffes are {tall} animals with long necks.",
       "short young",
     ),
     word(
       "short shorter shortest",
       "not tall; not long",
       "矮的；短的",
-      "My grandma is {short}, and I'm taller than her.|tall young | She has {short} black hair.|tall young | This pencil is too {short}.|tall young",
+      "My grandma is {short}, and I'm taller than her. | She has {short} black hair. | This pencil is too {short}.",
       "tall young",
     ),
     word(
       "beautiful",
       "very nice to look at",
       "美丽的",
-      "What a {beautiful} flower!|busy short | Your sister has {beautiful} long hair.|busy tall | The beach is {beautiful} in the evening.|busy tall",
+      "What a {beautiful} flower! | Your sister has {beautiful} long hair. | The beach is {beautiful} in the evening, with a pink and orange sky.",
       "busy friendly",
     ),
     word(
       "kind kinder kindest",
       "good and nice to other people",
       "善良的；友好的",
-      "Our teacher is very {kind}. She always helps us.|tall short | It's {kind} of you to help me.|tall short | Be {kind} to animals.|tall short",
+      "Our teacher is very {kind}. She always helps us. | It's {kind} of you to help me. | Be {kind} to animals.",
       "funny busy",
     ),
     word(
       "funny funnier funniest",
       "making people laugh",
       "有趣的；好笑的",
-      "My uncle is very {funny}. He tells great jokes.|tall short | That's a {funny} story! Ha ha!|tall short | The clown has a {funny} red nose.|busy young",
+      "My uncle is very {funny}. He tells great jokes. | That's a {funny} story! Ha ha! | The clown has a {funny} red nose.",
       "kind friendly",
     ),
     word(
       "friendly friendlier friendliest",
       "kind and happy to talk to people",
       "友好的",
-      "The new girl is very {friendly}. She says hello to everyone.|short tall | Our dog is {friendly}. It doesn't bite.|busy tall | The people in this town are {friendly}. They always say hello.|short tall",
-      "kind funny",
+      "The new girl is very {friendly}. She says hello to everyone. | Our dog is {friendly}. It doesn't bite. | The people in this town are {friendly}. They always say hello.",
+      "busy funny",
     ),
     word(
       "busy busier busiest",
       "with a lot to do; not free",
       "忙碌的",
-      "Mom is {busy} at work today, so Dad is cooking.|tall young | I'm {busy} now. Can we talk later?|tall short | The doctors are very {busy} in winter.|tall short",
-      "funny kind",
+      "Mom is {busy} at work today, so Dad is cooking. | I'm {busy} now. Can we talk later? | The doctors are very {busy} in winter. They have no free time.",
+      "free funny",
     ),
     word(
       "nice nicer nicest",
       "good; pleasant",
       "好的；令人愉快的",
-      "Have a {nice} day!|tall short | Your new dress is very {nice}.|tall young | It's {nice} to meet you.|tall short",
+      "Have a {nice} day! | Your new dress is very {nice}. | It's {nice} to meet you.",
       "kind friendly",
     ),
     word(
       "smile smiles smiled smiling",
       "to make a happy face, with the ends of your mouth up; a happy face like this",
       "微笑",
-      "Look at the camera and {smile}!|both also | She has a lovely {smile}.|both also | The baby {smiled} at me.|built kept",
-      "laugh cry",
+      "Look at the camera and {smile}! | She has a lovely {smile}. | The baby {smiled} at me.|cried sang",
+      "cry sing",
     ),
     word(
       "also",
       "too; as well",
       "也",
-      "My mom is a doctor. My dad is {also} a doctor.|both smile | I like cats, and I {also} like dogs.|both smile | Lily can swim. She can {also} ride a bike.|both smile",
+      "My mom is a doctor. My dad is {also} a doctor. | I like cats, and I {also} like dogs. | Lily can swim. She can {also} ride a bike.",
       "both only",
     ),
     word(
       "both",
       "the two; this one and that one",
       "两个都",
-      "My parents {both} work in an office.|smile kind | {Both} my sisters are tall.|Also Smile | I like {both} of them.|also smile",
+      "{Both} of my parents work in an office. | {Both} my sisters are tall. I have two sisters. | I have two cats, and I like {both} of them.",
       "also all",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Tall*, *short* and *young* describe how someone looks; *kind*, *funny*, *friendly* and *busy* describe what someone is like. Look for the clue: a height, an age, a joke or a busy day.",
+        "*tall*、*short*、*young* 描述外表；*kind*、*funny*、*friendly*、*busy* 描述性格或状态。找线索：身高、年龄、笑话，还是忙碌的一天。",
+      ),
+      meaning: t(
+        "*Both* is for exactly two, as in *both of my parents*; *all* is for three or more. *Also* adds one more fact, as in *She can also ride a bike*.",
+        "*both* 只用于两个，比如 *both of my parents*；*all* 用于三个或更多。*also* 是再补充一件事，比如 *She can also ride a bike*。",
+      ),
+      spell: t(
+        "*Beautiful* has eau after the b and one l at the end. *Funny*, *busy* and *friendly* change y to -ier and -iest.",
+        "*beautiful* 的 b 后面是 eau，结尾只有一个 l。*funny*、*busy*、*friendly* 的比较级和最高级把 y 变成 -ier、-iest。",
+      ),
+    },
+    notes: `
+      young|only twenty-five;born last in the family;a five-year-old brother|young means having lived a short time; old means having lived a long time|young 是年轻、年幼；old 是年纪大|old/oldest/older=old means having lived a long time, but twenty-five, being born last and being five are not old=old 是年纪大，可二十五岁、最后出生、五岁都不老;tall/tallest/taller=tall is about height, not about age or who was born last=tall 说的是身高，不是年龄或谁最后出生|young|ou said like the u in *up*|ou 读作 *up* 里的 u
+      tall|touching the ceiling;a head above mine;long necks|tall means high from feet to head; short means not tall|tall 是高；short 是矮|short/shorter=short means not tall, but touching the ceiling, a head above mine and long necks are tall=short 是矮，可摸到天花板、头比我高、长脖子都说明很高;young/younger=young is about age, not about height=young 说的是年龄，不是身高|tall|a double l, and a said like *all*|双写 l，a 读作 *all* 里的音
+      short|a grandma smaller than me;hair that is not long;a pencil that is too small|short means not tall or not long; tall means high|short 是矮或短；tall 是高|tall=tall means high, but the grandma is smaller than me, and hair and a pencil are not tall=tall 是高，可奶奶比我矮，头发和铅笔也不说高;young=young is about age, and hair or a pencil is not young=young 说的是年龄，头发和铅笔不说年轻|short|or said like *for*|or 读作 *for*
+      beautiful|a flower;long hair;a pink and orange evening sky|beautiful means very nice to look at; busy means with a lot to do|beautiful 是好看；busy 是忙|busy=busy means with a lot to do, but a flower, hair and a sky have nothing to do=busy 是事情多，可花、头发和天空都没有事要做;friendly=friendly means happy to talk to people, but a flower, hair or a sky cannot talk=friendly 是乐意和人交谈，可花、头发和天空不会说话|beau · ti · ful|eau after the b, and one l at the end|b 后面是 eau，结尾只有一个 l
+      kind|a teacher who always helps;helping me;how to treat animals|kind means good to other people; funny means making people laugh|kind 是善良；funny 是好笑|funny=funny means making people laugh, but here the point is helping and being good to others=funny 是让人发笑，可这里说的是帮助别人、善待别人;busy=busy means with a lot to do, not being good to others=busy 是事情多，不是善待别人|kind|i said like *eye*|i 读作 *eye*
+      funny|great jokes;ha ha;a clown's red nose|funny means making people laugh; kind means good to others|funny 是好笑；kind 是善良|kind=kind means good to others, but jokes, *ha ha* and a clown's nose make people laugh=kind 是善良，可笑话、哈哈和小丑的鼻子都是让人发笑的;friendly=friendly means happy to talk to people, and a story or a nose cannot be friendly=friendly 是乐意和人交谈，故事和鼻子不能说友好|fun · ny|a double n, and y at the end|双写 n，结尾是 y
+      friendly|saying hello to everyone;a dog that doesn't bite;people who always say hello|friendly means happy to talk to people; funny means making people laugh|friendly 是友好；funny 是好笑|busy=busy means with a lot to do, not happy to say hello or gentle like a dog that doesn't bite=busy 是事情多，不是乐意打招呼，也不是像不咬人的狗那样温和;funny=funny means making people laugh, but saying hello and not biting are not jokes=funny 是让人发笑，可打招呼和不咬人都不是笑话|friend · ly|*friend* + *-ly*, with ie in the middle|*friend* 加 *-ly*，中间是 ie
+      busy|a day at work so Dad cooks;no time to talk now;doctors with no free time|busy means with a lot to do; free means not busy|busy 是忙；free 是有空|free=free means not busy, but here there is no time to cook, talk or rest=free 是有空，可这里没时间做饭、聊天或休息;funny=funny means making people laugh, not having a lot to do=funny 是好笑，不是事情多|bus · y|u said like the i in *is*, so it sounds like *bizzy*|u 读作 *is* 里的 i，听起来像 *bizzy*
+      nice|a good day;a pretty dress;meeting someone|nice means good or pleasant; kind means good to other people|nice 是好的、令人愉快的；kind 是对人善良|kind=kind describes how a person treats others, not a day, a dress or meeting you=kind 形容一个人怎样对待别人，不形容一天、一件衣服或见面;friendly=friendly describes people or animals, not a day, a dress or meeting you=friendly 形容人或动物，不形容一天、一件衣服或见面|nice|c said like s, and a silent e|c 读作 s，词尾 e 不发音
+      smile|looking at the camera;a lovely face;a baby's happy face|you smile with your mouth and no sound; you cry with tears|smile 是不出声地笑；cry 是流泪|cry/cried=cry means to have tears, not a happy face for a camera or a lovely look=cry 是流泪，不是对着镜头的笑脸，也不是可爱的表情;sing/sang=sing means to make music with your voice, not a happy face=sing 是用嗓子唱歌，不是笑脸|smile|a silent e that makes the i say its name|词尾 e 不发音，让 i 读字母本音
+      also|a dad who is a doctor too;liking dogs as well;riding a bike as well|also adds one more fact; both is for two together|also 是再加一件事；both 是两个都|both=both goes before two things together, as in *both cats*, not before one more job, a dog or a bike=both 放在两样东西前面，比如 *both cats*，不放在又一个职业、狗或自行车前面;only=only means just this and nothing more, but each sentence adds one more thing=only 是只有，可每句都在添加一件事|al · so|one l, and -so at the end|只有一个 l，结尾是 -so
+      both|my two parents;my two sisters;my two cats|both is for two; all is for three or more|both 用于两个；all 用于三个或更多|also=also adds a fact, and it cannot go before *of my parents* or *my sisters*, or after *like*=also 是补充事实，不能放在 *of my parents*、*my sisters* 前面，也不能放在 *like* 后面;all=all is for three or more, but here there are only two=all 用于三个或更多，可这里只有两个|both|o said like *go*, and th at the end|o 读作 *go* 里的音，结尾是 th
+    `,
+  },
 });
 
 const workActions = vocabularyTopic({
@@ -214,79 +282,111 @@ const workActions = vocabularyTopic({
     "Build, drive, fix, grow, carry, wait, call, meet, keep and show.",
     "建造、驾驶、修理、种植、搬运、等待、打电话、见面、保存和展示。",
   ),
+  intro: t(
+    "My uncle **drives** a truck, **builds** houses and **fixes** our bikes. On Sunday he **shows** me how to **grow** tomatoes. These words help you talk about what people do at work.",
+    "我叔叔 **drives**（开）卡车、**builds**（盖）房子，还 **fixes**（修）我们的自行车。星期天他 **shows**（教给我看）怎么 **grow**（种）西红柿。这些词帮你谈论人们工作时做的事。",
+  ),
   prerequisites: ["a1-words-actions"],
   words: [
     word(
       "build builds built building",
       "to make something by putting parts together",
       "建造",
-      "The workers {build} houses.|wait call | Birds {build} nests in spring.|wait call | They {built} a new bridge last year.|waited called",
+      "The workers {build} new houses. | Birds {build} nests in spring. | They {built} a new bridge last year.|fixed grew",
       "fix grow",
     ),
     word(
       "drive drives drove driven driving",
       "to make a car, a bus or a train go",
       "驾驶；开车",
-      "My mom {drives} a bus.|grows smiles | Can you {drive} a car?|grow smile | Dad {drove} us to school this morning.|grew smiled",
+      "My mom {drives} a bus.|carries keeps | Can you {drive} a car on the road? | Dad {drove} us to school this morning.|carried kept",
       "carry keep",
     ),
     word(
       "fix fixes fixed fixing",
       "to make something that is broken work again",
       "修理",
-      "My dad can {fix} my bike.|wait meet | The phone is broken. Can you {fix} it?|wait meet | She {fixed} the door yesterday.|waited met",
+      "My bike is broken. My dad can {fix} it. | The phone is broken. Can you {fix} it? | The door was broken, so she {fixed} it yesterday.|built showed",
       "build show",
     ),
     word(
       "grow grows grew grown growing",
       "to get bigger; to make plants come up from the ground",
       "生长；种植",
-      "Farmers {grow} rice and vegetables.|wait call | Children {grow} very fast.|wait call | These apples {grew} in our garden.|waited called",
+      "Farmers {grow} rice and vegetables. | Children {grow} very fast. | These apples {grew} in our garden.|built kept",
       "build keep",
     ),
     word(
       "carry carries carried carrying",
       "to hold something and take it with you",
       "搬；提；携带",
-      "Can you help me {carry} this box?|wait meet | The nurse {carries} the baby.|waits builds | I {carried} my bag all day.|waited met",
+      "Can you help me {carry} this heavy box up the stairs? | The nurse {carries} the baby in her arms to the bed.|keeps shows | I {carried} my heavy bag on my back all day.|kept showed",
       "keep show",
     ),
     word(
       "wait waits waited waiting",
       "to stay in a place until someone comes or something happens",
       "等待",
-      "Please {wait} here. I'll be back soon.|show keep | We {waited} for the bus for half an hour.|built fixed | The doctor is busy. Can you {wait} a minute?|build fix",
+      "Please {wait} here. I'll be back soon. | We {waited} for the bus for half an hour.|met called | The doctor is busy. Can you {wait} a minute?",
       "meet call",
     ),
     word(
       "call calls called calling",
       "to talk to someone on the phone; to say a name loudly",
       "打电话；叫",
-      "{Call} me when you get home.|Build Grow | Mom {called} the doctor this morning.|built grew | The teacher {calls} our names every morning.|builds grows",
+      "{Call} me on the phone when you get home. | Mom {called} the doctor on the phone this morning.|met waited | The teacher {calls} our names every morning.|meets waits",
       "meet wait",
     ),
     word(
       "meet meets met meeting",
       "to see and talk to someone, for the first time or at a place you agree",
       "遇见；见面",
-      "Let's {meet} at the park at three.|grow carry | Nice to {meet} you!|build grow | I {met} my best friend at school.|built grew",
+      "Let's {meet} at the park at three and play together. | Nice to {meet} you! | I {met} my best friend at school.|called waited",
       "call wait",
     ),
     word(
       "keep keeps kept keeping",
       "to have something and not give it away; to stay in a place or a way",
       "保存；保持",
-      "You can {keep} this book. It's a present.|build wait | We {keep} our shoes by the door.|build wait | She {kept} the money in a box.|built waited",
+      "You can {keep} this book. It's a present. | We {keep} our shoes by the door. | She {kept} the money in a box.|carried showed",
       "carry show",
     ),
     word(
       "show shows showed shown showing",
       "to let someone see something",
       "给……看；展示",
-      "{Show} me your new bike!|Wait Grow | The farmer {showed} us his cows.|built waited | Can you {show} me the way to the station?|build wait",
+      "{Show} me your new bike! | The farmer {showed} us his cows.|kept carried | Can you {show} me the way to the station?",
       "keep carry",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Build* makes something new, but *fix* makes something broken work again, so look for the word *broken*. *Carry* means you take it with you, while *keep* means you do not give it away.",
+        "*build* 是造出新东西，*fix* 是把坏了的东西修好，所以留意 *broken* 这个词。*carry* 是拿着带走，*keep* 是留着不给别人。",
+      ),
+      meaning: t(
+        "You *meet* someone face to face, but you *call* them on the phone; you *wait* when you stay until someone comes. You *show* something so another person can see it.",
+        "*meet* 是当面见，*call* 是打电话；*wait* 是待着等人来。*show* 是拿给别人看。",
+      ),
+      spell: t(
+        "These past forms change: *build* becomes *built*, *drive* becomes *drove*, *grow* becomes *grew*, *meet* becomes *met* and *keep* becomes *kept*; *carry* becomes *carried*.",
+        "这些过去式会变：*build* 变 *built*，*drive* 变 *drove*，*grow* 变 *grew*，*meet* 变 *met*，*keep* 变 *kept*；*carry* 变 *carried*。",
+      ),
+    },
+    notes: `
+      build|new houses;nests in spring;a new bridge|you build something new; you fix something broken|build 是建新东西；fix 是修坏东西|fix/fixed=fix means to make something broken work again, but here the houses, nests and bridge are new=fix 是把坏的修好，可这里的房子、鸟窝和桥都是新的;grow/grew=grow is for plants and people getting bigger, not for putting parts together=grow 用于植物或人长大，不是把零件拼起来|build|ui said like the i in *is*, and the past *built*|ui 读作 *is* 里的 i，过去式是 *built*
+      drive|a bus;a car on the road;taking us to school by car|you drive a car or a bus; you carry something in your hands|drive 是开车；carry 是用手拿着|carry/carries/carried=carry means to hold something in your hands or arms, not to make a bus or a car go=carry 是用手或胳膊拿着，不是开公交车或汽车;keep/keeps/kept=keep means to have something and not give it away, not to make a car go=keep 是保存、留着，不是开车|drive|a silent e, and the past *drove*|词尾 e 不发音，过去式是 *drove*
+      fix|a broken bike;a broken phone;a broken door|you fix something broken; you build something new|fix 是修好坏东西；build 是建新东西|build/built=build means to make something new, but the bike, phone and door are already there and broken=build 是造新东西，可自行车、手机和门本来就有，只是坏了;show/showed=show means to let someone see something, not to make it work again=show 是给人看，不是修好|fix|x at the end, and -es in *fixes*|结尾是 x，第三人称是 *fixes*
+      grow|rice and vegetables;children getting bigger;apples in the garden|things grow bigger; people build things with parts|grow 是长大、种植；build 是用零件建造|build/built=build means to put parts together, not plants coming up or children getting bigger=build 是把零件拼起来，不是植物长出来或孩子长大;keep/kept=keep means to have something and not give it away, not to get bigger=keep 是留着，不是长大|grow|ow said like *go*, and the past *grew*|ow 读作 *go* 里的音，过去式是 *grew*
+      carry|a heavy box up the stairs;a baby in her arms;a heavy bag on my back|you carry something with you; you keep something and do not give it away|carry 是拿着带走；keep 是留着不给|keep/keeps/kept=keep means to have something and not give it away, not to hold it while you move=keep 是留着不给，不是拿着走;show/shows/showed=show means to let someone see something, not to take it up the stairs or on your back=show 是给人看，不是搬上楼或背在背上|car · ry|a double r, and y changing to i in *carried*|双写 r，*carried* 里 y 变成 i
+      wait|staying here until I'm back;half an hour for the bus;a minute for the doctor|you wait until someone comes; you meet someone when you see them|wait 是等；meet 是见面|meet/met=meet means to see someone, not to stay until someone comes or a bus arrives=meet 是见面，不是待着等人或等车;call=call means to phone someone, not to stay in a place until they come=call 是打电话，不是待着等人|wait|ai said like the a in *name*|ai 读作 *name* 里的 a
+      call|phoning me from home;phoning the doctor;saying our names|you call someone on the phone; you meet someone face to face|call 是打电话；meet 是当面见|meet/met/meets=meet means to see someone face to face, not to talk on the phone or say names out loud=meet 是当面见，不是打电话或点名;wait/waited/waits=wait means to stay until something happens, and it does not have *me* or the doctor right after it=wait 是等，后面不直接跟 *me* 或医生|call|a double l, and a said like *all*|双写 l，a 读作 *all* 里的音
+      meet|the park at three;someone new;my best friend at school|you meet someone face to face; you call them on the phone|meet 是当面见；call 是打电话|call/called=call means to phone someone, but here people come together in the same place=call 是打电话，可这里人们是到同一个地方见面;wait/waited=wait means to stay until someone comes, and there is no *nice to wait you*=wait 是等人来，没有 *nice to wait you* 的说法|meet|a double e, the same sound as *meat*|双写 e，和 *meat* 同音
+      keep|a book as a present;shoes by the door;money in a box|you keep something and do not give it away; you carry it with you|keep 是留着；carry 是带着|carry/carried=carry means to hold something while you move, not to have it stay in one place=carry 是拿着走，不是放在一个地方留着;show/showed=show means to let someone see something, not to have it and not give it away=show 是给人看，不是留着不给|keep|a double e, and the past *kept*|双写 e，过去式是 *kept*
+      show|my new bike;the farmer's cows;the way to the station|you show something so someone can see it; you keep it for yourself|show 是给人看；keep 是自己留着|keep/kept=keep means to have something for yourself, not to let someone see it=keep 是自己留着，不是给人看;carry/carried=carry means to hold something while you move, not to let someone see it=carry 是拿着走，不是给人看|show|ow said like *go*, and the past *showed*|ow 读作 *go* 里的音，过去式是 *showed*
+    `,
+  },
 });
 
 // Was and were.

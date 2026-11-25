@@ -22,93 +22,127 @@ const town = vocabularyTopic({
     "Streets and roads, buses, cars and trains, and the places in a town.",
     "街道和马路，公交车、汽车和火车，以及城镇里的各种地方。",
   ),
+  intro: t(
+    "In our **town**, the **bus** stops at the **station**, and there is a **bank** and a **museum** on Green Street. These words help you find your way around a town.",
+    "在我们 **town**（镇上），**bus**（公交车）停在 **station**（车站），绿街上有一家 **bank**（银行）和一座 **museum**（博物馆）。这些词帮你在镇上认路。",
+  ),
   prerequisites: ["a1-words-home"],
   words: [
     word(
       "town towns",
       "a place with many houses and shops, smaller than a city",
       "城镇",
-      "I live in a small {town} near the sea.|map bus | There is one museum in our {town}.|map car | The {town} has a big market on Saturdays.|map bus",
+      "I live in a small {town} with a hundred streets. | Our {town} has one museum, two schools and many streets. | The {town} has a big market in its main street on Saturdays.",
       "street road",
     ),
     word(
       "street streets",
       "a road in a town, with houses or shops on it",
       "街道",
-      "My school is on Green {Street}.|Bus Train | Look both ways before you cross the {street}.|bus museum | There are many shops on this {street}.|bus map",
-      "road town",
+      "My school is on Green {Street}.|Town Station | Look both ways before you cross the {street}. | There are many shops on this {street}.",
+      "town station",
     ),
     word(
       "road roads",
       "a way for cars, buses and bikes to go from one place to another",
       "马路；道路",
-      "Don't play on the {road}! It's dangerous.|bank map | This {road} goes to the airport.|bank hotel | The {road} is busy in the morning.|map bank",
-      "street way",
+      "Don't play on the {road}! Cars go fast here. | Cars and buses take this {road} to the airport. | The {road} is busy with cars in the morning.",
+      "path river",
     ),
     word(
       "bus buses",
       "a big car that carries many people along a set way",
       "公共汽车",
-      "I go to school by {bus}.|bank hotel | The number 5 {bus} goes to the zoo.|bank hotel | We waited for the {bus} for ten minutes.|bank map",
+      "I go to school by {bus} with thirty other children. It stops at every corner. | The number 5 {bus} goes along our street to the zoo. | We waited at the bus stop for the {bus}.",
       "car train",
     ),
     word(
       "car cars",
       "a machine with four wheels that people drive",
       "汽车",
-      "My dad drives a red {car}.|bank hotel | There are a lot of {cars} on the road.|banks maps | Put on your seat belt in the {car}.|bank map",
+      "My dad drives a red {car}. It has four seats. | Our family has two {cars} in the garage.|buses trains | Put on your seat belt in the {car}. Dad is driving.",
       "bus train",
     ),
     word(
       "train trains",
       "a line of cars that goes on rails",
       "火车",
-      "We go to Shanghai by {train}.|bank map | The {train} leaves from platform 3.|bank map | The fast {train} goes 300 kilometers an hour.|bank museum",
+      "Our {train} goes along the rails to Shanghai. | The {train} leaves from platform 3. | The fast {train} goes 300 kilometers an hour.",
       "bus car",
     ),
     word(
       "station stations",
       "a place where trains or buses stop for people to get on and off",
       "车站",
-      "The train is at the {station}.|map museum | Meet me at the bus {station} at four.|map hotel | The {station} is very busy in the morning.|map hotel",
+      "The train is at the {station}. | Meet me at the bus {station} at four. | The {station} is very busy in the morning, with trains coming and going.",
       "street bank",
     ),
     word(
       "bank banks",
       "a place where people keep their money",
       "银行",
-      "Mom gets money from the {bank}.|museum map | The {bank} is next to the post office.|map car | The {bank} closes at five.|map car",
+      "Mom gets money from the {bank}. | The {bank} keeps people's money safe. | I want to put my money in the {bank}.",
       "hotel museum",
     ),
     word(
       "restaurant restaurants",
       "a place where people pay to sit and eat a meal",
       "餐馆",
-      "We have dinner at a Chinese {restaurant}.|station bank | This {restaurant} has very good noodles.|station bank | The {restaurant} is full. There are no tables.|station map",
+      "We have dinner at a Chinese {restaurant} and then go home to sleep. | This {restaurant} only sells food. It has very good noodles. | The {restaurant} is full. There are no tables.",
       "hotel museum",
     ),
     word(
       "hotel hotels",
       "a building where people pay to sleep when they travel",
       "旅馆；酒店",
-      "We stayed in a {hotel} near the beach.|bank map | Our {hotel} room has a big bed.|bank station | The {hotel} has a swimming pool.|map bank",
+      "We stayed in a {hotel} near the beach. | Our {hotel} room has a big bed. | The {hotel} has a hundred bedrooms.",
       "restaurant museum",
     ),
     word(
       "museum museums",
       "a building where you can look at old or important things",
       "博物馆",
-      "We saw dinosaur bones at the {museum}.|bank station | The art {museum} is open on Sundays.|bank road | There are old Chinese bowls in this {museum}.|bank road",
+      "We saw dinosaur bones at the {museum}. | The art {museum} is open on Sundays. | There are old Chinese bowls in this {museum}.",
       "hotel bank",
     ),
     word(
       "map maps",
       "a picture that shows where streets, towns and countries are",
       "地图",
-      "Let's look at the {map}. Where is the museum?|bank bus | I can't find the hotel. Do you have a {map}?|bank road | This {map} shows all the streets in the town.|bank bus",
-      "street road",
+      "Let's look at the {map}. Where is the museum? | I can't find the hotel. Do you have a {map}? | This {map} shows all the streets in the town.",
+      "ticket card",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Ask what people do there: you keep money in a *bank*, eat in a *restaurant*, sleep in a *hotel* and look at old things in a *museum*. A *town* has many *streets*.",
+        "想想人们在那里做什么：在 *bank* 存钱，在 *restaurant* 吃饭，在 *hotel* 住宿，在 *museum* 看古老的东西。一个 *town* 里有很多 *streets*。",
+      ),
+      meaning: t(
+        "A *bus* carries many people along a set way, a *car* has a few seats, and a *train* runs on rails. A *station* is where trains or buses stop.",
+        "*bus* 沿固定路线载很多人，*car* 只有几个座位，*train* 在铁轨上跑。*station* 是火车或公交车停靠的地方。",
+      ),
+      spell: t(
+        "*Restaurant* has au in the middle, *museum* has eu, and *bus* doubles nothing but adds -es in *buses*.",
+        "*restaurant* 中间是 au，*museum* 中间是 eu，*bus* 的复数是 *buses*，不双写。",
+      ),
+    },
+    notes: `
+      town|a hundred streets;one museum and two schools;a market on its main street|a town is a place with many streets and shops; a street is one road in it|town 是有很多街道和商店的地方；street 是其中一条路|street=street is one road, so it does not have a hundred streets, two schools or its own main street=street 只是一条路，不会有一百条街、两所学校或自己的主街;road=road is a way for cars, so it does not have streets, a museum or a market on its main street=road 是车走的路，不会有街道、博物馆或主街上的市场|town|ow said like *now*|ow 读作 *now*
+      street|Green Street as a name;crossing it after looking both ways;many shops on it|a street is a road in a town; a town is the whole place|street 是镇里的街；town 是整个城镇|town=town is the whole place, so you do not cross a town after looking both ways or have shops *on* it=town 是整个城镇，不会左右看后穿过一个镇，商店也不是开在镇“上面”;station=station is where trains stop, not a name like Green Street, something you cross or a place with many shops on it=station 是火车停的地方，不是 Green Street 这样的街名，不能穿过，也不是两边开满商店的地方|street|a double e, and str at the start|双写 e，开头是 str
+      road|cars going fast;cars and buses to the airport;busy with cars|a road is for cars, buses and bikes; a path is for walking|road 是车走的路；path 是步行的小路|path=path is a small way for walking, not one where cars and buses go fast=path 是步行小路，汽车公交车不在上面飞驰;river=river is water, so cars and buses do not drive on it=river 是河水，汽车公交车不在上面开|road|oa said like *go*|oa 读作 *go*
+      bus|thirty other children and every corner;number 5 along our street;the bus stop|a bus carries many people and stops often; a train runs on rails|bus 载很多人、站站停；train 在铁轨上跑|car=car has only a few seats, so it does not carry thirty children, have a number like 5 or come to a bus stop=car 只有几个座位，不会载三十个孩子、没有 5 路这样的编号，也不停在公交站;train=train runs on rails, so it does not stop at every street corner, go along our street or come to a bus stop=train 在铁轨上跑，不会每个街角都停，不沿我们的街开，也不停在公交站|bus|one s, and -es in *buses*|只有一个 s，复数是 *buses*
+      car|four seats;two in the garage;a seat belt with Dad driving|a car is small with four wheels; a bus is big and carries many people|car 小，有四个轮子；bus 大，载很多人|bus/buses=bus has many seats and does not fit in a family garage or have Dad as a family driver=bus 座位很多，放不进家里的车库，也不是爸爸开着带全家的;train/trains=train runs on rails, so a family does not keep two in a garage or have four seats=train 在铁轨上跑，家里不会在车库停两列火车，也不止四个座位|car|ar said like *far*|ar 读作 *far*
+      train|rails to Shanghai;platform 3;300 kilometers an hour|a train runs on rails; a bus runs on roads|train 在铁轨上跑；bus 在马路上跑|bus=bus goes on roads, not on rails, and it does not leave from platform 3 or go 300 kilometers an hour=bus 在马路上开，不在铁轨上，不从 3 号站台出发，也开不到每小时 300 公里;car=car goes on roads, not on rails, and it does not leave from a platform or go 300 kilometers an hour=car 在马路上开，不在铁轨上，不从站台出发，也开不到每小时 300 公里|train|ai said like the a in *name*|ai 读作 *name* 里的 a
+      station|where the train is;the bus station at four;trains coming and going|a station is where trains or buses stop; a street is a road|station 是车站；street 是街|street=street is a road, so trains do not wait at it, and *bus street* is not English=street 是路，火车不在街上停，也没有 *bus street* 的说法;bank=bank keeps money, so trains do not come and go there, and *bus bank* is not English=bank 是存钱的地方，火车不在那里进出，也没有 *bus bank* 的说法|sta · tion|-tion at the end, said like *shun*|结尾是 -tion，读作 *shun*
+      bank|getting money;keeping money safe;putting my money in|a bank keeps people's money; a hotel is where people sleep|bank 保管钱；hotel 是住宿的地方|hotel=hotel is where people sleep when they travel, not where you get or keep money=hotel 是旅行时住的地方，不是取钱或存钱的地方;museum=museum shows old things, not where you get or keep money=museum 展出古老的东西，不是取钱或存钱的地方|bank|nk at the end|结尾是 nk
+      restaurant|dinner and then home to sleep;only food and good noodles;full with no tables|a restaurant is where you pay to eat; a hotel is where you pay to sleep|restaurant 是吃饭的地方；hotel 是住宿的地方|hotel=hotel is where you sleep, but here you go home to sleep, it only sells food and its tables are full=hotel 是住的地方，可这里吃完回家睡，只卖吃的，桌子都坐满了;museum=museum shows old things, not dinner, noodles or tables for eating=museum 展出古老的东西，不卖晚饭、面条，也没有吃饭的桌子|res · tau · rant|au in the middle, and -ant at the end|中间是 au，结尾是 -ant
+      hotel|staying near the beach;a room with a big bed;a hundred bedrooms|a hotel is where you pay to sleep; a restaurant is where you pay to eat|hotel 是住宿的地方；restaurant 是吃饭的地方|restaurant=restaurant is for eating, so you do not stay there for your holiday or sleep in its bedrooms=restaurant 是吃饭的地方，不在那里度假住宿，也没有卧室;museum=museum shows old things, not rooms with beds to stay in=museum 展出古老的东西，没有带床的房间供人住|ho · tel|the stress on *tel*|重音在 *tel*
+      museum|dinosaur bones;art open on Sundays;old Chinese bowls|a museum shows old or important things; a hotel is for sleeping|museum 展出古老或重要的东西；hotel 是住宿的地方|hotel=hotel is where people sleep, not where you see dinosaur bones, art or old bowls=hotel 是住宿的地方，不是看恐龙骨头、艺术品或古碗的地方;bank=bank keeps money, not dinosaur bones, art or old bowls=bank 保管钱，不放恐龙骨头、艺术品或古碗|mu · se · um|eu in the middle, said like *you-ZEE-um*|中间是 eu，读作 *you-ZEE-um*
+      map|where the museum is;finding the hotel;all the streets in the town|a map shows where places are; a ticket lets you get on a bus or a train|map 显示地方的位置；ticket 让你上车|ticket=ticket lets you get on a bus or a train, but it does not show where the museum, the hotel or the streets are=ticket 让你上车，但不显示博物馆、旅馆或街道在哪里;card=card is a small piece of paper, and it does not show where places are or all the streets in a town=card 是小卡片，不显示地方在哪，也不画出镇上所有街道|map|a short a, and p at the end|短元音 a，结尾是 p
+    `,
+  },
 });
 
 const directions = vocabularyTopic({
@@ -118,93 +152,127 @@ const directions = vocabularyTopic({
     "Left, turn, straight, stop, cross and corner, near and far, and getting about.",
     "左、转弯、直走、停、穿过和拐角，远和近，以及出行。",
   ),
+  intro: t(
+    "Go **straight** on, **cross** the road and **turn** **left** at the **corner**. The station isn't **far**. These words help you ask for and give directions.",
+    "一直 **straight**（往前走），**cross**（穿过）马路，在 **corner**（拐角）处 **turn**（转）**left**（向左）。车站不 **far**（远）。这些词帮你问路和指路。",
+  ),
   prerequisites: ["a1-words-town"],
   words: [
     word(
       "left",
       "on the side of your body where most people have their heart",
       "左边；向左",
-      "Turn {left} at the bank.|ticket plane | Write with your {left} hand.|ticket plane | The museum is on the {left}.|ticket plane",
+      "Turn {left} at the bank, not right. | I write with my {left} hand, not my right. | The museum is on the {left}, and the bank is on the right.",
       "right straight",
     ),
     word(
       "turn turns turned turning",
       "to go in a new way, left or right",
       "转弯；转动",
-      "{Turn} right at the corner.|Travel Visit | Don't {turn} left here. Go straight on.|travel visit | The bus {turned} into Park Road.|traveled visited",
+      "{Turn} right at the corner. | Don't {turn} left here. Go straight on. | The bus {turned} into Park Road.|crossed stopped",
       "cross stop",
     ),
     word(
       "straight",
       "not turning; in a line",
       "直；直的",
-      "Go {straight} on, then turn left.|far corner | She has long {straight} hair.|far corner | Walk {straight} to the end of the street.|far ticket",
+      "Go {straight} on, then turn left. | She has long {straight} hair. | Walk {straight} to the end of the street.",
       "left far",
     ),
     word(
       "stop stops stopped stopping",
       "to not move any more; a place where a bus stops",
       "停下；车站",
-      "{Stop}! The light is red.|Travel Visit | The bus {stops} outside our school.|travels visits | Get off at the next bus {stop}.|plane ticket",
+      "{Stop}! The light is red. | The bus {stops} outside our school, and we get off.|turns crosses | Get off at the next bus {stop}.",
       "turn cross",
     ),
     word(
       "cross crosses crossed crossing",
       "to go from one side of a road or river to the other",
       "穿过；横过",
-      "{Cross} the road at the green light.|Travel Stop | We {crossed} the river by boat.|stopped visited | Be careful when you {cross} the street.|stop travel",
+      "{Cross} the road at the green light. | We {crossed} the river by boat.|turned stopped | Be careful when you {cross} the street.",
       "turn stop",
     ),
     word(
       "corner corners",
       "the place where two streets meet",
       "拐角",
-      "The bank is on the {corner} of Park Road and Green Street.|ticket plane | Turn left at the {corner}.|ticket plane | There's a shop on the {corner}.|plane ticket",
+      "The bank is on the {corner} of Park Road and Green Street. | Turn left at the {corner}. | There's a shop on the {corner}, where the two streets meet.",
       "way left",
     ),
     word(
       "far farther farthest",
       "a long way away",
       "远的；远",
-      "Is the station {far} from here? — No, it's near.|straight left | My school isn't {far}. I can walk there.|straight left | The airport is {farther} than the station.|straighter lefter",
-      "straight left",
+      "Is the station {far} from here? — No, it's near. | My school isn't {far}. I can walk there. | The airport is {farther} than the station, so we take a taxi.|nearer closer",
+      "near close",
     ),
     word(
       "way ways",
       "how to get to a place; a road or path",
       "路；方法",
-      "Can you tell me the {way} to the station?|ticket plane | Is this the right {way} to the museum?|ticket plane | We lost our {way} in the forest.|ticket plane",
-      "corner map",
+      "Can you tell me the {way} to the station? | Is this the right {way} to the museum? | We lost our {way} in the forest.",
+      "corner left",
     ),
     word(
       "ticket tickets",
       "a piece of paper that lets you get on a bus or a train, or go into a place",
       "票",
-      "I need a {ticket} for the train.|corner way | Two {tickets} to Beijing, please.|corners ways | Show your {ticket} to the driver.|corner way",
+      "I need a {ticket} to get on the train. | Two {tickets} to Beijing, please. | Show your {ticket} to the driver, and you can get on.",
       "map way",
     ),
     word(
       "travel travels traveled traveling",
       "to go from one place to another, often far away",
       "旅行；出行",
-      "I want to {travel} around the world.|turn stop | They {travel} to work by train.|turn stop | Last summer we {traveled} to Japan.|turned stopped",
+      "I want to {travel} around the world. | They {travel} to work by train. | Last summer we {traveled} to Japan.|visited crossed",
       "visit cross",
     ),
     word(
       "visit visits visited visiting",
       "to go and see a person or a place",
       "拜访；参观",
-      "We {visit} Grandma every Sunday.|turn cross | Let's {visit} the museum tomorrow.|turn cross | They {visited} the Great Wall last year.|turned crossed",
-      "travel meet",
+      "We {visit} Grandma every Sunday. | Let's {visit} the museum tomorrow. | They {visited} the Great Wall last year.|traveled arrived",
+      "travel arrive",
     ),
     word(
       "plane planes",
       "a machine with wings that flies people through the sky",
       "飞机",
-      "We flew to Sydney by {plane}.|corner ticket | The {plane} lands at the airport at six.|corner ticket | Look! A {plane} is flying over our house.|corner ticket",
+      "We flew to Sydney by {plane}. | The {plane} lands at the airport at six. | Look! A {plane} is flying over our house.",
       "train ship",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Turn* goes with *left* or *right*, *go straight on* means do not turn, and you *cross* a road or a river from one side to the other. Look at the word after the gap.",
+        "*turn* 和 *left*、*right* 连用，*go straight on* 是不拐弯，*cross* 是从路或河的一边到另一边。看空格后面的词。",
+      ),
+      meaning: t(
+        "You *travel* to go from place to place, but you *visit* a person or a place to see them. A *corner* is where two streets meet, and the *way* is how to get somewhere.",
+        "*travel* 是从一地到另一地，*visit* 是去看望人或参观地方。*corner* 是两条街相交的地方，*way* 是去某处的路。",
+      ),
+      spell: t(
+        "*Straight* has aigh with a silent gh; *travel* becomes *traveled*, with one l in American English; *far* becomes *farther*.",
+        "*straight* 里是 aigh，gh 不发音；*travel* 的过去式是 *traveled*，美式只有一个 l；*far* 的比较级是 *farther*。",
+      ),
+    },
+    notes: `
+      left|turning at the bank not right;writing hand not my right;the museum with the bank on the right|left is the side opposite right; straight means not turning|left 是左；straight 是不拐弯|right=right is the other side, but each sentence says *not right* or puts something else on the right=right 是另一边，可每句都说了 *not right*，或者把别的东西放在右边;straight=straight means not turning, and *turn straight*, *straight hand* and *on the straight* are not English=straight 是不拐弯，没有 *turn straight*、*straight hand*、*on the straight* 的说法|left|ft at the end|结尾是 ft
+      turn|right at the corner;left here;into Park Road|you turn left or right; you cross from one side to the other|turn 是拐弯；cross 是横过|cross/crossed=cross means to go to the other side, and *cross right*, *cross left* and *crossed into Park Road* are not English=cross 是到另一边，没有 *cross right*、*cross left*、*crossed into Park Road* 的说法;stop/stopped=stop means to not move, and *stop right at the corner* or *stopped into Park Road* does not mean going a new way=stop 是停下，*stop right at the corner*、*stopped into Park Road* 都不是拐向新方向|turn|ur said like *er*|ur 读作 *er*
+      straight|going on before turning;long hair with no curls;to the end of the street|straight means in a line with no turns; left means to the left side|straight 是直的；left 是向左|left=left means to the left side, and *go left on, then turn left* or *long left hair* is not English=left 是左边，没有 *go left on, then turn left*、*long left hair* 的说法;far=far means a long way away, and *go far on*, *far hair* and *walk far to the end* are not English=far 是远，没有 *go far on*、*far hair*、*walk far to the end* 的说法|straight|aigh with a silent gh|aigh 里 gh 不发音
+      stop|a red light;outside our school to get off;the next bus stop|you stop when you do not move any more; you turn when you go a new way|stop 是停；turn 是转|turn/turns=turn means to go a new way, but a red light and getting off need you to not move, and *bus turn* is not English=turn 是转弯，可红灯和下车都要停下，也没有 *bus turn* 的说法;cross/crosses=cross means to go to the other side, but a red light means do not go, and *bus cross* is not English=cross 是穿过，可红灯表示不能走，也没有 *bus cross* 的说法|stop|a single p, and pp in *stopped*|只有一个 p，*stopped* 双写 p
+      cross|the road at the green light;the river by boat;the street with care|you cross from one side to the other; you stop when you do not move|cross 是横过；stop 是停|turn/turned=turn means to go left or right, and *turn the road*, *turned the river* and *turn the street* are not English=turn 是左转或右转，没有 *turn the road*、*turned the river*、*turn the street* 的说法;stop/stopped=stop means to not move, but a green light means go, and you cannot stop a river by boat=stop 是停，可绿灯表示可以走，也不能坐船让河停下|cross|a double s|双写 s
+      corner|Park Road and Green Street;turning left there;where two streets meet|a corner is where two streets meet; the way is how to get somewhere|corner 是两条街相交的地方；way 是去某处的路|way=way is how to get somewhere, not the place where two streets meet=way 是去某处的路，不是两条街相交的地方;left=left is a side, and *turn left at the left* or *the left of Park Road and Green Street* does not make sense=left 是一边，*turn left at the left*、*the left of Park Road and Green Street* 都说不通|cor · ner|or said like *for*, and -er at the end|or 读作 *for*，结尾是 -er
+      far|not near;walking there;a taxi to the airport|far means a long way away; near means close|far 是远；near 是近|near/nearer=near means close, but *No, it's near*, *isn't* and taking a taxi show the place is a long way away or not=near 是近，可 *No, it's near*、*isn't* 和打车都说明这里讲的是远不远;close/closer=close means not far, but *it's near* answers no, and you take a taxi because it is a long way=close 是近，可回答 *it's near* 是在否定，打车是因为远|far|ar said like *car*, and *farther* with a double r|ar 读作 *car*，*farther* 双写 r
+      way|to the station;the right one to the museum;lost in the forest|the way is how to get somewhere; a corner is where two streets meet|way 是去某处的路；corner 是街角|corner=corner is one place where streets meet, and you cannot be told *the corner to the station* or lose your corner=corner 是街道相交处，没人告诉你 *the corner to the station*，也不会丢了街角;left=left is a side, and *the left to the station*, *the right left* and *lost our left* are not English=left 是一边，没有 *the left to the station*、*the right left*、*lost our left* 的说法|way|ay said like *say*|ay 读作 *say*
+      ticket|getting on the train;two to Beijing;showing it to the driver|a ticket lets you get on; a map shows where places are|ticket 让你上车；map 显示地方的位置|map=map shows where places are, but it does not let you get on a train or a bus=map 显示地方在哪里，但不能让你上火车或公交车;way=way is how to get somewhere, and you cannot show a way to a driver or buy two ways to Beijing=way 是路，不能把路给司机看，也不能买两条去北京的路|tick · et|ck in the middle|中间是 ck
+      travel|around the world;to work by train;to Japan|you travel from place to place; you visit to see someone or something|travel 是出行；visit 是看望或参观|visit/visited=visit goes straight before the person or place, and *visit around the world*, *visit to work* and *visited to Japan* are not English=visit 后面直接接人或地点，没有 *visit around the world*、*visit to work*、*visited to Japan* 的说法;cross/crossed=cross means to go to the other side, and *cross around the world* or *crossed to Japan* is not English=cross 是到另一边，没有 *cross around the world*、*crossed to Japan* 的说法|trav · el|one l in *traveled*|*traveled* 里只有一个 l
+      visit|Grandma;the museum;the Great Wall|you visit a person or a place to see them; you travel to get somewhere|visit 是看望或参观；travel 是出行|travel/traveled=travel needs *to*, and *travel Grandma*, *travel the museum* and *traveled the Great Wall* are not English=travel 要加 *to*，没有 *travel Grandma*、*travel the museum*、*traveled the Great Wall* 的说法;arrive/arrived=arrive needs *at* or *in*, and *arrive Grandma* or *arrived the Great Wall* is not English=arrive 要加 *at* 或 *in*，没有 *arrive Grandma*、*arrived the Great Wall* 的说法|vis · it|s said like z|s 读作 z
+      plane|flying to Sydney;landing at the airport;flying over our house|a plane flies; a train runs on rails|plane 在天上飞；train 在铁轨上跑|train=train runs on rails, so you do not fly by train, and it does not land at an airport or fly over a house=train 在铁轨上跑，不能坐火车飞，也不会在机场降落或从房子上飞过;ship=ship goes on the sea, so you do not fly by ship, and it does not land at an airport or fly over a house=ship 在海上走，不能坐船飞，也不会在机场降落或从房子上飞过|plane|a silent e, the same sound as *plain*|词尾 e 不发音，和 *plain* 同音
+    `,
+  },
 });
 
 const trips = vocabularyTopic({
@@ -214,86 +282,119 @@ const trips = vocabularyTopic({
     "Trips and holidays, airports and bridges, boats, ships and taxis, arriving and leaving, fast and slow.",
     "旅行和假期，机场和桥，船和出租车，到达和离开，快和慢。",
   ),
+  intro: t(
+    "On our **holiday**, we take a **taxi** to the **airport**, and the plane **arrives** in the evening. Then we go across the sea by **ship**. These words help you talk about a trip.",
+    "**holiday**（假期）里，我们坐 **taxi**（出租车）去 **airport**（机场），飞机傍晚 **arrives**（到达）。然后我们坐 **ship**（轮船）过海。这些词帮你谈论旅行。",
+  ),
   prerequisites: ["a1-words-directions"],
   words: [
     word(
       "trip trips",
       "a short journey to a place and back",
       "旅行；出行",
-      "We went on a school {trip} to the zoo.|taxi bridge | Have a good {trip}!|taxi bridge | The {trip} to the beach takes two hours.|taxi bridge",
+      "We went on a school {trip} to the zoo. | Have a good {trip} to the zoo and back! | The {trip} to the beach takes two hours.",
       "holiday ship",
     ),
     word(
       "holiday holidays",
       "a time with no school or work, often when people travel",
       "假期",
-      "We go to the beach in the summer {holiday}.|taxi airport | Today is a {holiday}, so the banks are closed.|taxi bridge | Where did you go on {holiday}?|taxi bridge",
+      "We have no school in the summer {holiday}, so we go to the beach. | Today is a {holiday}, so the banks are closed. | Where did you go on {holiday}?",
       "trip airport",
     ),
     word(
       "airport airports",
       "a place where planes take off and land",
       "机场",
-      "We take a taxi to the {airport}.|bridge holiday | The plane lands at the {airport} at nine.|bridge boat | The {airport} is far from the city.|bridge holiday",
+      "We take a taxi to the {airport} to catch our plane. | The plane lands at the {airport} at nine. | The {airport} is far from the city, and planes fly in and out all day.",
       "station bridge",
     ),
     word(
       "bridge bridges",
       "a road that goes over a river or another road",
       "桥",
-      "We walk across the {bridge} to get to school.|taxi airport | There are three {bridges} over the river.|taxis airports | The old {bridge} is made of stone.|taxi holiday",
+      "We walk across the {bridge} high above the river. | There are three {bridges} over the river.|roads airports | The old stone {bridge} goes over the railway.",
       "road airport",
     ),
     word(
       "boat boats",
       "a small thing that carries people on water",
       "小船",
-      "We crossed the lake in a {boat}.|taxi bridge | My uncle has a fishing {boat}.|taxi bridge | Can you row a {boat}?|taxi bridge",
+      "We crossed the small lake in a little {boat}. | My uncle has a small fishing {boat}. | Can you row a {boat}?",
       "ship taxi",
     ),
     word(
       "ship ships",
       "a big boat that goes across the sea",
       "轮船",
-      "The {ship} carries cars across the sea.|taxi bridge | Big {ships} come into the port every day.|taxis bridges | We went to the island by {ship}.|taxi bridge",
+      "The big {ship} carries hundreds of cars across the sea. | Big {ships} come into the port every day.|boats planes | We went to the island by {ship}. It took two days on the sea.",
       "boat plane",
     ),
     word(
       "taxi taxis",
       "a car with a driver that you pay to take you somewhere",
       "出租车",
-      "Let's take a {taxi} to the hotel.|bridge ship | The {taxi} driver knows the way.|bridge ship | Call a {taxi}, please. It's raining.|bridge ship",
+      "Let's take a {taxi} to the hotel. Just us and the driver. | The {taxi} driver takes us right to our door. | Call a {taxi}, please. It's raining.",
       "bus boat",
     ),
     word(
       "arrive arrives arrived arriving",
       "to get to a place",
       "到达",
-      "The train {arrives} at ten.|crosses visits | We {arrived} at the hotel late at night.|crossed visited | What time do you {arrive} at school?|cross visit",
+      "The train {arrives} at the station at ten, and we get off.|leaves comes | We {arrived} at the hotel late at night.|left came | What time do you {arrive} at school?",
       "leave come",
     ),
     word(
       "leave leaving",
       "to go away from a place",
       "离开；出发",
-      "We {leave} for school at half past seven.|cross visit | Don't {leave} your bag on the bus!|cross visit | We are {leaving} now. Goodbye!|crossing visiting",
+      "We {leave} for school at half past seven. | Don't {leave} your bag on the bus! | We are {leaving} now. Goodbye!|arriving staying",
       "arrive stay",
     ),
     word(
       "fast faster fastest",
       "moving quickly",
       "快的；快",
-      "The train is very {fast}.|slow far | A cheetah can run very {fast}.|slow far | The plane is {faster} than the train.|slower farther",
-      "slow quick",
+      "The train is very {fast}. It goes 300 kilometers an hour. | A cheetah can run very {fast}. | The plane is {faster} than the train. It gets there in one hour, not five.|slower later",
+      "slow late",
     ),
     word(
       "slow slower slowest",
       "not fast; taking a long time",
       "慢的",
-      "The old bus is very {slow}.|fast far | Turtles are {slow} animals.|fast far | Our old computer is {slower} than the new one.|faster farther",
+      "The old bus is very {slow}. We walk faster than it. | Turtles are {slow} animals. | Our old computer is {slower} than the new one. It takes ages to start.|faster later",
       "fast late",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Size and water are the clues: a *boat* is small, as on a lake, but a *ship* is big and crosses the sea. A *taxi* takes just you and the driver, while a *bus* carries many people.",
+        "看大小和水面：*boat* 小，比如湖上的小船；*ship* 大，能横渡大海。*taxi* 只载你和司机，*bus* 载很多人。",
+      ),
+      meaning: t(
+        "You *arrive* when you get to a place and *leave* when you go away from it. A *trip* is a short journey there and back; a *holiday* is time with no school or work.",
+        "到了一个地方是 *arrive*，从那里走是 *leave*。*trip* 是来回的短途旅行；*holiday* 是不上学不上班的假期。",
+      ),
+      spell: t(
+        "*Arrive* has a double r, *bridge* has dge at the end, and *leave* becomes *leaving* without its e. *Taxi* becomes *taxis*.",
+        "*arrive* 双写 r，*bridge* 结尾是 dge，*leave* 变 *leaving* 时去掉 e。*taxi* 的复数是 *taxis*。",
+      ),
+    },
+    notes: `
+      trip|a school one to the zoo;to the zoo and back;two hours to the beach|a trip is a short journey there and back; a holiday is time off school or work|trip 是来回的短途出行；holiday 是假期|holiday=holiday is time with no school, so a school holiday is not a visit to the zoo, and a holiday does not take two hours=holiday 是不上学的日子，*school holiday* 不是去动物园，假期也不是两小时;ship=ship is a big boat, and a school ship, a ship to the zoo and back or a two-hour ship to the beach does not fit=ship 是大船，学校的船、去动物园再回来的船、两小时到海滩的船都不合适|trip|a short i, and p at the end|短元音 i，结尾是 p
+      holiday|no school in summer;a day the banks close;going away on holiday|a holiday is time with no school or work; a trip is one journey|holiday 是假期；trip 是一次出行|trip=trip is one journey, so it is not a summer with no school or a day the banks close, and *on trip* needs *a*=trip 是一次出行，不是不上学的夏天或银行关门的日子，*on trip* 也要加 *a*;airport=airport is where planes land, not a time with no school or a day banks close=airport 是飞机降落的地方，不是不上学的时间或银行关门的日子|hol · i · day|*holi* + *day*, with one l|*holi* 加 *day*，只有一个 l
+      airport|catching our plane;planes landing;planes in and out|an airport is for planes; a station is for trains and buses|airport 给飞机用；station 给火车和公交车用|station=station is for trains and buses, not where you catch a plane or planes land=station 给火车和公交车用，不在那里坐飞机，飞机也不在那里降落;bridge=bridge goes over a river, and planes do not land on it=bridge 架在河上，飞机不在桥上降落|air · port|*air* + *port*, one word|*air* 加 *port*，一个词
+      bridge|high above the river;three over the river;stone over the railway|a bridge goes over a river or a road; a road goes along the ground|bridge 架在河或路上方；road 在地面上|road/roads=road goes along the ground, not high above a river or over the railway=road 在地面上，不高架在河上，也不跨过铁路;airport/airports=airport is where planes land, not something you walk across over a river=airport 是飞机降落的地方，不是过河时走过的东西|bridge|dge at the end|结尾是 dge
+      boat|a little one on a small lake;a small fishing one;rowing one|a boat is small; a ship is big|boat 小；ship 大|ship=ship is big and goes across the sea, so it is not little, small or rowed by hand=ship 很大，横渡大海，不是小船，也不能用手划;taxi=taxi is a car, so it does not cross a lake, fish or get rowed=taxi 是汽车，不过湖，不打鱼，也不能划|boat|oa said like *go*|oa 读作 *go*
+      ship|hundreds of cars across the sea;big ones in the port;two days on the sea|a ship is a big boat for the sea; a boat is small|ship 是海上的大船；boat 是小船|boat/boats=boat is small, so it does not carry hundreds of cars, and *big boats* or two days at sea do not fit a little boat=boat 是小船，不能载几百辆车，大船和海上两天都不适合小船;plane/planes=plane flies, so it does not come into a port or take two days on the sea=plane 在天上飞，不进港口，也不在海上走两天|ship|sh at the start, and a short i|开头是 sh，短元音 i
+      taxi|just us and the driver;right to our door;calling one in the rain|a taxi takes you to your door; a bus carries many people on a set way|taxi 送你到门口；bus 沿固定路线载很多人|bus=bus carries many people on a set way, so it is not just us, it does not stop at our door and you do not call one=bus 沿固定路线载很多人，不是只有我们，不停在我们门口，也不能打电话叫;boat=boat goes on water, so it does not take us to a hotel or our door=boat 在水上走，不会把我们送到旅馆或家门口|tax · i|i at the end, and *taxis*|结尾是 i，复数是 *taxis*
+      arrive|at the station to get off;at the hotel at night;at school|you arrive when you get to a place; you leave when you go away|arrive 是到达；leave 是离开|leave/leaves/left=leave means to go away, but here we get off, reach the hotel or get to school, and *leave at school* is not right=leave 是离开，可这里是下车、到旅馆、到学校，*leave at school* 也不对;come/comes/came=come is not used with *at* for getting to a place, so *comes at the station* or *came at the hotel* is not English=come 不和 *at* 连用表示到达，没有 *comes at the station*、*came at the hotel* 的说法|ar · rive|a double r, and a silent e|双写 r，词尾 e 不发音
+      leave|for school;a bag on the bus;goodbye now|you leave when you go away; you arrive when you get to a place|leave 是离开；arrive 是到达|arrive/arriving=arrive means to get to a place, but *for school*, a forgotten bag and *Goodbye!* are about going away=arrive 是到达，可 *for school*、落下书包和 *Goodbye!* 都是离开;stay/staying=stay means to not go away, but *for school* and *Goodbye!* mean going, and *stay your bag* is not English=stay 是留下，可 *for school* 和 *Goodbye!* 都是要走，也没有 *stay your bag* 的说法|leave|ea said like *see*, and the e dropped in *leaving*|ea 读作 *see*，*leaving* 去掉 e
+      fast|300 kilometers an hour;a running cheetah;one hour not five|fast means moving quickly; slow means taking a long time|fast 是快；slow 是慢|slow/slower=slow means taking a long time, but 300 kilometers an hour, a cheetah and one hour not five are quick=slow 是慢，可每小时 300 公里、猎豹和一小时不是五小时都很快;late/later=late means after the right time, not how quickly something moves=late 是迟，不说移动得多快|fast|a said like *car* in British English, like *cat* in American|英式 a 读作 *car*，美式读作 *cat*
+      slow|slower than walking;turtles;ages to start|slow means taking a long time; fast means moving quickly|slow 是慢；fast 是快|fast/faster=fast means quick, but we walk faster than the bus, turtles are not quick and the old computer takes ages=fast 是快，可我们走路都比这辆车快，乌龟不快，旧电脑要很久才启动;late/later=late means after the right time, not how quickly a bus, an animal or a computer moves=late 是迟，不说公交车、动物或电脑的快慢|slow|ow said like *go*|ow 读作 *go*
+    `,
+  },
 });
 
 // Wh- questions.

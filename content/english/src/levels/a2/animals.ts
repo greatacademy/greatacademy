@@ -144,93 +144,127 @@ const wildlife = vocabularyTopic({
     "Wolves, foxes, deer, whales, dolphins, sharks, eagles, owls, bees, butterflies, spiders and ants.",
     "狼、狐狸、鹿、鲸、海豚、鲨鱼、鹰、猫头鹰、蜜蜂、蝴蝶、蜘蛛和蚂蚁。",
   ),
+  intro: t(
+    "On our trip we saw a **fox** run into the trees, a **dolphin** jump next to the boat and an **eagle** fly over the mountains. These words help you name the wild animals of forests, seas and skies and say what each one does.",
+    "旅行中我们看见一只 **fox**（狐狸）跑进树林，一只 **dolphin**（海豚）在船边跃起，一只 **eagle**（鹰）飞过山顶。这些词帮你说出森林、大海和天空中的野生动物，并说说它们各自做什么。",
+  ),
   prerequisites: ["a1-words-wild-animals", "a2-words-pets"],
   words: [
     word(
       "wolf wolves",
       "a wild animal like a big dog that lives and hunts in a group",
       "狼",
-      "The {wolves} howled at the moon.|owls eagles | In the story, the big bad {wolf} eats Grandma.|owl eagle | A {wolf} looks like a big gray dog.|whale shark",
+      "The {wolves} howled at the moon.|foxes deer | In the story, the big bad {wolf} eats Grandma. | A {wolf} looks like a big gray dog.",
       "fox deer",
     ),
     word(
       "fox foxes",
       "a wild animal like a small dog, with red fur and a long tail",
       "狐狸",
-      "A {fox} has red fur and a long tail.|whale shark | The {fox} took a chicken from the farm.|whale dolphin | {Foxes} often come into cities at night.|Whales Sharks",
+      "A {fox} has red fur and a long tail. | The little red {fox} took a chicken from the farm. | Little red {foxes} often look for food in city bins at night.|wolves deer",
       "wolf deer",
     ),
     word(
       "deer",
       "a wild animal with long thin legs; the male has antlers",
       "鹿",
-      "We saw three {deer} in the forest.|sharks whales | A baby {deer} is called a fawn.|shark whale | The {deer} ran away when it heard us.|shark dolphin",
+      "We saw three {deer} eating grass in the forest.|foxes wolves | A male {deer} has big antlers on its head. | The {deer} stopped eating leaves and ran away when it heard us.",
       "fox wolf",
     ),
     word(
       "whale whales",
       "the biggest animal in the sea",
       "鲸",
-      "The blue {whale} is the biggest animal in the world.|ant bee | We went on a boat to see the {whales}.|ants spiders | {Whales} come up to breathe air.|Ants Spiders",
+      "The blue {whale} is the biggest animal in the world. | From our boat, we saw the huge {whales} blow water high into the air.|dolphins sharks | {Whales} are bigger than any other animal in the sea.|Dolphins Sharks",
       "dolphin shark",
     ),
     word(
       "dolphin dolphins",
       "a clever sea animal that is friendly to people",
       "海豚",
-      "{Dolphins} are very clever and friendly.|Spiders Ants | A {dolphin} jumped out of the water next to our boat.|spider bee | {Dolphins} talk to each other with clicks and whistles.|Ants Spiders",
+      "{Dolphins} are clever, friendly and much smaller than whales.|Whales Sharks | A small, friendly {dolphin} swam next to our boat. | Small, friendly {dolphins} talk to each other with clicks and whistles.|Whales Sharks",
       "whale shark",
     ),
     word(
       "shark sharks",
       "a big fish with sharp teeth",
       "鲨鱼",
-      "Don't swim here! I saw a {shark}!|deer owl | A {shark} has many rows of sharp teeth.|deer owl | Some {sharks} are as long as a bus.|owls bees",
+      "Don't swim here! I saw a {shark}! | A {shark} has many rows of sharp teeth. | Some {sharks} are as long as a bus, and they are dangerous fish.|whales dolphins",
       "whale dolphin",
     ),
     word(
       "eagle eagles",
       "a big bird that hunts small animals and can see very far",
       "鹰",
-      "The {eagle} flew high above the mountains.|ant spider | An {eagle} can see a rabbit from very far away.|ant shark | {Eagles} build their nests on high rocks.|Ants Sharks",
+      "The {eagle} flew high above the mountains in the bright sun, looking for rabbits. | In the daytime, {eagles} can see a rabbit from very far away.|owls parrots | {Eagles} build huge nests of sticks on high mountain rocks.|Owls Parrots",
       "owl parrot",
     ),
     word(
       "owl owls",
       "a bird with big eyes that hunts at night",
       "猫头鹰",
-      'An {owl} hunts at night.|ant whale | {Owls} have very big eyes.|Ants Sharks | We heard an {owl} in the trees: "Hoo, hoo!"|ant eagle',
+      '{Owls} hunt at night.|eagles parrots | {Owls} have very big eyes to see in the dark.|Eagles Parrots | We heard the {owl} in the trees: "Hoo, hoo!"',
       "eagle parrot",
     ),
     word(
       "bee bees",
       "a flying insect that makes honey",
       "蜜蜂",
-      "{Bees} make honey.|Spiders Sharks | A {bee} stung me on the arm!|spider fox | The {bees} are flying from flower to flower.|spiders wolves",
+      "{Bees} make honey.|Ants Butterflies | The {bee} flew onto my arm and stung me! | The {bees} are flying from flower to flower to make honey.|ants butterflies",
       "ant butterfly",
     ),
     word(
       "butterfly butterflies",
       "an insect with big colorful wings",
       "蝴蝶",
-      "A {butterfly} has four colorful wings.|spider ant | The garden is full of {butterflies} in summer.|spiders ants | A caterpillar turns into a {butterfly}.|spider bee",
+      "A {butterfly} has four colorful wings. | The garden is full of colorful {butterflies} in summer.|bees spiders | A caterpillar turns into a {butterfly}.",
       "bee spider",
     ),
     word(
       "spider spiders",
       "a small animal with eight legs that makes webs",
       "蜘蛛",
-      "A {spider} has eight legs.|bee butterfly | There's a big {spider} in the bath!|bee whale | {Spiders} catch flies in their webs.|Bees Butterflies",
+      "{Spiders} have eight legs.|ants bees | There's a big {spider} with eight hairy legs in the bath! | {Spiders} catch flies in their webs.|Ants Bees",
       "ant bee",
     ),
     word(
       "ant ants",
       "a very small insect that lives in big groups",
       "蚂蚁",
-      "{Ants} can carry things much heavier than they are.|Whales Owls | There are {ants} on the cake!|whales owls | An {ant} is very small, but it is very strong.|owl eagle",
+      "{Ants} walk in long lines and carry things much heavier than they are.|Bees Spiders | Hundreds of tiny {ants} are walking in a line across the cake!|bees spiders | {Ants} are tiny insects with six legs and no wings.|bees spiders",
       "bee spider",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Bee*, *butterfly*, *spider* and *ant* are all small creatures. Look for what the sentence says it does: honey for a bee, colorful wings for a butterfly, eight legs and a web for a spider, long lines on the ground for an ant.",
+        "*bee*、*butterfly*、*spider* 和 *ant* 都是小动物。看句子说它做什么：酿蜜的是 bee，有彩色翅膀的是 butterfly，八条腿会结网的是 spider，在地上排成长队的是 ant。",
+      ),
+      meaning: t(
+        "*Whale*, *dolphin* and *shark* all live in the sea: a whale is the biggest, a dolphin is small and friendly, and a shark is a fish with sharp teeth.",
+        "*whale*、*dolphin* 和 *shark* 都生活在海里：whale 最大，dolphin 小而友好，shark 是长着尖牙的鱼。",
+      ),
+      spell: t(
+        "Some of these animals change in the plural: wol**f** becomes wol**ves**, fo**x** becomes fox**es**, and *deer* stays *deer*.",
+        "有些动物词的复数会变：wol**f** 变成 wol**ves**，fo**x** 变成 fox**es**，*deer* 的复数还是 *deer*。",
+      ),
+    },
+    notes: `
+      wolf|wild animals howling at the moon;the big bad animal of the story that eats Grandma;an animal that looks like a big gray dog|a wolf is big and gray and hunts in a group; a fox is small and red|wolf 体型大、毛灰、成群捕猎；fox 体型小、毛红|fox=fox is a small red animal that lives alone, not a big gray animal like a large dog=fox 是独自生活的红色小动物，不是像大狗那样的灰色大动物;deer=deer eats grass and leaves and is never a hunter that howls or eats people=deer 吃草和树叶，不会嚎叫，也不会吃人|wolf|the plural *wolves*: f changes to v and adds -es|复数 *wolves*：f 变成 v 再加 -es
+      fox|an animal with red fur and a long tail;a little red animal taking a chicken from a farm;little red animals looking in city bins at night|a fox is small and red; a wolf is big and gray|fox 体型小、毛红；wolf 体型大、毛灰|wolf=wolf is a big gray animal like a large dog, not a little red one=wolf 是像大狗那样的灰色大动物，不是红色的小动物;deer=deer has a short tail and eats only plants, so it does not catch chickens or look for food in bins=deer 尾巴短、只吃植物，不会抓鸡，也不会翻垃圾桶找吃的|fox|the x at the end, and the plural *foxes* with -es|词尾是 x，复数 *foxes* 要加 -es
+      deer|three animals eating grass in a forest;a male animal with big antlers on its head;an animal that stopped eating leaves and ran away|a deer eats plants and has long thin legs; a fox hunts small animals|deer 吃植物、腿细长；fox 捕食小动物|fox=fox is a small red hunter that eats meat, not grass or leaves, and has no antlers=fox 是吃肉的红色小猎手，不吃草和树叶，也没有鹿角;wolf=wolf is a hunter that eats meat, not grass or leaves, and has no antlers=wolf 是吃肉的猎手，不吃草和树叶，也没有鹿角|deer|the double e, and the plural is also *deer*, with no -s|两个 e；复数也是 *deer*，不加 -s
+      whale|the biggest animal in the world;huge animals blowing water high into the air;the animal bigger than any other in the sea|a whale is the biggest animal in the sea; a dolphin is much smaller|whale 是海里最大的动物；dolphin 小得多|dolphin=dolphin is a clever sea animal much smaller than a whale, not the biggest animal in the sea=dolphin 是比鲸小得多的聪明海洋动物，不是海里最大的动物;shark=shark is a fish with sharp teeth, smaller than a whale, and it does not blow water into the air=shark 是长着尖牙的鱼，比鲸小，也不会向空中喷水|whale|the silent h after w, and the silent e at the end|w 后面的 h 不发音，词尾的 e 也不发音
+      dolphin|clever, friendly sea animals much smaller than whales;a small, friendly animal swimming next to a boat;small, friendly animals talking with clicks and whistles|a dolphin is small, clever and friendly; a whale is huge|dolphin 体型小、聪明友好；whale 体型巨大|whale=whale is the biggest animal in the sea, not a small one=whale 是海里最大的动物，不是小动物;shark=shark is a fish with sharp teeth that people fear, not a clever, friendly animal=shark 是让人害怕的尖牙鱼，不是聪明友好的动物|dol · phin|ph, which sounds like f|ph 读作 f
+      shark|an animal that makes it dangerous to swim;an animal with many rows of sharp teeth;dangerous fish as long as a bus|a shark is a dangerous fish with sharp teeth; a dolphin is friendly|shark 是长着尖牙的危险的鱼；dolphin 很友好|whale=whale is a huge, gentle animal that breathes air, not a dangerous fish with rows of sharp teeth=whale 是呼吸空气、性情温和的巨大动物，不是长着一排排尖牙的危险的鱼;dolphin=dolphin is a friendly animal that breathes air, not a dangerous fish=dolphin 是呼吸空气、很友好的动物，不是危险的鱼|shark|ar, as in *car*, and k at the end|ar 和 *car* 里的一样，词尾是 k
+      eagle|a bird flying above mountains in the bright sun, looking for rabbits;birds seeing a rabbit far away in the daytime;birds building huge nests on mountain rocks|an eagle is a big bird that hunts in the day; an owl hunts at night|eagle 是白天捕猎的大鸟；owl 夜里捕猎|owl=owl is a bird that hunts at night, not a big bird hunting in the sun over the mountains=owl 是夜里捕猎的鸟，不是白天在山上空捕猎的大鸟;parrot=parrot is a colorful bird that eats seeds and fruit and learns words, not a big hunter of rabbits=parrot 是吃种子和水果、会学说话的彩色鸟，不是捕兔子的大鸟|ea · gle|ea for the long e sound, and -gle at the end|ea 发长 e 音，结尾是 -gle
+      owl|birds that hunt at night;birds with very big eyes to see in the dark;a bird in the trees saying "Hoo, hoo!"|an owl hunts at night and says "hoo"; an eagle hunts in the day|owl 夜里捕猎、叫声“呜呜”；eagle 白天捕猎|eagle=eagle is a big bird that hunts in the daytime, not at night, and it does not say "hoo"=eagle 是白天捕猎的大鸟，不在夜里捕猎，也不会“呜呜”叫;parrot=parrot is a colorful bird that learns words, not a night hunter that says "hoo"=parrot 是会学说话的彩色鸟，不是夜里捕猎、“呜呜”叫的鸟|owl|ow, as in *cow*, not ou|ow 和 *cow* 里的一样，不是 ou
+      bee|insects that make honey;an insect flying onto an arm and stinging;insects flying from flower to flower to make honey|a bee flies and makes honey; an ant walks on the ground|bee 会飞、会酿蜜；ant 在地上爬|ant=ant is a tiny insect that walks on the ground with no wings and makes no honey=ant 是在地上爬的小昆虫，没有翅膀，也不酿蜜;butterfly=butterfly has big colorful wings and does not make honey or sting=butterfly 有彩色的大翅膀，不酿蜜，也不蜇人|bee|the double e at the end|词尾双写 e
+      butterfly|an insect with four colorful wings;colorful insects filling a garden in summer;what a caterpillar turns into|a butterfly has big colorful wings; a bee makes honey|butterfly 有彩色的大翅膀；bee 会酿蜜|bee=bee is a small yellow and black insect that makes honey, not one with big colorful wings=bee 是酿蜜的黄黑色小昆虫，没有彩色的大翅膀;spider=spider has eight legs and no wings at all=spider 有八条腿，根本没有翅膀|but · ter · fly|the double t, and y changing to -ies for more than one|双写 t，复数要把 y 变成 -ies
+      spider|animals with eight legs;a big animal with eight hairy legs in the bath;animals catching flies in their webs|a spider has eight legs and makes webs; an ant has six legs|spider 八条腿、会结网；ant 六条腿|ant=ant is an insect with six legs that does not make webs=ant 是六条腿的昆虫，不会结网;bee=bee is an insect with six legs and wings, and it makes honey, not webs=bee 是六条腿、有翅膀的昆虫，酿的是蜜，不是网|spi · der|i that says its name, as in *ice*, and -er at the end|i 读字母本音，和 *ice* 一样，结尾是 -er
+      ant|insects walking in long lines with heavy things;hundreds of tiny insects walking across a cake;tiny insects with six legs and no wings|an ant is a tiny insect with no wings; a bee can fly|ant 是没有翅膀的小昆虫；bee 会飞|bee=bee is an insect with wings that flies and makes honey, not one that walks in lines=bee 是有翅膀、会飞会酿蜜的昆虫，不是排队爬行的;spider=spider has eight legs and lives alone in its web, not in long lines=spider 有八条腿，独自住在网上，不会排成长队|ant|a short a, not *aunt*, the word for your mother's sister|短元音 a，别写成表示姑姨的 *aunt*
+    `,
+  },
 });
 
 const animalLife = vocabularyTopic({
@@ -240,93 +274,127 @@ const animalLife = vocabularyTopic({
     "Hunting, hiding, nests, laying eggs, digging, chasing and biting; scared, huge, tiny, sharp and soft.",
     "捕猎、躲藏、巢、下蛋、挖、追赶和咬；害怕的、巨大的、极小的、锋利的和柔软的。",
   ),
+  intro: t(
+    "A fox **hunts** at night, a rabbit **hides** in its hole, and a bird keeps its eggs in a **nest**. These words help you say how animals find food, stay safe and look after their babies.",
+    "狐狸在夜里 **hunts**（捕猎），兔子 **hides**（躲）在洞里，鸟把蛋放在 **nest**（巢）里。这些词帮你说说动物怎样找食物、保护自己、照顾幼崽。",
+  ),
   prerequisites: ["a2-words-wildlife"],
   words: [
     word(
       "hunt hunts hunted hunting",
       "to chase and catch animals for food",
       "捕猎",
-      "Lions {hunt} in groups.|lay dig | Owls go {hunting} at night.|laying digging | The fox {hunted} for mice in the field.|laid dug",
+      "Lions {hunt} in groups. | Owls go {hunting} at night.|chasing hiding | The fox {hunted} for mice in the field.|chased hid",
       "chase hide",
     ),
     word(
       "hide hides hid hidden hiding",
       "to go where no one can see you; to put something where no one can find it",
       "躲藏；藏",
-      "The cat {hid} under the bed.|laid hunted | Where did you {hide} the chocolate?|hunt dig | The rabbit is {hiding} in its hole.|laying hunting",
+      "The cat {hid} under the bed.|hunted dug | Where did you {hide} the chocolate? | The rabbit is {hiding} from the fox in its hole.|hunting digging",
       "hunt dig",
     ),
     word(
       "nest nests",
       "a home that a bird builds for its eggs",
       "巢；窝",
-      "There are three eggs in the bird's {nest}.|tail fur | Birds build their {nests} with sticks and grass.|tails beaks | The eagle's {nest} is high on a rock.|tail fur",
+      "There are three eggs in the bird's {nest} in the tree. | Birds build their {nests} with sticks and grass.|cages wings | The eagle's {nest} is high on a rock.",
       "cage wing",
     ),
     word(
       "lay lays laid laying",
       "to put an egg out of the body",
       "下（蛋）；放",
-      "Our hens {lay} an egg every day.|hunt dig | The turtle {laid} a hundred eggs in the sand.|hunted hid | Please {lay} the baby on the bed.|hunt dig",
-      "dig hide",
+      "Our hens {lay} an egg every day. | The turtle {laid} a hundred eggs in the sand.|dug hunted | Please {lay} the baby on the bed.",
+      "dig hunt",
     ),
     word(
       "dig digs dug digging",
       "to make a hole in the ground",
       "挖",
-      "The dog {dug} a hole in the garden.|hunted bit | Rabbits {dig} holes to live in.|bite chase | We're {digging} for treasure on the beach!|biting chasing",
+      "The dog {dug} a hole in the garden.|hid laid | Rabbits {dig} holes to live in. | We're {digging} for treasure on the beach!|hiding laying",
       "hide lay",
     ),
     word(
       "chase chases chased chasing",
       "to run after someone or something to catch them",
       "追赶",
-      "The dog {chased} the cat up a tree.|laid dug | Cats like to {chase} mice.|lay dig | The children are {chasing} each other in the park.|laying digging",
+      "The dog {chased} the cat up a tree.|hunted bit | Cats like to {chase} balls of wool around the room. | The children are {chasing} each other around the park.|hunting biting",
       "hunt bite",
     ),
     word(
       "bite bites bitten biting",
       "to cut something with your teeth",
       "咬",
-      "Be careful! That dog {bites}.|lays digs | I was {bitten} by a mosquito.|laid dug | Don't {bite} your nails.|lay dig",
+      "Be careful! That dog {bites}. Don't put your hand near its mouth.|chases hunts | I was {bitten} by a mosquito, and now my arm itches.|chased hunted | Don't {bite} your nails.",
       "chase hunt",
     ),
     word(
       "scared",
       "afraid",
       "害怕的",
-      "I'm {scared} of spiders.|huge sharp | The little boy was {scared} of the dark.|huge sharp | Don't be {scared}. The dog is friendly.|huge tiny",
-      "huge sharp",
+      "I'm {scared} of spiders. | The little boy was {scared} of the dark. | Don't be {scared}. The dog is friendly.",
+      "huge tiny",
     ),
     word(
       "huge",
       "very, very big",
       "巨大的",
-      "An elephant is {huge}.|tiny scared | They live in a {huge} house with twenty rooms.|tiny scared | A {huge} wave hit the boat.|tiny soft",
+      "An elephant is {huge}. | They live in a {huge} house with twenty rooms. | A {huge} wave hit the boat and nearly turned it over.",
       "tiny soft",
     ),
     word(
       "tiny tinier tiniest",
       "very, very small",
       "极小的",
-      "An ant is {tiny}.|huge scared | The baby has {tiny} hands.|huge sharp | We stayed in a {tiny} room. There was only space for a bed.|huge scared",
-      "huge sharp",
+      "An ant is {tiny}. | The baby's {tiny} hand can only hold one of my fingers. | We stayed in a {tiny} room. There was only space for a bed.",
+      "huge soft",
     ),
     word(
       "sharp sharper sharpest",
       "with a thin edge or point that cuts easily",
       "锋利的；尖的",
-      "Sharks have {sharp} teeth.|soft scared | Be careful! That knife is very {sharp}.|soft scared | Cats have {sharp} claws.|soft scared",
+      "Sharks have {sharp} teeth that cut like knives. | Be careful! That knife is very {sharp}. | Cats have {sharp} claws that can scratch you.",
       "soft huge",
     ),
     word(
       "soft softer softest",
       "not hard; nice to touch",
       "柔软的",
-      "The kitten's fur is very {soft}.|sharp huge | I like a {soft} pillow.|sharp scared | This bread is fresh and {soft}.|sharp scared",
-      "sharp tiny",
+      "The kitten's fur is very {soft}. | My pillow is {soft}, so my head sinks into it. | This bread is fresh and {soft}, not hard and dry.",
+      "sharp huge",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Hunt* and *chase* both mean going after an animal: you *chase* something you can see, as in *chase the cat*, but you *hunt* or go *hunting* to find and catch food.",
+        "*hunt* 和 *chase* 都有“追”的意思：*chase* 是追看得见的东西，如 *chase the cat*；*hunt* 或 go *hunting* 是为了找食物、抓猎物。",
+      ),
+      meaning: t(
+        "*Huge* and *tiny* are opposites, and both are stronger than *big* and *small*: *huge* is very, very big and *tiny* is very, very small.",
+        "*huge* 和 *tiny* 是反义词，而且比 *big*、*small* 程度更深：*huge* 是非常非常大，*tiny* 是非常非常小。",
+      ),
+      spell: t(
+        "Several of these verbs change in the past: *hide* becomes *hid*, *lay* becomes *laid*, *dig* becomes *dug*, and *bite* becomes *bitten*.",
+        "这些动词里有几个过去式会变形：*hide* 变 *hid*，*lay* 变 *laid*，*dig* 变 *dug*，*bite* 变 *bitten*。",
+      ),
+    },
+    notes: `
+      hunt|lions catching food in groups;owls going out to catch food at night;a fox looking for mice in a field|you hunt to find and catch food; you chase something you can already see|hunt 是为了找食物而捕猎；chase 是追赶已经看见的东西|chase=chase means running after one thing you can see, and it needs that thing right after it, as in *chase a cat*=chase 是追赶看得见的某个东西，后面要直接跟追的对象，如 *chase a cat*;hide=hide means going where no one can see you, not looking for animals to catch=hide 是躲到别人看不见的地方，不是寻找猎物|hunt|u as in *sun*, and the past *hunted* with -ed|u 和 *sun* 里的一样，过去式 *hunted* 加 -ed
+      hide|a cat going under a bed so no one sees it;a place where someone put the chocolate so no one finds it;a rabbit keeping away from a fox in its hole|you hide to stay out of sight; you hunt to catch food|hide 是躲起来不让人看见；hunt 是捕猎|hunt=hunt means chasing and catching animals for food, not staying where no one can see you=hunt 是追捕动物当食物，不是躲在别人看不见的地方;dig=dig means making a hole in the ground, not keeping someone or something out of sight=dig 是在地上挖洞，不是把人或东西藏起来|hide|the silent e, and the past forms *hid* and *hidden* with no e|词尾 e 不发音；过去式 *hid* 和过去分词 *hidden* 没有 e
+      nest|three eggs of a bird in a tree;the homes birds build with sticks and grass;an eagle's home high on a rock|a nest is a home a wild bird builds; a cage is a box of bars people make|nest 是野鸟自己筑的窝；cage 是人做的金属笼子|cage=cage is a box of metal bars that people keep a bird in, not a home a bird builds itself=cage 是人用来关鸟的金属笼子，不是鸟自己筑的家;wing=wing is the part of a bird it flies with, not a home for its eggs=wing 是鸟用来飞的部位，不是放蛋的家|nest|a short e, as in *bed*, and -st at the end|短元音 e，和 *bed* 一样，结尾是 -st
+      lay|hens giving an egg every day;a turtle putting a hundred eggs in the sand;putting a baby down on a bed|a bird lays an egg out of its body; an animal digs a hole in the ground|鸟 lay（下）蛋；动物 dig（挖）洞|dig=dig means making a hole in the ground, not putting an egg out of the body or putting something down=dig 是在地上挖洞，不是下蛋，也不是把东西放下;hunt=hunt means chasing and catching animals for food, not putting an egg out or setting something down gently=hunt 是追捕动物当食物，不是下蛋，也不是轻轻放下东西|lay|the past *laid* with ai, not *layed*|过去式 *laid* 拼作 ai，不是 *layed*
+      dig|a dog making a hole in a garden;rabbits making holes to live in;looking for treasure under the sand of a beach|you dig a hole in the ground; you hide something so no one finds it|dig 是在地上挖洞；hide 是把东西藏起来|hide=hide means putting yourself or something out of sight, not making a hole in the ground=hide 是把自己或东西藏起来，不是在地上挖洞;lay=lay means putting an egg out of the body or putting something down, not making a hole=lay 是下蛋或把东西放下，不是挖洞|dig|the past *dug*, and the double g in *digging*|过去式 *dug*；*digging* 要双写 g
+      chase|a dog running after a cat up a tree;cats running after balls of wool;children running after each other in a park|you chase something you can see; you bite with your teeth|chase 是追赶看得见的东西；bite 是用牙咬|hunt=hunt means looking for animals to catch and eat, not running after a cat, a ball or friends in a game=hunt 是寻找动物来捕食，不是追赶猫、毛线球或玩伴;bite/bit=bite means cutting something with your teeth, not running after it=bite 是用牙咬，不是追赶|chase|the silent e that drops before -ing: *chasing*|词尾 e 不发音，加 -ing 时去掉：*chasing*
+      bite|a dog that may hurt your hand with its mouth;a mosquito that made an arm itch;nails a person should not put in the mouth|you bite with your teeth; you chase by running after something|bite 用牙咬；chase 是跑着追|chase=chase means running after someone, not using your teeth or mouth=chase 是追赶，不是用牙或嘴;hunt=hunt means looking for animals to catch and eat, not cutting with your teeth=hunt 是寻找动物来捕食，不是用牙咬|bite|i that says its name, and the double t in *bitten*|i 读字母本音；*bitten* 要双写 t
+      scared|a feeling about spiders;a little boy's feeling about the dark;a feeling the friendly dog should not give you|scared is a feeling of fear; huge describes size|scared 是害怕的感觉；huge 描述大小|huge=huge describes something very, very big, not a feeling of fear=huge 形容东西非常大，不是害怕的感觉;tiny=tiny describes something very, very small, not a feeling of fear=tiny 形容东西非常小，不是害怕的感觉|scared|one r: *scarred* with two r's means marked by a cut|只有一个 r；双写 r 的 *scarred* 是“留下伤疤的”
+      huge|the size of an elephant;a house with twenty rooms;a wave that nearly turned a boat over|huge is very, very big; tiny is very, very small|huge 是非常大；tiny 是非常小|tiny=tiny means very, very small, the opposite of huge=tiny 是非常小，和 huge 意思相反;soft=soft means not hard and nice to touch, and it says nothing about how big something is=soft 是柔软、摸着舒服，与大小无关|huge|u that says its name, and g said like j before the e|u 读字母本音，e 前面的 g 读作 j
+      tiny|the size of an ant;a baby's hand that can only hold one finger;a room with space only for a bed|tiny is very, very small; huge is very, very big|tiny 是非常小；huge 是非常大|huge=huge means very, very big, the opposite of tiny=huge 是非常大，和 tiny 意思相反;soft=soft means not hard and nice to touch, and it says nothing about how small something is=soft 是柔软、摸着舒服，与大小无关|ti · ny|the y at the end that changes to i in *tinier* and *tiniest*|词尾 y 在 *tinier*、*tiniest* 里变成 i
+      sharp|shark teeth that cut like knives;a knife to be careful with;cat claws that can scratch|sharp things cut or scratch; soft things are nice to touch|sharp 的东西能割伤或抓伤；soft 的东西摸着舒服|soft=soft means not hard and nice to touch, so it cannot cut or scratch=soft 是柔软、摸着舒服，不会割伤或抓伤;huge=huge means very, very big, and big things do not cut because of their size=huge 是非常大，东西大不等于能割东西|sharp|sh at the start and ar as in *car*|开头是 sh，ar 和 *car* 里的一样
+      soft|a kitten's fur;a pillow a head sinks into;fresh bread that is not hard and dry|soft is not hard and nice to touch; sharp can cut|soft 是柔软；sharp 是锋利能割|sharp=sharp means having an edge that cuts, not being nice and gentle to touch=sharp 是有能割东西的刃，不是柔软舒服;huge=huge means very, very big, not gentle and not hard to touch=huge 是非常大，与软硬无关|soft|o as in *hot*, and -ft at the end|o 和 *hot* 里的一样，结尾是 -ft
+    `,
+  },
 });
 
 const farmAndCare = vocabularyTopic({
@@ -336,86 +404,119 @@ const farmAndCare = vocabularyTopic({
     "Goats, hens, donkeys and lambs; fields and fences; vets and caring; alive, dead and dying.",
     "山羊、母鸡、驴和小羊；田野和篱笆；兽医和照顾；活着的、死的和死去。",
   ),
+  intro: t(
+    "On Grandpa's farm, a **goat** eats grass in the **field**, a **hen** sits on her eggs, and a **vet** comes when an animal is sick. These words help you talk about farm animals, the places they live and how people care for them.",
+    "在爷爷的农场里，一只 **goat**（山羊）在 **field**（牧场）上吃草，一只 **hen**（母鸡）在孵蛋，动物生病时 **vet**（兽医）就会来。这些词帮你谈论农场动物、它们生活的地方，以及人们怎样照顾它们。",
+  ),
   prerequisites: ["a2-words-animal-life"],
   words: [
     word(
       "goat goats",
       "a farm animal with horns that gives milk",
       "山羊",
-      "The {goat} ate my hat!|fence field | We make cheese from {goat} milk.|fence vet | {Goats} can climb very steep rocks.|Fences Fields",
+      "The {goat} with long horns ate my hat! | We make cheese from {goat} milk. | {Goats} can climb very steep rocks.|lambs donkeys",
       "lamb donkey",
     ),
     word(
       "hen hens",
       "a female chicken",
       "母鸡",
-      'Our {hens} lay eggs every morning.|fences vets | The {hen} is sitting on her eggs.|fence field | A {hen} says "cluck, cluck".|fence field',
+      'Our {hens} lay eggs every morning.|goats lambs | The {hen} is sitting on her eggs. | A {hen} says "cluck, cluck".',
       "goat lamb",
     ),
     word(
       "donkey donkeys",
       "an animal like a small horse with long ears",
       "驴",
-      'The {donkey} carried our bags up the mountain.|fence field | A {donkey} has long ears and says "hee-haw".|fence vet | The children rode {donkeys} on the beach.|fences fields',
+      'The {donkey} carried our bags up the mountain. | A {donkey} has long ears and says "hee-haw". | The children rode {donkeys} on the beach.|goats hens',
       "goat hen",
     ),
     word(
       "field fields",
       "an area of land where crops grow or animals eat grass",
       "田野；牧场",
-      "The cows are eating grass in the {field}.|vet hen | There are {fields} of rice near the village.|vets hens | Farmers work in the {fields} all day.|vets lambs",
+      "The cows are eating grass in the {field} next to the farm. | There are {fields} of rice near the village.|fences farms | On the farm, the farmers work in the {fields} all day.|fences farms",
       "fence farm",
     ),
     word(
       "vet vets",
       "a doctor for animals",
       "兽医",
-      "Our dog is sick. Let's take him to the {vet}.|field fence | I want to be a {vet} because I love animals.|field fence | The {vet} gave the cat some medicine.|field fence",
+      "Our dog is sick. Let's take him to the {vet}. | I want to be a {vet} because I want to help sick animals. | The {vet} gave the cat some medicine.",
       "nurse farmer",
     ),
     word(
       "care cares cared caring",
       "to look after someone; to think something is important",
       "照顾；在乎",
-      "Who will {care} for the dog when we're away?|die fence | Nurses take {care} of sick people.|fence field | I don't {care} what they say.|die fence",
+      "Who will {care} for the dog when we're away? | Nurses take {care} of sick people. | I don't {care} what they say.",
       "die feed",
     ),
     word(
       "fence fences",
       "a wall of wood or wire around a field or a garden",
       "篱笆；栅栏",
-      "The horse jumped over the {fence}.|vet hen | There is a high {fence} around the farm.|vet lamb | Paint the {fence} white.|vet lamb",
+      "The horse jumped over the wooden {fence} around the field. | There is a high {fence} around the farm. | Dad will paint the wooden {fence} around our garden white.",
       "field cage",
     ),
     word(
       "alive",
       "living, not dead",
       "活着的",
-      "The fish is still {alive}! Put it back in the water.|dead dying | My great-grandma is still {alive}. She's ninety-eight.|dead dying | Plants need water to stay {alive}.|dead dying",
-      "dead die",
+      "The fish is still {alive} and healthy! Put it back in the water. | My great-grandma is still {alive} and well at ninety-eight. | Plants need water to stay {alive}.",
+      "dead dying",
     ),
     word(
       "dead",
       "not living any more",
       "死的",
-      "The plant is {dead}. It's brown and dry.|alive dying | We found a {dead} bird in the garden.|alive caring | The battery is {dead}. I need a new one.|alive caring",
-      "alive die",
+      "The plant is completely {dead}. It's brown and dry. | The bird we found in the garden was {dead}. It wasn't moving or breathing. | The battery is {dead}, so the phone won't turn on at all.",
+      "alive dying",
     ),
     word(
       "die dies died dying",
       "to stop living",
       "死亡",
-      "Plants {die} without water.|care fence | My old dog {died} last year. I miss him.|cared fenced | The flowers are {dying}. Give them some water.|caring feeding",
+      "Plants {die} without water. | My old dog {died} last year. I miss him.|cared fed | The flowers are {dying}. Give them some water.|caring feeding",
       "care feed",
     ),
     word(
       "lamb lambs",
       "a young sheep",
       "小羊；羔羊",
-      "A {lamb} is a baby sheep.|goat hen | The {lambs} are playing in the field.|vets fences | Mary had a little {lamb}.|vet fence",
+      "A {lamb} is a baby sheep. | The young {lambs} are playing next to their mother sheep.|goats hens | Mary had a little {lamb} with wool as white as snow.",
       "goat hen",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Alive*, *dead* and *dying* all talk about life: *alive* means still living, *dead* means no longer living, and *dying* means about to stop living. Read whether the sentence says the life is still there.",
+        "*alive*、*dead* 和 *dying* 都和生命有关：*alive* 是还活着，*dead* 是已经死了，*dying* 是快要死了。看句子说的是生命还在不在。",
+      ),
+      meaning: t(
+        "*Goat*, *lamb* and *hen* are all farm animals: a *lamb* is a young sheep, a *goat* has horns and gives milk, and a *hen* is a female chicken that lays eggs.",
+        "*goat*、*lamb* 和 *hen* 都是农场动物：*lamb* 是小羊（绵羊的幼崽），*goat* 有角、能产奶，*hen* 是下蛋的母鸡。",
+      ),
+      spell: t(
+        "*Lamb* has a silent b at the end, and *die* changes ie to y before -ing: *dying*.",
+        "*lamb* 词尾的 b 不发音；*die* 加 -ing 时 ie 要变成 y：*dying*。",
+      ),
+    },
+    notes: `
+      goat|an animal with long horns that ate a hat;the milk used to make cheese;animals climbing very steep rocks|a goat has horns and gives milk; a lamb is a young sheep|goat 有角、能产奶；lamb 是小绵羊|lamb=lamb is a young sheep with no horns, too young to give milk=lamb 是没有角的小绵羊，还太小，不产奶;donkey=donkey is an animal like a small horse with long ears, and it has no horns=donkey 是像小马一样的长耳朵动物，没有角|goat|oa for the long o sound, as in *boat*|oa 发长 o 音，和 *boat* 一样
+      hen|birds laying eggs every morning;a bird sitting on her eggs;a bird that says "cluck, cluck"|a hen is a female chicken that lays eggs; a goat gives milk|hen 是下蛋的母鸡；goat 产奶|goat=goat is an animal with horns that gives milk, not a bird that lays eggs=goat 是有角、产奶的动物，不是下蛋的鸟;lamb=lamb is a young sheep with wool, not a bird that lays eggs=lamb 是长着羊毛的小羊，不是下蛋的鸟|hen|a short e, as in *ten*|短元音 e，和 *ten* 一样
+      donkey|an animal carrying bags up a mountain;an animal with long ears that says "hee-haw";animals children rode on a beach|a donkey is like a small horse with long ears; a goat has horns|donkey 像小马、耳朵长；goat 有角|goat=goat is a small animal with horns, too small to carry bags or children=goat 是有角的小动物，太小，驮不了包，也骑不了;hen=hen is a female chicken, a bird far too small to carry anything=hen 是母鸡，是一种太小、驮不了东西的鸟|don · key|o said like u in *sun*, and -ey at the end|o 读作 *sun* 里的 u，结尾是 -ey
+      field|grass for cows next to a farm;land growing rice near a village;the land where farmers work all day|a field is open land for crops or grass; a fence goes around it|field 是种庄稼或长草的开阔土地；fence 是围在四周的篱笆|fence=fence is a wall of wood or wire around the land, not the land where grass and crops grow=fence 是围着土地的木头或铁丝篱笆，不是长草种庄稼的土地;farm=farm is the whole place with its houses, animals and land, and the fields are only parts of it=farm 是包括房子、动物和土地的整个农场，field 只是其中的田地|field|ie for the long e sound: i before e|ie 发长 e 音：i 在 e 前面
+      vet|a sick dog that needs a doctor;a job helping sick animals;someone giving a cat medicine|a vet is a doctor for animals; a nurse looks after sick people|vet 是给动物看病的医生；nurse 照顾生病的人|nurse=nurse is someone who looks after sick people in a hospital, not a doctor for animals=nurse 是在医院照顾病人的人，不是给动物看病的医生;farmer=farmer grows crops and keeps animals on a farm but does not give them medicine as a doctor=farmer 在农场种庄稼、养动物，但不像医生那样给动物看病开药|vet|a short e, and it is short for *veterinarian*|短元音 e；它是 *veterinarian* 的简写
+      care|looking after a dog while the family is away;nurses looking after sick people;not thinking what other people say is important|you care for someone by looking after them; you feed them when you give them food|care for 是照顾；feed 是喂食物|die=die means to stop living, not to look after someone=die 是死去，不是照顾别人;feed=feed means only giving food, and it is never used in *take ___ of* or *don't ___ what*=feed 只是喂食物，不能用在 *take ___ of* 或 *don't ___ what* 里|care|are said like air, with the silent e at the end|are 读作 air，词尾 e 不发音
+      fence|a wooden wall a horse jumped over;a high wall around a farm;the wooden wall around a garden that Dad will paint|a fence goes around a field or garden; a field is the land inside|fence 围在田地或花园四周；field 是里面的土地|field=field is the open land itself, not the wall around it=field 是开阔的土地本身，不是围在四周的墙;cage=cage is a small box of metal bars an animal is kept in, not a wall around a field or garden=cage 是关动物的小铁笼子，不是围着田地或花园的篱笆|fence|-ce at the end, said like s|结尾 -ce 读作 s
+      alive|a fish still living and healthy;a great-grandma still living at ninety-eight;what plants need water to stay|alive means still living; dead means no longer living|alive 是还活着；dead 是已经死了|dead=dead means no longer living, the opposite of alive=dead 是已经死了，和 alive 意思相反;die=dying means close to death, not living and healthy=dying 是快要死了，不是活得好好的|a · live|a at the start, and i that says its name, as in *five*|开头是 a，i 读字母本音，和 *five* 一样
+      dead|a brown, dry plant;a bird in the garden that was not moving or breathing;a battery that cannot turn the phone on|dead means no longer living; dying means it has not stopped living yet|dead 是已经死了；dying 是还没死、快死了|alive=alive means still living, the opposite of dead=alive 是还活着，和 dead 意思相反;die=dying means still living but close to death, not completely without life=dying 是还活着但快要死了，不是已经完全没有生命|dead|ea said like short e, as in *bread*|ea 读短元音 e，和 *bread* 一样
+      die|plants without water;an old dog that stopped living last year;flowers that need water now|die means to stop living; care means to look after|die 是死去；care 是照顾|care=care means looking after someone, not stopping living=care 是照顾别人，不是死去;feed=feed means giving food to someone, not stopping living=feed 是给别人食物，不是死去|die|ie at the end, which changes to y in *dying*|词尾是 ie，*dying* 里要变成 y
+      lamb|a baby sheep;young animals playing next to their mother sheep;Mary's little animal with snow-white wool|a lamb is a young sheep; a goat is a grown animal with horns|lamb 是小绵羊；goat 是长着角的成年动物|goat=goat is an animal with horns and hair, not a baby sheep with wool=goat 是有角、长毛发的动物，不是长羊毛的小绵羊;hen=hen is a female chicken, a bird, not a baby sheep=hen 是母鸡，是一种鸟，不是小绵羊|lamb|the silent b at the end|词尾的 b 不发音
+    `,
+  },
 });
 
 // The past continuous.

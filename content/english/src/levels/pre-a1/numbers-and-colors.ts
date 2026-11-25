@@ -10,265 +10,329 @@ const numbers = vocabularyTopic({
   id: "pre-a1-words-numbers",
   title: t("Numbers 1 to 12", "数字 1 到 12"),
   summary: t("Counting from one to twelve.", "从一数到十二。"),
+  intro: t(
+    "A dog has **four** legs, a bee has **six** and a spider has **eight**. These words help you count from one to twelve and say how many things there are.",
+    "狗有 **four**（四）条腿，蜜蜂有 **six**（六）条，蜘蛛有 **eight**（八）条。这些词帮你从一数到十二，说出东西有多少。",
+  ),
   prerequisites: [],
   words: [
-    word(
-      "one",
-      "the number 1",
-      "一（1）",
-      "I have {one} nose.|two three | One and {one} is two.|two three | A cat has {one} tail.|two four",
-      "two three",
-    ),
-    word(
-      "two",
-      "the number 2",
-      "二（2）",
-      "I have {two} eyes.|three one | One and one is {two}.|three four | A bird has {two} legs.|four three",
-      "three one",
-    ),
+    word("one", "the number 1", "一（1）", "I have {one} nose. | One and {one} is two. | A cat has {one} tail.", "two three"),
+    word("two", "the number 2", "二（2）", "I have {two} eyes. | One and one is {two}. | A bird has {two} legs.", "one three"),
     word(
       "three",
       "the number 3",
       "三（3）",
-      "One and two is {three}.|four five | One, two, {three}, four.|five six | I have two cats and one dog. That is {three} animals.|two four",
-      "four five",
+      "One and two is {three}. | One, two, {three}, four. | I have two cats and one dog. That is {three} animals.",
+      "two four",
     ),
-    word(
-      "four",
-      "the number 4",
-      "四（4）",
-      "A dog has {four} legs.|two three | Two and two is {four}.|three five | Three, {four}, five.|six two",
-      "three five",
-    ),
+    word("four", "the number 4", "四（4）", "A dog has {four} legs. | Two and two is {four}. | Three, {four}, five.", "three five"),
     word(
       "five",
       "the number 5",
       "五（5）",
-      "I have {five} fingers on one hand.|four six | Two and three is {five}.|four six | Four, {five}, six.|three seven",
+      "I have {five} fingers on one hand. | Two and three is {five}. | Four, {five}, six.",
       "four six",
     ),
-    word(
-      "six",
-      "the number 6",
-      "六（6）",
-      "Three and three is {six}.|five seven | Five, {six}, seven.|four eight | A bee has {six} legs.|four eight",
-      "five seven",
-    ),
+    word("six", "the number 6", "六（6）", "Three and three is {six}. | Five, {six}, seven. | A bee has {six} legs.", "five seven"),
     word(
       "seven",
       "the number 7",
       "七（7）",
-      "There are {seven} days in a week.|six eight | Four and three is {seven}.|six eight | Six, {seven}, eight.|five nine",
+      "There are {seven} days in a week. | Four and three is {seven}. | Six, {seven}, eight.",
       "six eight",
     ),
     word(
       "eight",
       "the number 8",
       "八（8）",
-      "A spider has {eight} legs.|six ten | Four and four is {eight}.|six nine | Seven, {eight}, nine.|six ten",
-      "six nine",
+      "A spider has {eight} legs. | Four and four is {eight}. | Seven, {eight}, nine.",
+      "seven nine",
     ),
-    word(
-      "nine",
-      "the number 9",
-      "九（9）",
-      "Five and four is {nine}.|eight ten | Eight, {nine}, ten.|seven eleven | Ten take away one is {nine}.|eight eleven",
-      "eight ten",
-    ),
-    word(
-      "ten",
-      "the number 10",
-      "十（10）",
-      "I have {ten} fingers.|eight twelve | Five and five is {ten}.|nine eleven | Nine, {ten}, eleven.|eight twelve",
-      "nine eleven",
-    ),
+    word("nine", "the number 9", "九（9）", "Five and four is {nine}. | Eight, {nine}, ten. | Ten take away one is {nine}.", "eight ten"),
+    word("ten", "the number 10", "十（10）", "I have {ten} fingers. | Five and five is {ten}. | Nine, {ten}, eleven.", "nine eleven"),
     word(
       "eleven",
       "the number 11",
       "十一（11）",
-      "Ten and one is {eleven}.|twelve nine | Ten, {eleven}, twelve.|nine seven | A football team has {eleven} players.|ten twelve",
-      "twelve ten",
+      "Ten and one is {eleven}. | Ten, {eleven}, twelve. | A football team has {eleven} players.",
+      "ten twelve",
     ),
     word(
       "twelve",
       "the number 12",
       "十二（12）",
-      "There are {twelve} months in a year.|ten eleven | Six and six is {twelve}.|ten eleven | Ten, eleven, {twelve}.|nine seven",
-      "eleven ten",
+      "There are {twelve} months in a year. | Six and six is {twelve}. | Ten, eleven, {twelve}.",
+      "ten eleven",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Do the sum or count on: in *Three, ___, five* the gap is the number that comes right after three, and in *Two and two is ___* it is the answer to the sum.",
+        "先算一算或接着数：*Three, ___, five* 里空格是紧跟在 three 后面的数，*Two and two is ___* 里空格是算式的答案。",
+      ),
+      meaning: t(
+        "The meaning gives the number as a digit, like 7. Match the digit to its word, and do not mix up neighbors like *six* and *seven* or *eleven* and *twelve*.",
+        "释义用阿拉伯数字表示，比如 7。把数字和单词对上，别把 *six* 和 *seven*、*eleven* 和 *twelve* 这样相邻的数弄混。",
+      ),
+      spell: t(
+        "Some number words hide letters you do not hear: the w in *two*, the gh in *eight*, and the e at the end of *twelve*.",
+        "有些数字词里藏着不发音的字母：*two* 里的 w、*eight* 里的 gh、*twelve* 末尾的 e。",
+      ),
+    },
+    notes: `
+      one|a single nose;the sum one and one;a cat's tail|one is 1, and two is 2, right next to it|one 是 1，two 是紧挨着它的 2|two=two is 2, one more than 1, so it is not the number the sentence needs=two 是 2，比 1 多一，不是句子需要的数;three=three is 3, more than 1, so it is not the number the sentence needs=three 是 3，比 1 多，不是句子需要的数|one|o at the start, though it sounds like *won*|开头是 o，虽然读音像 *won*
+      two|my eyes;the sum one and one;a bird's legs|two is 2, and one is 1, right next to it|two 是 2，one 是紧挨着它的 1|one=one is 1, one less than 2, so it is not the number the sentence needs=one 是 1，比 2 少一，不是句子需要的数;three=three is 3, one more than 2, so it is not the number the sentence needs=three 是 3，比 2 多一，不是句子需要的数|two|the silent w after t|t 后面的 w 不发音
+      three|the sum one and two;counting from one to four;two cats and one dog|three is 3, and two is 2, right next to it|three 是 3，two 是紧挨着它的 2|two=two is 2, one less than 3, so it is not the number the sentence needs=two 是 2，比 3 少一，不是句子需要的数;four=four is 4, one more than 3, so it is not the number the sentence needs=four 是 4，比 3 多一，不是句子需要的数|three|thr at the start and the double e|开头是 thr，结尾两个 e
+      four|a dog's legs;the sum two and two;counting from three to five|four is 4, and three is 3, right next to it|four 是 4，three 是紧挨着它的 3|three=three is 3, one less than 4, so it is not the number the sentence needs=three 是 3，比 4 少一，不是句子需要的数;five=five is 5, one more than 4, so it is not the number the sentence needs=five 是 5，比 4 多一，不是句子需要的数|four|our after f, the same as in *your*|f 后面是 our，和 *your* 一样
+      five|the fingers on one hand;the sum two and three;counting from four to six|five is 5, and four is 4, right next to it|five 是 5，four 是紧挨着它的 4|four=four is 4, one less than 5, so it is not the number the sentence needs=four 是 4，比 5 少一，不是句子需要的数;six=six is 6, one more than 5, so it is not the number the sentence needs=six 是 6，比 5 多一，不是句子需要的数|five|i saying its name, with a silent e at the end|i 读字母本音，词尾 e 不发音
+      six|the sum three and three;counting from five to seven;a bee's legs|six is 6, and five is 5, right next to it|six 是 6，five 是紧挨着它的 5|five=five is 5, one less than 6, so it is not the number the sentence needs=five 是 5，比 6 少一，不是句子需要的数;seven=seven is 7, one more than 6, so it is not the number the sentence needs=seven 是 7，比 6 多一，不是句子需要的数|six|x at the end, said like ks|结尾是 x，读作 ks
+      seven|the days in a week;the sum four and three;counting from six to eight|seven is 7, and six is 6, right next to it|seven 是 7，six 是紧挨着它的 6|six=six is 6, one less than 7, so it is not the number the sentence needs=six 是 6，比 7 少一，不是句子需要的数;eight=eight is 8, one more than 7, so it is not the number the sentence needs=eight 是 8，比 7 多一，不是句子需要的数|sev · en|v in the middle and the ending -en|中间是 v，结尾是 -en
+      eight|a spider's legs;the sum four and four;counting from seven to nine|eight is 8, and seven is 7, right next to it|eight 是 8，seven 是紧挨着它的 7|seven=seven is 7, one less than 8, so it is not the number the sentence needs=seven 是 7，比 8 少一，不是句子需要的数;nine=nine is 9, one more than 8, so it is not the number the sentence needs=nine 是 9，比 8 多一，不是句子需要的数|eight|the silent gh after i|i 后面的 gh 不发音
+      nine|the sum five and four;counting from eight to ten;ten take away one|nine is 9, and eight is 8, right next to it|nine 是 9，eight 是紧挨着它的 8|eight=eight is 8, one less than 9, so it is not the number the sentence needs=eight 是 8，比 9 少一，不是句子需要的数;ten=ten is 10, one more than 9, so it is not the number the sentence needs=ten 是 10，比 9 多一，不是句子需要的数|nine|i saying its name, with a silent e at the end|i 读字母本音，词尾 e 不发音
+      ten|the fingers on two hands;the sum five and five;counting from nine to eleven|ten is 10, and nine is 9, right next to it|ten 是 10，nine 是紧挨着它的 9|nine=nine is 9, one less than 10, so it is not the number the sentence needs=nine 是 9，比 10 少一，不是句子需要的数;eleven=eleven is 11, one more than 10, so it is not the number the sentence needs=eleven 是 11，比 10 多一，不是句子需要的数|ten|the short e, as in *pen*|短元音 e，和 *pen* 一样
+      eleven|the sum ten and one;counting from ten to twelve;the players of a football team|eleven is 11, and ten is 10, right next to it|eleven 是 11，ten 是紧挨着它的 10|ten=ten is 10, one less than 11, so it is not the number the sentence needs=ten 是 10，比 11 少一，不是句子需要的数;twelve=twelve is 12, one more than 11, so it is not the number the sentence needs=twelve 是 12，比 11 多一，不是句子需要的数|e · lev · en|the e at the start and the ending -ven|开头是 e，结尾是 -ven
+      twelve|the months in a year;the sum six and six;counting from ten to twelve|twelve is 12, and ten is 10, right next to it|twelve 是 12，ten 是紧挨着它的 10|ten=ten is 10, less than 12, so it is not the number the sentence needs=ten 是 10，比 12 少，不是句子需要的数;eleven=eleven is 11, one less than 12, so it is not the number the sentence needs=eleven 是 11，比 12 少一，不是句子需要的数|twelve|lve at the end, with a silent e|结尾是 lve，e 不发音
+    `,
+  },
 });
 
 const colors = vocabularyTopic({
   id: "pre-a1-words-colors",
   title: t("Colors", "颜色"),
   summary: t("The names of the colors.", "颜色的名称。"),
+  intro: t(
+    "Grass is **green**, the sky is **blue** and bananas are **yellow**. These words help you name the colors of the things around you.",
+    "草是 **green**（绿色），天是 **blue**（蓝色），香蕉是 **yellow**（黄色）。这些词帮你说出身边东西的颜色。",
+  ),
   prerequisites: [],
   words: [
     word(
       "color colors",
       "what we call red, blue, green and the others",
       "颜色",
-      "What {color} is your bag? It's red.|name year | Red is my best {color}.|name friend | My pens are many {colors}: red, blue and green.|names friends",
+      "What {color} is your bag? It's red. | Red is my best {color}. | My pens are many {colors}: red, blue and green.|names years",
       "name year",
     ),
     word(
       "red",
       "the color of fire and of a stop light",
       "红色；红色的",
-      "Stop! The light is {red}.|green white | A fire truck is {red}.|blue purple | Tomatoes are {red}.|blue gray",
+      "Stop! The light is {red}. | A fire truck is {red}. | Tomatoes are {red}.",
       "blue green",
     ),
     word(
       "blue",
       "the color of the sky on a sunny day",
       "蓝色；蓝色的",
-      "The sky is {blue}.|green pink | The sea is {blue}.|red yellow | Mix yellow and {blue} to make green.|red white",
+      "The sky is {blue}. | The sea is {blue}, like the sky. | Mix yellow and {blue} to make green.",
       "green pink",
     ),
     word(
       "green",
       "the color of grass and leaves",
       "绿色；绿色的",
-      "Grass is {green}.|blue pink | Go! The light is {green}.|red black | Mix blue and yellow to make {green}.|red pink",
+      "Grass is {green}. | Go! The light is {green}. | Mix blue and yellow to make {green}.",
       "blue red",
     ),
     word(
       "yellow",
       "the color of bananas and the sun",
       "黄色；黄色的",
-      "Bananas are {yellow}.|blue black | The sun is {yellow}.|blue green | Lemons are {yellow}.|purple blue",
+      "Bananas are {yellow}. | The sun is {yellow}. | Lemons are {yellow}.",
       "blue black",
     ),
     word(
       "black",
       "the darkest color, the color of the sky at night",
       "黑色；黑色的",
-      "Night is dark. The sky is {black}.|yellow white | A panda is {black} and white.|blue pink | Crows are {black} birds.|pink yellow",
+      "Night is dark. The sky is {black}. | A panda is {black} and white. | Crows are {black} birds.",
       "white yellow",
     ),
     word(
       "white",
       "the color of snow and milk",
       "白色；白色的",
-      "Snow is {white}.|black green | Milk is {white}.|green blue | Clouds are {white}.|red green",
+      "Snow is {white}. | Milk is {white}. | Clouds on a sunny day are {white}.",
       "black green",
     ),
     word(
       "orange oranges",
       "a color like red and yellow together; also a round, sweet fruit of this color",
       "橙色；橙子",
-      "Mix red and yellow to make {orange}.|blue green | Carrots are {orange}.|blue purple | A tiger is {orange} and black.|blue green | I eat two {oranges} for breakfast. They are sweet.|colors grays",
+      "Mix red and yellow to make {orange}. | Carrots are {orange}. | A tiger is {orange} and black. | I eat two {oranges} for breakfast. They are sweet.|blues greens",
       "blue green",
     ),
     word(
       "pink",
       "a light red color",
       "粉红色；粉红色的",
-      "Mix red and white to make {pink}.|green black | A pig is {pink}.|blue green | Strawberry ice cream is {pink}.|blue black",
+      "Mix red and white to make {pink}. | A pig is {pink}. | Strawberry ice cream is {pink}.",
       "green black",
     ),
     word(
       "brown",
       "the color of chocolate and of wood",
       "棕色；棕色的",
-      "Chocolate is {brown}.|green blue | A bear is {brown}.|blue pink | Mud is {brown}.|blue pink",
+      "Chocolate is {brown}. | A bear is {brown}. | Mud is {brown}.",
       "green blue",
     ),
     word(
       "purple",
       "a color like red and blue together",
       "紫色；紫色的",
-      "Mix red and blue to make {purple}.|green yellow | Grapes are {purple}.|orange white | An eggplant is {purple}.|yellow white",
-      "green yellow",
+      "Mix red and blue to make {purple}. | Grapes are {purple}. | An eggplant is {purple}.",
+      "orange yellow",
     ),
     word(
       "gray",
       "a color like black and white together",
       "灰色；灰色的",
-      "Mix black and white to make {gray}.|pink brown | An elephant is {gray}.|pink green | Rain clouds are dark {gray}.|pink yellow",
+      "Mix black and white to make {gray}. | An elephant is {gray}. | Rain clouds are dark {gray}.",
       "pink brown",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Think of the thing in the sentence and its color: grass, snow, the sky, bananas. A sentence with *mix* puts two colors together, so red and yellow make *orange*.",
+        "想一想句中的东西是什么颜色：草、雪、天空、香蕉。带 *mix* 的句子是把两种颜色混在一起，比如红和黄混成 *orange*。",
+      ),
+      meaning: t(
+        "Each meaning names something of that color: fire for *red*, the sky for *blue*, snow and milk for *white*, chocolate for *brown*. Picture the thing, then pick its color.",
+        "每个释义都提到一样这种颜色的东西：火是 *red*，天空是 *blue*，雪和牛奶是 *white*，巧克力是 *brown*。先想出那样东西，再选它的颜色。",
+      ),
+      spell: t(
+        "*Yellow* has a double l, *purple* ends in -ple, *gray* ends in -ay, and *color* ends in -or.",
+        "*yellow* 双写 l，*purple* 以 -ple 结尾，*gray* 以 -ay 结尾，*color* 以 -or 结尾。",
+      ),
+    },
+    notes: `
+      color|asking about a bag answered with red;red as my best one;red, blue and green pens|a color is red, blue or green; a name is what someone is called|color 是红、蓝、绿这样的颜色；name 是名字|name/names=name is what we call a person or a thing, not red, blue or green=name 是人或东西的名字，不是红、蓝、绿;year/years=year is a time of twelve months, not red, blue or green=year 是十二个月的时间，不是红、蓝、绿|col · or|the ending -or, not -er|结尾是 -or，不是 -er
+      red|a stop light;a fire truck;tomatoes|red is the color of fire; green is the color of grass|red 是火的颜色；green 是草的颜色|blue=blue is the color of the sky, not of fire or a stop light=blue 是天空的颜色，不是火或停车灯的颜色;green=green is the color of grass and of the light that says go, not of a stop light=green 是草和通行灯的颜色，不是停车灯的颜色|red|the short e, and d at the end|短元音 e，结尾是 d
+      blue|the sky;the sea like the sky;yellow mixed to make green|blue is the color of the sky; green is the color of grass|blue 是天空的颜色；green 是草的颜色|green=green is the color of grass and leaves, not of the sky on a sunny day=green 是草和叶子的颜色，不是晴天天空的颜色;pink=pink is a light red, not the color of the sky or the sea=pink 是浅红色，不是天空或大海的颜色|blue|ue at the end, said like oo|结尾是 ue，读作 oo
+      green|grass;the light that says go;blue and yellow mixed|green is the color of grass; blue is the color of the sky|green 是草的颜色；blue 是天空的颜色|blue=blue is the color of the sky, not of grass, and it is one of the colors you mix to make green=blue 是天空的颜色，不是草的颜色，而且是混成绿色的颜色之一;red=red is the color of fire and of the light that says stop, not go=red 是火和停车灯的颜色，不是通行的颜色|green|the double e|两个 e
+      yellow|bananas;the sun;lemons|yellow is the color of bananas and the sun; black is the darkest color|yellow 是香蕉和太阳的颜色；black 是最深的颜色|blue=blue is the color of the sky, not of bananas, the sun or lemons=blue 是天空的颜色，不是香蕉、太阳或柠檬的颜色;black=black is the darkest color, not the bright color of the sun=black 是最深的颜色，不是太阳那样明亮的颜色|yel · low|the double l and ow at the end|双写 l，结尾是 ow
+      black|the dark sky at night;a panda with white;crows|black is the darkest color; white is the color of snow|black 是最深的颜色；white 是雪的颜色|white=white is the color of snow and milk, not the darkest color=white 是雪和牛奶的颜色，不是最深的颜色;yellow=yellow is the bright color of bananas, not a dark one=yellow 是香蕉那样明亮的颜色，不是深色|black|ck at the end|结尾是 ck
+      white|snow;milk;clouds on a sunny day|white is the color of snow; black is the darkest color|white 是雪的颜色；black 是最深的颜色|black=black is the darkest color, not the color of snow or milk=black 是最深的颜色，不是雪或牛奶的颜色;green=green is the color of grass, not of snow or milk=green 是草的颜色，不是雪或牛奶的颜色|white|the silent h after w, and a silent e at the end|w 后面的 h 不发音，词尾 e 不发音
+      orange|red and yellow mixed;carrots;a tiger with black;sweet fruit for breakfast|orange is red and yellow together, and a fruit too; blue is the color of the sky|orange 是红黄混成的颜色，也是一种水果；blue 是天空的颜色|blue/blues=blue is the color of the sky, not red and yellow together, and it is not a fruit=blue 是天空的颜色，不是红黄混成的，也不是水果;green/greens=green is the color of grass, not red and yellow together, and it is not a fruit=green 是草的颜色，不是红黄混成的，也不是水果|or · ange|the ending -ange, and -s for the fruit when there is more than one|结尾是 -ange；表示多个橙子时加 -s
+      pink|red and white mixed;a pig;strawberry ice cream|pink is a light red; green is the color of grass|pink 是浅红色；green 是草的颜色|green=green is the color of grass, not a light red=green 是草的颜色，不是浅红色;black=black is the darkest color, not a light one=black 是最深的颜色，不是浅色|pink|nk at the end|结尾是 nk
+      brown|chocolate;a bear;mud|brown is the color of chocolate; green is the color of grass|brown 是巧克力的颜色；green 是草的颜色|green=green is the color of grass and leaves, not of chocolate, bears or mud=green 是草和叶子的颜色，不是巧克力、熊或泥巴的颜色;blue=blue is the color of the sky, not of chocolate, bears or mud=blue 是天空的颜色，不是巧克力、熊或泥巴的颜色|brown|ow, said as in *now*|ow 的读音和 *now* 一样
+      purple|red and blue mixed;grapes;an eggplant|purple is red and blue together; orange is red and yellow together|purple 是红蓝混成的；orange 是红黄混成的|orange=orange is red and yellow together, not red and blue=orange 是红黄混成的，不是红蓝混成的;yellow=yellow is the bright color of bananas, not red and blue together=yellow 是香蕉那样明亮的颜色，不是红蓝混成的|pur · ple|ur in the middle and the ending -ple|中间是 ur，结尾是 -ple
+      gray|black and white mixed;an elephant;dark rain clouds|gray is black and white together; pink is red and white together|gray 是黑白混成的；pink 是红白混成的|pink=pink is red and white together, not black and white=pink 是红白混成的，不是黑白混成的;brown=brown is the color of chocolate and wood, not black and white together=brown 是巧克力和木头的颜色，不是黑白混成的|gray|ay at the end, the American spelling|结尾是 ay，这是美式拼法
+    `,
+  },
 });
 
 const howMany = vocabularyTopic({
   id: "pre-a1-words-how-many",
   title: t("What, How Many, How Old", "什么、多少、几岁"),
   summary: t("Question words, a, an and the, and and not.", "疑问词、a、an 和 the，以及 and 和 not。"),
+  intro: t(
+    '"**What** is your name? **How** **old** are you? **How many** pets do you have?" These words help you ask questions and use the little words *a*, *an*, *the*, *and* and *not*.',
+    "“你叫 **what**（什么）名字？你 **how old**（几岁）了？你有 **how many**（多少）只宠物？”这些词帮你提问，并用好 *a*、*an*、*the*、*and*、*not* 这些小词。",
+  ),
   prerequisites: ["pre-a1-words-i-and-you"],
   words: [
     word(
       "what what's",
       "the word you use to ask about a thing",
       "什么",
-      "{What} is your name?|How Many | {What's} this? It's a pen.|How's Where's | {What} color is it? It's red.|How Many | {What} is that? It is a book.|How Many",
-      "how many",
+      "{What} is your name? | {What's} this? It's a pen.|How's Who's | {What} color is it? It's red. | {What} is that? It is a book.",
+      "how who",
     ),
     word(
       "how",
       "the word you use to ask in what way, or how much",
       "怎样；多么；多少",
-      "{How} are you? I'm fine.|What Many | {How} old are you? I'm eight.|What Many | {How} many cats do you have?|What Not",
-      "what many",
+      "{How} are you? I'm fine. | {How} old are you? I'm eight. | {How} many cats do you have?",
+      "what where",
     ),
     word(
       "many",
       "a large number of; in a question, what number",
       "许多；（提问时）多少",
-      "How {many} pens do you have?|old not | How {many} books are there? Ten.|old a | I have {many} friends at school.|a an",
-      "old not",
+      "How {many} pens do you have? | How {many} books are there? Ten. | I have {many} friends at school: ten or more!",
+      "much old",
     ),
     word(
       "old older oldest",
       "having lived for many years; also used to say how many years someone has lived",
       "老的；旧的；……岁的",
-      "How {old} are you? I'm seven.|many not | I am ten years {old}.|many year | My grandpa is very {old}.|many not",
-      "many not",
+      "How {old} are you? I'm seven. | I am ten years {old}. | My grandpa is very {old}. He is eighty-five.",
+      "many big",
     ),
     word(
       "year years",
       "a time of twelve months",
       "年；岁",
-      "I am eight {years} old.|names friends | There are twelve months in a {year}.|name color | Happy New {Year}!|Name Color",
+      "I am eight {years} old.|names colors | There are twelve months in a {year}. | Happy New {Year}!",
       "name color",
     ),
     word(
       "a",
       "one; used before a word that starts with a sound like b, c or d",
       "一（个）（用在辅音开头的词前）",
-      "I have {a} dog.|an and | She is {a} teacher.|an and | That is {a} big egg.|an and",
-      "an and",
+      "I have {a} dog. The dog is black. | My mom is {a} teacher, and my dad is a doctor. | There is {a} big egg in the box.",
+      "an the",
     ),
     word(
       "an",
       "one; used before a word that starts with a sound like a, e, i, o or u",
       "一（个）（用在元音开头的词前）",
-      "It is {an} egg.|a and | I have {an} apple.|a and | He is {an} old man.|a and | That is {an} orange cat.|a and",
-      "a and",
+      "There is {an} egg in the nest. | I eat {an} apple every day. | Grandpa is {an} old man now. | My friend has {an} orange cat.",
+      "a the",
     ),
     word(
       "the",
       "the word before a thing we both know about",
       "这个；那个（特指）",
-      "Open {the} door, please.|an and | {The} sun is yellow.|An And | Look at {the} moon!|an and",
-      "an and",
+      "Open {the} door, please. | {The} sun is yellow. | Look at {the} moon!",
+      "a an",
     ),
     word(
       "and",
       "a word that joins two words or ideas",
       "和；而且",
-      "I have a cat {and} a dog.|not the | Tom {and} I are friends.|not the | Red {and} yellow make orange.|not a",
-      "not the",
+      "I have a cat {and} a dog. | Tom {and} I are friends. | Red {and} yellow make orange.",
+      "or but",
     ),
     word(
       "not",
       "a word that makes a sentence say no",
       "不；没有",
-      "I am {not} sad. I am happy.|and a | It is {not} a cat. It is a dog.|and the | She is {not} at home today.|and an",
-      "and the",
+      "I am {not} sad. I am happy. | It is {not} a cat. It is a dog. | She is {not} at home today. She is at school.",
+      "no very",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Look at the answer after the question: a thing answers *what*, an age answers *how old*, and a number answers *how many*.",
+        "看问题后面的回答：回答是东西就用 *what*，是年龄就用 *how old*，是数目就用 *how many*。",
+      ),
+      meaning: t(
+        "*A* and *an* both mean one; *the* is for one thing we both know about. *And* joins two things; *not* makes a sentence say no.",
+        "*a* 和 *an* 都表示“一个”；*the* 指双方都知道的那一个。*and* 把两样东西连起来；*not* 让句子变成否定。",
+      ),
+      spell: t(
+        "Choose by the first sound of the next word: *an egg*, *an apple*, *an old man*, but *a dog* and *a big egg*.",
+        "看后面那个词的第一个音来选：*an egg*、*an apple*、*an old man*，但是 *a dog*、*a big egg*。",
+      ),
+    },
+    notes: `
+      what|asking for a name;asking about a pen;asking about red;asking about a book|what asks about a thing; how asks in what way|what 问东西；how 问怎样|how/how's=how asks in what way or how someone is, but the answer here names a thing=how 问的是怎样，可回答说的是东西;who/who's=who asks about a person, but the answer here names a thing=who 问的是人，可回答说的是东西|what|wh at the start, with a silent h|开头是 wh，h 不发音
+      how|asking how you are;asking an age;asking a number of cats|how asks in what way or how much; what asks about a thing|how 问怎样或多少；what 问东西|what=what asks about a thing, and it does not go before *old* or *many* or answer *I'm fine*=what 问东西，不和 *old*、*many* 连用，也不用 *I'm fine* 回答;where=where asks about a place, but the answer here is not a place=where 问的是地点，可回答说的不是地点|how|ow, said as in *cow*|ow 的读音和 *cow* 一样
+      many|asking a number of pens;asking a number of books, answered with ten;ten or more friends|many goes with things you count, like pens; much goes with things you cannot count, like milk|many 跟可数的东西，比如 pens；much 跟不可数的东西，比如 milk|much=much goes with things you cannot count, like milk, not with pens, books or friends=much 跟牛奶这类不可数的东西，不跟 pens、books、friends;old=old says how many years someone has lived, not how many things there are=old 说的是年龄，不是东西有多少|ma · ny|a said like the short e in *pen*, and y at the end|a 读作 *pen* 里的短 e，结尾是 y
+      old|asking an age;ten years;a grandpa of eighty-five|old is about years lived; many is about a number of things|old 说的是年龄；many 说的是数目|many=many asks or tells a number of things, and it needs a noun like *pens* after it=many 问或说东西的数目，后面要跟 *pens* 这样的名词;big=big means large in size, not how many years someone has lived=big 是个头大，不是年龄|old|ld at the end|结尾是 ld
+      year|being eight;twelve months;a new one starting|a year is twelve months; a name is what someone is called|year 是十二个月；name 是名字|name/names=name is what someone is called, not a time of twelve months=name 是名字，不是十二个月的时间;color/colors=color is red, blue or green, not a time of twelve months=color 是红、蓝、绿这样的颜色，不是十二个月的时间|year|ear after y, said like the word *ear* with y in front|y 后面是 ear，读音像 *ear* 前面加 y
+      a|a dog first named, then called the dog;a job for my mom;a big egg in a box|a goes before a consonant sound; an goes before a vowel sound|a 用在辅音开头的词前；an 用在元音开头的词前|an=an goes before a vowel sound, as in *an egg*, not before *dog*, *teacher* or *big*=an 用在元音开头的词前，比如 *an egg*，不用在 *dog*、*teacher*、*big* 前;the=the is for a thing we both already know about, but here the thing is new=the 指双方都知道的东西，可这里是第一次说到|a|that it is said like *uh* before a word, not like the name of the letter|它在词前读作 *uh*，不读字母名
+      an|an egg in a nest;an apple every day;an old man;an orange cat|an goes before a vowel sound; a goes before a consonant sound|an 用在元音开头的词前；a 用在辅音开头的词前|a=a goes before a consonant sound, but *egg*, *apple*, *old* and *orange* start with a vowel sound=a 用在辅音开头的词前，可 *egg*、*apple*、*old*、*orange* 都以元音开头;the=the is for a thing we both already know about, but here the thing is new or one of many=the 指双方都知道的东西，可这里是新的或许多中的一个|an|n after a, used before a vowel sound|a 后面加 n，用在元音开头的词前
+      the|a door we both know;the one sun;the one moon|the is for a thing we both know about; a is for any one thing|the 指双方都知道的那个；a 指任意一个|a=a is for any one thing that is new, but there is only one sun and one moon, and we both know the door=a 指新提到的任意一个，可太阳和月亮只有一个，那扇门双方也都知道;an=an is for any one thing before a vowel sound, but *door*, *sun* and *moon* start with a consonant=an 用在元音开头的词前，可 *door*、*sun*、*moon* 都以辅音开头|the|th at the start and e at the end|开头是 th，结尾是 e
+      and|a cat and a dog together;Tom and me;red and yellow together|and puts two things together; or gives a choice|and 把两样连在一起；or 表示选择|or=or gives a choice between two things, but here both are together=or 表示二选一，可这里两样都在;but=but joins two ideas that go against each other, not two things that go together=but 连接相反的两件事，不是连接放在一起的两样|and|nd at the end|结尾是 nd
+      not|being happy, not sad;being a dog, not a cat;being at school, not at home|not makes a sentence say no; very makes a word stronger|not 表示否定；very 用来加强|no=no answers a question or goes before a noun, as in *no pens*, but after *is* or *am* we say *not*=no 用来回答问题或放在名词前，比如 *no pens*，而在 *is*、*am* 后面要说 *not*;very=very makes a describing word stronger, so it cannot make a sentence say no=very 用来加强形容词，不能让句子变成否定|not|o for the short sound, and t at the end|o 发短音，结尾是 t
+    `,
+  },
 });
 
 // A and an.

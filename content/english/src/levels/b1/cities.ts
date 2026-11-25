@@ -14,95 +14,129 @@ const cityLife = vocabularyTopic({
     "Urban and rural; suburbs and downtown; skyscrapers and residents; housing, rent and property; districts, facilities and sidewalks.",
     "城市的和农村的；郊区和市中心；摩天大楼和居民；住房、租金和房产；城区、设施和人行道。",
   ),
+  intro: t(
+    "Ana left a **rural** village for the city: now she **rents** a tiny flat in a busy **district**, with a **skyscraper** on one side and a crowded **sidewalk** below. These words help you talk about where people live in and around a city.",
+    "安娜离开 **rural**（乡村的）村子来到城市：如今她在一个热闹的 **district**（城区）**rent**（租）了一套小公寓，一边是 **skyscraper**（摩天大楼），楼下是拥挤的 **sidewalk**（人行道）。这些词帮你谈论人们在城市内外居住的地方。",
+  ),
   prerequisites: ["a2-words-neighborhood"],
   words: [
     word(
       "urban",
       "of a town or a city",
       "城市的",
-      "More than half of the world's people live in {urban} areas.|residents housing | {Urban} life can be stressful.|Resident Property | The government wants to reduce {urban} traffic.|sidewalk district",
-      "rural modern",
+      "More than half of the world's people now live in {urban} areas, in towns and cities rather than the countryside. | {Urban} life, with its traffic, noise and crowds of people, can be stressful. | The government wants to reduce {urban} traffic, so it is building more subway lines in the city.",
+      "rural royal",
       "downtown",
     ),
     word(
       "rural",
       "of the countryside",
       "农村的；乡村的",
-      "My grandparents live in a {rural} village far from the city.|urban downtown | Life in {rural} areas is quieter than in the city.|urban downtown | Farming is the main work in this {rural} area.|urban downtown",
-      "royal urban",
+      "My grandparents live in a small {rural} village far from the city. | Life in {rural} areas is quieter than in the city. | Farming is the main work in this {rural} area.",
+      "urban royal",
     ),
     word(
       "suburb suburbs",
       "an area where people live outside the center of a city",
       "郊区",
-      "We moved from the city center to a quiet {suburb}.|skyscraper sidewalk | Most families with children live in the {suburbs}.|skyscrapers sidewalks | The train takes forty minutes from the {suburbs} to the center.|skyscrapers sidewalks",
-      "subway village",
+      "We moved from the city center to a quiet {suburb} with gardens and parks. | Most families with children live in the {suburbs}, outside the city center, where houses are bigger.|skyscrapers sidewalks | The train takes forty minutes from the {suburbs} to the center.|skyscrapers sidewalks",
+      "skyscraper sidewalk",
     ),
     word(
       "downtown",
       "in or to the center of a city, where the shops and offices are",
       "市中心；在市中心",
-      "Let's take the bus {downtown}.|rural suburb | She works in an office {downtown}.|rural suburb | The {downtown} area is full of restaurants.|rural housing",
-      "download countryside",
+      "Let's take the bus to the {downtown} area, where the big shops are. | She works in a {downtown} office, right in the city center. | The {downtown} area is full of restaurants, offices and big shops.",
+      "rural suburban",
       "urban",
     ),
     word(
       "skyscraper skyscrapers",
       "a very tall building in a city",
       "摩天大楼",
-      "Shanghai has many {skyscrapers}.|sidewalks suburbs | The office is on the fiftieth floor of a {skyscraper}.|sidewalk suburb | New York is famous for its {skyscrapers}.|sidewalks residents",
-      "cottage garage",
+      "Shanghai has many {skyscrapers} more than four hundred meters tall.|cottages suburbs | The office is on the fiftieth floor of a {skyscraper}. | New York is famous for its {skyscrapers}, which seem to touch the sky.|cottages suburbs",
+      "cottage suburb",
     ),
     word(
       "resident residents",
       "a person who lives in a particular place",
       "居民",
-      "The {residents} of this street are angry about the noise.|properties facilities | Parking is only for {residents}.|properties sidewalks | She has been a {resident} of Paris for ten years.|property facility",
-      "president visitor",
+      "The {residents} of this street, who have lived here for years, are angry about the noise.|visitors tourists | Parking here is only for {residents} who live in these houses.|visitors tourists | She has been a {resident} of Paris for ten years.",
+      "visitor tourist",
     ),
     word(
       "housing",
       "buildings for people to live in",
       "住房",
-      "There isn't enough cheap {housing} in the city.|sidewalk rent | The government plans to build more {housing} for young families.|sidewalk district | {Housing} is very expensive in London.|Sidewalk Facility",
-      "household hosting",
+      "There isn't enough cheap {housing} in the city: many young people can't find a place to live. | The government plans to build more {housing} for young families: new apartments near the subway. | {Housing} is very expensive in London: a small flat costs a fortune.",
+      "facility transport",
     ),
     word(
       "rent rents rented renting",
       "to pay money to use a home or a thing that belongs to someone else; the money you pay",
       "租用；租金",
-      "We {rent} a small apartment near the university.|reside district | The {rent} is due on the first of every month.|resident suburb | They {rented} bikes and rode around the lake.|resided housed",
+      "We {rent} a small apartment near the university and pay the owner every month. | Students often {rent} rooms together because buying a flat costs too much. | They {rented} bikes and rode around the lake.|lent sold",
       "lend sell",
     ),
     word(
       "property properties",
       "a building or land that someone owns",
       "房产；地产；财产",
-      "{Property} prices have doubled in ten years.|Sidewalk Suburb | They own several {properties} in the city.|sidewalks suburbs | This house is private {property}.|sidewalk downtown",
-      "proper poverty",
+      "{Property} prices have doubled in ten years. | They own several {properties} in the city: two houses and a shop.|facilities districts | This house and garden are private {property}, so please don't come in.",
+      "facility district",
     ),
     word(
       "district districts",
       "an area of a town or a country",
       "城区；地区",
-      "We live in a quiet {district} in the north of the city.|resident facility | The business {district} is full of skyscrapers.|resident sidewalk | Beijing is divided into sixteen {districts}.|residents facilities",
-      "distance distinct",
+      "Our school is in the city's university {district}, where there are five universities close together. | The business {district} is full of skyscrapers. | Beijing is divided into sixteen {districts}.|suburbs facilities",
+      "suburb facility",
     ),
     word(
       "facility facilities",
       "a building or a room for a particular use, such as a sports center or a toilet",
       "设施",
-      "The school has excellent sports {facilities}.|residents suburbs | The hotel has good {facilities} for children.|residents districts | There are no washing {facilities} at the campsite.|residents districts",
-      "faculty factory",
+      "The school has excellent sports {facilities}.|properties districts | The hotel has good {facilities} for children, such as a pool and a playroom.|properties districts | There are no washing {facilities} at the campsite.|properties districts",
+      "property district",
     ),
     word(
       "sidewalk sidewalks",
       "the path at the side of a street for people to walk on",
       "人行道",
-      "Don't ride your bike on the {sidewalk}.|suburb district | The {sidewalks} were covered in snow.|suburbs districts | People sat at tables on the {sidewalk} outside the café.|suburb resident",
-      "sideways crosswalk",
+      "Don't ride your bike on the {sidewalk}; it's for people walking. | The {sidewalks} were covered in snow, so people walking had to be careful.|highways districts | People sat at tables on the {sidewalk} outside the café.",
+      "highway district",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Urban* and *rural* are opposites: *urban* is about towns and cities, and *rural* is about the countryside, farms and villages. Look for traffic and subways, or for farms and fields.",
+        "*urban* 和 *rural* 是反义词：*urban* 和城镇有关，*rural* 和乡村、农场有关。找找句子里是交通和地铁，还是农场和田野。",
+      ),
+      meaning: t(
+        "*Housing* and *property* both name buildings, but *housing* is homes for people to live in, and *property* is a building or land that someone owns. Check whether the meaning says living in or owning.",
+        "*housing* 和 *property* 都指建筑，但 *housing* 是供人居住的住房，*property* 是某人拥有的房产或土地。看清释义说的是居住还是拥有。",
+      ),
+      spell: t(
+        "*Facility* changes y to -ies for more than one, *facilities*, and *sidewalk* hides a silent l: side-**walk**.",
+        "*facility* 的复数把 y 变成 -ies：*facilities*；*sidewalk* 里藏着不发音的 l：side-**walk**。",
+      ),
+    },
+    notes: `
+      urban|towns and cities rather than the countryside;traffic, noise and crowds;subway lines in the city|urban is about towns and cities; rural is about the countryside|urban 与城市有关；rural 与乡村有关|rural=rural means of the countryside, the opposite of towns, cities and subways=rural 是乡村的，正与城镇和地铁相反;royal=royal means of a king or a queen, not of a town or a city=royal 是国王或王后的，不是城市的|ur · ban|ur said like *er*, as in *turn*|ur 读作 *er*，和 *turn* 一样
+      rural|a village far from the city;quieter areas than the city;farming as the main work|rural is about the countryside; urban is about cities|rural 与乡村有关；urban 与城市有关|urban=urban means of a town or a city, not of villages, fields and farms=urban 是城市的，不是村庄、田野和农场的;royal=royal means of a king or a queen, nothing to do with the countryside=royal 是国王或王后的，与乡村无关|ru · ral|ru-ral: r at the start of both parts|两块都以 r 开头：ru-ral
+      suburb|a quiet place with gardens and parks;families with bigger houses outside the center;forty minutes by train to the center|a suburb is where people live outside the city center; a skyscraper is one tall building|suburb 是市中心外的居住区；skyscraper 是一栋高楼|skyscraper/skyscrapers=skyscraper is one very tall building, not a whole area of homes and gardens=skyscraper 是一栋很高的楼，不是有房子和花园的整片地区;sidewalk/sidewalks=sidewalk is the path beside a street, not an area where families live=sidewalk 是街边的人行道，不是家庭居住的地区|sub · urb|sub- (under, near) + urb, as in *urban*|sub-（靠近）加 urb，和 *urban* 一样
+      downtown|big shops reached by bus;an office right in the city center;restaurants, offices and big shops|downtown is the center of a city; a suburb is outside it|downtown 是市中心；suburb 在市中心以外|rural=rural means of the countryside, not the busy center of a city=rural 是乡村的，不是城市的繁华中心;suburban=suburban means of the quiet areas outside the center, not the center itself=suburban 是市中心外安静地区的，不是市中心本身|down · town|down + town joined, with ow said the same in both|down 和 town 连写，两个 ow 读音相同
+      skyscraper|buildings more than four hundred meters tall;the fiftieth floor of an office;New York buildings that seem to touch the sky|a skyscraper is a very tall building; a cottage is a small house in the country|skyscraper 是摩天大楼；cottage 是乡间小屋|cottage/cottages=cottage is a small house in the countryside, not a very tall building with many floors=cottage 是乡下的小房子，不是很多层的高楼;suburb/suburbs=suburb is an area outside the city center, not one tall building=suburb 是市中心外的地区，不是一栋高楼|sky · scrap · er|sky + scraper: it scrapes the sky|sky 加 scraper：刮着天空
+      resident|people who have lived on a street for years;parking for people who live in these houses;ten years living in Paris|a resident lives in a place; a visitor only comes for a short time|resident 住在某地；visitor 只是短暂来访|visitor/visitors=visitor comes to a place for a short time and does not live there=visitor 只是短暂来访，并不住在那里;tourist/tourists=tourist travels to a place for a holiday, not someone who lives there=tourist 是来度假的游客，不是住在那里的人|res · i · dent|-ent at the end, not -ant|结尾是 -ent，不是 -ant
+      housing|young people unable to find a place to live;new apartments for young families;a small, very expensive flat in London|housing is homes for people to live in; property is a building or land someone owns|housing 是供人住的房子；property 是某人拥有的房产|facility=facility is a building or a room for a special use, such as a gym, not homes to live in=facility 是有特殊用途的设施，比如健身房，不是住的房子;transport=transport is a way of carrying people or goods, not homes to live in=transport 是运送人或货物的方式，不是住的房子|hous · ing|house drops its e before -ing|house 去掉 e 再加 -ing
+      rent|paying the owner of an apartment every month;students sharing rooms because buying costs too much;bikes for a ride around a lake|you rent something by paying to use it; you lend something by letting someone use it|rent 是付钱使用别人的东西；lend 是把自己的东西借给别人|lend/lent=lend means to give something of yours to someone for a while, not to pay to use something of theirs=lend 是把自己的东西借出，不是付钱用别人的东西;sell/sold=sell means to give something to someone for money for ever, not to pay to use it for a time=sell 是卖掉东西，不是付钱用一段时间|rent|nt at the end; the past is *rented*|结尾是 nt；过去式是 *rented*
+      property|prices that have doubled in ten years;two houses and a shop someone owns;a private house and garden|property is a building or land that someone owns; a facility is a place for a special use|property 是某人拥有的房产或土地；facility 是有特定用途的设施|facility/facilities=facility is a room or a building for a special use, such as a pool, not something that has a price as a home or land=facility 是有特定用途的场所，比如泳池，不是作为房产或土地标价的东西;district/districts=district is a whole area of a town, not a building or land that one person owns=district 是城市的一整片地区，不是个人拥有的房产|prop · er · ty|proper + -ty, and -ies for more than one|proper 加 -ty，复数为 -ies
+      district|five universities close together;a business area full of skyscrapers;Beijing's sixteen areas|a district is any area of a town or country; a suburb is a living area outside the center|district 是城市或国家的任何一片区域；suburb 是市中心外的居住区|suburb/suburbs=suburb is a quiet living area outside the city center, not a busy business or university area inside it=suburb 是市中心外安静的居住区，不是城里繁忙的商业或大学区;facility/facilities=facility is a building or room for a special use, not a large area of a city=facility 是有特殊用途的建筑或房间，不是城市的一大片区域|dis · trict|str in the middle, and -ict at the end|中间是 str，结尾是 -ict
+      facility|excellent sports places at a school;a pool and a playroom for children;nowhere to wash at a campsite|a facility is a building or a room for a special use; a property is a building someone owns|facility 是有特定用途的建筑或房间；property 是某人拥有的房产|property/properties=property is a building or land someone owns, not a pool, a gym or a washroom for people to use=property 是某人拥有的房产，不是供人使用的泳池、健身房或盥洗室;district/districts=district is a whole area of a town, not a room or a building for one use=district 是城市的一片区域，不是有特定用途的房间或建筑|fa · cil · i · ty|c said like s, and y to -ies for more than one|c 读 s，复数把 y 变成 -ies
+      sidewalk|a bike ride where people walk;snow where people walking must be careful;tables outside a café|a sidewalk is the path for walking beside a street; a highway is a fast road for cars|sidewalk 是街边供人走的路；highway 是汽车走的快速公路|highway/highways=highway is a big, fast road for cars between cities, not a path for people walking=highway 是城市之间供汽车行驶的快速公路，不是供人走的小路;district/districts=district is a whole area of a town, not the path beside one street=district 是城市的一片区域，不是一条街边的小路|side · walk|side + walk, with a silent l in walk|side 加 walk，walk 里的 l 不发音
+    `,
+  },
 });
 
 const gettingAround = vocabularyTopic({
@@ -112,96 +146,130 @@ const gettingAround = vocabularyTopic({
     "Commuting; transport, transportation and vehicles; pedestrians and cyclists; lanes and jams; the rush; parking, fares and highways.",
     "通勤；交通、运输和车辆；行人和骑自行车的人；车道和堵车；匆忙；停车、车费和公路。",
   ),
+  intro: t(
+    "Every morning Tom **commutes** downtown by bus; in the **rush** hour the bus sits in a traffic **jam** while **cyclists** speed past in their own **lane**. These words help you talk about how people travel around a city.",
+    "每天早上汤姆坐公交 **commute**（通勤）到市中心；**rush**（高峰）时段公交车堵在 **jam**（堵车）里，**cyclists**（骑车的人）却在自己的 **lane**（车道）上飞驰而过。这些词帮你谈论人们怎样在城市里出行。",
+  ),
   prerequisites: ["a2-words-transport"],
   words: [
     word(
       "commute commutes commuted commuting",
       "to travel regularly between your home and your work or school",
       "通勤；上下班往返",
-      "I {commute} to work by train every day.|park rush | She {commutes} two hours each way.|parks fares | {Commuting} by bike is good for your health.|Parking Fare",
-      "compute communicate",
+      "I {commute} between my home in the suburbs and my office every day by train. | She {commutes} two hours each way.|rushes parks | {Commuting} to work and back by bike is good for your health.|rushing parking",
+      "rush park",
     ),
     word(
       "transport transports",
       "a way of carrying people or goods from one place to another",
       "交通工具；运输",
-      "Public {transport} in this city is cheap and fast.|pedestrian fare | The bike is the cheapest form of {transport}.|pedestrian lane | Trucks {transport} food to the supermarkets.|pedestrian park",
-      "transfer translate",
+      "Public {transport} in this city is cheap and fast. | The bike is the cheapest form of {transport}. | {Transport} by ship is the cheapest way to move goods around the world.",
+      "fare traffic",
       "transportation vehicle",
     ),
     word(
       "transportation",
       "a system or a way of moving people or goods",
       "交通运输",
-      "The city needs better {transportation}.|pedestrian highway | Is {transportation} included in the price of the trip?|pedestrian cyclist | Buses are the main {transportation} for students here.|pedestrian cyclist",
-      "translation transformation",
+      "The city needs better {transportation}: more buses and trains. | Is {transportation} included in the price of the trip? | Buses are the main {transportation} for students here.",
+      "traffic highway",
       "transport vehicle",
     ),
     word(
       "vehicle vehicles",
       "a machine such as a car, a bus or a truck that carries people or things",
       "车辆；交通工具",
-      "No {vehicles} are allowed in the old town.|pedestrians cyclists | Electric {vehicles} are becoming more popular.|pedestrians fares | The police stopped the {vehicle} at the border.|pedestrian fare",
-      "vessel engine",
+      "No {vehicles} are allowed in the old town; cars, buses and trucks must stay outside.|pedestrians cyclists | Electric {vehicles} are becoming more popular.|pedestrians cyclists | The police stopped the {vehicle} and asked the driver to open its doors.",
+      "pedestrian cyclist",
       "transport transportation",
     ),
     word(
       "pedestrian pedestrians",
       "a person who is walking in a street",
       "行人",
-      "This street is only for {pedestrians}; cars can't go here.|vehicles highways | The driver didn't see the {pedestrian} crossing the road.|highway lane | {Pedestrians} should use the bridge to cross the highway.|Vehicles Fares",
-      "passenger driver",
+      "This street is only for {pedestrians}: no cars or bikes, just people on foot.|cyclists drivers | The driver didn't see the {pedestrian} walking across the road. | {Pedestrians} walking to the station should use the bridge to cross the highway.|cyclists drivers",
+      "cyclist driver",
     ),
     word(
       "cyclist cyclists",
       "a person who rides a bike",
       "骑自行车的人",
-      "{Cyclists} should always wear a helmet.|Vehicles Fares | The new lane is only for {cyclists}.|vehicles fares | A {cyclist} was hurt in the accident.|vehicle fare",
-      "cycle driver",
+      "{Cyclists} should always wear a helmet when they ride.|pedestrians drivers | The new lane is only for {cyclists} on bikes.|pedestrians drivers | A {cyclist} was hurt in the accident when a car hit his bike.",
+      "pedestrian driver",
     ),
     word(
       "lane lanes",
       "a part of a road for one line of traffic; a narrow road in the country",
       "车道；小路",
-      "The city has built new bike {lanes}.|jams fares | The bus was in the wrong {lane}.|jam fare | We walked down a quiet country {lane}.|jam fare",
-      "line plane",
+      "The city has built new bike {lanes}.|jams fares | The bus was in the wrong {lane} of the road and had to move left. | We walked down a quiet country {lane}.",
+      "jam fare",
     ),
     word(
       "jam jams",
       "a long line of cars that cannot move",
       "堵车",
-      "We were stuck in a traffic {jam} for an hour.|lane fare | There are always {jams} on this road in the morning.|fares lanes | The accident caused a huge {jam}.|fare commute",
-      "jar crash",
+      "We were stuck in a traffic {jam} for an hour. | There are always {jams} on this road in the morning, and cars don't move for twenty minutes.|lanes fares | The accident caused a huge {jam}.",
+      "lane fare",
     ),
     word(
       "rush rushes rushed rushing",
       "to move or do something very quickly; a time when many people are hurrying",
       "匆忙；高峰",
-      "I had to {rush} to catch the bus.|commute park | Don't travel during the {rush} hour if you can.|fare lane | She {rushed} out of the house without breakfast.|commuted parked",
-      "rest brush",
+      "I had to {rush} to catch the bus. | Don't travel during the {rush} hour if you can. | She {rushed} out of the house without breakfast.|commuted parked",
+      "commute park",
     ),
     word(
       "parking",
       "leaving a car somewhere for a time; a place to do this",
       "停车；停车位",
-      "{Parking} is very expensive downtown.|Rushing Lane | There's free {parking} behind the supermarket.|fare highway | You'll get a ticket for {parking} here.|commuting rushing",
-      "packing parting",
+      "{Parking} your car downtown is very expensive. | There's free {parking} behind the supermarket. | You'll get a ticket for {parking} here.",
+      "fare traffic",
     ),
     word(
       "fare fares",
       "the money you pay to travel by bus, train, taxi or plane",
       "车费；票价",
-      "The bus {fare} is two yuan.|lane jam | Taxi {fares} go up at night.|lanes jams | Students pay half {fare} on the subway.|lane jam",
-      "fair fee",
+      "The bus {fare} is two yuan. | Taxi {fares} go up at night.|lanes jams | Students pay half {fare} on the subway.",
+      "lane jam",
     ),
     word(
       "highway highways",
       "a big, fast road between cities",
       "公路；高速公路",
-      "We drove along the {highway} to Hangzhou.|sidewalk pedestrian | The new {highway} will cut the journey by an hour.|pedestrian fare | Accidents on {highways} are often serious.|pedestrians fares",
-      "hallway path",
+      "We drove along the {highway} to Hangzhou at 120 kilometers an hour. | The new {highway} will cut the journey by an hour. | Accidents on {highways} are often serious because cars go so fast.|sidewalks lanes",
+      "sidewalk lane",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Pedestrian* and *cyclist* are both people on the street without a car, but a *pedestrian* walks and a *cyclist* rides a bike. Look for on foot and walking, or for bikes, helmets and riding.",
+        "*pedestrian* 和 *cyclist* 都是街上不开车的人，但 *pedestrian* 步行，*cyclist* 骑自行车。找找句子里是步行，还是自行车、头盔和骑行。",
+      ),
+      meaning: t(
+        "*Fare* and *parking* both cost money when you travel, but a *fare* is what you pay to ride a bus, train, taxi or plane, and *parking* is leaving your own car somewhere. Check whether the meaning says riding or leaving a car.",
+        "*fare* 和 *parking* 都是出行时要花的钱，但 *fare* 是乘公交、火车、出租车或飞机的车费，*parking* 是把自己的车停在某处。看清释义说的是乘车还是停车。",
+      ),
+      spell: t(
+        "*Vehicle* has a silent h, said *vee-ikl*, and *pedestrian* starts with *ped-*, the Latin word for foot.",
+        "*vehicle* 里的 h 不发音，读作 *vee-ikl*；*pedestrian* 以 *ped-* 开头，在拉丁语里是“脚”。",
+      ),
+    },
+    notes: `
+      commute|a daily train between a home in the suburbs and an office;two hours each way;going to work and back by bike|to commute is to travel the same way to work or school every day; to rush is to go very fast once|commute 是每天往返上班或上学；rush 是某一次匆忙赶路|rush/rushes/rushing=rush means to go or do something very fast, not to make the same trip to work every day=rush 是匆忙赶路，不是每天固定往返上班;park/parks/parking=park means to leave a car somewhere, not to travel between home and work=park 是停车，不是在家和单位之间往返|com · mute|com- + mute, with u-e said like *you*|com- 加 mute，u-e 读作 *you*
+      transport|cheap and fast buses and trains in a city;a bike as the cheapest way to travel;ships moving goods around the world|transport is a way of carrying people or goods; traffic is the cars on a road|transport 是运送人或货物的方式；traffic 是路上的车流|fare=fare is the money you pay for one trip, not a way of carrying people or goods=fare 是一次乘车付的钱，不是运送人或货物的方式;traffic=traffic is the cars and buses on the roads at one time, not a way of travelling=traffic 是某时路上的车流，不是出行的方式|trans · port|trans- (across) + port (carry)|trans-（跨越）加 port（运送）
+      transportation|more buses and trains in a city;travel included in the price of a trip;buses as students' main way to travel|transportation is the system of moving people or goods; a highway is one road|transportation 是运送人或货物的系统；highway 只是一条路|traffic=traffic is the cars on a road at one time, not a system of buses and trains=traffic 是某时路上的车流，不是公交和火车组成的系统;highway=highway is one big road, not the whole way of moving people=highway 只是一条大路，不是整个运送人的方式|trans · por · ta · tion|transport + -ation|transport 加 -ation
+      vehicle|cars, buses and trucks kept out of an old town;electric machines becoming more popular;a driver opening its doors for the police|a vehicle is a machine that carries people or things; a pedestrian is a person walking|vehicle 是运载人或物的机器；pedestrian 是步行的人|pedestrian/pedestrians=pedestrian is a person walking, not a machine such as a car or a truck=pedestrian 是步行的人，不是汽车或卡车这样的机器;cyclist/cyclists=cyclist is a person riding a bike, not a machine with an engine=cyclist 是骑车的人，不是有发动机的机器|ve · hi · cle|a silent h: said *vee-ikl*|h 不发音：读作 *vee-ikl*
+      pedestrian|a street for people on foot;someone walking across the road;people walking to a station over a bridge|a pedestrian walks; a cyclist rides a bike|pedestrian 步行；cyclist 骑自行车|cyclist/cyclists=cyclist rides a bike, not someone who goes on foot=cyclist 是骑自行车的人，不是步行的人;driver/drivers=driver drives a car, not someone who walks=driver 是开车的人，不是步行的人|pe · des · tri · an|*ped-* means foot, and -ian at the end|*ped-* 意为“脚”，结尾是 -ian
+      cyclist|a helmet when riding;a lane for people on bikes;a car hitting a bike|a cyclist rides a bike; a pedestrian walks|cyclist 骑自行车；pedestrian 步行|pedestrian/pedestrians=pedestrian walks on foot and does not ride a bike or need a bike lane=pedestrian 是步行的人，不骑车，也不用自行车道;driver/drivers=driver drives a car, not a person riding a bike=driver 是开车的人，不是骑车的人|cy · clist|cy said like *sigh*, and y is the vowel|cy 读作 *sigh*，y 当元音
+      lane|new parts of the road for bikes;a bus in the wrong part of the road;a quiet country road|a lane is one part of a road or a small country road; a jam is cars that cannot move|lane 是车道或乡间小路；jam 是动不了的车流|jam/jams=jam is a long line of cars that cannot move, not a part of the road or a small road you walk down=jam 是动不了的长长车队，不是车道或可以走的小路;fare/fares=fare is the money you pay to travel, not a part of a road=fare 是车费，不是道路的一部分|lane|a-e says its name; *line*, which looks alike, is any long mark|a-e 读字母本音；长得像的 *line* 是线条
+      jam|an hour stuck in traffic;cars not moving for twenty minutes every morning;a huge line of cars after an accident|a jam is cars that cannot move; a lane is one part of a road|jam 是堵住的车流；lane 是一条车道|lane/lanes=lane is one part of a road for one line of cars, not cars stuck and not moving=lane 是一条车道，不是堵住不动的车;fare/fares=fare is the money you pay for a trip, not cars stuck on a road=fare 是车费，不是堵在路上的车|jam|short a, as in *man*|短元音 a，和 *man* 一样
+      rush|hurrying to catch a bus;the busy hour to avoid;running out without breakfast|to rush is to hurry; to commute is to travel to work every day|rush 是匆忙；commute 是每天通勤|commute/commuted=commute means to make the same trip to work or school every day, not to hurry once=commute 是每天固定往返，不是某一次赶时间;park/parked=park means to leave a car somewhere, not to move very fast=park 是停车，不是快速移动|rush|sh at the end, as in *brush*|结尾是 sh，和 *brush* 一样
+      parking|an expensive place to leave a car downtown;free space behind a supermarket;a ticket for leaving a car here|parking is leaving a car somewhere; a fare is what you pay to ride|parking 是停车；fare 是乘车付的钱|fare=fare is the money you pay to ride a bus, train or taxi, not leaving your own car somewhere=fare 是乘公交、火车或出租车的钱，不是把自己的车停在某处;traffic=traffic is the cars moving on a road, not leaving a car in one place=traffic 是路上行驶的车，不是把车停在一处|park · ing|park + -ing|park 加 -ing
+      fare|two yuan for a bus;taxi prices going up at night;students paying half on the subway|a fare is the money for a trip; a lane is a part of a road|fare 是车费；lane 是一条车道|lane/lanes=lane is a part of a road, not money you pay for a trip=lane 是车道，不是乘车付的钱;jam/jams=jam is cars that cannot move, not money you pay for a ride=jam 是堵住的车，不是乘车的钱|fare|a-r-e said like *air*; *fair*, which sounds the same, is a market or means just|are 读作 *air*；同音的 *fair* 是集市或公平的意思
+      highway|driving at 120 kilometers an hour to Hangzhou;a new road cutting a journey by an hour;serious accidents where cars go fast|a highway is a big, fast road between cities; a lane is one part of a road|highway 是城市间的快速公路；lane 是道路中的一条车道|sidewalk/sidewalks=sidewalk is a path for people walking, not a fast road for cars between cities=sidewalk 是供人走的路，不是城市间的快速公路;lane/lanes=lane is one part of a road, or a small country road, not a big road between cities=lane 是一条车道或乡间小路，不是城市之间的大路|high · way|high + way, with a silent gh|high 加 way，gh 不发音
+    `,
+  },
 });
 
 const cityProblems = vocabularyTopic({
@@ -211,95 +279,129 @@ const cityProblems = vocabularyTopic({
     "Vandalism and graffiti; homeless people and poverty; shortages and overcrowding; smog and congestion; unemployment; lacking; growth and pressure.",
     "故意破坏和涂鸦；无家可归者和贫困；短缺和过度拥挤；雾霾和拥堵；失业；缺乏；增长和压力。",
   ),
+  intro: t(
+    "The city's fast **growth** has brought **congestion** on the roads, **smog** in the air and a **shortage** of cheap homes, so some families are now **homeless**. These words help you talk about the problems of big cities and their causes.",
+    "这座城市的快速 **growth**（增长）带来了道路 **congestion**（拥堵）、空气中的 **smog**（雾霾）和廉价住房的 **shortage**（短缺），一些家庭因此 **homeless**（无家可归）。这些词帮你谈论大城市的问题及其原因。",
+  ),
   prerequisites: ["b1-words-city-life"],
   words: [
     word(
       "vandalism",
       "damaging public buildings or things on purpose",
       "故意破坏公物",
-      "Someone broke all the windows of the bus stop; it was an act of {vandalism}.|growth pressure | The town has cameras to stop {vandalism} in the park.|growth shortage | {Vandalism} costs the city a lot of money every year.|Growth Pressure",
-      "volleyball criminal",
+      "Someone broke all the windows of the bus stop; it was an act of {vandalism}. | The town has cameras to stop {vandalism}: people breaking benches and lights in the park. | {Vandalism}, such as smashed windows and broken benches, costs the city a lot of money every year.",
+      "graffiti poverty",
     ),
     word(
       "homeless",
       "having no home",
       "无家可归的",
-      "There are many {homeless} people sleeping in the station.|overcrowded congested | She works at a shelter for {homeless} families.|overcrowded urban | After the flood, a thousand people were {homeless}.|overcrowded poverty",
-      "helpless hopeless",
+      "There are many {homeless} people sleeping in the station. | She works at a shelter for {homeless} families. | After the flood, a thousand people were {homeless}.",
+      "overcrowded urban",
     ),
     word(
       "poverty",
       "being very poor",
       "贫困",
-      "Millions of children live in {poverty}.|smog graffiti | Education is the best way out of {poverty}.|smog graffiti | The government promised to end {poverty}.|smog graffiti",
-      "property honesty",
+      "Millions of children live in {poverty}. | Many families in {poverty} cannot pay for food, clothes or a doctor. | The government promised to end {poverty}, so that no family would be too poor to eat.",
+      "unemployment growth",
     ),
     word(
       "shortage shortages",
       "a situation in which there is not enough of something",
       "短缺",
-      "There is a {shortage} of doctors in rural areas.|growth graffiti | Water {shortages} are common in summer.|growths graffitis | The city faces a serious housing {shortage}.|graffiti vandalism",
-      "shortcut storage",
+      "There is a {shortage} of doctors in rural areas: one doctor for ten villages. | Water {shortages} are common in summer when it doesn't rain.|growths congestions | The city faces a serious housing {shortage}: there are not enough homes for everyone.",
+      "growth congestion",
       "lack",
     ),
     word(
       "overcrowded",
       "with too many people in a place",
       "过度拥挤的",
-      "The trains are {overcrowded} at rush hour.|homeless rural | Many families live in small, {overcrowded} apartments.|homeless rural | The beach was so {overcrowded} that we couldn't find a place to sit.|homeless rural",
-      "overgrown empty",
+      "The trains are {overcrowded} at rush hour, and people stand pressed together. | Many families live in small, {overcrowded} apartments where six people share two rooms. | The beach was so {overcrowded} that we couldn't find a place to sit.",
+      "homeless urban",
     ),
     word(
       "smog",
       "dirty air, made of smoke and fog, over a city",
       "雾霾；烟雾",
-      "On some days, the {smog} is so bad that you can't see the mountains.|poverty growth | Cars and factories cause {smog}.|poverty unemployment | People wear masks because of the {smog}.|poverty graffiti",
-      "smoke snow",
+      "On some days, the {smog} is so bad that you can't see the mountains. | Smoke from cars and factories mixes with fog to make {smog}. | People wear masks because of the {smog}.",
+      "graffiti congestion",
     ),
     word(
       "graffiti",
       "words or pictures painted on walls in public places",
       "涂鸦",
-      "The wall was covered in {graffiti}.|smog poverty | Some people think {graffiti} is art.|smog poverty | Students spent Saturday cleaning {graffiti} off the school walls.|smog poverty",
-      "painting graphics",
+      "The wall was covered in {graffiti}. | Some people think {graffiti} is art. | Students spent Saturday cleaning {graffiti} off the school walls.",
+      "vandalism smog",
     ),
     word(
       "unemployment",
       "the number of people who do not have a job; not having a job",
       "失业；失业率",
-      "{Unemployment} is high among young people.|Smog Graffiti | When the factory closed, {unemployment} rose quickly.|smog graffiti | The government is trying to reduce {unemployment}.|smog graffiti",
-      "employment entertainment",
+      "{Unemployment} is high among young people: one in five can't find a job. | When the factory closed, {unemployment} rose quickly as hundreds of workers lost their jobs. | The government is trying to reduce {unemployment} by creating new jobs.",
+      "poverty congestion",
     ),
     word(
       "congestion",
       "too much traffic on the roads",
       "拥堵；交通堵塞",
-      "The new subway line has reduced {congestion} downtown.|poverty graffiti | Traffic {congestion} is the city's biggest problem.|poverty graffiti | Drivers pay a fee to enter the center, which cuts {congestion}.|poverty graffiti",
-      "connection suggestion",
+      "The new subway line has reduced {congestion} on the roads downtown, so cars move faster. | Traffic {congestion} is the city's biggest problem. | Drivers pay a fee to enter the center, which cuts {congestion}: fewer cars, fewer jams.",
+      "smog unemployment",
     ),
     word(
       "lack lacks lacked lacking",
       "to not have enough of something; not having enough",
       "缺乏；缺少",
-      "The city {lacks} good public transport.|pressures grows | Many old people suffer from a {lack} of exercise.|growth smog | What the school {lacked} was money.|pressured grew",
-      "lake luck",
+      "The city {lacks} good public transport, so most people drive.|grows causes | Many old people {lack} exercise and sit at home all day. | What the school {lacked} was money.|grew caused",
+      "grow cause",
       "shortage",
     ),
     word(
       "growth",
       "getting bigger or increasing",
       "增长；发展",
-      "The rapid {growth} of the city has caused many problems.|poverty smog | There has been a {growth} in the number of cars.|smog poverty | Children need good food for healthy {growth}.|smog graffiti",
-      "grown growl",
+      "The rapid {growth} of the city has caused many problems. | There has been a {growth} in the number of cars, from one million to three million. | Children need good food for healthy {growth}.",
+      "shortage pressure",
     ),
     word(
       "pressure pressures",
       "a feeling of worry because of the things you must do; strong force",
       "压力",
-      "Students are under a lot of {pressure} before exams.|growth smog | Rising rents are putting {pressure} on young families.|graffiti smog | Living in a big city has its {pressures}.|graffitis smogs",
-      "pleasure president",
+      "Students are under a lot of {pressure} before exams. | Rising rents are putting {pressure} on young families. | Living in a big city brings {pressure}: long hours, high rents and always being in a hurry.",
+      "growth shortage",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Vandalism* and *graffiti* both hurt public places, but *vandalism* is breaking or damaging things on purpose, and *graffiti* is words or pictures painted on walls. Look for broken and smashed, or for painted walls.",
+        "*vandalism* 和 *graffiti* 都会损害公共场所，但 *vandalism* 是故意砸坏东西，*graffiti* 是在墙上涂写的字或画。找找句子里是打碎砸坏，还是墙上的涂画。",
+      ),
+      meaning: t(
+        "*Poverty* and *unemployment* often go together, but *poverty* is being very poor, and *unemployment* is not having a job. Check whether the meaning says poor or without work.",
+        "*poverty* 和 *unemployment* 常一起出现，但 *poverty* 是非常贫穷，*unemployment* 是没有工作。看清释义说的是贫穷还是失业。",
+      ),
+      spell: t(
+        "*Graffiti* has a double f and a double t, and *overcrowded* is *over* + *crowded* written as one word.",
+        "*graffiti* 的 f 和 t 都要双写；*overcrowded* 是 *over* 加 *crowded*，连写成一个词。",
+      ),
+    },
+    notes: `
+      vandalism|broken windows at a bus stop;people breaking benches and lights in a park;smashed windows and broken benches that cost money|vandalism is breaking things on purpose; graffiti is painting on walls|vandalism 是故意砸坏东西；graffiti 是在墙上涂画|graffiti=graffiti is words or pictures painted on walls, not breaking windows or benches=graffiti 是在墙上涂写字或画，不是砸坏窗户或长椅;poverty=poverty is being very poor, not damaging things on purpose=poverty 是非常贫穷，不是故意破坏东西|van · dal · ism|-ism at the end, as in *tourism*|结尾是 -ism，和 *tourism* 一样
+      homeless|people sleeping in a station;a shelter for families;a thousand people after a flood|homeless means having no home; overcrowded means with too many people|homeless 是无家可归；overcrowded 是人太多|overcrowded=overcrowded means a place has too many people in it, not that people have nowhere to live=overcrowded 是某地人太多，不是人们无处可住;urban=urban means of a town or a city, not having no home=urban 是城市的，不是没有家|home · less|home + -less (without)|home 加 -less（没有）
+      poverty|millions of children;families unable to pay for food, clothes or a doctor;no family too poor to eat|poverty is being very poor; unemployment is having no job|poverty 是非常贫穷；unemployment 是没有工作|unemployment=unemployment is not having a job, not being too poor to eat or pay for things=unemployment 是没有工作，不是穷得吃不上饭、付不起钱;growth=growth is getting bigger or more, not being very poor=growth 是变大或增多，不是非常贫穷|pov · er · ty|-er- in the middle and -ty at the end|中间是 -er-，结尾是 -ty
+      shortage|one doctor for ten villages;water in summer when it doesn't rain;not enough homes for everyone|a shortage is not having enough; growth is getting more|shortage 是不够；growth 是增加|growth/growths=growth is getting bigger or more, the opposite of not having enough=growth 是变大或增多，正好和不够相反;congestion/congestions=congestion is too much traffic, not too few doctors, homes or water=congestion 是车太多，不是医生、住房或水太少|short · age|short + -age|short 加 -age
+      overcrowded|people pressed together on rush-hour trains;six people sharing two rooms;no place to sit on a beach|overcrowded means with too many people; homeless means with no home|overcrowded 是人太多；homeless 是没有家|homeless=homeless means having no home, not a place with too many people in it=homeless 是没有家，不是某地人太多;urban=urban means of a city, not full of too many people=urban 是城市的，不是人太多|o · ver · crowd · ed|over + crowded, written as one word|over 加 crowded，连写成一个词
+      smog|mountains you cannot see;smoke from cars and factories mixed with fog;masks people wear|smog is dirty air over a city; congestion is too much traffic|smog 是城市上空的脏空气；congestion 是交通拥堵|graffiti=graffiti is paint on walls, not dirty air you breathe or cannot see through=graffiti 是墙上的涂鸦，不是吸进去、看不透的脏空气;congestion=congestion is too many cars on the roads, not smoke and fog in the air=congestion 是路上车太多，不是空气中的烟和雾|smog|*smoke* + *fog* joined into one short word|*smoke* 和 *fog* 合成的短词
+      graffiti|a wall covered in words and pictures;something some people call art;cleaning paint off school walls|graffiti is painting on walls; vandalism is breaking things|graffiti 是墙上涂鸦；vandalism 是故意破坏|vandalism=vandalism is breaking or damaging things, not words and pictures painted on walls=vandalism 是砸坏东西，不是在墙上涂写的字和画;smog=smog is dirty air over a city, not paint on walls=smog 是城市上空的脏空气，不是墙上的颜料|graf · fi · ti|a double f and a double t|f 和 t 都双写
+      unemployment|one in five young people unable to find a job;hundreds of workers losing their jobs;creating new jobs|unemployment is not having a job; poverty is being very poor|unemployment 是没有工作；poverty 是非常贫穷|poverty=poverty is being very poor, not the number of people without a job=poverty 是非常贫穷，不是没有工作的人数;congestion=congestion is too much traffic, not people without jobs=congestion 是交通拥堵，不是没有工作的人|un · em · ploy · ment|un- + employ + -ment|un- 加 employ 再加 -ment
+      congestion|cars moving faster after a new subway line;the city's biggest traffic problem;fewer cars and fewer jams|congestion is too much traffic; smog is dirty air|congestion 是交通拥堵；smog 是脏空气|smog=smog is dirty air, not too many cars on the roads=smog 是脏空气，不是路上车太多;unemployment=unemployment is people without jobs, not too much traffic=unemployment 是失业，不是交通太多|con · ges · tion|g said like j, and -tion said like *chun*|g 读 j，-tion 读作 *chun*
+      lack|a city where most people drive;old people sitting at home all day;a school without money|to lack something is not to have enough of it; to grow is to get bigger|lack 是缺少；grow 是增长|grow/grows/grew=grow means to get bigger or to make plants come up, not to be without something=grow 是增长或种植，不是缺少;cause/causes/caused=cause means to make something happen, not to be without it=cause 是导致某事发生，不是缺少某物|lack|ck at the end, as in *back*|结尾是 ck，和 *back* 一样
+      growth|a city getting bigger fast;cars going from one million to three million;good food for healthy children|growth is getting bigger; a shortage is not having enough|growth 是变大；shortage 是不够|shortage=shortage is not having enough of something, not getting bigger=shortage 是不够，不是变大;pressure=pressure is worry about things you must do, not getting bigger=pressure 是要做的事带来的压力，不是变大|growth|grow + -th, with ow as in *grow*|grow 加 -th，ow 和 *grow* 一样
+      pressure|students before exams;rising rents and young families;long hours, high rents and always hurrying|pressure is worry from things you must do; growth is getting bigger|pressure 是要做的事带来的压力；growth 是变大|growth=growth is getting bigger, not the worry of exams, rents and long hours=growth 是变大，不是考试、房租和长时间工作带来的担忧;shortage=shortage is not having enough of something, not the feeling of worry=shortage 是某物不够，不是担忧的感觉|pres · sure|press + -ure, with ss said like *sh*|press 加 -ure，ss 读作 *sh*
+    `,
+  },
 });
 
 const location = vocabularyTopic({
@@ -309,95 +411,129 @@ const location = vocabularyTopic({
     "Opposite, beside and beyond; north, south, east and west; directions and distance; blocks and locations; nearby.",
     "在对面、在旁边和在那边；北、南、东和西；方向和距离；街区和位置；附近的。",
   ),
+  intro: t(
+    "The museum is two **blocks** from the station: walk **north**, and you'll find it **opposite** the bank, **beside** a small park. These words help you ask the way and say where places are.",
+    "博物馆离车站两个 **block**（街区）：往 **north**（北）走，你会在银行 **opposite**（对面）、一个小公园 **beside**（旁边）找到它。这些词帮你问路，说出地方在哪里。",
+  ),
   prerequisites: ["a1-words-directions"],
   words: [
     word(
       "opposite",
       "on the other side of a street or a room, facing something",
       "在……对面",
-      "The bank is {opposite} the post office.|north east | She sat {opposite} me at dinner.|beyond north | The bus stop is on the {opposite} side of the road.|beyond nearby",
-      "opposed apposite",
+      "The bank is {opposite} the post office: they face each other across the street. | She sat {opposite} me at dinner, so we could look at each other across the table. | The bus stop is {opposite} our school, right across the road.",
+      "beside beyond",
     ),
     word(
       "beside",
       "next to; at the side of",
       "在……旁边",
-      "Come and sit {beside} me.|beyond south | There's a small café {beside} the river.|north west | He stood {beside} his father in the photo.|beyond north",
-      "besides behind",
+      "Come and sit {beside} me on the sofa; there's room next to me. | There's a small café right {beside} the river, so close you can touch the water. | He stood {beside} his father in the photo, shoulder to shoulder.",
+      "opposite beyond",
       "nearby",
     ),
     word(
       "beyond",
       "on the far side of something; further than",
       "在……那边；超出",
-      "The village is just {beyond} the hills.|nearby north | You can see the sea {beyond} the trees.|north nearby | The town has grown {beyond} its old walls.|beside nearby",
-      "behind below",
+      "The village is just {beyond} the hills, so you can't see it from here. | Look past the trees: the sea is far away, {beyond} them. | The town has grown {beyond} its old walls and now spreads far outside them.",
+      "beside opposite",
     ),
     word(
       "north",
       "the direction to your left when you face the sunrise; toward the top of a map",
       "北；北方",
-      "Harbin is in the {north} of China; it's very cold in winter.|south beside | Birds fly {north} in spring after the winter in Africa.|beside nearby | The North Pole is as far {north} as you can go.|south beside",
-      "nose northern",
+      "Harbin is in the {north} of China, at the top of the map, and it's very cold in winter. | In spring, birds fly {north} from warm Africa to cooler Europe. | The North Pole is as far {north} as you can go.",
+      "south east",
     ),
     word(
       "south",
       "the direction to your right when you face the sunrise; toward the bottom of a map",
       "南；南方",
-      "Hainan is an island in the far {south} of China.|north beside | Many birds fly {south} for the winter.|beside nearby | Australia is {south} of the equator.|north beside",
-      "mouth southern",
+      "Hainan is an island in the far {south} of China, where it is warm all year. | Many birds fly {south} to warmer places for the winter. | Australia is {south} of the equator.",
+      "north west",
     ),
     word(
       "east",
       "the direction where the sun rises",
       "东；东方",
-      "The sun rises in the {east}.|west beside | Shanghai is on the {east} coast of China.|west opposite | The wind is blowing from the {east}.|beyond nearby",
-      "easy eastern",
+      "The sun rises in the {east}. | Shanghai is on the {east} coast of China, facing the Pacific Ocean. | Japan is to the {east} of China, across the sea, where the sun rises first.",
+      "west north",
     ),
     word(
       "west",
       "the direction where the sun goes down",
       "西；西方",
-      "The sun sets in the {west}.|east beside | Tibet is in the {west} of China.|east opposite | We drove {west} toward the setting sun.|beside nearby",
-      "rest western",
+      "The sun sets in the {west}. | Xinjiang and Tibet are in the {west} of China, on the left of the map. | We drove {west} toward the setting sun.",
+      "east north",
     ),
     word(
       "direction directions",
       "the way something is moving or pointing; instructions on how to get somewhere",
       "方向；指路",
-      "Which {direction} is the station?|distance block | We walked in the wrong {direction} for half an hour.|distance location | Can you give me {directions} to the museum?|distances blocks",
-      "destination decision",
+      "Which {direction} is the station: left or right? | We walked in the wrong {direction} for half an hour. | Can you give me {directions} to the museum?|distances locations",
+      "distance location",
     ),
     word(
       "distance distances",
       "how far it is from one place to another",
       "距离",
-      "What's the {distance} from here to the airport?|direction block | The hotel is a short {distance} from the beach.|direction location | We could see the mountains in the {distance}.|direction block",
-      "difference instance",
+      "What's the {distance} from here to the airport in kilometers? | The hotel is a short {distance} from the beach. | We could see the mountains in the {distance}.",
+      "direction location",
     ),
     word(
       "block blocks",
       "a group of buildings with streets on all sides; a large building of flats or offices",
       "街区；大楼",
-      "The library is two {blocks} from here.|directions distances | Walk around the {block} and you'll see it.|direction distance | They live in a tall apartment {block}.|direction distance",
-      "black lock",
+      "The library is two {blocks} from here: cross two streets and it's on the left.|districts locations | Walk around the {block} and you'll see it. | They live in a tall apartment {block}.",
+      "district location",
     ),
     word(
       "location locations",
       "the place where something is",
       "位置；地点",
-      "The hotel is in a great {location}, near the beach.|direction distance | The film was shot in several {locations} in Morocco.|directions blocks | Can you send me your {location} on your phone?|distance block",
-      "local relation",
+      "The hotel is in a great {location}, near the beach. | The film was shot in several {locations} in Morocco.|directions distances | Can you send me your {location} on your phone, so I can find where you are?",
+      "direction distance",
     ),
     word(
       "nearby",
       "not far away",
       "附近的；在附近",
-      "Is there a supermarket {nearby}?|opposite beside | We stayed in a {nearby} hotel.|beside opposite | My grandparents live {nearby}, so we see them often.|beside opposite",
-      "nearly faraway",
+      "Is there a supermarket {nearby}, within walking distance? | We stayed in the {nearby} hotel, so the beach was only two minutes away. | My grandparents live {nearby}, just a five-minute walk away, so we see them often.",
+      "opposite beyond",
       "beside",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Opposite*, *beside* and *beyond* all say where something is: *opposite* is facing it from the other side, *beside* is right next to it, and *beyond* is on its far side. Ask whether the two things face each other, touch sides or are far apart.",
+        "*opposite*、*beside* 和 *beyond* 都表示位置：*opposite* 是隔着东西相对，*beside* 是紧挨着，*beyond* 是在更远的另一边。想想两样东西是面对面、肩并肩，还是隔得很远。",
+      ),
+      meaning: t(
+        "*Direction* and *distance* both help you find a place, but a *direction* is which way to go, and a *distance* is how far it is. Check whether the meaning says which way or how far.",
+        "*direction* 和 *distance* 都能帮你找地方，但 *direction* 是朝哪个方向走，*distance* 是有多远。看清释义说的是方向还是远近。",
+      ),
+      spell: t(
+        "*Beside* has no s at the end (*besides* means as well), and *distance* ends in -ance, not -ence.",
+        "*beside* 结尾没有 s（*besides* 是“此外”）；*distance* 结尾是 -ance，不是 -ence。",
+      ),
+    },
+    notes: `
+      opposite|two buildings facing each other across a street;looking at each other across a dinner table;a bus stop right across the road|opposite means facing something from the other side; beside means right next to it|opposite 是隔着东西面对面；beside 是紧挨着|beside=beside means right next to something, side by side, not facing it from the other side=beside 是紧挨着、肩并肩，不是隔着东西相对;beyond=beyond means far away on the other side, not facing something across a street or a table=beyond 是在远处的另一边，不是隔着街道或桌子面对面|op · po · site|the double p, and -site at the end|双写 p，结尾是 -site
+      beside|room next to someone on a sofa;a café so close you can touch the water;shoulder to shoulder in a photo|beside means right next to; besides, with an s, means as well|beside 是在旁边；带 s 的 besides 是“此外”|opposite=opposite means facing something from the other side, not touching it side by side=opposite 是隔着东西相对，不是紧挨着;beyond=beyond means far away on the other side, not right next to something=beyond 是在远处的另一边，不是紧挨着|be · side|be- + side, with no s at the end|be- 加 side，结尾没有 s
+      beyond|a village you can't see behind the hills;the sea far away past the trees;a town spreading far outside its walls|beyond means on the far side; beside means right next to|beyond 是在更远的另一边；beside 是紧挨着|beside=beside means right next to something, not far away on its other side=beside 是紧挨着，不是在远处的另一边;opposite=opposite means facing something across a street or a room, not far past it=opposite 是隔着街道或房间相对，不是远远在它后面|be · yond|y in the middle, and -ond at the end|中间是 y，结尾是 -ond
+      north|Harbin at the top of the map;birds flying from Africa to Europe;the North Pole|north is toward the top of a map; south is toward the bottom|north 指地图的上方；south 指下方|south=south is toward the bottom of the map, where it is warmer, the opposite way from the cold top=south 指地图下方、更暖的方向，与寒冷的上方相反;east=east is where the sun rises, to the right of the map, not toward the top=east 是日出的方向，在地图右边，不是上方|north|or said like *or*, and th at the end|or 读作 *or*，结尾是 th
+      south|an island warm all year;birds going to warmer places for the winter;Australia below the equator|south is toward the bottom of a map; north is toward the top|south 指地图下方；north 指上方|north=north is toward the top of the map and the cold North Pole, not toward warm places=north 指地图上方和寒冷的北极，不是温暖的方向;west=west is where the sun goes down, to the left of the map, not toward the bottom=west 是日落的方向，在地图左边，不是下方|south|ou said like *ow*, and th at the end|ou 读作 *ow*，结尾是 th
+      east|where the sun rises;Shanghai's coast facing the Pacific;Japan across the sea where the sun rises first|east is where the sun rises; west is where it goes down|east 是日出的方向；west 是日落的方向|west=west is where the sun goes down, not where it comes up=west 是太阳落下的方向，不是升起的方向;north=north is toward the top of the map and the North Pole, not where the sun rises=north 指地图上方和北极，不是日出的方向|east|ea said like long e, as in *eat*|ea 读长音 e，和 *eat* 一样
+      west|where the sun sets;Xinjiang and Tibet on the left of the map;driving toward the setting sun|west is where the sun goes down; east is where it comes up|west 是日落的方向；east 是日出的方向|east=east is where the sun comes up in the morning, not where it sets=east 是早上太阳升起的方向，不是落下的方向;north=north is toward the top of the map, not where the sun goes down=north 指地图上方，不是日落的方向|west|short e, and st at the end|短元音 e，结尾是 st
+      direction|left or right to the station;walking the wrong way for half an hour;the way to the museum|a direction is which way to go; a distance is how far|direction 是朝哪个方向；distance 是多远|distance/distances=distance is how far a place is, not which way to go=distance 是有多远，不是朝哪个方向;location/locations=location is the place where something is, not the way to move toward it=location 是东西所在的地方，不是朝它走的方向|di · rec · tion|direct + -ion|direct 加 -ion
+      distance|kilometers from here to the airport;a short way from the beach;mountains far away|a distance is how far; a direction is which way|distance 是多远；direction 是朝哪个方向|direction=direction is which way to go, not how many kilometers away a place is=direction 是方向，不是相隔多少公里;location=location is where a place is, not how far it is from you=location 是地点在哪儿，不是离你多远|dis · tance|-ance at the end, not -ence|结尾是 -ance，不是 -ence
+      block|two streets to cross before the library;walking around a group of buildings;a tall building of flats|a block is a group of buildings with streets around it; a district is a whole area of a town|block 是四面有街道的一片楼；district 是城市的一整个区|district/districts=district is a whole large area of a town, not the buildings between two streets=district 是城市的一大片区域，不是两条街之间的一片楼;location/locations=location is any place where something is, not a group of buildings with streets around it=location 是任何东西所在的地方，不是被街道围起来的一片楼|block|ck at the end, as in *clock*|结尾是 ck，和 *clock* 一样
+      location|a great place near the beach;places in Morocco where a film was shot;where you are on your phone|a location is where something is; a direction is which way to go|location 是东西所在的位置；direction 是朝哪走|direction/directions=direction is which way to go, not the place where something is=direction 是方向，不是所在的地方;distance/distances=distance is how far apart two places are, not the place itself=distance 是两地之间的距离，不是地点本身|lo · ca · tion|local + -tion, with ca said like *kay*|local 变来，ca 读作 *kay*
+      nearby|a supermarket within walking distance;a hotel two minutes from the beach;grandparents a five-minute walk away|nearby means not far away; opposite means facing on the other side|nearby 是在不远处；opposite 是在对面|opposite=opposite means facing something on the other side of a street, not just not far away=opposite 是在街道对面，不只是在不远处;beyond=beyond means on the far side of something, not close by=beyond 是在更远的另一边，不是就在附近|near · by|near + by, written as one word|near 加 by，连写成一个词
+    `,
+  },
 });
 
 const buildings = vocabularyTopic({
@@ -407,93 +543,127 @@ const buildings = vocabularyTopic({
     "Architecture and structures; tunnels; construction and constructing; concrete, steel and bricks; historic buildings and monuments; elevators and entrances.",
     "建筑学和结构；隧道；建造和施工；混凝土、钢和砖；历史悠久的建筑和纪念碑；电梯和入口。",
   ),
+  intro: t(
+    "The new museum is a **structure** of **steel** and glass, but its main **entrance** is through a **historic** red **brick** building more than a hundred years old. These words help you talk about how buildings are designed and made.",
+    "新博物馆是一座钢和玻璃的 **structure**（建筑物），用的是 **steel**（钢），但它的主 **entrance**（入口）穿过一栋一百多年的 **historic**（有历史意义的）红 **brick**（砖）楼。这些词帮你谈论建筑怎样设计、怎样建造。",
+  ),
   prerequisites: ["a2-words-materials"],
   words: [
     word(
       "architecture",
       "the design of buildings, or the style of buildings",
       "建筑学；建筑风格",
-      "I love the old {architecture} of this city.|entrance monument | She is studying {architecture} at university.|concrete entrance | The {architecture} of the new museum is very modern.|concrete steel",
-      "agriculture literature",
+      "I love the old {architecture} of this city: its beautiful buildings and their style. | She is studying {architecture} at university because she wants to design buildings. | The {architecture} of the new museum, with its glass walls and curved roof, is a style nobody has seen before.",
+      "construction structure",
     ),
     word(
       "structure structures",
       "something that has been built, such as a bridge or a building; the way parts are put together",
       "建筑物；结构",
-      "The Eiffel Tower is a {structure} made of iron.|entrance elevator | The bridge is the tallest {structure} in the city.|entrance tunnel | The bridge is a {structure} of steel and concrete.|entrance elevator",
-      "instruction culture",
+      "The Eiffel Tower is a {structure} made of iron. | The bridge is the tallest {structure} in the city. | The bridge is a {structure} of steel and concrete.",
+      "tunnel brick",
     ),
     word(
       "tunnel tunnels",
       "a passage under the ground or through a mountain",
       "隧道",
-      "The train goes through a long {tunnel} under the sea.|monument elevator | They are digging a {tunnel} through the mountain.|monument entrance | The new road {tunnel} cuts the journey by twenty minutes.|monument elevator",
-      "channel bridge",
+      "The train goes through a long {tunnel} under the sea. | They are digging a long {tunnel} through the mountain for the new railway. | The new road {tunnel} under the river cuts the journey by twenty minutes.",
+      "bridge elevator",
     ),
     word(
       "construction",
       "building something, such as a house or a road",
       "建造；施工",
-      "The new stadium is still under {construction}.|architecture concrete | {Construction} of the bridge took five years.|Architecture Concrete | My uncle works in {construction}.|brick monument",
-      "instruction destruction",
+      "The new stadium is still under {construction}. | {Construction} of the bridge took five years. | My uncle works in {construction}, building houses and roads.",
+      "architecture structure",
     ),
     word(
       "construct constructs constructed constructing",
       "to build something",
       "建造；修建",
-      "The bridge was {constructed} in 1937.|concreted entranced | They plan to {construct} a new airport.|concrete brick | The company {constructs} houses and schools.|concretes bricks",
-      "destroy instruct",
+      "The bridge was {constructed} in 1937 by two thousand workers using steel and stone.|designed destroyed | They plan to {construct} a new airport, and the building work starts next year. | The company {constructs} houses and schools with its own builders and machines.|designs destroys",
+      "design destroy",
     ),
     word(
       "concrete",
       "a hard building material made from cement, sand, stones and water",
       "混凝土",
-      "The wall is made of {concrete}.|entrance elevator | They poured {concrete} for the floor of the garage.|entrance monument | The city is full of gray {concrete} buildings.|entrance elevator",
-      "concert complete",
+      "The wall is made of {concrete}, poured in wet and left to go hard. | They poured {concrete} for the floor of the garage. | The city is full of gray {concrete} buildings, made of cement, sand and stones.",
+      "steel brick",
     ),
     word(
       "steel",
       "a very strong metal made from iron",
       "钢",
-      "The bridge is made of {steel}.|entrance monument | Modern skyscrapers have a {steel} frame.|entrance tunnel | This knife is made of {steel}, so it doesn't break.|tunnel elevator",
-      "steal stone",
+      "The bridge is made of {steel}, a metal so strong it can hold a hundred trucks. | Modern skyscrapers have a frame of {steel} beams, the strongest metal for building. | This knife is made of {steel}, so it doesn't break.",
+      "concrete brick",
     ),
     word(
       "brick bricks",
       "a small hard block of baked clay, used to build walls",
       "砖",
-      "The old school is built of red {bricks}.|tunnels elevators | He threw a {brick} through the window.|tunnel monument | They built a {brick} wall around the garden.|tunnel elevator",
-      "block stick",
+      "The old school is built of red {bricks} made from baked clay.|stones concrete | The builder put one more {brick} of baked clay on top of the wall. | They built a {brick} wall around the garden, laying the small clay blocks one by one.",
+      "stone concrete",
     ),
     word(
       "historic",
       "important in history",
       "历史上著名的；有历史意义的",
-      "The old town has many {historic} buildings.|concrete steel | It was a {historic} day when the first man walked on the moon.|concrete steel | We visited a {historic} castle by the sea.|concrete steel",
-      "hysteric heroic",
+      "The old town has many {historic} buildings, some more than five hundred years old and made of wood and stone. | The day the first man walked on the moon was {historic}: people will read about it in history books for ever. | We visited a {historic} castle by the sea where kings lived eight hundred years ago.",
+      "modern concrete",
     ),
     word(
       "monument monuments",
       "a building or a statue built to remember a person or an event",
       "纪念碑；纪念馆",
-      "There is a {monument} to the soldiers in the main square.|elevator entrance | The city is full of ancient {monuments}.|elevators entrances | We took photos in front of the {monument}.|elevator tunnel",
-      "moment document",
+      "In the main square stands a {monument} to remember the soldiers who died in the war. | The city is full of ancient {monuments}, built to remember kings and battles.|structures tunnels | We took photos in front of the {monument} to the heroes of the war.",
+      "structure tunnel",
     ),
     word(
       "elevator elevators",
       "a machine that carries people up and down in a building",
       "电梯",
-      "Take the {elevator} to the tenth floor.|entrance monument | The {elevator} is broken, so we'll have to use the stairs.|entrance monument | There are four {elevators} in the hotel.|monuments tunnels",
-      "escalator elevation",
+      "Press the button, wait for the doors to open, and take the {elevator} to the tenth floor. | The {elevator} doors closed, and we went up to the top floor in a small metal box. | Our hotel has four {elevators}, so you never wait long for the doors to open.|escalators exits",
+      "escalator exit",
     ),
     word(
       "entrance entrances",
       "a door or a gate where you go into a place",
       "入口",
-      "Meet me at the main {entrance} of the park.|elevator structure | The {entrance} to the museum is free.|elevator tunnel | Please use the side {entrance}; the front door is closed.|tunnel monument",
-      "exit entertainment",
+      "Meet me at the main {entrance} of the park, where everyone goes in. | The {entrance} to the museum is a big glass door, and you go in there. | Please use the side {entrance} to come in; the front door is closed.",
+      "exit monument",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Concrete*, *steel* and *brick* are all building materials: *concrete* is poured wet and goes hard, *steel* is a strong metal, and a *brick* is a small block of baked clay. Look for wet and gray, metal, or small red blocks.",
+        "*concrete*、*steel* 和 *brick* 都是建筑材料：*concrete* 是湿的时候浇筑、后来变硬的混凝土，*steel* 是坚固的金属，*brick* 是烧制的小黏土块。找找句子里是湿的灰色材料、金属，还是红色小块。",
+      ),
+      meaning: t(
+        "*Architecture* and *construction* are both about buildings, but *architecture* is how buildings are designed and the style they have, and *construction* is the work of building them. Check whether the meaning says design or building work.",
+        "*architecture* 和 *construction* 都和建筑有关，但 *architecture* 是建筑的设计和风格，*construction* 是建造的施工。看清释义说的是设计还是施工。",
+      ),
+      spell: t(
+        "*Architecture* starts with arch- said like *ark*, and *steel* has a double e (*steal*, with ea, means to take).",
+        "*architecture* 开头的 arch- 读作 *ark*；*steel* 是双写 e（写成 ea 的 *steal* 是“偷”）。",
+      ),
+    },
+    notes: `
+      architecture|beautiful old buildings and their style;wanting to design buildings;glass walls and a curved roof in a new style|architecture is how buildings are designed; construction is the work of building them|architecture 是建筑的设计和风格；construction 是建造施工|construction=construction is the work of building, not the design or the style of buildings=construction 是建造施工，不是建筑的设计或风格;structure=structure is one thing that has been built, not the design and style of a city's buildings=structure 是一座建好的建筑物，不是建筑的设计和风格|ar · chi · tec · ture|arch- said like *ark*, and -ture at the end|arch- 读作 *ark*，结尾是 -ture
+      structure|the Eiffel Tower made of iron;the tallest built thing in a city;a bridge of steel and concrete|a structure is anything built, such as a tower or a bridge; a tunnel is a passage under the ground|structure 是任何建成物，如塔或桥；tunnel 是地下通道|tunnel=tunnel is a passage under the ground or through a mountain, not a tower or a bridge that stands up high=tunnel 是地下或穿山的通道，不是高高立着的塔或桥;brick=brick is one small block of clay, not a whole tower or bridge=brick 是一块小黏土砖，不是整座塔或桥|struc · ture|str at the start, and -ture said like *cher*|开头 str，结尾 -ture 读作 *cher*
+      tunnel|a train under the sea;digging through a mountain for a railway;a road under a river|a tunnel goes under or through something; a bridge goes over it|tunnel 从下面或里面穿过；bridge 从上面跨过|bridge=bridge goes over a river or a road, not under the sea or through a mountain=bridge 是从河或路上面跨过，不是从海底或山里穿过;elevator=elevator carries people up and down inside a building, not along a passage under the ground=elevator 在楼里上下运送人，不是地下通道|tun · nel|the double n, and -el at the end|双写 n，结尾是 -el
+      construction|a stadium still being built;five years building a bridge;building houses and roads as a job|construction is building; architecture is the design of buildings|construction 是建造；architecture 是建筑设计|architecture=architecture is the design and style of buildings, not the work of building them=architecture 是建筑的设计和风格，不是建造的施工;structure=structure is a building or a bridge itself, not the work of making it=structure 是建筑物本身，不是建造它的过程|con · struc · tion|construct + -ion|construct 加 -ion
+      construct|a bridge built in 1937 by two thousand workers;building work on a new airport;houses and schools built by a company's own builders|to construct is to build; to design is to draw the plan first|construct 是建造；design 是先画出设计|design/designed/designs=design means to draw the plan of something, not to put it up with workers and machines=design 是画出设计图，不是用工人和机器把它建起来;destroy/destroyed/destroys=destroy means to break something so it no longer exists, the opposite of building it=destroy 是把东西毁掉，正好和建造相反|con · struct|con- + struct, with str in the middle|con- 加 struct，中间是 str
+      concrete|a wall poured wet and left to go hard;the floor of a garage;gray buildings of cement, sand and stones|concrete is poured wet and goes hard; steel is a metal|concrete 浇筑时是湿的，后来变硬；steel 是金属|steel=steel is a strong metal made from iron, not something poured wet from cement, sand and stones=steel 是铁炼成的坚固金属，不是水泥沙石浇筑的;brick=brick is a block of baked clay, not something poured in wet=brick 是烧制的黏土块，不是湿着浇筑的|con · crete|cr in the middle, and -ete at the end|中间是 cr，结尾是 -ete
+      steel|a bridge that can hold a hundred trucks;beams for the frames of skyscrapers;a knife that doesn't break|steel is a strong metal; concrete is made from cement, sand and stones|steel 是坚固的金属；concrete 由水泥、沙和石头制成|concrete=concrete is made from cement, sand and stones, not a metal=concrete 由水泥、沙和石头做成，不是金属;brick=brick is baked clay, not a metal=brick 是烧过的黏土，不是金属|steel|ee, not ea: *steal* means to take|是 ee，不是 ea：*steal* 是偷
+      brick|a school of baked red clay;one more block on top of a wall;small clay blocks laid one by one|a brick is a small block of baked clay; stone comes from the ground as it is|brick 是烧制的黏土块；stone 是天然的石头|stone/stones=stone comes from the ground as rock, not baked clay=stone 是天然岩石，不是烧过的黏土;concrete=concrete is poured wet and goes hard, not small blocks of baked clay laid one by one=concrete 是湿着浇筑后变硬的，不是一块块砌的烧黏土|brick|ck at the end, as in *trick*|结尾是 ck，和 *trick* 一样
+      historic|buildings of wood and stone five hundred years old;the first man on the moon in history books;a castle where kings lived eight hundred years ago|historic means important in history; modern means new and of today|historic 是有历史意义的；modern 是现代的|modern=modern means new and of today, not old and important in history=modern 是新的、当代的，不是古老而有历史意义的;concrete=concrete describes a gray building material, not something important in history=concrete 指灰色的建筑材料，不是有历史意义|his · tor · ic|history drops its y: histor-**ic**|history 去掉 y：histor-**ic**
+      monument|a stone to remember soldiers who died;ancient things built to remember kings and battles;photos in front of something for war heroes|a monument is built to remember a person or an event; a structure is anything built|monument 是为纪念人或事件而建的；structure 是任何建成物|structure/structures=structure is anything built, such as a bridge, not something built to remember people or events=structure 是任何建成物，比如桥，不是为纪念人或事件而建的;tunnel/tunnels=tunnel is a passage under the ground, not something you stand in front of to remember heroes=tunnel 是地下通道，不是用来纪念英雄的|mon · u · ment|u in the middle, and -ment at the end|中间是 u，结尾是 -ment
+      elevator|doors opening and a ride to the tenth floor;a small metal box going up to the top;never waiting long for the doors|an elevator is a box that carries you up and down; an escalator is moving stairs|elevator 是上下运送人的厢；escalator 是自动扶梯|escalator/escalators=escalator is a moving staircase with no doors or button, not a closed box=escalator 是没有门和按钮的自动扶梯，不是封闭的厢;exit/exits=exit is the door you go out through, not a machine that carries you up=exit 是出去的门，不是把人运上楼的机器|el · e · va · tor|-or at the end, not -er|结尾是 -or，不是 -er
+      entrance|a park gate where everyone goes in;a big glass door into a museum;a side door to come in|an entrance is where you go in; an exit is where you go out|entrance 是进去的地方；exit 是出去的地方|exit=exit is the door where you go out, not where you come in=exit 是出去的门，不是进来的门;monument=monument is built to remember someone, not a door you go in through=monument 是纪念建筑，不是进去的门|en · trance|enter loses its e: entr-**ance**|enter 去掉 e：entr-**ance**
+    `,
+  },
 });
 
 const services = vocabularyTopic({
@@ -503,93 +673,127 @@ const services = vocabularyTopic({
     "Councils and mayors; garbage; halls, stadiums and aquariums; pools, plazas and benches; streetlights and trams; cycling.",
     "市政委员会和市长；垃圾；大厅、体育场和水族馆；游泳池、广场和长椅；路灯和有轨电车；骑自行车。",
   ),
+  intro: t(
+    "The **mayor** opened the new **aquarium** in the **plaza**, and the city **council** promised more **benches** and **streetlights** along the river. These words help you talk about the places and services a city gives its people.",
+    "**mayor**（市长）为 **plaza**（广场）上新建的 **aquarium**（水族馆）剪彩，市 **council**（议会）还承诺沿河增设 **bench**（长椅）和 **streetlight**（路灯）。这些词帮你谈论城市为市民提供的场所和服务。",
+  ),
   prerequisites: ["a2-words-neighborhood"],
   words: [
     word(
       "council councils",
       "a group of people chosen to make decisions for a town or a city",
       "市政委员会；议会",
-      "The city {council} has decided to build a new library.|bench tram | You should write to the {council} about the broken streetlight.|bench plaza | Local {councils} collect the garbage.|benches trams",
-      "counsel country",
+      "The city {council} voted, and its forty members decided to build a new library. | You should write to the {council} members about the broken streetlight. | Local {councils} collect the garbage.|mayors plazas",
+      "mayor plaza",
     ),
     word(
       "mayor mayors",
       "the person chosen to lead a town or a city",
       "市长",
-      "The {mayor} opened the new bridge.|bench garbage | She was elected {mayor} of the city.|bench garbage | The {mayor} promised to clean the river.|bench stadium",
-      "major manager",
+      "The {mayor} cut the ribbon with a pair of scissors and opened the new bridge. | She was elected {mayor} of the city. | In her speech, the {mayor} promised to clean the river.",
+      "council resident",
     ),
     word(
       "garbage",
       "things you throw away, such as old food and packaging",
       "垃圾",
-      "The {garbage} is collected every Tuesday.|council mayor | Please put the {garbage} in the bin outside.|mayor council | The streets were full of {garbage} after the festival.|mayors councils",
-      "garage cabbage",
+      "The {garbage} is collected every Tuesday. | Please put the {garbage} in the bin outside. | The streets were full of {garbage} after the festival.",
+      "garage bench",
     ),
     word(
       "hall halls",
       "a large room or building for meetings, concerts or events",
       "大厅；礼堂",
-      "The concert will be in the town {hall}.|tram bench | The exams take place in the main {hall}.|tram bench | We rented a {hall} for the wedding party.|bench streetlight",
-      "hole wall",
+      "The concert will be in the town {hall}, a large room with a stage and five hundred seats. | The exams take place in the main {hall}. | We rented a {hall} for the wedding party.|stadiums plazas",
+      "stadium plaza",
     ),
     word(
       "stadium stadiums",
       "a large place with seats around a field, for sports or concerts",
       "体育场",
-      "The new {stadium} has seats for 80,000 people.|bench streetlight | Thousands of fans filled the {stadium}.|bench tram | The concert is at the {stadium} on Saturday.|bench garbage",
-      "studio station",
+      "The new {stadium} has seats for 80,000 people. | Thousands of fans filled the {stadium} to watch the football match. | The concert is at the {stadium} on Saturday, with seats all around the football field.",
+      "hall pool",
     ),
     word(
       "aquarium aquariums",
       "a building where people can look at fish and other animals that live in water",
       "水族馆",
-      "We saw sharks at the {aquarium}.|stadium bench | The city {aquarium} has a tunnel under the water where fish swim above you.|stadium bench | My little brother loves going to {aquariums}.|stadiums benches",
-      "aquatic zoo",
+      "We saw sharks at the {aquarium}. | The city {aquarium} has a tunnel under the water where fish swim above you. | My little brother loves going to {aquariums} to watch the fish and turtles.|stadiums pools",
+      "stadium pool",
     ),
     word(
       "pool pools",
       "a place filled with water for swimming",
       "游泳池",
-      "Let's go to the swimming {pool} after school.|plaza bench | The hotel has an outdoor {pool}.|plaza bench | The city has five public {pools}.|plazas benches",
-      "pole lake",
+      "Let's go to the swimming {pool} after school. | The hotel has an outdoor {pool} where guests can swim. | The city has five public {pools} for swimming.|plazas aquariums",
+      "plaza aquarium",
     ),
     word(
       "plaza plazas",
       "an open public square in a city or a town",
       "广场",
-      "People meet in the {plaza} in the evening to dance.|pool tram | The old church stands on one side of the {plaza}.|pool tram | Many Spanish towns have a main {plaza} with cafés.|pool tram",
-      "pizza palace",
+      "People meet in the open-air {plaza} in the evening to dance. | The old church stands on one side of the {plaza}. | Many Spanish towns have a main {plaza} with cafés.",
+      "hall pool",
     ),
     word(
       "bench benches",
       "a long seat for several people, often in a park",
       "长椅",
-      "We sat on a park {bench} and ate our sandwiches.|plaza tram | The city put new {benches} along the river.|plazas trams | An old man was sleeping on a {bench}.|plaza tram",
-      "branch beach",
+      "We sat on a park {bench} and ate our sandwiches. | The city put new {benches} along the river.|streetlights plazas | An old man was sleeping on a {bench}.",
+      "streetlight plaza",
     ),
     word(
       "streetlight streetlights",
       "a lamp on a tall post that lights a street",
       "路灯",
-      "The {streetlights} come on when it gets dark.|benches plazas | A {streetlight} is broken outside our house.|bench plaza | The council replaced the old {streetlights} with new ones that use less energy.|benches plazas",
-      "traffic flashlight",
+      "The {streetlights} come on when it gets dark.|benches trams | A {streetlight} is broken outside our house, so the street is dark at night. | The council replaced the old {streetlights} with new ones that use less energy.|benches trams",
+      "bench tram",
     ),
     word(
       "tram trams",
       "a long vehicle that runs on rails in the street and uses electricity",
       "有轨电车",
-      "We took a {tram} to the city center.|bench plaza | The {tram} stops right outside my house.|bench plaza | Melbourne is famous for its {trams}.|benches plazas",
-      "train truck",
+      "We took a {tram} along the rails in the middle of the street to the city center. | The {tram} stops right outside my house, where its rails end. | Melbourne is famous for its {trams}, green and gold cars running on rails through the streets.|taxis buses",
+      "taxi bus",
     ),
     word(
       "cycle cycles cycled cycling",
       "to ride a bike",
       "骑自行车",
-      "I {cycle} to school every day.|tram bench | We went {cycling} in the mountains.|tramming benching | She {cycled} twenty kilometers on Sunday.|trammed benched",
-      "circle recycle",
+      "I {cycle} to school on my bike every day. | We went {cycling} in the mountains on our new bikes.|driving walking | She {cycled} twenty kilometers on her racing bike on Sunday.|drove walked",
+      "drive walk",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Hall*, *stadium* and *plaza* are all public places for crowds: a *hall* is a large room indoors, a *stadium* has seats around a sports field, and a *plaza* is an open square. Look for a roof and a stage, a field and fans, or open air.",
+        "*hall*、*stadium* 和 *plaza* 都是人群聚集的公共场所：*hall* 是室内的大厅，*stadium* 是围着运动场的看台，*plaza* 是露天广场。找找句子里是屋顶和舞台、球场和球迷，还是露天。",
+      ),
+      meaning: t(
+        "*Council* and *mayor* both run a city, but a *council* is a group of people, and the *mayor* is one person who leads it. Check whether the meaning says a group or one person.",
+        "*council* 和 *mayor* 都管理城市，但 *council* 是一群人，*mayor* 是领导城市的一个人。看清释义说的是一群人还是一个人。",
+      ),
+      spell: t(
+        "*Aquarium* starts with aqua-, water, said *a-kwair*, and *garbage* ends in -age, said like *ij*.",
+        "*aquarium* 以 aqua-（水）开头，读作 *a-kwair*；*garbage* 结尾是 -age，读作 *ij*。",
+      ),
+    },
+    notes: `
+      council|forty members voting for a library;members to write to about a streetlight;local groups that collect the garbage|a council is a group that runs a town; the mayor is the one person who leads it|council 是管理城镇的一群人；mayor 是领导城市的那个人|mayor/mayors=mayor is one person who leads a city, not a group with many members=mayor 是领导城市的一个人，不是有很多成员的团体;plaza/plazas=plaza is an open square in a town, not people who make decisions=plaza 是城里的露天广场，不是做决定的人|coun · cil|ou said like *ow*, and c said like s: coun-**s**il|ou 读作 *ow*，c 读 s
+      mayor|cutting a ribbon to open a bridge;being elected to lead a city;a speech promising to clean the river|the mayor is one person who leads a city; the council is the group around him or her|mayor 是领导城市的一个人；council 是他或她周围的那群人|council=council is a group of people, not one person who cuts a ribbon or gives a speech=council 是一群人，不是剪彩或演讲的某一个人;resident=resident is anyone who lives in a city, not the person chosen to lead it=resident 是住在城里的任何人，不是被选出来领导城市的人|may · or|may + or|may 加 or
+      garbage|collection every Tuesday;a bin outside;streets after a festival|garbage is things you throw away; a garage, which looks alike, is where you keep a car|garbage 是扔掉的东西；长得像的 garage 是车库|garage=garage is a building where you keep a car, not old food and packaging you throw away=garage 是停车的车库，不是扔掉的剩饭和包装;bench=bench is a long seat in a park, not things you throw away=bench 是公园长椅，不是扔掉的东西|gar · bage|-age at the end, said like *ij*|结尾 -age 读作 *ij*
+      hall|a large room with a stage and five hundred seats;exams in the main room;a big room for a wedding party|a hall is a large room indoors; a plaza is an open square outside|hall 是室内大厅；plaza 是露天广场|stadium/stadiums=stadium is a huge place with seats around a sports field, not a large room with a stage=stadium 是围着运动场的大看台，不是有舞台的大厅;plaza/plazas=plaza is an open square outside, not a room with seats for exams or parties=plaza 是露天广场，不是能考试、办宴会的大厅|hall|the double l at the end|结尾双写 l
+      stadium|seats for 80,000 people;thousands of fans and a football match;seats all around a football field|a stadium has seats around a sports field; a hall is a large room|stadium 围着运动场有看台；hall 是大厅|hall=hall is a large room indoors, much too small for a football field and thousands of fans=hall 是室内大厅，容不下足球场和成千上万的球迷;pool=pool is water for swimming, not seats around a field=pool 是游泳的水池，不是围着球场的看台|sta · di · um|-ium at the end, as in *aquarium*|结尾是 -ium，和 *aquarium* 一样
+      aquarium|sharks;a tunnel under the water with fish above;fish and turtles|an aquarium is where you look at animals living in water; a pool is water for swimming|aquarium 是观看水生动物的地方；pool 是游泳的水池|stadium/stadiums=stadium is a place for sports or concerts, not one for looking at fish and sharks=stadium 是体育或演唱会的场地，不是看鱼和鲨鱼的地方;pool/pools=pool is water for people to swim in, not a building to look at sharks and fish=pool 是给人游泳的水池，不是观赏鲨鱼和鱼的建筑|a · quar · i · um|aqua- said *a-kwair*, and -ium at the end|aqua- 读作 *a-kwair*，结尾是 -ium
+      pool|a swim after school;an outdoor place for guests to swim;five public places for swimming|a pool is water for swimming; an aquarium is for looking at fish|pool 是游泳池；aquarium 是看鱼的地方|plaza/plazas=plaza is an open square with no water to swim in=plaza 是露天广场，没有可以游泳的水;aquarium/aquariums=aquarium is a building where you look at fish, not water for people to swim in=aquarium 是看鱼的建筑，不是人游泳的水|pool|oo said long, as in *cool*|oo 读长音，和 *cool* 一样
+      plaza|an open-air place to dance in the evening;an old church on one side;Spanish towns with cafés around|a plaza is an open square; a hall is a room indoors|plaza 是露天广场；hall 是室内大厅|hall=hall is a large room with a roof, not an open-air square=hall 是有屋顶的大厅，不是露天广场;pool=pool is water for swimming, not a square where people meet=pool 是游泳的水，不是人们聚会的广场|pla · za|z in the middle, said like *z*|中间是 z
+      bench|a park seat for eating sandwiches;new seats along the river;an old man sleeping|a bench is a long seat; a streetlight is a lamp on a post|bench 是长椅；streetlight 是路灯|streetlight/streetlights=streetlight is a lamp on a tall post, not a seat to sit or sleep on=streetlight 是高杆上的路灯，不是能坐、能睡的椅子;plaza/plazas=plaza is a whole square, not a long seat=plaza 是整个广场，不是一条长椅|bench|nch at the end|结尾是 nch
+      streetlight|lamps coming on when it gets dark;a dark street at night;new lamps that use less energy|a streetlight lights a street; a bench is a seat|streetlight 照亮街道；bench 是长椅|bench/benches=bench is a long seat, not a lamp that comes on when it gets dark=bench 是长椅，不是天黑就亮的灯;tram/trams=tram is a vehicle on rails, not a lamp on a post=tram 是有轨电车，不是杆子上的灯|street · light|street + light, with a silent gh|street 加 light，gh 不发音
+      tram|rails in the middle of the street;a stop where its rails end;Melbourne's green and gold cars on rails|a tram runs on rails in the street; a bus runs on the road with no rails|tram 在街上的轨道上行驶；bus 在路上跑，没有轨道|taxi/taxis=taxi is a car you pay to take you anywhere, not one that runs on rails=taxi 是付钱载你去任何地方的车，不在轨道上跑;bus/buses=bus drives on the road with no rails=bus 在马路上跑，没有轨道|tram|tr at the start and m at the end|开头 tr，结尾 m
+      cycle|going to school on a bike;the mountains on new bikes;twenty kilometers on a racing bike|to cycle is to ride a bike; to drive is to go by car|cycle 是骑自行车；drive 是开车|drive/driving/drove=drive means to go in a car, not on a bike=drive 是开车，不是骑自行车;walk/walking/walked=walk means to go on foot, not to ride a bike=walk 是步行，不是骑自行车|cy · cle|cy said like *sigh*, and -cle at the end|cy 读作 *sigh*，结尾是 -cle
+    `,
+  },
 });
 
 // So and such.

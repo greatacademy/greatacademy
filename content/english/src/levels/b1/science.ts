@@ -14,6 +14,10 @@ const science = vocabularyTopic({
     "Theories; atoms, cells and genes; evolution and gravity; oxygen, chemicals and substances; liquids, solids and particles.",
     "理论；原子、细胞和基因；进化和引力；氧气、化学物质和物质；液体、固体和微粒。",
   ),
+  intro: t(
+    "Everything is made of tiny **atoms**, living things are made of **cells**, and **gravity** pulls things toward the Earth. These words help you talk about science and how the world works.",
+    "万物都由微小的 **atoms**（原子）构成，生物由 **cells**（细胞）构成，**gravity**（引力）把东西拉向地球。这些词帮你谈论科学和世界的运转。",
+  ),
   prerequisites: ["b1-words-research-and-design"],
   words: [
     word(
@@ -27,7 +31,7 @@ const science = vocabularyTopic({
       "atom atoms",
       "the smallest part of a chemical element",
       "原子",
-      "Everything is made of {atoms}.|genes evolutions | A water molecule has three {atoms}: two of hydrogen and one of oxygen.|genes cells | An {atom} is far too small to see.|evolution oxygen",
+      "Everything, from rocks to water and air, is made of {atoms}.|genes evolutions | A water molecule has three {atoms}: two of hydrogen and one of oxygen.|genes cells | An {atom} is far too small to see.|evolution oxygen",
       "item planet",
       "particle",
     ),
@@ -35,14 +39,14 @@ const science = vocabularyTopic({
       "cell cells",
       "the smallest living part of a plant or an animal",
       "细胞",
-      "The human body is made of trillions of {cells}.|theories gravities | Under the microscope, we could see the plant {cells}.|theories gravities | Red blood {cells} carry oxygen around the body.|theories liquids",
+      "The human body is made of trillions of {cells}.|theories liquids | Under the microscope, we could see the plant {cells}.|theories liquids | Red blood {cells} carry oxygen around the body.|theories liquids",
       "sell shell",
     ),
     word(
       "gene genes",
       "a part of a cell that passes qualities from parents to children",
       "基因",
-      "You get your {genes} from your parents.|theories oxygens | Some illnesses are caused by a faulty {gene}.|gravity theory | Scientists found the {gene} that controls eye color.|gravity oxygen",
+      "You get your {genes} from your parents.|theories liquids | Some illnesses are caused by a faulty {gene}.|gravity theory | Scientists found the {gene} that controls eye color.|gravity oxygen",
       "germ general",
     ),
     word(
@@ -105,6 +109,33 @@ const science = vocabularyTopic({
       "atom",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Liquid* and *solid* are opposite states: a *liquid* flows, like water or oil, and a *solid* is hard, like ice. Look for clues like *pour* or *frozen*.",
+        "*liquid* 和 *solid* 是相对的状态：*liquid* 会流动，像水和油；*solid* 是硬的，像冰。留意 *pour* 或 *frozen* 这类线索。",
+      ),
+      meaning: t(
+        "*Atom* and *cell* are both tiny parts, but an *atom* is the smallest part of any substance, and a *cell* is the smallest living part of a plant or animal. Check whether the meaning says living.",
+        "*atom* 和 *cell* 都是微小的组成部分，但 *atom* 是任何物质的最小单位，*cell* 是动植物最小的有生命的单位。看释义有没有说“有生命的”。",
+      ),
+      spell: t("*Oxygen* has a y after the x: o-x-y-g-e-n.", "*oxygen* 的 x 后面是 y：o-x-y-g-e-n。"),
+    },
+    notes: `
+      theory|Einstein's idea about time;why dinosaurs died;how a plan should work|a theory is an idea that explains why something happens; oxygen is a gas|theory 是理论；oxygen 是氧气|oxygen/oxygens=oxygen is a gas in the air, not an idea that explains something=oxygen 是空气中的气体，不是理论;gravity=gravity is a force that pulls things down, not an idea someone had=gravity 是引力，不是某人提出的理论;liquids/liquid=a liquid is something that flows, not an idea that explains something=liquid 是液体，不是理论|a theory about · in theory|plural *theories*|复数 *theories*
+      atom|rocks, water and air;two of hydrogen and one of oxygen;far too small to see|an atom is the smallest part of an element; a gene passes qualities from parents|atom 是原子；gene 是基因|genes=genes are in living cells, not what rocks and air are made of=gene 存在于生物细胞中，不是岩石和空气的组成;evolutions/evolution=evolution is slow change over millions of years, not a tiny part of something=evolution 是漫长的进化，不是微小的组成部分;cells=cells are living parts, not parts of a water molecule=cell 是有生命的单位，不是水分子的组成;oxygen=oxygen is a gas, not one tiny part too small to see=oxygen 是一种气体，不是一个看不见的微粒;item=an item is one thing on a list, not the smallest part of matter=item 是一项、一件物品，不是原子|made of atoms · an atom of|adjective *atomic*|形容词 *atomic*
+      cell|trillions in the human body;plant ones under a microscope;red ones carrying oxygen|a cell is the smallest living part; a theory is an idea|cell 是细胞；theory 是理论|theories=theories are ideas, not the living parts of a body or plant=theory 是想法，不是身体或植物的组成部分;liquids=liquids are things that flow, not the living parts of a body=liquid 是液体，不是身体的组成部分;shell=a shell is the hard outside of an egg or a sea animal, not the smallest living part=shell 是壳，不是细胞|blood cells · plant cells|*cell* sounds like *sell*|*cell* 和 *sell* 读音相同
+      gene|what you get from your parents;a faulty one causing illness;eye color|a gene passes qualities from parents to children; gravity is a pulling force|gene 是基因；gravity 是引力|theories=theories are ideas, not what you get from your parents=theory 是想法，不是从父母那里遗传的东西;liquids=liquids are things that flow, not parts passed from parents=liquid 是液体，不是遗传的东西;gravity=gravity is a pulling force, not a part of a cell=gravity 是引力，不是细胞的一部分;theory=a theory is an idea, not a part of a cell that controls eye color=theory 是想法，不是控制眼睛颜色的细胞部分;oxygen=oxygen is a gas, not a part of a cell=oxygen 是气体，不是细胞的一部分;general=a general is a top army officer, not something passed from parents to children=general 是将军，不是基因;germ=a germ is a tiny living thing that can make you ill, not something passed from parents=germ 是病菌，不是基因|genes from parents · a faulty gene|adjective *genetic*|形容词 *genetic*
+      evolution|Darwin and animals;millions of years for humans;a museum room|evolution is slow change of living things; gravity is a pulling force|evolution 是进化；gravity 是引力|gravity=gravity is a force that pulls things down, not slow change of living things=gravity 是引力，不是生物的缓慢变化;oxygen=oxygen is a gas, not slow change of living things=oxygen 是气体，不是进化;liquid=a liquid flows, not a slow change of living things=liquid 是液体，不是进化|human evolution · the evolution of|verb *evolve*|动词 *evolve*
+      gravity|the moon in orbit;astronauts floating;a falling apple|gravity is a force that pulls things down; oxygen is a gas|gravity 是引力；oxygen 是氧气|oxygen/Oxygen=oxygen is a gas we breathe, not a force that pulls things down=oxygen 是我们呼吸的气体，不是向下拉的力;evolution/Evolution=evolution is slow change of living things, not a force that pulls=evolution 是进化，不是拉力;gravel=gravel is small stones, not the force that pulls things down=gravel 是碎石子，不是引力|because of gravity · little gravity|*gravity* is not *gravel*, small stones|*gravity* 不是 *gravel*（碎石）
+      oxygen|what fish take from water;less on high mountains;what plants produce|oxygen is a gas we need to live; gravity is a force|oxygen 是氧气；gravity 是引力|gravity=gravity is a pulling force, not a gas fish or plants take in or give out=gravity 是引力，不是鱼或植物吸入、放出的气体;evolution=evolution is slow change over time, not a gas=evolution 是进化，不是气体;nitrogen=nitrogen makes up most of the air, but it is not the gas we breathe in to live=nitrogen 是氮气，虽占空气大部分，却不是维持生命要吸入的气体|need oxygen · produce oxygen|*oxy-* with a y|*oxy-* 里是 y
+      chemical|insect killers;dangerous ones in a cleaner;something leaked into a river|a chemical is a substance used in chemistry; a gene is part of a cell|chemical 是化学品；gene 是基因|genes/gene=genes are parts of living cells, not substances used to kill insects or clean=gene 是细胞的一部分，不是杀虫或清洁用的物质;atoms=atoms are tiny parts of everything, not a product farmers use=atom 是原子，不是农民用的产品;theories/theory=theories are ideas, not substances that can leak=theory 是想法，不是会泄漏的物质;chemist=a chemist is a person who works with chemicals, not a substance=chemist 是化学家，不是化学物质|dangerous chemicals · a chemical leak|also an adjective: a chemical reaction|也是形容词：a chemical reaction
+      substance|the most common one on Earth;dangerous to touch;sticky glue|a substance is a solid, liquid or gas; a theory is an idea|substance 是物质；theory 是理论|theory/theories=a theory is an idea, not a solid, liquid or gas=theory 是想法，不是固体、液体或气体;evolution=evolution is slow change of living things, not a type of material=evolution 是进化，不是一种物质;genes/gene=genes are parts of cells, not types of material=gene 是基因，不是物质|a sticky substance · dangerous substances|*sub-* + *stance*|由 *sub-* 加 *stance* 构成
+      liquid|water at room temperature;not in hand luggage;poured into a glass|a liquid flows; a gene is part of a cell|liquid 是液体；gene 是基因|gravity=gravity is a pulling force, not something that flows=gravity 是引力，不是会流动的东西;gene/genes=a gene is part of a cell, not something that flows=gene 是基因，不是会流动的东西;theories/theory=theories are ideas, not things you can pour=theory 是想法，不能倒出来|a liquid · pour the liquid|opposite *solid*|反义词 *solid*
+      solid|ice as water;a hard wooden door;frozen ground|solid means hard, not liquid or gas; liquid means flowing|solid 是固体的；liquid 是液体的|liquid=liquid means flowing, not hard like ice or wood=liquid 是会流动的，不是像冰或木头那样硬;oxygen=oxygen is a gas, not something hard=oxygen 是气体，不是坚硬的东西;chemical=chemical is about chemistry, not hard wood=chemical 是化学的，不是坚硬的木头|solid wood · frozen solid|*solid* also means strong: a solid table|*solid* 也表示结实：a solid table
+      particle|dust floating in the light;dirt in city air;sand in an eye|a particle is a very small piece; a theory is an idea|particle 是微粒；theory 是理论|theories/theory=theories are ideas, not very small pieces of something=theory 是想法，不是微粒;genes/gene=genes are parts of cells, not pieces of dust or sand=gene 是基因，不是灰尘或沙粒|particles of dust · a particle of sand|*particle* is not *article*|*particle* 不是 *article*
+    `,
+  },
 });
 
 const research = vocabularyTopic({
@@ -113,6 +144,10 @@ const research = vocabularyTopic({
   summary: t(
     "Observing and observations; hypotheses, conclusions and outcomes; analyzing samples and surveys; investigating, predicting, estimating and calculating; researchers.",
     "观察和观察结果；假设、结论和结果；分析样本和调查；调查研究、预测、估计和计算；研究人员。",
+  ),
+  intro: t(
+    "A **researcher** starts with a **hypothesis**, collects a **sample**, **analyzes** the data, and reaches a **conclusion**. These words help you talk about how research is done.",
+    "**researcher**（研究人员）先提出 **hypothesis**（假设），收集 **sample**（样本），**analyzes**（分析）数据，最后得出 **conclusion**（结论）。这些词帮你谈论研究是怎样进行的。",
   ),
   prerequisites: ["b1-words-research-and-design"],
   words: [
@@ -127,14 +162,14 @@ const research = vocabularyTopic({
       "observation observations",
       "the careful watching of something; something you notice",
       "观察；观察结果",
-      "Write down your {observations} in your notebook.|samples surveys | The patient is in hospital for {observation}.|hypothesis sample | Her {observation} was that the plants grew faster in the light.|sample survey",
+      "Write down your {observations}, what you saw, in your notebook.|samples surveys | The patient is in hospital for {observation}.|hypothesis sample | Her {observation} was that the plants grew faster in the light.|sample survey",
       "operation obligation",
     ),
     word(
       "hypothesis",
       "an idea that you test to see if it is true",
       "假设；假说",
-      "Our {hypothesis} was that warm water freezes faster.|sample survey | The experiment proved his {hypothesis} wrong.|sample survey | First, form a {hypothesis}; then test it.|sample survey",
+      "Our {hypothesis}, the idea we wanted to test, was that warm water freezes faster.|sample survey | The experiment proved his {hypothesis} wrong.|sample survey | First, form a {hypothesis}; then test it.|sample survey",
       "hypocrite hospital",
     ),
     word(
@@ -148,7 +183,7 @@ const research = vocabularyTopic({
       "outcome outcomes",
       "the result of an action, a process or an event",
       "结果；结局",
-      "We are waiting for the {outcome} of the tests.|hypothesis sample | Nobody knows what the {outcome} of the election will be.|hypothesis sample | The study had two possible {outcomes}.|samples surveys",
+      "We are waiting for the {outcome} of the tests.|hypothesis sample | Nobody knows what the {outcome} of the election will be.|hypothesis sample | The study had two possible {outcomes}: success or failure.|samples surveys",
       "income outline",
       "conclusion",
     ),
@@ -156,7 +191,7 @@ const research = vocabularyTopic({
       "analyze analyzes analyzed analyzing",
       "to study something in detail to understand it",
       "分析",
-      "The scientists {analyzed} the water from the river.|predicted estimated | We need to {analyze} the data before we decide.|predict estimate | Computers can {analyze} millions of photos in a minute.|predict estimate",
+      "The scientists {analyzed} the water from the river.|predicted estimated | We need to {analyze} the data in detail before we decide.|predict estimate | Computers can {analyze} millions of photos in a minute.|predict estimate",
       "paralyze apologize",
       "investigate",
     ),
@@ -178,7 +213,7 @@ const research = vocabularyTopic({
       "investigate investigates investigated investigating",
       "to try to find out the facts about something",
       "调查；研究",
-      "The police are {investigating} the robbery.|predicting calculating | Scientists are {investigating} why the bees are dying.|calculating estimating | We {investigated} how light affects plant growth.|calculated estimated",
+      "The police are {investigating} the robbery.|predicting calculating | Scientists are {investigating} why the bees are dying.|calculating estimating | We {investigated} how light affects plant growth by doing experiments.|calculated estimated",
       "invest invite",
       "analyze",
     ),
@@ -193,14 +228,14 @@ const research = vocabularyTopic({
       "estimate estimates estimated estimating",
       "to guess an amount or a number without counting it exactly",
       "估计；估算",
-      "Scientists {estimate} that there are 8 million kinds of animals.|observe analyze | Can you {estimate} how long the journey will take?|observe analyze | The fire caused an {estimated} two million dollars of damage.|observed analyzed",
+      "Scientists {estimate}, without counting them all, that there are about 8 million kinds of animals.|observe analyze | Can you {estimate} how long the journey will take?|observe analyze | The fire caused an {estimated} two million dollars of damage.|observed analyzed",
       "eliminate measure",
     ),
     word(
       "calculate calculates calculated calculating",
       "to find a number or an amount using math",
       "计算",
-      "{Calculate} the area of the room.|Observe Investigate | The app {calculates} how many calories you burn.|observes investigates | We {calculated} that the trip would cost 500 dollars.|observed investigated",
+      "{Calculate} the area of the room: multiply the length by the width.|Observe Investigate | The app {calculates} how many calories you burn.|observes investigates | We {calculated} that the trip would cost 500 dollars.|observed investigated",
       "circulate collect",
     ),
     word(
@@ -211,6 +246,37 @@ const research = vocabularyTopic({
       "research reporter",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Predict* is about the future and *observe* is about now: you *predict* what will happen, and you *observe* what is happening. Look for *will* or *tomorrow* in the sentence.",
+        "*predict* 关于将来，*observe* 关于现在：*predict* 是预测会发生什么，*observe* 是观察正在发生什么。留意句中的 *will* 或 *tomorrow*。",
+      ),
+      meaning: t(
+        "*Estimate* and *calculate* both give a number, but you *estimate* by guessing without counting exactly, and you *calculate* by using math. Check whether the meaning says guess or exact.",
+        "*estimate* 和 *calculate* 都得出一个数，但 *estimate* 是不精确地估计，*calculate* 是用数学算出来。看释义说的是估还是算。",
+      ),
+      spell: t(
+        "*Hypothesis* has a y after the h, and its plural is *hypotheses*: h-y-p-o-t-h-e-s-i-s.",
+        "*hypothesis* 的 h 后面是 y，复数是 *hypotheses*：h-y-p-o-t-h-e-s-i-s。",
+      ),
+    },
+    notes: `
+      observe|birds for three years;stars through a telescope;animals watched quietly|to observe is to watch carefully; to calculate is to find a number with math|observe 是观察；calculate 是计算|calculate/calculated/calculating=to calculate is to find a number using math, not to watch carefully=calculate 是用数学计算，不是仔细观察;estimate/estimated/estimating=to estimate is to guess an amount, not to watch carefully=estimate 是估计数量，不是仔细观察;obey=to obey is to do what you are told, not to watch carefully=obey 是服从，不是观察|observe the stars · observe animals|noun *observation*|名词 *observation*
+      observation|what you saw, in a notebook;a patient watched in hospital;plants growing faster in light|an observation is something you notice by watching; a sample is a small amount|observation 是观察结果；sample 是样本|samples/sample=a sample is a small amount that shows what the rest is like, not what you saw=sample 是样本，不是你看到的东西;surveys/survey=a survey is questions you ask people, not what you noticed by watching=survey 是问卷调查，不是观察到的;hypothesis=a hypothesis is an idea to test, not careful watching of a patient=hypothesis 是待检验的想法，不是对病人的观察;obligation=an obligation is something you must do, not careful watching=obligation 是义务，不是观察|make an observation · under observation|from *observe*|来自 *observe*
+      hypothesis|an idea about warm water to test;proved wrong by an experiment;formed before testing|a hypothesis is an idea you test; a survey is questions you ask people|hypothesis 是假设；survey 是调查|sample=a sample is a small amount of something, not an idea you test=sample 是样本，不是待检验的想法;survey=a survey is questions for many people, not an idea you test=survey 是问卷调查，不是待检验的想法;hypocrite=a hypocrite is a person who says one thing and does another, not an idea to test=hypocrite 是伪君子，不是假设|form a hypothesis · test a hypothesis|plural *hypotheses*|复数 *hypotheses*
+      conclusion|what you reached;too early to draw;the experiment a success|a conclusion is what you decide after the facts; a sample is a small amount|conclusion 是结论；sample 是样本|sample/samples=a sample is a small amount of something, not what you decide after the facts=sample 是样本，不是结论;survey/surveys=a survey is questions you ask people, not what you decide=survey 是问卷调查，不是结论;confusion=confusion is not understanding, not what you decide at the end=confusion 是困惑，不是结论|reach a conclusion · in conclusion|verb *conclude*|动词 *conclude*
+      outcome|test results we wait for;an election;success or failure|an outcome is a result; a hypothesis is an idea you test before|outcome 是结果；hypothesis 是假设|hypothesis=a hypothesis is an idea you test before you know, not the result=hypothesis 是事先的假设，不是结果;sample/samples=a sample is a small amount of something, not the result of an event=sample 是样本，不是事件的结果;surveys=surveys are questions for people, not results like success or failure=survey 是问卷调查，不是成功或失败的结果|the outcome of · a possible outcome|*out* + *come*: what comes out|*out* 加 *come*：最后出来的东西
+      analyze|water from a river;data in detail;millions of photos|to analyze is to study in detail; to predict is to say what will happen|analyze 是分析；predict 是预测|predict/predicted=to predict is to say what will happen, not to study something in detail=predict 是预测，不是详细研究;estimate/estimated=to estimate is to guess an amount, not to study in detail=estimate 是估计，不是详细分析;paralyze=to paralyze is to make someone unable to move, not to study something closely=paralyze 是使瘫痪，不是分析|analyze data · analyze a sample|British spelling *analyse*; noun *analysis*|英式拼写 *analyse*；名词 *analysis*
+      sample|blood taken by a doctor;soil from ten farms;free pieces of cheese|a sample is a small amount that shows what the rest is like; a conclusion is what you decide|sample 是样本、样品；conclusion 是结论|hypothesis/hypotheses=a hypothesis is an idea, not a small amount of blood, soil or cheese=hypothesis 是想法，不是血液、土壤或奶酪的样本;conclusion/conclusions=a conclusion is what you decide, not a small amount of something=conclusion 是结论，不是样本|a blood sample · free samples|*sample* is not *simple*|*sample* 不是 *simple*
+      survey|most students sleeping less than eight hours;a short online one;500 people asked|a survey is questions for many people; a hypothesis is an idea you test|survey 是调查；hypothesis 是假设|hypothesis=a hypothesis is an idea you test, not questions you ask many people=hypothesis 是待检验的想法，不是问卷;conclusion=a conclusion is what you decide, not questions you ask=conclusion 是结论，不是问卷;outcome=an outcome is a result, not questions you fill in=outcome 是结果，不是要填的问卷|do a survey · fill in a survey|*survey* is not *surgery*|*survey* 不是 *surgery*
+      investigate|police and a robbery;why bees are dying;light and plant growth through experiments|to investigate is to find out the facts; to calculate is to find a number|investigate 是调查研究；calculate 是计算|predicting=to predict is to say what will happen, not to find out what happened=predict 是预测，不是查明事实;calculate/calculating/calculated=to calculate is to find a number, not to find out facts=calculate 是计算数字，不是调查事实;estimating/estimated=to estimate is to guess an amount, not to find out why=estimate 是估计数量，不是查明原因|investigate a crime · investigate why|noun *investigation*|名词 *investigation*
+      predict|rain tomorrow;a team nobody thought would win;how prices will change|to predict is to say what will happen; to observe is to watch now|predict 是预测；observe 是观察|observe/observes/observed=to observe is to watch what is happening now, not to say what will happen=observe 是观察现在，不是预测将来;analyze/analyzes/analyzed=to analyze is to study something that exists now, not to say what will happen=analyze 是分析现有的东西，不是预测|predict the weather · hard to predict|noun *prediction*|名词 *prediction*
+      estimate|8 million kinds without counting all;how long a journey will take;fire damage of about two million|to estimate is to guess an amount; to observe is to watch|estimate 是估计；observe 是观察|observe/observed=to observe is to watch carefully, not to guess an amount=observe 是观察，不是估计数量;analyze/analyzed=to analyze is to study in detail, not to guess a number roughly=analyze 是详细分析，不是粗略估计;eliminate=to eliminate is to remove completely, not to guess an amount=eliminate 是消除，不是估计|estimate the cost · an estimated|noun and verb|既是名词也是动词
+      calculate|length times width;calories burned;a trip costing 500 dollars|to calculate is to find a number using math; to observe is to watch|calculate 是计算；observe 是观察|observe/Observe/observes/observed=to observe is to watch carefully, not to find a number using math=observe 是观察，不是用数学计算;investigate/Investigate/investigates/investigated=to investigate is to find out facts, not to find a number using math=investigate 是调查事实，不是计算;circulate=to circulate is to move around, like blood in the body, not to work out numbers=circulate 是循环、流传，不是计算|calculate the cost · calculate how many|noun *calculation*; a *calculator* does it|名词 *calculation*；计算器是 *calculator*
+      researcher|a new kind of frog;ten years with birds;500 students asked|a researcher is a person who studies to find facts; a sample is a small amount|researcher 是研究人员；sample 是样本|samples/Samples/sample=a sample is a small amount of something, not a person who studies=sample 是样本，不是做研究的人;surveys/Surveys=surveys are questions, not people who find new facts=survey 是问卷，不是做研究的人;hypothesis=a hypothesis is an idea, not a person=hypothesis 是想法，不是人;conclusions=conclusions are decisions after facts, not people=conclusion 是结论，不是人|a researcher · researchers have found|from *research* + *-er*|由 *research* 加 *-er* 构成
+    `,
+  },
 });
 
 const space = vocabularyTopic({
@@ -220,13 +286,17 @@ const space = vocabularyTopic({
     "The universe and galaxies; orbits, telescopes and satellites; spacecraft, missions and launches; astronomers and comets; aliens and explorers.",
     "宇宙和星系；轨道、望远镜和卫星；航天器、任务和发射；天文学家和彗星；外星人和探险家。",
   ),
+  intro: t(
+    "An **astronomer** studies the **universe** through a **telescope**, while a **spacecraft** on a **mission** may **orbit** a distant planet. These words help you talk about space and exploring it.",
+    "**astronomer**（天文学家）用 **telescope**（望远镜）研究 **universe**（宇宙），执行 **mission**（任务）的 **spacecraft**（航天器）则可能 **orbit**（绕轨道运行）遥远的行星。这些词帮你谈论太空和太空探索。",
+  ),
   prerequisites: ["a2-words-space"],
   words: [
     word(
       "universe universes",
       "everything that exists, including all the stars and planets",
       "宇宙",
-      "The {universe} is about 14 billion years old.|comet telescope | Are we alone in the {universe}?|comet satellite | Some scientists think there may be other {universes}.|comets telescopes",
+      "The {universe}, with all its stars and planets, is about 14 billion years old.|comet telescope | Are we alone in the {universe}?|comet satellite | Some scientists think there may be other {universes}.|comets telescopes",
       "university galaxy",
     ),
     word(
@@ -276,14 +346,14 @@ const space = vocabularyTopic({
       "launch launches launched launching",
       "to send a rocket or a spacecraft into the sky",
       "发射；推出",
-      "China {launched} a new satellite last week.|orbited observed | The rocket will {launch} at six in the morning.|orbit observe | The company is {launching} a new phone in May.|orbiting observing",
+      "China {launched} a new satellite into space last week.|orbited observed | The rocket will {launch} at six in the morning.|orbit observe | The company is {launching} a new phone in May.|orbiting observing",
       "lunch land",
     ),
     word(
       "astronomer astronomers",
       "a scientist who studies the stars and planets",
       "天文学家",
-      "The {astronomer} discovered a new comet.|galaxy orbit | {Astronomers} use powerful telescopes.|Explorers Aliens | She became an {astronomer} because she loved the night sky.|explorer alien",
+      "The {astronomer} discovered a new comet.|galaxy orbit | {Astronomers} use powerful telescopes to study the stars.|Explorers Aliens | She became an {astronomer} because she loved the night sky.|explorer alien",
       "astronaut astrologer",
     ),
     word(
@@ -297,7 +367,7 @@ const space = vocabularyTopic({
       "alien aliens",
       "a creature from another planet",
       "外星人",
-      "Do you believe in {aliens}?|astronomers missions | The film is about an {alien} who lands in a small town.|astronomer orbit | The children dressed up as green {aliens}.|missions orbits",
+      "Do you believe in {aliens} from other planets?|astronomers missions | The film is about an {alien} who lands in a small town.|astronomer orbit | The children dressed up as green {aliens}.|missions orbits",
       "allien foreigner",
     ),
     word(
@@ -308,6 +378,36 @@ const space = vocabularyTopic({
       "explosion engineer",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "An *astronomer* studies the stars from the Earth; an *astronaut* travels into space. Look at whether the person stays on the ground or goes up.",
+        "*astronomer* 在地球上研究星星；*astronaut* 是飞进太空的人。看这个人是留在地面还是上了太空。",
+      ),
+      meaning: t(
+        "A *galaxy* is one very large group of stars; the *universe* is everything that exists, with billions of galaxies. Check whether the meaning says one group or everything.",
+        "*galaxy* 是一个巨大的恒星群；*universe* 是存在的一切，包含数十亿个星系。看释义说的是一个星群还是一切。",
+      ),
+      spell: t(
+        "*Satellite* has one t, a double l, and one t again: s-a-t-e-l-l-i-t-e.",
+        "*satellite* 先一个 t，再双写 l，然后又一个 t：s-a-t-e-l-l-i-t-e。",
+      ),
+    },
+    notes: `
+      universe|14 billion years old with all its stars;alone in it;maybe others like it|the universe is everything that exists; a comet is one object of ice and dust|universe 是宇宙；comet 是彗星|comet/comets=a comet is one object of ice and dust, not everything that exists=comet 是由冰和尘埃组成的一个天体，不是一切;telescope/telescopes=a telescope is a tool for looking at far things, not everything that exists=telescope 是望远镜，不是宇宙;satellite=a satellite is a machine that goes around the Earth, not everything that exists=satellite 是绕地球的机器，不是宇宙|the universe · in the universe|*uni-* means one: everything as one|*uni-* 表示“一”：万物为一
+      galaxy|billions of stars with our sun;billions in the universe;the nearest one far away|a galaxy is a very large group of stars; a telescope is a tool|galaxy 是星系；telescope 是望远镜|telescope/telescopes=a telescope is a tool for looking at far things, not a group of stars=telescope 是望远镜，不是星系;mission/missions=a mission is a journey or task, not a group of stars=mission 是任务，不是星系|our galaxy · the Milky Way galaxy|plural *galaxies*|复数 *galaxies*
+      orbit|the Earth around the sun once a year;a satellite around Mars;sixteen times a day|to orbit is to move around a planet or star; to launch is to send up|orbit 是绕轨道运行；launch 是发射|launch/launches/launched=to launch is to send a rocket up, not to keep moving around something=launch 是发射，不是绕着转;observe/observes/observed=to observe is to watch, not to move around something=observe 是观察，不是绕着转;alien=an alien is a creature from another planet, not a path around a planet=alien 是外星人，不是轨道;mission=a mission is a journey or task, not a path around a planet=mission 是任务，不是轨道|in orbit · orbit the Earth|noun and verb|既是名词也是动词
+      telescope|the moon looked at through one;seeing distant galaxies;Galileo and Jupiter|a telescope makes far things look bigger; a satellite goes around the Earth|telescope 是望远镜；satellite 是卫星|satellite=a satellite goes around the Earth, not a tube you look through=satellite 是卫星，不是可以透过去看的筒;comet=a comet is an object of ice and dust, not a tool you look through=comet 是彗星，不是观察工具;alien=an alien is a creature, not a tool that sees galaxies=alien 是外星人，不是能看到星系的工具;mission=a mission is a journey, not a tool Galileo used=mission 是任务，不是伽利略用的工具|through a telescope · a space telescope|*tele-* means far|*tele-* 表示“远”
+      satellite|photos of clouds;a TV signal;the moon as a natural one|a satellite goes around a planet; a comet is ice and dust with a tail|satellite 是卫星；comet 是彗星|comets/comet=a comet is an object of ice and dust, not a machine that takes photos or sends signals=comet 是彗星，不是拍照或发信号的机器;galaxies/galaxy=a galaxy is a huge group of stars, not something going around the Earth=galaxy 是星系，不是绕地球转的东西|a weather satellite · satellite TV|double l|双写 l
+      spacecraft|landing safely on Mars;three astronauts on board;nine years to Pluto|a spacecraft is a vehicle in space; an astronomer is a scientist|spacecraft 是航天器；astronomer 是天文学家|astronomer=an astronomer is a scientist on Earth, not a vehicle that lands on Mars=astronomer 是地上的科学家，不是登陆火星的飞行器;galaxy=a galaxy is a group of stars, not a vehicle=galaxy 是星系，不是飞行器;comet=a comet is ice and dust, not a vehicle with people on board=comet 是彗星，不是载人的飞行器;aircraft=an aircraft flies in the air, not in space=aircraft 是在空中飞的飞机，不去太空;spaceman=a spaceman is a person, not a vehicle=spaceman 是宇航员，是人，不是飞行器|on board the spacecraft · a spacecraft landed|plural is also *spacecraft*|复数也是 *spacecraft*
+      mission|a successful trip to the moon;new journeys to Mars;helping children read|a mission is an important journey or task; a galaxy is a group of stars|mission 是任务；galaxy 是星系|galaxy/galaxies=a galaxy is a group of stars, not a journey or task=galaxy 是星系，不是旅程或任务;orbit=an orbit is a path around a planet, not a task=orbit 是轨道，不是任务;comets/comet=comets are objects of ice and dust, not journeys or tasks=comet 是彗星，不是任务|a space mission · on a mission|double s|双写 s
+      launch|a satellite sent into space;a rocket at six;a new phone in May|to launch is to send a rocket up or bring out something new; to orbit is to move around|launch 是发射、推出；orbit 是绕行|orbit/orbited/orbiting=to orbit is to move around a planet, not to send something up or bring it out=orbit 是绕行，不是发射或推出;observe/observed/observing=to observe is to watch, not to send or bring out=observe 是观察，不是发射或推出|launch a rocket · launch a product|*launch* is not *lunch*|*launch* 不是 *lunch*
+      astronomer|a new comet discovered;powerful telescopes for stars;a love of the night sky|an astronomer studies stars; an explorer travels to new places|astronomer 是天文学家；explorer 是探险家|galaxy=a galaxy is a group of stars, not a person who discovers comets=galaxy 是星系，不是发现彗星的人;orbit=an orbit is a path, not a person=orbit 是轨道，不是人;Explorers/explorer=explorers travel to new places, not study stars through telescopes=explorer 是探险家，不用望远镜研究星星;Aliens/alien=aliens are creatures from other planets, not scientists who love our night sky=alien 是外星人，不是热爱星空的科学家;astrologer=an astrologer claims the stars tell your future, which is not science=astrologer 是占星师，不做科学研究;astronaut=an astronaut travels into space but does not study the stars as a job=astronaut 是宇航员，不以研究星体为职业|an astronomer · astronomers study|not *astronaut*, who goes into space|不是 *astronaut*（宇航员）
+      comet|Halley's every 76 years;a long, bright tail;water brought to the Earth|a comet is ice and dust with a tail; a galaxy is a group of stars|comet 是彗星；galaxy 是星系|Galaxy/galaxy/galaxies=a galaxy is a huge group of stars, not one object of ice with a tail=galaxy 是巨大的星群，不是带尾巴的冰体;Mission/mission/missions=a mission is a journey or task, not an object in space=mission 是任务，不是太空中的天体|a comet's tail · Halley's Comet|*comet* is not *comment*|*comet* 不是 *comment*
+      alien|creatures from other planets;one landing in a small town;green costumes|an alien is a creature from another planet; an astronomer studies stars|alien 是外星人；astronomer 是天文学家|astronomers/astronomer=astronomers are scientists on Earth, not creatures from other planets=astronomer 是地球上的科学家，不是外星生物;missions=missions are journeys or tasks, not creatures=mission 是任务，不是生物;orbit/orbits=an orbit is a path in space, not a creature=orbit 是轨道，不是生物;allien=allien is a misspelling, and the real word has only one l=allien 拼错了，正确的词只有一个 l|believe in aliens · an alien from Mars|*alien* also means a foreigner in formal English|在正式英语中 *alien* 也指外国人
+      explorer|crossing a desert on a camel;Zheng He;maps of the coast|an explorer travels to new places; a satellite goes around the Earth|explorer 是探险家；satellite 是卫星|alien/aliens=an alien is a creature from another planet, not a person who travels to new places=alien 是外星人，不是探险的人;satellite/satellites=a satellite is a machine in space, not a person who crosses deserts or draws maps=satellite 是太空中的机器，不是穿越沙漠、画地图的人;explosion=an explosion is a sudden loud burst, not a person who travels to find new places=explosion 是爆炸，不是探险家|a famous explorer · early explorers|verb *explore*|动词 *explore*
+    `,
+  },
 });
 
 const inventions = vocabularyTopic({
@@ -316,6 +416,10 @@ const inventions = vocabularyTopic({
   summary: t(
     "Steam, telephones and microscopes; patents and prototypes; breakthroughs; geniuses and pioneers; innovation, techniques and inventions; brilliant.",
     "蒸汽、电话和显微镜；专利和原型；突破；天才和先驱；创新、技术和发明；杰出的。",
+  ),
+  intro: t(
+    "A **genius** or a **pioneer** may build a **prototype**, get a **patent**, and make a **breakthrough** that becomes a famous **invention**. These words help you talk about new ideas and the people behind them.",
+    "**genius**（天才）或 **pioneer**（先驱）可能先造出 **prototype**（原型），申请 **patent**（专利），取得 **breakthrough**（突破），成为著名的 **invention**（发明）。这些词帮你谈论新创意和背后的人。",
   ),
   prerequisites: ["a2-words-machines"],
   words: [
@@ -344,7 +448,7 @@ const inventions = vocabularyTopic({
       "patent patents",
       "an official right to be the only one to make or sell an invention",
       "专利",
-      "She got a {patent} for her new kind of battery.|genius technique | Edison had more than a thousand {patents}.|geniuses techniques | The company owns the {patent} on this design.|genius pioneer",
+      "She got a {patent} for her new battery, so nobody else can make it.|genius technique | Edison had more than a thousand {patents}.|geniuses techniques | The company owns the {patent} on this design.|genius pioneer",
       "parent passport",
     ),
     word(
@@ -380,7 +484,7 @@ const inventions = vocabularyTopic({
       "innovation innovations",
       "a new idea, method or invention; bringing in new things",
       "创新；新事物",
-      "The company is famous for {innovation}.|steam genius | Online banking was a great {innovation}.|steam genius | The fair shows the latest {innovations} in farming.|geniuses patents",
+      "The company is famous for {innovation}: it is always bringing in new ideas.|steam genius | Online banking was a great {innovation}.|steam genius | The fair shows the latest {innovations} in farming.|geniuses patents",
       "invitation information",
       "invention breakthrough",
     ),
@@ -388,14 +492,14 @@ const inventions = vocabularyTopic({
       "technique techniques",
       "a special way of doing something",
       "技巧；技术",
-      "The painter used a new {technique}.|genius steam | Doctors are learning a new surgical {technique}.|genius steam | Good runners practice their breathing {techniques}.|breakthroughs patents",
+      "The painter used a new {technique}, a special way of mixing colors.|genius steam | Doctors are learning a new surgical {technique}.|genius steam | Good runners practice their breathing {techniques}.|breakthroughs patents",
       "technology mechanic",
     ),
     word(
       "invention inventions",
       "something new that someone has made or designed for the first time",
       "发明；发明物",
-      "The printing press was an important {invention}.|microscope steam | The light bulb is one of Edison's most famous {inventions}.|geniuses techniques | Paper is a Chinese {invention}.|microscope genius",
+      "The printing press was one of the most important {inventions} in history.|geniuses techniques | The light bulb is one of Edison's most famous {inventions}.|geniuses techniques | Paper is a Chinese {invention}.|microscope genius",
       "intention invitation",
       "innovation breakthrough",
     ),
@@ -403,10 +507,40 @@ const inventions = vocabularyTopic({
       "brilliant",
       "very clever, or very good",
       "聪明的；出色的",
-      "She's a {brilliant} scientist.|steam patent | What a {brilliant} idea!|steam patent | The film was {brilliant}.|steamed patented",
-      "brilliance bright-eyed",
+      "She's a {brilliant} scientist who has won many prizes. | What a {brilliant} idea! Let's do it. | The film was {brilliant}: I loved every minute.",
+      "boring terrible",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Genius* is a person and *brilliant* is an adjective: someone is a *genius*, or a *brilliant* scientist. Look for *a* before the gap with no noun after it.",
+        "*genius* 指人，*brilliant* 是形容词：某人是 a *genius*，或者是 a *brilliant* scientist。看空格前有 *a* 而后面没有名词。",
+      ),
+      meaning: t(
+        "A *prototype* is the first test model of a new machine; a *patent* is the official right to be the only one to make it. Check whether the meaning talks about a model or a right.",
+        "*prototype* 是新机器的第一个试验样机；*patent* 是独家制造的官方权利。看释义说的是样机还是权利。",
+      ),
+      spell: t(
+        "*Breakthrough* is one word, *break* + *through*, with -ough at the end: b-r-e-a-k-t-h-r-o-u-g-h.",
+        "*breakthrough* 是一个词，由 *break* 加 *through* 组成，结尾是 -ough：b-r-e-a-k-t-h-r-o-u-g-h。",
+      ),
+    },
+    notes: `
+      steam|out of a kettle;the first trains;cooking fish|steam is the gas from boiling water; a patent is a right to an invention|steam 是蒸汽；patent 是专利|Genius/genius=a genius is a very clever person, not gas from boiling water=genius 是天才，不是开水冒出的气;Patent/patent=a patent is an official right, not hot gas=patent 是专利权，不是热气|steam engine · cook in steam|*steam* is not *smoke*, from fire|*steam* 不是 *smoke*（烟）
+      telephone|Bell's famous one;used to call someone;rare a hundred years ago|a telephone lets you talk far away; a pioneer is one of the first people|telephone 是电话；pioneer 是先驱|genius=a genius is a clever person, not a machine Bell made=genius 是天才，不是贝尔造的机器;pioneer=a pioneer is a person, not a machine you use to talk=pioneer 是先驱，不是用来通话的机器;breakthrough=a breakthrough is a discovery, not a machine you borrow=breakthrough 是突破，不是借用的机器|on the telephone · a telephone call|*tele-* + *phone*: far sound|*tele-* 加 *phone*：远方的声音
+      microscope|cells looked at under one;tiny animals in water;the biology lab|a microscope makes small things bigger; a patent is a right|microscope 是显微镜；patent 是专利|breakthrough=a breakthrough is a discovery, not a tool you look through=breakthrough 是突破，不是观察工具;pioneer/pioneers=a pioneer is a person, not a tool you look through=pioneer 是先驱，不是观察工具;patent/patents=a patent is an official right, not an instrument in a lab=patent 是专利权，不是实验室仪器|under a microscope · use a microscope|*micro-* means small|*micro-* 表示“小”
+      patent|a battery nobody else can make;more than a thousand for Edison;owning a design|a patent is a right to make an invention; a technique is a way of doing something|patent 是专利；technique 是技巧|genius/geniuses=a genius is a clever person, not an official right=genius 是天才，不是官方权利;technique/techniques=a technique is a way of doing something, not a right to be the only maker=technique 是技巧，不是独家制造权;pioneer=a pioneer is a person, not something a company owns=pioneer 是先驱，不是公司拥有的东西|get a patent · own the patent|*patent* is not *parent*|*patent* 不是 *parent*
+      prototype|a first new car;one that didn't work;three robots being tested|a prototype is a first test model; a pioneer is one of the first people|prototype 是原型；pioneer 是先驱|breakthrough=a breakthrough is a discovery, not a test model you build=breakthrough 是突破，不是造出来的样机;pioneer/pioneers=a pioneer is a person, not a test model=pioneer 是人，不是样机;genius/geniuses=a genius is a clever person, not a model you test=genius 是天才，不是测试的样机;photograph=a photograph is a picture taken with a camera, not the first model of something new=photograph 是照片，不是原型|build a prototype · test a prototype|*proto-* means first|*proto-* 表示“最初”
+      breakthrough|a major new medicine;cancer research;computing|a breakthrough is an important discovery; a pioneer is a person|breakthrough 是突破；pioneer 是先驱|genius/geniuses=a genius is a person, not a discovery=genius 是天才，不是发现;technique=a technique is a way of doing something, not a sudden discovery=technique 是方法，不是重大突破;pioneer/pioneers=a pioneer is one of the first people to do something new, not the discovery itself=pioneer 是最早做某件新事的人，不是发现本身;breakdown=a breakdown is when a machine stops working, not an important discovery=breakdown 是故障、崩溃，不是突破;throughway=a throughway is a big fast road, not a discovery=throughway 是高速公路，不是突破|make a breakthrough · a major breakthrough|one word|是一个词
+      genius|Einstein;fixing it in five minutes;Mozart in music|a genius is an extremely clever person; a patent is a right|genius 是天才；patent 是专利|patent=a patent is an official right, not a very clever person=patent 是专利权，不是聪明人;prototype=a prototype is a test model, not a very clever person=prototype 是样机，不是聪明人;general=a general is a top army officer, not a very clever person=general 是将军，不是天才|a genius · a musical genius|plural *geniuses*|复数 *geniuses*
+      pioneer|Marie Curie and radioactivity;electric cars;early flight|a pioneer is one of the first to do something; a prototype is a test model|pioneer 是先驱；prototype 是原型|patent/patents=a patent is an official right, not a person who does something first=patent 是专利权，不是先行者;prototype/prototypes=a prototype is a test model, not a person who took risks=prototype 是样机，不是冒险的人|a pioneer of · early pioneers|*pio-neer* rhymes with *engineer*|*pioneer* 和 *engineer* 押韵
+      innovation|always bringing in new ideas;online banking;the latest in farming|an innovation is a new idea or method; steam is hot gas|innovation 是创新；steam 是蒸汽|steam=steam is hot gas from water, not a new idea or method=steam 是蒸汽，不是新想法或新方法;genius/geniuses=a genius is a clever person, not a new idea=genius 是天才，不是新想法;patents=patents are rights, not new things on show=patent 是专利权，不是展出的新事物|a great innovation · the latest innovations|verb *innovate*|动词 *innovate*
+      technique|a special way of mixing colors;surgery;breathing for runners|a technique is a special way of doing something; a genius is a person|technique 是技巧；genius 是天才|genius=a genius is a clever person, not a way of doing something=genius 是天才，不是做事的方法;steam=steam is hot gas, not a way of doing something=steam 是蒸汽，不是方法;breakthroughs=breakthroughs are discoveries, not ways runners practice=breakthrough 是突破，不是练习的方法;patents=patents are rights, not ways of breathing=patent 是专利权，不是呼吸方法|a new technique · breathing techniques|ends in *-ique*|以 *-ique* 结尾
+      invention|the printing press;Edison's light bulb;paper from China|an invention is something made for the first time; a microscope is one tool|invention 是发明；microscope 是显微镜|geniuses=geniuses are clever people, not things made for the first time=genius 是天才，不是发明物;techniques=techniques are ways of doing something, not things that were invented=technique 是方法，不是发明物;microscope=a microscope is one tool, and paper is not a tool to look through=microscope 是显微镜，纸不是观察工具;genius=a genius is a person, and paper is not a person=genius 是人，纸不是人;intention=an intention is something you plan to do, not a new thing someone has made=intention 是打算，不是发明|an important invention · a Chinese invention|verb *invent*|动词 *invent*
+      brilliant|a scientist with many prizes;an idea to try;a film I loved|brilliant means very clever or very good; boring means not interesting|brilliant 是聪明的、出色的；boring 是无聊的|boring=boring means not interesting, not very good or clever=boring 是无聊，不是出色;terrible=terrible means very bad, not very good=terrible 是非常糟糕，不是出色|a brilliant idea · brilliant at|double l: b-r-i-l-l-i-a-n-t|双写 l
+    `,
+  },
 });
 
 const amounts = vocabularyTopic({
@@ -416,95 +550,129 @@ const amounts = vocabularyTopic({
     "Percents and percentages; averages and totals; majorities and minorities; doubling; rates; dozens and billions; maximum and minimum.",
     "百分之……和百分比；平均数和总数；多数和少数；翻倍；比率；一打和十亿；最大值和最小值。",
   ),
+  intro: t(
+    "You can give an amount as a **percent**, an **average** or a **total**, or say that the **majority** wanted something and only a **minority** didn't. These words help you talk about numbers and results.",
+    "你可以用 **percent**（百分之……）、**average**（平均数）或 **total**（总数）来说一个数量，也可以说 **majority**（大多数）想要什么，只有 **minority**（少数）不想要。这些词帮你谈论数字和结果。",
+  ),
   prerequisites: ["a2-words-quantities"],
   words: [
     word(
       "percent",
       "for or out of every hundred",
       "百分之……",
-      "Fifty {percent} of the students walk to school.|dozen billion | Prices rose by ten {percent}.|dozen billion | Only five {percent} of the water on Earth is fresh.|dozen billion",
-      "per present",
+      "Half of the 100 students, or fifty {percent}, walk to school. | Prices rose by ten {percent}, from 200 to 220 dollars. | Of every 100 liters of water on Earth, only about three are fresh: just three {percent}.",
+      "dozen times",
       "percentage",
     ),
     word(
       "percentage percentages",
       "an amount said as a number out of a hundred",
       "百分比",
-      "What {percentage} of people own a car?|dozen billion | A high {percentage} of the population lives in cities.|dozen minimum | The {percentage} of young people who smoke has fallen.|dozen billion",
-      "passage parentage",
+      "The {percentage} of people who own a car has risen from 40 to 60 out of every hundred. | A high {percentage} of the population, 80 out of every 100 people, lives in cities. | The {percentage} of young people who smoke has fallen from 20 to 10 out of every hundred.",
+      "total maximum",
       "percent",
     ),
     word(
       "average averages",
       "the number you get by adding numbers together and dividing by how many there are; usual",
       "平均数；平均的",
-      "The {average} age of the students is fifteen.|dozen billion | On {average}, people sleep seven hours a night.|dozen maximum | She is taller than {average}.|dozen billion",
-      "advantage everage",
+      "The {average} age of the students is fifteen: add their ages and divide by the number of students. | Seven hours a night is the {average}: some people sleep more and some less. | Most women are shorter than her: she is well above the {average} height.|total maximum",
+      "total minimum",
     ),
     word(
       "total totals",
       "the number you get when you add everything together",
       "总数；总计",
-      "The {total} cost of the trip was 900 dollars.|dozen billion | In {total}, 200 people came to the meeting.|dozen billion | Add up the numbers and write the {total} at the bottom.|dozen billion",
-      "total-up tool",
+      "The {total} cost of the trip, with hotel, food and flights added together, was 900 dollars. | A {total} of 200 people came to the meeting: 120 adults and 80 children.|maximum minimum | Add up the numbers and write the {total} at the bottom.|average maximum",
+      "average minimum",
     ),
     word(
       "majority majorities",
       "more than half of a group",
       "大多数",
-      "The {majority} of students passed the exam.|minimum dozen | A large {majority} voted for the new rule.|dozen minimum | The {majority} of people in the survey wanted more parks.|dozen minimum",
-      "major maturity",
+      "The {majority} of students passed the exam: 90 out of 100. | A large {majority}, 80 percent, voted for the new rule. | The {majority} of people in the survey, more than half, wanted more parks.",
+      "minority total",
     ),
     word(
       "minority minorities",
       "less than half of a group",
       "少数",
-      "Only a {minority} of people disagreed.|dozen maximum | China has fifty-five ethnic {minorities}.|dozens maximums | A small {minority} of drivers break the speed limit.|dozen maximum",
-      "minor memory",
+      "Only a small {minority} of people, about ten percent, disagreed. | China has fifty-five ethnic {minorities}.|majorities totals | A small {minority} of drivers, only about five in a hundred, break the speed limit.",
+      "majority total",
     ),
     word(
       "double doubles doubled doubling",
       "to become twice as big, or to make something twice as big",
       "翻倍；加倍",
-      "The population of the city has {doubled} in thirty years.|totaled averaged | Prices will {double} if we wait.|total average | The number of cars is {doubling} every ten years.|totaling averaging",
-      "trouble divide",
+      "The population of the city has {doubled} in thirty years, from one million to two million.|divided totaled | Prices will {double}, from 50 to 100 dollars, if we wait. | The number of cars is {doubling} every ten years: 1,000, then 2,000, then 4,000.|dividing totaling",
+      "divide total",
     ),
     word(
       "rate rates",
       "how fast or how often something happens; a level of payment",
       "比率；速度",
-      "The birth {rate} is falling in many countries.|dozen billion | Your heart {rate} goes up when you run.|dozen billion | Interest {rates} are very low at the moment.|dozens billions",
-      "rat route",
+      "The birth {rate}, the number of babies born for every 1,000 people, is falling in many countries. | Your heart {rate} goes up when you run. | Interest {rates} are very low at the moment.|totals averages",
+      "total average",
     ),
     word(
       "dozen dozens",
       "twelve",
       "一打；十二个",
-      "I bought a {dozen} eggs.|billion majority | {Dozens} of people were waiting outside.|Majorities Percentages | There are about a {dozen} students in the club.|majority percentage",
-      "dozing ten",
+      "I bought a {dozen} eggs: twelve in one box. | {Dozens} of people, maybe forty or fifty, were waiting outside.|Billions Hundreds | There are about a {dozen} students in the club: twelve or thirteen.",
+      "billion hundred",
     ),
     word(
       "billion billions",
       "a thousand million (1,000,000,000)",
       "十亿",
-      "The world population is about eight {billion}.|dozens majorities | The bridge cost two {billion} dollars.|average majority | {Billions} of stars shine in our galaxy.|Majorities Averages",
-      "million trillion",
+      "The world population is about eight {billion}: 8,000,000,000 people. | The bridge cost two {billion} dollars: 2,000,000,000. | {Billions} of stars, more than 100,000,000,000, shine in our galaxy.|Dozens Hundreds",
+      "dozen hundred",
     ),
     word(
       "maximum",
       "the largest amount or number that is possible or allowed",
       "最大值；最高的",
-      "The {maximum} speed on this road is eighty kilometers an hour.|minority dozen | The lift can carry a {maximum} of ten people.|minority dozen | Bring a {maximum} of two bags.|minority majority",
-      "maximize medium",
+      "The {maximum} speed on this road is 80 kilometers an hour: never drive faster. | The lift can carry a {maximum} of ten people: no more. | Bring a {maximum} of two bags: no more than that.",
+      "minimum total",
     ),
     word(
       "minimum",
       "the smallest amount or number that is possible or allowed",
       "最小值；最低的",
-      "You need a {minimum} of three people to play this game.|majority dozen | The {minimum} age for driving is eighteen.|majority billion | Keep the noise to a {minimum}, please.|majority billion",
-      "minute medium",
+      "You need a {minimum} of three people to play this game: two is not enough. | The {minimum} age for driving is eighteen: younger people can't drive. | Keep the noise to a {minimum}, please: the baby is sleeping.",
+      "maximum majority",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Maximum* and *minimum* are opposites: the *maximum* is the most allowed, the *minimum* is the least. Look for *no more* or *not enough* in the sentence.",
+        "*maximum* 和 *minimum* 意思相反：*maximum* 是允许的最多，*minimum* 是最少。留意句中的 *no more* 或 *not enough*。",
+      ),
+      meaning: t(
+        "*Average* and *total* both come from adding numbers, but the *total* is the sum, and the *average* is the sum divided by how many numbers there are. Check whether the meaning says divide.",
+        "*average* 和 *total* 都要把数加起来，但 *total* 是总和，*average* 是总和再除以个数。看释义有没有说“除以”。",
+      ),
+      spell: t(
+        "*Percent* can be one word or two: *percent* or *per cent*; *percentage* adds -age.",
+        "*percent* 可以写成一个词，也可以分开：*percent* 或 *per cent*；*percentage* 加 -age。",
+      ),
+    },
+    notes: `
+      percent|half of 100 students;200 to 220 dollars;three liters in every hundred|percent means out of every hundred; a dozen is twelve|percent 是百分之……；dozen 是一打|dozen=a dozen is twelve things, not a number out of every hundred=dozen 是十二个，不是每一百中的几个;times=times shows how many times bigger, not a number out of every hundred=times 表示倍数，不是百分比|ten percent · fifty percent of|the sign is %|符号是 %
+      percentage|car owners out of every hundred;80 in every 100 living in cities;young smokers out of every hundred|a percentage is an amount out of a hundred; a total is everything added together|percentage 是百分比；total 是总数|total=a total is everything added together, not an amount out of every hundred=total 是总和，不是百分比;maximum=a maximum is the most allowed, not an amount out of every hundred=maximum 是最大值，不是百分比|a high percentage · the percentage of|no number before it, unlike *percent*|前面不加数字，和 *percent* 不同
+      average|ages added and divided;more or less than seven hours;taller than most women|the average is the sum divided by how many; the total is the sum|average 是平均数；total 是总数|total=the total is everything added together, not divided by how many=total 是总和，没有除以个数;minimum=the minimum is the smallest allowed, but some people sleep less=minimum 是最小值，但有人睡得更少;maximum=the maximum is the most possible, and no one is above it=maximum 是最大值，没人能超过它|on average · the average age|also an adjective: an average day|也是形容词：an average day
+      total|hotel, food and flights added together;120 adults and 80 children;numbers added up|the total is everything added together; the average is the sum divided by how many|total 是总数；average 是平均数|average=an average is the sum divided by how many, not everything added together=average 是平均数，不是总和;minimum=a minimum is the smallest allowed, not everything added together=minimum 是最小值，不是总和;maximum=a maximum is the most allowed, not the number who really came=maximum 是最多允许的人数，不是实际来的人数|in total · a total of|verb too: the bill totaled 50 dollars|也是动词：the bill totaled 50 dollars
+      majority|90 out of 100 passing;80 percent voting for a rule;more than half of a survey|the majority is more than half; the minority is less than half|majority 是大多数；minority 是少数|minority=a minority is less than half, not 80 or 90 percent=minority 是少数，不是百分之八九十;total=the total is all of them, not most of them=total 是全部，不是大多数|the majority of · a large majority|opposite *minority*|反义词 *minority*
+      minority|about ten percent who disagreed;55 ethnic groups in China;five drivers in a hundred who speed|the minority is less than half; the majority is more than half|minority 是少数；majority 是大多数|majority/majorities=a majority is more than half, not a small group=majority 是大多数，不是一小部分;total/totals=a total is everything added together, not a small part of a group=total 是总数，不是一小部分|a small minority · ethnic minorities|opposite *majority*|反义词 *majority*
+      double|one million to two million;50 to 100 dollars;1,000 then 2,000 then 4,000|to double is to become twice as big; to divide is to split into parts|double 是翻倍；divide 是分开|divide/divided/dividing=to divide is to split into parts, not to become twice as big=divide 是分成几份，不是翻倍;total/totaled/totaling=to total is to add up to a number, not to become twice as big=total 是合计，不是翻倍|double in size · prices doubled|also an adjective: a double room|也是形容词：a double room
+      rate|babies born for every 1,000 people;a heart going up;low interest|a rate is how fast or often something happens; a total is everything added|rate 是比率、速度；total 是总数|total/totals=a total is everything added together, not how fast or often something happens=total 是总和，不是比率;average/averages=an average is the sum divided by how many, not how often something happens per 1,000=average 是平均数，不是每千人的比率|the birth rate · heart rate|*rate* is not *rat*|*rate* 不是 *rat*
+      dozen|twelve eggs in a box;forty or fifty people;twelve or thirteen students|a dozen is twelve; a hundred is 100|dozen 是十二个；hundred 是一百|billion/Billions=a billion is a thousand million, not twelve=billion 是十亿，不是十二;hundred/Hundreds=a hundred is 100, not twelve=hundred 是一百，不是十二|a dozen eggs · dozens of|no -s after a number: two dozen eggs|数字后面不加 -s：two dozen eggs
+      billion|8,000,000,000 people;2,000,000,000 dollars;more than 100,000,000,000 stars|a billion is a thousand million; a hundred is 100|billion 是十亿；hundred 是一百|dozen/Dozens=a dozen is twelve, not a thousand million=dozen 是十二，不是十亿;hundred/Hundreds=a hundred is 100, not a thousand million=hundred 是一百，不是十亿|eight billion · billions of|no -s after a number: two billion dollars|数字后面不加 -s：two billion dollars
+      maximum|80 km an hour and no faster;ten people and no more;two bags and no more|the maximum is the most allowed; the minimum is the least|maximum 是最大值；minimum 是最小值|minimum=a minimum is the least allowed, not the most=minimum 是最少，不是最多;total=a total is everything added up, not the most allowed=total 是总数，不是允许的最大值|a maximum of · the maximum speed|opposite *minimum*|反义词 *minimum*
+      minimum|two players not enough;no driving under eighteen;quiet for a sleeping baby|the minimum is the least allowed; the maximum is the most|minimum 是最小值；maximum 是最大值|maximum=a maximum is the most allowed, not the least=maximum 是最多，不是最少;majority=a majority is more than half of a group, not the least amount=majority 是大多数，不是最少的量|a minimum of · keep it to a minimum|opposite *maximum*|反义词 *maximum*
+    `,
+  },
 });
 
 const physics = vocabularyTopic({
@@ -513,6 +681,10 @@ const physics = vocabularyTopic({
   summary: t(
     "Force, motion and speed; friction; magnets and magnetic; reflecting; mass and volume; surfaces and layers; elements.",
     "力、运动和速度；摩擦力；磁铁和有磁性的；反射；质量和体积；表面和层；元素。",
+  ),
+  intro: t(
+    "**Gravity** is one **force**; **friction** is another, and it slows down **motion** when one **surface** moves over another. These words help you talk about how things move and what they are made of.",
+    "引力是一种 **force**（力）；**friction**（摩擦力）是另一种，当一个 **surface**（表面）在另一个上移动时，它会减慢 **motion**（运动）。这些词帮你谈论物体怎样运动、由什么构成。",
   ),
   prerequisites: ["b1-words-science"],
   words: [
@@ -571,14 +743,14 @@ const physics = vocabularyTopic({
       "mass masses",
       "the amount of matter in something; a large amount",
       "质量；大量",
-      "The {mass} of the Earth is huge.|friction magnetic | Heavier objects have more {mass}.|magnetic reflect | A {mass} of people gathered in the square.|speed friction",
+      "The {mass} of the Earth, the amount of matter in it, is huge.|friction motion | Heavier objects have more {mass}: more matter inside them.|friction motion | A {mass} of people gathered in the square.|speed friction",
       "mess math",
     ),
     word(
       "volume volumes",
       "the amount of space that something fills; how loud a sound is",
       "体积；音量",
-      "What is the {volume} of this box?|friction motion | Please turn down the {volume}.|friction motion | The {volume} of traffic has increased.|friction motion",
+      "What is the {volume} of this box?|friction motion | Please turn down the {volume}.|friction motion | The {volume} of traffic, the number of cars on the road, has increased.|friction motion",
       "value column",
     ),
     word(
@@ -603,6 +775,36 @@ const physics = vocabularyTopic({
       "elephant elevator",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Magnet* is a noun and *magnetic* is an adjective: you pick up pins with a *magnet*, but iron is a *magnetic* metal. Look at whether a noun comes after the gap.",
+        "*magnet* 是名词，*magnetic* 是形容词：用 *magnet* 吸起大头针，但铁是 *magnetic* 金属。看空格后面是否跟着名词。",
+      ),
+      meaning: t(
+        "*Mass* and *volume* both measure an object, but *mass* is how much matter is in it, and *volume* is how much space it fills. Check whether the meaning says matter or space.",
+        "*mass* 和 *volume* 都是物体的量，但 *mass* 是物质有多少，*volume* 是占多大空间。看释义说的是物质还是空间。",
+      ),
+      spell: t(
+        "*Friction* is spelled with -ction: f-r-i-c-t-i-o-n; *fiction* has no r.",
+        "*friction* 以 -ction 结尾：f-r-i-c-t-i-o-n；*fiction* 里没有 r。",
+      ),
+    },
+    notes: `
+      force|wind knocking down a tree;gravity pulling things down;pushing and pulling|a force makes things move or change shape; a layer covers a surface|force 是力；layer 是层|layer/layers=a layer covers a surface, not a power that makes things move=layer 是覆盖物的一层，不是让物体移动的力;surface/surfaces=a surface is the outside of something, not a power that moves it=surface 是表面，不是力;volume=volume is the space something fills, not a power that pulls=volume 是体积，不是拉力|the force of · forces of nature|*force* is also a verb: force someone to go|*force* 也是动词：force someone to go
+      motion|a boat making me sick;Newton's three laws;a goal in slow replay|motion is moving; mass is the amount of matter|motion 是运动；mass 是质量|mass=mass is the amount of matter, not moving=mass 是物质的量，不是运动;volume=volume is space or loudness, not moving=volume 是体积或音量，不是运动;element=an element is a simple substance, not moving=element 是元素，不是运动;lotion=lotion is a cream for your skin, not moving=lotion 是护肤乳液，不是运动|in slow motion · laws of motion|*motion* is not *emotion*|*motion* 不是 *emotion*
+      speed|300 km an hour;light;slower near schools|speed is how fast something moves; mass is the amount of matter|speed 是速度；mass 是质量|mass=mass is the amount of matter, not how fast something moves=mass 是物质的量，不是速度;layer=a layer covers a surface, not how fast something moves=layer 是层，不是速度;surface=a surface is the outside of something, not how fast drivers go=surface 是表面，不是速度|at a speed of · high speed|also a verb: speed up|也是动词：speed up
+      friction|tires helping a car stop;heat from rubbing hands;oil between engine parts|friction makes it hard for surfaces to move; volume is space|friction 是摩擦力；volume 是体积|Volume/volume=volume is space or loudness, not the force between two surfaces=volume 是体积或音量，不是两个表面之间的力;Mass/mass=mass is the amount of matter, not the force that slows a moving surface=mass 是物质的量，不是阻碍表面移动的力;layer=a layer covers a surface, not a force that oil reduces=layer 是层，不是油能减少的力;fraction=a fraction is a part of a number, like a half, not a force=fraction 是分数，不是摩擦力|reduce friction · because of friction|*friction* is not *fiction*|*friction* 不是 *fiction*
+      magnet|pins picked up;photos on a fridge;a compass needle|a magnet pulls iron; a surface is the outside of something|magnet 是磁铁；surface 是表面|surface/surfaces=a surface is the outside of something, not metal that pulls iron=surface 是表面，不是吸铁的金属;element/elements=an element is a simple substance, not something that picks up pins=element 是元素，不是吸大头针的东西;layer=a layer covers a surface, not a needle that points north=layer 是层，不是指北的针|a fridge magnet · a small magnet|adjective *magnetic*|形容词 *magnetic*
+      magnetic|iron as a metal;the Earth's field;a card's strip|magnetic means able to pull iron; surface is the outside|magnetic 是有磁性的；surface 是表面|surface=a surface is the outside of something, not able to pull iron=surface 是表面，不是有磁性的;motion=motion is moving, not able to pull iron=motion 是运动，不是有磁性的;volume=volume is space or loudness, not able to pull iron=volume 是体积或音量，不是有磁性的;magic=magic is tricks or powers that seem impossible, not the power to pull iron=magic 是魔法，不是吸铁的性质;metallic=metallic means made of or like metal, and most metal cannot pull iron=metallic 是金属的，而大多数金属并不能吸铁|a magnetic field · a magnetic strip|from *magnet* + *-ic*|由 *magnet* 加 *-ic* 构成
+      reflect|a mirror and light;a face in water;white clothes and the sun's heat|to reflect is to send back light or heat; to force is to push|reflect 是反射；force 是强迫|layers/layered/layer=to layer is to put one thing over another, not to send back light=layer 是一层层铺，不是反射光;forces/forced/force=to force is to push or make someone do something, not to send back light=force 是强迫，不是反射;react=to react is to respond to something, not to send back light=react 是作出反应，不是反射|reflect light · reflected in the water|noun *reflection*|名词 *reflection*
+      mass|the Earth's matter;more matter in heavier objects;people gathered in a square|mass is the amount of matter; friction is a force between surfaces|mass 是质量；friction 是摩擦力|friction=friction is the force between two surfaces, not the amount of matter=friction 是摩擦力，不是物质的量;motion=motion is moving, not the amount of matter=motion 是运动，不是物质的量;speed=speed is how fast something moves, not a large group of people=speed 是速度，不是一大群人;mess=a mess is an untidy state, not the amount of matter=mess 是乱七八糟，不是质量|the mass of · a mass of people|*mass* is not *mess*|*mass* 不是 *mess*
+      volume|space in a box;sound turned down;cars on the road|volume is space or loudness; motion is moving|volume 是体积、音量；motion 是运动|friction=friction is a force between surfaces, not space or loudness=friction 是摩擦力，不是体积或音量;motion=motion is moving, not space, loudness or an amount=motion 是运动，不是体积、音量或数量|turn down the volume · the volume of|*volume* is also one book of a set|*volume* 也指一套书中的一册
+      surface|moon dust;oil floating on water;kitchen tops to clean|a surface is the outside or top of something; friction is a force|surface 是表面；friction 是摩擦力|friction/frictions=friction is a force, not the outside of something=friction 是一种力，不是物体的表面;motion/motions=motion is moving, not the top of something=motion 是运动，不是物体的顶面|the surface of · kitchen surfaces|*surface* is not *service*|*surface* 不是 *service*
+      layer|thin ice on a lake;three in a cake;clothes in cold weather|a layer covers a surface or lies between things; speed is how fast|layer 是层；speed 是速度|speed/speeds=speed is how fast something moves, not something that covers a surface=speed 是速度，不是覆盖物;motion/motions=motion is moving, not something that lies between things=motion 是运动，不是夹在中间的东西|a thin layer · layers of clothes|*layer* is not *lawyer*|*layer* 不是 *lawyer*
+      element|gold;118 known;hydrogen as the lightest|an element is a simple substance; motion is moving|element 是元素；motion 是运动|motion/motions=motion is moving, not a simple substance like gold=motion 是运动，不是像金子那样的物质;friction/frictions=friction is a force, not a substance like hydrogen=friction 是力，不是像氢那样的物质|a chemical element · 118 elements|*element* is not *elephant*|*element* 不是 *elephant*
+    `,
+  },
 });
 
 const change = vocabularyTopic({
@@ -612,101 +814,135 @@ const change = vocabularyTopic({
     "Gradual and gradually; rapid and rapidly; steady and steadily; slight and slightly; significant and constant; temporary and permanent.",
     "逐渐的和逐渐地；迅速的和迅速地；稳定的和稳定地；轻微的和稍微；显著的和持续不断的；暂时的和永久的。",
   ),
+  intro: t(
+    "A change can be **gradual** or **rapid**, **slight** or **significant**, **temporary** or **permanent**. These words help you describe how much and how fast things change.",
+    "变化可以是 **gradual**（逐渐的）或 **rapid**（迅速的），**slight**（轻微的）或 **significant**（显著的），**temporary**（暂时的）或 **permanent**（永久的）。这些词帮你描述事物变化的幅度和速度。",
+  ),
   prerequisites: ["b1-words-change"],
   words: [
     word(
       "gradual",
       "happening slowly, over a long time",
       "逐渐的",
-      "There has been a {gradual} rise in temperatures.|gradually rapidly | Learning a language is a {gradual} process.|gradually slightly | The change was so {gradual} that nobody noticed it.|gradually steadily",
-      "graduate grateful",
+      "There has been a {gradual} rise in temperatures, slowly, over a hundred years. | Learning a language is a {gradual} process: you get better little by little. | The change was so {gradual} that nobody noticed it.|rapid significant",
+      "rapid temporary",
       "gradually steady",
     ),
     word(
       "gradually",
       "slowly, over a long time",
       "逐渐地",
-      "The weather {gradually} got warmer.|gradual rapid | {Gradually}, she began to understand the language.|Gradual Rapid | The town has {gradually} become a city.|gradual steady",
-      "graduated generally",
+      "The weather {gradually} got warmer, day by day, over the spring. | {Gradually}, after many months, she began to understand the language.|Rapidly Suddenly | The town has {gradually} become a city over two hundred years.",
+      "rapidly suddenly",
       "gradual steadily",
     ),
     word(
       "rapid",
       "happening very quickly",
       "迅速的",
-      "The city has seen {rapid} growth.|rapidly gradually | There was a {rapid} change in the weather.|rapidly slightly | She made {rapid} progress in English.|rapidly steadily",
-      "rabbit rigid",
+      "The city has seen {rapid} growth: it doubled in five years. | There was a {rapid} change in the weather: in ten minutes the sun was gone and it was snowing. | She made {rapid} progress in English and was fluent in six months.",
+      "gradual slight",
       "rapidly",
     ),
     word(
       "rapidly",
       "very quickly",
       "迅速地",
-      "Prices are rising {rapidly}.|rapid gradual | The illness spread {rapidly}.|rapid slight | Technology is changing {rapidly}.|rapid permanent",
-      "rarely rapidity",
+      "Prices are rising {rapidly}: they went up by half in one month. | The illness spread {rapidly}, and in a week the whole town was sick. | Technology is changing {rapidly}: phones are out of date in a year or two.",
+      "gradually slightly",
       "rapid",
     ),
     word(
       "steady",
       "continuing at the same speed or level",
       "稳定的；平稳的",
-      "There has been a {steady} increase in visitors.|steadily rapidly | He has a {steady} job at the bank.|steadily slightly | Keep the ladder {steady} while I climb.|steadily rapidly",
-      "study ready",
+      "There has been a {steady} increase in visitors: about 100 more every year. | He has had a {steady} job at the bank for twenty years. | Keep the ladder {steady} while I climb.",
+      "sudden temporary",
       "steadily gradual",
     ),
     word(
       "steadily",
       "at a regular, even rate",
       "稳定地；不断地",
-      "The number of students has grown {steadily}.|steady gradual | It rained {steadily} all day.|steady rapid | Prices have risen {steadily} for ten years.|steady slight",
-      "suddenly sadly",
+      "The number of students has grown {steadily}, by about the same amount each year. | It rained {steadily} all day without stopping. | Prices have risen {steadily} for ten years, a little every year.",
+      "rapidly suddenly",
       "steady gradually",
     ),
     word(
       "slight",
       "small; not important or serious",
       "轻微的；微小的",
-      "I have a {slight} headache.|slightly steadily | There's a {slight} problem with the computer.|slightly rapidly | She speaks English with a {slight} accent.|slightly gradually",
-      "light slim",
+      "I have a {slight} headache, but it's not bad. | There's a {slight} problem with the computer, nothing serious. | She speaks English with a {slight} accent: you can hardly hear it.",
+      "significant rapid",
       "slightly",
     ),
     word(
       "slightly",
       "a little",
       "稍微；略微",
-      "I feel {slightly} better today.|slight rapid | The price went up {slightly}.|slight gradual | This shirt is {slightly} too big.|slight steady",
-      "lightly slowly",
+      "I feel {slightly} better today, but I'm still quite ill. | The price went up {slightly}, from 100 to 101 dollars.|rapidly steadily | This shirt is {slightly} big for me, but I can still wear it.",
+      "totally completely",
       "slight",
     ),
     word(
       "significant",
       "large or important enough to notice",
       "显著的；重要的",
-      "There has been a {significant} fall in crime.|slightly rapidly | This is a {significant} discovery.|rapidly gradually | Did anything {significant} happen while I was away?|temporary rapidly",
-      "signature magnificent",
+      "There has been a {significant} fall in crime: about 40 percent. | This is a {significant} discovery that will change medicine. | Did anything {significant} happen while I was away?",
+      "slight temporary",
     ),
     word(
       "constant",
       "happening all the time, or staying the same",
       "持续不断的；恒定的",
-      "The {constant} noise from the road keeps me awake.|slightly rapidly | Keep the water at a {constant} temperature.|slightly rapidly | She is in {constant} pain.|slightly gradually",
-      "content consonant",
+      "The {constant} noise from the road, day and night, keeps me awake. | Keep the water at a {constant} temperature that never changes. | She is in {constant} pain that never goes away.",
+      "temporary rapid",
     ),
     word(
       "temporary",
       "lasting for only a short time",
       "暂时的；临时的",
-      "She has a {temporary} job for the summer.|permanent constant | The road is closed, but it's only {temporary}.|permanent constant | We moved to a {temporary} home after the fire.|rapidly slightly",
-      "contemporary temperature",
+      "She has a {temporary} job for the summer. | The road is closed, but it's only {temporary}. | We moved to a {temporary} home for a few weeks after the fire.",
+      "permanent constant",
     ),
     word(
       "permanent",
       "lasting for a very long time or forever",
       "永久的；长期的",
-      "Smoking can cause {permanent} damage to your lungs.|rapidly slightly | She's looking for a {permanent} job.|slightly rapidly | Is this a {permanent} address or a temporary one?|temporary slightly",
-      "payment pertinent",
+      "Smoking can cause {permanent} damage to your lungs that never heals. | She's tired of summer jobs and is looking for a {permanent} job. | Is this a {permanent} address or a temporary one?",
+      "temporary slight",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "The adjective describes a noun and the -ly adverb describes a verb: a *rapid* change, but prices rise *rapidly*. Look at whether the gap comes before a noun or after a verb.",
+        "形容词修饰名词，-ly 副词修饰动词：a *rapid* change，但 prices rise *rapidly*。看空格是在名词前还是动词后。",
+      ),
+      meaning: t(
+        "*Temporary* and *permanent* are opposites: *temporary* lasts only a short time, *permanent* lasts a very long time or forever. Check how long the meaning says it lasts.",
+        "*temporary* 和 *permanent* 意思相反：*temporary* 只持续很短时间，*permanent* 持续很久或永远。看释义说持续多久。",
+      ),
+      spell: t(
+        "*Gradual* becomes *gradually* with a double l: g-r-a-d-u-a-l-l-y; *steady* changes y to i: *steadily*.",
+        "*gradual* 变成 *gradually* 要双写 l：g-r-a-d-u-a-l-l-y；*steady* 把 y 变成 i：*steadily*。",
+      ),
+    },
+    notes: `
+      gradual|temperatures over a hundred years;getting better little by little;a change nobody noticed|gradual means happening slowly; rapid means happening very quickly|gradual 是逐渐的；rapid 是迅速的|rapid=rapid means very quick, not slow over a long time=rapid 是迅速的，不是长时间慢慢地;temporary=temporary means lasting a short time, not happening slowly=temporary 是暂时的，不是逐渐的;significant=significant means large enough to notice, but nobody noticed this change=significant 是显著的，但这个变化没人注意到|a gradual rise · a gradual process|adverb *gradually*|副词 *gradually*
+      gradually|warmer day by day;understanding after many months;a town becoming a city over 200 years|gradually means slowly over a long time; suddenly means all at once|gradually 是逐渐地；suddenly 是突然地|rapidly/Rapidly=rapidly means very quickly, not slowly over a long time=rapidly 是很快地，不是慢慢地;suddenly/Suddenly=suddenly means all at once, not little by little=suddenly 是突然地，不是一点点地|gradually got warmer · gradually became|double l before -y|-y 前双写 l
+      rapid|a city doubled in five years;snow in ten minutes;fluent in six months|rapid means very quick; gradual means slow|rapid 是迅速的；gradual 是逐渐的|gradual=gradual means slow over a long time, not very quick=gradual 是缓慢的，不是迅速的;slight=slight means small, not very quick=slight 是轻微的，不是迅速的|rapid growth · rapid progress|adverb *rapidly*|副词 *rapidly*
+      rapidly|prices up by half in a month;a whole town sick in a week;phones out of date in a year|rapidly means very quickly; gradually means slowly|rapidly 是迅速地；gradually 是逐渐地|gradually=gradually means slowly over a long time, not very quickly=gradually 是慢慢地，不是很快地;slightly=slightly means a little, not very quickly=slightly 是稍微，不是迅速地|rise rapidly · spread rapidly|adjective *rapid* + *-ly*|形容词 *rapid* 加 *-ly*
+      steady|100 more visitors every year;twenty years at a bank;a ladder that doesn't move|steady means continuing at the same level; sudden means happening all at once|steady 是稳定的；sudden 是突然的|sudden=sudden means happening all at once, not continuing at the same speed=sudden 是突然的，不是持续平稳的;temporary=temporary means lasting a short time, not continuing for years=temporary 是暂时的，不是持续多年的|a steady increase · a steady job|adverb *steadily*|副词 *steadily*
+      steadily|the same amount each year;rain without stopping all day;a little every year for ten years|steadily means at an even rate; suddenly means all at once|steadily 是稳定地；suddenly 是突然地|rapidly=rapidly means very quickly, not at an even rate=rapidly 是很快地，不是平稳地;suddenly=suddenly means all at once, not at an even rate over time=suddenly 是突然地，不是持续平稳地|grow steadily · rain steadily|y becomes i: *steadily*|y 变 i：*steadily*
+      slight|a headache that's not bad;a problem that's nothing serious;an accent you can hardly hear|slight means small; significant means large enough to notice|slight 是轻微的；significant 是显著的|significant=significant means large enough to notice, not small and not serious=significant 是显著的，不是轻微的;rapid=rapid means very quick, not small=rapid 是迅速的，不是轻微的|a slight headache · a slight accent|adverb *slightly*|副词 *slightly*
+      slightly|better but still quite ill;100 to 101 dollars;a bit big but still wearable|slightly means a little; totally means completely|slightly 是稍微；totally 是完全|totally=totally means completely, not a little=totally 是完全，不是稍微;rapidly=rapidly means very quickly, not by a small amount=rapidly 是迅速地，不是稍微;steadily=steadily means at an even rate over time, not by one small amount=steadily 是持续平稳地，不是一次小小的变化;completely=completely means in every way, to the end, which is the opposite of a little=completely 是彻底、全部，和稍微正好相反|slightly better · slightly too big|adjective *slight* + *-ly*|形容词 *slight* 加 *-ly*
+      significant|crime down about 40 percent;a discovery that will change medicine;anything important while away|significant means large or important enough to notice; slight means small|significant 是显著的；slight 是轻微的|slight=slight means small and not important, not large enough to notice=slight 是轻微的，不是显著的;temporary=temporary means lasting a short time, not important=temporary 是暂时的，不是重要的|a significant change · something significant|noun *significance*|名词 *significance*
+      constant|road noise day and night;water that never changes;pain that never goes away|constant means happening all the time; temporary means lasting a short time|constant 是持续不断的；temporary 是暂时的|temporary=temporary means lasting a short time, not all the time=temporary 是暂时的，不是一直持续;rapid=rapid means very quick, not happening all the time=rapid 是迅速的，不是持续不断的|constant noise · a constant temperature|*constant* is not *consonant*|*constant* 不是 *consonant*
+      temporary|a summer job;a closed road;a home for a few weeks after a fire|temporary means for a short time; permanent means forever|temporary 是暂时的；permanent 是永久的|permanent=permanent means lasting forever, not only a short time=permanent 是永久的，不是短期的;constant=constant means happening all the time, not lasting only a short time=constant 是持续不断的，不是暂时的|a temporary job · only temporary|*tempor-* is about time|*tempor-* 和时间有关
+      permanent|lung damage that never heals;a job after summer jobs;an address that isn't temporary|permanent means lasting forever; temporary means for a short time|permanent 是永久的；temporary 是暂时的|temporary=temporary means lasting a short time, not forever=temporary 是暂时的，不是永久的;slight=slight means small, not lasting forever=slight 是轻微的，不是永久的|permanent damage · a permanent job|ends in *-ent*|以 *-ent* 结尾
+    `,
+  },
 });
 
 // The past perfect.

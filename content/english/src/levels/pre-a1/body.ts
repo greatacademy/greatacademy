@@ -9,69 +9,73 @@ const body = vocabularyTopic({
   id: "pre-a1-words-body",
   title: t("The Body", "身体"),
   summary: t("The parts of the body.", "身体的各个部位。"),
+  intro: t(
+    "Touch your **head**, then your **nose**, then your **feet**! These words help you name the parts of your body and say what each part does.",
+    "摸摸你的 **head**（头），再摸摸 **nose**（鼻子），然后是 **feet**（脚）！这些词帮你说出身体的各个部位，以及每个部位做什么。",
+  ),
   prerequisites: [],
   words: [
     word(
       "body bodies",
       "all of a person or an animal: the head, the arms, the legs and the rest",
       "身体",
-      "Running is good for your {body}.|hair nose | A snake has a long {body} and no legs.|hand arm | Our {bodies} need food, water and sleep.|noses ears",
-      "hair nose",
+      "Running is good for your {body}, from your head to your feet. | A snake has a long {body} and no legs. | Our {bodies} need food, water and sleep.|heads faces",
+      "head face",
     ),
     word(
       "head heads",
       "the top part of the body, with the eyes, the ears and the mouth",
       "头",
-      "I wear a hat on my {head}.|foot hand | Nod your {head} to say yes.|foot hand | A giraffe has a small {head} on a long neck.|foot hand",
+      "I wear a hat on my {head}. | Nod your {head} to say yes. | A giraffe has a small {head} on a long neck.",
       "foot hand",
     ),
     word(
       "face faces",
       "the front of the head",
       "脸",
-      "She has a happy {face}. She is smiling.|foot arm | Draw a {face} with two eyes, a nose and a mouth.|foot leg | He covers his {face} with his hands.|feet legs",
+      "She has a happy {face}. She is smiling. | Draw a {face} with two eyes, a nose and a mouth. | He covers his {face} with his hands, so we can't see his eyes.",
       "foot arm",
     ),
     word(
       "eye eyes",
       "the part of the face you see with",
       "眼睛",
-      "I see with my {eyes}.|ears hands | Close your {eyes} and go to sleep.|ears hands | She has big blue {eyes}.|ears noses",
+      "I see with my {eyes}.|ears hands | Close your {eyes} and go to sleep.|ears hands | She has big blue {eyes}.|ears hands",
       "ear hand",
     ),
     word(
       "ear ears",
       "the part of the head you hear with",
       "耳朵",
-      "I hear with my {ears}.|eyes hands | A rabbit has long {ears}.|eyes mouths | Put your hands over your {ears}. It's loud!|eyes feet",
+      "I hear with my {ears}.|eyes hands | A rabbit has long {ears}.|eyes hands | Put your hands over your {ears}. It's loud!|eyes hands",
       "eye hand",
     ),
     word(
       "nose noses",
       "the part of the face you smell with",
       "鼻子",
-      "I smell with my {nose}.|ear hand | An elephant has a very long {nose}.|ear foot | Blow your {nose}. Here is a tissue.|ear eye",
+      "I smell with my {nose}. | An elephant has a very long {nose}. | Blow your {nose}. Here is a tissue.",
       "ear hand",
     ),
     word(
       "mouth mouths",
       "the part of the face you eat and talk with",
       "嘴",
-      "I eat with my {mouth}.|nose ear | Open your {mouth} and say ah.|nose ear | Don't talk with food in your {mouth}.|nose hand",
+      "I eat with my {mouth}. | Open your {mouth} and say ah. | Don't talk with food in your {mouth}.",
       "nose ear",
     ),
     word(
       "hand hands",
       "the part at the end of your arm, with five fingers",
       "手",
-      "I write with my right {hand}.|foot leg | Wash your {hands} before you eat.|feet legs | Put up your {hand} to ask a question.|foot nose",
+      "I write with my right {hand}. | Wash your {hands} before you eat.|feet legs | Put up your {hand} to ask a question.",
       "foot leg",
     ),
     word(
       "arm arms",
       "the long part of the body between the shoulder and the hand",
       "手臂；胳膊",
-      "I hold the baby in my {arms}.|legs feet | A bird has wings, not {arms}.|ears eyes | My {arm} is broken, so I can't write.|leg foot",
+      "I hold the baby in my {arms}.|legs feet | A bird has wings, not {arms}.|legs feet | My {arm} is broken, so I can't write.",
       "leg foot",
     ),
     word(
@@ -85,17 +89,47 @@ const body = vocabularyTopic({
       "foot feet",
       "the part at the end of your leg that you stand on",
       "脚",
-      "I wear shoes on my {feet}.|hands arms | I kick the ball with my {foot}.|hand arm | Ouch! You are standing on my {foot}!|hand head",
+      "I wear shoes on my {feet}.|hands arms | I kick the ball with my {foot}. | Hop on one {foot}!",
       "hand arm",
     ),
     word(
       "hair",
       "what grows on your head",
       "头发",
-      "My sister has long black {hair}.|eyes arms | Brush your {hair} in the morning.|ears eyes | Grandpa has white {hair}.|eyes hands",
+      "My sister has long black {hair}.|eyes arms | Brush your {hair} in the morning.|eyes arms | Grandpa has white {hair}.|eyes arms",
       "eye arm",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Find the action in the sentence: you see with your *eyes*, hear with your *ears*, smell with your *nose* and eat with your *mouth*.",
+        "找出句子里的动作：用 *eyes* 看，用 *ears* 听，用 *nose* 闻，用 *mouth* 吃。",
+      ),
+      meaning: t(
+        "*Arm* and *leg* are both long parts; *hand* and *foot* are at their ends. Check whether the meaning talks about fingers and the shoulder or about standing and walking.",
+        "*arm* 和 *leg* 都是长长的部位；*hand* 和 *foot* 在它们的末端。看清释义说的是手指和肩膀，还是站立和走路。",
+      ),
+      spell: t(
+        "One *foot*, two *feet*, not *foots*; *body* becomes *bodies*; and *hair* for the hair on your head takes no -s.",
+        "one *foot*，two *feet*，不是 *foots*；*body* 的复数是 *bodies*；头上的头发 *hair* 不加 -s。",
+      ),
+    },
+    notes: `
+      body|running and everything from head to feet;a snake's long shape with no legs;what needs food, water and sleep|the body is all of you; the head is only the top part|body 是整个身体；head 只是顶部|head=head is only the top part of the body, not all of it=head 只是身体的顶部，不是整个身体;face=face is only the front of the head, not the whole person=face 只是头的前面，不是整个身体|bo · dy|y changing to -ies in *bodies*|复数 *bodies* 要把 y 变成 -ies
+      head|a hat;nodding to say yes;a giraffe's small top part on a long neck|the head is the top part of the body; the foot is at the bottom|head 在身体顶部；foot 在最下面|foot=foot is the part at the bottom of your leg, not the top of the body=foot 在腿的最下面，不在身体顶部;hand=hand is the part at the end of your arm, not the top of the body=hand 在手臂末端，不在身体顶部|head|ea said like the short e in *bed*|ea 读短 e，和 *bed* 一样
+      face|a happy smile;two eyes, a nose and a mouth;covering it with your hands to hide your eyes|the face is the front of the head; the foot is at the bottom of the leg|face 是头的前面；foot 在腿的下面|foot=foot is at the end of your leg and has no eyes, nose or mouth=foot 在腿的末端，没有眼睛、鼻子和嘴;arm=arm is the long part between the shoulder and the hand, with no eyes or mouth=arm 是肩膀到手之间的长长部分，没有眼睛和嘴|face|c said like s, and the silent e at the end|c 读作 s，词尾 e 不发音
+      eye|what you see with;closing them to sleep;big and blue|you see with your eyes; you hear with your ears|用 eyes 看；用 ears 听|ear=ear is the part you hear with, not the part you see with=ear 是用来听的，不是用来看的;hand=hand is the part with five fingers, not the part you see with=hand 是有五根手指的手，不是用来看的|eye|an e at both ends, though the word sounds like *I*|首尾都是 e，虽然读音像 *I*
+      ear|what you hear with;a rabbit's long ones;covering them when it is loud|you hear with your ears; you see with your eyes|用 ears 听；用 eyes 看|eye=eye is the part you see with, not the part you hear with=eye 是用来看的，不是用来听的;hand=hand is the part with five fingers, not the part you hear with=hand 是有五根手指的手，不是用来听的|ear|ea said like the *ear* sound in *hear*|ea 的读音和 *hear* 里一样
+      nose|what you smell with;an elephant's very long one;blowing it with a tissue|you smell with your nose; you hear with your ears|用 nose 闻；用 ears 听|ear=ear is the part you hear with, not the part you smell with=ear 是用来听的，不是用来闻的;hand=hand is the part with five fingers, not the part you smell with=hand 是有五根手指的手，不是用来闻的|nose|o and a silent e at the end, so o says its name|o 加词尾不发音的 e，o 读字母本音
+      mouth|what you eat with;opening it to say ah;food inside it while you talk|you eat and talk with your mouth; you smell with your nose|用 mouth 吃和说话；用 nose 闻|nose=nose is the part you smell with, not the part you eat or talk with=nose 是用来闻的，不是用来吃或说话的;ear=ear is the part you hear with, not the part you eat or talk with=ear 是用来听的，不是用来吃或说话的|mouth|ou in the middle and th at the end|中间是 ou，结尾是 th
+      hand|writing;washing before you eat;putting it up to ask a question|the hand is at the end of your arm; the foot is at the end of your leg|hand 在手臂末端；foot 在腿的末端|foot=foot is the part at the end of your leg that you stand on, not the one with fingers=foot 是腿末端用来站的脚，不是长手指的手;leg=leg is the long part you walk on, not the part with five fingers=leg 是用来走路的长长的腿，不是有五根手指的手|hand|nd at the end|结尾是 nd
+      arm|holding a baby;what a bird has wings in place of;a broken one that stops you writing|the arm goes from the shoulder to the hand; the leg goes down to the foot|arm 从肩膀到手；leg 往下连着脚|leg=leg is the long part you stand and walk on, not the part between the shoulder and the hand=leg 是用来站和走的腿，不是肩膀到手之间的部分;foot=foot is the part you stand on at the end of the leg, not the part between the shoulder and the hand=foot 是腿末端用来站的脚，不是肩膀到手之间的部分|arm|ar, said like the *ar* in *car*|ar 的读音和 *car* 里一样
+      leg|a dog's four;a spider's eight;tired after walking a long way|you stand and walk on your legs; your arms hold things|用 legs 站和走；用 arms 拿东西|arm=arm is the long part between the shoulder and the hand, not the part you stand and walk on=arm 是肩膀到手之间的部分，不是用来站和走的;hand=hand is the part with five fingers at the end of the arm, not the part you walk on=hand 是手臂末端有五根手指的手，不是用来走路的|leg|the short e, and just -s for more than one: legs|短元音 e，复数只加 -s：legs
+      foot|shoes;kicking a ball;hopping on one|you stand on your feet; you hold things in your hands|用 feet 站；用 hands 拿|hand=hand is the part at the end of your arm, with fingers, not the part you stand on=hand 是手臂末端长手指的手，不是用来站的;arm=arm is the long part between the shoulder and the hand, not the part you stand on=arm 是肩膀到手之间的部分，不是用来站的|foot|the double o, and *feet*, not *foots*, for more than one|两个 o；复数是 *feet*，不是 *foots*
+      hair|long and black on a sister;brushing it in the morning;white on Grandpa|hair grows on your head; eyes are in your face|hair 长在头上；eyes 在脸上|eye/eyes=eye is the part of the face you see with, not what grows on your head=eye 是脸上用来看的眼睛，不是头上长的东西;arm/arms=arm is the long part between the shoulder and the hand, not what grows on your head=arm 是肩膀到手之间的部分，不是头上长的东西|hair|air, said like the word *air*|拼作 air，读音和 *air* 一样
+    `,
+  },
 });
 
 // Describing words before nouns.

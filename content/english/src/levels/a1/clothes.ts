@@ -10,186 +10,254 @@ const clothes = vocabularyTopic({
   id: "a1-words-clothes",
   title: t("Clothes", "衣服"),
   summary: t("Shirts, dresses, pants, shoes, hats and coats, and the verb wear.", "衬衫、连衣裙、裤子、鞋、帽子和外套，以及动词 wear。"),
+  intro: t(
+    "Today Tom **wears** a blue **shirt**, black **pants** and his new **shoes**. These words help you talk about the clothes you put on.",
+    "今天 Tom **wears**（穿）蓝色 **shirt**（衬衫）、黑色 **pants**（裤子）和新 **shoes**（鞋）。这些词帮你说出自己穿的衣服。",
+  ),
   prerequisites: ["pre-a1-words-colors"],
   words: [
     word(
       "clothes",
       "the things you wear, like shirts and dresses",
       "衣服",
-      "Put your {clothes} in the cupboard.|hats shoes | I wear old {clothes} when I paint.|hats socks | We buy new {clothes} for the New Year.|hats socks",
-      "hats socks",
+      "Put your shirts and other {clothes} in the cupboard. | I wear old {clothes}, like an old shirt and old pants, when I paint. | We buy new {clothes} for the New Year: a dress, a shirt and pants.",
+      "shoes hats",
     ),
     word(
       "shirt shirts",
       "a piece of clothing for the top of your body, often with buttons",
       "衬衫",
-      "Dad wears a white {shirt} to work.|skirt sock | My {shirt} has six buttons.|sock shoe | Put on a clean {shirt}, please.|sock hat",
-      "skirt sock",
+      "Dad wears a white {shirt} and a tie to work. | My {shirt} has long arms and six buttons. | Do up the buttons of your {shirt}, right up to your neck.",
+      "skirt T-shirt",
     ),
     word(
       "T-shirt T-shirts",
       "a shirt with short arms and no buttons",
       "T恤",
-      "It's hot today, so I'm wearing a {T-shirt}.|coat jacket | My {T-shirt} has a cat on it.|coat sock | Our team has blue {T-shirts}.|coats socks",
+      "It's hot today, so I'm wearing a {T-shirt}. | In summer I wear a {T-shirt} with short arms. | On hot days, our team plays in blue {T-shirts}.|coats jackets",
       "coat jacket",
     ),
     word(
       "dress dresses",
       "a piece of clothing for a girl or a woman that covers the body and part of the legs",
       "连衣裙",
-      "Mia is wearing a pink {dress} to the party.|sock shoe | My sister has a long red {dress}.|sock hat | Grandma made two {dresses} for me.|socks hats",
-      "sock pants",
+      "Mia is wearing a pink {dress} that goes from her neck down to her knees. | My sister has a long red {dress}. She doesn't need a shirt or a skirt with it. | Grandma made two {dresses} for me. Each one is a top and a skirt in one piece.|skirts shirts",
+      "skirt shirt",
     ),
     word(
       "skirt skirts",
       "a piece of clothing that hangs from the middle of the body",
       "裙子；半身裙",
-      "She is wearing a blue {skirt} and a white shirt.|sock hat | My school {skirt} is gray.|sock hat | Girls in our school wear {skirts} or pants.|socks hats",
-      "sock shirt",
+      "She is wearing a blue {skirt} and a white shirt. | My school {skirt} is gray, and I wear it with a white shirt. | Girls in our school wear gray {skirts} or pants with their white shirts.|shirts dresses",
+      "shirt dress",
     ),
     word(
       "pants",
       "a piece of clothing that covers each leg",
       "裤子",
-      "I'm wearing black {pants} and a white shirt.|hats socks | These {pants} are too long for me.|hats shirts | Put on your {pants} and your shoes.|hats coats",
-      "hats socks",
+      "I'm wearing black {pants} on my legs and a white shirt. | These {pants} are too long for me. They touch the floor. | Put your legs into your {pants}, then put on your shoes.",
+      "shirts socks",
     ),
     word(
       "shoe shoes",
       "a thing you wear on your foot",
       "鞋",
-      "Take off your {shoes} at the door.|hats coats | I need new {shoes} for running.|hats shirts | One {shoe} is under the bed. Where is the other one?|hat coat",
+      "Take off your {shoes} at the door, and walk in your socks.|hats coats | I need new {shoes} for running. My old ones have holes under my feet.|hats coats | One {shoe} is under the bed. Where is the other one?",
       "hat coat",
     ),
     word(
       "sock socks",
       "a soft thing you wear on your foot, inside a shoe",
       "袜子",
-      "I wear {socks} in my shoes.|hats coats | One {sock} is red and one is blue!|hat coat | It's cold. Put on warm {socks}.|shirts hats",
+      "I wear {socks} in my shoes.|hats coats | One {sock} on my foot is red, and the other is blue! | Your feet are cold. Put on warm {socks}.|hats coats",
       "hat coat",
     ),
     word(
       "hat hats",
       "a thing you wear on your head",
       "帽子",
-      "It's sunny. Wear a {hat}.|sock skirt | The man has a black {hat} on his head.|sock shoe | We are wearing funny {hats} at the party.|socks shoes",
+      "It's sunny. Wear a {hat}. | The man has a black {hat} on his head. | We are wearing funny {hats} on our heads at the party.|socks shoes",
       "sock shoe",
     ),
     word(
       "coat coats",
       "a long warm piece of clothing you wear outside",
       "外套；大衣",
-      "It's cold outside. Put on your {coat}.|T-shirt sock | My winter {coat} is long and warm.|T-shirt sock | Hang your {coats} by the door.|T-shirts socks",
+      "It's cold outside. Put on your {coat}. | My winter {coat} is long and warm. | Hang your {coats} by the door.|T-shirts socks",
       "T-shirt sock",
     ),
     word(
       "jacket jackets",
       "a short coat",
       "夹克；短外套",
-      "Take a {jacket}. It may be cool tonight.|sock skirt | My {jacket} has two pockets.|sock dress | Leather {jackets} are expensive.|socks dresses",
-      "sock skirt",
+      "Take a {jacket}. It may be cool tonight. | My {jacket} keeps me warm, and it has two pockets. | Leather {jackets} are expensive.|T-shirts socks",
+      "T-shirt sock",
     ),
     word(
       "wear wears wore worn wearing",
       "to have clothes on your body",
       "穿；戴",
-      "I {wear} a uniform to school.|buy sell | She is {wearing} a red hat.|buying selling | What are you {wearing} to the party?|selling paying",
+      "I {wear} a uniform to school. | She is {wearing} a red hat on her head.|buying selling | What are you {wearing} to the party?|buying selling",
       "buy sell",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Look for the body part: *hat* for the head, *shoes* and *socks* for the feet, *pants* for the legs, *shirt* and *T-shirt* for the top. *Clothes* is the word for all of them together.",
+        "找句中的身体部位：头上是 *hat*，脚上是 *shoes* 和 *socks*，腿上是 *pants*，上身是 *shirt* 和 *T-shirt*。*clothes* 是所有这些的总称。",
+      ),
+      meaning: t(
+        "A *coat* is long and warm, a *jacket* is a short coat, and a *T-shirt* has short arms and no buttons. A *dress* is one piece; a *skirt* starts at the middle of the body.",
+        "*coat* 又长又暖，*jacket* 是短外套，*T-shirt* 短袖没扣子。*dress* 是连成一件的；*skirt* 从腰部往下。",
+      ),
+      spell: t(
+        "*Clothes* ends in -thes; *pants* always keeps its s, even for one; *T-shirt* has a capital T and a hyphen.",
+        "*clothes* 以 -thes 结尾；*pants* 即使指一条也要有 s；*T-shirt* 是大写 T 加连字符。",
+      ),
+    },
+    notes: `
+      clothes|shirts in the cupboard;an old shirt and old pants for painting;a dress, a shirt and pants for the New Year|clothes are all the things you wear; shoes are only for your feet|clothes 是所有穿的东西；shoes 只是脚上穿的|shoe/shoes=shoes are only for your feet, not shirts, pants and dresses=shoes 只穿在脚上，不包括衬衫、裤子和连衣裙;hat/hats=hats are only for your head, not shirts, pants and dresses=hats 只戴在头上，不包括衬衫、裤子和连衣裙|clothes|-thes at the end, said like *close*|结尾是 -thes，读音像 *close*
+      shirt|a white top with a tie for work;long arms and six buttons;buttons right up to the neck|a shirt is for the top of the body; a skirt hangs from the middle|shirt 穿在上身；skirt 从腰部垂下|skirt/skirts=skirt hangs from the middle of the body, with no arms, no tie and no buttons up to the neck=skirt 从腰部垂下，没有袖子，不配领带，也没有扣到脖子的扣子;t-shirt/t-shirts=T-shirt has short arms and no buttons, and nobody wears it with a tie=T-shirt 是短袖、没有扣子，也没人配领带穿|shirt|ir said like *er*, so not *shert*|ir 读作 *er*，不是 *shert*
+      T-shirt|a hot day;short arms in summer;a team on hot days|a T-shirt is thin with short arms; a coat is long and warm|T-shirt 薄而短袖；coat 又长又暖|coat/coats=coat is long and warm, for cold days, not for hot days or short arms=coat 又长又暖，是冷天穿的，不是热天穿的短袖;jacket/jackets=jacket is a short coat for cool weather, not for hot days or short arms=jacket 是凉天穿的短外套，不是热天穿的短袖|T · shirt|a capital T and a hyphen: *T-shirt*|大写 T 加连字符：*T-shirt*
+      dress|from the neck down to the knees;no shirt or skirt with it;a top and a skirt in one piece|a dress covers the top and part of the legs in one piece; a skirt starts at the middle|dress 是上身和腿的一部分连成一件；skirt 从腰部开始|skirt/skirts=skirt covers only the body from the middle down, not the top as well=skirt 只遮住腰部以下，不包括上身;shirt/shirts=shirt covers only the top of the body, not the legs as well=shirt 只遮住上身，不包括腿|dress|a double s at the end, and -es in *dresses*|结尾双写 s，复数是 *dresses*
+      skirt|blue with a white shirt;a gray school one worn with a white shirt;gray for girls with white shirts|a skirt hangs from the middle of the body; a shirt is for the top|skirt 从腰部垂下；shirt 穿在上身|shirt/shirts=shirt is for the top of the body, but the white shirt is already on top, so the gap is for the part below=shirt 穿在上身，可句中白衬衫已经穿在上身，空格说的是下身;dress/dresses=dress covers the top as well, so it is not worn with a shirt on top=dress 连上身也遮住，不会再在外面配衬衫|skirt|sk at the start and ir in the middle, so not *skert*|开头是 sk，中间是 ir，不是 *skert*
+      pants|black on my legs;too long and touching the floor;putting my legs in|pants cover each leg; a shirt is for the top|pants 套住两条腿；shirt 穿在上身|shirt/shirts=shirts are for the top of the body, not for the legs=shirts 穿在上身，不套在腿上;sock/socks=socks are for your feet, too short to cover the legs or touch the floor=socks 穿在脚上，太短，盖不住腿，也碰不到地|pants|always with s, even for one, as in *these pants*|即使一条也要有 s，比如 *these pants*
+      shoe|taking them off at the door;new ones for running;one under the bed|shoes go on your feet; a hat goes on your head|shoes 穿在脚上；hat 戴在头上|hat/hats=hats are worn on your head one at a time, not on your feet as a pair=hats 戴在头上，一次一顶，不是脚上成双穿的;coat/coats=coats are long and warm, for the body, not on your feet as a pair=coats 又长又暖，穿在身上，不是脚上成双穿的|shoe|oe said like *oo*: *shoe*, not *shoo*|oe 读作 *oo*：是 *shoe*，不是 *shoo*
+      sock|inside my shoes;one red and one blue on my feet;warm ones for cold feet|socks go inside your shoes; a hat goes on your head|socks 穿在鞋里；hat 戴在头上|hat/hats=hats go on your head, not on your feet or inside shoes=hats 戴在头上，不穿在脚上或鞋里;coat/coats=coats go on your body, not on your feet or inside shoes=coats 穿在身上，不穿在脚上或鞋里|sock|ck at the end, so not *sok*|结尾是 ck，不是 *sok*
+      hat|a sunny day;something black on his head;funny ones at a party|a hat goes on your head; socks go on your feet|hat 戴在头上；socks 穿在脚上|sock/socks=socks go on your feet, not on your head to keep the sun off=socks 穿在脚上，不戴在头上遮太阳;shoe/shoes=shoes go on your feet, not on your head=shoes 穿在脚上，不戴在头上|hat|a short a, as in *cat*, with no e at the end|短元音 a，和 *cat* 一样，词尾没有 e
+      coat|a cold day outside;long and warm for winter;hanging by the door|a coat is long and warm; a T-shirt is thin with short arms|coat 又长又暖；T-shirt 薄而短袖|t-shirt/t-shirts=T-shirt is thin with short arms, for hot days, not long and warm for going out in the cold=T-shirt 薄而短袖，是热天穿的，不是冷天出门穿的又长又暖的衣服;sock/socks=socks are for your feet, not a long warm thing you put on to go out=socks 穿在脚上，不是出门穿的又长又暖的衣服|coat|oa said like *go*|oa 读作 *go* 里的音
+      jacket|a cool night;something warm with two pockets;leather ones|a jacket is a short coat; a T-shirt is thin with short arms|jacket 是短外套；T-shirt 薄而短袖|t-shirt/t-shirts=T-shirt is thin with short arms, not a short coat to keep you warm=T-shirt 薄而短袖，不是保暖的短外套;sock/socks=socks go on your feet, not over your body like a short coat=socks 穿在脚上，不像短外套那样穿在身上|jack · et|ck in the middle, then -et|中间是 ck，后面是 -et
+      wear|a uniform for school;a red hat on her head;clothes for the party|you wear clothes on your body; you buy them with money|wear 是穿在身上；buy 是花钱买|buy/buying=buy means to get something with money, not to have it on your body=buy 是花钱买，不是穿在身上;sell/selling=sell means to give something for money, not to have it on your body=sell 是卖，不是穿在身上|wear|ear said like *air*, and the past *wore*|ear 读作 *air*，过去式是 *wore*
+    `,
+  },
 });
 
 const shopping = vocabularyTopic({
   id: "a1-words-shopping",
   title: t("Shopping", "购物"),
   summary: t("Buying, selling, paying, prices, sizes, cheap and expensive.", "买、卖、付钱、价格、尺码、便宜和贵。"),
+  intro: t(
+    "At the **store**, Mom looks at the **price** of a coat. It's too **expensive**, so she **buys** a **cheap** one. These words help you buy things and talk about money.",
+    "在 **store**（商店）里，妈妈看了看一件外套的 **price**（价格）。太 **expensive**（贵）了，所以她 **buys**（买）了一件 **cheap**（便宜）的。这些词帮你买东西、谈论钱。",
+  ),
   prerequisites: ["a1-words-clothes"],
   words: [
     word(
       "shop shops shopped shopping",
       "to go to stores to buy things; a store",
       "购物；商店",
-      "We {shop} for food on Saturday.|sell pay | Let's go {shopping} for new shoes.|selling paying | The {shop} on the corner sells bread.|price money",
-      "sell pay",
+      "We {shop} for food on Saturday. | Let's go {shopping} for new shoes.|buying selling | The {shop} on the corner sells bread.|price money",
+      "buy sell",
     ),
     word(
       "buy buys bought buying",
       "to get something by paying money",
       "买",
-      "I want to {buy} a new bike.|sell wear | Mom {bought} a cake for my birthday.|sold wore | Where can I {buy} a ticket?|sell wear",
-      "sell wear",
+      "I want to {buy} a new bike, so I'm saving my money. | Mom {bought} a cake for my birthday.|sold paid | Where can I {buy} a ticket?",
+      "sell pay",
     ),
     word(
       "sell sells sold selling",
       "to give something to someone for money",
       "卖",
-      "This shop {sells} shoes and bags.|buys pays | The farmer {sells} eggs at the market.|buys pays | Sorry, we don't {sell} newspapers.|buy pay",
+      "This shop {sells} shoes and bags.|buys pays | The farmer {sells} his eggs to people at the market.|buys pays | Sorry, we don't {sell} newspapers.",
       "buy pay",
     ),
     word(
       "money",
       "the coins and paper you use to buy things",
       "钱",
-      "I don't have any {money}. I can't buy it.|price size | How much {money} do you have?|price size | Keep your {money} in your bag.|price store",
+      "I don't have any {money}. I can't buy it. | How much {money} do you have? | Keep your {money} in your bag.",
       "price size",
     ),
     word(
       "dollar dollars",
       "money used in America, Canada, Australia and other countries",
       "美元；元",
-      "This hat is ten {dollars}.|sizes stores | Can I have a {dollar}, please?|size store | It costs five {dollars}.|sizes prices",
+      "This hat is ten {dollars}.|prices sizes | Can I have a {dollar}, please? I want to buy some candy. | It costs five {dollars}.|prices sizes",
       "price size",
     ),
     word(
       "cheap cheaper cheapest",
       "costing little money",
       "便宜的",
-      "This T-shirt is only two dollars. It's very {cheap}!|expensive different | The market is {cheaper} than the big store.|more expensive | Is there a {cheap} hotel near here?|expensive same",
-      "expensive different",
+      "This T-shirt is only two dollars. It's very {cheap}! | Apples are very {cheap} at the market: only a dollar a bag! | I don't have much money. Is there a {cheap} hotel near here?",
+      "expensive rich",
     ),
     word(
       "expensive",
       "costing a lot of money",
       "贵的",
-      "This coat is two hundred dollars. It's very {expensive}!|cheap same | I can't buy it. It's too {expensive}.|cheap new | Cars are {expensive}.|cheap same",
-      "cheap same",
+      "This coat is two hundred dollars. It's very {expensive}! | I can't buy it. It's too {expensive}. | Cars are {expensive}. You need a lot of money to buy one.",
+      "cheap rich",
     ),
     word(
       "price prices",
       "how much money you pay for something",
       "价格",
-      "What is the {price} of this bag? — It's twenty dollars.|size money | The {prices} at this shop are low.|sizes dollars | Look at the {price} on the label before you buy.|size store",
+      "What is the {price} of this bag? — It's twenty dollars. | The {prices} at this shop are low, so things are cheap.|sizes dollars | Look at the {price} on the label: is it ten dollars or twenty?",
       "size money",
     ),
     word(
       "store stores",
       "a place where you buy things",
       "商店",
-      "There's a big {store} next to the station.|price size | The {store} opens at nine.|price size | I bought my shoes at that {store}.|price size",
+      "There's a big {store} next to the station. | The {store} opens at nine. | I bought my shoes at that {store}.",
       "price size",
     ),
     word(
       "pay pays paid paying",
       "to give money for something",
       "付钱",
-      "Can I {pay} with a card?|sell wear | I {paid} ten dollars for this book.|sold wore | Please {pay} at the front desk.|sell wear",
-      "sell wear",
+      "Can I {pay} for the shoes with a card? | I {paid} ten dollars for this book.|bought sold | Please {pay} for your food at the front desk.",
+      "buy sell",
     ),
     word(
       "size sizes",
       "how big something is",
       "尺码；大小",
-      "These shoes are too small. Do you have a bigger {size}?|price money | What {size} are you? — Small.|price money | The two bags are the same {size}.|price money",
+      "These shoes are too small. Do you have a bigger {size}? | What {size} are you? — Small. | The two bags are the same {size}: both are small.",
       "price money",
     ),
     word(
       "try tries tried trying",
       "to do something to see if it is good; with *on*, to put on clothes in a shop to see if they fit",
       "尝试；（try on）试穿",
-      "Can I {try} on this dress?|buy pay | {Try} this soup. It's very good!|Pay Sell | She {tried} on three hats.|bought paid",
+      "Can I {try} on this dress? | {Try} this soup. It's very good!|Pay Sell | She {tried} on three hats.|bought paid",
       "buy pay",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Buy* is getting something, *sell* is giving it for money, and *pay* is giving the money, so we *pay for* things. Ask who gets the thing and who gets the money.",
+        "*buy* 是得到东西，*sell* 是把东西换成钱，*pay* 是付钱，所以说 *pay for* 某物。先想清楚谁拿到东西、谁拿到钱。",
+      ),
+      meaning: t(
+        "The *price* is how much it costs, the *size* is how big it is, and *money* is what you pay with. *Cheap* costs little; *expensive* costs a lot.",
+        "*price* 是多少钱，*size* 是多大，*money* 是用来付的钱。*cheap* 花钱少；*expensive* 花钱多。",
+      ),
+      spell: t(
+        "The past forms change: *buy* becomes *bought*, *sell* becomes *sold*, *pay* becomes *paid*, and *shop* doubles its p in *shopping*.",
+        "过去式会变：*buy* 变 *bought*，*sell* 变 *sold*，*pay* 变 *paid*；*shop* 在 *shopping* 里双写 p。",
+      ),
+    },
+    notes: `
+      shop|food on Saturday;new shoes;a place on the corner that sells bread|to shop is to go out and buy things; to buy is to get one thing with money|shop 是出去购物；buy 是花钱买某样东西|buy/buying=buy needs the thing right after it, as in *buy food*, and nobody says *buy for* or *go buying*=buy 后面直接跟东西，比如 *buy food*，没有 *buy for* 或 *go buying* 的说法;sell/selling=sell means to give things for money, but here people go out to get things=sell 是卖东西，可这里是人们出去买东西;price=price is how much something costs, and it cannot sell bread=price 是价格，不会卖面包;money=money is coins and paper, and it cannot sell bread=money 是硬币和纸币，不会卖面包|shop|a double p in *shopping*|*shopping* 里双写 p
+      buy|a new bike to save for;a birthday cake;a ticket|you buy to get something; you sell to give it for money|buy 是买进；sell 是卖出|sell/sold=sell means to give something away for money, the opposite of getting it=sell 是卖出，和买进相反;pay/paid=pay goes with *for* or with the money, as in *pay for a bike*, not straight before the thing you get=pay 要跟 *for* 或钱数，比如 *pay for a bike*，不直接跟买到的东西|buy|uy said like *eye*, and the past *bought*|uy 读作 *eye*，过去式是 *bought*
+      sell|shoes and bags in a shop;a farmer's eggs at the market;no newspapers here|you sell to give things for money; you buy to get them|sell 是卖出；buy 是买进|buy/buys=buy means to get something for money, but here the shop or the farmer gives things to people=buy 是买进，可这里是商店或农民把东西卖给别人;pay/pays=pay means to give money, not to give things for money=pay 是付钱，不是卖东西|sell|a double l, and the past *sold*|双写 l，过去式是 *sold*
+      money|nothing to buy with;how much someone has;something to keep in a bag|money is the coins and paper you pay with; a price is how much one thing costs|money 是付的钱；price 是某样东西的价格|price=price is how much one thing costs, not coins and paper you have or keep=price 是某样东西的价格，不是你有的、收着的钱;size=size is how big something is, not coins and paper=size 是大小，不是钱|mon · ey|o said like the u in *up*, and -ey at the end|o 读作 *up* 里的 u，结尾是 -ey
+      dollar|the cost of a hat;money for candy;the cost of something|a dollar is money; a price is how much something costs|dollar 是钱；price 是价格|price/prices=price is how much something costs, so you say *the price is ten dollars*, not *ten prices*, and you cannot have a price to spend=price 是价格，说 *the price is ten dollars*，不说 *ten prices*，也不能拿价格去花;size/sizes=size is how big something is, not money=size 是大小，不是钱|dol · lar|a double l, and -ar at the end|双写 l，结尾是 -ar
+      cheap|a two-dollar T-shirt;apples for a dollar a bag;a hotel for little money|cheap means costing little; expensive means costing a lot|cheap 是便宜；expensive 是贵|expensive=expensive means costing a lot, but here the price is small or the money is little=expensive 是贵，可这里价钱低或钱不多;rich=rich means having a lot of money, and it describes people, not things that cost little=rich 是有钱，形容人，不形容便宜的东西|cheap|ch at the start and ea in the middle|开头是 ch，中间是 ea
+      expensive|a two-hundred-dollar coat;something too costly to buy;cars|expensive means costing a lot; cheap means costing little|expensive 是贵；cheap 是便宜|cheap=cheap means costing little, but here the price is big=cheap 是便宜，可这里价钱很高;rich=rich describes a person with a lot of money, not a thing that costs a lot=rich 形容有钱的人，不形容很贵的东西|ex · pen · sive|-sive at the end, with s, not c|结尾是 -sive，用 s，不用 c
+      price|the cost of a bag;low costs at a shop;the number on a label|the price is how much it costs; the size is how big it is|price 是价格；size 是大小|size/sizes=size is how big something is, not how much money it costs=size 是大小，不是价钱;money=money is the coins and paper you pay with, not how much one thing costs=money 是用来付的钱，不是某样东西的价格;dollar/dollars=dollars are the money itself, not how much things cost=dollars 是钱本身，不是价格|price|c said like s|c 读作 s
+      store|a big one by the station;opening at nine;where I bought my shoes|a store is a place where you buy things; a price is how much they cost|store 是买东西的地方；price 是价格|price=price is how much something costs, not a place you go to=price 是价格，不是去的地方;size=size is how big something is, not a place=size 是大小，不是地方|store|ore at the end, as in *more*|结尾是 ore，和 *more* 一样
+      pay|shoes with a card;ten dollars for a book;food at the front desk|you pay money for something; you buy the thing itself|pay 是付钱；buy 是买东西|buy/bought=buy needs the thing right after it, as in *buy shoes*, not *buy for* or *buy ten dollars*=buy 后面直接跟东西，比如 *buy shoes*，不说 *buy for* 或 *buy ten dollars*;sell/sold=sell means to give things for money, but here the person is giving the money=sell 是卖东西，可这里是这个人在付钱|pay|ay at the end, and the past *paid*, not *payed*|结尾是 ay，过去式是 *paid*，不是 *payed*
+      size|a bigger one of the shoes;small;two small bags|the size is how big it is; the price is how much it costs|size 是大小；price 是价格|price=price is how much something costs, not how big or small it is=price 是价格，不是大小;money=money is coins and paper, not how big something is=money 是钱，不是大小|size|z in the middle and a silent e|中间是 z，词尾 e 不发音
+      try|a dress in a shop;tasting soup;three hats|you try clothes on to see if they fit; you buy them with money|try on 是试穿；buy 是花钱买|buy/bought=buy means to get something with money, and it does not go with *on*=buy 是花钱买，不和 *on* 连用;pay/paid=pay means to give money, not to put on clothes or taste soup=pay 是付钱，不是试穿衣服或尝汤;sell=sell means to give something for money, not to taste it=sell 是卖，不是尝|try|y changing to i in *tries* and *tried*|*tries*、*tried* 里 y 变成 i
+    `,
+  },
 });
 
 const atTheShop = vocabularyTopic({
@@ -199,87 +267,120 @@ const atTheShop = vocabularyTopic({
     "Want, would, new, another, the same, different, only, all, more and most.",
     "want、would、new、another、same、different、only、all、more 和 most。",
   ),
+  intro: t(
+    "I **want** a **new** bag. This is the **only** red one, so do you have **another** in a **different** color? These words help you choose between things in a shop.",
+    "我 **want**（想要）一个 **new**（新）包。这是 **only**（唯一）一个红色的，你们有 **another**（另一个）**different**（不同）颜色的吗？这些词帮你在商店里挑选东西。",
+  ),
   prerequisites: ["a1-words-shopping"],
   words: [
     word(
       "want wants wanted wanting",
       "to wish to have or do something",
       "想要",
-      "I {want} a new bike for my birthday.|would other | Do you {want} some juice?|would other | What do you {want} to eat?|other would",
-      "would other",
+      "I {want} a new bike for my birthday. | Do you {want} some juice? | What do you {want} to eat?",
+      "went would",
     ),
     word(
       "would I'd wouldn't",
       "with *like*, a kind way to say *want*",
       "（would like）想要（礼貌说法）",
-      "I {would} like a cup of tea, please.|want more | {Would} you like some cake?|Want More | What {would} you like to buy?|want more",
-      "want more",
+      "I {would} like a cup of tea, please. | {Would} you like some cake? | What {would} you like to buy?",
+      "want could",
     ),
     word(
       "new newer newest",
       "not used before; just bought or made",
       "新的",
-      "I have a {new} bike. I got it yesterday.|same other | These shoes are {new}. I bought them today.|same only | Happy {New} Year!|Same Only",
-      "same other",
+      "I have a {new} bike. I got it yesterday. | These shoes are {new}. I bought them today. | Happy {New} Year!|Old Same",
+      "old same",
     ),
     word(
       "another",
       "one more; a different one",
       "另一个；再一个",
-      "Can I have {another} cookie? I'm still hungry.|same all | This shirt is too small. Do you have {another} one?|all most | I'd like {another} glass of water, please.|all most",
-      "same all",
+      "Can I have {another} cookie? I'm still hungry. | This shirt is too small. Do you have {another} one? | I'd like {another} glass of water, please.",
+      "more all",
     ),
     word(
       "other others",
       "the second of two; not this one",
       "其他的；另一个",
-      "One sock is red. The {other} sock is blue.|another more | I like this hat, but not the {other} one.|another more | Where are the {other} children? — In the garden.|another most",
-      "another more",
+      "One sock is red. The {other} sock is blue. | I like this hat, but not the {other} one. | Where are the {other} children? — In the garden.",
+      "more all",
       "another",
     ),
     word(
       "same",
       "not different; exactly like another",
       "相同的",
-      "We are in the {same} class.|different other | My shoes and your shoes are the {same} color.|different another | Twins often wear the {same} clothes.|different another",
-      "different other",
+      "We are in the {same} class, so we sit together every day. | My shoes and your shoes are the {same} color: both are black. | Twins often look the {same}. I can't tell which is which.",
+      "different another",
     ),
     word(
       "different",
       "not the same",
       "不同的",
-      "A cat and a dog are very {different}.|same another | Do you have this coat in a {different} color?|same all | We speak {different} languages.|same all",
+      "A cat and a dog are very {different}. | Do you have this coat in a {different} color? | I speak Chinese and Tom speaks English. We speak {different} languages.",
       "same another",
     ),
     word(
       "only",
       "no more than; just one",
       "只有；仅仅",
-      "I have {only} one dollar. I can't buy it.|all more | It's {only} two dollars. It's cheap!|all more | She is the {only} girl in the team.|all most",
+      "I have {only} one dollar. I can't buy it. | It's {only} two dollars. It's cheap! | She is the {only} girl in the team.",
       "all more",
     ),
     word(
       "all",
       "every one; the whole",
       "全部；所有",
-      "{All} the children are in the classroom.|Only Another | I ate {all} the cake. There's none left!|another only | Thank you {all} for coming.|only another",
-      "only another",
+      "{All} the children are in the classroom. | I ate {all} the cake. There's none left! | Thank you {all} for coming.",
+      "each every",
     ),
     word(
       "more",
       "a bigger number or amount",
       "更多的",
-      "Can I have some {more} rice, please?|most only | This coat costs {more} than that one.|most only | We need {more} chairs for the party.|most only",
+      "Can I have some {more} rice, please? | This coat costs {more} than that one. | We have six chairs, but ten people are coming. We need {more} chairs.",
       "most only",
     ),
     word(
       "most",
       "the biggest number or amount",
       "最多的；大多数",
-      "Who has the {most} books? — Anna has ten!|more only | {Most} children like ice cream.|More Only | This is the {most} expensive shop in town.|more only",
-      "more only",
+      "Who has the {most} books? — Anna has ten! | {Most} children like ice cream, but a few don't. | This is the {most} expensive shop in town.",
+      "more much",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Another* goes with one thing, as in *another cookie*; *more* goes with many things or an amount, as in *more rice*. *The same* and *the other* need *the*, but *another* never takes it.",
+        "*another* 跟单个东西，比如 *another cookie*；*more* 跟复数或数量，比如 *more rice*。*the same*、*the other* 要有 *the*，*another* 前面从不加 *the*。",
+      ),
+      meaning: t(
+        "*Want* and *would like* both say what you wish for, but *would like* is kinder. *More* compares two, while *most* is the biggest of all.",
+        "*want* 和 *would like* 都表示想要，但 *would like* 更礼貌。*more* 是两者比较，*most* 是所有里最多的。",
+      ),
+      spell: t(
+        "*Would* has a silent l and sounds like *wood*. *Another* is one word, and *different* has a double f.",
+        "*would* 里的 l 不发音，读音像 *wood*。*another* 是一个词，*different* 双写 f。",
+      ),
+    },
+    notes: `
+      want|a new bike for my birthday;some juice;something to eat|want comes before the thing you wish for; went is the past of go|want 后面跟想要的东西；went 是 go 的过去式|went=went is the past of *go*, and it cannot have a thing right after it or follow *do*=went 是 *go* 的过去式，后面不能直接跟东西，也不能放在 *do* 后面;would=would goes with *like*, as in *would like*, and never comes after *do* or straight before a thing=would 要和 *like* 连用，比如 *would like*，不放在 *do* 后面，也不直接跟东西|want|a said like the o in *hot*|a 读作 *hot* 里的 o
+      would|a cup of tea;some cake;something to buy|would like is a kind way to say want; could is about being able to|would like 是礼貌地说想要；could 是能够|want=want comes before a thing or *to*, as in *want tea*, not before *like*=want 后面跟东西或 *to*，比如 *want tea*，不跟 *like*;could=could is about being able to, and nobody says *could like*=could 表示能够，没有 *could like* 的说法|would|a silent l: *would*, said like *wood*|l 不发音：*would* 读作 *wood*
+      new|a bike I got yesterday;shoes bought today;the start of a year|new means just bought or made; old means used for a long time|new 是新买或新做的；old 是用了很久的|old=old is the opposite of new, but the thing was just got or bought, and a new year is not old=old 和 new 相反，可东西是刚买的，新年也不旧;same=same needs *the*, as in *the same*, and it does not mean just bought=same 要和 *the* 连用，比如 *the same*，也不是刚买的意思|new|ew said like *oo*|ew 读作 *oo*
+      another|one more cookie;a shirt in a bigger size;one more glass of water|another means one more; more goes with many or an amount|another 是再一个；more 跟复数或数量|more=more goes with a plural or an amount, as in *more cookies*, not with one thing like *cookie*, *one* or *glass*=more 跟复数或数量，比如 *more cookies*，不跟单个的 *cookie*、*one* 或 *glass*;all=all means every one or the whole, not one more=all 是全部，不是再一个|an · oth · er|one word: *an* + *other*|是一个词：*an* 加 *other*
+      other|the second sock;the hat I don't like;the rest of the children|the other means the second one or the rest; more means a bigger number|the other 是另一个或其余的；more 是更多|more=more means a bigger number, not the second of two or the rest=more 是更多，不是两个中的另一个或其余的;all=all means every one, and it comes before *the*, as in *all the children*, not after it=all 是全部，放在 *the* 前面，比如 *all the children*，不放在 *the* 后面|oth · er|o said like the u in *up*, and th in the middle|o 读作 *up* 里的 u，中间是 th
+      same|one class to sit in together;black shoes for both;twins who look alike|the same means alike; different means not alike|same 是相同；different 是不同|different=different means not alike, but here both things match=different 是不同，可这里两样东西一样;another=another means one more, and it never comes after *the*=another 是再一个，前面从不加 *the*|same|a silent e that makes the a say its name|词尾 e 不发音，让 a 读字母本音
+      different|a cat and a dog;a coat in a new color;Chinese and English|different means not alike; the same means alike|different 是不同；same 是相同|same=same means alike, but a cat and a dog, a new color, or Chinese and English are not alike=same 是相同，可猫和狗、换个颜色、中文和英语都不一样;another=another goes with one thing, as in *another color*, and it does not come after *very* or *a*, or before a plural=another 跟单个东西，比如 *another color*，不放在 *very* 或 *a* 后面，也不跟复数|dif · fer · ent|a double f, and -ent at the end|双写 f，结尾是 -ent
+      only|one dollar;two dollars;one girl in the team|only means just one or no more; all means every one|only 是只有；all 是全部|all=all means every one or the whole, but here there is just one or a small amount=all 是全部，可这里只有一个或很少;more=more means a bigger amount, but here the amount is small=more 是更多，可这里数量很少|on · ly|o said like *go*, and -ly at the end|o 读作 *go* 里的音，结尾是 -ly
+      all|the children in the classroom;the whole cake;thanks to everyone|all means every one or the whole; each means one by one|all 是全部；each 是逐个|each=each goes with one thing, as in *each child*, not before *the* or straight after *thank you*=each 跟单个东西，比如 *each child*，不放在 *the* 前面，也不直接跟在 *thank you* 后面;every=every goes with one thing, as in *every child*, not before *the* or after *you*=every 跟单个东西，比如 *every child*，不放在 *the* 前面或 *you* 后面|all|a double l, and a said like *or*|双写 l，a 读作 *or*
+      more|extra rice;a coat that costs a lot;chairs for ten people|more means a bigger amount; most means the biggest of all|more 是更多；most 是最多|most=most means the biggest part of all, not extra, and it does not go with *some* or *than*=most 是最多的部分，不是额外的，也不和 *some* 或 *than* 连用;only=only means no more than, but here someone wants or needs extra=only 是只有，可这里是想要或需要更多|more|ore at the end, as in *store*|结尾是 ore，和 *store* 一样
+      most|ten books, more than anyone;children who like ice cream;the costliest shop in town|most is the biggest of all; more compares two|most 是最多；more 是两者比较|more=more compares two, as in *more than*, but here it is the biggest of all or the biggest part of a group=more 用于两者比较，比如 *more than*，可这里是所有里最多的或一群里的大部分;much=much goes with things you don't count, like rice, not with *books*, *children* or *expensive*=much 跟不可数的东西，比如 rice，不跟 *books*、*children* 或 *expensive*|most|o said like *go*, then st|o 读作 *go* 里的音，后面是 st
+    `,
+  },
 });
 
 // The present continuous.

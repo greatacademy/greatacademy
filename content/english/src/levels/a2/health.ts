@@ -13,93 +13,127 @@ const health = vocabularyTopic({
     "Health, being ill, pains and aches, coughs and fevers, medicine and the dentist.",
     "健康、生病、疼痛、咳嗽和发烧、药和牙医。",
   ),
+  intro: t(
+    "When Ana had a **fever** and a bad **cough**, the doctor gave her some **medicine** and told her to rest. These words help you say what is wrong with your body and how to stay **healthy**.",
+    "安娜 **fever**（发烧），还 **cough**（咳嗽）得厉害，医生给她开了些 **medicine**（药），让她好好休息。这些词帮你说出身体哪里不舒服，以及怎样保持 **healthy**（健康）。",
+  ),
   prerequisites: ["pre-a1-words-body"],
   words: [
     word(
       "health",
       "how well your body and mind are",
       "健康",
-      "Smoking is bad for your {health}.|pain fever | Fruit and vegetables are good for your {health}.|pain cough | My grandpa is in good {health} for his age.|pain medicine",
+      "Smoking is bad for your {health}. | Fruit and vegetables are good for your {health}. | My grandpa is in good {health} for his age.",
       "pain fever",
     ),
     word(
       "healthy healthier healthiest",
       "well and strong, not ill; good for your body",
       "健康的",
-      "Eat {healthy} food like fruit and vegetables.|ill hurt | My dog is old, but he is very {healthy}.|ill hurt | Swimming keeps you {healthy}.|ill hurt",
+      "Eat {healthy} food like fruit and vegetables. | My dog is old, but he is very {healthy} and still runs every day. | Swimming keeps you {healthy}.",
       "ill hurt",
     ),
     word(
       "ill",
       "not well; having something wrong with your body",
       "生病的",
-      "Tom isn't at school today. He's {ill}.|healthy pain | I felt {ill}, so I went to bed.|healthy pain | She was {ill} for a week with a bad cough.|healthy pain",
-      "healthy pain",
+      "Tom isn't at school today. He's {ill} with a cold. | I felt {ill} because I had a fever, so I went to bed. | She was {ill} for a week with a bad cough.",
+      "healthy hurt",
     ),
     word(
       "pain pains",
       "the feeling you have when part of your body hurts",
       "疼痛",
-      "I have a {pain} in my leg.|health medicine | The medicine stopped the {pain}.|health dentist | He cried out in {pain} when he fell.|health medicine",
+      "I have a {pain} in my leg. | The pills stopped the {pain} in my back. | He cried out in {pain} when he fell.",
       "health medicine",
     ),
     word(
       "headache headaches",
       "a pain in your head",
       "头痛",
-      "I have a {headache}. The music is too loud.|toothache stomach | Too much screen time gives me a {headache}.|toothache fever | My {headache} went away after I slept.|toothache dentist",
+      "I have a {headache} because the music is too loud. | Too much screen time gives me a {headache}. | My {headache} went away, and my head felt better after I slept.",
       "toothache stomach",
     ),
     word(
       "toothache toothaches",
       "a pain in a tooth",
       "牙痛",
-      "I have a {toothache}, so I'm going to the dentist.|headache fever | Too many sweets can give you a {toothache}.|fever cough | My {toothache} stopped after the dentist fixed my tooth.|headache cough",
+      "I have a {toothache}, so I'm going to the dentist. | Too many sweets can give you a {toothache} and holes in your teeth. | My {toothache} stopped after the dentist fixed my tooth.",
       "headache fever",
     ),
     word(
       "stomach stomachs",
       "the part inside your body where food goes after you eat it",
       "胃；肚子",
-      "I ate too much, and now my {stomach} hurts.|headache medicine | Don't swim on a full {stomach}.|headache fever | My {stomach} is making noises. I'm hungry!|headache fever",
+      "I ate too much, and now my {stomach} hurts. | Don't swim on a full {stomach}. | My {stomach} is making noises. I'm hungry!",
       "headache medicine",
     ),
     word(
       "cough coughs coughed coughing",
       "to push air out of your throat with a sudden noise; the noise or the illness",
       "咳嗽",
-      "Cover your mouth when you {cough}.|hurt ill | She {coughed} all night and couldn't sleep.|ill healthy | Smoke makes me {cough}.|pain healthy",
-      "hurt ill",
+      "Cover your mouth when you {cough}, so you don't give others your cold. | She {coughed} all night with a cold and couldn't sleep.|hurt shouted | Smoke gets into my throat and makes me {cough}.",
+      "hurt shout",
     ),
     word(
       "fever fevers",
       "a body temperature that is higher than normal",
       "发烧",
-      "Her head is very hot. She has a {fever}.|cough toothache | When I had a {fever}, I felt hot and then cold.|cough toothache | Take this medicine if you have a high {fever}.|cough toothache",
+      "Her head is very hot. She has a {fever}. | When I had a {fever}, I felt hot and then cold. | Take this medicine if you have a high {fever}.",
       "cough toothache",
     ),
     word(
       "medicine medicines",
       "something you take to get better when you are ill",
       "药",
-      "Take this {medicine} three times a day.|dentist pain | The {medicine} tastes bad, but it works.|dentist pain | Keep {medicine} away from small children.|dentist pain",
+      "Take this {medicine} three times a day. | The {medicine} tastes bad, but it works. | Keep {medicine} bottles away from small children.",
       "dentist pain",
     ),
     word(
       "dentist dentists",
       "a doctor for your teeth",
       "牙医",
-      "I go to the {dentist} twice a year.|medicine fever | The {dentist} looked at my teeth.|medicine fever | My uncle is a {dentist}, so he always tells me to brush my teeth.|medicine fever",
+      "I go to the {dentist} twice a year. | The {dentist} looked at my teeth. | My uncle is a {dentist}, so he always tells me to brush my teeth.",
       "medicine fever",
     ),
     word(
       "hurt hurts hurting",
       "to give pain; to feel pain",
       "疼；伤害",
-      "My leg {hurts}. I can't walk.|coughs ills | Ouch! That {hurt}!|cough ill | I fell off my bike and {hurt} my arm.|coughed ill",
-      "cough ill",
+      "My leg {hurts}. I can't walk.|coughs shouts | Ouch! That {hurt}!|coughed shouted | I fell off my bike and {hurt} my arm.|coughed shouted",
+      "cough shout",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Headache* and *toothache* are both pains: a *headache* is in your head, often from loud music or screens, and a *toothache* is in a tooth, the kind that sends you to the dentist. Look for the head or the teeth in the sentence.",
+        "*headache* 和 *toothache* 都是疼痛：*headache* 在头上，常因音乐太吵或看屏幕太久；*toothache* 在牙上，是要去看牙医的那种疼。在句子里找头或牙齿的线索。",
+      ),
+      meaning: t(
+        "*Health* is a noun and *healthy* is an adjective: *health* is how well your body is, as in *good for your health*, and *healthy* describes food, people or animals, as in *healthy food*.",
+        "*health* 是名词，*healthy* 是形容词：*health* 指身体好不好，如 *good for your health*；*healthy* 形容食物、人或动物，如 *healthy food*。",
+      ),
+      spell: t(
+        "*Headache*, *toothache* and *stomach* all have ch said like k: head · ache, tooth · ache, stom · ach.",
+        "*headache*、*toothache* 和 *stomach* 里的 ch 都读作 k：head · ache、tooth · ache、stom · ach。",
+      ),
+    },
+    notes: `
+      health|smoking;fruit and vegetables;a grandpa doing well for his age|health is how well your body is; pain is the feeling when it hurts|health 是身体好不好；pain 是身体疼的感觉|pain=pain is the feeling when part of your body hurts, not how well your body is=pain 是身体某处疼的感觉，不是身体好不好;fever=fever is a body temperature higher than normal, an illness, not how well your body is=fever 是体温高于正常，是一种病，不是身体好不好|good for your health · in good health|ea said like short e, and -th at the end|ea 读短元音 e，结尾是 -th
+      healthy|food like fruit and vegetables;an old dog that still runs every day;swimming|healthy means well and strong; ill means not well|healthy 是健康强壮；ill 是生病|ill=ill means not well, the opposite of well and strong=ill 是生病，和健康强壮正相反;hurt=hurt means having pain from a fall or a cut, not well and strong=hurt 是因摔倒或割伤而疼，不是健康强壮|healthy food · keep healthy|health + -y|health 加 -y
+      ill|Tom away from school with a cold;a fever and going to bed;a week with a bad cough|ill means sick with something like a cold; hurt means in pain from a fall or a cut|ill 是得了感冒之类的病；hurt 是因摔倒或割伤而疼|healthy=healthy means well and strong, the opposite of ill=healthy 是健康强壮，和 ill 意思相反;hurt=hurt means having pain from a fall or a cut, not being sick with a cold, a fever or a cough=hurt 是因摔倒或割伤而疼，不是得了感冒、发烧或咳嗽|feel ill · be ill with a cold|the double l|双写 l
+      pain|something in a leg;pills and a back;crying out after a fall|pain is the feeling when something hurts; medicine is what you take to stop it|pain 是疼痛的感觉；medicine 是用来止痛治病的药|health=health is how well your body is, not a feeling that something hurts=health 是身体好不好，不是疼的感觉;medicine=medicine is something you take to get better, not the feeling that something hurts=medicine 是治病的药，不是疼的感觉|a pain in my leg · in pain|ai for the long a sound|ai 发长 a 音
+      headache|loud music;too much screen time;a head feeling better after sleep|a headache is a pain in your head; a toothache is a pain in a tooth|headache 是头疼；toothache 是牙疼|toothache=toothache is a pain in a tooth, not in your head=toothache 是牙疼，不是头疼;stomach=stomach is the part of your body where food goes, not a pain in your head=stomach 是食物进入的胃，不是头疼|have a headache · give me a headache|head + ache, with ch said like k|head + ache，ch 读作 k
+      toothache|going to the dentist;too many sweets and holes in teeth;a tooth the dentist fixed|a toothache is a pain in a tooth; a fever is a hot body|toothache 是牙疼；fever 是身体发烫|headache=headache is a pain in your head, not in a tooth the dentist looks at=headache 是头疼，不是牙医看的牙疼;fever=fever is a body temperature higher than normal, not a pain in a tooth=fever 是体温高于正常，不是牙疼|have a toothache|tooth + ache, with ch said like k|tooth + ache，ch 读作 k
+      stomach|eating too much;swimming when full;noises from being hungry|your stomach is where food goes; a headache is a pain in your head|stomach 是胃；headache 是头疼|headache=headache is a pain in your head, not the place where food goes=headache 是头疼，不是食物进入的地方;medicine=medicine is something you take to get better, not a part of your body=medicine 是治病的药，不是身体的一部分|my stomach hurts · on a full stomach|ch said like k: stom · ach|ch 读作 k：stom · ach
+      cough|giving others your cold;a night with a cold and no sleep;smoke in a throat|you cough when air comes out of your throat with a noise; you shout when you say words loudly|cough 是咳嗽；shout 是大声喊|hurt=hurt means having or giving pain, not pushing air out of your throat with a noise=hurt 是疼或弄疼，不是咳出声来;shout/shouted=shout means saying words very loudly, not pushing air out of your throat because you are ill=shout 是大声说话，不是因病咳出声来|cover your mouth when you cough · a bad cough|ough said like *off*|ough 读作 *off*
+      fever|a very hot head;feeling hot and then cold;a high one that needs medicine|a fever is a hot body; a cough is a noise from your throat|fever 是发烧；cough 是咳嗽|cough=cough is a noise from your throat, not a hot head or a high temperature=cough 是喉咙发出的咳嗽声，不是头发烫或体温高;toothache=toothache is a pain in a tooth, not a hot body=toothache 是牙疼，不是身体发烫|have a fever · a high fever|-er at the end|结尾是 -er
+      medicine|three times a day;a bad taste that works;bottles kept from small children|medicine is what you take to get better; a dentist is a doctor for teeth|medicine 是药；dentist 是牙医|dentist=dentist is a doctor for teeth, a person you cannot take or keep in a bottle=dentist 是牙医，是人，不能服用，也不能装进瓶子;pain=pain is the feeling when something hurts, not something you take or keep in a bottle=pain 是疼的感觉，不能服用，也不能装进瓶子|take medicine · medicine bottles|med · i · cine, with c said like s|med · i · cine，c 读作 s
+      dentist|a visit twice a year;someone looking at teeth;an uncle who tells me to brush|a dentist is a doctor for your teeth; medicine is what you take|dentist 是牙医；medicine 是吃的药|medicine=medicine is something you take to get better, not a person who looks at teeth=medicine 是治病的药，不是看牙的人;fever=fever is a hot body, not a person=fever 是发烧，不是人|go to the dentist|dent + -ist|dent 加 -ist
+      hurt|a leg too painful to walk on;an ouch;a fall off a bike|hurt means to give or feel pain; cough means to push air out of your throat with a noise|hurt 是疼或弄疼；cough 是咳嗽|cough=cough means pushing air out of your throat with a noise, not giving or feeling pain=cough 是咳嗽，不是疼或弄疼;shout/shouts/shouted=shout means saying words very loudly, not giving or feeling pain=shout 是大声说话，不是疼或弄疼|my leg hurts · hurt my arm|the past is *hurt* too, never *hurted*|过去式也是 *hurt*，没有 *hurted*
+    `,
+  },
 });
 
 const body2 = vocabularyTopic({
@@ -109,86 +143,119 @@ const body2 = vocabularyTopic({
     "The neck, shoulders, knees, fingers, toes and teeth, and the heart, skin, blood, bones and throat.",
     "脖子、肩膀、膝盖、手指、脚趾和牙齿，以及心脏、皮肤、血液、骨头和喉咙。",
   ),
+  intro: t(
+    "At the pool, Leo fell and cut his **knee**: a little **blood** ran down his leg, but the nurse said no **bone** was broken and the **skin** would soon get better. These words help you name more parts of your body, inside and out.",
+    "在泳池边，利奥摔了一跤，划破了 **knee**（膝盖）：一点 **blood**（血）顺着腿流下来，但护士说没有 **bone**（骨头）断，**skin**（皮肤）很快就会长好。这些词帮你说出身体内外更多的部位。",
+  ),
   prerequisites: ["a2-words-health"],
   words: [
     word(
       "neck necks",
       "the part of the body between the head and the shoulders",
       "脖子",
-      "A giraffe has a long {neck}.|knee toe | She wore a scarf around her {neck}.|knee finger | I can't turn my head. My {neck} hurts.|knee toe",
+      "A giraffe has a long {neck}. | She wore a scarf around her {neck}. | I can't turn my head. My {neck} hurts.",
       "knee toe",
     ),
     word(
       "shoulder shoulders",
       "the part where your arm joins your body",
       "肩膀",
-      "She carried her bag on her {shoulder}.|toe knee | The baby is sleeping on Dad's {shoulder}.|knee toe | He put his hand on my {shoulder}.|toe tooth",
+      "She carried her bag on her {shoulder}. | The baby is sleeping on Dad's {shoulder}. | Sit on my {shoulders} so you can see over the people.|toes knees",
       "toe knee",
     ),
     word(
       "knee knees",
       "the middle part of your leg, where it bends",
       "膝盖",
-      "Sit down and bend your {knees}.|necks teeth | I fell off my bike and cut my {knee}.|tooth blood | The water came up to my {knees}.|teeth fingers",
+      "Sit down and bend your {knees}.|necks teeth | I fell off my bike and cut my {knee}, so it hurt to bend my leg. | The water was not deep: it only came up to my {knees}.|necks teeth",
       "neck tooth",
     ),
     word(
       "finger fingers",
       "one of the five long parts at the end of your hand",
       "手指",
-      "I have five {fingers} on each hand.|toes knees | She wears a ring on her {finger}.|knee shoulder | Don't point your {finger} at people.|toe knee",
+      "I have five {fingers} on each hand.|toes knees | She wears her wedding ring on her {finger}. | Don't point your {finger} at people.",
       "toe knee",
     ),
     word(
       "toe toes",
       "one of the five small parts at the end of your foot",
       "脚趾",
-      "I have ten {toes} on my feet.|fingers knees | Ouch! Someone stood on my {toe}!|neck shoulder | Stand on your {toes} to reach the top shelf.|fingers knees",
+      "I have ten {toes} on my feet.|fingers knees | Ouch! Someone stood on my {toe} with their big boots! | Stand on your {toes} to reach the top shelf.|fingers knees",
       "finger knee",
     ),
     word(
       "tooth teeth",
       "one of the hard white things in your mouth that you bite with",
       "牙齿",
-      "Brush your {teeth} twice a day.|bones skins | The baby has her first {tooth}.|bone finger | I broke a {tooth} on a hard sweet.|knee neck",
+      "Brush your {teeth} twice a day.|bones fingers | The baby has her first {tooth}. | I broke a {tooth} when I bit a hard sweet.",
       "bone finger",
     ),
     word(
       "heart hearts",
       "the part inside your chest that pushes blood around your body",
       "心脏",
-      "Your {heart} beats faster when you run.|bone skin | Running is good for your {heart}.|toe tooth | My {heart} was beating fast before the test.|blood bone",
+      "Your {heart} beats faster when you run. | Running is good for your {heart}, because it makes it beat strongly. | My {heart} was beating fast before the test.",
       "bone skin",
     ),
     word(
       "skin",
       "the outside cover of your body",
       "皮肤",
-      "Wear a hat to keep the sun off your {skin}.|blood bone | Babies have soft {skin}.|blood bone | Snakes change their {skin}.|blood bone",
+      "Wear a hat to keep the sun off your {skin}. | Babies have soft {skin}. | Snakes change their {skin}.",
       "blood bone",
     ),
     word(
       "blood",
       "the red liquid that moves around your body",
       "血",
-      "My knee is cut, and there is {blood} on my leg.|skin bone | The heart pushes {blood} around the body.|skin bone | The nurse took some {blood} from my arm.|skin bone",
+      "My knee is cut, and red {blood} is running down my leg. | The heart pushes {blood} around the body. | The nurse took some {blood} from my arm with a needle.",
       "skin bone",
     ),
     word(
       "bone bones",
       "one of the hard white parts inside your body",
       "骨头",
-      "The dog is eating a {bone}.|skin heart | Milk is good for your {bones}.|throats necks | He fell and broke a {bone} in his arm.|skin heart",
+      "The dog is chewing a hard {bone}. | Drinking milk helps your {bones} grow hard and strong.|skin hearts | He fell and broke a {bone} in his arm.",
       "skin heart",
     ),
     word(
       "throat throats",
       "the inside of your neck, where food and air go down",
       "喉咙",
-      "I have a sore {throat}, so I can't sing.|knee toe | Drink warm water for your {throat}.|knee toe | The cold drink hurt my {throat}.|knee toe",
-      "knee toe",
+      "I have a sore {throat}, so I can't sing. | Drink warm water when your {throat} is dry and sore. | The cold drink hurt my {throat}.",
+      "neck knee",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Neck* and *throat* are both between your head and your body: the *neck* is the outside, where a scarf goes, and the *throat* is the inside, where food, drink and your voice go. Ask whether the sentence is about the outside or the inside.",
+        "*neck* 和 *throat* 都在头和身体之间：*neck* 是外面，围巾围在那里；*throat* 是里面，食物、饮料和声音从那里经过。想想句子说的是外面还是里面。",
+      ),
+      meaning: t(
+        "*Finger* and *toe* are both small parts at the end of your body: you have five *fingers* on each hand and five *toes* on each foot.",
+        "*finger* 和 *toe* 都是身体末端的小部分：每只手上有五根 *fingers*，每只脚上有五个 *toes*。",
+      ),
+      spell: t(
+        "*Tooth* has an irregular plural, *teeth*, and *knee* has a silent k at the start: k-n-e-e.",
+        "*tooth* 的复数不规则，是 *teeth*；*knee* 开头的 k 不发音：k-n-e-e。",
+      ),
+    },
+    notes: `
+      neck|a giraffe;a scarf;a head that can't turn|the neck is the outside part between your head and shoulders; the knee is the middle of your leg|neck 是头和肩之间外面的部分；knee 是腿中间的膝盖|knee=knee is the middle part of your leg, far from your head and shoulders=knee 是腿中间的部分，离头和肩很远;toe=toe is one of the small parts at the end of your foot, far from your head=toe 是脚上的脚趾，离头很远|a long neck · around her neck|ck at the end|结尾是 ck
+      shoulder|a bag carried there;a baby sleeping on Dad;seeing over people|your shoulder is where your arm joins your body; your knee is in your leg|shoulder 是手臂和身体相连的地方；knee 在腿上|toe=toe is a small part at the end of your foot, too small to carry a bag or a baby=toe 是脚上的小脚趾，太小，扛不了包也抱不了孩子;knee=knee is the middle of your leg, not the top part where your arm joins your body=knee 是腿中间，不是手臂和身体相连的地方|on my shoulder · sit on my shoulders|ou said like long o, and -der at the end|ou 读长元音 o，结尾是 -der
+      knee|sitting down and bending;a cut that hurt to bend the leg;water that was not deep|the knee is where your leg bends; the neck is between your head and shoulders|knee 是腿弯曲的地方；neck 在头和肩之间|neck=neck is the part between your head and shoulders, not the middle of your leg where it bends=neck 是头和肩之间的部分，不是腿弯曲的地方;tooth=tooth is a hard white thing in your mouth that you bite with, not a part of your leg=tooth 是嘴里用来咬东西的牙齿，不是腿的一部分|bend your knees · cut my knee|a silent k: k-n-e-e|k 不发音：k-n-e-e
+      finger|five on each hand;a wedding ring;pointing at people|fingers are on your hands; toes are on your feet|finger 在手上；toe 在脚上|toe=toe is one of the small parts at the end of your foot, not your hand=toe 是脚上的脚趾，不在手上;knee=knee is the middle of your leg, not a long part at the end of your hand=knee 是腿中间的膝盖，不是手末端长长的部分|a ring on her finger · point your finger|-er at the end|结尾是 -er
+      toe|ten on two feet;big boots standing on it;reaching a top shelf|toes are on your feet; fingers are on your hands|toe 在脚上；finger 在手上|finger=finger is one of the long parts at the end of your hand, not your foot=finger 是手上的手指，不在脚上;knee=knee is the middle of your leg, not a small part at the end of your foot=knee 是腿中间的膝盖，不是脚末端的小部分|stand on your toes|oe said like long o, as in *go*|oe 读长元音 o，和 *go* 一样
+      tooth|brushing twice a day;a baby's first one;biting a hard sweet|a tooth is in your mouth; a bone is inside your body|tooth 在嘴里；bone 在身体里面|bone=bone is one of the hard parts inside your body, not in your mouth for biting=bone 是身体里面的骨头，不是嘴里用来咬东西的;finger=finger is a part of your hand, not a hard white thing in your mouth=finger 是手指，不是嘴里白色的硬东西|brush your teeth|one *tooth*, two *teeth*|一颗 *tooth*，两颗 *teeth*
+      heart|beating faster when running;strong beating from running;fast beating before a test|your heart beats and pushes blood; a bone is hard and does not move by itself|heart 跳动，推动血液；bone 是硬的，不会自己动|bone=bone is a hard part inside your body, and it never beats=bone 是身体里面的硬骨头，从不跳动;skin=skin is the outside cover of your body, and it never beats=skin 是身体外面的皮肤，从不跳动|my heart beats · good for your heart|ear said like *ar*: heart|ear 读作 *ar*：heart
+      skin|sun and a hat;babies being soft;snakes|skin is the outside cover of your body; blood is the red liquid inside|skin 是身体外面的皮肤；blood 是身体里面红色的液体|blood=blood is the red liquid inside your body, not the soft outside cover=blood 是身体里面红色的液体，不是外面柔软的皮肤;bone=bone is a hard part inside your body, not the soft outside cover=bone 是身体里面的硬骨头，不是外面柔软的皮肤|soft skin|sk at the start|开头是 sk
+      blood|a cut knee;what the heart pushes;a nurse's needle|blood is the red liquid in your body; skin is the outside cover|blood 是身体里红色的液体；skin 是外面的皮肤|skin=skin is the outside cover of your body, not a red liquid that runs or is pushed=skin 是身体外面的皮肤，不是会流动、被推动的红色液体;bone=bone is a hard part inside your body, not a red liquid=bone 是身体里面的硬骨头，不是红色的液体|blood on my leg · take some blood|oo said like short u, as in *flood*|oo 读短元音 u，和 *flood* 一样
+      bone|a dog chewing;milk helping them grow hard;a fall that broke something in an arm|a bone is hard and inside your body; skin is soft and outside|bone 是身体里面的硬骨头；skin 是外面柔软的皮肤|skin=skin is the soft outside cover of your body, not something hard that can break or be chewed=skin 是身体外面柔软的皮肤，不是能断、能啃的硬东西;heart=heart is the part that pushes blood, not something hard that can break or be chewed=heart 是推动血液的心脏，不是能断、能啃的硬东西|break a bone · strong bones|o that says its name before the silent e|不发音的 e 前面，o 读字母本音
+      throat|not being able to sing;warm water for dryness;a cold drink|the throat is inside your neck; the neck is the outside part|throat 在脖子里面；neck 是外面的部分|neck=neck is the outside part between your head and shoulders, not the inside where your voice, food and drink go=neck 是头和肩之间外面的部分，不是声音、食物和饮料经过的里面;knee=knee is the middle of your leg, nowhere near where you drink or sing=knee 是腿中间，和喝水、唱歌都不沾边|a sore throat|th at the start, and oa said like long o|开头是 th，oa 读长元音 o
+    `,
+  },
 });
 
 const stayingWell = vocabularyTopic({
@@ -198,27 +265,31 @@ const stayingWell = vocabularyTopic({
     "Exercise, diet, habits and advice, being fit, strong or weak, careful, and accidents.",
     "锻炼、饮食、习惯和建议，健壮、强壮或虚弱，小心和事故。",
   ),
+  intro: t(
+    "To stay **fit**, my aunt runs every morning, eats a good **diet** and follows her doctor's **advice**: brushing her teeth after every meal is her best **habit**. These words help you talk about keeping well and staying safe.",
+    "为了保持 **fit**（健康），我姑姑每天早上跑步，**diet**（饮食）很健康，还听医生的 **advice**（建议）：饭后刷牙是她最好的 **habit**（习惯）。这些词帮你谈论保持健康和注意安全。",
+  ),
   prerequisites: ["a2-words-body-2"],
   words: [
     word(
       "exercise exercises exercised exercising",
       "to move your body to stay healthy; movement like this",
       "锻炼",
-      "I {exercise} every morning before school.|diet habit | Swimming is good {exercise}.|advice accident | Dogs need {exercise} every day.|advice accident",
+      "I get some {exercise} every morning: I run around the park before school. | Swimming is good {exercise} because it moves your whole body. | Dogs need {exercise} every day, so we take ours for a long walk.",
       "diet habit",
     ),
     word(
       "diet diets",
       "the food you usually eat",
       "饮食",
-      "A healthy {diet} has lots of fruit and vegetables.|exercise habit | Grandpa is on a {diet}. He can't eat sweets.|habit accident | Rice is part of our {diet}.|exercise accident",
+      "A healthy {diet} has lots of fruit and vegetables. | Grandpa is on a special {diet}: he can't eat sweets. | Rice is part of our {diet}.",
       "exercise habit",
     ),
     word(
       "fit fitter fittest",
       "healthy and strong, because you exercise",
       "健康的；健壮的",
-      "My aunt runs every day, so she is very {fit}.|weak careful | I want to get {fit}, so I go swimming.|weak careful | Footballers have to be {fit}.|weak careful",
+      "My aunt runs every day, so she is very {fit}. | I want to get {fit}, so I go swimming. | Footballers have to be {fit} to run for ninety minutes.",
       "weak careful",
       "strong",
     ),
@@ -226,7 +297,7 @@ const stayingWell = vocabularyTopic({
       "strong stronger strongest",
       "having a lot of power in your body",
       "强壮的",
-      "He's {strong}. He can lift a big box.|weak careful | Milk makes your bones {strong}.|weak careful | Ants are small but very {strong}.|weak careful",
+      "He's {strong}. He can lift a big box. | Milk makes your bones {strong}. | Ants are small but very {strong}.",
       "weak careful",
       "fit",
     ),
@@ -234,52 +305,81 @@ const stayingWell = vocabularyTopic({
       "weak weaker weakest",
       "not strong",
       "虚弱的",
-      "After the fever, I felt {weak}.|strong fit | After a week in bed, his legs were {weak}.|strong fit | The baby bird is too {weak} to fly.|strong fit",
+      "After the fever, I felt {weak}. | After a week in bed, his legs were {weak}. | The baby bird is too {weak} to fly.",
       "strong fit",
     ),
     word(
       "habit habits",
       "something you do often, almost without thinking",
       "习惯",
-      "Brushing your teeth is a good {habit}.|accident matter | Eating late at night is a bad {habit}.|accident exercise | Biting your nails is a bad {habit}.|diet accident",
-      "accident advice",
+      "Brushing your teeth every night is a good {habit} that I never forget. | Eating late at night is a bad {habit}: I do it almost every day. | Biting your nails is a bad {habit} that is hard to stop.",
+      "accident diet",
     ),
     word(
       "should",
       "a word that gives advice: it is a good idea to",
       "应该",
-      "You look tired. You {should} go to bed.|careful matter | You {should} drink more water.|careful matter | {Should} I call a doctor?|Careful Matter",
-      "careful matter",
+      "You look tired. You {should} go to bed, but you don't have to. | It's only a good idea, not a rule: you {should} drink more water. | {Should} I call a doctor? What do you think is best?|Must Would",
+      "must would",
     ),
     word(
       "matter matters mattered mattering",
       "to be important; a problem",
       "要紧；问题",
-      "What's the {matter}? You look sad.|advice habit | It doesn't {matter}. We can try again.|advice habit | Does it {matter} if I'm late?|advice diet",
+      "What's the {matter}? You look sad. | It doesn't {matter} that we lost: it's only a game, and we can try again.|worry happen | Does it {matter} if I'm late? Is it important?|worry happen",
       "advice habit",
     ),
     word(
       "advice",
       "words that tell someone what you think they should do",
       "建议",
-      "Can you give me some {advice}?|matter accident | My doctor's {advice} was to rest.|accident matter | Thanks for your {advice}. I'll try it.|accident habit",
+      "Can you give me some {advice} about what to study? | My doctor's {advice} was that I should rest for a week. | Thanks for your {advice}. I'll try it.",
       "accident habit",
     ),
     word(
       "careful",
       "thinking about what you are doing so nothing bad happens",
       "小心的",
-      "Be {careful}! The road is busy.|weak fit | {Careful}! The floor is wet.|Weak Fit | Please be {careful} with that glass.|weak fit",
+      "Be {careful}! The road is busy. | {Careful}! The floor is wet. | Please be {careful} with that glass.",
       "weak fit",
     ),
     word(
       "accident accidents",
       "something bad that happens and hurts someone or breaks something",
       "事故；意外",
-      "He had a bike {accident} and broke his arm.|advice habit | Sorry, I broke your cup. It was an {accident}.|advice habit | There was a car {accident} on our street.|habit advice",
-      "advice habit",
+      "He had a bike {accident} and broke his arm. | Sorry, I didn't mean to break your cup. The {accident} happened so fast. | There was a car {accident} on our street, and two people were hurt.",
+      "habit diet",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Fit* and *strong* are close: *fit* means healthy because you exercise, as in *get fit*, and *strong* means having a lot of power, as in *lift a big box*. Ask whether the sentence is about exercise or about power.",
+        "*fit* 和 *strong* 意思接近：*fit* 是因为锻炼而健康，如 *get fit*；*strong* 是力气大，如 *lift a big box*。想想句子说的是锻炼还是力气。",
+      ),
+      meaning: t(
+        "A *habit* and an *accident* both happen to people, but a *habit* is something you do again and again, and an *accident* happens once, by chance, and hurts someone or breaks something.",
+        "*habit* 和 *accident* 都是发生在人身上的事，但 *habit* 是一次又一次地做的事，*accident* 是偶然发生一次、伤了人或弄坏东西的事。",
+      ),
+      spell: t(
+        "*Exercise* has x-e-r and ends in -cise: ex · er · cise. *Should* has a silent l: s-h-o-u-l-d.",
+        "*exercise* 里是 x-e-r，结尾是 -cise：ex · er · cise。*should* 里的 l 不发音：s-h-o-u-l-d。",
+      ),
+    },
+    notes: `
+      exercise|running around the park;swimming moving the whole body;a dog's long walk|exercise is moving your body to stay healthy; a diet is the food you eat|exercise 是活动身体以保持健康；diet 是吃的食物|diet=diet is the food you usually eat, not moving your body=diet 是平时吃的食物，不是活动身体;habit=habit is something you do often almost without thinking, good or bad, not moving your body to stay healthy=habit 是不假思索常做的事，有好有坏，不是为健康活动身体|get some exercise · good exercise|ex · er · cise, ending in -cise|ex · er · cise，结尾是 -cise
+      diet|fruit and vegetables;a grandpa who can't eat sweets;rice|your diet is the food you usually eat; exercise is moving your body|diet 是平时吃的食物；exercise 是锻炼|exercise=exercise is moving your body to stay healthy, not food you eat=exercise 是活动身体，不是吃的食物;habit=habit is something you do often, not the food you usually eat=habit 是常做的事，不是平时吃的食物|a healthy diet · on a diet|i and e said separately: di · et|i 和 e 分开读：di · et
+      fit|an aunt who runs every day;going swimming;running for ninety minutes|fit means healthy because you exercise; careful means thinking so nothing bad happens|fit 是因锻炼而健康；careful 是小心|weak=weak means not strong, the opposite of healthy from exercise=weak 是虚弱无力，和锻炼得健康强壮正相反;careful=careful means thinking about what you do so nothing bad happens, not healthy from exercise=careful 是小心谨慎，不是锻炼得健康|get fit · keep fit|the t doubles: fitter, fittest|t 要双写：fitter、fittest
+      strong|lifting a big box;milk and bones;small ants|strong means having a lot of power; weak means not strong|strong 是力气大；weak 是虚弱|weak=weak means without much power, the opposite of strong=weak 是没力气，和 strong 意思相反;careful=careful means thinking about what you do, not having a lot of power=careful 是小心，不是力气大|very strong · strong bones|str at the start, and -ong at the end|开头是 str，结尾是 -ong
+      weak|a fever;a week in bed;a baby bird that can't fly|weak means not strong; fit means healthy from exercise|weak 是虚弱；fit 是因锻炼而健康|strong=strong means having a lot of power, the opposite of weak=strong 是力气大，和 weak 意思相反;fit=fit means healthy and strong from exercise, the opposite of weak=fit 是锻炼得健康强壮，和 weak 意思相反|feel weak · too weak to fly|ea for the long e; *week* with ee is seven days|ea 发长 e 音；拼作 ee 的 *week* 是一周
+      habit|brushing teeth every night;eating late almost every day;biting nails|a habit is something you do again and again; an accident happens once by chance|habit 是一再做的事；accident 是偶然发生一次的事|accident=accident is something bad that happens once by chance, not something you do again and again=accident 是偶然发生一次的坏事，不是一再做的事;diet=diet is the food you usually eat, not something you do again and again like brushing or biting=diet 是平时吃的食物，不是刷牙、咬指甲这类一再做的事|a good habit · a bad habit|a short a and a short i: hab · it|短元音 a 和短元音 i：hab · it
+      should|being tired but not having to go to bed;a good idea, not a rule;asking what is best|should gives advice, a good idea; must says something has to be done|should 是给建议，是好主意；must 是必须做|must=must says something has to be done, like a rule, not just a good idea=must 表示必须做，像规定一样，不只是好主意;would=would talks about something imagined or asks politely, not what is a good idea to do=would 用于假想或客气地问，不表示做什么是好主意|you should · should I|a silent l: s-h-o-u-l-d|l 不发音：s-h-o-u-l-d
+      matter|looking sad;a game that was lost;whether being late is important|matter means to be important, or a problem as in *What's the matter?*; worry means to keep thinking about problems|matter 是要紧，或 *What's the matter?* 里的问题；worry 是担心|advice=advice is words telling someone what to do, not a problem or something being important=advice 是告诉别人怎么做的话，不是问题，也不是要紧;habit=habit is something you do often, not a problem or something being important=habit 是常做的事，不是问题，也不是要紧;worry=worry means a person keeps thinking about problems, and *it* cannot worry on its own=worry 是人在担心，*it* 不能单独 worry;happen=happen means to take place, not to be important=happen 是发生，不是要紧|What's the matter? · It doesn't matter.|the double t: mat · ter|双写 t：mat · ter
+      advice|what to study;a doctor saying I should rest;something to try|advice is words about what someone should do; a habit is something you do often|advice 是建议；habit 是习惯|accident=accident is something bad that happens by chance, not words about what someone should do=accident 是偶然发生的坏事，不是建议;habit=habit is something you do often, not words about what someone should do=habit 是常做的事，不是建议|some advice · give advice|no plural, and c said like s; the verb *advise* has an s|没有复数，c 读作 s；动词 *advise* 写作 s
+      careful|a busy road;a wet floor;a glass|careful means thinking so nothing bad happens; weak means not strong|careful 是小心；weak 是虚弱|weak=weak means not strong, not paying attention so nothing bad happens=weak 是虚弱，不是注意别出事;fit=fit means healthy from exercise, not paying attention so nothing bad happens=fit 是锻炼得健康，不是注意别出事|be careful · careful with that glass|care + -ful with one l|care 加 -ful，只有一个 l
+      accident|a bike crash and a broken arm;a broken cup that happened so fast;a car crash where two people were hurt|an accident happens once by chance; a habit is something you do again and again|accident 是偶然发生一次的事；habit 是一再做的事|habit=habit is something you do again and again, not something bad that happens once by chance=habit 是一再做的事，不是偶然发生一次的坏事;diet=diet is the food you usually eat, not something bad that happens=diet 是平时吃的食物，不是发生的坏事|have an accident · a car accident|the double c: ac · ci · dent, said *ks*|双写 c：ac · ci · dent，读作 *ks*
+    `,
+  },
 });
 
 const atTheDoctor = vocabularyTopic({
@@ -289,62 +389,66 @@ const atTheDoctor = vocabularyTopic({
     "Appointments, problems, temperatures, pills, pharmacies, ambulances, emergencies and patients; checking and worrying.",
     "预约、问题、体温、药片、药店、救护车、紧急情况和病人；检查和担心。",
   ),
+  intro: t(
+    "When I had a high **temperature**, Mom made an **appointment** with the doctor, who said it was nothing **serious** and sent us to the **pharmacy** for some **pills**. These words help you talk about visiting a doctor and getting help when you are ill.",
+    "我 **temperature**（体温）很高的时候，妈妈和医生约了 **appointment**（预约），医生说没什么 **serious**（严重的），让我们去 **pharmacy**（药店）买些 **pills**（药片）。这些词帮你谈论看医生，以及生病时怎样求助。",
+  ),
   prerequisites: ["a2-words-staying-well"],
   words: [
     word(
       "appointment appointments",
       "a time you agree to see someone, like a doctor",
       "预约",
-      "I have an {appointment} with the dentist at three.|emergency ambulance | Call the clinic to make an {appointment}.|emergency ambulance | I'm sorry I'm late for my {appointment}.|pharmacy patient",
+      "I have an {appointment} with the dentist at three. | Call the clinic to make an {appointment}. | I'm sorry I'm late for my {appointment}.",
       "emergency ambulance",
     ),
     word(
       "problem problems",
       "something that is wrong and needs to be fixed",
       "问题",
-      "What's the {problem}? — My ear hurts.|patient pill | There's a {problem} with my computer.|patient pill | No {problem}! I'm happy to help.|patient pill",
+      "What's the {problem}? — My ear hurts. | There's a {problem} with my computer. | No {problem}! I'm happy to help.",
       "patient pill",
     ),
     word(
       "temperature temperatures",
       "how hot or cold something is",
       "温度；体温",
-      "The nurse took my {temperature}. It was 38 degrees.|problem pill | The {temperature} today is 25 degrees.|problem patient | Your {temperature} is normal, so you don't have a fever.|patient pill",
+      "The nurse took my {temperature}. It was 38 degrees. | The {temperature} today is 25 degrees. | Your {temperature} is normal, so you don't have a fever.",
       "problem pill",
     ),
     word(
       "pill pills",
       "a small round piece of medicine that you take with water",
       "药片",
-      "Take two {pills} after each meal.|patients ambulances | This {pill} will help your headache.|patient ambulance | Take one {pill} with water before bed.|patient ambulance",
+      "Take two {pills} after each meal.|patients ambulances | This {pill} will help your headache. | Take one {pill} with water before bed.",
       "patient ambulance",
     ),
     word(
       "pharmacy pharmacies",
       "a shop where you can buy medicine",
       "药店",
-      "You can buy this medicine at the {pharmacy}.|ambulance appointment | The {pharmacy} is next to the bank.|ambulance appointment | Is there a {pharmacy} near here? I need some pills.|ambulance patient",
+      "You can buy this medicine at the {pharmacy}. | The {pharmacy} is the shop next to the bank. | I need some pills, so I'm going to the {pharmacy} on the corner.",
       "ambulance appointment",
     ),
     word(
       "ambulance ambulances",
       "a car that takes ill or hurt people to hospital fast",
       "救护车",
-      "Call an {ambulance}! He's hurt!|appointment pharmacy | The {ambulance} took her to the hospital.|pharmacy patient | We heard an {ambulance} on the street.|appointment patient",
+      "He's hurt! Phone 120 and ask for the {ambulance} to come quickly. | The {ambulance} took her to the hospital. | We heard the {ambulance} coming down the street, very loud and fast.",
       "appointment pharmacy",
     ),
     word(
       "emergency emergencies",
       "a dangerous time when you need help fast",
       "紧急情况",
-      "In an {emergency}, call 120.|appointment pharmacy | This is an {emergency}! Please help!|appointment pill | Only use this door in an {emergency}.|appointment problem",
-      "appointment pharmacy",
+      "In an {emergency}, when someone needs help fast, call 120. | This is an {emergency}! Please help! | Only use this door in an {emergency}, like a fire.",
+      "appointment ambulance",
     ),
     word(
       "patient patients",
       "a person who a doctor or nurse is looking after",
       "病人",
-      "The doctor sees thirty {patients} a day.|pills pharmacies | The nurse is talking to a {patient}.|pill pharmacy | Hospital {patients} must rest a lot.|pills pharmacies",
+      "The doctor sees thirty {patients} a day.|pills pharmacies | The nurse is talking to a {patient}. | Hospital {patients} must rest a lot.|pills pharmacies",
       "pill pharmacy",
     ),
     word(
@@ -358,24 +462,54 @@ const atTheDoctor = vocabularyTopic({
       "serious",
       "very bad, or very important; not joking",
       "严重的；严肃的",
-      "Are you {serious}? You want to run 50 km?|terrible patient | It's only a cold, nothing {serious}.|patient careful | Is the problem {serious}? — No, you'll be fine in two days.|patient emergency",
-      "patient careful",
+      "Are you {serious}? You want to run 50 km? | It's only a cold, nothing {serious}: you don't need to see a doctor. | Is the problem {serious}? — No, you'll be fine in two days.",
+      "careful cheerful",
     ),
     word(
       "terrible",
       "very bad",
       "糟糕的；可怕的",
-      "The food was {terrible}. I didn't eat it.|serious patient | I had a {terrible} night. I couldn't sleep.|serious patient | What {terrible} weather! It's raining again.|serious patient",
-      "serious patient",
+      "The food was {terrible}. I didn't eat it. | I had a {terrible} night. I couldn't sleep. | What {terrible} weather! It's raining again.",
+      "serious cheerful",
     ),
     word(
       "worry worries worried worrying",
       "to keep thinking about problems or bad things that may happen",
       "担心",
-      "Don't {worry}. Everything will be fine.|check matter | My mom {worries} when I come home late.|checks matters | I'm {worried} about my test.|checked serious",
-      "check matter",
+      "Don't {worry} about it. Everything will be fine. | My mom {worries} about me when I come home late.|checks hurts | I'm {worried} about my test.|checked hurt",
+      "check hurt",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Pharmacy*, *ambulance* and *appointment* all go with seeing a doctor: a *pharmacy* is a shop, an *ambulance* is a car that drives fast to hospital, and an *appointment* is a time. Look for a shop, a ride or a time in the sentence.",
+        "*pharmacy*、*ambulance* 和 *appointment* 都和看病有关：*pharmacy* 是商店，*ambulance* 是飞快开往医院的车，*appointment* 是约好的时间。在句子里找商店、乘车或时间的线索。",
+      ),
+      meaning: t(
+        "*Serious* and *terrible* both mean bad: *serious* says how big a problem is, as in *nothing serious*, and *terrible* says something was very unpleasant, like food or weather. *Serious* can also mean not joking.",
+        "*serious* 和 *terrible* 都表示不好：*serious* 说的是问题有多严重，如 *nothing serious*；*terrible* 说的是某样东西很糟糕，比如饭菜或天气。*serious* 还可以表示不是开玩笑。",
+      ),
+      spell: t(
+        "*Pharmacy* starts with ph said like f, and *appointment* has a double p: ap · point · ment.",
+        "*pharmacy* 开头的 ph 读作 f；*appointment* 要双写 p：ap · point · ment。",
+      ),
+    },
+    notes: `
+      appointment|the dentist at three;calling the clinic;being late|an appointment is a time you agree to see someone; an emergency is a dangerous time you did not plan|appointment 是约好的时间；emergency 是没预料到的紧急情况|emergency=emergency is a dangerous time that comes without a plan, not a time you agree on and can be late for=emergency 是突然发生的危险情况，不是约好的、会迟到的时间;ambulance=ambulance is a car that takes people to hospital, not a time you agree on=ambulance 是送人去医院的车，不是约好的时间|make an appointment · an appointment with the dentist|the double p: ap · point · ment|双写 p：ap · point · ment
+      problem|a hurting ear;a computer;being happy to help|a problem is something wrong; a patient is a person a doctor looks after|problem 是出了问题的事；patient 是医生照顾的病人|patient=patient is a person a doctor or nurse looks after, not something that is wrong=patient 是医生护士照顾的病人，不是出了问题的事;pill=pill is a small piece of medicine, not something that is wrong=pill 是一小片药，不是出了问题的事|What's the problem? · No problem!|prob · lem, with -lem at the end|prob · lem，结尾是 -lem
+      temperature|38 degrees;25 degrees today;no fever|temperature is how hot or cold something is; a problem is something wrong|temperature 是冷热的程度；problem 是出了问题的事|problem=problem is something that is wrong, not a number of degrees=problem 是出了问题的事，不是多少度;pill=pill is a small piece of medicine, not how hot or cold something is=pill 是一小片药，不是冷热的程度|take my temperature · the temperature today|tem · per · a · ture, with a quiet a|tem · per · a · ture，中间的 a 读得很轻
+      pill|after each meal;a headache;water before bed|a pill is a small piece of medicine; a patient is the person who takes it|pill 是一小片药；patient 是吃药的病人|patient=patient is a person a doctor looks after, not a small piece of medicine you take=patient 是医生照顾的病人，不是要吃的一小片药;ambulance=ambulance is a car that takes people to hospital, not a small piece of medicine=ambulance 是送人去医院的车，不是一小片药|take a pill · two pills|the double l|双写 l
+      pharmacy|buying medicine;a shop next to the bank;needing pills|a pharmacy is a shop for medicine; an ambulance is a car for ill people|pharmacy 是药店；ambulance 是救护车|ambulance=ambulance is a car that takes people to hospital, not a shop where you buy medicine=ambulance 是送人去医院的车，不是买药的商店;appointment=appointment is a time you agree to see someone, not a shop=appointment 是约好见面的时间，不是商店|at the pharmacy · go to the pharmacy|ph said like f, and -cy at the end|ph 读作 f，结尾是 -cy
+      ambulance|someone hurt and 120;a ride to the hospital;a loud fast sound in the street|an ambulance takes ill people to hospital; a pharmacy sells medicine|ambulance 送病人去医院；pharmacy 卖药|appointment=appointment is a time you agree on, and it cannot drive, come or take anyone anywhere=appointment 是约好的时间，不会开车，也不能把人送到哪里;pharmacy=pharmacy is a shop that stays in one place, and it cannot drive or take anyone anywhere=pharmacy 是待在原地的商店，不会开动，也不能把人送到哪里|call an ambulance · the ambulance took her|am · bu · lance, with -ance at the end|am · bu · lance，结尾是 -ance
+      emergency|someone needing help fast;a call for help;a fire|an emergency is a dangerous time when you need help fast; an appointment is a planned time|emergency 是需要紧急帮助的危险时刻；appointment 是约好的时间|appointment=appointment is a time you plan and agree on, not a dangerous time when you need help fast=appointment 是事先约好的时间，不是急需帮助的危险时刻;ambulance=ambulance is the car that comes when there is danger, not the dangerous time itself=ambulance 是出事时赶来的车，不是危险时刻本身|in an emergency|-ency at the end, with g said like j|结尾是 -ency，g 读作 j
+      patient|thirty a day for a doctor;a nurse talking;resting in hospital|a patient is a person a doctor looks after; a pill is medicine|patient 是病人；pill 是药片|pill=pill is a small piece of medicine, not a person who can see a doctor, talk or rest=pill 是一小片药，不是会看病、说话或休息的人;pharmacy=pharmacy is a shop, not a person a doctor or nurse looks after=pharmacy 是商店，不是医生护士照顾的人|a patient · hospital patients|ti said like *sh*: pa · tient|ti 读作 *sh*：pa · tient
+      check|a doctor looking at ears;answers before finishing;a temperature|you check something to see if it is right; you worry when you keep thinking about problems|check 是查看对不对；worry 是担心|worry=worry means to keep thinking about problems, not to look at something to see if it is right=worry 是担心，不是查看对不对;happen/happened=to happen is for an event to take place, not to look at something to see if it is right=happen 是发生，不是检查|check your answers · check my temperature|ch at the start, and ck at the end|开头是 ch，结尾是 ck
+      serious|running 50 km;only a cold;being fine in two days|serious means very bad, or not joking; careful means paying attention|serious 是严重的，或不是开玩笑；careful 是小心|careful=careful means paying attention so nothing bad happens, not how bad a problem is or not joking=careful 是小心，不是问题多严重，也不是不开玩笑;cheerful=cheerful means happy and smiling, not how bad a problem is or not joking=cheerful 是快乐开朗，不是问题多严重，也不是不开玩笑|nothing serious · Are you serious?|-ious at the end: se · ri · ous|结尾是 -ious：se · ri · ous
+      terrible|food that nobody ate;a night with no sleep;rain again|terrible means very bad; serious means a problem is big|terrible 是很糟糕；serious 是问题严重|serious=serious says how big a problem is, not that food, a night or weather was unpleasant=serious 说的是问题多严重，不是饭菜、夜晚或天气很糟;cheerful=cheerful means happy and bright, the opposite of very bad=cheerful 是快乐明亮，和很糟糕正相反|terrible weather · a terrible night|the double r, and -ible at the end|双写 r，结尾是 -ible
+      worry|everything being fine;a mom and coming home late;a test|you worry when you keep thinking about problems; you check when you look to see if something is right|worry 是担心；check 是查看对不对|check=check means looking at something to see if it is right, not thinking about problems=check 是查看对不对，不是担心问题;hurt=hurt means giving or feeling pain, not thinking about problems=hurt 是疼或弄疼，不是担心问题|don't worry · worried about my test|or said like *ur*, and y becomes ie: worries, worried|or 读作 *ur*，y 变 ie：worries、worried
+    `,
+  },
 });
 
 // Should and must.

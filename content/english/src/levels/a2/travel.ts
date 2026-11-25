@@ -14,94 +14,128 @@ const holidays = vocabularyTopic({
     "Vacations, tourists and guides; packing a suitcase; passports and going abroad; journeys, flights, luggage, souvenirs and postcards.",
     "假期、游客和导游；收拾行李箱；护照和出国；旅程、航班、行李、纪念品和明信片。",
   ),
+  intro: t(
+    "Before our **vacation** abroad, I **packed** my **suitcase**, found my **passport** and checked the time of our **flight**. These words help you plan a trip, travel and remember it.",
+    "出国 **vacation**（度假）前，我 **packed**（收拾）好 **suitcase**（行李箱），找到 **passport**（护照），又查了 **flight**（航班）的时间。这些词帮你计划旅行、出行，以及留下旅行的回忆。",
+  ),
   prerequisites: ["a1-words-trips"],
   words: [
     word(
       "vacation vacations",
       "time away from work or school, often spent traveling",
       "假期",
-      "We're going on {vacation} to the beach in July.|luggage passport | How was your {vacation}? — Great! We went to Thailand.|luggage passport | Dad has two weeks of {vacation} a year.|luggage souvenir",
+      "We're going on {vacation} to the beach in July. | How was your {vacation}? — Great! We had two weeks off school on a beach in Thailand. | Dad has two weeks of {vacation} a year.",
       "journey flight",
     ),
     word(
       "tourist tourists",
       "a person who visits a place on vacation",
       "游客",
-      "The city is full of {tourists} in summer.|suitcases passports | Many {tourists} take photos of the Great Wall.|suitcases luggages | Excuse me, I'm a {tourist}. Where is the museum?|suitcase passport",
+      "The city is full of {tourists} on vacation in summer.|guides passengers | Many {tourists} on vacation take photos of the Great Wall.|guides passengers | Excuse me, I'm a {tourist} here on vacation. Where is the museum?",
       "guide passenger",
     ),
     word(
       "guide guides",
       "a person who shows visitors around a place",
       "导游",
-      "Our {guide} told us the history of the palace.|suitcase luggage | Follow the {guide}. She has a red flag.|suitcase luggage | My aunt works as a tour {guide} in Xi'an.|suitcase postcard",
+      "Our {guide} told us the history of the palace. | Follow the {guide}. She has a red flag. | My aunt works as a tour {guide} in Xi'an.",
       "tourist passenger",
     ),
     word(
       "pack packs packed packing",
       "to put things in a bag or a suitcase for a trip",
       "收拾（行李）",
-      "Have you {packed} your suitcase yet?|flown traveled | Don't forget to {pack} your toothbrush!|fly guide | I'm {packing} for the trip. We leave at six.|flying guiding",
+      "Have you {packed} your suitcase yet?|flown traveled | Don't forget to {pack} your toothbrush! | I'm {packing} my bag for the trip. We leave at six.|flying traveling",
       "fly travel",
     ),
     word(
       "suitcase suitcases",
       "a large box-shaped bag with a handle for carrying clothes on a trip",
       "行李箱",
-      "My {suitcase} is too heavy to lift.|passport postcard | Put your clothes in the {suitcase}.|passport postcard | Our {suitcases} have wheels.|passports postcards",
+      "My {suitcase} is too heavy to lift. | Put your clothes in the {suitcase}. | Our {suitcases} have wheels.|passports souvenirs",
       "passport souvenir",
     ),
     word(
       "passport passports",
       "a small book that shows who you are when you travel to another country",
       "护照",
-      "You need a {passport} to travel abroad.|suitcase souvenir | Can I see your {passport}, please?|suitcase luggage | My {passport} photo looks terrible!|luggage souvenir",
-      "suitcase postcard",
+      "You need a {passport} to show who you are when you travel abroad. | Can I see your {passport}, please? I need to check who you are. | My {passport} photo looks terrible!",
+      "ticket suitcase",
     ),
     word(
       "abroad",
       "in or to another country",
       "在国外；到国外",
-      "Have you ever been {abroad}?|luggage souvenir | My brother is studying {abroad} in Canada.|luggage souvenir | We usually go {abroad} for our summer vacation.|luggage tourist",
-      "away luggage",
+      "Have you ever been {abroad}, to a country that is not your own? | My brother is studying {abroad} in Canada. | We usually go {abroad} to another country for our summer vacation.",
+      "home outside",
     ),
     word(
       "journey journeys",
       "a trip from one place to another, especially a long one",
       "旅程",
-      "The {journey} from Beijing to Shanghai takes about five hours by train.|souvenir luggage | Have a good {journey}!|souvenir luggage | It was a long {journey}, and we were very tired.|souvenir passport",
+      "The {journey} from Beijing to Shanghai takes about five hours by train. | Have a good {journey} on the bus to Grandma's town! | It was a long {journey} by car and train, and we were very tired.",
       "flight vacation",
     ),
     word(
       "flight flights",
       "a trip on a plane",
       "航班；飞行",
-      "Our {flight} leaves at 9 a.m.|luggage souvenir | The {flight} to London takes eleven hours.|luggage souvenir | There are no cheap {flights} in August.|luggages souvenirs",
-      "journey passport",
+      "Our {flight} to Beijing takes off from the airport at 9 a.m. | The {flight} to London takes eleven hours in the air. | In August, no airline has cheap {flights} to Paris.|journeys vacations",
+      "journey vacation",
     ),
     word(
       "luggage",
       "the bags and suitcases you take on a trip",
       "行李",
-      "How much {luggage} do you have? — Just one suitcase.|journey flight | Please don't leave your {luggage} on the seat.|journey flight | Our {luggage} got lost at the airport.|journey vacation",
-      "suitcase passport",
+      "How much {luggage} do you have? — Just one suitcase. | Please don't leave your {luggage}, your bags and suitcases, on the seat. | Our {luggage}, three big bags, got lost at the airport.",
+      "passport souvenir",
       "suitcase",
     ),
     word(
       "souvenir souvenirs",
       "something you buy to remember a place you visited",
       "纪念品",
-      "I bought a little panda as a {souvenir} of Chengdu.|journey flight | The shop near the temple sells {souvenirs}.|journeys flights | This key ring is a {souvenir} from Paris.|journey flight",
+      "I bought a little panda as a {souvenir} of Chengdu. | The shop near the temple sells {souvenirs}, like little statues and key rings, to remember it by.|postcards passports | This key ring is a {souvenir} from Paris.",
       "postcard passport",
     ),
     word(
       "postcard postcards",
       "a card with a picture on one side that you send without an envelope",
       "明信片",
-      "Send me a {postcard} from Italy!|luggage journey | The {postcard} has a picture of the Eiffel Tower.|luggage journey | I wrote three {postcards} to my friends.|journeys flights",
-      "souvenir passport",
+      "Send me a {postcard} with a picture of Rome on it! | The {postcard} I sent has a picture of the Eiffel Tower on one side. | I wrote three {postcards} with pictures on the front and sent them with no envelope.|letters souvenirs",
+      "letter souvenir",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Luggage* has no plural: say *a lot of luggage* or *one piece of luggage*, never *luggages*. A *suitcase* is one of the bags, so you can count *two suitcases*.",
+        "*luggage* 没有复数：说 *a lot of luggage* 或 *one piece of luggage*，不能说 *luggages*。*suitcase* 是其中一个箱子，所以可以数：*two suitcases*。",
+      ),
+      meaning: t(
+        "A *journey* is the trip from one place to another, a *flight* is that trip on a plane, and a *vacation* is the time away from work or school, wherever you go.",
+        "*journey* 是从一个地方到另一个地方的旅程，*flight* 是坐飞机的那段行程，*vacation* 是不上班不上学的假期，不管去哪儿。",
+      ),
+      spell: t(
+        "*Souvenir* comes from French: sou · ve · nir, with ou said like *oo*. *Passport* is pass + port, with a double s.",
+        "*souvenir* 来自法语：sou · ve · nir，ou 读作 *oo*。*passport* 是 pass + port，双写 s。",
+      ),
+    },
+    notes: `
+      vacation|going to the beach in July;two weeks off school in Thailand;Dad's two weeks a year|a vacation is time away from work or school; a journey is the trip itself|vacation 是不上班不上学的假期；journey 是路上的旅程|journey=journey is the trip from one place to another, not time off work or school, and it needs *a* or *the*=journey 是从一地到另一地的旅程，不是假期，而且前面要加 *a* 或 *the*;flight=flight is a trip on a plane, not time off work or school=flight 是坐飞机的行程，不是假期|va · ca · tion|-tion at the end; British English says *holiday*|结尾是 -tion；英式英语说 *holiday*
+      tourist|a city full of visitors in summer;photos of the Great Wall;someone asking the way to a museum|a tourist visits a place on vacation; a guide shows visitors around|tourist 是来度假游览的人；guide 是带游客参观的人|guide/guides=guide shows visitors around and knows the place, not a visitor on vacation=guide 带游客参观、熟悉当地，不是来度假的游客;passenger/passengers=passenger travels in a car, a bus, a train or a plane, not a visitor seeing a city=passenger 是乘车或乘飞机的人，不是游览城市的游客|tour · ist|tour + -ist|tour 加 -ist
+      guide|the history of a palace;someone with a red flag to follow;a tour job in Xi'an|a guide shows visitors around; a tourist is a visitor|guide 带游客参观；tourist 是游客|tourist=tourist is a visitor who does not know the place, not the person who shows people around=tourist 是不熟悉当地的游客，不是带人参观的人;passenger=passenger travels in a car, a bus, a train or a plane, not someone who shows visitors around=passenger 是乘客，不是带游客参观的人|guide|u after g, and i that says its name|g 后面有 u，i 读字母本音
+      pack|a suitcase;a toothbrush not to forget;a bag for a trip at six|pack means putting things in a bag for a trip; travel means going from place to place|pack 是收拾行李；travel 是出行|fly/flown/flying=fly means going by plane, not putting things in a bag=fly 是坐飞机，不是把东西装进包里;travel/traveled/traveling=travel means going from place to place, not putting things in a bag=travel 是出行，不是把东西装进包里|pack|ck at the end|结尾是 ck
+      suitcase|something too heavy to lift;a place to put clothes;things with wheels|a suitcase is a big bag for clothes; a passport is a small book|suitcase 是装衣服的大箱子；passport 是小本子|passport/passports=passport is a small book that shows who you are, too small for clothes and with no wheels=passport 是证明身份的小本子，装不下衣服，也没有轮子;souvenir/souvenirs=souvenir is something small to remember a place, not a big bag for clothes=souvenir 是用来纪念某地的小东西，不是装衣服的大箱子|suit · case|suit + case, one word, with ui said like *oo*|suit + case 合成一个词，ui 读作 *oo*
+      passport|showing who you are abroad;someone checking who you are;a terrible photo|a passport shows who you are when you travel; a ticket lets you get on a plane or a train|passport 证明你的身份；ticket 让你上飞机或火车|ticket=ticket lets you get on a plane, a train or into a show, not a small book that shows who you are=ticket 是乘车、乘飞机或入场的票，不是证明身份的小本子;suitcase=suitcase is a big bag for clothes, not something that shows who you are=suitcase 是装衣服的大箱子，不能证明你是谁|pass · port|pass + port, with a double s|pass + port，双写 s
+      abroad|a country that is not your own;studying in Canada;a summer vacation in another country|abroad means in or to another country; home is where you live|abroad 是在国外或到国外；home 是你住的地方|home=home is where you live, the opposite of another country=home 是你住的地方，和国外正相反;outside=outside means out of a building, not in another country=outside 是在户外，不是在国外|a · broad|oa said like *or*|oa 读作 *or*
+      journey|five hours by train from Beijing to Shanghai;a bus to Grandma's town;a long trip by car and train|a journey is a trip from one place to another; a flight is a trip on a plane|journey 是从一地到另一地的旅程；flight 是坐飞机的行程|flight=flight is a trip on a plane, not a trip by train, bus or car=flight 是坐飞机的行程，不是坐火车、汽车或开车;vacation=vacation is time away from work or school, not the trip from one place to another=vacation 是假期，不是从一地到另一地的旅程|jour · ney|our said like *er*, and -ey at the end|our 读作 *er*，结尾是 -ey
+      flight|a plane taking off at 9 a.m.;eleven hours in the air to London;airlines with no cheap ones in August|a flight is a trip on a plane; a journey can be by any way|flight 是坐飞机的行程；journey 可以是任何方式的旅程|journey/journeys=journey is any trip from place to place, not one that takes off from an airport or that airlines sell=journey 是任何方式的旅程，不是从机场起飞、由航空公司出售的航班;vacation/vacations=vacation is time away from work or school, not a trip on a plane=vacation 是假期，不是坐飞机的行程|flight|igh said like *eye*, with a silent gh|igh 读作 *eye*，gh 不发音
+      luggage|how much someone has, just one suitcase;bags and suitcases on a seat;three big bags lost at an airport|luggage is all the bags you take; a passport is a small book|luggage 是你带的所有行李；passport 是小本子|passport=passport is a small book that shows who you are, not bags and suitcases=passport 是证明身份的小本子，不是包和箱子;souvenir=souvenir is a small thing to remember a place, not the bags and suitcases you travel with=souvenir 是纪念某地的小东西，不是旅行带的包和箱子|lug · gage|the double g, and no plural|双写 g，没有复数
+      souvenir|a little panda from Chengdu;little statues and key rings near a temple;a key ring from Paris|a souvenir is something to remember a place; a postcard is a card you send|souvenir 是纪念某地的东西；postcard 是寄出的卡片|postcard/postcards=postcard is a card with a picture that you send, not a panda, a statue or a key ring=postcard 是寄出的图片卡，不是熊猫、雕像或钥匙扣;passport/passports=passport is a small book that shows who you are, not something you buy to remember a place=passport 是证明身份的小本子，不是买来纪念某地的东西|sou · ve · nir|ou said like *oo*, and -nir at the end|ou 读作 *oo*，结尾是 -nir
+      postcard|a picture of Rome to send;a picture of the Eiffel Tower on one side;pictures on the front and no envelope|a postcard has a picture and needs no envelope; a letter goes in an envelope|postcard 一面有图，不用信封；letter 装在信封里|letter/letters=letter is a written message you put in an envelope, with no picture on one side=letter 是装在信封里的信，一面没有图片;souvenir/souvenirs=souvenir is something you buy to keep, not a card you write and send=souvenir 是买来留作纪念的，不是写好寄出的卡片|post · card|post + card, one word|post + card，合成一个词
+    `,
+  },
 });
 
 const placesToVisit = vocabularyTopic({
@@ -111,86 +145,119 @@ const placesToVisit = vocabularyTopic({
     "Castles, palaces, towers, temples and statues; views; coasts, deserts, valleys, caves and oceans.",
     "城堡、宫殿、塔、寺庙和雕像；风景；海岸、沙漠、山谷、山洞和海洋。",
   ),
+  intro: t(
+    "On our trip, we visited an old **castle** on the **coast**, climbed a **tower** for the **view** of the **ocean**, and walked through a dark **cave**. These words help you talk about famous places and beautiful nature you can visit.",
+    "旅行时，我们参观了 **coast**（海边）的一座古老 **castle**（城堡），爬上 **tower**（塔）看 **ocean**（大海）的 **view**（景色），还穿过了一个黑黑的 **cave**（山洞）。这些词帮你谈论可以去参观的名胜和美丽的自然风光。",
+  ),
   prerequisites: ["a2-words-holidays"],
   words: [
     word(
       "castle castles",
       "a big old building with thick walls and towers, built to keep people safe",
       "城堡",
-      "The king and queen lived in a {castle}.|desert ocean | There are many old {castles} in Scotland.|deserts oceans | We walked around the walls of the {castle}.|ocean view",
+      "The king and queen lived in a {castle} with thick walls and towers to keep them safe. | There are many old {castles} with thick walls in Scotland. | We walked around the thick stone walls of the {castle}.",
       "palace tower",
     ),
     word(
       "palace palaces",
       "a very big, beautiful house where a king or queen lives",
       "宫殿",
-      "The Forbidden City was the {palace} of the emperors.|cave valley | The queen lives in Buckingham {Palace}.|Cave Valley | The {palace} has more than nine hundred rooms.|cave coast",
+      "The Forbidden City was the {palace} of the emperors. | The queen lives in Buckingham {Palace}.|Castle Temple | The {palace}, where the king lives, has more than nine hundred beautiful rooms.",
       "castle temple",
     ),
     word(
       "tower towers",
       "a tall narrow building or part of a building",
       "塔",
-      "We climbed to the top of the {tower} and looked down at the city.|valley cave | The Eiffel {Tower} is in Paris.|Valley Coast | The clock {tower} is the tallest building in our town.|valley cave",
+      "We climbed to the top of the {tower} and looked down at the city. | The Eiffel {Tower} is in Paris.|Statue Palace | The clock {tower} is the tallest building in our town.",
       "statue palace",
     ),
     word(
       "temple temples",
       "a building where people pray to a god",
       "寺庙",
-      "We visited an old Buddhist {temple} in the mountains.|ocean desert | Take off your shoes before you go into the {temple}.|ocean coast | There are many beautiful {temples} in Kyoto.|oceans deserts",
-      "palace castle",
+      "We visited an old Buddhist {temple} in the mountains. | Take off your shoes before you go into the Buddhist {temple} to pray. | There are many beautiful Buddhist {temples} in Kyoto.|churches palaces",
+      "church palace",
     ),
     word(
       "statue statues",
       "a figure of a person or an animal made of stone or metal",
       "雕像",
-      "There is a {statue} of a famous poet in the square.|view valley | The {Statue} of Liberty is in New York.|View Valley | The {statues} in the museum are two thousand years old.|views valleys",
-      "tower temple",
+      "There is a stone {statue} of a famous poet in the square. | The {Statue} of Liberty is in New York.|Tower Photo | The stone {statues} in the museum are two thousand years old.|towers photos",
+      "tower photo",
     ),
     word(
       "view views",
       "what you can see from a place",
       "风景；景色",
-      "The {view} from the top of the mountain is amazing.|statue temple | Our hotel room has a {view} of the sea.|statue temple | Let's stop here and enjoy the {view}.|statue cave",
-      "statue coast",
+      "The {view} from the top of the mountain is amazing. | Our hotel room has a {view} of the sea. | Let's stop here and enjoy the {view} of the hills below.",
+      "statue temple",
     ),
     word(
       "coast coasts",
       "the land next to the sea",
       "海岸",
-      "We drove along the {coast} and stopped at every beach.|desert cave | Many big cities are on the {coast}.|desert cave | There's a lighthouse on the west {coast} of the island.|desert valley",
-      "ocean valley",
+      "We drove along the {coast} and stopped at every beach. | Many big cities are on the {coast}, next to the sea. | There's a lighthouse on the west {coast} of the island.",
+      "desert valley",
     ),
     word(
       "desert deserts",
       "a large dry area with lots of sand and very little rain",
       "沙漠",
-      "It almost never rains in the {desert}.|coast ocean | Camels can walk across the {desert} for days without water.|ocean valley | The Sahara is the biggest hot {desert} in the world.|ocean valley",
-      "coast valley",
+      "It almost never rains in the {desert}. | Camels can walk across the {desert} for days without water. | The Sahara is the biggest hot {desert} in the world.",
+      "dessert coast",
     ),
     word(
       "valley valleys",
       "the low land between two hills or mountains",
       "山谷",
-      "A river runs through the {valley}.|tower statue | From the hill we could see the green {valley} below.|tower statue | The village is in a deep {valley} between the mountains.|tower statue",
+      "A river runs through the {valley} between the two hills. | From the hill we could see the green {valley} below. | The village is in a deep {valley} between the mountains.",
       "cave coast",
     ),
     word(
       "cave caves",
       "a big hole in the side of a hill or under the ground",
       "山洞",
-      "Bats live in the dark {cave}.|tower palace | People lived in {caves} thousands of years ago.|towers palaces | We need a light to go into the {cave}.|tower view",
+      "Bats live in the dark {cave}. | People lived in dark {caves} in the hills thousands of years ago.|valleys deserts | We need a light to go into the {cave}.",
       "valley desert",
     ),
     word(
       "ocean oceans",
       "a very big sea",
       "海洋",
-      "The Pacific is the biggest {ocean} in the world.|castle tower | Whales live in the {ocean}.|castle valley | More than half of the Earth is covered by {oceans}.|castles towers",
-      "coast desert",
+      "The Pacific, a very big sea, is the biggest {ocean} in the world. | Whales live in the salty water of the {ocean}. | More than half of the Earth is covered by {oceans}.|lakes rivers",
+      "lake river",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Famous places take a capital letter when the word is part of the name: *the Eiffel Tower*, *Buckingham Palace*, *the Statue of Liberty*. In other sentences, write *a tower*, *the palace* in small letters.",
+        "名胜的名字里含有这个词时要大写：*the Eiffel Tower*、*Buckingham Palace*、*the Statue of Liberty*。在其他句子里写小写的 *a tower*、*the palace*。",
+      ),
+      meaning: t(
+        "A *castle* and a *palace* are both big old buildings, but a *castle* has thick walls and towers to keep people safe, and a *palace* is a very big, beautiful house where a king or queen lives.",
+        "*castle* 和 *palace* 都是古老的大建筑，但 *castle* 有厚墙和塔楼，用来保护人们；*palace* 是国王或王后住的又大又漂亮的房子。",
+      ),
+      spell: t(
+        "*Desert* has one s and means sand, while *dessert* with a double s is the sweet food after a meal. *Castle* has a silent t: cas · tle.",
+        "*desert* 只有一个 s，指沙漠；*dessert* 双写 s，是饭后甜点。*castle* 里的 t 不发音：cas · tle。",
+      ),
+    },
+    notes: `
+      castle|a king and queen behind thick walls and towers;old buildings with thick walls in Scotland;thick stone walls to walk around|a castle has thick walls and towers to keep people safe; a palace is a beautiful house for a king|castle 有厚墙和塔楼保护人们；palace 是国王住的漂亮房子|palace=palace is a very big, beautiful house, not a building with thick walls and towers to keep people safe=palace 是又大又漂亮的房子，不是用厚墙和塔楼保护人的建筑;tower=tower is one tall narrow building, not a place with walls around it where a king and queen live=tower 是一座又高又窄的建筑，不是四周有城墙、国王王后住的地方|cas · tle|a silent t|t 不发音
+      palace|the emperors' home in the Forbidden City;where the queen lives in London;nine hundred beautiful rooms for a king|a palace is where a king or queen lives; a temple is where people pray|palace 是国王或王后住的地方；temple 是人们祈祷的地方|castle/Castle=castle is built with thick walls to keep people safe, not a very big, beautiful house of an emperor, a queen or a king=castle 是用厚墙保护人的建筑，不是皇帝、女王或国王住的华丽大房子;temple/Temple=temple is a building where people pray to a god, not where a king or queen lives=temple 是人们向神祈祷的地方，不是国王或王后住的地方|pal · ace|-ace at the end, said like *is*|结尾 -ace 读作 *is*
+      tower|the top looking down at a city;the Eiffel one in Paris;a clock on the tallest building in town|a tower is a tall narrow building; a statue is a figure of a person|tower 是又高又窄的建筑；statue 是人像|statue/Statue=statue is a figure of a person or an animal, not a tall building you climb or that has a clock=statue 是人或动物的雕像，不是可以爬上去或带钟的高楼;palace/Palace=palace is a big beautiful house for a king, not a tall narrow building=palace 是国王住的华丽大房子，不是又高又窄的建筑|tow · er|ow, as in *now*|ow 和 *now* 里的一样
+      temple|an old Buddhist one in the mountains;taking off shoes to pray inside;beautiful Buddhist buildings in Kyoto|a temple is where Buddhists and others pray; a church is where Christians pray|temple 是佛教徒等人祈祷的地方；church 是基督徒祈祷的地方|church/churches=church is where Christians pray, not a Buddhist building=church 是基督徒祈祷的地方，不是佛教建筑;palace/palaces=palace is where a king or queen lives, not a place to pray=palace 是国王或王后住的地方，不是祈祷的地方|tem · ple|-ple at the end|结尾是 -ple
+      statue|a stone poet in a square;Liberty in New York;stone figures two thousand years old|a statue is a figure made of stone or metal; a photo is a picture|statue 是石头或金属做的像；photo 是照片|tower/Tower/towers=tower is a tall narrow building, not a figure of a person=tower 是又高又窄的建筑，不是人像;photo/Photo/photos=photo is a picture on paper or a screen, not a figure made of stone=photo 是纸上或屏幕上的照片，不是石头做的像|stat · ue|-ue at the end|结尾是 -ue
+      view|the top of a mountain;a hotel room and the sea;the hills below|a view is what you can see from a place; a statue is a figure you look at|view 是从某处看到的景色；statue 是你看的雕像|statue=statue is one figure of a person, not everything you can see from a place=statue 是一尊人像，不是从某处看到的全部景色;temple=temple is a building where people pray, not what you can see from a place=temple 是祈祷的建筑，不是从某处看到的景色|view|ie, with w at the end|中间是 ie，结尾是 w
+      coast|driving and stopping at every beach;big cities next to the sea;a lighthouse on the west of an island|the coast is the land next to the sea; a desert is dry land with sand|coast 是海边的陆地；desert 是干燥的沙地|desert=desert is dry land with sand, far from the sea and with no beaches=desert 是干燥的沙地，远离大海，没有海滩;valley=valley is low land between hills, not land next to the sea=valley 是山与山之间的低地，不是海边的陆地|coast|oa, as in *boat*|oa 和 *boat* 里的一样
+      desert|almost never any rain;camels with no water for days;the Sahara|a desert is dry land with sand and little rain; the coast is next to the sea|desert 是少雨的沙地；coast 是海边|dessert=dessert is sweet food after a meal, not a dry place with sand=dessert 是饭后甜点，不是干燥的沙地;coast=coast is the land next to the sea, not a dry place far from water=coast 是海边的陆地，不是远离水的干燥地方|des · ert|one s; *dessert* with ss is the sweet food|一个 s；双写 ss 的 *dessert* 是甜点
+      valley|a river between two hills;green land below a hill;a village deep between mountains|a valley is low land between hills; a cave is a hole in a hill|valley 是山间低地；cave 是山上的洞|cave=cave is a dark hole in the side of a hill, not open land between hills=cave 是山边黑黑的洞，不是山间开阔的低地;coast=coast is the land next to the sea, not low land between hills=coast 是海边的陆地，不是山间低地|val · ley|the double l, and -ey at the end|双写 l，结尾是 -ey
+      cave|bats in the dark;dark homes in the hills long ago;needing a light to go in|a cave is a big hole in a hill or under the ground; a valley is open land between hills|cave 是山上或地下的大洞；valley 是山间开阔地|valley/valleys=valley is open land between hills, not a dark hole you need a light for=valley 是山间开阔的低地，不是需要照明的黑洞;desert/deserts=desert is open dry land with sand, not a dark hole=desert 是开阔干燥的沙地，不是黑洞|cave|a that says its name before the silent e|不发音的 e 前面，a 读字母本音
+      ocean|the Pacific, the biggest in the world;whales in salty water;more than half of the Earth|an ocean is a very big sea; a lake is water with land all around it|ocean 是很大的海；lake 是四周有陆地的水|lake/lakes=lake is water with land all around it, much smaller than the sea and not salty=lake 是四周有陆地的水，比大海小得多，也不咸;river/rivers=river is water that flows across land to the sea, not a very big salty sea=river 是流过陆地、流向大海的水，不是又大又咸的海|o · cean|ce said like *sh*|ce 读作 *sh*
+    `,
+  },
 });
 
 const transport = vocabularyTopic({
@@ -200,86 +267,119 @@ const transport = vocabularyTopic({
     "Subways, platforms and seats; ferries, motorbikes and helicopters; traffic; missing a train; delays, gates and passengers.",
     "地铁、站台和座位；渡轮、摩托车和直升机；交通；错过火车；延误、登机口和乘客。",
   ),
+  intro: t(
+    "At rush hour the **subway** was full, so we took the **ferry** across the river, but the **traffic** on the other side made us **miss** our train. These words help you talk about how you travel and what can go wrong on the way.",
+    "高峰时段 **subway**（地铁）挤满了人，所以我们坐 **ferry**（渡轮）过河，可是对岸的 **traffic**（车流）让我们 **miss**（错过）了火车。这些词帮你谈论怎样出行，以及路上可能出什么岔子。",
+  ),
   prerequisites: ["a2-words-places-to-visit"],
   words: [
     word(
       "subway subways",
       "a train that runs under the ground in a city",
       "地铁",
-      "I take the {subway} to school every day.|ferry helicopter | The {subway} is faster than the bus at rush hour.|ferry helicopter | Line 2 of the {subway} goes to the airport.|ferry gate",
-      "ferry platform",
+      "I take the {subway} to school every day: it runs under the city. | The {subway} runs under the ground, so it is faster than the bus at rush hour. | Line 2 of the {subway} has a station under the airport.",
+      "bus taxi",
     ),
     word(
       "platform platforms",
       "the place where you wait for a train in a station",
       "站台",
-      "The train to Beijing leaves from {platform} 4.|gate seat | Wait on the {platform} behind the yellow line.|traffic gate | The {platform} was full of people.|traffic helicopter",
+      "The train to Beijing leaves from {platform} 4. | Wait on the {platform} behind the yellow line. | The {platform} was full of people waiting for the train.",
       "gate seat",
     ),
     word(
       "seat seats",
       "something you sit on in a bus, a train or a plane",
       "座位",
-      "Is this {seat} free? — Yes, please sit down.|gate platform | I gave my {seat} to an old lady.|gate traffic | We had {seats} by the window.|gates platforms",
+      "Is this {seat} free? — Yes, please sit down. | I gave my {seat} to an old lady. | We had {seats} by the window.|gates platforms",
       "gate platform",
     ),
     word(
       "ferry ferries",
       "a boat that carries people and cars across water",
       "渡轮",
-      "We took the {ferry} to the island.|motorbike helicopter | The {ferry} leaves every hour from the port.|subway helicopter | Some cars drove onto the {ferry}.|subway platform",
-      "subway helicopter",
+      "We took the {ferry} to the island. | The {ferry} leaves every hour from the port. | Some cars drove onto the {ferry}.",
+      "bus subway",
     ),
     word(
       "motorbike motorbikes",
       "a bike with an engine",
       "摩托车",
-      "My uncle rides a {motorbike} to work.|ferry subway | Wear a helmet on a {motorbike}!|ferry platform | There are many {motorbikes} on the streets of Hanoi.|ferries platforms",
-      "helicopter ferry",
+      "My uncle rides a {motorbike} to work, with a helmet on his head. | Wear a helmet on a {motorbike}! | There are many {motorbikes} in Hanoi, with two wheels and an engine.|cars buses",
+      "car bus",
     ),
     word(
       "helicopter helicopters",
       "an aircraft with blades that turn on top, which can go straight up",
       "直升机",
-      "A {helicopter} took the sick man to the hospital.|ferry subway | The {helicopter} landed on the roof.|ferry subway | We heard {helicopters} over the city.|ferries subways",
-      "motorbike ferry",
+      "A {helicopter} landed next to the hospital with a sick man. | The {helicopter} landed on the roof. | We saw two {helicopters} stop in the air over the city.|planes ferries",
+      "plane ferry",
     ),
     word(
       "traffic",
       "the cars and buses on the roads",
       "交通；车流",
-      "There's a lot of {traffic} in the city at eight o'clock.|seat passenger | We were late because of the {traffic}.|passenger platform | Turn left at the {traffic} lights.|passenger seat",
-      "passenger delay",
+      "There's a lot of {traffic} on the roads at eight o'clock: cars and buses everywhere. | We were late because of the {traffic}: there were too many cars on the road. | Turn left at the {traffic} lights.",
+      "delay passenger",
     ),
     word(
       "miss misses missed missing",
       "to not catch a bus, a train or a plane; to feel sad that someone is not with you",
       "错过；想念",
-      "Hurry up, or we'll {miss} the train!|delay pack | I {missed} the bus, so I walked to school.|delayed packed | I {miss} my grandparents. They live far away.|delay pack",
-      "delay lose",
+      "Hurry up, or we'll {miss} the train! | I {missed} the bus, so I walked to school.|caught lost | I {miss} my grandparents. They live far away.",
+      "catch lose",
     ),
     word(
       "delay delays delayed delaying",
       "to make something late; a time when something is late",
       "延误；推迟",
-      "Our flight was {delayed} because of the snow.|missed packed | Sorry for the {delay}. The train will leave in ten minutes.|miss gate | There are long {delays} on the subway today.|gates seats",
+      "Our flight was {delayed} because of the snow.|missed packed | Sorry for the {delay}: the train is late and will leave in ten minutes.|traffic gate | There are long {delays} on the subway today, so you will be late.|gates platforms",
       "miss gate",
     ),
     word(
       "gate gates",
       "the door at an airport where you get on a plane",
       "登机口；大门",
-      "Flight CA981 is boarding at {gate} 12.|seat traffic | Please go to the {gate} thirty minutes before your flight.|traffic delay | Close the garden {gate}, or the dog will get out.|traffic delay",
+      "Flight CA981 is boarding at {gate} 12. | Please go to the {gate} thirty minutes before your flight. | Close the garden {gate}, or the dog will get out.",
       "platform seat",
     ),
     word(
       "passenger passengers",
       "a person who travels in a car, bus, train or plane but is not driving it",
       "乘客",
-      "The bus can carry fifty {passengers}.|traffics delays | All {passengers} must wear a seat belt.|traffics gates | I sat in the {passenger} seat next to my dad.|traffic gate",
-      "tourist traffic",
+      "The bus can carry fifty {passengers}.|drivers pilots | All {passengers} must sit down before the driver starts the bus.|drivers pilots | I sat in the {passenger} seat next to my dad.",
+      "driver pilot",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Miss* has two uses: you *miss* a bus when you are too late for it, and you *miss* a person when you feel sad they are far away. *Catch* is the opposite of the first: you *catch* a bus in time.",
+        "*miss* 有两种用法：没赶上公交车是 *miss* 了它，想念远方的人也是 *miss*。第一种的反义词是 *catch*：按时赶上公交车。",
+      ),
+      meaning: t(
+        "A *passenger* rides in a car, bus, train or plane, but the *driver* or the *pilot* moves it. A train leaves from a *platform*, but you get on a plane at a *gate*.",
+        "*passenger* 是坐在车、火车或飞机上的人，开车的是 *driver*，开飞机的是 *pilot*。火车从 *platform*（站台）出发，上飞机则在 *gate*（登机口）。",
+      ),
+      spell: t(
+        "*Ferry* has a double r and becomes *ferries*; *passenger* has a double s and an n before the g: pas · sen · ger.",
+        "*ferry* 双写 r，复数是 *ferries*；*passenger* 双写 s，g 前面有个 n：pas · sen · ger。",
+      ),
+    },
+    notes: `
+      subway|a ride to school under the city;something faster than the bus because it runs under the ground;Line 2 with a station under the airport|a subway is a train under the ground in a city; a bus drives on the roads|subway 是城市里在地下跑的火车；bus 在马路上开|bus=a bus drives on the roads, not under the ground or under a city=bus 在马路上开，不在地下或城市下面跑;taxi=a taxi is a car you pay to drive you on the roads, not a train under the ground=taxi 是在马路上载你的付费汽车，不是在地下跑的火车|sub · way|sub + way, one word|sub + way，合成一个词
+      platform|where the train to Beijing leaves from, number 4;where you wait behind the yellow line;a place full of people waiting for the train|a platform is where you wait for a train; a gate is where you get on a plane|platform 是等火车的站台；gate 是上飞机的登机口|gate=a gate is the door at an airport where you get on a plane, not where you wait for a train=gate 是机场上飞机的登机口，不是等火车的地方;seat=a seat is something one person sits on, not a place in a station where people stand and wait for a train=seat 是一个人坐的座位，不是车站里大家站着等火车的地方|plat · form|plat + form, one word|plat + form，合成一个词
+      seat|something free to sit down on;something given to an old lady;places to sit by the window|a seat is something you sit on; a platform is where you stand and wait for a train|seat 是坐的座位；platform 是站着等火车的站台|gate=a gate is a door at an airport or in a fence, not something you sit on=gate 是机场的登机口或围栏上的门，不是坐的东西;platform=a platform is where you stand and wait for a train, not something you sit on=platform 是站着等火车的地方，不是坐的东西|seat|ea for the long e sound|ea 发长 e 音
+      ferry|the way to an island;something leaving every hour from the port;something cars drove onto|a ferry is a boat that carries people and cars across water; a bus drives on the roads|ferry 是载人载车过水的渡轮；bus 在马路上开|bus=a bus drives on the roads, cannot cross water, and cars cannot drive onto it=bus 在马路上开，不能过水，汽车也开不上去;subway=a subway is a train under the ground in a city, not a boat that leaves from a port=subway 是城市地下的火车，不是从港口出发的船|fer · ry|the double r, and -ies for more than one|双写 r，复数是 -ies
+      motorbike|something an uncle rides to work with a helmet on;something you wear a helmet on;something with two wheels and an engine in Hanoi|a motorbike has two wheels and an engine; a car has four wheels and you sit inside it|motorbike 有两个轮子和发动机；car 有四个轮子，人坐在里面|car=a car has four wheels and you sit inside it, so you do not ride it with a helmet on=car 有四个轮子，人坐在里面，不用戴头盔骑;bus=a bus is a big car for many people with four or more wheels, and you do not ride it with a helmet on=bus 是载很多人的大车，有四个或更多轮子，不用戴头盔骑|mo · tor · bike|motor + bike, one word|motor + bike，合成一个词
+      helicopter|something landing next to a hospital with a sick man;something landing on a roof;something stopping in the air over a city|a helicopter can go straight up and stop in the air; a plane needs a long road at an airport|helicopter 能垂直起降、悬停在空中；plane 需要机场的长跑道|plane=a plane needs a long road at an airport to go up and land, so it cannot land on a roof or stop in the air=plane 需要机场的长跑道起降，不能停在屋顶上，也不能悬停;ferry=a ferry is a boat on the water, and it cannot fly or land=ferry 是水上的船，不能飞，也不能降落|hel · i · cop · ter|one l, and -ter at the end|只有一个 l，结尾是 -ter
+      traffic|cars and buses everywhere on the roads at eight;too many cars on the road making people late;the lights where you turn left|traffic is the cars and buses on the roads; a delay is a time when something is late|traffic 是路上的车流；delay 是延误的时间|delay=a delay is a time when something is late, not the cars and buses on the roads=delay 是延误的时间，不是路上的汽车和公交车;passenger=a passenger is one person who rides in a car or a bus, not all the cars on the roads=passenger 是坐车的人，不是路上所有的车|traf · fic|the double f in the middle|中间双写 f
+      miss|having to hurry to get the train;walking to school after the bus left;grandparents who live far away|you miss a bus when you are too late; you catch it when you are in time|没赶上车是 miss；赶上车是 catch|catch/caught=catch means getting on a bus or a train in time, the opposite of miss, and it is not feeling sad about people far away=catch 是及时赶上车，和 miss 相反，也不表示想念远方的人;lose/lost=lose means you cannot find something, not being too late for a bus or a train or being sad about people far away=lose 是丢了、找不到，不是没赶上车，也不是想念远方的人|miss|the double s at the end|结尾双写 s
+      delay|a flight late because of the snow;a train that is late and will leave in ten minutes;long waits on the subway that make you late|a delay is a time when something is late; traffic is the cars on the roads|delay 是延误；traffic 是路上的车流|miss/missed=miss means being too late for a bus or train yourself, and snow cannot miss a flight=miss 是自己没赶上车，雪不会“错过”航班;pack/packed=pack means putting things into a bag, and snow does not do that to a flight=pack 是往包里装东西，雪不会对航班做这件事;traffic=traffic is the cars and buses on the roads, not a train that is late=traffic 是路上的汽车和公交车，不是晚点的火车;gate/gates=a gate is the door at an airport where you get on a plane, and it does not make a train or the subway late=gate 是机场的登机口，不会让火车或地铁晚点;platform/platforms=a platform is where you wait for a train, and a long one does not make you late=platform 是等火车的站台，站台长不会让你迟到|de · lay|-ay at the end, and -ed for the past|结尾是 -ay，过去式加 -ed
+      gate|where Flight CA981 is boarding, number 12;where to go thirty minutes before a flight;a garden door to close so the dog stays in|a gate is a door at an airport or in a fence; a platform is where you wait for a train|gate 是登机口或围栏上的门；platform 是等火车的站台|platform=a platform is where you wait for a train in a station, not a door at an airport or in a garden fence=platform 是火车站里等火车的地方，不是机场的登机口，也不是花园的门;seat=a seat is something you sit on, not a door you go through at an airport or in a garden=seat 是坐的座位，不是机场或花园里要穿过的门|gate|a that says its name before the silent e|不发音的 e 前面，a 读字母本音
+      passenger|the fifty people a bus can carry;people who must sit down before the driver starts the bus;the seat next to a dad who drives|a passenger rides in a car, bus, train or plane; the driver drives it|passenger 是乘客；driver 是开车的人|driver/drivers=a driver drives the bus or the car, and there is only one, not the people who ride in it=driver 是开车的人，只有一个，不是坐车的人;pilot/pilots=a pilot flies a plane, not someone who rides in a bus or a car=pilot 是开飞机的人，不是坐公交车或汽车的人|pas · sen · ger|the double s, and an n before the g|双写 s，g 前面有个 n
+    `,
+  },
 });
 
 const future = vocabularyTopic({
@@ -289,88 +389,121 @@ const future = vocabularyTopic({
     "Will and won't; tomorrow and the future; probably, maybe and perhaps; expecting, dreaming and promising; someday and forever.",
     "will 和 won't；明天和将来；可能、也许和或许；期待、梦想和承诺；总有一天和永远。",
   ),
+  intro: t(
+    "**Tomorrow** I will **probably** visit Grandma, and **someday** I want to travel around the world: that is my **dream**. These words help you talk about plans, hopes and what may happen later.",
+    "**tomorrow**（明天）我 **probably**（很可能）会去看外婆；**someday**（总有一天）我想环游世界，那是我的 **dream**（梦想）。这些词帮你谈论计划、希望，以及以后可能发生的事。",
+  ),
   prerequisites: ["a2-words-transport"],
   words: [
     word(
       "will won't I'll you'll he'll she'll we'll they'll it'll",
       "a word used to talk about the future",
       "将；会",
-      "It {will} be sunny tomorrow.|was does | Don't worry. I {won't} tell anyone.|isn't wasn't | The bag is heavy. {I'll} help you.|I'm I've",
-      "would can",
+      "It {will} rain tomorrow, so take an umbrella. | Don't worry. I {won't} tell anyone when I see them tomorrow.|didn't don't | Your bags are heavy. Tomorrow I {will} help you carry them to the station.|did do",
+      "did does",
     ),
     word(
       "tomorrow",
       "the day after today",
       "明天",
-      "Today is Monday, so {tomorrow} is Tuesday.|forever someday | See you {tomorrow}!|forever future | I'm going to the dentist {tomorrow} morning.|forever perhaps",
+      "Today is Monday, so {tomorrow} is Tuesday. | Good night! See you {tomorrow} at school at eight. | I'm going to the dentist {tomorrow} morning.",
       "yesterday someday",
     ),
     word(
       "future",
       "the time that will come after now",
       "将来；未来",
-      "What do you want to be in the {future}?|tomorrow forever | Nobody knows the {future}.|tomorrow promise | In the {future}, cars will drive themselves.|tomorrow promise",
-      "past tomorrow",
+      "What do you want to be in the {future}? | Nobody knows what the {future} will bring. | In the {future}, cars will drive themselves.",
+      "past history",
     ),
     word(
       "probably",
       "almost certainly",
       "很可能",
-      "It's very cloudy. It will {probably} rain.|forever tomorrow | She's {probably} at home now.|forever tomorrow | We'll {probably} be late because of the traffic.|forever future",
-      "forever someday",
+      "It's very cloudy. It will {probably} rain. | Her coat and bag are gone, so she's {probably} at school now. | We'll {probably} be late because of the traffic.",
+      "never forever",
     ),
     word(
       "maybe",
       "it is possible; not sure",
       "也许；可能",
-      "{Maybe} it will snow tomorrow.|Forever Future | Are you coming? — {Maybe}. I'm not sure yet.|Forever Future | {Maybe} we can go to the beach on Sunday.|Forever Future",
-      "forever probably",
+      "{Maybe} it will snow tomorrow. | Are you coming? — {Maybe}. I'm not sure yet. | {Maybe} we can go to the beach this Sunday, if it is sunny.",
+      "Sometimes Someday",
       "perhaps",
     ),
     word(
       "perhaps",
-      "it is possible; not sure",
+      "possibly; a more formal word for maybe",
       "或许；可能",
-      "{Perhaps} he missed the bus.|Forever Future | {Perhaps} you're right.|Forever Tomorrow | We could {perhaps} meet next week.|forever future",
-      "forever probably",
+      "{Perhaps} he missed the bus this morning; I don't know. | {Perhaps} you're right: I'll check the answer now. | We could {perhaps} meet next week.|sometimes someday",
+      "Sometimes Someday",
       "maybe",
     ),
     word(
       "expect expects expected expecting",
       "to think that something will happen",
       "预计；期待",
-      "I {expect} it will be cold in the mountains.|promise dream | We're {expecting} twenty guests at the party.|promising dreaming | The test was easier than I {expected}.|promised dreamed",
+      "I {expect} it will be cold in the mountains. | We're {expecting} twenty guests at the party.|promising dreaming | The test was easier than I {expected}.|promised decided",
       "promise dream",
     ),
     word(
       "dream dreams dreamed dreaming",
       "pictures in your mind when you sleep; something you really want",
       "梦；梦想",
-      "Last night I {dreamed} that I could fly.|expected promised | My {dream} is to travel around the world.|future promise | Sweet {dreams}! Good night.|futures promises",
-      "promise expect",
+      "Last night I {dreamed} that I could fly, but then I woke up.|expected promised | My {dream} is to travel around the world.|future promise | Sweet {dreams}! Good night.|futures promises",
+      "expect promise",
     ),
     word(
       "someday",
       "at some time in the future",
       "总有一天",
-      "{Someday} I'm going to visit the pyramids.|Forever Yesterday | I hope I'll meet him {someday}.|forever yesterday | {Someday} you will understand.|Yesterday Forever",
-      "forever tomorrow",
+      "{Someday}, when I'm older, I'm going to visit the pyramids. | I don't know when, but I hope I'll meet him {someday}.|yesterday tomorrow | You're too young now, but {someday} you will understand.",
+      "Yesterday Tomorrow",
     ),
     word(
       "forever",
       "for all time",
       "永远",
-      "I will love you {forever}.|someday perhaps | Nothing lasts {forever}.|someday tomorrow | We waited {forever} for the bus! It came after an hour.|someday maybe",
-      "someday probably",
+      "I will love you {forever}, every day of my life. | Nothing lasts {forever}. | We waited {forever} for the bus! It came after an hour.",
+      "someday tomorrow",
     ),
     word(
       "promise promises promised promising",
       "to say that you will certainly do something",
       "承诺；保证",
-      "I {promise} I'll be home by ten.|expect dream | You {promised} to help me!|expected dreamed | Don't break your {promise}.|dream future",
+      "Mom, I {promise} I'll be home by ten: you can trust me. | You {promised} to help me!|expected dreamed | Don't break your {promise}.|dream future",
       "expect dream",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Maybe* and *perhaps* usually start a sentence, but *probably* goes after *will* or *be*: *It will probably rain*, *She's probably at home*.",
+        "*maybe* 和 *perhaps* 通常放在句首，而 *probably* 放在 *will* 或 *be* 后面：*It will probably rain*、*She's probably at home*。",
+      ),
+      meaning: t(
+        "*Someday* is one time in the future that you do not know yet, *forever* means for all time, and *tomorrow* is only the next day.",
+        "*someday* 是将来某个还不知道的时候，*forever* 是永远，*tomorrow* 只是第二天。",
+      ),
+      spell: t(
+        "*Probably* ends in -bly, not -bley, and *tomorrow* has one m and a double r: to · mor · row.",
+        "*probably* 结尾是 -bly，不是 -bley；*tomorrow* 只有一个 m，双写 r：to · mor · row。",
+      ),
+    },
+    notes: `
+      will|rain tomorrow and an umbrella;not telling anyone when you see them tomorrow;helping carry heavy bags tomorrow|will talks about the future; did talks about the past|will 说将来；did 说过去|did/didn't=did and didn't talk about the past, not about tomorrow=did 和 didn't 说的是过去，不说明天;do/does/don't=do, does and don't talk about what usually happens or is true now, not about tomorrow=do、does 和 don't 说的是经常发生的事或现在的事实，不是明天|will · won't|won't is will + not, with the o changed|won't 是 will + not，元音变成了 o
+      tomorrow|the day after Monday is Tuesday;seeing someone at school at eight after good night;going to the dentist in the morning|tomorrow is the day after today; yesterday is the day before today|tomorrow 是明天；yesterday 是昨天|yesterday=yesterday is the day before today, not a time still to come=yesterday 是昨天，不是还没到的时间;someday=someday means some time in the future that you do not know, not the very next day at a time you name=someday 是将来不确定的某一天，不是有明确时间的第二天|to · mor · row|one m and a double r|一个 m，双写 r
+      future|what someone wants to be;what nobody knows the time to come will bring;cars that will drive themselves|the future is the time after now; the past is the time before now|future 是将来；past 是过去|past=the past is the time before now, not the time that will come=past 是过去，不是将要到来的时间;history=history is what happened long ago, not the time that will come=history 是很久以前发生的事，不是将来|fu · ture|-ture at the end, said like *cher*|结尾 -ture 读作 *cher*
+      probably|rain after a very cloudy sky;a coat and bag that are gone;being late because of the traffic|probably means almost certainly, for a good reason; never means at no time|probably 是有理由的“很可能”；never 是从不|never=never means at no time, so it cannot go with a good reason why something is likely=never 是从不，不能和“某事很可能发生”的理由连用;forever=forever means for all time, not one thing that is likely now or soon=forever 是永远，不是现在或不久很可能发生的一件事|prob · a · bly|-bly at the end, not -bley|结尾是 -bly，不是 -bley
+      maybe|snow tomorrow;an answer about coming when someone is not sure yet;the beach this Sunday if it is sunny|maybe means it is possible; sometimes means now and then|maybe 是可能；sometimes 是有时候|sometimes=sometimes means now and then, again and again, not one thing that may happen at one time=sometimes 是时不时、一次又一次，不是某一次可能发生的事;someday=someday means at some time in the future you do not know, not tomorrow, now or this Sunday=someday 是将来不确定的某个时候，不是明天、现在或这个星期天|may · be|may + be, one word|may + be，合成一个词
+      perhaps|a bus missed this morning;someone being right before the answer is checked;meeting next week|perhaps means it is possible; someday means at some time in the future|perhaps 是或许；someday 是总有一天|sometimes=sometimes means now and then, again and again, not one thing that may be true at one time=sometimes 是时不时、一次又一次，不是某一次可能的事;someday=someday means at some time in the future you do not know, not this morning, now or next week=someday 是将来不确定的某个时候，不是今天早上、现在或下周|per · haps|per + haps, with -ps at the end|per + haps，结尾是 -ps
+      expect|thinking it will be cold in the mountains;twenty guests coming to a party;a test easier than someone thought|expect means thinking something will happen; promise means saying you will certainly do something|expect 是预计；promise 是保证|promise/promising/promised=promise means saying you will certainly do something yourself, not thinking what the weather, guests or a test will be like=promise 是保证自己一定会做某事，不是预计天气、客人或考试会怎样;dream/dreaming=dream means pictures in your sleep or something you really want, not thinking something will happen=dream 是睡着时的梦或很想要的东西，不是预计会发生的事;decide/decided=decide means choosing what to do, not thinking how something will be=decide 是决定做什么，不是预计会怎样|ex · pect|ex- at the start, and -ct at the end|开头是 ex-，结尾是 -ct
+      dream|flying at night before waking up;traveling around the world one day;good night wishes|a dream is pictures when you sleep or something you really want; a promise is saying you will do something|dream 是梦或梦想；promise 是承诺|expect/expected=expect means thinking something will happen, not seeing pictures while you sleep=expect 是预计会发生，不是睡着时看到的画面;promise/promised/promises=a promise is saying you will certainly do something for someone, not pictures in your sleep or something you only wish for=promise 是向别人保证一定做某事，不是梦，也不是心里的愿望;future/futures=the future is the time after now, not pictures in your sleep or one thing you wish for=future 是将来的时间，不是梦，也不是某个愿望|dream|ea for the long e, and -ed or -t for the past|ea 发长 e 音，过去式是 -ed 或 -t
+      someday|visiting the pyramids when older;meeting someone at a time no one knows;understanding when no longer too young|someday means at some time in the future; tomorrow means the next day|someday 是将来某一天；tomorrow 是明天|yesterday=yesterday is the day before today, not a time to come=yesterday 是昨天，不是将要到来的时间;tomorrow=tomorrow is the very next day, not a time far away that you do not know yet=tomorrow 是第二天，不是遥远的、还不知道的时候|some · day|some + day, one word|some + day，合成一个词
+      forever|love every day of a life;nothing lasting for all time;a bus that came after an hour|forever means for all time or a very long time; someday means at one time in the future|forever 是永远或很久；someday 是将来某一天|someday=someday means at one time in the future, not for all time or for a very long time=someday 是将来的某一天，不是永远，也不是很久;tomorrow=tomorrow is the day after today, not for all time or for a very long time=tomorrow 是第二天，不是永远，也不是很久|for · ev · er|for + ever, one word|for + ever，合成一个词
+      promise|being home by ten so Mom can trust you;help someone said they would give;something you should not break|a promise is saying you will certainly do something; a dream is something you wish for|promise 是保证；dream 是梦想|expect/expected=expect means thinking something will happen, not telling someone they can trust you to do it=expect 是预计会发生，不是让别人相信你一定会做;dream/dreamed=a dream is pictures in your sleep or something you wish for, and you cannot break it like a word you gave=dream 是梦或愿望，不像许下的诺言那样能“打破”;future=the future is the time after now, not words you gave that you should not break=future 是将来的时间，不是许下的、不该违背的话|prom · ise|-ise at the end, said like *is*|结尾 -ise 读作 *is*
+    `,
+  },
 });
 
 // Going to.

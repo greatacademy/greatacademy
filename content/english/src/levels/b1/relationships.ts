@@ -14,93 +14,127 @@ const relationships = vocabularyTopic({
     "Relationships, couples and marriage; divorce and getting engaged; boyfriends and girlfriends; single and romantic; acquaintances, generations and childhood.",
     "关系、情侣和婚姻；离婚和订婚；男朋友和女朋友；单身的和浪漫的；熟人、一代人和童年。",
   ),
+  intro: t(
+    "A **couple** may get **engaged**, then start a **marriage**, and sometimes it ends in **divorce**. These words help you talk about love, family and the people in your life.",
+    "一对 **couple**（情侣）可能先 **engaged**（订婚），然后开始 **marriage**（婚姻），有时以 **divorce**（离婚）告终。这些词帮你谈论爱情、家庭和生活中的人。",
+  ),
   prerequisites: ["a2-words-relatives"],
   words: [
     word(
       "relationship relationships",
       "the way two or more people feel about and behave toward each other",
       "关系",
-      "I have a good {relationship} with my parents.|generation childhood | Their {relationship} ended after three years.|childhood generation | Good {relationships} need trust.|childhoods generations",
-      "relative religion",
+      "I have a good {relationship} with my parents. | They were boyfriend and girlfriend, but their {relationship} ended after three years. | Good {relationships} with friends and coworkers need trust.|marriages generations",
+      "marriage generation",
     ),
     word(
       "couple couples",
       "two people who are married or in a romantic relationship",
       "情侣；夫妻",
-      "The young {couple} next door have just had a baby.|acquaintance generation | They have been a {couple} since high school.|generation childhood | Many {couples} get married in spring.|generations acquaintances",
-      "cousin double",
+      "The {couple} next door, Tom and his wife Anna, just had their first baby. | Sam and Mia fell in love at school and have been a {couple} ever since.|generation class | Many {couples} who love each other get married in spring.|generations neighbors",
+      "generation neighbor",
     ),
     word(
       "marriage marriages",
       "the relationship between two people who are married",
       "婚姻",
-      "My grandparents had a long and happy {marriage}.|childhood acquaintance | {Marriage} is a big decision.|Childhood Acquaintance | Their {marriage} lasted fifty years.|acquaintance generation",
-      "wedding message",
+      "My grandparents had a long and happy {marriage}: they were husband and wife for 60 years. | {Marriage} is a big decision. | Their {marriage} lasted fifty years, from their wedding day until he died.",
+      "childhood acquaintance",
     ),
     word(
       "divorce divorces divorced divorcing",
       "the legal end of a marriage; to end a marriage",
       "离婚",
-      "Her parents got {divorced} when she was six.|engaged romantic | The couple are getting a {divorce}.|childhood generation | One in three marriages ends in {divorce}.|childhood romantic",
-      "divide wedding",
+      "Her parents got {divorced} when she was six, and her father moved out. | The couple are getting a {divorce}.|childhood generation | One in three marriages ends in {divorce}.|childhood generation",
+      "engaged romantic",
     ),
     word(
       "engaged",
       "having agreed to marry someone",
       "订婚的",
-      "Tom and Lisa got {engaged} last month.|single romantic | My brother is {engaged} to a girl from Canada.|single romantic | They were {engaged} for two years before the wedding.|divorced single",
-      "engaging busy",
+      "Tom asked Lisa to marry him, and they got {engaged} last month. | My brother is {engaged}: he's going to marry a girl from Canada. | Before they got married, they were {engaged} for two years and planned the wedding together.|divorced single",
+      "single romantic",
     ),
     word(
       "boyfriend boyfriends",
       "a man or a boy with whom someone has a romantic relationship",
       "男朋友",
-      "Has your sister got a {boyfriend}?|childhood generation | She met her {boyfriend} at university.|childhood generation | Her new {boyfriend} is very funny.|childhood generation",
-      "brother classmate",
+      "Has your sister got a {boyfriend}? Who is he? | She met her {boyfriend} at university, and he's now her husband. | Her new {boyfriend} is very funny: he makes her laugh all the time.",
+      "girlfriend couple",
     ),
     word(
       "girlfriend girlfriends",
       "a woman or a girl with whom someone has a romantic relationship",
       "女朋友",
-      "He's bringing his {girlfriend} to the party.|childhood generation | Max and his {girlfriend} have been together for a year.|childhood generation | Jack bought his {girlfriend} flowers for her birthday.|childhood generation",
-      "sister classmate",
+      "He's bringing his {girlfriend} to the party: she's very nice. | Max and his {girlfriend}, Sara, have been together for a year. | Jack bought his {girlfriend} flowers for her birthday.",
+      "boyfriend couple",
     ),
     word(
       "single",
       "not married or not in a romantic relationship",
       "单身的",
-      "My aunt is {single} and lives alone.|romantic childhood | Are you married or {single}?|romantic childhood | He's been {single} since he broke up with his girlfriend.|romantic childhood",
-      "simple lonely",
+      "My aunt has never married and has no partner: she's {single}. | Are you married, or are you {single} with no partner? | He's been {single} since he broke up with his girlfriend.",
+      "engaged romantic",
     ),
     word(
       "romantic",
       "about love, or showing love in a special way",
       "浪漫的",
-      "They had a {romantic} dinner by candlelight.|single engaged | It's a {romantic} film about two students in Paris.|single engaged | My dad isn't very {romantic}; he forgot their anniversary.|engaged single",
-      "religious realistic",
+      "They had a {romantic} dinner by candlelight. | It's a {romantic} film about two students who fall in love in Paris. | My dad isn't very {romantic}; he forgot their anniversary.",
+      "single divorced",
     ),
     word(
       "acquaintance acquaintances",
       "a person you know a little but who is not a close friend",
       "熟人",
-      "He's not a friend; he's just an {acquaintance} from work.|engagement generation | I met an old {acquaintance} at the station.|generation childhood | She has many {acquaintances} but few close friends.|generations childhoods",
-      "accountant acceptance",
+      "Mark isn't a close friend: he's only my {acquaintance} from the office. | At the station I met some old {acquaintances} from my first job.|strangers boyfriends | She has many {acquaintances}, people she knows a little, but few close friends.|strangers boyfriends",
+      "stranger boyfriend",
     ),
     word(
       "generation generations",
       "all the people born at about the same time",
       "一代人；代",
-      "Three {generations} of the family live in the same house.|couples relationships | The younger {generation} uses phones for everything.|couple relationship | The recipe has been passed down from {generation} to generation.|couple marriage",
-      "general gene",
+      "Three {generations} live in the same house: grandparents, parents and children.|couples relationships | The younger {generation}, people born after 2000, uses phones for everything. | The recipe has been passed down from {generation} to generation.|couple marriage",
+      "couple relationship",
     ),
     word(
       "childhood",
       "the time when you are a child",
       "童年",
-      "I had a happy {childhood} in a small village.|generation acquaintance | We have been friends since {childhood}.|generation acquaintance | She told us stories from her {childhood}.|generation acquaintance",
-      "children neighborhood",
+      "I had a happy {childhood} in a small village, playing in the fields with other kids. | We have been friends since {childhood}. | She told us stories from her {childhood}, when she was a little girl.",
+      "generation marriage",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Boyfriend* and *girlfriend* differ only in who the partner is: a *boyfriend* is a man, a *girlfriend* is a woman. Look for *he*, *she*, *his* or *her* near the gap.",
+        "*boyfriend* 和 *girlfriend* 只差在对方是谁：*boyfriend* 是男性，*girlfriend* 是女性。留意空格附近的 *he*、*she*、*his* 或 *her*。",
+      ),
+      meaning: t(
+        "*Engaged* means you have agreed to marry but the wedding has not happened yet; after it, you are in a *marriage*. Check whether the meaning is before or after the wedding.",
+        "*engaged* 是已经答应结婚但还没举行婚礼；婚礼之后才是 *marriage*。看释义说的是婚礼之前还是之后。",
+      ),
+      spell: t(
+        "*Acquaintance* has a c before the q and ends in -ance: a-c-q-u-a-i-n-t-a-n-c-e.",
+        "*acquaintance* 的 q 前面有个 c，结尾是 -ance：a-c-q-u-a-i-n-t-a-n-c-e。",
+      ),
+    },
+    notes: `
+      relationship|getting on with parents;boyfriend and girlfriend for three years;friends and coworkers who trust each other|a relationship is how people feel and act toward each other; a marriage is between husband and wife|relationship 是关系；marriage 是婚姻|marriage/marriages=a marriage is between a husband and wife, not any way people get on=marriage 是夫妻之间的婚姻，不是任何人际关系;generation/generations=a generation is people born at the same time, not how two people get on=generation 是同一时期出生的人，不是两人的关系|a good relationship · a relationship with|from *relate*|来自 *relate*
+      couple|Tom and his wife Anna next door;in love since school;people in love who marry in spring|a couple is two people in love; a neighbor is one person living near you|couple 是一对情侣或夫妻；neighbor 是邻居|generation/generations=a generation is all the people born at the same time, not two people in love=generation 是同一时期出生的人，不是一对恋人;neighbor/neighbors=a neighbor is a person living near you, not two people in love=neighbor 是住在附近的人，不是一对恋人;class=a class is a group of students, not two people in love=class 是一班学生，不是一对恋人|a young couple · a married couple|*a couple of* also means two or a few|*a couple of* 也表示两个或几个
+      marriage|60 years as husband and wife;a big decision;from the wedding day until he died|a marriage is being husband and wife; a childhood is the time when you are a child|marriage 是婚姻；childhood 是童年|childhood/Childhood=a childhood is the time when you are a child, not being husband and wife=childhood 是童年，不是夫妻关系;acquaintance/Acquaintance=an acquaintance is a person you know a little, not being husband and wife=acquaintance 是熟人，不是夫妻关系;generation=a generation is people born at the same time, not being husband and wife=generation 是同代人，不是婚姻|a happy marriage · marriage is|verb *marry*; a *wedding* is the day, *marriage* the life after|动词 *marry*；*wedding* 是婚礼那天，*marriage* 是婚后生活
+      divorce|parents apart when she was six;a couple ending their marriage;one in three marriages|divorce is the legal end of a marriage; engaged means agreeing to marry|divorce 是离婚；engaged 是订婚|engaged=engaged means you have agreed to marry, not ended a marriage=engaged 是答应结婚，不是结束婚姻;romantic=romantic is about showing love, not ending a marriage=romantic 是浪漫，不是离婚;childhood=a childhood is the time you are a child, not the end of a marriage=childhood 是童年，不是婚姻的结束;generation=a generation is people born at the same time, not the end of a marriage=generation 是同代人，不是婚姻的结束|get divorced · get a divorce|noun and verb|既是名词也是动词
+      engaged|Lisa saying yes to marry Tom;going to marry a girl from Canada;two years planning the wedding|engaged means agreed to marry; single means not in a relationship|engaged 是订婚的；single 是单身的|single=single means not in a relationship, not agreed to marry someone=single 是单身，不是订了婚;romantic=romantic means showing love, not agreed to marry=romantic 是浪漫的，不是订了婚;divorced=divorced means a marriage has ended, not that a wedding is coming=divorced 是离了婚，不是婚礼即将到来|get engaged · engaged to|*engaged* also means busy on a phone line|*engaged* 也指电话占线
+      boyfriend|a sister's partner who is a he;met at university and now her husband;a he who makes her laugh|a boyfriend is a man; a girlfriend is a woman|boyfriend 是男朋友；girlfriend 是女朋友|girlfriend=a girlfriend is a woman, but the partner here is a he=girlfriend 是女性，而这里的对象是男性;couple=a couple is two people, not one partner=couple 是两个人，不是一位伴侣|have a boyfriend · her boyfriend|one word|是一个词
+      girlfriend|a she brought to a party;Max and Sara;flowers for her birthday|a girlfriend is a woman; a boyfriend is a man|girlfriend 是女朋友；boyfriend 是男朋友|boyfriend=a boyfriend is a man, but the partner here is a she=boyfriend 是男性，而这里的对象是女性;couple=a couple is two people, not one partner=couple 是两个人，不是一位伴侣|his girlfriend · a new girlfriend|one word|是一个词
+      single|an aunt with no partner;married or with no partner;after a break-up|single means not in a relationship; engaged means agreed to marry|single 是单身的；engaged 是订婚的|engaged=engaged means agreed to marry, not without a partner=engaged 是订了婚，不是没有伴侣;romantic=romantic means showing love, not without a partner=romantic 是浪漫的，不是没有伴侣|single and lives alone · stay single|*single* also means only one: a single ticket|*single* 也表示单个：a single ticket
+      romantic|dinner by candlelight;two students falling in love;a dad who forgot the anniversary|romantic means showing love; single means having no partner|romantic 是浪漫的；single 是单身的|single=single means having no partner, not showing love=single 是单身，不是浪漫;divorced=divorced means a marriage has ended, not showing love in a special way=divorced 是离了婚，不是浪漫|a romantic dinner · a romantic film|from *romance*|来自 *romance*
+      acquaintance|someone from the office, not a close friend;old people from a first job;people she knows a little|an acquaintance is someone you know a little; a stranger is someone you don't know|acquaintance 是熟人；stranger 是陌生人|stranger/strangers=a stranger is someone you don't know at all, not someone you know a little=stranger 是完全不认识的人，不是有点认识的人;boyfriend/boyfriends=a boyfriend is a close romantic partner, not someone you know a little=boyfriend 是亲密的男朋友，不是只有点认识的人|an old acquaintance · just an acquaintance|a c comes before the q|q 前面有个 c
+      generation|grandparents, parents and children;people born after 2000;passing a recipe down|a generation is people born at the same time; a couple is two people in love|generation 是一代人；couple 是一对情侣|couple/couples=a couple is two people in love, not people born at the same time=couple 是一对恋人，不是同代人;relationship/relationships=a relationship is how people get on, not people born at the same time=relationship 是关系，不是同代人;marriage=a marriage is between husband and wife, not people born at the same time=marriage 是婚姻，不是同代人|the younger generation · three generations|*generation* also means making power: electricity generation|*generation* 也指发电：electricity generation
+      childhood|playing in fields in a village;friends since a young age;stories from being a little girl|childhood is the time you are a child; a generation is people born at the same time|childhood 是童年；generation 是一代人|generation=a generation is people born at the same time, not the time when you are a child=generation 是同代人，不是童年;marriage=a marriage is being husband and wife, not the time when you are a child=marriage 是婚姻，不是童年;acquaintance=an acquaintance is a person you know a little, not a time of life=acquaintance 是熟人，不是人生阶段|a happy childhood · since childhood|*child* + *-hood*|由 *child* 加 *-hood* 构成
+    `,
+  },
 });
 
 const personality = vocabularyTopic({
@@ -110,30 +144,34 @@ const personality = vocabularyTopic({
     "Personality and character; generous and selfish; shy and outgoing; sensitive and sociable; stubborn, mature, easygoing and considerate.",
     "个性和性格；慷慨的和自私的；害羞的和外向的；敏感的和好交际的；固执的、成熟的、随和的和体贴的。",
   ),
+  intro: t(
+    "A **generous** person shares, a **selfish** one doesn't, a **shy** person is quiet with new people, and an **outgoing** one loves meeting them. These words help you describe what people are like.",
+    "**generous**（慷慨的）人乐于分享，**selfish**（自私的）人不会，**shy**（害羞的）人见到生人很安静，**outgoing**（外向的）人喜欢认识新朋友。这些词帮你描述别人的性格。",
+  ),
   prerequisites: ["b1-words-qualities"],
   words: [
     word(
       "personality personalities",
       "the kind of person someone is, shown in the way they behave and feel",
       "个性；性格",
-      "She has a warm and friendly {personality}.|stubborn mature | The twins look the same, but they have very different {personalities}.|generous mature | A good teacher needs a strong {personality}.|selfish generous",
-      "personal popularity",
+      "She has a warm and friendly {personality}: she's kind to everyone she meets. | The twins look the same, but they have very different {personalities}: one is shy and the other is outgoing.|habits hobbies | A good teacher needs a strong {personality} to keep a noisy class calm.",
+      "habit hobby",
       "character",
     ),
     word(
       "character characters",
       "all the qualities that make a person who they are",
       "性格；品质",
-      "Honesty is an important part of her {character}.|selfish mature | It's not in his {character} to lie.|stubborn sociable | Her brother has a very calm {character}.|generous outgoing",
-      "charity actor",
+      "Honesty is an important part of her {character}. | It's not in his {character} to lie. | Her brother has a very calm {character}: nothing makes him angry.",
+      "habit hobby",
       "personality",
     ),
     word(
       "generous",
       "happy to give money, time or help to others",
       "慷慨的；大方的",
-      "It was very {generous} of you to pay for dinner.|shy stubborn | My grandmother is {generous} with her time.|shy mature | He gave a {generous} gift to the school.|shy sociable",
-      "general selfish",
+      "It was very {generous} of you to pay for dinner. | My grandmother is {generous} with her time and always helps us. | He gave a {generous} gift to the school.",
+      "shy stubborn",
     ),
     word(
       "selfish",
@@ -146,15 +184,15 @@ const personality = vocabularyTopic({
       "shy shyer shyest",
       "nervous and uncomfortable with other people, especially new people",
       "害羞的",
-      "He was too {shy} to ask her to dance.|outgoing sociable | She was {shy} at first, but now she talks to everyone.|outgoing sociable | Don't be {shy}. Come and say hello.|generous mature",
-      "sly outgoing",
+      "He was too {shy} to ask her to dance. | She was {shy} at first, but now she talks to everyone. | Don't be {shy}. Come and say hello.",
+      "outgoing sociable",
     ),
     word(
       "outgoing",
       "friendly and liking to meet new people",
       "外向的；友好的",
-      "My sister is very {outgoing}; she talks to everyone.|shy stubborn | {Outgoing} people often enjoy working in sales.|Shy Stubborn | He's more {outgoing} than his brother, who prefers to stay at home.|shy stubborn",
-      "outdoor ongoing",
+      "My sister is very {outgoing}; she talks to everyone. | {Outgoing} people who love meeting others often enjoy working in sales. | He's more {outgoing} than his brother, who prefers to stay at home.",
+      "shy stubborn",
       "sociable",
     ),
     word(
@@ -183,15 +221,15 @@ const personality = vocabularyTopic({
       "mature",
       "behaving in a sensible way, like an adult",
       "成熟的",
-      "She's very {mature} for a twelve-year-old.|shy selfish | It wasn't very {mature} of you to shout at him.|shy sociable | He has become much more {mature} since he started university.|shy stubborn",
-      "nature major",
+      "She's very {mature} for a twelve-year-old: she behaves like an adult. | It wasn't very {mature} of you to shout at him.|shy sociable | He has become much more {mature} and sensible since he started university.|shy stubborn",
+      "shy selfish",
     ),
     word(
       "easygoing",
       "relaxed, and not easily worried or annoyed",
       "随和的；好相处的",
-      "My dad is very {easygoing}; he never gets angry.|stubborn selfish | She's an {easygoing} person who gets on with everyone.|stubborn selfish | Our teacher is {easygoing} about homework deadlines.|selfish shy",
-      "easy outgoing",
+      "My dad is very {easygoing}; he never gets angry. | She is {easygoing} and gets on with everyone. | Our teacher is {easygoing} about homework deadlines: a day late is fine.|selfish shy",
+      "stubborn selfish",
     ),
     word(
       "considerate",
@@ -201,6 +239,36 @@ const personality = vocabularyTopic({
       "considerable confident",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Shy* and *outgoing* are opposites: a *shy* person feels nervous with new people, an *outgoing* person enjoys them. Look at how the person acts with others in the sentence.",
+        "*shy* 和 *outgoing* 意思相反：*shy* 的人见生人紧张，*outgoing* 的人喜欢和人打交道。看句中这个人和别人相处的表现。",
+      ),
+      meaning: t(
+        "*Sensitive* is about feelings: easily upset, or quick to notice how others feel. *Sensible* means having good sense. Check whether the meaning talks about feelings or about good judgment.",
+        "*sensitive* 和感受有关：容易受伤，或很快察觉别人的感受。*sensible* 是明智的。看释义说的是感受还是判断力。",
+      ),
+      spell: t(
+        "*Considerate* ends in -ate, not -able: c-o-n-s-i-d-e-r-a-t-e; *considerable* is a different word.",
+        "*considerate* 以 -ate 结尾，不是 -able：c-o-n-s-i-d-e-r-a-t-e；*considerable* 是另一个词。",
+      ),
+    },
+    notes: `
+      personality|kind to everyone she meets;twins, one shy and one outgoing;a teacher keeping a class calm|personality is the kind of person you are; a habit is something you do often|personality 是个性；habit 是习惯|habit/habits=a habit is something you do often, not the kind of person you are=habit 是常做的事，不是性格;hobby/hobbies=a hobby is something you do for fun, not the kind of person you are=hobby 是业余爱好，不是性格|a strong personality · a friendly personality|close to *character*|和 *character* 意思相近
+      character|honesty as an important part;not one to lie;a brother nothing makes angry|character is the qualities that make you who you are; a hobby is something you enjoy doing|character 是品格；hobby 是爱好|habit=a habit is something you do often, not all the qualities that make you who you are=habit 是习惯，不是品格;hobby=a hobby is something you do for fun, not the qualities that make you who you are=hobby 是业余爱好，不是品格|a calm character · in his character|*character* is also a person in a story|*character* 也指故事里的人物
+      generous|paying for dinner;giving time and always helping;a big gift to a school|generous means happy to give; selfish means caring only about yourself|generous 是慷慨的；selfish 是自私的|shy=shy means nervous with people, not happy to give=shy 是害羞，不是慷慨;stubborn=stubborn means not changing your mind, not happy to give=stubborn 是固执，不是慷慨;sociable=sociable means enjoying company, not happy to give money or gifts=sociable 是好交际，不是慷慨;mature=mature means sensible like an adult, not happy to give=mature 是成熟，不是慷慨|generous with · a generous gift|noun *generosity*|名词 *generosity*
+      selfish|sweets not shared with a brother;taking the last piece of cake;never helping anyone|selfish means caring only about yourself; generous means happy to give|selfish 是自私的；generous 是慷慨的|generous=generous means happy to give, not caring only about yourself=generous 是乐于给予，不是自私;considerate=considerate means thinking of others, not only about yourself=considerate 是体贴别人，不是自私;mature=mature means sensible like an adult, not caring only about yourself=mature 是成熟，不是自私;sociable=sociable means enjoying company, not caring only about yourself=sociable 是好交际，不是自私;shellfish=shellfish are sea animals with shells, not a word for how a person behaves=shellfish 是贝类海鲜，不是形容人的词|selfish of him · too selfish to|*self* + *-ish*; not *shellfish*|由 *self* 加 *-ish* 构成；不是 *shellfish*
+      shy|too nervous to ask someone to dance;quiet at first, then talking to everyone;told to come and say hello|shy means nervous with people; outgoing means liking to meet people|shy 是害羞的；outgoing 是外向的|outgoing=outgoing means liking to meet new people, not nervous with them=outgoing 是外向，不是紧张害羞;sociable=sociable means enjoying company, not nervous with people=sociable 是好交际，不是害羞|too shy to · shy at first|comparative *shyer*|比较级 *shyer*
+      outgoing|a sister who talks to everyone;people who love meeting others;a brother who prefers staying home|outgoing means liking to meet people; shy means nervous with them|outgoing 是外向的；shy 是害羞的|shy/Shy=shy means nervous with new people, not liking to meet them=shy 是害羞，不是喜欢结识新人;stubborn/Stubborn=stubborn means not changing your mind, not liking to meet people=stubborn 是固执，不是外向|very outgoing · an outgoing person|*outgoing* also means leaving a job: the outgoing president|*outgoing* 也指即将离任的：the outgoing president
+      sensitive|careful words about weight;noticing when friends are sad;skin that needs sun cream|sensitive means easily upset or quick to notice feelings; easygoing means relaxed|sensitive 是敏感的；easygoing 是随和的|outgoing=outgoing means liking to meet people, not easily upset=outgoing 是外向，不是敏感;easygoing=easygoing means relaxed and not easily upset=easygoing 是随和，不容易被惹恼;stubborn=stubborn means not changing your mind, not quick to notice feelings or easily hurt=stubborn 是固执，不是敏感;selfish=selfish means caring only about yourself, not noticing how others feel=selfish 是自私，不会察觉别人的感受;sociable=sociable means enjoying company, not easily hurt by the sun=sociable 是好交际，不是容易被晒伤|sensitive about · sensitive skin|not *sensible*, which means having good sense|不是 *sensible*（明智的）
+      sociable|neighbors who invite us for dinner;not wanting company today;dogs that like company|sociable means enjoying being with people; shy means nervous with them|sociable 是好交际的；shy 是害羞的|shy=shy means nervous with people, not enjoying inviting them=shy 是害羞，不是喜欢请人吃饭;selfish=selfish means caring only about yourself, not enjoying company=selfish 是自私，不是好交际;stubborn=stubborn means not changing your mind, not enjoying company=stubborn 是固执，不是好交际;mature=mature means sensible like an adult, not wanting company=mature 是成熟，不是想要陪伴;socket=a socket is where you plug things in, not a friendly person=socket 是插座，不是爱交际的人|very sociable · sociable animals|from *social*|来自 *social*
+      stubborn|refusing to see a doctor;not saying sorry;like a mule|stubborn means not changing your mind; sociable means enjoying company|stubborn 是固执的；sociable 是好交际的|sociable=sociable means enjoying company, not refusing to change your mind=sociable 是好交际，不是固执;outgoing=outgoing means liking new people, not refusing to change your mind=outgoing 是外向，不是固执;generous=generous means happy to give, not refusing to change your mind=generous 是慷慨，不是固执;stupid=stupid means not clever, not refusing to change your mind=stupid 是笨，不是固执|too stubborn to · as stubborn as a mule|double b: s-t-u-b-b-o-r-n|双写 b：s-t-u-b-b-o-r-n
+      mature|a twelve-year-old who behaves like an adult;not shouting at someone;sensible since university|mature means sensible like an adult; shy means nervous with people|mature 是成熟的；shy 是害羞的|shy=shy means nervous with people, not sensible like an adult=shy 是害羞，不是成熟;selfish=selfish means caring only about yourself, not behaving like an adult=selfish 是自私，不是成熟;sociable=sociable means enjoying company, not sensible like an adult=sociable 是好交际，不是成熟;stubborn=stubborn means not changing your mind, not sensible like an adult=stubborn 是固执，不是成熟|mature for · become more mature|*mature* is not *nature*|*mature* 不是 *nature*
+      easygoing|a dad who never gets angry;getting on with everyone;a day late is fine|easygoing means relaxed; stubborn means not changing your mind|easygoing 是随和的；stubborn 是固执的|stubborn=stubborn means refusing to change your mind, not relaxed=stubborn 是固执，不是随和;selfish=selfish means caring only about yourself, not relaxed with others=selfish 是自私，不是随和;shy=shy means nervous with people, not relaxed about rules=shy 是害羞，不是对规矩随和|very easygoing · easygoing about|also written *easy-going*|也写作 *easy-going*
+      considerate|calling when you'll be late;turning your music down;a kind neighbor|considerate means thinking of others' feelings; stubborn means not changing your mind|considerate 是体贴的；stubborn 是固执的|stubborn=stubborn means not changing your mind, not thinking of others' feelings=stubborn 是固执，不是体贴;shy=shy means nervous with people, not thinking of their needs=shy 是害羞，不是体贴;selfish=selfish means thinking only of yourself, not of others=selfish 是只想着自己，不是体贴;considerable=considerable means large in amount, not kind to others=considerable 是相当多的，不是体贴的|considerate of you · be considerate|*considerate* is not *considerable*, which means large|*considerate* 不是 *considerable*（相当大的）
+    `,
+  },
 });
 
 const gettingOn = vocabularyTopic({
@@ -210,102 +278,137 @@ const gettingOn = vocabularyTopic({
     "Supporting, apologizing and forgiving; admitting, blaming and criticizing; praising and complaining; deserving; ignoring; quarrels, arguments and disagreeing.",
     "支持、道歉和原谅；承认、责备和批评；表扬和抱怨；应得；忽视；争吵、争论和意见不合。",
   ),
+  intro: t(
+    "After a **quarrel**, you might **admit** you were wrong, **apologize**, and hope your friend will **forgive** you. These words help you talk about getting on with people and making up after a fight.",
+    "吵了一 **quarrel**（架）之后，你可能会 **admit**（承认）自己错了，**apologize**（道歉），并希望朋友 **forgive**（原谅）你。这些词帮你谈论与人相处和吵架后和好。",
+  ),
   prerequisites: ["a2-words-people-together"],
   words: [
     word(
       "support supports supported supporting",
       "to help someone, especially when they have problems",
       "支持；帮助",
-      "My family always {supports} me when things are difficult.|blames criticizes | Thank you for all your {support}.|argument quarrel | Which football team do you {support}?|blame forgive",
-      "suppose report",
+      "My family always {supports} me and helps me when things are difficult.|blames criticizes | Thank you for all your {support}.|argument quarrel | Which football team do you {support}? I'm a big fan of Liverpool.",
+      "blame criticize",
     ),
     word(
       "apologize apologizes apologized apologizing",
       "to say that you are sorry",
       "道歉",
-      "You should {apologize} to your sister for breaking her phone.|praise deserve | He {apologized} for being late.|deserved admitted | I {apologize} if I hurt your feelings.|deserve support",
-      "apply complain",
+      "You broke your sister's phone, so you should {apologize} and say sorry. | He {apologized}: \"I'm sorry I'm late.\"|complained disagreed | I {apologize} if I hurt your feelings.",
+      "complain disagree",
     ),
     word(
       "forgive forgives forgave forgiven forgiving",
       "to stop being angry with someone for something they did",
       "原谅",
-      "Please {forgive} me. I didn't mean it.|criticize blame | She never {forgave} him for forgetting her birthday.|praised deserved | I've {forgiven} you, but I won't forget.|criticized deserved",
-      "forget give",
+      "Please {forgive} me. I didn't mean it. | She was angry for years and never {forgave} him for forgetting her birthday.|criticized blamed | I'm not angry any more: I've {forgiven} you, but I won't forget.|criticized blamed",
+      "criticize blame",
     ),
     word(
       "admit admits admitted admitting",
       "to agree that something bad is true, often unwillingly",
       "承认",
-      "He {admitted} that he had broken the window.|praised deserved | I must {admit} I was wrong.|deserve praise | She never {admits} her mistakes.|deserves praises",
-      "admire permit",
+      "He {admitted} that he had broken the window and said sorry.|denied complained | I must {admit} I was wrong: you were right all along. | She never {admits} her mistakes and always says they were someone else's.|denies forgives",
+      "deny complain",
     ),
     word(
       "blame blames blamed blaming",
       "to say that someone is responsible for something bad",
       "责备；归咎于",
-      "Don't {blame} me! It wasn't my fault.|praise apologize | The driver {blamed} the weather for the accident.|apologized deserved | Nobody {blames} you for what happened.|apologizes deserves",
-      "claim praise",
+      "Don't {blame} me for the broken window! It wasn't my fault. | The driver {blamed} the weather for the accident.|praised thanked | It was an accident: nobody {blames} you for what happened.|praises thanks",
+      "praise thank",
     ),
     word(
       "criticize criticizes criticized criticizing",
       "to say what you think is bad about someone or something",
       "批评；指责",
-      "My boss {criticized} my report in front of everyone.|apologized deserved | It's easy to {criticize} other people.|apologize deserve | Parents shouldn't always {criticize} their children; they should also praise them.|apologize deserve",
-      "praise organize",
+      "My boss {criticized} my report in front of everyone and said it was full of mistakes.|praised ignored | It's easy to {criticize} other people and say what they do wrong. | Parents shouldn't always {criticize} their children; they should also praise them.",
+      "praise ignore",
     ),
     word(
       "praise praises praised praising",
       "to say that someone or something is very good",
       "表扬；称赞",
-      "The teacher {praised} her for her excellent essay.|blamed complained | Children need {praise} as well as rules.|blame quarrel | Everyone {praises} the food at that restaurant.|complains apologizes",
-      "price blame",
+      "The teacher {praised} her for her excellent essay.|blamed criticized | Children need {praise} when they do well, as well as rules. | Everyone {praises} the food at that restaurant: it's delicious.|blames criticizes",
+      "blame criticize",
     ),
     word(
       "complain complains complained complaining",
       "to say that you are not happy about something",
       "抱怨；投诉",
-      "Our neighbors {complained} about the noise.|praised forgave | Stop {complaining} and eat your dinner!|praising forgiving | He's always {complaining} about the weather.|admitting deserving",
-      "explain compare",
+      "Our neighbors {complained} to us about the noise and asked us to be quiet.|apologized lied | Stop {complaining} about the food and eat your dinner!|apologizing lying | He's always {complaining} about the weather.|apologizing lying",
+      "apologize lie",
     ),
     word(
       "deserve deserves deserved deserving",
       "to have earned something because of what you have done",
       "应得；值得",
-      "You worked hard, so you {deserve} a holiday.|apologize complain | She {deserved} to win the prize.|complained apologized | He doesn't {deserve} such a kind girlfriend.|complain apologize",
-      "desert reserve",
+      "You worked hard, so you {deserve} a holiday. | She {deserved} to win the prize after all her hard work.|refused forgot | He's so rude to her that he doesn't {deserve} such a kind girlfriend.",
+      "deny ignore",
     ),
     word(
       "quarrel quarrels quarreled quarreling",
       "an angry argument; to argue angrily",
       "争吵",
-      "The two brothers {quarreled} about money.|praised supported | We had a {quarrel}, but we're friends again now.|support praise | Stop {quarreling}, you two!|praising supporting",
-      "quarter question",
+      "The two brothers {quarreled} angrily about money and shouted at each other.|apologized laughed | We had a {quarrel}, but we're friends again now. | Stop {quarreling}, you two, and be friends again!|apologizing laughing",
+      "joke chat",
       "argument",
     ),
     word(
       "argument arguments",
       "a talk in which people disagree, often angrily",
       "争论；争吵",
-      "I had an {argument} with my dad about my phone.|support praise | They never have {arguments} about money.|supports praises | The {argument} ended when she walked out of the room.|support praise",
-      "agreement document",
+      "My dad and I had a big {argument} about my phone, and we both shouted. | They never have {arguments} about money: they always agree.|jokes chats | The angry {argument} ended when she walked out of the room.",
+      "joke chat",
       "quarrel",
     ),
     word(
       "disagree disagrees disagreed disagreeing",
       "to have a different opinion from someone",
       "不同意；意见不合",
-      "I {disagree} with you about the new rule.|deserve forgive | My parents often {disagree} about where to go on holiday.|deserve apologize | Two teachers {disagreed} about the best answer.|deserved forgave",
-      "dislike disappear",
+      "I {disagree} with you about the new rule: I think it's a bad idea, and you think it's good. | My parents often {disagree} about where to go on holiday: Mom wants the beach and Dad wants the mountains. | Two teachers {disagreed} about the best answer: one said A and the other said B.|agreed joked",
+      "agree joke",
     ),
     word(
       "ignore ignores ignored ignoring",
       "to pay no attention to someone or something",
       "忽视；不理睬",
-      "I said hello, but she {ignored} me.|deserved apologized | Don't {ignore} the doctor's advice.|apologize complain | He kept {ignoring} my messages.|apologizing disagreeing",
-      "ignite inform",
+      "I said hello, but she {ignored} me and walked past without a word.|answered thanked | Don't {ignore} the doctor's advice: do what she says.|follow answer | He kept {ignoring} my messages and never wrote back.|answering thanking",
+      "answer thank",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Praise* and *criticize* are opposites: you *praise* what is good and *criticize* what is bad. Look for words like *excellent* or *mistakes* in the sentence.",
+        "*praise* 和 *criticize* 意思相反：*praise* 夸好的，*criticize* 批评不好的。留意句中的 *excellent* 或 *mistakes* 这类词。",
+      ),
+      meaning: t(
+        "*Blame* and *forgive* are both about something bad someone did, but to *blame* is to say they are responsible, and to *forgive* is to stop being angry. Check whether the anger starts or ends.",
+        "*blame* 和 *forgive* 都与别人做的坏事有关，但 *blame* 是说他该负责，*forgive* 是不再生气。看怒气是开始还是结束。",
+      ),
+      spell: t(
+        "*Forgive* has an irregular past: *forgave*, *forgiven*; *quarrel* doubles the r: q-u-a-r-r-e-l.",
+        "*forgive* 的过去式不规则：*forgave*、*forgiven*；*quarrel* 双写 r：q-u-a-r-r-e-l。",
+      ),
+    },
+    notes: `
+      support|family help when things are difficult;thanks for help;a football team|to support is to help; to blame is to say someone is responsible for something bad|support 是支持；blame 是责备|blame/blames=to blame is to say someone caused something bad, not to help them=blame 是归咎，不是帮助;criticize/criticizes=to criticize is to say what is bad, not to help=criticize 是批评，不是帮助;argument=an argument is an angry talk, not help you thank someone for=argument 是争吵，不是值得感谢的帮助;quarrel=a quarrel is an angry argument, not help=quarrel 是争吵，不是帮助;forgive=to forgive is to stop being angry, not to be a fan of a team=forgive 是原谅，不是支持球队|support someone · support a team|noun and verb|既是名词也是动词
+      apologize|saying sorry for a broken phone;"I'm sorry I'm late";hurt feelings|to apologize is to say sorry; to complain is to say you are not happy|apologize 是道歉；complain 是抱怨|complain/complained=to complain is to say you are not happy, not to say sorry=complain 是抱怨，不是道歉;disagree/disagreed=to disagree is to have a different opinion, not to say sorry=disagree 是意见不同，不是道歉|apologize to · apologize for|noun *apology*|名词 *apology*
+      forgive|"I didn't mean it";years of anger about a birthday;not angry any more|to forgive is to stop being angry; to blame is to say someone is responsible|forgive 是原谅；blame 是责备|criticize/criticized=to criticize is to say what is bad, not to stop being angry=criticize 是批评，不是原谅;blame/blamed=to blame is to say someone is responsible, not to stop being angry=blame 是归咎，不是原谅|forgive someone for · please forgive me|past *forgave*, *forgiven*|过去式 *forgave*，过去分词 *forgiven*
+      admit|a broken window and sorry;being wrong;mistakes she says were others'|to admit is to agree something bad is true; to deny is to say it isn't true|admit 是承认；deny 是否认|deny/denied/denies=to deny is to say something is not true, not to agree it is=deny 是否认，不是承认;complain/complained=to complain is to say you are not happy, not to agree something bad is true=complain 是抱怨，不是承认;forgives=to forgive is to stop being angry with someone, not to agree your own mistake is true=forgive 是原谅别人，不是承认自己的错|admit a mistake · I must admit|past *admitted* doubles the t|过去式 *admitted* 双写 t
+      blame|a broken window that wasn't my fault;the weather and an accident;an accident nobody caused on purpose|to blame is to say someone is responsible for something bad; to praise is to say they did well|blame 是责备；praise 是表扬|praise/praised/praises=to praise is to say something is good, not that someone caused something bad=praise 是表扬，不是归咎;thank/thanked/thanks=to thank is to say you are grateful, not that someone caused something bad=thank 是感谢，不是归咎|blame someone for · don't blame me|*blame* is also a noun: take the blame|*blame* 也是名词：take the blame
+      criticize|a report full of mistakes;saying what others do wrong;children who should also be praised|to criticize is to say what is bad; to praise is to say what is good|criticize 是批评；praise 是表扬|praise/praised=to praise is to say something is good, not what is bad=praise 是夸好的，不是批评;ignore/ignored=to ignore is to pay no attention, not to say what is bad=ignore 是不理睬，不是批评|criticize someone · easy to criticize|British spelling *criticise*|英式拼写 *criticise*
+      praise|an excellent essay;doing well, as well as rules;delicious food|to praise is to say something is very good; to blame is to say someone caused something bad|praise 是表扬；blame 是责备|blame/blamed/blames=to blame is to say someone caused something bad, not that they did well=blame 是归咎，不是表扬;criticize/criticized/criticizes=to criticize is to say what is bad, not what is very good=criticize 是批评，不是表扬;quarrel=a quarrel is an angry argument, not something children need when they do well=quarrel 是争吵，不是孩子做得好时需要的东西|praise someone for · need praise|*praise* is not *price*|*praise* 不是 *price*
+      complain|neighbors asking for quiet about noise;food at dinner;the weather|to complain is to say you are not happy; to apologize is to say sorry|complain 是抱怨；apologize 是道歉|apologize/apologized/apologizing=to apologize is to say sorry, not to say you are not happy=apologize 是道歉，不是抱怨;lie/lied/lying=to lie is to say something untrue, not to say you are not happy=lie 是说谎，不是抱怨|complain about · complain to|noun *complaint*|名词 *complaint*
+      deserve|a holiday after hard work;a prize after hard work;a kind girlfriend he is rude to|to deserve is to have earned something; to deny is to say something isn't true|deserve 是应得；deny 是否认|deny=to deny is to say something isn't true, not to have earned it=deny 是否认，不是应得;ignore=to ignore is to pay no attention, not to have earned something=ignore 是不理睬，不是应得;refused=to refuse is to say no, not to have earned something=refuse 是拒绝，不是应得;forgot=to forget is not to remember, not to have earned something=forget 是忘记，不是应得|deserve a rest · deserve to win|*deserve* is not *reserve*|*deserve* 不是 *reserve*
+      quarrel|brothers shouting about money;friends again after one;two people told to be friends again|a quarrel is an angry argument; a joke is something funny|quarrel 是争吵；joke 是笑话|joke=a joke is something funny, not an angry argument=joke 是笑话，不是争吵;chat=a chat is a friendly talk, not an angry argument=chat 是友好的聊天，不是争吵;apologized/apologizing=to apologize is to say sorry, not to argue angrily=apologize 是道歉，不是吵架;laughed/laughing=to laugh is to show something is funny, not to argue angrily=laugh 是笑，不是吵架|have a quarrel · quarrel about|American *quarreled*, British *quarrelled*|美式 *quarreled*，英式 *quarrelled*
+      argument|shouting about a phone;money, when they always agree;ended by walking out|an argument is an angry talk; a chat is a friendly one|argument 是争论；chat 是聊天|joke/jokes=a joke is something funny, not an angry talk=joke 是笑话，不是争吵;chat/chats=a chat is a friendly talk, not an angry one=chat 是友好的聊天，不是争吵|have an argument · an argument about|*argue* drops its e: *argument*|*argue* 去掉 e：*argument*
+      disagree|a bad idea against a good one;the beach or the mountains;answer A or answer B|to disagree is to have a different opinion; to agree is to have the same one|disagree 是不同意；agree 是同意|agree/agreed=to agree is to have the same opinion, not a different one=agree 是意见相同，不是不同;joke/joked=to joke is to say something funny, not to have a different opinion=joke 是开玩笑，不是意见不同|disagree with · disagree about|*dis-* + *agree*|由 *dis-* 加 *agree* 构成
+      ignore|walking past without a word;a doctor's advice;messages never answered|to ignore is to pay no attention; to answer is to reply|ignore 是不理睬；answer 是回答|answer/answered/answering=to answer is to reply, not to pay no attention=answer 是回答，不是不理睬;thank/thanked/thanking=to thank is to say you are grateful, not to pay no attention=thank 是感谢，不是不理睬;follow=to follow advice is to do what it says, not to pay no attention to it=follow 是听从，不是忽视|ignore someone · ignore advice|*ignore* is not *ignorant*, which means not knowing|*ignore* 不是 *ignorant*（无知的）
+    `,
+  },
 });
 
 const emotions = vocabularyTopic({
@@ -315,42 +418,46 @@ const emotions = vocabularyTopic({
     "Emotions; anger, fear and joy; grateful, disappointed and frustrated; confused and ashamed; relieved and annoyed.",
     "情绪；愤怒、恐惧和喜悦；感激的、失望的和沮丧的；困惑的和羞愧的；松了口气的和恼火的。",
   ),
+  intro: t(
+    "You can feel **anger**, **fear** or **joy**; you can be **grateful** for help, **relieved** when a problem is over, or **disappointed** when things go wrong. These words help you say how you feel.",
+    "你会感到 **anger**（愤怒）、**fear**（恐惧）或 **joy**（喜悦）；得到帮助会 **grateful**（感激），问题解决会 **relieved**（松了口气），事情不顺会 **disappointed**（失望）。这些词帮你说出自己的感受。",
+  ),
   prerequisites: ["a2-words-feelings-2"],
   words: [
     word(
       "emotion emotions",
       "a strong feeling, such as love, anger or fear",
       "情感；情绪",
-      "It's hard for him to show his {emotions}.|grateful relieved | Fear is a natural {emotion}.|anger joy | Her voice was full of {emotion} as she said goodbye.|grateful ashamed",
-      "motion emoji",
+      "It's hard for him to show his {emotions}: he never cries or laughs.|opinions situations | Fear is a natural {emotion}. | Her voice was full of {emotion} as she said goodbye.",
+      "opinion situation",
     ),
     word(
       "emotional",
       "having or showing strong feelings",
       "情绪的；激动的",
-      "The goodbye at the airport was very {emotional}.|grateful ashamed | She gets {emotional} when she talks about her grandmother.|grateful relieved | Teenagers go through many {emotional} changes.|grateful relieved",
-      "emotion national",
+      "The goodbye at the airport was very {emotional}: everyone was crying. | She gets {emotional} and starts to cry when she talks about her grandmother.|grateful relieved | Teenagers go through many {emotional} changes.|grateful relieved",
+      "grateful ashamed",
     ),
     word(
       "anger",
       "the strong feeling you have when you are very annoyed",
       "愤怒",
-      "He couldn't hide his {anger} when he saw the broken window.|joy grateful | She shouted in {anger}.|joy relieved | Count to ten to control your {anger}.|joy grateful",
-      "danger hunger",
+      "He couldn't hide his {anger} and shouted when he saw the broken window. | She shouted in {anger} and slammed the door. | Count to ten to control your {anger} when someone annoys you.",
+      "joy fear",
     ),
     word(
       "fear fears",
       "the feeling you have when you think something bad may happen",
       "恐惧；害怕",
-      "She has a {fear} of spiders.|joy anger | The children were shaking with {fear}.|joy relieved | You must face your {fears}.|joys angers",
-      "fair dear",
+      "Her {fear} of spiders is so strong that she screams when she sees one. | The children were shaking with {fear} as the storm got closer. | You must face your {fears}, the things that frighten you.|joys angers",
+      "joy anger",
     ),
     word(
       "joy",
       "great happiness",
       "喜悦；快乐",
-      "The baby brought {joy} to the whole family.|anger fear | She jumped for {joy} when she heard the news.|anger fear | Music brings {joy} to many people.|grateful relieved",
-      "toy joke",
+      "The baby brought {joy} to the whole family. | She jumped for {joy} when she heard the news. | Music brings {joy} and happiness to many people.",
+      "anger fear",
     ),
     word(
       "grateful",
@@ -363,8 +470,8 @@ const emotions = vocabularyTopic({
       "disappointed",
       "sad because something was not as good as you hoped",
       "失望的",
-      "I was {disappointed} with my exam results.|grateful relieved | The fans were {disappointed} when the concert was canceled.|grateful relieved | Mom will be {disappointed} if you don't come home for her birthday.|grateful relieved",
-      "disappeared appointed",
+      "I was {disappointed} with my exam results: they were worse than I hoped. | The fans were {disappointed} when the concert was canceled. | Mom will be {disappointed} if you don't come home for her birthday.",
+      "grateful relieved",
     ),
     word(
       "frustrated",
@@ -404,6 +511,36 @@ const emotions = vocabularyTopic({
       "frustrated",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Emotion* is a noun and *emotional* is an adjective: you show your *emotions*, but a goodbye is *emotional*. Look at the word before the gap.",
+        "*emotion* 是名词，*emotional* 是形容词：show your *emotions*，但 a goodbye is *emotional*。看空格前面的词。",
+      ),
+      meaning: t(
+        "*Disappointed* and *frustrated* are both unhappy feelings, but you are *disappointed* when something was not as good as you hoped, and *frustrated* when you keep trying and cannot get what you want. Check whether the meaning talks about hopes or about trying.",
+        "*disappointed* 和 *frustrated* 都是不开心，但 *disappointed* 是结果不如期望，*frustrated* 是一再努力却做不到。看释义说的是期望还是努力。",
+      ),
+      spell: t(
+        "*Disappointed* has one s and a double p: d-i-s-a-p-p-o-i-n-t-e-d.",
+        "*disappointed* 有一个 s、两个 p：d-i-s-a-p-p-o-i-n-t-e-d。",
+      ),
+    },
+    notes: `
+      emotion|someone who never cries or laughs;fear as a natural one;a voice saying goodbye|an emotion is a strong feeling; an opinion is what you think|emotion 是情感；opinion 是观点|opinion/opinions=an opinion is what you think about something, not a strong feeling like love or fear=opinion 是看法，不是爱或恐惧这样的情感;situation/situations=a situation is what is happening, not a feeling=situation 是情况，不是情感|show your emotions · full of emotion|adjective *emotional*|形容词 *emotional*
+      emotional|everyone crying at the airport;starting to cry about a grandmother;changes in teenagers|emotional means showing strong feelings; grateful means wanting to thank|emotional 是激动的；grateful 是感激的|grateful=grateful means wanting to thank someone, not crying with strong feelings=grateful 是感激，不是情绪激动得哭;ashamed=ashamed means feeling bad about what you did, not crying at a goodbye=ashamed 是羞愧，不是告别时激动;relieved=relieved means happy something bad is over, not showing strong feelings and crying=relieved 是松了口气，不是激动得哭|get emotional · an emotional goodbye|from *emotion*|来自 *emotion*
+      anger|shouting at a broken window;a slammed door;counting to ten|anger is a strong annoyed feeling; joy is great happiness|anger 是愤怒；joy 是喜悦|joy=joy is great happiness, not the feeling that makes you shout and slam doors=joy 是喜悦，不是让人大喊摔门的情绪;fear=fear is being afraid, not the feeling of being very annoyed=fear 是害怕，不是恼怒|in anger · control your anger|adjective *angry*|形容词 *angry*
+      fear|screaming at spiders;shaking as a storm came;things that frighten you|fear is the feeling that something bad may happen; joy is great happiness|fear 是恐惧；joy 是喜悦|joy/joys=joy is great happiness, not the feeling that something bad may happen=joy 是喜悦，不是担心坏事发生;anger/angers=anger is feeling very annoyed, not afraid=anger 是愤怒，不是害怕|a fear of · shaking with fear|*fear* is also a verb: I fear the worst|*fear* 也是动词：I fear the worst
+      joy|a baby for the whole family;jumping at good news;music and happiness|joy is great happiness; fear is being afraid|joy 是喜悦；fear 是恐惧|anger=anger is feeling very annoyed, not great happiness=anger 是愤怒，不是喜悦;fear=fear is being afraid, not great happiness=fear 是害怕，不是喜悦|jump for joy · bring joy|adjective *joyful*|形容词 *joyful*
+      grateful|all your help;everyone who gave money;friends visiting in hospital|grateful means wanting to thank; annoyed means a little angry|grateful 是感激的；annoyed 是恼火的|annoyed=annoyed means a little angry, not wanting to thank someone=annoyed 是有点生气，不是感激;ashamed=ashamed means feeling bad about what you did, not wanting to thank=ashamed 是羞愧，不是感激;confused=confused means not understanding, not wanting to thank=confused 是困惑，不是感激;graceful=graceful means moving in a smooth, beautiful way, not thankful=graceful 是优雅，不是感激|grateful for · grateful to|*grate-* not *great-*: g-r-a-t-e-f-u-l|拼作 *grate-* 不是 *great-*
+      disappointed|exam results worse than hoped;a canceled concert;not coming home for a birthday|disappointed means sad because something was worse than you hoped; relieved means happy a problem is over|disappointed 是失望的；relieved 是松了口气的|grateful=grateful means wanting to thank someone, not sad about something worse than you hoped=grateful 是感激，不是失望;relieved=relieved means happy a problem is over, not sad things went wrong=relieved 是松了口气，不是失望|disappointed with · disappointed when|*disappoint* has one s, double p|*disappoint* 一个 s、两个 p
+      frustrated|a slow computer;nobody listening to ideas;failing a driving test again|frustrated means annoyed because you can't do what you want; grateful means wanting to thank|frustrated 是受挫的；grateful 是感激的|grateful=grateful means wanting to thank someone, not annoyed at failing=grateful 是感激，不是受挫;relieved=relieved means happy something bad is over, not annoyed because you can't do something=relieved 是松了口气，不是受挫;frightened=frightened means afraid, not annoyed because you cannot do something=frightened 是害怕，不是因做不成事而恼火|get frustrated · feel frustrated|noun *frustration*|名词 *frustration*
+      confused|asking for an explanation again;new road signs;French you don't understand|confused means not able to understand; relieved means happy a problem is over|confused 是困惑的；relieved 是松了口气的|grateful=grateful means wanting to thank someone, not unable to understand=grateful 是感激，不是不明白;relieved=relieved means happy a problem is over, not unable to understand=relieved 是松了口气，不是困惑;ashamed=ashamed means feeling bad about what you did, not unable to understand signs=ashamed 是羞愧，不是看不懂|confused about · look confused|*confusing* describes what confuses you|*confusing* 描述让人困惑的东西
+      ashamed|lying to a mother;something unkind you said;forgetting a name|ashamed means feeling bad about what you did; relieved means happy something is over|ashamed 是羞愧的；relieved 是松了口气的|grateful=grateful means wanting to thank someone, not feeling bad about what you did=grateful 是感激，不是羞愧;relieved=relieved means happy something bad is over, not feeling bad about what you did=relieved 是松了口气，不是羞愧;amazed=amazed means very surprised, not feeling bad about something you did=amazed 是惊讶，不是羞愧;shameless=shameless means feeling no shame at all, which is the opposite=shameless 是不知羞耻，正好相反|ashamed of · ashamed to say|*a-* + *shamed*|由 *a-* 加 *shamed* 构成
+      relieved|a passport found;everyone safe;an exam that is over|relieved means happy something bad is over; annoyed means a little angry|relieved 是松了口气的；annoyed 是恼火的|ashamed=ashamed means feeling bad about what you did, not happy a problem is over=ashamed 是羞愧，不是松了口气;annoyed=annoyed means a little angry, not happy a problem is over=annoyed 是有点生气，不是松了口气|relieved to hear · so relieved|*ie* in *relieved*, like *believe*|*relieved* 里是 *ie*，像 *believe*
+      annoyed|someone late again;people interrupting;a door left open|annoyed means a little angry; grateful means wanting to thank|annoyed 是恼火的；grateful 是感激的|grateful=grateful means wanting to thank someone, not a little angry=grateful 是感激，不是生气;relieved=relieved means happy a problem is over, not a little angry=relieved 是松了口气，不是生气|annoyed with · get annoyed|*annoying* describes the person or thing that annoys you|*annoying* 描述让人烦的人或事
+    `,
+  },
 });
 
 const social = vocabularyTopic({
@@ -412,6 +549,10 @@ const social = vocabularyTopic({
   summary: t(
     "Gatherings and reunions; visitors; gossip; greeting people; accepting and refusing; attitudes, opportunities and situations; conversations and topics.",
     "聚会和重聚；来访者；闲话；打招呼；接受和拒绝；态度、机会和情况；谈话和话题。",
+  ),
+  intro: t(
+    "At a family **gathering** or a class **reunion**, you **greet** old friends, start a **conversation**, and maybe share a little **gossip**. These words help you talk about meeting and talking with people.",
+    "在家庭 **gathering**（聚会）或同学 **reunion**（重聚）上，你会 **greet**（问候）老朋友，开始一段 **conversation**（谈话），也许还聊点 **gossip**（八卦）。这些词帮你谈论与人见面和交谈。",
   ),
   prerequisites: ["a2-words-people-together"],
   words: [
@@ -427,7 +568,7 @@ const social = vocabularyTopic({
       "reunion reunions",
       "a meeting of people who have not seen each other for a long time",
       "团聚；重聚",
-      "Our class is having a ten-year {reunion} next month.|attitude situation | It was an emotional {reunion} at the airport.|attitude topic | Family {reunions} are a big part of Chinese New Year.|attitudes topics",
+      "Our class is having a ten-year {reunion} next month.|attitude situation | The {reunion} at the airport was emotional: they hadn't met for years.|attitude topic | Family {reunions} are a big part of Chinese New Year.|attitudes topics",
       "union return",
       "gathering",
     ),
@@ -442,29 +583,29 @@ const social = vocabularyTopic({
       "gossip gossips",
       "talk about other people's private lives, often unkind or untrue",
       "闲话；八卦",
-      "Don't believe all the {gossip} you hear.|opportunity attitude | They spent the evening drinking tea and sharing {gossip}.|opportunity situation | She loves to {gossip} about her neighbors.|accept refuse",
-      "gospel goggles",
+      "Don't believe all the {gossip} you hear. | They spent the evening drinking tea and sharing {gossip}.|opportunity situation | She loves to {gossip}, telling everyone the secrets of her neighbors.|greet complain",
+      "opportunity attitude",
     ),
     word(
       "greet greets greeted greeting",
       "to say hello to someone or welcome them",
       "问候；迎接",
-      "Our host {greeted} us at the door with a big smile.|refused accepted | In Japan, people often {greet} each other with a bow.|refuse gossip | She {greets} every customer by name.|refuses gossips",
-      "great agree",
+      'Our host {greeted} us at the door and said, "Welcome!"|refused ignored | In Japan, people often {greet} each other with a bow. | She {greets} every customer by name.|refuses ignores',
+      "refuse ignore",
     ),
     word(
       "accept accepts accepted accepting",
       "to say yes to something that is offered",
       "接受",
-      "She {accepted} the job offer at once.|greeted gossiped | Please {accept} this small gift.|greet gossip | Do you {accept} credit cards?|greet gossip",
-      "except expect",
+      "She {accepted} the job offer at once and started work on Monday.|refused greeted | Please {accept} this small gift. | Do you {accept} credit cards, or can I only pay in cash?",
+      "refuse greet",
     ),
     word(
       "refuse refuses refused refusing",
       "to say no to something; to say you will not do something",
       "拒绝",
-      "He {refused} to answer my question.|greeted gossiped | I couldn't {refuse} such a kind invitation.|greet gossip | The child {refuses} to eat vegetables.|greets gossips",
-      "refuel reuse",
+      'He {refused} to answer my question and said, "No comment."|agreed offered | I couldn\'t {refuse} such a kind invitation, so I said yes.|accept offer | The child {refuses} to eat vegetables and pushes the plate away.|agrees offers',
+      "agree offer",
     ),
     word(
       "attitude attitudes",
@@ -491,17 +632,47 @@ const social = vocabularyTopic({
       "conversation conversations",
       "a talk between two or more people",
       "谈话；对话",
-      "I had a long {conversation} with my grandmother.|attitude opportunity | It's hard to have a {conversation} in a noisy restaurant.|attitude situation | Our English teacher wants us to practice everyday {conversations}.|attitudes opportunities",
+      "I had a long {conversation} with my grandmother.|attitude opportunity | Our {conversation} was hard to hear in the noisy restaurant.|attitude situation | Our English teacher wants us to practice everyday {conversations}.|attitudes opportunities",
       "conservation invitation",
     ),
     word(
       "topic topics",
       "a subject that people talk or write about",
       "话题；主题",
-      "The weather is a safe {topic} of conversation.|visitor attitude | Let's change the {topic}.|visitor reunion | We discussed many {topics} at the meeting.|visitors reunions",
+      "The weather is a safe {topic} of conversation.|visitor attitude | Let's change the {topic} and talk about something else.|visitor reunion | We discussed many {topics} at the meeting.|visitors reunions",
       "tropic top",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Accept* and *refuse* are opposites: you *accept* when you say yes to an offer, and *refuse* when you say no. Look for clues like *said yes* or *No comment*.",
+        "*accept* 和 *refuse* 意思相反：答应别人的提议是 *accept*，拒绝是 *refuse*。留意 *said yes* 或 *No comment* 这类线索。",
+      ),
+      meaning: t(
+        "A *gathering* is any meeting of people for a social reason; a *reunion* is a meeting of people who have not seen each other for a long time. Check whether the meaning says the people were apart for long.",
+        "*gathering* 是任何社交聚会；*reunion* 是久别之人的重聚。看释义有没有说这些人分开了很久。",
+      ),
+      spell: t(
+        "*Opportunity* has a double p and ends in -ity: o-p-p-o-r-t-u-n-i-t-y.",
+        "*opportunity* 双写 p，以 -ity 结尾：o-p-p-o-r-t-u-n-i-t-y。",
+      ),
+    },
+    notes: `
+      gathering|a family meeting for a birthday;large ones not allowed;a village one every summer|a gathering is a social meeting of people; an attitude is how you think and feel|gathering 是聚会；attitude 是态度|attitude/attitudes=an attitude is the way you think and feel, not a meeting of people=attitude 是态度，不是聚会;topic/topics=a topic is a subject to talk about, not a meeting of people=topic 是话题，不是聚会;opportunity=an opportunity is a chance, not a meeting of people=opportunity 是机会，不是聚会;gardening=gardening is working in a garden, not people meeting together=gardening 是园艺，不是聚会|a family gathering · a small gathering|verb *gather*: to come together|动词 *gather*：聚集
+      reunion|a class ten years later;people who hadn't met for years;Chinese New Year families|a reunion is meeting again after a long time; a situation is what is happening|reunion 是重聚；situation 是情况|attitude/attitudes=an attitude is the way you think and feel, not a meeting after a long time=attitude 是态度，不是重聚;situation=a situation is what is happening, not a meeting after a long time=situation 是情况，不是重聚;topic/topics=a topic is a subject to talk about, not a meeting after a long time=topic 是话题，不是重聚|a family reunion · a class reunion|*re-* + *union*: coming together again|*re-* 加 *union*：再次相聚
+      visitor|thousands at a museum;guests from England;signing in at a desk|a visitor is a person who comes to see a place; a topic is a subject|visitor 是来访者；topic 是话题|topics/Topics=topics are subjects to talk about, not people who come to a place=topic 是话题，不是来访的人;attitudes/Attitudes=attitudes are ways of thinking, not people who come to a place=attitude 是态度，不是来访的人;situations=situations are what is happening, not people who come to see you=situation 是情况，不是来访的人|have visitors · visitors to the museum|from *visit* + *-or*|由 *visit* 加 *-or* 构成
+      gossip|things you shouldn't believe;news shared over tea;neighbors' secrets told to everyone|gossip is talk about other people's private lives; an opportunity is a chance|gossip 是八卦；opportunity 是机会|opportunity=an opportunity is a chance to do something, not talk about people's private lives=opportunity 是机会，不是八卦;attitude=an attitude is how you think, not talk about other people=attitude 是态度，不是八卦;situation=a situation is what is happening, not talk shared about others=situation 是情况，不是八卦;greet=to greet is to say hello, not to tell secrets about people=greet 是打招呼，不是说别人闲话;complain=to complain is to say you're not happy, not to tell people's secrets=complain 是抱怨，不是传播别人的秘密|share gossip · gossip about|noun and verb|既是名词也是动词
+      greet|a host saying "Welcome!";a bow in Japan;every customer by name|to greet is to say hello; to ignore is to pay no attention|greet 是问候；ignore 是不理睬|refuse/refused/refuses=to refuse is to say no, not to say hello and welcome=refuse 是拒绝，不是问候欢迎;ignore/ignored/ignores=to ignore is to pay no attention, not to say hello=ignore 是不理睬，不是问候|greet someone · greet with a smile|noun *greeting*|名词 *greeting*
+      accept|a job offer and work on Monday;a small gift;credit cards or only cash|to accept is to say yes to an offer; to refuse is to say no|accept 是接受；refuse 是拒绝|refuse/refused=to refuse is to say no, not yes to an offer=refuse 是拒绝，不是接受;greet/greeted=to greet is to say hello, not to say yes to an offer=greet 是打招呼，不是接受|accept an offer · accept a gift|*accept* is not *except*, which means but not|*accept* 不是 *except*（除了）
+      refuse|"No comment";a kind invitation answered yes;vegetables pushed away|to refuse is to say no; to agree is to say yes|refuse 是拒绝；agree 是同意|agree/agreed/agrees=to agree is to say yes, not no=agree 是同意，不是拒绝;offer/offered/offers=to offer is to ask if someone wants something, not to say no=offer 是主动提出，不是拒绝;accept=to accept an invitation is to say yes, but here you couldn't say no=accept 是接受；这里说的是没法拒绝|refuse to · refuse an invitation|noun *refusal*|名词 *refusal*
+      attitude|a positive one to life;feelings about work;different views on money|an attitude is how you think and feel; a gathering is a meeting|attitude 是态度；gathering 是聚会|gathering/gatherings=a gathering is a meeting of people, not how you think and feel=gathering 是聚会，不是态度;reunion/reunions=a reunion is meeting again, not how you think and feel=reunion 是重聚，不是态度;visitor=a visitor comes to see a place, not how you feel about work=visitor 是来访者，不是态度;altitude=altitude is height above the sea, not how you think and feel about something=altitude 是海拔高度，不是态度|a positive attitude · attitude to|*attitude* is not *altitude*, height|*attitude* 不是 *altitude*（高度）
+      opportunity|learning Spanish abroad;a summer job to earn money;jobs in big cities|an opportunity is a chance; an attitude is how you think|opportunity 是机会；attitude 是态度|attitude/attitudes=an attitude is how you think and feel, not a chance to do something=attitude 是态度，不是机会;gossip/gossips=gossip is talk about other people, not a chance to do something=gossip 是八卦，不是机会|the opportunity to · job opportunities|double p|双写 p
+      situation|getting worse every day;in my place;ordering food in real life|a situation is what is happening; a visitor is a person who comes|situation 是情况；visitor 是来访者|visitor/visitors=a visitor is a person who comes to see you, not what is happening=visitor 是来访者，不是情况;reunion/reunions=a reunion is a meeting again, not what is happening=reunion 是重聚，不是情况;gossip=gossip is talk about people, not your position=gossip 是八卦，不是处境;solution=a solution is an answer to a problem, not what is happening=solution 是解决办法，不是处境|a difficult situation · in my situation|*situation* is not *station*|*situation* 不是 *station*
+      conversation|a long talk with a grandmother;a noisy restaurant;everyday English|a conversation is a talk between people; a situation is what is happening|conversation 是谈话；situation 是情况|attitude/attitudes=an attitude is how you think, not a talk between people=attitude 是态度，不是谈话;opportunity/opportunities=an opportunity is a chance, not a talk between people=opportunity 是机会，不是谈话;situation=a situation is what is happening, not a talk between people=situation 是情况，不是谈话|have a conversation · a long conversation|*conversation* is not *conservation*, protecting nature|*conversation* 不是 *conservation*（保护自然）
+      topic|the weather in conversation;talking about something else;many at a meeting|a topic is a subject to talk about; a visitor is a person|topic 是话题；visitor 是来访者|visitor/visitors=a visitor is a person, not a subject to talk about=visitor 是来访者，不是话题;attitude=an attitude is how you think, not a subject to talk about=attitude 是态度，不是话题;reunion/reunions=a reunion is a meeting again, not a subject to talk about=reunion 是重聚，不是话题;tropic/tropics=the tropics are the hot parts of the world near the equator, not a subject to talk about=tropic 是热带，不是话题|change the topic · a safe topic|*topic* is not *tropic*|*topic* 不是 *tropic*
+    `,
+  },
 });
 
 const lifeEvents = vocabularyTopic({
@@ -511,65 +682,69 @@ const lifeEvents = vocabularyTopic({
     "Birth and death; adults, teenagers and youth; the elderly and retirement; funerals; pregnant; twins and ancestors.",
     "出生和死亡；成年人、青少年和青年时期；老年人和退休；葬礼；怀孕的；双胞胎和祖先。",
   ),
+  intro: t(
+    "Life goes from **birth** through **youth** to being an **adult**, then **retirement**, and finally **death** and a **funeral**. These words help you talk about the stages of a life.",
+    "人生从 **birth**（出生）经过 **youth**（青年时期）成为 **adult**（成年人），然后 **retirement**（退休），最后是 **death**（死亡）和 **funeral**（葬礼）。这些词帮你谈论人生的各个阶段。",
+  ),
   prerequisites: ["a2-words-relatives"],
   words: [
     word(
       "birth births",
       "the time when a baby is born",
       "出生",
-      "What is your date of {birth}?|death youth | She gave {birth} to twins.|death youth | The {birth} of their first child changed everything.|funeral retirement",
-      "birthday breath",
+      "What is your date of {birth}? | She gave {birth} to twins. | The {birth} of their first child was the happiest day of their lives.",
+      "death youth",
     ),
     word(
       "adult adults",
       "a person who is fully grown",
       "成年人",
-      "Tickets cost ten dollars for {adults} and five for children.|ancestors funerals | When you become an {adult}, you can vote.|ancestor elderly | The film is not for children; it's for {adults} only.|ancestors twins",
-      "child baby",
+      "Tickets cost ten dollars for {adults} and five for children and teenagers.|teenagers ancestors | At eighteen, young people become {adults} and can vote.|teenagers ancestors | The film is not for children: it's for {adults} only, people over 18.|teenagers ancestors",
+      "teenager ancestor",
     ),
     word(
       "teenager teenagers",
       "a person between thirteen and nineteen years old",
       "青少年",
-      "Most {teenagers} in my class have a phone.|ancestors funerals | When I was a {teenager}, I wanted to be a singer.|funeral ancestor | This book is written for {teenagers}.|ancestors funerals",
-      "toddler pensioner",
+      "Most {teenagers} in my class at high school have a phone.|adults ancestors | When I was a {teenager} of fifteen, I wanted to be a singer.|baby grandparent | This book is written for {teenagers} aged 13 to 19.|adults ancestors",
+      "adult ancestor",
       "teenage youth",
     ),
     word(
       "teenage",
       "between thirteen and nineteen years old, or for people of that age",
       "十几岁的；青少年的",
-      "They have two {teenage} sons.|elderly pregnant | Many {teenage} girls read her books.|elderly pregnant | Her {teenage} years were difficult.|elderly pregnant",
-      "toddler aged",
+      "They have two {teenage} sons, aged 14 and 16. | Many {teenage} girls at high school read her books. | Her {teenage} years, from 13 to 19, were difficult.",
+      "elderly adult",
       "teenager youth",
     ),
     word(
       "youth",
       "the time when someone is young",
       "青年时期；青春",
-      "In his {youth}, he was a great runner.|birth funeral | She spent her {youth} in the countryside.|funeral retirement | The town built a new {youth} club for teenagers.|funeral retirement",
-      "truth mouth",
+      "In his {youth}, he was a great runner.|birth funeral | She spent her {youth} in the countryside and moved to the city at 20. | The town built a new {youth} club for teenagers.",
+      "birth retirement",
       "teenager teenage",
     ),
     word(
       "elderly",
       "old (a polite word)",
       "年长的；上了年纪的",
-      "We help an {elderly} neighbor with her shopping.|teenage pregnant | The bus has special seats for {elderly} people.|teenage pregnant | Many {elderly} people live alone.|teenage pregnant",
+      "We help our {elderly} neighbor, who is 90, with her shopping.|teenage pregnant | The bus has special seats for {elderly} people over 70.|teenage pregnant | Many {elderly} people live alone after their husband or wife dies.|teenage pregnant",
       "early orderly",
     ),
     word(
       "retirement",
       "the time when you stop working because you are old",
       "退休",
-      "My grandfather enjoys his {retirement}; he plays chess every day.|birth youth | She is looking forward to her {retirement} next year.|birth youth | After {retirement}, many people travel.|birth twin",
-      "requirement entertainment",
+      "My grandfather stopped working at 65 and enjoys his {retirement}. | She is looking forward to her {retirement} next year. | After {retirement}, when they stop working, many people travel.",
+      "birth youth",
     ),
     word(
       "funeral funerals",
       "a ceremony after someone dies",
       "葬礼",
-      "Hundreds of people came to her {funeral}.|birth retirement | The {funeral} will be held on Friday.|youth birth | People usually wear black at {funerals}.|births youths",
+      "Hundreds of people came to her {funeral} after she died.|birth retirement | The {funeral} for Mr. Lee, who died last week, will be held on Friday.|youth birth | People usually wear black at {funerals}.|births youths",
       "festival general",
     ),
     word(
@@ -583,14 +758,14 @@ const lifeEvents = vocabularyTopic({
       "twin twins",
       "one of two children born at the same time to the same mother",
       "双胞胎之一",
-      "My {twin} brother and I look exactly the same.|elderly adult | They are {twins}, but they have very different personalities.|ancestors adults | I can never tell the {twins} apart.|ancestors adults",
+      "My {twin} brother and I were born on the same day and look exactly the same.|elderly adult | They are {twins}, born ten minutes apart, but they have very different personalities.|ancestors adults | I can never tell the {twins} apart.|ancestors adults",
       "pair cousin",
     ),
     word(
       "ancestor ancestors",
       "a person in your family who lived a long time ago",
       "祖先",
-      "My {ancestors} came from the south of China.|twins teenagers | During the festival, people remember their {ancestors}.|twins teenagers | One of her {ancestors} was a famous poet.|twins teenagers",
+      "My {ancestors} came from the south of China hundreds of years ago.|twins teenagers | During the festival, people remember their {ancestors} who died long ago.|twins teenagers | One of her {ancestors}, who lived 500 years ago, was a famous poet.|twins teenagers",
       "descendant grandchild",
     ),
     word(
@@ -601,6 +776,36 @@ const lifeEvents = vocabularyTopic({
       "dead debt",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Teenager* is a noun and *teenage* is an adjective: you are a *teenager*, but you have *teenage* sons. Look at whether a noun follows the gap.",
+        "*teenager* 是名词，*teenage* 是形容词：你是 *teenager*，但说 *teenage* sons。看空格后面是否跟着名词。",
+      ),
+      meaning: t(
+        "*Elderly* and *adult* both describe grown people, but *elderly* is a polite word for old, while an *adult* is anyone fully grown. Check whether the meaning says old or just grown up.",
+        "*elderly* 和 *adult* 都指长大的人，但 *elderly* 是“年长”的礼貌说法，*adult* 是任何成年人。看释义说的是年老还是仅仅成年。",
+      ),
+      spell: t(
+        "*Retirement* keeps the e of *retire* before -ment: r-e-t-i-r-e-m-e-n-t.",
+        "*retirement* 在 -ment 前保留 *retire* 的 e：r-e-t-i-r-e-m-e-n-t。",
+      ),
+    },
+    notes: `
+      birth|a date on a form;twins;the happiest day for new parents|birth is when a baby is born; death is the end of a life|birth 是出生；death 是死亡|death=death is the end of a life, not when a baby is born=death 是生命的结束，不是出生;youth=youth is the time when you are young, not the moment a baby is born=youth 是青年时期，不是出生那一刻;funeral=a funeral is a ceremony after someone dies, not when a baby is born=funeral 是葬礼，不是出生;retirement=retirement is when you stop working, not when a baby is born=retirement 是退休，不是出生|date of birth · give birth to|*birth* is not *birthday*, the same day every year|*birth* 不是 *birthday*（每年的生日）
+      adult|tickets for grown-ups, not children or teenagers;voting at eighteen;a film for over 18|an adult is a fully grown person; a teenager is 13 to 19|adult 是成年人；teenager 是青少年|teenager/teenagers=a teenager is 13 to 19, not fully grown and over 18=teenager 是十三到十九岁，不是十八岁以上的成年人;ancestor/ancestors=an ancestor lived long ago in your family, not a grown-up today=ancestor 是很久以前的祖先，不是现在的成年人|adults only · become an adult|stress on *a* or *dult*: both are used|重音在 *a* 或 *dult* 都可以
+      teenager|phone owners at high school;fifteen and wanting to be a singer;readers aged 13 to 19|a teenager is 13 to 19; an adult is fully grown|teenager 是青少年；adult 是成年人|adult/adults=an adult is fully grown, not aged 13 to 19 at high school=adult 是成年人，不是十三到十九岁的中学生;ancestor/ancestors=an ancestor lived long ago, not a young person today=ancestor 是祖先，不是现在的年轻人;baby=a baby is very young, not fifteen=baby 是婴儿，不是十五岁;grandparent=a grandparent is old, not fifteen=grandparent 是祖父母，不是十五岁|a teenager · teenagers today|from *-teen*: thirteen to nineteen|来自 *-teen*：thirteen 到 nineteen
+      teenage|sons aged 14 and 16;girls at high school;the years from 13 to 19|teenage describes people aged 13 to 19; elderly describes old people|teenage 是十几岁的；elderly 是年长的|elderly=elderly means old, not aged 13 to 19=elderly 是年长的，不是十几岁;adult=adult means fully grown, not aged 13 to 19=adult 是成年的，不是十几岁|teenage years · a teenage boy|adjective; the person is a *teenager*|形容词；人叫 *teenager*
+      youth|a great runner when young;the countryside until 20;a club for teenagers|youth is the time when you are young; retirement is when you stop working|youth 是青年时期；retirement 是退休|birth=birth is when a baby is born, not the years when you are young=birth 是出生，不是年轻的那些年;funeral=a funeral is after someone dies, not the time when you are young=funeral 是葬礼，不是青年时期;retirement=retirement is when you are old and stop working, not when you are young=retirement 是年老退休，不是年轻时|in his youth · a youth club|*youth* is not *truth*|*youth* 不是 *truth*
+      elderly|a neighbor of 90;bus seats for over 70;living alone after a partner dies|elderly is a polite word for old; teenage means 13 to 19|elderly 是年长的；teenage 是十几岁的|teenage=teenage means aged 13 to 19, not old=teenage 是十几岁，不是年长;pregnant=pregnant means having a baby inside, not old=pregnant 是怀孕，不是年长;orderly=orderly means neat and well arranged, not old=orderly 是整齐有序，不是年老|elderly people · an elderly neighbor|*elderly* looks like an adverb but is an adjective|*elderly* 像副词，其实是形容词
+      retirement|stopping work at 65;next year;travel after stopping work|retirement is when you stop working; youth is when you are young|retirement 是退休；youth 是青年时期|birth=birth is when a baby is born, not when you stop working=birth 是出生，不是退休;youth=youth is when you are young, not when you stop working=youth 是青年时期，不是退休|enjoy retirement · after retirement|verb *retire*|动词 *retire*
+      funeral|hundreds of people after she died;Friday, for a man who died;black clothes|a funeral is a ceremony after someone dies; a birth is when a baby is born|funeral 是葬礼；birth 是出生|birth/births=a birth is when a baby is born, not a ceremony after someone dies=birth 是出生，不是去世后的仪式;retirement=retirement is when you stop working, not a ceremony after someone dies=retirement 是退休，不是葬礼;youth/youths=youth is the time when you are young, not a ceremony after death=youth 是青年时期，不是葬礼;general=a general is a top army officer, not a ceremony for someone who has died=general 是将军，不是葬礼|go to a funeral · the funeral will be held|*funeral* is not *festival*|*funeral* 不是 *festival*
+      pregnant|a baby due in May;a second child;eight months|pregnant means having a baby inside; elderly means old|pregnant 是怀孕的；elderly 是年长的|elderly=elderly means old, not having a baby inside=elderly 是年长的，不是怀孕;teenage=teenage means aged 13 to 19, not having a baby inside=teenage 是十几岁，不是怀孕;present=present means here now, or a gift, not expecting a baby=present 是在场或礼物，不是怀孕|pregnant with · six months pregnant|noun *pregnancy*|名词 *pregnancy*
+      twin|a brother born the same day who looks the same;ten minutes apart;two children you can't tell apart|a twin is one of two children born together; an adult is a grown person|twin 是双胞胎之一；adult 是成年人|elderly=elderly means old, not born at the same time as a brother=elderly 是年长的，不是同一天出生;adult/adults=an adult is a grown person, not one of two children born together=adult 是成年人，不是双胞胎;ancestors=ancestors lived long ago, not two children born together=ancestor 是祖先，不是双胞胎|a twin brother · identical twins|*twin* is not *pair*: a pair is two of anything|*twin* 不是 *pair*：pair 是任何东西的一对
+      ancestor|from south China hundreds of years ago;remembered at a festival;a poet 500 years ago|an ancestor lived long ago in your family; a twin is born with you|ancestor 是祖先；twin 是双胞胎之一|twins=twins are two children born together, not family who lived long ago=twin 是双胞胎，不是很久以前的祖先;teenagers=teenagers are young people today, not family who lived long ago=teenager 是现在的青少年，不是祖先;descendant=a descendant comes after you in a family, not before you=descendant 是后代，不是祖先|our ancestors · remember ancestors|the opposite is *descendant*|反义词是 *descendant*
+      death|a dog that made him sad;early ones from smoking;with a grandmother until the end|death is the end of a life; birth is the start|death 是死亡；birth 是出生|birth/births=birth is the start of a life, not the end=birth 是生命的开始，不是结束;youth/youths=youth is the time when you are young, not the end of a life=youth 是青年时期，不是生命的结束|the death of · early deaths|adjective *dead*, verb *die*|形容词 *dead*，动词 *die*
+    `,
+  },
 });
 
 const family = vocabularyTopic({
@@ -610,13 +815,17 @@ const family = vocabularyTopic({
     "Upbringing and households; chores and allowance; siblings, nephews, nieces and grandchildren; spouses, brides and grooms; adopting.",
     "教养和家庭；家务和零花钱；兄弟姐妹、侄子外甥、侄女外甥女和孙辈；配偶、新娘和新郎；收养。",
   ),
+  intro: t(
+    "In every **household**, children do **chores**, may get an **allowance**, and grow up with **siblings**, a **nephew** or a **niece**. These words help you talk about family life at home.",
+    "每个 **household**（家庭）里，孩子要做 **chores**（家务），可能有 **allowance**（零花钱），和 **siblings**（兄弟姐妹）、**nephew**（侄子、外甥）或 **niece**（侄女、外甥女）一起长大。这些词帮你谈论家庭生活。",
+  ),
   prerequisites: ["a2-words-relatives"],
   words: [
     word(
       "upbringing",
       "the way parents care for a child and teach them how to behave",
       "养育；教养",
-      "She had a strict {upbringing}.|allowance chore | His good manners come from his {upbringing}.|allowance household | Parents play the biggest part in a child's {upbringing}.|allowance household",
+      "She had a strict {upbringing}: her parents taught her to be polite and work hard.|allowance chore | His good manners come from his {upbringing}.|allowance household | Parents play the biggest part in a child's {upbringing}.|allowance household",
       "upset uprising",
     ),
     word(
@@ -630,7 +839,7 @@ const family = vocabularyTopic({
       "chore chores",
       "a job you have to do regularly at home, such as cleaning",
       "家务；杂事",
-      "Washing the dishes is my least favorite {chore}.|spouse upbringing | We share the {chores} at home.|spouses nieces | I can go out after I've done my {chores}.|spouses nephews",
+      "Washing the dishes is my least favorite {chore}.|spouse upbringing | We share the {chores} at home, like cooking and cleaning.|spouses nieces | I can go out after I've done my {chores}.|spouses nephews",
       "choir hobby",
     ),
     word(
@@ -644,7 +853,7 @@ const family = vocabularyTopic({
       "sibling siblings",
       "a brother or a sister",
       "兄弟姐妹",
-      "Do you have any {siblings}?|spouses households | I'm the oldest of four {siblings}.|spouses brides | {Siblings} often argue, but they usually love each other.|Upbringings Allowances",
+      "Do you have any {siblings}, brothers or sisters?|spouses households | I'm the oldest of four {siblings}.|spouses brides | {Siblings} often argue, but they usually love each other.|Upbringings Allowances",
       "cousin seedling",
     ),
     word(
@@ -693,10 +902,40 @@ const family = vocabularyTopic({
       "adopt adopts adopted adopting",
       "to take another person's child into your family and become their legal parent",
       "收养",
-      "They {adopted} a baby girl from China.|divided supported | My cousin was {adopted} when he was two.|divided supported | We're thinking of {adopting} a dog from the animal shelter.|dividing supporting",
+      "They {adopted} a baby girl from China and became her parents.|divided supported | My cousin was {adopted} by new parents when he was two.|divided supported | We're thinking of {adopting} a dog from the animal shelter.|dividing supporting",
       "adapt adore",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Nephew* and *niece* differ only in the child: a *nephew* is a boy, a *niece* is a girl. Look for *boy*, *daughter*, *his* or *her* near the gap.",
+        "*nephew* 和 *niece* 只差在孩子的性别：*nephew* 是男孩，*niece* 是女孩。留意空格附近的 *boy*、*daughter*、*his* 或 *her*。",
+      ),
+      meaning: t(
+        "A *household* is the people who live together in one home; an *upbringing* is the way parents raise a child. Check whether the meaning names people or a way of raising.",
+        "*household* 是同住一个家里的人；*upbringing* 是父母养育孩子的方式。看释义说的是一群人还是养育方式。",
+      ),
+      spell: t(
+        "*Niece* has ie, and *nephew* has ph for the f sound: n-i-e-c-e, n-e-p-h-e-w.",
+        "*niece* 里是 ie，*nephew* 用 ph 发 f 音：n-i-e-c-e、n-e-p-h-e-w。",
+      ),
+    },
+    notes: `
+      upbringing|strict parents teaching politeness;where good manners come from;what parents play the biggest part in|upbringing is how parents raise a child; an allowance is money they give|upbringing 是教养；allowance 是零花钱|allowance=an allowance is money parents give, not the way they raise a child=allowance 是零花钱，不是养育方式;chore=a chore is a job at home, not the way parents raise a child=chore 是家务，不是养育方式;household=a household is the people living together, not how a child is raised=household 是一家人，不是养育方式|a strict upbringing · a good upbringing|from *bring up*|来自 *bring up*
+      household|villages and cars;family shopping;five people in one home|a household is the people living in one home; an upbringing is how a child is raised|household 是一家人；upbringing 是教养|chores=chores are jobs at home, not the people who live there=chore 是家务，不是住在家里的人;allowances/allowance=allowances are money for children, not the people in a home=allowance 是零花钱，不是家里的人;upbringing=upbringing is how a child is raised, not the people in a home=upbringing 是养育方式，不是家里的人;spouse=a spouse is a husband or wife, not all the shopping of a home=spouse 是配偶，不是一家人;housework=housework is jobs like cleaning and cooking, not all the people who live in a home=housework 是家务活，不是一家人|a household · household chores|*house* + *hold*|由 *house* 加 *hold* 构成
+      chore|washing dishes;cooking and cleaning shared;jobs done before going out|a chore is a regular job at home; a spouse is a husband or wife|chore 是家务；spouse 是配偶|spouse/spouses=a spouse is a husband or wife, not a job at home=spouse 是配偶，不是家务;upbringing=upbringing is how parents raise a child, not a job at home=upbringing 是养育方式，不是家务;nieces=nieces are your brother's or sister's daughters, not jobs at home=niece 是侄女，不是家务;nephews=nephews are your brother's or sister's sons, not jobs at home=nephew 是侄子，不是家务|do the chores · household chores|usually plural: *chores*|常用复数 *chores*
+      allowance|twenty yuan a week;half saved every month;stopped for not helping at home|an allowance is money given to a child; an upbringing is how a child is raised|allowance 是零花钱；upbringing 是教养|upbringing=upbringing is how a child is raised, not money given each week=upbringing 是养育方式，不是每周给的钱;household=a household is people who live together, not money given to a child=household 是一家人，不是零花钱;chore=a chore is a job at home, not money you save=chore 是家务，不是存下的钱;appearance=appearance is how someone looks, not money given to a child regularly=appearance 是外表，不是零花钱|a weekly allowance · pocket money|British English says *pocket money*|英式英语说 *pocket money*
+      sibling|brothers or sisters;the oldest of four;arguing but loving each other|a sibling is a brother or sister; a spouse is a husband or wife|sibling 是兄弟姐妹；spouse 是配偶|spouses=a spouse is a husband or wife, not a brother or sister=spouse 是配偶，不是兄弟姐妹;households=a household is people in one home, not a brother or sister=household 是一家人，不是兄弟姐妹;brides=a bride is a woman on her wedding day, not a brother or sister=bride 是新娘，不是兄弟姐妹;Upbringings=upbringing is how a child is raised, not brothers and sisters=upbringing 是养育方式，不是兄弟姐妹;Allowances=allowances are money for children, not brothers and sisters=allowance 是零花钱，不是兄弟姐妹;seedling=a seedling is a young plant, not a brother or sister=seedling 是幼苗，不是兄弟姐妹|any siblings · older siblings|a word for both brothers and sisters|兄弟姐妹的统称
+      nephew|a sister's little boy;a toy car for his birthday;two of them and a niece|a nephew is the son of your brother or sister; a niece is the daughter|nephew 是侄子、外甥；niece 是侄女、外甥女|niece=a niece is a girl, but this child is a boy=niece 是女孩，而这个孩子是男孩;bride/brides=a bride is a woman on her wedding day, not a brother's or sister's son=bride 是新娘，不是侄子;chore=a chore is a job at home, not a child you buy a toy for=chore 是家务，不是孩子;upbringing=upbringing is how a child is raised, not a child=upbringing 是养育方式，不是孩子;spouses=spouses are husbands or wives, not a brother's or sister's sons=spouse 是配偶，不是侄子;grandson=a grandson is your son's or daughter's son, not your brother's or sister's son=grandson 是孙子、外孙，不是侄子、外甥|my nephew · a nephew and a niece|ph sounds like f|ph 读作 f
+      niece|a brother's daughter;a trip to the zoo;three and no nephews|a niece is the daughter of your brother or sister; a nephew is the son|niece 是侄女、外甥女；nephew 是侄子、外甥|nephew=a nephew is a boy, but this child is a daughter=nephew 是男孩，而这个孩子是女儿;groom/grooms=a groom is a man on his wedding day, not a brother's daughter=groom 是新郎，不是侄女;chore=a chore is a job at home, not a child you take to the zoo=chore 是家务，不是孩子;upbringing=upbringing is how a child is raised, not a child=upbringing 是养育方式，不是孩子;spouses=spouses are husbands or wives, not daughters=spouse 是配偶，不是侄女|my niece · nieces and nephews|*niece* is not *nice*|*niece* 不是 *nice*
+      grandchild|ten for one grandmother;the first born last week;time spent with them|a grandchild is a child of your son or daughter; a chore is a job at home|grandchild 是孙辈；chore 是家务|chores=chores are jobs at home, not children of your son or daughter=chore 是家务，不是孙辈;allowances=allowances are money, not children of your son or daughter=allowance 是零花钱，不是孙辈;spouse=a spouse is a husband or wife, not a child born last week=spouse 是配偶，不是刚出生的孙辈;chore=a chore is a job at home, not a child born last week=chore 是家务，不是孙辈;godchild=a godchild is a child you promise to guide at a church ceremony, not your son's or daughter's child=godchild 是教子、教女，不是孙辈|ten grandchildren · our first grandchild|plural *grandchildren*|复数 *grandchildren*
+      spouse|brought to a work dinner;a name on a form;sharing money|a spouse is a husband or wife; a sibling is a brother or sister|spouse 是配偶；sibling 是兄弟姐妹|chore/Chores=a chore is a job at home, not a husband or wife=chore 是家务，不是配偶;upbringing/Upbringings=upbringing is how a child is raised, not a husband or wife=upbringing 是养育方式，不是配偶|your spouse · spouses and children|a formal word for husband or wife|husband 或 wife 的正式说法
+      bride|a red dress;everyone standing up;cutting the cake with the groom|a bride is a woman on her wedding day; a groom is a man|bride 是新娘；groom 是新郎|chore=a chore is a job at home, not a woman on her wedding day=chore 是家务，不是新娘;allowance=an allowance is money for a child, not a woman on her wedding day=allowance 是零花钱，不是新娘;nephew=a nephew is a boy, not a woman on her wedding day=nephew 是男孩，不是新娘;sibling=a sibling is a brother or sister, not the woman getting married=sibling 是兄弟姐妹，不是新娘;pride=pride is a feeling of being pleased with what you did, not a woman getting married=pride 是自豪，不是新娘|the bride and groom · a beautiful bride|*bride* is not *bridge*|*bride* 不是 *bridge*
+      groom|nervous before the ceremony;dancing with the bride;a funny speech|a groom is a man on his wedding day; a bride is a woman|groom 是新郎；bride 是新娘|chore=a chore is a job at home, not a man on his wedding day=chore 是家务，不是新郎;allowance=an allowance is money for a child, not a man on his wedding day=allowance 是零花钱，不是新郎;niece=a niece is a girl, not a man on his wedding day=niece 是女孩，不是新郎;sibling=a sibling is a brother or sister, not the man getting married=sibling 是兄弟姐妹，不是新郎;upbringing=upbringing is how a child is raised, not a man who makes a speech=upbringing 是养育方式，不是新郎;broom=a broom is a brush for sweeping the floor, not a man getting married=broom 是扫帚，不是新郎|the bride and groom · the groom's speech|also *bridegroom*|也说 *bridegroom*
+      adopt|a baby girl who got new parents;a cousin with new parents at two;a dog from a shelter|to adopt is to take a child into your family; to support is to help|adopt 是收养；support 是支持|divided/dividing=to divide is to separate into parts, not to take a child into your family=divide 是分开，不是收养;supported/supporting=to support is to help, not to become someone's legal parent=support 是帮助，不是成为合法父母;adore=to adore is to love very much, not to take a child into your family by law=adore 是非常喜爱，不是领养|adopt a child · adopt a dog|*adopt* is not *adapt*, to change|*adopt* 不是 *adapt*（适应）
+    `,
+  },
 });
 
 // Question tags.

@@ -14,93 +14,127 @@ const cooking = vocabularyTopic({
     "Recipes; boiling, frying, baking, cutting, mixing, adding, pouring and heating; slices, ovens and pans.",
     "食谱；煮、煎、烤、切、混合、加、倒和加热；片、烤箱和平底锅。",
   ),
+  intro: t(
+    "Dad reads the **recipe**, puts a **pan** on the stove and starts to **fry** some onions, while the bread **bakes** in the **oven**. These words help you follow the steps of cooking and talk about how food is made.",
+    "爸爸看着 **recipe**（食谱），把 **pan**（平底锅）放到炉子上，开始 **fry**（煎）洋葱，面包正在 **oven**（烤箱）里 **bakes**（烘烤）。这些词帮你按步骤做饭，并谈论食物是怎样做出来的。",
+  ),
   prerequisites: ["a1-words-meals"],
   words: [
     word(
       "recipe recipes",
       "a list of what you need and the steps for cooking a dish",
       "食谱",
-      "Can I have the {recipe} for this cake?|oven pan | Grandma's {recipe} for dumplings is the best.|oven pan | Follow the {recipe} step by step.|oven slice",
+      "Can you write down the {recipe} for this cake? | Grandma wrote her {recipe} for dumplings in a little book. | Follow the {recipe} step by step.",
       "oven pan",
     ),
     word(
       "boil boils boiled boiling",
       "to heat water or food until it bubbles",
       "煮沸；煮",
-      "{Boil} the water, then add the noodles.|Fry Bake | Water {boils} at 100 degrees.|fries bakes | The soup is {boiling}. Turn down the heat.|frying pouring",
+      "{Boil} the water, then add the noodles. | Water {boils} at 100 degrees.|fries bakes | The soup is {boiling}. Turn down the heat.|frying baking",
       "fry bake",
     ),
     word(
       "fry fries fried frying",
       "to cook in hot oil",
       "油炸；煎",
-      "{Fry} the onions in a little oil.|Boil Pour | Dad {fried} the fish in a hot pan.|boiled poured | Don't {fry} food every day. It isn't healthy.|pour mix",
+      "{Fry} the onions in a little oil. | Dad {fried} the fish in a hot pan.|boiled poured | Don't {fry} food in so much oil every day. It isn't healthy.",
       "boil pour",
     ),
     word(
       "bake bakes baked baking",
       "to cook in an oven",
       "烘焙；烤",
-      "Mom {baked} a cake for my birthday.|boiled poured | {Bake} the bread for forty minutes.|Boil Pour | I love the smell of {baking} bread.|boiling pouring",
-      "boil pour",
+      "Mom {baked} a cake for my birthday.|boiled fried | {Bake} the bread for forty minutes. | I love the smell of {baking} bread.|boiling frying",
+      "boil fry",
     ),
     word(
       "cut cuts cutting",
       "to make something into pieces with a knife",
       "切",
-      "{Cut} the apple in half.|Pour Boil | I {cut} my finger with a knife.|poured boiled | Can you {cut} the bread, please?|pour boil",
-      "pour boil",
+      "{Cut} the apple in half. | I {cut} my finger with a knife.|mixed poured | Can you {cut} the bread, please?",
+      "mix pour",
     ),
     word(
       "mix mixes mixed mixing",
       "to put things together and stir them",
       "混合",
-      "{Mix} the flour and the eggs.|Boil Fry | Red and yellow {mixed} together make orange.|poured cut | {Mix} everything well in a big bowl.|Boil Fry",
+      "{Mix} the flour and the eggs. | Red and yellow {mixed} together make orange.|boiled fried | {Mix} everything well in a big bowl.",
       "boil fry",
     ),
     word(
       "add adds added adding",
       "to put something with something else",
       "加；添加",
-      "{Add} a little salt to the soup.|Cut Bake | If you {add} 2 and 3, you get 5.|cut pour | Can you {add} some sugar to my tea?|cut bake",
+      "{Add} a little salt to the soup. | If you {add} 2 and 3, you get 5. | Can you {add} some sugar to my tea?",
       "cut bake",
     ),
     word(
       "pour pours poured pouring",
       "to make a liquid flow out of something",
       "倒；倾倒",
-      "{Pour} the milk into a glass.|Cut Fry | Can you {pour} me some water?|cut bake | It's {pouring} with rain!|cutting baking",
+      "{Pour} the milk into a glass. | Can you {pour} me some water? | It's {pouring} with rain!|cutting frying",
       "cut fry",
     ),
     word(
       "heat heats heated heating",
       "to make something hot; how hot something is",
       "加热；热",
-      "{Heat} the oil in a pan.|Cut Slice | I can't sleep in this {heat}.|oven pan | {Heat} the soup before you eat it.|Cut Pour",
-      "cut pour",
+      "{Heat} the oil in a pan. | I can't sleep in this {heat}.|pan recipe | {Heat} the soup before you eat it.",
+      "fry cut",
     ),
     word(
       "slice slices",
       "a thin flat piece cut from something",
       "片",
-      "Can I have a {slice} of cake?|pan oven | I had two {slices} of pizza.|pans ovens | Cut the lemon into thin {slices}.|pans ovens",
-      "pan oven",
+      "Can I have a {slice} of cake? | I had two {slices} of pizza.|pans recipes | Cut the lemon into thin {slices}.|pans recipes",
+      "pan recipe",
     ),
     word(
       "oven ovens",
       "a box in a kitchen that you heat to bake food in",
       "烤箱",
-      "Put the cake in the {oven} for thirty minutes.|pan recipe | Be careful! The {oven} is hot.|recipe slice | Our {oven} is broken, so we can't bake bread.|recipe slice",
+      "Put the cake in the hot {oven} to bake for thirty minutes. | Be careful! The {oven} door is hot. | Our {oven} is broken, so we can't bake bread.",
       "pan recipe",
     ),
     word(
       "pan pans",
       "a metal pot with a handle, for cooking",
       "平底锅；锅",
-      "Fry the eggs in a {pan}.|oven recipe | Wash the {pans} after dinner.|recipes ovens | Put some oil in the {pan}.|recipe slice",
+      "Fry the eggs in the {pan}. | Wash the dirty {pans} in the sink after dinner.|ovens recipes | Put some oil in the {pan}.",
       "oven recipe",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Boil*, *fry* and *bake* are three ways to cook: you boil in hot water, fry in hot oil and bake in an oven. Look for *water*, *oil* or *oven* and the food in the sentence.",
+        "*boil*、*fry* 和 *bake* 是三种做法：boil 是在开水里煮，fry 是用热油煎炸，bake 是放进烤箱烤。找找句子里有没有 *water*、*oil*、*oven* 和是什么食物。",
+      ),
+      meaning: t(
+        "A *recipe* is the list of things and steps for cooking a dish. It is not the food itself, and not the *oven* or *pan* you cook it in.",
+        "*recipe* 是做一道菜所需的材料和步骤清单，不是食物本身，也不是做菜用的 *oven* 或 *pan*。",
+      ),
+      spell: t(
+        "*Fry* changes y to i in *fries* and *fried* but keeps the y in *frying*, and the final e of *recipe* is said: re · ci · pe.",
+        "*fry* 在 *fries*、*fried* 里把 y 变成 i，但 *frying* 保留 y；*recipe* 词尾的 e 要读出来：re · ci · pe。",
+      ),
+    },
+    notes: `
+      recipe|the written steps for making a cake;Grandma's written steps for dumplings in a little book;steps to follow one by one|a recipe tells you how to cook a dish; an oven is a thing you cook in|recipe 告诉你怎样做一道菜；oven 是做菜用的器具|oven=oven is a hot box in the kitchen that you bake food in, not something you can write down or follow step by step=oven 是厨房里烤东西的箱子，不能写下来，也不能一步步照着做;pan=pan is a metal pot with a handle that you cook in, not a list of steps=pan 是带柄的金属锅，不是步骤清单|re · ci · pe|c said like s, and the final e is said, not silent|c 读作 s，词尾的 e 要读出来，不是不发音
+      boil|water heated before the noodles go in;water at 100 degrees;soup so hot that it bubbles|you boil food in hot water; you fry it in hot oil|boil 是在开水里煮；fry 是在热油里煎炸|fry=fry means cooking in hot oil, not water or soup bubbling as it gets very hot=fry 是用热油煎炸，不是水或汤烧开冒泡;bake=bake means cooking in an oven, not making water or soup bubble=bake 是用烤箱烤，不是把水或汤烧开|boil|oi, as in *oil*|oi 和 *oil* 里的一样
+      fry|onions cooked in a little oil;fish cooked in a hot pan;cooking in a lot of oil every day|you fry food in hot oil; you boil it in water|fry 是在热油里煎炸；boil 是在水里煮|boil=boil means cooking in bubbling water, not in hot oil in a pan=boil 是在沸水里煮，不是在锅里用热油煎;pour=pour means making a liquid flow out of a bottle or jug, not cooking food=pour 是把液体从瓶子或壶里倒出来，不是做饭|fry|y that changes to i in *fries* and *fried*, but stays in *frying*|y 在 *fries*、*fried* 里变成 i，在 *frying* 里不变
+      bake|a birthday cake made in an oven;bread cooked for forty minutes;the smell of bread in the oven|you bake bread and cakes in an oven; you fry food in oil|bake 是在烤箱里烤面包和蛋糕；fry 是用油煎|boil=boil means cooking in bubbling water, and cakes and bread are not cooked in water=boil 是在沸水里煮，蛋糕和面包不是用水煮的;fry=fry means cooking in hot oil in a pan, not making cakes and bread in an oven=fry 是在锅里用热油煎，不是在烤箱里做蛋糕面包|bake|the silent e that drops in *baking*|词尾 e 不发音，*baking* 里要去掉
+      cut|an apple made into two halves;a finger hurt by a knife;bread made into pieces|you cut with a knife; you mix things by stirring them together|cut 是用刀切；mix 是把东西搅在一起|mix=mix means stirring things together, not making pieces with a knife=mix 是把东西搅拌在一起，不是用刀切成块;pour=pour means making a liquid flow out, and apples, fingers and bread are not liquids=pour 是倒液体，而苹果、手指和面包都不是液体|cut|the past is also *cut*, and *cutting* doubles the t|过去式也是 *cut*；*cutting* 要双写 t
+      mix|flour and eggs put together and stirred;red and yellow together making orange;everything stirred well in a big bowl|you mix things into one; you boil water until it bubbles|mix 是把东西合在一起；boil 是把水烧开|boil=boil means heating water until it bubbles, not putting things together=boil 是把水烧到冒泡，不是把东西合在一起;fry=fry means cooking in hot oil, not stirring things together in a bowl=fry 是用热油煎，不是在碗里搅拌|mix|the x at the end, and -es for *mixes*|词尾是 x，第三人称单数加 -es：*mixes*
+      add|salt put into the soup;2 and 3 put together to make 5;sugar put into tea|you add a thing to something else; you cut a thing into pieces|add 是加进去；cut 是切成块|cut=cut means making pieces with a knife, and it is never followed by *to* the soup or the tea=cut 是用刀切成块，后面不会接 *to* 汤或茶;bake=bake means cooking in an oven, not putting one thing into another=bake 是用烤箱烤，不是把一样东西加进另一样|add|the double d at the end|词尾双写 d
+      pour|milk going into a glass;some water for someone;very heavy rain|you pour a liquid; you cut solid food|pour 倒的是液体；cut 切的是固体食物|cut=cut means making pieces with a knife, but milk, water and rain cannot be cut=cut 是用刀切，而牛奶、水和雨都切不了;fry=fry means cooking in hot oil, not making a liquid flow out=fry 是用热油煎，不是把液体倒出来|pour|our said like or, as in *four*|our 读作 or，和 *four* 一样
+      heat|oil made hot in a pan;the hot weather that keeps someone awake;soup made hot before eating|to heat food is to make it hot; to fry food is to cook it in hot oil|heat 是把食物加热；fry 是用热油煎|fry=fry means cooking food in hot oil, and you cannot fry the oil itself or a soup=fry 是用热油煎食物，不能煎油本身，也不能煎汤;cut=cut means making pieces with a knife, and oil and soup cannot be cut=cut 是用刀切，油和汤都切不了;pan=pan is a metal pot for cooking, not the hot weather that keeps you awake=pan 是做饭的金属锅，不是让人睡不着的炎热;recipe=recipe is a list of cooking steps, not hot weather=recipe 是做菜的步骤清单，不是炎热的天气|heat|ea for the long e sound, as in *eat*|ea 发长 e 音，和 *eat* 一样
+      slice|a thin piece of cake;two thin pieces of pizza;a lemon cut into thin pieces|a slice is a thin piece of food; a pan is a pot you cook in|slice 是一片食物；pan 是做饭的锅|pan=pan is a metal pot for cooking, not a thin piece of food you can eat=pan 是做饭的金属锅，不是能吃的一片食物;recipe=recipe is a list of cooking steps, not a piece of food=recipe 是做菜的步骤清单，不是一片食物|slice|ice at the end, said like *ice*|结尾是 ice，读音和 *ice* 一样
+      oven|a hot box where a cake bakes for thirty minutes;a hot door in the kitchen;a broken thing that stops us baking bread|an oven is a hot box you bake in; a pan is a pot for the stove|oven 是用来烤东西的箱子；pan 是放在炉子上的锅|pan=pan is a metal pot on the stove, with no door, and you do not bake bread in it=pan 是炉子上的金属锅，没有门，也不用来烤面包;recipe=recipe is a list of cooking steps, which cannot be hot or have a door=recipe 是做菜的步骤清单，不会烫，也没有门|o · ven|o said like u, as in *love*|o 读作 u，和 *love* 一样
+      pan|a pot for frying eggs;dirty pots washed in the sink;a pot with some oil in it|a pan is a metal pot for the stove; an oven is a big hot box|pan 是炉子上的金属锅；oven 是很大的烤箱|oven=oven is a big box you bake in, and it does not go in the sink=oven 是用来烤东西的大箱子，不能放进水槽;recipe=recipe is a list of steps, and you cannot fry eggs or pour oil in it=recipe 是步骤清单，不能在里面煎蛋或倒油|pan|a short a, as in *man*|短元音 a，和 *man* 一样
+    `,
+  },
 });
 
 const ingredients = vocabularyTopic({
@@ -110,93 +144,127 @@ const ingredients = vocabularyTopic({
     "Flour, butter, oil, pepper, onions, garlic, carrots, beans, corn, sauce, honey and lemons.",
     "面粉、黄油、油、胡椒、洋葱、大蒜、胡萝卜、豆子、玉米、酱、蜂蜜和柠檬。",
   ),
+  intro: t(
+    "For pancakes we need **flour**, eggs and milk, a little **butter** for the pan and some **honey** on top. These words help you name what goes into a dish and say how it tastes.",
+    "做煎饼要用 **flour**（面粉）、鸡蛋和牛奶，锅里放一点 **butter**（黄油），上面再淋些 **honey**（蜂蜜）。这些词帮你说出一道菜用了哪些材料，以及它是什么味道。",
+  ),
   prerequisites: ["a2-words-cooking"],
   words: [
     word(
       "flour",
       "a white powder made from wheat, used to make bread and cakes",
       "面粉",
-      "You need {flour}, eggs and milk to make pancakes.|garlic pepper | Bread is made from {flour} and water.|butter honey | {Flour} is a white powder. We use it to make bread.|Honey Oil",
+      "You need {flour}, eggs and milk to make pancakes. | Bread is made from {flour} and water. | {Flour} is a white powder. We use it to make bread.",
       "garlic pepper",
     ),
     word(
       "butter",
       "a yellow food made from milk, that you put on bread",
       "黄油",
-      "I like bread with {butter} and jam.|pepper garlic | Melt the {butter} in a pan.|pepper flour | {Butter} is made from milk.|Flour Pepper",
+      "I like bread with {butter} and jam. | Melt the {butter} in a pan. | {Butter} is made from milk.",
       "pepper garlic",
     ),
     word(
       "oil oils",
       "a thick liquid from plants, used for cooking",
       "油",
-      "Fry the fish in hot {oil}.|flour honey | Add a little olive {oil}.|flour honey | This bottle of {oil} is almost empty.|flour pepper",
+      "Fry the fish in hot {oil}. | Add a little olive {oil}. | This bottle of cooking {oil} is almost empty.",
       "flour honey",
     ),
     word(
       "pepper peppers",
       "a hot powder you put on food; a red, green or yellow vegetable",
       "胡椒；甜椒",
-      "Add salt and {pepper} to the soup.|flour honey | I don't like green {peppers}.|flours honeys | This soup has too much {pepper}. It's hot!|flour butter",
-      "flour honey",
+      "Add salt and {pepper} to the soup. | A green {pepper} tastes sweet and crunchy in a salad. | This soup has too much {pepper}. It's hot and makes me sneeze!",
+      "garlic honey",
     ),
     word(
       "onion onions",
       "a round vegetable with a strong smell that makes you cry when you cut it",
       "洋葱",
-      "Cutting {onions} makes me cry.|lemons carrots | Fry the {onion} until it is soft.|lemon honey | French {onion} soup is famous.|honey flour",
+      "Cutting {onions} makes me cry.|lemons honey | Fry the {onion} until it is soft. | I put a red {onion} in the salad, and now my breath smells strong.",
       "lemon honey",
     ),
     word(
       "garlic",
       "a small white plant with a strong taste, used in cooking",
       "大蒜",
-      "Add two pieces of {garlic} to the oil.|honey flour | I can smell {garlic} on your breath.|flour corn | Some people think {garlic} keeps you healthy.|flour butter",
+      "Add two pieces of {garlic} to the oil. | I can smell {garlic} on your breath. | Some people eat {garlic} to stay healthy, but it makes their breath smell.",
       "honey flour",
     ),
     word(
       "carrot carrots",
       "a long orange vegetable",
       "胡萝卜",
-      "Rabbits love {carrots}.|onions lemons | A {carrot} is long and orange.|lemon bean | Cut the {carrots} into slices.|honeys flours",
-      "onion lemon",
+      "Rabbits love crunchy orange {carrots}.|lemons beans | A {carrot} is long and orange. | Cut the long orange {carrots} into slices.|lemons beans",
+      "lemon bean",
     ),
     word(
       "bean beans",
       "a seed of a plant that you cook and eat",
       "豆",
-      "Tofu is made from {beans}.|carrots lemons | Green {beans} are good for you.|lemons onions | We had rice and {beans} for dinner.|honey flour",
+      "Tofu is made from {beans}.|carrots lemons | Green {beans} are good for you.|carrots lemons | We had rice and black {beans} for dinner.|carrots lemons",
       "carrot lemon",
     ),
     word(
       "corn",
       "a tall plant with yellow seeds that you eat",
       "玉米",
-      "Popcorn is made from {corn}.|flour beans | Chickens eat {corn}.|honey garlic | There are fields of {corn} near the village.|honey butter",
-      "honey garlic",
+      "Popcorn is made from {corn}. | Chickens eat {corn}. | There are fields of tall yellow {corn} near the village.",
+      "flour honey",
     ),
     word(
       "sauce sauces",
       "a thick liquid you eat with food",
       "酱；调味汁",
-      "Noodles with tomato {sauce} are my favorite.|flour garlic | Do you want soy {sauce} with your dumplings?|flour corn | The chef makes a special {sauce} for the fish.|flour corn",
+      "Noodles with tomato {sauce} are my favorite. | Do you want soy {sauce} with your dumplings? | The chef makes a special {sauce} for the fish.",
       "flour corn",
     ),
     word(
       "honey",
       "a sweet food that bees make",
       "蜂蜜",
-      "Bees make {honey}.|butter sauce | I put {honey} in my tea.|garlic onion | This cake is sweet because of the {honey}.|garlic pepper",
+      "Bees make {honey}. | I put {honey} in my tea. | This cake is sweet because of the {honey}.",
       "butter garlic",
     ),
     word(
       "lemon lemons",
       "a yellow fruit with a very sour taste",
       "柠檬",
-      "A {lemon} is yellow and sour.|carrot bean | Hot water with {lemon} and honey is good for a cold.|corn flour | I'd like tea with {lemon}, please.|garlic corn",
+      "A {lemon} is yellow and sour. | Hot water with {lemon} and honey is good for a cold. | I'd like tea with {lemon}, please.",
       "carrot bean",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Look at what the sentence says about taste and look: *honey* is sweet, a *lemon* is sour and yellow, *pepper* makes food hot, *garlic* and *onions* smell strong, and *flour* is a white powder.",
+        "看句子怎样描述味道和样子：*honey* 是甜的，*lemon* 又酸又黄，*pepper* 让食物变辣，*garlic* 和 *onion* 气味浓，*flour* 是白色粉末。",
+      ),
+      meaning: t(
+        "*Pepper* has two meanings: a hot powder you shake on food, and a red, green or yellow vegetable. Both are *pepper*.",
+        "*pepper* 有两个意思：撒在食物上的辣味粉末（胡椒），以及红、绿、黄色的蔬菜（甜椒）。两种都叫 *pepper*。",
+      ),
+      spell: t(
+        "*Flour* for bread and cakes sounds just like *flower* in a garden: for cooking, write f-l-o-u-r.",
+        "做面包蛋糕的 *flour* 和花园里的 *flower* 读音完全一样：做饭用的要写 f-l-o-u-r。",
+      ),
+    },
+    notes: `
+      flour|pancakes made with eggs and milk;bread made with water;a white powder for making bread|flour is a white powder for bread and cakes; pepper is a hot powder|flour 是做面包蛋糕的白色粉末；pepper 是辣味粉末|garlic=garlic is a small white plant with a strong taste, not a powder for making bread and pancakes=garlic 是味道很冲的白色小植物，不是做面包和煎饼的粉;pepper=pepper is a hot powder you shake on food in small amounts, not what bread and pancakes are made of=pepper 是少量撒在食物上的辣味粉，不是做面包和煎饼的原料|flour|our, said like *flower*, but written f-l-o-u-r|our 的读音和 *flower* 一样，但拼作 f-l-o-u-r
+      butter|something on bread with jam;something melted in a pan;a food made from milk|butter is a yellow food made from milk; pepper is a hot powder|butter 是用牛奶做的黄色食物；pepper 是辣味粉末|pepper=pepper is a hot powder or a vegetable, not a food made from milk=pepper 是辣味粉末或蔬菜，不是用牛奶做的食物;garlic=garlic is a plant with a strong smell, not a soft yellow food made from milk=garlic 是气味很冲的植物，不是用牛奶做的软软的黄色食物|but · ter|the double t in the middle|中间双写 t
+      oil|hot liquid for frying fish;olive liquid added to food;a bottle of cooking liquid|oil is a liquid for cooking; flour is a dry powder|oil 是做饭用的液体；flour 是干的粉末|flour=flour is a dry white powder, not a liquid you fry in or keep in a bottle=flour 是干的白色粉末，不是用来煎炸、装在瓶子里的液体;honey=honey is a sweet food made by bees, not a cooking liquid from plants=honey 是蜜蜂酿的甜食，不是从植物里来的食用油|oil|oi, as in *boil*|oi 和 *boil* 里的一样
+      pepper|salt and a hot powder added to soup;a green vegetable, sweet and crunchy in a salad;a hot powder that makes someone sneeze|pepper is hot or a crunchy vegetable; honey is sweet|pepper 是辣的粉或脆的蔬菜；honey 是甜的|garlic=garlic is a small white plant with a strong smell, not a green vegetable and not the hot powder you shake with salt=garlic 是气味很冲的白色小植物，不是绿色蔬菜，也不是和盐一起撒的辣粉;honey=honey is a sweet food made by bees, not hot and not a vegetable=honey 是蜜蜂酿的甜食，不辣，也不是蔬菜|pep · per|the double p in the middle|中间双写 p
+      onion|vegetables that make someone cry when cut;a vegetable fried until soft;a red vegetable that makes breath smell strong|an onion has a strong smell and makes you cry; a lemon is sour|onion 气味很冲，会让人流泪；lemon 是酸的|lemon=lemon is a sour yellow fruit that does not make you cry or make your breath smell=lemon 是酸的黄色水果，不会让人流泪，也不会让口气难闻;honey=honey is a sweet food made by bees, not a vegetable you cut, fry or eat in a salad=honey 是蜜蜂酿的甜食，不是切、炒或放进沙拉的蔬菜|on · ion|o said like u, as in *son*, and -ion at the end|o 读作 u，和 *son* 一样，结尾是 -ion
+      garlic|pieces of a plant added to oil;a strong smell on someone's breath;a plant some people eat to stay healthy|garlic is a small white plant with a strong taste; honey is sweet|garlic 是味道很冲的白色小植物；honey 是甜的|honey=honey is a sweet food made by bees, not a plant that comes in pieces or makes your breath smell=honey 是蜜蜂酿的甜食，不是一瓣一瓣的植物，也不会让口气难闻;flour=flour is a white powder for bread, not a plant with a strong smell=flour 是做面包的白色粉末，不是气味很冲的植物|gar · lic|-ic at the end, with no k|结尾是 -ic，没有 k
+      carrot|crunchy orange food that rabbits love;a long, orange vegetable;long orange vegetables cut into slices|a carrot is a long orange vegetable; a lemon is a yellow fruit|carrot 是长长的橙色蔬菜；lemon 是黄色水果|lemon=lemon is a round, yellow, sour fruit, not a long orange vegetable=lemon 是圆圆的黄色酸水果，不是长长的橙色蔬菜;bean=bean is a small seed you cook, not a long orange vegetable=bean 是煮着吃的小豆子，不是长长的橙色蔬菜|car · rot|the double r in the middle|中间双写 r
+      bean|seeds that tofu is made from;green seeds and pods that are good for you;small black seeds eaten with rice|a bean is a seed you cook; a carrot is a long orange vegetable|bean 是煮着吃的豆子；carrot 是长长的橙色蔬菜|carrot=carrot is a long orange vegetable, and tofu is not made from it=carrot 是长长的橙色蔬菜，豆腐不是用它做的;lemon=lemon is a sour yellow fruit, not a seed you cook and eat with rice=lemon 是酸的黄色水果，不是和米饭一起吃的豆子|bean|ea for the long e sound, as in *eat*|ea 发长 e 音，和 *eat* 一样
+      corn|what popcorn is made from;what chickens eat;tall yellow plants in fields near a village|corn is a tall plant with yellow seeds; flour is a powder made from wheat|corn 是长着黄色籽粒的高秆植物；flour 是小麦磨成的粉|flour=flour is a white powder made in a mill, not seeds that pop or plants that grow in fields=flour 是磨出来的白色粉末，不是能爆开的籽粒，也不是长在田里的植物;honey=honey is a sweet food made by bees, not a plant with yellow seeds=honey 是蜜蜂酿的甜食，不是长着黄色籽粒的植物|corn|or, as in *for*|or 和 *for* 里的一样
+      sauce|a tomato liquid on noodles;a soy liquid for dumplings;a special thick liquid for fish|a sauce is a thick liquid you eat with food; flour is a dry powder|sauce 是配着食物吃的浓汁；flour 是干粉末|flour=flour is a dry white powder for making bread, not a liquid you eat with noodles or fish=flour 是做面包的干的白色粉末，不是配面条或鱼吃的酱汁;corn=corn is a plant with yellow seeds, not a thick liquid made from tomato or soy=corn 是长着黄色籽粒的植物，不是用番茄或大豆做的酱汁|sauce|au said like or, and -ce at the end|au 读作 or，结尾是 -ce
+      honey|a sweet food bees make;something sweet put in tea;what makes a cake sweet|honey is sweet and made by bees; butter is made from milk|honey 是蜜蜂酿的，很甜；butter 是牛奶做的|butter=butter is a food made from milk, not something bees make or a sweet thing for tea=butter 是牛奶做的食物，不是蜜蜂酿的，也不是放进茶里的甜东西;garlic=garlic has a strong smell and is not sweet=garlic 气味很冲，一点也不甜|hon · ey|o said like u, as in *money*, and -ey at the end|o 读作 u，和 *money* 一样，结尾是 -ey
+      lemon|a yellow, sour fruit;a fruit in hot water with honey for a cold;a fruit in tea|a lemon is a sour yellow fruit; a carrot is an orange vegetable|lemon 是酸的黄色水果；carrot 是橙色蔬菜|carrot=carrot is a long orange vegetable, not a sour yellow fruit you put in tea=carrot 是长长的橙色蔬菜，不是放进茶里的酸的黄色水果;bean=bean is a small seed you cook, not a sour yellow fruit=bean 是煮着吃的小豆子，不是酸的黄色水果|lem · on|-on at the end, not -en|结尾是 -on，不是 -en
+    `,
+  },
 });
 
 const taste = vocabularyTopic({
@@ -206,86 +274,119 @@ const taste = vocabularyTopic({
     "Tasting and smelling; delicious, sweet, sour, salty, spicy, fresh, raw and bitter food; meals.",
     "品尝和闻；美味的、甜的、酸的、咸的、辣的、新鲜的、生的和苦的食物；一顿饭。",
   ),
+  intro: t(
+    "The curry is **spicy**, the lemonade is **sour**, and the cake is **sweet** and **delicious**. These words help you say what food tastes and smells like and whether you like it.",
+    "咖喱是 **spicy**（辣的），柠檬水是 **sour**（酸的），蛋糕又 **sweet**（甜）又 **delicious**（美味）。这些词帮你说出食物尝起来、闻起来怎么样，以及你喜不喜欢。",
+  ),
   prerequisites: ["a2-words-ingredients"],
   words: [
     word(
       "taste tastes tasted tasting",
       "what food is like in your mouth; to try a little food",
       "味道；品尝",
-      "This soup {tastes} too salty.|fresh raws | {Taste} the sauce before you add more salt.|Fresh Raw | Lemons have a sour {taste}.|meal raw",
-      "fresh raw",
+      "I tried a spoonful. This soup {tastes} too salty.|smells sounds | Put a little sauce on your tongue and {taste} it before you add more salt. | When you bite a lemon, it has a sour {taste}.",
+      "smell sound",
     ),
     word(
       "delicious",
       "very good to eat",
       "美味的",
-      "Mmm, this cake is {delicious}!|raw bitter | Thank you for the {delicious} meal.|raw bitter | The dumplings were {delicious}. I ate twenty!|raw bitter",
+      "Mmm, this cake is {delicious}! | Thank you for the {delicious} meal. | The dumplings were {delicious}. I ate twenty!",
       "raw bitter",
     ),
     word(
       "sweet sweeter sweetest",
       "tasting like sugar",
       "甜的",
-      "Sugar and honey are {sweet}.|sour salty | This tea is too {sweet}. You put in too much sugar.|sour salty | I like {sweet} things like cakes and ice cream.|sour salty",
+      "Sugar and honey are {sweet}. | This tea is too {sweet}. You put in too much sugar. | I like {sweet} things like cakes and ice cream.",
       "sour salty",
     ),
     word(
       "sour sourer sourest",
       "tasting like a lemon",
       "酸的",
-      "Lemons are {sour}.|sweet spicy | This milk is old. It tastes {sour}.|sweet spicy | The green apples were very {sour}, so I added sugar.|sweet salty",
+      "Lemons are {sour}. | This milk is old. It tastes {sour}. | The green apples were very {sour}, so I added sugar.",
       "sweet spicy",
     ),
     word(
       "salty saltier saltiest",
       "with a lot of salt",
       "咸的",
-      "Sea water is {salty}.|sweet sour | I'm thirsty. The chips were very {salty}.|sweet sour | This soup is too {salty}. Who put in so much salt?|sweet sour",
+      "Sea water is {salty}. | I'm thirsty. The chips were very {salty}. | This soup is too {salty}. Who put in so much salt?",
       "sweet sour",
     ),
     word(
       "spicy spicier spiciest",
       "with a hot, strong taste",
       "辣的",
-      "Sichuan food is very {spicy}.|sweet sour | This curry is too {spicy}. My mouth is on fire!|sweet sour | Do you like {spicy} food? — Yes, I love chilies.|sweet sour",
+      "Sichuan food is very {spicy}. | This curry is too {spicy}. My mouth is on fire! | Do you like {spicy} food? — Yes, I love chilies.",
       "sweet sour",
     ),
     word(
       "fresh fresher freshest",
       "just made or picked, not old",
       "新鲜的",
-      "We buy {fresh} fish at the market every morning.|bitter sour | This bread is {fresh}. It's still warm.|raw bitter | Open the window and let in some {fresh} air.|raw sweet",
+      "These flowers are {fresh}. I picked them this morning. | This bread is {fresh}. It's still warm. | Open the window and let in some {fresh} air.",
       "raw bitter",
     ),
     word(
       "raw",
       "not cooked",
       "生的",
-      "Sushi is made with {raw} fish.|bitter sweet | Don't eat {raw} meat. Cook it first.|fresh sweet | Carrots are good {raw} or cooked.|bitter sour",
+      "In sushi, the fish is {raw}. Nobody cooks it. | Don't eat {raw} meat. Cook it first. | Carrots are good {raw} or cooked.",
       "fresh bitter",
     ),
     word(
       "smell smells smelled smelling",
       "to notice something with your nose; what you notice with your nose",
       "闻；气味",
-      "I love the {smell} of fresh bread.|meal raw | Something {smells} bad. Is the fish old?|meals raws | Dogs can {smell} things from far away.|taste meal",
-      "taste meal",
+      "I love the {smell} of fresh bread coming from the kitchen. | Open the window! Something {smells} bad in here.|tastes feels | Dogs use their noses to {smell} food from far away.",
+      "taste feel",
     ),
     word(
       "bitter",
       "with a strong taste that is not sweet, like coffee without sugar",
       "苦的",
-      "Coffee without sugar is {bitter}.|sweet salty | Dark chocolate is a little {bitter}.|salty spicy | Black tea is {bitter} if you leave it too long.|salty spicy",
+      "Coffee without sugar is {bitter}. | Dark chocolate has little sugar, so it is a little {bitter}. | Black tea is {bitter} if you leave it too long.",
       "sweet salty",
     ),
     word(
       "meal meals",
       "the food you eat at one time, like breakfast or dinner",
       "一顿饭",
-      "Breakfast is the first {meal} of the day.|taste smell | We had a big {meal} at Grandma's.|taste smell | Wash your hands before {meals}.|tastes smells",
+      "Breakfast is the first {meal} of the day. | We had a big {meal} at Grandma's. | Wash your hands before {meals}.|tastes smells",
       "taste smell",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*Taste* and *smell* are close: you *taste* food in your mouth and *smell* it with your nose. Look for *mouth*, *tongue*, *nose* or a smell coming from somewhere.",
+        "*taste* 和 *smell* 很接近：*taste* 是用嘴尝，*smell* 是用鼻子闻。找找句子里有没有 *mouth*、*tongue*、*nose*，或者气味从哪里飘来。",
+      ),
+      meaning: t(
+        "*Fresh* and *raw* are different: *fresh* food is new, not old, and *raw* food is not cooked. Fresh bread is cooked, and a piece of old meat can still be raw.",
+        "*fresh* 和 *raw* 意思不同：*fresh* 是新鲜、不陈旧，*raw* 是生的、没煮过。新鲜面包是烤熟的，放久的肉也可能是生的。",
+      ),
+      spell: t(
+        "*Delicious* ends in -cious, said like *shus*: de · li · cious. Write c-i-o-u-s, not -shus.",
+        "*delicious* 以 -cious 结尾，读作 *shus*：de · li · cious。要写成 c-i-o-u-s，不要写成 -shus。",
+      ),
+    },
+    notes: `
+      taste|soup tried from a spoonful;sauce put on the tongue before more salt;the sour feeling of biting a lemon|you taste with your mouth; you smell with your nose|taste 用嘴尝；smell 用鼻子闻|smell=smell is what you notice with your nose, not what you notice when food is in your mouth=smell 是用鼻子闻到的，不是食物在嘴里尝到的;sound/sounds=sound is what you hear with your ears, not what food is like in your mouth=sound 是用耳朵听到的，不是食物在嘴里的味道|taste|a long a, and the silent e at the end|长元音 a，词尾 e 不发音
+      delicious|a cake that makes someone say "Mmm";a meal someone says thank you for;dumplings so good someone ate twenty|delicious means very good to eat; bitter is a strong taste many people dislike|delicious 是非常好吃；bitter 是很多人不喜欢的苦味|raw=raw means not cooked, which does not make food good to eat=raw 是没煮过的，并不表示好吃;bitter=bitter is a strong taste like coffee without sugar, not a taste that makes you eat twenty=bitter 是像不加糖的咖啡那样的苦味，不会让人想吃二十个|de · li · cious|the ending -cious, said like *shus*|结尾 -cious 读作 *shus*
+      sweet|the taste of sugar and honey;tea with too much sugar;cakes and ice cream|sweet tastes like sugar; sour tastes like a lemon|sweet 是糖的味道；sour 是柠檬的味道|sour=sour is the taste of a lemon, not the taste of sugar=sour 是柠檬的味道，不是糖的味道;salty=salty means with a lot of salt, not with a lot of sugar=salty 是盐放多了，不是糖放多了|sweet|the double e, as in *tree*|两个 e，和 *tree* 一样
+      sour|the taste of lemons;old milk;green apples that needed sugar|sour tastes like a lemon; sweet tastes like sugar|sour 是柠檬的味道；sweet 是糖的味道|sweet=sweet is the taste of sugar, and you would not add sugar to food that is already sweet=sweet 是糖的味道，已经甜的东西不用再加糖;spicy=spicy is the hot taste of chilies, not the taste of lemons, old milk or green apples=spicy 是辣椒的辣味，不是柠檬、变质牛奶或青苹果的味道|sour|our, as in *our*|our 的读音和 *our* 一样
+      salty|sea water;chips that make someone thirsty;soup with too much salt|salty means with a lot of salt; sweet means with a lot of sugar|salty 是盐多；sweet 是糖多|sweet=sweet is the taste of sugar, not of salt=sweet 是糖的味道，不是盐的味道;sour=sour is the taste of a lemon, not of salt=sour 是柠檬的味道，不是盐的味道|sal · ty|salt with a y added|在 salt 后面加 y
+      spicy|Sichuan food;a curry that sets the mouth on fire;food for someone who loves chilies|spicy is the hot taste of chilies; sour is the taste of a lemon|spicy 是辣椒的辣味；sour 是柠檬的酸味|sweet=sweet is the taste of sugar, which does not set your mouth on fire=sweet 是糖的味道，不会让嘴里火辣辣的;sour=sour is the taste of a lemon, not the hot taste of chilies=sour 是柠檬的酸味，不是辣椒的辣味|spi · cy|spice with the e changed to y|把 spice 的 e 换成 y
+      fresh|flowers picked this morning;warm bread just made;clean air from an open window|fresh means just made or picked; raw means not cooked|fresh 是刚做好或刚摘下的；raw 是没煮过的|raw=raw means not cooked, and flowers, warm bread and air are not food you cook=raw 是没煮过的，而花、热面包和空气都不是要煮的食物;bitter=bitter is a strong taste like coffee without sugar, not something new and clean=bitter 是像不加糖的咖啡那样的苦味，不是新鲜干净的|fresh|sh at the end|结尾是 sh
+      raw|fish in sushi that nobody cooks;meat that must be cooked first;carrots eaten without cooking|raw means not cooked; fresh means new, not old|raw 是没煮过；fresh 是新鲜、不陈旧|fresh=fresh means new and not old, and it does not tell you whether food is cooked=fresh 是新鲜、不陈旧，并不说明食物有没有煮过;bitter=bitter is a strong taste like coffee without sugar, not food that is not cooked=bitter 是像不加糖的咖啡那样的苦味，不是没煮过的食物|raw|aw, said like or, as in *saw*|aw 读作 or，和 *saw* 一样
+      smell|bread from the kitchen;something bad in the air of a room;food that dogs find with their noses|you smell with your nose; you taste with your mouth|smell 用鼻子闻；taste 用嘴尝|taste=taste is what food is like in your mouth, not what your nose notices from far away=taste 是食物在嘴里的味道，不是鼻子从远处闻到的;feel=feel means noticing something by touch or in your body, not with your nose=feel 是靠触摸或身体感觉，不是用鼻子闻|smell|the double l at the end|词尾双写 l
+      bitter|coffee without sugar;dark chocolate with little sugar;black tea left too long|bitter is a strong taste that is not sweet; sweet tastes of sugar|bitter 是不甜的苦味；sweet 是糖的甜味|sweet=sweet is the taste of sugar, but these drinks and foods have little or no sugar=sweet 是糖的味道，而这些饮料和食物几乎没有糖;salty=salty means with a lot of salt, and coffee, chocolate and tea are not salty=salty 是盐放多了，而咖啡、巧克力和茶都不咸|bit · ter|the double t in the middle|中间双写 t
+      meal|breakfast, the first food of the day;a big dinner at Grandma's;the times we eat, when we wash our hands first|a meal is the food you eat at one time; a taste is what food is like in your mouth|meal 是一顿饭；taste 是食物在嘴里的味道|taste=taste is what food is like in your mouth, not breakfast or dinner=taste 是食物在嘴里的味道，不是早饭或晚饭;smell=smell is what your nose notices, not the food you eat at one time=smell 是鼻子闻到的气味，不是一顿饭|meal|ea for the long e sound, as in *eat*|ea 发长 e 音，和 *eat* 一样
+    `,
+  },
 });
 
 const quantities = vocabularyTopic({
@@ -295,93 +396,127 @@ const quantities = vocabularyTopic({
     "Pieces, kilos, grams, liters, bits and pairs; few, little, enough, plenty, amounts and extra.",
     "块、千克、克、升、一点和一对；few、little、enough、plenty、数量和额外的。",
   ),
+  intro: t(
+    "For the party we buy a **kilo** of rice, two **liters** of juice and a **few** big cakes, so there is **plenty** for everyone. These words help you say how much or how many you need when you shop and cook.",
+    "为了聚会，我们买了一 **kilo**（公斤）大米、两 **liters**（升）果汁和 **few**（几个）大蛋糕，这样每个人都有 **plenty**（足够多的）东西吃。这些词帮你在购物和做饭时说出需要多少。",
+  ),
   prerequisites: ["a2-words-taste"],
   words: [
     word(
       "piece pieces",
       "one part of something",
       "一块；一片",
-      "Can I have a {piece} of cake?|pair kilo | I need a {piece} of paper.|pair liter | The plate fell and broke into {pieces}.|pairs kilos",
+      "Can I have a small {piece} of your birthday cake? | I need a {piece} of paper to write a note. | The plate fell and broke into {pieces}.|pairs kilos",
       "pair kilo",
     ),
     word(
       "kilo kilos",
       "a thousand grams",
       "千克；公斤",
-      "A {kilo} of apples, please.|liter pair | This bag of rice is five {kilos}.|liters pairs | The baby was three {kilos} when she was born.|liters pieces",
-      "liter pair",
+      "A {kilo} of apples, please. | This bag of rice is five {kilos}.|liters grams | The baby was three {kilos} when she was born.|liters grams",
+      "liter gram",
     ),
     word(
       "gram grams",
       "a very small amount of weight; there are a thousand in a kilo",
       "克",
-      "Add 200 {grams} of flour.|liters pairs | This letter is only 20 {grams}.|liters pieces | A {gram} is very light.|liter pair",
-      "liter pair",
+      "Add 200 {grams} of flour.|kilos liters | This letter is only 20 {grams}.|kilos liters | A {gram} is very light.",
+      "kilo liter",
     ),
     word(
       "liter liters",
       "an amount of liquid; a big bottle of water holds one or two",
       "升",
-      "We need two {liters} of milk.|kilos pairs | Drink about two {liters} of water a day.|grams pieces | This bottle holds one {liter}.|gram pair",
-      "kilo pair",
+      "We need two {liters} of milk.|kilos grams | Drink about two {liters} of water a day.|kilos grams | This bottle holds one {liter}.",
+      "kilo gram",
     ),
     word(
       "bit bits",
       "a small piece or amount",
       "一点；小块",
-      "I'm a {bit} tired.|few pair | Add a {bit} of salt.|few pair | Can I have a {bit} of your sandwich?|few kilo",
-      "few pair",
+      "I'm a {bit} tired. | Add a {bit} of salt. | Can I have a {bit} more time, please?",
+      "few piece",
     ),
     word(
       "few",
       "not many; with a: some",
       "很少；（a few）几个",
-      "There are a {few} apples in the bag.|little bit | I have a {few} friends in this town.|little bit | Very {few} people came to the party, so it was quiet.|little plenty",
+      "There are a {few} apples in the bag. | I have a {few} friends in this town. | Very {few} people came to the party, so it was quiet.",
       "little bit",
     ),
     word(
       "little less least",
       "not much; with a: some",
       "很少；（a little）一点",
-      "Add a {little} oil to the pan.|few pair | There's very {little} milk left. Let's buy some.|few plenty | I speak a {little} French.|few pair",
-      "few pair",
+      "Add a {little} oil to the pan. | There's very {little} milk left. Let's buy some. | I speak a {little} French.",
+      "few bit",
     ),
     word(
       "enough",
       "as much or as many as you need",
       "足够的",
-      "Do we have {enough} chairs for everyone?|plenty amount | I didn't have {enough} money to buy it.|plenty amount | Is there {enough} food for ten people?|plenty amount",
+      "Do we have {enough} chairs for everyone? | I didn't have {enough} money to buy it. | Is there {enough} food for ten people?",
       "plenty amount",
     ),
     word(
       "plenty",
       "a lot, more than enough",
       "大量；充足",
-      "Don't hurry. We have {plenty} of time.|enough few | There's {plenty} of food, so invite your friends.|few enough | Drink {plenty} of water when it's hot.|few enough",
+      "Don't hurry. We have {plenty} of time. | There's {plenty} of food, so invite your friends. | Drink {plenty} of water when it's hot.",
       "enough few",
     ),
     word(
       "pair pairs",
       "two things of the same kind used together",
       "一双；一对",
-      "I bought a new {pair} of shoes.|piece kilo | A {pair} of glasses costs a lot.|piece kilo | Work in {pairs}: two students in each group.|pieces kilos",
+      "I bought a new {pair} of shoes. | A {pair} of glasses costs a lot. | Work in {pairs}: two students in each group.|pieces kilos",
       "piece kilo",
     ),
     word(
       "amount amounts",
       "how much there is of something",
       "数量；数额",
-      "Use a small {amount} of salt.|pair few | That's a lot of money! What a large {amount}!|pair few | The {amount} of rain this year is low.|pair piece",
-      "pair few",
+      "Use a small {amount} of salt. | That's a lot of money! What a large {amount}! | The {amount} of rain this year is low.",
+      "pair kilo",
     ),
     word(
       "extra",
       "more than usual",
       "额外的",
-      "Can I have {extra} cheese on my pizza?|few amount | We have an {extra} bed if you want to stay.|enough plenty | There's an {extra} cost for breakfast.|enough plenty",
+      "Can I have {extra} cheese on my pizza? | We have one {extra} bed if you want to stay. | Breakfast is {extra}: it costs five dollars more.",
       "enough plenty",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "*A few* goes with things you can count, as in *a few apples*, and *a little* goes with things you cannot count, as in *a little oil*. Look at the noun after the gap.",
+        "*a few* 修饰可数的东西，如 *a few apples*；*a little* 修饰不可数的东西，如 *a little oil*。看空格后面的名词。",
+      ),
+      meaning: t(
+        "*Enough* means as much as you need, and *plenty* means more than enough; *plenty* needs *of* before a noun: *plenty of time*.",
+        "*enough* 是正好够用，*plenty* 是绰绰有余；*plenty* 后面接名词要加 *of*：*plenty of time*。",
+      ),
+      spell: t(
+        "The weights and measures end in different letters: *kilo* ends in o, *gram* in m, and *liter* in -er (British English writes *litre*).",
+        "这几个度量词的结尾各不相同：*kilo* 以 o 结尾，*gram* 以 m 结尾，*liter* 以 -er 结尾（英式英语写作 *litre*）。",
+      ),
+    },
+    notes: `
+      piece|a small part of a birthday cake;paper for writing a note;the parts of a broken plate|a piece is one part of something; a pair is two things used together|piece 是某物的一部分；pair 是成对使用的两样东西|pair=pair means two things used together, like shoes, not one part of a cake or paper=pair 是成对使用的两样东西，比如鞋，不是蛋糕或纸的一部分;kilo=kilo is a weight of a thousand grams, not one small part of something=kilo 是一千克的重量，不是某物的一小部分|piece|ie for the long e sound, and -ce at the end|ie 发长 e 音，结尾是 -ce
+      kilo|a weight of apples to buy;the weight of a bag of rice;a baby's weight when she was born|a kilo is a thousand grams; a liter measures liquid|kilo 是一千克；liter 量的是液体|liter=liter measures liquids like milk and water, not apples, rice or a baby=liter 量的是牛奶、水这样的液体，不是苹果、大米或婴儿;gram=gram is a very small weight, far too light for a bag of rice or a baby=gram 是很小的重量，一袋米或一个婴儿远不止这么轻|ki · lo|i said like ee, and o at the end: *kilos*|i 读作 ee，词尾是 o，复数 *kilos*
+      gram|the flour for a recipe;the weight of a letter;a very light weight|a gram is very light; a kilo is a thousand grams|gram 很轻；kilo 是一千克|kilo=kilo is a thousand grams, much too heavy for a recipe's flour or a letter=kilo 是一千克，对一份食谱的面粉或一封信来说太重了;liter=liter measures liquids, not the weight of flour or a letter=liter 量的是液体，不是面粉或信的重量|gram|m at the end, with no e|结尾是 m，没有 e
+      liter|milk to buy;water to drink every day;what a bottle holds|a liter measures liquid; a kilo measures weight|liter 量液体；kilo 量重量|kilo=kilo is a weight for things like rice and apples, not an amount of milk or water=kilo 是大米、苹果这类东西的重量，不是牛奶或水的量;gram=gram is a very small weight, not an amount of liquid in a bottle=gram 是很小的重量，不是瓶子里液体的量|li · ter|-er at the end; British English writes *litre*|结尾是 -er；英式英语写作 *litre*
+      bit|feeling a little tired;a small amount of salt;a little more time|a bit is a small amount; a piece is one part of a solid thing|bit 是一点点；piece 是固体东西的一块|few=few goes only with things you can count, and *a few tired* or *a few of salt* is not English=few 只修饰可数的东西，不能说 *a few tired* 或 *a few of salt*;piece=piece is one part of a solid thing, so you cannot be *a piece tired* or ask for *a piece more time*=piece 是固体东西的一块，不能说 *a piece tired*，也不能说 *a piece more time*|bit|a short i, as in *sit*|短元音 i，和 *sit* 一样
+      few|a small number of apples in a bag;a small number of friends in town;a very small number of people at a party|few goes with things you can count; little goes with things you cannot count|few 修饰可数的东西；little 修饰不可数的东西|little=little goes with things you cannot count, like oil or milk, not with apples, friends or people=little 修饰油、牛奶这样不可数的东西，不修饰苹果、朋友或人;bit=bit needs *of* before a noun, as in *a bit of salt*, and does not go with *very* or plural nouns=bit 后面接名词要加 *of*，如 *a bit of salt*，也不和 *very* 或复数名词连用|few|ew, said like *you*|ew 读作 *you*
+      little|a small amount of oil;not much milk left;some French|little goes with things you cannot count; few goes with things you can count|little 修饰不可数的东西；few 修饰可数的东西|few=few goes with things you can count, like apples, not with oil, milk or a language=few 修饰苹果这样可数的东西，不修饰油、牛奶或语言;bit=bit needs *of* before a noun, as in *a bit of oil*, and is not used with *very*=bit 后面接名词要加 *of*，如 *a bit of oil*，也不和 *very* 连用|lit · tle|the double t, and -le at the end|双写 t，结尾是 -le
+      enough|chairs for everyone;money to buy something;food for ten people|enough is as much as you need; plenty is more than enough|enough 是正好够用；plenty 是绰绰有余|plenty=plenty needs *of* before a noun, as in *plenty of chairs*, so it cannot come straight before *chairs*, *money* or *food*=plenty 后面接名词要加 *of*，如 *plenty of chairs*，不能直接放在 *chairs*、*money* 或 *food* 前面;amount=amount is a noun for how much there is, and it cannot stand before another noun like *chairs* or *food*=amount 是表示数量的名词，不能直接放在 *chairs*、*food* 这样的名词前面|e · nough|ough said like *uff*|ough 读作 *uff*
+      plenty|lots of time, so no need to hurry;lots of food for friends;lots of water on a hot day|plenty means a lot, more than enough; few means not many|plenty 是很多、绰绰有余；few 是很少|enough=enough goes straight before a noun with no *of*, so *enough of time* is not English=enough 直接放在名词前，不加 *of*，所以不能说 *enough of time*;few=few means not many, and it does not tell people not to hurry or to invite friends=few 是不多，不能用来让人别着急或邀请朋友|plen · ty|-ty at the end, with y|结尾是 -ty，用 y
+      pair|new shoes;glasses;two students working together|a pair is two things used together; a piece is one part|pair 是成对的两样东西；piece 是一部分|piece=piece is one part of something, and shoes and glasses come in twos, not pieces=piece 是某物的一部分，而鞋和眼镜是成对的;kilo=kilo is a weight of a thousand grams, not two things used together=kilo 是一千克的重量，不是成对的两样东西|pair|air at the end, said like *air*|结尾是 air，读音和 *air* 一样
+      amount|a little salt to use;a lot of money;how much rain fell this year|amount means how much there is; a pair is two things|amount 是多少；pair 是成对的两样东西|pair=pair means two things used together, not how much salt, money or rain there is=pair 是成对的两样东西，不是盐、钱或雨水的多少;kilo=kilo is one fixed weight, so *a small kilo* or *the kilo of rain* does not make sense=kilo 是一个固定的重量，*a small kilo* 或 *the kilo of rain* 都说不通|a · mount|a at the start, then *mount*|开头是 a，后面是 *mount*
+      extra|more cheese than usual on a pizza;one more bed for a visitor;breakfast that costs five dollars more|extra means more than usual; enough means as much as you need|extra 是额外的、多出来的；enough 是正好够|enough=enough means as much as you need, not something added that costs more=enough 是正好够用，不是额外加的、要多付钱的东西;plenty=plenty means a lot and needs *of* before a noun, so *plenty cheese* or *one plenty bed* is not English=plenty 是很多，后面接名词要加 *of*，不能说 *plenty cheese* 或 *one plenty bed*|ex · tra|x at the start, said like *ks*|开头的 x 读作 *ks*
+    `,
+  },
 });
 
 // A few and a little.
