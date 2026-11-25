@@ -857,6 +857,15 @@ export const taughtTopics: readonly string[] = [
   "words-of-wills-and-inheritance",
   "words-of-ships-and-sailors",
   "words-of-pirates-and-plunder",
+  // Grades 9 to 12 vocabulary
+  "words-for-literary-analysis",
+  "words-of-rhetoric",
+  "words-of-the-theater",
+  "words-of-government-and-law",
+  "words-of-scientific-inquiry",
+  "words-of-modern-history",
+  "words-for-poetic-form",
+  "words-for-reflection",
   // CEFR level vocabulary
   "a2-words-pets",
   // Word parts of grades 6 to 12
