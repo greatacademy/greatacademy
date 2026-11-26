@@ -2,14 +2,25 @@
 // functions to triple integrals: the reverse question, a harder case or a common trap.
 // See `deeperMultivariableCalculusThirdPoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
 import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
 import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 
+import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** text turns a pair of English and Chinese strings into a text. */
+const text = ([en, zh]: Pair): Text => t(en, zh);
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -29,8 +40,8 @@ const domainCount = point(
   "counting-integers-in-a-domain",
   ["Counting integers in a domain", "数定义域中的整数"],
   [
-    "The domain of a vector function is the intersection of the domains of its components. Each component removes something, and a single excluded point inside the interval must be taken away as well, so check the endpoints and the hole separately.",
-    "向量函数的定义域是各分量定义域的交集。每个分量都会去掉一部分，区间内被排除的单个点也要去掉，所以要分别检查端点和空洞。",
+    "The domain of a vector function is the intersection of the domains of its components. Each component removes something, and a single excluded point inside the interval must be taken away as well, so check the endpoints and the hole separately. For $\\left\\langle \\sqrt{t - 2}, \\ln(7 - t), \\frac{1}{t - 4} \\right\\rangle$ the domain is $[2, 7)$ without $4$, which holds the integers $2, 3, 5, 6$: four of them.\n\n> **Watch out.** A square root's endpoint is included, since $\\sqrt{0} = 0$, but a logarithm's is not, since $\\ln 0$ is not defined. And the hole is a single point, yet it must still be removed.",
+    "向量函数的定义域是各分量定义域的交集。每个分量都会去掉一部分，区间内被排除的单个点也要去掉，所以要分别检查端点和空洞。对 $\\left\\langle \\sqrt{t - 2}, \\ln(7 - t), \\frac{1}{t - 4} \\right\\rangle$，定义域是去掉 $4$ 的 $[2, 7)$，其中的整数是 $2, 3, 5, 6$，共四个。\n\n> **注意。** 平方根的端点包含在内，因为 $\\sqrt{0} = 0$；对数的端点不包含，因为 $\\ln 0$ 没有定义。空洞虽然只是一个点，也必须去掉。",
   ],
   (rng) => {
     const a = rng.int(-9, 0);
@@ -38,15 +49,49 @@ const domainCount = point(
     const b = c + rng.int(1, 6);
     const answer = b - a - 1;
     const r = br(`\\sqrt{${poly([1, "t"], [-a, ""])}}`, `\\ln(${poly([b, ""], [-1, "t"])})`, `\\frac{1}{${poly([1, "t"], [-c, ""])}}`);
-    return ask(
-      [`How many integers lie in the domain of $\\mathbf{r}(t) = ${r}$?`, `$\\mathbf{r}(t) = ${r}$ 的定义域中有多少个整数？`],
+    return numberProblem({
+      prompt: text([`How many integers lie in the domain of $\\mathbf{r}(t) = ${r}$?`, `$\\mathbf{r}(t) = ${r}$ 的定义域中有多少个整数？`]),
       answer,
-      [b - a, b - a + 1, b - a - 2],
-      [
-        `The components need $t \\ge ${a}$, $t < ${b}$ and $t \\ne ${c}$. From $${a}$ to $${b - 1}$ there are $${b - a}$ integers, and removing $${c}$ leaves $${answer}$.`,
-        `各分量要求 $t \\ge ${a}$，$t < ${b}$，$t \\ne ${c}$。从 $${a}$ 到 $${b - 1}$ 有 $${b - a}$ 个整数，去掉 $${c}$ 后剩下 $${answer}$ 个。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          b - a,
+          `$t = ${c}$ makes $\\frac{1}{${poly([1, "t"], [-c, ""])}}$ divide by zero, so that integer must be removed.`,
+          `$t = ${c}$ 使 $\\frac{1}{${poly([1, "t"], [-c, ""])}}$ 除以零，所以这个整数要去掉。`,
+        ),
+        why(
+          b - a + 1,
+          `$t = ${b}$ gives $\\ln 0$, which is not defined: the logarithm's endpoint is excluded.`,
+          `$t = ${b}$ 给出 $\\ln 0$，没有定义：对数的端点不包含在内。`,
+        ),
+        why(
+          b - a - 2,
+          `$t = ${a}$ gives $\\sqrt{0} = 0$, which is defined: the square root's endpoint is included.`,
+          `$t = ${a}$ 给出 $\\sqrt{0} = 0$，有定义：平方根的端点包含在内。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find each component's domain", "求各分量的定义域"],
+            t(
+              `The square root needs $t \\ge ${a}$, the logarithm needs $t < ${b}$, and the fraction needs $t \\ne ${c}$, so the domain is $[${a}, ${b})$ without $${c}$.`,
+              `平方根要求 $t \\ge ${a}$，对数要求 $t < ${b}$，分式要求 $t \\ne ${c}$，所以定义域是去掉 $${c}$ 的 $[${a}, ${b})$。`,
+            ),
+          ],
+          [
+            ["Count the integers", "数整数"],
+            t(
+              `From $${a}$ to $${b - 1}$ there are $${b - 1} - ${paren(a)} + 1 = ${b - a}$ integers, and removing $${c}$ leaves $${answer}$.`,
+              `从 $${a}$ 到 $${b - 1}$ 有 $${b - 1} - ${paren(a)} + 1 = ${b - a}$ 个整数，去掉 $${c}$ 后剩下 $${answer}$ 个。`,
+            ),
+          ],
+        ],
+        t(
+          `The smallest integer, $${a}$, gives $\\sqrt{0} = 0$, and the largest, $${b - 1}$, gives $\\ln 1 = 0$; both are defined, while $${b}$ and $${c}$ are not.`,
+          `最小的整数 $${a}$ 给出 $\\sqrt{0} = 0$，最大的 $${b - 1}$ 给出 $\\ln 1 = 0$，都有定义；而 $${b}$ 和 $${c}$ 没有定义。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -54,26 +99,61 @@ const smoothJoin = point(
   "the-slope-that-makes-a-join-differentiable",
   ["The slope that makes a join differentiable", "使连接处可导的斜率"],
   [
-    "A vector function is differentiable exactly when each component is. For a component made of two pieces, the values must agree at the join and the derivatives must agree too, and the second condition fixes the slope of a linear piece.",
-    "向量函数可导，当且仅当每个分量都可导。对于由两段组成的分量，连接处的值必须相等，导数也必须相等，后一个条件确定线性段的斜率。",
+    "A vector function is differentiable exactly when each component is. For a component made of two pieces, the values must agree at the join and the derivatives must agree too, and the second condition fixes the slope of a linear piece. If $g(t) = 7t^2$ for $t < 1$ and $mt + n$ for $t \\ge 1$, the slopes match when $m = 14$, and then the values match when $n = -7$.\n\n> **Watch out.** Matching the values only makes the join continuous; differentiability also needs the slopes to match. The slope of $ct^2$ at $t = a$ is $2ca$, not its value $ca^2$.",
+    "向量函数可导，当且仅当每个分量都可导。对于由两段组成的分量，连接处的值必须相等，导数也必须相等，后一个条件确定线性段的斜率。若 $t < 1$ 时 $g(t) = 7t^2$，$t \\ge 1$ 时为 $mt + n$，则 $m = 14$ 时斜率相等，再取 $n = -7$ 使函数值相等。\n\n> **注意。** 只让函数值相等，连接处只是连续；可导还要求斜率相等。$ct^2$ 在 $t = a$ 处的斜率是 $2ca$，不是它的值 $ca^2$。",
   ],
   (rng) => {
     const a = nz(rng, 6);
     const c = nz(rng, 5);
     const m = 2 * c * a;
+    const n = -c * a * a;
     const g = `\\begin{cases} ${poly([c, "t^{2}"])}, & t < ${a} \\\\ mt + n, & t \\ge ${a} \\end{cases}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `The second component of $\\mathbf{r}(t) = ${br("t", "g(t)")}$ is $g(t) = ${g}$. For which $m$ can $n$ be chosen so that $\\mathbf{r}$ is differentiable at $t = ${a}$?`,
         `$\\mathbf{r}(t) = ${br("t", "g(t)")}$ 的第二个分量是 $g(t) = ${g}$。当 $m$ 为何值时，可以选择 $n$ 使 $\\mathbf{r}$ 在 $t = ${a}$ 处可导？`,
-      ],
-      m,
-      [c * a * a, 2 * c, c * a],
-      [
-        `The derivative from the left is $${poly([2 * c, "t"])}$, which equals $${m}$ at $t = ${a}$. The right piece has derivative $m$, so $m = ${m}$, and then $n$ makes the values agree.`,
-        `左侧的导数是 $${poly([2 * c, "t"])}$，在 $t = ${a}$ 处等于 $${m}$。右段的导数是 $m$，所以 $m = ${m}$，再由 $n$ 使函数值相等。`,
-      ],
-    );
+      ]),
+      answer: m,
+      mistakes: apart(m, [
+        why(
+          c * a * a,
+          `$${c * a * a}$ is the value of $${poly([c, "t^{2}"])}$ at $t = ${a}$; $m$ must match its slope.`,
+          `$${c * a * a}$ 是 $${poly([c, "t^{2}"])}$ 在 $t = ${a}$ 处的值；$m$ 要与它的斜率相等。`,
+        ),
+        why(
+          2 * c,
+          `The left slope is $${poly([2 * c, "t"])}$; evaluate it at $t = ${a}$.`,
+          `左侧斜率是 $${poly([2 * c, "t"])}$；还要在 $t = ${a}$ 处求值。`,
+        ),
+        why(
+          c * a,
+          `The derivative of $${poly([c, "t^{2}"])}$ is $${poly([2 * c, "t"])}$: the power $2$ comes down as a factor.`,
+          `$${poly([c, "t^{2}"])}$ 的导数是 $${poly([2 * c, "t"])}$：指数 $2$ 要作为因子乘下来。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Match the slopes", "使斜率相等"],
+            t(
+              `The left piece has derivative $${poly([2 * c, "t"])}$, which is $${m}$ at $t = ${a}$, and the right piece has derivative $m$. So $m = ${m}$.`,
+              `左段的导数是 $${poly([2 * c, "t"])}$，在 $t = ${a}$ 处为 $${m}$，右段的导数是 $m$。所以 $m = ${m}$。`,
+            ),
+          ],
+          [
+            ["Match the values", "使函数值相等"],
+            t(
+              `The left value is $${c * a * a}$, so $${m} \\cdot ${paren(a)} + n = ${c * a * a}$ gives $n = ${n}$; the first component $t$ is differentiable everywhere.`,
+              `左侧的值是 $${c * a * a}$，所以由 $${m} \\cdot ${paren(a)} + n = ${c * a * a}$ 得 $n = ${n}$；第一个分量 $t$ 处处可导。`,
+            ),
+          ],
+        ],
+        t(
+          `With $m = ${m}$ and $n = ${n}$, $${poly([m, "t"], [n, ""])}$ and $${poly([c, "t^{2}"])}$ both equal $${c * a * a}$ at $t = ${a}$, and both have slope $${m}$ there.`,
+          `取 $m = ${m}$、$n = ${n}$，$${poly([m, "t"], [n, ""])}$ 与 $${poly([c, "t^{2}"])}$ 在 $t = ${a}$ 处都等于 $${c * a * a}$，斜率也都是 $${m}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -81,8 +161,8 @@ const fromAcceleration = point(
   "position-from-acceleration-and-two-initial-vectors",
   ["Position from acceleration and two initial vectors", "由加速度和两个初始向量求位置"],
   [
-    "Integrating an acceleration twice brings in two constant vectors, which are the initial velocity and the initial position. Each integration has its own constant, and the velocity constant gets multiplied by $t$ in the second integration.",
-    "把加速度积分两次，会引入两个常向量，即初速度和初始位置。每次积分都有自己的常数，而速度常数在第二次积分时要乘以 $t$。",
+    "Integrating an acceleration twice brings in two constant vectors, which are the initial velocity and the initial position. Each integration has its own constant, and the velocity constant gets multiplied by $t$ in the second integration. With second component $y'' = 6t$, $y'(0) = 10$ and $y(0) = 5$: $y' = 3t^2 + 10$ and $y = t^3 + 10t + 5$, so $y(1) = 16$.\n\n> **Watch out.** Two integrations need both constants: the initial velocity becomes $vt$ after the second integration, not $v$, and the initial position is added at the end.",
+    "把加速度积分两次，会引入两个常向量，即初速度和初始位置。每次积分都有自己的常数，而速度常数在第二次积分时要乘以 $t$。若第二个分量满足 $y'' = 6t$，$y'(0) = 10$，$y(0) = 5$：则 $y' = 3t^2 + 10$，$y = t^3 + 10t + 5$，所以 $y(1) = 16$。\n\n> **注意。** 积分两次需要两个常数：初速度在第二次积分后变成 $vt$，不是 $v$；初始位置在最后加上。",
   ],
   (rng) => {
     const q = nz(rng, 5);
@@ -90,18 +170,60 @@ const fromAcceleration = point(
     const y0 = rng.int(-9, 9);
     const T = rng.int(1, 4);
     const answer = y0 + v * T + q * T ** 3;
-    return ask(
-      [
+    const y = poly([q, "t^{3}"], [v, "t"], [y0, ""]);
+    return numberProblem({
+      prompt: text([
         `$\\mathbf{r}''(t) = ${br(2, poly([6 * q, "t"]))}$, $\\mathbf{r}'(0) = ${br(1, v)}$ and $\\mathbf{r}(0) = ${br(0, y0)}$. Find the second component of $\\mathbf{r}(${T})$.`,
         `$\\mathbf{r}''(t) = ${br(2, poly([6 * q, "t"]))}$，$\\mathbf{r}'(0) = ${br(1, v)}$，$\\mathbf{r}(0) = ${br(0, y0)}$。求 $\\mathbf{r}(${T})$ 的第二个分量。`,
-      ],
+      ]),
       answer,
-      [y0 + v + q * T ** 3, y0 + q * T ** 3, v * T + q * T ** 3],
-      [
-        `The second component has velocity $${poly([3 * q, "t^{2}"], [v, ""])}$ and position $${poly([q, "t^{3}"], [v, "t"], [y0, ""])}$. At $t = ${T}$ this is $${answer}$.`,
-        `第二个分量的速度是 $${poly([3 * q, "t^{2}"], [v, ""])}$，位置是 $${poly([q, "t^{3}"], [v, "t"], [y0, ""])}$。在 $t = ${T}$ 处等于 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          y0 + v + q * T ** 3,
+          `The initial velocity integrates to $${v}t$, which is $${v * T}$ at $t = ${T}$, not $${v}$.`,
+          `初速度积分后是 $${v}t$，在 $t = ${T}$ 处为 $${v * T}$，不是 $${v}$。`,
+        ),
+        why(
+          y0 + q * T ** 3,
+          `The initial velocity $${v}$ is missing; it is the constant of the first integration.`,
+          `缺了初速度 $${v}$；它是第一次积分的常数。`,
+        ),
+        why(
+          v * T + q * T ** 3,
+          `The initial position $${y0}$ is missing; it is the constant of the second integration.`,
+          `缺了初始位置 $${y0}$；它是第二次积分的常数。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate once", "积分一次"],
+            t(
+              `$y'' = ${poly([6 * q, "t"])}$ gives $y' = ${poly([3 * q, "t^{2}"])} + C$, and $y'(0) = ${v}$ makes $y' = ${poly([3 * q, "t^{2}"], [v, ""])}$.`,
+              `由 $y'' = ${poly([6 * q, "t"])}$ 得 $y' = ${poly([3 * q, "t^{2}"])} + C$，再由 $y'(0) = ${v}$ 得 $y' = ${poly([3 * q, "t^{2}"], [v, ""])}$。`,
+            ),
+          ],
+          [
+            ["Integrate again", "再积分一次"],
+            t(
+              `$y = ${poly([q, "t^{3}"], [v, "t"])} + D$, and $y(0) = ${y0}$ makes $y = ${y}$.`,
+              `$y = ${poly([q, "t^{3}"], [v, "t"])} + D$，再由 $y(0) = ${y0}$ 得 $y = ${y}$。`,
+            ),
+          ],
+          [
+            [`Substitute $t = ${T}$`, `代入 $t = ${T}$`],
+            t(
+              `$y(${T}) = ${q * T ** 3} + ${paren(v * T)} + ${paren(y0)} = ${answer}$.`,
+              `$y(${T}) = ${q * T ** 3} + ${paren(v * T)} + ${paren(y0)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Differentiating $y = ${y}$ gives $y' = ${poly([3 * q, "t^{2}"], [v, ""])}$ and $y'' = ${poly([6 * q, "t"])}$, with $y'(0) = ${v}$ and $y(0) = ${y0}$, as given.`,
+          `对 $y = ${y}$ 求导得 $y' = ${poly([3 * q, "t^{2}"], [v, ""])}$，$y'' = ${poly([6 * q, "t"])}$，且 $y'(0) = ${v}$，$y(0) = ${y0}$，与已知相符。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -109,8 +231,8 @@ const tangentOnStraightPath = point(
   "the-unit-tangent-on-a-straight-path-with-changing-speed",
   ["The unit tangent on a straight path with changing speed", "速度变化的直线路径上的单位切向量"],
   [
-    "The unit tangent records only the direction of motion, so a path along a line at changing speed has a constant $\\mathbf{T}$ until the motion reverses. When the velocity has a factor of $t$, the sign of $t$ decides which way $\\mathbf{T}$ points.",
-    "单位切向量只记录运动方向，所以沿直线以变化的速度运动时，$\\mathbf{T}$ 保持不变，直到运动反向。当速度含有因子 $t$ 时，$t$ 的符号决定 $\\mathbf{T}$ 的指向。",
+    "The unit tangent records only the direction of motion, so a path along a line at changing speed has a constant $\\mathbf{T}$ until the motion reverses. When the velocity has a factor of $t$, the sign of $t$ decides which way $\\mathbf{T}$ points. For $\\langle 6t^2, 8t^2 \\rangle$ at $t = -1$, $\\mathbf{r}' = -2\\langle 6, 8 \\rangle$ and $\\mathbf{T} = \\left\\langle -\\frac{3}{5}, -\\frac{4}{5} \\right\\rangle$.\n\n> **Watch out.** The speed is $|2t|$ times the length, so dividing by it keeps the sign of $t$: for $t < 0$ the point moves back toward the origin and $\\mathbf{T}$ flips. Divide by the length too; the entries of $\\mathbf{r}'$ are not yet a unit vector.",
+    "单位切向量只记录运动方向，所以沿直线以变化的速度运动时，$\\mathbf{T}$ 保持不变，直到运动反向。当速度含有因子 $t$ 时，$t$ 的符号决定 $\\mathbf{T}$ 的指向。对 $\\langle 6t^2, 8t^2 \\rangle$ 在 $t = -1$ 处，$\\mathbf{r}' = -2\\langle 6, 8 \\rangle$，$\\mathbf{T} = \\left\\langle -\\frac{3}{5}, -\\frac{4}{5} \\right\\rangle$。\n\n> **注意。** 速率是 $|2t|$ 乘以长度，所以除以速率后 $t$ 的符号保留下来：$t < 0$ 时点朝原点往回走，$\\mathbf{T}$ 反向。还要除以长度；$\\mathbf{r}'$ 的分量还不是单位向量。",
   ],
   (rng) => {
     const [a, b, c] = rng.pick(triples);
@@ -118,19 +240,50 @@ const tangentOnStraightPath = point(
     const s2 = rng.pick([-1, 1]);
     const t0 = nz(rng, 5);
     const answer = Q.of(Math.sign(t0) * s1 * a, c);
+    const second = Q.of(Math.sign(t0) * s2 * b, c);
     const r = br(poly([s1 * a, "t^{2}"]), poly([s2 * b, "t^{2}"]));
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Find the first component of the unit tangent vector $\\mathbf{T}(${t0})$ of $\\mathbf{r}(t) = ${r}$.`,
         `求 $\\mathbf{r}(t) = ${r}$ 的单位切向量 $\\mathbf{T}(${t0})$ 的第一个分量。`,
-      ],
+      ]),
       answer,
-      [answer.neg(), Q.of(Math.sign(t0) * s2 * b, c), s1 * a],
-      [
-        `$\\mathbf{r}'(t) = 2t${br(s1 * a, s2 * b)}$, and the vector has length $${c}$ apart from the factor $2t$. At $t = ${t0}$ that factor is ${t0 > 0 ? "positive" : "negative"}, so the component is $${answer.toLatex()}$.`,
-        `$\\mathbf{r}'(t) = 2t${br(s1 * a, s2 * b)}$，除因子 $2t$ 外，向量的长度是 $${c}$。在 $t = ${t0}$ 处，这个因子${t0 > 0 ? "为正" : "为负"}，所以分量是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          `The sign is wrong: at $t = ${t0}$ the factor $2t$ is ${t0 > 0 ? "positive" : "negative"}, and dividing by the speed $|2t| \\cdot ${c}$ keeps that sign.`,
+          `符号错了：在 $t = ${t0}$ 处因子 $2t$ ${t0 > 0 ? "为正" : "为负"}，除以速率 $|2t| \\cdot ${c}$ 后这个符号保留。`,
+        ),
+        why(second, "That is the second component of $\\mathbf{T}$.", "这是 $\\mathbf{T}$ 的第二个分量。"),
+        why(
+          2 * t0 * s1 * a,
+          `That is the first component of $\\mathbf{r}'(${t0})$; divide it by the speed $${2 * Math.abs(t0) * c}$.`,
+          `这是 $\\mathbf{r}'(${t0})$ 的第一个分量；还要除以速率 $${2 * Math.abs(t0) * c}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the velocity", "求速度"],
+            t(
+              `$\\mathbf{r}'(t) = 2t${br(s1 * a, s2 * b)}$, so $\\mathbf{r}'(${t0}) = ${br(2 * t0 * s1 * a, 2 * t0 * s2 * b)}$, of length $${2 * Math.abs(t0)} \\cdot ${c} = ${2 * Math.abs(t0) * c}$.`,
+              `$\\mathbf{r}'(t) = 2t${br(s1 * a, s2 * b)}$，所以 $\\mathbf{r}'(${t0}) = ${br(2 * t0 * s1 * a, 2 * t0 * s2 * b)}$，长度为 $${2 * Math.abs(t0)} \\cdot ${c} = ${2 * Math.abs(t0) * c}$。`,
+            ),
+          ],
+          [
+            ["Divide by the speed", "除以速率"],
+            t(
+              `$\\mathbf{T}(${t0}) = ${br(answer.toLatex(), second.toLatex())}$, so the first component is $${answer.toLatex()}$.`,
+              `$\\mathbf{T}(${t0}) = ${br(answer.toLatex(), second.toLatex())}$，所以第一个分量是 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\left(${answer.toLatex()}\\right)^2 + \\left(${second.toLatex()}\\right)^2 = \\frac{${a * a} + ${b * b}}{${c * c}} = 1$, and its first component has the same sign as that of $\\mathbf{r}'(${t0})$.`,
+          `$\\left(${answer.toLatex()}\\right)^2 + \\left(${second.toLatex()}\\right)^2 = \\frac{${a * a} + ${b * b}}{${c * c}} = 1$，且它的第一个分量与 $\\mathbf{r}'(${t0})$ 的同号。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -139,27 +292,59 @@ const normalOfParabola = {
     "the-normal-points-to-the-concave-side",
     ["The normal points to the concave side", "法向量指向凹的一侧"],
     [
-      "The principal normal is perpendicular to the tangent, and of the two perpendicular unit vectors it is the one toward which the curve bends. So for a parabola opening downward, $\\mathbf{N}$ has a negative second component.",
-      "主法向量垂直于切向量，在两个垂直的单位向量中，它是曲线弯向的那一个。所以对开口向下的抛物线，$\\mathbf{N}$ 的第二个分量为负。",
+      "The principal normal is perpendicular to the tangent, and of the two perpendicular unit vectors it is the one toward which the curve bends. So for a parabola opening downward, $\\mathbf{N}$ has a negative second component. On $\\langle t, t^2 \\rangle$ at $t = \\frac{10}{21}$ the slope is $\\frac{20}{21}$, so $\\mathbf{T} = \\left\\langle \\frac{21}{29}, \\frac{20}{29} \\right\\rangle$, and the parabola opens upward, so $\\mathbf{N} = \\left\\langle -\\frac{20}{29}, \\frac{21}{29} \\right\\rangle$.\n\n> **Watch out.** Both $\\langle -T_2, T_1 \\rangle$ and $\\langle T_2, -T_1 \\rangle$ are perpendicular to $\\mathbf{T}$; choose the one on the concave side. The second component of $\\mathbf{N}$ comes from the first component of $\\mathbf{T}$, not the second.",
+      "主法向量垂直于切向量，在两个垂直的单位向量中，它是曲线弯向的那一个。所以对开口向下的抛物线，$\\mathbf{N}$ 的第二个分量为负。在 $\\langle t, t^2 \\rangle$ 上 $t = \\frac{10}{21}$ 处斜率为 $\\frac{20}{21}$，所以 $\\mathbf{T} = \\left\\langle \\frac{21}{29}, \\frac{20}{29} \\right\\rangle$；抛物线开口向上，所以 $\\mathbf{N} = \\left\\langle -\\frac{20}{29}, \\frac{21}{29} \\right\\rangle$。\n\n> **注意。** $\\langle -T_2, T_1 \\rangle$ 与 $\\langle T_2, -T_1 \\rangle$ 都与 $\\mathbf{T}$ 垂直；要选凹的一侧那个。$\\mathbf{N}$ 的第二个分量来自 $\\mathbf{T}$ 的第一个分量，不是第二个。",
     ],
     (rng) => {
       const [p, q, h] = rng.pick(triples);
       const b = nz(rng, 4);
       const t0 = Q.of(p, 2 * b * q);
-      const answer = Q.of(Math.sign(b) * q, h);
+      const sg = Math.sign(b);
+      const answer = Q.of(sg * q, h);
+      const N = [Q.of(-sg * p, h), answer];
       const r = br("t", poly([b, "t^{2}"]));
-      return ask(
-        [
+      return numberProblem({
+        prompt: text([
           `Find the second component of the principal unit normal of $\\mathbf{r}(t) = ${r}$ at $t = ${t0.toLatex()}$.`,
           `求 $\\mathbf{r}(t) = ${r}$ 在 $t = ${t0.toLatex()}$ 处的主单位法向量的第二个分量。`,
-        ],
+        ]),
         answer,
-        [answer.neg(), Q.of(p, h), Q.of(-Math.sign(b) * p, h)],
-        [
-          `The slope there is $\\frac{${p}}{${q}}$, so $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$. The perpendicular direction toward the bend has second component $${answer.toLatex()}$, as the parabola opens ${b > 0 ? "upward" : "downward"}.`,
-          `该处斜率是 $\\frac{${p}}{${q}}$，所以 $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$。抛物线开口${b > 0 ? "向上" : "向下"}，弯曲方向上的垂直单位向量的第二个分量是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            answer.neg(),
+            `That normal points away from the bend; the parabola opens ${b > 0 ? "upward" : "downward"}.`,
+            `这个法向量背离弯曲方向；抛物线开口${b > 0 ? "向上" : "向下"}。`,
+          ),
+          why(
+            Q.of(p, h),
+            "That is the second component of $\\mathbf{T}$, the direction of motion.",
+            "这是 $\\mathbf{T}$ 的第二个分量，即运动方向。",
+          ),
+          why(Q.of(-sg * p, h), "That is the first component of $\\mathbf{N}$.", "这是 $\\mathbf{N}$ 的第一个分量。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the unit tangent", "求单位切向量"],
+              t(
+                `$\\mathbf{r}' = ${br(1, poly([2 * b, "t"]))}$, which at $t = ${t0.toLatex()}$ is $${br(1, `\\frac{${p}}{${q}}`)}$, parallel to $${br(q, p)}$ of length $${h}$. So $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$.`,
+                `$\\mathbf{r}' = ${br(1, poly([2 * b, "t"]))}$，在 $t = ${t0.toLatex()}$ 处为 $${br(1, `\\frac{${p}}{${q}}`)}$，与长度为 $${h}$ 的 $${br(q, p)}$ 平行。所以 $\\mathbf{T} = ${br(`\\frac{${q}}{${h}}`, `\\frac{${p}}{${h}}`)}$。`,
+              ),
+            ],
+            [
+              ["Turn toward the bend", "转向弯曲一侧"],
+              t(
+                `The perpendicular unit vectors are $\\pm${br(`-\\frac{${p}}{${h}}`, `\\frac{${q}}{${h}}`)}$. The parabola opens ${b > 0 ? "upward" : "downward"}, so $\\mathbf{N} = ${br(N[0]!.toLatex(), N[1]!.toLatex())}$ and its second component is $${answer.toLatex()}$.`,
+                `与之垂直的单位向量是 $\\pm${br(`-\\frac{${p}}{${h}}`, `\\frac{${q}}{${h}}`)}$。抛物线开口${b > 0 ? "向上" : "向下"}，所以 $\\mathbf{N} = ${br(N[0]!.toLatex(), N[1]!.toLatex())}$，第二个分量是 $${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\mathbf{N} \\cdot \\mathbf{T} = \\frac{${-sg * p * q} + ${paren(sg * q * p)}}{${h * h}} = 0$, the squares of the entries of $\\mathbf{N}$ add to $1$, and its second component is ${b > 0 ? "positive" : "negative"}, on the concave side.`,
+            `$\\mathbf{N} \\cdot \\mathbf{T} = \\frac{${-sg * p * q} + ${paren(sg * q * p)}}{${h * h}} = 0$，$\\mathbf{N}$ 各分量平方和为 $1$，且它的第二个分量${b > 0 ? "为正" : "为负"}，位于凹的一侧。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings1["principal-normal-vectors#the-normal-points-to-the-concave-side"],
@@ -170,8 +355,8 @@ const helixBinormal = {
     "the-binormal-of-a-helix",
     ["The binormal of a helix", "螺旋线的副法向量"],
     [
-      "The binormal $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is the unit normal of the osculating plane. On a helix it makes a constant angle with the axis, and the order of the cross product fixes its sign, so $\\mathbf{N} \\times \\mathbf{T}$ would give the opposite vector.",
-      "副法向量 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是密切平面的单位法向量。在螺旋线上，它与轴的夹角不变，叉积的顺序决定其符号，所以 $\\mathbf{N} \\times \\mathbf{T}$ 会得到相反的向量。",
+      "The binormal $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is the unit normal of the osculating plane. On a helix it makes a constant angle with the axis, and the order of the cross product fixes its sign, so $\\mathbf{N} \\times \\mathbf{T}$ would give the opposite vector. For $\\langle 20\\cos t, 20\\sin t, 21t \\rangle$ at $t = 0$, $\\mathbf{T} = \\left\\langle 0, \\frac{20}{29}, \\frac{21}{29} \\right\\rangle$ and $\\mathbf{N} = \\langle -1, 0, 0 \\rangle$, so $\\mathbf{B} = \\left\\langle 0, -\\frac{21}{29}, \\frac{20}{29} \\right\\rangle$.\n\n> **Watch out.** Take $\\mathbf{T} \\times \\mathbf{N}$ in that order; the reverse gives $-\\mathbf{B}$. A common scale of the radius and the climb cancels in $\\mathbf{T}$, so it does not change $\\mathbf{B}$.",
+      "副法向量 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是密切平面的单位法向量。在螺旋线上，它与轴的夹角不变，叉积的顺序决定其符号，所以 $\\mathbf{N} \\times \\mathbf{T}$ 会得到相反的向量。对 $\\langle 20\\cos t, 20\\sin t, 21t \\rangle$ 在 $t = 0$ 处，$\\mathbf{T} = \\left\\langle 0, \\frac{20}{29}, \\frac{21}{29} \\right\\rangle$，$\\mathbf{N} = \\langle -1, 0, 0 \\rangle$，所以 $\\mathbf{B} = \\left\\langle 0, -\\frac{21}{29}, \\frac{20}{29} \\right\\rangle$。\n\n> **注意。** 按 $\\mathbf{T} \\times \\mathbf{N}$ 的顺序计算；反过来得到 $-\\mathbf{B}$。半径和上升量的公共倍数在 $\\mathbf{T}$ 中约去，所以不改变 $\\mathbf{B}$。",
     ],
     (rng) => {
       const [a, b, c] = rng.pick(triples);
@@ -180,18 +365,54 @@ const helixBinormal = {
       const answer = third ? Q.of(a, c) : Q.of(-b, c);
       const r = br(`${a * u}\\cos t`, `${a * u}\\sin t`, `${b * u}t`);
       const name: Pair = third ? ["third", "第三"] : ["second", "第二"];
-      return ask(
-        [
+      const T = br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`);
+      const B = br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`);
+      return numberProblem({
+        prompt: text([
           `Find the ${name[0]} component of the unit binormal $\\mathbf{B}(0)$ of $\\mathbf{r}(t) = ${r}$.`,
           `求 $\\mathbf{r}(t) = ${r}$ 的单位副法向量 $\\mathbf{B}(0)$ 的${name[1]}个分量。`,
-        ],
+        ]),
         answer,
-        [answer.neg(), third ? Q.of(b, c) : Q.of(a, c), Q.of(a, b)],
-        [
-          `At $t = 0$, $\\mathbf{T} = ${br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`)}$ and $\\mathbf{N} = ${br(-1, 0, 0)}$. Their cross product is $${br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`)}$, so the component is $${answer.toLatex()}$.`,
-          `在 $t = 0$ 处，$\\mathbf{T} = ${br(0, `\\frac{${a}}{${c}}`, `\\frac{${b}}{${c}}`)}$，$\\mathbf{N} = ${br(-1, 0, 0)}$。叉积是 $${br(0, `-\\frac{${b}}{${c}}`, `\\frac{${a}}{${c}}`)}$，所以该分量是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            answer.neg(),
+            "That is a component of $\\mathbf{N} \\times \\mathbf{T} = -\\mathbf{B}$; the order is reversed.",
+            "这是 $\\mathbf{N} \\times \\mathbf{T} = -\\mathbf{B}$ 的分量；顺序反了。",
+          ),
+          why(
+            third ? Q.of(b, c) : Q.of(a, c),
+            "That is a component of $\\mathbf{T}$; the binormal is perpendicular to $\\mathbf{T}$.",
+            "这是 $\\mathbf{T}$ 的分量；副法向量与 $\\mathbf{T}$ 垂直。",
+          ),
+          why(
+            Q.of(a, b),
+            `Divide by the speed $${c * u}$ to get unit vectors; the radius over the climb is not a component.`,
+            `要除以速率 $${c * u}$ 得到单位向量；半径与上升量之比不是分量。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find $\\mathbf{T}(0)$ and $\\mathbf{N}(0)$", "求 $\\mathbf{T}(0)$ 与 $\\mathbf{N}(0)$"],
+              t(
+                `$\\mathbf{r}'(0) = ${br(0, a * u, b * u)}$ has length $${c * u}$, so $\\mathbf{T} = ${T}$; the helix turns toward its axis, so $\\mathbf{N} = ${br(-1, 0, 0)}$.`,
+                `$\\mathbf{r}'(0) = ${br(0, a * u, b * u)}$ 的长度为 $${c * u}$，所以 $\\mathbf{T} = ${T}$；螺旋线朝轴线弯曲，所以 $\\mathbf{N} = ${br(-1, 0, 0)}$。`,
+              ),
+            ],
+            [
+              ["Take the cross product", "求叉积"],
+              t(
+                `$\\mathbf{T} \\times \\mathbf{N} = \\left\\langle \\frac{${a}}{${c}} \\cdot 0 - \\frac{${b}}{${c}} \\cdot 0, \\frac{${b}}{${c}} \\cdot (-1) - 0, 0 - \\frac{${a}}{${c}} \\cdot (-1) \\right\\rangle = ${B}$, so the ${name[0]} component is $${answer.toLatex()}$.`,
+                `$\\mathbf{T} \\times \\mathbf{N} = \\left\\langle \\frac{${a}}{${c}} \\cdot 0 - \\frac{${b}}{${c}} \\cdot 0, \\frac{${b}}{${c}} \\cdot (-1) - 0, 0 - \\frac{${a}}{${c}} \\cdot (-1) \\right\\rangle = ${B}$，所以${name[1]}个分量是 $${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\mathbf{B} \\cdot \\mathbf{T} = \\frac{-${a * b} + ${a * b}}{${c * c}} = 0$ and $\\mathbf{B} \\cdot \\mathbf{N} = 0$, and $\\frac{${b * b} + ${a * a}}{${c * c}} = 1$, so $\\mathbf{B}$ is a unit vector perpendicular to both.`,
+            `$\\mathbf{B} \\cdot \\mathbf{T} = \\frac{-${a * b} + ${a * b}}{${c * c}} = 0$，$\\mathbf{B} \\cdot \\mathbf{N} = 0$，且 $\\frac{${b * b} + ${a * a}}{${c * c}} = 1$，所以 $\\mathbf{B}$ 是与两者都垂直的单位向量。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings1["the-osculating-plane#the-binormal-of-a-helix"],

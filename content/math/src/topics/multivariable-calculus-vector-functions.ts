@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly, Q, type RealSet } from "@ga/subject-math";
+import { intervalLatex, paren, poly, Q, type RealSet } from "@ga/subject-math";
 import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
 
 import {
@@ -9,11 +9,18 @@ import {
   expressionProblem,
   intervalProblem,
   numberProblem,
+  type PointProblem,
+  pointLatex,
   pointProblem,
+  say,
   steps,
   vectorLatex,
+  why,
+  withMistakes,
   yesNo,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
+import { none, walked } from "./calculus-i-differentiation.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -23,6 +30,31 @@ type Vec3 = readonly [number, number, number];
 
 const dot3 = (a: Vec3, b: Vec3): number => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 const v3L = (v: readonly (number | Q)[]): string => vectorLatex(v);
+
+/** asQ turns a number into a rational number so that values can be compared. */
+const asQ = (c: number | Q): Q => (typeof c === "number" ? Q.of(c) : c);
+
+/** distinct drops the mistakes whose value is the answer or repeats an earlier one. */
+function distinct<M extends { readonly value: number | Q }>(answer: number | Q, mistakes: readonly M[]): M[] {
+  return mistakes.filter((m, i, all) => !asQ(m.value).eq(asQ(answer)) && all.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
+}
+
+/** Wrong is a point or vector that a typical mistake gives, with what to say about it in English and Chinese. */
+type Wrong = readonly [values: readonly (number | Q)[], en: string, zh: string];
+
+/** located builds a point or vector problem whose wrong responses say what went wrong; repeats and the answer are dropped. */
+function located(p: Omit<PointProblem, "wrong">, mistakes: readonly Wrong[]): Problem {
+  const write = p.vector ? vectorLatex : pointLatex;
+  const seen = new Set([write(p.answer)]);
+  const kept = mistakes.filter(([v]) => !seen.has(write(v)) && Boolean(seen.add(write(v))));
+  return withMistakes(
+    pointProblem({ ...p, wrong: kept.map(([v]) => v) }),
+    kept.map(([v, en, zh]) => say(write(v), en, zh)),
+  );
+}
+
+/** num writes a decimal to two places, without a negative zero. */
+const num = (x: number): string => String(Number(x.toFixed(2)) || 0);
 
 /** pickChoice builds a multiple choice problem with options shuffled. */
 function pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
@@ -65,6 +97,10 @@ export const theDomainOfAVectorValuedFunction: TopicDef = {
     "The domain of a vector-valued function is the intersection of the domains of its component functions.",
     "向量值函数的定义域是其所有分量函数定义域的交集。",
   ),
+  intro: t(
+    "For $\\mathbf{r}(t) = \\left\\langle \\sqrt{t}, \\frac{1}{t - 2}, 3t \\right\\rangle$, the first component needs $t \\ge 0$, the second needs $t \\ne 2$, and the third is defined for every $t$. A value of $t$ belongs to the domain only when all three are defined, so the domain is $[0, 2) \\cup (2, \\infty)$.\n\nCheck: at $t = 1$ every component is defined, $\\mathbf{r}(1) = \\langle 1, -1, 3 \\rangle$, while at $t = 2$ the second component divides by zero and at $t = -1$ the first takes the root of a negative number.\n\nIn this lesson we find the domain of a vector-valued function as the set of $t$ where every component is defined.",
+    "对 $\\mathbf{r}(t) = \\left\\langle \\sqrt{t}, \\frac{1}{t - 2}, 3t \\right\\rangle$，第一个分量要求 $t \\ge 0$，第二个分量要求 $t \\ne 2$，第三个分量对每个 $t$ 都有定义。只有三个分量都有定义的 $t$ 才属于定义域，所以定义域是 $[0, 2) \\cup (2, \\infty)$。\n\n检验：$t = 1$ 时每个分量都有定义，$\\mathbf{r}(1) = \\langle 1, -1, 3 \\rangle$；而 $t = 2$ 时第二个分量除以零，$t = -1$ 时第一个分量对负数开方。\n\n本课我们把向量值函数的定义域求成使每个分量都有定义的 $t$ 的集合。",
+  ),
   prerequisites: ["defining-vector-valued-functions", "describing-sets-using-set-builder-notation"],
   encompasses: [],
   xp: 10,
@@ -73,84 +109,148 @@ export const theDomainOfAVectorValuedFunction: TopicDef = {
       id: "finding-the-domain-of-a-vector-valued-function",
       title: t("Finding the domain of a vector-valued function", "求向量值函数的定义域"),
       explanation: t(
-        "For a vector-valued function $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$, a value of $t$ is in the domain if and only if each component function $f(t)$, $g(t)$, and $h(t)$ is defined at $t$. Thus, the domain is the intersection:\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h).$$",
-        "对于向量值函数 $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$，$t$ 属于定义域当且仅当每个分量函数 $f(t)$、$g(t)$ 和 $h(t)$ 在 $t$ 处均有定义。因此其定义域为各分量定义域的交集：\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h)$$",
+        "For a vector-valued function $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$, a value of $t$ is in the domain if and only if each component function $f(t)$, $g(t)$, and $h(t)$ is defined at $t$. Thus, the domain is the intersection:\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h).$$\n\nFor $\\left\\langle \\sqrt{t + 1}, \\sqrt{3 - t} \\right\\rangle$ the first component needs $t \\ge -1$ and the second $t \\le 3$, so the domain is $[-1, 3]$.\n\n> **Watch out.** Take the intersection, not the union: a $t$ at which one component fails is outside the domain, however well the others behave. A square root allows $0$, so its endpoint is included, with a square bracket.",
+        "对于向量值函数 $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$，$t$ 属于定义域当且仅当每个分量函数 $f(t)$、$g(t)$ 和 $h(t)$ 在 $t$ 处均有定义。因此其定义域为各分量定义域的交集：\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h)$$\n\n对 $\\left\\langle \\sqrt{t + 1}, \\sqrt{3 - t} \\right\\rangle$，第一个分量要求 $t \\ge -1$，第二个要求 $t \\le 3$，所以定义域是 $[-1, 3]$。\n\n> **注意。** 要取交集而不是并集：只要有一个分量在 $t$ 处没有定义，这个 $t$ 就不在定义域中，不论其他分量如何。平方根允许 $0$，所以它的端点要包含在内，用方括号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-8, -1);
         const b = rng.int(1, 8);
         const c = rng.pick([rng.int(b + 1, b + 5), rng.int(a - 5, a - 1)]);
-        const set: RealSet = [{ lo: Q.of(a), hi: Q.of(b), loClosed: true, hiClosed: true }];
-        const prompt = t(
-          `Find the domain of the vector-valued function $\\mathbf{r}(t) = \\left\\langle \\sqrt{${poly([1, "t"], [-a, ""])}}, \\sqrt{${poly([-1, "t"], [b, ""])}}, \\frac{1}{${poly([1, "t"], [-c, ""])}} \\right\\rangle$ in interval notation.`,
-          `用区间记号求向量值函数 $\\mathbf{r}(t) = \\left\\langle \\sqrt{${poly([1, "t"], [-a, ""])}}, \\sqrt{${poly([-1, "t"], [b, ""])}}, \\frac{1}{${poly([1, "t"], [-c, ""])}} \\right\\rangle$ 的定义域。`,
-        );
-        const solution = t(
-          steps(
-            `The first component requires $${poly([1, "t"], [-a, ""])} \\ge 0 \\implies t \\ge ${a}$.`,
-            `The second component requires $${poly([-1, "t"], [b, ""])} \\ge 0 \\implies t \\le ${b}$.`,
-            `The third component requires $t \\ne ${c}$, which is automatically satisfied since $${c}$ is outside $[${a}, ${b}]$.`,
-            `Intersecting the domains gives $[${a}, ${b}]$.`,
-          ),
-          steps(
-            `第一分量要求 $${poly([1, "t"], [-a, ""])} \\ge 0 \\implies t \\ge ${a}$。`,
-            `第二分量要求 $${poly([-1, "t"], [b, ""])} \\ge 0 \\implies t \\le ${b}$。`,
-            `第三分量要求 $t \\ne ${c}$，由于 $${c}$ 在区间 $[${a}, ${b}]$ 之外，该条件自然满足。`,
-            `求交集得到定义域为 $[${a}, ${b}]$。`,
-          ),
-        );
-        return intervalProblem({
-          prompt,
-          solution,
-          set,
-          form: "interval",
-          wrong: [
-            [{ lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: false }],
-            [{ lo: Q.of(a), hi: Q.of(b), loClosed: true, hiClosed: false }],
-            [{ lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: true }],
-            [{ lo: Q.of(a), loClosed: true, hiClosed: false }],
+        const closed = (lo: number, loClosed: boolean, hi: number | null, hiClosed: boolean): RealSet => [
+          hi === null ? { lo: Q.of(lo), loClosed, hiClosed } : { lo: Q.of(lo), hi: Q.of(hi), loClosed, hiClosed },
+        ];
+        const set = closed(a, true, b, true);
+        const p1 = poly([1, "t"], [-a, ""]);
+        const p2 = poly([-1, "t"], [b, ""]);
+        const p3 = poly([1, "t"], [-c, ""]);
+        const mistakes = [
+          [
+            closed(a, false, b, false),
+            `Both square roots are defined where the inside is $0$, so the endpoints $${a}$ and $${b}$ belong to the domain.`,
+            `两个平方根在被开方数为 $0$ 时都有定义，所以端点 $${a}$ 和 $${b}$ 属于定义域。`,
           ],
-        });
+          [
+            closed(a, true, b, false),
+            `At $t = ${b}$ the second component is $\\sqrt{0} = 0$, which is defined, so $${b}$ belongs to the domain.`,
+            `$t = ${b}$ 时第二个分量是 $\\sqrt{0} = 0$，有定义，所以 $${b}$ 属于定义域。`,
+          ],
+          [
+            closed(a, false, b, true),
+            `At $t = ${a}$ the first component is $\\sqrt{0} = 0$, which is defined, so $${a}$ belongs to the domain.`,
+            `$t = ${a}$ 时第一个分量是 $\\sqrt{0} = 0$，有定义，所以 $${a}$ 属于定义域。`,
+          ],
+          [
+            closed(a, true, null, false),
+            `The second component limits $t$ as well: $\\sqrt{${p2}}$ needs $${p2} \\ge 0$.`,
+            `第二个分量也限制 $t$：$\\sqrt{${p2}}$ 要求 $${p2} \\ge 0$。`,
+          ],
+        ] as const;
+        return withMistakes(
+          intervalProblem({
+            prompt: t(
+              `Find the domain of the vector-valued function $\\mathbf{r}(t) = \\left\\langle \\sqrt{${p1}}, \\sqrt{${p2}}, \\frac{1}{${p3}} \\right\\rangle$ in interval notation.`,
+              `用区间记号求向量值函数 $\\mathbf{r}(t) = \\left\\langle \\sqrt{${p1}}, \\sqrt{${p2}}, \\frac{1}{${p3}} \\right\\rangle$ 的定义域。`,
+            ),
+            set,
+            form: "interval",
+            wrong: mistakes.map(([s]) => s),
+            solution: walked(
+              [
+                [
+                  ["Find what each component needs", "写出每个分量的要求"],
+                  t(
+                    `$\\sqrt{${p1}}$ needs $${p1} \\ge 0$, that is $t \\ge ${a}$. $\\sqrt{${p2}}$ needs $${p2} \\ge 0$, that is $t \\le ${b}$. $\\frac{1}{${p3}}$ needs $t \\ne ${c}$.`,
+                    `$\\sqrt{${p1}}$ 要求 $${p1} \\ge 0$，即 $t \\ge ${a}$。$\\sqrt{${p2}}$ 要求 $${p2} \\ge 0$，即 $t \\le ${b}$。$\\frac{1}{${p3}}$ 要求 $t \\ne ${c}$。`,
+                  ),
+                ],
+                [
+                  ["Intersect", "取交集"],
+                  t(
+                    `The two roots together allow $[${a}, ${b}]$, and $${c}$ lies outside this interval, so the fraction removes nothing from it. The domain is $[${a}, ${b}]$.`,
+                    `两个平方根合起来允许 $[${a}, ${b}]$，而 $${c}$ 在这个区间之外，所以分式不会从中去掉任何点。定义域是 $[${a}, ${b}]$。`,
+                  ),
+                ],
+              ],
+              t(
+                `At $t = ${a}$ the components are $\\sqrt{0}$, $\\sqrt{${b - a}}$ and $\\frac{1}{${a - c}}$, all defined; at $t = ${b}$ they are $\\sqrt{${b - a}}$, $\\sqrt{0}$ and $\\frac{1}{${b - c}}$, all defined. Just beyond either end one root has a negative inside.`,
+                `$t = ${a}$ 时各分量为 $\\sqrt{0}$、$\\sqrt{${b - a}}$ 和 $\\frac{1}{${a - c}}$，都有定义；$t = ${b}$ 时为 $\\sqrt{${b - a}}$、$\\sqrt{0}$ 和 $\\frac{1}{${b - c}}$，都有定义。越过任一端点，就有一个平方根的被开方数为负。`,
+              ),
+            ),
+          }),
+          mistakes.map(([s, en, zh]) => say(intervalLatex(s), en, zh)),
+        );
       },
     },
     {
       id: "a-domain-with-a-logarithm-and-a-hole",
       title: t("A domain with a logarithm and an excluded point", "含对数与挖去点的定义域"),
       explanation: t(
-        "The domain of $\\mathbf{r}(t)$ is the set of $t$ where every component is defined. A logarithm $\\ln(t - a)$ needs $t > a$ strictly, a square root $\\sqrt{c - t}$ needs $c - t \\ge 0$, and a quotient $\\frac{1}{t - b}$ removes the single point $t = b$. When the removed point lies inside the interval allowed by the other components, the domain splits into two intervals joined by $\\cup$.",
-        "$\\mathbf{r}(t)$ 的定义域是使每个分量都有定义的 $t$ 的集合。对数 $\\ln(t - a)$ 需要严格的 $t > a$，平方根 $\\sqrt{c - t}$ 需要 $c - t \\ge 0$，商 $\\frac{1}{t - b}$ 去掉单个点 $t = b$。若去掉的点落在其他分量允许的区间内部，定义域就分成用 $\\cup$ 连接的两个区间。",
+        "The domain of $\\mathbf{r}(t)$ is the set of $t$ where every component is defined. A logarithm $\\ln(t - a)$ needs $t > a$ strictly, a square root $\\sqrt{c - t}$ needs $c - t \\ge 0$, and a quotient $\\frac{1}{t - b}$ removes the single point $t = b$. When the removed point lies inside the interval allowed by the other components, the domain splits into two intervals joined by $\\cup$. For $\\left\\langle \\ln t, \\frac{1}{t - 1}, \\sqrt{4 - t} \\right\\rangle$ the domain is $(0, 1) \\cup (1, 4]$.\n\n> **Watch out.** A logarithm's endpoint is open, because $\\ln 0$ is not defined, while a square root's endpoint is closed, because $\\sqrt{0} = 0$. The removed point is open on both sides: it splits the interval in two.",
+        "$\\mathbf{r}(t)$ 的定义域是使每个分量都有定义的 $t$ 的集合。对数 $\\ln(t - a)$ 需要严格的 $t > a$，平方根 $\\sqrt{c - t}$ 需要 $c - t \\ge 0$，商 $\\frac{1}{t - b}$ 去掉单个点 $t = b$。若去掉的点落在其他分量允许的区间内部，定义域就分成用 $\\cup$ 连接的两个区间。对 $\\left\\langle \\ln t, \\frac{1}{t - 1}, \\sqrt{4 - t} \\right\\rangle$，定义域是 $(0, 1) \\cup (1, 4]$。\n\n> **注意。** 对数的端点是开的，因为 $\\ln 0$ 没有定义；平方根的端点是闭的，因为 $\\sqrt{0} = 0$。被去掉的点两侧都是开的：它把区间分成两段。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-6, 2);
         const b = a + rng.int(1, 4);
         const c = b + rng.int(1, 4);
-        const set: RealSet = [
-          { lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: false },
-          { lo: Q.of(b), hi: Q.of(c), loClosed: false, hiClosed: true },
-        ];
-        return intervalProblem({
-          prompt: t(
-            `Find the domain of $\\mathbf{r}(t) = \\left\\langle \\ln(${tMinus(a)}), \\frac{1}{${tMinus(b)}}, \\sqrt{${poly([-1, "t"], [c, ""])}} \\right\\rangle$ in interval notation.`,
-            `用区间记号求 $\\mathbf{r}(t) = \\left\\langle \\ln(${tMinus(a)}), \\frac{1}{${tMinus(b)}}, \\sqrt{${poly([-1, "t"], [c, ""])}} \\right\\rangle$ 的定义域。`,
-          ),
-          set,
-          form: "interval",
-          wrong: [
-            [{ lo: Q.of(a), hi: Q.of(c), loClosed: false, hiClosed: true }],
-            [
-              { lo: Q.of(a), hi: Q.of(b), loClosed: true, hiClosed: false },
-              { lo: Q.of(b), hi: Q.of(c), loClosed: false, hiClosed: true },
-            ],
-            [
-              { lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: false },
-              { lo: Q.of(b), hi: Q.of(c), loClosed: false, hiClosed: false },
-            ],
-          ],
-          solution: t(
-            `The logarithm needs $t > ${a}$, the square root needs $t \\le ${c}$, and the fraction excludes $t = ${b}$, which lies inside $(${a}, ${c}]$. So the domain is $(${a}, ${b}) \\cup (${b}, ${c}]$.`,
-            `对数需要 $t > ${a}$，平方根需要 $t \\le ${c}$，分式排除 $t = ${b}$，它位于 $(${a}, ${c}]$ 内部。所以定义域为 $(${a}, ${b}) \\cup (${b}, ${c}]$。`,
-          ),
+        const iv = (lo: number, loClosed: boolean, hi: number, hiClosed: boolean) => ({
+          lo: Q.of(lo),
+          hi: Q.of(hi),
+          loClosed,
+          hiClosed,
         });
+        const set: RealSet = [iv(a, false, b, false), iv(b, false, c, true)];
+        const mistakes = [
+          [
+            [iv(a, false, c, true)],
+            `The fraction $\\frac{1}{${tMinus(b)}}$ is not defined at $t = ${b}$, which lies inside the interval, so that point must be removed.`,
+            `分式 $\\frac{1}{${tMinus(b)}}$ 在 $t = ${b}$ 处没有定义，而这个点在区间内部，所以必须去掉。`,
+          ],
+          [
+            [iv(a, true, b, false), iv(b, false, c, true)],
+            `At $t = ${a}$ the logarithm would be $\\ln 0$, which is not defined: its endpoint is open.`,
+            `$t = ${a}$ 时对数是 $\\ln 0$，没有定义：它的端点是开的。`,
+          ],
+          [
+            [iv(a, false, b, false), iv(b, false, c, false)],
+            `At $t = ${c}$ the square root is $\\sqrt{0} = 0$, which is defined, so $${c}$ belongs to the domain.`,
+            `$t = ${c}$ 时平方根是 $\\sqrt{0} = 0$，有定义，所以 $${c}$ 属于定义域。`,
+          ],
+        ] as const;
+        const root = poly([-1, "t"], [c, ""]);
+        return withMistakes(
+          intervalProblem({
+            prompt: t(
+              `Find the domain of $\\mathbf{r}(t) = \\left\\langle \\ln(${tMinus(a)}), \\frac{1}{${tMinus(b)}}, \\sqrt{${root}} \\right\\rangle$ in interval notation.`,
+              `用区间记号求 $\\mathbf{r}(t) = \\left\\langle \\ln(${tMinus(a)}), \\frac{1}{${tMinus(b)}}, \\sqrt{${root}} \\right\\rangle$ 的定义域。`,
+            ),
+            set,
+            form: "interval",
+            wrong: mistakes.map(([s]) => s),
+            solution: walked(
+              [
+                [
+                  ["Find what each component needs", "写出每个分量的要求"],
+                  t(
+                    `The logarithm needs $${tMinus(a)} > 0$, that is $t > ${a}$. The fraction needs $t \\ne ${b}$. The square root needs $${root} \\ge 0$, that is $t \\le ${c}$.`,
+                    `对数要求 $${tMinus(a)} > 0$，即 $t > ${a}$。分式要求 $t \\ne ${b}$。平方根要求 $${root} \\ge 0$，即 $t \\le ${c}$。`,
+                  ),
+                ],
+                [
+                  ["Intersect", "取交集"],
+                  t(
+                    `The logarithm and the root together allow $(${a}, ${c}]$. The point $${b}$ lies inside it and must be removed, which splits it: the domain is $(${a}, ${b}) \\cup (${b}, ${c}]$.`,
+                    `对数和平方根合起来允许 $(${a}, ${c}]$。点 $${b}$ 在其内部，必须去掉，这把区间分成两段：定义域是 $(${a}, ${b}) \\cup (${b}, ${c}]$。`,
+                  ),
+                ],
+              ],
+              t(
+                `At $t = ${c}$ the components are $\\ln ${c - a}$, $\\frac{1}{${c - b}}$ and $\\sqrt{0}$, all defined. At $t = ${b}$ the fraction divides by zero, and at $t = ${a}$ the logarithm is $\\ln 0$.`,
+                `$t = ${c}$ 时各分量为 $\\ln ${c - a}$、$\\frac{1}{${c - b}}$ 和 $\\sqrt{0}$，都有定义。$t = ${b}$ 时分式除以零，$t = ${a}$ 时对数是 $\\ln 0$。`,
+              ),
+            ),
+          }),
+          mistakes.map(([s, en, zh]) => say(intervalLatex(s), en, zh)),
+        );
       },
     },
   ],
@@ -167,6 +267,10 @@ export const limitsOfVectorValuedFunctions: TopicDef = {
     "The limit of a vector-valued function is the vector of the limits of its components, and it exists only when every component has a limit.",
     "向量值函数的极限是其各分量极限组成的向量；只有每个分量都有极限时，它的极限才存在。",
   ),
+  intro: t(
+    "To find $\\lim_{t \\to 2} \\left\\langle t^2, \\frac{t^2 - 4}{t - 2}, 5 \\right\\rangle$, take the limit of each component: $t^2 \\to 4$; the middle component equals $t + 2$ for $t \\ne 2$, so it tends to $4$; and the constant stays $5$. The limit is $\\langle 4, 4, 5 \\rangle$.\n\nCheck: at $t = 2.01$ the vector is $\\langle 4.0401, 4.01, 5 \\rangle$, already close to $\\langle 4, 4, 5 \\rangle$.\n\nIn this lesson we take limits of vector-valued functions one component at a time, and recognize when a single component stops the limit from existing.",
+    "求 $\\lim_{t \\to 2} \\left\\langle t^2, \\frac{t^2 - 4}{t - 2}, 5 \\right\\rangle$ 时，对每个分量求极限：$t^2 \\to 4$；中间的分量在 $t \\ne 2$ 时等于 $t + 2$，所以趋于 $4$；常数保持为 $5$。极限是 $\\langle 4, 4, 5 \\rangle$。\n\n检验：$t = 2.01$ 时向量是 $\\langle 4.0401, 4.01, 5 \\rangle$，已经接近 $\\langle 4, 4, 5 \\rangle$。\n\n本课我们逐个分量求向量值函数的极限，并识别何时一个分量就使极限不存在。",
+  ),
   prerequisites: ["the-domain-of-a-vector-valued-function", "special-limits-involving-cosine"],
   encompasses: [{ topic: "defining-vector-valued-functions", weight: 0.3 }],
   xp: 10,
@@ -175,8 +279,8 @@ export const limitsOfVectorValuedFunctions: TopicDef = {
       id: "limits-component-by-component",
       title: t("Limits component by component", "逐个分量求极限"),
       explanation: t(
-        "A vector $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ approaches a vector $\\mathbf{L}$ exactly when each component approaches the matching component of $\\mathbf{L}$, so the limit is taken one component at a time, each with the techniques for ordinary limits:\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle.$$\n\nFor $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ at $t = 3$, the first component is $\\frac{0}{0}$, but it equals $t + 3$ for $t \\ne 3$, so its limit is $6$; the others are continuous and give $18$ and $2$. The limit is $\\langle 6, 18, 2 \\rangle$.",
-        "向量 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 趋于向量 $\\mathbf{L}$，恰好是每个分量都趋于 $\\mathbf{L}$ 的对应分量，所以极限要逐个分量求，每个分量都用普通极限的方法：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle$$\n\n对 $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ 在 $t = 3$ 处，第一个分量是 $\\frac{0}{0}$ 型，但当 $t \\ne 3$ 时它等于 $t + 3$，所以极限是 $6$；其余分量连续，分别给出 $18$ 和 $2$。极限是 $\\langle 6, 18, 2 \\rangle$。",
+        "A vector $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ approaches a vector $\\mathbf{L}$ exactly when each component approaches the matching component of $\\mathbf{L}$, so the limit is taken one component at a time, each with the techniques for ordinary limits:\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle.$$\n\nFor $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ at $t = 3$, the first component is $\\frac{0}{0}$, but it equals $t + 3$ for $t \\ne 3$, so its limit is $6$; the others are continuous and give $18$ and $2$. The limit is $\\langle 6, 18, 2 \\rangle$.\n\n> **Watch out.** A component that is $\\frac{0}{0}$ at the point has a limit that is neither $0$ nor missing: cancel the common factor first, then substitute. Keep each limit in the slot of its own component.",
+        "向量 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 趋于向量 $\\mathbf{L}$，恰好是每个分量都趋于 $\\mathbf{L}$ 的对应分量，所以极限要逐个分量求，每个分量都用普通极限的方法：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle$$\n\n对 $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ 在 $t = 3$ 处，第一个分量是 $\\frac{0}{0}$ 型，但当 $t \\ne 3$ 时它等于 $t + 3$，所以极限是 $6$；其余分量连续，分别给出 $18$ 和 $2$。极限是 $\\langle 6, 18, 2 \\rangle$。\n\n> **注意。** 在该点为 $\\frac{0}{0}$ 型的分量，其极限既不是 $0$，也不是不存在：先约去公因式，再代入。每个极限要放在它自己分量的位置上。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -191,79 +295,144 @@ export const limitsOfVectorValuedFunctions: TopicDef = {
         const y = c * a * a + d;
         const answer = [a - r, y, root];
         const r3 = `\\left\\langle \\frac{${top}}{${tMinus(a)}}, ${second}, \\sqrt{${inside}} \\right\\rangle`;
-        return pointProblem({
-          prompt: t(
-            `Let $\\mathbf{r}(t) = ${r3}$. Find $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$. Enter the vector as $\\langle a, b, c \\rangle$.`,
-            `设 $\\mathbf{r}(t) = ${r3}$。求 $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$。按 $\\langle a, b, c \\rangle$ 的形式输入向量。`,
-          ),
-          answer,
-          vector: true,
-          wrong: [
-            [a + r, y, root],
-            [0, y, root],
-            [a - r, y, root * root],
-            [root, y, a - r],
+        return located(
+          {
+            prompt: t(
+              `Let $\\mathbf{r}(t) = ${r3}$. Find $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$. Enter the vector as $\\langle a, b, c \\rangle$.`,
+              `设 $\\mathbf{r}(t) = ${r3}$。求 $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$。按 $\\langle a, b, c \\rangle$ 的形式输入向量。`,
+            ),
+            answer,
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Cancel the common factor", "约去公因式"],
+                  t(
+                    `The first component is $\\frac{0}{0}$ at $t = ${a}$. Factoring the top gives $\\frac{(${tMinus(a)})(${tMinus(r)})}{${tMinus(a)}} = ${tMinus(r)}$ for $t \\ne ${a}$, which tends to $${a} - ${paren(r)} = ${a - r}$.`,
+                    `第一个分量在 $t = ${a}$ 处是 $\\frac{0}{0}$ 型。分子因式分解得 $\\frac{(${tMinus(a)})(${tMinus(r)})}{${tMinus(a)}} = ${tMinus(r)}$（$t \\ne ${a}$），它趋于 $${a} - ${paren(r)} = ${a - r}$。`,
+                  ),
+                ],
+                [
+                  ["Substitute into the continuous components", "代入连续的分量"],
+                  t(
+                    `The polynomial gives $${paren(c)} \\cdot ${paren(a)}^{2} + ${paren(d)} = ${y}$, and the root gives $\\sqrt{${a} + ${paren(m)}} = \\sqrt{${root * root}} = ${root}$.`,
+                    `多项式给出 $${paren(c)} \\cdot ${paren(a)}^{2} + ${paren(d)} = ${y}$，平方根给出 $\\sqrt{${a} + ${paren(m)}} = \\sqrt{${root * root}} = ${root}$。`,
+                  ),
+                ],
+                [["Collect the limits", "组成向量"], t(`The limit is $${vectorLatex(answer)}$.`, `极限是 $${vectorLatex(answer)}$。`)],
+              ],
+              t(
+                `Multiplying back, $(${tMinus(a)})(${tMinus(r)}) = ${top}$, the numerator, so the cancellation is right.`,
+                `乘回去，$(${tMinus(a)})(${tMinus(r)}) = ${top}$，正是分子，所以约分是对的。`,
+              ),
+            ),
+          },
+          [
+            [
+              [a + r, y, root],
+              "The first entry has the wrong sign inside: after cancelling, substitute into the factor that is left, minding its sign.",
+              "第一个分量的符号错了：约分后，代入剩下的那个因式，注意它的符号。",
+            ],
+            [
+              [0, y, root],
+              "Substituting directly gives $\\frac{0}{0}$, which is not $0$: cancel the common factor first.",
+              "直接代入得到 $\\frac{0}{0}$，它不是 $0$：先约去公因式。",
+            ],
+            [
+              [a - r, y, root * root],
+              `The third component is a square root: take the root of $${root * root}$.`,
+              `第三个分量是平方根：要对 $${root * root}$ 开方。`,
+            ],
+            [
+              [root, y, a - r],
+              "The first and third entries are swapped: keep each limit in its own component's place.",
+              "第一和第三个分量互换了：每个极限要放在它自己分量的位置上。",
+            ],
           ],
-          solution: t(
-            steps(
-              `Take the limit of each component as $t \\to ${a}$.`,
-              `The first is $\\frac{0}{0}$ at $t = ${a}$; factor and cancel: $\\frac{(${tMinus(a)})(${tMinus(r)})}{${tMinus(a)}} = ${tMinus(r)} \\to ${a} - ${paren(r)} = ${a - r}$.`,
-              `The second is a polynomial: $${c} \\cdot ${paren(a)}^{2} + ${paren(d)} = ${y}$.`,
-              `The third is continuous at $t = ${a}$: $\\sqrt{${a} + ${paren(m)}} = \\sqrt{${root * root}} = ${root}$.`,
-              `So the limit is $${vectorLatex(answer)}$.`,
-            ),
-            steps(
-              `对每个分量求 $t \\to ${a}$ 时的极限。`,
-              `第一个分量在 $t = ${a}$ 处是 $\\frac{0}{0}$ 型；分解并约分：$\\frac{(${tMinus(a)})(${tMinus(r)})}{${tMinus(a)}} = ${tMinus(r)} \\to ${a} - ${paren(r)} = ${a - r}$。`,
-              `第二个分量是多项式：$${c} \\cdot ${paren(a)}^{2} + ${paren(d)} = ${y}$。`,
-              `第三个分量在 $t = ${a}$ 处连续：$\\sqrt{${a} + ${paren(m)}} = \\sqrt{${root * root}} = ${root}$。`,
-              `所以极限是 $${vectorLatex(answer)}$。`,
-            ),
-          ),
-        });
+        );
       },
     },
     {
       id: "trigonometric-components",
       title: t("Components with special limits", "含特殊极限的分量"),
       explanation: t(
-        "A component that is $\\frac{0}{0}$ at the point may need a special limit rather than factoring. At $t = 0$, $\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$ and $\\frac{1 - \\cos t}{t} \\to 0$. So\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle.$$",
-        "在该点为 $\\frac{0}{0}$ 型的分量，可能需要用特殊极限而不是因式分解。在 $t = 0$ 处，$\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$，$\\frac{1 - \\cos t}{t} \\to 0$。所以\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle$$",
+        "A component that is $\\frac{0}{0}$ at the point may need a special limit rather than factoring. At $t = 0$, $\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$ and $\\frac{1 - \\cos t}{t} \\to 0$. So\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle.$$\n\n> **Watch out.** $\\frac{\\sin u}{u} \\to 1$ needs the same $u$ on top and below. In $\\frac{\\sin 3t}{t}$ the angle is $3t$ but the denominator is $t$, so the limit is $3$, not $1$. And $\\frac{1 - \\cos t}{t}$ tends to $0$, not $1$.",
+        "在该点为 $\\frac{0}{0}$ 型的分量，可能需要用特殊极限而不是因式分解。在 $t = 0$ 处，$\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$，$\\frac{1 - \\cos t}{t} \\to 0$。所以\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle$$\n\n> **注意。** $\\frac{\\sin u}{u} \\to 1$ 要求分子分母是同一个 $u$。在 $\\frac{\\sin 3t}{t}$ 中，角是 $3t$，分母却是 $t$，所以极限是 $3$ 而不是 $1$。而 $\\frac{1 - \\cos t}{t}$ 趋于 $0$，不是 $1$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
         const m = rng.nonZero(-6, 6);
         const order = rng.shuffle([0, 1, 2]);
-        const parts = [
-          `\\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{t}`,
-          `\\frac{1 - \\cos t}{t}`,
-          `${m === 1 ? "" : m === -1 ? "-" : m}\\cos t`,
-        ];
+        const kt = k < 0 ? `(${k}t)` : `${k}t`;
+        const parts = [`\\frac{\\sin ${kt}}{t}`, `\\frac{1 - \\cos t}{t}`, `${m === 1 ? "" : m === -1 ? "-" : m}\\cos t`];
         const values = [k, 0, m];
         const answer = order.map((i) => values[i]!);
         const with_ = (v: readonly (number | Q)[]) => order.map((i) => v[i]!);
         const r3 = `\\left\\langle ${order.map((i) => parts[i]).join(", ")} \\right\\rangle`;
-        return pointProblem({
-          prompt: t(
-            `Let $\\mathbf{r}(t) = ${r3}$. Find $\\lim\\limits_{t \\to 0} \\mathbf{r}(t)$. Enter the vector as $\\langle a, b, c \\rangle$.`,
-            `设 $\\mathbf{r}(t) = ${r3}$。求 $\\lim\\limits_{t \\to 0} \\mathbf{r}(t)$。按 $\\langle a, b, c \\rangle$ 的形式输入向量。`,
-          ),
-          answer,
-          vector: true,
-          wrong: [with_([1, 0, m]), with_([k, 1, m]), with_([0, 0, m]), with_([Q.of(1, k), 0, m])],
-          solution: t(
-            `Take each limit as $t \\to 0$. $\\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{t} = ${k} \\cdot \\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{${k}t} \\to ${k}$, since $\\frac{\\sin u}{u} \\to 1$ as $u \\to 0$. $\\frac{1 - \\cos t}{t} \\to 0$. $${parts[2]} \\to ${m}$, since cosine is continuous and $\\cos 0 = 1$. So the limit is $${vectorLatex(answer)}$.`,
-            `逐个求 $t \\to 0$ 时的极限。$\\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{t} = ${k} \\cdot \\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{${k}t} \\to ${k}$，因为 $u \\to 0$ 时 $\\frac{\\sin u}{u} \\to 1$。$\\frac{1 - \\cos t}{t} \\to 0$。$${parts[2]} \\to ${m}$，因为余弦函数连续且 $\\cos 0 = 1$。所以极限是 $${vectorLatex(answer)}$。`,
-          ),
-        });
+        const near = num(Math.sin(0.01 * k) / 0.01);
+        return located(
+          {
+            prompt: t(
+              `Let $\\mathbf{r}(t) = ${r3}$. Find $\\lim\\limits_{t \\to 0} \\mathbf{r}(t)$. Enter the vector as $\\langle a, b, c \\rangle$.`,
+              `设 $\\mathbf{r}(t) = ${r3}$。求 $\\lim\\limits_{t \\to 0} \\mathbf{r}(t)$。按 $\\langle a, b, c \\rangle$ 的形式输入向量。`,
+            ),
+            answer,
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Match the sine to its angle", "让正弦与它的角相配"],
+                  t(
+                    `$${parts[0]} = ${k} \\cdot \\frac{\\sin ${kt}}{${k}t} \\to ${k} \\cdot 1 = ${k}$, since $\\frac{\\sin u}{u} \\to 1$ as $u \\to 0$.`,
+                    `$${parts[0]} = ${k} \\cdot \\frac{\\sin ${kt}}{${k}t} \\to ${k} \\cdot 1 = ${k}$，因为 $u \\to 0$ 时 $\\frac{\\sin u}{u} \\to 1$。`,
+                  ),
+                ],
+                [
+                  ["The other two components", "另外两个分量"],
+                  t(
+                    `$\\frac{1 - \\cos t}{t} \\to 0$, and $${parts[2]} \\to ${paren(m)} \\cdot \\cos 0 = ${m}$, since cosine is continuous.`,
+                    `$\\frac{1 - \\cos t}{t} \\to 0$，且 $${parts[2]} \\to ${paren(m)} \\cdot \\cos 0 = ${m}$，因为余弦函数连续。`,
+                  ),
+                ],
+                [["Collect in order", "按顺序组成向量"], t(`The limit is $${vectorLatex(answer)}$.`, `极限是 $${vectorLatex(answer)}$。`)],
+              ],
+              t(
+                `At $t = 0.01$ the sine component is $\\frac{\\sin(${num(0.01 * k)})}{0.01} \\approx ${near}$, already close to $${k}$.`,
+                `$t = 0.01$ 时正弦分量为 $\\frac{\\sin(${num(0.01 * k)})}{0.01} \\approx ${near}$，已经接近 $${k}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              with_([1, 0, m]),
+              `In $${parts[0]}$ the angle is $${k}t$ but the denominator is $t$, so it is not of the form $\\frac{\\sin u}{u}$ yet; rewrite it with $${k}t$ below first.`,
+              `在 $${parts[0]}$ 中，角是 $${k}t$，分母却是 $t$，还不是 $\\frac{\\sin u}{u}$ 的形式；先改写成分母为 $${k}t$。`,
+            ],
+            [
+              with_([k, 1, m]),
+              "$\\frac{1 - \\cos t}{t}$ does not tend to $1$; that is the limit of $\\frac{\\sin t}{t}$.",
+              "$\\frac{1 - \\cos t}{t}$ 不趋于 $1$；趋于 $1$ 的是 $\\frac{\\sin t}{t}$。",
+            ],
+            [
+              with_([0, 0, m]),
+              "The sine component is $\\frac{0}{0}$ at $t = 0$, which is not $0$: use $\\frac{\\sin u}{u} \\to 1$.",
+              "正弦分量在 $t = 0$ 处是 $\\frac{0}{0}$ 型，它不是 $0$：用 $\\frac{\\sin u}{u} \\to 1$。",
+            ],
+            [
+              with_([Q.of(1, k), 0, m]),
+              "The factor came out upside down: multiplying and dividing by the angle's coefficient leaves that coefficient in front.",
+              "提出的因子颠倒了：分子分母同乘角的系数后，留在前面的是这个系数本身。",
+            ],
+          ],
+        );
       },
     },
     {
       id: "when-the-limit-does-not-exist",
       title: t("When the limit does not exist", "极限不存在的情形"),
       explanation: t(
-        "Because the limit is taken component by component, $\\lim_{t \\to a} \\mathbf{r}(t)$ exists only if every component has a limit at $a$. One component that grows without bound, such as $\\frac{1}{t - 2}$ at $t = 2$, or that approaches different values from the two sides, such as $\\frac{|t - 2|}{t - 2}$, is enough to make the limit of the whole vector fail to exist, however well the other components behave. A $\\frac{0}{0}$ component, by contrast, often has a limit.",
-        "由于极限是逐个分量求的，只有每个分量在 $a$ 处都有极限时，$\\lim_{t \\to a} \\mathbf{r}(t)$ 才存在。只要有一个分量无界增长（例如 $\\frac{1}{t - 2}$ 在 $t = 2$ 处），或者从两侧趋于不同的值（例如 $\\frac{|t - 2|}{t - 2}$），整个向量的极限就不存在，无论其他分量多么正常。相反，$\\frac{0}{0}$ 型的分量往往有极限。",
+        "Because the limit is taken component by component, $\\lim_{t \\to a} \\mathbf{r}(t)$ exists only if every component has a limit at $a$. One component that grows without bound, such as $\\frac{1}{t - 2}$ at $t = 2$, or that approaches different values from the two sides, such as $\\frac{|t - 2|}{t - 2}$, is enough to make the limit of the whole vector fail to exist, however well the other components behave. A $\\frac{0}{0}$ component, by contrast, often has a limit. So $\\left\\langle t, \\frac{1}{t} \\right\\rangle$ has no limit at $t = 0$, while $\\left\\langle t, \\frac{\\sin t}{t} \\right\\rangle$ tends to $\\langle 0, 1 \\rangle$.\n\n> **Watch out.** Not being defined at the point decides nothing: $\\frac{0}{0}$ there often cancels to a limit. What stops a limit is a component that is unbounded nearby or that jumps between the two sides.",
+        "由于极限是逐个分量求的，只有每个分量在 $a$ 处都有极限时，$\\lim_{t \\to a} \\mathbf{r}(t)$ 才存在。只要有一个分量无界增长（例如 $\\frac{1}{t - 2}$ 在 $t = 2$ 处），或者从两侧趋于不同的值（例如 $\\frac{|t - 2|}{t - 2}$），整个向量的极限就不存在，无论其他分量多么正常。相反，$\\frac{0}{0}$ 型的分量往往有极限。所以 $\\left\\langle t, \\frac{1}{t} \\right\\rangle$ 在 $t = 0$ 处没有极限，而 $\\left\\langle t, \\frac{\\sin t}{t} \\right\\rangle$ 趋于 $\\langle 0, 1 \\rangle$。\n\n> **注意。** 在该点没有定义并不能说明什么：那里的 $\\frac{0}{0}$ 往往能约分得到极限。使极限不存在的，是在附近无界或在两侧跳跃的分量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -323,26 +492,54 @@ export const limitsOfVectorValuedFunctions: TopicDef = {
           t("None: the limit exists", "没有：极限存在"),
         ];
         const r3 = `\\left\\langle ${parts.map((q) => q.tex).join(", ")} \\right\\rangle`;
-        const fine = parts.filter((_, i) => i !== broken).map((q) => q.why);
-        const join = (lang: "en" | "zh-CN") => fine.map((w) => w[lang]).join(lang === "en" ? " and " : "，");
-        return choiceProblem({
-          prompt: t(
-            `Let $\\mathbf{r}(t) = ${r3}$. Which component keeps $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$ from existing?`,
-            `设 $\\mathbf{r}(t) = ${r3}$。哪个分量使 $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$ 不存在？`,
-          ),
-          options,
-          correct: broken,
-          solution:
-            broken === 3
-              ? t(
-                  `Every component has a limit as $t \\to ${a}$: ${join("en")}. So the limit exists.`,
-                  `当 $t \\to ${a}$ 时每个分量都有极限：${join("zh-CN")}。所以极限存在。`,
-                )
-              : t(
-                  `As $t \\to ${a}$, ${parts[broken]!.why.en}, so that component has no limit, and neither does $\\mathbf{r}(t)$, even though ${join("en")}.`,
-                  `当 $t \\to ${a}$ 时，${parts[broken]!.why["zh-CN"]}，所以这个分量没有极限，$\\mathbf{r}(t)$ 也没有极限，尽管${join("zh-CN")}。`,
-                ),
-        });
+        const all = (lang: "en" | "zh-CN") => parts.map((q) => q.why[lang]).join(lang === "en" ? "; " : "；");
+        const reasons = options.flatMap((o, i): [string, string, string][] =>
+          i === broken
+            ? []
+            : i < 3
+              ? [[o.en, `That component has a limit: ${parts[i]!.why.en}.`, `这个分量有极限：${parts[i]!.why["zh-CN"]}。`]]
+              : [
+                  [
+                    o.en,
+                    `One component has no limit at $t = ${a}$, and one is enough to stop the limit of the vector.`,
+                    `有一个分量在 $t = ${a}$ 处没有极限，一个就足以使向量的极限不存在。`,
+                  ],
+                ],
+        );
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Let $\\mathbf{r}(t) = ${r3}$. Which component keeps $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$ from existing?`,
+              `设 $\\mathbf{r}(t) = ${r3}$。哪个分量使 $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$ 不存在？`,
+            ),
+            options,
+            correct: broken,
+            solution: walked(
+              [
+                [["Test each component", "逐个检查分量"], t(`As $t \\to ${a}$: ${all("en")}.`, `当 $t \\to ${a}$ 时：${all("zh-CN")}。`)],
+                [
+                  ["Decide", "下结论"],
+                  broken === 3
+                    ? t("Every component has a limit, so the limit of the vector exists.", "每个分量都有极限，所以向量的极限存在。")
+                    : t(
+                        `The ${["first", "second", "third"][broken]} component has no limit, so the vector has none either.`,
+                        `第${["一", "二", "三"][broken]}个分量没有极限，所以向量也没有极限。`,
+                      ),
+                ],
+              ],
+              broken === 3
+                ? t(
+                    `No component is unbounded near $t = ${a}$ or jumps between the two sides, so nothing stands in the way.`,
+                    `没有分量在 $t = ${a}$ 附近无界或在两侧跳跃，所以没有任何阻碍。`,
+                  )
+                : t(
+                    `The other two components do have limits, so this one alone is what stands in the way.`,
+                    `另外两个分量都有极限，所以阻碍极限存在的只有这一个分量。`,
+                  ),
+            ),
+          }),
+          reasons,
+        );
       },
     },
   ],
@@ -356,6 +553,10 @@ export const continuityAndDifferentiabilityOfVectorValuedFunctions: TopicDef = {
     "A vector-valued function is continuous or differentiable at a point if and only if each of its component functions is continuous or differentiable at that point.",
     "向量值函数在某点连续或可微，当且仅当其每一个分量函数在该点连续或可微。",
   ),
+  intro: t(
+    "$\\mathbf{r}(t) = \\langle t^2, |t - 1| \\rangle$ is continuous everywhere, since both components are. But $|t - 1|$ has a corner at $t = 1$: its slope is $-1$ to the left and $1$ to the right. So $\\mathbf{r}$ is not differentiable at $t = 1$, even though $t^2$ is differentiable everywhere.\n\nCheck: the difference quotient of $|t - 1|$ at $t = 1$ is $\\frac{|h|}{h}$, which is $1$ for $h = 0.1$ and $-1$ for $h = -0.1$, so it settles on no single value.\n\nIn this lesson we decide, component by component, where a vector-valued function is continuous or differentiable, and choose values that make it so.",
+    "$\\mathbf{r}(t) = \\langle t^2, |t - 1| \\rangle$ 处处连续，因为两个分量都连续。但 $|t - 1|$ 在 $t = 1$ 处有折点：左侧斜率为 $-1$，右侧为 $1$。所以 $\\mathbf{r}$ 在 $t = 1$ 处不可微，尽管 $t^2$ 处处可微。\n\n检验：$|t - 1|$ 在 $t = 1$ 处的差商是 $\\frac{|h|}{h}$，$h = 0.1$ 时为 $1$，$h = -0.1$ 时为 $-1$，不趋于同一个值。\n\n本课我们逐个分量判断向量值函数在何处连续或可微，并选取使它连续或可微的值。",
+  ),
   prerequisites: ["defining-vector-valued-functions", "defining-continuity-at-a-point"],
   encompasses: [],
   xp: 10,
@@ -364,34 +565,58 @@ export const continuityAndDifferentiabilityOfVectorValuedFunctions: TopicDef = {
       id: "identifying-points-of-discontinuity-or-non-differentiability",
       title: t("Identifying points of non-differentiability", "识别不可微点"),
       explanation: t(
-        "A vector-valued function $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ fails to be differentiable at $t_0$ whenever at least one of its component functions is not differentiable at $t_0$. Common causes include sharp corners (such as $|t - c|$ at $t = c$) or vertical tangents.",
-        "当向量值函数 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 的至少一个分量函数在 $t_0$ 处不可微时，该向量值函数在 $t_0$ 处不可微。常见情形包括绝对值折点（如 $|t - c|$ 在 $t = c$ 处）或垂直切线。",
+        "A vector-valued function $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ fails to be differentiable at $t_0$ whenever at least one of its component functions is not differentiable at $t_0$. Common causes include sharp corners (such as $|t - c|$ at $t = c$) or vertical tangents. So $\\langle t^3, |t + 2| \\rangle$ is not differentiable at $t = -2$, where the inside of the absolute value is zero.\n\n> **Watch out.** The corner of $|t - c|$ is where the inside is zero, at $t = c$; for $|t + 2|$ that is $t = -2$, not $t = 2$. And continuity is not enough: $|t - c|$ is continuous at $c$ yet not differentiable there.",
+        "当向量值函数 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 的至少一个分量函数在 $t_0$ 处不可微时，该向量值函数在 $t_0$ 处不可微。常见情形包括绝对值折点（如 $|t - c|$ 在 $t = c$ 处）或垂直切线。所以 $\\langle t^3, |t + 2| \\rangle$ 在 $t = -2$ 处不可微，那里绝对值里面为零。\n\n> **注意。** $|t - c|$ 的折点在里面为零处，即 $t = c$；对 $|t + 2|$ 是 $t = -2$，不是 $t = 2$。而且连续还不够：$|t - c|$ 在 $c$ 处连续，却不可微。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.nonZero(-10, 10);
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
-        const prompt = t(
-          `Find the value of $t$ at which the vector-valued function $\\mathbf{r}(t) = \\left\\langle ${poly([a, "t^2"])}, |${poly([1, "t"], [-c, ""])}|, ${poly([b, "t"], [1, ""])} \\right\\rangle$ fails to be differentiable.`,
-          `求向量值函数 $\\mathbf{r}(t) = \\left\\langle ${poly([a, "t^2"])}, |${poly([1, "t"], [-c, ""])}|, ${poly([b, "t"], [1, ""])} \\right\\rangle$ 不可微的 $t$ 值。`,
-        );
-        const solution = t(
-          steps(
-            `The components $x(t) = ${poly([a, "t^2"])}$ and $z(t) = ${poly([b, "t"], [1, ""])}$ are polynomials and are differentiable everywhere.`,
-            `The second component $y(t) = |${poly([1, "t"], [-c, ""])}|$ has a corner at $t = ${c}$, where its left derivative is $-1$ and right derivative is $1$.`,
-            `Therefore, $\\mathbf{r}(t)$ fails to be differentiable at $t = ${c}$.`,
-          ),
-          steps(
-            `分量 $x(t) = ${poly([a, "t^2"])}$ 与 $z(t) = ${poly([b, "t"], [1, ""])}$ 为多项式，处处可微。`,
-            `第二分量 $y(t) = |${poly([1, "t"], [-c, ""])}|$ 在 $t = ${c}$ 处具有折点，其左导数为 $-1$，右导数为 $1$。`,
-            `因此，$\\mathbf{r}(t)$ 在 $t = ${c}$ 处不可微。`,
-          ),
+        const inside = tMinus(c);
+        const x = poly([a, "t^2"]);
+        const z = poly([b, "t"], [1, ""]);
+        const off = t(
+          `At that value the inside of $|${inside}|$ is not zero, so there is no corner there and every component is differentiable.`,
+          `在这个值处 $|${inside}|$ 里面不为零，那里没有折点，每个分量都可微。`,
         );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of $t$ at which the vector-valued function $\\mathbf{r}(t) = \\left\\langle ${x}, |${inside}|, ${z} \\right\\rangle$ fails to be differentiable.`,
+            `求向量值函数 $\\mathbf{r}(t) = \\left\\langle ${x}, |${inside}|, ${z} \\right\\rangle$ 不可微的 $t$ 值。`,
+          ),
           answer: c,
-          wrong: [-c, 0, c + 1, c - 1],
+          mistakes: distinct(c, [
+            why(
+              -c,
+              `At $t = ${-c}$ the inside of $|${inside}|$ is $${-2 * c}$, not zero: the corner is where the inside vanishes.`,
+              `$t = ${-c}$ 时 $|${inside}|$ 里面是 $${-2 * c}$，不是零：折点在里面为零的地方。`,
+            ),
+            { value: 0, why: off },
+            { value: c + 1, why: off },
+            { value: c - 1, why: off },
+          ]),
+          solution: walked(
+            [
+              [
+                ["Check the polynomial components", "检查多项式分量"],
+                t(
+                  `$x(t) = ${x}$ and $z(t) = ${z}$ are polynomials, differentiable for every $t$.`,
+                  `$x(t) = ${x}$ 和 $z(t) = ${z}$ 是多项式，对每个 $t$ 都可微。`,
+                ),
+              ],
+              [
+                ["Find the corner", "找出折点"],
+                t(
+                  `$y(t) = |${inside}|$ has a corner where $${inside} = 0$, at $t = ${c}$: its slope is $-1$ to the left and $1$ to the right. So $\\mathbf{r}$ fails to be differentiable at $t = ${c}$.`,
+                  `$y(t) = |${inside}|$ 在 $${inside} = 0$ 处有折点，即 $t = ${c}$：左侧斜率为 $-1$，右侧为 $1$。所以 $\\mathbf{r}$ 在 $t = ${c}$ 处不可微。`,
+                ),
+              ],
+            ],
+            t(
+              `The difference quotient of $y$ at $t = ${c}$ is $\\frac{|h|}{h}$: $1$ for $h > 0$ and $-1$ for $h < 0$, so the derivative does not exist there.`,
+              `$y$ 在 $t = ${c}$ 处的差商是 $\\frac{|h|}{h}$：$h > 0$ 时为 $1$，$h < 0$ 时为 $-1$，所以那里导数不存在。`,
+            ),
+          ),
         });
       },
     },
@@ -399,24 +624,66 @@ export const continuityAndDifferentiabilityOfVectorValuedFunctions: TopicDef = {
       id: "choosing-a-value-that-makes-a-vector-function-continuous",
       title: t("Choosing a value that makes $\\mathbf{r}$ continuous", "选取使 $\\mathbf{r}$ 连续的值"),
       explanation: t(
-        "A vector-valued function is continuous at $t = a$ exactly when each component is continuous there, that is, when $\\lim_{t \\to a}\\mathbf{r}(t) = \\mathbf{r}(a)$ component by component. If one component is $\\frac{t^2 - a^2}{t - a}$ for $t \\ne a$, its limit is found by cancelling: $\\frac{t^2 - a^2}{t - a} = t + a \\to 2a$. Defining that component to be $2a$ at $t = a$ removes the discontinuity.",
-        "向量值函数在 $t = a$ 处连续，当且仅当每个分量在该处连续，即逐分量地 $\\lim_{t \\to a}\\mathbf{r}(t) = \\mathbf{r}(a)$。若某分量在 $t \\ne a$ 时为 $\\frac{t^2 - a^2}{t - a}$，约分可求极限：$\\frac{t^2 - a^2}{t - a} = t + a \\to 2a$。把该分量在 $t = a$ 处定义为 $2a$ 就消除了间断。",
+        "A vector-valued function is continuous at $t = a$ exactly when each component is continuous there, that is, when $\\lim_{t \\to a}\\mathbf{r}(t) = \\mathbf{r}(a)$ component by component. If one component is $\\frac{t^2 - a^2}{t - a}$ for $t \\ne a$, its limit is found by cancelling: $\\frac{t^2 - a^2}{t - a} = t + a \\to 2a$. Defining that component to be $2a$ at $t = a$ removes the discontinuity. For $\\frac{t^2 - 9}{t - 3}$ at $t = 3$ the value to choose is $6$.\n\n> **Watch out.** The value to choose is the limit, found after cancelling; substituting $t = a$ into the formula gives $\\frac{0}{0}$, which is not a value. Every other component must match its limit too.",
+        "向量值函数在 $t = a$ 处连续，当且仅当每个分量在该处连续，即逐分量地 $\\lim_{t \\to a}\\mathbf{r}(t) = \\mathbf{r}(a)$。若某分量在 $t \\ne a$ 时为 $\\frac{t^2 - a^2}{t - a}$，约分可求极限：$\\frac{t^2 - a^2}{t - a} = t + a \\to 2a$。把该分量在 $t = a$ 处定义为 $2a$ 就消除了间断。对 $\\frac{t^2 - 9}{t - 3}$ 在 $t = 3$ 处，应取的值是 $6$。\n\n> **注意。** 应取的值是约分后求得的极限；把 $t = a$ 代入公式得到 $\\frac{0}{0}$，它不是一个值。其他每个分量也必须与各自的极限相符。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-6, 6);
         const m = rng.int(1, 3);
         const ans = 2 * a * m;
-        const num = m === 1 ? `t^2 - ${a * a}` : `${m}(t^2 - ${a * a})`;
+        const tPlus = poly([1, "t"], [a, ""]);
+        const lead = m === 1 ? "" : m;
+        const numer = m === 1 ? `t^2 - ${a * a}` : `${m}(t^2 - ${a * a})`;
         return numberProblem({
           prompt: t(
-            `$\\mathbf{r}(t) = \\left\\langle \\frac{${num}}{${tMinus(a)}}, t^2 \\right\\rangle$ for $t \\ne ${a}$, and $\\mathbf{r}(${a}) = \\langle k, ${a * a} \\rangle$. Find $k$ so that $\\mathbf{r}$ is continuous at $t = ${a}$.`,
-            `当 $t \\ne ${a}$ 时 $\\mathbf{r}(t) = \\left\\langle \\frac{${num}}{${tMinus(a)}}, t^2 \\right\\rangle$，且 $\\mathbf{r}(${a}) = \\langle k, ${a * a} \\rangle$。求 $k$ 使 $\\mathbf{r}$ 在 $t = ${a}$ 处连续。`,
+            `$\\mathbf{r}(t) = \\left\\langle \\frac{${numer}}{${tMinus(a)}}, t^2 \\right\\rangle$ for $t \\ne ${a}$, and $\\mathbf{r}(${a}) = \\langle k, ${a * a} \\rangle$. Find $k$ so that $\\mathbf{r}$ is continuous at $t = ${a}$.`,
+            `当 $t \\ne ${a}$ 时 $\\mathbf{r}(t) = \\left\\langle \\frac{${numer}}{${tMinus(a)}}, t^2 \\right\\rangle$，且 $\\mathbf{r}(${a}) = \\langle k, ${a * a} \\rangle$。求 $k$ 使 $\\mathbf{r}$ 在 $t = ${a}$ 处连续。`,
           ),
           answer: ans,
-          wrong: [0, a * m, -ans, a * a * m],
-          solution: t(
-            `For $t \\ne ${a}$ the first component equals $${m === 1 ? "" : m}(t ${a > 0 ? "+" : "-"} ${Math.abs(a)})$, which tends to $${m === 1 ? "" : `${m} \\cdot `}${paren(2 * a)} = ${ans}$. So $k = ${ans}$.`,
-            `当 $t \\ne ${a}$ 时第一分量等于 $${m === 1 ? "" : m}(t ${a > 0 ? "+" : "-"} ${Math.abs(a)})$，趋于 $${m === 1 ? "" : `${m} \\cdot `}${paren(2 * a)} = ${ans}$。所以 $k = ${ans}$。`,
+          solveFor: "k",
+          mistakes: distinct(ans, [
+            why(
+              0,
+              `Substituting $t = ${a}$ gives $\\frac{0}{0}$, which is not $0$: cancel the factor $${tMinus(a)}$ first.`,
+              `代入 $t = ${a}$ 得到 $\\frac{0}{0}$，它不是 $0$：先约去因式 $${tMinus(a)}$。`,
+            ),
+            why(
+              a * m,
+              `After cancelling, evaluate the whole factor $${tPlus}$ at $t = ${a}$, both of its terms.`,
+              `约分后，要把整个因式 $${tPlus}$ 在 $t = ${a}$ 处求值，两项都要算。`,
+            ),
+            why(
+              -ans,
+              `The sign is flipped: $t^2 - ${a * a}$ factors as $(${tMinus(a)})(${tPlus})$.`,
+              `符号反了：$t^2 - ${a * a}$ 分解为 $(${tMinus(a)})(${tPlus})$。`,
+            ),
+            why(
+              a * a * m,
+              `That is the constant $${m === 1 ? "" : `${m} \\cdot `}${a * a}$ from the numerator; the limit comes from the factor left after cancelling.`,
+              `这是分子中的常数 $${m === 1 ? "" : `${m} \\cdot `}${a * a}$；极限来自约分后剩下的因式。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Cancel the common factor", "约去公因式"],
+                t(
+                  `For $t \\ne ${a}$, $\\frac{${numer}}{${tMinus(a)}} = \\frac{${lead}(${tMinus(a)})(${tPlus})}{${tMinus(a)}} = ${lead}(${tPlus})$, which tends to $${m === 1 ? "" : `${m} \\cdot `}${paren(2 * a)} = ${ans}$ as $t \\to ${a}$.`,
+                  `当 $t \\ne ${a}$ 时，$\\frac{${numer}}{${tMinus(a)}} = \\frac{${lead}(${tMinus(a)})(${tPlus})}{${tMinus(a)}} = ${lead}(${tPlus})$，当 $t \\to ${a}$ 时趋于 $${m === 1 ? "" : `${m} \\cdot `}${paren(2 * a)} = ${ans}$。`,
+                ),
+              ],
+              [
+                ["Match the limit", "与极限相符"],
+                t(
+                  `The second component already matches, since $t^2 \\to ${a * a}$. Continuity needs the first entry of $\\mathbf{r}(${a})$ to equal its limit, so $k = ${ans}$.`,
+                  `第二个分量已经相符，因为 $t^2 \\to ${a * a}$。连续要求 $\\mathbf{r}(${a})$ 的第一个分量等于它的极限，所以 $k = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At $t = ${a} + 0.01$ the first component is $${lead}(${num(2 * a + 0.01)}) = ${num(ans + 0.01 * m)}$, close to $${ans}$.`,
+              `$t = ${a} + 0.01$ 时第一个分量为 $${lead}(${num(2 * a + 0.01)}) = ${num(ans + 0.01 * m)}$，接近 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -432,6 +699,10 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
     "Vector-valued functions satisfy sum, scalar multiple, dot product, and cross product differentiation rules.",
     "向量值函数满足和、数乘、点积以及叉积的求导法则。",
   ),
+  intro: t(
+    "For $\\mathbf{u}(t) = \\langle t, 1 \\rangle$ and $\\mathbf{v}(t) = \\langle t, t \\rangle$, the product rule gives $\\frac{d}{dt}(\\mathbf{u} \\cdot \\mathbf{v}) = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}' = \\langle 1, 0 \\rangle \\cdot \\langle t, t \\rangle + \\langle t, 1 \\rangle \\cdot \\langle 1, 1 \\rangle = t + (t + 1) = 2t + 1$.\n\nCheck: directly, $\\mathbf{u} \\cdot \\mathbf{v} = t^2 + t$, whose derivative is $2t + 1$, the same.\n\nIn this lesson we differentiate dot products, cross products and scalar multiples of vector functions with the product rules.",
+    "对 $\\mathbf{u}(t) = \\langle t, 1 \\rangle$ 和 $\\mathbf{v}(t) = \\langle t, t \\rangle$，乘积法则给出 $\\frac{d}{dt}(\\mathbf{u} \\cdot \\mathbf{v}) = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}' = \\langle 1, 0 \\rangle \\cdot \\langle t, t \\rangle + \\langle t, 1 \\rangle \\cdot \\langle 1, 1 \\rangle = t + (t + 1) = 2t + 1$。\n\n检验：直接算，$\\mathbf{u} \\cdot \\mathbf{v} = t^2 + t$，它的导数是 $2t + 1$，结果相同。\n\n本课我们用乘积法则对向量函数的点积、叉积和数乘求导。",
+  ),
   prerequisites: ["differentiating-vector-valued-functions", "the-cross-product-of-two-vectors"],
   encompasses: [{ topic: "differentiating-vector-valued-functions", weight: 0.3 }],
   xp: 10,
@@ -440,8 +711,8 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
       id: "derivative-of-dot-and-cross-products",
       title: t("Derivative of dot and cross products", "点积与叉积的导数"),
       explanation: t(
-        "For differentiable vector-valued functions $\\mathbf{u}(t)$ and $\\mathbf{v}(t)$:\n\n1. Product Rule for Dot Product:\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t).$$\n\n2. Product Rule for Cross Product:\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t).$$",
-        "对于可微向量值函数 $\\mathbf{u}(t)$ 和 $\\mathbf{v}(t)$：\n\n1. 点积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t)$$\n\n2. 叉积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t)$$",
+        "For differentiable vector-valued functions $\\mathbf{u}(t)$ and $\\mathbf{v}(t)$:\n\n1. Product Rule for Dot Product:\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t).$$\n\n2. Product Rule for Cross Product:\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t).$$\n\nIf at some instant $\\mathbf{u} = \\langle 1, 0, 0 \\rangle$, $\\mathbf{u}' = \\langle 0, 1, 0 \\rangle$, $\\mathbf{v} = \\langle 0, 2, 0 \\rangle$ and $\\mathbf{v}' = \\langle 3, 0, 0 \\rangle$, then $(\\mathbf{u} \\cdot \\mathbf{v})' = 2 + 3 = 5$.\n\n> **Watch out.** Each term differentiates exactly one factor: $\\mathbf{u}' \\cdot \\mathbf{v}'$ is not a term, and the two terms are added. For the cross product keep the order of each term, since $\\mathbf{v} \\times \\mathbf{u}' = -\\mathbf{u}' \\times \\mathbf{v}$.",
+        "对于可微向量值函数 $\\mathbf{u}(t)$ 和 $\\mathbf{v}(t)$：\n\n1. 点积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t)$$\n\n2. 叉积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t)$$\n\n若某一时刻 $\\mathbf{u} = \\langle 1, 0, 0 \\rangle$，$\\mathbf{u}' = \\langle 0, 1, 0 \\rangle$，$\\mathbf{v} = \\langle 0, 2, 0 \\rangle$，$\\mathbf{v}' = \\langle 3, 0, 0 \\rangle$，则 $(\\mathbf{u} \\cdot \\mathbf{v})' = 2 + 3 = 5$。\n\n> **注意。** 每一项只对一个因子求导：$\\mathbf{u}' \\cdot \\mathbf{v}'$ 不是其中的项，两项要相加。对叉积，每一项的顺序都要保持，因为 $\\mathbf{v} \\times \\mathbf{u}' = -\\mathbf{u}' \\times \\mathbf{v}$。",
       ),
       generate(rng: Rng): Problem {
         const u: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
@@ -449,31 +720,63 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
         const v: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
         const vp: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
         const t0 = rng.int(1, 4);
-
-        const ans = dot3(up, v) + dot3(u, vp);
-        const prompt = t(
-          `Suppose $\\mathbf{u}(${t0}) = ${v3L(u)}$, $\\mathbf{u}'(${t0}) = ${v3L(up)}$, $\\mathbf{v}(${t0}) = ${v3L(v)}$, and $\\mathbf{v}'(${t0}) = ${v3L(vp)}$. Find $\\left.\\frac{d}{dt}\\left[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)\\right]\\right|_{t=${t0}}$.`,
-          `已知 $\\mathbf{u}(${t0}) = ${v3L(u)}$、$\\mathbf{u}'(${t0}) = ${v3L(up)}$、$\\mathbf{v}(${t0}) = ${v3L(v)}$、$\\mathbf{v}'(${t0}) = ${v3L(vp)}$。求 $\\left.\\frac{d}{dt}\\left[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)\\right]\\right|_{t=${t0}}$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the product rule for dot products: $\\frac{d}{dt}[\\mathbf{u} \\cdot \\mathbf{v}] = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}'$.`,
-            `Compute $\\mathbf{u}'(${t0}) \\cdot \\mathbf{v}(${t0}) = (${up[0]})(${v[0]}) + (${up[1]})(${v[1]}) + (${up[2]})(${v[2]}) = ${dot3(up, v)}$.`,
-            `Compute $\\mathbf{u}(${t0}) \\cdot \\mathbf{v}'(${t0}) = (${u[0]})(${vp[0]}) + (${u[1]})(${vp[1]}) + (${u[2]})(${vp[2]}) = ${dot3(u, vp)}$.`,
-            `Add the terms: $${dot3(up, v)} + (${dot3(u, vp)}) = ${ans}$.`,
-          ),
-          steps(
-            `应用点积求导法则：$\\frac{d}{dt}[\\mathbf{u} \\cdot \\mathbf{v}] = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}'$。`,
-            `计算 $\\mathbf{u}'(${t0}) \\cdot \\mathbf{v}(${t0}) = (${up[0]})(${v[0]}) + (${up[1]})(${v[1]}) + (${up[2]})(${v[2]}) = ${dot3(up, v)}$。`,
-            `计算 $\\mathbf{u}(${t0}) \\cdot \\mathbf{v}'(${t0}) = (${u[0]})(${vp[0]}) + (${u[1]})(${vp[1]}) + (${u[2]})(${vp[2]}) = ${dot3(u, vp)}$。`,
-            `相加得：$${dot3(up, v)} + (${dot3(u, vp)}) = ${ans}$。`,
-          ),
-        );
+        const d1 = dot3(up, v);
+        const d2 = dot3(u, vp);
+        const ans = d1 + d2;
+        const terms = (p: Vec3, q: Vec3) => `(${p[0]})(${q[0]}) + (${p[1]})(${q[1]}) + (${p[2]})(${q[2]})`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Suppose $\\mathbf{u}(${t0}) = ${v3L(u)}$, $\\mathbf{u}'(${t0}) = ${v3L(up)}$, $\\mathbf{v}(${t0}) = ${v3L(v)}$, and $\\mathbf{v}'(${t0}) = ${v3L(vp)}$. Find $\\left.\\frac{d}{dt}\\left[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)\\right]\\right|_{t=${t0}}$.`,
+            `已知 $\\mathbf{u}(${t0}) = ${v3L(u)}$、$\\mathbf{u}'(${t0}) = ${v3L(up)}$、$\\mathbf{v}(${t0}) = ${v3L(v)}$、$\\mathbf{v}'(${t0}) = ${v3L(vp)}$。求 $\\left.\\frac{d}{dt}\\left[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)\\right]\\right|_{t=${t0}}$ 的值。`,
+          ),
           answer: ans,
-          wrong: [dot3(up, vp), dot3(u, v), dot3(up, v) - dot3(u, vp)],
+          mistakes: distinct(ans, [
+            why(
+              dot3(up, vp),
+              "That differentiates both factors at once; each term of the product rule differentiates only one of them.",
+              "这把两个因子同时求导了；乘积法则的每一项只对其中一个求导。",
+            ),
+            why(
+              dot3(u, v),
+              "That is $\\mathbf{u} \\cdot \\mathbf{v}$ itself, not its derivative.",
+              "这是 $\\mathbf{u} \\cdot \\mathbf{v}$ 本身，不是它的导数。",
+            ),
+            why(d1 - d2, "The two terms of the product rule are added, not subtracted.", "乘积法则的两项要相加，不是相减。"),
+            why(
+              d1,
+              "That is only $\\mathbf{u}' \\cdot \\mathbf{v}$; the term $\\mathbf{u} \\cdot \\mathbf{v}'$ is missing.",
+              "这只是 $\\mathbf{u}' \\cdot \\mathbf{v}$；缺了 $\\mathbf{u} \\cdot \\mathbf{v}'$ 这一项。",
+            ),
+            why(
+              d2,
+              "That is only $\\mathbf{u} \\cdot \\mathbf{v}'$; the term $\\mathbf{u}' \\cdot \\mathbf{v}$ is missing.",
+              "这只是 $\\mathbf{u} \\cdot \\mathbf{v}'$；缺了 $\\mathbf{u}' \\cdot \\mathbf{v}$ 这一项。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the product rule", "写出乘积法则"],
+                t(
+                  "$\\frac{d}{dt}[\\mathbf{u} \\cdot \\mathbf{v}] = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}'$, each term differentiating one factor.",
+                  "$\\frac{d}{dt}[\\mathbf{u} \\cdot \\mathbf{v}] = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}'$，每一项对一个因子求导。",
+                ),
+              ],
+              [
+                ["Compute the two dot products", "计算两个点积"],
+                none,
+                [
+                  `\\mathbf{u}'(${t0}) \\cdot \\mathbf{v}(${t0}) = ${terms(up, v)} = ${d1}`,
+                  `\\mathbf{u}(${t0}) \\cdot \\mathbf{v}'(${t0}) = ${terms(u, vp)} = ${d2}`,
+                ],
+              ],
+              [["Add", "相加"], t(`$${d1} + ${paren(d2)} = ${ans}$.`, `$${d1} + ${paren(d2)} = ${ans}$。`)],
+            ],
+            t(
+              `Near $t = ${t0}$, $\\mathbf{u} \\approx \\mathbf{u}(${t0}) + h\\mathbf{u}'(${t0})$ and $\\mathbf{v} \\approx \\mathbf{v}(${t0}) + h\\mathbf{v}'(${t0})$, so $\\mathbf{u} \\cdot \\mathbf{v} \\approx ${dot3(u, v)} + ${paren(ans)}h + ${paren(dot3(up, vp))}h^2$, whose rate of change at $h = 0$ is $${ans}$.`,
+              `在 $t = ${t0}$ 附近，$\\mathbf{u} \\approx \\mathbf{u}(${t0}) + h\\mathbf{u}'(${t0})$，$\\mathbf{v} \\approx \\mathbf{v}(${t0}) + h\\mathbf{v}'(${t0})$，所以 $\\mathbf{u} \\cdot \\mathbf{v} \\approx ${dot3(u, v)} + ${paren(ans)}h + ${paren(dot3(up, vp))}h^2$，它在 $h = 0$ 处的变化率是 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -481,8 +784,8 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
       id: "the-product-rule-for-a-scalar-times-a-vector",
       title: t("The product rule for $f(t)\\mathbf{u}(t)$", "$f(t)\\mathbf{u}(t)$ 的乘积法则"),
       explanation: t(
-        "A scalar function times a vector function is differentiated with the ordinary product rule, applied componentwise:\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t).$$\n\nSo at a single instant only four pieces of data are needed: $f$, $f'$, $\\mathbf{u}$ and $\\mathbf{u}'$ at that instant.",
-        "标量函数乘以向量函数按普通乘积法则逐分量求导：\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t)$$\n\n所以在某一时刻只需四个数据：该时刻的 $f$、$f'$、$\\mathbf{u}$ 与 $\\mathbf{u}'$。",
+        "A scalar function times a vector function is differentiated with the ordinary product rule, applied componentwise:\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t).$$\n\nSo at a single instant only four pieces of data are needed: $f$, $f'$, $\\mathbf{u}$ and $\\mathbf{u}'$ at that instant. With $f = 2$, $f' = 1$, $\\mathbf{u} = \\langle 1, 0, 0 \\rangle$ and $\\mathbf{u}' = \\langle 0, 1, 0 \\rangle$, the derivative is $\\langle 1, 0, 0 \\rangle + \\langle 0, 2, 0 \\rangle = \\langle 1, 2, 0 \\rangle$.\n\n> **Watch out.** Pair each scalar with the right vector: $f'$ multiplies $\\mathbf{u}$, and $f$ multiplies $\\mathbf{u}'$. Both terms are needed; $f'\\mathbf{u}'$ is not part of the derivative.",
+        "标量函数乘以向量函数按普通乘积法则逐分量求导：\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t)$$\n\n所以在某一时刻只需四个数据：该时刻的 $f$、$f'$、$\\mathbf{u}$ 与 $\\mathbf{u}'$。取 $f = 2$，$f' = 1$，$\\mathbf{u} = \\langle 1, 0, 0 \\rangle$，$\\mathbf{u}' = \\langle 0, 1, 0 \\rangle$，导数是 $\\langle 1, 0, 0 \\rangle + \\langle 0, 2, 0 \\rangle = \\langle 1, 2, 0 \\rangle$。\n\n> **注意。** 每个标量要配对正确的向量：$f'$ 乘 $\\mathbf{u}$，$f$ 乘 $\\mathbf{u}'$。两项都需要；$f'\\mathbf{u}'$ 不是导数的一部分。",
       ),
       generate(rng: Rng): Problem {
         const t0 = rng.int(0, 3);
@@ -490,21 +793,63 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
         const fp = rng.nonZero(-4, 4);
         const u: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.nonZero(-3, 3)];
         const up: Vec3 = [rng.int(-3, 3), rng.nonZero(-3, 3), rng.int(-3, 3)];
-        const ans = [0, 1, 2].map((i) => fp * u[i]! + f * up[i]!);
-        return pointProblem({
-          prompt: t(
-            `$f(${t0}) = ${f}$, $f'(${t0}) = ${fp}$, $\\mathbf{u}(${t0}) = ${v3L(u)}$ and $\\mathbf{u}'(${t0}) = ${v3L(up)}$. Find $\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right]$ at $t = ${t0}$.`,
-            `$f(${t0}) = ${f}$，$f'(${t0}) = ${fp}$，$\\mathbf{u}(${t0}) = ${v3L(u)}$，$\\mathbf{u}'(${t0}) = ${v3L(up)}$。求 $t = ${t0}$ 处的 $\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right]$。`,
-          ),
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [[0, 1, 2].map((i) => fp * up[i]!), [0, 1, 2].map((i) => f * u[i]! + fp * up[i]!), [0, 1, 2].map((i) => fp * u[i]!)],
-          solution: t(
-            `$f'\\mathbf{u} + f\\mathbf{u}' = ${fp === 1 ? "" : fp === -1 ? "-" : fp}${v3L(u)} ${f < 0 ? "-" : "+"} ${Math.abs(f) === 1 ? "" : Math.abs(f)}${v3L(up)} = ${v3L(ans)}$.`,
-            `$f'\\mathbf{u} + f\\mathbf{u}' = ${fp === 1 ? "" : fp === -1 ? "-" : fp}${v3L(u)} ${f < 0 ? "-" : "+"} ${Math.abs(f) === 1 ? "" : Math.abs(f)}${v3L(up)} = ${v3L(ans)}$。`,
-          ),
-        });
+        const first = [0, 1, 2].map((i) => fp * u[i]!);
+        const second = [0, 1, 2].map((i) => f * up[i]!);
+        const ans = [0, 1, 2].map((i) => first[i]! + second[i]!);
+        return located(
+          {
+            prompt: t(
+              `$f(${t0}) = ${f}$, $f'(${t0}) = ${fp}$, $\\mathbf{u}(${t0}) = ${v3L(u)}$ and $\\mathbf{u}'(${t0}) = ${v3L(up)}$. Find $\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right]$ at $t = ${t0}$.`,
+              `$f(${t0}) = ${f}$，$f'(${t0}) = ${fp}$，$\\mathbf{u}(${t0}) = ${v3L(u)}$，$\\mathbf{u}'(${t0}) = ${v3L(up)}$。求 $t = ${t0}$ 处的 $\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right]$。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Write the product rule", "写出乘积法则"],
+                  t(
+                    "$\\frac{d}{dt}[f\\mathbf{u}] = f'\\mathbf{u} + f\\mathbf{u}'$.",
+                    "$\\frac{d}{dt}[f\\mathbf{u}] = f'\\mathbf{u} + f\\mathbf{u}'$。",
+                  ),
+                ],
+                [
+                  ["Scale each vector", "分别数乘向量"],
+                  none,
+                  [`f'\\mathbf{u} = ${paren(fp)}${v3L(u)} = ${v3L(first)}`, `f\\mathbf{u}' = ${paren(f)}${v3L(up)} = ${v3L(second)}`],
+                ],
+                [["Add", "相加"], t(`$${v3L(first)} + ${v3L(second)} = ${v3L(ans)}$.`, `$${v3L(first)} + ${v3L(second)} = ${v3L(ans)}$。`)],
+              ],
+              t(
+                `On the second component alone the ordinary product rule gives $f'u_2 + fu_2' = ${paren(fp)} \\cdot ${paren(u[1])} + ${paren(f)} \\cdot ${paren(up[1])} = ${ans[1]}$, the same entry.`,
+                `只看第二个分量，普通乘积法则给出 $f'u_2 + fu_2' = ${paren(fp)} \\cdot ${paren(u[1])} + ${paren(f)} \\cdot ${paren(up[1])} = ${ans[1]}$，是同一个分量。`,
+              ),
+            ),
+          },
+          [
+            [
+              [0, 1, 2].map((i) => fp * up[i]!),
+              "That is $f'\\mathbf{u}'$, which differentiates both factors at once; each term differentiates only one.",
+              "这是 $f'\\mathbf{u}'$，把两个因子同时求导了；每一项只对一个因子求导。",
+            ],
+            [
+              [0, 1, 2].map((i) => f * u[i]! + fp * up[i]!),
+              "The scalars are paired with the wrong vectors: the derivative of $f$ goes with $\\mathbf{u}$ itself.",
+              "标量与向量配错了：$f$ 的导数要乘 $\\mathbf{u}$ 本身。",
+            ],
+            [
+              first,
+              "That is only the term $f'\\mathbf{u}$; the term $f\\mathbf{u}'$ is missing.",
+              "这只是 $f'\\mathbf{u}$ 一项；缺了 $f\\mathbf{u}'$ 这一项。",
+            ],
+            [
+              second,
+              "That is only the term $f\\mathbf{u}'$; the term $f'\\mathbf{u}$ is missing.",
+              "这只是 $f\\mathbf{u}'$ 一项；缺了 $f'\\mathbf{u}$ 这一项。",
+            ],
+          ],
+        );
       },
     },
   ],
@@ -518,6 +863,10 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
     "Integrals of vector-valued functions are computed componentwise and satisfy linearity.",
     "向量值函数的积分按分量逐项计算，并满足线性性质。",
   ),
+  intro: t(
+    "$\\int_0^2 \\langle 2t, 3 \\rangle\\,dt$ is found one component at a time: $\\int_0^2 2t\\,dt = \\left[t^2\\right]_0^2 = 4$ and $\\int_0^2 3\\,dt = 6$, so the integral is the vector $\\langle 4, 6 \\rangle$.\n\nCheck: $\\mathbf{R}(t) = \\langle t^2, 3t \\rangle$ has derivative $\\langle 2t, 3 \\rangle$, and $\\mathbf{R}(2) - \\mathbf{R}(0) = \\langle 4, 6 \\rangle$.\n\nIn this lesson we integrate vector-valued functions component by component and use a starting value to recover a position from its derivative.",
+    "$\\int_0^2 \\langle 2t, 3 \\rangle\\,dt$ 逐个分量计算：$\\int_0^2 2t\\,dt = \\left[t^2\\right]_0^2 = 4$，$\\int_0^2 3\\,dt = 6$，所以积分是向量 $\\langle 4, 6 \\rangle$。\n\n检验：$\\mathbf{R}(t) = \\langle t^2, 3t \\rangle$ 的导数是 $\\langle 2t, 3 \\rangle$，且 $\\mathbf{R}(2) - \\mathbf{R}(0) = \\langle 4, 6 \\rangle$。\n\n本课我们逐个分量对向量值函数积分，并利用初值由导数还原位置。",
+  ),
   prerequisites: ["integrating-vector-valued-functions"],
   encompasses: [{ topic: "integrating-vector-valued-functions", weight: 0.3 }],
   xp: 10,
@@ -526,52 +875,65 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
       id: "evaluating-definite-integrals-of-vector-functions",
       title: t("Evaluating definite integrals of vector functions", "计算向量值函数的定积分"),
       explanation: t(
-        "Each component is an ordinary function of the parameter, so integrate each one over the interval and collect the results as a vector. The definite integral of a vector-valued function is evaluated component by component:\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle.$$",
-        "每个分量都是参数的普通函数，所以把每个分量在区间上积分，再把结果组成一个向量。向量值函数的定积分逐个分量分别进行积分计算：\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle$$",
+        "Each component is an ordinary function of the parameter, so integrate each one over the interval and collect the results as a vector. The definite integral of a vector-valued function is evaluated component by component:\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle.$$\n\nFor example, $\\int_0^1 \\langle 1, 2t, 3t^2 \\rangle\\,dt = \\langle 1, 1, 1 \\rangle$.\n\n> **Watch out.** The integral of a vector function is a vector: keep one entry per component, in order. Integrating raises the power, $\\int t^2\\,dt = \\frac{t^3}{3}$; evaluating the integrand at the end of the interval is not integrating.",
+        "每个分量都是参数的普通函数，所以把每个分量在区间上积分，再把结果组成一个向量。向量值函数的定积分逐个分量分别进行积分计算：\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle$$\n\n例如 $\\int_0^1 \\langle 1, 2t, 3t^2 \\rangle\\,dt = \\langle 1, 1, 1 \\rangle$。\n\n> **注意。** 向量函数的积分是一个向量：每个分量一项，按顺序排列。积分会使次数升高，$\\int t^2\\,dt = \\frac{t^3}{3}$；把被积函数在区间端点处求值并不是积分。",
       ),
       generate(rng: Rng): Problem {
         const aCoeff = rng.pick([2, 4, 6, 8, 10]);
         const bCoeff = rng.pick([3, 6, 9, 12]);
         const cCoeff = rng.int(1, 8);
         const k = rng.int(1, 4);
-
         const intX = (aCoeff * k * k) / 2;
         const intY = (bCoeff * k * k * k) / 3;
         const intZ = cCoeff * k;
         const answer: Vec3 = [intX, intY, intZ];
-
-        const prompt = t(
-          `Evaluate the definite integral $\\int_{0}^{${k}} \\left\\langle ${poly([aCoeff, "t"])}, ${poly([bCoeff, "t^2"])}, ${cCoeff} \\right\\rangle dt$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `计算定积分 $\\int_{0}^{${k}} \\left\\langle ${poly([aCoeff, "t"])}, ${poly([bCoeff, "t^2"])}, ${cCoeff} \\right\\rangle dt$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Integrate each component from $0$ to $${k}$:\n\n` +
-              `$$\\int_{0}^{${k}} ${poly([aCoeff, "t"])}\\,dt = \\left[ ${poly([aCoeff / 2, "t^2"])} \\right]_{0}^{${k}} = ${intX}$$`,
-            `$$\\int_{0}^{${k}} ${poly([bCoeff, "t^2"])}\\,dt = \\left[ ${poly([bCoeff / 3, "t^3"])} \\right]_{0}^{${k}} = ${intY}$$`,
-            `$$\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${poly([cCoeff, "t"])} \\right]_{0}^{${k}} = ${intZ}$$`,
-            `Combine the components to get the vector $${v3L(answer)}$.`,
-          ),
-          steps(
-            `对每个分量在 $0$ 到 $${k}$ 上积分：\n\n` +
-              `$$\\int_{0}^{${k}} ${poly([aCoeff, "t"])}\\,dt = \\left[ ${poly([aCoeff / 2, "t^2"])} \\right]_{0}^{${k}} = ${intX}$$`,
-            `$$\\int_{0}^{${k}} ${poly([bCoeff, "t^2"])}\\,dt = \\left[ ${poly([bCoeff / 3, "t^3"])} \\right]_{0}^{${k}} = ${intY}$$`,
-            `$$\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${poly([cCoeff, "t"])} \\right]_{0}^{${k}} = ${intZ}$$`,
-            `合并各分量得到向量 $${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [aCoeff * k, bCoeff * k * k, cCoeff],
-            [intY, intX, intZ],
-            [intX, intY, 0],
+        const R = `\\left\\langle ${poly([aCoeff / 2, "t^2"])}, ${poly([bCoeff / 3, "t^3"])}, ${poly([cCoeff, "t"])} \\right\\rangle`;
+        return located(
+          {
+            prompt: t(
+              `Evaluate the definite integral $\\int_{0}^{${k}} \\left\\langle ${poly([aCoeff, "t"])}, ${poly([bCoeff, "t^2"])}, ${cCoeff} \\right\\rangle dt$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `计算定积分 $\\int_{0}^{${k}} \\left\\langle ${poly([aCoeff, "t"])}, ${poly([bCoeff, "t^2"])}, ${cCoeff} \\right\\rangle dt$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  [`Integrate each component from $0$ to $${k}$`, `把每个分量从 $0$ 积到 $${k}$`],
+                  none,
+                  [
+                    `\\int_{0}^{${k}} ${poly([aCoeff, "t"])}\\,dt = \\left[ ${poly([aCoeff / 2, "t^2"])} \\right]_{0}^{${k}} = ${intX}`,
+                    `\\int_{0}^{${k}} ${poly([bCoeff, "t^2"])}\\,dt = \\left[ ${poly([bCoeff / 3, "t^3"])} \\right]_{0}^{${k}} = ${intY}`,
+                    `\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${poly([cCoeff, "t"])} \\right]_{0}^{${k}} = ${intZ}`,
+                  ],
+                ],
+                [["Collect the components", "组成向量"], t(`The integral is $${v3L(answer)}$.`, `积分是 $${v3L(answer)}$。`)],
+              ],
+              t(
+                `$\\mathbf{R}(t) = ${R}$ has derivative $\\left\\langle ${poly([aCoeff, "t"])}, ${poly([bCoeff, "t^2"])}, ${cCoeff} \\right\\rangle$, the integrand, and $\\mathbf{R}(${k}) - \\mathbf{R}(0) = ${v3L(answer)}$.`,
+                `$\\mathbf{R}(t) = ${R}$ 的导数是 $\\left\\langle ${poly([aCoeff, "t"])}, ${poly([bCoeff, "t^2"])}, ${cCoeff} \\right\\rangle$，即被积函数，且 $\\mathbf{R}(${k}) - \\mathbf{R}(0) = ${v3L(answer)}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [aCoeff * k, bCoeff * k * k, cCoeff],
+              `That evaluates the integrand at $t = ${k}$ instead of integrating it.`,
+              `这是把被积函数在 $t = ${k}$ 处求值，而不是对它积分。`,
+            ],
+            [
+              [intY, intX, intZ],
+              "The first two entries are swapped: keep each integral in its own component's place.",
+              "前两个分量互换了：每个积分要放在它自己分量的位置上。",
+            ],
+            [
+              [intX, intY, 0],
+              `The integral of the constant $${cCoeff}$ is not $0$: a constant integrates to itself times the length of the interval.`,
+              `常数 $${cCoeff}$ 的积分不是 $0$：常数的积分等于它乘以区间长度。`,
+            ],
           ],
-        });
+        );
       },
     },
     {
@@ -581,8 +943,8 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
         "由 $\\mathbf{r}'(t)$ 与 $\\mathbf{r}(0)$ 还原 $\\mathbf{r}(t)$",
       ),
       explanation: t(
-        "Integrating a vector function componentwise leaves one constant per component, which together form a constant vector $\\mathbf{C}$. An initial value fixes it: since $\\mathbf{r}(t) = \\mathbf{r}(0) + \\int_0^t \\mathbf{r}'(u)\\,du$, the position at time $T$ is the starting position plus the definite integral of the derivative from $0$ to $T$.",
-        "逐分量积分向量函数时，每个分量留下一个常数，合起来是常向量 $\\mathbf{C}$。初值确定它：由于 $\\mathbf{r}(t) = \\mathbf{r}(0) + \\int_0^t \\mathbf{r}'(u)\\,du$，时刻 $T$ 的位置是起始位置加上导数从 $0$ 到 $T$ 的定积分。",
+        "Integrating a vector function componentwise leaves one constant per component, which together form a constant vector $\\mathbf{C}$. An initial value fixes it: since $\\mathbf{r}(t) = \\mathbf{r}(0) + \\int_0^t \\mathbf{r}'(u)\\,du$, the position at time $T$ is the starting position plus the definite integral of the derivative from $0$ to $T$. If $\\mathbf{r}'(t) = \\langle 1, 2t \\rangle$ and $\\mathbf{r}(0) = \\langle 3, 0 \\rangle$, then $\\mathbf{r}(t) = \\langle t + 3, t^2 \\rangle$ and $\\mathbf{r}(2) = \\langle 5, 4 \\rangle$.\n\n> **Watch out.** The integral alone is only the change in position; add the starting value $\\mathbf{r}(0)$. And integrate $\\mathbf{r}'$ over $[0, T]$; the velocity at $T$ is not the change in position.",
+        "逐分量积分向量函数时，每个分量留下一个常数，合起来是常向量 $\\mathbf{C}$。初值确定它：由于 $\\mathbf{r}(t) = \\mathbf{r}(0) + \\int_0^t \\mathbf{r}'(u)\\,du$，时刻 $T$ 的位置是起始位置加上导数从 $0$ 到 $T$ 的定积分。若 $\\mathbf{r}'(t) = \\langle 1, 2t \\rangle$，$\\mathbf{r}(0) = \\langle 3, 0 \\rangle$，则 $\\mathbf{r}(t) = \\langle t + 3, t^2 \\rangle$，$\\mathbf{r}(2) = \\langle 5, 4 \\rangle$。\n\n> **注意。** 单独的积分只是位置的变化量；还要加上初值 $\\mathbf{r}(0)$。并且要在 $[0, T]$ 上对 $\\mathbf{r}'$ 积分；$T$ 时刻的速度不是位置的变化量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -590,25 +952,67 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
         const c = rng.nonZero(-2, 2);
         const r0: Vec3 = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)];
         const T = rng.int(1, 3);
-        const ans = [r0[0] + a * T, r0[1] + b * T * T, r0[2] + c * T ** 3];
-        return pointProblem({
-          prompt: t(
-            `$\\mathbf{r}'(t) = \\left\\langle ${a}, ${poly([2 * b, "t"])}, ${poly([3 * c, "t^2"])} \\right\\rangle$ and $\\mathbf{r}(0) = ${v3L(r0)}$. Find $\\mathbf{r}(${T})$.`,
-            `$\\mathbf{r}'(t) = \\left\\langle ${a}, ${poly([2 * b, "t"])}, ${poly([3 * c, "t^2"])} \\right\\rangle$，$\\mathbf{r}(0) = ${v3L(r0)}$。求 $\\mathbf{r}(${T})$。`,
-          ),
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [a * T, b * T * T, c * T ** 3],
-            [r0[0] + a, r0[1] + 2 * b * T, r0[2] + 3 * c * T * T],
-            [r0[0] + a * T, r0[1] + 2 * b * T * T, r0[2] + 3 * c * T ** 3],
+        const change = [a * T, b * T * T, c * T ** 3];
+        const ans = [r0[0] + change[0]!, r0[1] + change[1]!, r0[2] + change[2]!];
+        const rt = `\\left\\langle ${poly([a, "t"], [r0[0], ""])}, ${poly([b, "t^2"], [r0[1], ""])}, ${poly([c, "t^3"], [r0[2], ""])} \\right\\rangle`;
+        const rp = `\\left\\langle ${a}, ${poly([2 * b, "t"])}, ${poly([3 * c, "t^2"])} \\right\\rangle`;
+        return located(
+          {
+            prompt: t(
+              `$\\mathbf{r}'(t) = ${rp}$ and $\\mathbf{r}(0) = ${v3L(r0)}$. Find $\\mathbf{r}(${T})$.`,
+              `$\\mathbf{r}'(t) = ${rp}$，$\\mathbf{r}(0) = ${v3L(r0)}$。求 $\\mathbf{r}(${T})$。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Integrate each component", "逐个分量积分"],
+                  t(
+                    `An antiderivative of $\\mathbf{r}'$ is $\\left\\langle ${poly([a, "t"])}, ${poly([b, "t^2"])}, ${poly([c, "t^3"])} \\right\\rangle$, so $\\mathbf{r}(t) = \\left\\langle ${poly([a, "t"])}, ${poly([b, "t^2"])}, ${poly([c, "t^3"])} \\right\\rangle + \\mathbf{C}$.`,
+                    `$\\mathbf{r}'$ 的一个原函数是 $\\left\\langle ${poly([a, "t"])}, ${poly([b, "t^2"])}, ${poly([c, "t^3"])} \\right\\rangle$，所以 $\\mathbf{r}(t) = \\left\\langle ${poly([a, "t"])}, ${poly([b, "t^2"])}, ${poly([c, "t^3"])} \\right\\rangle + \\mathbf{C}$。`,
+                  ),
+                ],
+                [
+                  ["Fix the constant", "确定常向量"],
+                  t(
+                    `At $t = 0$ the antiderivative is $\\mathbf{0}$, so $\\mathbf{C} = \\mathbf{r}(0) = ${v3L(r0)}$ and $\\mathbf{r}(t) = ${rt}$.`,
+                    `$t = 0$ 时原函数为 $\\mathbf{0}$，所以 $\\mathbf{C} = \\mathbf{r}(0) = ${v3L(r0)}$，$\\mathbf{r}(t) = ${rt}$。`,
+                  ),
+                ],
+                [
+                  [`Substitute $t = ${T}$`, `代入 $t = ${T}$`],
+                  t(
+                    `$\\mathbf{r}(${T}) = ${v3L(r0)} + ${v3L(change)} = ${v3L(ans)}$.`,
+                    `$\\mathbf{r}(${T}) = ${v3L(r0)} + ${v3L(change)} = ${v3L(ans)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Differentiating $\\mathbf{r}(t) = ${rt}$ gives back $${rp}$, and at $t = 0$ it equals $${v3L(r0)}$.`,
+                `对 $\\mathbf{r}(t) = ${rt}$ 求导得回 $${rp}$，且 $t = 0$ 时它等于 $${v3L(r0)}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              change,
+              "That is only the change in position; add the starting position $\\mathbf{r}(0)$.",
+              "这只是位置的变化量；还要加上起始位置 $\\mathbf{r}(0)$。",
+            ],
+            [
+              [r0[0] + a, r0[1] + 2 * b * T, r0[2] + 3 * c * T * T],
+              `That adds $\\mathbf{r}'(${T})$, the velocity at a single instant; integrate $\\mathbf{r}'$ from $0$ to $${T}$ instead.`,
+              `这加上的是 $\\mathbf{r}'(${T})$，即某一时刻的速度；应当把 $\\mathbf{r}'$ 从 $0$ 积到 $${T}$。`,
+            ],
+            [
+              [r0[0] + a * T, r0[1] + 2 * b * T * T, r0[2] + 3 * c * T ** 3],
+              "When integrating, divide by the new power: the coefficients of the second and third components should shrink.",
+              "积分时要除以新的次数：第二、第三个分量的系数应当变小。",
+            ],
           ],
-          solution: t(
-            `$\\int_0^{${T}} \\mathbf{r}'(u)\\,du = ${v3L([a * T, b * T * T, c * T ** 3])}$, so $\\mathbf{r}(${T}) = ${v3L(r0)} + ${v3L([a * T, b * T * T, c * T ** 3])} = ${v3L(ans)}$.`,
-            `$\\int_0^{${T}} \\mathbf{r}'(u)\\,du = ${v3L([a * T, b * T * T, c * T ** 3])}$，所以 $\\mathbf{r}(${T}) = ${v3L(r0)} + ${v3L([a * T, b * T * T, c * T ** 3])} = ${v3L(ans)}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -622,6 +1026,10 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
     "The arc length of a space curve r(t) from t = a to t = b is the integral of speed: L = ∫ ||r'(t)|| dt.",
     "空间曲线 r(t) 从 t = a 到 t = b 的弧长是速率的积分：L = ∫ ||r'(t)|| dt。",
   ),
+  intro: t(
+    "The helix $\\mathbf{r}(t) = \\langle 3\\cos t, 3\\sin t, 4t \\rangle$ has velocity $\\langle -3\\sin t, 3\\cos t, 4 \\rangle$ and speed $\\sqrt{9\\sin^2 t + 9\\cos^2 t + 16} = 5$ at every moment. Over $0 \\le t \\le 2$ it therefore travels $L = \\int_0^2 5\\,dt = 10$.\n\nCheck: unroll the cylinder of radius $3$ flat. The helix becomes a straight segment that goes $3 \\cdot 2 = 6$ across and $4 \\cdot 2 = 8$ up, and $\\sqrt{6^2 + 8^2} = 10$.\n\nIn this lesson we find the length of a space curve by integrating its speed.",
+    "螺旋线 $\\mathbf{r}(t) = \\langle 3\\cos t, 3\\sin t, 4t \\rangle$ 的速度为 $\\langle -3\\sin t, 3\\cos t, 4 \\rangle$，速率时时都是 $\\sqrt{9\\sin^2 t + 9\\cos^2 t + 16} = 5$。所以在 $0 \\le t \\le 2$ 上它走过 $L = \\int_0^2 5\\,dt = 10$。\n\n检验：把半径为 $3$ 的圆柱面展平。螺旋线变成一条线段，横向走 $3 \\cdot 2 = 6$，向上走 $4 \\cdot 2 = 8$，而 $\\sqrt{6^2 + 8^2} = 10$。\n\n本课我们通过对速率积分求空间曲线的长度。",
+  ),
   prerequisites: ["differentiating-vector-valued-functions", "the-arc-length-of-a-planar-curve"],
   encompasses: [{ topic: "the-arc-length-of-a-planar-curve", weight: 0.3 }],
   xp: 10,
@@ -631,34 +1039,63 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
       figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#computing-arc-length-of-a-space-curve"],
       title: t("Computing the arc length of a space curve", "计算空间曲线的弧长"),
       explanation: t(
-        "The speed is the length of the velocity vector, and integrating the speed over the time interval adds up the distance travelled along the curve. For a smooth space curve $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, the arc length from $t = a$ to $t = b$ is given by:\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt.$$",
-        "速率是速度向量的长度，把速率在时间区间上积分，就把沿曲线走过的路程加了起来。对于光滑空间曲线 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，从 $t = a$ 到 $t = b$ 的弧长为：\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt$$",
+        "The speed is the length of the velocity vector, and integrating the speed over the time interval adds up the distance travelled along the curve. For a smooth space curve $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, the arc length from $t = a$ to $t = b$ is given by:\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt.$$\n\nFor $\\langle 2\\cos t, 2\\sin t, t \\rangle$ the speed is $\\sqrt{4 + 1} = \\sqrt{5}$, so one full turn, $0 \\le t \\le 2\\pi$, has length $2\\pi\\sqrt{5}$.\n\n> **Watch out.** The speed is the square root of the sum of the squared components of $\\mathbf{r}'$, not the sum of the components. And the speed is the length per unit of time: multiply by the length of the time interval, or integrate.",
+        "速率是速度向量的长度，把速率在时间区间上积分，就把沿曲线走过的路程加了起来。对于光滑空间曲线 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，从 $t = a$ 到 $t = b$ 的弧长为：\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt$$\n\n对 $\\langle 2\\cos t, 2\\sin t, t \\rangle$，速率是 $\\sqrt{4 + 1} = \\sqrt{5}$，所以一整圈 $0 \\le t \\le 2\\pi$ 的长度是 $2\\pi\\sqrt{5}$。\n\n> **注意。** 速率是 $\\mathbf{r}'$ 各分量平方和的平方根，不是各分量之和。速率是单位时间走过的长度：要乘以时间区间的长度，或者积分。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
         const k = rng.int(2, 6);
-        const prompt = t(
-          `Find the arc length of the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ for $0 \\le t \\le ${k}$.`,
-          `求圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 在 $0 \\le t \\le ${k}$ 上的弧长。`,
-        );
         const ans = c * k;
-        const solution = t(
-          steps(
-            `Find the velocity vector: $\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$.`,
-            `Calculate the speed: $\\|\\mathbf{r}'(t)\\| = \\sqrt{(-${a}\\sin t)^2 + (${a}\\cos t)^2 + ${b}^2} = \\sqrt{${a * a}(\\sin^2 t + \\cos^2 t) + ${b * b}} = \\sqrt{${a * a + b * b}} = ${c}$.`,
-            `Integrate speed over $[0, ${k}]$: $L = \\int_0^{${k}} ${c}\\,dt = ${c} \\cdot ${k} = ${ans}$.`,
-          ),
-          steps(
-            `求速度向量：$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$。`,
-            `计算速率：$\\|\\mathbf{r}'(t)\\| = \\sqrt{(-${a}\\sin t)^2 + (${a}\\cos t)^2 + ${b}^2} = \\sqrt{${a * a}(\\sin^2 t + \\cos^2 t) + ${b * b}} = \\sqrt{${a * a + b * b}} = ${c}$。`,
-            `在 $[0, ${k}]$ 上对速率积分：$L = \\int_0^{${k}} ${c}\\,dt = ${c} \\cdot ${k} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the arc length of the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ for $0 \\le t \\le ${k}$.`,
+            `求圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 在 $0 \\le t \\le ${k}$ 上的弧长。`,
+          ),
           answer: ans,
-          wrong: [a * k, b * k, (a + b) * k, c],
+          mistakes: distinct(ans, [
+            why(
+              a * k,
+              "That is only the distance around the cylinder; the climb of the third component adds to the length.",
+              "这只是绕圆柱面的距离；第三个分量的上升也计入长度。",
+            ),
+            why(
+              b * k,
+              "That is only the climb; the turning of the first two components adds to the length.",
+              "这只是上升的高度；前两个分量的转动也计入长度。",
+            ),
+            why(
+              (a + b) * k,
+              `The speed is $\\sqrt{${a}^2 + ${b}^2}$, not $${a} + ${b}$: lengths combine like the sides of a right triangle.`,
+              `速率是 $\\sqrt{${a}^2 + ${b}^2}$，不是 $${a} + ${b}$：长度像直角三角形的边那样合成。`,
+            ),
+            why(
+              c,
+              `$${c}$ is the speed, the length per unit of time; multiply by the $${k}$ units of time.`,
+              `$${c}$ 是速率，即单位时间的长度；还要乘以 $${k}$ 个单位时间。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the velocity and the speed", "求速度与速率"],
+                t(
+                  `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$, so $\\|\\mathbf{r}'(t)\\| = \\sqrt{${a * a}(\\sin^2 t + \\cos^2 t) + ${b * b}} = \\sqrt{${c * c}} = ${c}$.`,
+                  `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$，所以 $\\|\\mathbf{r}'(t)\\| = \\sqrt{${a * a}(\\sin^2 t + \\cos^2 t) + ${b * b}} = \\sqrt{${c * c}} = ${c}$。`,
+                ),
+              ],
+              [
+                ["Integrate the speed", "对速率积分"],
+                t(
+                  `$L = \\int_0^{${k}} ${c}\\,dt = ${c} \\cdot ${k} = ${ans}$.`,
+                  `$L = \\int_0^{${k}} ${c}\\,dt = ${c} \\cdot ${k} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Unrolled flat, the cylinder of radius $${a}$ turns the helix into a straight segment going $${a * k}$ across and $${b * k}$ up, of length $\\sqrt{${a * k}^2 + ${b * k}^2} = ${ans}$.`,
+              `把半径为 $${a}$ 的圆柱面展平，螺旋线变成横向 $${a * k}$、向上 $${b * k}$ 的线段，长度为 $\\sqrt{${a * k}^2 + ${b * k}^2} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -667,8 +1104,8 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
       figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#arc-length-when-the-speed-is-a-perfect-square"],
       title: t("Arc length when the speed is a perfect square", "速率为完全平方时的弧长"),
       explanation: t(
-        "Arc length $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ is usually hard because of the square root, but some curves make it a perfect square. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$,\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\nso $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$.",
-        "弧长 $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ 通常因平方根而困难，但有些曲线使它成为完全平方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\n所以 $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$。",
+        "Arc length $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ is usually hard because of the square root, but some curves make it a perfect square. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$,\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\nso $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$. With $a = 5$ on $0 \\le t \\le 1$ this is $5\\left(\\frac{1}{3} + 2\\right) = \\frac{35}{3}$.\n\n> **Watch out.** The factor $a$ comes out of the square root and stays in front of the integral. The integrand is the speed $a(t^2 + 2)$, so its antiderivative has both terms $\\frac{t^3}{3}$ and $2t$; the change in speed is not the length.",
+        "弧长 $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ 通常因平方根而困难，但有些曲线使它成为完全平方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\n所以 $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$。取 $a = 5$，在 $0 \\le t \\le 1$ 上为 $5\\left(\\frac{1}{3} + 2\\right) = \\frac{35}{3}$。\n\n> **注意。** 因子 $a$ 从平方根里提出后留在积分前面。被积函数是速率 $a(t^2 + 2)$，所以原函数有 $\\frac{t^3}{3}$ 和 $2t$ 两项；速率的变化量不是长度。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 3);
@@ -676,16 +1113,55 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
         const t1 = t0 + rng.int(1, 3);
         const F = (x: number) => Q.of(x ** 3, 3).add(Q.of(2 * x));
         const ans = F(t1).sub(F(t0)).mul(Q.of(a));
+        const lead = a === 1 ? "" : a;
+        const d1 = t1 - t0;
+        const d2 = t1 * t1 - t0 * t0;
+        const d3 = t1 ** 3 - t0 ** 3;
+        const chord = a * Math.sqrt(4 * d1 * d1 + d2 * d2 + (d3 * d3) / 9);
         return numberProblem({
           prompt: t(
             `Find the arc length of $\\mathbf{r}(t) = ${cubicCurve(a)}$ for $${t0} \\le t \\le ${t1}$.`,
             `求 $\\mathbf{r}(t) = ${cubicCurve(a)}$ 在 $${t0} \\le t \\le ${t1}$ 上的弧长。`,
           ),
           answer: ans,
-          wrong: [F(t1).sub(F(t0)), Q.of(a * (t1 ** 3 - t0 ** 3), 3), Q.of(a * (t1 * t1 + 2 - t0 * t0 - 2)), ans.add(Q.of(2 * a))],
-          solution: t(
-            `$\\|\\mathbf{r}'(t)\\| = ${a === 1 ? "" : a}(t^2 + 2)$, so $L = ${a === 1 ? "" : a}\\left[\\frac{t^3}{3} + 2t\\right]_{${t0}}^{${t1}} = ${ans.toLatex()}$.`,
-            `$\\|\\mathbf{r}'(t)\\| = ${a === 1 ? "" : a}(t^2 + 2)$，所以 $L = ${a === 1 ? "" : a}\\left[\\frac{t^3}{3} + 2t\\right]_{${t0}}^{${t1}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              F(t1).sub(F(t0)),
+              `The factor $${a}$ from the speed $${lead}(t^2 + 2)$ is missing.`,
+              `缺了速率 $${lead}(t^2 + 2)$ 中的因子 $${a}$。`,
+            ),
+            why(
+              Q.of(a * d3, 3),
+              "That integrates only $t^2$; the speed also has the constant term $2$, whose integral is $2t$.",
+              "这只积分了 $t^2$；速率还有常数项 $2$，它的积分是 $2t$。",
+            ),
+            why(
+              Q.of(a * d2),
+              "That is the change in speed between the endpoints; the length is the integral of the speed.",
+              "这是两端速率之差；长度是速率的积分。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the speed", "求速率"],
+                t(
+                  `$\\mathbf{r}'(t) = ${lead}\\langle 2, 2t, t^2 \\rangle$, and $4 + 4t^2 + t^4 = (t^2 + 2)^2$, so $\\|\\mathbf{r}'(t)\\| = ${lead}(t^2 + 2)$.`,
+                  `$\\mathbf{r}'(t) = ${lead}\\langle 2, 2t, t^2 \\rangle$，而 $4 + 4t^2 + t^4 = (t^2 + 2)^2$，所以 $\\|\\mathbf{r}'(t)\\| = ${lead}(t^2 + 2)$。`,
+                ),
+              ],
+              [
+                ["Integrate the speed", "对速率积分"],
+                t(
+                  `$L = ${lead}\\left[\\frac{t^3}{3} + 2t\\right]_{${t0}}^{${t1}} = ${lead}\\left(${F(t1).toLatex()} - ${paren(F(t0))}\\right) = ${ans.toLatex()}$.`,
+                  `$L = ${lead}\\left[\\frac{t^3}{3} + 2t\\right]_{${t0}}^{${t1}} = ${lead}\\left(${F(t1).toLatex()} - ${paren(F(t0))}\\right) = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The straight segment from $\\mathbf{r}(${t0})$ to $\\mathbf{r}(${t1})$ has length about $${num(chord)}$, and the arc, about $${num(ans.toNumber())}$, is longer, as a curve between two points must be.`,
+              `从 $\\mathbf{r}(${t0})$ 到 $\\mathbf{r}(${t1})$ 的直线段长度约为 $${num(chord)}$，弧长约为 $${num(ans.toNumber())}$，更长，两点间的曲线理应如此。`,
+            ),
           ),
         });
       },
@@ -701,6 +1177,10 @@ export const tangentVectorsAndTangentLinesToCurves: TopicDef = {
     "The derivative r'(t0) is a tangent vector to the curve at t0, determining the direction of the tangent line.",
     "导数 r'(t0) 是曲线在 t0 处的切向量，决定了切线的方向。",
   ),
+  intro: t(
+    "For $\\mathbf{r}(t) = \\langle t, t^2, 3 \\rangle$ at $t = 2$, the curve is at $\\mathbf{r}(2) = \\langle 2, 4, 3 \\rangle$ and moving in the direction $\\mathbf{r}'(2) = \\langle 1, 4, 0 \\rangle$. The tangent line there is $\\boldsymbol{\\ell}(s) = \\langle 2, 4, 3 \\rangle + s\\langle 1, 4, 0 \\rangle$.\n\nCheck: the curve lies on the parabola $y = x^2$ in the plane $z = 3$, whose slope at $x = 2$ is $2 \\cdot 2 = 4$, and the direction $\\langle 1, 4, 0 \\rangle$ rises $4$ for each $1$ across.\n\nIn this lesson we find tangent vectors and tangent lines of space curves and where a tangent line meets a plane.",
+    "对 $\\mathbf{r}(t) = \\langle t, t^2, 3 \\rangle$ 在 $t = 2$ 处，曲线位于 $\\mathbf{r}(2) = \\langle 2, 4, 3 \\rangle$，运动方向为 $\\mathbf{r}'(2) = \\langle 1, 4, 0 \\rangle$。那里的切线是 $\\boldsymbol{\\ell}(s) = \\langle 2, 4, 3 \\rangle + s\\langle 1, 4, 0 \\rangle$。\n\n检验：曲线位于平面 $z = 3$ 内的抛物线 $y = x^2$ 上，它在 $x = 2$ 处的斜率是 $2 \\cdot 2 = 4$，而方向 $\\langle 1, 4, 0 \\rangle$ 每横移 $1$ 上升 $4$。\n\n本课我们求空间曲线的切向量与切线，以及切线与平面的交点。",
+  ),
   prerequisites: ["differentiating-vector-valued-functions", "the-vector-equation-of-a-line"],
   encompasses: [{ topic: "differentiating-vector-valued-functions", weight: 0.3 }],
   xp: 10,
@@ -709,76 +1189,132 @@ export const tangentVectorsAndTangentLinesToCurves: TopicDef = {
       id: "finding-tangent-vectors-to-space-curves",
       title: t("Finding tangent vectors to space curves", "求空间曲线的切向量"),
       explanation: t(
-        "If $\\mathbf{r}(t)$ is a smooth space curve, the derivative $\\mathbf{r}'(t_0) = \\langle x'(t_0), y'(t_0), z'(t_0) \\rangle$ provides a tangent vector to the curve at the point corresponding to $t = t_0$.",
-        "若 $\\mathbf{r}(t)$ 是一条光滑空间曲线，则导数 $\\mathbf{r}'(t_0) = \\langle x'(t_0), y'(t_0), z'(t_0) \\rangle$ 提供了曲线在参数 $t = t_0$ 对应点处的切向量。",
+        "If $\\mathbf{r}(t)$ is a smooth space curve, the derivative $\\mathbf{r}'(t_0) = \\langle x'(t_0), y'(t_0), z'(t_0) \\rangle$ provides a tangent vector to the curve at the point corresponding to $t = t_0$. For $\\langle t^2, t, 1 \\rangle$ at $t = 1$ it is $\\langle 2, 1, 0 \\rangle$.\n\n> **Watch out.** $\\mathbf{r}'(t_0)$ is a direction, not the point $\\mathbf{r}(t_0)$. Differentiate first and substitute $t_0$ afterwards: substituting first turns each component into a constant, whose derivative is $0$.",
+        "若 $\\mathbf{r}(t)$ 是一条光滑空间曲线，则导数 $\\mathbf{r}'(t_0) = \\langle x'(t_0), y'(t_0), z'(t_0) \\rangle$ 提供了曲线在参数 $t = t_0$ 对应点处的切向量。对 $\\langle t^2, t, 1 \\rangle$ 在 $t = 1$ 处，它是 $\\langle 2, 1, 0 \\rangle$。\n\n> **注意。** $\\mathbf{r}'(t_0)$ 是方向，不是点 $\\mathbf{r}(t_0)$。先求导再代入 $t_0$：先代入会把每个分量变成常数，而常数的导数是 $0$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-6, 6);
         const b = rng.nonZero(-6, 6);
         const c = rng.nonZero(-5, 5);
         const t0 = rng.int(-2, 2);
-
-        const ansX = 2 * a * t0;
-        const ansY = 3 * b * t0 * t0;
-        const ansZ = c;
-        const answer: Vec3 = [ansX, ansY, ansZ];
-
-        const prompt = t(
-          `Find the tangent vector $\\mathbf{r}'(${t0})$ to the curve $\\mathbf{r}(t) = \\left\\langle ${poly([a, "t^2"])}, ${poly([b, "t^3"])}, ${poly([c, "t"], [2, ""])} \\right\\rangle$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `求曲线 $\\mathbf{r}(t) = \\left\\langle ${poly([a, "t^2"])}, ${poly([b, "t^3"])}, ${poly([c, "t"], [2, ""])} \\right\\rangle$ 在 $t = ${t0}$ 处的切向量 $\\mathbf{r}'(${t0})$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Differentiate each component with respect to $t$: $\\mathbf{r}'(t) = \\langle ${poly([2 * a, "t"])}, ${poly([3 * b, "t^2"])}, ${c} \\rangle$.`,
-            `Substitute $t = ${t0}$: $\\mathbf{r}'(${t0}) = \\langle ${ansX}, ${ansY}, ${ansZ} \\rangle = ${v3L(answer)}$.`,
-          ),
-          steps(
-            `对每个分量关于 $t$ 求导：$\\mathbf{r}'(t) = \\langle ${poly([2 * a, "t"])}, ${poly([3 * b, "t^2"])}, ${c} \\rangle$。`,
-            `代入 $t = ${t0}$：$\\mathbf{r}'(${t0}) = \\langle ${ansX}, ${ansY}, ${ansZ} \\rangle = ${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [a * t0 * t0, b * t0 * t0 * t0, c * t0 + 2],
-            [2 * a, 3 * b, c],
-            [ansY, ansX, ansZ],
+        const answer: Vec3 = [2 * a * t0, 3 * b * t0 * t0, c];
+        const r = `\\left\\langle ${poly([a, "t^2"])}, ${poly([b, "t^3"])}, ${poly([c, "t"], [2, ""])} \\right\\rangle`;
+        return located(
+          {
+            prompt: t(
+              `Find the tangent vector $\\mathbf{r}'(${t0})$ to the curve $\\mathbf{r}(t) = ${r}$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `求曲线 $\\mathbf{r}(t) = ${r}$ 在 $t = ${t0}$ 处的切向量 $\\mathbf{r}'(${t0})$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Differentiate each component", "对每个分量求导"],
+                  t(
+                    `$\\mathbf{r}'(t) = \\left\\langle ${poly([2 * a, "t"])}, ${poly([3 * b, "t^2"])}, ${c} \\right\\rangle$.`,
+                    `$\\mathbf{r}'(t) = \\left\\langle ${poly([2 * a, "t"])}, ${poly([3 * b, "t^2"])}, ${c} \\right\\rangle$。`,
+                  ),
+                ],
+                [
+                  [`Substitute $t = ${t0}$`, `代入 $t = ${t0}$`],
+                  t(`$\\mathbf{r}'(${t0}) = ${v3L(answer)}$.`, `$\\mathbf{r}'(${t0}) = ${v3L(answer)}$。`),
+                ],
+              ],
+              t(
+                `A difference quotient agrees: the first component of $\\frac{\\mathbf{r}(${t0} + 0.01) - \\mathbf{r}(${t0})}{0.01}$ is $${paren(a)}(${num(2 * t0 + 0.01)}) = ${num(a * (2 * t0 + 0.01))}$, close to $${answer[0]}$.`,
+                `差商与之相符：$\\frac{\\mathbf{r}(${t0} + 0.01) - \\mathbf{r}(${t0})}{0.01}$ 的第一个分量是 $${paren(a)}(${num(2 * t0 + 0.01)}) = ${num(a * (2 * t0 + 0.01))}$，接近 $${answer[0]}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [a * t0 * t0, b * t0 ** 3, c * t0 + 2],
+              `That is the point $\\mathbf{r}(${t0})$ on the curve, not the tangent vector there.`,
+              `这是曲线上的点 $\\mathbf{r}(${t0})$，不是那里的切向量。`,
+            ],
+            [
+              [2 * a, 3 * b, c],
+              `Those are the coefficients of $\\mathbf{r}'(t)$; substitute $t = ${t0}$ into the derivative.`,
+              `这些是 $\\mathbf{r}'(t)$ 的系数；还要把 $t = ${t0}$ 代入导数。`,
+            ],
+            [
+              [answer[1], answer[0], answer[2]],
+              "The first two entries are swapped: keep each derivative in its own component's place.",
+              "前两个分量互换了：每个导数要放在它自己分量的位置上。",
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "where-a-tangent-line-meets-the-xy-plane",
       title: t("Where a tangent line meets the $xy$-plane", "切线与 $xy$ 平面的交点"),
       explanation: t(
-        "The tangent line to $\\mathbf{r}(t)$ at $t = t_0$ is $\\boldsymbol{\\ell}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$. To find where it meets a plane, substitute its coordinates into the plane's equation and solve for $s$. For the plane $z = 0$, solve $z(t_0) + s\\,z'(t_0) = 0$, then put that $s$ back into the other two coordinates.",
-        "$\\mathbf{r}(t)$ 在 $t = t_0$ 处的切线为 $\\boldsymbol{\\ell}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$。要求它与某平面的交点，把坐标代入平面方程解出 $s$。对平面 $z = 0$，解 $z(t_0) + s\\,z'(t_0) = 0$，再把 $s$ 代回另外两个坐标。",
+        "The tangent line to $\\mathbf{r}(t)$ at $t = t_0$ is $\\boldsymbol{\\ell}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$. To find where it meets a plane, substitute its coordinates into the plane's equation and solve for $s$. For the plane $z = 0$, solve $z(t_0) + s\\,z'(t_0) = 0$, then put that $s$ back into the other two coordinates. For $\\langle t^2, t, t^3 \\rangle$ at $t = 3$: $\\mathbf{r}(3) = \\langle 9, 3, 27 \\rangle$ and $\\mathbf{r}'(3) = \\langle 6, 1, 27 \\rangle$, so $27 + 27s = 0$ gives $s = -1$ and the point $(3, 2, 0)$.\n\n> **Watch out.** Solve for the line's parameter $s$, not the curve's $t$: setting $z(t) = 0$ finds where the curve itself meets the plane. And $s$ is negative when the line must run backwards to reach the plane; keep its sign.",
+        "$\\mathbf{r}(t)$ 在 $t = t_0$ 处的切线为 $\\boldsymbol{\\ell}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$。要求它与某平面的交点，把坐标代入平面方程解出 $s$。对平面 $z = 0$，解 $z(t_0) + s\\,z'(t_0) = 0$，再把 $s$ 代回另外两个坐标。对 $\\langle t^2, t, t^3 \\rangle$ 在 $t = 3$ 处：$\\mathbf{r}(3) = \\langle 9, 3, 27 \\rangle$，$\\mathbf{r}'(3) = \\langle 6, 1, 27 \\rangle$，由 $27 + 27s = 0$ 得 $s = -1$，交点为 $(3, 2, 0)$。\n\n> **注意。** 要解的是切线的参数 $s$，不是曲线的 $t$：令 $z(t) = 0$ 求的是曲线本身与平面的交点。当切线要反向才能到达平面时 $s$ 为负；要保留它的符号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const t0 = rng.nonZero(-3, 3);
         const ans = [Q.of(2 * a * t0, 3), Q.of(t0 * t0, 3), Q.zero];
-        return pointProblem({
-          prompt: t(
-            `Where does the tangent line to $\\mathbf{r}(t) = \\langle ${poly([a, "t"])}, t^2, t^3 \\rangle$ at $t = ${t0}$ meet the $xy$-plane?`,
-            `$\\mathbf{r}(t) = \\langle ${poly([a, "t"])}, t^2, t^3 \\rangle$ 在 $t = ${t0}$ 处的切线与 $xy$ 平面交于何处？`,
-          ),
-          answer: ans,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [Q.of(a * t0), Q.of(t0 * t0), Q.zero],
-            [Q.of(4 * a * t0, 3), Q.of(5 * t0 * t0, 3), Q.zero],
-            [Q.of(a * t0, 3), Q.of(t0 * t0, 3), Q.zero],
+        const s = Q.of(-t0, 3);
+        const P = [a * t0, t0 * t0, t0 ** 3];
+        const D = [a, 2 * t0, 3 * t0 * t0];
+        return located(
+          {
+            prompt: t(
+              `Where does the tangent line to $\\mathbf{r}(t) = \\langle ${poly([a, "t"])}, t^2, t^3 \\rangle$ at $t = ${t0}$ meet the $xy$-plane?`,
+              `$\\mathbf{r}(t) = \\langle ${poly([a, "t"])}, t^2, t^3 \\rangle$ 在 $t = ${t0}$ 处的切线与 $xy$ 平面交于何处？`,
+            ),
+            answer: ans,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Write the tangent line", "写出切线"],
+                  t(
+                    `$\\mathbf{r}(${t0}) = ${v3L(P)}$ and $\\mathbf{r}'(${t0}) = ${v3L(D)}$, so $\\boldsymbol{\\ell}(s) = ${v3L(P)} + s${v3L(D)}$.`,
+                    `$\\mathbf{r}(${t0}) = ${v3L(P)}$，$\\mathbf{r}'(${t0}) = ${v3L(D)}$，所以 $\\boldsymbol{\\ell}(s) = ${v3L(P)} + s${v3L(D)}$。`,
+                  ),
+                ],
+                [
+                  ["Solve $z = 0$ for $s$", "由 $z = 0$ 解出 $s$"],
+                  t(`$${P[2]} + ${D[2]}s = 0$ gives $s = ${s.toLatex()}$.`, `由 $${P[2]} + ${D[2]}s = 0$ 得 $s = ${s.toLatex()}$。`),
+                ],
+                [
+                  ["Substitute back", "代回"],
+                  t(
+                    `$x = ${P[0]} + ${paren(a)}${paren(s)} = ${ans[0]!.toLatex()}$ and $y = ${P[1]} + ${paren(D[1]!)}${paren(s)} = ${ans[1]!.toLatex()}$, so the point is $${pointLatex(ans)}$.`,
+                    `$x = ${P[0]} + ${paren(a)}${paren(s)} = ${ans[0]!.toLatex()}$，$y = ${P[1]} + ${paren(D[1]!)}${paren(s)} = ${ans[1]!.toLatex()}$，所以交点为 $${pointLatex(ans)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `From $\\mathbf{r}(${t0})$ to the point the change is $${v3L([ans[0]!.sub(Q.of(P[0]!)), ans[1]!.sub(Q.of(P[1]!)), Q.of(-P[2]!)])} = ${s.toLatex()}${v3L(D)}$, along the tangent direction, and the point has $z = 0$.`,
+                `从 $\\mathbf{r}(${t0})$ 到交点的变化量是 $${v3L([ans[0]!.sub(Q.of(P[0]!)), ans[1]!.sub(Q.of(P[1]!)), Q.of(-P[2]!)])} = ${s.toLatex()}${v3L(D)}$，沿着切线方向，且交点的 $z = 0$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [a * t0, t0 * t0, 0],
+              `That keeps $x$ and $y$ of $\\mathbf{r}(${t0})$ and sets $z = 0$; moving along the tangent line changes $x$ and $y$ too.`,
+              `这保留了 $\\mathbf{r}(${t0})$ 的 $x$、$y$ 并令 $z = 0$；沿切线移动时 $x$ 和 $y$ 也会改变。`,
+            ],
+            [
+              [Q.of(4 * a * t0, 3), Q.of(5 * t0 * t0, 3), Q.zero],
+              `That uses $s = ${s.neg().toLatex()}$, the wrong sign: solving $${P[2]} + ${D[2]}s = 0$ gives $s = ${s.toLatex()}$.`,
+              `这用了 $s = ${s.neg().toLatex()}$，符号错了：解 $${P[2]} + ${D[2]}s = 0$ 得 $s = ${s.toLatex()}$。`,
+            ],
+            [
+              [0, 0, 0],
+              "That is where the curve itself meets the $xy$-plane, at $t = 0$; the tangent line leaves the curve.",
+              "这是曲线本身与 $xy$ 平面的交点（$t = 0$ 时）；切线会离开曲线。",
+            ],
           ],
-          solution: t(
-            `$\\mathbf{r}(${t0}) = ${v3L([a * t0, t0 * t0, t0 ** 3])}$ and $\\mathbf{r}'(${t0}) = ${v3L([a, 2 * t0, 3 * t0 * t0])}$. Setting $${t0 ** 3} + ${3 * t0 * t0}s = 0$ gives $s = ${Q.of(-t0, 3).toLatex()}$, and the point is $(${ans[0]!.toLatex()}, ${ans[1]!.toLatex()}, 0)$.`,
-            `$\\mathbf{r}(${t0}) = ${v3L([a * t0, t0 * t0, t0 ** 3])}$，$\\mathbf{r}'(${t0}) = ${v3L([a, 2 * t0, 3 * t0 * t0])}$。令 $${t0 ** 3} + ${3 * t0 * t0}s = 0$ 得 $s = ${Q.of(-t0, 3).toLatex()}$，交点为 $(${ans[0]!.toLatex()}, ${ans[1]!.toLatex()}, 0)$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -792,6 +1328,10 @@ export const unitTangentVectors: TopicDef = {
     "The unit tangent vector T(t) = r'(t) / ||r'(t)|| points in the direction of motion with unit length.",
     "单位切向量 T(t) = r'(t) / ||r'(t)|| 指向运动方向且长度为 1。",
   ),
+  intro: t(
+    "For $\\mathbf{r}(t) = \\langle 3t, 4t \\rangle$ the velocity is $\\langle 3, 4 \\rangle$ with length $5$. Dividing by the length gives the unit tangent $\\mathbf{T} = \\left\\langle \\frac{3}{5}, \\frac{4}{5} \\right\\rangle$: the same direction, but length one.\n\nCheck: $\\left(\\frac{3}{5}\\right)^2 + \\left(\\frac{4}{5}\\right)^2 = \\frac{9 + 16}{25} = 1$.\n\nIn this lesson we compute unit tangent vectors by dividing the velocity by the speed.",
+    "对 $\\mathbf{r}(t) = \\langle 3t, 4t \\rangle$，速度为 $\\langle 3, 4 \\rangle$，长度为 $5$。除以长度得单位切向量 $\\mathbf{T} = \\left\\langle \\frac{3}{5}, \\frac{4}{5} \\right\\rangle$：方向相同，长度为 1。\n\n检验：$\\left(\\frac{3}{5}\\right)^2 + \\left(\\frac{4}{5}\\right)^2 = \\frac{9 + 16}{25} = 1$。\n\n本课我们用速度除以速率来求单位切向量。",
+  ),
   prerequisites: ["tangent-vectors-and-tangent-lines-to-curves"],
   encompasses: [{ topic: "tangent-vectors-and-tangent-lines-to-curves", weight: 0.3 }],
   xp: 10,
@@ -800,58 +1340,89 @@ export const unitTangentVectors: TopicDef = {
       id: "calculating-unit-tangent-vectors",
       title: t("Calculating unit tangent vectors", "计算单位切向量"),
       explanation: t(
-        "Dividing the velocity by its length keeps only its direction, giving a vector of length one that points along the curve in the direction of motion. The unit tangent vector $\\mathbf{T}(t)$ is obtained by normalizing the velocity vector:\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}.$$",
-        "把速度除以它的长度只保留方向，得到一个长度为 1、沿曲线指向运动方向的向量。单位切向量 $\\mathbf{T}(t)$ 通过对速度向量进行单位化得到：\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$$",
+        "Dividing the velocity by its length keeps only its direction, giving a vector of length one that points along the curve in the direction of motion. The unit tangent vector $\\mathbf{T}(t)$ is obtained by normalizing the velocity vector:\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}.$$\n\nIf $\\mathbf{r}'(t_0) = \\langle 1, 2, 2 \\rangle$, its length is $3$ and $\\mathbf{T}(t_0) = \\left\\langle \\frac{1}{3}, \\frac{2}{3}, \\frac{2}{3} \\right\\rangle$.\n\n> **Watch out.** Divide every component by the same length $\\|\\mathbf{r}'\\|$; a vector whose squared entries do not add to $1$ is not yet a unit vector. On a helix the third entry of $\\mathbf{T}$ is a nonzero constant, since the curve keeps climbing.",
+        "把速度除以它的长度只保留方向，得到一个长度为 1、沿曲线指向运动方向的向量。单位切向量 $\\mathbf{T}(t)$ 通过对速度向量进行单位化得到：\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$$\n\n若 $\\mathbf{r}'(t_0) = \\langle 1, 2, 2 \\rangle$，其长度为 $3$，$\\mathbf{T}(t_0) = \\left\\langle \\frac{1}{3}, \\frac{2}{3}, \\frac{2}{3} \\right\\rangle$。\n\n> **注意。** 每个分量都除以同一个长度 $\\|\\mathbf{r}'\\|$；各分量平方和不等于 $1$ 的向量还不是单位向量。在螺旋线上 $\\mathbf{T}$ 的第三个分量是非零常数，因为曲线一直在上升。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
-        const idx = rng.int(0, 3);
-        const angles = [
-          { tVal: "0", ans: [Q.zero, Q.of(a, c), Q.of(b, c)] as const },
-          { tVal: "\\frac{\\pi}{2}", ans: [Q.of(-a, c), Q.zero, Q.of(b, c)] as const },
-          { tVal: "\\pi", ans: [Q.zero, Q.of(-a, c), Q.of(b, c)] as const },
-          { tVal: "\\frac{3\\pi}{2}", ans: [Q.of(a, c), Q.zero, Q.of(b, c)] as const },
-        ];
-        const { tVal, ans: answer } = angles[idx]!;
-
-        const prompt = t(
-          `Find the unit tangent vector $\\mathbf{T}(${tVal})$ for the helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `求螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 在 $t = ${tVal}$ 处的单位切向量 $\\mathbf{T}(${tVal})$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Compute $\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$.`,
-            `The speed is $\\|\\mathbf{r}'(t)\\| = \\sqrt{(-${a}\\sin t)^2 + (${a}\\cos t)^2 + ${b}^2} = \\sqrt{${c * c}} = ${c}$.`,
-            `Therefore, $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$.`,
-            `At $t = ${tVal}$, $\\mathbf{T}(${tVal}) = ${v3L(answer)}$.`,
-          ),
-          steps(
-            `计算 $\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$。`,
-            `速率为 $\\|\\mathbf{r}'(t)\\| = \\sqrt{(-${a}\\sin t)^2 + (${a}\\cos t)^2 + ${b}^2} = \\sqrt{${c * c}} = ${c}$。`,
-            `因此，$\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$。`,
-            `在 $t = ${tVal}$ 处，$\\mathbf{T}(${tVal}) = ${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [Q.zero, Q.of(a), Q.of(b)],
-            [answer[1], answer[0], answer[2]],
-            [answer[0], answer[1], Q.zero],
+        const [tVal, cs, sn] = rng.pick([
+          ["0", 1, 0],
+          ["\\frac{\\pi}{2}", 0, 1],
+          ["\\pi", -1, 0],
+          ["\\frac{3\\pi}{2}", 0, -1],
+        ] as const);
+        const velocity = [-a * sn, a * cs, b];
+        const answer = velocity.map((x) => Q.of(x, c));
+        return located(
+          {
+            prompt: t(
+              `Find the unit tangent vector $\\mathbf{T}(${tVal})$ for the helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `求螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 在 $t = ${tVal}$ 处的单位切向量 $\\mathbf{T}(${tVal})$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Find the velocity", "求速度"],
+                  t(
+                    `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$, so $\\mathbf{r}'(${tVal}) = ${v3L(velocity)}$.`,
+                    `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$，所以 $\\mathbf{r}'(${tVal}) = ${v3L(velocity)}$。`,
+                  ),
+                ],
+                [
+                  ["Find the speed", "求速率"],
+                  t(
+                    `$\\|\\mathbf{r}'(t)\\| = \\sqrt{${a * a}(\\sin^2 t + \\cos^2 t) + ${b * b}} = \\sqrt{${c * c}} = ${c}$.`,
+                    `$\\|\\mathbf{r}'(t)\\| = \\sqrt{${a * a}(\\sin^2 t + \\cos^2 t) + ${b * b}} = \\sqrt{${c * c}} = ${c}$。`,
+                  ),
+                ],
+                [
+                  ["Divide by the speed", "除以速率"],
+                  t(
+                    `$\\mathbf{T}(${tVal}) = \\frac{1}{${c}}${v3L(velocity)} = ${v3L(answer)}$.`,
+                    `$\\mathbf{T}(${tVal}) = \\frac{1}{${c}}${v3L(velocity)} = ${v3L(answer)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The squared entries add to $\\frac{${a * a} + ${b * b}}{${c * c}} = 1$, so the answer is a unit vector.`,
+                `各分量平方和为 $\\frac{${a * a} + ${b * b}}{${c * c}} = 1$，所以答案是单位向量。`,
+              ),
+            ),
+          },
+          [
+            [
+              velocity,
+              `That is the velocity $\\mathbf{r}'(${tVal})$, of length $${c}$; divide it by its length.`,
+              `这是速度 $\\mathbf{r}'(${tVal})$，长度为 $${c}$；还要除以它的长度。`,
+            ],
+            [
+              [answer[1]!, answer[0]!, answer[2]!],
+              "The first two entries are swapped: the derivative of $\\cos t$ is $-\\sin t$ and goes first.",
+              "前两个分量互换了：$\\cos t$ 的导数是 $-\\sin t$，放在第一个位置。",
+            ],
+            [
+              [answer[0]!, answer[1]!, Q.zero],
+              `The helix keeps climbing, so the third entry is $\\frac{${b}}{${c}}$, not $0$.`,
+              `螺旋线一直在上升，所以第三个分量是 $\\frac{${b}}{${c}}$，不是 $0$。`,
+            ],
+            [
+              [answer[0]!.neg(), answer[1]!.neg(), answer[2]!],
+              "The signs of the first two entries are flipped: $(\\cos t)' = -\\sin t$ and $(\\sin t)' = \\cos t$.",
+              "前两个分量的符号反了：$(\\cos t)' = -\\sin t$，$(\\sin t)' = \\cos t$。",
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "a-unit-tangent-vector-with-rational-entries",
       title: t("A unit tangent vector with rational entries", "分量为有理数的单位切向量"),
       explanation: t(
-        "The unit tangent vector is $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$. For $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$, $\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$ and $\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$. The factor $a$ cancels, leaving\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}.$$\n\nRescaling a curve's speed never changes its unit tangent.",
-        "单位切向量为 $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$。对 $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），$\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$，$\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$。因子 $a$ 约去，得\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}$$\n\n改变曲线速率的倍数从不改变其单位切向量。",
+        "The unit tangent vector is $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$. For $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$, $\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$ and $\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$. The factor $a$ cancels, leaving\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}.$$\n\nRescaling a curve's speed never changes its unit tangent. At $t = 4$ with the $+$ sign, $\\mathbf{T} = \\frac{\\langle 2, 8, 16 \\rangle}{18} = \\left\\langle \\frac{1}{9}, \\frac{4}{9}, \\frac{8}{9} \\right\\rangle$.\n\n> **Watch out.** The factor $a$ appears in both $\\mathbf{r}'$ and its length, so it cancels; do not divide by it a second time. The sign of the middle entry follows the sign of the $t^2$ component.",
+        "单位切向量为 $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$。对 $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），$\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$，$\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$。因子 $a$ 约去，得\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}$$\n\n改变曲线速率的倍数从不改变其单位切向量。取 $+$ 号、$t = 4$ 时，$\\mathbf{T} = \\frac{\\langle 2, 8, 16 \\rangle}{18} = \\left\\langle \\frac{1}{9}, \\frac{4}{9}, \\frac{8}{9} \\right\\rangle$。\n\n> **注意。** 因子 $a$ 同时出现在 $\\mathbf{r}'$ 和它的长度中，所以会约去；不要再除一次。中间分量的符号跟随 $t^2$ 分量的符号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -859,28 +1430,76 @@ export const unitTangentVectors: TopicDef = {
         const t0 = rng.int(-3, 3);
         const n = t0 * t0 + 2;
         const ans = [Q.of(2, n), Q.of(2 * s * t0, n), Q.of(t0 * t0, n)];
-        return pointProblem({
-          prompt: t(
-            `Find the unit tangent vector $\\mathbf{T}(${t0})$ of $\\mathbf{r}(t) = ${cubicCurve(a, s)}$.`,
-            `求 $\\mathbf{r}(t) = ${cubicCurve(a, s)}$ 的单位切向量 $\\mathbf{T}(${t0})$。`,
-          ),
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [Q.of(2 * a), Q.of(2 * a * s * t0), Q.of(a * t0 * t0)],
-            [Q.of(2, a * n), Q.of(2 * s * t0, a * n), Q.of(t0 * t0, a * n)],
-            [Q.of(2, n), Q.of(-2 * s * t0, n), Q.of(t0 * t0, n)],
+        const velocity = [2 * a, 2 * a * s * t0, a * t0 * t0];
+        return located(
+          {
+            prompt: t(
+              `Find the unit tangent vector $\\mathbf{T}(${t0})$ of $\\mathbf{r}(t) = ${cubicCurve(a, s)}$.`,
+              `求 $\\mathbf{r}(t) = ${cubicCurve(a, s)}$ 的单位切向量 $\\mathbf{T}(${t0})$。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Find the velocity", "求速度"],
+                  t(
+                    `$\\mathbf{r}'(t) = \\left\\langle ${2 * a}, ${poly([2 * a * s, "t"])}, ${poly([a, "t^2"])} \\right\\rangle$, so $\\mathbf{r}'(${t0}) = ${v3L(velocity)}$.`,
+                    `$\\mathbf{r}'(t) = \\left\\langle ${2 * a}, ${poly([2 * a * s, "t"])}, ${poly([a, "t^2"])} \\right\\rangle$，所以 $\\mathbf{r}'(${t0}) = ${v3L(velocity)}$。`,
+                  ),
+                ],
+                [
+                  ["Find the speed", "求速率"],
+                  t(
+                    `$\\|\\mathbf{r}'(${t0})\\| = ${a === 1 ? "" : a}(${t0 * t0} + 2) = ${a * n}$.`,
+                    `$\\|\\mathbf{r}'(${t0})\\| = ${a === 1 ? "" : a}(${t0 * t0} + 2) = ${a * n}$。`,
+                  ),
+                ],
+                [
+                  ["Divide by the speed", "除以速率"],
+                  t(
+                    `$\\mathbf{T}(${t0}) = \\frac{1}{${a * n}}${v3L(velocity)} = ${v3L(ans)}$.`,
+                    `$\\mathbf{T}(${t0}) = \\frac{1}{${a * n}}${v3L(velocity)} = ${v3L(ans)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The squared entries add to $\\frac{4 + ${4 * t0 * t0} + ${t0 ** 4}}{${n * n}} = \\frac{${n * n}}{${n * n}} = 1$.`,
+                `各分量平方和为 $\\frac{4 + ${4 * t0 * t0} + ${t0 ** 4}}{${n * n}} = \\frac{${n * n}}{${n * n}} = 1$。`,
+              ),
+            ),
+          },
+          [
+            [
+              velocity,
+              `That is the velocity $\\mathbf{r}'(${t0})$; divide it by its length $${a * n}$.`,
+              `这是速度 $\\mathbf{r}'(${t0})$；还要除以它的长度 $${a * n}$。`,
+            ],
+            [
+              ans.map((x) => x.div(Q.of(a))),
+              `The factor $${a}$ cancels between $\\mathbf{r}'$ and its length; dividing by it again makes the vector too short.`,
+              `因子 $${a}$ 在 $\\mathbf{r}'$ 与其长度之间约去；再除一次会使向量太短。`,
+            ],
+            [
+              [ans[0]!, ans[1]!.neg(), ans[2]!],
+              "The middle sign is flipped: it follows the sign of the $t^2$ component of $\\mathbf{r}$.",
+              "中间分量的符号反了：它跟随 $\\mathbf{r}$ 中 $t^2$ 分量的符号。",
+            ],
           ],
-          solution: t(
-            `$\\mathbf{r}'(${t0}) = ${v3L([2 * a, 2 * a * s * t0, a * t0 * t0])}$ with length $${a * n}$, so $\\mathbf{T}(${t0}) = ${v3L(ans)}$.`,
-            `$\\mathbf{r}'(${t0}) = ${v3L([2 * a, 2 * a * s * t0, a * t0 * t0])}$，长度为 $${a * n}$，所以 $\\mathbf{T}(${t0}) = ${v3L(ans)}$。`,
-          ),
-        });
+        );
       },
     },
   ],
 };
+
+/** turning gives cos t and sin t at the four quarter turns used by the helix problems. */
+const turning = [
+  ["0", 1, 0],
+  ["\\frac{\\pi}{2}", 0, 1],
+  ["\\pi", -1, 0],
+  ["\\frac{3\\pi}{2}", 0, -1],
+] as const;
 
 /** principalNormalVectors calculates the principal normal vector N(t). */
 export const principalNormalVectors: TopicDef = {
@@ -890,6 +1509,10 @@ export const principalNormalVectors: TopicDef = {
     "The principal normal vector N(t) = T'(t) / ||T'(t)|| points in the direction the curve is turning, perpendicular to T(t).",
     "主法向量 N(t) = T'(t) / ||T'(t)|| 指向曲线转弯的方向，且与 T(t) 垂直。",
   ),
+  intro: t(
+    "On the circle $\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t \\rangle$ the unit tangent is $\\mathbf{T} = \\langle -\\sin t, \\cos t \\rangle$, so $\\mathbf{T}' = \\langle -\\cos t, -\\sin t \\rangle$, already of length $1$. Hence $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t \\rangle$; at $t = 0$, at the point $(2, 0)$, it is $\\langle -1, 0 \\rangle$, pointing to the center.\n\nCheck: $\\mathbf{T}(0) = \\langle 0, 1 \\rangle$ and $\\mathbf{N}(0) \\cdot \\mathbf{T}(0) = 0$, so the normal is perpendicular to the motion.\n\nIn this lesson we compute the principal normal, the unit vector in the direction the curve is turning.",
+    "在圆 $\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t \\rangle$ 上，单位切向量为 $\\mathbf{T} = \\langle -\\sin t, \\cos t \\rangle$，所以 $\\mathbf{T}' = \\langle -\\cos t, -\\sin t \\rangle$，长度已经是 $1$。因此 $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t \\rangle$；$t = 0$ 时在点 $(2, 0)$ 处它是 $\\langle -1, 0 \\rangle$，指向圆心。\n\n检验：$\\mathbf{T}(0) = \\langle 0, 1 \\rangle$，且 $\\mathbf{N}(0) \\cdot \\mathbf{T}(0) = 0$，所以法向量与运动方向垂直。\n\n本课我们计算主法向量，即指向曲线弯曲方向的单位向量。",
+  ),
   prerequisites: ["unit-tangent-vectors"],
   encompasses: [{ topic: "unit-tangent-vectors", weight: 0.3 }],
   xp: 10,
@@ -898,50 +1521,69 @@ export const principalNormalVectors: TopicDef = {
       id: "calculating-principal-normal-vectors",
       title: t("Calculating principal normal vectors", "计算主法向量"),
       explanation: t(
-        "Since $\\mathbf{T}(t)$ has constant unit length, $\\mathbf{T}'(t)$ is orthogonal to $\\mathbf{T}(t)$. The principal unit normal vector $\\mathbf{N}(t)$ is defined by:\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}.$$",
-        "由于 $\\mathbf{T}(t)$ 具有恒定单位长度，因此 $\\mathbf{T}'(t)$ 与 $\\mathbf{T}(t)$ 正交。主单位法向量 $\\mathbf{N}(t)$ 定义为：\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}$$",
+        "Since $\\mathbf{T}(t)$ has constant unit length, $\\mathbf{T}'(t)$ is orthogonal to $\\mathbf{T}(t)$. The principal unit normal vector $\\mathbf{N}(t)$ is defined by:\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}.$$\n\nFor the helix $\\langle \\cos t, \\sin t, t \\rangle$, $\\mathbf{T}' = \\frac{1}{\\sqrt{2}}\\langle -\\cos t, -\\sin t, 0 \\rangle$, so $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$.\n\n> **Watch out.** On a helix $\\mathbf{N}$ points horizontally toward the axis, the inside of the turn, not away from it; the climb belongs to $\\mathbf{T}$, so the third entry of $\\mathbf{N}$ is $0$. Divide $\\mathbf{T}'$ by its length.",
+        "由于 $\\mathbf{T}(t)$ 具有恒定单位长度，因此 $\\mathbf{T}'(t)$ 与 $\\mathbf{T}(t)$ 正交。主单位法向量 $\\mathbf{N}(t)$ 定义为：\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}$$\n\n对螺旋线 $\\langle \\cos t, \\sin t, t \\rangle$，$\\mathbf{T}' = \\frac{1}{\\sqrt{2}}\\langle -\\cos t, -\\sin t, 0 \\rangle$，所以 $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$。\n\n> **注意。** 在螺旋线上 $\\mathbf{N}$ 水平地指向轴线，即弯曲的内侧，而不是背离轴线；上升属于 $\\mathbf{T}$，所以 $\\mathbf{N}$ 的第三个分量是 $0$。要把 $\\mathbf{T}'$ 除以它的长度。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
-        const choice = rng.int(0, 3);
-        const cases = [
-          { tText: "0", ans: [-1, 0, 0] as const },
-          { tText: "\\frac{\\pi}{2}", ans: [0, -1, 0] as const },
-          { tText: "\\pi", ans: [1, 0, 0] as const },
-          { tText: "\\frac{3\\pi}{2}", ans: [0, 1, 0] as const },
-        ];
-        const { tText, ans } = cases[choice]!;
-
-        const prompt = t(
-          `Find the principal unit normal vector $\\mathbf{N}\\left(${tText}\\right)$ for the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `求圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 在 $t = ${tText}$ 处的主单位法向量 $\\mathbf{N}\\left(${tText}\\right)$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `From the unit tangent vector $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$, differentiate to get:\n\n$$\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{${c}}\\cos t, -\\frac{${a}}{${c}}\\sin t, 0 \\right\\rangle.$$`,
-            `The norm is $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{${c}}$.`,
-            `Dividing by the norm gives $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$.`,
-            `Evaluating at $t = ${tText}$ gives $\\mathbf{N}\\left(${tText}\\right) = ${v3L(ans)}$.`,
-          ),
-          steps(
-            `由单位切向量 $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$ 求导得：\n\n$$\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{${c}}\\cos t, -\\frac{${a}}{${c}}\\sin t, 0 \\right\\rangle$$`,
-            `其模长为 $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{${c}}$。`,
-            `除以模长得到 $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$。`,
-            `代入 $t = ${tText}$ 得 $\\mathbf{N}\\left(${tText}\\right) = ${v3L(ans)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [-ans[0], -ans[1], 0],
-            [0, 0, 1],
-            [ans[1], ans[0], 0],
+        const [tText, cs, sn] = rng.pick(turning);
+        const ans = [-cs, -sn, 0];
+        const T = [Q.of(-a * sn, c), Q.of(a * cs, c), Q.of(b, c)];
+        return located(
+          {
+            prompt: t(
+              `Find the principal unit normal vector $\\mathbf{N}\\left(${tText}\\right)$ for the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `求圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 在 $t = ${tText}$ 处的主单位法向量 $\\mathbf{N}\\left(${tText}\\right)$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Find the unit tangent", "求单位切向量"],
+                  t(
+                    `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$ has length $\\sqrt{${a * a} + ${b * b}} = ${c}$, so $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$.`,
+                    `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$ 的长度为 $\\sqrt{${a * a} + ${b * b}} = ${c}$，所以 $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Differentiate and normalize", "求导并单位化"],
+                  t(
+                    `$\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{${c}}\\cos t, -\\frac{${a}}{${c}}\\sin t, 0 \\right\\rangle$ has length $\\frac{${a}}{${c}}$, so $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$.`,
+                    `$\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{${c}}\\cos t, -\\frac{${a}}{${c}}\\sin t, 0 \\right\\rangle$ 的长度为 $\\frac{${a}}{${c}}$，所以 $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$。`,
+                  ),
+                ],
+                [
+                  [`Evaluate at $t = ${tText}$`, `代入 $t = ${tText}$`],
+                  t(`$\\mathbf{N}\\left(${tText}\\right) = ${v3L(ans)}$.`, `$\\mathbf{N}\\left(${tText}\\right) = ${v3L(ans)}$。`),
+                ],
+              ],
+              t(
+                `$\\mathbf{T}\\left(${tText}\\right) = ${v3L(T)}$, and its dot product with $${v3L(ans)}$ is $0$; the point $(${a * cs}, ${a * sn})$ in the $xy$-plane moves along $${v3L(ans)}$ straight to the axis.`,
+                `$\\mathbf{T}\\left(${tText}\\right) = ${v3L(T)}$，它与 $${v3L(ans)}$ 的点积为 $0$；在 $xy$ 平面内，点 $(${a * cs}, ${a * sn})$ 沿 $${v3L(ans)}$ 方向直指轴线。`,
+              ),
+            ),
+          },
+          [
+            [[cs, sn, 0], "That points away from the axis; the helix turns toward its axis.", "这背离轴线；螺旋线朝它的轴线弯曲。"],
+            [
+              [0, 0, 1],
+              "The climb belongs to the tangent; $\\mathbf{T}'$ has third entry $0$, so $\\mathbf{N}$ is horizontal.",
+              "上升属于切向量；$\\mathbf{T}'$ 的第三个分量为 $0$，所以 $\\mathbf{N}$ 是水平的。",
+            ],
+            [
+              [Q.of(-a * cs, c), Q.of(-a * sn, c), Q.zero],
+              `That is $\\mathbf{T}'$, of length $\\frac{${a}}{${c}}$; divide it by its length.`,
+              `这是 $\\mathbf{T}'$，长度为 $\\frac{${a}}{${c}}$；还要除以它的长度。`,
+            ],
+            [
+              [-sn, -cs, 0],
+              "The first two entries are swapped: $\\mathbf{N} = \\langle -\\cos t, -\\sin t, 0 \\rangle$.",
+              "前两个分量互换了：$\\mathbf{N} = \\langle -\\cos t, -\\sin t, 0 \\rangle$。",
+            ],
           ],
-        });
+        );
       },
     },
     {
@@ -949,8 +1591,8 @@ export const principalNormalVectors: TopicDef = {
       figure: multivariableDrawings1["principal-normal-vectors#the-principal-normal-of-a-circle-points-to-its-center"],
       title: t("The principal normal of a circle points to its center", "圆的主法向量指向圆心"),
       explanation: t(
-        "The principal unit normal $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ points in the direction the curve is turning. On a circle the curve always turns toward the center, so at a point $P$ of the circle with center $C$,\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\nwhatever the direction of travel or the speed.",
-        "主单位法向量 $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ 指向曲线弯曲的方向。在圆上曲线总是朝圆心弯曲，所以在圆心为 $C$ 的圆上一点 $P$ 处，\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\n与运动方向和速率无关。",
+        "The principal unit normal $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ points in the direction the curve is turning. On a circle the curve always turns toward the center, so at a point $P$ of the circle with center $C$,\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\nwhatever the direction of travel or the speed. On the circle of radius $3$ centered at $(1, 2)$, at the point $(4, 2)$, $\\mathbf{N} = \\frac{\\langle -3, 0 \\rangle}{3} = \\langle -1, 0 \\rangle$.\n\n> **Watch out.** Reversing the direction of travel flips $\\mathbf{T}$ but not $\\mathbf{N}$: the curve still turns toward the center. Divide $C - P$ by the radius, since $\\mathbf{N}$ is a unit vector.",
+        "主单位法向量 $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ 指向曲线弯曲的方向。在圆上曲线总是朝圆心弯曲，所以在圆心为 $C$ 的圆上一点 $P$ 处，\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\n与运动方向和速率无关。在圆心为 $(1, 2)$、半径为 $3$ 的圆上，点 $(4, 2)$ 处 $\\mathbf{N} = \\frac{\\langle -3, 0 \\rangle}{3} = \\langle -1, 0 \\rangle$。\n\n> **注意。** 反转运动方向会使 $\\mathbf{T}$ 反向，但 $\\mathbf{N}$ 不变：曲线仍然朝圆心弯曲。要把 $C - P$ 除以半径，因为 $\\mathbf{N}$ 是单位向量。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 6);
@@ -958,36 +1600,71 @@ export const principalNormalVectors: TopicDef = {
         const k = rng.int(-4, 4);
         const w = rng.pick([1, 2, 3]);
         const cw = rng.int(0, 1) === 1;
-        const [num, den, cs, sn] = rng.pick([
+        const [n, den, cs, sn] = rng.pick([
           [0, 1, 1, 0],
           [1, 2, 0, 1],
           [1, 1, -1, 0],
           [3, 2, 0, -1],
         ] as const);
         const wt = w === 1 ? "t" : `${w}t`;
-        const tq = Q.of(num, den * w);
-        const t0 = num === 0 ? "0" : tq.isInteger() ? `${tq.n === 1n ? "" : tq.n}\\pi` : `\\frac{${tq.n === 1n ? "" : tq.n}\\pi}{${tq.d}}`;
+        const tq = Q.of(n, den * w);
+        const t0 = n === 0 ? "0" : tq.isInteger() ? `${tq.n === 1n ? "" : tq.n}\\pi` : `\\frac{${tq.n === 1n ? "" : tq.n}\\pi}{${tq.d}}`;
         const ys = cw ? -sn : sn;
         const ans = [-cs, -ys];
         const x = `${R === 1 ? "" : R}\\cos ${wt}${h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`}`;
         const y = `${cw ? "-" : ""}${R === 1 ? "" : R}\\sin ${wt}${k === 0 ? "" : k > 0 ? ` + ${k}` : ` - ${-k}`}`;
-        return pointProblem({
-          prompt: t(
-            `Find the principal unit normal $\\mathbf{N}$ of $\\mathbf{r}(t) = \\langle ${x}, ${y} \\rangle$ at $t = ${t0}$.`,
-            `求 $\\mathbf{r}(t) = \\langle ${x}, ${y} \\rangle$ 在 $t = ${t0}$ 处的主单位法向量 $\\mathbf{N}$。`,
-          ),
-          answer: ans,
-          vector: true,
-          wrong: [
-            [cs, ys],
-            [-ys, cs],
-            [ys, -cs],
+        const P = [h + R * cs, k + R * ys];
+        const vel = [-w * R * sn, (cw ? -1 : 1) * w * R * cs];
+        return located(
+          {
+            prompt: t(
+              `Find the principal unit normal $\\mathbf{N}$ of $\\mathbf{r}(t) = \\langle ${x}, ${y} \\rangle$ at $t = ${t0}$.`,
+              `求 $\\mathbf{r}(t) = \\langle ${x}, ${y} \\rangle$ 在 $t = ${t0}$ 处的主单位法向量 $\\mathbf{N}$。`,
+            ),
+            answer: ans,
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Find the circle and the point", "确定圆与点"],
+                  t(
+                    `$\\mathbf{r}$ traces the circle of radius $${R}$ centered at $C = (${h}, ${k})$, and at $t = ${t0}$ it is at $P = (${P[0]}, ${P[1]})$.`,
+                    `$\\mathbf{r}$ 描出圆心为 $C = (${h}, ${k})$、半径为 $${R}$ 的圆，$t = ${t0}$ 时位于 $P = (${P[0]}, ${P[1]})$。`,
+                  ),
+                ],
+                [
+                  ["Point to the center", "指向圆心"],
+                  t(
+                    `$C - P = \\langle ${-R * cs}, ${-R * ys} \\rangle$ has length $${R}$, so $\\mathbf{N} = \\langle ${-cs}, ${-ys} \\rangle$.`,
+                    `$C - P = \\langle ${-R * cs}, ${-R * ys} \\rangle$ 的长度为 $${R}$，所以 $\\mathbf{N} = \\langle ${-cs}, ${-ys} \\rangle$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The velocity there is $\\mathbf{r}'(${t0}) = \\langle ${vel[0]}, ${vel[1]} \\rangle$, and $\\langle ${-cs}, ${-ys} \\rangle \\cdot \\langle ${vel[0]}, ${vel[1]} \\rangle = 0$: the normal is perpendicular to the motion.`,
+                `该处速度为 $\\mathbf{r}'(${t0}) = \\langle ${vel[0]}, ${vel[1]} \\rangle$，且 $\\langle ${-cs}, ${-ys} \\rangle \\cdot \\langle ${vel[0]}, ${vel[1]} \\rangle = 0$：法向量与运动方向垂直。`,
+              ),
+            ),
+          },
+          [
+            [[cs, ys], "That points away from the center; a circle turns toward its center.", "这背离圆心；圆朝圆心弯曲。"],
+            [
+              [-ys, cs],
+              "That is a tangent direction, along the motion; $\\mathbf{N}$ is perpendicular to it.",
+              "这是切线方向，沿着运动方向；$\\mathbf{N}$ 与它垂直。",
+            ],
+            [
+              [ys, -cs],
+              "That is a tangent direction, along the motion; $\\mathbf{N}$ is perpendicular to it.",
+              "这是切线方向，沿着运动方向；$\\mathbf{N}$ 与它垂直。",
+            ],
+            [
+              [-R * cs, -R * ys],
+              `That is $C - P$, of length $${R}$; divide by the radius to get a unit vector.`,
+              `这是 $C - P$，长度为 $${R}$；除以半径才得到单位向量。`,
+            ],
           ],
-          solution: t(
-            `The point is $(${h + R * cs}, ${k + R * ys})$ on the circle centered at $(${h}, ${k})$. $\\mathbf{N}$ points to the center: $\\langle ${-cs}, ${-ys} \\rangle$.`,
-            `该点为 $(${h + R * cs}, ${k + R * ys})$，位于圆心 $(${h}, ${k})$ 的圆上。$\\mathbf{N}$ 指向圆心：$\\langle ${-cs}, ${-ys} \\rangle$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -1001,6 +1678,10 @@ export const binormalVectors: TopicDef = {
     "The binormal vector B(t) = T(t) × N(t) completes the right-handed Frenet-Serret orthonormal frame {T, N, B}.",
     "次法向量 B(t) = T(t) × N(t) 构成了右手系 Frenet-Serret 正交标架 {T, N, B}。",
   ),
+  intro: t(
+    "If at some point $\\mathbf{T} = \\langle 1, 0, 0 \\rangle$ and $\\mathbf{N} = \\langle 0, 1, 0 \\rangle$, then $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N} = \\langle 0 \\cdot 0 - 0 \\cdot 1, 0 \\cdot 0 - 1 \\cdot 0, 1 \\cdot 1 - 0 \\cdot 0 \\rangle = \\langle 0, 0, 1 \\rangle$.\n\nCheck: $\\mathbf{B}$ is perpendicular to both, $\\mathbf{B} \\cdot \\mathbf{T} = 0$ and $\\mathbf{B} \\cdot \\mathbf{N} = 0$, has length $1$, and the right-hand rule from $x$ toward $y$ points up the $z$-axis.\n\nIn this lesson we compute the binormal $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ that completes the moving frame of a curve.",
+    "若某点处 $\\mathbf{T} = \\langle 1, 0, 0 \\rangle$，$\\mathbf{N} = \\langle 0, 1, 0 \\rangle$，则 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N} = \\langle 0 \\cdot 0 - 0 \\cdot 1, 0 \\cdot 0 - 1 \\cdot 0, 1 \\cdot 1 - 0 \\cdot 0 \\rangle = \\langle 0, 0, 1 \\rangle$。\n\n检验：$\\mathbf{B}$ 与两者都垂直，$\\mathbf{B} \\cdot \\mathbf{T} = 0$，$\\mathbf{B} \\cdot \\mathbf{N} = 0$，长度为 $1$，而右手从 $x$ 转向 $y$ 时拇指指向 $z$ 轴正方向。\n\n本课我们计算补全曲线活动标架的次法向量 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$。",
+  ),
   prerequisites: ["principal-normal-vectors", "the-cross-product-of-two-vectors"],
   encompasses: [{ topic: "principal-normal-vectors", weight: 0.3 }],
   xp: 10,
@@ -1009,66 +1690,66 @@ export const binormalVectors: TopicDef = {
       id: "computing-binormal-vectors",
       title: t("Computing binormal vectors", "计算次法向量"),
       explanation: t(
-        "The binormal vector $\\mathbf{B}(t)$ is defined by the cross product of the unit tangent and principal normal vectors:\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t).$$",
-        "次法向量 $\\mathbf{B}(t)$ 定义为单位切向量与主法向量的叉积：\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t)$$",
+        "The binormal vector $\\mathbf{B}(t)$ is defined by the cross product of the unit tangent and principal normal vectors:\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t).$$\n\nWith $\\mathbf{T} = \\langle 0, 1, 0 \\rangle$ and $\\mathbf{N} = \\langle -1, 0, 0 \\rangle$, $\\mathbf{B} = \\langle 1 \\cdot 0 - 0 \\cdot 0, 0 \\cdot (-1) - 0 \\cdot 0, 0 \\cdot 0 - 1 \\cdot (-1) \\rangle = \\langle 0, 0, 1 \\rangle$.\n\n> **Watch out.** The order matters: $\\mathbf{N} \\times \\mathbf{T} = -\\mathbf{B}$. Take the cross product with $\\mathbf{T}$ in the second row and $\\mathbf{N}$ in the third, and check that the result is perpendicular to both.",
+        "次法向量 $\\mathbf{B}(t)$ 定义为单位切向量与主法向量的叉积：\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t)$$\n\n取 $\\mathbf{T} = \\langle 0, 1, 0 \\rangle$，$\\mathbf{N} = \\langle -1, 0, 0 \\rangle$，$\\mathbf{B} = \\langle 1 \\cdot 0 - 0 \\cdot 0, 0 \\cdot (-1) - 0 \\cdot 0, 0 \\cdot 0 - 1 \\cdot (-1) \\rangle = \\langle 0, 0, 1 \\rangle$。\n\n> **注意。** 顺序很重要：$\\mathbf{N} \\times \\mathbf{T} = -\\mathbf{B}$。计算叉积时 $\\mathbf{T}$ 放在第二行、$\\mathbf{N}$ 放在第三行，并检查结果与两者都垂直。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
-        const idx = rng.int(0, 3);
-        const cases = [
-          {
-            tVal: "0",
-            tVec: `\\left\\langle 0, \\frac{${a}}{${c}}, \\frac{${b}}{${c}} \\right\\rangle`,
-            nVec: "\\langle -1, 0, 0 \\rangle",
-            ans: [Q.zero, Q.of(-b, c), Q.of(a, c)] as const,
-          },
-          {
-            tVal: "\\frac{\\pi}{2}",
-            tVec: `\\left\\langle -\\frac{${a}}{${c}}, 0, \\frac{${b}}{${c}} \\right\\rangle`,
-            nVec: "\\langle 0, -1, 0 \\rangle",
-            ans: [Q.of(b, c), Q.zero, Q.of(a, c)] as const,
-          },
-          {
-            tVal: "\\pi",
-            tVec: `\\left\\langle 0, -\\frac{${a}}{${c}}, \\frac{${b}}{${c}} \\right\\rangle`,
-            nVec: "\\langle 1, 0, 0 \\rangle",
-            ans: [Q.zero, Q.of(b, c), Q.of(a, c)] as const,
-          },
-          {
-            tVal: "\\frac{3\\pi}{2}",
-            tVec: `\\left\\langle \\frac{${a}}{${c}}, 0, \\frac{${b}}{${c}} \\right\\rangle`,
-            nVec: "\\langle 0, 1, 0 \\rangle",
-            ans: [Q.of(-b, c), Q.zero, Q.of(a, c)] as const,
-          },
+        const [tVal, cs, sn] = rng.pick(turning);
+        const T = [Q.of(-a * sn, c), Q.of(a * cs, c), Q.of(b, c)] as const;
+        const N = [Q.of(-cs), Q.of(-sn), Q.zero] as const;
+        const ans = [T[1].mul(N[2]).sub(T[2].mul(N[1])), T[2].mul(N[0]).sub(T[0].mul(N[2])), T[0].mul(N[1]).sub(T[1].mul(N[0]))];
+        const dotQ = (u: readonly Q[], v: readonly Q[]) => u.reduce((s, x, i) => s.add(x.mul(v[i]!)), Q.zero);
+        const entries = [
+          `${paren(T[1])} \\cdot 0 - ${paren(T[2])} \\cdot ${paren(N[1])}`,
+          `${paren(T[2])} \\cdot ${paren(N[0])} - ${paren(T[0])} \\cdot 0`,
+          `${paren(T[0])} \\cdot ${paren(N[1])} - ${paren(T[1])} \\cdot ${paren(N[0])}`,
         ];
-        const { tVal, tVec, nVec, ans } = cases[idx]!;
-
-        const prompt = t(
-          `For the helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ with unit tangent vector $\\mathbf{T}(${tVal}) = ${tVec}$ and principal normal $\\mathbf{N}(${tVal}) = ${nVec}$, find the binormal vector $\\mathbf{B}(${tVal})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `对于螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$，已知其在 $t = ${tVal}$ 处的单位切向量为 $\\mathbf{T}(${tVal}) = ${tVec}$，主法向量为 $\\mathbf{N}(${tVal}) = ${nVec}$。求次法向量 $\\mathbf{B}(${tVal})$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the cross product $\\mathbf{B}(${tVal}) = \\mathbf{T}(${tVal}) \\times \\mathbf{N}(${tVal})$.`,
-            `Evaluating the determinant with $\\mathbf{T}(${tVal}) = ${tVec}$ and $\\mathbf{N}(${tVal}) = ${nVec}$ gives $${v3L(ans)}$.`,
-          ),
-          steps(
-            `计算叉积 $\\mathbf{B}(${tVal}) = \\mathbf{T}(${tVal}) \\times \\mathbf{N}(${tVal})$。`,
-            `用 $\\mathbf{T}(${tVal}) = ${tVec}$ 与 $\\mathbf{N}(${tVal}) = ${nVec}$ 计算行列式得 $${v3L(ans)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [Q.zero, Q.of(b, c), Q.of(-a, c)],
-            [Q.of(1), Q.zero, Q.zero],
-            [ans[1], ans[0], ans[2]],
+        return located(
+          {
+            prompt: t(
+              `For the helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ with unit tangent vector $\\mathbf{T}(${tVal}) = ${v3L(T)}$ and principal normal $\\mathbf{N}(${tVal}) = ${v3L(N)}$, find the binormal vector $\\mathbf{B}(${tVal})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `对于螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$，已知其在 $t = ${tVal}$ 处的单位切向量为 $\\mathbf{T}(${tVal}) = ${v3L(T)}$，主法向量为 $\\mathbf{N}(${tVal}) = ${v3L(N)}$。求次法向量 $\\mathbf{B}(${tVal})$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Set up the cross product", "列出叉积"],
+                  t(
+                    "$\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N} = \\langle T_2N_3 - T_3N_2, T_3N_1 - T_1N_3, T_1N_2 - T_2N_1 \\rangle$.",
+                    "$\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N} = \\langle T_2N_3 - T_3N_2, T_3N_1 - T_1N_3, T_1N_2 - T_2N_1 \\rangle$。",
+                  ),
+                ],
+                [["Compute each entry", "逐个计算分量"], none, entries.map((e, i) => `${e} = ${ans[i]!.toLatex()}`)],
+                [["Collect the entries", "组成向量"], t(`$\\mathbf{B}(${tVal}) = ${v3L(ans)}$.`, `$\\mathbf{B}(${tVal}) = ${v3L(ans)}$。`)],
+              ],
+              t(
+                `$\\mathbf{B} \\cdot \\mathbf{T} = ${dotQ(ans, T).toLatex()}$ and $\\mathbf{B} \\cdot \\mathbf{N} = ${dotQ(ans, N).toLatex()}$, and the squared entries add to $\\frac{${b * b} + ${a * a}}{${c * c}} = 1$.`,
+                `$\\mathbf{B} \\cdot \\mathbf{T} = ${dotQ(ans, T).toLatex()}$，$\\mathbf{B} \\cdot \\mathbf{N} = ${dotQ(ans, N).toLatex()}$，且各分量平方和为 $\\frac{${b * b} + ${a * a}}{${c * c}} = 1$。`,
+              ),
+            ),
+          },
+          [
+            [
+              ans.map((x) => x.neg()),
+              "That is $\\mathbf{N} \\times \\mathbf{T}$, the order reversed, which gives $-\\mathbf{B}$.",
+              "这是 $\\mathbf{N} \\times \\mathbf{T}$，顺序反了，得到 $-\\mathbf{B}$。",
+            ],
+            [
+              [0, 0, 1],
+              "The binormal of a helix tilts: it is perpendicular to $\\mathbf{T}$, which climbs.",
+              "螺旋线的次法向量是倾斜的：它与正在上升的 $\\mathbf{T}$ 垂直。",
+            ],
+            [
+              [ans[1]!, ans[0]!, ans[2]!],
+              "The first two entries are swapped; keep the cross product's entries in order.",
+              "前两个分量互换了；叉积的分量要按顺序排列。",
+            ],
           ],
-        });
+        );
       },
     },
     {
@@ -1076,8 +1757,8 @@ export const binormalVectors: TopicDef = {
       figure: multivariableDrawings1["binormal-vectors#the-binormal-of-a-plane-curve"],
       title: t("The binormal of a plane curve", "平面曲线的副法向量"),
       explanation: t(
-        "For a curve lying in a plane, both $\\mathbf{T}$ and $\\mathbf{N}$ lie in that plane, so $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is a unit normal to the plane. For a circle in a horizontal plane $z = c$, the right-hand rule decides the sign: traversed counterclockwise when viewed from above, $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$; clockwise, $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$. The radius and the speed do not matter.",
-        "对位于平面内的曲线，$\\mathbf{T}$ 与 $\\mathbf{N}$ 都在该平面内，所以 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是该平面的单位法向量。对水平平面 $z = c$ 内的圆，右手法则决定符号：从上方看逆时针运动时 $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$；顺时针时 $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$。半径与速率无关。",
+        "For a curve lying in a plane, both $\\mathbf{T}$ and $\\mathbf{N}$ lie in that plane, so $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is a unit normal to the plane. For a circle in a horizontal plane $z = c$, the right-hand rule decides the sign: traversed counterclockwise when viewed from above, $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$; clockwise, $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$. The radius and the speed do not matter. So $\\langle \\cos t, \\sin t, 7 \\rangle$, counterclockwise, has $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$.\n\n> **Watch out.** $\\mathbf{B}$ is a unit vector: neither the radius nor the height $c$ of the plane appears in it. A minus sign on $\\sin$ reverses the direction of travel, which flips $\\mathbf{B}$.",
+        "对位于平面内的曲线，$\\mathbf{T}$ 与 $\\mathbf{N}$ 都在该平面内，所以 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是该平面的单位法向量。对水平平面 $z = c$ 内的圆，右手法则决定符号：从上方看逆时针运动时 $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$；顺时针时 $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$。半径与速率无关。所以逆时针的 $\\langle \\cos t, \\sin t, 7 \\rangle$ 有 $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$。\n\n> **注意。** $\\mathbf{B}$ 是单位向量：半径和平面的高度 $c$ 都不出现在其中。$\\sin$ 前的负号使运动方向反转，从而使 $\\mathbf{B}$ 反向。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 6);
@@ -1086,25 +1767,60 @@ export const binormalVectors: TopicDef = {
         const cw = rng.int(0, 1) === 1;
         const wt = w === 1 ? "t" : `${w}t`;
         const r = R === 1 ? "" : String(R);
-        const ans = [0, 0, cw ? -1 : 1];
-        return pointProblem({
-          prompt: t(
-            `Find the binormal vector $\\mathbf{B}(t)$ of $\\mathbf{r}(t) = \\langle ${r}\\cos ${wt}, ${cw ? "-" : ""}${r}\\sin ${wt}, ${c} \\rangle$.`,
-            `求 $\\mathbf{r}(t) = \\langle ${r}\\cos ${wt}, ${cw ? "-" : ""}${r}\\sin ${wt}, ${c} \\rangle$ 的副法向量 $\\mathbf{B}(t)$。`,
-          ),
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [0, 0, cw ? 1 : -1],
-            [0, 0, R],
-            [0, 0, c === 0 ? 2 : c],
+        const sg = cw ? -1 : 1;
+        const ans = [0, 0, sg];
+        const mistakes: Wrong[] = [
+          [
+            [0, 0, -sg],
+            "The direction is reversed: use the right-hand rule with the direction of travel seen from above.",
+            "方向反了：按从上方看到的运动方向使用右手法则。",
           ],
-          solution: t(
-            `The curve is a circle in the plane $z = ${c}$, traversed ${cw ? "clockwise" : "counterclockwise"} seen from above, so $\\mathbf{B} = \\langle 0, 0, ${cw ? -1 : 1} \\rangle$.`,
-            `该曲线是平面 $z = ${c}$ 内的圆，从上方看${cw ? "顺时针" : "逆时针"}运动，所以 $\\mathbf{B} = \\langle 0, 0, ${cw ? -1 : 1} \\rangle$。`,
-          ),
-        });
+          [
+            [0, 0, R],
+            `$\\mathbf{B}$ is a unit vector; the radius $${R}$ does not appear in it.`,
+            `$\\mathbf{B}$ 是单位向量；半径 $${R}$ 不出现在其中。`,
+          ],
+        ];
+        if (Math.abs(c) > 1)
+          mistakes.push([
+            [0, 0, c],
+            `The height $${c}$ of the plane does not appear in $\\mathbf{B}$, a unit vector.`,
+            `平面的高度 $${c}$ 不出现在单位向量 $\\mathbf{B}$ 中。`,
+          ]);
+        return located(
+          {
+            prompt: t(
+              `Find the binormal vector $\\mathbf{B}(t)$ of $\\mathbf{r}(t) = \\langle ${r}\\cos ${wt}, ${cw ? "-" : ""}${r}\\sin ${wt}, ${c} \\rangle$.`,
+              `求 $\\mathbf{r}(t) = \\langle ${r}\\cos ${wt}, ${cw ? "-" : ""}${r}\\sin ${wt}, ${c} \\rangle$ 的副法向量 $\\mathbf{B}(t)$。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Recognize the plane curve", "识别平面曲线"],
+                  t(
+                    `The curve is a circle in the plane $z = ${c}$, traversed ${cw ? "clockwise" : "counterclockwise"} seen from above, so $\\mathbf{B}$ is a unit normal of that plane, $\\langle 0, 0, \\pm 1 \\rangle$.`,
+                    `该曲线是平面 $z = ${c}$ 内的圆，从上方看${cw ? "顺时针" : "逆时针"}运动，所以 $\\mathbf{B}$ 是该平面的单位法向量 $\\langle 0, 0, \\pm 1 \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Choose the sign", "确定符号"],
+                  t(
+                    `By the right-hand rule a ${cw ? "clockwise" : "counterclockwise"} turn gives $\\mathbf{B} = ${v3L(ans)}$.`,
+                    `由右手法则，${cw ? "顺时针" : "逆时针"}转动给出 $\\mathbf{B} = ${v3L(ans)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `At $t = 0$, $\\mathbf{T} = \\langle 0, ${sg}, 0 \\rangle$ and $\\mathbf{N} = \\langle -1, 0, 0 \\rangle$, and $\\mathbf{T} \\times \\mathbf{N} = \\langle 0, 0, 0 \\cdot 0 - ${paren(sg)} \\cdot (-1) \\rangle = ${v3L(ans)}$.`,
+                `$t = 0$ 时 $\\mathbf{T} = \\langle 0, ${sg}, 0 \\rangle$，$\\mathbf{N} = \\langle -1, 0, 0 \\rangle$，且 $\\mathbf{T} \\times \\mathbf{N} = \\langle 0, 0, 0 \\cdot 0 - ${paren(sg)} \\cdot (-1) \\rangle = ${v3L(ans)}$。`,
+              ),
+            ),
+          },
+          mistakes,
+        );
       },
     },
   ],
@@ -1118,6 +1834,10 @@ export const theOsculatingPlane: TopicDef = {
     "The osculating plane contains the tangent and principal normal vectors and has normal vector B(t).",
     "密切平面包含切向量和主法向量，其法向量为次法向量 B(t)。",
   ),
+  intro: t(
+    "The circle $\\mathbf{r}(t) = \\langle \\cos t, \\sin t, 2 \\rangle$ lies in the plane $z = 2$. At $t = 0$, $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 1, 0 \\rangle \\times \\langle -1, 0, 0 \\rangle = \\langle 0, 0, 1 \\rangle$, so the osculating plane through $(1, 0, 2)$ with that normal is $z = 2$.\n\nCheck: the plane contains the point $(1, 0, 2)$ and both directions $\\langle 0, 1, 0 \\rangle$ and $\\langle -1, 0, 0 \\rangle$, whose third entries are $0$.\n\nIn this lesson we find the osculating plane, the plane in which a curve is momentarily moving and turning.",
+    "圆 $\\mathbf{r}(t) = \\langle \\cos t, \\sin t, 2 \\rangle$ 位于平面 $z = 2$ 内。$t = 0$ 时 $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 1, 0 \\rangle \\times \\langle -1, 0, 0 \\rangle = \\langle 0, 0, 1 \\rangle$，所以过 $(1, 0, 2)$、以它为法向量的密切平面是 $z = 2$。\n\n检验：该平面包含点 $(1, 0, 2)$ 以及两个方向 $\\langle 0, 1, 0 \\rangle$ 与 $\\langle -1, 0, 0 \\rangle$，它们的第三个分量都是 $0$。\n\n本课我们求密切平面，即曲线在某一瞬间运动和弯曲所在的平面。",
+  ),
   prerequisites: ["binormal-vectors", "the-cartesian-equation-of-a-plane"],
   encompasses: [{ topic: "binormal-vectors", weight: 0.3 }],
   xp: 10,
@@ -1126,74 +1846,136 @@ export const theOsculatingPlane: TopicDef = {
       id: "finding-the-equation-of-the-osculating-plane",
       title: t("Finding the equation of the osculating plane", "求密切平面的方程"),
       explanation: t(
-        "The osculating plane to a curve at $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ is the plane spanned by $\\mathbf{T}(t_0)$ and $\\mathbf{N}(t_0)$. Its normal vector is the binormal vector $\\mathbf{B}(t_0)$, so its Cartesian equation is:\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0.$$",
-        "曲线在 $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ 处的密切平面是由 $\\mathbf{T}(t_0)$ 和 $\\mathbf{N}(t_0)$ 张成的平面。其法向量为次法向量 $\\mathbf{B}(t_0)$，故其笛卡尔方程为：\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0$$",
+        "The osculating plane to a curve at $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ is the plane spanned by $\\mathbf{T}(t_0)$ and $\\mathbf{N}(t_0)$. Its normal vector is the binormal vector $\\mathbf{B}(t_0)$, so its Cartesian equation is:\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0.$$\n\nAny multiple of $\\mathbf{B}$ works, such as $\\mathbf{r}' \\times \\mathbf{r}''$. For $\\langle 20\\cos t, 20\\sin t, 21t \\rangle$ at $t = 0$, $\\mathbf{r}' \\times \\mathbf{r}'' = 20\\langle 0, -21, 20 \\rangle$ and the point is $(20, 0, 0)$, so the plane is $20z - 21y = 0$.\n\n> **Watch out.** The normal of the osculating plane is $\\mathbf{B}$, not $\\mathbf{N}$: a plane with normal $\\mathbf{N}$, such as $x = x_0$ here, contains $\\mathbf{T}$ and $\\mathbf{B}$ instead. The constant comes from the point $\\mathbf{r}(t_0)$.",
+        "曲线在 $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ 处的密切平面是由 $\\mathbf{T}(t_0)$ 和 $\\mathbf{N}(t_0)$ 张成的平面。其法向量为次法向量 $\\mathbf{B}(t_0)$，故其笛卡尔方程为：\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0$$\n\n$\\mathbf{B}$ 的任何倍数都可以，例如 $\\mathbf{r}' \\times \\mathbf{r}''$。对 $\\langle 20\\cos t, 20\\sin t, 21t \\rangle$ 在 $t = 0$ 处，$\\mathbf{r}' \\times \\mathbf{r}'' = 20\\langle 0, -21, 20 \\rangle$，点为 $(20, 0, 0)$，所以平面是 $20z - 21y = 0$。\n\n> **注意。** 密切平面的法向量是 $\\mathbf{B}$，不是 $\\mathbf{N}$：以 $\\mathbf{N}$ 为法向量的平面（这里如 $x = x_0$）包含的是 $\\mathbf{T}$ 和 $\\mathbf{B}$。常数由点 $\\mathbf{r}(t_0)$ 决定。",
       ),
       generate(rng: Rng): Problem {
         const [a, b] = rng.pick(pythagoreanTriples);
         const d = rng.int(-4, 4);
         const rhs = a * d;
-        // At t = 0, r(0) = (a, 0, d), B(0) parallel to <0, -b, a>.
-        // Equation: 0*(x - a) + (-b)*(y - 0) + a*(z - d) = 0 => a*z - b*y = a*d.
         const zTerm = poly([a, "z"], [-b, "y"]);
-        const answer = rhs === 0 ? `${zTerm} = 0` : `${zTerm} = ${rhs}`;
+        const answer = `${zTerm} = ${rhs}`;
         const zComponent = d === 0 ? `${b}t` : poly([b, "t"], [d, ""]);
-
-        const prompt = t(
-          `Find the equation of the osculating plane to the helix $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ at $t = 0$.`,
-          `求螺旋线 $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ 在 $t = 0$ 处的密切平面方程。`,
-        );
-        const solution = t(
-          steps(
-            `The point on the curve is $(x_0, y_0, z_0) = (${a}, 0, ${d})$.`,
-            `Here $\\mathbf{r}'(0) = \\langle 0, ${a}, ${b} \\rangle$ and $\\mathbf{r}''(0) = \\langle -${a}, 0, 0 \\rangle$, and their cross product is $${a} \\langle 0, -${b}, ${a} \\rangle$. So the binormal, which is normal to the osculating plane, is parallel to $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$.`,
-            `The plane equation is $0(x - ${paren(a)}) + ${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$.`,
-            `Simplifying gives $${answer}$.`,
+        const mistakes = [
+          say(
+            `${poly([b, "z"], [-a, "y"])} = ${b * d}`,
+            `The coefficients are swapped: the normal is $\\langle 0, ${-b}, ${a} \\rangle$, with $${-b}$ on $y$ and $${a}$ on $z$.`,
+            `系数互换了：法向量是 $\\langle 0, ${-b}, ${a} \\rangle$，$y$ 的系数是 $${-b}$，$z$ 的系数是 $${a}$。`,
           ),
-          steps(
-            `曲线上对应点为 $(x_0, y_0, z_0) = (${a}, 0, ${d})$。`,
-            `这里 $\\mathbf{r}'(0) = \\langle 0, ${a}, ${b} \\rangle$，$\\mathbf{r}''(0) = \\langle -${a}, 0, 0 \\rangle$，二者的叉积为 $${a} \\langle 0, -${b}, ${a} \\rangle$。所以作为密切平面法向量的次法向量平行于 $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$。`,
-            `平面方程为 $0(x - ${paren(a)}) + ${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$。`,
-            `化简得 $${answer}$。`,
+          say(
+            `${poly([a, "z"], [b, "y"])} = ${rhs}`,
+            `The sign of the $y$ term is wrong: the second entry of $\\mathbf{r}' \\times \\mathbf{r}''$ is $${-a * b}$.`,
+            `$y$ 项的符号错了：$\\mathbf{r}' \\times \\mathbf{r}''$ 的第二个分量是 $${-a * b}$。`,
           ),
+          say(
+            `x = ${a}`,
+            "That plane has normal $\\mathbf{N}$ and contains $\\mathbf{T}$ and $\\mathbf{B}$; the osculating plane has normal $\\mathbf{B}$.",
+            "这个平面以 $\\mathbf{N}$ 为法向量，包含 $\\mathbf{T}$ 和 $\\mathbf{B}$；密切平面以 $\\mathbf{B}$ 为法向量。",
+          ),
+          ...(rhs === 0
+            ? []
+            : [
+                say(
+                  `${zTerm} = 0`,
+                  `The plane must pass through $(${a}, 0, ${d})$; the constant is $${a} \\cdot ${paren(d)} = ${rhs}$.`,
+                  `平面必须经过 $(${a}, 0, ${d})$；常数是 $${a} \\cdot ${paren(d)} = ${rhs}$。`,
+                ),
+              ]),
+        ];
+        return withMistakes(
+          equationProblem({
+            prompt: t(
+              `Find the equation of the osculating plane to the helix $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ at $t = 0$.`,
+              `求螺旋线 $\\mathbf{r}(t) = \\left\\langle ${a}\\cos t, ${a}\\sin t, ${zComponent} \\right\\rangle$ 在 $t = 0$ 处的密切平面方程。`,
+            ),
+            answer,
+            wrong: mistakes.map((m) => m.response),
+            solution: walked(
+              [
+                [["Find the point", "求点"], t(`$\\mathbf{r}(0) = (${a}, 0, ${d})$.`, `$\\mathbf{r}(0) = (${a}, 0, ${d})$。`)],
+                [
+                  ["Find a normal", "求法向量"],
+                  t(
+                    `$\\mathbf{r}'(0) = \\langle 0, ${a}, ${b} \\rangle$ and $\\mathbf{r}''(0) = \\langle -${a}, 0, 0 \\rangle$, so $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, ${-a * b}, ${a * a} \\rangle = ${a}\\langle 0, ${-b}, ${a} \\rangle$, parallel to $\\mathbf{B}(0)$.`,
+                    `$\\mathbf{r}'(0) = \\langle 0, ${a}, ${b} \\rangle$，$\\mathbf{r}''(0) = \\langle -${a}, 0, 0 \\rangle$，所以 $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, ${-a * b}, ${a * a} \\rangle = ${a}\\langle 0, ${-b}, ${a} \\rangle$，与 $\\mathbf{B}(0)$ 平行。`,
+                  ),
+                ],
+                [
+                  ["Write the plane", "写出平面"],
+                  t(
+                    `$${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$, that is, $${answer}$.`,
+                    `$${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$，即 $${answer}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The point $(${a}, 0, ${d})$ gives $${a} \\cdot ${paren(d)} - 0 = ${rhs}$; the tangent direction $\\langle 0, ${a}, ${b} \\rangle$ gives $${a} \\cdot ${b} - ${b} \\cdot ${a} = 0$, and the normal direction $\\langle -1, 0, 0 \\rangle$ gives $0$, so the plane contains the point, $\\mathbf{T}$ and $\\mathbf{N}$.`,
+                `点 $(${a}, 0, ${d})$ 给出 $${a} \\cdot ${paren(d)} - 0 = ${rhs}$；切线方向 $\\langle 0, ${a}, ${b} \\rangle$ 给出 $${a} \\cdot ${b} - ${b} \\cdot ${a} = 0$，法线方向 $\\langle -1, 0, 0 \\rangle$ 给出 $0$，所以平面包含该点以及 $\\mathbf{T}$ 和 $\\mathbf{N}$。`,
+              ),
+            ),
+          }),
+          mistakes,
         );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [`${poly([b, "z"], [-a, "y"])} = 0`, `${poly([a, "z"], [b, "y"])} = ${rhs}`, `${poly([1, "x"], [-a, ""])} = 0`],
-        });
       },
     },
     {
       id: "the-osculating-plane-of-a-plane-curve",
       title: t("The osculating plane of a plane curve", "平面曲线的密切平面"),
       explanation: t(
-        "The osculating plane at a point contains $\\mathbf{T}$ and $\\mathbf{N}$, the directions in which the curve is moving and turning. If the whole curve lies in a plane, every tangent and normal lies in that plane too, so the osculating plane is the same plane at every point. To find it, look for a linear relation among the coordinates, such as $z = \\alpha x + \\beta y + \\gamma$, that holds for every $t$.",
-        "某点处的密切平面包含 $\\mathbf{T}$ 与 $\\mathbf{N}$，即曲线运动与弯曲的方向。若整条曲线位于一个平面内，每个切向量和法向量也都在其中，所以每点的密切平面都是这个平面。要找到它，就寻找对每个 $t$ 都成立的坐标间的线性关系，如 $z = \\alpha x + \\beta y + \\gamma$。",
+        "The osculating plane at a point contains $\\mathbf{T}$ and $\\mathbf{N}$, the directions in which the curve is moving and turning. If the whole curve lies in a plane, every tangent and normal lies in that plane too, so the osculating plane is the same plane at every point. To find it, look for a linear relation among the coordinates, such as $z = \\alpha x + \\beta y + \\gamma$, that holds for every $t$. For $\\langle t, t^2, 5t + 6t^2 - 7 \\rangle$, substituting $x = t$ and $y = t^2$ gives $z = 5x + 6y - 7$.\n\n> **Watch out.** Match each coefficient to its coordinate: the $t$ term goes with $x = t$ and the $t^2$ term with $y = t^2$. The constant term is $\\gamma$ and keeps its sign.",
+        "某点处的密切平面包含 $\\mathbf{T}$ 与 $\\mathbf{N}$，即曲线运动与弯曲的方向。若整条曲线位于一个平面内，每个切向量和法向量也都在其中，所以每点的密切平面都是这个平面。要找到它，就寻找对每个 $t$ 都成立的坐标间的线性关系，如 $z = \\alpha x + \\beta y + \\gamma$。对 $\\langle t, t^2, 5t + 6t^2 - 7 \\rangle$，代入 $x = t$、$y = t^2$ 得 $z = 5x + 6y - 7$。\n\n> **注意。** 每个系数要对应到它的坐标：$t$ 项对应 $x = t$，$t^2$ 项对应 $y = t^2$。常数项就是 $\\gamma$，符号保持不变。",
       ),
       generate(rng: Rng): Problem {
         const al = rng.nonZero(-4, 4);
         const be = rng.nonZero(-4, 4);
         const ga = rng.int(-5, 5);
         const z = poly([al, "t"], [be, "t^2"], [ga, ""]);
-        return pointProblem({
-          prompt: t(
-            `The osculating plane of $\\mathbf{r}(t) = \\langle t, t^2, ${z} \\rangle$ is the same at every point and has the form $z = \\alpha x + \\beta y + \\gamma$. Enter $(\\alpha, \\beta, \\gamma)$.`,
-            `$\\mathbf{r}(t) = \\langle t, t^2, ${z} \\rangle$ 的密切平面在每点都相同，形如 $z = \\alpha x + \\beta y + \\gamma$。输入 $(\\alpha, \\beta, \\gamma)$。`,
-          ),
-          answer: [al, be, ga],
-          vars: ["\\alpha", "\\beta", "\\gamma"],
-          wrong: [
-            [be, al, ga],
-            [al, be, 0],
-            [-al, -be, -ga],
+        const plane = poly([al, "x"], [be, "y"], [ga, ""]);
+        return located(
+          {
+            prompt: t(
+              `The osculating plane of $\\mathbf{r}(t) = \\langle t, t^2, ${z} \\rangle$ is the same at every point and has the form $z = \\alpha x + \\beta y + \\gamma$. Enter $(\\alpha, \\beta, \\gamma)$.`,
+              `$\\mathbf{r}(t) = \\langle t, t^2, ${z} \\rangle$ 的密切平面在每点都相同，形如 $z = \\alpha x + \\beta y + \\gamma$。输入 $(\\alpha, \\beta, \\gamma)$。`,
+            ),
+            answer: [al, be, ga],
+            vars: ["\\alpha", "\\beta", "\\gamma"],
+            solution: walked(
+              [
+                [
+                  ["Write $z$ in terms of $x$ and $y$", "用 $x$、$y$ 表示 $z$"],
+                  t(
+                    `With $x = t$ and $y = t^2$, $z = ${z} = ${plane}$ for every $t$.`,
+                    `由 $x = t$，$y = t^2$，对每个 $t$ 有 $z = ${z} = ${plane}$。`,
+                  ),
+                ],
+                [
+                  ["Read off the plane", "读出平面"],
+                  t(
+                    `The whole curve lies in the plane $z = ${plane}$, so that is the osculating plane at every point: $(\\alpha, \\beta, \\gamma) = (${al}, ${be}, ${ga})$.`,
+                    `整条曲线位于平面 $z = ${plane}$ 内，所以它是每点处的密切平面：$(\\alpha, \\beta, \\gamma) = (${al}, ${be}, ${ga})$。`,
+                  ),
+                ],
+              ],
+              t(
+                `At $t = 2$ the curve is at $(2, 4, ${2 * al + 4 * be + ga})$, and $${al} \\cdot 2 + ${paren(be)} \\cdot 4 + ${paren(ga)} = ${2 * al + 4 * be + ga}$, so the point lies in the plane.`,
+                `$t = 2$ 时曲线位于 $(2, 4, ${2 * al + 4 * be + ga})$，而 $${al} \\cdot 2 + ${paren(be)} \\cdot 4 + ${paren(ga)} = ${2 * al + 4 * be + ga}$，所以该点在平面内。`,
+              ),
+            ),
+          },
+          [
+            [
+              [be, al, ga],
+              "$\\alpha$ and $\\beta$ are swapped: the $t$ term goes with $x = t$, the $t^2$ term with $y = t^2$.",
+              "$\\alpha$ 与 $\\beta$ 互换了：$t$ 项对应 $x = t$，$t^2$ 项对应 $y = t^2$。",
+            ],
+            [[al, be, 0], `The constant term $${ga}$ is $\\gamma$; it cannot be dropped.`, `常数项 $${ga}$ 就是 $\\gamma$；不能丢掉。`],
+            [
+              [-al, -be, -ga],
+              "The signs are flipped: the plane is $z = \\alpha x + \\beta y + \\gamma$, with $z$ alone on the left.",
+              "符号反了：平面是 $z = \\alpha x + \\beta y + \\gamma$，左边只有 $z$。",
+            ],
           ],
-          solution: t(
-            `With $x = t$ and $y = t^2$, $z = ${z} = ${poly([al, "x"], [be, "y"], [ga, ""])}$ for every $t$. The curve lies in that plane, so it is the osculating plane: $(${al}, ${be}, ${ga})$.`,
-            `由 $x = t$，$y = t^2$，对每个 $t$ 有 $z = ${z} = ${poly([al, "x"], [be, "y"], [ga, ""])}$。曲线位于该平面内，所以它就是密切平面：$(${al}, ${be}, ${ga})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -1207,6 +1989,10 @@ export const parameterizationByArcLength: TopicDef = {
     "Reparameterizing a curve by arc length s yields a natural parameterization with unit speed: ||r'(s)|| = 1.",
     "用弧长 s 对曲线重新参数化可得到自然参数化，其速率为单位长度：||r'(s)|| = 1。",
   ),
+  intro: t(
+    "$\\mathbf{r}(t) = \\langle 3t, 4t \\rangle$ moves at speed $5$, so after time $t$ it has travelled $s = 5t$. Solving, $t = \\frac{s}{5}$ and $\\mathbf{r}(s) = \\left\\langle \\frac{3s}{5}, \\frac{4s}{5} \\right\\rangle$; the point at arc length $10$ is $(6, 8)$.\n\nCheck: the distance from the origin to $(6, 8)$ is $\\sqrt{36 + 64} = 10$, and $\\left\\|\\left\\langle \\frac{3}{5}, \\frac{4}{5} \\right\\rangle\\right\\| = 1$, so the new parameterization has unit speed.\n\nIn this lesson we reparameterize curves by arc length and find the point a given distance along a curve.",
+    "$\\mathbf{r}(t) = \\langle 3t, 4t \\rangle$ 以速率 $5$ 运动，所以经过时间 $t$ 走过 $s = 5t$。解得 $t = \\frac{s}{5}$，$\\mathbf{r}(s) = \\left\\langle \\frac{3s}{5}, \\frac{4s}{5} \\right\\rangle$；弧长为 $10$ 处的点是 $(6, 8)$。\n\n检验：原点到 $(6, 8)$ 的距离是 $\\sqrt{36 + 64} = 10$，且 $\\left\\|\\left\\langle \\frac{3}{5}, \\frac{4}{5} \\right\\rangle\\right\\| = 1$，所以新的参数化速率为 1。\n\n本课我们按弧长重新参数化曲线，并求沿曲线走过给定距离处的点。",
+  ),
   prerequisites: ["the-arc-length-of-a-vector-valued-function"],
   encompasses: [{ topic: "the-arc-length-of-a-vector-valued-function", weight: 0.3 }],
   xp: 10,
@@ -1216,35 +2002,58 @@ export const parameterizationByArcLength: TopicDef = {
       figure: multivariableDrawings1["parameterization-by-arc-length#reparameterizing-curves-by-arc-length"],
       title: t("Reparameterizing curves by arc length", "按弧长重新参数化曲线"),
       explanation: t(
-        "The arc length function starting from $t = 0$ is $s(t) = \\int_0^t \\|\\mathbf{r}'(u)\\|\\,du$. If the speed is a constant $c$, then $s = ct$, which inverts to $t = \\frac{s}{c}$. Substituting $t(s)$ gives the arc length parameterization $\\mathbf{r}(s)$.",
-        "以 $t = 0$ 为基准的弧长函数为 $s(t) = \\int_0^t \\|\\mathbf{r}'(u)\\|\\,du$。若速率为常数 $c$，则 $s = ct$，反解得 $t = \\frac{s}{c}$。代入 $t(s)$ 即可得到弧长参数化 $\\mathbf{r}(s)$。",
+        "The arc length function starting from $t = 0$ is $s(t) = \\int_0^t \\|\\mathbf{r}'(u)\\|\\,du$. If the speed is a constant $c$, then $s = ct$, which inverts to $t = \\frac{s}{c}$. Substituting $t(s)$ gives the arc length parameterization $\\mathbf{r}(s)$. For $\\langle 20\\cos t, 20\\sin t, 21t \\rangle$ the speed is $29$, so arc length $58$ is reached at $t = 2$.\n\n> **Watch out.** $s = ct$ is undone by dividing by the speed, not multiplying. And $s$ and $t$ agree only when the speed is $1$.",
+        "以 $t = 0$ 为基准的弧长函数为 $s(t) = \\int_0^t \\|\\mathbf{r}'(u)\\|\\,du$。若速率为常数 $c$，则 $s = ct$，反解得 $t = \\frac{s}{c}$。代入 $t(s)$ 即可得到弧长参数化 $\\mathbf{r}(s)$。对 $\\langle 20\\cos t, 20\\sin t, 21t \\rangle$，速率为 $29$，所以弧长 $58$ 在 $t = 2$ 时达到。\n\n> **注意。** 要用除以速率来还原 $s = ct$，不是乘以速率。只有速率为 $1$ 时 $s$ 与 $t$ 才相同。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
         const t0 = rng.int(2, 7);
         const sVal = c * t0;
-
-        const prompt = t(
-          `If the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ is parameterized by arc length $s$ starting from $t = 0$, what is the parameter value $t$ when the arc length is $s = ${sVal}$?`,
-          `若把圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 以 $t = 0$ 为起点按弧长 $s$ 进行参数化，当弧长 $s = ${sVal}$ 时对应的参数 $t$ 为多少？`,
-        );
-        const solution = t(
-          steps(
-            `The speed is $\\sqrt{${a}^2 + ${b}^2} = ${c}$, a constant, so $s(t) = \\int_0^t ${c}\\,du = ${c}t$.`,
-            `Invert to express $t$ in terms of $s$: $t = \\frac{s}{${c}}$.`,
-            `For $s = ${sVal}$, $t = \\frac{${sVal}}{${c}} = ${t0}$.`,
-          ),
-          steps(
-            `速率为 $\\sqrt{${a}^2 + ${b}^2} = ${c}$，是常数，所以 $s(t) = \\int_0^t ${c}\\,du = ${c}t$。`,
-            `反解得到 $t$ 关于 $s$ 的表达式：$t = \\frac{s}{${c}}$。`,
-            `当 $s = ${sVal}$ 时，$t = \\frac{${sVal}}{${c}} = ${t0}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `If the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ is parameterized by arc length $s$ starting from $t = 0$, what is the parameter value $t$ when the arc length is $s = ${sVal}$?`,
+            `若把圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 以 $t = 0$ 为起点按弧长 $s$ 进行参数化，当弧长 $s = ${sVal}$ 时对应的参数 $t$ 为多少？`,
+          ),
           answer: t0,
-          wrong: [sVal * c, sVal + c, sVal - c],
+          mistakes: distinct(t0, [
+            why(
+              sVal * c,
+              `$s = ${c}t$ is undone by dividing by the speed $${c}$, not multiplying.`,
+              `$s = ${c}t$ 要除以速率 $${c}$ 来还原，不是乘以它。`,
+            ),
+            why(
+              sVal,
+              `$s$ and $t$ agree only at speed $1$; this helix moves at speed $${c}$.`,
+              `只有速率为 $1$ 时 $s$ 与 $t$ 才相同；这条螺旋线的速率是 $${c}$。`,
+            ),
+            why(
+              sVal - c,
+              `The relation is $s = ${c}t$, a product, so divide by $${c}$; subtracting it does not undo a product.`,
+              `关系是乘积 $s = ${c}t$，所以要除以 $${c}$；减去它不能还原乘积。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the speed", "求速率"],
+                t(
+                  `$\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = ${c}$, a constant, so $s(t) = \\int_0^t ${c}\\,du = ${c}t$.`,
+                  `$\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = ${c}$，是常数，所以 $s(t) = \\int_0^t ${c}\\,du = ${c}t$。`,
+                ),
+              ],
+              [
+                ["Invert", "反解"],
+                t(
+                  `$t = \\frac{s}{${c}}$, so for $s = ${sVal}$, $t = \\frac{${sVal}}{${c}} = ${t0}$.`,
+                  `$t = \\frac{s}{${c}}$，所以 $s = ${sVal}$ 时 $t = \\frac{${sVal}}{${c}} = ${t0}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Going forward, at $t = ${t0}$ the helix has travelled $${c} \\cdot ${t0} = ${sVal}$.`,
+              `反过来算，$t = ${t0}$ 时螺旋线走过 $${c} \\cdot ${t0} = ${sVal}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1253,8 +2062,8 @@ export const parameterizationByArcLength: TopicDef = {
       figure: multivariableDrawings1["parameterization-by-arc-length#a-point-at-a-given-arc-length-along-a-line"],
       title: t("The point at a given arc length along a line", "直线上给定弧长处的点"),
       explanation: t(
-        "A line $\\mathbf{r}(t) = P + t\\mathbf{v}$ has constant speed $\\|\\mathbf{v}\\|$, so the arc length from $t = 0$ is $s = \\|\\mathbf{v}\\|t$. Solving $t = s/\\|\\mathbf{v}\\|$ gives the arc length parametrization\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\nwhich moves at unit speed. The point at arc length $s$ is $P$ plus $s$ times the unit vector in the direction of $\\mathbf{v}$.",
-        "直线 $\\mathbf{r}(t) = P + t\\mathbf{v}$ 速率恒为 $\\|\\mathbf{v}\\|$，所以从 $t = 0$ 起的弧长为 $s = \\|\\mathbf{v}\\|t$。解出 $t = s/\\|\\mathbf{v}\\|$ 得弧长参数化\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\n它以单位速率运动。弧长 $s$ 处的点是 $P$ 加上 $s$ 乘以 $\\mathbf{v}$ 方向的单位向量。",
+        "A line $\\mathbf{r}(t) = P + t\\mathbf{v}$ has constant speed $\\|\\mathbf{v}\\|$, so the arc length from $t = 0$ is $s = \\|\\mathbf{v}\\|t$. Solving $t = s/\\|\\mathbf{v}\\|$ gives the arc length parametrization\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\nwhich moves at unit speed. The point at arc length $s$ is $P$ plus $s$ times the unit vector in the direction of $\\mathbf{v}$. From $P = (1, 0, 0)$ along $\\mathbf{v} = \\langle 3, 4, 12 \\rangle$, of length $13$, arc length $26$ is reached at $t = 2$, at $(7, 8, 24)$.\n\n> **Watch out.** Divide $s$ by $\\|\\mathbf{v}\\|$ before stepping along $\\mathbf{v}$: using $s$ as $t$ goes too far unless $\\mathbf{v}$ is a unit vector. And start from $P$, not from the origin.",
+        "直线 $\\mathbf{r}(t) = P + t\\mathbf{v}$ 速率恒为 $\\|\\mathbf{v}\\|$，所以从 $t = 0$ 起的弧长为 $s = \\|\\mathbf{v}\\|t$。解出 $t = s/\\|\\mathbf{v}\\|$ 得弧长参数化\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\n它以单位速率运动。弧长 $s$ 处的点是 $P$ 加上 $s$ 乘以 $\\mathbf{v}$ 方向的单位向量。从 $P = (1, 0, 0)$ 沿长度为 $13$ 的 $\\mathbf{v} = \\langle 3, 4, 12 \\rangle$ 出发，弧长 $26$ 在 $t = 2$ 时达到，位于 $(7, 8, 24)$。\n\n> **注意。** 沿 $\\mathbf{v}$ 前进之前先把 $s$ 除以 $\\|\\mathbf{v}\\|$：除非 $\\mathbf{v}$ 是单位向量，否则把 $s$ 当作 $t$ 会走过头。而且要从 $P$ 出发，不是从原点出发。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c, n] = rng.pick([
@@ -1269,24 +2078,58 @@ export const parameterizationByArcLength: TopicDef = {
         const P: Vec3 = [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)];
         const s = n * rng.int(1, 3);
         const k = s / n;
-        const ans = [P[0] + k * v[0], P[1] + k * v[1], P[2] + k * v[2]];
-        return pointProblem({
-          prompt: t(
-            `Starting at $t = 0$, find the point at arc length $${s}$ along $\\mathbf{r}(t) = ${v3L(P)} + t${v3L(v)}$, $t \\ge 0$.`,
-            `从 $t = 0$ 开始，求沿 $\\mathbf{r}(t) = ${v3L(P)} + t${v3L(v)}$（$t \\ge 0$）弧长为 $${s}$ 处的点。`,
-          ),
-          answer: ans,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [P[0] + s * v[0], P[1] + s * v[1], P[2] + s * v[2]],
-            [k * v[0], k * v[1], k * v[2]],
-            [P[0] - k * v[0], P[1] - k * v[1], P[2] - k * v[2]],
+        const kv = [k * v[0], k * v[1], k * v[2]];
+        const ans = [P[0] + kv[0]!, P[1] + kv[1]!, P[2] + kv[2]!];
+        return located(
+          {
+            prompt: t(
+              `Starting at $t = 0$, find the point at arc length $${s}$ along $\\mathbf{r}(t) = ${v3L(P)} + t${v3L(v)}$, $t \\ge 0$.`,
+              `从 $t = 0$ 开始，求沿 $\\mathbf{r}(t) = ${v3L(P)} + t${v3L(v)}$（$t \\ge 0$）弧长为 $${s}$ 处的点。`,
+            ),
+            answer: ans,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Find the speed", "求速率"],
+                  t(
+                    `$\\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${n}$, so $s = ${n}t$.`,
+                    `$\\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${n}$，所以 $s = ${n}t$。`,
+                  ),
+                ],
+                [["Find the parameter", "求参数"], t(`$t = \\frac{${s}}{${n}} = ${k}$.`, `$t = \\frac{${s}}{${n}} = ${k}$。`)],
+                [
+                  ["Substitute", "代入"],
+                  t(
+                    `$\\mathbf{r}(${k}) = ${v3L(P)} + ${v3L(kv)} = ${v3L(ans)}$, the point $${pointLatex(ans)}$.`,
+                    `$\\mathbf{r}(${k}) = ${v3L(P)} + ${v3L(kv)} = ${v3L(ans)}$，即点 $${pointLatex(ans)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The distance from $${pointLatex(P)}$ to $${pointLatex(ans)}$ is $\\sqrt{${kv[0]! ** 2} + ${kv[1]! ** 2} + ${kv[2]! ** 2}} = ${s}$, the required arc length.`,
+                `从 $${pointLatex(P)}$ 到 $${pointLatex(ans)}$ 的距离是 $\\sqrt{${kv[0]! ** 2} + ${kv[1]! ** 2} + ${kv[2]! ** 2}} = ${s}$，正是要求的弧长。`,
+              ),
+            ),
+          },
+          [
+            [
+              [P[0] + s * v[0], P[1] + s * v[1], P[2] + s * v[2]],
+              `That uses $t = ${s}$; the speed is $${n}$, so arc length $${s}$ is reached at $t = ${k}$.`,
+              `这用了 $t = ${s}$；速率是 $${n}$，所以弧长 $${s}$ 在 $t = ${k}$ 时达到。`,
+            ],
+            [
+              kv,
+              `That is the displacement $${k}\\mathbf{v}$ alone; start from $P = ${pointLatex(P)}$.`,
+              `这只是位移 $${k}\\mathbf{v}$；要从 $P = ${pointLatex(P)}$ 出发。`,
+            ],
+            [
+              [P[0] - kv[0]!, P[1] - kv[1]!, P[2] - kv[2]!],
+              "That steps backwards; for $t \\ge 0$ the point moves in the direction of $\\mathbf{v}$.",
+              "这是反向走的；$t \\ge 0$ 时点沿 $\\mathbf{v}$ 的方向运动。",
+            ],
           ],
-          solution: t(
-            `$\\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${n}$, so arc length $${s}$ is reached at $t = ${k}$, at the point $(${ans.join(", ")})$.`,
-            `$\\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${n}$，所以弧长 $${s}$ 在 $t = ${k}$ 时达到，对应点 $(${ans.join(", ")})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -1304,6 +2147,10 @@ export const introductionToCurvature: TopicDef = {
     "Curvature κ = ||dT/ds|| measures the rate at which the unit tangent vector turns per unit of arc length.",
     "曲率 κ = ||dT/ds|| 度量单位切向量随弧长转动的速率。",
   ),
+  intro: t(
+    "On the circle $\\mathbf{r}(t) = \\langle 4\\cos t, 4\\sin t \\rangle$ the unit tangent is $\\mathbf{T} = \\langle -\\sin t, \\cos t \\rangle$, so $\\|\\mathbf{T}'\\| = 1$, while the speed is $4$. The tangent turns $1$ radian per unit of $t$ while the point travels $4$, so $\\kappa = \\frac{1}{4}$.\n\nCheck: in one lap the tangent turns through $2\\pi$ over a distance of $8\\pi$, and $\\frac{2\\pi}{8\\pi} = \\frac{1}{4}$.\n\nIn this lesson we measure curvature, how fast the direction of a curve turns per unit of distance.",
+    "在圆 $\\mathbf{r}(t) = \\langle 4\\cos t, 4\\sin t \\rangle$ 上，单位切向量为 $\\mathbf{T} = \\langle -\\sin t, \\cos t \\rangle$，所以 $\\|\\mathbf{T}'\\| = 1$，而速率为 $4$。每单位 $t$ 切向转过 $1$ 弧度，点走过 $4$，所以 $\\kappa = \\frac{1}{4}$。\n\n检验：一圈中切向转过 $2\\pi$，走过的距离是 $8\\pi$，而 $\\frac{2\\pi}{8\\pi} = \\frac{1}{4}$。\n\n本课我们度量曲率，即曲线方向每单位距离转动的快慢。",
+  ),
   prerequisites: ["unit-tangent-vectors", "the-arc-length-of-a-vector-valued-function"],
   encompasses: [{ topic: "unit-tangent-vectors", weight: 0.3 }],
   xp: 10,
@@ -1312,38 +2159,67 @@ export const introductionToCurvature: TopicDef = {
       id: "defining-and-calculating-curvature",
       title: t("Defining and calculating curvature", "曲率的定义与计算"),
       explanation: t(
-        "Curvature $\\kappa$ measures how quickly a curve changes direction. In terms of parameter $t$:\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}.$$ For a circular helix $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$, the curvature is constant: $\\kappa = \\frac{a}{a^2 + b^2}$.",
-        "曲率 $\\kappa$ 度量曲线改变方向的快慢。用参数 $t$ 表示为：\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}$$ 对于圆柱螺旋线 $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$，其曲率为常数：$\\kappa = \\frac{a}{a^2 + b^2}$。",
+        "Curvature $\\kappa$ measures how quickly a curve changes direction. In terms of parameter $t$:\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}.$$ For a circular helix $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$, the curvature is constant: $\\kappa = \\frac{a}{a^2 + b^2}$. So $\\langle \\cos t, \\sin t, t \\rangle$ has $\\kappa = \\frac{1}{2}$.\n\n> **Watch out.** $\\|\\mathbf{T}'\\|$ alone is the turning per unit of $t$; divide by the speed to get the turning per unit of length. The climb $b$ spreads the turn out, so a helix bends less than the circle of radius $a$: $\\kappa < \\frac{1}{a}$.",
+        "曲率 $\\kappa$ 度量曲线改变方向的快慢。用参数 $t$ 表示为：\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}$$ 对于圆柱螺旋线 $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$，其曲率为常数：$\\kappa = \\frac{a}{a^2 + b^2}$。所以 $\\langle \\cos t, \\sin t, t \\rangle$ 的 $\\kappa = \\frac{1}{2}$。\n\n> **注意。** $\\|\\mathbf{T}'\\|$ 本身只是每单位 $t$ 的转动；要除以速率才得到每单位长度的转动。上升量 $b$ 把转弯拉长，所以螺旋线比半径为 $a$ 的圆弯得少：$\\kappa < \\frac{1}{a}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 10);
         const b = rng.int(1, 10);
         const sumSq = a * a + b * b;
         const ans = Q.of(a, sumSq);
-
-        const prompt = t(
-          `Find the curvature $\\kappa$ of the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$.`,
-          `求圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 的曲率 $\\kappa$。`,
-        );
-        const solution = t(
-          steps(
-            `The speed is $\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${sumSq}}$.`,
-            `The unit tangent vector is $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, \\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, \\frac{${b}}{\\sqrt{${sumSq}}} \\right\\rangle$.`,
-            `Its derivative is $\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, 0 \\right\\rangle$, with norm $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{\\sqrt{${sumSq}}}$.`,
-            `Thus $\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|} = \\frac{${a}/\\sqrt{${sumSq}}}{\\sqrt{${sumSq}}} = \\frac{${a}}{${sumSq}}${ans.isInteger() || ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}$.`,
-          ),
-          steps(
-            `速率为 $\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${sumSq}}$。`,
-            `单位切向量为 $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, \\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, \\frac{${b}}{\\sqrt{${sumSq}}} \\right\\rangle$。`,
-            `其导数为 $\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, 0 \\right\\rangle$，模长为 $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{\\sqrt{${sumSq}}}$。`,
-            `因此 $\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|} = \\frac{${a}/\\sqrt{${sumSq}}}{\\sqrt{${sumSq}}} = \\frac{${a}}{${sumSq}}${ans.isInteger() || ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}$。`,
-          ),
-        );
+        const root = `\\sqrt{${sumSq}}`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the curvature $\\kappa$ of the circular helix $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$.`,
+            `求圆柱螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 的曲率 $\\kappa$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(1, a), Q.of(b, sumSq), Q.of(1, sumSq)],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(1, a),
+              `That is the curvature of the circle of radius $${a}$; the climb $${b}t$ makes the helix bend less.`,
+              `这是半径为 $${a}$ 的圆的曲率；上升项 $${b}t$ 使螺旋线弯得更少。`,
+            ),
+            why(
+              Q.of(b, sumSq),
+              `The numerator is the radius $${a}$, which comes from $\\|\\mathbf{T}'\\|$, not the climb $${b}$.`,
+              `分子是半径 $${a}$，它来自 $\\|\\mathbf{T}'\\|$，不是上升量 $${b}$。`,
+            ),
+            why(
+              Q.of(1, sumSq),
+              `$\\|\\mathbf{T}'\\| = \\frac{${a}}{${root}}$, not $\\frac{1}{${root}}$: the factor $${a}$ stays.`,
+              `$\\|\\mathbf{T}'\\| = \\frac{${a}}{${root}}$，不是 $\\frac{1}{${root}}$：因子 $${a}$ 要保留。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the speed and the unit tangent", "求速率与单位切向量"],
+                t(
+                  `$\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = ${root}$, so $\\mathbf{T}(t) = \\frac{1}{${root}}\\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$.`,
+                  `$\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = ${root}$，所以 $\\mathbf{T}(t) = \\frac{1}{${root}}\\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$。`,
+                ),
+              ],
+              [
+                ["Differentiate $\\mathbf{T}$", "对 $\\mathbf{T}$ 求导"],
+                t(
+                  `$\\mathbf{T}'(t) = \\frac{1}{${root}}\\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle$, with length $\\frac{${a}}{${root}}$.`,
+                  `$\\mathbf{T}'(t) = \\frac{1}{${root}}\\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle$，长度为 $\\frac{${a}}{${root}}$。`,
+                ),
+              ],
+              [
+                ["Divide by the speed", "除以速率"],
+                t(
+                  `$\\kappa = \\frac{${a}/${root}}{${root}} = \\frac{${a}}{${sumSq}}${ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}$.`,
+                  `$\\kappa = \\frac{${a}/${root}}{${root}} = \\frac{${a}}{${sumSq}}${ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With no climb, $b = 0$, the formula would give $\\frac{${a}}{${a * a}} = \\frac{1}{${a}}$, the curvature of the circle of radius $${a}$; the climb makes $\\kappa$ smaller than that, as $\\frac{${a}}{${sumSq}} < \\frac{1}{${a}}$.`,
+              `若没有上升，$b = 0$，公式给出 $\\frac{${a}}{${a * a}} = \\frac{1}{${a}}$，即半径为 $${a}$ 的圆的曲率；上升使 $\\kappa$ 比它小，确有 $\\frac{${a}}{${sumSq}} < \\frac{1}{${a}}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1352,24 +2228,61 @@ export const introductionToCurvature: TopicDef = {
       figure: multivariableDrawings1["introduction-to-curvature#the-curvature-of-a-circle-is-the-reciprocal-of-its-radius"],
       title: t("The curvature of a circle", "圆的曲率"),
       explanation: t(
-        "Curvature $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ measures how fast the direction turns per unit of distance travelled. Around a circle of radius $R$ the tangent turns through $2\\pi$ while the point travels $2\\pi R$, at a steady rate, so\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}.$$\n\nThe parametrization's speed and the circle's center do not affect $\\kappa$, because curvature is measured per unit arc length.",
-        "曲率 $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ 衡量每走过单位距离方向转动多快。绕半径为 $R$ 的圆一周，切向转过 $2\\pi$，而点走过 $2\\pi R$，且速率均匀，所以\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}$$\n\n参数化的速率和圆心位置都不影响 $\\kappa$，因为曲率是按单位弧长度量的。",
+        "Curvature $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ measures how fast the direction turns per unit of distance travelled. Around a circle of radius $R$ the tangent turns through $2\\pi$ while the point travels $2\\pi R$, at a steady rate, so\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}.$$\n\nThe parametrization's speed and the circle's center do not affect $\\kappa$, because curvature is measured per unit arc length. A circle of radius $10$ has $\\kappa = \\frac{1}{10}$.\n\n> **Watch out.** Curvature is $\\frac{1}{R}$, not $R$: a smaller circle bends more. Going around faster, as with $\\cos 3t$, changes the turning per unit of time but not per unit of length.",
+        "曲率 $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ 衡量每走过单位距离方向转动多快。绕半径为 $R$ 的圆一周，切向转过 $2\\pi$，而点走过 $2\\pi R$，且速率均匀，所以\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}$$\n\n参数化的速率和圆心位置都不影响 $\\kappa$，因为曲率是按单位弧长度量的。半径为 $10$ 的圆有 $\\kappa = \\frac{1}{10}$。\n\n> **注意。** 曲率是 $\\frac{1}{R}$，不是 $R$：圆越小弯得越厉害。转得更快（如 $\\cos 3t$）会改变每单位时间的转动，但不改变每单位长度的转动。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 9);
         const w = rng.int(1, 5);
         const h = rng.int(-4, 4);
         const wt = w === 1 ? "t" : `${w}t`;
+        const ans = Q.of(1, R);
+        const shift = h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`;
         return numberProblem({
           prompt: t(
-            `Find the curvature of $\\mathbf{r}(t) = \\langle ${R}\\cos ${wt}${h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`}, ${R}\\sin ${wt} \\rangle$.`,
-            `求 $\\mathbf{r}(t) = \\langle ${R}\\cos ${wt}${h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`}, ${R}\\sin ${wt} \\rangle$ 的曲率。`,
+            `Find the curvature of $\\mathbf{r}(t) = \\langle ${R}\\cos ${wt}${shift}, ${R}\\sin ${wt} \\rangle$.`,
+            `求 $\\mathbf{r}(t) = \\langle ${R}\\cos ${wt}${shift}, ${R}\\sin ${wt} \\rangle$ 的曲率。`,
           ),
-          answer: Q.of(1, R),
-          wrong: [Q.of(w, R), Q.of(R), Q.of(1, R * w), Q.of(1, R * R)],
-          solution: t(
-            `This is a circle of radius $${R}$, traversed at speed $${R * w}$. Curvature does not depend on the speed, so $\\kappa = \\frac{1}{${R}}$.`,
-            `这是半径为 $${R}$ 的圆，以速率 $${R * w}$ 运动。曲率与速率无关，所以 $\\kappa = \\frac{1}{${R}}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(w, R),
+              `The speed is $${R * w}$, not $${R}$: the factor $${w}$ in $${wt}$ multiplies the speed too, and it cancels.`,
+              `速率是 $${R * w}$，不是 $${R}$：$${wt}$ 中的因子 $${w}$ 也乘进速率，并且会约去。`,
+            ),
+            why(
+              Q.of(R),
+              "That is the radius; curvature is its reciprocal, and a larger circle bends less.",
+              "这是半径；曲率是它的倒数，圆越大弯得越少。",
+            ),
+            why(
+              Q.of(1, R * w),
+              `$\\|\\mathbf{T}'\\| = ${w}$, not $1$: the tangent turns $${w}$ radians per unit of $t$.`,
+              `$\\|\\mathbf{T}'\\| = ${w}$，不是 $1$：每单位 $t$ 切向转过 $${w}$ 弧度。`,
+            ),
+            why(Q.of(1, R * R), "Curvature is $\\frac{1}{R}$, not $\\frac{1}{R^2}$.", "曲率是 $\\frac{1}{R}$，不是 $\\frac{1}{R^2}$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Recognize the circle", "识别圆"],
+                t(
+                  `$\\mathbf{r}$ traces the circle of radius $${R}$ centered at $(${h}, 0)$, at speed $\\|\\mathbf{r}'\\| = ${R * w}$.`,
+                  `$\\mathbf{r}$ 以速率 $\\|\\mathbf{r}'\\| = ${R * w}$ 描出圆心为 $(${h}, 0)$、半径为 $${R}$ 的圆。`,
+                ),
+              ],
+              [
+                ["Use $\\kappa = \\frac{1}{R}$", "用 $\\kappa = \\frac{1}{R}$"],
+                t(
+                  `Curvature does not depend on the speed or the center, so $\\kappa = \\frac{1}{${R}}$.`,
+                  `曲率与速率、圆心都无关，所以 $\\kappa = \\frac{1}{${R}}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$\\mathbf{T} = \\langle -\\sin ${wt}, \\cos ${wt} \\rangle$ has $\\|\\mathbf{T}'\\| = ${w}$, and $\\frac{\\|\\mathbf{T}'\\|}{\\|\\mathbf{r}'\\|} = \\frac{${w}}{${R * w}} = \\frac{1}{${R}}$.`,
+              `$\\mathbf{T} = \\langle -\\sin ${wt}, \\cos ${wt} \\rangle$ 的 $\\|\\mathbf{T}'\\| = ${w}$，且 $\\frac{\\|\\mathbf{T}'\\|}{\\|\\mathbf{r}'\\|} = \\frac{${w}}{${R * w}} = \\frac{1}{${R}}$。`,
+            ),
           ),
         });
       },
@@ -1385,6 +2298,10 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
     "The curvature of a space curve is $\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$.",
     "空间曲线的曲率为 $\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$。",
   ),
+  intro: t(
+    "For $\\mathbf{r}(t) = \\langle t, t^2, 0 \\rangle$ at $t = 0$: $\\mathbf{r}'(0) = \\langle 1, 0, 0 \\rangle$ and $\\mathbf{r}''(0) = \\langle 0, 2, 0 \\rangle$, so $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 0, 2 \\rangle$ and $\\kappa(0) = \\frac{2}{1^3} = 2$.\n\nCheck: near its vertex the parabola $y = x^2$ hugs a circle of radius $\\rho$, which near its lowest point looks like $y \\approx \\frac{x^2}{2\\rho}$; matching gives $\\rho = \\frac{1}{2}$, and $\\frac{1}{\\rho} = 2$.\n\nIn this lesson we compute curvature from the first two derivatives with the cross product formula.",
+    "对 $\\mathbf{r}(t) = \\langle t, t^2, 0 \\rangle$ 在 $t = 0$ 处：$\\mathbf{r}'(0) = \\langle 1, 0, 0 \\rangle$，$\\mathbf{r}''(0) = \\langle 0, 2, 0 \\rangle$，所以 $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 0, 2 \\rangle$，$\\kappa(0) = \\frac{2}{1^3} = 2$。\n\n检验：抛物线 $y = x^2$ 在顶点附近贴近半径为 $\\rho$ 的圆，而这个圆在最低点附近近似为 $y \\approx \\frac{x^2}{2\\rho}$；比较得 $\\rho = \\frac{1}{2}$，而 $\\frac{1}{\\rho} = 2$。\n\n本课我们用叉积公式由前两阶导数计算曲率。",
+  ),
   prerequisites: ["introduction-to-curvature", "the-cross-product-of-two-vectors"],
   encompasses: [{ topic: "introduction-to-curvature", weight: 0.3 }],
   xp: 10,
@@ -1393,46 +2310,63 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
       id: "computing-curvature-via-cross-product",
       title: t("Computing curvature via cross product", "通过叉积计算曲率"),
       explanation: t(
-        "Curvature measures how quickly the direction of the curve turns, and the cross product of velocity and acceleration captures that turning without normalizing first. For any smooth three-dimensional curve $\\mathbf{r}(t)$, the curvature can be computed directly without finding $\\mathbf{T}(t)$:\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}.$$",
-        "曲率衡量曲线方向转动的快慢，速度与加速度的叉积不必先单位化就能反映这种转动。对于任意光滑三维空间曲线 $\\mathbf{r}(t)$，无需先求出 $\\mathbf{T}(t)$，可直接利用叉积公式计算曲率：\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$$",
+        "Curvature measures how quickly the direction of the curve turns, and the cross product of velocity and acceleration captures that turning without normalizing first. For any smooth three-dimensional curve $\\mathbf{r}(t)$, the curvature can be computed directly without finding $\\mathbf{T}(t)$:\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}.$$\n\nFor $\\langle t, 9t^2, t^3 \\rangle$ at $t = 0$, $\\mathbf{r}' = \\langle 1, 0, 0 \\rangle$ and $\\mathbf{r}'' = \\langle 0, 18, 0 \\rangle$, so $\\kappa(0) = 18$.\n\n> **Watch out.** Differentiating $at^2$ twice gives $2a$, not $a$. The denominator is the cube of the speed, and a $t^3$ term contributes nothing at $t = 0$, where its first and second derivatives vanish.",
+        "曲率衡量曲线方向转动的快慢，速度与加速度的叉积不必先单位化就能反映这种转动。对于任意光滑三维空间曲线 $\\mathbf{r}(t)$，无需先求出 $\\mathbf{T}(t)$，可直接利用叉积公式计算曲率：\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$$\n\n对 $\\langle t, 9t^2, t^3 \\rangle$ 在 $t = 0$ 处，$\\mathbf{r}' = \\langle 1, 0, 0 \\rangle$，$\\mathbf{r}'' = \\langle 0, 18, 0 \\rangle$，所以 $\\kappa(0) = 18$。\n\n> **注意。** $at^2$ 求两次导得 $2a$，不是 $a$。分母是速率的立方，而 $t^3$ 项在 $t = 0$ 处毫无贡献，那里它的一阶、二阶导数都为零。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
         const b = rng.int(1, 5);
-        // r(t) = <t, a*t^2, b*t^3>
-        // r'(t) = <1, 2a*t, 3b*t^2> -> r'(0) = <1, 0, 0>
-        // r''(t) = <0, 2a, 6b*t> -> r''(0) = <0, 2a, 0>
-        // r'(0) x r''(0) = <0, 0, 2a>
-        // ||r'(0) x r''(0)|| = 2a, ||r'(0)||^3 = 1^3 = 1 -> kappa(0) = 2a.
         const ans = 2 * a;
-
-        const prompt = t(
-          `Use the cross product formula to find the curvature $\\kappa(0)$ of the curve $\\mathbf{r}(t) = \\left\\langle t, ${poly([a, "t^2"])}, ${poly([b, "t^3"])} \\right\\rangle$ at $t = 0$.`,
-          `使用叉积公式求曲线 $\\mathbf{r}(t) = \\left\\langle t, ${poly([a, "t^2"])}, ${poly([b, "t^3"])} \\right\\rangle$ 在 $t = 0$ 处的曲率 $\\kappa(0)$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the velocity and acceleration at $t = 0$:\n\n` +
-              `$\\mathbf{r}'(t) = \\langle 1, ${2 * a}t, ${3 * b}t^2 \\rangle \\implies \\mathbf{r}'(0) = \\langle 1, 0, 0 \\rangle$.\n\n` +
-              `$\\mathbf{r}''(t) = \\langle 0, ${2 * a}, ${6 * b}t \\rangle \\implies \\mathbf{r}''(0) = \\langle 0, ${2 * a}, 0 \\rangle$.`,
-            `Compute the cross product: $\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 0, ${2 * a} \\rangle$, which has magnitude $\\|\\mathbf{r}'(0) \\times \\mathbf{r}''(0)\\| = ${2 * a}$.`,
-            `The speed at $t = 0$ is $\\|\\mathbf{r}'(0)\\| = 1$.`,
-            `Apply the formula: $\\kappa(0) = \\frac{${2 * a}}{1^3} = ${ans}$.`,
-          ),
-          steps(
-            `计算 $t = 0$ 处的速度和加速度：\n\n` +
-              `$\\mathbf{r}'(t) = \\langle 1, ${2 * a}t, ${3 * b}t^2 \\rangle \\implies \\mathbf{r}'(0) = \\langle 1, 0, 0 \\rangle$。\n\n` +
-              `$\\mathbf{r}''(t) = \\langle 0, ${2 * a}, ${6 * b}t \\rangle \\implies \\mathbf{r}''(0) = \\langle 0, ${2 * a}, 0 \\rangle$。`,
-            `计算叉积：$\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 0, ${2 * a} \\rangle$，其模长为 $\\|\\mathbf{r}'(0) \\times \\mathbf{r}''(0)\\| = ${2 * a}$。`,
-            `在 $t = 0$ 处的速率为 $\\|\\mathbf{r}'(0)\\| = 1$。`,
-            `应用公式：$\\kappa(0) = \\frac{${2 * a}}{1^3} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Use the cross product formula to find the curvature $\\kappa(0)$ of the curve $\\mathbf{r}(t) = \\left\\langle t, ${poly([a, "t^2"])}, ${poly([b, "t^3"])} \\right\\rangle$ at $t = 0$.`,
+            `使用叉积公式求曲线 $\\mathbf{r}(t) = \\left\\langle t, ${poly([a, "t^2"])}, ${poly([b, "t^3"])} \\right\\rangle$ 在 $t = 0$ 处的曲率 $\\kappa(0)$。`,
+          ),
           answer: ans,
-          wrong: [a, ans / 2, ans * 2],
+          mistakes: distinct(ans, [
+            why(
+              a,
+              `The second derivative of $${poly([a, "t^2"])}$ is $${2 * a}$, not $${a}$.`,
+              `$${poly([a, "t^2"])}$ 的二阶导数是 $${2 * a}$，不是 $${a}$。`,
+            ),
+            why(
+              4 * a,
+              "The cross product has length $2a$ and the speed is $1$; nothing doubles it again.",
+              "叉积长度为 $2a$，速率为 $1$；没有再翻倍的因素。",
+            ),
+            why(
+              6 * b,
+              `At $t = 0$ the $t^3$ term has $\\mathbf{r}''$ entry $${6 * b}t = 0$; it contributes nothing there.`,
+              `$t = 0$ 时 $t^3$ 项在 $\\mathbf{r}''$ 中的分量 $${6 * b}t = 0$；它在那里毫无贡献。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate twice", "求两阶导数"],
+                none,
+                [
+                  `\\mathbf{r}'(t) = \\langle 1, ${2 * a}t, ${3 * b}t^2 \\rangle, \\quad \\mathbf{r}'(0) = \\langle 1, 0, 0 \\rangle`,
+                  `\\mathbf{r}''(t) = \\langle 0, ${2 * a}, ${6 * b}t \\rangle, \\quad \\mathbf{r}''(0) = \\langle 0, ${2 * a}, 0 \\rangle`,
+                ],
+              ],
+              [
+                ["Take the cross product", "求叉积"],
+                t(
+                  `$\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 0, ${2 * a} \\rangle$, of length $${2 * a}$, and $\\|\\mathbf{r}'(0)\\| = 1$.`,
+                  `$\\mathbf{r}'(0) \\times \\mathbf{r}''(0) = \\langle 0, 0, ${2 * a} \\rangle$，长度为 $${2 * a}$，且 $\\|\\mathbf{r}'(0)\\| = 1$。`,
+                ),
+              ],
+              [
+                ["Apply the formula", "代入公式"],
+                t(`$\\kappa(0) = \\frac{${2 * a}}{1^3} = ${ans}$.`, `$\\kappa(0) = \\frac{${2 * a}}{1^3} = ${ans}$。`),
+              ],
+            ],
+            t(
+              `Near $t = 0$ the curve's shadow in the $xy$-plane is $y = ${poly([a, "x^2"])}$, which hugs a circle of radius $\\rho$ shaped like $y \\approx \\frac{x^2}{2\\rho}$; so $\\rho = \\frac{1}{${2 * a}}$ and $\\kappa = ${ans}$.`,
+              `在 $t = 0$ 附近，曲线在 $xy$ 平面上的投影是 $y = ${poly([a, "x^2"])}$，它贴近形如 $y \\approx \\frac{x^2}{2\\rho}$ 的半径为 $\\rho$ 的圆；所以 $\\rho = \\frac{1}{${2 * a}}$，$\\kappa = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1441,24 +2375,71 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
       figure: multivariableDrawings1["finding-curvature-using-the-cross-product#curvature-of-a-cubic-space-curve-by-the-cross-product"],
       title: t("Curvature of a cubic space curve", "三次空间曲线的曲率"),
       explanation: t(
-        "The cross product formula $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ works for any parametrization, so there is no need to reparametrize by arc length first. Compute the first two derivatives, take their cross product, and divide its length by the cube of the speed. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$, $\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$ and $\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$, so\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2).$$\n\nWith $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ this gives $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$.",
-        "叉积公式 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 对任意参数化都成立，因此不必先改用弧长参数。求出前两阶导数，取叉积，再用其长度除以速率的立方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$，$\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$，$\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$，所以\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2)$$\n\n由 $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ 得 $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$。",
+        "The cross product formula $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ works for any parametrization, so there is no need to reparametrize by arc length first. Compute the first two derivatives, take their cross product, and divide its length by the cube of the speed. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$, $\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$ and $\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$, so\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2).$$\n\nWith $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ this gives $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$. With $a = 5$ at $t = 0$, $\\kappa = \\frac{2}{5 \\cdot 4} = \\frac{1}{10}$.\n\n> **Watch out.** The denominator is the cube of the speed, $a^3(t^2 + 2)^3$, so $a^2$ over $a^3$ leaves $\\frac{1}{a}$, not $a$. Keep the factor $2$ of the cross product's length.",
+        "叉积公式 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 对任意参数化都成立，因此不必先改用弧长参数。求出前两阶导数，取叉积，再用其长度除以速率的立方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$，$\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$，$\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$，所以\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2)$$\n\n由 $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ 得 $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$。取 $a = 5$、$t = 0$，$\\kappa = \\frac{2}{5 \\cdot 4} = \\frac{1}{10}$。\n\n> **注意。** 分母是速率的立方 $a^3(t^2 + 2)^3$，所以 $a^2$ 除以 $a^3$ 剩下 $\\frac{1}{a}$，不是 $a$。叉积长度中的因子 $2$ 要保留。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const t0 = rng.int(-3, 3);
         const n = t0 * t0 + 2;
         const ans = Q.of(2, a * n * n);
+        const cross = [2 * a * a * t0 * t0, -4 * a * a * t0, 4 * a * a];
         return numberProblem({
           prompt: t(
             `Find the curvature of $\\mathbf{r}(t) = ${cubicCurve(a)}$ at $t = ${t0}$.`,
             `求 $\\mathbf{r}(t) = ${cubicCurve(a)}$ 在 $t = ${t0}$ 处的曲率。`,
           ),
           answer: ans,
-          wrong: [Q.of(2, n * n), Q.of(2, a * n), Q.of(2 * a, n * n), Q.of(1, a * n * n)],
-          solution: t(
-            `$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${2 * a * a} \\cdot ${n}$ and $\\|\\mathbf{r}'\\|^3 = (${a} \\cdot ${n})^3$, so $\\kappa = \\frac{2}{${a} \\cdot ${n}^2} = ${ans.toLatex()}$.`,
-            `$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${2 * a * a} \\cdot ${n}$，$\\|\\mathbf{r}'\\|^3 = (${a} \\cdot ${n})^3$，所以 $\\kappa = \\frac{2}{${a} \\cdot ${n}^2} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(2, n * n),
+              `The factor $\\frac{1}{${a}}$ is missing: $a^2$ in the cross product over $a^3$ in the cubed speed leaves $\\frac{1}{a}$.`,
+              `缺了因子 $\\frac{1}{${a}}$：叉积中的 $a^2$ 除以速率立方中的 $a^3$ 剩下 $\\frac{1}{a}$。`,
+            ),
+            why(
+              Q.of(2, a * n),
+              "That divides by the square of the speed; the formula has the cube.",
+              "这除以的是速率的平方；公式中是立方。",
+            ),
+            why(
+              Q.of(2 * a, n * n),
+              "$a^2$ over $a^3$ is $\\frac{1}{a}$, so $a$ belongs in the denominator.",
+              "$a^2$ 除以 $a^3$ 是 $\\frac{1}{a}$，所以 $a$ 应在分母。",
+            ),
+            why(
+              Q.of(1, a * n * n),
+              "The cross product has length $2a^2(t^2 + 2)$; the factor $2$ is missing.",
+              "叉积长度为 $2a^2(t^2 + 2)$；缺了因子 $2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the cross product", "求叉积"],
+                t(
+                  `$\\mathbf{r}'(${t0}) \\times \\mathbf{r}''(${t0}) = ${v3L(cross)}$, of length $2 \\cdot ${a * a} \\cdot ${n} = ${2 * a * a * n}$.`,
+                  `$\\mathbf{r}'(${t0}) \\times \\mathbf{r}''(${t0}) = ${v3L(cross)}$，长度为 $2 \\cdot ${a * a} \\cdot ${n} = ${2 * a * a * n}$。`,
+                ),
+              ],
+              [
+                ["Cube the speed", "速率立方"],
+                t(
+                  `$\\|\\mathbf{r}'(${t0})\\| = ${a} \\cdot ${n} = ${a * n}$, so $\\|\\mathbf{r}'\\|^3 = ${(a * n) ** 3}$.`,
+                  `$\\|\\mathbf{r}'(${t0})\\| = ${a} \\cdot ${n} = ${a * n}$，所以 $\\|\\mathbf{r}'\\|^3 = ${(a * n) ** 3}$。`,
+                ),
+              ],
+              [
+                ["Divide", "相除"],
+                t(
+                  `$\\kappa = \\frac{${2 * a * a * n}}{${(a * n) ** 3}} = ${ans.toLatex()}$.`,
+                  `$\\kappa = \\frac{${2 * a * a * n}}{${(a * n) ** 3}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The squared entries of the cross product add to $${cross.map((x) => x * x).join(" + ")} = ${cross.reduce((s, x) => s + x * x, 0)} = ${2 * a * a * n}^2$, confirming its length.`,
+              `叉积各分量平方和为 $${cross.map((x) => x * x).join(" + ")} = ${cross.reduce((s, x) => s + x * x, 0)} = ${2 * a * a * n}^2$，确认了它的长度。`,
+            ),
           ),
         });
       },
@@ -1474,6 +2455,10 @@ export const radiusOfCurvature: TopicDef = {
     "The radius of curvature ρ = 1 / κ is the radius of the osculating circle that best approximates the curve at a point.",
     "曲率半径 ρ = 1 / κ 是在某点处最佳逼近曲线的密切圆的半径。",
   ),
+  intro: t(
+    "At a point where $\\|\\mathbf{r}'\\| = 10$ and $\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 50$, the curvature is $\\kappa = \\frac{50}{10^3} = \\frac{1}{20}$, so the radius of curvature is $\\rho = \\frac{1}{\\kappa} = 20$: near that point the curve bends like a circle of radius $20$.\n\nCheck: $\\kappa\\rho = \\frac{1}{20} \\cdot 20 = 1$, and a circle of radius $20$ has curvature $\\frac{1}{20}$.\n\nIn this lesson we find the radius of curvature, the radius of the circle that best fits a curve at a point.",
+    "在 $\\|\\mathbf{r}'\\| = 10$、$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 50$ 的点处，曲率 $\\kappa = \\frac{50}{10^3} = \\frac{1}{20}$，所以曲率半径 $\\rho = \\frac{1}{\\kappa} = 20$：在该点附近曲线像半径为 $20$ 的圆那样弯曲。\n\n检验：$\\kappa\\rho = \\frac{1}{20} \\cdot 20 = 1$，而半径为 $20$ 的圆的曲率是 $\\frac{1}{20}$。\n\n本课我们求曲率半径，即在某点处最贴合曲线的圆的半径。",
+  ),
   prerequisites: ["introduction-to-curvature"],
   encompasses: [{ topic: "introduction-to-curvature", weight: 0.3 }],
   xp: 10,
@@ -1483,34 +2468,56 @@ export const radiusOfCurvature: TopicDef = {
       figure: multivariableDrawings1["radius-of-curvature#calculating-the-radius-of-curvature"],
       title: t("Calculating the radius of curvature", "计算曲率半径"),
       explanation: t(
-        "The radius of curvature $\\rho$ at a point on a curve is the reciprocal of its curvature:\n\n$$\\rho = \\frac{1}{\\kappa}.$$ It represents the radius of the osculating circle (circle of curvature) at that point. With $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ this reads $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$.",
-        "曲线在某点处的曲率半径 $\\rho$ 为该点曲率的倒数：\n\n$$\\rho = \\frac{1}{\\kappa}$$ 它表示在该点处的密切圆（曲率圆）的半径。由 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 可写成 $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$。",
+        "The radius of curvature $\\rho$ at a point on a curve is the reciprocal of its curvature:\n\n$$\\rho = \\frac{1}{\\kappa}.$$ It represents the radius of the osculating circle (circle of curvature) at that point. With $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ this reads $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$. If $\\|\\mathbf{r}'\\| = 3$ and $\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 9$, then $\\rho = \\frac{27}{9} = 3$.\n\n> **Watch out.** $\\rho$ is the reciprocal of $\\kappa$, so the cubed speed goes on top: a sharp bend has large $\\kappa$ and small $\\rho$. Cube the speed; the cross product's length is not squared.",
+        "曲线在某点处的曲率半径 $\\rho$ 为该点曲率的倒数：\n\n$$\\rho = \\frac{1}{\\kappa}$$ 它表示在该点处的密切圆（曲率圆）的半径。由 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 可写成 $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$。若 $\\|\\mathbf{r}'\\| = 3$，$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 9$，则 $\\rho = \\frac{27}{9} = 3$。\n\n> **注意。** $\\rho$ 是 $\\kappa$ 的倒数，所以速率的立方在分子上：急弯的 $\\kappa$ 大而 $\\rho$ 小。速率要立方；叉积的长度不要平方。",
       ),
       generate(rng: Rng): Problem {
         const speed = rng.int(2, 6);
         const cross = rng.int(3, 7);
         const cube = speed ** 3;
         const ans = Q.of(cube, cross);
-
-        const prompt = t(
-          `At a point $P$ of a curve, $\\|\\mathbf{r}'\\| = ${speed}$ and $\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${cross}$. Find the radius of curvature $\\rho$ at $P$.`,
-          `在曲线的点 $P$ 处，$\\|\\mathbf{r}'\\| = ${speed}$，$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${cross}$。求曲线在点 $P$ 处的曲率半径 $\\rho$。`,
-        );
-        const solution = t(
-          steps(
-            `The curvature is $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3} = \\frac{${cross}}{${cube}}$.`,
-            `The radius of curvature is its reciprocal: $\\rho = \\frac{1}{\\kappa} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `曲率为 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3} = \\frac{${cross}}{${cube}}$。`,
-            `曲率半径是它的倒数：$\\rho = \\frac{1}{\\kappa} = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `At a point $P$ of a curve, $\\|\\mathbf{r}'\\| = ${speed}$ and $\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${cross}$. Find the radius of curvature $\\rho$ at $P$.`,
+            `在曲线的点 $P$ 处，$\\|\\mathbf{r}'\\| = ${speed}$，$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${cross}$。求曲线在点 $P$ 处的曲率半径 $\\rho$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(cross, cube), Q.of(speed * speed, cross), Q.of(cube, cross * cross)],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(cross, cube),
+              "That is the curvature $\\kappa$; the radius of curvature is its reciprocal.",
+              "这是曲率 $\\kappa$；曲率半径是它的倒数。",
+            ),
+            why(
+              Q.of(speed * speed, cross),
+              `The speed is cubed: $${speed}^3 = ${cube}$, not $${speed}^2$.`,
+              `速率要立方：$${speed}^3 = ${cube}$，不是 $${speed}^2$。`,
+            ),
+            why(
+              Q.of(cube, cross * cross),
+              `The cross product's length $${cross}$ appears to the first power, not squared.`,
+              `叉积长度 $${cross}$ 是一次方，不要平方。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the curvature", "求曲率"],
+                t(
+                  `$\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3} = \\frac{${cross}}{${speed}^3} = \\frac{${cross}}{${cube}}$.`,
+                  `$\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3} = \\frac{${cross}}{${speed}^3} = \\frac{${cross}}{${cube}}$。`,
+                ),
+              ],
+              [
+                ["Take the reciprocal", "取倒数"],
+                t(`$\\rho = \\frac{1}{\\kappa} = ${ans.toLatex()}$.`, `$\\rho = \\frac{1}{\\kappa} = ${ans.toLatex()}$。`),
+              ],
+            ],
+            t(
+              `$\\kappa\\rho = \\frac{${cross}}{${cube}} \\cdot ${ans.toLatex()} = 1$.`,
+              `$\\kappa\\rho = \\frac{${cross}}{${cube}} \\cdot ${ans.toLatex()} = 1$。`,
+            ),
+          ),
         });
       },
     },
@@ -1519,8 +2526,8 @@ export const radiusOfCurvature: TopicDef = {
       figure: multivariableDrawings1["radius-of-curvature#the-radius-of-curvature-at-a-vertex-of-an-ellipse"],
       title: t("The radius of curvature at a vertex of an ellipse", "椭圆顶点处的曲率半径"),
       explanation: t(
-        "For the ellipse $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$, the cross product formula gives\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}.$$\n\nAt the vertex $(A, 0)$, where $t = 0$, this is $\\kappa = \\frac{A}{B^2}$, so the radius of curvature is $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$. At $(0, B)$ the roles swap and $\\rho = \\frac{A^2}{B}$.",
-        "对椭圆 $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$，叉积公式给出\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}$$\n\n在顶点 $(A, 0)$（$t = 0$）处，$\\kappa = \\frac{A}{B^2}$，所以曲率半径 $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$。在 $(0, B)$ 处角色互换，$\\rho = \\frac{A^2}{B}$。",
+        "For the ellipse $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$, the cross product formula gives\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}.$$\n\nAt the vertex $(A, 0)$, where $t = 0$, this is $\\kappa = \\frac{A}{B^2}$, so the radius of curvature is $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$. At $(0, B)$ the roles swap and $\\rho = \\frac{A^2}{B}$. For $\\frac{x^2}{100} + \\frac{y^2}{4} = 1$ at $(10, 0)$, $\\rho = \\frac{4}{10} = \\frac{2}{5}$: the ellipse is sharp at the ends of its long axis.\n\n> **Watch out.** At $(A, 0)$ the radius squares the other semi-axis, $\\frac{B^2}{A}$; it is neither semi-axis itself. And $\\rho$ is $\\frac{1}{\\kappa}$, not $\\kappa$.",
+        "对椭圆 $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$，叉积公式给出\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}$$\n\n在顶点 $(A, 0)$（$t = 0$）处，$\\kappa = \\frac{A}{B^2}$，所以曲率半径 $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$。在 $(0, B)$ 处角色互换，$\\rho = \\frac{A^2}{B}$。对 $\\frac{x^2}{100} + \\frac{y^2}{4} = 1$ 在 $(10, 0)$ 处，$\\rho = \\frac{4}{10} = \\frac{2}{5}$：椭圆在长轴两端很尖。\n\n> **注意。** 在 $(A, 0)$ 处半径平方的是另一条半轴，$\\frac{B^2}{A}$；它不是任何一条半轴本身。而且 $\\rho$ 是 $\\frac{1}{\\kappa}$，不是 $\\kappa$。",
       ),
       generate(rng: Rng): Problem {
         const A = rng.int(2, 9);
@@ -1528,23 +2535,59 @@ export const radiusOfCurvature: TopicDef = {
         if (B === A) B += 1;
         const onX = rng.int(0, 1) === 0;
         const ans = onX ? Q.of(B * B, A) : Q.of(A * A, B);
+        const point = onX ? `(${A}, 0)` : `(0, ${B})`;
+        const kappa = onX ? `\\frac{${A}}{${B * B}}` : `\\frac{${B}}{${A * A}}`;
+        const local = onX ? `x \\approx ${A} - ${Q.of(A, 2 * B * B).toLatex()}y^2` : `y \\approx ${B} - ${Q.of(B, 2 * A * A).toLatex()}x^2`;
         return numberProblem({
           prompt: t(
-            `Find the radius of curvature of the ellipse $\\frac{x^2}{${A * A}} + \\frac{y^2}{${B * B}} = 1$ at the point $${onX ? `(${A}, 0)` : `(0, ${B})`}$.`,
-            `求椭圆 $\\frac{x^2}{${A * A}} + \\frac{y^2}{${B * B}} = 1$ 在点 $${onX ? `(${A}, 0)` : `(0, ${B})`}$ 处的曲率半径。`,
+            `Find the radius of curvature of the ellipse $\\frac{x^2}{${A * A}} + \\frac{y^2}{${B * B}} = 1$ at the point $${point}$.`,
+            `求椭圆 $\\frac{x^2}{${A * A}} + \\frac{y^2}{${B * B}} = 1$ 在点 $${point}$ 处的曲率半径。`,
           ),
           answer: ans,
-          wrong: [onX ? Q.of(A, B * B) : Q.of(B, A * A), onX ? Q.of(A * A, B) : Q.of(B * B, A), Q.of(onX ? A : B), Q.of(onX ? B : A)],
-          solution: t(
-            `With $A = ${A}$ and $B = ${B}$, the curvature at $${onX ? `(${A}, 0)` : `(0, ${B})`}$ is $${onX ? `\\frac{${A}}{${B * B}}` : `\\frac{${B}}{${A * A}}`}$, so $\\rho = ${ans.toLatex()}$.`,
-            `由 $A = ${A}$，$B = ${B}$，在 $${onX ? `(${A}, 0)` : `(0, ${B})`}$ 处曲率为 $${onX ? `\\frac{${A}}{${B * B}}` : `\\frac{${B}}{${A * A}}`}$，所以 $\\rho = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              onX ? Q.of(A, B * B) : Q.of(B, A * A),
+              "That is the curvature $\\kappa$; the radius of curvature is its reciprocal.",
+              "这是曲率 $\\kappa$；曲率半径是它的倒数。",
+            ),
+            why(
+              onX ? Q.of(A * A, B) : Q.of(B * B, A),
+              "That is the radius of curvature at the other vertex; the semi-axes swap roles there.",
+              "这是另一个顶点处的曲率半径；那里两条半轴的角色互换。",
+            ),
+            why(
+              Q.of(A),
+              `$${A}$ is a semi-axis, not the radius of the circle that fits the ellipse at the vertex.`,
+              `$${A}$ 是半轴，不是在顶点处贴合椭圆的圆的半径。`,
+            ),
+            why(
+              Q.of(B),
+              `$${B}$ is a semi-axis, not the radius of the circle that fits the ellipse at the vertex.`,
+              `$${B}$ 是半轴，不是在顶点处贴合椭圆的圆的半径。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read off the semi-axes", "读出半轴"],
+                t(
+                  `$A = ${A}$ and $B = ${B}$, and $${point}$ is the vertex at $t = ${onX ? "0" : "\\frac{\\pi}{2}"}$ of $\\langle ${A}\\cos t, ${B}\\sin t \\rangle$.`,
+                  `$A = ${A}$，$B = ${B}$，$${point}$ 是 $\\langle ${A}\\cos t, ${B}\\sin t \\rangle$ 在 $t = ${onX ? "0" : "\\frac{\\pi}{2}"}$ 处的顶点。`,
+                ),
+              ],
+              [["Find the curvature", "求曲率"], t(`There $\\kappa = ${kappa}$.`, `那里 $\\kappa = ${kappa}$。`)],
+              [["Take the reciprocal", "取倒数"], t(`$\\rho = ${ans.toLatex()}$.`, `$\\rho = ${ans.toLatex()}$。`)],
+            ],
+            t(
+              `Near $${point}$ the ellipse is $${local}$, and a circle of radius $\\rho$ near its own extreme point looks like a parabola with coefficient $\\frac{1}{2\\rho}$; $\\frac{1}{2 \\cdot ${paren(ans)}} = ${Q.of(1, 2).div(ans).toLatex()}$ matches.`,
+              `在 $${point}$ 附近椭圆为 $${local}$，而半径为 $\\rho$ 的圆在其极端点附近像系数为 $\\frac{1}{2\\rho}$ 的抛物线；$\\frac{1}{2 \\cdot ${paren(ans)}} = ${Q.of(1, 2).div(ans).toLatex()}$，相符。`,
+            ),
           ),
         });
       },
     },
   ],
 };
-
 /** theCurvatureOfAPlaneCurve computes curvature for y = f(x). */
 export const theCurvatureOfAPlaneCurve: TopicDef = {
   id: "the-curvature-of-a-plane-curve",

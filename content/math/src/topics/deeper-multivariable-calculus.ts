@@ -12,8 +12,15 @@ import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { numberProblem, pointProblem } from "../problems.ts";
+import { numberProblem, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
+
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** both writes the same formula as an option in both languages. */
 const both = (latex: string): Text => t(`$${latex}$`, `$${latex}$`);
@@ -33,8 +40,8 @@ const tangentParallelToPlane: KnowledgePointDef = {
   figure: multivariableDrawings1["tangent-vectors-and-tangent-lines-to-curves#where-a-tangent-line-is-parallel-to-the-xy-plane"],
   title: t("Where a tangent line is parallel to the $xy$-plane", "切线在何处与 $xy$ 平面平行"),
   explanation: t(
-    "The tangent line at a point of a curve has the direction $\\mathbf{r}'(t)$. It is parallel to the $xy$-plane exactly when this direction has no vertical part, so solve $z'(t) = 0$ and ignore the other two components.",
-    "曲线上一点的切线方向是 $\\mathbf{r}'(t)$。切线与 $xy$ 平面平行，当且仅当这个方向没有竖直分量，所以解 $z'(t) = 0$，另外两个分量不用管。",
+    "The tangent line at a point of a curve has the direction $\\mathbf{r}'(t)$. It is parallel to the $xy$-plane exactly when this direction has no vertical part, so solve $z'(t) = 0$ and ignore the other two components. For $z = t^3 - 30t^2 + 2$, $z' = 3t(t - 20)$, so the tangent is level at $t = 20$ (and at $t = 0$).\n\n> **Watch out.** Solve $z'(t) = 0$, not $z(t) = 0$ or $z''(t) = 0$: the height itself and the bending do not decide the direction. Factor out $3t$ before reading off the root.",
+    "曲线上一点的切线方向是 $\\mathbf{r}'(t)$。切线与 $xy$ 平面平行，当且仅当这个方向没有竖直分量，所以解 $z'(t) = 0$，另外两个分量不用管。对 $z = t^3 - 30t^2 + 2$，$z' = 3t(t - 20)$，所以切线在 $t = 20$（以及 $t = 0$）处水平。\n\n> **注意。** 要解 $z'(t) = 0$，不是 $z(t) = 0$ 或 $z''(t) = 0$：高度本身和弯曲都不决定方向。先提出因子 $3t$ 再读出根。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
@@ -48,10 +55,44 @@ const tangentParallelToPlane: KnowledgePointDef = {
       ),
       answer,
       solveFor: "t",
-      wrong: [p, 3 * p, 6 * p],
-      solution: t(
-        `We need $z'(t) = 3t^2 - ${6 * p}t = 3t(t - ${2 * p}) = 0$. The zero with $t > 0$ is $t = ${answer}$.`,
-        `需要 $z'(t) = 3t^2 - ${6 * p}t = 3t(t - ${2 * p}) = 0$。其中 $t > 0$ 的根是 $t = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          p,
+          `$t = ${p}$ solves $z''(t) = 6t - ${6 * p} = 0$, where the bending changes; the direction needs $z' = 0$.`,
+          `$t = ${p}$ 是 $z''(t) = 6t - ${6 * p} = 0$ 的解，那里弯曲方向改变；方向要求 $z' = 0$。`,
+        ),
+        why(
+          3 * p,
+          `$t = ${3 * p}$ is a root of $t^3 - ${3 * p}t^2$, part of the height; the direction needs $z' = 0$.`,
+          `$t = ${3 * p}$ 是 $t^3 - ${3 * p}t^2$ 的根，属于高度；方向要求 $z' = 0$。`,
+        ),
+        why(
+          6 * p,
+          `$3t^2 - ${6 * p}t = 3t(t - ${2 * p})$: divide by the $3$ as well.`,
+          `$3t^2 - ${6 * p}t = 3t(t - ${2 * p})$：还要除以 $3$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Require a level direction", "要求方向水平"],
+            t(
+              `The tangent has direction $\\mathbf{r}'(t) = \\langle 1, 2t, z'(t) \\rangle$, parallel to the $xy$-plane when $z'(t) = 0$.`,
+              `切线方向为 $\\mathbf{r}'(t) = \\langle 1, 2t, z'(t) \\rangle$，当 $z'(t) = 0$ 时与 $xy$ 平面平行。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `$z'(t) = 3t^2 - ${6 * p}t = 3t(t - ${2 * p}) = 0$, and the root with $t > 0$ is $t = ${answer}$.`,
+              `$z'(t) = 3t^2 - ${6 * p}t = 3t(t - ${2 * p}) = 0$，其中 $t > 0$ 的根是 $t = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\mathbf{r}'(${answer}) = \\langle 1, ${2 * answer}, 3 \\cdot ${answer * answer} - ${6 * p} \\cdot ${answer} \\rangle = \\langle 1, ${2 * answer}, 0 \\rangle$, which has no vertical part.`,
+          `$\\mathbf{r}'(${answer}) = \\langle 1, ${2 * answer}, 3 \\cdot ${answer * answer} - ${6 * p} \\cdot ${answer} \\rangle = \\langle 1, ${2 * answer}, 0 \\rangle$，没有竖直分量。`,
+        ),
       ),
     });
   },
@@ -62,24 +103,53 @@ const curvatureOfAHelix: KnowledgePointDef = {
   figure: multivariableDrawings1["finding-curvature-using-the-cross-product#the-curvature-of-a-helix"],
   title: t("The curvature of a helix", "螺旋线的曲率"),
   explanation: t(
-    "For the helix $\\langle a\\cos t, a\\sin t, bt \\rangle$, the cross product formula gives the constant curvature $\\kappa = \\frac{a}{a^2+b^2}$. With $b = 0$ this is the circle's $\\frac{1}{a}$, and stretching the helix upward straightens it and lowers the curvature.",
-    "对螺旋线 $\\langle a\\cos t, a\\sin t, bt \\rangle$，向量积公式给出常数曲率 $\\kappa = \\frac{a}{a^2+b^2}$。当 $b = 0$ 时就是圆的 $\\frac{1}{a}$；把螺旋线向上拉长会使它变直，曲率变小。",
+    "For the helix $\\langle a\\cos t, a\\sin t, bt \\rangle$, the cross product formula gives the constant curvature $\\kappa = \\frac{a}{a^2+b^2}$. With $b = 0$ this is the circle's $\\frac{1}{a}$, and stretching the helix upward straightens it and lowers the curvature. For $\\langle 7\\cos t, 7\\sin t, t \\rangle$, $\\kappa = \\frac{7}{49 + 1} = \\frac{7}{50}$, a little less than the circle's $\\frac{1}{7}$.\n\n> **Watch out.** The numerator is the radius $a$, not the climb $b$, and the denominator is $a^2 + b^2$ itself, not its square root: $|\\mathbf{r}' \\times \\mathbf{r}''| = a\\sqrt{a^2+b^2}$ over $|\\mathbf{r}'|^3 = (a^2+b^2)\\sqrt{a^2+b^2}$.",
+    "对螺旋线 $\\langle a\\cos t, a\\sin t, bt \\rangle$，向量积公式给出常数曲率 $\\kappa = \\frac{a}{a^2+b^2}$。当 $b = 0$ 时就是圆的 $\\frac{1}{a}$；把螺旋线向上拉长会使它变直，曲率变小。对 $\\langle 7\\cos t, 7\\sin t, t \\rangle$，$\\kappa = \\frac{7}{49 + 1} = \\frac{7}{50}$，比圆的 $\\frac{1}{7}$ 略小。\n\n> **注意。** 分子是半径 $a$，不是上升量 $b$；分母就是 $a^2 + b^2$，不是它的平方根：$|\\mathbf{r}' \\times \\mathbf{r}''| = a\\sqrt{a^2+b^2}$，除以 $|\\mathbf{r}'|^3 = (a^2+b^2)\\sqrt{a^2+b^2}$。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
     let b = rng.int(1, 6);
     if (b === a) b += 1;
-    const answer = Q.of(a, a * a + b * b);
+    const S = a * a + b * b;
+    const answer = Q.of(a, S);
+    const r = `\\langle ${coefficient(a)}\\cos t, ${coefficient(a)}\\sin t, ${coefficient(b)}t \\rangle`;
     return numberProblem({
-      prompt: t(
-        `Find the curvature of the helix $\\langle ${coefficient(a)}\\cos t, ${coefficient(a)}\\sin t, ${coefficient(b)}t \\rangle$.`,
-        `求螺旋线 $\\langle ${coefficient(a)}\\cos t, ${coefficient(a)}\\sin t, ${coefficient(b)}t \\rangle$ 的曲率。`,
-      ),
+      prompt: t(`Find the curvature of the helix $${r}$.`, `求螺旋线 $${r}$ 的曲率。`),
       answer,
-      wrong: [Q.of(1, a), Q.of(b, a * a + b * b), Q.of(1, a * a + b * b)],
-      solution: t(
-        `Here $|\\mathbf{r}'|^2 = ${a * a + b * b}$ and $|\\mathbf{r}' \\times \\mathbf{r}''| = ${a}\\sqrt{${a * a + b * b}}$. Then $\\kappa = \\frac{|\\mathbf{r}' \\times \\mathbf{r}''|}{|\\mathbf{r}'|^3} = ${answer.toLatex()}$.`,
-        `这里 $|\\mathbf{r}'|^2 = ${a * a + b * b}$，$|\\mathbf{r}' \\times \\mathbf{r}''| = ${a}\\sqrt{${a * a + b * b}}$。于是 $\\kappa = \\frac{|\\mathbf{r}' \\times \\mathbf{r}''|}{|\\mathbf{r}'|^3} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(1, a),
+          `$\\frac{1}{${a}}$ is the curvature of the flat circle of radius $${a}$; the climb $${b}t$ straightens the curve.`,
+          `$\\frac{1}{${a}}$ 是半径 $${a}$ 的平面圆的曲率；上升的 $${b}t$ 会使曲线变直。`,
+        ),
+        why(Q.of(b, S), `The numerator is the radius $${a}$, not the climb $${b}$.`, `分子是半径 $${a}$，不是上升量 $${b}$。`),
+        why(
+          Q.of(1, S),
+          `$|\\mathbf{r}' \\times \\mathbf{r}''| = ${a}\\sqrt{${S}}$ keeps the factor $${a}$.`,
+          `$|\\mathbf{r}' \\times \\mathbf{r}''| = ${a}\\sqrt{${S}}$ 带有因子 $${a}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate twice", "求两次导数"],
+            t(
+              `$\\mathbf{r}' = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$ and $\\mathbf{r}'' = \\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle$, so $|\\mathbf{r}'| = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${S}}$.`,
+              `$\\mathbf{r}' = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$，$\\mathbf{r}'' = \\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle$，所以 $|\\mathbf{r}'| = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${S}}$。`,
+            ),
+          ],
+          [
+            ["Cross and divide", "求向量积再相除"],
+            t(
+              `$\\mathbf{r}' \\times \\mathbf{r}'' = \\langle ${a * b}\\sin t, -${a * b}\\cos t, ${a * a} \\rangle$ has length $\\sqrt{${a * a * b * b} + ${a ** 4}} = ${a}\\sqrt{${S}}$. Then $\\kappa = \\frac{${a}\\sqrt{${S}}}{${S}\\sqrt{${S}}} = ${answer.toLatex()}$.`,
+              `$\\mathbf{r}' \\times \\mathbf{r}'' = \\langle ${a * b}\\sin t, -${a * b}\\cos t, ${a * a} \\rangle$ 的长度为 $\\sqrt{${a * a * b * b} + ${a ** 4}} = ${a}\\sqrt{${S}}$。于是 $\\kappa = \\frac{${a}\\sqrt{${S}}}{${S}\\sqrt{${S}}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Setting the climb to $0$ in $\\frac{a}{a^2+b^2}$ gives $\\frac{1}{${a}}$, the circle's curvature, and $${answer.toLatex()} < \\frac{1}{${a}}$ as a climbing helix should be.`,
+          `在 $\\frac{a}{a^2+b^2}$ 中令上升量为 $0$ 得 $\\frac{1}{${a}}$，正是圆的曲率；而 $${answer.toLatex()} < \\frac{1}{${a}}$，符合上升的螺旋线。`,
+        ),
       ),
     });
   },
@@ -90,8 +160,8 @@ const binormalFromTangentAndNormal: KnowledgePointDef = {
   figure: multivariableDrawings1["binormal-vectors#the-binormal-from-the-unit-tangent-and-normal"],
   title: t("The binormal from the unit tangent and normal", "由单位切向量和法向量求副法向量"),
   explanation: t(
-    "The binormal is defined by $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$, in this order. Because $\\mathbf{T}$ and $\\mathbf{N}$ are perpendicular unit vectors, $\\mathbf{B}$ is a unit vector too, so no further normalizing is needed. Reversing the order would flip its sign.",
-    "副法向量定义为 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$，顺序不能变。因为 $\\mathbf{T}$ 和 $\\mathbf{N}$ 是互相垂直的单位向量，$\\mathbf{B}$ 也是单位向量，不必再单位化。交换顺序会改变符号。",
+    "The binormal is defined by $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$, in this order. Because $\\mathbf{T}$ and $\\mathbf{N}$ are perpendicular unit vectors, $\\mathbf{B}$ is a unit vector too, so no further normalizing is needed. For $\\mathbf{T} = \\langle 1, 0, 0 \\rangle$ and $\\mathbf{N} = \\langle 0, 0, 1 \\rangle$, $\\mathbf{B} = \\langle 0 \\cdot 1 - 0 \\cdot 0, 0 \\cdot 0 - 1 \\cdot 1, 0 \\rangle = \\langle 0, -1, 0 \\rangle$.\n\n> **Watch out.** Reversing the order, $\\mathbf{N} \\times \\mathbf{T}$, flips the sign. And the middle entry of a cross product is $T_zN_x - T_xN_z$: get its sign wrong and $\\mathbf{B}$ is no longer perpendicular to both.",
+    "副法向量定义为 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$，顺序不能变。因为 $\\mathbf{T}$ 和 $\\mathbf{N}$ 是互相垂直的单位向量，$\\mathbf{B}$ 也是单位向量，不必再单位化。对 $\\mathbf{T} = \\langle 1, 0, 0 \\rangle$ 和 $\\mathbf{N} = \\langle 0, 0, 1 \\rangle$，$\\mathbf{B} = \\langle 0 \\cdot 1 - 0 \\cdot 0, 0 \\cdot 0 - 1 \\cdot 1, 0 \\rangle = \\langle 0, -1, 0 \\rangle$。\n\n> **注意。** 交换顺序成 $\\mathbf{N} \\times \\mathbf{T}$ 会改变符号。向量积的中间分量是 $T_zN_x - T_xN_z$：符号弄错，$\\mathbf{B}$ 就不再与两者都垂直。",
   ),
   generate(rng) {
     const [p, q, r] = rng.pick([
@@ -106,8 +176,32 @@ const binormalFromTangentAndNormal: KnowledgePointDef = {
     const sn = rng.pick([1, -1]);
     const T = [sa * p, sb * q];
     const answer = [Q.of(sn * T[1]!, r), Q.of(-sn * T[0]!, r), Q.of(0)];
-    const Tl = `\\left\\langle ${Q.of(T[0]!, r).toLatex()}, ${Q.of(T[1]!, r).toLatex()}, 0 \\right\\rangle`;
-    return pointProblem({
+    const Tx = Q.of(T[0]!, r);
+    const Ty = Q.of(T[1]!, r);
+    const Tl = `\\left\\langle ${Tx.toLatex()}, ${Ty.toLatex()}, 0 \\right\\rangle`;
+    const reversed = answer.map((x) => x.neg());
+    const added = [Tx, Ty, Q.of(sn)];
+    const swapped = [answer[1]!.neg(), answer[0]!.neg(), Q.of(0)];
+    const mistakes: [Q[], string, string][] = [
+      [
+        reversed,
+        "That is $\\mathbf{N} \\times \\mathbf{T}$; the binormal is $\\mathbf{T} \\times \\mathbf{N}$, and the order flips the sign.",
+        "那是 $\\mathbf{N} \\times \\mathbf{T}$；副法向量是 $\\mathbf{T} \\times \\mathbf{N}$，顺序会改变符号。",
+      ],
+      [
+        added,
+        "These are the entries of $\\mathbf{T}$ and $\\mathbf{N}$ put together; $\\mathbf{B}$ is their cross product.",
+        "这是把 $\\mathbf{T}$ 和 $\\mathbf{N}$ 的分量拼在一起；$\\mathbf{B}$ 是它们的向量积。",
+      ],
+      [
+        swapped,
+        "The first entry is $T_yN_z - T_zN_y$ and the second $T_zN_x - T_xN_z$; this has them mixed up and is not perpendicular to $\\mathbf{T}$.",
+        "第一个分量是 $T_yN_z - T_zN_y$，第二个是 $T_zN_x - T_xN_z$；这里弄混了，结果不垂直于 $\\mathbf{T}$。",
+      ],
+    ];
+    const B = vectorLatex(answer);
+    const wrapped = (v: Q) => (v.toNumber() < 0 ? `\\left(${v.toLatex()}\\right)` : v.toLatex());
+    const problem = pointProblem({
       prompt: t(
         `At a point of a curve, $\\mathbf{T} = ${Tl}$ and $\\mathbf{N} = \\langle 0, 0, ${sn} \\rangle$. Find $\\mathbf{B}$ as $\\langle x, y, z \\rangle$.`,
         `曲线上某点处 $\\mathbf{T} = ${Tl}$，$\\mathbf{N} = \\langle 0, 0, ${sn} \\rangle$。求 $\\mathbf{B}$，写成 $\\langle x, y, z \\rangle$。`,
@@ -115,12 +209,34 @@ const binormalFromTangentAndNormal: KnowledgePointDef = {
       answer,
       vars: ["x", "y", "z"],
       vector: true,
-      wrong: [answer.map((x) => x.neg()), [Q.of(T[0]!, r), Q.of(T[1]!, r), Q.of(sn)]],
-      solution: t(
-        `Take the cross product: $\\mathbf{T} \\times \\mathbf{N} = \\langle T_y N_z, -T_x N_z, 0 \\rangle = \\langle ${answer[0]!.toLatex()}, ${answer[1]!.toLatex()}, 0 \\rangle$. The third component is $T_xN_y - T_yN_x = 0$, since $\\mathbf{N}$ has no $x$ or $y$ part.`,
-        `计算向量积：$\\mathbf{T} \\times \\mathbf{N} = \\langle T_y N_z, -T_x N_z, 0 \\rangle = \\langle ${answer[0]!.toLatex()}, ${answer[1]!.toLatex()}, 0 \\rangle$。第三个分量是 $T_xN_y - T_yN_x = 0$，因为 $\\mathbf{N}$ 没有 $x$、$y$ 分量。`,
+      wrong: mistakes.map(([v]) => v),
+      solution: walked(
+        [
+          [
+            ["Set up the cross product", "列出向量积"],
+            t(
+              `$\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N} = \\langle T_yN_z - T_zN_y, T_zN_x - T_xN_z, T_xN_y - T_yN_x \\rangle$, with $T_z = 0$ and $N_x = N_y = 0$.`,
+              `$\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N} = \\langle T_yN_z - T_zN_y, T_zN_x - T_xN_z, T_xN_y - T_yN_x \\rangle$，其中 $T_z = 0$，$N_x = N_y = 0$。`,
+            ),
+          ],
+          [
+            ["Fill in the entries", "代入分量"],
+            t(
+              `$\\mathbf{B} = \\left\\langle ${Ty.toLatex()} \\cdot ${inParens(sn)}, -${wrapped(Tx)} \\cdot ${inParens(sn)}, 0 \\right\\rangle = ${B}$.`,
+              `$\\mathbf{B} = \\left\\langle ${Ty.toLatex()} \\cdot ${inParens(sn)}, -${wrapped(Tx)} \\cdot ${inParens(sn)}, 0 \\right\\rangle = ${B}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\mathbf{B} \\cdot \\mathbf{T} = ${answer[0]!.mul(Tx).toLatex()} + ${wrapped(answer[1]!.mul(Ty))} = 0$, $\\mathbf{B} \\cdot \\mathbf{N} = 0$ since its third entry is $0$, and $|\\mathbf{B}|^2 = \\frac{${p * p} + ${q * q}}{${r * r}} = 1$.`,
+          `$\\mathbf{B} \\cdot \\mathbf{T} = ${answer[0]!.mul(Tx).toLatex()} + ${wrapped(answer[1]!.mul(Ty))} = 0$，$\\mathbf{B} \\cdot \\mathbf{N} = 0$（它的第三个分量是 $0$），且 $|\\mathbf{B}|^2 = \\frac{${p * p} + ${q * q}}{${r * r}} = 1$。`,
+        ),
       ),
     });
+    return withMistakes(
+      problem,
+      mistakes.map(([v, en, zh]) => say(vectorLatex(v), en, zh)),
+    );
   },
 };
 
@@ -783,8 +899,8 @@ const helixLength: KnowledgePointDef = {
   figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#the-length-of-a-helix"],
   title: t("The length of a helix", "螺旋线的长度"),
   explanation: t(
-    "A circular helix has constant speed, because the circular part of its velocity has constant size and its vertical part is constant. So its arc length needs no real integration: it is the speed times the elapsed parameter. Unrolling the cylinder shows why, since the helix then becomes a straight line.",
-    "圆柱螺旋线的速率是常数，因为速度的圆周部分大小不变，竖直部分也不变。所以它的弧长不需要真正积分：就是速率乘以参数的变化量。把圆柱面展开就能看出原因，这时螺旋线变成了一条直线。",
+    "A circular helix has constant speed, because the circular part of its velocity has constant size and its vertical part is constant. So its arc length needs no real integration: it is the speed times the elapsed parameter. Unrolling the cylinder shows why, since the helix then becomes a straight line. For $\\langle 12\\cos t, 12\\sin t, 16t \\rangle$ the speed is $\\sqrt{144 + 256} = 20$, so one turn, $0 \\le t \\le 2\\pi$, has length $40\\pi$.\n\n> **Watch out.** The speed is $\\sqrt{a^2 + b^2}$, not $a$ (that ignores the climb) and not $a + b$ (lengths at right angles combine by Pythagoras). And each turn is $2\\pi$ of the parameter, not $1$.",
+    "圆柱螺旋线的速率是常数，因为速度的圆周部分大小不变，竖直部分也不变。所以它的弧长不需要真正积分：就是速率乘以参数的变化量。把圆柱面展开就能看出原因，这时螺旋线变成了一条直线。对 $\\langle 12\\cos t, 12\\sin t, 16t \\rangle$，速率是 $\\sqrt{144 + 256} = 20$，所以一圈 $0 \\le t \\le 2\\pi$ 的长度是 $40\\pi$。\n\n> **注意。** 速率是 $\\sqrt{a^2 + b^2}$，不是 $a$（那忽略了上升），也不是 $a + b$（互相垂直的长度按勾股定理合成）。每一圈对应参数变化 $2\\pi$，不是 $1$。",
   ),
   generate(rng) {
     const { a, b, h } = helixShape(rng);
@@ -798,10 +914,44 @@ const helixLength: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * n * a, 2 * n * (a + b), n * h],
-      solution: t(
-        `The speed is $\\sqrt{${a}^2 + ${b}^2} = ${h}$ at every $t$. Multiplying by the elapsed $${top}$ gives the length $${answer}\\pi$.`,
-        `速率在每个 $t$ 处都是 $\\sqrt{${a}^2 + ${b}^2} = ${h}$。乘以参数变化量 $${top}$，得长度 $${answer}\\pi$。`,
+      mistakes: apart(answer, [
+        why(
+          2 * n * a,
+          `$${2 * n * a}\\pi$ is the length of the circle traced ${n} times; the climb $${b}t$ adds to the length.`,
+          `$${2 * n * a}\\pi$ 是把圆绕 ${n} 圈的长度；上升的 $${b}t$ 也增加长度。`,
+        ),
+        why(
+          2 * n * (a + b),
+          `The speed is $\\sqrt{${a}^2 + ${b}^2} = ${h}$, not $${a} + ${b}$: perpendicular parts combine by Pythagoras.`,
+          `速率是 $\\sqrt{${a}^2 + ${b}^2} = ${h}$，不是 $${a} + ${b}$：互相垂直的分量按勾股定理合成。`,
+        ),
+        why(
+          n * h,
+          `The parameter runs over $${top}$, so multiply the speed by $${2 * n}\\pi$, not $${n}\\pi$.`,
+          `参数变化量是 $${top}$，所以速率要乘 $${2 * n}\\pi$，不是 $${n}\\pi$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the speed", "求速率"],
+            t(
+              `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$, so $|\\mathbf{r}'(t)| = \\sqrt{${a * a}\\sin^2 t + ${a * a}\\cos^2 t + ${b * b}} = \\sqrt{${a * a + b * b}} = ${h}$ at every $t$.`,
+              `$\\mathbf{r}'(t) = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$，所以在每个 $t$ 处 $|\\mathbf{r}'(t)| = \\sqrt{${a * a}\\sin^2 t + ${a * a}\\cos^2 t + ${b * b}} = \\sqrt{${a * a + b * b}} = ${h}$。`,
+            ),
+          ],
+          [
+            ["Integrate the constant speed", "对常数速率积分"],
+            t(
+              `$L = \\int_0^{${top}} ${h}\\,dt = ${h} \\cdot ${top} = ${answer}\\pi$, so $c = ${answer}$.`,
+              `$L = \\int_0^{${top}} ${h}\\,dt = ${h} \\cdot ${top} = ${answer}\\pi$，所以 $c = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Unroll the cylinder: the helix becomes a segment with horizontal run $${n === 1 ? "" : `${n} \\cdot `}2\\pi \\cdot ${a} = ${2 * n * a}\\pi$ and rise $${b} \\cdot ${top} = ${2 * n * b}\\pi$, and $\\sqrt{${2 * n * a}^2 + ${2 * n * b}^2}\\,\\pi = ${answer}\\pi$.`,
+          `把圆柱面展开：螺旋线变成一条线段，水平长 $${n === 1 ? "" : `${n} \\cdot `}2\\pi \\cdot ${a} = ${2 * n * a}\\pi$，上升 $${b} \\cdot ${top} = ${2 * n * b}\\pi$，而 $\\sqrt{${2 * n * a}^2 + ${2 * n * b}^2}\\,\\pi = ${answer}\\pi$。`,
+        ),
       ),
     });
   },
@@ -812,8 +962,8 @@ const pointAtArcLengthOnHelix: KnowledgePointDef = {
   figure: multivariableDrawings1["parameterization-by-arc-length#the-height-on-a-helix-after-a-given-arc-length"],
   title: t("The height on a helix after a given arc length", "螺旋线上走过给定弧长后的高度"),
   explanation: t(
-    "When the speed is a constant $v$, arc length measured from $t = 0$ is $s = vt$, so $t = \\frac{s}{v}$. Substituting this into the curve gives its parametrization by arc length. Any question about where a point has reached after travelling a set distance then becomes a matter of reading off a coordinate.",
-    "速率是常数 $v$ 时，从 $t = 0$ 量起的弧长是 $s = vt$，所以 $t = \\frac{s}{v}$。把它代入曲线，就得到以弧长为参数的表示。这样，走过一段给定路程后到达哪里，就只是读出一个坐标的问题了。",
+    "When the speed is a constant $v$, arc length measured from $t = 0$ is $s = vt$, so $t = \\frac{s}{v}$. Substituting this into the curve gives its parametrization by arc length. Any question about where a point has reached after travelling a set distance then becomes a matter of reading off a coordinate. On $\\langle 12\\cos t, 12\\sin t, 16t \\rangle$, with speed $20$, an arc length of $60$ is reached at $t = 3$, where $z = 48$.\n\n> **Watch out.** The arc length $s$ is not the parameter $t$ and not the height $z$: first divide by the speed to get $t$, then put $t$ into the coordinate you want.",
+    "速率是常数 $v$ 时，从 $t = 0$ 量起的弧长是 $s = vt$，所以 $t = \\frac{s}{v}$。把它代入曲线，就得到以弧长为参数的表示。这样，走过一段给定路程后到达哪里，就只是读出一个坐标的问题了。在 $\\langle 12\\cos t, 12\\sin t, 16t \\rangle$ 上，速率是 $20$，走过弧长 $60$ 时 $t = 3$，此时 $z = 48$。\n\n> **注意。** 弧长 $s$ 既不是参数 $t$，也不是高度 $z$：先除以速率得到 $t$，再把 $t$ 代入所求的坐标。",
   ),
   generate(rng) {
     const { a, b, h } = helixShape(rng);
@@ -827,10 +977,44 @@ const pointAtArcLengthOnHelix: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [b * s, a * m, s],
-      solution: t(
-        `The speed is ${h}, so $t = \\frac{${s}}{${h}} = ${m}$, and then $z = ${b} \\cdot ${m} = ${answer}$.`,
-        `速率是 ${h}，所以 $t = \\frac{${s}}{${h}} = ${m}$，于是 $z = ${b} \\cdot ${m} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          b * s,
+          `That puts $t = ${s}$; the arc length is $${h}t$, so $t = ${m}$.`,
+          `那是令 $t = ${s}$；弧长是 $${h}t$，所以 $t = ${m}$。`,
+        ),
+        why(
+          a * m,
+          `$z = ${b}t$, so multiply by the climb $${b}$, not the radius $${a}$.`,
+          `$z = ${b}t$，所以要乘上升量 $${b}$，不是半径 $${a}$。`,
+        ),
+        why(
+          s,
+          `The arc length is measured along the curve, which also winds around; the height is only part of it.`,
+          `弧长是沿曲线量的，曲线还在绕圈；高度只是其中一部分。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the speed", "求速率"],
+            t(
+              `$|\\mathbf{r}'(t)| = |\\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle| = \\sqrt{${a * a} + ${b * b}} = ${h}$, so the arc length from $t = 0$ is $s = ${h}t$.`,
+              `$|\\mathbf{r}'(t)| = |\\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle| = \\sqrt{${a * a} + ${b * b}} = ${h}$，所以从 $t = 0$ 量起的弧长是 $s = ${h}t$。`,
+            ),
+          ],
+          [
+            ["Find $t$, then $z$", "求 $t$，再求 $z$"],
+            t(
+              `$${h}t = ${s}$ gives $t = ${m}$, and $z = ${b} \\cdot ${m} = ${answer}$.`,
+              `由 $${h}t = ${s}$ 得 $t = ${m}$，而 $z = ${b} \\cdot ${m} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The speed ${h} times the elapsed $t = ${m}$ is $${h * m}$, the arc length given.`,
+          `速率 ${h} 乘以经过的 $t = ${m}$ 得 $${h * m}$，正是给定的弧长。`,
+        ),
       ),
     });
   },
@@ -841,8 +1025,8 @@ const helixCurvature: KnowledgePointDef = {
   figure: multivariableDrawings1["introduction-to-curvature#the-curvature-of-a-helix"],
   title: t("The curvature of a helix", "螺旋线的曲率"),
   explanation: t(
-    "With constant speed $v$, curvature is $\\kappa = \\frac{|\\mathbf{r}''|}{v^2}$. For the helix $\\langle a\\cos t, a\\sin t, bt \\rangle$ this gives $\\frac{a}{a^2 + b^2}$. Setting $b = 0$ recovers a circle of curvature $\\frac{1}{a}$. Raising the pitch stretches the curve out, and so the curvature falls.",
-    "速率是常数 $v$ 时，曲率是 $\\kappa = \\frac{|\\mathbf{r}''|}{v^2}$。对螺旋线 $\\langle a\\cos t, a\\sin t, bt \\rangle$，得 $\\frac{a}{a^2 + b^2}$。令 $b = 0$，就回到曲率为 $\\frac{1}{a}$ 的圆。螺距增大时曲线被拉长，曲率随之减小。",
+    "With constant speed $v$, curvature is $\\kappa = \\frac{|\\mathbf{r}''|}{v^2}$. For the helix $\\langle a\\cos t, a\\sin t, bt \\rangle$ this gives $\\frac{a}{a^2 + b^2}$. Setting $b = 0$ recovers a circle of curvature $\\frac{1}{a}$. Raising the pitch stretches the curve out, and so the curvature falls. For $\\langle 28\\cos t, 28\\sin t, 45t \\rangle$ the speed is $53$, so $\\kappa = \\frac{28}{53^2} = \\frac{28}{2809}$.\n\n> **Watch out.** Divide by the speed squared, $v^2$, not by $v$, and the top is $|\\mathbf{r}''| = a$, the radius, not the climb $b$. This shortcut needs constant speed; in general use $\\frac{|\\mathbf{r}' \\times \\mathbf{r}''|}{|\\mathbf{r}'|^3}$.",
+    "速率是常数 $v$ 时，曲率是 $\\kappa = \\frac{|\\mathbf{r}''|}{v^2}$。对螺旋线 $\\langle a\\cos t, a\\sin t, bt \\rangle$，得 $\\frac{a}{a^2 + b^2}$。令 $b = 0$，就回到曲率为 $\\frac{1}{a}$ 的圆。螺距增大时曲线被拉长，曲率随之减小。对 $\\langle 28\\cos t, 28\\sin t, 45t \\rangle$，速率是 $53$，所以 $\\kappa = \\frac{28}{53^2} = \\frac{28}{2809}$。\n\n> **注意。** 要除以速率的平方 $v^2$，不是 $v$；分子是 $|\\mathbf{r}''| = a$，即半径，不是上升量 $b$。这个简便公式要求速率不变；一般情形用 $\\frac{|\\mathbf{r}' \\times \\mathbf{r}''|}{|\\mathbf{r}'|^3}$。",
   ),
   generate(rng) {
     const shape = helixShape(rng);
@@ -857,10 +1041,40 @@ const helixCurvature: KnowledgePointDef = {
         `求螺旋线 $\\mathbf{r}(t) = \\langle ${a}\\cos t, ${a}\\sin t, ${b}t \\rangle$ 的曲率。`,
       ),
       answer,
-      wrong: [Q.of(1, a), Q.of(b, h * h), Q.of(a, h)],
-      solution: t(
-        `The speed is ${h}, and $|\\mathbf{r}''| = ${a}$. So $\\kappa = \\frac{${a}}{${h}^2} = ${answer.toLatex()}$.`,
-        `速率是 ${h}，且 $|\\mathbf{r}''| = ${a}$。所以 $\\kappa = \\frac{${a}}{${h}^2} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(1, a),
+          `$\\frac{1}{${a}}$ is the curvature of the flat circle; the climb $${b}t$ straightens the curve.`,
+          `$\\frac{1}{${a}}$ 是平面圆的曲率；上升的 $${b}t$ 会使曲线变直。`,
+        ),
+        why(
+          Q.of(b, h * h),
+          `$|\\mathbf{r}''| = |\\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle| = ${a}$; the climb $${b}$ drops out of $\\mathbf{r}''$.`,
+          `$|\\mathbf{r}''| = |\\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle| = ${a}$；上升量 $${b}$ 在 $\\mathbf{r}''$ 中消失。`,
+        ),
+        why(Q.of(a, h), `Divide by the speed squared, $${h}^2$, not by $${h}$.`, `要除以速率的平方 $${h}^2$，不是 $${h}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the speed", "求速率"],
+            t(
+              `$\\mathbf{r}' = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$ has length $\\sqrt{${a * a} + ${b * b}} = ${h}$ at every $t$.`,
+              `$\\mathbf{r}' = \\langle -${a}\\sin t, ${a}\\cos t, ${b} \\rangle$ 在每个 $t$ 处长度都是 $\\sqrt{${a * a} + ${b * b}} = ${h}$。`,
+            ),
+          ],
+          [
+            ["Divide the acceleration by the speed squared", "加速度除以速率平方"],
+            t(
+              `$\\mathbf{r}'' = \\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle$ has length ${a}, so $\\kappa = \\frac{${a}}{${h}^2} = ${answer.toLatex()}$.`,
+              `$\\mathbf{r}'' = \\langle -${a}\\cos t, -${a}\\sin t, 0 \\rangle$ 的长度是 ${a}，所以 $\\kappa = \\frac{${a}}{${h}^2} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `By the cross product, $|\\mathbf{r}' \\times \\mathbf{r}''| = ${a} \\cdot ${h}$ since the two are perpendicular, and $\\frac{${a} \\cdot ${h}}{${h}^3} = ${answer.toLatex()}$ again.`,
+          `用向量积：两者互相垂直，所以 $|\\mathbf{r}' \\times \\mathbf{r}''| = ${a} \\cdot ${h}$，而 $\\frac{${a} \\cdot ${h}}{${h}^3} = ${answer.toLatex()}$，结果相同。`,
+        ),
       ),
     });
   },
@@ -871,8 +1085,8 @@ const radiusAtParabolaVertex: KnowledgePointDef = {
   figure: multivariableDrawings1["radius-of-curvature#the-radius-of-curvature-at-the-vertex-of-a-parabola"],
   title: t("The radius of curvature at the vertex of a parabola", "抛物线顶点处的曲率半径"),
   explanation: t(
-    "A graph has curvature $\\frac{|y''|}{(1 + y'^2)^{3/2}}$. At the vertex of a parabola the slope is zero, so the denominator is one and the curvature is simply $|y''|$. The circle that best fits the parabola there has the reciprocal of this as its radius, wherever the vertex happens to be located.",
-    "函数图像的曲率是 $\\frac{|y''|}{(1 + y'^2)^{3/2}}$。在抛物线的顶点处斜率为零，所以分母为一，曲率就是 $|y''|$。无论顶点在哪里，这里最贴合抛物线的圆，半径都是这个值的倒数。",
+    "A graph has curvature $\\frac{|y''|}{(1 + y'^2)^{3/2}}$. At the vertex of a parabola the slope is zero, so the denominator is one and the curvature is simply $|y''|$. The circle that best fits the parabola there has the reciprocal of this as its radius, wherever the vertex happens to be located. For $y = 3x^2 - 12x + 1$, $y'' = 6$, so the radius at the vertex is $\\frac{1}{6}$.\n\n> **Watch out.** $y''$ of $ax^2 + \\dots$ is $2a$, not $a$, and the radius is the reciprocal of the curvature, not the curvature itself. Do not confuse it with the focal distance $\\frac{1}{4|a|}$.",
+    "函数图像的曲率是 $\\frac{|y''|}{(1 + y'^2)^{3/2}}$。在抛物线的顶点处斜率为零，所以分母为一，曲率就是 $|y''|$。无论顶点在哪里，这里最贴合抛物线的圆，半径都是这个值的倒数。对 $y = 3x^2 - 12x + 1$，$y'' = 6$，所以顶点处的曲率半径是 $\\frac{1}{6}$。\n\n> **注意。** $ax^2 + \\dots$ 的 $y''$ 是 $2a$，不是 $a$；半径是曲率的倒数，不是曲率本身。也不要和焦距 $\\frac{1}{4|a|}$ 混淆。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -884,10 +1098,40 @@ const radiusAtParabolaVertex: KnowledgePointDef = {
     return numberProblem({
       prompt: t(`Find the radius of curvature of $y = ${curve}$ at its vertex.`, `求 $y = ${curve}$ 在顶点处的曲率半径。`),
       answer,
-      wrong: [Q.of(1, size), Q.of(2 * size), Q.of(1, 4 * size)],
-      solution: t(
-        `At the vertex $y' = 0$, so the curvature is $|y''| = ${2 * size}$. The radius is its reciprocal, $${answer.toLatex()}$.`,
-        `在顶点处 $y' = 0$，所以曲率是 $|y''| = ${2 * size}$。半径是它的倒数 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(1, size),
+          `$y'' = 2 \\cdot ${inParens(a)} = ${2 * a}$, twice the leading coefficient.`,
+          `$y'' = 2 \\cdot ${inParens(a)} = ${2 * a}$，是首项系数的两倍。`,
+        ),
+        why(Q.of(2 * size), `$${2 * size}$ is the curvature; the radius is its reciprocal.`, `$${2 * size}$ 是曲率；半径是它的倒数。`),
+        why(
+          Q.of(1, 4 * size),
+          `$\\frac{1}{${4 * size}}$ is the distance from the vertex to the focus, not the radius of curvature.`,
+          `$\\frac{1}{${4 * size}}$ 是顶点到焦点的距离，不是曲率半径。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate", "求导"],
+            t(
+              `$y' = ${poly([2 * a, "x"], [-2 * a * h, ""])}$ is $0$ at the vertex $x = ${h}$, and $y'' = ${2 * a}$.`,
+              `$y' = ${poly([2 * a, "x"], [-2 * a * h, ""])}$ 在顶点 $x = ${h}$ 处为 $0$，且 $y'' = ${2 * a}$。`,
+            ),
+          ],
+          [
+            ["Take the reciprocal", "取倒数"],
+            t(
+              `With $y' = 0$ the curvature is $\\kappa = |y''| = ${2 * size}$, so the radius is $\\rho = \\frac{1}{\\kappa} = ${answer.toLatex()}$.`,
+              `$y' = 0$ 时曲率 $\\kappa = |y''| = ${2 * size}$，所以半径 $\\rho = \\frac{1}{\\kappa} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Near its ${a > 0 ? "lowest" : "highest"} point a circle of radius $\\rho$ is $y \\approx ${k} ${a > 0 ? "+" : "-"} \\frac{(${poly([1, "x"], [-h, ""])})^2}{2\\rho}$, and $\\frac{1}{2\\rho} = ${size}$ matches the parabola's $|a| = ${size}$.`,
+          `半径为 $\\rho$ 的圆在其${a > 0 ? "最低" : "最高"}点附近是 $y \\approx ${k} ${a > 0 ? "+" : "-"} \\frac{(${poly([1, "x"], [-h, ""])})^2}{2\\rho}$，而 $\\frac{1}{2\\rho} = ${size}$ 正好等于抛物线的 $|a| = ${size}$。`,
+        ),
       ),
     });
   },
@@ -1704,8 +1948,8 @@ const squaredLengthRate: KnowledgePointDef = {
   figure: multivariableDrawings1["differentiation-rules-for-vector-valued-functions#the-rate-of-change-of-a-squared-length"],
   title: t("The rate of change of a squared length", "长度平方的变化率"),
   explanation: t(
-    "The squared length of a moving vector is $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$, so the product rule for dot products gives $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$. Only the current position and velocity are needed, and not the formula for the curve. If the result is zero, the vector is momentarily neither lengthening nor shortening, because its velocity is perpendicular to it.",
-    "运动向量的长度平方是 $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$，所以点积的乘积法则给出 $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$。只需要当前的位置和速度，不需要曲线的公式。如果结果为零，向量此刻既不变长也不变短，因为它的速度与它垂直。",
+    "The squared length of a moving vector is $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$, so the product rule for dot products gives $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$. Only the current position and velocity are needed, and not the formula for the curve. If the result is zero, the vector is momentarily neither lengthening nor shortening, because its velocity is perpendicular to it. With $\\mathbf{r} = \\langle 1, 2, 8 \\rangle$ and $\\mathbf{r}' = \\langle 3, 0, 1 \\rangle$, $\\mathbf{r} \\cdot \\mathbf{r}' = 3 + 0 + 8 = 11$, so the squared length grows at rate $22$.\n\n> **Watch out.** Keep the factor $2$ from the product rule, and multiply matching entries before adding: $\\mathbf{r} \\cdot \\mathbf{r}'$ is not the sum of all six entries.",
+    "运动向量的长度平方是 $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$，所以点积的乘积法则给出 $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$。只需要当前的位置和速度，不需要曲线的公式。如果结果为零，向量此刻既不变长也不变短，因为它的速度与它垂直。设 $\\mathbf{r} = \\langle 1, 2, 8 \\rangle$，$\\mathbf{r}' = \\langle 3, 0, 1 \\rangle$，则 $\\mathbf{r} \\cdot \\mathbf{r}' = 3 + 0 + 8 = 11$，所以长度平方以 $22$ 的速率增长。\n\n> **注意。** 不要丢掉乘积法则带来的因子 $2$；要先把对应分量相乘再相加：$\\mathbf{r} \\cdot \\mathbf{r}'$ 不是六个分量的总和。",
   ),
   generate(rng) {
     const r = [rng.int(-6, 6), rng.int(-6, 6), nonzero(rng, 6)];
@@ -1714,6 +1958,7 @@ const squaredLengthRate: KnowledgePointDef = {
     const t0 = rng.int(1, 5);
     const answer = 2 * product;
     const vectorSum = (r[0] ?? 0) + (r[1] ?? 0) + (r[2] ?? 0) + (v[0] ?? 0) + (v[1] ?? 0) + (v[2] ?? 0);
+    const terms = r.map((x, i) => `${inParens(x)} \\cdot ${inParens(v[i] ?? 0)}`).join(" + ");
     return numberProblem({
       prompt: t(
         `A curve has $\\mathbf{r}(${t0}) = \\langle ${r.join(", ")} \\rangle$ and $\\mathbf{r}'(${t0}) = \\langle ${v.join(", ")} \\rangle$. Find $\\frac{d}{dt}\\|\\mathbf{r}(t)\\|^2$ at $t = ${t0}$.`,
@@ -1721,10 +1966,44 @@ const squaredLengthRate: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [product, -answer, vectorSum, answer + 1],
-      solution: t(
-        `The derivative is $2\\mathbf{r} \\cdot \\mathbf{r}'$. The dot product is $${product}$, so the value is $${answer}$.`,
-        `导数是 $2\\mathbf{r} \\cdot \\mathbf{r}'$。点积是 $${product}$，所以值是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          product,
+          `$${product}$ is $\\mathbf{r} \\cdot \\mathbf{r}'$; the product rule gives $\\mathbf{r}' \\cdot \\mathbf{r} + \\mathbf{r} \\cdot \\mathbf{r}' = 2\\mathbf{r} \\cdot \\mathbf{r}'$.`,
+          `$${product}$ 是 $\\mathbf{r} \\cdot \\mathbf{r}'$；乘积法则给出 $\\mathbf{r}' \\cdot \\mathbf{r} + \\mathbf{r} \\cdot \\mathbf{r}' = 2\\mathbf{r} \\cdot \\mathbf{r}'$。`,
+        ),
+        why(
+          -answer,
+          `Check the signs: each term is $r_i r_i'$, added, with no minus in front.`,
+          `检查符号：每一项是 $r_i r_i'$，直接相加，前面没有负号。`,
+        ),
+        why(
+          vectorSum,
+          `That adds all six entries; the dot product multiplies matching entries first.`,
+          `那是把六个分量全加起来；点积要先把对应分量相乘。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate the squared length", "对长度平方求导"],
+            t(
+              `$\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$, so by the product rule $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$.`,
+              `$\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$，由乘积法则 $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$。`,
+            ),
+          ],
+          [
+            ["Use the values at the moment", "代入此刻的值"],
+            t(
+              `$\\mathbf{r} \\cdot \\mathbf{r}' = ${terms} = ${product}$, so the rate is $2 \\cdot ${inParens(product)} = ${answer}$.`,
+              `$\\mathbf{r} \\cdot \\mathbf{r}' = ${terms} = ${product}$，所以变化率是 $2 \\cdot ${inParens(product)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Written out, $\\frac{d}{dt}(x^2 + y^2 + z^2) = 2xx' + 2yy' + 2zz' = ${r.map((x, i) => `2 \\cdot ${inParens(x)} \\cdot ${inParens(v[i] ?? 0)}`).join(" + ")} = ${answer}$.`,
+          `展开写，$\\frac{d}{dt}(x^2 + y^2 + z^2) = 2xx' + 2yy' + 2zz' = ${r.map((x, i) => `2 \\cdot ${inParens(x)} \\cdot ${inParens(v[i] ?? 0)}`).join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },

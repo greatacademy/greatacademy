@@ -221,6 +221,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `methods-of-proof-congruence.ts` | 14 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third-2.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-number-theory.ts`, `deeper-number-theory.ts` and `figure-reading-college.ts` too; `numeric` in `figure-reading-more.ts` takes mistakes |
 | `linear-algebra-preliminaries.ts` | 25 | done | coordinator | the 16 set topics and the 9 line and plane topics, with third points in `deeper-linear-algebra-third.ts`, `deeper-linear-algebra.ts`, `deeper-methods-of-proof.ts`, `deeper-figures-methods-of-proof.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-linear-algebra.ts`, `deeper-figures-linear-algebra-2.ts`, `figure-reading.ts` and `figure-reading-more.ts` |
 | `linear-algebra-matrices.ts` | 29 | in progress | coordinator | the determinant, elimination, elementary-matrix and inverse topics through 2.7.3 so far, with third points in `deeper-linear-algebra.ts`, `deeper-linear-algebra-third.ts`, `deeper-discrete-mathematics.ts`, `deeper-figures-linear-algebra.ts` and `deeper-figures-linear-algebra-2.ts` |
+| `multivariable-calculus-vector-functions.ts` | 15 | in progress | coordinator, helper B | topics 1–15, from the domain of a vector function to the radius of curvature, with third points in `deeper-multivariable-calculus.ts`, `deeper-multivariable-calculus-third.ts` and `deeper-figures-multivariable-calculus-2.ts` |
 
 ## Open Gaps
 

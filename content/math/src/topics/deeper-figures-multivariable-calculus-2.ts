@@ -14,7 +14,7 @@ import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { explainedChoice, numberProblem } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -27,6 +27,11 @@ const at = (p: Point) => `(${p[0]}, ${p[1]})`;
 const dot = (u: Point, v: Point) => u[0] * v[0] + u[1] * v[1];
 const cross = (u: Point, v: Point) => u[0] * v[1] - u[1] * v[0];
 const paren = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly ReturnType<typeof why>[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** terms writes a sum of coefficient and variable pairs, leaving out zero terms. */
 function terms(parts: readonly (readonly [number, string])[]): string {
@@ -192,8 +197,8 @@ const tangentSlope = point(
   "the-slope-at-a-marked-point-of-a-parametrized-curve",
   ["The slope at a marked point of a parametrized curve", "参数曲线上标记点处的斜率"],
   [
-    "Find the parameter of the point from its coordinates. The tangent vector there is $r'(t)$, and the slope of the tangent line is $\\frac{y'(t)}{x'(t)}$.",
-    "由坐标求出该点的参数。那里的切向量是 $r'(t)$，切线斜率为 $\\frac{y'(t)}{x'(t)}$。",
+    "Find the parameter of the point from its coordinates. The tangent vector there is $r'(t)$, and the slope of the tangent line is $\\frac{y'(t)}{x'(t)}$. For $r(t) = (4t,\\ t^2)$ at $P = (8, 4)$, $4t = 8$ gives $t = 2$, and $r'(2) = (4,\\ 4)$, so the slope is $\\frac{4}{4} = 1$.\n\n> **Watch out.** Find $t$ from $x$, not from $y = t^2$: $t^2 = 4$ allows $t = -2$ as well, which is a different point. And the slope is $\\frac{y'}{x'}$, rise over run, not $\\frac{x'}{y'}$.",
+    "由坐标求出该点的参数。那里的切向量是 $r'(t)$，切线斜率为 $\\frac{y'(t)}{x'(t)}$。对 $r(t) = (4t,\\ t^2)$ 在 $P = (8, 4)$ 处，由 $4t = 8$ 得 $t = 2$，而 $r'(2) = (4,\\ 4)$，所以斜率为 $\\frac{4}{4} = 1$。\n\n> **注意。** 要由 $x$ 求 $t$，不要由 $y = t^2$ 求：$t^2 = 4$ 也允许 $t = -2$，那是另一个点。斜率是 $\\frac{y'}{x'}$，纵向变化比横向变化，不是 $\\frac{x'}{y'}$。",
   ],
   (rng) => {
     const k = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -201,18 +206,52 @@ const tangentSlope = point(
     const P: Point = [k * t0, t0 * t0];
     const answer = Q.of(2 * t0, k);
     const xt = terms([[k, "t"]]);
-    return ask(
-      [
-        `The drawing shows the curve $r(t) = (${xt},\\ t^2)$ with a marked point $P$. Find the slope of the tangent line at $P$.`,
-        `图中是曲线 $r(t) = (${xt},\\ t^2)$，标出了点 $P$。求 $P$ 处切线的斜率。`,
-      ],
-      answer,
-      [Q.of(k, 2 * t0), Q.of(-2 * t0, k), 2 * t0, Q.of(t0, k)],
-      [
-        `$P = ${at(P)}$, so $${xt} = ${P[0]}$${k === 1 ? "" : ` gives $t = ${t0}$`}. Since $r'(t) = (${k},\\ 2t)$, the slope is $\\frac{2(${t0})}{${k}} = ${answer.toLatex()}$.`,
-        `$P = ${at(P)}$，${k === 1 ? `即 $t = ${t0}$` : `由 $${xt} = ${P[0]}$ 得 $t = ${t0}$`}。因为 $r'(t) = (${k},\\ 2t)$，斜率为 $\\frac{2(${t0})}{${k}} = ${answer.toLatex()}$。`,
-      ],
-      fig(
+    const slope = (s: number) => Q.of(2 * s * k, k * k);
+    const tOfX = k === 1 ? "x" : k === -1 ? "-x" : k < 0 ? `-\\frac{x}{${-k}}` : `\\frac{x}{${k}}`;
+    const yOfX = k * k === 1 ? "x^2" : `\\frac{x^2}{${k * k}}`;
+    const slopeOfX = k * k === 1 ? "2x" : `\\frac{2x}{${k * k}}`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The drawing shows the curve $r(t) = (${xt},\\ t^2)$ with a marked point $P$. Find the slope of the tangent line at $P$.`,
+          `图中是曲线 $r(t) = (${xt},\\ t^2)$，标出了点 $P$。求 $P$ 处切线的斜率。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            Q.of(k, 2 * t0),
+            `That is $\\frac{x'}{y'}$; the slope is $\\frac{y'}{x'}$.`,
+            `那是 $\\frac{x'}{y'}$；斜率是 $\\frac{y'}{x'}$。`,
+          ),
+          why(
+            Q.of(-2 * t0, k),
+            `That uses $t = ${-t0}$, which also solves $t^2 = ${t0 * t0}$ but gives the point $${at([-k * t0, t0 * t0])}$; find $t$ from $x$.`,
+            `那用了 $t = ${-t0}$，它也满足 $t^2 = ${t0 * t0}$，但对应点 $${at([-k * t0, t0 * t0])}$；要由 $x$ 求 $t$。`,
+          ),
+          why(2 * t0, `$${2 * t0}$ is $y'(t)$ alone; divide by $x'(t) = ${k}$.`, `$${2 * t0}$ 只是 $y'(t)$；还要除以 $x'(t) = ${k}$。`),
+          why(Q.of(t0, k), `$y = t^2$ has $y' = 2t$, not $t$.`, `$y = t^2$ 的导数是 $y' = 2t$，不是 $t$。`),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the parameter of $P$", "求 $P$ 的参数"],
+              t(`$P = ${at(P)}$, and $${xt} = ${P[0]}$ gives $t = ${t0}$.`, `$P = ${at(P)}$，由 $${xt} = ${P[0]}$ 得 $t = ${t0}$。`),
+            ],
+            [
+              ["Divide the rates", "两个变化率相除"],
+              t(
+                `$r'(t) = (${k},\\ 2t)$, so at $t = ${t0}$ the slope is $\\frac{y'}{x'} = \\frac{2 \\cdot ${paren(t0)}}{${k}} = ${answer.toLatex()}$.`,
+                `$r'(t) = (${k},\\ 2t)$，所以在 $t = ${t0}$ 处斜率为 $\\frac{y'}{x'} = \\frac{2 \\cdot ${paren(t0)}}{${k}} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Eliminating $t = ${tOfX}$ gives $y = ${yOfX}$, whose slope $${slopeOfX}$ at $x = ${P[0]}$ is $${slope(t0).toLatex()}$.`,
+            `消去 $t = ${tOfX}$ 得 $y = ${yOfX}$，它在 $x = ${P[0]}$ 处的斜率 $${slopeOfX}$ 等于 $${slope(t0).toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         { xMin: -10, xMax: 10, yMin: -2, yMax: 11, labelEvery: 2 },
         [
           { kind: "curve", f: (x) => (x / k) ** 2, accent: true },
@@ -223,7 +262,7 @@ const tangentSlope = point(
           `顶点在原点、开口向上的抛物线，点 P 位于 ${at(P)}。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -1627,8 +1666,8 @@ const arcLength = {
     "the-length-of-a-drawn-broken-path",
     ["The length of a drawn broken path", "所画折线路径的长度"],
     [
-      "Arc length adds up along the pieces of a path. On a straight piece, $\\int \\lVert r'(t) \\rVert\\,dt$ is the distance between its ends.",
-      "弧长沿路径的各段相加。在直线段上，$\\int \\lVert r'(t) \\rVert\\,dt$ 就是两端之间的距离。",
+      "Arc length adds up along the pieces of a path. On a straight piece, $\\int \\lVert r'(t) \\rVert\\,dt$ is the distance between its ends. The path $(0, 0) \\to (6, 8) \\to (6, 3)$ has pieces of length $\\sqrt{36 + 64} = 10$ and $5$, so its length is $15$, more than the $\\sqrt{36 + 9} \\approx 6.7$ straight across.\n\n> **Watch out.** A slanted piece has length $\\sqrt{\\Delta x^2 + \\Delta y^2}$, not $\\lvert \\Delta x \\rvert + \\lvert \\Delta y \\rvert$, and the length follows every piece, not the straight line from start to end.",
+      "弧长沿路径的各段相加。在直线段上，$\\int \\lVert r'(t) \\rVert\\,dt$ 就是两端之间的距离。路径 $(0, 0) \\to (6, 8) \\to (6, 3)$ 各段长为 $\\sqrt{36 + 64} = 10$ 和 $5$，所以长度为 $15$，比直接连线的 $\\sqrt{36 + 9} \\approx 6.7$ 长。\n\n> **注意。** 斜段的长度是 $\\sqrt{\\Delta x^2 + \\Delta y^2}$，不是 $\\lvert \\Delta x \\rvert + \\lvert \\Delta y \\rvert$；长度要沿每一段走，不是起点到终点的直线距离。",
     ],
     (rng) => {
       const legs: readonly [number, number, number][] = [
@@ -1667,26 +1706,56 @@ const arcLength = {
       }
       const total = chosen.reduce((sum, [, , r]) => sum + r, 0);
       const end = points[points.length - 1] as Point;
-      const straight = Math.round(Math.hypot(end[0] - start[0], end[1] - start[1]));
-      return ask(
-        ["Find the arc length of the drawn broken path.", "求所画折线路径的弧长。"],
-        total,
-        [
-          straight === total ? total + 1 : straight,
-          chosen.reduce((sum, [dx, dy]) => sum + Math.abs(dx) + Math.abs(dy), 0),
-          total + 2,
-          total - 1,
-        ],
-        [
-          `The pieces have lengths ${chosen.map(([, , r]) => `$${r}$`).join(", ")}, which add up to $${total}$.`,
-          `各段长度为 ${chosen.map(([, , r]) => `$${r}$`).join("、")}，总和为 $${total}$。`,
-        ],
-        fig(
+      const across = (end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2;
+      const straight = Math.sqrt(across);
+      const taxicab = chosen.reduce((sum, [dx, dy]) => sum + Math.abs(dx) + Math.abs(dy), 0);
+      const piece = ([dx, dy, r]: readonly [number, number, number]) =>
+        dx === 0 || dy === 0 ? `${r}` : `\\sqrt{${dx * dx} + ${dy * dy}} = ${r}`;
+      const lengths = chosen.map(([, , r]) => `${r}`).join(" + ");
+      const direct = Number.isInteger(straight) ? `\\sqrt{${across}} = ${straight}` : `\\sqrt{${across}}`;
+      return {
+        ...numberProblem({
+          prompt: t("Find the arc length of the drawn broken path.", "求所画折线路径的弧长。"),
+          answer: total,
+          mistakes: apart(total, [
+            ...(Number.isInteger(straight)
+              ? [
+                  why(
+                    straight,
+                    `$${straight}$ is the straight distance from the first point to the last; the path follows every piece.`,
+                    `$${straight}$ 是首点到末点的直线距离；路径要沿每一段走。`,
+                  ),
+                ]
+              : []),
+            why(
+              taxicab,
+              `That adds $\\lvert \\Delta x \\rvert + \\lvert \\Delta y \\rvert$ on each piece; a slanted piece has length $\\sqrt{\\Delta x^2 + \\Delta y^2}$.`,
+              `那是每段加上 $\\lvert \\Delta x \\rvert + \\lvert \\Delta y \\rvert$；斜段的长度是 $\\sqrt{\\Delta x^2 + \\Delta y^2}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Measure each piece", "量出每一段"],
+                t(
+                  `Going through ${points.map(at).join(", ")}, the pieces have lengths ${chosen.map((c) => `$${piece(c)}$`).join(", ")}.`,
+                  `依次经过 ${points.map(at).join("、")}，各段长度为 ${chosen.map((c) => `$${piece(c)}$`).join("、")}。`,
+                ),
+              ],
+              [["Add them", "相加"], t(`The arc length is $${lengths} = ${total}$.`, `弧长为 $${lengths} = ${total}$。`)],
+            ],
+            t(
+              `The straight distance from ${at(start)} to ${at(end)} is $${direct}$, and $${total}^2 = ${total * total} \\ge ${across}$, so the path is at least as long as the straight line, as it must be.`,
+              `从 ${at(start)} 到 ${at(end)} 的直线距离是 $${direct}$，而 $${total}^2 = ${total * total} \\ge ${across}$，所以路径不短于直线，理应如此。`,
+            ),
+          ),
+        }),
+        figure: fig(
           { xMin: -10, xMax: 10, yMin: -10, yMax: 10, labelEvery: 2 },
           [{ kind: "path", points, accent: true }, ...points.map((p): PlaneMark => ({ kind: "point", at: p }))],
           [`A broken path through ${points.map(at).join(", ")}.`, `折线路径，依次经过 ${points.map(at).join("、")}。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings1["the-arc-length-of-a-vector-valued-function#the-length-of-a-drawn-broken-path"],
