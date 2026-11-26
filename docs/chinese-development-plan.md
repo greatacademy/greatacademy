@@ -17,7 +17,7 @@ This document turns the design in [Chinese Curriculum](chinese-curriculum.md) in
 | 4 Grades 1 and 2, heritage bridges | The first two grades and three literacy bridges | — | Each course meets its criteria |
 | 5 Grades 7 to 9, senior secondary, classical language | The rest of the native courses | — | Each course meets its criteria |
 | 6 Levels 4 to 9, judged writing, speech and conversation, exam courses | The rest of the foreign-language courses and the exam courses | Teachers scoring writing and speech | Each course meets its criteria |
-| 7 Fit for self-study | Every course teaches a learner alone: true feedback, unique answers, honest options, every word heard, words produced, prompts within reach, grades 1 and 2 for a child, heritage reading, Gaokao at the exam's level | Teachers reading for self-study | Gate CG7 |
+| 7 Fit for self-study | Every course teaches a learner alone: true feedback, unique answers, honest options, every word heard, words produced, prompts within reach, grades 1 and 2 for a child, heritage reading, Gaokao at the exam's level, texts laid out as in a textbook, pictures | Teachers reading for self-study | Gate CG7 |
 
 ```text
 CG0 ─► C1 first slice ─► CG1 ─┬─► C2 levels 1–3 ─► CG2 ─┬─► C6 levels 4–9, writing, speech, exams
@@ -295,9 +295,25 @@ The milestones close what was found, in the order of the harm to a learner alone
 
 **Done when.** A test over the native courses and the audit.
 
-### C7.14 Gate CG7
+### C7.14 Texts Laid Out as in a Textbook (M)
 
-C7.1 to C7.13 are done; a walk of every course, at least one lesson and ten questions each, finds none of the problems above; and teachers of Chinese as a native and as a foreign language (§10.3) read a sample of each course for self-study.
+**Found.** A text or poem to read or recite is met first in pieces: the introduction leads through it sentence by sentence or word by word, and the whole is seen only in a question, in the size and spacing of a question. A textbook does the reverse: it gives the whole text first, in larger type with wider lines, a poem centred line by line under its title and poet, with pinyin over the characters the learner has not met, and only then works through it. No page or app can yet set pinyin over a character.
+
+**Build.** Each topic that teaches a text or poem opens with the whole of it, before any guidance: title, author and dynasty, the body in larger type and wider spacing than a question, a poem in its lines, prose in its paragraphs, with its recording. Characters not yet taught by the course, counted as C7.7 counts them, carry their pinyin above them as ruby, in the tone they are said in; the content marks them, the compiler checks each reading against the dictionary of `libs/subject-chinese`, and the web app and the apps render it. The guidance by sentence and word follows the whole text, which stays one tap away in every later question on it.
+
+**Done when.** A test that every text and poem topic opens with its whole text and that every untaught character in it has a checked reading; the walk of C7.16 sees the layout on a phone and on the web.
+
+### C7.15 Pictures That Help Understanding (L)
+
+**Found.** Only the sixteen HSK 5 story tasks have pictures. A textbook illustrates nearly every text, poem and new word, and a learner alone has no teacher to show what a 柳 or a 驿站 is or where a poem takes place; English already illustrates its reading units.
+
+**Build.** Pictures, generated with codex's image tool by the agent of [chinese-illustrations.md](chinese-illustrations.md), extended with a section for each kind: one per text and poem, shown above it as a textbook shows it; one per concrete new word of the lower grades, the foreign-language levels and the HSK, shown with the word in its lesson; and one per reading unit cover. The style, review and files follow that document and [english-illustrations.md](english-illustrations.md): no writing in a picture, nothing a picture shows that the text does not say, a classical poem drawn in its own period, the cast kept the same within a course. Batches go in the order of the learners who most need them, grades 1 and 2, level 1 and HSK 1 first.
+
+**Done when.** Every text and poem, and every concrete new word of those courses, has a picture that passed review; a test checks the list against the files.
+
+### C7.16 Gate CG7
+
+C7.1 to C7.15 are done; a walk of every course, at least one lesson and ten questions each, finds none of the problems above; and teachers of Chinese as a native and as a foreign language (§10.3) read a sample of each course for self-study.
 
 ## 10. Across All Stages
 
