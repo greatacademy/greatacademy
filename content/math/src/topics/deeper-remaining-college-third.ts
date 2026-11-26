@@ -957,20 +957,53 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-vertices-from-the-edges",
       ["The vertices from the edges", "由边数求顶点数"],
       [
-        "In a regular graph every vertex has the same degree, so the handshake lemma reads $nk = 2E$. Knowing the degree and the number of edges therefore gives the number of vertices.",
-        "正则图中每个顶点的度相同，所以握手定理写成 $nk = 2E$。因此知道度和边数，就能求出顶点数。",
+        "In a regular graph every vertex has the same degree, so the handshake lemma reads $nk = 2E$. Knowing the degree and the number of edges therefore gives the number of vertices. The graph drawn has degree $3$ and $9$ edges, so $3n = 18$ and $n = 6$. A $10$-regular graph with $75$ edges has $n = \\frac{2 \\cdot 75}{10} = 15$ vertices.\n\n> **Watch out.** Double the edges before dividing by the degree: $\\frac{E}{k}$ counts each edge from only one end.",
+        "正则图中每个顶点的度相同，所以握手定理写成 $nk = 2E$。因此知道度和边数，就能求出顶点数。图中的图度为 $3$、有 $9$ 条边，所以 $3n = 18$，$n = 6$。有 $75$ 条边的 $10$-正则图有 $n = \\frac{2 \\cdot 75}{10} = 15$ 个顶点。\n\n> **注意。** 先把边数加倍，再除以度：$\\frac{E}{k}$ 只从一端数了每条边。",
       ],
       (rng) => {
         const k = rng.int(2, 8);
         const half = rng.int(k + 1, k + 15);
         const v = k % 2 === 0 ? half : 2 * half;
         const e = (v * k) / 2;
-        return whole(
-          [`A ${k}-regular graph has ${e} edges. How many vertices does it have?`, `一个 ${k}-正则图有 ${e} 条边。它有多少个顶点？`],
-          v,
-          [v + 2, v * k, e + 1],
-          [`$n \\cdot ${k} = 2 \\cdot ${e}$, so $n = ${v}$.`, `$n \\cdot ${k} = 2 \\cdot ${e}$，所以 $n = ${v}$。`],
-        );
+        return numberProblem({
+          prompt: t(
+            `A ${k}-regular graph has ${e} edges. How many vertices does it have?`,
+            `一个 ${k}-正则图有 ${e} 条边。它有多少个顶点？`,
+          ),
+          answer: v,
+          form: "integer",
+          mistakes: [
+            why(v * k, "That multiplies by the degree; divide the degree sum by it instead.", "那是乘以了度；应当用度数之和除以它。"),
+            why(
+              e / k,
+              "That divides the edges by the degree; the degree sum is twice the edges.",
+              "那是用边数除以度；度数之和是边数的两倍。",
+            ),
+            why(2 * e, "That is the degree sum $2E$, not the number of vertices.", "那是度数之和 $2E$，不是顶点数。"),
+            why(
+              e + 1,
+              "That is close to the number of edges; the vertices come from $nk = 2E$.",
+              "那接近边数；顶点数要由 $nk = 2E$ 求出。",
+            ),
+            why(v + 2, "That is too many: solve $nk = 2E$ again.", "太多了：重新解 $nk = 2E$。"),
+          ].filter((x, i, all) => Number.isInteger(x.value) && x.value !== v && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Use the handshake lemma", "用握手定理"],
+                t(
+                  `Every vertex has degree ${k}, so $n \\cdot ${k} = 2 \\cdot ${e} = ${2 * e}$.`,
+                  `每个顶点的度都是 ${k}，所以 $n \\cdot ${k} = 2 \\cdot ${e} = ${2 * e}$。`,
+                ),
+              ],
+              [["Divide by the degree", "除以度"], t(`$n = \\frac{${2 * e}}{${k}} = ${v}$.`, `$n = \\frac{${2 * e}}{${k}} = ${v}$。`)],
+            ],
+            t(
+              `$\\frac{${v} \\cdot ${k}}{2} = ${e}$ edges, and $${k} \\le ${v - 1}$, so a simple ${k}-regular graph on ${v} vertices can exist.`,
+              `$\\frac{${v} \\cdot ${k}}{2} = ${e}$ 条边，且 $${k} \\le ${v - 1}$，所以 ${v} 个顶点的 ${k}-正则简单图可以存在。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -1217,8 +1250,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-missing-degree",
       ["The missing degree", "缺失的度"],
       [
-        "Every edge has two ends, so the degrees of a graph add up to twice the number of edges. This is the handshake lemma, and it finds one missing degree when the others are known.",
-        "每条边有两个端点，所以图的度数之和是边数的两倍。这就是握手定理，已知其他度时可以求出缺失的度。",
+        "Every edge has two ends, so the degrees of a graph add up to twice the number of edges. This is the handshake lemma, and it finds one missing degree when the others are known. A graph with $4$ vertices and $4$ edges whose first three degrees are $3, 2, 2$ has degree sum $2 \\cdot 4 = 8$, so the last degree is $8 - 7 = 1$.\n\n> **Watch out.** Subtract from twice the number of edges, not from the number of edges itself.",
+        "每条边有两个端点，所以图的度数之和是边数的两倍。这就是握手定理，已知其他度时可以求出缺失的度。有 $4$ 个顶点、$4$ 条边的图，前三个顶点的度为 $3, 2, 2$，度数之和为 $2 \\cdot 4 = 8$，所以最后一个顶点的度是 $8 - 7 = 1$。\n\n> **注意。** 要从边数的两倍中减，而不是从边数本身中减。",
       ],
       (rng) => {
         const n = rng.int(5, 8);
@@ -1236,18 +1269,48 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const hidden = rng.int(0, n - 1);
         const answer = degrees[hidden] as number;
         const others = degrees.filter((_, i) => i !== hidden);
-        return whole(
-          [
+        const known = 2 * edges - answer;
+        return numberProblem({
+          prompt: t(
             `A simple graph has ${edges} edges and ${n} vertices. ${n - 1} of the vertices have degrees $${others.join(", ")}$. What is the degree of the last vertex?`,
             `简单图有 ${edges} 条边、${n} 个顶点。其中 ${n - 1} 个顶点的度是 $${others.join(", ")}$。最后一个顶点的度是多少？`,
-          ],
+          ),
           answer,
-          [answer + 2, answer + 1, edges],
-          [
-            `The degrees add up to ${2 * edges}, and the others add up to ${2 * edges - answer}.`,
-            `度数之和是 ${2 * edges}，其他顶点的度数之和是 ${2 * edges - answer}。`,
-          ],
-        );
+          form: "integer",
+          mistakes: [
+            why(edges, "That is the number of edges, not a degree.", "那是边数，不是度。"),
+            why(
+              edges - known,
+              "That subtracts from the number of edges; the degrees add up to twice the edges.",
+              "那是从边数中减；度数之和是边数的两倍。",
+            ),
+            why(answer + 1, "That is one too many: add the known degrees again.", "多了一：重新把已知的度相加。"),
+            why(
+              answer + 2,
+              "That is two too many: each edge adds $1$ to each of its two ends, not $2$.",
+              "多了二：每条边使两个端点的度各加 $1$，不是 $2$。",
+            ),
+          ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the degree sum", "求度数之和"],
+                t(`The degrees add up to $2 \\cdot ${edges} = ${2 * edges}$.`, `度数之和是 $2 \\cdot ${edges} = ${2 * edges}$。`),
+              ],
+              [
+                ["Subtract the known degrees", "减去已知的度"],
+                t(
+                  `The others add up to ${known}, so the last degree is $${2 * edges} - ${known} = ${answer}$.`,
+                  `其他顶点的度数之和是 ${known}，所以最后一个顶点的度是 $${2 * edges} - ${known} = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$${[...others, answer].join(" + ")} = ${2 * edges}$, and $0 \\le ${answer} \\le ${n - 1}$, as a degree in a simple graph on ${n} vertices must be.`,
+              `$${[...others, answer].join(" + ")} = ${2 * edges}$，且 $0 \\le ${answer} \\le ${n - 1}$，符合 ${n} 个顶点的简单图中度的范围。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -1338,8 +1401,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "walks-of-length-three-from-a-matrix",
       ["Walks of length three from a matrix", "由矩阵求长度为 3 的路线"],
       [
-        "Entry $(i, j)$ of the $k$th power of an adjacency matrix counts the walks of length $k$ from $i$ to $j$. So walks of length three come from multiplying the matrix by itself twice.",
-        "邻接矩阵 $k$ 次幂的 $(i, j)$ 元素，就是从 $i$ 到 $j$ 长度为 $k$ 的路线数。所以长度为 3 的路线数由矩阵自乘两次得到。",
+        "Entry $(i, j)$ of the $k$th power of an adjacency matrix counts the walks of length $k$ from $i$ to $j$. So walks of length three come from multiplying the matrix by itself twice. For the matrix $\\begin{pmatrix} 0 & 1 \\\\ 1 & 1 \\end{pmatrix}$ on $A, B$, the square is $\\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and the cube is $\\begin{pmatrix} 1 & 2 \\\\ 2 & 3 \\end{pmatrix}$, so $2$ walks of length 3 go from $A$ to $B$.\n\n> **Watch out.** The square counts walks of length 2 and the matrix itself walks of length 1; and the rows give the starting vertex, so do not read the entry from $j$ to $i$ instead.",
+        "邻接矩阵 $k$ 次幂的 $(i, j)$ 元素，就是从 $i$ 到 $j$ 长度为 $k$ 的路线数。所以长度为 3 的路线数由矩阵自乘两次得到。对 $A, B$ 上的矩阵 $\\begin{pmatrix} 0 & 1 \\\\ 1 & 1 \\end{pmatrix}$，平方为 $\\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$，立方为 $\\begin{pmatrix} 1 & 2 \\\\ 2 & 3 \\end{pmatrix}$，所以从 $A$ 到 $B$ 长度为 3 的路线有 $2$ 条。\n\n> **注意。** 平方数的是长度为 2 的路线，矩阵本身数的是长度为 1 的路线；而且行表示起点，不要读成从 $j$ 到 $i$ 的元素。",
       ],
       (rng) => {
         const mul = (x: number[][], y: number[][]) =>
@@ -1359,22 +1422,63 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const rowOfSquare = squared[i] as number[];
         const column = m.map((row) => row[j] as number);
         const names = ["A", "B", "C"];
-        return whole(
-          [
+        const cube = mul(squared, m);
+        const rowOfMatrix = m[i] as number[];
+        const columnOfSquare = squared.map((row) => row[j] as number);
+        const picked = (values: number[], ones: number[]) => {
+          const kept = [0, 1, 2].filter((k) => ones[k] === 1).map((k) => values[k] as number);
+          return kept.length === 1 ? `${answer}` : `${kept.join(" + ")} = ${answer}`;
+        };
+        const onesIn = (ones: number[]) =>
+          [0, 1, 2]
+            .filter((k) => ones[k] === 1)
+            .map((k) => `$${names[k]}$`)
+            .join(", ");
+        return numberProblem({
+          prompt: t(
             `A directed graph on $A, B, C$ has adjacency matrix $${mat(m)}$. How many walks of length 3 go from $${names[i]}$ to $${names[j]}$?`,
             `顶点为 $A, B, C$ 的有向图的邻接矩阵是 $${mat(m)}$。从 $${names[i]}$ 到 $${names[j]}$ 长度为 3 的路线有多少条？`,
-          ],
+          ),
           answer,
-          [
-            square === answer ? answer + 1 : square,
-            answer + 2,
-            (m[i] as number[])[j] === answer ? answer + 3 : ((m[i] as number[])[j] as number),
-          ],
-          [
-            `Row $${names[i]}$ of the matrix squared is $(${rowOfSquare.join(", ")})$. Multiply it by column $${names[j]}$ of the matrix, $(${column.join(", ")})$: $${rowOfSquare.map((v, k) => `${v} \\cdot ${column[k]}`).join(" + ")} = ${answer}$.`,
-            `矩阵平方的 $${names[i]}$ 行是 $(${rowOfSquare.join(", ")})$。乘以矩阵的 $${names[j]}$ 列 $(${column.join(", ")})$：$${rowOfSquare.map((v, k) => `${v} \\cdot ${column[k]}`).join(" + ")} = ${answer}$。`,
-          ],
-        );
+          form: "integer",
+          mistakes: [
+            why(square, "That is the entry of the square, which counts walks of length 2.", "那是平方的元素，数的是长度为 2 的路线。"),
+            why(
+              rowOfMatrix[j] as number,
+              "That is the entry of the matrix itself, which counts walks of length 1.",
+              "那是矩阵本身的元素，数的是长度为 1 的路线。",
+            ),
+            why(
+              (cube[j] as number[])[i] as number,
+              `That counts the walks from $${names[j]}$ to $${names[i]}$; the row gives the start.`,
+              `那是数了从 $${names[j]}$ 到 $${names[i]}$ 的路线；行表示起点。`,
+            ),
+            why(answer + 1, "That is one too many: multiply the row by the column again.", "多了一：重新用行乘以列。"),
+            why(answer + 2, "That is two too many: multiply the row by the column again.", "多了二：重新用行乘以列。"),
+          ].filter((x, k, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === k),
+          solution: walked(
+            [
+              [
+                ["Square the matrix", "求矩阵的平方"],
+                t(
+                  `Row $${names[i]}$ of the matrix squared is $(${rowOfSquare.join(", ")})$, the walks of length 2 from $${names[i]}$.`,
+                  `矩阵平方的 $${names[i]}$ 行是 $(${rowOfSquare.join(", ")})$，即从 $${names[i]}$ 出发长度为 2 的路线数。`,
+                ),
+              ],
+              [
+                [`Multiply by column $${names[j]}$`, `乘以 $${names[j]}$ 列`],
+                t(
+                  `Column $${names[j]}$ of the matrix is $(${column.join(", ")})$, with $1$s in the rows of ${onesIn(column)}, so add those entries of the row: $${picked(rowOfSquare, column)}$.`,
+                  `矩阵的 $${names[j]}$ 列是 $(${column.join(", ")})$，在 ${onesIn(column)} 所在的行为 $1$，所以把行中这些位置的元素相加：$${picked(rowOfSquare, column)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Grouping the other way, row $${names[i]}$ of the matrix is $(${rowOfMatrix.join(", ")})$ and column $${names[j]}$ of the square is $(${columnOfSquare.join(", ")})$; adding the entries where the row has $1$s gives $${picked(columnOfSquare, rowOfMatrix)}$ again.`,
+              `换一种结合方式：矩阵的 $${names[i]}$ 行是 $(${rowOfMatrix.join(", ")})$，平方的 $${names[j]}$ 列是 $(${columnOfSquare.join(", ")})$；把行中为 $1$ 的位置对应的元素相加，同样得到 $${picked(columnOfSquare, rowOfMatrix)}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],

@@ -243,6 +243,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `discrete-mathematics-boolean.ts` | 17 | done | coordinator, helper B | Boolean functions, normal forms, Boolean polynomials, Karnaugh maps, Post's classes and completeness, and logic circuits, with third points in `deeper-discrete-mathematics.ts` and `deeper-remaining-college-third.ts` |
 | `discrete-mathematics-number-theory.ts` | 15 | done | coordinator, helper B | binary, hexadecimal and other bases, integers and fractions, Fermat's little theorem, Euler's totient and theorem, and the linear cipher, Diffie-Hellman and RSA, with third points in `deeper-discrete-mathematics.ts` |
 | `discrete-mathematics-recurrences.ts` | 14 | done | coordinator, helper B | first- and second-order recurrences with polynomial and exponential forcing, real, repeated and complex roots, and generating functions, with third points in `deeper-discrete-mathematics.ts`, `deeper-remaining-college-third.ts` and `deeper-differential-equations.ts` |
+| `discrete-mathematics-graphs.ts` | 14 | done | coordinator, helper B | graphs, walks, paths and distances, degrees and the handshaking lemma, complements, complete, bipartite and regular graphs, planarity, cycles, connectivity, cut vertices and edges, and trees, with third points in `deeper-discrete-mathematics.ts`, `deeper-remaining-college-third.ts` and `figure-reading-more.ts` |
 
 ## Open Gaps
 

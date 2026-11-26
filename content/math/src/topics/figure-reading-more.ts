@@ -3451,8 +3451,8 @@ const edgesToTree: KnowledgePointDef = {
   figure: discreteDrawings1["trees-and-forests#edges-to-remove-to-get-a-tree"],
   title: t("Edges to remove to get a tree", "要去掉几条边才成树"),
   explanation: t(
-    "A tree on $n$ vertices has exactly $n - 1$ edges, whichever tree it is. So a connected graph with more edges has extra ones that close cycles, and removing each of these while staying connected leaves a spanning tree. The number that must go is the number of edges minus the number of vertices plus one, and it does not depend on which edges are chosen.",
-    "$n$ 个顶点的树恰好有 $n - 1$ 条边，不管是哪棵树。所以边更多的连通图有一些多余的边构成圈，逐条去掉它们并保持连通，就留下一棵生成树。必须去掉的边数等于边数减顶点数加 1，和选哪些边无关。",
+    "A tree on $n$ vertices has exactly $n - 1$ edges, whichever tree it is. So a connected graph with more edges has extra ones that close cycles, and removing each of these while staying connected leaves a spanning tree. The number that must go is the number of edges minus the number of vertices plus one, and it does not depend on which edges are chosen. The drawing shows $5$ vertices and $7$ edges: the $3$ dashed edges close cycles, and removing them leaves a spanning tree with $4$ edges, since $7 - 5 + 1 = 3$. A connected graph with $12$ vertices and $20$ edges keeps $11$ edges in a tree, so $20 - 11 = 9$ edges must go.\n\n> **Watch out.** The tree keeps $n - 1$ edges, not $n$, so subtracting the number of vertices leaves one edge too few; and the question asks for the edges removed, not the edges kept.",
+    "$n$ 个顶点的树恰好有 $n - 1$ 条边，不管是哪棵树。所以边更多的连通图有一些多余的边构成圈，逐条去掉它们并保持连通，就留下一棵生成树。必须去掉的边数等于边数减顶点数加 1，和选哪些边无关。图中有 $5$ 个顶点、$7$ 条边：$3$ 条虚线边构成圈，去掉它们后留下有 $4$ 条边的生成树，因为 $7 - 5 + 1 = 3$。有 $12$ 个顶点、$20$ 条边的连通图，留下的树有 $11$ 条边，所以要去掉 $20 - 11 = 9$ 条边。\n\n> **注意。** 树保留 $n - 1$ 条边，而不是 $n$ 条，所以减去顶点数会少算一条；而且问的是去掉的边数，不是保留的边数。",
   ),
   generate(rng) {
     const n = rng.int(5, 7);
@@ -3477,9 +3477,24 @@ const edgesToTree: KnowledgePointDef = {
       ),
       answer,
       [edges.length - n, edges.length, n - 1, answer + 1],
-      t(
-        `The graph has ${n} vertices and ${edges.length} edges. A tree on ${n} vertices has ${n - 1} edges, so $${edges.length} - ${n - 1} = ${answer}$ must go.`,
-        `这个图有 ${n} 个顶点、${edges.length} 条边。${n} 个顶点的树有 ${n - 1} 条边，所以要去掉 $${edges.length} - ${n - 1} = ${answer}$ 条。`,
+      walked(
+        [
+          [
+            ["Count the edges a tree keeps", "数树保留的边"],
+            t(
+              `The graph has ${n} vertices and ${edges.length} edges. A tree on ${n} vertices has $${n} - 1 = ${n - 1}$ edges.`,
+              `这个图有 ${n} 个顶点、${edges.length} 条边。${n} 个顶点的树有 $${n} - 1 = ${n - 1}$ 条边。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(`So $${edges.length} - ${n - 1} = ${answer}$ edges must go.`, `所以要去掉 $${edges.length} - ${n - 1} = ${answer}$ 条边。`),
+          ],
+        ],
+        t(
+          `Adding back: $${n - 1} + ${answer} = ${edges.length}$ edges, and ${n - 1} edges that keep all ${n} vertices connected form a tree, since one fewer would disconnect them.`,
+          `加回去验证：$${n - 1} + ${answer} = ${edges.length}$ 条边；保持 ${n} 个顶点连通的 ${n - 1} 条边构成一棵树，再少一条就不连通了。`,
+        ),
       ),
       graphFigure(
         names,
@@ -3491,6 +3506,30 @@ const edgesToTree: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        {
+          value: edges.length - n,
+          why: t(
+            "That subtracts the number of vertices; a tree keeps one edge fewer than the vertices, so one more edge must go.",
+            "那是减去了顶点数；树的边数比顶点数少一，所以还要多去掉一条。",
+          ),
+        },
+        {
+          value: edges.length,
+          why: t("That removes every edge, which leaves no tree.", "那是去掉了所有的边，就不剩树了。"),
+        },
+        {
+          value: n - 1,
+          why: t("That is the number of edges the tree keeps, not the number removed.", "那是树保留的边数，不是去掉的边数。"),
+        },
+        {
+          value: answer + 1,
+          why: t(
+            "Removing that many leaves fewer than $n - 1$ edges, so the graph falls apart.",
+            "去掉这么多条后剩下的边少于 $n - 1$ 条，图就不连通了。",
+          ),
+        },
+      ].filter((x) => x.value !== answer),
     );
   },
 };

@@ -1348,8 +1348,8 @@ const facesOfARegularPlanarGraph: KnowledgePointDef = {
   figure: discreteDrawings1["planar-graphs#faces-of-a-regular-planar-graph"],
   title: t("Faces of a regular planar graph", "正则平面图的面数"),
   explanation: t(
-    "Euler's formula $V - E + F = 2$ needs the number of edges, and for a regular graph the handshaking lemma supplies it: the degrees add up to twice the edges. Combining the two facts gives the number of faces from the number of vertices and the common degree alone, without ever drawing the graph.",
-    "欧拉公式 $V - E + F = 2$ 需要边数，而对正则图，握手引理正好给出它：度数之和等于边数的两倍。把这两个事实结合起来，只由顶点数和公共的度数就能得到面数，完全不必画出这个图。",
+    "Euler's formula $V - E + F = 2$ needs the number of edges, and for a regular graph the handshaking lemma supplies it: the degrees add up to twice the edges. Combining the two facts gives the number of faces from the number of vertices and the common degree alone, without ever drawing the graph. The drawing shows a $3$-regular planar graph on $8$ vertices: $E = \\frac{8 \\cdot 3}{2} = 12$ and $F = 2 - 8 + 12 = 6$, the inner square, four quadrilaterals around it and the outer face. A connected planar graph with $50$ vertices, each of degree $4$, has $E = \\frac{4 \\cdot 50}{2} = 100$ edges, so $F = 2 - 50 + 100 = 52$ faces.\n\n> **Watch out.** Halve the degree sum before using it as $E$, and count the outer face: Euler's formula includes it.",
+    "欧拉公式 $V - E + F = 2$ 需要边数，而对正则图，握手引理正好给出它：度数之和等于边数的两倍。把这两个事实结合起来，只由顶点数和公共的度数就能得到面数，完全不必画出这个图。图中是 $8$ 个顶点的 $3$-正则平面图：$E = \\frac{8 \\cdot 3}{2} = 12$，$F = 2 - 8 + 12 = 6$，即内部的正方形、它周围的四个四边形和外部面。一个连通平面图有 $50$ 个顶点，每个顶点的度都是 $4$，则 $E = \\frac{4 \\cdot 50}{2} = 100$，所以 $F = 2 - 50 + 100 = 52$。\n\n> **注意。** 度数之和要先减半才是 $E$；外部面也要算上：欧拉公式包括它。",
   ),
   generate(rng) {
     const [k, V] = rng.pick([...range(2, 20).map((i) => [3, 2 * i] as const), ...range(3, 20).map((i) => [4, 2 * i] as const)]);
@@ -1362,10 +1362,24 @@ const facesOfARegularPlanarGraph: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [E, answer - 2, answer - 1],
-      solution: t(
-        `The handshaking lemma gives $E = \\frac{${k} \\cdot ${V}}{2} = ${E}$. Euler's formula then gives $F = 2 - ${V} + ${E} = ${answer}$.`,
-        `由握手引理得 $E = \\frac{${k} \\cdot ${V}}{2} = ${E}$。再由欧拉公式得 $F = 2 - ${V} + ${E} = ${answer}$。`,
+      mistakes: [
+        why(E, "That is the number of edges; Euler's formula still has to turn it into faces.", "那是边数；还要用欧拉公式把它化为面数。"),
+        why(answer - 2, "That leaves out the $2$ in Euler's formula.", "那是漏掉了欧拉公式中的 $2$。"),
+        why(answer - 1, "That leaves out the outer face, which counts as a face.", "那是漏掉了外部面，它也算一个面。"),
+        why(2 - V + k * V, "That uses the degree sum as the number of edges; halve it first.", "那是把度数之和当作边数；要先减半。"),
+      ].filter((m, i, all) => all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the edges", "求边数"],
+            t(
+              `The handshaking lemma gives $E = \\frac{${k} \\cdot ${V}}{2} = ${E}$.`,
+              `由握手引理得 $E = \\frac{${k} \\cdot ${V}}{2} = ${E}$。`,
+            ),
+          ],
+          [["Apply Euler's formula", "用欧拉公式"], t(`$F = 2 - ${V} + ${E} = ${answer}$.`, `$F = 2 - ${V} + ${E} = ${answer}$。`)],
+        ],
+        t(`$${V} - ${E} + ${answer} = 2$, as Euler's formula requires.`, `$${V} - ${E} + ${answer} = 2$，符合欧拉公式。`),
       ),
     });
   },
@@ -1376,14 +1390,16 @@ const mostBipartiteEdges: KnowledgePointDef = {
   figure: discreteDrawings1["complete-and-bipartite-graphs#the-most-edges-of-a-bipartite-graph"],
   title: t("The most edges of a bipartite graph", "二部图的最多边数"),
   explanation: t(
-    "A bipartite graph with parts of sizes $a$ and $b$ has at most $ab$ edges, reached by the complete bipartite graph. For a fixed total $a + b = n$, the product is largest when the parts are as equal as possible. So a graph on $n$ vertices with no odd cycle has at most $\\lfloor \\frac{n^2}{4} \\rfloor$ edges.",
-    "两部分大小为 $a$ 和 $b$ 的二部图最多有 $ab$ 条边，完全二部图达到这个值。总数 $a + b = n$ 固定时，两部分越接近相等，乘积越大。所以 $n$ 个顶点且没有奇圈的图最多有 $\\lfloor \\frac{n^2}{4} \\rfloor$ 条边。",
+    "A bipartite graph with parts of sizes $a$ and $b$ has at most $ab$ edges, reached by the complete bipartite graph. For a fixed total $a + b = n$, the product is largest when the parts are as equal as possible. So a graph on $n$ vertices with no odd cycle has at most $\\lfloor \\frac{n^2}{4} \\rfloor$ edges. In the drawing, on $6$ vertices, parts of $3$ and $3$ allow $3 \\cdot 3 = 9$ edges while parts of $2$ and $4$ allow only $2 \\cdot 4 = 8$. On $51$ vertices the best split is $25$ and $26$, giving $25 \\cdot 26 = 650$ edges.\n\n> **Watch out.** Edges inside a part are not allowed, so the count is not $\\binom{n}{2}$; and when $n$ is odd the parts differ by one, so the answer is not $\\left(\\frac{n}{2}\\right)^2$.",
+    "两部分大小为 $a$ 和 $b$ 的二部图最多有 $ab$ 条边，完全二部图达到这个值。总数 $a + b = n$ 固定时，两部分越接近相等，乘积越大。所以 $n$ 个顶点且没有奇圈的图最多有 $\\lfloor \\frac{n^2}{4} \\rfloor$ 条边。图中是 $6$ 个顶点的情形：分成 $3$ 和 $3$ 可有 $3 \\cdot 3 = 9$ 条边，分成 $2$ 和 $4$ 只有 $2 \\cdot 4 = 8$ 条。$51$ 个顶点时最好的分法是 $25$ 和 $26$，共 $25 \\cdot 26 = 650$ 条边。\n\n> **注意。** 同一部分内部不能连边，所以答案不是 $\\binom{n}{2}$；$n$ 为奇数时两部分相差一，所以答案也不是 $\\left(\\frac{n}{2}\\right)^2$。",
   ),
   generate(rng) {
     const n = rng.int(5, 44);
     const a = Math.floor(n / 2);
     const b = n - a;
     const answer = a * b;
+    const moved = (a - 1) * (b + 1);
+    const movedTex = a - 1 === 1 ? `${moved}` : `${a - 1} \\cdot ${b + 1} = ${moved}`;
     return numberProblem({
       prompt: t(
         `What is the largest possible number of edges of a bipartite graph with ${n} vertices?`,
@@ -1391,10 +1407,44 @@ const mostBipartiteEdges: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(n * (n - 1)) / 2, n - 1, a * a],
-      solution: t(
-        `The product of the part sizes is largest for parts of sizes ${a} and ${b}. All edges between them are allowed, which makes $${a} \\cdot ${b} = ${answer}$ edges.`,
-        `两部分大小为 ${a} 和 ${b} 时乘积最大。它们之间的边都可以连，共 $${a} \\cdot ${b} = ${answer}$ 条边。`,
+      mistakes: [
+        why(
+          (n * (n - 1)) / 2,
+          "That counts every pair of vertices; no edge may join two vertices of the same part.",
+          "那是数了所有顶点对；同一部分的两个顶点之间不能连边。",
+        ),
+        why(
+          n - 1,
+          "That is far too few; every vertex of one part can be joined to every vertex of the other.",
+          "太少了；一部分的每个顶点都可以与另一部分的每个顶点相连。",
+        ),
+        why(
+          a * a,
+          `That uses two parts of size $${a}$; the parts must add up to $${n}$.`,
+          `那是用了两个大小为 $${a}$ 的部分；两部分之和必须是 $${n}$。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choose the part sizes", "选部分的大小"],
+            t(
+              `With parts of sizes $x$ and $${n} - x$ there are at most $x(${n} - x)$ edges, largest for the most equal split, $${a}$ and $${b}$.`,
+              `两部分大小为 $x$ 和 $${n} - x$ 时至多有 $x(${n} - x)$ 条边，分得最均匀时最大，即 $${a}$ 和 $${b}$。`,
+            ),
+          ],
+          [
+            ["Join every pair across", "连接所有跨部分的顶点对"],
+            t(
+              `All edges between the parts are allowed: $${a} \\cdot ${b} = ${answer}$.`,
+              `两部分之间的边都可以连：$${a} \\cdot ${b} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\lfloor \\frac{${n}^2}{4} \\rfloor = \\lfloor \\frac{${n * n}}{4} \\rfloor = ${answer}$, and moving one vertex across gives only $${movedTex}$ edges.`,
+          `$\\lfloor \\frac{${n}^2}{4} \\rfloor = \\lfloor \\frac{${n * n}}{4} \\rfloor = ${answer}$，而把一个顶点移到另一部分只得到 $${movedTex}$ 条边。`,
+        ),
       ),
     });
   },
@@ -1404,8 +1454,8 @@ const treesWithAGivenVertexDegree: KnowledgePointDef = {
   id: "labeled-trees-where-one-vertex-has-a-given-degree",
   title: t("Labeled trees where one vertex has a given degree", "某顶点度数给定的标号树"),
   explanation: t(
-    "A labeled tree on $n$ vertices corresponds to a Prüfer word of length $n - 2$, and a vertex appears in the word one time fewer than its degree. So fixing the degree of one vertex fixes how often its label occurs. Choose the positions for this label, and fill the remaining positions freely with the other labels.",
-    "$n$ 个顶点的标号树对应长度为 $n - 2$ 的普吕弗序列，一个顶点在序列中出现的次数比它的度少一。所以确定一个顶点的度，就确定了它的标号出现的次数。选出这个标号的位置，其余位置用其他标号任意填写。",
+    "A labeled tree on $n$ vertices corresponds to a Prüfer word of length $n - 2$, and a vertex appears in the word one time fewer than its degree. So fixing the degree of one vertex fixes how often its label occurs. Choose the positions for this label, and fill the remaining positions freely with the other labels. On the vertices $1, \\dots, 12$, vertex $1$ has degree $4$ when it fills $3$ of the $10$ places, in $\\binom{10}{3} = 120$ ways, and the other $7$ places take any of $11$ labels: $120 \\cdot 11^7 = 2338460520$ trees.\n\n> **Watch out.** The label appears $d - 1$ times, not $d$ times, and the remaining places may not use label $1$ again, so they have $n - 1$ choices each, not $n$.",
+    "$n$ 个顶点的标号树对应长度为 $n - 2$ 的普吕弗序列，一个顶点在序列中出现的次数比它的度少一。所以确定一个顶点的度，就确定了它的标号出现的次数。选出这个标号的位置，其余位置用其他标号任意填写。在顶点 $1, \\dots, 12$ 上，顶点 $1$ 的度为 $4$ 时，它占据 $10$ 个位置中的 $3$ 个，有 $\\binom{10}{3} = 120$ 种方式，其余 $7$ 个位置各取 $11$ 个标号之一：共 $120 \\cdot 11^7 = 2338460520$ 棵树。\n\n> **注意。** 这个标号出现 $d - 1$ 次，而不是 $d$ 次；其余位置不能再用标号 $1$，所以每个位置有 $n - 1$ 种选择，而不是 $n$ 种。",
   ),
   generate(rng) {
     const [n, d] = rng.pick(range(4, 9).flatMap((n) => range(1, n - 1).map((d) => [n, d] as const)));
@@ -1426,10 +1476,40 @@ const treesWithAGivenVertexDegree: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n ** (n - 2), places, (n - 1) ** rest * d],
-      solution: t(
-        `Vertex 1 appears ${d - 1} times in the Prüfer word of length ${n - 2}, in $\\binom{${n - 2}}{${d - 1}}$ ways. ${count.en} The total is $\\binom{${n - 2}}{${d - 1}}${fill} = ${answer}$.`,
-        `顶点 1 在长度为 ${n - 2} 的普吕弗序列中出现 ${d - 1} 次，有 $\\binom{${n - 2}}{${d - 1}}$ 种方式。${count["zh-CN"]}总数是 $\\binom{${n - 2}}{${d - 1}}${fill} = ${answer}$。`,
+      mistakes: [
+        why(
+          n ** (n - 2),
+          "That counts every labeled tree, whatever the degree of vertex 1.",
+          "那是数了所有标号树，不管顶点 1 的度是多少。",
+        ),
+        why(places, "That only places the label 1; the other positions still have to be filled.", "那只是放好了标号 1；其余位置还要填写。"),
+        why(
+          (n - 1) ** rest * d,
+          "That multiplies by the degree; choose the positions of label 1 with a binomial coefficient instead.",
+          "那是乘以了度数；应当用二项式系数选出标号 1 的位置。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Place the label 1", "放置标号 1"],
+            t(
+              `Vertex 1 appears ${d - 1} times in the Prüfer word of length ${n - 2}, in $\\binom{${n - 2}}{${d - 1}}$ ways.`,
+              `顶点 1 在长度为 ${n - 2} 的普吕弗序列中出现 ${d - 1} 次，有 $\\binom{${n - 2}}{${d - 1}}$ 种方式。`,
+            ),
+          ],
+          [
+            ["Fill the other positions", "填其余位置"],
+            t(
+              `${count.en} The total is $\\binom{${n - 2}}{${d - 1}}${fill} = ${answer}$.`,
+              `${count["zh-CN"]}总数是 $\\binom{${n - 2}}{${d - 1}}${fill} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The positions add up: $${d - 1} + ${rest} = ${n - 2}$, the length of the Prüfer word.`,
+          `位置数相加：$${d - 1} + ${rest} = ${n - 2}$，正是普吕弗序列的长度。`,
+        ),
       ),
     });
   },
@@ -1440,8 +1520,8 @@ const fourCycles: KnowledgePointDef = {
   figure: discreteDrawings1["cycles-in-graphs#four-cycles-of-a-complete-bipartite-graph"],
   title: t("Four-cycles of a complete bipartite graph", "完全二部图的四圈"),
   explanation: t(
-    "A cycle in a bipartite graph alternates between the two parts, so its length is even and the shortest possible cycles have length four. A four-cycle uses two vertices from each part. In a complete bipartite graph, any such choice of vertices can be joined into exactly one four-cycle, so counting them reduces to choosing pairs.",
-    "二部图中的圈在两部分之间交替，所以长度是偶数，最短的圈长度为四。四圈从每一部分各用两个顶点。在完全二部图中，这样选出的顶点恰好能连成一个四圈，所以计数就化为选取顶点对。",
+    "A cycle in a bipartite graph alternates between the two parts, so its length is even and the shortest possible cycles have length four. A four-cycle uses two vertices from each part. In a complete bipartite graph, any such choice of vertices can be joined into exactly one four-cycle, so counting them reduces to choosing pairs. The drawing shows $K_{3,4}$, with $\\binom{3}{2}\\binom{4}{2} = 3 \\cdot 6 = 18$ four-cycles. $K_{10,12}$ has $\\binom{10}{2}\\binom{12}{2} = 45 \\cdot 66 = 2970$ four-cycles.\n\n> **Watch out.** The two choices of pairs combine by multiplying, not adding, and each choice gives one four-cycle, not two: its two directions trace the same cycle.",
+    "二部图中的圈在两部分之间交替，所以长度是偶数，最短的圈长度为四。四圈从每一部分各用两个顶点。在完全二部图中，这样选出的顶点恰好能连成一个四圈，所以计数就化为选取顶点对。图中是 $K_{3,4}$，有 $\\binom{3}{2}\\binom{4}{2} = 3 \\cdot 6 = 18$ 个四圈。$K_{10,12}$ 有 $\\binom{10}{2}\\binom{12}{2} = 45 \\cdot 66 = 2970$ 个四圈。\n\n> **注意。** 两次选顶点对的方法数要相乘，而不是相加；每种选法只给出一个四圈，不是两个：两个方向走的是同一个圈。",
   ),
   generate(rng) {
     const m = rng.int(2, 9);
@@ -1449,6 +1529,13 @@ const fourCycles: KnowledgePointDef = {
     const left = binom(m, 2);
     const right = binom(n, 2);
     const answer = left * right;
+    const product = left === 1 || right === 1 ? "" : ` = ${left} \\cdot ${right}`;
+    const sides = [
+      [m, n, m - 1, n - 1].filter((f) => f !== 1).join(" \\cdot "),
+      `${m * n * (m - 1) * (n - 1)}`,
+      answer === 1 ? "4" : `4 \\cdot ${answer}`,
+    ];
+    const sequences = sides.filter((s, i) => i === 0 || s !== sides[i - 1]).join(" = ");
     return numberProblem({
       prompt: t(
         `How many cycles of length 4 does the complete bipartite graph $K_{${m},${n}}$ have?`,
@@ -1456,10 +1543,36 @@ const fourCycles: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m * n, left + right, 2 * answer],
-      solution: t(
-        `A 4-cycle is fixed by two vertices of each part. That gives $\\binom{${m}}{2}\\binom{${n}}{2} = ${left} \\cdot ${right} = ${answer}$ cycles.`,
-        `4 圈由每一部分的两个顶点确定。所以共有 $\\binom{${m}}{2}\\binom{${n}}{2} = ${left} \\cdot ${right} = ${answer}$ 个圈。`,
+      mistakes: [
+        why(m * n, "That counts the edges of the graph, not its 4-cycles.", "那是数了图的边，不是 4 圈。"),
+        why(
+          left + right,
+          "That adds the two choices of pairs; every pair on one side combines with every pair on the other, so multiply.",
+          "那是把两次选顶点对的方法数相加；一侧的每一对与另一侧的每一对都能搭配，所以要相乘。",
+        ),
+        why(2 * answer, "That counts each 4-cycle twice, once for each direction around it.", "那是把每个 4 圈数了两次，每个方向各一次。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Describe a 4-cycle", "描述 4 圈"],
+            t(
+              "A 4-cycle alternates between the parts, so it uses two vertices of each part, and any such four vertices form exactly one 4-cycle.",
+              "4 圈在两部分之间交替，所以每一部分各用两个顶点；任意这样的四个顶点恰好构成一个 4 圈。",
+            ),
+          ],
+          [
+            ["Choose the pairs", "选顶点对"],
+            t(
+              `That gives $\\binom{${m}}{2}\\binom{${n}}{2}${product} = ${answer}$ ${answer === 1 ? "cycle" : "cycles"}.`,
+              `所以共有 $\\binom{${m}}{2}\\binom{${n}}{2}${product} = ${answer}$ 个圈。`,
+            ),
+          ],
+        ],
+        t(
+          `Counting walks instead: ${m} choices of a start on the left, then ${n}, ${m - 1} and ${n - 1} choices for the next vertices, give $${sequences}$; each 4-cycle arises from $2$ starts on the left and $2$ directions.`,
+          `换成数途径：左侧起点有 ${m} 种选择，接下来的顶点依次有 ${n}、${m - 1}、${n - 1} 种选择，得 $${sequences}$；每个 4 圈对应左侧的 $2$ 个起点和 $2$ 个方向。`,
+        ),
       ),
     });
   },
@@ -2682,8 +2795,8 @@ const graphsWithEdges: KnowledgePointDef = {
   id: "labeled-graphs-with-a-given-number-of-edges",
   title: t("Labeled graphs with a given number of edges", "给定边数的标号图"),
   explanation: t(
-    "A simple graph on labeled vertices is decided by which pairs of vertices are joined. There are $\\binom{n}{2}$ pairs available, and a graph with exactly $m$ edges chooses $m$ of them. So the count is a binomial coefficient applied twice. Labeled means that two graphs with the same shape but different vertex names count as different, unlike counting graphs up to isomorphism.",
-    "标号顶点上的简单图，由哪些顶点对相连决定。可用的顶点对有 $\\binom{n}{2}$ 个，恰有 $m$ 条边的图从中选出 $m$ 个。所以计数用了两次二项式系数。标号意味着形状相同但顶点名称不同的两个图算作不同的图，这与同构意义下的计数不同。",
+    "A simple graph on labeled vertices is decided by which pairs of vertices are joined. There are $\\binom{n}{2}$ pairs available, and a graph with exactly $m$ edges chooses $m$ of them. So the count is a binomial coefficient applied twice. Labeled means that two graphs with the same shape but different vertex names count as different, unlike counting graphs up to isomorphism. In the drawing, $4$ labeled vertices have $\\binom{4}{2} = 6$ pairs, so $\\binom{6}{2} = 15$ graphs have exactly $2$ edges, like the colored one. On $10$ labeled vertices there are $\\binom{10}{2} = 45$ pairs, so $\\binom{45}{3} = 14190$ graphs have exactly $3$ edges.\n\n> **Watch out.** Choose among the pairs of vertices, not among the vertices themselves, and choose exactly $m$ of them: $2^{\\binom{n}{2}}$ counts the graphs with any number of edges.",
+    "标号顶点上的简单图，由哪些顶点对相连决定。可用的顶点对有 $\\binom{n}{2}$ 个，恰有 $m$ 条边的图从中选出 $m$ 个。所以计数用了两次二项式系数。标号意味着形状相同但顶点名称不同的两个图算作不同的图，这与同构意义下的计数不同。图中 $4$ 个标号顶点有 $\\binom{4}{2} = 6$ 个顶点对，所以恰有 $2$ 条边的图有 $\\binom{6}{2} = 15$ 个，彩色的就是其中之一。$10$ 个标号顶点有 $\\binom{10}{2} = 45$ 个顶点对，所以恰有 $3$ 条边的图有 $\\binom{45}{3} = 14190$ 个。\n\n> **注意。** 要在顶点对中选，而不是在顶点中选，而且恰好选 $m$ 个：$2^{\\binom{n}{2}}$ 数的是边数任意的图。",
   ),
   generate(rng) {
     const n = rng.int(3, 8);
@@ -2697,10 +2810,46 @@ const graphsWithEdges: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 ** pairs, binom(n, Math.min(m, n)), pairs, pairs * m],
-      solution: t(
-        `There are $\\binom{${n}}{2} = ${pairs}$ pairs of vertices, and the graph chooses ${m} of them, in $\\binom{${pairs}}{${m}} = ${answer}$ ways.`,
-        `一共有 $\\binom{${n}}{2} = ${pairs}$ 个顶点对，图从中选出 ${m} 个，有 $\\binom{${pairs}}{${m}} = ${answer}$ 种方法。`,
+      mistakes: [
+        why(
+          2 ** pairs,
+          "That counts the graphs with any number of edges; exactly the given number must be chosen.",
+          "那是数了边数任意的图；必须恰好选出给定数目的边。",
+        ),
+        why(
+          binom(n, Math.min(m, n)),
+          "That chooses vertices; an edge is a pair of vertices, so choose among the pairs.",
+          "那是在选顶点；边是顶点对，所以要在顶点对中选。",
+        ),
+        why(
+          pairs,
+          "That is the number of pairs available, not the number of ways to choose some of them.",
+          "那是可用的顶点对数，不是从中选取的方法数。",
+        ),
+        why(
+          pairs * m,
+          "That multiplies; choosing a set of pairs calls for a binomial coefficient.",
+          "那是相乘；选出一组顶点对要用二项式系数。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the pairs", "数顶点对"],
+            t(`There are $\\binom{${n}}{2} = ${pairs}$ pairs of vertices.`, `一共有 $\\binom{${n}}{2} = ${pairs}$ 个顶点对。`),
+          ],
+          [
+            ["Choose the edges", "选边"],
+            t(
+              `The graph chooses ${m} of them, in $\\binom{${pairs}}{${m}} = ${answer}$ ways.`,
+              `图从中选出 ${m} 个，有 $\\binom{${pairs}}{${m}} = ${answer}$ 种方法。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing instead the ${pairs - m} ${pairs - m === 1 ? "pair" : "pairs"} left out gives the same count, $\\binom{${pairs}}{${pairs - m}} = ${answer}$.`,
+          `改为选出不连边的 ${pairs - m} 个顶点对，得到相同的个数 $\\binom{${pairs}}{${pairs - m}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2710,8 +2859,8 @@ const fewestVertices: KnowledgePointDef = {
   id: "the-fewest-vertices-for-a-given-maximum-degree",
   title: t("The fewest vertices for a given maximum degree", "给定最大度时的最少顶点数"),
   explanation: t(
-    "The handshaking lemma gives a lower bound on the number of vertices. If no degree exceeds $d$, the sum of the degrees is at most $dn$, and it must equal $2m$. So $n \\ge \\frac{2m}{d}$, and since $n$ is a whole number, this rounds up. When $d$ is smaller than $n$, a graph with degrees as equal as possible reaches this bound.",
-    "握手引理给出顶点数的下界。如果没有度超过 $d$，度数之和最多是 $dn$，而它必须等于 $2m$。所以 $n \\ge \\frac{2m}{d}$，由于 $n$ 是整数，要向上取整。当 $d$ 小于 $n$ 时，度数尽量相等的图可以达到这个下界。",
+    "The handshaking lemma gives a lower bound on the number of vertices. If no degree exceeds $d$, the sum of the degrees is at most $dn$, and it must equal $2m$. So $n \\ge \\frac{2m}{d}$, and since $n$ is a whole number, this rounds up. When $d$ is smaller than $n$, a graph with degrees as equal as possible reaches this bound. In the drawing, $6$ edges with no degree above $3$ need $n \\ge \\frac{12}{3} = 4$, and the complete graph on $4$ vertices reaches it. With $44$ edges and no degree above $3$, $n \\ge \\frac{88}{3}$, so at least $30$ vertices are needed.\n\n> **Watch out.** Use the degree sum $2m$, not $m$, and round up, not down: $29$ vertices of degree at most $3$ carry a degree sum of at most $87 < 88$.",
+    "握手引理给出顶点数的下界。如果没有度超过 $d$，度数之和最多是 $dn$，而它必须等于 $2m$。所以 $n \\ge \\frac{2m}{d}$，由于 $n$ 是整数，要向上取整。当 $d$ 小于 $n$ 时，度数尽量相等的图可以达到这个下界。图中 $6$ 条边且没有度超过 $3$，需要 $n \\ge \\frac{12}{3} = 4$，$4$ 个顶点的完全图正好达到。有 $44$ 条边且没有度超过 $3$ 时，$n \\ge \\frac{88}{3}$，所以至少需要 $30$ 个顶点。\n\n> **注意。** 要用度数之和 $2m$，而不是 $m$；而且要向上取整，不能向下：$29$ 个度至多为 $3$ 的顶点，度数之和至多是 $87 < 88$。",
   ),
   generate(rng) {
     const n = rng.int(4, 20);
@@ -2725,10 +2874,40 @@ const fewestVertices: KnowledgePointDef = {
       ),
       answer: n,
       form: "integer",
-      wrong: [m, d + 1, Math.floor(m / d), n + 1, n - 1],
-      solution: t(
-        `The degrees add to ${2 * m} and each is at most ${d}, so the number of vertices is at least $${bound.toLatex()}$. The smallest whole number allowed is ${n}.`,
-        `度数之和是 ${2 * m}，每个度最多是 ${d}，所以顶点数至少是 $${bound.toLatex()}$。允许的最小整数是 ${n}。`,
+      mistakes: [
+        why(
+          m,
+          "That is the number of edges; the bound comes from the degree sum divided by the largest degree.",
+          "那是边数；下界来自度数之和除以最大度。",
+        ),
+        why(d + 1, "That is only enough vertices for a single vertex of the largest degree.", "那只够一个顶点达到最大度。"),
+        why(
+          Math.floor(m / d),
+          "That divides the edges, not the degree sum, by the largest degree.",
+          "那是用边数而不是度数之和去除以最大度。",
+        ),
+        why(n + 1, "That is not the fewest: one vertex less still carries enough degree.", "那不是最少的：少一个顶点仍有足够的度数。"),
+        why(
+          n - 1,
+          "That rounds down; too few vertices cannot carry the whole degree sum.",
+          "那是向下取整；顶点太少，承担不了全部度数之和。",
+        ),
+      ].filter((w, i, all) => w.value !== n && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Bound the degree sum", "估计度数之和"],
+            t(
+              `The degrees add to ${2 * m} and each is at most ${d}, so the number of vertices is at least $${bound.toLatex()}$.`,
+              `度数之和是 ${2 * m}，每个度最多是 ${d}，所以顶点数至少是 $${bound.toLatex()}$。`,
+            ),
+          ],
+          [["Round up", "向上取整"], t(`The smallest whole number allowed is ${n}.`, `允许的最小整数是 ${n}。`)],
+        ],
+        t(
+          `$${n - 1}$ vertices carry a degree sum of at most $${n - 1} \\cdot ${d} = ${(n - 1) * d} < ${2 * m}$, while $${n}$ vertices allow up to $${n} \\cdot ${d} = ${n * d} \\ge ${2 * m}$.`,
+          `$${n - 1}$ 个顶点的度数之和至多为 $${n - 1} \\cdot ${d} = ${(n - 1) * d} < ${2 * m}$，而 $${n}$ 个顶点最多可达 $${n} \\cdot ${d} = ${n * d} \\ge ${2 * m}$。`,
+        ),
       ),
     });
   },
@@ -2739,8 +2918,8 @@ const complementOfRegular: KnowledgePointDef = {
   figure: discreteDrawings1["subgraphs-and-graph-complements#the-edges-of-the-complement-of-a-regular-graph"],
   title: t("The edges of the complement of a regular graph", "正则图补图的边数"),
   explanation: t(
-    "In the complement of a simple graph, a vertex is joined to exactly the vertices it was not joined to, leaving out itself. So a vertex of degree $r$ on $n$ vertices has degree $n - 1 - r$ in the complement. The complement of a regular graph is therefore regular too, and the handshaking lemma gives its edges. The total with the original is always $\\binom{n}{2}$.",
-    "在简单图的补图中，一个顶点恰好与原来不相邻的顶点相连，不包括自身。所以 $n$ 个顶点的图中度为 $r$ 的顶点，在补图中的度是 $n - 1 - r$。因此正则图的补图也是正则的，握手引理给出它的边数。它与原图的边数之和总是 $\\binom{n}{2}$。",
+    "In the complement of a simple graph, a vertex is joined to exactly the vertices it was not joined to, leaving out itself. So a vertex of degree $r$ on $n$ vertices has degree $n - 1 - r$ in the complement. The complement of a regular graph is therefore regular too, and the handshaking lemma gives its edges. The total with the original is always $\\binom{n}{2}$. The drawing shows the $2$-regular cycle on $5$ vertices and its complement, the star-shaped cycle, which is $5 - 1 - 2 = 2$-regular; each has $5$ edges, and $5 + 5 = 10 = \\binom{5}{2}$. The complement of a $7$-regular graph on $40$ vertices is $32$-regular, with $\\frac{40 \\cdot 32}{2} = 640$ edges.\n\n> **Watch out.** A vertex has $n - 1$ possible neighbors, not $n$, and the degree sum $n(n - 1 - r)$ must still be halved to give the edges.",
+    "在简单图的补图中，一个顶点恰好与原来不相邻的顶点相连，不包括自身。所以 $n$ 个顶点的图中度为 $r$ 的顶点，在补图中的度是 $n - 1 - r$。因此正则图的补图也是正则的，握手引理给出它的边数。它与原图的边数之和总是 $\\binom{n}{2}$。图中是 $5$ 个顶点的 $2$-正则圈和它的补图，即星形的圈，它是 $5 - 1 - 2 = 2$-正则的；两者各有 $5$ 条边，$5 + 5 = 10 = \\binom{5}{2}$。$40$ 个顶点的 $7$-正则图，其补图是 $32$-正则的，有 $\\frac{40 \\cdot 32}{2} = 640$ 条边。\n\n> **注意。** 一个顶点有 $n - 1$ 个可能的邻点，而不是 $n$ 个；度数之和 $n(n - 1 - r)$ 还要减半才是边数。",
   ),
   generate(rng) {
     const n = rng.int(5, 30);
@@ -2748,6 +2927,9 @@ const complementOfRegular: KnowledgePointDef = {
     const r = rng.pick(options);
     const degree = n - 1 - r;
     const answer = (n * degree) / 2;
+    const half = degree === 1 ? `\\frac{${n}}{2}` : `\\frac{${n} \\cdot ${degree}}{2}`;
+    const own = (n * r) / 2;
+    const ownHalf = r === 1 ? `\\frac{${n}}{2}` : `\\frac{${n} \\cdot ${r}}{2}`;
     return numberProblem({
       prompt: t(
         `A simple ${r}-regular graph has ${n} vertices. How many edges does its complement have?`,
@@ -2755,10 +2937,34 @@ const complementOfRegular: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(n * r) / 2, binom(n, 2), n * degree, degree],
-      solution: t(
-        `Each vertex has degree $${n} - 1 - ${r} = ${degree}$ in the complement, so it has $\\frac{${n} \\cdot ${degree}}{2} = ${answer}$ edges.`,
-        `每个顶点在补图中的度是 $${n} - 1 - ${r} = ${degree}$，所以补图有 $\\frac{${n} \\cdot ${degree}}{2} = ${answer}$ 条边。`,
+      mistakes: [
+        why(own, "That is the number of edges of the graph itself, not of its complement.", "那是原图本身的边数，不是补图的。"),
+        why(
+          binom(n, 2),
+          "That counts every pair of vertices; the edges of the graph must be left out.",
+          "那是数了所有顶点对；要去掉原图的边。",
+        ),
+        why(n * degree, "That is the degree sum of the complement; halve it to get the edges.", "那是补图的度数之和；要减半才得到边数。"),
+        why(degree, "That is the degree of each vertex in the complement, not the number of edges.", "那是补图中每个顶点的度，不是边数。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the degree in the complement", "求补图中的度"],
+            t(
+              `Each vertex has degree $${n} - 1 - ${r} = ${degree}$ in the complement.`,
+              `每个顶点在补图中的度是 $${n} - 1 - ${r} = ${degree}$。`,
+            ),
+          ],
+          [
+            ["Apply the handshaking lemma", "用握手引理"],
+            t(`So the complement has $${half} = ${answer}$ edges.`, `所以补图有 $${half} = ${answer}$ 条边。`),
+          ],
+        ],
+        t(
+          `The graph itself has $${ownHalf} = ${own}$ edges, and $${own} + ${answer} = ${binom(n, 2)} = \\binom{${n}}{2}$, every pair of vertices.`,
+          `原图有 $${ownHalf} = ${own}$ 条边，而 $${own} + ${answer} = ${binom(n, 2)} = \\binom{${n}}{2}$，正是所有顶点对。`,
+        ),
       ),
     });
   },
@@ -2769,8 +2975,8 @@ const mostComponents: KnowledgePointDef = {
   figure: discreteDrawings1["connected-graphs#the-most-components-for-a-given-number-of-edges"],
   title: t("The most components for a given number of edges", "给定边数时的最多连通分支数"),
   explanation: t(
-    "To get as many connected components as possible, keep the edges from joining new vertices. That means packing all $m$ edges into the smallest possible group of $k$ vertices, the smallest $k$ with $\\binom{k}{2} \\ge m$, and leaving all the other vertices isolated. The group counts as one component, and each isolated vertex counts as another. Spreading the edges out would only lower the count.",
-    "要得到尽可能多的连通分支，就不要让边连接新的顶点。也就是把所有 $m$ 条边放进尽可能少的 $k$ 个顶点中（满足 $\\binom{k}{2} \\ge m$ 的最小 $k$），其余顶点都孤立。这一组算一个分支，每个孤立顶点各算一个。把边分散开只会使个数减少。",
+    "To get as many connected components as possible, keep the edges from joining new vertices. That means packing all $m$ edges into the smallest possible group of $k$ vertices, the smallest $k$ with $\\binom{k}{2} \\ge m$, and leaving all the other vertices isolated. The group counts as one component, and each isolated vertex counts as another. Spreading the edges out would only lower the count. In the drawing, $4$ edges on $7$ vertices need a group of $4$, since $\\binom{3}{2} = 3$ is too few and $\\binom{4}{2} = 6$ is enough, and the other $3$ vertices are isolated: $3 + 1 = 4$ components. With $40$ vertices and $10$ edges, $\\binom{5}{2} = 10$, so the edges fit on $5$ vertices and the other $35$ stay isolated: $35 + 1 = 36$ components.\n\n> **Watch out.** The group holding the edges is itself one component, so add $1$ to the isolated vertices; and the group needs $\\binom{k}{2} \\ge m$, not $k \\ge m$.",
+    "要得到尽可能多的连通分支，就不要让边连接新的顶点。也就是把所有 $m$ 条边放进尽可能少的 $k$ 个顶点中（满足 $\\binom{k}{2} \\ge m$ 的最小 $k$），其余顶点都孤立。这一组算一个分支，每个孤立顶点各算一个。把边分散开只会使个数减少。图中 $7$ 个顶点上的 $4$ 条边需要 $4$ 个顶点的一组，因为 $\\binom{3}{2} = 3$ 不够，$\\binom{4}{2} = 6$ 够了，其余 $3$ 个顶点孤立：共 $3 + 1 = 4$ 个分支。有 $40$ 个顶点、$10$ 条边时，$\\binom{5}{2} = 10$，所以这些边放在 $5$ 个顶点上，其余 $35$ 个顶点孤立：共 $35 + 1 = 36$ 个分支。\n\n> **注意。** 容纳边的那一组本身是一个分支，所以要在孤立顶点数上加 $1$；而这一组需要满足 $\\binom{k}{2} \\ge m$，而不是 $k \\ge m$。",
   ),
   generate(rng) {
     const n = rng.int(6, 30);
@@ -2784,10 +2990,45 @@ const mostComponents: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.max(n - m, 1), n, answer + 1, n - k],
-      solution: t(
-        `The smallest group of vertices that holds ${m} ${m === 1 ? "edge" : "edges"} has ${k} vertices, since $\\binom{${k}}{2} = ${binom(k, 2)}$. The other ${n - k} ${n - k === 1 ? "vertex stays" : "vertices stay"} isolated, which gives $${n - k} + 1 = ${answer}$ components.`,
-        `能容纳 ${m} 条边的最小顶点组有 ${k} 个顶点，因为 $\\binom{${k}}{2} = ${binom(k, 2)}$。其余 ${n - k} 个顶点保持孤立，于是有 $${n - k} + 1 = ${answer}$ 个分支。`,
+      mistakes: [
+        why(
+          Math.max(n - m, 1),
+          "That spreads the edges out as a forest; packing them onto few vertices leaves more vertices isolated.",
+          "那是把边分散成森林；把边集中在少数顶点上，孤立顶点会更多。",
+        ),
+        why(
+          n,
+          "That ignores the edges; each edge joins two vertices into one component.",
+          "那是忽略了边；每条边都把两个顶点连成一个分支。",
+        ),
+        why(answer + 1, "That is one too many: the edges need a larger group of vertices.", "多了一：这些边需要更大的一组顶点。"),
+        why(
+          n - k,
+          "That counts only the isolated vertices; the group holding the edges is one more component.",
+          "那只数了孤立顶点；容纳边的那一组还是一个分支。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Pack the edges", "把边集中"],
+            t(
+              `The smallest group of vertices that holds ${m} ${m === 1 ? "edge" : "edges"} has ${k} vertices, since $\\binom{${k}}{2} = ${binom(k, 2)}$.`,
+              `能容纳 ${m} 条边的最小顶点组有 ${k} 个顶点，因为 $\\binom{${k}}{2} = ${binom(k, 2)}$。`,
+            ),
+          ],
+          [
+            ["Count the components", "数分支"],
+            t(
+              `The other ${n - k} ${n - k === 1 ? "vertex stays" : "vertices stay"} isolated, which gives $${n - k} + 1 = ${answer}$ components.`,
+              `其余 ${n - k} 个顶点保持孤立，于是有 $${n - k} + 1 = ${answer}$ 个分支。`,
+            ),
+          ],
+        ],
+        t(
+          `${k === 2 ? "A single vertex holds" : `A group of $${k - 1}$ vertices holds`} at most $\\binom{${k - 1}}{2} = ${binom(k - 1, 2)} < ${m}$ edges, so the edges cannot fit on fewer vertices.`,
+          `$${k - 1}$ 个顶点至多容纳 $\\binom{${k - 1}}{2} = ${binom(k - 1, 2)} < ${m}$ 条边，所以这些边放不进更少的顶点。`,
+        ),
       ),
     });
   },
@@ -2798,13 +3039,14 @@ const treeCutVertices: KnowledgePointDef = {
   figure: discreteDrawings1["cut-vertices-and-cut-edges#the-cut-vertices-of-a-tree"],
   title: t("The cut vertices of a tree", "树的割点"),
   explanation: t(
-    "In a tree, each pair of vertices is joined by exactly one path. Removing a vertex of degree at least 2 cuts the path between two of its neighbors, so every such vertex is a cut vertex. Removing a leaf cannot disconnect anything, since no path passes through a leaf. So on three or more vertices, the cut vertices are exactly the vertices that are not leaves.",
-    "在树中，每对顶点恰好由一条路径相连。去掉度至少为 2 的顶点，会切断它的两个邻点之间的路径，所以每个这样的顶点都是割点。去掉叶子不会使任何东西断开，因为没有路径经过叶子。所以在三个或更多顶点上，割点恰好就是不是叶子的顶点。",
+    "In a tree, each pair of vertices is joined by exactly one path. Removing a vertex of degree at least 2 cuts the path between two of its neighbors, so every such vertex is a cut vertex. Removing a leaf cannot disconnect anything, since no path passes through a leaf. So on three or more vertices, the cut vertices are exactly the vertices that are not leaves. The tree drawn has $6$ vertices and $4$ leaves, so its $6 - 4 = 2$ other vertices, highlighted, are the cut vertices. A tree on $60$ vertices with $25$ leaves has $60 - 25 = 35$ cut vertices.\n\n> **Watch out.** Count cut vertices, not cut edges: every one of the $n - 1$ edges of a tree is a cut edge, but the leaves are never cut vertices.",
+    "在树中，每对顶点恰好由一条路径相连。去掉度至少为 2 的顶点，会切断它的两个邻点之间的路径，所以每个这样的顶点都是割点。去掉叶子不会使任何东西断开，因为没有路径经过叶子。所以在三个或更多顶点上，割点恰好就是不是叶子的顶点。图中的树有 $6$ 个顶点、$4$ 片叶子，所以其余 $6 - 4 = 2$ 个突出显示的顶点就是割点。有 $60$ 个顶点、$25$ 片叶子的树有 $60 - 25 = 35$ 个割点。\n\n> **注意。** 要数的是割点，不是割边：树的 $n - 1$ 条边每条都是割边，但叶子绝不是割点。",
   ),
   generate(rng) {
     const n = rng.int(3, 40);
     const leaves = rng.int(2, n - 1);
     const answer = n - leaves;
+    const rest = 2 * (n - 1) - leaves;
     return numberProblem({
       prompt: t(
         `A tree has ${n} vertices, and ${leaves} of them are leaves. How many cut vertices does it have?`,
@@ -2812,10 +3054,35 @@ const treeCutVertices: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [leaves, n - 1, answer + 1, n],
-      solution: t(
-        `The cut vertices are the non-leaves, so there are $${n} - ${leaves} = ${answer}$.`,
-        `割点就是非叶子顶点，所以有 $${n} - ${leaves} = ${answer}$ 个。`,
+      mistakes: [
+        why(leaves, "That counts the leaves, which are never cut vertices.", "那是数了叶子，而叶子绝不是割点。"),
+        why(
+          n - 1,
+          "That is the number of edges, all of them cut edges; the question asks for cut vertices.",
+          "那是边数，它们都是割边；题目问的是割点。",
+        ),
+        why(
+          answer + 1,
+          "That is one too many: only the vertices that are not leaves are cut vertices.",
+          "多了一：只有非叶子顶点才是割点。",
+        ),
+        why(n, "That counts every vertex; removing a leaf leaves the tree connected.", "那是数了所有顶点；去掉叶子后树仍连通。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Identify the cut vertices", "找出割点"],
+            t(
+              "Removing a vertex of degree at least 2 separates two of its neighbors, while removing a leaf disconnects nothing, so the cut vertices are the non-leaves.",
+              "去掉度至少为 2 的顶点会把它的两个邻点分开，而去掉叶子不会使任何东西断开，所以割点就是非叶子顶点。",
+            ),
+          ],
+          [["Count them", "数一数"], t(`$${n} - ${leaves} = ${answer}$.`, `$${n} - ${leaves} = ${answer}$。`)],
+        ],
+        t(
+          `The degrees of a tree add to $2 \\cdot ${n - 1} = ${2 * (n - 1)}$, so the non-leaves carry $${2 * (n - 1)} - ${leaves} = ${rest}$, at least $2$ each: $${rest} \\ge ${answer === 1 ? "2" : `2 \\cdot ${answer} = ${2 * answer}`}$.`,
+          `树的度数之和为 $2 \\cdot ${n - 1} = ${2 * (n - 1)}$，所以非叶子顶点的度数之和为 $${2 * (n - 1)} - ${leaves} = ${rest}$，每个至少为 $2$：$${rest} \\ge ${answer === 1 ? "2" : `2 \\cdot ${answer} = ${2 * answer}`}$。`,
+        ),
       ),
     });
   },
@@ -2826,13 +3093,17 @@ const fullTreeLeaves: KnowledgePointDef = {
   figure: discreteDrawings1["trees-and-forests#the-leaves-of-a-full-tree"],
   title: t("The leaves of a full tree", "满树的叶子"),
   explanation: t(
-    "In a full $m$-ary tree, each internal vertex has exactly $m$ children. Every vertex except the root is a child of exactly one internal vertex, so with $i$ internal vertices the tree has $mi + 1$ vertices. Subtracting the internal ones leaves $(m - 1)i + 1$ leaves. The depth and shape of the tree play no part, so very different trees give the same count.",
-    "在满 $m$ 叉树中，每个内部顶点恰有 $m$ 个孩子。除根以外的每个顶点都恰好是一个内部顶点的孩子，所以有 $i$ 个内部顶点的树共有 $mi + 1$ 个顶点。减去内部顶点，剩下 $(m - 1)i + 1$ 片叶子。树的深度和形状都不起作用，所以差别很大的树也给出相同的个数。",
+    "In a full $m$-ary tree, each internal vertex has exactly $m$ children. Every vertex except the root is a child of exactly one internal vertex, so with $i$ internal vertices the tree has $mi + 1$ vertices. Subtracting the internal ones leaves $(m - 1)i + 1$ leaves. The depth and shape of the tree play no part, so very different trees give the same count. The drawing shows two full binary trees of different shapes, each with $3$ internal vertices and so $(2 - 1) \\cdot 3 + 1 = 4$ leaves. A full $10$-ary tree with $50$ internal vertices has $10 \\cdot 50 + 1 = 501$ vertices and $501 - 50 = 451$ leaves.\n\n> **Watch out.** The $+ 1$ is the root, the one vertex that is nobody's child; and subtract the internal vertices from the total, since the leaves are what remains.",
+    "在满 $m$ 叉树中，每个内部顶点恰有 $m$ 个孩子。除根以外的每个顶点都恰好是一个内部顶点的孩子，所以有 $i$ 个内部顶点的树共有 $mi + 1$ 个顶点。减去内部顶点，剩下 $(m - 1)i + 1$ 片叶子。树的深度和形状都不起作用，所以差别很大的树也给出相同的个数。图中是两棵形状不同的满二叉树，各有 $3$ 个内部顶点，所以各有 $(2 - 1) \\cdot 3 + 1 = 4$ 片叶子。有 $50$ 个内部顶点的满 $10$ 叉树共有 $10 \\cdot 50 + 1 = 501$ 个顶点，叶子有 $501 - 50 = 451$ 片。\n\n> **注意。** 其中的 $+ 1$ 是根，它是唯一不是任何顶点孩子的顶点；叶子是总数减去内部顶点后剩下的部分。",
   ),
   generate(rng) {
     const m = rng.int(2, 9);
     const i = rng.int(1, 40);
     const answer = (m - 1) * i + 1;
+    const children = i === 1 ? `${m}` : `${m} \\cdot ${i}`;
+    const factors = [m - 1, i].filter((f) => f !== 1);
+    const product = factors.length === 0 ? "1" : factors.join(" \\cdot ");
+    const formula = factors.length < 2 ? `${product} + 1` : `${product} + 1 = ${(m - 1) * i} + 1`;
     return numberProblem({
       prompt: t(
         `In a rooted tree, every internal vertex has exactly ${m} children, and there are ${i} internal ${i === 1 ? "vertex" : "vertices"}. How many leaves does it have?`,
@@ -2840,10 +3111,38 @@ const fullTreeLeaves: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m * i + 1, m * i, (m - 1) * i, i + 1],
-      solution: t(
-        `The tree has $${m} \\cdot ${i} + 1 = ${m * i + 1}$ vertices, and removing the ${i} internal ones leaves ${answer}.`,
-        `这棵树有 $${m} \\cdot ${i} + 1 = ${m * i + 1}$ 个顶点，去掉 ${i} 个内部顶点，剩下 ${answer} 个。`,
+      mistakes: [
+        why(m * i + 1, "That is the number of all vertices; the internal ones are not leaves.", "那是所有顶点的个数；内部顶点不是叶子。"),
+        why(
+          m * i,
+          "That counts every child; some children are internal vertices themselves.",
+          "那是数了所有孩子；有些孩子本身就是内部顶点。",
+        ),
+        why(
+          (m - 1) * i,
+          "That leaves out the root, the one vertex that is nobody's child.",
+          "那是漏掉了根，它是唯一不是任何顶点孩子的顶点。",
+        ),
+        why(i + 1, `That gives each internal vertex one child; it has ${m}.`, `那是让每个内部顶点只有一个孩子；它有 ${m} 个。`),
+      ].filter((w, k, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === k),
+      solution: walked(
+        [
+          [
+            ["Count all the vertices", "数所有顶点"],
+            t(
+              `Every vertex but the root is a child, so the tree has $${children} + 1 = ${m * i + 1}$ vertices.`,
+              `除根以外的每个顶点都是孩子，所以这棵树有 $${children} + 1 = ${m * i + 1}$ 个顶点。`,
+            ),
+          ],
+          [
+            ["Remove the internal vertices", "去掉内部顶点"],
+            t(
+              `Removing the ${i} internal ones leaves $${m * i + 1} - ${i} = ${answer}$.`,
+              `去掉 ${i} 个内部顶点，剩下 $${m * i + 1} - ${i} = ${answer}$ 个。`,
+            ),
+          ],
+        ],
+        t(`The formula $(m - 1)i + 1$ gives $${formula} = ${answer}$ as well.`, `公式 $(m - 1)i + 1$ 同样给出 $${formula} = ${answer}$。`),
       ),
     });
   },
@@ -4788,8 +5087,8 @@ const walksInACompleteGraph: KnowledgePointDef = {
   id: "walks-between-two-vertices-of-a-complete-graph",
   title: t("Walks between two vertices of a complete graph", "完全图中两顶点之间的途径"),
   explanation: t(
-    "The symmetry of a complete graph means only one thing matters about a walk's current position: whether it stands at the target vertex or somewhere else. So keep two counts, one for walks ending at the target and one for walks ending at any particular other vertex, and update both as the walk grows. This avoids any matrix power.",
-    "完全图的对称性意味着，途径当前的位置只有一点重要：它是否在目标顶点上。所以维护两个计数，一个是结束于目标顶点的途径数，另一个是结束于某个特定其他顶点的途径数，随途径变长同时更新。这样就不需要计算矩阵的幂。",
+    "The symmetry of a complete graph means only one thing matters about a walk's current position: whether it stands at the target vertex or somewhere else. So keep two counts, one for walks ending at the target and one for walks ending at any particular other vertex, and update both as the walk grows. This avoids any matrix power. In $K_{15}$, with $a_j$ the walks of length $j$ from $u$ back to $u$ and $b_j$ those from $u$ to $v$, $a_1 = 0$ and $b_1 = 1$ give $a_2 = 14$, $b_2 = 13$, and then $b_3 = a_2 + 13 b_2 = 14 + 169 = 183$.\n\n> **Watch out.** A walk may revisit vertices, so this is not a count of paths; and a walk standing at a vertex cannot step to that same vertex, so the last step is not free: $(n - 1)^k$ counts the walks ending anywhere.",
+    "完全图的对称性意味着，途径当前的位置只有一点重要：它是否在目标顶点上。所以维护两个计数，一个是结束于目标顶点的途径数，另一个是结束于某个特定其他顶点的途径数，随途径变长同时更新。这样就不需要计算矩阵的幂。在 $K_{15}$ 中，设 $a_j$ 是从 $u$ 回到 $u$ 的长度为 $j$ 的途径数，$b_j$ 是从 $u$ 到 $v$ 的途径数，由 $a_1 = 0$，$b_1 = 1$ 得 $a_2 = 14$，$b_2 = 13$，于是 $b_3 = a_2 + 13 b_2 = 14 + 169 = 183$。\n\n> **注意。** 途径可以重复经过顶点，所以这不是数路径；而且站在某个顶点的途径不能走到同一个顶点，所以最后一步不是任意的：$(n - 1)^k$ 数的是终点任意的途径。",
   ),
   generate(rng) {
     const n = rng.int(4, 12);
@@ -4803,6 +5102,15 @@ const walksInACompleteGraph: KnowledgePointDef = {
     const answer = other[k - 1] as number;
     const lastSame = same[k - 2] as number;
     const lastOther = other[k - 2] as number;
+    const lastTerms = [...(lastSame === 0 ? [] : [`${lastSame}`]), lastOther === 1 ? `${n - 2}` : `${n - 2} \\cdot ${lastOther}`].join(
+      " + ",
+    );
+    const finalStep = lastTerms === `${answer}` ? `b_{${k}} = ${answer}` : `b_{${k}} = ${lastTerms} = ${answer}`;
+    const table = range(1, k - 1)
+      .map((j) => `(a_{${j}}, b_{${j}}) = (${same[j - 1] as number}, ${other[j - 1] as number})`)
+      .join(", ");
+    const power = (n - 1) ** k;
+    const sign = k % 2 === 0 ? "-" : "+";
     return numberProblem({
       prompt: t(
         `In the complete graph $K_{${n}}$, $u$ and $v$ are two different vertices. How many walks of length ${k} go from $u$ to $v$?`,
@@ -4810,10 +5118,50 @@ const walksInACompleteGraph: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(n - 1) ** k, (n - 1) ** (k - 1), same[k - 1] as number, (n - 2) ** (k - 1), n ** (k - 1), answer + 1, answer - 1],
-      solution: t(
-        `Let $a_j$ count walks of length $j$ from $u$ back to $u$, and $b_j$ those from $u$ to one other vertex, with $a_1 = 0$ and $b_1 = 1$. The last step into $v$ comes from $u$ or from one of the other $${n - 2}$ vertices, so $b_{j+1} = a_j + ${n - 2}b_j$, and $a_{j+1} = ${n - 1}b_j$. Working up to $j = ${k - 1}$ gives $a_{${k - 1}} = ${lastSame}$ and $b_{${k - 1}} = ${lastOther}$, so $b_{${k}} = ${lastSame} + ${n - 2} \\cdot ${lastOther} = ${answer}$.`,
-        `设 $a_j$ 是从 $u$ 回到 $u$ 的长度为 $j$ 的途径数，$b_j$ 是从 $u$ 到某个其他顶点的途径数，$a_1 = 0$，$b_1 = 1$。进入 $v$ 的最后一步来自 $u$ 或其他 $${n - 2}$ 个顶点之一，所以 $b_{j+1} = a_j + ${n - 2}b_j$，$a_{j+1} = ${n - 1}b_j$。递推到 $j = ${k - 1}$ 得 $a_{${k - 1}} = ${lastSame}$，$b_{${k - 1}} = ${lastOther}$，所以 $b_{${k}} = ${lastSame} + ${n - 2} \\cdot ${lastOther} = ${answer}$。`,
+      mistakes: [
+        why(
+          power,
+          `That counts every walk of length ${k} from $u$, wherever it ends.`,
+          `那是数了从 $u$ 出发、长度为 ${k} 的所有途径，不管终点在哪里。`,
+        ),
+        why(
+          (n - 1) ** (k - 1),
+          "That lets the earlier steps go anywhere and forces the last step to $v$, but a walk already at $v$ cannot step to $v$.",
+          "那是让前面的步任意走、最后一步走到 $v$，但已经在 $v$ 的途径不能再走到 $v$。",
+        ),
+        why(
+          same[k - 1] as number,
+          `That counts the walks from $u$ back to $u$, not to $v$.`,
+          `那是数了从 $u$ 回到 $u$ 的途径，不是到 $v$ 的。`,
+        ),
+        why(
+          (n - 2) ** (k - 1),
+          "That never lets the walk pass through $u$ or $v$ on the way; a walk may revisit them.",
+          "那是不让途径中途经过 $u$ 或 $v$；途径可以重复经过它们。",
+        ),
+        why(
+          n ** (k - 1),
+          "That lets a step stay at the same vertex; a complete graph has no loops.",
+          "那是允许某一步停在原顶点；完全图没有环。",
+        ),
+        why(answer + 1, "That is one too many: check the recurrence step by step.", "多了一：逐步检查递推。"),
+        why(answer - 1, "That is one too few: check the recurrence step by step.", "少了一：逐步检查递推。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Set up two counts", "设两个计数"],
+            t(
+              `Let $a_j$ count walks of length $j$ from $u$ back to $u$, and $b_j$ those from $u$ to one other vertex, with $a_1 = 0$ and $b_1 = 1$. The last step into $v$ comes from $u$ or from one of the other $${n - 2}$ vertices, so $b_{j+1} = a_j + ${n - 2}b_j$, and $a_{j+1} = ${n - 1}b_j$.`,
+              `设 $a_j$ 是从 $u$ 回到 $u$ 的长度为 $j$ 的途径数，$b_j$ 是从 $u$ 到某个其他顶点的途径数，$a_1 = 0$，$b_1 = 1$。进入 $v$ 的最后一步来自 $u$ 或其他 $${n - 2}$ 个顶点之一，所以 $b_{j+1} = a_j + ${n - 2}b_j$，$a_{j+1} = ${n - 1}b_j$。`,
+            ),
+          ],
+          [[`Work up to length ${k}`, `递推到长度 ${k}`], t(`$${table}$, so $${finalStep}$.`, `$${table}$，所以 $${finalStep}$。`)],
+        ],
+        t(
+          `The closed form $b_k = \\frac{(n - 1)^k - (-1)^k}{n}$ gives $\\frac{${n - 1}^{${k}} ${sign} 1}{${n}} = \\frac{${k % 2 === 0 ? power - 1 : power + 1}}{${n}} = ${answer}$.`,
+          `闭式 $b_k = \\frac{(n - 1)^k - (-1)^k}{n}$ 给出 $\\frac{${n - 1}^{${k}} ${sign} 1}{${n}} = \\frac{${k % 2 === 0 ? power - 1 : power + 1}}{${n}} = ${answer}$。`,
+        ),
       ),
     });
   },
