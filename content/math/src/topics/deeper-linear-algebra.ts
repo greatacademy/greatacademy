@@ -1200,8 +1200,8 @@ const parameterForRankOne: KnowledgePointDef = {
   id: "the-entry-that-makes-the-rank-one",
   title: t("The entry that makes the rank one", "使秩为 1 的元素"),
   explanation: t(
-    "A nonzero matrix has rank one exactly when every row is a multiple of a single row. The known entries of a second row show which multiple it must be, and that multiple fixes the unknown entry.",
-    "非零矩阵的秩为 1，当且仅当每一行都是同一行的倍数。第二行的已知元素说明了倍数是多少，这个倍数决定了未知元素。",
+    "A nonzero matrix has rank one exactly when every row is a multiple of a single row. The known entries of a second row show which multiple it must be, and that multiple fixes the unknown entry. For example, if row 1 is $(1, 2, 5)$ and row 2 is $(3, 6, k)$, row 2 is $3$ times row 1, so $k = 3 \\cdot 5 = 15$.\n\n> **Watch out.** The multiple is the same in every column, so the unknown entry is the multiple times the entry above it, not that entry plus something.",
+    "非零矩阵的秩为 1，当且仅当每一行都是同一行的倍数。第二行的已知元素说明了倍数是多少，这个倍数决定了未知元素。例如第 1 行为 $(1, 2, 5)$、第 2 行为 $(3, 6, k)$ 时，第 2 行是第 1 行的 $3$ 倍，所以 $k = 3 \\cdot 5 = 15$。\n\n> **注意。** 每一列的倍数都相同，所以未知元素等于倍数乘它上方的元素，而不是上方元素加上某个数。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
@@ -1221,10 +1221,38 @@ const parameterForRankOne: KnowledgePointDef = {
       ),
       answer: k,
       solveFor: "k",
-      wrong: [b, c + b, a * b],
-      solution: t(
-        `Row 2 starts with $${c}$ times row 1, so it must be that multiple throughout: $k = ${c}(${b}) = ${k}$.`,
-        `第 2 行开头是第 1 行的 $${c}$ 倍，所以整行都是这个倍数：$k = ${c}(${b}) = ${k}$。`,
+      mistakes: [
+        why(
+          b,
+          "That copies the entry above; row 2 is a multiple of row 1, so multiply it.",
+          "这是照抄上方的元素；第 2 行是第 1 行的倍数，要乘上倍数。",
+        ),
+        why(
+          c + b,
+          "That adds the multiple; every entry of row 2 is the multiple times the entry above it.",
+          "这是加上了倍数；第 2 行每个元素都是倍数乘上方的元素。",
+        ),
+        why(
+          a * b,
+          `The multiple comes from the first column, $${c} \\div 1 = ${c}$, not from the entry $${a}$.`,
+          `倍数来自第一列，$${c} \\div 1 = ${c}$，而不是元素 $${a}$。`,
+        ),
+      ].filter((m, i, all) => m.value !== k && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the multiple", "求倍数"],
+            t(
+              `Row 1 starts with $1$ and row 2 with $${c}$, and the second column agrees: $${inParens(c)} \\cdot ${inParens(a)} = ${c * a}$. So row 2 is $${c}$ times row 1.`,
+              `第 1 行以 $1$ 开头，第 2 行以 $${c}$ 开头，第二列也吻合：$${inParens(c)} \\cdot ${inParens(a)} = ${c * a}$。所以第 2 行是第 1 行的 $${c}$ 倍。`,
+            ),
+          ],
+          [["Apply it to the last column", "用于最后一列"], t("", ""), [`k = ${inParens(c)} \\cdot ${inParens(b)} = ${k}`]],
+        ],
+        t(
+          `With $k = ${k}$, row 2 is $(${c}, ${c * a}, ${k}) = ${c}(1, ${a}, ${b})$, so the two rows are dependent and the rank is $1$.`,
+          `取 $k = ${k}$，第 2 行为 $(${c}, ${c * a}, ${k}) = ${c}(1, ${a}, ${b})$，两行线性相关，秩为 $1$。`,
+        ),
       ),
     });
   },
@@ -1302,8 +1330,8 @@ const dimensionOfFamilies: KnowledgePointDef = {
   id: "the-dimension-of-a-family-of-matrices-or-polynomials",
   title: t("The dimension of a family of matrices or polynomials", "矩阵族或多项式族的维数"),
   explanation: t(
-    "Count the free choices. A symmetric $n \\times n$ matrix is fixed by its entries on and above the diagonal, a skew-symmetric one by those strictly above it. Each independent linear condition, such as a zero trace or a prescribed root, removes one dimension.",
-    "数一数自由选择的个数。$n$ 阶对称矩阵由对角线及其上方的元素决定，反对称矩阵由严格上方的元素决定。每个独立的线性条件，比如迹为零或指定一个根，都减少一维。",
+    "Count the free choices. A symmetric $n \\times n$ matrix is fixed by its entries on and above the diagonal, a skew-symmetric one by those strictly above it. Each independent linear condition, such as a zero trace or a prescribed root, removes one dimension. For example, the polynomials of degree at most $3$ with $p(2) = 0$ have $4$ coefficients and one condition, so they form a space of dimension $3$, with basis $t - 2$, $t(t - 2)$, $t^2(t - 2)$.\n\n> **Watch out.** Start from the right count before the conditions: $\\mathbb{P}_n$ has $n + 1$ coefficients, and a skew-symmetric matrix has a zero diagonal, so its diagonal entries are not free.",
+    "数一数自由选择的个数。$n$ 阶对称矩阵由对角线及其上方的元素决定，反对称矩阵由严格上方的元素决定。每个独立的线性条件，比如迹为零或指定一个根，都减少一维。例如次数不超过 $3$ 且 $p(2) = 0$ 的多项式有 $4$ 个系数和一个条件，所以构成 $3$ 维空间，一组基为 $t - 2$、$t(t - 2)$、$t^2(t - 2)$。\n\n> **注意。** 加条件之前先数对总数：$\\mathbb{P}_n$ 有 $n + 1$ 个系数；反对称矩阵的对角线为零，对角元不是自由的。",
   ),
   generate(rng) {
     const n = rng.int(2, 5);
@@ -1341,13 +1369,98 @@ const dimensionOfFamilies: KnowledgePointDef = {
         `$${n + 1}$ 个系数满足两个独立的线性条件。`,
       ],
     ];
-    const [family, answer, why, whyZh] = rng.pick(families);
+    const choice = rng.pick([0, 1, 2, 3, 4]);
+    const [family, answer, count, countZh] = families[choice]!;
+    const total = choice < 3 ? n * n : n + 1;
+    const conditions = [
+      `$A^T = A$ ties each entry below the diagonal to the one above it.`,
+      `$A^T = -A$ ties each entry below the diagonal to the one above it and forces $a_{ii} = -a_{ii}$, so $a_{ii} = 0$.`,
+      `$a_{11} + \\dots + a_{${n}${n}} = 0$ is one linear equation in the entries.`,
+      `$p(${a}) = 0$ is one linear equation in the coefficients.`,
+      `$p(${a}) = 0$ and $p(${b}) = 0$ are two linear equations, independent because $${a} \\ne ${b}$.`,
+    ];
+    const conditionsZh = [
+      `$A^T = A$ 使对角线下方的每个元素等于上方对应的元素。`,
+      `$A^T = -A$ 使对角线下方的每个元素由上方对应元素确定，并迫使 $a_{ii} = -a_{ii}$，即 $a_{ii} = 0$。`,
+      `$a_{11} + \\dots + a_{${n}${n}} = 0$ 是关于元素的一个线性方程。`,
+      `$p(${a}) = 0$ 是关于系数的一个线性方程。`,
+      `$p(${a}) = 0$ 与 $p(${b}) = 0$ 是两个线性方程，因 $${a} \\ne ${b}$ 而相互独立。`,
+    ];
+    const mistakes =
+      choice < 3
+        ? [
+            why(
+              n * n,
+              "That is the dimension of all $n \\times n$ matrices; the condition takes some freedom away.",
+              "这是全部 $n \\times n$ 矩阵的维数；条件会减少自由度。",
+            ),
+            why(
+              n,
+              "That counts only the diagonal; entries off the diagonal can be free too.",
+              "这只数了对角线；对角线以外的元素也可以是自由的。",
+            ),
+            ...(choice === 0
+              ? [
+                  why(
+                    (n * (n - 1)) / 2,
+                    "That leaves out the diagonal, which is free for a symmetric matrix.",
+                    "这漏掉了对角线，而对称矩阵的对角元是自由的。",
+                  ),
+                ]
+              : choice === 1
+                ? [
+                    why(
+                      (n * (n + 1)) / 2,
+                      "That counts the diagonal, but $A^T = -A$ forces the diagonal entries to be $0$.",
+                      "这把对角线也算上了，但 $A^T = -A$ 迫使对角元为 $0$。",
+                    ),
+                  ]
+                : [
+                    why(
+                      n * n - n,
+                      "One equation on the trace removes one dimension, not one per diagonal entry.",
+                      "关于迹的一个方程只减少一维，而不是每个对角元减一维。",
+                    ),
+                  ]),
+          ]
+        : [
+            why(
+              n + 1,
+              `That is the dimension of all of $\\mathbb{P}_{${n}}$; each condition removes one dimension.`,
+              `这是整个 $\\mathbb{P}_{${n}}$ 的维数；每个条件减少一维。`,
+            ),
+            why(
+              answer - 1,
+              `$\\mathbb{P}_{${n}}$ has $${n + 1}$ coefficients, counting the constant term, so start from $${n + 1}$.`,
+              `$\\mathbb{P}_{${n}}$ 算上常数项有 $${n + 1}$ 个系数，所以从 $${n + 1}$ 开始数。`,
+            ),
+          ];
     return numberProblem({
       prompt: t(`What is the dimension of the space of ${family.en}?`, `由${family["zh-CN"]}组成的空间是多少维？`),
       answer,
       form: "integer",
-      wrong: [n * n, n, n + 1, answer + 1].filter((x) => x !== answer),
-      solution: t(`${why} So the dimension is $${answer}$.`, `${whyZh}所以维数是 $${answer}$。`),
+      mistakes: mistakes.filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count before the conditions", "先数条件前的个数"],
+            t(
+              choice < 3
+                ? `Each $${n} \\times ${n}$ matrix has $${n * n}$ entries.`
+                : `A polynomial of degree at most $${n}$ has $${n + 1}$ coefficients, $a_0$ to $a_{${n}}$.`,
+              choice < 3
+                ? `$${n} \\times ${n}$ 矩阵有 $${n * n}$ 个元素。`
+                : `次数不超过 $${n}$ 的多项式有 $${n + 1}$ 个系数，从 $a_0$ 到 $a_{${n}}$。`,
+            ),
+          ],
+          [["Apply the conditions", "应用条件"], t(conditions[choice]!, conditionsZh[choice]!)],
+          [["Count the free choices", "数自由选择"], t(count, countZh)],
+        ],
+        t(
+          `The dimension is $${answer}$, and $${total} - ${total - answer} = ${answer}$: the conditions remove $${total - answer}$ of the $${total}$ starting choices.`,
+          `维数是 $${answer}$，且 $${total} - ${total - answer} = ${answer}$：条件去掉了起初 $${total}$ 个选择中的 $${total - answer}$ 个。`,
+        ),
+      ),
     });
   },
 };
@@ -1356,8 +1469,8 @@ const coordinatesAroundAPoint: KnowledgePointDef = {
   id: "coordinates-in-powers-of-x-minus-a",
   title: t("Coordinates in powers of $x - a$", "以 $x - a$ 的幂为基的坐标"),
   explanation: t(
-    "The polynomials $1$, $x-a$ and $(x-a)^2$ form a basis of the polynomials of degree at most two. Coordinates in this basis come from rewriting the polynomial: the coefficient of $x^2$ is the last coordinate, then subtract and continue downward.",
-    "多项式 $1$、$x-a$、$(x-a)^2$ 构成次数不超过二的多项式空间的一组基。这组基下的坐标来自改写多项式：$x^2$ 的系数是最后一个坐标，然后减去这一项再继续往下。",
+    "The polynomials $1$, $x-a$ and $(x-a)^2$ form a basis of the polynomials of degree at most two. Coordinates in this basis come from rewriting the polynomial: the coefficient of $x^2$ is the last coordinate, then subtract and continue downward. For example, $x^2 + 1 = 2 + 2(x - 1) + (x - 1)^2$, since the right side expands to $2 + 2x - 2 + x^2 - 2x + 1 = x^2 + 1$, so the coordinates are $(2, 2, 1)$.\n\n> **Watch out.** Only the top coordinate equals an ordinary coefficient; the other two change, because $(x - a)^2$ also contributes to the $x$ and constant terms.",
+    "多项式 $1$、$x-a$、$(x-a)^2$ 构成次数不超过二的多项式空间的一组基。这组基下的坐标来自改写多项式：$x^2$ 的系数是最后一个坐标，然后减去这一项再继续往下。例如 $x^2 + 1 = 2 + 2(x - 1) + (x - 1)^2$，因为右边展开为 $2 + 2x - 2 + x^2 - 2x + 1 = x^2 + 1$，所以坐标为 $(2, 2, 1)$。\n\n> **注意。** 只有最高次的坐标等于原来的系数；另外两个会改变，因为 $(x - a)^2$ 也贡献了 $x$ 项和常数项。",
   ),
   generate(rng) {
     const a = nonzero(rng, 3);
@@ -1367,22 +1480,56 @@ const coordinatesAroundAPoint: KnowledgePointDef = {
     const p1 = c1 - 2 * a * c2;
     const p0 = c0 - a * c1 + a * a * c2;
     const base = a > 0 ? `x - ${a}` : `x + ${-a}`;
-    return pointProblem({
-      prompt: t(
-        `Write $${poly([c2, "x^2"], [p1, "x"], [p0, ""])}$ as $c_0 + c_1(${base}) + c_2(${base})^2$. Answer as $(c_0, c_1, c_2)$.`,
-        `把 $${poly([c2, "x^2"], [p1, "x"], [p0, ""])}$ 写成 $c_0 + c_1(${base}) + c_2(${base})^2$，答案写成 $(c_0, c_1, c_2)$。`,
-      ),
-      answer: [c0, c1, c2],
-      vars: ["c_0", "c_1", "c_2"],
-      wrong: [
-        [p0, p1, c2],
-        [c2, c1, c0],
-      ],
-      solution: t(
-        `The coefficient of $x^2$ gives $c_2 = ${c2}$. Matching $x$ gives $c_1 - ${inParens(2 * a * c2)} = ${p1}$, so $c_1 = ${c1}$. Setting $x = ${a}$ leaves $c_0 = ${c0}$.`,
-        `$x^2$ 的系数给出 $c_2 = ${c2}$。比较 $x$ 的系数得 $c_1 - ${inParens(2 * a * c2)} = ${p1}$，所以 $c_1 = ${c1}$。令 $x = ${a}$ 得 $c_0 = ${c0}$。`,
-      ),
-    });
+    const answer = [c0, c1, c2];
+    const given = poly([c2, "x^2"], [p1, "x"], [p0, ""]);
+    return withMistakes(
+      pointProblem({
+        prompt: t(
+          `Write $${given}$ as $c_0 + c_1(${base}) + c_2(${base})^2$. Answer as $(c_0, c_1, c_2)$.`,
+          `把 $${given}$ 写成 $c_0 + c_1(${base}) + c_2(${base})^2$，答案写成 $(c_0, c_1, c_2)$。`,
+        ),
+        answer,
+        vars: ["c_0", "c_1", "c_2"],
+        solution: walked(
+          [
+            [
+              ["Match $x^2$", "比较 $x^2$"],
+              t(`Only $c_2(${base})^2$ has an $x^2$ term, so $c_2 = ${c2}$.`, `只有 $c_2(${base})^2$ 含 $x^2$ 项，所以 $c_2 = ${c2}$。`),
+            ],
+            [
+              ["Match $x$", "比较 $x$"],
+              t(`$(${base})^2$ contributes $${-2 * a}x$, so the $x$ terms give:`, `$(${base})^2$ 贡献 $${-2 * a}x$，所以 $x$ 项给出：`),
+              [`c_1 + ${inParens(c2)} \\cdot ${inParens(-2 * a)} = ${p1}`, `c_1 = ${c1}`],
+            ],
+            [
+              [`Set $x = ${a}$`, `令 $x = ${a}$`],
+              t(
+                "Both other terms vanish there, so $c_0$ is the value of the polynomial at that point:",
+                "在该点另外两项都为零，所以 $c_0$ 就是多项式在该点的值：",
+              ),
+              [`c_0 = ${inParens(c2)} \\cdot ${inParens(a * a)} + ${inParens(p1)} \\cdot ${inParens(a)} + ${inParens(p0)} = ${c0}`],
+            ],
+          ],
+          t(
+            `At $x = 0$: $${c0} + ${inParens(c1)} \\cdot ${inParens(-a)} + ${inParens(c2)} \\cdot ${inParens(a * a)} = ${p0}$, the constant term of the given polynomial.`,
+            `在 $x = 0$ 处：$${c0} + ${inParens(c1)} \\cdot ${inParens(-a)} + ${inParens(c2)} \\cdot ${inParens(a * a)} = ${p0}$，正是所给多项式的常数项。`,
+          ),
+        ),
+      }),
+      [
+        say(
+          pointLatex([p0, p1, c2]),
+          "These are the ordinary coefficients; in the shifted basis the lower two coordinates change.",
+          "这是原来的系数；在平移后的基下，较低的两个坐标会改变。",
+        ),
+        say(pointLatex([c2, c1, c0]), "The order is reversed: $c_0$, the weight on $1$, comes first.", "顺序反了：$1$ 的权重 $c_0$ 在前。"),
+        say(
+          pointLatex([p0, c1, c2]),
+          `$c_0$ is the value at $x = ${a}$, not the value at $x = 0$.`,
+          `$c_0$ 是在 $x = ${a}$ 处的值，而不是在 $x = 0$ 处的值。`,
+        ),
+      ].filter((m, i, all) => m.response !== pointLatex(answer) && all.findIndex((o) => o.response === m.response) === i),
+    );
   },
 };
 
@@ -2701,8 +2848,8 @@ const nullityOfTranspose: KnowledgePointDef = {
   id: "the-nullity-of-a-transpose",
   title: t("The nullity of a transpose", "转置矩阵的零化度"),
   explanation: t(
-    "A matrix and its transpose have the same rank, because row rank equals column rank. Their nullities generally differ, since the transpose has as many columns as the original has rows. Rank-nullity applied to the transpose of an $m \\times n$ matrix of rank $r$ gives $m - r$, while the matrix itself has nullity $n - r$. The two agree only for square matrices.",
-    "矩阵和它的转置有相同的秩，因为行秩等于列秩。它们的零化度一般不同，因为转置的列数等于原矩阵的行数。对秩为 $r$ 的 $m \\times n$ 矩阵的转置用秩-零化度定理，得 $m - r$，而矩阵本身的零化度是 $n - r$。只有方阵的两者才相等。",
+    "A matrix and its transpose have the same rank, because row rank equals column rank. Their nullities generally differ, since the transpose has as many columns as the original has rows. Rank-nullity applied to the transpose of an $m \\times n$ matrix of rank $r$ gives $m - r$, while the matrix itself has nullity $n - r$. The two agree only for square matrices. For example, a $5 \\times 3$ matrix of rank $2$ has nullity $3 - 2 = 1$, while its $3 \\times 5$ transpose has nullity $5 - 2 = 3$.\n\n> **Watch out.** Subtract the rank from the number of columns of $A^T$, which is the number of rows of $A$.",
+    "矩阵和它的转置有相同的秩，因为行秩等于列秩。它们的零化度一般不同，因为转置的列数等于原矩阵的行数。对秩为 $r$ 的 $m \\times n$ 矩阵的转置用秩-零化度定理，得 $m - r$，而矩阵本身的零化度是 $n - r$。只有方阵的两者才相等。例如秩为 $2$ 的 $5 \\times 3$ 矩阵的零化度是 $3 - 2 = 1$，而它的 $3 \\times 5$ 转置的零化度是 $5 - 2 = 3$。\n\n> **注意。** 要用 $A^T$ 的列数减去秩，而 $A^T$ 的列数就是 $A$ 的行数。",
   ),
   generate(rng) {
     const m = rng.int(3, 12);
@@ -2716,10 +2863,39 @@ const nullityOfTranspose: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n - r, r, m + n - r, n],
-      solution: t(
-        `The transpose has ${m} columns and rank ${r}, so its nullity is $${m} - ${r} = ${answer}$.`,
-        `转置有 ${m} 列，秩是 ${r}，所以零化度是 $${m} - ${r} = ${answer}$。`,
+      mistakes: [
+        why(
+          n - r,
+          "That is the nullity of $A$ itself; $A^T$ has as many columns as $A$ has rows.",
+          "这是 $A$ 本身的零化度；$A^T$ 的列数等于 $A$ 的行数。",
+        ),
+        why(
+          r,
+          "That is the rank, which $A$ and $A^T$ share; the nullity is what the rank leaves of the columns.",
+          "这是秩，$A$ 与 $A^T$ 的秩相同；零化度是列数减去秩后剩下的部分。",
+        ),
+        why(
+          m + n - r,
+          "Rank-nullity uses only the number of columns of $A^T$, not rows plus columns.",
+          "秩-零化度定理只用 $A^T$ 的列数，而不是行数加列数。",
+        ),
+        why(m, "That is the number of columns of $A^T$; subtract the rank from it.", "这是 $A^T$ 的列数；还要减去秩。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the shape and rank of $A^T$", "求 $A^T$ 的尺寸和秩"],
+            t(
+              `$A^T$ is ${n} by ${m}, so it has ${m} columns, and its rank equals that of $A$, namely ${r}.`,
+              `$A^T$ 是 ${n} 行 ${m} 列，所以有 ${m} 列；它的秩与 $A$ 相同，为 ${r}。`,
+            ),
+          ],
+          [["Apply rank-nullity to $A^T$", "对 $A^T$ 用秩-零化度定理"], t("", ""), [`\\operatorname{null}(A^T) = ${m} - ${r} = ${answer}`]],
+        ],
+        t(
+          `Rank plus nullity of $A^T$ is $${r} + ${answer} = ${m}$, its number of columns.`,
+          `$A^T$ 的秩加零化度为 $${r} + ${answer} = ${m}$，正是它的列数。`,
+        ),
       ),
     });
   },
@@ -2729,8 +2905,8 @@ const smallestNullity: KnowledgePointDef = {
   id: "the-smallest-possible-nullity-of-a-matrix",
   title: t("The smallest possible nullity of a matrix", "矩阵零化度的最小可能值"),
   explanation: t(
-    "The rank of a matrix cannot exceed its number of rows or its number of columns. Rank-nullity then bounds the nullity from below: it is at least the number of columns minus the largest possible rank. So a matrix with more columns than rows always has a nontrivial null space, while with at least as many rows as columns the nullity can be zero.",
-    "矩阵的秩不能超过行数，也不能超过列数。于是秩-零化度定理给出零化度的下界：它至少是列数减去最大可能的秩。所以列数多于行数的矩阵总有非平凡的零空间，而行数不少于列数时，零化度可以为零。",
+    "The rank of a matrix cannot exceed its number of rows or its number of columns. Rank-nullity then bounds the nullity from below: it is at least the number of columns minus the largest possible rank. So a matrix with more columns than rows always has a nontrivial null space, while with at least as many rows as columns the nullity can be zero. For example, a $3 \\times 7$ matrix has rank at most $3$, so its nullity is at least $7 - 3 = 4$, while a $7 \\times 3$ matrix can have rank $3$ and nullity $0$.\n\n> **Watch out.** Nullity counts free columns, so subtract from the number of columns, and it is never negative: with more rows than columns the smallest nullity is $0$.",
+    "矩阵的秩不能超过行数，也不能超过列数。于是秩-零化度定理给出零化度的下界：它至少是列数减去最大可能的秩。所以列数多于行数的矩阵总有非平凡的零空间，而行数不少于列数时，零化度可以为零。例如 $3 \\times 7$ 矩阵的秩至多为 $3$，所以零化度至少为 $7 - 3 = 4$；而 $7 \\times 3$ 矩阵的秩可以是 $3$，零化度为 $0$。\n\n> **注意。** 零化度数的是自由列，所以要从列数中减，而且它不会是负数：行数多于列数时最小零化度是 $0$。",
   ),
   generate(rng) {
     const m = rng.int(2, 20);
@@ -2743,10 +2919,39 @@ const smallestNullity: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m, n, Math.abs(n - m) + 1, Math.min(m, n), Math.max(m, n) - 1],
-      solution: t(
-        `The rank is at most $${Math.min(m, n)}$, so the nullity is at least $${n} - ${Math.min(m, n)} = ${answer}$, and a matrix of largest rank reaches it.`,
-        `秩最多是 $${Math.min(m, n)}$，所以零化度至少是 $${n} - ${Math.min(m, n)} = ${answer}$，秩最大的矩阵达到这个值。`,
+      mistakes: [
+        why(
+          Math.abs(n - m),
+          "The nullity is the number of columns minus the rank, and the rank can reach the number of columns here, so nothing is forced.",
+          "零化度是列数减去秩，而这里秩可以达到列数，所以没有被迫的自由列。",
+        ),
+        why(Math.min(m, n), "That is the largest possible rank, not the nullity it leaves.", "这是最大可能的秩，而不是它剩下的零化度。"),
+        why(
+          n,
+          "That is the largest possible nullity, reached by the zero matrix; the question asks for the smallest.",
+          "这是最大可能的零化度，由零矩阵达到；题目问的是最小值。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Bound the rank", "给秩定上界"],
+            t(`The rank is at most the smaller of ${m} rows and ${n} columns:`, `秩不超过行数 ${m} 与列数 ${n} 中较小的一个：`),
+            [`\\operatorname{rank} A \\le ${Math.min(m, n)}`],
+          ],
+          [
+            ["Apply rank-nullity", "用秩-零化度定理"],
+            t(
+              `Nullity is ${n} minus the rank, so it is smallest when the rank is largest:`,
+              `零化度等于 ${n} 减去秩，所以秩最大时零化度最小：`,
+            ),
+            [`\\operatorname{null} A \\ge ${n} - ${Math.min(m, n)} = ${answer}`],
+          ],
+        ],
+        t(
+          `A matrix whose top-left $${Math.min(m, n)} \\times ${Math.min(m, n)}$ block is the identity, with zeros elsewhere, has rank $${Math.min(m, n)}$ and nullity exactly $${answer}$.`,
+          `左上角 $${Math.min(m, n)} \\times ${Math.min(m, n)}$ 块为单位矩阵、其余为零的矩阵，秩为 $${Math.min(m, n)}$，零化度恰为 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -3800,8 +4005,8 @@ const rankFromFormula: KnowledgePointDef = {
   id: "the-rank-of-a-matrix-given-by-a-formula",
   title: t("The rank of a matrix given by a formula", "由公式给出的矩阵的秩"),
   explanation: t(
-    "A large matrix can have a small rank when a formula defines its entries. If the entries expand as a sum of terms, each a function of the row times a function of the column, then every column is a combination of the same few column vectors. So the dimension of the span of the columns is at most the number of such terms. For example, $a_{ij} = i + j$ has every column in the span of $(i)$ and $(1)$.",
-    "当公式定义矩阵的元素时，大矩阵可以有很小的秩。如果元素能展开为若干项之和，每项是行的函数乘以列的函数，那么每一列都是相同几个列向量的组合。所以各列张成空间的维数至多是这种项的个数。例如，$a_{ij} = i + j$ 的每一列都在 $(i)$ 和 $(1)$ 张成的空间中。",
+    "A large matrix can have a small rank when a formula defines its entries. If the entries expand as a sum of terms, each a function of the row times a function of the column, then every column is a combination of the same few column vectors. So the dimension of the span of the columns is at most the number of such terms. For example, $a_{ij} = i + j$ has every column in the span of $(i)$ and $(1)$: column $j$ is $(i) + j(1)$, so the rank is $2$ however large the matrix is.\n\n> **Watch out.** The size of the matrix does not set the rank; count the separate row-times-column terms after expanding, as $(i + j)^2 = i^2 + 2ij + j^2$ has three.",
+    '当公式定义矩阵的元素时，大矩阵可以有很小的秩。如果元素能展开为若干项之和，每项是行的函数乘以列的函数，那么每一列都是相同几个列向量的组合。所以各列张成空间的维数至多是这种项的个数。例如，$a_{ij} = i + j$ 的每一列都在 $(i)$ 和 $(1)$ 张成的空间中：第 $j$ 列是 $(i) + j(1)$，所以无论矩阵多大，秩都是 $2$。\n\n> **注意。** 矩阵的尺寸不决定秩；要展开后数出"行的函数乘列的函数"的项数，例如 $(i + j)^2 = i^2 + 2ij + j^2$ 有三项。',
   ),
   generate(rng) {
     const n = rng.int(3, 9);
@@ -3831,10 +4036,62 @@ const rankFromFormula: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n, n - 1, 1, 2, 3],
-      solution: t(
-        `Expanding the formula, each column is built from ${en}. These vectors are independent, so the rank is $${answer}$.`,
-        `展开公式，每一列由以下部分构成：${zh}。这些向量线性无关，所以秩是 $${answer}$。`,
+      mistakes: [
+        why(
+          n,
+          "The size of the matrix does not set its rank; the formula makes the columns combinations of a few vectors.",
+          "矩阵的尺寸不决定秩；公式使各列都是少数几个向量的组合。",
+        ),
+        why(
+          n - 1,
+          "The columns are combinations of a fixed few vectors, so the rank does not grow with the size.",
+          "各列都是固定几个向量的组合，所以秩不随尺寸增大。",
+        ),
+        ...(kind >= 2
+          ? [
+              why(
+                2,
+                "Expanding the square gives three row-times-column terms, $i^2$, $ij$ and $j^2$, not two.",
+                '展开平方得到三个"行乘列"的项 $i^2$、$ij$、$j^2$，而不是两个。',
+              ),
+            ]
+          : kind === 0
+            ? [
+                why(
+                  1,
+                  "Column $j$ mixes two different vectors, $(i)$ and $(1)$, with weights that change with $j$, so one vector is not enough.",
+                  "第 $j$ 列由两个不同的向量 $(i)$ 与 $(1)$ 组合而成，权重随 $j$ 变化，所以一个向量不够。",
+                ),
+              ]
+            : [
+                why(
+                  2,
+                  "$ij$ is one product of a function of $i$ and a function of $j$, so every column is a multiple of $(i)$.",
+                  "$ij$ 是 $i$ 的函数与 $j$ 的函数的一个乘积，所以每一列都是 $(i)$ 的倍数。",
+                ),
+              ]),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Expand the formula", "展开公式"],
+            t(
+              `Write $a_{ij} = ${formula}$ as a sum of terms, each a function of $i$ times a function of $j$. Then each column is built from ${en}.`,
+              `把 $a_{ij} = ${formula}$ 写成若干项之和，每项是 $i$ 的函数乘 $j$ 的函数。于是每一列由以下部分构成：${zh}。`,
+            ),
+          ],
+          [
+            ["Check independence", "检验线性无关"],
+            t(
+              `The vectors ${answer === 1 ? "$(i)$ is nonzero" : answer === 2 ? "$(i)$ and $(1)$ are not multiples of each other" : "$(i^2)$, $(i)$ and $(1)$ are independent, since a nonzero quadratic in $i$ cannot vanish at the three values $i = 1, 2, 3$"}, and enough columns use each of them, so the rank is exactly the count.`,
+              `向量${answer === 1 ? " $(i)$ 非零" : answer === 2 ? " $(i)$ 与 $(1)$ 不成倍数" : " $(i^2)$、$(i)$、$(1)$ 线性无关，因为非零的 $i$ 的二次式不可能在 $i = 1, 2, 3$ 三处都为零"}，且有足够多的列用到它们，所以秩正好等于这个个数。`,
+            ),
+          ],
+        ],
+        t(
+          `So the rank is $${answer}$ for this $${n} \\times ${n}$ matrix, and it would stay $${answer}$ for any larger size.`,
+          `所以这个 $${n} \\times ${n}$ 矩阵的秩是 $${answer}$，尺寸再大秩也仍是 $${answer}$。`,
+        ),
       ),
     });
   },

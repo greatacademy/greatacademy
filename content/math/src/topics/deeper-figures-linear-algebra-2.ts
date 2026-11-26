@@ -897,8 +897,8 @@ const rankNullity = point(
   "nullity-from-a-drawn-image",
   ["Nullity from a drawn image", "由所画的像求零化度"],
   [
-    "The rank of $T : \\mathbb{R}^n \\to \\mathbb{R}^2$ is the dimension of its image: $0$ for the origin alone, $1$ for a line through the origin, $2$ for the whole plane. Then rank plus nullity equals $n$.",
-    "$T : \\mathbb{R}^n \\to \\mathbb{R}^2$ 的秩是像的维数：只有原点时为 $0$，过原点的直线时为 $1$，整个平面时为 $2$。秩加零化度等于 $n$。",
+    "The rank of $T : \\mathbb{R}^n \\to \\mathbb{R}^2$ is the dimension of its image: $0$ for the origin alone, $1$ for a line through the origin, $2$ for the whole plane. Then rank plus nullity equals $n$. For example, if $T : \\mathbb{R}^5 \\to \\mathbb{R}^2$ has a line as its image, the rank is $1$ and the nullity is $5 - 1 = 4$.\n\n> **Watch out.** Subtract the rank, read from the drawing, from the dimension $n$ of the domain, not from the $2$ of the plane the picture shows.",
+    "$T : \\mathbb{R}^n \\to \\mathbb{R}^2$ 的秩是像的维数：只有原点时为 $0$，过原点的直线时为 $1$，整个平面时为 $2$。秩加零化度等于 $n$。例如若 $T : \\mathbb{R}^5 \\to \\mathbb{R}^2$ 的像是一条直线，则秩为 $1$，零化度为 $5 - 1 = 4$。\n\n> **注意。** 要用定义域的维数 $n$ 减去从图中读出的秩，而不是用图中平面的维数 $2$ 去减。",
   ],
   (rng) => {
     const n = rng.int(3, 9);
@@ -910,18 +910,60 @@ const rankNullity = point(
         : rank === 1
           ? [{ kind: "line", a: [0, 0], b: d, accent: true }]
           : [{ kind: "region", halfPlanes: [[0, 0, 1]] }];
-    return ask(
-      [
-        `The accented part of the drawing is the image of a linear map $T : \\mathbb{R}^{${n}} \\to \\mathbb{R}^2$. What is the nullity of $T$?`,
-        `图中突出显示的部分是线性映射 $T : \\mathbb{R}^{${n}} \\to \\mathbb{R}^2$ 的像。$T$ 的零化度是多少？`,
-      ],
-      n - rank,
-      [rank, n, n - rank - 1, n - rank + 1],
-      [
-        `The image has dimension $${rank}$, so the rank is $${rank}$ and the nullity is $${n} - ${rank} = ${n - rank}$.`,
-        `像的维数为 $${rank}$，所以秩为 $${rank}$，零化度为 $${n} - ${rank} = ${n - rank}$。`,
-      ],
-      fig(
+    const answer = n - rank;
+    const seen: Pair =
+      rank === 0
+        ? [
+            "Only the origin is marked, so the image is $\\{\\mathbf{0}\\}$, of dimension $0$.",
+            "只标出原点，所以像是 $\\{\\mathbf{0}\\}$，维数为 $0$。",
+          ]
+        : rank === 1
+          ? [
+              `The image is the line through the origin in direction ${at(d)}, of dimension $1$.`,
+              `像是过原点、方向为 ${at(d)} 的直线，维数为 $1$。`,
+            ]
+          : [
+              "The whole plane is shaded, so the image is $\\mathbb{R}^2$, of dimension $2$.",
+              "整个平面为阴影，所以像是 $\\mathbb{R}^2$，维数为 $2$。",
+            ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The accented part of the drawing is the image of a linear map $T : \\mathbb{R}^{${n}} \\to \\mathbb{R}^2$. What is the nullity of $T$?`,
+          `图中突出显示的部分是线性映射 $T : \\mathbb{R}^{${n}} \\to \\mathbb{R}^2$ 的像。$T$ 的零化度是多少？`,
+        ),
+        answer,
+        form: "integer",
+        mistakes: [
+          why(
+            rank,
+            "That is the rank, the dimension of the image; the nullity is what is left of the domain.",
+            "这是秩，即像的维数；零化度是定义域剩下的部分。",
+          ),
+          why(
+            n,
+            "That is the dimension of the whole domain; subtract the rank shown in the drawing.",
+            "这是整个定义域的维数；还要减去图中显示的秩。",
+          ),
+          why(
+            2 - rank,
+            "That subtracts from the $2$ of the plane; rank-nullity counts the domain $\\mathbb{R}^n$.",
+            "这是用平面的 $2$ 去减；秩-零化度定理数的是定义域 $\\mathbb{R}^n$。",
+          ),
+          why(n - 2, "The rank is the dimension of the drawn image, not always $2$.", "秩是所画像的维数，不一定是 $2$。"),
+        ].filter((m, k, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === k),
+        solution: walked(
+          [
+            [["Read the rank", "读出秩"], t(seen[0], seen[1])],
+            [["Apply rank-nullity", "用秩-零化度定理"], t("", ""), [`\\operatorname{null} T = ${n} - ${rank} = ${answer}`]],
+          ],
+          t(
+            `Rank plus nullity is $${rank} + ${answer} = ${n}$, the dimension of the domain.`,
+            `秩加零化度为 $${rank} + ${answer} = ${n}$，正是定义域的维数。`,
+          ),
+        ),
+      }),
+      figure: fig(
         5,
         marks,
         rank === 0
@@ -930,7 +972,7 @@ const rankNullity = point(
             ? [`A line through the origin with direction ${at(d)}.`, `过原点、方向为 ${at(d)} 的直线。`]
             : ["The whole plane is shaded.", "整个平面为阴影。"],
       ),
-    );
+    };
   },
 );
 

@@ -1745,25 +1745,54 @@ const solvableDimension = point(
   "the-dimension-of-the-reachable-right-hand-sides",
   ["The dimension of the reachable right-hand sides", "可达右端的维数"],
   [
-    "The right-hand sides $\\mathbf{b}$ for which $A\\mathbf{x} = \\mathbf{b}$ is solvable form the column space, whose dimension is the rank. By rank-nullity, a nonzero null space shrinks it, so a singular square matrix cannot reach every right-hand side.",
-    "使 $A\\mathbf{x} = \\mathbf{b}$ 有解的右端 $\\mathbf{b}$ 构成列空间，其维数是秩。由秩-零化度定理，非零的零空间会使它缩小，所以奇异方阵不能达到每个右端。",
+    "The right-hand sides $\\mathbf{b}$ for which $A\\mathbf{x} = \\mathbf{b}$ is solvable form the column space, whose dimension is the rank. By rank-nullity, a nonzero null space shrinks it, so a singular square matrix cannot reach every right-hand side. For example, a $4 \\times 4$ matrix with a $1$-dimensional null space has rank $4 - 1 = 3$, so the reachable $\\mathbf{b}$ form a $3$-dimensional subspace of $\\mathbb{R}^4$.\n\n> **Watch out.** The null space lives among the inputs $\\mathbf{x}$, the reachable $\\mathbf{b}$ among the outputs; the answer is the rank, not the nullity.",
+    "使 $A\\mathbf{x} = \\mathbf{b}$ 有解的右端 $\\mathbf{b}$ 构成列空间，其维数是秩。由秩-零化度定理，非零的零空间会使它缩小，所以奇异方阵不能达到每个右端。例如零空间为 $1$ 维的 $4 \\times 4$ 矩阵的秩是 $4 - 1 = 3$，所以可达的 $\\mathbf{b}$ 构成 $\\mathbb{R}^4$ 的 $3$ 维子空间。\n\n> **注意。** 零空间位于输入 $\\mathbf{x}$ 之中，可达的 $\\mathbf{b}$ 位于输出之中；答案是秩，而不是零化度。",
   ],
   (rng) => {
     const n = rng.int(3, 12);
     const p = rng.int(1, n - 1);
     const answer = n - p;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$A$ is a square matrix of size $${n} \\times ${n}$ with $\\dim \\operatorname{Null}(A) = ${p}$. Find the dimension of the set of all $\\mathbf{b}$ for which $A\\mathbf{x} = \\mathbf{b}$ has a solution.`,
         `$A$ 是 $${n} \\times ${n}$ 矩阵，$\\dim \\operatorname{Null}(A) = ${p}$。求使 $A\\mathbf{x} = \\mathbf{b}$ 有解的所有 $\\mathbf{b}$ 构成的集合的维数。`,
-      ],
+      ]),
       answer,
-      [p, n, n + p],
-      [
-        `That set is the column space, whose dimension is the rank. By rank-nullity the rank is $${n} - ${p} = ${answer}$.`,
-        `这个集合就是列空间，其维数是秩。由秩-零化度定理，秩是 $${n} - ${p} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          p,
+          "That is the nullity, a dimension among the inputs; the reachable $\\mathbf{b}$ form the column space, of dimension the rank.",
+          "这是零化度，是输入一侧的维数；可达的 $\\mathbf{b}$ 构成列空间，维数是秩。",
+        ),
+        why(
+          n,
+          "A nonzero null space makes $A$ singular, so not every $\\mathbf{b}$ in $\\mathbb{R}^n$ is reachable.",
+          "非零的零空间使 $A$ 奇异，所以并非 $\\mathbb{R}^n$ 中每个 $\\mathbf{b}$ 都可达。",
+        ),
+        why(
+          n + p,
+          "Rank and nullity add up to $n$, so subtract the nullity rather than add it.",
+          "秩与零化度之和是 $n$，所以要减去零化度，而不是加上。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Name the set", "说出这个集合"],
+            text([
+              "$A\\mathbf{x}$ is a combination of the columns of $A$, so the reachable $\\mathbf{b}$ form the column space, of dimension $\\operatorname{rank} A$.",
+              "$A\\mathbf{x}$ 是 $A$ 各列的组合，所以可达的 $\\mathbf{b}$ 构成列空间，维数为 $\\operatorname{rank} A$。",
+            ]),
+          ],
+          [["Apply rank-nullity", "用秩-零化度定理"], text(["", ""]), [`\\operatorname{rank} A = ${n} - ${p} = ${answer}`]],
+        ],
+        text([
+          `Rank plus nullity is $${answer} + ${p} = ${n}$, the number of columns, and $${answer} < ${n}$ shows that some $\\mathbf{b}$ cannot be reached.`,
+          `秩加零化度为 $${answer} + ${p} = ${n}$，正是列数；而 $${answer} < ${n}$ 说明有些 $\\mathbf{b}$ 不可达。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1771,40 +1800,96 @@ const shiftedSpace = point(
   "the-zero-and-inverses-of-a-shifted-vector-space",
   ["The zero and inverses of a shifted vector space", "平移向量空间的零元和逆元"],
   [
-    "With unusual operations, the zero vector need not be the number $0$. It is whichever element leaves every other element unchanged under the given addition. The additive inverse of an element is then whatever adds to it to give this zero, not to give $0$.",
-    "在非常规运算下，零向量不一定是数 $0$。它是在给定加法下使其他元素都不变的那个元素。元素的加法逆元则是与它相加得到这个零元的元素，而不是得到 $0$。",
+    "With unusual operations, the zero vector need not be the number $0$. It is whichever element leaves every other element unchanged under the given addition. The additive inverse of an element is then whatever adds to it to give this zero, not to give $0$. For example, with $x \\oplus y = x + y - 3$, the zero is $3$, since $x \\oplus 3 = x$, and the inverse of $5$ is $1$, since $5 \\oplus 1 = 3$.\n\n> **Watch out.** Solve $x \\oplus z = x$ with the new addition; the ordinary $0$ and the ordinary $-x$ are usually wrong here.",
+    "在非常规运算下，零向量不一定是数 $0$。它是在给定加法下使其他元素都不变的那个元素。元素的加法逆元则是与它相加得到这个零元的元素，而不是得到 $0$。例如在 $x \\oplus y = x + y - 3$ 下，零元是 $3$，因为 $x \\oplus 3 = x$；$5$ 的逆元是 $1$，因为 $5 \\oplus 1 = 3$。\n\n> **注意。** 要用新的加法解 $x \\oplus z = x$；通常的 $0$ 和通常的 $-x$ 在这里一般是错的。",
   ],
   (rng) => {
     const k = nz(rng, 9);
     const a = rng.int(-12, 12);
     const op = `x \\oplus y = ${poly([1, "x"], [1, "y"], [-k, ""])}`;
     if (rng.bool()) {
-      return ask(
-        [
+      return numberProblem({
+        prompt: text([
           `$\\mathbb{R}$ is made into a vector space with the addition $${op}$. Find its zero vector.`,
           `用加法 $${op}$ 把 $\\mathbb{R}$ 变成向量空间。求它的零向量。`,
-        ],
-        k,
-        [0, -k, 2 * k],
-        [
-          `The zero vector $z$ needs $x \\oplus z = x$ for all $x$, that is $${poly([1, "x"], [1, "z"], [-k, ""])} = x$. So $z = ${k}$.`,
-          `零向量 $z$ 要对所有 $x$ 满足 $x \\oplus z = x$，即 $${poly([1, "x"], [1, "z"], [-k, ""])} = x$。所以 $z = ${k}$。`,
-        ],
-      );
+        ]),
+        answer: k,
+        form: "integer",
+        mistakes: [
+          why(
+            0,
+            `$x \\oplus 0 = ${poly([1, "x"], [-k, ""])}$, which is not $x$; the zero must be found with the new addition.`,
+            `$x \\oplus 0 = ${poly([1, "x"], [-k, ""])}$，不等于 $x$；零元要用新的加法来求。`,
+          ),
+          why(-k, `The sign is flipped: $z - ${wrap(k)} = 0$ gives $z = ${k}$.`, `符号反了：$z - ${wrap(k)} = 0$ 给出 $z = ${k}$。`),
+          why(
+            2 * k,
+            `$x \\oplus ${wrap(2 * k)} = ${poly([1, "x"], [k, ""])}$, which is not $x$.`,
+            `$x \\oplus ${wrap(2 * k)} = ${poly([1, "x"], [k, ""])}$，不等于 $x$。`,
+          ),
+        ].filter((w, i, all) => w.value !== k && all.findIndex((o) => o.value === w.value) === i),
+        solution: walked(
+          [
+            [
+              ["Write the condition", "写出条件"],
+              text(["The zero vector $z$ needs $x \\oplus z = x$ for every $x$:", "零向量 $z$ 要对每个 $x$ 满足 $x \\oplus z = x$："]),
+              [`${poly([1, "x"], [1, "z"], [-k, ""])} = x`],
+            ],
+            [
+              ["Solve for $z$", "解出 $z$"],
+              text(["Subtract $x$ from both sides:", "两边减去 $x$："]),
+              [`${poly([1, "z"], [-k, ""])} = 0`, `z = ${k}`],
+            ],
+          ],
+          text([
+            `$x \\oplus ${wrap(k)} = x + ${wrap(k)} - ${wrap(k)} = x$ for every $x$.`,
+            `对每个 $x$，$x \\oplus ${wrap(k)} = x + ${wrap(k)} - ${wrap(k)} = x$。`,
+          ]),
+        ),
+      });
     }
     const answer = 2 * k - a;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$\\mathbb{R}$ is made into a vector space with the addition $${op}$. Find the additive inverse of $${a}$.`,
         `用加法 $${op}$ 把 $\\mathbb{R}$ 变成向量空间。求 $${a}$ 的加法逆元。`,
-      ],
+      ]),
       answer,
-      [-a, k - a, a - 2 * k],
-      [
-        `The zero vector is $${k}$, since adding it changes nothing. We need $${a} \\oplus y = ${k}$, that is $${a} + y - ${wrap(k)} = ${k}$, so $y = ${answer}$.`,
-        `零向量是 $${k}$，因为加上它不改变任何元素。需要 $${a} \\oplus y = ${k}$，即 $${a} + y - ${wrap(k)} = ${k}$，所以 $y = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          -a,
+          `That is the ordinary inverse; here $${a} \\oplus ${wrap(-a)} = ${-k}$, not the zero vector $${k}$.`,
+          `这是通常的逆元；这里 $${a} \\oplus ${wrap(-a)} = ${-k}$，不是零向量 $${k}$。`,
+        ),
+        why(
+          k - a,
+          `That makes $${a} \\oplus y$ equal to the number $0$; it must equal the zero vector, $${k}$.`,
+          `这使 $${a} \\oplus y$ 等于数 $0$；它应当等于零向量 $${k}$。`,
+        ),
+        why(a - 2 * k, "The sign is flipped; solve for $y$ again.", "符号反了；请重新解出 $y$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the zero vector", "求零向量"],
+            text([
+              `$x \\oplus z = x$ means $x + z - ${wrap(k)} = x$, so the zero vector is $${k}$.`,
+              `$x \\oplus z = x$ 即 $x + z - ${wrap(k)} = x$，所以零向量是 $${k}$。`,
+            ]),
+          ],
+          [
+            ["Solve for the inverse", "解出逆元"],
+            text([`The inverse $y$ needs $${a} \\oplus y = ${k}$:`, `逆元 $y$ 要满足 $${a} \\oplus y = ${k}$：`]),
+            [`${a} + y - ${wrap(k)} = ${k}`, `y = ${answer}`],
+          ],
+        ],
+        text([
+          `$${a} \\oplus ${wrap(answer)} = ${a} + ${wrap(answer)} - ${wrap(k)} = ${k}$, the zero vector.`,
+          `$${a} \\oplus ${wrap(answer)} = ${a} + ${wrap(answer)} - ${wrap(k)} = ${k}$，正是零向量。`,
+        ]),
+      ),
+    });
   },
 );
 

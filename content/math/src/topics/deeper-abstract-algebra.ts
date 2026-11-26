@@ -7,7 +7,8 @@ import { poly, Q } from "@ga/subject-math";
 import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts";
 import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, why } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 /** gcd gives the greatest common divisor of two positive integers. */
 const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
@@ -850,8 +851,8 @@ const dependentPolynomials: KnowledgePointDef = {
   id: "the-parameter-that-makes-polynomials-dependent",
   title: t("The parameter that makes polynomials dependent", "使多项式线性相关的参数"),
   explanation: t(
-    "Three polynomials in the space of polynomials of degree at most two are dependent exactly when one is a combination of the others. Combine two of them to remove a power of $x$ that the third lacks. The third must then be a multiple of this combination, and comparing the remaining coefficients gives the parameter.",
-    "在次数至多为二的多项式空间中，三个多项式线性相关，当且仅当其中一个是其余两个的组合。把其中两个组合起来，消去第三个所没有的 $x$ 的幂。第三个就必须是这个组合的倍数，比较剩下的系数就得到参数。",
+    "Three polynomials in the space of polynomials of degree at most two are dependent exactly when one is a combination of the others. Combine two of them to remove a power of $x$ that the third lacks. The third must then be a multiple of this combination, and comparing the remaining coefficients gives the parameter. For example, for $1 + x$, $x + x^2$ and $2 + kx^2$: $(1 + x) - (x + x^2) = 1 - x^2$, and $2 + kx^2$ must be $2(1 - x^2)$, so $k = -2$.\n\n> **Watch out.** The third polynomial is a multiple of the combination, so scale the whole combination, its $x^2$ coefficient included, to match the constant term.",
+    "在次数至多为二的多项式空间中，三个多项式线性相关，当且仅当其中一个是其余两个的组合。把其中两个组合起来，消去第三个所没有的 $x$ 的幂。第三个就必须是这个组合的倍数，比较剩下的系数就得到参数。例如对 $1 + x$、$x + x^2$ 和 $2 + kx^2$：$(1 + x) - (x + x^2) = 1 - x^2$，而 $2 + kx^2$ 必须是 $2(1 - x^2)$，所以 $k = -2$。\n\n> **注意。** 第三个多项式是这个组合的倍数，所以要把整个组合（包括 $x^2$ 的系数）一起放大，使常数项吻合。",
   ),
   generate(rng) {
     const a = pickNonzero(rng, 6);
@@ -869,10 +870,46 @@ const dependentPolynomials: KnowledgePointDef = {
       answer,
       solveFor: "k",
       form: "integer",
-      wrong: [a * b * c, -a * b, a + b],
-      solution: t(
-        `Removing $x$ from the first two gives $(${p1}) ${a < 0 ? "+" : "-"} ${Math.abs(a) === 1 ? "" : Math.abs(a)}(${p2}) = ${combination}$. The third polynomial must be ${c === 1 ? "this one" : `${c} times this one`}, so $k = ${answer}$.`,
-        `从前两个中消去 $x$，得 $(${p1}) ${a < 0 ? "+" : "-"} ${Math.abs(a) === 1 ? "" : Math.abs(a)}(${p2}) = ${combination}$。第三个多项式必须${c === 1 ? "就是它" : `是它的 ${c} 倍`}，所以 $k = ${answer}$。`,
+      mistakes: [
+        why(
+          a * b * c,
+          `The sign is flipped: the combination that removes $x$ has $x^2$ coefficient $${-a * b}$.`,
+          `符号反了：消去 $x$ 的组合中 $x^2$ 的系数是 $${-a * b}$。`,
+        ),
+        why(
+          -a * b,
+          `That matches the combination itself, but its constant term is $1$, not $${c}$; scale it by $${c}$.`,
+          `这与组合本身吻合，但它的常数项是 $1$ 而不是 $${c}$；要乘以 $${c}$。`,
+        ),
+        why(
+          -a * c,
+          `The weight on the second polynomial is $${-a * c}$, and it multiplies the $x^2$ coefficient $${b}$ too.`,
+          `第二个多项式的权重是 $${-a * c}$，它也要乘上 $x^2$ 的系数 $${b}$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Remove the $x$ term", "消去 $x$ 项"],
+            t(
+              `The third polynomial has no $x$ term, so combine the first two to cancel $x$:`,
+              `第三个多项式没有 $x$ 项，所以组合前两个以消去 $x$：`,
+            ),
+            [`(${p1}) ${a < 0 ? "+" : "-"} ${Math.abs(a) === 1 ? "" : Math.abs(a)}(${p2}) = ${combination}`],
+          ],
+          [
+            ["Match the constant term", "对齐常数项"],
+            t(
+              `The third polynomial has constant term $${c}$, so it must be $${c}$ times this combination:`,
+              `第三个多项式的常数项是 $${c}$，所以它必须是这个组合的 $${c}$ 倍：`,
+            ),
+            [`${c} + kx^2 = ${c}(${combination}) = ${poly([c, ""], [answer, "x^2"])}`, `k = ${answer}`],
+          ],
+        ],
+        t(
+          `Indeed, $${c}(${p1}) ${-a * c < 0 ? "-" : "+"} ${Math.abs(a * c) === 1 ? "" : Math.abs(a * c)}(${p2}) = ${poly([c, ""], [answer, "x^2"])}$ is the third polynomial, so the three are dependent.`,
+          `确实，$${c}(${p1}) ${-a * c < 0 ? "-" : "+"} ${Math.abs(a * c) === 1 ? "" : Math.abs(a * c)}(${p2}) = ${poly([c, ""], [answer, "x^2"])}$ 正是第三个多项式，所以三者线性相关。`,
+        ),
       ),
     });
   },
@@ -1635,8 +1672,8 @@ const productDimension: KnowledgePointDef = {
   id: "the-dimension-of-a-product-of-abstract-spaces",
   title: t("The dimension of a product of abstract spaces", "抽象空间之积的维数"),
   explanation: t(
-    "Abstract vector spaces have dimensions that come from counting free coefficients. Polynomials of degree at most $a$ have $a + 1$ coefficients, because the constant term counts too, and $b \\times c$ matrices have $bc$ entries. A pair drawn from two spaces has all the coordinates of both, so the dimension of a product is the sum of the two dimensions.",
-    "抽象向量空间的维数来自对自由系数的计数。次数不超过 $a$ 的多项式有 $a + 1$ 个系数，因为常数项也算在内，$b \\times c$ 矩阵有 $bc$ 个元素。从两个空间各取一个组成的对，含有两者的全部坐标，所以乘积的维数是两个维数之和。",
+    "Abstract vector spaces have dimensions that come from counting free coefficients. Polynomials of degree at most $a$ have $a + 1$ coefficients, because the constant term counts too, and $b \\times c$ matrices have $bc$ entries. A pair drawn from two spaces has all the coordinates of both, so the dimension of a product is the sum of the two dimensions. For example, $\\mathbb{P}_2 \\times M_{2 \\times 2}$ has dimension $3 + 4 = 7$: a pair is fixed by $3$ coefficients and $4$ entries.\n\n> **Watch out.** A product of spaces adds the dimensions; it does not multiply them.",
+    "抽象向量空间的维数来自对自由系数的计数。次数不超过 $a$ 的多项式有 $a + 1$ 个系数，因为常数项也算在内，$b \\times c$ 矩阵有 $bc$ 个元素。从两个空间各取一个组成的对，含有两者的全部坐标，所以乘积的维数是两个维数之和。例如 $\\mathbb{P}_2 \\times M_{2 \\times 2}$ 的维数是 $3 + 4 = 7$：一个对由 $3$ 个系数和 $4$ 个元素确定。\n\n> **注意。** 空间之积的维数是维数相加，而不是相乘。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -1650,10 +1687,36 @@ const productDimension: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b * c, (a + 1) * b * c, a + 1 + b + c],
-      solution: t(
-        `The dimensions are ${a + 1} and $${b} \\cdot ${c} = ${b * c}$, and they add to $${answer}$.`,
-        `维数分别是 ${a + 1} 和 $${b} \\cdot ${c} = ${b * c}$，相加得 $${answer}$。`,
+      mistakes: [
+        why(
+          a + b * c,
+          `$\\mathbb{P}_{${a}}$ has $${a + 1}$ coefficients, counting the constant term, so its dimension is $${a + 1}$.`,
+          `$\\mathbb{P}_{${a}}$ 算上常数项有 $${a + 1}$ 个系数，所以维数是 $${a + 1}$。`,
+        ),
+        why((a + 1) * b * c, "The dimensions of a product add; they do not multiply.", "乘积空间的维数相加，而不是相乘。"),
+        why(
+          a + 1 + b + c,
+          `A $${b} \\times ${c}$ matrix has $${b} \\cdot ${c} = ${b * c}$ entries, not $${b} + ${c}$.`,
+          `$${b} \\times ${c}$ 矩阵有 $${b} \\cdot ${c} = ${b * c}$ 个元素，而不是 $${b} + ${c}$ 个。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Dimension of each factor", "各因子的维数"],
+            t("", ""),
+            [`\\dim \\mathbb{P}_{${a}} = ${a} + 1 = ${a + 1}`, `\\dim M_{${b} \\times ${c}} = ${b} \\cdot ${c} = ${b * c}`],
+          ],
+          [
+            ["Add them", "相加"],
+            t("A pair carries the coordinates of both parts:", "一个对含有两部分的全部坐标："),
+            [`${a + 1} + ${b * c} = ${answer}`],
+          ],
+        ],
+        t(
+          `A basis is the $${a + 1}$ pairs $(t^i, O)$ together with the $${b * c}$ pairs $(0, E_{jk})$, $${answer}$ in all.`,
+          `一组基由 $${a + 1}$ 个对 $(t^i, O)$ 与 $${b * c}$ 个对 $(0, E_{jk})$ 组成，共 $${answer}$ 个。`,
+        ),
       ),
     });
   },
@@ -1663,8 +1726,8 @@ const shiftedBasisCoordinate: KnowledgePointDef = {
   id: "a-coordinate-in-a-shifted-polynomial-basis",
   title: t("A coordinate in a shifted polynomial basis", "平移多项式基下的坐标"),
   explanation: t(
-    "The polynomials $1, t - c, (t - c)^2$ form a basis of $\\mathbb{P}_2$, and it is well suited to working near $t = c$. Differentiating an expansion $p(t) = x + y(t - c) + z(t - c)^2$ and setting $t = c$ removes every term except $y$. So the coordinate on $t - c$ is the derivative $p'(c)$, and no linear system has to be solved.",
-    "多项式 $1, t - c, (t - c)^2$ 构成 $\\mathbb{P}_2$ 的一组基，它很适合在 $t = c$ 附近使用。对展开式 $p(t) = x + y(t - c) + z(t - c)^2$ 求导并令 $t = c$，除了 $y$ 之外的项都消失了。所以 $t - c$ 上的坐标就是导数 $p'(c)$，不必解线性方程组。",
+    "The polynomials $1, t - c, (t - c)^2$ form a basis of $\\mathbb{P}_2$, and it is well suited to working near $t = c$. Differentiating an expansion $p(t) = x + y(t - c) + z(t - c)^2$ and setting $t = c$ removes every term except $y$. So the coordinate on $t - c$ is the derivative $p'(c)$, and no linear system has to be solved. For example, for $p(t) = t^2 + 3t$ and $c = 1$, $p'(t) = 2t + 3$, so the coordinate on $t - 1$ is $p'(1) = 5$; indeed $t^2 + 3t = 4 + 5(t - 1) + (t - 1)^2$.\n\n> **Watch out.** The coordinate on $t - c$ is not the ordinary coefficient of $t$: the $(t - c)^2$ term also contributes to $t$, which is why the derivative is evaluated at $c$.",
+    "多项式 $1, t - c, (t - c)^2$ 构成 $\\mathbb{P}_2$ 的一组基，它很适合在 $t = c$ 附近使用。对展开式 $p(t) = x + y(t - c) + z(t - c)^2$ 求导并令 $t = c$，除了 $y$ 之外的项都消失了。所以 $t - c$ 上的坐标就是导数 $p'(c)$，不必解线性方程组。例如 $p(t) = t^2 + 3t$、$c = 1$ 时，$p'(t) = 2t + 3$，所以 $t - 1$ 上的坐标是 $p'(1) = 5$；确实 $t^2 + 3t = 4 + 5(t - 1) + (t - 1)^2$。\n\n> **注意。** $t - c$ 上的坐标不是 $t$ 的原系数：$(t - c)^2$ 项也贡献了 $t$ 项，所以要在 $c$ 处求导数的值。",
   ),
   generate(rng) {
     const a = pickNonzero(rng, 5);
@@ -1681,10 +1744,44 @@ const shiftedBasisCoordinate: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [b, 2 * a * c, a * c + b, a * c * c + b * c + g],
-      solution: t(
-        `The coordinate is $p'(${c})$. Since $p'(t) = ${poly([2 * a, "t"], [b, ""])}$, this equals $${answer}$.`,
-        `这个坐标是 $p'(${c})$。由于 $p'(t) = ${poly([2 * a, "t"], [b, ""])}$，它等于 $${answer}$。`,
+      mistakes: [
+        why(
+          b,
+          `That is the ordinary coefficient of $t$; the $(${linear})^2$ term also contributes to $t$, so use $p'(${c})$.`,
+          `这是 $t$ 的原系数；$(${linear})^2$ 项也贡献了 $t$ 项，所以要用 $p'(${c})$。`,
+        ),
+        why(
+          2 * a * c,
+          `That drops the constant $${b}$ of $p'(t)$, the derivative of $${poly([b, "t"])}$.`,
+          `这漏掉了 $p'(t)$ 中的常数 $${b}$，即 $${poly([b, "t"])}$ 的导数。`,
+        ),
+        why(a * c + b, `The derivative of $${a}t^2$ is $${2 * a}t$, not $${a}t$.`, `$${a}t^2$ 的导数是 $${2 * a}t$，而不是 $${a}t$。`),
+        why(
+          a * c * c + b * c + g,
+          `That is $p(${c})$, the coordinate on $1$; the coordinate on $${linear}$ is $p'(${c})$.`,
+          `这是 $p(${c})$，即 $1$ 上的坐标；$${linear}$ 上的坐标是 $p'(${c})$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Differentiate", "求导"],
+            t(
+              `Differentiating $p(t) = x + y(${linear}) + z(${linear})^2$ gives $p'(t) = y + 2z(${linear})$, so $y = p'(${c})$. Here:`,
+              `对 $p(t) = x + y(${linear}) + z(${linear})^2$ 求导得 $p'(t) = y + 2z(${linear})$，所以 $y = p'(${c})$。这里：`,
+            ),
+            [`p'(t) = ${poly([2 * a, "t"], [b, ""])}`],
+          ],
+          [
+            [`Evaluate at $t = ${c}$`, `在 $t = ${c}$ 处求值`],
+            t("", ""),
+            [`y = p'(${c}) = ${2 * a} \\cdot ${c < 0 ? `(${c})` : c} + ${b < 0 ? `(${b})` : b} = ${answer}`],
+          ],
+        ],
+        t(
+          `The coordinate on $(${linear})^2$ is $${a}$, and $${a}(${linear})^2$ contributes $${-2 * a * c}t$; adding $${answer}t$ from $${answer}(${linear})$ gives $${b}t$, as in $p$.`,
+          `$(${linear})^2$ 上的坐标是 $${a}$，$${a}(${linear})^2$ 贡献 $${-2 * a * c}t$；加上 $${answer}(${linear})$ 中的 $${answer}t$，得 $${b}t$，与 $p$ 一致。`,
+        ),
       ),
     });
   },
@@ -1694,8 +1791,8 @@ const matrixSubspaceDimension: KnowledgePointDef = {
   id: "the-dimension-of-a-subspace-of-square-matrices",
   title: t("The dimension of a subspace of square matrices", "方阵子空间的维数"),
   explanation: t(
-    "A symmetric matrix is decided by its entries on and above the diagonal, which number $\\frac{n(n + 1)}{2}$. A skew-symmetric matrix has a zero diagonal, because each diagonal entry equals its own negative, so it is decided by the $\\frac{n(n - 1)}{2}$ entries above it. The two dimensions add to $n^2$, since every square matrix splits uniquely into these two kinds.",
-    "对称矩阵由对角线及其上方的元素决定，共 $\\frac{n(n + 1)}{2}$ 个。反对称矩阵的对角线为零，因为每个对角元等于自身的相反数，所以它由对角线上方的 $\\frac{n(n - 1)}{2}$ 个元素决定。两个维数之和是 $n^2$，因为每个方阵都能唯一地分解成这两类之和。",
+    "A symmetric matrix is decided by its entries on and above the diagonal, which number $\\frac{n(n + 1)}{2}$. A skew-symmetric matrix has a zero diagonal, because each diagonal entry equals its own negative, so it is decided by the $\\frac{n(n - 1)}{2}$ entries above it. The two dimensions add to $n^2$, since every square matrix splits uniquely into these two kinds. For example, in $M_{3 \\times 3}$ the symmetric matrices have dimension $6$ and the skew-symmetric ones $3$, and $6 + 3 = 9$.\n\n> **Watch out.** The diagonal is free for symmetric matrices but forced to zero for skew-symmetric ones, so the two counts differ by exactly $n$.",
+    "对称矩阵由对角线及其上方的元素决定，共 $\\frac{n(n + 1)}{2}$ 个。反对称矩阵的对角线为零，因为每个对角元等于自身的相反数，所以它由对角线上方的 $\\frac{n(n - 1)}{2}$ 个元素决定。两个维数之和是 $n^2$，因为每个方阵都能唯一地分解成这两类之和。例如在 $M_{3 \\times 3}$ 中，对称矩阵的维数是 $6$，反对称矩阵的维数是 $3$，而 $6 + 3 = 9$。\n\n> **注意。** 对称矩阵的对角元是自由的，反对称矩阵的对角元则被迫为零，所以两个维数恰好相差 $n$。",
   ),
   generate(rng) {
     const n = rng.int(2, 25);
@@ -1709,10 +1806,42 @@ const matrixSubspaceDimension: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [other, n * n, n],
-      solution: t(
-        `A ${symmetric ? "symmetric matrix is decided by its entries on and above the diagonal" : "skew-symmetric matrix has a zero diagonal and is decided by its entries above it"}, and there are $\\frac{${n} \\cdot ${symmetric ? n + 1 : n - 1}}{2} = ${answer}$ of them.`,
-        `${symmetric ? "对称矩阵由对角线及其上方的元素决定" : "反对称矩阵对角线为零，由对角线上方的元素决定"}，共有 $\\frac{${n} \\cdot ${symmetric ? n + 1 : n - 1}}{2} = ${answer}$ 个。`,
+      mistakes: [
+        why(
+          other,
+          symmetric
+            ? "That leaves out the diagonal, which is free for a symmetric matrix."
+            : "That counts the diagonal, but each diagonal entry of a skew-symmetric matrix equals its own negative, so it is $0$.",
+          symmetric
+            ? "这漏掉了对角线，而对称矩阵的对角元是自由的。"
+            : "这把对角线也算上了，但反对称矩阵的每个对角元等于自身的相反数，所以是 $0$。",
+        ),
+        why(
+          n * n,
+          "That is the dimension of all of $M_{n \\times n}$; the condition ties the entries below the diagonal to those above.",
+          "这是整个 $M_{n \\times n}$ 的维数；条件使对角线下方的元素由上方确定。",
+        ),
+        why(n, "That counts only the diagonal; the entries above it are free too.", "这只数了对角线；对角线上方的元素也是自由的。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the free entries", "找出自由元素"],
+            t(
+              symmetric
+                ? "$A^T = A$ makes each entry below the diagonal equal the one above it, so the free entries are those on and above the diagonal."
+                : "$A^T = -A$ makes each entry below the diagonal the negative of the one above it, and gives $a_{ii} = -a_{ii}$, so the diagonal is $0$ and the free entries are those strictly above it.",
+              symmetric
+                ? "$A^T = A$ 使对角线下方的每个元素等于上方对应的元素，所以自由元素是对角线及其上方的元素。"
+                : "$A^T = -A$ 使对角线下方的每个元素等于上方对应元素的相反数，并给出 $a_{ii} = -a_{ii}$，所以对角线为 $0$，自由元素是严格位于对角线上方的元素。",
+            ),
+          ],
+          [["Count them", "数个数"], t("", ""), [`\\frac{${n} \\cdot ${symmetric ? n + 1 : n - 1}}{2} = ${answer}`]],
+        ],
+        t(
+          `The symmetric and skew-symmetric counts add up: $${symmetric ? answer : other} + ${symmetric ? other : answer} = ${n * n} = ${n}^2$.`,
+          `对称与反对称的个数相加：$${symmetric ? answer : other} + ${symmetric ? other : answer} = ${n * n} = ${n}^2$。`,
+        ),
       ),
     });
   },

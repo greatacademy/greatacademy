@@ -2,9 +2,9 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 
-import { article, choiceProblem, numberProblem, pointProblem, say, vectorLatex, withMistakes } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
-import { walked } from "./calculus-i-differentiation.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** sumLatex writes a sum of numbers with negatives in parentheses: "3 + (-2) + 5". */
 function sumLatex(values: readonly number[]): string {
@@ -2948,6 +2948,10 @@ export const theDimensionOfASpan: TopicDef = {
     "Define the dimension of a subspace as the number of vectors in any basis, and determine the dimension of a span by counting pivot columns.",
     "理解子空间维数作为任意基中向量个数的定义，并通过统计主元列数求解张成空间的维数。",
   ),
+  intro: t(
+    "Take $W = \\operatorname{Span}\\{(1, 2, 0), (2, 4, 0), (0, 0, 1)\\}$. The second vector is $2(1, 2, 0)$, so it adds nothing, and $\\{(1, 2, 0), (0, 0, 1)\\}$ is a basis of $W$: $\\dim W = 2$.\n\nCheck: neither of $(1, 2, 0)$ and $(0, 0, 1)$ is a multiple of the other, so they are independent, and $(2, 4, 0) = 2(1, 2, 0) + 0(0, 0, 1)$ is a combination of them.\n\nIn this lesson we define the dimension of a subspace as the size of any of its bases and find the dimension of a span by counting pivot columns.",
+    "取 $W = \\operatorname{Span}\\{(1, 2, 0), (2, 4, 0), (0, 0, 1)\\}$。第二个向量是 $2(1, 2, 0)$，不提供新方向，所以 $\\{(1, 2, 0), (0, 0, 1)\\}$ 是 $W$ 的一组基：$\\dim W = 2$。\n\n检验：$(1, 2, 0)$ 与 $(0, 0, 1)$ 互不为倍数，所以线性无关，而 $(2, 4, 0) = 2(1, 2, 0) + 0(0, 0, 1)$ 是它们的组合。\n\n本课我们把子空间的维数定义为它任意一组基的向量个数，并通过数主元列求张成空间的维数。",
+  ),
   prerequisites: ["finding-a-basis-of-a-span"],
   encompasses: [],
   xp: 14,
@@ -2957,8 +2961,8 @@ export const theDimensionOfASpan: TopicDef = {
       id: "dimension-definition-invariance",
       title: t("Dimension as basis cardinality", "维数作为基向量个数的唯一性"),
       explanation: t(
-        "The dimension of a nonzero subspace $H$, written $\\dim(H)$, is the number of vectors in any basis for $H$. The zero subspace $\\{\\mathbf{0}\\}$ has dimension $0$.",
-        "非零子空间 $H$ 的维数（记作 $\\dim(H)$）是 $H$ 的任意一组基中所含向量的个数。零子空间 $\\{\\mathbf{0}\\}$ 的维数规定为 $0$。",
+        "The dimension of a nonzero subspace $H$, written $\\dim(H)$, is the number of vectors in any basis for $H$. The zero subspace $\\{\\mathbf{0}\\}$ has dimension $0$. This makes sense because every basis of $H$ has the same size. For example, $\\mathbb{R}^3$ has the standard basis $\\{\\mathbf{e}_1, \\mathbf{e}_2, \\mathbf{e}_3\\}$ and also the basis $\\{(1, 1, 0), (0, 1, 1), (1, 0, 1)\\}$, and both have $3$ vectors.\n\n> **Watch out.** A spanning set may have more vectors than $\\dim(H)$, and an independent set fewer; only a set that is both, a basis, has exactly $\\dim(H)$ vectors.",
+        "非零子空间 $H$ 的维数（记作 $\\dim(H)$）是 $H$ 的任意一组基中所含向量的个数。零子空间 $\\{\\mathbf{0}\\}$ 的维数规定为 $0$。这个定义有意义，是因为 $H$ 的所有基大小相同。例如 $\\mathbb{R}^3$ 有标准基 $\\{\\mathbf{e}_1, \\mathbf{e}_2, \\mathbf{e}_3\\}$，也有基 $\\{(1, 1, 0), (0, 1, 1), (1, 0, 1)\\}$，两者都含 $3$ 个向量。\n\n> **注意。** 张成集的向量可以多于 $\\dim(H)$，线性无关集的向量可以少于 $\\dim(H)$；只有既张成又线性无关的集合，即基，恰好有 $\\dim(H)$ 个向量。",
       ),
       generate(rng) {
         const k = rng.int(2, 30);
@@ -2972,11 +2976,45 @@ export const theDimensionOfASpan: TopicDef = {
           t(`It must contain at least $${k + 1}$ vectors`, `它必须至少包含 $${k + 1}$ 个向量`),
           t(`It must contain fewer than $${k}$ vectors if they are orthogonal`, `若向量正交，则包含的向量个数可以少于 $${k}$ 个`),
         ];
-        const solution = t(
-          `By the Dimension Theorem, any two bases for the same vector space or subspace have the exact same number of vectors. Hence every basis for $H$ has exactly $${k}$ vectors, so $\\dim(H) = ${k}$.`,
-          `根据维数定理，同一个向量空间或子空间的所有基必定含有相同数目的向量。因此 $H$ 的每组基都恰有 $${k}$ 个向量，$\\dim(H) = ${k}$。`,
+        const solution = walked(
+          [
+            [
+              ["Compare the sizes", "比较大小"],
+              t(
+                `In $H$, an independent set never has more vectors than a spanning set. The given basis spans $H$, so another basis, being independent, has at most $${k}$ vectors; the other basis spans $H$, so the given one, being independent, has at most as many as it.`,
+                `在 $H$ 中，线性无关集的向量个数不超过张成集的向量个数。已知的基张成 $H$，所以另一组基（线性无关）至多有 $${k}$ 个向量；另一组基也张成 $H$，所以已知的基（线性无关）的个数不超过它。`,
+              ),
+            ],
+            [
+              ["Conclude", "得出结论"],
+              t(
+                `Both inequalities hold, so every basis of $H$ has exactly $${k}$ vectors and $\\dim(H) = ${k}$.`,
+                `两个不等式同时成立，所以 $H$ 的每组基都恰有 $${k}$ 个向量，$\\dim(H) = ${k}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$${k + 1}$ vectors in $H$ would be dependent, and $${k - 1}$ vectors could not span $H$, so no other size is possible.`,
+            `$H$ 中 $${k + 1}$ 个向量必定线性相关，而 $${k - 1}$ 个向量不能张成 $H$，所以不可能是别的个数。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "Spanning is not enough: a basis must also be independent, and that fixes the count.",
+            "只张成还不够：基还必须线性无关，这就确定了向量个数。",
+          ],
+          [
+            wrong[1]!.en,
+            `In a subspace of dimension $${k}$, any $${k + 1}$ vectors are dependent, so they cannot form a basis.`,
+            `在 $${k}$ 维子空间中，任意 $${k + 1}$ 个向量都线性相关，所以不能构成基。`,
+          ],
+          [
+            wrong[2]!.en,
+            `Orthogonality does not change the count: an orthogonal basis is still a basis, with $${k}$ vectors.`,
+            `正交与否不改变个数：正交基仍是基，有 $${k}$ 个向量。`,
+          ],
+        ]);
       },
     },
     {
@@ -2986,52 +3024,145 @@ export const theDimensionOfASpan: TopicDef = {
         "计算 $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 的维数",
       ),
       explanation: t(
-        "Row reduction shows which vectors are combinations of earlier ones, and the remaining pivot columns form a basis of the span. The dimension of $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ equals the number of pivot columns in the matrix $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k]$.",
-        "行化简可以看出哪些向量是前面向量的组合，剩下的主元列构成张成空间的一组基。$\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 的维数等于以这些向量为列构成的矩阵 $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k]$ 的主元列个数。",
+        "Row reduction shows which vectors are combinations of earlier ones, and the remaining pivot columns form a basis of the span. The dimension of $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ equals the number of pivot columns in the matrix $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k]$. For example, $(1, 0, 2)$, $(0, 1, 1)$ and $(1, 1, 3)$ span a space of dimension $2$: the first two are independent, and $(1, 1, 3) = (1, 0, 2) + (0, 1, 1)$, so the third column has no pivot.\n\n> **Watch out.** Count pivots, not vectors: three vectors in $\\mathbb{R}^3$ may span all of $\\mathbb{R}^3$, a plane or only a line.",
+        "行化简可以看出哪些向量是前面向量的组合，剩下的主元列构成张成空间的一组基。$\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 的维数等于以这些向量为列构成的矩阵 $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k]$ 的主元列个数。例如 $(1, 0, 2)$、$(0, 1, 1)$、$(1, 1, 3)$ 张成的空间维数为 $2$：前两个线性无关，而 $(1, 1, 3) = (1, 0, 2) + (0, 1, 1)$，所以第三列没有主元。\n\n> **注意。** 数主元，不是数向量：$\\mathbb{R}^3$ 中三个向量可能张成整个 $\\mathbb{R}^3$、一个平面，或只是一条直线。",
       ),
       generate(rng) {
         const pivots = rng.pick([1, 2, 3]);
         let v1: number[];
         let v2: number[];
         let v3: number[];
+        let s1 = 0;
+        let s2 = 0;
+        let c = 0;
+        let d = 0;
         if (pivots === 1) {
           const a = rng.nonZero(-3, 3);
           const b = rng.int(-3, 3);
-          const c = rng.int(-3, 3);
-          const s1 = rng.nonZero(-3, 3);
-          const s2 = rng.nonZero(-3, 3);
-          v1 = [a, b, c];
-          v2 = [s1 * a, s1 * b, s1 * c];
-          v3 = [s2 * a, s2 * b, s2 * c];
+          const cc = rng.int(-3, 3);
+          s1 = rng.nonZero(-3, 3);
+          s2 = rng.nonZero(-3, 3);
+          v1 = [a, b, cc];
+          v2 = [s1 * a, s1 * b, s1 * cc];
+          v3 = [s2 * a, s2 * b, s2 * cc];
         } else if (pivots === 2) {
           const a = rng.int(-3, 3);
           const b = rng.int(-3, 3);
-          const c = rng.nonZero(-2, 2);
-          const d = rng.nonZero(-2, 2);
+          c = rng.nonZero(-2, 2);
+          d = rng.nonZero(-2, 2);
           v1 = [1, 0, a];
           v2 = [0, 1, b];
           v3 = [c, d, c * a + d * b];
         } else {
           const a = rng.int(-3, 3);
           const b = rng.int(-3, 3);
-          const c = rng.int(-3, 3);
+          const cc = rng.int(-3, 3);
           v1 = [1, 0, 0];
           v2 = [a, 1, 0];
-          v3 = [c, b, 1];
+          v3 = [cc, b, 1];
         }
+        const [c1, c2, c3] = [colVecLatex(v1), colVecLatex(v2), colVecLatex(v3)];
         const prompt = t(
-          `Find the dimension of the subspace $W = \\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ in $\\mathbb{R}^3$.`,
-          `求 $\\mathbb{R}^3$ 中子空间 $W = \\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ 的维数。`,
+          `Find the dimension of the subspace $W = \\text{Span}\\left\\{ ${c1}, ${c2}, ${c3} \\right\\}$ in $\\mathbb{R}^3$.`,
+          `求 $\\mathbb{R}^3$ 中子空间 $W = \\text{Span}\\left\\{ ${c1}, ${c2}, ${c3} \\right\\}$ 的维数。`,
         );
-        const solution = t(
-          `Row reducing the matrix formed by the 3 vectors reveals exactly $${pivots}$ pivot column(s). Therefore, the dimension of the subspace is $${pivots}$.`,
-          `将这 3 个向量作为列构成矩阵并进行初等行化简，得到恰好 $${pivots}$ 个主元列。因此，该子空间的维数为 $${pivots}$.`,
+        const steps: Step[] =
+          pivots === 1
+            ? [
+                [
+                  ["Compare the vectors", "比较各向量"],
+                  t(`The first vector is nonzero, and the others are multiples of it:`, `第一个向量非零，其余向量都是它的倍数：`),
+                  [`\\mathbf{v}_2 = ${s1}\\mathbf{v}_1`, `\\mathbf{v}_3 = ${s2}\\mathbf{v}_1`],
+                ],
+                [
+                  ["Count the pivots", "数主元"],
+                  t(
+                    "Row reduction leaves one nonzero row, so only the first column has a pivot and $\\{\\mathbf{v}_1\\}$ is a basis of $W$.",
+                    "行化简后只剩一个非零行，所以只有第一列有主元，$\\{\\mathbf{v}_1\\}$ 是 $W$ 的一组基。",
+                  ),
+                ],
+              ]
+            : pivots === 2
+              ? [
+                  [
+                    ["The first two vectors", "前两个向量"],
+                    t(
+                      "$\\mathbf{v}_1$ and $\\mathbf{v}_2$ have entries $(1, 0)$ and $(0, 1)$ on top, so neither is a multiple of the other and both columns have pivots.",
+                      "$\\mathbf{v}_1$ 与 $\\mathbf{v}_2$ 的前两个元素是 $(1, 0)$ 和 $(0, 1)$，互不为倍数，所以这两列都有主元。",
+                    ),
+                  ],
+                  [
+                    ["The third vector", "第三个向量"],
+                    t(
+                      "The top two entries of $\\mathbf{v}_3$ give the weights, and they fit the last entry too:",
+                      "$\\mathbf{v}_3$ 的前两个元素给出权重，而且最后一个元素也吻合：",
+                    ),
+                    [`\\mathbf{v}_3 = ${c}\\mathbf{v}_1 + ${paren(d)}\\mathbf{v}_2`],
+                  ],
+                ]
+              : [
+                  [
+                    ["Form the matrix", "写出矩阵"],
+                    t(
+                      "With the vectors as columns the matrix is upper triangular, with $1$ on the diagonal:",
+                      "以这些向量为列，矩阵是对角线为 $1$ 的上三角矩阵：",
+                    ),
+                    [`[\\mathbf{v}_1 \\ \\mathbf{v}_2 \\ \\mathbf{v}_3] = ${matLatex([0, 1, 2].map((i) => [v1[i]!, v2[i]!, v3[i]!]))}`],
+                  ],
+                  [
+                    ["Count the pivots", "数主元"],
+                    t(
+                      "Each of the three diagonal $1$s is a pivot, so no vector is a combination of the others.",
+                      "对角线上的三个 $1$ 都是主元，所以没有一个向量是其他向量的组合。",
+                    ),
+                  ],
+                ];
+        const solution = walked(
+          steps,
+          pivots === 1
+            ? t(
+                `$${s1} \\cdot ${c1} = ${c2}$, so $W$ is the line through $\\mathbf{v}_1$ and $\\dim W = 1$.`,
+                `$${s1} \\cdot ${c1} = ${c2}$，所以 $W$ 是过 $\\mathbf{v}_1$ 的直线，$\\dim W = 1$。`,
+              )
+            : pivots === 2
+              ? t(
+                  `$${c} \\cdot ${c1} + ${paren(d)} \\cdot ${c2} = ${c3}$, so $W$ is a plane and $\\dim W = 2$.`,
+                  `$${c} \\cdot ${c1} + ${paren(d)} \\cdot ${c2} = ${c3}$，所以 $W$ 是平面，$\\dim W = 2$。`,
+                )
+              : t(
+                  "A triangular matrix with $1$s on the diagonal has determinant $1 \\ne 0$, so the three vectors are independent and $\\dim W = 3$.",
+                  "对角线为 $1$ 的三角矩阵行列式为 $1 \\ne 0$，所以三个向量线性无关，$\\dim W = 3$。",
+                ),
         );
         return numberProblem({
           prompt,
           answer: pivots,
           form: "integer",
-          wrong: [pivots === 3 ? 2 : pivots + 1, pivots === 1 ? 3 : pivots - 1, 0],
+          mistakes: [
+            why(
+              3,
+              "That counts the vectors; at least one of them is a combination of the others and adds no dimension.",
+              "这是数向量的个数；其中至少一个是其他向量的组合，不增加维数。",
+            ),
+            why(
+              pivots === 3 ? 2 : pivots === 1 ? 2 : 1,
+              pivots === 3
+                ? "All three columns have pivots: the matrix is triangular with $1$s on the diagonal."
+                : pivots === 1
+                  ? "$\\mathbf{v}_2$ and $\\mathbf{v}_3$ are multiples of $\\mathbf{v}_1$, so all three lie on one line."
+                  : "$\\mathbf{v}_1$ and $\\mathbf{v}_2$ are not multiples of each other, so the span is more than a line.",
+              pivots === 3
+                ? "三列都有主元：矩阵是对角线为 $1$ 的三角矩阵。"
+                : pivots === 1
+                  ? "$\\mathbf{v}_2$ 和 $\\mathbf{v}_3$ 都是 $\\mathbf{v}_1$ 的倍数，所以三者在同一条直线上。"
+                  : "$\\mathbf{v}_1$ 与 $\\mathbf{v}_2$ 互不为倍数，所以张成的不止一条直线。",
+            ),
+            why(
+              0,
+              "Dimension $0$ belongs only to the zero subspace, and these vectors are nonzero.",
+              "只有零子空间的维数是 $0$，而这些向量非零。",
+            ),
+          ].filter((m, i, all) => m.value !== pivots && all.findIndex((o) => o.value === m.value) === i),
           solution,
         });
       },
@@ -3047,6 +3178,10 @@ export const theRankOfAMatrix: TopicDef = {
     "Define the rank of a matrix as $\\dim \\operatorname{Col}(A)$, equal to the number of pivot positions, and understand properties such as $\\operatorname{rank}(A) \\le \\min(m, n)$ and $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$.",
     "掌握矩阵的秩定义为 $\\dim \\operatorname{Col}(A)$（即阶梯形的主元个数），理解 $\\operatorname{rank}(A) \\le \\min(m, n)$ 与 $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ 等性质。",
   ),
+  intro: t(
+    "Suppose $A$ row reduces to $\\begin{pmatrix} 1 & 2 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$. The pivots are in columns $1$ and $3$, so columns $1$ and $3$ of $A$ form a basis of $\\operatorname{Col}(A)$ and $\\operatorname{rank}(A) = 2$.\n\nCheck: the rank is at most $\\min(3, 3) = 3$, and it is less because column $2$ of the echelon form is $2$ times column $1$, so it adds no new direction.\n\nIn this lesson we read the rank of a matrix from its pivot positions and use the bound $\\operatorname{rank}(A) \\le \\min(m, n)$.",
+    "设 $A$ 行化简为 $\\begin{pmatrix} 1 & 2 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$。主元在第 $1$ 列和第 $3$ 列，所以 $A$ 的第 $1$、$3$ 列构成 $\\operatorname{Col}(A)$ 的一组基，$\\operatorname{rank}(A) = 2$。\n\n检验：秩至多为 $\\min(3, 3) = 3$，而这里更小，因为阶梯形的第 $2$ 列是第 $1$ 列的 $2$ 倍，不提供新方向。\n\n本课我们由主元位置读出矩阵的秩，并使用上界 $\\operatorname{rank}(A) \\le \\min(m, n)$。",
+  ),
   prerequisites: ["finding-a-basis-of-the-column-space-of-a-matrix"],
   encompasses: [],
   xp: 14,
@@ -3056,8 +3191,8 @@ export const theRankOfAMatrix: TopicDef = {
       id: "rank-from-pivot-positions",
       title: t("Rank as number of pivot positions", "秩作为主元位置个数"),
       explanation: t(
-        "The rank of a matrix $A$, written $\\operatorname{rank}(A)$, is the dimension of the column space $\\operatorname{Col}(A)$, which equals the number of pivot columns in any echelon form of $A$.",
-        "矩阵 $A$ 的秩记作 $\\operatorname{rank}(A)$，是列空间 $\\operatorname{Col}(A)$ 的维数，等于 $A$ 的任意阶梯形中主元列的个数。",
+        "The rank of a matrix $A$, written $\\operatorname{rank}(A)$, is the dimension of the column space $\\operatorname{Col}(A)$, which equals the number of pivot columns in any echelon form of $A$. For example, the echelon form $\\begin{pmatrix} 2 & 1 & 3 \\\\ 0 & 0 & -1 \\end{pmatrix}$ has its pivots in columns $1$ and $3$, so the rank is $2$.\n\n> **Watch out.** Count pivots, the leading entries of the nonzero rows, not nonzero entries or nonzero columns: a column with entries but no pivot adds nothing to the rank.",
+        "矩阵 $A$ 的秩记作 $\\operatorname{rank}(A)$，是列空间 $\\operatorname{Col}(A)$ 的维数，等于 $A$ 的任意阶梯形中主元列的个数。例如阶梯形 $\\begin{pmatrix} 2 & 1 & 3 \\\\ 0 & 0 & -1 \\end{pmatrix}$ 的主元在第 $1$ 列和第 $3$ 列，所以秩为 $2$。\n\n> **注意。** 数的是主元，即各非零行的首个非零元，而不是非零元素或非零列：有元素却没有主元的列不增加秩。",
       ),
       generate(rng) {
         const rows = rng.int(3, 5);
@@ -3081,15 +3216,37 @@ export const theRankOfAMatrix: TopicDef = {
           `An echelon form of the matrix $A$ is $$${matLatex(echelon)}.$$ What is $\\text{rank}(A)$?`,
           `矩阵 $A$ 的一个阶梯形为 $$${matLatex(echelon)}$$ $\\text{rank}(A)$ 是多少？`,
         );
-        const solution = t(
-          `By definition, $\\text{rank}(A) = \\dim(\\text{Col}(A))$, which equals the number of pivot columns in echelon form. The pivots are in columns $${columnList}$, so there are $${r}$ of them and $\\text{rank}(A) = ${r}$.`,
-          `按定义，$\\text{rank}(A) = \\dim(\\text{Col}(A))$ 等于行阶梯形中主元的个数。此处主元在第 $${columnList}$ 列，共 $${r}$ 个，故 $\\text{rank}(A) = ${r}$。`,
+        const solution = walked(
+          [
+            [
+              ["Find the pivots", "找出主元"],
+              t(
+                `The leading entry of each nonzero row is a pivot. They sit in columns $${columnList}$.`,
+                `每个非零行的首个非零元是主元。它们位于第 $${columnList}$ 列。`,
+              ),
+            ],
+            [
+              ["Count them", "数主元"],
+              t(
+                `There are $${r}$ pivot columns, so $\\text{rank}(A) = \\dim(\\text{Col}(A)) = ${r}$.`,
+                `共有 $${r}$ 个主元列，所以 $\\text{rank}(A) = \\dim(\\text{Col}(A)) = ${r}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The echelon form has $${r}$ nonzero rows, one pivot in each, and $${r} \\le \\min(${rows}, ${cols})$.`,
+            `阶梯形有 $${r}$ 个非零行，每行一个主元，且 $${r} \\le \\min(${rows}, ${cols})$。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: r,
           form: "integer",
-          wrong: [r + 1, r > 1 ? r - 1 : r + 2, cols, rows].filter((w) => w !== r),
+          mistakes: [
+            why(cols, "That is the number of columns; a column without a pivot does not count.", "这是列数；没有主元的列不算。"),
+            why(rows, "That is the number of rows; a zero row has no pivot.", "这是行数；零行没有主元。"),
+            why(r + 1, `Count the leading entries again: only $${r}$ rows are nonzero.`, `重新数首个非零元：只有 $${r}$ 行非零。`),
+          ].filter((m, i, all) => m.value !== r && all.findIndex((o) => o.value === m.value) === i),
           solution,
         });
       },
@@ -3098,8 +3255,8 @@ export const theRankOfAMatrix: TopicDef = {
       id: "properties-of-matrix-rank",
       title: t("Fundamental properties of rank", "矩阵秩的基本性质"),
       explanation: t(
-        "The rank counts independent columns and also independent rows, so it can never exceed either the number of rows or the number of columns. For any $m \\times n$ matrix $A$: (1) $\\operatorname{rank}(A) \\le \\min(m, n)$; (2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ (row rank equals column rank).",
-        "秩既是线性无关列的个数，也是线性无关行的个数，所以它不会超过行数，也不会超过列数。对任意 $m \\times n$ 矩阵 $A$：(1) $\\operatorname{rank}(A) \\le \\min(m, n)$；(2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$（行秩等于列秩）。",
+        "The rank counts independent columns and also independent rows, so it can never exceed either the number of rows or the number of columns. For any $m \\times n$ matrix $A$: (1) $\\operatorname{rank}(A) \\le \\min(m, n)$; (2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ (row rank equals column rank). For example, a $3 \\times 5$ matrix has rank at most $3$, even though it has $5$ columns, and its $5 \\times 3$ transpose has the same rank.\n\n> **Watch out.** The bound is the smaller of $m$ and $n$, not the larger one, their sum or their product.",
+        "秩既是线性无关列的个数，也是线性无关行的个数，所以它不会超过行数，也不会超过列数。对任意 $m \\times n$ 矩阵 $A$：(1) $\\operatorname{rank}(A) \\le \\min(m, n)$；(2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$（行秩等于列秩）。例如 $3 \\times 5$ 矩阵的秩至多为 $3$，尽管它有 $5$ 列，它的 $5 \\times 3$ 转置秩相同。\n\n> **注意。** 上界是 $m$ 与 $n$ 中较小的那个，不是较大的那个，也不是它们的和或积。",
       ),
       generate(rng) {
         const m = rng.int(2, 12);
@@ -3109,18 +3266,55 @@ export const theRankOfAMatrix: TopicDef = {
           `What is the maximum possible rank of ${article(m)} $${m} \\times ${n}$ matrix $A$?`,
           `一个 $${m} \\times ${n}$ 矩阵 $A$ 的秩最大可能为多少？`,
         );
-        const solution = t(
-          `The number of pivots cannot exceed the number of rows ($m$) or the number of columns ($n$). Thus $\\text{rank}(A) \\le \\min(${m}, ${n}) = ${minMN}$.`,
-          `主元的个数既不能超过行数（$${m}$），也不能超过列数（$${n}$）。因此 $\\text{rank}(A) \\le \\min(${m}, ${n}) = ${minMN}$。`,
+        const solution = walked(
+          [
+            [
+              ["Bound by the rows", "受行数限制"],
+              t(`Each pivot is in a different row, so there are at most $${m}$ pivots.`, `每个主元在不同的行，所以至多 $${m}$ 个主元。`),
+            ],
+            [
+              ["Bound by the columns", "受列数限制"],
+              t(
+                `Each pivot is also in a different column, so there are at most $${n}$. Together, $\\text{rank}(A) \\le \\min(${m}, ${n}) = ${minMN}$.`,
+                `每个主元也在不同的列，所以至多 $${n}$ 个。合起来，$\\text{rank}(A) \\le \\min(${m}, ${n}) = ${minMN}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The bound is reached: the matrix with $1$ in positions $(1, 1)$ to $(${minMN}, ${minMN})$ and $0$ elsewhere has exactly $${minMN}$ pivots.`,
+            `这个上界能取到：在 $(1, 1)$ 到 $(${minMN}, ${minMN})$ 位置为 $1$、其余为 $0$ 的矩阵恰有 $${minMN}$ 个主元。`,
+          ),
         );
-        const w1 = Math.max(m, n) === minMN ? minMN + 1 : Math.max(m, n);
-        const w2 = m + n === w1 ? w1 + 1 : m + n;
-        const w3 = m * n === w2 || m * n === w1 ? w2 + 1 : m * n;
         return numberProblem({
           prompt,
           answer: minMN,
           form: "integer",
-          wrong: [w1, w2, w3],
+          mistakes: [
+            why(
+              Math.max(m, n),
+              "That is the larger dimension; a pivot needs its own row and its own column, so the smaller one limits it.",
+              "这是较大的维数；每个主元需要单独的一行和一列，所以较小的那个起限制作用。",
+            ),
+            ...(m === n
+              ? [
+                  why(
+                    minMN + 1,
+                    `There are only $${minMN}$ rows and $${minMN}$ columns, so at most $${minMN}$ pivots.`,
+                    `只有 $${minMN}$ 行和 $${minMN}$ 列，所以至多 $${minMN}$ 个主元。`,
+                  ),
+                ]
+              : []),
+            why(
+              m + n,
+              "Rows and columns do not add up: the rank is bounded by each of them separately.",
+              "行数和列数不能相加：秩分别受两者限制。",
+            ),
+            why(
+              m * n,
+              "That counts the entries; each pivot uses up a whole row and a whole column.",
+              "这是元素个数；每个主元占用一整行和一整列。",
+            ),
+          ].filter((w, i, all) => w.value !== minMN && all.findIndex((o) => o.value === w.value) === i),
           solution,
         });
       },
@@ -3136,6 +3330,10 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
     "Define nullity(A) as dim(Null(A)), compute it as the number of free variables in Ax = 0, and relate nullity(A) = 0 to trivial null space.",
     "掌握矩阵零度 nullity(A) 作为 dim(Null(A)) 的定义，通过自由未知量个数进行计算，并理解 nullity(A) = 0 与零空间仅含零向量的等价性。",
   ),
+  intro: t(
+    "Suppose $A$ has reduced echelon form $\\begin{pmatrix} 1 & 0 & 2 & -1 \\\\ 0 & 1 & 3 & 0 \\end{pmatrix}$. Columns $3$ and $4$ have no pivot, so $x_3$ and $x_4$ are free, and $\\operatorname{nullity}(A) = 2$.\n\nCheck: setting $x_3 = 1, x_4 = 0$ and then $x_3 = 0, x_4 = 1$ gives the basis $(-2, -3, 1, 0)$ and $(1, 0, 0, 1)$ of $\\operatorname{Null}(A)$, two vectors.\n\nIn this lesson we find the nullity of a matrix by counting free variables and see what nullity $0$ says about the matrix.",
+    "设 $A$ 的简化阶梯形为 $\\begin{pmatrix} 1 & 0 & 2 & -1 \\\\ 0 & 1 & 3 & 0 \\end{pmatrix}$。第 $3$、$4$ 列没有主元，所以 $x_3$、$x_4$ 是自由变量，$\\operatorname{nullity}(A) = 2$。\n\n检验：先取 $x_3 = 1, x_4 = 0$，再取 $x_3 = 0, x_4 = 1$，得到 $\\operatorname{Null}(A)$ 的基 $(-2, -3, 1, 0)$ 和 $(1, 0, 0, 1)$，共两个向量。\n\n本课我们通过数自由变量求矩阵的零度，并看零度为 $0$ 对矩阵意味着什么。",
+  ),
   prerequisites: ["finding-a-basis-of-the-null-space-of-a-matrix"],
   encompasses: [],
   xp: 14,
@@ -3145,8 +3343,8 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "nullity-from-free-variables",
       title: t("Nullity equals the number of free variables", "零度等于自由未知量的个数"),
       explanation: t(
-        "The dimension of $\\operatorname{Null}(A)$, called the nullity of $A$, equals the number of free variables in the homogeneous equation $A\\mathbf{x} = \\mathbf{0}$.",
-        "$\\operatorname{Null}(A)$ 的维数称为矩阵 $A$ 的零度，等于齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$ 中自由未知量的个数。",
+        "The dimension of $\\operatorname{Null}(A)$, called the nullity of $A$, equals the number of free variables in the homogeneous equation $A\\mathbf{x} = \\mathbf{0}$. Each free variable gives one basis vector of the null space. For example, if $A$ has $5$ columns and $3$ pivot columns, then $2$ variables are free and $\\operatorname{nullity}(A) = 2$.\n\n> **Watch out.** Subtract the pivot columns from the number of columns, not from the number of rows: the free variables are the columns without a pivot.",
+        "$\\operatorname{Null}(A)$ 的维数称为矩阵 $A$ 的零度，等于齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$ 中自由未知量的个数。每个自由变量给出零空间的一个基向量。例如 $A$ 有 $5$ 列、$3$ 个主元列时，有 $2$ 个自由变量，$\\operatorname{nullity}(A) = 2$。\n\n> **注意。** 用列数减主元列数，而不是用行数减：自由变量对应没有主元的列。",
       ),
       generate(rng) {
         const n = rng.int(4, 15);
@@ -3156,15 +3354,46 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
           `A matrix $A$ has $${n}$ columns and its reduced row echelon form has $${pivots}$ pivot columns. What is $\\text{nullity}(A) = \\dim(\\text{Null}(A))$?`,
           `矩阵 $A$ 拥有 $${n}$ 列，其简化行阶梯形有 $${pivots}$ 个主元列。矩阵 $A$ 的零度 $\\text{nullity}(A) = \\dim(\\text{Null}(A))$ 是多少？`,
         );
-        const solution = t(
-          `The number of free variables in $A\\mathbf{x} = \\mathbf{0}$ equals the total number of columns minus the number of pivot columns: $${n} - ${pivots} = ${freeVars}$. Hence $\\text{nullity}(A) = ${freeVars}$.`,
-          `齐次方程 $A\\mathbf{x} = \\mathbf{0}$ 的自由未知量个数等于总列数减去主元列数：$${n} - ${pivots} = ${freeVars}$。因此 $\\text{nullity}(A) = ${freeVars}$。`,
+        const solution = walked(
+          [
+            [
+              ["Count the free variables", "数自由变量"],
+              t(
+                `Each of the $${n}$ columns either has a pivot or gives a free variable of $A\\mathbf{x} = \\mathbf{0}$, so:`,
+                `$${n}$ 列中每一列要么有主元，要么对应 $A\\mathbf{x} = \\mathbf{0}$ 的一个自由变量，所以：`,
+              ),
+              [`\\text{free variables} = ${n} - ${pivots} = ${freeVars}`],
+            ],
+            [
+              ["Read the nullity", "读出零度"],
+              t(
+                `Each free variable gives one basis vector of $\\text{Null}(A)$, so $\\text{nullity}(A) = ${freeVars}$.`,
+                `每个自由变量给出 $\\text{Null}(A)$ 的一个基向量，所以 $\\text{nullity}(A) = ${freeVars}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\text{rank} + \\text{nullity} = ${pivots} + ${freeVars} = ${n}$, the number of columns.`,
+            `$\\text{rank} + \\text{nullity} = ${pivots} + ${freeVars} = ${n}$，正是列数。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: freeVars,
           form: "integer",
-          wrong: [freeVars + 1, freeVars > 1 ? freeVars - 1 : freeVars + 2, 0],
+          mistakes: [
+            why(
+              pivots,
+              "That is the number of pivot columns, the rank; the nullity counts the columns without a pivot.",
+              "这是主元列数，即秩；零度数的是没有主元的列。",
+            ),
+            why(n, "That is the number of columns; the pivot columns must be taken away.", "这是列数；要减去主元列。"),
+            why(
+              0,
+              `Nullity $0$ would need a pivot in every column, but only $${pivots}$ of the $${n}$ columns have one.`,
+              `零度为 $0$ 需要每列都有主元，但 $${n}$ 列中只有 $${pivots}$ 列有。`,
+            ),
+          ].filter((m, i, all) => m.value !== freeVars && all.findIndex((o) => o.value === m.value) === i),
           solution,
         });
       },
@@ -3173,8 +3402,8 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "nullity-zero-and-uniqueness",
       title: t("Nullity 0 and linear independence", "零度为 0 与线性无关的等价性"),
       explanation: t(
-        "$\\operatorname{nullity}(A) = 0$ if and only if $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$, which means $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution and the columns of $A$ are linearly independent.",
-        "$\\operatorname{nullity}(A) = 0$ 当且仅当 $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$，即 $A\\mathbf{x} = \\mathbf{0}$ 只有零解，且 $A$ 的列向量线性无关。",
+        "$\\operatorname{nullity}(A) = 0$ if and only if $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$, which means $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution and the columns of $A$ are linearly independent. For example, for $A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 1 \\end{pmatrix}$ the first two rows of $A\\mathbf{x} = \\mathbf{0}$ already force $x_1 = x_2 = 0$, so the nullity is $0$ and the two columns are independent.\n\n> **Watch out.** Nullity $0$ is about the columns. It says nothing direct about the rows: the $3 \\times 2$ matrix above has nullity $0$, yet its three rows are dependent.",
+        "$\\operatorname{nullity}(A) = 0$ 当且仅当 $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$，即 $A\\mathbf{x} = \\mathbf{0}$ 只有零解，且 $A$ 的列向量线性无关。例如对 $A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 1 \\end{pmatrix}$，$A\\mathbf{x} = \\mathbf{0}$ 的前两行就迫使 $x_1 = x_2 = 0$，所以零度为 $0$，两列线性无关。\n\n> **注意。** 零度为 $0$ 说的是列。它不直接说明行：上面的 $3 \\times 2$ 矩阵零度为 $0$，但它的三行线性相关。",
       ),
       generate(rng) {
         const m = rng.int(3, 10);
@@ -3187,16 +3416,58 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
           `$A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution, and the columns of $A$ are linearly independent`,
           `$A\\mathbf{x} = \\mathbf{0}$ 仅有零解，且 $A$ 的列向量线性无关`,
         );
+        const rowsClaim =
+          m === n
+            ? t(`The rows of $A$ are linearly dependent`, `$A$ 的行向量必定线性相关`)
+            : t(`The rows of $A$ are linearly independent`, `$A$ 的行向量线性无关`);
         const wrong = [
           t(`$A\\mathbf{x} = \\mathbf{0}$ has infinitely many solutions`, `$A\\mathbf{x} = \\mathbf{0}$ 有无穷多解`),
-          t(`The rows of $A$ are linearly dependent`, `$A$ 的行向量必定线性相关`),
+          rowsClaim,
           t(`$A$ is the zero matrix`, `$A$ 必定是零矩阵`),
         ];
-        const solution = t(
-          `$\\text{nullity}(A) = 0$ means the solution space $\\text{Null}(A)$ is the zero subspace $\\{\\mathbf{0}\\}$. Thus $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution $\\mathbf{x} = \\mathbf{0}$, which implies the columns of $A$ are linearly independent.`,
-          `$\\text{nullity}(A) = 0$ 意味着零空间为零子空间 $\\{\\mathbf{0}\\}$。因此齐次方程 $A\\mathbf{x} = \\mathbf{0}$ 仅有平凡零解，这等价于 $A$ 的列向量线性无关。`,
+        const solution = walked(
+          [
+            [
+              ["Read the nullity", "读出零度"],
+              t(
+                "$\\text{nullity}(A) = 0$ means $\\text{Null}(A)$ has dimension $0$, so $\\text{Null}(A) = \\{\\mathbf{0}\\}$ and $A\\mathbf{x} = \\mathbf{0}$ has only the solution $\\mathbf{x} = \\mathbf{0}$.",
+                "$\\text{nullity}(A) = 0$ 表示 $\\text{Null}(A)$ 的维数为 $0$，所以 $\\text{Null}(A) = \\{\\mathbf{0}\\}$，$A\\mathbf{x} = \\mathbf{0}$ 只有解 $\\mathbf{x} = \\mathbf{0}$。",
+              ),
+            ],
+            [
+              ["Translate to the columns", "转化为列的语言"],
+              t(
+                "A relation $c_1\\mathbf{a}_1 + \\dots + c_n\\mathbf{a}_n = \\mathbf{0}$ among the columns is a solution $\\mathbf{x} = (c_1, \\dots, c_n)$, so every $c_i = 0$: the columns are independent.",
+                "列之间的关系 $c_1\\mathbf{a}_1 + \\dots + c_n\\mathbf{a}_n = \\mathbf{0}$ 就是一个解 $\\mathbf{x} = (c_1, \\dots, c_n)$，所以每个 $c_i = 0$：各列线性无关。",
+              ),
+            ],
+          ],
+          t(
+            `$\\text{rank}(A) = ${n} - 0 = ${n}$, so each of the $${n}$ columns has a pivot.`,
+            `$\\text{rank}(A) = ${n} - 0 = ${n}$，所以 $${n}$ 列每列都有主元。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "Infinitely many solutions would need a free variable, that is, nullity at least $1$.",
+            "无穷多解需要有自由变量，即零度至少为 $1$。",
+          ],
+          [
+            rowsClaim.en,
+            m === n
+              ? `For a square matrix, rank $${n}$ means the $${n}$ rows are independent too.`
+              : `The rank is $${n}$, but there are $${m}$ rows, so the rows are dependent, not independent.`,
+            m === n
+              ? `对方阵而言，秩为 $${n}$ 意味着 $${n}$ 行也线性无关。`
+              : `秩为 $${n}$，但有 $${m}$ 行，所以各行线性相关，而不是线性无关。`,
+          ],
+          [
+            wrong[2]!.en,
+            `The zero matrix is the opposite extreme: its nullity is $${n}$, since every vector solves $A\\mathbf{x} = \\mathbf{0}$.`,
+            `零矩阵是另一个极端：它的零度是 $${n}$，因为每个向量都满足 $A\\mathbf{x} = \\mathbf{0}$。`,
+          ],
+        ]);
       },
     },
   ],
@@ -3210,6 +3481,10 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
     "Characterize the invertibility of an $n \\times n$ matrix in terms of $\\operatorname{rank}(A) = n$, $\\operatorname{nullity}(A) = 0$, $\\operatorname{Col}(A) = \\mathbb{R}^n$, and $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$.",
     "从 $\\operatorname{rank}(A) = n$、$\\operatorname{nullity}(A) = 0$、$\\operatorname{Col}(A) = \\mathbb{R}^n$ 及 $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$ 等秩与维数的角度表述 $n$ 阶方阵的可逆等价条件。",
   ),
+  intro: t(
+    "Take $A = \\begin{pmatrix} 2 & 1 \\\\ 4 & 2 \\end{pmatrix}$. Subtracting $2$ times row $1$ from row $2$ leaves one pivot, so $\\operatorname{rank}(A) = 1 < 2$, $\\operatorname{nullity}(A) = 1$, and $A$ is not invertible.\n\nCheck: $\\det A = 2 \\cdot 2 - 1 \\cdot 4 = 0$, and $A(1, -2) = (2 - 2, 4 - 4) = (0, 0)$, a nonzero vector in $\\operatorname{Null}(A)$.\n\nIn this lesson we state invertibility of a square matrix through rank, nullity, column space and null space, and draw the consequences when the rank falls short.",
+    "取 $A = \\begin{pmatrix} 2 & 1 \\\\ 4 & 2 \\end{pmatrix}$。第 $2$ 行减去第 $1$ 行的 $2$ 倍后只剩一个主元，所以 $\\operatorname{rank}(A) = 1 < 2$，$\\operatorname{nullity}(A) = 1$，$A$ 不可逆。\n\n检验：$\\det A = 2 \\cdot 2 - 1 \\cdot 4 = 0$，且 $A(1, -2) = (2 - 2, 4 - 4) = (0, 0)$，是 $\\operatorname{Null}(A)$ 中的非零向量。\n\n本课我们用秩、零度、列空间和零空间表述方阵的可逆性，并推出秩不足时的结论。",
+  ),
   prerequisites: ["the-rank-of-a-matrix", "the-dimension-of-the-null-space-of-a-matrix"],
   encompasses: [],
   xp: 14,
@@ -3219,8 +3494,8 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
       id: "imt-rank-conditions-n-by-n",
       title: t("Invertibility statements for rank and nullity", "秩与零度视角的方阵可逆等价命题"),
       explanation: t(
-        "For a square matrix, having a pivot in every column, full rank and a zero null space all express the same fact: the matrix is invertible. For an $n \\times n$ matrix $A$, the following are equivalent: (1) $A$ is invertible; (2) $\\operatorname{rank}(A) = n$; (3) $\\operatorname{nullity}(A) = 0$; (4) $\\operatorname{Col}(A) = \\mathbb{R}^n$; (5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$.",
-        "对于方阵，每列都有主元、满秩和零空间只含零向量都表达同一个事实：矩阵可逆。对 $n \\times n$ 矩阵 $A$，以下条件相互等价：(1) $A$ 可逆；(2) $\\operatorname{rank}(A) = n$；(3) $\\operatorname{nullity}(A) = 0$；(4) $\\operatorname{Col}(A) = \\mathbb{R}^n$；(5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$。",
+        "For a square matrix, having a pivot in every column, full rank and a zero null space all express the same fact: the matrix is invertible. For an $n \\times n$ matrix $A$, the following are equivalent: (1) $A$ is invertible; (2) $\\operatorname{rank}(A) = n$; (3) $\\operatorname{nullity}(A) = 0$; (4) $\\operatorname{Col}(A) = \\mathbb{R}^n$; (5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$. For example, a $3 \\times 3$ matrix of rank $3$ has nullity $3 - 3 = 0$, its columns span $\\mathbb{R}^3$, and it is invertible.\n\n> **Watch out.** These equivalences are for square matrices only: a $3 \\times 2$ matrix can have nullity $0$ without being invertible.",
+        "对于方阵，每列都有主元、满秩和零空间只含零向量都表达同一个事实：矩阵可逆。对 $n \\times n$ 矩阵 $A$，以下条件相互等价：(1) $A$ 可逆；(2) $\\operatorname{rank}(A) = n$；(3) $\\operatorname{nullity}(A) = 0$；(4) $\\operatorname{Col}(A) = \\mathbb{R}^n$；(5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$。例如秩为 $3$ 的 $3 \\times 3$ 矩阵零度为 $3 - 3 = 0$，各列张成 $\\mathbb{R}^3$，矩阵可逆。\n\n> **注意。** 这些等价只对方阵成立：$3 \\times 2$ 矩阵可以零度为 $0$ 却不可逆。",
       ),
       generate(rng) {
         const n = rng.int(3, 30);
@@ -3234,19 +3509,47 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
           t(`$\\text{Col}(A)$ is a line in $\\mathbb{R}^{${n}}$`, `$\\text{Col}(A)$ 是 $\\mathbb{R}^{${n}}$ 中的一条直线`),
           t(`$\\text{Null}(A)$ contains non-zero vectors`, `$\\text{Null}(A)$ 包含非零向量`),
         ];
-        const solution = t(
-          `By the Invertible Matrix Theorem, an $n \\times n$ matrix is invertible if and only if it has full rank ($n$), which by the Rank-Nullity Theorem is equivalent to $\\text{nullity}(A) = 0$.`,
-          `由可逆矩阵等价定理，一个 $n$ 阶方阵可逆当且仅当它满秩（$\\text{rank}(A) = n$），由秩-零度定理这等价于 $\\text{nullity}(A) = 0$。`,
+        const solution = walked(
+          [
+            [
+              ["Invertible means full rank", "可逆即满秩"],
+              t(
+                `An $${n} \\times ${n}$ matrix is invertible exactly when its reduced echelon form is $I$, that is, when all $${n}$ columns have pivots: $\\text{rank}(A) = ${n}$.`,
+                `$${n} \\times ${n}$ 矩阵可逆，当且仅当它的简化阶梯形是 $I$，即 $${n}$ 列都有主元：$\\text{rank}(A) = ${n}$。`,
+              ),
+            ],
+            [
+              ["Apply rank-nullity", "应用秩-零度定理"],
+              t(`Then the nullity is:`, `于是零度为：`),
+              [`\\text{nullity}(A) = ${n} - ${n} = 0`],
+            ],
+          ],
+          t(
+            `Conversely, nullity $0$ gives rank $${n} - 0 = ${n}$, so the two conditions together are equivalent to invertibility.`,
+            `反过来，零度为 $0$ 给出秩 $${n} - 0 = ${n}$，所以这两个条件合起来与可逆等价。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "Rank $0$ is the zero matrix, the furthest from invertible.", "秩为 $0$ 的是零矩阵，离可逆最远。"],
+          [
+            wrong[1]!.en,
+            `A line has dimension $1$, so the rank would be $1 < ${n}$ and $A$ would not be invertible.`,
+            `直线的维数是 $1$，所以秩为 $1 < ${n}$，$A$ 不可逆。`,
+          ],
+          [
+            wrong[2]!.en,
+            "A nonzero $\\mathbf{x}$ with $A\\mathbf{x} = \\mathbf{0}$ means two inputs, $\\mathbf{x}$ and $\\mathbf{0}$, give the same output, so $A$ cannot be undone.",
+            "有非零 $\\mathbf{x}$ 使 $A\\mathbf{x} = \\mathbf{0}$，说明 $\\mathbf{x}$ 和 $\\mathbf{0}$ 两个输入给出同一输出，所以 $A$ 无法逆转。",
+          ],
+        ]);
       },
     },
     {
       id: "imt-singular-matrix-deductions",
       title: t("Deductions for non-invertible square matrices", "奇异矩阵的维数推论"),
       explanation: t(
-        "If an $n \\times n$ matrix has $\\operatorname{rank}(A) < n$, then $\\operatorname{nullity}(A) \\ge 1$ and $\\det(A) = 0$, and its columns are linearly dependent and do not span $\\mathbb{R}^n$.",
-        "若 $n \\times n$ 矩阵满足 $\\operatorname{rank}(A) < n$，则 $\\operatorname{nullity}(A) \\ge 1$，$\\det(A) = 0$，其列向量线性相关且不能张成 $\\mathbb{R}^n$。",
+        "If an $n \\times n$ matrix has $\\operatorname{rank}(A) < n$, then $\\operatorname{nullity}(A) \\ge 1$ and $\\det(A) = 0$, and its columns are linearly dependent and do not span $\\mathbb{R}^n$. For example, a $4 \\times 4$ matrix of rank $3$ has nullity $4 - 3 = 1$, its columns span only a $3$-dimensional subspace, and it is not invertible.\n\n> **Watch out.** Rank below $n$ rules out every invertibility condition at once: $\\operatorname{Col}(A) \\ne \\mathbb{R}^n$ and $\\operatorname{Null}(A) \\ne \\{\\mathbf{0}\\}$.",
+        "若 $n \\times n$ 矩阵满足 $\\operatorname{rank}(A) < n$，则 $\\operatorname{nullity}(A) \\ge 1$，$\\det(A) = 0$，其列向量线性相关且不能张成 $\\mathbb{R}^n$。例如秩为 $3$ 的 $4 \\times 4$ 矩阵零度为 $4 - 3 = 1$，各列只张成一个 $3$ 维子空间，矩阵不可逆。\n\n> **注意。** 秩小于 $n$ 会同时否定所有可逆条件：$\\operatorname{Col}(A) \\ne \\mathbb{R}^n$，$\\operatorname{Null}(A) \\ne \\{\\mathbf{0}\\}$。",
       ),
       generate(rng) {
         const n = rng.int(3, 15);
@@ -3262,11 +3565,36 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
           t(`$\\text{Col}(A) = \\mathbb{R}^{${n}}$`, `$\\text{Col}(A) = \\mathbb{R}^{${n}}$`),
           t(`$\\text{Null}(A) = \\{\\mathbf{0}\\}$`, `$\\text{Null}(A) = \\{\\mathbf{0}\\}$`),
         ];
-        const solution = t(
-          `Since $\\text{rank}(A) = ${r} < ${n}$, the matrix is not of full rank and therefore not invertible. By Rank-Nullity, $\\text{nullity}(A) = ${n} - ${r} = ${nullity}$.`,
-          `由于 $\\text{rank}(A) = ${r} < ${n}$，矩阵不满秩，因此不可逆。由秩-零度定理，$\\text{nullity}(A) = ${n} - ${r} = ${nullity}$。`,
+        const solution = walked(
+          [
+            [
+              ["Compare the rank with $n$", "把秩与 $n$ 比较"],
+              t(
+                `$\\text{rank}(A) = ${r} < ${n}$, so some column has no pivot and $A$ is not invertible.`,
+                `$\\text{rank}(A) = ${r} < ${n}$，所以有的列没有主元，$A$ 不可逆。`,
+              ),
+            ],
+            [
+              ["Apply rank-nullity", "应用秩-零度定理"],
+              t("The nullity is the number of columns minus the rank:", "零度等于列数减秩："),
+              [`\\text{nullity}(A) = ${n} - ${r} = ${nullity}`],
+            ],
+          ],
+          t(`$${r} + ${nullity} = ${n}$, the number of columns.`, `$${r} + ${nullity} = ${n}$，正是列数。`),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, `Invertibility needs rank $${n}$, and the rank is only $${r}$.`, `可逆需要秩为 $${n}$，而秩只有 $${r}$。`],
+          [
+            wrong[1]!.en,
+            `$\\text{Col}(A)$ has dimension $${r}$, less than $${n}$, so it is not all of $\\mathbb{R}^{${n}}$.`,
+            `$\\text{Col}(A)$ 的维数是 $${r}$，小于 $${n}$，所以不是整个 $\\mathbb{R}^{${n}}$。`,
+          ],
+          [
+            wrong[2]!.en,
+            `$\\text{Null}(A)$ has dimension $${nullity} \\ge 1$, so it contains nonzero vectors.`,
+            `$\\text{Null}(A)$ 的维数是 $${nullity} \\ge 1$，所以含非零向量。`,
+          ],
+        ]);
       },
     },
   ],
@@ -3280,6 +3608,10 @@ export const theRankNullityTheorem: TopicDef = {
     "Apply the Rank-Nullity Theorem: for any m × n matrix A, rank(A) + nullity(A) = n (the number of columns).",
     "掌握并应用秩-零度定理：对任意 m × n 矩阵 A，恒有 rank(A) + nullity(A) = n（总列数）。",
   ),
+  intro: t(
+    "A $3 \\times 5$ matrix $A$ of rank $2$ has $2$ pivot columns, and the other $5 - 2 = 3$ columns give free variables, so $\\operatorname{nullity}(A) = 3$.\n\nCheck: $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = 2 + 3 = 5$, the number of columns, and the $3$ rows played no part in the count.\n\nIn this lesson we use $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$ to find one of the two from the other, and to find the dimension of the solution space of a homogeneous system.",
+    "秩为 $2$ 的 $3 \\times 5$ 矩阵 $A$ 有 $2$ 个主元列，其余 $5 - 2 = 3$ 列对应自由变量，所以 $\\operatorname{nullity}(A) = 3$。\n\n检验：$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = 2 + 3 = 5$，正是列数，$3$ 个行在计数中不起作用。\n\n本课我们用 $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$ 由其中一个求另一个，并求齐次方程组解空间的维数。",
+  ),
   prerequisites: ["the-rank-of-a-matrix", "the-dimension-of-the-null-space-of-a-matrix"],
   encompasses: [],
   xp: 14,
@@ -3289,8 +3621,8 @@ export const theRankNullityTheorem: TopicDef = {
       id: "rank-nullity-computation",
       title: t("Rank-Nullity formula computation", "应用秩-零度公式进行计算"),
       explanation: t(
-        "The theorem splits the columns into those with pivots, which give the rank, and those with free variables, which give the nullity. For an $m \\times n$ matrix $A$, $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$: every column is either a pivot column or corresponds to a free variable.",
-        "这个定理把各列分成有主元的列和对应自由变量的列，前者给出秩，后者给出零度。对于 $m \\times n$ 矩阵 $A$，$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$：每一列要么是主元列，要么对应一个自由未知量。",
+        "The theorem splits the columns into those with pivots, which give the rank, and those with free variables, which give the nullity. For an $m \\times n$ matrix $A$, $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$: every column is either a pivot column or corresponds to a free variable. For example, a $4 \\times 6$ matrix of rank $4$ has nullity $6 - 4 = 2$.\n\n> **Watch out.** Use $n$, the number of columns; the number of rows does not enter the formula.",
+        "这个定理把各列分成有主元的列和对应自由变量的列，前者给出秩，后者给出零度。对于 $m \\times n$ 矩阵 $A$，$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$：每一列要么是主元列，要么对应一个自由未知量。例如秩为 $4$ 的 $4 \\times 6$ 矩阵零度为 $6 - 4 = 2$。\n\n> **注意。** 要用列数 $n$；行数不出现在公式中。",
       ),
       generate(rng) {
         const m = rng.int(3, 10);
@@ -3301,15 +3633,37 @@ export const theRankNullityTheorem: TopicDef = {
           `A matrix $A$ has $${m}$ rows and $${n}$ columns. If $\\text{rank}(A) = ${r}$, what is $\\text{nullity}(A) = \\dim(\\text{Null}(A))$?`,
           `矩阵 $A$ 拥有 $${m}$ 行和 $${n}$ 列。若 $\\text{rank}(A) = ${r}$，则 $\\text{nullity}(A) = \\dim(\\text{Null}(A))$ 等于多少？`,
         );
-        const solution = t(
-          `By the Rank-Nullity Theorem, $\\text{rank}(A) + \\text{nullity}(A) = n$, where $n = ${n}$ is the number of columns. Thus $\\text{nullity}(A) = ${n} - ${r} = ${nullity}$.`,
-          `根据秩-零度定理，$\\text{rank}(A) + \\text{nullity}(A) = n$，其中 $n = ${n}$ 为列数。故 $\\text{nullity}(A) = ${n} - ${r} = ${nullity}$。`,
+        const solution = walked(
+          [
+            [
+              ["State the theorem", "写出定理"],
+              t(`For a matrix with $n = ${n}$ columns:`, `对有 $n = ${n}$ 列的矩阵：`),
+              [`\\text{rank}(A) + \\text{nullity}(A) = ${n}`],
+            ],
+            [["Solve for the nullity", "解出零度"], t("", ""), [`\\text{nullity}(A) = ${n} - ${r} = ${nullity}`]],
+          ],
+          t(
+            `$${r} + ${nullity} = ${n}$: $${r}$ pivot columns and $${nullity}$ free variables account for all $${n}$ columns.`,
+            `$${r} + ${nullity} = ${n}$：$${r}$ 个主元列和 $${nullity}$ 个自由变量正好对应全部 $${n}$ 列。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: nullity,
           form: "integer",
-          wrong: [nullity + 1, nullity > 1 ? nullity - 1 : nullity + 2, 0],
+          mistakes: [
+            why(
+              m - r,
+              "That subtracts the rank from the number of rows; the theorem uses the number of columns.",
+              "这是用行数减秩；定理用的是列数。",
+            ),
+            why(r, "That is the rank itself; the nullity is what remains of the columns.", "这就是秩本身；零度是列数中剩下的部分。"),
+            why(
+              n + r,
+              "The rank and the nullity add up to $n$, so the rank must be subtracted, not added.",
+              "秩与零度之和是 $n$，所以要减去秩，而不是加上。",
+            ),
+          ].filter((w, i, all) => w.value !== nullity && all.findIndex((o) => o.value === w.value) === i),
           solution,
         });
       },
@@ -3318,8 +3672,8 @@ export const theRankNullityTheorem: TopicDef = {
       id: "rank-nullity-homogeneous-system-analysis",
       title: t("Solution space dimension of homogeneous systems", "齐次线性方程组解空间的维数"),
       explanation: t(
-        "Each free variable adds one dimension to the solution space, and the number of free variables is the number of variables minus the rank. A homogeneous system $A\\mathbf{x} = \\mathbf{0}$ of $m$ linear equations in $n$ variables has a solution space of dimension $n - \\operatorname{rank}(A)$.",
-        "每个自由变量为解空间增加一维，自由变量的个数等于变量个数减去秩。含 $n$ 个未知量、$m$ 个方程的齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$，其解空间的维数等于 $n - \\operatorname{rank}(A)$。",
+        "Each free variable adds one dimension to the solution space, and the number of free variables is the number of variables minus the rank. A homogeneous system $A\\mathbf{x} = \\mathbf{0}$ of $m$ linear equations in $n$ variables has a solution space of dimension $n - \\operatorname{rank}(A)$. For example, $5$ equations in $7$ variables with a coefficient matrix of rank $4$ have a solution space of dimension $7 - 4 = 3$.\n\n> **Watch out.** Subtract the rank from the number of variables, not from the number of equations.",
+        "每个自由变量为解空间增加一维，自由变量的个数等于变量个数减去秩。含 $n$ 个未知量、$m$ 个方程的齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$，其解空间的维数等于 $n - \\operatorname{rank}(A)$。例如 $7$ 个未知量、$5$ 个方程、系数矩阵秩为 $4$ 的方程组，解空间维数为 $7 - 4 = 3$。\n\n> **注意。** 用未知量个数减秩，而不是用方程个数减秩。",
       ),
       generate(rng) {
         const m = rng.int(3, 12);
@@ -3330,15 +3684,47 @@ export const theRankNullityTheorem: TopicDef = {
           `A homogeneous system of $${m}$ linear equations in $${n}$ variables has coefficient matrix with rank $${r}$. What is the dimension of the solution space?`,
           `一个由 $${m}$ 个方程与 $${n}$ 个未知量组成的齐次线性方程组，其系数矩阵的秩为 $${r}$。该方程组解空间的维数是多少？`,
         );
-        const solution = t(
-          `The solution space of $A\\mathbf{x} = \\mathbf{0}$ is $\\text{Null}(A)$. By the Rank-Nullity Theorem, $\\dim(\\text{Null}(A)) = n - \\text{rank}(A) = ${n} - ${r} = ${dimSol}$.`,
-          `齐次方程组 $A\\mathbf{x} = \\mathbf{0}$ 的解空间即为零空间 $\\text{Null}(A)$。由秩-零度定理，$\\dim(\\text{Null}(A)) = n - \\text{rank}(A) = ${n} - ${r} = ${dimSol}$。`,
+        const solution = walked(
+          [
+            [
+              ["Name the solution space", "认出解空间"],
+              t(
+                `The solutions of $A\\mathbf{x} = \\mathbf{0}$ form $\\text{Null}(A)$, and $A$ has one column per variable: $${n}$ columns.`,
+                `$A\\mathbf{x} = \\mathbf{0}$ 的解构成 $\\text{Null}(A)$，$A$ 每个未知量对应一列：共 $${n}$ 列。`,
+              ),
+            ],
+            [
+              ["Apply rank-nullity", "应用秩-零度定理"],
+              t("", ""),
+              [`\\dim(\\text{Null}(A)) = n - \\text{rank}(A) = ${n} - ${r} = ${dimSol}`],
+            ],
+          ],
+          t(
+            `There are $${r}$ pivot variables and $${dimSol}$ free variables, $${r} + ${dimSol} = ${n}$ in all, and each free variable gives one basis vector of the solution space.`,
+            `共有 $${r}$ 个主元变量和 $${dimSol}$ 个自由变量，合计 $${r} + ${dimSol} = ${n}$ 个，每个自由变量给出解空间的一个基向量。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: dimSol,
           form: "integer",
-          wrong: [dimSol + 1, dimSol > 1 ? dimSol - 1 : dimSol + 2, 0],
+          mistakes: [
+            why(
+              m - r,
+              "That subtracts the rank from the number of equations; the free variables come from the variables.",
+              "这是用方程个数减秩；自由变量来自未知量。",
+            ),
+            why(
+              r,
+              "That is the rank, the number of pivot variables; the solution space has one dimension per free variable.",
+              "这是秩，即主元变量个数；解空间每个自由变量贡献一维。",
+            ),
+            why(
+              n,
+              "That is the number of variables; the pivot variables are determined by the free ones and add no dimension.",
+              "这是未知量个数；主元变量由自由变量决定，不增加维数。",
+            ),
+          ].filter((w, i, all) => w.value !== dimSol && all.findIndex((o) => o.value === w.value) === i),
           solution,
         });
       },
@@ -3358,6 +3744,10 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
     "Generalize vectors beyond $\\mathbb{R}^n$ to polynomial spaces $\\mathbb{P}_n$, matrix spaces $M_{m \\times n}$, and continuous functions $C[a, b]$, identifying their operations and zero vectors.",
     "将向量概念由 $\\mathbb{R}^n$ 推广至多项式空间 $\\mathbb{P}_n$、矩阵空间 $M_{m \\times n}$ 及连续函数空间 $C[a, b]$，理解其运算与零向量。",
   ),
+  intro: t(
+    "In $\\mathbb{P}_2$, add $p(t) = 1 + 2t$ and $q(t) = 3 - t + t^2$ coefficient by coefficient: $p + q = 4 + t + t^2$, and $2p = 2 + 4t$. Both results are again polynomials of degree at most $2$, so they stay in $\\mathbb{P}_2$, just as sums and multiples of vectors stay in $\\mathbb{R}^3$.\n\nCheck: the zero polynomial $0$ works as the zero vector, since $p + 0 = 1 + 2t = p$.\n\nIn this lesson we treat polynomials, matrices and functions as vectors and find the zero vector of each of these spaces.",
+    "在 $\\mathbb{P}_2$ 中，把 $p(t) = 1 + 2t$ 和 $q(t) = 3 - t + t^2$ 逐项系数相加：$p + q = 4 + t + t^2$，且 $2p = 2 + 4t$。两个结果仍是次数不超过 $2$ 的多项式，所以仍在 $\\mathbb{P}_2$ 中，正如 $\\mathbb{R}^3$ 中向量的和与倍数仍在 $\\mathbb{R}^3$ 中。\n\n检验：零多项式 $0$ 起零向量的作用，因为 $p + 0 = 1 + 2t = p$。\n\n本课我们把多项式、矩阵和函数看作向量，并找出这些空间各自的零向量。",
+  ),
   prerequisites: ["the-rank-nullity-theorem"],
   encompasses: [],
   xp: 14,
@@ -3367,8 +3757,8 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
       id: "abstract-vectors-elements",
       title: t("Objects in abstract vector spaces", "抽象向量空间中的元素与运算"),
       explanation: t(
-        'In abstract linear algebra, "vectors" are the elements of any set with an addition and a scalar multiplication satisfying the vector space axioms, such as polynomials in $\\mathbb{P}_n$ or matrices in $M_{m \\times n}$.',
-        '在抽象线性代数中，"向量"指任何满足向量空间公理的集合中的元素，例如多项式空间 $\\mathbb{P}_n$ 中的多项式或矩阵空间 $M_{m \\times n}$ 中的矩阵。',
+        'In abstract linear algebra, "vectors" are the elements of any set with an addition and a scalar multiplication satisfying the vector space axioms, such as polynomials in $\\mathbb{P}_n$ or matrices in $M_{m \\times n}$. For example, $\\mathbb{P}_3$ contains $1 - t^2$, $5t^3$ and also the constant $7$, since "degree at most $3$" includes lower degrees.\n\n> **Watch out.** $\\mathbb{P}_n$ means degree at most $n$, not exactly $n$: polynomials of exact degree $n$ alone are not closed under addition, since $t^n + (-t^n) = 0$.',
+        '在抽象线性代数中，"向量"指任何满足向量空间公理的集合中的元素，例如多项式空间 $\\mathbb{P}_n$ 中的多项式或矩阵空间 $M_{m \\times n}$ 中的矩阵。例如 $\\mathbb{P}_3$ 含有 $1 - t^2$、$5t^3$，也含有常数 $7$，因为"次数至多为 $3$"包括更低的次数。\n\n> **注意。** $\\mathbb{P}_n$ 指次数至多为 $n$，而不是恰好为 $n$：仅由恰好 $n$ 次的多项式组成的集合对加法不封闭，因为 $t^n + (-t^n) = 0$。',
       ),
       generate(rng) {
         const n = rng.int(2, 30);
@@ -3385,19 +3775,53 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
           t(`Column vectors in $\\mathbb{R}^{${n}}$ whose entries are integers`, `分量为整数的 $\\mathbb{R}^{${n}}$ 列向量`),
           t(`All rational functions $p(x)/q(x)$ of degree at most $${n}$`, `次数不超过 $${n}$ 的所有有理分式 $p(x)/q(x)$`),
         ];
-        const solution = t(
-          `$\\mathbb{P}_n$ is defined as the set of all polynomials $p(t) = a_0 + a_1 t + \\dots + a_n t^n$ of degree $\\le n$. Any two such polynomials can be added and scaled by real numbers, staying in $\\mathbb{P}_n$.`,
-          `$\\mathbb{P}_n$ 定义为所有次数不超过 $n$ 的实系数多项式集合。两个多项式相加以及数乘后的结果仍为次数不超过 $n$ 的多项式。`,
+        const solution = walked(
+          [
+            [
+              ["Recall the definition", "回顾定义"],
+              t(
+                `$\\mathbb{P}_{${n}}$ is the set of all $p(t) = a_0 + a_1 t + \\dots + a_{${n}} t^{${n}}$ with real coefficients, so its degree is at most $${n}$, and the zero polynomial is included.`,
+                `$\\mathbb{P}_{${n}}$ 是所有实系数 $p(t) = a_0 + a_1 t + \\dots + a_{${n}} t^{${n}}$ 的集合，所以次数至多为 $${n}$，且包含零多项式。`,
+              ),
+            ],
+            [
+              ["Check the operations", "检验运算"],
+              t(
+                `Adding two such polynomials adds their coefficients, and scaling multiplies them, so the results are again in $\\mathbb{P}_{${n}}$: these polynomials are the vectors.`,
+                `两个这样的多项式相加就是系数相加，数乘就是系数相乘，结果仍在 $\\mathbb{P}_{${n}}$ 中：这些多项式就是向量。`,
+              ),
+            ],
+          ],
+          t(
+            `$t^{${n}} + (1 - t^{${n}}) = 1$ has degree $0$, and it is still in $\\mathbb{P}_{${n}}$, as it must be.`,
+            `$t^{${n}} + (1 - t^{${n}}) = 1$ 的次数为 $0$，仍在 $\\mathbb{P}_{${n}}$ 中，正应如此。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `Exact degree $${n}$ is too narrow: $t^{${n}} + (1 - t^{${n}}) = 1$ leaves that set, and the zero polynomial is not in it.`,
+            `恰好 $${n}$ 次太窄了：$t^{${n}} + (1 - t^{${n}}) = 1$ 不在这个集合中，零多项式也不在。`,
+          ],
+          [
+            wrong[1]!.en,
+            "The vectors of $\\mathbb{P}_n$ are polynomials, not columns of numbers, and integer entries are not closed under real multiples.",
+            "$\\mathbb{P}_n$ 的向量是多项式，不是数列，而且整数分量对实数倍不封闭。",
+          ],
+          [
+            wrong[2]!.en,
+            "A quotient $p(x)/q(x)$ is generally not a polynomial, so it is not an element of $\\mathbb{P}_n$.",
+            "商 $p(x)/q(x)$ 一般不是多项式，所以不是 $\\mathbb{P}_n$ 的元素。",
+          ],
+        ]);
       },
     },
     {
       id: "zero-vector-in-abstract-spaces",
       title: t("The zero vector in abstract spaces", "抽象空间中的零向量"),
       explanation: t(
-        "Every vector space $V$ has a unique zero vector $\\mathbf{0}$ satisfying $\\mathbf{v} + \\mathbf{0} = \\mathbf{v}$ for all $\\mathbf{v} \\in V$. In $\\mathbb{P}_n$ it is the zero polynomial $0$, in $M_{m \\times n}$ it is the $m \\times n$ zero matrix $O$, and in $C[a, b]$ it is the constant zero function $f(x) = 0$.",
-        "每个向量空间 $V$ 都有唯一的零向量 $\\mathbf{0}$，对所有 $\\mathbf{v} \\in V$ 满足 $\\mathbf{v} + \\mathbf{0} = \\mathbf{v}$。在 $\\mathbb{P}_n$ 中为零多项式 $0$，在 $M_{m \\times n}$ 中为 $m \\times n$ 零矩阵 $O$，在 $C[a, b]$ 中为恒零函数 $f(x) = 0$。",
+        "Every vector space $V$ has a unique zero vector $\\mathbf{0}$ satisfying $\\mathbf{v} + \\mathbf{0} = \\mathbf{v}$ for all $\\mathbf{v} \\in V$. In $\\mathbb{P}_n$ it is the zero polynomial $0$, in $M_{m \\times n}$ it is the $m \\times n$ zero matrix $O$, and in $C[a, b]$ it is the constant zero function $f(x) = 0$. For example, in $M_{2 \\times 3}$, $\\begin{pmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\end{pmatrix} + O$ leaves every entry unchanged.\n\n> **Watch out.** The zero vector belongs to the space itself: in a matrix space it is a matrix of the right size, not the number $0$ and not the identity matrix.",
+        "每个向量空间 $V$ 都有唯一的零向量 $\\mathbf{0}$，对所有 $\\mathbf{v} \\in V$ 满足 $\\mathbf{v} + \\mathbf{0} = \\mathbf{v}$。在 $\\mathbb{P}_n$ 中为零多项式 $0$，在 $M_{m \\times n}$ 中为 $m \\times n$ 零矩阵 $O$，在 $C[a, b]$ 中为恒零函数 $f(x) = 0$。例如在 $M_{2 \\times 3}$ 中，$\\begin{pmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\end{pmatrix} + O$ 的每个元素都不变。\n\n> **注意。** 零向量属于这个空间本身：在矩阵空间中它是尺寸合适的矩阵，不是数 $0$，也不是单位矩阵。",
       ),
       generate(rng) {
         const space = rng.pick(["matrices", "functions", "polynomials"]);
@@ -3417,11 +3841,45 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
             t(`The scalar number $0$`, `实数标量 $0$`),
             t(`The column vector of length $${m}$ with all 0s`, `长度为 $${m}$ 的全零列向量`),
           ];
-          const solution = t(
-            `The zero vector in $M_{${m} \\times ${n}}$ must satisfy $A + O = A$ for any $${m} \\times ${n}$ matrix $A$. This is uniquely the $${m} \\times ${n}$ matrix with all entries equal to 0.`,
-            `$M_{${m} \\times ${n}}$ 中的零向量必须满足对任意矩阵 $A$ 均有 $A + O = A$。这唯一对应元素全为 0 的 $${m} \\times ${n}$ 零矩阵。`,
+          const solution = walked(
+            [
+              [
+                ["State the requirement", "写出要求"],
+                t(
+                  `The zero vector $O$ must be an $${m} \\times ${n}$ matrix with $A + O = A$ for every $A$ in $M_{${m} \\times ${n}}$.`,
+                  `零向量 $O$ 必须是 $${m} \\times ${n}$ 矩阵，且对 $M_{${m} \\times ${n}}$ 中每个 $A$ 都有 $A + O = A$。`,
+                ),
+              ],
+              [
+                ["Solve entry by entry", "逐个元素求解"],
+                t(
+                  "Addition is entrywise, so each entry of $O$ satisfies $a_{ij} + o_{ij} = a_{ij}$, giving $o_{ij} = 0$.",
+                  "加法逐元素进行，所以 $O$ 的每个元素满足 $a_{ij} + o_{ij} = a_{ij}$，得 $o_{ij} = 0$。",
+                ),
+              ],
+            ],
+            t(
+              `Whatever the entries of $A$, adding the all-zero $${m} \\times ${n}$ matrix changes nothing, so $O$ is the zero vector.`,
+              `无论 $A$ 的元素是什么，加上全零的 $${m} \\times ${n}$ 矩阵都不改变它，所以 $O$ 是零向量。`,
+            ),
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+            [
+              wrong[0]!.en,
+              "$A + I$ adds $1$ to each diagonal entry, so it changes $A$; $I$ is the identity for multiplication, not addition.",
+              "$A + I$ 会给每个对角元加 $1$，改变了 $A$；$I$ 是乘法的单位元，不是加法的。",
+            ],
+            [
+              wrong[1]!.en,
+              `The number $0$ is not an element of $M_{${m} \\times ${n}}$; the zero vector must be a matrix of that size.`,
+              `数 $0$ 不是 $M_{${m} \\times ${n}}$ 的元素；零向量必须是这个尺寸的矩阵。`,
+            ],
+            [
+              wrong[2]!.en,
+              `A column of length $${m}$ is not an $${m} \\times ${n}$ matrix, so it cannot be added to the elements of this space.`,
+              `长度为 $${m}$ 的列不是 $${m} \\times ${n}$ 矩阵，不能与这个空间的元素相加。`,
+            ],
+          ]);
         }
         if (space === "functions") {
           const a = rng.int(-5, 0);
@@ -3439,11 +3897,45 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
             t(`The identity function $f(x) = x$`, `恒等函数 $f(x) = x$`),
             t(`The origin $(0, 0)$ in $\\mathbb{R}^2$`, `$\\mathbb{R}^2$ 中的原点 $(0, 0)$`),
           ];
-          const solution = t(
-            `The additive identity must satisfy $(f + z)(x) = f(x) + z(x) = f(x)$ for all $x \\in [${a}, ${b}]$, which requires $z(x) = 0$ identically.`,
-            `加法单位元需满足对任意函数 $f$ 及任意 $x \\in [${a}, ${b}]$ 均有 $(f+z)(x) = f(x)$，故必有 $z(x) \\equiv 0$。`,
+          const solution = walked(
+            [
+              [
+                ["State the requirement", "写出要求"],
+                t(
+                  `The zero vector $z$ must be a continuous function on $[${a}, ${b}]$ with $f + z = f$ for every $f$.`,
+                  `零向量 $z$ 必须是 $[${a}, ${b}]$ 上的连续函数，且对每个 $f$ 都有 $f + z = f$。`,
+                ),
+              ],
+              [
+                ["Solve point by point", "逐点求解"],
+                t(
+                  `Functions add pointwise, so $f(x) + z(x) = f(x)$ for each $x \\in [${a}, ${b}]$, giving $z(x) = 0$ everywhere.`,
+                  `函数逐点相加，所以对每个 $x \\in [${a}, ${b}]$ 有 $f(x) + z(x) = f(x)$，得处处 $z(x) = 0$。`,
+                ),
+              ],
+            ],
+            t(
+              `$z(x) = 0$ is continuous, so it lies in $C[${a}, ${b}]$, and $(f + z)(x) = f(x) + 0 = f(x)$.`,
+              `$z(x) = 0$ 是连续的，所以在 $C[${a}, ${b}]$ 中，且 $(f + z)(x) = f(x) + 0 = f(x)$。`,
+            ),
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+            [
+              wrong[0]!.en,
+              "Adding $1$ raises every value by $1$, so $f + 1 \\ne f$.",
+              "加上 $1$ 使每个函数值增加 $1$，所以 $f + 1 \\ne f$。",
+            ],
+            [
+              wrong[1]!.en,
+              "Adding $x$ changes $f(x)$ to $f(x) + x$; the identity function is not the additive zero.",
+              "加上 $x$ 把 $f(x)$ 变成 $f(x) + x$；恒等函数不是加法的零元。",
+            ],
+            [
+              wrong[2]!.en,
+              `A point of $\\mathbb{R}^2$ is not a function on $[${a}, ${b}]$, so it is not an element of this space.`,
+              `$\\mathbb{R}^2$ 中的点不是 $[${a}, ${b}]$ 上的函数，所以不是这个空间的元素。`,
+            ],
+          ]);
         }
         const k = rng.int(2, 10);
         const prompt = t(
@@ -3456,11 +3948,38 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
           t(`The monomial $p(t) = t^{${k}}$`, `单项式 $p(t) = t^{${k}}$`),
           t(`The zero vector in $\\mathbb{R}^{${k}}$`, `$\\mathbb{R}^{${k}}$ 中的零向量`),
         ];
-        const solution = t(
-          `The zero vector in $\\mathbb{P}_{${k}}$ is the zero polynomial whose coefficients are all zero, satisfying $q(t) + 0 = q(t)$ for every $q(t) \\in \\mathbb{P}_{${k}}$.`,
-          `$\\mathbb{P}_{${k}}$ 中的零向量是所有系数均为零的零多项式，满足对任意 $q(t) \\in \\mathbb{P}_{${k}}$ 均有 $q(t) + 0 = q(t)$。`,
+        const solution = walked(
+          [
+            [
+              ["State the requirement", "写出要求"],
+              t(
+                `The zero vector must be a polynomial $z$ in $\\mathbb{P}_{${k}}$ with $q + z = q$ for every $q$.`,
+                `零向量必须是 $\\mathbb{P}_{${k}}$ 中的多项式 $z$，且对每个 $q$ 都有 $q + z = q$。`,
+              ),
+            ],
+            [
+              ["Solve coefficient by coefficient", "逐个系数求解"],
+              t(
+                "Polynomials add coefficient by coefficient, so every coefficient of $z$ must be $0$: $z(t) = 0$.",
+                "多项式逐项系数相加，所以 $z$ 的每个系数都必须为 $0$：$z(t) = 0$。",
+              ),
+            ],
+          ],
+          t(`For $q(t) = 1 + t^{${k}}$, $q + 0 = 1 + t^{${k}} = q$.`, `对 $q(t) = 1 + t^{${k}}$，$q + 0 = 1 + t^{${k}} = q$。`),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "Adding $1$ raises the constant term, so $q + 1 \\ne q$.", "加上 $1$ 会改变常数项，所以 $q + 1 \\ne q$。"],
+          [
+            wrong[1]!.en,
+            `Adding $t^{${k}}$ raises the top coefficient by $1$, so it changes $q$.`,
+            `加上 $t^{${k}}$ 使最高次系数增加 $1$，改变了 $q$。`,
+          ],
+          [
+            wrong[2]!.en,
+            `A vector of $\\mathbb{R}^{${k}}$ is not a polynomial; besides, $\\mathbb{P}_{${k}}$ has $${k + 1}$ coefficients, not $${k}$.`,
+            `$\\mathbb{R}^{${k}}$ 中的向量不是多项式；而且 $\\mathbb{P}_{${k}}$ 有 $${k + 1}$ 个系数，而不是 $${k}$ 个。`,
+          ],
+        ]);
       },
     },
   ],
@@ -3474,6 +3993,10 @@ export const definingAbstractVectorSpaces: TopicDef = {
     "Examine the eight vector space axioms governing addition and scalar multiplication, and determine whether a given set and operations form a vector space.",
     "掌握支配向量加法与标量乘法的八条公理，并检验给定的集合与代数运算是否构成向量空间。",
   ),
+  intro: t(
+    "Define addition on $\\mathbb{R}^2$ by $(x, y) \\oplus (u, v) = (x + u + 1, y + v)$ and keep the usual scaling. With $c = 2$ and $\\mathbf{u} = \\mathbf{v} = (0, 0)$: $2(\\mathbf{u} \\oplus \\mathbf{v}) = 2(1, 0) = (2, 0)$, but $2\\mathbf{u} \\oplus 2\\mathbf{v} = (0, 0) \\oplus (0, 0) = (1, 0)$.\n\nCheck: $(2, 0) \\ne (1, 0)$, so the axiom $c(\\mathbf{u} \\oplus \\mathbf{v}) = c\\mathbf{u} \\oplus c\\mathbf{v}$ fails and these operations do not make $\\mathbb{R}^2$ a vector space.\n\nIn this lesson we name the vector space axioms and test them on operations that are defined in unusual ways.",
+    "在 $\\mathbb{R}^2$ 上定义加法 $(x, y) \\oplus (u, v) = (x + u + 1, y + v)$，数乘照常。取 $c = 2$、$\\mathbf{u} = \\mathbf{v} = (0, 0)$：$2(\\mathbf{u} \\oplus \\mathbf{v}) = 2(1, 0) = (2, 0)$，而 $2\\mathbf{u} \\oplus 2\\mathbf{v} = (0, 0) \\oplus (0, 0) = (1, 0)$。\n\n检验：$(2, 0) \\ne (1, 0)$，所以公理 $c(\\mathbf{u} \\oplus \\mathbf{v}) = c\\mathbf{u} \\oplus c\\mathbf{v}$ 不成立，这样的运算不能使 $\\mathbb{R}^2$ 成为向量空间。\n\n本课我们说出向量空间的各条公理，并在定义特殊的运算上检验它们。",
+  ),
   prerequisites: ["introduction-to-abstract-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -3483,13 +4006,21 @@ export const definingAbstractVectorSpaces: TopicDef = {
       id: "identify-vector-space-axioms",
       title: t("Identifying vector space axioms", "识别向量空间公理"),
       explanation: t(
-        "The axioms include associativity and commutativity of addition, existence of zero and additive inverses, distributivity of scalar multiplication over vector addition $c(u+v) = cu+cv$, distributivity over scalar addition $(c+d)u = cu+du$, associativity of scaling $c(du) = (cd)u$, and $1u = u$.",
-        "公理包括加法结合律、加法交换律、零元存在性、负元存在性、数乘对向量加法的分配律 $c(u+v) = cu+cv$、数乘对标量加法的分配律 $(c+d)u = cu+du$、数乘结合律 $c(du) = (cd)u$ 以及标量乘单位元 $1u = u$。",
+        "The axioms include associativity and commutativity of addition, existence of zero and additive inverses, distributivity of scalar multiplication over vector addition $c(u+v) = cu+cv$, distributivity over scalar addition $(c+d)u = cu+du$, associativity of scaling $c(du) = (cd)u$, and $1u = u$. For example, $3(\\mathbf{u} + \\mathbf{v}) = 3\\mathbf{u} + 3\\mathbf{v}$ has one scalar and two vectors, so it is distributivity over vector addition, while $(2 + 3)\\mathbf{u} = 2\\mathbf{u} + 3\\mathbf{u}$ has two scalars and one vector.\n\n> **Watch out.** To tell the two distributive laws apart, look at what is being added inside the parentheses: two vectors, or two scalars.",
+        "公理包括加法结合律、加法交换律、零元存在性、负元存在性、数乘对向量加法的分配律 $c(u+v) = cu+cv$、数乘对标量加法的分配律 $(c+d)u = cu+du$、数乘结合律 $c(du) = (cd)u$ 以及标量乘单位元 $1u = u$。例如 $3(\\mathbf{u} + \\mathbf{v}) = 3\\mathbf{u} + 3\\mathbf{v}$ 中有一个标量和两个向量，是对向量加法的分配律；而 $(2 + 3)\\mathbf{u} = 2\\mathbf{u} + 3\\mathbf{u}$ 中有两个标量和一个向量。\n\n> **注意。** 区分两条分配律，要看括号里相加的是什么：两个向量，还是两个标量。",
       ),
       generate(rng) {
         const type = rng.pick(["distrib-vector", "distrib-scalar", "assoc-scalar", "inverse"]);
         const sc1 = rng.nonZero(-5, 5);
         const sc2 = rng.nonZero(-5, 5);
+        const two = (readEn: string, readZh: string, nameEn: string, nameZh: string, check: Text) =>
+          walked(
+            [
+              [["Read the identity", "读等式"], t(readEn, readZh)],
+              [["Name the axiom", "说出公理"], t(nameEn, nameZh)],
+            ],
+            check,
+          );
         if (type === "distrib-vector") {
           const prompt = t(
             `Which vector space axiom is demonstrated by the identity $${sc1}(\\mathbf{u} + \\mathbf{v}) = ${poly([sc1, "\\mathbf{u}"], [sc1, "\\mathbf{v}"])}$ for scalar $c = ${sc1}$ and vectors $\\mathbf{u}, \\mathbf{v}$?`,
@@ -3501,11 +4032,26 @@ export const definingAbstractVectorSpaces: TopicDef = {
             t(`Associativity of vector addition`, `向量加法的结合律`),
             t(`Commutativity of scalar multiplication`, `标量乘法的交换律`),
           ];
-          const solution = t(
-            `The scalar distributes over the sum of two vectors $(\\mathbf{u} + \\mathbf{v})$, which is the distributive property of scalar multiplication over vector addition.`,
-            `标量分配到两个向量的和 $(\\mathbf{u} + \\mathbf{v})$ 上，属于标量乘法对向量加法的分配律。`,
+          const solution = two(
+            `Inside the parentheses two vectors are added, $\\mathbf{u} + \\mathbf{v}$, and one scalar $${sc1}$ multiplies the sum.`,
+            `括号里是两个向量相加 $\\mathbf{u} + \\mathbf{v}$，一个标量 $${sc1}$ 乘这个和。`,
+            "The scalar is spread over the sum of vectors: distributivity over vector addition, $c(\\mathbf{u} + \\mathbf{v}) = c\\mathbf{u} + c\\mathbf{v}$.",
+            "标量分配到向量的和上：对向量加法的分配律 $c(\\mathbf{u} + \\mathbf{v}) = c\\mathbf{u} + c\\mathbf{v}$。",
+            t(`With $c = ${sc1}$ the general law reads exactly as the given identity.`, `取 $c = ${sc1}$，一般规律正好就是所给等式。`),
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+            [
+              wrong[0]!.en,
+              "That law adds two scalars, $(c + d)\\mathbf{u}$; here two vectors are added.",
+              "那条规律是两个标量相加 $(c + d)\\mathbf{u}$；这里相加的是两个向量。",
+            ],
+            [
+              wrong[1]!.en,
+              "Associativity regroups three vectors in a sum; no scalar is involved.",
+              "结合律是对三个向量之和重新分组；不涉及标量。",
+            ],
+            [wrong[2]!.en, "There is no such axiom, and nothing here is swapped.", "没有这样的公理，这里也没有交换任何东西。"],
+          ]);
         }
         if (type === "distrib-scalar") {
           const prompt = t(
@@ -3518,11 +4064,33 @@ export const definingAbstractVectorSpaces: TopicDef = {
             t(`Associativity of scalar multiplication`, `标量乘法的结合律`),
             t(`Existence of additive identity`, `加法单位元的存在性`),
           ];
-          const solution = t(
-            `The sum of two scalars scales a single vector $\\mathbf{u}$, distributing across the scalar addition.`,
-            `两个标量的和与向量 $\\mathbf{u}$ 做数乘，属于标量乘法对标量加法的分配律。`,
+          const solution = two(
+            `Inside the parentheses two scalars are added, $${sc1} + ${paren(sc2)}$, and the sum multiplies one vector $\\mathbf{u}$.`,
+            `括号里是两个标量相加 $${sc1} + ${paren(sc2)}$，这个和乘一个向量 $\\mathbf{u}$。`,
+            "The vector is spread over the sum of scalars: distributivity over scalar addition, $(c + d)\\mathbf{u} = c\\mathbf{u} + d\\mathbf{u}$.",
+            "向量分配到标量的和上：对标量加法的分配律 $(c + d)\\mathbf{u} = c\\mathbf{u} + d\\mathbf{u}$。",
+            t(
+              `With $c = ${sc1}$ and $d = ${sc2}$ the general law reads exactly as the given identity.`,
+              `取 $c = ${sc1}$、$d = ${sc2}$，一般规律正好就是所给等式。`,
+            ),
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+            [
+              wrong[0]!.en,
+              "That law adds two vectors, $c(\\mathbf{u} + \\mathbf{v})$; here two scalars are added.",
+              "那条规律是两个向量相加 $c(\\mathbf{u} + \\mathbf{v})$；这里相加的是两个标量。",
+            ],
+            [
+              wrong[1]!.en,
+              "Associativity of scaling multiplies scalars one after another, $c(d\\mathbf{u})$; here they are added.",
+              "数乘结合律是标量逐次相乘 $c(d\\mathbf{u})$；这里是标量相加。",
+            ],
+            [
+              wrong[2]!.en,
+              "The additive identity is about $\\mathbf{u} + \\mathbf{0} = \\mathbf{u}$; no zero vector appears here.",
+              "加法单位元说的是 $\\mathbf{u} + \\mathbf{0} = \\mathbf{u}$；这里没有出现零向量。",
+            ],
+          ]);
         }
         if (type === "assoc-scalar") {
           const prompt = t(
@@ -3535,11 +4103,33 @@ export const definingAbstractVectorSpaces: TopicDef = {
             t(`Distributivity of scalar multiplication`, `标量乘法的分配律`),
             t(`Unitary property of scalar multiplication`, `标量乘法的单位元性质`),
           ];
-          const solution = t(
-            `Scaling by $d$ then by $c$ is the same as scaling by the product $cd$, which is scalar multiplication associativity.`,
-            `先数乘 $d$ 再数乘 $c$ 等于直接数乘积 $cd$，这是标量乘法的结合律。`,
+          const solution = two(
+            `The vector is scaled by $${sc2}$ and then by $${sc1}$, and the result equals one scaling by $${sc1} \\cdot ${paren(sc2)} = ${sc1 * sc2}$.`,
+            `向量先乘 $${sc2}$ 再乘 $${sc1}$，结果等于一次乘以 $${sc1} \\cdot ${paren(sc2)} = ${sc1 * sc2}$。`,
+            "Two scalings combine into one by multiplying the scalars: associativity of scalar multiplication, $c(d\\mathbf{u}) = (cd)\\mathbf{u}$.",
+            "两次数乘可合并为一次，标量相乘：标量乘法的结合律 $c(d\\mathbf{u}) = (cd)\\mathbf{u}$。",
+            t(
+              `With $c = ${sc1}$ and $d = ${sc2}$, $cd = ${sc1 * sc2}$, matching the right side.`,
+              `取 $c = ${sc1}$、$d = ${sc2}$，$cd = ${sc1 * sc2}$，与右边一致。`,
+            ),
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+            [
+              wrong[0]!.en,
+              "Commutativity swaps two vectors in a sum; there is no sum of vectors here.",
+              "交换律交换和中的两个向量；这里没有向量之和。",
+            ],
+            [
+              wrong[1]!.en,
+              "A distributive law needs a sum inside the parentheses; here there is a product.",
+              "分配律需要括号里有和；这里是积。",
+            ],
+            [
+              wrong[2]!.en,
+              "The unitary property is $1\\mathbf{u} = \\mathbf{u}$, about the scalar $1$ only.",
+              "单位元性质是 $1\\mathbf{u} = \\mathbf{u}$，只涉及标量 $1$。",
+            ],
+          ]);
         }
         const prompt = t(
           `For a vector $\\mathbf{u}$, which vector space axiom guarantees that there exists a vector $-\\mathbf{u}$ such that $\\mathbf{u} + (-\\mathbf{u}) = \\mathbf{0}$?`,
@@ -3551,19 +4141,41 @@ export const definingAbstractVectorSpaces: TopicDef = {
           t(`Closure under scalar multiplication`, `标量乘法的封闭性`),
           t(`Commutativity of addition`, `加法交换律`),
         ];
-        const solution = t(
-          `This is the axiom asserting the existence of an additive inverse for every element in the space.`,
-          `这是保证集合中每一个元素都存在加法逆元（负向量）的公理。`,
+        const solution = two(
+          "The statement asks for a partner $-\\mathbf{u}$ that adds with $\\mathbf{u}$ to give $\\mathbf{0}$.",
+          "这句话要求有一个伙伴 $-\\mathbf{u}$，与 $\\mathbf{u}$ 相加得 $\\mathbf{0}$。",
+          "A vector that cancels $\\mathbf{u}$ is its additive inverse, and the axiom that guarantees it is the existence of additive inverses.",
+          "抵消 $\\mathbf{u}$ 的向量是它的加法逆元，保证它存在的公理是加法逆元的存在性。",
+          t(
+            "In $\\mathbb{R}^2$, $(3, -1) + (-3, 1) = (0, 0)$, so $(-3, 1)$ is the inverse of $(3, -1)$.",
+            "在 $\\mathbb{R}^2$ 中，$(3, -1) + (-3, 1) = (0, 0)$，所以 $(-3, 1)$ 是 $(3, -1)$ 的逆元。",
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "That axiom gives the zero vector $\\mathbf{0}$ itself, not a partner for each $\\mathbf{u}$.",
+            "那条公理给出零向量 $\\mathbf{0}$ 本身，而不是每个 $\\mathbf{u}$ 的伙伴。",
+          ],
+          [
+            wrong[1]!.en,
+            "Closure says $c\\mathbf{u}$ stays in the space; it does not say that a sum can return to $\\mathbf{0}$.",
+            "封闭性说 $c\\mathbf{u}$ 仍在空间中；它不保证某个和能回到 $\\mathbf{0}$。",
+          ],
+          [
+            wrong[2]!.en,
+            "Commutativity says $\\mathbf{u} + \\mathbf{v} = \\mathbf{v} + \\mathbf{u}$; it does not produce any new vector.",
+            "交换律说 $\\mathbf{u} + \\mathbf{v} = \\mathbf{v} + \\mathbf{u}$；它不产生新的向量。",
+          ],
+        ]);
       },
     },
     {
       id: "verify-nonstandard-operations",
       title: t("Testing non-standard operations", "检验非标准运算是否满足公理"),
       explanation: t(
-        "When addition or scalar multiplication is redefined non-standardly, one or more axioms may fail. For example, if $c(x, y) = (cx, 0)$, the identity axiom $1\\mathbf{u} = \\mathbf{u}$ fails when $y \\neq 0$.",
-        "当重新定义非标准的加法或数乘时，某些公理可能不成立。例如若定义 $c(x, y) = (cx, 0)$，当 $y \\neq 0$ 时单位元公理 $1\\mathbf{u} = \\mathbf{u}$ 将失效。",
+        "When addition or scalar multiplication is redefined non-standardly, one or more axioms may fail. For example, if $c(x, y) = (cx, 0)$, the identity axiom $1\\mathbf{u} = \\mathbf{u}$ fails when $y \\neq 0$: $1(2, 5) = (2, 0) \\ne (2, 5)$. To show an axiom fails, one specific counterexample with numbers is enough.\n\n> **Watch out.** An axiom that holds for the usual operations may fail for the new ones, so test each law with the new definitions, starting from the simplest vectors such as $\\mathbf{0}$.",
+        "当重新定义非标准的加法或数乘时，某些公理可能不成立。例如若定义 $c(x, y) = (cx, 0)$，当 $y \\neq 0$ 时单位元公理 $1\\mathbf{u} = \\mathbf{u}$ 将失效：$1(2, 5) = (2, 0) \\ne (2, 5)$。要说明某条公理不成立，一个具体的数值反例就够了。\n\n> **注意。** 对通常运算成立的公理，对新运算可能不成立，所以要用新定义逐条检验，从 $\\mathbf{0}$ 这样最简单的向量开始。",
       ),
       generate(rng) {
         const k = rng.nonZero(-25, 25);
@@ -3580,9 +4192,29 @@ export const definingAbstractVectorSpaces: TopicDef = {
           t(`Closure under vector addition fails`, `向量加法封闭性不成立`),
           t(`Associativity of scalar multiplication fails`, `标量乘法结合律不成立`),
         ];
-        const solution = t(
-          `For scalar $c = 2$ and $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$, $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$, while $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$. Thus distributivity over vector addition fails.`,
-          `取标量 $c = 2$ 及 $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$，左边 $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$，而右边 $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$。因此分配律失效。`,
+        const solution = walked(
+          [
+            [
+              ["Take simple vectors", "取简单的向量"],
+              t(
+                `Let $c = 2$ and $\\mathbf{u} = \\mathbf{v} = (0, 0)$. Then $\\mathbf{u} \\oplus \\mathbf{v} = (${k}, 0)$, so:`,
+                `取 $c = 2$，$\\mathbf{u} = \\mathbf{v} = (0, 0)$。则 $\\mathbf{u} \\oplus \\mathbf{v} = (${k}, 0)$，所以：`,
+              ),
+              [`c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)`],
+            ],
+            [
+              ["Compute the other side", "计算另一边"],
+              t(
+                "Scaling first gives $c\\mathbf{u} = c\\mathbf{v} = (0, 0)$, so:",
+                "先数乘得 $c\\mathbf{u} = c\\mathbf{v} = (0, 0)$，所以：",
+              ),
+              [`c\\mathbf{u} \\oplus c\\mathbf{v} = (0, 0) \\oplus (0, 0) = (${k}, 0)`],
+            ],
+          ],
+          t(
+            `$(${2 * k}, 0) \\ne (${k}, 0)$ because $${k} \\ne 0$, so distributivity over vector addition fails.`,
+            `因为 $${k} \\ne 0$，$(${2 * k}, 0) \\ne (${k}, 0)$，所以对向量加法的分配律不成立。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [wrong[0]!.en, "Swapping the two vectors gives the same sums, so commutativity holds.", "交换两个向量，和不变，所以交换律成立。"],
@@ -3602,6 +4234,10 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
     "Determine whether sets of polynomials in $\\mathbb{P}_n$ or matrices in $M_{m \\times n}$ are linearly independent by setting linear combinations equal to the zero vector.",
     "通过令线性组合等于零向量，判定 $\\mathbb{P}_n$ 中的多项式组或 $M_{m \\times n}$ 中的矩阵组是否线性无关。",
   ),
+  intro: t(
+    "Are $1 + t$, $t$ and $t^2$ independent in $\\mathbb{P}_2$? Set $c_1(1 + t) + c_2 t + c_3 t^2 = 0$ and compare coefficients: the constant term gives $c_1 = 0$, the $t$ term gives $c_1 + c_2 = 0$, so $c_2 = 0$, and the $t^2$ term gives $c_3 = 0$.\n\nCheck: only the trivial combination gives the zero polynomial, so the three polynomials are independent; a relation such as $1 + t = t + 1 \\cdot 1$ would need the polynomial $1$, which is not in the set.\n\nIn this lesson we test sets of polynomials and of matrices for independence by setting a combination equal to the zero vector and comparing coefficients or entries.",
+    "$1 + t$、$t$、$t^2$ 在 $\\mathbb{P}_2$ 中线性无关吗？令 $c_1(1 + t) + c_2 t + c_3 t^2 = 0$ 并比较系数：常数项给出 $c_1 = 0$，$t$ 项给出 $c_1 + c_2 = 0$，所以 $c_2 = 0$，$t^2$ 项给出 $c_3 = 0$。\n\n检验：只有平凡组合得到零多项式，所以三个多项式线性无关；像 $1 + t = t + 1 \\cdot 1$ 这样的关系需要多项式 $1$，而它不在集合中。\n\n本课我们令组合等于零向量，比较系数或元素，检验多项式组和矩阵组是否线性无关。",
+  ),
   prerequisites: ["defining-abstract-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -3611,8 +4247,8 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
       id: "independence-of-polynomials",
       title: t("Linear independence of polynomials in $\\mathbb{P}_2$", "$\\mathbb{P}_2$ 中多项式组的线性相关性"),
       explanation: t(
-        "Polynomials $p_1, \\dots, p_k$ are linearly independent if $c_1p_1(t) + \\dots + c_kp_k(t) = 0$ for all $t$ implies $c_1 = \\dots = c_k = 0$. Equating coefficients of like powers yields a linear system.",
-        "若由 $c_1p_1(t) + \\dots + c_kp_k(t) \\equiv 0$ 能推出 $c_1 = \\dots = c_k = 0$，则多项式组线性无关。通过比较同次项系数可转化为常系数线性方程组。",
+        "Polynomials $p_1, \\dots, p_k$ are linearly independent if $c_1p_1(t) + \\dots + c_kp_k(t) = 0$ for all $t$ implies $c_1 = \\dots = c_k = 0$. Equating coefficients of like powers yields a linear system. For example, $p_1 = 1 + t$, $p_2 = t$, $p_3 = 2 + 3t$ are dependent: $2p_1 + p_2 = 2 + 3t = p_3$.\n\n> **Watch out.** The combination must be the zero polynomial for every $t$, not just at one value of $t$; compare all the coefficients.",
+        "若由 $c_1p_1(t) + \\dots + c_kp_k(t) \\equiv 0$ 能推出 $c_1 = \\dots = c_k = 0$，则多项式组线性无关。通过比较同次项系数可转化为常系数线性方程组。例如 $p_1 = 1 + t$，$p_2 = t$，$p_3 = 2 + 3t$ 线性相关：$2p_1 + p_2 = 2 + 3t = p_3$。\n\n> **注意。** 组合必须对每个 $t$ 都是零多项式，而不只在某一个 $t$ 处为零；要比较全部系数。",
       ),
       generate(rng) {
         const isDep = rng.bool();
@@ -3642,24 +4278,95 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
               t(`Linearly dependent, because $p_1(0) \\neq 0$`, `线性相关，因为 $p_1(0) \\neq 0$`),
               t(`Linearly dependent, because $p_1(t) + p_2(t) = p_3(t)$`, `线性相关，因为 $p_1(t) + p_2(t) = p_3(t)$`),
             ];
+        const sum2 = formatPoly2(2, 2 * a, 0);
+        const sum12 = formatPoly2(1, a + 1, b);
         const solution = isDep
-          ? t(
-              `Notice that $p_3(t) = 2p_1(t) + p_2(t)$. Since one polynomial is a linear combination of the others, the set is linearly dependent.`,
-              `注意到 $p_3(t) = 2p_1(t) + p_2(t)$。因其中一个多项式是其余多项式的线性组合，故该多项式组线性相关。`,
+          ? walked(
+              [
+                [
+                  ["Match the constant term", "对齐常数项"],
+                  t(
+                    `Only $p_1$ and $p_3$ have constant terms, $1$ and $2$, so try $2p_1$:`,
+                    `只有 $p_1$ 和 $p_3$ 有常数项，分别为 $1$ 和 $2$，所以试 $2p_1$：`,
+                  ),
+                  [`2p_1(t) = ${sum2}`],
+                ],
+                [
+                  ["Add $p_2$", "加上 $p_2$"],
+                  t(`Adding $p_2(t) = ${p2Str}$ gives:`, `加上 $p_2(t) = ${p2Str}$ 得：`),
+                  [`2p_1(t) + p_2(t) = ${p3Str} = p_3(t)`],
+                ],
+              ],
+              t(
+                `$2p_1 + p_2 - p_3 = 0$ has the nonzero weights $2, 1, -1$, so the set is dependent.`,
+                `$2p_1 + p_2 - p_3 = 0$ 的权重 $2, 1, -1$ 不全为零，所以线性相关。`,
+              ),
             )
-          : t(
-              `Setting $c_1 p_1(t) + c_2 p_2(t) + c_3 p_3(t) = 0$ and equating coefficients of $1, t, t^2$ gives an upper triangular system with nonzero diagonal entries, which has only the trivial solution $c_1 = c_2 = c_3 = 0$. Thus the set is linearly independent.`,
-              `令 $c_1 p_1(t) + c_2 p_2(t) + c_3 p_3(t) = 0$，比较常数项、一次项与二次项系数，得到对角元非零的三角方程组，仅有零解 $c_1 = c_2 = c_3 = 0$。因此线性无关。`,
+          : walked(
+              [
+                [
+                  ["Compare coefficients", "比较系数"],
+                  t(
+                    `Set $c_1(${p1Str}) + c_2(${p2Str}) + c_3 t^2 = 0$. The coefficients of $1$, $t$ and $t^2$ give:`,
+                    `令 $c_1(${p1Str}) + c_2(${p2Str}) + c_3 t^2 = 0$。$1$、$t$、$t^2$ 的系数给出：`,
+                  ),
+                  [`c_1 = 0`, `${a === 1 ? "" : a === -1 ? "-" : a}c_1 + c_2 = 0`, `${b === 1 ? "" : b === -1 ? "-" : b}c_2 + c_3 = 0`],
+                ],
+                [
+                  ["Solve in order", "依次求解"],
+                  t(
+                    "The first equation gives $c_1 = 0$, then the second gives $c_2 = 0$, and the third gives $c_3 = 0$.",
+                    "第一个方程给出 $c_1 = 0$，再由第二个得 $c_2 = 0$，由第三个得 $c_3 = 0$。",
+                  ),
+                ],
+              ],
+              t(
+                `Only the trivial combination works, so the set is independent; for instance $p_1 + p_2 = ${sum12} \\ne t^2$.`,
+                `只有平凡组合成立，所以线性无关；例如 $p_1 + p_2 = ${sum12} \\ne t^2$。`,
+              ),
             );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(
+          oneOf(rng, prompt, right, wrong, solution),
+          isDep
+            ? [
+                [
+                  wrong[0]!.en,
+                  "$p_2$ and $p_3$ both have degree $2$, and in any case different degrees would not rule out a relation among three polynomials here.",
+                  "$p_2$ 和 $p_3$ 都是 $2$ 次的；而且这里次数不同也不能排除三个多项式之间的关系。",
+                ],
+                [
+                  wrong[1]!.en,
+                  "Nonzero polynomials can still be dependent: here $p_3 = 2p_1 + p_2$.",
+                  "非零多项式仍可能线性相关：这里 $p_3 = 2p_1 + p_2$。",
+                ],
+                [
+                  wrong[2]!.en,
+                  "$2p_1 + p_2 - p_3$ is the zero polynomial, zero for every $t$, not only at $t = 0$.",
+                  "$2p_1 + p_2 - p_3$ 是零多项式，对每个 $t$ 都为零，而不只在 $t = 0$ 处。",
+                ],
+              ]
+            : [
+                [
+                  wrong[0]!.en,
+                  "$\\mathbb{P}_2$ has dimension $3$, so $3$ polynomials can be independent; dependence needs more than $3$.",
+                  "$\\mathbb{P}_2$ 的维数是 $3$，所以 $3$ 个多项式可以线性无关；超过 $3$ 个才必定相关。",
+                ],
+                [
+                  wrong[1]!.en,
+                  "A nonzero value at one point says nothing about dependence; compare all coefficients.",
+                  "某一点处的值非零与相关性无关；要比较全部系数。",
+                ],
+                [wrong[2]!.en, `$p_1 + p_2 = ${sum12}$, which is not $t^2$.`, `$p_1 + p_2 = ${sum12}$，不是 $t^2$。`],
+              ],
+        );
       },
     },
     {
       id: "independence-of-matrices-m22",
       title: t("Linear independence of matrices in M_{2×2}", "M_{2×2} 中矩阵组的线性相关性"),
       explanation: t(
-        "Matrices form a vector space too, so independence is tested exactly as for vectors, by setting a combination equal to the zero matrix and solving for the weights. A set of matrices $\\{A_1, \\dots, A_k\\}$ is linearly independent if $c_1A_1 + \\dots + c_kA_k = O$ implies all scalars $c_i = 0$.",
-        "矩阵也构成向量空间，所以检验线性无关的方法与向量完全相同：令组合等于零矩阵，求出权重。若 $c_1A_1 + \\dots + c_kA_k = O$ 蕴含所有标量 $c_i = 0$，则矩阵组 $\\{A_1, \\dots, A_k\\}$ 线性无关。",
+        "Matrices form a vector space too, so independence is tested exactly as for vectors, by setting a combination equal to the zero matrix and solving for the weights. A set of matrices $\\{A_1, \\dots, A_k\\}$ is linearly independent if $c_1A_1 + \\dots + c_kA_k = O$ implies all scalars $c_i = 0$. For example, $c_1\\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix} + c_2\\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix} = \\begin{pmatrix} c_1 & c_2 \\\\ c_2 & 0 \\end{pmatrix}$ is $O$ only when $c_1 = c_2 = 0$, so these two matrices are independent.\n\n> **Watch out.** Each entry gives its own equation; properties such as invertibility, determinants or traces of the single matrices do not decide independence.",
+        "矩阵也构成向量空间，所以检验线性无关的方法与向量完全相同：令组合等于零矩阵，求出权重。若 $c_1A_1 + \\dots + c_kA_k = O$ 蕴含所有标量 $c_i = 0$，则矩阵组 $\\{A_1, \\dots, A_k\\}$ 线性无关。例如 $c_1\\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix} + c_2\\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix} = \\begin{pmatrix} c_1 & c_2 \\\\ c_2 & 0 \\end{pmatrix}$ 只有在 $c_1 = c_2 = 0$ 时才是 $O$，所以这两个矩阵线性无关。\n\n> **注意。** 每个元素给出一个方程；单个矩阵是否可逆、行列式或迹是多少，都不能决定线性相关性。",
       ),
       generate(rng) {
         const isDep = rng.bool();
@@ -3673,18 +4380,15 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
           [0, 1],
           [b, 0],
         ];
-        let A3: number[][];
-        if (isDep) {
-          A3 = [
-            [2, 1],
-            [b, 2 * a],
-          ];
-        } else {
-          A3 = [
-            [0, 0],
-            [1, 0],
-          ];
-        }
+        const A3 = isDep
+          ? [
+              [2, 1],
+              [b, 2 * a],
+            ]
+          : [
+              [0, 0],
+              [1, 0],
+            ];
         const prompt = t(
           `Determine whether the set $\\left\\{ ${matLatex(A1)}, ${matLatex(A2)}, ${matLatex(A3)} \\right\\}$ in $M_{2 \\times 2}$ is linearly independent.`,
           `判断 $M_{2 \\times 2}$ 中的矩阵组 $\\left\\{ ${matLatex(A1)}, ${matLatex(A2)}, ${matLatex(A3)} \\right\\}$ 是否线性无关。`,
@@ -3709,16 +4413,95 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
               t(`Linearly dependent, because one matrix has zero determinant`, `线性相关，因为其中一个矩阵的行列式为 0`),
               t(`Linearly dependent, because $A_1 + A_2 = A_3$`, `线性相关，因为 $A_1 + A_2 = A_3$`),
             ];
+        const combo = (x: string, y: string, z: string) =>
+          `\\begin{pmatrix} ${x} & ${y} \\\\ ${z} & ${a === 1 ? "" : a === -1 ? "-" : a}c_1 \\end{pmatrix}`;
         const solution = isDep
-          ? t(
-              `Entry-by-entry inspection reveals $A_3 = 2A_1 + A_2$. Thus $2A_1 + A_2 - A_3 = O$ is a non-trivial linear relation, proving linear dependence.`,
-              `对应位置逐项比对可知 $A_3 = 2A_1 + A_2$。故 $2A_1 + A_2 - A_3 = O$ 为非平凡相关关系，证明矩阵组线性相关。`,
+          ? walked(
+              [
+                [
+                  ["Match the top row", "对齐第一行"],
+                  t(
+                    "The top row of the third matrix is $(2, 1)$, which is $2$ times that of $A_1$ plus that of $A_2$. So try $2A_1 + A_2$:",
+                    "第三个矩阵的第一行是 $(2, 1)$，等于 $A_1$ 第一行的 $2$ 倍加 $A_2$ 的第一行。所以试 $2A_1 + A_2$：",
+                  ),
+                  [
+                    `2A_1 + A_2 = ${matLatex([
+                      [2, 0],
+                      [0, 2 * a],
+                    ])} + ${matLatex(A2)} = ${matLatex(A3)}`,
+                  ],
+                ],
+                [
+                  ["Conclude", "得出结论"],
+                  t(
+                    "This is the third matrix, so $2A_1 + A_2 - A_3 = O$ is a relation with nonzero weights.",
+                    "这正是第三个矩阵，所以 $2A_1 + A_2 - A_3 = O$ 是权重不全为零的关系。",
+                  ),
+                ],
+              ],
+              t(
+                `The bottom row matches too: $2 \\cdot 0 + ${paren(b)} = ${b}$ and $2 \\cdot ${paren(a)} + 0 = ${2 * a}$.`,
+                `第二行也吻合：$2 \\cdot 0 + ${paren(b)} = ${b}$，$2 \\cdot ${paren(a)} + 0 = ${2 * a}$。`,
+              ),
             )
-          : t(
-              `Setting $c_1 A_1 + c_2 A_2 + c_3 A_3 = O$ yields one equation for each entry. The top row gives $c_1 = 0$ and $c_2 = 0$, and then the bottom left entry gives $c_3 = 0$. Hence only the trivial solution exists, so the matrices are linearly independent.`,
-              `令 $c_1 A_1 + c_2 A_2 + c_3 A_3 = O$，每个位置的元素给出一个方程。第一行给出 $c_1 = 0$ 和 $c_2 = 0$，于是左下角的元素给出 $c_3 = 0$。只有平凡零解，故线性无关。`,
+          : walked(
+              [
+                [
+                  ["Write the combination", "写出组合"],
+                  t("Entry by entry, $c_1A_1 + c_2A_2 + c_3A_3$ is:", "逐个元素，$c_1A_1 + c_2A_2 + c_3A_3$ 为："),
+                  [combo("c_1", "c_2", `${b === 1 ? "" : b === -1 ? "-" : b}c_2 + c_3`)],
+                ],
+                [
+                  ["Set it equal to $O$", "令其等于 $O$"],
+                  t(
+                    "The top row gives $c_1 = 0$ and $c_2 = 0$, and then the bottom left entry gives $c_3 = 0$.",
+                    "第一行给出 $c_1 = 0$、$c_2 = 0$，于是左下角元素给出 $c_3 = 0$。",
+                  ),
+                ],
+              ],
+              t(
+                "Only the trivial combination gives $O$, so the three matrices are independent.",
+                "只有平凡组合得到 $O$，所以三个矩阵线性无关。",
+              ),
             );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(
+          oneOf(rng, prompt, right, wrong, solution),
+          isDep
+            ? [
+                [
+                  wrong[0]!.en,
+                  "Invertible matrices can still be dependent: here the third matrix is $2A_1 + A_2$.",
+                  "可逆矩阵仍可能线性相关：这里第三个矩阵等于 $2A_1 + A_2$。",
+                ],
+                [
+                  wrong[1]!.en,
+                  "Traces of the single matrices do not decide independence; the relation $2A_1 + A_2 = A_3$ does.",
+                  "单个矩阵的迹不能决定线性相关性；起决定作用的是关系 $2A_1 + A_2 = A_3$。",
+                ],
+                [
+                  wrong[2]!.en,
+                  "The relation $2A_1 + A_2 = A_3$ holds whatever $A_2$ looks like; no symmetry is needed.",
+                  "无论 $A_2$ 是什么样，关系 $2A_1 + A_2 = A_3$ 都成立；不需要对称。",
+                ],
+              ]
+            : [
+                [
+                  wrong[0]!.en,
+                  "$M_{2 \\times 2}$ has dimension $4$, so $3$ matrices can be independent; only $5$ or more must be dependent.",
+                  "$M_{2 \\times 2}$ 的维数是 $4$，所以 $3$ 个矩阵可以线性无关；$5$ 个或更多才必定相关。",
+                ],
+                [
+                  wrong[1]!.en,
+                  "One matrix with determinant $0$ can still be part of an independent set; only the combination equal to $O$ decides.",
+                  "行列式为 $0$ 的矩阵仍可属于线性无关组；只有令组合等于 $O$ 才能判定。",
+                ],
+                [
+                  wrong[2]!.en,
+                  "$A_1 + A_2$ has top row $(1, 1)$, while $A_3$ has top row $(0, 0)$, so they are not equal.",
+                  "$A_1 + A_2$ 的第一行是 $(1, 1)$，而 $A_3$ 的第一行是 $(0, 0)$，两者不相等。",
+                ],
+              ],
+        );
       },
     },
   ],
@@ -3732,6 +4515,10 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
     "Verify the three subspace criteria (zero element, closure under addition and under scalar multiplication) for subsets of $\\mathbb{P}_n$ and $M_{n \\times n}$.",
     "对 $\\mathbb{P}_n$ 与 $M_{n \\times n}$ 的子集检验零元、加法封闭与数乘封闭，判定子空间。",
   ),
+  intro: t(
+    "Is $W = \\{p \\in \\mathbb{P}_2 \\mid p(1) = 0\\}$ a subspace? The zero polynomial has $0(1) = 0$, so it is in $W$. If $p(1) = 0$ and $q(1) = 0$, then $(p + q)(1) = 0 + 0 = 0$ and $(cp)(1) = c \\cdot 0 = 0$, so $W$ is closed under both operations.\n\nCheck: $t - 1$ and $t^2 - 1$ are in $W$, and so is their sum $t^2 + t - 2$, since $1 + 1 - 2 = 0$.\n\nIn this lesson we test subsets of polynomial and matrix spaces with the three subspace conditions.",
+    "$W = \\{p \\in \\mathbb{P}_2 \\mid p(1) = 0\\}$ 是子空间吗？零多项式满足 $0(1) = 0$，所以在 $W$ 中。若 $p(1) = 0$、$q(1) = 0$，则 $(p + q)(1) = 0 + 0 = 0$，$(cp)(1) = c \\cdot 0 = 0$，所以 $W$ 对两种运算都封闭。\n\n检验：$t - 1$ 和 $t^2 - 1$ 都在 $W$ 中，它们的和 $t^2 + t - 2$ 也在，因为 $1 + 1 - 2 = 0$。\n\n本课我们用子空间的三个条件检验多项式空间和矩阵空间的子集。",
+  ),
   prerequisites: ["defining-abstract-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -3741,8 +4528,8 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
       id: "subspaces-of-polynomial-spaces",
       title: t("Subspaces of $\\mathbb{P}_n$", "$\\mathbb{P}_n$ 的子空间判定"),
       explanation: t(
-        "A subset of $\\mathbb{P}_n$ defined by homogeneous linear conditions on values or derivatives (such as $p(0) = 0$ or $p'(1) = 0$) is a subspace. Subsets defined by non-zero values (such as $p(0) = 1$) or by an exact degree are not.",
-        "由函数值或导数的齐次线性条件（如 $p(0) = 0$ 或 $p'(1) = 0$）定义的 $\\mathbb{P}_n$ 子集是子空间。由非零函数值（如 $p(0) = 1$）或固定次数定义的子集则不是子空间。",
+        "A subset of $\\mathbb{P}_n$ defined by homogeneous linear conditions on values or derivatives (such as $p(0) = 0$ or $p'(1) = 0$) is a subspace. Subsets defined by non-zero values (such as $p(0) = 1$) or by an exact degree are not. For example, $\\{p \\in \\mathbb{P}_2 \\mid p(0) = 1\\}$ is not a subspace: the zero polynomial has $0(0) = 0 \\ne 1$, and $1 + 1 = 2$ shows that sums leave the set.\n\n> **Watch out.** Test the zero polynomial first: a condition with a nonzero right side, or a fixed degree, already fails there.",
+        "由函数值或导数的齐次线性条件（如 $p(0) = 0$ 或 $p'(1) = 0$）定义的 $\\mathbb{P}_n$ 子集是子空间。由非零函数值（如 $p(0) = 1$）或固定次数定义的子集则不是子空间。例如 $\\{p \\in \\mathbb{P}_2 \\mid p(0) = 1\\}$ 不是子空间：零多项式满足 $0(0) = 0 \\ne 1$，而 $1 + 1 = 2$ 说明和会离开这个集合。\n\n> **注意。** 先检验零多项式：右边非零的条件，或固定次数的条件，在这里就已经不成立。",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -3753,31 +4540,68 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
         const order = rng.shuffle([0, 1, 2]);
         const name = (kind: number) => `W_${order.indexOf(kind) + 1}`;
         const listed = order.map((kind, i) => `W_{${i + 1}} = \\{ p(t) \\in \\mathbb{P}_{${n}} \\mid ${sets[kind]} \\}`);
-        return choiceProblem({
+        const options = [
+          t("Only $W_1$", "仅有 $W_1$"),
+          t("Only $W_2$", "仅有 $W_2$"),
+          t("Only $W_3$", "仅有 $W_3$"),
+          t("All three are subspaces", "三个都是子空间"),
+        ];
+        const problem = choiceProblem({
           prompt: t(
             `Consider the subsets of $\\mathbb{P}_{${n}}$: $${listed[0]}$, $${listed[1]}$, and $${listed[2]}$. Which of these is a subspace of $\\mathbb{P}_{${n}}$?`,
             `考虑 $\\mathbb{P}_{${n}}$ 的子集：$${listed[0]}$，$${listed[1]}$ 及 $${listed[2]}$。其中哪一个是 $\\mathbb{P}_{${n}}$ 的子空间？`,
           ),
-          options: [
-            t("Only $W_1$", "仅有 $W_1$"),
-            t("Only $W_2$", "仅有 $W_2$"),
-            t("Only $W_3$", "仅有 $W_3$"),
-            t("All three are subspaces", "三个都是子空间"),
-          ],
+          options,
           correct: order.indexOf(0),
-          solution: t(
-            `$${name(0)}$ contains the zero polynomial ($0(${x0}) = 0$), and if $p(${x0}) = 0$ and $q(${x0}) = 0$, then $(p+q)(${x0}) = 0$ and $(cp)(${x0}) = 0$. $${name(1)}$ does not contain the zero polynomial ($0 \\neq ${k}$). $${name(2)}$ does not contain the zero polynomial, which has no degree $${n}$. Hence only $${name(0)}$ is a subspace.`,
-            `$${name(0)}$ 包含零多项式（$0(${x0}) = 0$），且若 $p(${x0}) = 0$、$q(${x0}) = 0$，则 $(p+q)(${x0}) = 0$、$(cp)(${x0}) = 0$，故为子空间。$${name(1)}$ 不含零多项式（$0 \\neq ${k}$）；$${name(2)}$ 不含零多项式（零多项式的次数不是 $${n}$）。因此仅有 $${name(0)}$ 是子空间。`,
+          solution: walked(
+            [
+              [
+                ["Test the zero polynomial", "检验零多项式"],
+                t(
+                  `$0(${x0}) = 0 \\ne ${k}$, so $${name(1)}$ misses the zero polynomial, and the zero polynomial has no degree $${n}$, so $${name(2)}$ misses it too. Only $${name(0)}$ contains it.`,
+                  `$0(${x0}) = 0 \\ne ${k}$，所以 $${name(1)}$ 不含零多项式；零多项式也不是 $${n}$ 次的，所以 $${name(2)}$ 也不含它。只有 $${name(0)}$ 含零多项式。`,
+                ),
+              ],
+              [
+                [`Test closure for $${name(0)}$`, `检验 $${name(0)}$ 的封闭性`],
+                t(
+                  `If $p(${x0}) = 0$ and $q(${x0}) = 0$, then $(p + q)(${x0}) = 0 + 0 = 0$ and $(cp)(${x0}) = c \\cdot 0 = 0$.`,
+                  `若 $p(${x0}) = 0$、$q(${x0}) = 0$，则 $(p + q)(${x0}) = 0 + 0 = 0$，$(cp)(${x0}) = c \\cdot 0 = 0$。`,
+                ),
+              ],
+            ],
+            t(
+              `$${name(0)}$ passes all three conditions and the other two fail the first, so only $${name(0)}$ is a subspace.`,
+              `$${name(0)}$ 满足全部三个条件，另外两个连第一个都不满足，所以只有 $${name(0)}$ 是子空间。`,
+            ),
           ),
         });
+        const only = (kind: number) => options[order.indexOf(kind)]!.en;
+        return reasoned(problem, [
+          [
+            only(1),
+            `$${name(1)}$ does not contain the zero polynomial, since $0(${x0}) = 0 \\ne ${k}$.`,
+            `$${name(1)}$ 不含零多项式，因为 $0(${x0}) = 0 \\ne ${k}$。`,
+          ],
+          [
+            only(2),
+            `$${name(2)}$ does not contain the zero polynomial, and $t^{${n}} + (1 - t^{${n}}) = 1$ drops out of it.`,
+            `$${name(2)}$ 不含零多项式，而且 $t^{${n}} + (1 - t^{${n}}) = 1$ 不在其中。`,
+          ],
+          [
+            options[3]!.en,
+            `$${name(1)}$ and $${name(2)}$ both miss the zero polynomial, so they are not subspaces.`,
+            `$${name(1)}$ 和 $${name(2)}$ 都不含零多项式，所以不是子空间。`,
+          ],
+        ]);
       },
     },
     {
       id: "subspaces-of-matrix-spaces",
       title: t("Subspaces of matrix spaces M_{n×n}", "矩阵空间 M_{n×n} 的子空间"),
       explanation: t(
-        "Subsets of $M_{n \\times n}$ defined by linear constraints, such as the symmetric matrices ($A^T = A$), the diagonal matrices, or the matrices with zero trace ($\\operatorname{tr}(A) = 0$), form subspaces. The invertible matrices do not form a subspace: they are not closed under addition and do not contain the zero matrix.",
-        "由线性条件定义的 $M_{n \\times n}$ 子集（如对称矩阵 $A^T = A$、对角矩阵或零迹矩阵 $\\operatorname{tr}(A) = 0$）构成子空间。可逆矩阵不构成子空间：它们对加法不封闭，且不含零矩阵。",
+        "Subsets of $M_{n \\times n}$ defined by linear constraints, such as the symmetric matrices ($A^T = A$), the diagonal matrices, or the matrices with zero trace ($\\operatorname{tr}(A) = 0$), form subspaces. The invertible matrices do not form a subspace: they are not closed under addition and do not contain the zero matrix. For example, $\\begin{pmatrix} 1 & 2 \\\\ 2 & 0 \\end{pmatrix}$ and $\\begin{pmatrix} 0 & -1 \\\\ -1 & 3 \\end{pmatrix}$ are symmetric, and so is their sum $\\begin{pmatrix} 1 & 1 \\\\ 1 & 3 \\end{pmatrix}$.\n\n> **Watch out.** A condition such as $\\det(A) = 1$ or $A^TA = I$ is not linear: the zero matrix fails it, so the set cannot be a subspace.",
+        "由线性条件定义的 $M_{n \\times n}$ 子集（如对称矩阵 $A^T = A$、对角矩阵或零迹矩阵 $\\operatorname{tr}(A) = 0$）构成子空间。可逆矩阵不构成子空间：它们对加法不封闭，且不含零矩阵。例如 $\\begin{pmatrix} 1 & 2 \\\\ 2 & 0 \\end{pmatrix}$ 和 $\\begin{pmatrix} 0 & -1 \\\\ -1 & 3 \\end{pmatrix}$ 都是对称的，它们的和 $\\begin{pmatrix} 1 & 1 \\\\ 1 & 3 \\end{pmatrix}$ 也是。\n\n> **注意。** $\\det(A) = 1$ 或 $A^TA = I$ 这样的条件不是线性的：零矩阵不满足它，所以这样的集合不可能是子空间。",
       ),
       generate(rng) {
         const n = rng.int(2, 35);
@@ -3803,11 +4627,40 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
             `正交矩阵的集合：$\\{ A \\in M_{${n} \\times ${n}} \\mid A^T A = I \\}$`,
           ),
         ];
-        const solution = t(
-          `The zero matrix is symmetric ($O^T = O$). If $A^T = A$ and $B^T = B$, then $(A + B)^T = A^T + B^T = A + B$ and $(cA)^T = cA^T = cA$. Thus symmetric matrices form a subspace. The invertible matrices do not contain $O$, nor are they closed under addition (e.g. $I + (-I) = O$).`,
-          `零矩阵是对称的（$O^T = O$），且对称性对矩阵加法和数乘保持封闭，因此对称矩阵构成子空间。可逆矩阵不含零矩阵，且对加法不封闭（如 $I + (-I) = O$）。`,
+        const solution = walked(
+          [
+            [
+              ["Test the zero matrix", "检验零矩阵"],
+              t(
+                "$O^T = O$, so the zero matrix is symmetric. It is not invertible, has determinant $0 \\ne 1$, and $O^TO = O \\ne I$, so the other three sets miss it.",
+                "$O^T = O$，所以零矩阵是对称的。它不可逆，行列式为 $0 \\ne 1$，且 $O^TO = O \\ne I$，所以另外三个集合都不含它。",
+              ),
+            ],
+            [
+              ["Test closure for symmetric matrices", "检验对称矩阵的封闭性"],
+              t("If $A^T = A$ and $B^T = B$, then:", "若 $A^T = A$、$B^T = B$，则："),
+              ["(A + B)^T = A^T + B^T = A + B", "(cA)^T = cA^T = cA"],
+            ],
+          ],
+          t("The symmetric matrices pass all three conditions, so they form a subspace.", "对称矩阵满足全部三个条件，所以构成子空间。"),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The zero matrix is not invertible, and $I + (-I) = O$ shows that sums leave the set.",
+            "零矩阵不可逆，而 $I + (-I) = O$ 说明和会离开这个集合。",
+          ],
+          [
+            wrong[1]!.en,
+            `The zero matrix has determinant $0$, not $1$, and $2I$ has determinant $2^{${n}} \\ne 1$.`,
+            `零矩阵的行列式是 $0$ 而不是 $1$，而 $2I$ 的行列式为 $2^{${n}} \\ne 1$。`,
+          ],
+          [
+            wrong[2]!.en,
+            "$O^TO = O \\ne I$, so the zero matrix is not orthogonal, and $2I$ is not orthogonal either.",
+            "$O^TO = O \\ne I$，所以零矩阵不是正交矩阵，$2I$ 也不是。",
+          ],
+        ]);
       },
     },
   ],
@@ -3821,6 +4674,10 @@ export const basesInAbstractVectorSpaces: TopicDef = {
     "Identify the standard bases of $\\mathbb{P}_n$ and $M_{m \\times n}$, and verify whether a given set forms a basis.",
     "掌握 $\\mathbb{P}_n$ 与 $M_{m \\times n}$ 的标准基，并验证给定向量组是否构成基。",
   ),
+  intro: t(
+    "Is $\\{1, 1 + t, 1 + t + t^2\\}$ a basis of $\\mathbb{P}_2$? The degrees are $0$, $1$ and $2$, so a combination equal to $0$ must have weight $0$ on $1 + t + t^2$ (the only $t^2$ term), then on $1 + t$ (the only remaining $t$ term), then on $1$.\n\nCheck: the three polynomials are independent, and $\\dim \\mathbb{P}_2 = 3$, so they also span; for example $t^2 = (1 + t + t^2) - (1 + t)$.\n\nIn this lesson we use the standard bases of $\\mathbb{P}_n$ and $M_{2 \\times 2}$ and decide whether other sets are bases.",
+    "$\\{1, 1 + t, 1 + t + t^2\\}$ 是 $\\mathbb{P}_2$ 的基吗？三者次数分别为 $0$、$1$、$2$，所以等于 $0$ 的组合中，$1 + t + t^2$ 的权重必为 $0$（唯一的 $t^2$ 项），接着 $1 + t$ 的权重为 $0$（剩下唯一的 $t$ 项），再接着 $1$ 的权重为 $0$。\n\n检验：三个多项式线性无关，而 $\\dim \\mathbb{P}_2 = 3$，所以也张成；例如 $t^2 = (1 + t + t^2) - (1 + t)$。\n\n本课我们使用 $\\mathbb{P}_n$ 和 $M_{2 \\times 2}$ 的标准基，并判断其他集合是否为基。",
+  ),
   prerequisites: ["linear-independence-in-abstract-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -3830,8 +4687,8 @@ export const basesInAbstractVectorSpaces: TopicDef = {
       id: "standard-bases-abstract",
       title: t("Standard bases for $\\mathbb{P}_n$ and $M_{2 \\times 2}$", "$\\mathbb{P}_n$ 与 $M_{2 \\times 2}$ 的标准基"),
       explanation: t(
-        "The standard basis for $\\mathbb{P}_n$ is $\\{1, t, t^2, \\dots, t^n\\}$, which contains $n + 1$ polynomials. The standard basis for $M_{2 \\times 2}$ consists of the four elementary matrices $E_{11}, E_{12}, E_{21}, E_{22}$.",
-        "多项式空间 $\\mathbb{P}_n$ 的标准基为 $\\{1, t, t^2, \\dots, t^n\\}$，共含 $n + 1$ 个多项式。矩阵空间 $M_{2 \\times 2}$ 的标准基由 $4$ 个基本矩阵 $E_{11}, E_{12}, E_{21}, E_{22}$ 组成。",
+        "The standard basis for $\\mathbb{P}_n$ is $\\{1, t, t^2, \\dots, t^n\\}$, which contains $n + 1$ polynomials. The standard basis for $M_{2 \\times 2}$ consists of the four elementary matrices $E_{11}, E_{12}, E_{21}, E_{22}$. For example, in $\\mathbb{P}_3$ the polynomial $4 - t + 2t^3$ is $4 \\cdot 1 + (-1) \\cdot t + 0 \\cdot t^2 + 2 \\cdot t^3$.\n\n> **Watch out.** The constant polynomial $1$ belongs to the basis, so $\\mathbb{P}_n$ needs $n + 1$ basis polynomials, not $n$.",
+        "多项式空间 $\\mathbb{P}_n$ 的标准基为 $\\{1, t, t^2, \\dots, t^n\\}$，共含 $n + 1$ 个多项式。矩阵空间 $M_{2 \\times 2}$ 的标准基由 $4$ 个基本矩阵 $E_{11}, E_{12}, E_{21}, E_{22}$ 组成。例如在 $\\mathbb{P}_3$ 中，多项式 $4 - t + 2t^3$ 等于 $4 \\cdot 1 + (-1) \\cdot t + 0 \\cdot t^2 + 2 \\cdot t^3$。\n\n> **注意。** 常数多项式 $1$ 属于这组基，所以 $\\mathbb{P}_n$ 需要 $n + 1$ 个基多项式，而不是 $n$ 个。",
       ),
       generate(rng) {
         const n = rng.int(2, 40);
@@ -3847,9 +4704,27 @@ export const basesInAbstractVectorSpaces: TopicDef = {
           t(`$\\left\\{ 1 + t + \\dots + t^{${n}} \\right\\}$`, `$\\left\\{ 1 + t + \\dots + t^{${n}} \\right\\}$`),
           t(`$\\left\\{ t^{${n}} \\right\\}$`, `$\\left\\{ t^{${n}} \\right\\}$`),
         ];
-        const solution = t(
-          `Every polynomial in $\\mathbb{P}_{${n}}$ is uniquely written as $a_0(1) + a_1(t) + \\dots + a_{${n}}(t^{${n}})$. The set of monomials $\\{${powers.join(", ")}\\}$ is linearly independent and spans $\\mathbb{P}_{${n}}$, making it the standard basis.`,
-          `$\\mathbb{P}_{${n}}$ 中的任意多项式均可唯一表示为 $a_0(1) + a_1(t) + \\dots + a_{${n}}(t^{${n}})$。单项式集合 $\\{${powers.join(", ")}\\}$ 线性无关且张成全空间，故为标准基。`,
+        const solution = walked(
+          [
+            [
+              ["Spanning", "张成"],
+              t(
+                `Every polynomial in $\\mathbb{P}_{${n}}$ is $a_0 \\cdot 1 + a_1 t + \\dots + a_{${n}} t^{${n}}$, a combination of the powers $1, t, \\dots, t^{${n}}$.`,
+                `$\\mathbb{P}_{${n}}$ 中每个多项式都是 $a_0 \\cdot 1 + a_1 t + \\dots + a_{${n}} t^{${n}}$，是各次幂 $1, t, \\dots, t^{${n}}$ 的组合。`,
+              ),
+            ],
+            [
+              ["Independence", "线性无关"],
+              t(
+                "A combination of the powers is the zero polynomial only when every coefficient is $0$.",
+                "各次幂的组合只有在每个系数都为 $0$ 时才是零多项式。",
+              ),
+            ],
+          ],
+          t(
+            `The basis has $${n + 1}$ polynomials, matching $\\dim \\mathbb{P}_{${n}} = ${n} + 1$.`,
+            `这组基有 $${n + 1}$ 个多项式，与 $\\dim \\mathbb{P}_{${n}} = ${n} + 1$ 一致。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [
@@ -3874,8 +4749,8 @@ export const basesInAbstractVectorSpaces: TopicDef = {
       id: "verify-basis-in-polynomial-space",
       title: t("Verifying a basis for $\\mathbb{P}_2$", "验证 $\\mathbb{P}_2$ 的一组非标准基"),
       explanation: t(
-        "A set of $3$ polynomials in $\\mathbb{P}_2$ forms a basis if and only if they are linearly independent (which in turn guarantees they span the $3$-dimensional space $\\mathbb{P}_2$).",
-        "$\\mathbb{P}_2$ 中的 $3$ 个多项式构成基，当且仅当它们线性无关（这也保证了它们必能张成 $3$ 维空间 $\\mathbb{P}_2$）。",
+        "A set of $3$ polynomials in $\\mathbb{P}_2$ forms a basis if and only if they are linearly independent (which in turn guarantees they span the $3$-dimensional space $\\mathbb{P}_2$). For example, $\\{1, 1 + t, t + t^2\\}$ is a basis, since the degrees $0, 1, 2$ force every weight in a zero combination to vanish, while $\\{1, 1 + t, 2 + 2t\\}$ is not, since $2 + 2t = 2(1 + t)$.\n\n> **Watch out.** Three nonzero polynomials need not be a basis: check that none is a combination of the others.",
+        "$\\mathbb{P}_2$ 中的 $3$ 个多项式构成基，当且仅当它们线性无关（这也保证了它们必能张成 $3$ 维空间 $\\mathbb{P}_2$）。例如 $\\{1, 1 + t, t + t^2\\}$ 是基，因为次数 $0, 1, 2$ 迫使零组合的每个权重为零；而 $\\{1, 1 + t, 2 + 2t\\}$ 不是，因为 $2 + 2t = 2(1 + t)$。\n\n> **注意。** 三个非零多项式不一定构成基：要检查没有一个是其他多项式的组合。",
       ),
       generate(rng) {
         const isBasis = rng.bool();
@@ -3910,15 +4785,88 @@ export const basesInAbstractVectorSpaces: TopicDef = {
               t(`No, because $\\mathbb{P}_2$ is infinite-dimensional`, `否，因为 $\\mathbb{P}_2$ 是无限维的`),
             ];
         const solution = isBasis
-          ? t(
-              `The polynomials have strictly increasing degrees (0, 1, 2). The coordinate matrix relative to $\\{1, t, t^2\\}$ is triangular with non-zero diagonal entries, so its determinant is non-zero. Since $\\dim(\\mathbb{P}_2) = 3$, these 3 linearly independent polynomials form a basis.`,
-              `三个多项式的次数严格递增（0、1、2）。相对于标准基的坐标矩阵为上三角阵且对角元全非零，行列式非零，故线性无关。由于 $\\dim(\\mathbb{P}_2) = 3$，3 个线性无关的多项式必构成基。`,
+          ? walked(
+              [
+                [
+                  ["Look at the degrees", "看次数"],
+                  t(
+                    `$${p1}$, $${p2}$ and $${p3}$ have degrees $0$, $1$ and $2$.`,
+                    `$${p1}$、$${p2}$、$${p3}$ 的次数分别为 $0$、$1$、$2$。`,
+                  ),
+                ],
+                [
+                  ["Solve a zero combination", "求解零组合"],
+                  t(
+                    `In $c_1 \\cdot 1 + c_2(${p2}) + c_3(${p3}) = 0$, only the third has a $t^2$ term, so $c_3 = 0$; then only the second has a $t$ term, so $c_2 = 0$; then $c_1 = 0$.`,
+                    `在 $c_1 \\cdot 1 + c_2(${p2}) + c_3(${p3}) = 0$ 中，只有第三个有 $t^2$ 项，所以 $c_3 = 0$；接着只有第二个有 $t$ 项，所以 $c_2 = 0$；于是 $c_1 = 0$。`,
+                  ),
+                ],
+              ],
+              t(
+                "The three are independent, and $\\dim \\mathbb{P}_2 = 3$, so three independent polynomials also span: they form a basis.",
+                "三者线性无关，而 $\\dim \\mathbb{P}_2 = 3$，所以三个线性无关的多项式也张成：它们构成基。",
+              ),
             )
-          : t(
-              `The second and third polynomials are proportional, so the set is linearly dependent and cannot be a basis.`,
-              `第二个与第三个多项式成比例，该集合线性相关，因此不能构成基。`,
+          : walked(
+              [
+                [
+                  ["Compare the last two", "比较后两个"],
+                  t(
+                    `$${p3} = 2(${p2})$, so the third polynomial is a multiple of the second.`,
+                    `$${p3} = 2(${p2})$，所以第三个多项式是第二个的倍数。`,
+                  ),
+                ],
+                [
+                  ["Conclude", "得出结论"],
+                  t(
+                    "$2p_2 - p_3 = 0$ is a relation with nonzero weights, so the set is dependent and is not a basis.",
+                    "$2p_2 - p_3 = 0$ 是权重不全为零的关系，所以线性相关，不是基。",
+                  ),
+                ],
+              ],
+              t(
+                "No polynomial in the set has a $t^2$ term, so $t^2$ is not in their span either.",
+                "集合中没有多项式含 $t^2$ 项，所以 $t^2$ 也不在它们的张成中。",
+              ),
             );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(
+          oneOf(rng, prompt, right, wrong, solution),
+          isBasis
+            ? [
+                [
+                  wrong[0]!.en,
+                  "A space has many bases; any $3$ independent polynomials in $\\mathbb{P}_2$ form one.",
+                  "一个空间有许多组基；$\\mathbb{P}_2$ 中任意 $3$ 个线性无关的多项式都构成一组。",
+                ],
+                [
+                  wrong[1]!.en,
+                  "$\\dim \\mathbb{P}_2 = 3$, because of the basis $\\{1, t, t^2\\}$, so a basis has $3$ polynomials.",
+                  "因为有基 $\\{1, t, t^2\\}$，$\\dim \\mathbb{P}_2 = 3$，所以基有 $3$ 个多项式。",
+                ],
+                [
+                  wrong[2]!.en,
+                  "Being a basis is a property of the polynomials themselves, not of particular values of $t$.",
+                  "是否为基是多项式本身的性质，与 $t$ 的取值无关。",
+                ],
+              ]
+            : [
+                [
+                  wrong[0]!.en,
+                  "Three polynomials form a basis only when they are independent, and here the third is twice the second.",
+                  "三个多项式只有线性无关时才构成基，而这里第三个是第二个的 $2$ 倍。",
+                ],
+                [
+                  wrong[1]!.en,
+                  "Nonzero polynomials can still be dependent: here the third is twice the second.",
+                  "非零多项式仍可能线性相关：这里第三个是第二个的 $2$ 倍。",
+                ],
+                [
+                  wrong[2]!.en,
+                  "$\\mathbb{P}_2$ has dimension $3$; the set fails because it is dependent.",
+                  "$\\mathbb{P}_2$ 的维数是 $3$；这个集合不行是因为它线性相关。",
+                ],
+              ],
+        );
       },
     },
   ],
@@ -3932,6 +4880,10 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
     "Determine coordinate vectors $[\\mathbf{v}]_{\\mathcal{B}} \\in \\mathbb{R}^n$ for polynomials and matrices relative to ordered bases, illustrating the coordinate isomorphism.",
     "求解多项式与矩阵在有序基下的坐标向量 $[\\mathbf{v}]_{\\mathcal{B}} \\in \\mathbb{R}^n$，理解坐标同构映射。",
   ),
+  intro: t(
+    "Relative to $\\mathcal{B} = \\{1, t, t^2\\}$, the polynomial $p(t) = 3 - 2t + 5t^2$ has coordinate vector $[p]_{\\mathcal{B}} = (3, -2, 5)$: the weights on $1$, $t$ and $t^2$ in that order.\n\nCheck: $3 \\cdot 1 + (-2) \\cdot t + 5 \\cdot t^2 = 3 - 2t + 5t^2 = p(t)$.\n\nIn this lesson we turn polynomials and $2 \\times 2$ matrices into coordinate vectors relative to their standard bases.",
+    "相对于 $\\mathcal{B} = \\{1, t, t^2\\}$，多项式 $p(t) = 3 - 2t + 5t^2$ 的坐标向量为 $[p]_{\\mathcal{B}} = (3, -2, 5)$：依次是 $1$、$t$、$t^2$ 的权重。\n\n检验：$3 \\cdot 1 + (-2) \\cdot t + 5 \\cdot t^2 = 3 - 2t + 5t^2 = p(t)$。\n\n本课我们把多项式和 $2 \\times 2$ 矩阵写成相对于标准基的坐标向量。",
+  ),
   prerequisites: ["bases-in-abstract-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -3941,42 +4893,67 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
       id: "polynomial-coordinate-vector",
       title: t("Coordinate vector of a polynomial in $\\mathbb{P}_2$", "$\\mathbb{P}_2$ 中多项式的坐标向量"),
       explanation: t(
-        "Relative to the standard basis of powers, the coordinates of a polynomial are just its coefficients listed in order of increasing degree. For the ordered standard basis $\\mathcal{B} = \\{1, t, t^2\\}$ of $\\mathbb{P}_2$, the polynomial $p(t) = a_0 + a_1t + a_2t^2$ has coordinate vector $[p]_{\\mathcal{B}} = (a_0, a_1, a_2)^T$.",
-        "相对于由幂组成的标准基，多项式的坐标就是按次数从低到高排列的系数。对于 $\\mathbb{P}_2$ 的有序标准基 $\\mathcal{B} = \\{1, t, t^2\\}$，多项式 $p(t) = a_0 + a_1t + a_2t^2$ 的坐标向量为 $[p]_{\\mathcal{B}} = (a_0, a_1, a_2)^T$。",
+        "Relative to the standard basis of powers, the coordinates of a polynomial are just its coefficients listed in order of increasing degree. For the ordered standard basis $\\mathcal{B} = \\{1, t, t^2\\}$ of $\\mathbb{P}_2$, the polynomial $p(t) = a_0 + a_1t + a_2t^2$ has coordinate vector $[p]_{\\mathcal{B}} = (a_0, a_1, a_2)^T$. For example, $p(t) = 4t - t^2$ has $[p]_{\\mathcal{B}} = (0, 4, -1)$.\n\n> **Watch out.** Follow the order of the basis, starting with the constant term, and write $0$ for any missing power.",
+        "相对于由幂组成的标准基，多项式的坐标就是按次数从低到高排列的系数。对于 $\\mathbb{P}_2$ 的有序标准基 $\\mathcal{B} = \\{1, t, t^2\\}$，多项式 $p(t) = a_0 + a_1t + a_2t^2$ 的坐标向量为 $[p]_{\\mathcal{B}} = (a_0, a_1, a_2)^T$。例如 $p(t) = 4t - t^2$ 的坐标为 $[p]_{\\mathcal{B}} = (0, 4, -1)$。\n\n> **注意。** 按基的顺序排列，从常数项开始，缺少的幂写 $0$。",
       ),
       generate(rng) {
         const a0 = rng.int(-5, 5);
         const a1 = rng.nonZero(-5, 5);
         const a2 = rng.nonZero(-5, 5);
         const polyStr = formatPoly2(a0, a1, a2);
+        const answer = [a0, a1, a2];
         const prompt = t(
           `Find the coordinate vector $[p(t)]_{\\mathcal{B}}$ of the polynomial $p(t) = ${polyStr}$ relative to the ordered standard basis $\\mathcal{B} = \\{1, t, t^2\\}$ of $\\mathbb{P}_2$. Enter the vector as $\\langle a_0, a_1, a_2 \\rangle$.`,
           `求多项式 $p(t) = ${polyStr}$ 在 $\\mathbb{P}_2$ 的有序标准基 $\\mathcal{B} = \\{1, t, t^2\\}$ 下的坐标向量 $[p(t)]_{\\mathcal{B}}$。以 $\\langle a_0, a_1, a_2 \\rangle$ 的形式输入结果。`,
         );
-        const solution = t(
-          `Writing $p(t) = (${a0})\\cdot 1 + (${a1})\\cdot t + (${a2})\\cdot t^2$, the coefficients with respect to the ordered basis $\\{1, t, t^2\\}$ are $a_0 = ${a0}$, $a_1 = ${a1}$, and $a_2 = ${a2}$. Thus $[p(t)]_{\\mathcal{B}} = \\langle ${a0}, ${a1}, ${a2} \\rangle$.`,
-          `将多项式写为 $p(t) = (${a0})\\cdot 1 + (${a1})\\cdot t + (${a2})\\cdot t^2$，对应基 $\\{1, t, t^2\\}$ 的各分量系数分别为 $a_0 = ${a0}$，$a_1 = ${a1}$，$a_2 = ${a2}$。故坐标向量为 $[p(t)]_{\\mathcal{B}} = \\langle ${a0}, ${a1}, ${a2} \\rangle$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [a0, a1, a2],
-          wrong: [
-            [a2, a1, a0],
-            [a0, -a1, a2],
-            [a1, a2, a0],
+        const solution = walked(
+          [
+            [
+              ["Write $p$ in the basis", "用基写出 $p$"],
+              t(
+                "Give every basis polynomial its weight, including $0$ for a missing term:",
+                "给每个基多项式配上权重，缺少的项权重为 $0$：",
+              ),
+              [`p(t) = ${paren(a0)} \\cdot 1 + ${paren(a1)} \\cdot t + ${paren(a2)} \\cdot t^2`],
+            ],
+            [["List the weights in order", "按顺序列出权重"], t("", ""), [`[p(t)]_{\\mathcal{B}} = ${vectorLatex(answer)}`]],
           ],
-          vars: ["a_0", "a_1", "a_2"],
-          vector: true,
-          solution,
-        });
+          t(
+            `At $t = 1$ the combination gives $${sumLatex([a0, a1, a2])} = ${a0 + a1 + a2}$, and $p(1) = ${a0 + a1 + a2}$ as well.`,
+            `在 $t = 1$ 处，组合给出 $${sumLatex([a0, a1, a2])} = ${a0 + a1 + a2}$，而 $p(1)$ 也等于 $${a0 + a1 + a2}$。`,
+          ),
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer, vars: ["a_0", "a_1", "a_2"], vector: true, solution }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([a2, a1, a0]),
+                "The order is reversed: the basis starts with $1$, so the constant term comes first.",
+                "顺序反了：基从 $1$ 开始，所以常数项在前。",
+              ),
+              say(
+                vectorLatex([a0, -a1, a2]),
+                "The sign of the $t$ coefficient is flipped; copy each coefficient with its sign.",
+                "$t$ 的系数符号反了；每个系数要连同符号照抄。",
+              ),
+              say(
+                vectorLatex([a1, a2, a0]),
+                "The entries are shifted: the first coordinate is the weight on $1$, the constant term.",
+                "各分量错位了：第一个坐标是 $1$ 的权重，即常数项。",
+              ),
+            ],
+            vectorLatex(answer),
+          ),
+        );
       },
     },
     {
       id: "matrix-coordinate-vector-m22",
       title: t("Coordinate vector of a 2×2 matrix", "2×2 矩阵在标准基下的坐标向量"),
       explanation: t(
-        "Each standard basis matrix has a single one in one position, so the coordinates of a matrix are its entries read row by row. For $M_{2 \\times 2}$ with the standard ordered basis $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$, the matrix $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ has coordinate vector $[M]_{\\mathcal{B}} = (a, b, c, d)^T$ in $\\mathbb{R}^4$.",
-        "每个标准基矩阵只在一个位置上有 1，所以矩阵的坐标就是按行读出的各个元素。在 $M_{2 \\times 2}$ 中，关于标准有序基 $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$，矩阵 $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ 的坐标向量为 $\\mathbb{R}^4$ 中的 $[M]_{\\mathcal{B}} = (a, b, c, d)^T$。",
+        "Each standard basis matrix has a single one in one position, so the coordinates of a matrix are its entries read row by row. For $M_{2 \\times 2}$ with the standard ordered basis $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$, the matrix $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ has coordinate vector $[M]_{\\mathcal{B}} = (a, b, c, d)^T$ in $\\mathbb{R}^4$. For example, $\\begin{pmatrix} 2 & -1 \\\\ 0 & 3 \\end{pmatrix}$ has coordinates $(2, -1, 0, 3)$.\n\n> **Watch out.** Read along the rows, as the basis is ordered $E_{11}, E_{12}, E_{21}, E_{22}$; reading down the columns swaps the middle two coordinates.",
+        "每个标准基矩阵只在一个位置上有 1，所以矩阵的坐标就是按行读出的各个元素。在 $M_{2 \\times 2}$ 中，关于标准有序基 $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$，矩阵 $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ 的坐标向量为 $\\mathbb{R}^4$ 中的 $[M]_{\\mathcal{B}} = (a, b, c, d)^T$。例如 $\\begin{pmatrix} 2 & -1 \\\\ 0 & 3 \\end{pmatrix}$ 的坐标为 $(2, -1, 0, 3)$。\n\n> **注意。** 基的顺序是 $E_{11}, E_{12}, E_{21}, E_{22}$，所以要按行读；按列读会把中间两个坐标交换。",
       ),
       generate(rng) {
         const a = rng.int(-4, 4);
@@ -3987,26 +4964,48 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
           [a, b],
           [c, d],
         ];
+        const answer = [a, b, c, d];
         const prompt = t(
           `Find the coordinate vector $[M]_{\\mathcal{B}}$ of the matrix $M = ${matLatex(M)}$ relative to the standard ordered basis $\\mathcal{B} = \\left\\{ \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 0 & 1 \\end{pmatrix} \\right\\}$ of $M_{2 \\times 2}$. Enter the vector as $\\langle a, b, c, d \\rangle$.`,
           `求矩阵 $M = ${matLatex(M)}$ 在 $M_{2 \\times 2}$ 的标准有序基 $\\mathcal{B} = \\left\\{ \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 0 & 1 \\end{pmatrix} \\right\\}$ 下的坐标向量 $[M]_{\\mathcal{B}}$。以 $\\langle a, b, c, d \\rangle$ 的形式输入结果。`,
         );
-        const solution = t(
-          `Since $M = (${a})E_{11} + (${b})E_{12} + (${c})E_{21} + (${d})E_{22}$, reading the coordinates in the ordered basis gives $[M]_{\\mathcal{B}} = \\langle ${a}, ${b}, ${c}, ${d} \\rangle \\in \\mathbb{R}^4$.`,
-          `因 $M = (${a})E_{11} + (${b})E_{12} + (${c})E_{21} + (${d})E_{22}$，按基的顺序排列各系数得到 $[M]_{\\mathcal{B}} = \\langle ${a}, ${b}, ${c}, ${d} \\rangle \\in \\mathbb{R}^4$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [a, b, c, d],
-          wrong: [
-            [a, c, b, d],
-            [d, c, b, a],
-            [a, b, -c, -d],
+        const solution = walked(
+          [
+            [
+              ["Split $M$ into basis matrices", "把 $M$ 拆成基矩阵"],
+              t("Each entry is the weight on the basis matrix with a $1$ in that position:", "每个元素就是在该位置为 $1$ 的基矩阵的权重："),
+              [`M = ${paren(a)}E_{11} + ${paren(b)}E_{12} + ${paren(c)}E_{21} + ${paren(d)}E_{22}`],
+            ],
+            [["List the weights in the basis order", "按基的顺序列出权重"], t("", ""), [`[M]_{\\mathcal{B}} = ${vectorLatex(answer)}`]],
           ],
-          vars: ["a", "b", "c", "d"],
-          vector: true,
-          solution,
-        });
+          t(
+            `The first two coordinates are the top row $(${a}, ${b})$ and the last two the bottom row $(${c}, ${d})$, as in $M$.`,
+            `前两个坐标是第一行 $(${a}, ${b})$，后两个是第二行 $(${c}, ${d})$，与 $M$ 一致。`,
+          ),
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer, vars: ["a", "b", "c", "d"], vector: true, solution }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([a, c, b, d]),
+                "That reads down the columns; the basis order $E_{11}, E_{12}, E_{21}, E_{22}$ reads along the rows.",
+                "这是按列读的；基的顺序 $E_{11}, E_{12}, E_{21}, E_{22}$ 是按行读。",
+              ),
+              say(
+                vectorLatex([d, c, b, a]),
+                "The order is reversed: the first coordinate is the weight on $E_{11}$, the top left entry.",
+                "顺序反了：第一个坐标是 $E_{11}$ 的权重，即左上角的元素。",
+              ),
+              say(
+                vectorLatex([a, b, -c, -d]),
+                "The bottom row has its signs flipped; copy each entry with its sign.",
+                "第二行的符号反了；每个元素要连同符号照抄。",
+              ),
+            ],
+            vectorLatex(answer),
+          ),
+        );
       },
     },
   ],
@@ -4020,6 +5019,10 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
     "Calculate dimensions such as $\\dim \\mathbb{P}_n = n + 1$ and $\\dim M_{m \\times n} = mn$, and distinguish finite-dimensional from infinite-dimensional spaces.",
     "计算维数，如 $\\dim \\mathbb{P}_n = n + 1$ 与 $\\dim M_{m \\times n} = mn$，并区分有限维与无限维向量空间。",
   ),
+  intro: t(
+    "$\\mathbb{P}_3$ has the basis $\\{1, t, t^2, t^3\\}$, so $\\dim \\mathbb{P}_3 = 4$, and $M_{2 \\times 3}$ has one basis matrix $E_{ij}$ for each of its $6$ positions, so $\\dim M_{2 \\times 3} = 6$.\n\nCheck: a polynomial in $\\mathbb{P}_3$ is fixed by its $4$ coefficients $a_0, a_1, a_2, a_3$, and a $2 \\times 3$ matrix by its $2 \\cdot 3 = 6$ entries, so the counts agree.\n\nIn this lesson we compute the dimensions of polynomial and matrix spaces and tell finite-dimensional spaces from infinite-dimensional ones.",
+    "$\\mathbb{P}_3$ 有基 $\\{1, t, t^2, t^3\\}$，所以 $\\dim \\mathbb{P}_3 = 4$；$M_{2 \\times 3}$ 的 $6$ 个位置各对应一个基矩阵 $E_{ij}$，所以 $\\dim M_{2 \\times 3} = 6$。\n\n检验：$\\mathbb{P}_3$ 中的多项式由 $4$ 个系数 $a_0, a_1, a_2, a_3$ 确定，$2 \\times 3$ 矩阵由 $2 \\cdot 3 = 6$ 个元素确定，个数吻合。\n\n本课我们计算多项式空间和矩阵空间的维数，并区分有限维空间与无限维空间。",
+  ),
   prerequisites: ["the-coordinates-of-a-vector-relative-to-a-basis-in-abstract-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -4029,8 +5032,8 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
       id: "dimension-formula-abstract-spaces",
       title: t("Dimension formulas for $\\mathbb{P}_n$ and $M_{m \\times n}$", "$\\mathbb{P}_n$ 与 $M_{m \\times n}$ 的维数公式"),
       explanation: t(
-        "$\\dim(\\mathbb{P}_n) = n + 1$ because its standard basis $\\{1, t, \\dots, t^n\\}$ has $n + 1$ elements. For matrix spaces, $\\dim(M_{m \\times n}) = mn$. For the symmetric $n \\times n$ matrices, the dimension is $\\frac{n(n + 1)}{2}$.",
-        "$\\dim(\\mathbb{P}_n) = n + 1$，因为其标准基 $\\{1, t, \\dots, t^n\\}$ 包含 $n + 1$ 个元素。矩阵空间的维数为 $\\dim(M_{m \\times n}) = mn$。$n$ 阶对称矩阵子空间的维数为 $\\frac{n(n + 1)}{2}$。",
+        "$\\dim(\\mathbb{P}_n) = n + 1$ because its standard basis $\\{1, t, \\dots, t^n\\}$ has $n + 1$ elements. For matrix spaces, $\\dim(M_{m \\times n}) = mn$. For the symmetric $n \\times n$ matrices, the dimension is $\\frac{n(n + 1)}{2}$. For example, a symmetric $3 \\times 3$ matrix is fixed by the $3$ diagonal entries and the $3$ entries above the diagonal, so that subspace has dimension $6 = \\frac{3 \\cdot 4}{2}$.\n\n> **Watch out.** Count free choices: $\\mathbb{P}_n$ has $n + 1$ coefficients because of the constant term, and in a symmetric matrix the entries below the diagonal are not free.",
+        "$\\dim(\\mathbb{P}_n) = n + 1$，因为其标准基 $\\{1, t, \\dots, t^n\\}$ 包含 $n + 1$ 个元素。矩阵空间的维数为 $\\dim(M_{m \\times n}) = mn$。$n$ 阶对称矩阵子空间的维数为 $\\frac{n(n + 1)}{2}$。例如 $3 \\times 3$ 对称矩阵由 $3$ 个对角元和对角线上方的 $3$ 个元素确定，所以这个子空间的维数为 $6 = \\frac{3 \\cdot 4}{2}$。\n\n> **注意。** 数自由选择的个数：$\\mathbb{P}_n$ 因为有常数项而有 $n + 1$ 个系数；对称矩阵中对角线下方的元素不是自由的。",
       ),
       generate(rng) {
         const choice = rng.pick(["polynomials", "matrices", "symmetric"]);
@@ -4040,15 +5043,39 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
             `What is the dimension of the polynomial vector space $\\mathbb{P}_{${n}}$?`,
             `多项式向量空间 $\\mathbb{P}_{${n}}$ 的维数是多少？`,
           );
-          const solution = t(
-            `The standard basis for $\\mathbb{P}_{${n}}$ is $\\{1, t, t^2, \\dots, t^{${n}}\\}$, which contains $${n} + 1 = ${n + 1}$ elements. Therefore $\\dim(\\mathbb{P}_{${n}}) = ${n + 1}$.`,
-            `$\\mathbb{P}_{${n}}$ 的标准基为 $\\{1, t, t^2, \\dots, t^{${n}}\\}$，共含有 $${n} + 1 = ${n + 1}$ 个基向量。因此 $\\dim(\\mathbb{P}_{${n}}) = ${n + 1}$。`,
+          const solution = walked(
+            [
+              [
+                ["Take the standard basis", "取标准基"],
+                t(
+                  `$\\mathbb{P}_{${n}}$ has the basis $\\{1, t, t^2, \\dots, t^{${n}}\\}$.`,
+                  `$\\mathbb{P}_{${n}}$ 有基 $\\{1, t, t^2, \\dots, t^{${n}}\\}$。`,
+                ),
+              ],
+              [
+                ["Count it", "数个数"],
+                t(`The powers $t^0$ to $t^{${n}}$ number:`, `幂 $t^0$ 到 $t^{${n}}$ 的个数为：`),
+                [`${n} + 1 = ${n + 1}`],
+              ],
+            ],
+            t(
+              `A polynomial in $\\mathbb{P}_{${n}}$ is fixed by its $${n + 1}$ coefficients $a_0, \\dots, a_{${n}}$.`,
+              `$\\mathbb{P}_{${n}}$ 中的多项式由 $${n + 1}$ 个系数 $a_0, \\dots, a_{${n}}$ 确定。`,
+            ),
           );
           return numberProblem({
             prompt,
             answer: n + 1,
             form: "integer",
-            wrong: [n, n - 1, 2 * n],
+            mistakes: [
+              why(n, "That leaves out the constant polynomial $1$, which is in the basis.", "这漏掉了常数多项式 $1$，它也在基中。"),
+              why(
+                n - 1,
+                `Count the powers from $t^0$ to $t^{${n}}$; there are $${n + 1}$ of them.`,
+                `数一数从 $t^0$ 到 $t^{${n}}$ 的幂；共有 $${n + 1}$ 个。`,
+              ),
+              why(2 * n, "Each power appears once in the basis; nothing is doubled.", "每个幂在基中只出现一次；没有加倍。"),
+            ].filter((w, i, all) => w.value !== n + 1 && all.findIndex((o) => o.value === w.value) === i),
             solution,
           });
         }
@@ -4060,15 +5087,38 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
             `What is the dimension of the vector space $M_{${m} \\times ${n}}$ of all $${m} \\times ${n}$ matrices?`,
             `所有 $${m} \\times ${n}$ 矩阵构成的向量空间 $M_{${m} \\times ${n}}$ 的维数是多少？`,
           );
-          const solution = t(
-            `Each entry in an $m \\times n$ matrix is an independent free parameter. The standard basis consists of $mn = ${m} \\times ${n} = ${dim}$ elementary matrices $E_{ij}$, so the dimension is $${dim}$.`,
-            `$m \\times n$ 矩阵中的每个位置都是独立的自由参数。标准基由 $mn = ${m} \\times ${n} = ${dim}$ 个单位矩阵 $E_{ij}$ 组成，因此维数为 $${dim}$。`,
+          const solution = walked(
+            [
+              [
+                ["Take the standard basis", "取标准基"],
+                t(
+                  "For each position $(i, j)$, the matrix $E_{ij}$ has a $1$ there and $0$ elsewhere.",
+                  "对每个位置 $(i, j)$，矩阵 $E_{ij}$ 在该处为 $1$，其余为 $0$。",
+                ),
+              ],
+              [["Count the positions", "数位置"], t("", ""), [`${m} \\times ${n} = ${dim}`]],
+            ],
+            t(
+              `Each of the $${dim}$ entries can be chosen freely, one weight per $E_{ij}$.`,
+              `$${dim}$ 个元素都可以自由选取，每个 $E_{ij}$ 对应一个权重。`,
+            ),
           );
           return numberProblem({
             prompt,
             answer: dim,
             form: "integer",
-            wrong: [dim + 1, dim - 1, m + n === dim ? dim + 2 : m + n],
+            mistakes: [
+              why(
+                m + n,
+                "That adds the numbers of rows and columns; the basis has one matrix per entry, $m \\times n$ of them.",
+                "这是把行数和列数相加；基中每个元素位置对应一个矩阵，共 $m \\times n$ 个。",
+              ),
+              why(
+                Math.max(m, n),
+                "That counts only one row or one column; every entry gets its own basis matrix.",
+                "这只数了一行或一列；每个元素位置都有自己的基矩阵。",
+              ),
+            ].filter((w, i, all) => w.value !== dim && all.findIndex((o) => o.value === w.value) === i),
             solution,
           });
         }
@@ -4078,15 +5128,46 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
           `What is the dimension of the subspace of all symmetric $${n} \\times ${n}$ matrices in $M_{${n} \\times ${n}}$?`,
           `在 $M_{${n} \\times ${n}}$ 中，所有 $${n} \\times ${n}$ 对称矩阵构成的子空间的维数是多少？`,
         );
-        const solution = t(
-          `A symmetric $n \\times n$ matrix is completely determined by the entries on and above the main diagonal. The number of such independent entries is $\\frac{n(n + 1)}{2} = \\frac{${n}(${n + 1})}{2} = ${dimSym}$.`,
-          `$n \\times n$ 对称矩阵完全由主对角线及其上方的元素决定。独立元素的个数为 $\\frac{n(n + 1)}{2} = \\frac{${n}(${n + 1})}{2} = ${dimSym}$。`,
+        const solution = walked(
+          [
+            [
+              ["Find the free entries", "找出自由元素"],
+              t(
+                "$A^T = A$ means each entry below the diagonal equals the one above it, so only the diagonal and the entries above it are free.",
+                "$A^T = A$ 表示对角线下方的每个元素等于上方对应的元素，所以只有对角线及其上方的元素是自由的。",
+              ),
+            ],
+            [
+              ["Count them", "数个数"],
+              t(
+                `Row $1$ has $${n}$ such entries, row $2$ has $${n - 1}$, and so on down to $1$:`,
+                `第 $1$ 行有 $${n}$ 个，第 $2$ 行有 $${n - 1}$ 个，依此类推到 $1$：`,
+              ),
+              [`${n} + ${n - 1} + \\dots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${dimSym}`],
+            ],
+          ],
+          t(
+            `$${dimSym}$ free entries plus $${(n * (n - 1)) / 2}$ copied ones below the diagonal give all $${n * n}$ entries.`,
+            `$${dimSym}$ 个自由元素加上对角线下方 $${(n * (n - 1)) / 2}$ 个复制的元素，正好是全部 $${n * n}$ 个元素。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: dimSym,
           form: "integer",
-          wrong: [n * n, n, dimSym - 1],
+          mistakes: [
+            why(
+              n * n,
+              "That is the dimension of all $n \\times n$ matrices; in a symmetric matrix the entries below the diagonal are not free.",
+              "这是全部 $n \\times n$ 矩阵的维数；对称矩阵中对角线下方的元素不是自由的。",
+            ),
+            why(n, "That counts only the diagonal; the entries above it are free too.", "这只数了对角线；对角线上方的元素也是自由的。"),
+            why(
+              (n * (n - 1)) / 2,
+              "That counts only the entries above the diagonal; the diagonal entries are free too.",
+              "这只数了对角线上方的元素；对角元也是自由的。",
+            ),
+          ].filter((w, i, all) => w.value !== dimSym && all.findIndex((o) => o.value === w.value) === i),
           solution,
         });
       },
@@ -4095,8 +5176,8 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
       id: "finite-vs-infinite-dimensional",
       title: t("Finite vs infinite-dimensional vector spaces", "有限维与无限维向量空间"),
       explanation: t(
-        "A vector space is finite-dimensional if it is spanned by a finite set of vectors. Otherwise it is infinite-dimensional, such as the space $\\mathbb{P}$ of all polynomials, $C[a, b]$, or $C^\\infty(\\mathbb{R})$.",
-        "若向量空间可由有限个向量张成，则为有限维空间；否则为无限维空间，例如所有多项式的空间 $\\mathbb{P}$、连续函数空间 $C[a, b]$ 以及光滑函数空间 $C^\\infty(\\mathbb{R})$。",
+        "A vector space is finite-dimensional if it is spanned by a finite set of vectors. Otherwise it is infinite-dimensional, such as the space $\\mathbb{P}$ of all polynomials, $C[a, b]$, or $C^\\infty(\\mathbb{R})$. For example, any finite set of polynomials has some highest degree $d$, so $t^{d + 1}$ is not in its span; hence no finite set spans $\\mathbb{P}$.\n\n> **Watch out.** A large dimension is still finite: $M_{2 \\times 10}$ has dimension $20$, while $C[a, b]$ has no finite basis at all.",
+        "若向量空间可由有限个向量张成，则为有限维空间；否则为无限维空间，例如所有多项式的空间 $\\mathbb{P}$、连续函数空间 $C[a, b]$ 以及光滑函数空间 $C^\\infty(\\mathbb{R})$。例如任何有限个多项式都有一个最高次数 $d$，所以 $t^{d + 1}$ 不在它们的张成中；因此没有有限集能张成 $\\mathbb{P}$。\n\n> **注意。** 维数再大也仍是有限的：$M_{2 \\times 10}$ 的维数是 $20$，而 $C[a, b]$ 根本没有有限的基。",
       ),
       generate(rng) {
         const a = rng.int(-5, 0);
@@ -4115,9 +5196,27 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
           t(`$M_{2 \\times ${d}}$, the space of $2 \\times ${d}$ matrices`, `$M_{2 \\times ${d}}$，所有 $2 \\times ${d}$ 矩阵构成的空间`),
           t(`$\\mathbb{R}^{${d}}$, the ${d}-dimensional Euclidean space`, `$\\mathbb{R}^{${d}}$，${d} 维欧几里得空间`),
         ];
-        const solution = t(
-          `$C[${a}, ${b}]$ contains linearly independent sets of arbitrary finite size (for example, $\\{1, x, x^2, x^3, \\dots\\}$), so no finite set of functions can span it. Hence $C[${a}, ${b}]$ is infinite-dimensional. $\\mathbb{P}_{${d}}$ has dimension $${d + 1}$, $M_{2 \\times ${d}}$ has dimension $${2 * d}$, and $\\mathbb{R}^{${d}}$ has dimension $${d}$.`,
-          `$C[${a}, ${b}]$ 包含任意有限大小的线性无关集（例如 $\\{1, x, x^2, x^3, \\dots\\}$），无法由有限个函数张成，故为无限维空间。$\\mathbb{P}_{${d}}$ 维数为 $${d + 1}$，$M_{2 \\times ${d}}$ 维数为 $${2 * d}$，$\\mathbb{R}^{${d}}$ 维数为 $${d}$。`,
+        const solution = walked(
+          [
+            [
+              ["Count the finite ones", "数出有限维的"],
+              t(
+                `$\\mathbb{P}_{${d}}$ has dimension $${d + 1}$, $M_{2 \\times ${d}}$ has dimension $${2 * d}$, and $\\mathbb{R}^{${d}}$ has dimension $${d}$: each has a finite basis.`,
+                `$\\mathbb{P}_{${d}}$ 的维数为 $${d + 1}$，$M_{2 \\times ${d}}$ 的维数为 $${2 * d}$，$\\mathbb{R}^{${d}}$ 的维数为 $${d}$：它们都有有限的基。`,
+              ),
+            ],
+            [
+              ["Look at the function space", "看函数空间"],
+              t(
+                `$C[${a}, ${b}]$ contains $1, x, x^2, x^3, \\dots$, and any finitely many of them are independent, so no finite set of functions spans it.`,
+                `$C[${a}, ${b}]$ 含有 $1, x, x^2, x^3, \\dots$，其中任意有限个都线性无关，所以没有有限个函数能张成它。`,
+              ),
+            ],
+          ],
+          t(
+            `If $C[${a}, ${b}]$ had dimension $N$, the $N + 1$ independent functions $1, x, \\dots, x^N$ could not exist in it; they do, so it is infinite-dimensional.`,
+            `若 $C[${a}, ${b}]$ 的维数为 $N$，其中就不可能有 $N + 1$ 个线性无关的函数 $1, x, \\dots, x^N$；而它们确实存在，所以它是无限维的。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [
