@@ -5598,6 +5598,10 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
     "Master the general Gauss-Jordan inversion algorithm and detect singularity when a zero row appears.",
     "掌握高斯-约当求逆通法，并在消元过程中左侧出现全零行时判定方阵不可逆（奇异）。",
   ),
+  intro: t(
+    "Reduce $[A \\mid I]$ for $A = \\begin{pmatrix} 1 & 2 & 1 \\\\ 0 & 1 & 1 \\\\ 1 & 3 & 2 \\end{pmatrix}$. $R_3 - R_1 \\to R_3$ makes row $3$ equal to $(0, 1, 1 \\mid -1, 0, 1)$, and $R_3 - R_2 \\to R_3$ makes it $(0, 0, 0 \\mid -1, -1, 1)$. The left block now has a zero row, so it can never become $I_3$ and $A$ has no inverse.\n\nCheck: row $3$ of $A$ is row $1$ plus row $2$, $(1 + 0, 2 + 1, 1 + 1) = (1, 3, 2)$, so the rows are dependent and $\\det A = 0$.\n\nIn this lesson we run Gauss-Jordan elimination on $[A \\mid I_n]$ for any $n$ and read from it whether $A$ is invertible.",
+    "化简 $A = \\begin{pmatrix} 1 & 2 & 1 \\\\ 0 & 1 & 1 \\\\ 1 & 3 & 2 \\end{pmatrix}$ 的 $[A \\mid I]$。$R_3 - R_1 \\to R_3$ 使第 $3$ 行为 $(0, 1, 1 \\mid -1, 0, 1)$，$R_3 - R_2 \\to R_3$ 使它变为 $(0, 0, 0 \\mid -1, -1, 1)$。左块出现了零行，永远化不成 $I_3$，所以 $A$ 没有逆。\n\n检验：$A$ 的第 $3$ 行等于第 $1$ 行加第 $2$ 行，$(1 + 0, 2 + 1, 1 + 1) = (1, 3, 2)$，各行线性相关，$\\det A = 0$。\n\n本课我们对任意 $n$ 在 $[A \\mid I_n]$ 上做高斯-约当消元，并由此判断 $A$ 是否可逆。",
+  ),
   prerequisites: ["finding-the-inverse-of-a-3x3-matrix-using-row-operations"],
   encompasses: [],
   xp: 10,
@@ -5607,8 +5611,8 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
       id: "gauss-jordan-inversion-algorithm",
       title: t("General Gauss-Jordan inversion and singularity detection", "高斯-约当求逆通法与奇异性判定"),
       explanation: t(
-        "For an $n \\times n$ matrix $A$, row reducing $[A \\mid I_n]$ either produces $[I_n \\mid A^{-1}]$ if $\\text{rank}(A) = n$, or produces a row of zeros in the left block if $\\text{rank}(A) < n$. If a row of zeros appears in the left block, $A$ cannot be reduced to $I_n$ and therefore has no inverse (it is not invertible).",
-        "对于 $n \\times n$ 矩阵 $A$，对 $[A \\mid I_n]$ 进行行化简：若 $\\text{rank}(A) = n$，则可化为 $[I_n \\mid A^{-1}]$；若 $\\text{rank}(A) < n$，则左侧必然出现全零行。一旦左侧出现全零行，说明 $A$ 无法化为单位矩阵，因此矩阵不可逆（没有逆矩阵）。",
+        "For an $n \\times n$ matrix $A$, row reducing $[A \\mid I_n]$ either produces $[I_n \\mid A^{-1}]$ if $\\text{rank}(A) = n$, or produces a row of zeros in the left block if $\\text{rank}(A) < n$. If a row of zeros appears in the left block, $A$ cannot be reduced to $I_n$ and therefore has no inverse (it is not invertible). For example, a $3 \\times 3$ matrix whose third row is the sum of the first two always leads to a zero row.\n\n> **Watch out.** Only a zero row in the left block decides the question. An inverse never has a zero row, and an invertible matrix has exactly one inverse.",
+        "对于 $n \\times n$ 矩阵 $A$，对 $[A \\mid I_n]$ 进行行化简：若 $\\text{rank}(A) = n$，则可化为 $[I_n \\mid A^{-1}]$；若 $\\text{rank}(A) < n$，则左侧必然出现全零行。一旦左侧出现全零行，说明 $A$ 无法化为单位矩阵，因此矩阵不可逆（没有逆矩阵）。例如第三行等于前两行之和的 $3 \\times 3$ 矩阵，消元时一定出现零行。\n\n> **注意。** 只有左块的零行才决定结论。逆矩阵绝不含零行，可逆矩阵的逆恰有一个。",
       ),
       generate(rng) {
         const n = rng.pick([3, 4, 5]);
@@ -5629,28 +5633,80 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
           t("The inverse matrix $A^{-1}$ has a row of zeros", "逆矩阵 $A^{-1}$ 必然包含一个全零行"),
           t("Matrix $A$ has infinitely many inverses", "矩阵 $A$ 拥有无穷多个逆矩阵"),
         ];
-        return choiceProblem({
-          prompt,
-          options,
-          correct: singular ? 0 : 1,
-          solution: singular
-            ? t(
-                `If a row of zeros appears in the left block during row reduction, $\\text{rank}(A) < ${n}$. Since an $n \\times n$ matrix is invertible if and only if $\\text{rank}(A) = n$, $A$ cannot be transformed into the identity matrix $I_{${n}}$. Therefore, $A$ is singular and has no inverse.`,
-                `若行化简过程中左侧块出现全零行，说明 $\\text{rank}(A) < ${n}$。因为 $n \\times n$ 矩阵可逆当且仅当其满秩（$\\text{rank}(A) = n$），故 $A$ 无法化为单位矩阵 $I_{${n}}$，因此 $A$ 必然是奇异矩阵，没有逆矩阵。`,
-              )
-            : t(
-                `The row operations amount to multiplying on the left by one invertible matrix $E$. If $EA = I_{${n}}$, then $E = A^{-1}$, and the right block is $EI_{${n}} = A^{-1}$. An inverse is unique, and it is invertible itself, so it has no row of zeros.`,
-                `行变换相当于左乘一个可逆矩阵 $E$。若 $EA = I_{${n}}$，则 $E = A^{-1}$，右侧部分为 $EI_{${n}} = A^{-1}$。逆矩阵是唯一的，且本身可逆，所以没有全零行。`,
-              ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt,
+            options,
+            correct: singular ? 0 : 1,
+            solution: walked(
+              [
+                [
+                  ["Count the pivots", "数主元"],
+                  singular
+                    ? t(
+                        `A zero row in the left block means fewer than $${n}$ pivots, so $\\text{rank}(A) < ${n}$.`,
+                        `左块出现零行，说明主元少于 $${n}$ 个，即 $\\text{rank}(A) < ${n}$。`,
+                      )
+                    : t(
+                        `The left block reached $I_{${n}}$, so all $${n}$ pivots exist and $\\text{rank}(A) = ${n}$.`,
+                        `左块化成了 $I_{${n}}$，所以 $${n}$ 个主元都存在，$\\text{rank}(A) = ${n}$。`,
+                      ),
+                ],
+                [
+                  ["Conclude", "得出结论"],
+                  singular
+                    ? t(
+                        `An $${n} \\times ${n}$ matrix is invertible exactly when its rank is $${n}$, so $A$ is singular and has no inverse.`,
+                        `$${n} \\times ${n}$ 矩阵可逆当且仅当秩为 $${n}$，所以 $A$ 奇异，没有逆矩阵。`,
+                      )
+                    : t(
+                        `The row operations amount to one invertible matrix $E$ with $EA = I_{${n}}$, so $E = A^{-1}$, and the right block is $EI_{${n}} = A^{-1}$.`,
+                        `这些行变换合起来是一个可逆矩阵 $E$，且 $EA = I_{${n}}$，所以 $E = A^{-1}$，右块为 $EI_{${n}} = A^{-1}$。`,
+                      ),
+                ],
+              ],
+              singular
+                ? t(
+                    "Row operations keep the rank, and a matrix with a zero row has rank below its size, so no further step can turn the left block into the identity.",
+                    "行变换不改变秩，而含零行的矩阵秩小于其阶数，所以后续任何步骤都无法把左块化为单位矩阵。",
+                  )
+                : t(
+                    `Multiplying back, $A \\cdot A^{-1} = A E = I_{${n}}$ too, since a one-sided inverse of a square matrix is two-sided.`,
+                    `反过来相乘也有 $A \\cdot A^{-1} = AE = I_{${n}}$，因为方阵的单侧逆就是双侧逆。`,
+                  ),
+            ),
+          }),
+          [
+            [
+              options[0]!.en,
+              "The left block reached the identity, so every column has a pivot and $A$ is invertible.",
+              "左块化成了单位矩阵，所以每列都有主元，$A$ 可逆。",
+            ],
+            [
+              options[1]!.en,
+              "A zero row in the left block means fewer pivots than columns, so the left block can never become the identity.",
+              "左块出现零行，说明主元少于列数，左块永远化不成单位矩阵。",
+            ],
+            [
+              options[2]!.en,
+              "An inverse is itself invertible, so it never has a zero row; the zero row here, if any, is in the left block.",
+              "逆矩阵本身可逆，所以绝不含零行；这里的零行若有，也是在左块中。",
+            ],
+            [
+              options[3]!.en,
+              "An inverse is unique: if $B$ and $C$ are both inverses, then $B = B(AC) = (BA)C = C$.",
+              "逆矩阵是唯一的：若 $B$、$C$ 都是逆，则 $B = B(AC) = (BA)C = C$。",
+            ],
+          ],
+        );
       },
     },
     {
       id: "the-inverse-of-a-bidiagonal-matrix",
       title: t("The inverse of a bidiagonal matrix", "双对角矩阵的逆"),
       explanation: t(
-        "Let $B$ be the $n \\times n$ matrix with $1$ on the diagonal and $-a$ directly above it, so $B = I - aN$ where $N$ shifts entries one place. Since $N^n = 0$, the geometric series stops:\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}.$$\n\nSo the $(i, j)$ entry of $B^{-1}$ for $j \\ge i$ is $a^{j-i}$, and in particular the top-right entry is $a^{n-1}$. Gauss-Jordan elimination on $[B \\mid I]$ gives the same result row by row.",
-        "设 $B$ 是对角线为 $1$、紧邻上方为 $-a$ 的 $n \\times n$ 矩阵，即 $B = I - aN$，其中 $N$ 把元素平移一位。由于 $N^n = 0$，几何级数终止：\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}$$\n\n所以当 $j \\ge i$ 时 $B^{-1}$ 的 $(i, j)$ 元素为 $a^{j-i}$，特别地右上角元素为 $a^{n-1}$。对 $[B \\mid I]$ 作高斯-若尔当消元逐行得到同样结果。",
+        "Let $B$ be the $n \\times n$ matrix with $1$ on the diagonal and $-a$ directly above it, so $B = I - aN$ where $N$ shifts entries one place. Since $N^n = 0$, the geometric series stops:\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}.$$\n\nSo the $(i, j)$ entry of $B^{-1}$ for $j \\ge i$ is $a^{j-i}$, and in particular the top-right entry is $a^{n-1}$. Gauss-Jordan elimination on $[B \\mid I]$ gives the same result row by row. With $n = 3$ and $a = 2$, the top-right entry of $B^{-1}$ is $2^{2} = 4$.\n\n> **Watch out.** $B$ has $-a$ above the diagonal, but $B^{-1}$ has powers of $+a$; the exponent is $j - i$, the distance from the diagonal.",
+        "设 $B$ 是对角线为 $1$、紧邻上方为 $-a$ 的 $n \\times n$ 矩阵，即 $B = I - aN$，其中 $N$ 把元素平移一位。由于 $N^n = 0$，几何级数终止：\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}$$\n\n所以当 $j \\ge i$ 时 $B^{-1}$ 的 $(i, j)$ 元素为 $a^{j-i}$，特别地右上角元素为 $a^{n-1}$。对 $[B \\mid I]$ 作高斯-若尔当消元逐行得到同样结果。取 $n = 3$，$a = 2$，$B^{-1}$ 的右上角元素为 $2^{2} = 4$。\n\n> **注意。** $B$ 对角线上方是 $-a$，而 $B^{-1}$ 中是 $+a$ 的幂；指数是 $j - i$，即到对角线的距离。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(3, 5);
@@ -5665,10 +5721,50 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
             `求 $B = ${matLatex(B)}$ 的逆矩阵 $B^{-1}$ 的 $(${i}, ${j})$ 元素。`,
           ),
           answer: ans,
-          wrong: [-ans, (-a) ** (j - i), a * (j - i), j === 2 ? 0 : a ** (j - i - 1)],
-          solution: t(
-            `$B = I - ${paren(a)}N$, so $B^{-1} = \\sum_k ${paren(a)}^kN^k$ and the $(${i}, ${j})$ entry is $${paren(a)}^{${j - i}} = ${ans}$.`,
-            `$B = I - ${paren(a)}N$，所以 $B^{-1} = \\sum_k ${paren(a)}^kN^k$，其 $(${i}, ${j})$ 元素为 $${paren(a)}^{${j - i}} = ${ans}$。`,
+          mistakes: [
+            why(
+              (-a) ** (j - i),
+              `That raises the entry $${-a}$ of $B$ to the power; the inverse uses $${a}$, with the sign flipped.`,
+              `这是把 $B$ 的元素 $${-a}$ 求幂；逆矩阵用的是 $${a}$，符号相反。`,
+            ),
+            why(
+              -ans,
+              "The sign is wrong: every entry of $B^{-1}$ is a power of $a$ itself.",
+              "符号错了：$B^{-1}$ 的每个元素都是 $a$ 本身的幂。",
+            ),
+            why(
+              a * (j - i),
+              `The entries are powers of $${a}$, not multiples: $${paren(a)}^{${j - i}}$.`,
+              `这些元素是 $${a}$ 的幂，不是倍数：$${paren(a)}^{${j - i}}$。`,
+            ),
+            why(
+              a ** (j - i - 1),
+              `One power short: the exponent is the distance from the diagonal, $${j} - ${i} = ${j - i}$.`,
+              `少了一次幂：指数是到对角线的距离 $${j} - ${i} = ${j - i}$。`,
+            ),
+          ].filter((w, k, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === k),
+          solution: walked(
+            [
+              [
+                ["Write $B$ as $I - aN$", "把 $B$ 写成 $I - aN$"],
+                t(
+                  `The entries above the diagonal are $${-a}$, so $B = I - ${paren(a)}N$ with $N^{${n}} = 0$.`,
+                  `对角线上方的元素为 $${-a}$，所以 $B = I - ${paren(a)}N$，且 $N^{${n}} = 0$。`,
+                ),
+              ],
+              [
+                ["Sum the finite series", "求有限级数之和"],
+                t(
+                  `$B^{-1} = I + ${paren(a)}N + ${paren(a)}^2N^2 + \\dots$, and only $N^{${j - i}}$ reaches position $(${i}, ${j})$:`,
+                  `$B^{-1} = I + ${paren(a)}N + ${paren(a)}^2N^2 + \\dots$，其中只有 $N^{${j - i}}$ 到达 $(${i}, ${j})$ 位置：`,
+                ),
+                [`${paren(a)}^{${j - i}} = ${ans}`],
+              ],
+            ],
+            t(
+              `Row 1 of $B$ is $(1, ${-a}, 0, \\dots)$ and column ${j} of $B^{-1}$ starts $(${ans}, ${a ** (j - 2)}, \\dots)$, so their product is $${ans} + ${paren(-a)} \\cdot ${paren(a ** (j - 2))} = 0$, the $(1, ${j})$ entry of $I$.`,
+              `$B$ 的第 1 行为 $(1, ${-a}, 0, \\dots)$，$B^{-1}$ 的第 ${j} 列开头为 $(${ans}, ${a ** (j - 2)}, \\dots)$，二者之积为 $${ans} + ${paren(-a)} \\cdot ${paren(a ** (j - 2))} = 0$，正是 $I$ 的 $(1, ${j})$ 元素。`,
+            ),
           ),
         });
       },
@@ -5686,6 +5782,10 @@ export const matricesWithEasyToFindInverses: TopicDef = {
     "Invert special matrices directly: a diagonal matrix has $D^{-1} = \\operatorname{diag}(1/d_i)$, and an orthogonal matrix has $Q^{-1} = Q^T$.",
     "直接求特殊矩阵的逆：对角矩阵 $D^{-1} = \\operatorname{diag}(1/d_i)$，正交矩阵 $Q^{-1} = Q^T$。",
   ),
+  intro: t(
+    "$D = \\operatorname{diag}(2, -4, 5)$ has $D^{-1} = \\operatorname{diag}(\\frac{1}{2}, -\\frac{1}{4}, \\frac{1}{5})$: each diagonal entry is inverted on its own. A permutation matrix such as $P = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$ has $P^{-1} = P^{T}$.\n\nCheck: the diagonal of $DD^{-1}$ is $2 \\cdot \\frac{1}{2} = 1$, $(-4) \\cdot (-\\frac{1}{4}) = 1$, $5 \\cdot \\frac{1}{5} = 1$.\n\nIn this lesson we write down the inverses of diagonal, orthogonal and permutation matrices without row reduction.",
+    "$D = \\operatorname{diag}(2, -4, 5)$ 的逆为 $D^{-1} = \\operatorname{diag}(\\frac{1}{2}, -\\frac{1}{4}, \\frac{1}{5})$：每个对角元素各自取倒数。置换矩阵如 $P = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$ 满足 $P^{-1} = P^{T}$。\n\n检验：$DD^{-1}$ 的对角线为 $2 \\cdot \\frac{1}{2} = 1$，$(-4) \\cdot (-\\frac{1}{4}) = 1$，$5 \\cdot \\frac{1}{5} = 1$。\n\n本课我们不经行化简，直接写出对角矩阵、正交矩阵与置换矩阵的逆。",
+  ),
   prerequisites: ["finding-the-inverse-of-an-nxn-square-matrix-using-row-operations"],
   encompasses: [],
   xp: 10,
@@ -5695,8 +5795,8 @@ export const matricesWithEasyToFindInverses: TopicDef = {
       id: "special-matrix-inverses",
       title: t("Inverses of diagonal and orthogonal matrices", "对角矩阵与正交矩阵的求逆"),
       explanation: t(
-        "Special matrix families have immediate formulas for their inverses: (1) Diagonal matrix: $\\text{diag}(d_1, \\dots, d_n)^{-1} = \\text{diag}(1/d_1, \\dots, 1/d_n)$; (2) Orthogonal matrix ($Q^T Q = I$): $Q^{-1} = Q^T$; (3) Block diagonal matrix: $\\text{diag}(A, B)^{-1} = \\text{diag}(A^{-1}, B^{-1})$.",
-        "某些特殊矩阵类可以直接写出逆矩阵：(1) 对角矩阵：$\\text{diag}(d_1, \\dots, d_n)^{-1} = \\text{diag}(1/d_1, \\dots, 1/d_n)$；(2) 正交矩阵（$Q^T Q = I$）：$Q^{-1} = Q^T$；(3) 分块对角矩阵：$\\text{diag}(A, B)^{-1} = \\text{diag}(A^{-1}, B^{-1})$。",
+        "Special matrix families have immediate formulas for their inverses: (1) Diagonal matrix: $\\text{diag}(d_1, \\dots, d_n)^{-1} = \\text{diag}(1/d_1, \\dots, 1/d_n)$; (2) Orthogonal matrix ($Q^T Q = I$): $Q^{-1} = Q^T$; (3) Block diagonal matrix: $\\text{diag}(A, B)^{-1} = \\text{diag}(A^{-1}, B^{-1})$. For example, $\\text{diag}(2, 5)^{-1} = \\text{diag}(\\frac{1}{2}, \\frac{1}{5})$.\n\n> **Watch out.** Inverting entry by entry works only for a diagonal matrix, and each reciprocal stays in its own position and keeps its sign.",
+        "某些特殊矩阵类可以直接写出逆矩阵：(1) 对角矩阵：$\\text{diag}(d_1, \\dots, d_n)^{-1} = \\text{diag}(1/d_1, \\dots, 1/d_n)$；(2) 正交矩阵（$Q^T Q = I$）：$Q^{-1} = Q^T$；(3) 分块对角矩阵：$\\text{diag}(A, B)^{-1} = \\text{diag}(A^{-1}, B^{-1})$。例如 $\\text{diag}(2, 5)^{-1} = \\text{diag}(\\frac{1}{2}, \\frac{1}{5})$。\n\n> **注意。** 逐个元素取倒数只对对角矩阵成立，而且每个倒数留在原位置、保持符号。",
       ),
       generate(rng) {
         const d1 = rng.pick([2, 3, 4, 5]);
@@ -5708,11 +5808,22 @@ export const matricesWithEasyToFindInverses: TopicDef = {
           [0, d2, 0],
           [0, 0, d3],
         ];
-
-        const invDStr = `\\begin{pmatrix} \\frac{1}{${d1}} & 0 & 0 \\\\ 0 & -\\frac{1}{${-d2}} & 0 \\\\ 0 & 0 & ${d3 === 1 ? "1" : `\\frac{1}{${d3}}`} \\end{pmatrix}`;
-        const wrong1Str = `\\begin{pmatrix} -${d1} & 0 & 0 \\\\ 0 & ${-d2} & 0 \\\\ 0 & 0 & -${d3} \\end{pmatrix}`;
-        const wrong2Str = `\\begin{pmatrix} ${d3} & 0 & 0 \\\\ 0 & ${d2} & 0 \\\\ 0 & 0 & ${d1} \\end{pmatrix}`;
-        const wrong3Str = `\\begin{pmatrix} \\frac{1}{${d1}} & \\frac{1}{${d2}} & \\frac{1}{${d3}} \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \\end{pmatrix}`;
+        const r = (d: number) => Q.of(1, d).toLatex();
+        const diag = (x: string, y: string, z: string) =>
+          matLatex([
+            [x, "0", "0"],
+            ["0", y, "0"],
+            ["0", "0", z],
+          ]);
+        const invDStr = diag(r(d1), r(d2), r(d3));
+        const wrong1Str = diag(String(-d1), String(-d2), String(-d3));
+        const wrong2Str = diag(String(d3), String(d2), String(d1));
+        const wrong3Str = matLatex([
+          [r(d1), r(d2), r(d3)],
+          ["0", "0", "0"],
+          ["0", "0", "0"],
+        ]);
+        const show = (s: string) => t(`$$${s}$$`, `$$${s}$$`);
 
         const prompt = t(
           `What is the inverse of the diagonal matrix $D$?
@@ -5723,15 +5834,47 @@ $$D = ${matLatex(D)}$$`,
 $$D = ${matLatex(D)}$$`,
         );
 
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$${invDStr}$$`, `$$${invDStr}$$`),
-          [t(`$$${wrong1Str}$$`, `$$${wrong1Str}$$`), t(`$$${wrong2Str}$$`, `$$${wrong2Str}$$`), t(`$$${wrong3Str}$$`, `$$${wrong3Str}$$`)],
-          t(
-            `For any diagonal matrix $D = \\text{diag}(d_1, d_2, d_3)$ with non-zero entries, its inverse is obtained by simply reciprocating each diagonal entry: $D^{-1} = \\text{diag}(1/d_1, 1/d_2, 1/d_3) = ${invDStr}$.`,
-            `对任意主对角线非零的对角矩阵 $D = \\text{diag}(d_1, d_2, d_3)$，其逆矩阵只需将对角线上的每个元素分别取倒数：$D^{-1} = \\text{diag}(1/d_1, 1/d_2, 1/d_3) = ${invDStr}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            show(invDStr),
+            [show(wrong1Str), show(wrong2Str), show(wrong3Str)],
+            walked(
+              [
+                [
+                  ["Invert each diagonal entry", "每个对角元素取倒数"],
+                  t(
+                    "A diagonal matrix acts on each coordinate separately, so each entry is undone on its own:",
+                    "对角矩阵分别作用于每个坐标，所以每个元素各自撤销：",
+                  ),
+                  [`\\frac{1}{${d1}} = ${r(d1)}, \\quad \\frac{1}{${d2}} = ${r(d2)}, \\quad \\frac{1}{${d3}} = ${r(d3)}`],
+                ],
+                [["Keep them in place", "放回原位"], t("", ""), [`D^{-1} = ${invDStr}`]],
+              ],
+              t(
+                `The diagonal of $DD^{-1}$ is $${d1} \\cdot ${r(d1)} = 1$, $${paren(d2)} \\cdot \\left(${r(d2)}\\right) = 1$, $${d3} \\cdot ${r(d3)} = 1$, and every other entry is $0$.`,
+                `$DD^{-1}$ 的对角线为 $${d1} \\cdot ${r(d1)} = 1$，$${paren(d2)} \\cdot \\left(${r(d2)}\\right) = 1$，$${d3} \\cdot ${r(d3)} = 1$，其余元素都是 $0$。`,
+              ),
+            ),
           ),
+          [
+            [
+              `$$${wrong1Str}$$`,
+              "That is $-D$; its product with $D$ is $-D^2$, not $I$. Each entry needs its reciprocal.",
+              "这是 $-D$；它与 $D$ 的积是 $-D^2$，不是 $I$。每个元素要取倒数。",
+            ],
+            [
+              `$$${wrong2Str}$$`,
+              "That reverses the order of the entries and inverts none of them.",
+              "这只是把元素顺序颠倒，一个也没有取倒数。",
+            ],
+            [
+              `$$${wrong3Str}$$`,
+              "The reciprocals belong on the diagonal; a matrix with zero rows has no inverse itself and cannot be one.",
+              "倒数应放在对角线上；含零行的矩阵本身不可逆，不可能是逆矩阵。",
+            ],
+          ],
         );
       },
     },
@@ -5739,8 +5882,8 @@ $$D = ${matLatex(D)}$$`,
       id: "the-inverse-of-a-permutation-matrix-is-its-transpose",
       title: t("The inverse of a permutation matrix is its transpose", "置换矩阵的逆是其转置"),
       explanation: t(
-        "A permutation matrix $P$ has orthonormal columns, so $P^TP = I$ and $P^{-1} = P^T$. To find where the $1$ in row $i$ of $P^{-1}$ sits, read column $i$ of $P$: if its $1$ is in row $k$, then row $i$ of $P^{-1}$ has its $1$ in column $k$. No row reduction is needed.",
-        "置换矩阵 $P$ 的各列标准正交，所以 $P^TP = I$，$P^{-1} = P^T$。要找 $P^{-1}$ 第 $i$ 行中 $1$ 的位置，只需看 $P$ 的第 $i$ 列：若其 $1$ 在第 $k$ 行，则 $P^{-1}$ 的第 $i$ 行的 $1$ 在第 $k$ 列。无需行化简。",
+        "A permutation matrix $P$ has orthonormal columns, so $P^TP = I$ and $P^{-1} = P^T$. To find where the $1$ in row $i$ of $P^{-1}$ sits, read column $i$ of $P$: if its $1$ is in row $k$, then row $i$ of $P^{-1}$ has its $1$ in column $k$. No row reduction is needed. For $P = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 1 & 0 & 0 \\end{pmatrix}$, column $1$ has its $1$ in row $3$, so row $1$ of $P^{-1}$ has its $1$ in column $3$.\n\n> **Watch out.** Read column $i$ of $P$, not row $i$: row $i$ of $P$ describes $P$ itself, not its inverse.",
+        "置换矩阵 $P$ 的各列标准正交，所以 $P^TP = I$，$P^{-1} = P^T$。要找 $P^{-1}$ 第 $i$ 行中 $1$ 的位置，只需看 $P$ 的第 $i$ 列：若其 $1$ 在第 $k$ 行，则 $P^{-1}$ 的第 $i$ 行的 $1$ 在第 $k$ 列。无需行化简。对 $P = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 1 & 0 & 0 \\end{pmatrix}$，第 $1$ 列的 $1$ 在第 $3$ 行，所以 $P^{-1}$ 第 $1$ 行的 $1$ 在第 $3$ 列。\n\n> **注意。** 要看 $P$ 的第 $i$ 列，而不是第 $i$ 行：$P$ 的第 $i$ 行描述的是 $P$ 本身，而不是它的逆。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(3, 5);
@@ -5755,10 +5898,36 @@ $$D = ${matLatex(D)}$$`,
             `对 $P = ${matLatex(P)}$，$P^{-1}$ 第 $${i + 1}$ 行中的 $1$ 在第几列？`,
           ),
           answer: k + 1,
-          wrong: [sigma[i]! + 1, i + 1, n - k],
-          solution: t(
-            `$P^{-1} = P^T$, so row $${i + 1}$ of $P^{-1}$ is column $${i + 1}$ of $P$, whose $1$ is in row $${k + 1}$. The answer is column $${k + 1}$.`,
-            `$P^{-1} = P^T$，所以 $P^{-1}$ 的第 $${i + 1}$ 行就是 $P$ 的第 $${i + 1}$ 列，其 $1$ 在第 $${k + 1}$ 行。答案是第 $${k + 1}$ 列。`,
+          mistakes: [
+            why(
+              sigma[i]! + 1,
+              `That reads row $${i + 1}$ of $P$, which describes $P$ itself; row $${i + 1}$ of $P^{-1}$ is column $${i + 1}$ of $P$.`,
+              `这是读了 $P$ 的第 $${i + 1}$ 行，描述的是 $P$ 本身；$P^{-1}$ 的第 $${i + 1}$ 行是 $P$ 的第 $${i + 1}$ 列。`,
+            ),
+            why(
+              i + 1,
+              "That would put the $1$ on the diagonal, which happens only where $P$ fixes a row.",
+              "这会把 $1$ 放在对角线上，只有 $P$ 保持某行不动时才如此。",
+            ),
+          ].filter((w, m, all) => w.value !== k + 1 && all.findIndex((o) => o.value === w.value) === m),
+          solution: walked(
+            [
+              [
+                ["Use $P^{-1} = P^{T}$", "用 $P^{-1} = P^{T}$"],
+                t(`Row $${i + 1}$ of $P^{T}$ is column $${i + 1}$ of $P$.`, `$P^{T}$ 的第 $${i + 1}$ 行就是 $P$ 的第 $${i + 1}$ 列。`),
+              ],
+              [
+                ["Find the $1$ in that column", "找出该列中的 $1$"],
+                t(
+                  `Column $${i + 1}$ of $P$ has its $1$ in row $${k + 1}$, so row $${i + 1}$ of $P^{-1}$ has its $1$ in column $${k + 1}$.`,
+                  `$P$ 的第 $${i + 1}$ 列的 $1$ 在第 $${k + 1}$ 行，所以 $P^{-1}$ 第 $${i + 1}$ 行的 $1$ 在第 $${k + 1}$ 列。`,
+                ),
+              ],
+            ],
+            t(
+              `In $P^{-1}P$, row $${i + 1}$ picks out row $${k + 1}$ of $P$, which has its $1$ in column $${i + 1}$: that is row $${i + 1}$ of $I$.`,
+              `在 $P^{-1}P$ 中，第 $${i + 1}$ 行取出 $P$ 的第 $${k + 1}$ 行，其 $1$ 在第 $${i + 1}$ 列：正是 $I$ 的第 $${i + 1}$ 行。`,
+            ),
           ),
         });
       },
@@ -5778,6 +5947,10 @@ export const triangularMatrices: TopicDef = {
     "Identify upper, lower, and unit triangular matrices and compute their determinants and products.",
     "理解上三角矩阵、下三角矩阵及单位三角矩阵的性质，计算其行列式与矩阵乘积。",
   ),
+  intro: t(
+    "$U = \\begin{pmatrix} 2 & 5 & 1 \\\\ 0 & 3 & 4 \\\\ 0 & 0 & -1 \\end{pmatrix}$ is upper triangular: every entry below the diagonal is $0$. Its determinant is the product of the diagonal, $2 \\cdot 3 \\cdot (-1) = -6$.\n\nCheck: expanding along column $1$ gives $2 \\cdot (3 \\cdot (-1) - 4 \\cdot 0) = -6$.\n\nIn this lesson we recognize upper, lower and unit triangular matrices, take their determinants and multiply them.",
+    "$U = \\begin{pmatrix} 2 & 5 & 1 \\\\ 0 & 3 & 4 \\\\ 0 & 0 & -1 \\end{pmatrix}$ 是上三角矩阵：对角线下方的元素都是 $0$。它的行列式是对角元素之积 $2 \\cdot 3 \\cdot (-1) = -6$。\n\n检验：按第 $1$ 列展开得 $2 \\cdot (3 \\cdot (-1) - 4 \\cdot 0) = -6$。\n\n本课我们识别上三角、下三角与单位三角矩阵，求它们的行列式并做乘法。",
+  ),
   prerequisites: ["gaussian-elimination-for-nxm-systems-of-equations"],
   encompasses: [],
   xp: 10,
@@ -5787,8 +5960,8 @@ export const triangularMatrices: TopicDef = {
       id: "triangular-matrices-properties",
       title: t("Properties of upper and lower triangular matrices", "三角矩阵的基本性质与行列式"),
       explanation: t(
-        "A square matrix $U$ is upper triangular if $u_{ij} = 0$ for all $i > j$. A square matrix $L$ is lower triangular if $l_{ij} = 0$ for all $i < j$. A unit triangular matrix additionally has all 1s on its main diagonal. Key properties: (1) The product of two upper (lower) triangular matrices is upper (lower) triangular; (2) The determinant of any triangular matrix is simply the product of its diagonal entries.",
-        "若方阵 $U$ 满足对所有 $i > j$ 均有 $u_{ij} = 0$，则称其为上三角矩阵。若方阵 $L$ 满足对所有 $i < j$ 均有 $l_{ij} = 0$，则称其为下三角矩阵。主对角线元素全为 1 的三角矩阵称为单位三角矩阵。关键性质：(1) 两个上（下）三角矩阵的乘积仍为上（下）三角矩阵；(2) 任意三角矩阵的行列式直接等于其主对角线上所有元素的乘积。",
+        "A square matrix $U$ is upper triangular if $u_{ij} = 0$ for all $i > j$. A square matrix $L$ is lower triangular if $l_{ij} = 0$ for all $i < j$. A unit triangular matrix additionally has all 1s on its main diagonal. Key properties: (1) The product of two upper (lower) triangular matrices is upper (lower) triangular; (2) The determinant of any triangular matrix is simply the product of its diagonal entries. For example, $\\det \\begin{pmatrix} 2 & 7 \\\\ 0 & 3 \\end{pmatrix} = 2 \\cdot 3 = 6$.\n\n> **Watch out.** The entries off the diagonal play no part in the determinant of a triangular matrix, and the diagonal entries are multiplied, not added.",
+        "若方阵 $U$ 满足对所有 $i > j$ 均有 $u_{ij} = 0$，则称其为上三角矩阵。若方阵 $L$ 满足对所有 $i < j$ 均有 $l_{ij} = 0$，则称其为下三角矩阵。主对角线元素全为 1 的三角矩阵称为单位三角矩阵。关键性质：(1) 两个上（下）三角矩阵的乘积仍为上（下）三角矩阵；(2) 任意三角矩阵的行列式直接等于其主对角线上所有元素的乘积。例如 $\\det \\begin{pmatrix} 2 & 7 \\\\ 0 & 3 \\end{pmatrix} = 2 \\cdot 3 = 6$。\n\n> **注意。** 三角矩阵的非对角元素与行列式无关，对角元素要相乘而不是相加。",
       ),
       generate(rng) {
         const d1 = rng.pick([2, 3, 4, -2]);
@@ -5819,11 +5992,33 @@ $$U = ${matLatex(U)}$$`,
         return numberProblem({
           prompt,
           answer: detU,
-          solution: t(
-            `For any triangular matrix (upper or lower), the determinant equals the product of its diagonal entries: $\\det(U) = (${d1}) \\cdot (${d2}) \\cdot (${d3}) = ${detU}$.`,
-            `对任意三角矩阵（无论上三角或下三角），其行列式直接等于主对角线元素的乘积：$\\det(U) = (${d1}) \\cdot (${d2}) \\cdot (${d3}) = ${detU}$。`,
+          mistakes: [
+            why(
+              d1 + d2 + d3,
+              "The diagonal entries were added; the determinant of a triangular matrix is their product.",
+              "对角元素被相加了；三角矩阵的行列式是它们的乘积。",
+            ),
+            why(-detU, "The sign is wrong: the product of the diagonal needs no extra sign.", "符号错了：对角元素之积不需要额外的符号。"),
+            why(detU + u12, "The entries above the diagonal do not enter the determinant.", "对角线上方的元素不进入行列式。"),
+            why(d1 * d2 + d3, "All three diagonal entries are multiplied together.", "三个对角元素要全部相乘。"),
+          ].filter((w, i, all) => w.value !== detU && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Check the shape", "检查形状"],
+                t(
+                  "Every entry below the diagonal is $0$, so $U$ is upper triangular.",
+                  "对角线下方的元素都是 $0$，所以 $U$ 是上三角矩阵。",
+                ),
+              ],
+              [
+                ["Multiply the diagonal", "对角元素相乘"],
+                t("", ""),
+                [`\\det U = ${paren(d1)} \\cdot ${paren(d2)} \\cdot ${paren(d3)} = ${detU}`],
+              ],
+            ],
+            t(`Expanding along row $1$: $${expansion3(U)}$.`, `按第 $1$ 行展开：$${expansion3(U)}$。`),
           ),
-          wrong: [d1 + d2 + d3, -detU, detU + u12, d1 * d2 + d3],
         });
       },
     },
@@ -5831,8 +6026,8 @@ $$U = ${matLatex(U)}$$`,
       id: "an-entry-of-a-product-of-upper-triangular-matrices",
       title: t("An entry of a product of upper triangular matrices", "上三角矩阵乘积的元素"),
       explanation: t(
-        "The product of two upper triangular matrices is upper triangular. In the $(i, j)$ entry $\\sum_k u_{ik}v_{kj}$, the term is zero unless $i \\le k \\le j$, so only a few products survive. For example the $(1, 2)$ entry of $UV$ is $u_{11}v_{12} + u_{12}v_{22}$, and the diagonal entries are just $u_{ii}v_{ii}$.",
-        "两个上三角矩阵的乘积仍是上三角矩阵。在 $(i, j)$ 元素 $\\sum_k u_{ik}v_{kj}$ 中，除非 $i \\le k \\le j$，否则该项为零，所以只剩下少数几项。例如 $UV$ 的 $(1, 2)$ 元素为 $u_{11}v_{12} + u_{12}v_{22}$，对角元素就是 $u_{ii}v_{ii}$。",
+        "The product of two upper triangular matrices is upper triangular. In the $(i, j)$ entry $\\sum_k u_{ik}v_{kj}$, the term is zero unless $i \\le k \\le j$, so only a few products survive. For example the $(1, 2)$ entry of $UV$ is $u_{11}v_{12} + u_{12}v_{22}$, and the diagonal entries are just $u_{ii}v_{ii}$. With $U = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$ and $V = \\begin{pmatrix} 4 & 5 \\\\ 0 & 6 \\end{pmatrix}$, the $(1, 2)$ entry is $1 \\cdot 5 + 2 \\cdot 6 = 17$.\n\n> **Watch out.** Off the diagonal the entry is a sum of products, not $u_{ij}v_{ij}$, and the order matters: $UV$ and $VU$ usually differ.",
+        "两个上三角矩阵的乘积仍是上三角矩阵。在 $(i, j)$ 元素 $\\sum_k u_{ik}v_{kj}$ 中，除非 $i \\le k \\le j$，否则该项为零，所以只剩下少数几项。例如 $UV$ 的 $(1, 2)$ 元素为 $u_{11}v_{12} + u_{12}v_{22}$，对角元素就是 $u_{ii}v_{ii}$。取 $U = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$，$V = \\begin{pmatrix} 4 & 5 \\\\ 0 & 6 \\end{pmatrix}$，$(1, 2)$ 元素为 $1 \\cdot 5 + 2 \\cdot 6 = 17$。\n\n> **注意。** 非对角元素是乘积之和，而不是 $u_{ij}v_{ij}$；顺序也有关系：$UV$ 与 $VU$ 通常不同。",
       ),
       generate(rng: Rng): Problem {
         const up = () => [
@@ -5849,19 +6044,48 @@ $$U = ${matLatex(U)}$$`,
           [1, 3],
         ] as const);
         const ans = W[i - 1]![j - 1]!;
-        const terms = Array.from({ length: j - i + 1 }, (_, s) => i + s).map(
-          (k) => `${paren(U[i - 1]![k - 1]!)} \\cdot ${paren(V[k - 1]![j - 1]!)}`,
-        );
+        const term = (k: number) => `${paren(U[i - 1]![k - 1]!)} \\cdot ${paren(V[k - 1]![j - 1]!)}`;
+        const terms = Array.from({ length: j - i + 1 }, (_, s) => term(i + s));
+        const all = [1, 2, 3].map(term);
         return numberProblem({
           prompt: t(
             `Find the $(${i}, ${j})$ entry of $UV$ for $U = ${matLatex(U)}$ and $V = ${matLatex(V)}$.`,
             `对 $U = ${matLatex(U)}$ 和 $V = ${matLatex(V)}$，求 $UV$ 的 $(${i}, ${j})$ 元素。`,
           ),
           answer: ans,
-          wrong: [U[i - 1]![j - 1]! * V[i - 1]![j - 1]!, matMul(V, U)[i - 1]![j - 1]!, U[i - 1]![j - 1]! + V[i - 1]![j - 1]!, -ans],
-          solution: t(
-            `Only $k$ from $${i}$ to $${j}$ contribute: $${terms.join(" + ")} = ${ans}$.`,
-            `只有 $k$ 从 $${i}$ 到 $${j}$ 的项有贡献：$${terms.join(" + ")} = ${ans}$。`,
+          mistakes: [
+            why(
+              U[i - 1]![j - 1]! * V[i - 1]![j - 1]!,
+              "That multiplies the two entries in the same position; a product entry is row $i$ of $U$ times column $j$ of $V$.",
+              "这是把同一位置的两个元素相乘；乘积的元素是 $U$ 的第 $i$ 行乘 $V$ 的第 $j$ 列。",
+            ),
+            why(
+              matMul(V, U)[i - 1]![j - 1]!,
+              "That is the entry of $VU$; the order of the factors matters.",
+              "这是 $VU$ 的元素；因子的顺序有关系。",
+            ),
+            why(
+              U[i - 1]![j - 1]! + V[i - 1]![j - 1]!,
+              "That adds the two entries, which is the entry of $U + V$, not of $UV$.",
+              "这是两元素相加，是 $U + V$ 的元素，不是 $UV$ 的。",
+            ),
+            why(-ans, "The sign is wrong; recheck the signs of the products.", "符号错了；请重新检查各乘积的符号。"),
+          ].filter((w, k, list) => w.value !== ans && list.findIndex((o) => o.value === w.value) === k),
+          solution: walked(
+            [
+              [
+                ["Find the surviving terms", "找出不为零的项"],
+                t(
+                  `In $\\sum_k u_{${i}k}v_{k${j}}$, $u_{${i}k} = 0$ for $k < ${i}$ and $v_{k${j}} = 0$ for $k > ${j}$, so only $k$ from $${i}$ to $${j}$ contribute.`,
+                  `在 $\\sum_k u_{${i}k}v_{k${j}}$ 中，$k < ${i}$ 时 $u_{${i}k} = 0$，$k > ${j}$ 时 $v_{k${j}} = 0$，所以只有 $k$ 从 $${i}$ 到 $${j}$ 的项有贡献。`,
+                ),
+              ],
+              [["Add them", "相加"], t("", ""), [`${terms.join(" + ")} = ${ans}`]],
+            ],
+            t(
+              `The full row-times-column sum gives the same: $${all.join(" + ")} = ${ans}$.`,
+              `完整的行乘列之和也一样：$${all.join(" + ")} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -5879,6 +6103,10 @@ export const luFactorizationOf2x2Matrices: TopicDef = {
     "Factor 2x2 matrices into A = LU with unit lower triangular L and upper triangular U.",
     "将二阶矩阵分解为 A = LU，其中 L 为单位下三角矩阵，U 为上三角矩阵。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 2 & 1 \\\\ 6 & 5 \\end{pmatrix}$, the operation $R_2 - 3R_1 \\to R_2$ clears the $6$ and leaves $U = \\begin{pmatrix} 2 & 1 \\\\ 0 & 2 \\end{pmatrix}$. The multiplier $3$ goes into $L = \\begin{pmatrix} 1 & 0 \\\\ 3 & 1 \\end{pmatrix}$.\n\nCheck: $LU = \\begin{pmatrix} 2 & 1 \\\\ 3 \\cdot 2 & 3 \\cdot 1 + 2 \\end{pmatrix} = \\begin{pmatrix} 2 & 1 \\\\ 6 & 5 \\end{pmatrix} = A$.\n\nIn this lesson we factor $2 \\times 2$ matrices as $A = LU$ by recording the elimination step.",
+    "对 $A = \\begin{pmatrix} 2 & 1 \\\\ 6 & 5 \\end{pmatrix}$，行变换 $R_2 - 3R_1 \\to R_2$ 消去 $6$，留下 $U = \\begin{pmatrix} 2 & 1 \\\\ 0 & 2 \\end{pmatrix}$。乘数 $3$ 放入 $L = \\begin{pmatrix} 1 & 0 \\\\ 3 & 1 \\end{pmatrix}$。\n\n检验：$LU = \\begin{pmatrix} 2 & 1 \\\\ 3 \\cdot 2 & 3 \\cdot 1 + 2 \\end{pmatrix} = \\begin{pmatrix} 2 & 1 \\\\ 6 & 5 \\end{pmatrix} = A$。\n\n本课我们记下消元步骤，把 $2 \\times 2$ 矩阵分解为 $A = LU$。",
+  ),
   prerequisites: ["triangular-matrices"],
   encompasses: [],
   xp: 10,
@@ -5888,8 +6116,8 @@ export const luFactorizationOf2x2Matrices: TopicDef = {
       id: "lu-factorization-2x2",
       title: t("Computing the LU factorization of a 2x2 matrix", "二阶矩阵的 LU 分解计算"),
       explanation: t(
-        "The lower factor records the multiplier used to eliminate the entry below the pivot, and the upper factor is the matrix left after elimination. For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, Gaussian elimination uses multiplier $l_{21} = \\frac{c}{a}$ in the operation $R_2 - l_{21} R_1 \\to R_2$. This yields $A = L U$, where $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$ and $U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$.",
-        "下三角因子记录了消去主元下方元素时用的乘数，上三角因子是消元后剩下的矩阵。对于 $a \\ne 0$ 的二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，高斯消元法利用乘子 $l_{21} = \\frac{c}{a}$ 进行行变换 $R_2 - l_{21} R_1 \\to R_2$。这给出分解 $A = L U$，其中 $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$，$U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$。",
+        "The lower factor records the multiplier used to eliminate the entry below the pivot, and the upper factor is the matrix left after elimination. For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, Gaussian elimination uses multiplier $l_{21} = \\frac{c}{a}$ in the operation $R_2 - l_{21} R_1 \\to R_2$. This yields $A = L U$, where $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$ and $U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$. For $\\begin{pmatrix} 1 & 2 \\\\ 4 & 9 \\end{pmatrix}$: $l_{21} = 4$ and $u_{22} = 9 - 8 = 1$.\n\n> **Watch out.** $L$ holds the multiplier $l_{21}$ itself, below the diagonal, not the $-l_{21}$ of the elimination matrix.",
+        "下三角因子记录了消去主元下方元素时用的乘数，上三角因子是消元后剩下的矩阵。对于 $a \\ne 0$ 的二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，高斯消元法利用乘子 $l_{21} = \\frac{c}{a}$ 进行行变换 $R_2 - l_{21} R_1 \\to R_2$。这给出分解 $A = L U$，其中 $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$，$U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$。对 $\\begin{pmatrix} 1 & 2 \\\\ 4 & 9 \\end{pmatrix}$：$l_{21} = 4$，$u_{22} = 9 - 8 = 1$。\n\n> **注意。** $L$ 中放的是乘数 $l_{21}$ 本身，位于对角线下方，而不是消元矩阵中的 $-l_{21}$。",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3]);
@@ -5932,15 +6160,61 @@ $$A = ${matLatex(A)}$$`,
 $$A = ${matLatex(A)}$$`,
         );
 
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$${rightStr}$$`, `$$${rightStr}$$`),
-          [t(`$$${wrong1Str}$$`, `$$${wrong1Str}$$`), t(`$$${wrong2Str}$$`, `$$${wrong2Str}$$`), t(`$$${wrong3Str}$$`, `$$${wrong3Str}$$`)],
-          t(
-            `The pivot in row 1 is $a_{11} = ${a}$. The multiplier to eliminate $a_{21} = ${c}$ is $l_{21} = \\frac{${c}}{${a}} = ${l21}$. Subtracting $${l21} R_1$ from $R_2$ produces $u_{22} = ${d} - (${l21})(${b}) = ${u22}$. Thus $L = ${matLatex(L)}$ and $U = ${matLatex(U)}$.`,
-            `第 1 行的主元为 $a_{11} = ${a}$。消去 $a_{21} = ${c}$ 所需的乘子为 $l_{21} = \\frac{${c}}{${a}} = ${l21}$。从第 2 行减去第 1 行的 $${l21}$ 倍得到 $u_{22} = ${d} - (${l21})(${b}) = ${u22}$。因此 $L = ${matLatex(L)}$ 且 $U = ${matLatex(U)}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$$${rightStr}$$`, `$$${rightStr}$$`),
+            [
+              t(`$$${wrong1Str}$$`, `$$${wrong1Str}$$`),
+              t(`$$${wrong2Str}$$`, `$$${wrong2Str}$$`),
+              t(`$$${wrong3Str}$$`, `$$${wrong3Str}$$`),
+            ],
+            walked(
+              [
+                [
+                  ["Find the multiplier", "求乘数"],
+                  t(`The pivot is $a_{11} = ${a}$ and the entry below it is $${c}$:`, `主元为 $a_{11} = ${a}$，其下方元素为 $${c}$：`),
+                  [`l_{21} = \\frac{${c}}{${a}} = ${l21}`],
+                ],
+                [
+                  ["Eliminate", "消元"],
+                  t(
+                    `$${replacement(2, l21, 1)}$ leaves row 1 and changes the second pivot:`,
+                    `$${replacement(2, l21, 1)}$ 保留第 1 行，并改变第二个主元：`,
+                  ),
+                  [`u_{22} = ${d} - ${paren(l21)} \\cdot ${paren(b)} = ${u22}`, `L = ${matLatex(L)}, \\quad U = ${matLatex(U)}`],
+                ],
+              ],
+              t(
+                `$LU = ${matLatex([
+                  [a, b],
+                  [`${l21} \\cdot ${paren(a)}`, `${l21} \\cdot ${paren(b)} + ${paren(u22)}`],
+                ])} = ${matLatex(A)} = A$.`,
+                `$LU = ${matLatex([
+                  [a, b],
+                  [`${l21} \\cdot ${paren(a)}`, `${l21} \\cdot ${paren(b)} + ${paren(u22)}`],
+                ])} = ${matLatex(A)} = A$。`,
+              ),
+            ),
           ),
+          [
+            [
+              `$$${wrong1Str}$$`,
+              `The multiplier has the wrong sign: $L$ undoes the elimination, so it holds $${l21}$, not $${-l21}$.`,
+              `乘数符号错了：$L$ 撤销消元，所以放的是 $${l21}$，而不是 $${-l21}$。`,
+            ],
+            [
+              `$$${wrong2Str}$$`,
+              "The factors are swapped: $L$ must be lower triangular with $1$s on the diagonal.",
+              "两个因子颠倒了：$L$ 必须是对角线为 $1$ 的下三角矩阵。",
+            ],
+            [
+              `$$${wrong3Str}$$`,
+              "The multiplier is above the diagonal, so this factor is not lower triangular.",
+              "乘数放在了对角线上方，这个因子不是下三角矩阵。",
+            ],
+          ],
         );
       },
     },
@@ -5948,8 +6222,8 @@ $$A = ${matLatex(A)}$$`,
       id: "the-second-pivot-in-a-2x2-lu-factorization",
       title: t("The second pivot in a 2×2 $LU$ factorization", "2×2 $LU$ 分解中的第二个主元"),
       explanation: t(
-        "For $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, the factorization $A = LU$ with $L$ unit lower triangular is\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}.$$\n\nThe multiplier $\\ell_{21} = \\frac{c}{a}$ goes into $L$ and the second pivot $u_{22} = d - \\ell_{21}b$ goes into $U$. Their product with $a$ recovers $\\det A$.",
-        "对 $a \\ne 0$ 的 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，$L$ 为单位下三角矩阵的分解 $A = LU$ 为\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}$$\n\n乘数 $\\ell_{21} = \\frac{c}{a}$ 放入 $L$，第二个主元 $u_{22} = d - \\ell_{21}b$ 放入 $U$。它与 $a$ 之积就是 $\\det A$。",
+        "For $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, the factorization $A = LU$ with $L$ unit lower triangular is\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}.$$\n\nThe multiplier $\\ell_{21} = \\frac{c}{a}$ goes into $L$ and the second pivot $u_{22} = d - \\ell_{21}b$ goes into $U$. Their product with $a$ recovers $\\det A$. For $\\begin{pmatrix} 2 & 3 \\\\ 4 & 7 \\end{pmatrix}$: $\\ell_{21} = 2$ and $u_{22} = 7 - 2 \\cdot 3 = 1$.\n\n> **Watch out.** The second pivot subtracts $\\ell_{21}b$ from $d$; it is neither the multiplier nor $\\det A$ itself, but $\\frac{\\det A}{a}$.",
+        "对 $a \\ne 0$ 的 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，$L$ 为单位下三角矩阵的分解 $A = LU$ 为\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}$$\n\n乘数 $\\ell_{21} = \\frac{c}{a}$ 放入 $L$，第二个主元 $u_{22} = d - \\ell_{21}b$ 放入 $U$。它与 $a$ 之积就是 $\\det A$。对 $\\begin{pmatrix} 2 & 3 \\\\ 4 & 7 \\end{pmatrix}$：$\\ell_{21} = 2$，$u_{22} = 7 - 2 \\cdot 3 = 1$。\n\n> **注意。** 第二个主元是从 $d$ 中减去 $\\ell_{21}b$；它既不是乘数，也不是 $\\det A$ 本身，而是 $\\frac{\\det A}{a}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.pick([-4, -3, -2, 2, 3, 4, 5]);
@@ -5958,6 +6232,7 @@ $$A = ${matLatex(A)}$$`,
         const d = rng.int(-6, 6);
         const l = Q.of(c, a);
         const ans = Q.of(d).sub(l.mul(Q.of(b)));
+        const det = a * d - b * c;
         return numberProblem({
           prompt: t(
             `Find $u_{22}$ in the factorization $A = LU$ ($L$ unit lower triangular) of $A = ${matLatex([
@@ -5970,10 +6245,41 @@ $$A = ${matLatex(A)}$$`,
             ])}$ 的分解 $A = LU$（$L$ 为单位下三角矩阵）中的 $u_{22}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(d).add(l.mul(Q.of(b))), l, Q.of(a * d - b * c), Q.of(d)],
-          solution: t(
-            `$\\ell_{21} = \\frac{${c}}{${a}} = ${l.toLatex()}$, so $u_{22} = ${d} - ${paren(l)} \\cdot ${paren(b)} = ${ans.toLatex()}$.`,
-            `$\\ell_{21} = \\frac{${c}}{${a}} = ${l.toLatex()}$，所以 $u_{22} = ${d} - ${paren(l)} \\cdot ${paren(b)} = ${ans.toLatex()}$。`,
+          mistakes: [
+            why(
+              Q.of(d).add(l.mul(Q.of(b))),
+              "The sign is wrong: elimination subtracts $\\ell_{21}$ times row 1.",
+              "符号错了：消元要减去第 1 行的 $\\ell_{21}$ 倍。",
+            ),
+            why(
+              l,
+              "That is the multiplier $\\ell_{21}$, which goes into $L$; the pivot is what is left in $U$.",
+              "这是乘数 $\\ell_{21}$，它放入 $L$；主元是 $U$ 中剩下的元素。",
+            ),
+            why(
+              Q.of(det),
+              `That is $\\det A$; the pivots multiply to it, so $u_{22} = \\frac{${det}}{${a}}$.`,
+              `这是 $\\det A$；两个主元之积才是它，所以 $u_{22} = \\frac{${det}}{${a}}$。`,
+            ),
+            why(
+              Q.of(d),
+              "That is $d$ before elimination; subtracting $\\ell_{21}$ times row 1 changes it.",
+              "这是消元前的 $d$；减去第 1 行的 $\\ell_{21}$ 倍会改变它。",
+            ),
+          ].filter((w, i, all) => !asQ(w.value).eq(ans) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+          solution: walked(
+            [
+              [["Find the multiplier", "求乘数"], t("", ""), [`\\ell_{21} = \\frac{${c}}{${a}} = ${l.toLatex()}`]],
+              [
+                ["Eliminate", "消元"],
+                t("Subtract $\\ell_{21}$ times row 1 from row 2:", "从第 2 行减去第 1 行的 $\\ell_{21}$ 倍："),
+                [`u_{22} = ${d} - ${paren(l)} \\cdot ${paren(b)} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `The pivots multiply to $\\det A$: $${a} \\cdot ${paren(ans)} = ${det}$ and $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$.`,
+              `两个主元之积等于 $\\det A$：$${a} \\cdot ${paren(ans)} = ${det}$，而 $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$。`,
+            ),
           ),
         });
       },
@@ -5991,6 +6297,10 @@ export const luFactorizationOf3x3Matrices: TopicDef = {
     "Compute 3x3 LU factorizations: elimination multipliers form L and the final REF forms U.",
     "掌握三阶矩阵的 LU 分解：高斯消元的乘子构成单位下三角矩阵 L，消元结果为上三角矩阵 U。",
   ),
+  intro: t(
+    "Eliminate in $A = \\begin{pmatrix} 1 & 2 & 0 \\\\ 2 & 5 & 1 \\\\ -1 & 1 & 5 \\end{pmatrix}$. $R_2 - 2R_1 \\to R_2$ gives $(0, 1, 1)$ and $R_3 + R_1 \\to R_3$ gives $(0, 3, 5)$, so $l_{21} = 2$ and $l_{31} = -1$. Then $R_3 - 3R_2 \\to R_3$ gives $(0, 0, 2)$, so $l_{32} = 3$. Hence $L = \\begin{pmatrix} 1 & 0 & 0 \\\\ 2 & 1 & 0 \\\\ -1 & 3 & 1 \\end{pmatrix}$ and $U = \\begin{pmatrix} 1 & 2 & 0 \\\\ 0 & 1 & 1 \\\\ 0 & 0 & 2 \\end{pmatrix}$.\n\nCheck: row $3$ of $LU$ is $-1 \\cdot (1, 2, 0) + 3 \\cdot (0, 1, 1) + (0, 0, 2) = (-1, 1, 5)$, row $3$ of $A$.\n\nIn this lesson we factor $3 \\times 3$ matrices as $A = LU$ by writing each elimination multiplier into $L$.",
+    "对 $A = \\begin{pmatrix} 1 & 2 & 0 \\\\ 2 & 5 & 1 \\\\ -1 & 1 & 5 \\end{pmatrix}$ 消元。$R_2 - 2R_1 \\to R_2$ 得 $(0, 1, 1)$，$R_3 + R_1 \\to R_3$ 得 $(0, 3, 5)$，所以 $l_{21} = 2$，$l_{31} = -1$。再由 $R_3 - 3R_2 \\to R_3$ 得 $(0, 0, 2)$，所以 $l_{32} = 3$。于是 $L = \\begin{pmatrix} 1 & 0 & 0 \\\\ 2 & 1 & 0 \\\\ -1 & 3 & 1 \\end{pmatrix}$，$U = \\begin{pmatrix} 1 & 2 & 0 \\\\ 0 & 1 & 1 \\\\ 0 & 0 & 2 \\end{pmatrix}$。\n\n检验：$LU$ 的第 $3$ 行为 $-1 \\cdot (1, 2, 0) + 3 \\cdot (0, 1, 1) + (0, 0, 2) = (-1, 1, 5)$，正是 $A$ 的第 $3$ 行。\n\n本课我们把每个消元乘数写进 $L$，将 $3 \\times 3$ 矩阵分解为 $A = LU$。",
+  ),
   prerequisites: ["lu-factorization-of-2x2-matrices"],
   encompasses: [],
   xp: 10,
@@ -6000,8 +6310,8 @@ export const luFactorizationOf3x3Matrices: TopicDef = {
       id: "lu-factorization-3x3",
       title: t("Multipliers and LU factorization of 3x3 matrices", "三阶矩阵消元乘子与 LU 分解"),
       explanation: t(
-        "For a $3 \\times 3$ matrix $A$ requiring no row swaps: (1) The multipliers $l_{21} = \\frac{a_{21}}{a_{11}}$, $l_{31} = \\frac{a_{31}}{a_{11}}$, and $l_{32} = \\frac{a'_{32}}{a'_{22}}$ from Gaussian elimination record the row additions; (2) Placing these multipliers into the lower triangle gives the unit lower triangular matrix $L$; (3) The resulting row echelon form is $U$, giving $A = LU$.",
-        "对于消元过程中无需行交换的三阶矩阵 $A$：(1) 高斯消元过程中的乘子 $l_{21} = \\frac{a_{21}}{a_{11}}$、$l_{31} = \\frac{a_{31}}{a_{11}}$ 以及 $l_{32} = \\frac{a'_{32}}{a'_{22}}$ 记录了行变换的倍数；(2) 将这些乘子填入下三角部分即可得到单位下三角矩阵 $L$；(3) 消元最终得到的上三角阶梯形矩阵即为 $U$，满足 $A = LU$。",
+        "For a $3 \\times 3$ matrix $A$ requiring no row swaps: (1) The multipliers $l_{21} = \\frac{a_{21}}{a_{11}}$, $l_{31} = \\frac{a_{31}}{a_{11}}$, and $l_{32} = \\frac{a'_{32}}{a'_{22}}$ from Gaussian elimination record the row additions; (2) Placing these multipliers into the lower triangle gives the unit lower triangular matrix $L$; (3) The resulting row echelon form is $U$, giving $A = LU$. For example, if $R_2 - 4R_1 \\to R_2$ is the first step, then $l_{21} = 4$.\n\n> **Watch out.** $l_{32}$ comes from the rows after column $1$ is cleared ($a'_{32}$ and $a'_{22}$), not from the original entries, and each multiplier enters $L$ with the sign it has in $R_i - l_{ij}R_j$.",
+        "对于消元过程中无需行交换的三阶矩阵 $A$：(1) 高斯消元过程中的乘子 $l_{21} = \\frac{a_{21}}{a_{11}}$、$l_{31} = \\frac{a_{31}}{a_{11}}$ 以及 $l_{32} = \\frac{a'_{32}}{a'_{22}}$ 记录了行变换的倍数；(2) 将这些乘子填入下三角部分即可得到单位下三角矩阵 $L$；(3) 消元最终得到的上三角阶梯形矩阵即为 $U$，满足 $A = LU$。例如第一步若为 $R_2 - 4R_1 \\to R_2$，则 $l_{21} = 4$。\n\n> **注意。** $l_{32}$ 来自第 $1$ 列消去后的行（$a'_{32}$ 与 $a'_{22}$），而不是原来的元素；每个乘数按它在 $R_i - l_{ij}R_j$ 中的符号进入 $L$。",
       ),
       generate(rng) {
         const l21 = rng.pick([2, 3, -1]);
@@ -6017,16 +6327,10 @@ export const luFactorizationOf3x3Matrices: TopicDef = {
 
         const u33 = rng.pick([2, 3, 4]);
 
-        // Construct A = L * U
         const L: Mat = [
           [1, 0, 0],
           [l21, 1, 0],
           [l31, l32, 1],
-        ];
-        const _U: Mat = [
-          [u11, u12, u13],
-          [0, u22, u23],
-          [0, 0, u33],
         ];
 
         // Compute A = L * U
@@ -6059,28 +6363,60 @@ $$A = ${matLatex(A)}$$`,
           [l21, 1, 0],
           [l31, 0, 1],
         ];
+        const row = (v: readonly number[]) => `(${v.join(", ")})`;
 
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$${matLatex(L)}$$`, `$$${matLatex(L)}$$`),
-          [
-            t(`$$${matLatex(wrongL1)}$$`, `$$${matLatex(wrongL1)}$$`),
-            t(`$$${matLatex(wrongL2)}$$`, `$$${matLatex(wrongL2)}$$`),
-            t(`$$${matLatex(wrongL3)}$$`, `$$${matLatex(wrongL3)}$$`),
-          ],
-          t(
-            `The multipliers from forward elimination are:
-- $l_{21} = \\frac{a_{21}}{a_{11}} = ${l21}$
-- $l_{31} = \\frac{a_{31}}{a_{11}} = ${l31}$
-- After clearing column 1, row 2 becomes $[0, 1, ${u23}]$ and row 3 becomes $[0, ${l32}, ${l32 * u23 + u33}]$, giving $l_{32} = ${l32}$.
-Placing these multipliers into the unit lower triangular matrix gives $L = ${matLatex(L)}$.`,
-            `前向消元的乘子分别为：
-- $l_{21} = \\frac{a_{21}}{a_{11}} = ${l21}$
-- $l_{31} = \\frac{a_{31}}{a_{11}} = ${l31}$
-- 消去第 1 列后，第 2 行变为 $[0, 1, ${u23}]$，第 3 行变为 $[0, ${l32}, ${l32 * u23 + u33}]$，故 $l_{32} = ${l32}$。
-将各乘子填入单位下三角矩阵即得 $L = ${matLatex(L)}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$$${matLatex(L)}$$`, `$$${matLatex(L)}$$`),
+            [
+              t(`$$${matLatex(wrongL1)}$$`, `$$${matLatex(wrongL1)}$$`),
+              t(`$$${matLatex(wrongL2)}$$`, `$$${matLatex(wrongL2)}$$`),
+              t(`$$${matLatex(wrongL3)}$$`, `$$${matLatex(wrongL3)}$$`),
+            ],
+            walked(
+              [
+                [
+                  ["Clear column 1", "消去第 1 列"],
+                  t(
+                    `The pivot is $a_{11} = 1$, so $l_{21} = ${l21}$ and $l_{31} = ${l31}$. After $${replacement(2, l21, 1)}$ and $${replacement(3, l31, 1)}$:`,
+                    `主元为 $a_{11} = 1$，所以 $l_{21} = ${l21}$，$l_{31} = ${l31}$。经 $${replacement(2, l21, 1)}$ 与 $${replacement(3, l31, 1)}$ 后：`,
+                  ),
+                  [`R_2 = (0, 1, ${u23}), \\quad R_3 = (0, ${l32}, ${l32 * u23 + u33})`],
+                ],
+                [
+                  ["Clear column 2", "消去第 2 列"],
+                  t(
+                    `The new pivot is $1$ and the entry below it is $${l32}$, so $l_{32} = ${l32}$. Writing the three multipliers below the diagonal:`,
+                    `新主元为 $1$，其下方元素为 $${l32}$，所以 $l_{32} = ${l32}$。把三个乘数写在对角线下方：`,
+                  ),
+                  [`L = ${matLatex(L)}`],
+                ],
+              ],
+              t(
+                `$U$ has rows $${row(r1)}$, $(0, 1, ${u23})$, $(0, 0, ${u33})$, and row 3 of $LU$ is $${l31} \\cdot ${row(r1)} + ${paren(l32)} \\cdot (0, 1, ${u23}) + (0, 0, ${u33}) = ${row(r3)}$, row 3 of $A$.`,
+                `$U$ 的各行为 $${row(r1)}$、$(0, 1, ${u23})$、$(0, 0, ${u33})$，$LU$ 的第 3 行为 $${l31} \\cdot ${row(r1)} + ${paren(l32)} \\cdot (0, 1, ${u23}) + (0, 0, ${u33}) = ${row(r3)}$，正是 $A$ 的第 3 行。`,
+              ),
+            ),
           ),
+          [
+            [
+              `$$${matLatex(wrongL1)}$$`,
+              "Every multiplier has the wrong sign: $L$ undoes the eliminations, so it holds the multipliers that were subtracted, with their own signs.",
+              "每个乘数的符号都错了：$L$ 撤销消元，所以放的是被减去的乘数本身，保持原符号。",
+            ],
+            [
+              `$$${matLatex(wrongL2)}$$`,
+              "That is the transpose: the multipliers belong below the diagonal, since $L$ is lower triangular.",
+              "这是转置：乘数应放在对角线下方，因为 $L$ 是下三角矩阵。",
+            ],
+            [
+              `$$${matLatex(wrongL3)}$$`,
+              `That leaves out $l_{32}$: after column 1 is cleared, row 3 still has $${l32}$ below the second pivot.`,
+              `这漏掉了 $l_{32}$：第 1 列消去后，第 3 行在第二个主元下方仍有 $${l32}$。`,
+            ],
+          ],
         );
       },
     },
@@ -6088,8 +6424,8 @@ Placing these multipliers into the unit lower triangular matrix gives $L = ${mat
       id: "the-last-pivot-in-a-3x3-lu-factorization",
       title: t("The last pivot in a 3×3 $LU$ factorization", "3×3 $LU$ 分解中的最后一个主元"),
       explanation: t(
-        "In $A = LU$ the diagonal of $U$ holds the pivots of Gaussian elimination without row swaps. Since $\\det L = 1$, the product of the pivots is $\\det A$. So once the first two pivots are found, the last one is\n\n$$u_{33} = \\frac{\\det A}{u_{11}u_{22}},$$\n\nwhich gives a quick check on the elimination.",
-        "在 $A = LU$ 中，$U$ 的对角线就是不换行的高斯消元的主元。由于 $\\det L = 1$，主元之积等于 $\\det A$。所以求出前两个主元后，最后一个主元为\n\n$$u_{33} = \\frac{\\det A}{u_{11}u_{22}},$$\n\n这可以快速检验消元结果。",
+        "In $A = LU$ the diagonal of $U$ holds the pivots of Gaussian elimination without row swaps. Since $\\det L = 1$, the product of the pivots is $\\det A$. So once the first two pivots are found, the last one is\n\n$$u_{33} = \\frac{\\det A}{u_{11}u_{22}},$$\n\nwhich gives a quick check on the elimination. For example, if $\\det A = 12$, $u_{11} = 2$ and $u_{22} = -3$, then $u_{33} = \\frac{12}{-6} = -2$.\n\n> **Watch out.** $u_{33}$ is not $a_{33}$: row $3$ changes in both elimination steps, once by a multiple of row $1$ and once by a multiple of the new row $2$.",
+        "在 $A = LU$ 中，$U$ 的对角线就是不换行的高斯消元的主元。由于 $\\det L = 1$，主元之积等于 $\\det A$。所以求出前两个主元后，最后一个主元为\n\n$$u_{33} = \\frac{\\det A}{u_{11}u_{22}},$$\n\n这可以快速检验消元结果。例如 $\\det A = 12$，$u_{11} = 2$，$u_{22} = -3$，则 $u_{33} = \\frac{12}{-6} = -2$。\n\n> **注意。** $u_{33}$ 不是 $a_{33}$：第 $3$ 行在两步消元中都会改变，一次减去第 $1$ 行的倍数，一次减去新第 $2$ 行的倍数。",
       ),
       generate(rng: Rng): Problem {
         const L = [
@@ -6104,16 +6440,54 @@ Placing these multipliers into the unit lower triangular matrix gives $L = ${mat
           [0, 0, piv[2]!],
         ];
         const A = matMul(L, U);
+        const ans = piv[2]!;
+        const det = det3(A);
+        const l21 = L[1]![0]!;
+        const u22 = A[1]![1]! - l21 * A[0]![1]!;
         return numberProblem({
           prompt: t(
             `Find $u_{33}$ in the factorization $A = LU$ ($L$ unit lower triangular) of $A = ${matLatex(A)}$.`,
             `求 $A = ${matLatex(A)}$ 的分解 $A = LU$（$L$ 为单位下三角矩阵）中的 $u_{33}$。`,
           ),
-          answer: piv[2]!,
-          wrong: [A[2]![2]!, -piv[2]!, piv[0]! * piv[1]! * piv[2]!, A[2]![2]! - L[2]![0]! * U[0]![2]!],
-          solution: t(
-            `Elimination gives $U = ${matLatex(U)}$, so $u_{33} = ${piv[2]}$. Check: $\\det A = ${det3(A)} = ${piv[0]} \\cdot ${paren(piv[1]!)} \\cdot ${paren(piv[2]!)}$.`,
-            `消元得 $U = ${matLatex(U)}$，所以 $u_{33} = ${piv[2]}$。检验：$\\det A = ${det3(A)} = ${piv[0]} \\cdot ${paren(piv[1]!)} \\cdot ${paren(piv[2]!)}$。`,
+          answer: ans,
+          mistakes: [
+            why(
+              A[2]![2]!,
+              "That is $a_{33}$ before elimination; both elimination steps change row 3.",
+              "这是消元前的 $a_{33}$；两步消元都会改变第 3 行。",
+            ),
+            why(-ans, "The sign is wrong; recheck the division by the first two pivots.", "符号错了；请重新检查除以前两个主元的计算。"),
+            why(
+              det,
+              "That is $\\det A$, the product of all three pivots; divide by $u_{11}u_{22}$.",
+              "这是 $\\det A$，即三个主元之积；还要除以 $u_{11}u_{22}$。",
+            ),
+            why(
+              A[2]![2]! - L[2]![0]! * U[0]![2]!,
+              "Only the multiple of row 1 was subtracted; row 3 also loses a multiple of the new row 2.",
+              "只减去了第 1 行的倍数；第 3 行还要减去新第 2 行的倍数。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the first two pivots", "求前两个主元"],
+                t(
+                  `$u_{11} = a_{11} = ${piv[0]}$, the multiplier is $l_{21} = \\frac{${A[1]![0]}}{${piv[0]}} = ${l21}$, and`,
+                  `$u_{11} = a_{11} = ${piv[0]}$，乘数 $l_{21} = \\frac{${A[1]![0]}}{${piv[0]}} = ${l21}$，于是`,
+                ),
+                [`u_{22} = ${A[1]![1]} - ${paren(l21)} \\cdot ${paren(A[0]![1]!)} = ${u22}`],
+              ],
+              [
+                ["Divide the determinant", "用行列式相除"],
+                t(`Expanding gives $\\det A = ${det}$, and the pivots multiply to it:`, `展开得 $\\det A = ${det}$，三个主元之积等于它：`),
+                [`u_{33} = \\frac{${det}}{${paren(piv[0]!)} \\cdot ${paren(u22)}} = ${ans}`],
+              ],
+            ],
+            t(
+              `Full elimination gives $U = ${matLatex(U)}$, whose last diagonal entry is $${ans}$, and $${piv[0]} \\cdot ${paren(piv[1]!)} \\cdot ${paren(ans)} = ${det}$.`,
+              `完整消元得 $U = ${matLatex(U)}$，其最后一个对角元素为 $${ans}$，且 $${piv[0]} \\cdot ${paren(piv[1]!)} \\cdot ${paren(ans)} = ${det}$。`,
+            ),
           ),
         });
       },
@@ -6131,6 +6505,10 @@ export const luFactorizationOfNxnMatrices: TopicDef = {
     "Understand when LU factorization requires partial pivoting, giving the PA = LU factorization.",
     "理解当消元遇到零主元时需要进行行交换（部分主元法），从而得到 PLU 分解：PA = LU。",
   ),
+  intro: t(
+    "$A = \\begin{pmatrix} 0 & 2 \\\\ 3 & 1 \\end{pmatrix}$ has a zero in the first pivot position, so it has no factorization $A = LU$. Swapping the rows with $P = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$ gives $PA = \\begin{pmatrix} 3 & 1 \\\\ 0 & 2 \\end{pmatrix}$, which is already upper triangular: $PA = LU$ with $L = I$ and $U = PA$.\n\nCheck: one swap gives $\\det P = -1$, so $\\det A = -(3 \\cdot 2) = -6$, and directly $0 \\cdot 1 - 2 \\cdot 3 = -6$.\n\nIn this lesson we add row swaps to elimination, factor $PA = LU$ and read determinants from it.",
+    "$A = \\begin{pmatrix} 0 & 2 \\\\ 3 & 1 \\end{pmatrix}$ 的第一个主元位置为零，所以没有分解 $A = LU$。用 $P = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$ 交换两行得 $PA = \\begin{pmatrix} 3 & 1 \\\\ 0 & 2 \\end{pmatrix}$，它已是上三角矩阵：$PA = LU$，其中 $L = I$，$U = PA$。\n\n检验：一次换行使 $\\det P = -1$，所以 $\\det A = -(3 \\cdot 2) = -6$，直接计算也是 $0 \\cdot 1 - 2 \\cdot 3 = -6$。\n\n本课我们在消元中加入换行，作分解 $PA = LU$，并由它求行列式。",
+  ),
   prerequisites: ["lu-factorization-of-3x3-matrices"],
   encompasses: [],
   xp: 10,
@@ -6140,8 +6518,8 @@ export const luFactorizationOfNxnMatrices: TopicDef = {
       id: "plu-factorization-general",
       title: t("Partial pivoting and PLU factorization", "部分主元法与 PLU 分解"),
       explanation: t(
-        "A matrix $A$ may not have a standard $A = LU$ factorization if a zero appears in a pivot position during Gaussian elimination. By interchanging rows using a permutation matrix $P$, every invertible matrix has a factorization $PA = LU$, where $P$ is a permutation matrix, $L$ is unit lower triangular, and $U$ is upper triangular.",
-        "若在高斯消元过程中主元位置出现零，则矩阵可能无法直接进行标准的 $A = LU$ 分解。通过使用置换矩阵 $P$ 交换各行，任意可逆方阵均存在分解 $PA = LU$，其中 $P$ 为置换矩阵，$L$ 为单位下三角矩阵，$U$ 为上三角矩阵。",
+        "A matrix $A$ may not have a standard $A = LU$ factorization if a zero appears in a pivot position during Gaussian elimination. By interchanging rows using a permutation matrix $P$, every invertible matrix has a factorization $PA = LU$, where $P$ is a permutation matrix, $L$ is unit lower triangular, and $U$ is upper triangular. Partial pivoting chooses, in each column, the row whose entry has the largest absolute value: in a first column $(0, -5, 3)$ it swaps rows $1$ and $2$, since $|-5| > |3|$.\n\n> **Watch out.** Compare absolute values, not signed values, and the swap must involve the row with the zero pivot.",
+        "若在高斯消元过程中主元位置出现零，则矩阵可能无法直接进行标准的 $A = LU$ 分解。通过使用置换矩阵 $P$ 交换各行，任意可逆方阵均存在分解 $PA = LU$，其中 $P$ 为置换矩阵，$L$ 为单位下三角矩阵，$U$ 为上三角矩阵。部分主元法在每一列选取元素绝对值最大的行：第一列为 $(0, -5, 3)$ 时交换第 $1$、$2$ 行，因为 $|-5| > |3|$。\n\n> **注意。** 比较的是绝对值而不是带符号的值，而且交换必须涉及零主元所在的行。",
       ),
       generate(rng) {
         // a_{11} = 0, so a row swap is needed; partial pivoting brings up the entry of largest absolute value in column 1.
@@ -6161,6 +6539,7 @@ export const luFactorizationOfNxnMatrices: TopicDef = {
         const P = swap(1, pivotRow);
         const pivot = pivotRow === 2 ? a21 : a31;
         const other = pivotRow === 2 ? a31 : a21;
+        const PA = matMul(P, A);
         const prompt = t(
           `Matrix $A$ has a zero in the $(1, 1)$ entry:
 
@@ -6174,15 +6553,50 @@ $$A = ${matLatex(A)}$$
 采用部分主元法，$PA = LU$ 分解的第一步把第 1 行与第 1 列中绝对值最大的元素所在的行交换。这一步的置换矩阵 $P$ 是哪一个？`,
         );
         const mat = (m: Mat) => t(`$$${matLatex(m)}$$`, `$$${matLatex(m)}$$`);
-        return oneOf(
-          rng,
-          prompt,
-          mat(P),
-          [mat(swap(1, 5 - pivotRow)), mat(swap(2, 3)), mat(swap(1, 1))],
-          t(
-            `In column 1, $|${pivot}| > |${other}|$, so partial pivoting swaps rows 1 and ${pivotRow}. Swapping those rows of $I_3$ gives $P = ${matLatex(P)}$, and $PA$ has the pivot $${pivot}$ in the $(1, 1)$ position.`,
-            `第 1 列中 $|${pivot}| > |${other}|$，所以部分主元法交换第 1 行与第 ${pivotRow} 行。对 $I_3$ 交换这两行得 $P = ${matLatex(P)}$，$PA$ 的 $(1, 1)$ 位置为主元 $${pivot}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            mat(P),
+            [mat(swap(1, 5 - pivotRow)), mat(swap(2, 3)), mat(swap(1, 1))],
+            walked(
+              [
+                [
+                  ["Compare absolute values", "比较绝对值"],
+                  t(
+                    `Below the zero, column 1 has $${a21}$ and $${a31}$, and $|${pivot}| > |${other}|$, so the pivot comes from row ${pivotRow}.`,
+                    `零下方第 1 列为 $${a21}$ 与 $${a31}$，且 $|${pivot}| > |${other}|$，所以主元取自第 ${pivotRow} 行。`,
+                  ),
+                ],
+                [
+                  ["Swap those rows of $I_3$", "交换 $I_3$ 的这两行"],
+                  t(`Swapping rows 1 and ${pivotRow} of the identity:`, `交换单位矩阵的第 1 行与第 ${pivotRow} 行：`),
+                  [`P = ${matLatex(P)}`],
+                ],
+              ],
+              t(
+                `$PA = ${matLatex(PA)}$ has row ${pivotRow} of $A$ on top, with the pivot $${pivot}$ in the $(1, 1)$ position.`,
+                `$PA = ${matLatex(PA)}$ 把 $A$ 的第 ${pivotRow} 行移到最上面，$(1, 1)$ 位置为主元 $${pivot}$。`,
+              ),
+            ),
           ),
+          [
+            [
+              `$$${matLatex(swap(1, 5 - pivotRow))}$$`,
+              `That brings up $${other}$, but partial pivoting takes the largest absolute value, and $|${pivot}| > |${other}|$.`,
+              `这把 $${other}$ 换了上来，但部分主元法取绝对值最大者，而 $|${pivot}| > |${other}|$。`,
+            ],
+            [
+              `$$${matLatex(swap(2, 3))}$$`,
+              "That swaps rows 2 and 3 and leaves the zero in the $(1, 1)$ position.",
+              "这交换了第 2、3 行，$(1, 1)$ 位置仍然是零。",
+            ],
+            [
+              `$$${matLatex(swap(1, 1))}$$`,
+              "The identity makes no swap, so the zero stays in the pivot position.",
+              "单位矩阵不做任何交换，零仍留在主元位置。",
+            ],
+          ],
         );
       },
     },
@@ -6190,25 +6604,58 @@ $$A = ${matLatex(A)}$$
       id: "a-determinant-from-a-pa-equals-lu-factorization",
       title: t("A determinant from $PA = LU$", "由 $PA = LU$ 求行列式"),
       explanation: t(
-        "Taking determinants of $PA = LU$ gives $\\det P \\det A = \\det L \\det U$. Here $\\det L = 1$, $\\det U$ is the product of its diagonal entries, and $\\det P = (-1)^s$ where $s$ is the number of row swaps recorded in $P$. So\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}.$$",
-        "对 $PA = LU$ 取行列式得 $\\det P \\det A = \\det L \\det U$。其中 $\\det L = 1$，$\\det U$ 是其对角元素之积，$\\det P = (-1)^s$，$s$ 为 $P$ 记录的换行次数。所以\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}$$",
+        "Taking determinants of $PA = LU$ gives $\\det P \\det A = \\det L \\det U$. Here $\\det L = 1$, $\\det U$ is the product of its diagonal entries, and $\\det P = (-1)^s$ where $s$ is the number of row swaps recorded in $P$. So\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}.$$\n\nFor example, $2$ swaps and diagonal entries $1, -2, 3$ give $\\det A = (+1)(1)(-2)(3) = -6$.\n\n> **Watch out.** The number of swaps enters only through the sign $(-1)^s$; it is never a factor of the determinant.",
+        "对 $PA = LU$ 取行列式得 $\\det P \\det A = \\det L \\det U$。其中 $\\det L = 1$，$\\det U$ 是其对角元素之积，$\\det P = (-1)^s$，$s$ 为 $P$ 记录的换行次数。所以\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}$$\n\n例如 $2$ 次换行、对角元素为 $1, -2, 3$，则 $\\det A = (+1)(1)(-2)(3) = -6$。\n\n> **注意。** 换行次数只通过符号 $(-1)^s$ 起作用，绝不是行列式的一个因子。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(3, 4);
         const s = rng.int(1, 3);
         const diag = Array.from({ length: n }, () => rng.nonZero(-3, 3));
         const prod = diag.reduce((x, y) => x * y, 1);
-        const ans = (s % 2 === 0 ? 1 : -1) * prod;
+        const sign = s % 2 === 0 ? 1 : -1;
+        const ans = sign * prod;
         return numberProblem({
           prompt: t(
             `For a $${n} \\times ${n}$ matrix $A$, partial pivoting gives $PA = LU$ after $${s}$ row swap${s === 1 ? "" : "s"}, with $L$ unit lower triangular and $U$ having diagonal entries $${diag.join(", ")}$. Find $\\det A$.`,
             `对 $${n} \\times ${n}$ 矩阵 $A$，部分主元法经 $${s}$ 次换行得到 $PA = LU$，$L$ 为单位下三角矩阵，$U$ 的对角元素为 $${diag.join(", ")}$。求 $\\det A$。`,
           ),
           answer: ans,
-          wrong: [-ans, prod * s, diag.reduce((x, y) => x + y, 0)],
-          solution: t(
-            `$\\det P = (-1)^{${s}} = ${s % 2 === 0 ? 1 : -1}$ and $\\det U = ${prod}$, so $\\det A = ${ans}$.`,
-            `$\\det P = (-1)^{${s}} = ${s % 2 === 0 ? 1 : -1}$，$\\det U = ${prod}$，所以 $\\det A = ${ans}$。`,
+          mistakes: [
+            why(
+              -ans,
+              `The sign is wrong: $${s}$ swap${s === 1 ? "" : "s"} give $\\det P = (-1)^{${s}} = ${sign}$.`,
+              `符号错了：$${s}$ 次换行给出 $\\det P = (-1)^{${s}} = ${sign}$。`,
+            ),
+            why(
+              prod * s,
+              "The number of swaps enters only through the sign $(-1)^s$, not as a factor.",
+              "换行次数只通过符号 $(-1)^s$ 起作用，不是一个因子。",
+            ),
+            why(
+              diag.reduce((x, y) => x + y, 0),
+              "The diagonal entries were added; $\\det U$ is their product.",
+              "对角元素被相加了；$\\det U$ 是它们的乘积。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find $\\det P$ and $\\det U$", "求 $\\det P$ 与 $\\det U$"],
+                t(
+                  `Each swap flips the sign, so $\\det P = (-1)^{${s}} = ${sign}$; $U$ is triangular, so $\\det U = ${diag.map(paren).join(" \\cdot ")} = ${prod}$.`,
+                  `每次换行改变一次符号，所以 $\\det P = (-1)^{${s}} = ${sign}$；$U$ 是三角矩阵，所以 $\\det U = ${diag.map(paren).join(" \\cdot ")} = ${prod}$。`,
+                ),
+              ],
+              [
+                ["Solve for $\\det A$", "解出 $\\det A$"],
+                t("Since $\\det L = 1$ and $\\det P = \\pm 1$:", "由于 $\\det L = 1$，$\\det P = \\pm 1$："),
+                [`\\det A = \\det P \\cdot \\det U = ${paren(sign)} \\cdot ${paren(prod)} = ${ans}`],
+              ],
+            ],
+            t(
+              `$\\det P \\det A = ${paren(sign)} \\cdot ${paren(ans)} = ${prod} = \\det L \\det U$.`,
+              `$\\det P \\det A = ${paren(sign)} \\cdot ${paren(ans)} = ${prod} = \\det L \\det U$。`,
+            ),
           ),
         });
       },
@@ -6226,6 +6673,10 @@ export const solvingSystemsOfEquationsUsingLuFactorization: TopicDef = {
     "Solve Ax = b via LU: forward substitution Ly = b, then back substitution Ux = y.",
     "利用 LU 分解求解线性方程组：先前向回代解 Ly = b，再反向回代解 Ux = y。",
   ),
+  intro: t(
+    "Solve $A\\mathbf{x} = \\mathbf{b}$ with $L = \\begin{pmatrix} 1 & 0 \\\\ 2 & 1 \\end{pmatrix}$, $U = \\begin{pmatrix} 1 & 1 \\\\ 0 & 3 \\end{pmatrix}$ and $\\mathbf{b} = (2, 7)$. Forward substitution in $L\\mathbf{y} = \\mathbf{b}$ gives $y_1 = 2$ and $y_2 = 7 - 2 \\cdot 2 = 3$. Back substitution in $U\\mathbf{x} = \\mathbf{y}$ gives $x_2 = \\frac{3}{3} = 1$ and $x_1 = 2 - 1 = 1$.\n\nCheck: $A = LU = \\begin{pmatrix} 1 & 1 \\\\ 2 & 5 \\end{pmatrix}$, and $A\\mathbf{x} = (1 + 1, 2 + 5) = (2, 7) = \\mathbf{b}$.\n\nIn this lesson we solve systems with a known $LU$ factorization by one forward and one back substitution.",
+    "已知 $L = \\begin{pmatrix} 1 & 0 \\\\ 2 & 1 \\end{pmatrix}$，$U = \\begin{pmatrix} 1 & 1 \\\\ 0 & 3 \\end{pmatrix}$，$\\mathbf{b} = (2, 7)$，求解 $A\\mathbf{x} = \\mathbf{b}$。对 $L\\mathbf{y} = \\mathbf{b}$ 前代得 $y_1 = 2$，$y_2 = 7 - 2 \\cdot 2 = 3$。对 $U\\mathbf{x} = \\mathbf{y}$ 回代得 $x_2 = \\frac{3}{3} = 1$，$x_1 = 2 - 1 = 1$。\n\n检验：$A = LU = \\begin{pmatrix} 1 & 1 \\\\ 2 & 5 \\end{pmatrix}$，$A\\mathbf{x} = (1 + 1, 2 + 5) = (2, 7) = \\mathbf{b}$。\n\n本课我们利用已知的 $LU$ 分解，通过一次前代和一次回代求解方程组。",
+  ),
   prerequisites: ["lu-factorization-of-3x3-matrices"],
   encompasses: [],
   xp: 10,
@@ -6235,8 +6686,8 @@ export const solvingSystemsOfEquationsUsingLuFactorization: TopicDef = {
       id: "solving-via-lu",
       title: t("Two-step solution algorithm using LU factorization", "LU 分解的两步法求解"),
       explanation: t(
-        "To solve $A\\mathbf{x} = \\mathbf{b}$ given $A = LU$: (1) Forward substitution: Solve $L\\mathbf{y} = \\mathbf{b}$ for $\\mathbf{y}$; (2) Back substitution: Solve $U\\mathbf{x} = \\mathbf{y}$ for $\\mathbf{x}$. Since both $L$ and $U$ are triangular, each step takes only $O(n^2)$ arithmetic operations, making this highly efficient when solving for multiple right-hand sides $\\mathbf{b}$.",
-        "已知矩阵分解 $A = LU$，求解方程组 $A\\mathbf{x} = \\mathbf{b}$：(1) 前向回代：求解三角系统 $L\\mathbf{y} = \\mathbf{b}$ 得到中间向量 $\\mathbf{y}$；(2) 反向回代：求解三角系统 $U\\mathbf{x} = \\mathbf{y}$ 得到最终解 $\\mathbf{x}$。由于 $L$ 与 $U$ 均为三角矩阵，每步仅需 $O(n^2)$ 次运算，在处理多个不同右端项 $\\mathbf{b}$ 时极具效率优势。",
+        "To solve $A\\mathbf{x} = \\mathbf{b}$ given $A = LU$: (1) Forward substitution: Solve $L\\mathbf{y} = \\mathbf{b}$ for $\\mathbf{y}$; (2) Back substitution: Solve $U\\mathbf{x} = \\mathbf{y}$ for $\\mathbf{x}$. Since both $L$ and $U$ are triangular, each step takes only $O(n^2)$ arithmetic operations, making this highly efficient when solving for multiple right-hand sides $\\mathbf{b}$. For example, with $l_{21} = 3$ and $\\mathbf{b} = (1, 5)$, forward substitution gives $y_1 = 1$ and $y_2 = 5 - 3 \\cdot 1 = 2$.\n\n> **Watch out.** $\\mathbf{y}$ is not $\\mathbf{b}$: each $y_i$ is $b_i$ minus the multiples of the $y$'s already found.",
+        "已知矩阵分解 $A = LU$，求解方程组 $A\\mathbf{x} = \\mathbf{b}$：(1) 前向回代：求解三角系统 $L\\mathbf{y} = \\mathbf{b}$ 得到中间向量 $\\mathbf{y}$；(2) 反向回代：求解三角系统 $U\\mathbf{x} = \\mathbf{y}$ 得到最终解 $\\mathbf{x}$。由于 $L$ 与 $U$ 均为三角矩阵，每步仅需 $O(n^2)$ 次运算，在处理多个不同右端项 $\\mathbf{b}$ 时极具效率优势。例如 $l_{21} = 3$，$\\mathbf{b} = (1, 5)$，前代得 $y_1 = 1$，$y_2 = 5 - 3 \\cdot 1 = 2$。\n\n> **注意。** $\\mathbf{y}$ 不是 $\\mathbf{b}$：每个 $y_i$ 等于 $b_i$ 减去已求出的各 $y$ 的倍数。",
       ),
       generate(rng) {
         // Integer solutions
@@ -6254,10 +6705,6 @@ export const solvingSystemsOfEquationsUsingLuFactorization: TopicDef = {
           [l31, l32, 1],
         ];
 
-        // Ly = b:
-        // b1 = y1
-        // b2 = l21*y1 + y2
-        // b3 = l31*y1 + l32*y2 + y3
         const b1 = y1;
         const b2 = l21 * y1 + y2;
         const b3 = l31 * y1 + l32 * y2 + y3;
@@ -6282,25 +6729,61 @@ $$L = ${matLatex(L)}, \\quad \\mathbf{b} = ${colVecLatex(bVec)}$$
         const wrong2Str = colVecLatex([b1, b2, b3]);
         const wrong3Str = colVecLatex([y1, y2, -y3]);
 
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$\\mathbf{y} = ${rightStr}$$`, `$$\\mathbf{y} = ${rightStr}$$`),
-          [
-            t(`$$\\mathbf{y} = ${wrong1Str}$$`, `$$\\mathbf{y} = ${wrong1Str}$$`),
-            t(`$$\\mathbf{y} = ${wrong2Str}$$`, `$$\\mathbf{y} = ${wrong2Str}$$`),
-            t(`$$\\mathbf{y} = ${wrong3Str}$$`, `$$\\mathbf{y} = ${wrong3Str}$$`),
-          ],
-          t(
-            `From row 1: $y_1 = ${b1}$.
-From row 2: $(${l21})y_1 + y_2 = ${b2} \\implies (${l21})(${y1}) + y_2 = ${b2} \\implies y_2 = ${y2}$.
-From row 3: $(${l31})y_1 + (${l32})y_2 + y_3 = ${b3} \\implies y_3 = ${y3}$.
-Thus $\\mathbf{y} = ${rightStr}$.`,
-            `由第 1 行：$y_1 = ${b1}$。
-由第 2 行：$(${l21})y_1 + y_2 = ${b2} \\implies (${l21})(${y1}) + y_2 = ${b2} \\implies y_2 = ${y2}$。
-由第 3 行：$(${l31})y_1 + (${l32})y_2 + y_3 = ${b3} \\implies y_3 = ${y3}$。
-因此 $\\mathbf{y} = ${rightStr}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$$\\mathbf{y} = ${rightStr}$$`, `$$\\mathbf{y} = ${rightStr}$$`),
+            [
+              t(`$$\\mathbf{y} = ${wrong1Str}$$`, `$$\\mathbf{y} = ${wrong1Str}$$`),
+              t(`$$\\mathbf{y} = ${wrong2Str}$$`, `$$\\mathbf{y} = ${wrong2Str}$$`),
+              t(`$$\\mathbf{y} = ${wrong3Str}$$`, `$$\\mathbf{y} = ${wrong3Str}$$`),
+            ],
+            walked(
+              [
+                [
+                  ["Rows 1 and 2", "第 1、2 行"],
+                  t(
+                    `Row 1 gives $y_1 = ${b1}$ at once. Row 2 reads $${l21}y_1 + y_2 = ${b2}$, so`,
+                    `第 1 行直接给出 $y_1 = ${b1}$。第 2 行为 $${l21}y_1 + y_2 = ${b2}$，所以`,
+                  ),
+                  [`y_2 = ${b2} - ${paren(l21)} \\cdot ${paren(y1)} = ${y2}`],
+                ],
+                [
+                  ["Row 3", "第 3 行"],
+                  t(
+                    `Row 3 reads $${l31}y_1 + ${paren(l32)}y_2 + y_3 = ${b3}$, so`,
+                    `第 3 行为 $${l31}y_1 + ${paren(l32)}y_2 + y_3 = ${b3}$，所以`,
+                  ),
+                  [
+                    `y_3 = ${b3} - ${paren(l31)} \\cdot ${paren(y1)} - ${paren(l32)} \\cdot ${paren(y2)} = ${y3}`,
+                    `\\mathbf{y} = ${rightStr}`,
+                  ],
+                ],
+              ],
+              t(
+                `$L\\mathbf{y}$ gives $${y1}$, $${l21} \\cdot ${paren(y1)} + ${paren(y2)} = ${b2}$ and $${l31} \\cdot ${paren(y1)} + ${paren(l32)} \\cdot ${paren(y2)} + ${paren(y3)} = ${b3}$, which is $\\mathbf{b}$.`,
+                `$L\\mathbf{y}$ 给出 $${y1}$、$${l21} \\cdot ${paren(y1)} + ${paren(y2)} = ${b2}$ 与 $${l31} \\cdot ${paren(y1)} + ${paren(l32)} \\cdot ${paren(y2)} + ${paren(y3)} = ${b3}$，正是 $\\mathbf{b}$。`,
+              ),
+            ),
           ),
+          [
+            [
+              `$$\\mathbf{y} = ${wrong1Str}$$`,
+              `The sign of $y_2$ is wrong: $y_2 = ${b2} - ${paren(l21)} \\cdot ${paren(y1)}$ subtracts the multiple of $y_1$.`,
+              `$y_2$ 的符号错了：$y_2 = ${b2} - ${paren(l21)} \\cdot ${paren(y1)}$，要减去 $y_1$ 的倍数。`,
+            ],
+            [
+              `$$\\mathbf{y} = ${wrong2Str}$$`,
+              "That is $\\mathbf{b}$ itself; forward substitution subtracts the multiples of the earlier $y$'s.",
+              "这就是 $\\mathbf{b}$ 本身；前代要减去前面各 $y$ 的倍数。",
+            ],
+            [
+              `$$\\mathbf{y} = ${wrong3Str}$$`,
+              "The sign of $y_3$ is wrong: move both known terms of row 3 to the right side before reading off $y_3$.",
+              "$y_3$ 的符号错了：先把第 3 行中两个已知项移到右边，再读出 $y_3$。",
+            ],
+          ],
         );
       },
     },
@@ -6308,8 +6791,8 @@ Thus $\\mathbf{y} = ${rightStr}$.`,
       id: "back-substitution-in-the-second-stage-of-an-lu-solve",
       title: t("Back substitution in the second stage of an $LU$ solve", "$LU$ 求解第二步中的回代"),
       explanation: t(
-        "Solving $A\\mathbf{x} = \\mathbf{b}$ with $A = LU$ takes two triangular solves. First $L\\mathbf{y} = \\mathbf{b}$ by forward substitution, then $U\\mathbf{x} = \\mathbf{y}$ by back substitution, starting from the last row: $x_3 = \\frac{y_3}{u_{33}}$, then $x_2 = \\frac{y_2 - u_{23}x_3}{u_{22}}$, then $x_1$. Each triangular solve costs far less than eliminating $A$ again.",
-        "用 $A = LU$ 求解 $A\\mathbf{x} = \\mathbf{b}$ 需要两次三角求解。先用前代法解 $L\\mathbf{y} = \\mathbf{b}$，再用回代法解 $U\\mathbf{x} = \\mathbf{y}$，从最后一行开始：$x_3 = \\frac{y_3}{u_{33}}$，然后 $x_2 = \\frac{y_2 - u_{23}x_3}{u_{22}}$，再求 $x_1$。每次三角求解的代价远小于重新对 $A$ 消元。",
+        "Solving $A\\mathbf{x} = \\mathbf{b}$ with $A = LU$ takes two triangular solves. First $L\\mathbf{y} = \\mathbf{b}$ by forward substitution, then $U\\mathbf{x} = \\mathbf{y}$ by back substitution, starting from the last row: $x_3 = \\frac{y_3}{u_{33}}$, then $x_2 = \\frac{y_2 - u_{23}x_3}{u_{22}}$, then $x_1$. Each triangular solve costs far less than eliminating $A$ again. For example, with $u_{22} = 2$, $u_{23} = 1$, $y_2 = 7$ and $x_3 = 3$, we get $x_2 = \\frac{7 - 3}{2} = 2$.\n\n> **Watch out.** Subtract the terms of the unknowns already found before dividing by the pivot; $\\frac{y_i}{u_{ii}}$ alone is right only in the last row.",
+        "用 $A = LU$ 求解 $A\\mathbf{x} = \\mathbf{b}$ 需要两次三角求解。先用前代法解 $L\\mathbf{y} = \\mathbf{b}$，再用回代法解 $U\\mathbf{x} = \\mathbf{y}$，从最后一行开始：$x_3 = \\frac{y_3}{u_{33}}$，然后 $x_2 = \\frac{y_2 - u_{23}x_3}{u_{22}}$，再求 $x_1$。每次三角求解的代价远小于重新对 $A$ 消元。例如 $u_{22} = 2$，$u_{23} = 1$，$y_2 = 7$，$x_3 = 3$，则 $x_2 = \\frac{7 - 3}{2} = 2$。\n\n> **注意。** 先减去已求出未知数的项，再除以主元；只有最后一行才是单纯的 $\\frac{y_i}{u_{ii}}$。",
       ),
       generate(rng: Rng): Problem {
         const x = [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)];
@@ -6320,17 +6803,56 @@ Thus $\\mathbf{y} = ${rightStr}$.`,
         ];
         const y = U.map((row) => row.reduce((s, v, k) => s + v * x[k]!, 0));
         const which = rng.int(0, 1);
+        const ans = x[which]!;
+        const name = which === 0 ? "x_1" : "x_2";
+        const x3Step: [[string, string], Text, string[]] = [
+          ["Last row", "最后一行"],
+          t("Back substitution starts at the bottom:", "回代从最下面一行开始："),
+          [`x_3 = \\frac{${y[2]}}{${U[2]![2]}} = ${x[2]}`],
+        ];
+        const x2Step: [[string, string], Text, string[]] = [
+          ["Row 2", "第 2 行"],
+          t("Subtract the known term, then divide by the pivot:", "减去已知项，再除以主元："),
+          [`x_2 = \\frac{${y[1]} - ${paren(U[1]![2]!)} \\cdot ${paren(x[2]!)}}{${U[1]![1]}} = ${x[1]}`],
+        ];
+        const x1Step: [[string, string], Text, string[]] = [
+          ["Row 1", "第 1 行"],
+          t("Subtract both known terms, then divide by the pivot:", "减去两个已知项，再除以主元："),
+          [
+            `x_1 = \\frac{${y[0]} - ${paren(U[0]![1]!)} \\cdot ${paren(x[1]!)} - ${paren(U[0]![2]!)} \\cdot ${paren(x[2]!)}}{${U[0]![0]}} = ${x[0]}`,
+          ],
+        ];
+        const rowCheck = (r: number) => {
+          const terms = [0, 1, 2].filter((k) => k >= r).map((k) => `${paren(U[r]![k]!)} \\cdot ${paren(x[k]!)}`);
+          return `${terms.join(" + ")} = ${y[r]}`;
+        };
         return numberProblem({
           prompt: t(
-            `In solving $A\\mathbf{x} = \\mathbf{b}$ with $A = LU$, the first stage gave $\\mathbf{y} = ${colVecLatex(y)}$. With $U = ${matLatex(U)}$, find $${which === 0 ? "x_1" : "x_2"}$.`,
-            `用 $A = LU$ 求解 $A\\mathbf{x} = \\mathbf{b}$ 时，第一步得到 $\\mathbf{y} = ${colVecLatex(y)}$。已知 $U = ${matLatex(U)}$，求 $${which === 0 ? "x_1" : "x_2"}$。`,
+            `In solving $A\\mathbf{x} = \\mathbf{b}$ with $A = LU$, the first stage gave $\\mathbf{y} = ${colVecLatex(y)}$. With $U = ${matLatex(U)}$, find $${name}$.`,
+            `用 $A = LU$ 求解 $A\\mathbf{x} = \\mathbf{b}$ 时，第一步得到 $\\mathbf{y} = ${colVecLatex(y)}$。已知 $U = ${matLatex(U)}$，求 $${name}$。`,
           ),
-          answer: x[which]!,
-          solveFor: which === 0 ? "x_1" : "x_2",
-          wrong: [x[2]!, x[1 - which]!, Q.of(y[which]!, U[which]![which]!), -x[which]!],
-          solution: t(
-            `Back substitution: $x_3 = \\frac{${y[2]}}{${U[2]![2]}} = ${x[2]}$, $x_2 = \\frac{${y[1]} - ${paren(U[1]![2]!)} \\cdot ${paren(x[2]!)}}{${U[1]![1]}} = ${x[1]}$, $x_1 = \\frac{${y[0]} - ${paren(U[0]![1]!)} \\cdot ${paren(x[1]!)} - ${paren(U[0]![2]!)} \\cdot ${paren(x[2]!)}}{${U[0]![0]}} = ${x[0]}$.`,
-            `回代：$x_3 = \\frac{${y[2]}}{${U[2]![2]}} = ${x[2]}$，$x_2 = \\frac{${y[1]} - ${paren(U[1]![2]!)} \\cdot ${paren(x[2]!)}}{${U[1]![1]}} = ${x[1]}$，$x_1 = \\frac{${y[0]} - ${paren(U[0]![1]!)} \\cdot ${paren(x[1]!)} - ${paren(U[0]![2]!)} \\cdot ${paren(x[2]!)}}{${U[0]![0]}} = ${x[0]}$。`,
+          answer: ans,
+          solveFor: name,
+          mistakes: [
+            why(
+              x[2]!,
+              "That is $x_3$, the first value back substitution gives; keep going up the rows.",
+              "这是 $x_3$，回代得到的第一个值；还要继续往上算。",
+            ),
+            why(x[1 - which]!, `That is the other unknown; the question asks for $${name}$.`, `这是另一个未知数；题目求的是 $${name}$。`),
+            why(
+              Q.of(y[which]!, U[which]![which]!),
+              "That divides by the pivot without first subtracting the terms of the unknowns already found.",
+              "这是直接除以主元，没有先减去已求出未知数的项。",
+            ),
+            why(-ans, "The sign is wrong; recheck the subtraction before dividing.", "符号错了；请重新检查除法前的减法。"),
+          ].filter((w, i, all) => !asQ(w.value).eq(Q.of(ans)) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+          solution: walked(
+            which === 0 ? [x3Step, x2Step, x1Step] : [x3Step, x2Step],
+            t(
+              `Row ${which + 1} of $U\\mathbf{x}$: $${rowCheck(which)}$, which is $y_${which + 1}$.`,
+              `$U\\mathbf{x}$ 的第 ${which + 1} 行：$${rowCheck(which)}$，正是 $y_${which + 1}$。`,
+            ),
           ),
         });
       },

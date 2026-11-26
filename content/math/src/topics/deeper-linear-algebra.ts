@@ -866,8 +866,8 @@ const inverseOfAProduct: KnowledgePointDef = {
   id: "the-inverse-of-a-product-reverses-the-order",
   title: t("The inverse of a product reverses the order", "乘积的逆要交换顺序"),
   explanation: t(
-    "Since $AB(B^{-1}A^{-1}) = I$, the inverse of a product is the product of the inverses in the opposite order. Matrices seldom commute, so $A^{-1}B^{-1}$ is usually a different matrix and gives wrong entries.",
-    "因为 $AB(B^{-1}A^{-1}) = I$，乘积的逆是各自的逆按相反顺序相乘。矩阵很少可交换，所以 $A^{-1}B^{-1}$ 通常是另一个矩阵，算出的元素是错的。",
+    "Since $AB(B^{-1}A^{-1}) = I$, the inverse of a product is the product of the inverses in the opposite order. Matrices seldom commute, so $A^{-1}B^{-1}$ is usually a different matrix and gives wrong entries. For example, with $A^{-1} = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ and $B^{-1} = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$, the $(1, 1)$ entry of $(AB)^{-1} = B^{-1}A^{-1}$ is $1$, while $A^{-1}B^{-1}$ has $2$ there.\n\n> **Watch out.** Undo the last step first, as with socks and shoes: $(AB)^{-1} = B^{-1}A^{-1}$, never $A^{-1}B^{-1}$ in general.",
+    "因为 $AB(B^{-1}A^{-1}) = I$，乘积的逆是各自的逆按相反顺序相乘。矩阵很少可交换，所以 $A^{-1}B^{-1}$ 通常是另一个矩阵，算出的元素是错的。例如 $A^{-1} = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，$B^{-1} = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$，$(AB)^{-1} = B^{-1}A^{-1}$ 的 $(1, 1)$ 元素为 $1$，而 $A^{-1}B^{-1}$ 在该处为 $2$。\n\n> **注意。** 像先穿袜子再穿鞋一样，要先撤销最后一步：$(AB)^{-1} = B^{-1}A^{-1}$，一般不等于 $A^{-1}B^{-1}$。",
   ),
   generate(rng) {
     let Ai: number[][];
@@ -887,10 +887,44 @@ const inverseOfAProduct: KnowledgePointDef = {
       ),
       answer: right[0]![1]!,
       form: "integer",
-      wrong: [wrongOrder[0]![1]!, right[1]![0]!, Ai[0]![1]! * Bi[0]![1]!],
-      solution: t(
-        `$(AB)^{-1} = B^{-1}A^{-1}$. Row 1 of $B^{-1}$ times column 2 of $A^{-1}$ is $${Bi[0]![0]}(${Ai[0]![1]}) + ${inParens(Bi[0]![1]!)}(${Ai[1]![1]}) = ${right[0]![1]}$.`,
-        `$(AB)^{-1} = B^{-1}A^{-1}$。$B^{-1}$ 的第 1 行乘 $A^{-1}$ 的第 2 列，得 $${Bi[0]![0]}(${Ai[0]![1]}) + ${inParens(Bi[0]![1]!)}(${Ai[1]![1]}) = ${right[0]![1]}$。`,
+      mistakes: [
+        why(
+          wrongOrder[0]![1]!,
+          "That is the entry of $A^{-1}B^{-1}$; the inverse of a product reverses the order.",
+          "这是 $A^{-1}B^{-1}$ 的元素；乘积的逆要交换顺序。",
+        ),
+        why(
+          right[1]![0]!,
+          "That is the entry in row 2, column 1; the question asks for row 1, column 2.",
+          "这是第 2 行第 1 列的元素；题目求的是第 1 行第 2 列。",
+        ),
+        why(
+          Ai[0]![1]! * Bi[0]![1]!,
+          "That multiplies the two entries in position $(1, 2)$; an entry of a product is a row times a column.",
+          "这是把两个 $(1, 2)$ 位置的元素相乘；乘积的元素是行乘列。",
+        ),
+      ].filter((w, i, all) => w.value !== right[0]![1]! && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Reverse the order", "交换顺序"],
+            t(
+              "Since $(AB)(B^{-1}A^{-1}) = A(BB^{-1})A^{-1} = I$, the inverse is $(AB)^{-1} = B^{-1}A^{-1}$.",
+              "由于 $(AB)(B^{-1}A^{-1}) = A(BB^{-1})A^{-1} = I$，逆为 $(AB)^{-1} = B^{-1}A^{-1}$。",
+            ),
+          ],
+          [
+            ["Row 1 times column 2", "第 1 行乘第 2 列"],
+            t("Row 1 of $B^{-1}$ times column 2 of $A^{-1}$:", "$B^{-1}$ 的第 1 行乘 $A^{-1}$ 的第 2 列："),
+            [
+              `${inParens(Bi[0]![0]!)} \\cdot ${inParens(Ai[0]![1]!)} + ${inParens(Bi[0]![1]!)} \\cdot ${inParens(Ai[1]![1]!)} = ${right[0]![1]}`,
+            ],
+          ],
+        ],
+        t(
+          `The whole product is $B^{-1}A^{-1} = ${mat(right)}$, while $A^{-1}B^{-1} = ${mat(wrongOrder)}$ has $${wrongOrder[0]![1]}$ in that place, so the order matters here.`,
+          `整个乘积为 $B^{-1}A^{-1} = ${mat(right)}$，而 $A^{-1}B^{-1} = ${mat(wrongOrder)}$ 在该处为 $${wrongOrder[0]![1]}$，所以这里顺序有关系。`,
+        ),
       ),
     });
   },
@@ -900,8 +934,8 @@ const whenLuFails: KnowledgePointDef = {
   id: "the-parameter-where-lu-needs-a-row-swap",
   title: t("The parameter where LU needs a row swap", "LU 分解需要换行时的参数"),
   explanation: t(
-    "Elimination without row swaps divides by each pivot in turn. If the first entry is zero and the entry below it is not, no multiple of the first row can clear that entry, so no factorization $A = LU$ exists until the rows are swapped.",
-    "不换行的消元要依次除以各个主元。如果第一个元素为零而它下方的元素不为零，第一行的任何倍数都消不掉下方的元素，所以不换行就不存在 $A = LU$ 分解。",
+    "Elimination without row swaps divides by each pivot in turn. If the first entry is zero and the entry below it is not, no multiple of the first row can clear that entry, so no factorization $A = LU$ exists until the rows are swapped. For example, $\\begin{pmatrix} k - 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ needs a swap exactly at $k = 2$.\n\n> **Watch out.** A singular matrix can still have $A = LU$; what blocks it is a zero pivot, not a zero determinant.",
+    "不换行的消元要依次除以各个主元。如果第一个元素为零而它下方的元素不为零，第一行的任何倍数都消不掉下方的元素，所以不换行就不存在 $A = LU$ 分解。例如 $\\begin{pmatrix} k - 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ 恰在 $k = 2$ 时需要换行。\n\n> **注意。** 奇异矩阵仍可能有 $A = LU$；阻碍分解的是零主元，而不是行列式为零。",
   ),
   generate(rng) {
     const q = nonzero(rng, 6);
@@ -922,10 +956,37 @@ const whenLuFails: KnowledgePointDef = {
       ),
       answer: -q,
       solveFor: "k",
-      wrong: [q, c, Q.of(b * c, d).sub(Q.of(q))],
-      solution: t(
-        `The first pivot is $${entry}$. When it is zero, that is at $k = ${-q}$, the nonzero entry $${c}$ below it cannot be cleared. Any other $k$ gives a pivot to divide by, even if the matrix is singular.`,
-        `第一个主元是 $${entry}$。当它为零，即 $k = ${-q}$ 时，下方的非零元素 $${c}$ 消不掉。其他任何 $k$ 都有主元可除，即使矩阵是奇异的。`,
+      mistakes: [
+        why(q, `The sign is wrong: $${entry} = 0$ gives $k = ${-q}$.`, `符号错了：$${entry} = 0$ 给出 $k = ${-q}$。`),
+        why(
+          c,
+          `That is the entry below the pivot; the pivot $${entry}$ itself must vanish.`,
+          `这是主元下方的元素；需要为零的是主元 $${entry}$ 本身。`,
+        ),
+        why(
+          Q.of(b * c, d).sub(Q.of(q)),
+          "That value makes the determinant zero, but a singular matrix still has $LU$ while its first pivot is nonzero.",
+          "这个值使行列式为零，但只要第一个主元不为零，奇异矩阵仍有 $LU$ 分解。",
+        ),
+      ].filter((w, i, all) => {
+        const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+        return !asQ(w.value).eq(Q.of(-q)) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i;
+      }),
+      solution: walked(
+        [
+          [
+            ["Find the first pivot", "找出第一个主元"],
+            t(
+              `Elimination divides by the $(1, 1)$ entry $${entry}$ to clear the $${c}$ below it, with multiplier $\\frac{${c}}{${entry}}$.`,
+              `消元要除以 $(1, 1)$ 元素 $${entry}$ 来消去其下方的 $${c}$，乘数为 $\\frac{${c}}{${entry}}$。`,
+            ),
+          ],
+          [["Set it to zero", "令其为零"], t("", ""), [`${entry} = 0 \\implies k = ${-q}`]],
+        ],
+        t(
+          `At $k = ${-q}$ the first column is $(0, ${c})$, and no multiple of a row starting with $0$ can clear $${c}$; any other $k$ leaves a nonzero pivot.`,
+          `当 $k = ${-q}$ 时第一列为 $(0, ${c})$，首元为 $0$ 的行的任何倍数都消不掉 $${c}$；其他任何 $k$ 都留下非零主元。`,
+        ),
       ),
     });
   },
@@ -4024,8 +4085,8 @@ const inverseOfScaledPermutation: KnowledgePointDef = {
   id: "an-entry-of-the-inverse-of-a-scaled-permutation-matrix",
   title: t("An entry of the inverse of a scaled permutation matrix", "带系数置换矩阵逆的元素"),
   explanation: t(
-    "A matrix with exactly one nonzero entry in each row and column is a permutation matrix with scaled entries, and row reduction only needs to swap and divide. If the entry $d$ lies in row $i$ and column $j$, then the column $\\mathbf{e}_j$ goes to $d\\mathbf{e}_i$, and the inverse must send $\\mathbf{e}_i$ back to $\\frac{1}{d}\\mathbf{e}_j$. So the inverse has $\\frac{1}{d}$ in row $j$ and column $i$, the mirror position across the diagonal.",
-    "每行每列恰有一个非零元的矩阵是带系数的置换矩阵，行化简只需交换和除法。如果元素 $d$ 位于第 $i$ 行第 $j$ 列，那么 $\\mathbf{e}_j$ 被映到 $d\\mathbf{e}_i$，逆矩阵必须把 $\\mathbf{e}_i$ 映回 $\\frac{1}{d}\\mathbf{e}_j$。所以逆矩阵在第 $j$ 行第 $i$ 列有 $\\frac{1}{d}$，这是关于对角线的镜像位置。",
+    "A matrix with exactly one nonzero entry in each row and column is a permutation matrix with scaled entries, and row reduction only needs to swap and divide. If the entry $d$ lies in row $i$ and column $j$, then the column $\\mathbf{e}_j$ goes to $d\\mathbf{e}_i$, and the inverse must send $\\mathbf{e}_i$ back to $\\frac{1}{d}\\mathbf{e}_j$. So the inverse has $\\frac{1}{d}$ in row $j$ and column $i$, the mirror position across the diagonal. For example, if $A$ has $4$ in row $1$, column $2$, then $A^{-1}$ has $\\frac{1}{4}$ in row $2$, column $1$.\n\n> **Watch out.** The reciprocal moves to the mirror position, not the same one, and it keeps the sign of $d$.",
+    "每行每列恰有一个非零元的矩阵是带系数的置换矩阵，行化简只需交换和除法。如果元素 $d$ 位于第 $i$ 行第 $j$ 列，那么 $\\mathbf{e}_j$ 被映到 $d\\mathbf{e}_i$，逆矩阵必须把 $\\mathbf{e}_i$ 映回 $\\frac{1}{d}\\mathbf{e}_j$。所以逆矩阵在第 $j$ 行第 $i$ 列有 $\\frac{1}{d}$，这是关于对角线的镜像位置。例如 $A$ 在第 $1$ 行第 $2$ 列为 $4$，则 $A^{-1}$ 在第 $2$ 行第 $1$ 列为 $\\frac{1}{4}$。\n\n> **注意。** 倒数要移到镜像位置而不是原位置，并且保持 $d$ 的符号。",
   ),
   generate(rng) {
     const pool = [-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -4052,10 +4113,50 @@ const inverseOfScaledPermutation: KnowledgePointDef = {
         ])}$。求 $A^{-1}$ 第 ${row} 行第 ${column} 列的元素。`,
       ),
       answer,
-      wrong: [Q.of(d), answer.neg(), 0, Q.of(1, entries[(at + 1) % 4] ?? 2), Q.of(-d)],
-      solution: t(
-        `The entry $${d}$ of $A$ lies in row ${column}, column ${row}. So the inverse has its reciprocal in the mirror position, row ${row}, column ${column}, which is $${answer.toLatex()}$.`,
-        `$A$ 的元素 $${d}$ 位于第 ${column} 行第 ${row} 列。所以逆矩阵在镜像位置第 ${row} 行第 ${column} 列有它的倒数，即 $${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(d),
+          `That is the entry $${d}$ of $A$ itself; the inverse holds its reciprocal.`,
+          `这是 $A$ 自身的元素 $${d}$；逆矩阵中是它的倒数。`,
+        ),
+        why(answer.neg(), `The reciprocal keeps the sign of $${d}$.`, `倒数保持 $${d}$ 的符号。`),
+        why(
+          0,
+          `Row ${row}, column ${column} mirrors the position of $${d}$ in $A$, so this entry is not zero.`,
+          `第 ${row} 行第 ${column} 列正是 $A$ 中 $${d}$ 的镜像位置，所以该元素不为零。`,
+        ),
+        why(
+          Q.of(1, entries[(at + 1) % 4] ?? 2),
+          `That is the reciprocal of a neighbouring entry; the entry of $A$ in row ${column}, column ${row} is $${d}$.`,
+          `这是相邻元素的倒数；$A$ 第 ${column} 行第 ${row} 列的元素是 $${d}$。`,
+        ),
+        why(Q.of(-d), `The inverse holds the reciprocal of $${d}$, with the same sign.`, `逆矩阵中是 $${d}$ 的倒数，符号相同。`),
+      ].filter((w, i, all) => {
+        const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+        return !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i;
+      }),
+      solution: walked(
+        [
+          [
+            ["Locate the entry", "定位元素"],
+            t(
+              `Row ${column} of $A$ has its only nonzero entry $${d}$ in column ${row}, so $A\\mathbf{e}_{${row}} = ${d}\\mathbf{e}_{${column}}$.`,
+              `$A$ 的第 ${column} 行唯一的非零元素 $${d}$ 位于第 ${row} 列，所以 $A\\mathbf{e}_{${row}} = ${d}\\mathbf{e}_{${column}}$。`,
+            ),
+          ],
+          [
+            ["Mirror and invert", "取镜像并求倒数"],
+            t(
+              `The inverse sends $\\mathbf{e}_{${column}}$ back to $\\frac{1}{${d}}\\mathbf{e}_{${row}}$, so row ${row}, column ${column} of $A^{-1}$ is`,
+              `逆矩阵把 $\\mathbf{e}_{${column}}$ 映回 $\\frac{1}{${d}}\\mathbf{e}_{${row}}$，所以 $A^{-1}$ 第 ${row} 行第 ${column} 列为`,
+            ),
+            [`\\frac{1}{${d}} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `Row ${row} of $A^{-1}$ times column ${row} of $A$ is $${answer.toLatex()} \\cdot ${inParens(d)} = 1$, the diagonal entry of $I$.`,
+          `$A^{-1}$ 的第 ${row} 行乘 $A$ 的第 ${row} 列为 $${answer.toLatex()} \\cdot ${inParens(d)} = 1$，正是 $I$ 的对角元素。`,
+        ),
       ),
     });
   },

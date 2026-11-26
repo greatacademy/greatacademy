@@ -1154,8 +1154,8 @@ const triangularTrace = point(
   "the-trace-of-the-inverse-of-a-triangular-matrix",
   ["The trace of the inverse of a triangular matrix", "三角矩阵的逆的迹"],
   [
-    "The inverse of an invertible triangular matrix is triangular as well, and each of its diagonal entries is the reciprocal of the corresponding entry. So the trace of the inverse needs only the diagonal, and entries off the diagonal play no part.",
-    "可逆三角矩阵的逆矩阵也是三角矩阵，它的每个对角元素都是相应元素的倒数。所以逆矩阵的迹只需要对角元素，对角线外的元素不起作用。",
+    "The inverse of an invertible triangular matrix is triangular as well, and each of its diagonal entries is the reciprocal of the corresponding entry. So the trace of the inverse needs only the diagonal, and entries off the diagonal play no part. For example, a triangular matrix with diagonal $2, 4, -1$ has an inverse with trace $\\frac{1}{2} + \\frac{1}{4} - 1 = -\\frac{1}{4}$.\n\n> **Watch out.** The trace of $U^{-1}$ adds the reciprocals; it is neither the trace of $U$ nor the reciprocal of $\\det U$.",
+    "可逆三角矩阵的逆矩阵也是三角矩阵，它的每个对角元素都是相应元素的倒数。所以逆矩阵的迹只需要对角元素，对角线外的元素不起作用。例如对角元素为 $2, 4, -1$ 的三角矩阵，其逆的迹为 $\\frac{1}{2} + \\frac{1}{4} - 1 = -\\frac{1}{4}$。\n\n> **注意。** $U^{-1}$ 的迹是各倒数之和；它既不是 $U$ 的迹，也不是 $\\det U$ 的倒数。",
   ],
   (rng) => {
     const pool = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6];
@@ -1168,15 +1168,47 @@ const triangularTrace = point(
       [0, d2, nz(rng, 5)],
       [0, 0, d3],
     ]);
-    return ask(
-      [`Find the trace of $U^{-1}$ for $U = ${U}$.`, `对 $U = ${U}$，求 $U^{-1}$ 的迹。`],
+    const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+    const recips = [d1, d2, d3].map((d) => Q.of(1, d).toLatex());
+    const wrapped = recips.map((s) => (s.startsWith("-") ? `\\left(${s}\\right)` : s));
+    return numberProblem({
+      prompt: text([`Find the trace of $U^{-1}$ for $U = ${U}$.`, `对 $U = ${U}$，求 $U^{-1}$ 的迹。`]),
       answer,
-      [d1 + d2 + d3, Q.of(1, d1 * d2 * d3), answer.neg()],
-      [
-        `The diagonal entries of $U^{-1}$ are the reciprocals $${Q.of(1, d1).toLatex()}$, $${Q.of(1, d2).toLatex()}$ and $${Q.of(1, d3).toLatex()}$. Their sum is $${answer.toLatex()}$.`,
-        `$U^{-1}$ 的对角元素是倒数 $${Q.of(1, d1).toLatex()}$、$${Q.of(1, d2).toLatex()}$ 和 $${Q.of(1, d3).toLatex()}$。它们的和是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          d1 + d2 + d3,
+          "That is the trace of $U$; the diagonal of $U^{-1}$ holds the reciprocals.",
+          "这是 $U$ 的迹；$U^{-1}$ 的对角线上是倒数。",
+        ),
+        why(
+          Q.of(1, d1 * d2 * d3),
+          "That is $\\det U^{-1}$, the product of the reciprocals; the trace adds them.",
+          "这是 $\\det U^{-1}$，即倒数之积；迹是把它们相加。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is wrong: each reciprocal keeps the sign of its diagonal entry.",
+          "符号错了：每个倒数保持对应对角元素的符号。",
+        ),
+      ].filter((w, i, all) => !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+      solution: walked(
+        [
+          [
+            ["Read the diagonal of $U^{-1}$", "读出 $U^{-1}$ 的对角线"],
+            text([
+              `$U^{-1}$ is upper triangular, and its diagonal entries are the reciprocals of $${d1}$, $${d2}$, $${d3}$:`,
+              `$U^{-1}$ 是上三角矩阵，其对角元素是 $${d1}$、$${d2}$、$${d3}$ 的倒数：`,
+            ]),
+            [recips.join(", \\quad ")],
+          ],
+          [["Add them", "相加"], t("", ""), [`${recips.join(" + ").replace(/\+ -/g, "- ")} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `The diagonal of $UU^{-1}$ is $${d1} \\cdot ${wrapped[0]}$, $${d2} \\cdot ${wrapped[1]}$, $${d3} \\cdot ${wrapped[2]}$, each equal to $1$, as the diagonal of $I$ must be.`,
+          `$UU^{-1}$ 的对角线为 $${d1} \\cdot ${wrapped[0]}$、$${d2} \\cdot ${wrapped[1]}$、$${d3} \\cdot ${wrapped[2]}$，都等于 $1$，正如 $I$ 的对角线。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1184,8 +1216,8 @@ const recoverFromLu = point(
   "an-entry-of-a-from-its-factors",
   ["An entry of A from its factors", "由因子求 A 的元素"],
   [
-    "Since $L$ is lower triangular and $U$ is upper triangular, the sum for an entry of $A = LU$ stops early. The $(3, 2)$ entry uses only the first two columns of row $3$ of $L$, so it is $l_{31}u_{12} + l_{32}u_{22}$.",
-    "由于 $L$ 是下三角矩阵，$U$ 是上三角矩阵，$A = LU$ 的元素的和式会提前终止。$(3, 2)$ 元素只用到 $L$ 第 $3$ 行的前两列，所以等于 $l_{31}u_{12} + l_{32}u_{22}$。",
+    "Since $L$ is lower triangular and $U$ is upper triangular, the sum for an entry of $A = LU$ stops early. The $(3, 2)$ entry uses only the first two columns of row $3$ of $L$, so it is $l_{31}u_{12} + l_{32}u_{22}$. For example, $l_{31} = 2$, $u_{12} = 3$, $l_{32} = -1$ and $u_{22} = 4$ give $6 - 4 = 2$.\n\n> **Watch out.** Both terms are needed: the $1$ on the diagonal of $L$ meets $u_{32} = 0$, but $l_{31}$ and $l_{32}$ each contribute.",
+    "由于 $L$ 是下三角矩阵，$U$ 是上三角矩阵，$A = LU$ 的元素的和式会提前终止。$(3, 2)$ 元素只用到 $L$ 第 $3$ 行的前两列，所以等于 $l_{31}u_{12} + l_{32}u_{22}$。例如 $l_{31} = 2$，$u_{12} = 3$，$l_{32} = -1$，$u_{22} = 4$，得 $6 - 4 = 2$。\n\n> **注意。** 两项都不能少：$L$ 对角线上的 $1$ 遇到的是 $u_{32} = 0$，但 $l_{31}$ 与 $l_{32}$ 各有贡献。",
   ],
   (rng) => {
     const l21 = nz(rng, 4);
@@ -1198,8 +1230,8 @@ const recoverFromLu = point(
     const u23 = nz(rng, 5);
     const u33 = nz(rng, 5);
     const answer = l31 * u12 + l32 * u22;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$L = ${mat([
           [1, 0, 0],
           [l21, 1, 0],
@@ -1218,14 +1250,46 @@ const recoverFromLu = point(
           [0, u22, u23],
           [0, 0, u33],
         ])}$。求 $A = LU$ 的 $(3, 2)$ 元素。`,
-      ],
+      ]),
       answer,
-      [l32 * u22, l31 * u12, l31 * u13 + l32 * u23],
-      [
-        `Multiply row $3$ of $L$ by column $2$ of $U$: $${wrap(l31)} \\cdot ${wrap(u12)} + ${wrap(l32)} \\cdot ${wrap(u22)} + 1 \\cdot 0 = ${answer}$.`,
-        `用 $L$ 的第 $3$ 行乘以 $U$ 的第 $2$ 列：$${wrap(l31)} \\cdot ${wrap(u12)} + ${wrap(l32)} \\cdot ${wrap(u22)} + 1 \\cdot 0 = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          l32 * u22,
+          `The term $l_{31}u_{12} = ${wrap(l31)} \\cdot ${wrap(u12)}$ is missing.`,
+          `漏了 $l_{31}u_{12} = ${wrap(l31)} \\cdot ${wrap(u12)}$ 这一项。`,
+        ),
+        why(
+          l31 * u12,
+          `The term $l_{32}u_{22} = ${wrap(l32)} \\cdot ${wrap(u22)}$ is missing.`,
+          `漏了 $l_{32}u_{22} = ${wrap(l32)} \\cdot ${wrap(u22)}$ 这一项。`,
+        ),
+        why(
+          l31 * u13 + l32 * u23,
+          "That uses column 3 of $U$; the $(3, 2)$ entry needs column 2.",
+          "这用的是 $U$ 的第 3 列；$(3, 2)$ 元素要用第 2 列。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Pick the row and column", "选出行与列"],
+            text([
+              `The $(3, 2)$ entry is row $3$ of $L$, $(${l31}, ${l32}, 1)$, times column $2$ of $U$, $(${u12}, ${u22}, 0)$.`,
+              `$(3, 2)$ 元素是 $L$ 的第 $3$ 行 $(${l31}, ${l32}, 1)$ 乘 $U$ 的第 $2$ 列 $(${u12}, ${u22}, 0)$。`,
+            ]),
+          ],
+          [
+            ["Multiply and add", "相乘再相加"],
+            t("", ""),
+            [`${wrap(l31)} \\cdot ${wrap(u12)} + ${wrap(l32)} \\cdot ${wrap(u22)} + 1 \\cdot 0 = ${answer}`],
+          ],
+        ],
+        t(
+          `Row 3 of $A$ is $${l31}$ times row 1 of $U$ plus $${wrap(l32)}$ times row 2 of $U$ plus row 3 of $U$; its second entries give $${wrap(l31)} \\cdot ${wrap(u12)} + ${wrap(l32)} \\cdot ${wrap(u22)} + 0 = ${answer}$.`,
+          `$A$ 的第 3 行等于 $U$ 第 1 行的 $${l31}$ 倍加第 2 行的 $${wrap(l32)}$ 倍再加第 3 行；取第二个元素得 $${wrap(l31)} \\cdot ${wrap(u12)} + ${wrap(l32)} \\cdot ${wrap(u22)} + 0 = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1233,26 +1297,53 @@ const pivotFromMinors = point(
   "a-pivot-from-leading-minors",
   ["A pivot from leading minors", "由顺序主子式求主元"],
   [
-    "With $L$ unit lower triangular, the determinant of the leading $k \\times k$ block of $A$ is the product of the first $k$ pivots. So each pivot is a ratio of consecutive leading minors, and LU without row swaps exists only when these minors are nonzero.",
-    "当 $L$ 是单位下三角矩阵时，$A$ 的前 $k \\times k$ 块的行列式等于前 $k$ 个主元之积。所以每个主元都是相邻顺序主子式之比，只有这些主子式都不为零时，才存在不做行交换的 LU 分解。",
+    "With $L$ unit lower triangular, the determinant of the leading $k \\times k$ block of $A$ is the product of the first $k$ pivots. So each pivot is a ratio of consecutive leading minors, and LU without row swaps exists only when these minors are nonzero. For example, leading minors $2$, $6$ and $-12$ give pivots $2$, $\\frac{6}{2} = 3$ and $\\frac{-12}{6} = -2$.\n\n> **Watch out.** Divide consecutive minors, the larger size on top; a difference of minors is not a pivot.",
+    "当 $L$ 是单位下三角矩阵时，$A$ 的前 $k \\times k$ 块的行列式等于前 $k$ 个主元之积。所以每个主元都是相邻顺序主子式之比，只有这些主子式都不为零时，才存在不做行交换的 LU 分解。例如顺序主子式 $2$、$6$、$-12$ 给出主元 $2$、$\\frac{6}{2} = 3$、$\\frac{-12}{6} = -2$。\n\n> **注意。** 要用相邻主子式相除，阶数大的作分子；主子式之差不是主元。",
   ],
   (rng) => {
     const d1 = nz(rng, 9);
     const d2 = nz(rng, 12);
     const d3 = nz(rng, 20);
     const answer = Q.of(d3, d2);
-    return ask(
-      [
+    const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+    const u22 = Q.of(d2, d1);
+    return numberProblem({
+      prompt: text([
         `$A = LU$ with $L$ unit lower triangular. The leading minors of sizes $1$, $2$, $3$ are $${d1}$, $${d2}$ and $${d3}$. Find $u_{33}$.`,
         `$A = LU$，其中 $L$ 是单位下三角矩阵。$1$、$2$、$3$ 阶顺序主子式分别是 $${d1}$、$${d2}$ 和 $${d3}$。求 $u_{33}$。`,
-      ],
+      ]),
       answer,
-      [d3, d3 - d2, Q.of(d2, d3)],
-      [
-        `The leading minors are the products $u_{11}$, $u_{11}u_{22}$ and $u_{11}u_{22}u_{33}$. Dividing the last by the one before gives $u_{33} = ${answer.toLatex()}$.`,
-        `顺序主子式是乘积 $u_{11}$、$u_{11}u_{22}$ 和 $u_{11}u_{22}u_{33}$。用最后一个除以前一个，得 $u_{33} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          d3,
+          "That is the $3 \\times 3$ minor, the product of all three pivots; divide by the $2 \\times 2$ minor.",
+          "这是 $3$ 阶主子式，即三个主元之积；还要除以 $2$ 阶主子式。",
+        ),
+        why(
+          d3 - d2,
+          "The minors are products of pivots, so consecutive minors are divided, not subtracted.",
+          "主子式是主元之积，所以相邻主子式要相除而不是相减。",
+        ),
+        why(Q.of(d2, d3), "The fraction is upside down: the larger minor goes on top.", "分数颠倒了：阶数大的主子式作分子。"),
+      ].filter((w, i, all) => !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+      solution: walked(
+        [
+          [
+            ["Write the minors as products", "把主子式写成乘积"],
+            text([
+              "Since $\\det L = 1$ for each leading block, the leading minors are $u_{11}$, $u_{11}u_{22}$ and $u_{11}u_{22}u_{33}$:",
+              "由于各前块的 $\\det L = 1$，顺序主子式为 $u_{11}$、$u_{11}u_{22}$ 和 $u_{11}u_{22}u_{33}$：",
+            ]),
+            [`u_{11} = ${d1}, \\quad u_{11}u_{22} = ${d2}, \\quad u_{11}u_{22}u_{33} = ${d3}`],
+          ],
+          [["Divide consecutive minors", "相邻主子式相除"], t("", ""), [`u_{33} = \\frac{${d3}}{${d2}} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `The pivots are $${d1}$, $u_{22} = \\frac{${d2}}{${d1}} = ${u22.toLatex()}$ and $${answer.toLatex()}$, and their product is $${Q.of(d1).mul(u22).mul(answer).toLatex()} = ${d3}$.`,
+          `三个主元为 $${d1}$、$u_{22} = \\frac{${d2}}{${d1}} = ${u22.toLatex()}$ 与 $${answer.toLatex()}$，其乘积为 $${Q.of(d1).mul(u22).mul(answer).toLatex()} = ${d3}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1260,8 +1351,8 @@ const transposeSolve = point(
   "solving-with-the-transpose-using-the-same-factors",
   ["Solving with the transpose using the same factors", "用同样的因子解转置方程组"],
   [
-    "If $A = LU$, then $A^{T} = U^{T}L^{T}$, so the same factors also solve $A^{T}\\mathbf{x} = \\mathbf{b}$. Now the order changes: first solve $U^{T}\\mathbf{z} = \\mathbf{b}$, which is lower triangular, and then $L^{T}\\mathbf{x} = \\mathbf{z}$, which is upper triangular.",
-    "如果 $A = LU$，则 $A^{T} = U^{T}L^{T}$，所以同样的因子也能解 $A^{T}\\mathbf{x} = \\mathbf{b}$。此时顺序改变：先解下三角的 $U^{T}\\mathbf{z} = \\mathbf{b}$，再解上三角的 $L^{T}\\mathbf{x} = \\mathbf{z}$。",
+    "If $A = LU$, then $A^{T} = U^{T}L^{T}$, so the same factors also solve $A^{T}\\mathbf{x} = \\mathbf{b}$. Now the order changes: first solve $U^{T}\\mathbf{z} = \\mathbf{b}$, which is lower triangular, and then $L^{T}\\mathbf{x} = \\mathbf{z}$, which is upper triangular. For example, with $U = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$ and $\\mathbf{b} = (4, 5)$, the first stage gives $z_1 = 2$ and $z_2 = \\frac{5 - 2}{3} = 1$.\n\n> **Watch out.** Transposing reverses the order of the factors, so $U^{T}$ is solved first, and $\\mathbf{z}$ is only the intermediate vector, not $\\mathbf{x}$.",
+    "如果 $A = LU$，则 $A^{T} = U^{T}L^{T}$，所以同样的因子也能解 $A^{T}\\mathbf{x} = \\mathbf{b}$。此时顺序改变：先解下三角的 $U^{T}\\mathbf{z} = \\mathbf{b}$，再解上三角的 $L^{T}\\mathbf{x} = \\mathbf{z}$。例如 $U = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$，$\\mathbf{b} = (4, 5)$，第一步得 $z_1 = 2$，$z_2 = \\frac{5 - 2}{3} = 1$。\n\n> **注意。** 转置会颠倒因子的顺序，所以先解 $U^{T}$；$\\mathbf{z}$ 只是中间向量，不是 $\\mathbf{x}$。",
   ],
   (rng) => {
     const l = nz(rng, 4);
@@ -1274,8 +1365,8 @@ const transposeSolve = point(
     const z2 = x2;
     const b1 = a * z1;
     const b2 = b * z1 + d * z2;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$A = LU$ with $L = ${mat([
           [1, 0],
           [l, 1],
@@ -1290,14 +1381,55 @@ const transposeSolve = point(
           [a, b],
           [0, d],
         ])}$。解 $A^{T}\\mathbf{x} = ${vec(b1, b2)}$，求 $x_{1}$。`,
-      ],
-      x1,
-      [x2, z1, -x1],
-      [
-        `$U^{T}\\mathbf{z} = \\mathbf{b}$ gives $z_{1} = ${z1}$ and $z_{2} = ${z2}$. Then $L^{T}\\mathbf{x} = \\mathbf{z}$ gives $x_{2} = ${x2}$ and $x_{1} = ${z1} - ${wrap(l)} \\cdot ${wrap(x2)} = ${x1}$.`,
-        `由 $U^{T}\\mathbf{z} = \\mathbf{b}$ 得 $z_{1} = ${z1}$，$z_{2} = ${z2}$。再由 $L^{T}\\mathbf{x} = \\mathbf{z}$ 得 $x_{2} = ${x2}$，$x_{1} = ${z1} - ${wrap(l)} \\cdot ${wrap(x2)} = ${x1}$。`,
-      ],
-    );
+      ]),
+      answer: x1,
+      solveFor: "x_1",
+      mistakes: [
+        why(x2, "That is $x_2$; the question asks for $x_1$.", "这是 $x_2$；题目求的是 $x_1$。"),
+        why(
+          z1,
+          `That is $z_1$ from the first stage; $L^{T}\\mathbf{x} = \\mathbf{z}$ still subtracts $${wrap(l)} \\cdot x_2$.`,
+          `这是第一步的 $z_1$；$L^{T}\\mathbf{x} = \\mathbf{z}$ 还要减去 $${wrap(l)} \\cdot x_2$。`,
+        ),
+        why(-x1, `The sign is wrong: $x_1 = z_1 - ${wrap(l)} \\cdot x_2$.`, `符号错了：$x_1 = z_1 - ${wrap(l)} \\cdot x_2$。`),
+      ].filter((w, i, all) => w.value !== x1 && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Solve $U^{T}\\mathbf{z} = \\mathbf{b}$", "解 $U^{T}\\mathbf{z} = \\mathbf{b}$"],
+            text([
+              `$A^{T} = U^{T}L^{T}$ with $U^{T} = ${mat([
+                [a, 0],
+                [b, d],
+              ])}$, lower triangular, so solve from the top:`,
+              `$A^{T} = U^{T}L^{T}$，其中 $U^{T} = ${mat([
+                [a, 0],
+                [b, d],
+              ])}$ 是下三角矩阵，所以从上往下解：`,
+            ]),
+            [`z_1 = \\frac{${b1}}{${a}} = ${z1}, \\quad z_2 = \\frac{${b2} - ${wrap(b)} \\cdot ${wrap(z1)}}{${d}} = ${z2}`],
+          ],
+          [
+            ["Solve $L^{T}\\mathbf{x} = \\mathbf{z}$", "解 $L^{T}\\mathbf{x} = \\mathbf{z}$"],
+            text([
+              `$L^{T} = ${mat([
+                [1, l],
+                [0, 1],
+              ])}$ is upper triangular, so solve from the bottom:`,
+              `$L^{T} = ${mat([
+                [1, l],
+                [0, 1],
+              ])}$ 是上三角矩阵，所以从下往上解：`,
+            ]),
+            [`x_2 = ${x2}, \\quad x_1 = ${z1} - ${wrap(l)} \\cdot ${wrap(x2)} = ${x1}`],
+          ],
+        ],
+        t(
+          `Row 1 of $A^{T}$ is column 1 of $A = LU$, namely $(${a}, ${l * a})$, and $${a} \\cdot ${wrap(x1)} + ${wrap(l * a)} \\cdot ${wrap(x2)} = ${b1}$.`,
+          `$A^{T}$ 的第 1 行是 $A = LU$ 的第 1 列，即 $(${a}, ${l * a})$，且 $${a} \\cdot ${wrap(x1)} + ${wrap(l * a)} \\cdot ${wrap(x2)} = ${b1}$。`,
+        ),
+      ),
+    });
   },
 );
 
