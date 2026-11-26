@@ -2098,8 +2098,8 @@ const lastEigenvector = point(
   "the-last-eigenvector-of-a-triangular-matrix",
   ["The last eigenvector of a triangular matrix", "三角矩阵的最后一个特征向量"],
   [
-    "For an upper triangular matrix, the eigenvector of the last diagonal entry has every component in play. Set the last component to $1$ and work upward: each row then gives one component, which depends on those below it found earlier.",
-    "对上三角矩阵，最后一个对角元素的特征向量的所有分量都起作用。令最后一个分量为 $1$，然后向上计算：每一行给出一个分量，它依赖于前面已求出的下方的分量。",
+    "For an upper triangular matrix, the eigenvector of the last diagonal entry has every component in play. Set the last component to $1$ and work upward: each row then gives one component, which depends on those below it found earlier. For example, $\\begin{pmatrix} 1 & 1 & 1 \\\\ 0 & 2 & 1 \\\\ 0 & 0 & 3 \\end{pmatrix}$ and $\\lambda = 3$: row $2$ of $A - 3I$ gives $-x_{2} + 1 = 0$, so $x_{2} = 1$, and row $1$ gives $-2x_{1} + 1 + 1 = 0$, so $x_{1} = 1$.\n\n> **Watch out.** Go from the bottom row up. Row $1$ involves $x_{2}$, so it can only be solved after row $2$; using row $1$ first, or dropping the $x_{2}$ term, gives the wrong $x_{1}$.",
+    "对上三角矩阵，最后一个对角元素的特征向量的所有分量都起作用。令最后一个分量为 $1$，然后向上计算：每一行给出一个分量，它依赖于前面已求出的下方的分量。例如 $\\begin{pmatrix} 1 & 1 & 1 \\\\ 0 & 2 & 1 \\\\ 0 & 0 & 3 \\end{pmatrix}$，$\\lambda = 3$：$A - 3I$ 的第 $2$ 行给出 $-x_{2} + 1 = 0$，所以 $x_{2} = 1$；第 $1$ 行给出 $-2x_{1} + 1 + 1 = 0$，所以 $x_{1} = 1$。\n\n> **注意。** 要从最下面一行往上算。第 $1$ 行含有 $x_{2}$，只能在第 $2$ 行之后解；先用第 $1$ 行，或漏掉 $x_{2}$ 那一项，都会得到错误的 $x_{1}$。",
   ],
   (rng) => {
     const a11 = rng.int(-6, 6);
@@ -2110,26 +2110,53 @@ const lastEigenvector = point(
     const a12 = nz(rng, 4);
     const a23 = (a33 - a22) * x2;
     const a13 = (a33 - a11) * x1 - a12 * x2;
-    return ask(
-      [
-        `$${vec("x_{1}", "x_{2}", 1)}$ is an eigenvector of $${mat([
-          [a11, a12, a13],
-          [0, a22, a23],
-          [0, 0, a33],
-        ])}$ for $\\lambda = ${a33}$. Find $x_{1}$.`,
-        `$${vec("x_{1}", "x_{2}", 1)}$ 是 $${mat([
-          [a11, a12, a13],
-          [0, a22, a23],
-          [0, 0, a33],
-        ])}$ 关于 $\\lambda = ${a33}$ 的特征向量。求 $x_{1}$。`,
-      ],
-      x1,
-      [x2, -x1, a13],
-      [
-        `Row $2$ of $A - ${wrap(a33)}I$ gives $${poly([a22 - a33, "x_{2}"], [a23, ""])} = 0$, so $x_{2} = ${x2}$. Row $1$ then gives $${poly([a11 - a33, "x_{1}"], [a12 * x2 + a13, ""])} = 0$, so $x_{1} = ${x1}$.`,
-        `$A - ${wrap(a33)}I$ 的第 $2$ 行给出 $${poly([a22 - a33, "x_{2}"], [a23, ""])} = 0$，所以 $x_{2} = ${x2}$。第 $1$ 行再给出 $${poly([a11 - a33, "x_{1}"], [a12 * x2 + a13, ""])} = 0$，所以 $x_{1} = ${x1}$。`,
-      ],
-    );
+    const A = mat([
+      [a11, a12, a13],
+      [0, a22, a23],
+      [0, 0, a33],
+    ]);
+    return numberProblem({
+      prompt: text([
+        `$${vec("x_{1}", "x_{2}", 1)}$ is an eigenvector of $${A}$ for $\\lambda = ${a33}$. Find $x_{1}$.`,
+        `$${vec("x_{1}", "x_{2}", 1)}$ 是 $${A}$ 关于 $\\lambda = ${a33}$ 的特征向量。求 $x_{1}$。`,
+      ]),
+      answer: x1,
+      form: "integer",
+      mistakes: [
+        why(
+          x2,
+          "That is $x_{2}$, from row $2$; row $1$ still has to be solved for $x_{1}$.",
+          "这是由第 $2$ 行求出的 $x_{2}$；还要由第 $1$ 行解出 $x_{1}$。",
+        ),
+        why(
+          -x1,
+          "The sign is flipped; move the known terms of row $1$ to the other side again.",
+          "符号反了；请重新把第 $1$ 行的已知项移到另一边。",
+        ),
+        why(a13, "That is an entry of the matrix, not a component of the eigenvector.", "这是矩阵的元素，不是特征向量的分量。"),
+      ].filter((w, i, all) => w.value !== x1 && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Solve row 2 for $x_{2}$", "由第 2 行解出 $x_{2}$"],
+            text([`Row $2$ of $A - ${wrap(a33)}I$ with $x_{3} = 1$:`, `$A - ${wrap(a33)}I$ 的第 $2$ 行，取 $x_{3} = 1$：`]),
+            [`${poly([a22 - a33, "x_{2}"], [a23, ""])} = 0`, `x_{2} = ${x2}`],
+          ],
+          [
+            ["Solve row 1 for $x_{1}$", "由第 1 行解出 $x_{1}$"],
+            text([
+              `Row $1$ is $${poly([a11 - a33, "x_{1}"], [a12, "x_{2}"], [a13, ""])} = 0$; put in $x_{2} = ${x2}$:`,
+              `第 $1$ 行为 $${poly([a11 - a33, "x_{1}"], [a12, "x_{2}"], [a13, ""])} = 0$；代入 $x_{2} = ${x2}$：`,
+            ]),
+            [`${poly([a11 - a33, "x_{1}"], [a12 * x2 + a13, ""])} = 0`, `x_{1} = ${x1}`],
+          ],
+        ],
+        text([
+          `The first entry of $A\\mathbf{v}$ is $${a11} \\cdot ${wrap(x1)} + ${wrap(a12)} \\cdot ${wrap(x2)} + ${wrap(a13)} = ${a33 * x1} = ${wrap(a33)} \\cdot ${wrap(x1)}$.`,
+          `$A\\mathbf{v}$ 的第一个分量：$${a11} \\cdot ${wrap(x1)} + ${wrap(a12)} \\cdot ${wrap(x2)} + ${wrap(a13)} = ${a33 * x1} = ${wrap(a33)} \\cdot ${wrap(x1)}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2137,8 +2164,8 @@ const geometricMult = point(
   "a-single-entry-decides-the-geometric-multiplicity",
   ["A single entry decides the geometric multiplicity", "一个元素决定几何重数"],
   [
-    "A repeated eigenvalue may have fewer independent eigenvectors than its multiplicity. The geometric multiplicity is $3$ minus the rank of $A - \\lambda I$. In a triangular matrix, one entry above the diagonal can raise that rank and remove an eigenvector.",
-    "重特征值的线性无关特征向量可能少于其重数。几何重数等于 $3$ 减去 $A - \\lambda I$ 的秩。在三角矩阵中，对角线上方的一个元素就能提高这个秩，并减少一个特征向量。",
+    "A repeated eigenvalue may have fewer independent eigenvectors than its multiplicity. The geometric multiplicity is $3$ minus the rank of $A - \\lambda I$. In a triangular matrix, one entry above the diagonal can raise that rank and remove an eigenvector. For example, $\\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ has $\\operatorname{rank}(A - 2I) = 2$, so the eigenvalue $2$ has geometric multiplicity $3 - 2 = 1$; with $0$ in place of the $1$ the rank drops to $1$ and the multiplicity rises to $2$.\n\n> **Watch out.** The geometric multiplicity is not the number of times $\\lambda$ appears on the diagonal. It is $3 - \\operatorname{rank}(A - \\lambda I)$, never less than $1$ and never more than the algebraic multiplicity.",
+    "重特征值的线性无关特征向量可能少于其重数。几何重数等于 $3$ 减去 $A - \\lambda I$ 的秩。在三角矩阵中，对角线上方的一个元素就能提高这个秩，并减少一个特征向量。例如 $\\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ 有 $\\operatorname{rank}(A - 2I) = 2$，所以特征值 $2$ 的几何重数为 $3 - 2 = 1$；把其中的 $1$ 换成 $0$，秩降为 $1$，重数升为 $2$。\n\n> **注意。** 几何重数不是 $\\lambda$ 在对角线上出现的次数，而是 $3 - \\operatorname{rank}(A - \\lambda I)$，它不小于 $1$，也不超过代数重数。",
   ],
   (rng) => {
     const l = nz(rng, 6);
@@ -2148,31 +2175,71 @@ const geometricMult = point(
     const b = nz(rng, 5);
     const k = nz(rng, 5);
     const answer = zero ? 2 : 1;
-    return ask(
-      [
-        `Find the geometric multiplicity of the eigenvalue $${l}$ of $${mat([
-          [l, a, b],
-          [0, l, k],
-          [0, 0, mu],
-        ])}$.`,
-        `求 $${mat([
-          [l, a, b],
-          [0, l, k],
-          [0, 0, mu],
-        ])}$ 的特征值 $${l}$ 的几何重数。`,
-      ],
+    const A = mat([
+      [l, a, b],
+      [0, l, k],
+      [0, 0, mu],
+    ]);
+    const shifted = mat([
+      [0, a, b],
+      [0, 0, k],
+      [0, 0, mu - l],
+    ]);
+    return numberProblem({
+      prompt: text([`Find the geometric multiplicity of the eigenvalue $${l}$ of $${A}$.`, `求 $${A}$ 的特征值 $${l}$ 的几何重数。`]),
       answer,
-      [3, zero ? 1 : 2, 0],
-      zero
-        ? [
-            "In $A - \\lambda I$ the first two columns are zero, and all the rows are multiples of one row. So the rank is $1$ and the geometric multiplicity is $2$.",
-            "在 $A - \\lambda I$ 中，前两列为零，各行都是同一行的倍数。所以秩是 $1$，几何重数是 $2$。",
-          ]
-        : [
-            "In $A - \\lambda I$ the nonzero $(1, 2)$ entry and the nonzero $(3, 3)$ entry give two pivots. So the rank is $2$ and the geometric multiplicity is $1$.",
-            "在 $A - \\lambda I$ 中，非零的 $(1, 2)$ 元素和非零的 $(3, 3)$ 元素给出两个主元。所以秩是 $2$，几何重数是 $1$。",
+      form: "integer",
+      mistakes: [
+        why(
+          3,
+          "That would need $A - \\lambda I = 0$; its entries are not all zero.",
+          "那需要 $A - \\lambda I = 0$；但它的元素并不全为零。",
+        ),
+        zero
+          ? why(
+              1,
+              "With a zero in the $(1, 2)$ place, every row of $A - \\lambda I$ is a multiple of one row, so the rank is only $1$.",
+              "$(1, 2)$ 位置为零时，$A - \\lambda I$ 的各行都是同一行的倍数，所以秩只有 $1$。",
+            )
+          : why(
+              2,
+              `That is the algebraic multiplicity; the entry $${a}$ above the diagonal makes the rank $2$.`,
+              `这是代数重数；对角线上方的元素 $${a}$ 使秩为 $2$。`,
+            ),
+        why(0, "An eigenvalue always has at least one eigenvector.", "特征值总有至少一个特征向量。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Subtract $\\lambda I$", "减去 $\\lambda I$"], t("", ""), [`A - ${wrap(l)}I = ${shifted}`]],
+          [
+            ["Find the rank", "求秩"],
+            text(
+              zero
+                ? [
+                    "The first two columns are zero, and all the rows are multiples of one row, so the rank is $1$.",
+                    "前两列为零，各行都是同一行的倍数，所以秩是 $1$。",
+                  ]
+                : [
+                    "The nonzero $(1, 2)$ entry and the nonzero $(3, 3)$ entry give two pivots, so the rank is $2$.",
+                    "非零的 $(1, 2)$ 元素和非零的 $(3, 3)$ 元素给出两个主元，所以秩是 $2$。",
+                  ],
+            ),
           ],
-    );
+          [["Subtract from 3", "用 3 减去秩"], t("", ""), [`3 - ${3 - answer} = ${answer}`]],
+        ],
+        text(
+          zero
+            ? [
+                `$(1, 0, 0)$ and $(0, 1, 0)$ are both sent to $${l}$ times themselves, so there are two independent eigenvectors.`,
+                `$(1, 0, 0)$ 和 $(0, 1, 0)$ 都被映为自身的 $${l}$ 倍，所以有两个线性无关的特征向量。`,
+              ]
+            : [
+                `$A(0, 1, 0) = (${a}, ${l}, 0)$ is not a multiple of $(0, 1, 0)$, so only the direction of $(1, 0, 0)$ remains.`,
+                `$A(0, 1, 0) = (${a}, ${l}, 0)$ 不是 $(0, 1, 0)$ 的倍数，所以只剩 $(1, 0, 0)$ 这个方向。`,
+              ],
+        ),
+      ),
+    });
   },
 );
 
@@ -2180,8 +2247,8 @@ const powerOnCombination = point(
   "a-matrix-power-on-a-combination-of-eigenvectors",
   ["A matrix power on a combination of eigenvectors", "矩阵幂作用于特征向量的组合"],
   [
-    "Diagonalization makes matrix powers simple: when a vector is written in the eigenvector basis, $A^{n}$ multiplies each coefficient by the $n$th power of its eigenvalue. Each eigenvector stays separate, and the coefficient itself is not raised to the power.",
-    "对角化使矩阵的幂变得简单：把向量写成特征向量基的组合后，$A^{n}$ 把每个系数乘以相应特征值的 $n$ 次幂。各特征向量彼此独立，系数本身不取幂。",
+    "Diagonalization makes matrix powers simple: when a vector is written in the eigenvector basis, $A^{n}$ multiplies each coefficient by the $n$th power of its eigenvalue. Each eigenvector stays separate, and the coefficient itself is not raised to the power. For example, if $A\\mathbf{v}_{1} = 2\\mathbf{v}_{1}$ and $A\\mathbf{v}_{2} = -\\mathbf{v}_{2}$, then $A^{3}(5\\mathbf{v}_{1} + 4\\mathbf{v}_{2}) = 5 \\cdot 8\\mathbf{v}_{1} + 4 \\cdot (-1)\\mathbf{v}_{2} = 40\\mathbf{v}_{1} - 4\\mathbf{v}_{2}$.\n\n> **Watch out.** Raise the eigenvalue to the power and keep the coefficient as it is: the new coefficient is $c\\lambda^{n}$, not $c\\lambda$, not $\\lambda^{n}$ alone, and not $nc\\lambda$.",
+    "对角化使矩阵的幂变得简单：把向量写成特征向量基的组合后，$A^{n}$ 把每个系数乘以相应特征值的 $n$ 次幂。各特征向量彼此独立，系数本身不取幂。例如若 $A\\mathbf{v}_{1} = 2\\mathbf{v}_{1}$，$A\\mathbf{v}_{2} = -\\mathbf{v}_{2}$，则 $A^{3}(5\\mathbf{v}_{1} + 4\\mathbf{v}_{2}) = 5 \\cdot 8\\mathbf{v}_{1} + 4 \\cdot (-1)\\mathbf{v}_{2} = 40\\mathbf{v}_{1} - 4\\mathbf{v}_{2}$。\n\n> **注意。** 把特征值取幂，系数保持不变：新系数是 $c\\lambda^{n}$，不是 $c\\lambda$，不是单独的 $\\lambda^{n}$，也不是 $nc\\lambda$。",
   ],
   (rng) => {
     const l1 = rng.pick([-3, -2, 1, 2, 3]);
@@ -2192,18 +2259,46 @@ const powerOnCombination = point(
     const c3 = nz(rng, 5);
     const n = rng.int(2, 3);
     const answer = c2 * l2 ** n;
-    return ask(
-      [
-        `$\\mathbf{v}_{1}, \\mathbf{v}_{2}, \\mathbf{v}_{3}$ are eigenvectors of $A$ for the eigenvalues $${l1}$, $${l2}$, $${l3}$, and $\\mathbf{x} = ${poly([c1, "\\mathbf{v}_{1}"], [c2, "\\mathbf{v}_{2}"], [c3, "\\mathbf{v}_{3}"])}$. Find the coefficient of $\\mathbf{v}_{2}$ in $A^{${n}}\\mathbf{x}$.`,
-        `$\\mathbf{v}_{1}, \\mathbf{v}_{2}, \\mathbf{v}_{3}$ 是 $A$ 关于特征值 $${l1}$、$${l2}$、$${l3}$ 的特征向量，$\\mathbf{x} = ${poly([c1, "\\mathbf{v}_{1}"], [c2, "\\mathbf{v}_{2}"], [c3, "\\mathbf{v}_{3}"])}$。求 $A^{${n}}\\mathbf{x}$ 中 $\\mathbf{v}_{2}$ 的系数。`,
-      ],
+    const x = poly([c1, "\\mathbf{v}_{1}"], [c2, "\\mathbf{v}_{2}"], [c3, "\\mathbf{v}_{3}"]);
+    return numberProblem({
+      prompt: text([
+        `$\\mathbf{v}_{1}, \\mathbf{v}_{2}, \\mathbf{v}_{3}$ are eigenvectors of $A$ for the eigenvalues $${l1}$, $${l2}$, $${l3}$, and $\\mathbf{x} = ${x}$. Find the coefficient of $\\mathbf{v}_{2}$ in $A^{${n}}\\mathbf{x}$.`,
+        `$\\mathbf{v}_{1}, \\mathbf{v}_{2}, \\mathbf{v}_{3}$ 是 $A$ 关于特征值 $${l1}$、$${l2}$、$${l3}$ 的特征向量，$\\mathbf{x} = ${x}$。求 $A^{${n}}\\mathbf{x}$ 中 $\\mathbf{v}_{2}$ 的系数。`,
+      ]),
       answer,
-      [c2 * l2, l2 ** n, n * c2 * l2],
-      [
-        `$A^{${n}}\\mathbf{v}_{2} = ${wrap(l2)}^{${n}}\\mathbf{v}_{2}$, and the coefficient $${c2}$ is kept. So the coefficient is $${wrap(c2)} \\cdot ${wrap(l2 ** n)} = ${answer}$.`,
-        `$A^{${n}}\\mathbf{v}_{2} = ${wrap(l2)}^{${n}}\\mathbf{v}_{2}$，系数 $${c2}$ 保留。所以结果是 $${wrap(c2)} \\cdot ${wrap(l2 ** n)} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          c2 * l2,
+          `That applies $A$ only once; $A^{${n}}$ multiplies by $${wrap(l2)}^{${n}}$.`,
+          `这只作用了一次 $A$；$A^{${n}}$ 要乘以 $${wrap(l2)}^{${n}}$。`,
+        ),
+        why(l2 ** n, `The coefficient $${c2}$ is dropped; it stays in front.`, `漏掉了系数 $${c2}$；它要保留在前面。`),
+        why(
+          n * c2 * l2,
+          "That multiplies by the exponent; a power multiplies by the eigenvalue again and again.",
+          "这是乘以了指数；取幂是反复乘以特征值。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Apply the power to each eigenvector", "对每个特征向量取幂"],
+            t("", ""),
+            [`A^{${n}}\\mathbf{v}_{2} = ${wrap(l2)}^{${n}}\\mathbf{v}_{2} = ${l2 ** n}\\mathbf{v}_{2}`],
+          ],
+          [
+            ["Keep the coefficient", "保留系数"],
+            text([`The term $${c2}\\mathbf{v}_{2}$ becomes:`, `项 $${c2}\\mathbf{v}_{2}$ 变为：`]),
+            [`${c2} \\cdot ${wrap(l2 ** n)}\\mathbf{v}_{2} = ${answer}\\mathbf{v}_{2}`],
+          ],
+        ],
+        text([
+          `Applying $A$ one step at a time gives $${c2} \\to ${c2 * l2}${n === 3 ? ` \\to ${c2 * l2 * l2}` : ""} \\to ${answer}$, multiplying by $${wrap(l2)}$ each time.`,
+          `每次作用一次 $A$：$${c2} \\to ${c2 * l2}${n === 3 ? ` \\to ${c2 * l2 * l2}` : ""} \\to ${answer}$，每次乘以 $${wrap(l2)}$。`,
+        ]),
+      ),
+    });
   },
 );
 

@@ -11,7 +11,6 @@ import {
   pointProblem,
   say,
   solutionsProblem,
-  steps,
   vectorLatex,
   why,
   whySet,
@@ -2668,6 +2667,10 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
     "Calculate the eigenvectors of a 3x3 matrix when all eigenvalues are distinct.",
     "计算所有特征值互不相同的 3x3 矩阵的特征向量。",
   ),
+  intro: t(
+    "The triangular matrix $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}$ has eigenvalues $2$, $5$ and $-1$. For $\\lambda = 5$, the matrix $A - 5I$ has rows $(-3, 1, 0)$, $(0, 0, 0)$ and $(0, 0, -6)$. The last row forces $x_3 = 0$, and the first gives $x_2 = 3x_1$, so $\\mathbf{v} = \\langle 1, 3, 0 \\rangle$.\n\nCheck: $A\\mathbf{v} = \\langle 2 + 3, 15, 0 \\rangle = \\langle 5, 15, 0 \\rangle = 5\\mathbf{v}$.\n\nIn this lesson we find an eigenvector for each eigenvalue of a $3 \\times 3$ matrix whose eigenvalues are all different, by solving $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ with one free variable.",
+    "三角矩阵 $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}$ 的特征值为 $2$、$5$ 和 $-1$。对 $\\lambda = 5$，矩阵 $A - 5I$ 的三行为 $(-3, 1, 0)$、$(0, 0, 0)$ 和 $(0, 0, -6)$。最后一行迫使 $x_3 = 0$，第一行给出 $x_2 = 3x_1$，所以 $\\mathbf{v} = \\langle 1, 3, 0 \\rangle$。\n\n检验：$A\\mathbf{v} = \\langle 2 + 3, 15, 0 \\rangle = \\langle 5, 15, 0 \\rangle = 5\\mathbf{v}$。\n\n本课我们对特征值互不相同的 $3 \\times 3$ 矩阵，通过解只有一个自由变量的 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$，为每个特征值求出一个特征向量。",
+  ),
   prerequisites: ["cayley-hamilton-theorem"],
   encompasses: [],
   xp: 14,
@@ -2676,8 +2679,8 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
       id: "eigenvectors-3x3-distinct-eigenvalues",
       title: t("Eigenvectors of 3x3 Matrix with Distinct Eigenvalues", "3x3 矩阵在相异特征值下的特征向量"),
       explanation: t(
-        "With distinct eigenvalues, each one gives a one dimensional null space, so row reduce to find one free variable and read off the eigenvector. Solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $3 \\times 3$ matrix with distinct eigenvalues.",
-        "当特征值互不相同时，每个特征值对应一维的零空间，所以行化简后找到一个自由变量，就能读出特征向量。对具有互异特征值的 $3 \\times 3$ 矩阵，求解方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。",
+        "With distinct eigenvalues, each one gives a one dimensional null space, so row reduce to find one free variable and read off the eigenvector. Solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $3 \\times 3$ matrix with distinct eigenvalues. For example, for $A = \\begin{pmatrix} 3 & 2 & 1 \\\\ 0 & 5 & 4 \\\\ 0 & 0 & -2 \\end{pmatrix}$ and $\\lambda = 3$, the matrix $A - 3I$ has diagonal $0, 2, -5$; back substitution gives $x_3 = 0$, then $x_2 = 0$, and $x_1$ is free, so $\\mathbf{v} = \\langle 1, 0, 0 \\rangle$.\n\n> **Watch out.** Solve from the bottom row up. A nonzero diagonal entry of $A - \\lambda I$ forces its variable to be $0$ once the variables below it are $0$; only the column with a zero on the diagonal is free.",
+        "当特征值互不相同时，每个特征值对应一维的零空间，所以行化简后找到一个自由变量，就能读出特征向量。对具有互异特征值的 $3 \\times 3$ 矩阵，求解方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。例如 $A = \\begin{pmatrix} 3 & 2 & 1 \\\\ 0 & 5 & 4 \\\\ 0 & 0 & -2 \\end{pmatrix}$，$\\lambda = 3$ 时，$A - 3I$ 的对角元为 $0, 2, -5$；回代得 $x_3 = 0$，再得 $x_2 = 0$，$x_1$ 自由，所以 $\\mathbf{v} = \\langle 1, 0, 0 \\rangle$。\n\n> **注意。** 从最下面一行往上解。下面的变量都为 $0$ 后，$A - \\lambda I$ 中非零的对角元会迫使它所在的变量为 $0$；只有对角元为零的那一列是自由的。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(1, 3);
@@ -2695,30 +2698,64 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
           `The upper triangular matrix $A = ${mat3Latex(mat)}$ has distinct eigenvalues $\\lambda_1 = ${l1}$, $\\lambda_2 = ${l2}$, and $\\lambda_3 = ${l3}$. Find the eigenvector $\\mathbf{v} = \\langle x_1, x_2, x_3 \\rangle$ corresponding to $\\lambda_1 = ${l1}$ whose first non-zero component is $1$.`,
           `上三角矩阵 $A = ${mat3Latex(mat)}$ 具有相异特征值 $\\lambda_1 = ${l1}$、$\\lambda_2 = ${l2}$ 与 $\\lambda_3 = ${l3}$。求对应于 $\\lambda_1 = ${l1}$ 且首个非零分量为 $1$ 的特征向量 $\\mathbf{v} = \\langle x_1, x_2, x_3 \\rangle$。`,
         );
-        const solution = t(
-          `Since $A$ is upper triangular, $A e_1 = A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1} e_1$. Thus, $\\mathbf{v} = \\langle 1, 0, 0 \\rangle$ is the eigenvector corresponding to $\\lambda_1 = ${l1}$.`,
-          `因为 $A$ 是上三角矩阵，计算可知 $A e_1 = A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1} e_1$。因此 $\\mathbf{v} = \\langle 1, 0, 0 \\rangle$ 是对应 $\\lambda_1 = ${l1}$ 的特征向量。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [1, 0, 0],
-          vector: true,
-          solution,
-          wrong: [
-            [0, 1, 0],
-            [0, 0, 1],
-            [1, 1, 0],
-            [1, 0, 1],
+        const shifted: Mat3 = [
+          [0, a12, a13],
+          [0, l2 - l1, a23],
+          [0, 0, l3 - l1],
+        ];
+        const solution = walked(
+          [
+            [["Subtract $\\lambda_1 I$", "减去 $\\lambda_1 I$"], t("", ""), [`A - ${l1}I = ${mat3Latex(shifted)}`]],
+            [
+              ["Back-substitute", "回代"],
+              t(
+                `The third row gives $${l3 - l1}x_3 = 0$, so $x_3 = 0$. The second row then gives $${l2 - l1}x_2 = 0$, so $x_2 = 0$. The first column is zero, so $x_1$ is free; take $x_1 = 1$.`,
+                `第三行给出 $${l3 - l1}x_3 = 0$，所以 $x_3 = 0$。第二行接着给出 $${l2 - l1}x_2 = 0$，所以 $x_2 = 0$。第一列全为零，所以 $x_1$ 自由；取 $x_1 = 1$。`,
+              ),
+            ],
           ],
-        });
+          t(
+            `$A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1}${vec3Latex([1, 0, 0])}$.`,
+            `$A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1}${vec3Latex([1, 0, 0])}$。`,
+          ),
+        );
+        const image = (v: Vec3): Vec3 => [l1 * v[0] + a12 * v[1] + a13 * v[2], l2 * v[1] + a23 * v[2], l3 * v[2]];
+        const off = (v: Vec3, en: string, zh: string) => {
+          const w = image(v);
+          return say(
+            vectorLatex(v),
+            `${en} Here $A${vectorLatex(v)} = ${vectorLatex(w)}$, which is not $${l1}$ times it.`,
+            `${zh}这里 $A${vectorLatex(v)} = ${vectorLatex(w)}$，不是它的 $${l1}$ 倍。`,
+          );
+        };
+        return withMistakes(
+          pointProblem({ prompt, answer: [1, 0, 0], vector: true, solution }),
+          dedupeSaid(
+            [
+              off(
+                [0, 1, 0],
+                "This is $e_2$, but the second column of $A$ has the entry $a_{12} \\ne 0$ above the diagonal.",
+                "这是 $e_2$，但 $A$ 的第二列在对角线上方有非零元 $a_{12}$。",
+              ),
+              off(
+                [0, 0, 1],
+                "This is $e_3$, which belongs with the last diagonal entry, if with any.",
+                "这是 $e_3$，它即使是特征向量，也对应最后一个对角元。",
+              ),
+              off([1, 1, 0], "The second row of $A - \\lambda_1 I$ forces $x_2 = 0$.", "$A - \\lambda_1 I$ 的第二行迫使 $x_2 = 0$。"),
+              off([1, 0, 1], "The third row of $A - \\lambda_1 I$ forces $x_3 = 0$.", "$A - \\lambda_1 I$ 的第三行迫使 $x_3 = 0$。"),
+            ],
+            vectorLatex([1, 0, 0]),
+          ),
+        );
       },
     },
     {
       id: "the-middle-eigenvector-of-a-triangular-3x3-matrix",
       title: t("The middle eigenvector of a triangular 3x3 matrix", "三角 3x3 矩阵中间特征值的特征向量"),
       explanation: t(
-        "For an upper triangular matrix the eigenvalues are the diagonal entries. An eigenvector for the middle entry $\\lambda = a_{22}$ can be taken with $x_3 = 0$ and $x_2 = 1$. The third equation then holds automatically, the second is $0 = 0$, and the first row gives\n\n$$(a_{11} - a_{22})x_1 + a_{12} = 0, \\qquad x_1 = \\frac{a_{12}}{a_{22} - a_{11}}.$$",
-        "上三角矩阵的特征值就是对角元。对中间的对角元 $\\lambda = a_{22}$，可取特征向量使 $x_3 = 0$，$x_2 = 1$。此时第三个方程自动成立，第二个方程为 $0 = 0$，第一行给出\n\n$$(a_{11} - a_{22})x_1 + a_{12} = 0, \\qquad x_1 = \\frac{a_{12}}{a_{22} - a_{11}}.$$",
+        "For an upper triangular matrix the eigenvalues are the diagonal entries. An eigenvector for the middle entry $\\lambda = a_{22}$ can be taken with $x_3 = 0$ and $x_2 = 1$. The third equation then holds automatically, the second is $0 = 0$, and the first row gives\n\n$$(a_{11} - a_{22})x_1 + a_{12} = 0, \\qquad x_1 = \\frac{a_{12}}{a_{22} - a_{11}}.$$\n\nFor example, if $a_{11} = 1$, $a_{12} = 4$ and $a_{22} = 3$, then $-2x_1 + 4 = 0$ and $x_1 = 2$.\n\n> **Watch out.** The denominator is $a_{22} - a_{11}$, the eigenvalue minus the first diagonal entry. Writing it the other way round flips the sign of $x_1$.",
+        "上三角矩阵的特征值就是对角元。对中间的对角元 $\\lambda = a_{22}$，可取特征向量使 $x_3 = 0$，$x_2 = 1$。此时第三个方程自动成立，第二个方程为 $0 = 0$，第一行给出\n\n$$(a_{11} - a_{22})x_1 + a_{12} = 0, \\qquad x_1 = \\frac{a_{12}}{a_{22} - a_{11}}.$$\n\n例如 $a_{11} = 1$，$a_{12} = 4$，$a_{22} = 3$ 时，$-2x_1 + 4 = 0$，$x_1 = 2$。\n\n> **注意。** 分母是 $a_{22} - a_{11}$，即特征值减去第一个对角元。写反了会使 $x_1$ 变号。",
       ),
       generate(rng: Rng): Problem {
         const d1 = rng.int(-5, 5);
@@ -2733,6 +2770,7 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
           [0, 0, d3],
         ];
         const x1 = Q.of(a12, d2 - d1);
+        const left = Q.of(d1).mul(x1).add(Q.of(a12));
         return numberProblem({
           prompt: t(
             `Find $x_1$ so that $\\langle x_1, 1, 0 \\rangle$ is an eigenvector of $A = ${mat3Latex(M)}$ for $\\lambda = ${d2}$.`,
@@ -2740,10 +2778,39 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
           ),
           answer: x1,
           solveFor: "x_1",
-          wrong: [x1.neg(), Q.of(a12), Q.of(d2 - d1, a12)],
-          solution: t(
-            `The first row of $(A - ${paren(d2)}I)\\mathbf{v} = \\mathbf{0}$ is $${poly([d1 - d2, "x_1"], [a12, ""])} = 0$, so $x_1 = ${x1.toLatex()}$.`,
-            `$(A - ${paren(d2)}I)\\mathbf{v} = \\mathbf{0}$ 的第一行为 $${poly([d1 - d2, "x_1"], [a12, ""])} = 0$，所以 $x_1 = ${x1.toLatex()}$。`,
+          mistakes: (
+            [
+              [
+                x1.neg(),
+                `The sign is flipped: the first row gives $x_1 = \\frac{${a12}}{${d2} - ${paren(d1)}}$, with the eigenvalue first in the denominator.`,
+                `符号反了：第一行给出 $x_1 = \\frac{${a12}}{${d2} - ${paren(d1)}}$，分母中特征值在前。`,
+              ],
+              [
+                Q.of(a12),
+                "That is $a_{12}$ itself; it must still be divided by $a_{22} - a_{11}$.",
+                "这是 $a_{12}$ 本身；还要除以 $a_{22} - a_{11}$。",
+              ],
+              [Q.of(d2 - d1, a12), "The fraction is upside down: $a_{12}$ goes in the numerator.", "分数上下颠倒了：$a_{12}$ 应在分子上。"],
+            ] as const
+          )
+            .filter(([v], i, all) => !v.eq(x1) && all.findIndex(([o]) => o.eq(v)) === i)
+            .map(([v, en, zh]) => why(v, en, zh)),
+          solution: walked(
+            [
+              [
+                ["Write the first row", "写出第一行"],
+                t(
+                  `With $x_2 = 1$ and $x_3 = 0$, the first row of $(A - ${paren(d2)}I)\\mathbf{v} = \\mathbf{0}$ is:`,
+                  `取 $x_2 = 1$，$x_3 = 0$，$(A - ${paren(d2)}I)\\mathbf{v} = \\mathbf{0}$ 的第一行为：`,
+                ),
+                [`${poly([d1 - d2, "x_1"], [a12, ""])} = 0`],
+              ],
+              [["Solve for $x_1$", "解出 $x_1$"], t("", ""), [`x_1 = ${x1.toLatex()}`]],
+            ],
+            t(
+              `The first entry of $A\\mathbf{v}$ is $${d1} \\cdot ${paren(x1)} + ${paren(a12)} = ${left.toLatex()} = ${d2} \\cdot ${paren(x1)}$, and the second is $${d2} \\cdot 1$, so $A\\mathbf{v} = ${d2}\\mathbf{v}$.`,
+              `$A\\mathbf{v}$ 的第一个元素为 $${d1} \\cdot ${paren(x1)} + ${paren(a12)} = ${left.toLatex()} = ${d2} \\cdot ${paren(x1)}$，第二个元素为 $${d2} \\cdot 1$，所以 $A\\mathbf{v} = ${d2}\\mathbf{v}$。`,
+            ),
           ),
         });
       },
@@ -2759,6 +2826,10 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
     "Determine the eigenspace and geometric multiplicity for 3x3 matrices with repeated eigenvalues.",
     "确定具有重特征值的 3x3 矩阵的特征子空间与几何重数。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ has the eigenvalue $2$ twice and $5$ once. Here $A - 2I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 3 \\end{pmatrix}$ has rank $2$, so its null space is a line, spanned by $\\langle 1, 0, 0 \\rangle$: the repeated eigenvalue has only one independent eigenvector.\n\nCheck: $A\\langle 1, 0, 0 \\rangle = \\langle 2, 0, 0 \\rangle$, while $A\\langle 0, 1, 0 \\rangle = \\langle 1, 2, 0 \\rangle$ is not a multiple of $\\langle 0, 1, 0 \\rangle$.\n\nIn this lesson we find the eigenvectors of a $3 \\times 3$ matrix when an eigenvalue repeats, and count them with the geometric multiplicity $3 - \\operatorname{rank}(A - \\lambda I)$.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ 的特征值 $2$ 出现两次，$5$ 出现一次。这里 $A - 2I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 3 \\end{pmatrix}$ 的秩为 $2$，所以它的零空间是由 $\\langle 1, 0, 0 \\rangle$ 张成的直线：重特征值只有一个线性无关的特征向量。\n\n检验：$A\\langle 1, 0, 0 \\rangle = \\langle 2, 0, 0 \\rangle$，而 $A\\langle 0, 1, 0 \\rangle = \\langle 1, 2, 0 \\rangle$ 不是 $\\langle 0, 1, 0 \\rangle$ 的倍数。\n\n本课我们在特征值重复时求 $3 \\times 3$ 矩阵的特征向量，并用几何重数 $3 - \\operatorname{rank}(A - \\lambda I)$ 数出它们的个数。",
+  ),
   prerequisites: ["calculating-the-eigenvectors-of-a-3x3-matrix-with-distinct-eigenvalues"],
   encompasses: [],
   xp: 14,
@@ -2767,8 +2838,8 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
       id: "geometric-multiplicity-3x3",
       title: t("Geometric Multiplicity of 3x3 Matrices", "3x3 矩阵的几何重数"),
       explanation: t(
-        "The geometric multiplicity counts the independent eigenvectors for an eigenvalue, and it can be smaller than the number of times the eigenvalue is repeated. Compute $\\operatorname{nullity}(A - \\lambda I)$ to find the geometric multiplicity of a repeated eigenvalue.",
-        "几何重数是一个特征值对应的线性无关特征向量的个数，它可能小于该特征值重复的次数。计算 $\\operatorname{nullity}(A - \\lambda I)$，得到重特征值的几何重数。",
+        "The geometric multiplicity counts the independent eigenvectors for an eigenvalue, and it can be smaller than the number of times the eigenvalue is repeated. Compute $\\operatorname{nullity}(A - \\lambda I)$ to find the geometric multiplicity of a repeated eigenvalue. For example, $A = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 4 \\end{pmatrix}$ gives $A - I$ of rank $1$, so $\\lambda = 1$ has geometric multiplicity $3 - 1 = 2$; putting a $2$ in the top middle would raise the rank to $2$ and lower it to $1$.\n\n> **Watch out.** The geometric multiplicity is not read from the characteristic polynomial: two matrices with the same repeated eigenvalue can have different numbers of eigenvectors. Always find the rank of $A - \\lambda I$.",
+        "几何重数是一个特征值对应的线性无关特征向量的个数，它可能小于该特征值重复的次数。计算 $\\operatorname{nullity}(A - \\lambda I)$，得到重特征值的几何重数。例如 $A = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 4 \\end{pmatrix}$ 使 $A - I$ 的秩为 $1$，所以 $\\lambda = 1$ 的几何重数为 $3 - 1 = 2$；在第一行中间放一个 $2$，秩升为 $2$，几何重数降为 $1$。\n\n> **注意。** 几何重数不能从特征多项式读出：重特征值相同的两个矩阵，特征向量的个数可以不同。一定要求 $A - \\lambda I$ 的秩。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -2789,25 +2860,64 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
           `对于矩阵 $A = ${mat3Latex(mat)}$，特征值 $\\lambda = ${lambda}$ 的代数重数为 $2$。求 $\\lambda = ${lambda}$ 的几何重数。`,
         );
         const shiftStr = formatShift(lambda, "I");
-        const solution = t(
-          `The geometric multiplicity is $\\dim(\\ker(A${shiftStr})) = 3 - \\operatorname{rank}(A${shiftStr})$. Here $A${shiftStr} = ${mat3Latex(
+        const shifted = mat3Latex([
+          [0, a, 0],
+          [0, 0, 0],
+          [0, 0, mu - lambda],
+        ]);
+        const rank = 3 - expectedGeoMult;
+        const solution = walked(
+          [
+            [["Subtract $\\lambda I$", "减去 $\\lambda I$"], t("", ""), [`A${shiftStr} = ${shifted}`]],
             [
-              [0, a, 0],
-              [0, 0, 0],
-              [0, 0, mu - lambda],
+              ["Find the rank", "求秩"],
+              t(
+                hasExtraPivot
+                  ? `The entries $${a}$ and $${mu - lambda}$ lie in different rows and columns, so the rank is $2$ and the nullity is $3 - 2 = 1$.`
+                  : `Only the entry $${mu - lambda}$ is nonzero, so the rank is $1$ and the nullity is $3 - 1 = 2$.`,
+                hasExtraPivot
+                  ? `元素 $${a}$ 和 $${mu - lambda}$ 位于不同的行和列，所以秩为 $2$，零化度为 $3 - 2 = 1$。`
+                  : `只有元素 $${mu - lambda}$ 非零，所以秩为 $1$，零化度为 $3 - 1 = 2$。`,
+              ),
             ],
-          )}$, which has rank ${3 - expectedGeoMult}. Therefore, the geometric multiplicity is $3 - ${3 - expectedGeoMult} = ${expectedGeoMult}$.`,
-          `几何重数为 $\\dim(\\ker(A${shiftStr})) = 3 - \\operatorname{rank}(A${shiftStr})$。这里 $A${shiftStr} = ${mat3Latex([
-            [0, a, 0],
-            [0, 0, 0],
-            [0, 0, mu - lambda],
-          ])}$，其秩为 ${3 - expectedGeoMult}。因此几何重数为 $3 - ${3 - expectedGeoMult} = ${expectedGeoMult}$。`,
+          ],
+          t(
+            hasExtraPivot
+              ? `$A\\langle 1, 0, 0 \\rangle = ${lambda}\\langle 1, 0, 0 \\rangle$, but $A\\langle 0, 1, 0 \\rangle = \\langle ${a}, ${lambda}, 0 \\rangle$ is not a multiple of $\\langle 0, 1, 0 \\rangle$, so there is only one independent eigenvector.`
+              : `Both $\\langle 1, 0, 0 \\rangle$ and $\\langle 0, 1, 0 \\rangle$ are sent to $${lambda}$ times themselves, so there are two independent eigenvectors.`,
+            hasExtraPivot
+              ? `$A\\langle 1, 0, 0 \\rangle = ${lambda}\\langle 1, 0, 0 \\rangle$，但 $A\\langle 0, 1, 0 \\rangle = \\langle ${a}, ${lambda}, 0 \\rangle$ 不是 $\\langle 0, 1, 0 \\rangle$ 的倍数，所以只有一个线性无关的特征向量。`
+              : `$\\langle 1, 0, 0 \\rangle$ 和 $\\langle 0, 1, 0 \\rangle$ 都被映为自身的 $${lambda}$ 倍，所以有两个线性无关的特征向量。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: expectedGeoMult,
           solution,
-          wrong: [0, 1, 2, 3].filter((w) => w !== expectedGeoMult),
+          mistakes: [
+            hasExtraPivot
+              ? why(
+                  2,
+                  `That is the algebraic multiplicity; the entry $${a}$ above the diagonal makes $A${shiftStr}$ rank $2$, leaving one free variable.`,
+                  `这是代数重数；对角线上方的元素 $${a}$ 使 $A${shiftStr}$ 的秩为 $2$，只剩一个自由变量。`,
+                )
+              : why(
+                  1,
+                  `With a zero above the diagonal, $A${shiftStr}$ has rank $1$, so two variables are free.`,
+                  `对角线上方为零时，$A${shiftStr}$ 的秩为 $1$，所以有两个自由变量。`,
+                ),
+            why(
+              rank,
+              "That is the rank of $A - \\lambda I$; the geometric multiplicity is $3$ minus the rank.",
+              "这是 $A - \\lambda I$ 的秩；几何重数是 $3$ 减去秩。",
+            ),
+            why(
+              3,
+              `The third row of $A${shiftStr}$ is not zero, since $${mu} \\ne ${lambda}$.`,
+              `$A${shiftStr}$ 的第三行不为零，因为 $${mu} \\ne ${lambda}$。`,
+            ),
+            why(0, "Every eigenvalue has at least one eigenvector.", "每个特征值至少有一个特征向量。"),
+          ].filter((w, i, all) => w.value !== expectedGeoMult && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -2815,8 +2925,8 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
       id: "the-simple-eigenvector-beside-a-repeated-eigenvalue",
       title: t("The eigenvector of a simple eigenvalue beside a repeated one", "重特征值旁单特征值的特征向量"),
       explanation: t(
-        "When $A$ has a repeated eigenvalue $\\lambda$ and a simple eigenvalue $\\mu$, the eigenvector for $\\mu$ is still found by solving $(A - \\mu I)\\mathbf{v} = \\mathbf{0}$. For an upper triangular $A$ with $\\mu$ in the last diagonal position, set $x_3 = 1$ and back-substitute: each row above gives one more coordinate, divided by $\\lambda - \\mu$.",
-        "当 $A$ 有重特征值 $\\lambda$ 和单特征值 $\\mu$ 时，$\\mu$ 的特征向量仍由解 $(A - \\mu I)\\mathbf{v} = \\mathbf{0}$ 得到。对 $\\mu$ 位于最后一个对角位置的上三角矩阵 $A$，令 $x_3 = 1$ 并回代：上面每一行给出一个坐标，要除以 $\\lambda - \\mu$。",
+        "When $A$ has a repeated eigenvalue $\\lambda$ and a simple eigenvalue $\\mu$, the eigenvector for $\\mu$ is still found by solving $(A - \\mu I)\\mathbf{v} = \\mathbf{0}$. For an upper triangular $A$ with $\\mu$ in the last diagonal position, set $x_3 = 1$ and back-substitute: each row above gives one more coordinate, divided by $\\mu - \\lambda$. For example, for $A = \\begin{pmatrix} 1 & 1 & 0 \\\\ 0 & 1 & 2 \\\\ 0 & 0 & 3 \\end{pmatrix}$ and $\\mu = 3$, the second row gives $-2x_2 + 2 = 0$, so $x_2 = 1$, and the first gives $-2x_1 + 1 = 0$, so $x_1 = \\frac{1}{2}$.\n\n> **Watch out.** Solve the second row before the first: the first row contains $x_2$, so its term $a_{12}x_2$ must be included before dividing.",
+        "当 $A$ 有重特征值 $\\lambda$ 和单特征值 $\\mu$ 时，$\\mu$ 的特征向量仍由解 $(A - \\mu I)\\mathbf{v} = \\mathbf{0}$ 得到。对 $\\mu$ 位于最后一个对角位置的上三角矩阵 $A$，令 $x_3 = 1$ 并回代：上面每一行给出一个坐标，要除以 $\\mu - \\lambda$。例如 $A = \\begin{pmatrix} 1 & 1 & 0 \\\\ 0 & 1 & 2 \\\\ 0 & 0 & 3 \\end{pmatrix}$，$\\mu = 3$ 时，第二行给出 $-2x_2 + 2 = 0$，所以 $x_2 = 1$；第一行给出 $-2x_1 + 1 = 0$，所以 $x_1 = \\frac{1}{2}$。\n\n> **注意。** 先解第二行，再解第一行：第一行含有 $x_2$，除之前必须把 $a_{12}x_2$ 这一项算进去。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-4, 4);
@@ -2832,35 +2942,65 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
         ];
         const x2 = Q.of(b, g);
         const x1 = Q.of(a).add(Q.of(c).mul(x2)).div(Q.of(g));
-        return pointProblem({
-          prompt: t(
-            `Find the eigenvector $\\langle x_1, x_2, 1 \\rangle$ of $A = ${mat3Latex(M)}$ for $\\lambda = ${mu}$.`,
-            `求 $A = ${mat3Latex(M)}$ 对应于 $\\lambda = ${mu}$ 的特征向量 $\\langle x_1, x_2, 1 \\rangle$。`,
+        const row1 = Q.of(lam).mul(x1).add(Q.of(c).mul(x2)).add(Q.of(a));
+        const row2 = Q.of(lam).mul(x2).add(Q.of(b));
+        const answer = vectorLatex([x1, x2, 1]);
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find the eigenvector $\\langle x_1, x_2, 1 \\rangle$ of $A = ${mat3Latex(M)}$ for $\\lambda = ${mu}$.`,
+              `求 $A = ${mat3Latex(M)}$ 对应于 $\\lambda = ${mu}$ 的特征向量 $\\langle x_1, x_2, 1 \\rangle$。`,
+            ),
+            answer: [x1, x2, 1],
+            vector: true,
+            vars: ["x_1", "x_2", "x_3"],
+            solution: walked(
+              [
+                [
+                  ["Subtract $\\mu I$", "减去 $\\mu I$"],
+                  t("", ""),
+                  [
+                    `A - ${paren(mu)}I = ${mat3Latex([
+                      [-g, c, a],
+                      [0, -g, b],
+                      [0, 0, 0],
+                    ])}`,
+                  ],
+                ],
+                [
+                  ["Solve the second row", "解第二行"],
+                  t("With $x_3 = 1$:", "取 $x_3 = 1$："),
+                  [`${poly([-g, "x_2"], [b, ""])} = 0`, `x_2 = ${x2.toLatex()}`],
+                ],
+                [
+                  ["Solve the first row", "解第一行"],
+                  t("Substitute $x_2$:", "代入 $x_2$："),
+                  [`${poly([-g, "x_1"])} + ${paren(c)} \\cdot ${paren(x2)} + ${paren(a)} = 0`, `x_1 = ${x1.toLatex()}`],
+                ],
+              ],
+              t(
+                `The first two entries of $A\\mathbf{v}$ are $${row1.toLatex()} = ${mu} \\cdot ${paren(x1)}$ and $${row2.toLatex()} = ${mu} \\cdot ${paren(x2)}$, and the third is $${mu}$, so $A\\mathbf{v} = ${mu}\\mathbf{v}$.`,
+                `$A\\mathbf{v}$ 的前两个元素为 $${row1.toLatex()} = ${mu} \\cdot ${paren(x1)}$ 和 $${row2.toLatex()} = ${mu} \\cdot ${paren(x2)}$，第三个为 $${mu}$，所以 $A\\mathbf{v} = ${mu}\\mathbf{v}$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([x1.neg(), x2.neg(), 1]),
+                `The signs are flipped: the rows divide by $\\mu - \\lambda = ${g}$, not by $\\lambda - \\mu$.`,
+                `符号反了：各行要除以 $\\mu - \\lambda = ${g}$，而不是 $\\lambda - \\mu$。`,
+              ),
+              say(
+                vectorLatex([Q.of(a, g), x2, 1]),
+                `The first row also contains $${paren(c)}x_2$; include it before dividing.`,
+                `第一行还含有 $${paren(c)}x_2$；除之前要把它算进去。`,
+              ),
+              say(vectorLatex([x1, x2, 0]), "The question fixes $x_3 = 1$.", "题目要求 $x_3 = 1$。"),
+            ],
+            answer,
           ),
-          answer: [x1, x2, 1],
-          vector: true,
-          vars: ["x_1", "x_2", "x_3"],
-          wrong: [
-            [x1.neg(), x2.neg(), 1],
-            [Q.of(a, g), x2, 1],
-          ],
-          solution: t(
-            `${steps(
-              `A - ${paren(mu)}I = ${mat3Latex([
-                [-g, c, a],
-                [0, -g, b],
-                [0, 0, 0],
-              ])}`,
-            )}The second row gives $${poly([-g, "x_2"], [b, ""])} = 0$, so $x_2 = ${x2.toLatex()}$. The first row gives $${poly([-g, "x_1"])} + ${paren(c)} \\cdot ${paren(x2)} + ${paren(a)} = 0$, so $x_1 = ${x1.toLatex()}$.`,
-            `${steps(
-              `A - ${paren(mu)}I = ${mat3Latex([
-                [-g, c, a],
-                [0, -g, b],
-                [0, 0, 0],
-              ])}`,
-            )}第二行给出 $${poly([-g, "x_2"], [b, ""])} = 0$，所以 $x_2 = ${x2.toLatex()}$。第一行给出 $${poly([-g, "x_1"])} + ${paren(c)} \\cdot ${paren(x2)} + ${paren(a)} = 0$，所以 $x_1 = ${x1.toLatex()}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -2874,6 +3014,10 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
     "Apply the eigenvalue criterion for matrix invertibility: A is invertible if and only if 0 is not an eigenvalue.",
     "应用矩阵可逆性的特征值判据：矩阵 A 可逆当且仅当 0 不是 A 的特征值。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 4 \\\\ 1 & 2 \\end{pmatrix}$ has trace $4$ and determinant $0$, so its eigenvalues are $0$ and $4$. Because $0$ is an eigenvalue, some nonzero vector is sent to zero: $A\\langle 2, -1 \\rangle = \\langle 0, 0 \\rangle$. So $A$ is not invertible.\n\nCheck: $\\det A = 2 \\cdot 2 - 4 \\cdot 1 = 0$, which is the product of the eigenvalues $0 \\cdot 4$.\n\nIn this lesson we decide invertibility from the eigenvalues, and find the eigenvalues and determinant of an inverse from those of the matrix.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 4 \\\\ 1 & 2 \\end{pmatrix}$ 的迹为 $4$，行列式为 $0$，所以特征值为 $0$ 和 $4$。因为 $0$ 是特征值，某个非零向量被映为零：$A\\langle 2, -1 \\rangle = \\langle 0, 0 \\rangle$。所以 $A$ 不可逆。\n\n检验：$\\det A = 2 \\cdot 2 - 4 \\cdot 1 = 0$，正是特征值之积 $0 \\cdot 4$。\n\n本课我们由特征值判断可逆性，并由矩阵的特征值求出其逆矩阵的特征值和行列式。",
+  ),
   prerequisites: ["calculating-the-eigenvectors-of-a-3x3-matrix-in-the-general-case"],
   encompasses: [],
   xp: 14,
@@ -2882,8 +3026,8 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
       id: "zero-eigenvalue-invertibility-test",
       title: t("Zero Eigenvalue Invertibility Test", "零特征值可逆性判据"),
       explanation: t(
-        "Zero is an eigenvalue exactly when some nonzero vector is sent to zero, which is exactly when the matrix fails to be invertible. Relate matrix invertibility to the absence of zero from the spectrum.",
-        "零是特征值当且仅当某个非零向量被映射到零，而这正是矩阵不可逆的情形。将矩阵的可逆性与其特征值谱中不含零联系起来。",
+        "Zero is an eigenvalue exactly when some nonzero vector is sent to zero, which is exactly when the matrix fails to be invertible. When $A$ is invertible, every eigenvalue $\\lambda$ is nonzero, and $A^{-1}$ has the same eigenvectors with eigenvalue $\\frac{1}{\\lambda}$. For example, if $A\\mathbf{v} = 4\\mathbf{v}$, then $A^{-1}\\mathbf{v} = \\frac{1}{4}\\mathbf{v}$.\n\n> **Watch out.** Inverting a matrix inverts its eigenvalues: the answer is the reciprocal $\\frac{1}{\\lambda}$, not the opposite $-\\lambda$, and the eigenvector stays the same.",
+        "零是特征值当且仅当某个非零向量被映射到零，而这正是矩阵不可逆的情形。当 $A$ 可逆时，每个特征值 $\\lambda$ 都不为零，$A^{-1}$ 有相同的特征向量，特征值为 $\\frac{1}{\\lambda}$。例如若 $A\\mathbf{v} = 4\\mathbf{v}$，则 $A^{-1}\\mathbf{v} = \\frac{1}{4}\\mathbf{v}$。\n\n> **注意。** 求逆会把特征值取倒数：答案是倒数 $\\frac{1}{\\lambda}$，而不是相反数 $-\\lambda$，特征向量保持不变。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9])!;
@@ -2893,15 +3037,53 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
           `设 $A$ 为可逆的 $${n} \\times ${n}$ 矩阵，已知其具有特征值 $\\lambda = ${l1}$。求 $A^{-1}$ 对应的特征值。`,
         );
         const ans = Q.of(1, l1);
-        const solution = t(
-          `If $A\\mathbf{v} = \\lambda \\mathbf{v}$ with $\\lambda = ${l1} \\neq 0$, multiplying both sides by $A^{-1}$ yields $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$, so $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$. Thus, the eigenvalue of $A^{-1}$ is $\\frac{1}{\\lambda} = ${ans.toLatex()}$.`,
-          `若 $A\\mathbf{v} = \\lambda \\mathbf{v}$ 且 $\\lambda = ${l1} \\neq 0$，两边同乘 $A^{-1}$ 可得 $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$，即 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$。因此 $A^{-1}$ 对应的特征值为 $\\frac{1}{\\lambda} = ${ans.toLatex()}$。`,
-        );
         return numberProblem({
           prompt,
           answer: ans,
-          solution,
-          wrong: [Q.of(-1, l1), Q.of(l1), Q.of(-l1), Q.zero],
+          mistakes: (
+            [
+              [
+                Q.of(-1, l1),
+                "The sign is wrong: the reciprocal of a number has the same sign as the number.",
+                "符号错了：一个数的倒数与它同号。",
+              ],
+              [
+                Q.of(l1),
+                "That is the eigenvalue of $A$; the eigenvalue of $A^{-1}$ is its reciprocal.",
+                "这是 $A$ 的特征值；$A^{-1}$ 的特征值是它的倒数。",
+              ],
+              [
+                Q.of(-l1),
+                "That is the opposite; inverting the matrix takes the reciprocal of the eigenvalue.",
+                "这是相反数；求逆矩阵要取特征值的倒数。",
+              ],
+              [
+                Q.zero,
+                "An invertible matrix never has the eigenvalue $0$, and neither does its inverse.",
+                "可逆矩阵从不以 $0$ 为特征值，它的逆矩阵也不会。",
+              ],
+            ] as const
+          )
+            .filter(([v], i, all) => !v.eq(ans) && all.findIndex(([o]) => o.eq(v)) === i)
+            .map(([v, en, zh]) => why(v, en, zh)),
+          solution: walked(
+            [
+              [
+                ["Apply $A^{-1}$ to both sides", "两边同乘 $A^{-1}$"],
+                t(`Start from $A\\mathbf{v} = ${l1}\\mathbf{v}$:`, `从 $A\\mathbf{v} = ${l1}\\mathbf{v}$ 出发：`),
+                [`\\mathbf{v} = ${l1}A^{-1}\\mathbf{v}`],
+              ],
+              [
+                ["Divide by the eigenvalue", "除以特征值"],
+                t(`Since $${l1} \\ne 0$:`, `因为 $${l1} \\ne 0$：`),
+                [`A^{-1}\\mathbf{v} = ${ans.toLatex()}\\mathbf{v}`],
+              ],
+            ],
+            t(
+              `$A(A^{-1}\\mathbf{v}) = ${ans.toLatex()} \\cdot ${l1}\\mathbf{v} = \\mathbf{v}$, as it must be.`,
+              `$A(A^{-1}\\mathbf{v}) = ${ans.toLatex()} \\cdot ${l1}\\mathbf{v} = \\mathbf{v}$，正应如此。`,
+            ),
+          ),
         });
       },
     },
@@ -2909,24 +3091,56 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
       id: "the-determinant-of-an-inverse-from-eigenvalues",
       title: t("The determinant of an inverse from eigenvalues", "由特征值求逆矩阵的行列式"),
       explanation: t(
-        "The determinant of a matrix is the product of its eigenvalues, so $A$ is invertible exactly when $0$ is not an eigenvalue. The eigenvalues of $A^{-1}$ are the reciprocals $\\frac{1}{\\lambda_i}$, with the same eigenvectors, so\n\n$$\\det(A^{-1}) = \\frac{1}{\\lambda_1\\lambda_2\\lambda_3} = \\frac{1}{\\det A}.$$",
-        "矩阵的行列式等于其特征值之积，所以 $A$ 可逆当且仅当 $0$ 不是特征值。$A^{-1}$ 的特征值是倒数 $\\frac{1}{\\lambda_i}$，特征向量相同，所以\n\n$$\\det(A^{-1}) = \\frac{1}{\\lambda_1\\lambda_2\\lambda_3} = \\frac{1}{\\det A}.$$",
+        "The determinant of a matrix is the product of its eigenvalues, so $A$ is invertible exactly when $0$ is not an eigenvalue. The eigenvalues of $A^{-1}$ are the reciprocals $\\frac{1}{\\lambda_i}$, with the same eigenvectors, so\n\n$$\\det(A^{-1}) = \\frac{1}{\\lambda_1\\lambda_2\\lambda_3} = \\frac{1}{\\det A}.$$\n\nFor example, eigenvalues $2$, $-1$ and $3$ give $\\det A = -6$ and $\\det(A^{-1}) = -\\frac{1}{6}$.\n\n> **Watch out.** Multiply the eigenvalues, do not add them: the sum is the trace. Keep the sign, which is negative when an odd number of eigenvalues are negative.",
+        "矩阵的行列式等于其特征值之积，所以 $A$ 可逆当且仅当 $0$ 不是特征值。$A^{-1}$ 的特征值是倒数 $\\frac{1}{\\lambda_i}$，特征向量相同，所以\n\n$$\\det(A^{-1}) = \\frac{1}{\\lambda_1\\lambda_2\\lambda_3} = \\frac{1}{\\det A}.$$\n\n例如特征值 $2$、$-1$ 和 $3$ 给出 $\\det A = -6$，$\\det(A^{-1}) = -\\frac{1}{6}$。\n\n> **注意。** 要把特征值相乘，而不是相加：和是迹。保留符号，负特征值的个数为奇数时结果为负。",
       ),
       generate(rng: Rng): Problem {
         const nz = (): number => rng.int(1, 5) * rng.pick([-1, 1]);
         const [l1, l2, l3] = [nz(), nz(), nz()];
         const prod = l1 * l2 * l3;
+        const sum = l1 + l2 + l3;
         const ans = Q.of(1, prod);
+        const recips = [l1, l2, l3].map((l) => Q.of(1, l));
         return numberProblem({
           prompt: t(
             `A $3 \\times 3$ matrix $A$ has eigenvalues $${l1}$, $${l2}$ and $${l3}$. Find $\\det(A^{-1})$.`,
             `$3 \\times 3$ 矩阵 $A$ 的特征值为 $${l1}$、$${l2}$ 和 $${l3}$。求 $\\det(A^{-1})$。`,
           ),
           answer: ans,
-          wrong: [Q.of(prod), Q.of(1, l1 + l2 + l3 === 0 ? 1 : l1 + l2 + l3), ans.neg()],
-          solution: t(
-            `$\\det A = ${l1} \\cdot ${paren(l2)} \\cdot ${paren(l3)} = ${prod}$, so $\\det(A^{-1}) = \\frac{1}{\\det A} = ${ans.toLatex()}$.`,
-            `$\\det A = ${l1} \\cdot ${paren(l2)} \\cdot ${paren(l3)} = ${prod}$，所以 $\\det(A^{-1}) = \\frac{1}{\\det A} = ${ans.toLatex()}$。`,
+          mistakes: (
+            [
+              [
+                Q.of(prod),
+                "That is $\\det A$; the determinant of the inverse is its reciprocal.",
+                "这是 $\\det A$；逆矩阵的行列式是它的倒数。",
+              ],
+              ...(sum === 0
+                ? []
+                : ([
+                    [
+                      Q.of(1, sum),
+                      "That uses the sum of the eigenvalues, which is the trace; the determinant is their product.",
+                      "这用了特征值之和，即迹；行列式是它们的积。",
+                    ],
+                  ] as const)),
+              [ans.neg(), "The sign is wrong: count the negative eigenvalues in the product.", "符号错了：数一数乘积中负特征值的个数。"],
+            ] as const
+          )
+            .filter(([v], i, all) => !v.eq(ans) && all.findIndex(([o]) => o.eq(v)) === i)
+            .map(([v, en, zh]) => why(v, en, zh)),
+          solution: walked(
+            [
+              [
+                ["Multiply the eigenvalues", "把特征值相乘"],
+                t("", ""),
+                [`\\det A = ${l1} \\cdot ${paren(l2)} \\cdot ${paren(l3)} = ${prod}`],
+              ],
+              [["Take the reciprocal", "取倒数"], t("", ""), [`\\det(A^{-1}) = \\frac{1}{\\det A} = ${ans.toLatex()}`]],
+            ],
+            t(
+              `The eigenvalues of $A^{-1}$ are $${recips.map((r) => r.toLatex()).join("$, $")}$, and their product is $${recips[0]!.mul(recips[1]!).mul(recips[2]!).toLatex()}$, the same value.`,
+              `$A^{-1}$ 的特征值为 $${recips.map((r) => r.toLatex()).join("$、$")}$，其积为 $${recips[0]!.mul(recips[1]!).mul(recips[2]!).toLatex()}$，结果相同。`,
+            ),
           ),
         });
       },
@@ -2946,6 +3160,10 @@ export const diagonalizingA2x2Matrix: TopicDef = {
     "Diagonalize a 2x2 matrix by finding an invertible matrix P of eigenvectors and a diagonal matrix D of eigenvalues.",
     "通过寻找由特征向量构成的可逆矩阵 P 和由特征值构成的对角矩阵 D 对角化 2x2 矩阵。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$ has eigenvalues $1$ and $3$. For $1$ the eigenvector is $(1, 0)$; for $3$, the matrix $A - 3I = \\begin{pmatrix} -2 & 2 \\\\ 0 & 0 \\end{pmatrix}$ gives $(1, 1)$. Putting these as columns gives $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ and $D = \\begin{pmatrix} 1 & 0 \\\\ 0 & 3 \\end{pmatrix}$, so $A = PDP^{-1}$.\n\nCheck: $AP = \\begin{pmatrix} 1 & 3 \\\\ 0 & 3 \\end{pmatrix}$ and $PD = \\begin{pmatrix} 1 & 3 \\\\ 0 & 3 \\end{pmatrix}$, the same matrix.\n\nIn this lesson we diagonalize a $2 \\times 2$ matrix by putting its eigenvectors into $P$ and its eigenvalues into $D$ in the same order, and we multiply $PDP^{-1}$ back out to recover the matrix.",
+    "矩阵 $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$ 的特征值为 $1$ 和 $3$。对 $1$，特征向量是 $(1, 0)$；对 $3$，矩阵 $A - 3I = \\begin{pmatrix} -2 & 2 \\\\ 0 & 0 \\end{pmatrix}$ 给出 $(1, 1)$。把它们作为列，得 $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，$D = \\begin{pmatrix} 1 & 0 \\\\ 0 & 3 \\end{pmatrix}$，于是 $A = PDP^{-1}$。\n\n检验：$AP = \\begin{pmatrix} 1 & 3 \\\\ 0 & 3 \\end{pmatrix}$，$PD = \\begin{pmatrix} 1 & 3 \\\\ 0 & 3 \\end{pmatrix}$，是同一个矩阵。\n\n本课我们把 $2 \\times 2$ 矩阵的特征向量放进 $P$、特征值按相同顺序放进 $D$ 来对角化它，并把 $PDP^{-1}$ 乘出来还原矩阵。",
+  ),
   prerequisites: ["invertible-matrix-theorem-in-terms-of-eigenvalues"],
   encompasses: [],
   xp: 14,
@@ -2954,8 +3172,8 @@ export const diagonalizingA2x2Matrix: TopicDef = {
       id: "factorization-a-equals-pdp-inv-2x2",
       title: t("Factorization A = PDP^{-1} for 2x2 Matrices", "2x2 矩阵的 A = PDP^{-1} 分解"),
       explanation: t(
-        "Put the eigenvectors as the columns of one matrix and the matching eigenvalues on the diagonal of another, keeping them in the same order. Form $P$ and $D$ such that $A = PDP^{-1}$ for a diagonalizable $2 \\times 2$ matrix.",
-        "把特征向量作为一个矩阵的列，把对应的特征值放在另一个矩阵的对角线上，并保持相同的顺序。构造矩阵 $P$ 与 $D$，使得可对角化的 $2 \\times 2$ 矩阵满足 $A = PDP^{-1}$。",
+        "Put the eigenvectors as the columns of one matrix and the matching eigenvalues on the diagonal of another, keeping them in the same order. Form $P$ and $D$ such that $A = PDP^{-1}$ for a diagonalizable $2 \\times 2$ matrix. For example, $A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 4 \\end{pmatrix}$ has eigenvectors $(1, 0)$ for $2$ and $(1, 2)$ for $4$, so $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 2 \\end{pmatrix}$ and $D = \\begin{pmatrix} 2 & 0 \\\\ 0 & 4 \\end{pmatrix}$.\n\n> **Watch out.** The $j$th column of $P$ must be an eigenvector for the $j$th diagonal entry of $D$. Swapping the columns of $P$ without swapping the entries of $D$ breaks $AP = PD$.",
+        "把特征向量作为一个矩阵的列，把对应的特征值放在另一个矩阵的对角线上，并保持相同的顺序。构造矩阵 $P$ 与 $D$，使得可对角化的 $2 \\times 2$ 矩阵满足 $A = PDP^{-1}$。例如 $A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 4 \\end{pmatrix}$ 对 $2$ 有特征向量 $(1, 0)$，对 $4$ 有特征向量 $(1, 2)$，所以 $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 2 \\end{pmatrix}$，$D = \\begin{pmatrix} 2 & 0 \\\\ 0 & 4 \\end{pmatrix}$。\n\n> **注意。** $P$ 的第 $j$ 列必须是 $D$ 的第 $j$ 个对角元的特征向量。只交换 $P$ 的列而不交换 $D$ 的对角元，$AP = PD$ 就不成立。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(1, 3);
@@ -2986,61 +3204,100 @@ export const diagonalizingA2x2Matrix: TopicDef = {
           `求可逆矩阵 $P$ 和对角矩阵 $D$，将矩阵 $A = ${mat2Latex(matA)}$ 对角化为 $A = P D P^{-1}$。`,
         );
         const right = t(`$P = ${mat2Latex(matP)}, \\; D = ${mat2Latex(matD)}$`, `$P = ${mat2Latex(matP)}, \\; D = ${mat2Latex(matD)}$`);
+        const both = (P: Mat2, D: Mat2) =>
+          t(`$P = ${mat2Latex(P)}, \\; D = ${mat2Latex(D)}$`, `$P = ${mat2Latex(P)}, \\; D = ${mat2Latex(D)}$`);
         const wrong = [
-          t(
-            `$P = ${mat2Latex([
+          both(
+            [
               [p12, p11],
               [p22, p21],
-            ])}, \\; D = ${mat2Latex(matD)}$`,
-            `$P = ${mat2Latex([
-              [p12, p11],
-              [p22, p21],
-            ])}, \\; D = ${mat2Latex(matD)}$`,
+            ],
+            matD,
           ),
-          t(
-            `$P = ${mat2Latex([
+          both(
+            [
               [1, 0],
               [0, 1],
-            ])}, \\; D = ${mat2Latex(matA)}$`,
-            `$P = ${mat2Latex([
-              [1, 0],
-              [0, 1],
-            ])}, \\; D = ${mat2Latex(matA)}$`,
+            ],
+            matA,
           ),
-          t(
-            `$P = ${mat2Latex(matP)}, \\; D = ${mat2Latex([
-              [l2, 0],
-              [0, l1],
-            ])}$`,
-            `$P = ${mat2Latex(matP)}, \\; D = ${mat2Latex([
-              [l2, 0],
-              [0, l1],
-            ])}$`,
-          ),
-          t(
-            `$P = ${mat2Latex([
+          both(matP, [
+            [l2, 0],
+            [0, l1],
+          ]),
+          both(
+            [
               [p21, p11],
               [p22, p12],
-            ])}, \\; D = ${mat2Latex(matD)}$`,
-            `$P = ${mat2Latex([
-              [p21, p11],
-              [p22, p12],
-            ])}, \\; D = ${mat2Latex(matD)}$`,
+            ],
+            matD,
           ),
         ];
-        const solution = t(
-          `The eigenvalues are $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. The corresponding eigenvectors form the columns of $P$: $v_1 = ${vec2Latex([1, 0])}$ and $v_2 = ${vec2Latex([p12, p22])}$. Setting $D = \\operatorname{diag}(${l1}, ${l2})$ gives $A = P D P^{-1}$.`,
-          `特征值为 $\\lambda_1 = ${l1}$ 与 $\\lambda_2 = ${l2}$。对应的特征向量构成矩阵 $P$ 的各列：$v_1 = ${vec2Latex([1, 0])}$ 且 $v_2 = ${vec2Latex([p12, p22])}$。取 $D = \\operatorname{diag}(${l1}, ${l2})$ 即可得到 $A = P D P^{-1}$。`,
+        const solution = walked(
+          [
+            [
+              ["Read the eigenvalues", "读出特征值"],
+              t(
+                `$A$ is triangular, so its eigenvalues are its diagonal entries $${l1}$ and $${l2}$.`,
+                `$A$ 是三角矩阵，所以特征值是对角元 $${l1}$ 和 $${l2}$。`,
+              ),
+            ],
+            [
+              ["Find the eigenvectors", "求特征向量"],
+              t(
+                `For $${l1}$, $A - ${l1}I$ has zero first column, so $v_1 = (1, 0)$. For $${l2}$, $A - ${l2}I = ${mat2Latex([
+                  [l1 - l2, b],
+                  [0, 0],
+                ])}$ gives $${poly([l1 - l2, "x_1"], [b, "x_2"])} = 0$, so $v_2 = (${p12}, ${p22})$.`,
+                `对 $${l1}$，$A - ${l1}I$ 的第一列为零，所以 $v_1 = (1, 0)$。对 $${l2}$，$A - ${l2}I = ${mat2Latex([
+                  [l1 - l2, b],
+                  [0, 0],
+                ])}$ 给出 $${poly([l1 - l2, "x_1"], [b, "x_2"])} = 0$，所以 $v_2 = (${p12}, ${p22})$。`,
+              ),
+            ],
+            [
+              ["Assemble $P$ and $D$", "组成 $P$ 和 $D$"],
+              t(
+                `Put $v_1, v_2$ as the columns of $P = ${mat2Latex(matP)}$ and $${l1}, ${l2}$ in the same order on the diagonal of $D$.`,
+                `把 $v_1, v_2$ 作为 $P = ${mat2Latex(matP)}$ 的列，把 $${l1}, ${l2}$ 按相同顺序放在 $D$ 的对角线上。`,
+              ),
+            ],
+          ],
+          t(
+            `$Av_2 = (${b * l2}, ${l2 * p22}) = ${l2}v_2$ and $Av_1 = ${l1}v_1$, so $AP = PD$.`,
+            `$Av_2 = (${b * l2}, ${l2 * p22}) = ${l2}v_2$，$Av_1 = ${l1}v_1$，所以 $AP = PD$。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The columns of $P$ are swapped but $D$ is not, so each column no longer matches its eigenvalue.",
+            "$P$ 的两列交换了而 $D$ 没有，所以每一列与其特征值不再对应。",
+          ],
+          [
+            wrong[1]!.en,
+            "$D$ must be diagonal, but $A$ has a nonzero entry off the diagonal.",
+            "$D$ 必须是对角矩阵，但 $A$ 在对角线外有非零元。",
+          ],
+          [
+            wrong[2]!.en,
+            `The eigenvalues are in the wrong order: the first column $(1, 0)$ belongs to $${l1}$.`,
+            `特征值的顺序错了：第一列 $(1, 0)$ 对应 $${l1}$。`,
+          ],
+          [
+            wrong[3]!.en,
+            `The first column $(0, ${p22})$ is not an eigenvector: $A$ sends it to $(${b * p22}, ${l2 * p22})$.`,
+            `第一列 $(0, ${p22})$ 不是特征向量：$A$ 把它映为 $(${b * p22}, ${l2 * p22})$。`,
+          ],
+        ]);
       },
     },
     {
       id: "rebuilding-a-matrix-from-its-diagonalization",
       title: t("Rebuilding a matrix from its diagonalization", "由对角化还原矩阵"),
       explanation: t(
-        "If $P$ has eigenvectors as columns and $D$ holds the matching eigenvalues, then $A = PDP^{-1}$. Multiplying out recovers $A$: first $PD$ scales each column of $P$ by its eigenvalue, then multiplying by $P^{-1}$ on the right gives $A$. For $P = \\begin{pmatrix} 1 & k \\\\ j & 1 + jk \\end{pmatrix}$, which has determinant $1$, $P^{-1} = \\begin{pmatrix} 1 + jk & -k \\\\ -j & 1 \\end{pmatrix}$.",
-        "若 $P$ 以特征向量为列，$D$ 含有对应的特征值，则 $A = PDP^{-1}$。乘出来就能还原 $A$：先用 $PD$ 把 $P$ 的每一列乘以其特征值，再右乘 $P^{-1}$ 得到 $A$。对行列式为 $1$ 的 $P = \\begin{pmatrix} 1 & k \\\\ j & 1 + jk \\end{pmatrix}$，$P^{-1} = \\begin{pmatrix} 1 + jk & -k \\\\ -j & 1 \\end{pmatrix}$。",
+        "If $P$ has eigenvectors as columns and $D$ holds the matching eigenvalues, then $A = PDP^{-1}$. Multiplying out recovers $A$: first $PD$ scales each column of $P$ by its eigenvalue, then multiplying by $P^{-1}$ on the right gives $A$. For $P = \\begin{pmatrix} 1 & k \\\\ j & 1 + jk \\end{pmatrix}$, which has determinant $1$, $P^{-1} = \\begin{pmatrix} 1 + jk & -k \\\\ -j & 1 \\end{pmatrix}$. For example, $P = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $D = \\operatorname{diag}(2, 3)$ give $PD = \\begin{pmatrix} 2 & 3 \\\\ 2 & 6 \\end{pmatrix}$ and $A = PD \\begin{pmatrix} 2 & -1 \\\\ -1 & 1 \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ -2 & 4 \\end{pmatrix}$, with trace $5 = 2 + 3$.\n\n> **Watch out.** $PD$ is not yet $A$: it still has to be multiplied by $P^{-1}$ on the right. The diagonal entries of $A$ are not the eigenvalues unless $A$ is diagonal.",
+        "若 $P$ 以特征向量为列，$D$ 含有对应的特征值，则 $A = PDP^{-1}$。乘出来就能还原 $A$：先用 $PD$ 把 $P$ 的每一列乘以其特征值，再右乘 $P^{-1}$ 得到 $A$。对行列式为 $1$ 的 $P = \\begin{pmatrix} 1 & k \\\\ j & 1 + jk \\end{pmatrix}$，$P^{-1} = \\begin{pmatrix} 1 + jk & -k \\\\ -j & 1 \\end{pmatrix}$。例如 $P = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$，$D = \\operatorname{diag}(2, 3)$ 给出 $PD = \\begin{pmatrix} 2 & 3 \\\\ 2 & 6 \\end{pmatrix}$，$A = PD \\begin{pmatrix} 2 & -1 \\\\ -1 & 1 \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ -2 & 4 \\end{pmatrix}$，迹为 $5 = 2 + 3$。\n\n> **注意。** $PD$ 还不是 $A$：还要右乘 $P^{-1}$。除非 $A$ 是对角矩阵，否则 $A$ 的对角元不是特征值。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.int(-5, 5);
@@ -3057,9 +3314,14 @@ export const diagonalizingA2x2Matrix: TopicDef = {
           [l1, l2 * k],
           [l1 * j, l2 * (1 + j * k)],
         ];
+        const Pinv: Mat2 = [
+          [1 + j * k, -k],
+          [-j, 1],
+        ];
         const i = rng.int(0, 1);
         const c = rng.int(0, 1);
         const swapped = fromEigen2(l2, l1, j, k);
+        const answer = A[i]![c]!;
         return numberProblem({
           prompt: t(
             `Let $A = PDP^{-1}$ with $P = ${mat2Latex(P)}$ and $D = ${mat2Latex([
@@ -3071,17 +3333,43 @@ export const diagonalizingA2x2Matrix: TopicDef = {
               [0, l2],
             ])}$。求 $A$ 的 $(${i + 1}, ${c + 1})$ 元。`,
           ),
-          answer: A[i]![c]!,
-          wrong: [swapped[i]![c]!, PD[i]![c]!, i === c ? (i === 0 ? l1 : l2) : 0],
-          solution: t(
-            `$PD = ${mat2Latex(PD)}$ and $P^{-1} = ${mat2Latex([
-              [1 + j * k, -k],
-              [-j, 1],
-            ])}$, so $A = ${mat2Latex(A)}$ and the entry is $${A[i]![c]!}$.`,
-            `$PD = ${mat2Latex(PD)}$，$P^{-1} = ${mat2Latex([
-              [1 + j * k, -k],
-              [-j, 1],
-            ])}$，所以 $A = ${mat2Latex(A)}$，该元为 $${A[i]![c]!}$。`,
+          answer,
+          mistakes: [
+            why(swapped[i]![c]!, "The eigenvalues are matched with the wrong columns of $P$.", "特征值与 $P$ 的列配错了。"),
+            why(
+              PD[i]![c]!,
+              "That is an entry of $PD$; it still has to be multiplied by $P^{-1}$ on the right.",
+              "这是 $PD$ 的元素；还要右乘 $P^{-1}$。",
+            ),
+            i === c
+              ? why(
+                  i === 0 ? l1 : l2,
+                  "That is an eigenvalue; the diagonal entries of $A$ equal the eigenvalues only when $A$ is diagonal.",
+                  "这是特征值；只有 $A$ 是对角矩阵时，其对角元才等于特征值。",
+                )
+              : why(
+                  0,
+                  "$A$ is not diagonal, so its entries off the diagonal need not be zero.",
+                  "$A$ 不是对角矩阵，所以对角线外的元不一定为零。",
+                ),
+          ].filter((w, n, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === n),
+          solution: walked(
+            [
+              [["Scale the columns of $P$", "缩放 $P$ 的列"], t("", ""), [`PD = ${mat2Latex(PD)}`]],
+              [["Invert $P$", "求 $P^{-1}$"], t("$\\det P = 1$, so:", "$\\det P = 1$，所以："), [`P^{-1} = ${mat2Latex(Pinv)}`]],
+              [
+                ["Multiply row by column", "行乘列"],
+                t(
+                  `Row $${i + 1}$ of $PD$ times column $${c + 1}$ of $P^{-1}$:`,
+                  `$PD$ 的第 $${i + 1}$ 行乘以 $P^{-1}$ 的第 $${c + 1}$ 列：`,
+                ),
+                [`${PD[i]![0]!} \\cdot ${paren(Pinv[0][c]!)} + ${paren(PD[i]![1]!)} \\cdot ${paren(Pinv[1][c]!)} = ${answer}`],
+              ],
+            ],
+            t(
+              `The whole matrix is $A = ${mat2Latex(A)}$, whose trace $${A[0][0]} + ${paren(A[1][1])} = ${A[0][0] + A[1][1]}$ equals $${l1} + ${paren(l2)}$, the sum of the eigenvalues.`,
+              `整个矩阵为 $A = ${mat2Latex(A)}$，其迹 $${A[0][0]} + ${paren(A[1][1])} = ${A[0][0] + A[1][1]}$ 等于特征值之和 $${l1} + ${paren(l2)}$。`,
+            ),
           ),
         });
       },
@@ -3097,6 +3385,10 @@ export const propertiesOfDiagonalization: TopicDef = {
     "Use a diagonalization $A = PDP^{-1}$ to compute powers $A^k$, and understand properties of diagonalizable matrices.",
     "利用对角化 $A = PDP^{-1}$ 计算矩阵幂 $A^k$，并理解可对角化矩阵的性质。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$ is $PDP^{-1}$ with $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ and $D = \\operatorname{diag}(2, 3)$. In $A^3 = PDP^{-1}PDP^{-1}PDP^{-1}$ the inner factors cancel, so $A^3 = PD^3P^{-1}$ with $D^3 = \\operatorname{diag}(8, 27)$, which gives $A^3 = \\begin{pmatrix} 8 & 19 \\\\ 0 & 27 \\end{pmatrix}$.\n\nCheck: $A^2 = \\begin{pmatrix} 4 & 5 \\\\ 0 & 9 \\end{pmatrix}$, and $A^2A = \\begin{pmatrix} 8 & 4 + 15 \\\\ 0 & 27 \\end{pmatrix}$, the same matrix.\n\nIn this lesson we use a diagonalization to compute powers of a matrix by raising only its eigenvalues to the power.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$ 等于 $PDP^{-1}$，其中 $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，$D = \\operatorname{diag}(2, 3)$。在 $A^3 = PDP^{-1}PDP^{-1}PDP^{-1}$ 中，中间的因子相互抵消，所以 $A^3 = PD^3P^{-1}$，$D^3 = \\operatorname{diag}(8, 27)$，得 $A^3 = \\begin{pmatrix} 8 & 19 \\\\ 0 & 27 \\end{pmatrix}$。\n\n检验：$A^2 = \\begin{pmatrix} 4 & 5 \\\\ 0 & 9 \\end{pmatrix}$，$A^2A = \\begin{pmatrix} 8 & 4 + 15 \\\\ 0 & 27 \\end{pmatrix}$，是同一个矩阵。\n\n本课我们利用对角化，只把特征值取幂，来计算矩阵的幂。",
+  ),
   prerequisites: ["diagonalizing-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -3105,8 +3397,8 @@ export const propertiesOfDiagonalization: TopicDef = {
       id: "computing-matrix-powers-diagonalization",
       title: t("Computing Matrix Powers via Diagonalization", "通过对角化计算矩阵幂"),
       explanation: t(
-        "In the factorization the inner factors cancel when multiplied repeatedly, so only the diagonal matrix is raised to the power, which just raises each entry. Apply $A^k = P D^k P^{-1}$ to compute high powers of a diagonalizable matrix.",
-        "在分解式中反复相乘时，中间的因子相互抵消，所以只需对对角矩阵求幂，也就是对每个对角元素求幂。应用 $A^k = P D^k P^{-1}$ 计算可对角化矩阵的高次幂。",
+        "In the factorization the inner factors cancel when multiplied repeatedly, so only the diagonal matrix is raised to the power, which just raises each entry. Apply $A^k = P D^k P^{-1}$ to compute high powers of a diagonalizable matrix. For example, $D = \\operatorname{diag}(2, -1)$ gives $D^3 = \\operatorname{diag}(8, -1)$.\n\n> **Watch out.** Raise each diagonal entry to the power; do not multiply it by the exponent. The entries stay in their places, and $P$ and $P^{-1}$ are not raised to the power.",
+        "在分解式中反复相乘时，中间的因子相互抵消，所以只需对对角矩阵求幂，也就是对每个对角元素求幂。应用 $A^k = P D^k P^{-1}$ 计算可对角化矩阵的高次幂。例如 $D = \\operatorname{diag}(2, -1)$ 给出 $D^3 = \\operatorname{diag}(8, -1)$。\n\n> **注意。** 要把每个对角元取幂，而不是乘以指数。各元素位置不变，$P$ 和 $P^{-1}$ 不取幂。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(2, 4);
@@ -3117,38 +3409,54 @@ export const propertiesOfDiagonalization: TopicDef = {
           `If a matrix $A$ is diagonalized as $A = P D P^{-1}$ with $D = \\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$, what is the diagonal matrix $D^{${k}}$ used in computing $A^{${k}} = P D^{${k}} P^{-1}$?`,
           `若矩阵 $A$ 可对角化为 $A = P D P^{-1}$，其中 $D = \\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$，求计算 $A^{${k}} = P D^{${k}} P^{-1}$ 时所用的对角矩阵 $D^{${k}}$。`,
         );
-        const right = t(
-          `$\\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$`,
-          `$\\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$`,
+        const diag = (x: string | number, y: string | number) => {
+          const s = `$\\begin{pmatrix} ${x} & 0 \\\\ 0 & ${y} \\end{pmatrix}$`;
+          return t(s, s);
+        };
+        const right = diag(`${l1}^{${k}}`, `${base2}^{${k}}`);
+        const wrong = [diag(k * l1, k * l2), diag(l1, l2), diag(`${base2}^{${k}}`, `${l1}^{${k}}`), diag(l1 + k, l2 + k)];
+        const solution = walked(
+          [
+            [
+              ["Cancel the inner factors", "消去中间的因子"],
+              t(
+                `In $(PDP^{-1})^{${k}}$ each $P^{-1}P$ in the middle is $I$, so only $D$ is multiplied by itself $${k}$ times.`,
+                `在 $(PDP^{-1})^{${k}}$ 中，中间的每个 $P^{-1}P$ 都是 $I$，所以只有 $D$ 自乘 $${k}$ 次。`,
+              ),
+            ],
+            [
+              ["Raise each diagonal entry", "把每个对角元取幂"],
+              t("A product of diagonal matrices multiplies matching diagonal entries:", "对角矩阵相乘时，对应的对角元相乘："),
+              [`D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}`],
+            ],
+          ],
+          t(
+            `The entries are $${l1 ** k}$ and $${l2 ** k}$; for $k = 2$ the same rule gives $D^2 = \\operatorname{diag}(${l1 * l1}, ${l2 * l2})$, which matches multiplying $D$ by itself.`,
+            `这两个元素为 $${l1 ** k}$ 和 $${l2 ** k}$；对 $k = 2$，同样的规则给出 $D^2 = \\operatorname{diag}(${l1 * l1}, ${l2 * l2})$，与 $D$ 自乘的结果一致。`,
+          ),
         );
-        const wrong = [
-          t(
-            `$\\begin{pmatrix} ${k * l1} & 0 \\\\ 0 & ${k * l2} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${k * l1} & 0 \\\\ 0 & ${k * l2} \\end{pmatrix}$`,
-          ),
-          t(`$\\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$`, `$\\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$`),
-          t(
-            `$\\begin{pmatrix} ${base2}^{${k}} & 0 \\\\ 0 & ${l1}^{${k}} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${base2}^{${k}} & 0 \\\\ 0 & ${l1}^{${k}} \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} ${l1 + k} & 0 \\\\ 0 & ${l2 + k} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${l1 + k} & 0 \\\\ 0 & ${l2 + k} \\end{pmatrix}$`,
-          ),
-        ];
-        const solution = t(
-          `For a diagonal matrix $D = \\operatorname{diag}(\\lambda_1, \\lambda_2)$, its $k$-th power is obtained by raising each diagonal entry to the $k$-th power: $D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$.`,
-          `对角矩阵 $D = \\operatorname{diag}(\\lambda_1, \\lambda_2)$ 的 $k$ 次幂等于将其对角线上的每个元素分别取 $k$ 次幂：$D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "Each entry is multiplied by the exponent; a power multiplies the entry by itself.",
+            "每个元素乘以了指数；取幂是把元素自乘。",
+          ],
+          [wrong[1]!.en, "That is $D$ itself, not its power.", "这是 $D$ 本身，不是它的幂。"],
+          [wrong[2]!.en, "The entries changed places; each stays in its own position.", "两个元素交换了位置；每个元素都留在原位。"],
+          [
+            wrong[3]!.en,
+            "The exponent is added to each entry; a power multiplies the entry by itself.",
+            "这把指数加到了每个元素上；取幂是把元素自乘。",
+          ],
+        ]);
       },
     },
     {
       id: "an-entry-of-a-power-through-diagonalization",
       title: t("An entry of a power through diagonalization", "通过对角化求幂的元素"),
       explanation: t(
-        "Diagonalization turns powers into powers of numbers: $A^n = PD^nP^{-1}$, and $D^n$ just raises each eigenvalue to the $n$th power. For $A = \\begin{pmatrix} a & b - a \\\\ 0 & b \\end{pmatrix}$ the eigenvectors $(1, 0)$ and $(1, 1)$ give $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$, and\n\n$$A^n = \\begin{pmatrix} a^n & b^n - a^n \\\\ 0 & b^n \\end{pmatrix}.$$",
-        "对角化把矩阵的幂变成数的幂：$A^n = PD^nP^{-1}$，而 $D^n$ 只是把每个特征值取 $n$ 次方。对 $A = \\begin{pmatrix} a & b - a \\\\ 0 & b \\end{pmatrix}$，特征向量 $(1, 0)$ 和 $(1, 1)$ 给出 $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，且\n\n$$A^n = \\begin{pmatrix} a^n & b^n - a^n \\\\ 0 & b^n \\end{pmatrix}.$$",
+        "Diagonalization turns powers into powers of numbers: $A^n = PD^nP^{-1}$, and $D^n$ just raises each eigenvalue to the $n$th power. For $A = \\begin{pmatrix} a & b - a \\\\ 0 & b \\end{pmatrix}$ the eigenvectors $(1, 0)$ and $(1, 1)$ give $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$, and\n\n$$A^n = \\begin{pmatrix} a^n & b^n - a^n \\\\ 0 & b^n \\end{pmatrix}.$$\n\nFor example, $a = 1$, $b = 2$ and $n = 3$ give the $(1, 2)$ entry $2^3 - 1^3 = 7$.\n\n> **Watch out.** The corner entry is $b^n - a^n$, not $(b - a)^n$: the power acts on the eigenvalues, not on the entries of $A$.",
+        "对角化把矩阵的幂变成数的幂：$A^n = PD^nP^{-1}$，而 $D^n$ 只是把每个特征值取 $n$ 次方。对 $A = \\begin{pmatrix} a & b - a \\\\ 0 & b \\end{pmatrix}$，特征向量 $(1, 0)$ 和 $(1, 1)$ 给出 $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，且\n\n$$A^n = \\begin{pmatrix} a^n & b^n - a^n \\\\ 0 & b^n \\end{pmatrix}.$$\n\n例如 $a = 1$，$b = 2$，$n = 3$ 给出 $(1, 2)$ 元 $2^3 - 1^3 = 7$。\n\n> **注意。** 右上角的元是 $b^n - a^n$，而不是 $(b - a)^n$：幂作用在特征值上，而不是 $A$ 的元素上。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3);
@@ -3156,6 +3464,10 @@ export const propertiesOfDiagonalization: TopicDef = {
         if (b === a) b = a + 1;
         const n = rng.int(3, 6);
         const ans = b ** n - a ** n;
+        const P = mat2Latex([
+          [1, 1],
+          [0, 1],
+        ]);
         return numberProblem({
           prompt: t(
             `Use diagonalization to find the $(1, 2)$ entry of $A^{${n}}$ for $A = ${mat2Latex([
@@ -3168,16 +3480,48 @@ export const propertiesOfDiagonalization: TopicDef = {
             ])}$。`,
           ),
           answer: ans,
-          wrong: [(b - a) ** n, a ** n - b ** n, n * (b - a)],
-          solution: t(
-            `$A = PDP^{-1}$ with $P = ${mat2Latex([
-              [1, 1],
-              [0, 1],
-            ])}$ and $D = \\operatorname{diag}(${a}, ${b})$, so the $(1, 2)$ entry of $A^{${n}}$ is $${paren(b)}^{${n}} - ${paren(a)}^{${n}} = ${ans}$.`,
-            `$A = PDP^{-1}$，其中 $P = ${mat2Latex([
-              [1, 1],
-              [0, 1],
-            ])}$，$D = \\operatorname{diag}(${a}, ${b})$，所以 $A^{${n}}$ 的 $(1, 2)$ 元为 $${paren(b)}^{${n}} - ${paren(a)}^{${n}} = ${ans}$。`,
+          mistakes: [
+            why(
+              (b - a) ** n,
+              "That raises the entry $b - a$ itself to the power; the power acts on the eigenvalues.",
+              "这把元素 $b - a$ 本身取了幂；幂作用在特征值上。",
+            ),
+            why(a ** n - b ** n, "The order is reversed: the entry is $b^n - a^n$.", "顺序反了：该元是 $b^n - a^n$。"),
+            why(
+              n * (b - a),
+              "That multiplies the entry by the exponent; powers of a matrix do not work that way.",
+              "这把元素乘以了指数；矩阵的幂不是这样算的。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Diagonalize", "对角化"],
+                t(
+                  `The eigenvectors $(1, 0)$ for $${a}$ and $(1, 1)$ for $${b}$ give $P = ${P}$ and $D = \\operatorname{diag}(${a}, ${b})$.`,
+                  `$${a}$ 的特征向量 $(1, 0)$ 和 $${b}$ 的特征向量 $(1, 1)$ 给出 $P = ${P}$，$D = \\operatorname{diag}(${a}, ${b})$。`,
+                ),
+              ],
+              [
+                ["Raise $D$ to the power", "把 $D$ 取幂"],
+                t("Then $A^n = PD^nP^{-1}$:", "于是 $A^n = PD^nP^{-1}$："),
+                [
+                  `A^{${n}} = ${mat2StrLatex([
+                    [`${paren(a)}^{${n}}`, `${paren(b)}^{${n}} - ${paren(a)}^{${n}}`],
+                    ["0", `${paren(b)}^{${n}}`],
+                  ])}`,
+                ],
+              ],
+              [
+                ["Evaluate the entry", "求该元"],
+                t("", ""),
+                [`${paren(b)}^{${n}} - ${paren(a)}^{${n}} = ${b ** n} - ${paren(a ** n)} = ${ans}`],
+              ],
+            ],
+            t(
+              `For $n = 2$ the same formula gives $${paren(b)}^2 - ${paren(a)}^2 = ${b * b - a * a}$, and the $(1, 2)$ entry of $A^2$ is $${paren(a)} \\cdot ${paren(b - a)} + ${paren(b - a)} \\cdot ${paren(b)} = ${b * b - a * a}$.`,
+              `对 $n = 2$，同一公式给出 $${paren(b)}^2 - ${paren(a)}^2 = ${b * b - a * a}$，而 $A^2$ 的 $(1, 2)$ 元为 $${paren(a)} \\cdot ${paren(b - a)} + ${paren(b - a)} \\cdot ${paren(b)} = ${b * b - a * a}$。`,
+            ),
           ),
         });
       },
@@ -3193,6 +3537,10 @@ export const diagonalizingA3x3MatrixWithDistinctEigenvalues: TopicDef = {
     "Construct the diagonalizing matrix P and diagonal matrix D for 3x3 matrices with distinct eigenvalues.",
     "构造具有不同特征值的 3x3 矩阵的对角化变换矩阵 P 和对角矩阵 D。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{pmatrix}$ has the distinct eigenvalues $1$, $2$ and $3$, with eigenvectors $(1, 0, 0)$, $(1, 1, 0)$ and $(0, 0, 1)$. So $P = \\begin{pmatrix} 1 & 1 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ and $D = \\operatorname{diag}(1, 2, 3)$ give $A = PDP^{-1}$.\n\nCheck: $A(1, 1, 0) = (2, 2, 0) = 2(1, 1, 0)$, so the second column of $AP$ is $2$ times the second column of $P$, as in $PD$.\n\nIn this lesson we diagonalize $3 \\times 3$ matrices with three distinct eigenvalues, and use the diagonal form to find determinants of related matrices.",
+    "矩阵 $A = \\begin{pmatrix} 1 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{pmatrix}$ 有互不相同的特征值 $1$、$2$、$3$，特征向量为 $(1, 0, 0)$、$(1, 1, 0)$、$(0, 0, 1)$。所以 $P = \\begin{pmatrix} 1 & 1 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ 与 $D = \\operatorname{diag}(1, 2, 3)$ 给出 $A = PDP^{-1}$。\n\n检验：$A(1, 1, 0) = (2, 2, 0) = 2(1, 1, 0)$，所以 $AP$ 的第二列是 $P$ 第二列的 $2$ 倍，与 $PD$ 一致。\n\n本课我们对有三个互异特征值的 $3 \\times 3$ 矩阵进行对角化，并用对角形式求相关矩阵的行列式。",
+  ),
   prerequisites: ["properties-of-diagonalization"],
   encompasses: [],
   xp: 14,
@@ -3201,8 +3549,8 @@ export const diagonalizingA3x3MatrixWithDistinctEigenvalues: TopicDef = {
       id: "diagonalizing-3x3-distinct-eigenvalues-kp",
       title: t("Diagonalizing 3x3 Matrices with Distinct Eigenvalues", "对角化具有相异特征值的 3x3 矩阵"),
       explanation: t(
-        "Eigenvectors for distinct eigenvalues are always independent, so a three by three matrix with three distinct eigenvalues can always be diagonalized. Assemble the eigenvectors as the columns of $P$ so that $P^{-1} A P = D$.",
-        "属于不同特征值的特征向量总是线性无关的，所以有三个不同特征值的三阶矩阵总能对角化。将特征向量组合为 $P$ 的各列，使得 $P^{-1} A P = D$。",
+        "Eigenvectors for distinct eigenvalues are always independent, so a three by three matrix with three distinct eigenvalues can always be diagonalized. Assemble the eigenvectors as the columns of $P$ so that $P^{-1} A P = D$. For example, if $Av_1 = 2v_1$, $Av_2 = -v_2$ and $Av_3 = 5v_3$, then $P = (v_1 \\; v_2 \\; v_3)$ gives $P^{-1}AP = \\operatorname{diag}(2, -1, 5)$.\n\n> **Watch out.** The eigenvalues sit on the diagonal in the same order as their eigenvectors in $P$, and every entry off the diagonal is $0$.",
+        "属于不同特征值的特征向量总是线性无关的，所以有三个不同特征值的三阶矩阵总能对角化。将特征向量组合为 $P$ 的各列，使得 $P^{-1} A P = D$。例如若 $Av_1 = 2v_1$，$Av_2 = -v_2$，$Av_3 = 5v_3$，则 $P = (v_1 \\; v_2 \\; v_3)$ 给出 $P^{-1}AP = \\operatorname{diag}(2, -1, 5)$。\n\n> **注意。** 特征值在对角线上的顺序与其特征向量在 $P$ 中的顺序相同，对角线外的元全为 $0$。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(1, 3);
@@ -3212,93 +3560,84 @@ export const diagonalizingA3x3MatrixWithDistinctEigenvalues: TopicDef = {
           `A $3 \\times 3$ matrix $A$ has distinct eigenvalues $\\lambda_1 = ${l1}$, $\\lambda_2 = ${l2}$, and $\\lambda_3 = ${l3}$ with corresponding eigenvectors $v_1, v_2, v_3$. If $P = \\begin{pmatrix} v_1 & v_2 & v_3 \\end{pmatrix}$, what is $P^{-1} A P$?`,
           `$3 \\times 3$ 矩阵 $A$ 具有相异特征值 $\\lambda_1 = ${l1}$、$\\lambda_2 = ${l2}$ 与 $\\lambda_3 = ${l3}$，对应特征向量为 $v_1, v_2, v_3$。若 $P = \\begin{pmatrix} v_1 & v_2 & v_3 \\end{pmatrix}$，求 $P^{-1} A P$。`,
         );
-        const right = t(
-          `$${mat3Latex([
-            [l1, 0, 0],
-            [0, l2, 0],
-            [0, 0, l3],
-          ])}$`,
-          `$${mat3Latex([
-            [l1, 0, 0],
-            [0, l2, 0],
-            [0, 0, l3],
-          ])}$`,
-        );
-        const wrong = [
-          t(
-            `$${mat3Latex([
-              [l3, 0, 0],
-              [0, l2, 0],
-              [0, 0, l1],
-            ])}$`,
-            `$${mat3Latex([
-              [l3, 0, 0],
-              [0, l2, 0],
-              [0, 0, l1],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [l1, l2, l3],
-              [0, 0, 0],
-              [0, 0, 0],
-            ])}$`,
-            `$${mat3Latex([
-              [l1, l2, l3],
-              [0, 0, 0],
-              [0, 0, 0],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [0, 0, l1],
-              [0, l2, 0],
-              [l3, 0, 0],
-            ])}$`,
-            `$${mat3Latex([
-              [0, 0, l1],
-              [0, l2, 0],
-              [l3, 0, 0],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [1, 0, 0],
-              [0, 1, 0],
-              [0, 0, 1],
-            ])}$`,
-            `$${mat3Latex([
-              [1, 0, 0],
-              [0, 1, 0],
-              [0, 0, 1],
-            ])}$`,
-          ),
+        const m = (M: Mat3) => t(`$${mat3Latex(M)}$`, `$${mat3Latex(M)}$`);
+        const D: Mat3 = [
+          [l1, 0, 0],
+          [0, l2, 0],
+          [0, 0, l3],
         ];
-        const solution = t(
-          `When the columns of $P$ are eigenvectors ordered as $v_1, v_2, v_3$, the similarity transform $P^{-1} A P$ produces the diagonal matrix $D = \\operatorname{diag}(\\lambda_1, \\lambda_2, \\lambda_3) = ${mat3Latex(
+        const right = m(D);
+        const wrong = [
+          m([
+            [l3, 0, 0],
+            [0, l2, 0],
+            [0, 0, l1],
+          ]),
+          m([
+            [l1, l2, l3],
+            [0, 0, 0],
+            [0, 0, 0],
+          ]),
+          m([
+            [0, 0, l1],
+            [0, l2, 0],
+            [l3, 0, 0],
+          ]),
+          m([
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1],
+          ]),
+        ];
+        const solution = walked(
+          [
             [
-              [l1, 0, 0],
-              [0, l2, 0],
-              [0, 0, l3],
+              ["Multiply $A$ by $P$ column by column", "逐列计算 $AP$"],
+              t(
+                `$AP = (Av_1 \\; Av_2 \\; Av_3) = (${l1}v_1 \\; ${l2}v_2 \\; ${l3}v_3) = PD$ with $D = \\operatorname{diag}(${l1}, ${l2}, ${l3})$.`,
+                `$AP = (Av_1 \\; Av_2 \\; Av_3) = (${l1}v_1 \\; ${l2}v_2 \\; ${l3}v_3) = PD$，其中 $D = \\operatorname{diag}(${l1}, ${l2}, ${l3})$。`,
+              ),
             ],
-          )}$.`,
-          `当矩阵 $P$ 的列向量按特征向量 $v_1, v_2, v_3$ 的顺序排列时，相似变换 $P^{-1} A P$ 产生对应的对角矩阵 $D = \\operatorname{diag}(\\lambda_1, \\lambda_2, \\lambda_3) = ${mat3Latex(
             [
-              [l1, 0, 0],
-              [0, l2, 0],
-              [0, 0, l3],
+              ["Multiply by $P^{-1}$", "左乘 $P^{-1}$"],
+              t(
+                "The eigenvectors are independent because the eigenvalues are distinct, so $P$ is invertible and:",
+                "特征值互异，所以特征向量线性无关，$P$ 可逆，于是：",
+              ),
+              [`P^{-1}AP = ${mat3Latex(D)}`],
             ],
-          )}$。`,
+          ],
+          t(
+            `Similar matrices have the same trace, and $${l1} + ${l2} + ${paren(l3)} = ${l1 + l2 + l3}$ is the trace of $A$.`,
+            `相似矩阵的迹相同，$${l1} + ${l2} + ${paren(l3)} = ${l1 + l2 + l3}$ 就是 $A$ 的迹。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The order is reversed: $v_1$ is the first column of $P$, so $\\lambda_1$ comes first.",
+            "顺序反了：$v_1$ 是 $P$ 的第一列，所以 $\\lambda_1$ 排在最前。",
+          ],
+          [wrong[1]!.en, "The eigenvalues go on the diagonal, not across the first row.", "特征值应在对角线上，而不是排在第一行。"],
+          [
+            wrong[2]!.en,
+            "The eigenvalues go on the main diagonal; the entries off it are all $0$.",
+            "特征值应在主对角线上；其余元都为 $0$。",
+          ],
+          [
+            wrong[3]!.en,
+            "That would make $A = PIP^{-1} = I$; the diagonal holds the eigenvalues, not ones.",
+            "那样会使 $A = PIP^{-1} = I$；对角线上是特征值，而不是 $1$。",
+          ],
+        ]);
       },
     },
     {
       id: "a-shifted-determinant-through-diagonalization",
       title: t("A shifted determinant through diagonalization", "通过对角化求平移后的行列式"),
       explanation: t(
-        "If $A = PDP^{-1}$ with $D = \\operatorname{diag}(\\lambda_1, \\lambda_2, \\lambda_3)$, then $A + kI = P(D + kI)P^{-1}$, because $P(kI)P^{-1} = kI$. So $A + kI$ is diagonalized by the same $P$, with eigenvalues $\\lambda_i + k$, and\n\n$$\\det(A + kI) = (\\lambda_1 + k)(\\lambda_2 + k)(\\lambda_3 + k).$$\n\nThe determinant of a diagonalizable matrix is the product of its eigenvalues, so there is no need to form $A$ or multiply out any matrices.",
-        "若 $A = PDP^{-1}$，$D = \\operatorname{diag}(\\lambda_1, \\lambda_2, \\lambda_3)$，则 $A + kI = P(D + kI)P^{-1}$，因为 $P(kI)P^{-1} = kI$。所以 $A + kI$ 由同一个 $P$ 对角化，特征值为 $\\lambda_i + k$，且\n\n$$\\det(A + kI) = (\\lambda_1 + k)(\\lambda_2 + k)(\\lambda_3 + k).$$\n\n可对角化矩阵的行列式等于其特征值之积，所以无需求出 $A$ 或做任何矩阵乘法。",
+        "If $A = PDP^{-1}$ with $D = \\operatorname{diag}(\\lambda_1, \\lambda_2, \\lambda_3)$, then $A + kI = P(D + kI)P^{-1}$, because $P(kI)P^{-1} = kI$. So $A + kI$ is diagonalized by the same $P$, with eigenvalues $\\lambda_i + k$, and\n\n$$\\det(A + kI) = (\\lambda_1 + k)(\\lambda_2 + k)(\\lambda_3 + k).$$\n\nThe determinant of a diagonalizable matrix is the product of its eigenvalues, so there is no need to form $A$ or multiply out any matrices. For example, $D = \\operatorname{diag}(1, 2, 3)$ and $k = 1$ give $\\det(A + I) = 2 \\cdot 3 \\cdot 4 = 24$.\n\n> **Watch out.** Add $k$ to each eigenvalue before multiplying; adding $k$ to $\\det A$ itself gives the wrong value. For $A - kI$ subtract $k$ instead.",
+        "若 $A = PDP^{-1}$，$D = \\operatorname{diag}(\\lambda_1, \\lambda_2, \\lambda_3)$，则 $A + kI = P(D + kI)P^{-1}$，因为 $P(kI)P^{-1} = kI$。所以 $A + kI$ 由同一个 $P$ 对角化，特征值为 $\\lambda_i + k$，且\n\n$$\\det(A + kI) = (\\lambda_1 + k)(\\lambda_2 + k)(\\lambda_3 + k).$$\n\n可对角化矩阵的行列式等于其特征值之积，所以无需求出 $A$ 或做任何矩阵乘法。例如 $D = \\operatorname{diag}(1, 2, 3)$，$k = 1$ 给出 $\\det(A + I) = 2 \\cdot 3 \\cdot 4 = 24$。\n\n> **注意。** 先给每个特征值加上 $k$ 再相乘；把 $k$ 加到 $\\det A$ 上会得到错误的值。对 $A - kI$ 则是减去 $k$。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.int(-4, 4);
@@ -3308,16 +3647,47 @@ export const diagonalizingA3x3MatrixWithDistinctEigenvalues: TopicDef = {
         if (l3 === l1 || l3 === l2) l3 = Math.max(l1, l2) + 2;
         const k = rng.int(1, 3) * rng.pick([-1, 1]);
         const ans = (l1 + k) * (l2 + k) * (l3 + k);
+        const shift = `A ${k < 0 ? "-" : "+"} ${Math.abs(k)}I`;
+        const det = l1 * l2 * l3;
         return numberProblem({
           prompt: t(
-            `A $3 \\times 3$ matrix is diagonalized as $A = PDP^{-1}$ with $D = \\operatorname{diag}(${l1}, ${l2}, ${l3})$. Find $\\det(A ${k < 0 ? "-" : "+"} ${Math.abs(k)}I)$.`,
-            `$3 \\times 3$ 矩阵对角化为 $A = PDP^{-1}$，$D = \\operatorname{diag}(${l1}, ${l2}, ${l3})$。求 $\\det(A ${k < 0 ? "-" : "+"} ${Math.abs(k)}I)$。`,
+            `A $3 \\times 3$ matrix is diagonalized as $A = PDP^{-1}$ with $D = \\operatorname{diag}(${l1}, ${l2}, ${l3})$. Find $\\det(${shift})$.`,
+            `$3 \\times 3$ 矩阵对角化为 $A = PDP^{-1}$，$D = \\operatorname{diag}(${l1}, ${l2}, ${l3})$。求 $\\det(${shift})$。`,
           ),
           answer: ans,
-          wrong: [l1 * l2 * l3 + k, l1 * l2 * l3 + k ** 3, (l1 - k) * (l2 - k) * (l3 - k)],
-          solution: t(
-            `$A ${k < 0 ? "-" : "+"} ${Math.abs(k)}I$ has eigenvalues $${l1 + k}$, $${l2 + k}$, $${l3 + k}$, so its determinant is $${l1 + k} \\cdot ${paren(l2 + k)} \\cdot ${paren(l3 + k)} = ${ans}$.`,
-            `$A ${k < 0 ? "-" : "+"} ${Math.abs(k)}I$ 的特征值为 $${l1 + k}$、$${l2 + k}$、$${l3 + k}$，所以其行列式为 $${l1 + k} \\cdot ${paren(l2 + k)} \\cdot ${paren(l3 + k)} = ${ans}$。`,
+          mistakes: [
+            why(
+              det + k,
+              `That adds $${k}$ to $\\det A$; the shift is added to each eigenvalue.`,
+              `这是把 $${k}$ 加到 $\\det A$ 上；平移应加到每个特征值上。`,
+            ),
+            why(
+              det + k ** 3,
+              "The product of sums is not the sum of the products; add the shift to each eigenvalue, then multiply.",
+              "和的积不等于积的和；先给每个特征值加上平移量，再相乘。",
+            ),
+            why((l1 - k) * (l2 - k) * (l3 - k), "The shift has the wrong sign.", "平移的符号错了。"),
+            why(det, "That is $\\det A$; the shift changes every eigenvalue.", "这是 $\\det A$；平移会改变每个特征值。"),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Shift the eigenvalues", "平移特征值"],
+                t(
+                  `$${shift} = P(D ${k < 0 ? "-" : "+"} ${Math.abs(k)}I)P^{-1}$, so its eigenvalues are $${l1 + k}$, $${l2 + k}$ and $${l3 + k}$.`,
+                  `$${shift} = P(D ${k < 0 ? "-" : "+"} ${Math.abs(k)}I)P^{-1}$，所以它的特征值为 $${l1 + k}$、$${l2 + k}$ 和 $${l3 + k}$。`,
+                ),
+              ],
+              [
+                ["Multiply them", "把它们相乘"],
+                t("", ""),
+                [`\\det(${shift}) = ${l1 + k} \\cdot ${paren(l2 + k)} \\cdot ${paren(l3 + k)} = ${ans}`],
+              ],
+            ],
+            t(
+              `$\\det(P(D ${k < 0 ? "-" : "+"} ${Math.abs(k)}I)P^{-1}) = \\det P \\cdot \\det(D ${k < 0 ? "-" : "+"} ${Math.abs(k)}I) \\cdot \\frac{1}{\\det P}$, and the determinant of the diagonal matrix is the product of its diagonal entries, $${ans}$.`,
+              `$\\det(P(D ${k < 0 ? "-" : "+"} ${Math.abs(k)}I)P^{-1}) = \\det P \\cdot \\det(D ${k < 0 ? "-" : "+"} ${Math.abs(k)}I) \\cdot \\frac{1}{\\det P}$，而对角矩阵的行列式是对角元之积 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -3333,6 +3703,10 @@ export const diagonalizingA3x3MatrixInTheGeneralCase: TopicDef = {
     "Determine whether a general 3x3 matrix is diagonalizable by comparing algebraic and geometric multiplicities.",
     "通过比较代数重数与几何重数，判定一般 3x3 矩阵是否可对角化。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ has the eigenvalue $2$ twice. But $A - 2I$ has rank $2$, so $2$ has only one independent eigenvector, and with the one for $5$ that makes two, one short of the three needed. So $A$ is not diagonalizable. Replacing the $1$ by $0$ makes $A - 2I$ rank $1$, and then $A$ is diagonal already.\n\nCheck: $A(0, 1, 0) = (1, 2, 0)$, which is not a multiple of $(0, 1, 0)$, so $(0, 1, 0)$ is not a second eigenvector for $2$.\n\nIn this lesson we decide whether a $3 \\times 3$ matrix with a repeated eigenvalue is diagonalizable, by comparing the geometric and algebraic multiplicity of each eigenvalue.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ 的特征值 $2$ 出现两次。但 $A - 2I$ 的秩为 $2$，所以 $2$ 只有一个线性无关的特征向量，加上 $5$ 的一个共两个，比所需的三个少一个。所以 $A$ 不可对角化。把 $1$ 换成 $0$，$A - 2I$ 的秩变为 $1$，此时 $A$ 本身就是对角矩阵。\n\n检验：$A(0, 1, 0) = (1, 2, 0)$，不是 $(0, 1, 0)$ 的倍数，所以 $(0, 1, 0)$ 不是 $2$ 的第二个特征向量。\n\n本课我们比较每个特征值的几何重数与代数重数，判断有重特征值的 $3 \\times 3$ 矩阵能否对角化。",
+  ),
   prerequisites: ["diagonalizing-a-3x3-matrix-with-distinct-eigenvalues"],
   encompasses: [],
   xp: 14,
@@ -3341,8 +3715,8 @@ export const diagonalizingA3x3MatrixInTheGeneralCase: TopicDef = {
       id: "diagonalizability-criterion-3x3",
       title: t("Diagonalizability Criterion for 3x3 Matrices", "3x3 矩阵可对角化判据"),
       explanation: t(
-        "A matrix is diagonalizable when it has enough independent eigenvectors to form a basis, which fails if some repeated eigenvalue has too few. Check whether geometric multiplicity equals algebraic multiplicity for each eigenvalue.",
-        "当矩阵有足够多的线性无关特征向量构成一组基时，它就可以对角化；如果某个重复特征值的特征向量太少就不行。检验每个特征值的几何重数是否等于代数重数。",
+        "A matrix is diagonalizable when it has enough independent eigenvectors to form a basis, which fails if some repeated eigenvalue has too few. Check whether geometric multiplicity equals algebraic multiplicity for each eigenvalue. For example, $\\begin{pmatrix} 3 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ is diagonalizable, while $\\begin{pmatrix} 3 & 1 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ is not: there $A - 3I$ has rank $2$, so $3$ has geometric multiplicity $1 < 2$.\n\n> **Watch out.** A repeated eigenvalue does not by itself stop diagonalization, and being triangular does not guarantee it. Only the count of independent eigenvectors decides.",
+        "当矩阵有足够多的线性无关特征向量构成一组基时，它就可以对角化；如果某个重复特征值的特征向量太少就不行。检验每个特征值的几何重数是否等于代数重数。例如 $\\begin{pmatrix} 3 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ 可对角化，而 $\\begin{pmatrix} 3 & 1 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ 不可以：那里 $A - 3I$ 的秩为 $2$，所以 $3$ 的几何重数为 $1 < 2$。\n\n> **注意。** 有重特征值本身并不妨碍对角化，是三角矩阵也不能保证可对角化。只有线性无关特征向量的个数说了算。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -3379,40 +3753,81 @@ export const diagonalizingA3x3MatrixInTheGeneralCase: TopicDef = {
               t("No, because its trace is non-zero", "否，因为其迹非零"),
             ];
         const shiftStr = formatShift(lambda, "I");
-        const solution = isDiag
-          ? t(
-              `The eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity 2. Since $A${shiftStr} = ${mat3Latex([
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, mu - lambda],
-              ])}$ has rank 1, its nullity is $3 - 1 = 2$. Since geometric multiplicity equals algebraic multiplicity for all eigenvalues, $A$ is diagonalizable.`,
-              `特征值 $\\lambda = ${lambda}$ 的代数重数为 2。因为 $A${shiftStr} = ${mat3Latex([
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, mu - lambda],
-              ])}$ 的秩为 1，零度为 $3 - 1 = 2$。所有特征值的几何重数均等于代数重数，因此 $A$ 可对角化。`,
-            )
-          : t(
-              `The eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity 2. Since $A${shiftStr} = ${mat3Latex([
-                [0, a, 0],
-                [0, 0, 0],
-                [0, 0, mu - lambda],
-              ])}$ has rank 2, its nullity (geometric multiplicity) is only $3 - 2 = 1 < 2$. Hence, $A$ is not diagonalizable.`,
-              `特征值 $\\lambda = ${lambda}$ 的代数重数为 2。因为 $A${shiftStr} = ${mat3Latex([
-                [0, a, 0],
-                [0, 0, 0],
-                [0, 0, mu - lambda],
-              ])}$ 的秩为 2，其零度（几何重数）仅为 $3 - 2 = 1 < 2$。因此 $A$ 不可对角化。`,
-            );
-        return oneOf(rng, prompt, right, wrong, solution);
+        const geo = isDiag ? 2 : 1;
+        const solution = walked(
+          [
+            [
+              ["List the eigenvalues", "列出特征值"],
+              t(
+                `$A$ is triangular, so its eigenvalues are $${lambda}$ twice and $${mu}$ once.`,
+                `$A$ 是三角矩阵，所以特征值为 $${lambda}$（两次）和 $${mu}$（一次）。`,
+              ),
+            ],
+            [
+              ["Count eigenvectors for the repeated eigenvalue", "数重特征值的特征向量"],
+              t("", ""),
+              [
+                `A${shiftStr} = ${mat3Latex([
+                  [0, a, 0],
+                  [0, 0, 0],
+                  [0, 0, mu - lambda],
+                ])}`,
+              ],
+            ],
+          ],
+          t(
+            isDiag
+              ? `The rank is $1$, so $${lambda}$ has geometric multiplicity $3 - 1 = 2$, equal to its algebraic multiplicity. With one eigenvector for $${mu}$ there are $3$ independent eigenvectors, so $A$ is diagonalizable.`
+              : `The rank is $2$, so $${lambda}$ has geometric multiplicity $3 - 2 = 1 < 2$. With one eigenvector for $${mu}$ there are only $2$ independent eigenvectors, fewer than $3$, so $A$ is not diagonalizable.`,
+            isDiag
+              ? `秩为 $1$，所以 $${lambda}$ 的几何重数为 $3 - 1 = 2$，等于代数重数。加上 $${mu}$ 的一个特征向量，共有 $3$ 个线性无关的特征向量，所以 $A$ 可对角化。`
+              : `秩为 $2$，所以 $${lambda}$ 的几何重数为 $3 - 2 = 1 < 2$。加上 $${mu}$ 的一个特征向量，只有 $2$ 个线性无关的特征向量，少于 $3$ 个，所以 $A$ 不可对角化。`,
+          ),
+        );
+        const reasons: [string, string, string][] = isDiag
+          ? [
+              [
+                wrong[0]!.en,
+                `A repeated eigenvalue is fine when its eigenspace is as large as its multiplicity, as here: $${lambda}$ has $${geo}$ independent eigenvectors.`,
+                `只要特征空间的维数与重数一样大，重特征值就没有问题，这里正是如此：$${lambda}$ 有 $${geo}$ 个线性无关的特征向量。`,
+              ],
+              [
+                wrong[1]!.en,
+                "Diagonalizability does not depend on the determinant; a diagonal matrix can have determinant $0$.",
+                "能否对角化与行列式无关；对角矩阵的行列式也可以为 $0$。",
+              ],
+              [
+                wrong[2]!.en,
+                "The eigenvalues and eigenvectors are all real, so $A$ is diagonalizable over $\\mathbb{R}$.",
+                "特征值和特征向量都是实的，所以 $A$ 在 $\\mathbb{R}$ 上就可对角化。",
+              ],
+            ]
+          : [
+              [
+                wrong[0]!.en,
+                `Triangular matrices need not be diagonalizable; here $${lambda}$ has only one independent eigenvector.`,
+                `三角矩阵不一定可对角化；这里 $${lambda}$ 只有一个线性无关的特征向量。`,
+              ],
+              [
+                wrong[1]!.en,
+                `The eigenvalues are $${lambda}$, $${lambda}$ and $${mu}$, so $${lambda}$ is repeated.`,
+                `特征值为 $${lambda}$、$${lambda}$ 和 $${mu}$，所以 $${lambda}$ 是重特征值。`,
+              ],
+              [
+                wrong[2]!.en,
+                "The answer is right but the reason is not: the trace does not decide diagonalizability.",
+                "结论对但理由不对：迹并不决定能否对角化。",
+              ],
+            ];
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), reasons);
       },
     },
     {
       id: "counting-independent-eigenvectors",
       title: t("Counting independent eigenvectors", "数线性无关的特征向量"),
       explanation: t(
-        "A $3 \\times 3$ matrix is diagonalizable exactly when it has $3$ linearly independent eigenvectors. Eigenvectors for different eigenvalues are independent, and the eigenspace of $\\lambda$ contributes $3 - \\operatorname{rank}(A - \\lambda I)$ of them. So count, for each eigenvalue, the dimension of its eigenspace and add them up.",
-        "$3 \\times 3$ 矩阵可对角化当且仅当它有 $3$ 个线性无关的特征向量。不同特征值的特征向量线性无关，$\\lambda$ 的特征空间提供 $3 - \\operatorname{rank}(A - \\lambda I)$ 个。所以对每个特征值求其特征空间的维数，再加起来。",
+        "A $3 \\times 3$ matrix is diagonalizable exactly when it has $3$ linearly independent eigenvectors. Eigenvectors for different eigenvalues are independent, and the eigenspace of $\\lambda$ contributes $3 - \\operatorname{rank}(A - \\lambda I)$ of them. So count, for each eigenvalue, the dimension of its eigenspace and add them up. For example, $\\begin{pmatrix} 2 & 1 & 4 \\\\ 0 & 2 & 3 \\\\ 0 & 0 & 5 \\end{pmatrix}$ has $\\operatorname{rank}(A - 2I) = 2$, giving one eigenvector for $2$, and one for $5$: two in all.\n\n> **Watch out.** Look at the entry above the repeated diagonal entry: if it is nonzero, the rank of $A - \\lambda I$ goes up and the eigenspace shrinks to a line. Entries in the last column do not change this count.",
+        "$3 \\times 3$ 矩阵可对角化当且仅当它有 $3$ 个线性无关的特征向量。不同特征值的特征向量线性无关，$\\lambda$ 的特征空间提供 $3 - \\operatorname{rank}(A - \\lambda I)$ 个。所以对每个特征值求其特征空间的维数，再加起来。例如 $\\begin{pmatrix} 2 & 1 & 4 \\\\ 0 & 2 & 3 \\\\ 0 & 0 & 5 \\end{pmatrix}$ 有 $\\operatorname{rank}(A - 2I) = 2$，$2$ 有一个特征向量，$5$ 有一个：共两个。\n\n> **注意。** 看重复对角元上方的那个元：它不为零时，$A - \\lambda I$ 的秩增大，特征空间缩成一条直线。最后一列的元不改变这个个数。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-4, 4);
@@ -3425,16 +3840,61 @@ export const diagonalizingA3x3MatrixInTheGeneralCase: TopicDef = {
         ];
         const dimLam = a === 0 ? 2 : 1;
         const ans = dimLam + 1;
+        const shifted: Mat3 = [
+          [0, a, M[0][2]],
+          [0, 0, M[1][2]],
+          [0, 0, mu - lam],
+        ];
         return numberProblem({
           prompt: t(
             `How many linearly independent eigenvectors does $A = ${mat3Latex(M)}$ have?`,
             `$A = ${mat3Latex(M)}$ 有多少个线性无关的特征向量？`,
           ),
           answer: ans,
-          wrong: [5 - ans, 1, 3],
-          solution: t(
-            `For $\\lambda = ${lam}$, $A - ${paren(lam)}I$ has rank $${3 - dimLam}$, so its eigenspace has dimension $${dimLam}$; $\\lambda = ${mu}$ adds one more. In total there are $${ans}$${ans === 3 ? ", so $A$ is diagonalizable" : ", so $A$ is not diagonalizable"}.`,
-            `对 $\\lambda = ${lam}$，$A - ${paren(lam)}I$ 的秩为 $${3 - dimLam}$，所以其特征空间维数为 $${dimLam}$；$\\lambda = ${mu}$ 再提供一个。共有 $${ans}$ 个${ans === 3 ? "，所以 $A$ 可对角化" : "，所以 $A$ 不可对角化"}。`,
+          mistakes: [
+            a === 0
+              ? why(
+                  2,
+                  `With a zero above the repeated diagonal entry, $A${formatShift(lam, "I")}$ has rank $1$, so $${lam}$ alone has two eigenvectors.`,
+                  `重复对角元上方为零时，$A${formatShift(lam, "I")}$ 的秩为 $1$，所以 $${lam}$ 就有两个特征向量。`,
+                )
+              : why(
+                  3,
+                  `The entry $${a}$ above the repeated diagonal entry makes $A${formatShift(lam, "I")}$ rank $2$, so $${lam}$ has only one eigenvector.`,
+                  `重复对角元上方的元 $${a}$ 使 $A${formatShift(lam, "I")}$ 的秩为 $2$，所以 $${lam}$ 只有一个特征向量。`,
+                ),
+            why(
+              1,
+              `The simple eigenvalue $${mu}$ also has an eigenvector, independent of those for $${lam}$.`,
+              `单特征值 $${mu}$ 也有一个特征向量，与 $${lam}$ 的特征向量线性无关。`,
+            ),
+            why(0, "Every eigenvalue has at least one eigenvector.", "每个特征值至少有一个特征向量。"),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                [`The repeated eigenvalue $${lam}$`, `重特征值 $${lam}$`],
+                t(
+                  `$A${formatShift(lam, "I")} = ${mat3Latex(shifted)}$ has rank $${3 - dimLam}$, so the eigenspace of $${lam}$ has dimension $${dimLam}$.`,
+                  `$A${formatShift(lam, "I")} = ${mat3Latex(shifted)}$ 的秩为 $${3 - dimLam}$，所以 $${lam}$ 的特征空间维数为 $${dimLam}$。`,
+                ),
+              ],
+              [
+                [`The simple eigenvalue $${mu}$`, `单特征值 $${mu}$`],
+                t(
+                  `It adds one more eigenvector, for a total of $${dimLam} + 1 = ${ans}$.`,
+                  `它再提供一个特征向量，共 $${dimLam} + 1 = ${ans}$ 个。`,
+                ),
+              ],
+            ],
+            t(
+              ans === 3
+                ? "Three independent eigenvectors form a basis of $\\mathbb{R}^3$, so $A$ is diagonalizable."
+                : "Two independent eigenvectors cannot form a basis of $\\mathbb{R}^3$, so $A$ is not diagonalizable.",
+              ans === 3
+                ? "三个线性无关的特征向量构成 $\\mathbb{R}^3$ 的一组基，所以 $A$ 可对角化。"
+                : "两个线性无关的特征向量不能构成 $\\mathbb{R}^3$ 的基，所以 $A$ 不可对角化。",
+            ),
           ),
         });
       },
@@ -3454,6 +3914,10 @@ export const vectorsOverTheComplexNumbers: TopicDef = {
     "Decompose complex vectors into real and imaginary parts and compute complex conjugates.",
     "将复向量分解为实部与虚部，并计算复共轭向量。",
   ),
+  intro: t(
+    "The vector $\\mathbf{v} = (2 + 3i, -1 + 4i)$ splits entry by entry into $\\mathbf{v} = (2, -1) + i(3, 4)$, so $\\operatorname{Re}(\\mathbf{v}) = (2, -1)$ and $\\operatorname{Im}(\\mathbf{v}) = (3, 4)$. Its length uses absolute values: $\\|\\mathbf{v}\\|^2 = |2 + 3i|^2 + |-1 + 4i|^2 = 13 + 17 = 30$.\n\nCheck: $(2 + 3i)(2 - 3i) = 4 + 9 = 13$ and $(-1 + 4i)(-1 - 4i) = 1 + 16 = 17$, so multiplying each entry by its conjugate gives the same squares.\n\nIn this lesson we split complex vectors into real and imaginary parts and find their lengths in $\\mathbb{C}^n$.",
+    "向量 $\\mathbf{v} = (2 + 3i, -1 + 4i)$ 逐分量拆开为 $\\mathbf{v} = (2, -1) + i(3, 4)$，所以 $\\operatorname{Re}(\\mathbf{v}) = (2, -1)$，$\\operatorname{Im}(\\mathbf{v}) = (3, 4)$。它的长度用绝对值计算：$\\|\\mathbf{v}\\|^2 = |2 + 3i|^2 + |-1 + 4i|^2 = 13 + 17 = 30$。\n\n检验：$(2 + 3i)(2 - 3i) = 4 + 9 = 13$，$(-1 + 4i)(-1 - 4i) = 1 + 16 = 17$，每个分量乘以其共轭得到相同的平方。\n\n本课我们把复向量拆成实部和虚部，并求它们在 $\\mathbb{C}^n$ 中的长度。",
+  ),
   prerequisites: ["diagonalizing-a-3x3-matrix-in-the-general-case"],
   encompasses: [],
   xp: 14,
@@ -3462,8 +3926,8 @@ export const vectorsOverTheComplexNumbers: TopicDef = {
       id: "complex-vector-decomposition",
       title: t("Complex Vector Decomposition", "复向量的分解"),
       explanation: t(
-        "Splitting each entry into its real and imaginary parts writes a complex vector as a real vector plus $i$ times another real vector. Express a complex vector $\\mathbf{v} \\in \\mathbb{C}^n$ as $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ and find its conjugate.",
-        "把每个分量拆成实部和虚部，就把复向量写成一个实向量加上 $i$ 乘以另一个实向量。将复向量 $\\mathbf{v} \\in \\mathbb{C}^n$ 表示为 $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ 并求其复共轭。",
+        "Splitting each entry into its real and imaginary parts writes a complex vector as a real vector plus $i$ times another real vector. Express a complex vector $\\mathbf{v} \\in \\mathbb{C}^n$ as $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ and find its conjugate. For example, $(1 - 2i, 5i) = (1, 0) + i(-2, 5)$, and its conjugate is $(1 + 2i, -5i)$.\n\n> **Watch out.** The imaginary part is the real coefficient of $i$, sign included: $\\operatorname{Im}(1 - 2i) = -2$, not $-2i$ and not $2$. An entry with no $i$ has imaginary part $0$.",
+        "把每个分量拆成实部和虚部，就把复向量写成一个实向量加上 $i$ 乘以另一个实向量。将复向量 $\\mathbf{v} \\in \\mathbb{C}^n$ 表示为 $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ 并求其复共轭。例如 $(1 - 2i, 5i) = (1, 0) + i(-2, 5)$，其共轭为 $(1 + 2i, -5i)$。\n\n> **注意。** 虚部是 $i$ 的实系数，连同符号：$\\operatorname{Im}(1 - 2i) = -2$，不是 $-2i$，也不是 $2$。不含 $i$ 的分量虚部为 $0$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-6, 6);
@@ -3472,70 +3936,147 @@ export const vectorsOverTheComplexNumbers: TopicDef = {
         const d = rng.pick([-5, -4, -3, 3, 4, 5])!;
         const vStr: readonly [string, string] = [formatComplex(a, b), formatComplex(c, d)];
         const askRe = rng.bool();
+        const split = t(
+          `$\\mathbf{v} = ${vec2Latex([a, c])} + i${vec2Latex([b, d])}$, taking the real part and the coefficient of $i$ of each entry.`,
+          `$\\mathbf{v} = ${vec2Latex([a, c])} + i${vec2Latex([b, d])}$，即取每个分量的实部和 $i$ 的系数。`,
+        );
+        const check = t(
+          `$${vec2Latex([a, c])} + i${vec2Latex([b, d])}$ gives back the entries $${vStr[0]}$ and $${vStr[1]}$.`,
+          `$${vec2Latex([a, c])} + i${vec2Latex([b, d])}$ 还原出分量 $${vStr[0]}$ 和 $${vStr[1]}$。`,
+        );
         if (askRe) {
           const prompt = t(
             `Let $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$. What is the real part $\\operatorname{Re}(\\mathbf{v})$? Enter your answer as a vector $\\langle x_1, x_2 \\rangle$.`,
             `设 $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$。求其实部 $\\operatorname{Re}(\\mathbf{v})$。请以向量 $\\langle x_1, x_2 \\rangle$ 的形式作答。`,
           );
-          const solution = t(
-            `The real part takes the real components: $\\operatorname{Re}(\\mathbf{v}) = \\langle ${a}, ${c} \\rangle$.`,
-            `实部取各分量的实部：$\\operatorname{Re}(\\mathbf{v}) = \\langle ${a}, ${c} \\rangle$。`,
-          );
-          return pointProblem({
-            prompt,
-            answer: [a, c],
-            vector: true,
-            solution,
-            wrong: [
-              [b, d],
-              [-a, -c],
-              [a, b],
-              [c, d],
+          const solution = walked(
+            [
+              [["Split each entry", "拆开每个分量"], split],
+              [
+                ["Take the real vector", "取实向量"],
+                t(
+                  `The real part is the vector of real parts, $\\langle ${a}, ${c} \\rangle$.`,
+                  `实部是各分量实部组成的向量 $\\langle ${a}, ${c} \\rangle$。`,
+                ),
+              ],
             ],
-          });
+            check,
+          );
+          return withMistakes(
+            pointProblem({ prompt, answer: [a, c], vector: true, solution }),
+            dedupeSaid(
+              [
+                say(vectorLatex([b, d]), "That is the imaginary part, the coefficients of $i$.", "这是虚部，即 $i$ 的系数。"),
+                say(vectorLatex([-a, -c]), "The real parts keep their signs.", "实部要保留原来的符号。"),
+                say(
+                  vectorLatex([a, b]),
+                  "These are the two parts of the first entry; take the real part of each entry.",
+                  "这是第一个分量的两部分；应取每个分量的实部。",
+                ),
+                say(
+                  vectorLatex([c, d]),
+                  "These are the two parts of the second entry; take the real part of each entry.",
+                  "这是第二个分量的两部分；应取每个分量的实部。",
+                ),
+              ],
+              vectorLatex([a, c]),
+            ),
+          );
         }
         const prompt = t(
           `Let $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$. What is the imaginary part $\\operatorname{Im}(\\mathbf{v})$? Enter your answer as a vector $\\langle y_1, y_2 \\rangle$.`,
           `设 $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$。求其虚部 $\\operatorname{Im}(\\mathbf{v})$。请以向量 $\\langle y_1, y_2 \\rangle$ 的形式作答。`,
         );
-        const solution = t(
-          `The imaginary part takes the coefficients of $i$: $\\operatorname{Im}(\\mathbf{v}) = \\langle ${b}, ${d} \\rangle$.`,
-          `虚部取各分量中 $i$ 的系数：$\\operatorname{Im}(\\mathbf{v}) = \\langle ${b}, ${d} \\rangle$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [b, d],
-          vector: true,
-          solution,
-          wrong: [
-            [a, c],
-            [-b, -d],
-            [a, b],
-            [c, d],
+        const solution = walked(
+          [
+            [["Split each entry", "拆开每个分量"], split],
+            [
+              ["Take the coefficients of $i$", "取 $i$ 的系数"],
+              t(
+                `The imaginary part is the real vector of coefficients of $i$, $\\langle ${b}, ${d} \\rangle$.`,
+                `虚部是 $i$ 的系数组成的实向量 $\\langle ${b}, ${d} \\rangle$。`,
+              ),
+            ],
           ],
-        });
+          check,
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer: [b, d], vector: true, solution }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([a, c]),
+                "That is the real part; the imaginary part is the coefficients of $i$.",
+                "这是实部；虚部是 $i$ 的系数。",
+              ),
+              say(
+                vectorLatex([-b, -d]),
+                "The signs are flipped: that is the imaginary part of the conjugate.",
+                "符号反了：这是共轭向量的虚部。",
+              ),
+              say(
+                vectorLatex([a, b]),
+                "These are the two parts of the first entry; take the coefficient of $i$ in each entry.",
+                "这是第一个分量的两部分；应取每个分量中 $i$ 的系数。",
+              ),
+              say(
+                vectorLatex([c, d]),
+                "These are the two parts of the second entry; take the coefficient of $i$ in each entry.",
+                "这是第二个分量的两部分；应取每个分量中 $i$ 的系数。",
+              ),
+            ],
+            vectorLatex([b, d]),
+          ),
+        );
       },
     },
     {
       id: "the-length-of-a-complex-vector",
       title: t("The length of a complex vector", "复向量的长度"),
       explanation: t(
-        "In $\\mathbb{C}^n$ the length is defined with absolute values, so that it is a non-negative real number:\n\n$$\\|\\mathbf{v}\\|^2 = |v_1|^2 + |v_2|^2, \\qquad |a + bi|^2 = a^2 + b^2.$$\n\nSquaring the components themselves would give complex numbers and could even give $0$ for a non-zero vector, as for $(1, i)$.",
-        "在 $\\mathbb{C}^n$ 中长度用绝对值定义，使之成为非负实数：\n\n$$\\|\\mathbf{v}\\|^2 = |v_1|^2 + |v_2|^2, \\qquad |a + bi|^2 = a^2 + b^2.$$\n\n若直接把分量平方，会得到复数，对非零向量甚至可能得到 $0$，例如 $(1, i)$。",
+        "In $\\mathbb{C}^n$ the length is defined with absolute values, so that it is a non-negative real number:\n\n$$\\|\\mathbf{v}\\|^2 = |v_1|^2 + |v_2|^2, \\qquad |a + bi|^2 = a^2 + b^2.$$\n\nFor example, $\\mathbf{v} = (1 + 2i, 3)$ has $\\|\\mathbf{v}\\|^2 = (1 + 4) + 9 = 14$.\n\n> **Watch out.** Do not square the components themselves: that gives complex numbers, and for $(1, i)$ it gives $1 + i^2 = 0$ for a non-zero vector. Use $|a + bi|^2 = a^2 + b^2$, with a plus sign.",
+        "在 $\\mathbb{C}^n$ 中长度用绝对值定义，使之成为非负实数：\n\n$$\\|\\mathbf{v}\\|^2 = |v_1|^2 + |v_2|^2, \\qquad |a + bi|^2 = a^2 + b^2.$$\n\n例如 $\\mathbf{v} = (1 + 2i, 3)$ 有 $\\|\\mathbf{v}\\|^2 = (1 + 4) + 9 = 14$。\n\n> **注意。** 不要直接把分量平方：那样得到的是复数，对 $(1, i)$ 会得到 $1 + i^2 = 0$，而它是非零向量。要用 $|a + bi|^2 = a^2 + b^2$，中间是加号。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c, d] = [rng.int(-5, 5), rng.int(-5, 5) || 1, rng.int(-5, 5), rng.int(-5, 5) || -2];
         const ans = a * a + b * b + c * c + d * d;
+        const z1 = formatComplex(a, b);
+        const z2 = formatComplex(c, d);
         return numberProblem({
           prompt: t(
-            `Find $\\|\\mathbf{v}\\|^2$ for $\\mathbf{v} = ${vec2Latex([formatComplex(a, b), formatComplex(c, d)])} \\in \\mathbb{C}^2$.`,
-            `求 $\\mathbf{v} = ${vec2Latex([formatComplex(a, b), formatComplex(c, d)])} \\in \\mathbb{C}^2$ 的 $\\|\\mathbf{v}\\|^2$。`,
+            `Find $\\|\\mathbf{v}\\|^2$ for $\\mathbf{v} = ${vec2Latex([z1, z2])} \\in \\mathbb{C}^2$.`,
+            `求 $\\mathbf{v} = ${vec2Latex([z1, z2])} \\in \\mathbb{C}^2$ 的 $\\|\\mathbf{v}\\|^2$。`,
           ),
           answer: ans,
-          wrong: [a * a - b * b + c * c - d * d, a * a + c * c, (a + c) ** 2 + (b + d) ** 2],
-          solution: t(
-            `$|${formatComplex(a, b)}|^2 = ${a * a + b * b}$ and $|${formatComplex(c, d)}|^2 = ${c * c + d * d}$, so $\\|\\mathbf{v}\\|^2 = ${ans}$.`,
-            `$|${formatComplex(a, b)}|^2 = ${a * a + b * b}$，$|${formatComplex(c, d)}|^2 = ${c * c + d * d}$，所以 $\\|\\mathbf{v}\\|^2 = ${ans}$。`,
+          mistakes: [
+            why(
+              a * a - b * b + c * c - d * d,
+              "That squares the entries themselves, so $i^2 = -1$ turns the imaginary parts negative; use $|a + bi|^2 = a^2 + b^2$.",
+              "这是直接把分量平方，$i^2 = -1$ 使虚部变成负的；应使用 $|a + bi|^2 = a^2 + b^2$。",
+            ),
+            why(a * a + c * c, "The imaginary parts are left out; they count toward the length too.", "漏掉了虚部；虚部也计入长度。"),
+            why(
+              (a + c) ** 2 + (b + d) ** 2,
+              "That adds the entries first; square the absolute value of each entry, then add.",
+              "这是先把分量相加；应先求每个分量绝对值的平方，再相加。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Square each absolute value", "求每个绝对值的平方"],
+                t("", ""),
+                [
+                  `|${z1}|^2 = ${paren(a)}^2 + ${paren(b)}^2 = ${a * a + b * b}`,
+                  `|${z2}|^2 = ${paren(c)}^2 + ${paren(d)}^2 = ${c * c + d * d}`,
+                ],
+              ],
+              [["Add them", "相加"], t("", ""), [`\\|\\mathbf{v}\\|^2 = ${a * a + b * b} + ${c * c + d * d} = ${ans}`]],
+            ],
+            t(
+              `$(${z1})(${formatComplex(a, -b)}) = ${a * a + b * b}$, so multiplying the first entry by its conjugate gives the same square.`,
+              `$(${z1})(${formatComplex(a, -b)}) = ${a * a + b * b}$，第一个分量乘以其共轭得到相同的平方。`,
+            ),
           ),
         });
       },
@@ -3551,6 +4092,10 @@ export const matricesOverTheComplexNumbers: TopicDef = {
     "Compute the conjugate transpose (Hermitian adjoint) and basic operations on complex matrices.",
     "计算复矩阵的共轭转置（埃尔米特伴随）及基本运算。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 1 & 2i \\\\ 3 - i & 4 \\end{pmatrix}$, the conjugate transpose $A^*$ swaps rows and columns and conjugates every entry: $A^* = \\begin{pmatrix} 1 & 3 + i \\\\ -2i & 4 \\end{pmatrix}$. The diagonal of $AA^*$ holds the squared lengths of the rows of $A$, so $\\operatorname{tr}(AA^*) = 1 + 4 + 10 + 16 = 31$.\n\nCheck: the $(1, 1)$ entry of $AA^*$ is $1 \\cdot 1 + 2i \\cdot (-2i) = 1 + 4 = 5$, the squared length of the first row.\n\nIn this lesson we take conjugate transposes of complex matrices and use them to find $\\operatorname{tr}(AA^*)$.",
+    "对 $A = \\begin{pmatrix} 1 & 2i \\\\ 3 - i & 4 \\end{pmatrix}$，共轭转置 $A^*$ 交换行与列并对每个元素取共轭：$A^* = \\begin{pmatrix} 1 & 3 + i \\\\ -2i & 4 \\end{pmatrix}$。$AA^*$ 的对角线上是 $A$ 各行长度的平方，所以 $\\operatorname{tr}(AA^*) = 1 + 4 + 10 + 16 = 31$。\n\n检验：$AA^*$ 的 $(1, 1)$ 元为 $1 \\cdot 1 + 2i \\cdot (-2i) = 1 + 4 = 5$，即第一行长度的平方。\n\n本课我们求复矩阵的共轭转置，并用它求 $\\operatorname{tr}(AA^*)$。",
+  ),
   prerequisites: ["vectors-over-the-complex-numbers"],
   encompasses: [],
   xp: 14,
@@ -3559,8 +4104,8 @@ export const matricesOverTheComplexNumbers: TopicDef = {
       id: "conjugate-transpose-complex-matrix",
       title: t("Conjugate Transpose of a Complex Matrix", "复矩阵的共轭转置"),
       explanation: t(
-        "The conjugate transpose combines two operations: swap rows and columns, and replace every entry by its complex conjugate. Calculate the conjugate transpose $A^* = \\bar{A}^T$ of a $2 \\times 2$ complex matrix.",
-        "共轭转置结合了两个操作：交换行与列，并把每个元素换成它的共轭复数。计算 $2 \\times 2$ 复矩阵的共轭转置 $A^* = \\bar{A}^T$。",
+        "The conjugate transpose combines two operations: swap rows and columns, and replace every entry by its complex conjugate. Calculate the conjugate transpose $A^* = \\bar{A}^T$ of a $2 \\times 2$ complex matrix. For example, $A = \\begin{pmatrix} 2 & i \\\\ 5i & 1 \\end{pmatrix}$ has $A^* = \\begin{pmatrix} 2 & -5i \\\\ -i & 1 \\end{pmatrix}$.\n\n> **Watch out.** Do both steps. Transposing alone keeps the signs of the imaginary parts, and conjugating alone leaves the off-diagonal entries in place. Real entries do not change sign.",
+        "共轭转置结合了两个操作：交换行与列，并把每个元素换成它的共轭复数。计算 $2 \\times 2$ 复矩阵的共轭转置 $A^* = \\bar{A}^T$。例如 $A = \\begin{pmatrix} 2 & i \\\\ 5i & 1 \\end{pmatrix}$ 有 $A^* = \\begin{pmatrix} 2 & -5i \\\\ -i & 1 \\end{pmatrix}$。\n\n> **注意。** 两步都要做。只转置会保留虚部的符号，只取共轭则非对角元不换位置。实数元素不变号。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
@@ -3583,62 +4128,74 @@ export const matricesOverTheComplexNumbers: TopicDef = {
           `Find the conjugate transpose (Hermitian adjoint) $A^* = \\overline{A}^T$ of the matrix $A = ${mat2StrLatex(mStr)}$.`,
           `求矩阵 $A = ${mat2StrLatex(mStr)}$ 的共轭转置（埃尔米特伴随）$A^* = \\overline{A}^T$。`,
         );
-        const right = t(`$${mat2StrLatex(mAdjStr)}$`, `$${mat2StrLatex(mAdjStr)}$`);
+        const m = (M: readonly [readonly [string, string], readonly [string, string]]) => t(`$${mat2StrLatex(M)}$`, `$${mat2StrLatex(M)}$`);
+        const right = m(mAdjStr);
         const wrong = [
-          t(
-            `$${mat2StrLatex([
-              [mStr[0][0], mStr[1][0]],
-              [mStr[0][1], mStr[1][1]],
-            ])}$`,
-            `$${mat2StrLatex([
-              [mStr[0][0], mStr[1][0]],
-              [mStr[0][1], mStr[1][1]],
-            ])}$`,
-          ),
-          t(
-            `$${mat2StrLatex([
-              [`${a}`, negBiStr],
-              [negCiStr, `${d}`],
-            ])}$`,
-            `$${mat2StrLatex([
-              [`${a}`, negBiStr],
-              [negCiStr, `${d}`],
-            ])}$`,
-          ),
-          t(
-            `$${mat2StrLatex([
-              [`${-a}`, ciStr],
-              [biStr, `${-d}`],
-            ])}$`,
-            `$${mat2StrLatex([
-              [`${-a}`, ciStr],
-              [biStr, `${-d}`],
-            ])}$`,
-          ),
-          t(
-            `$${mat2StrLatex([
-              [`${a}`, biStr],
-              [ciStr, `${d}`],
-            ])}$`,
-            `$${mat2StrLatex([
-              [`${a}`, biStr],
-              [ciStr, `${d}`],
-            ])}$`,
-          ),
+          m([
+            [mStr[0][0], mStr[1][0]],
+            [mStr[0][1], mStr[1][1]],
+          ]),
+          m([
+            [`${a}`, negBiStr],
+            [negCiStr, `${d}`],
+          ]),
+          m([
+            [`${-a}`, ciStr],
+            [biStr, `${-d}`],
+          ]),
+          m([
+            [`${a}`, biStr],
+            [ciStr, `${d}`],
+          ]),
         ];
-        const solution = t(
-          `To find $A^*$, transpose the matrix and take the complex conjugate of each entry: $\\overline{A}^T = ${mat2StrLatex(mAdjStr)}$.`,
-          `求 $A^*$ 时，先将矩阵转置，再对每个元素取复共轭：$\\overline{A}^T = ${mat2StrLatex(mAdjStr)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Transpose", "转置"],
+              t("", ""),
+              [
+                `A^T = ${mat2StrLatex([
+                  [mStr[0][0], mStr[1][0]],
+                  [mStr[0][1], mStr[1][1]],
+                ])}`,
+              ],
+            ],
+            [
+              ["Conjugate every entry", "对每个元素取共轭"],
+              t(
+                `$\\overline{${ciStr}} = ${negCiStr}$ and $\\overline{${biStr}} = ${negBiStr}$; the real entries stay the same:`,
+                `$\\overline{${ciStr}} = ${negCiStr}$，$\\overline{${biStr}} = ${negBiStr}$；实数元素不变：`,
+              ),
+              [`A^* = ${mat2StrLatex(mAdjStr)}`],
+            ],
+          ],
+          t(
+            `Taking the conjugate transpose of $A^*$ again gives back $A$: the $(1, 2)$ entry of $(A^*)^*$ is $\\overline{${negBiStr}} = ${biStr}$.`,
+            `再对 $A^*$ 取共轭转置会还原 $A$：$(A^*)^*$ 的 $(1, 2)$ 元为 $\\overline{${negBiStr}} = ${biStr}$。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "That is only the transpose; each entry must also be conjugated.", "这只是转置；每个元素还要取共轭。"],
+          [
+            wrong[1]!.en,
+            "That is only the conjugate; the off-diagonal entries must also swap places.",
+            "这只是取共轭；非对角元还要交换位置。",
+          ],
+          [
+            wrong[2]!.en,
+            "Conjugation does not change the sign of real entries; this is $-A^*$.",
+            "取共轭不改变实数元素的符号；这是 $-A^*$。",
+          ],
+          [wrong[3]!.en, "That is $A$ itself, neither transposed nor conjugated.", "这是 $A$ 本身，既没有转置也没有取共轭。"],
+        ]);
       },
     },
     {
       id: "the-trace-of-a-matrix-times-its-conjugate-transpose",
       title: t("The trace of a matrix times its conjugate transpose", "矩阵与其共轭转置之积的迹"),
       explanation: t(
-        "For a complex matrix $A$, the diagonal entries of $AA^*$ are $\\sum_j a_{ij}\\overline{a_{ij}} = \\sum_j |a_{ij}|^2$, the squared lengths of the rows. So\n\n$$\\operatorname{tr}(AA^*) = \\sum_{i, j} |a_{ij}|^2,$$\n\nthe sum of the squared absolute values of all entries. It is always a non-negative real number, even though $A$ is complex.",
-        "对复矩阵 $A$，$AA^*$ 的对角元为 $\\sum_j a_{ij}\\overline{a_{ij}} = \\sum_j |a_{ij}|^2$，即各行长度的平方。所以\n\n$$\\operatorname{tr}(AA^*) = \\sum_{i, j} |a_{ij}|^2,$$\n\n即所有元素绝对值平方之和。即使 $A$ 是复矩阵，它也总是非负实数。",
+        "For a complex matrix $A$, the diagonal entries of $AA^*$ are $\\sum_j a_{ij}\\overline{a_{ij}} = \\sum_j |a_{ij}|^2$, the squared lengths of the rows. So\n\n$$\\operatorname{tr}(AA^*) = \\sum_{i, j} |a_{ij}|^2,$$\n\nthe sum of the squared absolute values of all entries. It is always a non-negative real number, even though $A$ is complex. For example, $A = \\begin{pmatrix} 1 + i & 0 \\\\ 2 & -i \\end{pmatrix}$ gives $2 + 0 + 4 + 1 = 7$.\n\n> **Watch out.** Every entry counts, not only the diagonal ones, and each imaginary part adds its square: $|a + bi|^2 = a^2 + b^2$, never $a^2 - b^2$.",
+        "对复矩阵 $A$，$AA^*$ 的对角元为 $\\sum_j a_{ij}\\overline{a_{ij}} = \\sum_j |a_{ij}|^2$，即各行长度的平方。所以\n\n$$\\operatorname{tr}(AA^*) = \\sum_{i, j} |a_{ij}|^2,$$\n\n即所有元素绝对值平方之和。即使 $A$ 是复矩阵，它也总是非负实数。例如 $A = \\begin{pmatrix} 1 + i & 0 \\\\ 2 & -i \\end{pmatrix}$ 给出 $2 + 0 + 4 + 1 = 7$。\n\n> **注意。** 所有元素都要算，不只是对角元；每个虚部都加上它的平方：$|a + bi|^2 = a^2 + b^2$，而不是 $a^2 - b^2$。",
       ),
       generate(rng: Rng): Problem {
         const z = [0, 1, 2, 3].map(() => [rng.int(-3, 3), rng.int(-3, 3)] as const);
@@ -3653,10 +4210,36 @@ export const matricesOverTheComplexNumbers: TopicDef = {
         return numberProblem({
           prompt: t(`Find $\\operatorname{tr}(AA^*)$ for $A = ${A}$.`, `求 $A = ${A}$ 的 $\\operatorname{tr}(AA^*)$。`),
           answer: ans,
-          wrong: [z.reduce((x, [a, b]) => x + a * a - b * b, 0), z.reduce((x, [a]) => x + a * a, 0), sq[0]! + sq[3]!],
-          solution: t(
-            `$\\operatorname{tr}(AA^*)$ is the sum of $|a_{ij}|^2$: $${sq.join(" + ")} = ${ans}$.`,
-            `$\\operatorname{tr}(AA^*)$ 等于各 $|a_{ij}|^2$ 之和：$${sq.join(" + ")} = ${ans}$。`,
+          mistakes: [
+            why(
+              z.reduce((x, [a, b]) => x + a * a - b * b, 0),
+              "That squares the entries themselves, so the imaginary parts count negatively; use $|a + bi|^2 = a^2 + b^2$.",
+              "这是直接把元素平方，虚部被算成负的；应使用 $|a + bi|^2 = a^2 + b^2$。",
+            ),
+            why(
+              z.reduce((x, [a]) => x + a * a, 0),
+              "The imaginary parts are left out; each adds its square.",
+              "漏掉了虚部；每个虚部都要加上它的平方。",
+            ),
+            why(
+              sq[0]! + sq[3]!,
+              "Only the diagonal entries of $A$ were used; every entry of $A$ contributes.",
+              "只用了 $A$ 的对角元；$A$ 的每个元素都有贡献。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Square the absolute value of each entry", "求每个元素绝对值的平方"],
+                t("", ""),
+                z.map(([a, b], n) => `|${ent[n]!}|^2 = ${paren(a)}^2 + ${paren(b)}^2 = ${sq[n]!}`),
+              ],
+              [["Add them", "相加"], t("", ""), [`\\operatorname{tr}(AA^*) = ${sq.join(" + ")} = ${ans}`]],
+            ],
+            t(
+              `The diagonal entries of $AA^*$ are the squared row lengths $${sq[0]!} + ${sq[1]!} = ${sq[0]! + sq[1]!}$ and $${sq[2]!} + ${sq[3]!} = ${sq[2]! + sq[3]!}$, which add to $${ans}$.`,
+              `$AA^*$ 的对角元是各行长度的平方 $${sq[0]!} + ${sq[1]!} = ${sq[0]! + sq[1]!}$ 和 $${sq[2]!} + ${sq[3]!} = ${sq[2]! + sq[3]!}$，相加得 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -3672,6 +4255,10 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
     "Find the complex conjugate pair of eigenvalues a +- bi for real 2x2 matrices with negative discriminant.",
     "求判别式为负的实 2x2 矩阵的共轭复特征值对 a +- bi。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & -2 \\\\ 2 & 1 \\end{pmatrix}$ has trace $2$ and determinant $5$, so its characteristic equation is $\\lambda^2 - 2\\lambda + 5 = 0$. The discriminant $4 - 20 = -16$ is negative, and the quadratic formula gives $\\lambda = \\frac{2 \\pm 4i}{2} = 1 \\pm 2i$.\n\nCheck: $(1 + 2i) + (1 - 2i) = 2$ is the trace and $(1 + 2i)(1 - 2i) = 1 + 4 = 5$ is the determinant.\n\nIn this lesson we find the complex conjugate eigenvalues of real $2 \\times 2$ matrices, and read their real part and modulus from the trace and determinant.",
+    "矩阵 $A = \\begin{pmatrix} 1 & -2 \\\\ 2 & 1 \\end{pmatrix}$ 的迹为 $2$，行列式为 $5$，所以特征方程为 $\\lambda^2 - 2\\lambda + 5 = 0$。判别式 $4 - 20 = -16$ 为负，求根公式给出 $\\lambda = \\frac{2 \\pm 4i}{2} = 1 \\pm 2i$。\n\n检验：$(1 + 2i) + (1 - 2i) = 2$ 是迹，$(1 + 2i)(1 - 2i) = 1 + 4 = 5$ 是行列式。\n\n本课我们求实 $2 \\times 2$ 矩阵的共轭复特征值，并由迹和行列式读出它们的实部与模。",
+  ),
   prerequisites: ["matrices-over-the-complex-numbers"],
   encompasses: [],
   xp: 14,
@@ -3680,8 +4267,8 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
       id: "computing-complex-eigenvalues-2x2-kp",
       title: t("Computing Complex Eigenvalues of 2x2 Matrices", "计算 2x2 矩阵的复特征值"),
       explanation: t(
-        "When the characteristic quadratic has a negative discriminant, the quadratic formula gives a pair of complex conjugate eigenvalues. Solve the characteristic quadratic equation when $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$.",
-        "当特征二次方程的判别式为负时，求根公式给出一对共轭复特征值。在 $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$ 时求解特征二次方程。",
+        "When the characteristic quadratic has a negative discriminant, the quadratic formula gives a pair of complex conjugate eigenvalues. Solve the characteristic quadratic equation when $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$. For example, $\\begin{pmatrix} 3 & -1 \\\\ 1 & 3 \\end{pmatrix}$ gives $(\\lambda - 3)^2 + 1 = 0$, so $\\lambda - 3 = \\pm i$ and $\\lambda = 3 \\pm i$.\n\n> **Watch out.** A negative square has imaginary roots: $(\\lambda - 3)^2 = -1$ gives $\\pm i$, not $\\pm 1$. The real part of the eigenvalues is half the trace.",
+        "当特征二次方程的判别式为负时，求根公式给出一对共轭复特征值。在 $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$ 时求解特征二次方程。例如 $\\begin{pmatrix} 3 & -1 \\\\ 1 & 3 \\end{pmatrix}$ 给出 $(\\lambda - 3)^2 + 1 = 0$，所以 $\\lambda - 3 = \\pm i$，$\\lambda = 3 \\pm i$。\n\n> **注意。** 负数的平方根是虚数：$(\\lambda - 3)^2 = -1$ 给出 $\\pm i$，而不是 $\\pm 1$。特征值的实部是迹的一半。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-4, 4);
@@ -3701,9 +4288,27 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
           t(`$\\lambda = ${formatComplexPair(0, b)}$`, `$\\lambda = ${formatComplexPair(0, b)}$`),
         ];
         const aPart = a === 0 ? "\\lambda^2" : `(${formatFactor("\\lambda", a)})^2`;
-        const solution = t(
-          `The characteristic equation is $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$. Solving gives $${aPart} = -${b * b}$, so $\\lambda = ${eigPair}$.`,
-          `特征方程为 $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$。解得 $${aPart} = -${b * b}$，因此 $\\lambda = ${eigPair}$。`,
+        const root = a === 0 ? "\\lambda" : formatFactor("\\lambda", a);
+        const iPart = b === 1 ? "i" : `${b}i`;
+        const solution = walked(
+          [
+            [
+              ["Write the characteristic equation", "写出特征方程"],
+              t(
+                `The diagonal entries of $A - \\lambda I$ are both $${a === 0 ? "-\\lambda" : `${a} - \\lambda`}$ and the off-diagonal ones multiply to $-${b * b}$, so $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$.`,
+                `$A - \\lambda I$ 的两个对角元都是 $${a === 0 ? "-\\lambda" : `${a} - \\lambda`}$，非对角元之积为 $-${b * b}$，所以 $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$。`,
+              ),
+            ],
+            [
+              ["Take square roots", "开平方"],
+              t(`$${aPart} = -${b * b}$ is negative, so the roots are imaginary:`, `$${aPart} = -${b * b}$ 是负数，所以根是虚数：`),
+              [`${root} = \\pm ${iPart}`, `\\lambda = ${eigPair}`],
+            ],
+          ],
+          t(
+            `The two eigenvalues add to $${2 * a}$, the trace, and multiply to $${a * a} + ${b * b} = ${a * a + b * b}$, the determinant.`,
+            `两个特征值之和为 $${2 * a}$，即迹；之积为 $${a * a} + ${b * b} = ${a * a + b * b}$，即行列式。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [wrong[0]!.en, "The real part has the wrong sign: it equals the diagonal entry.", "实部的符号错了：它等于对角元素。"],
@@ -3729,8 +4334,8 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
       id: "the-modulus-and-real-part-of-complex-eigenvalues",
       title: t("The modulus and real part of complex eigenvalues", "复特征值的模与实部"),
       explanation: t(
-        "When a real $2 \\times 2$ matrix has $(\\operatorname{tr} A)^2 < 4\\det A$, its eigenvalues are a conjugate pair $\\alpha \\pm \\beta i$. Their sum is the trace and their product is the determinant, so\n\n$$\\alpha = \\frac{\\operatorname{tr} A}{2}, \\qquad |\\lambda|^2 = \\alpha^2 + \\beta^2 = \\det A.$$\n\nBoth can be read off without solving the quadratic.",
-        "当实 $2 \\times 2$ 矩阵满足 $(\\operatorname{tr} A)^2 < 4\\det A$ 时，其特征值是一对共轭复数 $\\alpha \\pm \\beta i$。两者之和为迹，之积为行列式，所以\n\n$$\\alpha = \\frac{\\operatorname{tr} A}{2}, \\qquad |\\lambda|^2 = \\alpha^2 + \\beta^2 = \\det A.$$\n\n无需解二次方程就能读出两者。",
+        "When a real $2 \\times 2$ matrix has $(\\operatorname{tr} A)^2 < 4\\det A$, its eigenvalues are a conjugate pair $\\alpha \\pm \\beta i$. Their sum is the trace and their product is the determinant, so\n\n$$\\alpha = \\frac{\\operatorname{tr} A}{2}, \\qquad |\\lambda|^2 = \\alpha^2 + \\beta^2 = \\det A.$$\n\nBoth can be read off without solving the quadratic. For example, $\\begin{pmatrix} 1 & -1 \\\\ 5 & 3 \\end{pmatrix}$ has trace $4$ and determinant $8$, so $\\operatorname{Re}(\\lambda) = 2$ and $|\\lambda|^2 = 8$; indeed $\\lambda = 2 \\pm 2i$.\n\n> **Watch out.** The real part is half the trace, not the trace itself, and $|\\lambda|^2$ is the whole determinant $\\alpha^2 + \\beta^2$, not only $\\beta^2$.",
+        "当实 $2 \\times 2$ 矩阵满足 $(\\operatorname{tr} A)^2 < 4\\det A$ 时，其特征值是一对共轭复数 $\\alpha \\pm \\beta i$。两者之和为迹，之积为行列式，所以\n\n$$\\alpha = \\frac{\\operatorname{tr} A}{2}, \\qquad |\\lambda|^2 = \\alpha^2 + \\beta^2 = \\det A.$$\n\n无需解二次方程就能读出两者。例如 $\\begin{pmatrix} 1 & -1 \\\\ 5 & 3 \\end{pmatrix}$ 的迹为 $4$，行列式为 $8$，所以 $\\operatorname{Re}(\\lambda) = 2$，$|\\lambda|^2 = 8$；确实 $\\lambda = 2 \\pm 2i$。\n\n> **注意。** 实部是迹的一半，而不是迹本身；$|\\lambda|^2$ 是整个行列式 $\\alpha^2 + \\beta^2$，而不只是 $\\beta^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4);
@@ -3739,16 +4344,67 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
         const wantMod = rng.int(0, 1) === 0;
         const det = a * a + b * b;
         const ans = wantMod ? det : a;
+        const mistakes = wantMod
+          ? [
+              why(
+                b * b,
+                "That is only $\\beta^2$; the modulus squared also includes the square of the real part.",
+                "这只是 $\\beta^2$；模的平方还包括实部的平方。",
+              ),
+              why(
+                a * a - b * b,
+                "$|\\alpha + \\beta i|^2 = \\alpha^2 + \\beta^2$, with a plus sign.",
+                "$|\\alpha + \\beta i|^2 = \\alpha^2 + \\beta^2$，中间是加号。",
+              ),
+              why(
+                2 * a,
+                "That is the trace, the sum of the eigenvalues; the product is the determinant.",
+                "这是迹，即特征值之和；之积才是行列式。",
+              ),
+            ]
+          : [
+              why(
+                2 * a,
+                "That is the trace, the sum of both eigenvalues; the real part is half of it.",
+                "这是迹，即两个特征值之和；实部是它的一半。",
+              ),
+              why(b, "That is the imaginary part $\\beta$.", "这是虚部 $\\beta$。"),
+              why(det, "That is the determinant, which equals $|\\lambda|^2$.", "这是行列式，它等于 $|\\lambda|^2$。"),
+            ];
         return numberProblem({
           prompt: t(
             `The eigenvalues of $A = ${mat2Latex(A)}$ are a complex conjugate pair $\\lambda$, $\\bar{\\lambda}$. Find ${wantMod ? "$|\\lambda|^2$" : "$\\operatorname{Re}(\\lambda)$"}.`,
             `$A = ${mat2Latex(A)}$ 的特征值是一对共轭复数 $\\lambda$、$\\bar{\\lambda}$。求${wantMod ? " $|\\lambda|^2$" : " $\\operatorname{Re}(\\lambda)$"}。`,
           ),
           answer: ans,
-          wrong: wantMod ? [b * b, a * a - b * b, 2 * a] : [2 * a, b, det],
-          solution: t(
-            `$\\operatorname{tr} A = ${2 * a}$ and $\\det A = ${det}$, so the eigenvalues are $${formatComplexPair(a, b)}$. ${wantMod ? `$|\\lambda|^2 = \\det A = ${det}$.` : `$\\operatorname{Re}(\\lambda) = \\frac{${2 * a}}{2} = ${a}$.`}`,
-            `$\\operatorname{tr} A = ${2 * a}$，$\\det A = ${det}$，所以特征值为 $${formatComplexPair(a, b)}$。${wantMod ? `$|\\lambda|^2 = \\det A = ${det}$。` : `$\\operatorname{Re}(\\lambda) = \\frac{${2 * a}}{2} = ${a}$。`}`,
+          mistakes: mistakes.filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the trace and determinant", "求迹和行列式"],
+                t("", ""),
+                [
+                  `\\operatorname{tr} A = ${A[0][0]} + ${paren(A[1][1])} = ${2 * a}`,
+                  `\\det A = ${A[0][0]} \\cdot ${paren(A[1][1])} ${A[0][1] * A[1][0] < 0 ? "+" : "-"} ${Math.abs(A[0][1] * A[1][0])} = ${det}`,
+                ],
+              ],
+              [
+                [wantMod ? "Use the product" : "Use the sum", wantMod ? "利用乘积" : "利用和"],
+                wantMod
+                  ? t(
+                      `$\\lambda\\bar{\\lambda} = |\\lambda|^2$ equals $\\det A = ${det}$.`,
+                      `$\\lambda\\bar{\\lambda} = |\\lambda|^2$ 等于 $\\det A = ${det}$。`,
+                    )
+                  : t(
+                      `$\\lambda + \\bar{\\lambda} = 2\\operatorname{Re}(\\lambda) = ${2 * a}$, so $\\operatorname{Re}(\\lambda) = ${a}$.`,
+                      `$\\lambda + \\bar{\\lambda} = 2\\operatorname{Re}(\\lambda) = ${2 * a}$，所以 $\\operatorname{Re}(\\lambda) = ${a}$。`,
+                    ),
+              ],
+            ],
+            t(
+              `Solving the quadratic gives $\\lambda = ${formatComplexPair(a, b)}$, with real part $${a}$ and $|\\lambda|^2 = ${a * a} + ${b * b} = ${det}$.`,
+              `解二次方程得 $\\lambda = ${formatComplexPair(a, b)}$，实部为 $${a}$，$|\\lambda|^2 = ${a * a} + ${b * b} = ${det}$。`,
+            ),
           ),
         });
       },
@@ -3764,6 +4420,10 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
     "Find a complex eigenvector corresponding to a complex eigenvalue of a real 2x2 matrix.",
     "求实 2x2 矩阵的复特征值对应的复特征向量。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & -2 \\\\ 2 & 1 \\end{pmatrix}$ has the eigenvalue $\\lambda = 1 + 2i$. Then $A - \\lambda I = \\begin{pmatrix} -2i & -2 \\\\ 2 & -2i \\end{pmatrix}$, and its first row gives $-2iv_1 - 2v_2 = 0$, so $v_2 = -iv_1$. Taking $v_1 = 1$ gives the eigenvector $(1, -i)$.\n\nCheck: $A(1, -i) = (1 + 2i, 2 - i)$, and $(1 + 2i)(1, -i) = (1 + 2i, -i + 2)$, the same vector.\n\nIn this lesson we find complex eigenvectors of real $2 \\times 2$ matrices from one row of $A - \\lambda I$.",
+    "矩阵 $A = \\begin{pmatrix} 1 & -2 \\\\ 2 & 1 \\end{pmatrix}$ 有特征值 $\\lambda = 1 + 2i$。于是 $A - \\lambda I = \\begin{pmatrix} -2i & -2 \\\\ 2 & -2i \\end{pmatrix}$，其第一行给出 $-2iv_1 - 2v_2 = 0$，所以 $v_2 = -iv_1$。取 $v_1 = 1$ 得特征向量 $(1, -i)$。\n\n检验：$A(1, -i) = (1 + 2i, 2 - i)$，而 $(1 + 2i)(1, -i) = (1 + 2i, -i + 2)$，是同一个向量。\n\n本课我们由 $A - \\lambda I$ 的一行求实 $2 \\times 2$ 矩阵的复特征向量。",
+  ),
   prerequisites: ["finding-complex-eigenvalues-of-real-2x2-matrices"],
   encompasses: [],
   xp: 14,
@@ -3772,8 +4432,8 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
       id: "solving-for-complex-eigenvector-2x2-kp",
       title: t("Solving for Complex Eigenvectors of 2x2 Matrices", "求解 2x2 矩阵的复特征向量"),
       explanation: t(
-        "The two rows of the shifted matrix are complex multiples of each other, so one row is enough to find an eigenvector. Find the nonzero solutions in $\\mathbb{C}^2$ of $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$.",
-        "平移后的矩阵的两行互为复数倍，所以只用一行就能求出特征向量。在 $\\mathbb{C}^2$ 中求方程 $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$ 的非零解。",
+        "The two rows of the shifted matrix are complex multiples of each other, so one row is enough to find an eigenvector. Find the nonzero solutions in $\\mathbb{C}^2$ of $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$. For example, $A = \\begin{pmatrix} 0 & -3 \\\\ 3 & 0 \\end{pmatrix}$ and $\\lambda = 3i$ give the first row $-3iv_1 - 3v_2 = 0$, so $v_2 = -iv_1$ and $\\mathbf{v} = (1, -i)$.\n\n> **Watch out.** The conjugate eigenvalue has the conjugate eigenvector, so $(1, i)$ and $(1, -i)$ belong to different eigenvalues. Keep track of the sign of $i$ in $\\lambda$ when you subtract it.",
+        "平移后的矩阵的两行互为复数倍，所以只用一行就能求出特征向量。在 $\\mathbb{C}^2$ 中求方程 $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$ 的非零解。例如 $A = \\begin{pmatrix} 0 & -3 \\\\ 3 & 0 \\end{pmatrix}$，$\\lambda = 3i$ 给出第一行 $-3iv_1 - 3v_2 = 0$，所以 $v_2 = -iv_1$，$\\mathbf{v} = (1, -i)$。\n\n> **注意。** 共轭特征值对应共轭特征向量，所以 $(1, i)$ 与 $(1, -i)$ 属于不同的特征值。减去 $\\lambda$ 时要注意其中 $i$ 的符号。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
@@ -3796,9 +4456,22 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
         const wrong = [vec(["1", s === 1 ? "-i" : "i"]), vec(["1", "1"]), vec([si, "1"]), vec(["-1", si])];
         const biStr = formatComplex(0, s * b);
         const v2Term = b === 1 ? "v_2" : `${b} v_2`;
-        const solution = t(
-          `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives $${biStr} v_1 - ${v2Term} = 0$, so $v_2 = ${si} v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", si])}$.`,
-          `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 $${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = ${si} v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", si])}$。`,
+        const shifted = `\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix}`;
+        const solution = walked(
+          [
+            [["Subtract $\\lambda$ on the diagonal", "在对角线上减去 $\\lambda$"], t("", ""), [`A - (${eigStr})I = ${shifted}`]],
+            [
+              ["Solve the first row", "解第一行"],
+              t(
+                `$${biStr} v_1 - ${v2Term} = 0$ gives $v_2 = ${si} v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", si])}$.`,
+                `$${biStr} v_1 - ${v2Term} = 0$ 给出 $v_2 = ${si} v_1$。取 $v_1 = 1$ 得 $\\mathbf{v} = ${vec2Latex(["1", si])}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The second row gives $${b} \\cdot 1 + (${biStr})(${si}) = ${b} - ${b} = 0$, so it holds too.`,
+            `第二行给出 $${b} \\cdot 1 + (${biStr})(${si}) = ${b} - ${b} = 0$，也成立。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [wrong[0]!.en, "This is an eigenvector of the other, conjugate eigenvalue.", "这是另一个共轭特征值的特征向量。"],
@@ -3824,8 +4497,8 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
       id: "a-complex-eigenvector-from-the-first-row",
       title: t("A complex eigenvector from the first row", "由第一行求复特征向量"),
       explanation: t(
-        "For a complex eigenvalue $\\lambda$ of $A = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$ with $q \\ne 0$, the first row of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ is $(p - \\lambda)v_1 + qv_2 = 0$. It is solved by\n\n$$\\mathbf{v} = \\begin{pmatrix} q \\\\ \\lambda - p \\end{pmatrix}.$$\n\nThe second row is then satisfied automatically because $\\lambda$ is an eigenvalue. The eigenvector for $\\bar{\\lambda}$ is the conjugate $\\bar{\\mathbf{v}}$.",
-        "对 $A = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$（$q \\ne 0$）的复特征值 $\\lambda$，$(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的第一行为 $(p - \\lambda)v_1 + qv_2 = 0$。它的一个解是\n\n$$\\mathbf{v} = \\begin{pmatrix} q \\\\ \\lambda - p \\end{pmatrix}.$$\n\n由于 $\\lambda$ 是特征值，第二行自动成立。$\\bar{\\lambda}$ 的特征向量是共轭 $\\bar{\\mathbf{v}}$。",
+        "For a complex eigenvalue $\\lambda$ of $A = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$ with $q \\ne 0$, the first row of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ is $(p - \\lambda)v_1 + qv_2 = 0$. It is solved by\n\n$$\\mathbf{v} = \\begin{pmatrix} q \\\\ \\lambda - p \\end{pmatrix}.$$\n\nThe second row is then satisfied automatically because $\\lambda$ is an eigenvalue. The eigenvector for $\\bar{\\lambda}$ is the conjugate $\\bar{\\mathbf{v}}$. For example, $A = \\begin{pmatrix} 2 & 1 \\\\ -5 & 0 \\end{pmatrix}$ has $\\lambda = 1 + 2i$, and $\\mathbf{v} = (1, -1 + 2i)$.\n\n> **Watch out.** The second entry is $\\lambda - p$, not $p - \\lambda$: check that $(p - \\lambda)q + q(\\lambda - p) = 0$. Using $\\bar{\\lambda}$ instead gives the eigenvector of the other eigenvalue.",
+        "对 $A = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$（$q \\ne 0$）的复特征值 $\\lambda$，$(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的第一行为 $(p - \\lambda)v_1 + qv_2 = 0$。它的一个解是\n\n$$\\mathbf{v} = \\begin{pmatrix} q \\\\ \\lambda - p \\end{pmatrix}.$$\n\n由于 $\\lambda$ 是特征值，第二行自动成立。$\\bar{\\lambda}$ 的特征向量是共轭 $\\bar{\\mathbf{v}}$。例如 $A = \\begin{pmatrix} 2 & 1 \\\\ -5 & 0 \\end{pmatrix}$ 有 $\\lambda = 1 + 2i$，$\\mathbf{v} = (1, -1 + 2i)$。\n\n> **注意。** 第二个分量是 $\\lambda - p$，不是 $p - \\lambda$：验证 $(p - \\lambda)q + q(\\lambda - p) = 0$。用 $\\bar{\\lambda}$ 会得到另一个特征值的特征向量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3);
@@ -3833,37 +4506,69 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
         const A = complexEigenMatrix(rng, a, b);
         const p = A[0][0];
         const q = A[0][1];
+        const r = A[1][0];
         const opt = (x: string, y: string): Text => {
           const v = vec2Latex([x, y]);
           return t(`$${v}$`, `$${v}$`);
         };
         const right = opt(String(q), formatComplex(a - p, b));
-        return oneOf(
-          rng,
+        const wrong = [
+          opt(String(q), formatComplex(a - p, -b)),
+          opt(String(q), formatComplex(p - a, b)),
+          opt(formatComplex(a - p, b), String(q)),
+        ];
+        const v2Part = q === 1 ? "+ v_2" : "- v_2";
+        const v = vec2Latex([String(q), formatComplex(a - p, b)]);
+        const solution = walked(
+          [
+            [
+              ["Write the first row of $A - \\lambda I$", "写出 $A - \\lambda I$ 的第一行"],
+              t(
+                `$p - \\lambda = ${formatComplex(p - a, -b)}$, so the first row reads $(${formatComplex(p - a, -b)})v_1 ${v2Part} = 0$.`,
+                `$p - \\lambda = ${formatComplex(p - a, -b)}$，所以第一行为 $(${formatComplex(p - a, -b)})v_1 ${v2Part} = 0$。`,
+              ),
+            ],
+            [
+              ["Solve it", "求解"],
+              t(
+                `Take $v_1 = q = ${q}$ and $v_2 = \\lambda - p = ${formatComplex(a - p, b)}$, which gives $\\mathbf{v} = ${v}$.`,
+                `取 $v_1 = q = ${q}$，$v_2 = \\lambda - p = ${formatComplex(a - p, b)}$，得 $\\mathbf{v} = ${v}$。`,
+              ),
+            ],
+          ],
           t(
-            `Which vector is an eigenvector of $A = ${mat2Latex(A)}$ for $\\lambda = ${formatComplex(a, b)}$?`,
-            `哪个向量是 $A = ${mat2Latex(A)}$ 对应于 $\\lambda = ${formatComplex(a, b)}$ 的特征向量？`,
+            `The second row gives $r q + (s - \\lambda)(\\lambda - p) = ${r * q} + (${formatComplex(a - p, -b)})(${formatComplex(a - p, b)}) = ${r * q} + ${(a - p) ** 2 + b * b} = 0$.`,
+            `第二行给出 $r q + (s - \\lambda)(\\lambda - p) = ${r * q} + (${formatComplex(a - p, -b)})(${formatComplex(a - p, b)}) = ${r * q} + ${(a - p) ** 2 + b * b} = 0$。`,
           ),
-          right,
-          [opt(String(q), formatComplex(a - p, -b)), opt(String(q), formatComplex(p - a, b)), opt(formatComplex(a - p, b), String(q))],
-          t(
-            `The first row of $A - \\lambda I$ is $(${formatComplex(p - a, -b)}, ${q})$, so $\\mathbf{v} = ${vec2Latex([String(q), formatComplex(a - p, b)])}$ satisfies $(${formatComplex(p - a, -b)})v_1 ${formatLinearComb2(
-              0,
-              "",
-              q,
-              "v_2",
-            )
-              .replace(/^-/, "- ")
-              .replace(/^(?!-)/, "+ ")} = 0$.`,
-            `$A - \\lambda I$ 的第一行为 $(${formatComplex(p - a, -b)}, ${q})$，所以 $\\mathbf{v} = ${vec2Latex([String(q), formatComplex(a - p, b)])}$ 满足 $(${formatComplex(p - a, -b)})v_1 ${formatLinearComb2(
-              0,
-              "",
-              q,
-              "v_2",
-            )
-              .replace(/^-/, "- ")
-              .replace(/^(?!-)/, "+ ")} = 0$。`,
+        );
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which vector is an eigenvector of $A = ${mat2Latex(A)}$ for $\\lambda = ${formatComplex(a, b)}$?`,
+              `哪个向量是 $A = ${mat2Latex(A)}$ 对应于 $\\lambda = ${formatComplex(a, b)}$ 的特征向量？`,
+            ),
+            right,
+            wrong,
+            solution,
           ),
+          [
+            [
+              wrong[0]!.en,
+              "That is the conjugate vector, an eigenvector for $\\bar{\\lambda}$.",
+              "这是共轭向量，是 $\\bar{\\lambda}$ 的特征向量。",
+            ],
+            [
+              wrong[1]!.en,
+              "The real part of the second entry has the wrong sign: it is $\\lambda - p$.",
+              "第二个分量实部的符号错了：它应是 $\\lambda - p$。",
+            ],
+            [
+              wrong[2]!.en,
+              "The entries are swapped: the first row needs $v_1 = q$ and $v_2 = \\lambda - p$.",
+              "两个分量交换了：第一行要求 $v_1 = q$，$v_2 = \\lambda - p$。",
+            ],
+          ],
         );
       },
     },
@@ -3878,6 +4583,10 @@ export const rotationScalingMatrices: TopicDef = {
     "Analyze rotation-scaling matrices, computing the scale factor $r = \\sqrt{a^2 + b^2}$ and the rotation angle.",
     "分析旋转缩放矩阵，计算缩放因子 $r = \\sqrt{a^2 + b^2}$ 与旋转角。",
   ),
+  intro: t(
+    "The matrix $C = \\begin{pmatrix} 3 & -3 \\\\ 3 & 3 \\end{pmatrix}$ has the form $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ with $(a, b) = (3, 3)$. Its scale factor is $r = \\sqrt{9 + 9} = 3\\sqrt{2}$, and the point $(3, 3)$ points at $45^{\\circ}$, so $C$ rotates by $45^{\\circ}$ and stretches by $3\\sqrt{2}$.\n\nCheck: $C(1, 0) = (3, 3)$ has length $3\\sqrt{2}$ and lies at $45^{\\circ}$, as a rotation by $45^{\\circ}$ followed by a stretch requires.\n\nIn this lesson we read the scale factor and the rotation angle of a rotation-scaling matrix from its entries.",
+    "矩阵 $C = \\begin{pmatrix} 3 & -3 \\\\ 3 & 3 \\end{pmatrix}$ 具有 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 的形式，$(a, b) = (3, 3)$。其缩放因子为 $r = \\sqrt{9 + 9} = 3\\sqrt{2}$，点 $(3, 3)$ 的方向角为 $45^{\\circ}$，所以 $C$ 旋转 $45^{\\circ}$ 并伸长 $3\\sqrt{2}$ 倍。\n\n检验：$C(1, 0) = (3, 3)$ 的长度为 $3\\sqrt{2}$，方向为 $45^{\\circ}$，正符合先旋转 $45^{\\circ}$ 再伸长的结果。\n\n本课我们由旋转缩放矩阵的元素读出它的缩放因子和旋转角。",
+  ),
   prerequisites: ["finding-complex-eigenvectors-of-real-2x2-matrices"],
   encompasses: [],
   xp: 14,
@@ -3887,8 +4596,8 @@ export const rotationScalingMatrices: TopicDef = {
       figure: linearAlgebraDrawings1["rotation-scaling-matrices#rotation-scaling-scale-factor"],
       title: t("Rotation-Scaling Scale Factor", "旋转缩放矩阵的缩放因子"),
       explanation: t(
-        "A rotation scaling matrix multiplies lengths by a fixed factor while it rotates, and that factor is the modulus of the complex eigenvalue. Compute the square of the scaling factor, $r^2 = a^2 + b^2$, for a rotation-scaling matrix.",
-        "旋转缩放矩阵在旋转的同时把长度乘以一个固定的因子，这个因子就是复特征值的模。计算旋转缩放矩阵缩放因子的平方 $r^2 = a^2 + b^2$。",
+        "A rotation scaling matrix multiplies lengths by a fixed factor while it rotates, and that factor is the modulus of the complex eigenvalue. Compute the square of the scaling factor, $r^2 = a^2 + b^2$, for a rotation-scaling matrix. For example, $\\begin{pmatrix} 6 & -8 \\\\ 8 & 6 \\end{pmatrix}$ has $r = \\sqrt{36 + 64} = 10$.\n\n> **Watch out.** The scale factor is the square root $\\sqrt{a^2 + b^2}$, not $a^2 + b^2$ itself, and not $|a| + |b|$.",
+        "旋转缩放矩阵在旋转的同时把长度乘以一个固定的因子，这个因子就是复特征值的模。计算旋转缩放矩阵缩放因子的平方 $r^2 = a^2 + b^2$。例如 $\\begin{pmatrix} 6 & -8 \\\\ 8 & 6 \\end{pmatrix}$ 有 $r = \\sqrt{36 + 64} = 10$。\n\n> **注意。** 缩放因子是平方根 $\\sqrt{a^2 + b^2}$，而不是 $a^2 + b^2$ 本身，也不是 $|a| + |b|$。",
       ),
       generate: (rng: Rng): Problem => {
         const [baseA, baseB, r] = rng.pick(pythagoreanTriples)!;
@@ -3904,15 +4613,33 @@ export const rotationScalingMatrices: TopicDef = {
           `A rotation-scaling matrix has the form $C = ${mat2Latex(mat)}$. What is its scaling factor $r$?`,
           `旋转缩放矩阵具有形式 $C = ${mat2Latex(mat)}$。求其缩放因子 $r$。`,
         );
-        const solution = t(
-          `A rotation-scaling matrix can be factored as $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$, where $r = \\sqrt{a^2 + b^2} = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a + b * b}} = ${r}$.`,
-          `旋转缩放矩阵可分解为 $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$，其中 $r = \\sqrt{a^2 + b^2} = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a + b * b}} = ${r}$。`,
+        const solution = walked(
+          [
+            [
+              ["Read $a$ and $b$", "读出 $a$ 和 $b$"],
+              t(`The first column of $C$ is $(a, b) = (${a}, ${b})$.`, `$C$ 的第一列为 $(a, b) = (${a}, ${b})$。`),
+            ],
+            [["Take the length", "求长度"], t("", ""), [`r = \\sqrt{${paren(a)}^2 + ${paren(b)}^2} = \\sqrt{${a * a + b * b}} = ${r}`]],
+          ],
+          t(
+            `$C$ sends $(1, 0)$ to $(${a}, ${b})$, whose length is $${r}$, so lengths are multiplied by $${r}$.`,
+            `$C$ 把 $(1, 0)$ 映为 $(${a}, ${b})$，其长度为 $${r}$，所以长度都乘以 $${r}$。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: r,
           solution,
-          wrong: [r * r, Math.abs(a), Math.abs(b), Math.abs(a) + Math.abs(b)].filter((w) => w !== r),
+          mistakes: [
+            why(r * r, "That is $r^2 = a^2 + b^2$; take the square root.", "这是 $r^2 = a^2 + b^2$；还要开平方。"),
+            why(Math.abs(a), "That is only $|a|$; the scale factor uses both entries.", "这只是 $|a|$；缩放因子要用到两个元素。"),
+            why(Math.abs(b), "That is only $|b|$; the scale factor uses both entries.", "这只是 $|b|$；缩放因子要用到两个元素。"),
+            why(
+              Math.abs(a) + Math.abs(b),
+              "Lengths do not add this way; use $\\sqrt{a^2 + b^2}$.",
+              "长度不能这样相加；应使用 $\\sqrt{a^2 + b^2}$。",
+            ),
+          ].filter((w, i, all) => w.value !== r && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -3921,8 +4648,8 @@ export const rotationScalingMatrices: TopicDef = {
       figure: linearAlgebraDrawings1["rotation-scaling-matrices#the-rotation-angle-of-a-rotation-scaling-matrix"],
       title: t("The rotation angle of a rotation-scaling matrix", "旋转伸缩矩阵的旋转角"),
       explanation: t(
-        "A rotation-scaling matrix $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ equals $r\\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$ with $r = \\sqrt{a^2 + b^2}$. The angle $\\theta$ is the argument of the point $(a, b)$: find the quadrant from the signs of $a$ and $b$, then the reference angle from $\\tan\\theta = \\frac{b}{a}$.",
-        "旋转伸缩矩阵 $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 等于 $r\\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$，其中 $r = \\sqrt{a^2 + b^2}$。角 $\\theta$ 是点 $(a, b)$ 的辐角：先由 $a$、$b$ 的符号确定象限，再由 $\\tan\\theta = \\frac{b}{a}$ 求参考角。",
+        "A rotation-scaling matrix $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ equals $r\\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$ with $r = \\sqrt{a^2 + b^2}$. The angle $\\theta$ is the argument of the point $(a, b)$: find the quadrant from the signs of $a$ and $b$, then the reference angle from $\\tan\\theta = \\frac{b}{a}$. For example, $\\begin{pmatrix} -2 & -2 \\\\ 2 & -2 \\end{pmatrix}$ has $(a, b) = (-2, 2)$ in the second quadrant with reference angle $45^{\\circ}$, so $\\theta = 135^{\\circ}$.\n\n> **Watch out.** Read $b$ from the lower left entry, not the upper right one, which is $-b$. $\\tan\\theta$ alone cannot tell $45^{\\circ}$ from $225^{\\circ}$; the signs of $a$ and $b$ decide the quadrant.",
+        "旋转伸缩矩阵 $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 等于 $r\\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$，其中 $r = \\sqrt{a^2 + b^2}$。角 $\\theta$ 是点 $(a, b)$ 的辐角：先由 $a$、$b$ 的符号确定象限，再由 $\\tan\\theta = \\frac{b}{a}$ 求参考角。例如 $\\begin{pmatrix} -2 & -2 \\\\ 2 & -2 \\end{pmatrix}$ 有 $(a, b) = (-2, 2)$，在第二象限，参考角 $45^{\\circ}$，所以 $\\theta = 135^{\\circ}$。\n\n> **注意。** $b$ 要从左下角的元读出，而不是右上角的元，那个是 $-b$。仅凭 $\\tan\\theta$ 分不清 $45^{\\circ}$ 和 $225^{\\circ}$；要由 $a$、$b$ 的符号确定象限。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 6);
@@ -3942,6 +4669,30 @@ export const rotationScalingMatrices: TopicDef = {
         const b = sb * k;
         const opt = (d: number): Text => t(`$${d}^{\\circ}$`, `$${d}^{\\circ}$`);
         const others = [dirs[(idx + 2) % 8]![2], dirs[(idx + 4) % 8]![2], dirs[(idx + 6) % 8]![2]];
+        const rStr = b === 0 || a === 0 ? `${k}` : `${k}\\sqrt{2}`;
+        const where =
+          a === 0 || b === 0
+            ? t(
+                `The point $(${a}, ${b})$ lies on an axis, in the direction of $${deg}^{\\circ}$.`,
+                `点 $(${a}, ${b})$ 在坐标轴上，方向为 $${deg}^{\\circ}$。`,
+              )
+            : t(
+                `The signs of $a = ${a}$ and $b = ${b}$ place $(a, b)$ in the quadrant of $${deg}^{\\circ}$, and $|b| = |a|$ gives the reference angle $45^{\\circ}$, so $\\theta = ${deg}^{\\circ}$.`,
+                `$a = ${a}$ 与 $b = ${b}$ 的符号确定 $(a, b)$ 在 $${deg}^{\\circ}$ 所在的象限，$|b| = |a|$ 给出参考角 $45^{\\circ}$，所以 $\\theta = ${deg}^{\\circ}$。`,
+              );
+        const solution = walked(
+          [
+            [
+              ["Read $a$ and $b$", "读出 $a$ 和 $b$"],
+              t(`The first column of $C$ is $(a, b) = (${a}, ${b})$.`, `$C$ 的第一列为 $(a, b) = (${a}, ${b})$。`),
+            ],
+            [["Locate the point", "确定点的方向"], where],
+          ],
+          t(
+            `With $r = ${rStr}$, $r\\cos ${deg}^{\\circ} = ${a}$ and $r\\sin ${deg}^{\\circ} = ${b}$, matching the first column.`,
+            `取 $r = ${rStr}$，$r\\cos ${deg}^{\\circ} = ${a}$，$r\\sin ${deg}^{\\circ} = ${b}$，与第一列一致。`,
+          ),
+        );
         return reasoned(
           oneOf(
             rng,
@@ -3959,10 +4710,7 @@ export const rotationScalingMatrices: TopicDef = {
             ),
             opt(deg),
             others.map(opt),
-            t(
-              `Here $(a, b) = (${a}, ${b})$, which points at angle $${deg}^{\\circ}$; the scaling factor is $r = ${b === 0 || a === 0 ? k : `${k}\\sqrt{2}`}$.`,
-              `这里 $(a, b) = (${a}, ${b})$，其方向角为 $${deg}^{\\circ}$；伸缩因子为 $r = ${b === 0 || a === 0 ? k : `${k}\\sqrt{2}`}$。`,
-            ),
+            solution,
           ),
           [
             ...others.map(

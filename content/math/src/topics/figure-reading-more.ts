@@ -1123,14 +1123,36 @@ const rotationScalingFromDrawing: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["rotation-scaling-matrices#a-rotation-scaling-matrix-from-a-drawing"],
   title: t("A rotation-scaling matrix from a drawing", "由图写旋转缩放矩阵"),
   explanation: t(
-    "A rotation-scaling matrix has the form with $a$ and $-b$ on top, and $b$ and $a$ below. It sends the first basis vector to the point $(a, b)$. So the image of that one vector determines the whole matrix, and this is why the map is pictured so simply: every vector is turned by the same angle and stretched by the same factor.",
-    "旋转缩放矩阵的形式是第一行为 $a$ 和 $-b$，第二行为 $b$ 和 $a$。它把第一个基向量送到点 $(a, b)$。所以这一个向量的像决定整个矩阵，这也是这种映射的图形如此简单的原因：每个向量都转过同样的角度并按同样的倍数伸缩。",
+    "A rotation-scaling matrix has the form with $a$ and $-b$ on top, and $b$ and $a$ below. It sends the first basis vector to the point $(a, b)$. So the image of that one vector determines the whole matrix, and this is why the map is pictured so simply: every vector is turned by the same angle and stretched by the same factor. For example, if $e_1$ is drawn going to $(2, 1)$, the matrix is $\\begin{pmatrix} 2 & -1 \\\\ 1 & 2 \\end{pmatrix}$, whose second column $(-1, 2)$ is $(2, 1)$ turned a quarter turn counterclockwise.\n\n> **Watch out.** The image of $e_1$ is the first column, not the first row. The minus sign goes on the top right entry, so that the second column is the first one turned counterclockwise.",
+    "旋转缩放矩阵的形式是第一行为 $a$ 和 $-b$，第二行为 $b$ 和 $a$。它把第一个基向量送到点 $(a, b)$。所以这一个向量的像决定整个矩阵，这也是这种映射的图形如此简单的原因：每个向量都转过同样的角度并按同样的倍数伸缩。例如图中 $e_1$ 被送到 $(2, 1)$ 时，矩阵为 $\\begin{pmatrix} 2 & -1 \\\\ 1 & 2 \\end{pmatrix}$，其第二列 $(-1, 2)$ 是 $(2, 1)$ 逆时针转四分之一圈。\n\n> **注意。** $e_1$ 的像是第一列，而不是第一行。负号在右上角，这样第二列才是第一列逆时针转过的结果。",
   ),
   generate(rng) {
     const pick = () => rng.pick([-3, -2, -1, 1, 2, 3]);
     const [a, b] = [pick(), pick()];
     const mat = (p: number, q: number, r: number, s: number) => `\\begin{pmatrix} ${p} & ${q} \\\\ ${r} & ${s} \\end{pmatrix}`;
-    return pickChoice(
+    const reasons: Reason[] = [
+      [
+        `$${mat(a, b, -b, a)}$`,
+        `Its first column is $(${a}, ${-b})$, so it sends $e_1$ there, not to the drawn point $(${a}, ${b})$.`,
+        `它的第一列是 $(${a}, ${-b})$，所以把 $e_1$ 送到那里，而不是图中的点 $(${a}, ${b})$。`,
+      ],
+      [
+        `$${mat(b, -a, a, b)}$`,
+        `The coordinates are swapped: it sends $e_1$ to $(${b}, ${a})$.`,
+        `坐标交换了：它把 $e_1$ 送到 $(${b}, ${a})$。`,
+      ],
+      [
+        `$${mat(a, b, b, -a)}$`,
+        "Its second column is not the first one turned a quarter turn, so it is a reflection combined with a scaling, not a rotation-scaling.",
+        "它的第二列不是第一列转四分之一圈的结果，所以它是反射加缩放，而不是旋转缩放。",
+      ],
+      [
+        `$${mat(a, b, b, a)}$`,
+        `Its second column $(${b}, ${a})$ is not $(${a}, ${b})$ turned a quarter turn, so it is not a rotation-scaling matrix.`,
+        `它的第二列 $(${b}, ${a})$ 不是 $(${a}, ${b})$ 转四分之一圈的结果，所以不是旋转缩放矩阵。`,
+      ],
+    ];
+    const problem = pickChoice(
       rng,
       t(
         "A rotation-scaling matrix sends $e_1$ to the drawn vector. Which matrix is it?",
@@ -1139,8 +1161,8 @@ const rotationScalingFromDrawing: KnowledgePointDef = {
       math(mat(a, -b, b, a)),
       [math(mat(a, b, -b, a)), math(mat(b, -a, a, b)), math(mat(a, b, b, -a)), math(mat(a, b, b, a))],
       t(
-        `The image of $e_1$ is the first column, $(${a}, ${b})$. A rotation-scaling matrix then has second column $(${-b}, ${a})$.`,
-        `$e_1$ 的像是第一列 $(${a}, ${b})$。旋转缩放矩阵的第二列就是 $(${-b}, ${a})$。`,
+        `${stepLabel(1, "Read the first column", "读出第一列").en} The arrow from the origin ends at $(${a}, ${b})$, the image of $e_1$, so the first column is $(${a}, ${b})$.\n\n${stepLabel(2, "Turn it a quarter turn", "转四分之一圈").en} The second column is $(${a}, ${b})$ turned counterclockwise, $(${-b}, ${a})$, which gives $${mat(a, -b, b, a)}$.\n\n**Check.** The two columns have the same length and their dot product is $${a} \\cdot ${-b < 0 ? `(${-b})` : -b} + ${b < 0 ? `(${b})` : b} \\cdot ${a < 0 ? `(${a})` : a} = 0$, as for a rotation followed by a scaling.`,
+        `${stepLabel(1, "Read the first column", "读出第一列")["zh-CN"]}从原点出发的箭头终点为 $(${a}, ${b})$，即 $e_1$ 的像，所以第一列是 $(${a}, ${b})$。\n\n${stepLabel(2, "Turn it a quarter turn", "转四分之一圈")["zh-CN"]}第二列是 $(${a}, ${b})$ 逆时针转过的 $(${-b}, ${a})$，得 $${mat(a, -b, b, a)}$。\n\n**检验。**两列长度相同，点积为 $${a} \\cdot ${-b < 0 ? `(${-b})` : -b} + ${b < 0 ? `(${b})` : b} \\cdot ${a < 0 ? `(${a})` : a} = 0$，符合先旋转再缩放。`,
       ),
       drawn(
         square(4),
@@ -1152,6 +1174,7 @@ const rotationScalingFromDrawing: KnowledgePointDef = {
         t(`The vector e₁ and its image at (${a}, ${b}).`, `向量 e₁ 和它的像，在 (${a}, ${b})。`),
       ),
     );
+    return reasoned(problem, reasons);
   },
 };
 

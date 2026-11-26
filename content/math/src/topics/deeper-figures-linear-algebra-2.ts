@@ -1156,8 +1156,8 @@ const powersOnEigen = point(
   "a-power-of-a-matrix-through-drawn-eigenvectors",
   ["A power of a matrix through drawn eigenvectors", "通过所画的特征向量求矩阵的幂"],
   [
-    "On an eigenvector, $A^k$ multiplies by $\\lambda^k$. Split a vector into eigenvectors and apply $A^k$ to each piece. This is what diagonalization does.",
-    "在特征向量上，$A^k$ 乘以 $\\lambda^k$。把向量分解成特征向量，再分别作用 $A^k$。这正是对角化所做的。",
+    "On an eigenvector, $A^k$ multiplies by $\\lambda^k$. Split a vector into eigenvectors and apply $A^k$ to each piece. This is what diagonalization does. For example, if $Av = 2v$ and $Aw = -w$, then $A^2(v + w) = 4v + w$.\n\n> **Watch out.** Raise each eigenvalue to the power $k$; do not multiply it by $k$. Read each eigenvalue from its own arrow: the image of $v$ is $\\lambda v$, so compare lengths and directions.",
+    "在特征向量上，$A^k$ 乘以 $\\lambda^k$。把向量分解成特征向量，再分别作用 $A^k$。这正是对角化所做的。例如若 $Av = 2v$，$Aw = -w$，则 $A^2(v + w) = 4v + w$。\n\n> **注意。** 要把每个特征值取 $k$ 次方，而不是乘以 $k$。每个特征值从它自己的箭头读出：$v$ 的像是 $\\lambda v$，比较长度和方向即可。",
   ],
   (rng) => {
     const { v1, v2, l1, l2, figure } = eigenPicture(rng);
@@ -1197,33 +1197,57 @@ const complexEigen = {
     "complex-eigenvalues-from-a-drawn-rotation-scaling",
     ["Complex eigenvalues from a drawn rotation-scaling", "由所画的旋转伸缩读复特征值"],
     [
-      "A matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ sends $e_1$ to $(a, b)$ and $e_2$ to $(-b, a)$, which rotates and scales the plane, so it has no real eigenvector. Its eigenvalues are $a \\pm bi$.",
-      "矩阵 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 把 $e_1$ 映到 $(a, b)$，把 $e_2$ 映到 $(-b, a)$，这是对平面的旋转加缩放，所以没有实特征向量。它的特征值是 $a \\pm bi$。",
+      "A matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ sends $e_1$ to $(a, b)$ and $e_2$ to $(-b, a)$, which rotates and scales the plane, so it has no real eigenvector. Its eigenvalues are $a \\pm bi$. For example, if $e_1$ goes to $(2, 3)$ and $e_2$ to $(-3, 2)$, the eigenvalues are $2 \\pm 3i$.\n\n> **Watch out.** Read $a$ and $b$ from the image of $e_1$, not of $e_2$. The real part is the first coordinate $a$, and the imaginary part is the second coordinate $b$, not $a^2 + b^2$.",
+      "矩阵 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 把 $e_1$ 映到 $(a, b)$，把 $e_2$ 映到 $(-b, a)$，这是对平面的旋转加缩放，所以没有实特征向量。它的特征值是 $a \\pm bi$。例如 $e_1$ 映到 $(2, 3)$，$e_2$ 映到 $(-3, 2)$ 时，特征值为 $2 \\pm 3i$。\n\n> **注意。** $a$ 和 $b$ 要从 $e_1$ 的像读出，而不是 $e_2$ 的像。实部是第一个坐标 $a$，虚部是第二个坐标 $b$，而不是 $a^2 + b^2$。",
     ],
     (rng) => {
       const [a, b] = spin(rng);
       const size = (v: number) => (Math.abs(v) === 1 ? "" : Math.abs(v));
       const answer = (x: number, y: number) => `${x} \\pm ${size(y)}i`;
-      return choose(
-        rng,
-        [
-          "The arrows show the images of $e_1$ and $e_2$ under a real matrix $A$ that rotates and scales the plane. What are the eigenvalues of $A$?",
-          "箭头表示 $e_1$ 和 $e_2$ 在实矩阵 $A$ 下的像，$A$ 对平面做旋转和伸缩。$A$ 的特征值是什么？",
-        ],
-        same(answer(a, b)),
-        [same(answer(b, a)), same(answer(-a, b)), same(answer(-b, a)), same(answer(a * a + b * b, 1))],
-        [
-          `The arrows give $A = ${mat(a, -b, b, a)}$, so $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$, whose roots are $${answer(a, b)}$.`,
-          `由箭头得 $A = ${mat(a, -b, b, a)}$，所以 $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$，根为 $${answer(a, b)}$。`,
-        ],
-        fig(
-          5,
-          [...arrow([a, b], "T(e1)"), ...arrow([-b, a], "T(e2)")],
+      return reasoned(
+        choose(
+          rng,
           [
-            `Arrows from the origin: T(e1) to ${at([a, b])} and T(e2) to ${at([-b, a])}.`,
-            `从原点出发的箭头：T(e1) 指向 ${at([a, b])}，T(e2) 指向 ${at([-b, a])}。`,
+            "The arrows show the images of $e_1$ and $e_2$ under a real matrix $A$ that rotates and scales the plane. What are the eigenvalues of $A$?",
+            "箭头表示 $e_1$ 和 $e_2$ 在实矩阵 $A$ 下的像，$A$ 对平面做旋转和伸缩。$A$ 的特征值是什么？",
           ],
+          same(answer(a, b)),
+          [same(answer(b, a)), same(answer(-a, b)), same(answer(-b, a)), same(answer(a * a + b * b, 1))],
+          [
+            `The arrows give $A = ${mat(a, -b, b, a)}$, so $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$, whose roots are $${answer(a, b)}$.`,
+            `由箭头得 $A = ${mat(a, -b, b, a)}$，所以 $\\lambda^2 ${2 * a < 0 ? "+" : "-"} ${Math.abs(2 * a)}\\lambda + ${a * a + b * b} = 0$，根为 $${answer(a, b)}$。`,
+          ],
+          fig(
+            5,
+            [...arrow([a, b], "T(e1)"), ...arrow([-b, a], "T(e2)")],
+            [
+              `Arrows from the origin: T(e1) to ${at([a, b])} and T(e2) to ${at([-b, a])}.`,
+              `从原点出发的箭头：T(e1) 指向 ${at([a, b])}，T(e2) 指向 ${at([-b, a])}。`,
+            ],
+          ),
         ),
+        [
+          [
+            same(answer(b, a))[0],
+            "The two parts are swapped: the real part is the first coordinate of $T(e_1)$.",
+            "两部分交换了：实部是 $T(e_1)$ 的第一个坐标。",
+          ],
+          [
+            same(answer(-a, b))[0],
+            "The real part has the wrong sign: it is the first coordinate of $T(e_1)$ as drawn.",
+            "实部的符号错了：它就是图中 $T(e_1)$ 的第一个坐标。",
+          ],
+          [
+            same(answer(-b, a))[0],
+            "That reads the image of $e_2$; $a$ and $b$ come from the image of $e_1$.",
+            "这读的是 $e_2$ 的像；$a$ 和 $b$ 来自 $e_1$ 的像。",
+          ],
+          [
+            same(answer(a * a + b * b, 1))[0],
+            `$${a * a + b * b}$ is the determinant $a^2 + b^2$, the product of the eigenvalues, not their real part.`,
+            `$${a * a + b * b}$ 是行列式 $a^2 + b^2$，即特征值之积，而不是实部。`,
+          ],
+        ],
       );
     },
   ),

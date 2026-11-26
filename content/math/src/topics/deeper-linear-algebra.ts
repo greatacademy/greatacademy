@@ -1870,8 +1870,8 @@ const traceOfAPower: KnowledgePointDef = {
   id: "the-trace-of-a-power-from-the-eigenvalues",
   title: t("The trace of a power from the eigenvalues", "由特征值求幂的迹"),
   explanation: t(
-    "Diagonalizing $A$ gives $A^n = PD^nP^{-1}$, and similar matrices have the same trace. So the trace of $A^n$ is the sum of the $n$th powers of the eigenvalues, which is much less work than multiplying the matrix out.",
-    "对角化 $A$ 得 $A^n = PD^nP^{-1}$，而相似矩阵的迹相同。所以 $A^n$ 的迹是各特征值 $n$ 次幂之和，比把矩阵乘出来省事得多。",
+    "Diagonalizing $A$ gives $A^n = PD^nP^{-1}$, and similar matrices have the same trace. So the trace of $A^n$ is the sum of the $n$th powers of the eigenvalues, which is much less work than multiplying the matrix out. For example, eigenvalues $2$ and $-1$ give $\\operatorname{tr}(A^3) = 8 + (-1) = 7$.\n\n> **Watch out.** Raise each eigenvalue to the power before adding: $\\operatorname{tr}(A^n)$ is $\\lambda_1^n + \\lambda_2^n$, not $(\\lambda_1 + \\lambda_2)^n$, the power of the trace of $A$.",
+    "对角化 $A$ 得 $A^n = PD^nP^{-1}$，而相似矩阵的迹相同。所以 $A^n$ 的迹是各特征值 $n$ 次幂之和，比把矩阵乘出来省事得多。例如特征值 $2$ 和 $-1$ 给出 $\\operatorname{tr}(A^3) = 8 + (-1) = 7$。\n\n> **注意。** 先把每个特征值取幂再相加：$\\operatorname{tr}(A^n)$ 是 $\\lambda_1^n + \\lambda_2^n$，而不是 $A$ 的迹的幂 $(\\lambda_1 + \\lambda_2)^n$。",
   ),
   generate(rng) {
     const l1 = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -1886,10 +1886,42 @@ const traceOfAPower: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(l1 + l2) ** n, n * (l1 + l2), (l1 * l2) ** n],
-      solution: t(
-        `$A^{${n}}$ is similar to a diagonal matrix with entries $(${l1})^{${n}}$ and $(${l2})^{${n}}$, so its trace is $${l1 ** n} + ${inParens(l2 ** n)} = ${answer}$.`,
-        `$A^{${n}}$ 相似于对角元为 $(${l1})^{${n}}$ 和 $(${l2})^{${n}}$ 的对角矩阵，所以迹是 $${l1 ** n} + ${inParens(l2 ** n)} = ${answer}$。`,
+      mistakes: [
+        why(
+          (l1 + l2) ** n,
+          "That raises the trace of $A$ to the power; raise each eigenvalue first, then add.",
+          "这是把 $A$ 的迹取幂；应先把每个特征值取幂再相加。",
+        ),
+        why(
+          n * (l1 + l2),
+          "That multiplies the trace by the exponent; a power multiplies each eigenvalue by itself.",
+          "这是把迹乘以指数；取幂是把每个特征值自乘。",
+        ),
+        why(
+          (l1 * l2) ** n,
+          "That is $\\det(A^n)$, the product of the powers; the trace is their sum.",
+          "这是 $\\det(A^n)$，即各幂之积；迹是它们的和。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Diagonalize the power", "把幂对角化"],
+            t(
+              `$A^{${n}} = PD^{${n}}P^{-1}$ is similar to $\\operatorname{diag}(${inParens(l1)}^{${n}}, ${inParens(l2)}^{${n}}) = \\operatorname{diag}(${l1 ** n}, ${l2 ** n})$.`,
+              `$A^{${n}} = PD^{${n}}P^{-1}$ 相似于 $\\operatorname{diag}(${inParens(l1)}^{${n}}, ${inParens(l2)}^{${n}}) = \\operatorname{diag}(${l1 ** n}, ${l2 ** n})$。`,
+            ),
+          ],
+          [
+            ["Add the diagonal", "把对角元相加"],
+            t("Similar matrices have the same trace:", "相似矩阵的迹相同："),
+            [`\\operatorname{tr}(A^{${n}}) = ${l1 ** n} + ${inParens(l2 ** n)} = ${answer}`],
+          ],
+        ],
+        t(
+          `For $n = 1$ the same rule gives $${l1} + ${inParens(l2)} = ${l1 + l2}$, which is the trace $${A[0]![0]!} + ${inParens(A[1]![1]!)}$ of $A$ itself.`,
+          `对 $n = 1$，同样的规则给出 $${l1} + ${inParens(l2)} = ${l1 + l2}$，正是 $A$ 本身的迹 $${A[0]![0]!} + ${inParens(A[1]![1]!)}$。`,
+        ),
       ),
     });
   },
@@ -1900,8 +1932,8 @@ const lengthUnderRotationScaling: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["rotation-scaling-matrices#the-length-of-a-vector-under-a-power-of-a-rotation-scaling"],
   title: t("Lengths under powers of a rotation-scaling matrix", "旋转缩放矩阵的幂下的长度"),
   explanation: t(
-    "The matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ rotates and multiplies every length by $r = \\sqrt{a^2+b^2}$. Rotation does not change length, so its $n$th power multiplies every length by $r^n$, whatever the direction of the vector.",
-    "矩阵 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 作旋转，并把所有长度乘以 $r = \\sqrt{a^2+b^2}$。旋转不改变长度，所以它的 $n$ 次幂把所有长度乘以 $r^n$，与向量的方向无关。",
+    "The matrix $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ rotates and multiplies every length by $r = \\sqrt{a^2+b^2}$. Rotation does not change length, so its $n$th power multiplies every length by $r^n$, whatever the direction of the vector. For example, $\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ has $r = 5$, so its square sends a vector of length $2$ to one of length $2 \\cdot 25 = 50$.\n\n> **Watch out.** The factor is $r = \\sqrt{a^2 + b^2}$, not $a^2 + b^2$, and the power gives $r^n$, not $nr$.",
+    "矩阵 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ 作旋转，并把所有长度乘以 $r = \\sqrt{a^2+b^2}$。旋转不改变长度，所以它的 $n$ 次幂把所有长度乘以 $r^n$，与向量的方向无关。例如 $\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ 有 $r = 5$，所以它的平方把长度为 $2$ 的向量变为长度 $2 \\cdot 25 = 50$。\n\n> **注意。** 因子是 $r = \\sqrt{a^2 + b^2}$，不是 $a^2 + b^2$；取幂得到 $r^n$，不是 $nr$。",
   ),
   generate(rng) {
     const [p, q, r] = rng.pick([
@@ -1930,10 +1962,39 @@ const lengthUnderRotationScaling: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [length * r * n, length * r, length * (p * p + q * q) ** n],
-      solution: t(
-        `Each application multiplies length by $\\sqrt{${a * a} + ${b * b}} = ${r}$. After ${n} applications the length is $${length} \\cdot ${r}^{${n}} = ${answer}$.`,
-        `每作用一次，长度乘以 $\\sqrt{${a * a} + ${b * b}} = ${r}$。作用 ${n} 次后长度是 $${length} \\cdot ${r}^{${n}} = ${answer}$。`,
+      mistakes: [
+        why(
+          length * r * n,
+          "That multiplies by $r$ times the exponent; each application multiplies the length by $r$ again.",
+          "这是乘以 $r$ 与指数之积；每作用一次，长度都要再乘以 $r$。",
+        ),
+        why(
+          length * r,
+          `That applies $A$ only once; $A^{${n}}$ applies it $${n}$ times.`,
+          `这只作用了一次 $A$；$A^{${n}}$ 要作用 $${n}$ 次。`,
+        ),
+        why(
+          length * (p * p + q * q) ** n,
+          "That uses $r^2 = a^2 + b^2$ in place of $r$; the length is multiplied by the square root.",
+          "这把 $r^2 = a^2 + b^2$ 当成了 $r$；长度乘的是平方根。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Find the scale factor", "求缩放因子"], t("", ""), [`r = \\sqrt{${a * a} + ${b * b}} = ${r}`]],
+          [
+            ["Apply it once per power", "每次幂乘一次"],
+            t(
+              "Rotation keeps lengths, so each application multiplies the length by $r$:",
+              "旋转不改变长度，所以每作用一次，长度乘以 $r$：",
+            ),
+            [`${length} \\cdot ${r}^{${n}} = ${answer}`],
+          ],
+        ],
+        t(
+          `$A$ sends $(1, 0)$ to $(${a}, ${b})$, of length $${r}$; so a vector of length $${length}$ goes to length $${length * r}$ after one step, and $${answer}$ after $${n}$.`,
+          `$A$ 把 $(1, 0)$ 映为长度为 $${r}$ 的 $(${a}, ${b})$；所以长度为 $${length}$ 的向量一次后长度为 $${length * r}$，$${n}$ 次后为 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -3381,8 +3442,8 @@ const inverseShiftEigenvalue: KnowledgePointDef = {
   id: "an-eigenvalue-of-a-shifted-inverse",
   title: t("An eigenvalue of a shifted inverse", "平移逆矩阵的特征值"),
   explanation: t(
-    "If $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $A$ invertible, then $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$, so the same eigenvector works for the inverse. Adding $cI$ just adds $c\\mathbf{v}$. So $A^{-1} + cI$ has eigenvalue $\\frac{1}{\\lambda} + c$. Order matters: inverting after the shift would give a different number, $\\frac{1}{\\lambda + c}$.",
-    "如果 $A\\mathbf{v} = \\lambda\\mathbf{v}$ 且 $A$ 可逆，那么 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$，所以同一个特征向量对逆矩阵也适用。加上 $cI$ 只是加上 $c\\mathbf{v}$。所以 $A^{-1} + cI$ 有特征值 $\\frac{1}{\\lambda} + c$。顺序很重要：平移后再求逆，会得到另一个数 $\\frac{1}{\\lambda + c}$。",
+    "If $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $A$ invertible, then $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$, so the same eigenvector works for the inverse. Adding $cI$ just adds $c\\mathbf{v}$. So $A^{-1} + cI$ has eigenvalue $\\frac{1}{\\lambda} + c$. Order matters: inverting after the shift would give a different number, $\\frac{1}{\\lambda + c}$. For example, $\\lambda = 2$ and $c = 3$ give $A^{-1} + 3I$ the eigenvalue $\\frac{1}{2} + 3 = \\frac{7}{2}$.\n\n> **Watch out.** Invert first, then shift: the answer is $\\frac{1}{\\lambda} + c$, not $\\frac{1}{\\lambda + c}$ and not $\\lambda + c$.",
+    "如果 $A\\mathbf{v} = \\lambda\\mathbf{v}$ 且 $A$ 可逆，那么 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$，所以同一个特征向量对逆矩阵也适用。加上 $cI$ 只是加上 $c\\mathbf{v}$。所以 $A^{-1} + cI$ 有特征值 $\\frac{1}{\\lambda} + c$。顺序很重要：平移后再求逆，会得到另一个数 $\\frac{1}{\\lambda + c}$。例如 $\\lambda = 2$，$c = 3$ 时 $A^{-1} + 3I$ 的特征值为 $\\frac{1}{2} + 3 = \\frac{7}{2}$。\n\n> **注意。** 先求逆再平移：答案是 $\\frac{1}{\\lambda} + c$，不是 $\\frac{1}{\\lambda + c}$，也不是 $\\lambda + c$。",
   ),
   generate(rng) {
     const lambda = nonzero(rng, 9);
@@ -3394,10 +3455,47 @@ const inverseShiftEigenvalue: KnowledgePointDef = {
         `可逆矩阵 $A$ 有特征值 $${lambda}$。求 $A^{-1} ${shiftTerm(c)}$ 相应的特征值。`,
       ),
       answer,
-      wrong: [Q.of(lambda + c), Q.of(1, lambda).sub(Q.of(c)), lambda + c === 0 ? Q.of(c, lambda) : Q.of(1, lambda + c), Q.of(c, lambda)],
-      solution: t(
-        `The inverse has eigenvalue $${frac(1, lambda)}$ on the same eigenvector, and the shift adds $${c}$. The sum is $${answer.toLatex()}$.`,
-        `逆矩阵在同一个特征向量上的特征值是 $${frac(1, lambda)}$，平移再加上 $${c}$。和是 $${answer.toLatex()}$。`,
+      mistakes: (
+        [
+          [
+            Q.of(lambda + c),
+            "The inverse is missing: $A^{-1}$ has eigenvalue $\\frac{1}{\\lambda}$.",
+            "漏了求逆：$A^{-1}$ 的特征值是 $\\frac{1}{\\lambda}$。",
+          ],
+          [Q.of(1, lambda).sub(Q.of(c)), "The shift has the wrong sign.", "平移的符号错了。"],
+          [
+            lambda + c === 0 ? Q.of(c, lambda) : Q.of(1, lambda + c),
+            "That shifts first and then inverts; here the inverse comes first.",
+            "这是先平移再求逆；这里应先求逆。",
+          ],
+          [
+            Q.of(c, lambda),
+            "That multiplies by the shift; $cI$ adds $c$ to the eigenvalue.",
+            "这是乘以了平移量；$cI$ 是把 $c$ 加到特征值上。",
+          ],
+        ] as const
+      )
+        .filter(([v], i, all) => !v.eq(answer) && all.findIndex(([o]) => o.eq(v)) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          [
+            ["Invert", "求逆"],
+            t(
+              `$A\\mathbf{v} = ${lambda}\\mathbf{v}$ gives $A^{-1}\\mathbf{v} = ${frac(1, lambda)}\\mathbf{v}$ for the same eigenvector.`,
+              `$A\\mathbf{v} = ${lambda}\\mathbf{v}$ 给出同一个特征向量上的 $A^{-1}\\mathbf{v} = ${frac(1, lambda)}\\mathbf{v}$。`,
+            ),
+          ],
+          [
+            ["Shift", "平移"],
+            t(`The term $${shiftTerm(c)}$ adds $${c}$:`, `$${shiftTerm(c)}$ 这一项加上 $${c}$：`),
+            [`${frac(1, lambda)} + ${inParens(c)} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `$(A^{-1} ${shiftTerm(c)})\\mathbf{v} = ${frac(1, lambda)}\\mathbf{v} + ${inParens(c)}\\mathbf{v} = ${answer.toLatex()}\\mathbf{v}$.`,
+          `$(A^{-1} ${shiftTerm(c)})\\mathbf{v} = ${frac(1, lambda)}\\mathbf{v} + ${inParens(c)}\\mathbf{v} = ${answer.toLatex()}\\mathbf{v}$。`,
+        ),
       ),
     });
   },
@@ -3407,8 +3505,8 @@ const powerOfDiagonalized: KnowledgePointDef = {
   id: "an-entry-of-a-power-from-a-diagonalization",
   title: t("An entry of a power from a diagonalization", "由对角化求幂的元素"),
   explanation: t(
-    "Writing $A = PDP^{-1}$ makes powers simple, because the inner factors cancel: $A^k = PD^kP^{-1}$. Only the diagonal entries of $D$ need raising to the power. The work that remains is two matrix products, and the $P$ here has a simple inverse. Multiplying $A$ by itself repeatedly would be far slower when $k$ is large.",
-    "写成 $A = PDP^{-1}$ 后，求幂就很简单，因为中间的因子相消：$A^k = PD^kP^{-1}$。只需要对 $D$ 的对角元求幂。剩下的工作是两次矩阵乘法，而这里的 $P$ 的逆很简单。当 $k$ 很大时，反复用 $A$ 自乘要慢得多。",
+    "Writing $A = PDP^{-1}$ makes powers simple, because the inner factors cancel: $A^k = PD^kP^{-1}$. Only the diagonal entries of $D$ need raising to the power. The work that remains is two matrix products, and the $P$ here has a simple inverse. Multiplying $A$ by itself repeatedly would be far slower when $k$ is large. For example, $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ and $D = \\operatorname{diag}(1, 2)$ give $A^3$ the $(1, 2)$ entry $1 \\cdot (2^3 - 1^3) = 7$.\n\n> **Watch out.** Raise the eigenvalues to the power before subtracting: the entry uses $q^k - p^k$, not $(q - p)^k$, and $P^{-1}$ has $-a$ where $P$ has $a$.",
+    "写成 $A = PDP^{-1}$ 后，求幂就很简单，因为中间的因子相消：$A^k = PD^kP^{-1}$。只需要对 $D$ 的对角元求幂。剩下的工作是两次矩阵乘法，而这里的 $P$ 的逆很简单。当 $k$ 很大时，反复用 $A$ 自乘要慢得多。例如 $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，$D = \\operatorname{diag}(1, 2)$ 时，$A^3$ 的 $(1, 2)$ 元为 $1 \\cdot (2^3 - 1^3) = 7$。\n\n> **注意。** 先把特征值取幂再相减：这个元用的是 $q^k - p^k$，而不是 $(q - p)^k$；$P$ 中的 $a$ 在 $P^{-1}$ 中变为 $-a$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -3458,8 +3556,8 @@ const hermitianDeterminant: KnowledgePointDef = {
   id: "the-determinant-of-a-hermitian-matrix",
   title: t("The determinant of a Hermitian matrix", "埃尔米特矩阵的行列式"),
   explanation: t(
-    "A Hermitian matrix equals its own conjugate transpose, so its diagonal is real and the entries across the diagonal are conjugates. The two by two determinant then subtracts a complex number times its conjugate, which is the real number $|z|^2$. So the determinant comes out real, in agreement with the fact that a Hermitian matrix has real eigenvalues.",
-    "埃尔米特矩阵等于自身的共轭转置，所以对角元是实数，关于对角线对称的元素互为共轭。于是二阶行列式减去的是一个复数乘以它的共轭，也就是实数 $|z|^2$。所以行列式是实数，这与埃尔米特矩阵的特征值都是实数这一事实相符。",
+    "A Hermitian matrix equals its own conjugate transpose, so its diagonal is real and the entries across the diagonal are conjugates. The two by two determinant then subtracts a complex number times its conjugate, which is the real number $|z|^2$. So the determinant comes out real, in agreement with the fact that a Hermitian matrix has real eigenvalues. For example, $\\begin{pmatrix} 4 & 1 + 2i \\\\ 1 - 2i & 3 \\end{pmatrix}$ has determinant $12 - (1 + 4) = 7$.\n\n> **Watch out.** $(x + yi)(x - yi) = x^2 + y^2$, with a plus sign, and it is subtracted from the product of the diagonal entries.",
+    "埃尔米特矩阵等于自身的共轭转置，所以对角元是实数，关于对角线对称的元素互为共轭。于是二阶行列式减去的是一个复数乘以它的共轭，也就是实数 $|z|^2$。所以行列式是实数，这与埃尔米特矩阵的特征值都是实数这一事实相符。例如 $\\begin{pmatrix} 4 & 1 + 2i \\\\ 1 - 2i & 3 \\end{pmatrix}$ 的行列式为 $12 - (1 + 4) = 7$。\n\n> **注意。** $(x + yi)(x - yi) = x^2 + y^2$，中间是加号，而且要从对角元之积中减去它。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -3481,10 +3579,33 @@ const hermitianDeterminant: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a * d + re * re + im * im, a * d - re * re + im * im, a * d - (re + im) ** 2],
-      solution: t(
-        `The product of the off-diagonal entries is $${re}^2 + ${im}^2 = ${re * re + im * im}$. So the determinant is $${a * d} - ${re * re + im * im} = ${answer}$.`,
-        `非对角元之积是 $${re}^2 + ${im}^2 = ${re * re + im * im}$。所以行列式是 $${a * d} - ${re * re + im * im} = ${answer}$。`,
+      mistakes: [
+        why(
+          a * d + re * re + im * im,
+          "The product of the off-diagonal entries is subtracted, not added.",
+          "非对角元之积要减去，而不是加上。",
+        ),
+        why(
+          a * d - re * re + im * im,
+          "The product of a number and its conjugate is $x^2 + y^2$; the $y^2$ term has a plus sign inside.",
+          "一个数与其共轭之积是 $x^2 + y^2$；其中 $y^2$ 一项是加号。",
+        ),
+        why(a * d - (re + im) ** 2, "That squares $x + y$; the product is $x^2 + y^2$.", "这是把 $x + y$ 平方；乘积应是 $x^2 + y^2$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Multiply the diagonal", "对角元相乘"], t("", ""), [`${inParens(a)} \\cdot ${inParens(d)} = ${a * d}`]],
+          [
+            ["Multiply the off-diagonal entries", "非对角元相乘"],
+            t("They are conjugates, so the product is real:", "它们互为共轭，所以乘积是实数："),
+            [`(${re} + ${tail})(${re} - ${tail}) = ${re}^2 + ${im}^2 = ${re * re + im * im}`],
+          ],
+          [["Subtract", "相减"], t("", ""), [`${a * d} - ${re * re + im * im} = ${answer}`]],
+        ],
+        t(
+          `The determinant is real, as it must be for a Hermitian matrix, whose eigenvalues are real and multiply to $${answer}$.`,
+          `行列式是实数，这正符合埃尔米特矩阵的性质：它的特征值都是实数，乘积为 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -4480,8 +4601,8 @@ const countingDiagonalForms: KnowledgePointDef = {
   id: "counting-the-diagonal-forms-of-a-matrix",
   title: t("Counting the diagonal forms of a matrix", "计算矩阵的对角形式"),
   explanation: t(
-    "A diagonalization $A = PDP^{-1}$ is not unique, because the columns of $P$ can be listed in any order. Reordering them reorders the entries of $D$. So the diagonal matrices similar to $A$ are exactly the arrangements of its eigenvalues along the diagonal, each repeated according to its multiplicity. Equal eigenvalues produce no new matrix when they trade places, so the count is a multinomial coefficient, not a plain factorial.",
-    "对角化 $A = PDP^{-1}$ 不是唯一的，因为 $P$ 的各列可以按任意顺序排列。重排它们也就重排了 $D$ 的元素。所以与 $A$ 相似的对角矩阵恰好是特征值（按重数重复）沿对角线的各种排列。相等的特征值交换位置不产生新矩阵，所以个数是多项式系数，而不是单纯的阶乘。",
+    "A diagonalization $A = PDP^{-1}$ is not unique, because the columns of $P$ can be listed in any order. Reordering them reorders the entries of $D$. So the diagonal matrices similar to $A$ are exactly the arrangements of its eigenvalues along the diagonal, each repeated according to its multiplicity. Equal eigenvalues produce no new matrix when they trade places, so the count is a multinomial coefficient, not a plain factorial. For example, the eigenvalues $1, 1, 2$ give $\\frac{3!}{2! \\, 1!} = 3$ diagonal matrices: $\\operatorname{diag}(1, 1, 2)$, $\\operatorname{diag}(1, 2, 1)$ and $\\operatorname{diag}(2, 1, 1)$.\n\n> **Watch out.** Divide by the factorial of each multiplicity, since swapping equal eigenvalues gives the same matrix. Counting only the distinct eigenvalues, as $3!$, ignores the size of the matrix.",
+    "对角化 $A = PDP^{-1}$ 不是唯一的，因为 $P$ 的各列可以按任意顺序排列。重排它们也就重排了 $D$ 的元素。所以与 $A$ 相似的对角矩阵恰好是特征值（按重数重复）沿对角线的各种排列。相等的特征值交换位置不产生新矩阵，所以个数是多项式系数，而不是单纯的阶乘。例如特征值 $1, 1, 2$ 给出 $\\frac{3!}{2! \\, 1!} = 3$ 个对角矩阵：$\\operatorname{diag}(1, 1, 2)$、$\\operatorname{diag}(1, 2, 1)$ 和 $\\operatorname{diag}(2, 1, 1)$。\n\n> **注意。** 要除以每个重数的阶乘，因为交换相等的特征值得到同一个矩阵。只按互异特征值计数得 $3!$，忽略了矩阵的大小。",
   ),
   generate(rng) {
     const [l1, l2, l3] = distinctNonzero(rng, 6, 3) as [number, number, number];
@@ -4498,10 +4619,40 @@ const countingDiagonalForms: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [factorial(n), 6, n, answer + 1, 2 * answer],
-      solution: t(
-        `A similar diagonal matrix is an arrangement of the eigenvalues, with multiplicities ${m1}, ${m2} and ${m3}. There are $\\frac{${n}!}{${m1}! \\, ${m2}! \\, ${m3}!} = ${answer}$ arrangements.`,
-        `相似的对角矩阵就是特征值的一种排列，重数分别是 ${m1}、${m2}、${m3}。共有 $\\frac{${n}!}{${m1}! \\, ${m2}! \\, ${m3}!} = ${answer}$ 种排列。`,
+      mistakes: [
+        why(
+          factorial(n),
+          "That counts swaps of equal eigenvalues as new matrices; divide by the factorial of each multiplicity.",
+          "这把相等特征值的交换也算成了新矩阵；要除以每个重数的阶乘。",
+        ),
+        why(
+          6,
+          "That arranges only the three distinct eigenvalues; each appears as often as its multiplicity.",
+          "这只排列了三个互异特征值；每个特征值要按其重数出现。",
+        ),
+        why(n, "That is the size of the matrix, not the number of arrangements.", "这是矩阵的阶数，不是排列的个数。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Read the multiplicities", "读出重数"],
+            t(
+              `The eigenvalues $${l1}$, $${l2}$, $${l3}$ appear $${m1}$, $${m2}$ and $${m3}$ times, on a diagonal of length $${n}$.`,
+              `特征值 $${l1}$、$${l2}$、$${l3}$ 分别出现 $${m1}$、$${m2}$、$${m3}$ 次，对角线长为 $${n}$。`,
+            ),
+          ],
+          [
+            ["Count the arrangements", "数排列"],
+            t("Swapping equal eigenvalues gives the same matrix:", "交换相等的特征值得到同一个矩阵："),
+            [
+              `\\frac{${n}!}{${m1}! \\, ${m2}! \\, ${m3}!} = \\frac{${factorial(n)}}{${factorial(m1) * factorial(m2) * factorial(m3)}} = ${answer}`,
+            ],
+          ],
+        ],
+        t(
+          `Choose the $${m1}$ places of $${l1}$ in $\\binom{${n}}{${m1}}$ ways, then the $${m2}$ places of $${l2}$ among the rest in $\\binom{${n - m1}}{${m2}}$ ways; the product is $${answer}$.`,
+          `先在 $\\binom{${n}}{${m1}}$ 种方式中选 $${l1}$ 的 $${m1}$ 个位置，再在剩下的位置中以 $\\binom{${n - m1}}{${m2}}$ 种方式选 $${l2}$ 的 $${m2}$ 个位置；乘积为 $${answer}$。`,
+        ),
       ),
     });
   },

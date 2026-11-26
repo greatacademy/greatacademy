@@ -2,11 +2,16 @@
 // regression: the reverse question, a harder case or a common trap.
 // See `deeperLinearAlgebraThird2Points`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
-
+import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** text turns a pair of strings into a Text. */
+const text = ([en, zh]: Pair): Text => t(en, zh);
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -39,8 +44,8 @@ const hermitianProduct = point(
   "the-complex-inner-product-conjugates-one-vector",
   ["The complex inner product conjugates one vector", "复内积要共轭一个向量"],
   [
-    "The inner product on $\\mathbb{C}^{n}$ conjugates the entries of one vector, so that a vector paired with itself gives a real, nonnegative length. Leaving out the conjugate gives a different number, and the imaginary part is usually where this difference shows.",
-    "$\\mathbb{C}^{n}$ 上的内积要把一个向量的元素取共轭，这样向量与自身配对时才得到非负实数长度。漏掉共轭会得到不同的数，这个差别通常体现在虚部上。",
+    "The inner product on $\\mathbb{C}^{n}$ conjugates the entries of one vector, so that a vector paired with itself gives a real, nonnegative length. Leaving out the conjugate gives a different number, and the imaginary part is usually where this difference shows. For example, $\\mathbf{u} = (i, 1)$ and $\\mathbf{v} = (1, i)$ give $\\overline{\\mathbf{u}}^{T}\\mathbf{v} = (-i)(1) + (1)(i) = 0$, while leaving out the conjugate gives $i + i = 2i$.\n\n> **Watch out.** Conjugate the entries of $\\mathbf{u}$, not those of $\\mathbf{v}$: conjugating $\\mathbf{v}$ gives the conjugate number, whose imaginary part has the opposite sign.",
+    "$\\mathbb{C}^{n}$ 上的内积要把一个向量的元素取共轭，这样向量与自身配对时才得到非负实数长度。漏掉共轭会得到不同的数，这个差别通常体现在虚部上。例如 $\\mathbf{u} = (i, 1)$，$\\mathbf{v} = (1, i)$ 给出 $\\overline{\\mathbf{u}}^{T}\\mathbf{v} = (-i)(1) + (1)(i) = 0$，而漏掉共轭会得到 $i + i = 2i$。\n\n> **注意。** 要共轭 $\\mathbf{u}$ 的元素，而不是 $\\mathbf{v}$ 的：共轭 $\\mathbf{v}$ 得到的是共轭的数，其虚部符号相反。",
   ],
   (rng) => {
     const a1 = rng.int(-4, 4);
@@ -55,18 +60,49 @@ const hermitianProduct = point(
     const product = "\\overline{\\mathbf{u}}^{T}\\mathbf{v}";
     const u = vec(complex(a1, b1), complex(a2, b2));
     const v = vec(complex(c1, d1), complex(c2, d2));
-    return ask(
-      [
+    const im1 = a1 * d1 - b1 * c1;
+    const im2 = a2 * d2 - b2 * c2;
+    return numberProblem({
+      prompt: text([
         `Find the imaginary part of $${product}$ for $\\mathbf{u} = ${u}$ and $\\mathbf{v} = ${v}$.`,
         `对 $\\mathbf{u} = ${u}$，$\\mathbf{v} = ${v}$，求 $${product}$ 的虚部。`,
-      ],
+      ]),
       answer,
-      [a1 * d1 + b1 * c1 + a2 * d2 + b2 * c2, a1 * c1 + b1 * d1 + a2 * c2 + b2 * d2, -answer],
-      [
-        `The conjugate of $\\mathbf{u}$ has entries $${complex(a1, -b1)}$ and $${complex(a2, -b2)}$. Multiplying by the entries of $\\mathbf{v}$ gives imaginary parts $${a1 * d1 - b1 * c1}$ and $${a2 * d2 - b2 * c2}$, whose sum is $${answer}$.`,
-        `$\\mathbf{u}$ 的共轭的元素是 $${complex(a1, -b1)}$ 和 $${complex(a2, -b2)}$。与 $\\mathbf{v}$ 的元素相乘，虚部分别是 $${a1 * d1 - b1 * c1}$ 和 $${a2 * d2 - b2 * c2}$，和为 $${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(a1 * d1 + b1 * c1 + a2 * d2 + b2 * c2, "The conjugate of $\\mathbf{u}$ is left out.", "漏掉了 $\\mathbf{u}$ 的共轭。"),
+        why(a1 * c1 + b1 * d1 + a2 * c2 + b2 * d2, "That is the real part of the product.", "这是乘积的实部。"),
+        why(
+          -answer,
+          "That conjugates $\\mathbf{v}$ instead of $\\mathbf{u}$, which flips the sign of the imaginary part.",
+          "这是共轭了 $\\mathbf{v}$ 而不是 $\\mathbf{u}$，使虚部变号。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Conjugate $\\mathbf{u}$", "共轭 $\\mathbf{u}$"],
+            text([
+              `$\\overline{\\mathbf{u}}$ has entries $${complex(a1, -b1)}$ and $${complex(a2, -b2)}$.`,
+              `$\\overline{\\mathbf{u}}$ 的元素是 $${complex(a1, -b1)}$ 和 $${complex(a2, -b2)}$。`,
+            ]),
+          ],
+          [
+            ["Take the imaginary part of each product", "取每个乘积的虚部"],
+            text(["The imaginary part of $(x - yi)(z + wi)$ is $xw - yz$:", "$(x - yi)(z + wi)$ 的虚部是 $xw - yz$："]),
+            [
+              `${wrap(a1)} \\cdot ${wrap(d1)} ${b1 * c1 < 0 ? "+" : "-"} ${Math.abs(b1 * c1)} = ${im1}`,
+              `${wrap(a2)} \\cdot ${wrap(d2)} ${b2 * c2 < 0 ? "+" : "-"} ${Math.abs(b2 * c2)} = ${im2}`,
+            ],
+          ],
+          [["Add", "相加"], text(["", ""]), [`${im1} + ${wrap(im2)} = ${answer}`]],
+        ],
+        text([
+          `The first product in full is $(${complex(a1, -b1)})(${complex(c1, d1)}) = ${complex(a1 * c1 + b1 * d1, im1)}$, whose imaginary part is $${im1}$.`,
+          `第一个乘积完整写出为 $(${complex(a1, -b1)})(${complex(c1, d1)}) = ${complex(a1 * c1 + b1 * d1, im1)}$，虚部为 $${im1}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -74,8 +110,8 @@ const complexThreshold = point(
   "the-largest-entry-that-keeps-eigenvalues-complex",
   ["The largest entry that keeps eigenvalues complex", "使特征值保持复数的最大元素"],
   [
-    "A real $2 \\times 2$ matrix has non-real eigenvalues exactly when the discriminant $(a - d)^{2} + 4bc$ of its characteristic polynomial is negative. So when $b$ is positive, the entry $c$ must lie strictly below a bound, and a discriminant of zero gives a repeated real eigenvalue instead.",
-    "实 $2 \\times 2$ 矩阵有非实特征值，当且仅当特征多项式的判别式 $(a - d)^{2} + 4bc$ 为负。所以当 $b$ 为正时，元素 $c$ 必须严格小于某个界，判别式为零时得到的则是重实特征值。",
+    "A real $2 \\times 2$ matrix has non-real eigenvalues exactly when the discriminant $(a - d)^{2} + 4bc$ of its characteristic polynomial is negative. So when $b$ is positive, the entry $c$ must lie strictly below a bound, and a discriminant of zero gives a repeated real eigenvalue instead. For example, $\\begin{pmatrix} 1 & 1 \\\\ k & 3 \\end{pmatrix}$ has discriminant $4 + 4k$, which is negative for $k < -1$, so the largest integer is $k = -2$.\n\n> **Watch out.** The inequality is strict: at the bound itself the discriminant is $0$ and the eigenvalues are real. Keep the sign of the bound, which is negative when $b > 0$.",
+    "实 $2 \\times 2$ 矩阵有非实特征值，当且仅当特征多项式的判别式 $(a - d)^{2} + 4bc$ 为负。所以当 $b$ 为正时，元素 $c$ 必须严格小于某个界，判别式为零时得到的则是重实特征值。例如 $\\begin{pmatrix} 1 & 1 \\\\ k & 3 \\end{pmatrix}$ 的判别式为 $4 + 4k$，当 $k < -1$ 时为负，所以最大整数为 $k = -2$。\n\n> **注意。** 不等式是严格的：在界上判别式为 $0$，特征值是实数。要保留界的符号，$b > 0$ 时它是负的。",
   ],
   (rng) => {
     const a = rng.int(-6, 6);
@@ -85,24 +121,57 @@ const complexThreshold = point(
     const floor = Math.floor(D / (4 * b));
     const answer = -floor - 1;
     const bound = Q.of(-D, 4 * b);
-    return ask(
-      [
-        `Find the largest integer $k$ for which $${mat([
-          [a, b],
-          ["k", d],
-        ])}$ has non-real eigenvalues.`,
-        `求使 $${mat([
-          [a, b],
-          ["k", d],
-        ])}$ 有非实特征值的最大整数 $k$。`,
-      ],
+    const M = mat([
+      [a, b],
+      ["k", d],
+    ]);
+    const disc = (k: number) => D + 4 * b * k;
+    return numberProblem({
+      prompt: text([`Find the largest integer $k$ for which $${M}$ has non-real eigenvalues.`, `求使 $${M}$ 有非实特征值的最大整数 $k$。`]),
       answer,
-      [-floor, -floor - 2, floor + 1],
-      [
-        `The discriminant is $${D} + ${4 * b}k$, which must be negative. So $k < ${bound.toLatex()}$, and the largest such integer is $${answer}$.`,
-        `判别式是 $${D} + ${4 * b}k$，它必须为负。所以 $k < ${bound.toLatex()}$，满足条件的最大整数是 $${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          -floor,
+          `At $k = ${-floor}$ the discriminant is $${disc(-floor)}$, not negative, so the eigenvalues are real.`,
+          `$k = ${-floor}$ 时判别式为 $${disc(-floor)}$，不是负数，所以特征值是实数。`,
+        ),
+        why(
+          -floor - 2,
+          `That works, but $${answer}$ is larger and still gives a negative discriminant.`,
+          `它满足条件，但 $${answer}$ 更大，判别式仍为负。`,
+        ),
+        why(
+          floor + 1,
+          "The sign of the bound is lost; with $b > 0$ the entry must be negative.",
+          "界的符号丢了；$b > 0$ 时这个元素必须为负。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the discriminant", "写出判别式"],
+            text([
+              `$(\\operatorname{tr})^2 - 4\\det = (a - d)^2 + 4bk$ for this matrix:`,
+              `对这个矩阵，$(\\operatorname{tr})^2 - 4\\det = (a - d)^2 + 4bk$：`,
+            ]),
+            [`${wrap(a - d)}^2 + 4 \\cdot ${b} \\cdot k = ${D} + ${4 * b}k`],
+          ],
+          [["Make it negative", "令其为负"], text(["", ""]), [`${D} + ${4 * b}k < 0`, `k < ${bound.toLatex()}`]],
+          [
+            ["Take the largest integer", "取最大整数"],
+            text([
+              `The largest integer strictly below $${bound.toLatex()}$ is $${answer}$.`,
+              `严格小于 $${bound.toLatex()}$ 的最大整数是 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `$k = ${answer}$ gives the discriminant $${disc(answer)} < 0$, while $k = ${answer + 1}$ gives $${disc(answer + 1)} \\ge 0$.`,
+          `$k = ${answer}$ 给出判别式 $${disc(answer)} < 0$，而 $k = ${answer + 1}$ 给出 $${disc(answer + 1)} \\ge 0$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -110,8 +179,8 @@ const rowFromComplexPair = point(
   "a-row-of-a-real-matrix-from-a-complex-eigenpair",
   ["A row of a real matrix from a complex eigenpair", "由复特征对求实矩阵的一行"],
   [
-    "One complex equation holds two real equations. For a real matrix, the first row of $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $\\mathbf{v} = (1, p + qi)$ can be split into real and imaginary parts, and comparing them determines both entries of that row of the matrix.",
-    "一个复方程包含两个实方程。对实矩阵，$\\mathbf{v} = (1, p + qi)$ 时 $A\\mathbf{v} = \\lambda\\mathbf{v}$ 的第一行可以分成实部和虚部，比较它们就能确定矩阵这一行的两个元素。",
+    "One complex equation holds two real equations. For a real matrix, the first row of $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $\\mathbf{v} = (1, p + qi)$ can be split into real and imaginary parts, and comparing them determines both entries of that row of the matrix. For example, $\\mathbf{v} = (1, 1 + 2i)$ and $\\lambda = 3 + 4i$: the first row $(s, t)$ gives $s + t(1 + 2i) = 3 + 4i$, so $2t = 4$, $t = 2$, and $s + 2 = 3$, $s = 1$.\n\n> **Watch out.** The imaginary parts give $tq = \\operatorname{Im}\\lambda$, so divide by $q$; and the real part of $\\lambda$ is $s + tp$, not $s$ alone.",
+    "一个复方程包含两个实方程。对实矩阵，$\\mathbf{v} = (1, p + qi)$ 时 $A\\mathbf{v} = \\lambda\\mathbf{v}$ 的第一行可以分成实部和虚部，比较它们就能确定矩阵这一行的两个元素。例如 $\\mathbf{v} = (1, 1 + 2i)$，$\\lambda = 3 + 4i$：第一行 $(s, t)$ 给出 $s + t(1 + 2i) = 3 + 4i$，所以 $2t = 4$，$t = 2$，而 $s + 2 = 3$，$s = 1$。\n\n> **注意。** 虚部给出 $tq = \\operatorname{Im}\\lambda$，要除以 $q$；$\\lambda$ 的实部是 $s + tp$，而不只是 $s$。",
   ],
   (rng) => {
     const q = nz(rng, 3);
@@ -125,18 +194,58 @@ const rowFromComplexPair = point(
     const lambda = complex(a, b);
     const v = vec(1, complex(p, q));
     const name = entry ? "(1, 2)" : "(1, 1)";
-    return ask(
-      [
+    const tp = t * p;
+    const sSum = `${a} ${tp < 0 ? "+" : "-"} ${Math.abs(tp)}`;
+    const mistakes = entry
+      ? [
+          why(
+            b,
+            `That is $\\operatorname{Im}\\lambda$; it equals $${wrap(q)}t$, so divide by $${q}$.`,
+            `这是 $\\operatorname{Im}\\lambda$；它等于 $${wrap(q)}t$，要除以 $${q}$。`,
+          ),
+          why(-t, "The sign is flipped; compare the imaginary parts again.", "符号反了；请重新比较虚部。"),
+          why(
+            a,
+            "That is $\\operatorname{Re}\\lambda$; the entry comes from the imaginary parts.",
+            "这是 $\\operatorname{Re}\\lambda$；这个元素由虚部求出。",
+          ),
+        ]
+      : [
+          why(
+            a,
+            `That is $\\operatorname{Re}\\lambda$; it equals $s + ${wrap(t)} \\cdot ${wrap(p)}$, not $s$ alone.`,
+            `这是 $\\operatorname{Re}\\lambda$；它等于 $s + ${wrap(t)} \\cdot ${wrap(p)}$，而不只是 $s$。`,
+          ),
+          why(a + tp, "The term $tp$ is added instead of subtracted.", "$tp$ 一项被加上了，应当减去。"),
+          why(t, "That is the $(1, 2)$ entry, found from the imaginary parts.", "这是由虚部求出的 $(1, 2)$ 元素。"),
+        ];
+    return numberProblem({
+      prompt: text([
         `A real $2 \\times 2$ matrix $A$ has the eigenvector $${v}$ for the eigenvalue $${lambda}$. Find the $${name}$ entry of $A$.`,
         `实 $2 \\times 2$ 矩阵 $A$ 有关于特征值 $${lambda}$ 的特征向量 $${v}$。求 $A$ 的 $${name}$ 元素。`,
-      ],
+      ]),
       answer,
-      entry ? [b, -t, a] : [a, a + t * p, t],
-      [
-        `Write the first row as $(s, t)$. Then $s + t(${complex(p, q)}) = ${lambda}$. The imaginary parts give $t = ${t}$, and the real parts give $s = ${a} - ${wrap(t)} \\cdot ${wrap(p)} = ${s}$.`,
-        `设第一行为 $(s, t)$。则 $s + t(${complex(p, q)}) = ${lambda}$。比较虚部得 $t = ${t}$，比较实部得 $s = ${a} - ${wrap(t)} \\cdot ${wrap(p)} = ${s}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: mistakes.filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the first row", "写出第一行"],
+            text([
+              `Call the first row $(s, t)$. The first entry of $A\\mathbf{v} = \\lambda\\mathbf{v}$ reads:`,
+              `设第一行为 $(s, t)$。$A\\mathbf{v} = \\lambda\\mathbf{v}$ 的第一个分量为：`,
+            ]),
+            [`s + t(${complex(p, q)}) = ${lambda}`],
+          ],
+          [["Compare imaginary parts", "比较虚部"], text(["", ""]), [`${q === 1 ? "" : q === -1 ? "-" : q}t = ${b}`, `t = ${t}`]],
+          [["Compare real parts", "比较实部"], text(["", ""]), [`s ${tp < 0 ? "-" : "+"} ${Math.abs(tp)} = ${a}`, `s = ${sSum} = ${s}`]],
+        ],
+        text([
+          `$${s} + ${wrap(t)}(${complex(p, q)}) = ${complex(s + tp, t * q)} = ${lambda}$.`,
+          `$${s} + ${wrap(t)}(${complex(p, q)}) = ${complex(s + tp, t * q)} = ${lambda}$。`,
+        ]),
+      ),
+    });
   },
 );
 
