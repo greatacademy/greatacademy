@@ -1548,8 +1548,8 @@ const cartesianFromPolar = point(
   "a-cartesian-partial-from-polar-ones",
   ["A Cartesian partial from polar ones", "由极坐标偏导求直角坐标偏导"],
   [
-    "Inverting the polar chain rule gives $z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$. The factor $\\frac{1}{r}$ is needed because a change of $\\theta$ moves a point by a distance proportional to $r$. At $\\theta = \\frac{\\pi}{2}$, $x$ changes only through $\\theta$.",
-    "把极坐标链式法则反过来，得 $z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$。需要因子 $\\frac{1}{r}$，是因为 $\\theta$ 的变化使点移动的距离与 $r$ 成正比。在 $\\theta = \\frac{\\pi}{2}$ 处，$x$ 只通过 $\\theta$ 变化。",
+    "Inverting the polar chain rule gives $z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$. The factor $\\frac{1}{r}$ is needed because a change of $\\theta$ moves a point by a distance proportional to $r$. At $\\theta = \\frac{\\pi}{2}$, $x$ changes only through $\\theta$. At $r = 2$, $\\theta = \\frac{3\\pi}{2}$ with $z_{r} = 5$ and $z_{\\theta} = 4$: $\\cos\\theta = 0$ and $\\sin\\theta = -1$, so $z_{x} = 0 - \\frac{4 \\cdot (-1)}{2} = 2$.\n\n> **Watch out.** Divide $z_{\\theta}$ by $r$, and keep the minus sign in front of that term. Read the cosine and sine at the given angle; at $\\theta = \\pi$ the cosine is $-1$.",
+    "把极坐标链式法则反过来，得 $z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$。需要因子 $\\frac{1}{r}$，是因为 $\\theta$ 的变化使点移动的距离与 $r$ 成正比。在 $\\theta = \\frac{\\pi}{2}$ 处，$x$ 只通过 $\\theta$ 变化。在 $r = 2$，$\\theta = \\frac{3\\pi}{2}$ 处，若 $z_{r} = 5$，$z_{\\theta} = 4$：$\\cos\\theta = 0$，$\\sin\\theta = -1$，所以 $z_{x} = 0 - \\frac{4 \\cdot (-1)}{2} = 2$。\n\n> **注意。** $z_{\\theta}$ 要除以 $r$，并保留这一项前面的负号。在给定角度处读出余弦和正弦；在 $\\theta = \\pi$ 处余弦是 $-1$。",
   ],
   (rng) => {
     const p = nz(rng, 12);
@@ -1558,18 +1558,61 @@ const cartesianFromPolar = point(
     const k = rng.int(0, 2);
     const theta = ["0", "\\frac{\\pi}{2}", "\\pi"][k] as string;
     const answer = k === 0 ? Q.of(p) : k === 1 ? Q.of(-q, r0) : Q.of(-p);
-    return ask(
-      [
+    const zy = k === 0 ? Q.of(q, r0) : k === 1 ? Q.of(p) : Q.of(-q, r0);
+    const cos = [1, 0, -1][k] as number;
+    const sin = [0, 1, 0][k] as number;
+    return numberProblem({
+      prompt: text([
         `At the point with $r = ${r0}$ and $\\theta = ${theta}$, we have $z_{r} = ${p}$ and $z_{\\theta} = ${q}$. Find $z_{x}$.`,
         `在 $r = ${r0}$，$\\theta = ${theta}$ 的点，$z_{r} = ${p}$，$z_{\\theta} = ${q}$。求 $z_{x}$。`,
-      ],
+      ]),
       answer,
-      [answer.neg(), Q.of(q), Q.of(p + q, r0)],
-      [
-        `$z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$. At $\\theta = ${theta}$ the cosine is $${[1, 0, -1][k]}$ and the sine is $${[0, 1, 0][k]}$, so $z_{x} = ${answer.toLatex()}$.`,
-        `$z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$。在 $\\theta = ${theta}$ 处，余弦是 $${[1, 0, -1][k]}$，正弦是 $${[0, 1, 0][k]}$，所以 $z_{x} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        k === 1
+          ? why(
+              answer.neg(),
+              "The minus sign in front of $\\frac{z_{\\theta}\\sin\\theta}{r}$ is lost.",
+              "漏掉了 $\\frac{z_{\\theta}\\sin\\theta}{r}$ 前面的负号。",
+            )
+          : why(answer.neg(), `At $\\theta = ${theta}$ the cosine is $${cos}$.`, `在 $\\theta = ${theta}$ 处余弦是 $${cos}$。`),
+        k === 1
+          ? why(Q.of(-q), `$z_{\\theta}$ must be divided by $r = ${r0}$.`, `$z_{\\theta}$ 要除以 $r = ${r0}$。`)
+          : why(
+              answer.sub(Q.of(q, r0)),
+              `$\\sin ${theta} = 0$, so the $z_{\\theta}$ term drops out.`,
+              `$\\sin ${theta} = 0$，所以 $z_{\\theta}$ 项消失。`,
+            ),
+        k === 1
+          ? why(p, "$\\cos\\frac{\\pi}{2} = 0$, so the $z_{r}$ term drops out.", "$\\cos\\frac{\\pi}{2} = 0$，所以 $z_{r}$ 项消失。")
+          : why(
+              q,
+              `That is $z_{\\theta}$; at $\\theta = ${theta}$, $z_{x}$ comes from $z_{r}$.`,
+              `那是 $z_{\\theta}$；在 $\\theta = ${theta}$ 处，$z_{x}$ 来自 $z_{r}$。`,
+            ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the inverse chain rule", "写出反向的链式法则"],
+            t(
+              "$z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$.",
+              "$z_{x} = z_{r}\\cos\\theta - \\frac{z_{\\theta}\\sin\\theta}{r}$。",
+            ),
+          ],
+          [
+            ["Substitute", "代入"],
+            t(
+              `At $\\theta = ${theta}$, $\\cos\\theta = ${cos}$ and $\\sin\\theta = ${sin}$, so $z_{x} = ${p} \\cdot ${paren(cos)} - \\frac{${q} \\cdot ${sin}}{${r0}} = ${answer.toLatex()}$.`,
+              `在 $\\theta = ${theta}$ 处，$\\cos\\theta = ${cos}$，$\\sin\\theta = ${sin}$，所以 $z_{x} = ${p} \\cdot ${paren(cos)} - \\frac{${q} \\cdot ${sin}}{${r0}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $z_{x} = ${answer.toLatex()}$ and $z_{y} = ${zy.toLatex()}$, the forward rules give $z_{r} = z_{x}\\cos\\theta + z_{y}\\sin\\theta = ${p}$ and $z_{\\theta} = r(-z_{x}\\sin\\theta + z_{y}\\cos\\theta) = ${q}$, as given.`,
+          `取 $z_{x} = ${answer.toLatex()}$，$z_{y} = ${zy.toLatex()}$，正向公式给出 $z_{r} = z_{x}\\cos\\theta + z_{y}\\sin\\theta = ${p}$，$z_{\\theta} = r(-z_{x}\\sin\\theta + z_{y}\\cos\\theta) = ${q}$，与已知一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1578,26 +1621,56 @@ const movingAlongLevel = {
     "a-velocity-that-keeps-a-function-constant",
     ["A velocity that keeps a function constant", "使函数保持不变的速度"],
     [
-      "By the chain rule, $\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$. The function stays constant to first order exactly when this dot product is zero, that is, when the velocity is perpendicular to the gradient, or in other words tangent to the level curve.",
-      "由链式法则，$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$。当这个点积为零时，函数在一阶上保持不变，也就是速度垂直于梯度，或者说与等值线相切。",
+      "By the chain rule, $\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$. The function stays constant to first order exactly when this dot product is zero, that is, when the velocity is perpendicular to the gradient, or in other words tangent to the level curve. With $\\nabla f = \\langle 5, 10 \\rangle$ and $\\mathbf{r}' = \\langle -4, k \\rangle$, $-20 + 10k = 0$ gives $k = 2$.\n\n> **Watch out.** $k$ multiplies the second component of the gradient, so divide by that one. A velocity parallel to the gradient changes $f$ fastest; the one wanted here is perpendicular.",
+      "由链式法则，$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}'(t)$。当这个点积为零时，函数在一阶上保持不变，也就是速度垂直于梯度，或者说与等值线相切。若 $\\nabla f = \\langle 5, 10 \\rangle$，$\\mathbf{r}' = \\langle -4, k \\rangle$，由 $-20 + 10k = 0$ 得 $k = 2$。\n\n> **注意。** $k$ 与梯度的第二个分量相乘，所以要除以这个分量。与梯度平行的速度使 $f$ 变化最快；这里要的是垂直的速度。",
     ],
     (rng) => {
       const p = nz(rng, 9);
       const q = nz(rng, 9);
       const a = nz(rng, 9);
       const answer = Q.of(-a * p, q);
-      return ask(
-        [
+      return numberProblem({
+        prompt: text([
           `At an instant, a particle has $\\nabla f = ${br(p, q)}$ and $\\mathbf{r}'(t) = ${br(a, "k")}$. Find $k$ so that $\\frac{df}{dt} = 0$ at that instant.`,
           `在某一时刻，质点处 $\\nabla f = ${br(p, q)}$，$\\mathbf{r}'(t) = ${br(a, "k")}$。求 $k$，使该时刻 $\\frac{df}{dt} = 0$。`,
-        ],
+        ]),
         answer,
-        [answer.neg(), Q.of(a * q, p), a],
-        [
-          `$\\frac{df}{dt} = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k$. Setting this to zero gives $k = ${answer.toLatex()}$.`,
-          `$\\frac{df}{dt} = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k$。令它为零，得 $k = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(answer.neg(), "The sign is lost when the first term moves to the other side.", "把第一项移到另一边时丢了符号。"),
+          why(
+            Q.of(a * q, p),
+            "That makes the velocity parallel to the gradient, the direction in which $f$ changes fastest.",
+            "那使速度与梯度平行，是 $f$ 变化最快的方向。",
+          ),
+          why(
+            Q.of(-a * q, p),
+            `The components are paired wrongly: $k$ multiplies $${q}$, not $${p}$.`,
+            `分量配错了：$k$ 乘的是 $${q}$，不是 $${p}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Write the rate", "写出变化率"],
+              t(
+                `$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}' = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k = ${p * a} + ${paren(q)}k$.`,
+                `$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}' = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k = ${p * a} + ${paren(q)}k$。`,
+              ),
+            ],
+            [
+              ["Set it to zero", "令其为零"],
+              t(
+                `$${paren(q)}k = ${-p * a}$, so $k = ${answer.toLatex()}$.`,
+                `$${paren(q)}k = ${-p * a}$，所以 $k = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$${paren(p)} \\cdot ${paren(a)} + ${paren(q)} \\cdot ${paren(answer)} = ${p * a} + ${paren(-p * a)} = 0$, so the velocity is perpendicular to the gradient.`,
+            `$${paren(p)} \\cdot ${paren(a)} + ${paren(q)} \\cdot ${paren(answer)} = ${p * a} + ${paren(-p * a)} = 0$，所以速度垂直于梯度。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings2["the-multivariable-chain-rule-in-vector-form#a-velocity-that-keeps-a-function-constant"],
@@ -1607,8 +1680,8 @@ const worstError = point(
   "the-worst-case-error-of-a-product",
   ["The worst case error of a product", "乘积的最坏误差"],
   [
-    "The differential gives $dV = yz\\,dx + xz\\,dy + xy\\,dz$. When each measurement has error up to $\\varepsilon$, the worst case takes every error with the sign that adds, so the bound is the sum of the three products times $\\varepsilon$.",
-    "微分给出 $dV = yz\\,dx + xz\\,dy + xy\\,dz$。当每次测量的误差最多为 $\\varepsilon$ 时，最坏情况是所有误差都取相加的符号，所以上界是三个乘积的和乘以 $\\varepsilon$。",
+    "The differential gives $dV = yz\\,dx + xz\\,dy + xy\\,dz$. When each measurement has error up to $\\varepsilon$, the worst case takes every error with the sign that adds, so the bound is the sum of the three products times $\\varepsilon$. For a box $10$ by $2$ by $3$ with each error at most $\\frac{1}{5}$, the bound is $(6 + 30 + 20) \\cdot \\frac{1}{5} = \\frac{56}{5}$.\n\n> **Watch out.** The error in each length is multiplied by the product of the other two lengths, not by the volume and not by the length itself.",
+    "微分给出 $dV = yz\\,dx + xz\\,dy + xy\\,dz$。当每次测量的误差最多为 $\\varepsilon$ 时，最坏情况是所有误差都取相加的符号，所以上界是三个乘积的和乘以 $\\varepsilon$。对尺寸为 $10$、$2$、$3$，每个误差最多 $\\frac{1}{5}$ 的长方体，上界是 $(6 + 30 + 20) \\cdot \\frac{1}{5} = \\frac{56}{5}$。\n\n> **注意。** 每个长度的误差要乘以另外两个长度的乘积，而不是乘以体积，也不是乘以这个长度本身。",
   ],
   (rng) => {
     const x = rng.int(2, 9);
@@ -1617,18 +1690,57 @@ const worstError = point(
     const e = rng.pick([Q.of(1, 10), Q.of(1, 20), Q.of(1, 100)]);
     const sum = y * z + x * z + x * y;
     const answer = e.mul(Q.of(sum));
-    return ask(
-      [
+    const grown = Q.of(x)
+      .add(e)
+      .mul(Q.of(y).add(e))
+      .mul(Q.of(z).add(e))
+      .sub(Q.of(x * y * z));
+    return numberProblem({
+      prompt: text([
         `A box measures $${x}$ by $${y}$ by $${z}$, and each length has error at most $${e.toLatex()}$. Use differentials to find the largest error in its volume.`,
         `一个长方体的尺寸是 $${x}$、$${y}$、$${z}$，每个长度的误差最多为 $${e.toLatex()}$。用微分求体积的最大误差。`,
-      ],
+      ]),
       answer,
-      [e.mul(Q.of(x * y * z)), e.mul(Q.of(x + y + z)), e.mul(Q.of(3 * x * y * z))],
-      [
-        `$|dV| \\le (${y * z} + ${x * z} + ${x * y})${e.toLatex()}$, taking all three errors with the same effect. This is $${answer.toLatex()}$.`,
-        `所有误差都取同样的效果时，$|dV| \\le (${y * z} + ${x * z} + ${x * y})${e.toLatex()}$，即 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          e.mul(Q.of(x * y * z)),
+          "That multiplies the volume by the error; each error is multiplied by the product of the other two lengths.",
+          "那是把体积乘以误差；每个误差要乘以另外两个长度的乘积。",
+        ),
+        why(
+          e.mul(Q.of(x + y + z)),
+          "That multiplies each error by its own length; $\\frac{\\partial V}{\\partial x} = yz$, not $x$.",
+          "那是把每个误差乘以它自己的长度；$\\frac{\\partial V}{\\partial x} = yz$，不是 $x$。",
+        ),
+        why(
+          e.mul(Q.of(y * z)),
+          "Only the error in the first length is counted; all three add in the worst case.",
+          "只计算了第一个长度的误差；最坏情况下三个都要加上。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the differential", "求微分"],
+            t(
+              `$dV = yz\\,dx + xz\\,dy + xy\\,dz = ${y * z}\\,dx + ${x * z}\\,dy + ${x * y}\\,dz$.`,
+              `$dV = yz\\,dx + xz\\,dy + xy\\,dz = ${y * z}\\,dx + ${x * z}\\,dy + ${x * y}\\,dz$。`,
+            ),
+          ],
+          [
+            ["Take the worst case", "取最坏情况"],
+            t(
+              `With every error $${e.toLatex()}$ in the same direction, $|dV| \\le ${sum} \\cdot ${e.toLatex()} = ${answer.toLatex()}$.`,
+              `所有误差都取 $${e.toLatex()}$ 且同向时，$|dV| \\le ${sum} \\cdot ${e.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Growing every side by exactly $${e.toLatex()}$ raises the volume by $${grown.toLatex()}$, just above $${answer.toLatex()}$; the difference comes from the products of the small errors.`,
+          `把每条边精确地增大 $${e.toLatex()}$，体积增加 $${grown.toLatex()}$，略大于 $${answer.toLatex()}$；差别来自小误差之间的乘积。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1637,8 +1749,8 @@ const affinePreimage = {
     "the-point-that-an-affine-map-sends-to-a-target",
     ["The point that an affine map sends to a target", "仿射变换映到目标点的原像"],
     [
-      "An affine map with nonzero determinant is invertible, so each target has exactly one preimage. Subtract the translation first, and then solve the linear system. Doing this in the wrong order, or leaving out the translation, gives a different point.",
-      "行列式不为零的仿射变换可逆，所以每个目标点恰有一个原像。先减去平移部分，再解线性方程组。顺序错误或漏掉平移，都会得到不同的点。",
+      "An affine map with nonzero determinant is invertible, so each target has exactly one preimage. Subtract the translation first, and then solve the linear system. Doing this in the wrong order, or leaving out the translation, gives a different point. For $T(x, y) = (2x + 5y + 1, x + 3y - 2)$ and the target $(9, 3)$, subtracting gives $2x + 5y = 8$ and $x + 3y = 5$; the determinant is $1$, so $x = 8 \\cdot 3 - 5 \\cdot 5 = -1$ and $y = 2 \\cdot 5 - 1 \\cdot 8 = 2$.\n\n> **Watch out.** Solve with the target minus the translation on the right-hand side, not the target itself, and give the coordinate that is asked for.",
+      "行列式不为零的仿射变换可逆，所以每个目标点恰有一个原像。先减去平移部分，再解线性方程组。顺序错误或漏掉平移，都会得到不同的点。对 $T(x, y) = (2x + 5y + 1, x + 3y - 2)$ 和目标点 $(9, 3)$，减去平移得 $2x + 5y = 8$，$x + 3y = 5$；行列式为 $1$，所以 $x = 8 \\cdot 3 - 5 \\cdot 5 = -1$，$y = 2 \\cdot 5 - 1 \\cdot 8 = 2$。\n\n> **注意。** 方程右边要用目标点减去平移量，而不是目标点本身；还要给出题目所求的那个坐标。",
     ],
     (rng) => {
       const a = nz(rng, 4);
@@ -1653,18 +1765,45 @@ const affinePreimage = {
       const u = a * x + b * y + e;
       const v = c * x + d * y + f;
       const map = `(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [f, ""])})`;
-      return ask(
-        [
+      const det = a * d - b * c;
+      return numberProblem({
+        prompt: text([
           `$T(x, y) = ${map}$ sends a point $(x, y)$ to $(${u}, ${v})$. Find $x$.`,
           `$T(x, y) = ${map}$ 把点 $(x, y)$ 映到 $(${u}, ${v})$。求 $x$。`,
-        ],
-        x,
-        [y, u, -x],
-        [
-          `Subtracting the translation gives $${poly([a, "x"], [b, "y"])} = ${u - e}$ and $${poly([c, "x"], [d, "y"])} = ${v - f}$. The determinant is $${a * d - b * c}$, and solving gives $x = ${x}$ and $y = ${y}$.`,
-          `减去平移部分，得 $${poly([a, "x"], [b, "y"])} = ${u - e}$，$${poly([c, "x"], [d, "y"])} = ${v - f}$。行列式是 $${a * d - b * c}$，解得 $x = ${x}$，$y = ${y}$。`,
-        ],
-      );
+        ]),
+        answer: x,
+        mistakes: apart(x, [
+          why(y, "That is $y$; the question asks for $x$.", "那是 $y$；题目求的是 $x$。"),
+          why(
+            u,
+            "That is the first coordinate of the target, not of the point sent there.",
+            "那是目标点的第一个坐标，不是被映过去的点的坐标。",
+          ),
+          why(Q.of(u * d - b * v, det), "The translation was not subtracted before solving.", "求解前没有减去平移部分。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Subtract the translation", "减去平移部分"],
+              t(
+                `$${poly([a, "x"], [b, "y"])} = ${u} - ${paren(e)} = ${u - e}$ and $${poly([c, "x"], [d, "y"])} = ${v} - ${paren(f)} = ${v - f}$.`,
+                `$${poly([a, "x"], [b, "y"])} = ${u} - ${paren(e)} = ${u - e}$，$${poly([c, "x"], [d, "y"])} = ${v} - ${paren(f)} = ${v - f}$。`,
+              ),
+            ],
+            [
+              ["Solve for x", "解出 x"],
+              t(
+                `The determinant is $${det}$, so $x = \\frac{${u - e} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(v - f)}}{${det}} = ${x}$, and likewise $y = ${y}$.`,
+                `行列式是 $${det}$，所以 $x = \\frac{${u - e} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(v - f)}}{${det}} = ${x}$，同理 $y = ${y}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$T(${x}, ${y}) = (${a} \\cdot ${paren(x)} + ${paren(b)} \\cdot ${paren(y)} + ${paren(e)}, ${c} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} + ${paren(f)}) = (${u}, ${v})$.`,
+            `$T(${x}, ${y}) = (${a} \\cdot ${paren(x)} + ${paren(b)} \\cdot ${paren(y)} + ${paren(e)}, ${c} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} + ${paren(f)}) = (${u}, ${v})$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings3["the-image-of-an-affine-transformation#the-point-that-an-affine-map-sends-to-a-target"],
@@ -1674,8 +1813,8 @@ const squarePreimage = point(
   "undoing-the-squaring-map",
   ["Undoing the squaring map", "还原平方映射"],
   [
-    "The map $u = x^{2} - y^{2}$, $v = 2xy$ sends $(x, y)$ and $(-x, -y)$ to the same point, so it needs a restriction like $x > 0$ to be inverted. Then $u^{2} + v^{2} = (x^{2} + y^{2})^{2}$ gives $x^{2} + y^{2}$, and adding $u$ gives $2x^{2}$.",
-    "映射 $u = x^{2} - y^{2}$，$v = 2xy$ 把 $(x, y)$ 和 $(-x, -y)$ 映到同一点，所以需要 $x > 0$ 这样的限制才能求逆。由 $u^{2} + v^{2} = (x^{2} + y^{2})^{2}$ 得 $x^{2} + y^{2}$，再加上 $u$ 得 $2x^{2}$。",
+    "The map $u = x^{2} - y^{2}$, $v = 2xy$ sends $(x, y)$ and $(-x, -y)$ to the same point, so it needs a restriction like $x > 0$ to be inverted. Then $u^{2} + v^{2} = (x^{2} + y^{2})^{2}$ gives $x^{2} + y^{2}$, and adding $u$ gives $2x^{2}$. For $(u, v) = (99, -20)$: $\\sqrt{99^{2} + 20^{2}} = 101$, so $2x^{2} = 101 + 99$ and $x = 10$; then $y = \\frac{v}{2x} = -1$.\n\n> **Watch out.** Take the sign of $y$ from $v = 2xy$, not from a square root: with $x > 0$, $y$ has the sign of $v$. And $x^{2} + y^{2}$ is not yet a coordinate.",
+    "映射 $u = x^{2} - y^{2}$，$v = 2xy$ 把 $(x, y)$ 和 $(-x, -y)$ 映到同一点，所以需要 $x > 0$ 这样的限制才能求逆。由 $u^{2} + v^{2} = (x^{2} + y^{2})^{2}$ 得 $x^{2} + y^{2}$，再加上 $u$ 得 $2x^{2}$。对 $(u, v) = (99, -20)$：$\\sqrt{99^{2} + 20^{2}} = 101$，所以 $2x^{2} = 101 + 99$，$x = 10$；再得 $y = \\frac{v}{2x} = -1$。\n\n> **注意。** $y$ 的符号要由 $v = 2xy$ 确定，而不是由平方根确定：当 $x > 0$ 时，$y$ 与 $v$ 同号。$x^{2} + y^{2}$ 还不是坐标。",
   ],
   (rng) => {
     const a = rng.int(1, 8);
@@ -1685,18 +1824,44 @@ const squarePreimage = point(
     const useX = rng.bool();
     const answer = useX ? a : b;
     const name = useX ? "x" : "y";
-    return ask(
-      [
+    const s = a * a + b * b;
+    return numberProblem({
+      prompt: text([
         `With $x > 0$, the map $u = x^{2} - y^{2}$, $v = 2xy$ sends $(x, y)$ to $(${u}, ${v})$. Find $${name}$.`,
         `在 $x > 0$ 时，映射 $u = x^{2} - y^{2}$，$v = 2xy$ 把 $(x, y)$ 映到 $(${u}, ${v})$。求 $${name}$。`,
-      ],
+      ]),
       answer,
-      [useX ? b : a, -answer, a * a + b * b],
-      [
-        `$x^{2} + y^{2} = \\sqrt{${u * u} + ${v * v}} = ${a * a + b * b}$. Adding and subtracting $u$ gives $x^{2} = ${a * a}$ and $y^{2} = ${b * b}$. With $x > 0$, $x = ${a}$, and $v$ then gives $y = ${b}$.`,
-        `$x^{2} + y^{2} = \\sqrt{${u * u} + ${v * v}} = ${a * a + b * b}$。加减 $u$ 得 $x^{2} = ${a * a}$，$y^{2} = ${b * b}$。由 $x > 0$，$x = ${a}$，再由 $v$ 得 $y = ${b}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          useX ? b : a,
+          `That is $${useX ? "y" : "x"}$; the question asks for $${name}$.`,
+          `那是 $${useX ? "y" : "x"}$；题目求的是 $${name}$。`,
+        ),
+        useX
+          ? why(-answer, "The restriction $x > 0$ picks the positive root.", "限制 $x > 0$ 选的是正根。")
+          : why(-answer, `With $x > 0$, $y$ has the sign of $v = ${v}$.`, `当 $x > 0$ 时，$y$ 与 $v = ${v}$ 同号。`),
+        why(s, "That is $x^{2} + y^{2}$; it still has to be combined with $u$.", "那是 $x^{2} + y^{2}$；还要和 $u$ 结合。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the sum of squares", "求平方和"],
+            t(`$x^{2} + y^{2} = \\sqrt{${u * u} + ${v * v}} = ${s}$.`, `$x^{2} + y^{2} = \\sqrt{${u * u} + ${v * v}} = ${s}$。`),
+          ],
+          [
+            ["Add and subtract u", "加减 u"],
+            t(
+              `$2x^{2} = ${s} + ${paren(u)}$ gives $x^{2} = ${a * a}$, so $x = ${a}$ since $x > 0$; then $y = \\frac{v}{2x} = \\frac{${v}}{${2 * a}} = ${b}$.`,
+              `由 $2x^{2} = ${s} + ${paren(u)}$ 得 $x^{2} = ${a * a}$，因为 $x > 0$，$x = ${a}$；再得 $y = \\frac{v}{2x} = \\frac{${v}}{${2 * a}} = ${b}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${a}^{2} - ${paren(b)}^{2} = ${u}$ and $2 \\cdot ${a} \\cdot ${paren(b)} = ${v}$, the given image.`,
+          `$${a}^{2} - ${paren(b)}^{2} = ${u}$，$2 \\cdot ${a} \\cdot ${paren(b)} = ${v}$，正是给定的像。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1705,25 +1870,59 @@ const areaBetweenHyperbolas = {
     "the-area-between-hyperbolas-and-rays",
     ["The area between hyperbolas and rays", "双曲线和射线之间的面积"],
     [
-      "With $u = xy$ and $v = \\frac{y}{x}$ a region between hyperbolas and rays becomes a rectangle. The area element is $\\frac{1}{2v}\\,du\\,dv$, the reciprocal of the Jacobian $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$, and this is what makes a logarithm appear.",
-      "用 $u = xy$，$v = \\frac{y}{x}$，双曲线和射线之间的区域变成矩形。面积元是 $\\frac{1}{2v}\\,du\\,dv$，它是雅可比行列式 $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$ 的倒数，对数正是由此出现的。",
+      "With $u = xy$ and $v = \\frac{y}{x}$ a region between hyperbolas and rays becomes a rectangle. The area element is $\\frac{1}{2v}\\,du\\,dv$, the reciprocal of the Jacobian $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$, and this is what makes a logarithm appear. For $2 \\le xy \\le 8$, $1 \\le \\frac{y}{x} \\le 10$ the area is $\\int_{1}^{10} \\int_{2}^{8} \\frac{1}{2v} \\, du \\, dv = 6 \\cdot \\frac{1}{2}\\ln 10 = 3\\ln 10$.\n\n> **Watch out.** The area element divides by the Jacobian $2v$ of $(u, v)$ with respect to $(x, y)$; multiplying by it goes the wrong way. And $\\frac{1}{2v}$ changes with $v$, so integrate it rather than evaluate it at an end.",
+      "用 $u = xy$，$v = \\frac{y}{x}$，双曲线和射线之间的区域变成矩形。面积元是 $\\frac{1}{2v}\\,du\\,dv$，它是雅可比行列式 $\\frac{\\partial(u, v)}{\\partial(x, y)} = 2v$ 的倒数，对数正是由此出现的。对 $2 \\le xy \\le 8$，$1 \\le \\frac{y}{x} \\le 10$，面积是 $\\int_{1}^{10} \\int_{2}^{8} \\frac{1}{2v} \\, du \\, dv = 6 \\cdot \\frac{1}{2}\\ln 10 = 3\\ln 10$。\n\n> **注意。** 面积元要除以 $(u, v)$ 对 $(x, y)$ 的雅可比行列式 $2v$；乘以它就反了。$\\frac{1}{2v}$ 随 $v$ 变化，要积分，而不是在端点取值。",
     ],
     (rng) => {
       const p = rng.int(2, 20);
       const q = rng.int(2, 9);
       const answer = Q.of(p - 1, 2);
-      return ask(
-        [
+      return numberProblem({
+        prompt: text([
           `In the first quadrant, the region $1 \\le xy \\le ${p}$, $1 \\le \\frac{y}{x} \\le ${q}$ has area $k\\ln ${q}$. Find $k$.`,
           `在第一象限，区域 $1 \\le xy \\le ${p}$，$1 \\le \\frac{y}{x} \\le ${q}$ 的面积是 $k\\ln ${q}$。求 $k$。`,
-        ],
+        ]),
         answer,
-        [p - 1, 2 * (p - 1), Q.of(p - 1, 2 * q)],
-        [
-          `The area is $\\int_{1}^{${q}} \\int_{1}^{${p}} \\frac{1}{2v} \\, du \\, dv$. The inner integral gives $${p - 1}$, and the outer gives $\\frac{1}{2}\\ln ${q}$, so $k = ${answer.toLatex()}$.`,
-          `面积是 $\\int_{1}^{${q}} \\int_{1}^{${p}} \\frac{1}{2v} \\, du \\, dv$。内层积分给出 $${p - 1}$，外层给出 $\\frac{1}{2}\\ln ${q}$，所以 $k = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            p - 1,
+            "The factor $\\frac{1}{2}$ of the area element $\\frac{1}{2v}$ is missing.",
+            "漏掉了面积元 $\\frac{1}{2v}$ 中的因子 $\\frac{1}{2}$。",
+          ),
+          why(
+            2 * (p - 1),
+            "That multiplies by the Jacobian $2v$; the area element divides by it.",
+            "那是乘以雅可比行列式 $2v$；面积元应除以它。",
+          ),
+          why(
+            Q.of(p - 1, 2 * q),
+            `That takes $\\frac{1}{2v}$ at $v = ${q}$ as a constant; integrating $\\frac{1}{2v}$ from $1$ to $${q}$ gives the logarithm.`,
+            `那是把 $\\frac{1}{2v}$ 在 $v = ${q}$ 处的值当成常数；把 $\\frac{1}{2v}$ 从 $1$ 积到 $${q}$ 才得到对数。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Change coordinates", "换坐标"],
+              text([
+                `With $u = xy$ and $v = \\frac{y}{x}$ the region is the rectangle $1 \\le u \\le ${p}$, $1 \\le v \\le ${q}$, and $dA = \\frac{1}{2v}\\,du\\,dv$.`,
+                `用 $u = xy$，$v = \\frac{y}{x}$，区域变成矩形 $1 \\le u \\le ${p}$，$1 \\le v \\le ${q}$，且 $dA = \\frac{1}{2v}\\,du\\,dv$。`,
+              ]),
+            ],
+            [
+              ["Integrate", "积分"],
+              text([
+                `The inner integral over $u$ gives $${p - 1} \\cdot \\frac{1}{2v}$, and $\\int_{1}^{${q}} \\frac{${p - 1}}{2v} \\, dv = \\frac{${p - 1}}{2}\\ln ${q}$, so $k = ${answer.toLatex()}$.`,
+                `对 $u$ 的内层积分给出 $${p - 1} \\cdot \\frac{1}{2v}$，而 $\\int_{1}^{${q}} \\frac{${p - 1}}{2v} \\, dv = \\frac{${p - 1}}{2}\\ln ${q}$，所以 $k = ${answer.toLatex()}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `Between the two rays, the sector from the origin out to the hyperbola $xy = c$ is $0 < u \\le c$ and has area $\\frac{c}{2}\\ln ${q}$; the sectors for $c = ${p}$ and $c = 1$ differ by $\\frac{${p} - 1}{2}\\ln ${q}$.`,
+            `在两条射线之间，从原点到双曲线 $xy = c$ 的扇形是 $0 < u \\le c$，面积为 $\\frac{c}{2}\\ln ${q}$；$c = ${p}$ 与 $c = 1$ 的两个扇形相差 $\\frac{${p} - 1}{2}\\ln ${q}$。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings3["transformations-of-regions-between-curves#the-area-between-hyperbolas-and-rays"],
@@ -1733,25 +1932,48 @@ const singularJacobian = point(
   "where-a-jacobian-vanishes",
   ["Where a Jacobian vanishes", "雅可比行列式为零的位置"],
   [
-    "A map collapses area where its Jacobian determinant is zero, and it may fail to be invertible there. For a nonlinear map the Jacobian depends on the point, so these places form a curve or a line in the $uv$-plane instead of every point or none.",
-    "映射在雅可比行列式为零的地方压缩面积，并可能在那里不可逆。对非线性映射，雅可比行列式依赖于点，所以这些位置构成 $uv$ 平面上的曲线或直线，而不是全部或没有。",
+    "A map collapses area where its Jacobian determinant is zero, and it may fail to be invertible there. For a nonlinear map the Jacobian depends on the point, so these places form a curve or a line in the $uv$-plane instead of every point or none. For $x = u^{2} + 12v$, $y = u + v$ the Jacobian is $2u \\cdot 1 - 12 \\cdot 1 = 2u - 12$, which is zero along the line $u = 6$.\n\n> **Watch out.** The determinant subtracts the product $x_v y_u$; adding it moves the line to the other side. And solving $2u = $ a constant needs the division by $2$.",
+    "映射在雅可比行列式为零的地方压缩面积，并可能在那里不可逆。对非线性映射，雅可比行列式依赖于点，所以这些位置构成 $uv$ 平面上的曲线或直线，而不是全部或没有。对 $x = u^{2} + 12v$，$y = u + v$，雅可比行列式为 $2u \\cdot 1 - 12 \\cdot 1 = 2u - 12$，沿直线 $u = 6$ 为零。\n\n> **注意。** 行列式要减去乘积 $x_v y_u$；加上它会把直线移到另一侧。解 $2u = $ 常数时，别忘了除以 $2$。",
   ],
   (rng) => {
     const k = nz(rng, 9);
     const c = nz(rng, 5);
     const answer = Q.of(k * c, 2);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `For $x = ${poly([1, "u^{2}"], [k, "v"])}$, $y = ${poly([c, "u"], [1, "v"])}$, the Jacobian $\\frac{\\partial(x, y)}{\\partial(u, v)}$ is zero along a line $u = u_{0}$. Find $u_{0}$.`,
         `对 $x = ${poly([1, "u^{2}"], [k, "v"])}$，$y = ${poly([c, "u"], [1, "v"])}$，雅可比行列式 $\\frac{\\partial(x, y)}{\\partial(u, v)}$ 沿直线 $u = u_{0}$ 为零。求 $u_{0}$。`,
-      ],
+      ]),
       answer,
-      [k * c, answer.neg(), Q.of(k, 2)],
-      [
-        `The determinant is $2u \\cdot 1 - ${paren(k)} \\cdot ${paren(c)} = ${poly([2, "u"], [-k * c, ""])}$, which is zero at $u = ${answer.toLatex()}$.`,
-        `行列式是 $2u \\cdot 1 - ${paren(k)} \\cdot ${paren(c)} = ${poly([2, "u"], [-k * c, ""])}$，在 $u = ${answer.toLatex()}$ 时为零。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(k * c, `$2u = ${k * c}$ still has to be divided by $2$.`, `$2u = ${k * c}$ 还要除以 $2$。`),
+        why(
+          answer.neg(),
+          "The product $x_v y_u$ is subtracted in the determinant, not added.",
+          "行列式中乘积 $x_v y_u$ 是减去的，不是加上的。",
+        ),
+        why(Q.of(k, 2), `That leaves out $y_u = ${c}$ in the product $x_v y_u$.`, `那是在乘积 $x_v y_u$ 中漏掉了 $y_u = ${c}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the partial derivatives", "求偏导数"],
+            text([`$x_u = 2u$, $x_v = ${k}$, $y_u = ${c}$, $y_v = 1$.`, `$x_u = 2u$，$x_v = ${k}$，$y_u = ${c}$，$y_v = 1$。`]),
+          ],
+          [
+            ["Set the determinant to zero", "令行列式为零"],
+            text([
+              `$2u \\cdot 1 - ${paren(k)} \\cdot ${paren(c)} = ${poly([2, "u"], [-k * c, ""])} = 0$ at $u = ${answer.toLatex()}$.`,
+              `$2u \\cdot 1 - ${paren(k)} \\cdot ${paren(c)} = ${poly([2, "u"], [-k * c, ""])} = 0$，得 $u = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `On that line the columns $(x_u, y_u) = (${k * c}, ${c})$ and $(x_v, y_v) = (${k}, 1)$ are parallel, since the first is $${c}$ times the second, so the map squashes small squares flat there.`,
+          `在这条直线上，两列 $(x_u, y_u) = (${k * c}, ${c})$ 与 $(x_v, y_v) = (${k}, 1)$ 平行，前者是后者的 $${c}$ 倍，所以映射在那里把小正方形压扁。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1759,8 +1981,8 @@ const inverseAtImage = point(
   "the-inverse-jacobian-is-evaluated-at-the-preimage",
   ["The inverse Jacobian is evaluated at the preimage", "逆映射的雅可比行列式在原像处计算"],
   [
-    "The inverse function theorem says that the Jacobian of $T^{-1}$ at $T(P)$ is the reciprocal of the Jacobian of $T$ at $P$. So given a point in the image, first find the point it came from, and only then evaluate the Jacobian of $T$.",
-    "反函数定理指出，$T^{-1}$ 在 $T(P)$ 处的雅可比行列式，是 $T$ 在 $P$ 处雅可比行列式的倒数。所以给定像中的点，要先求它来自哪一点，然后才计算 $T$ 的雅可比行列式。",
+    "The inverse function theorem says that the Jacobian of $T^{-1}$ at $T(P)$ is the reciprocal of the Jacobian of $T$ at $P$. So given a point in the image, first find the point it came from, and only then evaluate the Jacobian of $T$. For $T(x, y) = (x^{2} + y, xy)$, $T(5, 2) = (27, 10)$ and the Jacobian of $T$ at $(5, 2)$ is $2 \\cdot 25 - 2 = 48$, so the inverse has Jacobian $\\frac{1}{48}$ at $(27, 10)$.\n\n> **Watch out.** The formula $2x^{2} - y$ takes the preimage $(x, y)$, not the given image point. And the inverse has the reciprocal of that value.",
+    "反函数定理指出，$T^{-1}$ 在 $T(P)$ 处的雅可比行列式，是 $T$ 在 $P$ 处雅可比行列式的倒数。所以给定像中的点，要先求它来自哪一点，然后才计算 $T$ 的雅可比行列式。对 $T(x, y) = (x^{2} + y, xy)$，$T(5, 2) = (27, 10)$，$T$ 在 $(5, 2)$ 处的雅可比行列式为 $2 \\cdot 25 - 2 = 48$，所以逆映射在 $(27, 10)$ 处的雅可比行列式为 $\\frac{1}{48}$。\n\n> **注意。** 公式 $2x^{2} - y$ 要代入原像 $(x, y)$，而不是给出的像点。逆映射的值是它的倒数。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -1771,18 +1993,61 @@ const inverseAtImage = point(
     const J = 2 * a * a - b;
     const answer = Q.of(1, J);
     const atImage = 2 * u0 * u0 - v0;
-    return ask(
-      [
+    const added = 2 * a * a + b;
+    return numberProblem({
+      prompt: text([
         `$T(x, y) = (x^{2} + y, xy)$ has $T(${a}, ${b}) = (${u0}, ${v0})$. Find the Jacobian determinant of the local inverse of $T$ at $(${u0}, ${v0})$.`,
         `$T(x, y) = (x^{2} + y, xy)$ 满足 $T(${a}, ${b}) = (${u0}, ${v0})$。求 $T$ 的局部逆映射在 $(${u0}, ${v0})$ 处的雅可比行列式。`,
-      ],
+      ]),
       answer,
-      [J, answer.neg(), atImage === 0 ? a : Q.of(1, atImage)],
-      [
-        `The Jacobian of $T$ is $2x^{2} - y$, to be evaluated at the preimage $(${a}, ${b})$, where it is $${J}$. The inverse has the reciprocal, $${answer.toLatex()}$.`,
-        `$T$ 的雅可比行列式是 $2x^{2} - y$，要在原像 $(${a}, ${b})$ 处计算，得 $${J}$。逆映射的值是它的倒数 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          J,
+          `$${J}$ is the Jacobian of $T$ at $(${a}, ${b})$; the inverse has its reciprocal.`,
+          `$${J}$ 是 $T$ 在 $(${a}, ${b})$ 处的雅可比行列式；逆映射的值是它的倒数。`,
+        ),
+        ...(atImage === 0
+          ? []
+          : [
+              why(
+                Q.of(1, atImage),
+                `That puts the image point $(${u0}, ${v0})$ into $2x^{2} - y$; the formula takes the preimage $(${a}, ${b})$.`,
+                `那是把像点 $(${u0}, ${v0})$ 代入了 $2x^{2} - y$；公式要代入原像 $(${a}, ${b})$。`,
+              ),
+            ]),
+        ...(added === 0
+          ? []
+          : [
+              why(
+                Q.of(1, added),
+                "The determinant subtracts $u_y v_x = 1 \\cdot y$; it is $2x^{2} - y$, not $2x^{2} + y$.",
+                "行列式要减去 $u_y v_x = 1 \\cdot y$；它是 $2x^{2} - y$，不是 $2x^{2} + y$。",
+              ),
+            ]),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the Jacobian of T", "求 T 的雅可比行列式"],
+            text([
+              "$u_x = 2x$, $u_y = 1$, $v_x = y$, $v_y = x$, so the Jacobian is $2x \\cdot x - 1 \\cdot y = 2x^{2} - y$.",
+              "$u_x = 2x$，$u_y = 1$，$v_x = y$，$v_y = x$，所以雅可比行列式为 $2x \\cdot x - 1 \\cdot y = 2x^{2} - y$。",
+            ]),
+          ],
+          [
+            ["Evaluate at the preimage and invert", "在原像处求值并取倒数"],
+            text([
+              `At $(${a}, ${b})$ it is $2 \\cdot ${a * a} - ${paren(b)} = ${J}$, so the inverse has Jacobian $\\frac{1}{${J}} = ${answer.toLatex()}$ at $(${u0}, ${v0})$.`,
+              `在 $(${a}, ${b})$ 处它等于 $2 \\cdot ${a * a} - ${paren(b)} = ${J}$，所以逆映射在 $(${u0}, ${v0})$ 处的雅可比行列式为 $\\frac{1}{${J}} = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The preimage is right: $${paren(a)}^{2} + ${paren(b)} = ${u0}$ and $${paren(a)} \\cdot ${paren(b)} = ${v0}$; and $${J} \\cdot ${paren(answer)} = 1$.`,
+          `原像是对的：$${paren(a)}^{2} + ${paren(b)} = ${u0}$，$${paren(a)} \\cdot ${paren(b)} = ${v0}$；且 $${J} \\cdot ${paren(answer)} = 1$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1790,8 +2055,8 @@ const triangularJacobian3 = point(
   "a-triangular-three-dimensional-jacobian",
   ["A triangular three-dimensional Jacobian", "三角形的三维雅可比行列式"],
   [
-    "If each new variable involves the old ones in a staged way, the Jacobian matrix is triangular after ordering, and its determinant is the product of the diagonal entries. The off-diagonal terms have no effect, which saves expanding a three by three determinant.",
-    "如果每个新变量分阶段地依赖旧变量，雅可比矩阵排序后是三角矩阵，行列式等于对角元素之积。非对角项不起作用，这省去了展开三阶行列式的工作。",
+    "If each new variable involves the old ones in a staged way, the Jacobian matrix is triangular after ordering, and its determinant is the product of the diagonal entries. The off-diagonal terms have no effect, which saves expanding a three by three determinant. For $x = 6u$, $y = u + v^{2}$, $z = 2u - 7w$ at $v = 3$, the diagonal entries are $6$, $2v = 6$ and $-7$, so the Jacobian is $6 \\cdot 6 \\cdot (-7) = -252$.\n\n> **Watch out.** The diagonal entry for $y$ is the derivative $2v$, not $v^{2}$ itself. The entries below the diagonal, however large, do not enter the product.",
+    "如果每个新变量分阶段地依赖旧变量，雅可比矩阵排序后是三角矩阵，行列式等于对角元素之积。非对角项不起作用，这省去了展开三阶行列式的工作。对 $x = 6u$，$y = u + v^{2}$，$z = 2u - 7w$，在 $v = 3$ 处对角元素为 $6$、$2v = 6$ 和 $-7$，所以雅可比行列式为 $6 \\cdot 6 \\cdot (-7) = -252$。\n\n> **注意。** $y$ 对应的对角元素是导数 $2v$，不是 $v^{2}$ 本身。对角线下方的元素无论多大，都不进入乘积。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -1800,18 +2065,48 @@ const triangularJacobian3 = point(
     const v0 = nz(rng, 4);
     const answer = 2 * a * c * v0;
     const M = `\\begin{pmatrix} ${a} & 0 & 0 \\\\ ${b} & ${2 * v0} & 0 \\\\ 1 & 0 & ${c} \\end{pmatrix}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `For $x = ${poly([a, "u"])}$, $y = ${poly([b, "u"], [1, "v^{2}"])}$, $z = ${poly([1, "u"], [c, "w"])}$, find $\\frac{\\partial(x, y, z)}{\\partial(u, v, w)}$ at $v = ${v0}$.`,
         `对 $x = ${poly([a, "u"])}$，$y = ${poly([b, "u"], [1, "v^{2}"])}$，$z = ${poly([1, "u"], [c, "w"])}$，求 $v = ${v0}$ 时的 $\\frac{\\partial(x, y, z)}{\\partial(u, v, w)}$。`,
-      ],
+      ]),
       answer,
-      [a * c, -answer, 2 * a * b * c * v0],
-      [
-        `The matrix is $${M}$, which is lower triangular. The determinant is the product of the diagonal entries, $${answer}$.`,
-        `矩阵是 $${M}$，它是下三角矩阵。行列式是对角元素之积，等于 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          a * v0 * v0 * c,
+          `That uses $v^{2} = ${v0 * v0}$; the entry is the derivative $2v = ${2 * v0}$.`,
+          `那用的是 $v^{2} = ${v0 * v0}$；元素应是导数 $2v = ${2 * v0}$。`,
+        ),
+        why(a * c * v0, "The derivative of $v^{2}$ is $2v$; the factor $2$ is missing.", "$v^{2}$ 的导数是 $2v$；漏掉了因子 $2$。"),
+        why(
+          2 * a * b * c * v0,
+          `The entry $${b}$ lies below the diagonal and does not enter the product.`,
+          `元素 $${b}$ 在对角线下方，不进入乘积。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the matrix", "写出矩阵"],
+            text([
+              `The matrix of partial derivatives at $v = ${v0}$ is $${M}$, which is lower triangular.`,
+              `$v = ${v0}$ 处的偏导数矩阵是 $${M}$，它是下三角矩阵。`,
+            ]),
+          ],
+          [
+            ["Multiply the diagonal", "对角元素相乘"],
+            text([
+              `$${a} \\cdot ${paren(2 * v0)} \\cdot ${paren(c)} = ${answer}$.`,
+              `$${a} \\cdot ${paren(2 * v0)} \\cdot ${paren(c)} = ${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `Expanding along the last column, whose only nonzero entry is $${c}$, gives $${c} \\cdot \\begin{vmatrix} ${a} & 0 \\\\ ${b} & ${2 * v0} \\end{vmatrix} = ${c} \\cdot ${paren(2 * a * v0)} = ${answer}$.`,
+          `沿最后一列展开，它唯一的非零元素是 $${c}$，得 $${c} \\cdot \\begin{vmatrix} ${a} & 0 \\\\ ${b} & ${2 * v0} \\end{vmatrix} = ${c} \\cdot ${paren(2 * a * v0)} = ${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1819,26 +2114,57 @@ const secondMultiplier = point(
   "finding-the-second-multiplier",
   ["Finding the second multiplier", "求第二个乘数"],
   [
-    "With two constraints the condition is $\\nabla f = \\lambda\\nabla g + \\mu\\nabla h$, a vector equation. After finding the point from the constraints and symmetry, the components give the multipliers. Each multiplier measures how fast the optimal value changes as its constraint moves.",
-    "有两个约束时，条件是向量方程 $\\nabla f = \\lambda\\nabla g + \\mu\\nabla h$。由约束和对称性求出点后，各分量给出乘数。每个乘数度量最优值随相应约束变化的速度。",
+    "With two constraints the condition is $\\nabla f = \\lambda\\nabla g + \\mu\\nabla h$, a vector equation. After finding the point from the constraints and symmetry, the components give the multipliers. Each multiplier measures how fast the optimal value changes as its constraint moves. For $x^2 + y^2 + z^2$ with $x + y + z = 20$ and $z = 4$, symmetry gives $x = y = 8$; the first component gives $\\lambda = 16$, and the third, $8 = 16 + \\mu$, gives $\\mu = -8$.\n\n> **Watch out.** The third component of $\\nabla f$ is $2z$, and both constraints contribute to it: $2z = \\lambda + \\mu$. Subtract $\\lambda$ before reading off $\\mu$.",
+    "有两个约束时，条件是向量方程 $\\nabla f = \\lambda\\nabla g + \\mu\\nabla h$。由约束和对称性求出点后，各分量给出乘数。每个乘数度量最优值随相应约束变化的速度。对 $x + y + z = 20$，$z = 4$ 下的 $x^2 + y^2 + z^2$，由对称性 $x = y = 8$；第一个分量给出 $\\lambda = 16$，第三个分量 $8 = 16 + \\mu$ 给出 $\\mu = -8$。\n\n> **注意。** $\\nabla f$ 的第三个分量是 $2z$，两个约束都对它有贡献：$2z = \\lambda + \\mu$。要先减去 $\\lambda$ 再读出 $\\mu$。",
   ],
   (rng) => {
     const B = nz(rng, 9);
     const s = nz(rng, 6);
     const A = B + 2 * s;
     const answer = 3 * B - A;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Minimize $x^{2} + y^{2} + z^{2}$ subject to $x + y + z = ${A}$ and $z = ${B}$. With $g = x + y + z$ and $h = z$, the condition is $\\nabla f = \\lambda\\nabla g + \\mu\\nabla h$. Find $\\mu$.`,
         `在 $x + y + z = ${A}$，$z = ${B}$ 的条件下，求 $x^{2} + y^{2} + z^{2}$ 的最小值。取 $g = x + y + z$，$h = z$，条件是 $\\nabla f = \\lambda\\nabla g + \\mu\\nabla h$。求 $\\mu$。`,
-      ],
+      ]),
       answer,
-      [2 * s, 2 * B, A - B],
-      [
-        `By symmetry $x = y = ${s}$, with $z = ${B}$. The first component gives $\\lambda = ${2 * s}$, and the third gives $${2 * B} = ${paren(2 * s)} + \\mu$, so $\\mu = ${answer}$.`,
-        `由对称性 $x = y = ${s}$，且 $z = ${B}$。第一个分量给出 $\\lambda = ${2 * s}$，第三个分量给出 $${2 * B} = ${paren(2 * s)} + \\mu$，所以 $\\mu = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(2 * s, `That is $\\lambda$, from the first component $2x = \\lambda$.`, `那是 $\\lambda$，来自第一个分量 $2x = \\lambda$。`),
+        why(
+          2 * B,
+          `That is the whole third component $2z$; it equals $\\lambda + \\mu$, so subtract $\\lambda = ${2 * s}$.`,
+          `那是整个第三个分量 $2z$；它等于 $\\lambda + \\mu$，所以要减去 $\\lambda = ${2 * s}$。`,
+        ),
+        why(
+          -answer,
+          `The sign is reversed: $\\mu = 2z - \\lambda = ${2 * B} - ${paren(2 * s)}$.`,
+          `符号反了：$\\mu = 2z - \\lambda = ${2 * B} - ${paren(2 * s)}$。`,
+        ),
+        why(B - s, `$\\nabla f = (2x, 2y, 2z)$: the factor $2$ was dropped.`, `$\\nabla f = (2x, 2y, 2z)$：漏了系数 $2$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the point", "求出该点"],
+            text([
+              `$z = ${B}$ leaves $x + y = ${2 * s}$, and by symmetry $x = y = ${s}$.`,
+              `由 $z = ${B}$ 得 $x + y = ${2 * s}$，由对称性 $x = y = ${s}$。`,
+            ]),
+          ],
+          [
+            ["Read the multipliers", "读出乘数"],
+            text([
+              `$(2x, 2y, 2z) = (\\lambda, \\lambda, \\lambda + \\mu)$: the first component gives $\\lambda = ${2 * s}$, and the third gives $${2 * B} = ${2 * s} + \\mu$, so $\\mu = ${answer}$.`,
+              `$(2x, 2y, 2z) = (\\lambda, \\lambda, \\lambda + \\mu)$：第一个分量给出 $\\lambda = ${2 * s}$，第三个分量给出 $${2 * B} = ${2 * s} + \\mu$，所以 $\\mu = ${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `With $z = c$, the optimum is $f^* = \\frac{(${A} - c)^2}{2} + c^2$, whose derivative $-(${A} - c) + 2c$ at $c = ${B}$ is $${answer}$, matching $\\mu$.`,
+          `当 $z = c$ 时最优值为 $f^* = \\frac{(${A} - c)^2}{2} + c^2$，其导数 $-(${A} - c) + 2c$ 在 $c = ${B}$ 处为 $${answer}$，与 $\\mu$ 一致。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1846,8 +2172,8 @@ const newtonDeterminant = point(
   "the-determinant-that-decides-if-a-newton-step-exists",
   ["The determinant that decides if a Newton step exists", "决定牛顿步是否存在的行列式"],
   [
-    "A Newton step for a system solves a linear system with the Jacobian as its matrix. If the determinant at the starting point is zero, the step does not exist, however good the guess looks. So this is the first thing to check at a symmetric starting point.",
-    "方程组的牛顿步要解一个以雅可比矩阵为系数的线性方程组。如果起点处的行列式为零，无论猜测看起来多好，这一步都不存在。所以在对称的起点，首先要检查这一点。",
+    "A Newton step for a system solves a linear system with the Jacobian as its matrix. If the determinant at the starting point is zero, the step does not exist, however good the guess looks. So this is the first thing to check at a symmetric starting point. For $x^2 + y^2 = 100$, $xy = 15$, the Jacobian $\\begin{pmatrix} 2x & 2y \\\\ y & x \\end{pmatrix}$ has determinant $2x^2 - 2y^2$: at $(7, 1)$ it is $98 - 2 = 96$, but at $(3, 3)$ it is $0$ and no step exists.\n\n> **Watch out.** The determinant is the product down the main diagonal minus the product of the other two entries, $(2x)(x) - (2y)(y)$; adding them or reversing the order gives a wrong value.",
+    "方程组的牛顿步要解一个以雅可比矩阵为系数的线性方程组。如果起点处的行列式为零，无论猜测看起来多好，这一步都不存在。所以在对称的起点，首先要检查这一点。对 $x^2 + y^2 = 100$，$xy = 15$，雅可比矩阵 $\\begin{pmatrix} 2x & 2y \\\\ y & x \\end{pmatrix}$ 的行列式为 $2x^2 - 2y^2$：在 $(7, 1)$ 处为 $98 - 2 = 96$，而在 $(3, 3)$ 处为 $0$，无法迈出一步。\n\n> **注意。** 行列式是主对角线之积减去另两个元素之积，$(2x)(x) - (2y)(y)$；相加或把顺序颠倒都会出错。",
   ],
   (rng) => {
     const R = rng.int(2, 9);
@@ -1855,18 +2181,48 @@ const newtonDeterminant = point(
     const x0 = nz(rng, 6);
     const y0 = nz(rng, 6);
     const answer = 2 * x0 * x0 - 2 * y0 * y0;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `For Newton's method on $x^{2} + y^{2} = ${R * R}$, $${poly([1, "xy"])} = ${k}$, find the determinant of the Jacobian at the starting point $(${x0}, ${y0})$.`,
         `对 $x^{2} + y^{2} = ${R * R}$，$${poly([1, "xy"])} = ${k}$ 用牛顿法，求起点 $(${x0}, ${y0})$ 处雅可比矩阵的行列式。`,
-      ],
+      ]),
       answer,
-      [2 * x0 * x0 + 2 * y0 * y0, -answer, 4 * x0 * y0],
-      [
-        `The Jacobian is $\\begin{pmatrix} 2x & 2y \\\\ y & x \\end{pmatrix}$, with determinant $2x^{2} - 2y^{2}$. At the point this is $${answer}$${answer === 0 ? ", so no step exists from here" : ""}.`,
-        `雅可比矩阵是 $\\begin{pmatrix} 2x & 2y \\\\ y & x \\end{pmatrix}$，行列式是 $2x^{2} - 2y^{2}$。在该点等于 $${answer}$${answer === 0 ? "，所以从这里无法迈出一步" : ""}。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(2 * x0 * x0 + 2 * y0 * y0, "The two products are subtracted, not added.", "两个乘积要相减，不是相加。"),
+        why(
+          -answer,
+          "The order is reversed: main diagonal $(2x)(x)$ first, then subtract $(2y)(y)$.",
+          "顺序颠倒了：先算主对角线 $(2x)(x)$，再减去 $(2y)(y)$。",
+        ),
+        why(
+          4 * x0 * y0,
+          "That multiplies along the first row; the determinant pairs the diagonal entries.",
+          "那是把第一行相乘；行列式是对角线上的元素相乘。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the Jacobian", "求雅可比矩阵"],
+            text([
+              `The rows are the gradients of $x^2 + y^2$ and $xy$: $J = \\begin{pmatrix} 2x & 2y \\\\ y & x \\end{pmatrix} = \\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ ${y0} & ${x0} \\end{pmatrix}$.`,
+              `各行是 $x^2 + y^2$ 和 $xy$ 的梯度：$J = \\begin{pmatrix} 2x & 2y \\\\ y & x \\end{pmatrix} = \\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ ${y0} & ${x0} \\end{pmatrix}$。`,
+            ]),
+          ],
+          [
+            ["Take the determinant", "求行列式"],
+            text([
+              `$${2 * x0} \\cdot ${paren(x0)} - ${paren(2 * y0)} \\cdot ${paren(y0)} = ${answer}$${answer === 0 ? ", so no step exists from here" : ""}.`,
+              `$${2 * x0} \\cdot ${paren(x0)} - ${paren(2 * y0)} \\cdot ${paren(y0)} = ${answer}$${answer === 0 ? "，所以从这里无法迈出一步" : ""}。`,
+            ]),
+          ],
+        ],
+        text([
+          `The formula $2x^2 - 2y^2$ gives $2 \\cdot ${x0 * x0} - 2 \\cdot ${y0 * y0} = ${answer}$, the same.`,
+          `公式 $2x^2 - 2y^2$ 给出 $2 \\cdot ${x0 * x0} - 2 \\cdot ${y0 * y0} = ${answer}$，相同。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1874,8 +2230,8 @@ const newtonQuadratic = point(
   "one-newton-step-solves-a-quadratic",
   ["One Newton step solves a quadratic", "一次牛顿步解决二次函数"],
   [
-    "Newton's method for optimization replaces $f$ by its second-order Taylor model and goes to the critical point of the model. If $f$ is itself quadratic, the model equals $f$, so one step from any start lands exactly on the critical point.",
-    "优化的牛顿法用二阶泰勒模型代替 $f$，并走到模型的临界点。如果 $f$ 本身是二次函数，模型就等于 $f$，所以从任何起点出发，一步就恰好到达临界点。",
+    "Newton's method for optimization replaces $f$ by its second-order Taylor model and goes to the critical point of the model. If $f$ is itself quadratic, the model equals $f$, so one step from any start lands exactly on the critical point. For $f = x^2 + y^2 - 14x + 4y$, a step from any point reaches $(7, -2)$, where $f_x = 2x - 14$ and $f_y = 2y + 4$ both vanish.\n\n> **Watch out.** The starting point does not matter for a quadratic: do not take the step from it by hand when solving $\\nabla f = \\mathbf{0}$ gives the landing point directly.",
+    "优化的牛顿法用二阶泰勒模型代替 $f$，并走到模型的临界点。如果 $f$ 本身是二次函数，模型就等于 $f$，所以从任何起点出发，一步就恰好到达临界点。对 $f = x^2 + y^2 - 14x + 4y$，从任何点出发一步都到达 $(7, -2)$，那里 $f_x = 2x - 14$ 与 $f_y = 2y + 4$ 都为零。\n\n> **注意。** 对二次函数，起点无关紧要：解 $\\nabla f = \\mathbf{0}$ 就直接得到落点，不必从起点手算这一步。",
   ],
   (rng) => {
     const p = rng.int(1, 4);
@@ -1891,18 +2247,48 @@ const newtonQuadratic = point(
     const answer = useX ? xs : ys;
     const f = poly([p, "x^{2}"], [q, "xy"], [r, "y^{2}"], [a, "x"], [b, "y"]);
     const name = useX ? "x_{1}" : "y_{1}";
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `One step of Newton's method for optimization is applied to $f(x, y) = ${f}$ from $(${x0}, ${y0})$, reaching $(x_{1}, y_{1})$. Find $${name}$.`,
         `从 $(${x0}, ${y0})$ 出发，对 $f(x, y) = ${f}$ 做一次优化的牛顿步，到达 $(x_{1}, y_{1})$。求 $${name}$。`,
-      ],
+      ]),
       answer,
-      [useX ? x0 : y0, useX ? ys : xs, -answer],
-      [
-        `$f$ is quadratic with a nonsingular Hessian, so one step reaches its critical point from any start. Solving $${poly([2 * p, "x"], [q, "y"], [a, ""])} = 0$ and $${poly([q, "x"], [2 * r, "y"], [b, ""])} = 0$ gives $(${xs}, ${ys})$.`,
-        `$f$ 是二次函数，黑塞矩阵非奇异，所以从任何起点出发，一步就到达临界点。解 $${poly([2 * p, "x"], [q, "y"], [a, ""])} = 0$ 和 $${poly([q, "x"], [2 * r, "y"], [b, ""])} = 0$，得 $(${xs}, ${ys})$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          useX ? x0 : y0,
+          "That is the starting coordinate; the step moves the point to the critical point.",
+          "那是起点的坐标；这一步会把点移到临界点。",
+        ),
+        why(
+          useX ? ys : xs,
+          `That is the other coordinate of the critical point; the question asks for $${name}$.`,
+          `那是临界点的另一个坐标；题目问的是 $${name}$。`,
+        ),
+        why(-answer, "The sign is flipped; solve the gradient equations carefully.", "符号反了；要仔细解梯度方程。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use that f is quadratic", "利用 f 是二次函数"],
+            text([
+              `The Hessian $\\begin{pmatrix} ${2 * p} & ${q} \\\\ ${q} & ${2 * r} \\end{pmatrix}$ is constant with determinant $${4 * p * r - q * q} \\ne 0$, so one step reaches the critical point from any start.`,
+              `黑塞矩阵 $\\begin{pmatrix} ${2 * p} & ${q} \\\\ ${q} & ${2 * r} \\end{pmatrix}$ 是常数矩阵，行列式 $${4 * p * r - q * q} \\ne 0$，所以从任何起点出发，一步就到达临界点。`,
+            ]),
+          ],
+          [
+            ["Solve the gradient equations", "解梯度方程"],
+            text([
+              `$${poly([2 * p, "x"], [q, "y"], [a, ""])} = 0$ and $${poly([q, "x"], [2 * r, "y"], [b, ""])} = 0$ give $(${xs}, ${ys})$, so $${name} = ${answer}$.`,
+              `由 $${poly([2 * p, "x"], [q, "y"], [a, ""])} = 0$ 和 $${poly([q, "x"], [2 * r, "y"], [b, ""])} = 0$ 得 $(${xs}, ${ys})$，所以 $${name} = ${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `At $(${xs}, ${ys})$: $${2 * p} \\cdot ${paren(xs)} + ${paren(q)} \\cdot ${paren(ys)} + ${paren(a)} = 0$ and $${paren(q)} \\cdot ${paren(xs)} + ${2 * r} \\cdot ${paren(ys)} + ${paren(b)} = 0$.`,
+          `在 $(${xs}, ${ys})$ 处：$${2 * p} \\cdot ${paren(xs)} + ${paren(q)} \\cdot ${paren(ys)} + ${paren(a)} = 0$，$${paren(q)} \\cdot ${paren(xs)} + ${2 * r} \\cdot ${paren(ys)} + ${paren(b)} = 0$。`,
+        ]),
+      ),
+    });
   },
 );
 

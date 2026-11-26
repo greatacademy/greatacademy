@@ -1721,8 +1721,8 @@ const criticalPointFromContours: KnowledgePointDef = {
   id: "classifying-a-critical-point-from-level-curves",
   title: t("Classifying a critical point from level curves", "由等值线判断临界点"),
   explanation: t(
-    "Level curves near a critical point show its type. Closed loops around it mean a local extremum, and the levels tell which: values that rise toward the center mean a maximum, and values that fall toward it mean a minimum. Curves shaped like an X, or like hyperbolas in opposite pairs, mean a saddle, where the function rises one way and falls the other.",
-    "临界点附近的等值线显示了它的类型。环绕它的闭合曲线表示局部极值，等值线的数值说明是哪一种：向中心增大是极大值，向中心减小是极小值。形如 X、或成对相对的双曲线，表示鞍点，那里函数沿一个方向上升，沿另一个方向下降。",
+    "Level curves near a critical point show its type. Closed loops around it mean a local extremum, and the levels tell which: values that rise toward the center mean a maximum, and values that fall toward it mean a minimum. Curves shaped like an X, or like hyperbolas in opposite pairs, mean a saddle, where the function rises one way and falls the other. For loops at the levels $20$, $17$ and $12$ from the inside out, the values rise toward the center, so the center is a local maximum.\n\n> **Watch out.** Read the order of the levels, not only their shape: loops whose values fall toward the center surround a minimum. A point surrounded by level curves where the gradient is zero is still a critical point, even when it is a saddle.",
+    "临界点附近的等值线显示了它的类型。环绕它的闭合曲线表示局部极值，等值线的数值说明是哪一种：向中心增大是极大值，向中心减小是极小值。形如 X、或成对相对的双曲线，表示鞍点，那里函数沿一个方向上升，沿另一个方向下降。若从里到外闭合曲线的数值为 $20$、$17$、$12$，数值向中心增大，所以中心是局部极大值点。\n\n> **注意。** 不只看形状，还要看数值的顺序：数值向中心减小的闭合曲线围着的是极小值点。梯度为零的点即使是鞍点，也仍是临界点。",
   ),
   generate(rng) {
     const kind = rng.pick(["max", "min", "saddle"] as const);
@@ -1745,9 +1745,36 @@ const criticalPointFromContours: KnowledgePointDef = {
       t("A saddle point", "鞍点"),
       t("Not a critical point", "不是临界点"),
     ];
-    return pickChoice(
-      rng,
-      t(
+    const inner = labelled[0] ?? "";
+    const outer = labelled[2] ?? "";
+    const reason = (en: string) => {
+      if (en === "Not a critical point")
+        return t(
+          "The prompt says the origin is a critical point; the question is only which kind.",
+          "题目已说明原点是临界点；问题只是它属于哪一类。",
+        );
+      if (kind === "saddle")
+        return t(
+          `The curves are not closed loops: the values rise to ${shift + 4} in one direction and fall to ${shift - 4} in the other, so the origin is neither the highest nor the lowest point nearby.`,
+          `这些曲线不是闭合的：数值沿一个方向升到 ${shift + 4}，沿另一个方向降到 ${shift - 4}，所以原点既不是附近的最高点，也不是最低点。`,
+        );
+      if (en === "A saddle point")
+        return t(
+          "The curves are closed loops around the origin, so the function changes the same way in every direction; a saddle needs curves that open like hyperbolas.",
+          "这些曲线是围绕原点的闭合曲线，函数在各个方向上变化相同；鞍点的等值线要像双曲线那样分开。",
+        );
+      return kind === "max"
+        ? t(
+            `From the inside out the values fall from ${inner} to ${outer}, so they rise toward the center: a maximum.`,
+            `从里到外数值从 ${inner} 减小到 ${outer}，即向中心增大：是极大值。`,
+          )
+        : t(
+            `From the inside out the values grow from ${inner} to ${outer}, so they fall toward the center: a minimum.`,
+            `从里到外数值从 ${inner} 增大到 ${outer}，即向中心减小：是极小值。`,
+          );
+    };
+    return explainedChoice(rng, {
+      prompt: t(
         kind === "saddle"
           ? `These are level curves of $f$ at the levels ${labelled.join(", ")} and ${shift - 4} near the origin, which is a critical point. What is the origin?`
           : `These are level curves of $f$ near the origin, which is a critical point, at the levels ${labelled.join(", ")} from the inside out. What is the origin?`,
@@ -1755,17 +1782,40 @@ const criticalPointFromContours: KnowledgePointDef = {
           ? `这些是 $f$ 在原点附近的等值线，数值为 ${labelled.join("、")} 和 ${shift - 4}，原点是临界点。原点是什么？`
           : `这些是 $f$ 在原点附近的等值线，从里到外数值为 ${labelled.join("、")}，原点是临界点。原点是什么？`,
       ),
-      rightText,
-      options.filter((o) => o.en !== rightText.en),
-      t(
+      correct: rightText,
+      wrong: options.filter((o) => o.en !== rightText.en).map((o) => ({ option: o, why: reason(o.en) })),
+      solution: walked(
+        [
+          [
+            ["Read the shape", "看形状"],
+            kind === "saddle"
+              ? t("The curves are hyperbolas in opposite pairs, not closed loops.", "这些曲线是成对相对的双曲线，不是闭合曲线。")
+              : t("The curves are closed loops around the origin.", "这些曲线是围绕原点的闭合曲线。"),
+          ],
+          [
+            ["Read the levels", "看数值"],
+            kind === "saddle"
+              ? t(
+                  "The function rises in one direction and falls in the other, so the origin is a saddle point.",
+                  "函数沿一个方向上升，沿另一个方向下降，所以原点是鞍点。",
+                )
+              : t(
+                  `The values ${kind === "max" ? "rise" : "fall"} toward the center, so the origin is a local ${kind === "max" ? "maximum" : "minimum"}.`,
+                  `数值向中心${kind === "max" ? "增大" : "减小"}，所以原点是局部${kind === "max" ? "极大值点" : "极小值点"}。`,
+                ),
+          ],
+        ],
         kind === "saddle"
-          ? "The curves are hyperbolas in opposite pairs, so the function rises in one direction and falls in the other."
-          : `The curves are closed loops, and the values ${kind === "max" ? "rise" : "fall"} toward the center.`,
-        kind === "saddle"
-          ? "这些曲线是成对相对的双曲线，所以函数沿一个方向上升，沿另一个方向下降。"
-          : `这些曲线是闭合的，数值向中心${kind === "max" ? "增大" : "减小"}。`,
+          ? t(
+              `Near the origin $f$ reaches ${shift + 1} on one side and ${shift - 1} on the other, so the origin is neither the highest nor the lowest point nearby.`,
+              `在原点附近，$f$ 在一侧达到 ${shift + 1}，在另一侧达到 ${shift - 1}，所以原点既不是附近的最高点，也不是最低点。`,
+            )
+          : t(
+              `Moving out, the levels go from ${inner} to ${outer}, so $f$ at the origin is ${kind === "max" ? "above" : "below"} ${inner}, ${kind === "max" ? "higher" : "lower"} than on every drawn curve.`,
+              `向外走，数值从 ${inner} 变到 ${outer}，所以 $f$ 在原点处${kind === "max" ? "高于" : "低于"} ${inner}，${kind === "max" ? "高于" : "低于"}每条所画曲线上的值。`,
+            ),
       ),
-      drawn(
+      figure: drawn(
         square(4),
         levels.map((level): PlaneMark => ({ kind: "contour", f, level, accent: true })),
         t(
@@ -1775,7 +1825,7 @@ const criticalPointFromContours: KnowledgePointDef = {
           kind === "saddle" ? "等值线是围绕原点成对相对的双曲线。" : "等值线是围绕原点的闭合椭圆。",
         ),
       ),
-    );
+    });
   },
 };
 
@@ -1849,8 +1899,8 @@ const polarFromPoint: KnowledgePointDef = {
   figure: multivariableDrawings3["polar-coordinate-transformations#polar-coordinates-from-a-drawn-point"],
   title: t("Polar coordinates from a drawn point", "由图中的点写极坐标"),
   explanation: t(
-    "Polar coordinates of a point give its distance from the origin and its angle from the positive x-axis. Both can be read from a drawing: the radius with the Pythagorean theorem, and the angle from the quadrant. The formula with the arctangent gives only an angle in the right half of the plane, so a picture guards against being off by half a turn.",
-    "点的极坐标给出它到原点的距离和相对于 x 轴正向的角。两者都能从图上读出：半径用勾股定理，角由象限决定。用反正切的公式只给出右半平面的角，所以图可以防止差出半圈。",
+    "Polar coordinates of a point give its distance from the origin and its angle from the positive x-axis. Both can be read from a drawing: the radius with the Pythagorean theorem, and the angle from the quadrant. The formula with the arctangent gives only an angle in the right half of the plane, so a picture guards against being off by half a turn. The point $(-6, 6)$ has $r = \\sqrt{36 + 36} = 6\\sqrt{2}$, and it lies in the second quadrant on the line $y = -x$, so $\\theta = \\frac{3\\pi}{4}$.\n\n> **Watch out.** $\\arctan\\frac{6}{-6} = -\\frac{\\pi}{4}$ points to $(6, -6)$, the opposite point; for a point left of the y-axis, add $\\pi$. And $r$ is $\\sqrt{x^2 + y^2}$, not $x^2 + y^2$.",
+    "点的极坐标给出它到原点的距离和相对于 x 轴正向的角。两者都能从图上读出：半径用勾股定理，角由象限决定。用反正切的公式只给出右半平面的角，所以图可以防止差出半圈。点 $(-6, 6)$ 有 $r = \\sqrt{36 + 36} = 6\\sqrt{2}$，它在第二象限、直线 $y = -x$ 上，所以 $\\theta = \\frac{3\\pi}{4}$。\n\n> **注意。** $\\arctan\\frac{6}{-6} = -\\frac{\\pi}{4}$ 指向 $(6, -6)$，即相反的点；对 y 轴左边的点，要加上 $\\pi$。$r$ 是 $\\sqrt{x^2 + y^2}$，不是 $x^2 + y^2$。",
   ),
   generate(rng) {
     const directions = [
@@ -1868,20 +1918,81 @@ const polarFromPoint: KnowledgePointDef = {
     const [x, y] = [ux * size, uy * size];
     const axial = ux === 0 || uy === 0;
     const r = axial ? `${size}` : size === 1 ? "\\sqrt{2}" : `${size}\\sqrt{2}`;
-    const other = rng.shuffle(directions.map((d) => d[2] as string).filter((a) => a !== tex));
-    return pickChoice(
-      rng,
-      t(
+    const angleOf = (dx: number, dy: number) => directions.find((d) => d[0] === dx && d[1] === dy)?.[2] ?? "0";
+    const at = (dx: number, dy: number) => `(${dx * size}, ${dy * size})`;
+    const squared = x * x + y * y;
+    const where: readonly [string, string] = axial
+      ? [
+          `on the ${ux + uy > 0 ? "positive" : "negative"} ${uy === 0 ? "x" : "y"}-axis`,
+          `在 ${uy === 0 ? "x" : "y"} 轴的${ux + uy > 0 ? "正" : "负"}半轴上`,
+        ]
+      : [
+          `in the ${["first", "second", "third", "fourth"][ux > 0 ? (uy > 0 ? 0 : 3) : uy > 0 ? 1 : 2]} quadrant, on the line $y = ${ux === uy ? "" : "-"}x$`,
+          `在第${["一", "二", "三", "四"][ux > 0 ? (uy > 0 ? 0 : 3) : uy > 0 ? 1 : 2]}象限、直线 $y = ${ux === uy ? "" : "-"}x$ 上`,
+        ];
+    const turned: readonly [number, number] = axial ? [uy, ux] : [ux, -uy];
+    return explainedChoice(rng, {
+      prompt: t(
         "What are the polar coordinates $(r, \\theta)$ of the point, with $r > 0$ and $0 \\le \\theta < 2\\pi$?",
         "这个点的极坐标 $(r, \\theta)$ 是什么？要求 $r > 0$，$0 \\le \\theta < 2\\pi$。",
       ),
-      math(`\\left(${r}, ${tex}\\right)`),
-      [math(`\\left(${r}, ${other[0]}\\right)`), math(`\\left(${2 * size}, ${tex}\\right)`), math(`\\left(${r}, ${other[1]}\\right)`)],
-      t(
-        `The point is at $(${x}, ${y})$, so $r = ${r}$. Its position relative to the axes gives the angle $${tex}$.`,
-        `这个点在 $(${x}, ${y})$，所以 $r = ${r}$。由它相对坐标轴的位置得到角 $${tex}$。`,
+      correct: math(`\\left(${r}, ${tex}\\right)`),
+      wrong: [
+        {
+          option: math(`\\left(${r}, ${angleOf(-ux, -uy)}\\right)`),
+          why: t(
+            `That angle is half a turn off and points to $${at(-ux, -uy)}$, the opposite point; the arctangent cannot tell the two apart`,
+            `这个角差了半圈，指向相反的点 $${at(-ux, -uy)}$；反正切分不清这两个点`,
+          ),
+        },
+        {
+          option: math(`\\left(${r}, ${angleOf(turned[0], turned[1])}\\right)`),
+          why: axial
+            ? t(
+                `That angle points to $${at(turned[0], turned[1])}$: it is measured from the y-axis, but $\\theta$ starts on the positive x-axis`,
+                `这个角指向 $${at(turned[0], turned[1])}$：它是从 y 轴量起的，而 $\\theta$ 从 x 轴正向量起`,
+              )
+            : t(
+                `That angle points to $${at(turned[0], turned[1])}$: it is measured clockwise, but $\\theta$ turns counterclockwise`,
+                `这个角指向 $${at(turned[0], turned[1])}$：它是按顺时针量的，而 $\\theta$ 按逆时针转`,
+              ),
+        },
+        {
+          option: math(`\\left(${squared}, ${tex}\\right)`),
+          why: t(`$${squared}$ is $x^2 + y^2 = r^2$; take its square root`, `$${squared}$ 是 $x^2 + y^2 = r^2$；还要开平方`),
+        },
+        ...(axial
+          ? []
+          : [
+              {
+                option: math(`\\left(${2 * size}, ${tex}\\right)`),
+                why: t(
+                  `$${2 * size}$ is $|x| + |y|$; the distance is $\\sqrt{x^2 + y^2}$`,
+                  `$${2 * size}$ 是 $|x| + |y|$；距离是 $\\sqrt{x^2 + y^2}$`,
+                ),
+              },
+            ]),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the radius", "求半径"],
+            t(
+              `The point is at $(${x}, ${y})$, so $r = \\sqrt{${x < 0 ? `(${x})` : x}^2 + ${y < 0 ? `(${y})` : y}^2} = \\sqrt{${squared}} = ${r}$.`,
+              `这个点在 $(${x}, ${y})$，所以 $r = \\sqrt{${x < 0 ? `(${x})` : x}^2 + ${y < 0 ? `(${y})` : y}^2} = \\sqrt{${squared}} = ${r}$。`,
+            ),
+          ],
+          [
+            ["Find the angle", "求角"],
+            t(`The point lies ${where[0]}, so $\\theta = ${tex}$.`, `这个点${where[1]}，所以 $\\theta = ${tex}$。`),
+          ],
+        ],
+        t(
+          `Going back, $r\\cos\\theta = ${r}\\cos ${tex} = ${x}$ and $r\\sin\\theta = ${r}\\sin ${tex} = ${y}$, the drawn point.`,
+          `反推回去，$r\\cos\\theta = ${r}\\cos ${tex} = ${x}$，$r\\sin\\theta = ${r}\\sin ${tex} = ${y}$，正是图中的点。`,
+        ),
       ),
-      drawn(
+      figure: drawn(
         square(6),
         [
           { kind: "segment", a: [0, 0], b: [x, y], dashed: true },
@@ -1889,7 +2000,7 @@ const polarFromPoint: KnowledgePointDef = {
         ],
         t(`The point (${x}, ${y}).`, `点 (${x}, ${y})。`),
       ),
-    );
+    });
   },
 };
 

@@ -698,29 +698,65 @@ const localMinimumPoint: KnowledgePointDef = {
   id: "picking-the-local-minimum-among-critical-points",
   title: t("Picking the local minimum among critical points", "在临界点中找出局部极小点"),
   explanation: t(
-    "A function can have several critical points of different kinds. Find them all by setting both partial derivatives to zero, then test each with the second derivatives. A point with $D > 0$ and $f_{xx} > 0$ is a local minimum, and $D < 0$ means a saddle.",
-    "函数可以有多个不同类型的临界点。令两个偏导数为零，求出全部临界点，再用二阶导数逐一检验。$D > 0$ 且 $f_{xx} > 0$ 的点是局部极小点，$D < 0$ 则是鞍点。",
+    "A function can have several critical points of different kinds. Find them all by setting both partial derivatives to zero, then test each with the second derivatives. A point with $D > 0$ and $f_{xx} > 0$ is a local minimum, and $D < 0$ means a saddle. For $f = x^3 - 75x + y^2 - 6y$, the critical points are $(\\pm 5, 3)$; with $f_{xx} = 6x$, $f_{yy} = 2$ and $f_{xy} = 0$, $D = 12x$ is $60$ at $(5, 3)$, a minimum, and $-60$ at $(-5, 3)$, a saddle.\n\n> **Watch out.** $3x^2 = 3a^2$ has two roots, $x = \\pm a$, and only one of them is the minimum; test both rather than keeping the first one found.",
+    "函数可以有多个不同类型的临界点。令两个偏导数为零，求出全部临界点，再用二阶导数逐一检验。$D > 0$ 且 $f_{xx} > 0$ 的点是局部极小点，$D < 0$ 则是鞍点。对 $f = x^3 - 75x + y^2 - 6y$，临界点为 $(\\pm 5, 3)$；$f_{xx} = 6x$，$f_{yy} = 2$，$f_{xy} = 0$，$D = 12x$ 在 $(5, 3)$ 处为 $60$，是极小点，在 $(-5, 3)$ 处为 $-60$，是鞍点。\n\n> **注意。** $3x^2 = 3a^2$ 有两个根 $x = \\pm a$，只有一个是极小点；两个都要检验，不要只取先求出的那个。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
     const b = nonzero(rng, 4);
     const f = poly([1, "x^3"], [-3 * a * a, "x"], [1, "y^2"], [-2 * b, "y"]);
-    return pointProblem({
+    const mistakes: [number[], string, string][] = [
+      [
+        [-a, b],
+        `At $(${-a}, ${b})$, $D = ${-12 * a} < 0$: that critical point is a saddle.`,
+        `在 $(${-a}, ${b})$ 处 $D = ${-12 * a} < 0$：那个临界点是鞍点。`,
+      ],
+      [
+        [a, -b],
+        `$f_y = 2y ${b > 0 ? "-" : "+"} ${Math.abs(2 * b)} = 0$ gives $y = ${b}$; the sign was flipped.`,
+        `由 $f_y = 2y ${b > 0 ? "-" : "+"} ${Math.abs(2 * b)} = 0$ 得 $y = ${b}$；符号弄反了。`,
+      ],
+    ];
+    if (a > 1)
+      mistakes.push([
+        [a * a, b],
+        `$x^2 = ${a * a}$ gives $x = \\pm ${a}$; the square root was not taken.`,
+        `由 $x^2 = ${a * a}$ 得 $x = \\pm ${a}$；漏了开平方。`,
+      ]);
+    const problem = pointProblem({
       prompt: t(
         `Find the local minimum point of $f(x, y) = ${f}$. Answer as $(x, y)$.`,
         `求 $f(x, y) = ${f}$ 的局部极小点，写成 $(x, y)$。`,
       ),
       answer: [a, b],
-      wrong: [
-        [-a, b],
-        [a, -b],
-        [a * a, b],
-      ],
-      solution: t(
-        `Setting $f_x = 3x^2 - ${3 * a * a} = 0$ and $f_y = 2y - ${inParens(2 * b)} = 0$ gives $(\\pm ${a}, ${b})$. With $f_{yy} = 2$, $D = 12x$: at $x = ${a}$ it is positive with $f_{xx} > 0$, a minimum, and at $x = ${-a}$ it is negative, a saddle.`,
-        `令 $f_x = 3x^2 - ${3 * a * a} = 0$，$f_y = 2y - ${inParens(2 * b)} = 0$，得 $(\\pm ${a}, ${b})$。$f_{yy} = 2$，$D = 12x$：在 $x = ${a}$ 处 $D$ 为正且 $f_{xx} > 0$，是极小点；在 $x = ${-a}$ 处 $D$ 为负，是鞍点。`,
+      wrong: mistakes.map(([v]) => v),
+      solution: walked(
+        [
+          [
+            ["Find the critical points", "求临界点"],
+            t(
+              `Setting $f_x = 3x^2 - ${3 * a * a} = 0$ and $f_y = 2y ${b > 0 ? "-" : "+"} ${Math.abs(2 * b)} = 0$ gives $(\\pm ${a}, ${b})$.`,
+              `令 $f_x = 3x^2 - ${3 * a * a} = 0$，$f_y = 2y ${b > 0 ? "-" : "+"} ${Math.abs(2 * b)} = 0$，得 $(\\pm ${a}, ${b})$。`,
+            ),
+          ],
+          [
+            ["Test each one", "逐一检验"],
+            t(
+              `With $f_{xx} = 6x$, $f_{yy} = 2$ and $f_{xy} = 0$, $D = 12x$: at $x = ${a}$ it is $${12 * a} > 0$ with $f_{xx} = ${6 * a} > 0$, a minimum, and at $x = ${-a}$ it is $${-12 * a} < 0$, a saddle.`,
+              `$f_{xx} = 6x$，$f_{yy} = 2$，$f_{xy} = 0$，$D = 12x$：在 $x = ${a}$ 处为 $${12 * a} > 0$ 且 $f_{xx} = ${6 * a} > 0$，是极小点；在 $x = ${-a}$ 处为 $${-12 * a} < 0$，是鞍点。`,
+            ),
+          ],
+        ],
+        t(
+          `At $(${a}, ${b})$, $f_x = ${3 * a * a} - ${3 * a * a} = 0$ and $f_y = ${2 * b} - ${inParens(2 * b)} = 0$, so the point is critical.`,
+          `在 $(${a}, ${b})$ 处 $f_x = ${3 * a * a} - ${3 * a * a} = 0$，$f_y = ${2 * b} - ${inParens(2 * b)} = 0$，所以该点是临界点。`,
+        ),
       ),
     });
+    return withMistakes(
+      problem,
+      mistakes.map(([v, en, zh]) => say(pointLatex(v), en, zh)),
+    );
   },
 };
 
@@ -728,14 +764,16 @@ const saddleParameter: KnowledgePointDef = {
   id: "the-smallest-coefficient-that-gives-a-saddle",
   title: t("The smallest coefficient that gives a saddle", "产生鞍点的最小系数"),
   explanation: t(
-    "For $f = ax^2 + kxy + by^2$ with $a$ and $b$ positive, the origin is critical with discriminant $D = 4ab - k^2$. A saddle needs $D < 0$, so $k^2 > 4ab$. When $D = 0$ the test says nothing, and so that value of $k$ does not count.",
-    "对 $f = ax^2 + kxy + by^2$（$a$、$b$ 为正），原点是临界点，判别式 $D = 4ab - k^2$。鞍点要求 $D < 0$，即 $k^2 > 4ab$。$D = 0$ 时判别法没有结论，所以这样的 $k$ 不算。",
+    "For $f = ax^2 + kxy + by^2$ with $a$ and $b$ positive, the origin is critical with discriminant $D = 4ab - k^2$. A saddle needs $D < 0$, so $k^2 > 4ab$. When $D = 0$ the test says nothing, and so that value of $k$ does not count. For $f = 7x^2 + kxy + 2y^2$, $4ab = 56$; $7^2 = 49$ is not above $56$ and $8^2 = 64$ is, so the smallest $k$ is $8$.\n\n> **Watch out.** The discriminant uses $f_{xx} = 2a$ and $f_{yy} = 2b$, so the bound is $4ab$, not $ab$; and $k^2$ must exceed $4ab$, so compare squares rather than stopping at $4ab$ itself.",
+    "对 $f = ax^2 + kxy + by^2$（$a$、$b$ 为正），原点是临界点，判别式 $D = 4ab - k^2$。鞍点要求 $D < 0$，即 $k^2 > 4ab$。$D = 0$ 时判别法没有结论，所以这样的 $k$ 不算。对 $f = 7x^2 + kxy + 2y^2$，$4ab = 56$；$7^2 = 49$ 不大于 $56$，$8^2 = 64$ 大于 $56$，所以最小的 $k$ 是 $8$。\n\n> **注意。** 判别式用的是 $f_{xx} = 2a$ 和 $f_{yy} = 2b$，所以界是 $4ab$，不是 $ab$；而且是 $k^2$ 要超过 $4ab$，要比较平方，不能停在 $4ab$ 本身。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
     const b = rng.int(1, 6);
     const four = 4 * a * b;
     const answer = Math.floor(Math.sqrt(four)) + 1;
+    const below = answer - 1;
+    const noFour = Math.floor(Math.sqrt(a * b)) + 1;
     return numberProblem({
       prompt: t(
         `What is the smallest positive integer $k$ for which the second derivative test shows that $f(x, y) = ${poly([a, "x^2"], [1, "kxy"], [b, "y^2"])}$ has a saddle at the origin?`,
@@ -743,10 +781,48 @@ const saddleParameter: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [answer - 1, four, four + 1],
-      solution: t(
-        `$D = ${four} - k^2$, and a saddle needs $k^2 > ${four}$. Now $${answer - 1}^2 = ${(answer - 1) ** 2}$ is not above $${four}$, and $${answer}^2 = ${answer * answer}$ is.`,
-        `$D = ${four} - k^2$，鞍点要求 $k^2 > ${four}$。而 $${answer - 1}^2 = ${(answer - 1) ** 2}$ 不大于 $${four}$，$${answer}^2 = ${answer * answer}$ 大于 $${four}$。`,
+      mistakes: apart(answer, [
+        why(
+          below,
+          below * below === four
+            ? `With $k = ${below}$, $D = ${four} - ${below * below} = 0$ and the test says nothing.`
+            : `With $k = ${below}$, $D = ${four} - ${below * below} = ${four - below * below} > 0$, not a saddle.`,
+          below * below === four
+            ? `$k = ${below}$ 时 $D = ${four} - ${below * below} = 0$，判别法没有结论。`
+            : `$k = ${below}$ 时 $D = ${four} - ${below * below} = ${four - below * below} > 0$，不是鞍点。`,
+        ),
+        why(
+          four,
+          `$${four}$ is the bound for $k^2$, not for $k$; take the square root.`,
+          `$${four}$ 是 $k^2$ 的界，不是 $k$ 的界；要开平方。`,
+        ),
+        why(
+          noFour,
+          `That uses $ab - k^2$; with $f_{xx} = ${2 * a}$ and $f_{yy} = ${2 * b}$, $D = ${four} - k^2$.`,
+          `那是用了 $ab - k^2$；$f_{xx} = ${2 * a}$，$f_{yy} = ${2 * b}$，所以 $D = ${four} - k^2$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the discriminant", "求判别式"],
+            t(
+              `$f_{xx} = ${2 * a}$, $f_{yy} = ${2 * b}$ and $f_{xy} = k$, so $D = ${four} - k^2$, and a saddle needs $k^2 > ${four}$.`,
+              `$f_{xx} = ${2 * a}$，$f_{yy} = ${2 * b}$，$f_{xy} = k$，所以 $D = ${four} - k^2$，鞍点要求 $k^2 > ${four}$。`,
+            ),
+          ],
+          [
+            ["Compare squares", "比较平方"],
+            t(
+              `$${below}^2 = ${below * below}$ is not above $${four}$, and $${answer}^2 = ${answer * answer}$ is, so $k = ${answer}$.`,
+              `$${below}^2 = ${below * below}$ 不大于 $${four}$，$${answer}^2 = ${answer * answer}$ 大于 $${four}$，所以 $k = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $k = ${answer}$, $D = ${four} - ${answer * answer} = ${four - answer * answer} < 0$.`,
+          `$k = ${answer}$ 时 $D = ${four} - ${answer * answer} = ${four - answer * answer} < 0$。`,
+        ),
       ),
     });
   },
@@ -756,8 +832,8 @@ const meaningOfTheMultiplier: KnowledgePointDef = {
   id: "finding-the-lagrange-multiplier-and-its-meaning",
   title: t("Finding the Lagrange multiplier and its meaning", "拉格朗日乘数及其含义"),
   explanation: t(
-    "The multiplier in $\\nabla f = \\lambda\\nabla g$ is more than a helper. It tells how fast the optimal value changes as the constraint $g = c$ is relaxed: $\\frac{d f^*}{dc} = \\lambda$. To find it, express the point through $\\lambda$ and substitute into the constraint.",
-    "$\\nabla f = \\lambda\\nabla g$ 中的乘数不只是辅助量。它说明放宽约束 $g = c$ 时最优值变化多快：$\\frac{d f^*}{dc} = \\lambda$。要求出它，先用 $\\lambda$ 表示点，再代入约束。",
+    "The multiplier in $\\nabla f = \\lambda\\nabla g$ is more than a helper. It tells how fast the optimal value changes as the constraint $g = c$ is relaxed: $\\frac{d f^*}{dc} = \\lambda$. To find it, express the point through $\\lambda$ and substitute into the constraint. For $x^2 + y^2$ on $x + 2y = 10$, $2x = \\lambda$ and $2y = 2\\lambda$ give $\\frac{\\lambda}{2} + 2\\lambda = 10$, so $\\lambda = 4$; and indeed $f^* = \\frac{c^2}{5}$ has $\\frac{df^*}{dc} = \\frac{2c}{5} = 4$.\n\n> **Watch out.** Solving $2x = a\\lambda$ gives $x = \\frac{a\\lambda}{2}$: the point is $\\frac{\\lambda}{2}(a, b)$, so the multiple of $(a, b)$ is half of $\\lambda$, and $\\lambda$ is not the minimum value either.",
+    "$\\nabla f = \\lambda\\nabla g$ 中的乘数不只是辅助量。它说明放宽约束 $g = c$ 时最优值变化多快：$\\frac{d f^*}{dc} = \\lambda$。要求出它，先用 $\\lambda$ 表示点，再代入约束。对 $x + 2y = 10$ 上的 $x^2 + y^2$，由 $2x = \\lambda$，$2y = 2\\lambda$ 得 $\\frac{\\lambda}{2} + 2\\lambda = 10$，所以 $\\lambda = 4$；而 $f^* = \\frac{c^2}{5}$ 确实有 $\\frac{df^*}{dc} = \\frac{2c}{5} = 4$。\n\n> **注意。** 由 $2x = a\\lambda$ 得 $x = \\frac{a\\lambda}{2}$：该点是 $\\frac{\\lambda}{2}(a, b)$，所以 $(a, b)$ 的倍数是 $\\lambda$ 的一半；$\\lambda$ 也不是最小值。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
@@ -773,10 +849,40 @@ const meaningOfTheMultiplier: KnowledgePointDef = {
         `在 $${poly([a, "x"], [b, "y"])} = ${c}$ 的条件下求 $x^2 + y^2$ 的最小值。求最小点处 $\\nabla f = \\lambda\\nabla g$ 中的乘数 $\\lambda$。`,
       ),
       answer,
-      wrong: [Q.of(c, nn), Q.of(c * c, nn), Q.of(nn, 2 * c)],
-      solution: t(
-        `The equations $2x = ${ca}\\lambda$ and $2y = ${cb}\\lambda$ give $x = \\frac{${ca}\\lambda}{2}$ and $y = \\frac{${cb}\\lambda}{2}$. Substituting gives $\\frac{${nn}\\lambda}{2} = ${c}$, so $\\lambda = ${answer.toLatex()}$.`,
-        `由 $2x = ${ca}\\lambda$，$2y = ${cb}\\lambda$ 得 $x = \\frac{${ca}\\lambda}{2}$，$y = \\frac{${cb}\\lambda}{2}$。代入约束得 $\\frac{${nn}\\lambda}{2} = ${c}$，所以 $\\lambda = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(c, nn),
+          `That is $\\frac{\\lambda}{2}$, the multiple of $(${a}, ${b})$ that gives the point; $\\lambda$ is twice it.`,
+          `那是 $\\frac{\\lambda}{2}$，即给出该点的 $(${a}, ${b})$ 的倍数；$\\lambda$ 是它的两倍。`,
+        ),
+        why(Q.of(c * c, nn), "That is the minimum value $f^*$, not the multiplier.", "那是最小值 $f^*$，不是乘数。"),
+        why(
+          Q.of(nn, 2 * c),
+          `The fraction is upside down: $\\frac{${nn}\\lambda}{2} = ${c}$ gives $\\lambda = ${answer.toLatex()}$.`,
+          `分数上下颠倒了：由 $\\frac{${nn}\\lambda}{2} = ${c}$ 得 $\\lambda = ${answer.toLatex()}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the point through the multiplier", "用乘数表示该点"],
+            t(
+              `The equations $2x = ${ca}\\lambda$ and $2y = ${cb}\\lambda$ give $x = \\frac{${ca}\\lambda}{2}$ and $y = \\frac{${cb}\\lambda}{2}$.`,
+              `由 $2x = ${ca}\\lambda$，$2y = ${cb}\\lambda$ 得 $x = \\frac{${ca}\\lambda}{2}$，$y = \\frac{${cb}\\lambda}{2}$。`,
+            ),
+          ],
+          [
+            ["Substitute into the constraint", "代入约束"],
+            t(
+              `$\\frac{${nn}\\lambda}{2} = ${c}$, so $\\lambda = ${answer.toLatex()}$.`,
+              `$\\frac{${nn}\\lambda}{2} = ${c}$，所以 $\\lambda = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The minimum value is $f^* = \\frac{c^2}{${nn}}$ as a function of the right side $c$, and $\\frac{df^*}{dc} = \\frac{2c}{${nn}} = ${answer.toLatex()}$ at $c = ${c}$, the same as $\\lambda$.`,
+          `最小值作为右端 $c$ 的函数是 $f^* = \\frac{c^2}{${nn}}$，在 $c = ${c}$ 处 $\\frac{df^*}{dc} = \\frac{2c}{${nn}} = ${answer.toLatex()}$，与 $\\lambda$ 相同。`,
+        ),
       ),
     });
   },
@@ -1637,8 +1743,8 @@ const affineCommutator: KnowledgePointDef = {
   figure: multivariableDrawings3["affine-transformations#affine-maps-do-not-commute"],
   title: t("Affine maps do not commute", "仿射变换不可交换"),
   explanation: t(
-    "Composing an affine map with a translation depends on the order. Translating first feeds the shift through the linear part of the map, while translating last simply adds the shift to the result. So $T(S(\\mathbf{x}))$ and $S(T(\\mathbf{x}))$ generally differ, and the difference is the image of the shift under the linear part minus the shift itself.",
-    "仿射变换与平移的复合取决于顺序。先平移时，位移要经过变换的线性部分；后平移时，位移只是加到结果上。所以 $T(S(\\mathbf{x}))$ 和 $S(T(\\mathbf{x}))$ 一般不同，差就是位移在线性部分下的像减去位移本身。",
+    "Composing an affine map with a translation depends on the order. Translating first feeds the shift through the linear part of the map, while translating last simply adds the shift to the result. So $T(S(\\mathbf{x}))$ and $S(T(\\mathbf{x}))$ generally differ, and the difference is the image of the shift under the linear part minus the shift itself. For $S(x, y) = (x + 2, y - 1)$ and $T(x, y) = (6x + y + 4, x - y)$: $T(S(0, 0)) = T(2, -1)$ has first coordinate $12 - 1 + 4 = 15$, while $S(T(0, 0)) = S(4, 0)$ has first coordinate $6$, a difference of $9$.\n\n> **Watch out.** The order is inside first: $T(S(\\mathbf{x}))$ applies $S$ before $T$. The constant term of $T$ appears in both results and cancels, but the shift of $S$ does not.",
+    "仿射变换与平移的复合取决于顺序。先平移时，位移要经过变换的线性部分；后平移时，位移只是加到结果上。所以 $T(S(\\mathbf{x}))$ 和 $S(T(\\mathbf{x}))$ 一般不同，差就是位移在线性部分下的像减去位移本身。对 $S(x, y) = (x + 2, y - 1)$ 和 $T(x, y) = (6x + y + 4, x - y)$：$T(S(0, 0)) = T(2, -1)$ 的第一个坐标是 $12 - 1 + 4 = 15$，而 $S(T(0, 0)) = S(4, 0)$ 的第一个坐标是 $6$，相差 $9$。\n\n> **注意。** 顺序是先算里面：$T(S(\\mathbf{x}))$ 先作用 $S$ 再作用 $T$。$T$ 的常数项在两个结果中都出现并相互抵消，但 $S$ 的位移不会抵消。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -1657,10 +1763,44 @@ const affineCommutator: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a * p + b * q, 0, answer + 2 * p],
-      solution: t(
-        `First, $T(${p}, ${q})$ has first coordinate $${a * p + b * q + e}$. Next, $T(0, 0) = (${e}, ${f})$, and $S$ sends it to first coordinate $${e + p}$. The difference is $${answer}$.`,
-        `首先，$T(${p}, ${q})$ 的第一个坐标是 $${a * p + b * q + e}$。其次，$T(0, 0) = (${e}, ${f})$，$S$ 把它映到第一个坐标 $${e + p}$。差是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          a * p + b * q,
+          `$S$ also adds $${p}$ to the first coordinate of $T(0, 0)$; subtract that too.`,
+          `$S$ 还会给 $T(0, 0)$ 的第一个坐标加上 $${p}$；这一项也要减去。`,
+        ),
+        why(
+          0,
+          "Affine maps do not commute in general: the shift of $S$ goes through the matrix of $T$ in one order only.",
+          "仿射变换一般不可交换：只有在一种顺序下，$S$ 的位移才经过 $T$ 的矩阵。",
+        ),
+        why(
+          a * p + b * q + e,
+          "That is only the first coordinate of $T(S(0, 0))$; subtract that of $S(T(0, 0))$.",
+          "那只是 $T(S(0, 0))$ 的第一个坐标；还要减去 $S(T(0, 0))$ 的第一个坐标。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Apply S, then T", "先作用 S，再作用 T"],
+            t(
+              `$S(0, 0) = (${p}, ${q})$, and $T(${p}, ${q})$ has first coordinate $${a} \\cdot ${inParens(p)} + ${inParens(b)} \\cdot ${inParens(q)} + ${inParens(e)} = ${a * p + b * q + e}$.`,
+              `$S(0, 0) = (${p}, ${q})$，$T(${p}, ${q})$ 的第一个坐标是 $${a} \\cdot ${inParens(p)} + ${inParens(b)} \\cdot ${inParens(q)} + ${inParens(e)} = ${a * p + b * q + e}$。`,
+            ),
+          ],
+          [
+            ["Apply T, then S", "先作用 T，再作用 S"],
+            t(
+              `$T(0, 0) = (${e}, ${f})$, and $S$ sends it to first coordinate $${e} + ${inParens(p)} = ${e + p}$. The difference is $${a * p + b * q + e} - ${inParens(e + p)} = ${answer}$.`,
+              `$T(0, 0) = (${e}, ${f})$，$S$ 把它映到第一个坐标 $${e} + ${inParens(p)} = ${e + p}$。差是 $${a * p + b * q + e} - ${inParens(e + p)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The difference does not depend on the point: at $(1, 0)$, $T(S(1, 0))$ has first coordinate $${a * (1 + p) + b * q + e}$ and $S(T(1, 0))$ has $${a + e + p}$, again a difference of $${answer}$.`,
+          `这个差与点无关：在 $(1, 0)$ 处，$T(S(1, 0))$ 的第一个坐标是 $${a * (1 + p) + b * q + e}$，$S(T(1, 0))$ 的是 $${a + e + p}$，差仍为 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -1670,8 +1810,8 @@ const derivativeOfComposition: KnowledgePointDef = {
   id: "an-entry-of-the-derivative-of-a-composition",
   title: t("An entry of the derivative of a composition", "复合映射导数的一个元素"),
   explanation: t(
-    "The derivative of a composition is the matrix product of the derivatives, $D(g \\circ f)(\\mathbf{a}) = Dg(f(\\mathbf{a}))\\,Df(\\mathbf{a})$. This is the chain rule for maps between spaces of several dimensions. The order matters, since matrix multiplication does not commute, and the outer map's derivative is taken at the image point rather than at $\\mathbf{a}$.",
-    "复合映射的导数是导数矩阵的乘积：$D(g \\circ f)(\\mathbf{a}) = Dg(f(\\mathbf{a}))\\,Df(\\mathbf{a})$。这就是高维空间之间映射的链式法则。顺序很重要，因为矩阵乘法不可交换，而外层映射的导数要在像点处取，而不是在 $\\mathbf{a}$ 处。",
+    "The derivative of a composition is the matrix product of the derivatives, $D(g \\circ f)(\\mathbf{a}) = Dg(f(\\mathbf{a}))\\,Df(\\mathbf{a})$. This is the chain rule for maps between spaces of several dimensions. The order matters, since matrix multiplication does not commute, and the outer map's derivative is taken at the image point rather than at $\\mathbf{a}$. With $Dg = \\begin{pmatrix} 2 & 0 \\\\ 1 & 3 \\end{pmatrix}$ and $Df = \\begin{pmatrix} 6 & 1 \\\\ -1 & 2 \\end{pmatrix}$, the entry in row 1, column 1 of the product is $2 \\cdot 6 + 0 \\cdot (-1) = 12$.\n\n> **Watch out.** Row $i$ comes from $Dg$, the outer map, and column $j$ from $Df$; the product $Df\\,Dg$ is a different matrix. An entry is a sum of two products, not the product of the two matching entries.",
+    "复合映射的导数是导数矩阵的乘积：$D(g \\circ f)(\\mathbf{a}) = Dg(f(\\mathbf{a}))\\,Df(\\mathbf{a})$。这就是高维空间之间映射的链式法则。顺序很重要，因为矩阵乘法不可交换，而外层映射的导数要在像点处取，而不是在 $\\mathbf{a}$ 处。对 $Dg = \\begin{pmatrix} 2 & 0 \\\\ 1 & 3 \\end{pmatrix}$ 和 $Df = \\begin{pmatrix} 6 & 1 \\\\ -1 & 2 \\end{pmatrix}$，乘积第 1 行第 1 列的元素是 $2 \\cdot 6 + 0 \\cdot (-1) = 12$。\n\n> **注意。** 第 $i$ 行取自外层映射的 $Dg$，第 $j$ 列取自 $Df$；乘积 $Df\\,Dg$ 是另一个矩阵。一个元素是两个乘积之和，而不是两个对应元素之积。",
   ),
   generate(rng) {
     const entry = () => nonzero(rng, 5);
@@ -1695,10 +1835,44 @@ const derivativeOfComposition: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [reversed, at(Dg, i, j) * at(Df, i, j), at(Dg, i, j) + at(Df, i, j)],
-      solution: t(
-        `The derivative is the product with $Dg$ on the left. Row ${i + 1} of $Dg$ times column ${j + 1} of $Df$ gives $${inParens(at(Dg, i, 0))} \\cdot ${inParens(at(Df, 0, j))} + ${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))} = ${answer}$.`,
-        `导数是 $Dg$ 在左的乘积。$Dg$ 的第 ${i + 1} 行乘以 $Df$ 的第 ${j + 1} 列，得 $${inParens(at(Dg, i, 0))} \\cdot ${inParens(at(Df, 0, j))} + ${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          reversed,
+          "That is the entry of $Df\\,Dg$; the outer map's $Dg$ goes on the left.",
+          "那是 $Df\\,Dg$ 的元素；外层映射的 $Dg$ 应放在左边。",
+        ),
+        why(
+          at(Dg, i, j) * at(Df, i, j),
+          "That multiplies the two matching entries; an entry of a product is a row times a column.",
+          "那是把两个对应元素相乘；乘积的元素是一行乘以一列。",
+        ),
+        why(
+          at(Dg, i, 0) * at(Df, 0, j),
+          `Row ${i + 1} times column ${j + 1} has two terms; the second, $${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))}$, is missing.`,
+          `第 ${i + 1} 行乘以第 ${j + 1} 列有两项；漏掉了第二项 $${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Order the product", "确定乘积的顺序"],
+            t(
+              "By the chain rule $D(g \\circ f)(\\mathbf{a}) = Dg(f(\\mathbf{a}))\\,Df(\\mathbf{a})$, with $Dg$ on the left.",
+              "由链式法则 $D(g \\circ f)(\\mathbf{a}) = Dg(f(\\mathbf{a}))\\,Df(\\mathbf{a})$，$Dg$ 在左边。",
+            ),
+          ],
+          [
+            ["Row times column", "行乘以列"],
+            t(
+              `Row ${i + 1} of $Dg$ times column ${j + 1} of $Df$ gives $${inParens(at(Dg, i, 0))} \\cdot ${inParens(at(Df, 0, j))} + ${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))} = ${answer}$.`,
+              `$Dg$ 的第 ${i + 1} 行乘以 $Df$ 的第 ${j + 1} 列，得 $${inParens(at(Dg, i, 0))} \\cdot ${inParens(at(Df, 0, j))} + ${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Follow a small step along coordinate ${j + 1}: $Df$ turns it into column ${j + 1}, $(${at(Df, 0, j)}, ${at(Df, 1, j)})$, and $Dg$ turns that into a vector whose component ${i + 1} is $${at(Dg, i, 0)} \\cdot ${inParens(at(Df, 0, j))} + ${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))} = ${answer}$.`,
+          `沿第 ${j + 1} 个坐标走一小步：$Df$ 把它变成第 ${j + 1} 列 $(${at(Df, 0, j)}, ${at(Df, 1, j)})$，$Dg$ 再把它变成一个向量，其第 ${i + 1} 个分量为 $${at(Dg, i, 0)} \\cdot ${inParens(at(Df, 0, j))} + ${inParens(at(Dg, i, 1))} \\cdot ${inParens(at(Df, 1, j))} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1709,8 +1883,8 @@ const linearMaxOnTriangle: KnowledgePointDef = {
   figure: multivariableDrawings3["calculating-global-extrema-of-multivariable-functions#the-maximum-of-a-linear-function-on-a-triangle"],
   title: t("The maximum of a linear function on a triangle", "线性函数在三角形上的最大值"),
   explanation: t(
-    "A nonconstant linear function has no critical points, so its extreme values on a closed region lie on the boundary. Along each edge it is linear again, so the extremes move to the ends of the edge. On a polygon, then, only the vertices need checking. This is the central idea behind linear programming.",
-    "非常值线性函数没有临界点，所以它在闭区域上的最值在边界上。沿每条边它仍是线性的，所以最值又移到了边的端点。因此在多边形上只需检查顶点。这正是线性规划的核心思想。",
+    "A nonconstant linear function has no critical points, so its extreme values on a closed region lie on the boundary. Along each edge it is linear again, so the extremes move to the ends of the edge. On a polygon, then, only the vertices need checking. This is the central idea behind linear programming. For $f = 7x - 2y + 1$ on the triangle with vertices $(0, 0)$, $(8, 0)$ and $(0, 3)$, the vertex values are $1$, $57$ and $-5$, so the maximum is $57$.\n\n> **Watch out.** Only the three vertices count: the point $(p, q)$ is not a vertex of this triangle, and the largest vertex value, not the smallest, is the maximum.",
+    "非常值线性函数没有临界点，所以它在闭区域上的最值在边界上。沿每条边它仍是线性的，所以最值又移到了边的端点。因此在多边形上只需检查顶点。这正是线性规划的核心思想。对顶点为 $(0, 0)$、$(8, 0)$、$(0, 3)$ 的三角形上的 $f = 7x - 2y + 1$，顶点处的值是 $1$、$57$、$-5$，所以最大值是 $57$。\n\n> **注意。** 只有三个顶点算数：点 $(p, q)$ 不是这个三角形的顶点；最大值是顶点值中最大的，不是最小的。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -1727,10 +1901,40 @@ const linearMaxOnTriangle: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c + a * p + b * q, Math.min(...values), c + Math.abs(a) * p + Math.abs(b) * q],
-      solution: t(
-        `The maximum of a linear function lies at a vertex. The values there are ${values.join(", ")}, and the largest is $${answer}$.`,
-        `线性函数的最大值在顶点处取到。顶点处的值是 ${values.join(", ")}，最大的是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          c + a * p + b * q,
+          `That is $f(${p}, ${q})$, but $(${p}, ${q})$ lies outside the triangle; its vertices are $(0, 0)$, $(${p}, 0)$ and $(0, ${q})$.`,
+          `那是 $f(${p}, ${q})$，但 $(${p}, ${q})$ 在三角形外；三角形的顶点是 $(0, 0)$、$(${p}, 0)$、$(0, ${q})$。`,
+        ),
+        why(Math.min(...values), "That is the smallest vertex value, the minimum.", "那是最小的顶点值，即最小值。"),
+        why(
+          c + Math.abs(a) * p + Math.abs(b) * q,
+          "Negative coefficients stay negative; evaluate $f$ at each vertex as it is.",
+          "负的系数仍是负的；要按原式在每个顶点处求 $f$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reduce to the vertices", "归结到顶点"],
+            t(
+              `$\\nabla f = (${a}, ${b})$ is never zero, so the maximum is on the boundary, and along each edge $f$ is linear, so it is at a vertex.`,
+              `$\\nabla f = (${a}, ${b})$ 恒不为零，所以最大值在边界上；沿每条边 $f$ 是线性的，所以在顶点处取得。`,
+            ),
+          ],
+          [
+            ["Compare the vertices", "比较顶点"],
+            t(
+              `$f(0, 0) = ${values[0]}$, $f(${p}, 0) = ${values[1]}$ and $f(0, ${q}) = ${values[2]}$; the largest is $${answer}$.`,
+              `$f(0, 0) = ${values[0]}$，$f(${p}, 0) = ${values[1]}$，$f(0, ${q}) = ${values[2]}$；最大的是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The midpoint $(${Q.of(p, 2).toLatex()}, ${Q.of(q, 2).toLatex()})$ of the long edge gives $${Q.of((values[1] ?? 0) + (values[2] ?? 0), 2).toLatex()}$, the average of two vertex values, which is not above $${answer}$.`,
+          `斜边的中点 $(${Q.of(p, 2).toLatex()}, ${Q.of(q, 2).toLatex()})$ 给出 $${Q.of((values[1] ?? 0) + (values[2] ?? 0), 2).toLatex()}$，是两个顶点值的平均，不超过 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -1741,8 +1945,8 @@ const closestToOrigin: KnowledgePointDef = {
   figure: multivariableDrawings3["optimizing-multivariable-functions-using-lagrange-multipliers#the-minimum-of-a-sum-of-squares-on-a-line"],
   title: t("The minimum of a sum of squares on a line", "直线上平方和的最小值"),
   explanation: t(
-    "To minimize $x^2 + y^2$ on the line $ax + by = c$, Lagrange's condition says that the gradient $\\langle 2x, 2y \\rangle$ is parallel to $\\langle a, b \\rangle$. So the best point is a multiple of the normal vector, which matches the geometry: the closest point to the origin lies along the perpendicular to the line.",
-    "要在直线 $ax + by = c$ 上使 $x^2 + y^2$ 最小，拉格朗日条件说梯度 $\\langle 2x, 2y \\rangle$ 与 $\\langle a, b \\rangle$ 平行。所以最优点是法向量的倍数，这与几何事实一致：离原点最近的点在过原点的垂线上。",
+    "To minimize $x^2 + y^2$ on the line $ax + by = c$, Lagrange's condition says that the gradient $\\langle 2x, 2y \\rangle$ is parallel to $\\langle a, b \\rangle$. So the best point is a multiple of the normal vector, which matches the geometry: the closest point to the origin lies along the perpendicular to the line. For $7x + y = 25$, the point is $\\frac{25}{50}(7, 1) = \\left(\\frac{7}{2}, \\frac{1}{2}\\right)$ and the minimum is $\\frac{49}{4} + \\frac{1}{4} = \\frac{25}{2}$.\n\n> **Watch out.** The multiple $\\frac{c}{a^2 + b^2}$ locates the point but is not the value; the value is $\\frac{c^2}{a^2 + b^2}$, with the full $a^2 + b^2$ below.",
+    "要在直线 $ax + by = c$ 上使 $x^2 + y^2$ 最小，拉格朗日条件说梯度 $\\langle 2x, 2y \\rangle$ 与 $\\langle a, b \\rangle$ 平行。所以最优点是法向量的倍数，这与几何事实一致：离原点最近的点在过原点的垂线上。对 $7x + y = 25$，该点为 $\\frac{25}{50}(7, 1) = \\left(\\frac{7}{2}, \\frac{1}{2}\\right)$，最小值为 $\\frac{49}{4} + \\frac{1}{4} = \\frac{25}{2}$。\n\n> **注意。** 倍数 $\\frac{c}{a^2 + b^2}$ 确定了该点，但不是值；值是 $\\frac{c^2}{a^2 + b^2}$，分母是完整的 $a^2 + b^2$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -1757,10 +1961,41 @@ const closestToOrigin: KnowledgePointDef = {
         `在 $${poly([a, "x"], [b, "y"])} = ${c}$ 的条件下，求 $x^2 + y^2$ 的最小值。`,
       ),
       answer,
-      wrong: [lambda, Q.of(c * c, Math.abs(a) + Math.abs(b)), Q.of(c * c, a * a)],
-      solution: t(
-        `The condition gives $(x, y) = \\lambda(${a}, ${b})$, and the constraint gives $\\lambda = ${lambda.toLatex()}$. The value is $\\lambda^2 \\cdot ${sum} = ${answer.toLatex()}$.`,
-        `条件给出 $(x, y) = \\lambda(${a}, ${b})$，约束给出 $\\lambda = ${lambda.toLatex()}$。值是 $\\lambda^2 \\cdot ${sum} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          lambda,
+          `That is the multiple $s = ${lambda.toLatex()}$ with $(x, y) = s(${a}, ${b})$; the value is $s^2 \\cdot ${sum}$.`,
+          `那是倍数 $s = ${lambda.toLatex()}$，$(x, y) = s(${a}, ${b})$；值是 $s^2 \\cdot ${sum}$。`,
+        ),
+        why(
+          Q.of(c * c, Math.abs(a) + Math.abs(b)),
+          `The denominator is $a^2 + b^2 = ${sum}$, not $|a| + |b|$.`,
+          `分母是 $a^2 + b^2 = ${sum}$，不是 $|a| + |b|$。`,
+        ),
+        why(
+          Q.of(c * c, a * a),
+          `Both coefficients count: the denominator is $${a * a} + ${b * b} = ${sum}$.`,
+          `两个系数都要算：分母是 $${a * a} + ${b * b} = ${sum}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the gradient condition", "用梯度条件"],
+            t(
+              `$\\langle 2x, 2y \\rangle$ is parallel to $\\langle ${a}, ${b} \\rangle$, so $(x, y) = s(${a}, ${b})$, and the constraint gives $s \\cdot ${sum} = ${c}$, so $s = ${lambda.toLatex()}$.`,
+              `$\\langle 2x, 2y \\rangle$ 与 $\\langle ${a}, ${b} \\rangle$ 平行，所以 $(x, y) = s(${a}, ${b})$，由约束得 $s \\cdot ${sum} = ${c}$，所以 $s = ${lambda.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Evaluate", "求值"],
+            t(`$x^2 + y^2 = s^2 \\cdot ${sum} = ${answer.toLatex()}$.`, `$x^2 + y^2 = s^2 \\cdot ${sum} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `The distance from the origin to the line is $\\frac{${c}}{\\sqrt{${sum}}}$, and its square is $${answer.toLatex()}$.`,
+          `原点到直线的距离是 $\\frac{${c}}{\\sqrt{${sum}}}$，其平方为 $${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -2776,8 +3011,8 @@ const preimageArea: KnowledgePointDef = {
   figure: multivariableDrawings3["the-inverse-of-an-affine-transformation#the-area-of-a-region-from-the-area-of-its-image"],
   title: t("The area of a region from the area of its image", "由像的面积求原区域的面积"),
   explanation: t(
-    "An affine transformation multiplies every area by $|\\det A|$, where $A$ is its matrix, and the translation has no effect on area. Its inverse is also affine, with matrix $A^{-1}$, whose determinant is $\\frac{1}{\\det A}$. So to go back from an image to the original region, divide by $|\\det A|$. There is no need to find the inverse map or to know the shape of the region.",
-    "仿射变换把每个面积乘以 $|\\det A|$，其中 $A$ 是它的矩阵，平移对面积没有影响。它的逆也是仿射的，矩阵是 $A^{-1}$，行列式是 $\\frac{1}{\\det A}$。所以从像回到原区域，就除以 $|\\det A|$。不需要求出逆映射，也不需要知道区域的形状。",
+    "An affine transformation multiplies every area by $|\\det A|$, where $A$ is its matrix, and the translation has no effect on area. Its inverse is also affine, with matrix $A^{-1}$, whose determinant is $\\frac{1}{\\det A}$. So to go back from an image to the original region, divide by $|\\det A|$. There is no need to find the inverse map or to know the shape of the region. For $T(x, y) = (5x + y + 7, 2x + 3y)$, $\\det A = 5 \\cdot 3 - 1 \\cdot 2 = 13$, so a region whose image has area $26$ has area $\\frac{26}{13} = 2$.\n\n> **Watch out.** The image is known and the original is asked for, so divide by $|\\det A|$ rather than multiply. The determinant is $ad - bc$, with a minus sign, and only its absolute value matters.",
+    "仿射变换把每个面积乘以 $|\\det A|$，其中 $A$ 是它的矩阵，平移对面积没有影响。它的逆也是仿射的，矩阵是 $A^{-1}$，行列式是 $\\frac{1}{\\det A}$。所以从像回到原区域，就除以 $|\\det A|$。不需要求出逆映射，也不需要知道区域的形状。对 $T(x, y) = (5x + y + 7, 2x + 3y)$，$\\det A = 5 \\cdot 3 - 1 \\cdot 2 = 13$，所以像的面积为 $26$ 的区域，面积是 $\\frac{26}{13} = 2$。\n\n> **注意。** 已知的是像，求的是原区域，所以要除以 $|\\det A|$，而不是乘。行列式是 $ad - bc$，中间是减号，只取它的绝对值。",
   ),
   generate(rng) {
     let a = nonzero(rng, 4);
@@ -2797,10 +3032,44 @@ const preimageArea: KnowledgePointDef = {
         `变换 $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [g, ""])})$ 把区域 $S$ 映到面积为 $${area}$ 的区域。求 $S$ 的面积。`,
       ),
       answer,
-      wrong: [Q.of(area * size), Q.of(area), Q.of(area, Math.abs(a * d + b * c) || 1), answer.add(Q.of(1))],
-      solution: t(
-        `The determinant of the linear part is $${det}$, so areas are multiplied by $${size}$. Dividing $${area}$ by this gives $${answer.toLatex()}$.`,
-        `线性部分的行列式是 $${det}$，所以面积乘以 $${size}$。用它除 $${area}$，得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(area * size),
+          `$T$ multiplies areas by $${size}$, so going back from the image divides by $${size}$.`,
+          `$T$ 把面积乘以 $${size}$，所以从像回到原区域要除以 $${size}$。`,
+        ),
+        why(
+          Q.of(area),
+          "The translation leaves area alone, but the linear part does not: divide by $|\\det A|$.",
+          "平移不改变面积，但线性部分会改变：要除以 $|\\det A|$。",
+        ),
+        why(
+          Q.of(area, Math.abs(a * d + b * c) || 1),
+          `The determinant is $ad - bc$, not $ad + bc$: here $${det}$.`,
+          `行列式是 $ad - bc$，不是 $ad + bc$：这里是 $${det}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the area factor", "求面积的倍数"],
+            t(
+              `The linear part has determinant $${a} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${det}$, so $T$ multiplies areas by $${size}$; the translation changes nothing.`,
+              `线性部分的行列式是 $${a} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${det}$，所以 $T$ 把面积乘以 $${size}$；平移不改变面积。`,
+            ),
+          ],
+          [
+            ["Undo it", "反推"],
+            t(
+              `The area of $S$ is $\\frac{${area}}{${size}} = ${answer.toLatex()}$.`,
+              `$S$ 的面积是 $\\frac{${area}}{${size}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Going forward, $${answer.toLatex()} \\cdot ${size} = ${area}$, the area of the image.`,
+          `正向验证：$${answer.toLatex()} \\cdot ${size} = ${area}$，正是像的面积。`,
+        ),
       ),
     });
   },
@@ -2810,13 +3079,14 @@ const largestSecondDirectional: KnowledgePointDef = {
   id: "the-largest-second-directional-derivative",
   title: t("The largest second directional derivative", "最大的二阶方向导数"),
   explanation: t(
-    "The second directional derivative in the direction of a unit vector $\\mathbf{u}$ is $\\mathbf{u}^T H \\mathbf{u}$, where $H$ is the Hessian. For a symmetric matrix, this quantity is largest when $\\mathbf{u}$ is an eigenvector for the largest eigenvalue, and that eigenvalue is the largest value. A Hessian of the form $\\begin{pmatrix} p & q \\\\ q & p \\end{pmatrix}$ has eigenvalues $p + q$ and $p - q$, along the diagonal directions.",
-    "沿单位向量 $\\mathbf{u}$ 的二阶方向导数是 $\\mathbf{u}^T H \\mathbf{u}$，其中 $H$ 是黑塞矩阵。对对称矩阵，当 $\\mathbf{u}$ 是最大特征值的特征向量时，这个量最大，最大值就是这个特征值。形如 $\\begin{pmatrix} p & q \\\\ q & p \\end{pmatrix}$ 的黑塞矩阵有特征值 $p + q$ 和 $p - q$，对应对角方向。",
+    "The second directional derivative in the direction of a unit vector $\\mathbf{u}$ is $\\mathbf{u}^T H \\mathbf{u}$, where $H$ is the Hessian. For a symmetric matrix, this quantity is largest when $\\mathbf{u}$ is an eigenvector for the largest eigenvalue, and that eigenvalue is the largest value. A Hessian of the form $\\begin{pmatrix} p & q \\\\ q & p \\end{pmatrix}$ has eigenvalues $p + q$ and $p - q$, along the diagonal directions. For $f = 7x^2 + 10xy + 7y^2$, $H = \\begin{pmatrix} 14 & 10 \\\\ 10 & 14 \\end{pmatrix}$, so the largest second directional derivative is $14 + 10 = 24$, along $(1, 1)$.\n\n> **Watch out.** The diagonal of $H$ is $f_{xx} = 2s$ for a term $sx^2$, while the mixed term $qxy$ gives $f_{xy} = q$. The largest eigenvalue is $p + |q|$; $p - |q|$ is the smallest.",
+    "沿单位向量 $\\mathbf{u}$ 的二阶方向导数是 $\\mathbf{u}^T H \\mathbf{u}$，其中 $H$ 是黑塞矩阵。对对称矩阵，当 $\\mathbf{u}$ 是最大特征值的特征向量时，这个量最大，最大值就是这个特征值。形如 $\\begin{pmatrix} p & q \\\\ q & p \\end{pmatrix}$ 的黑塞矩阵有特征值 $p + q$ 和 $p - q$，对应对角方向。对 $f = 7x^2 + 10xy + 7y^2$，$H = \\begin{pmatrix} 14 & 10 \\\\ 10 & 14 \\end{pmatrix}$，所以最大的二阶方向导数是 $14 + 10 = 24$，方向为 $(1, 1)$。\n\n> **注意。** 对项 $sx^2$，$H$ 的对角元是 $f_{xx} = 2s$，而混合项 $qxy$ 给出 $f_{xy} = q$。最大特征值是 $p + |q|$；$p - |q|$ 是最小的。",
   ),
   generate(rng) {
     const s = nonzero(rng, 6);
     const q = nonzero(rng, 9);
     const answer = 2 * s + Math.abs(q);
+    const sign = q > 0 ? 1 : -1;
     return numberProblem({
       prompt: t(
         `Let $f(x, y) = ${poly([s, "x^2"], [q, "xy"], [s, "y^2"])}$. Find the largest value of the second directional derivative of $f$ over all unit vectors.`,
@@ -2824,10 +3094,46 @@ const largestSecondDirectional: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * s, 2 * s - Math.abs(q), Math.abs(q), 2 * s * Math.abs(q)],
-      solution: t(
-        `The Hessian has diagonal entries $${2 * s}$ and off-diagonal entries $${q}$, so its eigenvalues are $${2 * s} \\pm ${Math.abs(q)}$. The larger is $${answer}$.`,
-        `黑塞矩阵的对角元是 $${2 * s}$，非对角元是 $${q}$，所以特征值是 $${2 * s} \\pm ${Math.abs(q)}$。较大的是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          2 * s,
+          "That is $f_{xx}$, the value along the $x$-axis; a diagonal direction does better.",
+          "那是 $f_{xx}$，即沿 $x$ 轴的值；对角方向更大。",
+        ),
+        why(
+          2 * s - Math.abs(q),
+          `That is the smaller eigenvalue $${2 * s} - ${Math.abs(q)}$; the largest is $${2 * s} + ${Math.abs(q)}$.`,
+          `那是较小的特征值 $${2 * s} - ${Math.abs(q)}$；最大的是 $${2 * s} + ${Math.abs(q)}$。`,
+        ),
+        why(
+          s + Math.abs(q),
+          `The diagonal entries of $H$ are $f_{xx} = ${2 * s}$, not the coefficient $${s}$.`,
+          `$H$ 的对角元是 $f_{xx} = ${2 * s}$，不是系数 $${s}$。`,
+        ),
+        why(
+          2 * s + 2 * Math.abs(q),
+          `The mixed term gives $f_{xy} = ${q}$, not $${2 * q}$.`,
+          `混合项给出 $f_{xy} = ${q}$，不是 $${2 * q}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the Hessian", "写出黑塞矩阵"],
+            t(
+              `$H = \\begin{pmatrix} ${2 * s} & ${q} \\\\ ${q} & ${2 * s} \\end{pmatrix}$, with eigenvalues $${2 * s} \\pm ${Math.abs(q)}$.`,
+              `$H = \\begin{pmatrix} ${2 * s} & ${q} \\\\ ${q} & ${2 * s} \\end{pmatrix}$，特征值为 $${2 * s} \\pm ${Math.abs(q)}$。`,
+            ),
+          ],
+          [
+            ["Take the larger", "取较大者"],
+            t(`The largest value is $${2 * s} + ${Math.abs(q)} = ${answer}$.`, `最大值为 $${2 * s} + ${Math.abs(q)} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Along $\\mathbf{u} = \\frac{1}{\\sqrt{2}}(1, ${sign})$, $\\mathbf{u}^T H \\mathbf{u} = \\frac{${2 * s} + 2 \\cdot ${inParens(q)} \\cdot ${inParens(sign)} + ${inParens(2 * s)}}{2} = ${answer}$, so this value is reached.`,
+          `沿 $\\mathbf{u} = \\frac{1}{\\sqrt{2}}(1, ${sign})$，$\\mathbf{u}^T H \\mathbf{u} = \\frac{${2 * s} + 2 \\cdot ${inParens(q)} \\cdot ${inParens(sign)} + ${inParens(2 * s)}}{2} = ${answer}$，所以这个值能取到。`,
+        ),
       ),
     });
   },
@@ -2837,8 +3143,8 @@ const logarithmCrossTerm: KnowledgePointDef = {
   id: "the-cross-term-of-a-taylor-polynomial-of-a-logarithm",
   title: t("The cross term of a Taylor polynomial of a logarithm", "对数的泰勒多项式的交叉项"),
   explanation: t(
-    "A Taylor polynomial of a composite function can be found without any partial derivatives. Put $w = ax + by$ into the one-variable series $\\ln(1 + w) = w - \\frac{w^2}{2} + \\dots$, and collect terms up to degree two. Only $-\\frac{w^2}{2}$ can produce a term in $xy$, and squaring $w$ gives $2ab\\,xy$ there. The higher terms of the series have degree at least three.",
-    "复合函数的泰勒多项式不必求偏导数就能得到。把 $w = ax + by$ 代入一元级数 $\\ln(1 + w) = w - \\frac{w^2}{2} + \\dots$，并收集到二次为止的项。只有 $-\\frac{w^2}{2}$ 能产生 $xy$ 项，而 $w$ 的平方在那里给出 $2ab\\,xy$。级数的更高项次数至少是三。",
+    "A Taylor polynomial of a composite function can be found without any partial derivatives. Put $w = ax + by$ into the one-variable series $\\ln(1 + w) = w - \\frac{w^2}{2} + \\dots$, and collect terms up to degree two. Only $-\\frac{w^2}{2}$ can produce a term in $xy$, and squaring $w$ gives $2ab\\,xy$ there. The higher terms of the series have degree at least three. For $\\ln(1 + 2x - 7y)$, $-\\frac{w^2}{2}$ contains $-\\frac{1}{2} \\cdot 2 \\cdot 2 \\cdot (-7)\\,xy = 14xy$.\n\n> **Watch out.** The $w^2$ term carries a minus sign. Squaring $w$ gives $2ab\\,xy$, and the $\\frac{1}{2}$ then cancels the $2$, leaving $-ab$.",
+    "复合函数的泰勒多项式不必求偏导数就能得到。把 $w = ax + by$ 代入一元级数 $\\ln(1 + w) = w - \\frac{w^2}{2} + \\dots$，并收集到二次为止的项。只有 $-\\frac{w^2}{2}$ 能产生 $xy$ 项，而 $w$ 的平方在那里给出 $2ab\\,xy$。级数的更高项次数至少是三。对 $\\ln(1 + 2x - 7y)$，$-\\frac{w^2}{2}$ 含有 $-\\frac{1}{2} \\cdot 2 \\cdot 2 \\cdot (-7)\\,xy = 14xy$。\n\n> **注意。** $w^2$ 项带负号。$w$ 的平方给出 $2ab\\,xy$，$\\frac{1}{2}$ 再与 $2$ 约去，剩下 $-ab$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -2850,10 +3156,36 @@ const logarithmCrossTerm: KnowledgePointDef = {
         `求 $f(x, y) = \\ln(${poly([1, ""], [a, "x"], [b, "y"])})$ 在 $(0, 0)$ 处的二次泰勒多项式中 $xy$ 的系数。`,
       ),
       answer,
-      wrong: [Q.of(a * b), Q.of(-a * b, 2), Q.of(-2 * a * b), Q.of(a + b)],
-      solution: t(
-        `The term $-\\frac{w^2}{2}$ with $w = ${poly([a, "x"], [b, "y"])}$ contains $-\\frac{1}{2} \\cdot 2 \\cdot ${inParens(a)} \\cdot ${inParens(b)}\\,xy$, so the coefficient is $${answer}$.`,
-        `当 $w = ${poly([a, "x"], [b, "y"])}$ 时，$-\\frac{w^2}{2}$ 含有 $-\\frac{1}{2} \\cdot 2 \\cdot ${inParens(a)} \\cdot ${inParens(b)}\\,xy$，所以系数是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(a * b, "The series is $w - \\frac{w^2}{2}$: the square term has a minus sign.", "级数是 $w - \\frac{w^2}{2}$：平方项带负号。"),
+        why(
+          Q.of(-a * b, 2),
+          "Squaring $w$ gives the cross term $2ab\\,xy$, not $ab\\,xy$.",
+          "$w$ 的平方给出交叉项 $2ab\\,xy$，不是 $ab\\,xy$。",
+        ),
+        why(-2 * a * b, "The factor $\\frac{1}{2}$ of $-\\frac{w^2}{2}$ is missing.", "漏掉了 $-\\frac{w^2}{2}$ 中的因子 $\\frac{1}{2}$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Square w", "把 w 平方"],
+            t(
+              `With $w = ${poly([a, "x"], [b, "y"])}$, $w^2$ has cross term $2 \\cdot ${inParens(a)} \\cdot ${inParens(b)}\\,xy = ${poly([2 * a * b, "xy"])}$.`,
+              `当 $w = ${poly([a, "x"], [b, "y"])}$ 时，$w^2$ 的交叉项是 $2 \\cdot ${inParens(a)} \\cdot ${inParens(b)}\\,xy = ${poly([2 * a * b, "xy"])}$。`,
+            ),
+          ],
+          [
+            ["Apply the series", "代入级数"],
+            t(
+              `$-\\frac{w^2}{2}$ contributes $-\\frac{1}{2} \\cdot ${inParens(2 * a * b)} = ${answer}$, the coefficient of $xy$.`,
+              `$-\\frac{w^2}{2}$ 贡献 $-\\frac{1}{2} \\cdot ${inParens(2 * a * b)} = ${answer}$，即 $xy$ 的系数。`,
+            ),
+          ],
+        ],
+        t(
+          `By derivatives, $f_{xy} = ${a * b > 0 ? "-" : ""}\\frac{${Math.abs(a * b)}}{(${poly([1, ""], [a, "x"], [b, "y"])})^2}$, which is $${answer}$ at the origin, and the coefficient of $xy$ is $f_{xy}(0, 0)$ itself.`,
+          `用导数验证：$f_{xy} = ${a * b > 0 ? "-" : ""}\\frac{${Math.abs(a * b)}}{(${poly([1, ""], [a, "x"], [b, "y"])})^2}$，在原点处为 $${answer}$，而 $xy$ 的系数就是 $f_{xy}(0, 0)$ 本身。`,
+        ),
       ),
     });
   },

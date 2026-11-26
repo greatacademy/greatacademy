@@ -1312,8 +1312,8 @@ const criticalKind = point(
   "the-kind-of-critical-point-from-labeled-level-curves",
   ["The kind of critical point from labeled level curves", "由带标注的等值线判断临界点类型"],
   [
-    "Closed level curves around a point mean a local extremum: a minimum if the values grow outward, a maximum if they fall outward. Curves that open away from the point like hyperbolas, with values above on one axis and below on the other, mean a saddle.",
-    "围绕一点的闭合等值线表示局部极值：数值向外增大是极小值，向外减小是极大值。像双曲线一样分开、一条轴上数值较大而另一条轴上较小的等值线表示鞍点。",
+    "Closed level curves around a point mean a local extremum: a minimum if the values grow outward, a maximum if they fall outward. Curves that open away from the point like hyperbolas, with values above on one axis and below on the other, mean a saddle. For ellipses around $P$ labeled $10$ on the inner curve and $13$ on the outer one, every step away from $P$ climbs, so $P$ is a local minimum.\n\n> **Watch out.** Closed curves alone do not say minimum: read the labels, since values that fall outward make $P$ a maximum. And hyperbola-shaped curves mean a saddle even when the labels on one side grow outward.",
+    "围绕一点的闭合等值线表示局部极值：数值向外增大是极小值，向外减小是极大值。像双曲线一样分开、一条轴上数值较大而另一条轴上较小的等值线表示鞍点。若围绕 $P$ 的椭圆内圈标 $10$、外圈标 $13$，离开 $P$ 的每一步都在上升，所以 $P$ 是局部极小值点。\n\n> **注意。** 仅凭闭合曲线不能断定是极小值：要看标注，数值向外减小时 $P$ 是极大值点。双曲线形的等值线即使一侧的标注向外增大，也表示鞍点。",
   ],
   (rng) => {
     const kind = rng.pick(["min", "max", "saddle"] as const);
@@ -1338,7 +1338,7 @@ const criticalKind = point(
       max: ["A local maximum", "局部极大值"],
       saddle: ["A saddle point", "鞍点"],
     };
-    const why: Record<typeof kind, Pair> = {
+    const reading: Record<typeof kind, Pair> = {
       min: ["The curves close around $P$ and the labels grow outward.", "等值线围绕 $P$ 闭合，标注的数值向外增大。"],
       max: ["The curves close around $P$ and the labels fall outward.", "等值线围绕 $P$ 闭合，标注的数值向外减小。"],
       saddle: [
@@ -1346,19 +1346,65 @@ const criticalKind = point(
         `等值线在 $P$ 处分开，一条轴上数值高于 $${c}$，另一条轴上低于它。`,
       ],
     };
-    return choose(
-      rng,
-      [
+    const wrongWhy = (x: typeof kind): Pair => {
+      if (kind === "saddle")
+        return [
+          `The curves do not close around $P$: going one way the values rise to $${c + 1}$, going the other they fall to $${c - 1}$.`,
+          `等值线没有围绕 $P$ 闭合：朝一个方向数值升到 $${c + 1}$，朝另一个方向降到 $${c - 1}$。`,
+        ];
+      if (x === "saddle")
+        return [
+          "The curves close around $P$, and the values change the same way in every direction, so $f$ does not rise one way and fall the other.",
+          "等值线围绕 $P$ 闭合，各个方向上数值的变化相同，所以 $f$ 不会一边上升一边下降。",
+        ];
+      return kind === "min"
+        ? [
+            `The labels grow outward from $${c + 1}$ to $${c + 4}$, so $P$ is the lowest point nearby, not the highest.`,
+            `标注向外从 $${c + 1}$ 增大到 $${c + 4}$，所以 $P$ 是附近的最低点，不是最高点。`,
+          ]
+        : [
+            `The labels fall outward from $${c - 1}$ to $${c - 4}$, so $P$ is the highest point nearby, not the lowest.`,
+            `标注向外从 $${c - 1}$ 减小到 $${c - 4}$，所以 $P$ 是附近的最高点，不是最低点。`,
+          ];
+    };
+    const noTest: Pair = [
+      "The labeled curves settle it directly, and the curves here come from a quadratic whose discriminant is not zero.",
+      "带标注的等值线直接给出了答案，而且这里的曲线来自判别式不为零的二次函数。",
+    ];
+    const near = kind === "max" ? c - 1 : c + 1;
+    return explainedChoice(rng, {
+      prompt: t(
         "The curves are labeled level curves of $f$, and $P$ is a critical point. What kind of point is $P$?",
         "这些曲线是带数值标注的 $f$ 的等值线，$P$ 是临界点。$P$ 是什么类型的点？",
+      ),
+      correct: t(...names[kind]),
+      wrong: [
+        ...(["min", "max", "saddle"] as const).filter((x) => x !== kind).map((x) => ({ option: t(...names[x]), why: t(...wrongWhy(x)) })),
+        {
+          option: t("A point where the second derivative test gives no information", "二阶导数判别法无法判断的点"),
+          why: t(...noTest),
+        },
       ],
-      names[kind],
-      [
-        ...(["min", "max", "saddle"] as const).filter((x) => x !== kind).map((x) => names[x]),
-        ["A point where the second derivative test gives no information", "二阶导数判别法无法判断的点"],
-      ],
-      why[kind],
-      fig(7, marks, [
+      solution: walked(
+        [
+          [
+            ["Read the shape", "看形状"],
+            kind === "saddle"
+              ? t("The curves open away from $P$ like hyperbolas.", "等值线像双曲线一样在 $P$ 处分开。")
+              : t("The curves close around $P$.", "等值线围绕 $P$ 闭合。"),
+          ],
+          [["Read the labels", "看标注"], t(...reading[kind])],
+        ],
+        t(
+          kind === "saddle"
+            ? `Stepping from $P$ toward the right, $f$ reaches $${c + 1}$; stepping up, it reaches $${c - 1}$: one rise and one fall, as at a saddle.`
+            : `Stepping from $P$ toward the right, $f$ reaches $${near}$ and then $${kind === "max" ? c - 4 : c + 4}$; every direction does the same, so $P$ is the ${kind === "max" ? "highest" : "lowest"} point nearby.`,
+          kind === "saddle"
+            ? `从 $P$ 向右走，$f$ 达到 $${c + 1}$；向上走，达到 $${c - 1}$：一升一降，正如鞍点。`
+            : `从 $P$ 向右走，$f$ 先达到 $${near}$，再达到 $${kind === "max" ? c - 4 : c + 4}$；各个方向都一样，所以 $P$ 是附近的${kind === "max" ? "最高" : "最低"}点。`,
+        ),
+      ),
+      figure: fig(7, marks, [
         kind === "saddle"
           ? `Hyperbola-shaped level curves around P at (${h}, ${k}), labeled ${word(c + 1)} and ${word(c + 4)} on one axis and ${word(c - 1)} and ${word(c - 4)} on the other.`
           : `Closed level curves around P at (${h}, ${k}), labeled ${word(c + sign)} on the inner curve and ${word(c + 4 * sign)} on the outer curve.`,
@@ -1366,7 +1412,7 @@ const criticalKind = point(
           ? `围绕 P (${h}, ${k}) 的双曲线形等值线，一条轴上标 ${word(c + 1)} 和 ${word(c + 4)}，另一条轴上标 ${word(c - 1)} 和 ${word(c - 4)}。`
           : `围绕 P (${h}, ${k}) 的闭合等值线，内圈标 ${word(c + sign)}，外圈标 ${word(c + 4 * sign)}。`,
       ]),
-    );
+    });
   },
 );
 
@@ -1375,8 +1421,8 @@ const lagrangeLine = {
     "the-minimum-on-a-drawn-line-from-tangent-level-curves",
     ["The minimum on a drawn line from tangent level curves", "由相切等值线求所画直线上的最小值"],
     [
-      "At a constrained extremum the level curve of $f$ is tangent to the constraint, since $\\nabla f$ is parallel to the normal of the constraint. For $f = x^2 + y^2$ the level curves are circles, and the tangent one touches the line at the foot of the perpendicular from the origin.",
-      "在约束极值处，$f$ 的等值线与约束相切，因为 $\\nabla f$ 平行于约束的法向量。对 $f = x^2 + y^2$，等值线是圆，相切的圆在原点到直线的垂足处接触直线。",
+      "At a constrained extremum the level curve of $f$ is tangent to the constraint, since $\\nabla f$ is parallel to the normal of the constraint. For $f = x^2 + y^2$ the level curves are circles, and the tangent one touches the line at the foot of the perpendicular from the origin. For the vertical line $x = 5$, the circle $x^2 + y^2 = 25$ touches it at $(5, 0)$, so the minimum of $f$ on the line is $25$.\n\n> **Watch out.** Use the circle that just touches the line: a larger circle crosses it, so the line also reaches lower values, and a smaller one misses it. The value of $f$ is the squared radius, $p^2 + q^2$, not $|p| + |q|$.",
+      "在约束极值处，$f$ 的等值线与约束相切，因为 $\\nabla f$ 平行于约束的法向量。对 $f = x^2 + y^2$，等值线是圆，相切的圆在原点到直线的垂足处接触直线。对竖直线 $x = 5$，圆 $x^2 + y^2 = 25$ 在 $(5, 0)$ 处与它相切，所以 $f$ 在该直线上的最小值是 $25$。\n\n> **注意。** 要用恰好与直线相切的圆：更大的圆与直线相交，直线上还有更小的值；更小的圆与直线不相交。$f$ 的值是半径的平方 $p^2 + q^2$，不是 $|p| + |q|$。",
     ],
     (rng) => {
       const nonzero = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -1384,19 +1430,50 @@ const lagrangeLine = {
       const q = rng.pick(nonzero);
       const value = p * p + q * q;
       const circle = (x: number, y: number) => x * x + y * y;
-      const levels = [value, value + 6, Math.max(1, value - 4)];
-      return ask(
-        [
-          "The solid line is a constraint, and the dashed curves are level curves of $f(x, y) = x^2 + y^2$. Find the minimum of $f$ on the line.",
-          "实线是约束，虚线是 $f(x, y) = x^2 + y^2$ 的等值线。求 $f$ 在直线上的最小值。",
-        ],
-        value,
-        [Math.abs(p) + Math.abs(q), value + 6, 2 * value, p * q === value ? value + 1 : Math.abs(p * q)],
-        [
-          `The dashed circle tangent to the line touches it at $${at([p, q])}$, where the radius meets the line at a right angle. There $f = ${p * p} + ${q * q} = ${value}$.`,
-          `与直线相切的虚线圆在 $${at([p, q])}$ 处接触直线，半径在那里与直线垂直。此时 $f = ${p * p} + ${q * q} = ${value}$。`,
-        ],
-        fig(
+      const small = Math.max(1, value - 4);
+      const levels = [value, value + 6, small];
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The solid line is a constraint, and the dashed curves are level curves of $f(x, y) = x^2 + y^2$. Find the minimum of $f$ on the line.",
+            "实线是约束，虚线是 $f(x, y) = x^2 + y^2$ 的等值线。求 $f$ 在直线上的最小值。",
+          ),
+          answer: value,
+          mistakes: apart(value, [
+            why(
+              Math.abs(p) + Math.abs(q),
+              `$f$ squares the coordinates: at $${at([p, q])}$ it is $${p * p} + ${q * q}$, not $${Math.abs(p)} + ${Math.abs(q)}$.`,
+              `$f$ 要把坐标平方：在 $${at([p, q])}$ 处是 $${p * p} + ${q * q}$，不是 $${Math.abs(p)} + ${Math.abs(q)}$。`,
+            ),
+            why(
+              value + 6,
+              `The circle at level $${value + 6}$ crosses the line, so the line also passes through lower levels.`,
+              `等值 $${value + 6}$ 的圆与直线相交，所以直线还经过更低的等值线。`,
+            ),
+            why(
+              small,
+              `The circle at level $${small}$ does not reach the line, so no point of the line has that value.`,
+              `等值 $${small}$ 的圆碰不到直线，所以直线上没有点取这个值。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the tangent circle", "找出相切的圆"],
+                t(
+                  `The dashed circle tangent to the line touches it at $${at([p, q])}$, where the radius meets the line at a right angle.`,
+                  `与直线相切的虚线圆在 $${at([p, q])}$ 处接触直线，半径在那里与直线垂直。`,
+                ),
+              ],
+              [["Evaluate f there", "在该点求 f"], t(`$f = ${p * p} + ${q * q} = ${value}$.`, `$f = ${p * p} + ${q * q} = ${value}$。`)],
+            ],
+            t(
+              `The line runs in the direction $(${q}, ${-p})$, perpendicular to $(${p}, ${q})$, so every point of it is $(${p}, ${q}) + s(${q}, ${-p})$ with $f = ${value} + ${value}s^2 \\ge ${value}$.`,
+              `直线方向为 $(${q}, ${-p})$，与 $(${p}, ${q})$ 垂直，所以直线上每一点为 $(${p}, ${q}) + s(${q}, ${-p})$，$f = ${value} + ${value}s^2 \\ge ${value}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           8,
           [
             { kind: "line", a: [p, q], b: [p + q, q - p], accent: true },
@@ -1407,7 +1484,7 @@ const lagrangeLine = {
             `过 ${at([p, q])} 和 ${at([p + q, q - p])} 的直线，以及以原点为圆心的虚线圆。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings3["lagrange-multipliers-with-one-constraint#the-minimum-on-a-drawn-line-from-tangent-level-curves"],
@@ -1482,8 +1559,8 @@ const affineImage = {
     "the-image-of-a-drawn-vertex-under-an-affine-map",
     ["The image of a drawn vertex under an affine map", "所画顶点在仿射映射下的像"],
     [
-      "An affine map is a linear map followed by a shift. Read the coordinates of the point and substitute them into the formula.",
-      "仿射映射是线性映射再加平移。读出点的坐标，代入公式。",
+      "An affine map is a linear map followed by a shift. Read the coordinates of the point from the grid and substitute them into the formula, $x$ for $x$ and $y$ for $y$. For $T(x, y) = (4x - y + 1,\\ x + 5y - 2)$ and a vertex at $(2, 3)$, the image is $(8 - 3 + 1,\\ 2 + 15 - 2) = (6, 15)$.\n\n> **Watch out.** Keep the constant terms: they are the shift, and without them you have only the linear part. Read the point as $(x, y)$, across first and then up, so that the coordinates do not trade places.",
+      "仿射映射是线性映射再加平移。从网格读出点的坐标，代入公式，$x$ 代 $x$，$y$ 代 $y$。对 $T(x, y) = (4x - y + 1,\\ x + 5y - 2)$ 和顶点 $(2, 3)$，像是 $(8 - 3 + 1,\\ 2 + 15 - 2) = (6, 15)$。\n\n> **注意。** 不要丢掉常数项：它们就是平移，没有它们就只剩线性部分。按 $(x, y)$ 读点，先横后纵，坐标才不会互换。",
     ],
     (rng) => {
       const a = rng.pick([-2, -1, 1, 2, 3]);
@@ -1507,20 +1584,48 @@ const affineImage = {
         [d, "y"],
         [f, ""],
       ])}\\right)`;
-      return ask(
-        [
-          `For $${map}$, find the ${name[0]} coordinate of the image of the vertex $P$ of the drawn triangle.`,
-          `对 $${map}$，求所画三角形的顶点 $P$ 的像的${name[1]}个坐标。`,
-        ],
-        first ? image[0] : image[1],
-        [
-          first ? image[1] : image[0],
-          first ? a * P[1] + b * P[0] + e : c * P[1] + d * P[0] + f,
-          first ? image[0] - e : image[1] - f,
-          (first ? image[0] : image[1]) + 1,
-        ],
-        [`$P = ${at(P)}$, so $T(P) = ${at(image)}$.`, `$P = ${at(P)}$，所以 $T(P) = ${at(image)}$。`],
-        fig(
+      const answer = first ? image[0] : image[1];
+      const [p, q, s] = first ? [a, b, e] : [c, d, f];
+      const run = Q1[0] - P[0];
+      const imageQ: Point = [a * Q1[0] + b * Q1[1] + e, c * Q1[0] + d * Q1[1] + f];
+      return {
+        ...numberProblem({
+          prompt: t(
+            `For $${map}$, find the ${name[0]} coordinate of the image of the vertex $P$ of the drawn triangle.`,
+            `对 $${map}$，求所画三角形的顶点 $P$ 的像的${name[1]}个坐标。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              p * P[1] + q * P[0] + s,
+              `That puts $${P[1]}$ in for $x$ and $${P[0]}$ in for $y$; $P = ${at(P)}$ has $x = ${P[0]}$.`,
+              `那是把 $${P[1]}$ 代给 $x$，把 $${P[0]}$ 代给 $y$；$P = ${at(P)}$ 的 $x = ${P[0]}$。`,
+            ),
+            why(answer - s, `That is only the linear part; add the shift $${s}$.`, `那只是线性部分；还要加上平移 $${s}$。`),
+            why(
+              first ? image[1] : image[0],
+              `That is the ${first ? "second" : "first"} coordinate of $T(P)$; the question asks for the ${name[0]}.`,
+              `那是 $T(P)$ 的${first ? "第二" : "第一"}个坐标；题目问的是${name[1]}个。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Read the vertex", "读出顶点"], t(`On the grid, $P = ${at(P)}$.`, `从网格读出 $P = ${at(P)}$。`)],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `The ${name[0]} coordinate is $${p} \\cdot ${paren(P[0])} + ${paren(q)} \\cdot ${paren(P[1])} + ${paren(s)} = ${answer}$, so $T(P) = ${at(image)}$.`,
+                  `${name[1]}个坐标是 $${p} \\cdot ${paren(P[0])} + ${paren(q)} \\cdot ${paren(P[1])} + ${paren(s)} = ${answer}$，所以 $T(P) = ${at(image)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The other drawn vertex $${at(Q1)}$ lies $${run}$ across from $P$ and goes to $${at(imageQ)}$; the difference $(${imageQ[0] - image[0]}, ${imageQ[1] - image[1]})$ is $${run}$ times the first column $(${a}, ${c})$, as a linear part plus a shift requires.`,
+              `另一个所画顶点 $${at(Q1)}$ 与 $P$ 横向相差 $${run}$，它的像是 $${at(imageQ)}$；差 $(${imageQ[0] - image[0]}, ${imageQ[1] - image[1]})$ 正是第一列 $(${a}, ${c})$ 的 $${run}$ 倍，符合“线性部分加平移”。`,
+            ),
+          ),
+        }),
+        figure: fig(
           6,
           [
             { kind: "polygon", points: [P, Q1, R] },
@@ -1531,7 +1636,7 @@ const affineImage = {
             `阴影三角形，顶点为 ${at(P)}、${at(Q1)} 和 ${at(R)}，P 位于 ${at(P)}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings3["the-image-of-an-affine-transformation#the-image-of-a-drawn-vertex-under-an-affine-map"],

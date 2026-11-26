@@ -6,7 +6,6 @@ import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.
 import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 
 import {
-  choiceProblem,
   type EquationProblem,
   equationProblem,
   explainedChoice,
@@ -17,7 +16,6 @@ import {
   pointLatex,
   pointProblem,
   say,
-  steps,
   vectorLatex,
   verdictChoice,
   why,
@@ -70,13 +68,6 @@ function equationWith(p: Omit<EquationProblem, "wrong">, mistakes: readonly { re
 
 const v2L = (v: readonly (number | Q)[]): string => `(${v.map((c) => (c instanceof Q ? c.toLatex() : String(c))).join(", ")})`;
 const v3L = (v: readonly (number | Q)[]): string => vectorLatex(v);
-
-/** pickChoice builds a multiple choice problem with options shuffled. */
-function pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
-  const options = rng.shuffle([right, ...wrong]);
-  const correct = options.indexOf(right);
-  return choiceProblem({ prompt, options, correct, solution });
-}
 
 /** pythagoreanTriples provides nice integer triangles. */
 const pythagoreanTriples: readonly (readonly [number, number, number])[] = [
@@ -4671,6 +4662,10 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
     "In polar coordinates x = r cos θ and y = r sin θ, the radial derivative is ∂z/∂r = (∂z/∂x) cos θ + (∂z/∂y) sin θ.",
     "在极坐标 x = r cos θ 与 y = r sin θ 下，径向偏导数为 ∂z/∂r = (∂z/∂x) cos θ + (∂z/∂y) sin θ。",
   ),
+  intro: t(
+    "Let $z = xy$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$. At $r = 2$, $\\theta = \\frac{\\pi}{6}$ the point is $(\\sqrt{3}, 1)$, where $z_x = y = 1$ and $z_y = x = \\sqrt{3}$. So $\\frac{\\partial z}{\\partial r} = z_x\\cos\\theta + z_y\\sin\\theta = \\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{3}}{2} = \\sqrt{3}$.\n\nCheck: substituting, $z = r^2\\cos\\theta\\sin\\theta$, so $\\frac{\\partial z}{\\partial r} = 2r\\cos\\theta\\sin\\theta = 4 \\cdot \\frac{\\sqrt{3}}{2} \\cdot \\frac{1}{2} = \\sqrt{3}$.\n\nIn this lesson we use the chain rule to find derivatives with respect to $r$ and $\\theta$, and to recover Cartesian partial derivatives from polar ones.",
+    "设 $z = xy$，其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$。在 $r = 2$，$\\theta = \\frac{\\pi}{6}$ 处，点为 $(\\sqrt{3}, 1)$，此处 $z_x = y = 1$，$z_y = x = \\sqrt{3}$。所以 $\\frac{\\partial z}{\\partial r} = z_x\\cos\\theta + z_y\\sin\\theta = \\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{3}}{2} = \\sqrt{3}$。\n\n检验：代入得 $z = r^2\\cos\\theta\\sin\\theta$，所以 $\\frac{\\partial z}{\\partial r} = 2r\\cos\\theta\\sin\\theta = 4 \\cdot \\frac{\\sqrt{3}}{2} \\cdot \\frac{1}{2} = \\sqrt{3}$。\n\n本课我们用链式法则求对 $r$ 和 $\\theta$ 的导数，并由极坐标下的偏导数还原直角坐标下的偏导数。",
+  ),
   prerequisites: ["the-multivariable-chain-rule"],
   encompasses: [{ topic: "the-multivariable-chain-rule", weight: 0.3 }],
   xp: 10,
@@ -4679,8 +4674,8 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
       id: "radial-derivatives-in-polar-coordinates",
       title: t("Radial derivatives in polar coordinates", "极坐标下的径向导数"),
       explanation: t(
-        "Changing the radius moves the point in both the horizontal and vertical directions, so the chain rule adds both partial derivatives with the right weights. For $z = f(x, y)$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, applying the chain rule yields:\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta.$$",
-        "改变半径会使点在水平和竖直两个方向上移动，所以链式法则要把两个偏导数按相应的权重加起来。对于 $z = f(x, y)$（其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$），由链式法则可得：\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta$$",
+        "Changing the radius moves the point in both the horizontal and vertical directions, so the chain rule adds both partial derivatives with the right weights. For $z = f(x, y)$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, applying the chain rule yields:\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta.$$\n\nFor $z = x + y^3$ at $r = 2$, $\\theta = \\frac{\\pi}{2}$, the point is $(0, 2)$, so $\\frac{\\partial z}{\\partial r} = 1 \\cdot 0 + 12 \\cdot 1 = 12$.\n\n> **Watch out.** $\\frac{\\partial x}{\\partial r} = \\cos\\theta$ goes with $z_x$ and $\\frac{\\partial y}{\\partial r} = \\sin\\theta$ with $z_y$; swapping them is the usual slip. After substituting $x = r\\cos\\theta$, the factor $r$ stays in the answer.",
+        "改变半径会使点在水平和竖直两个方向上移动，所以链式法则要把两个偏导数按相应的权重加起来。对于 $z = f(x, y)$（其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$），由链式法则可得：\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta$$\n\n对 $z = x + y^3$，在 $r = 2$，$\\theta = \\frac{\\pi}{2}$ 处，点为 $(0, 2)$，所以 $\\frac{\\partial z}{\\partial r} = 1 \\cdot 0 + 12 \\cdot 1 = 12$。\n\n> **注意。** $\\frac{\\partial x}{\\partial r} = \\cos\\theta$ 与 $z_x$ 相乘，$\\frac{\\partial y}{\\partial r} = \\sin\\theta$ 与 $z_y$ 相乘；把两者对调是常见的失误。代入 $x = r\\cos\\theta$ 后，答案中仍保留因子 $r$。",
       ),
       generate(rng: Rng): Problem {
         const r0 = rng.int(2, 5);
@@ -4695,28 +4690,52 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
         // z = a x^2 + b y^2, so dz/dr = 2 a x cos(theta) + 2 b y sin(theta) = 2 r (a cos^2 + b sin^2) = r (a c4 + b s4) / 2.
         const ans = Q.of(r0 * (a * c4 + b * s4), 2);
         const zText = poly([a, "x^2"], [b, "y^2"]);
-
-        const prompt = t(
-          `For $z = ${zText}$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, find $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$.`,
-          `设 $z = ${zText}$，其中 $x = r\\cos\\theta$ 且 $y = r\\sin\\theta$。求 $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the polar chain rule: $\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta = ${2 * a}x\\cos\\theta + ${paren(2 * b)}y\\sin\\theta$.`,
-            `Substituting $x$ and $y$ gives $${2 * a}r\\cos^2\\theta + ${paren(2 * b)}r\\sin^2\\theta$.`,
-            `At $\\theta = ${thetaText}$, $\\cos^2\\theta = \\frac{${c4}}{4}$ and $\\sin^2\\theta = \\frac{${s4}}{4}$, and with $r = ${r0}$ the value is $${ans.toLatex()}$.`,
-          ),
-          steps(
-            `应用极坐标链式法则：$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta = ${2 * a}x\\cos\\theta + ${paren(2 * b)}y\\sin\\theta$。`,
-            `代入 $x$、$y$ 得 $${2 * a}r\\cos^2\\theta + ${paren(2 * b)}r\\sin^2\\theta$。`,
-            `在 $\\theta = ${thetaText}$ 处，$\\cos^2\\theta = \\frac{${c4}}{4}$，$\\sin^2\\theta = \\frac{${s4}}{4}$，再取 $r = ${r0}$，其值为 $${ans.toLatex()}$。`,
-          ),
-        );
+        const inR = Q.of(a * c4 + b * s4, 4);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `For $z = ${zText}$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, find $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$.`,
+            `设 $z = ${zText}$，其中 $x = r\\cos\\theta$ 且 $y = r\\sin\\theta$。求 $\\left.\\frac{\\partial z}{\\partial r}\\right|_{r=${r0}, \\theta=${thetaText}}$ 的值。`,
+          ),
           answer: ans,
-          wrong: [Q.of(r0 * (a * s4 + b * c4), 2), Q.of(a * c4 + b * s4, 2), 2 * r0 * (a + b), ans.neg()],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(r0 * (a * s4 + b * c4), 2),
+              "The weights are swapped: $z_x$ is multiplied by $\\cos\\theta$ and $z_y$ by $\\sin\\theta$.",
+              "权重对调了：$z_x$ 乘以 $\\cos\\theta$，$z_y$ 乘以 $\\sin\\theta$。",
+            ),
+            why(
+              Q.of(a * c4 + b * s4, 2),
+              `The factor $r = ${r0}$ is lost; after substituting $x = r\\cos\\theta$ and $y = r\\sin\\theta$ it is still there.`,
+              `丢了因子 $r = ${r0}$；代入 $x = r\\cos\\theta$、$y = r\\sin\\theta$ 后它仍然存在。`,
+            ),
+            why(
+              2 * r0 * (a + b),
+              "The factors $\\cos^2\\theta$ and $\\sin^2\\theta$ are left out; each term carries one from $x$ or $y$ and one from the chain rule.",
+              "漏掉了因子 $\\cos^2\\theta$ 和 $\\sin^2\\theta$；每一项都从 $x$ 或 $y$ 带来一个，从链式法则再带来一个。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Apply the polar chain rule", "应用极坐标链式法则"],
+                t(
+                  `$\\frac{\\partial z}{\\partial r} = z_x\\cos\\theta + z_y\\sin\\theta = ${2 * a}x\\cos\\theta + ${paren(2 * b)}y\\sin\\theta$.`,
+                  `$\\frac{\\partial z}{\\partial r} = z_x\\cos\\theta + z_y\\sin\\theta = ${2 * a}x\\cos\\theta + ${paren(2 * b)}y\\sin\\theta$。`,
+                ),
+              ],
+              [
+                ["Substitute x and y", "代入 x 和 y"],
+                t(
+                  `This is $${2 * a}r\\cos^2\\theta + ${paren(2 * b)}r\\sin^2\\theta$. At $\\theta = ${thetaText}$, $\\cos^2\\theta = \\frac{${c4}}{4}$ and $\\sin^2\\theta = \\frac{${s4}}{4}$, and with $r = ${r0}$ the value is $${ans.toLatex()}$.`,
+                  `即 $${2 * a}r\\cos^2\\theta + ${paren(2 * b)}r\\sin^2\\theta$。在 $\\theta = ${thetaText}$ 处，$\\cos^2\\theta = \\frac{${c4}}{4}$，$\\sin^2\\theta = \\frac{${s4}}{4}$，再取 $r = ${r0}$，其值为 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In polar form $z = r^2\\left(${a}\\cos^2\\theta + ${paren(b)}\\sin^2\\theta\\right)$, which is $${inR.toLatex()}r^2$ at $\\theta = ${thetaText}$; its $r$-derivative $${inR.mul(Q.of(2)).toLatex()}r$ is $${ans.toLatex()}$ at $r = ${r0}$.`,
+              `化成极坐标形式 $z = r^2\\left(${a}\\cos^2\\theta + ${paren(b)}\\sin^2\\theta\\right)$，在 $\\theta = ${thetaText}$ 处为 $${inR.toLatex()}r^2$；它对 $r$ 的导数 $${inR.mul(Q.of(2)).toLatex()}r$ 在 $r = ${r0}$ 时为 $${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4724,8 +4743,8 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
       id: "the-angular-derivative-in-polar-coordinates",
       title: t("The angular derivative in polar coordinates", "极坐标下对角度的导数"),
       explanation: t(
-        "With $x = r\\cos\\theta$ and $y = r\\sin\\theta$, we have $\\frac{\\partial x}{\\partial \\theta} = -y$ and $\\frac{\\partial y}{\\partial \\theta} = x$, so the chain rule gives\n\n$$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y.$$\n\nFind the Cartesian point first, then substitute it into both partial derivatives.",
-        "由 $x = r\\cos\\theta$，$y = r\\sin\\theta$ 得 $\\frac{\\partial x}{\\partial \\theta} = -y$，$\\frac{\\partial y}{\\partial \\theta} = x$，所以链式法则给出\n\n$$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y.$$\n\n先求出直角坐标点，再把它代入两个偏导数。",
+        "With $x = r\\cos\\theta$ and $y = r\\sin\\theta$, we have $\\frac{\\partial x}{\\partial \\theta} = -y$ and $\\frac{\\partial y}{\\partial \\theta} = x$, so the chain rule gives\n\n$$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y.$$\n\nFind the Cartesian point first, then substitute it into both partial derivatives. For $z = xy$ at $r = 3$, $\\theta = 0$, the point is $(3, 0)$, with $z_x = 0$ and $z_y = 3$, so $\\frac{\\partial z}{\\partial \\theta} = 0 + 3 \\cdot 3 = 9$.\n\n> **Watch out.** The minus sign belongs to $\\frac{\\partial x}{\\partial \\theta} = -r\\sin\\theta = -y$. And $x\\,z_x + y\\,z_y$ is $r\\frac{\\partial z}{\\partial r}$, the radial rate, not the angular one.",
+        "由 $x = r\\cos\\theta$，$y = r\\sin\\theta$ 得 $\\frac{\\partial x}{\\partial \\theta} = -y$，$\\frac{\\partial y}{\\partial \\theta} = x$，所以链式法则给出\n\n$$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y.$$\n\n先求出直角坐标点，再把它代入两个偏导数。对 $z = xy$，在 $r = 3$，$\\theta = 0$ 处，点为 $(3, 0)$，$z_x = 0$，$z_y = 3$，所以 $\\frac{\\partial z}{\\partial \\theta} = 0 + 3 \\cdot 3 = 9$。\n\n> **注意。** 负号来自 $\\frac{\\partial x}{\\partial \\theta} = -r\\sin\\theta = -y$。而 $x\\,z_x + y\\,z_y$ 是 $r\\frac{\\partial z}{\\partial r}$，即径向变化率，不是角向变化率。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
@@ -4751,10 +4770,44 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
             `设 $z = ${poly([a, "x^2"], [b, "y^2"], [d, "x"], [e, "y"])}$，其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$。求 $r = ${r}$，$\\theta = ${ang}$ 时的 $\\frac{\\partial z}{\\partial \\theta}$。`,
           ),
           answer: ans,
-          wrong: [y * zx + x * zy, -x * zx + y * zy, x * zx + y * zy],
-          solution: t(
-            `The point is $(x, y) = (${x}, ${y})$, where $z_x = ${zx}$ and $z_y = ${zy}$. So $\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y = ${-y * zx} + ${paren(x * zy)} = ${ans}$.`,
-            `该点为 $(x, y) = (${x}, ${y})$，此处 $z_x = ${zx}$，$z_y = ${zy}$。所以 $\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y = ${-y * zx} + ${paren(x * zy)} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              y * zx + x * zy,
+              "The minus sign is lost: $\\frac{\\partial x}{\\partial \\theta} = -r\\sin\\theta = -y$.",
+              "漏掉了负号：$\\frac{\\partial x}{\\partial \\theta} = -r\\sin\\theta = -y$。",
+            ),
+            why(
+              x * zx + y * zy,
+              "That is $x\\,z_x + y\\,z_y = r\\frac{\\partial z}{\\partial r}$, the radial rate; the angular rate uses $-y$ and $x$.",
+              "那是 $x\\,z_x + y\\,z_y = r\\frac{\\partial z}{\\partial r}$，即径向变化率；角向变化率用的是 $-y$ 和 $x$。",
+            ),
+            why(
+              -x * zx + y * zy,
+              "$x$ and $y$ are swapped: $z_x$ is multiplied by $-y$ and $z_y$ by $x$.",
+              "$x$ 与 $y$ 对调了：$z_x$ 乘以 $-y$，$z_y$ 乘以 $x$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the point", "求出点"],
+                t(
+                  `$(x, y) = (${x}, ${y})$, where $z_x = ${poly([2 * a, "x"], [d, ""])} = ${zx}$ and $z_y = ${poly([2 * b, "y"], [e, ""])} = ${zy}$.`,
+                  `$(x, y) = (${x}, ${y})$，此处 $z_x = ${poly([2 * a, "x"], [d, ""])} = ${zx}$，$z_y = ${poly([2 * b, "y"], [e, ""])} = ${zy}$。`,
+                ),
+              ],
+              [
+                ["Apply the chain rule", "应用链式法则"],
+                t(
+                  `$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y = ${-y} \\cdot ${paren(zx)} + ${paren(x)} \\cdot ${paren(zy)} = ${ans}$.`,
+                  `$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y = ${-y} \\cdot ${paren(zx)} + ${paren(x)} \\cdot ${paren(zy)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The weights $(-y, x) = (${-y}, ${x})$ are perpendicular to $(x, y)$: $${x} \\cdot ${paren(-y)} + ${paren(y)} \\cdot ${paren(x)} = 0$, as a direction along the circle $r = ${r}$ must be.`,
+              `权重 $(-y, x) = (${-y}, ${x})$ 与 $(x, y)$ 垂直：$${x} \\cdot ${paren(-y)} + ${paren(y)} \\cdot ${paren(x)} = 0$，沿圆 $r = ${r}$ 的方向正应如此。`,
+            ),
           ),
         });
       },
@@ -4770,6 +4823,10 @@ export const theMultivariableChainRuleInVectorForm: TopicDef = {
     "In vector form, the rate of change of f along a space curve r(t) is d/dt[f(r(t))] = ∇f(r(t)) · r'(t).",
     "在向量形式下，函数 f 沿空间曲线 r(t) 的变化率为 d/dt[f(r(t))] = ∇f(r(t)) · r'(t)。",
   ),
+  intro: t(
+    "Let $f(x, y, z) = x^2 + yz$ and $\\mathbf{r}(t) = \\langle t, 2t, t^2 \\rangle$. At $t = 1$ the point is $(1, 2, 1)$, $\\nabla f = \\langle 2x, z, y \\rangle = \\langle 2, 1, 2 \\rangle$ and $\\mathbf{r}'(1) = \\langle 1, 2, 2 \\rangle$, so $\\frac{d}{dt}f(\\mathbf{r}(t)) = 2 + 2 + 4 = 8$.\n\nCheck: $f(\\mathbf{r}(t)) = t^2 + 2t^3$, whose derivative $2t + 6t^2$ is $8$ at $t = 1$.\n\nIn this lesson we write the chain rule as a dot product of the gradient with the velocity, and use it to find rates along curves.",
+    "设 $f(x, y, z) = x^2 + yz$，$\\mathbf{r}(t) = \\langle t, 2t, t^2 \\rangle$。在 $t = 1$ 时点为 $(1, 2, 1)$，$\\nabla f = \\langle 2x, z, y \\rangle = \\langle 2, 1, 2 \\rangle$，$\\mathbf{r}'(1) = \\langle 1, 2, 2 \\rangle$，所以 $\\frac{d}{dt}f(\\mathbf{r}(t)) = 2 + 2 + 4 = 8$。\n\n检验：$f(\\mathbf{r}(t)) = t^2 + 2t^3$，其导数 $2t + 6t^2$ 在 $t = 1$ 时为 $8$。\n\n本课我们把链式法则写成梯度与速度的点积，并用它求沿曲线的变化率。",
+  ),
   prerequisites: ["the-multivariable-chain-rule"],
   encompasses: [{ topic: "the-multivariable-chain-rule", weight: 0.3 }],
   xp: 10,
@@ -4778,37 +4835,61 @@ export const theMultivariableChainRuleInVectorForm: TopicDef = {
       id: "gradient-dot-product-formula-for-chain-rule",
       title: t("Gradient dot product formula for the chain rule", "链式法则的梯度点积公式"),
       explanation: t(
-        "Along a curve, the rate of change of the function is the gradient dotted with the velocity of the curve, combining all the partial derivative terms at once. If $w = f(\\mathbf{r}(t))$ where $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, then the chain rule compactly reads:\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$",
-        "沿一条曲线，函数的变化率等于梯度与曲线速度的点积，一次就合并了所有偏导数项。若 $w = f(\\mathbf{r}(t))$，其中 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，则链式法则简洁地表示为：\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)$$",
+        "Along a curve, the rate of change of the function is the gradient dotted with the velocity of the curve, combining all the partial derivative terms at once. If $w = f(\\mathbf{r}(t))$ where $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, then the chain rule compactly reads:\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\nWith $\\nabla f = \\langle 2, -1, 5 \\rangle$ and $\\mathbf{r}' = \\langle 4, 6, 1 \\rangle$, the rate is $8 - 6 + 5 = 7$.\n\n> **Watch out.** Multiply matching components and add all three products, keeping the sign of each; a negative product lowers the rate.",
+        "沿一条曲线，函数的变化率等于梯度与曲线速度的点积，一次就合并了所有偏导数项。若 $w = f(\\mathbf{r}(t))$，其中 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，则链式法则简洁地表示为：\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)$$\n\n若 $\\nabla f = \\langle 2, -1, 5 \\rangle$，$\\mathbf{r}' = \\langle 4, 6, 1 \\rangle$，变化率为 $8 - 6 + 5 = 7$。\n\n> **注意。** 对应分量相乘，三个乘积全部相加，并保留各自的符号；负的乘积会使变化率变小。",
       ),
       generate(rng: Rng): Problem {
-        const grad: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
-        const vel: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
+        const grad: Vec3 = [rng.nonZero(-3, 3), rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
+        const vel: Vec3 = [rng.nonZero(-3, 3), rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
         const t0 = rng.int(1, 4);
-
-        const ans = grad[0] * vel[0] + grad[1] * vel[1] + grad[2] * vel[2];
-
-        const prompt = t(
-          `Suppose a particle moves along a curve $\\mathbf{r}(t)$ such that at $t = ${t0}$, $\\mathbf{r}'(${t0}) = ${v3L(vel)}$ and $\\nabla f(\\mathbf{r}(${t0})) = ${v3L(grad)}$. Find $\\left.\\frac{d}{dt}\\left[f(\\mathbf{r}(t))\\right]\\right|_{t=${t0}}$.`,
-          `设质点沿曲线 $\\mathbf{r}(t)$ 运动，已知在 $t = ${t0}$ 时，$\\mathbf{r}'(${t0}) = ${v3L(vel)}$ 且 $\\nabla f(\\mathbf{r}(${t0})) = ${v3L(grad)}$。求 $\\left.\\frac{d}{dt}\\left[f(\\mathbf{r}(t))\\right]\\right|_{t=${t0}}$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the vector chain rule: $\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)$.`,
-            `Compute the dot product at $t = ${t0}$:\n\n` +
-              `$$\\nabla f \\cdot \\mathbf{r}' = (${grad[0]})(${vel[0]}) + (${grad[1]})(${vel[1]}) + (${grad[2]})(${vel[2]}) = ${ans}.$$`,
-          ),
-          steps(
-            `应用向量形式的链式法则：$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)$。`,
-            `计算在 $t = ${t0}$ 处的点积：\n\n` +
-              `$$\\nabla f \\cdot \\mathbf{r}' = (${grad[0]})(${vel[0]}) + (${grad[1]})(${vel[1]}) + (${grad[2]})(${vel[2]}) = ${ans}$$`,
-          ),
-        );
+        const products = [grad[0] * vel[0], grad[1] * vel[1], grad[2] * vel[2]] as const;
+        const ans = products[0] + products[1] + products[2];
+        const sign = ans > 0 ? t("increasing", "增大") : ans < 0 ? t("decreasing", "减小") : t("momentarily constant", "瞬时不变");
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Suppose a particle moves along a curve $\\mathbf{r}(t)$ such that at $t = ${t0}$, $\\mathbf{r}'(${t0}) = ${v3L(vel)}$ and $\\nabla f(\\mathbf{r}(${t0})) = ${v3L(grad)}$. Find $\\left.\\frac{d}{dt}\\left[f(\\mathbf{r}(t))\\right]\\right|_{t=${t0}}$.`,
+            `设质点沿曲线 $\\mathbf{r}(t)$ 运动，已知在 $t = ${t0}$ 时，$\\mathbf{r}'(${t0}) = ${v3L(vel)}$ 且 $\\nabla f(\\mathbf{r}(${t0})) = ${v3L(grad)}$。求 $\\left.\\frac{d}{dt}\\left[f(\\mathbf{r}(t))\\right]\\right|_{t=${t0}}$ 的值。`,
+          ),
           answer: ans,
-          wrong: [ans + 1, -ans, grad[0] * vel[0]],
+          mistakes: distinct(ans, [
+            why(
+              products[0] + products[1],
+              "The $z$-components are left out; the dot product adds all three products.",
+              "漏掉了 $z$ 分量；点积要把三个乘积全部相加。",
+            ),
+            why(
+              Math.abs(products[0]) + Math.abs(products[1]) + Math.abs(products[2]),
+              "The signs are dropped; a negative product must be subtracted.",
+              "丢了符号；负的乘积要减去。",
+            ),
+            why(
+              products[0],
+              "Only the $x$-components are used; the curve also moves in $y$ and $z$.",
+              "只用了 $x$ 分量；曲线在 $y$ 和 $z$ 方向上也在移动。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the vector chain rule", "写出向量链式法则"],
+                t(
+                  "$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)$.",
+                  "$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)$。",
+                ),
+              ],
+              [
+                ["Take the dot product", "求点积"],
+                t(
+                  `$${grad[0]} \\cdot ${paren(vel[0])} + ${paren(grad[1])} \\cdot ${paren(vel[1])} + ${paren(grad[2])} \\cdot ${paren(vel[2])} = ${products[0]} + ${paren(products[1])} + ${paren(products[2])} = ${ans}$.`,
+                  `$${grad[0]} \\cdot ${paren(vel[0])} + ${paren(grad[1])} \\cdot ${paren(vel[1])} + ${paren(grad[2])} \\cdot ${paren(vel[2])} = ${products[0]} + ${paren(products[1])} + ${paren(products[2])} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Adding the products in another order, $${products[2]} + ${paren(products[1])} + ${paren(products[0])} = ${ans}$; so $f$ is ${sign.en} along the curve at $t = ${t0}$.`,
+              `换一个顺序相加，$${products[2]} + ${paren(products[1])} + ${paren(products[0])} = ${ans}$；所以在 $t = ${t0}$ 时 $f$ 沿曲线${sign["zh-CN"]}。`,
+            ),
+          ),
         });
       },
     },
@@ -4816,8 +4897,8 @@ export const theMultivariableChainRuleInVectorForm: TopicDef = {
       id: "the-rate-of-change-along-a-space-curve",
       title: t("The rate of change along a space curve", "沿空间曲线的变化率"),
       explanation: t(
-        "In vector form the chain rule reads\n\n$$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\nEvaluate the curve at the given $t$ to find the point, compute the gradient there, and take its dot product with the velocity $\\mathbf{r}'(t)$.",
-        "链式法则的向量形式为\n\n$$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\n先在给定的 $t$ 处求出曲线上的点，再计算该点的梯度，最后与速度 $\\mathbf{r}'(t)$ 作点积。",
+        "In vector form the chain rule reads\n\n$$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\nEvaluate the curve at the given $t$ to find the point, compute the gradient there, and take its dot product with the velocity $\\mathbf{r}'(t)$. For $f = xz + y$ and $\\mathbf{r}(t) = \\langle t, t^2, t^3 \\rangle$ at $t = 1$: the point is $(1, 1, 1)$, $\\nabla f = \\langle z, 1, x \\rangle = \\langle 1, 1, 1 \\rangle$ and $\\mathbf{r}' = \\langle 1, 2, 3 \\rangle$, so the rate is $6$.\n\n> **Watch out.** The gradient is evaluated at the point $\\mathbf{r}(t)$, not at $t$ itself. Differentiate every component of $\\mathbf{r}$, including signs such as $\\frac{d}{dt}\\frac{1}{t} = -\\frac{1}{t^2}$.",
+        "链式法则的向量形式为\n\n$$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\n先在给定的 $t$ 处求出曲线上的点，再计算该点的梯度，最后与速度 $\\mathbf{r}'(t)$ 作点积。对 $f = xz + y$，$\\mathbf{r}(t) = \\langle t, t^2, t^3 \\rangle$，在 $t = 1$ 时：点为 $(1, 1, 1)$，$\\nabla f = \\langle z, 1, x \\rangle = \\langle 1, 1, 1 \\rangle$，$\\mathbf{r}' = \\langle 1, 2, 3 \\rangle$，所以变化率为 $6$。\n\n> **注意。** 梯度在点 $\\mathbf{r}(t)$ 处求值，而不是在 $t$ 处。$\\mathbf{r}$ 的每个分量都要求导，包括 $\\frac{d}{dt}\\frac{1}{t} = -\\frac{1}{t^2}$ 这样的符号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
@@ -4833,10 +4914,51 @@ export const theMultivariableChainRuleInVectorForm: TopicDef = {
             `设 $f(x, y, z) = ${poly([a, "xy"], [b, "z^2"])}$，$\\mathbf{r}(t) = \\left(t, t^2, \\frac{1}{t}\\right)$。求 $t = ${p}$ 时的 $\\frac{d}{dt} f(\\mathbf{r}(t))$。`,
           ),
           answer: ans,
-          wrong: [Q.of(3 * a * p * p).add(Q.of(2 * b, p ** 3)), Q.of(2 * a * p * p).sub(Q.of(2 * b, p ** 3)), Q.of(3 * a * p * p)],
-          solution: t(
-            `$\\mathbf{r}(${p}) = ${v3L(pt)}$, $\\nabla f = ${v3L(grad)}$ there, and $\\mathbf{r}'(${p}) = ${v3L(vel)}$. Their dot product is $${ans.toLatex()}$.`,
-            `$\\mathbf{r}(${p}) = ${v3L(pt)}$，该点处 $\\nabla f = ${v3L(grad)}$，$\\mathbf{r}'(${p}) = ${v3L(vel)}$。它们的点积为 $${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(3 * a * p * p).add(Q.of(2 * b, p ** 3)),
+              "The sign of $\\frac{d}{dt}\\frac{1}{t} = -\\frac{1}{t^2}$ is lost.",
+              "漏掉了 $\\frac{d}{dt}\\frac{1}{t} = -\\frac{1}{t^2}$ 的负号。",
+            ),
+            why(
+              Q.of(2 * a * p * p).sub(Q.of(2 * b, p ** 3)),
+              "The $x$ term $f_x \\cdot 1$ is left out of the dot product.",
+              "点积中漏掉了 $x$ 项 $f_x \\cdot 1$。",
+            ),
+            why(
+              Q.of(3 * a * p * p),
+              "The $z$ term is left out; $f$ depends on $z = \\frac{1}{t}$ too.",
+              "漏掉了 $z$ 项；$f$ 也依赖于 $z = \\frac{1}{t}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the point and velocity", "求点和速度"],
+                t(
+                  `$\\mathbf{r}(${p}) = ${v3L(pt)}$ and $\\mathbf{r}'(t) = \\left\\langle 1, 2t, -\\frac{1}{t^2} \\right\\rangle = ${v3L(vel)}$.`,
+                  `$\\mathbf{r}(${p}) = ${v3L(pt)}$，$\\mathbf{r}'(t) = \\left\\langle 1, 2t, -\\frac{1}{t^2} \\right\\rangle = ${v3L(vel)}$。`,
+                ),
+              ],
+              [
+                ["Evaluate the gradient", "求梯度"],
+                t(
+                  `$\\nabla f = \\langle ${poly([a, "y"])}, ${poly([a, "x"])}, ${poly([2 * b, "z"])} \\rangle = ${v3L(grad)}$ there.`,
+                  `该点处 $\\nabla f = \\langle ${poly([a, "y"])}, ${poly([a, "x"])}, ${poly([2 * b, "z"])} \\rangle = ${v3L(grad)}$。`,
+                ),
+              ],
+              [
+                ["Take the dot product", "求点积"],
+                t(
+                  `$${grad[0]!.toLatex()} \\cdot 1 + ${paren(grad[1]!)} \\cdot ${paren(vel[1]!)} + ${paren(grad[2]!)} \\cdot ${paren(vel[2]!)} = ${ans.toLatex()}$.`,
+                  `$${grad[0]!.toLatex()} \\cdot 1 + ${paren(grad[1]!)} \\cdot ${paren(vel[1]!)} + ${paren(grad[2]!)} \\cdot ${paren(vel[2]!)} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Substituting first, $f(\\mathbf{r}(t)) = ${poly([a, "t^3"])} + ${paren(b)}t^{-2}$, whose derivative $${poly([3 * a, "t^2"])} - ${paren(2 * b)}t^{-3}$ is $${ans.toLatex()}$ at $t = ${p}$.`,
+              `先代入，$f(\\mathbf{r}(t)) = ${poly([a, "t^3"])} + ${paren(b)}t^{-2}$，其导数 $${poly([3 * a, "t^2"])} - ${paren(2 * b)}t^{-3}$ 在 $t = ${p}$ 时为 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -4852,6 +4974,10 @@ export const differentials: TopicDef = {
     "The total differential dz = fx dx + fy dy approximates the change Δz in a function for small increments dx and dy.",
     "全微分 dz = fx dx + fy dy 在自变量有微小增量 dx 与 dy 时近似表示函数值的增量 Δz。",
   ),
+  intro: t(
+    "Let $z = xy^2$ at $(3, 1)$, with $dx = 0.1$ and $dy = -0.2$. There $z_x = y^2 = 1$ and $z_y = 2xy = 6$, so $dz = 1 \\cdot 0.1 + 6 \\cdot (-0.2) = -1.1$.\n\nCheck: the exact change is $3.1 \\cdot 0.8^2 - 3 = 1.984 - 3 = -1.016$, close to $dz$ for steps this small.\n\nIn this lesson we estimate changes with the total differential and use it to bound errors in measured quantities.",
+    "设 $z = xy^2$，在点 $(3, 1)$ 处取 $dx = 0.1$，$dy = -0.2$。此处 $z_x = y^2 = 1$，$z_y = 2xy = 6$，所以 $dz = 1 \\cdot 0.1 + 6 \\cdot (-0.2) = -1.1$。\n\n检验：精确的变化量是 $3.1 \\cdot 0.8^2 - 3 = 1.984 - 3 = -1.016$，对这么小的步长与 $dz$ 很接近。\n\n本课我们用全微分估计变化量，并用它估计测量量的误差。",
+  ),
   prerequisites: ["the-multivariable-chain-rule"],
   encompasses: [],
   xp: 10,
@@ -4860,47 +4986,61 @@ export const differentials: TopicDef = {
       id: "approximating-changes-using-differentials",
       title: t("Approximating changes using differentials", "利用全微分估计变化量"),
       explanation: t(
-        "For small changes in the inputs, the change in the output is approximately each partial derivative times the change in its input, all added together. For a differentiable function $z = f(x, y)$, the **total differential** is:\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy.$$ For small increments $\\Delta x$ and $\\Delta y$, $\\Delta z \\approx dz$.",
-        "当输入的变化很小时，输出的变化近似等于每个偏导数乘以相应输入的变化，再全部加起来。对于可微函数 $z = f(x, y)$，其**全微分**为：\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy$$ 当增量 $\\Delta x$ 与 $\\Delta y$ 较小时，$\\Delta z \\approx dz$。",
+        "For small changes in the inputs, the change in the output is approximately each partial derivative times the change in its input, all added together. For a differentiable function $z = f(x, y)$, the **total differential** is:\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy.$$ For small increments $\\Delta x$ and $\\Delta y$, $\\Delta z \\approx dz$. For $z = x^3 - y$ at $(1, 2)$ with $dx = 0.1$ and $dy = 0.5$, $dz = 3 \\cdot 0.1 - 1 \\cdot 0.5 = -0.2$.\n\n> **Watch out.** Evaluate the partial derivatives at the starting point and multiply by the increments $dx$ and $dy$, not by the new coordinates.",
+        "当输入的变化很小时，输出的变化近似等于每个偏导数乘以相应输入的变化，再全部加起来。对于可微函数 $z = f(x, y)$，其**全微分**为：\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy$$ 当增量 $\\Delta x$ 与 $\\Delta y$ 较小时，$\\Delta z \\approx dz$。对 $z = x^3 - y$，在 $(1, 2)$ 处取 $dx = 0.1$，$dy = 0.5$，$dz = 3 \\cdot 0.1 - 1 \\cdot 0.5 = -0.2$。\n\n> **注意。** 偏导数在起点处求值，再乘以增量 $dx$ 和 $dy$，而不是乘以新的坐标。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
         const x0 = rng.int(1, 4);
         const y0 = rng.int(1, 4);
-        // z = a*x^2 + b*y^2
-        // dz = 2a*x0 dx + 2b*y0 dy
-        // Let dx = 1, dy = -1 or similar integer increments
         const dx = rng.nonZero(-2, 2);
         const dy = rng.nonZero(-2, 2);
-
         const fx = 2 * a * x0;
         const fy = 2 * b * y0;
         const ans = fx * dx + fy * dy;
-
-        const prompt = t(
-          `Calculate the total differential $dz$ for $z = ${poly([a, "x^2"], [b, "y^2"])}$ at the point $(${x0}, ${y0})$ when $dx = ${dx}$ and $dy = ${dy}$.`,
-          `计算函数 $z = ${poly([a, "x^2"], [b, "y^2"])}$ 在点 $(${x0}, ${y0})$ 处当 $dx = ${dx}$ 与 $dy = ${dy}$ 时的全微分 $dz$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute partial derivatives:\n\n` +
-              `$\\frac{\\partial z}{\\partial x} = ${2 * a}x \\implies f_x(${x0}, ${y0}) = ${fx}$\n\n` +
-              `$\\frac{\\partial z}{\\partial y} = ${2 * b}y \\implies f_y(${x0}, ${y0}) = ${fy}$`,
-            `Apply the total differential formula: $dz = f_x\\,dx + f_y\\,dy = (${fx})(${dx}) + (${fy})(${dy}) = ${ans}$.`,
-          ),
-          steps(
-            `计算偏导数：\n\n` +
-              `$\\frac{\\partial z}{\\partial x} = ${2 * a}x \\implies f_x(${x0}, ${y0}) = ${fx}$\n\n` +
-              `$\\frac{\\partial z}{\\partial y} = ${2 * b}y \\implies f_y(${x0}, ${y0}) = ${fy}$`,
-            `应用全微分公式：$dz = f_x\\,dx + f_y\\,dy = (${fx})(${dx}) + (${fy})(${dy}) = ${ans}$。`,
-          ),
-        );
+        const exact = a * ((x0 + dx) ** 2 - x0 * x0) + b * ((y0 + dy) ** 2 - y0 * y0);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the total differential $dz$ for $z = ${poly([a, "x^2"], [b, "y^2"])}$ at the point $(${x0}, ${y0})$ when $dx = ${dx}$ and $dy = ${dy}$.`,
+            `计算函数 $z = ${poly([a, "x^2"], [b, "y^2"])}$ 在点 $(${x0}, ${y0})$ 处当 $dx = ${dx}$ 与 $dy = ${dy}$ 时的全微分 $dz$。`,
+          ),
           answer: ans,
-          wrong: [fx * dx - fy * dy, ans + 1, -ans],
+          mistakes: distinct(ans, [
+            why(
+              fx + fy,
+              "The partial derivatives are added without multiplying by $dx$ and $dy$.",
+              "偏导数直接相加，没有乘以 $dx$ 和 $dy$。",
+            ),
+            why(
+              fx * (x0 + dx) + fy * (y0 + dy),
+              "The partial derivatives are multiplied by the new coordinates; the differential uses the increments $dx$ and $dy$.",
+              "偏导数乘以了新的坐标；全微分用的是增量 $dx$ 和 $dy$。",
+            ),
+            why(fx * dx, "The $y$ term $f_y\\,dy$ is left out.", "漏掉了 $y$ 项 $f_y\\,dy$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate the partial derivatives", "求偏导数的值"],
+                t(
+                  `$f_x = ${poly([2 * a, "x"])} = ${fx}$ and $f_y = ${poly([2 * b, "y"])} = ${fy}$ at $(${x0}, ${y0})$.`,
+                  `在 $(${x0}, ${y0})$ 处，$f_x = ${poly([2 * a, "x"])} = ${fx}$，$f_y = ${poly([2 * b, "y"])} = ${fy}$。`,
+                ),
+              ],
+              [
+                ["Apply the total differential", "应用全微分公式"],
+                t(
+                  `$dz = f_x\\,dx + f_y\\,dy = ${fx} \\cdot ${paren(dx)} + ${paren(fy)} \\cdot ${paren(dy)} = ${ans}$.`,
+                  `$dz = f_x\\,dx + f_y\\,dy = ${fx} \\cdot ${paren(dx)} + ${paren(fy)} \\cdot ${paren(dy)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact change is $z(${x0 + dx}, ${y0 + dy}) - z(${x0}, ${y0}) = ${exact}$; it differs from $dz$ by $${a}(dx)^2 + ${paren(b)}(dy)^2 = ${exact - ans}$, the part the differential leaves out.`,
+              `精确的变化量是 $z(${x0 + dx}, ${y0 + dy}) - z(${x0}, ${y0}) = ${exact}$；它与 $dz$ 相差 $${a}(dx)^2 + ${paren(b)}(dy)^2 = ${exact - ans}$，正是全微分略去的部分。`,
+            ),
+          ),
         });
       },
     },
@@ -4908,8 +5048,8 @@ export const differentials: TopicDef = {
       id: "estimating-percentage-error-with-differentials",
       title: t("Estimating percentage error with differentials", "用全微分估计百分比误差"),
       explanation: t(
-        "For a product of powers such as $V = \\pi r^2 h$, divide the differential by $V$:\n\n$$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}.$$\n\nSo relative errors add, each multiplied by its exponent. If $r$ is measured within $p\\%$ and $h$ within $q\\%$, the largest error in $V$ is about $(2p + q)\\%$; constant factors such as $\\pi$ or $\\frac{1}{3}$ do not change it.",
-        "对于幂的乘积，如 $V = \\pi r^2 h$，把全微分除以 $V$：\n\n$$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}.$$\n\n所以相对误差相加，并各乘以其指数。若 $r$ 的测量误差不超过 $p\\%$，$h$ 不超过 $q\\%$，则 $V$ 的最大误差约为 $(2p + q)\\%$；像 $\\pi$ 或 $\\frac{1}{3}$ 这样的常数因子不改变它。",
+        "For a product of powers such as $V = \\pi r^2 h$, divide the differential by $V$:\n\n$$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}.$$\n\nSo relative errors add, each multiplied by its exponent. If $r$ is measured within $p\\%$ and $h$ within $q\\%$, the largest error in $V$ is about $(2p + q)\\%$; constant factors such as $\\pi$ or $\\frac{1}{3}$ do not change it. For $w = xy^3$ with $x$ within $1\\%$ and $y$ within $2\\%$, the error in $w$ is at most about $1 + 3 \\cdot 2 = 7\\%$.\n\n> **Watch out.** Each relative error is multiplied by its own exponent, then the results are added; percentages are never multiplied together.",
+        "对于幂的乘积，如 $V = \\pi r^2 h$，把全微分除以 $V$：\n\n$$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}.$$\n\n所以相对误差相加，并各乘以其指数。若 $r$ 的测量误差不超过 $p\\%$，$h$ 不超过 $q\\%$，则 $V$ 的最大误差约为 $(2p + q)\\%$；像 $\\pi$ 或 $\\frac{1}{3}$ 这样的常数因子不改变它。对 $w = xy^3$，若 $x$ 误差不超过 $1\\%$，$y$ 不超过 $2\\%$，则 $w$ 的误差约不超过 $1 + 3 \\cdot 2 = 7\\%$。\n\n> **注意。** 每个相对误差乘以它自己的指数，然后相加；百分比之间从不相乘。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(1, 6);
@@ -4917,17 +5057,49 @@ export const differentials: TopicDef = {
         const cone = rng.int(0, 1) === 1;
         const shape = cone ? t("cone", "圆锥") : t("cylinder", "圆柱");
         const V = cone ? "V = \\frac{1}{3}\\pi r^2 h" : "V = \\pi r^2 h";
+        const ans = 2 * p + q;
+        const exact = Q.of((100 + p) ** 2 * (100 + q), 10000).sub(Q.of(100));
         return numberProblem({
           prompt: t(
             `The radius of a ${shape.en} is measured with error at most $${p}\\%$ and its height with error at most $${q}\\%$. Use differentials to estimate the largest percentage error in its volume $${V}$.`,
             `测量一个${shape["zh-CN"]}的半径误差不超过 $${p}\\%$，高的误差不超过 $${q}\\%$。用全微分估计其体积 $${V}$ 的最大百分比误差。`,
           ),
-          answer: 2 * p + q,
+          answer: ans,
           percent: true,
-          wrong: [p + q, p + 2 * q, 2 * p * q],
-          solution: t(
-            `$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}$, so the error is at most $2 \\cdot ${p}\\% + ${q}\\% = ${2 * p + q}\\%$.`,
-            `$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}$，所以误差不超过 $2 \\cdot ${p}\\% + ${q}\\% = ${2 * p + q}\\%$。`,
+          mistakes: distinct(ans, [
+            why(p + q, "The exponent $2$ on $r$ is ignored; the radius error counts twice.", "忽略了 $r$ 的指数 $2$；半径的误差要算两次。"),
+            why(
+              p + 2 * q,
+              "The factor $2$ belongs to the radius, which is squared, not to the height.",
+              "因子 $2$ 属于被平方的半径，而不是高。",
+            ),
+            why(
+              2 * p * q,
+              "The percentages are multiplied; relative errors add, each times its exponent.",
+              "把百分比相乘了；相对误差应相加，各乘以其指数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take relative differentials", "求相对微分"],
+                t(
+                  "$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}$; the constant factor drops out.",
+                  "$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}$；常数因子被约去。",
+                ),
+              ],
+              [
+                ["Add the worst cases", "加上最坏情形"],
+                t(
+                  `The error is at most $2 \\cdot ${p}\\% + ${q}\\% = ${ans}\\%$.`,
+                  `误差不超过 $2 \\cdot ${p}\\% + ${q}\\% = ${ans}\\%$。`,
+                ),
+              ],
+            ],
+            t(
+              `Raising $r$ by $${p}\\%$ and $h$ by $${q}\\%$ exactly multiplies $V$ by $${((100 + p) / 100).toFixed(2)}^2 \\cdot ${((100 + q) / 100).toFixed(2)}$, an increase of $${exact.toNumber().toFixed(2)}\\%$, close to $${ans}\\%$.`,
+              `把 $r$ 精确增大 $${p}\\%$、$h$ 增大 $${q}\\%$，$V$ 乘以 $${((100 + p) / 100).toFixed(2)}^2 \\cdot ${((100 + q) / 100).toFixed(2)}$，增加了 $${exact.toNumber().toFixed(2)}\\%$，与 $${ans}\\%$ 很接近。`,
+            ),
           ),
         });
       },
@@ -4947,6 +5119,10 @@ export const affineTransformations: TopicDef = {
     "An affine transformation T(x) = Ax + b consists of a linear map followed by a translation.",
     "仿射变换 T(x) = Ax + b 由线性映射复合平移变换构成。",
   ),
+  intro: t(
+    "Let $T(x, y) = (2x - y + 3, x + 4y - 1)$. At $(1, 2)$: $T(1, 2) = (2 - 2 + 3, 1 + 8 - 1) = (3, 8)$.\n\nCheck: $T(0, 0) = (3, -1)$ is the shift, and $T(1, 2) - T(0, 0) = (0, 9)$ equals the matrix part $(2 \\cdot 1 - 2, 1 + 4 \\cdot 2)$.\n\nIn this lesson we evaluate affine transformations, find their fixed points, and see that the order of two of them matters.",
+    "设 $T(x, y) = (2x - y + 3, x + 4y - 1)$。在 $(1, 2)$ 处：$T(1, 2) = (2 - 2 + 3, 1 + 8 - 1) = (3, 8)$。\n\n检验：$T(0, 0) = (3, -1)$ 就是平移量，而 $T(1, 2) - T(0, 0) = (0, 9)$ 等于矩阵部分 $(2 \\cdot 1 - 2, 1 + 4 \\cdot 2)$。\n\n本课我们计算仿射变换的像，求它们的不动点，并看到两个仿射变换的先后次序是有影响的。",
+  ),
   prerequisites: ["introduction-to-linear-transformations", "the-parametric-equations-of-a-plane"],
   encompasses: [{ topic: "introduction-to-linear-transformations", weight: 0.3 }],
   xp: 10,
@@ -4956,8 +5132,8 @@ export const affineTransformations: TopicDef = {
       figure: multivariableDrawings3["affine-transformations#evaluating-affine-transformations-on-points"],
       title: t("Evaluating affine transformations on points", "计算点在仿射变换下的像"),
       explanation: t(
-        "An affine transformation multiplies by a matrix and then adds a fixed vector, so it can stretch, rotate and shift the plane all at once. An affine transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is represented as:\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f).$$",
-        "仿射变换先乘以一个矩阵再加上一个固定向量，所以可以同时伸缩、旋转和平移平面。仿射变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 表示为：\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f)$$",
+        "An affine transformation multiplies by a matrix and then adds a fixed vector, so it can stretch, rotate and shift the plane all at once. An affine transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is represented as:\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f).$$\n\nFor $T(x, y) = (x + 5y - 2, 4x - y + 6)$, $T(2, -1) = (2 - 5 - 2, 8 + 1 + 6) = (-5, 15)$.\n\n> **Watch out.** The first row of the matrix gives the first coordinate; the shift is added after multiplying, to every point.",
+        "仿射变换先乘以一个矩阵再加上一个固定向量，所以可以同时伸缩、旋转和平移平面。仿射变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 表示为：\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f)$$\n\n对 $T(x, y) = (x + 5y - 2, 4x - y + 6)$，$T(2, -1) = (2 - 5 - 2, 8 + 1 + 6) = (-5, 15)$。\n\n> **注意。** 矩阵的第一行给出第一个坐标；平移量在乘法之后加上，而且对每个点都要加。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -4966,51 +5142,59 @@ export const affineTransformations: TopicDef = {
         const d = rng.nonZero(-3, 3);
         const e = rng.int(-4, 4);
         const f = rng.int(-4, 4);
-
         const x0 = rng.int(-3, 3);
         const y0 = rng.int(-3, 3);
-
         const u = a * x0 + b * y0 + e;
         const v = cCoeff * x0 + d * y0 + f;
-        const answer: Vec2 = [u, v];
-
-        const prompt = t(
-          `Find the image $T(${x0}, ${y0})$ under the affine transformation $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([cCoeff, "x"], [d, "y"], [f, ""])})$. Express your answer as a point $(u, v)$.`,
-          `求点 $(${x0}, ${y0})$ 在仿射变换 $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([cCoeff, "x"], [d, "y"], [f, ""])})$ 下的像 $T(${x0}, ${y0})$。结果以点 $(u, v)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $x = ${x0}$ and $y = ${y0}$ into the transformation:`,
-            `$u = ${a}(${x0}) + ${paren(b)}(${y0}) + ${paren(e)} = ${u}$`,
-            `$v = ${cCoeff}(${x0}) + ${paren(d)}(${y0}) + ${paren(f)} = ${v}$`,
-            `The image is $(u, v) = ${v2L(answer)}$.`,
-          ),
-          steps(
-            `将 $x = ${x0}$ 和 $y = ${y0}$ 代入变换公式：`,
-            `$u = ${a}(${x0}) + ${paren(b)}(${y0}) + ${paren(e)} = ${u}$`,
-            `$v = ${cCoeff}(${x0}) + ${paren(d)}(${y0}) + ${paren(f)} = ${v}$`,
-            `得到像为 $(u, v) = ${v2L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vars: ["u", "v"],
-          wrong: [
-            [v, u],
-            [u - e, v - f],
-            [x0, y0],
+        return pointWith(
+          {
+            prompt: t(
+              `Find the image $T(${x0}, ${y0})$ under the affine transformation $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([cCoeff, "x"], [d, "y"], [f, ""])})$. Express your answer as a point $(u, v)$.`,
+              `求点 $(${x0}, ${y0})$ 在仿射变换 $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([cCoeff, "x"], [d, "y"], [f, ""])})$ 下的像 $T(${x0}, ${y0})$。结果以点 $(u, v)$ 表示。`,
+            ),
+            answer: [u, v],
+            vars: ["u", "v"],
+            solution: walked(
+              [
+                [
+                  ["First coordinate", "第一个坐标"],
+                  t(
+                    `$u = ${a} \\cdot ${paren(x0)} + ${paren(b)} \\cdot ${paren(y0)} + ${paren(e)} = ${u}$.`,
+                    `$u = ${a} \\cdot ${paren(x0)} + ${paren(b)} \\cdot ${paren(y0)} + ${paren(e)} = ${u}$。`,
+                  ),
+                ],
+                [
+                  ["Second coordinate", "第二个坐标"],
+                  t(
+                    `$v = ${cCoeff} \\cdot ${paren(x0)} + ${paren(d)} \\cdot ${paren(y0)} + ${paren(f)} = ${v}$, so the image is $(${u}, ${v})$.`,
+                    `$v = ${cCoeff} \\cdot ${paren(x0)} + ${paren(d)} \\cdot ${paren(y0)} + ${paren(f)} = ${v}$，所以像为 $(${u}, ${v})$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$T(0, 0) = (${e}, ${f})$ is the shift, and $(${u}, ${v}) - (${e}, ${f}) = (${u - e}, ${v - f})$ is the matrix times $(${x0}, ${y0})$.`,
+                `$T(0, 0) = (${e}, ${f})$ 是平移量，而 $(${u}, ${v}) - (${e}, ${f}) = (${u - e}, ${v - f})$ 正是矩阵乘以 $(${x0}, ${y0})$。`,
+              ),
+            ),
+          },
+          [
+            [[v, u], "The coordinates are swapped; the first formula gives $u$.", "两个坐标对调了；第一个公式给出 $u$。"],
+            [[u - e, v - f], "The shift is left out; add it after multiplying.", "漏掉了平移量；乘法之后要把它加上。"],
+            [
+              [a * x0 + cCoeff * y0 + e, b * x0 + d * y0 + f],
+              "The columns of the matrix are used as its rows; $u$ takes the coefficients of the first formula.",
+              "把矩阵的列当成了行；$u$ 用的是第一个公式的系数。",
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "the-fixed-point-of-an-affine-transformation",
       title: t("The fixed point of an affine transformation", "仿射变换的不动点"),
       explanation: t(
-        "A fixed point of $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ is a point with $T(\\mathbf{x}) = \\mathbf{x}$. Rearranging gives the linear system\n\n$$(I - A)\\mathbf{x} = \\mathbf{b},$$\n\nwhich has exactly one solution when $\\det(I - A) \\ne 0$. Write out the two equations coordinate by coordinate and solve them.",
-        "$T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的不动点是满足 $T(\\mathbf{x}) = \\mathbf{x}$ 的点。移项得线性方程组\n\n$$(I - A)\\mathbf{x} = \\mathbf{b},$$\n\n当 $\\det(I - A) \\ne 0$ 时它恰有一个解。按坐标写出两个方程并求解。",
+        "A fixed point of $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ is a point with $T(\\mathbf{x}) = \\mathbf{x}$. Rearranging gives the linear system\n\n$$(I - A)\\mathbf{x} = \\mathbf{b},$$\n\nwhich has exactly one solution when $\\det(I - A) \\ne 0$. Write out the two equations coordinate by coordinate and solve them. For $T(x, y) = (3x - 2, 2y + 5)$, $x = 3x - 2$ gives $x = 1$ and $y = 2y + 5$ gives $y = -5$, so the fixed point is $(1, -5)$.\n\n> **Watch out.** Move every $x$ and $y$ to one side before solving, keeping signs; the shift $\\mathbf{b}$ is not itself the fixed point.",
+        "$T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的不动点是满足 $T(\\mathbf{x}) = \\mathbf{x}$ 的点。移项得线性方程组\n\n$$(I - A)\\mathbf{x} = \\mathbf{b},$$\n\n当 $\\det(I - A) \\ne 0$ 时它恰有一个解。按坐标写出两个方程并求解。对 $T(x, y) = (3x - 2, 2y + 5)$，由 $x = 3x - 2$ 得 $x = 1$，由 $y = 2y + 5$ 得 $y = -5$，所以不动点是 $(1, -5)$。\n\n> **注意。** 求解前把所有含 $x$、$y$ 的项移到一边，注意符号；平移量 $\\mathbf{b}$ 本身不是不动点。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 2) * rng.pick([-1, 1]);
@@ -5022,20 +5206,51 @@ export const affineTransformations: TopicDef = {
         const Y = rng.int(-4, 4);
         const b1 = m11 * X + m12 * Y;
         const b2 = m21 * X + m22 * Y;
-        const T = `\\left(${poly([1 - m11, "x"], [-m12, "y"], [b1, ""])}, ${poly([-m21, "x"], [1 - m22, "y"], [b2, ""])}\\right)`;
-        return pointProblem({
-          prompt: t(`Find the fixed point of $T(x, y) = ${T}$.`, `求 $T(x, y) = ${T}$ 的不动点。`),
-          answer: [X, Y],
-          wrong: [
-            [-X, -Y],
-            [Y, X],
-            [b1, b2],
+        const first = poly([1 - m11, "x"], [-m12, "y"], [b1, ""]) || "0";
+        const second = poly([-m21, "x"], [1 - m22, "y"], [b2, ""]) || "0";
+        const T = `\\left(${first}, ${second}\\right)`;
+        return pointWith(
+          {
+            prompt: t(`Find the fixed point of $T(x, y) = ${T}$.`, `求 $T(x, y) = ${T}$ 的不动点。`),
+            answer: [X, Y],
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Set T(x, y) equal to (x, y)", "令 T(x, y) = (x, y)"],
+                  t(
+                    `$x = ${first}$ and $y = ${second}$, which rearrange to $${poly([m11, "x"], [m12, "y"])} = ${b1}$ and $${poly([m21, "x"], [m22, "y"])} = ${b2}$.`,
+                    `$x = ${first}$，$y = ${second}$，移项得 $${poly([m11, "x"], [m12, "y"])} = ${b1}$，$${poly([m21, "x"], [m22, "y"])} = ${b2}$。`,
+                  ),
+                ],
+                [
+                  ["Solve the system", "解方程组"],
+                  t(
+                    `The determinant is $${m11} \\cdot ${paren(m22)} - ${paren(m12)} \\cdot ${paren(m21)} = 1$, so $x = ${b1} \\cdot ${paren(m22)} - ${paren(m12)} \\cdot ${paren(b2)} = ${X}$ and $y = ${m11} \\cdot ${paren(b2)} - ${paren(m21)} \\cdot ${paren(b1)} = ${Y}$.`,
+                    `行列式为 $${m11} \\cdot ${paren(m22)} - ${paren(m12)} \\cdot ${paren(m21)} = 1$，所以 $x = ${b1} \\cdot ${paren(m22)} - ${paren(m12)} \\cdot ${paren(b2)} = ${X}$，$y = ${m11} \\cdot ${paren(b2)} - ${paren(m21)} \\cdot ${paren(b1)} = ${Y}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$T(${X}, ${Y}) = (${X}, ${Y})$: substituting into both formulas gives the point back.`,
+                `$T(${X}, ${Y}) = (${X}, ${Y})$：代入两个公式都得回该点。`,
+              ),
+            ),
+          },
+          [
+            [
+              [-X, -Y],
+              "The signs are reversed, as if solving $(A - I)\\mathbf{x} = \\mathbf{b}$.",
+              "符号反了，相当于解 $(A - I)\\mathbf{x} = \\mathbf{b}$。",
+            ],
+            [[Y, X], "The coordinates are swapped.", "两个坐标对调了。"],
+            [
+              [b1, b2],
+              "That is the shift $\\mathbf{b} = T(0, 0)$, not a point that $T$ leaves fixed.",
+              "那是平移量 $\\mathbf{b} = T(0, 0)$，不是 $T$ 保持不动的点。",
+            ],
           ],
-          solution: t(
-            `${steps(`${poly([m11, "x"], [m12, "y"])} = ${b1}`, `${poly([m21, "x"], [m22, "y"])} = ${b2}`)}Solving gives $(x, y) = (${X}, ${Y})$.`,
-            `${steps(`${poly([m11, "x"], [m12, "y"])} = ${b1}`, `${poly([m21, "x"], [m22, "y"])} = ${b2}`)}解得 $(x, y) = (${X}, ${Y})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -5049,6 +5264,10 @@ export const theImageOfAnAffineTransformation: TopicDef = {
     "An affine transformation T(x) = Ax + b scales areas by a factor of |det A|: Area(T(S)) = |det A| Area(S).",
     "仿射变换 T(x) = Ax + b 将区域的面积缩放 |det A| 倍：Area(T(S)) = |det A| Area(S)。",
   ),
+  intro: t(
+    "Let $T(x, y) = (3x + y + 4, x + 2y)$. Its matrix has determinant $3 \\cdot 2 - 1 \\cdot 1 = 5$, so $T$ maps the unit square, of area $1$, to a parallelogram of area $5$.\n\nCheck: the image vertices are $(4, 0)$, $(7, 1)$, $(8, 3)$ and $(5, 2)$; the shoelace formula gives $\\frac{1}{2}|4 + 13 + 1 - 8| = 5$.\n\nIn this lesson we find areas of images under affine maps and the points they send to given targets.",
+    "设 $T(x, y) = (3x + y + 4, x + 2y)$。其矩阵的行列式为 $3 \\cdot 2 - 1 \\cdot 1 = 5$，所以 $T$ 把面积为 $1$ 的单位正方形映成面积为 $5$ 的平行四边形。\n\n检验：像的顶点是 $(4, 0)$、$(7, 1)$、$(8, 3)$、$(5, 2)$；鞋带公式给出 $\\frac{1}{2}|4 + 13 + 1 - 8| = 5$。\n\n本课我们求仿射映射下像的面积，以及被映到给定目标的点。",
+  ),
   prerequisites: ["affine-transformations"],
   encompasses: [{ topic: "affine-transformations", weight: 0.3 }],
   xp: 10,
@@ -5057,8 +5276,8 @@ export const theImageOfAnAffineTransformation: TopicDef = {
       id: "area-scaling-by-affine-maps",
       title: t("Area scaling by affine maps", "仿射映射的面积缩放因子"),
       explanation: t(
-        "The shift does not change areas, while the matrix multiplies every area by the absolute value of its determinant. For an affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ in $\\mathbb{R}^2$, the area of the image $T(S)$ of a region $S$ is:\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S).$$",
-        "平移不改变面积，而矩阵把每个面积乘以其行列式的绝对值。对于 $\\mathbb{R}^2$ 中的仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$，区域 $S$ 的像 $T(S)$ 的面积为：\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S)$$",
+        "The shift does not change areas, while the matrix multiplies every area by the absolute value of its determinant. For an affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ in $\\mathbb{R}^2$, the area of the image $T(S)$ of a region $S$ is:\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S).$$\n\nFor $A = \\begin{pmatrix} 2 & 5 \\\\ 1 & 4 \\end{pmatrix}$, $\\det A = 8 - 5 = 3$, so a region of area $7$ has an image of area $21$.\n\n> **Watch out.** The determinant is $ad - bc$, with a minus sign, and the factor is its absolute value: areas are never negative.",
+        "平移不改变面积，而矩阵把每个面积乘以其行列式的绝对值。对于 $\\mathbb{R}^2$ 中的仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$，区域 $S$ 的像 $T(S)$ 的面积为：\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S)$$\n\n对 $A = \\begin{pmatrix} 2 & 5 \\\\ 1 & 4 \\end{pmatrix}$，$\\det A = 8 - 5 = 3$，所以面积为 $7$ 的区域的像面积为 $21$。\n\n> **注意。** 行列式是 $ad - bc$，中间是减号；缩放因子是它的绝对值：面积从不为负。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -5071,26 +5290,40 @@ export const theImageOfAnAffineTransformation: TopicDef = {
         const absDet = Math.abs(detA);
         const areaS = rng.int(2, 8);
         const ans = absDet * areaS;
-
-        const prompt = t(
-          `An affine transformation $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ maps a region $S$ of area $${areaS}$. Find the area of the image $T(S)$.`,
-          `已知仿射变换 $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ 作用于面积为 $${areaS}$ 的区域 $S$。求像 $T(S)$ 的面积。`,
-        );
-        const solution = t(
-          steps(
-            `The area scaling factor of an affine transformation is $|\\det(A)|$, and here $|\\det(A)| = |(${a})(${d}) - (${b})(${cCoeff})| = ${absDet}$.`,
-            `Compute $\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S) = ${absDet} \\cdot ${areaS} = ${ans}$.`,
-          ),
-          steps(
-            `仿射变换的面积缩放因子为 $|\\det(A)|$，这里 $|\\det(A)| = |(${a})(${d}) - (${b})(${cCoeff})| = ${absDet}$。`,
-            `计算 $\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S) = ${absDet} \\cdot ${areaS} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `An affine transformation $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ maps a region $S$ of area $${areaS}$. Find the area of the image $T(S)$.`,
+            `已知仿射变换 $T(x, y) = (${poly([a, "x"], [b, "y"])}, ${poly([cCoeff, "x"], [d, "y"])}) + (1, -2)$ 作用于面积为 $${areaS}$ 的区域 $S$。求像 $T(S)$ 的面积。`,
+          ),
           answer: ans,
-          wrong: [areaS, absDet + areaS, ans * 2, (a * d + b * cCoeff) * areaS],
+          mistakes: distinct(ans, [
+            why(areaS, "The area is not scaled; the matrix multiplies it by $|\\det A|$.", "面积没有缩放；矩阵会把它乘以 $|\\det A|$。"),
+            why((a * d + b * cCoeff) * areaS, "The determinant is $ad - bc$, not $ad + bc$.", "行列式是 $ad - bc$，不是 $ad + bc$。"),
+            why(detA * areaS, "An area cannot be negative; the factor is $|\\det A|$.", "面积不能为负；缩放因子是 $|\\det A|$。"),
+            why(absDet + areaS, "The factor multiplies the area; it is not added to it.", "缩放因子要乘以面积，而不是加上。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the determinant", "求行列式"],
+                t(
+                  `$\\det A = ${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(cCoeff)} = ${detA}$, so $|\\det A| = ${absDet}$; the shift $(1, -2)$ does not affect areas.`,
+                  `$\\det A = ${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(cCoeff)} = ${detA}$，所以 $|\\det A| = ${absDet}$；平移 $(1, -2)$ 不影响面积。`,
+                ),
+              ],
+              [
+                ["Scale the area", "缩放面积"],
+                t(
+                  `$\\operatorname{Area}(T(S)) = ${absDet} \\cdot ${areaS} = ${ans}$.`,
+                  `$\\operatorname{Area}(T(S)) = ${absDet} \\cdot ${areaS} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The unit square goes to the parallelogram on the columns $(${a}, ${cCoeff})$ and $(${b}, ${d})$, of area $|${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(cCoeff)}| = ${absDet}$, so every area is multiplied by $${absDet}$.`,
+              `单位正方形映成以列向量 $(${a}, ${cCoeff})$、$(${b}, ${d})$ 为边的平行四边形，面积为 $|${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(cCoeff)}| = ${absDet}$，所以每个面积都乘以 $${absDet}$。`,
+            ),
+          ),
         });
       },
     },
@@ -5099,8 +5332,8 @@ export const theImageOfAnAffineTransformation: TopicDef = {
       figure: multivariableDrawings3["the-image-of-an-affine-transformation#the-area-of-the-image-of-a-triangle"],
       title: t("The area of the image of a triangle", "三角形像的面积"),
       explanation: t(
-        "An affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ maps triangles to triangles and multiplies every area by $|\\det A|$; the translation $\\mathbf{b}$ does not change areas. So find the area of the original triangle, then multiply by $|\\det A|$. A negative determinant only reverses orientation.",
-        "仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 把三角形映成三角形，并把每个面积乘以 $|\\det A|$；平移 $\\mathbf{b}$ 不改变面积。所以先求原三角形的面积，再乘以 $|\\det A|$。行列式为负只是使定向反转。",
+        "An affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ maps triangles to triangles and multiplies every area by $|\\det A|$; the translation $\\mathbf{b}$ does not change areas. So find the area of the original triangle, then multiply by $|\\det A|$. A negative determinant only reverses orientation. The triangle with vertices $(1, 1)$, $(4, 1)$ and $(1, 3)$ has area $3$; under a map with $\\det A = -2$ its image has area $2 \\cdot 3 = 6$.\n\n> **Watch out.** A right triangle's area is half the product of its legs; do not forget the $\\frac{1}{2}$.",
+        "仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 把三角形映成三角形，并把每个面积乘以 $|\\det A|$；平移 $\\mathbf{b}$ 不改变面积。所以先求原三角形的面积，再乘以 $|\\det A|$。行列式为负只是使定向反转。顶点为 $(1, 1)$、$(4, 1)$、$(1, 3)$ 的三角形面积为 $3$；在 $\\det A = -2$ 的映射下，它的像面积为 $2 \\cdot 3 = 6$。\n\n> **注意。** 直角三角形的面积是两条直角边乘积的一半；不要忘了 $\\frac{1}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4) * rng.pick([-1, 1]);
@@ -5114,16 +5347,44 @@ export const theImageOfAnAffineTransformation: TopicDef = {
         const f = rng.int(-5, 5);
         const ans = Q.of(Math.abs(D) * m * n, 2);
         const T = `\\left(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [dd, "y"], [f, ""])}\\right)`;
+        const p1 = [a * m, c * m] as const;
+        const p2 = [b * n, dd * n] as const;
         return numberProblem({
           prompt: t(
             `Find the area of the image of the triangle with vertices $(0, 0)$, $(${m}, 0)$ and $(0, ${n})$ under $T(x, y) = ${T}$.`,
             `求以 $(0, 0)$、$(${m}, 0)$、$(0, ${n})$ 为顶点的三角形在 $T(x, y) = ${T}$ 下的像的面积。`,
           ),
           answer: ans,
-          wrong: [Q.of(Math.abs(D) * m * n), Q.of(m * n, 2), Q.of((Math.abs(D) + 1) * m * n, 2)],
-          solution: t(
-            `The triangle has area $\\frac{${m} \\cdot ${n}}{2}$ and $\\det A = ${a} \\cdot ${paren(dd)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$, so the image has area $${Math.abs(D)} \\cdot \\frac{${m * n}}{2} = ${ans.toLatex()}$.`,
-            `三角形面积为 $\\frac{${m} \\cdot ${n}}{2}$，$\\det A = ${a} \\cdot ${paren(dd)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$，所以像的面积为 $${Math.abs(D)} \\cdot \\frac{${m * n}}{2} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(Math.abs(D) * m * n, "The $\\frac{1}{2}$ of the triangle's area is left out.", "漏掉了三角形面积中的 $\\frac{1}{2}$。"),
+            why(
+              Q.of(m * n, 2),
+              "That is the area of the original triangle; the map multiplies it by $|\\det A|$.",
+              "那是原三角形的面积；映射会把它乘以 $|\\det A|$。",
+            ),
+            why(Q.of(D * m * n, 2), "An area cannot be negative; use $|\\det A|$.", "面积不能为负；要用 $|\\det A|$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Area of the triangle", "三角形的面积"],
+                t(
+                  `The legs are $${m}$ and $${n}$, so the area is $\\frac{${m} \\cdot ${n}}{2} = ${Q.of(m * n, 2).toLatex()}$.`,
+                  `两条直角边为 $${m}$ 和 $${n}$，所以面积为 $\\frac{${m} \\cdot ${n}}{2} = ${Q.of(m * n, 2).toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Scale by the determinant", "乘以行列式"],
+                t(
+                  `$\\det A = ${a} \\cdot ${paren(dd)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$, so the image has area $${Math.abs(D)} \\cdot ${Q.of(m * n, 2).toLatex()} = ${ans.toLatex()}$.`,
+                  `$\\det A = ${a} \\cdot ${paren(dd)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$，所以像的面积为 $${Math.abs(D)} \\cdot ${Q.of(m * n, 2).toLatex()} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `From the image of $(0, 0)$, the other two image vertices lie along $(${p1[0]}, ${p1[1]})$ and $(${p2[0]}, ${p2[1]})$, and $\\frac{1}{2}|${p1[0]} \\cdot ${paren(p2[1])} - ${paren(p2[0])} \\cdot ${paren(p1[1])}| = ${ans.toLatex()}$.`,
+              `从 $(0, 0)$ 的像出发，另外两个像顶点分别沿 $(${p1[0]}, ${p1[1]})$ 和 $(${p2[0]}, ${p2[1]})$，且 $\\frac{1}{2}|${p1[0]} \\cdot ${paren(p2[1])} - ${paren(p2[0])} \\cdot ${paren(p1[1])}| = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -5139,6 +5400,10 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
     "If det A ≠ 0, the inverse of T(x) = Ax + b is T⁻¹(y) = A⁻¹(y - b).",
     "若 det A ≠ 0，则 T(x) = Ax + b 的逆变换为 T⁻¹(y) = A⁻¹(y - b)。",
   ),
+  intro: t(
+    "Let $T(x, y) = (2x + 1, 3y - 4)$. To find $T^{-1}(7, 5)$, undo the shift and then the scaling: $x = \\frac{7 - 1}{2} = 3$ and $y = \\frac{5 + 4}{3} = 3$, so $T^{-1}(7, 5) = (3, 3)$.\n\nCheck: $T(3, 3) = (6 + 1, 9 - 4) = (7, 5)$.\n\nIn this lesson we invert affine transformations, first with separate coordinates and then with coupled ones, and use the inverse to relate areas.",
+    "设 $T(x, y) = (2x + 1, 3y - 4)$。要求 $T^{-1}(7, 5)$，先撤销平移，再撤销伸缩：$x = \\frac{7 - 1}{2} = 3$，$y = \\frac{5 + 4}{3} = 3$，所以 $T^{-1}(7, 5) = (3, 3)$。\n\n检验：$T(3, 3) = (6 + 1, 9 - 4) = (7, 5)$。\n\n本课我们求仿射变换的逆，先是各坐标分离的情形，再是坐标耦合的情形，并用逆变换联系面积。",
+  ),
   prerequisites: ["affine-transformations"],
   encompasses: [],
   xp: 10,
@@ -5148,48 +5413,63 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
       figure: multivariableDrawings3["the-inverse-of-an-affine-transformation#inverting-affine-maps"],
       title: t("Inverting affine maps", "求仿射变换的逆像"),
       explanation: t(
-        "To undo the map, reverse its steps in the opposite order: first remove the shift, then undo the matrix with its inverse. To invert $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, first subtract the translation $\\mathbf{y} - \\mathbf{b}$, then apply the matrix inverse $A^{-1}$:\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b}).$$",
-        "要撤销这个映射，就按相反的顺序倒推每一步：先去掉平移，再用逆矩阵撤销矩阵的作用。求 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的逆变换，先减去平移量 $\\mathbf{y} - \\mathbf{b}$，再乘以矩阵逆 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b})$$",
+        "To undo the map, reverse its steps in the opposite order: first remove the shift, then undo the matrix with its inverse. To invert $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, first subtract the translation $\\mathbf{y} - \\mathbf{b}$, then apply the matrix inverse $A^{-1}$:\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b}).$$\n\nFor $T(x, y) = (5x - 2, -4y + 1)$, $T^{-1}(8, 9) = \\left(\\frac{8 + 2}{5}, \\frac{9 - 1}{-4}\\right) = (2, -2)$.\n\n> **Watch out.** Subtract the shift before dividing. Dividing first and then subtracting undoes the steps in the wrong order.",
+        "要撤销这个映射，就按相反的顺序倒推每一步：先去掉平移，再用逆矩阵撤销矩阵的作用。求 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的逆变换，先减去平移量 $\\mathbf{y} - \\mathbf{b}$，再乘以矩阵逆 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b})$$\n\n对 $T(x, y) = (5x - 2, -4y + 1)$，$T^{-1}(8, 9) = \\left(\\frac{8 + 2}{5}, \\frac{9 - 1}{-4}\\right) = (2, -2)$。\n\n> **注意。** 先减去平移量，再做除法。先除后减就把步骤的顺序弄反了。",
       ),
       generate(rng: Rng): Problem {
-        // Simple diagonal scaling and shift: T(x, y) = (a*x + e, d*y + f)
         const aVal = rng.nonZero(-3, 3);
         const dVal = rng.nonZero(-3, 3);
         const e = rng.int(-3, 3);
         const f = rng.int(-3, 3);
-
         const x0 = rng.int(-3, 3);
         const y0 = rng.int(-3, 3);
         const u0 = aVal * x0 + e;
         const v0 = dVal * y0 + f;
-
-        const prompt = t(
-          `Given the affine transformation $T(x, y) = (${poly([aVal, "x"], [e, ""])}, ${poly([dVal, "y"], [f, ""])})$, find the pre-image $(x, y) = T^{-1}(${u0}, ${v0})$. Express your answer as a point $(x, y)$.`,
-          `已知仿射变换 $T(x, y) = (${poly([aVal, "x"], [e, ""])}, ${poly([dVal, "y"], [f, ""])})$，求点 $(${u0}, ${v0})$ 的原像 $(x, y) = T^{-1}(${u0}, ${v0})$。结果以点 $(x, y)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Set $u = ${poly([aVal, "x"], [e, ""])} = ${u0} \\implies ${poly([aVal, "x"])} = ${u0 - e} \\implies x = ${x0}$.`,
-            `Set $v = ${poly([dVal, "y"], [f, ""])} = ${v0} \\implies ${poly([dVal, "y"])} = ${v0 - f} \\implies y = ${y0}$.`,
-            `The pre-image is $(x, y) = (${x0}, ${y0})$.`,
-          ),
-          steps(
-            `令 $u = ${poly([aVal, "x"], [e, ""])} = ${u0} \\implies ${poly([aVal, "x"])} = ${u0 - e} \\implies x = ${x0}$。`,
-            `令 $v = ${poly([dVal, "y"], [f, ""])} = ${v0} \\implies ${poly([dVal, "y"])} = ${v0 - f} \\implies y = ${y0}$。`,
-            `原像为 $(x, y) = (${x0}, ${y0})$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer: [x0, y0],
-          vars: ["x", "y"],
-          wrong: [
-            [y0, x0],
-            [u0, v0],
-            [-x0, -y0],
+        return pointWith(
+          {
+            prompt: t(
+              `Given the affine transformation $T(x, y) = (${poly([aVal, "x"], [e, ""])}, ${poly([dVal, "y"], [f, ""])})$, find the pre-image $(x, y) = T^{-1}(${u0}, ${v0})$. Express your answer as a point $(x, y)$.`,
+              `已知仿射变换 $T(x, y) = (${poly([aVal, "x"], [e, ""])}, ${poly([dVal, "y"], [f, ""])})$，求点 $(${u0}, ${v0})$ 的原像 $(x, y) = T^{-1}(${u0}, ${v0})$。结果以点 $(x, y)$ 表示。`,
+            ),
+            answer: [x0, y0],
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Undo the first coordinate", "还原第一个坐标"],
+                  t(
+                    `$${poly([aVal, "x"], [e, ""])} = ${u0}$ gives $${poly([aVal, "x"])} = ${u0 - e}$, so $x = ${x0}$.`,
+                    `由 $${poly([aVal, "x"], [e, ""])} = ${u0}$ 得 $${poly([aVal, "x"])} = ${u0 - e}$，所以 $x = ${x0}$。`,
+                  ),
+                ],
+                [
+                  ["Undo the second coordinate", "还原第二个坐标"],
+                  t(
+                    `$${poly([dVal, "y"], [f, ""])} = ${v0}$ gives $${poly([dVal, "y"])} = ${v0 - f}$, so $y = ${y0}$.`,
+                    `由 $${poly([dVal, "y"], [f, ""])} = ${v0}$ 得 $${poly([dVal, "y"])} = ${v0 - f}$，所以 $y = ${y0}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$T(${x0}, ${y0}) = (${aVal} \\cdot ${paren(x0)} + ${paren(e)}, ${dVal} \\cdot ${paren(y0)} + ${paren(f)}) = (${u0}, ${v0})$.`,
+                `$T(${x0}, ${y0}) = (${aVal} \\cdot ${paren(x0)} + ${paren(e)}, ${dVal} \\cdot ${paren(y0)} + ${paren(f)}) = (${u0}, ${v0})$。`,
+              ),
+            ),
+          },
+          [
+            [[y0, x0], "The coordinates are swapped.", "两个坐标对调了。"],
+            [
+              [u0, v0],
+              "That is the given image point; the pre-image is the point that $T$ sends there.",
+              "那是给定的像点；原像是被 $T$ 映到那里的点。",
+            ],
+            [
+              [Q.of(u0, aVal).sub(Q.of(e)), Q.of(v0, dVal).sub(Q.of(f))],
+              "The steps are undone in the wrong order: subtract the shift first, then divide.",
+              "撤销步骤的顺序弄反了：先减去平移量，再做除法。",
+            ],
           ],
-        });
+        );
       },
     },
     {
@@ -5197,8 +5477,8 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
       figure: multivariableDrawings3["the-inverse-of-an-affine-transformation#applying-the-inverse-of-a-coupled-affine-map"],
       title: t("Applying the inverse of a coupled affine map", "求耦合仿射变换的逆像"),
       explanation: t(
-        "To find $T^{-1}(u, v)$ for $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, undo the steps in reverse order: subtract the translation, then apply $A^{-1}$:\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\nFor a $2 \\times 2$ matrix, $A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$. Check the answer by applying $T$ to it.",
-        "要对 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 求 $T^{-1}(u, v)$，按相反的顺序撤销各步：先减去平移，再作用 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\n对 $2 \\times 2$ 矩阵，$A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$。把 $T$ 作用于答案来检验。",
+        "To find $T^{-1}(u, v)$ for $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, undo the steps in reverse order: subtract the translation, then apply $A^{-1}$:\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\nFor a $2 \\times 2$ matrix, $A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$. Check the answer by applying $T$ to it. For $T(x, y) = (3x + y + 1, 5x + 2y - 3)$, $\\det A = 1$; $T^{-1}(6, 0)$ subtracts the shift to get $(5, 3)$, and $A^{-1}(5, 3) = (2 \\cdot 5 - 3, -5 \\cdot 5 + 3 \\cdot 3) = (7, -16)$.\n\n> **Watch out.** Apply $A^{-1}$ to $\\mathbf{u} - \\mathbf{b}$, not to $\\mathbf{u}$; and $A^{-1}$ swaps the diagonal entries and negates the other two.",
+        "要对 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 求 $T^{-1}(u, v)$，按相反的顺序撤销各步：先减去平移，再作用 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\n对 $2 \\times 2$ 矩阵，$A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$。把 $T$ 作用于答案来检验。对 $T(x, y) = (3x + y + 1, 5x + 2y - 3)$，$\\det A = 1$；求 $T^{-1}(6, 0)$ 时先减去平移得 $(5, 3)$，再得 $A^{-1}(5, 3) = (2 \\cdot 5 - 3, -5 \\cdot 5 + 3 \\cdot 3) = (7, -16)$。\n\n> **注意。** $A^{-1}$ 作用于 $\\mathbf{u} - \\mathbf{b}$，而不是 $\\mathbf{u}$；$A^{-1}$ 交换对角元，并把另外两个元素变号。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 3) * rng.pick([-1, 1]);
@@ -5213,19 +5493,44 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
         const u = a * X + b * Y + e;
         const v = c * X + d * Y + f;
         const T = `\\left(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [f, ""])}\\right)`;
-        return pointProblem({
-          prompt: t(`Let $T(x, y) = ${T}$. Find $T^{-1}(${u}, ${v})$.`, `设 $T(x, y) = ${T}$。求 $T^{-1}(${u}, ${v})$。`),
-          answer: [X, Y],
-          wrong: [
-            [u - e, v - f],
-            [a * u + b * v + e, c * u + d * v + f],
-            [Y, X],
+        const p = u - e;
+        const q = v - f;
+        return pointWith(
+          {
+            prompt: t(`Let $T(x, y) = ${T}$. Find $T^{-1}(${u}, ${v})$.`, `设 $T(x, y) = ${T}$。求 $T^{-1}(${u}, ${v})$。`),
+            answer: [X, Y],
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Subtract the shift", "减去平移量"],
+                  t(
+                    `$\\mathbf{u} - \\mathbf{b} = (${u} - ${paren(e)}, ${v} - ${paren(f)}) = (${p}, ${q})$.`,
+                    `$\\mathbf{u} - \\mathbf{b} = (${u} - ${paren(e)}, ${v} - ${paren(f)}) = (${p}, ${q})$。`,
+                  ),
+                ],
+                [
+                  ["Apply the inverse matrix", "作用逆矩阵"],
+                  t(
+                    `$\\det A = ${det}$, so $A^{-1}(${p}, ${q}) = (${d} \\cdot ${paren(p)} - ${paren(b)} \\cdot ${paren(q)}, ${-c} \\cdot ${paren(p)} + ${paren(a)} \\cdot ${paren(q)}) = (${X}, ${Y})$.`,
+                    `$\\det A = ${det}$，所以 $A^{-1}(${p}, ${q}) = (${d} \\cdot ${paren(p)} - ${paren(b)} \\cdot ${paren(q)}, ${-c} \\cdot ${paren(p)} + ${paren(a)} \\cdot ${paren(q)}) = (${X}, ${Y})$。`,
+                  ),
+                ],
+              ],
+              t(`$T(${X}, ${Y}) = (${u}, ${v})$.`, `$T(${X}, ${Y}) = (${u}, ${v})$。`),
+            ),
+          },
+          [
+            [[p, q], "This only removes the shift; $A^{-1}$ must still be applied.", "这只去掉了平移量；还要作用 $A^{-1}$。"],
+            [[a * u + b * v + e, c * u + d * v + f], "This applies $T$ again instead of undoing it.", "这是再作用一次 $T$，而不是撤销它。"],
+            [
+              [d * u - b * v, -c * u + a * v],
+              "$A^{-1}$ is applied to $\\mathbf{u}$ before the shift is removed.",
+              "在去掉平移量之前就对 $\\mathbf{u}$ 作用了 $A^{-1}$。",
+            ],
+            [[Y, X], "The coordinates are swapped.", "两个坐标对调了。"],
           ],
-          solution: t(
-            `$\\mathbf{u} - \\mathbf{b} = (${u - e}, ${v - f})$ and $\\det A = ${det}$, so $A^{-1}(\\mathbf{u} - \\mathbf{b}) = (${X}, ${Y})$. Check: $T(${X}, ${Y}) = (${u}, ${v})$.`,
-            `$\\mathbf{u} - \\mathbf{b} = (${u - e}, ${v - f})$，$\\det A = ${det}$，所以 $A^{-1}(\\mathbf{u} - \\mathbf{b}) = (${X}, ${Y})$。检验：$T(${X}, ${Y}) = (${u}, ${v})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -5239,6 +5544,10 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
     "Nonlinear coordinate transformations u = u(x, y), v = v(x, y) map curved regions in the xy-plane to simpler regions in the uv-plane.",
     "非线性坐标变换 u = u(x, y)、v = v(x, y) 将 xy 平面内的弯曲区域映射为 uv 平面内更简单的区域。",
   ),
+  intro: t(
+    "Let $T(x, y) = (x^2, y - x)$. The point $(3, 5)$ maps to $(9, 2)$.\n\nCheck: $(-3, -1)$ maps to $\\left((-3)^2, -1 + 3\\right) = (9, 2)$ as well, so unlike an invertible affine map, this one sends two points to the same image.\n\nIn this lesson we map points and lines under nonlinear transformations, and undo one on a region where it is one-to-one.",
+    "设 $T(x, y) = (x^2, y - x)$。点 $(3, 5)$ 映到 $(9, 2)$。\n\n检验：$(-3, -1)$ 映到 $\\left((-3)^2, -1 + 3\\right) = (9, 2)$，也是同一点；与可逆的仿射映射不同，这个映射把两个点映到同一个像。\n\n本课我们求点和直线在非线性变换下的像，并在变换为一一对应的区域上把它还原。",
+  ),
   prerequisites: ["affine-transformations"],
   encompasses: [],
   xp: 10,
@@ -5247,47 +5556,50 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
       id: "mapping-points-under-nonlinear-transformations",
       title: t("Mapping points under nonlinear transformations", "计算点在非线性变换下的像"),
       explanation: t(
-        "A nonlinear transformation has no single matrix, so find the image of a point by substituting its coordinates into the formulas directly. A nonlinear transformation maps a point $(x, y)$ to $(u, v)$ via nonlinear formulas such as $u = x^2 - y^2$ and $v = 2xy$.",
-        "非线性变换没有单一的矩阵，所以要把点的坐标直接代入公式来求像点。非线性变换通过非线性公式（如 $u = x^2 - y^2$ 与 $v = 2xy$）将点 $(x, y)$ 映射为 $(u, v)$。",
+        "A nonlinear transformation has no single matrix, so find the image of a point by substituting its coordinates into the formulas directly. A nonlinear transformation maps a point $(x, y)$ to $(u, v)$ via nonlinear formulas such as $u = x^2 - y^2$ and $v = 2xy$. Under $u = x + y^2$, $v = xy$, the point $(2, 3)$ goes to $(2 + 9, 6) = (11, 6)$.\n\n> **Watch out.** $x^2 - y^2$ squares each coordinate first and then subtracts; it is not $(x - y)^2$.",
+        "非线性变换没有单一的矩阵，所以要把点的坐标直接代入公式来求像点。非线性变换通过非线性公式（如 $u = x^2 - y^2$ 与 $v = 2xy$）将点 $(x, y)$ 映射为 $(u, v)$。在 $u = x + y^2$，$v = xy$ 下，点 $(2, 3)$ 映到 $(2 + 9, 6) = (11, 6)$。\n\n> **注意。** $x^2 - y^2$ 是先把每个坐标平方再相减，而不是 $(x - y)^2$。",
       ),
       generate(rng: Rng): Problem {
         const x0 = rng.int(1, 5);
         const y0 = rng.int(1, 5);
-
-        // u = x^2 - y^2, v = 2xy
         const u = x0 * x0 - y0 * y0;
         const v = 2 * x0 * y0;
-        const answer: Vec2 = [u, v];
-
-        const prompt = t(
-          `Under the nonlinear transformation $u = x^2 - y^2$ and $v = 2xy$, find the image $(u, v)$ of the point $(${x0}, ${y0})$. Express your answer as a point $(u, v)$.`,
-          `在非线性变换 $u = x^2 - y^2$ 与 $v = 2xy$ 下，求点 $(${x0}, ${y0})$ 的像 $(u, v)$。结果以点 $(u, v)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $x = ${x0}$ and $y = ${y0}$:\n\n` +
-              `$u = (${x0})^2 - (${y0})^2 = ${x0 * x0} - ${y0 * y0} = ${u}$\n\n` +
-              `$v = 2(${x0})(${y0}) = ${v}$`,
-            `The image is $(u, v) = ${v2L(answer)}$.`,
-          ),
-          steps(
-            `代入 $x = ${x0}$ 和 $y = ${y0}$：\n\n` +
-              `$u = (${x0})^2 - (${y0})^2 = ${x0 * x0} - ${y0 * y0} = ${u}$\n\n` +
-              `$v = 2(${x0})(${y0}) = ${v}$`,
-            `像点为 $(u, v) = ${v2L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vars: ["u", "v"],
-          wrong: [
-            [v, u],
-            [x0 * x0 + y0 * y0, v],
-            [-u, -v],
+        const sum = x0 * x0 + y0 * y0;
+        return pointWith(
+          {
+            prompt: t(
+              `Under the nonlinear transformation $u = x^2 - y^2$ and $v = 2xy$, find the image $(u, v)$ of the point $(${x0}, ${y0})$. Express your answer as a point $(u, v)$.`,
+              `在非线性变换 $u = x^2 - y^2$ 与 $v = 2xy$ 下，求点 $(${x0}, ${y0})$ 的像 $(u, v)$。结果以点 $(u, v)$ 表示。`,
+            ),
+            answer: [u, v],
+            vars: ["u", "v"],
+            solution: walked(
+              [
+                [
+                  ["Compute u", "计算 u"],
+                  t(
+                    `$u = ${x0}^2 - ${y0}^2 = ${x0 * x0} - ${y0 * y0} = ${u}$.`,
+                    `$u = ${x0}^2 - ${y0}^2 = ${x0 * x0} - ${y0 * y0} = ${u}$。`,
+                  ),
+                ],
+                [["Compute v", "计算 v"], t(`$v = 2 \\cdot ${x0} \\cdot ${y0} = ${v}$.`, `$v = 2 \\cdot ${x0} \\cdot ${y0} = ${v}$。`)],
+              ],
+              t(
+                `For this map $u^2 + v^2 = (x^2 + y^2)^2$, and indeed $${paren(u)}^2 + ${v}^2 = ${u * u + v * v} = ${sum}^2$.`,
+                `对这个映射有 $u^2 + v^2 = (x^2 + y^2)^2$，确实 $${paren(u)}^2 + ${v}^2 = ${u * u + v * v} = ${sum}^2$。`,
+              ),
+            ),
+          },
+          [
+            [[v, u], "The coordinates are swapped; $u = x^2 - y^2$ comes first.", "两个坐标对调了；$u = x^2 - y^2$ 在前。"],
+            [[sum, v], "The squares are added; $u$ subtracts $y^2$ from $x^2$.", "把平方相加了；$u$ 是 $x^2$ 减去 $y^2$。"],
+            [
+              [(x0 - y0) ** 2, v],
+              "That squares the difference; $u$ is $x^2 - y^2$, not $(x - y)^2$.",
+              "那是差的平方；$u$ 是 $x^2 - y^2$，不是 $(x - y)^2$。",
+            ],
           ],
-        });
+        );
       },
     },
     {
@@ -5295,24 +5607,55 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
       figure: multivariableDrawings3["nonlinear-transformations-of-plane-regions#the-image-of-a-vertical-line-under-a-nonlinear-map"],
       title: t("The image of a vertical line under a nonlinear map", "竖直直线在非线性变换下的像"),
       explanation: t(
-        "To find the image of a curve under $T(x, y) = (u, v)$, substitute the curve's description into $u$ and $v$ and eliminate the parameter. Under $T(x, y) = (x + ay^2, y)$ the line $x = c$ goes to the points $(c + ay^2, y)$, so with $v = y$ its image is the parabola\n\n$$u = c + av^2.$$\n\nLines become curves because the map is not linear.",
-        "要求曲线在 $T(x, y) = (u, v)$ 下的像，把曲线的描述代入 $u$ 和 $v$ 并消去参数。在 $T(x, y) = (x + ay^2, y)$ 下，直线 $x = c$ 映到点 $(c + ay^2, y)$，令 $v = y$ 得其像为抛物线\n\n$$u = c + av^2.$$\n\n由于变换不是线性的，直线变成了曲线。",
+        "To find the image of a curve under $T(x, y) = (u, v)$, substitute the curve's description into $u$ and $v$ and eliminate the parameter. Under $T(x, y) = (x + ay^2, y)$ the line $x = c$ goes to the points $(c + ay^2, y)$, so with $v = y$ its image is the parabola\n\n$$u = c + av^2.$$\n\nLines become curves because the map is not linear. Under $T(x, y) = (x - y^3, y)$, the line $x = 1$ becomes $u = 1 - v^3$, which passes through $(-7, 2)$.\n\n> **Watch out.** Keep both pieces: $u$ is the constant $c$ from the line plus the term from $y$, and that term uses $v^2$, not $v$.",
+        "要求曲线在 $T(x, y) = (u, v)$ 下的像，把曲线的描述代入 $u$ 和 $v$ 并消去参数。在 $T(x, y) = (x + ay^2, y)$ 下，直线 $x = c$ 映到点 $(c + ay^2, y)$，令 $v = y$ 得其像为抛物线\n\n$$u = c + av^2.$$\n\n由于变换不是线性的，直线变成了曲线。在 $T(x, y) = (x - y^3, y)$ 下，直线 $x = 1$ 变成 $u = 1 - v^3$，它经过 $(-7, 2)$。\n\n> **注意。** 两部分都要保留：$u$ 是直线给出的常数 $c$ 加上来自 $y$ 的项，而这一项用的是 $v^2$，不是 $v$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.pick([-3, -2, -1, 1, 2, 3]);
         const c = rng.int(-5, 5);
         const k = rng.int(-4, 4) || 2;
         const ans = c + a * k * k;
+        const image = poly([c, ""], [a, "v^2"]);
         return numberProblem({
           prompt: t(
             `Under $T(x, y) = (${poly([1, "x"], [a, "y^2"])}, y)$ the image of the line $x = ${c}$ is a curve in the $uv$-plane. Find $u$ at the point of the image with $v = ${k}$.`,
             `在 $T(x, y) = (${poly([1, "x"], [a, "y^2"])}, y)$ 下，直线 $x = ${c}$ 的像是 $uv$ 平面上的一条曲线。求像上 $v = ${k}$ 的点的 $u$ 值。`,
           ),
           answer: ans,
-          wrong: [c, c + a * k, a * k * k],
-          solution: t(
-            `The image is $u = ${poly([c, ""], [a, "v^2"])}$, so at $v = ${k}$, $u = ${ans}$.`,
-            `像为 $u = ${poly([c, ""], [a, "v^2"])}$，所以 $v = ${k}$ 时 $u = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c,
+              `That keeps $u = x = ${c}$; the map adds $${poly([a, "y^2"])}$.`,
+              `那是保留了 $u = x = ${c}$；映射还要加上 $${poly([a, "y^2"])}$。`,
+            ),
+            why(
+              c + a * k,
+              `$y$ is squared: the added term is $${a} \\cdot ${paren(k)}^2$, not $${a} \\cdot ${paren(k)}$.`,
+              `$y$ 要平方：加上的项是 $${a} \\cdot ${paren(k)}^2$，不是 $${a} \\cdot ${paren(k)}$。`,
+            ),
+            why(a * k * k, `The constant $x = ${c}$ from the line is left out.`, `漏掉了直线给出的常数 $x = ${c}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the line", "代入直线"],
+                t(
+                  `On $x = ${c}$, $T(${c}, y) = (${poly([c, ""], [a, "y^2"])}, y)$, so with $v = y$ the image is $u = ${image}$.`,
+                  `在 $x = ${c}$ 上，$T(${c}, y) = (${poly([c, ""], [a, "y^2"])}, y)$，令 $v = y$，像为 $u = ${image}$。`,
+                ),
+              ],
+              [
+                ["Evaluate at the given v", "在给定的 v 处求值"],
+                t(
+                  `At $v = ${k}$, $u = ${c} + ${paren(a)} \\cdot ${paren(k)}^2 = ${ans}$.`,
+                  `在 $v = ${k}$ 时，$u = ${c} + ${paren(a)} \\cdot ${paren(k)}^2 = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(${c}, ${k})$ lies on the line, and $T(${c}, ${k}) = (${ans}, ${k})$.`,
+              `点 $(${c}, ${k})$ 在直线上，且 $T(${c}, ${k}) = (${ans}, ${k})$。`,
+            ),
           ),
         });
       },
@@ -5328,6 +5671,10 @@ export const polarCoordinateTransformations: TopicDef = {
     "The polar transformation x = r cos θ, y = r sin θ has Jacobian determinant ∂(x, y)/∂(r, θ) = r, giving area element dA = r dr dθ.",
     "极坐标变换 x = r cos θ、y = r sin θ 的雅可比行列式为 ∂(x, y)/∂(r, θ) = r，对应的面积微元为 dA = r dr dθ。",
   ),
+  intro: t(
+    "At the point $(x, y) = (20, 21)$ the radius is $r = \\sqrt{400 + 441} = 29$, so the polar map stretches a small $r\\theta$-rectangle there by a factor of $29$. A rectangle with sides $0.01$ in $r$ and $0.01$ in $\\theta$ becomes a patch of area about $29 \\cdot 0.0001 = 0.0029$.\n\nCheck: the patch has a radial side of $0.01$ and an arc of length $r \\cdot 0.01 = 0.29$, and $0.01 \\cdot 0.29 = 0.0029$.\n\nIn this lesson we compute the Jacobian of polar coordinates and use it to find the areas of polar rectangles.",
+    "在点 $(x, y) = (20, 21)$ 处半径为 $r = \\sqrt{400 + 441} = 29$，所以极坐标映射把那里的小 $r\\theta$ 矩形放大 $29$ 倍。$r$ 方向边长 $0.01$、$\\theta$ 方向边长 $0.01$ 的矩形，变成面积约为 $29 \\cdot 0.0001 = 0.0029$ 的小块。\n\n检验：这个小块的径向边长为 $0.01$，弧长为 $r \\cdot 0.01 = 0.29$，而 $0.01 \\cdot 0.29 = 0.0029$。\n\n本课我们计算极坐标的雅可比行列式，并用它求极坐标矩形的面积。",
+  ),
   prerequisites: ["nonlinear-transformations-of-plane-regions"],
   encompasses: [],
   xp: 10,
@@ -5337,8 +5684,8 @@ export const polarCoordinateTransformations: TopicDef = {
       figure: multivariableDrawings3["polar-coordinate-transformations#jacobian-of-polar-coordinate-transformation"],
       title: t("Jacobian of polar coordinate transformation", "极坐标变换的雅可比行列式"),
       explanation: t(
-        "The Jacobian determinant measures how much a small rectangle in the new coordinates is stretched, and for polar coordinates it equals the radius. For $x = r\\cos\\theta$ and $y = r\\sin\\theta$, the Jacobian matrix and its determinant are:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r.$$",
-        "雅可比行列式衡量新坐标中的小矩形被拉伸了多少，对极坐标来说它等于半径。对于 $x = r\\cos\\theta$ 与 $y = r\\sin\\theta$，其雅可比矩阵及行列式为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r$$",
+        "The Jacobian determinant measures how much a small rectangle in the new coordinates is stretched, and for polar coordinates it equals the radius. For $x = r\\cos\\theta$ and $y = r\\sin\\theta$, the Jacobian matrix and its determinant are:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r.$$\n\nSo at the point $(x, y) = (-12, 35)$ the Jacobian is $r = \\sqrt{144 + 1225} = 37$.\n\n> **Watch out.** $\\cos^2\\theta + \\sin^2\\theta = 1$, but the factor $r$ stays: $J$ is $r$, not $1$ and not $r^2$. And $r$ is $\\sqrt{x^2 + y^2}$, never $x + y$.",
+        "雅可比行列式衡量新坐标中的小矩形被拉伸了多少，对极坐标来说它等于半径。对于 $x = r\\cos\\theta$ 与 $y = r\\sin\\theta$，其雅可比矩阵及行列式为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r.$$\n\n所以在点 $(x, y) = (-12, 35)$ 处，雅可比行列式为 $r = \\sqrt{144 + 1225} = 37$。\n\n> **注意。** $\\cos^2\\theta + \\sin^2\\theta = 1$，但因子 $r$ 还在：$J$ 是 $r$，不是 $1$，也不是 $r^2$。而 $r$ 是 $\\sqrt{x^2 + y^2}$，绝不是 $x + y$。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, r0] = rng.pick([
@@ -5353,26 +5700,51 @@ export const polarCoordinateTransformations: TopicDef = {
         const x0 = (swap ? q : p) * rng.pick([-1, 1]);
         const y0 = (swap ? p : q) * rng.pick([-1, 1]);
         const ans = r0;
-
-        const prompt = t(
-          `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$ of the polar transformation $x = r\\cos\\theta, y = r\\sin\\theta$ at the point with Cartesian coordinates $(x, y) = (${x0}, ${y0})$.`,
-          `计算极坐标变换 $x = r\\cos\\theta, y = r\\sin\\theta$ 在直角坐标为 $(x, y) = (${x0}, ${y0})$ 的点处的雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$。`,
-        );
-        const solution = t(
-          steps(
-            `The determinant is $J = r\\cos^2\\theta + r\\sin^2\\theta = r$.`,
-            `At this point $r = \\sqrt{${x0 * x0} + ${y0 * y0}} = ${r0}$, so $J = ${ans}$.`,
-          ),
-          steps(
-            `行列式为 $J = r\\cos^2\\theta + r\\sin^2\\theta = r$。`,
-            `在该点 $r = \\sqrt{${x0 * x0} + ${y0 * y0}} = ${r0}$，所以 $J = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$ of the polar transformation $x = r\\cos\\theta, y = r\\sin\\theta$ at the point with Cartesian coordinates $(x, y) = (${x0}, ${y0})$.`,
+            `计算极坐标变换 $x = r\\cos\\theta, y = r\\sin\\theta$ 在直角坐标为 $(x, y) = (${x0}, ${y0})$ 的点处的雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)}$。`,
+          ),
           answer: ans,
-          wrong: [r0 * r0, 1, p + q],
+          mistakes: distinct(ans, [
+            why(
+              r0 * r0,
+              `$${r0 * r0}$ is $r^2 = x^2 + y^2$; the Jacobian is $r$ itself.`,
+              `$${r0 * r0}$ 是 $r^2 = x^2 + y^2$；雅可比行列式是 $r$ 本身。`,
+            ),
+            why(
+              1,
+              "$\\cos^2\\theta + \\sin^2\\theta = 1$, but it is multiplied by $r$.",
+              "$\\cos^2\\theta + \\sin^2\\theta = 1$，但它还要乘以 $r$。",
+            ),
+            why(
+              p + q,
+              `$r$ is $\\sqrt{x^2 + y^2}$, not the sum $|x| + |y| = ${p + q}$.`,
+              `$r$ 是 $\\sqrt{x^2 + y^2}$，不是和 $|x| + |y| = ${p + q}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Expand the determinant", "展开行列式"],
+                t(
+                  "$J = \\cos\\theta \\cdot r\\cos\\theta - (-r\\sin\\theta) \\cdot \\sin\\theta = r(\\cos^2\\theta + \\sin^2\\theta) = r$.",
+                  "$J = \\cos\\theta \\cdot r\\cos\\theta - (-r\\sin\\theta) \\cdot \\sin\\theta = r(\\cos^2\\theta + \\sin^2\\theta) = r$。",
+                ),
+              ],
+              [
+                ["Find r at the point", "求该点的 r"],
+                t(
+                  `$r = \\sqrt{${paren(x0)}^2 + ${paren(y0)}^2} = \\sqrt{${x0 * x0 + y0 * y0}} = ${r0}$, so $J = ${ans}$.`,
+                  `$r = \\sqrt{${paren(x0)}^2 + ${paren(y0)}^2} = \\sqrt{${x0 * x0 + y0 * y0}} = ${r0}$，所以 $J = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With $r\\cos\\theta = ${x0}$ and $\\cos\\theta = \\frac{${x0}}{${r0}}$, $r\\sin\\theta = ${y0}$ and $\\sin\\theta = \\frac{${y0}}{${r0}}$, the entries give $\\frac{${x0}}{${r0}} \\cdot ${paren(x0)} + ${paren(y0)} \\cdot \\frac{${y0}}{${r0}} = \\frac{${r0 * r0}}{${r0}} = ${r0}$.`,
+              `由 $r\\cos\\theta = ${x0}$、$\\cos\\theta = \\frac{${x0}}{${r0}}$，$r\\sin\\theta = ${y0}$、$\\sin\\theta = \\frac{${y0}}{${r0}}$，各元素给出 $\\frac{${x0}}{${r0}} \\cdot ${paren(x0)} + ${paren(y0)} \\cdot \\frac{${y0}}{${r0}} = \\frac{${r0 * r0}}{${r0}} = ${r0}$。`,
+            ),
+          ),
         });
       },
     },
@@ -5381,8 +5753,8 @@ export const polarCoordinateTransformations: TopicDef = {
       figure: multivariableDrawings3["polar-coordinate-transformations#the-area-of-a-polar-rectangle"],
       title: t("The area of a polar rectangle", "极坐标矩形的面积"),
       explanation: t(
-        "The polar map $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ sends the rectangle $r_1 \\le r \\le r_2$, $\\alpha \\le \\theta \\le \\beta$ to a piece of an annulus. Its area is a fraction $\\frac{\\beta - \\alpha}{2\\pi}$ of the full annulus:\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\nThe same result comes from integrating the Jacobian $r$ over the rectangle.",
-        "极坐标映射 $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ 把矩形 $r_1 \\le r \\le r_2$，$\\alpha \\le \\theta \\le \\beta$ 映成圆环的一部分。其面积是整个圆环的 $\\frac{\\beta - \\alpha}{2\\pi}$：\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\n在矩形上对雅可比行列式 $r$ 积分也得到同样的结果。",
+        "The polar map $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ sends the rectangle $r_1 \\le r \\le r_2$, $\\alpha \\le \\theta \\le \\beta$ to a piece of an annulus. Its area is a fraction $\\frac{\\beta - \\alpha}{2\\pi}$ of the full annulus:\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\nThe same result comes from integrating the Jacobian $r$ over the rectangle. For $1 \\le r \\le 6$, $0 \\le \\theta \\le \\pi$, the area is $\\frac{1}{2} \\cdot \\pi \\cdot (36 - 1) = \\frac{35\\pi}{2}$.\n\n> **Watch out.** Subtract the squares, $r_2^2 - r_1^2$, rather than squaring the difference $(r_2 - r_1)^2$, and keep the factor $\\frac{1}{2}$ that comes from integrating $r$.",
+        "极坐标映射 $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ 把矩形 $r_1 \\le r \\le r_2$，$\\alpha \\le \\theta \\le \\beta$ 映成圆环的一部分。其面积是整个圆环的 $\\frac{\\beta - \\alpha}{2\\pi}$：\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\n在矩形上对雅可比行列式 $r$ 积分也得到同样的结果。对 $1 \\le r \\le 6$，$0 \\le \\theta \\le \\pi$，面积为 $\\frac{1}{2} \\cdot \\pi \\cdot (36 - 1) = \\frac{35\\pi}{2}$。\n\n> **注意。** 要用平方差 $r_2^2 - r_1^2$，而不是差的平方 $(r_2 - r_1)^2$；也不要丢掉对 $r$ 积分得到的因子 $\\frac{1}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(0, 4);
@@ -5409,10 +5781,44 @@ export const polarCoordinateTransformations: TopicDef = {
             `极坐标区域 $${r1} \\le r \\le ${r2}$，$${alpha} \\le \\theta \\le ${piL(end)}$ 的面积为 $k\\pi$。求 $k$。`,
           ),
           answer: ans,
-          wrong: [span.mul(Q.of((r2 - r1) ** 2, 2)), span.mul(Q.of(r2 * r2 - r1 * r1)), Q.of(r2 * r2 - r1 * r1)],
-          solution: t(
-            `$A = \\frac{1}{2} \\cdot ${piL(span)} \\cdot (${r2 * r2} - ${r1 * r1}) = ${piL(ans)}$, so $k = ${ans.toLatex()}$.`,
-            `$A = \\frac{1}{2} \\cdot ${piL(span)} \\cdot (${r2 * r2} - ${r1 * r1}) = ${piL(ans)}$，所以 $k = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              span.mul(Q.of((r2 - r1) ** 2, 2)),
+              `That squares the difference $${r2} - ${r1}$; the area uses $r_2^2 - r_1^2 = ${r2 * r2 - r1 * r1}$.`,
+              `那是把差 $${r2} - ${r1}$ 平方了；面积用的是 $r_2^2 - r_1^2 = ${r2 * r2 - r1 * r1}$。`,
+            ),
+            why(
+              span.mul(Q.of(r2 * r2 - r1 * r1)),
+              "The factor $\\frac{1}{2}$ from $\\int r\\,dr = \\frac{r^2}{2}$ is missing.",
+              "漏掉了由 $\\int r\\,dr = \\frac{r^2}{2}$ 得到的因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(r2 * r2 - r1 * r1),
+              `$${r2 * r2 - r1 * r1}\\pi$ is the whole annulus; the region covers only an angle of $${piL(span)}$ out of $2\\pi$.`,
+              `$${r2 * r2 - r1 * r1}\\pi$ 是整个圆环；这个区域只占 $2\\pi$ 中的 $${piL(span)}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the angle", "读出角度"],
+                t(
+                  `The angle runs over $\\beta - \\alpha = ${piL(end)} - ${alpha} = ${piL(span)}$.`,
+                  `角度的范围是 $\\beta - \\alpha = ${piL(end)} - ${alpha} = ${piL(span)}$。`,
+                ),
+              ],
+              [
+                ["Apply the formula", "代入公式"],
+                t(
+                  `$A = \\frac{1}{2} \\cdot ${piL(span)} \\cdot (${r2 * r2} - ${r1 * r1}) = ${piL(ans)}$, so $k = ${ans.toLatex()}$.`,
+                  `$A = \\frac{1}{2} \\cdot ${piL(span)} \\cdot (${r2 * r2} - ${r1 * r1}) = ${piL(ans)}$，所以 $k = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The full annulus has area $\\pi(${r2 * r2} - ${r1 * r1}) = ${r2 * r2 - r1 * r1}\\pi$, and the region takes the fraction $\\frac{${piL(span)}}{2\\pi} = ${span.mul(Q.of(1, 2)).toLatex()}$ of it: $${span.mul(Q.of(1, 2)).toLatex()} \\cdot ${r2 * r2 - r1 * r1} = ${ans.toLatex()}$.`,
+              `整个圆环的面积是 $\\pi(${r2 * r2} - ${r1 * r1}) = ${r2 * r2 - r1 * r1}\\pi$，区域占其中的 $\\frac{${piL(span)}}{2\\pi} = ${span.mul(Q.of(1, 2)).toLatex()}$：$${span.mul(Q.of(1, 2)).toLatex()} \\cdot ${r2 * r2 - r1 * r1} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -5428,6 +5834,10 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
     "Choosing new coordinates u and v along the boundary curves converts a curved region into a rectangle in the uv-plane.",
     "选取沿边界曲线的新坐标 u 与 v，可将弯曲区域转化为 uv 平面上的矩形区域。",
   ),
+  intro: t(
+    "The region in the first quadrant between the hyperbolas $xy = 2$ and $xy = 6$ and the rays $y = x$ and $y = 4x$ has curved sides. In the coordinates $u = xy$ and $v = \\frac{y}{x}$ it becomes the rectangle $2 \\le u \\le 6$, $1 \\le v \\le 4$.\n\nCheck: the point $(1, 3)$ lies between both pairs of curves, since $xy = 3$ and $\\frac{y}{x} = 3$, and its new coordinates $(u, v) = (3, 3)$ lie inside the rectangle.\n\nIn this lesson we change to coordinates along the boundary curves and compute the Jacobian of that change.",
+    "第一象限中位于双曲线 $xy = 2$ 与 $xy = 6$、射线 $y = x$ 与 $y = 4x$ 之间的区域边界是弯的。在坐标 $u = xy$、$v = \\frac{y}{x}$ 下，它变成矩形 $2 \\le u \\le 6$，$1 \\le v \\le 4$。\n\n检验：点 $(1, 3)$ 满足 $xy = 3$、$\\frac{y}{x} = 3$，位于两对曲线之间，它的新坐标 $(u, v) = (3, 3)$ 也在矩形内。\n\n本课我们换成沿边界曲线的坐标，并计算这个变换的雅可比行列式。",
+  ),
   prerequisites: ["nonlinear-transformations-of-plane-regions"],
   encompasses: [{ topic: "nonlinear-transformations-of-plane-regions", weight: 0.3 }],
   xp: 10,
@@ -5437,44 +5847,45 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
       figure: multivariableDrawings3["transformations-of-regions-between-curves#mapping-hyperbolic-regions-to-rectangles"],
       title: t("Mapping hyperbolic regions to rectangles", "将双曲区域映射为矩形"),
       explanation: t(
-        "A region in the first quadrant bounded by hyperbolas $xy = c_1, xy = c_2$ and rays $y = k_1 x, y = k_2 x$ is mapped to a rectangle by setting $u = xy$ and $v = \\frac{y}{x}$.",
-        "第一象限中由双曲线 $xy = c_1, xy = c_2$ 与射线 $y = k_1 x, y = k_2 x$ 围成的区域，可通过引入新坐标 $u = xy$ 和 $v = \\frac{y}{x}$ 映射为一个矩形。",
+        "A region in the first quadrant bounded by hyperbolas $xy = c_1, xy = c_2$ and rays $y = k_1 x, y = k_2 x$ is mapped to a rectangle by setting $u = xy$ and $v = \\frac{y}{x}$: each hyperbola becomes a vertical side $u = c$ and each ray a horizontal side $v = k$. The point $(4, 2)$, for example, has $u = 8$ and $v = \\frac{2}{4} = \\frac{1}{2}$.\n\n> **Watch out.** $v$ is $\\frac{y}{x}$, the slope of the ray through the point, not $\\frac{x}{y}$. And $u$ is the product $xy$, not the sum.",
+        "第一象限中由双曲线 $xy = c_1, xy = c_2$ 与射线 $y = k_1 x, y = k_2 x$ 围成的区域，可通过引入新坐标 $u = xy$ 和 $v = \\frac{y}{x}$ 映射为一个矩形：每条双曲线变成竖边 $u = c$，每条射线变成横边 $v = k$。例如点 $(4, 2)$ 有 $u = 8$，$v = \\frac{2}{4} = \\frac{1}{2}$。\n\n> **注意。** $v$ 是 $\\frac{y}{x}$，即过该点的射线的斜率，不是 $\\frac{x}{y}$。$u$ 是乘积 $xy$，不是和。",
       ),
       generate(rng: Rng): Problem {
         const x0 = rng.int(1, 8);
         const k = rng.int(1, 8);
         const y0 = k * x0;
-
-        // u = xy = k * x0^2, v = y/x = k
         const u = x0 * y0;
         const v = k;
-        const answer: Vec2 = [u, v];
-
-        const prompt = t(
-          `For coordinates $u = xy$ and $v = \\frac{y}{x}$, find the coordinates $(u, v)$ of the point $(${x0}, ${y0})$. Express your answer as a point $(u, v)$.`,
-          `对于新坐标 $u = xy$ 和 $v = \\frac{y}{x}$，求点 $(${x0}, ${y0})$ 在新坐标系下的坐标 $(u, v)$。结果以点 $(u, v)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $x = ${x0}$ and $y = ${y0}$:\n\n` + `$u = (${x0})(${y0}) = ${u}$\n\n` + `$v = \\frac{${y0}}{${x0}} = ${v}$`,
-            `The point is $(u, v) = (${u}, ${v})$.`,
-          ),
-          steps(
-            `代入 $x = ${x0}$ 和 $y = ${y0}$：\n\n` + `$u = (${x0})(${y0}) = ${u}$\n\n` + `$v = \\frac{${y0}}{${x0}} = ${v}$`,
-            `得到新坐标为 $(u, v) = (${u}, ${v})$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vars: ["u", "v"],
-          wrong: [
-            [v, u],
-            [x0 + y0, y0 - x0],
-            [u, 1],
+        return pointWith(
+          {
+            prompt: t(
+              `For coordinates $u = xy$ and $v = \\frac{y}{x}$, find the coordinates $(u, v)$ of the point $(${x0}, ${y0})$. Express your answer as a point $(u, v)$.`,
+              `对于新坐标 $u = xy$ 和 $v = \\frac{y}{x}$，求点 $(${x0}, ${y0})$ 在新坐标系下的坐标 $(u, v)$。结果以点 $(u, v)$ 表示。`,
+            ),
+            answer: [u, v],
+            vars: ["u", "v"],
+            solution: walked(
+              [
+                [["Compute u", "计算 u"], t(`$u = ${x0} \\cdot ${y0} = ${u}$.`, `$u = ${x0} \\cdot ${y0} = ${u}$。`)],
+                [
+                  ["Compute v", "计算 v"],
+                  t(
+                    `$v = \\frac{${y0}}{${x0}} = ${v}$, so $(u, v) = (${u}, ${v})$.`,
+                    `$v = \\frac{${y0}}{${x0}} = ${v}$，所以 $(u, v) = (${u}, ${v})$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Going back, $x = \\sqrt{\\frac{u}{v}} = \\sqrt{${x0 * x0}} = ${x0}$ and $y = \\sqrt{uv} = \\sqrt{${y0 * y0}} = ${y0}$, the original point.`,
+                `反推回去，$x = \\sqrt{\\frac{u}{v}} = \\sqrt{${x0 * x0}} = ${x0}$，$y = \\sqrt{uv} = \\sqrt{${y0 * y0}} = ${y0}$，正是原来的点。`,
+              ),
+            ),
+          },
+          [
+            [[v, u], "The coordinates are swapped; $u = xy$ comes first.", "两个坐标对调了；$u = xy$ 在前。"],
+            [[x0 + y0, v], `$u$ is the product $xy = ${u}$, not the sum $x + y$.`, `$u$ 是乘积 $xy = ${u}$，不是和 $x + y$。`],
           ],
-        });
+        );
       },
     },
     {
@@ -5482,8 +5893,8 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
       figure: multivariableDrawings3["transformations-of-regions-between-curves#the-jacobian-of-the-hyperbola-ray-coordinates"],
       title: t("The Jacobian of hyperbola and ray coordinates", "双曲线与射线坐标的雅可比行列式"),
       explanation: t(
-        "Regions between hyperbolas $xy = c$ and rays $y = mx$ become rectangles in the coordinates $u = xy$, $v = \\frac{y}{x}$. Their Jacobian is\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\nWith constant factors $u = a\\,xy$ and $v = b\\,\\frac{y}{x}$, the Jacobian is multiplied by $ab$.",
-        "在坐标 $u = xy$，$v = \\frac{y}{x}$ 下，双曲线 $xy = c$ 与射线 $y = mx$ 之间的区域变成矩形。其雅可比行列式为\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\n若带常数因子 $u = a\\,xy$，$v = b\\,\\frac{y}{x}$，雅可比行列式要乘以 $ab$。",
+        "Regions between hyperbolas $xy = c$ and rays $y = mx$ become rectangles in the coordinates $u = xy$, $v = \\frac{y}{x}$. Their Jacobian is\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\nWith constant factors $u = a\\,xy$ and $v = b\\,\\frac{y}{x}$, the Jacobian is multiplied by $ab$. For $u = 5xy$ and $v = \\frac{y}{x}$ at $(1, 2)$, it is $5 \\cdot \\frac{2 \\cdot 2}{1} = 20$.\n\n> **Watch out.** The product of the off-diagonal entries is $x \\cdot \\left(-\\frac{y}{x^2}\\right) = -\\frac{y}{x}$, and subtracting it adds: the two terms do not cancel.",
+        "在坐标 $u = xy$，$v = \\frac{y}{x}$ 下，双曲线 $xy = c$ 与射线 $y = mx$ 之间的区域变成矩形。其雅可比行列式为\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\n若带常数因子 $u = a\\,xy$，$v = b\\,\\frac{y}{x}$，雅可比行列式要乘以 $ab$。对 $u = 5xy$、$v = \\frac{y}{x}$ 在 $(1, 2)$ 处，它等于 $5 \\cdot \\frac{2 \\cdot 2}{1} = 20$。\n\n> **注意。** 副对角线元素之积是 $x \\cdot \\left(-\\frac{y}{x^2}\\right) = -\\frac{y}{x}$，减去它等于加上：两项不会抵消。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -5491,16 +5902,51 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
         const p = rng.int(1, 5);
         const q = rng.int(1, 6);
         const ans = Q.of(2 * a * b * q, p);
+        const vHere = Q.of(b * q, p);
         return numberProblem({
           prompt: t(
             `Let $u = ${a === 1 ? "" : a}xy$ and $v = \\frac{${b === 1 ? "" : b}y}{x}$. Find $\\frac{\\partial(u, v)}{\\partial(x, y)}$ at $(${p}, ${q})$.`,
             `设 $u = ${a === 1 ? "" : a}xy$，$v = \\frac{${b === 1 ? "" : b}y}{x}$。求 $\\frac{\\partial(u, v)}{\\partial(x, y)}$ 在 $(${p}, ${q})$ 处的值。`,
           ),
           answer: ans,
-          wrong: [Q.of(a * b * q, p), Q.zero, Q.of(2 * a * b * p, q)],
-          solution: t(
-            `$\\frac{\\partial(u, v)}{\\partial(x, y)} = ${a * b} \\cdot \\frac{2y}{x} = ${a * b} \\cdot \\frac{${2 * q}}{${p}} = ${ans.toLatex()}$.`,
-            `$\\frac{\\partial(u, v)}{\\partial(x, y)} = ${a * b} \\cdot \\frac{2y}{x} = ${a * b} \\cdot \\frac{${2 * q}}{${p}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(a * b * q, p),
+              "Only one of the two equal terms is counted; the determinant is $\\frac{y}{x} + \\frac{y}{x}$, times $ab$.",
+              "只算了两个相等项中的一个；行列式是 $\\frac{y}{x} + \\frac{y}{x}$，再乘 $ab$。",
+            ),
+            why(
+              0,
+              "The off-diagonal product is negative, so subtracting it adds; the terms do not cancel.",
+              "副对角线的乘积是负的，减去它就是加上；两项不会抵消。",
+            ),
+            why(
+              Q.of(2 * a * b * p, q),
+              "That is $\\frac{2x}{y}$; the Jacobian is $\\frac{2y}{x}$, times $ab$.",
+              "那是 $\\frac{2x}{y}$；雅可比行列式是 $\\frac{2y}{x}$，再乘 $ab$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the partial derivatives", "求偏导数"],
+                t(
+                  `$u_x = ${a === 1 ? "" : a}y$, $u_y = ${a === 1 ? "" : a}x$, $v_x = -\\frac{${b === 1 ? "" : b}y}{x^2}$, $v_y = \\frac{${b}}{x}$.`,
+                  `$u_x = ${a === 1 ? "" : a}y$，$u_y = ${a === 1 ? "" : a}x$，$v_x = -\\frac{${b === 1 ? "" : b}y}{x^2}$，$v_y = \\frac{${b}}{x}$。`,
+                ),
+              ],
+              [
+                ["Form the determinant", "计算行列式"],
+                t(
+                  `$u_x v_y - u_y v_x = ${a * b} \\cdot \\frac{y}{x} + ${a * b} \\cdot \\frac{y}{x} = ${a * b} \\cdot \\frac{2y}{x} = ${a * b} \\cdot \\frac{${2 * q}}{${p}} = ${ans.toLatex()}$.`,
+                  `$u_x v_y - u_y v_x = ${a * b} \\cdot \\frac{y}{x} + ${a * b} \\cdot \\frac{y}{x} = ${a * b} \\cdot \\frac{2y}{x} = ${a * b} \\cdot \\frac{${2 * q}}{${p}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In terms of the new coordinates the Jacobian is $${2 * a}v$, and here $v = \\frac{${b * q}}{${p}} = ${vHere.toLatex()}$, so $${2 * a} \\cdot ${vHere.toLatex()} = ${ans.toLatex()}$.`,
+              `用新坐标表示，雅可比行列式是 $${2 * a}v$，这里 $v = \\frac{${b * q}}{${p}} = ${vHere.toLatex()}$，所以 $${2 * a} \\cdot ${vHere.toLatex()} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -5520,6 +5966,10 @@ export const theJacobian: TopicDef = {
     "The Jacobian determinant ∂(x, y)/∂(u, v) = xu yv - xv yu measures the local area expansion factor of a coordinate transformation.",
     "雅可比行列式 ∂(x, y)/∂(u, v) = xu yv - xv yu 度量了坐标变换的局部面积伸缩因子。",
   ),
+  intro: t(
+    "For $x = u + v$ and $y = uv$ the partial derivatives are $x_u = 1$, $x_v = 1$, $y_u = v$ and $y_v = u$, so the Jacobian is $1 \\cdot u - 1 \\cdot v = u - v$. At $(u, v) = (7, 2)$ it is $5$: near that point the map multiplies small areas by $5$.\n\nCheck: moving $u$ by $0.01$ moves $(x, y)$ by about $(0.01, 0.02)$, and moving $v$ by $0.01$ moves it by about $(0.01, 0.07)$. The parallelogram on these two sides has area $0.01 \\cdot 0.07 - 0.01 \\cdot 0.02 = 0.0005$, which is $5$ times the area $0.0001$ of the small square.\n\nIn this lesson we compute Jacobian determinants and integrate them to find the areas of images of regions.",
+    "对 $x = u + v$，$y = uv$，偏导数为 $x_u = 1$，$x_v = 1$，$y_u = v$，$y_v = u$，所以雅可比行列式为 $1 \\cdot u - 1 \\cdot v = u - v$。在 $(u, v) = (7, 2)$ 处它等于 $5$：在该点附近，映射把小面积放大 $5$ 倍。\n\n检验：$u$ 增加 $0.01$ 使 $(x, y)$ 大约移动 $(0.01, 0.02)$，$v$ 增加 $0.01$ 使它大约移动 $(0.01, 0.07)$。以这两条边张成的平行四边形面积为 $0.01 \\cdot 0.07 - 0.01 \\cdot 0.02 = 0.0005$，正是小正方形面积 $0.0001$ 的 $5$ 倍。\n\n本课我们计算雅可比行列式，并对它积分，求区域的像的面积。",
+  ),
   prerequisites: ["polar-coordinate-transformations"],
   encompasses: [],
   xp: 10,
@@ -5528,46 +5978,61 @@ export const theJacobian: TopicDef = {
       id: "calculating-2d-jacobian-determinants",
       title: t("Calculating 2D Jacobian determinants", "计算二维雅可比行列式"),
       explanation: t(
-        "Arrange the partial derivatives of the old coordinates with respect to the new ones in a matrix, and take its determinant. For a transformation $x = g(u, v)$ and $y = h(u, v)$, the **Jacobian determinant** is:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}.$$",
-        "把旧坐标对新坐标的偏导数排成一个矩阵，再求它的行列式。对于变换 $x = g(u, v)$ 与 $y = h(u, v)$，其**雅可比行列式**为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}$$",
+        "Arrange the partial derivatives of the old coordinates with respect to the new ones in a matrix, and take its determinant. For a transformation $x = g(u, v)$ and $y = h(u, v)$, the **Jacobian determinant** is:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}.$$\n\nFor $x = 5u^2$ and $y = v^2$, $x_u = 10u$, $y_v = 2v$ and the other two are zero, so $J = 20uv$, which is $40$ at $(1, 2)$.\n\n> **Watch out.** The entries are derivatives, not the coordinates themselves: each square contributes its own factor $2$. And $J$ keeps its sign; only an area uses $|J|$.",
+        "把旧坐标对新坐标的偏导数排成一个矩阵，再求它的行列式。对于变换 $x = g(u, v)$ 与 $y = h(u, v)$，其**雅可比行列式**为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}.$$\n\n对 $x = 5u^2$，$y = v^2$，有 $x_u = 10u$，$y_v = 2v$，另两个为零，所以 $J = 20uv$，在 $(1, 2)$ 处为 $40$。\n\n> **注意。** 矩阵的元素是偏导数，不是坐标本身：每个平方都带来自己的因子 $2$。$J$ 保留符号；只有面积才用 $|J|$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const u0 = rng.int(1, 4);
         const v0 = rng.int(1, 4);
-
-        // x = a * u^2, y = b * v^2
-        // xu = 2a*u, xv = 0
-        // yu = 0, yv = 2b*v
-        // J = (2a*u)*(2b*v) = 4ab * u * v
         const ans = 4 * a * b * u0 * v0;
-
-        const prompt = t(
-          `Compute the Jacobian determinant $J = \\frac{\\partial(x, y)}{\\partial(u, v)}$ for the transformation $x = ${poly([a, "u^2"])}, y = ${poly([b, "v^2"])}$ at the point $(u, v) = (${u0}, ${v0})$.`,
-          `计算变换 $x = ${poly([a, "u^2"])}, y = ${poly([b, "v^2"])}$ 在点 $(u, v) = (${u0}, ${v0})$ 处的雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(u, v)}$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the partial derivatives:\n\n` +
-              `$\\frac{\\partial x}{\\partial u} = ${2 * a}u, \\quad \\frac{\\partial x}{\\partial v} = 0$\n\n` +
-              `$\\frac{\\partial y}{\\partial u} = 0, \\quad \\frac{\\partial y}{\\partial v} = ${2 * b}v$`,
-            `The Jacobian determinant is $J = (${2 * a}u)(${2 * b}v) - 0 = ${4 * a * b}uv$.`,
-            `Evaluate at $(${u0}, ${v0})$: $J = ${4 * a * b}(${u0})(${v0}) = ${ans}$.`,
-          ),
-          steps(
-            `计算偏导数：\n\n` +
-              `$\\frac{\\partial x}{\\partial u} = ${2 * a}u, \\quad \\frac{\\partial x}{\\partial v} = 0$\n\n` +
-              `$\\frac{\\partial y}{\\partial u} = 0, \\quad \\frac{\\partial y}{\\partial v} = ${2 * b}v$`,
-            `雅可比行列式为 $J = (${2 * a}u)(${2 * b}v) - 0 = ${4 * a * b}uv$。`,
-            `在 $(${u0}, ${v0})$ 处求值：$J = ${4 * a * b}(${u0})(${v0}) = ${ans}$。`,
-          ),
-        );
+        const central = (k: number, s: number) => (k * (s + 1) * (s + 1) - k * (s - 1) * (s - 1)) / 2;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Compute the Jacobian determinant $J = \\frac{\\partial(x, y)}{\\partial(u, v)}$ for the transformation $x = ${poly([a, "u^2"])}, y = ${poly([b, "v^2"])}$ at the point $(u, v) = (${u0}, ${v0})$.`,
+            `计算变换 $x = ${poly([a, "u^2"])}, y = ${poly([b, "v^2"])}$ 在点 $(u, v) = (${u0}, ${v0})$ 处的雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(u, v)}$。`,
+          ),
           answer: ans,
-          wrong: [2 * a * b * u0 * v0, -ans, ans / 2],
+          mistakes: distinct(ans, [
+            why(
+              2 * a * b * u0 * v0,
+              "Only one factor $2$ is kept; both $x_u$ and $y_v$ carry one.",
+              "只保留了一个因子 $2$；$x_u$ 和 $y_v$ 各带一个。",
+            ),
+            why(
+              a * b * u0 * u0 * v0 * v0,
+              "That multiplies $x$ and $y$ themselves; the determinant uses their partial derivatives.",
+              "那是把 $x$ 和 $y$ 本身相乘；行列式用的是它们的偏导数。",
+            ),
+            why(
+              -ans,
+              "The sign is flipped; with $x_v = y_u = 0$ the determinant is just $x_u y_v$.",
+              "符号反了；由于 $x_v = y_u = 0$，行列式就是 $x_u y_v$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the partial derivatives", "求偏导数"],
+                t(
+                  `$\\frac{\\partial x}{\\partial u} = ${2 * a}u$, $\\frac{\\partial x}{\\partial v} = 0$, $\\frac{\\partial y}{\\partial u} = 0$, $\\frac{\\partial y}{\\partial v} = ${2 * b}v$.`,
+                  `$\\frac{\\partial x}{\\partial u} = ${2 * a}u$，$\\frac{\\partial x}{\\partial v} = 0$，$\\frac{\\partial y}{\\partial u} = 0$，$\\frac{\\partial y}{\\partial v} = ${2 * b}v$。`,
+                ),
+              ],
+              [
+                ["Form the determinant", "计算行列式"],
+                t(
+                  `$J = (${2 * a}u)(${2 * b}v) - 0 = ${4 * a * b}uv$, and at $(${u0}, ${v0})$, $J = ${4 * a * b} \\cdot ${u0} \\cdot ${v0} = ${ans}$.`,
+                  `$J = (${2 * a}u)(${2 * b}v) - 0 = ${4 * a * b}uv$，在 $(${u0}, ${v0})$ 处 $J = ${4 * a * b} \\cdot ${u0} \\cdot ${v0} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `For a quadratic the central difference is exact: $\\frac{x(${u0 + 1}) - x(${u0 - 1})}{2} = ${central(a, u0)}$ and $\\frac{y(${v0 + 1}) - y(${v0 - 1})}{2} = ${central(b, v0)}$, whose product is $${ans}$.`,
+              `对二次函数，中心差分是精确的：$\\frac{x(${u0 + 1}) - x(${u0 - 1})}{2} = ${central(a, u0)}$，$\\frac{y(${v0 + 1}) - y(${v0 - 1})}{2} = ${central(b, v0)}$，二者之积为 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -5576,8 +6041,8 @@ export const theJacobian: TopicDef = {
       figure: multivariableDrawings3["the-jacobian#area-under-a-nonlinear-map-by-the-jacobian"],
       title: t("Area under a nonlinear map by the Jacobian", "用雅可比行列式求非线性变换下的面积"),
       explanation: t(
-        "When $T(u, v) = (x, y)$ is one-to-one on a region $R$, the area of the image is\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\nFor $T(u, v) = (u, uv)$ the Jacobian is $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$, so it stretches area more where $u$ is larger. Integrating $u$ over the rectangle gives the image's area.",
-        "当 $T(u, v) = (x, y)$ 在区域 $R$ 上是一一映射时，像的面积为\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\n对 $T(u, v) = (u, uv)$，雅可比行列式为 $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$，所以 $u$ 越大面积被拉伸得越多。在矩形上对 $u$ 积分就得到像的面积。",
+        "When $T(u, v) = (x, y)$ is one-to-one on a region $R$, the area of the image is\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\nFor $T(u, v) = (u, uv)$ the Jacobian is $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$, so it stretches area more where $u$ is larger. Integrating $u$ over the rectangle gives the image's area. For $1 \\le u \\le 3$, $1 \\le v \\le 3$ it is $\\int_1^3 \\int_1^3 u\\,du\\,dv = 2 \\cdot \\frac{9 - 1}{2} = 8$.\n\n> **Watch out.** The area of the rectangle itself is not the answer: the map stretches it by the factor $u$, which changes across the rectangle and must be integrated.",
+        "当 $T(u, v) = (x, y)$ 在区域 $R$ 上是一一映射时，像的面积为\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\n对 $T(u, v) = (u, uv)$，雅可比行列式为 $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$，所以 $u$ 越大面积被拉伸得越多。在矩形上对 $u$ 积分就得到像的面积。对 $1 \\le u \\le 3$，$1 \\le v \\le 3$，面积为 $\\int_1^3 \\int_1^3 u\\,du\\,dv = 2 \\cdot \\frac{9 - 1}{2} = 8$。\n\n> **注意。** 矩形本身的面积不是答案：映射按因子 $u$ 拉伸它，而这个因子在矩形上是变化的，必须积分。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(1, 4);
@@ -5590,10 +6055,44 @@ export const theJacobian: TopicDef = {
             `求矩形 $${p} \\le u \\le ${q}$，$0 \\le v \\le ${n}$ 在 $T(u, v) = (u, uv)$ 下的像的面积。`,
           ),
           answer: ans,
-          wrong: [Q.of(n * (q - p)), Q.of(n * (q * q - p * p)), Q.of(n * (q - p) ** 2, 2)],
-          solution: t(
-            `The Jacobian is $u$, so the area is $\\int_0^{${n}}\\int_{${p}}^{${q}} u\\,du\\,dv = ${n} \\cdot \\frac{${q * q} - ${p * p}}{2} = ${ans.toLatex()}$.`,
-            `雅可比行列式为 $u$，所以面积为 $\\int_0^{${n}}\\int_{${p}}^{${q}} u\\,du\\,dv = ${n} \\cdot \\frac{${q * q} - ${p * p}}{2} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              n * (q - p),
+              "That is the area of the rectangle itself; the map stretches it by the Jacobian $u$.",
+              "那是矩形本身的面积；映射按雅可比行列式 $u$ 拉伸它。",
+            ),
+            why(
+              n * (q * q - p * p),
+              "The factor $\\frac{1}{2}$ from $\\int u\\,du = \\frac{u^2}{2}$ is missing.",
+              "漏掉了由 $\\int u\\,du = \\frac{u^2}{2}$ 得到的因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(n * (q - p) ** 2, 2),
+              `That squares the difference $${q} - ${p}$; the integral gives $\\frac{${q}^2 - ${p}^2}{2}$.`,
+              `那是把差 $${q} - ${p}$ 平方了；积分给出 $\\frac{${q}^2 - ${p}^2}{2}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the Jacobian", "求雅可比行列式"],
+                t(
+                  "$\\frac{\\partial(x, y)}{\\partial(u, v)} = 1 \\cdot u - 0 \\cdot v = u$, which is positive here.",
+                  "$\\frac{\\partial(x, y)}{\\partial(u, v)} = 1 \\cdot u - 0 \\cdot v = u$，这里为正。",
+                ),
+              ],
+              [
+                ["Integrate it", "积分"],
+                t(
+                  `$\\int_0^{${n}}\\int_{${p}}^{${q}} u\\,du\\,dv = ${n} \\cdot \\frac{${q * q} - ${p * p}}{2} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${n}}\\int_{${p}}^{${q}} u\\,du\\,dv = ${n} \\cdot \\frac{${q * q} - ${p * p}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The image is the region $${p} \\le x \\le ${q}$, $0 \\le y \\le ${n === 1 ? "" : n}x$, whose area is $\\int_{${p}}^{${q}} ${n === 1 ? "" : n}x\\,dx = ${ans.toLatex()}$ directly.`,
+              `像是区域 $${p} \\le x \\le ${q}$，$0 \\le y \\le ${n === 1 ? "" : n}x$，直接算面积为 $\\int_{${p}}^{${q}} ${n === 1 ? "" : n}x\\,dx = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -5609,6 +6108,10 @@ export const theInverseFunctionTheorem: TopicDef = {
     "If the Jacobian determinant J is nonzero at a point, the transformation is locally invertible, with inverse Jacobian 1/J.",
     "若在某点处雅可比行列式 J 非零，则该变换在该点局部可逆，且逆变换的雅可比行列式为 1/J。",
   ),
+  intro: t(
+    "The map $x = 2u + v$, $y = u + 3v$ has Jacobian $2 \\cdot 3 - 1 \\cdot 1 = 5$. Its inverse is $u = \\frac{3x - y}{5}$, $v = \\frac{2y - x}{5}$, whose Jacobian is $\\frac{3}{5} \\cdot \\frac{2}{5} - \\left(-\\frac{1}{5}\\right)\\left(-\\frac{1}{5}\\right) = \\frac{5}{25} = \\frac{1}{5}$.\n\nCheck: $5 \\cdot \\frac{1}{5} = 1$, the Jacobian of the identity map, which is what doing the map and then its inverse gives.\n\nIn this lesson we use a nonzero Jacobian to invert a map near a point, and find the Jacobian and the partial derivatives of the inverse without solving for it.",
+    "映射 $x = 2u + v$，$y = u + 3v$ 的雅可比行列式为 $2 \\cdot 3 - 1 \\cdot 1 = 5$。它的逆是 $u = \\frac{3x - y}{5}$，$v = \\frac{2y - x}{5}$，其雅可比行列式为 $\\frac{3}{5} \\cdot \\frac{2}{5} - \\left(-\\frac{1}{5}\\right)\\left(-\\frac{1}{5}\\right) = \\frac{5}{25} = \\frac{1}{5}$。\n\n检验：$5 \\cdot \\frac{1}{5} = 1$，正是恒等映射的雅可比行列式，而先做映射再做其逆就得到恒等映射。\n\n本课我们利用非零的雅可比行列式在一点附近求逆映射，并且不解出逆映射就求出它的雅可比行列式和偏导数。",
+  ),
   prerequisites: ["the-jacobian"],
   encompasses: [{ topic: "the-jacobian", weight: 0.3 }],
   xp: 10,
@@ -5617,30 +6120,53 @@ export const theInverseFunctionTheorem: TopicDef = {
       id: "reciprocal-property-of-inverse-jacobians",
       title: t("Reciprocal property of inverse Jacobians", "逆变换雅可比行列式的倒数关系"),
       explanation: t(
-        "By the Inverse Function Theorem, if $T$ is continuously differentiable with non-zero Jacobian $J = \\frac{\\partial(x, y)}{\\partial(u, v)} \\ne 0$, then $T^{-1}$ exists locally and:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{J}.$$",
-        "由反函数定理，若 $T$ 连续可微且雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(u, v)} \\ne 0$，则 $T^{-1}$ 局部存在且满足：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{J}$$",
+        "By the Inverse Function Theorem, if $T$ is continuously differentiable with non-zero Jacobian $J = \\frac{\\partial(x, y)}{\\partial(u, v)} \\ne 0$, then $T^{-1}$ exists locally and:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{J}.$$\n\nA map with Jacobian $-\\frac{2}{3}$ at a point has an inverse with Jacobian $-\\frac{3}{2}$ at the image point.\n\n> **Watch out.** The reciprocal keeps the sign: an inverse reverses orientation exactly when the map does. It is $\\frac{1}{J}$, not $-J$ and not $\\frac{1}{J^2}$.",
+        "由反函数定理，若 $T$ 连续可微且雅可比行列式 $J = \\frac{\\partial(x, y)}{\\partial(u, v)} \\ne 0$，则 $T^{-1}$ 局部存在且满足：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{J}.$$\n\n若映射在某点的雅可比行列式为 $-\\frac{2}{3}$，则其逆在像点处的雅可比行列式为 $-\\frac{3}{2}$。\n\n> **注意。** 倒数保留符号：映射改变定向时，它的逆也改变定向。答案是 $\\frac{1}{J}$，不是 $-J$，也不是 $\\frac{1}{J^2}$。",
       ),
       generate(rng: Rng): Problem {
         const jVal = rng.nonZero(-30, 30);
         const ans = Q.of(1, jVal);
-
-        const prompt = t(
-          `Suppose a smooth coordinate transformation $T(u, v) = (x, y)$ has Jacobian determinant $\\frac{\\partial(x, y)}{\\partial(u, v)} = ${jVal}$ at a point $P$. Find the Jacobian determinant $\\frac{\\partial(u, v)}{\\partial(x, y)}$ of the inverse transformation at $T(P)$.`,
-          `设光滑坐标变换 $T(u, v) = (x, y)$ 在点 $P$ 处的雅可比行列式为 $\\frac{\\partial(x, y)}{\\partial(u, v)} = ${jVal}$。求逆变换在 $T(P)$ 处的雅可比行列式 $\\frac{\\partial(u, v)}{\\partial(x, y)}$。`,
-        );
-        const solution = t(
-          steps(
-            `By the Inverse Function Theorem, the Jacobian of the inverse transformation is the reciprocal of the forward Jacobian:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = ${jVal > 0 ? "" : `\\frac{1}{${jVal}} = `}${ans.toLatex()}.$$`,
-          ),
-          steps(
-            `由反函数定理，逆变换的雅可比行列式等于正向变换雅可比行列式的倒数：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = ${jVal > 0 ? "" : `\\frac{1}{${jVal}} = `}${ans.toLatex()}$$`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Suppose a smooth coordinate transformation $T(u, v) = (x, y)$ has Jacobian determinant $\\frac{\\partial(x, y)}{\\partial(u, v)} = ${jVal}$ at a point $P$. Find the Jacobian determinant $\\frac{\\partial(u, v)}{\\partial(x, y)}$ of the inverse transformation at $T(P)$.`,
+            `设光滑坐标变换 $T(u, v) = (x, y)$ 在点 $P$ 处的雅可比行列式为 $\\frac{\\partial(x, y)}{\\partial(u, v)} = ${jVal}$。求逆变换在 $T(P)$ 处的雅可比行列式 $\\frac{\\partial(u, v)}{\\partial(x, y)}$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(jVal), ans.neg(), Q.of(1, jVal * jVal)],
+          mistakes: distinct(ans, [
+            why(
+              jVal,
+              "That is the Jacobian of $T$ itself; the inverse has the reciprocal.",
+              "那是 $T$ 本身的雅可比行列式；逆变换的是它的倒数。",
+            ),
+            why(ans.neg(), "The reciprocal keeps the sign of $J$.", "倒数保留 $J$ 的符号。"),
+            why(
+              Q.of(1, jVal * jVal),
+              "Only one reciprocal is taken: $\\frac{1}{J}$, not $\\frac{1}{J^2}$.",
+              "只取一次倒数：$\\frac{1}{J}$，不是 $\\frac{1}{J^2}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Check the theorem applies", "检查定理的条件"],
+                t(
+                  `The Jacobian $${jVal}$ is not zero, so $T$ has a local inverse near $P$.`,
+                  `雅可比行列式 $${jVal}$ 不为零，所以 $T$ 在 $P$ 附近有局部逆映射。`,
+                ),
+              ],
+              [
+                ["Take the reciprocal", "取倒数"],
+                t(
+                  `$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{${jVal}} = ${ans.toLatex()}$.`,
+                  `$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{${jVal}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Composing $T$ with its inverse gives the identity, whose Jacobian is $1$, and indeed $${jVal} \\cdot ${paren(ans)} = 1$.`,
+              `$T$ 与其逆复合得到恒等映射，其雅可比行列式为 $1$，确实 $${jVal} \\cdot ${paren(ans)} = 1$。`,
+            ),
+          ),
         });
       },
     },
@@ -5648,15 +6174,15 @@ export const theInverseFunctionTheorem: TopicDef = {
       id: "partial-derivatives-of-a-local-inverse",
       title: t("Partial derivatives of a local inverse", "局部逆映射的偏导数"),
       explanation: t(
-        "If $T(x, y) = (u, v)$ has a nonzero Jacobian at a point, the inverse function theorem gives a local inverse whose derivative matrix is the inverse of $DT$:\n\n$$\\begin{pmatrix} x_u & x_v \\\\ y_u & y_v \\end{pmatrix} = \\frac{1}{u_x v_y - u_y v_x}\\begin{pmatrix} v_y & -u_y \\\\ -v_x & u_x \\end{pmatrix}.$$\n\nSo the partial derivatives of the inverse can be found without solving for $x$ and $y$.",
-        "若 $T(x, y) = (u, v)$ 在某点的雅可比行列式非零，反函数定理给出一个局部逆映射，其导数矩阵是 $DT$ 的逆：\n\n$$\\begin{pmatrix} x_u & x_v \\\\ y_u & y_v \\end{pmatrix} = \\frac{1}{u_x v_y - u_y v_x}\\begin{pmatrix} v_y & -u_y \\\\ -v_x & u_x \\end{pmatrix}.$$\n\n所以无需解出 $x$ 和 $y$ 就能求出逆映射的偏导数。",
+        "If $T(x, y) = (u, v)$ has a nonzero Jacobian at a point, the inverse function theorem gives a local inverse whose derivative matrix is the inverse of $DT$:\n\n$$\\begin{pmatrix} x_u & x_v \\\\ y_u & y_v \\end{pmatrix} = \\frac{1}{u_x v_y - u_y v_x}\\begin{pmatrix} v_y & -u_y \\\\ -v_x & u_x \\end{pmatrix}.$$\n\nSo the partial derivatives of the inverse can be found without solving for $x$ and $y$. For $T(x, y) = (x^2 + 5y, x + y^2)$ at $(1, 2)$, $DT = \\begin{pmatrix} 2 & 5 \\\\ 1 & 4 \\end{pmatrix}$ with determinant $3$, so $x_u = \\frac{4}{3}$ and $x_v = -\\frac{5}{3}$.\n\n> **Watch out.** $x_u$ is not $\\frac{1}{u_x}$: the inverse matrix swaps the diagonal entries and changes the sign of the other two, all over the determinant.",
+        "若 $T(x, y) = (u, v)$ 在某点的雅可比行列式非零，反函数定理给出一个局部逆映射，其导数矩阵是 $DT$ 的逆：\n\n$$\\begin{pmatrix} x_u & x_v \\\\ y_u & y_v \\end{pmatrix} = \\frac{1}{u_x v_y - u_y v_x}\\begin{pmatrix} v_y & -u_y \\\\ -v_x & u_x \\end{pmatrix}.$$\n\n所以无需解出 $x$ 和 $y$ 就能求出逆映射的偏导数。对 $T(x, y) = (x^2 + 5y, x + y^2)$ 在 $(1, 2)$ 处，$DT = \\begin{pmatrix} 2 & 5 \\\\ 1 & 4 \\end{pmatrix}$，行列式为 $3$，所以 $x_u = \\frac{4}{3}$，$x_v = -\\frac{5}{3}$。\n\n> **注意。** $x_u$ 不是 $\\frac{1}{u_x}$：逆矩阵交换两个对角元素，改变另两个元素的符号，再全部除以行列式。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
         const b = rng.int(-3, 3) || 2;
         const p = rng.int(-3, 3) || 1;
         let q = rng.int(-3, 3) || 2;
-        if (4 * p * q - a * b === 0) q += 1;
+        if (4 * p * q - a * b === 0) q += q > 0 ? 1 : -1;
         const J = 4 * p * q - a * b;
         const which = rng.int(0, 3);
         const names = [
@@ -5665,21 +6191,70 @@ export const theInverseFunctionTheorem: TopicDef = {
           "\\frac{\\partial y}{\\partial u}",
           "\\frac{\\partial y}{\\partial v}",
         ];
+        const forward = [2 * p, a, b, 2 * q];
         const nums = [2 * q, -a, -b, 2 * p];
         const num = nums[which] ?? 0;
+        const fwd = forward[which] ?? 1;
         const ans = Q.of(num, J);
         const u0 = p * p + a * q;
         const v0 = b * p + q * q;
+        const diagonal = which === 0 || which === 3;
+        const column = which % 2 === 0 ? [2 * q, -b] : [-a, 2 * p];
+        const c0 = column[0] ?? 0;
+        const c1 = column[1] ?? 0;
+        const rowDot = 2 * p * c0 + a * c1;
         return numberProblem({
           prompt: t(
             `Let $T(x, y) = (${poly([1, "x^2"], [a, "y"])}, ${poly([b, "x"], [1, "y^2"])})$. Near $(${p}, ${q})$, $T$ has a local inverse. Find $${names[which]}$ at $(u, v) = (${u0}, ${v0})$.`,
             `设 $T(x, y) = (${poly([1, "x^2"], [a, "y"])}, ${poly([b, "x"], [1, "y^2"])})$。在 $(${p}, ${q})$ 附近 $T$ 有局部逆映射。求 $(u, v) = (${u0}, ${v0})$ 处的 $${names[which]}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(nums[3 - which] ?? 1, J), Q.of(J, num === 0 ? 1 : num), Q.of(-num, J)],
-          solution: t(
-            `$DT(${p}, ${q}) = \\begin{pmatrix} ${2 * p} & ${a} \\\\ ${b} & ${2 * q} \\end{pmatrix}$ with determinant $${J}$. Its inverse is $${J < 0 ? "-" : ""}\\frac{1}{${Math.abs(J)}}\\begin{pmatrix} ${2 * q} & ${-a} \\\\ ${-b} & ${2 * p} \\end{pmatrix}$, so $${names[which]} = ${ans.toLatex()}$.`,
-            `$DT(${p}, ${q}) = \\begin{pmatrix} ${2 * p} & ${a} \\\\ ${b} & ${2 * q} \\end{pmatrix}$，行列式为 $${J}$。其逆为 $${J < 0 ? "-" : ""}\\frac{1}{${Math.abs(J)}}\\begin{pmatrix} ${2 * q} & ${-a} \\\\ ${-b} & ${2 * p} \\end{pmatrix}$，所以 $${names[which]} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(fwd, J),
+              diagonal
+                ? "That keeps the diagonal entry in its place; the inverse matrix swaps the two diagonal entries."
+                : "That keeps the sign of the off-diagonal entry; the inverse matrix changes it.",
+              diagonal ? "那是让对角元素留在原位；逆矩阵要交换两个对角元素。" : "那是保留了副对角元素的符号；逆矩阵要改变它。",
+            ),
+            diagonal
+              ? why(
+                  Q.of(1, fwd),
+                  "$\\frac{1}{u_x}$ is the one-variable rule; with two variables, invert the whole matrix.",
+                  "$\\frac{1}{u_x}$ 是一元的法则；两个变量时要求整个矩阵的逆。",
+                )
+              : why(
+                  Q.of(nums[3 - which] ?? 1, J),
+                  "That is the other off-diagonal entry; each one stays in its place and only changes sign.",
+                  "那是另一个副对角元素；每个副对角元素留在原位，只改变符号。",
+                ),
+            why(
+              Q.of(J, num),
+              "The fraction is upside down: the entry is divided by the determinant.",
+              "分数上下颠倒了：应是该元素除以行列式。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the derivative matrix", "求导数矩阵"],
+                t(
+                  `$DT(${p}, ${q}) = \\begin{pmatrix} ${2 * p} & ${a} \\\\ ${b} & ${2 * q} \\end{pmatrix}$, with determinant $${2 * p} \\cdot ${paren(2 * q)} - ${paren(a)} \\cdot ${paren(b)} = ${J}$.`,
+                  `$DT(${p}, ${q}) = \\begin{pmatrix} ${2 * p} & ${a} \\\\ ${b} & ${2 * q} \\end{pmatrix}$，行列式为 $${2 * p} \\cdot ${paren(2 * q)} - ${paren(a)} \\cdot ${paren(b)} = ${J}$。`,
+                ),
+              ],
+              [
+                ["Invert it", "求逆"],
+                t(
+                  `The inverse is $\\frac{1}{${J}}\\begin{pmatrix} ${2 * q} & ${-a} \\\\ ${-b} & ${2 * p} \\end{pmatrix}$, so $${names[which]} = ${ans.toLatex()}$.`,
+                  `其逆为 $\\frac{1}{${J}}\\begin{pmatrix} ${2 * q} & ${-a} \\\\ ${-b} & ${2 * p} \\end{pmatrix}$，所以 $${names[which]} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The first row of $DT$ times column ${which % 2 === 0 ? "one" : "two"} of the inverse is $\\frac{${2 * p} \\cdot ${paren(c0)} + ${paren(a)} \\cdot ${paren(c1)}}{${J}} = ${rowDot / J}$, the matching entry of the identity matrix.`,
+              `$DT$ 的第一行乘以逆矩阵的第${which % 2 === 0 ? "一" : "二"}列，得 $\\frac{${2 * p} \\cdot ${paren(c0)} + ${paren(a)} \\cdot ${paren(c1)}}{${J}} = ${rowDot / J}$，正是单位矩阵的对应元素。`,
+            ),
           ),
         });
       },
@@ -5695,6 +6270,10 @@ export const theJacobianOfAThreeDimensionalTransformation: TopicDef = {
     "The 3D Jacobian determinant ∂(x, y, z)/∂(u, v, w) gives the local volume scaling factor, equal to r for cylindrical and ρ² sin φ for spherical coordinates.",
     "三维雅可比行列式 ∂(x, y, z)/∂(u, v, w) 给出了局部体积缩放因子，在柱坐标下为 r，在球坐标下为 ρ² sin φ。",
   ),
+  intro: t(
+    "In spherical coordinates at $\\rho = 2$, $\\varphi = \\frac{\\pi}{3}$, the Jacobian is $\\rho^2 \\sin\\varphi = 4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$. A small coordinate box with sides $0.01$ in $\\rho$, $\\theta$ and $\\varphi$ therefore has volume about $2\\sqrt{3} \\cdot 10^{-6}$.\n\nCheck: the box has edges $0.01$ along the radius, $\\rho \\cdot 0.01 = 0.02$ along a meridian, and $\\rho\\sin\\varphi \\cdot 0.01 = \\sqrt{3} \\cdot 0.01$ along a circle of latitude; their product is $2\\sqrt{3} \\cdot 10^{-6}$.\n\nIn this lesson we find the volume factors of cylindrical and spherical coordinates and evaluate them at points.",
+    "在球坐标中 $\\rho = 2$，$\\varphi = \\frac{\\pi}{3}$ 处，雅可比行列式为 $\\rho^2 \\sin\\varphi = 4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$。因此 $\\rho$、$\\theta$、$\\varphi$ 方向边长都为 $0.01$ 的小坐标块，体积约为 $2\\sqrt{3} \\cdot 10^{-6}$。\n\n检验：这个小块沿半径的棱长为 $0.01$，沿经线的为 $\\rho \\cdot 0.01 = 0.02$，沿纬线圆的为 $\\rho\\sin\\varphi \\cdot 0.01 = \\sqrt{3} \\cdot 0.01$；三者之积为 $2\\sqrt{3} \\cdot 10^{-6}$。\n\n本课我们求柱坐标和球坐标的体积因子，并在具体的点求值。",
+  ),
   prerequisites: ["the-jacobian"],
   encompasses: [{ topic: "the-jacobian", weight: 0.3 }],
   xp: 10,
@@ -5703,59 +6282,94 @@ export const theJacobianOfAThreeDimensionalTransformation: TopicDef = {
       id: "cylindrical-and-spherical-jacobians",
       title: t("Cylindrical and spherical Jacobians", "柱坐标与球坐标的雅可比行列式"),
       explanation: t(
-        "These factors are the volume scaling of the coordinate systems, and they must appear in any triple integral after changing coordinates. Standard 3D coordinate Jacobians:\n\n- **Cylindrical coordinates** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$): $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$.\n- **Spherical coordinates** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$): $J = \\rho^2\\sin\\phi$.",
-        "这些因子是坐标系的体积缩放因子，换坐标后的任何三重积分中都必须出现它们。标准三维坐标变换的雅可比行列式：\n\n- **柱坐标** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$)：$J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$。\n- **球坐标** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$)：$J = \\rho^2\\sin\\phi$。",
+        "These factors are the volume scaling of the coordinate systems, and they must appear in any triple integral after changing coordinates. Standard 3D coordinate Jacobians:\n\n- **Cylindrical coordinates** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$): $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$.\n- **Spherical coordinates** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$): $J = \\rho^2\\sin\\phi$.\n\nSo the cylindrical Jacobian at $r = 25$ is $25$, and the spherical one at $\\rho = 12$, $\\phi = \\frac{\\pi}{6}$ is $144 \\cdot \\frac{1}{2} = 72$.\n\n> **Watch out.** Cylindrical coordinates only add a straight $z$-direction to polar ones, so the factor stays $r$, not $r^2$. The spherical factor needs both pieces: $\\rho$ squared and $\\sin\\phi$.",
+        "这些因子是坐标系的体积缩放因子，换坐标后的任何三重积分中都必须出现它们。标准三维坐标变换的雅可比行列式：\n\n- **柱坐标** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$)：$J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$。\n- **球坐标** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$)：$J = \\rho^2\\sin\\phi$。\n\n所以柱坐标在 $r = 25$ 处的雅可比行列式为 $25$，球坐标在 $\\rho = 12$，$\\phi = \\frac{\\pi}{6}$ 处的为 $144 \\cdot \\frac{1}{2} = 72$。\n\n> **注意。** 柱坐标只是在极坐标上加了一个直的 $z$ 方向，所以因子仍是 $r$，不是 $r^2$。球坐标的因子两部分都要有：$\\rho$ 的平方和 $\\sin\\phi$。",
       ),
       generate(rng: Rng): Problem {
         const isCylindrical = rng.bool();
         if (isCylindrical) {
           const r = rng.int(2, 20);
-          const ans = Q.of(r);
-          const prompt = t(
-            `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)}$ of the cylindrical coordinate transformation at $r = ${r}$.`,
-            `计算柱坐标变换在 $r = ${r}$ 处的雅可比行列式 $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)}$。`,
-          );
-          const solution = t(
-            steps(`The Jacobian determinant for cylindrical coordinates is $J = r$.`, `Evaluating at $r = ${r}$ yields $J = ${r}$.`),
-            steps(`柱坐标变换的雅可比行列式公式为 $J = r$。`, `在 $r = ${r}$ 处求值得到 $J = ${r}$。`),
-          );
           return numberProblem({
-            prompt,
-            solution,
-            answer: ans,
-            wrong: [Q.of(r * r), Q.of(1), Q.of(r + 1)],
+            prompt: t(
+              `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)}$ of the cylindrical coordinate transformation at $r = ${r}$.`,
+              `计算柱坐标变换在 $r = ${r}$ 处的雅可比行列式 $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)}$。`,
+            ),
+            answer: r,
+            mistakes: distinct(r, [
+              why(
+                r * r,
+                "Only the polar part stretches, by $r$; the $z$-direction adds a factor $1$, not another $r$.",
+                "只有极坐标部分有拉伸，因子是 $r$；$z$ 方向带来的因子是 $1$，不是又一个 $r$。",
+              ),
+              why(
+                1,
+                "$\\cos^2\\theta + \\sin^2\\theta = 1$, but the factor $r$ from the polar part remains.",
+                "$\\cos^2\\theta + \\sin^2\\theta = 1$，但极坐标部分的因子 $r$ 还在。",
+              ),
+            ]),
+            solution: walked(
+              [
+                [
+                  ["Expand along the z-row", "沿 z 所在行展开"],
+                  t(
+                    "The row of $z$ is $(0, 0, 1)$, so $J$ is the polar Jacobian $\\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r$.",
+                    "$z$ 所在的行是 $(0, 0, 1)$，所以 $J$ 就是极坐标的雅可比行列式 $\\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r$。",
+                  ),
+                ],
+                [["Evaluate", "求值"], t(`At $r = ${r}$, $J = ${r}$.`, `在 $r = ${r}$ 处 $J = ${r}$。`)],
+              ],
+              t(
+                `A small box at radius $${r}$ has edges $\\Delta r$, $${r}\\,\\Delta\\theta$ and $\\Delta z$, so its volume is $${r}$ times $\\Delta r\\,\\Delta\\theta\\,\\Delta z$.`,
+                `半径 $${r}$ 处的小块棱长为 $\\Delta r$、$${r}\\,\\Delta\\theta$ 和 $\\Delta z$，所以体积是 $\\Delta r\\,\\Delta\\theta\\,\\Delta z$ 的 $${r}$ 倍。`,
+              ),
+            ),
           });
         }
-
         const rho = rng.int(2, 10);
-        // At phi = pi/2: sin(pi/2) = 1 => J = rho^2
-        // At phi = pi/6: sin(pi/6) = 1/2 => J = rho^2 / 2
         const atHalf = rng.bool();
         const phiText = atHalf ? "\\frac{\\pi}{2}" : "\\frac{\\pi}{6}";
         const sinVal = atHalf ? Q.of(1) : Q.of(1, 2);
         const ans = sinVal.mul(Q.of(rho * rho));
-
-        const prompt = t(
-          `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\phi)}$ of the spherical coordinate transformation at $\\rho = ${rho}$ and $\\phi = ${phiText}$.`,
-          `计算球坐标变换在 $\\rho = ${rho}$ 与 $\\phi = ${phiText}$ 处的雅可比行列式 $J = \\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\phi)}$。`,
-        );
-        const solution = t(
-          steps(
-            `The Jacobian determinant for spherical coordinates is $J = \\rho^2 \\sin\\phi$.`,
-            `Substitute $\\rho = ${rho}$ and $\\phi = ${phiText}$:\n\n` +
-              `$$J = (${rho})^2 \\sin\\left(${phiText}\\right) = ${rho * rho}\\left(${sinVal.toLatex()}\\right) = ${ans.toLatex()}.$$`,
-          ),
-          steps(
-            `球坐标变换的雅可比行列式公式为 $J = \\rho^2 \\sin\\phi$。`,
-            `代入 $\\rho = ${rho}$ 和 $\\phi = ${phiText}$：\n\n` +
-              `$$J = (${rho})^2 \\sin\\left(${phiText}\\right) = ${rho * rho}\\left(${sinVal.toLatex()}\\right) = ${ans.toLatex()}$$`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the Jacobian determinant $J = \\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\phi)}$ of the spherical coordinate transformation at $\\rho = ${rho}$ and $\\phi = ${phiText}$.`,
+            `计算球坐标变换在 $\\rho = ${rho}$ 与 $\\phi = ${phiText}$ 处的雅可比行列式 $J = \\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\phi)}$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(rho * rho), ans.mul(Q.of(2)), Q.of(rho)],
+          mistakes: distinct(ans, [
+            why(rho * rho, `The factor $\\sin\\phi = ${sinVal.toLatex()}$ is missing.`, `漏掉了因子 $\\sin\\phi = ${sinVal.toLatex()}$。`),
+            why(rho, "$\\rho$ is squared in the spherical factor.", "球坐标的因子中 $\\rho$ 要平方。"),
+            atHalf
+              ? why(
+                  0,
+                  "That uses $\\cos\\phi$, which is $0$ at $\\frac{\\pi}{2}$; the factor is $\\sin\\phi = 1$.",
+                  "那用的是 $\\cos\\phi$，它在 $\\frac{\\pi}{2}$ 处为 $0$；因子是 $\\sin\\phi = 1$。",
+                )
+              : why(
+                  ans.mul(Q.of(4)),
+                  `That divides by $\\sin\\phi$ instead of multiplying: $\\sin ${phiText} = \\frac{1}{2}$, so the factor halves $\\rho^2$.`,
+                  `那是除以 $\\sin\\phi$ 而不是乘：$\\sin ${phiText} = \\frac{1}{2}$，所以要把 $\\rho^2$ 减半。`,
+                ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Recall the factor", "写出因子"],
+                t("For spherical coordinates $J = \\rho^2\\sin\\phi$.", "球坐标的 $J = \\rho^2\\sin\\phi$。"),
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$J = ${rho}^2 \\sin ${phiText} = ${rho * rho} \\cdot ${sinVal.toLatex()} = ${ans.toLatex()}$.`,
+                  `$J = ${rho}^2 \\sin ${phiText} = ${rho * rho} \\cdot ${sinVal.toLatex()} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `A small box there has edges $\\Delta\\rho$, $${rho}\\,\\Delta\\phi$ and $${rho} \\cdot ${sinVal.toLatex()}\\,\\Delta\\theta$, whose product is $${ans.toLatex()}\\,\\Delta\\rho\\,\\Delta\\theta\\,\\Delta\\phi$.`,
+              `那里的小块棱长为 $\\Delta\\rho$、$${rho}\\,\\Delta\\phi$ 和 $${rho} \\cdot ${sinVal.toLatex()}\\,\\Delta\\theta$，乘积为 $${ans.toLatex()}\\,\\Delta\\rho\\,\\Delta\\theta\\,\\Delta\\phi$。`,
+            ),
+          ),
         });
       },
     },
@@ -5763,8 +6377,8 @@ export const theJacobianOfAThreeDimensionalTransformation: TopicDef = {
       id: "the-spherical-coordinate-jacobian",
       title: t("The spherical coordinate Jacobian", "球坐标的雅可比行列式"),
       explanation: t(
-        "For spherical coordinates $x = \\rho\\sin\\varphi\\cos\\theta$, $y = \\rho\\sin\\varphi\\sin\\theta$, $z = \\rho\\cos\\varphi$, the absolute value of the Jacobian is\n\n$$\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right| = \\rho^2 \\sin\\varphi.$$\n\nIt does not depend on $\\theta$, because turning about the $z$-axis does not stretch volume. Small boxes far from the origin and near the equator $\\varphi = \\frac{\\pi}{2}$ have the largest volume.",
-        "对球坐标 $x = \\rho\\sin\\varphi\\cos\\theta$，$y = \\rho\\sin\\varphi\\sin\\theta$，$z = \\rho\\cos\\varphi$，雅可比行列式的绝对值为\n\n$$\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right| = \\rho^2 \\sin\\varphi.$$\n\n它与 $\\theta$ 无关，因为绕 $z$ 轴旋转不拉伸体积。离原点远且靠近赤道 $\\varphi = \\frac{\\pi}{2}$ 的小块体积最大。",
+        "For spherical coordinates $x = \\rho\\sin\\varphi\\cos\\theta$, $y = \\rho\\sin\\varphi\\sin\\theta$, $z = \\rho\\cos\\varphi$, the absolute value of the Jacobian is\n\n$$\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right| = \\rho^2 \\sin\\varphi.$$\n\nIt does not depend on $\\theta$, because turning about the $z$-axis does not stretch volume. Small boxes far from the origin and near the equator $\\varphi = \\frac{\\pi}{2}$ have the largest volume. At $\\rho = 10$, $\\theta = \\frac{\\pi}{4}$, $\\varphi = \\frac{\\pi}{6}$ it is $100 \\cdot \\frac{1}{2} = 50$.\n\n> **Watch out.** The angle $\\theta$ plays no part, so do not try to use it. And $\\sin\\varphi$ is positive for every $\\varphi$ between $0$ and $\\pi$, including the southern half.",
+        "对球坐标 $x = \\rho\\sin\\varphi\\cos\\theta$，$y = \\rho\\sin\\varphi\\sin\\theta$，$z = \\rho\\cos\\varphi$，雅可比行列式的绝对值为\n\n$$\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right| = \\rho^2 \\sin\\varphi.$$\n\n它与 $\\theta$ 无关，因为绕 $z$ 轴旋转不拉伸体积。离原点远且靠近赤道 $\\varphi = \\frac{\\pi}{2}$ 的小块体积最大。在 $\\rho = 10$，$\\theta = \\frac{\\pi}{4}$，$\\varphi = \\frac{\\pi}{6}$ 处，它等于 $100 \\cdot \\frac{1}{2} = 50$。\n\n> **注意。** 角 $\\theta$ 不起作用，不要用它。对 $0$ 到 $\\pi$ 之间的每个 $\\varphi$，包括南半部分，$\\sin\\varphi$ 都是正的。",
       ),
       generate(rng: Rng): Problem {
         const r = rng.int(1, 8);
@@ -5781,10 +6395,36 @@ export const theJacobianOfAThreeDimensionalTransformation: TopicDef = {
             `求球坐标在 $\\rho = ${r}$，$\\theta = ${theta}$，$\\varphi = ${phi}$ 处的 $\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right|$。`,
           ),
           answer: ans,
-          wrong: [s.mul(Q.of(r)), Q.of(r * r), s.mul(Q.of(r * r * r))],
-          solution: t(
-            `$\\rho^2 \\sin\\varphi = ${r * r} \\sin ${phi} = ${ans.toLatex()}$; the value of $\\theta$ does not matter.`,
-            `$\\rho^2 \\sin\\varphi = ${r * r} \\sin ${phi} = ${ans.toLatex()}$；$\\theta$ 的值不影响结果。`,
+          mistakes: distinct(ans, [
+            why(
+              s.mul(Q.of(r)),
+              "$\\rho$ appears squared: two of the box's edges grow with $\\rho$.",
+              "$\\rho$ 要平方：小块有两条棱随 $\\rho$ 增长。",
+            ),
+            why(Q.of(r * r), `The factor $\\sin ${phi} = ${s.toLatex()}$ is missing.`, `漏掉了因子 $\\sin ${phi} = ${s.toLatex()}$。`),
+            why(s.mul(Q.of(r * r * r)), "That is $\\rho^3$; the factor is $\\rho^2$.", "那是 $\\rho^3$；因子是 $\\rho^2$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Drop theta", "去掉 θ"],
+                t(
+                  `$\\rho^2\\sin\\varphi$ does not involve $\\theta$, so $\\theta = ${theta}$ is not needed.`,
+                  `$\\rho^2\\sin\\varphi$ 不含 $\\theta$，所以不需要 $\\theta = ${theta}$。`,
+                ),
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$\\rho^2 \\sin\\varphi = ${r * r} \\sin ${phi} = ${r * r} \\cdot ${s.toLatex()} = ${ans.toLatex()}$.`,
+                  `$\\rho^2 \\sin\\varphi = ${r * r} \\sin ${phi} = ${r * r} \\cdot ${s.toLatex()} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The small box has edges $\\Delta\\rho$, $${r}\\,\\Delta\\varphi$ and $${r} \\cdot ${s.toLatex()}\\,\\Delta\\theta$, whose product is $${ans.toLatex()}\\,\\Delta\\rho\\,\\Delta\\theta\\,\\Delta\\varphi$.`,
+              `小块的棱长为 $\\Delta\\rho$、$${r}\\,\\Delta\\varphi$ 和 $${r} \\cdot ${s.toLatex()}\\,\\Delta\\theta$，乘积为 $${ans.toLatex()}\\,\\Delta\\rho\\,\\Delta\\theta\\,\\Delta\\varphi$。`,
+            ),
           ),
         });
       },
@@ -5800,6 +6440,10 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
     "The derivative of a vector-valued multivariable function F: Rⁿ → Rᵐ is represented by its m × n Jacobian matrix of partial derivatives.",
     "向量值多元函数 F: Rⁿ → Rᵐ 的导数由其包含各偏导数的 m × n 雅可比矩阵表示。",
   ),
+  intro: t(
+    "For $\\mathbf{F}(x, y) = (x^2 y,\\ x + 3y)$ the derivative matrix is $D\\mathbf{F} = \\begin{pmatrix} 2xy & x^2 \\\\ 1 & 3 \\end{pmatrix}$, which at $(2, 1)$ is $\\begin{pmatrix} 4 & 4 \\\\ 1 & 3 \\end{pmatrix}$. Moving $x$ by $0.01$ changes $\\mathbf{F}$ by about $0.01 \\cdot (4, 1) = (0.04, 0.01)$, the first column.\n\nCheck: $\\mathbf{F}(2.01, 1) = (4.0401,\\ 5.01)$, and $\\mathbf{F}(2, 1) + (0.04, 0.01) = (4.04,\\ 5.01)$ is within $0.0001$ of it.\n\nIn this lesson we compute the entries of derivative matrices and use them to approximate vector functions.",
+    "对 $\\mathbf{F}(x, y) = (x^2 y,\\ x + 3y)$，导数矩阵为 $D\\mathbf{F} = \\begin{pmatrix} 2xy & x^2 \\\\ 1 & 3 \\end{pmatrix}$，在 $(2, 1)$ 处为 $\\begin{pmatrix} 4 & 4 \\\\ 1 & 3 \\end{pmatrix}$。$x$ 增加 $0.01$ 时，$\\mathbf{F}$ 大约改变 $0.01 \\cdot (4, 1) = (0.04, 0.01)$，即第一列。\n\n检验：$\\mathbf{F}(2.01, 1) = (4.0401,\\ 5.01)$，而 $\\mathbf{F}(2, 1) + (0.04, 0.01) = (4.04,\\ 5.01)$，与它相差不超过 $0.0001$。\n\n本课我们计算导数矩阵的元素，并用它近似向量函数。",
+  ),
   prerequisites: ["the-jacobian"],
   encompasses: [{ topic: "the-jacobian", weight: 0.3 }],
   xp: 10,
@@ -5808,40 +6452,57 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
       id: "evaluating-jacobian-matrix-entries",
       title: t("Evaluating Jacobian matrix entries", "计算雅可比矩阵的元素"),
       explanation: t(
-        "Each row of the Jacobian matrix holds the partial derivatives of one component, so it plays the role of the derivative for a function with vector outputs. For $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$, the derivative is the $2 \\times 2$ Jacobian matrix:\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}.$$",
-        "雅可比矩阵的每一行是一个分量的偏导数，所以它对输出为向量的函数起着导数的作用。对于 $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$，其导数为 $2 \\times 2$ 雅可比矩阵：\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}$$",
+        "Each row of the Jacobian matrix holds the partial derivatives of one component, so it plays the role of the derivative for a function with vector outputs. For $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$, the derivative is the $2 \\times 2$ Jacobian matrix:\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}.$$\n\nFor $\\mathbf{F} = \\langle 5x^2 - y^2, 2xy \\rangle$ at $(4, 1)$, the $(1, 1)$-entry is $\\frac{\\partial f_1}{\\partial x} = 10x = 40$.\n\n> **Watch out.** The row names the component and the column names the variable: the $(1, 2)$-entry is $\\frac{\\partial f_1}{\\partial y}$ and the $(2, 1)$-entry is $\\frac{\\partial f_2}{\\partial x}$.",
+        "雅可比矩阵的每一行是一个分量的偏导数，所以它对输出为向量的函数起着导数的作用。对于 $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$，其导数为 $2 \\times 2$ 雅可比矩阵：\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}.$$\n\n对 $\\mathbf{F} = \\langle 5x^2 - y^2, 2xy \\rangle$ 在 $(4, 1)$ 处，$(1, 1)$ 位置元素为 $\\frac{\\partial f_1}{\\partial x} = 10x = 40$。\n\n> **注意。** 行对应分量，列对应变量：$(1, 2)$ 位置元素是 $\\frac{\\partial f_1}{\\partial y}$，$(2, 1)$ 位置元素是 $\\frac{\\partial f_2}{\\partial x}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const x0 = rng.nonZero(-2, 3);
         const y0 = rng.nonZero(-2, 3);
-
-        // f1 = a * x^2 + b * y^2, f2 = 2 * x * y
-        // Entry (1, 1): df1/dx = 2a*x0
         const ans = 2 * a * x0;
-
-        const prompt = t(
-          `For $\\mathbf{F}(x, y) = \\left\\langle ${poly([a, "x^2"], [b, "y^2"])}, 2xy \\right\\rangle$, compute the $(1, 1)$-entry $\\frac{\\partial f_1}{\\partial x}$ of the Jacobian matrix $D\\mathbf{F}(${x0}, ${y0})$.`,
-          `对于 $\\mathbf{F}(x, y) = \\left\\langle ${poly([a, "x^2"], [b, "y^2"])}, 2xy \\right\\rangle$，计算雅可比矩阵 $D\\mathbf{F}(${x0}, ${y0})$ 的 $(1, 1)$ 位置元素 $\\frac{\\partial f_1}{\\partial x}$。`,
-        );
-        const solution = t(
-          steps(
-            `The first component is $f_1(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$.`,
-            `Differentiate with respect to $x$: $\\frac{\\partial f_1}{\\partial x} = ${2 * a}x$.`,
-            `Evaluate at $x = ${x0}$: $\\frac{\\partial f_1}{\\partial x}(${x0}, ${y0}) = ${2 * a}(${x0}) = ${ans}$.`,
-          ),
-          steps(
-            `第一分量为 $f_1(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$。`,
-            `对 $x$ 求偏导：$\\frac{\\partial f_1}{\\partial x} = ${2 * a}x$。`,
-            `在 $x = ${x0}$ 处求值：$\\frac{\\partial f_1}{\\partial x}(${x0}, ${y0}) = ${2 * a}(${x0}) = ${ans}$。`,
-          ),
-        );
+        const f1 = (x: number) => a * x * x + b * y0 * y0;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `For $\\mathbf{F}(x, y) = \\left\\langle ${poly([a, "x^2"], [b, "y^2"])}, 2xy \\right\\rangle$, compute the $(1, 1)$-entry $\\frac{\\partial f_1}{\\partial x}$ of the Jacobian matrix $D\\mathbf{F}(${x0}, ${y0})$.`,
+            `对于 $\\mathbf{F}(x, y) = \\left\\langle ${poly([a, "x^2"], [b, "y^2"])}, 2xy \\right\\rangle$，计算雅可比矩阵 $D\\mathbf{F}(${x0}, ${y0})$ 的 $(1, 1)$ 位置元素 $\\frac{\\partial f_1}{\\partial x}$。`,
+          ),
           answer: ans,
-          wrong: [2 * b * y0, a * x0, -ans],
+          mistakes: distinct(ans, [
+            why(
+              2 * b * y0,
+              "That is $\\frac{\\partial f_1}{\\partial y}$, the $(1, 2)$-entry.",
+              "那是 $\\frac{\\partial f_1}{\\partial y}$，即 $(1, 2)$ 位置元素。",
+            ),
+            why(
+              2 * y0,
+              "That is $\\frac{\\partial f_2}{\\partial x} = 2y$, the $(2, 1)$-entry.",
+              "那是 $\\frac{\\partial f_2}{\\partial x} = 2y$，即 $(2, 1)$ 位置元素。",
+            ),
+            why(a * x0, "The derivative of $x^2$ is $2x$; the factor $2$ is missing.", "$x^2$ 的导数是 $2x$；漏掉了因子 $2$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Pick the entry", "确定元素"],
+                t(
+                  `Row $1$ is $f_1 = ${poly([a, "x^2"], [b, "y^2"])}$, and column $1$ means differentiating by $x$.`,
+                  `第 $1$ 行是 $f_1 = ${poly([a, "x^2"], [b, "y^2"])}$，第 $1$ 列表示对 $x$ 求导。`,
+                ),
+              ],
+              [
+                ["Differentiate and evaluate", "求导并求值"],
+                t(
+                  `$\\frac{\\partial f_1}{\\partial x} = ${2 * a}x$, which at $x = ${x0}$ is $${2 * a} \\cdot ${paren(x0)} = ${ans}$.`,
+                  `$\\frac{\\partial f_1}{\\partial x} = ${2 * a}x$，在 $x = ${x0}$ 处为 $${2 * a} \\cdot ${paren(x0)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `For a quadratic the central difference is exact: $\\frac{f_1(${x0 + 1}, ${y0}) - f_1(${x0 - 1}, ${y0})}{2} = \\frac{${f1(x0 + 1)} - ${paren(f1(x0 - 1))}}{2} = ${ans}$.`,
+              `对二次函数，中心差分是精确的：$\\frac{f_1(${x0 + 1}, ${y0}) - f_1(${x0 - 1}, ${y0})}{2} = \\frac{${f1(x0 + 1)} - ${paren(f1(x0 - 1))}}{2} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -5849,8 +6510,8 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
       id: "approximating-a-vector-function-with-its-derivative-matrix",
       title: t("Approximating a vector function with its derivative matrix", "用导数矩阵近似向量函数"),
       explanation: t(
-        "The derivative of $\\mathbf{F}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ at $\\mathbf{a}$ is its Jacobian matrix $D\\mathbf{F}(\\mathbf{a})$, the best linear approximation of the change in $\\mathbf{F}$:\n\n$$\\mathbf{F}(\\mathbf{a} + \\mathbf{h}) \\approx \\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}(\\mathbf{a})\\,\\mathbf{h}.$$\n\nEach row of the matrix is the gradient of one component, so each component is approximated by its own linearization.",
-        "$\\mathbf{F}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 在 $\\mathbf{a}$ 处的导数是其雅可比矩阵 $D\\mathbf{F}(\\mathbf{a})$，即 $\\mathbf{F}$ 的变化量的最佳线性近似：\n\n$$\\mathbf{F}(\\mathbf{a} + \\mathbf{h}) \\approx \\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}(\\mathbf{a})\\,\\mathbf{h}.$$\n\n矩阵的每一行是一个分量的梯度，所以每个分量都用自己的线性化来近似。",
+        "The derivative of $\\mathbf{F}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ at $\\mathbf{a}$ is its Jacobian matrix $D\\mathbf{F}(\\mathbf{a})$, the best linear approximation of the change in $\\mathbf{F}$:\n\n$$\\mathbf{F}(\\mathbf{a} + \\mathbf{h}) \\approx \\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}(\\mathbf{a})\\,\\mathbf{h}.$$\n\nEach row of the matrix is the gradient of one component, so each component is approximated by its own linearization. For $\\mathbf{F}(x, y) = (xy, x^2 + 5y)$ at $(1, 1)$, $\\mathbf{F} = (1, 6)$ and $D\\mathbf{F} = \\begin{pmatrix} 1 & 1 \\\\ 2 & 5 \\end{pmatrix}$, so with $\\mathbf{h} = (0.1, -0.1)$, $\\mathbf{F}(1.1, 0.9) \\approx (1 + 0.1 - 0.1,\\ 6 + 0.2 - 0.5) = (1, 5.7)$.\n\n> **Watch out.** Multiply row by column: the first row pairs with $h_1$ and $h_2$ in order to give the first component. And add $D\\mathbf{F}\\,\\mathbf{h}$ to $\\mathbf{F}(\\mathbf{a})$; it is only the change.",
+        "$\\mathbf{F}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 在 $\\mathbf{a}$ 处的导数是其雅可比矩阵 $D\\mathbf{F}(\\mathbf{a})$，即 $\\mathbf{F}$ 的变化量的最佳线性近似：\n\n$$\\mathbf{F}(\\mathbf{a} + \\mathbf{h}) \\approx \\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}(\\mathbf{a})\\,\\mathbf{h}.$$\n\n矩阵的每一行是一个分量的梯度，所以每个分量都用自己的线性化来近似。对 $\\mathbf{F}(x, y) = (xy, x^2 + 5y)$ 在 $(1, 1)$ 处，$\\mathbf{F} = (1, 6)$，$D\\mathbf{F} = \\begin{pmatrix} 1 & 1 \\\\ 2 & 5 \\end{pmatrix}$，取 $\\mathbf{h} = (0.1, -0.1)$，得 $\\mathbf{F}(1.1, 0.9) \\approx (1 + 0.1 - 0.1,\\ 6 + 0.2 - 0.5) = (1, 5.7)$。\n\n> **注意。** 按行乘列：第一行依次与 $h_1$、$h_2$ 相乘，得到第一个分量。还要把 $D\\mathbf{F}\\,\\mathbf{h}$ 加到 $\\mathbf{F}(\\mathbf{a})$ 上；它只是变化量。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(-3, 3) || 2;
@@ -5858,32 +6519,68 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
         const q = rng.int(-3, 3) || 2;
         const h1 = Q.of(rng.int(1, 3) * rng.pick([-1, 1]), 10);
         const h2 = Q.of(rng.int(-3, 3), 10);
-        const F = [p * q, p * p + c * q];
-        const D = [
-          [q, p],
-          [2 * p, c],
-        ] as const;
-        const a1 = Q.of(F[0]!).add(Q.of(D[0][0]).mul(h1)).add(Q.of(D[0][1]).mul(h2));
-        const a2 = Q.of(F[1]!).add(Q.of(D[1][0]).mul(h1)).add(Q.of(D[1][1]).mul(h2));
+        const F0 = p * q;
+        const F1 = p * p + c * q;
+        const d1 = Q.of(q).mul(h1).add(Q.of(p).mul(h2));
+        const d2 = Q.of(2 * p)
+          .mul(h1)
+          .add(Q.of(c).mul(h2));
+        const a1 = Q.of(F0).add(d1);
+        const a2 = Q.of(F1).add(d2);
         const dec = (v: Q): string => String(v.toNumber());
         const x = Q.of(p).add(h1);
         const y = Q.of(q).add(h2);
-        return pointProblem({
-          prompt: t(
-            `Let $\\mathbf{F}(x, y) = (xy, ${poly([1, "x^2"], [c, "y"])})$. Use $D\\mathbf{F}(${p}, ${q})$ to approximate $\\mathbf{F}(${dec(x)}, ${dec(y)})$.`,
-            `设 $\\mathbf{F}(x, y) = (xy, ${poly([1, "x^2"], [c, "y"])})$。用 $D\\mathbf{F}(${p}, ${q})$ 近似 $\\mathbf{F}(${dec(x)}, ${dec(y)})$。`,
-          ),
-          answer: [a1, a2],
-          vars: ["u", "v"],
-          wrong: [
-            [Q.of(F[0]!), Q.of(F[1]!)],
-            [Q.of(F[0]!).add(Q.of(D[0][1]).mul(h1)).add(Q.of(D[0][0]).mul(h2)), a2],
+        const e1 = x.mul(y);
+        const e2 = x.mul(x).add(Q.of(c).mul(y));
+        return pointWith(
+          {
+            prompt: t(
+              `Let $\\mathbf{F}(x, y) = (xy, ${poly([1, "x^2"], [c, "y"])})$. Use $D\\mathbf{F}(${p}, ${q})$ to approximate $\\mathbf{F}(${dec(x)}, ${dec(y)})$.`,
+              `设 $\\mathbf{F}(x, y) = (xy, ${poly([1, "x^2"], [c, "y"])})$。用 $D\\mathbf{F}(${p}, ${q})$ 近似 $\\mathbf{F}(${dec(x)}, ${dec(y)})$。`,
+            ),
+            answer: [a1, a2],
+            vars: ["u", "v"],
+            solution: walked(
+              [
+                [
+                  ["Evaluate F and DF", "求 F 与 DF"],
+                  t(
+                    `$\\mathbf{F}(${p}, ${q}) = (${F0}, ${F1})$ and $D\\mathbf{F} = \\begin{pmatrix} y & x \\\\ 2x & ${c} \\end{pmatrix} = \\begin{pmatrix} ${q} & ${p} \\\\ ${2 * p} & ${c} \\end{pmatrix}$.`,
+                    `$\\mathbf{F}(${p}, ${q}) = (${F0}, ${F1})$，$D\\mathbf{F} = \\begin{pmatrix} y & x \\\\ 2x & ${c} \\end{pmatrix} = \\begin{pmatrix} ${q} & ${p} \\\\ ${2 * p} & ${c} \\end{pmatrix}$。`,
+                  ),
+                ],
+                [
+                  ["Multiply by h", "乘以 h"],
+                  t(
+                    `With $\\mathbf{h} = (${dec(h1)}, ${dec(h2)})$, $D\\mathbf{F}\\,\\mathbf{h} = (${dec(d1)}, ${dec(d2)})$, so $\\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}\\,\\mathbf{h} = (${dec(a1)}, ${dec(a2)})$.`,
+                    `取 $\\mathbf{h} = (${dec(h1)}, ${dec(h2)})$，$D\\mathbf{F}\\,\\mathbf{h} = (${dec(d1)}, ${dec(d2)})$，所以 $\\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}\\,\\mathbf{h} = (${dec(a1)}, ${dec(a2)})$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The exact value is $\\mathbf{F}(${dec(x)}, ${dec(y)}) = (${dec(e1)}, ${dec(e2)})$; the differences $h_1 h_2 = ${dec(e1.sub(a1))}$ and $h_1^2 = ${dec(e2.sub(a2))}$ are of second order, as they should be.`,
+                `精确值为 $\\mathbf{F}(${dec(x)}, ${dec(y)}) = (${dec(e1)}, ${dec(e2)})$；差 $h_1 h_2 = ${dec(e1.sub(a1))}$ 与 $h_1^2 = ${dec(e2.sub(a2))}$ 是二阶小量，正应如此。`,
+              ),
+            ),
+          },
+          [
+            [
+              [Q.of(F0), Q.of(F1)],
+              "That is $\\mathbf{F}(\\mathbf{a})$ alone; add the change $D\\mathbf{F}\\,\\mathbf{h}$.",
+              "那只是 $\\mathbf{F}(\\mathbf{a})$；还要加上变化量 $D\\mathbf{F}\\,\\mathbf{h}$。",
+            ],
+            [
+              [d1, d2],
+              "That is only the change $D\\mathbf{F}\\,\\mathbf{h}$; add it to $\\mathbf{F}(\\mathbf{a})$.",
+              "那只是变化量 $D\\mathbf{F}\\,\\mathbf{h}$；要把它加到 $\\mathbf{F}(\\mathbf{a})$ 上。",
+            ],
+            [
+              [Q.of(F0).add(Q.of(p).mul(h1)).add(Q.of(q).mul(h2)), a2],
+              "In the first component the entries of the row are paired with the wrong components of $\\mathbf{h}$.",
+              "第一个分量中，行的元素与 $\\mathbf{h}$ 的分量配错了。",
+            ],
           ],
-          solution: t(
-            `$\\mathbf{F}(${p}, ${q}) = (${F[0]}, ${F[1]})$ and $D\\mathbf{F} = \\begin{pmatrix} ${q} & ${p} \\\\ ${2 * p} & ${c} \\end{pmatrix}$. With $\\mathbf{h} = (${dec(h1)}, ${dec(h2)})$, $\\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}\\,\\mathbf{h} = (${dec(a1)}, ${dec(a2)})$.`,
-            `$\\mathbf{F}(${p}, ${q}) = (${F[0]}, ${F[1]})$，$D\\mathbf{F} = \\begin{pmatrix} ${q} & ${p} \\\\ ${2 * p} & ${c} \\end{pmatrix}$。取 $\\mathbf{h} = (${dec(h1)}, ${dec(h2)})$，$\\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}\\,\\mathbf{h} = (${dec(a1)}, ${dec(a2)})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -5897,6 +6594,10 @@ export const theSecondDerivativeOfAMultivariableFunction: TopicDef = {
     "The second derivative of a scalar function f is represented by the symmetric Hessian matrix of second partial derivatives.",
     "标量函数 f 的二阶导数由其二阶偏导数构成的对称黑塞矩阵（Hessian 矩阵）表示。",
   ),
+  intro: t(
+    "For $f(x, y) = x^3y + y^2$, the second partial derivatives are $f_{xx} = 6xy$, $f_{xy} = 3x^2$ and $f_{yy} = 2$. At $(1, 2)$ the Hessian is $H = \\begin{pmatrix} 12 & 3 \\\\ 3 & 2 \\end{pmatrix}$, with determinant $24 - 9 = 15$.\n\nCheck: differentiating in the other order, $f_y = x^3 + 2y$ and $f_{yx} = 3x^2$, the same as $f_{xy}$, so the matrix is symmetric as it should be.\n\nIn this lesson we compute Hessian matrices, their determinants, and second derivatives in a given direction.",
+    "对 $f(x, y) = x^3y + y^2$，二阶偏导数为 $f_{xx} = 6xy$，$f_{xy} = 3x^2$，$f_{yy} = 2$。在 $(1, 2)$ 处黑塞矩阵为 $H = \\begin{pmatrix} 12 & 3 \\\\ 3 & 2 \\end{pmatrix}$，行列式为 $24 - 9 = 15$。\n\n检验：换一个顺序求导，$f_y = x^3 + 2y$，$f_{yx} = 3x^2$，与 $f_{xy}$ 相同，所以矩阵如应有的那样是对称的。\n\n本课我们计算黑塞矩阵及其行列式，以及沿给定方向的二阶导数。",
+  ),
   prerequisites: ["equality-of-mixed-partial-derivatives", "the-derivative-of-a-multivariable-function"],
   encompasses: [{ topic: "equality-of-mixed-partial-derivatives", weight: 0.3 }],
   xp: 10,
@@ -5905,41 +6606,55 @@ export const theSecondDerivativeOfAMultivariableFunction: TopicDef = {
       id: "computing-hessian-determinants",
       title: t("Computing Hessian determinants", "计算黑塞矩阵行列式"),
       explanation: t(
-        "The Hessian collects the second partial derivatives, and its determinant at a critical point helps decide whether that point is a maximum, a minimum or a saddle. For a scalar function $f(x, y)$, the **Hessian matrix** and its determinant are:\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2.$$",
-        "黑塞矩阵汇集了二阶偏导数，它在临界点处的行列式有助于判断该点是极大值、极小值还是鞍点。对于标量函数 $f(x, y)$，其**黑塞矩阵**及其行列式为：\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2$$",
+        "The Hessian collects the second partial derivatives, and its determinant at a critical point helps decide whether that point is a maximum, a minimum or a saddle. For a scalar function $f(x, y)$, the **Hessian matrix** and its determinant are:\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2.$$\n\nFor $f = 5x^2 - y^2 + 4xy$, $f_{xx} = 10$, $f_{yy} = -2$ and $f_{xy} = 4$, so $D = 10 \\cdot (-2) - 4^2 = -36$.\n\n> **Watch out.** A square term $ax^2$ gives $f_{xx} = 2a$, but a mixed term $cxy$ gives $f_{xy} = c$, with no extra $2$. The square of $f_{xy}$ is subtracted.",
+        "黑塞矩阵汇集了二阶偏导数，它在临界点处的行列式有助于判断该点是极大值、极小值还是鞍点。对于标量函数 $f(x, y)$，其**黑塞矩阵**及其行列式为：\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2.$$\n\n对 $f = 5x^2 - y^2 + 4xy$，$f_{xx} = 10$，$f_{yy} = -2$，$f_{xy} = 4$，所以 $D = 10 \\cdot (-2) - 4^2 = -36$。\n\n> **注意。** 平方项 $ax^2$ 给出 $f_{xx} = 2a$，而混合项 $cxy$ 给出 $f_{xy} = c$，没有多出的 $2$。$f_{xy}$ 的平方是减去的。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.int(-2, 2);
-
-        // f(x, y) = a*x^2 + b*y^2 + c*x*y
-        // f_xx = 2a, f_yy = 2b, f_xy = c
-        // D = (2a)(2b) - c^2 = 4ab - c^2
         const ans = 4 * a * b - c * c;
-
-        const prompt = t(
-          `Calculate the Hessian determinant $D = \\det(H)$ for the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ at any point.`,
-          `计算函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ 的黑塞矩阵行列式 $D = \\det(H)$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute second partial derivatives:\n\n` +
-              `$f_{xx} = 2(${a}) = ${2 * a}$\n\n` +
-              `$f_{yy} = 2(${b}) = ${2 * b}$\n\n` +
-              `$f_{xy} = ${c}$`,
-            `The Hessian determinant is $D = f_{xx}f_{yy} - (f_{xy})^2 = (${2 * a})(${2 * b}) - (${c})^2 = ${4 * a * b} - ${c * c} = ${ans}$.`,
-          ),
-          steps(
-            `计算二阶偏导数：\n\n$f_{xx} = 2(${a}) = ${2 * a}$\n\n$f_{yy} = 2(${b}) = ${2 * b}$\n\n$f_{xy} = ${c}$`,
-            `黑塞矩阵行列式为 $D = f_{xx}f_{yy} - (f_{xy})^2 = (${2 * a})(${2 * b}) - (${c})^2 = ${4 * a * b} - ${c * c} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the Hessian determinant $D = \\det(H)$ for the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ at any point.`,
+            `计算函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ 的黑塞矩阵行列式 $D = \\det(H)$。`,
+          ),
           answer: ans,
-          wrong: [4 * a * b + c * c, 2 * a * b - c, -ans],
+          mistakes: distinct(ans, [
+            why(4 * a * b + c * c, "The square of $f_{xy}$ is subtracted, not added.", "$f_{xy}$ 的平方是减去的，不是加上的。"),
+            why(
+              a * b - c * c,
+              `The second derivative of $${poly([a, "x^2"])}$ is $${2 * a}$, not $${a}$; each square term doubles.`,
+              `$${poly([a, "x^2"])}$ 的二阶导数是 $${2 * a}$，不是 $${a}$；每个平方项都要乘 $2$。`,
+            ),
+            why(
+              4 * a * b - 4 * c * c,
+              `The mixed term $${poly([c, "xy"])}$ gives $f_{xy} = ${c}$, not $${2 * c}$.`,
+              `混合项 $${poly([c, "xy"])}$ 给出 $f_{xy} = ${c}$，不是 $${2 * c}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the second partial derivatives", "求二阶偏导数"],
+                t(
+                  `$f_{xx} = ${2 * a}$, $f_{yy} = ${2 * b}$, $f_{xy} = ${c}$.`,
+                  `$f_{xx} = ${2 * a}$，$f_{yy} = ${2 * b}$，$f_{xy} = ${c}$。`,
+                ),
+              ],
+              [
+                ["Form the determinant", "计算行列式"],
+                t(
+                  `$D = ${2 * a} \\cdot ${paren(2 * b)} - ${paren(c)}^2 = ${4 * a * b} - ${c * c} = ${ans}$.`,
+                  `$D = ${2 * a} \\cdot ${paren(2 * b)} - ${paren(c)}^2 = ${4 * a * b} - ${c * c} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `For a quadratic $ax^2 + cxy + by^2$, $D = 4ab - c^2$ is the negative of the discriminant $c^2 - 4ab$ of $${poly([a, "t^2"], [c, "t"], [b, ""])}$, and $-(${c * c} - ${paren(4 * a * b)}) = ${ans}$.`,
+              `对二次式 $ax^2 + cxy + by^2$，$D = 4ab - c^2$ 等于 $${poly([a, "t^2"], [c, "t"], [b, ""])}$ 的判别式 $c^2 - 4ab$ 的相反数，而 $-(${c * c} - ${paren(4 * a * b)}) = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -5947,8 +6662,8 @@ export const theSecondDerivativeOfAMultivariableFunction: TopicDef = {
       id: "the-second-directional-derivative",
       title: t("The second directional derivative", "二阶方向导数"),
       explanation: t(
-        "The second derivative of $f$ is its Hessian matrix $H$. The second derivative of $f$ in the direction of a unit vector $\\mathbf{u} = (u_1, u_2)$ is\n\n$$D_{\\mathbf{u}}^2 f = \\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = f_{xx}u_1^2 + 2f_{xy}u_1u_2 + f_{yy}u_2^2.$$\n\nIt measures how the surface curves along that direction. The mixed term appears twice because $H$ is symmetric.",
-        "$f$ 的二阶导数是其黑塞矩阵 $H$。$f$ 沿单位向量 $\\mathbf{u} = (u_1, u_2)$ 方向的二阶导数为\n\n$$D_{\\mathbf{u}}^2 f = \\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = f_{xx}u_1^2 + 2f_{xy}u_1u_2 + f_{yy}u_2^2.$$\n\n它衡量曲面沿该方向的弯曲程度。由于 $H$ 是对称的，混合项出现两次。",
+        "The second derivative of $f$ is its Hessian matrix $H$. The second derivative of $f$ in the direction of a unit vector $\\mathbf{u} = (u_1, u_2)$ is\n\n$$D_{\\mathbf{u}}^2 f = \\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = f_{xx}u_1^2 + 2f_{xy}u_1u_2 + f_{yy}u_2^2.$$\n\nIt measures how the surface curves along that direction. The mixed term appears twice because $H$ is symmetric. For $f = x^2 + 6xy + y^2$ along $\\mathbf{u} = \\left(\\frac{1}{\\sqrt{2}}, \\frac{1}{\\sqrt{2}}\\right)$, it is $2 \\cdot \\frac{1}{2} + 2 \\cdot 6 \\cdot \\frac{1}{2} + 2 \\cdot \\frac{1}{2} = 8$.\n\n> **Watch out.** Count the mixed term twice, $2f_{xy}u_1u_2$. The components of $\\mathbf{u}$ are squared, so a denominator $w$ becomes $w^2$.",
+        "$f$ 的二阶导数是其黑塞矩阵 $H$。$f$ 沿单位向量 $\\mathbf{u} = (u_1, u_2)$ 方向的二阶导数为\n\n$$D_{\\mathbf{u}}^2 f = \\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = f_{xx}u_1^2 + 2f_{xy}u_1u_2 + f_{yy}u_2^2.$$\n\n它衡量曲面沿该方向的弯曲程度。由于 $H$ 是对称的，混合项出现两次。对 $f = x^2 + 6xy + y^2$ 沿 $\\mathbf{u} = \\left(\\frac{1}{\\sqrt{2}}, \\frac{1}{\\sqrt{2}}\\right)$，它等于 $2 \\cdot \\frac{1}{2} + 2 \\cdot 6 \\cdot \\frac{1}{2} + 2 \\cdot \\frac{1}{2} = 8$。\n\n> **注意。** 混合项要算两次，即 $2f_{xy}u_1u_2$。$\\mathbf{u}$ 的分量要平方，所以分母 $w$ 变成 $w^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
@@ -5958,20 +6673,51 @@ export const theSecondDerivativeOfAMultivariableFunction: TopicDef = {
         const u = u0 * rng.pick([-1, 1]);
         const v = v0;
         const ans = Q.of(2 * a * u * u + 2 * b * u * v + 2 * c * v * v, w * w);
+        const along = Q.of(a * u * u + b * u * v + c * v * v, w * w);
         return numberProblem({
           prompt: t(
             `Find the second directional derivative of $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ in the direction of $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$.`,
             `求 $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ 沿 $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$ 方向的二阶方向导数。`,
           ),
           answer: ans,
-          wrong: [
-            Q.of(2 * a * u * u + b * u * v + 2 * c * v * v, w * w),
-            Q.of(2 * a * u * u + 2 * b * u * v + 2 * c * v * v, w),
-            Q.of(2 * a + 2 * c),
-          ],
-          solution: t(
-            `$H = \\begin{pmatrix} ${2 * a} & ${b} \\\\ ${b} & ${2 * c} \\end{pmatrix}$, so $\\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = \\frac{${2 * a} \\cdot ${u * u} + 2 \\cdot ${paren(b)} \\cdot ${paren(u * v)} + ${paren(2 * c)} \\cdot ${v * v}}{${w * w}} = ${ans.toLatex()}$.`,
-            `$H = \\begin{pmatrix} ${2 * a} & ${b} \\\\ ${b} & ${2 * c} \\end{pmatrix}$，所以 $\\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = \\frac{${2 * a} \\cdot ${u * u} + 2 \\cdot ${paren(b)} \\cdot ${paren(u * v)} + ${paren(2 * c)} \\cdot ${v * v}}{${w * w}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(2 * a * u * u + b * u * v + 2 * c * v * v, w * w),
+              "The mixed term counts twice: $2f_{xy}u_1u_2$.",
+              "混合项要算两次：$2f_{xy}u_1u_2$。",
+            ),
+            why(
+              Q.of(2 * a * u * u + 2 * b * u * v + 2 * c * v * v, w),
+              `The components are squared, so the denominator is $${w}^2 = ${w * w}$, not $${w}$.`,
+              `分量要平方，所以分母是 $${w}^2 = ${w * w}$，不是 $${w}$。`,
+            ),
+            why(
+              Q.of(2 * a + 2 * c),
+              "$f_{xx} + f_{yy}$ ignores the direction; weight each entry by the components of $\\mathbf{u}$.",
+              "$f_{xx} + f_{yy}$ 没有考虑方向；每个元素都要按 $\\mathbf{u}$ 的分量加权。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the Hessian", "写出黑塞矩阵"],
+                t(
+                  `$H = \\begin{pmatrix} ${2 * a} & ${b} \\\\ ${b} & ${2 * c} \\end{pmatrix}$.`,
+                  `$H = \\begin{pmatrix} ${2 * a} & ${b} \\\\ ${b} & ${2 * c} \\end{pmatrix}$。`,
+                ),
+              ],
+              [
+                ["Sandwich it", "两边乘以 u"],
+                t(
+                  `$\\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = \\frac{${2 * a} \\cdot ${u * u} + 2 \\cdot ${paren(b)} \\cdot ${paren(u * v)} + ${paren(2 * c)} \\cdot ${v * v}}{${w * w}} = ${ans.toLatex()}$.`,
+                  `$\\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = \\frac{${2 * a} \\cdot ${u * u} + 2 \\cdot ${paren(b)} \\cdot ${paren(u * v)} + ${paren(2 * c)} \\cdot ${v * v}}{${w * w}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Along the line $t\\mathbf{u}$, $f = ${along.toLatex()}\\,t^2$, and the second derivative of that in $t$ is $2 \\cdot ${paren(along)} = ${ans.toLatex()}$.`,
+              `沿直线 $t\\mathbf{u}$，$f = ${along.toLatex()}\\,t^2$，它对 $t$ 的二阶导数是 $2 \\cdot ${paren(along)} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -5987,6 +6733,10 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
     "The second-degree Taylor polynomial centered at (0, 0) is P2(x, y) = f(0, 0) + fx x + fy y + ½(fxx x² + 2fxy xy + fyy y²).",
     "在 (0, 0) 展开的二阶泰勒多项式为 P2(x, y) = f(0, 0) + fx x + fy y + ½(fxx x² + 2fxy xy + fyy y²)。",
   ),
+  intro: t(
+    "For $f(x, y) = e^y \\sin x$, multiplying the series $\\sin x \\approx x$ and $e^y \\approx 1 + y + \\frac{y^2}{2}$ and keeping terms of degree at most $2$ gives $P_2(x, y) = x + xy$.\n\nCheck: from the derivatives at $(0, 0)$, $f = 0$, $f_x = \\cos 0 \\cdot e^0 = 1$, $f_y = 0$, $f_{xx} = -\\sin 0 \\cdot e^0 = 0$, $f_{xy} = \\cos 0 \\cdot e^0 = 1$ and $f_{yy} = 0$, so the formula gives $x + 1 \\cdot xy$ as well.\n\nIn this lesson we build second-degree Taylor polynomials of functions of two variables and read off their coefficients.",
+    "对 $f(x, y) = e^y \\sin x$，把级数 $\\sin x \\approx x$ 与 $e^y \\approx 1 + y + \\frac{y^2}{2}$ 相乘，保留次数不超过 $2$ 的项，得 $P_2(x, y) = x + xy$。\n\n检验：由 $(0, 0)$ 处的导数，$f = 0$，$f_x = \\cos 0 \\cdot e^0 = 1$，$f_y = 0$，$f_{xx} = -\\sin 0 \\cdot e^0 = 0$，$f_{xy} = \\cos 0 \\cdot e^0 = 1$，$f_{yy} = 0$，所以公式同样给出 $x + 1 \\cdot xy$。\n\n本课我们构造二元函数的二阶泰勒多项式，并读出它的系数。",
+  ),
   prerequisites: ["the-second-derivative-of-a-multivariable-function"],
   encompasses: [{ topic: "the-second-derivative-of-a-multivariable-function", weight: 0.3 }],
   xp: 10,
@@ -5995,41 +6745,60 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
       id: "constructing-multivariable-taylor-polynomials",
       title: t("Constructing multivariable Taylor polynomials", "构造多元泰勒多项式"),
       explanation: t(
-        "A quadratic Taylor polynomial in two variables matches the value, the first partial derivatives and the second partial derivatives of the function at the center. The quadratic Taylor polynomial of $f(x, y)$ centered at $(0, 0)$ is:\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2.$$",
-        "二元二次泰勒多项式在中心处与函数的值、一阶偏导数和二阶偏导数都一致。函数 $f(x, y)$ 在 $(0, 0)$ 处的二阶泰勒多项式为：\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2$$",
+        "A quadratic Taylor polynomial in two variables matches the value, the first partial derivatives and the second partial derivatives of the function at the center. The quadratic Taylor polynomial of $f(x, y)$ centered at $(0, 0)$ is:\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2.$$\n\nFor $f = e^{x - y}$ every derivative at the origin is $\\pm 1$, and $P_2 = 1 + x - y + \\frac{1}{2}x^2 - xy + \\frac{1}{2}y^2$.\n\n> **Watch out.** Halve $f_{xx}$ and $f_{yy}$, but not $f_{xy}$: the two equal mixed partials have already been combined into one $xy$ term.",
+        "二元二次泰勒多项式在中心处与函数的值、一阶偏导数和二阶偏导数都一致。函数 $f(x, y)$ 在 $(0, 0)$ 处的二阶泰勒多项式为：\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2.$$\n\n对 $f = e^{x - y}$，原点处的每个导数都是 $\\pm 1$，$P_2 = 1 + x - y + \\frac{1}{2}x^2 - xy + \\frac{1}{2}y^2$。\n\n> **注意。** $f_{xx}$ 和 $f_{yy}$ 要减半，$f_{xy}$ 不减半：两个相等的混合偏导数已经合并成一个 $xy$ 项。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.pick([-4, -2, 2, 4]);
         if (rng.bool()) {
-          // f = c e^{px + qy}: P2 = c (1 + u + u^2 / 2) with u = px + qy.
           const p = rng.nonZero(-2, 2);
           const q = rng.nonZero(-2, 2);
-          const f = `${c === 1 ? "" : c === -1 ? "-" : c}e^{${poly([p, "x"], [q, "y"])}}`;
+          const f = `${c}e^{${poly([p, "x"], [q, "y"])}}`;
           const ans = poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [c * p * q, "xy"], [(c * q * q) / 2, "y^2"]);
           return expressionProblem({
             prompt: t(
               `Find the second-degree Taylor polynomial $P_2(x, y)$ centered at $(0, 0)$ for $f(x, y) = ${f}$.`,
               `求函数 $f(x, y) = ${f}$ 在 $(0, 0)$ 处的二阶泰勒多项式 $P_2(x, y)$。`,
             ),
-            solution: t(
-              steps(
-                `At $(0, 0)$: $f = ${c}$, $f_x = ${c * p}$, $f_y = ${c * q}$, $f_{xx} = ${c * p * p}$, $f_{xy} = ${c * p * q}$ and $f_{yy} = ${c * q * q}$.`,
-                `Halving the pure second derivatives: $$P_2(x, y) = ${ans}.$$`,
+            answer: ans,
+            mistakes: spoken(ans, [
+              say(
+                poly([c, ""], [c * p, "x"], [c * q, "y"], [c * p * p, "x^2"], [c * p * q, "xy"], [c * q * q, "y^2"]),
+                "The coefficients of $x^2$ and $y^2$ are half of $f_{xx}$ and $f_{yy}$.",
+                "$x^2$ 和 $y^2$ 的系数是 $f_{xx}$ 和 $f_{yy}$ 的一半。",
               ),
-              steps(
-                `在 $(0, 0)$ 处：$f = ${c}$，$f_x = ${c * p}$，$f_y = ${c * q}$，$f_{xx} = ${c * p * p}$，$f_{xy} = ${c * p * q}$，$f_{yy} = ${c * q * q}$。`,
-                `纯二阶导数乘以 $\\frac{1}{2}$：$$P_2(x, y) = ${ans}$$`,
+              say(
+                poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * p * q) / 2, "xy"], [(c * q * q) / 2, "y^2"]),
+                "The $xy$ coefficient is the whole of $f_{xy}$; only the pure squares are halved.",
+                "$xy$ 的系数是整个 $f_{xy}$；只有纯平方项才减半。",
+              ),
+              say(
+                poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]),
+                `The mixed term $${poly([c * p * q, "xy"])}$ is missing: $f_{xy}(0, 0) = ${c * p * q}$.`,
+                `漏掉了混合项 $${poly([c * p * q, "xy"])}$：$f_{xy}(0, 0) = ${c * p * q}$。`,
+              ),
+            ]),
+            solution: walked(
+              [
+                [
+                  ["Find the derivatives at the origin", "求原点处的导数"],
+                  t(
+                    `Each derivative brings down a factor $${p}$ for $x$ or $${q}$ for $y$: $f = ${c}$, $f_x = ${c * p}$, $f_y = ${c * q}$, $f_{xx} = ${c * p * p}$, $f_{xy} = ${c * p * q}$, $f_{yy} = ${c * q * q}$.`,
+                    `每求一次导数，对 $x$ 带下因子 $${p}$，对 $y$ 带下因子 $${q}$：$f = ${c}$，$f_x = ${c * p}$，$f_y = ${c * q}$，$f_{xx} = ${c * p * p}$，$f_{xy} = ${c * p * q}$，$f_{yy} = ${c * q * q}$。`,
+                  ),
+                ],
+                [
+                  ["Assemble the polynomial", "组成多项式"],
+                  t(`Halving $f_{xx}$ and $f_{yy}$: $P_2(x, y) = ${ans}$.`, `把 $f_{xx}$ 和 $f_{yy}$ 减半：$P_2(x, y) = ${ans}$。`),
+                ],
+              ],
+              t(
+                `With $s = ${poly([p, "x"], [q, "y"])}$, $${c}\\left(1 + s + \\frac{s^2}{2}\\right)$ expands to the same polynomial; for instance its $xy$ term is $${c} \\cdot \\frac{2 \\cdot ${paren(p)} \\cdot ${paren(q)}}{2}\\,xy = ${poly([c * p * q, "xy"])}$.`,
+                `令 $s = ${poly([p, "x"], [q, "y"])}$，$${c}\\left(1 + s + \\frac{s^2}{2}\\right)$ 展开后是同一个多项式；例如其 $xy$ 项为 $${c} \\cdot \\frac{2 \\cdot ${paren(p)} \\cdot ${paren(q)}}{2}\\,xy = ${poly([c * p * q, "xy"])}$。`,
               ),
             ),
-            answer: ans,
-            wrong: [
-              poly([c, ""], [c * p, "x"], [c * q, "y"], [c * p * p, "x^2"], [c * p * q, "xy"], [c * q * q, "y^2"]),
-              poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * p * q) / 2, "xy"], [(c * q * q) / 2, "y^2"]),
-              poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]),
-            ],
           });
         }
-        // f = c cos(px) e^{qy}: cos(px) ≈ 1 - p^2 x^2 / 2 and e^{qy} ≈ 1 + qy + q^2 y^2 / 2.
         const p = rng.int(1, 3);
         const q = rng.nonZero(-2, 2);
         const f = `${c}\\cos(${poly([p, "x"])}) e^{${poly([q, "y"])}}`;
@@ -6039,22 +6808,43 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
             `Find the second-degree Taylor polynomial $P_2(x, y)$ centered at $(0, 0)$ for $f(x, y) = ${f}$.`,
             `求函数 $f(x, y) = ${f}$ 在 $(0, 0)$ 处的二阶泰勒多项式 $P_2(x, y)$。`,
           ),
-          solution: t(
-            steps(
-              `At $(0, 0)$: $f = ${c}$, $f_x = 0$, $f_y = ${c * q}$, $f_{xx} = ${-c * p * p}$, $f_{xy} = 0$ and $f_{yy} = ${c * q * q}$.`,
-              `Halving the pure second derivatives: $$P_2(x, y) = ${ans}.$$`,
+          answer: ans,
+          mistakes: spoken(ans, [
+            say(
+              poly([c, ""], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]),
+              `The second derivative of $\\cos(${poly([p, "x"])})$ is $-${p * p}\\cos(${poly([p, "x"])})$, so the $x^2$ term changes sign.`,
+              `$\\cos(${poly([p, "x"])})$ 的二阶导数是 $-${p * p}\\cos(${poly([p, "x"])})$，所以 $x^2$ 项要变号。`,
             ),
-            steps(
-              `在 $(0, 0)$ 处：$f = ${c}$，$f_x = 0$，$f_y = ${c * q}$，$f_{xx} = ${-c * p * p}$，$f_{xy} = 0$，$f_{yy} = ${c * q * q}$。`,
-              `纯二阶导数乘以 $\\frac{1}{2}$：$$P_2(x, y) = ${ans}$$`,
+            say(
+              poly([c, ""], [c * q, "y"], [-c * p * p, "x^2"], [c * q * q, "y^2"]),
+              "The coefficients of $x^2$ and $y^2$ are half of $f_{xx}$ and $f_{yy}$.",
+              "$x^2$ 和 $y^2$ 的系数是 $f_{xx}$ 和 $f_{yy}$ 的一半。",
+            ),
+            say(
+              poly([c, ""], [c * q, "y"], [-(c * p * p) / 2, "x^2"]),
+              `The $y^2$ term is missing: $f_{yy}(0, 0) = ${c * q * q}$, so it is $${poly([(c * q * q) / 2, "y^2"])}$.`,
+              `漏掉了 $y^2$ 项：$f_{yy}(0, 0) = ${c * q * q}$，所以它是 $${poly([(c * q * q) / 2, "y^2"])}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the derivatives at the origin", "求原点处的导数"],
+                t(
+                  `$f = ${c}$, $f_x = 0$, $f_y = ${c * q}$, $f_{xx} = ${-c * p * p}$, $f_{xy} = 0$, $f_{yy} = ${c * q * q}$, since $\\sin 0 = 0$.`,
+                  `$f = ${c}$，$f_x = 0$，$f_y = ${c * q}$，$f_{xx} = ${-c * p * p}$，$f_{xy} = 0$，$f_{yy} = ${c * q * q}$，因为 $\\sin 0 = 0$。`,
+                ),
+              ],
+              [
+                ["Assemble the polynomial", "组成多项式"],
+                t(`Halving $f_{xx}$ and $f_{yy}$: $P_2(x, y) = ${ans}$.`, `把 $f_{xx}$ 和 $f_{yy}$ 减半：$P_2(x, y) = ${ans}$。`),
+              ],
+            ],
+            t(
+              `Multiplying $${c}\\left(1 - \\frac{${p * p}x^2}{2}\\right)$ by $${poly([1, ""], [q, "y"])} + \\frac{${q * q}y^2}{2}$ and dropping terms of degree above $2$ gives $${ans}$ again.`,
+              `把 $${c}\\left(1 - \\frac{${p * p}x^2}{2}\\right)$ 与 $${poly([1, ""], [q, "y"])} + \\frac{${q * q}y^2}{2}$ 相乘，去掉次数高于 $2$ 的项，同样得到 $${ans}$。`,
             ),
           ),
-          answer: ans,
-          wrong: [
-            poly([c, ""], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]),
-            poly([c, ""], [c * q, "y"], [-c * p * p, "x^2"], [c * q * q, "y^2"]),
-            poly([c, ""], [c * q, "y"], [-(c * p * p) / 2, "x^2"]),
-          ],
         });
       },
     },
@@ -6062,8 +6852,8 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
       id: "coefficients-of-a-second-degree-taylor-polynomial",
       title: t("Coefficients of a second-degree Taylor polynomial", "二阶泰勒多项式的系数"),
       explanation: t(
-        "The second-degree Taylor polynomial at the origin is\n\n$$P_2 = f + f_x x + f_y y + \\tfrac{1}{2}f_{xx}x^2 + f_{xy}xy + \\tfrac{1}{2}f_{yy}y^2,$$\n\nwith every derivative taken at $(0, 0)$. So the coefficient of $x^2$ is half of $f_{xx}(0, 0)$, while the coefficient of $xy$ is the whole of $f_{xy}(0, 0)$, since the two mixed partials have been combined. Products of one-variable series give the same coefficients.",
-        "原点处的二阶泰勒多项式为\n\n$$P_2 = f + f_x x + f_y y + \\tfrac{1}{2}f_{xx}x^2 + f_{xy}xy + \\tfrac{1}{2}f_{yy}y^2,$$\n\n其中所有导数都在 $(0, 0)$ 处取值。所以 $x^2$ 的系数是 $f_{xx}(0, 0)$ 的一半，而 $xy$ 的系数是整个 $f_{xy}(0, 0)$，因为两个混合偏导数已合并。用一元级数相乘也得到同样的系数。",
+        "The second-degree Taylor polynomial at the origin is\n\n$$P_2 = f + f_x x + f_y y + \\tfrac{1}{2}f_{xx}x^2 + f_{xy}xy + \\tfrac{1}{2}f_{yy}y^2,$$\n\nwith every derivative taken at $(0, 0)$. So the coefficient of $x^2$ is half of $f_{xx}(0, 0)$, while the coefficient of $xy$ is the whole of $f_{xy}(0, 0)$, since the two mixed partials have been combined. Products of one-variable series give the same coefficients. For $f = e^{2x + 5y}$, $f_{xy}(0, 0) = 10$, so the coefficient of $xy$ is $10$, and the coefficient of $y^2$ is $\\frac{25}{2}$.\n\n> **Watch out.** Halve the pure second derivatives but not the mixed one. A factor $\\cos(by)$ contributes $-\\frac{b^2}{2}y^2$, with a minus sign.",
+        "原点处的二阶泰勒多项式为\n\n$$P_2 = f + f_x x + f_y y + \\tfrac{1}{2}f_{xx}x^2 + f_{xy}xy + \\tfrac{1}{2}f_{yy}y^2,$$\n\n其中所有导数都在 $(0, 0)$ 处取值。所以 $x^2$ 的系数是 $f_{xx}(0, 0)$ 的一半，而 $xy$ 的系数是整个 $f_{xy}(0, 0)$，因为两个混合偏导数已合并。用一元级数相乘也得到同样的系数。对 $f = e^{2x + 5y}$，$f_{xy}(0, 0) = 10$，所以 $xy$ 的系数是 $10$，$y^2$ 的系数是 $\\frac{25}{2}$。\n\n> **注意。** 纯二阶导数要减半，混合的不减半。因子 $\\cos(by)$ 带来的是 $-\\frac{b^2}{2}y^2$，带负号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4) || 1;
@@ -6082,20 +6872,80 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
               : Q.of(b * b, 2);
         const deriv = mono === "x^2" ? "f_{xx}" : mono === "xy" ? "f_{xy}" : "f_{yy}";
         const dv = mono === "xy" ? coef : coef.mul(Q.of(2));
+        const k = mono === "x^2" ? a : b;
+        const notHalved = why(
+          dv,
+          `$${dv.toLatex()}$ is $${deriv}(0, 0)$; the coefficient of a square is half of it.`,
+          `$${dv.toLatex()}$ 是 $${deriv}(0, 0)$；平方项的系数是它的一半。`,
+        );
+        const mistakes =
+          mono === "xy"
+            ? [
+                why(
+                  coef.mul(Q.of(2)),
+                  "The coefficient of $xy$ is $f_{xy}(0, 0)$ once; the two mixed partials are already combined.",
+                  "$xy$ 的系数是一个 $f_{xy}(0, 0)$；两个混合偏导数已经合并。",
+                ),
+                why(
+                  coef.mul(Q.of(1, 2)),
+                  "Only the pure squares are halved; the $xy$ coefficient is the whole of $f_{xy}(0, 0)$.",
+                  "只有纯平方项才减半；$xy$ 的系数是整个 $f_{xy}(0, 0)$。",
+                ),
+              ]
+            : cosForm && mono === "y^2"
+              ? [
+                  notHalved,
+                  why(
+                    coef.neg(),
+                    `$\\cos(${poly([b, "y"])}) \\approx 1 - \\frac{${b * b}}{2}y^2$: the $y^2$ term is negative.`,
+                    `$\\cos(${poly([b, "y"])}) \\approx 1 - \\frac{${b * b}}{2}y^2$：$y^2$ 项是负的。`,
+                  ),
+                ]
+              : [
+                  notHalved,
+                  why(
+                    Q.of(k, 2),
+                    `The factor $${k}$ is squared: two derivatives each bring one down.`,
+                    `因子 $${k}$ 要平方：两次求导各带下一个。`,
+                  ),
+                  why(
+                    coef.neg(),
+                    `$${paren(k)}^2 = ${k * k}$ is positive, so the coefficient is positive.`,
+                    `$${paren(k)}^2 = ${k * k}$ 是正的，所以系数为正。`,
+                  ),
+                ];
+        const series = cosForm
+          ? mono === "x^2"
+            ? `e^{${poly([a, "x"])}} \\approx ${poly([1, ""], [a, "x"])} + \\frac{${a * a}}{2}x^2`
+            : `\\cos(${poly([b, "y"])}) \\approx 1 - \\frac{${b * b}}{2}y^2`
+          : `e^{s} \\approx 1 + s + \\frac{s^2}{2}, \\ s = ${poly([a, "x"], [b, "y"])}`;
         return numberProblem({
           prompt: t(
             `Find the coefficient of $${mono}$ in the second-degree Taylor polynomial of $f(x, y) = ${f}$ at $(0, 0)$.`,
             `求 $f(x, y) = ${f}$ 在 $(0, 0)$ 处的二阶泰勒多项式中 $${mono}$ 的系数。`,
           ),
           answer: coef,
-          wrong: [dv.eq(coef) ? coef.mul(Q.of(2)) : dv, coef.neg(), Q.of(a * b, 2)],
-          solution: t(
-            mono === "xy"
-              ? `$f_{xy}(0, 0) = ${dv.toLatex()}$, and the coefficient of $xy$ is $f_{xy}(0, 0)$ itself: $${coef.toLatex()}$.`
-              : `$${deriv}(0, 0) = ${dv.toLatex()}$, so the coefficient is $\\frac{1}{2} \\cdot ${paren(dv)} = ${coef.toLatex()}$.`,
-            mono === "xy"
-              ? `$f_{xy}(0, 0) = ${dv.toLatex()}$，而 $xy$ 的系数就是 $f_{xy}(0, 0)$ 本身：$${coef.toLatex()}$。`
-              : `$${deriv}(0, 0) = ${dv.toLatex()}$，所以系数为 $\\frac{1}{2} \\cdot ${paren(dv)} = ${coef.toLatex()}$。`,
+          mistakes: distinct(coef, mistakes),
+          solution: walked(
+            [
+              [["Find the derivative", "求导数"], t(`$${deriv}(0, 0) = ${dv.toLatex()}$.`, `$${deriv}(0, 0) = ${dv.toLatex()}$。`)],
+              [
+                ["Take the coefficient", "取系数"],
+                mono === "xy"
+                  ? t(
+                      `The coefficient of $xy$ is $f_{xy}(0, 0)$ itself: $${coef.toLatex()}$.`,
+                      `$xy$ 的系数就是 $f_{xy}(0, 0)$ 本身：$${coef.toLatex()}$。`,
+                    )
+                  : t(
+                      `The coefficient is $\\frac{1}{2} \\cdot ${paren(dv)} = ${coef.toLatex()}$.`,
+                      `系数为 $\\frac{1}{2} \\cdot ${paren(dv)} = ${coef.toLatex()}$。`,
+                    ),
+              ],
+            ],
+            t(
+              `From the series $${series}$, the $${mono}$ term has coefficient $${coef.toLatex()}$ as well.`,
+              `由级数 $${series}$，$${mono}$ 项的系数同样是 $${coef.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -6115,6 +6965,10 @@ export const globalVsLocalExtremaAndCriticalPointsOfMultivariableFunctions: Topi
     "A point (x0, y0) is a critical point of f(x, y) if ∇f(x0, y0) = 0 or if either partial derivative fails to exist.",
     "若 ∇f(x0, y0) = 0 或至少一个偏导数不存在，则点 (x0, y0) 为函数 f(x, y) 的临界点（驻点）。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2 + y^3 - 48y$, setting $f_x = 2x = 0$ and $f_y = 3y^2 - 48 = 0$ gives the critical points $(0, 4)$ and $(0, -4)$. Near $(0, 4)$ the function is lowest at that point, with $f(0, 4) = 64 - 192 = -128$, so it is a local minimum.\n\nCheck: $f(0, -10) = -1000 + 480 = -520$ is lower than $-128$, so the local minimum is not a global one; along the $y$-axis, $y^3$ sends $f$ down without bound.\n\nIn this lesson we find critical points by setting the gradient to zero, and tell local extrema from global ones.",
+    "对 $f(x, y) = x^2 + y^3 - 48y$，令 $f_x = 2x = 0$，$f_y = 3y^2 - 48 = 0$，得临界点 $(0, 4)$ 和 $(0, -4)$。在 $(0, 4)$ 附近，函数在该点最小，$f(0, 4) = 64 - 192 = -128$，所以它是局部最小值点。\n\n检验：$f(0, -10) = -1000 + 480 = -520$ 比 $-128$ 更小，所以这个局部最小值不是全局最小值；沿 $y$ 轴，$y^3$ 使 $f$ 无限下降。\n\n本课我们令梯度为零来求临界点，并区分局部极值与全局极值。",
+  ),
   prerequisites: ["the-gradient-vector"],
   encompasses: [{ topic: "the-gradient-vector", weight: 0.3 }],
   xp: 10,
@@ -6123,8 +6977,8 @@ export const globalVsLocalExtremaAndCriticalPointsOfMultivariableFunctions: Topi
       id: "finding-critical-points-of-surfaces",
       title: t("Finding critical points of surfaces", "求曲面的临界点"),
       explanation: t(
-        "To find the critical points of a differentiable function $f(x, y)$, solve the system of equations setting both partial derivatives to zero:\n\n$$\\begin{cases} f_x(x, y) = 0 \\\\ f_y(x, y) = 0 \\end{cases}$$",
-        "求可微函数 $f(x, y)$ 的临界点，需联立求解令一阶偏导数均为零的方程组：\n\n$$\\begin{cases} f_x(x, y) = 0 \\\\ f_y(x, y) = 0 \\end{cases}$$",
+        "To find the critical points of a differentiable function $f(x, y)$, solve the system of equations setting both partial derivatives to zero:\n\n$$\\begin{cases} f_x(x, y) = 0 \\\\ f_y(x, y) = 0 \\end{cases}$$\n\nFor $f = 5x^2 - 30x + y^2 + 4y$, $f_x = 10x - 30 = 0$ gives $x = 3$ and $f_y = 2y + 4 = 0$ gives $y = -2$, so the critical point is $(3, -2)$.\n\n> **Watch out.** Solving $2ax + d = 0$ gives $x = -\\frac{d}{2a}$: keep the minus sign and divide by $2a$, not by $a$.",
+        "求可微函数 $f(x, y)$ 的临界点，需联立求解令一阶偏导数均为零的方程组：\n\n$$\\begin{cases} f_x(x, y) = 0 \\\\ f_y(x, y) = 0 \\end{cases}$$\n\n对 $f = 5x^2 - 30x + y^2 + 4y$，由 $f_x = 10x - 30 = 0$ 得 $x = 3$，由 $f_y = 2y + 4 = 0$ 得 $y = -2$，所以临界点是 $(3, -2)$。\n\n> **注意。** 解 $2ax + d = 0$ 得 $x = -\\frac{d}{2a}$：保留负号，并除以 $2a$，而不是 $a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -6134,64 +6988,109 @@ export const globalVsLocalExtremaAndCriticalPointsOfMultivariableFunctions: Topi
         if (x0 === 0 && y0 === 0) {
           x0 = rng.pick([-1, 1]);
         }
-
-        // f(x, y) = a*(x - x0)^2 + b*(y - y0)^2 = a*x^2 - 2a*x0*x + b*y^2 - 2b*y0*y + C
         const cTerm = -2 * a * x0;
         const dTerm = -2 * b * y0;
-        const answer: Vec2 = [x0, y0];
-
-        const prompt = t(
-          `Find the critical point $(x, y)$ of the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cTerm, "x"], [dTerm, "y"])}$ by solving $\\nabla f(x, y) = \\mathbf{0}$. Express your answer as a point $(x, y)$.`,
-          `通过求解 $\\nabla f(x, y) = \\mathbf{0}$，求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cTerm, "x"], [dTerm, "y"])}$ 的临界点 $(x, y)$。结果以点 $(x, y)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Compute partial derivatives:\n\n` +
-              `$f_x = ${poly([2 * a, "x"], [cTerm, ""])} = 0 \\implies x = ${x0}$\n\n` +
-              `$f_y = ${poly([2 * b, "y"], [dTerm, ""])} = 0 \\implies y = ${y0}$`,
-            `The unique critical point is $(x, y) = (${x0}, ${y0})$.`,
-          ),
-          steps(
-            `求偏导数并令其为零：\n\n` +
-              `$f_x = ${poly([2 * a, "x"], [cTerm, ""])} = 0 \\implies x = ${x0}$\n\n` +
-              `$f_y = ${poly([2 * b, "y"], [dTerm, ""])} = 0 \\implies y = ${y0}$`,
-            `唯一的临界点为 $(x, y) = (${x0}, ${y0})$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vars: ["x", "y"],
-          wrong: [
-            [-x0, -y0],
-            [y0, x0],
-            [0, 0],
+        const shift = -(a * x0 * x0 + b * y0 * y0);
+        const sq = (k: number, v: string, at: number) =>
+          `${k === 1 ? "" : k === -1 ? "-" : k}${at === 0 ? `${v}^2` : `(${v} ${at > 0 ? "-" : "+"} ${Math.abs(at)})^2`}`;
+        const squares = `${sq(a, "x", x0)} ${b < 0 ? "-" : "+"} ${sq(Math.abs(b), "y", y0)}${shift === 0 ? "" : ` ${shift > 0 ? "+" : "-"} ${Math.abs(shift)}`}`;
+        const mistakes: [number[], string, string][] = [
+          [
+            [-x0 || 0, -y0 || 0],
+            "The signs are flipped: $2ax + d = 0$ gives $x = -\\frac{d}{2a}$.",
+            "符号反了：由 $2ax + d = 0$ 得 $x = -\\frac{d}{2a}$。",
           ],
-        });
+          [
+            [2 * x0, 2 * y0],
+            "Each linear coefficient must be divided by $2a$ or $2b$, the coefficient in $f_x$ or $f_y$, not by $a$ or $b$.",
+            "每个一次项系数要除以 $f_x$ 或 $f_y$ 中的系数 $2a$ 或 $2b$，而不是 $a$ 或 $b$。",
+          ],
+        ];
+        if (x0 !== y0)
+          mistakes.push([[y0, x0], "The coordinates are swapped; $f_x = 0$ gives $x$.", "两个坐标对调了；由 $f_x = 0$ 得到的是 $x$。"]);
+        return pointWith(
+          {
+            prompt: t(
+              `Find the critical point $(x, y)$ of the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cTerm, "x"], [dTerm, "y"])}$ by solving $\\nabla f(x, y) = \\mathbf{0}$. Express your answer as a point $(x, y)$.`,
+              `通过求解 $\\nabla f(x, y) = \\mathbf{0}$，求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cTerm, "x"], [dTerm, "y"])}$ 的临界点 $(x, y)$。结果以点 $(x, y)$ 表示。`,
+            ),
+            answer: [x0, y0],
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Set f_x to zero", "令 f_x 为零"],
+                  t(
+                    `$f_x = ${poly([2 * a, "x"], [cTerm, ""])} = 0$ gives $x = ${x0}$.`,
+                    `由 $f_x = ${poly([2 * a, "x"], [cTerm, ""])} = 0$ 得 $x = ${x0}$。`,
+                  ),
+                ],
+                [
+                  ["Set f_y to zero", "令 f_y 为零"],
+                  t(
+                    `$f_y = ${poly([2 * b, "y"], [dTerm, ""])} = 0$ gives $y = ${y0}$, so the critical point is $(${x0}, ${y0})$.`,
+                    `由 $f_y = ${poly([2 * b, "y"], [dTerm, ""])} = 0$ 得 $y = ${y0}$，所以临界点是 $(${x0}, ${y0})$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Completing the squares, $f = ${squares}$, whose squares vanish exactly at $(${x0}, ${y0})$.`,
+                `配方得 $f = ${squares}$，其中的平方项恰在 $(${x0}, ${y0})$ 处为零。`,
+              ),
+            ),
+          },
+          mistakes,
+        );
       },
     },
     {
       id: "a-local-minimum-that-is-not-global",
       title: t("A local minimum that is not global", "不是全局最小值的局部最小值"),
       explanation: t(
-        "A local minimum is lower than all nearby values, but the function may still go lower far away. For $f(x, y) = x^3 - 3k^2x + y^2 + c$ with $k > 0$, the critical points are $(\\pm k, 0)$. At $(k, 0)$, $f_{xx} = 6k > 0$ and $f_{yy} = 2 > 0$ with $f_{xy} = 0$, so it is a local minimum with value $c - 2k^3$. It is not global: along $y = 0$, $x^3$ makes $f \\to -\\infty$ as $x \\to -\\infty$.",
-        "局部最小值比附近所有的值都小，但函数在远处仍可能更小。对 $k > 0$ 的 $f(x, y) = x^3 - 3k^2x + y^2 + c$，临界点为 $(\\pm k, 0)$。在 $(k, 0)$ 处 $f_{xx} = 6k > 0$，$f_{yy} = 2 > 0$，$f_{xy} = 0$，所以它是局部最小值点，值为 $c - 2k^3$。它不是全局最小值：沿 $y = 0$，当 $x \\to -\\infty$ 时 $x^3$ 使 $f \\to -\\infty$。",
+        "A local minimum is lower than all nearby values, but the function may still go lower far away. For $f(x, y) = x^3 - 3k^2x + y^2 + c$ with $k > 0$, the critical points are $(\\pm k, 0)$. At $(k, 0)$, $f_{xx} = 6k > 0$ and $f_{yy} = 2 > 0$ with $f_{xy} = 0$, so it is a local minimum with value $c - 2k^3$. It is not global: along $y = 0$, $x^3$ makes $f \\to -\\infty$ as $x \\to -\\infty$. For $x^3 - 75x + y^2 + 3$, $k = 5$ and the local minimum value is $3 - 250 = -247$.\n\n> **Watch out.** At $(-k, 0)$, $f_{xx} = -6k$ is negative while $f_{yy} = 2$ is positive, so that point is a saddle, not the minimum. And the value $f(k, 0) = k^3 - 3k^3 + c$ keeps the $k^3$ from $x^3$.",
+        "局部最小值比附近所有的值都小，但函数在远处仍可能更小。对 $k > 0$ 的 $f(x, y) = x^3 - 3k^2x + y^2 + c$，临界点为 $(\\pm k, 0)$。在 $(k, 0)$ 处 $f_{xx} = 6k > 0$，$f_{yy} = 2 > 0$，$f_{xy} = 0$，所以它是局部最小值点，值为 $c - 2k^3$。它不是全局最小值：沿 $y = 0$，当 $x \\to -\\infty$ 时 $x^3$ 使 $f \\to -\\infty$。对 $x^3 - 75x + y^2 + 3$，$k = 5$，局部最小值为 $3 - 250 = -247$。\n\n> **注意。** 在 $(-k, 0)$ 处，$f_{xx} = -6k$ 为负而 $f_{yy} = 2$ 为正，所以那是鞍点，不是最小值点。函数值 $f(k, 0) = k^3 - 3k^3 + c$ 中要保留来自 $x^3$ 的 $k^3$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 4);
         const c = rng.int(-9, 9);
         const ans = c - 2 * k ** 3;
+        const cs = c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
         return numberProblem({
           prompt: t(
             `Find the local minimum value of $f(x, y) = ${poly([1, "x^3"], [-3 * k * k, "x"], [1, "y^2"], [c, ""])}$.`,
             `求 $f(x, y) = ${poly([1, "x^3"], [-3 * k * k, "x"], [1, "y^2"], [c, ""])}$ 的局部最小值。`,
           ),
           answer: ans,
-          wrong: [c + 2 * k ** 3, c, c - 4 * k ** 3],
-          solution: t(
-            `$f_x = 3x^2 - ${3 * k * k} = 0$ and $f_y = 2y = 0$ give $(\\pm ${k}, 0)$. At $(${k}, 0)$, $f_{xx} = ${6 * k} > 0$, so it is a local minimum with $f(${k}, 0) = ${k ** 3} - ${3 * k ** 3} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${ans}$. It is not a global minimum, since $f(x, 0) \\to -\\infty$ as $x \\to -\\infty$.`,
-            `由 $f_x = 3x^2 - ${3 * k * k} = 0$，$f_y = 2y = 0$ 得 $(\\pm ${k}, 0)$。在 $(${k}, 0)$ 处 $f_{xx} = ${6 * k} > 0$，所以它是局部最小值点，$f(${k}, 0) = ${k ** 3} - ${3 * k ** 3} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${ans}$。它不是全局最小值，因为当 $x \\to -\\infty$ 时 $f(x, 0) \\to -\\infty$。`,
+          mistakes: distinct(ans, [
+            why(
+              c + 2 * k ** 3,
+              `That is $f(${-k}, 0)$, but $(${-k}, 0)$ is a saddle: $f_{xx} = ${-6 * k} < 0$ there while $f_{yy} = 2 > 0$.`,
+              `那是 $f(${-k}, 0)$，但 $(${-k}, 0)$ 是鞍点：那里 $f_{xx} = ${-6 * k} < 0$ 而 $f_{yy} = 2 > 0$。`,
+            ),
+            why(c, "That is $f(0, 0)$, and the origin is not a critical point.", "那是 $f(0, 0)$，而原点不是临界点。"),
+            why(c - 3 * k ** 3, `The term $x^3$ contributes $${k ** 3}$ at $x = ${k}$.`, `在 $x = ${k}$ 处，$x^3$ 项贡献 $${k ** 3}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the critical points", "求临界点"],
+                t(
+                  `$f_x = 3x^2 - ${3 * k * k} = 0$ and $f_y = 2y = 0$ give $(\\pm ${k}, 0)$.`,
+                  `由 $f_x = 3x^2 - ${3 * k * k} = 0$，$f_y = 2y = 0$ 得 $(\\pm ${k}, 0)$。`,
+                ),
+              ],
+              [
+                ["Pick the minimum", "选出最小值点"],
+                t(
+                  `At $(${k}, 0)$, $f_{xx} = ${6 * k} > 0$, $f_{yy} = 2$ and $f_{xy} = 0$, so it is a local minimum with $f(${k}, 0) = ${k ** 3} - ${3 * k ** 3}${cs} = ${ans}$.`,
+                  `在 $(${k}, 0)$ 处，$f_{xx} = ${6 * k} > 0$，$f_{yy} = 2$，$f_{xy} = 0$，所以它是局部最小值点，$f(${k}, 0) = ${k ** 3} - ${3 * k ** 3}${cs} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `It is only local: $f(${-3 * k}, 0) = ${-27 * k ** 3} + ${9 * k ** 3}${cs} = ${c - 18 * k ** 3}$ is lower, as $x^3$ dominates for large negative $x$.`,
+              `它只是局部的：$f(${-3 * k}, 0) = ${-27 * k ** 3} + ${9 * k ** 3}${cs} = ${c - 18 * k ** 3}$ 更小，因为 $x$ 很负时 $x^3$ 起主导作用。`,
+            ),
           ),
         });
       },
@@ -6207,6 +7106,10 @@ export const theSecondPartialDerivativesTest: TopicDef = {
     "The second partial derivatives test classifies critical points using D = fxx fyy - (fxy)²: local minimum if D > 0 and fxx > 0, local maximum if D > 0 and fxx < 0, saddle point if D < 0.",
     "二阶偏导数判别法利用判别式 D = fxx fyy - (fxy)² 分类临界点：若 D > 0 且 fxx > 0 为局部极小值；若 D > 0 且 fxx < 0 为局部极大值；若 D < 0 为鞍点。",
   ),
+  intro: t(
+    "The function $f(x, y) = x^3 + y^3 - 3xy$ has a critical point at $(1, 1)$, where $f_x = 3x^2 - 3y$ and $f_y = 3y^2 - 3x$ both vanish. There $f_{xx} = 6$, $f_{yy} = 6$ and $f_{xy} = -3$, so $D = 36 - 9 = 27 > 0$ with $f_{xx} > 0$: a local minimum.\n\nCheck: $f(1, 1) = -1$, while the nearby values $f(1.1, 1) = -0.969$ and $f(1, 0.9) = -0.971$ are both higher.\n\nIn this lesson we use the discriminant $D$ to classify critical points as minima, maxima or saddle points, and recognize when the test says nothing.",
+    "函数 $f(x, y) = x^3 + y^3 - 3xy$ 在 $(1, 1)$ 处有临界点，那里 $f_x = 3x^2 - 3y$ 和 $f_y = 3y^2 - 3x$ 都为零。该点 $f_{xx} = 6$，$f_{yy} = 6$，$f_{xy} = -3$，所以 $D = 36 - 9 = 27 > 0$ 且 $f_{xx} > 0$：局部极小值点。\n\n检验：$f(1, 1) = -1$，而附近的值 $f(1.1, 1) = -0.969$ 和 $f(1, 0.9) = -0.971$ 都更大。\n\n本课我们用判别式 $D$ 把临界点分为极小值点、极大值点或鞍点，并认识检验失效的情形。",
+  ),
   prerequisites: [
     "global-vs-local-extrema-and-critical-points-of-multivariable-functions",
     "the-second-derivative-of-a-multivariable-function",
@@ -6218,70 +7121,85 @@ export const theSecondPartialDerivativesTest: TopicDef = {
       id: "classifying-critical-points-using-discriminant",
       title: t("Classifying critical points using the discriminant", "利用二阶判别式分类临界点"),
       explanation: t(
-        "Let $(a, b)$ be a critical point with continuous second partials. Let $D = f_{xx}(a, b)f_{yy}(a, b) - [f_{xy}(a, b)]^2$:\n\n1. If $D > 0$ and $f_{xx}(a, b) > 0$, then $f(a, b)$ is a **local minimum**.\n2. If $D > 0$ and $f_{xx}(a, b) < 0$, then $f(a, b)$ is a **local maximum**.\n3. If $D < 0$, then $(a, b)$ is a **saddle point**.\n4. If $D = 0$, the test is **inconclusive**.",
-        "设 $(a, b)$ 为具有连续二阶偏导数的临界点，令 $D = f_{xx}(a, b)f_{yy}(a, b) - [f_{xy}(a, b)]^2$：\n\n1. 若 $D > 0$ 且 $f_{xx}(a, b) > 0$，则该点为**局部极小点**。\n2. 若 $D > 0$ 且 $f_{xx}(a, b) < 0$，则该点为**局部极大点**。\n3. 若 $D < 0$，则该点为**鞍点**。\n4. 若 $D = 0$，判别法**失效**（无法判定）。",
+        "Let $(a, b)$ be a critical point with continuous second partials. Let $D = f_{xx}(a, b)f_{yy}(a, b) - [f_{xy}(a, b)]^2$:\n\n1. If $D > 0$ and $f_{xx}(a, b) > 0$, then $f(a, b)$ is a **local minimum**.\n2. If $D > 0$ and $f_{xx}(a, b) < 0$, then $f(a, b)$ is a **local maximum**.\n3. If $D < 0$, then $(a, b)$ is a **saddle point**.\n4. If $D = 0$, the test is **inconclusive**.\n\nFor $f = 5x^2 - 6y^2$ at the origin, $D = 10 \\cdot (-12) - 0 = -120 < 0$, so the origin is a saddle point even though $f_{xx} > 0$.\n\n> **Watch out.** A positive $D$ alone does not say minimum or maximum; the sign of $f_{xx}$ decides. A negative $D$ means a saddle whatever the sign of $f_{xx}$.",
+        "设 $(a, b)$ 为具有连续二阶偏导数的临界点，令 $D = f_{xx}(a, b)f_{yy}(a, b) - [f_{xy}(a, b)]^2$：\n\n1. 若 $D > 0$ 且 $f_{xx}(a, b) > 0$，则该点为**局部极小点**。\n2. 若 $D > 0$ 且 $f_{xx}(a, b) < 0$，则该点为**局部极大点**。\n3. 若 $D < 0$，则该点为**鞍点**。\n4. 若 $D = 0$，判别法**失效**（无法判定）。\n\n对 $f = 5x^2 - 6y^2$ 在原点处，$D = 10 \\cdot (-12) - 0 = -120 < 0$，所以尽管 $f_{xx} > 0$，原点仍是鞍点。\n\n> **注意。** 仅凭 $D$ 为正还不能判断是极小还是极大，要由 $f_{xx}$ 的符号决定。$D$ 为负就是鞍点，与 $f_{xx}$ 的符号无关。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.int(0, 2);
-        let a: number;
-        let b: number;
-        let right: Text;
-        let wrong: readonly Text[];
-
-        if (kind === 0) {
-          // Local min: a > 0, b > 0
-          a = rng.int(1, 4);
-          b = rng.int(1, 4);
-          right = t("Local minimum", "局部极小值点");
-          wrong = [t("Local maximum", "局部极大值点"), t("Saddle point", "鞍点"), t("Inconclusive", "无法判定")];
-        } else if (kind === 1) {
-          // Local max: a < 0, b < 0
-          a = -rng.int(1, 4);
-          b = -rng.int(1, 4);
-          right = t("Local maximum", "局部极大值点");
-          wrong = [t("Local minimum", "局部极小值点"), t("Saddle point", "鞍点"), t("Inconclusive", "无法判定")];
-        } else {
-          // Saddle point: a > 0, b < 0
-          a = rng.int(1, 4);
-          b = -rng.int(1, 4);
-          right = t("Saddle point", "鞍点");
-          wrong = [t("Local minimum", "局部极小值点"), t("Local maximum", "局部极大值点"), t("Inconclusive", "无法判定")];
-        }
-
+        const a = kind === 1 ? -rng.int(1, 4) : rng.int(1, 4);
+        const b = kind === 0 ? rng.int(1, 4) : -rng.int(1, 4);
         const D = 4 * a * b;
-        const prompt = t(
-          `At the origin $(0, 0)$, the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ has a critical point. Use the second partial derivatives test to classify this critical point.`,
-          `函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 在原点 $(0, 0)$ 处有一个临界点。使用二阶偏导数判别法对该临界点进行分类。`,
-        );
-        const solution = t(
-          steps(
-            `Compute second partial derivatives: $f_{xx} = ${2 * a}$, $f_{yy} = ${2 * b}$, $f_{xy} = 0$.`,
-            `Calculate the discriminant: $D = f_{xx}f_{yy} - (f_{xy})^2 = (${2 * a})(${2 * b}) - 0 = ${D}$.`,
-            D > 0
-              ? a > 0
-                ? `Since $D = ${D} > 0$ and $f_{xx} = ${2 * a} > 0$, the critical point is a local minimum.`
-                : `Since $D = ${D} > 0$ and $f_{xx} = ${2 * a} < 0$, the critical point is a local maximum.`
-              : `Since $D = ${D} < 0$, the critical point is a saddle point.`,
+        const names = [
+          t("Local minimum", "局部极小值点"),
+          t("Local maximum", "局部极大值点"),
+          t("Saddle point", "鞍点"),
+          t("Inconclusive", "无法判定"),
+        ];
+        const reason = (i: number): Text => {
+          if (i === 3) return t(`$D = ${D}$ is not zero, so the test gives a verdict.`, `$D = ${D}$ 不为零，所以检验能给出结论。`);
+          if (kind === 2)
+            return i === 0
+              ? t(
+                  `$D = ${D} < 0$ means a saddle even though $f_{xx} = ${2 * a} > 0$.`,
+                  `$D = ${D} < 0$ 意味着鞍点，尽管 $f_{xx} = ${2 * a} > 0$。`,
+                )
+              : t(`$D = ${D} < 0$ means a saddle; along the $x$-axis $f$ rises.`, `$D = ${D} < 0$ 意味着鞍点；沿 $x$ 轴 $f$ 是上升的。`);
+          if (i === 2) return t(`$D = ${D} > 0$ rules out a saddle.`, `$D = ${D} > 0$ 排除了鞍点。`);
+          return kind === 0
+            ? t(
+                `$f_{xx} = ${2 * a} > 0$, so the surface bends upward: a minimum, not a maximum.`,
+                `$f_{xx} = ${2 * a} > 0$，曲面向上弯：是极小值点，不是极大值点。`,
+              )
+            : t(
+                `$f_{xx} = ${2 * a} < 0$, so the surface bends downward: a maximum, not a minimum.`,
+                `$f_{xx} = ${2 * a} < 0$，曲面向下弯：是极大值点，不是极小值点。`,
+              );
+        };
+        const verdict =
+          kind === 0
+            ? t(
+                `$D = ${D} > 0$ and $f_{xx} = ${2 * a} > 0$, so the origin is a local minimum.`,
+                `$D = ${D} > 0$ 且 $f_{xx} = ${2 * a} > 0$，所以原点是局部极小点。`,
+              )
+            : kind === 1
+              ? t(
+                  `$D = ${D} > 0$ and $f_{xx} = ${2 * a} < 0$, so the origin is a local maximum.`,
+                  `$D = ${D} > 0$ 且 $f_{xx} = ${2 * a} < 0$，所以原点是局部极大点。`,
+                )
+              : t(`$D = ${D} < 0$, so the origin is a saddle point.`, `$D = ${D} < 0$，所以原点是鞍点。`);
+        const sign = (v: number) => (v > 0 ? ["positive", "正"] : ["negative", "负"]);
+        return explainedChoice(rng, {
+          prompt: t(
+            `At the origin $(0, 0)$, the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ has a critical point. Use the second partial derivatives test to classify this critical point.`,
+            `函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 在原点 $(0, 0)$ 处有一个临界点。使用二阶偏导数判别法对该临界点进行分类。`,
           ),
-          steps(
-            `计算二阶偏导数：$f_{xx} = ${2 * a}$，$f_{yy} = ${2 * b}$，$f_{xy} = 0$。`,
-            `计算判别式：$D = f_{xx}f_{yy} - (f_{xy})^2 = (${2 * a})(${2 * b}) - 0 = ${D}$。`,
-            D > 0
-              ? a > 0
-                ? `因为 $D = ${D} > 0$ 且 $f_{xx} = ${2 * a} > 0$，故该临界点为局部极小点。`
-                : `因为 $D = ${D} > 0$ 且 $f_{xx} = ${2 * a} < 0$，故该临界点为局部极大点。`
-              : `因为 $D = ${D} < 0$，故该临界点为鞍点。`,
+          correct: names[kind] as Text,
+          wrong: [0, 1, 2, 3].filter((i) => i !== kind).map((i) => ({ option: names[i] as Text, why: reason(i) })),
+          solution: walked(
+            [
+              [
+                ["Find the discriminant", "求判别式"],
+                t(
+                  `$f_{xx} = ${2 * a}$, $f_{yy} = ${2 * b}$, $f_{xy} = 0$, so $D = ${2 * a} \\cdot ${paren(2 * b)} - 0 = ${D}$.`,
+                  `$f_{xx} = ${2 * a}$，$f_{yy} = ${2 * b}$，$f_{xy} = 0$，所以 $D = ${2 * a} \\cdot ${paren(2 * b)} - 0 = ${D}$。`,
+                ),
+              ],
+              [["Apply the test", "应用判别法"], verdict],
+            ],
+            t(
+              `Along the axes, $f(t, 0) = ${poly([a, "t^2"])}$ is ${sign(a)[0]} and $f(0, t) = ${poly([b, "t^2"])}$ is ${sign(b)[0]} for $t \\ne 0$, which matches.`,
+              `沿坐标轴，$t \\ne 0$ 时 $f(t, 0) = ${poly([a, "t^2"])}$ 为${sign(a)[1]}，$f(0, t) = ${poly([b, "t^2"])}$ 为${sign(b)[1]}，与结论一致。`,
+            ),
           ),
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        });
       },
     },
     {
       id: "classifying-the-origin-for-a-quadratic-form",
       title: t("Classifying the origin for a quadratic form", "判断二次型在原点的类型"),
       explanation: t(
-        "For $f(x, y) = ax^2 + bxy + cy^2$ the origin is a critical point with $f_{xx} = 2a$, $f_{xy} = b$, $f_{yy} = 2c$, so the discriminant is\n\n$$D = f_{xx}f_{yy} - f_{xy}^2 = 4ac - b^2.$$\n\nIf $D > 0$ the origin is a local minimum when $a > 0$ and a local maximum when $a < 0$; if $D < 0$ it is a saddle point; if $D = 0$ the test is inconclusive.",
-        "对 $f(x, y) = ax^2 + bxy + cy^2$，原点是临界点，且 $f_{xx} = 2a$，$f_{xy} = b$，$f_{yy} = 2c$，所以判别式为\n\n$$D = f_{xx}f_{yy} - f_{xy}^2 = 4ac - b^2.$$\n\n若 $D > 0$，当 $a > 0$ 时原点是局部最小值点，当 $a < 0$ 时是局部最大值点；若 $D < 0$，它是鞍点；若 $D = 0$，检验无法判定。",
+        "For $f(x, y) = ax^2 + bxy + cy^2$ the origin is a critical point with $f_{xx} = 2a$, $f_{xy} = b$, $f_{yy} = 2c$, so the discriminant is\n\n$$D = f_{xx}f_{yy} - f_{xy}^2 = 4ac - b^2.$$\n\nIf $D > 0$ the origin is a local minimum when $a > 0$ and a local maximum when $a < 0$; if $D < 0$ it is a saddle point; if $D = 0$ the test is inconclusive. For $f = 2x^2 + 7xy + 5y^2$, $D = 40 - 49 = -9$, so the origin is a saddle point although $a$ and $c$ are both positive.\n\n> **Watch out.** The discriminant is $4ac - b^2$, not $ac - b^2$: the diagonal entries are $2a$ and $2c$. When $D = 0$ the test gives no answer at all.",
+        "对 $f(x, y) = ax^2 + bxy + cy^2$，原点是临界点，且 $f_{xx} = 2a$，$f_{xy} = b$，$f_{yy} = 2c$，所以判别式为\n\n$$D = f_{xx}f_{yy} - f_{xy}^2 = 4ac - b^2.$$\n\n若 $D > 0$，当 $a > 0$ 时原点是局部最小值点，当 $a < 0$ 时是局部最大值点；若 $D < 0$，它是鞍点；若 $D = 0$，检验无法判定。对 $f = 2x^2 + 7xy + 5y^2$，$D = 40 - 49 = -9$，所以尽管 $a$ 和 $c$ 都为正，原点仍是鞍点。\n\n> **注意。** 判别式是 $4ac - b^2$，不是 $ac - b^2$：对角元素是 $2a$ 和 $2c$。$D = 0$ 时检验给不出任何结论。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.int(0, 3);
@@ -6313,19 +7231,68 @@ export const theSecondPartialDerivativesTest: TopicDef = {
           t("The test is inconclusive", "检验无法判定"),
         ];
         const right = names[kind] ?? names[0]!;
-        return pickChoice(
-          rng,
-          t(
+        const reason = (i: number): Text => {
+          if (kind === 3)
+            return i === 2
+              ? t("$D = 0$ is not negative; with $D = 0$ the test gives no verdict.", "$D = 0$ 不是负数；$D = 0$ 时检验给不出结论。")
+              : t(
+                  `With $D = 0$ the test gives no verdict, whatever the sign of $a = ${a}$.`,
+                  `$D = 0$ 时，无论 $a = ${a}$ 的符号如何，检验都给不出结论。`,
+                );
+          if (i === 3) return t(`$D = ${D}$ is not zero, so the test decides.`, `$D = ${D}$ 不为零，所以检验能作出判断。`);
+          if (kind === 2)
+            return t(
+              `$D = ${D} < 0$ means a saddle, whatever the signs of $a$ and $c$.`,
+              `$D = ${D} < 0$ 意味着鞍点，与 $a$、$c$ 的符号无关。`,
+            );
+          if (i === 2) return t(`$D = ${D} > 0$ rules out a saddle.`, `$D = ${D} > 0$ 排除了鞍点。`);
+          return kind === 0
+            ? t(`$f_{xx} = ${2 * a} > 0$, so it is a minimum, not a maximum.`, `$f_{xx} = ${2 * a} > 0$，所以是最小值点，不是最大值点。`)
+            : t(`$f_{xx} = ${2 * a} < 0$, so it is a maximum, not a minimum.`, `$f_{xx} = ${2 * a} < 0$，所以是最大值点，不是最小值点。`);
+        };
+        const fAt = a * D;
+        const check =
+          kind === 3
+            ? t(
+                `$f(${-b}, ${2 * a}) = a \\cdot D = 0$, so $f$ vanishes along a whole line through the origin; the second derivatives cannot see what happens beyond that.`,
+                `$f(${-b}, ${2 * a}) = a \\cdot D = 0$，所以 $f$ 沿一整条过原点的直线为零；二阶导数看不出更多。`,
+              )
+            : kind === 2
+              ? t(
+                  `$f(1, 0) = ${a}$ and $f(${-b}, ${2 * a}) = a \\cdot D = ${fAt}$ have opposite signs, so $f$ takes both signs near the origin.`,
+                  `$f(1, 0) = ${a}$ 与 $f(${-b}, ${2 * a}) = a \\cdot D = ${fAt}$ 异号，所以 $f$ 在原点附近正负都取。`,
+                )
+              : t(
+                  `$f(1, 0) = ${a}$, $f(0, 1) = ${c}$ and $f(${-b}, ${2 * a}) = a \\cdot D = ${fAt}$ all have the sign of $a$, as they do near a ${kind === 0 ? "minimum" : "maximum"}.`,
+                  `$f(1, 0) = ${a}$，$f(0, 1) = ${c}$，$f(${-b}, ${2 * a}) = a \\cdot D = ${fAt}$ 都与 $a$ 同号，正如在${kind === 0 ? "最小值点" : "最大值点"}附近那样。`,
+                );
+        return explainedChoice(rng, {
+          prompt: t(
             `Use the second partials test to classify the critical point $(0, 0)$ of $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$.`,
             `用二阶偏导数检验判断 $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ 的临界点 $(0, 0)$ 的类型。`,
           ),
-          right,
-          names.filter((_, i) => i !== kind),
-          t(
-            `$D = 4 \\cdot ${paren(a)} \\cdot ${paren(c)} - ${paren(b)}^2 = ${D}$${D > 0 ? ` and $f_{xx} = ${2 * a}$` : ""}, so the answer is: ${right.en.toLowerCase()}.`,
-            `$D = 4 \\cdot ${paren(a)} \\cdot ${paren(c)} - ${paren(b)}^2 = ${D}$${D > 0 ? `，$f_{xx} = ${2 * a}$` : ""}，所以答案是：${right["zh-CN"]}。`,
+          correct: right,
+          wrong: [0, 1, 2, 3].filter((i) => i !== kind).map((i) => ({ option: names[i] as Text, why: reason(i) })),
+          solution: walked(
+            [
+              [
+                ["Find the discriminant", "求判别式"],
+                t(
+                  `$D = 4 \\cdot ${paren(a)} \\cdot ${paren(c)} - ${paren(b)}^2 = ${D}$.`,
+                  `$D = 4 \\cdot ${paren(a)} \\cdot ${paren(c)} - ${paren(b)}^2 = ${D}$。`,
+                ),
+              ],
+              [
+                ["Apply the test", "应用检验"],
+                t(
+                  `${D > 0 ? `With $f_{xx} = ${2 * a}$, ` : ""}the answer is: ${right.en.toLowerCase()}.`,
+                  `${D > 0 ? `由 $f_{xx} = ${2 * a}$，` : ""}答案是：${right["zh-CN"]}。`,
+                ),
+              ],
+            ],
+            check,
           ),
-        );
+        });
       },
     },
   ],
@@ -6339,6 +7306,10 @@ export const calculatingGlobalExtremaOfMultivariableFunctions: TopicDef = {
     "To find the global extrema of a continuous function on a closed and bounded set, compare values at interior critical points and along the boundary.",
     "求有界闭集上连续函数的全局极值，需比较内部所有临界点处及边界上的函数值。",
   ),
+  intro: t(
+    "Find the extremes of $f(x, y) = x^2 + y^2 - 4x$ on the disk $x^2 + y^2 \\le 9$. Inside, $\\nabla f = (2x - 4, 2y) = \\mathbf{0}$ at $(2, 0)$, where $f = -4$. On the circle $x^2 + y^2 = 9$, $f = 9 - 4x$ with $-3 \\le x \\le 3$, which runs from $-3$ at $x = 3$ to $21$ at $x = -3$. Comparing, the global minimum is $-4$ and the global maximum is $21$.\n\nCheck: $f(-3, 0) = 9 + 12 = 21$, and $f = (x - 2)^2 + y^2 - 4 \\ge -4$ everywhere, with equality only at $(2, 0)$.\n\nIn this lesson we find global extrema on closed, bounded regions by comparing interior critical points with the boundary.",
+    "求 $f(x, y) = x^2 + y^2 - 4x$ 在圆盘 $x^2 + y^2 \\le 9$ 上的最值。在内部，$\\nabla f = (2x - 4, 2y) = \\mathbf{0}$ 于 $(2, 0)$，那里 $f = -4$。在圆 $x^2 + y^2 = 9$ 上，$f = 9 - 4x$，$-3 \\le x \\le 3$，其值从 $x = 3$ 处的 $-3$ 到 $x = -3$ 处的 $21$。比较可知，全局最小值为 $-4$，全局最大值为 $21$。\n\n检验：$f(-3, 0) = 9 + 12 = 21$，且处处 $f = (x - 2)^2 + y^2 - 4 \\ge -4$，仅在 $(2, 0)$ 处取等号。\n\n本课我们比较内部临界点与边界上的值，求有界闭区域上的全局极值。",
+  ),
   prerequisites: ["the-second-partial-derivatives-test"],
   encompasses: [],
   xp: 10,
@@ -6347,41 +7318,51 @@ export const calculatingGlobalExtremaOfMultivariableFunctions: TopicDef = {
       id: "finding-global-maximum-on-disks",
       title: t("Finding global maximum on disks", "在闭圆盘上求全局最大值"),
       explanation: t(
-        "By the Extreme Value Theorem, a continuous function $f(x, y)$ on a closed bounded set $D$ attains both a global maximum and minimum. Check values at all interior critical points and parameterize the boundary $\\partial D$.",
-        "由极值定理，有界闭集 $D$ 上的连续函数 $f(x, y)$ 必能取得全局最大值与最小值。需检验内部所有临界点处的取值，并对边界 $\\partial D$ 参数化求极值。",
+        "By the Extreme Value Theorem, a continuous function $f(x, y)$ on a closed bounded set $D$ attains both a global maximum and minimum. Check values at all interior critical points and parameterize the boundary $\\partial D$. For $f = 20 - 3x^2 - 3y^2$ on $x^2 + y^2 \\le 49$, the only critical point is $(0, 0)$ with $f = 20$, and on the boundary $f = 20 - 3 \\cdot 49 = -127$; so the maximum is $20$ and the minimum is $-127$.\n\n> **Watch out.** The boundary value is the smallest here, not the largest: compare the values before naming the maximum, and keep the minus sign in front of the squares.",
+        "由极值定理，有界闭集 $D$ 上的连续函数 $f(x, y)$ 必能取得全局最大值与最小值。需检验内部所有临界点处的取值，并对边界 $\\partial D$ 参数化求极值。对 $x^2 + y^2 \\le 49$ 上的 $f = 20 - 3x^2 - 3y^2$，唯一的临界点是 $(0, 0)$，$f = 20$；边界上 $f = 20 - 3 \\cdot 49 = -127$；所以最大值为 $20$，最小值为 $-127$。\n\n> **注意。** 这里边界上的值是最小的，不是最大的：先比较各值再判断最大值，并保留平方项前的负号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const R = rng.int(2, 6);
         const cVal = rng.int(1, 10);
-
-        // f(x, y) = cVal - a*(x^2 + y^2) on x^2 + y^2 <= R^2
-        // Max at (0, 0): f(0, 0) = cVal. Min on boundary: cVal - a*R^2.
         const ans = cVal;
-
-        const prompt = t(
-          `Find the global maximum value of the function $f(x, y) = ${poly([cVal, ""], [-a, "x^2"], [-a, "y^2"])}$ on the closed disk $D = \\left\\{(x, y) : x^2 + y^2 \\le ${R * R}\\right\\}$.`,
-          `求函数 $f(x, y) = ${poly([cVal, ""], [-a, "x^2"], [-a, "y^2"])}$ 在闭圆盘 $D = \\left\\{(x, y) : x^2 + y^2 \\le ${R * R}\\right\\}$ 上的全局最大值。`,
-        );
-        const solution = t(
-          steps(
-            `Find interior critical points: $\\nabla f = \\langle -${2 * a}x, -${2 * a}y \\rangle = \\mathbf{0} \\implies (x, y) = (0, 0)$.`,
-            `The value at the critical point is $f(0, 0) = ${cVal}$.`,
-            `On the boundary $x^2 + y^2 = ${R * R}$, the value is $f(x, y) = ${cVal} - ${a}(${R * R}) = ${cVal - a * R * R}$.`,
-            `Comparing values, the global maximum value is $${ans}$.`,
-          ),
-          steps(
-            `求内部临界点：$\\nabla f = \\langle -${2 * a}x, -${2 * a}y \\rangle = \\mathbf{0} \\implies (x, y) = (0, 0)$。`,
-            `临界点处的函数值为 $f(0, 0) = ${cVal}$。`,
-            `在边界 $x^2 + y^2 = ${R * R}$ 上，函数值为 $f(x, y) = ${cVal} - ${a}(${R * R}) = ${cVal - a * R * R}$。`,
-            `比较各处取值，全局最大值为 $${ans}$。`,
-          ),
-        );
+        const edge = cVal - a * R * R;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the global maximum value of the function $f(x, y) = ${poly([cVal, ""], [-a, "x^2"], [-a, "y^2"])}$ on the closed disk $D = \\left\\{(x, y) : x^2 + y^2 \\le ${R * R}\\right\\}$.`,
+            `求函数 $f(x, y) = ${poly([cVal, ""], [-a, "x^2"], [-a, "y^2"])}$ 在闭圆盘 $D = \\left\\{(x, y) : x^2 + y^2 \\le ${R * R}\\right\\}$ 上的全局最大值。`,
+          ),
           answer: ans,
-          wrong: [cVal - a * R * R, 0, cVal + a * R * R],
+          mistakes: distinct(ans, [
+            why(edge, "That is the value on the boundary circle, which is the global minimum.", "那是边界圆上的值，是全局最小值。"),
+            why(
+              cVal + a * R * R,
+              `The squares enter with a minus sign: on the boundary $f = ${cVal} - ${a === 1 ? "" : a}(x^2 + y^2)$, and that is not the maximum anyway.`,
+              `平方项前是负号：边界上 $f = ${cVal} - ${a === 1 ? "" : a}(x^2 + y^2)$，而且那也不是最大值。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the interior critical point", "求内部临界点"],
+                t(
+                  `$\\nabla f = (${-2 * a}x, ${-2 * a}y) = \\mathbf{0}$ only at $(0, 0)$, where $f(0, 0) = ${cVal}$.`,
+                  `$\\nabla f = (${-2 * a}x, ${-2 * a}y) = \\mathbf{0}$ 仅在 $(0, 0)$ 处成立，$f(0, 0) = ${cVal}$。`,
+                ),
+              ],
+              [
+                ["Check the boundary", "检查边界"],
+                t(
+                  `On $x^2 + y^2 = ${R * R}$, $f = ${cVal} - ${a} \\cdot ${R * R} = ${edge}$. The larger value is $${ans}$.`,
+                  `在 $x^2 + y^2 = ${R * R}$ 上，$f = ${cVal} - ${a} \\cdot ${R * R} = ${edge}$。较大的值是 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Since $x^2 + y^2 \\ge 0$, $f \\le ${cVal}$ everywhere, with equality at the origin.`,
+              `由于 $x^2 + y^2 \\ge 0$，处处 $f \\le ${cVal}$，在原点处取等号。`,
+            ),
+          ),
         });
       },
     },
@@ -6389,28 +7370,62 @@ export const calculatingGlobalExtremaOfMultivariableFunctions: TopicDef = {
       id: "the-maximum-distance-on-a-square",
       title: t("The maximum distance on a square", "正方形上的最大距离"),
       explanation: t(
-        "A continuous function on a closed, bounded region attains a global maximum, either at a critical point inside or on the boundary. The function $f(x, y) = (x - p)^2 + (y - q)^2$ is the squared distance to $(p, q)$; its only critical point is the minimum at $(p, q)$. So on a square its maximum is on the boundary, at the corner farthest from $(p, q)$.",
-        "闭有界区域上的连续函数必取得全局最大值，要么在内部的临界点，要么在边界上。函数 $f(x, y) = (x - p)^2 + (y - q)^2$ 是到 $(p, q)$ 的距离的平方；其唯一的临界点是 $(p, q)$ 处的最小值点。所以它在正方形上的最大值在边界上，位于离 $(p, q)$ 最远的顶点。",
+        "A continuous function on a closed, bounded region attains a global maximum, either at a critical point inside or on the boundary. The function $f(x, y) = (x - p)^2 + (y - q)^2$ is the squared distance to $(p, q)$; its only critical point is the minimum at $(p, q)$. So on a square its maximum is on the boundary, at the corner farthest from $(p, q)$. For $f = (x - 2)^2 + (y + 1)^2$ on $-6 \\le x, y \\le 6$, the farthest corner is $(-6, 6)$ and the maximum is $8^2 + 7^2 = 113$.\n\n> **Watch out.** The farthest corner is on the opposite side from $(p, q)$ in each coordinate, so each distance is $L + |p|$ or $L + |q|$, not $L - |p|$.",
+        "闭有界区域上的连续函数必取得全局最大值，要么在内部的临界点，要么在边界上。函数 $f(x, y) = (x - p)^2 + (y - q)^2$ 是到 $(p, q)$ 的距离的平方；其唯一的临界点是 $(p, q)$ 处的最小值点。所以它在正方形上的最大值在边界上，位于离 $(p, q)$ 最远的顶点。对 $-6 \\le x, y \\le 6$ 上的 $f = (x - 2)^2 + (y + 1)^2$，最远的顶点是 $(-6, 6)$，最大值为 $8^2 + 7^2 = 113$。\n\n> **注意。** 最远的顶点在每个坐标上都位于 $(p, q)$ 的另一侧，所以每个距离是 $L + |p|$ 或 $L + |q|$，而不是 $L - |p|$。",
       ),
       generate(rng: Rng): Problem {
         const L = rng.int(1, 5);
         const p = rng.int(-L + 1, L - 1);
-        const q = rng.int(-L, L);
-        const ans = (L + Math.abs(p)) ** 2 + (L + Math.abs(q)) ** 2;
+        let q = rng.int(-L, L);
+        if (p === 0 && q === 0) q = 1;
+        const dx = L + Math.abs(p);
+        const dy = L + Math.abs(q);
+        const ans = dx * dx + dy * dy;
         const cx = p > 0 ? -L : L;
         const cy = q > 0 ? -L : L;
         const fx = p === 0 ? "x^2" : `(${poly([1, "x"], [-p, ""])})^2`;
         const fy = q === 0 ? "y^2" : `(${poly([1, "y"], [-q, ""])})^2`;
+        const other = (L - Math.abs(p)) ** 2 + dy * dy;
         return numberProblem({
           prompt: t(
             `Find the maximum value of $f(x, y) = ${fx} + ${fy}$ on the square $-${L} \\le x \\le ${L}$, $-${L} \\le y \\le ${L}$.`,
             `求 $f(x, y) = ${fx} + ${fy}$ 在正方形 $-${L} \\le x \\le ${L}$，$-${L} \\le y \\le ${L}$ 上的最大值。`,
           ),
           answer: ans,
-          wrong: [0, (L - Math.abs(p)) ** 2 + (L - Math.abs(q)) ** 2, 2 * L * L],
-          solution: t(
-            `The only critical point $(${p}, ${q})$ gives the minimum $0$. The maximum is at the farthest corner $(${cx}, ${cy})$: $f = ${(L + Math.abs(p)) ** 2} + ${(L + Math.abs(q)) ** 2} = ${ans}$.`,
-            `唯一的临界点 $(${p}, ${q})$ 给出最小值 $0$。最大值在最远的顶点 $(${cx}, ${cy})$ 处：$f = ${(L + Math.abs(p)) ** 2} + ${(L + Math.abs(q)) ** 2} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(0, `That is the minimum, at the critical point $(${p}, ${q})$.`, `那是最小值，在临界点 $(${p}, ${q})$ 处取得。`),
+            why(
+              (L - Math.abs(p)) ** 2 + (L - Math.abs(q)) ** 2,
+              "That is the nearest corner; the maximum is at the corner farthest from the center of the circles.",
+              "那是最近的顶点；最大值在离圆心最远的顶点处。",
+            ),
+            why(
+              2 * L * L,
+              `That is the squared distance from the origin to a corner; distances are measured from $(${p}, ${q})$.`,
+              `那是原点到顶点距离的平方；距离应从 $(${p}, ${q})$ 量起。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Rule out the inside", "排除内部"],
+                t(
+                  `The only critical point is $(${p}, ${q})$, where $f = 0$, the minimum; so the maximum is on the boundary, at a corner.`,
+                  `唯一的临界点是 $(${p}, ${q})$，那里 $f = 0$，是最小值；所以最大值在边界上，在某个顶点处。`,
+                ),
+              ],
+              [
+                ["Take the farthest corner", "取最远的顶点"],
+                t(
+                  `The corner $(${cx}, ${cy})$ is $${dx}$ and $${dy}$ away in each coordinate, so $f = ${dx * dx} + ${dy * dy} = ${ans}$.`,
+                  `顶点 $(${cx}, ${cy})$ 在两个坐标上分别相距 $${dx}$ 和 $${dy}$，所以 $f = ${dx * dx} + ${dy * dy} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The corner $(${-cx}, ${cy})$ gives only $${(L - Math.abs(p)) ** 2} + ${dy * dy} = ${other}$, which is not larger.`,
+              `顶点 $(${-cx}, ${cy})$ 只给出 $${(L - Math.abs(p)) ** 2} + ${dy * dy} = ${other}$，并不更大。`,
+            ),
           ),
         });
       },
@@ -6426,6 +7441,10 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
     "The method of Lagrange multipliers optimizes f(x, y) subject to g(x, y) = k by solving ∇f = λ∇g and g(x, y) = k.",
     "拉格朗日乘数法通过求解 ∇f = λ∇g 与 g(x, y) = k 来寻找满足约束条件 g(x, y) = k 的函数 f(x, y) 的极值。",
   ),
+  intro: t(
+    "Maximize $f(x, y) = 2x + y$ on the circle $x^2 + y^2 = 5$. Setting $\\nabla f = \\lambda \\nabla g$ gives $(2, 1) = \\lambda(2x, 2y)$, so $x = \\frac{1}{\\lambda}$ and $y = \\frac{1}{2\\lambda}$. The constraint gives $\\frac{5}{4\\lambda^2} = 5$, so $\\lambda = \\pm\\frac{1}{2}$, and $\\lambda = \\frac{1}{2}$ gives the point $(2, 1)$ with $f = 5$.\n\nCheck: $(2, 1)$ is on the circle since $4 + 1 = 5$, and $\\lambda = -\\frac{1}{2}$ gives $(-2, -1)$ with $f = -5$, the minimum.\n\nIn this lesson we solve $\\nabla f = \\lambda \\nabla g$ together with the constraint to find extrema on a curve.",
+    "在圆 $x^2 + y^2 = 5$ 上求 $f(x, y) = 2x + y$ 的最大值。令 $\\nabla f = \\lambda \\nabla g$，得 $(2, 1) = \\lambda(2x, 2y)$，所以 $x = \\frac{1}{\\lambda}$，$y = \\frac{1}{2\\lambda}$。由约束得 $\\frac{5}{4\\lambda^2} = 5$，所以 $\\lambda = \\pm\\frac{1}{2}$；$\\lambda = \\frac{1}{2}$ 给出点 $(2, 1)$，$f = 5$。\n\n检验：$4 + 1 = 5$，所以 $(2, 1)$ 在圆上；$\\lambda = -\\frac{1}{2}$ 给出 $(-2, -1)$，$f = -5$，是最小值。\n\n本课我们把 $\\nabla f = \\lambda \\nabla g$ 与约束联立，求曲线上的极值。",
+  ),
   prerequisites: ["calculating-global-extrema-of-multivariable-functions", "the-gradient-as-a-normal-vector"],
   encompasses: [],
   xp: 10,
@@ -6435,37 +7454,68 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
       figure: multivariableDrawings3["lagrange-multipliers-with-one-constraint#optimizing-linear-functions-on-circles-using-lagrange"],
       title: t("Optimizing linear functions on circles using Lagrange", "利用拉格朗日法在圆上优化线性函数"),
       explanation: t(
-        "At an extreme point on the constraint, the gradient of the function is parallel to the gradient of the constraint, which gives equations for the point. To find the maximum of $f(x, y) = ax + by$ subject to $x^2 + y^2 = r^2$, apply $\\nabla f = \\lambda \\nabla g$:\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{Max value} = r\\sqrt{a^2 + b^2}.$$",
-        "在约束上的极值点处，函数的梯度与约束的梯度平行，由此得到求该点的方程。在约束条件 $x^2 + y^2 = r^2$ 下求 $f(x, y) = ax + by$ 的最大值，应用 $\\nabla f = \\lambda \\nabla g$：\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{最大值} = r\\sqrt{a^2 + b^2}$$",
+        "At an extreme point on the constraint, the gradient of the function is parallel to the gradient of the constraint, which gives equations for the point. To find the maximum of $f(x, y) = ax + by$ subject to $x^2 + y^2 = r^2$, apply $\\nabla f = \\lambda \\nabla g$:\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{Max value} = r\\sqrt{a^2 + b^2}.$$\n\nFor $f = x + 2y$ on $x^2 + y^2 = 20$, $r = 2\\sqrt{5}$ and $\\sqrt{a^2 + b^2} = \\sqrt{5}$, so the maximum is $10$, at $(2, 4)$.\n\n> **Watch out.** The constraint gives $r^2$, so take its square root for $r$; and the factor is $\\sqrt{a^2 + b^2}$, not $a^2 + b^2$.",
+        "在约束上的极值点处，函数的梯度与约束的梯度平行，由此得到求该点的方程。在约束条件 $x^2 + y^2 = r^2$ 下求 $f(x, y) = ax + by$ 的最大值，应用 $\\nabla f = \\lambda \\nabla g$：\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{最大值} = r\\sqrt{a^2 + b^2}$$\n\n对 $x^2 + y^2 = 20$ 上的 $f = x + 2y$，$r = 2\\sqrt{5}$，$\\sqrt{a^2 + b^2} = \\sqrt{5}$，所以最大值为 $10$，在 $(2, 4)$ 处取得。\n\n> **注意。** 约束给出的是 $r^2$，要开平方得 $r$；系数是 $\\sqrt{a^2 + b^2}$，不是 $a^2 + b^2$。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
         const r = rng.int(1, 5);
         const ans = r * c;
-
-        const prompt = t(
-          `Use the method of Lagrange multipliers to find the maximum value of $f(x, y) = ${poly([a, "x"], [b, "y"])}$ subject to the constraint $x^2 + y^2 = ${r * r}$.`,
-          `利用拉格朗日乘数法求函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$ 在约束条件 $x^2 + y^2 = ${r * r}$ 下的最大值。`,
-        );
-        const solution = t(
-          steps(
-            `Set up Lagrange system: $\\nabla f = \\lambda \\nabla g \\implies \\langle ${a}, ${b} \\rangle = \\lambda \\langle 2x, 2y \\rangle$.`,
-            `This gives $x = \\frac{${a}}{2\\lambda}$ and $y = \\frac{${b}}{2\\lambda}$.`,
-            `Substitute into constraint: $\\frac{${a * a} + ${b * b}}{4\\lambda^2} = ${r * r} \\implies 4\\lambda^2 = \\frac{${c * c}}{${r * r}} \\implies 2\\lambda = \\pm \\frac{${c}}{${r}}$.`,
-            `The maximum value is $ax + by = \\frac{${a * a} + ${b * b}}{2\\lambda} = ${c * c} \\left(\\frac{${r}}{${c}}\\right) = ${ans}$.`,
-          ),
-          steps(
-            `建立拉格朗日方程组：$\\nabla f = \\lambda \\nabla g \\implies \\langle ${a}, ${b} \\rangle = \\lambda \\langle 2x, 2y \\rangle$。`,
-            `解得 $x = \\frac{${a}}{2\\lambda}$ 且 $y = \\frac{${b}}{2\\lambda}$。`,
-            `代入约束条件：$\\frac{${a * a} + ${b * b}}{4\\lambda^2} = ${r * r} \\implies 4\\lambda^2 = \\frac{${c * c}}{${r * r}} \\implies 2\\lambda = \\pm \\frac{${c}}{${r}}$。`,
-            `最大值为 $ax + by = \\frac{${a * a} + ${b * b}}{2\\lambda} = ${c * c} \\left(\\frac{${r}}{${c}}\\right) = ${ans}$。`,
-          ),
-        );
+        const x = Q.of(r * a, c);
+        const y = Q.of(r * b, c);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Use the method of Lagrange multipliers to find the maximum value of $f(x, y) = ${poly([a, "x"], [b, "y"])}$ subject to the constraint $x^2 + y^2 = ${r * r}$.`,
+            `利用拉格朗日乘数法求函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$ 在约束条件 $x^2 + y^2 = ${r * r}$ 下的最大值。`,
+          ),
           answer: ans,
-          wrong: [c, r * a, -ans],
+          mistakes: distinct(ans, [
+            why(
+              -ans,
+              "That is the minimum, from the negative multiplier; the maximum takes the point in the direction of $(a, b)$.",
+              "那是最小值，来自负的乘数；最大值取在 $(a, b)$ 方向上的点。",
+            ),
+            why(
+              c,
+              `That is $\\sqrt{${a * a + b * b}}$ alone; it still has to be multiplied by the radius $${r}$.`,
+              `那只是 $\\sqrt{${a * a + b * b}}$；还要乘以半径 $${r}$。`,
+            ),
+            why(r * r * c, `$${r * r}$ is $r^2$; the radius is $${r}$.`, `$${r * r}$ 是 $r^2$；半径是 $${r}$。`),
+            why(
+              r * c * c,
+              `$${c * c}$ is $a^2 + b^2$; the factor is its square root, $${c}$.`,
+              `$${c * c}$ 是 $a^2 + b^2$；系数是它的平方根 $${c}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set up the system", "列出方程组"],
+                t(
+                  `$\\langle ${a}, ${b} \\rangle = \\lambda \\langle 2x, 2y \\rangle$ gives $x = \\frac{${a}}{2\\lambda}$ and $y = \\frac{${b}}{2\\lambda}$.`,
+                  `由 $\\langle ${a}, ${b} \\rangle = \\lambda \\langle 2x, 2y \\rangle$ 得 $x = \\frac{${a}}{2\\lambda}$，$y = \\frac{${b}}{2\\lambda}$。`,
+                ),
+              ],
+              [
+                ["Use the constraint", "代入约束"],
+                t(
+                  `$\\frac{${a * a + b * b}}{4\\lambda^2} = ${r * r}$, so $2\\lambda = \\pm\\frac{${c}}{${r}}$; the plus sign gives $(x, y) = (${x.toLatex()}, ${y.toLatex()})$.`,
+                  `$\\frac{${a * a + b * b}}{4\\lambda^2} = ${r * r}$，所以 $2\\lambda = \\pm\\frac{${c}}{${r}}$；取正号得 $(x, y) = (${x.toLatex()}, ${y.toLatex()})$。`,
+                ),
+              ],
+              [
+                ["Evaluate", "求值"],
+                t(
+                  `$f = \\frac{${a * a + b * b}}{2\\lambda} = ${a * a + b * b} \\cdot \\frac{${r}}{${c}} = ${ans}$.`,
+                  `$f = \\frac{${a * a + b * b}}{2\\lambda} = ${a * a + b * b} \\cdot \\frac{${r}}{${c}} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point is on the circle: $${x.mul(x).add(y.mul(y)).toLatex()} = ${r * r}$; and $${a}x + ${b}y = ${Q.of(r * (a * a + b * b), c).toLatex()} = ${ans}$.`,
+              `该点在圆上：$${x.mul(x).add(y.mul(y)).toLatex()} = ${r * r}$；且 $${a}x + ${b}y = ${Q.of(r * (a * a + b * b), c).toLatex()} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -6473,25 +7523,58 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
       id: "the-closest-point-of-a-line-to-the-origin",
       title: t("The closest point of a line to the origin", "直线上离原点最近的点"),
       explanation: t(
-        "To minimize $f = x^2 + y^2$ subject to $ax + by = c$, set $\\nabla f = \\lambda \\nabla g$: $2x = \\lambda a$ and $2y = \\lambda b$. So $(x, y)$ is a multiple of $(a, b)$, and the constraint gives $\\frac{\\lambda}{2}(a^2 + b^2) = c$. The minimum value is\n\n$$f_{\\min} = \\frac{c^2}{a^2 + b^2},$$\n\nthe square of the distance from the origin to the line.",
-        "要在约束 $ax + by = c$ 下最小化 $f = x^2 + y^2$，令 $\\nabla f = \\lambda \\nabla g$：$2x = \\lambda a$，$2y = \\lambda b$。所以 $(x, y)$ 是 $(a, b)$ 的倍数，由约束得 $\\frac{\\lambda}{2}(a^2 + b^2) = c$。最小值为\n\n$$f_{\\min} = \\frac{c^2}{a^2 + b^2},$$\n\n即原点到该直线距离的平方。",
+        "To minimize $f = x^2 + y^2$ subject to $ax + by = c$, set $\\nabla f = \\lambda \\nabla g$: $2x = \\lambda a$ and $2y = \\lambda b$. So $(x, y)$ is a multiple of $(a, b)$, and the constraint gives $\\frac{\\lambda}{2}(a^2 + b^2) = c$. The minimum value is\n\n$$f_{\\min} = \\frac{c^2}{a^2 + b^2},$$\n\nthe square of the distance from the origin to the line. For $3x + y = 10$, the point is $(3, 1)$ and the minimum is $\\frac{100}{10} = 10$.\n\n> **Watch out.** The multiplier $t = \\frac{c}{a^2 + b^2}$ is not the minimum; the minimum is $t^2(a^2 + b^2) = \\frac{c^2}{a^2 + b^2}$.",
+        "要在约束 $ax + by = c$ 下最小化 $f = x^2 + y^2$，令 $\\nabla f = \\lambda \\nabla g$：$2x = \\lambda a$，$2y = \\lambda b$。所以 $(x, y)$ 是 $(a, b)$ 的倍数，由约束得 $\\frac{\\lambda}{2}(a^2 + b^2) = c$。最小值为\n\n$$f_{\\min} = \\frac{c^2}{a^2 + b^2},$$\n\n即原点到该直线距离的平方。对 $3x + y = 10$，该点为 $(3, 1)$，最小值为 $\\frac{100}{10} = 10$。\n\n> **注意。** 倍数 $t = \\frac{c}{a^2 + b^2}$ 不是最小值；最小值是 $t^2(a^2 + b^2) = \\frac{c^2}{a^2 + b^2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5) * rng.pick([-1, 1]);
         const b = rng.int(1, 5) * rng.pick([-1, 1]);
         const c = rng.int(1, 9) * rng.pick([-1, 1]);
-        const ans = Q.of(c * c, a * a + b * b);
-        const k = Q.of(c, a * a + b * b);
+        const n = a * a + b * b;
+        const ans = Q.of(c * c, n);
+        const k = Q.of(c, n);
+        const px = k.mul(Q.of(a));
+        const py = k.mul(Q.of(b));
         return numberProblem({
           prompt: t(
             `Use Lagrange multipliers to find the minimum of $x^2 + y^2$ subject to $${poly([a, "x"], [b, "y"])} = ${c}$.`,
             `用拉格朗日乘数法求 $x^2 + y^2$ 在约束 $${poly([a, "x"], [b, "y"])} = ${c}$ 下的最小值。`,
           ),
           answer: ans,
-          wrong: [Q.of(Math.abs(c), a * a + b * b), Q.of(c * c, (Math.abs(a) + Math.abs(b)) ** 2), Q.of(c * c)],
-          solution: t(
-            `$(x, y) = t(${a}, ${b})$ with $t \\cdot ${a * a + b * b} = ${c}$, so $t = ${k.toLatex()}$ and the minimum is $t^2 \\cdot ${a * a + b * b} = ${ans.toLatex()}$.`,
-            `$(x, y) = t(${a}, ${b})$，且 $t \\cdot ${a * a + b * b} = ${c}$，所以 $t = ${k.toLatex()}$，最小值为 $t^2 \\cdot ${a * a + b * b} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(Math.abs(c), n),
+              `That is $|t|$, the size of the multiple of $(${a}, ${b})$; the minimum is $t^2 \\cdot ${n}$.`,
+              `那是 $|t|$，即 $(${a}, ${b})$ 的倍数的大小；最小值是 $t^2 \\cdot ${n}$。`,
+            ),
+            why(
+              Q.of(c * c, (Math.abs(a) + Math.abs(b)) ** 2),
+              `The squared length of $(${a}, ${b})$ is $${a * a} + ${b * b} = ${n}$, not $(|a| + |b|)^2$.`,
+              `$(${a}, ${b})$ 的长度平方是 $${a * a} + ${b * b} = ${n}$，不是 $(|a| + |b|)^2$。`,
+            ),
+            why(Q.of(c * c), `That leaves out the division by $a^2 + b^2 = ${n}$.`, `那漏了除以 $a^2 + b^2 = ${n}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the gradient condition", "用梯度条件"],
+                t(
+                  `$2x = \\lambda \\cdot ${paren(a)}$ and $2y = \\lambda \\cdot ${paren(b)}$, so $(x, y) = t(${a}, ${b})$.`,
+                  `$2x = \\lambda \\cdot ${paren(a)}$，$2y = \\lambda \\cdot ${paren(b)}$，所以 $(x, y) = t(${a}, ${b})$。`,
+                ),
+              ],
+              [
+                ["Use the constraint", "代入约束"],
+                t(
+                  `$t \\cdot ${n} = ${c}$, so $t = ${k.toLatex()}$ and the minimum is $t^2 \\cdot ${n} = ${ans.toLatex()}$.`,
+                  `$t \\cdot ${n} = ${c}$，所以 $t = ${k.toLatex()}$，最小值为 $t^2 \\cdot ${n} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(${px.toLatex()}, ${py.toLatex()})$ is on the line, and the distance formula gives $\\left(\\frac{|${c}|}{\\sqrt{${n}}}\\right)^2 = ${ans.toLatex()}$.`,
+              `点 $(${px.toLatex()}, ${py.toLatex()})$ 在直线上，距离公式给出 $\\left(\\frac{|${c}|}{\\sqrt{${n}}}\\right)^2 = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -6507,6 +7590,10 @@ export const lagrangeMultipliersWithMultipleConstraints: TopicDef = {
     "To optimize f subject to two constraints g = c and h = k, solve ∇f = λ∇g + μ∇h alongside the constraint equations.",
     "在双重约束条件 g = c 与 h = k 下求 f 的极值，需联立求解 ∇f = λ∇g + μ∇h 及约束方程。",
   ),
+  intro: t(
+    "Minimize $x^2 + y^2 + z^2$ subject to $x + y = 4$ and $y + z = 4$. The condition $(2x, 2y, 2z) = \\lambda(1, 1, 0) + \\mu(0, 1, 1)$ gives $x = \\frac{\\lambda}{2}$, $y = \\frac{\\lambda + \\mu}{2}$ and $z = \\frac{\\mu}{2}$. The two constraints read $\\lambda + \\frac{\\mu}{2} = 4$ and $\\frac{\\lambda}{2} + \\mu = 4$, so $\\lambda = \\mu = \\frac{8}{3}$, the point is $\\left(\\frac{4}{3}, \\frac{8}{3}, \\frac{4}{3}\\right)$, and the minimum is $\\frac{16 + 64 + 16}{9} = \\frac{32}{3}$.\n\nCheck: $\\frac{4}{3} + \\frac{8}{3} = 4$ satisfies both constraints, and the point $(2, 2, 2)$, which also satisfies them, gives the larger value $12$.\n\nIn this lesson we set $\\nabla f$ equal to a combination of the constraint gradients and solve it together with all the constraints.",
+    "在约束 $x + y = 4$ 与 $y + z = 4$ 下最小化 $x^2 + y^2 + z^2$。条件 $(2x, 2y, 2z) = \\lambda(1, 1, 0) + \\mu(0, 1, 1)$ 给出 $x = \\frac{\\lambda}{2}$，$y = \\frac{\\lambda + \\mu}{2}$，$z = \\frac{\\mu}{2}$。两个约束化为 $\\lambda + \\frac{\\mu}{2} = 4$ 与 $\\frac{\\lambda}{2} + \\mu = 4$，所以 $\\lambda = \\mu = \\frac{8}{3}$，该点为 $\\left(\\frac{4}{3}, \\frac{8}{3}, \\frac{4}{3}\\right)$，最小值为 $\\frac{16 + 64 + 16}{9} = \\frac{32}{3}$。\n\n检验：$\\frac{4}{3} + \\frac{8}{3} = 4$，两个约束都满足；同样满足约束的点 $(2, 2, 2)$ 给出更大的值 $12$。\n\n本课我们令 $\\nabla f$ 等于各约束梯度的组合，并与全部约束联立求解。",
+  ),
   prerequisites: ["lagrange-multipliers-with-one-constraint"],
   encompasses: [{ topic: "lagrange-multipliers-with-one-constraint", weight: 0.3 }],
   xp: 10,
@@ -6515,40 +7602,53 @@ export const lagrangeMultipliersWithMultipleConstraints: TopicDef = {
       id: "formulating-multiple-constraint-lagrange-equations",
       title: t("Formulating multiple-constraint Lagrange equations", "建立多约束拉格朗日方程"),
       explanation: t(
-        "For an objective function $f(x, y, z)$ subject to two constraints $g(x, y, z) = c$ and $h(x, y, z) = k$, critical points occur where $\\nabla f$ is in the plane spanned by $\\nabla g$ and $\\nabla h$:\n\n$$\\nabla f = \\lambda \\nabla g + \\mu \\nabla h.$$",
-        "对于目标函数 $f(x, y, z)$ 在两个约束条件 $g(x, y, z) = c$ 与 $h(x, y, z) = k$ 下的极值问题，临界点出现在 $\\nabla f$ 位于由 $\\nabla g$ 和 $\\nabla h$ 张成的平面内：\n\n$$\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$$",
+        "For an objective function $f(x, y, z)$ subject to two constraints $g(x, y, z) = c$ and $h(x, y, z) = k$, critical points occur where $\\nabla f$ is in the plane spanned by $\\nabla g$ and $\\nabla h$:\n\n$$\\nabla f = \\lambda \\nabla g + \\mu \\nabla h.$$\n\nWith $g = x + y$ and $h = y + z$, $\\nabla g = (1, 1, 0)$ and $\\nabla h = (0, 1, 1)$, so $\\lambda\\nabla g + \\mu\\nabla h = (\\lambda, \\lambda + \\mu, \\mu)$. If $\\nabla f = (5, 14, 9)$, then $\\lambda = 5$ and $\\mu = 9$, and the middle entry $14 = 5 + 9$ agrees.\n\n> **Watch out.** Each multiplier belongs to its own constraint: $\\lambda$ goes with $\\nabla g$, $\\mu$ with $\\nabla h$. Read $\\lambda$ from a component where only $\\nabla g$ is nonzero.",
+        "对于目标函数 $f(x, y, z)$ 在两个约束条件 $g(x, y, z) = c$ 与 $h(x, y, z) = k$ 下的极值问题，临界点出现在 $\\nabla f$ 位于由 $\\nabla g$ 和 $\\nabla h$ 张成的平面内：\n\n$$\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$$\n\n当 $g = x + y$，$h = y + z$ 时，$\\nabla g = (1, 1, 0)$，$\\nabla h = (0, 1, 1)$，所以 $\\lambda\\nabla g + \\mu\\nabla h = (\\lambda, \\lambda + \\mu, \\mu)$。若 $\\nabla f = (5, 14, 9)$，则 $\\lambda = 5$，$\\mu = 9$，中间分量 $14 = 5 + 9$ 也吻合。\n\n> **注意。** 每个乘数属于自己的约束：$\\lambda$ 对应 $\\nabla g$，$\\mu$ 对应 $\\nabla h$。要从只有 $\\nabla g$ 不为零的分量读出 $\\lambda$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-8, 8);
-        const b = rng.nonZero(-8, 8);
+        let b = rng.nonZero(-8, 8);
+        if (b === a) b = -a;
         const c1 = rng.int(1, 10);
         const c2 = rng.int(1, 10);
         const ans = a;
-
-        const prompt = t(
-          `When optimizing a function $f(x, y, z)$ subject to the two plane constraints $x + y = ${c1}$ and $y + z = ${c2}$, the Lagrange multiplier condition is $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$. If at an extremum $\\nabla f = \\langle ${a}, ${a + b}, ${b} \\rangle$, find the multiplier $\\lambda$.`,
-          `在两个平面约束 $x + y = ${c1}$ 与 $y + z = ${c2}$ 下优化函数 $f(x, y, z)$ 时，拉格朗日乘数条件为 $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$。若在极值点处 $\\nabla f = \\langle ${a}, ${a + b}, ${b} \\rangle$，求拉格朗日乘数 $\\lambda$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the constraint gradients: $\\nabla g = \\langle 1, 1, 0 \\rangle$ and $\\nabla h = \\langle 0, 1, 1 \\rangle$.`,
-            `The linear combination is $\\lambda \\nabla g + \\mu \\nabla h = \\langle \\lambda, \\lambda + \\mu, \\mu \\rangle$.`,
-            `Equating components with $\\nabla f = \\langle ${a}, ${a + b}, ${b} \\rangle$:\n\n` +
-              `$$\\lambda = ${a}, \\quad \\mu = ${b}.$$`,
-            `Thus $\\lambda = ${ans}$.`,
-          ),
-          steps(
-            `计算约束函数的梯度：$\\nabla g = \\langle 1, 1, 0 \\rangle$ 与 $\\nabla h = \\langle 0, 1, 1 \\rangle$。`,
-            `线性组合为 $\\lambda \\nabla g + \\mu \\nabla h = \\langle \\lambda, \\lambda + \\mu, \\mu \\rangle$。`,
-            `与 $\\nabla f = \\langle ${a}, ${a + b}, ${b} \\rangle$ 的各分量对应比较：\n\n` + `$$\\lambda = ${a}, \\quad \\mu = ${b}$$`,
-            `因此 $\\lambda = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `When optimizing a function $f(x, y, z)$ subject to the two plane constraints $x + y = ${c1}$ and $y + z = ${c2}$, the Lagrange multiplier condition is $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$. If at an extremum $\\nabla f = \\langle ${a}, ${a + b}, ${b} \\rangle$, find the multiplier $\\lambda$.`,
+            `在两个平面约束 $x + y = ${c1}$ 与 $y + z = ${c2}$ 下优化函数 $f(x, y, z)$ 时，拉格朗日乘数条件为 $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$。若在极值点处 $\\nabla f = \\langle ${a}, ${a + b}, ${b} \\rangle$，求拉格朗日乘数 $\\lambda$ 的值。`,
+          ),
           answer: ans,
-          wrong: [b, a + b, a - b],
+          mistakes: distinct(ans, [
+            why(
+              b,
+              "That is $\\mu$, the multiplier of $\\nabla h = \\langle 0, 1, 1 \\rangle$.",
+              "那是 $\\mu$，即 $\\nabla h = \\langle 0, 1, 1 \\rangle$ 的乘数。",
+            ),
+            why(
+              a + b,
+              "That is the middle component, $\\lambda + \\mu$, where both gradients contribute.",
+              "那是中间分量 $\\lambda + \\mu$，两个梯度在那里都有贡献。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Combine the gradients", "组合梯度"],
+                t(
+                  "$\\nabla g = \\langle 1, 1, 0 \\rangle$ and $\\nabla h = \\langle 0, 1, 1 \\rangle$, so $\\lambda \\nabla g + \\mu \\nabla h = \\langle \\lambda, \\lambda + \\mu, \\mu \\rangle$.",
+                  "$\\nabla g = \\langle 1, 1, 0 \\rangle$，$\\nabla h = \\langle 0, 1, 1 \\rangle$，所以 $\\lambda \\nabla g + \\mu \\nabla h = \\langle \\lambda, \\lambda + \\mu, \\mu \\rangle$。",
+                ),
+              ],
+              [
+                ["Match the components", "比较分量"],
+                t(
+                  `The first component gives $\\lambda = ${a}$ and the third gives $\\mu = ${b}$.`,
+                  `第一个分量给出 $\\lambda = ${a}$，第三个给出 $\\mu = ${b}$。`,
+                ),
+              ],
+            ],
+            t(`The middle component agrees: $${a} + ${paren(b)} = ${a + b}$.`, `中间分量也吻合：$${a} + ${paren(b)} = ${a + b}$。`),
+          ),
         });
       },
     },
@@ -6556,8 +7656,8 @@ export const lagrangeMultipliersWithMultipleConstraints: TopicDef = {
       id: "the-closest-point-on-the-intersection-of-two-planes",
       title: t("The closest point on the intersection of two planes", "两平面交线上离原点最近的点"),
       explanation: t(
-        "To minimize $x^2 + y^2 + z^2$ subject to $x + y + z = p$ and $x - y = q$, set $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$:\n\n$$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0).$$\n\nThis gives $x = \\frac{\\lambda + \\mu}{2}$, $y = \\frac{\\lambda - \\mu}{2}$, $z = \\frac{\\lambda}{2}$. The constraints then give $\\lambda = \\frac{2p}{3}$ and $\\mu = q$, and the minimum works out to $\\frac{p^2}{3} + \\frac{q^2}{2}$.",
-        "要在约束 $x + y + z = p$ 与 $x - y = q$ 下最小化 $x^2 + y^2 + z^2$，令 $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$：\n\n$$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0).$$\n\n由此得 $x = \\frac{\\lambda + \\mu}{2}$，$y = \\frac{\\lambda - \\mu}{2}$，$z = \\frac{\\lambda}{2}$。再由约束得 $\\lambda = \\frac{2p}{3}$，$\\mu = q$，最小值为 $\\frac{p^2}{3} + \\frac{q^2}{2}$。",
+        "To minimize $x^2 + y^2 + z^2$ subject to $x + y + z = p$ and $x - y = q$, set $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$:\n\n$$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0).$$\n\nThis gives $x = \\frac{\\lambda + \\mu}{2}$, $y = \\frac{\\lambda - \\mu}{2}$, $z = \\frac{\\lambda}{2}$. The constraints then give $\\lambda = \\frac{2p}{3}$ and $\\mu = q$, and the minimum works out to $\\frac{p^2}{3} + \\frac{q^2}{2}$. For $p = 12$ and $q = 4$, $\\lambda = 8$ and $\\mu = 4$ give the point $(6, 2, 4)$ and the minimum $36 + 4 + 16 = 56$.\n\n> **Watch out.** Both constraints shape the answer: dropping $x - y = q$ leaves only $\\frac{p^2}{3}$. The $q$ is split as $\\pm\\frac{q}{2}$ between $x$ and $y$, so it adds $\\frac{q^2}{2}$, not $q^2$.",
+        "要在约束 $x + y + z = p$ 与 $x - y = q$ 下最小化 $x^2 + y^2 + z^2$，令 $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$：\n\n$$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0).$$\n\n由此得 $x = \\frac{\\lambda + \\mu}{2}$，$y = \\frac{\\lambda - \\mu}{2}$，$z = \\frac{\\lambda}{2}$。再由约束得 $\\lambda = \\frac{2p}{3}$，$\\mu = q$，最小值为 $\\frac{p^2}{3} + \\frac{q^2}{2}$。当 $p = 12$，$q = 4$ 时，$\\lambda = 8$，$\\mu = 4$ 给出点 $(6, 2, 4)$，最小值为 $36 + 4 + 16 = 56$。\n\n> **注意。** 两个约束都影响答案：去掉 $x - y = q$ 只剩 $\\frac{p^2}{3}$。$q$ 以 $\\pm\\frac{q}{2}$ 分给 $x$ 和 $y$，所以增加的是 $\\frac{q^2}{2}$，不是 $q^2$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(-9, 9);
@@ -6567,16 +7667,52 @@ export const lagrangeMultipliersWithMultipleConstraints: TopicDef = {
         const x = lam.add(Q.of(q)).div(Q.of(2));
         const y = lam.sub(Q.of(q)).div(Q.of(2));
         const z = lam.div(Q.of(2));
+        const wrap = (v: Q) => (v.sign() < 0 ? `\\left(${v.toLatex()}\\right)` : v.toLatex());
         return numberProblem({
           prompt: t(
             `Find the minimum of $x^2 + y^2 + z^2$ subject to $x + y + z = ${p}$ and $x - y = ${q}$.`,
             `求 $x^2 + y^2 + z^2$ 在约束 $x + y + z = ${p}$ 与 $x - y = ${q}$ 下的最小值。`,
           ),
           answer: ans,
-          wrong: [Q.of(p * p, 3), Q.of(p * p + q * q, 3), Q.of(p * p, 3).add(Q.of(q * q))],
-          solution: t(
-            `$\\lambda = ${lam.toLatex()}$ and $\\mu = ${q}$ give the point $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$, where $x^2 + y^2 + z^2 = ${ans.toLatex()}$.`,
-            `$\\lambda = ${lam.toLatex()}$，$\\mu = ${q}$ 给出点 $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$，此处 $x^2 + y^2 + z^2 = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(p * p, 3),
+              `That uses only $x + y + z = ${p}$; the constraint $x - y = ${q}$ moves the point away.`,
+              `那只用了 $x + y + z = ${p}$；约束 $x - y = ${q}$ 会使该点移开。`,
+            ),
+            why(
+              Q.of(p * p + q * q, 3),
+              `The two parts have different denominators: $\\frac{p^2}{3} + \\frac{q^2}{2}$.`,
+              `两部分的分母不同：$\\frac{p^2}{3} + \\frac{q^2}{2}$。`,
+            ),
+            why(
+              Q.of(p * p, 3).add(Q.of(q * q)),
+              `$x$ and $y$ each move by $\\frac{${Math.abs(q)}}{2}$, so the $q$ part is $2 \\cdot \\frac{q^2}{4} = \\frac{q^2}{2}$.`,
+              `$x$ 与 $y$ 各移动 $\\frac{${Math.abs(q)}}{2}$，所以 $q$ 的部分是 $2 \\cdot \\frac{q^2}{4} = \\frac{q^2}{2}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the point through the multipliers", "用乘数表示该点"],
+                t(
+                  "$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0)$ gives $x = \\frac{\\lambda + \\mu}{2}$, $y = \\frac{\\lambda - \\mu}{2}$ and $z = \\frac{\\lambda}{2}$.",
+                  "由 $(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0)$ 得 $x = \\frac{\\lambda + \\mu}{2}$，$y = \\frac{\\lambda - \\mu}{2}$，$z = \\frac{\\lambda}{2}$。",
+                ),
+              ],
+              [
+                ["Use the constraints", "代入约束"],
+                t(
+                  `$x + y + z = \\frac{3\\lambda}{2} = ${p}$ gives $\\lambda = ${lam.toLatex()}$, and $x - y = \\mu = ${q}$; the point is $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$.`,
+                  `由 $x + y + z = \\frac{3\\lambda}{2} = ${p}$ 得 $\\lambda = ${lam.toLatex()}$，且 $x - y = \\mu = ${q}$；该点为 $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$。`,
+                ),
+              ],
+              [["Evaluate", "求值"], t(`$x^2 + y^2 + z^2 = ${ans.toLatex()}$.`, `$x^2 + y^2 + z^2 = ${ans.toLatex()}$。`)],
+            ],
+            t(
+              `The point satisfies both constraints: $${x.toLatex()} + ${wrap(y)} + ${wrap(z)} = ${p}$ and $${x.toLatex()} - ${wrap(y)} = ${q}$.`,
+              `该点满足两个约束：$${x.toLatex()} + ${wrap(y)} + ${wrap(z)} = ${p}$，$${x.toLatex()} - ${wrap(y)} = ${q}$。`,
+            ),
           ),
         });
       },
@@ -6592,6 +7728,10 @@ export const optimizingMultivariableFunctionsUsingLagrangeMultipliers: TopicDef 
     "Geometric and physical optimization problems are solved by formulating objective and constraint functions and applying Lagrange multipliers.",
     "通过建立目标函数与约束函数并应用拉格朗日乘数法，求解几何与物理中的极值问题。",
   ),
+  intro: t(
+    "A rectangle has sides $x$ and $y$ with $5x + 2y = 40$; maximize its area $xy$. Lagrange's condition $(y, x) = \\lambda(5, 2)$ gives $y = 5\\lambda$ and $x = 2\\lambda$. The constraint gives $10\\lambda + 10\\lambda = 40$, so $\\lambda = 2$, $x = 4$, $y = 10$ and the area is $40$.\n\nCheck: other points on the line give less, for example $(2, 15)$ gives $30$ and $(6, 5)$ gives $30$.\n\nIn this lesson we turn a word problem into an objective and a constraint and solve it with Lagrange multipliers.",
+    "矩形的边长 $x$、$y$ 满足 $5x + 2y = 40$，求面积 $xy$ 的最大值。拉格朗日条件 $(y, x) = \\lambda(5, 2)$ 给出 $y = 5\\lambda$，$x = 2\\lambda$。由约束得 $10\\lambda + 10\\lambda = 40$，所以 $\\lambda = 2$，$x = 4$，$y = 10$，面积为 $40$。\n\n检验：直线上的其他点给出的值更小，例如 $(2, 15)$ 给出 $30$，$(6, 5)$ 给出 $30$。\n\n本课我们把应用问题化为目标函数与约束，再用拉格朗日乘数法求解。",
+  ),
   prerequisites: ["lagrange-multipliers-with-one-constraint"],
   encompasses: [{ topic: "lagrange-multipliers-with-one-constraint", weight: 0.3 }],
   xp: 10,
@@ -6600,44 +7740,58 @@ export const optimizingMultivariableFunctionsUsingLagrangeMultipliers: TopicDef 
       id: "maximizing-products-under-linear-constraints",
       title: t("Maximizing products under linear constraints", "在线性约束下求乘积最大值"),
       explanation: t(
-        "To maximize $P(x, y) = xy$ subject to a linear budget constraint $ax + by = C$ (with $x, y > 0$), applying Lagrange multipliers yields equal allocation of value: $ax = by = \\frac{C}{2}$, so $xy = \\frac{C^2}{4ab}$.",
-        "在正数线性约束 $ax + by = C$ 下最大化乘积 $P(x, y) = xy$，应用拉格朗日乘数法可知各项均分总额：$ax = by = \\frac{C}{2}$，从而最大值为 $xy = \\frac{C^2}{4ab}$。",
+        "To maximize $P(x, y) = xy$ subject to a linear budget constraint $ax + by = C$ (with $x, y > 0$), applying Lagrange multipliers yields equal allocation of value: $ax = by = \\frac{C}{2}$, so $xy = \\frac{C^2}{4ab}$. For $3x + 5y = 60$, $3x = 5y = 30$ gives $x = 10$, $y = 6$ and the maximum $60$.\n\n> **Watch out.** The two terms share $C$: each gets $\\frac{C}{2}$, not all of $C$. And $(ax)(by) = \\frac{C^2}{4}$ is not $xy$; divide by $ab$.",
+        "在正数线性约束 $ax + by = C$ 下最大化乘积 $P(x, y) = xy$，应用拉格朗日乘数法可知各项均分总额：$ax = by = \\frac{C}{2}$，从而最大值为 $xy = \\frac{C^2}{4ab}$。对 $3x + 5y = 60$，由 $3x = 5y = 30$ 得 $x = 10$，$y = 6$，最大值为 $60$。\n\n> **注意。** 两项分享 $C$：各得 $\\frac{C}{2}$，而不是各得整个 $C$。$(ax)(by) = \\frac{C^2}{4}$ 也不是 $xy$；要除以 $ab$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
         const k = rng.int(2, 6);
-        // C = 2 * a * b * k, so ax = abk => x = bk, by = abk => y = ak
         const C = 2 * a * b * k;
         const xOpt = b * k;
         const yOpt = a * k;
         const ans = xOpt * yOpt;
-
-        const prompt = t(
-          `Find the maximum value of $f(x, y) = xy$ subject to the constraint $${poly([a, "x"], [b, "y"])} = ${C}$ for $x, y > 0$.`,
-          `求函数 $f(x, y) = xy$ 在约束条件 $${poly([a, "x"], [b, "y"])} = ${C}$（$x, y > 0$）下的最大值。`,
-        );
-        const solution = t(
-          steps(
-            `Apply Lagrange multipliers: $\\nabla f = \\lambda \\nabla g \\implies \\langle y, x \\rangle = \\lambda \\langle ${a}, ${b} \\rangle$.`,
-            `This gives $y = ${a}\\lambda$ and $x = ${b}\\lambda$.`,
-            `Substitute into the constraint: $${a}(${b}\\lambda) + ${b}(${a}\\lambda) = ${2 * a * b}\\lambda = ${C} \\implies \\lambda = ${k}$.`,
-            `The optimal values are $x = ${xOpt}$ and $y = ${yOpt}$.`,
-            `The maximum product is $f(${xOpt}, ${yOpt}) = (${xOpt})(${yOpt}) = ${ans}$.`,
-          ),
-          steps(
-            `应用拉格朗日乘数法：$\\nabla f = \\lambda \\nabla g \\implies \\langle y, x \\rangle = \\lambda \\langle ${a}, ${b} \\rangle$。`,
-            `得到 $y = ${a}\\lambda$ 且 $x = ${b}\\lambda$。`,
-            `代入约束条件：$${a}(${b}\\lambda) + ${b}(${a}\\lambda) = ${2 * a * b}\\lambda = ${C} \\implies \\lambda = ${k}$。`,
-            `最佳取值为 $x = ${xOpt}$ 与 $y = ${yOpt}$。`,
-            `最大乘积为 $f(${xOpt}, ${yOpt}) = (${xOpt})(${yOpt}) = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the maximum value of $f(x, y) = xy$ subject to the constraint $${poly([a, "x"], [b, "y"])} = ${C}$ for $x, y > 0$.`,
+            `求函数 $f(x, y) = xy$ 在约束条件 $${poly([a, "x"], [b, "y"])} = ${C}$（$x, y > 0$）下的最大值。`,
+          ),
           answer: ans,
-          wrong: [Math.floor((C * C) / (2 * a * b)), ans + k, ans * 2],
+          mistakes: distinct(ans, [
+            why(
+              4 * ans,
+              `$${a === 1 ? "" : a}x$ and $${b === 1 ? "" : b}y$ share the total $${C}$: each is $${C / 2}$, not $${C}$.`,
+              `$${a === 1 ? "" : a}x$ 与 $${b === 1 ? "" : b}y$ 分享总数 $${C}$：各为 $${C / 2}$，不是 $${C}$。`,
+            ),
+            why(
+              (C / 2) ** 2,
+              `That is $(${a === 1 ? "" : a}x)(${b === 1 ? "" : b}y)$; divide by $${a * b}$ to get $xy$.`,
+              `那是 $(${a === 1 ? "" : a}x)(${b === 1 ? "" : b}y)$；除以 $${a * b}$ 才得 $xy$。`,
+            ),
+            why(k, "That is the multiplier $\\lambda$, not the product.", "那是乘数 $\\lambda$，不是乘积。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Apply the condition", "应用条件"],
+                t(
+                  `$\\langle y, x \\rangle = \\lambda \\langle ${a}, ${b} \\rangle$ gives $y = ${a === 1 ? "" : a}\\lambda$ and $x = ${b === 1 ? "" : b}\\lambda$.`,
+                  `由 $\\langle y, x \\rangle = \\lambda \\langle ${a}, ${b} \\rangle$ 得 $y = ${a === 1 ? "" : a}\\lambda$，$x = ${b === 1 ? "" : b}\\lambda$。`,
+                ),
+              ],
+              [
+                ["Use the constraint", "代入约束"],
+                t(
+                  `$${a}(${b}\\lambda) + ${b}(${a}\\lambda) = ${2 * a * b}\\lambda = ${C}$, so $\\lambda = ${k}$, $x = ${xOpt}$, $y = ${yOpt}$ and $xy = ${ans}$.`,
+                  `$${a}(${b}\\lambda) + ${b}(${a}\\lambda) = ${2 * a * b}\\lambda = ${C}$，所以 $\\lambda = ${k}$，$x = ${xOpt}$，$y = ${yOpt}$，$xy = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The nearby point $(${xOpt + b}, ${yOpt - a})$ is also on the line, and gives only $${(xOpt + b) * (yOpt - a)}$.`,
+              `附近的点 $(${xOpt + b}, ${yOpt - a})$ 也在直线上，只给出 $${(xOpt + b) * (yOpt - a)}$。`,
+            ),
+          ),
         });
       },
     },
@@ -6645,12 +7799,11 @@ export const optimizingMultivariableFunctionsUsingLagrangeMultipliers: TopicDef 
       id: "maximizing-a-product-of-powers-on-a-line",
       title: t("Maximizing a product of powers on a line", "在直线上最大化幂的乘积"),
       explanation: t(
-        "To maximize $f = x^m y^n$ with $x, y > 0$ subject to $x + y = s$, the Lagrange condition $\\nabla f = \\lambda \\nabla g$ gives $m x^{m-1}y^n = \\lambda$ and $n x^m y^{n-1} = \\lambda$. Dividing, $\\frac{m}{x} = \\frac{n}{y}$, so the sum is split in the ratio of the exponents:\n\n$$x = \\frac{m}{m + n}s, \\qquad y = \\frac{n}{m + n}s.$$",
-        "要在 $x, y > 0$ 且约束 $x + y = s$ 下最大化 $f = x^m y^n$，拉格朗日条件 $\\nabla f = \\lambda \\nabla g$ 给出 $m x^{m-1}y^n = \\lambda$ 与 $n x^m y^{n-1} = \\lambda$。两式相除得 $\\frac{m}{x} = \\frac{n}{y}$，所以和按指数之比分配：\n\n$$x = \\frac{m}{m + n}s, \\qquad y = \\frac{n}{m + n}s.$$",
+        "To maximize $f = x^m y^n$ with $x, y > 0$ subject to $x + y = s$, the Lagrange condition $\\nabla f = \\lambda \\nabla g$ gives $m x^{m-1}y^n = \\lambda$ and $n x^m y^{n-1} = \\lambda$. Dividing, $\\frac{m}{x} = \\frac{n}{y}$, so the sum is split in the ratio of the exponents:\n\n$$x = \\frac{m}{m + n}s, \\qquad y = \\frac{n}{m + n}s.$$\n\nFor $x^2y$ with $x + y = 15$, the split $2 : 1$ gives $x = 10$, $y = 5$ and the maximum $100 \\cdot 5 = 500$.\n\n> **Watch out.** Split in the ratio of the exponents, not equally, and give the larger share to the variable with the larger exponent.",
+        "要在 $x, y > 0$ 且约束 $x + y = s$ 下最大化 $f = x^m y^n$，拉格朗日条件 $\\nabla f = \\lambda \\nabla g$ 给出 $m x^{m-1}y^n = \\lambda$ 与 $n x^m y^{n-1} = \\lambda$。两式相除得 $\\frac{m}{x} = \\frac{n}{y}$，所以和按指数之比分配：\n\n$$x = \\frac{m}{m + n}s, \\qquad y = \\frac{n}{m + n}s.$$\n\n对 $x + y = 15$ 下的 $x^2y$，按 $2 : 1$ 分配得 $x = 10$，$y = 5$，最大值为 $100 \\cdot 5 = 500$。\n\n> **注意。** 要按指数之比分配，而不是平分；指数较大的变量分得较多。",
       ),
       generate(rng: Rng): Problem {
         const [m, n] = rng.pick([
-          [1, 1],
           [1, 2],
           [2, 1],
           [2, 2],
@@ -6667,16 +7820,54 @@ export const optimizingMultivariableFunctionsUsingLagrangeMultipliers: TopicDef 
         const y = n * k;
         const ans = x ** m * y ** n;
         const mon = `${m === 1 ? "x" : `x^${m}`}${n === 1 ? "y" : `y^${n}`}`;
+        const power = (v: number, e: number) => (e === 1 ? `${v}` : `${v}^{${e}}`);
+        const lambda = m * x ** (m - 1) * y ** n;
         return numberProblem({
           prompt: t(
             `Find the maximum of $${mon}$ for $x, y > 0$ subject to $x + y = ${s}$.`,
             `求 $x, y > 0$ 且 $x + y = ${s}$ 时 $${mon}$ 的最大值。`,
           ),
           answer: ans,
-          wrong: [Q.of(s, 2).pow(m + n), Q.of(y ** m * x ** n), Q.of(x * y)],
-          solution: t(
-            `Splitting $${s}$ in the ratio $${m} : ${n}$ gives $x = ${x}$, $y = ${y}$, so the maximum is $${m === 1 ? x : `${x}^{${m}}`} \\cdot ${n === 1 ? y : `${y}^{${n}}`} = ${ans}$.`,
-            `按 $${m} : ${n}$ 分配 $${s}$ 得 $x = ${x}$，$y = ${y}$，所以最大值为 $${m === 1 ? x : `${x}^{${m}}`} \\cdot ${n === 1 ? y : `${y}^{${n}}`} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(s, 2).pow(m + n),
+              `That splits $${s}$ equally; the split follows the exponents, $${m} : ${n}$.`,
+              `那是平分 $${s}$；应按指数之比 $${m} : ${n}$ 分配。`,
+            ),
+            why(
+              y ** m * x ** n,
+              `The shares are swapped: $x$ has exponent $${m}$, so $x = ${x}$.`,
+              `两份对调了：$x$ 的指数是 $${m}$，所以 $x = ${x}$。`,
+            ),
+            why(
+              x * y,
+              `That is $xy$ at the best point; the powers $${m}$ and $${n}$ still apply.`,
+              `那是最优点处的 $xy$；还要取 $${m}$ 次和 $${n}$ 次幂。`,
+            ),
+            why(
+              lambda,
+              `That is the multiplier $\\lambda = f_x$ at the best point, not the value of $f$.`,
+              `那是最优点处的乘数 $\\lambda = f_x$，不是 $f$ 的值。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Split the sum", "分配总和"],
+                t(
+                  `$\\frac{${m}}{x} = \\frac{${n}}{y}$ splits $${s}$ in the ratio $${m} : ${n}$, so $x = ${x}$ and $y = ${y}$.`,
+                  `由 $\\frac{${m}}{x} = \\frac{${n}}{y}$，按 $${m} : ${n}$ 分配 $${s}$，所以 $x = ${x}$，$y = ${y}$。`,
+                ),
+              ],
+              [
+                ["Evaluate", "求值"],
+                t(`$${power(x, m)} \\cdot ${power(y, n)} = ${ans}$.`, `$${power(x, m)} \\cdot ${power(y, n)} = ${ans}$。`),
+              ],
+            ],
+            t(
+              `Both equations give the same multiplier, since $\\frac{${m}}{${x}} = \\frac{${n}}{${y}} = ${Q.of(1, k).toLatex()}$; and $x + y = ${x} + ${y} = ${s}$.`,
+              `两个方程给出同一个乘数，因为 $\\frac{${m}}{${x}} = \\frac{${n}}{${y}} = ${Q.of(1, k).toLatex()}$；且 $x + y = ${x} + ${y} = ${s}$。`,
+            ),
           ),
         });
       },
@@ -6692,6 +7883,10 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
     "Newton's method solves a nonlinear system $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ by iterating $\\mathbf{x}_{n+1} = \\mathbf{x}_n - J(\\mathbf{x}_n)^{-1}\\mathbf{F}(\\mathbf{x}_n)$.",
     "多元牛顿法通过迭代 $\\mathbf{x}_{n+1} = \\mathbf{x}_n - J(\\mathbf{x}_n)^{-1}\\mathbf{F}(\\mathbf{x}_n)$ 求解非线性方程组 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$。",
   ),
+  intro: t(
+    "Solve $x^2 + y = 5$, $x - y = -1$ starting from $(1, 1)$. With $\\mathbf{F} = (x^2 + y - 5, x - y + 1)$, $\\mathbf{F}(1, 1) = (-3, 1)$ and $J = \\begin{pmatrix} 2x & 1 \\\\ 1 & -1 \\end{pmatrix} = \\begin{pmatrix} 2 & 1 \\\\ 1 & -1 \\end{pmatrix}$. Solving $J\\Delta = (3, -1)$ gives $\\Delta = \\left(\\frac{2}{3}, \\frac{5}{3}\\right)$, so $\\mathbf{x}_1 = \\left(\\frac{5}{3}, \\frac{8}{3}\\right)$.\n\nCheck: $\\mathbf{F}\\left(\\frac{5}{3}, \\frac{8}{3}\\right) = \\left(\\frac{25}{9} + \\frac{24}{9} - \\frac{45}{9}, 0\\right) = \\left(\\frac{4}{9}, 0\\right)$, much smaller than $(-3, 1)$.\n\nIn this lesson we take Newton steps for systems by solving the linear system $J\\Delta = -\\mathbf{F}$.",
+    "从 $(1, 1)$ 出发求解 $x^2 + y = 5$，$x - y = -1$。取 $\\mathbf{F} = (x^2 + y - 5, x - y + 1)$，则 $\\mathbf{F}(1, 1) = (-3, 1)$，$J = \\begin{pmatrix} 2x & 1 \\\\ 1 & -1 \\end{pmatrix} = \\begin{pmatrix} 2 & 1 \\\\ 1 & -1 \\end{pmatrix}$。解 $J\\Delta = (3, -1)$ 得 $\\Delta = \\left(\\frac{2}{3}, \\frac{5}{3}\\right)$，所以 $\\mathbf{x}_1 = \\left(\\frac{5}{3}, \\frac{8}{3}\\right)$。\n\n检验：$\\mathbf{F}\\left(\\frac{5}{3}, \\frac{8}{3}\\right) = \\left(\\frac{25}{9} + \\frac{24}{9} - \\frac{45}{9}, 0\\right) = \\left(\\frac{4}{9}, 0\\right)$，比 $(-3, 1)$ 小得多。\n\n本课我们解线性方程组 $J\\Delta = -\\mathbf{F}$，对方程组作牛顿迭代。",
+  ),
   prerequisites: ["the-derivative-of-a-multivariable-function"],
   encompasses: [{ topic: "the-derivative-of-a-multivariable-function", weight: 0.3 }],
   xp: 10,
@@ -6700,49 +7895,65 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
       id: "performing-multivariable-newton-step",
       title: t("Performing a multivariable Newton step", "执行多元牛顿迭代步"),
       explanation: t(
-        "The multivariable step replaces the function by its linearization and solves the resulting linear system to move toward a root. To solve $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$, Newton's iteration update solves $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$ and updates $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$.",
-        "多元牛顿法的一步用线性化代替函数，解出所得的线性方程组，从而向根靠近。求解 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 时，牛顿迭代步通过求解线性方程组 $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$，并更新 $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$。",
+        "The multivariable step replaces the function by its linearization and solves the resulting linear system to move toward a root. To solve $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$, Newton's iteration update solves $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$ and updates $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$. For $\\mathbf{F} = (4x - 20, -5y - 10)$ from $(0, 0)$, $J = \\operatorname{diag}(4, -5)$ and $-\\mathbf{F}(0, 0) = (20, 10)$, so $\\Delta = (5, -2)$ and $\\mathbf{x}_1 = (5, -2)$, where $\\mathbf{F}$ is exactly zero.\n\n> **Watch out.** The right side is $-\\mathbf{F}(\\mathbf{x}_0)$, not $\\mathbf{F}(\\mathbf{x}_0)$, and the step is $J^{-1}$ times it: divide each entry by the matching diagonal entry of $J$.",
+        "多元牛顿法的一步用线性化代替函数，解出所得的线性方程组，从而向根靠近。求解 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 时，牛顿迭代步通过求解线性方程组 $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$，并更新 $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$。对 $\\mathbf{F} = (4x - 20, -5y - 10)$，从 $(0, 0)$ 出发，$J = \\operatorname{diag}(4, -5)$，$-\\mathbf{F}(0, 0) = (20, 10)$，所以 $\\Delta = (5, -2)$，$\\mathbf{x}_1 = (5, -2)$，那里 $\\mathbf{F}$ 恰为零。\n\n> **注意。** 右端是 $-\\mathbf{F}(\\mathbf{x}_0)$，不是 $\\mathbf{F}(\\mathbf{x}_0)$；步长是 $J^{-1}$ 乘以它：每个分量要除以 $J$ 对应的对角元素。",
       ),
       generate(rng: Rng): Problem {
-        // Linear system: F(x, y) = (a*x - c, b*y - d)
-        // J = diag(a, b). For any initial guess (x0, y0), one Newton step gives exact root (c/a, d/b)!
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
-        const cVal = a * rng.int(-3, 3);
-        const dVal = b * rng.int(-3, 3);
-        const targetX = cVal / a;
-        const targetY = dVal / b;
-        const answer: Vec2 = [targetX, targetY];
-
-        const prompt = t(
-          `Apply one step of Newton's method starting from $(x_0, y_0) = (0, 0)$ to solve $\\mathbf{F}(x, y) = \\mathbf{0}$ for $\\mathbf{F}(x, y) = (${poly([a, "x"], [-cVal, ""])}, ${poly([b, "y"], [-dVal, ""])})$. Express your answer as $(x_1, y_1)$.`,
-          `从初始点 $(x_0, y_0) = (0, 0)$ 出发，应用一步牛顿迭代法求解 $\\mathbf{F}(x, y) = \\mathbf{0}$，其中 $\\mathbf{F}(x, y) = (${poly([a, "x"], [-cVal, ""])}, ${poly([b, "y"], [-dVal, ""])})$。结果以 $(x_1, y_1)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the Jacobian matrix: $J = \\begin{pmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{pmatrix}$.`,
-            `Evaluate $\\mathbf{F}(0, 0) = (${-cVal}, ${-dVal})$.`,
-            `Solve $J\\Delta \\mathbf{x} = -\\mathbf{F}(0, 0) = (${cVal}, ${dVal}) \\implies \\Delta x = ${targetX}, \\Delta y = ${targetY}$.`,
-            `The next iterate is $\\mathbf{x}_1 = (0, 0) + (${targetX}, ${targetY}) = ${v2L(answer)}$.`,
-          ),
-          steps(
-            `计算雅可比矩阵：$J = \\begin{pmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{pmatrix}$。`,
-            `计算 $\\mathbf{F}(0, 0) = (${-cVal}, ${-dVal})$。`,
-            `求解 $J\\Delta \\mathbf{x} = -\\mathbf{F}(0, 0) = (${cVal}, ${dVal}) \\implies \\Delta x = ${targetX}, \\Delta y = ${targetY}$。`,
-            `下一步迭代值为 $\\mathbf{x}_1 = (0, 0) + (${targetX}, ${targetY}) = ${v2L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vars: ["x", "y"],
-          wrong: [
-            [-targetX, -targetY],
-            [targetY, targetX],
-            [0, 0],
+        let tx = rng.int(-3, 3);
+        const ty = rng.int(-3, 3);
+        if (tx === 0 && ty === 0) tx = rng.pick([-2, 2]);
+        const cVal = a * tx;
+        const dVal = b * ty;
+        const answer: Vec2 = [tx, ty];
+        const neg = (v: number) => -v || 0;
+        const mistakes: [number[], string, string][] = [
+          [
+            [neg(tx), neg(ty)],
+            "That solves $J\\Delta = \\mathbf{F}(\\mathbf{x}_0)$; the right side is $-\\mathbf{F}(\\mathbf{x}_0)$.",
+            "那是解了 $J\\Delta = \\mathbf{F}(\\mathbf{x}_0)$；右端应是 $-\\mathbf{F}(\\mathbf{x}_0)$。",
           ],
-        });
+          [
+            [cVal, dVal],
+            `That uses $-\\mathbf{F}(0, 0)$ itself as the step; divide by the entries $${a}$ and $${b}$ of $J$.`,
+            `那是直接把 $-\\mathbf{F}(0, 0)$ 当作步长；要除以 $J$ 的元素 $${a}$ 和 $${b}$。`,
+          ],
+          [[ty, tx], "The coordinates are swapped; the first equation gives $x_1$.", "两个坐标对调了；第一个方程给出 $x_1$。"],
+        ];
+        return pointWith(
+          {
+            prompt: t(
+              `Apply one step of Newton's method starting from $(x_0, y_0) = (0, 0)$ to solve $\\mathbf{F}(x, y) = \\mathbf{0}$ for $\\mathbf{F}(x, y) = (${poly([a, "x"], [-cVal, ""])}, ${poly([b, "y"], [-dVal, ""])})$. Express your answer as $(x_1, y_1)$.`,
+              `从初始点 $(x_0, y_0) = (0, 0)$ 出发，应用一步牛顿迭代法求解 $\\mathbf{F}(x, y) = \\mathbf{0}$，其中 $\\mathbf{F}(x, y) = (${poly([a, "x"], [-cVal, ""])}, ${poly([b, "y"], [-dVal, ""])})$。结果以 $(x_1, y_1)$ 表示。`,
+            ),
+            answer,
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Find the Jacobian and the value", "求雅可比矩阵与函数值"],
+                  t(
+                    `$J = \\begin{pmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{pmatrix}$ and $\\mathbf{F}(0, 0) = (${neg(cVal)}, ${neg(dVal)})$.`,
+                    `$J = \\begin{pmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{pmatrix}$，$\\mathbf{F}(0, 0) = (${neg(cVal)}, ${neg(dVal)})$。`,
+                  ),
+                ],
+                [
+                  ["Solve for the step", "解出步长"],
+                  t(
+                    `$J\\Delta = (${cVal}, ${dVal})$ gives $\\Delta = (${tx}, ${ty})$, so $\\mathbf{x}_1 = ${v2L(answer)}$.`,
+                    `由 $J\\Delta = (${cVal}, ${dVal})$ 得 $\\Delta = (${tx}, ${ty})$，所以 $\\mathbf{x}_1 = ${v2L(answer)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$\\mathbf{F}${v2L(answer)} = (${a} \\cdot ${paren(tx)} - ${paren(cVal)}, ${b} \\cdot ${paren(ty)} - ${paren(dVal)}) = (0, 0)$: for a linear system one step lands on the root.`,
+                `$\\mathbf{F}${v2L(answer)} = (${a} \\cdot ${paren(tx)} - ${paren(cVal)}, ${b} \\cdot ${paren(ty)} - ${paren(dVal)}) = (0, 0)$：线性方程组一步就到达根。`,
+              ),
+            ),
+          },
+          mistakes.filter(([v], i, all) => v2L(v) !== v2L(answer) && all.findIndex(([w]) => v2L(w) === v2L(v)) === i),
+        );
       },
     },
     {
@@ -6750,35 +7961,73 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
       figure: multivariableDrawings3["newtons-method-for-multivariable-functions#a-newton-step-for-a-circle-and-a-line"],
       title: t("A Newton step for a circle and a line", "圆与直线方程组的牛顿迭代一步"),
       explanation: t(
-        "Newton's method for a system $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ replaces $\\mathbf{F}$ by its linearization at the current guess and solves that instead:\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\nFor $\\mathbf{F} = (x^2 + y^2 - a, x - y)$ the Jacobian is $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$. Solve the $2 \\times 2$ system for $\\Delta$ rather than inverting the matrix by habit.",
-        "方程组 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 的牛顿法用 $\\mathbf{F}$ 在当前猜测处的线性化代替 $\\mathbf{F}$ 并求解：\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\n对 $\\mathbf{F} = (x^2 + y^2 - a, x - y)$，雅可比矩阵为 $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$。解这个 $2 \\times 2$ 方程组求 $\\Delta$，不必习惯性地求逆矩阵。",
+        "Newton's method for a system $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ replaces $\\mathbf{F}$ by its linearization at the current guess and solves that instead:\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\nFor $\\mathbf{F} = (x^2 + y^2 - a, x - y)$ the Jacobian is $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$. Solve the $2 \\times 2$ system for $\\Delta$ rather than inverting the matrix by habit. For $a = 26$ from $(3, 2)$, $\\mathbf{F} = (-13, 1)$, and $6\\Delta_1 + 4\\Delta_2 = 13$, $\\Delta_1 - \\Delta_2 = -1$ give $\\Delta = \\left(\\frac{9}{10}, \\frac{19}{10}\\right)$, so $\\mathbf{x}_1 = \\left(\\frac{39}{10}, \\frac{39}{10}\\right)$.\n\n> **Watch out.** $\\Delta$ is the change, not the new point: add it to $\\mathbf{x}_0$. And the right side is $-\\mathbf{F}(\\mathbf{x}_0)$, so subtracting $\\Delta$ moves the wrong way.",
+        "方程组 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 的牛顿法用 $\\mathbf{F}$ 在当前猜测处的线性化代替 $\\mathbf{F}$ 并求解：\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\n对 $\\mathbf{F} = (x^2 + y^2 - a, x - y)$，雅可比矩阵为 $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$。解这个 $2 \\times 2$ 方程组求 $\\Delta$，不必习惯性地求逆矩阵。对 $a = 26$，从 $(3, 2)$ 出发，$\\mathbf{F} = (-13, 1)$，由 $6\\Delta_1 + 4\\Delta_2 = 13$，$\\Delta_1 - \\Delta_2 = -1$ 得 $\\Delta = \\left(\\frac{9}{10}, \\frac{19}{10}\\right)$，所以 $\\mathbf{x}_1 = \\left(\\frac{39}{10}, \\frac{39}{10}\\right)$。\n\n> **注意。** $\\Delta$ 是改变量，不是新的点：要把它加到 $\\mathbf{x}_0$ 上。右端是 $-\\mathbf{F}(\\mathbf{x}_0)$，所以减去 $\\Delta$ 会走错方向。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(1, 20);
+        let a = rng.int(1, 20);
         const x0 = rng.int(1, 4);
         const y0 = rng.int(0, 4);
+        if (x0 === y0 && 2 * x0 * x0 === a) a += 1;
         const F1 = x0 * x0 + y0 * y0 - a;
         const F2 = x0 - y0;
-        // 2x0 d1 + 2y0 d2 = -F1, d1 - d2 = -F2
         const d2 = Q.of(-F1 + 2 * x0 * F2, 2 * x0 + 2 * y0);
         const d1 = d2.sub(Q.of(F2));
         const x1 = Q.of(x0).add(d1);
         const y1 = Q.of(y0).add(d2);
-        return pointProblem({
-          prompt: t(
-            `Apply one step of Newton's method to the system $x^2 + y^2 = ${a}$, $x - y = 0$, starting from $(${x0}, ${y0})$.`,
-            `从 $(${x0}, ${y0})$ 出发，对方程组 $x^2 + y^2 = ${a}$，$x - y = 0$ 作一步牛顿迭代。`,
-          ),
-          answer: [x1, y1],
-          wrong: [
+        const answer = [x1, y1];
+        const mistakes: [Q[], string, string][] = [
+          [
             [Q.of(x0).sub(d1), Q.of(y0).sub(d2)],
-            [d1, d2],
+            "That subtracts $\\Delta$; since $J\\Delta = -\\mathbf{F}(\\mathbf{x}_0)$, the new point is $\\mathbf{x}_0 + \\Delta$.",
+            "那是减去了 $\\Delta$；因为 $J\\Delta = -\\mathbf{F}(\\mathbf{x}_0)$，新点是 $\\mathbf{x}_0 + \\Delta$。",
           ],
-          solution: t(
-            `${steps(`\\mathbf{F}(${x0}, ${y0}) = (${F1}, ${F2})`, `\\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ 1 & -1 \\end{pmatrix}\\Delta = (${-F1}, ${-F2})`)}This gives $\\Delta = \\left(${d1.toLatex()}, ${d2.toLatex()}\\right)$, so $\\mathbf{x}_1 = \\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$.`,
-            `${steps(`\\mathbf{F}(${x0}, ${y0}) = (${F1}, ${F2})`, `\\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ 1 & -1 \\end{pmatrix}\\Delta = (${-F1}, ${-F2})`)}解得 $\\Delta = \\left(${d1.toLatex()}, ${d2.toLatex()}\\right)$，所以 $\\mathbf{x}_1 = \\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$。`,
-          ),
-        });
+          [
+            [d1, d2],
+            `That is $\\Delta$ itself; add it to the starting point $(${x0}, ${y0})$.`,
+            `那是 $\\Delta$ 本身；要把它加到起点 $(${x0}, ${y0})$ 上。`,
+          ],
+        ];
+        return pointWith(
+          {
+            prompt: t(
+              `Apply one step of Newton's method to the system $x^2 + y^2 = ${a}$, $x - y = 0$, starting from $(${x0}, ${y0})$.`,
+              `从 $(${x0}, ${y0})$ 出发，对方程组 $x^2 + y^2 = ${a}$，$x - y = 0$ 作一步牛顿迭代。`,
+            ),
+            answer,
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Evaluate at the start", "在起点求值"],
+                  t(
+                    `$\\mathbf{F}(${x0}, ${y0}) = (${F1}, ${F2})$ and $J = \\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ 1 & -1 \\end{pmatrix}$.`,
+                    `$\\mathbf{F}(${x0}, ${y0}) = (${F1}, ${F2})$，$J = \\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ 1 & -1 \\end{pmatrix}$。`,
+                  ),
+                ],
+                [
+                  ["Solve the linear system", "解线性方程组"],
+                  t(
+                    `$${2 * x0}\\Delta_1 + ${2 * y0}\\Delta_2 = ${-F1 || 0}$ and $\\Delta_1 - \\Delta_2 = ${-F2 || 0}$ give $\\Delta = \\left(${d1.toLatex()}, ${d2.toLatex()}\\right)$.`,
+                    `由 $${2 * x0}\\Delta_1 + ${2 * y0}\\Delta_2 = ${-F1 || 0}$，$\\Delta_1 - \\Delta_2 = ${-F2 || 0}$ 得 $\\Delta = \\left(${d1.toLatex()}, ${d2.toLatex()}\\right)$。`,
+                  ),
+                ],
+                [
+                  ["Take the step", "迈出一步"],
+                  t(
+                    `$\\mathbf{x}_1 = (${x0}, ${y0}) + \\Delta = \\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$.`,
+                    `$\\mathbf{x}_1 = (${x0}, ${y0}) + \\Delta = \\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$。`,
+                  ),
+                ],
+              ],
+              t(
+                "The linear equation $x - y = 0$ now holds exactly, since Newton's step solves linear equations without error: $x_1 = y_1$.",
+                "线性方程 $x - y = 0$ 现在恰好成立，因为牛顿步对线性方程没有误差：$x_1 = y_1$。",
+              ),
+            ),
+          },
+          mistakes.filter(([v], i, all) => v2L(v) !== v2L(answer) && all.findIndex(([w]) => v2L(w) === v2L(v)) === i),
+        );
       },
     },
   ],
@@ -6792,6 +8041,10 @@ export const newtonsMethodForOptimizingMultivariableFunctions: TopicDef = {
     "Newton's method for optimization finds stationary points by iterating $\\mathbf{x}_{n+1} = \\mathbf{x}_n - H(\\mathbf{x}_n)^{-1}\\nabla f(\\mathbf{x}_n)$.",
     "用于优化的牛顿法通过迭代 $\\mathbf{x}_{n+1} = \\mathbf{x}_n - H(\\mathbf{x}_n)^{-1}\\nabla f(\\mathbf{x}_n)$ 寻找驻点。",
   ),
+  intro: t(
+    "Take a Newton step for $f(x, y) = x^2 + xy + y^2 - 3x$ from $(0, 0)$. The gradient is $(2x + y - 3, x + 2y)$, so $\\nabla f(0, 0) = (-3, 0)$, and the Hessian is $H = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$. Solving $H\\Delta = (3, 0)$, that is $2\\Delta_1 + \\Delta_2 = 3$ and $\\Delta_1 + 2\\Delta_2 = 0$, gives $\\Delta = (2, -1)$, so $\\mathbf{x}_1 = (2, -1)$.\n\nCheck: $\\nabla f(2, -1) = (4 - 1 - 3, 2 - 2) = (0, 0)$, and $H$ has $D = 3 > 0$ with $f_{xx} > 0$, so $(2, -1)$ is the minimum.\n\nIn this lesson we apply Newton's method to $\\nabla f = \\mathbf{0}$, with the Hessian in place of the Jacobian.",
+    "从 $(0, 0)$ 出发，对 $f(x, y) = x^2 + xy + y^2 - 3x$ 作一步牛顿迭代。梯度为 $(2x + y - 3, x + 2y)$，所以 $\\nabla f(0, 0) = (-3, 0)$；黑塞矩阵为 $H = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$。解 $H\\Delta = (3, 0)$，即 $2\\Delta_1 + \\Delta_2 = 3$，$\\Delta_1 + 2\\Delta_2 = 0$，得 $\\Delta = (2, -1)$，所以 $\\mathbf{x}_1 = (2, -1)$。\n\n检验：$\\nabla f(2, -1) = (4 - 1 - 3, 2 - 2) = (0, 0)$，且 $H$ 的 $D = 3 > 0$，$f_{xx} > 0$，所以 $(2, -1)$ 是最小值点。\n\n本课我们把牛顿法用于 $\\nabla f = \\mathbf{0}$，用黑塞矩阵代替雅可比矩阵。",
+  ),
   prerequisites: ["newtons-method-for-multivariable-functions", "the-second-derivative-of-a-multivariable-function"],
   encompasses: [{ topic: "newtons-method-for-multivariable-functions", weight: 0.3 }],
   xp: 10,
@@ -6800,58 +8053,73 @@ export const newtonsMethodForOptimizingMultivariableFunctions: TopicDef = {
       id: "performing-newton-optimization-step",
       title: t("Performing a Newton optimization step", "执行牛顿优化迭代步"),
       explanation: t(
-        "To minimize or find critical points of $f(\\mathbf{x})$, Newton's optimization iteration solves $H(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\nabla f(\\mathbf{x}_0)$ and updates $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$. For a quadratic function, one step finds the exact stationary point.",
-        "求 $f(\\mathbf{x})$ 的极值点或驻点，牛顿优化迭代步通过求解 $H(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\nabla f(\\mathbf{x}_0)$，并更新 $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$。对于二次函数，只需一步迭代即可达到精确驻点。",
+        "To minimize or find critical points of $f(\\mathbf{x})$, Newton's optimization iteration solves $H(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\nabla f(\\mathbf{x}_0)$ and updates $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$. For a quadratic function, one step finds the exact stationary point. For $f = 5x^2 + 2y^2 - 20x + 12y$ from $(0, 0)$, $H = \\operatorname{diag}(10, 4)$ and $-\\nabla f(0, 0) = (20, -12)$, so $\\mathbf{x}_1 = (2, -3)$.\n\n> **Watch out.** The Hessian entries are $2a$ and $2b$, the second derivatives of $ax^2$ and $by^2$; dividing by $a$ and $b$ doubles the step.",
+        "求 $f(\\mathbf{x})$ 的极值点或驻点，牛顿优化迭代步通过求解 $H(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\nabla f(\\mathbf{x}_0)$，并更新 $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$。对于二次函数，只需一步迭代即可达到精确驻点。对 $f = 5x^2 + 2y^2 - 20x + 12y$，从 $(0, 0)$ 出发，$H = \\operatorname{diag}(10, 4)$，$-\\nabla f(0, 0) = (20, -12)$，所以 $\\mathbf{x}_1 = (2, -3)$。\n\n> **注意。** 黑塞矩阵的元素是 $2a$ 和 $2b$，即 $ax^2$ 与 $by^2$ 的二阶导数；除以 $a$ 和 $b$ 会使步长加倍。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
-        const xTarget = rng.int(-3, 3);
+        let xTarget = rng.int(-3, 3);
         const yTarget = rng.int(-3, 3);
-
-        // f(x, y) = a*(x - xTarget)^2 + b*(y - yTarget)^2
-        // = a*x^2 - 2a*xTarget*x + b*y^2 - 2b*yTarget*y + C
+        if (xTarget === 0 && yTarget === 0) xTarget = rng.pick([-1, 1]);
         const cCoeff = -2 * a * xTarget;
         const dCoeff = -2 * b * yTarget;
         const answer: Vec2 = [xTarget, yTarget];
-
-        const prompt = t(
-          `Apply one iteration of Newton's optimization method from the initial guess $(x_0, y_0) = (0, 0)$ to find the minimum of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cCoeff, "x"], [dCoeff, "y"])}$ using $\\mathbf{x}_1 = \\mathbf{x}_0 - H^{-1}\\nabla f(\\mathbf{x}_0)$. Express your answer as $(x_1, y_1)$.`,
-          `从初始猜测 $(x_0, y_0) = (0, 0)$ 出发，利用牛顿优化迭代公式 $\\mathbf{x}_1 = \\mathbf{x}_0 - H^{-1}\\nabla f(\\mathbf{x}_0)$ 执行一步迭代，求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cCoeff, "x"], [dCoeff, "y"])}$ 的极小值点。结果以 $(x_1, y_1)$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `The gradient is $\\nabla f(x, y) = \\langle ${poly([2 * a, "x"], [cCoeff, ""])}, ${poly([2 * b, "y"], [dCoeff, ""])} \\rangle$. At $(0, 0)$, $\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$.`,
-            `The Hessian matrix is constant: $H = \\begin{pmatrix} ${2 * a} & 0 \\\\ 0 & ${2 * b} \\end{pmatrix}$.`,
-            `Solve $H\\Delta \\mathbf{x} = -\\nabla f(0, 0) = \\langle ${-cCoeff}, ${-dCoeff} \\rangle \\implies \\Delta x = ${xTarget}, \\Delta y = ${yTarget}$.`,
-            `The next point is $(x_1, y_1) = (0, 0) + (${xTarget}, ${yTarget}) = ${v2L(answer)}$.`,
-          ),
-          steps(
-            `梯度为 $\\nabla f(x, y) = \\langle ${poly([2 * a, "x"], [cCoeff, ""])}, ${poly([2 * b, "y"], [dCoeff, ""])} \\rangle$。在 $(0, 0)$ 处，$\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$。`,
-            `黑塞矩阵为常数矩阵：$H = \\begin{pmatrix} ${2 * a} & 0 \\\\ 0 & ${2 * b} \\end{pmatrix}$。`,
-            `求解 $H\\Delta \\mathbf{x} = -\\nabla f(0, 0) = \\langle ${-cCoeff}, ${-dCoeff} \\rangle \\implies \\Delta x = ${xTarget}, \\Delta y = ${yTarget}$。`,
-            `下一步迭代点为 $(x_1, y_1) = (0, 0) + (${xTarget}, ${yTarget}) = ${v2L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vars: ["x", "y"],
-          wrong: [
-            [-xTarget, -yTarget],
-            [yTarget, xTarget],
-            [0, 0],
+        const neg = (v: number) => -v || 0;
+        const mistakes: [number[], string, string][] = [
+          [
+            [neg(xTarget), neg(yTarget)],
+            "That adds $H^{-1}\\nabla f$; the step goes against the gradient, $-H^{-1}\\nabla f$.",
+            "那是加上了 $H^{-1}\\nabla f$；步长与梯度方向相反，是 $-H^{-1}\\nabla f$。",
           ],
-        });
+          [
+            [2 * xTarget, 2 * yTarget],
+            `That divides by $${a}$ and $${b}$; the Hessian entries are $${2 * a}$ and $${2 * b}$.`,
+            `那是除以了 $${a}$ 和 $${b}$；黑塞矩阵的元素是 $${2 * a}$ 和 $${2 * b}$。`,
+          ],
+          [[yTarget, xTarget], "The coordinates are swapped; the $x$-equation gives $x_1$.", "两个坐标对调了；$x$ 的方程给出 $x_1$。"],
+        ];
+        return pointWith(
+          {
+            prompt: t(
+              `Apply one iteration of Newton's optimization method from the initial guess $(x_0, y_0) = (0, 0)$ to find the minimum of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cCoeff, "x"], [dCoeff, "y"])}$ using $\\mathbf{x}_1 = \\mathbf{x}_0 - H^{-1}\\nabla f(\\mathbf{x}_0)$. Express your answer as $(x_1, y_1)$.`,
+              `从初始猜测 $(x_0, y_0) = (0, 0)$ 出发，利用牛顿优化迭代公式 $\\mathbf{x}_1 = \\mathbf{x}_0 - H^{-1}\\nabla f(\\mathbf{x}_0)$ 执行一步迭代，求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [cCoeff, "x"], [dCoeff, "y"])}$ 的极小值点。结果以 $(x_1, y_1)$ 表示。`,
+            ),
+            answer,
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Find the gradient and the Hessian", "求梯度与黑塞矩阵"],
+                  t(
+                    `$\\nabla f = \\langle ${poly([2 * a, "x"], [cCoeff, ""])}, ${poly([2 * b, "y"], [dCoeff, ""])} \\rangle$, so $\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$, and $H = \\begin{pmatrix} ${2 * a} & 0 \\\\ 0 & ${2 * b} \\end{pmatrix}$.`,
+                    `$\\nabla f = \\langle ${poly([2 * a, "x"], [cCoeff, ""])}, ${poly([2 * b, "y"], [dCoeff, ""])} \\rangle$，所以 $\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$，$H = \\begin{pmatrix} ${2 * a} & 0 \\\\ 0 & ${2 * b} \\end{pmatrix}$。`,
+                  ),
+                ],
+                [
+                  ["Solve for the step", "解出步长"],
+                  t(
+                    `$H\\Delta = \\langle ${neg(cCoeff)}, ${neg(dCoeff)} \\rangle$ gives $\\Delta = (${xTarget}, ${yTarget})$, so $\\mathbf{x}_1 = ${v2L(answer)}$.`,
+                    `由 $H\\Delta = \\langle ${neg(cCoeff)}, ${neg(dCoeff)} \\rangle$ 得 $\\Delta = (${xTarget}, ${yTarget})$，所以 $\\mathbf{x}_1 = ${v2L(answer)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$\\nabla f${v2L(answer)} = \\langle ${2 * a} \\cdot ${paren(xTarget)} + ${paren(cCoeff)}, ${2 * b} \\cdot ${paren(yTarget)} + ${paren(dCoeff)} \\rangle = \\langle 0, 0 \\rangle$, so one step reaches the minimum of this quadratic.`,
+                `$\\nabla f${v2L(answer)} = \\langle ${2 * a} \\cdot ${paren(xTarget)} + ${paren(cCoeff)}, ${2 * b} \\cdot ${paren(yTarget)} + ${paren(dCoeff)} \\rangle = \\langle 0, 0 \\rangle$，所以对这个二次函数一步就到达最小值点。`,
+              ),
+            ),
+          },
+          mistakes.filter(([v], i, all) => v2L(v) !== v2L(answer) && all.findIndex(([w]) => v2L(w) === v2L(v)) === i),
+        );
       },
     },
     {
       id: "a-newton-optimization-step-with-a-cubic-term",
       title: t("A Newton optimization step with a cubic term", "含三次项的牛顿优化一步"),
       explanation: t(
-        "Newton's method for finding a critical point applies Newton's method to $\\nabla f = \\mathbf{0}$, so the Hessian plays the role of the Jacobian:\n\n$$\\mathbf{x}_1 = \\mathbf{x}_0 - H(\\mathbf{x}_0)^{-1}\\nabla f(\\mathbf{x}_0).$$\n\nFor $f = \\frac{x^3}{3} - ax + y^2 - by$ the Hessian is diagonal, $\\operatorname{diag}(2x, 2)$, so each coordinate updates on its own. The quadratic part in $y$ is solved exactly in one step, while the cubic part in $x$ only gets closer to $\\sqrt{a}$.",
-        "求临界点的牛顿法是把牛顿法用于 $\\nabla f = \\mathbf{0}$，所以黑塞矩阵起雅可比矩阵的作用：\n\n$$\\mathbf{x}_1 = \\mathbf{x}_0 - H(\\mathbf{x}_0)^{-1}\\nabla f(\\mathbf{x}_0).$$\n\n对 $f = \\frac{x^3}{3} - ax + y^2 - by$，黑塞矩阵是对角的 $\\operatorname{diag}(2x, 2)$，所以每个坐标各自更新。$y$ 的二次部分一步就精确求出，而 $x$ 的三次部分只是更接近 $\\sqrt{a}$。",
+        "Newton's method for finding a critical point applies Newton's method to $\\nabla f = \\mathbf{0}$, so the Hessian plays the role of the Jacobian:\n\n$$\\mathbf{x}_1 = \\mathbf{x}_0 - H(\\mathbf{x}_0)^{-1}\\nabla f(\\mathbf{x}_0).$$\n\nFor $f = \\frac{x^3}{3} - ax + y^2 - by$ the Hessian is diagonal, $\\operatorname{diag}(2x, 2)$, so each coordinate updates on its own. The quadratic part in $y$ is solved exactly in one step, while the cubic part in $x$ only gets closer to $\\sqrt{a}$. For $a = 13$, $b = 14$ from $(3, 0)$, $\\nabla f = (-4, -14)$ and $H = \\operatorname{diag}(6, 2)$, so $\\mathbf{x}_1 = \\left(3 + \\frac{4}{6}, 0 + 7\\right) = \\left(\\frac{11}{3}, 7\\right)$, and $\\frac{11}{3} \\approx 3.67$ is near $\\sqrt{13} \\approx 3.61$.\n\n> **Watch out.** Each gradient entry is divided by its Hessian entry, $2x_0$ or $2$, before it is subtracted; subtracting the raw gradient overshoots.",
+        "求临界点的牛顿法是把牛顿法用于 $\\nabla f = \\mathbf{0}$，所以黑塞矩阵起雅可比矩阵的作用：\n\n$$\\mathbf{x}_1 = \\mathbf{x}_0 - H(\\mathbf{x}_0)^{-1}\\nabla f(\\mathbf{x}_0).$$\n\n对 $f = \\frac{x^3}{3} - ax + y^2 - by$，黑塞矩阵是对角的 $\\operatorname{diag}(2x, 2)$，所以每个坐标各自更新。$y$ 的二次部分一步就精确求出，而 $x$ 的三次部分只是更接近 $\\sqrt{a}$。对 $a = 13$，$b = 14$，从 $(3, 0)$ 出发，$\\nabla f = (-4, -14)$，$H = \\operatorname{diag}(6, 2)$，所以 $\\mathbf{x}_1 = \\left(3 + \\frac{4}{6}, 0 + 7\\right) = \\left(\\frac{11}{3}, 7\\right)$，而 $\\frac{11}{3} \\approx 3.67$ 接近 $\\sqrt{13} \\approx 3.61$。\n\n> **注意。** 每个梯度分量要先除以对应的黑塞矩阵元素 $2x_0$ 或 $2$，再减去；直接减去梯度会走过头。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 12);
@@ -6860,21 +8128,60 @@ export const newtonsMethodForOptimizingMultivariableFunctions: TopicDef = {
         const y0 = rng.int(-3, 3);
         const x1 = Q.of(x0 * x0 + a, 2 * x0);
         const y1 = Q.of(b, 2);
-        return pointProblem({
-          prompt: t(
-            `Apply one step of Newton's method for optimization to $f(x, y) = \\frac{x^3}{3} ${poly([-a, "x"], [1, "y^2"], [-b, "y"])}$, starting from $(${x0}, ${y0})$.`,
-            `从 $(${x0}, ${y0})$ 出发，对 $f(x, y) = \\frac{x^3}{3} ${poly([-a, "x"], [1, "y^2"], [-b, "y"])}$ 作一步牛顿优化迭代。`,
-          ),
-          answer: [x1, y1],
-          wrong: [
+        const answer = [x1, y1];
+        const stepX = Q.of(x0 * x0 - a, 2 * x0);
+        const mistakes: [Q[], string, string][] = [
+          [
             [Q.of(x0 * x0 - a, 2 * x0), y1],
-            [Q.of(x0).sub(Q.of(x0 * x0 - a)), Q.of(y0).sub(Q.of(2 * y0 - b))],
+            `That is $\\frac{x_0^2 - a}{2x_0}$, the step itself; $x_1 = ${x0} - ${paren(stepX)}$.`,
+            `那是 $\\frac{x_0^2 - a}{2x_0}$，即步长本身；$x_1 = ${x0} - ${paren(stepX)}$。`,
           ],
-          solution: t(
-            `$\\nabla f(${x0}, ${y0}) = (${x0 * x0 - a}, ${2 * y0 - b})$ and $H = \\operatorname{diag}(${2 * x0}, 2)$, so $x_1 = ${x0} - ${paren(Q.of(x0 * x0 - a, 2 * x0))} = ${x1.toLatex()}$ and $y_1 = ${y0} - ${paren(Q.of(2 * y0 - b, 2))} = ${y1.toLatex()}$.`,
-            `$\\nabla f(${x0}, ${y0}) = (${x0 * x0 - a}, ${2 * y0 - b})$，$H = \\operatorname{diag}(${2 * x0}, 2)$，所以 $x_1 = ${x0} - ${paren(Q.of(x0 * x0 - a, 2 * x0))} = ${x1.toLatex()}$，$y_1 = ${y0} - ${paren(Q.of(2 * y0 - b, 2))} = ${y1.toLatex()}$。`,
-          ),
-        });
+          [
+            [Q.of(x0).sub(Q.of(x0 * x0 - a)), Q.of(y0).sub(Q.of(2 * y0 - b))],
+            `That subtracts the raw gradient; divide its entries by the Hessian entries $${2 * x0}$ and $2$ first.`,
+            `那是直接减去了梯度；要先把各分量除以黑塞矩阵元素 $${2 * x0}$ 和 $2$。`,
+          ],
+          [
+            [Q.of(x0).add(stepX), Q.of(y0).add(Q.of(2 * y0 - b, 2))],
+            "That adds $H^{-1}\\nabla f$; Newton's step subtracts it.",
+            "那是加上了 $H^{-1}\\nabla f$；牛顿步要减去它。",
+          ],
+        ];
+        const gap = x1.mul(x1).sub(Q.of(a));
+        const fy = b === 0 ? "2y_1" : `2y_1 ${b < 0 ? "+" : "-"} ${Math.abs(b)}`;
+        return pointWith(
+          {
+            prompt: t(
+              `Apply one step of Newton's method for optimization to $f(x, y) = \\frac{x^3}{3} ${poly([-a, "x"], [1, "y^2"], [-b, "y"])}$, starting from $(${x0}, ${y0})$.`,
+              `从 $(${x0}, ${y0})$ 出发，对 $f(x, y) = \\frac{x^3}{3} ${poly([-a, "x"], [1, "y^2"], [-b, "y"])}$ 作一步牛顿优化迭代。`,
+            ),
+            answer,
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Find the gradient and the Hessian", "求梯度与黑塞矩阵"],
+                  t(
+                    `$\\nabla f = (x^2 - ${a}, ${poly([2, "y"], [-b, ""])})$, so $\\nabla f(${x0}, ${y0}) = (${x0 * x0 - a}, ${2 * y0 - b})$, and $H = \\operatorname{diag}(${2 * x0}, 2)$.`,
+                    `$\\nabla f = (x^2 - ${a}, ${poly([2, "y"], [-b, ""])})$，所以 $\\nabla f(${x0}, ${y0}) = (${x0 * x0 - a}, ${2 * y0 - b})$，$H = \\operatorname{diag}(${2 * x0}, 2)$。`,
+                  ),
+                ],
+                [
+                  ["Update each coordinate", "逐个坐标更新"],
+                  t(
+                    `$x_1 = ${x0} - ${paren(stepX)} = ${x1.toLatex()}$ and $y_1 = ${y0} - ${paren(Q.of(2 * y0 - b, 2))} = ${y1.toLatex()}$.`,
+                    `$x_1 = ${x0} - ${paren(stepX)} = ${x1.toLatex()}$，$y_1 = ${y0} - ${paren(Q.of(2 * y0 - b, 2))} = ${y1.toLatex()}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$f_y = ${fy} = 0$ exactly, and $x_1^2 - ${a} = ${gap.toLatex()}$, ${gap.isZero() ? `so $x_1$ is exactly $\\sqrt{${a}}$` : `which is positive, so $x_1$ lies above $\\sqrt{${a}}$`}.`,
+                `$f_y = ${fy} = 0$ 恰好成立，且 $x_1^2 - ${a} = ${gap.toLatex()}$，${gap.isZero() ? `所以 $x_1$ 恰为 $\\sqrt{${a}}$` : `它为正，所以 $x_1$ 大于 $\\sqrt{${a}}$`}。`,
+              ),
+            ),
+          },
+          mistakes.filter(([v], i, all) => v2L(v) !== v2L(answer) && all.findIndex(([w]) => v2L(w) === v2L(v)) === i),
+        );
       },
     },
   ],
