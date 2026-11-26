@@ -167,6 +167,15 @@ function explainedNumber(
   });
 }
 
+/** keptMistakes drops the reasons whose value is the answer or repeats an earlier one, for a number problem that needs options explainedNumber lacks. */
+function keptMistakes(answer: number | Q, reasons: readonly Reason[]) {
+  const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+  const right = q(answer);
+  return reasons
+    .filter((r, i) => !q(r[0]).eq(right) && reasons.findIndex((s) => q(s[0]).eq(q(r[0]))) === i)
+    .map(([value, en, zh]) => ({ value: q(value), why: t(en, zh) }));
+}
+
 const largestHarvest: KnowledgePointDef = {
   id: "the-largest-sustainable-harvest",
   title: t("The largest sustainable harvest", "最大的可持续收获量"),
@@ -1299,8 +1308,8 @@ const sineCoefficientOfAStep: KnowledgePointDef = {
   id: "a-fourier-sine-coefficient-of-a-step",
   title: t("A Fourier sine coefficient of a step", "阶跃函数的傅里叶正弦系数"),
   explanation: t(
-    "For a function that is constant on each half of $(-\\pi, \\pi)$, split the integral for $b_n$ at zero. Over a half period, $\\int_0^\\pi \\sin nx\\,dx$ is $\\frac{2}{n}$ for odd $n$ and zero for even $n$. So only odd frequencies appear, and their coefficients fall off like $\\frac{1}{n}$.",
-    "对在 $(-\\pi, \\pi)$ 两半上分别为常数的函数，把 $b_n$ 的积分在零处分开。在半个周期上，$\\int_0^\\pi \\sin nx\\,dx$ 当 $n$ 为奇数时是 $\\frac{2}{n}$，为偶数时是零。所以只出现奇数频率，系数按 $\\frac{1}{n}$ 衰减。",
+    "For a function that is constant on each half of $(-\\pi, \\pi)$, split the integral for $b_n$ at zero. Over a half period, $\\int_0^\\pi \\sin nx\\,dx$ is $\\frac{2}{n}$ for odd $n$ and zero for even $n$. So only odd frequencies appear, and their coefficients fall off like $\\frac{1}{n}$.\n\n> **Watch out.** On $(-\\pi, 0)$ the sine is negative, so the left value enters with a minus sign. For $f = -1$ then $1$, $b_1 = \\frac{1}{\\pi}\\left((-1)(-2) + 1 \\cdot 2\\right) = \\frac{4}{\\pi}$, not $0$.",
+    "对在 $(-\\pi, \\pi)$ 两半上分别为常数的函数，把 $b_n$ 的积分在零处分开。在半个周期上，$\\int_0^\\pi \\sin nx\\,dx$ 当 $n$ 为奇数时是 $\\frac{2}{n}$，为偶数时是零。所以只出现奇数频率，系数按 $\\frac{1}{n}$ 衰减。\n\n> **注意。** 在 $(-\\pi, 0)$ 上正弦为负，所以左边的值带着负号进入。对先为 $-1$、后为 $1$ 的 $f$，$b_1 = \\frac{1}{\\pi}\\left((-1)(-2) + 1 \\cdot 2\\right) = \\frac{4}{\\pi}$，不是 $0$。",
   ),
   generate(rng) {
     const a = rng.int(-6, 6);
@@ -1308,18 +1317,51 @@ const sineCoefficientOfAStep: KnowledgePointDef = {
     const n = rng.pick([1, 3, 5, 7]);
     const answer = Q.of(2 * (b - a), n);
     const f = `\\begin{cases} ${a} & -\\pi < x < 0 \\\\ ${b} & 0 < x < \\pi \\end{cases}`;
-    return numberProblem({
-      prompt: t(
+    const half = n === 1 ? "2" : `\\frac{2}{${n}}`;
+    const sine = `\\sin ${n === 1 ? "" : n}x`;
+    return explainedNumber(
+      [
         `Let $f(x) = ${f}$. Its Fourier coefficient is $b_{${n}} = \\frac{c}{\\pi}$. Find $c$.`,
         `设 $f(x) = ${f}$。它的傅里叶系数是 $b_{${n}} = \\frac{c}{\\pi}$。求 $c$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(b - a, n), answer.neg(), Q.of(2 * (a + b) || 1, n)],
-      solution: t(
-        `$b_{${n}} = \\frac{1}{\\pi}\\left(${inParens(a)} \\cdot \\frac{-2}{${n}} + ${inParens(b)} \\cdot \\frac{2}{${n}}\\right)$, since the two halves give opposite integrals. So $c = ${answer.toLatex()}$.`,
-        `$b_{${n}} = \\frac{1}{\\pi}\\left(${inParens(a)} \\cdot \\frac{-2}{${n}} + ${inParens(b)} \\cdot \\frac{2}{${n}}\\right)$，因为两半的积分相反。所以 $c = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Integrate over each half", "在每一半上积分"],
+          "",
+          "",
+          `\\int_{-\\pi}^{0}${sine}\\,dx = -${half}, \\qquad \\int_{0}^{\\pi}${sine}\\,dx = ${half}`,
+        ),
+        labelled(
+          ["Weight by the two values", "乘以两段的值"],
+          "",
+          "",
+          `\\pi b_{${n}} = ${inParens(a)} \\cdot \\left(-${half}\\right) + ${inParens(b)} \\cdot ${half} = ${answer.toLatex()}`,
+          `c = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The jump from $${a}$ to $${b}$ is $${b - a}$, and $c = 2 \\cdot ${inParens(b - a)} \\div ${n} = ${answer.toLatex()}$, as for a square wave of that height.`,
+        `从 $${a}$ 到 $${b}$ 的跳跃为 $${b - a}$，$c = 2 \\cdot ${inParens(b - a)} \\div ${n} = ${answer.toLatex()}$，与这个高度的方波相同。`,
+      ],
+      [
+        [
+          Q.of(b - a, n),
+          `That drops the 2: over a half period $\\int_{0}^{\\pi}${sine}\\,dx = ${half}$.`,
+          `这漏掉了 2：在半个周期上 $\\int_{0}^{\\pi}${sine}\\,dx = ${half}$。`,
+        ],
+        [
+          answer.neg(),
+          "That swaps the signs of the halves; the sine is negative on $(-\\pi, 0)$, so the left value gets the minus sign.",
+          "这把两半的符号弄反了；正弦在 $(-\\pi, 0)$ 上为负，所以负号属于左边的值。",
+        ],
+        [
+          Q.of(2 * (a + b), n),
+          "That gives both halves the same integral; on $(-\\pi, 0)$ it is negative.",
+          "这让两半的积分相同；在 $(-\\pi, 0)$ 上它是负的。",
+        ],
+      ],
+    );
   },
 };
 
@@ -2173,8 +2215,8 @@ const halfPeriodShift: KnowledgePointDef = {
   id: "the-series-of-a-half-period-shift",
   title: t("The series of a half-period shift", "平移半个周期后的级数"),
   explanation: t(
-    "Moving a $2\\pi$-periodic function by half its period changes its Fourier series in a simple way. Since $\\cos n(x + \\pi) = (-1)^n\\cos nx$ and $\\sin n(x + \\pi) = (-1)^n\\sin nx$, each coefficient keeps its size. Even harmonics stay the same and odd harmonics change sign, so no integral has to be computed again.",
-    "把周期为 $2\\pi$ 的函数平移半个周期，它的傅里叶级数变化很简单。因为 $\\cos n(x + \\pi) = (-1)^n\\cos nx$，$\\sin n(x + \\pi) = (-1)^n\\sin nx$，每个系数的大小不变。偶次谐波不变，奇次谐波变号，所以不需要重新计算积分。",
+    "Moving a $2\\pi$-periodic function by half its period changes its Fourier series in a simple way. Since $\\cos n(x + \\pi) = (-1)^n\\cos nx$ and $\\sin n(x + \\pi) = (-1)^n\\sin nx$, each coefficient keeps its size. Even harmonics stay the same and odd harmonics change sign, so no integral has to be computed again.\n\n> **Watch out.** The shift changes signs, not which list a coefficient comes from: the coefficient of $\\cos kx$ still comes from $a_k$, never from $b_k$. For $a_n = \\frac{6}{n}$, the shifted coefficient of $\\cos 3x$ is $-2$ and that of $\\cos 2x$ is $3$.",
+    "把周期为 $2\\pi$ 的函数平移半个周期，它的傅里叶级数变化很简单。因为 $\\cos n(x + \\pi) = (-1)^n\\cos nx$，$\\sin n(x + \\pi) = (-1)^n\\sin nx$，每个系数的大小不变。偶次谐波不变，奇次谐波变号，所以不需要重新计算积分。\n\n> **注意。** 平移只改变符号，不改变系数来自哪一组：$\\cos kx$ 的系数仍来自 $a_k$，而不是 $b_k$。对 $a_n = \\frac{6}{n}$，平移后 $\\cos 3x$ 的系数是 $-2$，$\\cos 2x$ 的系数是 $3$。",
   ),
   generate(rng) {
     const c = rng.int(1, 12);
@@ -2182,18 +2224,44 @@ const halfPeriodShift: KnowledgePointDef = {
     const k = rng.int(2, 7);
     const sign = k % 2 === 0 ? 1 : -1;
     const answer = Q.of(sign * c, k);
-    return numberProblem({
-      prompt: t(
+    const minus = sign === 1 ? "" : "-";
+    return explainedNumber(
+      [
         `A $2\\pi$-periodic function $f$ has Fourier coefficients $a_n = \\frac{${c}}{n}$ and $b_n = \\frac{${e}}{n}$. Let $g(x) = f(x + \\pi)$. Find the coefficient of $\\cos ${k}x$ in the Fourier series of $g$.`,
         `周期为 $2\\pi$ 的函数 $f$ 的傅里叶系数是 $a_n = \\frac{${c}}{n}$，$b_n = \\frac{${e}}{n}$。设 $g(x) = f(x + \\pi)$。求 $g$ 的傅里叶级数中 $\\cos ${k}x$ 的系数。`,
-      ),
+      ],
       answer,
-      wrong: [answer.neg(), Q.of(sign * e, k), Q.of(e, k)],
-      solution: t(
-        `The shift turns $\\cos ${k}x$ into $\\cos(${k}x + ${k}\\pi) = ${sign === 1 ? "" : "-"}\\cos ${k}x$, and sine terms stay sine terms. So the coefficient is $${sign === 1 ? "" : "-"}a_{${k}} = ${answer.toLatex()}$.`,
-        `平移把 $\\cos ${k}x$ 变成 $\\cos(${k}x + ${k}\\pi) = ${sign === 1 ? "" : "-"}\\cos ${k}x$，正弦项仍是正弦项。所以系数是 $${sign === 1 ? "" : "-"}a_{${k}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Shift the cosine", "平移余弦"], "", "", `\\cos ${k}(x + \\pi) = \\cos(${k}x + ${k}\\pi) = ${minus}\\cos ${k}x`),
+        labelled(
+          ["Read off the coefficient", "读出系数"],
+          `Only $a_{${k}}\\cos ${k}x$ feeds this term; the sine terms stay sines:`,
+          `只有 $a_{${k}}\\cos ${k}x$ 贡献这一项；正弦项仍是正弦：`,
+          `${minus}a_{${k}} = ${minus}\\frac{${c}}{${k}} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `$${k}$ is ${sign === 1 ? "even" : "odd"}, so $\\cos ${k}\\pi = ${sign}$; the size $${Q.of(c, k).toLatex()}$ of $a_{${k}}$ is unchanged.`,
+        `$${k}$ 是${sign === 1 ? "偶数" : "奇数"}，所以 $\\cos ${k}\\pi = ${sign}$；$a_{${k}}$ 的大小 $${Q.of(c, k).toLatex()}$ 不变。`,
+      ],
+      [
+        [
+          answer.neg(),
+          `That has the wrong sign: $\\cos ${k}\\pi = ${sign}$, so ${sign === 1 ? "an even harmonic keeps its sign" : "an odd harmonic changes sign"}.`,
+          `符号错了：$\\cos ${k}\\pi = ${sign}$，所以${sign === 1 ? "偶次谐波保持符号" : "奇次谐波变号"}。`,
+        ],
+        [
+          Q.of(sign * e, k),
+          "That takes the sine coefficient $b_k$; the shift does not turn sines into cosines.",
+          "这用了正弦系数 $b_k$；平移不会把正弦变成余弦。",
+        ],
+        [
+          Q.of(e, k),
+          "That takes $b_k$ and also misses the sign change; the cosine term comes from $a_k$.",
+          "这用了 $b_k$，还漏了符号变化；余弦项来自 $a_k$。",
+        ],
+      ],
+    );
   },
 };
 
@@ -2201,26 +2269,63 @@ const sineSeriesOfLinear: KnowledgePointDef = {
   id: "the-sine-series-of-a-linear-function",
   title: t("The sine series of a linear function", "线性函数的正弦级数"),
   explanation: t(
-    "The sine coefficients on $(0, \\pi)$ are $b_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\sin nx\\,dx$. For $f(x) = x$, integration by parts gives $\\int_0^\\pi x\\sin nx\\,dx = -\\frac{\\pi\\cos n\\pi}{n}$. Since $\\cos n\\pi = (-1)^n$, the result is $b_n = \\frac{2(-1)^{n+1}}{n}$. The signs alternate, and a constant multiple of $x$ scales every coefficient.",
-    "$(0, \\pi)$ 上的正弦系数是 $b_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\sin nx\\,dx$。对 $f(x) = x$，分部积分得 $\\int_0^\\pi x\\sin nx\\,dx = -\\frac{\\pi\\cos n\\pi}{n}$。因为 $\\cos n\\pi = (-1)^n$，结果是 $b_n = \\frac{2(-1)^{n+1}}{n}$。符号交替出现，$x$ 乘以常数时每个系数也乘以同一个常数。",
+    "The sine coefficients on $(0, \\pi)$ are $b_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\sin nx\\,dx$. For $f(x) = x$, integration by parts gives $\\int_0^\\pi x\\sin nx\\,dx = -\\frac{\\pi\\cos n\\pi}{n}$. Since $\\cos n\\pi = (-1)^n$, the result is $b_n = \\frac{2(-1)^{n+1}}{n}$. The signs alternate, and a constant multiple of $x$ scales every coefficient.\n\n> **Watch out.** The signs start with $+$: $b_1 > 0$ for $f = x$, because $\\cos \\pi = -1$ cancels the minus in front. And the $\\frac{2}{\\pi}$ cancels the $\\pi$ of the integral, leaving a factor $2$. For $f = 3x$, $b_1 = 6$ and $b_2 = -3$.",
+    "$(0, \\pi)$ 上的正弦系数是 $b_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\sin nx\\,dx$。对 $f(x) = x$，分部积分得 $\\int_0^\\pi x\\sin nx\\,dx = -\\frac{\\pi\\cos n\\pi}{n}$。因为 $\\cos n\\pi = (-1)^n$，结果是 $b_n = \\frac{2(-1)^{n+1}}{n}$。符号交替出现，$x$ 乘以常数时每个系数也乘以同一个常数。\n\n> **注意。** 符号从 $+$ 开始：对 $f = x$ 有 $b_1 > 0$，因为 $\\cos \\pi = -1$ 抵消了前面的负号。而 $\\frac{2}{\\pi}$ 与积分中的 $\\pi$ 约掉，留下因子 $2$。对 $f = 3x$，$b_1 = 6$，$b_2 = -3$。",
   ),
   generate(rng) {
     const c = nonzero(rng, 9);
     const n = rng.int(1, 8);
     const sign = n % 2 === 1 ? 1 : -1;
     const answer = Q.of(2 * c * sign, n);
-    return numberProblem({
-      prompt: t(
+    const sine = `\\sin ${n === 1 ? "" : n}x`;
+    const integral = `${sign < 0 ? "-" : ""}${n === 1 ? "\\pi" : `\\frac{\\pi}{${n}}`}`;
+    return explainedNumber(
+      [
         `The Fourier sine series of $f(x) = ${poly([c, "x"])}$ on $(0, \\pi)$ has coefficients $b_n$. Find $b_{${n}}$.`,
         `$f(x) = ${poly([c, "x"])}$ 在 $(0, \\pi)$ 上的傅里叶正弦级数的系数为 $b_n$。求 $b_{${n}}$。`,
-      ),
+      ],
       answer,
-      wrong: [answer.neg(), Q.of(c * sign, n), Q.of(2 * c, n * n), Q.of(4 * c * sign, n)],
-      solution: t(
-        `For $f(x) = x$ the coefficient is $\\frac{2(-1)^{n+1}}{n}$. Here $n = ${n}$ gives the sign $${sign === 1 ? "+" : "-"}$, and the factor $${c}$ scales it, so $b_{${n}} = ${answer.toLatex()}$.`,
-        `对 $f(x) = x$，系数是 $\\frac{2(-1)^{n+1}}{n}$。这里 $n = ${n}$，符号为 $${sign === 1 ? "+" : "-"}$，再乘以因子 $${c}$，所以 $b_{${n}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Integrate by parts", "分部积分"],
+          "",
+          "",
+          `\\int_{0}^{\\pi} x\\sin nx\\,dx = \\left[-\\frac{x\\cos nx}{n}\\right]_{0}^{\\pi} + \\frac{1}{n}\\int_{0}^{\\pi}\\cos nx\\,dx = -\\frac{\\pi\\cos n\\pi}{n}`,
+        ),
+        labelled(
+          [`Put in n = ${n}`, `代入 n = ${n}`],
+          `Here $\\cos ${n}\\pi = ${-sign}$:`,
+          `这里 $\\cos ${n}\\pi = ${-sign}$：`,
+          `\\int_{0}^{\\pi} x${sine}\\,dx = ${integral}, \\qquad b_{${n}} = \\frac{2}{\\pi} \\cdot ${inParens(c)} \\cdot ${sign < 0 ? `\\left(${integral}\\right)` : integral} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The rule $b_n = \\frac{2c(-1)^{n+1}}{n}$ with $c = ${c}$ and $n = ${n}$ gives $2 \\cdot ${inParens(c)} \\cdot ${inParens(sign)} \\div ${n} = ${answer.toLatex()}$.`,
+        `由 $b_n = \\frac{2c(-1)^{n+1}}{n}$，$c = ${c}$，$n = ${n}$，得 $2 \\cdot ${inParens(c)} \\cdot ${inParens(sign)} \\div ${n} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [
+          answer.neg(),
+          `That has the wrong sign: $(-1)^{n+1}$ is $${sign}$ for $n = ${n}$.`,
+          `符号错了：$n = ${n}$ 时 $(-1)^{n+1}$ 是 $${sign}$。`,
+        ],
+        [
+          Q.of(c * sign, n),
+          "That drops the factor $2$ of $\\frac{2}{\\pi}$ in front of the integral.",
+          "这漏掉了积分前 $\\frac{2}{\\pi}$ 中的因子 $2$。",
+        ],
+        [
+          Q.of(2 * c, n * n),
+          "That divides by $n$ twice and loses the sign; the boundary term carries a single $\\frac{1}{n}$.",
+          "这除了两次 $n$，还丢了符号；边界项只带一个 $\\frac{1}{n}$。",
+        ],
+        [
+          Q.of(4 * c * sign, n),
+          "That uses $\\frac{4}{\\pi}$, the factor for a constant on odd $n$; the factor here is $\\frac{2}{\\pi}$.",
+          "这用了 $\\frac{4}{\\pi}$，那是常数在 $n$ 为奇数时的因子；这里的因子是 $\\frac{2}{\\pi}$。",
+        ],
+      ],
+    );
   },
 };
 
@@ -2228,26 +2333,62 @@ const cosineSeriesOfQuadratic: KnowledgePointDef = {
   id: "the-cosine-series-of-a-quadratic-function",
   title: t("The cosine series of a quadratic function", "二次函数的余弦级数"),
   explanation: t(
-    "The cosine coefficients on $(0, \\pi)$ are $a_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\cos nx\\,dx$. For $f(x) = x^2$, integrating by parts twice gives $\\int_0^\\pi x^2\\cos nx\\,dx = \\frac{2\\pi(-1)^n}{n^2}$, so $a_n = \\frac{4(-1)^n}{n^2}$. The coefficients shrink like $\\frac{1}{n^2}$, faster than for a function whose extension has a jump.",
-    "$(0, \\pi)$ 上的余弦系数是 $a_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\cos nx\\,dx$。对 $f(x) = x^2$，分部积分两次得 $\\int_0^\\pi x^2\\cos nx\\,dx = \\frac{2\\pi(-1)^n}{n^2}$，所以 $a_n = \\frac{4(-1)^n}{n^2}$。系数像 $\\frac{1}{n^2}$ 那样减小，比延拓后有跳跃的函数更快。",
+    "The cosine coefficients on $(0, \\pi)$ are $a_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\cos nx\\,dx$. For $f(x) = x^2$, integrating by parts twice gives $\\int_0^\\pi x^2\\cos nx\\,dx = \\frac{2\\pi(-1)^n}{n^2}$, so $a_n = \\frac{4(-1)^n}{n^2}$. The coefficients shrink like $\\frac{1}{n^2}$, faster than for a function whose extension has a jump.\n\n> **Watch out.** Here the sign is $(-1)^n$, so $a_1 < 0$ for $f = x^2$, and the denominator is $n^2$, not $n$. For $f = x^2$, $a_1 = -4$, $a_2 = 1$ and $a_3 = -\\frac{4}{9}$.",
+    "$(0, \\pi)$ 上的余弦系数是 $a_n = \\frac{2}{\\pi}\\int_0^\\pi f(x)\\cos nx\\,dx$。对 $f(x) = x^2$，分部积分两次得 $\\int_0^\\pi x^2\\cos nx\\,dx = \\frac{2\\pi(-1)^n}{n^2}$，所以 $a_n = \\frac{4(-1)^n}{n^2}$。系数像 $\\frac{1}{n^2}$ 那样减小，比延拓后有跳跃的函数更快。\n\n> **注意。** 这里的符号是 $(-1)^n$，所以对 $f = x^2$ 有 $a_1 < 0$；分母是 $n^2$，不是 $n$。对 $f = x^2$，$a_1 = -4$，$a_2 = 1$，$a_3 = -\\frac{4}{9}$。",
   ),
   generate(rng) {
     const c = nonzero(rng, 9);
     const n = rng.int(1, 8);
     const sign = n % 2 === 0 ? 1 : -1;
     const answer = Q.of(4 * c * sign, n * n);
-    return numberProblem({
-      prompt: t(
+    const integral = `${sign < 0 ? "-" : ""}${n === 1 ? "2\\pi" : `\\frac{2\\pi}{${n * n}}`}`;
+    return explainedNumber(
+      [
         `The Fourier cosine series of $f(x) = ${poly([c, "x^2"])}$ on $(0, \\pi)$ has coefficients $a_n$. Find $a_{${n}}$.`,
         `$f(x) = ${poly([c, "x^2"])}$ 在 $(0, \\pi)$ 上的傅里叶余弦级数的系数为 $a_n$。求 $a_{${n}}$。`,
-      ),
+      ],
       answer,
-      wrong: [answer.neg(), Q.of(2 * c * sign, n * n), Q.of(4 * c * sign, n), Q.of(4 * c, n * n * n)],
-      solution: t(
-        `For $f(x) = x^2$ the coefficient is $\\frac{4(-1)^n}{n^2}$. Here $n = ${n}$ gives the sign $${sign === 1 ? "+" : "-"}$, and the factor $${c}$ scales it, so $a_{${n}} = ${answer.toLatex()}$.`,
-        `对 $f(x) = x^2$，系数是 $\\frac{4(-1)^n}{n^2}$。这里 $n = ${n}$，符号为 $${sign === 1 ? "+" : "-"}$，再乘以因子 $${c}$，所以 $a_{${n}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Integrate by parts twice", "分部积分两次"],
+          "The first boundary term vanishes because $\\sin n\\pi = 0$, and the rest is the integral of $x\\sin nx$:",
+          "第一次的边界项因 $\\sin n\\pi = 0$ 而为零，剩下的是 $x\\sin nx$ 的积分：",
+          `\\int_{0}^{\\pi} x^{2}\\cos nx\\,dx = -\\frac{2}{n}\\int_{0}^{\\pi} x\\sin nx\\,dx = -\\frac{2}{n} \\cdot \\left(-\\frac{\\pi\\cos n\\pi}{n}\\right) = \\frac{2\\pi\\cos n\\pi}{n^{2}}`,
+        ),
+        labelled(
+          [`Put in n = ${n}`, `代入 n = ${n}`],
+          `Here $\\cos ${n}\\pi = ${sign}$:`,
+          `这里 $\\cos ${n}\\pi = ${sign}$：`,
+          `a_{${n}} = \\frac{2}{\\pi} \\cdot ${inParens(c)} \\cdot ${sign < 0 ? `\\left(${integral}\\right)` : integral} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The rule $a_n = \\frac{4c(-1)^n}{n^2}$ with $c = ${c}$ and $n = ${n}$ gives $4 \\cdot ${inParens(c)} \\cdot ${inParens(sign)} \\div ${n * n} = ${answer.toLatex()}$.`,
+        `由 $a_n = \\frac{4c(-1)^n}{n^2}$，$c = ${c}$，$n = ${n}$，得 $4 \\cdot ${inParens(c)} \\cdot ${inParens(sign)} \\div ${n * n} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [
+          answer.neg(),
+          `That has the wrong sign: $(-1)^{n}$ is $${sign}$ for $n = ${n}$.`,
+          `符号错了：$n = ${n}$ 时 $(-1)^{n}$ 是 $${sign}$。`,
+        ],
+        [
+          Q.of(2 * c * sign, n * n),
+          "That drops the factor $2$ of $\\frac{2}{\\pi}$ in front of the integral.",
+          "这漏掉了积分前 $\\frac{2}{\\pi}$ 中的因子 $2$。",
+        ],
+        [
+          Q.of(4 * c * sign, n),
+          "That divides by $n$ only once; each of the two integrations by parts brings a $\\frac{1}{n}$.",
+          "这只除了一次 $n$；两次分部积分各带来一个 $\\frac{1}{n}$。",
+        ],
+        [
+          Q.of(4 * c, n * n * n),
+          "That divides by $n$ three times and loses the sign; there are only two integrations by parts.",
+          "这除了三次 $n$，还丢了符号；只做了两次分部积分。",
+        ],
+      ],
+    );
   },
 };
 
@@ -2255,8 +2396,8 @@ const harmonicFromFrequency: KnowledgePointDef = {
   id: "naming-a-harmonic-from-its-frequency",
   title: t("Naming a harmonic from its frequency", "由频率确定谐波的次数"),
   explanation: t(
-    "A function of period $T = 2L$ has a Fourier series with terms $\\cos\\frac{n\\pi x}{L}$. A written term may have its fraction reduced, which hides its number $n$. To recover it, divide the angular frequency of the term by the fundamental frequency $\\frac{\\pi}{L}$. The quotient is the number of full oscillations in a period.",
-    "周期为 $T = 2L$ 的函数，其傅里叶级数的项是 $\\cos\\frac{n\\pi x}{L}$。写出来的项可能约过分，因而看不出次数 $n$。要还原它，就用该项的角频率除以基频 $\\frac{\\pi}{L}$。商就是一个周期内完整振荡的次数。",
+    "A function of period $T = 2L$ has a Fourier series with terms $\\cos\\frac{n\\pi x}{L}$. A written term may have its fraction reduced, which hides its number $n$. To recover it, divide the angular frequency of the term by the fundamental frequency $\\frac{\\pi}{L}$. The quotient is the number of full oscillations in a period.\n\n> **Watch out.** Divide by $\\frac{\\pi}{L}$ with $L$ half the period, and undo any cancelling first. For period $8$, $L = 4$, and $\\cos\\frac{3\\pi x}{2} = \\cos\\frac{6\\pi x}{4}$ is the harmonic $n = 6$, not $3$.",
+    "周期为 $T = 2L$ 的函数，其傅里叶级数的项是 $\\cos\\frac{n\\pi x}{L}$。写出来的项可能约过分，因而看不出次数 $n$。要还原它，就用该项的角频率除以基频 $\\frac{\\pi}{L}$。商就是一个周期内完整振荡的次数。\n\n> **注意。** 除以 $\\frac{\\pi}{L}$ 时 $L$ 是半个周期，并且要先还原约分。对周期 $8$，$L = 4$，$\\cos\\frac{3\\pi x}{2} = \\cos\\frac{6\\pi x}{4}$ 是第 $n = 6$ 次谐波，不是 $3$。",
   ),
   generate(rng) {
     const L = rng.int(2, 8);
@@ -2265,6 +2406,7 @@ const harmonicFromFrequency: KnowledgePointDef = {
     const p = n / g;
     const q = L / g;
     const angle = q === 1 ? `${multiple(p, "\\pi")} x` : `\\frac{${multiple(p, "\\pi")} x}{${q}}`;
+    const frequency = q === 1 ? multiple(p, "\\pi") : `\\frac{${multiple(p, "\\pi")}}{${q}}`;
     return numberProblem({
       prompt: t(
         `A function has period $${2 * L}$. Which harmonic number $n$ is the term $\\cos\\left(${angle}\\right)$ of its Fourier series?`,
@@ -2273,10 +2415,36 @@ const harmonicFromFrequency: KnowledgePointDef = {
       answer: n,
       form: "integer",
       solveFor: "n",
-      wrong: [p, 2 * n, Q.of(n, 2), n + L],
-      solution: t(
-        `Here $L = ${L}$, so the terms are $\\cos\\frac{n\\pi x}{${L}}$. Matching the frequencies requires $\\frac{n}{${L}} = ${Q.of(n, L).toLatex()}$, so $n = ${n}$.`,
-        `这里 $L = ${L}$，所以各项是 $\\cos\\frac{n\\pi x}{${L}}$。比较频率，需要 $\\frac{n}{${L}} = ${Q.of(n, L).toLatex()}$，所以 $n = ${n}$。`,
+      mistakes: keptMistakes(n, [
+        [
+          p,
+          `That reads the numerator of the cancelled fraction; written over $L = ${L}$ the angle is $\\frac{${multiple(n, "\\pi")} x}{${L}}$.`,
+          `这读的是约分后的分子；写成分母为 $L = ${L}$ 时，角度是 $\\frac{${multiple(n, "\\pi")} x}{${L}}$。`,
+        ],
+        [
+          2 * n,
+          `That puts the whole period $${2 * L}$ in place of $L$; the terms are $\\cos\\frac{n\\pi x}{L}$ with $L = ${L}$.`,
+          `这把整个周期 $${2 * L}$ 当成了 $L$；各项是 $\\cos\\frac{n\\pi x}{L}$，其中 $L = ${L}$。`,
+        ],
+        [
+          Q.of(n, 2),
+          `That writes the terms as $\\cos\\frac{2n\\pi x}{${L}}$, as if the period were $${L}$; it is $${2 * L}$.`,
+          `这把各项写成 $\\cos\\frac{2n\\pi x}{${L}}$，好像周期是 $${L}$；实际周期是 $${2 * L}$。`,
+        ],
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find L", "求 L"],
+            t("$L$ is half the period, and the fundamental frequency is $\\frac{\\pi}{L}$:", "$L$ 是半个周期，基频是 $\\frac{\\pi}{L}$："),
+            [`L = \\frac{${2 * L}}{2} = ${L}, \\qquad \\frac{\\pi}{L} = \\frac{\\pi}{${L}}`],
+          ],
+          [["Divide by the fundamental", "除以基频"], t("", ""), [`n = ${frequency} \\div \\frac{\\pi}{${L}} = ${n}`]],
+        ],
+        t(
+          `$\\frac{${multiple(n, "\\pi")} x}{${L}}$ reduces to $${angle}$, the term given.`,
+          `$\\frac{${multiple(n, "\\pi")} x}{${L}}$ 约分后正是 $${angle}$。`,
+        ),
       ),
     });
   },
@@ -2286,14 +2454,15 @@ const gibbsOvershoot: KnowledgePointDef = {
   id: "the-overshoot-at-a-jump",
   title: t("The overshoot at a jump", "跳跃点处的过冲"),
   explanation: t(
-    "Partial sums of a Fourier series do not settle smoothly near a jump. They overshoot the higher value and undershoot the lower one by about $9\\%$ of the jump, however many terms are taken. This is the Gibbs phenomenon. The peak only moves closer to the jump, so convergence does not remove its height.",
-    "傅里叶级数的部分和在跳跃点附近不会平稳地趋近。无论取多少项，它都会高出较高的值、低于较低的值，差距约为跳跃量的 $9\\%$。这就是吉布斯现象。峰值只是越来越靠近跳跃点，所以收敛并不会消除它的高度。",
+    "Partial sums of a Fourier series do not settle smoothly near a jump. They overshoot the higher value and undershoot the lower one by about $9\\%$ of the jump, however many terms are taken. This is the Gibbs phenomenon. The peak only moves closer to the jump, so convergence does not remove its height.\n\n> **Watch out.** The $9\\%$ is of the jump, not of the function value, and it is added to the higher value, not to the midpoint. For a jump from $-1$ to $3$, the peak is $3 + 0.09 \\cdot 4 = 3.36$, not $3.27$ or $1.36$.",
+    "傅里叶级数的部分和在跳跃点附近不会平稳地趋近。无论取多少项，它都会高出较高的值、低于较低的值，差距约为跳跃量的 $9\\%$。这就是吉布斯现象。峰值只是越来越靠近跳跃点，所以收敛并不会消除它的高度。\n\n> **注意。** $9\\%$ 是跳跃量的百分比，不是函数值的百分比，而且要加在较高的值上，不是加在中点上。对从 $-1$ 跳到 $3$ 的情形，峰值为 $3 + 0.09 \\cdot 4 = 3.36$，不是 $3.27$ 或 $1.36$。",
   ),
   generate(rng) {
     const a = rng.int(-9, 8);
     const gap = rng.int(1, 12);
     const b = a + gap;
     const answer = Q.of(100 * b + 9 * gap, 100);
+    const over = Q.of(9 * gap, 100);
     return numberProblem({
       prompt: t(
         `A $2\\pi$-periodic function equals $${a}$ on $(-\\pi, 0)$ and $${b}$ on $(0, \\pi)$. Taking the Gibbs overshoot to be $9\\%$ of the jump, what height do the peaks of the partial sums approach just to the right of $x = 0$?`,
@@ -2301,10 +2470,42 @@ const gibbsOvershoot: KnowledgePointDef = {
       ),
       answer,
       form: "decimal",
-      wrong: [Q.of(a + b, 2), b, Q.of(100 * b + 18 * gap, 100), Q.of(100 * b + 9 * Math.abs(b), 100), Q.of(100 * a - 9 * gap, 100)],
-      solution: t(
-        `The jump is $${gap}$, measured from $${a}$ up to $${b}$. The peak lies above the higher value by $9\\%$ of the jump: $${b} + 0.09 \\cdot ${gap} = ${dec(answer)}$.`,
-        `跳跃量是 $${gap}$，从 $${a}$ 升到 $${b}$。峰值比较高的值高出跳跃量的 $9\\%$：$${b} + 0.09 \\cdot ${gap} = ${dec(answer)}$。`,
+      mistakes: keptMistakes(answer, [
+        [
+          Q.of(a + b, 2),
+          "That is the midpoint, the value the series takes at the jump itself, not the peak beside it.",
+          "这是中点，即级数在跳跃点本身取的值，而不是旁边的峰值。",
+        ],
+        [b, "That leaves out the overshoot, which does not shrink as more terms are taken.", "这漏掉了过冲，而过冲不会随项数增加而缩小。"],
+        [
+          Q.of(100 * b + 18 * gap, 100),
+          "That adds $9\\%$ twice; the overshoot above the top is $9\\%$ of the jump once.",
+          "这加了两次 $9\\%$；顶端之上的过冲只是一次跳跃量的 $9\\%$。",
+        ],
+        [
+          Q.of(100 * b + 9 * Math.abs(b), 100),
+          `That takes $9\\%$ of the value $${b}$; it is $9\\%$ of the jump $${gap}$.`,
+          `这取的是函数值 $${b}$ 的 $9\\%$；应当取跳跃量 $${gap}$ 的 $9\\%$。`,
+        ],
+        [
+          Q.of(100 * a - 9 * gap, 100),
+          "That is the undershoot on the left, below the lower value; the question asks just to the right of $0$.",
+          "这是左侧低于较低值的下冲；题目问的是 $0$ 的右侧。",
+        ],
+      ]),
+      solution: walked(
+        [
+          [["Measure the jump", "量出跳跃量"], t("", ""), [`${b} - ${inParens(a)} = ${gap}`]],
+          [
+            ["Add the overshoot", "加上过冲"],
+            t("The peak lies above the higher value by $9\\%$ of the jump:", "峰值比较高的值高出跳跃量的 $9\\%$："),
+            [`0.09 \\cdot ${gap} = ${dec(over)}, \\qquad ${b} + ${dec(over)} = ${dec(answer)}`],
+          ],
+        ],
+        t(
+          `The peak is above $${b}$ by $${dec(over)}$, which is $${dec(over)} \\div ${gap} = 0.09$ of the jump.`,
+          `峰值比 $${b}$ 高 $${dec(over)}$，它是跳跃量的 $${dec(over)} \\div ${gap} = 0.09$。`,
+        ),
       ),
     });
   },
@@ -2314,8 +2515,8 @@ const countingEigenvalues: KnowledgePointDef = {
   id: "counting-eigenvalues-below-a-bound",
   title: t("Counting eigenvalues below a bound", "计数小于某值的特征值"),
   explanation: t(
-    "On an interval of length $\\ell$, the problem $y'' + \\lambda y = 0$ has eigenvalues $\\left(\\frac{n\\pi}{\\ell}\\right)^2$. With $y = 0$ at both ends, $n$ starts at $1$. With $y' = 0$ at both ends, $n$ starts at $0$, since a constant is then an eigenfunction. So the count depends on the boundary conditions as well as the length.",
-    "在长度为 $\\ell$ 的区间上，问题 $y'' + \\lambda y = 0$ 的特征值是 $\\left(\\frac{n\\pi}{\\ell}\\right)^2$。两端 $y = 0$ 时，$n$ 从 $1$ 开始。两端 $y' = 0$ 时，$n$ 从 $0$ 开始，因为这时常数是特征函数。所以特征值的个数既取决于长度，也取决于边界条件。",
+    "On an interval of length $\\ell$, the problem $y'' + \\lambda y = 0$ has eigenvalues $\\left(\\frac{n\\pi}{\\ell}\\right)^2$. With $y = 0$ at both ends, $n$ starts at $1$. With $y' = 0$ at both ends, $n$ starts at $0$, since a constant is then an eigenfunction. So the count depends on the boundary conditions as well as the length.\n\n> **Watch out.** Check the end conditions before counting. On $(0, \\pi)$ with the bound $10$: $y = 0$ at both ends gives $1, 4, 9$, three eigenvalues, while $y' = 0$ at both ends adds $\\lambda = 0$, making four.",
+    "在长度为 $\\ell$ 的区间上，问题 $y'' + \\lambda y = 0$ 的特征值是 $\\left(\\frac{n\\pi}{\\ell}\\right)^2$。两端 $y = 0$ 时，$n$ 从 $1$ 开始。两端 $y' = 0$ 时，$n$ 从 $0$ 开始，因为这时常数是特征函数。所以特征值的个数既取决于长度，也取决于边界条件。\n\n> **注意。** 计数前先看端点条件。在 $(0, \\pi)$ 上、界限为 $10$ 时：两端 $y = 0$ 给出 $1, 4, 9$ 三个特征值；两端 $y' = 0$ 还要加上 $\\lambda = 0$，共四个。",
   ),
   generate(rng) {
     const m = rng.int(1, 3);
@@ -2328,19 +2529,56 @@ const countingEigenvalues: KnowledgePointDef = {
     const answer = fixed ? N : N + 1;
     const conditions = fixed ? `y(0) = y\\left(${end}\\right) = 0` : `y'(0) = y'\\left(${end}\\right) = 0`;
     const rule = poly([m * m, "n^2"]);
-    return numberProblem({
-      prompt: t(
+    const start = fixed ? 1 : 0;
+    const values = Array.from({ length: N + 2 - start }, (_, i) => ((i + start) * m) ** 2).join(", ");
+    return explainedNumber(
+      [
         `How many eigenvalues of $y'' + \\lambda y = 0$ with $${conditions}$ are less than $${M}$?`,
         `$y'' + \\lambda y = 0$（条件为 $${conditions}$）有多少个特征值小于 $${M}$？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [fixed ? N + 1 : N, answer + 1, answer - 1, Math.floor(Math.sqrt(M))],
-      solution: t(
-        `The eigenvalues are $\\lambda = ${rule}$ with $n = ${fixed ? "1" : "0"}, ${fixed ? "2" : "1"}, \\ldots$. The value at $n = ${N}$ is $${low}$, which is below the bound, and the value at $n = ${N + 1}$ is $${high}$, which is not. That leaves $${answer}$ eigenvalues${fixed ? "" : ", counting $\\lambda = 0$"}.`,
-        `特征值是 $\\lambda = ${rule}$，$n = ${fixed ? "1" : "0"}, ${fixed ? "2" : "1"}, \\ldots$。$n = ${N}$ 时的值是 $${low}$，小于界限；$n = ${N + 1}$ 时的值是 $${high}$，不小于界限。所以共有 $${answer}$ 个特征值${fixed ? "" : "（包括 $\\lambda = 0$）"}。`,
-      ),
-    });
+      [
+        labelled(
+          ["List the eigenvalues", "列出特征值"],
+          `On an interval of length $${end}$ they are $\\lambda = ${rule}$, with $n$ starting at $${start}$:`,
+          `在长度为 $${end}$ 的区间上，特征值为 $\\lambda = ${rule}$，$n$ 从 $${start}$ 开始：`,
+          `\\lambda = ${values}, \\ldots`,
+        ),
+        labelled(
+          ["Count those below the bound", "数出小于界限的"],
+          `The values up to $${low}$ are below $${M}$ and $${high}$ is not, so $n$ runs from $${start}$ to $${N}$:`,
+          `直到 $${low}$ 的值都小于 $${M}$，而 $${high}$ 不小于，所以 $n$ 从 $${start}$ 到 $${N}$：`,
+          `${low} < ${M} \\le ${high}, \\qquad ${N} - ${start} + 1 = ${answer}`,
+        ),
+      ],
+      [
+        `$n = ${N}$ gives $${low} < ${M}$ and $n = ${N + 1}$ gives $${high} \\ge ${M}$, so the count stops at $n = ${N}$${fixed ? "" : ", with $\\lambda = 0$ included"}.`,
+        `$n = ${N}$ 时为 $${low} < ${M}$，$n = ${N + 1}$ 时为 $${high} \\ge ${M}$，所以计数到 $n = ${N}$ 为止${fixed ? "" : "，并包括 $\\lambda = 0$"}。`,
+      ],
+      [
+        [
+          fixed ? N + 1 : N,
+          fixed
+            ? "That counts $\\lambda = 0$, but with $y = 0$ at both ends a constant must be $0$, so $n$ starts at $1$."
+            : "That leaves out $\\lambda = 0$: with $y' = 0$ at both ends the constant $y = 1$ is an eigenfunction.",
+          fixed
+            ? "这把 $\\lambda = 0$ 也算进去了，但两端 $y = 0$ 时常数只能是 $0$，所以 $n$ 从 $1$ 开始。"
+            : "这漏掉了 $\\lambda = 0$：两端 $y' = 0$ 时常数 $y = 1$ 是特征函数。",
+        ],
+        [answer + 1, `That also counts $${high}$, which is not less than $${M}$.`, `这把 $${high}$ 也算进去了，但它不小于 $${M}$。`],
+        [
+          answer - 1,
+          `That stops one too early: $${low}$ is less than $${M}$ and counts.`,
+          `这少数了一个：$${low}$ 小于 $${M}$，应当计入。`,
+        ],
+        [
+          Math.floor(Math.sqrt(M)),
+          `That counts the $n$ with $n^{2} < ${M}$, ignoring the length; here the eigenvalues are $${rule}$.`,
+          `这数的是满足 $n^{2} < ${M}$ 的 $n$，忽略了区间长度；这里特征值是 $${rule}$。`,
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3941,8 +4179,8 @@ const mixedEndEigenvalue: KnowledgePointDef = {
   id: "eigenvalues-with-one-fixed-end-and-one-free-end",
   title: t("Eigenvalues with one fixed end and one free end", "一端固定一端自由的特征值"),
   explanation: t(
-    "For $y'' + \\lambda y = 0$ with $y(0) = 0$, the first condition leaves $y = \\sin(kx)$, where $k^2 = \\lambda$. The condition $y'(L) = 0$ then needs $\\cos(kL) = 0$, so $kL$ is an odd multiple of $\\frac{\\pi}{2}$. This differs from two fixed ends, where $kL$ is any multiple of $\\pi$. So the lowest mode fits only a quarter of a wave on the interval, and the eigenvalues involve the odd numbers only.",
-    "对 $y'' + \\lambda y = 0$，$y(0) = 0$，第一个条件留下 $y = \\sin(kx)$，其中 $k^2 = \\lambda$。条件 $y'(L) = 0$ 又要求 $\\cos(kL) = 0$，所以 $kL$ 是 $\\frac{\\pi}{2}$ 的奇数倍。这与两端固定不同，那时 $kL$ 是 $\\pi$ 的任意整数倍。所以最低模式在区间上只有四分之一个波，特征值只涉及奇数。",
+    "For $y'' + \\lambda y = 0$ with $y(0) = 0$, the first condition leaves $y = \\sin(kx)$, where $k^2 = \\lambda$. The condition $y'(L) = 0$ then needs $\\cos(kL) = 0$, so $kL$ is an odd multiple of $\\frac{\\pi}{2}$. This differs from two fixed ends, where $kL$ is any multiple of $\\pi$. So the lowest mode fits only a quarter of a wave on the interval, and the eigenvalues involve the odd numbers only.\n\n> **Watch out.** The multiples are odd multiples of $\\frac{\\pi}{2}$, and the $2$ is squared too. For $L = 1$ the smallest eigenvalue is $\\frac{\\pi^2}{4}$, not $\\pi^2$ or $\\frac{\\pi^2}{2}$.",
+    "对 $y'' + \\lambda y = 0$，$y(0) = 0$，第一个条件留下 $y = \\sin(kx)$，其中 $k^2 = \\lambda$。条件 $y'(L) = 0$ 又要求 $\\cos(kL) = 0$，所以 $kL$ 是 $\\frac{\\pi}{2}$ 的奇数倍。这与两端固定不同，那时 $kL$ 是 $\\pi$ 的任意整数倍。所以最低模式在区间上只有四分之一个波，特征值只涉及奇数。\n\n> **注意。** 这里是 $\\frac{\\pi}{2}$ 的奇数倍，而且分母的 $2$ 也要平方。对 $L = 1$，最小的特征值是 $\\frac{\\pi^2}{4}$，不是 $\\pi^2$ 或 $\\frac{\\pi^2}{2}$。",
   ),
   generate(rng) {
     const n = rng.int(1, 4);
@@ -3951,24 +4189,62 @@ const mixedEndEigenvalue: KnowledgePointDef = {
     const answer = Q.of(odd * odd, 4 * length * length);
     const en = ["smallest", "second smallest", "third smallest", "fourth smallest"][n - 1];
     const zh = ["最小的", "第二小的", "第三小的", "第四小的"][n - 1];
-    return numberProblem({
-      prompt: t(
+    const oddPi = `${odd === 1 ? "" : odd}\\pi`;
+    const Lk = `${length === 1 ? "" : length}k`;
+    return explainedNumber(
+      [
         `For $y'' + \\lambda y = 0$ with $y(0) = 0$ and $y'(${length}) = 0$, the ${en} eigenvalue is $c\\pi^2$. Find $c$.`,
         `对 $y'' + \\lambda y = 0$，$y(0) = 0$，$y'(${length}) = 0$，${zh}特征值是 $c\\pi^2$。求 $c$。`,
-      ),
-      answer,
-      wrong: [
-        Q.of(n * n, length * length),
-        Q.of(odd * odd, length * length),
-        Q.of((odd + 2) ** 2, 4 * length * length),
-        Q.of(n * n, 4 * length * length),
-        Q.of(odd * odd, 2 * length * length),
       ],
-      solution: t(
-        `Here $k \\cdot ${length} = \\frac{${odd === 1 ? "" : odd}\\pi}{2}$, so $\\lambda = k^2 = \\frac{${odd === 1 ? "" : odd * odd}\\pi^2}{${4 * length * length}}$. Thus $c = ${answer.toLatex()}$.`,
-        `这里 $k \\cdot ${length} = \\frac{${odd === 1 ? "" : odd}\\pi}{2}$，所以 $\\lambda = k^2 = \\frac{${odd === 1 ? "" : odd * odd}\\pi^2}{${4 * length * length}}$。于是 $c = ${answer.toLatex()}$。`,
-      ),
-    });
+      answer,
+      [
+        labelled(["Use y(0) = 0", "用 y(0) = 0"], "", "", "y = \\sin kx, \\qquad y' = k\\cos kx"),
+        labelled(
+          ["Use the free end", "用自由端"],
+          `$y'(${length}) = 0$ needs the cosine to vanish, at the ${en} odd multiple of $\\frac{\\pi}{2}$:`,
+          `$y'(${length}) = 0$ 要求余弦为零，取$\\frac{\\pi}{2}$ 的${zh}奇数倍：`,
+          `\\cos ${Lk} = 0 \\implies ${Lk} = \\frac{${oddPi}}{2}`,
+        ),
+        labelled(
+          ["Square k", "把 k 平方"],
+          "",
+          "",
+          `k = \\frac{${oddPi}}{${2 * length}}, \\qquad \\lambda = k^{2} = \\frac{${odd === 1 ? "" : odd * odd}\\pi^{2}}{${4 * length * length}}`,
+          `c = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `$\\cos\\frac{${oddPi}}{2} = 0$, so $y'(${length}) = 0$; and $${odd} = 2 \\cdot ${n} - 1$ is the ${en} odd number.`,
+        `$\\cos\\frac{${oddPi}}{2} = 0$，所以 $y'(${length}) = 0$；而 $${odd} = 2 \\cdot ${n} - 1$ 是${zh}奇数。`,
+      ],
+      [
+        [
+          Q.of(n * n, length * length),
+          "That uses two fixed ends, where $kL$ is a multiple of $\\pi$; a free end makes it an odd multiple of $\\frac{\\pi}{2}$.",
+          "这用的是两端固定，那时 $kL$ 是 $\\pi$ 的倍数；自由端使它成为 $\\frac{\\pi}{2}$ 的奇数倍。",
+        ],
+        [
+          Q.of(odd * odd, length * length),
+          "That takes $kL$ as an odd multiple of $\\pi$; the cosine vanishes at odd multiples of $\\frac{\\pi}{2}$.",
+          "这把 $kL$ 当成 $\\pi$ 的奇数倍；余弦在 $\\frac{\\pi}{2}$ 的奇数倍处为零。",
+        ],
+        [
+          Q.of((odd + 2) ** 2, 4 * length * length),
+          `That skips one: the ${en} eigenvalue uses the odd number $${odd}$, counting from $1$.`,
+          `这多跳了一个：${zh}特征值用的是奇数 $${odd}$，从 $1$ 数起。`,
+        ],
+        [
+          Q.of(n * n, 4 * length * length),
+          `That uses $n = ${n}$ in place of the odd number $2n - 1 = ${odd}$.`,
+          `这用了 $n = ${n}$，应当用奇数 $2n - 1 = ${odd}$。`,
+        ],
+        [
+          Q.of(odd * odd, 2 * length * length),
+          "That does not square the $2$ of $\\frac{\\pi}{2}$; squaring gives $4$.",
+          "这没有把 $\\frac{\\pi}{2}$ 中的 $2$ 平方；平方后是 $4$。",
+        ],
+      ],
+    );
   },
 };
 
@@ -3978,25 +4254,54 @@ const loadedEndSlope: KnowledgePointDef = {
     differentialEquationsDrawings1["second-order-inhomogeneous-boundary-value-problems#the-end-slope-of-a-loaded-boundary-value-problem"],
   title: t("The end slope of a loaded boundary value problem", "受载边值问题的端点斜率"),
   explanation: t(
-    "Integrating $y'' = c$ twice gives $y = \\frac{c}{2}x^2 + Ax + B$, with two constants that the boundary conditions must fix. Unlike an initial value problem, the slope at the left end is not given in advance: it is whatever makes the curve arrive correctly at the far end. With $y(0) = y(L) = 0$, the parabola is symmetric about the midpoint, so the two end slopes are equal and opposite.",
-    "对 $y'' = c$ 积分两次，得 $y = \\frac{c}{2}x^2 + Ax + B$，两个常数由边界条件确定。与初值问题不同，左端的斜率不是预先给定的，它要使曲线正确到达另一端。当 $y(0) = y(L) = 0$ 时，抛物线关于中点对称，所以两端的斜率大小相等、方向相反。",
+    "Integrating $y'' = c$ twice gives $y = \\frac{c}{2}x^2 + Ax + B$, with two constants that the boundary conditions must fix. Unlike an initial value problem, the slope at the left end is not given in advance: it is whatever makes the curve arrive correctly at the far end. With $y(0) = y(L) = 0$, the parabola is symmetric about the midpoint, so the two end slopes are equal and opposite.\n\n> **Watch out.** The answer is a slope, not a height, and its sign is opposite to that of $c$. For $y'' = 4$ on $[0, 3]$, $y = 2x(x - 3)$, so $y'(0) = -6$, while the lowest height is $y(1.5) = -4.5$.",
+    "对 $y'' = c$ 积分两次，得 $y = \\frac{c}{2}x^2 + Ax + B$，两个常数由边界条件确定。与初值问题不同，左端的斜率不是预先给定的，它要使曲线正确到达另一端。当 $y(0) = y(L) = 0$ 时，抛物线关于中点对称，所以两端的斜率大小相等、方向相反。\n\n> **注意。** 所求的是斜率，不是高度，并且它的符号与 $c$ 相反。对 $[0, 3]$ 上的 $y'' = 4$，$y = 2x(x - 3)$，所以 $y'(0) = -6$，而最低点的高度是 $y(1.5) = -4.5$。",
   ),
   generate(rng) {
     const c = nonzero(rng, 9);
     const length = rng.int(1, 9);
     const answer = Q.of(-c * length, 2);
-    return numberProblem({
-      prompt: t(
+    const LA = `${length === 1 ? "" : length}A`;
+    return explainedNumber(
+      [
         `Let $y'' = ${c}$ with $y(0) = 0$ and $y(${length}) = 0$. Find $y'(0)$.`,
         `设 $y'' = ${c}$，$y(0) = 0$，$y(${length}) = 0$。求 $y'(0)$。`,
-      ),
+      ],
       answer,
-      wrong: [answer.neg(), Q.of(c * length), Q.of(-c * length), Q.of(-c * length * length, 8)],
-      solution: t(
-        `The solution is $y = \\frac{c}{2}x(x - ${length})$ with $c = ${c}$. Differentiating at $x = 0$ gives $${answer.toLatex()}$.`,
-        `解是 $y = \\frac{c}{2}x(x - ${length})$，其中 $c = ${c}$。在 $x = 0$ 处求导，得 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Integrate twice", "积分两次"], "", "", `y = ${poly([Q.of(c, 2), "x^{2}"])} + Ax + B`),
+        labelled(
+          ["Use the two ends", "用两端条件"],
+          "",
+          "",
+          `y(0) = B = 0`,
+          `y(${length}) = ${Q.of(c * length * length, 2).toLatex()} + ${LA} = 0 \\implies A = ${answer.toLatex()}`,
+        ),
+        labelled(["Differentiate at 0", "在 0 处求导"], "", "", `y'(0) = A = ${answer.toLatex()}`),
+      ],
+      [
+        `$y'(${length}) = ${answer.neg().toLatex()}$, the opposite slope, and $y'(${length}) - y'(0) = ${c * length}$, which is $y'' = ${c}$ times the length $${length}$.`,
+        `$y'(${length}) = ${answer.neg().toLatex()}$，斜率相反；$y'(${length}) - y'(0) = ${c * length}$，正是 $y'' = ${c}$ 乘以长度 $${length}$。`,
+      ],
+      [
+        [answer.neg(), "That is the slope at the far end; at the left end the sign is the opposite.", "这是另一端的斜率；左端的符号相反。"],
+        [
+          Q.of(c * length),
+          "That is the total change $y'(L) - y'(0) = cL$, not the slope at $0$.",
+          "这是总变化量 $y'(L) - y'(0) = cL$，不是 $0$ 处的斜率。",
+        ],
+        [
+          Q.of(-c * length),
+          "That drops the $\\frac{1}{2}$: the slope changes by $cL$ across the interval, and the two end slopes split it equally.",
+          "这漏掉了 $\\frac{1}{2}$：斜率在整个区间上变化 $cL$，两端斜率平分它。",
+        ],
+        [
+          Q.of(-c * length * length, 8),
+          "That is the height at the midpoint, $y\\left(\\frac{L}{2}\\right)$, not a slope.",
+          "这是中点的高度 $y\\left(\\frac{L}{2}\\right)$，不是斜率。",
+        ],
+      ],
+    );
   },
 };
 

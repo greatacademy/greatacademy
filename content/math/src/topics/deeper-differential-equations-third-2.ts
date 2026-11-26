@@ -1164,8 +1164,8 @@ const bvpEigenvalues = point(
   "the-values-of-lambda-with-nonzero-solutions",
   ["The values of lambda with nonzero solutions", "存在非零解的 lambda 值"],
   [
-    "A homogeneous boundary value problem has the zero solution, and nonzero solutions only for special values of the parameter. For $y'' + \\lambda y = 0$ with $y(0) = y(L) = 0$, the condition is that $\\sqrt{\\lambda}L$ is a multiple of $\\pi$, so $\\lambda$ equals $\\left(\\frac{n\\pi}{L}\\right)^{2}$.",
-    "齐次边值问题有零解，只有参数取特殊值时才有非零解。对 $y'' + \\lambda y = 0$，$y(0) = y(L) = 0$，条件是 $\\sqrt{\\lambda}L$ 为 $\\pi$ 的倍数，所以 $\\lambda$ 等于 $\\left(\\frac{n\\pi}{L}\\right)^{2}$。",
+    "A homogeneous boundary value problem has the zero solution, and nonzero solutions only for special values of the parameter. For $y'' + \\lambda y = 0$ with $y(0) = y(L) = 0$, the condition is that $\\sqrt{\\lambda}L$ is a multiple of $\\pi$, so $\\lambda$ equals $\\left(\\frac{n\\pi}{L}\\right)^{2}$. For $L = \\frac{\\pi}{2}$: $\\sqrt{\\lambda} \\cdot \\frac{\\pi}{2} = n\\pi$ gives $\\sqrt{\\lambda} = 2n$, so $\\lambda = 4, 16, 36, \\ldots$\n\n> **Watch out.** $\\lambda = 0$ is not on the list: $y = c_{1} + c_{2}x$ with both ends zero is only $y = 0$. And square at the end: for $L = \\frac{\\pi}{3}$ the smallest $\\lambda$ is $9$, not $3$.",
+    "齐次边值问题有零解，只有参数取特殊值时才有非零解。对 $y'' + \\lambda y = 0$，$y(0) = y(L) = 0$，条件是 $\\sqrt{\\lambda}L$ 为 $\\pi$ 的倍数，所以 $\\lambda$ 等于 $\\left(\\frac{n\\pi}{L}\\right)^{2}$。对 $L = \\frac{\\pi}{2}$：$\\sqrt{\\lambda} \\cdot \\frac{\\pi}{2} = n\\pi$ 给出 $\\sqrt{\\lambda} = 2n$，所以 $\\lambda = 4, 16, 36, \\ldots$\n\n> **注意。** $\\lambda = 0$ 不在其中：$y = c_{1} + c_{2}x$ 两端为零时只能是 $y = 0$。最后还要平方：对 $L = \\frac{\\pi}{3}$，最小的 $\\lambda$ 是 $9$，不是 $3$。",
   ],
   (rng) => {
     const k = rng.int(1, 9);
@@ -1173,18 +1173,49 @@ const bvpEigenvalues = point(
     const L = k === 1 ? "\\pi" : `\\frac{\\pi}{${k}}`;
     const name = ordinals[n - 1] as Pair;
     const answer = (n * k) ** 2;
-    return ask(
-      [
+    const nPi = `${n === 1 ? "" : n}\\pi`;
+    return numberProblem({
+      prompt: t(
         `$y'' + \\lambda y = 0$ with $y(0) = 0$ and $y\\left(${L}\\right) = 0$ has nonzero solutions for certain positive $\\lambda$. Find the ${name[0]} such $\\lambda$.`,
         `$y'' + \\lambda y = 0$，$y(0) = 0$，$y\\left(${L}\\right) = 0$，对某些正数 $\\lambda$ 有非零解。求${name[1]}这样的 $\\lambda$。`,
-      ],
+      ),
       answer,
-      [n * k, n * n * k, n * k * k],
-      [
-        `The condition $y(0) = 0$ leaves $y = \\sin(\\sqrt{\\lambda}x)$, so the other condition needs $\\sqrt{\\lambda} \\cdot ${L} = ${n === 1 ? "" : n}\\pi$. That gives $\\sqrt{\\lambda} = ${n * k}$ and $\\lambda = ${answer}$.`,
-        `条件 $y(0) = 0$ 留下 $y = \\sin(\\sqrt{\\lambda}x)$，所以另一个条件要求 $\\sqrt{\\lambda} \\cdot ${L} = ${n === 1 ? "" : n}\\pi$。于是 $\\sqrt{\\lambda} = ${n * k}$，$\\lambda = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(n * k, "That is $\\sqrt{\\lambda}$; square it to get $\\lambda$.", "这是 $\\sqrt{\\lambda}$；平方后才是 $\\lambda$。"),
+        why(
+          ((n - 1) * k) ** 2,
+          "That counts $\\lambda = 0$ as the first value; it gives only $y = 0$, so the list starts at $n = 1$.",
+          "这把 $\\lambda = 0$ 算作第一个值；它只给出 $y = 0$，所以从 $n = 1$ 开始数。",
+        ),
+        why(
+          (2 * n * k) ** 2,
+          "That makes $\\sqrt{\\lambda}L$ a multiple of $2\\pi$; the sine is already $0$ at every multiple of $\\pi$.",
+          "这要求 $\\sqrt{\\lambda}L$ 为 $2\\pi$ 的倍数；正弦在 $\\pi$ 的每个倍数处就已经为 $0$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the first condition", "用第一个条件"],
+            t("", ""),
+            ["y = c_{1}\\cos\\sqrt{\\lambda}x + c_{2}\\sin\\sqrt{\\lambda}x, \\qquad y(0) = c_{1} = 0"],
+          ],
+          [
+            ["Use the second condition", "用第二个条件"],
+            t(
+              "A nonzero solution needs $c_{2} \\ne 0$, so the sine must vanish at the far end:",
+              "非零解要求 $c_{2} \\ne 0$，所以正弦必须在另一端为零：",
+            ),
+            [`\\sqrt{\\lambda} \\cdot ${L} = n\\pi \\implies \\sqrt{\\lambda} = ${k === 1 ? "n" : `${k}n`}, \\quad n = 1, 2, 3, \\ldots`],
+          ],
+          [[`Take n = ${n}`, `取 n = ${n}`], t("", ""), [`\\sqrt{\\lambda} = ${n * k}, \\qquad \\lambda = ${answer}`]],
+        ],
+        t(
+          `$y = ${angle("sin", n * k, "x")}$ is not zero, and at $x = ${L}$ its angle is $${nPi}$, where the sine is $0$.`,
+          `$y = ${angle("sin", n * k, "x")}$ 不恒为零，在 $x = ${L}$ 处其角度为 $${nPi}$，正弦为 $0$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1192,28 +1223,61 @@ const integrationConstant = point(
   "the-constant-from-integrating-sine-terms",
   ["The constant from integrating sine terms", "积分正弦项产生的常数"],
   [
-    "Integrating a sine series term by term from $0$ to $x$ does not give a pure cosine series. Since $\\int_{0}^{x} \\sin nt \\, dt = \\frac{1 - \\cos nx}{n}$, each term leaves a constant $\\frac{1}{n}$ times its coefficient, and these constants add up.",
-    "把正弦级数从 $0$ 到 $x$ 逐项积分，得到的不是纯余弦级数。由于 $\\int_{0}^{x} \\sin nt \\, dt = \\frac{1 - \\cos nx}{n}$，每一项都留下一个常数，等于其系数乘以 $\\frac{1}{n}$，这些常数相加。",
+    "Integrating a sine series term by term from $0$ to $x$ does not give a pure cosine series. Since $\\int_{0}^{x} \\sin nt \\, dt = \\frac{1 - \\cos nx}{n}$, each term leaves a constant $\\frac{1}{n}$ times its coefficient, and these constants add up. For $2\\sin t + 6\\sin 3t$: $\\int_{0}^{x} = 2(1 - \\cos x) + 2(1 - \\cos 3x) = 4 - 2\\cos x - 2\\cos 3x$, with constant term $4$.\n\n> **Watch out.** The constant is $+\\frac{b_n}{n}$: it comes from subtracting $-\\frac{\\cos 0}{n}$ at the lower limit. Dropping the lower limit gives $0$, and subtracting the wrong way flips the sign. For $\\sin 2t$ alone the constant is $\\frac{1}{2}$, not $0$ or $-\\frac{1}{2}$.",
+    "把正弦级数从 $0$ 到 $x$ 逐项积分，得到的不是纯余弦级数。由于 $\\int_{0}^{x} \\sin nt \\, dt = \\frac{1 - \\cos nx}{n}$，每一项都留下一个常数，等于其系数乘以 $\\frac{1}{n}$，这些常数相加。对 $2\\sin t + 6\\sin 3t$：$\\int_{0}^{x} = 2(1 - \\cos x) + 2(1 - \\cos 3x) = 4 - 2\\cos x - 2\\cos 3x$，常数项为 $4$。\n\n> **注意。** 常数是 $+\\frac{b_n}{n}$：它来自在下限处减去 $-\\frac{\\cos 0}{n}$。漏掉下限得 $0$，减反了符号就反了。单独的 $\\sin 2t$ 常数为 $\\frac{1}{2}$，不是 $0$ 或 $-\\frac{1}{2}$。",
   ],
   (rng) => {
     const a = nz(rng, 12);
     const b = nz(rng, 12);
     const p = rng.int(1, 5);
     const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
-    const answer = Q.of(a, p).add(Q.of(b, q));
+    const A = Q.of(a, p);
+    const B = Q.of(b, q);
+    const answer = A.add(B);
     const f = poly([a, angle("sin", p, "t")], [b, angle("sin", q, "t")]);
-    return ask(
-      [
+    /** times writes a rational coefficient in front of a bracket, leaving out 1. */
+    const times = (r: Q) => (r.toLatex() === "1" ? "" : r.toLatex() === "-1" ? "-" : r.toLatex());
+    const term = (c: number, m: number, r: Q) =>
+      `\\int_{0}^{x} ${poly([c, angle("sin", m, "t")])}\\,dt = ${times(r)}\\left(1 - ${angle("cos", m, "x")}\\right)`;
+    return numberProblem({
+      prompt: t(
         `Integrate $${f}$ term by term from $0$ to $x$. Find the constant term of the result.`,
         `把 $${f}$ 从 $0$ 到 $x$ 逐项积分。求结果的常数项。`,
-      ],
+      ),
       answer,
-      [0, answer.neg(), a + b],
-      [
-        `Each term gives a constant from the lower limit: $${Q.of(a, p).toLatex()}$ and $${Q.of(b, q).toLatex()}$. Their sum is $${answer.toLatex()}$, which is not zero in general, even though the sines themselves have mean zero.`,
-        `每一项由下限产生一个常数：$${Q.of(a, p).toLatex()}$ 和 $${Q.of(b, q).toLatex()}$。它们的和是 $${answer.toLatex()}$，一般不为零，尽管正弦函数本身的平均值为零。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          0,
+          "The sines have mean zero, but the lower limit still leaves a constant from each term.",
+          "正弦的平均值为零，但下限仍为每一项留下一个常数。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is flipped: $\\left[-\\frac{\\cos nt}{n}\\right]_{0}^{x} = \\frac{1}{n} - \\frac{\\cos nx}{n}$.",
+          "符号反了：$\\left[-\\frac{\\cos nt}{n}\\right]_{0}^{x} = \\frac{1}{n} - \\frac{\\cos nx}{n}$。",
+        ),
+        why(a + b, "That forgets to divide each coefficient by its $n$.", "这忘了把每个系数除以对应的 $n$。"),
+        why(
+          Q.of(a, p * p).add(Q.of(b, q * q)),
+          "That divides by $n$ twice; integrating once brings one factor $\\frac{1}{n}$.",
+          "这除了两次 $n$；积分一次只带来一个因子 $\\frac{1}{n}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Integrate each term", "逐项积分"], t("", ""), [term(a, p, A), term(b, q, B)]],
+          [
+            ["Collect the constants", "合并常数"],
+            t("Each bracket contributes its coefficient times $1$:", "每个括号贡献其系数乘以 $1$："),
+            [`${A.toLatex()} + ${paren(B)} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `At $x = 0$ the integral from $0$ to $0$ must be $0$. With every cosine equal to $1$ there, the result is $${answer.toLatex()} - ${paren(A)} - ${paren(B)} = 0$.`,
+          `在 $x = 0$ 处，从 $0$ 到 $0$ 的积分必须为 $0$。那里每个余弦都等于 $1$，结果为 $${answer.toLatex()} - ${paren(A)} - ${paren(B)} = 0$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1221,8 +1285,8 @@ const constantMode = point(
   "the-constant-mode-of-a-periodic-response",
   ["The constant mode of a periodic response", "周期响应的常数模态"],
   [
-    "A Fourier series may have a constant term, and it counts as the mode with $n = 0$. For $y'' + k^{2}y = c + b\\sin nx$ the constant mode responds with $\\frac{c}{k^{2}}$ and the sine mode with $\\frac{b}{k^{2} - n^{2}}$, and the solution is their sum.",
-    "傅里叶级数可能有常数项，它相当于 $n = 0$ 的模态。对 $y'' + k^{2}y = c + b\\sin nx$，常数模态的响应是 $\\frac{c}{k^{2}}$，正弦模态的响应是 $\\frac{b}{k^{2} - n^{2}}$，解是它们的和。",
+    "A Fourier series may have a constant term, and it counts as the mode with $n = 0$. For $y'' + k^{2}y = c + b\\sin nx$ the constant mode responds with $\\frac{c}{k^{2}}$ and the sine mode with $\\frac{b}{k^{2} - n^{2}}$, and the solution is their sum. For $y'' + 4y = 8 + 6\\sin x$: the constant $Y_{0}$ has $4Y_{0} = 8$, so $Y_{0} = 2$, and the sine mode has $(4 - 1)Y_{1} = 6$, so $Y_{1} = 2$. Thus $y = 2 + 2\\sin x$.\n\n> **Watch out.** The constant mode divides by $k^{2}$, and it must not be dropped. In the example $y\\left(\\frac{\\pi}{2}\\right) = 2 + 2 = 4$, not $2$; and $8$ undivided is not the constant of $y$.",
+    "傅里叶级数可能有常数项，它相当于 $n = 0$ 的模态。对 $y'' + k^{2}y = c + b\\sin nx$，常数模态的响应是 $\\frac{c}{k^{2}}$，正弦模态的响应是 $\\frac{b}{k^{2} - n^{2}}$，解是它们的和。对 $y'' + 4y = 8 + 6\\sin x$：常数 $Y_{0}$ 满足 $4Y_{0} = 8$，所以 $Y_{0} = 2$；正弦模态满足 $(4 - 1)Y_{1} = 6$，所以 $Y_{1} = 2$。于是 $y = 2 + 2\\sin x$。\n\n> **注意。** 常数模态要除以 $k^{2}$，而且不能丢掉。在这个例子中 $y\\left(\\frac{\\pi}{2}\\right) = 2 + 2 = 4$，不是 $2$；没除的 $8$ 也不是 $y$ 的常数项。",
   ],
   (rng) => {
     const k = rng.int(2, 6);
@@ -1235,18 +1299,56 @@ const constantMode = point(
     const answer = level.add(mode.mul(Q.of(sign)));
     const left = poly([1, "y''"], [k * k, "y"]);
     const right = poly([c, ""], [b, angle("sin", n, "x")]);
-    return ask(
-      [
+    const signed = mode.mul(Q.of(sign));
+    return numberProblem({
+      prompt: t(
         `$y$ is the periodic solution of $${left} = ${right}$. Find $y\\left(\\frac{\\pi}{2}\\right)$.`,
         `$y$ 是 $${left} = ${right}$ 的周期解。求 $y\\left(\\frac{\\pi}{2}\\right)$。`,
-      ],
+      ),
       answer,
-      [mode.mul(Q.of(sign)), level, level.sub(mode.mul(Q.of(sign)))],
-      [
-        `The constant mode gives $${level.toLatex()}$, and the sine mode has amplitude $${mode.toLatex()}$. At $\\frac{\\pi}{2}$ the sine equals $${sign}$, so $y = ${answer.toLatex()}$.`,
-        `常数模态给出 $${level.toLatex()}$，正弦模态的振幅是 $${mode.toLatex()}$。在 $\\frac{\\pi}{2}$ 处，正弦值等于 $${sign}$，所以 $y = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(signed, "That drops the constant mode $Y_{0}$.", "这丢掉了常数模态 $Y_{0}$。"),
+        why(level, "That drops the sine mode.", "这丢掉了正弦模态。"),
+        why(
+          level.sub(signed),
+          `That takes the sine at $\\frac{\\pi}{2}$ with the wrong sign; $\\sin\\frac{${n === 1 ? "" : n}\\pi}{2} = ${sign}$.`,
+          `这把 $\\frac{\\pi}{2}$ 处的正弦符号弄反了；$\\sin\\frac{${n === 1 ? "" : n}\\pi}{2} = ${sign}$。`,
+        ),
+        why(
+          Q.of(c).add(signed),
+          `That leaves the constant $${c}$ undivided; the constant mode is $\\frac{${c}}{${k * k}}$.`,
+          `这没有把常数 $${c}$ 除以 $${k * k}$；常数模态是 $\\frac{${c}}{${k * k}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Constant mode", "常数模态"],
+            t("A constant $Y_{0}$ has $Y_{0}'' = 0$:", "常数 $Y_{0}$ 满足 $Y_{0}'' = 0$："),
+            [`${k * k}Y_{0} = ${c}, \\qquad Y_{0} = ${level.toLatex()}`],
+          ],
+          [
+            ["Sine mode", "正弦模态"],
+            t(
+              `For $Y_{1}${angle("sin", n, "x")}$ the second derivative brings $-${n * n}$:`,
+              `对 $Y_{1}${angle("sin", n, "x")}$，二阶导数带来 $-${n * n}$：`,
+            ),
+            [`(${k * k} - ${n * n})Y_{1} = ${b}, \\qquad Y_{1} = ${mode.toLatex()}`],
+          ],
+          [
+            ["Evaluate at π/2", "在 π/2 处求值"],
+            t("", ""),
+            [
+              `\\sin\\frac{${n === 1 ? "" : n}\\pi}{2} = ${sign}, \\qquad y\\left(\\frac{\\pi}{2}\\right) = Y_{0} ${sign === 1 ? "+" : "-"} Y_{1} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `Putting each part back: $${k * k} \\cdot ${paren(level)} = ${c}$ and $(${k * k} - ${n * n}) \\cdot ${paren(mode)} = ${b}$, the two terms of the right side.`,
+          `逐项代回：$${k * k} \\cdot ${paren(level)} = ${c}$，$(${k * k} - ${n * n}) \\cdot ${paren(mode)} = ${b}$，正是右边的两项。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1254,8 +1356,8 @@ const cosineIvp = point(
   "cosine-forcing-changes-the-first-constant",
   ["Cosine forcing changes the first constant", "余弦强迫改变第一个常数"],
   [
-    "Under sine forcing the particular part vanishes at $t = 0$, so $c_{1} = y(0)$. Under cosine forcing it does not: the particular part has the value $Y$ at $t = 0$, and so $c_{1} = y(0) - Y$. The derivative condition then fixes $c_{2}$ on its own.",
-    "在正弦强迫下，特解部分在 $t = 0$ 处为零，所以 $c_{1} = y(0)$。在余弦强迫下则不然：特解部分在 $t = 0$ 处的值是 $Y$，所以 $c_{1} = y(0) - Y$。导数条件再单独确定 $c_{2}$。",
+    "Under sine forcing the particular part vanishes at $t = 0$, so $c_{1} = y(0)$. Under cosine forcing it does not: the particular part has the value $Y$ at $t = 0$, and so $c_{1} = y(0) - Y$. The derivative condition then fixes $c_{2}$ on its own. For $y'' + 4y = 3\\cos t$ with $y(0) = 5$: $(4 - 1)Y = 3$ gives $Y = 1$, and $y(0) = Y + c_{1}$ gives $c_{1} = 4$.\n\n> **Watch out.** Do not set $c_{1} = y(0)$ out of habit from sine forcing, and subtract $Y$ rather than add it. In the example $c_{1} = 4$, not $5$ or $6$.",
+    "在正弦强迫下，特解部分在 $t = 0$ 处为零，所以 $c_{1} = y(0)$。在余弦强迫下则不然：特解部分在 $t = 0$ 处的值是 $Y$，所以 $c_{1} = y(0) - Y$。导数条件再单独确定 $c_{2}$。对 $y'' + 4y = 3\\cos t$，$y(0) = 5$：$(4 - 1)Y = 3$ 给出 $Y = 1$，$y(0) = Y + c_{1}$ 给出 $c_{1} = 4$。\n\n> **注意。** 不要沿用正弦强迫的习惯令 $c_{1} = y(0)$，并且要减去 $Y$ 而不是加上。在这个例子中 $c_{1} = 4$，不是 $5$ 或 $6$。",
   ],
   (rng) => {
     const k = rng.int(1, 6);
@@ -1267,18 +1369,40 @@ const cosineIvp = point(
     const answer = Q.of(y0).sub(Y);
     const left = poly([1, "y''"], [k * k, "y"]);
     const form = `Y${angle("cos", w, "t")} + c_{1}${angle("cos", k, "t")} + c_{2}${angle("sin", k, "t")}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Solve $${left} = ${poly([F, angle("cos", w, "t")])}$ with $y(0) = ${y0}$ and $y'(0) = ${v0}$, writing $y = ${form}$. Find $c_{1}$.`,
         `解 $${left} = ${poly([F, angle("cos", w, "t")])}$，$y(0) = ${y0}$，$y'(0) = ${v0}$，写成 $y = ${form}$。求 $c_{1}$。`,
-      ],
+      ),
       answer,
-      [y0, Q.of(y0).add(Y), Y],
-      [
-        `Substituting the cosine term gives $Y = \\frac{${F}}{${k * k - w * w}} = ${Y.toLatex()}$. At $t = 0$ the sines vanish, so $y(0) = Y + c_{1}$, and $c_{1} = ${y0} - ${paren(Y)} = ${answer.toLatex()}$.`,
-        `代入余弦项得 $Y = \\frac{${F}}{${k * k - w * w}} = ${Y.toLatex()}$。在 $t = 0$ 处正弦项为零，所以 $y(0) = Y + c_{1}$，$c_{1} = ${y0} - ${paren(Y)} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          y0,
+          "That is the rule for sine forcing; here the particular part is $Y$ at $t = 0$.",
+          "这是正弦强迫时的做法；这里特解部分在 $t = 0$ 处为 $Y$。",
+        ),
+        why(Q.of(y0).add(Y), "That adds $Y$; it has to be subtracted from $y(0)$.", "这加上了 $Y$；应当从 $y(0)$ 中减去。"),
+        why(Y, "That is $Y$ itself, the coefficient of the forced cosine.", "这是 $Y$ 本身，即强迫余弦项的系数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find Y", "求 Y"],
+            t(`Put $Y${angle("cos", w, "t")}$ into the equation:`, `把 $Y${angle("cos", w, "t")}$ 代入方程：`),
+            [`(${k * k} - ${w * w})Y = ${F}, \\qquad Y = ${Y.toLatex()}`],
+          ],
+          [
+            ["Use y(0)", "用 y(0)"],
+            t("At $t = 0$ every cosine is $1$ and every sine is $0$:", "在 $t = 0$ 处每个余弦为 $1$，每个正弦为 $0$："),
+            [`Y + c_{1} = ${y0}, \\qquad c_{1} = ${y0} - ${paren(Y)} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `$y(0) = ${Y.toLatex()} + ${paren(answer)} = ${y0}$, as required; the condition $y'(0) = ${v0}$ only fixes $c_{2}$.`,
+          `$y(0) = ${Y.toLatex()} + ${paren(answer)} = ${y0}$，符合要求；条件 $y'(0) = ${v0}$ 只确定 $c_{2}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1286,8 +1410,8 @@ const reactionBvp = point(
   "a-reaction-term-in-the-sine-expansion",
   ["A reaction term in the sine expansion", "正弦展开中的反应项"],
   [
-    "The sine expansion still works for $-y'' + k^{2}y = f$ on $[0, \\pi]$ with zero boundary values. On the mode $\\sin nx$ the left side multiplies by $n^{2} + k^{2}$, so each coefficient divides by this sum. There is no resonance, because the sum is never zero.",
-    "正弦展开对 $[0, \\pi]$ 上边界值为零的 $-y'' + k^{2}y = f$ 同样有效。在模态 $\\sin nx$ 上，左边乘以 $n^{2} + k^{2}$，所以每个系数都除以这个和。不会共振，因为这个和永远不为零。",
+    "The sine expansion still works for $-y'' + k^{2}y = f$ on $[0, \\pi]$ with zero boundary values. On the mode $\\sin nx$ the left side multiplies by $n^{2} + k^{2}$, so each coefficient divides by this sum. There is no resonance, because the sum is never zero. For $-y'' + 4y = 10\\sin x$: $y = Y\\sin x$ gives $(1 + 4)Y = 10$, so $Y = 2$.\n\n> **Watch out.** $-y''$ on $\\sin nx$ gives $+n^{2}$, so the two parts add. Dividing by $k^{2} - n^{2}$, or by $k^{2}$ alone, is wrong: in the example $Y = 2$, not $\\frac{10}{3}$ or $\\frac{5}{2}$.",
+    "正弦展开对 $[0, \\pi]$ 上边界值为零的 $-y'' + k^{2}y = f$ 同样有效。在模态 $\\sin nx$ 上，左边乘以 $n^{2} + k^{2}$，所以每个系数都除以这个和。不会共振，因为这个和永远不为零。对 $-y'' + 4y = 10\\sin x$：$y = Y\\sin x$ 给出 $(1 + 4)Y = 10$，所以 $Y = 2$。\n\n> **注意。** $-y''$ 作用在 $\\sin nx$ 上给出 $+n^{2}$，所以两部分相加。除以 $k^{2} - n^{2}$ 或只除以 $k^{2}$ 都是错的：在这个例子中 $Y = 2$，不是 $\\frac{10}{3}$ 或 $\\frac{5}{2}$。",
   ],
   (rng) => {
     const n = rng.int(1, 5);
@@ -1297,18 +1421,42 @@ const reactionBvp = point(
     const left = poly([-1, "y''"], [k * k, "y"]);
     const right = poly([b, angle("sin", n, "x")]);
     const mode = angle("sin", n, "x");
-    return ask(
-      [
+    const nn = n === 1 ? "" : `${n * n}`;
+    return numberProblem({
+      prompt: t(
         `Solve $${left} = ${right}$ on $[0, \\pi]$ with $y(0) = y(\\pi) = 0$, writing $y = Y${mode}$. Find $Y$.`,
         `在 $[0, \\pi]$ 上解 $${left} = ${right}$，$y(0) = y(\\pi) = 0$，写成 $y = Y${mode}$。求 $Y$。`,
-      ],
+      ),
       answer,
-      [Q.of(b, n * n), Q.of(b, k * k), Q.of(b, (n + k) ** 2)],
-      [
-        `Substituting, $-y''$ gives $${n * n}Y${mode}$ and the other term gives $${k * k}Y${mode}$. So $${n * n + k * k}Y = ${b}$ and $Y = ${answer.toLatex()}$.`,
-        `代入后，$-y''$ 给出 $${n * n}Y${mode}$，另一项给出 $${k * k}Y${mode}$。所以 $${n * n + k * k}Y = ${b}$，$Y = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(Q.of(b, n * n), `That drops the term $${k === 1 ? "" : k * k}y$.`, `这漏掉了 $${k === 1 ? "" : k * k}y$ 这一项。`),
+        why(Q.of(b, k * k), "That drops $-y''$, which contributes $n^{2}Y$.", "这漏掉了 $-y''$，它贡献 $n^{2}Y$。"),
+        why(
+          Q.of(b, (n + k) ** 2),
+          "That adds $n$ and $k$ before squaring; the factor is $n^{2} + k^{2}$.",
+          "这是先把 $n$ 与 $k$ 相加再平方；因子是 $n^{2} + k^{2}$。",
+        ),
+        ...(n === k
+          ? []
+          : [
+              why(
+                Q.of(b, k * k - n * n),
+                "That treats $-y''$ as $-n^{2}Y$; differentiating twice gives $-n^{2}$, and the minus sign in front makes it $+n^{2}$.",
+                "这把 $-y''$ 当成 $-n^{2}Y$；求两次导得 $-n^{2}$，前面的负号使它变成 $+n^{2}$。",
+              ),
+            ]),
+      ]),
+      solution: walked(
+        [
+          [["Differentiate the mode", "对模态求导"], t("", ""), [`y'' = -${nn}Y${mode}, \\qquad -y'' = ${nn}Y${mode}`]],
+          [["Match the coefficients", "比较系数"], t("", ""), [`(${n * n} + ${k * k})Y = ${b}, \\qquad Y = ${answer.toLatex()}`]],
+        ],
+        t(
+          `The mode meets both ends: $\\sin 0 = 0$ and $\\sin ${n === 1 ? "" : n}\\pi = 0$. And $${n * n + k * k} \\cdot ${paren(answer)} = ${b}$.`,
+          `这个模态满足两端条件：$\\sin 0 = 0$，$\\sin ${n === 1 ? "" : n}\\pi = 0$。并且 $${n * n + k * k} \\cdot ${paren(answer)} = ${b}$。`,
+        ),
+      ),
+    });
   },
 );
 

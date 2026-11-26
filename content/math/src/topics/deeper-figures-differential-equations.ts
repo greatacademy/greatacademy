@@ -9,7 +9,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { explainedChoice, numberProblem } from "../problems.ts";
 
-import { choose, type Pair, point, same } from "../university-kit.ts";
+import { type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
@@ -1286,8 +1286,8 @@ const symmetryOfWave = {
     "which-fourier-terms-a-drawn-wave-needs",
     ["Which Fourier terms a drawn wave needs", "图中的波需要哪些傅里叶项"],
     [
-      "The symmetry of a graph decides which Fourier terms it needs. An odd function, with rotation symmetry about the origin, needs only sine terms. An even function, with mirror symmetry in the vertical axis, needs only cosine terms and perhaps a constant. A wave with neither symmetry needs both kinds of terms.",
-      "图的对称性决定需要哪些傅里叶项。奇函数关于原点旋转对称，只需要正弦项。偶函数关于纵轴镜像对称，只需要余弦项，可能还有常数。两种对称都没有的波，两类项都需要。",
+      "The symmetry of a graph decides which Fourier terms it needs. An odd function, with rotation symmetry about the origin, needs only sine terms. An even function, with mirror symmetry in the vertical axis, needs only cosine terms and perhaps a constant. A wave with neither symmetry needs both kinds of terms.\n\n> **Watch out.** Judge the symmetry about the vertical axis and the origin, not the look of one piece. A square wave equal to $1$ on $(0, \\pi)$ and $-1$ on $(-\\pi, 0)$ is odd and needs sines only, while a triangle wave between $0$ and $2$ is even but also needs a constant term, since it never goes below the axis.",
+      "图的对称性决定需要哪些傅里叶项。奇函数关于原点旋转对称，只需要正弦项。偶函数关于纵轴镜像对称，只需要余弦项，可能还有常数。两种对称都没有的波，两类项都需要。\n\n> **注意。** 要看关于纵轴和原点的对称性，而不是某一段的样子。在 $(0, \\pi)$ 上为 $1$、在 $(-\\pi, 0)$ 上为 $-1$ 的方波是奇函数，只需要正弦项；而在 $0$ 与 $2$ 之间的三角波是偶函数，但还需要常数项，因为它从不低于横轴。",
     ],
     (rng) => {
       const kind = rng.pick(["oddSquare", "evenTriangle", "oddSaw", "neither"] as const);
@@ -1312,12 +1312,108 @@ const symmetryOfWave = {
                 "图既不关于纵轴镜像对称，也不关于原点旋转对称",
               ]
             : ["The graph has rotation symmetry about the origin", "图关于原点旋转对称"];
-      return choose(
+      const q = period / 4;
+      const odd = kind === "oddSquare" || kind === "oddSaw";
+      const flat: Because<Pair> = [
+        options.none as Pair,
+        "The graph is not flat, so it needs terms that oscillate, not a constant alone.",
+        "图不是水平的，所以需要振荡的项，而不只是常数。",
+      ];
+      const wrong: Because<Pair>[] = odd
+        ? [
+            [
+              options.even as Pair,
+              "Cosines alone give a mirror image in the vertical axis; here the values at $x$ and $-x$ have opposite signs.",
+              "只有余弦项的图关于纵轴镜像对称；这里 $x$ 与 $-x$ 处的值符号相反。",
+            ],
+            [
+              options.both as Pair,
+              "A half turn about the origin gives the same graph, so every cosine coefficient is $0$.",
+              "绕原点旋转半圈得到同一个图，所以每个余弦系数都为 $0$。",
+            ],
+            flat,
+          ]
+        : kind === "evenTriangle"
+          ? [
+              [
+                options.odd as Pair,
+                "Sines alone give rotation symmetry about the origin; this graph is a mirror image in the vertical axis instead, so every sine coefficient is $0$.",
+                "只有正弦项的图关于原点旋转对称；这个图却关于纵轴镜像对称，所以每个正弦系数都为 $0$。",
+              ],
+              [
+                options.both as Pair,
+                "The mirror symmetry in the vertical axis makes every sine coefficient $0$.",
+                "关于纵轴的镜像对称使每个正弦系数都为 $0$。",
+              ],
+              flat,
+            ]
+          : [
+              [
+                options.odd as Pair,
+                "Sines alone give rotation symmetry about the origin; this graph is never below the axis, so it has none.",
+                "只有正弦项的图关于原点旋转对称；这个图从不低于横轴，没有这种对称。",
+              ],
+              [
+                options.even as Pair,
+                "Cosines alone give a mirror image in the vertical axis; this graph rises just right of $0$ but is flat just left of it.",
+                "只有余弦项的图关于纵轴镜像对称；这个图在 $0$ 右侧上升，在左侧却是水平的。",
+              ],
+              flat,
+            ];
+      const symmetry = odd ? "f(-x) = -f(x)" : kind === "evenTriangle" ? "f(-x) = f(x)" : "f(-x) \\ne f(x), \\qquad f(-x) \\ne -f(x)";
+      const terms: Step = odd
+        ? stepOf(
+            ["Match the terms", "对应傅里叶项"],
+            [
+              "For an odd function $f(x)\\cos nx$ is odd and integrates to $0$ over a period:",
+              "奇函数的 $f(x)\\cos nx$ 是奇函数，在一个周期上积分为 $0$：",
+            ],
+            "a_{0} = 0, \\qquad a_{n} = 0",
+          )
+        : kind === "evenTriangle"
+          ? stepOf(
+              ["Match the terms", "对应傅里叶项"],
+              [
+                "For an even function $f(x)\\sin nx$ is odd, and equal areas above and below the axis make the mean $0$:",
+                "偶函数的 $f(x)\\sin nx$ 是奇函数；轴上下面积相等，使平均值为 $0$：",
+              ],
+              "b_{n} = 0, \\qquad a_{0} = 0",
+            )
+          : stepOf(
+              ["Match the terms", "对应傅里叶项"],
+              [
+                "The even part needs cosines and the odd part needs sines, and neither part is zero:",
+                "偶部分需要余弦项，奇部分需要正弦项，而两部分都不为零：",
+              ],
+              "f(x) = \\frac{f(x) + f(-x)}{2} + \\frac{f(x) - f(-x)}{2}",
+            );
+      const check: Pair =
+        kind === "oddSquare"
+          ? [
+              `$f(${q}) = ${amp}$ and $f(-${q}) = -${amp}$: opposite values, as an odd function has.`,
+              `$f(${q}) = ${amp}$，$f(-${q}) = -${amp}$：值相反，正是奇函数的特征。`,
+            ]
+          : kind === "oddSaw"
+            ? [
+                `$f(${q}) = ${amp / 2}$ and $f(-${q}) = -${amp / 2}$: opposite values, as an odd function has.`,
+                `$f(${q}) = ${amp / 2}$，$f(-${q}) = -${amp / 2}$：值相反，正是奇函数的特征。`,
+              ]
+            : kind === "evenTriangle"
+              ? [
+                  `$f(0) = ${amp}$ and $f(\\pm ${period / 2}) = -${amp}$: the two sides match, and the triangles above and below the axis have equal area.`,
+                  `$f(0) = ${amp}$，$f(\\pm ${period / 2}) = -${amp}$：两侧一致，轴上下的三角形面积相等。`,
+                ]
+              : [
+                  `$f(${q}) = ${amp / 2}$ but $f(-${q}) = 0$, which is neither $${amp / 2}$ nor $-${amp / 2}$.`,
+                  `$f(${q}) = ${amp / 2}$，而 $f(-${q}) = 0$，既不是 $${amp / 2}$，也不是 $-${amp / 2}$。`,
+                ];
+      return figureChoice(
         rng,
         ["Which terms appear in the Fourier series of the periodic function drawn?", "图中周期函数的傅里叶级数含有哪些项？"],
         right as Pair,
-        [options.odd as Pair, options.even as Pair, options.both as Pair, options.none as Pair],
-        [`${reason[0]}, so the series has ${(right as Pair)[0]}.`, `${reason[1]}，所以级数${(right as Pair)[1]}。`],
+        wrong,
+        [stepOf(["Test the symmetry", "检验对称性"], [`${reason[0]}:`, `${reason[1]}：`], symmetry), terms],
+        check,
         fig({ xMin: -8, xMax: 8, yMin: -4, yMax: 4 }, wave(kind, period, amp), [
           `A periodic graph with period ${period} and height ${amp}. ${reason[0]}.`,
           `周期为 ${period}、高度为 ${amp} 的周期函数图。${reason[1]}。`,
