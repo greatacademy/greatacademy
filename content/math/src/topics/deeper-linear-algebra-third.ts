@@ -5,7 +5,9 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
+import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -21,23 +23,38 @@ const squaresBounded = point(
   "counting-integers-with-a-bounded-square",
   ["Counting integers with a bounded square", "数平方有界的整数"],
   [
-    "When a set is described inside the integers, negative numbers count as well. A condition such as $x^{2} \\le k$ allows both signs and zero, so the set has one element for zero and two for each positive integer up to the square root of $k$.",
-    "当集合在整数中描述时，负数也要计入。像 $x^{2} \\le k$ 这样的条件允许正负两种符号以及零，所以集合中零占一个元素，不超过 $k$ 的平方根的每个正整数占两个元素。",
+    "When a set is described inside the integers, negative numbers count as well. A condition such as $x^{2} \\le k$ allows both signs and zero, so the set has one element for zero and two for each positive integer up to the square root of $k$.\n\n> **Watch out.** Zero and the negative integers belong too. $\\{x \\in \\mathbb{Z} \\mid x^{2} \\le 10\\} = \\{-3, -2, -1, 0, 1, 2, 3\\}$ has $7$ elements, not $3$.",
+    "当集合在整数中描述时，负数也要计入。像 $x^{2} \\le k$ 这样的条件允许正负两种符号以及零，所以集合中零占一个元素，不超过 $k$ 的平方根的每个正整数占两个元素。\n\n> **注意。** 零和负整数也属于这个集合。$\\{x \\in \\mathbb{Z} \\mid x^{2} \\le 10\\} = \\{-3, -2, -1, 0, 1, 2, 3\\}$ 有 $7$ 个元素，而不是 $3$ 个。",
   ],
   (rng) => {
     const k = rng.int(2, 150);
     const s = Math.floor(Math.sqrt(k));
     const answer = 2 * s + 1;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `How many elements does $\\{x \\in \\mathbb{Z} \\mid x^{2} \\le ${k}\\}$ have?`,
+          `$\\{x \\in \\mathbb{Z} \\mid x^{2} \\le ${k}\\}$ 有多少个元素？`,
+        ],
+        answer,
+        [s, 2 * s, s + 1],
+        [
+          `**Step 1: Find the largest allowed integer.** $${s}^{2} = ${s * s} \\le ${k}$ but $${s + 1}^{2} = ${(s + 1) ** 2} > ${k}$, so the positive elements are $1, \\dots, ${s}$.\n\n**Step 2: Count both signs and zero.** $(-x)^{2} = x^{2}$, so the set is $\\{${-s}, \\dots, ${s}\\}$: $${s}$ negative integers, zero and $${s}$ positive ones, $2 \\cdot ${s} + 1 = ${answer}$ in all.\n\n**Check.** From $${-s}$ to $${s}$ there are $${s} - (${-s}) + 1 = ${answer}$ integers, and $\\pm ${s + 1}$ are left out since their square $${(s + 1) ** 2}$ exceeds $${k}$.`,
+          `**第一步：找出允许的最大整数。** $${s}^{2} = ${s * s} \\le ${k}$，而 $${s + 1}^{2} = ${(s + 1) ** 2} > ${k}$，所以正的元素是 $1, \\dots, ${s}$。\n\n**第二步：计入两种符号和零。** $(-x)^{2} = x^{2}$，所以集合是 $\\{${-s}, \\dots, ${s}\\}$：$${s}$ 个负整数、零和 $${s}$ 个正整数，共 $2 \\cdot ${s} + 1 = ${answer}$ 个。\n\n**检验。** 从 $${-s}$ 到 $${s}$ 共有 $${s} - (${-s}) + 1 = ${answer}$ 个整数；$\\pm ${s + 1}$ 不在其中，因为它们的平方 $${(s + 1) ** 2}$ 超过 $${k}$。`,
+        ],
+      ),
       [
-        `How many elements does $\\{x \\in \\mathbb{Z} \\mid x^{2} \\le ${k}\\}$ have?`,
-        `$\\{x \\in \\mathbb{Z} \\mid x^{2} \\le ${k}\\}$ 有多少个元素？`,
-      ],
-      answer,
-      [s, 2 * s, s + 1],
-      [
-        `The largest integer whose square is at most $${k}$ is $${s}$. So the set runs from $${-s}$ to $${s}$, which is $${answer}$ integers including zero.`,
-        `平方不超过 $${k}$ 的最大整数是 $${s}$。所以集合从 $${-s}$ 到 $${s}$，包括零在内共 $${answer}$ 个整数。`,
+        say(
+          String(s),
+          "That counts only the positive integers; negative integers have the same squares, and zero belongs too.",
+          "这只数了正整数；负整数有相同的平方，而且零也属于这个集合。",
+        ),
+        say(String(2 * s), "Zero is missing: $0^{2} = 0$ satisfies the condition.", "漏了零：$0^{2} = 0$ 满足条件。"),
+        say(
+          String(s + 1),
+          "That counts zero and the positive integers; each negative integer $-x$ has the same square as $x$.",
+          "这数了零和正整数；每个负整数 $-x$ 与 $x$ 的平方相同。",
+        ),
       ],
     );
   },
@@ -47,40 +64,78 @@ const negation = point(
   "negating-a-quantified-statement",
   ["Negating a quantified statement", "否定带量词的命题"],
   [
-    "To negate a quantified statement, change the quantifier and negate the predicate: not for all becomes there exists, and not there exists becomes for all. Negating an inequality includes the boundary, so the negation of $>$ is $\\le$, not $<$.",
-    "否定带量词的命题时，要改变量词并否定谓词：并非对所有变成存在，并非存在变成对所有。否定不等式时要包括边界，所以 $>$ 的否定是 $\\le$，而不是 $<$。",
+    "To negate a quantified statement, change the quantifier and negate the predicate: not for all becomes there exists, and not there exists becomes for all. Negating an inequality includes the boundary, so the negation of $>$ is $\\le$, not $<$.\n\n> **Watch out.** Both changes are needed, and the boundary goes to the negation. The negation of $\\forall x,\\ x^{2} > 4$ is $\\exists x,\\ x^{2} \\le 4$: at $x = 2$, $x^{2} > 4$ is false, so $x^{2} = 4$ must satisfy the negated predicate.",
+    "否定带量词的命题时，要改变量词并否定谓词：并非对所有变成存在，并非存在变成对所有。否定不等式时要包括边界，所以 $>$ 的否定是 $\\le$，而不是 $<$。\n\n> **注意。** 两处改变都需要，而且边界归否定的一方。$\\forall x,\\ x^{2} > 4$ 的否定是 $\\exists x,\\ x^{2} \\le 4$：在 $x = 2$ 处 $x^{2} > 4$ 为假，所以 $x^{2} = 4$ 必须满足否定后的谓词。",
   ],
   (rng) => {
     const k = rng.int(1, 25);
     const R = "x \\in \\mathbb{R}";
     if (rng.bool()) {
-      return choose(
-        rng,
-        [`Which statement is the negation of $\\forall ${R},\\ x^{2} > ${k}$?`, `哪个命题是 $\\forall ${R},\\ x^{2} > ${k}$ 的否定？`],
-        [`$\\exists ${R},\\ x^{2} \\le ${k}$`, `$\\exists ${R},\\ x^{2} \\le ${k}$`],
+      return reasoned(
+        choose(
+          rng,
+          [`Which statement is the negation of $\\forall ${R},\\ x^{2} > ${k}$?`, `哪个命题是 $\\forall ${R},\\ x^{2} > ${k}$ 的否定？`],
+          [`$\\exists ${R},\\ x^{2} \\le ${k}$`, `$\\exists ${R},\\ x^{2} \\le ${k}$`],
+          [
+            [`$\\exists ${R},\\ x^{2} < ${k}$`, `$\\exists ${R},\\ x^{2} < ${k}$`],
+            [`$\\forall ${R},\\ x^{2} \\le ${k}$`, `$\\forall ${R},\\ x^{2} \\le ${k}$`],
+            [`$\\exists ${R},\\ x^{2} > ${k}$`, `$\\exists ${R},\\ x^{2} > ${k}$`],
+          ],
+          [
+            `**Step 1: Change the quantifier.** "Not for every $x$" means "for some $x$", so $\\forall$ becomes $\\exists$.\n\n**Step 2: Negate the predicate.** $x^{2} > ${k}$ fails exactly when $x^{2} \\le ${k}$, equality included. The negation is $\\exists ${R},\\ x^{2} \\le ${k}$.\n\n**Check.** At $x = 0$ the original fails, since $0 > ${k}$ is false, and the negation holds, since $0 \\le ${k}$: the two have opposite truth values, as a statement and its negation must.`,
+            `**第一步：改变量词。** “并非对每个 $x$”意思是“对某个 $x$”，所以 $\\forall$ 变为 $\\exists$。\n\n**第二步：否定谓词。** $x^{2} > ${k}$ 不成立恰好是 $x^{2} \\le ${k}$，包括等号。否定是 $\\exists ${R},\\ x^{2} \\le ${k}$。\n\n**检验。** 在 $x = 0$ 处原命题不成立，因为 $0 > ${k}$ 为假；而否定成立，因为 $0 \\le ${k}$：两者真假相反，命题与其否定本应如此。`,
+          ],
+        ),
         [
-          [`$\\exists ${R},\\ x^{2} < ${k}$`, `$\\exists ${R},\\ x^{2} < ${k}$`],
-          [`$\\forall ${R},\\ x^{2} \\le ${k}$`, `$\\forall ${R},\\ x^{2} \\le ${k}$`],
-          [`$\\exists ${R},\\ x^{2} > ${k}$`, `$\\exists ${R},\\ x^{2} > ${k}$`],
-        ],
-        [
-          `The quantifier changes from for all to there exists, and the negation of $x^{2} > ${k}$ is $x^{2} \\le ${k}$, which includes equality.`,
-          `量词由对所有变为存在，而 $x^{2} > ${k}$ 的否定是 $x^{2} \\le ${k}$，其中包括等号。`,
+          [
+            `$\\exists ${R},\\ x^{2} < ${k}$`,
+            `$x^{2} = ${k}$ also makes $x^{2} > ${k}$ false, so the negated predicate must include equality.`,
+            `$x^{2} = ${k}$ 也使 $x^{2} > ${k}$ 为假，所以否定后的谓词必须包括等号。`,
+          ],
+          [
+            `$\\forall ${R},\\ x^{2} \\le ${k}$`,
+            "The quantifier must change as well: the negation of a statement about every $x$ is a statement about some $x$.",
+            "量词也必须改变：关于每个 $x$ 的命题，其否定是关于某个 $x$ 的命题。",
+          ],
+          [
+            `$\\exists ${R},\\ x^{2} > ${k}$`,
+            "Only the quantifier changed; the predicate must be negated too.",
+            "只改变了量词；谓词也必须否定。",
+          ],
         ],
       );
     }
-    return choose(
-      rng,
-      [`Which statement is the negation of $\\exists ${R},\\ x^{2} < ${k}$?`, `哪个命题是 $\\exists ${R},\\ x^{2} < ${k}$ 的否定？`],
-      [`$\\forall ${R},\\ x^{2} \\ge ${k}$`, `$\\forall ${R},\\ x^{2} \\ge ${k}$`],
+    return reasoned(
+      choose(
+        rng,
+        [`Which statement is the negation of $\\exists ${R},\\ x^{2} < ${k}$?`, `哪个命题是 $\\exists ${R},\\ x^{2} < ${k}$ 的否定？`],
+        [`$\\forall ${R},\\ x^{2} \\ge ${k}$`, `$\\forall ${R},\\ x^{2} \\ge ${k}$`],
+        [
+          [`$\\forall ${R},\\ x^{2} > ${k}$`, `$\\forall ${R},\\ x^{2} > ${k}$`],
+          [`$\\exists ${R},\\ x^{2} \\ge ${k}$`, `$\\exists ${R},\\ x^{2} \\ge ${k}$`],
+          [`$\\forall ${R},\\ x^{2} < ${k}$`, `$\\forall ${R},\\ x^{2} < ${k}$`],
+        ],
+        [
+          `**Step 1: Change the quantifier.** "There is no $x$ with the property" means "every $x$ lacks it", so $\\exists$ becomes $\\forall$.\n\n**Step 2: Negate the predicate.** $x^{2} < ${k}$ fails exactly when $x^{2} \\ge ${k}$, equality included. The negation is $\\forall ${R},\\ x^{2} \\ge ${k}$.\n\n**Check.** At $x = 0$ the original holds, since $0 < ${k}$, and the negation fails, since $0 \\ge ${k}$ is false: the two have opposite truth values, as a statement and its negation must.`,
+          `**第一步：改变量词。** “不存在具有该性质的 $x$”意思是“每个 $x$ 都不具有它”，所以 $\\exists$ 变为 $\\forall$。\n\n**第二步：否定谓词。** $x^{2} < ${k}$ 不成立恰好是 $x^{2} \\ge ${k}$，包括等号。否定是 $\\forall ${R},\\ x^{2} \\ge ${k}$。\n\n**检验。** 在 $x = 0$ 处原命题成立，因为 $0 < ${k}$；而否定不成立，因为 $0 \\ge ${k}$ 为假：两者真假相反，命题与其否定本应如此。`,
+        ],
+      ),
       [
-        [`$\\forall ${R},\\ x^{2} > ${k}$`, `$\\forall ${R},\\ x^{2} > ${k}$`],
-        [`$\\exists ${R},\\ x^{2} \\ge ${k}$`, `$\\exists ${R},\\ x^{2} \\ge ${k}$`],
-        [`$\\forall ${R},\\ x^{2} < ${k}$`, `$\\forall ${R},\\ x^{2} < ${k}$`],
-      ],
-      [
-        `The quantifier changes from there exists to for all, and the negation of $x^{2} < ${k}$ is $x^{2} \\ge ${k}$, which includes equality.`,
-        `量词由存在变为对所有，而 $x^{2} < ${k}$ 的否定是 $x^{2} \\ge ${k}$，其中包括等号。`,
+        [
+          `$\\forall ${R},\\ x^{2} > ${k}$`,
+          `$x^{2} = ${k}$ also makes $x^{2} < ${k}$ false, so the negated predicate must include equality.`,
+          `$x^{2} = ${k}$ 也使 $x^{2} < ${k}$ 为假，所以否定后的谓词必须包括等号。`,
+        ],
+        [
+          `$\\exists ${R},\\ x^{2} \\ge ${k}$`,
+          "The quantifier must change as well: the negation of a statement about some $x$ is a statement about every $x$.",
+          "量词也必须改变：关于某个 $x$ 的命题，其否定是关于每个 $x$ 的命题。",
+        ],
+        [
+          `$\\forall ${R},\\ x^{2} < ${k}$`,
+          "Only the quantifier changed; the predicate must be negated too.",
+          "只改变了量词；谓词也必须否定。",
+        ],
       ],
     );
   },
@@ -90,24 +145,39 @@ const imageSet = point(
   "a-constructed-set-with-hidden-repeats",
   ["A constructed set with hidden repeats", "隐含重复元素的构造集合"],
   [
-    "A set built by applying a formula lists each value once, even if several inputs produce it. Squaring sends $x$ and $-x$ to the same number, so the size of the set can be much smaller than the number of inputs, and it depends on the larger end of the range.",
-    "用公式构造的集合中，每个值只列一次，即使有多个输入产生它。平方把 $x$ 和 $-x$ 送到同一个数，所以集合的大小可能远小于输入的个数，并且取决于范围中较大的一端。",
+    "A set built by applying a formula lists each value once, even if several inputs produce it. Squaring sends $x$ and $-x$ to the same number, so the size of the set can be much smaller than the number of inputs, and it depends on the larger end of the range.\n\n> **Watch out.** Count the values, not the inputs. $\\{x^{2} \\mid x \\in \\mathbb{Z},\\ -2 \\le x \\le 3\\}$ has $6$ inputs but only the $4$ values $0, 1, 4, 9$.",
+    "用公式构造的集合中，每个值只列一次，即使有多个输入产生它。平方把 $x$ 和 $-x$ 送到同一个数，所以集合的大小可能远小于输入的个数，并且取决于范围中较大的一端。\n\n> **注意。** 数的是值，不是输入。$\\{x^{2} \\mid x \\in \\mathbb{Z},\\ -2 \\le x \\le 3\\}$ 有 $6$ 个输入，却只有 $0, 1, 4, 9$ 这 $4$ 个值。",
   ],
   (rng) => {
     const a = rng.int(1, 9);
     const b = a + rng.int(0, 5);
     const answer = b + 1;
-    return ask(
+    return withMistakes(
+      ask(
+        [
+          `How many elements does $\\{x^{2} \\mid x \\in \\mathbb{Z},\\ ${-a} \\le x \\le ${b}\\}$ have?`,
+          `$\\{x^{2} \\mid x \\in \\mathbb{Z},\\ ${-a} \\le x \\le ${b}\\}$ 有多少个元素？`,
+        ],
+        answer,
+        [a + b + 1, b, 2 * b + 1],
+        [
+          `**Step 1: Match the negative inputs.** $(-x)^{2} = x^{2}$, and each negative input $-x \\ge ${-a}$ has its partner $x \\le ${a} \\le ${b}$ in the range, so it adds no new value.\n\n**Step 2: Count the distinct values.** The values are $0^{2}, 1^{2}, \\dots, ${b}^{2}$, which is $${b} + 1 = ${answer}$ numbers.\n\n**Check.** The squares $0 < 1 < 4 < \\dots < ${b * b}$ increase strictly, so they are all different; there are $${a + b + 1}$ inputs but only $${answer}$ values.`,
+          `**第一步：配对负的输入。** $(-x)^{2} = x^{2}$，而每个负输入 $-x \\ge ${-a}$ 在范围内都有对应的 $x \\le ${a} \\le ${b}$，所以不产生新的值。\n\n**第二步：数不同的值。** 值是 $0^{2}, 1^{2}, \\dots, ${b}^{2}$，共 $${b} + 1 = ${answer}$ 个数。\n\n**检验。** 平方 $0 < 1 < 4 < \\dots < ${b * b}$ 严格递增，所以互不相同；共有 $${a + b + 1}$ 个输入，却只有 $${answer}$ 个值。`,
+        ],
+      ),
       [
-        `How many elements does $\\{x^{2} \\mid x \\in \\mathbb{Z},\\ ${-a} \\le x \\le ${b}\\}$ have?`,
-        `$\\{x^{2} \\mid x \\in \\mathbb{Z},\\ ${-a} \\le x \\le ${b}\\}$ 有多少个元素？`,
-      ],
-      answer,
-      [a + b + 1, b, 2 * b + 1],
-      [
-        `The negative inputs repeat squares of positive ones, since $${a} \\le ${b}$. The distinct values are the squares of $0, 1, \\dots, ${b}$, which is $${answer}$ numbers.`,
-        `由于 $${a} \\le ${b}$，负的输入只是重复正数的平方。不同的值是 $0, 1, \\dots, ${b}$ 的平方，共 $${answer}$ 个数。`,
-      ],
+        say(
+          String(a + b + 1),
+          `$${a + b + 1}$ is the number of inputs; $x$ and $-x$ give the same square, so the set lists it once.`,
+          `$${a + b + 1}$ 是输入的个数；$x$ 与 $-x$ 的平方相同，集合中只列一次。`,
+        ),
+        say(String(b), "The value $0^{2} = 0$ is missing.", "漏了值 $0^{2} = 0$。"),
+        say(
+          String(2 * b + 1),
+          `That counts the inputs from $${-b}$ to $${b}$; the range starts at $${-a}$, and in any case each square is listed once.`,
+          `这数的是从 $${-b}$ 到 $${b}$ 的输入；范围从 $${-a}$ 开始，而且每个平方都只列一次。`,
+        ),
+      ].filter((m, i, all) => m.response !== String(answer) && all.findIndex((x) => x.response === m.response) === i),
     );
   },
 );
@@ -116,8 +186,8 @@ const residuesInInterval = point(
   "counting-a-residue-set-in-an-interval",
   ["Counting a residue set in an interval", "数区间内的同余集元素"],
   [
-    "The elements of $\\{mk + r\\}$ in an interval are equally spaced by $m$. So find the first element at or above the lower end and the last at or below the upper end, and count the steps between them, adding one for the starting element.",
-    "$\\{mk + r\\}$ 在区间内的元素以 $m$ 为间隔等距分布。所以先找不小于下端的第一个元素和不大于上端的最后一个元素，再数它们之间的步数，并加上起始元素这一个。",
+    "The elements of $\\{mk + r\\}$ in an interval are equally spaced by $m$. So find the first element at or above the lower end and the last at or below the upper end, and count the steps between them, adding one for the starting element.\n\n> **Watch out.** Start from the first element of the set, not from the end of the interval. In $[0, 20]$ the elements of $\\{6k + 2\\}$ are $2, 8, 14, 20$: $3$ steps of $6$ from $2$ to $20$, so $4$ elements.",
+    "$\\{mk + r\\}$ 在区间内的元素以 $m$ 为间隔等距分布。所以先找不小于下端的第一个元素和不大于上端的最后一个元素，再数它们之间的步数，并加上起始元素这一个。\n\n> **注意。** 从集合的第一个元素开始，而不是从区间的端点开始。在 $[0, 20]$ 中，$\\{6k + 2\\}$ 的元素是 $2, 8, 14, 20$：从 $2$ 到 $20$ 走了 $3$ 步，每步 $6$，所以有 $4$ 个元素。",
   ],
   (rng) => {
     const m = rng.int(3, 9);
@@ -127,17 +197,39 @@ const residuesInInterval = point(
     const low = Math.ceil((L - r) / m);
     const high = Math.floor((U - r) / m);
     const answer = high - low + 1;
-    return ask(
+    const [first, last] = [m * low + r, m * high + r];
+    return withMistakes(
+      ask(
+        [
+          `How many elements of $\\{${poly([m, "k"], [r, ""])} \\mid k \\in \\mathbb{Z}\\}$ lie in the interval $[${L}, ${U}]$?`,
+          `$\\{${poly([m, "k"], [r, ""])} \\mid k \\in \\mathbb{Z}\\}$ 有多少个元素在区间 $[${L}, ${U}]$ 内？`,
+        ],
+        answer,
+        [answer + 1, answer - 1 === 0 ? answer + 2 : answer - 1, U - L + 1],
+        [
+          `**Step 1: Find the first and last elements.** The smallest $k$ with $${m}k + ${r} \\ge ${L}$ is $k = ${low}$, giving $${first}$; the largest with $${m}k + ${r} \\le ${U}$ is $k = ${high}$, giving $${last}$.\n\n**Step 2: Count.** $k$ runs from $${low}$ to $${high}$, so there are $${high} - ${wrap(low)} + 1 = ${answer}$ elements.\n\n**Check.** The neighbours $${first - m}$ and $${last + m}$ lie outside $[${L}, ${U}]$, and $\\frac{${last} - ${wrap(first)}}{${m}} + 1 = ${answer}$.`,
+          `**第一步：找出第一个与最后一个元素。** 满足 $${m}k + ${r} \\ge ${L}$ 的最小 $k$ 是 $${low}$，给出 $${first}$；满足 $${m}k + ${r} \\le ${U}$ 的最大 $k$ 是 $${high}$，给出 $${last}$。\n\n**第二步：计数。** $k$ 从 $${low}$ 到 $${high}$，共 $${high} - ${wrap(low)} + 1 = ${answer}$ 个元素。\n\n**检验。** 相邻的 $${first - m}$ 和 $${last + m}$ 都在 $[${L}, ${U}]$ 之外，且 $\\frac{${last} - ${wrap(first)}}{${m}} + 1 = ${answer}$。`,
+        ],
+      ),
       [
-        `How many elements of $\\{${poly([m, "k"], [r, ""])} \\mid k \\in \\mathbb{Z}\\}$ lie in the interval $[${L}, ${U}]$?`,
-        `$\\{${poly([m, "k"], [r, ""])} \\mid k \\in \\mathbb{Z}\\}$ 有多少个元素在区间 $[${L}, ${U}]$ 内？`,
-      ],
-      answer,
-      [answer + 1, answer - 1 === 0 ? answer + 2 : answer - 1, U - L + 1],
-      [
-        `The first element in the interval is $${m * low + r}$ and the last is $${m * high + r}$. They differ by $${m * (high - low)}$, so the count is $\\frac{${m * (high - low)}}{${m}} + 1 = ${answer}$.`,
-        `区间内第一个元素是 $${m * low + r}$，最后一个是 $${m * high + r}$。它们相差 $${m * (high - low)}$，所以个数是 $\\frac{${m * (high - low)}}{${m}} + 1 = ${answer}$。`,
-      ],
+        say(
+          String(answer - 1),
+          `That is the number of steps from $${first}$ to $${last}$; add one for the starting element.`,
+          `这是从 $${first}$ 到 $${last}$ 的步数；还要加上起始元素。`,
+        ),
+        say(
+          String(answer + 1),
+          `One element too many: $${first - m}$ and $${last + m}$ lie outside the interval.`,
+          `多了一个元素：$${first - m}$ 和 $${last + m}$ 在区间之外。`,
+        ),
+        say(
+          String(U - L + 1),
+          `That counts every integer in the interval; only every $${m}$th one is in the set.`,
+          `这数的是区间内的所有整数；只有每隔 $${m}$ 个的那些在集合中。`,
+        ),
+      ].filter(
+        (x, i, all) => x.response !== String(answer) && Number(x.response) > 0 && all.findIndex((y) => y.response === x.response) === i,
+      ),
     );
   },
 );
@@ -146,28 +238,49 @@ const listingIntegers = point(
   "the-position-of-an-integer-in-a-listing",
   ["The position of an integer in a listing", "整数在列表中的位置"],
   [
-    "A set is countably infinite if a list reaches every element. The integers are listed by alternating signs as $0, -1, 1, -2, 2, \\dots$, even though they extend in both directions. Each integer has an exact position, and the formula differs for the two signs.",
-    "如果一个列表能到达集合的每个元素，这个集合就是可数无穷的。整数可以用正负交替的方式列为 $0, -1, 1, -2, 2, \\dots$，尽管它们向两个方向延伸。每个整数都有确定的位置，两种符号的公式不同。",
+    "A set is countably infinite if a list reaches every element. The integers are listed by alternating signs as $0, -1, 1, -2, 2, \\dots$, even though they extend in both directions. Each integer has an exact position, and the formula differs for the two signs.\n\n> **Watch out.** The list starts at $n = 0$, and the signs alternate. $f(0) = 0$, $f(1) = -1$, $f(2) = 1$, so the integer $1$ sits at $n = 2$, not at $n = 1$.",
+    "如果一个列表能到达集合的每个元素，这个集合就是可数无穷的。整数可以用正负交替的方式列为 $0, -1, 1, -2, 2, \\dots$，尽管它们向两个方向延伸。每个整数都有确定的位置，两种符号的公式不同。\n\n> **注意。** 列表从 $n = 0$ 开始，正负交替。$f(0) = 0$，$f(1) = -1$，$f(2) = 1$，所以整数 $1$ 位于 $n = 2$，而不是 $n = 1$。",
   ],
   (rng) => {
     const m = nz(rng, 30);
     const answer = m > 0 ? 2 * m : -2 * m - 1;
     const f = "\\begin{cases} \\frac{n}{2}, & n \\text{ even} \\\\ -\\frac{n + 1}{2}, & n \\text{ odd} \\end{cases}";
-    return ask(
-      [
-        `The function $f(n) = ${f}$, $n = 0, 1, 2, \\dots$, lists all the integers. Find the $n$ with $f(n) = ${m}$.`,
-        `函数 $f(n) = ${f}$，$n = 0, 1, 2, \\dots$，列出全部整数。求满足 $f(n) = ${m}$ 的 $n$。`,
-      ],
-      answer,
-      [Math.abs(m), m > 0 ? 2 * m - 1 : -2 * m, answer + 1],
-      [
+    const other = m > 0 ? 2 * m - 1 : -2 * m;
+    return withMistakes(
+      ask(
+        [
+          `The function $f(n) = ${f}$, $n = 0, 1, 2, \\dots$, lists all the integers. Find the $n$ with $f(n) = ${m}$.`,
+          `函数 $f(n) = ${f}$，$n = 0, 1, 2, \\dots$，列出全部整数。求满足 $f(n) = ${m}$ 的 $n$。`,
+        ],
+        answer,
+        [Math.abs(m), other, answer + 1],
         m > 0
-          ? `A positive value comes from an even $n$, so $\\frac{n}{2} = ${m}$ and $n = ${answer}$.`
-          : `A negative value comes from an odd $n$, so $-\\frac{n + 1}{2} = ${m}$ and $n = ${answer}$.`,
-        m > 0
-          ? `正值来自偶数 $n$，所以 $\\frac{n}{2} = ${m}$，$n = ${answer}$。`
-          : `负值来自奇数 $n$，所以 $-\\frac{n + 1}{2} = ${m}$，$n = ${answer}$。`,
-      ],
+          ? [
+              `**Step 1: Choose the branch.** The odd branch $-\\frac{n + 1}{2}$ is always negative, so the positive value $${m}$ comes from an even $n$.\n\n**Step 2: Solve.** $\\frac{n}{2} = ${m}$ gives $n = ${answer}$.\n\n**Check.** $${answer}$ is even and $f(${answer}) = \\frac{${answer}}{2} = ${m}$.`,
+              `**第一步：选择分支。** 奇数分支 $-\\frac{n + 1}{2}$ 总是负的，所以正值 $${m}$ 来自偶数 $n$。\n\n**第二步：求解。** $\\frac{n}{2} = ${m}$，得 $n = ${answer}$。\n\n**检验。** $${answer}$ 是偶数，$f(${answer}) = \\frac{${answer}}{2} = ${m}$。`,
+            ]
+          : [
+              `**Step 1: Choose the branch.** The even branch $\\frac{n}{2}$ is never negative, so the negative value $${m}$ comes from an odd $n$.\n\n**Step 2: Solve.** $-\\frac{n + 1}{2} = ${m}$ gives $n + 1 = ${-2 * m}$, so $n = ${answer}$.\n\n**Check.** $${answer}$ is odd and $f(${answer}) = -\\frac{${answer} + 1}{2} = -\\frac{${answer + 1}}{2} = ${m}$.`,
+              `**第一步：选择分支。** 偶数分支 $\\frac{n}{2}$ 从不为负，所以负值 $${m}$ 来自奇数 $n$。\n\n**第二步：求解。** $-\\frac{n + 1}{2} = ${m}$，得 $n + 1 = ${-2 * m}$，所以 $n = ${answer}$。\n\n**检验。** $${answer}$ 是奇数，$f(${answer}) = -\\frac{${answer} + 1}{2} = -\\frac{${answer + 1}}{2} = ${m}$。`,
+            ],
+      ),
+      [
+        say(
+          String(Math.abs(m)),
+          `The position is not the size of the integer: the list alternates signs, so $${m}$ sits further along.`,
+          `位置不是整数的大小：列表正负交替，所以 $${m}$ 排得更靠后。`,
+        ),
+        say(
+          String(other),
+          `$f(${other})$ uses the ${other % 2 === 0 ? "even" : "odd"} branch, which gives $${other % 2 === 0 ? other / 2 : -(other + 1) / 2}$, not $${m}$.`,
+          `$f(${other})$ 用的是${other % 2 === 0 ? "偶数" : "奇数"}分支，得 $${other % 2 === 0 ? other / 2 : -(other + 1) / 2}$，而不是 $${m}$。`,
+        ),
+        say(
+          String(answer + 1),
+          `$f(${answer + 1}) = ${(answer + 1) % 2 === 0 ? (answer + 1) / 2 : -(answer + 2) / 2}$; the list starts at $n = 0$, not $n = 1$.`,
+          `$f(${answer + 1}) = ${(answer + 1) % 2 === 0 ? (answer + 1) / 2 : -(answer + 2) / 2}$；列表从 $n = 0$ 开始，而不是 $n = 1$。`,
+        ),
+      ].filter((x, i, all) => x.response !== String(answer) && all.findIndex((y) => y.response === x.response) === i),
     );
   },
 );

@@ -32,8 +32,8 @@ const threeSets: KnowledgePointDef = {
   id: "inclusion-exclusion-for-three-sets",
   title: t("Inclusion-exclusion for three sets", "三个集合的容斥原理"),
   explanation: t(
-    "Adding the sizes of three sets counts each element of a pairwise overlap too often, so the three pairwise overlaps are subtracted. But then an element in all three sets has been added three times and subtracted three times. So the triple overlap must be added back once to count that element correctly.",
-    "把三个集合的大小相加，会重复计算两两交集中的元素，所以要减去三个两两交集。但这样一来，同时属于三个集合的元素被加了三次又减了三次。所以要把三者的交集再加回一次，才能正确地计算这些元素。",
+    "Adding the sizes of three sets counts each element of a pairwise overlap too often, so the three pairwise overlaps are subtracted. But then an element in all three sets has been added three times and subtracted three times. So the triple overlap must be added back once to count that element correctly: $|A \\cup B \\cup C| = |A| + |B| + |C| - |A \\cap B| - |A \\cap C| - |B \\cap C| + |A \\cap B \\cap C|$.\n\n> **Watch out.** The triple overlap is added, not subtracted. An element of $A \\cap B \\cap C$ is counted $3$ times in the sizes and removed $3$ times with the pairwise overlaps, so after the subtraction it is not counted at all; adding $|A \\cap B \\cap C|$ restores it once.",
+    "把三个集合的大小相加，会重复计算两两交集中的元素，所以要减去三个两两交集。但这样一来，同时属于三个集合的元素被加了三次又减了三次。所以要把三者的交集再加回一次，才能正确地计算这些元素：$|A \\cup B \\cup C| = |A| + |B| + |C| - |A \\cap B| - |A \\cap C| - |B \\cap C| + |A \\cap B \\cap C|$。\n\n> **注意。** 三者的交集是加上，而不是减去。$A \\cap B \\cap C$ 中的元素在三个大小中被数了 $3$ 次，又随两两交集被减了 $3$ 次，所以减完之后它一次也没被数到；加上 $|A \\cap B \\cap C|$ 才把它恢复为一次。",
   ),
   generate(rng) {
     const all = rng.int(1, 5);
@@ -44,6 +44,8 @@ const threeSets: KnowledgePointDef = {
     const b = ab + bc - all + rng.int(1, 9);
     const c = ac + bc - all + rng.int(1, 9);
     const answer = a + b + c - ab - ac - bc + all;
+    const only = [a - ab - ac + all, b - ab - bc + all, c - ac - bc + all];
+    const two = [ab - all, ac - all, bc - all];
     return numberProblem({
       prompt: t(
         `Finite sets have $|A| = ${a}$, $|B| = ${b}$, $|C| = ${c}$, $|A \\cap B| = ${ab}$, $|A \\cap C| = ${ac}$, $|B \\cap C| = ${bc}$ and $|A \\cap B \\cap C| = ${all}$. Find $|A \\cup B \\cup C|$.`,
@@ -51,10 +53,38 @@ const threeSets: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [answer - all, a + b + c, answer - 2 * all],
-      solution: t(
-        `Inclusion-exclusion gives $${a} + ${b} + ${c} - ${ab} - ${ac} - ${bc} + ${all} = ${answer}$.`,
-        `由容斥原理得 $${a} + ${b} + ${c} - ${ab} - ${ac} - ${bc} + ${all} = ${answer}$。`,
+      mistakes: [
+        why(
+          answer - all,
+          "The elements in all three sets were added three times and subtracted three times; add the triple overlap back once.",
+          "三者共有的元素被加了三次又减了三次；要把三者的交集加回一次。",
+        ),
+        why(
+          a + b + c,
+          "Adding the three sizes counts every element of an overlap more than once; subtract the pairwise overlaps.",
+          "三个大小相加会把交集中的元素多数；要减去两两交集。",
+        ),
+        why(answer - 2 * all, "The triple overlap is added back, not subtracted.", "三者的交集应加回，而不是减去。"),
+      ],
+      solution: walked(
+        [
+          [["Add the sizes", "大小相加"], t(`$${a} + ${b} + ${c} = ${a + b + c}$.`, `$${a} + ${b} + ${c} = ${a + b + c}$。`)],
+          [
+            ["Subtract the pairwise overlaps", "减去两两交集"],
+            t(
+              `$${a + b + c} - ${ab} - ${ac} - ${bc} = ${a + b + c - ab - ac - bc}$.`,
+              `$${a + b + c} - ${ab} - ${ac} - ${bc} = ${a + b + c - ab - ac - bc}$。`,
+            ),
+          ],
+          [
+            ["Add back the triple overlap", "加回三者的交集"],
+            t(`$${a + b + c - ab - ac - bc} + ${all} = ${answer}$.`, `$${a + b + c - ab - ac - bc} + ${all} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Count the seven regions of the diagram: only one set $${only.join(" + ")}$, exactly two $${two.join(" + ")}$, all three $${all}$. The total is $${answer}$.`,
+          `数韦恩图的七个区域：只属于一个集合 $${only.join(" + ")}$，恰属于两个 $${two.join(" + ")}$，三个都属于 $${all}$。合计 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -133,8 +163,8 @@ const subsetsThroughAnElement: KnowledgePointDef = {
   id: "subsets-of-a-given-size-through-an-element",
   title: t("Subsets of a given size through an element", "含某元素的给定大小的子集"),
   explanation: t(
-    "To count the subsets of a given size that contain a particular element, put that element in first. What is left is to choose the rest of the subset from the other elements. So a size and a set both drop by one, and which element was named makes no difference to the count.",
-    "要数含某个元素的给定大小的子集，先把这个元素放进去。剩下的就是从其他元素中选出子集的其余部分。所以子集大小和集合大小都减一，而指定的是哪个元素，对个数没有影响。",
+    "To count the subsets of a given size that contain a particular element, put that element in first. What is left is to choose the rest of the subset from the other elements. So a size and a set both drop by one, and which element was named makes no difference to the count. The $2$-element subsets of $\\{1, 2, 3, 4\\}$ that contain $1$ are $\\{1, 2\\}$, $\\{1, 3\\}$ and $\\{1, 4\\}$: $\\binom{3}{1} = 3$.\n\n> **Watch out.** Both numbers drop by one. Once the element is in, choose $k - 1$ more, and choose them from the $n - 1$ other elements: $\\binom{n - 1}{k}$ counts the subsets without the element, and $\\binom{n}{k - 1}$ could pick the element a second time.",
+    "要数含某个元素的给定大小的子集，先把这个元素放进去。剩下的就是从其他元素中选出子集的其余部分。所以子集大小和集合大小都减一，而指定的是哪个元素，对个数没有影响。$\\{1, 2, 3, 4\\}$ 中含 $1$ 的 $2$ 元子集是 $\\{1, 2\\}$、$\\{1, 3\\}$、$\\{1, 4\\}$：$\\binom{3}{1} = 3$ 个。\n\n> **注意。** 两个数都要减一。放入这个元素后，再选 $k - 1$ 个，而且从其余 $n - 1$ 个元素中选：$\\binom{n - 1}{k}$ 数的是不含该元素的子集，$\\binom{n}{k - 1}$ 则可能把该元素再选一次。",
   ),
   generate(rng) {
     const n = rng.int(5, 12);
@@ -148,10 +178,38 @@ const subsetsThroughAnElement: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [binom(n, k), binom(n - 1, k), binom(n, k - 1)],
-      solution: t(
-        `With ${m} included, choose the other ${k - 1} from the remaining ${n - 1} numbers: $\\binom{${n - 1}}{${k - 1}} = ${answer}$.`,
-        `放入 ${m} 后，从其余 ${n - 1} 个数中选另外 ${k - 1} 个：$\\binom{${n - 1}}{${k - 1}} = ${answer}$。`,
+      mistakes: [
+        why(
+          binom(n, k),
+          `That counts all ${k}-element subsets, including those without ${m}.`,
+          `这数的是全部 ${k} 元子集，包括不含 ${m} 的。`,
+        ),
+        why(
+          binom(n - 1, k),
+          `That chooses all ${k} elements from the numbers other than ${m}: those are exactly the subsets without ${m}.`,
+          `这是从 ${m} 以外的数中选出全部 ${k} 个元素：恰好是不含 ${m} 的子集。`,
+        ),
+        why(
+          binom(n, k - 1),
+          `The other ${k - 1} elements must come from the ${n - 1} numbers other than ${m}.`,
+          `其余 ${k - 1} 个元素必须从 ${m} 以外的 ${n - 1} 个数中选。`,
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((y) => y.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Put the named element in", "放入指定的元素"],
+            t(
+              `${m} is in the subset, so $${k} - 1 = ${k - 1}$ more elements are needed, from the other $${n - 1}$ numbers.`,
+              `${m} 已在子集中，所以还需 $${k} - 1 = ${k - 1}$ 个元素，从其余 $${n - 1}$ 个数中选。`,
+            ),
+          ],
+          [["Choose the rest", "选出其余元素"], t("", ""), [`\\binom{${n - 1}}{${k - 1}} = ${answer}`]],
+        ],
+        t(
+          `All ${k}-element subsets number $\\binom{${n}}{${k}} = ${binom(n, k)}$, and those without ${m} number $\\binom{${n - 1}}{${k}} = ${binom(n - 1, k)}$; the difference is $${binom(n, k)} - ${binom(n - 1, k)} = ${answer}$.`,
+          `全部 ${k} 元子集有 $\\binom{${n}}{${k}} = ${binom(n, k)}$ 个，不含 ${m} 的有 $\\binom{${n - 1}}{${k}} = ${binom(n - 1, k)}$ 个；相减得 $${binom(n, k)} - ${binom(n - 1, k)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -240,14 +298,17 @@ const pairsInAProduct: KnowledgePointDef = {
   id: "pairs-of-a-product-that-meet-a-condition",
   title: t("Pairs of a product that meet a condition", "笛卡儿积中满足条件的数对"),
   explanation: t(
-    "A condition on the pairs of a Cartesian product picks out a subset of its grid. To count this subset, fix the first coordinate and count the second coordinates that are allowed, then add over the first coordinate. This is the same as counting the points of the grid one column at a time.",
-    "对笛卡儿积中数对的条件选出网格的一个子集。要数这个子集，先固定第一个坐标，数出允许的第二个坐标，再对第一个坐标求和。这和逐列数网格中的点是一回事。",
+    "A condition on the pairs of a Cartesian product picks out a subset of its grid. To count this subset, fix the first coordinate and count the second coordinates that are allowed, then add over the first coordinate. This is the same as counting the points of the grid one column at a time. In $\\{1, 2, 3\\} \\times \\{1, 2, 3\\}$, the pairs with $a < b$ number $2 + 1 + 0 = 3$.\n\n> **Watch out.** $a < b$ is strict: a pair with $a = b$, such as $(2, 2)$, does not count. For each $a$, the allowed $b$ run from $a + 1$, not from $a$.",
+    "对笛卡儿积中数对的条件选出网格的一个子集。要数这个子集，先固定第一个坐标，数出允许的第二个坐标，再对第一个坐标求和。这和逐列数网格中的点是一回事。在 $\\{1, 2, 3\\} \\times \\{1, 2, 3\\}$ 中，满足 $a < b$ 的数对有 $2 + 1 + 0 = 3$ 个。\n\n> **注意。** $a < b$ 是严格不等式：$a = b$ 的数对，例如 $(2, 2)$，不算在内。对每个 $a$，允许的 $b$ 从 $a + 1$ 开始，而不是从 $a$ 开始。",
   ),
   generate(rng) {
     const m = rng.int(3, 12);
     const n = rng.int(3, 12);
     const terms = [...Array(m).keys()].map((i) => n - i - 1).filter((v) => v > 0);
     const answer = terms.reduce((sum, v) => sum + v, 0);
+    const equal = Math.min(m, n);
+    const above = [...Array(n).keys()].map((j) => m - j - 1).filter((v) => v > 0);
+    const greater = above.reduce((sum, v) => sum + v, 0);
     return numberProblem({
       prompt: t(
         `Let $A = \\{1, \\dots, ${m}\\}$ and $B = \\{1, \\dots, ${n}\\}$. How many pairs $(a, b) \\in A \\times B$ have $a < b$?`,
@@ -255,10 +316,34 @@ const pairsInAProduct: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m * n, answer + Math.min(m, n), m * n - answer],
-      solution: t(
-        `Starting from $a = 1$, the number of allowed $b$ is ${terms.join(", ")}, one value of $a$ at a time. These add to $${answer}$.`,
-        `从 $a = 1$ 起，每个 $a$ 允许的 $b$ 依次有 ${terms.join(", ")} 个。它们的和是 $${answer}$。`,
+      mistakes: [
+        why(
+          m * n,
+          "That counts every pair of the product; only the pairs with $a < b$ count.",
+          "这数的是积中所有的数对；只有满足 $a < b$ 的才算。",
+        ),
+        why(answer + equal, "That includes the pairs with $a = b$; the inequality is strict.", "这包括了 $a = b$ 的数对；不等式是严格的。"),
+        why(
+          m * n - answer,
+          "That counts the pairs with $a \\ge b$, the opposite condition.",
+          "这数的是 $a \\ge b$ 的数对，正好是相反的条件。",
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((y) => y.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count for each first coordinate", "对每个第一个坐标计数"],
+            t(
+              `For $a$, the allowed $b$ are $a + 1, \\dots, ${n}$, which is $${n} - a$ of them when positive. Going from $a = 1$, the counts are $${terms.join(", ")}$.`,
+              `对给定的 $a$，允许的 $b$ 是 $a + 1, \\dots, ${n}$，个数为 $${n} - a$（为正时）。从 $a = 1$ 起，个数依次为 $${terms.join(", ")}$。`,
+            ),
+          ],
+          [["Add", "相加"], t(`$${terms.join(" + ")} = ${answer}$.`, `$${terms.join(" + ")} = ${answer}$。`)],
+        ],
+        t(
+          `The pairs with $a = b$ number $${equal}$ and those with $a > b$ number $${greater}$; with the $${answer}$ pairs found, $${answer} + ${equal} + ${greater} = ${m * n} = ${m} \\cdot ${n}$, the whole grid.`,
+          `$a = b$ 的数对有 $${equal}$ 个，$a > b$ 的有 $${greater}$ 个；加上求得的 $${answer}$ 个，$${answer} + ${equal} + ${greater} = ${m * n} = ${m} \\cdot ${n}$，正是整个网格。`,
+        ),
       ),
     });
   },
@@ -333,8 +418,8 @@ const symmetricDifference: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-difference-of-sets#the-size-of-a-symmetric-difference"],
   title: t("The size of a symmetric difference", "对称差的大小"),
   explanation: t(
-    "The symmetric difference $A \\triangle B$ is the union of the two one-way differences, so it holds the elements in exactly one of the sets. It is what remains of the union after removing the intersection. Since the sizes of $A$ and $B$ together count the union and the intersection once each, $|A \\triangle B| = 2|A \\cup B| - |A| - |B|$.",
-    "对称差 $A \\triangle B$ 是两个单向差集的并，所以它包含恰好属于一个集合的元素。它是并集去掉交集后剩下的部分。由于 $A$ 和 $B$ 的大小之和恰好把并集和交集各算一次，所以 $|A \\triangle B| = 2|A \\cup B| - |A| - |B|$。",
+    "The symmetric difference $A \\triangle B$ is the union of the two one-way differences, so it holds the elements in exactly one of the sets. It is what remains of the union after removing the intersection. Since the sizes of $A$ and $B$ together count the union and the intersection once each, $|A \\triangle B| = 2|A \\cup B| - |A| - |B|$.\n\n> **Watch out.** $|A| + |B|$ is not the size of the symmetric difference: it counts the intersection twice, while the symmetric difference leaves it out altogether. Find $|A \\cap B| = |A| + |B| - |A \\cup B|$ first and remove it from the union.",
+    "对称差 $A \\triangle B$ 是两个单向差集的并，所以它包含恰好属于一个集合的元素。它是并集去掉交集后剩下的部分。由于 $A$ 和 $B$ 的大小之和恰好把并集和交集各算一次，所以 $|A \\triangle B| = 2|A \\cup B| - |A| - |B|$。\n\n> **注意。** $|A| + |B|$ 不是对称差的大小：它把交集数了两次，而对称差完全不含交集。先求出 $|A \\cap B| = |A| + |B| - |A \\cup B|$，再从并集中去掉它。",
   ),
   generate(rng) {
     const shared = rng.int(1, 9);
@@ -351,10 +436,29 @@ const symmetricDifference: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [union + shared, a + b, 2 * shared],
-      solution: t(
-        `The intersection has size $${a} + ${b} - ${union} = ${shared}$. Removing it from the union leaves $${union} - ${shared} = ${answer}$.`,
-        `交集的大小是 $${a} + ${b} - ${union} = ${shared}$。从并集中去掉它，剩下 $${union} - ${shared} = ${answer}$。`,
+      mistakes: [
+        why(a + b, "That counts the intersection twice; the symmetric difference leaves it out.", "这把交集数了两次；对称差不含交集。"),
+        why(union, "The union still contains the intersection; remove it.", "并集中还含有交集；要把它去掉。"),
+        why(
+          shared,
+          "That is the size of the intersection, the part the symmetric difference leaves out.",
+          "这是交集的大小，正是对称差排除的部分。",
+        ),
+        why(
+          2 * shared,
+          "Remove the intersection from the union; doubling it does not give the symmetric difference.",
+          "应从并集中去掉交集；把交集加倍得不到对称差。",
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((y) => y.value === x.value) === i),
+      solution: walked(
+        [
+          [["Find the intersection", "求交集"], t("", ""), [`|A \\cap B| = ${a} + ${b} - ${union} = ${shared}`]],
+          [["Remove it from the union", "从并集中去掉"], t("", ""), [`|A \\triangle B| = ${union} - ${shared} = ${answer}`]],
+        ],
+        t(
+          `$|A \\setminus B| = ${a} - ${shared} = ${p}$ and $|B \\setminus A| = ${b} - ${shared} = ${q}$, so $|A \\triangle B| = ${p} + ${q} = ${answer}$; the formula gives $2 \\cdot ${union} - ${a} - ${b} = ${answer}$ as well.`,
+          `$|A \\setminus B| = ${a} - ${shared} = ${p}$，$|B \\setminus A| = ${b} - ${shared} = ${q}$，所以 $|A \\triangle B| = ${p} + ${q} = ${answer}$；公式 $2 \\cdot ${union} - ${a} - ${b} = ${answer}$ 也给出同样结果。`,
+        ),
       ),
     });
   },
@@ -587,8 +691,8 @@ const latticePoints: KnowledgePointDef = {
   id: "counting-the-integer-points-of-a-region",
   title: t("Counting the integer points of a region", "数区域内的整点"),
   explanation: t(
-    "A set of integer points in the plane can be counted one vertical line at a time. Fix $x$, solve the conditions for $y$, and count the integers allowed. Then add over $x$. Remember to include the points on the axes when the inequalities allow zero, since each line then holds one more point.",
-    "平面上的整点集可以沿竖线逐条来数。固定 $x$，解出关于 $y$ 的条件，数出允许的整数，再对 $x$ 求和。不等式允许取零时，别忘了算上坐标轴上的点，因为这时每条线都多一个点。",
+    "A set of integer points in the plane can be counted one vertical line at a time. Fix $x$, solve the conditions for $y$, and count the integers allowed. Then add over $x$. Remember to include the points on the axes when the inequalities allow zero, since each line then holds one more point. For $x, y \\ge 0$ and $x + 2y \\le 4$, the lines $x = 0, \\dots, 4$ hold $3, 2, 2, 1, 1$ points: $9$ in all.\n\n> **Watch out.** On the line at $x$, the allowed $y$ are $0, 1, \\dots, \\lfloor (c - ax)/b \\rfloor$, which is $\\lfloor (c - ax)/b \\rfloor + 1$ values: the $+1$ is the point $y = 0$ on the axis. And the bounding rectangle $\\{0, \\dots, \\lfloor c/a \\rfloor\\} \\times \\{0, \\dots, \\lfloor c/b \\rfloor\\}$ holds points above the line, so its size is too large.",
+    "平面上的整点集可以沿竖线逐条来数。固定 $x$，解出关于 $y$ 的条件，数出允许的整数，再对 $x$ 求和。不等式允许取零时，别忘了算上坐标轴上的点，因为这时每条线都多一个点。对 $x, y \\ge 0$ 且 $x + 2y \\le 4$，竖线 $x = 0, \\dots, 4$ 上依次有 $3, 2, 2, 1, 1$ 个点，共 $9$ 个。\n\n> **注意。** 在 $x$ 处的竖线上，允许的 $y$ 是 $0, 1, \\dots, \\lfloor (c - ax)/b \\rfloor$，共 $\\lfloor (c - ax)/b \\rfloor + 1$ 个值：$+1$ 就是坐标轴上 $y = 0$ 的点。而外接矩形 $\\{0, \\dots, \\lfloor c/a \\rfloor\\} \\times \\{0, \\dots, \\lfloor c/b \\rfloor\\}$ 含有直线上方的点，所以它的大小偏大。",
   ),
   generate(rng) {
     const a = rng.int(2, 5);
@@ -596,6 +700,8 @@ const latticePoints: KnowledgePointDef = {
     const c = rng.int(5, 20);
     const columns: number[] = [];
     for (let x = 0; a * x <= c; x++) columns.push(Math.floor((c - a * x) / b) + 1);
+    const rows: number[] = [];
+    for (let y = 0; b * y <= c; y++) rows.push(Math.floor((c - b * y) / a) + 1);
     const answer = columns.reduce((sum, v) => sum + v, 0);
     const line = poly([a, "x"], [b, "y"]);
     let strict = 0;
@@ -609,10 +715,38 @@ const latticePoints: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [strict, positive, (Math.floor(c / a) + 1) * (Math.floor(c / b) + 1)],
-      solution: t(
-        `From $x = 0$ upward, the numbers of allowed $y$ are ${columns.join(", ")}. These add to $${answer}$.`,
-        `从 $x = 0$ 起，允许的 $y$ 依次有 ${columns.join(", ")} 个。它们的和是 $${answer}$。`,
+      mistakes: [
+        why(
+          strict,
+          "That leaves out the points on the line itself; the inequality allows equality.",
+          "这漏掉了直线上的点；不等式允许取等号。",
+        ),
+        why(
+          positive,
+          "That leaves out the points on the axes; $x = 0$ and $y = 0$ are allowed.",
+          "这漏掉了坐标轴上的点；$x = 0$ 和 $y = 0$ 都是允许的。",
+        ),
+        why(
+          (Math.floor(c / a) + 1) * (Math.floor(c / b) + 1),
+          "That counts the whole bounding rectangle, including points above the line.",
+          "这数的是整个外接矩形，包括直线上方的点。",
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((y) => y.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count each vertical line", "逐条竖线计数"],
+            t(
+              `At $x$, the allowed $y$ are $0, \\dots, \\lfloor (${c} - ${a}x)/${b} \\rfloor$. From $x = 0$ to $x = ${columns.length - 1}$ the counts are $${columns.join(", ")}$.`,
+              `在 $x$ 处，允许的 $y$ 是 $0, \\dots, \\lfloor (${c} - ${a}x)/${b} \\rfloor$。从 $x = 0$ 到 $x = ${columns.length - 1}$，个数依次为 $${columns.join(", ")}$。`,
+            ),
+          ],
+          [["Add", "相加"], t(`$${columns.join(" + ")} = ${answer}$.`, `$${columns.join(" + ")} = ${answer}$。`)],
+        ],
+        t(
+          `Count by horizontal lines instead: at $y$, the allowed $x$ number $\\lfloor (${c} - ${b}y)/${a} \\rfloor + 1$, giving $${rows.join(" + ")} = ${answer}$.`,
+          `改为逐条横线计数：在 $y$ 处，允许的 $x$ 有 $\\lfloor (${c} - ${b}y)/${a} \\rfloor + 1$ 个，得 $${rows.join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1299,8 +1433,8 @@ const countingFunctions: KnowledgePointDef = {
   id: "counting-all-functions-between-finite-sets",
   title: t("Counting all functions between finite sets", "数有限集之间的所有函数"),
   explanation: t(
-    "A function assigns exactly one output to each input, with no further restriction. So each element of the domain makes its choice independently from the whole codomain. The count is therefore the size of the codomain raised to the size of the domain. This is why the set of such functions is written $B^A$.",
-    "函数给每个输入指定恰好一个输出，没有其他限制。所以定义域的每个元素都独立地从整个陪域中选择。因此个数是陪域的大小的定义域大小次幂。这就是这类函数的集合记作 $B^A$ 的原因。",
+    "A function assigns exactly one output to each input, with no further restriction. So each element of the domain makes its choice independently from the whole codomain. The count is therefore the size of the codomain raised to the size of the domain. This is why the set of such functions is written $B^A$. From a $2$-element set to a $3$-element set there are $3 \\cdot 3 = 3^{2} = 9$ functions.\n\n> **Watch out.** The base is the codomain and the exponent is the domain: one factor of $|B|$ for each input. $|A|^{|B|}$ swaps the roles, and $|A| \\cdot |B|$ counts input–output pairs, not functions.",
+    "函数给每个输入指定恰好一个输出，没有其他限制。所以定义域的每个元素都独立地从整个陪域中选择。因此个数是陪域的大小的定义域大小次幂。这就是这类函数的集合记作 $B^A$ 的原因。从 $2$ 元集合到 $3$ 元集合有 $3 \\cdot 3 = 3^{2} = 9$ 个函数。\n\n> **注意。** 底数是陪域的大小，指数是定义域的大小：每个输入贡献一个因子 $|B|$。$|A|^{|B|}$ 把两者弄反了，而 $|A| \\cdot |B|$ 数的是输入与输出组成的数对，不是函数。",
   ),
   generate(rng) {
     const m = rng.int(2, 7);
@@ -1313,10 +1447,38 @@ const countingFunctions: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m ** n, m * n, n ** (m - 1)],
-      solution: t(
-        `Each of the ${m} inputs chooses one of ${n} outputs, independently. That gives $${n}^{${m}} = ${answer}$ functions.`,
-        `${m} 个输入各自独立地从 ${n} 个输出中选一个。所以有 $${n}^{${m}} = ${answer}$ 个函数。`,
+      mistakes: [
+        why(
+          m ** n,
+          "The base and exponent are swapped: each input chooses among the outputs, so the base is the size of the codomain.",
+          "底数和指数弄反了：每个输入在输出中选择，所以底数是陪域的大小。",
+        ),
+        why(
+          m * n,
+          "That counts input–output pairs; a function makes one choice for every input at once, so the choices multiply.",
+          "这数的是输入与输出组成的数对；函数要同时为每个输入作选择，所以各选择相乘。",
+        ),
+        why(
+          n ** (m - 1),
+          "Every input makes a choice, so there is one factor for each of the inputs.",
+          "每个输入都要作选择，所以每个输入都贡献一个因子。",
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((y) => y.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choices for each input", "每个输入的选择"],
+            t(
+              `Each of the ${m} inputs chooses one of ${n} outputs, independently of the others.`,
+              `${m} 个输入各自独立地从 ${n} 个输出中选一个。`,
+            ),
+          ],
+          [["Multiply", "相乘"], t("", ""), [`${Array(m).fill(n).join(" \\cdot ")} = ${n}^{${m}} = ${answer}`]],
+        ],
+        t(
+          `A function from a $1$-element set would number $${n}$, one per output; each further input multiplies by $${n}$ again, reaching $${n}^{${m}} = ${answer}$ after ${m} inputs.`,
+          `从 $1$ 元集合出发的函数有 $${n}$ 个，每个输出一个；每增加一个输入就再乘 $${n}$，${m} 个输入时得 $${n}^{${m}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1844,8 +2006,8 @@ const unknownInASetEquality: KnowledgePointDef = {
   id: "solving-for-an-unknown-in-a-set-equality",
   title: t("Solving for an unknown in a set equality", "由集合相等求未知数"),
   explanation: t(
-    "Two sets are equal when they have the same elements, and the order of a roster carries no meaning. So an equation between two-element sets does not say which element matches which. Both matchings have to be tried. A matching counts only if the value it gives for the unknown also makes the other pair of elements agree.",
-    "两个集合相等是指它们有相同的元素，而列举时的顺序没有意义。所以两个二元集合之间的等式并没有说明哪个元素对应哪个。两种对应方式都要试。只有当一种对应方式求出的未知数也使另一对元素相等时，它才成立。",
+    "Two sets are equal when they have the same elements, and the order of a roster carries no meaning. So an equation between two-element sets does not say which element matches which. Both matchings have to be tried. A matching counts only if the value it gives for the unknown also makes the other pair of elements agree. For $\\{x + 1, 2x\\} = \\{3, 4\\}$: $x + 1 = 3$ gives $x = 2$ and $2x = 4$, which works; $x + 1 = 4$ gives $x = 3$ and $2x = 6 \\ne 3$, which fails.\n\n> **Watch out.** Solving one equation is not enough. The value of $x$ from one matching must be substituted into the other expression, and it counts only if that expression then equals the remaining element.",
+    "两个集合相等是指它们有相同的元素，而列举时的顺序没有意义。所以两个二元集合之间的等式并没有说明哪个元素对应哪个。两种对应方式都要试。只有当一种对应方式求出的未知数也使另一对元素相等时，它才成立。对 $\\{x + 1, 2x\\} = \\{3, 4\\}$：$x + 1 = 3$ 给出 $x = 2$，$2x = 4$，成立；$x + 1 = 4$ 给出 $x = 3$，$2x = 6 \\ne 3$，不成立。\n\n> **注意。** 只解一个方程是不够的。由一种对应求出的 $x$ 必须代入另一个式子，只有这个式子等于剩下的元素时才成立。",
   ),
   generate(rng) {
     const a = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -1866,10 +2028,41 @@ const unknownInASetEquality: KnowledgePointDef = {
       ),
       answer: x,
       form: "integer",
-      wrong: [rejected, Q.of(u - b, 2), u, v],
-      solution: t(
-        `If $${first} = ${v}$, then $x = ${rejected}$ and $${second} = ${rejectedValue}$, which is not $${u}$, so this matching fails. If $${first} = ${u}$, then $x = ${x}$ and $${second} = ${v}$, as required. So $x = ${x}$.`,
-        `如果 $${first} = ${v}$，那么 $x = ${rejected}$，$${second} = ${rejectedValue}$，它不等于 $${u}$，所以这种对应不成立。如果 $${first} = ${u}$，那么 $x = ${x}$，$${second} = ${v}$，符合要求。所以 $x = ${x}$。`,
+      mistakes: [
+        why(
+          rejected,
+          `With that value, $${first}$ equals $${v}$, but $${second}$ does not equal the remaining element; substitute into both expressions.`,
+          `取这个值时 $${first}$ 等于 $${v}$，但 $${second}$ 不等于剩下的元素；要代入两个式子检验。`,
+        ),
+        why(
+          Q.of(u - b, 2),
+          `That solves $${second} = ${u}$ alone; with it, $${first}$ does not equal $${v}$, so both elements do not match.`,
+          `这只解了 $${second} = ${u}$；此时 $${first}$ 不等于 $${v}$，两个元素没有都对上。`,
+        ),
+        why(u, "That is an element of the set, not the value of $x$.", "这是集合的一个元素，不是 $x$ 的值。"),
+        why(v, "That is an element of the set, not the value of $x$.", "这是集合的一个元素，不是 $x$ 的值。"),
+      ].filter((m, i, all) => m.value !== x && all.findIndex((y) => y.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            [`Try $${first} = ${v}$`, `试 $${first} = ${v}$`],
+            t(
+              `Then $x = ${rejected}$ and $${second} = ${rejectedValue}$, which is not $${u}$, so this matching fails.`,
+              `则 $x = ${rejected}$，$${second} = ${rejectedValue}$，不等于 $${u}$，所以这种对应不成立。`,
+            ),
+          ],
+          [
+            [`Try $${first} = ${u}$`, `试 $${first} = ${u}$`],
+            t(
+              `Then $x = ${x}$ and $${second} = ${v}$, as required. So $x = ${x}$.`,
+              `则 $x = ${x}$，$${second} = ${v}$，符合要求。所以 $x = ${x}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $x = ${x}$: $${x} + ${a < 0 ? `(${a})` : a} = ${u}$ and $2 \\cdot ${x < 0 ? `(${x})` : x} + ${b < 0 ? `(${b})` : b} = ${v}$, so the set is $\\{${Math.min(u, v)}, ${Math.max(u, v)}\\}$.`,
+          `取 $x = ${x}$：$${x} + ${a < 0 ? `(${a})` : a} = ${u}$，$2 \\cdot ${x < 0 ? `(${x})` : x} + ${b < 0 ? `(${b})` : b} = ${v}$，所以集合是 $\\{${Math.min(u, v)}, ${Math.max(u, v)}\\}$。`,
+        ),
       ),
     });
   },
@@ -1879,8 +2072,8 @@ const inNeitherSet: KnowledgePointDef = {
   id: "the-number-of-elements-in-neither-set",
   title: t("The number of elements in neither set", "两个集合都不含的元素个数"),
   explanation: t(
-    "An element lies outside both sets exactly when it lies outside their union, which is De Morgan's law for complements. So the count of elements in neither set does not need a new formula. Find the size of the union by inclusion-exclusion, because adding the two sizes counts the overlap twice, and then subtract it from the universe.",
-    "元素同时不属于两个集合，当且仅当它不属于它们的并集，这就是关于补集的德摩根律。所以数两个集合都不含的元素，不需要新公式。先用容斥原理求并集的大小，因为两个集合的大小相加时把交集算了两次，再用全集的大小减去它。",
+    "An element lies outside both sets exactly when it lies outside their union, which is De Morgan's law for complements. So the count of elements in neither set does not need a new formula. Find the size of the union by inclusion-exclusion, because adding the two sizes counts the overlap twice, and then subtract it from the universe. With $|U| = 20$, $|A| = 8$, $|B| = 7$ and $|A \\cap B| = 3$: the union has $8 + 7 - 3 = 12$ elements, so $20 - 12 = 8$ lie in neither.\n\n> **Watch out.** $|U| - |A| - |B|$ removes the overlap twice. Subtract the union, $|A| + |B| - |A \\cap B|$, so that each element of $A \\cap B$ is removed once.",
+    "元素同时不属于两个集合，当且仅当它不属于它们的并集，这就是关于补集的德摩根律。所以数两个集合都不含的元素，不需要新公式。先用容斥原理求并集的大小，因为两个集合的大小相加时把交集算了两次，再用全集的大小减去它。若 $|U| = 20$，$|A| = 8$，$|B| = 7$，$|A \\cap B| = 3$：并集有 $8 + 7 - 3 = 12$ 个元素，所以两者都不含的有 $20 - 12 = 8$ 个。\n\n> **注意。** $|U| - |A| - |B|$ 把交集减了两次。应减去并集 $|A| + |B| - |A \\cap B|$，使 $A \\cap B$ 中的每个元素只被减去一次。",
   ),
   generate(rng) {
     const shared = rng.int(1, 9);
@@ -1898,10 +2091,39 @@ const inNeitherSet: KnowledgePointDef = {
       ),
       answer: outside,
       form: "integer",
-      wrong: [size - a - b, size - shared, union],
-      solution: t(
-        `By De Morgan's law, $A^c \\cap B^c = (A \\cup B)^c$. The union has size $${a} + ${b} - ${shared} = ${union}$, so the complement has size $${size} - ${union} = ${outside}$.`,
-        `由德摩根律，$A^c \\cap B^c = (A \\cup B)^c$。并集的大小是 $${a} + ${b} - ${shared} = ${union}$，所以补集的大小是 $${size} - ${union} = ${outside}$。`,
+      mistakes: [
+        why(
+          size - a - b,
+          "That removes the intersection twice; subtract the size of the union instead.",
+          "这把交集减了两次；应减去并集的大小。",
+        ),
+        why(
+          size - shared,
+          "That is the size of the complement of $A \\cap B$; the elements in neither set lie outside $A \\cup B$.",
+          "这是 $A \\cap B$ 的补集的大小；两者都不含的元素在 $A \\cup B$ 之外。",
+        ),
+        why(
+          union,
+          "That is the size of the union; the question asks for what lies outside it.",
+          "这是并集的大小；题目问的是并集之外的部分。",
+        ),
+      ].filter((m, i, all) => m.value !== outside && all.findIndex((y) => y.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Use De Morgan's law", "用德摩根律"],
+            t(
+              "$A^c \\cap B^c = (A \\cup B)^c$, so count what lies outside the union.",
+              "$A^c \\cap B^c = (A \\cup B)^c$，所以数并集之外的元素。",
+            ),
+          ],
+          [["Find the union", "求并集"], t("", ""), [`|A \\cup B| = ${a} + ${b} - ${shared} = ${union}`]],
+          [["Subtract from the universe", "用全集减去"], t("", ""), [`|A^c \\cap B^c| = ${size} - ${union} = ${outside}`]],
+        ],
+        t(
+          `The four regions of the diagram add up to the universe: only $A$ $${p}$, only $B$ $${q}$, both $${shared}$, neither $${outside}$; $${p} + ${q} + ${shared} + ${outside} = ${size}$.`,
+          `韦恩图的四个区域合起来是全集：只属于 $A$ 的 $${p}$，只属于 $B$ 的 $${q}$，两者都属于的 $${shared}$，都不属于的 $${outside}$；$${p} + ${q} + ${shared} + ${outside} = ${size}$。`,
+        ),
       ),
     });
   },
@@ -1912,8 +2134,8 @@ const overlapOfProducts: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["visualizing-cartesian-products#the-overlap-of-two-products-of-intervals"],
   title: t("The overlap of two products of intervals", "两个区间之积的重叠部分"),
   explanation: t(
-    "A point lies in a product of intervals when each of its coordinates lies in the matching interval. So a point lies in two products at once when its first coordinate lies in both first intervals and its second coordinate lies in both second intervals. The overlap of two rectangles is therefore itself a rectangle, built from the two overlaps of intervals.",
-    "一个点属于区间之积，是指它的每个坐标都属于对应的区间。所以一个点同时属于两个积，是指它的第一个坐标属于两个第一区间，第二个坐标属于两个第二区间。因此两个矩形的重叠部分本身也是矩形，由两组区间的重叠部分构成。",
+    "A point lies in a product of intervals when each of its coordinates lies in the matching interval. So a point lies in two products at once when its first coordinate lies in both first intervals and its second coordinate lies in both second intervals. The overlap of two rectangles is therefore itself a rectangle, built from the two overlaps of intervals. For $([0, 3] \\times [0, 2]) \\cap ([1, 5] \\times [1, 4])$, the first intervals overlap in $[1, 3]$ and the second in $[1, 2]$, so the overlap is $[1, 3] \\times [1, 2]$, of area $2 \\cdot 1 = 2$.\n\n> **Watch out.** Two intervals overlap from the larger left end to the smaller right end. The area of the overlap is the product of the two overlap widths, not their sum, and not anything found from the areas of the two rectangles.",
+    "一个点属于区间之积，是指它的每个坐标都属于对应的区间。所以一个点同时属于两个积，是指它的第一个坐标属于两个第一区间，第二个坐标属于两个第二区间。因此两个矩形的重叠部分本身也是矩形，由两组区间的重叠部分构成。对 $([0, 3] \\times [0, 2]) \\cap ([1, 5] \\times [1, 4])$，第一个区间重叠于 $[1, 3]$，第二个区间重叠于 $[1, 2]$，所以重叠部分是 $[1, 3] \\times [1, 2]$，面积 $2 \\cdot 1 = 2$。\n\n> **注意。** 两个区间的重叠从较大的左端点到较小的右端点。重叠部分的面积是两个重叠宽度之积，不是它们之和，也不能由两个矩形的面积直接求出。",
   ),
   generate(rng) {
     const segment = () => {
@@ -1943,10 +2165,47 @@ const overlapOfProducts: KnowledgePointDef = {
       prompt: t(`Find the area of $${set}$.`, `求 $${set}$ 的面积。`),
       answer,
       form: "integer",
-      wrong: [across.width + up.width, areas, areas - answer],
-      solution: t(
-        `Intersecting the first intervals and the second intervals separately gives $${overlap}$. Its area is $${across.width} \\cdot ${up.width} = ${answer}$.`,
-        `分别求第一个区间和第二个区间的交，得到 $${overlap}$。它的面积是 $${across.width} \\cdot ${up.width} = ${answer}$。`,
+      mistakes: [
+        why(
+          across.width + up.width,
+          "The area of a rectangle is the product of its widths, not their sum.",
+          "矩形的面积是两边长之积，不是之和。",
+        ),
+        why(
+          areas,
+          "That adds the areas of the two rectangles; the intersection is only the part they share.",
+          "这是两个矩形面积之和；交集只是它们共有的部分。",
+        ),
+        why(areas - answer, "That is the area of the union; the intersection is the shared part.", "这是并集的面积；交集是共有的部分。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((y) => y.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Intersect the first intervals", "求第一个区间的交"],
+            t(
+              `$${across.one} \\cap ${across.other} = [${across.low}, ${across.high}]$, of width $${across.width}$.`,
+              `$${across.one} \\cap ${across.other} = [${across.low}, ${across.high}]$，宽 $${across.width}$。`,
+            ),
+          ],
+          [
+            ["Intersect the second intervals", "求第二个区间的交"],
+            t(
+              `$${up.one} \\cap ${up.other} = [${up.low}, ${up.high}]$, of width $${up.width}$.`,
+              `$${up.one} \\cap ${up.other} = [${up.low}, ${up.high}]$，宽 $${up.width}$。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `The overlap is $${overlap}$, of area $${across.width} \\cdot ${up.width} = ${answer}$.`,
+              `重叠部分是 $${overlap}$，面积 $${across.width} \\cdot ${up.width} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The overlap lies inside both rectangles, and $${answer}$ is indeed at most both of their areas, $${across.oneWidth * up.oneWidth}$ and $${across.otherWidth * up.otherWidth}$.`,
+          `重叠部分在两个矩形之内，$${answer}$ 确实不超过它们的面积 $${across.oneWidth * up.oneWidth}$ 和 $${across.otherWidth * up.otherWidth}$。`,
+        ),
       ),
     });
   },
@@ -1956,8 +2215,8 @@ const countingAnIndexedFamily: KnowledgePointDef = {
   id: "counting-the-elements-of-an-indexed-family",
   title: t("Counting the elements of an indexed family", "数集合族的元素"),
   explanation: t(
-    "When each set of a family is a block of consecutive integers sliding along with its index, the union and the intersection are blocks too. The union runs from the smallest lower end to the largest upper end, provided that neighboring sets overlap. An integer in the intersection has to clear the largest lower end and stay under the smallest upper end.",
-    "当集合族中的每个集合都是一段随指标滑动的连续整数时，并集和交集也都是连续的一段。只要相邻集合有重叠，并集就从最小的下端延伸到最大的上端。交集中的整数必须不小于最大的下端，且不大于最小的上端。",
+    "When each set of a family is a block of consecutive integers sliding along with its index, the union and the intersection are blocks too. The union runs from the smallest lower end to the largest upper end, provided that neighboring sets overlap. An integer in the intersection has to clear the largest lower end and stay under the smallest upper end. For $A_i = \\{i, \\dots, i + 4\\}$ with $i = 1, 2, 3$, the union is $\\{1, \\dots, 7\\}$ with $7$ integers and the intersection is $\\{3, 4, 5\\}$ with $3$.\n\n> **Watch out.** The integers from $m$ to $M$ number $M - m + 1$, not $M - m$. And the sets overlap, so the size of the union is not the sum of their sizes.",
+    "当集合族中的每个集合都是一段随指标滑动的连续整数时，并集和交集也都是连续的一段。只要相邻集合有重叠，并集就从最小的下端延伸到最大的上端。交集中的整数必须不小于最大的下端，且不大于最小的上端。对 $i = 1, 2, 3$ 的 $A_i = \\{i, \\dots, i + 4\\}$，并集是 $\\{1, \\dots, 7\\}$，有 $7$ 个整数；交集是 $\\{3, 4, 5\\}$，有 $3$ 个。\n\n> **注意。** 从 $m$ 到 $M$ 的整数有 $M - m + 1$ 个，而不是 $M - m$ 个。而且这些集合互相重叠，所以并集的大小不是各集合大小之和。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
@@ -1980,15 +2239,74 @@ const countingAnIndexedFamily: KnowledgePointDef = {
           ),
       answer,
       form: "integer",
-      wrong: union ? [n * (w + 1), n + w + 1, w + 1] : [w - n + 1, w - n + 3, w + 1],
+      mistakes: (union
+        ? [
+            why(
+              n * (w + 1),
+              "The sets overlap, so adding their sizes counts shared integers many times.",
+              "这些集合互相重叠，把它们的大小相加会把共有的整数数很多次。",
+            ),
+            why(
+              n + w + 1,
+              "Recount the integers between the two ends; the count is one more than their difference.",
+              "重新数两端之间的整数；个数是两端之差加一。",
+            ),
+            why(
+              w + 1,
+              "That is the size of a single set; the union also takes in what the other sets add.",
+              "这是单个集合的大小；并集还包括其他集合新增的部分。",
+            ),
+          ]
+        : [
+            why(
+              w - n + 1,
+              "The integers from the lower end to the upper end number one more than their difference.",
+              "从下端到上端的整数个数是两端之差加一。",
+            ),
+            why(
+              w - n + 3,
+              "Recount the integers between the two ends; the count is one more than their difference.",
+              "重新数两端之间的整数；个数是两端之差加一。",
+            ),
+            why(
+              w + 1,
+              "That is the size of a single set; an integer of the intersection must lie in every set.",
+              "这是单个集合的大小；交集中的整数必须属于每个集合。",
+            ),
+          ]
+      ).filter((m, i, all) => m.value !== answer && all.findIndex((y) => y.value === m.value) === i),
       solution: union
-        ? t(
-            `Neighbouring sets overlap, so the union has no gaps. It runs from $${s + 1}$ to $${s + n + w}$, which is ${answer} integers.`,
-            `相邻集合有重叠，所以并集没有空隙。它从 $${s + 1}$ 到 $${s + n + w}$，共 ${answer} 个整数。`,
+        ? walked(
+            [
+              [
+                ["Find the ends", "找两端"],
+                t(
+                  `Neighbouring sets overlap, so the union has no gaps. It runs from the lowest lower end, $${s + 1}$ at $i = 1$, to the highest upper end, $${s + n + w}$ at $i = ${n}$.`,
+                  `相邻集合有重叠，所以并集没有空隙。它从最小的下端（$i = 1$ 时的 $${s + 1}$）到最大的上端（$i = ${n}$ 时的 $${s + n + w}$）。`,
+                ),
+              ],
+              [["Count", "计数"], t("", ""), [`${s + n + w} - ${s + 1 < 0 ? `(${s + 1})` : s + 1} + 1 = ${answer}`]],
+            ],
+            t(
+              `$A_1$ has $${w + 1}$ integers, and each of the other $${n - 1}$ sets adds one new integer at the top: $${w + 1} + ${n - 1} = ${answer}$.`,
+              `$A_1$ 有 $${w + 1}$ 个整数，其余 $${n - 1}$ 个集合各在顶端新增一个整数：$${w + 1} + ${n - 1} = ${answer}$。`,
+            ),
           )
-        : t(
-            `An integer in every set is at least the largest lower end, $${s + n}$, and at most the smallest upper end, $${s + 1 + w}$. That is ${answer} integers.`,
-            `属于每个集合的整数不小于最大的下端 $${s + n}$，且不大于最小的上端 $${s + 1 + w}$。共 ${answer} 个整数。`,
+        : walked(
+            [
+              [
+                ["Find the ends", "找两端"],
+                t(
+                  `An integer in every set is at least the largest lower end, $${s + n}$ at $i = ${n}$, and at most the smallest upper end, $${s + 1 + w}$ at $i = 1$.`,
+                  `属于每个集合的整数不小于最大的下端（$i = ${n}$ 时的 $${s + n}$），且不大于最小的上端（$i = 1$ 时的 $${s + 1 + w}$）。`,
+                ),
+              ],
+              [["Count", "计数"], t("", ""), [`${s + 1 + w} - ${s + n < 0 ? `(${s + n})` : s + n} + 1 = ${answer}`]],
+            ],
+            t(
+              `The intersection is $A_1 \\cap A_{${n}}$, since every other set contains it: $A_1$ ends at $${s + 1 + w}$ and $A_{${n}}$ starts at $${s + n}$, leaving $${answer}$ integers.`,
+              `交集就是 $A_1 \\cap A_{${n}}$，因为其余每个集合都包含它：$A_1$ 止于 $${s + 1 + w}$，$A_{${n}}$ 始于 $${s + n}$，剩下 $${answer}$ 个整数。`,
+            ),
           ),
     });
   },
@@ -4082,8 +4400,8 @@ const setOfSquares: KnowledgePointDef = {
   id: "the-size-of-a-set-of-squares",
   title: t("The size of a set of squares", "平方数集合的大小"),
   explanation: t(
-    "A set lists each element once, however many times the condition produces it. In the set of $x^2$ with $x$ running from $-a$ to $b$, the values $x$ and $-x$ give the same square, so counting the values of $x$ overcounts. Only the sizes $0, 1, 2, \\dots$ matter, and these reach up to the larger of $a$ and $b$. So the size of the set is one more than that larger number.",
-    "集合中每个元素只列一次，不管条件产生它多少次。在 $x$ 从 $-a$ 取到 $b$ 的 $x^2$ 的集合中，$x$ 和 $-x$ 给出相同的平方，所以数 $x$ 的个数会数多。只有绝对值 $0, 1, 2, \\dots$ 起作用，它们最大取到 $a$ 和 $b$ 中较大的数。所以集合的大小是这个较大的数加一。",
+    "A set lists each element once, however many times the condition produces it. In the set of $x^2$ with $x$ running from $-a$ to $b$, the values $x$ and $-x$ give the same square, so counting the values of $x$ overcounts. Only the sizes $0, 1, 2, \\dots$ matter, and these reach up to the larger of $a$ and $b$. So the size of the set is one more than that larger number. For $-2 \\le x \\le 3$ the squares are $4, 1, 0, 1, 4, 9$, and the set $\\{0, 1, 4, 9\\}$ has $4$ elements.\n\n> **Watch out.** Count the distinct squares, not the values of $x$: $-x$ and $x$ give one element, not two. And do not forget $0^2 = 0$, which makes the count one more than the largest absolute value.",
+    "集合中每个元素只列一次，不管条件产生它多少次。在 $x$ 从 $-a$ 取到 $b$ 的 $x^2$ 的集合中，$x$ 和 $-x$ 给出相同的平方，所以数 $x$ 的个数会数多。只有绝对值 $0, 1, 2, \\dots$ 起作用，它们最大取到 $a$ 和 $b$ 中较大的数。所以集合的大小是这个较大的数加一。对 $-2 \\le x \\le 3$，平方依次是 $4, 1, 0, 1, 4, 9$，集合 $\\{0, 1, 4, 9\\}$ 有 $4$ 个元素。\n\n> **注意。** 要数不同的平方，而不是 $x$ 的个数：$-x$ 和 $x$ 只给出一个元素。也别忘了 $0^2 = 0$，它使个数比最大的绝对值多一。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
@@ -4097,10 +4415,45 @@ const setOfSquares: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b + 1, Math.min(a, b) + 1, a + b, top],
-      solution: t(
-        `The squares are those of $0, 1, \\dots, ${top}$, since a negative value repeats the square of its opposite. That gives $${answer}$ elements.`,
-        `这些平方是 $0, 1, \\dots, ${top}$ 的平方，因为负值只是重复其相反数的平方。所以有 $${answer}$ 个元素。`,
+      mistakes: [
+        why(
+          a + b + 1,
+          "That counts the values of $x$; $x$ and $-x$ give the same square, which the set lists once.",
+          "这数的是 $x$ 的个数；$x$ 和 $-x$ 给出相同的平方，集合只列一次。",
+        ),
+        why(
+          Math.min(a, b) + 1,
+          "The absolute values reach up to the larger of the two bounds, not the smaller.",
+          "绝对值最大能取到两个界中较大的那个，而不是较小的。",
+        ),
+        why(
+          a + b,
+          "That counts values of $x$ other than $0$; repeated squares are listed once.",
+          "这数的是 $0$ 以外的 $x$ 的个数；重复的平方只列一次。",
+        ),
+        why(top, "The square $0^2 = 0$ is an element too.", "$0^2 = 0$ 也是一个元素。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((y) => y.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Pair opposite values", "配对相反数"],
+            t(
+              `$(-x)^2 = x^2$, so each negative $x$ repeats the square of its opposite. Only the absolute values $0, 1, \\dots, ${top}$ matter.`,
+              `$(-x)^2 = x^2$，所以每个负的 $x$ 都重复其相反数的平方。只有绝对值 $0, 1, \\dots, ${top}$ 起作用。`,
+            ),
+          ],
+          [
+            ["Count", "计数"],
+            t(
+              `The squares $0^2, 1^2, \\dots, ${top}^2$ are distinct, so there are $${top} + 1 = ${answer}$ elements.`,
+              `平方 $0^2, 1^2, \\dots, ${top}^2$ 互不相同，所以有 $${top} + 1 = ${answer}$ 个元素。`,
+            ),
+          ],
+        ],
+        t(
+          `The $${a + b + 1}$ values of $x$ include $${Math.min(a, b)}$ pairs $\\pm x$ that share a square; removing one from each pair leaves $${a + b + 1} - ${Math.min(a, b)} = ${answer}$.`,
+          `$x$ 的 $${a + b + 1}$ 个取值中有 $${Math.min(a, b)}$ 对 $\\pm x$ 共享同一个平方；每对去掉一个，剩下 $${a + b + 1} - ${Math.min(a, b)} = ${answer}$ 个。`,
+        ),
       ),
     });
   },

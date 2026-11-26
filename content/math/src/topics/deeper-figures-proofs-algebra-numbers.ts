@@ -88,27 +88,80 @@ const differences: readonly TwoSetExpression[] = [
   { tex: (a, b) => `(${a} \\setminus ${b}) \\cup (${b} \\setminus ${a})`, shaded: ["onlyA", "onlyB"] },
 ];
 
+const REGIONS: readonly Region[] = ["onlyA", "both", "onlyB", "out"];
+
+/** regionName names a region of a two-set diagram by the names of its sets. */
+const regionName = (r: Region, a: string, b: string): Pair =>
+  r === "onlyA"
+    ? [`the part of $${a}$ outside $${b}$`, `$${a}$ 中在 $${b}$ 之外的部分`]
+    : r === "onlyB"
+      ? [`the part of $${b}$ outside $${a}$`, `$${b}$ 中在 $${a}$ 之外的部分`]
+      : r === "both"
+        ? [`the overlap of $${a}$ and $${b}$`, `$${a}$ 与 $${b}$ 的重叠部分`]
+        : ["the part outside both sets", "两个集合之外的部分"];
+
+/** shadingReasons says, for each wrong expression, a region where its shading differs from the drawing. */
+const shadingReasons = (right: TwoSetExpression, wrongs: readonly TwoSetExpression[], a: string, b: string): Reason[] =>
+  wrongs.map((e): Reason => {
+    const tex = e.tex(a, b);
+    const r = REGIONS.find((x) => e.shaded.includes(x) !== right.shaded.includes(x)) ?? "out";
+    const [en, zh] = regionName(r, a, b);
+    return right.shaded.includes(r)
+      ? [
+          same(tex)[0],
+          `${en[0]?.toUpperCase()}${en.slice(1)} is shaded, but $${tex}$ leaves it out.`,
+          `${zh}有阴影，但 $${tex}$ 不包含它。`,
+        ]
+      : [same(tex)[0], `$${tex}$ contains ${en}, which is not shaded.`, `$${tex}$ 包含${zh}，而那里没有阴影。`];
+  });
+
+/** shadingSolution reads the shaded regions, names the set they form, and checks the regions left blank. */
+const shadingSolution = (right: TwoSetExpression, a: string, b: string, rule: Pair): Pair => {
+  const tex = right.tex(a, b);
+  const on = right.shaded.map((r) => regionName(r, a, b));
+  const off = REGIONS.filter((r) => !right.shaded.includes(r)).map((r) => regionName(r, a, b));
+  return [
+    `**Step 1: Read the shading.** The shaded part is ${on.map((p) => p[0]).join(" together with ")}.\n\n**Step 2: Name the set.** ${rule[0]} That is exactly $${tex}$.\n\n**Check.** The blank regions are ${off.map((p) => p[0]).join(", ")}, and $${tex}$ contains none of them.`,
+    `**第一步：读阴影。** 阴影部分是${on.map((p) => p[1]).join("以及")}。\n\n**第二步：写出集合。** ${rule[1]}这正是 $${tex}$。\n\n**检验。** 空白区域是${off.map((p) => p[1]).join("、")}，$${tex}$ 都不包含它们。`,
+  ];
+};
+
 const differenceOnVenn = point(
   "a-difference-of-sets-on-a-diagram",
   ["A difference of sets on a diagram", "图上的集合差"],
   [
-    "The difference $A \\setminus B$ holds the elements of $A$ that are not in $B$. On a diagram, it is the part of $A$ outside the overlap, and it is usually not the same as $B \\setminus A$.",
-    "差集 $A \\setminus B$ 由属于 $A$ 但不属于 $B$ 的元素组成。在图上，它是 $A$ 中重叠部分之外的部分，通常与 $B \\setminus A$ 不同。",
+    "The difference $A \\setminus B$ holds the elements of $A$ that are not in $B$. On a diagram, it is the part of $A$ outside the overlap, and it is usually not the same as $B \\setminus A$. If $A = \\{1, 2, 3\\}$ and $B = \\{3, 4\\}$, then $A \\setminus B = \\{1, 2\\}$ but $B \\setminus A = \\{4\\}$.\n\n> **Watch out.** The order matters: $A \\setminus B$ is the part of the first set left after removing the second. It never contains the overlap, and it contains nothing of $B$.",
+    "差集 $A \\setminus B$ 由属于 $A$ 但不属于 $B$ 的元素组成。在图上，它是 $A$ 中重叠部分之外的部分，通常与 $B \\setminus A$ 不同。若 $A = \\{1, 2, 3\\}$，$B = \\{3, 4\\}$，则 $A \\setminus B = \\{1, 2\\}$，而 $B \\setminus A = \\{4\\}$。\n\n> **注意。** 顺序很重要：$A \\setminus B$ 是第一个集合去掉第二个集合后剩下的部分。它从不包含重叠部分，也不含 $B$ 中的任何元素。",
   ],
   (rng) => {
     const names = namesOf(rng);
     const [a, b] = names;
     const right = rng.pick(differences);
-    return choose(
-      rng,
-      ["Which set does the shaded part of the diagram show?", "图中的阴影部分表示哪个集合？"],
-      same(right.tex(a, b)),
-      differences.filter((e) => e !== right).map((e) => same(e.tex(a, b))),
-      [
-        `The shading covers ${right.shaded.map((r) => regionNames[r][0]).join(" and ")}, which is $${right.tex(a, b)}$.`,
-        `阴影覆盖${right.shaded.map((r) => regionNames[r][1]).join("和")}，即 $${right.tex(a, b)}$。`,
-      ],
-      figureOf(vennTwo(names, right.shaded), vennAlt(names, right.shaded)),
+    const wrongs = differences.filter((e) => e !== right);
+    const rule: Pair =
+      right === differences[0]
+        ? [
+            `Elements of $${a}$ that are not in $${b}$ form the difference $${a}$ minus $${b}$.`,
+            `属于 $${a}$ 但不属于 $${b}$ 的元素构成 $${a}$ 减 $${b}$ 的差集。`,
+          ]
+        : right === differences[1]
+          ? [
+              `Elements of $${b}$ that are not in $${a}$ form the difference $${b}$ minus $${a}$.`,
+              `属于 $${b}$ 但不属于 $${a}$ 的元素构成 $${b}$ 减 $${a}$ 的差集。`,
+            ]
+          : right === differences[2]
+            ? [`Elements in both sets form the intersection.`, `同时属于两个集合的元素构成交集。`]
+            : [`Elements in exactly one of the sets form the union of the two differences.`, `恰好属于一个集合的元素构成两个差集的并。`];
+    return reasoned(
+      choose(
+        rng,
+        ["Which set does the shaded part of the diagram show?", "图中的阴影部分表示哪个集合？"],
+        same(right.tex(a, b)),
+        wrongs.map((e) => same(e.tex(a, b))),
+        shadingSolution(right, a, b, rule),
+        figureOf(vennTwo(names, right.shaded), vennAlt(names, right.shaded)),
+      ),
+      shadingReasons(right, wrongs, a, b),
     );
   },
 );
@@ -124,23 +177,35 @@ const complementOnVenn = point(
   "a-complement-on-a-diagram",
   ["A complement on a diagram", "图上的补集"],
   [
-    "The complement $A^{c}$ holds every element of the box, the universal set, that is not in $A$. So the shading of a complement always includes the part outside both sets.",
-    "补集 $A^{c}$ 由方框（全集）中所有不属于 $A$ 的元素组成。所以补集的阴影总是包含两个集合之外的部分。",
+    "The complement $A^{c}$ holds every element of the box, the universal set, that is not in $A$. So the shading of a complement always includes the part outside both sets. In a box holding $A$ and $B$, $A^{c}$ is the part of $B$ outside $A$ together with the part outside both, and $(A \\cup B)^{c}$ is only the part outside both.\n\n> **Watch out.** Shade what the set leaves out of the whole box, not of the other circle. $A^{c}$ is not the same as $B \\setminus A$: it also takes in the part of the box outside both sets.",
+    "补集 $A^{c}$ 由方框（全集）中所有不属于 $A$ 的元素组成。所以补集的阴影总是包含两个集合之外的部分。在含有 $A$ 和 $B$ 的方框中，$A^{c}$ 是 $B$ 中在 $A$ 之外的部分加上两个集合之外的部分，而 $(A \\cup B)^{c}$ 只是两个集合之外的部分。\n\n> **注意。** 要看去掉的部分相对于整个方框，而不是相对于另一个圆。$A^{c}$ 与 $B \\setminus A$ 不同：它还包括方框中两个集合之外的部分。",
   ],
   (rng) => {
     const names = namesOf(rng);
     const [a, b] = names;
     const right = rng.pick(complements);
-    return choose(
-      rng,
-      ["The box is the universal set. Which set does the shaded part of the diagram show?", "方框是全集。图中的阴影部分表示哪个集合？"],
-      same(right.tex(a, b)),
-      complements.filter((e) => e !== right).map((e) => same(e.tex(a, b))),
-      [
-        `The shading covers ${right.shaded.map((r) => regionNames[r][0]).join(" and ")}, which is everything outside the set being complemented: $${right.tex(a, b)}$.`,
-        `阴影覆盖${right.shaded.map((r) => regionNames[r][1]).join("和")}，也就是被取补的集合之外的全部：$${right.tex(a, b)}$。`,
-      ],
-      figureOf(vennTwo(names, right.shaded), vennAlt(names, right.shaded)),
+    const wrongs = complements.filter((e) => e !== right);
+    const rule: Pair =
+      right === complements[0]
+        ? [`Everything in the box outside $${a}$ is the complement of $${a}$.`, `方框中 $${a}$ 之外的全部是 $${a}$ 的补集。`]
+        : right === complements[1]
+          ? [`Everything in the box outside $${b}$ is the complement of $${b}$.`, `方框中 $${b}$ 之外的全部是 $${b}$ 的补集。`]
+          : right === complements[2]
+            ? [`Everything in the box outside both sets is the complement of their union.`, `方框中两个集合之外的全部是它们的并集的补集。`]
+            : [
+                `Everything in the box outside the overlap is the complement of the intersection.`,
+                `方框中重叠部分之外的全部是交集的补集。`,
+              ];
+    return reasoned(
+      choose(
+        rng,
+        ["The box is the universal set. Which set does the shaded part of the diagram show?", "方框是全集。图中的阴影部分表示哪个集合？"],
+        same(right.tex(a, b)),
+        wrongs.map((e) => same(e.tex(a, b))),
+        shadingSolution(right, a, b, rule),
+        figureOf(vennTwo(names, right.shaded), vennAlt(names, right.shaded)),
+      ),
+      shadingReasons(right, wrongs, a, b),
     );
   },
 );
@@ -198,8 +263,8 @@ const productGrid = point(
   "the-pair-missing-from-a-drawn-cartesian-product",
   ["The pair missing from a drawn Cartesian product", "所画笛卡儿积缺少的序对"],
   [
-    "The Cartesian product $A \\times B$ holds every pair $(a, b)$ with $a \\in A$ and $b \\in B$. Drawn as dots, it fills every crossing of the columns of $A$ with the rows of $B$, so a gap stands out.",
-    "笛卡儿积 $A \\times B$ 由所有满足 $a \\in A$，$b \\in B$ 的序对 $(a, b)$ 组成。画成点时，它填满 $A$ 的各列与 $B$ 的各行的每个交叉点，所以缺口很显眼。",
+    "The Cartesian product $A \\times B$ holds every pair $(a, b)$ with $a \\in A$ and $b \\in B$. Drawn as dots, it fills every crossing of the columns of $A$ with the rows of $B$, so a gap stands out. For $A = \\{1, 2\\}$ and $B = \\{1, 3\\}$, the dots sit at $(1, 1)$, $(1, 3)$, $(2, 1)$ and $(2, 3)$: two columns crossing two rows.\n\n> **Watch out.** A pair is written with its first coordinate from $A$, read along the horizontal axis, and its second from $B$, read up the vertical axis. Read the column of the gap first, then its row.",
+    "笛卡儿积 $A \\times B$ 由所有满足 $a \\in A$，$b \\in B$ 的序对 $(a, b)$ 组成。画成点时，它填满 $A$ 的各列与 $B$ 的各行的每个交叉点，所以缺口很显眼。对 $A = \\{1, 2\\}$，$B = \\{1, 3\\}$，点位于 $(1, 1)$、$(1, 3)$、$(2, 1)$、$(2, 3)$：两列与两行交叉。\n\n> **注意。** 序对的第一个坐标来自 $A$，沿横轴读；第二个坐标来自 $B$，沿纵轴读。先读缺口所在的列，再读它所在的行。",
   ],
   (rng) => {
     const A = rng.sample([1, 2, 3, 4, 5, 6, 7], rng.int(3, 4)).sort((p, q) => p - q);
@@ -214,26 +279,52 @@ const productGrid = point(
       [A[A.length - 1] === missing[0] ? (A[0] as number) : (A[A.length - 1] as number), missing[1]],
       [missing[0], B[B.length - 1] === missing[1] ? (B[0] as number) : (B[B.length - 1] as number)],
     ];
-    return choose(
-      rng,
-      [
-        "The dots show every pair of a product $A \\times B$ except one. Which pair is missing?",
-        "这些点表示积 $A \\times B$ 中除一个之外的所有序对。缺少哪个序对？",
-      ],
-      pair(missing),
-      others.map(pair),
-      [
-        `The columns give $A = \\{${A.join(", ")}\\}$ and the rows give $B = \\{${B.join(", ")}\\}$. The only crossing without a dot is $(${missing[0]}, ${missing[1]})$.`,
-        `各列给出 $A = \\{${A.join(", ")}\\}$，各行给出 $B = \\{${B.join(", ")}\\}$。唯一没有点的交叉处是 $(${missing[0]}, ${missing[1]})$。`,
-      ],
-      drawn(
-        { xMin: 0, xMax: 8, yMin: 0, yMax: 7 },
-        marks,
-        t(
-          `Dots at ${marks.map((m) => (m.kind === "point" ? `(${m.at[0]}, ${m.at[1]})` : "")).join(", ")}.`,
-          `点位于 ${marks.map((m) => (m.kind === "point" ? `(${m.at[0]}, ${m.at[1]})` : "")).join("、")}。`,
+    const reasons = others.map((p, i): Reason => {
+      const tex = `(${p[0]}, ${p[1]})`;
+      if (i === 0) {
+        return [
+          pair(p)[0],
+          "This swaps the coordinates: the first coordinate comes from $A$, read along the horizontal axis.",
+          "这把坐标弄反了：第一个坐标来自 $A$，沿横轴读。",
+        ];
+      }
+      if (!A.includes(p[0]))
+        return [
+          pair(p)[0],
+          `$${p[0]} \\notin A$, so $${tex}$ is not a pair of $A \\times B$ at all.`,
+          `$${p[0]} \\notin A$，所以 $${tex}$ 根本不是 $A \\times B$ 的序对。`,
+        ];
+      if (!B.includes(p[1]))
+        return [
+          pair(p)[0],
+          `$${p[1]} \\notin B$, so $${tex}$ is not a pair of $A \\times B$ at all.`,
+          `$${p[1]} \\notin B$，所以 $${tex}$ 根本不是 $A \\times B$ 的序对。`,
+        ];
+      return [pair(p)[0], `There is a dot at $${tex}$.`, `$${tex}$ 处有点。`];
+    });
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The dots show every pair of a product $A \\times B$ except one. Which pair is missing?",
+          "这些点表示积 $A \\times B$ 中除一个之外的所有序对。缺少哪个序对？",
+        ],
+        pair(missing),
+        others.map(pair),
+        [
+          `**Step 1: Read the factors.** The columns give $A = \\{${A.join(", ")}\\}$ and the rows give $B = \\{${B.join(", ")}\\}$.\n\n**Step 2: Find the gap.** The column $x = ${missing[0]}$ has no dot in the row $y = ${missing[1]}$, so the missing pair is $(${missing[0]}, ${missing[1]})$.\n\n**Check.** $A \\times B$ has $${A.length} \\cdot ${B.length} = ${A.length * B.length}$ pairs, and the drawing has $${marks.length} = ${A.length * B.length} - 1$ dots.`,
+          `**第一步：读出两个因子。** 各列给出 $A = \\{${A.join(", ")}\\}$，各行给出 $B = \\{${B.join(", ")}\\}$。\n\n**第二步：找缺口。** 列 $x = ${missing[0]}$ 在行 $y = ${missing[1]}$ 处没有点，所以缺少的序对是 $(${missing[0]}, ${missing[1]})$。\n\n**检验。** $A \\times B$ 有 $${A.length} \\cdot ${B.length} = ${A.length * B.length}$ 个序对，图中有 $${marks.length} = ${A.length * B.length} - 1$ 个点。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: 8, yMin: 0, yMax: 7 },
+          marks,
+          t(
+            `Dots at ${marks.map((m) => (m.kind === "point" ? `(${m.at[0]}, ${m.at[1]})` : "")).join(", ")}.`,
+            `点位于 ${marks.map((m) => (m.kind === "point" ? `(${m.at[0]}, ${m.at[1]})` : "")).join("、")}。`,
+          ),
         ),
       ),
+      reasons,
     );
   },
 );

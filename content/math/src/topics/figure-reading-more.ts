@@ -20,7 +20,7 @@ import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 import { explainedChoice, numberProblem } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
-import { reasoned } from "../wrong-reasons.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
@@ -2765,8 +2765,8 @@ const productFromDots: KnowledgePointDef = {
   id: "a-factor-from-a-cartesian-product-plot",
   title: t("A factor from a plotted product", "由笛卡尔积的图读因子"),
   explanation: t(
-    "The Cartesian product of two sets of numbers can be drawn as a grid of dots in the plane. The first coordinates of the dots make up the first set, and the second coordinates make up the second. So the number of dots is the product of the sizes of the sets, and each set can be read off by looking along one axis.",
-    "两个数集的笛卡尔积可以画成平面上的点阵。这些点的第一个坐标组成第一个集合，第二个坐标组成第二个集合。所以点的个数等于两个集合大小的积，每个集合都可以沿一条坐标轴读出来。",
+    "The Cartesian product of two sets of numbers can be drawn as a grid of dots in the plane. The first coordinates of the dots make up the first set, and the second coordinates make up the second. So the number of dots is the product of the sizes of the sets, and each set can be read off by looking along one axis. Dots at $(1, 2)$, $(1, 4)$, $(3, 2)$ and $(3, 4)$ show $\\{1, 3\\} \\times \\{2, 4\\}$.\n\n> **Watch out.** The first factor is read along the horizontal axis, from the columns of dots, and the second along the vertical axis, from the rows. Each column gives one element, however many dots it holds.",
+    "两个数集的笛卡尔积可以画成平面上的点阵。这些点的第一个坐标组成第一个集合，第二个坐标组成第二个集合。所以点的个数等于两个集合大小的积，每个集合都可以沿一条坐标轴读出来。位于 $(1, 2)$、$(1, 4)$、$(3, 2)$、$(3, 4)$ 的点表示 $\\{1, 3\\} \\times \\{2, 4\\}$。\n\n> **注意。** 第一个因子沿横轴读，来自点的各列；第二个因子沿纵轴读，来自各行。每一列只给出一个元素，不管这一列有几个点。",
   ),
   generate(rng) {
     const pool = [-3, -2, -1, 1, 2, 3, 4];
@@ -2785,32 +2785,64 @@ const productFromDots: KnowledgePointDef = {
     const other = asksA ? B : A;
     const extra = pool.filter((v) => !right.includes(v));
     const wrongOne = [...right.slice(1), extra[0] as number].sort((p, q) => p - q);
-    return pickChoice(
-      rng,
-      t(
-        `The dots show the product $A \\times B$. What is ${asksA ? "$A$" : "$B$"}?`,
-        `这些点表示 $A \\times B$。${asksA ? "$A$" : "$B$"} 是什么？`,
-      ),
-      math(set(right)),
-      [
-        math(set(other)),
-        math(set(right.map((v) => v + 1))),
-        math(set(wrongOne)),
-        math(set(right.slice(1).length > 0 ? right.slice(1) : right)),
-        math(set(right.map((v) => -v).sort((p, q) => p - q))),
-      ],
-      t(
-        asksA ? `The first coordinates of the dots are $${A.join(", ")}$.` : `The second coordinates of the dots are $${B.join(", ")}$.`,
-        asksA ? `这些点的第一个坐标是 $${A.join(", ")}$。` : `这些点的第二个坐标是 $${B.join(", ")}$。`,
-      ),
-      drawn(
-        square(5),
-        marks,
+    const wrong = [
+      other,
+      right.map((v) => v + 1),
+      wrongOne,
+      right.slice(1).length > 0 ? right.slice(1) : right,
+      right.map((v) => -v).sort((p, q) => p - q),
+    ];
+    const coord: [string, string] = asksA ? ["first", "第一个"] : ["second", "第二个"];
+    const reasons = wrong.map((w): Reason => {
+      const option = math(set(w)).en;
+      if (set(w) === set(other)) {
+        return [
+          option,
+          `That is the other factor, read along the ${asksA ? "vertical" : "horizontal"} axis.`,
+          `这是另一个因子，是沿${asksA ? "纵" : "横"}轴读出的。`,
+        ];
+      }
+      const stray = w.find((v) => !right.includes(v));
+      return stray !== undefined
+        ? [option, `No dot has ${coord[0]} coordinate $${stray}$.`, `没有点的${coord[1]}坐标是 $${stray}$。`]
+        : [option, `This leaves out a ${asksA ? "column" : "row"} of dots.`, `这漏掉了一${asksA ? "列" : "行"}点。`];
+    });
+    const name = asksA ? "A" : "B";
+    return reasoned(
+      pickChoice(
+        rng,
         t(
-          `Dots at the points of a grid, with x in ${A.join(", ")} and y in ${B.join(", ")}.`,
-          `网格上的点，x 取 ${A.join("、")}，y 取 ${B.join("、")}。`,
+          `The dots show the product $A \\times B$. What is ${asksA ? "$A$" : "$B$"}?`,
+          `这些点表示 $A \\times B$。${asksA ? "$A$" : "$B$"} 是什么？`,
+        ),
+        math(set(right)),
+        wrong.map((w) => math(set(w))),
+        walked(
+          [
+            [
+              [asksA ? "Read the columns" : "Read the rows", asksA ? "读各列" : "读各行"],
+              t(
+                `$${name}$ holds the ${coord[0]} coordinates of the dots, read along the ${asksA ? "horizontal" : "vertical"} axis: the ${asksA ? "columns" : "rows"} stand at $${right.join(", ")}$.`,
+                `$${name}$ 由点的${coord[1]}坐标组成，沿${asksA ? "横" : "纵"}轴读：各${asksA ? "列" : "行"}位于 $${right.join(", ")}$。`,
+              ),
+            ],
+            [["List each value once", "每个值只列一次"], t(`So $${name} = ${set(right)}$.`, `所以 $${name} = ${set(right)}$。`)],
+          ],
+          t(
+            `The other factor is $${set(other)}$, and $${A.length} \\cdot ${B.length} = ${A.length * B.length}$, which is the number of dots drawn.`,
+            `另一个因子是 $${set(other)}$，而 $${A.length} \\cdot ${B.length} = ${A.length * B.length}$，正是图中点的个数。`,
+          ),
+        ),
+        drawn(
+          square(5),
+          marks,
+          t(
+            `Dots at the points of a grid, with x in ${A.join(", ")} and y in ${B.join(", ")}.`,
+            `网格上的点，x 取 ${A.join("、")}，y 取 ${B.join("、")}。`,
+          ),
         ),
       ),
+      reasons,
     );
   },
 };

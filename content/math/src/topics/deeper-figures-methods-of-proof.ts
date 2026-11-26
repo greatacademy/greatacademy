@@ -170,45 +170,138 @@ const countsOnVenn = {
     "reading-counts-from-a-two-circle-diagram",
     ["Reading counts from a two-circle diagram", "由两圆图读计数"],
     [
-      "A Venn diagram with counts splits the elements into separate regions, so that each element is counted once. To find the size of a set, add the regions inside it. The size of a union adds the three regions once each, and the complement counts what lies outside the given set, including the region outside both circles.",
-      "带计数的文氏图把元素分成互不相交的区域，所以每个元素只算一次。要求一个集合的大小，就把它内部的区域相加。并集的大小把三个区域各加一次，补集计算给定集合之外的部分，包括两个圆之外的区域。",
+      "A Venn diagram with counts splits the elements into separate regions, so that each element is counted once. To find the size of a set, add the regions inside it. The size of a union adds the three regions once each, and the complement counts what lies outside the given set, including the region outside both circles. With $5$ only in $A$, $2$ in both, $4$ only in $B$ and $3$ outside, $|A| = 5 + 2 = 7$ and $|A^c| = 4 + 3 = 7$.\n\n> **Watch out.** The number in a region counts only that region. The number in the left part of circle $A$ is $|A \\setminus B|$, not $|A|$: the size of $A$ also takes in the overlap. And a complement includes the region outside both circles.",
+      "带计数的文氏图把元素分成互不相交的区域，所以每个元素只算一次。要求一个集合的大小，就把它内部的区域相加。并集的大小把三个区域各加一次，补集计算给定集合之外的部分，包括两个圆之外的区域。若只在 $A$ 中有 $5$ 个，两者都有的 $2$ 个，只在 $B$ 中有 $4$ 个，外面有 $3$ 个，则 $|A| = 5 + 2 = 7$，$|A^c| = 4 + 3 = 7$。\n\n> **注意。** 区域中的数只计这个区域。圆 $A$ 左边部分的数是 $|A \\setminus B|$，而不是 $|A|$：$A$ 的大小还包括重叠部分。补集也包括两个圆之外的区域。",
     ],
     (rng) => {
       const [onlyA, both, onlyB, outside] = [rng.int(2, 12), rng.int(1, 9), rng.int(2, 12), rng.int(1, 9)];
       const q = rng.pick([
-        { tex: "|A \\cup B|", value: onlyA + both + onlyB, parts: [onlyA, both, onlyB] },
-        { tex: "|A \\cap B|", value: both, parts: [both] },
-        { tex: "|A \\setminus B|", value: onlyA, parts: [onlyA] },
-        { tex: "|B \\setminus A|", value: onlyB, parts: [onlyB] },
-        { tex: "|A|", value: onlyA + both, parts: [onlyA, both] },
-        { tex: "|B|", value: onlyB + both, parts: [onlyB, both] },
-        { tex: "|A^c|", value: onlyB + outside, parts: [onlyB, outside] },
-        { tex: "|(A \\cup B)^c|", value: outside, parts: [outside] },
-        { tex: "|A \\triangle B|", value: onlyA + onlyB, parts: [onlyA, onlyB] },
-      ]);
-      const body = `<rect x="10" y="10" width="300" height="170" fill="none"/><circle cx="125" cy="95" r="66" fill="none"/><circle cx="195" cy="95" r="66" fill="none"/>${label(90, 100, String(onlyA))}${label(160, 100, String(both))}${label(232, 100, String(onlyB))}${label(290, 168, String(outside))}${label(72, 32, "A")}${label(246, 32, "B")}`;
-      return ask(
-        [
-          `The numbers give the count of elements in each region. What is $${q.tex}$?`,
-          `图中的数给出每个区域的元素个数。$${q.tex}$ 是多少？`,
-        ],
-        q.value,
-        [onlyA + both + onlyB + outside, q.value + both, q.value + outside, q.value + 1],
-        [
-          q.parts.length === 1
-            ? `This set is one region of the diagram, which holds $${q.value}$ elements.`
-            : `This set consists of the regions with counts $${q.parts.join(", ")}$, which add up to $${q.value}$.`,
-          q.parts.length === 1
-            ? `这个集合是图中的一个区域，含有 $${q.value}$ 个元素。`
-            : `这个集合由计数为 $${q.parts.join(", ")}$ 的区域组成，总和为 $${q.value}$。`,
-        ],
         {
-          svg: svgDocument(190, body),
-          alt: t(
-            `Two circles A and B, with ${onlyA} only in A, ${both} in both, ${onlyB} only in B and ${outside} outside.`,
-            `两个圆 A 和 B，只在 A 中有 ${onlyA} 个，两者都有的 ${both} 个，只在 B 中有 ${onlyB} 个，外面有 ${outside} 个。`,
-          ),
+          tex: "|A \\cup B|",
+          value: onlyA + both + onlyB,
+          parts: [onlyA, both, onlyB],
+          where: ["the three regions inside the circles", "两个圆内的三个区域"],
+          hasBoth: true,
+          hasOut: false,
         },
+        {
+          tex: "|A \\cap B|",
+          value: both,
+          parts: [both],
+          where: ["the overlap of the circles", "两个圆的重叠部分"],
+          hasBoth: true,
+          hasOut: false,
+        },
+        {
+          tex: "|A \\setminus B|",
+          value: onlyA,
+          parts: [onlyA],
+          where: ["the part of $A$ outside $B$", "$A$ 中在 $B$ 之外的部分"],
+          hasBoth: false,
+          hasOut: false,
+        },
+        {
+          tex: "|B \\setminus A|",
+          value: onlyB,
+          parts: [onlyB],
+          where: ["the part of $B$ outside $A$", "$B$ 中在 $A$ 之外的部分"],
+          hasBoth: false,
+          hasOut: false,
+        },
+        {
+          tex: "|A|",
+          value: onlyA + both,
+          parts: [onlyA, both],
+          where: ["the two regions inside $A$", "$A$ 内的两个区域"],
+          hasBoth: true,
+          hasOut: false,
+        },
+        {
+          tex: "|B|",
+          value: onlyB + both,
+          parts: [onlyB, both],
+          where: ["the two regions inside $B$", "$B$ 内的两个区域"],
+          hasBoth: true,
+          hasOut: false,
+        },
+        {
+          tex: "|A^c|",
+          value: onlyB + outside,
+          parts: [onlyB, outside],
+          where: ["the part of $B$ outside $A$ and the region outside both circles", "$B$ 中在 $A$ 之外的部分和两个圆之外的区域"],
+          hasBoth: false,
+          hasOut: true,
+        },
+        {
+          tex: "|(A \\cup B)^c|",
+          value: outside,
+          parts: [outside],
+          where: ["the region outside both circles", "两个圆之外的区域"],
+          hasBoth: false,
+          hasOut: true,
+        },
+        {
+          tex: "|A \\triangle B|",
+          value: onlyA + onlyB,
+          parts: [onlyA, onlyB],
+          where: ["the two parts of the circles outside the overlap", "两个圆在重叠部分之外的两部分"],
+          hasBoth: false,
+          hasOut: false,
+        },
+      ]);
+      const total = onlyA + both + onlyB + outside;
+      const left = total - q.value;
+      const body = `<rect x="10" y="10" width="300" height="170" fill="none"/><circle cx="125" cy="95" r="66" fill="none"/><circle cx="195" cy="95" r="66" fill="none"/>${label(90, 100, String(onlyA))}${label(160, 100, String(both))}${label(232, 100, String(onlyB))}${label(290, 168, String(outside))}${label(72, 32, "A")}${label(246, 32, "B")}`;
+      const says = [
+        say(
+          String(total),
+          "That adds every region of the diagram, including those outside the set.",
+          "这把图中每个区域都加上了，包括集合之外的区域。",
+        ),
+        q.hasBoth
+          ? say(
+              String(q.value + both),
+              "That counts the overlap twice; each region is added once.",
+              "这把重叠部分算了两次；每个区域只加一次。",
+            )
+          : say(
+              String(q.value + both),
+              "That adds the overlap of the circles, which is not part of this set.",
+              "这加上了两个圆的重叠部分，而它不属于这个集合。",
+            ),
+        q.hasOut
+          ? say(
+              String(q.value + outside),
+              "That counts the region outside both circles twice; each region is added once.",
+              "这把两个圆之外的区域算了两次；每个区域只加一次。",
+            )
+          : say(
+              String(q.value + outside),
+              "That adds the region outside both circles, which is not part of this set.",
+              "这加上了两个圆之外的区域，而它不属于这个集合。",
+            ),
+      ].filter((s, i, all) => s.response !== String(q.value) && all.findIndex((x) => x.response === s.response) === i);
+      return withMistakes(
+        ask(
+          [
+            `The numbers give the count of elements in each region. What is $${q.tex}$?`,
+            `图中的数给出每个区域的元素个数。$${q.tex}$ 是多少？`,
+          ],
+          q.value,
+          [total, q.value + both, q.value + outside, q.value + 1],
+          [
+            `**Step 1: Find the regions.** $${q.tex}$ counts ${q.where[0]}.\n\n**Step 2: Add their counts.** ${q.parts.length === 1 ? `That region holds $${q.value}$ elements.` : `$${q.parts.join(" + ")} = ${q.value}$.`}\n\n**Check.** The regions left out hold $${total} - ${q.value} = ${left}$ elements, and $${q.value} + ${left} = ${total}$ is the sum of all four counts, $${onlyA} + ${both} + ${onlyB} + ${outside}$.`,
+            `**第一步：找区域。** $${q.tex}$ 数的是${q.where[1]}。\n\n**第二步：把计数相加。** ${q.parts.length === 1 ? `这个区域含有 $${q.value}$ 个元素。` : `$${q.parts.join(" + ")} = ${q.value}$。`}\n\n**检验。** 未计入的区域共有 $${total} - ${q.value} = ${left}$ 个元素，而 $${q.value} + ${left} = ${total}$ 正是四个计数之和 $${onlyA} + ${both} + ${onlyB} + ${outside}$。`,
+          ],
+          {
+            svg: svgDocument(190, body),
+            alt: t(
+              `Two circles A and B, with ${onlyA} only in A, ${both} in both, ${onlyB} only in B and ${outside} outside.`,
+              `两个圆 A 和 B，只在 A 中有 ${onlyA} 个，两者都有的 ${both} 个，只在 B 中有 ${onlyB} 个，外面有 ${outside} 个。`,
+            ),
+          },
+        ),
+        says,
       );
     },
   ),
@@ -349,74 +442,157 @@ const imageAndPreimage = point(
   "images-and-preimages-from-arrows",
   ["Images and preimages from arrows", "由箭头读像和原像"],
   [
-    "The image of a set under a function collects the ends of the arrows that start in the set. The preimage of a set collects the starts of the arrows that end in the set. So the two read an arrow diagram in opposite directions, and the preimage of a point that no arrow reaches is the empty set.",
-    "集合在函数下的像收集从集合出发的箭头的终点。集合的原像收集终点在集合内的箭头的起点。所以二者沿相反方向读箭头图，没有箭头到达的点的原像是空集。",
+    "The image of a set under a function collects the ends of the arrows that start in the set. The preimage of a set collects the starts of the arrows that end in the set. So the two read an arrow diagram in opposite directions, and the preimage of a point that no arrow reaches is the empty set. If $f$ sends $1 \\mapsto a$, $2 \\mapsto a$ and $3 \\mapsto b$, then $f(\\{1, 2\\}) = \\{a\\}$ and $f^{-1}(\\{a\\}) = \\{1, 2\\}$.\n\n> **Watch out.** An image lies in the codomain and a preimage lies in the domain, so they are not even made of the same kind of point. And an image lists each end once, even when several arrows reach it.",
+    "集合在函数下的像收集从集合出发的箭头的终点。集合的原像收集终点在集合内的箭头的起点。所以二者沿相反方向读箭头图，没有箭头到达的点的原像是空集。若 $f$ 把 $1 \\mapsto a$，$2 \\mapsto a$，$3 \\mapsto b$，则 $f(\\{1, 2\\}) = \\{a\\}$，$f^{-1}(\\{a\\}) = \\{1, 2\\}$。\n\n> **注意。** 像在陪域中，原像在定义域中，所以它们甚至不是同一类点。而且即使有几个箭头到达同一个终点，像中也只列一次。",
   ],
   (rng) => {
     const m = rng.int(4, 6);
     const n = rng.int(3, 5);
     const map = Array.from({ length: m }, () => rng.int(0, n - 1));
     const letters = LETTERS.slice(0, n);
+    const domain = Array.from({ length: m }, (_, i) => i + 1);
     const list = (xs: readonly (string | number)[]) => (xs.length === 0 ? "\\varnothing" : `\\{${xs.join(", ")}\\}`);
     const image = rng.bool();
-    const S = rng
-      .sample(
-        Array.from({ length: m }, (_, i) => i + 1),
-        2,
-      )
-      .sort((a, b) => a - b);
+    const S = rng.sample(domain, 2).sort((a, b) => a - b);
     const T = rng.sample(letters, 2).sort();
-    const imageOf = (xs: readonly number[]) => [...new Set(xs.map((x) => letters[map[x - 1] as number] as string))].sort();
-    const preOf = (ys: readonly string[]) =>
-      Array.from({ length: m }, (_, i) => i + 1).filter((x) => ys.includes(letters[map[x - 1] as number] as string));
-    const answer = image ? list(imageOf(S)) : list(preOf(T));
-    const candidates = [
-      list(preOf(T)),
-      list(imageOf(S)),
-      list(S),
-      list(T),
-      list(letters),
-      list(imageOf(Array.from({ length: m }, (_, i) => i + 1))),
-      list(rng.sample(letters, 1)),
-      list(rng.sample(letters, 3).sort()),
-      list(
-        rng
-          .sample(
-            Array.from({ length: m }, (_, i) => i + 1),
-            3,
-          )
-          .sort((a, b) => a - b),
-      ),
-      list([1]),
-      list([]),
-    ];
-    const wrong = [...new Set(candidates)].filter((c) => c !== answer);
-    return choose(
-      rng,
-      image
-        ? [`The arrows show a function $f$. What is the image $f(${list(S)})$?`, `箭头表示函数 $f$。像 $f(${list(S)})$ 是什么？`]
-        : [
-            `The arrows show a function $f$. What is the preimage $f^{-1}(${list(T)})$?`,
-            `箭头表示函数 $f$。原像 $f^{-1}(${list(T)})$ 是什么？`,
-          ],
-      same(answer),
-      rng.shuffle(wrong).map((c) => same(c)),
+    const end = (x: number) => letters[map[x - 1] as number] as string;
+    const imageOf = (xs: readonly number[]) => [...new Set(xs.map(end))].sort();
+    const preOf = (ys: readonly string[]) => domain.filter((x) => ys.includes(end(x)));
+    const answerSet: readonly (string | number)[] = image ? imageOf(S) : preOf(T);
+    const answer = list(answerSet);
+    const special = new Map<string, Pair>(
       image
         ? [
-            `Following the arrows out of the points of the set ends at the points in $${answer}$, and each of these is listed once.`,
-            `沿集合中各点出发的箭头走，终点是 $${answer}$ 中的点，每个只列一次。`,
+            [
+              list(preOf(T)),
+              [
+                "That reads the arrows backwards; the image follows the arrows out of the set.",
+                "这是沿箭头反方向读的；像要沿从集合出发的箭头走。",
+              ],
+            ],
+            [list(S), ["That is the set itself; the image is where its arrows end.", "这是集合本身；像是它的箭头的终点。"]],
+            [
+              list(imageOf(domain)),
+              [
+                "That is the range, the image of the whole domain; only the arrows from the given set count.",
+                "这是值域，即整个定义域的像；只有从给定集合出发的箭头才算。",
+              ],
+            ],
+            [
+              list(letters),
+              [
+                "That is the whole codomain; only the ends of arrows from the given set count.",
+                "这是整个陪域；只有从给定集合出发的箭头的终点才算。",
+              ],
+            ],
           ]
         : [
-            `The arrows that end in the given set start at the points of $${answer}$, which is the preimage by definition.`,
-            `终点在给定集合内的箭头从 $${answer}$ 中的点出发，这就是原像的定义。`,
+            [
+              list(imageOf(S)),
+              [
+                "That follows arrows forwards; the preimage collects the starts of the arrows that end in the set.",
+                "这是沿箭头正方向读的；原像收集终点在集合内的箭头的起点。",
+              ],
+            ],
+            [
+              list(T),
+              [
+                "That is the given set itself; the preimage lies in the domain, at the starts of arrows.",
+                "这是给定的集合本身；原像在定义域中，在箭头的起点。",
+              ],
+            ],
+            [
+              list(domain),
+              [
+                "That is the whole domain; only the points whose arrows end in the set count.",
+                "这是整个定义域；只有箭头终点在集合内的点才算。",
+              ],
+            ],
           ],
-      {
-        svg: arrowFunction(map, letters),
-        alt: t(
-          `A function from ${m} points to ${n} points, sending ${functionAlt(map, letters)}.`,
-          `从 ${m} 个点到 ${n} 个点的函数，把 ${functionAltZh(map, letters)}。`,
-        ),
-      },
+    );
+    const candidates: (readonly (string | number)[])[] = [
+      preOf(T),
+      imageOf(S),
+      S,
+      T,
+      letters,
+      imageOf(domain),
+      domain,
+      rng.sample(letters, 1),
+      rng.sample(letters, 3).sort(),
+      rng.sample(domain, 3).sort((a, b) => a - b),
+      [1],
+      [],
+    ];
+    const kindOk = (xs: readonly (string | number)[]) => xs.every((x) => typeof x === (image ? "string" : "number"));
+    const reasonFor = (xs: readonly (string | number)[]): Pair => {
+      const tex = list(xs);
+      const named = special.get(tex);
+      if (named) return named;
+      if (!kindOk(xs)) {
+        return image
+          ? ["An image lies in the codomain, among the letters, not among the numbered points.", "像在陪域中，是字母点，而不是编号的点。"]
+          : [
+              "A preimage lies in the domain, among the numbered points, not among the letters.",
+              "原像在定义域中，是编号的点，而不是字母点。",
+            ];
+      }
+      const extra = xs.find((x) => !answerSet.includes(x));
+      if (extra !== undefined) {
+        return image
+          ? [`No arrow from $${list(S)}$ ends at $${extra}$.`, `从 $${list(S)}$ 出发的箭头都不到达 $${extra}$。`]
+          : [
+              `The arrow from $${extra}$ ends at $${end(extra as number)}$, outside $${list(T)}$.`,
+              `从 $${extra}$ 出发的箭头终点是 $${end(extra as number)}$，不在 $${list(T)}$ 中。`,
+            ];
+      }
+      return image
+        ? ["This set leaves out the end of an arrow from the given set.", "这个集合漏掉了从给定集合出发的某个箭头的终点。"]
+        : ["This set leaves out a point whose arrow ends in the given set.", "这个集合漏掉了某个箭头终点在给定集合内的点。"];
+    };
+    const seen = new Set<string>([answer]);
+    const wrong: (readonly (string | number)[])[] = [];
+    for (const c of candidates) {
+      if (!seen.has(list(c))) {
+        seen.add(list(c));
+        wrong.push(c);
+      }
+    }
+    const reasons = wrong.map((c): Reason => {
+      const [en, zh] = reasonFor(c);
+      return [same(list(c))[0], en, zh];
+    });
+    const arrows = (xs: readonly number[]) => xs.map((x) => `${x} \\mapsto ${end(x)}`).join(",\\ ");
+    const solution: Pair = image
+      ? [
+          `**Step 1: Follow the arrows out of the set.** $${arrows(S)}$.\n\n**Step 2: Collect the ends.** Listing each end once gives $f(${list(S)}) = ${answer}$.\n\n**Check.** Every point of $${answer}$ is reached by an arrow from $${list(S)}$, and both arrows from $${list(S)}$ end in $${answer}$.`,
+          `**第一步：沿集合出发的箭头走。** $${arrows(S)}$。\n\n**第二步：收集终点。** 每个终点只列一次，得 $f(${list(S)}) = ${answer}$。\n\n**检验。** $${answer}$ 中每个点都有来自 $${list(S)}$ 的箭头到达，而且从 $${list(S)}$ 出发的两个箭头都终止于 $${answer}$。`,
+        ]
+      : [
+          `**Step 1: Read every arrow.** $${arrows(domain)}$.\n\n**Step 2: Keep the starts that end in the set.** The arrows ending in $${list(T)}$ start at the points of $${answer}$, so $f^{-1}(${list(T)}) = ${answer}$.\n\n**Check.** ${answerSet.length === 0 ? `No arrow ends in $${list(T)}$, so the preimage is empty.` : `$f(${answer}) = ${list(imageOf(answerSet as number[]))}$, which lies inside $${list(T)}$, and every other point is sent outside $${list(T)}$.`}`,
+          `**第一步：读出每个箭头。** $${arrows(domain)}$。\n\n**第二步：保留终点在集合内的起点。** 终点在 $${list(T)}$ 中的箭头从 $${answer}$ 中的点出发，所以 $f^{-1}(${list(T)}) = ${answer}$。\n\n**检验。** ${answerSet.length === 0 ? `没有箭头终止于 $${list(T)}$，所以原像是空集。` : `$f(${answer}) = ${list(imageOf(answerSet as number[]))}$，在 $${list(T)}$ 之内，而其余每个点都被送到 $${list(T)}$ 之外。`}`,
+        ];
+    return reasoned(
+      choose(
+        rng,
+        image
+          ? [`The arrows show a function $f$. What is the image $f(${list(S)})$?`, `箭头表示函数 $f$。像 $f(${list(S)})$ 是什么？`]
+          : [
+              `The arrows show a function $f$. What is the preimage $f^{-1}(${list(T)})$?`,
+              `箭头表示函数 $f$。原像 $f^{-1}(${list(T)})$ 是什么？`,
+            ],
+        same(answer),
+        rng.shuffle(wrong).map((c) => same(list(c))),
+        solution,
+        {
+          svg: arrowFunction(map, letters),
+          alt: t(
+            `A function from ${m} points to ${n} points, sending ${functionAlt(map, letters)}.`,
+            `从 ${m} 个点到 ${n} 个点的函数，把 ${functionAltZh(map, letters)}。`,
+          ),
+        },
+      ),
+      reasons,
     );
   },
 );
@@ -874,33 +1050,70 @@ const regionSetBuilder = point(
   "set-builder-notation-for-a-drawn-region",
   ["Set-builder notation for a drawn region", "图中区域的集合构造记法"],
   [
-    "Set-builder notation describes a planar region by the conditions its points satisfy. For a shaded quarter of the plane, read the boundaries first, which give the values $k$ and $m$, and then decide on which side of each boundary the shading lies. A point test is a useful check: pick a shaded point and substitute it.",
-    "集合构造记法用点满足的条件描述平面区域。对平面上阴影的四分之一，先读边界，它们给出 $k$ 和 $m$ 的值，再判断阴影在每条边界的哪一侧。代入点检验很有用：取一个阴影中的点代入验证。",
+    "Set-builder notation describes a planar region by the conditions its points satisfy. For a shaded quarter of the plane, read the boundaries first, which give the values $k$ and $m$, and then decide on which side of each boundary the shading lies. A point test is a useful check: pick a shaded point and substitute it.\n\n> **Watch out.** A vertical line has an equation $x = k$ and a horizontal line $y = m$, so the number read off the vertical line belongs with $x$. Shading to the right of a vertical line means $x \\geq k$, and shading below a horizontal line means $y \\leq m$.",
+    "集合构造记法用点满足的条件描述平面区域。对平面上阴影的四分之一，先读边界，它们给出 $k$ 和 $m$ 的值，再判断阴影在每条边界的哪一侧。代入点检验很有用：取一个阴影中的点代入验证。\n\n> **注意。** 竖直线的方程是 $x = k$，水平线的方程是 $y = m$，所以从竖直线读出的数属于 $x$。阴影在竖直线右边表示 $x \\geq k$，阴影在水平线下方表示 $y \\leq m$。",
   ],
   (rng) => {
     const k = rng.int(-3, 3);
     let m = rng.int(-3, 3);
     if (m === k) m = k === 3 ? 2 : k + 1;
     const right = rng.pick(planarRegions);
-    const wrong = planarRegions.filter((r) => r !== right).map((r) => same(r.tex(k, m)));
-    return choose(
-      rng,
-      ["Which set is the shaded region, boundaries included?", "阴影区域（包括边界）是哪个集合？"],
-      same(right.tex(k, m)),
-      [...wrong, same(right.tex(m, k))],
-      [
-        `The boundaries are the lines $x = ${k}$ and $y = ${m}$, and the shading is ${right.clue[0]}, which matches $${right.tex(k, m)}$.`,
-        `边界是直线 $x = ${k}$ 和 $y = ${m}$，阴影是${right.clue[1]}，与 $${right.tex(k, m)}$ 相符。`,
-      ],
-      drawn(
-        { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },
+    const xUp = (r: PlanarRegion) => r.tex(0, 0).includes("x \\geq");
+    const yUp = (r: PlanarRegion) => r.tex(0, 0).includes("y \\geq");
+    const others = planarRegions.filter((r) => r !== right);
+    const side = (up: boolean): Pair => (up ? ["to the right of", "右边"] : ["to the left of", "左边"]);
+    const level = (up: boolean): Pair => (up ? ["above", "上方"] : ["below", "下方"]);
+    const reasons = others.map((r): Reason => {
+      const tex = r.tex(k, m);
+      if (xUp(r) !== xUp(right) && yUp(r) !== yUp(right)) {
+        return [
+          same(tex)[0],
+          `This set is the opposite quarter: both inequalities face the wrong way.`,
+          `这是相对的那个四分之一：两个不等式的方向都反了。`,
+        ];
+      }
+      if (xUp(r) !== xUp(right)) {
+        return [
+          same(tex)[0],
+          `The shading lies ${side(xUp(right))[0]} the line $x = ${k}$, but this set takes the points ${side(xUp(r))[0]} it.`,
+          `阴影在直线 $x = ${k}$ 的${side(xUp(right))[1]}，但这个集合取的是它${side(xUp(r))[1]}的点。`,
+        ];
+      }
+      return [
+        same(tex)[0],
+        `The shading lies ${level(yUp(right))[0]} the line $y = ${m}$, but this set takes the points ${level(yUp(r))[0]} it.`,
+        `阴影在直线 $y = ${m}$ 的${level(yUp(right))[1]}，但这个集合取的是它${level(yUp(r))[1]}的点。`,
+      ];
+    });
+    reasons.push([
+      same(right.tex(m, k))[0],
+      `This swaps the boundaries: the vertical line is $x = ${k}$, so $${k}$ belongs with $x$, and $${m}$ with $y$.`,
+      `这把两条边界弄反了：竖直线是 $x = ${k}$，所以 $${k}$ 属于 $x$，$${m}$ 属于 $y$。`,
+    ]);
+    const px = xUp(right) ? k + 1 : k - 1;
+    const py = yUp(right) ? m + 1 : m - 1;
+    const tex = right.tex(k, m);
+    return reasoned(
+      choose(
+        rng,
+        ["Which set is the shaded region, boundaries included?", "阴影区域（包括边界）是哪个集合？"],
+        same(tex),
+        [...others.map((r) => same(r.tex(k, m))), same(right.tex(m, k))],
         [
-          ...right.marks(k, m),
-          { kind: "segment", a: [k, -6], b: [k, 6], accent: true },
-          { kind: "segment", a: [-6, m], b: [6, m], accent: true },
+          `**Step 1: Read the boundaries.** The vertical line is $x = ${k}$ and the horizontal line is $y = ${m}$.\n\n**Step 2: Read the sides.** The shading is ${right.clue[0]}: ${side(xUp(right))[0]} $x = ${k}$ gives $x ${xUp(right) ? "\\geq" : "\\leq"} ${k}$, and ${level(yUp(right))[0]} $y = ${m}$ gives $y ${yUp(right) ? "\\geq" : "\\leq"} ${m}$. With the boundaries included, the set is $${tex}$.\n\n**Check.** The shaded point $(${px}, ${py})$ satisfies both conditions: $${px} ${xUp(right) ? "\\geq" : "\\leq"} ${k}$ and $${py} ${yUp(right) ? "\\geq" : "\\leq"} ${m}$.`,
+          `**第一步：读边界。** 竖直线是 $x = ${k}$，水平线是 $y = ${m}$。\n\n**第二步：读方向。** 阴影是${right.clue[1]}：在 $x = ${k}$ 的${side(xUp(right))[1]}给出 $x ${xUp(right) ? "\\geq" : "\\leq"} ${k}$，在 $y = ${m}$ 的${level(yUp(right))[1]}给出 $y ${yUp(right) ? "\\geq" : "\\leq"} ${m}$。包括边界，集合就是 $${tex}$。\n\n**检验。** 阴影中的点 $(${px}, ${py})$ 满足两个条件：$${px} ${xUp(right) ? "\\geq" : "\\leq"} ${k}$，$${py} ${yUp(right) ? "\\geq" : "\\leq"} ${m}$。`,
         ],
-        t(`The lines x = ${k} and y = ${m}, with ${right.clue[0]} shaded.`, `直线 x = ${k} 和 y = ${m}，${right.clue[1]}有阴影。`),
+        drawn(
+          { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },
+          [
+            ...right.marks(k, m),
+            { kind: "segment", a: [k, -6], b: [k, 6], accent: true },
+            { kind: "segment", a: [-6, m], b: [6, m], accent: true },
+          ],
+          t(`The lines x = ${k} and y = ${m}, with ${right.clue[0]} shaded.`, `直线 x = ${k} 和 y = ${m}，${right.clue[1]}有阴影。`),
+        ),
       ),
+      reasons,
     );
   },
 );
