@@ -822,8 +822,8 @@ const oscillatorFrequency = {
     "an-oscillator-from-its-drawn-graph",
     ["An oscillator from its drawn graph", "由图读振子"],
     [
-      "A simple harmonic oscillator $my'' + ky = 0$ moves as $y = R\\cos(\\omega t - \\phi)$ with $\\omega = \\sqrt{\\frac{k}{m}}$. The amplitude $R$ is half the distance from top to bottom, the period is $T = \\frac{2\\pi}{\\omega}$, and the largest speed is $R\\omega$.",
-      "简谐振子 $my'' + ky = 0$ 的运动为 $y = R\\cos(\\omega t - \\phi)$，$\\omega = \\sqrt{\\frac{k}{m}}$。振幅 $R$ 是从最高到最低距离的一半，周期 $T = \\frac{2\\pi}{\\omega}$，最大速率为 $R\\omega$。",
+      "A simple harmonic oscillator $my'' + ky = 0$ moves as $y = R\\cos(\\omega t - \\phi)$ with $\\omega = \\sqrt{\\frac{k}{m}}$. The amplitude $R$ is half the distance from top to bottom, the period is $T = \\frac{2\\pi}{\\omega}$, and the largest speed is $R\\omega$. A wave from $-3$ to $3$ that repeats every $4$ has $R = 3$, $\\omega = \\frac{2\\pi}{4} = \\frac{\\pi}{2}$ and largest speed $\\frac{3\\pi}{2}$.\n\n> **Watch out.** Read the period from one peak to the next, not from a peak to the following trough; and the amplitude is half the height from bottom to top.",
+      "简谐振子 $my'' + ky = 0$ 的运动为 $y = R\\cos(\\omega t - \\phi)$，$\\omega = \\sqrt{\\frac{k}{m}}$。振幅 $R$ 是从最高到最低距离的一半，周期 $T = \\frac{2\\pi}{\\omega}$，最大速率为 $R\\omega$。在 $-3$ 与 $3$ 之间、每 $4$ 个单位重复一次的波，$R = 3$，$\\omega = \\frac{2\\pi}{4} = \\frac{\\pi}{2}$，最大速率为 $\\frac{3\\pi}{2}$。\n\n> **注意。** 周期要从一个波峰量到下一个波峰，而不是从波峰量到随后的波谷；振幅是从最低到最高高度的一半。",
     ],
     (rng) => {
       const R = rng.int(1, 5);
@@ -845,32 +845,75 @@ const oscillatorFrequency = {
       const figure = figureOf(svg, [`A cosine wave with amplitude ${R} and period ${T}.`, `振幅为 ${R}、周期为 ${T} 的余弦波。`]);
       if (kind === "amplitude") {
         const speed = Q.of(2 * R, T);
-        return ask(
+        return figureNumber(
           [
             "The graph shows $y(t)$ for a simple harmonic oscillator. Find its largest speed divided by $\\pi$.",
             "图中是简谐振子的 $y(t)$。求它的最大速率除以 $\\pi$。",
           ],
           speed,
-          [Q.of(R, T), Q.of(4 * R, T), Q.of(2 * R, 1), Q.of(2, T), Q.of(2 * T, R)],
           [
-            `The amplitude is $${R}$ and the period is $${T}$, so $\\omega = \\frac{2\\pi}{${T}}$. The largest speed is $R\\omega = ${speed.toLatex()}\\pi$.`,
-            `振幅为 $${R}$，周期为 $${T}$，所以 $\\omega = \\frac{2\\pi}{${T}}$。最大速率为 $R\\omega = ${speed.toLatex()}\\pi$。`,
+            stepOf(
+              ["Read the graph", "读图"],
+              ["The wave runs between its peaks and troughs and repeats:", "波在波峰与波谷之间往复并重复："],
+              `R = ${R}, \\qquad T = ${T}`,
+            ),
+            stepOf(
+              ["Find the largest speed", "求最大速率"],
+              ["", ""],
+              `\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}`,
+              `R\\omega = ${R} \\cdot ${omega(2, T)} = ${speed.toLatex() === "1" ? "" : speed.toLatex()}\\pi`,
+            ),
+          ],
+          [
+            `$y = ${R === 1 ? "" : R}\\cos(${omega(2, T)} t)$ has $y' = -${R === 1 ? "" : `${R} \\cdot `}${omega(2, T)}\\sin(${omega(2, T)} t)$, whose largest size is $${speed.toLatex()}\\pi$ where the sine is $\\pm 1$.`,
+            `$y = ${R === 1 ? "" : R}\\cos(${omega(2, T)} t)$ 的导数 $y' = -${R === 1 ? "" : `${R} \\cdot `}${omega(2, T)}\\sin(${omega(2, T)} t)$，在正弦为 $\\pm 1$ 处取最大值 $${speed.toLatex()}\\pi$。`,
+          ],
+          [
+            [
+              Q.of(R, T),
+              "That uses $\\omega = \\frac{\\pi}{T}$; a full turn is $2\\pi$.",
+              "这是用了 $\\omega = \\frac{\\pi}{T}$；一整圈是 $2\\pi$。",
+            ],
+            [Q.of(4 * R, T), "That uses the full height $2R$ in place of the amplitude.", "这是用整个高度 $2R$ 代替了振幅。"],
+            [2 * R, "That takes $\\omega = 2\\pi$ and leaves out the period.", "这是取 $\\omega = 2\\pi$，漏掉了周期。"],
+            [Q.of(2, T), "That is $\\frac{\\omega}{\\pi}$; multiply by the amplitude.", "这是 $\\frac{\\omega}{\\pi}$；还要乘以振幅。"],
+            [Q.of(2 * T, R), "That divides the period by the amplitude, upside down.", "这是用周期除以振幅，倒过来了。"],
           ],
           figure,
         );
       }
-      return choose(
+      const right = same(`\\omega = ${omega(2, T)}`);
+      const wrong: Because<Pair>[] = [
+        [
+          same(`\\omega = ${omega(1, T)}`),
+          "That divides $\\pi$ by the period; a full turn is $2\\pi$.",
+          "这是用 $\\pi$ 除以周期；一整圈是 $2\\pi$。",
+        ],
+        [
+          same(`\\omega = ${omega(T, 2)}`),
+          "That is $\\frac{T}{2}$ times $\\pi$, the formula upside down.",
+          "这是 $\\frac{T}{2}$ 乘以 $\\pi$，公式倒过来了。",
+        ],
+        [
+          same(`\\omega = ${omega(4, T)}`),
+          "That reads the period from a peak to the next trough, which is half a wave.",
+          "这是从波峰量到随后的波谷，那只是半个波。",
+        ],
+        [same(`\\omega = ${T}`), "That is the period itself, not the angular frequency.", "这是周期本身，而不是角频率。"],
+      ];
+      return figureChoice(
         rng,
         [
           "The graph shows $y(t)$ for a simple harmonic oscillator. What is its angular frequency $\\omega$?",
           "图中是简谐振子的 $y(t)$。它的角频率 $\\omega$ 是多少？",
         ],
-        same(`\\omega = ${omega(2, T)}`),
-        [same(`\\omega = ${omega(1, T)}`), same(`\\omega = ${omega(T, 2)}`), same(`\\omega = ${omega(4, T)}`), same(`\\omega = ${T}`)],
+        right,
+        wrong.filter(([o], i) => o[0] !== right[0] && wrong.findIndex(([p]) => p[0] === o[0]) === i),
         [
-          `One full wave takes time $T = ${T}$, so $\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}$.`,
-          `一个完整波形用时 $T = ${T}$，所以 $\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}$。`,
+          stepOf(["Read the period", "读出周期"], ["One full wave, peak to peak, takes", "一个完整波形（波峰到波峰）用时"], `T = ${T}`),
+          stepOf(["Convert", "换算"], ["", ""], `\\omega = \\frac{2\\pi}{${T}} = ${omega(2, T)}`),
         ],
+        [`$${omega(2, T)} \\cdot ${T} = 2\\pi$, one full turn per wave.`, `$${omega(2, T)} \\cdot ${T} = 2\\pi$，每个波正好转一整圈。`],
         figure,
       );
     },
@@ -883,8 +926,8 @@ const dampingKind = {
     "the-kind-of-damping-from-a-drawn-graph",
     ["The kind of damping from a drawn graph", "由图判断阻尼类型"],
     [
-      "For $my'' + cy' + ky = 0$, the discriminant $c^2 - 4mk$ decides the motion. Negative: oscillation with shrinking waves. Zero or positive: decay with at most one crossing of zero. No damping: waves of constant size.",
-      "对 $my'' + cy' + ky = 0$，判别式 $c^2 - 4mk$ 决定运动。为负：振幅递减的振荡。为零或正：衰减，至多穿过零一次。无阻尼：振幅不变的波。",
+      "For $my'' + cy' + ky = 0$, the discriminant $c^2 - 4mk$ decides the motion. Negative: oscillation with shrinking waves. Zero or positive: decay with at most one crossing of zero. No damping: waves of constant size. For $y'' + 2y' + 10y = 0$, $4 - 40 < 0$, so the graph is a wave whose peaks shrink like $e^{-t}$.\n\n> **Watch out.** Count the crossings of zero: a curve that crosses once and then settles is critically or overdamped, not underdamped; and growing waves mean $c < 0$, energy being added.",
+      "对 $my'' + cy' + ky = 0$，判别式 $c^2 - 4mk$ 决定运动。为负：振幅递减的振荡。为零或正：衰减，至多穿过零一次。无阻尼：振幅不变的波。对 $y'' + 2y' + 10y = 0$，$4 - 40 < 0$，所以图像是峰值按 $e^{-t}$ 缩小的波。\n\n> **注意。** 数一数穿过零的次数：只穿过一次就趋于静止的曲线是临界阻尼或过阻尼，而不是欠阻尼；波幅增大说明 $c < 0$，能量在增加。",
     ],
     (rng) => {
       const kind = rng.pick(["under", "over", "none", "negative"] as const);
@@ -924,15 +967,48 @@ const dampingKind = {
         none: ["A wave whose peaks keep the same height.", "峰值高度不变的波。"],
         negative: ["A wave whose peaks grow over time.", "峰值随时间增大的波。"],
       };
-      return choose(
+      const needs: Record<typeof kind, Pair> = {
+        under: ["Underdamping gives waves that keep crossing zero while they shrink.", "欠阻尼给出不断穿过零且逐渐缩小的波。"],
+        over: ["Critical damping or overdamping decays with at most one crossing of zero.", "临界阻尼或过阻尼衰减时至多穿过零一次。"],
+        none: ["With no damping the waves keep the same size.", "没有阻尼时波幅保持不变。"],
+        negative: ["A negative $c$ adds energy and makes the waves grow.", "负的 $c$ 增加能量，使波幅增大。"],
+      };
+      const roots: Record<typeof kind, Pair> = {
+        under: [
+          "The roots $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$ are complex with negative real part $-\\frac{c}{2m}$, which shrinks the waves.",
+          "特征根 $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$ 是复数，实部 $-\\frac{c}{2m}$ 为负，使波幅缩小。",
+        ],
+        over: [
+          "The roots $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$ are real and negative, so the solution decays without oscillating.",
+          "特征根 $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$ 是负实数，所以解衰减而不振荡。",
+        ],
+        none: [
+          "With $c = 0$ the roots are $\\pm i\\sqrt{\\frac{k}{m}}$, purely imaginary, so the waves keep their size.",
+          "$c = 0$ 时特征根是纯虚数 $\\pm i\\sqrt{\\frac{k}{m}}$，所以波幅不变。",
+        ],
+        negative: [
+          "With $c < 0$ the real part $-\\frac{c}{2m}$ of the roots is positive, which makes the waves grow.",
+          "$c < 0$ 时特征根的实部 $-\\frac{c}{2m}$ 为正，使波幅增大。",
+        ],
+      };
+      return figureChoice(
         rng,
         [
           "The graph shows a solution of $my'' + cy' + ky = 0$ with $m, k > 0$. Which description fits it?",
           "图中是 $my'' + cy' + ky = 0$（$m, k > 0$）的一个解。哪个描述符合它？",
         ],
         names[kind],
-        (["under", "over", "none", "negative"] as const).filter((x) => x !== kind).map((x) => names[x]),
-        why[kind],
+        (["under", "over", "none", "negative"] as const)
+          .filter((x) => x !== kind)
+          .map(
+            (x): Because<Pair> => [
+              names[x],
+              `${needs[x][0]} This graph does not match. ${why[kind][0]}`,
+              `${needs[x][1]}这幅图不符合。${why[kind][1]}`,
+            ],
+          ),
+        [stepOf(["Read the graph", "读图"], why[kind]), stepOf(["Match the roots", "对应特征根"], roots[kind])],
+        [`${needs[kind][0]} No other description gives this shape.`, `${needs[kind][1]}其他描述都不会给出这种形状。`],
         figureOf(svg, alts[kind]),
       );
     },
@@ -944,8 +1020,8 @@ const resonance = point(
   "the-forcing-that-causes-a-drawn-resonance",
   ["The forcing that causes a drawn resonance", "造成所画共振的外力"],
   [
-    "For $y'' + \\omega_0^2 y = F\\cos(\\omega t)$, a forcing at the natural frequency, $\\omega = \\omega_0$, gives waves that grow without bound, $y = \\frac{F}{2\\omega_0}t\\sin(\\omega_0 t)$. Any other frequency gives bounded motion.",
-    "对 $y'' + \\omega_0^2 y = F\\cos(\\omega t)$，频率等于固有频率（$\\omega = \\omega_0$）的外力产生无界增长的波，$y = \\frac{F}{2\\omega_0}t\\sin(\\omega_0 t)$。其他频率的运动都有界。",
+    "For $y'' + \\omega_0^2 y = F\\cos(\\omega t)$, a forcing at the natural frequency, $\\omega = \\omega_0$, gives waves that grow without bound, $y = \\frac{F}{2\\omega_0}t\\sin(\\omega_0 t)$. Any other frequency gives bounded motion. For $y'' + 9y = 6\\cos(\\omega t)$ the waves grow only for $\\omega = 3$, as $y = t\\sin 3t$.\n\n> **Watch out.** The natural frequency is the square root of the coefficient of $y$: for $y'' + 9y$ it is $3$, not $9$.",
+    "对 $y'' + \\omega_0^2 y = F\\cos(\\omega t)$，频率等于固有频率（$\\omega = \\omega_0$）的外力产生无界增长的波，$y = \\frac{F}{2\\omega_0}t\\sin(\\omega_0 t)$。其他频率的运动都有界。对 $y'' + 9y = 6\\cos(\\omega t)$，只有 $\\omega = 3$ 时波才增长，$y = t\\sin 3t$。\n\n> **注意。** 固有频率是 $y$ 的系数的平方根：对 $y'' + 9y$，它是 $3$ 而不是 $9$。",
   ],
   (rng) => {
     const w0 = rng.int(1, 5);
@@ -955,18 +1031,45 @@ const resonance = point(
     const top = a * 10 * 1.1;
     const svg = chart([0, 10], [-top, top], intTicks(0, 10), [], (x, y) => guide(x, y, [0, 0], [10, 0]) + curvePath(f, 0, 10, x, y));
     const eq = `y'' + ${w0 * w0 === 1 ? "" : w0 * w0}y = ${F === 1 ? "" : F}\\cos(\\omega t)`;
-    const near = [w0 + 1, w0 + 2, w0 * w0 === w0 ? w0 + 3 : w0 * w0, w0 > 1 ? w0 - 1 : w0 + 3];
-    return choose(
+    const near = [w0 + 1, w0 + 2, w0 * w0 === w0 ? w0 + 3 : w0 * w0, w0 > 1 ? w0 - 1 : w0 + 3].filter((v, i, all) => all.indexOf(v) === i);
+    const rate = Q.of(F, 2 * w0);
+    const rateText = rate.toLatex() === "1" ? "" : rate.toLatex();
+    const sinText = `\\sin ${w0 === 1 ? "" : w0}t`;
+    return figureChoice(
       rng,
       [
         `The graph shows a solution of $${eq}$ starting from rest. Which value of $\\omega$ produces it?`,
         `图中是 $${eq}$ 从静止开始的一个解。哪个 $\\omega$ 产生了它？`,
       ],
       same(`\\omega = ${w0}`),
-      near.map((v) => same(`\\omega = ${v}`)),
+      near.map(
+        (v): Because<Pair> =>
+          v === w0 * w0
+            ? [
+                same(`\\omega = ${v}`),
+                `That is $\\omega_0^2$, the coefficient of $y$; the natural frequency is its square root, $${w0}$.`,
+                `这是 $y$ 的系数 $\\omega_0^2$；固有频率是它的平方根 $${w0}$。`,
+              ]
+            : [
+                same(`\\omega = ${v}`),
+                `With $\\omega = ${v}$, away from the natural frequency $${w0}$, the motion stays bounded; the drawn peaks keep growing.`,
+                `$\\omega = ${v}$ 偏离固有频率 $${w0}$，运动保持有界；而图中的峰值一直增大。`,
+              ],
+      ),
       [
-        `The waves grow without bound, so this is resonance, where $\\omega$ equals the natural frequency $\\sqrt{${w0 * w0}} = ${w0}$.`,
-        `波无界增长，所以这是共振，此时 $\\omega$ 等于固有频率 $\\sqrt{${w0 * w0}} = ${w0}$。`,
+        stepOf(
+          ["Read the graph", "读图"],
+          ["The peaks grow in a straight line, so the forcing is at resonance.", "峰值沿直线增长，所以外力处于共振。"],
+        ),
+        stepOf(
+          ["Find the natural frequency", "求固有频率"],
+          ["Resonance needs $\\omega$ equal to", "共振要求 $\\omega$ 等于"],
+          `\\omega_0 = \\sqrt{${w0 * w0}} = ${w0}`,
+        ),
+      ],
+      [
+        `$y = ${rateText}t${sinText}$ has $y'' + ${w0 * w0 === 1 ? "" : w0 * w0}y = ${rateText === "" ? "" : `${rateText} \\cdot `}${2 * w0}\\cos ${w0 === 1 ? "" : w0}t = ${F === 1 ? "" : F}\\cos ${w0 === 1 ? "" : w0}t$, with peaks growing like $${rateText === "" ? "" : rateText}t$.`,
+        `$y = ${rateText}t${sinText}$ 满足 $y'' + ${w0 * w0 === 1 ? "" : w0 * w0}y = ${rateText === "" ? "" : `${rateText} \\cdot `}${2 * w0}\\cos ${w0 === 1 ? "" : w0}t = ${F === 1 ? "" : F}\\cos ${w0 === 1 ? "" : w0}t$，峰值按 $${rateText === "" ? "" : rateText}t$ 增长。`,
       ],
       figureOf(svg, ["A wave whose peaks grow in a straight line over time.", "峰值随时间直线增长的波。"]),
     );

@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
-import { choiceProblem, lowestTerms, numberProblem, steps, why, yesNo } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, why, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
@@ -2021,6 +2021,10 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
     "Substituting $y = x^m$ into $x^2 y'' + axy' + by = 0$ gives $m(m - 1) + am + b = 0$ and power solutions $y = c_1 x^{m_1} + c_2 x^{m_2}$.",
     "将 $y = x^m$ 代入 $x^2 y'' + axy' + by = 0$ 得 $m(m - 1) + am + b = 0$，从而得到幂函数通解 $y = c_1 x^{m_1} + c_2 x^{m_2}$。",
   ),
+  intro: t(
+    "Solve $x^2y'' - 2xy' + 2y = 0$ for $x > 0$. Try $y = x^m$: then $x^2y'' = m(m - 1)x^m$ and $xy' = mx^m$, so dividing by $x^m$ leaves $m(m - 1) - 2m + 2 = m^2 - 3m + 2 = (m - 1)(m - 2) = 0$. The roots $1$ and $2$ give $y = c_1x + c_2x^2$.\n\nCheck: for $y = x^2$, $x^2 \\cdot 2 - 2x \\cdot 2x + 2x^2 = 2x^2 - 4x^2 + 2x^2 = 0$.\n\nIn this lesson we solve Cauchy-Euler equations whose indicial equation has two different real roots, and fit the constants to initial values at $x = 1$.",
+    "在 $x > 0$ 上解 $x^2y'' - 2xy' + 2y = 0$。设 $y = x^m$：则 $x^2y'' = m(m - 1)x^m$，$xy' = mx^m$，两边除以 $x^m$ 得 $m(m - 1) - 2m + 2 = m^2 - 3m + 2 = (m - 1)(m - 2) = 0$。根 $1$ 与 $2$ 给出 $y = c_1x + c_2x^2$。\n\n检验：对 $y = x^2$，$x^2 \\cdot 2 - 2x \\cdot 2x + 2x^2 = 2x^2 - 4x^2 + 2x^2 = 0$。\n\n本课我们求解指标方程有两个不同实根的柯西-欧拉方程，并用 $x = 1$ 处的初值确定常数。",
+  ),
   prerequisites: ["second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
     {
@@ -2034,47 +2038,49 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
       id: "cauchy-euler-distinct-real-roots",
       title: t("Indicial equation with distinct real roots", "柯西-欧拉方程的互异实指标根"),
       explanation: t(
-        "In a Cauchy Euler equation each power of the variable matches the order of the derivative, so a power of the variable is the natural trial solution. For $x^2 y'' + a x y' + b y = 0$, the indicial equation is $m^2 + (a - 1)m + b = 0$.",
-        "在柯西-欧拉方程中，变量的幂次与导数的阶数相对应，所以变量的幂是自然的试探解。对于柯西-欧拉方程 $x^2 y'' + a x y' + b y = 0$，指标特征方程为 $m^2 + (a - 1)m + b = 0$。",
+        "In a Cauchy Euler equation each power of the variable matches the order of the derivative, so a power of the variable is the natural trial solution. For $x^2 y'' + a x y' + b y = 0$, the indicial equation is $m^2 + (a - 1)m + b = 0$. For $x^2y'' - 4xy' + 6y = 0$ it is $m^2 - 5m + 6 = (m - 2)(m - 3) = 0$, so the powers are $x^2$ and $x^3$.\n\n> **Watch out.** $x^2(x^m)''$ gives $m(m - 1)$, not $m^2$, so the middle coefficient is $a - 1$, not $a$.",
+        "在柯西-欧拉方程中，变量的幂次与导数的阶数相对应，所以变量的幂是自然的试探解。对于柯西-欧拉方程 $x^2 y'' + a x y' + b y = 0$，指标特征方程为 $m^2 + (a - 1)m + b = 0$。对 $x^2y'' - 4xy' + 6y = 0$，它是 $m^2 - 5m + 6 = (m - 2)(m - 3) = 0$，所以幂为 $x^2$ 与 $x^3$。\n\n> **注意。** $x^2(x^m)''$ 给出 $m(m - 1)$ 而不是 $m^2$，所以一次项系数是 $a - 1$，而不是 $a$。",
       ),
       generate(rng: Rng): Problem {
         const m1 = rng.int(1, 6);
         const m2 = rng.int(m1 + 1, m1 + 8);
-        // m^2 + (a - 1)m + b = (m - m1)(m - m2) = m^2 - (m1 + m2)m + m1*m2
-        // so a - 1 = -(m1 + m2) => a = 1 - (m1 + m2)
-        // or pick roots of m^2 + A m + B with positive coefficients
-        // Let m1, m2 be positive, let indicial eq be (m - m1)(m - m2) = m^2 - (m1+m2)m + m1*m2
-        // Then a = 1 - (m1 + m2), b = m1 * m2
-        const aCoeff = 1 - (m1 + m2);
-        const bCoeff = m1 * m2;
-        const ans = m2; // larger root
-
-        const prompt = t(
-          `Find the larger power exponent $m$ in the fundamental solutions $y = x^m$ to the Cauchy-Euler differential equation $x^2 y'' ${aCoeff < 0 ? `- ${-aCoeff}` : `+ ${aCoeff}`}x y' + ${bCoeff}y = 0$ (for $x > 0$).`,
-          `求柯西-欧拉微分方程 $x^2 y'' ${aCoeff < 0 ? `- ${-aCoeff}` : `+ ${aCoeff}`}x y' + ${bCoeff}y = 0$（$x > 0$）的基本解 $y = x^m$ 中较大的幂指数 $m$。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $y = x^m$: $y' = m x^{m-1}$ and $y'' = m(m-1)x^{m-2}$.`,
-            `Plug into the equation: $x^2 [m(m-1)x^{m-2}] + (${aCoeff})x [m x^{m-1}] + ${bCoeff}x^m = 0$.`,
-            `Divide by $x^m$: $m(m-1) + (${aCoeff})m + ${bCoeff} = 0 \\implies m^2 - ${m1 + m2}m + ${bCoeff} = 0$.`,
-            `Factor: $(m - ${m1})(m - ${m2}) = 0$, giving roots $m = ${m1}$ and $m = ${m2}$.`,
-            `The larger exponent is $m = ${ans}$.`,
-          ),
-          steps(
-            `代入解的形式 $y = x^m$：$y' = m x^{m-1}$，$y'' = m(m-1)x^{m-2}$。`,
-            `代入方程：$x^2 [m(m-1)x^{m-2}] + (${aCoeff})x [m x^{m-1}] + ${bCoeff}x^m = 0$。`,
-            `同除以 $x^m$：$m(m-1) + (${aCoeff})m + ${bCoeff} = 0 \\implies m^2 - ${m1 + m2}m + ${bCoeff} = 0$。`,
-            `因式分解：$(m - ${m1})(m - ${m2}) = 0$，解得指标根 $m = ${m1}$ 与 $m = ${m2}$。`,
-            `其中较大的幂指数为 $m = ${ans}$。`,
-          ),
-        );
-
+        const a = 1 - (m1 + m2);
+        const b = m1 * m2;
+        const ans = m2;
+        const eq = poly([1, "x^2y''"], [a, "xy'"], [b, "y"]);
+        const indicial = poly([1, "m^2"], [a - 1, "m"], [b, ""]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the larger power exponent $m$ in the fundamental solutions $y = x^m$ to the Cauchy-Euler differential equation $${eq} = 0$ (for $x > 0$).`,
+            `求柯西-欧拉微分方程 $${eq} = 0$（$x > 0$）的基本解 $y = x^m$ 中较大的幂指数 $m$。`,
+          ),
           answer: ans,
-          wrong: [m1, m1 + m2, bCoeff],
+          mistakes: apart(ans, [
+            why(m1, "That is the smaller root; the question asks for the larger one.", "这是较小的根；题目要的是较大的根。"),
+            why(m1 + m2, "That is the sum of the two roots, not a root.", "这是两根之和，而不是一个根。"),
+            why(b, "That is the product of the two roots, the constant term.", "这是两根之积，也就是常数项。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the indicial equation", "写出指标方程"],
+                t(
+                  `Put $y = x^m$, so $x^2y'' = m(m - 1)x^m$ and $xy' = mx^m$, then divide by $x^m$:`,
+                  `代入 $y = x^m$，于是 $x^2y'' = m(m - 1)x^m$，$xy' = mx^m$，再除以 $x^m$：`,
+                ),
+                [`${poly([1, "m(m - 1)"], [a, "m"], [b, ""])} = ${indicial} = 0`],
+              ],
+              [
+                ["Factor", "因式分解"],
+                t("The two roots are the powers:", "两个根就是幂指数："),
+                [`(m - ${m1})(m - ${m2}) = 0`, `m = ${m1}, \\quad m = ${m2}`],
+              ],
+            ],
+            t(
+              `$${m2} \\cdot ${m2 - 1} ${signed(a * m2)} + ${b} = ${m2 * (m2 - 1)} ${signed(a * m2)} + ${b} = 0$, so $x^{${m2}}$ solves the equation.`,
+              `$${m2} \\cdot ${m2 - 1} ${signed(a * m2)} + ${b} = ${m2 * (m2 - 1)} ${signed(a * m2)} + ${b} = 0$，所以 $x^{${m2}}$ 是方程的解。`,
+            ),
+          ),
         });
       },
     },
@@ -2082,8 +2088,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
       id: "evaluating-a-cauchy-euler-initial-value-problem",
       title: t("Evaluating a Cauchy-Euler initial value problem", "求柯西-欧拉初值问题的解在某点的值"),
       explanation: t(
-        "For $x^2y'' + axy' + by = 0$ the trial $y = x^m$ gives the indicial equation $m(m - 1) + am + b = 0$. With distinct real roots, $y = c_1x^{m_1} + c_2x^{m_2}$. Initial conditions are usually given at $x = 1$, where every power equals $1$:\n\n$$c_1 + c_2 = y(1), \\qquad m_1c_1 + m_2c_2 = y'(1).$$",
-        "对 $x^2y'' + axy' + by = 0$，试探解 $y = x^m$ 给出指标方程 $m(m - 1) + am + b = 0$。当它有互异实根时，$y = c_1x^{m_1} + c_2x^{m_2}$。初始条件通常在 $x = 1$ 处给出，那里每个幂都等于 $1$：\n\n$$c_1 + c_2 = y(1), \\qquad m_1c_1 + m_2c_2 = y'(1).$$",
+        "For $x^2y'' + axy' + by = 0$ the trial $y = x^m$ gives the indicial equation $m(m - 1) + am + b = 0$. With distinct real roots, $y = c_1x^{m_1} + c_2x^{m_2}$. Initial conditions are usually given at $x = 1$, where every power equals $1$:\n\n$$c_1 + c_2 = y(1), \\qquad m_1c_1 + m_2c_2 = y'(1).$$\n\nFor $x^2y'' - 2xy' + 2y = 0$ with $y(1) = 3$ and $y'(1) = 4$: $c_1 + c_2 = 3$ and $c_1 + 2c_2 = 4$, so $c_2 = 1$, $c_1 = 2$ and $y(2) = 2 \\cdot 2 + 1 \\cdot 4 = 8$.\n\n> **Watch out.** At $x = 2$ each power must be evaluated, $2^{m}$, not $2m$.",
+        "对 $x^2y'' + axy' + by = 0$，试探解 $y = x^m$ 给出指标方程 $m(m - 1) + am + b = 0$。当它有互异实根时，$y = c_1x^{m_1} + c_2x^{m_2}$。初始条件通常在 $x = 1$ 处给出，那里每个幂都等于 $1$：\n\n$$c_1 + c_2 = y(1), \\qquad m_1c_1 + m_2c_2 = y'(1).$$\n\n对 $x^2y'' - 2xy' + 2y = 0$，$y(1) = 3$，$y'(1) = 4$：$c_1 + c_2 = 3$，$c_1 + 2c_2 = 4$，所以 $c_2 = 1$，$c_1 = 2$，$y(2) = 2 \\cdot 2 + 1 \\cdot 4 = 8$。\n\n> **注意。** 在 $x = 2$ 处要计算每个幂 $2^{m}$，而不是 $2m$。",
       ),
       generate(rng: Rng): Problem {
         const m1 = rng.int(-3, 1);
@@ -2098,27 +2104,49 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
         const ans = Q.of(c1)
           .mul(two.pow(m1))
           .add(Q.of(c2).mul(two.pow(m2)));
+        const eq = poly([1, "x^2y''"], [a, "xy'"], [b, "y"]);
         return numberProblem({
           prompt: t(
-            `Solve $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$, and find $y(2)$.`,
-            `在 $x > 0$ 上解 $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$，并求 $y(2)$。`,
+            `Solve $${eq} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$, and find $y(2)$.`,
+            `在 $x > 0$ 上解 $${eq} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$，并求 $y(2)$。`,
           ),
           answer: ans,
-          wrong: [
-            Q.of(c2)
-              .mul(two.pow(m1))
-              .add(Q.of(c1).mul(two.pow(m2))),
-            Q.of(p),
-            Q.of(c1 * 2 * m1 + c2 * 2 * m2),
-          ],
-          solution: t(
-            steps(
-              `The indicial equation $${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = 0$ has roots $${m1}$ and $${m2}$.`,
-              `$c_1 + c_2 = ${p}$ and $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$ give $c_1 = ${c1}$, $c_2 = ${c2}$, so $y(2) = ${c1} \\cdot 2^{${m1}} + ${par(c2)} \\cdot 2^{${m2}} = ${ans.toLatex()}$.`,
+          mistakes: apart(ans, [
+            why(
+              Q.of(c2)
+                .mul(two.pow(m1))
+                .add(Q.of(c1).mul(two.pow(m2))),
+              "The constants are swapped: $c_1$ goes with the smaller power.",
+              "常数配反了：$c_1$ 对应较小的幂。",
             ),
-            steps(
-              `指标方程 $${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = 0$ 的根为 $${m1}$ 与 $${m2}$。`,
-              `由 $c_1 + c_2 = ${p}$ 与 $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$ 得 $c_1 = ${c1}$，$c_2 = ${c2}$，所以 $y(2) = ${c1} \\cdot 2^{${m1}} + ${par(c2)} \\cdot 2^{${m2}} = ${ans.toLatex()}$。`,
+            why(p, "That is $y(1)$; the solution still has to be evaluated at $x = 2$.", "这是 $y(1)$；还要在 $x = 2$ 处求值。"),
+            why(
+              c1 * 2 * m1 + c2 * 2 * m2,
+              "That multiplies each power by $2$; at $x = 2$ the power $x^{m}$ is $2^{m}$.",
+              "这是把每个幂乘以 $2$；在 $x = 2$ 处幂 $x^{m}$ 等于 $2^{m}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the powers", "求幂指数"],
+                t("The indicial equation factors:", "指标方程可以分解："),
+                [`${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = (m ${signed(-m1)})(m ${signed(-m2)}) = 0`],
+              ],
+              [
+                ["Fit the constants at x = 1", "在 x = 1 处确定常数"],
+                t("Every power equals $1$ there:", "那里每个幂都等于 $1$："),
+                [`c_1 + c_2 = ${p}, \\quad ${poly([m1, "c_1"], [m2, "c_2"])} = ${q}`, `c_1 = ${c1}, \\quad c_2 = ${c2}`],
+              ],
+              [
+                ["Evaluate at x = 2", "在 x = 2 处求值"],
+                t("", ""),
+                [`y(2) = ${c1} \\cdot 2^{${m1}} + ${par(c2)} \\cdot 2^{${m2}} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `$${c1} + ${par(c2)} = ${p}$ and $${m1} \\cdot ${par(c1)} + ${par(m2)} \\cdot ${par(c2)} = ${q}$, matching both initial values.`,
+              `$${c1} + ${par(c2)} = ${p}$，$${m1} \\cdot ${par(c1)} + ${par(m2)} \\cdot ${par(c2)} = ${q}$，与两个初值一致。`,
             ),
           ),
         });
@@ -2135,6 +2163,10 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
     "When the indicial equation has a repeated root $m$, the general solution is $y = (c_1 + c_2 \\ln x)x^m$.",
     "当指标方程有二重根 $m$ 时，通解为 $y = (c_1 + c_2 \\ln x)x^m$。",
   ),
+  intro: t(
+    "Solve $x^2y'' - 3xy' + 4y = 0$ for $x > 0$. The trial $y = x^m$ gives $m(m - 1) - 3m + 4 = m^2 - 4m + 4 = (m - 2)^2 = 0$, a repeated root $m = 2$. The second solution carries a logarithm: $y = (c_1 + c_2\\ln x)x^2$.\n\nCheck: for $y = x^2\\ln x$, $y' = 2x\\ln x + x$ and $y'' = 2\\ln x + 3$, so $x^2y'' - 3xy' + 4y = (2 - 6 + 4)x^2\\ln x + (3 - 3)x^2 = 0$.\n\nIn this lesson we solve Cauchy-Euler equations with a repeated indicial root and fit their constants at $x = 1$.",
+    "在 $x > 0$ 上解 $x^2y'' - 3xy' + 4y = 0$。试探解 $y = x^m$ 给出 $m(m - 1) - 3m + 4 = m^2 - 4m + 4 = (m - 2)^2 = 0$，有二重根 $m = 2$。第二个解带有对数：$y = (c_1 + c_2\\ln x)x^2$。\n\n检验：对 $y = x^2\\ln x$，$y' = 2x\\ln x + x$，$y'' = 2\\ln x + 3$，所以 $x^2y'' - 3xy' + 4y = (2 - 6 + 4)x^2\\ln x + (3 - 3)x^2 = 0$。\n\n本课我们求解指标方程有重根的柯西-欧拉方程，并在 $x = 1$ 处确定常数。",
+  ),
   prerequisites: ["cauchy-euler-equations-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
     {
@@ -2148,39 +2180,44 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
       id: "cauchy-euler-repeated-roots",
       title: t("Indicial equation with repeated roots", "柯西-欧拉方程的二重指标根"),
       explanation: t(
-        "With a repeated root, the second solution is the first one multiplied by the logarithm of the variable. For $(m - k)^2 = 0$, the repeated root is $m = k$. The second independent solution incorporates a logarithmic factor: $y_2 = x^k \\ln x$.",
-        "当有重根时，第二个解是第一个解乘以变量的对数。对于 $(m - k)^2 = 0$，二重指标根为 $m = k$。第二个线性无关解引入对数因子：$y_2 = x^k \\ln x$。",
+        "With a repeated root, the second solution is the first one multiplied by the logarithm of the variable. For $(m - k)^2 = 0$, the repeated root is $m = k$. The second independent solution incorporates a logarithmic factor: $y_2 = x^k \\ln x$. For $x^2y'' - 5xy' + 9y = 0$, $m^2 - 6m + 9 = (m - 3)^2$, so $m = 3$.\n\n> **Watch out.** The middle coefficient of the indicial equation is $a - 1$: halving $-a$ instead gives a number that is not a root.",
+        "当有重根时，第二个解是第一个解乘以变量的对数。对于 $(m - k)^2 = 0$，二重指标根为 $m = k$。第二个线性无关解引入对数因子：$y_2 = x^k \\ln x$。对 $x^2y'' - 5xy' + 9y = 0$，$m^2 - 6m + 9 = (m - 3)^2$，所以 $m = 3$。\n\n> **注意。** 指标方程的一次项系数是 $a - 1$：直接取 $-a$ 的一半得到的数不是根。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 35);
-        // (m - k)^2 = m^2 - 2k m + k^2
-        // a - 1 = -2k => a = 1 - 2k
-        const aCoeff = 1 - 2 * k;
-        const bCoeff = k * k;
+        const a = 1 - 2 * k;
+        const b = k * k;
         const ans = k;
-
-        const prompt = t(
-          `Find the repeated power root $m$ of the indicial equation for $x^2 y'' ${aCoeff < 0 ? `- ${-aCoeff}` : `+ ${aCoeff}`}x y' + ${bCoeff}y = 0$.`,
-          `求柯西-欧拉微分方程 $x^2 y'' ${aCoeff < 0 ? `- ${-aCoeff}` : `+ ${aCoeff}`}x y' + ${bCoeff}y = 0$ 的指标特征方程二重根 $m$。`,
-        );
-        const solution = t(
-          steps(
-            `The indicial equation is $m(m-1) + (${aCoeff})m + ${bCoeff} = 0$.`,
-            `Simplify: $m^2 - ${2 * k}m + ${bCoeff} = (m - ${k})^2 = 0$.`,
-            `The repeated root is $m = ${ans}$.`,
-          ),
-          steps(
-            `写出指标特征方程：$m(m-1) + (${aCoeff})m + ${bCoeff} = 0$。`,
-            `整理化简：$m^2 - ${2 * k}m + ${bCoeff} = (m - ${k})^2 = 0$。`,
-            `求得二重指标根为 $m = ${ans}$。`,
-          ),
-        );
-
+        const eq = poly([1, "x^2y''"], [a, "xy'"], [b, "y"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the repeated power root $m$ of the indicial equation for $${eq} = 0$.`,
+            `求柯西-欧拉微分方程 $${eq} = 0$ 的指标特征方程二重根 $m$。`,
+          ),
           answer: ans,
-          wrong: [2 * k, bCoeff, ans + 1],
+          mistakes: apart(ans, [
+            why(2 * k, "That is the sum of the two equal roots; each root is half of it.", "这是两个相等根之和；每个根是它的一半。"),
+            why(b, "That is the constant term, the square of the root.", "这是常数项，也就是根的平方。"),
+            why(
+              Q.of(2 * k - 1, 2),
+              "That halves $-a$ and forgets that $m(m - 1)$ adds $-m$ to the middle term.",
+              "这是取 $-a$ 的一半，忘了 $m(m - 1)$ 给一次项带来 $-m$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the indicial equation", "写出指标方程"],
+                t("The middle coefficient is $a - 1$:", "一次项系数为 $a - 1$："),
+                [`${poly([1, "m(m - 1)"], [a, "m"], [b, ""])} = ${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = 0`],
+              ],
+              [["Recognize a perfect square", "识别完全平方"], t("", ""), [`(m - ${k})^2 = 0`, `m = ${ans}`]],
+            ],
+            t(
+              `$${k} \\cdot ${k - 1} ${signed(a * k)} + ${b} = ${k * (k - 1)} ${signed(a * k)} + ${b} = 0$, and the discriminant $${2 * k}^2 - 4 \\cdot ${b}$ is $0$, so the root is repeated.`,
+              `$${k} \\cdot ${k - 1} ${signed(a * k)} + ${b} = ${k * (k - 1)} ${signed(a * k)} + ${b} = 0$，且判别式 $${2 * k}^2 - 4 \\cdot ${b}$ 为 $0$，所以是重根。`,
+            ),
+          ),
         });
       },
     },
@@ -2188,8 +2225,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
       id: "solving-a-cauchy-euler-ivp-with-a-repeated-root",
       title: t("Solving a Cauchy-Euler initial value problem with a repeated root", "求解指标方程有重根的柯西-欧拉初值问题"),
       explanation: t(
-        "A repeated indicial root $m$ gives $y = x^m(c_1 + c_2\\ln x)$. At $x = 1$, $\\ln 1 = 0$, so $y(1) = c_1$. Differentiating,\n\n$$y' = mx^{m - 1}(c_1 + c_2\\ln x) + c_2x^{m - 1}, \\qquad y'(1) = mc_1 + c_2.$$\n\nSo the coefficient of $x^m\\ln x$ is $c_2 = y'(1) - m\\,y(1)$. The logarithm plays the part that the extra factor $x$ plays for a repeated root of a constant-coefficient equation, because the substitution $x = e^t$ turns $\\ln x$ into $t$.",
-        "指标方程的重根 $m$ 给出 $y = x^m(c_1 + c_2\\ln x)$。在 $x = 1$ 处 $\\ln 1 = 0$，所以 $y(1) = c_1$。求导得\n\n$$y' = mx^{m - 1}(c_1 + c_2\\ln x) + c_2x^{m - 1}, \\qquad y'(1) = mc_1 + c_2.$$\n\n所以 $x^m\\ln x$ 的系数为 $c_2 = y'(1) - m\\,y(1)$。对数所起的作用，相当于常系数方程重根时多出的因子 $x$，因为代换 $x = e^t$ 把 $\\ln x$ 变成 $t$。",
+        "A repeated indicial root $m$ gives $y = x^m(c_1 + c_2\\ln x)$. At $x = 1$, $\\ln 1 = 0$, so $y(1) = c_1$. Differentiating,\n\n$$y' = mx^{m - 1}(c_1 + c_2\\ln x) + c_2x^{m - 1}, \\qquad y'(1) = mc_1 + c_2.$$\n\nSo the coefficient of $x^m\\ln x$ is $c_2 = y'(1) - m\\,y(1)$. The logarithm plays the part that the extra factor $x$ plays for a repeated root of a constant-coefficient equation, because the substitution $x = e^t$ turns $\\ln x$ into $t$. For $m = 2$, $y(1) = 1$ and $y'(1) = 5$, $c_2 = 5 - 2 \\cdot 1 = 3$.\n\n> **Watch out.** $y'(1)$ is not $c_2$ alone: the power $x^m$ also contributes $mc_1$, which must be subtracted.",
+        "指标方程的重根 $m$ 给出 $y = x^m(c_1 + c_2\\ln x)$。在 $x = 1$ 处 $\\ln 1 = 0$，所以 $y(1) = c_1$。求导得\n\n$$y' = mx^{m - 1}(c_1 + c_2\\ln x) + c_2x^{m - 1}, \\qquad y'(1) = mc_1 + c_2.$$\n\n所以 $x^m\\ln x$ 的系数为 $c_2 = y'(1) - m\\,y(1)$。对数所起的作用，相当于常系数方程重根时多出的因子 $x$，因为代换 $x = e^t$ 把 $\\ln x$ 变成 $t$。当 $m = 2$，$y(1) = 1$，$y'(1) = 5$ 时，$c_2 = 5 - 2 \\cdot 1 = 3$。\n\n> **注意。** $y'(1)$ 不只是 $c_2$：幂 $x^m$ 还贡献了 $mc_1$，必须减去。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
@@ -2197,16 +2234,39 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
         const q = rng.int(-8, 8);
         const ans = q - m * p;
         const xm = m === 1 ? "x" : `x^{${m}}`;
+        const eq = poly([1, "x^2y''"], [1 - 2 * m, "xy'"], [m * m, "y"]);
         return numberProblem({
           prompt: t(
-            `Solve $${poly([1, "x^2y''"], [1 - 2 * m, "xy'"], [m * m, "y"])} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$. Find the coefficient of $${xm}\\ln x$.`,
-            `在 $x > 0$ 上解 $${poly([1, "x^2y''"], [1 - 2 * m, "xy'"], [m * m, "y"])} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$。求 $${xm}\\ln x$ 的系数。`,
+            `Solve $${eq} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$. Find the coefficient of $${xm}\\ln x$.`,
+            `在 $x > 0$ 上解 $${eq} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$。求 $${xm}\\ln x$ 的系数。`,
           ),
           answer: ans,
-          wrong: [q, q + m * p, p],
-          solution: t(
-            `The indicial equation is $(m ${signed(-m)})^2 = 0$, so $y = ${xm}(c_1 + c_2\\ln x)$ with $c_1 = ${p}$ and $c_2 = ${q} - ${par(m)} \\cdot ${par(p)} = ${ans}$.`,
-            `指标方程为 $(m ${signed(-m)})^2 = 0$，所以 $y = ${xm}(c_1 + c_2\\ln x)$，其中 $c_1 = ${p}$，$c_2 = ${q} - ${par(m)} \\cdot ${par(p)} = ${ans}$。`,
+          mistakes: apart(ans, [
+            why(
+              q,
+              `That takes $c_2$ as $y'(1)$; the power also contributes $${cf(m)}c_1$.`,
+              `这是把 $c_2$ 当成 $y'(1)$；幂还贡献了 $${cf(m)}c_1$。`,
+            ),
+            why(q + m * p, "That adds $m\\,y(1)$ instead of subtracting it.", "这是加上了 $m\\,y(1)$，而不是减去它。"),
+            why(p, "That is $c_1 = y(1)$, the coefficient without the logarithm.", "这是 $c_1 = y(1)$，即不带对数的那个系数。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the repeated root", "求重根"],
+                t("The indicial equation is a perfect square:", "指标方程是完全平方："),
+                [`(m ${signed(-m)})^2 = 0`, `y = ${xm}(c_1 + c_2\\ln x)`],
+              ],
+              [
+                ["Use the values at x = 1", "用 x = 1 处的值"],
+                t("Since $\\ln 1 = 0$:", "由于 $\\ln 1 = 0$："),
+                [`c_1 = y(1) = ${p}`, `c_2 = y'(1) - m\\,c_1 = ${q} - ${par(m)} \\cdot ${par(p)} = ${ans}`],
+              ],
+            ],
+            t(
+              `$y'(1) = mc_1 + c_2 = ${par(m)} \\cdot ${par(p)} + ${par(ans)} = ${q}$, as given.`,
+              `$y'(1) = mc_1 + c_2 = ${par(m)} \\cdot ${par(p)} + ${par(ans)} = ${q}$，与题设一致。`,
+            ),
           ),
         });
       },
@@ -2222,6 +2282,10 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
     "When the indicial roots are $\\alpha \\pm i\\beta$, the general solution is $y = x^{\\alpha}[c_1 \\cos(\\beta \\ln x) + c_2 \\sin(\\beta \\ln x)]$.",
     "当指标方程的根为 $\\alpha \\pm i\\beta$ 时，通解为 $y = x^{\\alpha}[c_1 \\cos(\\beta \\ln x) + c_2 \\sin(\\beta \\ln x)]$。",
   ),
+  intro: t(
+    "Solve $x^2y'' + xy' + 4y = 0$ for $x > 0$. The trial $y = x^m$ gives $m(m - 1) + m + 4 = m^2 + 4 = 0$, so $m = \\pm 2i$. The real solutions are $\\cos(2\\ln x)$ and $\\sin(2\\ln x)$, and $y = c_1\\cos(2\\ln x) + c_2\\sin(2\\ln x)$.\n\nCheck: for $y = \\cos(2\\ln x)$, $xy' = -2\\sin(2\\ln x)$ and $x^2y'' = 2\\sin(2\\ln x) - 4\\cos(2\\ln x)$, so $x^2y'' + xy' + 4y = 0$.\n\nIn this lesson we turn complex indicial roots into powers times cosines and sines of $\\ln x$, and fit the constants at $x = 1$.",
+    "在 $x > 0$ 上解 $x^2y'' + xy' + 4y = 0$。试探解 $y = x^m$ 给出 $m(m - 1) + m + 4 = m^2 + 4 = 0$，所以 $m = \\pm 2i$。实解为 $\\cos(2\\ln x)$ 与 $\\sin(2\\ln x)$，$y = c_1\\cos(2\\ln x) + c_2\\sin(2\\ln x)$。\n\n检验：对 $y = \\cos(2\\ln x)$，$xy' = -2\\sin(2\\ln x)$，$x^2y'' = 2\\sin(2\\ln x) - 4\\cos(2\\ln x)$，所以 $x^2y'' + xy' + 4y = 0$。\n\n本课我们把复指标根化为幂乘以 $\\ln x$ 的余弦与正弦，并在 $x = 1$ 处确定常数。",
+  ),
   prerequisites: ["cauchy-euler-equations-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
     {
@@ -2235,38 +2299,39 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
       id: "cauchy-euler-complex-roots",
       title: t("Indicial equation with complex roots", "柯西-欧拉方程的复数指标根"),
       explanation: t(
-        "Complex roots give powers with imaginary exponents, which are rewritten as cosines and sines of the logarithm of the variable. For $x^2 y'' + x y' + \\beta^2 y = 0$, the indicial equation is $m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$, giving solutions $\\cos(\\beta \\ln x)$ and $\\sin(\\beta \\ln x)$.",
-        "复根给出指数为虚数的幂，它们被改写成变量对数的余弦和正弦。对于 $x^2 y'' + x y' + \\beta^2 y = 0$，指标特征方程为 $m(m-1) + m + \\beta^2 = m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$，对应解为 $\\cos(\\beta \\ln x)$ 和 $\\sin(\\beta \\ln x)$。",
+        "Complex roots give powers with imaginary exponents, which are rewritten as cosines and sines of the logarithm of the variable. For $x^2 y'' + x y' + \\beta^2 y = 0$, the indicial equation is $m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$, giving solutions $\\cos(\\beta \\ln x)$ and $\\sin(\\beta \\ln x)$. For $x^2y'' + xy' + 9y = 0$, $m^2 + 9 = 0$ and $\\beta = 3$.\n\n> **Watch out.** The constant term is $\\beta^2$, so $\\beta$ is its square root, not the constant itself.",
+        "复根给出指数为虚数的幂，它们被改写成变量对数的余弦和正弦。对于 $x^2 y'' + x y' + \\beta^2 y = 0$，指标特征方程为 $m(m-1) + m + \\beta^2 = m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$，对应解为 $\\cos(\\beta \\ln x)$ 和 $\\sin(\\beta \\ln x)$。对 $x^2y'' + xy' + 9y = 0$，$m^2 + 9 = 0$，$\\beta = 3$。\n\n> **注意。** 常数项是 $\\beta^2$，所以 $\\beta$ 是它的平方根，而不是常数项本身。",
       ),
       generate(rng: Rng): Problem {
         const beta = rng.int(2, 35);
         const betaSq = beta * beta;
         const ans = beta;
-
-        const prompt = t(
-          `Find the frequency parameter $\\beta > 0$ in the trigonometric arguments $\\cos(\\beta \\ln x)$ of the general solution to $x^2 y'' + x y' + ${betaSq}y = 0$ (for $x > 0$).`,
-          `求柯西-欧拉微分方程 $x^2 y'' + x y' + ${betaSq}y = 0$（$x > 0$）的通解三角函数部分 $\\cos(\\beta \\ln x)$ 中的频率参数 $\\beta > 0$。`,
-        );
-        const solution = t(
-          steps(
-            `The indicial equation is $m(m-1) + 1\\cdot m + ${betaSq} = 0$.`,
-            `Simplify: $m^2 - m + m + ${betaSq} = 0 \\implies m^2 + ${betaSq} = 0$.`,
-            `Solve for $m$: $m = \\pm ${beta}i$.`,
-            `The frequency parameter in the logarithmic argument is $\\beta = ${ans}$.`,
-          ),
-          steps(
-            `写出指标特征方程：$m(m-1) + 1\\cdot m + ${betaSq} = 0$。`,
-            `化简展开：$m^2 - m + m + ${betaSq} = 0 \\implies m^2 + ${betaSq} = 0$。`,
-            `解得共轭纯虚根：$m = \\pm ${beta}i$。`,
-            `因此对数自变量的频率系数为 $\\beta = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the frequency parameter $\\beta > 0$ in the trigonometric arguments $\\cos(\\beta \\ln x)$ of the general solution to $x^2 y'' + x y' + ${betaSq}y = 0$ (for $x > 0$).`,
+            `求柯西-欧拉微分方程 $x^2 y'' + x y' + ${betaSq}y = 0$（$x > 0$）的通解三角函数部分 $\\cos(\\beta \\ln x)$ 中的频率参数 $\\beta > 0$。`,
+          ),
           answer: ans,
-          wrong: [betaSq, Math.round(betaSq / 2), ans + 1],
+          mistakes: apart(ans, [
+            why(betaSq, "That is $\\beta^2$; take its square root.", "这是 $\\beta^2$；要取它的平方根。"),
+            why(-beta, "The question asks for $\\beta > 0$.", "题目要求 $\\beta > 0$。"),
+            why(
+              Q.of(betaSq, 2),
+              "That halves the constant; the roots solve $m^2 = -\\beta^2$.",
+              "这是把常数减半；根满足 $m^2 = -\\beta^2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the indicial equation", "写出指标方程"],
+                t("The $-m$ from $m(m - 1)$ cancels the $m$ from $xy'$:", "$m(m - 1)$ 中的 $-m$ 与 $xy'$ 给出的 $m$ 相消："),
+                [`m(m - 1) + m + ${betaSq} = m^2 + ${betaSq} = 0`],
+              ],
+              [["Solve", "求解"], t("", ""), [`m = \\pm ${beta}i`, `\\beta = ${ans}`]],
+            ],
+            t(`$(${beta}i)^2 + ${betaSq} = -${betaSq} + ${betaSq} = 0$.`, `$(${beta}i)^2 + ${betaSq} = -${betaSq} + ${betaSq} = 0$。`),
+          ),
         });
       },
     },
@@ -2274,8 +2339,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
       id: "solving-a-cauchy-euler-ivp-with-complex-roots",
       title: t("Solving a Cauchy-Euler initial value problem with complex roots", "求解指标方程有复根的柯西-欧拉初值问题"),
       explanation: t(
-        "Complex indicial roots $\\alpha \\pm \\beta i$ give $y = x^{\\alpha}\\big(A\\cos(\\beta\\ln x) + B\\sin(\\beta\\ln x)\\big)$. At $x = 1$ the logarithm is $0$, so $y(1) = A$, and the chain rule gives\n\n$$y'(1) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(1) - \\alpha\\,y(1)}{\\beta}.$$\n\nThe power $x^{\\alpha}$ contributes to the derivative just as $e^{\\alpha x}$ does for constant coefficients, so subtract its share before dividing by $\\beta$.",
-        "指标方程的复根 $\\alpha \\pm \\beta i$ 给出 $y = x^{\\alpha}\\big(A\\cos(\\beta\\ln x) + B\\sin(\\beta\\ln x)\\big)$。在 $x = 1$ 处对数为 $0$，所以 $y(1) = A$，由链式法则得\n\n$$y'(1) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(1) - \\alpha\\,y(1)}{\\beta}.$$\n\n幂 $x^{\\alpha}$ 对导数的贡献，与常系数情形中 $e^{\\alpha x}$ 的贡献一样，所以要先减去这一部分，再除以 $\\beta$。",
+        "Complex indicial roots $\\alpha \\pm \\beta i$ give $y = x^{\\alpha}\\big(A\\cos(\\beta\\ln x) + B\\sin(\\beta\\ln x)\\big)$. At $x = 1$ the logarithm is $0$, so $y(1) = A$, and the chain rule gives\n\n$$y'(1) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(1) - \\alpha\\,y(1)}{\\beta}.$$\n\nThe power $x^{\\alpha}$ contributes to the derivative just as $e^{\\alpha x}$ does for constant coefficients, so subtract its share before dividing by $\\beta$. For $\\alpha = 1$, $\\beta = 2$, $y(1) = 1$ and $y'(1) = 5$, $B = \\frac{5 - 1}{2} = 2$.\n\n> **Watch out.** Subtract $\\alpha\\,y(1)$ first and then divide by $\\beta$; dividing $y'(1)$ alone ignores the power.",
+        "指标方程的复根 $\\alpha \\pm \\beta i$ 给出 $y = x^{\\alpha}\\big(A\\cos(\\beta\\ln x) + B\\sin(\\beta\\ln x)\\big)$。在 $x = 1$ 处对数为 $0$，所以 $y(1) = A$，由链式法则得\n\n$$y'(1) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(1) - \\alpha\\,y(1)}{\\beta}.$$\n\n幂 $x^{\\alpha}$ 对导数的贡献，与常系数情形中 $e^{\\alpha x}$ 的贡献一样，所以要先减去这一部分，再除以 $\\beta$。当 $\\alpha = 1$，$\\beta = 2$，$y(1) = 1$，$y'(1) = 5$ 时，$B = \\frac{5 - 1}{2} = 2$。\n\n> **注意。** 先减去 $\\alpha\\,y(1)$，再除以 $\\beta$；只用 $y'(1)$ 去除就忽略了幂的作用。",
       ),
       generate(rng: Rng): Problem {
         const al = rng.int(-2, 3);
@@ -2285,16 +2350,44 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
         const ans = Q.of(q - al * p, be);
         const xa = al === 0 ? "" : al === 1 ? "x" : `x^{${al}}`;
         const bl = be === 1 ? "\\ln x" : `${be}\\ln x`;
+        const eq = poly([1, "x^2y''"], [1 - 2 * al, "xy'"], [al * al + be * be, "y"]);
+        const roots = al === 0 ? `\\pm ${cf(be)}i` : `${al} \\pm ${cf(be)}i`;
         return numberProblem({
           prompt: t(
-            `Solve $${poly([1, "x^2y''"], [1 - 2 * al, "xy'"], [al * al + be * be, "y"])} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$, written as $y = ${xa}\\big(A\\cos(${bl}) + B\\sin(${bl})\\big)$. Find $B$.`,
-            `在 $x > 0$ 上解 $${poly([1, "x^2y''"], [1 - 2 * al, "xy'"], [al * al + be * be, "y"])} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$，写成 $y = ${xa}\\big(A\\cos(${bl}) + B\\sin(${bl})\\big)$。求 $B$。`,
+            `Solve $${eq} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$, written as $y = ${xa}\\big(A\\cos(${bl}) + B\\sin(${bl})\\big)$. Find $B$.`,
+            `在 $x > 0$ 上解 $${eq} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$，写成 $y = ${xa}\\big(A\\cos(${bl}) + B\\sin(${bl})\\big)$。求 $B$。`,
           ),
           answer: ans,
-          wrong: [Q.of(q, be), Q.of(q + al * p, be), Q.of(q - al * p)],
-          solution: t(
-            `The indicial roots are $${al} \\pm ${be === 1 ? "" : be}i$. $A = ${p}$ and $${al} \\cdot ${par(p)} + ${be}B = ${q}$, so $B = ${ans.toLatex()}$.`,
-            `指标根为 $${al} \\pm ${be === 1 ? "" : be}i$。$A = ${p}$，且 $${al} \\cdot ${par(p)} + ${be}B = ${q}$，所以 $B = ${ans.toLatex()}$。`,
+          mistakes: apart(ans, [
+            why(
+              Q.of(q, be),
+              "That divides $y'(1)$ by $\\beta$ without first subtracting $\\alpha\\,y(1)$.",
+              "这是直接用 $y'(1)$ 除以 $\\beta$，没有先减去 $\\alpha\\,y(1)$。",
+            ),
+            why(
+              Q.of(q + al * p, be),
+              "That adds $\\alpha\\,y(1)$ instead of subtracting it.",
+              "这是加上了 $\\alpha\\,y(1)$，而不是减去它。",
+            ),
+            why(Q.of(q - al * p), "That forgets to divide by $\\beta$.", "这是忘了除以 $\\beta$。"),
+            why(p, "That is $A = y(1)$, the cosine coefficient.", "这是余弦系数 $A = y(1)$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read off the roots", "读出指标根"],
+                t(`The roots are $${roots}$, and $A = y(1) = ${p}$.`, `指标根为 $${roots}$，且 $A = y(1) = ${p}$。`),
+              ],
+              [
+                ["Use the slope at x = 1", "用 x = 1 处的斜率"],
+                t("", ""),
+                [`y'(1) = ${poly([al, "A"], [be, "B"])} = ${q}`, `B = ${over(`${q} - ${par(al * p)}`, be)} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `$${al} \\cdot ${par(p)} + ${be} \\cdot ${parQ(ans)} = ${al * p} ${signed(q - al * p)} = ${q}$.`,
+              `$${al} \\cdot ${par(p)} + ${be} \\cdot ${parQ(ans)} = ${al * p} ${signed(q - al * p)} = ${q}$。`,
+            ),
           ),
         });
       },
@@ -2309,6 +2402,10 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
   summary: t(
     "The substitution $x = e^t$ turns a Cauchy-Euler equation with forcing into a constant-coefficient equation in $t$.",
     "代换 $x = e^t$ 把非齐次柯西-欧拉方程化为关于 $t$ 的常系数方程。",
+  ),
+  intro: t(
+    "Find a particular solution of $x^2y'' + xy' - y = 3x^2$. Try $y_p = Ax^2$: then $x^2y_p'' = 2Ax^2$ and $xy_p' = 2Ax^2$, so the left side is $(2 + 2 - 1)Ax^2 = 3Ax^2$. Matching gives $A = 1$ and $y_p = x^2$.\n\nCheck: $x^2 \\cdot 2 + x \\cdot 2x - x^2 = 3x^2$.\n\nIn this lesson we handle forcing in Cauchy-Euler equations, by the substitution $x = e^t$ and by trying a power of $x$.",
+    "求 $x^2y'' + xy' - y = 3x^2$ 的一个特解。设 $y_p = Ax^2$：则 $x^2y_p'' = 2Ax^2$，$xy_p' = 2Ax^2$，所以左边为 $(2 + 2 - 1)Ax^2 = 3Ax^2$。比较得 $A = 1$，$y_p = x^2$。\n\n检验：$x^2 \\cdot 2 + x \\cdot 2x - x^2 = 3x^2$。\n\n本课我们处理柯西-欧拉方程中的强迫项，方法是代换 $x = e^t$ 以及试探 $x$ 的幂。",
   ),
   prerequisites: [
     "cauchy-euler-equations-characteristic-equations-with-distinct-real-roots",
@@ -2326,38 +2423,46 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
       id: "transformation-to-constant-coefficients",
       title: t("Transformation to constant coefficients via logarithmic substitution", "对数代换化柯西-欧拉方程为常系数微分方程"),
       explanation: t(
-        "Substituting the variable as an exponential of a new variable turns the Cauchy Euler equation into one with constant coefficients. Under $x = e^t$, $x \\frac{dy}{dx} = \\frac{dy}{dt}$ and $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$. Thus $x^2 y'' + a x y' + b y = f(e^t)$ becomes $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$.",
-        "把自变量换成新变量的指数函数，就把柯西-欧拉方程化为常系数方程。在变量代换 $x = e^t$ 下，$x \\frac{dy}{dx} = \\frac{dy}{dt}$，且 $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$。方程 $x^2 y'' + a x y' + b y = f(e^t)$ 转化为 $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$。",
+        "Substituting the variable as an exponential of a new variable turns the Cauchy Euler equation into one with constant coefficients. Under $x = e^t$, $x \\frac{dy}{dx} = \\frac{dy}{dt}$ and $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$. Thus $x^2 y'' + a x y' + b y = f(e^t)$ becomes $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$. For $x^2y'' + 4xy' + 2y = x$ this gives $\\frac{d^2y}{dt^2} + 3\\frac{dy}{dt} + 2y = e^t$.\n\n> **Watch out.** $x^2y''$ brings its own $-\\frac{dy}{dt}$, so the first-derivative coefficient drops by $1$; it does not stay $a$.",
+        "把自变量换成新变量的指数函数，就把柯西-欧拉方程化为常系数方程。在变量代换 $x = e^t$ 下，$x \\frac{dy}{dx} = \\frac{dy}{dt}$，且 $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$。方程 $x^2 y'' + a x y' + b y = f(e^t)$ 转化为 $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$。对 $x^2y'' + 4xy' + 2y = x$，得 $\\frac{d^2y}{dt^2} + 3\\frac{dy}{dt} + 2y = e^t$。\n\n> **注意。** $x^2y''$ 自带一个 $-\\frac{dy}{dt}$，所以一阶导数的系数要减 $1$，不会仍是 $a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 20);
         const b = rng.int(2, 15);
         const ans = a - 1;
-
-        const prompt = t(
-          `Under the substitution $x = e^t$, the Cauchy-Euler equation $x^2 y'' + ${a}x y' + ${b}y = x$ transforms into a constant-coefficient equation $\\frac{d^2y}{dt^2} + P \\frac{dy}{dt} + ${b}y = e^t$. Find the coefficient $P$.`,
-          `通过变量代换 $x = e^t$，柯西-欧拉微分方程 $x^2 y'' + ${a}x y' + ${b}y = x$ 转化为关于 $t$ 的常系数微分方程 $\\frac{d^2y}{dt^2} + P \\frac{dy}{dt} + ${b}y = e^t$。求一次导数系数 $P$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `With $t = \\ln x$, the chain rule gives $x y' = \\frac{dy}{dt}$ and $x^2 y'' = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$.`,
-            `Substitute these expressions: $\\left(\\frac{d^2y}{dt^2} - \\frac{dy}{dt}\\right) + ${a}\\frac{dy}{dt} + ${b}y = e^t$.`,
-            `Combine the first-derivative terms: $\\frac{d^2y}{dt^2} + (${a} - 1)\\frac{dy}{dt} + ${b}y = e^t$.`,
-            `Therefore, $P = ${a} - 1 = ${ans}$.`,
-          ),
-          steps(
-            `令 $t = \\ln x$，由复合求导链式法则知 $x y' = \\frac{dy}{dt}$，且 $x^2 y'' = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$。`,
-            `代入原方程：$\\left(\\frac{d^2y}{dt^2} - \\frac{dy}{dt}\\right) + ${a}\\frac{dy}{dt} + ${b}y = e^t$。`,
-            `合并一阶导数项：$\\frac{d^2y}{dt^2} + (${a} - 1)\\frac{dy}{dt} + ${b}y = e^t$。`,
-            `因此，系数 $P = ${a} - 1 = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Under the substitution $x = e^t$, the Cauchy-Euler equation $x^2 y'' + ${a}x y' + ${b}y = x$ transforms into a constant-coefficient equation $\\frac{d^2y}{dt^2} + P \\frac{dy}{dt} + ${b}y = e^t$. Find the coefficient $P$.`,
+            `通过变量代换 $x = e^t$，柯西-欧拉微分方程 $x^2 y'' + ${a}x y' + ${b}y = x$ 转化为关于 $t$ 的常系数微分方程 $\\frac{d^2y}{dt^2} + P \\frac{dy}{dt} + ${b}y = e^t$。求一次导数系数 $P$ 的值。`,
+          ),
           answer: ans,
-          wrong: [a, a + 1, b],
+          mistakes: apart(ans, [
+            why(
+              a,
+              "That keeps $a$ and misses the $-\\frac{dy}{dt}$ from $x^2y''$.",
+              "这是保留了 $a$，漏掉了 $x^2y''$ 带来的 $-\\frac{dy}{dt}$。",
+            ),
+            why(a + 1, "That adds $\\frac{dy}{dt}$ instead of subtracting it.", "这是加上了 $\\frac{dy}{dt}$，而不是减去它。"),
+            why(b, "That is the coefficient of $y$.", "这是 $y$ 的系数。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Change variables", "换元"],
+                t("With $t = \\ln x$, the chain rule gives", "令 $t = \\ln x$，由链式法则得"),
+                [`xy' = \\frac{dy}{dt}, \\quad x^2y'' = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}`],
+              ],
+              [
+                ["Substitute and combine", "代入并合并"],
+                t("", ""),
+                [`\\left(\\frac{d^2y}{dt^2} - \\frac{dy}{dt}\\right) + ${a}\\frac{dy}{dt} + ${b}y = e^t`, `P = ${a} - 1 = ${ans}`],
+              ],
+            ],
+            t(
+              `$y = e^{t}$ makes the left side $(1 + ${ans} + ${b})e^{t}$ in $t$ and $(0 + ${a} + ${b})x$ in $x$; both equal $${a + b}$ times the forcing, as they must.`,
+              `$y = e^{t}$ 使左边在 $t$ 中为 $(1 + ${ans} + ${b})e^{t}$，在 $x$ 中为 $(0 + ${a} + ${b})x$；两者都是强迫项的 $${a + b}$ 倍，正应如此。`,
+            ),
+          ),
         });
       },
     },
@@ -2365,8 +2470,8 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
       id: "a-power-particular-solution-of-a-cauchy-euler-equation",
       title: t("A power particular solution of a Cauchy-Euler equation", "柯西-欧拉方程的幂函数特解"),
       explanation: t(
-        "A Cauchy-Euler operator maps a power to a multiple of the same power:\n\n$$x^2(x^r)'' + ax(x^r)' + bx^r = \\big(r(r - 1) + ar + b\\big)x^r.$$\n\nSo for the forcing $kx^r$, the trial $y_p = Ax^r$ works directly with $A = \\frac{k}{r(r - 1) + ar + b}$, provided $r$ is not a root of the indicial equation.",
-        "柯西-欧拉算子把幂函数映为同一幂的倍数：\n\n$$x^2(x^r)'' + ax(x^r)' + bx^r = \\big(r(r - 1) + ar + b\\big)x^r.$$\n\n所以对强迫项 $kx^r$，只要 $r$ 不是指标方程的根，试探解 $y_p = Ax^r$ 直接可用，$A = \\frac{k}{r(r - 1) + ar + b}$。",
+        "A Cauchy-Euler operator maps a power to a multiple of the same power:\n\n$$x^2(x^r)'' + ax(x^r)' + bx^r = \\big(r(r - 1) + ar + b\\big)x^r.$$\n\nSo for the forcing $kx^r$, the trial $y_p = Ax^r$ works directly with $A = \\frac{k}{r(r - 1) + ar + b}$, provided $r$ is not a root of the indicial equation. For $x^2y'' + xy' - y = 3x^2$: $2 + 2 - 1 = 3$, so $A = 1$.\n\n> **Watch out.** $x^2(x^r)''$ gives $r(r - 1)$, not $r^2$, and the $xy'$ term gives $ar$, not $a$.",
+        "柯西-欧拉算子把幂函数映为同一幂的倍数：\n\n$$x^2(x^r)'' + ax(x^r)' + bx^r = \\big(r(r - 1) + ar + b\\big)x^r.$$\n\n所以对强迫项 $kx^r$，只要 $r$ 不是指标方程的根，试探解 $y_p = Ax^r$ 直接可用，$A = \\frac{k}{r(r - 1) + ar + b}$。对 $x^2y'' + xy' - y = 3x^2$：$2 + 2 - 1 = 3$，所以 $A = 1$。\n\n> **注意。** $x^2(x^r)''$ 给出 $r(r - 1)$ 而不是 $r^2$，$xy'$ 项给出 $ar$ 而不是 $a$。",
       ),
       generate(rng: Rng): Problem {
         let [a, b, r, den] = [0, 0, 0, 0];
@@ -2379,16 +2484,52 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
         const k = rng.int(-9, 9) || 4;
         const ans = Q.of(k, den);
         const xr = `x^{${r}}`;
+        const square = r * r + a * r + b;
+        const flat = r * (r - 1) + a + b;
+        const eq = poly([1, "x^2y''"], [a, "xy'"], [b, "y"]);
         return numberProblem({
           prompt: t(
-            `Find $A$ in the particular solution $y_p = A${xr}$ of $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = ${poly([k, xr])}$.`,
-            `求 $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = ${poly([k, xr])}$ 的特解 $y_p = A${xr}$ 中的 $A$。`,
+            `Find $A$ in the particular solution $y_p = A${xr}$ of $${eq} = ${poly([k, xr])}$.`,
+            `求 $${eq} = ${poly([k, xr])}$ 的特解 $y_p = A${xr}$ 中的 $A$。`,
           ),
           answer: ans,
-          wrong: [Q.of(k, r * r + a * r + b || 11), Q.of(k, r * (r - 1) + a + b || 13), ans.neg()],
-          solution: t(
-            `Substituting gives $(${r * (r - 1)} ${signed(a * r)} ${signed(b)})A = ${k}$, so $A = \\frac{${k}}{${den}}${lowestTerms(k, den)}$.`,
-            `代入得 $(${r * (r - 1)} ${signed(a * r)} ${signed(b)})A = ${k}$，所以 $A = \\frac{${k}}{${den}}${lowestTerms(k, den)}$。`,
+          mistakes: apart(ans, [
+            ...(square === 0
+              ? []
+              : [
+                  why(
+                    Q.of(k, square),
+                    "That uses $r^2$ for the second derivative term; it is $r(r - 1)$.",
+                    "这是把二阶导数项算成 $r^2$；应当是 $r(r - 1)$。",
+                  ),
+                ]),
+            ...(flat === 0
+              ? []
+              : [why(Q.of(k, flat), "That uses $a$ for the $xy'$ term; it is $ar$.", "这是把 $xy'$ 项算成 $a$；应当是 $ar$。")]),
+            why(ans.neg(), "The sign is flipped; recheck the sum $r(r - 1) + ar + b$.", "符号反了；重新检查 $r(r - 1) + ar + b$。"),
+            why(
+              Q.of(den, k),
+              "That divides the other way: $A$ is the forcing coefficient over the sum.",
+              "这是除反了：$A$ 是强迫系数除以这个和。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the power", "代入幂函数"],
+                t(`Each term of the operator is a multiple of $${xr}$:`, `算子的每一项都是 $${xr}$ 的倍数：`),
+                [`x^2(${xr})'' = ${r * (r - 1)}${xr}, \\quad x(${xr})' = ${cf(r)}${xr}`],
+              ],
+              [
+                ["Match the coefficients", "比较系数"],
+                t("", ""),
+                [`(${r * (r - 1)} ${signed(a * r)} ${signed(b)})A = ${k}`, `${cf(den)}A = ${k}`, `A = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `$${den} \\cdot ${parQ(ans)} = ${k}$, so $y_p = ${poly([ans, xr])}$ reproduces the forcing $${poly([k, xr])}$.`,
+              `$${den} \\cdot ${parQ(ans)} = ${k}$，所以 $y_p = ${poly([ans, xr])}$ 正好给出强迫项 $${poly([k, xr])}$。`,
+            ),
           ),
         });
       },
@@ -2408,6 +2549,10 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
     "Setting $y = u(x)y_h(x)$ in $y' + P(x)y = f(x)$ gives $u' = \\frac{f}{y_h}$, which produces the particular solution directly.",
     "在 $y' + P(x)y = f(x)$ 中设 $y = u(x)y_h(x)$，得 $u' = \\frac{f}{y_h}$，由此直接得到特解。",
   ),
+  intro: t(
+    "Solve $y' + 2y = 3e^{-2x}$ with $y(0) = 1$. The homogeneous solution is $e^{-2x}$, so set $y = u(x)e^{-2x}$. Then $y' + 2y = u'e^{-2x}$, because the terms in $u$ cancel, and the equation becomes $u' = 3$. So $u = 3x + 1$ and $y = (3x + 1)e^{-2x}$.\n\nCheck: $y' = 3e^{-2x} - 2(3x + 1)e^{-2x}$, so $y' + 2y = 3e^{-2x}$, and $y(0) = 1$.\n\nIn this lesson we replace the constant of the homogeneous solution by a function and solve first-order linear equations this way.",
+    "解 $y' + 2y = 3e^{-2x}$，$y(0) = 1$。齐次解为 $e^{-2x}$，所以设 $y = u(x)e^{-2x}$。于是 $y' + 2y = u'e^{-2x}$，因为含 $u$ 的项相互抵消，方程变为 $u' = 3$。所以 $u = 3x + 1$，$y = (3x + 1)e^{-2x}$。\n\n检验：$y' = 3e^{-2x} - 2(3x + 1)e^{-2x}$，所以 $y' + 2y = 3e^{-2x}$，且 $y(0) = 1$。\n\n本课我们把齐次解中的常数换成函数，用这种方法求解一阶线性方程。",
+  ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
   xp: 10,
@@ -2416,8 +2561,8 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
       id: "variation-of-parameters-first-order",
       title: t("Variation of parameters derivative formula for first-order ODEs", "一阶微分方程常数变易法的导数公式"),
       explanation: t(
-        "Replace the constant in the homogeneous solution by an unknown function, substitute, and the equation reduces to a simple formula for that function's derivative. For $y' + a y = K e^{-a x}$, homogeneous solution is $y_h = e^{-a x}$. Setting $y = u(x) e^{-a x}$ gives $u'(x) = K$.",
-        "把齐次解中的常数换成一个未知函数并代入，方程就化为该函数导数的简单公式。对于 $y' + a y = K e^{-a x}$，对应齐次解为 $y_h = e^{-a x}$。设 $y = u(x) e^{-a x}$ 代入可得 $u'(x) = K$。",
+        "Replace the constant in the homogeneous solution by an unknown function, substitute, and the equation reduces to a simple formula for that function's derivative. For $y' + a y = K e^{-a x}$, homogeneous solution is $y_h = e^{-a x}$. Setting $y = u(x) e^{-a x}$ gives $u'(x) = K$. For $y' + 2y = 3e^{-2x}$ with $y(0) = 1$, $u = 3x + 1$ and $u(2) = 7$.\n\n> **Watch out.** The terms in $u$ cancel completely, so no factor $a$ remains in $u'$; and because $e^{0} = 1$, the constant of integration is $y(0)$.",
+        "把齐次解中的常数换成一个未知函数并代入，方程就化为该函数导数的简单公式。对于 $y' + a y = K e^{-a x}$，对应齐次解为 $y_h = e^{-a x}$。设 $y = u(x) e^{-a x}$ 代入可得 $u'(x) = K$。对 $y' + 2y = 3e^{-2x}$，$y(0) = 1$，$u = 3x + 1$，$u(2) = 7$。\n\n> **注意。** 含 $u$ 的项完全抵消，所以 $u'$ 中不剩因子 $a$；又因为 $e^{0} = 1$，积分常数就是 $y(0)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
@@ -2425,31 +2570,41 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
         const y0 = rng.nonZero(-6, 6);
         const T = rng.int(2, 5);
         const ans = K * T + y0;
-
-        const prompt = t(
-          `Apply variation of parameters to $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$, $y(0) = ${y0}$, by setting $y(x) = u(x) e^{-${poly([a, "x"])}}$. Find $u(${T})$.`,
-          `利用常数变易法求解 $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$，$y(0) = ${y0}$，设 $y(x) = u(x) e^{-${poly([a, "x"])}}$。求 $u(${T})$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute $y'(x) = u'(x)e^{-${poly([a, "x"])}} - ${a}u(x)e^{-${poly([a, "x"])}}$.`,
-            `Substitute into the equation: the terms in $u$ cancel, which leaves $u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$, so $u'(x) = ${K}$.`,
-            `Integrate: $u(x) = ${K}x + C$. Since $e^{0} = 1$, $u(0) = y(0)$, so $C = ${y0}$.`,
-            `Therefore $u(${T}) = ${K} \\cdot ${T} ${signed(y0)} = ${ans}$.`,
-          ),
-          steps(
-            `求导：$y'(x) = u'(x)e^{-${poly([a, "x"])}} - ${a}u(x)e^{-${poly([a, "x"])}}$。`,
-            `代入方程：含 $u$ 的项相互抵消，剩下 $u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$，所以 $u'(x) = ${K}$。`,
-            `积分：$u(x) = ${K}x + C$。因为 $e^{0} = 1$，所以 $u(0) = y(0)$，$C = ${y0}$。`,
-            `因此 $u(${T}) = ${K} \\cdot ${T} ${signed(y0)} = ${ans}$。`,
-          ),
-        );
-
+        const E = `e^{-${poly([a, "x"])}}`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Apply variation of parameters to $y' + ${poly([a, "y"])} = ${K}${E}$, $y(0) = ${y0}$, by setting $y(x) = u(x) ${E}$. Find $u(${T})$.`,
+            `利用常数变易法求解 $y' + ${poly([a, "y"])} = ${K}${E}$，$y(0) = ${y0}$，设 $y(x) = u(x) ${E}$。求 $u(${T})$。`,
+          ),
           answer: ans,
-          wrong: [K * T, K + y0, K * T - y0, a * K * T + y0],
+          mistakes: apart(ans, [
+            why(K * T, "That leaves out the constant of integration, which equals $y(0)$.", "这里漏掉了积分常数，它等于 $y(0)$。"),
+            why(K + y0, "That uses $u' = K$ in place of $u$; integrate first.", "这是把 $u' = K$ 当成 $u$；要先积分。"),
+            why(K * T - y0, "The constant has the wrong sign; $u(0) = y(0)$.", "常数的符号反了；$u(0) = y(0)$。"),
+            why(
+              a * K * T + y0,
+              "That keeps a factor $a$ in $u'$; the terms in $u$ cancel and leave $u' = K$.",
+              "这是在 $u'$ 中保留了因子 $a$；含 $u$ 的项抵消后 $u' = K$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute", "代入"],
+                t("The terms in $u$ cancel:", "含 $u$ 的项相互抵消："),
+                [`y' + ${poly([a, "y"])} = u'${E} = ${K}${E}`, `u' = ${K}`],
+              ],
+              [
+                ["Integrate and use y(0)", "积分并用 y(0)"],
+                t("Since $e^{0} = 1$, $u(0) = y(0)$:", "因为 $e^{0} = 1$，所以 $u(0) = y(0)$："),
+                [`u = ${K}x ${signed(y0)}`, `u(${T}) = ${K} \\cdot ${T} ${signed(y0)} = ${ans}`],
+              ],
+            ],
+            t(
+              `$y = (${K}x ${signed(y0)})${E}$ has $y(0) = ${y0}$, and $y' + ${poly([a, "y"])} = ${K}${E}$ because the derivative of the bracket is $${K}$.`,
+              `$y = (${K}x ${signed(y0)})${E}$ 满足 $y(0) = ${y0}$，且 $y' + ${poly([a, "y"])} = ${K}${E}$，因为括号的导数是 $${K}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2457,8 +2612,8 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
       id: "variation-of-parameters-with-a-power-times-exponential",
       title: t("Variation of parameters with a power times an exponential", "强迫项为幂乘指数时的参数变易法"),
       explanation: t(
-        "For $y' + ay = g(x)$ the homogeneous solution is $e^{-ax}$. Setting $y = u(x)e^{-ax}$ cancels the $a$ term and leaves $u' = e^{ax}g(x)$. When $g(x) = kx^ne^{-ax}$ the exponentials cancel:\n\n$$u' = kx^n, \\qquad u = \\frac{k}{n + 1}x^{n + 1} + C.$$\n\nThe initial value fixes $C = y(0)$, and $y = \\left(C + \\frac{k}{n + 1}x^{n + 1}\\right)e^{-ax}$.",
-        "对 $y' + ay = g(x)$，齐次解为 $e^{-ax}$。设 $y = u(x)e^{-ax}$，$a$ 项抵消，剩下 $u' = e^{ax}g(x)$。当 $g(x) = kx^ne^{-ax}$ 时指数相消：\n\n$$u' = kx^n, \\qquad u = \\frac{k}{n + 1}x^{n + 1} + C.$$\n\n初值确定 $C = y(0)$，于是 $y = \\left(C + \\frac{k}{n + 1}x^{n + 1}\\right)e^{-ax}$。",
+        "For $y' + ay = g(x)$ the homogeneous solution is $e^{-ax}$. Setting $y = u(x)e^{-ax}$ cancels the $a$ term and leaves $u' = e^{ax}g(x)$. When $g(x) = kx^ne^{-ax}$ the exponentials cancel:\n\n$$u' = kx^n, \\qquad u = \\frac{k}{n + 1}x^{n + 1} + C.$$\n\nThe initial value fixes $C = y(0)$, and $y = \\left(C + \\frac{k}{n + 1}x^{n + 1}\\right)e^{-ax}$. For $y' + y = 6x^{2}e^{-x}$, $u' = 6x^{2}$ and $u = 2x^{3} + C$.\n\n> **Watch out.** Integrating $kx^{n}$ divides by $n + 1$, not $n$; and $y(0)$ only sets the constant $C$, not the coefficient of the power.",
+        "对 $y' + ay = g(x)$，齐次解为 $e^{-ax}$。设 $y = u(x)e^{-ax}$，$a$ 项抵消，剩下 $u' = e^{ax}g(x)$。当 $g(x) = kx^ne^{-ax}$ 时指数相消：\n\n$$u' = kx^n, \\qquad u = \\frac{k}{n + 1}x^{n + 1} + C.$$\n\n初值确定 $C = y(0)$，于是 $y = \\left(C + \\frac{k}{n + 1}x^{n + 1}\\right)e^{-ax}$。对 $y' + y = 6x^{2}e^{-x}$，$u' = 6x^{2}$，$u = 2x^{3} + C$。\n\n> **注意。** 对 $kx^{n}$ 积分要除以 $n + 1$，而不是 $n$；$y(0)$ 只确定常数 $C$，不影响幂的系数。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
@@ -2468,16 +2623,48 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
         const ans = Q.of(k, n + 1);
         const ea = a === 1 ? "e^{-x}" : a === -1 ? "e^{x}" : `e^{${-a}x}`;
         const xn = n === 1 ? "x" : `x^{${n}}`;
+        const xm = `x^{${n + 1}}`;
         return numberProblem({
           prompt: t(
-            `Solve $${poly([1, "y'"], [a, "y"])} = ${poly([k, `${xn}${ea}`])}$ with $y(0) = ${y0}$ by setting $y = u(x)${ea}$. Find the coefficient of $x^{${n + 1}}${ea}$ in $y$.`,
-            `设 $y = u(x)${ea}$，解 $${poly([1, "y'"], [a, "y"])} = ${poly([k, `${xn}${ea}`])}$，$y(0) = ${y0}$。求 $y$ 中 $x^{${n + 1}}${ea}$ 的系数。`,
+            `Solve $${poly([1, "y'"], [a, "y"])} = ${poly([k, `${xn}${ea}`])}$ with $y(0) = ${y0}$ by setting $y = u(x)${ea}$. Find the coefficient of $${xm}${ea}$ in $y$.`,
+            `设 $y = u(x)${ea}$，解 $${poly([1, "y'"], [a, "y"])} = ${poly([k, `${xn}${ea}`])}$，$y(0) = ${y0}$。求 $y$ 中 $${xm}${ea}$ 的系数。`,
           ),
           answer: ans,
-          wrong: [Q.of(k), Q.of(k, n), Q.of(k * (n + 1)), Q.of(y0 + k, n + 1)],
-          solution: t(
-            `$u' = ${poly([k, xn])}$, so $u = ${poly([ans, `x^{${n + 1}}`], [y0, ""])}$ and the coefficient is $${ans.toLatex()}$.`,
-            `$u' = ${poly([k, xn])}$，所以 $u = ${poly([ans, `x^{${n + 1}}`], [y0, ""])}$，系数为 $${ans.toLatex()}$。`,
+          mistakes: apart(ans, [
+            why(k, "That forgets to divide by $n + 1$ when integrating the power.", "这里对幂积分时忘了除以 $n + 1$。"),
+            why(
+              Q.of(k, n),
+              "That divides by $n$; integrating $x^{n}$ divides by $n + 1$.",
+              "这是除以 $n$；对 $x^{n}$ 积分要除以 $n + 1$。",
+            ),
+            why(
+              k * (n + 1),
+              "That multiplies by $n + 1$, as in differentiating, instead of dividing.",
+              "这是像求导那样乘以 $n + 1$，而不是除以它。",
+            ),
+            why(
+              Q.of(y0 + k, n + 1),
+              "That mixes $y(0)$ into the coefficient; it only sets the constant term of $u$.",
+              "这是把 $y(0)$ 混进了系数；它只确定 $u$ 的常数项。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute", "代入"],
+                t("The terms in $u$ cancel and so do the exponentials:", "含 $u$ 的项抵消，指数函数也相消："),
+                [`u' = ${poly([k, xn])}`],
+              ],
+              [
+                ["Integrate", "积分"],
+                t("The constant is $y(0)$:", "常数为 $y(0)$："),
+                [`u = ${poly([ans, xm], [y0, ""])}`, `y = \\left(${poly([ans, xm], [y0, ""])}\\right)${ea}`],
+              ],
+            ],
+            t(
+              `$\\frac{d}{dx}\\left(${poly([ans, xm])}\\right) = ${n + 1} \\cdot ${parQ(ans)}${xn} = ${poly([k, xn])}$, which is $u'$.`,
+              `$\\frac{d}{dx}\\left(${poly([ans, xm])}\\right) = ${n + 1} \\cdot ${parQ(ans)}${xn} = ${poly([k, xn])}$，正是 $u'$。`,
+            ),
           ),
         });
       },
@@ -2493,6 +2680,10 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
     "For $y'' + P(x)y' + Q(x)y = g(x)$, setting $y_p = u_1 y_1 + u_2 y_2$ with $u_1' y_1 + u_2' y_2 = 0$ gives $u_1' = -\\frac{y_2 g}{W}$ and $u_2' = \\frac{y_1 g}{W}$.",
     "对 $y'' + P(x)y' + Q(x)y = g(x)$，设 $y_p = u_1 y_1 + u_2 y_2$ 并附加条件 $u_1' y_1 + u_2' y_2 = 0$，得 $u_1' = -\\frac{y_2 g}{W}$、$u_2' = \\frac{y_1 g}{W}$。",
   ),
+  intro: t(
+    "Find a particular solution of $y'' - 3y' + 2y = e^{3x}$ with $y_1 = e^{x}$ and $y_2 = e^{2x}$. The Wronskian is $W = e^{x} \\cdot 2e^{2x} - e^{x} \\cdot e^{2x} = e^{3x}$, so $u_1' = -\\frac{e^{2x}e^{3x}}{e^{3x}} = -e^{2x}$ and $u_2' = \\frac{e^{x}e^{3x}}{e^{3x}} = e^{x}$. Integrating, $u_1 = -\\frac{1}{2}e^{2x}$ and $u_2 = e^{x}$, so $y_p = -\\frac{1}{2}e^{3x} + e^{3x} = \\frac{1}{2}e^{3x}$.\n\nCheck: for $y = \\frac{1}{2}e^{3x}$, $y'' - 3y' + 2y = \\frac{1}{2}(9 - 9 + 2)e^{3x} = e^{3x}$.\n\nIn this lesson we set up the two equations for the parameter derivatives and solve them with the Wronskian.",
+    "求 $y'' - 3y' + 2y = e^{3x}$ 的一个特解，取 $y_1 = e^{x}$，$y_2 = e^{2x}$。朗斯基行列式为 $W = e^{x} \\cdot 2e^{2x} - e^{x} \\cdot e^{2x} = e^{3x}$，所以 $u_1' = -\\frac{e^{2x}e^{3x}}{e^{3x}} = -e^{2x}$，$u_2' = \\frac{e^{x}e^{3x}}{e^{3x}} = e^{x}$。积分得 $u_1 = -\\frac{1}{2}e^{2x}$，$u_2 = e^{x}$，所以 $y_p = -\\frac{1}{2}e^{3x} + e^{3x} = \\frac{1}{2}e^{3x}$。\n\n检验：对 $y = \\frac{1}{2}e^{3x}$，$y'' - 3y' + 2y = \\frac{1}{2}(9 - 9 + 2)e^{3x} = e^{3x}$。\n\n本课我们列出参数导数满足的两个方程，并用朗斯基行列式求解。",
+  ),
   prerequisites: ["variation-of-parameters-for-first-order-linear-odes", "linear-independence-of-solutions-to-homogeneous-odes"],
   encompasses: [],
   xp: 10,
@@ -2501,8 +2692,8 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
       id: "second-order-variation-of-parameters-system",
       title: t("Linear system for parameter derivatives", "待定变易参数导数的代数线性方程组"),
       explanation: t(
-        "The extra condition makes the derivatives of the parameters satisfy a linear system, which Cramer's rule solves with the Wronskian in the denominator. The variation of parameters system is $u_1' y_1 + u_2' y_2 = 0$ and $u_1' y_1' + u_2' y_2' = g(x)$. By Cramer's rule, $u_2' = \\frac{y_1 g}{W}$.",
-        "附加条件使参数的导数满足一个线性方程组，用克拉默法则求解时分母是朗斯基行列式。常数变易法联立代数方程组为 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g(x)$。由克莱姆法则解得 $u_2' = \\frac{y_1 g}{W}$。",
+        "The extra condition makes the derivatives of the parameters satisfy a linear system, which Cramer's rule solves with the Wronskian in the denominator. The variation of parameters system is $u_1' y_1 + u_2' y_2 = 0$ and $u_1' y_1' + u_2' y_2' = g(x)$. By Cramer's rule, $u_2' = \\frac{y_1 g}{W}$. With $y_1 = 2$, $y_1' = 1$, $y_2 = 1$, $y_2' = 3$ and $g = 5$ at a point, $W = 6 - 1 = 5$ and $u_2' = \\frac{2 \\cdot 5}{5} = 2$.\n\n> **Watch out.** $W = y_1y_2' - y_1'y_2$ has a minus sign between the products, and $u_2'$ uses $y_1$ with no minus sign; the minus sign belongs to $u_1'$.",
+        "附加条件使参数的导数满足一个线性方程组，用克拉默法则求解时分母是朗斯基行列式。常数变易法联立代数方程组为 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g(x)$。由克莱姆法则解得 $u_2' = \\frac{y_1 g}{W}$。若在某点 $y_1 = 2$，$y_1' = 1$，$y_2 = 1$，$y_2' = 3$，$g = 5$，则 $W = 6 - 1 = 5$，$u_2' = \\frac{2 \\cdot 5}{5} = 2$。\n\n> **注意。** $W = y_1y_2' - y_1'y_2$ 两个乘积之间是减号；$u_2'$ 用的是 $y_1$，没有负号，负号属于 $u_1'$。",
       ),
       generate(rng: Rng): Problem {
         for (;;) {
@@ -2515,29 +2706,45 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
           const flipped = a * d + b * c;
           if (W === 0 || flipped === 0) continue;
           const ans = Q.of(a * g, W);
-
-          const prompt = t(
-            `Solve $y'' + P(x)y' + Q(x)y = g(x)$ by variation of parameters, with $y = u_1 y_1 + u_2 y_2$. At $x = 0$: $y_1 = ${a}$, $y_1' = ${b}$, $y_2 = ${c}$, $y_2' = ${d}$, and $g = ${g}$. Find $u_2'(0)$.`,
-            `用常数变易法求解 $y'' + P(x)y' + Q(x)y = g(x)$，设 $y = u_1 y_1 + u_2 y_2$。在 $x = 0$ 处：$y_1 = ${a}$，$y_1' = ${b}$，$y_2 = ${c}$，$y_2' = ${d}$，$g = ${g}$。求 $u_2'(0)$。`,
-          );
-          const solution = t(
-            steps(
-              `The parameters satisfy $u_1' y_1 + u_2' y_2 = 0$ and $u_1' y_1' + u_2' y_2' = g$, and Cramer's rule gives $u_2' = \\frac{y_1 g}{W}$ with $W = y_1 y_2' - y_1' y_2$.`,
-              `$W(0) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${W}$.`,
-              `$u_2'(0) = \\frac{${par(a)} \\cdot ${par(g)}}{${W}} = ${ans.toLatex()}$.`,
-            ),
-            steps(
-              `变易参数满足 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g$，由克莱姆法则得 $u_2' = \\frac{y_1 g}{W}$，其中 $W = y_1 y_2' - y_1' y_2$。`,
-              `$W(0) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${W}$。`,
-              `$u_2'(0) = \\frac{${par(a)} \\cdot ${par(g)}}{${W}} = ${ans.toLatex()}$。`,
-            ),
-          );
-
+          const u1 = Q.of(-c * g, W);
           return numberProblem({
-            prompt,
-            solution,
+            prompt: t(
+              `Solve $y'' + P(x)y' + Q(x)y = g(x)$ by variation of parameters, with $y = u_1 y_1 + u_2 y_2$. At $x = 0$: $y_1 = ${a}$, $y_1' = ${b}$, $y_2 = ${c}$, $y_2' = ${d}$, and $g = ${g}$. Find $u_2'(0)$.`,
+              `用常数变易法求解 $y'' + P(x)y' + Q(x)y = g(x)$，设 $y = u_1 y_1 + u_2 y_2$。在 $x = 0$ 处：$y_1 = ${a}$，$y_1' = ${b}$，$y_2 = ${c}$，$y_2' = ${d}$，$g = ${g}$。求 $u_2'(0)$。`,
+            ),
             answer: ans,
-            wrong: [Q.of(-c * g, W), Q.of(-a * g, W), Q.of(a * g, flipped), Q.of(a * g)],
+            mistakes: apart(ans, [
+              why(u1, "That is $u_1'(0) = -\\frac{y_2g}{W}$, the other parameter.", "这是另一个参数 $u_1'(0) = -\\frac{y_2g}{W}$。"),
+              why(
+                ans.neg(),
+                "The sign is flipped; $u_2' = \\frac{y_1g}{W}$ has no minus sign.",
+                "符号反了；$u_2' = \\frac{y_1g}{W}$ 没有负号。",
+              ),
+              why(
+                Q.of(a * g, flipped),
+                "That adds the products in $W$; it is $y_1y_2' - y_1'y_2$.",
+                "这是把 $W$ 中的乘积相加；应当是 $y_1y_2' - y_1'y_2$。",
+              ),
+              why(a * g, "That forgets to divide by the Wronskian.", "这里忘了除以朗斯基行列式。"),
+            ]),
+            solution: walked(
+              [
+                [
+                  ["Compute the Wronskian", "计算朗斯基行列式"],
+                  t("", ""),
+                  [`W(0) = y_1y_2' - y_1'y_2 = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${W}`],
+                ],
+                [
+                  ["Apply Cramer's rule", "用克拉默法则"],
+                  t("", ""),
+                  [`u_2'(0) = \\frac{y_1g}{W} = ${over(`${par(a)} \\cdot ${par(g)}`, W)} = ${ans.toLatex()}`],
+                ],
+              ],
+              t(
+                `With $u_1'(0) = ${u1.toLatex()}$, the first equation holds: $${par(a)} \\cdot ${parQ(u1)} + ${par(c)} \\cdot ${parQ(ans)} = 0$.`,
+                `取 $u_1'(0) = ${u1.toLatex()}$，第一个方程成立：$${par(a)} \\cdot ${parQ(u1)} + ${par(c)} \\cdot ${parQ(ans)} = 0$。`,
+              ),
+            ),
           });
         }
       },
@@ -2546,8 +2753,8 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
       id: "the-parameter-derivatives-for-exponential-solutions",
       title: t("The parameter derivatives for exponential solutions", "指数解情形的参数导数"),
       explanation: t(
-        "For $y'' + py' + qy = g$ with homogeneous solutions $y_1$, $y_2$, variation of parameters sets $y_p = u_1y_1 + u_2y_2$ with\n\n$$u_1' = -\\frac{y_2\\,g}{W}, \\qquad u_2' = \\frac{y_1\\,g}{W}, \\qquad W = y_1y_2' - y_1'y_2.$$\n\nFor $y_1 = e^{r_1x}$ and $y_2 = e^{r_2x}$, $W = (r_2 - r_1)e^{(r_1 + r_2)x}$, so with $g = ke^{sx}$ the parameter derivatives are again exponentials.",
-        "对 $y'' + py' + qy = g$，设齐次解为 $y_1$、$y_2$，参数变易法取 $y_p = u_1y_1 + u_2y_2$，其中\n\n$$u_1' = -\\frac{y_2\\,g}{W}, \\qquad u_2' = \\frac{y_1\\,g}{W}, \\qquad W = y_1y_2' - y_1'y_2.$$\n\n对 $y_1 = e^{r_1x}$，$y_2 = e^{r_2x}$，$W = (r_2 - r_1)e^{(r_1 + r_2)x}$，所以当 $g = ke^{sx}$ 时，参数导数仍是指数函数。",
+        "For $y'' + py' + qy = g$ with homogeneous solutions $y_1$, $y_2$, variation of parameters sets $y_p = u_1y_1 + u_2y_2$ with\n\n$$u_1' = -\\frac{y_2\\,g}{W}, \\qquad u_2' = \\frac{y_1\\,g}{W}, \\qquad W = y_1y_2' - y_1'y_2.$$\n\nFor $y_1 = e^{r_1x}$ and $y_2 = e^{r_2x}$, $W = (r_2 - r_1)e^{(r_1 + r_2)x}$, so with $g = ke^{sx}$ the parameter derivatives are again exponentials. For $y_1 = e^{x}$, $y_2 = e^{2x}$ and $g = 3e^{3x}$: $W = e^{3x}$ and $u_1' = -3e^{2x}$.\n\n> **Watch out.** The coefficient of $W$ is $r_2 - r_1$, later rate minus earlier; only $u_1'$ carries a minus sign.",
+        "对 $y'' + py' + qy = g$，设齐次解为 $y_1$、$y_2$，参数变易法取 $y_p = u_1y_1 + u_2y_2$，其中\n\n$$u_1' = -\\frac{y_2\\,g}{W}, \\qquad u_2' = \\frac{y_1\\,g}{W}, \\qquad W = y_1y_2' - y_1'y_2.$$\n\n对 $y_1 = e^{r_1x}$，$y_2 = e^{r_2x}$，$W = (r_2 - r_1)e^{(r_1 + r_2)x}$，所以当 $g = ke^{sx}$ 时，参数导数仍是指数函数。对 $y_1 = e^{x}$，$y_2 = e^{2x}$，$g = 3e^{3x}$：$W = e^{3x}$，$u_1' = -3e^{2x}$。\n\n> **注意。** $W$ 的系数是 $r_2 - r_1$，后一个速率减前一个；只有 $u_1'$ 带负号。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(-3, 2);
@@ -2555,20 +2762,72 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
         const s = rng.int(-3, 4);
         const k = rng.int(-9, 9) || 4;
         const first = rng.int(0, 1) === 0;
-        const ans = first ? Q.of(-k, r2 - r1) : Q.of(k, r2 - r1);
+        const top = first ? -k : k;
+        const ans = Q.of(top, r2 - r1);
         const e = (r: number) => (r === 0 ? "1" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
         const g = s === 0 ? String(k) : poly([k, e(s)]);
         const out = first ? s - r1 : s - r2;
+        const W = r1 + r2 === 0 ? `${r2 - r1}` : poly([r2 - r1, e(r1 + r2)]);
+        const which = first ? 1 : 2;
+        const result = out === 0 ? ans.toLatex() : poly([ans, e(out)]);
         return numberProblem({
           prompt: t(
-            `For $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ take $y_1 = ${e(r1)}$, $y_2 = ${e(r2)}$. Then $u_{${first ? 1 : 2}}' = C${out === 0 ? "" : e(out)}$. Find $C$.`,
-            `对 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ 取 $y_1 = ${e(r1)}$，$y_2 = ${e(r2)}$。则 $u_{${first ? 1 : 2}}' = C${out === 0 ? "" : e(out)}$。求 $C$。`,
+            `For $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ take $y_1 = ${e(r1)}$, $y_2 = ${e(r2)}$. Then $u_{${which}}' = C${out === 0 ? "" : e(out)}$. Find $C$.`,
+            `对 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ 取 $y_1 = ${e(r1)}$，$y_2 = ${e(r2)}$。则 $u_{${which}}' = C${out === 0 ? "" : e(out)}$。求 $C$。`,
           ),
           answer: ans,
-          wrong: [ans.neg(), Q.of(k), Q.of(k, r1 - r2 - 1)],
-          solution: t(
-            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$, so $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot (${g})}{W}$ and $C = ${ans.toLatex()}$.`,
-            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$，所以 $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot (${g})}{W}$，$C = ${ans.toLatex()}$。`,
+          mistakes: apart(ans, [
+            why(
+              ans.neg(),
+              first
+                ? "The sign is flipped; $u_1' = -\\frac{y_2g}{W}$ carries a minus sign."
+                : "The sign is flipped; $u_2' = \\frac{y_1g}{W}$ has no minus sign.",
+              first ? "符号反了；$u_1' = -\\frac{y_2g}{W}$ 带负号。" : "符号反了；$u_2' = \\frac{y_1g}{W}$ 没有负号。",
+            ),
+            why(
+              top,
+              "That forgets to divide by the coefficient $r_2 - r_1$ of the Wronskian.",
+              "这里忘了除以朗斯基行列式的系数 $r_2 - r_1$。",
+            ),
+            ...(r1 + r2 === 0
+              ? []
+              : [
+                  why(
+                    Q.of(top, r1 + r2),
+                    "That divides by the rate in the exponent of $W$; its coefficient is $r_2 - r_1$.",
+                    "这是除以 $W$ 指数中的速率；它的系数是 $r_2 - r_1$。",
+                  ),
+                ]),
+            ...(r2 === 0
+              ? []
+              : [
+                  why(
+                    Q.of(top, r2),
+                    "That divides by $r_2$ alone; $W$ also subtracts $y_1'y_2$.",
+                    "这是只除以 $r_2$；$W$ 还要减去 $y_1'y_2$。",
+                  ),
+                ]),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the Wronskian", "计算朗斯基行列式"],
+                t("", ""),
+                [`W = y_1y_2' - y_1'y_2 = (${r2} - ${par(r1)})${e(r1 + r2) === "1" ? "" : e(r1 + r2)} = ${W}`],
+              ],
+              [
+                ["Divide", "相除"],
+                t("", ""),
+                [
+                  `u_{${which}}' = ${first ? "-" : ""}\\frac{${first ? e(r2) : e(r1)} \\cdot ${k < 0 ? `\\left(${g}\\right)` : g}}{${W}} = ${result}`,
+                  `C = ${ans.toLatex()}`,
+                ],
+              ],
+            ],
+            t(
+              `$${r2 - r1} \\cdot ${parQ(ans)} = ${top}$, so $Wu_{${which}}' = ${first ? "-y_2g" : "y_1g"}$.`,
+              `$${r2 - r1} \\cdot ${parQ(ans)} = ${top}$，所以 $Wu_{${which}}' = ${first ? "-y_2g" : "y_1g"}$。`,
+            ),
           ),
         });
       },
@@ -2584,6 +2843,10 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
     "Variation of parameters solves equations such as $y'' + y = \\tan x$, where undetermined coefficients fails, through $u_1 = -\\int \\frac{y_2 g}{W}\\,dx$ and $u_2 = \\int \\frac{y_1 g}{W}\\,dx$.",
     "常数变易法可求解待定系数法失效的方程（如 $y'' + y = \\tan x$），通过 $u_1 = -\\int \\frac{y_2 g}{W}\\,dx$ 与 $u_2 = \\int \\frac{y_1 g}{W}\\,dx$ 得到解。",
   ),
+  intro: t(
+    "Solve $y'' + y = \\sec x$. With $y_1 = \\cos x$ and $y_2 = \\sin x$, $W = 1$. Then $u_1' = -\\sin x\\sec x = -\\tan x$, so $u_1 = \\ln|\\cos x|$, and $u_2' = \\cos x\\sec x = 1$, so $u_2 = x$. A particular solution is $y_p = \\cos x\\,\\ln|\\cos x| + x\\sin x$.\n\nCheck: $(x\\sin x)'' + x\\sin x = 2\\cos x$ and $(\\cos x\\ln|\\cos x|)'' + \\cos x\\ln|\\cos x| = \\frac{\\sin^2 x}{\\cos x} - \\cos x$; together they give $\\frac{\\sin^2 x + \\cos^2 x}{\\cos x} = \\sec x$.\n\nIn this lesson we carry variation of parameters through to a particular solution for forcing terms that undetermined coefficients cannot handle.",
+    "解 $y'' + y = \\sec x$。取 $y_1 = \\cos x$，$y_2 = \\sin x$，$W = 1$。于是 $u_1' = -\\sin x\\sec x = -\\tan x$，所以 $u_1 = \\ln|\\cos x|$；$u_2' = \\cos x\\sec x = 1$，所以 $u_2 = x$。一个特解是 $y_p = \\cos x\\,\\ln|\\cos x| + x\\sin x$。\n\n检验：$(x\\sin x)'' + x\\sin x = 2\\cos x$，$(\\cos x\\ln|\\cos x|)'' + \\cos x\\ln|\\cos x| = \\frac{\\sin^2 x}{\\cos x} - \\cos x$；两者相加得 $\\frac{\\sin^2 x + \\cos^2 x}{\\cos x} = \\sec x$。\n\n本课我们把参数变易法完整地做到特解，处理待定系数法无法处理的强迫项。",
+  ),
   prerequisites: ["variation-of-parameters-for-second-order-odes"],
   encompasses: [{ topic: "variation-of-parameters-for-second-order-odes", weight: 0.3 }],
   xp: 10,
@@ -2592,36 +2855,47 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
       id: "variation-of-parameters-secant-forcing",
       title: t("Particular solution with secant forcing", "正割函数右端项的常数变易法特解"),
       explanation: t(
-        "Undetermined coefficients cannot handle a secant forcing term, but variation of parameters works for any continuous forcing function. For $y'' + y = \\sec x$, fundamental solutions are $y_1 = \\cos x, y_2 = \\sin x$ with $W = 1$. Then $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$. For $\\cos\\omega x$ and $\\sin\\omega x$, $W = \\omega$.",
-        "待定系数法无法处理正割型强迫项，但常数变易法适用于任何连续的强迫函数。对于 $y'' + y = \\sec x$，基本齐次解为 $y_1 = \\cos x, y_2 = \\sin x$（$W = 1$）。由公式得 $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$。 对 $\\cos\\omega x$ 与 $\\sin\\omega x$，$W = \\omega$。",
+        "Undetermined coefficients cannot handle a secant forcing term, but variation of parameters works for any continuous forcing function. For $y'' + y = \\sec x$, fundamental solutions are $y_1 = \\cos x, y_2 = \\sin x$ with $W = 1$. Then $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$. For $\\cos\\omega x$ and $\\sin\\omega x$, $W = \\omega$. So for $y'' + 4y = 6\\sec 2x$, $u_2' = \\frac{6}{2} = 3$.\n\n> **Watch out.** The Wronskian of $\\cos\\omega x$ and $\\sin\\omega x$ is $\\omega$, not $1$, so divide by it; do not multiply.",
+        "待定系数法无法处理正割型强迫项，但常数变易法适用于任何连续的强迫函数。对于 $y'' + y = \\sec x$，基本齐次解为 $y_1 = \\cos x, y_2 = \\sin x$（$W = 1$）。由公式得 $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$。对 $\\cos\\omega x$ 与 $\\sin\\omega x$，$W = \\omega$。所以对 $y'' + 4y = 6\\sec 2x$，$u_2' = \\frac{6}{2} = 3$。\n\n> **注意。** $\\cos\\omega x$ 与 $\\sin\\omega x$ 的朗斯基行列式是 $\\omega$ 而不是 $1$，所以要除以它，而不是乘以它。",
       ),
       generate(rng: Rng): Problem {
         const omega = rng.int(2, 6);
         const k = rng.int(2, 30);
         const ans = Q.of(k, omega);
-
-        const prompt = t(
-          `When solving $y'' + ${omega * omega}y = ${k}\\sec ${omega}x$ using variation of parameters with $y_1 = \\cos ${omega}x$ and $y_2 = \\sin ${omega}x$, the second parameter derivative is a constant: $u_2'(x) = C$. Find $C$.`,
-          `利用常数变易法求解 $y'' + ${omega * omega}y = ${k}\\sec ${omega}x$（其中 $y_1 = \\cos ${omega}x$，$y_2 = \\sin ${omega}x$），第二个变易参数的导数为常数 $u_2'(x) = C$。求 $C$。`,
-        );
-        const solution = t(
-          steps(
-            `The Wronskian is $W = y_1 y_2' - y_1' y_2 = ${omega}\\cos^2 ${omega}x + ${omega}\\sin^2 ${omega}x = ${omega}$.`,
-            `Then $u_2'(x) = \\frac{y_1 g}{W} = \\frac{(\\cos ${omega}x)(${k}\\sec ${omega}x)}{${omega}}$.`,
-            `Since $\\cos ${omega}x \\sec ${omega}x = 1$, we obtain $C = \\frac{${k}}{${omega}}${lowestTerms(k, omega)}$.`,
-          ),
-          steps(
-            `朗斯基行列式为 $W = y_1 y_2' - y_1' y_2 = ${omega}\\cos^2 ${omega}x + ${omega}\\sin^2 ${omega}x = ${omega}$。`,
-            `于是 $u_2'(x) = \\frac{y_1 g}{W} = \\frac{(\\cos ${omega}x)(${k}\\sec ${omega}x)}{${omega}}$。`,
-            `因为 $\\cos ${omega}x \\sec ${omega}x = 1$，所以 $C = \\frac{${k}}{${omega}}${lowestTerms(k, omega)}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `When solving $y'' + ${omega * omega}y = ${k}\\sec ${omega}x$ using variation of parameters with $y_1 = \\cos ${omega}x$ and $y_2 = \\sin ${omega}x$, the second parameter derivative is a constant: $u_2'(x) = C$. Find $C$.`,
+            `利用常数变易法求解 $y'' + ${omega * omega}y = ${k}\\sec ${omega}x$（其中 $y_1 = \\cos ${omega}x$，$y_2 = \\sin ${omega}x$），第二个变易参数的导数为常数 $u_2'(x) = C$。求 $C$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(k), Q.of(k * omega), Q.of(-k, omega), Q.of(omega, k)],
+          mistakes: apart(ans, [
+            why(k, `That takes the Wronskian as $1$; it is $${omega}$.`, `这是把朗斯基行列式当成 $1$；它等于 $${omega}$。`),
+            why(k * omega, "That multiplies by the Wronskian instead of dividing.", "这是乘以朗斯基行列式，而不是除以它。"),
+            why(
+              Q.of(-k, omega),
+              "The sign is flipped; $u_2' = \\frac{y_1g}{W}$ has no minus sign.",
+              "符号反了；$u_2' = \\frac{y_1g}{W}$ 没有负号。",
+            ),
+            why(Q.of(omega, k), "That divides the other way round.", "这是除反了。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the Wronskian", "计算朗斯基行列式"],
+                t("", ""),
+                [`W = y_1y_2' - y_1'y_2 = ${omega}\\cos^2 ${omega}x + ${omega}\\sin^2 ${omega}x = ${omega}`],
+              ],
+              [
+                ["Divide", "相除"],
+                t(`Since $\\cos ${omega}x \\sec ${omega}x = 1$:`, `因为 $\\cos ${omega}x \\sec ${omega}x = 1$：`),
+                [`u_2' = \\frac{y_1g}{W} = \\frac{(\\cos ${omega}x)(${k}\\sec ${omega}x)}{${omega}} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `$${omega} \\cdot ${ans.toLatex()} = ${k} = \\cos ${omega}x \\cdot ${k}\\sec ${omega}x$, so $Wu_2' = y_1g$.`,
+              `$${omega} \\cdot ${ans.toLatex()} = ${k} = \\cos ${omega}x \\cdot ${k}\\sec ${omega}x$，所以 $Wu_2' = y_1g$。`,
+            ),
+          ),
         });
       },
     },
@@ -2629,8 +2903,8 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
       id: "the-particular-solution-for-secant-forcing",
       title: t("The particular solution for secant forcing", "正割强迫项的特解"),
       explanation: t(
-        "Undetermined coefficients cannot handle $\\sec \\omega x$, but variation of parameters can. For $y'' + \\omega^2y = k\\sec \\omega x$ take $y_1 = \\cos \\omega x$, $y_2 = \\sin \\omega x$, $W = \\omega$:\n\n$$u_1' = -\\frac{k}{\\omega}\\tan \\omega x, \\qquad u_2' = \\frac{k}{\\omega}.$$\n\nIntegrating, $u_1 = \\frac{k}{\\omega^2}\\ln|\\cos \\omega x|$ and $u_2 = \\frac{k}{\\omega}x$, so\n\n$$y_p = \\frac{k}{\\omega^2}\\cos \\omega x\\,\\ln|\\cos \\omega x| + \\frac{k}{\\omega}x\\sin \\omega x.$$\n\nThe logarithm comes from integrating the tangent, and the factor $x$ from integrating a constant. Both coefficients scale with $k$, but they are divided by different powers of $\\omega$.",
-        "待定系数法处理不了 $\\sec \\omega x$，参数变易法却可以。对 $y'' + \\omega^2y = k\\sec \\omega x$，取 $y_1 = \\cos \\omega x$，$y_2 = \\sin \\omega x$，$W = \\omega$：\n\n$$u_1' = -\\frac{k}{\\omega}\\tan \\omega x, \\qquad u_2' = \\frac{k}{\\omega}.$$\n\n积分得 $u_1 = \\frac{k}{\\omega^2}\\ln|\\cos \\omega x|$，$u_2 = \\frac{k}{\\omega}x$，所以\n\n$$y_p = \\frac{k}{\\omega^2}\\cos \\omega x\\,\\ln|\\cos \\omega x| + \\frac{k}{\\omega}x\\sin \\omega x.$$\n\n对数来自对正切的积分，因子 $x$ 来自对常数的积分。两个系数都与 $k$ 成正比，但分别除以 $\\omega$ 的不同次幂。",
+        "Undetermined coefficients cannot handle $\\sec \\omega x$, but variation of parameters can. For $y'' + \\omega^2y = k\\sec \\omega x$ take $y_1 = \\cos \\omega x$, $y_2 = \\sin \\omega x$, $W = \\omega$:\n\n$$u_1' = -\\frac{k}{\\omega}\\tan \\omega x, \\qquad u_2' = \\frac{k}{\\omega}.$$\n\nIntegrating, $u_1 = \\frac{k}{\\omega^2}\\ln|\\cos \\omega x|$ and $u_2 = \\frac{k}{\\omega}x$, so\n\n$$y_p = \\frac{k}{\\omega^2}\\cos \\omega x\\,\\ln|\\cos \\omega x| + \\frac{k}{\\omega}x\\sin \\omega x.$$\n\nThe logarithm comes from integrating the tangent, and the factor $x$ from integrating a constant. Both coefficients scale with $k$, but they are divided by different powers of $\\omega$. For $y'' + 4y = 8\\sec 2x$ the coefficients are $2$ and $4$.\n\n> **Watch out.** Integrating $-\\tan\\omega x$ gives $+\\frac{1}{\\omega}\\ln|\\cos\\omega x|$: the sign turns positive and a second factor $\\frac{1}{\\omega}$ appears, which the constant $u_2'$ does not get.",
+        "待定系数法处理不了 $\\sec \\omega x$，参数变易法却可以。对 $y'' + \\omega^2y = k\\sec \\omega x$，取 $y_1 = \\cos \\omega x$，$y_2 = \\sin \\omega x$，$W = \\omega$：\n\n$$u_1' = -\\frac{k}{\\omega}\\tan \\omega x, \\qquad u_2' = \\frac{k}{\\omega}.$$\n\n积分得 $u_1 = \\frac{k}{\\omega^2}\\ln|\\cos \\omega x|$，$u_2 = \\frac{k}{\\omega}x$，所以\n\n$$y_p = \\frac{k}{\\omega^2}\\cos \\omega x\\,\\ln|\\cos \\omega x| + \\frac{k}{\\omega}x\\sin \\omega x.$$\n\n对数来自对正切的积分，因子 $x$ 来自对常数的积分。两个系数都与 $k$ 成正比，但分别除以 $\\omega$ 的不同次幂。对 $y'' + 4y = 8\\sec 2x$，两个系数分别是 $2$ 和 $4$。\n\n> **注意。** 对 $-\\tan\\omega x$ 积分得 $+\\frac{1}{\\omega}\\ln|\\cos\\omega x|$：符号变正，并多出一个因子 $\\frac{1}{\\omega}$，而常数 $u_2'$ 积分时没有这个因子。",
       ),
       generate(rng: Rng): Problem {
         const w = rng.int(1, 4);
@@ -2638,16 +2912,66 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
         const log = rng.int(0, 1) === 0;
         const ans = log ? Q.of(k, w * w) : Q.of(k, w);
         const wx = w === 1 ? "x" : `${w}x`;
+        const logTerm = `\\cos ${wx}\\,\\ln|\\cos ${wx}|`;
+        const target = log ? logTerm : `x\\sin ${wx}`;
+        const lnCos = `\\ln|\\cos ${wx}|`;
         return numberProblem({
           prompt: t(
-            `Variation of parameters gives a particular solution of $y'' + ${w * w === 1 ? "" : w * w}y = ${poly([k, `\\sec ${wx}`])}$ as a combination of $\\cos ${wx}\\,\\ln|\\cos ${wx}|$ and $x\\sin ${wx}$. Find the coefficient of $${log ? `\\cos ${wx}\\,\\ln|\\cos ${wx}|` : `x\\sin ${wx}`}$.`,
-            `参数变易法给出 $y'' + ${w * w === 1 ? "" : w * w}y = ${poly([k, `\\sec ${wx}`])}$ 的一个特解，它是 $\\cos ${wx}\\,\\ln|\\cos ${wx}|$ 与 $x\\sin ${wx}$ 的组合。求 $${log ? `\\cos ${wx}\\,\\ln|\\cos ${wx}|` : `x\\sin ${wx}`}$ 的系数。`,
+            `Variation of parameters gives a particular solution of $y'' + ${w * w === 1 ? "" : w * w}y = ${poly([k, `\\sec ${wx}`])}$ as a combination of $${logTerm}$ and $x\\sin ${wx}$. Find the coefficient of $${target}$.`,
+            `参数变易法给出 $y'' + ${w * w === 1 ? "" : w * w}y = ${poly([k, `\\sec ${wx}`])}$ 的一个特解，它是 $${logTerm}$ 与 $x\\sin ${wx}$ 的组合。求 $${target}$ 的系数。`,
           ),
           answer: ans,
-          wrong: log ? [Q.of(k, w), Q.of(-k, w * w), Q.of(k)] : [Q.of(k, w * w), Q.of(-k, w), Q.of(k * w)],
-          solution: t(
-            `$W = ${w}$, $u_1' = ${Q.of(-k, w).toLatex()}\\tan ${wx}$ and $u_2' = ${Q.of(k, w).toLatex()}$, so $u_1 = ${Q.of(k, w * w).toLatex()}\\ln|\\cos ${wx}|$ and $u_2 = ${Q.of(k, w).toLatex()}x$. The coefficient is $${ans.toLatex()}$.`,
-            `$W = ${w}$，$u_1' = ${Q.of(-k, w).toLatex()}\\tan ${wx}$，$u_2' = ${Q.of(k, w).toLatex()}$，所以 $u_1 = ${Q.of(k, w * w).toLatex()}\\ln|\\cos ${wx}|$，$u_2 = ${Q.of(k, w).toLatex()}x$。系数为 $${ans.toLatex()}$。`,
+          mistakes: apart(
+            ans,
+            log
+              ? [
+                  why(
+                    Q.of(k, w),
+                    "That misses the second $\\frac{1}{\\omega}$ from integrating the tangent.",
+                    "这里漏掉了对正切积分带来的第二个 $\\frac{1}{\\omega}$。",
+                  ),
+                  why(
+                    Q.of(-k, w * w),
+                    "The sign is flipped; integrating $-\\tan$ gives $+\\ln|\\cos|$.",
+                    "符号反了；对 $-\\tan$ 积分得 $+\\ln|\\cos|$。",
+                  ),
+                  why(k, "That takes $W = 1$ and skips the factor from integrating.", "这是取 $W = 1$，又跳过了积分带来的因子。"),
+                ]
+              : [
+                  why(
+                    Q.of(k, w * w),
+                    "That divides by $\\omega$ twice; integrating the constant $u_2'$ adds no factor.",
+                    "这是除了两次 $\\omega$；对常数 $u_2'$ 积分不会多出因子。",
+                  ),
+                  why(
+                    Q.of(-k, w),
+                    "The sign is flipped; $u_2' = \\frac{y_1g}{W}$ has no minus sign.",
+                    "符号反了；$u_2' = \\frac{y_1g}{W}$ 没有负号。",
+                  ),
+                  why(k * w, "That multiplies by $W = \\omega$ instead of dividing.", "这是乘以 $W = \\omega$，而不是除以它。"),
+                  why(k, "That takes the Wronskian as $1$.", "这是把朗斯基行列式当成 $1$。"),
+                ],
+          ),
+          solution: walked(
+            [
+              [
+                ["Find the parameter derivatives", "求参数的导数"],
+                t(`Here $W = ${w}$:`, `这里 $W = ${w}$：`),
+                [`u_1' = -\\frac{y_2g}{W} = ${poly([Q.of(-k, w), `\\tan ${wx}`])}`, `u_2' = \\frac{y_1g}{W} = ${Q.of(k, w).toLatex()}`],
+              ],
+              [
+                ["Integrate", "积分"],
+                t("", ""),
+                [
+                  `u_1 = ${poly([Q.of(k, w * w), lnCos])}, \\quad u_2 = ${poly([Q.of(k, w), "x"])}`,
+                  `y_p = ${poly([Q.of(k, w * w), logTerm], [Q.of(k, w), `x\\sin ${wx}`])}`,
+                ],
+              ],
+            ],
+            t(
+              `$\\frac{d}{dx}\\left(${poly([Q.of(k, w * w), lnCos])}\\right) = ${poly([Q.of(k, w * w), ""])} \\cdot \\frac{-${w === 1 ? "" : w}\\sin ${wx}}{\\cos ${wx}} = ${poly([Q.of(-k, w), `\\tan ${wx}`])}$, which is $u_1'$.`,
+              `$\\frac{d}{dx}\\left(${poly([Q.of(k, w * w), lnCos])}\\right) = ${poly([Q.of(k, w * w), ""])} \\cdot \\frac{-${w === 1 ? "" : w}\\sin ${wx}}{\\cos ${wx}} = ${poly([Q.of(-k, w), `\\tan ${wx}`])}$，正是 $u_1'$。`,
+            ),
           ),
         });
       },
@@ -2663,6 +2987,10 @@ export const variationOfParametersWithHigherOrderOdes: TopicDef = {
     "For an $n$th-order linear ODE, variation of parameters gives $u_k' = \\frac{W_k}{W} g$, where $W_k$ replaces column $k$ of the Wronskian with $(0, \\dots, 0, 1)^T$.",
     "对 $n$ 阶线性方程，常数变易法给出 $u_k' = \\frac{W_k}{W} g$，其中 $W_k$ 是把朗斯基行列式第 $k$ 列换成 $(0, \\dots, 0, 1)^T$ 所得。",
   ),
+  intro: t(
+    "Find a particular solution of $y''' = 6$ with $y_1 = 1$, $y_2 = x$, $y_3 = x^{2}$. The Wronskian is $W = 2$, and replacing each column by $(0, 0, 1)$ gives $W_1 = x^{2}$, $W_2 = -2x$ and $W_3 = 1$. So $u_1' = 3x^{2}$, $u_2' = -6x$ and $u_3' = 3$, which integrate to $u_1 = x^{3}$, $u_2 = -3x^{2}$ and $u_3 = 3x$. Then $y_p = x^{3} - 3x^{3} + 3x^{3} = x^{3}$.\n\nCheck: $(x^{3})''' = 6$.\n\nIn this lesson we extend variation of parameters to higher-order equations through Cramer's rule and the Wronskian of several solutions.",
+    "求 $y''' = 6$ 的一个特解，取 $y_1 = 1$，$y_2 = x$，$y_3 = x^{2}$。朗斯基行列式为 $W = 2$，把各列依次换成 $(0, 0, 1)$ 得 $W_1 = x^{2}$，$W_2 = -2x$，$W_3 = 1$。所以 $u_1' = 3x^{2}$，$u_2' = -6x$，$u_3' = 3$，积分得 $u_1 = x^{3}$，$u_2 = -3x^{2}$，$u_3 = 3x$。于是 $y_p = x^{3} - 3x^{3} + 3x^{3} = x^{3}$。\n\n检验：$(x^{3})''' = 6$。\n\n本课我们通过克拉默法则和多个解的朗斯基行列式，把参数变易法推广到高阶方程。",
+  ),
   prerequisites: ["solving-second-order-odes-using-variation-of-parameters"],
   encompasses: [
     {
@@ -2676,35 +3004,54 @@ export const variationOfParametersWithHigherOrderOdes: TopicDef = {
       id: "higher-order-variation-of-parameters",
       title: t("Cramer's rule for n-th order variation of parameters", "高阶常数变易法的克莱姆法则"),
       explanation: t(
-        "In an $n$-th order ODE, the parameter derivatives satisfy Cramer's rule $u_k'(x) = \\frac{W_k(x) g(x)}{W(x)}$. For fundamental solutions $1, x, x^k$, the Wronskian at $x = 1$ is $W(1, x, x^k)(1) = k(k-1)$.",
-        "在 $n$ 阶线性方程中，参数导数由克莱姆法则确定为 $u_k'(x) = \\frac{W_k(x) g(x)}{W(x)}$。对于基本解组 $1, x, x^k$，在 $x = 1$ 处的朗斯基行列式为 $W(1, x, x^k)(1) = k(k-1)$。",
+        "In an $n$-th order ODE, the parameter derivatives satisfy Cramer's rule $u_k'(x) = \\frac{W_k(x) g(x)}{W(x)}$. For fundamental solutions $1, x, x^k$, the Wronskian at $x = 1$ is $W(1, x, x^k)(1) = k(k-1)$. For $1, x, x^{3}$ it is $3 \\cdot 2 = 6$.\n\n> **Watch out.** The third row holds second derivatives, and $(x^{k})'' = k(k - 1)x^{k - 2}$, not $k^{2}x^{k - 2}$.",
+        "在 $n$ 阶线性方程中，参数导数由克莱姆法则确定为 $u_k'(x) = \\frac{W_k(x) g(x)}{W(x)}$。对于基本解组 $1, x, x^k$，在 $x = 1$ 处的朗斯基行列式为 $W(1, x, x^k)(1) = k(k-1)$。对 $1, x, x^{3}$，它是 $3 \\cdot 2 = 6$。\n\n> **注意。** 第三行是二阶导数，$(x^{k})'' = k(k - 1)x^{k - 2}$，而不是 $k^{2}x^{k - 2}$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 35);
         const ans = k * (k - 1);
-
-        const prompt = t(
-          `Calculate the value of the Wronskian determinant $W(1, x, x^{${k}})$ at $x = 1$, which arises when applying variation of parameters to a third-order differential equation.`,
-          `计算对三阶微分方程应用常数变易法时在 $x = 1$ 处的朗斯基行列式 $W(1, x, x^{${k}})(1)$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `The Wronskian of $y_1 = 1, y_2 = x, y_3 = x^{${k}}$ is the determinant of the functions and their first two derivatives: $\\begin{pmatrix} 1 & x & x^{${k}} \\\\ 0 & 1 & ${k}x^{${k}-1} \\\\ 0 & 0 & ${k * (k - 1)}x^{${k}-2} \\end{pmatrix}$.`,
-            `Evaluating at $x = 1$, the matrix is upper triangular: $\\begin{pmatrix} 1 & 1 & 1 \\\\ 0 & 1 & ${k} \\\\ 0 & 0 & ${k * (k - 1)} \\end{pmatrix}$.`,
-            `The determinant is the product of diagonal elements: $1 \\times 1 \\times ${k * (k - 1)} = ${ans}$.`,
-          ),
-          steps(
-            `函数组 $y_1 = 1, y_2 = x, y_3 = x^{${k}}$ 的朗斯基行列式由函数及一、二阶导数构成：$\\begin{pmatrix} 1 & x & x^{${k}} \\\\ 0 & 1 & ${k}x^{${k}-1} \\\\ 0 & 0 & ${k * (k - 1)}x^{${k}-2} \\end{pmatrix}$。`,
-            `在 $x = 1$ 处求值得到上三角矩阵：$\\begin{pmatrix} 1 & 1 & 1 \\\\ 0 & 1 & ${k} \\\\ 0 & 0 & ${k * (k - 1)} \\end{pmatrix}$。`,
-            `上三角行列式等于对角线元素之积：$1 \\times 1 \\times ${k * (k - 1)} = ${ans}$。`,
-          ),
-        );
-
+        const d2 = k === 2 ? `${ans}` : `${ans}${pw(k - 2)}`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the value of the Wronskian determinant $W(1, x, x^{${k}})$ at $x = 1$, which arises when applying variation of parameters to a third-order differential equation.`,
+            `计算对三阶微分方程应用常数变易法时在 $x = 1$ 处的朗斯基行列式 $W(1, x, x^{${k}})(1)$ 的值。`,
+          ),
           answer: ans,
-          wrong: [k, k * k, ans + 2],
+          mistakes: apart(ans, [
+            why(
+              k,
+              "That stops at the first derivative; the last diagonal entry is a second derivative.",
+              "这只算到一阶导数；对角线最后一项是二阶导数。",
+            ),
+            why(
+              k * k,
+              "That uses $k^{2}$ for the second derivative; it is $k(k - 1)$.",
+              "这是把二阶导数的系数算成 $k^{2}$；应当是 $k(k - 1)$。",
+            ),
+            why(
+              ans / 2,
+              "That divides by $2$; the determinant is just the product of the diagonal.",
+              "这是除以 $2$；行列式就是对角线之积。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the Wronskian matrix", "写出朗斯基矩阵"],
+                t("Rows are the functions and their first two derivatives:", "各行是函数及其一阶、二阶导数："),
+                [`\\begin{pmatrix} 1 & x & x^{${k}} \\\\ 0 & 1 & ${k}${pw(k - 1)} \\\\ 0 & 0 & ${d2} \\end{pmatrix}`],
+              ],
+              [
+                ["Evaluate at x = 1", "在 x = 1 处求值"],
+                t("The matrix is upper triangular:", "矩阵是上三角的："),
+                [`W(1) = 1 \\cdot 1 \\cdot ${ans} = ${ans}`],
+              ],
+            ],
+            t(
+              `$(x^{${k}})'' = ${k} \\cdot ${k - 1}${k === 2 ? "" : pw(k - 2)}$, which is $${ans}$ at $x = 1$, the only diagonal entry other than $1$.`,
+              `$(x^{${k}})'' = ${k} \\cdot ${k - 1}${k === 2 ? "" : pw(k - 2)}$，在 $x = 1$ 处等于 $${ans}$，这是对角线上唯一不为 $1$ 的元素。`,
+            ),
+          ),
         });
       },
     },
@@ -2712,8 +3059,8 @@ export const variationOfParametersWithHigherOrderOdes: TopicDef = {
       id: "the-wronskian-of-three-exponentials",
       title: t("The Wronskian of three exponentials", "三个指数函数的朗斯基行列式"),
       explanation: t(
-        "Variation of parameters for a third-order equation divides by the Wronskian $W(y_1, y_2, y_3)$, the determinant of the functions and their first two derivatives. For $e^{ax}$, $e^{bx}$, $e^{cx}$ at $x = 0$ the rows are $(1, 1, 1)$, $(a, b, c)$ and $(a^2, b^2, c^2)$, a Vandermonde determinant:\n\n$$W(0) = (b - a)(c - a)(c - b).$$\n\nIt is nonzero exactly when the three rates are distinct.",
-        "三阶方程的参数变易法要除以朗斯基行列式 $W(y_1, y_2, y_3)$，即由函数及其一阶、二阶导数组成的行列式。对 $e^{ax}$、$e^{bx}$、$e^{cx}$，在 $x = 0$ 处各行为 $(1, 1, 1)$、$(a, b, c)$、$(a^2, b^2, c^2)$，这是范德蒙德行列式：\n\n$$W(0) = (b - a)(c - a)(c - b).$$\n\n它不为零当且仅当三个速率互不相同。",
+        "Variation of parameters for a third-order equation divides by the Wronskian $W(y_1, y_2, y_3)$, the determinant of the functions and their first two derivatives. For $e^{ax}$, $e^{bx}$, $e^{cx}$ at $x = 0$ the rows are $(1, 1, 1)$, $(a, b, c)$ and $(a^2, b^2, c^2)$, a Vandermonde determinant:\n\n$$W(0) = (b - a)(c - a)(c - b).$$\n\nIt is nonzero exactly when the three rates are distinct. For $1$, $e^{x}$, $e^{2x}$: $(1 - 0)(2 - 0)(2 - 1) = 2$.\n\n> **Watch out.** Each factor is a later rate minus an earlier one; reversing a single factor flips the sign, and all three factors are needed.",
+        "三阶方程的参数变易法要除以朗斯基行列式 $W(y_1, y_2, y_3)$，即由函数及其一阶、二阶导数组成的行列式。对 $e^{ax}$、$e^{bx}$、$e^{cx}$，在 $x = 0$ 处各行为 $(1, 1, 1)$、$(a, b, c)$、$(a^2, b^2, c^2)$，这是范德蒙德行列式：\n\n$$W(0) = (b - a)(c - a)(c - b).$$\n\n它不为零当且仅当三个速率互不相同。对 $1$、$e^{x}$、$e^{2x}$：$(1 - 0)(2 - 0)(2 - 1) = 2$。\n\n> **注意。** 每个因子都是后一个速率减前一个；只要反了一个因子，符号就会反，而且三个因子缺一不可。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 1);
@@ -2721,16 +3068,46 @@ export const variationOfParametersWithHigherOrderOdes: TopicDef = {
         const c = b + rng.int(1, 3);
         const ans = (b - a) * (c - a) * (c - b);
         const e = (r: number) => (r === 0 ? "1" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
+        const m1 = b * c * c - c * b * b;
+        const m2 = a * c * c - c * a * a;
+        const m3 = a * b * b - b * a * a;
         return numberProblem({
           prompt: t(
             `Evaluate the Wronskian $W(${e(a)}, ${e(b)}, ${e(c)})$ at $x = 0$.`,
             `求朗斯基行列式 $W(${e(a)}, ${e(b)}, ${e(c)})$ 在 $x = 0$ 处的值。`,
           ),
           answer: ans,
-          wrong: [-ans, (b - a) * (c - b), a * b * c, b - a + (c - a) + (c - b)],
-          solution: t(
-            `The rows at $0$ are $(1, 1, 1)$, $(${a}, ${b}, ${c})$, $(${a * a}, ${b * b}, ${c * c})$, so $W(0) = (${b} - ${par(a)})(${c} - ${par(a)})(${c} - ${par(b)}) = ${ans}$.`,
-            `在 $0$ 处各行为 $(1, 1, 1)$、$(${a}, ${b}, ${c})$、$(${a * a}, ${b * b}, ${c * c})$，所以 $W(0) = (${b} - ${par(a)})(${c} - ${par(a)})(${c} - ${par(b)}) = ${ans}$。`,
+          mistakes: apart(ans, [
+            why(
+              -ans,
+              "The sign is flipped; each factor is a later rate minus an earlier one.",
+              "符号反了；每个因子都是后一个速率减前一个。",
+            ),
+            why((b - a) * (c - b), "That leaves out the factor $c - a$.", "这里漏掉了因子 $c - a$。"),
+            why(
+              a * b * c,
+              "That multiplies the rates; the determinant multiplies their differences.",
+              "这是把速率相乘；行列式是它们的差相乘。",
+            ),
+            why(b - a + (c - a) + (c - b), "That adds the differences; they are multiplied.", "这是把差相加；应当相乘。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the rows at x = 0", "写出 x = 0 处的各行"],
+                t("Each derivative brings down the rate:", "每次求导都带下速率："),
+                [`\\begin{pmatrix} 1 & 1 & 1 \\\\ ${a} & ${b} & ${c} \\\\ ${a * a} & ${b * b} & ${c * c} \\end{pmatrix}`],
+              ],
+              [
+                ["Use the Vandermonde form", "用范德蒙德公式"],
+                t("", ""),
+                [`W(0) = (${b} - ${par(a)})(${c} - ${par(a)})(${c} - ${par(b)}) = ${ans}`],
+              ],
+            ],
+            t(
+              `Expanding along the first row: $${m1} - ${par(m2)} + ${par(m3)} = ${ans}$.`,
+              `沿第一行展开：$${m1} - ${par(m2)} + ${par(m3)} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -2750,6 +3127,10 @@ export const simpleHarmonicOscillators: TopicDef = {
     "An undamped mass-spring system satisfies $my'' + ky = 0$ and oscillates with natural angular frequency $\\omega_0 = \\sqrt{k/m}$.",
     "无阻尼弹簧振子满足 $my'' + ky = 0$，以固有角频率 $\\omega_0 = \\sqrt{k/m}$ 振动。",
   ),
+  intro: t(
+    "A $2\\text{ kg}$ mass hangs on a spring with $k = 18\\text{ N/m}$. Newton's law gives $2y'' + 18y = 0$, so $y'' + 9y = 0$ and the characteristic roots are $\\pm 3i$. The mass oscillates with natural angular frequency $\\omega_0 = \\sqrt{18/2} = 3\\text{ rad/s}$; released from $y(0) = 1$ at rest, $y = \\cos 3t$.\n\nCheck: $y'' = -9\\cos 3t$, so $2y'' + 18y = -18\\cos 3t + 18\\cos 3t = 0$, and $y(0) = 1$, $y'(0) = 0$.\n\nIn this lesson we model an undamped mass on a spring, find its natural frequency and read the amplitude from the initial conditions.",
+    "一个 $2\\text{ kg}$ 的物体挂在 $k = 18\\text{ N/m}$ 的弹簧上。由牛顿定律得 $2y'' + 18y = 0$，即 $y'' + 9y = 0$，特征根为 $\\pm 3i$。物体以固有角频率 $\\omega_0 = \\sqrt{18/2} = 3\\text{ rad/s}$ 振动；从 $y(0) = 1$ 静止释放时，$y = \\cos 3t$。\n\n检验：$y'' = -9\\cos 3t$，所以 $2y'' + 18y = -18\\cos 3t + 18\\cos 3t = 0$，且 $y(0) = 1$，$y'(0) = 0$。\n\n本课我们为无阻尼弹簧振子建模，求它的固有频率，并由初始条件求振幅。",
+  ),
   prerequisites: ["second-order-homogeneous-initial-value-problems"],
   encompasses: [
     {
@@ -2763,37 +3144,52 @@ export const simpleHarmonicOscillators: TopicDef = {
       id: "natural-frequency-of-harmonic-oscillator",
       title: t("Natural angular frequency of a harmonic oscillator", "简谐振子的固有角频率"),
       explanation: t(
-        "A stiffer spring pulls back harder and a heavier mass responds more slowly, so the natural frequency grows with stiffness and shrinks with mass. The natural angular frequency of a mass $m$ attached to a spring with stiffness constant $k$ is $\\omega_0 = \\sqrt{\\frac{k}{m}}$.",
-        "弹簧越硬，回复力越大；质量越大，响应越慢；所以固有频率随刚度增大而增大，随质量增大而减小。质量为 $m$、劲度系数为 $k$ 的弹簧振子的固有角频率为 $\\omega_0 = \\sqrt{\\frac{k}{m}}$。",
+        "A stiffer spring pulls back harder and a heavier mass responds more slowly, so the natural frequency grows with stiffness and shrinks with mass. The natural angular frequency of a mass $m$ attached to a spring with stiffness constant $k$ is $\\omega_0 = \\sqrt{\\frac{k}{m}}$. For $m = 2$ and $k = 18$, $\\omega_0 = \\sqrt{9} = 3$.\n\n> **Watch out.** Divide by the mass before taking the root: $\\frac{k}{m}$ is $\\omega_0^{2}$, not $\\omega_0$, and $\\sqrt{k}$ alone is right only when $m = 1$.",
+        "弹簧越硬，回复力越大；质量越大，响应越慢；所以固有频率随刚度增大而增大，随质量增大而减小。质量为 $m$、劲度系数为 $k$ 的弹簧振子的固有角频率为 $\\omega_0 = \\sqrt{\\frac{k}{m}}$。对 $m = 2$，$k = 18$，$\\omega_0 = \\sqrt{9} = 3$。\n\n> **注意。** 先除以质量再开方：$\\frac{k}{m}$ 是 $\\omega_0^{2}$ 而不是 $\\omega_0$；只有 $m = 1$ 时 $\\sqrt{k}$ 才对。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(1, 8);
         const omega0 = rng.int(2, 15);
         const k = m * omega0 * omega0;
         const ans = omega0;
-
-        const prompt = t(
-          `A mass of $m = ${m}\\text{ kg}$ is attached to a spring with spring constant $k = ${k}\\text{ N/m}$. Find the natural angular frequency $\\omega_0$ in $\\text{rad/s}$.`,
-          `一个质量为 $m = ${m}\\text{ 千克}$ 的物体连接在劲度系数为 $k = ${k}\\text{ 牛/米}$ 的弹簧上。求系统的固有角频率 $\\omega_0$（单位：$\\text{弧度/秒}$）。`,
-        );
-        const solution = t(
-          steps(
-            `The equation of motion is $m y'' + k y = 0 \\implies y'' + \\frac{k}{m}y = 0$.`,
-            `The natural frequency squared is $\\omega_0^2 = \\frac{k}{m} = \\frac{${k}}{${m}} = ${omega0 * omega0}$.`,
-            `Take the square root: $\\omega_0 = \\sqrt{${omega0 * omega0}} = ${ans}\\text{ rad/s}$.`,
-          ),
-          steps(
-            `运动微分方程为 $m y'' + k y = 0 \\implies y'' + \\frac{k}{m}y = 0$。`,
-            `固有角频率平方为 $\\omega_0^2 = \\frac{k}{m} = \\frac{${k}}{${m}} = ${omega0 * omega0}$。`,
-            `开平方计算：$\\omega_0 = \\sqrt{${omega0 * omega0}} = ${ans}\\text{ 弧度/秒}$。`,
-          ),
-        );
-
+        const root = Math.sqrt(k);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `A mass of $m = ${m}\\text{ kg}$ is attached to a spring with spring constant $k = ${k}\\text{ N/m}$. Find the natural angular frequency $\\omega_0$ in $\\text{rad/s}$.`,
+            `一个质量为 $m = ${m}\\text{ 千克}$ 的物体连接在劲度系数为 $k = ${k}\\text{ 牛/米}$ 的弹簧上。求系统的固有角频率 $\\omega_0$（单位：$\\text{弧度/秒}$）。`,
+          ),
           answer: ans,
-          wrong: [omega0 * omega0, Math.round(k / m), ans * 2],
+          mistakes: apart(ans, [
+            why(
+              omega0 * omega0,
+              "That is $\\frac{k}{m} = \\omega_0^{2}$; take the square root.",
+              "这是 $\\frac{k}{m} = \\omega_0^{2}$；还要开平方。",
+            ),
+            why(
+              m * omega0,
+              "That multiplies by the mass under the root; $\\omega_0 = \\sqrt{k/m}$ divides by it.",
+              "这是在根号下乘以质量；$\\omega_0 = \\sqrt{k/m}$ 要除以质量。",
+            ),
+            ...(Number.isInteger(root) ? [why(root, "That is $\\sqrt{k}$; the mass is left out.", "这是 $\\sqrt{k}$；漏掉了质量。")] : []),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the equation", "写出方程"],
+                t("Divide by the mass:", "除以质量："),
+                [`${m === 1 ? "" : m}y'' + ${k}y = 0`, ...(m === 1 ? [] : [`y'' + ${omega0 * omega0}y = 0`])],
+              ],
+              [
+                ["Take the root", "开方"],
+                t("", ""),
+                [`\\omega_0 = \\sqrt{${over(k, m)}} = \\sqrt{${omega0 * omega0}} = ${ans}\\text{ rad/s}`],
+              ],
+            ],
+            t(
+              `$m\\omega_0^{2} = ${m} \\cdot ${omega0 * omega0} = ${k} = k$, so $y = \\cos ${ans}t$ solves the equation.`,
+              `$m\\omega_0^{2} = ${m} \\cdot ${omega0 * omega0} = ${k} = k$，所以 $y = \\cos ${ans}t$ 满足方程。`,
+            ),
+          ),
         });
       },
     },
@@ -2801,8 +3197,8 @@ export const simpleHarmonicOscillators: TopicDef = {
       id: "the-amplitude-from-initial-conditions",
       title: t("The amplitude from initial conditions", "由初始条件求振幅"),
       explanation: t(
-        "The solution of $y'' + \\omega^2y = 0$ with $y(0) = y_0$ and $y'(0) = v_0$ is $y = y_0\\cos \\omega t + \\frac{v_0}{\\omega}\\sin \\omega t$. Written as one cosine $R\\cos(\\omega t - \\delta)$, its amplitude is\n\n$$R = \\sqrt{y_0^2 + \\left(\\frac{v_0}{\\omega}\\right)^2}.$$\n\nThe initial velocity is divided by $\\omega$ before it is combined with the initial displacement.",
-        "$y'' + \\omega^2y = 0$ 满足 $y(0) = y_0$，$y'(0) = v_0$ 的解为 $y = y_0\\cos \\omega t + \\frac{v_0}{\\omega}\\sin \\omega t$。写成单个余弦 $R\\cos(\\omega t - \\delta)$，振幅为\n\n$$R = \\sqrt{y_0^2 + \\left(\\frac{v_0}{\\omega}\\right)^2}.$$\n\n初速度要先除以 $\\omega$，再与初位移合成。",
+        "The solution of $y'' + \\omega^2y = 0$ with $y(0) = y_0$ and $y'(0) = v_0$ is $y = y_0\\cos \\omega t + \\frac{v_0}{\\omega}\\sin \\omega t$. Written as one cosine $R\\cos(\\omega t - \\delta)$, its amplitude is\n\n$$R = \\sqrt{y_0^2 + \\left(\\frac{v_0}{\\omega}\\right)^2}.$$\n\nThe initial velocity is divided by $\\omega$ before it is combined with the initial displacement. For $y'' + 4y = 0$, $y(0) = 3$, $y'(0) = 8$: $R = \\sqrt{9 + 16} = 5$.\n\n> **Watch out.** The two parts combine like the sides of a right triangle, so square, add and take the root; adding them directly overstates the amplitude.",
+        "$y'' + \\omega^2y = 0$ 满足 $y(0) = y_0$，$y'(0) = v_0$ 的解为 $y = y_0\\cos \\omega t + \\frac{v_0}{\\omega}\\sin \\omega t$。写成单个余弦 $R\\cos(\\omega t - \\delta)$，振幅为\n\n$$R = \\sqrt{y_0^2 + \\left(\\frac{v_0}{\\omega}\\right)^2}.$$\n\n初速度要先除以 $\\omega$，再与初位移合成。对 $y'' + 4y = 0$，$y(0) = 3$，$y'(0) = 8$：$R = \\sqrt{9 + 16} = 5$。\n\n> **注意。** 两部分像直角三角形的两条直角边那样合成：先平方、相加再开方；直接相加会把振幅算大。",
       ),
       generate(rng: Rng): Problem {
         const [u, v, R] = rng.pick([
@@ -2817,16 +3213,44 @@ export const simpleHarmonicOscillators: TopicDef = {
         const w = rng.int(1, 5);
         const y0 = u * rng.pick([-1, 1]);
         const v0 = v * w * rng.pick([-1, 1]);
+        const raw = Math.sqrt(u * u + v0 * v0);
+        const sin = poly([Q.of(v0, w), w === 1 ? "\\sin t" : `\\sin ${w}t`]);
         return numberProblem({
           prompt: t(
             `A spring satisfies $y'' + ${w * w === 1 ? "" : w * w}y = 0$ with $y(0) = ${y0}$ and $y'(0) = ${v0}$. Find the amplitude of the motion.`,
             `弹簧满足 $y'' + ${w * w === 1 ? "" : w * w}y = 0$，$y(0) = ${y0}$，$y'(0) = ${v0}$。求运动的振幅。`,
           ),
           answer: R,
-          wrong: [u + v, Math.abs(y0) + Math.abs(v0), ...(w === 1 ? [] : [Math.round(Math.sqrt(u * u + v0 * v0))])],
-          solution: t(
-            `$\\omega = ${w}$, so $R = \\sqrt{${par(y0)}^2 + \\left(\\frac{${v0}}{${w}}\\right)^2} = \\sqrt{${u * u} + ${v * v}} = ${R}$.`,
-            `$\\omega = ${w}$，所以 $R = \\sqrt{${par(y0)}^2 + \\left(\\frac{${v0}}{${w}}\\right)^2} = \\sqrt{${u * u} + ${v * v}} = ${R}$。`,
+          mistakes: apart(R, [
+            why(u + v, "That adds the two parts; square them, add and take the root.", "这是把两部分直接相加；要先平方、相加再开方。"),
+            why(
+              Math.abs(y0) + Math.abs(v0),
+              "That adds the displacement and the raw velocity.",
+              "这是把位移和未除以 $\\omega$ 的速度直接相加。",
+            ),
+            ...(w === 1 || !Number.isInteger(raw)
+              ? []
+              : [why(raw, "That forgets to divide the velocity by $\\omega$.", "这里忘了把速度除以 $\\omega$。")]),
+            why(
+              u,
+              "That keeps only the displacement; the initial velocity also adds to the amplitude.",
+              "这里只用了位移；初速度也会增大振幅。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the solution", "写出解"],
+                t(`Here $\\omega = ${w}$:`, `这里 $\\omega = ${w}$：`),
+                [`y = ${poly([y0, w === 1 ? "\\cos t" : `\\cos ${w}t`])} ${sin.startsWith("-") ? sin.replace(/^-/, "- ") : `+ ${sin}`}`],
+              ],
+              [
+                ["Combine", "合成"],
+                t("", ""),
+                [`R = \\sqrt{${par(y0)}^2 + \\left(${over(v0, w)}\\right)^2} = \\sqrt{${u * u} + ${v * v}} = ${R}`],
+              ],
+            ],
+            t(`$${u}^2 + ${v}^2 = ${u * u + v * v} = ${R}^2$.`, `$${u}^2 + ${v}^2 = ${u * u + v * v} = ${R}^2$。`),
           ),
         });
       },
@@ -2842,6 +3266,10 @@ export const dampedOscillators: TopicDef = {
     "In $my'' + cy' + ky = 0$, the sign of $c^2 - 4mk$ classifies the motion as overdamped ($> 0$), critically damped ($= 0$) or underdamped ($< 0$); critical damping is $c = 2\\sqrt{mk}$.",
     "在 $my'' + cy' + ky = 0$ 中，$c^2 - 4mk$ 的符号把运动分为过阻尼（$> 0$）、临界阻尼（$= 0$）与欠阻尼（$< 0$）；临界阻尼系数为 $c = 2\\sqrt{mk}$。",
   ),
+  intro: t(
+    "A $1\\text{ kg}$ mass on a spring with $k = 9\\text{ N/m}$ moves through a damper with constant $c$, so $y'' + cy' + 9y = 0$ and the roots are $\\frac{-c \\pm \\sqrt{c^2 - 36}}{2}$. With $c = 2$ the discriminant is negative and the mass oscillates while it settles; with $c = 10$ it is positive and the mass creeps back without oscillating. The boundary is $c = 2\\sqrt{1 \\cdot 9} = 6$, where $r^2 + 6r + 9 = (r + 3)^2$ has a repeated root.\n\nCheck: $6^2 - 4 \\cdot 1 \\cdot 9 = 0$.\n\nIn this lesson we add damping to the spring model and classify the motion by the discriminant $c^2 - 4mk$.",
+    "一个 $1\\text{ kg}$ 的物体挂在 $k = 9\\text{ N/m}$ 的弹簧上，并通过阻尼常数为 $c$ 的阻尼器运动，所以 $y'' + cy' + 9y = 0$，特征根为 $\\frac{-c \\pm \\sqrt{c^2 - 36}}{2}$。取 $c = 2$ 时判别式为负，物体一边振荡一边停下；取 $c = 10$ 时判别式为正，物体不振荡地慢慢回到平衡位置。分界是 $c = 2\\sqrt{1 \\cdot 9} = 6$，此时 $r^2 + 6r + 9 = (r + 3)^2$ 有重根。\n\n检验：$6^2 - 4 \\cdot 1 \\cdot 9 = 0$。\n\n本课我们在弹簧模型中加入阻尼，并用判别式 $c^2 - 4mk$ 对运动分类。",
+  ),
   prerequisites: ["simple-harmonic-oscillators"],
   encompasses: [{ topic: "simple-harmonic-oscillators", weight: 0.3 }],
   xp: 10,
@@ -2850,37 +3278,57 @@ export const dampedOscillators: TopicDef = {
       id: "critical-damping-coefficient",
       title: t("Critical damping coefficient", "临界阻尼系数计算"),
       explanation: t(
-        "Critical damping is the boundary between oscillating and not oscillating, which is where the characteristic equation has a repeated root. Critical damping occurs when the characteristic discriminant vanishes: $c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$.",
-        "临界阻尼是振荡与不振荡之间的分界，此时特征方程有重根。当特征方程判别式为零时系统处于临界阻尼状态：$c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$。",
+        "Critical damping is the boundary between oscillating and not oscillating, which is where the characteristic equation has a repeated root. Critical damping occurs when the characteristic discriminant vanishes: $c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$. For $m = 2$ and $k = 8$, $c_{\\text{crit}} = 2\\sqrt{16} = 8$.\n\n> **Watch out.** The mass is under the root together with $k$, and the factor $2$ stays outside it.",
+        "临界阻尼是振荡与不振荡之间的分界，此时特征方程有重根。当特征方程判别式为零时系统处于临界阻尼状态：$c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$。对 $m = 2$，$k = 8$，$c_{\\text{crit}} = 2\\sqrt{16} = 8$。\n\n> **注意。** 质量和 $k$ 一起在根号下，因子 $2$ 在根号外。",
       ),
       generate(rng: Rng): Problem {
-        const p = rng.int(2, 35);
-        const mass = 1;
-        const springK = p * p;
-        const ans = 2 * p;
-
-        const prompt = t(
-          `A mass-spring-damper system has mass $m = ${mass}\\text{ kg}$ and spring stiffness $k = ${springK}\\text{ N/m}$. Find the critical damping coefficient $c_{\\text{crit}}$ in $\\text{N}\\cdot\\text{s/m}$.`,
-          `质量-弹簧-阻尼系统具有质量 $m = ${mass}\\text{ 千克}$ 和弹簧劲度系数 $k = ${springK}\\text{ 牛/米}$。求系统的临界阻尼系数 $c_{\\text{crit}}$（单位：$\\text{牛}\\cdot\\text{秒/米}$）。`,
-        );
-        const solution = t(
-          steps(
-            `The characteristic equation for $m y'' + c y' + k y = 0$ is $m r^2 + c r + k = 0$.`,
-            `The discriminant is $\\Delta = c^2 - 4mk$. Critical damping occurs when $\\Delta = 0 \\implies c = 2\\sqrt{mk}$.`,
-            `Substitute $m = ${mass}$ and $k = ${springK}$: $c_{\\text{crit}} = 2\\sqrt{${mass} \\times ${springK}} = 2\\sqrt{${springK}} = 2(${p}) = ${ans}\\text{ N}\\cdot\\text{s/m}$.`,
-          ),
-          steps(
-            `阻尼振动方程 $m y'' + c y' + k y = 0$ 的特征方程为 $m r^2 + c r + k = 0$。`,
-            `特征方程判别式为 $\\Delta = c^2 - 4mk$。发生临界阻尼时判别式为零：$c = 2\\sqrt{mk}$。`,
-            `代入 $m = ${mass}$ 与 $k = ${springK}$：$c_{\\text{crit}} = 2\\sqrt{${mass} \\times ${springK}} = 2\\sqrt{${springK}} = 2(${p}) = ${ans}\\text{ 牛}\\cdot\\text{秒/米}$。`,
-          ),
-        );
-
+        const p = rng.int(2, 12);
+        const mass = rng.int(1, 4);
+        const springK = mass * p * p;
+        const ans = 2 * mass * p;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `A mass-spring-damper system has mass $m = ${mass}\\text{ kg}$ and spring stiffness $k = ${springK}\\text{ N/m}$. Find the critical damping coefficient $c_{\\text{crit}}$ in $\\text{N}\\cdot\\text{s/m}$.`,
+            `质量-弹簧-阻尼系统具有质量 $m = ${mass}\\text{ 千克}$ 和弹簧劲度系数 $k = ${springK}\\text{ 牛/米}$。求系统的临界阻尼系数 $c_{\\text{crit}}$（单位：$\\text{牛}\\cdot\\text{秒/米}$）。`,
+          ),
           answer: ans,
-          wrong: [p, 4 * p, springK],
+          mistakes: apart(ans, [
+            why(mass * p, "That is $\\sqrt{mk}$; the factor $2$ is missing.", "这是 $\\sqrt{mk}$；漏掉了因子 $2$。"),
+            why(
+              2 * ans,
+              "That puts the $4$ of $4mk$ outside the root; $\\sqrt{4} = 2$.",
+              "这是把 $4mk$ 中的 $4$ 放到根号外；$\\sqrt{4} = 2$。",
+            ),
+            why(4 * mass * springK, "That is $c^2 = 4mk$; take the square root.", "这是 $c^2 = 4mk$；还要开平方。"),
+            why(
+              2 * p,
+              "That uses $2\\sqrt{k/m}$; the mass multiplies $k$ under the root.",
+              "这是用了 $2\\sqrt{k/m}$；根号下质量要乘以 $k$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set the discriminant to zero", "令判别式为零"],
+                t(
+                  `The characteristic equation is $${mass === 1 ? "" : mass}r^2 + cr + ${springK} = 0$:`,
+                  `特征方程为 $${mass === 1 ? "" : mass}r^2 + cr + ${springK} = 0$：`,
+                ),
+                [`c^2 - 4 \\cdot ${mass} \\cdot ${springK} = 0`],
+              ],
+              [
+                ["Solve for c", "解出 c"],
+                t("", ""),
+                [
+                  `c_{\\text{crit}} = 2\\sqrt{${mass} \\cdot ${springK}} = 2\\sqrt{${mass * springK}} = 2 \\cdot ${mass * p} = ${ans}\\text{ N}\\cdot\\text{s/m}`,
+                ],
+              ],
+            ],
+            t(
+              `$${ans}^2 = ${ans * ans} = 4 \\cdot ${mass} \\cdot ${springK}$, so the roots coincide at $r = -\\frac{c}{2m} = -${p}$.`,
+              `$${ans}^2 = ${ans * ans} = 4 \\cdot ${mass} \\cdot ${springK}$，所以两根重合于 $r = -\\frac{c}{2m} = -${p}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2888,8 +3336,8 @@ export const dampedOscillators: TopicDef = {
       id: "classifying-the-damping-of-an-oscillator",
       title: t("Classifying the damping of an oscillator", "判别振子的阻尼类型"),
       explanation: t(
-        "For $my'' + cy' + ky = 0$ the characteristic roots are $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$, so the discriminant $c^2 - 4mk$ decides the motion. If it is negative the system is underdamped and oscillates with decaying amplitude. If it is zero the system is critically damped, and if it is positive it is overdamped; in both of these cases it returns to rest without oscillating.",
-        "对 $my'' + cy' + ky = 0$，特征根为 $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$，所以判别式 $c^2 - 4mk$ 决定运动类型。若它为负，系统欠阻尼，振幅衰减地振荡。若它为零，系统临界阻尼；若为正，系统过阻尼；后两种情形下系统都不振荡地回到静止。",
+        "For $my'' + cy' + ky = 0$ the characteristic roots are $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$, so the discriminant $c^2 - 4mk$ decides the motion. If it is negative the system is underdamped and oscillates with decaying amplitude. If it is zero the system is critically damped, and if it is positive it is overdamped; in both of these cases it returns to rest without oscillating. For $m = 1$, $k = 9$ and $c = 4$: $16 - 36 < 0$, underdamped.\n\n> **Watch out.** Compare $c^2$ with $4mk$, not $c$ with $mk$ or $4mk$; $c = 4$ is less than $4mk = 36$ either way, but $c = 7$ is not, and $49 - 36 > 0$ makes it overdamped.",
+        "对 $my'' + cy' + ky = 0$，特征根为 $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$，所以判别式 $c^2 - 4mk$ 决定运动类型。若它为负，系统欠阻尼，振幅衰减地振荡。若它为零，系统临界阻尼；若为正，系统过阻尼；后两种情形下系统都不振荡地回到静止。对 $m = 1$，$k = 9$，$c = 4$：$16 - 36 < 0$，欠阻尼。\n\n> **注意。** 要比较 $c^2$ 和 $4mk$，而不是比较 $c$ 和 $mk$ 或 $4mk$；$c = 7$ 小于 $36$，但 $49 - 36 > 0$，所以是过阻尼。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(1, 5);
@@ -2904,18 +3352,50 @@ export const dampedOscillators: TopicDef = {
               : Math.floor(2 * Math.sqrt(m * k)) + rng.int(1, 6);
         const disc = c * c - 4 * m * k;
         const correct = disc < 0 ? 0 : disc === 0 ? 1 : 2;
-        return choiceProblem({
+        const sign = (en: string, zh: string) => [en, zh] as const;
+        const [nowEn, nowZh] = disc < 0 ? sign("negative", "为负") : disc === 0 ? sign("zero", "为零") : sign("positive", "为正");
+        const problem = choiceProblem({
           prompt: t(
             `A mass of $${m}\\text{ kg}$ on a spring with $k = ${k}\\text{ N/m}$ has damping $c = ${c}\\text{ N}\\cdot\\text{s/m}$. Classify the damping.`,
             `质量为 $${m}\\text{ kg}$ 的物体挂在 $k = ${k}\\text{ N/m}$ 的弹簧上，阻尼 $c = ${c}\\text{ N}\\cdot\\text{s/m}$。判断阻尼类型。`,
           ),
           options: [t("Underdamped", "欠阻尼"), t("Critically damped", "临界阻尼"), t("Overdamped", "过阻尼")],
           correct,
-          solution: t(
-            `$c^2 - 4mk = ${c * c} - ${4 * m * k} = ${disc}$, which is ${disc < 0 ? "negative: underdamped" : disc === 0 ? "zero: critically damped" : "positive: overdamped"}.`,
-            `$c^2 - 4mk = ${c * c} - ${4 * m * k} = ${disc}$，${disc < 0 ? "为负：欠阻尼" : disc === 0 ? "为零：临界阻尼" : "为正：过阻尼"}。`,
+          solution: walked(
+            [
+              [
+                ["Compute the discriminant", "计算判别式"],
+                t("", ""),
+                [`c^2 - 4mk = ${c * c} - 4 \\cdot ${m} \\cdot ${k} = ${c * c} - ${4 * m * k} = ${disc}`],
+              ],
+              [
+                ["Classify", "分类"],
+                disc < 0
+                  ? t("It is negative, so the roots are complex: underdamped.", "它为负，特征根是复数：欠阻尼。")
+                  : disc === 0
+                    ? t("It is zero, so the root is repeated: critically damped.", "它为零，特征根是重根：临界阻尼。")
+                    : t("It is positive, so the roots are real and distinct: overdamped.", "它为正，特征根是两个不同的实数：过阻尼。"),
+              ],
+            ],
+            t(
+              `The roots are $\\frac{-${c} \\pm \\sqrt{${disc}}}{${2 * m}}$, ${disc < 0 ? "a complex pair whose real part $-\\frac{c}{2m}$ makes the oscillation decay" : disc === 0 ? "one repeated real root" : "two negative real roots, since $\\sqrt{c^2 - 4mk} < c$"}.`,
+              `特征根为 $\\frac{-${c} \\pm \\sqrt{${disc}}}{${2 * m}}$，${disc < 0 ? "是一对复根，实部 $-\\frac{c}{2m}$ 使振荡衰减" : disc === 0 ? "是一个实重根" : "是两个负实根，因为 $\\sqrt{c^2 - 4mk} < c$"}。`,
+            ),
           ),
         });
+        return reasoned(problem, [
+          ["Underdamped", `Underdamping needs $c^2 - 4mk < 0$; here it is ${nowEn}.`, `欠阻尼要求 $c^2 - 4mk < 0$；这里它${nowZh}。`],
+          [
+            "Critically damped",
+            `Critical damping needs $c^2 - 4mk = 0$ exactly; here it is ${nowEn}.`,
+            `临界阻尼要求 $c^2 - 4mk$ 恰好为零；这里它${nowZh}。`,
+          ],
+          [
+            "Overdamped",
+            `Overdamping needs $c^2 - 4mk > 0$; here it is ${nowEn}. Compare $c^2$, not $c$, with $4mk$.`,
+            `过阻尼要求 $c^2 - 4mk > 0$；这里它${nowZh}。要用 $c^2$ 而不是 $c$ 与 $4mk$ 比较。`,
+          ],
+        ]);
       },
     },
   ],
@@ -2929,6 +3409,10 @@ export const forcedOscillators: TopicDef = {
     "In $my'' + cy' + ky = F_0 \\cos \\omega t$, damping makes the transient homogeneous response die out, leaving the periodic steady-state response.",
     "在 $my'' + cy' + ky = F_0 \\cos \\omega t$ 中，阻尼使齐次瞬态解衰减，最终只留下周期稳态解。",
   ),
+  intro: t(
+    "Take $y'' + 2y' + 2y = 10\\cos t$. The homogeneous roots are $-1 \\pm i$, so the transient carries $e^{-t}$ and dies out. For the steady state try $A\\cos t + B\\sin t$: matching the $\\cos t$ terms gives $A + 2B = 10$ and matching $\\sin t$ gives $B - 2A = 0$, so $A = 2$, $B = 4$ and the motion settles into $2\\cos t + 4\\sin t$, of amplitude $\\sqrt{20} = 2\\sqrt{5}$.\n\nCheck: for $y = 2\\cos t + 4\\sin t$, $y'' + 2y' + 2y = (-2 + 8 + 4)\\cos t + (-4 - 4 + 8)\\sin t = 10\\cos t$.\n\nIn this lesson we drive a damped oscillator with a periodic force, see the transient decay and find the size of the steady-state response.",
+    "考虑 $y'' + 2y' + 2y = 10\\cos t$。齐次方程的根为 $-1 \\pm i$，所以暂态含 $e^{-t}$，会逐渐消失。稳态试设 $A\\cos t + B\\sin t$：比较 $\\cos t$ 的系数得 $A + 2B = 10$，比较 $\\sin t$ 的系数得 $B - 2A = 0$，所以 $A = 2$，$B = 4$，运动趋于 $2\\cos t + 4\\sin t$，振幅为 $\\sqrt{20} = 2\\sqrt{5}$。\n\n检验：对 $y = 2\\cos t + 4\\sin t$，$y'' + 2y' + 2y = (-2 + 8 + 4)\\cos t + (-4 - 4 + 8)\\sin t = 10\\cos t$。\n\n本课我们用周期外力驱动阻尼振子，观察暂态衰减，并求稳态响应的大小。",
+  ),
   prerequisites: ["damped-oscillators"],
   encompasses: [{ topic: "damped-oscillators", weight: 0.3 }],
   xp: 10,
@@ -2937,8 +3421,8 @@ export const forcedOscillators: TopicDef = {
       id: "steady-state-forced-oscillation",
       title: t("Steady-state forced oscillation response", "受迫振动的稳态响应与衰减"),
       explanation: t(
-        "For an underdamped oscillator with $c > 0$, the roots of $m r^2 + c r + k = 0$ have negative real part $-\\frac{c}{2m}$, so the homogeneous transient solution decays exponentially to zero as $t \\to \\infty$.",
-        "对于阻尼系数 $c > 0$ 的欠阻尼系统，特征根具有负实部 $-\\frac{c}{2m}$，因此当 $t \\to \\infty$ 时齐次瞬态解按指数规律衰减趋于零。",
+        "For an underdamped oscillator with $c > 0$, the roots of $m r^2 + c r + k = 0$ have negative real part $-\\frac{c}{2m}$, so the homogeneous transient solution decays exponentially to zero as $t \\to \\infty$. For $y'' + 6y' + 25y = F\\cos \\omega t$ the roots are $-3 \\pm 4i$, and the transient decays like $e^{-3t}$.\n\n> **Watch out.** The decay rate is half of $\\frac{c}{m}$, and it comes from the real part of the roots; the imaginary part sets the frequency, not the decay.",
+        "对于阻尼系数 $c > 0$ 的欠阻尼系统，特征根具有负实部 $-\\frac{c}{2m}$，因此当 $t \\to \\infty$ 时齐次瞬态解按指数规律衰减趋于零。对 $y'' + 6y' + 25y = F\\cos \\omega t$，特征根为 $-3 \\pm 4i$，暂态按 $e^{-3t}$ 衰减。\n\n> **注意。** 衰减速率是 $\\frac{c}{m}$ 的一半，它来自特征根的实部；虚部决定频率，而不是衰减。",
       ),
       generate(rng: Rng): Problem {
         const decayRate = rng.int(1, 12);
@@ -2946,31 +3430,45 @@ export const forcedOscillators: TopicDef = {
         const c = 2 * decayRate;
         const k = decayRate * decayRate + beta * beta;
         const ans = decayRate;
-
-        const prompt = t(
-          `In a damped forced oscillator $y'' + ${c}y' + ${k}y = 10\\cos(3t)$, the transient homogeneous solution decays proportional to $e^{-\\gamma t}$. Find the decay coefficient $\\gamma$.`,
-          `在阻尼受迫振子系统 $y'' + ${c}y' + ${k}y = 10\\cos(3t)$ 中，齐次瞬态响应解按 $e^{-\\gamma t}$ 规律衰减。求衰减系数 $\\gamma$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `The characteristic equation of the homogeneous system is $r^2 + ${c}r + ${k} = 0$.`,
-            `The roots are $r = -\\frac{${c}}{2} \\pm \\sqrt{${decayRate * decayRate} - ${k}} = -${decayRate} \\pm ${beta}i$.`,
-            `The homogeneous solution has exponential factor $e^{-${decayRate}t}$.`,
-            `Therefore, the decay coefficient is $\\gamma = ${ans}$.`,
-          ),
-          steps(
-            `齐次部分的特征方程为 $r^2 + ${c}r + ${k} = 0$。`,
-            `求根公式：$r = -\\frac{${c}}{2} \\pm \\sqrt{${decayRate * decayRate} - ${k}} = -${decayRate} \\pm ${beta}i$。`,
-            `齐次解包含指数包络因子 $e^{-${decayRate}t}$。`,
-            `因此，衰减系数为 $\\gamma = ${ans}$。`,
-          ),
-        );
-
+        const bi = `${beta === 1 ? "" : beta}i`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `In a damped forced oscillator $y'' + ${c}y' + ${k}y = 10\\cos(3t)$, the transient homogeneous solution decays proportional to $e^{-\\gamma t}$. Find the decay coefficient $\\gamma$.`,
+            `在阻尼受迫振子系统 $y'' + ${c}y' + ${k}y = 10\\cos(3t)$ 中，齐次瞬态响应解按 $e^{-\\gamma t}$ 规律衰减。求衰减系数 $\\gamma$ 的值。`,
+          ),
           answer: ans,
-          wrong: [c, beta, k],
+          mistakes: apart(ans, [
+            why(
+              c,
+              "That is the whole damping coefficient; the real part of the roots is $-\\frac{c}{2}$.",
+              "这是整个阻尼系数；特征根的实部是 $-\\frac{c}{2}$。",
+            ),
+            why(beta, "That is the imaginary part of the roots, which sets the frequency.", "这是特征根的虚部，它决定频率。"),
+            why(k, "That is the stiffness; the decay comes from the $y'$ term.", "这是刚度；衰减来自 $y'$ 项。"),
+            why(
+              3,
+              "That is the driving frequency, which belongs to the steady state, not the transient.",
+              "这是驱动频率，属于稳态而不是暂态。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the roots", "求特征根"],
+                t("Complete the square in $r^2 + cr + k$:", "对 $r^2 + cr + k$ 配方："),
+                [`r^2 + ${c}r + ${k} = (r + ${decayRate})^2 + ${beta * beta}`, `r = -${decayRate} \\pm ${bi}`],
+              ],
+              [
+                ["Read the decay", "读出衰减"],
+                t("The transient is $e^{-\\gamma t}$ times a sinusoid:", "暂态是 $e^{-\\gamma t}$ 乘以正弦型函数："),
+                [`\\gamma = ${ans}`],
+              ],
+            ],
+            t(
+              `$(r + ${decayRate})^2 + ${beta * beta} = r^2 + ${c}r + ${decayRate * decayRate + beta * beta}$, which matches the equation, and $\\gamma = \\frac{${c}}{2}$.`,
+              `$(r + ${decayRate})^2 + ${beta * beta} = r^2 + ${c}r + ${decayRate * decayRate + beta * beta}$，与方程一致，且 $\\gamma = \\frac{${c}}{2}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2978,8 +3476,8 @@ export const forcedOscillators: TopicDef = {
       id: "the-steady-state-amplitude-of-a-forced-oscillator",
       title: t("The steady-state amplitude of a forced oscillator", "受迫振子的稳态振幅"),
       explanation: t(
-        "For $y'' + cy' + ky = F\\cos \\omega t$ with $c > 0$ the transient dies out and the motion settles into the steady state $A\\cos \\omega t + B\\sin \\omega t$. Its amplitude is\n\n$$\\sqrt{A^2 + B^2} = \\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}.$$\n\nThe denominator combines the mismatch $k - \\omega^2$ between the natural and the driving frequency with the damping term $c\\omega$.",
-        "对 $y'' + cy' + ky = F\\cos \\omega t$（$c > 0$），暂态消失，运动趋于稳态 $A\\cos \\omega t + B\\sin \\omega t$。其振幅为\n\n$$\\sqrt{A^2 + B^2} = \\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}.$$\n\n分母把固有频率与驱动频率的失配 $k - \\omega^2$ 和阻尼项 $c\\omega$ 结合在一起。",
+        "For $y'' + cy' + ky = F\\cos \\omega t$ with $c > 0$ the transient dies out and the motion settles into the steady state $A\\cos \\omega t + B\\sin \\omega t$. Its amplitude is\n\n$$\\sqrt{A^2 + B^2} = \\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}.$$\n\nThe denominator combines the mismatch $k - \\omega^2$ between the natural and the driving frequency with the damping term $c\\omega$. For $y'' + 2y' + 2y = 10\\cos t$: $k - \\omega^2 = 1$, $c\\omega = 2$ and the amplitude is $\\frac{10}{\\sqrt{5}} = 2\\sqrt{5}$.\n\n> **Watch out.** Square the two terms before adding and take the root of the sum; adding $|k - \\omega^2|$ and $c\\omega$ directly gives too large a denominator.",
+        "对 $y'' + cy' + ky = F\\cos \\omega t$（$c > 0$），暂态消失，运动趋于稳态 $A\\cos \\omega t + B\\sin \\omega t$。其振幅为\n\n$$\\sqrt{A^2 + B^2} = \\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}.$$\n\n分母把固有频率与驱动频率的失配 $k - \\omega^2$ 和阻尼项 $c\\omega$ 结合在一起。对 $y'' + 2y' + 2y = 10\\cos t$：$k - \\omega^2 = 1$，$c\\omega = 2$，振幅为 $\\frac{10}{\\sqrt{5}} = 2\\sqrt{5}$。\n\n> **注意。** 两项要先平方再相加，然后对和开方；直接把 $|k - \\omega^2|$ 与 $c\\omega$ 相加，分母会偏大。",
       ),
       generate(rng: Rng): Problem {
         const w = rng.int(1, 4);
@@ -2994,7 +3492,8 @@ export const forcedOscillators: TopicDef = {
         const c = q * u;
         const k = w * w + p * w * u;
         const F = rng.int(1, 12) * 5;
-        const ans = Q.of(F, 5 * w * u);
+        const den = 5 * w * u;
+        const ans = Q.of(F, den);
         const wt = w === 1 ? "t" : `${w}t`;
         return numberProblem({
           prompt: t(
@@ -3002,10 +3501,37 @@ export const forcedOscillators: TopicDef = {
             `求 $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos ${wt}$ 的稳态振幅。`,
           ),
           answer: ans,
-          wrong: [Q.of(F, Math.abs(k - w * w) + c * w), Q.of(F, k), Q.of(F, 25 * w * w * u * u)],
-          solution: t(
-            `$k - \\omega^2 = ${k - w * w}$ and $c\\omega = ${c * w}$, so the amplitude is $\\frac{${F}}{\\sqrt{${(k - w * w) ** 2} + ${(c * w) ** 2}}} = \\frac{${F}}{${5 * w * u}}${lowestTerms(F, 5 * w * u)}$.`,
-            `$k - \\omega^2 = ${k - w * w}$，$c\\omega = ${c * w}$，所以振幅为 $\\frac{${F}}{\\sqrt{${(k - w * w) ** 2} + ${(c * w) ** 2}}} = \\frac{${F}}{${5 * w * u}}${lowestTerms(F, 5 * w * u)}$。`,
+          mistakes: apart(ans, [
+            why(
+              Q.of(F, Math.abs(k - w * w) + c * w),
+              "That adds the two terms; square them, add and take the root.",
+              "这是把两项直接相加；要先平方、相加再开方。",
+            ),
+            why(
+              Q.of(F, k),
+              "That divides by $k$ as for a constant force; the driving frequency matters.",
+              "这是像恒力那样除以 $k$；驱动频率也起作用。",
+            ),
+            why(Q.of(F, den * den), "That leaves out the square root in the denominator.", "这里漏掉了分母中的平方根。"),
+            why(Q.of(F, Math.abs(k - w * w)), "That leaves out the damping term $c\\omega$.", "这里漏掉了阻尼项 $c\\omega$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the two terms", "求两项"],
+                t(`Here $\\omega = ${w}$:`, `这里 $\\omega = ${w}$：`),
+                [`k - \\omega^2 = ${k} - ${w * w} = ${k - w * w}`, `c\\omega = ${c} \\cdot ${w} = ${c * w}`],
+              ],
+              [
+                ["Divide", "相除"],
+                t("", ""),
+                [`\\frac{${F}}{\\sqrt{${(k - w * w) ** 2} + ${(c * w) ** 2}}} = \\frac{${F}}{${den}} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `$${(k - w * w) ** 2} + ${(c * w) ** 2} = ${den * den} = ${den}^2$, and $${den} \\cdot ${ans.toLatex()} = ${F}$.`,
+              `$${(k - w * w) ** 2} + ${(c * w) ** 2} = ${den * den} = ${den}^2$，且 $${den} \\cdot ${ans.toLatex()} = ${F}$。`,
+            ),
           ),
         });
       },
@@ -3021,6 +3547,10 @@ export const resonanceInVibratingSystems: TopicDef = {
     "Driving an undamped system at its natural frequency ($\\omega = \\omega_0$) causes pure resonance: $y_p = \\frac{F_0}{2m\\omega_0} t \\sin \\omega_0 t$, whose amplitude grows linearly.",
     "以固有频率（$\\omega = \\omega_0$）驱动无阻尼系统会发生纯共振：$y_p = \\frac{F_0}{2m\\omega_0} t \\sin \\omega_0 t$，振幅线性增长。",
   ),
+  intro: t(
+    "Drive $y'' + 4y = 8\\cos 2t$ at its own natural frequency $2$. The usual guess $A\\cos 2t + B\\sin 2t$ solves the homogeneous equation, so multiply by $t$ and try $y_p = Kt\\sin 2t$. Then $y_p'' + 4y_p = 4K\\cos 2t$, so $K = 2$ and $y_p = 2t\\sin 2t$: the oscillation grows without bound, its envelope rising by $2$ every unit of time.\n\nCheck: $(t\\sin 2t)'' = 4\\cos 2t - 4t\\sin 2t$, so $y_p'' + 4y_p = 2 \\cdot 4\\cos 2t = 8\\cos 2t$.\n\nIn this lesson we study resonance: the unbounded growth without damping, and the finite peak that damping leaves.",
+    "以固有频率 $2$ 驱动 $y'' + 4y = 8\\cos 2t$。通常的试探 $A\\cos 2t + B\\sin 2t$ 满足齐次方程，所以乘以 $t$，试设 $y_p = Kt\\sin 2t$。于是 $y_p'' + 4y_p = 4K\\cos 2t$，所以 $K = 2$，$y_p = 2t\\sin 2t$：振荡无限增大，包络每单位时间增加 $2$。\n\n检验：$(t\\sin 2t)'' = 4\\cos 2t - 4t\\sin 2t$，所以 $y_p'' + 4y_p = 2 \\cdot 4\\cos 2t = 8\\cos 2t$。\n\n本课我们研究共振：无阻尼时的无界增长，以及有阻尼时留下的有限峰值。",
+  ),
   prerequisites: ["forced-oscillators"],
   encompasses: [{ topic: "forced-oscillators", weight: 0.3 }],
   xp: 10,
@@ -3029,39 +3559,54 @@ export const resonanceInVibratingSystems: TopicDef = {
       id: "pure-resonance-amplitude-growth",
       title: t("Linear amplitude growth rate in pure resonance", "纯共振下的线性振幅增长速率"),
       explanation: t(
-        "When the forcing matches the natural frequency exactly and there is no damping, each push adds to the motion, so the amplitude grows steadily in time. For $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$, the particular solution is $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$, where the amplitude envelope grows at rate $\\frac{F_0}{2\\omega_0}$.",
-        "当强迫频率恰好等于固有频率且没有阻尼时，每一次推动都会加强运动，所以振幅随时间稳定增长。对于纯共振方程 $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$，特解为 $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$，振幅包络按速率 $\\frac{F_0}{2\\omega_0}$ 随时间线性发散。",
+        "When the forcing matches the natural frequency exactly and there is no damping, each push adds to the motion, so the amplitude grows steadily in time. For $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$, the particular solution is $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$, where the amplitude envelope grows at rate $\\frac{F_0}{2\\omega_0}$. For $y'' + 9y = 12\\cos 3t$ the rate is $\\frac{12}{6} = 2$.\n\n> **Watch out.** Divide by $2\\omega_0$, the factor that differentiating $t\\sin\\omega_0 t$ twice leaves on $\\cos\\omega_0 t$; not by $\\omega_0$ alone or by $\\omega_0^2$.",
+        "当强迫频率恰好等于固有频率且没有阻尼时，每一次推动都会加强运动，所以振幅随时间稳定增长。对于纯共振方程 $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$，特解为 $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$，振幅包络按速率 $\\frac{F_0}{2\\omega_0}$ 随时间线性发散。对 $y'' + 9y = 12\\cos 3t$，速率为 $\\frac{12}{6} = 2$。\n\n> **注意。** 要除以 $2\\omega_0$，这是对 $t\\sin\\omega_0 t$ 求两次导后留在 $\\cos\\omega_0 t$ 上的因子；不是只除以 $\\omega_0$，也不是除以 $\\omega_0^2$。",
       ),
       generate(rng: Rng): Problem {
         const omega0 = rng.int(2, 8);
         const rate = rng.int(2, 10);
         const F0 = rate * 2 * omega0;
         const ans = rate;
-
-        const prompt = t(
-          `An undamped vibrating system satisfies $y'' + ${omega0 * omega0}y = ${F0}\\cos(${omega0}t)$. The resonating particular solution has the form $y_p(t) = K t \\sin(${omega0}t)$. Find the constant $K$.`,
-          `一个无阻尼振动系统满足 $y'' + ${omega0 * omega0}y = ${F0}\\cos(${omega0}t)$。共振特解具有形式 $y_p(t) = K t \\sin(${omega0}t)$。求常数 $K$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Since the driving frequency matches the natural frequency $\\omega_0 = ${omega0}$, resonance occurs.`,
-            `The particular solution has the form $y_p(t) = K t \\sin(${omega0}t)$.`,
-            `Differentiate and substitute into $y'' + ${omega0 * omega0}y$: $2(${omega0}) K \\cos(${omega0}t) = ${F0}\\cos(${omega0}t)$.`,
-            `Solve for $K$: $K = \\frac{${F0}}{2(${omega0})} = \\frac{${F0}}{${2 * omega0}} = ${ans}$.`,
-          ),
-          steps(
-            `由于激励频率与固有频率 $\\omega_0 = ${omega0}$ 一致，系统发生共振。`,
-            `共振特解形式为 $y_p(t) = K t \\sin(${omega0}t)$。`,
-            `求导并代入微分方程化简得：$2(${omega0}) K \\cos(${omega0}t) = ${F0}\\cos(${omega0}t)$。`,
-            `解出系数 $K$：$K = \\frac{${F0}}{2(${omega0})} = \\frac{${F0}}{${2 * omega0}} = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `An undamped vibrating system satisfies $y'' + ${omega0 * omega0}y = ${F0}\\cos(${omega0}t)$. The resonating particular solution has the form $y_p(t) = K t \\sin(${omega0}t)$. Find the constant $K$.`,
+            `一个无阻尼振动系统满足 $y'' + ${omega0 * omega0}y = ${F0}\\cos(${omega0}t)$。共振特解具有形式 $y_p(t) = K t \\sin(${omega0}t)$。求常数 $K$ 的值。`,
+          ),
           answer: ans,
-          wrong: [F0, ans * 2, omega0],
+          mistakes: apart(ans, [
+            why(F0, "That forgets to divide by $2\\omega_0$.", "这里忘了除以 $2\\omega_0$。"),
+            why(
+              2 * rate,
+              "That divides by $\\omega_0$ only; the second derivative leaves $2\\omega_0$.",
+              "这是只除以 $\\omega_0$；二阶导数留下的是 $2\\omega_0$。",
+            ),
+            why(
+              Q.of(F0, omega0 * omega0),
+              "That divides by the coefficient $\\omega_0^2$ of $y$, but those terms cancel.",
+              "这是除以 $y$ 的系数 $\\omega_0^2$，但这些项会相互抵消。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate twice", "求两次导数"],
+                t("", ""),
+                [`(t\\sin ${omega0}t)'' = ${2 * omega0}\\cos ${omega0}t - ${omega0 * omega0}t\\sin ${omega0}t`],
+              ],
+              [
+                ["Substitute", "代入"],
+                t("The terms in $t\\sin$ cancel:", "含 $t\\sin$ 的项相互抵消："),
+                [
+                  `y_p'' + ${omega0 * omega0}y_p = ${2 * omega0}K\\cos ${omega0}t = ${F0}\\cos ${omega0}t`,
+                  `K = \\frac{${F0}}{${2 * omega0}} = ${ans}`,
+                ],
+              ],
+            ],
+            t(
+              `$${2 * omega0} \\cdot ${ans} = ${F0}$, so $y_p = ${ans}t\\sin ${omega0}t$ reproduces the forcing.`,
+              `$${2 * omega0} \\cdot ${ans} = ${F0}$，所以 $y_p = ${ans}t\\sin ${omega0}t$ 恰好给出强迫项。`,
+            ),
+          ),
         });
       },
     },
@@ -3069,25 +3614,59 @@ export const resonanceInVibratingSystems: TopicDef = {
       id: "the-practical-resonance-frequency",
       title: t("The practical resonance frequency", "实际共振频率"),
       explanation: t(
-        "With damping, the steady-state amplitude $\\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}$ of $y'' + cy' + ky = F\\cos \\omega t$ stays finite. It is largest where the expression under the root is smallest; differentiating in $\\omega^2$ gives\n\n$$\\omega_r^2 = k - \\frac{c^2}{2},$$\n\nwhen this is positive. The peak sits below the natural frequency $\\sqrt{k}$, and with heavy damping ($c^2 \\ge 2k$) there is no resonance peak at all.",
-        "有阻尼时，$y'' + cy' + ky = F\\cos \\omega t$ 的稳态振幅 $\\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}$ 保持有限。根号下的式子最小时振幅最大；对 $\\omega^2$ 求导得\n\n$$\\omega_r^2 = k - \\frac{c^2}{2},$$\n\n前提是它为正。峰值位于固有频率 $\\sqrt{k}$ 之下；阻尼很大（$c^2 \\ge 2k$）时根本没有共振峰。",
+        "With damping, the steady-state amplitude $\\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}$ of $y'' + cy' + ky = F\\cos \\omega t$ stays finite. It is largest where the expression under the root is smallest; differentiating in $\\omega^2$ gives\n\n$$\\omega_r^2 = k - \\frac{c^2}{2},$$\n\nwhen this is positive. The peak sits below the natural frequency $\\sqrt{k}$, and with heavy damping ($c^2 \\ge 2k$) there is no resonance peak at all. For $y'' + 2y' + 11y = F\\cos\\omega t$: $\\omega_r^2 = 11 - 2 = 9$, so $\\omega_r = 3$.\n\n> **Watch out.** The peak uses $\\frac{c^2}{2}$, while the free quasi-frequency uses $\\frac{c^2}{4}$; the two are different frequencies.",
+        "有阻尼时，$y'' + cy' + ky = F\\cos \\omega t$ 的稳态振幅 $\\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}$ 保持有限。根号下的式子最小时振幅最大；对 $\\omega^2$ 求导得\n\n$$\\omega_r^2 = k - \\frac{c^2}{2},$$\n\n前提是它为正。峰值位于固有频率 $\\sqrt{k}$ 之下；阻尼很大（$c^2 \\ge 2k$）时根本没有共振峰。对 $y'' + 2y' + 11y = F\\cos\\omega t$：$\\omega_r^2 = 11 - 2 = 9$，所以 $\\omega_r = 3$。\n\n> **注意。** 共振峰用的是 $\\frac{c^2}{2}$，而自由振动的准频率用的是 $\\frac{c^2}{4}$；这是两个不同的频率。",
       ),
       generate(rng: Rng): Problem {
-        const wr = rng.int(1, 7);
-        const v = rng.int(1, 4);
+        const [wr, v, hyp] = rng.pick([
+          [3, 4, 5],
+          [4, 3, 5],
+          [6, 8, 10],
+          [8, 6, 10],
+          [5, 12, 13],
+          [12, 5, 13],
+          [8, 15, 17],
+        ] as const);
         const c = 2 * v;
         const k = wr * wr + 2 * v * v;
         const F = rng.int(2, 9);
+        const root = Math.sqrt(k);
         return numberProblem({
           prompt: t(
             `For $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos \\omega t$, find the driving frequency $\\omega > 0$ that maximizes the steady-state amplitude.`,
             `对 $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos \\omega t$，求使稳态振幅最大的驱动频率 $\\omega > 0$。`,
           ),
           answer: wr,
-          wrong: [wr * wr, ...(Number.isInteger(Math.sqrt(k)) ? [Math.sqrt(k)] : []), k - c],
-          solution: t(
-            `$\\omega_r^2 = ${k} - \\frac{${c}^2}{2} = ${k} - ${2 * v * v} = ${wr * wr}$, so $\\omega_r = ${wr}$.`,
-            `$\\omega_r^2 = ${k} - \\frac{${c}^2}{2} = ${k} - ${2 * v * v} = ${wr * wr}$，所以 $\\omega_r = ${wr}$。`,
+          mistakes: apart(wr, [
+            why(wr * wr, "That is $\\omega_r^2$; take the square root.", "这是 $\\omega_r^2$；还要开平方。"),
+            why(
+              hyp,
+              "That uses $\\frac{c^2}{4}$, the free quasi-frequency; the peak uses $\\frac{c^2}{2}$.",
+              "这是用了 $\\frac{c^2}{4}$，即自由振动的准频率；共振峰用 $\\frac{c^2}{2}$。",
+            ),
+            ...(Number.isInteger(root)
+              ? [
+                  why(
+                    root,
+                    "That is the natural frequency $\\sqrt{k}$; damping moves the peak below it.",
+                    "这是固有频率 $\\sqrt{k}$；阻尼使峰值移到它下方。",
+                  ),
+                ]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Minimize the denominator", "使分母最小"],
+                t("The expression under the root is smallest at", "根号下的式子在下式处最小"),
+                [`\\omega_r^2 = k - \\frac{c^2}{2} = ${k} - \\frac{${c * c}}{2} = ${k} - ${2 * v * v} = ${wr * wr}`],
+              ],
+              [["Take the root", "开方"], t("", ""), [`\\omega_r = ${wr}`]],
+            ],
+            t(
+              `With $s = \\omega^2$, $(${k} - s)^2 + ${c * c}s$ has derivative $-2(${k} - s) + ${c * c}$, which is $0$ at $s = ${k} - ${2 * v * v} = ${wr * wr}$.`,
+              `令 $s = \\omega^2$，$(${k} - s)^2 + ${c * c}s$ 的导数为 $-2(${k} - s) + ${c * c}$，在 $s = ${k} - ${2 * v * v} = ${wr * wr}$ 处为 $0$。`,
+            ),
           ),
         });
       },
@@ -3103,6 +3682,10 @@ export const modelingCapacitorChargeInRclCircuitsWithSecondOrderOdes: TopicDef =
     "Kirchhoff's law for a series RCL circuit gives $Lq'' + Rq' + \\frac{1}{C}q = E(t)$ for the capacitor charge, with resonant frequency $\\omega_0 = \\frac{1}{\\sqrt{LC}}$.",
     "串联 RCL 电路的基尔霍夫定律给出电容器电荷方程 $Lq'' + Rq' + \\frac{1}{C}q = E(t)$，共振频率为 $\\omega_0 = \\frac{1}{\\sqrt{LC}}$。",
   ),
+  intro: t(
+    "A series circuit has $L = 1\\text{ H}$, $R = 2\\ \\Omega$ and $C = \\frac{1}{5}\\text{ F}$ with no source. The voltage drops $Lq''$, $Rq'$ and $\\frac{q}{C}$ add to zero, so $q'' + 2q' + 5q = 0$, with roots $-1 \\pm 2i$. The charge oscillates at $2\\text{ rad/s}$ while it decays like $e^{-t}$; without the resistor it would oscillate at $\\frac{1}{\\sqrt{LC}} = \\sqrt{5}$.\n\nCheck: $(-1 + 2i)^2 + 2(-1 + 2i) + 5 = -3 - 4i - 2 + 4i + 5 = 0$.\n\nIn this lesson we model the charge on a capacitor with the same second-order equation as a damped spring.",
+    "串联电路中 $L = 1\\text{ H}$，$R = 2\\ \\Omega$，$C = \\frac{1}{5}\\text{ F}$，没有电源。电压降 $Lq''$、$Rq'$ 与 $\\frac{q}{C}$ 之和为零，所以 $q'' + 2q' + 5q = 0$，特征根为 $-1 \\pm 2i$。电荷以 $2\\text{ rad/s}$ 振荡，同时按 $e^{-t}$ 衰减；没有电阻时它会以 $\\frac{1}{\\sqrt{LC}} = \\sqrt{5}$ 振荡。\n\n检验：$(-1 + 2i)^2 + 2(-1 + 2i) + 5 = -3 - 4i - 2 + 4i + 5 = 0$。\n\n本课我们用与阻尼弹簧相同的二阶方程为电容器上的电荷建模。",
+  ),
   prerequisites: ["simple-harmonic-oscillators"],
   encompasses: [{ topic: "simple-harmonic-oscillators", weight: 0.3 }],
   xp: 10,
@@ -3111,36 +3694,47 @@ export const modelingCapacitorChargeInRclCircuitsWithSecondOrderOdes: TopicDef =
       id: "rcl-natural-frequency",
       title: t("Resonant natural frequency of an LC circuit", "LC 谐振回路的固有振荡频率"),
       explanation: t(
-        "A circuit with an inductor and a capacitor obeys the same equation as a mass on a spring, with inductance playing the role of mass. In an ideal LC circuit ($R = 0$), charge satisfies $L q'' + \\frac{1}{C} q = 0$, oscillating at natural frequency $\\omega_0 = \\frac{1}{\\sqrt{LC}}$.",
-        "含电感和电容的电路与弹簧上的物体满足同样的方程，电感起着质量的作用。在理想无阻尼 LC 电路（$R = 0$）中，电荷满足 $L q'' + \\frac{1}{C} q = 0$，固有自由振荡角频率为 $\\omega_0 = \\frac{1}{\\sqrt{LC}}$。",
+        "A circuit with an inductor and a capacitor obeys the same equation as a mass on a spring, with inductance playing the role of mass. In an ideal LC circuit ($R = 0$), charge satisfies $L q'' + \\frac{1}{C} q = 0$, oscillating at natural frequency $\\omega_0 = \\frac{1}{\\sqrt{LC}}$. For $L = 2\\text{ H}$ and $C = \\frac{1}{50}\\text{ F}$, $LC = \\frac{1}{25}$ and $\\omega_0 = 5$.\n\n> **Watch out.** It is one over $\\sqrt{LC}$, not $\\sqrt{LC}$ itself; and the inductance divides, so $\\frac{1}{\\sqrt{C}}$ alone is right only when $L = 1$.",
+        "含电感和电容的电路与弹簧上的物体满足同样的方程，电感起着质量的作用。在理想无阻尼 LC 电路（$R = 0$）中，电荷满足 $L q'' + \\frac{1}{C} q = 0$，固有自由振荡角频率为 $\\omega_0 = \\frac{1}{\\sqrt{LC}}$。对 $L = 2\\text{ H}$，$C = \\frac{1}{50}\\text{ F}$，$LC = \\frac{1}{25}$，$\\omega_0 = 5$。\n\n> **注意。** 是 $\\sqrt{LC}$ 的倒数，而不是 $\\sqrt{LC}$ 本身；电感也要除，所以只有 $L = 1$ 时 $\\frac{1}{\\sqrt{C}}$ 才对。",
       ),
       generate(rng: Rng): Problem {
-        const omega0 = rng.int(2, 40);
-        const omega0Sq = omega0 * omega0;
+        const omega0 = rng.int(2, 20);
+        const L = rng.int(1, 4);
+        const n = L * omega0 * omega0;
         const ans = omega0;
-
-        const prompt = t(
-          `An LC circuit contains an inductor and capacitor with parameter ratio $\\frac{1}{LC} = ${omega0Sq}\\text{ s}^{-2}$. Find the undamped natural frequency $\\omega_0$ in $\\text{rad/s}$.`,
-          `一个 LC 回路中电感与电容参数满足 $\\frac{1}{LC} = ${omega0Sq}\\text{ 秒}^{-2}$。求其无阻尼固有角频率 $\\omega_0$（单位：$\\text{弧度/秒}$）。`,
-        );
-        const solution = t(
-          steps(
-            `The differential equation for the charge is $L q'' + \\frac{1}{C}q = 0 \\implies q'' + \\frac{1}{LC}q = 0$.`,
-            `The natural frequency satisfies $\\omega_0^2 = \\frac{1}{LC} = ${omega0Sq}$.`,
-            `Take the square root: $\\omega_0 = \\sqrt{${omega0Sq}} = ${ans}\\text{ rad/s}$.`,
-          ),
-          steps(
-            `电荷量的微分方程为 $L q'' + \\frac{1}{C}q = 0 \\implies q'' + \\frac{1}{LC}q = 0$。`,
-            `固有振荡角频率满足 $\\omega_0^2 = \\frac{1}{LC} = ${omega0Sq}$。`,
-            `开平方求得：$\\omega_0 = \\sqrt{${omega0Sq}} = ${ans}\\text{ 弧度/秒}$。`,
-          ),
-        );
-
+        const noL = Math.sqrt(n);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `An LC circuit has inductance $L = ${L}\\text{ H}$ and capacitance $C = \\frac{1}{${n}}\\text{ F}$. Find the undamped natural frequency $\\omega_0$ in $\\text{rad/s}$.`,
+            `一个 LC 回路的电感 $L = ${L}\\text{ H}$，电容 $C = \\frac{1}{${n}}\\text{ F}$。求其无阻尼固有角频率 $\\omega_0$（单位：$\\text{弧度/秒}$）。`,
+          ),
           answer: ans,
-          wrong: [omega0Sq, ans * 2, Math.round(omega0 / 2)],
+          mistakes: apart(ans, [
+            why(
+              omega0 * omega0,
+              "That is $\\frac{1}{LC} = \\omega_0^2$; take the square root.",
+              "这是 $\\frac{1}{LC} = \\omega_0^2$；还要开平方。",
+            ),
+            why(Q.of(1, omega0), "That is $\\sqrt{LC}$; the frequency is its reciprocal.", "这是 $\\sqrt{LC}$；频率是它的倒数。"),
+            ...(Number.isInteger(noL)
+              ? [why(noL, "That is $\\frac{1}{\\sqrt{C}}$; the inductance is left out.", "这是 $\\frac{1}{\\sqrt{C}}$；漏掉了电感。")]
+              : []),
+            why(n, "That is $\\frac{1}{C}$; divide by $L$ and take the root.", "这是 $\\frac{1}{C}$；还要除以 $L$ 并开方。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the equation", "写出方程"],
+                t("Divide $Lq'' + \\frac{1}{C}q = 0$ by $L$:", "把 $Lq'' + \\frac{1}{C}q = 0$ 除以 $L$："),
+                [`q'' + \\frac{1}{LC}q = 0, \\qquad \\frac{1}{LC} = ${over(n, L)} = ${omega0 * omega0}`],
+              ],
+              [["Take the root", "开方"], t("", ""), [`\\omega_0 = \\sqrt{${omega0 * omega0}} = ${ans}\\text{ rad/s}`]],
+            ],
+            t(
+              `$LC = \\frac{${L}}{${n}} = \\frac{1}{${omega0 * omega0}}$, so $\\frac{1}{\\sqrt{LC}} = ${ans}$.`,
+              `$LC = \\frac{${L}}{${n}} = \\frac{1}{${omega0 * omega0}}$，所以 $\\frac{1}{\\sqrt{LC}} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3148,26 +3742,58 @@ export const modelingCapacitorChargeInRclCircuitsWithSecondOrderOdes: TopicDef =
       id: "the-damped-frequency-of-capacitor-charge",
       title: t("The damped frequency of capacitor charge", "电容电荷的阻尼振荡频率"),
       explanation: t(
-        "The charge in a series RCL circuit satisfies $Lq'' + Rq' + \\frac{1}{C}q = E(t)$. Its characteristic roots are\n\n$$-\\frac{R}{2L} \\pm i\\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$$\n\nwhen $R^2 < \\frac{4L}{C}$. Then the charge oscillates with the damped angular frequency $\\omega_d = \\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$, which is lower than the undamped $\\frac{1}{\\sqrt{LC}}$.",
-        "串联 RCL 电路中的电荷满足 $Lq'' + Rq' + \\frac{1}{C}q = E(t)$。当 $R^2 < \\frac{4L}{C}$ 时，其特征根为\n\n$$-\\frac{R}{2L} \\pm i\\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}.$$\n\n此时电荷以阻尼角频率 $\\omega_d = \\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$ 振荡，它低于无阻尼频率 $\\frac{1}{\\sqrt{LC}}$。",
+        "The charge in a series RCL circuit satisfies $Lq'' + Rq' + \\frac{1}{C}q = E(t)$. Its characteristic roots are\n\n$$-\\frac{R}{2L} \\pm i\\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$$\n\nwhen $R^2 < \\frac{4L}{C}$. Then the charge oscillates with the damped angular frequency $\\omega_d = \\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$, which is lower than the undamped $\\frac{1}{\\sqrt{LC}}$. For $L = 1$, $R = 2$, $C = \\frac{1}{5}$: $\\omega_d = \\sqrt{5 - 1} = 2$.\n\n> **Watch out.** A constant source $E$ only shifts the equilibrium charge and does not change $\\omega_d$; and $\\frac{R}{2L}$ is the decay rate, not the frequency.",
+        "串联 RCL 电路中的电荷满足 $Lq'' + Rq' + \\frac{1}{C}q = E(t)$。当 $R^2 < \\frac{4L}{C}$ 时，其特征根为\n\n$$-\\frac{R}{2L} \\pm i\\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}.$$\n\n此时电荷以阻尼角频率 $\\omega_d = \\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$ 振荡，它低于无阻尼频率 $\\frac{1}{\\sqrt{LC}}$。对 $L = 1$，$R = 2$，$C = \\frac{1}{5}$：$\\omega_d = \\sqrt{5 - 1} = 2$。\n\n> **注意。** 恒定电源 $E$ 只移动平衡电荷，不改变 $\\omega_d$；$\\frac{R}{2L}$ 是衰减速率，而不是频率。",
       ),
       generate(rng: Rng): Problem {
         const L = rng.int(1, 4);
         const al = rng.int(1, 5);
-        const be = rng.int(1, 8);
+        const be = rng.int(2, 8);
         const R = 2 * L * al;
         const n = L * (al * al + be * be);
         const E = rng.int(1, 12) * 10;
+        const und = Math.sqrt(al * al + be * be);
         return numberProblem({
           prompt: t(
             `A series circuit has $L = ${L}\\text{ H}$, $R = ${R}\\ \\Omega$, $C = \\frac{1}{${n}}\\text{ F}$ and $E = ${E}\\text{ V}$. Find the damped angular frequency $\\omega_d$ of the charge in $\\text{rad/s}$.`,
             `串联电路中 $L = ${L}\\text{ H}$，$R = ${R}\\ \\Omega$，$C = \\frac{1}{${n}}\\text{ F}$，$E = ${E}\\text{ V}$。求电荷的阻尼角频率 $\\omega_d$（单位 $\\text{rad/s}$）。`,
           ),
           answer: be,
-          wrong: [be * be, al, al * al + be * be],
-          solution: t(
-            `$\\frac{1}{LC} = ${al * al + be * be}$ and $\\frac{R}{2L} = ${al}$, so $\\omega_d = \\sqrt{${al * al + be * be} - ${al * al}} = ${be}$.`,
-            `$\\frac{1}{LC} = ${al * al + be * be}$，$\\frac{R}{2L} = ${al}$，所以 $\\omega_d = \\sqrt{${al * al + be * be} - ${al * al}} = ${be}$。`,
+          mistakes: apart(be, [
+            why(be * be, "That is $\\omega_d^2$; take the square root.", "这是 $\\omega_d^2$；还要开平方。"),
+            why(al, "That is the decay rate $\\frac{R}{2L}$, not the frequency.", "这是衰减速率 $\\frac{R}{2L}$，而不是频率。"),
+            why(
+              al * al + be * be,
+              "That is $\\frac{1}{LC}$; subtract $\\frac{R^2}{4L^2}$ and take the root.",
+              "这是 $\\frac{1}{LC}$；还要减去 $\\frac{R^2}{4L^2}$ 并开方。",
+            ),
+            ...(Number.isInteger(und)
+              ? [
+                  why(
+                    und,
+                    "That is the undamped frequency $\\frac{1}{\\sqrt{LC}}$; the resistor lowers it.",
+                    "这是无阻尼频率 $\\frac{1}{\\sqrt{LC}}$；电阻会使它降低。",
+                  ),
+                ]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the two parts", "求两部分"],
+                t("", ""),
+                [`\\frac{1}{LC} = ${over(n, L)} = ${al * al + be * be}`, `\\frac{R}{2L} = \\frac{${R}}{${2 * L}} = ${al}`],
+              ],
+              [
+                ["Take the root", "开方"],
+                t("", ""),
+                [`\\omega_d = \\sqrt{${al * al + be * be} - ${al}^2} = \\sqrt{${be * be}} = ${be}\\text{ rad/s}`],
+              ],
+            ],
+            t(
+              `The roots $-${al} \\pm ${be}i$ satisfy $${L === 1 ? "" : L}r^2 + ${R}r + ${n} = 0$, since $(r + ${al})^2 + ${be * be} = r^2 + ${2 * al}r + ${al * al + be * be}$.`,
+              `特征根 $-${al} \\pm ${be}i$ 满足 $${L === 1 ? "" : L}r^2 + ${R}r + ${n} = 0$，因为 $(r + ${al})^2 + ${be * be} = r^2 + ${2 * al}r + ${al * al + be * be}$。`,
+            ),
           ),
         });
       },
@@ -3183,6 +3809,10 @@ export const modelingCurrentInRclCircuitsWithSecondOrderOdes: TopicDef = {
     "Differentiating the charge equation with i = dq/dt yields the current equation: L i'' + R i' + (1/C) i = E'(t).",
     "利用电流定义 i = dq/dt 对电荷方程逐项求导，得到回路电流满足的二阶微分方程：L i'' + R i' + (1/C) i = E'(t)。",
   ),
+  intro: t(
+    "A series circuit with $L = 1\\text{ H}$, $R = 3\\ \\Omega$ and $C = \\frac{1}{2}\\text{ F}$ is driven by $E(t) = 10\\sin 3t$. The charge satisfies $q'' + 3q' + 2q = 10\\sin 3t$. Differentiating every term and writing $i = q'$ gives the equation for the current, $i'' + 3i' + 2i = 30\\cos 3t$: the forcing becomes $E'(t)$.\n\nCheck: $\\frac{d}{dt}(10\\sin 3t) = 10 \\cdot 3\\cos 3t = 30\\cos 3t$.\n\nIn this lesson we turn the charge equation into an equation for the current and find the size of the steady current.",
+    "串联电路中 $L = 1\\text{ H}$，$R = 3\\ \\Omega$，$C = \\frac{1}{2}\\text{ F}$，由 $E(t) = 10\\sin 3t$ 驱动。电荷满足 $q'' + 3q' + 2q = 10\\sin 3t$。对每一项求导并记 $i = q'$，得到电流的方程 $i'' + 3i' + 2i = 30\\cos 3t$：强迫项变成 $E'(t)$。\n\n检验：$\\frac{d}{dt}(10\\sin 3t) = 10 \\cdot 3\\cos 3t = 30\\cos 3t$。\n\n本课我们把电荷方程变为电流方程，并求稳态电流的大小。",
+  ),
   prerequisites: ["modeling-capacitor-charge-in-rcl-circuits-with-second-order-odes"],
   encompasses: [
     {
@@ -3196,34 +3826,46 @@ export const modelingCurrentInRclCircuitsWithSecondOrderOdes: TopicDef = {
       id: "rcl-current-differential-equation",
       title: t("Forcing term in the current differential equation", "电流微分方程中的激励导数项"),
       explanation: t(
-        "Differentiating the charge equation once turns it into an equation for the current, and the forcing term becomes the derivative of the voltage. Differentiating $L q'' + R q' + \\frac{1}{C} q = E(t)$ with $i = q'$ yields $L i'' + R i' + \\frac{1}{C} i = E'(t)$. For $E(t) = E_0 \\sin(\\omega t)$, the forcing term is $E'(t) = \\omega E_0 \\cos(\\omega t)$.",
-        "把电荷方程求导一次，就变成关于电流的方程，强迫项变为电压的导数。对回路方程 $L q'' + R q' + \\frac{1}{C} q = E(t)$ 求导，得 $L i'' + R i' + \\frac{1}{C} i = E'(t)$。当电源为正弦交流电 $E(t) = E_0 \\sin(\\omega t)$ 时，电流方程的激励项为 $E'(t) = \\omega E_0 \\cos(\\omega t)$。",
+        "Differentiating the charge equation once turns it into an equation for the current, and the forcing term becomes the derivative of the voltage. Differentiating $L q'' + R q' + \\frac{1}{C} q = E(t)$ with $i = q'$ yields $L i'' + R i' + \\frac{1}{C} i = E'(t)$. For $E(t) = E_0 \\sin(\\omega t)$, the forcing term is $E'(t) = \\omega E_0 \\cos(\\omega t)$. For $E = 10\\sin 3t$ it is $30\\cos 3t$.\n\n> **Watch out.** The chain rule multiplies by $\\omega$; integrating would divide by it, and the amplitude $E_0$ alone leaves the factor out.",
+        "把电荷方程求导一次，就变成关于电流的方程，强迫项变为电压的导数。对回路方程 $L q'' + R q' + \\frac{1}{C} q = E(t)$ 求导，得 $L i'' + R i' + \\frac{1}{C} i = E'(t)$。当电源为正弦交流电 $E(t) = E_0 \\sin(\\omega t)$ 时，电流方程的激励项为 $E'(t) = \\omega E_0 \\cos(\\omega t)$。对 $E = 10\\sin 3t$，它是 $30\\cos 3t$。\n\n> **注意。** 链式法则要乘以 $\\omega$；积分才会除以它，只写振幅 $E_0$ 就漏掉了这个因子。",
       ),
       generate(rng: Rng): Problem {
         const E0 = rng.int(5, 50);
         const omega = rng.int(2, 10);
         const ans = omega * E0;
-
-        const prompt = t(
-          `In an RCL circuit driven by an alternating voltage $E(t) = ${E0}\\sin(${omega}t)\\text{ V}$, the current $i(t)$ satisfies $L i'' + R i' + \\frac{1}{C}i = E'(t)$. Find the amplitude of the forcing term $E'(t)$ in $\\text{V/s}$.`,
-          `在由交流电源 $E(t) = ${E0}\\sin(${omega}t)\\text{ 伏}$ 驱动的 RCL 电路中，电流 $i(t)$ 满足方程 $L i'' + R i' + \\frac{1}{C}i = E'(t)$。求激励源导数项 $E'(t)$ 的幅值大小（单位：$\\text{伏/秒}$）。`,
-        );
-        const solution = t(
-          steps(
-            `Differentiate $E(t) = ${E0}\\sin(${omega}t)$ with respect to $t$: $E'(t) = ${E0} \\times ${omega} \\cos(${omega}t) = ${ans}\\cos(${omega}t)$.`,
-            `The amplitude of $E'(t)$ is $\\omega E_0 = ${ans}\\text{ V/s}$.`,
-          ),
-          steps(
-            `对电源电压 $E(t) = ${E0}\\sin(${omega}t)$ 关于时间 $t$ 求导：$E'(t) = ${E0} \\times ${omega} \\cos(${omega}t) = ${ans}\\cos(${omega}t)$。`,
-            `激励项的幅值为 $\\omega E_0 = ${ans}\\text{ 伏/秒}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `In an RCL circuit driven by an alternating voltage $E(t) = ${E0}\\sin(${omega}t)\\text{ V}$, the current $i(t)$ satisfies $L i'' + R i' + \\frac{1}{C}i = E'(t)$. Find the amplitude of the forcing term $E'(t)$ in $\\text{V/s}$.`,
+            `在由交流电源 $E(t) = ${E0}\\sin(${omega}t)\\text{ 伏}$ 驱动的 RCL 电路中，电流 $i(t)$ 满足方程 $L i'' + R i' + \\frac{1}{C}i = E'(t)$。求激励源导数项 $E'(t)$ 的幅值大小（单位：$\\text{伏/秒}$）。`,
+          ),
           answer: ans,
-          wrong: [E0, omega, ans * 2],
+          mistakes: apart(ans, [
+            why(
+              E0,
+              "That is the amplitude of $E$ itself; differentiating multiplies by $\\omega$.",
+              "这是 $E$ 本身的振幅；求导要乘以 $\\omega$。",
+            ),
+            why(omega, "That keeps only the factor from the chain rule and drops $E_0$.", "这里只留下了链式法则的因子，丢掉了 $E_0$。"),
+            why(
+              Q.of(E0, omega),
+              "That divides by $\\omega$, as in integrating, instead of multiplying.",
+              "这是像积分那样除以 $\\omega$，而不是乘以它。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate the source", "对电源求导"],
+                t("The chain rule brings down the frequency:", "链式法则带下频率："),
+                [`E'(t) = ${E0} \\cdot ${omega}\\cos(${omega}t) = ${ans}\\cos(${omega}t)`],
+              ],
+              [["Read the amplitude", "读出振幅"], t("", ""), [`\\omega E_0 = ${ans}\\text{ V/s}`]],
+            ],
+            t(
+              `Integrating back: $\\int ${ans}\\cos(${omega}t)\\,dt = \\frac{${ans}}{${omega}}\\sin(${omega}t) = ${E0}\\sin(${omega}t)$.`,
+              `反过来积分：$\\int ${ans}\\cos(${omega}t)\\,dt = \\frac{${ans}}{${omega}}\\sin(${omega}t) = ${E0}\\sin(${omega}t)$。`,
+            ),
+          ),
         });
       },
     },
@@ -3231,8 +3873,8 @@ export const modelingCurrentInRclCircuitsWithSecondOrderOdes: TopicDef = {
       id: "the-steady-state-current-amplitude",
       title: t("The steady-state current amplitude", "稳态电流振幅"),
       explanation: t(
-        "Driven by $E(t) = E_0\\sin \\omega t$, a series RCL circuit settles into a sinusoidal current whose amplitude is the voltage amplitude divided by the impedance:\n\n$$I = \\frac{E_0}{Z}, \\qquad Z = \\sqrt{R^2 + X^2}, \\qquad X = \\omega L - \\frac{1}{\\omega C}.$$\n\nThe reactance $X$ can be negative when the capacitor dominates; only its square enters $Z$. When $X = 0$ the current amplitude is largest, $E_0/R$.",
-        "在 $E(t) = E_0\\sin \\omega t$ 驱动下，串联 RCL 电路趋于正弦电流，其振幅等于电压振幅除以阻抗：\n\n$$I = \\frac{E_0}{Z}, \\qquad Z = \\sqrt{R^2 + X^2}, \\qquad X = \\omega L - \\frac{1}{\\omega C}.$$\n\n电容占主导时电抗 $X$ 可以为负；进入 $Z$ 的只是它的平方。当 $X = 0$ 时电流振幅最大，为 $E_0/R$。",
+        "Driven by $E(t) = E_0\\sin \\omega t$, a series RCL circuit settles into a sinusoidal current whose amplitude is the voltage amplitude divided by the impedance:\n\n$$I = \\frac{E_0}{Z}, \\qquad Z = \\sqrt{R^2 + X^2}, \\qquad X = \\omega L - \\frac{1}{\\omega C}.$$\n\nThe reactance $X$ can be negative when the capacitor dominates; only its square enters $Z$. When $X = 0$ the current amplitude is largest, $E_0/R$. For $R = 3$, $X = -4$ and $E_0 = 20$: $Z = 5$ and $I = 4$.\n\n> **Watch out.** $R$ and $X$ combine like the sides of a right triangle; adding them, or dividing by $R$ alone, gives the wrong impedance.",
+        "在 $E(t) = E_0\\sin \\omega t$ 驱动下，串联 RCL 电路趋于正弦电流，其振幅等于电压振幅除以阻抗：\n\n$$I = \\frac{E_0}{Z}, \\qquad Z = \\sqrt{R^2 + X^2}, \\qquad X = \\omega L - \\frac{1}{\\omega C}.$$\n\n电容占主导时电抗 $X$ 可以为负；进入 $Z$ 的只是它的平方。当 $X = 0$ 时电流振幅最大，为 $E_0/R$。对 $R = 3$，$X = -4$，$E_0 = 20$：$Z = 5$，$I = 4$。\n\n> **注意。** $R$ 与 $X$ 像直角三角形的两条直角边那样合成；把它们相加，或只除以 $R$，阻抗都不对。",
       ),
       generate(rng: Rng): Problem {
         const s = rng.int(1, 4);
@@ -3259,10 +3901,39 @@ export const modelingCurrentInRclCircuitsWithSecondOrderOdes: TopicDef = {
             `串联电路中 $R = ${R}\\ \\Omega$，$L = ${L}\\text{ H}$，$C = \\frac{1}{${w * cap}}\\text{ F}$，由 $E(t) = ${E0}\\sin ${w}t\\text{ V}$ 驱动。求稳态电流振幅（单位安培）。`,
           ),
           answer: ans,
-          wrong: [Q.of(E0, R), Q.of(E0, R + Math.abs(X)), Q.of(E0 * w, Z)],
-          solution: t(
-            `$\\omega L = ${w * L}$ and $\\frac{1}{\\omega C} = ${cap}$, so $X = ${X}$ and $Z = \\sqrt{${R * R} + ${X * X}} = ${Z}$. Then $I = \\frac{${E0}}{${Z}}${lowestTerms(E0, Z)}$.`,
-            `$\\omega L = ${w * L}$，$\\frac{1}{\\omega C} = ${cap}$，所以 $X = ${X}$，$Z = \\sqrt{${R * R} + ${X * X}} = ${Z}$。于是 $I = \\frac{${E0}}{${Z}}${lowestTerms(E0, Z)}$。`,
+          mistakes: apart(ans, [
+            why(Q.of(E0, R), "That divides by $R$ alone, as if the reactance were zero.", "这是只除以 $R$，好像电抗为零。"),
+            why(
+              Q.of(E0, R + Math.abs(X)),
+              "That adds $R$ and $|X|$; square them, add and take the root.",
+              "这是把 $R$ 与 $|X|$ 相加；要先平方、相加再开方。",
+            ),
+            why(
+              Q.of(E0 * w, Z),
+              "That multiplies by $\\omega$ as for $E'$; the amplitude of $i$ is $\\frac{E_0}{Z}$.",
+              "这是像 $E'$ 那样乘以 $\\omega$；$i$ 的振幅是 $\\frac{E_0}{Z}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the reactance", "求电抗"],
+                t("", ""),
+                [
+                  `\\omega L = ${w} \\cdot ${L} = ${w * L}, \\qquad \\frac{1}{\\omega C} = \\frac{${w * cap}}{${w}} = ${cap}`,
+                  `X = ${w * L} - ${cap} = ${X}`,
+                ],
+              ],
+              [
+                ["Divide by the impedance", "除以阻抗"],
+                t("", ""),
+                [`Z = \\sqrt{${R * R} + ${X * X}} = ${Z}`, `I = \\frac{${E0}}{${Z}} = ${ans.toLatex()}\\text{ A}`],
+              ],
+            ],
+            t(
+              `$${R}^2 + ${par(X)}^2 = ${R * R + X * X} = ${Z}^2$, and $${Z} \\cdot ${ans.toLatex()} = ${E0}$.`,
+              `$${R}^2 + ${par(X)}^2 = ${R * R + X * X} = ${Z}^2$，且 $${Z} \\cdot ${ans.toLatex()} = ${E0}$。`,
+            ),
           ),
         });
       },

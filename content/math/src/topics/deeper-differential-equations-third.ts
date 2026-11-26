@@ -458,8 +458,8 @@ const turningPoint = point(
   "the-turning-point-of-a-restoring-force",
   ["The turning point of a restoring force", "恢复力下的折返点"],
   [
-    "Using $v\\frac{dv}{dx} = a(x)$ with $a = -k^{2}x$ gives the conserved quantity $v^{2} + k^{2}x^{2}$. The particle turns back where $v = 0$, so the amplitude comes from the initial position and speed together, not from either one alone.",
-    "用 $v\\frac{dv}{dx} = a(x)$，当 $a = -k^{2}x$ 时得到守恒量 $v^{2} + k^{2}x^{2}$。质点在 $v = 0$ 处折返，所以振幅由初始位置和速度共同决定，而不是由其中之一决定。",
+    "Using $v\\frac{dv}{dx} = a(x)$ with $a = -k^{2}x$ gives the conserved quantity $v^{2} + k^{2}x^{2}$. The particle turns back where $v = 0$, so the amplitude comes from the initial position and speed together, not from either one alone. For $a = -4x$ starting at $x = 3$ with speed $8$: $v^{2} + 4x^{2} = 64 + 36 = 100$, so at the turning point $4x^{2} = 100$ and the distance is $5$.\n\n> **Watch out.** Position and speed combine as squares, $x^{2} + \\frac{v^{2}}{k^{2}}$; adding the starting distance to $\\frac{v}{k}$ overshoots.",
+    "用 $v\\frac{dv}{dx} = a(x)$，当 $a = -k^{2}x$ 时得到守恒量 $v^{2} + k^{2}x^{2}$。质点在 $v = 0$ 处折返，所以振幅由初始位置和速度共同决定，而不是由其中之一决定。对 $a = -4x$，从 $x = 3$ 以速率 $8$ 出发：$v^{2} + 4x^{2} = 64 + 36 = 100$，所以在折返点 $4x^{2} = 100$，距离是 $5$。\n\n> **注意。** 位置和速度以平方的形式组合，$x^{2} + \\frac{v^{2}}{k^{2}}$；把起始距离与 $\\frac{v}{k}$ 直接相加会算大。",
   ],
   (rng) => {
     const [p, q, h] = rng.pick(rightTriples);
@@ -467,18 +467,47 @@ const turningPoint = point(
     const u = rng.int(1, 4);
     const x0 = p * u;
     const v0 = k * q * u;
-    return ask(
-      [
+    const answer = h * u;
+    const total = v0 * v0 + k * k * x0 * x0;
+    const kk = k * k === 1 ? "" : `${k * k}`;
+    return numberProblem({
+      prompt: t(
         `A particle has acceleration $a = ${poly([-k * k, "x"])}$. It is at $x = ${x0}$ with speed $${v0}$. What is the greatest distance from $x = 0$ that it reaches?`,
         `质点的加速度是 $a = ${poly([-k * k, "x"])}$。它在 $x = ${x0}$ 处，速率是 $${v0}$。它离 $x = 0$ 的最大距离是多少？`,
-      ],
-      h * u,
-      [x0, q * u, (p + q) * u],
-      [
-        `$${poly([1, "v^{2}"], [k * k, "x^{2}"])}$ is constant, and it equals $${v0 * v0} + ${k * k * x0 * x0} = ${v0 * v0 + k * k * x0 * x0}$. At the turning point $v = 0$, so $x^{2} = ${(h * u) ** 2}$ and the distance is $${h * u}$.`,
-        `$${poly([1, "v^{2}"], [k * k, "x^{2}"])}$ 是常数，等于 $${v0 * v0} + ${k * k * x0 * x0} = ${v0 * v0 + k * k * x0 * x0}$。在折返点 $v = 0$，所以 $x^{2} = ${(h * u) ** 2}$，距离是 $${h * u}$。`,
-      ],
-    );
+      ),
+      answer,
+      mistakes: apart(answer, [
+        why(x0, "That is the starting position; the speed carries the particle farther out.", "这是起始位置；速度会把质点带得更远。"),
+        why(
+          q * u,
+          "That uses the speed alone, $\\frac{v}{k}$, and ignores the starting position.",
+          "这只用了速度 $\\frac{v}{k}$，忽略了起始位置。",
+        ),
+        why((p + q) * u, "That adds the two distances; they combine as squares.", "这是把两段距离直接相加；它们应以平方的形式组合。"),
+        why(v0, "That takes the speed as a distance without dividing by $k$.", "这是把速率当成距离，没有除以 $k$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the conserved quantity", "求守恒量"],
+            t(
+              `Integrating $v\\frac{dv}{dx} = ${poly([-k * k, "x"])}$ shows that this stays constant:`,
+              `对 $v\\frac{dv}{dx} = ${poly([-k * k, "x"])}$ 积分可知下式保持不变：`,
+            ),
+            [`${poly([1, "v^{2}"], [k * k, "x^{2}"])} = ${v0}^{2} + ${kk === "" ? "" : `${kk} \\cdot `}${x0}^{2} = ${total}`],
+          ],
+          [
+            ["Set the speed to zero", "令速度为零"],
+            t("At the turning point $v = 0$:", "在折返点 $v = 0$："),
+            [`${kk}x^{2} = ${total}`, `x^{2} = ${answer * answer}, \\quad |x| = ${answer}`],
+          ],
+        ],
+        t(
+          `$${kk === "" ? "" : `${kk} \\cdot `}${answer}^{2} = ${total}$, the same constant, so the particle stops at distance $${answer}$.`,
+          `$${kk === "" ? "" : `${kk} \\cdot `}${answer}^{2} = ${total}$，正是这个常数，所以质点在距离 $${answer}$ 处停下。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -896,8 +925,8 @@ const eulerResonance = point(
   "a-logarithm-when-the-power-solves-the-homogeneous-equation",
   ["A logarithm when the power solves the homogeneous equation", "幂满足齐次方程时出现对数"],
   [
-    "In a Cauchy-Euler equation, a forcing power $x^{r}$ with $r$ a root of the indicial equation is the analogue of resonance: $Ax^{r}$ gives zero. The right form is $Ax^{r}\\ln x$, and for distinct roots $r$ and $s$ the coefficient is $A = \\frac{c}{r - s}$.",
-    "在柯西-欧拉方程中，如果强迫幂 $x^{r}$ 的 $r$ 是指标方程的根，就类似于共振：$Ax^{r}$ 代入后为零。正确的形式是 $Ax^{r}\\ln x$；对不同的根 $r$ 和 $s$，系数是 $A = \\frac{c}{r - s}$。",
+    "In a Cauchy-Euler equation, a forcing power $x^{r}$ with $r$ a root of the indicial equation is the analogue of resonance: $Ax^{r}$ gives zero. The right form is $Ax^{r}\\ln x$, and for distinct roots $r$ and $s$ the coefficient is $A = \\frac{c}{r - s}$. For $x^{2}y'' - 2xy' + 2y = x$, the roots are $1$ and $2$, so $A = \\frac{1}{1 - 2} = -1$ and $y_{p} = -x\\ln x$.\n\n> **Watch out.** After the $\\ln x$ terms cancel, the leftover factor is $2r - 1 + a = r - s$; dividing by $r$ alone, or forgetting to divide, gives the wrong coefficient.",
+    "在柯西-欧拉方程中，如果强迫幂 $x^{r}$ 的 $r$ 是指标方程的根，就类似于共振：$Ax^{r}$ 代入后为零。正确的形式是 $Ax^{r}\\ln x$；对不同的根 $r$ 和 $s$，系数是 $A = \\frac{c}{r - s}$。对 $x^{2}y'' - 2xy' + 2y = x$，根为 $1$ 与 $2$，所以 $A = \\frac{1}{1 - 2} = -1$，$y_{p} = -x\\ln x$。\n\n> **注意。** 含 $\\ln x$ 的项抵消后，剩下的因子是 $2r - 1 + a = r - s$；只除以 $r$ 或忘了相除都会得到错误的系数。",
   ],
   (rng) => {
     const r = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
@@ -908,18 +937,52 @@ const eulerResonance = point(
     const answer = Q.of(c, r - s);
     const eq = poly([1, "x^{2}y''"], [a, "xy'"], [b, "y"]);
     const pw = r === 1 ? "x" : `x^{${r}}`;
-    return ask(
-      [
+    const low = r - 1 === 0 ? "" : r - 1 === 1 ? "x" : `x^{${r - 1}}`;
+    return numberProblem({
+      prompt: t(
         `The equation $${eq} = ${poly([c, pw])}$ has a particular solution $y_{p} = A${pw}\\ln x$. Find $A$.`,
         `方程 $${eq} = ${poly([c, pw])}$ 有特解 $y_{p} = A${pw}\\ln x$。求 $A$。`,
-      ],
+      ),
       answer,
-      [c, answer.neg(), Q.of(c, r)],
-      [
-        `The indicial equation has roots $r = ${r}$ and $${s}$, so $${pw}$ solves the homogeneous equation and the terms with $\\ln x$ cancel. With $${a}$ the coefficient of $xy'$, what remains is $(2r - 1 + ${paren(a)})A = ${poly([r - s, "A"])}$ times the power. So $${poly([r - s, "A"])} = ${c}$ and $A = ${answer.toLatex()}$.`,
-        `指标方程的根是 $r = ${r}$ 和 $${s}$，所以 $${pw}$ 满足齐次方程，含 $\\ln x$ 的项抵消。$xy'$ 的系数是 $${a}$，剩下的是 $(2r - 1 + ${paren(a)})A = ${poly([r - s, "A"])}$ 乘以这个幂。所以 $${poly([r - s, "A"])} = ${c}$，$A = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(c, "That forgets to divide by the leftover factor $r - s$.", "这里忘了除以剩下的因子 $r - s$。"),
+        why(
+          answer.neg(),
+          "The sign is flipped; the factor is $r - s$, with $r$ the forcing power.",
+          "符号反了；因子是 $r - s$，其中 $r$ 是强迫项的幂。",
+        ),
+        why(
+          Q.of(c, r),
+          "That divides by $r$; the leftover factor is $2r - 1 + a = r - s$.",
+          "这是除以 $r$；剩下的因子是 $2r - 1 + a = r - s$。",
+        ),
+        why(Q.of(c, 2 * r - 1), "That leaves out the $xy'$ term, which adds $a$ to the factor.", "这里漏掉了 $xy'$ 项，它给因子加上 $a$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the indicial roots", "求指标根"],
+            t(
+              `The roots are $${r}$ and $${s}$, so $${pw}$ solves the homogeneous equation.`,
+              `根为 $${r}$ 与 $${s}$，所以 $${pw}$ 满足齐次方程。`,
+            ),
+            [`${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = (${poly([1, "m"], [-r, ""])})(${poly([1, "m"], [-s, ""])})`],
+          ],
+          [
+            ["Substitute the trial", "代入试探解"],
+            t("The $\\ln x$ terms cancel, which leaves", "含 $\\ln x$ 的项抵消，剩下"),
+            [
+              `${poly([1, "x^{2}y_{p}''"], [a, "xy_{p}'"], [b, "y_{p}"])} = (2 \\cdot ${paren(r)} - 1 + ${paren(a)})A${pw} = ${poly([r - s, `A${pw}`])}`,
+              `A = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `$${r - s} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${c}$, and $y_{p}' = A${low}(${poly([r, "\\ln x"], [1, ""])})$ brings the extra $A${low}$ that produces this term.`,
+          `$${r - s} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${c}$；$y_{p}' = A${low}(${poly([r, "\\ln x"], [1, ""])})$ 多出的 $A${low}$ 正产生这一项。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -927,8 +990,8 @@ const nonResonantParameter = point(
   "variation-of-parameters-away-from-resonance",
   ["Variation of parameters away from resonance", "非共振时的参数变易"],
   [
-    "With $y = u(x)e^{-kx}$, the equation $y' + ky = ce^{mx}$ gives $u' = ce^{(m + k)x}$. When $m + k \\ne 0$, integrating brings a factor $\\frac{1}{m + k}$, so the particular solution is $\\frac{c}{m + k}e^{mx}$. The exponents add, and do not subtract.",
-    "设 $y = u(x)e^{-kx}$，方程 $y' + ky = ce^{mx}$ 给出 $u' = ce^{(m + k)x}$。当 $m + k \\ne 0$ 时，积分带来因子 $\\frac{1}{m + k}$，所以特解是 $\\frac{c}{m + k}e^{mx}$。指数是相加，而不是相减。",
+    "With $y = u(x)e^{-kx}$, the equation $y' + ky = ce^{mx}$ gives $u' = ce^{(m + k)x}$. When $m + k \\ne 0$, integrating brings a factor $\\frac{1}{m + k}$, so the particular solution is $\\frac{c}{m + k}e^{mx}$. For $y' + 2y = 6e^{x}$, $u' = 6e^{3x}$, $u = 2e^{3x}$ and $y_{p} = 2e^{x}$.\n\n> **Watch out.** Dividing by $e^{-kx}$ multiplies by $e^{kx}$, so the exponents add: divide by $m + k$, not by $m - k$ or $m$.",
+    "设 $y = u(x)e^{-kx}$，方程 $y' + ky = ce^{mx}$ 给出 $u' = ce^{(m + k)x}$。当 $m + k \\ne 0$ 时，积分带来因子 $\\frac{1}{m + k}$，所以特解是 $\\frac{c}{m + k}e^{mx}$。对 $y' + 2y = 6e^{x}$，$u' = 6e^{3x}$，$u = 2e^{3x}$，$y_{p} = 2e^{x}$。\n\n> **注意。** 除以 $e^{-kx}$ 就是乘以 $e^{kx}$，所以指数相加：要除以 $m + k$，而不是 $m - k$ 或 $m$。",
   ],
   (rng) => {
     const k = nz(rng, 7);
@@ -937,18 +1000,49 @@ const nonResonantParameter = point(
     const c = nz(rng, 12);
     const answer = Q.of(c, m + k);
     const left = poly([1, "y'"], [k, "y"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Using $y = u(x)${expOf(-k)}$, find the coefficient $A$ of the particular solution $y_{p} = A${expOf(m)}$ of $${left} = ${poly([c, expOf(m)])}$.`,
         `用 $y = u(x)${expOf(-k)}$，求 $${left} = ${poly([c, expOf(m)])}$ 的特解 $y_{p} = A${expOf(m)}$ 的系数 $A$。`,
-      ],
+      ),
       answer,
-      [Q.of(c, m - k), c, Q.of(c, m)],
-      [
-        `$u' = ${poly([c, expOf(m + k)])}$, so $u = ${poly([answer, expOf(m + k)])}$. Multiplying by $${expOf(-k)}$ gives $A = ${answer.toLatex()}$.`,
-        `$u' = ${poly([c, expOf(m + k)])}$，所以 $u = ${poly([answer, expOf(m + k)])}$。乘以 $${expOf(-k)}$，得 $A = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(c, m - k),
+          "That subtracts the exponents; multiplying by $e^{kx}$ adds $k$.",
+          "这是把指数相减；乘以 $e^{kx}$ 是加上 $k$。",
+        ),
+        why(c, "That forgets the factor from integrating the exponential.", "这里忘了对指数函数积分带来的因子。"),
+        why(
+          Q.of(c, m),
+          "That divides by $m$ alone and drops the $k$ from the factor $e^{kx}$.",
+          "这是只除以 $m$，漏掉了因子 $e^{kx}$ 带来的 $k$。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is flipped; integrating $e^{(m + k)x}$ divides by $m + k$ as it stands.",
+          "符号反了；对 $e^{(m + k)x}$ 积分是原样除以 $m + k$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Substitute", "代入"],
+            t(`With $y = u${expOf(-k)}$ the terms in $u$ itself cancel:`, `由 $y = u${expOf(-k)}$，含 $u$ 本身的项相消：`),
+            [`u'${expOf(-k)} = ${poly([c, expOf(m)])}`, `u' = ${poly([c, expOf(m + k)])}`],
+          ],
+          [
+            ["Integrate and multiply back", "积分并乘回"],
+            t("", ""),
+            [`u = ${poly([answer, expOf(m + k)])}`, `y_{p} = u${expOf(-k)} = ${poly([answer, expOf(m)])}`],
+          ],
+        ],
+        t(
+          `$y_{p}' ${k < 0 ? "-" : "+"} ${Math.abs(k) === 1 ? "" : Math.abs(k)}y_{p} = (${m} ${k < 0 ? "-" : "+"} ${Math.abs(k)})A${expOf(m)} = ${m + k} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()}${expOf(m)} = ${poly([c, expOf(m)])}$.`,
+          `$y_{p}' ${k < 0 ? "-" : "+"} ${Math.abs(k) === 1 ? "" : Math.abs(k)}y_{p} = (${m} ${k < 0 ? "-" : "+"} ${Math.abs(k)})A${expOf(m)} = ${m + k} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()}${expOf(m)} = ${poly([c, expOf(m)])}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -956,8 +1050,8 @@ const secondParameterSign = point(
   "the-other-parameter-and-its-sign",
   ["The other parameter and its sign", "另一个参数及其符号"],
   [
-    "In $u_{1}' = -\\frac{y_{2}g}{W}$ and $u_{2}' = \\frac{y_{1}g}{W}$ the minus sign is only on $u_{1}'$, and swapping the solutions changes the sign of $W$. So $u_{2}'$ uses $y_{1}$, the other solution, with the Wronskian computed in the stated order.",
-    "在 $u_{1}' = -\\frac{y_{2}g}{W}$ 和 $u_{2}' = \\frac{y_{1}g}{W}$ 中，负号只在 $u_{1}'$ 上，而交换两个解会改变 $W$ 的符号。所以 $u_{2}'$ 用的是另一个解 $y_{1}$，并按给定顺序计算朗斯基行列式。",
+    "In $u_{1}' = -\\frac{y_{2}g}{W}$ and $u_{2}' = \\frac{y_{1}g}{W}$ the minus sign is only on $u_{1}'$, and swapping the solutions changes the sign of $W$. So $u_{2}'$ uses $y_{1}$, the other solution, with the Wronskian computed in the stated order. For $y_{1} = e^{x}$, $y_{2} = e^{2x}$ and $g = 3e^{3x}$, $W = e^{3x}$ and $u_{2}' = \\frac{e^{x} \\cdot 3e^{3x}}{e^{3x}} = 3e^{x}$.\n\n> **Watch out.** $W = y_{1}y_{2}' - y_{1}'y_{2}$ in that order; reversing it, or carrying the minus sign of $u_{1}'$ over to $u_{2}'$, flips the answer.",
+    "在 $u_{1}' = -\\frac{y_{2}g}{W}$ 和 $u_{2}' = \\frac{y_{1}g}{W}$ 中，负号只在 $u_{1}'$ 上，而交换两个解会改变 $W$ 的符号。所以 $u_{2}'$ 用的是另一个解 $y_{1}$，并按给定顺序计算朗斯基行列式。对 $y_{1} = e^{x}$，$y_{2} = e^{2x}$，$g = 3e^{3x}$，$W = e^{3x}$，$u_{2}' = \\frac{e^{x} \\cdot 3e^{3x}}{e^{3x}} = 3e^{x}$。\n\n> **注意。** $W = y_{1}y_{2}' - y_{1}'y_{2}$ 要按这个顺序；顺序反了，或把 $u_{1}'$ 的负号带到 $u_{2}'$ 上，答案的符号就会反。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -966,18 +1060,58 @@ const secondParameterSign = point(
     const c = nz(rng, 12);
     const answer = Q.of(c, b - a);
     const eq = poly([1, "y''"], [-(a + b), "y'"], [a * b, "y"]);
-    return ask(
-      [
+    const W = a + b === 0 ? `${b - a}` : poly([b - a, expOf(a + b)]);
+    return numberProblem({
+      prompt: t(
         `For $${eq} = ${poly([c, expOf(m)])}$, take $y_{1} = ${expOf(a)}$ and $y_{2} = ${expOf(b)}$. Then $u_{2}' = C${expOf(m - b)}$. Find $C$.`,
         `对 $${eq} = ${poly([c, expOf(m)])}$，取 $y_{1} = ${expOf(a)}$，$y_{2} = ${expOf(b)}$。于是 $u_{2}' = C${expOf(m - b)}$。求 $C$。`,
-      ],
+      ),
       answer,
-      [answer.neg(), c, Q.of(c, a + b === 0 ? 2 * a : a + b)],
-      [
-        `$W = ${b - a}${a + b === 0 ? "" : expOf(a + b)}$. Then $u_{2}' = \\frac{y_{1}g}{W}$, and dividing gives the coefficient $${answer.toLatex()}$.`,
-        `$W = ${b - a}${a + b === 0 ? "" : expOf(a + b)}$。于是 $u_{2}' = \\frac{y_{1}g}{W}$，相除得系数 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          "The sign is flipped: the minus sign belongs to $u_{1}'$, and $W$ is $y_{1}y_{2}' - y_{1}'y_{2}$.",
+          "符号反了：负号属于 $u_{1}'$，且 $W = y_{1}y_{2}' - y_{1}'y_{2}$。",
+        ),
+        why(c, "That leaves out the Wronskian in the denominator.", "这里漏掉了分母中的朗斯基行列式。"),
+        ...(a + b === 0
+          ? []
+          : [
+              why(
+                Q.of(c, a + b),
+                "That divides by the exponent of $W$; its coefficient is $b - a$.",
+                "这是除以 $W$ 的指数；它的系数是 $b - a$。",
+              ),
+            ]),
+        why(
+          Q.of(c, b),
+          "That divides by the derivative of $y_{2}$ alone; $W$ also contains $y_{1}'y_{2}$.",
+          "这是只除以 $y_{2}$ 的导数；$W$ 还含有 $y_{1}'y_{2}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compute the Wronskian", "计算朗斯基行列式"],
+            t("", ""),
+            [
+              `W = ${expOf(a)} \\cdot ${b < 0 ? `\\left(${poly([b, expOf(b)])}\\right)` : poly([b, expOf(b)])} - ${a < 0 ? `\\left(${poly([a, expOf(a)])}\\right)` : poly([a, expOf(a)])} \\cdot ${expOf(b)} = ${W}`,
+            ],
+          ],
+          [
+            ["Divide", "相除"],
+            t("The second parameter has no minus sign:", "第二个参数没有负号："),
+            [
+              `u_{2}' = \\frac{y_{1}g}{W} = \\frac{${expOf(a)} \\cdot ${c < 0 ? `\\left(${poly([c, expOf(m)])}\\right)` : poly([c, expOf(m)])}}{${W}} = ${poly([answer, expOf(m - b)])}`,
+            ],
+          ],
+        ],
+        t(
+          `$${b - a} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${c}$, so $Wu_{2}' = y_{1}g$.`,
+          `$${b - a} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${c}$，所以 $Wu_{2}' = y_{1}g$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -985,8 +1119,8 @@ const cosecantForcing = point(
   "cosecant-forcing-with-a-frequency",
   ["Cosecant forcing with a frequency", "带频率的余割强迫项"],
   [
-    "For $y'' + \\omega^{2}y = k\\csc\\omega x$, the Wronskian of $\\cos\\omega x$ and $\\sin\\omega x$ is $\\omega$, not $1$. So $u_{1} = -\\frac{k}{\\omega}x$ and $u_{2} = \\frac{k}{\\omega^{2}}\\ln|\\sin\\omega x|$, where the second has a further factor $\\frac{1}{\\omega}$ from integrating $\\cot\\omega x$.",
-    "对 $y'' + \\omega^{2}y = k\\csc\\omega x$，$\\cos\\omega x$ 和 $\\sin\\omega x$ 的朗斯基行列式是 $\\omega$，而不是 $1$。所以 $u_{1} = -\\frac{k}{\\omega}x$，$u_{2} = \\frac{k}{\\omega^{2}}\\ln|\\sin\\omega x|$，后者由于积分 $\\cot\\omega x$ 又多了一个因子 $\\frac{1}{\\omega}$。",
+    "For $y'' + \\omega^{2}y = k\\csc\\omega x$, the Wronskian of $\\cos\\omega x$ and $\\sin\\omega x$ is $\\omega$, not $1$. So $u_{1} = -\\frac{k}{\\omega}x$ and $u_{2} = \\frac{k}{\\omega^{2}}\\ln|\\sin\\omega x|$, where the second has a further factor $\\frac{1}{\\omega}$ from integrating $\\cot\\omega x$. For $y'' + 4y = 6\\csc 2x$: $W = 2$, $u_{1}' = -3$ and $u_{2}' = 3\\cot 2x$, so $u_{1} = -3x$ and $u_{2} = \\frac{3}{2}\\ln|\\sin 2x|$.\n\n> **Watch out.** Divide by $W = \\omega$ in both parameters, and divide by $\\omega$ once more when integrating $\\cot\\omega x$; the coefficient of $x\\cos\\omega x$ keeps the minus sign of $u_{1}'$.",
+    "对 $y'' + \\omega^{2}y = k\\csc\\omega x$，$\\cos\\omega x$ 和 $\\sin\\omega x$ 的朗斯基行列式是 $\\omega$，而不是 $1$。所以 $u_{1} = -\\frac{k}{\\omega}x$，$u_{2} = \\frac{k}{\\omega^{2}}\\ln|\\sin\\omega x|$，后者由于积分 $\\cot\\omega x$ 又多了一个因子 $\\frac{1}{\\omega}$。对 $y'' + 4y = 6\\csc 2x$：$W = 2$，$u_{1}' = -3$，$u_{2}' = 3\\cot 2x$，所以 $u_{1} = -3x$，$u_{2} = \\frac{3}{2}\\ln|\\sin 2x|$。\n\n> **注意。** 两个参数都要除以 $W = \\omega$，积分 $\\cot\\omega x$ 时还要再除以一次 $\\omega$；$x\\cos\\omega x$ 的系数保留 $u_{1}'$ 的负号。",
   ],
   (rng) => {
     const w = rng.int(1, 6);
@@ -1000,18 +1134,65 @@ const cosecantForcing = point(
     const eq = `${poly([1, "y''"], [w * w, "y"])} = ${poly([k, `\\csc ${c}x`])}`;
     const cot = poly([first.neg(), `\\cot ${c}x`]);
     const logs = poly([second, `\\ln|\\sin ${c}x|`]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Variation of parameters gives a particular solution of $${eq}$ with $y_{1} = \\cos ${c}x$ and $y_{2} = \\sin ${c}x$. Find the coefficient of $${form}$ in it.`,
         `用参数变易法，取 $y_{1} = \\cos ${c}x$，$y_{2} = \\sin ${c}x$，求 $${eq}$ 的特解。求其中 $${form}$ 的系数。`,
-      ],
+      ),
       answer,
-      [answer.neg(), askX ? second : first, k],
-      [
-        `$W = ${w}$. Then $u_{1}' = ${first.toLatex()}$ and $u_{2}' = ${cot}$, whose integrals are $${poly([first, "x"])}$ and $${logs}$. So the coefficient is $${answer.toLatex()}$.`,
-        `$W = ${w}$。于是 $u_{1}' = ${first.toLatex()}$，$u_{2}' = ${cot}$，积分得 $${poly([first, "x"])}$ 和 $${logs}$。所以系数是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          askX
+            ? "The sign is flipped; $u_{1}' = -\\frac{y_{2}g}{W}$ carries a minus sign."
+            : "The sign is flipped; $u_{2}' = \\frac{y_{1}g}{W}$ has no minus sign.",
+          askX ? "符号反了；$u_{1}' = -\\frac{y_{2}g}{W}$ 带负号。" : "符号反了；$u_{2}' = \\frac{y_{1}g}{W}$ 没有负号。",
+        ),
+        why(
+          askX ? second : first,
+          askX
+            ? "That is the coefficient of the logarithm term, from the other parameter."
+            : "That is the coefficient of $x\\cos\\omega x$, from the other parameter.",
+          askX ? "这是对数项的系数，来自另一个参数。" : "这是 $x\\cos\\omega x$ 的系数，来自另一个参数。",
+        ),
+        why(
+          k,
+          "That takes the Wronskian as $1$; for these solutions it is $\\omega$.",
+          "这是把朗斯基行列式当成 $1$；对这两个解它等于 $\\omega$。",
+        ),
+        ...(askX
+          ? []
+          : [
+              why(
+                Q.of(k, w),
+                "That forgets the $\\frac{1}{\\omega}$ from integrating $\\cot\\omega x$.",
+                "这里忘了积分 $\\cot\\omega x$ 带来的 $\\frac{1}{\\omega}$。",
+              ),
+            ]),
+      ]),
+      solution: walked(
+        [
+          [["Compute the Wronskian", "计算朗斯基行列式"], t("", ""), [`W = ${c}\\cos^{2} ${c}x + ${c}\\sin^{2} ${c}x = ${w}`]],
+          [
+            ["Find the parameter derivatives", "求参数的导数"],
+            t("Since $\\sin\\omega x\\csc\\omega x = 1$:", "由于 $\\sin\\omega x\\csc\\omega x = 1$："),
+            [`u_{1}' = -\\frac{y_{2}g}{W} = ${first.toLatex()}`, `u_{2}' = \\frac{y_{1}g}{W} = ${cot}`],
+          ],
+          [
+            ["Integrate", "积分"],
+            t("", ""),
+            [
+              `u_{1} = ${poly([first, "x"])}, \\quad u_{2} = ${logs}`,
+              `y_{p} = ${poly([first, `x\\cos ${c}x`], [second, `\\sin ${c}x\\,\\ln|\\sin ${c}x|`])}`,
+            ],
+          ],
+        ],
+        t(
+          `Differentiating $u_{2} = ${logs}$ gives $${poly([second.mul(Q.of(w)), `\\cot ${c}x`])} = ${cot}$, which is $u_{2}'$ again.`,
+          `对 $u_{2} = ${logs}$ 求导得 $${poly([second.mul(Q.of(w)), `\\cot ${c}x`])} = ${cot}$，正是 $u_{2}'$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1019,8 +1200,8 @@ const thirdParameter = point(
   "the-last-parameter-of-a-third-order-equation",
   ["The last parameter of a third-order equation", "三阶方程的最后一个参数"],
   [
-    "For a third-order equation with leading coefficient $1$, Cramer's rule gives $u_{3}' = \\frac{W_{3}g}{W}$, where $W_{3}$ is the determinant with the third column replaced by $(0, 0, 1)$. For $y''' = g$ with $1, x, x^{2}$, $W = 2$ and $W_{3} = 1$.",
-    "对首项系数为 $1$ 的三阶方程，克拉默法则给出 $u_{3}' = \\frac{W_{3}g}{W}$，其中 $W_{3}$ 是把第三列换成 $(0, 0, 1)$ 后的行列式。对 $y''' = g$ 和 $1, x, x^{2}$，$W = 2$，$W_{3} = 1$。",
+    "For a third-order equation with leading coefficient $1$, Cramer's rule gives $u_{3}' = \\frac{W_{3}g}{W}$, where $W_{3}$ is the determinant with the third column replaced by $(0, 0, 1)$. For $y''' = g$ with $1, x, x^{2}$, $W = 2$ and $W_{3} = 1$. So for $y''' = 6x$, $u_{3}'(1) = \\frac{6}{2} = 3$.\n\n> **Watch out.** $W$ for $1, x, x^{2}$ is the product of the diagonal $1 \\cdot 1 \\cdot 2 = 2$, not $3! = 6$, and $u_{3}'$ divides $g$ by $W$, so it is not $g$ itself.",
+    "对首项系数为 $1$ 的三阶方程，克拉默法则给出 $u_{3}' = \\frac{W_{3}g}{W}$，其中 $W_{3}$ 是把第三列换成 $(0, 0, 1)$ 后的行列式。对 $y''' = g$ 和 $1, x, x^{2}$，$W = 2$，$W_{3} = 1$。所以对 $y''' = 6x$，$u_{3}'(1) = \\frac{6}{2} = 3$。\n\n> **注意。** $1, x, x^{2}$ 的 $W$ 是对角线之积 $1 \\cdot 1 \\cdot 2 = 2$，而不是 $3! = 6$；$u_{3}'$ 是 $g$ 除以 $W$，不是 $g$ 本身。",
   ],
   (rng) => {
     const c = nz(rng, 12);
@@ -1029,18 +1210,44 @@ const thirdParameter = point(
     const value = c * x0 ** m;
     const answer = Q.of(value, 2);
     const g = poly([c, m === 1 ? "x" : `x^{${m}}`]);
-    return ask(
-      [
+    const at = m === 1 ? `${paren(x0)}` : `${paren(x0)}^{${m}}`;
+    return numberProblem({
+      prompt: t(
         `For $y''' = ${g}$, take $y_{1} = 1$, $y_{2} = x$, $y_{3} = x^{2}$. Find $u_{3}'(${x0})$ in variation of parameters.`,
         `对 $y''' = ${g}$，取 $y_{1} = 1$，$y_{2} = x$，$y_{3} = x^{2}$。在参数变易法中，求 $u_{3}'(${x0})$。`,
-      ],
+      ),
       answer,
-      [value, Q.of(value, 6), answer.neg()],
-      [
-        `The Wronskian of $1, x, x^{2}$ is $2$, and replacing the last column by $(0, 0, 1)$ gives $W_{3} = 1$. So $u_{3}' = \\frac{g}{2}$, which is $${answer.toLatex()}$ at $x = ${x0}$.`,
-        `$1, x, x^{2}$ 的朗斯基行列式是 $2$，把最后一列换成 $(0, 0, 1)$ 得 $W_{3} = 1$。所以 $u_{3}' = \\frac{g}{2}$，在 $x = ${x0}$ 处等于 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(value, "That is $g$ itself; it still has to be divided by $W = 2$.", "这是 $g$ 本身；还要除以 $W = 2$。"),
+        why(
+          Q.of(value, 6),
+          "That divides by $3! = 6$; the Wronskian here is $1 \\cdot 1 \\cdot 2 = 2$.",
+          "这是除以 $3! = 6$；这里的朗斯基行列式是 $1 \\cdot 1 \\cdot 2 = 2$。",
+        ),
+        why(answer.neg(), "The sign is flipped; $W_{3}$ and $W$ are both positive here.", "符号反了；这里 $W_{3}$ 与 $W$ 都是正的。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compute the determinants", "计算行列式"],
+            t("Both matrices are triangular:", "两个矩阵都是三角形的："),
+            [
+              `W = \\det\\begin{pmatrix} 1 & x & x^{2} \\\\ 0 & 1 & 2x \\\\ 0 & 0 & 2 \\end{pmatrix} = 2`,
+              `W_{3} = \\det\\begin{pmatrix} 1 & x & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix} = 1`,
+            ],
+          ],
+          [
+            ["Evaluate", "求值"],
+            t("", ""),
+            [`u_{3}' = \\frac{W_{3}g}{W} = \\frac{g}{2}`, `u_{3}'(${x0}) = \\frac{${c} \\cdot ${at}}{2} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `$2 \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${value} = g(${x0})$, so $Wu_{3}' = W_{3}g$ at $x = ${x0}$.`,
+          `$2 \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${value} = g(${x0})$，所以在 $x = ${x0}$ 处 $Wu_{3}' = W_{3}g$。`,
+        ),
+      ),
+    });
   },
 );
 

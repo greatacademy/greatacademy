@@ -730,26 +730,43 @@ const frequencyFromStretch: KnowledgePointDef = {
   id: "the-frequency-from-the-static-stretch-of-a-spring",
   title: t("The frequency from the static stretch of a spring", "由弹簧静伸长求频率"),
   explanation: t(
-    "At rest, a hanging mass stretches a spring by a distance $d$ for which $kd = mg$. So $\\frac{k}{m} = \\frac{g}{d}$, and the natural frequency is $\\omega = \\sqrt{\\frac{g}{d}}$. Neither the mass nor the spring constant needs to be known separately: the stretch alone sets the frequency.",
-    "静止时，悬挂的质量使弹簧伸长 $d$，满足 $kd = mg$。所以 $\\frac{k}{m} = \\frac{g}{d}$，固有频率是 $\\omega = \\sqrt{\\frac{g}{d}}$。质量和弹簧常数都不必单独知道，只由静伸长就能确定频率。",
+    "At rest, a hanging mass stretches a spring by a distance $d$ for which $kd = mg$. So $\\frac{k}{m} = \\frac{g}{d}$, and the natural frequency is $\\omega = \\sqrt{\\frac{g}{d}}$. Neither the mass nor the spring constant needs to be known separately: the stretch alone sets the frequency. With $g = 10$, a stretch of $d = \\frac{2}{5}$ m gives $\\omega = \\sqrt{25} = 5$ rad/s.\n\n> **Watch out.** $\\frac{g}{d}$ is $\\omega^{2}$, so take its root; and the mass cancels, so it must not be multiplied in.",
+    "静止时，悬挂的质量使弹簧伸长 $d$，满足 $kd = mg$。所以 $\\frac{k}{m} = \\frac{g}{d}$，固有频率是 $\\omega = \\sqrt{\\frac{g}{d}}$。质量和弹簧常数都不必单独知道，只由静伸长就能确定频率。取 $g = 10$，伸长 $d = \\frac{2}{5}$ m 给出 $\\omega = \\sqrt{25} = 5$ rad/s。\n\n> **注意。** $\\frac{g}{d}$ 是 $\\omega^{2}$，还要开方；质量会约掉，不能再乘进去。",
   ),
   generate(rng) {
     const w = rng.int(2, 10);
     const m = rng.int(1, 6);
     const d = Q.of(10, w * w);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A mass of ${m} kg hanging at rest stretches a spring by $${d.toLatex()}$ m. Taking $g = 10$ m/s² and ignoring damping, find the natural frequency in rad/s.`,
         `质量为 ${m} kg 的物体静止悬挂时，使弹簧伸长 $${d.toLatex()}$ m。取 $g = 10$ m/s²，忽略阻尼，求固有频率（rad/s）。`,
-      ),
-      answer: w,
-      form: "integer",
-      wrong: [w * w, m * w, w + m],
-      solution: t(
-        `$\\omega^2 = \\frac{g}{d} = 10 \\div ${d.toLatex()} = ${w * w}$, so $\\omega = ${w}$. The mass does not enter.`,
-        `$\\omega^2 = \\frac{g}{d} = 10 \\div ${d.toLatex()} = ${w * w}$，所以 $\\omega = ${w}$。质量不起作用。`,
-      ),
-    });
+      ],
+      w,
+      [
+        labelled(
+          ["Use the rest position", "用静止位置"],
+          "At rest the spring force balances gravity, so the mass cancels:",
+          "静止时弹簧力与重力平衡，所以质量约掉：",
+          `kd = mg \\implies \\frac{k}{m} = \\frac{g}{d}`,
+        ),
+        labelled(["Take the root", "开方"], "", "", `\\omega^2 = \\frac{10}{${d.toLatex()}} = ${w * w}`, `\\omega = ${w}`),
+      ],
+      [
+        `$${w}^2 \\cdot ${d.toLatex()} = 10 = g$, so $k = ${m} \\cdot ${w * w} = ${m * w * w}$ N/m stretches $${d.toLatex()}$ m under $${m * 10}$ N.`,
+        `$${w}^2 \\cdot ${d.toLatex()} = 10 = g$，所以 $k = ${m} \\cdot ${w * w} = ${m * w * w}$ N/m 在 $${m * 10}$ N 下伸长 $${d.toLatex()}$ m。`,
+      ],
+      [
+        [w * w, "That is $\\frac{g}{d} = \\omega^{2}$; take the square root.", "这是 $\\frac{g}{d} = \\omega^{2}$；还要开平方。"],
+        [m * w, "That multiplies by the mass, but it cancels from $kd = mg$.", "这是乘以了质量，但它在 $kd = mg$ 中约掉了。"],
+        [
+          m * w * w,
+          "That is the spring constant $k = \\frac{mg}{d}$, not the frequency.",
+          "这是弹簧常数 $k = \\frac{mg}{d}$，而不是频率。",
+        ],
+        [Q.of(1, w), "That is $\\sqrt{\\frac{d}{g}}$, the ratio upside down.", "这是 $\\sqrt{\\frac{d}{g}}$，比值倒过来了。"],
+      ],
+    );
   },
 };
 
@@ -757,8 +774,8 @@ const quasiFrequency: KnowledgePointDef = {
   id: "the-quasi-frequency-of-a-damped-oscillator",
   title: t("The quasi-frequency of a damped oscillator", "阻尼振子的准频率"),
   explanation: t(
-    "An underdamped oscillator $my'' + cy' + ky = 0$ has characteristic roots $-\\frac{c}{2m} \\pm qi$, where $q^2 = \\frac{k}{m} - \\frac{c^2}{4m^2}$. Its oscillation therefore has the frequency $q$, which is lower than the undamped frequency $\\sqrt{\\frac{k}{m}}$. Damping slows the swings as well as shrinking them.",
-    "欠阻尼振子 $my'' + cy' + ky = 0$ 的特征根是 $-\\frac{c}{2m} \\pm qi$，其中 $q^2 = \\frac{k}{m} - \\frac{c^2}{4m^2}$。所以它的振动频率是 $q$，低于无阻尼频率 $\\sqrt{\\frac{k}{m}}$。阻尼既使振幅缩小，也使振动变慢。",
+    "An underdamped oscillator $my'' + cy' + ky = 0$ has characteristic roots $-\\frac{c}{2m} \\pm qi$, where $q^2 = \\frac{k}{m} - \\frac{c^2}{4m^2}$. Its oscillation therefore has the frequency $q$, which is lower than the undamped frequency $\\sqrt{\\frac{k}{m}}$. Damping slows the swings as well as shrinking them. For $y'' + 2y' + 10y = 0$ the roots are $-1 \\pm 3i$, so the quasi-frequency is $3$, below $\\sqrt{10}$.\n\n> **Watch out.** Divide the whole equation by the mass first; the real part $-\\frac{c}{2m}$ is the decay rate, and only the imaginary part is the frequency.",
+    "欠阻尼振子 $my'' + cy' + ky = 0$ 的特征根是 $-\\frac{c}{2m} \\pm qi$，其中 $q^2 = \\frac{k}{m} - \\frac{c^2}{4m^2}$。所以它的振动频率是 $q$，低于无阻尼频率 $\\sqrt{\\frac{k}{m}}$。阻尼既使振幅缩小，也使振动变慢。对 $y'' + 2y' + 10y = 0$，根是 $-1 \\pm 3i$，准频率是 $3$，低于 $\\sqrt{10}$。\n\n> **注意。** 先把整个方程除以质量；实部 $-\\frac{c}{2m}$ 是衰减速率，只有虚部才是频率。",
   ),
   generate(rng) {
     const m = rng.int(1, 6);
@@ -766,19 +783,47 @@ const quasiFrequency: KnowledgePointDef = {
     const q = rng.int(1, 6);
     const c = 2 * m * p;
     const k = m * (p * p + q * q);
-    return numberProblem({
-      prompt: t(
+    const free = Math.sqrt(p * p + q * q);
+    const monic = poly([1, "r^2"], [2 * p, "r"], [p * p + q * q, ""]);
+    return explainedNumber(
+      [
         `Find the quasi-frequency, in rad/s, of the oscillator $${poly([m, "y''"], [c, "y'"], [k, "y"])} = 0$.`,
         `求振子 $${poly([m, "y''"], [c, "y'"], [k, "y"])} = 0$ 的准频率（rad/s）。`,
-      ),
-      answer: q,
-      form: "integer",
-      wrong: [p, p * p + q * q, p + q],
-      solution: t(
-        `Dividing by the mass gives the roots of $${poly([1, "r^2"], [2 * p, "r"], [p * p + q * q, ""])} = 0$, which are $${complexRoots(p, q)}$. The imaginary part is the quasi-frequency, $${q}$.`,
-        `除以质量后，特征方程是 $${poly([1, "r^2"], [2 * p, "r"], [p * p + q * q, ""])} = 0$，根是 $${complexRoots(p, q)}$。虚部就是准频率 $${q}$。`,
-      ),
-    });
+      ],
+      q,
+      [
+        labelled(["Divide by the mass", "除以质量"], "The characteristic equation becomes", "特征方程变为", `${monic} = 0`),
+        labelled(
+          ["Complete the square", "配方"],
+          "The imaginary part of the roots is the quasi-frequency:",
+          "根的虚部就是准频率：",
+          `(r + ${p})^2 + ${q * q} = 0 \\implies r = ${complexRoots(p, q)}`,
+        ),
+      ],
+      [
+        `$(r + ${p})^2 + ${q * q} = ${monic}$, and $${m} \\cdot ${p * p + q * q} = ${k}$.`,
+        `$(r + ${p})^2 + ${q * q} = ${monic}$，且 $${m} \\cdot ${p * p + q * q} = ${k}$。`,
+      ],
+      [
+        [p, "That is the decay rate $\\frac{c}{2m}$, the real part of the roots.", "这是衰减速率 $\\frac{c}{2m}$，即根的实部。"],
+        [
+          p * p + q * q,
+          "That is $\\frac{k}{m}$; subtract $\\frac{c^2}{4m^2}$ and take the root.",
+          "这是 $\\frac{k}{m}$；还要减去 $\\frac{c^2}{4m^2}$ 并开方。",
+        ],
+        [q * q, "That is $q^{2}$; take the square root.", "这是 $q^{2}$；还要开平方。"],
+        ...(Number.isInteger(free)
+          ? [
+              [
+                free,
+                "That is the undamped frequency $\\sqrt{\\frac{k}{m}}$; damping lowers it.",
+                "这是无阻尼频率 $\\sqrt{\\frac{k}{m}}$；阻尼会使它降低。",
+              ] as const,
+            ]
+          : []),
+      ],
+      "integer",
+    );
   },
 };
 
@@ -786,8 +831,8 @@ const beats: KnowledgePointDef = {
   id: "the-coefficient-of-a-beat",
   title: t("The coefficient of a beat", "拍的系数"),
   explanation: t(
-    "An undamped oscillator forced from rest at a nearby frequency combines two cosines: $y = A(\\cos\\nu t - \\cos\\omega t)$, with $A = \\frac{F}{\\omega^2 - \\nu^2}$. The closer the frequencies, the larger $A$ is. The two cosines drift in and out of step, which produces the swelling and fading called beats.",
-    "无阻尼振子从静止开始，受到相近频率的强迫时，解是两个余弦的组合：$y = A(\\cos\\nu t - \\cos\\omega t)$，其中 $A = \\frac{F}{\\omega^2 - \\nu^2}$。频率越接近，$A$ 越大。两个余弦时而同步、时而错开，产生时强时弱的现象，叫作拍。",
+    "An undamped oscillator forced from rest at a nearby frequency combines two cosines: $y = A(\\cos\\nu t - \\cos\\omega t)$, with $A = \\frac{F}{\\omega^2 - \\nu^2}$. The closer the frequencies, the larger $A$ is. The two cosines drift in and out of step, which produces the swelling and fading called beats. For $y'' + 9y = 5\\cos 2t$: $A = \\frac{5}{9 - 4} = 1$, so $y = \\cos 2t - \\cos 3t$.\n\n> **Watch out.** The denominator is the natural frequency squared minus the driving frequency squared, $\\omega^2 - \\nu^2$, in that order; not the difference of the frequencies themselves.",
+    "无阻尼振子从静止开始，受到相近频率的强迫时，解是两个余弦的组合：$y = A(\\cos\\nu t - \\cos\\omega t)$，其中 $A = \\frac{F}{\\omega^2 - \\nu^2}$。频率越接近，$A$ 越大。两个余弦时而同步、时而错开，产生时强时弱的现象，叫作拍。对 $y'' + 9y = 5\\cos 2t$：$A = \\frac{5}{9 - 4} = 1$，所以 $y = \\cos 2t - \\cos 3t$。\n\n> **注意。** 分母是固有频率的平方减驱动频率的平方 $\\omega^2 - \\nu^2$，顺序不能反；也不是两个频率本身的差。",
   ),
   generate(rng) {
     const w = rng.int(1, 9);
@@ -795,18 +840,40 @@ const beats: KnowledgePointDef = {
     const F = rng.int(1, 20);
     const answer = Q.of(F, w * w - n * n);
     const cos = (j: number) => `\\cos ${j === 1 ? "" : j}t`;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `The solution of $${poly([1, "y''"], [w * w, "y"])} = ${F}${cos(n)}$ with $y(0) = y'(0) = 0$ has the form $y = A(${cos(n)} - ${cos(w)})$. Find $A$.`,
         `$${poly([1, "y''"], [w * w, "y"])} = ${F}${cos(n)}$，$y(0) = y'(0) = 0$ 的解形如 $y = A(${cos(n)} - ${cos(w)})$。求 $A$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(F, w * w + n * n), answer.neg(), Q.of(F, w - n)],
-      solution: t(
-        `Substituting the trial $A${cos(n)}$ gives $A(${w * w} - ${n * n}) = ${F}$, so $A = ${answer.toLatex()}$. The term in $${cos(w)}$ solves the homogeneous equation and makes $y(0) = 0$.`,
-        `代入试探解 $A${cos(n)}$，得 $A(${w * w} - ${n * n}) = ${F}$，所以 $A = ${answer.toLatex()}$。$${cos(w)}$ 项是齐次方程的解，它使 $y(0) = 0$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Substitute the forced part", "代入受迫部分"],
+          `The term in $${cos(w)}$ solves the homogeneous equation, so only $A${cos(n)}$ meets the forcing:`,
+          `$${cos(w)}$ 项满足齐次方程，所以只有 $A${cos(n)}$ 与强迫项对应：`,
+          `(A${cos(n)})'' + ${w * w}A${cos(n)} = A(${w * w} - ${n * n})${cos(n)} = ${F}${cos(n)}`,
+        ),
+        labelled(["Solve for A", "解出 A"], "", "", `A = \\frac{${F}}{${w * w - n * n}} = ${answer.toLatex()}`),
+      ],
+      [
+        `At $t = 0$, $y = A(1 - 1) = 0$ and $y' = A(0 - 0) = 0$; and $${w * w - n * n} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${F}$.`,
+        `在 $t = 0$ 处，$y = A(1 - 1) = 0$，$y' = A(0 - 0) = 0$；且 $${w * w - n * n} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${F}$。`,
+      ],
+      [
+        [
+          answer.neg(),
+          "The sign is flipped; the denominator is $\\omega^2 - \\nu^2$, natural minus driving.",
+          "符号反了；分母是 $\\omega^2 - \\nu^2$，固有减驱动。",
+        ],
+        [
+          Q.of(F, w * w + n * n),
+          "That adds the squares; the forced term gives $\\omega^2 - \\nu^2$.",
+          "这是把平方相加；受迫项给出的是 $\\omega^2 - \\nu^2$。",
+        ],
+        [Q.of(F, w - n), "That subtracts the frequencies, not their squares.", "这是把频率相减，而不是它们的平方相减。"],
+        [F, "That forgets to divide by $\\omega^2 - \\nu^2$.", "这里忘了除以 $\\omega^2 - \\nu^2$。"],
+      ],
+    );
   },
 };
 
@@ -814,27 +881,46 @@ const criticalResistance: KnowledgePointDef = {
   id: "the-resistance-for-critical-damping",
   title: t("The resistance for critical damping", "临界阻尼的电阻"),
   explanation: t(
-    "The charge in a series circuit satisfies $Lq'' + Rq' + \\frac{q}{C} = 0$. The circuit is critically damped when the characteristic equation has a repeated root, that is, when $R^2 = \\frac{4L}{C}$. A smaller resistance makes the charge oscillate, and a larger one makes it decay slowly without oscillating.",
-    "串联电路中的电荷满足 $Lq'' + Rq' + \\frac{q}{C} = 0$。特征方程有重根时电路处于临界阻尼，即 $R^2 = \\frac{4L}{C}$。电阻更小时电荷会振荡，更大时电荷缓慢衰减而不振荡。",
+    "The charge in a series circuit satisfies $Lq'' + Rq' + \\frac{q}{C} = 0$. The circuit is critically damped when the characteristic equation has a repeated root, that is, when $R^2 = \\frac{4L}{C}$. A smaller resistance makes the charge oscillate, and a larger one makes it decay slowly without oscillating. For $L = 2$ H and $C = \\frac{1}{8}$ F, $R^2 = 64$ and $R = 8\\ \\Omega$.\n\n> **Watch out.** $R^2 = \\frac{4L}{C}$ gives the square of the resistance; take the root, and keep the $4$ under it, which becomes a factor $2$.",
+    "串联电路中的电荷满足 $Lq'' + Rq' + \\frac{q}{C} = 0$。特征方程有重根时电路处于临界阻尼，即 $R^2 = \\frac{4L}{C}$。电阻更小时电荷会振荡，更大时电荷缓慢衰减而不振荡。对 $L = 2$ H，$C = \\frac{1}{8}$ F，$R^2 = 64$，$R = 8\\ \\Omega$。\n\n> **注意。** $R^2 = \\frac{4L}{C}$ 给出的是电阻的平方，还要开方；根号下的 $4$ 要保留，开方后成为因子 $2$。",
   ),
   generate(rng) {
     const s = rng.int(1, 9);
     const L = rng.int(1, 6);
     const C = Q.of(L, s * s);
     const answer = 2 * s;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A series circuit has inductance ${L} H and capacitance $${C.toLatex()}$ F. Which resistance, in ohms, makes it critically damped?`,
         `串联电路的电感是 ${L} H，电容是 $${C.toLatex()}$ F。多大的电阻（欧姆）使它处于临界阻尼？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [s, 4 * s * s, 2 * L],
-      solution: t(
-        `$R^2 = \\frac{4L}{C} = 4 \\cdot ${L} \\div ${C.toLatex()} = ${answer * answer}$, so $R = ${answer}$.`,
-        `$R^2 = \\frac{4L}{C} = 4 \\cdot ${L} \\div ${C.toLatex()} = ${answer * answer}$，所以 $R = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Ask for a repeated root", "要求重根"],
+          `The characteristic equation $${L === 1 ? "" : L}r^2 + Rr + \\frac{1}{C} = 0$ has a repeated root when its discriminant is zero:`,
+          `特征方程 $${L === 1 ? "" : L}r^2 + Rr + \\frac{1}{C} = 0$ 的判别式为零时有重根：`,
+          `R^2 = \\frac{4L}{C} = 4 \\cdot ${L} \\div ${C.toLatex()} = ${answer * answer}`,
+        ),
+        labelled(["Take the root", "开方"], "", "", `R = ${answer}`),
+      ],
+      [`$${answer}^2 \\cdot ${C.toLatex()} = ${4 * L} = 4L$.`, `$${answer}^2 \\cdot ${C.toLatex()} = ${4 * L} = 4L$。`],
+      [
+        [
+          s,
+          "That is $\\sqrt{\\frac{L}{C}}$; the $4$ under the root gives a factor $2$.",
+          "这是 $\\sqrt{\\frac{L}{C}}$；根号下的 $4$ 给出因子 $2$。",
+        ],
+        [4 * s * s, "That is $R^2$; take the square root.", "这是 $R^2$；还要开平方。"],
+        [
+          2 * L,
+          "That is $2L$; the capacitance belongs in the formula too, as $\\sqrt{\\frac{4L}{C}}$.",
+          "这是 $2L$；公式中还要有电容：$\\sqrt{\\frac{4L}{C}}$。",
+        ],
+        [s * s, "That is $\\frac{L}{C}$, with neither the $4$ nor the root.", "这是 $\\frac{L}{C}$，既没有乘 $4$ 也没有开方。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1230,8 +1316,8 @@ const equationFromPowers: KnowledgePointDef = {
   id: "the-equation-from-two-power-solutions",
   title: t("The equation from two power solutions", "由两个幂函数解求方程"),
   explanation: t(
-    "Substituting $y = x^m$ into $x^2y'' + bxy' + cy = 0$ gives the indicial equation $m^2 + (b - 1)m + c = 0$. Knowing two solutions means knowing its two roots, and the roots fix the quadratic. Expand $(m - r)(m - s)$ and compare coefficients. The term $b - 1$ is the usual trap, since $b$ itself is not minus the sum of the roots.",
-    "把 $y = x^m$ 代入 $x^2y'' + bxy' + cy = 0$，得到指标方程 $m^2 + (b - 1)m + c = 0$。知道两个解就是知道它的两个根，而两个根决定了这个二次式。展开 $(m - r)(m - s)$ 并比较系数。容易出错的是 $b - 1$ 这一项：$b$ 本身并不等于两根之和的相反数。",
+    "Substituting $y = x^m$ into $x^2y'' + bxy' + cy = 0$ gives the indicial equation $m^2 + (b - 1)m + c = 0$. Knowing two solutions means knowing its two roots, and the roots fix the quadratic. Expand $(m - r)(m - s)$ and compare coefficients. For the solutions $x^2$ and $x^3$, $(m - 2)(m - 3) = m^2 - 5m + 6$, so $b - 1 = -5$, $b = -4$ and $c = 6$.\n\n> **Watch out.** The term $b - 1$ is the usual trap: $b$ itself is not minus the sum of the roots, so add $1$ back.",
+    "把 $y = x^m$ 代入 $x^2y'' + bxy' + cy = 0$，得到指标方程 $m^2 + (b - 1)m + c = 0$。知道两个解就是知道它的两个根，而两个根决定了这个二次式。展开 $(m - r)(m - s)$ 并比较系数。对解 $x^2$ 与 $x^3$，$(m - 2)(m - 3) = m^2 - 5m + 6$，所以 $b - 1 = -5$，$b = -4$，$c = 6$。\n\n> **注意。** 容易出错的是 $b - 1$ 这一项：$b$ 本身并不等于两根之和的相反数，要把 $1$ 加回去。",
   ),
   generate(rng) {
     const r = nonzero(rng, 5);
@@ -1239,21 +1325,51 @@ const equationFromPowers: KnowledgePointDef = {
     const askB = rng.pick([true, false]);
     const b = 1 - r - s;
     const c = r * s;
+    const answer = askB ? b : c;
     const quadratic = poly([1, "m^2"], [-(r + s), "m"], [c, ""]);
-    const stepEn = askB ? `So $b - 1 = ${-(r + s)}$, which gives $b = ${b}$.` : `So $c = ${c}$.`;
-    const stepZh = askB ? `所以 $b - 1 = ${-(r + s)}$，得 $b = ${b}$。` : `所以 $c = ${c}$。`;
+    const reasons: [number, string, string][] = askB
+      ? [
+          [-(r + s), "That is $b - 1$; add $1$ to get $b$.", "这是 $b - 1$；加 $1$ 才得到 $b$。"],
+          [r + s, "That is the sum of the roots; the middle coefficient is minus the sum.", "这是两根之和；一次项系数是两根之和的相反数。"],
+          [1 + r + s, "The sign of the sum is flipped; $b - 1$ is minus the sum.", "两根之和的符号反了；$b - 1$ 是两根之和的相反数。"],
+        ]
+      : [
+          [-c, "The sign is flipped; the constant term is the product of the roots itself.", "符号反了；常数项就是两根之积。"],
+          [r + s, "That is the sum of the roots; $c$ is their product.", "这是两根之和；$c$ 是两根之积。"],
+          [c + 1, "The $1$ belongs to $b - 1$, not to $c$.", "这个 $1$ 属于 $b - 1$，不属于 $c$。"],
+        ];
+    const xr = power(r);
+    const value = `${r} \\cdot ${inParens(r - 1)} + ${inParens(b)} \\cdot ${inParens(r)} + ${inParens(c)} = ${r * (r - 1) + b * r + c}`;
     return numberProblem({
       prompt: t(
-        `The equation $x^2y'' + bxy' + cy = 0$ has the solutions $y = ${power(r)}$ and $y = ${power(s)}$ for $x > 0$. Find $${askB ? "b" : "c"}$.`,
-        `方程 $x^2y'' + bxy' + cy = 0$ 在 $x > 0$ 上有解 $y = ${power(r)}$ 和 $y = ${power(s)}$。求 $${askB ? "b" : "c"}$。`,
+        `The equation $x^2y'' + bxy' + cy = 0$ has the solutions $y = ${xr}$ and $y = ${power(s)}$ for $x > 0$. Find $${askB ? "b" : "c"}$.`,
+        `方程 $x^2y'' + bxy' + cy = 0$ 在 $x > 0$ 上有解 $y = ${xr}$ 和 $y = ${power(s)}$。求 $${askB ? "b" : "c"}$。`,
       ),
-      answer: askB ? b : c,
+      answer,
       form: "integer",
       solveFor: askB ? "b" : "c",
-      wrong: askB ? [-(r + s), r + s, 1 + r + s] : [-c, r + s, c + 1],
-      solution: t(
-        `The indicial equation has these exponents as roots, so it is $${quadratic} = 0$. Comparing it with $m^2 + (b - 1)m + c = 0$ gives the coefficients. ${stepEn}`,
-        `这两个指数是指标方程的根，所以指标方程是 $${quadratic} = 0$。把它与 $m^2 + (b - 1)m + c = 0$ 比较，就得到系数。${stepZh}`,
+      mistakes: reasons
+        .filter(([v], i) => v !== answer && reasons.findIndex(([other]) => other === v) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          labelled(
+            ["Build the indicial equation", "构造指标方程"],
+            "The exponents are its roots:",
+            "两个指数就是它的根：",
+            `(${poly([1, "m"], [-r, ""])})(${poly([1, "m"], [-s, ""])}) = ${quadratic}`,
+          ),
+          labelled(
+            ["Compare coefficients", "比较系数"],
+            askB ? "The middle coefficient is $b - 1$:" : "The constant term is $c$:",
+            askB ? "一次项系数是 $b - 1$：" : "常数项是 $c$：",
+            askB ? `b - 1 = ${-(r + s)}, \\quad b = ${b}` : `c = ${c}`,
+          ),
+        ],
+        t(
+          `With $b = ${b}$ and $c = ${c}$, the power $m = ${r}$ gives $${value}$, so $y = ${xr}$ is a solution.`,
+          `当 $b = ${b}$，$c = ${c}$ 时，幂 $m = ${r}$ 给出 $${value}$，所以 $y = ${xr}$ 是解。`,
+        ),
       ),
     });
   },
@@ -1263,8 +1379,8 @@ const coefficientForRepeatedRoot: KnowledgePointDef = {
   id: "the-coefficient-that-makes-a-repeated-root",
   title: t("The coefficient that makes a repeated root", "使指标方程有重根的系数"),
   explanation: t(
-    "For $ax^2y'' + pxy' + ky = 0$ the indicial equation is $am^2 + (p - a)m + k = 0$. Solutions switch from two separate powers to $x^m$ and $x^m \\ln x$ exactly when this quadratic has a repeated root. So set its discriminant to zero. Remember that the middle coefficient is $p - a$, not $p$.",
-    "对 $ax^2y'' + pxy' + ky = 0$，指标方程是 $am^2 + (p - a)m + k = 0$。当且仅当这个二次方程有重根时，解才从两个不同的幂函数变成 $x^m$ 和 $x^m \\ln x$。所以令判别式为零。注意中间的系数是 $p - a$，而不是 $p$。",
+    "For $ax^2y'' + pxy' + ky = 0$ the indicial equation is $am^2 + (p - a)m + k = 0$. Solutions switch from two separate powers to $x^m$ and $x^m \\ln x$ exactly when this quadratic has a repeated root. So set its discriminant to zero. For $x^2y'' - 3xy' + ky = 0$ the indicial equation is $m^2 - 4m + k = 0$, and $16 - 4k = 0$ gives $k = 4$, with the repeated root $m = 2$.\n\n> **Watch out.** The middle coefficient is $p - a$, not $p$: using $p$ gives a $k$ whose indicial equation has two different roots.",
+    "对 $ax^2y'' + pxy' + ky = 0$，指标方程是 $am^2 + (p - a)m + k = 0$。当且仅当这个二次方程有重根时，解才从两个不同的幂函数变成 $x^m$ 和 $x^m \\ln x$。所以令判别式为零。对 $x^2y'' - 3xy' + ky = 0$，指标方程是 $m^2 - 4m + k = 0$，由 $16 - 4k = 0$ 得 $k = 4$，重根是 $m = 2$。\n\n> **注意。** 中间的系数是 $p - a$，而不是 $p$：用 $p$ 求出的 $k$ 会使指标方程有两个不同的根。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -1272,6 +1388,14 @@ const coefficientForRepeatedRoot: KnowledgePointDef = {
     const p = a * (1 - 2 * R);
     const answer = a * R * R;
     const middle = p - a;
+    const reasons: [number | Q, string, string][] = [
+      [R * R, "That is the square of the root; the leading coefficient $a$ multiplies it.", "这是根的平方；还要乘以首项系数 $a$。"],
+      [-answer, "The sign is flipped; the discriminant condition gives a positive $k$ here.", "符号反了；这里判别式条件给出正的 $k$。"],
+      [Q.of(p * p, 4 * a), "That uses $p$ as the middle coefficient; it is $p - a$.", "这是把 $p$ 当成一次项系数；应当是 $p - a$。"],
+      [2 * answer, "That divides by $2a$; the discriminant has $4ak$.", "这是除以 $2a$；判别式里是 $4ak$。"],
+    ];
+    const lead = a === 1 ? "" : `${a}`;
+    const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
     return numberProblem({
       prompt: t(
         `For which value of $k$ does $${poly([a, "x^2y''"], [p, "xy'"])} + ky = 0$ have an indicial equation with a repeated root?`,
@@ -1280,10 +1404,29 @@ const coefficientForRepeatedRoot: KnowledgePointDef = {
       answer,
       form: "integer",
       solveFor: "k",
-      wrong: [R * R, -answer, Q.of(p * p, 4 * a), 2 * answer],
-      solution: t(
-        `The indicial equation is $${poly([a, "m^2"], [middle, "m"])} + k = 0$. Setting its discriminant to zero gives $k = \\frac{${inParens(middle)}^2}{${4 * a}} = ${answer}$, and the repeated root is $m = ${R}$.`,
-        `指标方程是 $${poly([a, "m^2"], [middle, "m"])} + k = 0$。令判别式为零，得 $k = \\frac{${inParens(middle)}^2}{${4 * a}} = ${answer}$，重根是 $m = ${R}$。`,
+      mistakes: reasons
+        .filter(([v], i) => !asQ(v).eq(Q.of(answer)) && reasons.findIndex(([o]) => asQ(o).eq(asQ(v))) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          labelled(
+            ["Write the indicial equation", "写出指标方程"],
+            "The middle coefficient is $p - a$:",
+            "一次项系数是 $p - a$：",
+            `${poly([a, "m^2"], [middle, "m"])} + k = 0`,
+          ),
+          labelled(
+            ["Set the discriminant to zero", "令判别式为零"],
+            "",
+            "",
+            `${inParens(middle)}^2 - 4 \\cdot ${a} \\cdot k = 0`,
+            `k = \\frac{${middle * middle}}{${4 * a}} = ${answer}`,
+          ),
+        ],
+        t(
+          `$${lead}(m ${R < 0 ? "+" : "-"} ${Math.abs(R)})^2 = ${poly([a, "m^2"], [middle, "m"], [answer, ""])}$, so $m = ${R}$ is a repeated root.`,
+          `$${lead}(m ${R < 0 ? "+" : "-"} ${Math.abs(R)})^2 = ${poly([a, "m^2"], [middle, "m"], [answer, ""])}$，所以 $m = ${R}$ 是重根。`,
+        ),
       ),
     });
   },
@@ -1293,8 +1436,8 @@ const coefficientFromOscillatingSolution: KnowledgePointDef = {
   id: "the-coefficient-from-an-oscillating-power-solution",
   title: t("A coefficient from an oscillating power solution", "由振荡的幂函数解求系数"),
   explanation: t(
-    "A solution $x^{\\alpha}\\cos(\\beta \\ln x)$ of $x^2y'' + bxy' + cy = 0$ shows that $\\alpha \\pm \\beta i$ are the roots of the indicial equation $m^2 + (b - 1)m + c = 0$. The constant term of a monic quadratic is the product of its roots. For conjugate roots that product is $\\alpha^2 + \\beta^2$.",
-    "如果 $x^{\\alpha}\\cos(\\beta \\ln x)$ 是 $x^2y'' + bxy' + cy = 0$ 的解，那么 $\\alpha \\pm \\beta i$ 就是指标方程 $m^2 + (b - 1)m + c = 0$ 的根。首一二次式的常数项等于两根之积。对共轭根，这个积是 $\\alpha^2 + \\beta^2$。",
+    "A solution $x^{\\alpha}\\cos(\\beta \\ln x)$ of $x^2y'' + bxy' + cy = 0$ shows that $\\alpha \\pm \\beta i$ are the roots of the indicial equation $m^2 + (b - 1)m + c = 0$. The constant term of a monic quadratic is the product of its roots. For conjugate roots that product is $\\alpha^2 + \\beta^2$. For $y = x^{2}\\cos(3\\ln x)$ the roots are $2 \\pm 3i$, so $c = 4 + 9 = 13$.\n\n> **Watch out.** $(\\alpha + \\beta i)(\\alpha - \\beta i) = \\alpha^2 + \\beta^2$, a sum of squares, because $i^2 = -1$; it is not $\\alpha^2 - \\beta^2$.",
+    "如果 $x^{\\alpha}\\cos(\\beta \\ln x)$ 是 $x^2y'' + bxy' + cy = 0$ 的解，那么 $\\alpha \\pm \\beta i$ 就是指标方程 $m^2 + (b - 1)m + c = 0$ 的根。首一二次式的常数项等于两根之积。对共轭根，这个积是 $\\alpha^2 + \\beta^2$。对 $y = x^{2}\\cos(3\\ln x)$，根为 $2 \\pm 3i$，所以 $c = 4 + 9 = 13$。\n\n> **注意。** $(\\alpha + \\beta i)(\\alpha - \\beta i) = \\alpha^2 + \\beta^2$ 是平方和，因为 $i^2 = -1$；它不是 $\\alpha^2 - \\beta^2$。",
   ),
   generate(rng) {
     const alpha = rng.int(-4, 4);
@@ -1302,6 +1445,22 @@ const coefficientFromOscillatingSolution: KnowledgePointDef = {
     const answer = alpha * alpha + beta * beta;
     const amplitude = alpha === 0 ? "" : power(alpha);
     const wave = `\\cos(${multiple(beta, "\\ln x")})`;
+    const bi = multiple(beta, "i");
+    const roots = alpha === 0 ? `\\pm ${bi}` : `${alpha} \\pm ${bi}`;
+    const reasons: [number, string, string][] = [
+      [beta * beta, "That drops $\\alpha^2$; the power in front adds the real part.", "这漏掉了 $\\alpha^2$；前面的幂给出实部。"],
+      [
+        alpha * alpha - beta * beta,
+        "That subtracts $\\beta^2$; since $i^2 = -1$ the product is a sum of squares.",
+        "这是减去 $\\beta^2$；由于 $i^2 = -1$，积是平方和。",
+      ],
+      [
+        beta * beta - alpha * alpha,
+        "That subtracts $\\alpha^2$; the product of conjugates adds both squares.",
+        "这是减去 $\\alpha^2$；共轭根之积是两个平方相加。",
+      ],
+      [alpha + beta, "That adds the parts; $c$ is the product of the roots.", "这是把实部与虚部相加；$c$ 是两根之积。"],
+    ];
     return numberProblem({
       prompt: t(
         `The equation $x^2y'' + bxy' + cy = 0$ has the solution $y = ${amplitude}${wave}$ for $x > 0$. Find $c$.`,
@@ -1310,10 +1469,26 @@ const coefficientFromOscillatingSolution: KnowledgePointDef = {
       answer,
       form: "integer",
       solveFor: "c",
-      wrong: [beta * beta, alpha * alpha - beta * beta, beta * beta - alpha * alpha, alpha + beta],
-      solution: t(
-        `The indicial roots are $m = ${alpha} \\pm ${multiple(beta, "i")}$. Their product is $c = ${inParens(alpha)}^2 + ${beta}^2 = ${answer}$.`,
-        `指标方程的根是 $m = ${alpha} \\pm ${multiple(beta, "i")}$。它们的积是 $c = ${inParens(alpha)}^2 + ${beta}^2 = ${answer}$。`,
+      mistakes: reasons.filter(([v], i) => v !== answer && reasons.findIndex(([o]) => o === v) === i).map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          labelled(
+            ["Read the roots", "读出根"],
+            "The power gives the real part and the logarithm's multiple gives the imaginary part:",
+            "幂给出实部，对数前的倍数给出虚部：",
+            `m = ${roots}`,
+          ),
+          labelled(
+            ["Multiply the roots", "两根相乘"],
+            "The constant term is their product:",
+            "常数项是它们的积：",
+            `c = ${inParens(alpha)}^2 + ${beta}^2 = ${answer}`,
+          ),
+        ],
+        t(
+          `$${poly([1, "m^2"], [-2 * alpha, "m"], [answer, ""])} = ${alpha === 0 ? "m^2" : `(${poly([1, "m"], [-alpha, ""])})^2`} + ${beta * beta}$ vanishes at $m = ${roots}$.`,
+          `$${poly([1, "m^2"], [-2 * alpha, "m"], [answer, ""])} = ${alpha === 0 ? "m^2" : `(${poly([1, "m"], [-alpha, ""])})^2`} + ${beta * beta}$ 在 $m = ${roots}$ 处为零。`,
+        ),
       ),
     });
   },
@@ -1383,26 +1558,50 @@ const springForResonance: KnowledgePointDef = {
   id: "the-spring-constant-for-resonance",
   title: t("The spring constant for resonance", "产生共振的弹簧常数"),
   explanation: t(
-    "An undamped system $mx'' + kx = F\\cos\\omega t$ has natural frequency $\\sqrt{\\frac{k}{m}}$. It resonates when the driving frequency equals the natural one, and the response then grows without bound. Engineers avoid this by choosing the stiffness. So $k = m\\omega^2$ is the value to reach or, in practice, to stay away from.",
-    "无阻尼系统 $mx'' + kx = F\\cos\\omega t$ 的固有频率是 $\\sqrt{\\frac{k}{m}}$。当驱动频率等于固有频率时发生共振，响应会无限增大。工程师通过选择刚度来避免这种情况。所以 $k = m\\omega^2$ 是要达到的值，或者在实践中要避开的值。",
+    "An undamped system $mx'' + kx = F\\cos\\omega t$ has natural frequency $\\sqrt{\\frac{k}{m}}$. It resonates when the driving frequency equals the natural one, and the response then grows without bound. Engineers avoid this by choosing the stiffness. So $k = m\\omega^2$ is the value to reach or, in practice, to stay away from. For $3x'' + kx = 5\\cos 2t$ the system resonates at $k = 3 \\cdot 4 = 12$.\n\n> **Watch out.** Square the driving frequency and multiply by the mass; the force amplitude $F$ plays no part.",
+    "无阻尼系统 $mx'' + kx = F\\cos\\omega t$ 的固有频率是 $\\sqrt{\\frac{k}{m}}$。当驱动频率等于固有频率时发生共振，响应会无限增大。工程师通过选择刚度来避免这种情况。所以 $k = m\\omega^2$ 是要达到的值，或者在实践中要避开的值。对 $3x'' + kx = 5\\cos 2t$，系统在 $k = 3 \\cdot 4 = 12$ 时共振。\n\n> **注意。** 把驱动频率平方再乘以质量；力的振幅 $F$ 不起作用。",
   ),
   generate(rng) {
     const m = rng.int(2, 9);
     const w = rng.int(1, 9);
     const F = rng.int(2, 9);
     const answer = m * w * w;
+    const reasons: readonly Reason[] = [
+      [m * w, "That forgets to square the driving frequency.", "这里忘了把驱动频率平方。"],
+      [w * w, "That leaves out the mass; $k = m\\omega^2$.", "这里漏掉了质量；$k = m\\omega^2$。"],
+      [
+        Q.of(w * w, m),
+        "That divides by the mass; $\\frac{k}{m} = \\omega^2$ means multiplying.",
+        "这是除以质量；$\\frac{k}{m} = \\omega^2$ 意味着要乘以质量。",
+      ],
+      [m * m * w * w, "That squares the mass as well as the frequency.", "这是把质量也平方了。"],
+      [F * w * w, "That uses the force amplitude in place of the mass.", "这是用力的振幅代替了质量。"],
+    ];
+    const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
     return numberProblem({
       prompt: t(
         `For which spring constant $k$ does the undamped system $${m}x'' + kx = ${F}\\cos ${multiple(w, "t")}$ resonate?`,
         `弹簧常数 $k$ 取何值时，无阻尼系统 $${m}x'' + kx = ${F}\\cos ${multiple(w, "t")}$ 发生共振？`,
       ),
       answer,
-      form: "integer",
       solveFor: "k",
-      wrong: [m * w, w * w, Q.of(w * w, m), m * m * w * w],
-      solution: t(
-        `Resonance needs $\\sqrt{\\frac{k}{${m}}} = ${w}$. Squaring gives $k = ${m} \\cdot ${w}^2 = ${answer}$. The force amplitude plays no part.`,
-        `共振要求 $\\sqrt{\\frac{k}{${m}}} = ${w}$。平方得 $k = ${m} \\cdot ${w}^2 = ${answer}$。力的振幅不起作用。`,
+      mistakes: reasons
+        .filter(([v], i) => !q(v).eq(Q.of(answer)) && reasons.findIndex(([o]) => q(o).eq(q(v))) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          labelled(
+            ["Match the frequencies", "使频率相等"],
+            "Resonance needs the natural frequency to equal the driving one:",
+            "共振要求固有频率等于驱动频率：",
+            `\\sqrt{\\frac{k}{${m}}} = ${w}`,
+          ),
+          labelled(["Square", "平方"], "", "", `k = ${m} \\cdot ${w}^2 = ${answer}`),
+        ],
+        t(
+          `$\\sqrt{\\frac{${answer}}{${m}}} = \\sqrt{${w * w}} = ${w}$; the force amplitude $${F}$ plays no part.`,
+          `$\\sqrt{\\frac{${answer}}{${m}}} = \\sqrt{${w * w}} = ${w}$；力的振幅 $${F}$ 不起作用。`,
+        ),
       ),
     });
   },
@@ -1412,8 +1611,8 @@ const capacitanceForResonance: KnowledgePointDef = {
   id: "the-capacitance-for-electrical-resonance",
   title: t("The capacitance for electrical resonance", "产生电共振的电容"),
   explanation: t(
-    "The steady-state current in a series circuit has amplitude $\\frac{V}{\\sqrt{R^2 + \\left(L\\omega - \\frac{1}{C\\omega}\\right)^2}}$. The resistance cannot be removed, but the second term in the root can. The amplitude is largest when $L\\omega = \\frac{1}{C\\omega}$, which is how a radio tunes to a station by adjusting its capacitor.",
-    "串联电路的稳态电流振幅是 $\\frac{V}{\\sqrt{R^2 + \\left(L\\omega - \\frac{1}{C\\omega}\\right)^2}}$。电阻无法消除，但根号中的第二项可以。当 $L\\omega = \\frac{1}{C\\omega}$ 时振幅最大，收音机正是这样通过调节电容来选台的。",
+    "The steady-state current in a series circuit has amplitude $\\frac{V}{\\sqrt{R^2 + \\left(L\\omega - \\frac{1}{C\\omega}\\right)^2}}$. The resistance cannot be removed, but the second term in the root can. The amplitude is largest when $L\\omega = \\frac{1}{C\\omega}$, which is how a radio tunes to a station by adjusting its capacitor. For $L = 2$ H at $\\omega = 5$, $C = \\frac{1}{2 \\cdot 25} = \\frac{1}{50}$ F.\n\n> **Watch out.** Solving $L\\omega = \\frac{1}{C\\omega}$ gives $C = \\frac{1}{L\\omega^2}$: the frequency is squared, and $C$ is a reciprocal, not $L\\omega^2$ itself. The resistance and the voltage do not affect it.",
+    "串联电路的稳态电流振幅是 $\\frac{V}{\\sqrt{R^2 + \\left(L\\omega - \\frac{1}{C\\omega}\\right)^2}}$。电阻无法消除，但根号中的第二项可以。当 $L\\omega = \\frac{1}{C\\omega}$ 时振幅最大，收音机正是这样通过调节电容来选台的。对 $L = 2$ H，$\\omega = 5$，$C = \\frac{1}{2 \\cdot 25} = \\frac{1}{50}$ F。\n\n> **注意。** 由 $L\\omega = \\frac{1}{C\\omega}$ 解得 $C = \\frac{1}{L\\omega^2}$：频率要平方，而且 $C$ 是倒数，不是 $L\\omega^2$ 本身。电阻和电压都不影响它。",
   ),
   generate(rng) {
     const L = rng.int(1, 8);
@@ -1421,18 +1620,32 @@ const capacitanceForResonance: KnowledgePointDef = {
     const R = rng.int(1, 20);
     const V = 10 * rng.int(1, 9);
     const answer = Q.of(1, L * w * w);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A series circuit has $R = ${R}\\ \\Omega$ and $L = ${L}\\text{ H}$, and is driven by $E(t) = ${V}\\sin ${w}t\\text{ V}$. Which capacitance, in farads, makes the steady-state current amplitude as large as possible?`,
         `串联电路中 $R = ${R}\\ \\Omega$，$L = ${L}\\text{ H}$，由 $E(t) = ${V}\\sin ${w}t\\text{ V}$ 驱动。电容取多少法拉时，稳态电流的振幅最大？`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(1, L * w), Q.of(1, w * w), L * w * w, Q.of(1, L * L * w * w)],
-      solution: t(
-        `The amplitude is largest when $${L} \\cdot ${w} = \\frac{1}{${w}C}$, which gives $C = \\frac{1}{${L} \\cdot ${w}^2} = ${answer.toLatex()}$.`,
-        `当 $${L} \\cdot ${w} = \\frac{1}{${w}C}$ 时振幅最大，得 $C = \\frac{1}{${L} \\cdot ${w}^2} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Cancel the reactance", "消去电抗"],
+          "The amplitude is largest when the second term under the root vanishes:",
+          "根号下第二项为零时振幅最大：",
+          `${L === 1 ? "" : `${L} \\cdot `}${w} = \\frac{1}{${w}C}`,
+        ),
+        labelled(["Solve for C", "解出 C"], "", "", `C = \\frac{1}{${L} \\cdot ${w}^2} = ${answer.toLatex()}`),
+      ],
+      [
+        `With $C = ${answer.toLatex()}$, $\\frac{1}{${w}C} = \\frac{${L * w * w}}{${w}} = ${L * w} = L\\omega$, so the current amplitude is $\\frac{V}{R} = ${Q.of(V, R).toLatex()}$.`,
+        `取 $C = ${answer.toLatex()}$，$\\frac{1}{${w}C} = \\frac{${L * w * w}}{${w}} = ${L * w} = L\\omega$，所以电流振幅为 $\\frac{V}{R} = ${Q.of(V, R).toLatex()}$。`,
+      ],
+      [
+        [Q.of(1, L * w), "That forgets to square the frequency.", "这里忘了把频率平方。"],
+        [Q.of(1, w * w), "That leaves out the inductance.", "这里漏掉了电感。"],
+        [L * w * w, "That is $L\\omega^2$, the reciprocal of the capacitance.", "这是 $L\\omega^2$，即电容的倒数。"],
+        [Q.of(1, L * L * w * w), "That squares the inductance as well.", "这是把电感也平方了。"],
+      ],
+    );
   },
 };
 
@@ -2720,8 +2933,8 @@ const accelerationFromPower: KnowledgePointDef = {
     multivariableDrawings8["velocity-and-acceleration-as-functions-of-displacement#the-acceleration-when-speed-is-a-power-of-position"],
   title: t("The acceleration when speed is a power of position", "速度是位置的幂时的加速度"),
   explanation: t(
-    "If velocity is given as a function of position, $\\frac{dv}{dx}$ alone is not the acceleration, because it measures the change per metre and not per second. The chain rule supplies the missing factor: $a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$. So the acceleration at a point is the speed there times the slope of the velocity graph. The time never needs to appear in the calculation.",
-    "如果速度是位置的函数，$\\frac{dv}{dx}$ 本身不是加速度，因为它度量的是每米而不是每秒的变化。链式法则补上缺少的因子：$a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$。所以一点处的加速度是该点的速度乘以速度图的斜率。计算中根本不需要出现时间。",
+    "If velocity is given as a function of position, $\\frac{dv}{dx}$ alone is not the acceleration, because it measures the change per metre and not per second. The chain rule supplies the missing factor: $a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$. So the acceleration at a point is the speed there times the slope of the velocity graph. The time never needs to appear in the calculation. For $v = x^{2}$ at $x = 3$: $v = 9$ and $\\frac{dv}{dx} = 6$, so $a = 54$.\n\n> **Watch out.** $\\frac{dv}{dx}$ is a rate per unit of distance; multiply it by $v$ to get the rate per unit of time.",
+    "如果速度是位置的函数，$\\frac{dv}{dx}$ 本身不是加速度，因为它度量的是每米而不是每秒的变化。链式法则补上缺少的因子：$a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$。所以一点处的加速度是该点的速度乘以速度图的斜率。计算中根本不需要出现时间。对 $v = x^{2}$，在 $x = 3$ 处：$v = 9$，$\\frac{dv}{dx} = 6$，所以 $a = 54$。\n\n> **注意。** $\\frac{dv}{dx}$ 是对距离的变化率；乘以 $v$ 才得到对时间的变化率。",
   ),
   generate(rng) {
     const k = rng.int(1, 4);
@@ -2730,17 +2943,51 @@ const accelerationFromPower: KnowledgePointDef = {
     const velocity = k * x0 ** n;
     const slope = k * n * x0 ** (n - 1);
     const answer = velocity * slope;
+    const v = `${k === 1 ? "" : k}${signedPower("x", n)}`;
+    const dv = n === 1 ? `${k}` : `${k * n === 1 ? "" : k * n}${signedPower("x", n - 1)}`;
+    const reasons: [number, string, string][] = [
+      [
+        slope,
+        "That is $\\frac{dv}{dx}$ alone, a rate per unit of distance; multiply by $v$.",
+        "这只是 $\\frac{dv}{dx}$，是对距离的变化率；还要乘以 $v$。",
+      ],
+      [velocity, "That is the velocity at the point, not its rate of change.", "这是该点的速度，而不是它的变化率。"],
+      [
+        velocity * velocity,
+        "That squares the velocity; the second factor is the slope $\\frac{dv}{dx}$.",
+        "这是把速度平方；第二个因子应是斜率 $\\frac{dv}{dx}$。",
+      ],
+      [2 * answer, "That is $\\frac{d}{dx}(v^{2})$; the acceleration is half of it.", "这是 $\\frac{d}{dx}(v^{2})$；加速度是它的一半。"],
+    ];
     return numberProblem({
       prompt: t(
-        `A particle moving along a line has velocity $v = ${k === 1 ? "" : k}${signedPower("x", n)}$ at position $x$. Find its acceleration at $x = ${x0}$.`,
-        `沿直线运动的质点在位置 $x$ 的速度是 $v = ${k === 1 ? "" : k}${signedPower("x", n)}$。求它在 $x = ${x0}$ 处的加速度。`,
+        `A particle moving along a line has velocity $v = ${v}$ at position $x$. Find its acceleration at $x = ${x0}$.`,
+        `沿直线运动的质点在位置 $x$ 的速度是 $v = ${v}$。求它在 $x = ${x0}$ 处的加速度。`,
       ),
       answer,
       form: "integer",
-      wrong: [slope, velocity, velocity * velocity, answer + 1],
-      solution: t(
-        `At $x = ${x0}$, $v = ${velocity}$ and $\\frac{dv}{dx} = ${slope}$. So $a = v\\frac{dv}{dx} = ${answer}$.`,
-        `在 $x = ${x0}$ 处，$v = ${velocity}$，$\\frac{dv}{dx} = ${slope}$。所以 $a = v\\frac{dv}{dx} = ${answer}$。`,
+      mistakes: reasons.filter(([w], i) => w !== answer && reasons.findIndex(([o]) => o === w) === i).map(([w, en, zh]) => why(w, en, zh)),
+      solution: walked(
+        [
+          labelled(
+            ["Use the chain rule", "用链式法则"],
+            "The time drops out:",
+            "时间被消去：",
+            `a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}`,
+            `\\frac{dv}{dx} = ${dv}`,
+          ),
+          labelled(
+            ["Evaluate at the point", "在该点求值"],
+            `At $x = ${x0}$:`,
+            `在 $x = ${x0}$ 处：`,
+            `v = ${velocity}, \\quad \\frac{dv}{dx} = ${slope}`,
+            `a = ${velocity} \\cdot ${slope} = ${answer}`,
+          ),
+        ],
+        t(
+          `Since $a = \\frac{d}{dx}\\left(\\frac{v^{2}}{2}\\right)$ and $\\frac{v^{2}}{2} = \\frac{${k * k}}{2}x^{${2 * n}}$, differentiating gives $${n * k * k === 1 ? "" : n * k * k}${signedPower("x", 2 * n - 1)}$, which is $${answer}$ at $x = ${x0}$.`,
+          `由于 $a = \\frac{d}{dx}\\left(\\frac{v^{2}}{2}\\right)$，而 $\\frac{v^{2}}{2} = \\frac{${k * k}}{2}x^{${2 * n}}$，求导得 $${n * k * k === 1 ? "" : n * k * k}${signedPower("x", 2 * n - 1)}$，在 $x = ${x0}$ 处等于 $${answer}$。`,
+        ),
       ),
     });
   },

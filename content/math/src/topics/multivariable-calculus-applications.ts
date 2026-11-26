@@ -199,6 +199,7 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
         const x1 = rng.int(1, 6);
         const vSq = k * x1 * x1 + 2 * b * x1;
         const half = Q.of(vSq, 2);
+        const kx2 = k === 2 ? "x^2" : k % 2 === 0 ? `${k / 2}x^2` : `\\frac{${k}}{2}x^2`;
         return numberProblem({
           prompt: t(
             `A particle starts from rest at $x = 0$ and moves along the $x$-axis with acceleration $a(x) = ${k}x + ${b}$. Find the squared speed $v^2$ when the particle reaches $x = ${x1}$.`,
@@ -218,8 +219,8 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
             ),
             why(
               2 * k * x1 * x1 + 2 * b * x1,
-              `That integrates $${k}x$ to $${k}x^2$; its antiderivative is $\\frac{${k}}{2}x^2$.`,
-              `那是把 $${k}x$ 积分成 $${k}x^2$；它的原函数是 $\\frac{${k}}{2}x^2$。`,
+              `That integrates $${k}x$ to $${k}x^2$; its antiderivative is $${kx2}$.`,
+              `那是把 $${k}x$ 积分成 $${k}x^2$；它的原函数是 $${kx2}$。`,
             ),
           ]),
           solution: walked(
@@ -228,15 +229,15 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
               [
                 ["Integrate", "积分"],
                 t(
-                  `$\\frac{1}{2}v^2 = \\left[\\frac{${k}}{2}x^2 + ${coef(b)}x\\right]_0^{${x1}} = ${Q.of(k * x1 * x1, 2).toLatex()} + ${b * x1} = ${half.toLatex()}$.`,
-                  `$\\frac{1}{2}v^2 = \\left[\\frac{${k}}{2}x^2 + ${coef(b)}x\\right]_0^{${x1}} = ${Q.of(k * x1 * x1, 2).toLatex()} + ${b * x1} = ${half.toLatex()}$。`,
+                  `$\\frac{1}{2}v^2 = \\left[${kx2} + ${coef(b)}x\\right]_0^{${x1}} = ${Q.of(k * x1 * x1, 2).toLatex()} + ${b * x1} = ${half.toLatex()}$.`,
+                  `$\\frac{1}{2}v^2 = \\left[${kx2} + ${coef(b)}x\\right]_0^{${x1}} = ${Q.of(k * x1 * x1, 2).toLatex()} + ${b * x1} = ${half.toLatex()}$。`,
                 ),
               ],
               [["Double", "加倍"], t(`$v^2 = ${vSq}$.`, `$v^2 = ${vSq}$。`)],
             ],
             t(
-              `Differentiating $\\frac{1}{2}v^2 = \\frac{${k}}{2}x^2 + ${coef(b)}x$ gives $v\\frac{dv}{dx} = ${k}x + ${b}$, which is $a(x)$.`,
-              `对 $\\frac{1}{2}v^2 = \\frac{${k}}{2}x^2 + ${coef(b)}x$ 求导得 $v\\frac{dv}{dx} = ${k}x + ${b}$，正是 $a(x)$。`,
+              `Differentiating $\\frac{1}{2}v^2 = ${kx2} + ${coef(b)}x$ gives $v\\frac{dv}{dx} = ${k}x + ${b}$, which is $a(x)$.`,
+              `对 $\\frac{1}{2}v^2 = ${kx2} + ${coef(b)}x$ 求导得 $v\\frac{dv}{dx} = ${k}x + ${b}$，正是 $a(x)$。`,
             ),
           ),
         });
