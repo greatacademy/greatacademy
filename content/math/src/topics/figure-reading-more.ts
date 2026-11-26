@@ -1834,8 +1834,8 @@ const workSignFromDrawing: KnowledgePointDef = {
   figure: multivariableDrawings6["interpreting-line-integrals-of-vector-valued-functions#the-sign-of-the-work-from-a-drawing"],
   title: t("The sign of the work from a drawing", "由图判断功的符号"),
   explanation: t(
-    "The line integral of a field along a curve adds up the part of the field along the direction of travel. So where the arrows point along the path the contribution is positive, where they point against it the contribution is negative, and where they cross at a right angle the contribution is zero. Reversing the direction of the path changes the sign of the integral.",
-    "向量场沿曲线的线积分，把场在行进方向上的分量累加起来。所以箭头顺着路径时贡献为正，逆着路径时为负，直角穿过时为零。把路径方向反过来，积分就变号。",
+    "The line integral of a field along a curve adds up the part of the field along the direction of travel. So where the arrows point along the path the contribution is positive, where they point against it the contribution is negative, and where they cross at a right angle the contribution is zero. Reversing the direction of the path changes the sign of the integral. For the constant field $\\langle 2, 1 \\rangle$ along a path in the direction $(-1, 3)$, the dot product is $-2 + 3 = 1$, so the work is positive.\n\n> **Watch out.** Compare the direction of the arrows with the direction of travel, including which way the path is traversed. How fast the particle moves does not change the sign.",
+    "向量场沿曲线的线积分，把场在行进方向上的分量累加起来。所以箭头顺着路径时贡献为正，逆着路径时为负，直角穿过时为零。把路径方向反过来，积分就变号。对常向量场 $\\langle 2, 1 \\rangle$，沿方向为 $(-1, 3)$ 的路径，点积为 $-2 + 3 = 1$，所以功为正。\n\n> **注意。** 要把箭头的方向与行进方向比较，包括路径走的是哪个方向。质点运动的快慢不改变符号。",
   ),
   generate(rng) {
     const [u, v] = rng.pick([
@@ -1864,25 +1864,65 @@ const workSignFromDrawing: KnowledgePointDef = {
     const arrows: PlaneMark[] = [];
     for (let x = -3; x <= 3; x += 2)
       for (let y = -3; y <= 3; y += 2) arrows.push({ kind: "arrow", from: [x, y], to: [x + u * 0.7, y + v * 0.7], thin: true });
-    const [right, others] =
-      dot > 0
-        ? [t("Positive", "正"), [t("Negative", "负"), t("Zero", "零")]]
-        : dot < 0
-          ? [t("Negative", "负"), [t("Positive", "正"), t("Zero", "零")]]
-          : [t("Zero", "零"), [t("Positive", "正"), t("Negative", "负")]];
-    return pickChoice(
-      rng,
-      t(
+    const pos = t("Positive", "正");
+    const neg = t("Negative", "负");
+    const zero = t("Zero", "零");
+    const sign = dot > 0 ? 1 : dot < 0 ? -1 : 0;
+    const right = sign > 0 ? pos : sign < 0 ? neg : zero;
+    const along = t(
+      "the arrows point along the direction of travel, so the field pushes the particle forward",
+      "箭头顺着行进方向，场推动质点向前",
+    );
+    const against = t(
+      "the arrows point against the direction of travel, so the field holds the particle back",
+      "箭头逆着行进方向，场阻碍质点前进",
+    );
+    const across = t("the arrows cross the path at a right angle, so they do not push along it", "箭头与路径成直角，不沿路径推动");
+    const actual = sign > 0 ? along : sign < 0 ? against : across;
+    const wrongWhy = (claim: string, claimZh: string) => t(`${claim}: ${actual.en}`, `${claimZh}：${actual["zh-CN"]}`);
+    const wrong = [
+      ...(sign > 0 ? [] : [{ option: pos, why: wrongWhy("Not positive", "不为正") }]),
+      ...(sign < 0 ? [] : [{ option: neg, why: wrongWhy("Not negative", "不为负") }]),
+      ...(sign === 0 ? [] : [{ option: zero, why: wrongWhy("Not zero", "不为零") }]),
+      {
+        option: t("It depends on the speed along the path", "取决于沿路径的速度"),
+        why: t(
+          "The sign is set by the directions of the field and of the path; moving faster or slower changes neither",
+          "符号由场的方向和路径的方向决定；走得快或慢都不改变它们",
+        ),
+      },
+    ];
+    const show = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    return explainedChoice(rng, {
+      prompt: t(
         "The field is constant, as the thin arrows show. What is the sign of the work done by the field along the thick arrow?",
         "如细箭头所示，这个场是常向量场。沿粗箭头，场做的功符号如何？",
       ),
-      right,
-      [...others, t("It depends on the speed along the path", "取决于沿路径的速度")],
-      t(
-        `The dot product of the field and the direction of travel is ${dot < 0 ? `$${dot}$` : dot}, so the work is ${dot > 0 ? "positive" : dot < 0 ? "negative" : "zero"}. The speed does not matter.`,
-        `场与行进方向的点积是 ${dot < 0 ? `$${dot}$` : dot}，所以功${dot > 0 ? "为正" : dot < 0 ? "为负" : "为零"}。速度没有影响。`,
+      correct: right,
+      wrong,
+      solution: walked(
+        [
+          [
+            ["Read the directions", "读出方向"],
+            t(
+              `The thin arrows point in the direction $(${u}, ${v})$, and the thick arrow runs in the direction $(${dx}, ${dy})$.`,
+              `细箭头指向方向 $(${u}, ${v})$，粗箭头沿方向 $(${dx}, ${dy})$。`,
+            ),
+          ],
+          [
+            ["Take the dot product", "求点积"],
+            t(
+              `$${show(u)} \\cdot ${show(dx)} + ${show(v)} \\cdot ${show(dy)} = ${dot}$, so the work is ${sign > 0 ? "positive" : sign < 0 ? "negative" : "zero"}.`,
+              `$${show(u)} \\cdot ${show(dx)} + ${show(v)} \\cdot ${show(dy)} = ${dot}$，所以功${sign > 0 ? "为正" : sign < 0 ? "为负" : "为零"}。`,
+            ),
+          ],
+        ],
+        t(
+          `In the drawing, ${actual.en}. For a constant field the work is the field dotted with the displacement, a positive multiple of $${dot}$, so it has the same sign.`,
+          `从图中看，${actual["zh-CN"]}。对常向量场，功是场与位移的点积，是 $${dot}$ 的正数倍，所以符号相同。`,
+        ),
       ),
-      drawn(
+      figure: drawn(
         square(4),
         [...arrows, { kind: "arrow", from: start, to: end, accent: true }],
         t(
@@ -1890,7 +1930,7 @@ const workSignFromDrawing: KnowledgePointDef = {
           `方向为 (${u}, ${v}) 的常向量场，以及方向为 (${dx}, ${dy}) 的路径。`,
         ),
       ),
-    );
+    });
   },
 };
 

@@ -15,7 +15,7 @@ import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { ask, type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -461,8 +461,8 @@ const segmentIntegral = point(
   "a-scalar-line-integral-over-a-drawn-segment",
   ["A scalar line integral over a drawn segment", "所画线段上的标量线积分"],
   [
-    "On a segment of length $L$, $ds = L\\,dt$ for $t$ from $0$ to $1$. For a linear function $f$, the integral of $f$ is $L$ times the value of $f$ at the midpoint.",
-    "在长度为 $L$ 的线段上，$ds = L\\,dt$，$t$ 从 $0$ 到 $1$。对线性函数 $f$，积分等于 $L$ 乘以 $f$ 在中点的值。",
+    "On a segment of length $L$, $ds = L\\,dt$ for $t$ from $0$ to $1$. For a linear function $f$, the integral of $f$ is $L$ times the value of $f$ at the midpoint. For $f(x, y) = 2x$ on the segment from $(0, 0)$ to $(6, 8)$, $L = 10$ and $f(3, 4) = 6$, so the integral is $60$.\n\n> **Watch out.** Read the length off the drawing as $\\sqrt{\\Delta x^2 + \\Delta y^2}$ and multiply by it once; the midpoint value alone is the average, not the integral.",
+    "在长度为 $L$ 的线段上，$ds = L\\,dt$，$t$ 从 $0$ 到 $1$。对线性函数 $f$，积分等于 $L$ 乘以 $f$ 在中点的值。对 $f(x, y) = 2x$，在从 $(0, 0)$ 到 $(6, 8)$ 的线段上，$L = 10$，$f(3, 4) = 6$，所以积分为 $60$。\n\n> **注意。** 从图中读出长度 $\\sqrt{\\Delta x^2 + \\Delta y^2}$，只乘一次；只取中点的值得到的是平均值，不是积分。",
   ],
   (rng) => {
     const [dx, dy, L] = signedLeg(rng);
@@ -470,30 +470,76 @@ const segmentIntegral = point(
     const B: Point = [A[0] + dx, A[1] + dy];
     const m = rng.int(-3, 3);
     const n = rng.pick([-3, -2, -1, 1, 2, 3]);
-    const c = rng.int(-4, 4);
+    let c = rng.int(-4, 4);
+    while (m * (A[0] + B[0]) + n * (A[1] + B[1]) + 2 * c === 0) c = rng.int(-4, 4);
     const f = ([x, y]: Point) => m * x + n * y + c;
     const mid = Q.of(f(A) + f(B), 2);
     const answer = Q.of(L * (f(A) + f(B)), 2);
-    return ask(
-      [
-        `Let $f(x, y) = ${terms([
-          [m, "x"],
-          [n, "y"],
-          [c, ""],
-        ])}$. Find $\\int_C f\\,ds$ over the drawn segment $C$.`,
-        `设 $f(x, y) = ${terms([
-          [m, "x"],
-          [n, "y"],
-          [c, ""],
-        ])}$。求所画线段 $C$ 上的 $\\int_C f\\,ds$。`,
-      ],
-      answer,
-      [mid, Q.of(f(A) + f(B), 1), Q.of(L * f(B), 1), Q.of(L * L * (f(A) + f(B)), 2)],
-      [
-        `The ends are $${at(A)}$ and $${at(B)}$, so $L = ${L}$. At the midpoint $f = ${mid.toLatex()}$, which gives $${L} \\cdot ${mid.toLatex()} = ${answer.toLatex()}$.`,
-        `端点为 $${at(A)}$ 和 $${at(B)}$，所以 $L = ${L}$。在中点 $f = ${mid.toLatex()}$，于是得 $${L} \\cdot ${mid.toLatex()} = ${answer.toLatex()}$。`,
-      ],
-      fig(
+    const fx = terms([
+      [m, "x"],
+      [n, "y"],
+      [c, ""],
+    ]);
+    const midPoint = `\\left(${Q.of(A[0] + B[0], 2).toLatex()}, ${Q.of(A[1] + B[1], 2).toLatex()}\\right)`;
+    const midIn = mid.sign() < 0 ? `\\left(${mid.toLatex()}\\right)` : mid.toLatex();
+    const change = Q.of(f(B) - f(A), 2);
+    const inside = change.isZero() ? `${f(A)}` : `${f(A)} ${change.sign() < 0 ? "-" : "+"} ${change.abs().toLatex()}`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `Let $f(x, y) = ${fx}$. Find $\\int_C f\\,ds$ over the drawn segment $C$.`,
+          `设 $f(x, y) = ${fx}$。求所画线段 $C$ 上的 $\\int_C f\\,ds$。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            mid,
+            `That is the value at the midpoint, the average of $f$; multiply by the length $${L}$.`,
+            `那是中点处的值，即 $f$ 的平均值；还要乘以长度 $${L}$。`,
+          ),
+          why(
+            Q.of(L * (f(A) + f(B))),
+            "That adds the end values without halving them; the midpoint value is half their sum.",
+            "那是两端值相加后没有除以 $2$；中点处的值是和的一半。",
+          ),
+          why(
+            Q.of(L * f(A)),
+            "That uses the value at one end; a linear function averages its value at the midpoint.",
+            "那是用了一端的值；线性函数的平均值是中点处的值。",
+          ),
+          why(
+            Q.of(L * f(B)),
+            "That uses the value at one end; a linear function averages its value at the midpoint.",
+            "那是用了一端的值；线性函数的平均值是中点处的值。",
+          ),
+          why(
+            Q.of(L * L * (f(A) + f(B)), 2),
+            `That multiplies by $L^2 = ${L * L}$; $ds = ${L}\\,dt$ brings one factor of $L$.`,
+            `那是乘了 $L^2 = ${L * L}$；$ds = ${L}\\,dt$ 只带来一个因子 $L$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the length", "读出长度"],
+              t(
+                `The ends are $${at(A)}$ and $${at(B)}$, so $L = \\sqrt{${dx * dx} + ${dy * dy}} = ${L}$.`,
+                `端点为 $${at(A)}$ 和 $${at(B)}$，所以 $L = \\sqrt{${dx * dx} + ${dy * dy}} = ${L}$。`,
+              ),
+            ],
+            [
+              ["Evaluate at the midpoint", "求中点处的值"],
+              t(`At the midpoint $${midPoint}$, $f = ${mid.toLatex()}$.`, `在中点 $${midPoint}$ 处，$f = ${mid.toLatex()}$。`),
+            ],
+            [["Multiply", "相乘"], t(`$${L} \\cdot ${midIn} = ${answer.toLatex()}$.`, `$${L} \\cdot ${midIn} = ${answer.toLatex()}$。`)],
+          ],
+          t(
+            `Along $\\mathbf{r}(t) = ${at(A)} + t(${dx}, ${dy})$, $f$ runs from $${f(A)}$ to $${f(B)}$ at a steady rate, so $\\int_0^1 f \\cdot ${L}\\,dt = ${L}\\left(${inside}\\right) = ${answer.toLatex()}$.`,
+            `沿 $\\mathbf{r}(t) = ${at(A)} + t(${dx}, ${dy})$，$f$ 从 $${f(A)}$ 匀速变到 $${f(B)}$，所以 $\\int_0^1 f \\cdot ${L}\\,dt = ${L}\\left(${inside}\\right) = ${answer.toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         { xMin: -10, xMax: 10, yMin: -10, yMax: 10, labelEvery: 2 },
         [
           { kind: "segment", a: A, b: B, accent: true },
@@ -502,7 +548,7 @@ const segmentIntegral = point(
         ],
         [`A segment from ${at(A)} to ${at(B)}.`, `从 ${at(A)} 到 ${at(B)} 的线段。`],
       ),
-    );
+    };
   },
 );
 
@@ -511,8 +557,8 @@ const circleIntegral = {
     "a-scalar-line-integral-over-a-drawn-circle",
     ["A scalar line integral over a drawn circle", "所画圆上的标量线积分"],
     [
-      "On a circle of radius $R$, $ds = R\\,d\\theta$. The cosine and sine terms integrate to zero over a full turn, so for a linear $f$ the integral is $2\\pi R$ times the value of $f$ at the center.",
-      "在半径为 $R$ 的圆上，$ds = R\\,d\\theta$。余弦和正弦项在一整圈上积分为零，所以对线性函数 $f$，积分是 $2\\pi R$ 乘以 $f$ 在圆心的值。",
+      "On a circle of radius $R$, $ds = R\\,d\\theta$. The cosine and sine terms integrate to zero over a full turn, so for a linear $f$ the integral is $2\\pi R$ times the value of $f$ at the center. For $f(x, y) = x$ on the circle of radius $2$ centered at $(1, 0)$, the integral is $2\\pi \\cdot 2 \\cdot 1 = 4\\pi$.\n\n> **Watch out.** Use the value of $f$ at the center read from the drawing, not at the origin, and the circumference $2\\pi R$, not the area $\\pi R^2$.",
+      "在半径为 $R$ 的圆上，$ds = R\\,d\\theta$。余弦和正弦项在一整圈上积分为零，所以对线性函数 $f$，积分是 $2\\pi R$ 乘以 $f$ 在圆心的值。对 $f(x, y) = x$，在以 $(1, 0)$ 为圆心、半径为 $2$ 的圆上，积分为 $2\\pi \\cdot 2 \\cdot 1 = 4\\pi$。\n\n> **注意。** 要用 $f$ 在图中圆心处的值，不是原点处的值；要用周长 $2\\pi R$，不是面积 $\\pi R^2$。",
     ],
     (rng) => {
       const R = rng.int(1, 4);
@@ -520,34 +566,85 @@ const circleIntegral = {
       const cy = rng.int(-3, 3);
       const m = rng.int(-3, 3);
       const n = rng.pick([-3, -2, -1, 1, 2, 3]);
-      const c = rng.int(-3, 3);
+      let c = rng.int(-3, 3);
+      while (m * cx + n * cy + c === 0) c = rng.int(-3, 3);
       const center = m * cx + n * cy + c;
       const k = 2 * R * center;
-      return ask(
-        [
-          `Let $f(x, y) = ${terms([
-            [m, "x"],
-            [n, "y"],
-            [c, ""],
-          ])}$. Over the drawn circle $C$, $\\oint_C f\\,ds = k\\pi$. Find $k$.`,
-          `设 $f(x, y) = ${terms([
-            [m, "x"],
-            [n, "y"],
-            [c, ""],
-          ])}$。在所画的圆 $C$ 上，$\\oint_C f\\,ds = k\\pi$。求 $k$。`,
-        ],
-        k,
-        [R * center, 2 * R * c, 2 * R * R * center, k + 2 * R],
-        [
-          `The center is $(${cx}, ${cy})$ and $R = ${R}$. There $f = ${center}$, so the integral is $2\\pi(${R})(${center}) = ${piTimes(k)}$.`,
-          `圆心为 $(${cx}, ${cy})$，$R = ${R}$。那里 $f = ${center}$，所以积分为 $2\\pi(${R})(${center}) = ${piTimes(k)}$。`,
-        ],
-        fig(
+      const fx = terms([
+        [m, "x"],
+        [n, "y"],
+        [c, ""],
+      ]);
+      const wave = terms([
+        [m * R, "\\cos\\theta"],
+        [n * R, "\\sin\\theta"],
+      ]);
+      return {
+        ...numberProblem({
+          prompt: t(
+            `Let $f(x, y) = ${fx}$. Over the drawn circle $C$, $\\oint_C f\\,ds = k\\pi$. Find $k$.`,
+            `设 $f(x, y) = ${fx}$。在所画的圆 $C$ 上，$\\oint_C f\\,ds = k\\pi$。求 $k$。`,
+          ),
+          answer: k,
+          mistakes: apart(k, [
+            why(
+              R * center,
+              "That uses $\\pi R$ for the length of the circle; it is $2\\pi R$.",
+              "那是把圆周长当作 $\\pi R$；它是 $2\\pi R$。",
+            ),
+            why(
+              2 * R * c,
+              `That evaluates $f$ at the origin; the center of the drawn circle is $(${cx}, ${cy})$.`,
+              `那是在原点求 $f$ 的值；所画圆的圆心是 $(${cx}, ${cy})$。`,
+            ),
+            why(
+              2 * R * R * center,
+              `That multiplies by $R$ twice; $ds = ${R}\\,d\\theta$ brings one factor of $R$.`,
+              `那是乘了两次 $R$；$ds = ${R}\\,d\\theta$ 只带来一个因子 $R$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the circle", "读出圆"],
+                t(
+                  `The center is $(${cx}, ${cy})$ and $R = ${R}$, so the length is $${piTimes(2 * R)}$.`,
+                  `圆心为 $(${cx}, ${cy})$，$R = ${R}$，所以周长为 $${piTimes(2 * R)}$。`,
+                ),
+              ],
+              [["Evaluate at the center", "求圆心处的值"], t(`$f(${cx}, ${cy}) = ${center}$.`, `$f(${cx}, ${cy}) = ${center}$。`)],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `$\\oint_C f\\,ds = ${piTimes(2 * R)} \\cdot ${paren(center)} = ${piTimes(k)}$, so $k = ${k}$.`,
+                  `$\\oint_C f\\,ds = ${piTimes(2 * R)} \\cdot ${paren(center)} = ${piTimes(k)}$，所以 $k = ${k}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With $x = ${terms([
+                [cx, ""],
+                [R, "\\cos\\theta"],
+              ])}$, $y = ${terms([
+                [cy, ""],
+                [R, "\\sin\\theta"],
+              ])}$, $f = ${center} ${wave.startsWith("-") ? "-" : "+"} ${wave.replace(/^-/, "")}$. The $\\cos\\theta$ and $\\sin\\theta$ terms integrate to $0$ over a full turn, leaving $\\int_0^{2\\pi} ${paren(center)} \\cdot ${R}\\,d\\theta = ${piTimes(k)}$.`,
+              `取 $x = ${terms([
+                [cx, ""],
+                [R, "\\cos\\theta"],
+              ])}$，$y = ${terms([
+                [cy, ""],
+                [R, "\\sin\\theta"],
+              ])}$，则 $f = ${center} ${wave.startsWith("-") ? "-" : "+"} ${wave.replace(/^-/, "")}$。$\\cos\\theta$ 与 $\\sin\\theta$ 项在一整圈上积分为 $0$，剩下 $\\int_0^{2\\pi} ${paren(center)} \\cdot ${R}\\,d\\theta = ${piTimes(k)}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           8,
           [{ kind: "circle", center: [cx, cy], r: R, accent: true }],
           [`A circle with center (${cx}, ${cy}) and radius ${R}.`, `圆心为 (${cx}, ${cy})、半径为 ${R} 的圆。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-circles#a-scalar-line-integral-over-a-drawn-circle"],
@@ -2266,8 +2363,8 @@ const curveKind = point(
   "simple-and-closed-from-a-drawn-curve",
   ["Simple and closed from a drawn curve", "由所画曲线判断简单和闭合"],
   [
-    "A curve is closed when it ends where it starts, and simple when it does not cross itself, apart from the two ends of a closed curve. The two properties are independent.",
-    "曲线终点与起点重合时是闭合的；除闭合曲线的两端外不自交时是简单的。这两个性质彼此独立。",
+    "A curve is closed when it ends where it starts, and simple when it does not cross itself, apart from the two ends of a closed curve. The two properties are independent: a circle traced once is both, the same circle stopped a little short of a full turn is simple but not closed, and a figure eight is closed but not simple.\n\n> **Watch out.** Decide the two questions separately. Look first at the two ends, then for a crossing; the ends of a closed curve meeting is not a crossing.",
+    "曲线终点与起点重合时是闭合的；除闭合曲线的两端外不自交时是简单的。这两个性质彼此独立：描一次的圆两者都满足；同一个圆差一点没走满一圈，就简单但不闭合；8 字形闭合但不简单。\n\n> **注意。** 两个问题要分开判断。先看两端，再找自交点；闭曲线的两端重合不算自交。",
   ],
   (rng) => {
     const kind = rng.pick(["simple-closed", "closed", "simple", "neither"] as const);
@@ -2303,14 +2400,42 @@ const curveKind = point(
       simple: ["An open arc with two separate ends and no crossing.", "有两个分开的端点且不自交的开弧。"],
       neither: ["An open curve with two separate ends that forms a loop by crossing itself.", "有两个分开端点的开曲线，自交形成一个环。"],
     };
-    return choose(
-      rng,
-      ["Which description fits the drawn curve?", "哪个描述符合所画的曲线？"],
-      names[kind],
-      (["simple-closed", "closed", "simple", "neither"] as const).filter((x) => x !== kind).map((x) => names[x]),
-      why[kind],
-      fig(10, [{ kind: "path", points, accent: true }], alts[kind]),
-    );
+    const closedNow = kind === "simple-closed" || kind === "closed";
+    const simpleNow = kind === "simple-closed" || kind === "simple";
+    const wrongWhy = (x: typeof kind): Pair => {
+      const closedThere = x === "simple-closed" || x === "closed";
+      if (closedThere !== closedNow)
+        return closedNow
+          ? ["The curve ends where it starts, so it is closed", "曲线回到起点，所以是闭合的"]
+          : ["The two ends of the curve are separate points, so it is not closed", "曲线的两端是分开的点，所以不闭合"];
+      return simpleNow
+        ? ["The curve never passes through a point twice, so it is simple", "曲线从不两次经过同一点，所以是简单的"]
+        : ["The curve passes through one point twice, so it is not simple", "曲线两次经过同一点，所以不是简单的"];
+    };
+    const ends: Pair = closedNow
+      ? ["The curve ends at the point where it starts, so it is closed.", "曲线在起点处结束，所以是闭合的。"]
+      : ["The two ends of the curve are different points, so it is not closed.", "曲线的两端是不同的点，所以不闭合。"];
+    const crossing: Pair = simpleNow
+      ? ["No point of the curve is passed twice, so it is simple.", "曲线上没有点被经过两次，所以是简单的。"]
+      : [
+          "The curve passes through one point twice, where two strands cross, so it is not simple.",
+          "曲线在两股交叉处两次经过同一点，所以不是简单的。",
+        ];
+    return explainedChoice(rng, {
+      prompt: t("Which description fits the drawn curve?", "哪个描述符合所画的曲线？"),
+      correct: t(...names[kind]),
+      wrong: (["simple-closed", "closed", "simple", "neither"] as const)
+        .filter((x) => x !== kind)
+        .map((x) => ({ option: t(...names[x]), why: t(...wrongWhy(x)) })),
+      solution: walked(
+        [
+          [["Look at the ends", "看两端"], t(...ends)],
+          [["Look for a crossing", "找自交点"], t(...crossing)],
+        ],
+        t(...why[kind]),
+      ),
+      figure: fig(10, [{ kind: "path", points, accent: true }], alts[kind]),
+    });
   },
 );
 

@@ -3943,8 +3943,8 @@ const averageAlongSegment: KnowledgePointDef = {
   figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-line-segments#the-average-of-a-linear-function-along-a-segment"],
   title: t("The average of a linear function along a segment", "线性函数沿线段的平均值"),
   explanation: t(
-    "The average value of $f$ along a curve $C$ is $\\frac{1}{L}\\int_C f\\,ds$, where $L$ is the length. On a straight segment, a linear function changes at a steady rate with arc length, so its average is the value at the midpoint, and equals the average of the values at the two ends. So the length of the segment, which may be an awkward number, never needs to be computed.",
-    "$f$ 沿曲线 $C$ 的平均值是 $\\frac{1}{L}\\int_C f\\,ds$，其中 $L$ 是长度。在直线段上，线性函数随弧长匀速变化，所以平均值就是中点处的值，也等于两端值的平均。所以线段的长度即使是不太好算的数，也根本不需要计算。",
+    "The average value of $f$ along a curve $C$ is $\\frac{1}{L}\\int_C f\\,ds$, where $L$ is the length. On a straight segment, a linear function changes at a steady rate with arc length, so its average is the value at the midpoint, and equals the average of the values at the two ends. So the length of the segment, which may be an awkward number, never needs to be computed. For $f(x, y, z) = x + y + z$ along the segment from $(1, 0, 2)$ to $(3, 4, 0)$, the end values are $3$ and $7$, so the average is $5$.\n\n> **Watch out.** Add the two end values and halve the sum. The sum alone is twice the average, and either end value alone ignores the other half of the segment.",
+    "$f$ 沿曲线 $C$ 的平均值是 $\\frac{1}{L}\\int_C f\\,ds$，其中 $L$ 是长度。在直线段上，线性函数随弧长匀速变化，所以平均值就是中点处的值，也等于两端值的平均。所以线段的长度即使是不太好算的数，也根本不需要计算。对 $f(x, y, z) = x + y + z$，沿从 $(1, 0, 2)$ 到 $(3, 4, 0)$ 的线段，两端的值为 $3$ 和 $7$，所以平均值是 $5$。\n\n> **注意。** 把两端的值相加后再除以 $2$。只取和是平均值的两倍，只取某一端的值则忽略了线段的另一半。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -3952,21 +3952,61 @@ const averageAlongSegment: KnowledgePointDef = {
     const c = rng.int(-9, 9);
     const px = rng.int(-6, 6);
     const py = rng.int(-6, 6);
-    const qx = px + nonzero(rng, 6);
-    const qy = py + nonzero(rng, 6);
+    let qx = px + nonzero(rng, 6);
+    let qy = py + nonzero(rng, 6);
+    while (a * (qx - px) + b * (qy - py) === 0) {
+      qx = px + nonzero(rng, 6);
+      qy = py + nonzero(rng, 6);
+    }
     const start = a * px + b * py + c;
     const end = a * qx + b * qy + c;
     const answer = Q.of(start + end, 2);
+    const sum = `${start} ${end < 0 ? "-" : "+"} ${Math.abs(end)}`;
     return numberProblem({
       prompt: t(
         `Find the average value of $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$ along the segment from $(${px}, ${py})$ to $(${qx}, ${qy})$.`,
         `求 $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$ 沿从 $(${px}, ${py})$ 到 $(${qx}, ${qy})$ 的线段的平均值。`,
       ),
       answer,
-      wrong: [Q.of(start), Q.of(end), Q.of(start + end), answer.add(Q.of(1))],
-      solution: t(
-        `The values at the ends are $${start}$ and $${end}$. Because $f$ changes steadily along the segment, the average is halfway between them, which is $${answer.toLatex()}$.`,
-        `两端的值是 $${start}$ 和 $${end}$。由于 $f$ 沿线段匀速变化，平均值在它们的正中间，也就是 $${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(start),
+          "That is the value at the start alone; the average lies halfway between the two end values.",
+          "那只是起点处的值；平均值在两端值的正中间。",
+        ),
+        why(
+          Q.of(end),
+          "That is the value at the end alone; the average lies halfway between the two end values.",
+          "那只是终点处的值；平均值在两端值的正中间。",
+        ),
+        ...(start + end === 0
+          ? []
+          : [
+              why(
+                Q.of(start + end),
+                "That adds the end values without halving; the average is half their sum.",
+                "那是两端值相加后没有除以 $2$；平均值是和的一半。",
+              ),
+            ]),
+      ],
+      solution: walked(
+        [
+          [
+            ["Evaluate at the ends", "求两端的值"],
+            t(`$f(${px}, ${py}) = ${start}$ and $f(${qx}, ${qy}) = ${end}$.`, `$f(${px}, ${py}) = ${start}$，$f(${qx}, ${qy}) = ${end}$。`),
+          ],
+          [
+            ["Take the midpoint value", "取中点处的值"],
+            t(
+              `$f$ changes steadily along the segment, so its average is $\\frac{${sum}}{2} = ${answer.toLatex()}$.`,
+              `$f$ 沿线段匀速变化，所以平均值为 $\\frac{${sum}}{2} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The midpoint is $\\left(${Q.of(px + qx, 2).toLatex()}, ${Q.of(py + qy, 2).toLatex()}\\right)$, and $f$ there is $${answer.toLatex()}$ as well.`,
+          `中点为 $\\left(${Q.of(px + qx, 2).toLatex()}, ${Q.of(py + qy, 2).toLatex()}\\right)$，$f$ 在那里的值也是 $${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -3976,8 +4016,8 @@ const workByRadialField: KnowledgePointDef = {
   id: "the-work-done-by-a-field-proportional-to-position",
   title: t("The work done by a field proportional to position", "与位置成正比的力场做的功"),
   explanation: t(
-    "A force that points along the position vector, $\\mathbf{F} = k\\langle x, y \\rangle$, varies from point to point, so work is not a dot product with the displacement. But it is the gradient of $\\frac{k}{2}(x^2 + y^2)$. The fundamental theorem of line integrals then gives the work as the change in this potential, and the path taken between the two points makes no difference.",
-    "沿位置向量方向的力 $\\mathbf{F} = k\\langle x, y \\rangle$ 随点而变，所以功不是它与位移的点积。但它是 $\\frac{k}{2}(x^2 + y^2)$ 的梯度。于是线积分基本定理给出功等于这个势的改变量，两点之间走哪条路径都没有区别。",
+    "A force that points along the position vector, $\\mathbf{F} = k\\langle x, y \\rangle$, varies from point to point, so work is not a dot product with the displacement. But it is the gradient of $\\frac{k}{2}(x^2 + y^2)$. The fundamental theorem of line integrals then gives the work as the change in this potential, and the path taken between the two points makes no difference. For $\\mathbf{F} = 2\\langle x, y \\rangle$ the potential is $x^2 + y^2$; from $(0, 1)$ to $(3, 9)$ it rises from $1$ to $90$, so the work is $89$ along any path.\n\n> **Watch out.** The potential carries the factor $\\frac{1}{2}$: $\\frac{\\partial}{\\partial x}\\frac{k}{2}x^2 = kx$. Dropping it doubles the work. Take the value at the end minus the value at the start, and do not dot the field at a single point with the displacement, since the field changes along the way.",
+    "沿位置向量方向的力 $\\mathbf{F} = k\\langle x, y \\rangle$ 随点而变，所以功不是它与位移的点积。但它是 $\\frac{k}{2}(x^2 + y^2)$ 的梯度。于是线积分基本定理给出功等于这个势的改变量，两点之间走哪条路径都没有区别。对 $\\mathbf{F} = 2\\langle x, y \\rangle$，势函数是 $x^2 + y^2$；从 $(0, 1)$ 到 $(3, 9)$，它从 $1$ 增加到 $90$，所以沿任何路径做的功都是 $89$。\n\n> **注意。** 势函数带有因子 $\\frac{1}{2}$：$\\frac{\\partial}{\\partial x}\\frac{k}{2}x^2 = kx$。漏掉它，功就翻倍了。要用终点的值减起点的值，也不要用某一点处的力场去点乘位移，因为力场一路都在变。",
   ),
   generate(rng) {
     const k = nonzero(rng, 6);
@@ -3991,16 +4031,66 @@ const workByRadialField: KnowledgePointDef = {
     const atStart = k * (px * (qx - px) + py * (qy - py));
     const atEnd = k * (qx * (qx - px) + qy * (qy - py));
     const field = k === 1 ? "" : k === -1 ? "-" : `${k}`;
+    const half = k === 2 ? "" : k === -2 ? "-" : Q.of(k, 2).toLatex();
+    const potential = `${half}(x^2 + y^2)`;
+    const startSquares = `${px * px} + ${py * py}`;
+    const endSquares = `${qx * qx} + ${qy * qy}`;
     return numberProblem({
       prompt: t(
         `Find the work done by $\\mathbf{F}(x, y) = ${field}\\langle x, y \\rangle$ on a particle moving along a smooth path from $(${px}, ${py})$ to $(${qx}, ${qy})$.`,
         `求 $\\mathbf{F}(x, y) = ${field}\\langle x, y \\rangle$ 对沿光滑路径从 $(${px}, ${py})$ 运动到 $(${qx}, ${qy})$ 的质点做的功。`,
       ),
       answer,
-      wrong: [Q.of(k * (end - start)), answer.neg(), Q.of(atStart), Q.of(atEnd)],
-      solution: t(
-        `A potential is $\\frac{k}{2}(x^2 + y^2)$ with $k = ${k}$, and $x^2 + y^2$ changes from $${start}$ to $${end}$. So the work is $${answer.toLatex()}$.`,
-        `势函数是 $\\frac{k}{2}(x^2 + y^2)$，其中 $k = ${k}$，$x^2 + y^2$ 从 $${start}$ 变到 $${end}$。所以功是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(k * (end - start)),
+          "That drops the factor $\\frac{1}{2}$ from the potential, which doubles the work.",
+          "那漏掉了势函数中的因子 $\\frac{1}{2}$，使功翻倍。",
+        ),
+        why(
+          answer.neg(),
+          "That subtracts the end value of the potential from the start value; work is end minus start.",
+          "那是用起点的势减终点的势；功是终点减起点。",
+        ),
+        why(
+          Q.of(atStart),
+          "That dots the field at the start with the displacement, as if the field stayed constant.",
+          "那是用起点处的力场点乘位移，好像力场保持不变。",
+        ),
+        why(
+          Q.of(atEnd),
+          "That dots the field at the end with the displacement, as if the field stayed constant.",
+          "那是用终点处的力场点乘位移，好像力场保持不变。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find a potential", "求势函数"],
+            t(
+              `$\\mathbf{F} = \\nabla \\varphi$ with $\\varphi(x, y) = ${potential}$, since $\\frac{\\partial \\varphi}{\\partial x} = ${field}x$ and $\\frac{\\partial \\varphi}{\\partial y} = ${field}y$.`,
+              `$\\mathbf{F} = \\nabla \\varphi$，其中 $\\varphi(x, y) = ${potential}$，因为 $\\frac{\\partial \\varphi}{\\partial x} = ${field}x$，$\\frac{\\partial \\varphi}{\\partial y} = ${field}y$。`,
+            ),
+          ],
+          [
+            ["Evaluate at the ends", "求两端的值"],
+            t(
+              `$x^2 + y^2$ is $${startSquares} = ${start}$ at the start and $${endSquares} = ${end}$ at the end.`,
+              `$x^2 + y^2$ 在起点是 $${startSquares} = ${start}$，在终点是 $${endSquares} = ${end}$。`,
+            ),
+          ],
+          [
+            ["Take the change", "求改变量"],
+            t(
+              `$W = \\varphi(${qx}, ${qy}) - \\varphi(${px}, ${py}) = ${half}(${end} - ${start}) = ${answer.toLatex()}$.`,
+              `$W = \\varphi(${qx}, ${qy}) - \\varphi(${px}, ${py}) = ${half}(${end} - ${start}) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Along the straight segment the field changes linearly, so the work is the average of the constant-field values at the two ends: $\\frac{1}{2}(${atStart} ${atEnd < 0 ? "-" : "+"} ${Math.abs(atEnd)}) = ${answer.toLatex()}$.`,
+          `沿直线段力场线性变化，所以功等于两端力场分别当作常力时所得值的平均：$\\frac{1}{2}(${atStart} ${atEnd < 0 ? "-" : "+"} ${Math.abs(atEnd)}) = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },

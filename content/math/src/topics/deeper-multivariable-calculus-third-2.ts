@@ -605,26 +605,60 @@ const selfCrossing = point(
   "finding-where-a-curve-crosses-itself",
   ["Finding where a curve crosses itself", "求曲线自交的位置"],
   [
-    "A curve is not simple if two different parameter values give the same point. When $x(t)$ is even and $y(t)$ is odd, the values $t$ and $-t$ automatically share $x$, so they give one point exactly when $y(t) = 0$. The root $t = 0$ does not count, since $t$ and $-t$ agree there.",
-    "如果两个不同的参数值给出同一点，曲线就不是简单曲线。当 $x(t)$ 是偶函数、$y(t)$ 是奇函数时，$t$ 和 $-t$ 的 $x$ 自动相同，所以当且仅当 $y(t) = 0$ 时它们给出同一点。根 $t = 0$ 不算，因为此时 $t$ 和 $-t$ 相同。",
+    "A curve is not simple if two different parameter values give the same point. When $x(t)$ is even and $y(t)$ is odd, the values $t$ and $-t$ automatically share $x$, so they give one point exactly when $y(t) = 0$. The root $t = 0$ does not count, since $t$ and $-t$ agree there. For $\\mathbf{r}(t) = (t^2 - 2, t^3 - 2t)$, $y = t(t^2 - 2) = 0$ gives $t = \\sqrt{2}$, and $t = \\pm\\sqrt{2}$ both give the origin.\n\n> **Watch out.** Solve $t^2 = a^2$ for $t$: the answer is $t = a$, not $a^2$. And $t = 0$ is not a crossing, as it is one parameter value.",
+    "如果两个不同的参数值给出同一点，曲线就不是简单曲线。当 $x(t)$ 是偶函数、$y(t)$ 是奇函数时，$t$ 和 $-t$ 的 $x$ 自动相同，所以当且仅当 $y(t) = 0$ 时它们给出同一点。根 $t = 0$ 不算，因为此时 $t$ 和 $-t$ 相同。对 $\\mathbf{r}(t) = (t^2 - 2, t^3 - 2t)$，$y = t(t^2 - 2) = 0$ 给出 $t = \\sqrt{2}$，$t = \\pm\\sqrt{2}$ 都对应原点。\n\n> **注意。** 由 $t^2 = a^2$ 解出的是 $t = a$，不是 $a^2$。$t = 0$ 不是自交点，因为它只是一个参数值。",
   ],
   (rng) => {
     const a = rng.int(1, 9);
     const c = nz(rng, 5);
     const x = poly([1, "t^{2}"], [-a * a, ""]);
     const y = poly([c, "t^{3}"], [-c * a * a, "t"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `The curve $\\mathbf{r}(t) = (${x}, ${y})$ crosses itself where $\\mathbf{r}(t) = \\mathbf{r}(-t)$ for some $t > 0$. Find this $t$.`,
         `曲线 $\\mathbf{r}(t) = (${x}, ${y})$ 在某个 $t > 0$ 处满足 $\\mathbf{r}(t) = \\mathbf{r}(-t)$，这是它的自交点。求这个 $t$。`,
-      ],
-      a,
-      [a * a, 2 * a, 0],
-      [
-        `The first coordinate is even in $t$, and the second is odd, so we need $${y} = 0$. The positive root is $t = ${a}$, and both parameter values give the origin.`,
-        `第一个坐标是 $t$ 的偶函数，第二个是奇函数，所以需要 $${y} = 0$。正根是 $t = ${a}$，两个参数值都对应原点。`,
-      ],
-    );
+      ),
+      answer: a,
+      mistakes: apart(a, [
+        why(
+          a * a,
+          `That is $t^2$; from $t^2 = ${a * a}$ the parameter is $t = ${a}$.`,
+          `那是 $t^2$；由 $t^2 = ${a * a}$ 得参数 $t = ${a}$。`,
+        ),
+        why(
+          2 * a,
+          `That is the distance between $t = -${a}$ and $t = ${a}$, not the parameter value.`,
+          `那是 $t = -${a}$ 与 $t = ${a}$ 之间的距离，不是参数值。`,
+        ),
+        why(
+          0,
+          "At $t = 0$ the values $t$ and $-t$ are the same parameter, so it is not a crossing.",
+          "$t = 0$ 时 $t$ 与 $-t$ 是同一个参数值，所以不是自交。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the symmetry", "利用对称性"],
+            t(
+              `$x(t) = ${x}$ is even, so $x(t) = x(-t)$ always; $y(t)$ is odd, so $y(-t) = -y(t)$, and the points agree exactly when $y(t) = 0$.`,
+              `$x(t) = ${x}$ 是偶函数，所以总有 $x(t) = x(-t)$；$y(t)$ 是奇函数，$y(-t) = -y(t)$，所以两点重合当且仅当 $y(t) = 0$。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `$${y} = ${poly([c, "t"])}(t^2 - ${a * a}) = 0$ gives $t = 0$ or $t = \\pm ${a}$, and the positive one is $t = ${a}$.`,
+              `$${y} = ${poly([c, "t"])}(t^2 - ${a * a}) = 0$ 给出 $t = 0$ 或 $t = \\pm ${a}$，正的是 $t = ${a}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$x(${a}) = ${a}^2 - ${a * a} = 0$, and $y(t)$ has the factor $t^2 - ${a * a}$, which vanishes at $t = \\pm ${a}$, so $\\mathbf{r}(${a}) = \\mathbf{r}(-${a}) = (0, 0)$.`,
+          `$x(${a}) = ${a}^2 - ${a * a} = 0$，而 $y(t)$ 含因子 $t^2 - ${a * a}$，它在 $t = \\pm ${a}$ 处为零，所以 $\\mathbf{r}(${a}) = \\mathbf{r}(-${a}) = (0, 0)$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -632,26 +666,60 @@ const segmentIn3d = point(
   "a-scalar-line-integral-along-a-segment-in-space",
   ["A scalar line integral along a segment in space", "空间线段上的标量线积分"],
   [
-    "In space, the length element of a segment comes from all three coordinate differences. Parametrizing by $t$ from $0$ to $1$ makes $ds$ equal to the full length times $dt$, even when the integrand depends on only one of the coordinates.",
-    "在空间中，线段的长度元由三个坐标差共同决定。用 $t$ 从 $0$ 到 $1$ 参数化，$ds$ 等于全长乘以 $dt$，即使被积函数只依赖一个坐标也是这样。",
+    "In space, the length element of a segment comes from all three coordinate differences. Parametrizing by $t$ from $0$ to $1$ makes $ds$ equal to the full length times $dt$, even when the integrand depends on only one of the coordinates. From the origin to $(2, 6, 3)$ the length is $\\sqrt{4 + 36 + 9} = 7$ and $z = 3t$, so $\\int_C z\\,ds = \\int_0^1 3t \\cdot 7\\,dt = \\frac{21}{2}$.\n\n> **Watch out.** $ds$ uses all three coordinates, $\\sqrt{x_1^2 + y_1^2 + z_1^2}\\,dt$, even when $f$ depends on $z$ alone. And $z = z_1t$ still has to be integrated, which brings a $\\frac{1}{2}$.",
+    "在空间中，线段的长度元由三个坐标差共同决定。用 $t$ 从 $0$ 到 $1$ 参数化，$ds$ 等于全长乘以 $dt$，即使被积函数只依赖一个坐标也是这样。从原点到 $(2, 6, 3)$，长度为 $\\sqrt{4 + 36 + 9} = 7$，$z = 3t$，所以 $\\int_C z\\,ds = \\int_0^1 3t \\cdot 7\\,dt = \\frac{21}{2}$。\n\n> **注意。** 即使 $f$ 只依赖 $z$，$ds$ 也要用全部三个坐标：$\\sqrt{x_1^2 + y_1^2 + z_1^2}\\,dt$。而 $z = z_1t$ 仍要积分，带来一个 $\\frac{1}{2}$。",
   ],
   (rng) => {
     const [a, b, c, h] = rng.pick(quads);
     const u = rng.int(1, 3);
     const k = rng.int(1, 9);
     const answer = Q.of(k * c * h * u * u, 2);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Evaluate $\\int_{C} ${poly([k, "z"])}\\,ds$ along the segment from the origin to $(${a * u}, ${b * u}, ${c * u})$.`,
         `求 $\\int_{C} ${poly([k, "z"])}\\,ds$，其中 $C$ 是从原点到 $(${a * u}, ${b * u}, ${c * u})$ 的线段。`,
-      ],
+      ),
       answer,
-      [Q.of(k * c * u * u, 2), k * c * h * u * u, Q.of(k * (a + b + c) * h * u * u, 2)],
-      [
-        `The length is $\\sqrt{${(a * u) ** 2} + ${(b * u) ** 2} + ${(c * u) ** 2}} = ${h * u}$, and $z = ${c * u}t$. So the integral is $\\int_{0}^{1} ${k} \\cdot ${c * u}t \\cdot ${h * u} \\, dt = ${answer.toLatex()}$.`,
-        `线段长度是 $\\sqrt{${(a * u) ** 2} + ${(b * u) ** 2} + ${(c * u) ** 2}} = ${h * u}$，且 $z = ${c * u}t$。所以积分是 $\\int_{0}^{1} ${k} \\cdot ${c * u}t \\cdot ${h * u} \\, dt = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(k * c * u * u, 2),
+          `That uses $dt$ for $ds$; here $ds = ${h * u}\\,dt$.`,
+          `那是把 $ds$ 当作 $dt$；这里 $ds = ${h * u}\\,dt$。`,
+        ),
+        why(
+          k * c * h * u * u,
+          "That forgets the $\\frac{1}{2}$ from $\\int_0^1 t\\,dt$.",
+          "那是漏了 $\\int_0^1 t\\,dt$ 中的 $\\frac{1}{2}$。",
+        ),
+        why(
+          Q.of(k * (a + b + c) * h * u * u, 2),
+          "That integrates $x + y + z$; the integrand depends on $z$ only.",
+          "那是积分了 $x + y + z$；被积函数只依赖 $z$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find $ds$", "求 $ds$"],
+            t(
+              `With $\\mathbf{r}(t) = (${a * u}t, ${b * u}t, ${c * u}t)$, $ds = \\sqrt{${(a * u) ** 2} + ${(b * u) ** 2} + ${(c * u) ** 2}}\\,dt = ${h * u}\\,dt$.`,
+              `取 $\\mathbf{r}(t) = (${a * u}t, ${b * u}t, ${c * u}t)$，$ds = \\sqrt{${(a * u) ** 2} + ${(b * u) ** 2} + ${(c * u) ** 2}}\\,dt = ${h * u}\\,dt$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$z = ${c * u}t$, so $\\int_{0}^{1} ${k} \\cdot ${c * u}t \\cdot ${h * u}\\,dt = ${answer.toLatex()}$.`,
+              `$z = ${c * u}t$，所以 $\\int_{0}^{1} ${k} \\cdot ${c * u}t \\cdot ${h * u}\\,dt = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${poly([k, "z"])}$ grows evenly along the segment, so its average is its midpoint value $${Q.of(k * c * u, 2).toLatex()}$, and times the length $${h * u}$ that is $${answer.toLatex()}$.`,
+          `$${poly([k, "z"])}$ 沿线段均匀增长，平均值是中点处的值 $${Q.of(k * c * u, 2).toLatex()}$，乘以长度 $${h * u}$ 得 $${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -659,25 +727,48 @@ const averageOnCurve = point(
   "the-average-value-along-a-curve",
   ["The average value along a curve", "沿曲线的平均值"],
   [
-    "The average of $f$ along a curve of length $L$ is $\\frac{1}{L}\\int_{C} f\\,ds$. It is the constant that gives the same line integral as $f$, so subtracting it from $f$ gives a function whose line integral over $C$ is zero.",
-    "$f$ 沿长度为 $L$ 的曲线的平均值是 $\\frac{1}{L}\\int_{C} f\\,ds$。它是与 $f$ 有相同线积分的常数，所以从 $f$ 中减去它，得到的函数在 $C$ 上的线积分为零。",
+    "The average of $f$ along a curve of length $L$ is $\\frac{1}{L}\\int_{C} f\\,ds$. It is the constant that gives the same line integral as $f$, so subtracting it from $f$ gives a function whose line integral over $C$ is zero. On the unit circle, of length $2\\pi$, $\\int_C f\\,ds = 6\\pi$ gives the average $k = 3$.\n\n> **Watch out.** A constant $k$ integrates to $kL$, not to $k$, so the integral has to be divided by the length. Dividing the length by the integral turns the average upside down.",
+    "$f$ 沿长度为 $L$ 的曲线的平均值是 $\\frac{1}{L}\\int_{C} f\\,ds$。它是与 $f$ 有相同线积分的常数，所以从 $f$ 中减去它，得到的函数在 $C$ 上的线积分为零。在长度为 $2\\pi$ 的单位圆上，$\\int_C f\\,ds = 6\\pi$ 给出平均值 $k = 3$。\n\n> **注意。** 常数 $k$ 的积分是 $kL$，不是 $k$，所以要用积分除以长度。用长度除以积分，平均值就颠倒了。",
   ],
   (rng) => {
     const L = rng.int(2, 12);
     const I = nz(rng, 40);
     const answer = Q.of(I, L);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `A curve $C$ has length $${L}$, and $\\int_{C} f\\,ds = ${I}$. Find the constant $k$ such that $\\int_{C} (f - k)\\,ds = 0$.`,
         `曲线 $C$ 的长度是 $${L}$，且 $\\int_{C} f\\,ds = ${I}$。求常数 $k$，使 $\\int_{C} (f - k)\\,ds = 0$。`,
-      ],
+      ),
       answer,
-      [I, I * L, Q.of(L, I)],
-      [
-        `$\\int_{C} (f - k)\\,ds = ${I} - ${L}k$, since a constant integrates to itself times the length. Setting this to zero gives $k = ${answer.toLatex()}$.`,
-        `$\\int_{C} (f - k)\\,ds = ${I} - ${L}k$，因为常数的积分等于它乘以长度。令它为零，得 $k = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(I, `That integrates the constant $k$ to $k$; it gives $${L}k$.`, `那是把常数 $k$ 积成 $k$；它应给出 $${L}k$。`),
+        why(I * L, `That multiplies by the length $${L}$; it divides.`, `那是乘以长度 $${L}$；应当除以它。`),
+        why(
+          Q.of(L, I),
+          "That divides the length by the integral; the average is the integral divided by the length.",
+          "那是用长度除以积分；平均值是积分除以长度。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate the constant", "积分常数"],
+            t(
+              `$\\int_{C} (f - k)\\,ds = ${I} - ${L}k$, since a constant integrates to itself times the length.`,
+              `$\\int_{C} (f - k)\\,ds = ${I} - ${L}k$，因为常数的积分等于它乘以长度。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(`$${I} - ${L}k = 0$ gives $k = ${answer.toLatex()}$.`, `$${I} - ${L}k = 0$ 给出 $k = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `$\\int_C ${answer.toLatex()}\\,ds = ${answer.toLatex()} \\cdot ${L} = ${I}$, the same as $\\int_C f\\,ds$, so the difference integrates to zero.`,
+          `$\\int_C ${answer.toLatex()}\\,ds = ${answer.toLatex()} \\cdot ${L} = ${I}$，与 $\\int_C f\\,ds$ 相同，所以差的积分为零。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -686,26 +777,63 @@ const alongParabola = {
     "a-line-integral-along-a-parabola",
     ["A line integral along a parabola", "沿抛物线的线积分"],
     [
-      "On a curved graph $y = g(x)$, the factor $\\sqrt{1 + g'(x)^{2}}$ changes along the path, so it stays inside the integral. On $y = \\frac{x^{2}}{2}$ it is $\\sqrt{1 + x^{2}}$, and an integrand with a factor of $x$ makes the substitution work.",
-      "在曲线 $y = g(x)$ 上，因子 $\\sqrt{1 + g'(x)^{2}}$ 沿路径变化，所以要留在积分号内。在 $y = \\frac{x^{2}}{2}$ 上它是 $\\sqrt{1 + x^{2}}$，被积函数含因子 $x$ 时可以用换元法。",
+      "On a curved graph $y = g(x)$, the factor $\\sqrt{1 + g'(x)^{2}}$ changes along the path, so it stays inside the integral. On $y = \\frac{x^{2}}{2}$ it is $\\sqrt{1 + x^{2}}$, and an integrand with a factor of $x$ makes the substitution work. Up to $x = \\sqrt{3}$, $\\int_C x\\,ds = \\int_0^{\\sqrt{3}} x\\sqrt{1 + x^2}\\,dx = \\frac{1}{3}\\left(4^{3/2} - 1\\right) = \\frac{7}{3}$.\n\n> **Watch out.** The lower limit $x = 0$ gives $(1 + 0)^{3/2} = 1$, not $0$, so it must be subtracted. And the antiderivative of $x\\sqrt{1 + x^2}$ is $\\frac{1}{3}(1 + x^2)^{3/2}$, with $\\frac{1}{3}$.",
+      "在曲线 $y = g(x)$ 上，因子 $\\sqrt{1 + g'(x)^{2}}$ 沿路径变化，所以要留在积分号内。在 $y = \\frac{x^{2}}{2}$ 上它是 $\\sqrt{1 + x^{2}}$，被积函数含因子 $x$ 时可以用换元法。积到 $x = \\sqrt{3}$，$\\int_C x\\,ds = \\int_0^{\\sqrt{3}} x\\sqrt{1 + x^2}\\,dx = \\frac{1}{3}\\left(4^{3/2} - 1\\right) = \\frac{7}{3}$。\n\n> **注意。** 下限 $x = 0$ 给出 $(1 + 0)^{3/2} = 1$，不是 $0$，必须减去。$x\\sqrt{1 + x^2}$ 的原函数是 $\\frac{1}{3}(1 + x^2)^{3/2}$，系数是 $\\frac{1}{3}$。",
     ],
     (rng) => {
       const [a, b, c] = rng.pick(triples);
       const k = rng.int(1, 12);
       const X = Q.of(a, b);
       const answer = Q.of(k * (c ** 3 - b ** 3), 3 * b ** 3);
-      return ask(
-        [
+      const top = Q.of(c ** 3, b ** 3);
+      const lead = k === 3 ? "" : Q.of(k, 3).toLatex();
+      return numberProblem({
+        prompt: t(
           `Evaluate $\\int_{C} ${poly([k, "x"])}\\,ds$ along $y = \\frac{x^{2}}{2}$ from $x = 0$ to $x = ${X.toLatex()}$.`,
           `求 $\\int_{C} ${poly([k, "x"])}\\,ds$，其中 $C$ 是 $y = \\frac{x^{2}}{2}$ 上从 $x = 0$ 到 $x = ${X.toLatex()}$ 的一段。`,
-        ],
+        ),
         answer,
-        [Q.of(k * c ** 3, 3 * b ** 3), Q.of(k * a * a, 2 * b * b), Q.of(k * (c ** 3 - b ** 3), b ** 3)],
-        [
-          `$ds = \\sqrt{1 + x^{2}}\\,dx$, and the integral is $${k} \\cdot \\frac{1}{3}\\left[(1 + x^{2})^{3/2}\\right]$ from $0$. At the upper limit $1 + x^{2} = ${Q.of(c * c, b * b).toLatex()}$, whose root is $${Q.of(c, b).toLatex()}$, so the value is $${answer.toLatex()}$.`,
-          `$ds = \\sqrt{1 + x^{2}}\\,dx$，积分是 $${k} \\cdot \\frac{1}{3}\\left[(1 + x^{2})^{3/2}\\right]$，下限为 $0$。在上限处 $1 + x^{2} = ${Q.of(c * c, b * b).toLatex()}$，其平方根是 $${Q.of(c, b).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of(k * c ** 3, 3 * b ** 3),
+            "That leaves out the lower limit, where $(1 + x^2)^{3/2} = 1$.",
+            "那是漏了下限，那里 $(1 + x^2)^{3/2} = 1$。",
+          ),
+          why(
+            Q.of(k * a * a, 2 * b * b),
+            "That uses $dx$ for $ds$; on the parabola $ds = \\sqrt{1 + x^2}\\,dx$.",
+            "那是把 $ds$ 当作 $dx$；在抛物线上 $ds = \\sqrt{1 + x^2}\\,dx$。",
+          ),
+          why(
+            Q.of(k * (c ** 3 - b ** 3), b ** 3),
+            "That drops the $\\frac{1}{3}$: with $u = 1 + x^2$, $\\frac{1}{2}\\int \\sqrt{u}\\,du = \\frac{1}{3}u^{3/2}$.",
+            "那是漏了 $\\frac{1}{3}$：令 $u = 1 + x^2$，$\\frac{1}{2}\\int \\sqrt{u}\\,du = \\frac{1}{3}u^{3/2}$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [["Find $ds$", "求 $ds$"], t("$y' = x$, so $ds = \\sqrt{1 + x^{2}}\\,dx$.", "$y' = x$，所以 $ds = \\sqrt{1 + x^{2}}\\,dx$。")],
+            [
+              ["Substitute", "换元"],
+              t(
+                `With $u = 1 + x^2$, $\\int ${poly([k, "x"])}\\sqrt{1 + x^2}\\,dx = ${lead}(1 + x^2)^{3/2}$.`,
+                `令 $u = 1 + x^2$，$\\int ${poly([k, "x"])}\\sqrt{1 + x^2}\\,dx = ${lead}(1 + x^2)^{3/2}$。`,
+              ),
+            ],
+            [
+              ["Evaluate", "代入上下限"],
+              t(
+                `At $x = ${X.toLatex()}$, $1 + x^2 = ${Q.of(c * c, b * b).toLatex()}$ and $(1 + x^2)^{3/2} = ${top.toLatex()}$; at $x = 0$ it is $1$. So the value is $${lead}\\left(${top.toLatex()} - 1\\right) = ${answer.toLatex()}$.`,
+                `在 $x = ${X.toLatex()}$ 处，$1 + x^2 = ${Q.of(c * c, b * b).toLatex()}$，$(1 + x^2)^{3/2} = ${top.toLatex()}$；在 $x = 0$ 处它是 $1$。所以结果是 $${lead}\\left(${top.toLatex()} - 1\\right) = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `By the chain rule $\\frac{d}{dx}(1 + x^2)^{3/2} = 3x\\sqrt{1 + x^2}$, so the derivative of $${lead}(1 + x^2)^{3/2}$ is $${poly([k, "x"])}\\sqrt{1 + x^2}$, the integrand.`,
+            `由链式法则 $\\frac{d}{dx}(1 + x^2)^{3/2} = 3x\\sqrt{1 + x^2}$，所以 $${lead}(1 + x^2)^{3/2}$ 的导数是 $${poly([k, "x"])}\\sqrt{1 + x^2}$，正是被积函数。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -716,25 +844,56 @@ const powerCurveInY = point(
   "a-curve-in-y-with-a-simple-length-element",
   ["A curve in y with a simple length element", "长度元简单的 y 的函数曲线"],
   [
-    "For $x = h(y)$ the length element is $\\sqrt{1 + h'(y)^{2}}\\,dy$, with the derivative taken in $y$. The curve $x = \\frac{2}{3}y^{3/2}$ is a standard case, as $h'(y)^{2} = y$ and the element becomes $\\sqrt{1 + y}\\,dy$, which integrates directly.",
-    "对 $x = h(y)$，长度元是 $\\sqrt{1 + h'(y)^{2}}\\,dy$，导数对 $y$ 求。曲线 $x = \\frac{2}{3}y^{3/2}$ 是标准情形，因为 $h'(y)^{2} = y$，长度元变为 $\\sqrt{1 + y}\\,dy$，可以直接积分。",
+    "For $x = h(y)$ the length element is $\\sqrt{1 + h'(y)^{2}}\\,dy$, with the derivative taken in $y$. The curve $x = \\frac{2}{3}y^{3/2}$ is a standard case, as $h'(y)^{2} = y$ and the element becomes $\\sqrt{1 + y}\\,dy$, which integrates directly. From $y = 3$ to $y = 8$ the length of this curve is $\\frac{2}{3}\\left(9^{3/2} - 4^{3/2}\\right) = \\frac{2}{3}(27 - 8) = \\frac{38}{3}$.\n\n> **Watch out.** At the lower limit $y = 0$, $(1 + y)^{3/2} = 1$, not $0$. And the antiderivative of $\\sqrt{1 + y}$ is $\\frac{2}{3}(1 + y)^{3/2}$, with $\\frac{2}{3}$.",
+    "对 $x = h(y)$，长度元是 $\\sqrt{1 + h'(y)^{2}}\\,dy$，导数对 $y$ 求。曲线 $x = \\frac{2}{3}y^{3/2}$ 是标准情形，因为 $h'(y)^{2} = y$，长度元变为 $\\sqrt{1 + y}\\,dy$，可以直接积分。从 $y = 3$ 到 $y = 8$，这条曲线的长度是 $\\frac{2}{3}\\left(9^{3/2} - 4^{3/2}\\right) = \\frac{2}{3}(27 - 8) = \\frac{38}{3}$。\n\n> **注意。** 在下限 $y = 0$ 处 $(1 + y)^{3/2} = 1$，不是 $0$。$\\sqrt{1 + y}$ 的原函数是 $\\frac{2}{3}(1 + y)^{3/2}$，系数是 $\\frac{2}{3}$。",
   ],
   (rng) => {
     const n = rng.int(2, 6);
     const k = rng.int(1, 9);
     const answer = Q.of(2 * k * (n ** 3 - 1), 3);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Evaluate $\\int_{C} ${k}\\,ds$ along $x = \\frac{2}{3}y^{3/2}$ from $y = 0$ to $y = ${n * n - 1}$.`,
         `求 $\\int_{C} ${k}\\,ds$，其中 $C$ 是 $x = \\frac{2}{3}y^{3/2}$ 上从 $y = 0$ 到 $y = ${n * n - 1}$ 的一段。`,
-      ],
+      ),
       answer,
-      [k * (n * n - 1), Q.of(2 * k * n ** 3, 3), Q.of(k * (n ** 3 - 1), 3)],
-      [
-        `$\\frac{dx}{dy} = y^{1/2}$, so $ds = \\sqrt{1 + y}\\,dy$. Then $\\int_{0}^{${n * n - 1}} ${k}\\sqrt{1 + y} \\, dy = ${k} \\cdot \\frac{2}{3}(${n}^{3} - 1) = ${answer.toLatex()}$.`,
-        `$\\frac{dx}{dy} = y^{1/2}$，所以 $ds = \\sqrt{1 + y}\\,dy$。于是 $\\int_{0}^{${n * n - 1}} ${k}\\sqrt{1 + y} \\, dy = ${k} \\cdot \\frac{2}{3}(${n}^{3} - 1) = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          k * (n * n - 1),
+          "That uses $dy$ for $ds$; here $ds = \\sqrt{1 + y}\\,dy$.",
+          "那是把 $ds$ 当作 $dy$；这里 $ds = \\sqrt{1 + y}\\,dy$。",
+        ),
+        why(
+          Q.of(2 * k * n ** 3, 3),
+          "That leaves out the lower limit, where $(1 + y)^{3/2} = 1$.",
+          "那是漏了下限，那里 $(1 + y)^{3/2} = 1$。",
+        ),
+        why(
+          Q.of(k * (n ** 3 - 1), 3),
+          "The antiderivative of $\\sqrt{1 + y}$ is $\\frac{2}{3}(1 + y)^{3/2}$, not $\\frac{1}{3}(1 + y)^{3/2}$.",
+          "$\\sqrt{1 + y}$ 的原函数是 $\\frac{2}{3}(1 + y)^{3/2}$，不是 $\\frac{1}{3}(1 + y)^{3/2}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find $ds$", "求 $ds$"],
+            t("$\\frac{dx}{dy} = y^{1/2}$, so $ds = \\sqrt{1 + y}\\,dy$.", "$\\frac{dx}{dy} = y^{1/2}$，所以 $ds = \\sqrt{1 + y}\\,dy$。"),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$\\int_{0}^{${n * n - 1}} ${k}\\sqrt{1 + y}\\,dy = ${k} \\cdot \\frac{2}{3}\\left[(1 + y)^{3/2}\\right]_0^{${n * n - 1}} = ${k} \\cdot \\frac{2}{3}(${n}^{3} - 1) = ${answer.toLatex()}$.`,
+              `$\\int_{0}^{${n * n - 1}} ${k}\\sqrt{1 + y}\\,dy = ${k} \\cdot \\frac{2}{3}\\left[(1 + y)^{3/2}\\right]_0^{${n * n - 1}} = ${k} \\cdot \\frac{2}{3}(${n}^{3} - 1) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The integral of the constant $${k}$ is $${k}$ times the length, and the length $${Q.of(2 * (n ** 3 - 1), 3).toLatex()}$ is more than the rise $${n * n - 1}$ in $y$, as a curved path must be.`,
+          `常数 $${k}$ 的积分等于 $${k}$ 乘以长度，长度 $${Q.of(2 * (n ** 3 - 1), 3).toLatex()}$ 大于 $y$ 方向的升高 $${n * n - 1}$，弯曲的路径理应如此。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -743,30 +902,74 @@ const offCenterCircle = {
     "a-circle-that-is-not-centered-at-the-origin",
     ["A circle that is not centered at the origin", "圆心不在原点的圆"],
     [
-      "On a circle with center $(a, b)$, writing $x = a + r\\cos t$ makes the cosine term integrate to zero over a full turn. So the integral of $x$ is $a$ times the length of the circle. Treating the center as the origin would lose this term.",
-      "在圆心为 $(a, b)$ 的圆上，写 $x = a + r\\cos t$，余弦项在一整圈上的积分为零。所以 $x$ 的积分等于 $a$ 乘以圆的周长。如果把圆心当成原点，就会丢失这一项。",
+      "On a circle with center $(a, b)$, writing $x = a + r\\cos t$ makes the cosine term integrate to zero over a full turn. So the integral of $x$ is $a$ times the length of the circle. Treating the center as the origin would lose this term. On $(x - 2)^2 + y^2 = 9$, $\\oint_C x\\,ds = 2 \\cdot 6\\pi = 12\\pi$.\n\n> **Watch out.** The radius is the square root of the right-hand side, and the length is $2\\pi r$. The value that multiplies it is the integrand at the center $(a, b)$, not at the origin.",
+      "在圆心为 $(a, b)$ 的圆上，写 $x = a + r\\cos t$，余弦项在一整圈上的积分为零。所以 $x$ 的积分等于 $a$ 乘以圆的周长。如果把圆心当成原点，就会丢失这一项。在 $(x - 2)^2 + y^2 = 9$ 上，$\\oint_C x\\,ds = 2 \\cdot 6\\pi = 12\\pi$。\n\n> **注意。** 半径是右边的平方根，周长是 $2\\pi r$。与它相乘的是被积函数在圆心 $(a, b)$ 处的值，不是在原点处的值。",
     ],
     (rng) => {
       const a = nz(rng, 6);
       const b = nz(rng, 6);
       const r = rng.int(1, 6);
       const k = nz(rng, 5);
-      const m = nz(rng, 9);
+      let m = nz(rng, 9);
+      while (k * a + m === 0) m = nz(rng, 9);
       const answer = 2 * r * (k * a + m);
       const f = poly([k, "x"], [m, ""]);
       const circle = `(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${r * r}`;
-      return ask(
-        [
+      const atCenter = k * a + m;
+      const shifted = poly([k * a + m, ""], [k * r, "\\cos t"]);
+      return numberProblem({
+        prompt: t(
           `$C$ is the circle $${circle}$. Find $\\frac{1}{\\pi}\\oint_{C} (${f})\\,ds$.`,
           `$C$ 是圆 $${circle}$。求 $\\frac{1}{\\pi}\\oint_{C} (${f})\\,ds$。`,
-        ],
+        ),
         answer,
-        [2 * r * m, r * (k * a + m), 2 * r * r * (k * a + m)],
-        [
-          `The cosine term vanishes over a full turn, so the integrand averages $${poly([k * a + m, ""])}$, its value at the center. The length is $${2 * r}\\pi$, so the result is $${answer}$.`,
-          `余弦项在一整圈上为零，所以被积函数的平均值是 $${poly([k * a + m, ""])}$，即它在圆心处的值。周长是 $${2 * r}\\pi$，所以结果是 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            2 * r * m,
+            `That treats the center as the origin; at the center $(${a}, ${b})$ the integrand is $${atCenter}$, not $${m}$.`,
+            `那是把圆心当成原点；在圆心 $(${a}, ${b})$ 处被积函数是 $${atCenter}$，不是 $${m}$。`,
+          ),
+          why(
+            r * atCenter,
+            `That uses $\\pi r$ for the length; it is $2\\pi \\cdot ${r}$.`,
+            `那是把周长当作 $\\pi r$；它是 $2\\pi \\cdot ${r}$。`,
+          ),
+          why(
+            2 * r * r * atCenter,
+            `That uses $r^2 = ${r * r}$ in place of $r = ${r}$; $ds = ${r}\\,dt$.`,
+            `那是用 $r^2 = ${r * r}$ 代替了 $r = ${r}$；$ds = ${r}\\,dt$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the circle", "读出圆"],
+              t(
+                `The center is $(${a}, ${b})$ and the radius is $\\sqrt{${r * r}} = ${r}$, so the length is $${2 * r}\\pi$.`,
+                `圆心为 $(${a}, ${b})$，半径为 $\\sqrt{${r * r}} = ${r}$，所以周长为 $${2 * r}\\pi$。`,
+              ),
+            ],
+            [
+              ["Evaluate at the center", "求圆心处的值"],
+              t(
+                `At $x = ${a}$ the integrand is $${atCenter}$, and that is its average over the circle.`,
+                `在 $x = ${a}$ 处被积函数为 $${atCenter}$，这就是它在圆上的平均值。`,
+              ),
+            ],
+            [
+              ["Multiply", "相乘"],
+              t(
+                `$\\oint_C (${f})\\,ds = ${atCenter} \\cdot ${2 * r}\\pi = ${answer}\\pi$, so the result is $${answer}$.`,
+                `$\\oint_C (${f})\\,ds = ${atCenter} \\cdot ${2 * r}\\pi = ${answer}\\pi$，所以结果是 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `With $x = ${poly([a, ""], [r, "\\cos t"])}$ and $ds = ${r}\\,dt$, $\\int_0^{2\\pi} (${shifted}) \\cdot ${r}\\,dt = ${answer}\\pi$, because $\\cos t$ integrates to $0$ over a full turn.`,
+            `取 $x = ${poly([a, ""], [r, "\\cos t"])}$，$ds = ${r}\\,dt$，$\\int_0^{2\\pi} (${shifted}) \\cdot ${r}\\,dt = ${answer}\\pi$，因为 $\\cos t$ 在一整圈上积分为 $0$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-circles#a-circle-that-is-not-centered-at-the-origin"],
@@ -777,25 +980,68 @@ const quarterEllipse = {
     "a-quarter-of-an-ellipse-by-substitution",
     ["A quarter of an ellipse by substitution", "用换元法求四分之一椭圆"],
     [
-      "Arc length on an ellipse has no elementary form, but with $x = a\\cos t$ and $y = b\\sin t$ an integrand $xy$ supplies the derivative of $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$. So the substitution in $u$ removes the root, and the integral is elementary.",
-      "椭圆的弧长没有初等形式，但用 $x = a\\cos t$，$y = b\\sin t$ 时，被积函数 $xy$ 正好提供 $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$ 的导数。所以对 $u$ 换元后根号消失，积分是初等的。",
+      "Arc length on an ellipse has no elementary form, but with $x = a\\cos t$ and $y = b\\sin t$ an integrand $xy$ supplies the derivative of $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$. So the substitution in $u$ removes the root, and the integral is elementary. On the first-quadrant arc of $\\frac{x^2}{64} + \\frac{y^2}{4} = 1$, $u = 64\\sin^2 t + 4\\cos^2 t$ and $du = 120\\sin t\\cos t\\,dt$, so $\\int_C xy\\,ds = \\frac{16}{120}\\int_4^{64} \\sqrt{u}\\,du = \\frac{224}{5}$.\n\n> **Watch out.** $du = 2(a^2 - b^2)\\sin t\\cos t\\,dt$ carries a factor $2$, and $u$ runs from $b^2$ at $t = 0$ to $a^2$ at $t = \\frac{\\pi}{2}$. When simplifying, $a^3 - b^3 = (a - b)(a^2 + ab + b^2)$, not $(a - b)(a^2 + b^2)$.",
+      "椭圆的弧长没有初等形式，但用 $x = a\\cos t$，$y = b\\sin t$ 时，被积函数 $xy$ 正好提供 $u = a^{2}\\sin^{2}t + b^{2}\\cos^{2}t$ 的导数。所以对 $u$ 换元后根号消失，积分是初等的。在 $\\frac{x^2}{64} + \\frac{y^2}{4} = 1$ 位于第一象限的弧上，$u = 64\\sin^2 t + 4\\cos^2 t$，$du = 120\\sin t\\cos t\\,dt$，所以 $\\int_C xy\\,ds = \\frac{16}{120}\\int_4^{64} \\sqrt{u}\\,du = \\frac{224}{5}$。\n\n> **注意。** $du = 2(a^2 - b^2)\\sin t\\cos t\\,dt$ 带有因子 $2$，且 $u$ 从 $t = 0$ 时的 $b^2$ 变到 $t = \\frac{\\pi}{2}$ 时的 $a^2$。化简时 $a^3 - b^3 = (a - b)(a^2 + ab + b^2)$，不是 $(a - b)(a^2 + b^2)$。",
     ],
     (rng) => {
       const [a, b] = rng.sample([1, 2, 3, 4, 5, 6], 2) as [number, number];
       const k = rng.int(1, 6);
       const answer = Q.of(k * a * b * (a * a + a * b + b * b), 3 * (a + b));
-      return ask(
-        [
-          `Evaluate $\\int_{C} ${poly([k, "xy"])}\\,ds$, where $C$ is the first-quadrant arc of $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$.`,
-          `求 $\\int_{C} ${poly([k, "xy"])}\\,ds$，其中 $C$ 是 $${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1$ 在第一象限的弧。`,
-        ],
+      const curve = `${a === 1 ? "x^{2}" : `\\frac{x^{2}}{${a * a}}`} + ${b === 1 ? "y^{2}" : `\\frac{y^{2}}{${b * b}}`} = 1`;
+      const lead = Q.of(k * a * b, 2 * (a * a - b * b));
+      return numberProblem({
+        prompt: t(
+          `Evaluate $\\int_{C} ${poly([k, "xy"])}\\,ds$, where $C$ is the first-quadrant arc of $${curve}$.`,
+          `求 $\\int_{C} ${poly([k, "xy"])}\\,ds$，其中 $C$ 是 $${curve}$ 在第一象限的弧。`,
+        ),
         answer,
-        [Q.of(k * a * b, 2), Q.of(k * a * b * (a + b), 3), Q.of(k * a * b * (a * a + b * b), 3 * (a + b))],
-        [
-          `With $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$, the integral becomes a multiple of $\\int \\sqrt{u}\\,du$ from $${b * b}$ to $${a * a}$. It equals $\\frac{${k * a * b}(${a}^{3} - ${b}^{3})}{3(${a}^{2} - ${b}^{2})} = ${answer.toLatex()}$.`,
-          `令 $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$，积分变成 $\\int \\sqrt{u}\\,du$ 从 $${b * b}$ 到 $${a * a}$ 的倍数。结果是 $\\frac{${k * a * b}(${a}^{3} - ${b}^{3})}{3(${a}^{2} - ${b}^{2})} = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of(k * a * b, 2),
+            "That uses $dt$ for $ds$; the speed $\\sqrt{u}$ multiplies the integrand.",
+            "那是把 $ds$ 当作 $dt$；速率 $\\sqrt{u}$ 要乘进被积函数。",
+          ),
+          why(
+            answer.mul(Q.of(2)),
+            "That loses the factor $2$ in $du = 2(a^2 - b^2)\\sin t\\cos t\\,dt$.",
+            "那是丢了 $du = 2(a^2 - b^2)\\sin t\\cos t\\,dt$ 中的因子 $2$。",
+          ),
+          why(
+            Q.of(k * a * b * (a * a + b * b), 3 * (a + b)),
+            "That factors $a^3 - b^3$ as $(a - b)(a^2 + b^2)$; it is $(a - b)(a^2 + ab + b^2)$.",
+            "那是把 $a^3 - b^3$ 分解为 $(a - b)(a^2 + b^2)$；它是 $(a - b)(a^2 + ab + b^2)$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Parametrize", "参数化"],
+              t(
+                `$x = ${poly([a, "\\cos t"])}$, $y = ${poly([b, "\\sin t"])}$ for $0 \\le t \\le \\frac{\\pi}{2}$, so $ds = \\sqrt{u}\\,dt$ with $u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$.`,
+                `$x = ${poly([a, "\\cos t"])}$，$y = ${poly([b, "\\sin t"])}$，$0 \\le t \\le \\frac{\\pi}{2}$，所以 $ds = \\sqrt{u}\\,dt$，$u = ${a * a}\\sin^{2}t + ${b * b}\\cos^{2}t$。`,
+              ),
+            ],
+            [
+              ["Substitute", "换元"],
+              t(
+                `$du = ${2 * (a * a - b * b)}\\sin t\\cos t\\,dt$ and $${poly([k, "xy"])} = ${k * a * b}\\sin t\\cos t$, so the integral is $${lead.toLatex()}\\int_{${b * b}}^{${a * a}} \\sqrt{u}\\,du$.`,
+                `$du = ${2 * (a * a - b * b)}\\sin t\\cos t\\,dt$，$${poly([k, "xy"])} = ${k * a * b}\\sin t\\cos t$，所以积分为 $${lead.toLatex()}\\int_{${b * b}}^{${a * a}} \\sqrt{u}\\,du$。`,
+              ),
+            ],
+            [
+              ["Integrate", "积分"],
+              t(
+                `$\\int_{${b * b}}^{${a * a}} \\sqrt{u}\\,du = \\frac{2}{3}(${a ** 3} - ${b ** 3})$, so the result is $${lead.toLatex()} \\cdot \\frac{2}{3}(${a ** 3 - b ** 3}) = ${answer.toLatex()}$.`,
+                `$\\int_{${b * b}}^{${a * a}} \\sqrt{u}\\,du = \\frac{2}{3}(${a ** 3} - ${b ** 3})$，所以结果为 $${lead.toLatex()} \\cdot \\frac{2}{3}(${a ** 3 - b ** 3}) = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Swapping $a$ and $b$ reflects the arc in $y = x$, which keeps $xy$ and $ds$, so the value must be symmetric in $${a}$ and $${b}$. It is: $\\frac{${k * a * b}(${a * a} + ${a * b} + ${b * b})}{3 \\cdot ${a + b}} = ${answer.toLatex()}$.`,
+            `交换 $a$ 与 $b$ 相当于把弧关于 $y = x$ 反射，$xy$ 和 $ds$ 都不变，所以结果关于 $${a}$ 与 $${b}$ 必须对称。确实如此：$\\frac{${k * a * b}(${a * a} + ${a * b} + ${b * b})}{3 \\cdot ${a + b}} = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-ellipses#a-quarter-of-an-ellipse-by-substitution"],
@@ -805,8 +1051,8 @@ const weightedAverage = point(
   "the-average-over-two-pieces-of-different-length",
   ["The average over two pieces of different length", "两段不等长曲线上的平均值"],
   [
-    "Line integrals add over pieces, but averages do not. The average over a union is a weighted mean, with the lengths as weights, so a long piece counts for more. Adding the two averages and dividing by two is correct only for equal lengths.",
-    "线积分可以按段相加，平均值却不行。并集上的平均值是以长度为权的加权平均，所以长的一段影响更大。把两个平均值相加再除以二，只在长度相等时才正确。",
+    "Line integrals add over pieces, but averages do not. The average over a union is a weighted mean, with the lengths as weights, so a long piece counts for more. Adding the two averages and dividing by two is correct only for equal lengths. A piece of length $12$ with average $1$ and a piece of length $4$ with average $5$ carry integrals $12$ and $20$, so the average over the whole is $\\frac{32}{16} = 2$, not $3$.\n\n> **Watch out.** First turn each average into an integral by multiplying by its length, add those, and divide by the total length. Dividing the total by $2$, or the sum of the averages by the total length, mixes up the two steps.",
+    "线积分可以按段相加，平均值却不行。并集上的平均值是以长度为权的加权平均，所以长的一段影响更大。把两个平均值相加再除以二，只在长度相等时才正确。长度 $12$、平均值 $1$ 的一段与长度 $4$、平均值 $5$ 的一段，积分分别为 $12$ 和 $20$，所以整体的平均值是 $\\frac{32}{16} = 2$，不是 $3$。\n\n> **注意。** 先把每段的平均值乘以长度化成积分，相加，再除以总长度。把总积分除以 $2$，或把平均值之和除以总长度，都是把两步弄混了。",
   ],
   (rng) => {
     const L1 = rng.int(1, 9);
@@ -815,18 +1061,55 @@ const weightedAverage = point(
     const m2 = rng.pick([-8, -5, -3, -1, 2, 4, 7, 10].filter((v) => v !== m1));
     const total = L1 * m1 + L2 * m2;
     const answer = Q.of(total, L1 + L2);
-    return ask(
-      [
+    const p = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+    const [low, high] = m1 < m2 ? [m1, m2] : [m2, m1];
+    const nearer = L1 > L2 ? m1 : m2;
+    return numberProblem({
+      prompt: t(
         `A wire consists of a piece of length $${L1}$ with average density $${m1}$ and a piece of length $${L2}$ with average density $${m2}$. Find the average density of the whole wire.`,
         `一根导线由两段组成：长度 $${L1}$、平均密度 $${m1}$ 的一段，和长度 $${L2}$、平均密度 $${m2}$ 的一段。求整根导线的平均密度。`,
-      ],
+      ),
       answer,
-      [Q.of(m1 + m2, 2), total, Q.of(m1 + m2, L1 + L2)],
-      [
-        `The integrals over the pieces add to $${L1} \\cdot ${m1 < 0 ? `(${m1})` : m1} + ${L2} \\cdot ${m2 < 0 ? `(${m2})` : m2} = ${total}$, and the total length is $${L1 + L2}$. The average is $${answer.toLatex()}$.`,
-        `两段上的积分之和是 $${L1} \\cdot ${m1 < 0 ? `(${m1})` : m1} + ${L2} \\cdot ${m2 < 0 ? `(${m2})` : m2} = ${total}$，总长度是 $${L1 + L2}$。平均值是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(m1 + m2, 2),
+          "That averages the two averages; the longer piece counts for more.",
+          "那是对两个平均值取平均；较长的一段影响更大。",
+        ),
+        why(
+          total,
+          `That is the integral over the whole wire; divide it by the length $${L1 + L2}$.`,
+          `那是整根导线上的积分；还要除以长度 $${L1 + L2}$。`,
+        ),
+        why(
+          Q.of(m1 + m2, L1 + L2),
+          "That divides the sum of the averages by the length; the averages must first be multiplied by their lengths.",
+          "那是把平均值之和除以长度；平均值要先乘以各自的长度。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Turn averages into integrals", "把平均值化为积分"],
+            t(
+              `The pieces carry $${L1} \\cdot ${p(m1)} = ${L1 * m1}$ and $${L2} \\cdot ${p(m2)} = ${L2 * m2}$, a total of $${total}$.`,
+              `两段的积分分别为 $${L1} \\cdot ${p(m1)} = ${L1 * m1}$ 和 $${L2} \\cdot ${p(m2)} = ${L2 * m2}$，合计 $${total}$。`,
+            ),
+          ],
+          [
+            ["Divide by the total length", "除以总长度"],
+            t(
+              `The total length is $${L1 + L2}$, so the average is $\\frac{${total}}{${L1 + L2}} = ${answer.toLatex()}$.`,
+              `总长度为 $${L1 + L2}$，所以平均值为 $\\frac{${total}}{${L1 + L2}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ lies between $${low}$ and $${high}$, nearer to $${nearer}$, the density of the longer piece.`,
+          `$${answer.toLatex()}$ 介于 $${low}$ 与 $${high}$ 之间，且更接近较长一段的密度 $${nearer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -835,25 +1118,63 @@ const polarCircle = {
     "a-circle-through-the-pole",
     ["A circle through the pole", "过极点的圆"],
     [
-      "In polar form $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$. On $r = 2a\\cos\\theta$, the two squares add to $4a^{2}$, so $ds = 2a\\,d\\theta$ is constant, and writing $ds = r\\,d\\theta$ would be wrong. A single turn takes $\\theta$ from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$.",
-      "在极坐标中 $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$。在 $r = 2a\\cos\\theta$ 上，两个平方之和是 $4a^{2}$，所以 $ds = 2a\\,d\\theta$ 是常数，写成 $ds = r\\,d\\theta$ 是错的。走一圈时 $\\theta$ 从 $-\\frac{\\pi}{2}$ 变到 $\\frac{\\pi}{2}$。",
+      "In polar form $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$. On $r = 2a\\cos\\theta$, the two squares add to $4a^{2}$, so $ds = 2a\\,d\\theta$ is constant, and writing $ds = r\\,d\\theta$ would be wrong. A single turn takes $\\theta$ from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$. On $r = 3\\cos\\theta$, $ds = 3\\,d\\theta$ and $x = 3\\cos^2\\theta$, so $\\oint_C x\\,ds = 9 \\cdot \\frac{\\pi}{2} = \\frac{9\\pi}{2}$.\n\n> **Watch out.** $\\theta$ runs over an interval of length $\\pi$, not $2\\pi$, so $\\int \\cos^2\\theta\\,d\\theta = \\frac{\\pi}{2}$ there. And $x = r\\cos\\theta$ has to be written on the curve; it is not $r$.",
+      "在极坐标中 $ds = \\sqrt{r^{2} + (r')^{2}}\\,d\\theta$。在 $r = 2a\\cos\\theta$ 上，两个平方之和是 $4a^{2}$，所以 $ds = 2a\\,d\\theta$ 是常数，写成 $ds = r\\,d\\theta$ 是错的。走一圈时 $\\theta$ 从 $-\\frac{\\pi}{2}$ 变到 $\\frac{\\pi}{2}$。在 $r = 3\\cos\\theta$ 上，$ds = 3\\,d\\theta$，$x = 3\\cos^2\\theta$，所以 $\\oint_C x\\,ds = 9 \\cdot \\frac{\\pi}{2} = \\frac{9\\pi}{2}$。\n\n> **注意。** $\\theta$ 走过的区间长为 $\\pi$，不是 $2\\pi$，所以在那里 $\\int \\cos^2\\theta\\,d\\theta = \\frac{\\pi}{2}$。$x = r\\cos\\theta$ 要写在曲线上，它不等于 $r$。",
     ],
     (rng) => {
       const a = rng.int(1, 9);
       const k = rng.int(1, 12);
       const answer = 2 * k * a * a;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `$C$ is the circle $r = ${2 * a}\\cos\\theta$, $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$. Find $\\frac{1}{\\pi}\\oint_{C} ${poly([k, "x"])}\\,ds$.`,
           `$C$ 是圆 $r = ${2 * a}\\cos\\theta$，$-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$。求 $\\frac{1}{\\pi}\\oint_{C} ${poly([k, "x"])}\\,ds$。`,
-        ],
+        ),
         answer,
-        [k * a * a, 4 * k * a * a, 2 * k * a],
-        [
-          `Here $ds = ${2 * a}\\,d\\theta$ and $x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$. Since $\\int \\cos^{2}\\theta\\,d\\theta = \\frac{\\pi}{2}$ on this interval, the value divided by $\\pi$ is $${answer}$.`,
-          `这里 $ds = ${2 * a}\\,d\\theta$，$x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$。由于在这个区间上 $\\int \\cos^{2}\\theta\\,d\\theta = \\frac{\\pi}{2}$，所以除以 $\\pi$ 后的值是 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            k * a * a,
+            "That uses $\\frac{\\pi}{4}$ for $\\int \\cos^2\\theta\\,d\\theta$ over this interval; it is $\\frac{\\pi}{2}$.",
+            "那是把这个区间上的 $\\int \\cos^2\\theta\\,d\\theta$ 当作 $\\frac{\\pi}{4}$；它是 $\\frac{\\pi}{2}$。",
+          ),
+          why(
+            4 * k * a * a,
+            "That uses $\\pi$ for $\\int \\cos^2\\theta\\,d\\theta$, as over a full $2\\pi$; here $\\theta$ spans only $\\pi$.",
+            "那是把 $\\int \\cos^2\\theta\\,d\\theta$ 当作 $\\pi$，如同在整个 $2\\pi$ 上；这里 $\\theta$ 只走过 $\\pi$。",
+          ),
+          why(
+            2 * k * a,
+            `That integrates $${k}$ alone, giving $${k}$ times the length; the integrand $x$ has to be kept.`,
+            `那是只积分了 $${k}$，得到 $${k}$ 乘以长度；被积函数中的 $x$ 要保留。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find $ds$", "求 $ds$"],
+              t(
+                `$r^2 + r'^2 = ${4 * a * a}\\cos^2\\theta + ${4 * a * a}\\sin^2\\theta = ${4 * a * a}$, so $ds = ${2 * a}\\,d\\theta$.`,
+                `$r^2 + r'^2 = ${4 * a * a}\\cos^2\\theta + ${4 * a * a}\\sin^2\\theta = ${4 * a * a}$，所以 $ds = ${2 * a}\\,d\\theta$。`,
+              ),
+            ],
+            [
+              ["Write $x$ on the curve", "在曲线上写出 $x$"],
+              t(`$x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$.`, `$x = r\\cos\\theta = ${2 * a}\\cos^{2}\\theta$。`),
+            ],
+            [
+              ["Integrate", "积分"],
+              t(
+                `$\\int_{-\\pi/2}^{\\pi/2} ${k} \\cdot ${2 * a}\\cos^{2}\\theta \\cdot ${2 * a}\\,d\\theta = ${4 * k * a * a} \\cdot \\frac{\\pi}{2} = ${answer}\\pi$, so the value divided by $\\pi$ is $${answer}$.`,
+                `$\\int_{-\\pi/2}^{\\pi/2} ${k} \\cdot ${2 * a}\\cos^{2}\\theta \\cdot ${2 * a}\\,d\\theta = ${4 * k * a * a} \\cdot \\frac{\\pi}{2} = ${answer}\\pi$，所以除以 $\\pi$ 后的值是 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$r = ${2 * a}\\cos\\theta$ is the circle of radius $${a}$ centered at $(${a}, 0)$. Its length is $${2 * a}\\pi$ and $x$ averages $${a}$ on it, so $\\oint_C ${poly([k, "x"])}\\,ds = ${k} \\cdot ${a} \\cdot ${2 * a}\\pi = ${answer}\\pi$.`,
+            `$r = ${2 * a}\\cos\\theta$ 是以 $(${a}, 0)$ 为圆心、半径 $${a}$ 的圆。它的长度为 $${2 * a}\\pi$，$x$ 在其上的平均值为 $${a}$，所以 $\\oint_C ${poly([k, "x"])}\\,ds = ${k} \\cdot ${a} \\cdot ${2 * a}\\pi = ${answer}\\pi$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings5["line-integrals-of-scalar-functions-over-polar-curves#a-circle-through-the-pole"],
@@ -863,8 +1184,8 @@ const areaFromYdx = point(
   "the-sign-of-a-closed-y-dx-integral",
   ["The sign of a closed y dx integral", "闭合 y dx 积分的符号"],
   [
-    "Around a counterclockwise closed curve, $\\oint y\\,dx$ equals minus the enclosed area, while $\\oint x\\,dy$ equals plus the area. Along the top the curve moves left, so $dx$ is negative where $y$ is largest, and this explains the minus sign.",
-    "沿逆时针闭曲线，$\\oint y\\,dx$ 等于所围面积的相反数，而 $\\oint x\\,dy$ 等于面积。在顶部曲线向左走，所以在 $y$ 最大的地方 $dx$ 为负，这解释了负号。",
+    "Around a counterclockwise closed curve, $\\oint y\\,dx$ equals minus the enclosed area, while $\\oint x\\,dy$ equals plus the area. Along the top the curve moves left, so $dx$ is negative where $y$ is largest, and this explains the minus sign. Around the triangle $(0, 0)$, $(4, 0)$, $(4, 3)$, the bottom has $y = 0$, the right side has $dx = 0$, and the slanted side from $(4, 3)$ back to $(0, 0)$ gives $\\int_4^0 \\frac{3x}{4}\\,dx = -6$, minus the area $6$.\n\n> **Watch out.** The sign is minus for $\\oint y\\,dx$; plus the area belongs to $\\oint x\\,dy$. The contributions do not cancel: $y$ is larger on the leftward part of the boundary.",
+    "沿逆时针闭曲线，$\\oint y\\,dx$ 等于所围面积的相反数，而 $\\oint x\\,dy$ 等于面积。在顶部曲线向左走，所以在 $y$ 最大的地方 $dx$ 为负，这解释了负号。沿三角形 $(0, 0)$、$(4, 0)$、$(4, 3)$ 的边界，底边上 $y = 0$，右边上 $dx = 0$，从 $(4, 3)$ 回到 $(0, 0)$ 的斜边给出 $\\int_4^0 \\frac{3x}{4}\\,dx = -6$，即面积 $6$ 的相反数。\n\n> **注意。** $\\oint y\\,dx$ 的符号是负的；等于正面积的是 $\\oint x\\,dy$。各部分的贡献不会相消：边界向左走的部分 $y$ 更大。",
   ],
   (rng) => {
     const W = rng.int(1, 9);
@@ -876,18 +1197,62 @@ const areaFromYdx = point(
     const shape: Pair = tri
       ? [`the triangle with vertices $(0, 0)$, $(${W}, 0)$ and $(0, ${H})$`, `顶点为 $(0, 0)$、$(${W}, 0)$、$(0, ${H})$ 的三角形`]
       : [`the rectangle $[0, ${W}] \\times [0, ${H}]$`, `矩形 $[0, ${W}] \\times [0, ${H}]$`];
-    return ask(
-      [
-        `$C$ is the counterclockwise boundary of ${shape[0]}. Evaluate $\\oint_{C} ${poly([k, "y"])}\\,dx$.`,
-        `$C$ 是${shape[1]}的逆时针边界。求 $\\oint_{C} ${poly([k, "y"])}\\,dx$。`,
-      ],
+    const ky = poly([k, "y"]);
+    return numberProblem({
+      prompt: t(
+        `$C$ is the counterclockwise boundary of ${shape[0]}. Evaluate $\\oint_{C} ${ky}\\,dx$.`,
+        `$C$ 是${shape[1]}的逆时针边界。求 $\\oint_{C} ${ky}\\,dx$。`,
+      ),
       answer,
-      [answer.neg(), answer.mul(Q.of(2)), 0],
-      [
-        `$\\oint_{C} y\\,dx$ is minus the area, and the area is $${area.toLatex()}$. Multiplying by $${k}$ gives $${answer.toLatex()}$.`,
-        `$\\oint_{C} y\\,dx$ 等于面积的相反数，面积是 $${area.toLatex()}$。乘以 $${k}$，得 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          "That uses plus the area, which is the rule for $\\oint x\\,dy$; $\\oint y\\,dx$ is minus the area.",
+          "那是用了正面积，那是 $\\oint x\\,dy$ 的规则；$\\oint y\\,dx$ 等于面积的相反数。",
+        ),
+        why(
+          0,
+          "That assumes the pieces cancel; $y$ is larger where the boundary moves left, so they do not.",
+          "那是以为各段相消；边界向左走的地方 $y$ 更大，所以不会相消。",
+        ),
+        ...(tri
+          ? [
+              why(
+                Q.of(-k * W * H),
+                `That uses $${W} \\cdot ${H}$ for the area; the triangle has half of it.`,
+                `那是把面积当作 $${W} \\cdot ${H}$；三角形只有它的一半。`,
+              ),
+            ]
+          : []),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the rule", "使用规则"],
+            t(
+              `Counterclockwise, $\\oint_{C} y\\,dx = -(\\text{area})$, and the area is $${area.toLatex()}$.`,
+              `逆时针时 $\\oint_{C} y\\,dx = -(\\text{面积})$，面积为 $${area.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `$\\oint_{C} ${ky}\\,dx = ${k} \\cdot (-${area.toLatex()}) = ${answer.toLatex()}$.`,
+              `$\\oint_{C} ${ky}\\,dx = ${k} \\cdot (-${area.toLatex()}) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        tri
+          ? t(
+              `Side by side: the bottom has $y = 0$ and the left side has $dx = 0$. The slanted side from $(${W}, 0)$ to $(0, ${H})$ is $x = ${poly([W, ""], [-W, "t"])}$, $y = ${poly([H, "t"])}$, and $\\int_0^1 ${poly([H, "t"])} \\cdot (-${W})\\,dt = -${area.toLatex()}$.`,
+              `逐边计算：底边 $y = 0$，左边 $dx = 0$。从 $(${W}, 0)$ 到 $(0, ${H})$ 的斜边为 $x = ${poly([W, ""], [-W, "t"])}$，$y = ${poly([H, "t"])}$，$\\int_0^1 ${poly([H, "t"])} \\cdot (-${W})\\,dt = -${area.toLatex()}$。`,
+            )
+          : t(
+              `Side by side: the bottom has $y = 0$ and the two sides have $dx = 0$. The top runs left from $x = ${W}$ to $0$ at $y = ${H}$, giving $\\int_{${W}}^{0} ${H}\\,dx = -${area.toLatex()}$.`,
+              `逐边计算：底边 $y = 0$，两条竖边 $dx = 0$。顶边在 $y = ${H}$ 上从 $x = ${W}$ 向左走到 $0$，给出 $\\int_{${W}}^{0} ${H}\\,dx = -${area.toLatex()}$。`,
+            ),
+      ),
+    });
   },
 );
 
@@ -895,8 +1260,8 @@ const verticalPiece = point(
   "a-vertical-piece-contributes-nothing-to-dx",
   ["A vertical piece contributes nothing to dx", "竖直段对 dx 积分没有贡献"],
   [
-    "On a vertical segment $x$ is constant, so $dx = 0$ and the piece contributes nothing to a $dx$ integral, whatever the integrand is. On a horizontal piece $y$ is constant, and that value is the one that goes into the integrand.",
-    "在竖直线段上 $x$ 是常数，所以 $dx = 0$，无论被积函数是什么，这一段对 $dx$ 积分都没有贡献。在水平段上 $y$ 是常数，被积函数中要代入的就是这个值。",
+    "On a vertical segment $x$ is constant, so $dx = 0$ and the piece contributes nothing to a $dx$ integral, whatever the integrand is. On a horizontal piece $y$ is constant, and that value is the one that goes into the integrand. From $(3, 1)$ up to $(3, 7)$ and then to $(-4, 7)$, $\\int_C 2y\\,dx = 0 + 2 \\cdot 7 \\cdot (-7) = -98$.\n\n> **Watch out.** On the horizontal piece use the height of that piece, not the $y$ of the starting point. And the change in $x$ is end minus start, so moving left makes it negative.",
+    "在竖直线段上 $x$ 是常数，所以 $dx = 0$，无论被积函数是什么，这一段对 $dx$ 积分都没有贡献。在水平段上 $y$ 是常数，被积函数中要代入的就是这个值。从 $(3, 1)$ 向上到 $(3, 7)$，再到 $(-4, 7)$，$\\int_C 2y\\,dx = 0 + 2 \\cdot 7 \\cdot (-7) = -98$。\n\n> **注意。** 在水平段上要用该段的高度，不是起点的 $y$。$x$ 的变化量是终点减起点，向左走时为负。",
   ],
   (rng) => {
     const a = rng.int(-6, 6);
@@ -905,18 +1270,50 @@ const verticalPiece = point(
     const e = rng.pick([-7, -5, -3, -1, 1, 2, 4, 6, 8].filter((v) => v !== a));
     const k = nz(rng, 5);
     const answer = k * d * (e - a);
-    return ask(
-      [
+    const p = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+    return numberProblem({
+      prompt: t(
         `$C$ runs along segments from $(${a}, ${b})$ to $(${a}, ${d})$ and then to $(${e}, ${d})$. Evaluate $\\int_{C} ${poly([k, "y"])}\\,dx$.`,
         `$C$ 沿线段从 $(${a}, ${b})$ 到 $(${a}, ${d})$，再到 $(${e}, ${d})$。求 $\\int_{C} ${poly([k, "y"])}\\,dx$。`,
-      ],
+      ),
       answer,
-      [k * b * (e - a), -answer, 0],
-      [
-        `On the vertical piece $dx = 0$. On the horizontal piece $y = ${d}$, and $x$ changes by $${e - a}$, so the integral is $${k} \\cdot ${d < 0 ? `(${d})` : d} \\cdot ${e - a < 0 ? `(${e - a})` : e - a} = ${answer}$.`,
-        `在竖直段 $dx = 0$。在水平段 $y = ${d}$，$x$ 的变化量是 $${e - a}$，所以积分是 $${k} \\cdot ${d < 0 ? `(${d})` : d} \\cdot ${e - a < 0 ? `(${e - a})` : e - a} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          k * b * (e - a),
+          `That uses $y = ${b}$, the starting height; the horizontal piece is at $y = ${d}$.`,
+          `那是用了起点的高度 $y = ${b}$；水平段在 $y = ${d}$ 上。`,
+        ),
+        why(
+          -answer,
+          `That takes the change in $x$ to be $${a} - ${p(e)}$; it is end minus start, $${e} - ${p(a)} = ${e - a}$.`,
+          `那是把 $x$ 的变化量当作 $${a} - ${p(e)}$；它是终点减起点 $${e} - ${p(a)} = ${e - a}$。`,
+        ),
+        why(
+          0,
+          "That gives the horizontal piece nothing as well; only the vertical piece has $dx = 0$.",
+          "那是让水平段也没有贡献；只有竖直段 $dx = 0$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["The vertical piece", "竖直段"],
+            t(`$x = ${a}$ is constant, so $dx = 0$ and it contributes $0$.`, `$x = ${a}$ 为常数，所以 $dx = 0$，贡献 $0$。`),
+          ],
+          [
+            ["The horizontal piece", "水平段"],
+            t(
+              `$y = ${d}$ and $x$ changes by $${e - a}$, so it contributes $${k} \\cdot ${p(d)} \\cdot ${p(e - a)} = ${answer}$.`,
+              `$y = ${d}$，$x$ 的变化量是 $${e - a}$，所以贡献 $${k} \\cdot ${p(d)} \\cdot ${p(e - a)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $x = ${poly([a, ""], [e - a, "t"])}$, $y = ${d}$ on the horizontal piece, $dx = ${e - a}\\,dt$ and $\\int_0^1 ${k * d} \\cdot ${p(e - a)}\\,dt = ${answer}$.`,
+          `水平段取 $x = ${poly([a, ""], [e - a, "t"])}$，$y = ${d}$，$dx = ${e - a}\\,dt$，$\\int_0^1 ${k * d} \\cdot ${p(e - a)}\\,dt = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -925,8 +1322,8 @@ const quarterCircleSum = {
     "p-dx-plus-q-dy-on-a-quarter-circle",
     ["P dx plus Q dy on a quarter circle", "四分之一圆上的 P dx + Q dy"],
     [
-      "On a circle, $dx$ and $dy$ both come from the parametrization, and $dx = -r\\sin t\\,dt$ carries a minus sign that is easily lost. Then $y\\,dx$ gives $-r^{2}\\sin^{2}t\\,dt$, and $x\\,dy$ gives $r^{2}\\cos^{2}t\\,dt$, and each square averages one half over a quarter turn.",
-      "在圆上，$dx$ 和 $dy$ 都来自参数化，$dx = -r\\sin t\\,dt$ 带有容易丢失的负号。于是 $y\\,dx$ 给出 $-r^{2}\\sin^{2}t\\,dt$，$x\\,dy$ 给出 $r^{2}\\cos^{2}t\\,dt$，每个平方在四分之一圈上的平均值都是二分之一。",
+      "On a circle, $dx$ and $dy$ both come from the parametrization, and $dx = -r\\sin t\\,dt$ carries a minus sign that is easily lost. Then $y\\,dx$ gives $-r^{2}\\sin^{2}t\\,dt$, and $x\\,dy$ gives $r^{2}\\cos^{2}t\\,dt$, and each square averages one half over a quarter turn. On $x = 2\\cos t$, $y = 2\\sin t$, $0 \\le t \\le \\frac{\\pi}{2}$, $\\int_C 3x\\,dy = 12\\int_0^{\\pi/2} \\cos^2 t\\,dt = 3\\pi$.\n\n> **Watch out.** Keep the minus sign in $dx = -r\\sin t\\,dt$. Over a quarter turn $\\int \\cos^2 t\\,dt = \\int \\sin^2 t\\,dt = \\frac{\\pi}{4}$, not $\\frac{\\pi}{2}$.",
+      "在圆上，$dx$ 和 $dy$ 都来自参数化，$dx = -r\\sin t\\,dt$ 带有容易丢失的负号。于是 $y\\,dx$ 给出 $-r^{2}\\sin^{2}t\\,dt$，$x\\,dy$ 给出 $r^{2}\\cos^{2}t\\,dt$，每个平方在四分之一圈上的平均值都是二分之一。在 $x = 2\\cos t$，$y = 2\\sin t$，$0 \\le t \\le \\frac{\\pi}{2}$ 上，$\\int_C 3x\\,dy = 12\\int_0^{\\pi/2} \\cos^2 t\\,dt = 3\\pi$。\n\n> **注意。** 保留 $dx = -r\\sin t\\,dt$ 中的负号。在四分之一圈上 $\\int \\cos^2 t\\,dt = \\int \\sin^2 t\\,dt = \\frac{\\pi}{4}$，不是 $\\frac{\\pi}{2}$。",
     ],
     (rng) => {
       const r = rng.int(1, 6);
@@ -934,18 +1331,57 @@ const quarterCircleSum = {
       const b = rng.pick([-8, -5, -2, 1, 3, 6, 9].filter((v) => v !== a));
       const answer = Q.of(r * r * (b - a), 4);
       const form = poly([a, "y\\,dx"], [b, "x\\,dy"]);
-      return ask(
-        [
+      const quarter = Q.of(r * r, 4).toLatex();
+      const quarterPi = r === 2 ? "\\pi" : `${quarter}\\pi`;
+      return numberProblem({
+        prompt: t(
           `$C$ is $x = ${r}\\cos t$, $y = ${r}\\sin t$, $0 \\le t \\le \\frac{\\pi}{2}$. Find $\\frac{1}{\\pi}\\int_{C} ${form}$.`,
           `$C$ 是 $x = ${r}\\cos t$，$y = ${r}\\sin t$，$0 \\le t \\le \\frac{\\pi}{2}$。求 $\\frac{1}{\\pi}\\int_{C} ${form}$。`,
-        ],
+        ),
         answer,
-        [answer.neg(), Q.of(r * r * (a + b), 4), Q.of(r * r * (b - a), 2)],
-        [
-          `The integrand becomes $${r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$. Each square integrates to $\\frac{\\pi}{4}$ over the quarter turn, so the value divided by $\\pi$ is $${answer.toLatex()}$.`,
-          `被积式变为 $${r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$。每个平方在四分之一圈上的积分是 $\\frac{\\pi}{4}$，所以除以 $\\pi$ 后的值是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(Q.of(r * r * (a + b), 4), "That loses the minus sign in $dx = -r\\sin t\\,dt$.", "那是丢了 $dx = -r\\sin t\\,dt$ 中的负号。"),
+          why(
+            answer.neg(),
+            "That traces the arc clockwise; $t$ increases from $0$ to $\\frac{\\pi}{2}$, which is counterclockwise.",
+            "那是顺时针描画了这段弧；$t$ 从 $0$ 增加到 $\\frac{\\pi}{2}$，是逆时针。",
+          ),
+          why(
+            Q.of(r * r * (b - a), 2),
+            "That uses $\\frac{\\pi}{2}$ for each square; over a quarter turn $\\int \\cos^2 t\\,dt = \\frac{\\pi}{4}$.",
+            "那是把每个平方的积分当作 $\\frac{\\pi}{2}$；在四分之一圈上 $\\int \\cos^2 t\\,dt = \\frac{\\pi}{4}$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the differentials", "求微分"],
+              t(
+                `$dx = -${r === 1 ? "" : r}\\sin t\\,dt$ and $dy = ${r === 1 ? "" : r}\\cos t\\,dt$.`,
+                `$dx = -${r === 1 ? "" : r}\\sin t\\,dt$，$dy = ${r === 1 ? "" : r}\\cos t\\,dt$。`,
+              ),
+            ],
+            [
+              ["Substitute", "代入"],
+              t(
+                `The integrand becomes $${r * r === 1 ? "" : r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$.`,
+                `被积式变为 $${r * r === 1 ? "" : r * r}(${poly([b, "\\cos^{2}t"], [-a, "\\sin^{2}t"])})\\,dt$。`,
+              ),
+            ],
+            [
+              ["Integrate", "积分"],
+              t(
+                `Each square integrates to $\\frac{\\pi}{4}$, so the integral is $${r * r} \\cdot ${b - a < 0 ? `(${b - a})` : b - a} \\cdot \\frac{\\pi}{4}$, and divided by $\\pi$ it is $${answer.toLatex()}$.`,
+                `每个平方积分为 $\\frac{\\pi}{4}$，所以积分为 $${r * r} \\cdot ${b - a < 0 ? `(${b - a})` : b - a} \\cdot \\frac{\\pi}{4}$，除以 $\\pi$ 得 $${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Close the arc with the two axes; there $y = 0$ or $dx = 0$, and $x = 0$ or $dy = 0$. So $\\int_C x\\,dy$ is the quarter-disk area $${quarterPi}$ and $\\int_C y\\,dx$ is $-${quarterPi}$, and $${b} \\cdot ${quarter} - ${a < 0 ? `(${a})` : a} \\cdot ${quarter} = ${answer.toLatex()}$.`,
+            `用两条坐标轴把弧封闭；轴上 $y = 0$ 或 $dx = 0$，$x = 0$ 或 $dy = 0$。所以 $\\int_C x\\,dy$ 是四分之一圆盘面积 $${quarterPi}$，$\\int_C y\\,dx$ 是 $-${quarterPi}$，$${b} \\cdot ${quarter} - ${a < 0 ? `(${a})` : a} \\cdot ${quarter} = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -956,14 +1392,15 @@ const generalSegment = point(
   "p-dx-plus-q-dy-on-a-slanted-segment",
   ["P dx plus Q dy on a slanted segment", "斜线段上的 P dx + Q dy"],
   [
-    "On a slanted segment both $x$ and $y$ change. Since a linear function on a segment averages to the mean of its end values, $\\int y\\,dx$ is the change in $x$ times the mean of the values of $y$. Using only the starting value of $y$ is a common error.",
-    "在斜线段上，$x$ 和 $y$ 都变化。由于线性函数在线段上的平均值等于两端值的平均数，所以 $\\int y\\,dx$ 等于 $x$ 的变化量乘以 $y$ 两端值的平均数。只用 $y$ 的起始值是常见错误。",
+    "On a slanted segment both $x$ and $y$ change. Since a linear function on a segment averages to the mean of its end values, $\\int y\\,dx$ is the change in $x$ times the mean of the values of $y$. Using only the starting value of $y$ is a common error. From $(1, 2)$ to $(4, 10)$, $x$ changes by $3$ while $y$ averages $6$, so $\\int_C y\\,dx = 18$.\n\n> **Watch out.** Pair each differential with the right average: $y\\,dx$ takes the mean of $y$ times the change in $x$, and $x\\,dy$ takes the mean of $x$ times the change in $y$.",
+    "在斜线段上，$x$ 和 $y$ 都变化。由于线性函数在线段上的平均值等于两端值的平均数，所以 $\\int y\\,dx$ 等于 $x$ 的变化量乘以 $y$ 两端值的平均数。只用 $y$ 的起始值是常见错误。从 $(1, 2)$ 到 $(4, 10)$，$x$ 变化 $3$，$y$ 的平均值为 $6$，所以 $\\int_C y\\,dx = 18$。\n\n> **注意。** 每个微分要配对正确的平均值：$y\\,dx$ 用 $y$ 的平均值乘以 $x$ 的变化量，$x\\,dy$ 用 $x$ 的平均值乘以 $y$ 的变化量。",
   ],
   (rng) => {
     const x1 = rng.int(-5, 5);
     const y1 = rng.int(-5, 5);
-    const dx = nz(rng, 6);
+    let dx = nz(rng, 6);
     const dy = nz(rng, 6);
+    while (2 * x1 + dx === 0 && 2 * y1 + dy === 0) dx = nz(rng, 6);
     const x2 = x1 + dx;
     const y2 = y1 + dy;
     const k = nz(rng, 5);
@@ -971,18 +1408,66 @@ const generalSegment = point(
     const part1 = Q.of(k * dx * (y1 + y2), 2);
     const part2 = Q.of(m * dy * (x1 + x2), 2);
     const answer = part1.add(part2);
-    return ask(
-      [
-        `Evaluate $\\int_{C} ${poly([k, "y\\,dx"], [m, "x\\,dy"])}$ along the segment from $(${x1}, ${y1})$ to $(${x2}, ${y2})$.`,
-        `求 $\\int_{C} ${poly([k, "y\\,dx"], [m, "x\\,dy"])}$，其中 $C$ 是从 $(${x1}, ${y1})$ 到 $(${x2}, ${y2})$ 的线段。`,
-      ],
+    const form = poly([k, "y\\,dx"], [m, "x\\,dy"]);
+    const yMean = Q.of(y1 + y2, 2);
+    const xMean = Q.of(x1 + x2, 2);
+    const pq = (v: Q) => (v.sign() < 0 ? `\\left(${v.toLatex()}\\right)` : v.toLatex());
+    const lead = (c: number) => (c === 1 ? "" : c === -1 ? "-" : `${c}`);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_{C} ${form}$ along the segment from $(${x1}, ${y1})$ to $(${x2}, ${y2})$.`,
+        `求 $\\int_{C} ${form}$，其中 $C$ 是从 $(${x1}, ${y1})$ 到 $(${x2}, ${y2})$ 的线段。`,
+      ),
       answer,
-      [Q.of(k * dx * y1 + m * dy * x1), Q.of(k * dy * (x1 + x2), 2).add(Q.of(m * dx * (y1 + y2), 2)), answer.neg()],
-      [
-        `$y$ averages $${Q.of(y1 + y2, 2).toLatex()}$ while $x$ changes by $${dx}$, and $x$ averages $${Q.of(x1 + x2, 2).toLatex()}$ while $y$ changes by $${dy}$. The two terms are $${part1.toLatex()}$ and $${part2.toLatex()}$, with sum $${answer.toLatex()}$.`,
-        `$x$ 变化 $${dx}$ 时，$y$ 的平均值是 $${Q.of(y1 + y2, 2).toLatex()}$；$y$ 变化 $${dy}$ 时，$x$ 的平均值是 $${Q.of(x1 + x2, 2).toLatex()}$。两项是 $${part1.toLatex()}$ 和 $${part2.toLatex()}$，和为 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(k * dx * y1 + m * dy * x1),
+          "That uses the starting values of $y$ and $x$; each varies along the segment, so use its mean.",
+          "那是用了 $y$ 和 $x$ 的起始值；它们沿线段变化，要用平均值。",
+        ),
+        why(
+          Q.of(k * dy * (x1 + x2), 2).add(Q.of(m * dx * (y1 + y2), 2)),
+          "That pairs $dx$ with the mean of $x$ and $dy$ with the mean of $y$; $y\\,dx$ needs the mean of $y$.",
+          "那是把 $dx$ 配给了 $x$ 的平均值，把 $dy$ 配给了 $y$ 的平均值；$y\\,dx$ 需要 $y$ 的平均值。",
+        ),
+        why(
+          part1,
+          "That keeps only the $y\\,dx$ term; the $x\\,dy$ term contributes too.",
+          "那是只保留了 $y\\,dx$ 项；$x\\,dy$ 项也有贡献。",
+        ),
+        why(
+          part2,
+          "That keeps only the $x\\,dy$ term; the $y\\,dx$ term contributes too.",
+          "那是只保留了 $x\\,dy$ 项；$y\\,dx$ 项也有贡献。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["The $y\\,dx$ term", "$y\\,dx$ 项"],
+            t(
+              `$y$ averages $${yMean.toLatex()}$ while $x$ changes by $${dx}$: $${k} \\cdot ${pq(yMean)} \\cdot ${dx < 0 ? `(${dx})` : dx} = ${part1.toLatex()}$.`,
+              `$x$ 变化 $${dx}$ 时 $y$ 的平均值为 $${yMean.toLatex()}$：$${k} \\cdot ${pq(yMean)} \\cdot ${dx < 0 ? `(${dx})` : dx} = ${part1.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["The $x\\,dy$ term", "$x\\,dy$ 项"],
+            t(
+              `$x$ averages $${xMean.toLatex()}$ while $y$ changes by $${dy}$: $${m} \\cdot ${pq(xMean)} \\cdot ${dy < 0 ? `(${dy})` : dy} = ${part2.toLatex()}$.`,
+              `$y$ 变化 $${dy}$ 时 $x$ 的平均值为 $${xMean.toLatex()}$：$${m} \\cdot ${pq(xMean)} \\cdot ${dy < 0 ? `(${dy})` : dy} = ${part2.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Add", "相加"],
+            t(`$${part1.toLatex()} + ${pq(part2)} = ${answer.toLatex()}$.`, `$${part1.toLatex()} + ${pq(part2)} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `With $x = ${poly([x1, ""], [dx, "t"])}$, $y = ${poly([y1, ""], [dy, "t"])}$, $0 \\le t \\le 1$, $\\int_0^1 ${lead(k)}(${poly([y1, ""], [dy, "t"])}) \\cdot ${dx < 0 ? `(${dx})` : dx}\\,dt = ${part1.toLatex()}$ and $\\int_0^1 ${lead(m)}(${poly([x1, ""], [dx, "t"])}) \\cdot ${dy < 0 ? `(${dy})` : dy}\\,dt = ${part2.toLatex()}$, as found.`,
+          `取 $x = ${poly([x1, ""], [dx, "t"])}$，$y = ${poly([y1, ""], [dy, "t"])}$，$0 \\le t \\le 1$，$\\int_0^1 ${lead(k)}(${poly([y1, ""], [dy, "t"])}) \\cdot ${dx < 0 ? `(${dx})` : dx}\\,dt = ${part1.toLatex()}$，$\\int_0^1 ${lead(m)}(${poly([x1, ""], [dx, "t"])}) \\cdot ${dy < 0 ? `(${dy})` : dy}\\,dt = ${part2.toLatex()}$，与上面一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -990,8 +1475,8 @@ const twistedCubic = point(
   "a-vector-line-integral-along-a-space-curve",
   ["A vector line integral along a space curve", "沿空间曲线的向量线积分"],
   [
-    "Along a space curve the dot product has three terms, and each component of $\\mathbf{F}$ pairs with the derivative of the matching coordinate. On $(t, t^{2}, t^{3})$ the derivatives are $1$, $2t$ and $3t^{2}$, and forgetting them is the usual error.",
-    "沿空间曲线，点积有三项，$\\mathbf{F}$ 的每个分量与相应坐标的导数相乘。在 $(t, t^{2}, t^{3})$ 上，导数是 $1$、$2t$ 和 $3t^{2}$，漏掉它们是常见错误。",
+    "Along a space curve the dot product has three terms, and each component of $\\mathbf{F}$ pairs with the derivative of the matching coordinate. On $(t, t^{2}, t^{3})$ the derivatives are $1$, $2t$ and $3t^{2}$. For $\\mathbf{F} = \\langle z, x, y \\rangle$ on this curve from $t = 0$ to $t = 1$, the integrand is $t^{3} \\cdot 1 + t \\cdot 2t + t^{2} \\cdot 3t^{2} = t^{3} + 2t^{2} + 3t^{4}$, and the integral is $\\frac{1}{4} + \\frac{2}{3} + \\frac{3}{5} = \\frac{91}{60}$.\n\n> **Watch out.** Substituting the curve into $\\mathbf{F}$ is only half the work: each component must then be multiplied by the derivative of its own coordinate, $x'$, $y'$ or $z'$. Leaving out the factors $2t$ and $3t^{2}$ is the usual error.",
+    "沿空间曲线，点积有三项，$\\mathbf{F}$ 的每个分量与相应坐标的导数相乘。在 $(t, t^{2}, t^{3})$ 上，导数是 $1$、$2t$ 和 $3t^{2}$。对 $\\mathbf{F} = \\langle z, x, y \\rangle$，沿这条曲线从 $t = 0$ 到 $t = 1$，被积函数是 $t^{3} \\cdot 1 + t \\cdot 2t + t^{2} \\cdot 3t^{2} = t^{3} + 2t^{2} + 3t^{4}$，积分为 $\\frac{1}{4} + \\frac{2}{3} + \\frac{3}{5} = \\frac{91}{60}$。\n\n> **注意。** 把曲线代入 $\\mathbf{F}$ 只完成了一半：每个分量还要乘以它对应坐标的导数 $x'$、$y'$ 或 $z'$。漏掉因子 $2t$ 和 $3t^{2}$ 是常见错误。",
   ],
   (rng) => {
     const a = nz(rng, 9);
@@ -1001,19 +1486,68 @@ const twistedCubic = point(
       .add(Q.of(2 * b, 5))
       .add(Q.of(3 * c, 4));
     const noDerivative = Q.of(a, 3).add(Q.of(b, 4)).add(Q.of(c, 2));
+    const noThree = Q.of(a, 3)
+      .add(Q.of(2 * b, 5))
+      .add(Q.of(c, 4));
     const F = br(poly([a, "y"]), poly([b, "z"]), poly([c, "x"]));
-    return ask(
-      [
+    const integrand = poly([a, "t^{2}"], [3 * c, "t^{3}"], [2 * b, "t^{4}"]);
+    const pq = (v: Q) => (v.sign() < 0 ? `\\left(${v.toLatex()}\\right)` : v.toLatex());
+    const pn = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    return numberProblem({
+      prompt: t(
         `Evaluate $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = ${F}$ along $\\mathbf{r}(t) = \\langle t, t^{2}, t^{3} \\rangle$, $0 \\le t \\le 1$.`,
         `求 $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F} = ${F}$，路径是 $\\mathbf{r}(t) = \\langle t, t^{2}, t^{3} \\rangle$，$0 \\le t \\le 1$。`,
-      ],
+      ),
       answer,
-      [noDerivative, answer.neg(), a + b + c],
-      [
-        `The integrand is $${poly([a, "t^{2}"], [2 * b, "t^{4}"], [3 * c, "t^{3}"])}$. Integrating from $0$ to $1$ gives $${Q.of(a, 3).toLatex()}$, $${Q.of(2 * b, 5).toLatex()}$ and $${Q.of(3 * c, 4).toLatex()}$, with sum $${answer.toLatex()}$.`,
-        `被积函数是 $${poly([a, "t^{2}"], [2 * b, "t^{4}"], [3 * c, "t^{3}"])}$。从 $0$ 到 $1$ 积分得 $${Q.of(a, 3).toLatex()}$、$${Q.of(2 * b, 5).toLatex()}$ 和 $${Q.of(3 * c, 4).toLatex()}$，和为 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          noDerivative,
+          "That substitutes the curve into $\\mathbf{F}$ but leaves out the derivatives $2t$ and $3t^{2}$ of the coordinates.",
+          "那是把曲线代入了 $\\mathbf{F}$，却漏掉了坐标的导数 $2t$ 和 $3t^{2}$。",
+        ),
+        why(noThree, "That drops the factor $3$ from $z' = 3t^{2}$.", "那是漏掉了 $z' = 3t^{2}$ 中的因子 $3$。"),
+        why(
+          Q.of(a + b + c),
+          "That adds the coefficients, as if every term of the integrand were $1$.",
+          "那是把系数相加，好像被积函数的每一项都是 $1$。",
+        ),
+        why(
+          answer.neg(),
+          "That has the sign reversed; the curve runs from $t = 0$ to $t = 1$.",
+          "那是符号反了；曲线从 $t = 0$ 走到 $t = 1$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate the path", "对路径求导"],
+            t("$\\mathbf{r}'(t) = \\langle 1, 2t, 3t^{2} \\rangle$.", "$\\mathbf{r}'(t) = \\langle 1, 2t, 3t^{2} \\rangle$。"),
+          ],
+          [
+            ["Substitute into the field", "代入力场"],
+            t(
+              `With $x = t$, $y = t^{2}$, $z = t^{3}$: $\\mathbf{F}(\\mathbf{r}(t)) = ${br(poly([a, "t^{2}"]), poly([b, "t^{3}"]), poly([c, "t"]))}$.`,
+              `由 $x = t$，$y = t^{2}$，$z = t^{3}$：$\\mathbf{F}(\\mathbf{r}(t)) = ${br(poly([a, "t^{2}"]), poly([b, "t^{3}"]), poly([c, "t"]))}$。`,
+            ),
+          ],
+          [
+            ["Take the dot product", "求点积"],
+            t(`$\\mathbf{F} \\cdot \\mathbf{r}' = ${integrand}$.`, `$\\mathbf{F} \\cdot \\mathbf{r}' = ${integrand}$。`),
+          ],
+          [
+            ["Integrate from 0 to 1", "从 0 积到 1"],
+            t(
+              `$${Q.of(a, 3).toLatex()} + ${pq(Q.of(3 * c, 4))} + ${pq(Q.of(2 * b, 5))} = ${answer.toLatex()}$.`,
+              `$${Q.of(a, 3).toLatex()} + ${pq(Q.of(3 * c, 4))} + ${pq(Q.of(2 * b, 5))} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Over the common denominator $60$ the sum is $\\frac{20 \\cdot ${pn(a)} + 45 \\cdot ${pn(c)} + 24 \\cdot ${pn(b)}}{60} = \\frac{${20 * a + 45 * c + 24 * b}}{60}$, which is $${answer.toLatex()}$.`,
+          `通分到分母 $60$，和为 $\\frac{20 \\cdot ${pn(a)} + 45 \\cdot ${pn(c)} + 24 \\cdot ${pn(b)}}{60} = \\frac{${20 * a + 45 * c + 24 * b}}{60}$，即 $${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1022,26 +1556,69 @@ const graphInY = {
     "a-vector-line-integral-along-a-graph-x-in-terms-of-y",
     ["A vector line integral along a graph of x in terms of y", "沿 x 关于 y 的图像的向量线积分"],
     [
-      "If a curve is a graph $x = g(y)$, then $y$ is the natural parameter, and $dx = g'(y)\\,dy$. Everything must be written in $y$ before integrating, including the term in $dx$, whose factor from the derivative is easily left out.",
-      "如果曲线是图像 $x = g(y)$，$y$ 就是自然的参数，且 $dx = g'(y)\\,dy$。积分前一切都要写成 $y$ 的式子，包括 $dx$ 的项，其中来自导数的因子容易漏掉。",
+      "If a curve is a graph $x = g(y)$, then $y$ is the natural parameter, and $dx = g'(y)\\,dy$. Everything must be written in $y$ before integrating, including the term in $dx$. For $\\mathbf{F} = \\langle y, x \\rangle$ along $x = y^{3}$ from $(0, 0)$ to $(8, 2)$, $dx = 3y^{2}\\,dy$, so the integrand is $y \\cdot 3y^{2} + y^{3} = 4y^{3}$ and the integral is $\\int_0^2 4y^{3}\\,dy = 16$.\n\n> **Watch out.** The term in $dx$ picks up the factor $g'(y)$, which is easily left out, while the term in $dy$ does not. And the limits are values of $y$, not of $x$.",
+      "如果曲线是图像 $x = g(y)$，$y$ 就是自然的参数，且 $dx = g'(y)\\,dy$。积分前一切都要写成 $y$ 的式子，包括 $dx$ 的项。对 $\\mathbf{F} = \\langle y, x \\rangle$，沿 $x = y^{3}$ 从 $(0, 0)$ 到 $(8, 2)$，$dx = 3y^{2}\\,dy$，所以被积函数是 $y \\cdot 3y^{2} + y^{3} = 4y^{3}$，积分为 $\\int_0^2 4y^{3}\\,dy = 16$。\n\n> **注意。** $dx$ 的项要乘上因子 $g'(y)$，这个因子容易漏掉，而 $dy$ 的项不需要。积分限是 $y$ 的值，不是 $x$ 的值。",
     ],
     (rng) => {
       const p = nz(rng, 6);
       const q = nz(rng, 6);
       const Y = rng.int(1, 6);
       const answer = Q.of((2 * p + q) * Y ** 3, 3);
-      return ask(
-        [
+      const first = Q.of(2 * p * Y ** 3, 3);
+      const second = Q.of(q * Y ** 3, 3);
+      const pq = (v: Q) => (v.sign() < 0 ? `\\left(${v.toLatex()}\\right)` : v.toLatex());
+      return numberProblem({
+        prompt: t(
           `Evaluate $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = ${br(poly([p, "y"]), poly([q, "x"]))}$ along $x = y^{2}$ from $(0, 0)$ to $(${Y * Y}, ${Y})$.`,
           `求 $\\int_{C} \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F} = ${br(poly([p, "y"]), poly([q, "x"]))}$，路径是 $x = y^{2}$ 上从 $(0, 0)$ 到 $(${Y * Y}, ${Y})$ 的一段。`,
-        ],
+        ),
         answer,
-        [Q.of((p + q) * Y ** 3, 3), Q.of((2 * q + p) * Y ** 3, 3), Q.of((2 * p + q) * Y ** 2, 2)],
-        [
-          `With $dx = 2y\\,dy$, the first term gives $${poly([2 * p, "y^{2}"])}\\,dy$ and the second gives $${poly([q, "y^{2}"])}\\,dy$. Integrating $${poly([2 * p + q, "y^{2}"])}$ from $0$ to $${Y}$ gives $${answer.toLatex()}$.`,
-          `由 $dx = 2y\\,dy$，第一项给出 $${poly([2 * p, "y^{2}"])}\\,dy$，第二项给出 $${poly([q, "y^{2}"])}\\,dy$。把 $${poly([2 * p + q, "y^{2}"])}$ 从 $0$ 积到 $${Y}$，得 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of((p + q) * Y ** 3, 3),
+            "That writes $dx$ as $y\\,dy$, dropping the factor $2$ of $dx = 2y\\,dy$.",
+            "那是把 $dx$ 写成了 $y\\,dy$，漏掉了 $dx = 2y\\,dy$ 中的因子 $2$。",
+          ),
+          why(
+            Q.of((2 * q + p) * Y ** 3, 3),
+            "That puts the factor $2$ on the $dy$ term; only the $dx$ term picks up $g'(y) = 2y$.",
+            "那是把因子 $2$ 放到了 $dy$ 项上；只有 $dx$ 项才乘 $g'(y) = 2y$。",
+          ),
+          why(
+            Q.of((2 * p + q) * Y ** 2, 2),
+            "That integrates $y^{2}$ as if it were $y$; the antiderivative of $y^{2}$ is $\\frac{y^{3}}{3}$.",
+            "那是把 $y^{2}$ 当成 $y$ 来积分；$y^{2}$ 的原函数是 $\\frac{y^{3}}{3}$。",
+          ),
+          why(
+            Q.of((2 * p + q) * Y ** 6, 3),
+            `That integrates up to $x = ${Y * Y}$; the parameter is $y$, which runs to $${Y}$.`,
+            `那是积到了 $x = ${Y * Y}$；参数是 $y$，它只到 $${Y}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [["Use y as the parameter", "以 y 为参数"], t("On $x = y^{2}$, $dx = 2y\\,dy$.", "在 $x = y^{2}$ 上，$dx = 2y\\,dy$。")],
+            [
+              ["Write everything in y", "全部写成 y 的式子"],
+              t(
+                `$${poly([p, "y"])}\\,dx = ${poly([2 * p, "y^{2}"])}\\,dy$ and $${poly([q, "x"])}\\,dy = ${poly([q, "y^{2}"])}\\,dy$, so the integrand is $${poly([2 * p + q, "y^{2}"])}\\,dy$.`,
+                `$${poly([p, "y"])}\\,dx = ${poly([2 * p, "y^{2}"])}\\,dy$，$${poly([q, "x"])}\\,dy = ${poly([q, "y^{2}"])}\\,dy$，所以被积式是 $${poly([2 * p + q, "y^{2}"])}\\,dy$。`,
+              ),
+            ],
+            [
+              [`Integrate from 0 to ${Y}`, `从 0 积到 ${Y}`],
+              t(
+                `$\\int_0^{${Y}} ${poly([2 * p + q, "y^{2}"])}\\,dy = ${answer.toLatex()}$.`,
+                `$\\int_0^{${Y}} ${poly([2 * p + q, "y^{2}"])}\\,dy = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Split the two terms: $\\int ${poly([p, "y"])}\\,dx = ${p === 1 ? "" : p === -1 ? "-" : `${p}`}\\int_0^{${Y * Y}} \\sqrt{x}\\,dx = ${first.toLatex()}$ and $\\int ${poly([q, "x"])}\\,dy = ${q === 1 ? "" : q === -1 ? "-" : `${q}`}\\int_0^{${Y}} y^{2}\\,dy = ${second.toLatex()}$, which add to $${first.toLatex()} + ${pq(second)} = ${answer.toLatex()}$.`,
+            `把两项分开：$\\int ${poly([p, "y"])}\\,dx = ${p === 1 ? "" : p === -1 ? "-" : `${p}`}\\int_0^{${Y * Y}} \\sqrt{x}\\,dx = ${first.toLatex()}$，$\\int ${poly([q, "x"])}\\,dy = ${q === 1 ? "" : q === -1 ? "-" : `${q}`}\\int_0^{${Y}} y^{2}\\,dy = ${second.toLatex()}$，两者相加得 $${first.toLatex()} + ${pq(second)} = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -1054,25 +1631,59 @@ const tangentialComponent = point(
   "work-from-the-tangential-component",
   ["Work from the tangential component", "由切向分量求功"],
   [
-    "Since $d\\mathbf{r} = \\mathbf{T}\\,ds$, a line integral of a vector field is the scalar integral of the tangential component. Reversing the curve reverses $\\mathbf{T}$, so the tangential component changes sign, and this is why the vector integral changes sign but a scalar one does not.",
-    "由于 $d\\mathbf{r} = \\mathbf{T}\\,ds$，向量场的线积分是切向分量的标量积分。曲线反向时 $\\mathbf{T}$ 反向，切向分量变号，这就是向量线积分变号而标量线积分不变号的原因。",
+    "Since $d\\mathbf{r} = \\mathbf{T}\\,ds$, a line integral of a vector field is the scalar integral of the tangential component. Reversing the curve reverses $\\mathbf{T}$, so the tangential component changes sign, and this is why the vector integral changes sign but a scalar one does not. If $\\mathbf{F} \\cdot \\mathbf{T} = -3$ all along a curve $C$ of length $15$, then $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = -45$ and $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = 45$.\n\n> **Watch out.** The length is the same in both directions, but the tangential component is not: on $-C$ it is the negative of its value on $C$. Multiply by the length as well; the tangential component alone is not the integral.",
+    "由于 $d\\mathbf{r} = \\mathbf{T}\\,ds$，向量场的线积分是切向分量的标量积分。曲线反向时 $\\mathbf{T}$ 反向，切向分量变号，这就是向量线积分变号而标量线积分不变号的原因。如果沿长度为 $15$ 的曲线 $C$ 处处有 $\\mathbf{F} \\cdot \\mathbf{T} = -3$，那么 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = -45$，$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = 45$。\n\n> **注意。** 两个方向上的长度相同，但切向分量不同：在 $-C$ 上它是在 $C$ 上的值的相反数。还要乘以长度；单独的切向分量不是积分。",
   ],
   (rng) => {
     const c = nz(rng, 9);
     const L = rng.int(2, 12);
     const answer = -c * L;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Along a curve $C$ of length $${L}$, the tangential component $\\mathbf{F} \\cdot \\mathbf{T}$ equals $${c}$ at every point. Find $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r}$.`,
         `沿长度为 $${L}$ 的曲线 $C$，切向分量 $\\mathbf{F} \\cdot \\mathbf{T}$ 处处等于 $${c}$。求 $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r}$。`,
-      ],
+      ),
       answer,
-      [c * L, c, -c],
-      [
-        `On $C$ the integral is $${c} \\cdot ${L}$, the tangential component times the length. Reversing the direction changes its sign, which gives $${answer}$.`,
-        `在 $C$ 上，积分是 $${c} \\cdot ${L}$，即切向分量乘以长度。方向相反时符号改变，所以结果是 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          c * L,
+          "That is the integral over $C$; reversing the curve reverses $\\mathbf{T}$ and changes the sign.",
+          "那是沿 $C$ 的积分；曲线反向时 $\\mathbf{T}$ 反向，符号改变。",
+        ),
+        why(
+          -c,
+          "That is the tangential component on $-C$ alone; it must be multiplied by the length.",
+          "那只是 $-C$ 上的切向分量；还要乘以长度。",
+        ),
+        why(
+          c,
+          "That is the tangential component on $C$, neither multiplied by the length nor reversed.",
+          "那是 $C$ 上的切向分量，既没有乘以长度也没有变号。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate over C", "沿 C 积分"],
+            t(
+              `$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = ${c} \\cdot ${L} = ${c * L}$.`,
+              `$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = ${c} \\cdot ${L} = ${c * L}$。`,
+            ),
+          ],
+          [
+            ["Reverse the direction", "反转方向"],
+            t(
+              `On $-C$ the unit tangent is $-\\mathbf{T}$, so the integral changes sign: $${answer}$.`,
+              `在 $-C$ 上单位切向量是 $-\\mathbf{T}$，所以积分变号：$${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly on $-C$: the tangential component is $${-c}$ at every point and the length is still $${L}$, so the integral is $${-c} \\cdot ${L} = ${answer}$.`,
+          `直接在 $-C$ 上算：切向分量处处为 $${-c}$，长度仍是 $${L}$，所以积分为 $${-c} \\cdot ${L} = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
