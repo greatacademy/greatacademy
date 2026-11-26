@@ -9,7 +9,7 @@ import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -92,32 +92,49 @@ const matrixFromSquare = point(
   "the-matrix-from-a-transformed-square",
   ["The matrix from a transformed square", "由变换后的正方形读矩阵"],
   [
-    "The columns of the standard matrix are the images of the basis vectors. So a drawing of where the unit square lands gives the matrix directly: the image of the first basis vector is the first column, and the image of the second basis vector is the second column. Writing the images as rows gives the transpose by mistake.",
-    "标准矩阵的列是基向量的像。所以单位正方形落在哪里的图直接给出矩阵：第一个基向量的像是第一列，第二个基向量的像是第二列。把像写成行，就误得到转置矩阵。",
+    "The columns of the standard matrix are the images of the basis vectors. So a drawing of where the unit square lands gives the matrix directly: the image of the first basis vector is the first column, and the image of the second basis vector is the second column. For example, if the arrows end at $T(e_1) = (2, 1)$ and $T(e_2) = (-1, 3)$, the matrix is $\\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}$, and multiplying it by $(1, 0)$ gives back $(2, 1)$.\n\n> **Watch out.** Write each image as a column, not a row: writing the images as rows gives the transpose. Keep the order too, since $T(e_1)$ is the first column.",
+    "标准矩阵的列是基向量的像。所以单位正方形落在哪里的图直接给出矩阵：第一个基向量的像是第一列，第二个基向量的像是第二列。例如箭头终点为 $T(e_1) = (2, 1)$，$T(e_2) = (-1, 3)$ 时，矩阵是 $\\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}$，用它乘 $(1, 0)$ 又得到 $(2, 1)$。\n\n> **注意。** 把每个像写成列，而不是行：写成行得到的是转置矩阵。还要保持顺序，$T(e_1)$ 是第一列。",
   ],
   (rng) => {
     const [u, v] = independentPair(rng, 3);
     const [a, c, b, d] = [u[0], u[1], v[0], v[1]];
-    return choose(
+    const wrong: [string, string, string][] = [
+      [mat(a, c, b, d), "This writes the images as rows, which gives the transpose.", "这把像写成了行，得到的是转置矩阵。"],
+      [mat(b, a, d, c), "The columns are swapped: $T(e_1)$ must be the first column.", "两列交换了：$T(e_1)$ 必须是第一列。"],
+      [mat(-a, -b, -c, -d), "Every sign is flipped; the arrows are read with their own signs.", "所有符号都反了；箭头的坐标要按原符号读。"],
+      [
+        mat(c, d, a, b),
+        "The rows are swapped, so each column lists its coordinates in the wrong order.",
+        "两行交换了，所以每一列的坐标顺序都错了。",
+      ],
+      [
+        mat(a, -b, c, -d),
+        "The second column has the wrong sign; it must equal $T(e_2)$ exactly.",
+        "第二列的符号错了；它必须恰好等于 $T(e_2)$。",
+      ],
+      [
+        mat(-a, b, -c, d),
+        "The first column has the wrong sign; it must equal $T(e_1)$ exactly.",
+        "第一列的符号错了；它必须恰好等于 $T(e_1)$。",
+      ],
+    ];
+    const choice = choose(
       rng,
       [
         "A linear map $T$ sends the dashed unit square to the shaded region. What is its standard matrix?",
         "线性映射 $T$ 把虚线单位正方形映成阴影区域。它的标准矩阵是什么？",
       ],
       same(mat(a, b, c, d)),
+      wrong.map(([m]) => same(m)),
       [
-        same(mat(a, c, b, d)),
-        same(mat(b, a, d, c)),
-        same(mat(-a, -b, -c, -d)),
-        same(mat(c, d, a, b)),
-        same(mat(a, -b, c, -d)),
-        same(mat(-a, b, -c, d)),
-      ],
-      [
-        `The arrows give $T(e_1) = (${a}, ${c})$ and $T(e_2) = (${b}, ${d})$. These are the columns of the matrix, in that order, which gives $${mat(a, b, c, d)}$.`,
-        `箭头给出 $T(e_1) = (${a}, ${c})$，$T(e_2) = (${b}, ${d})$。它们依次是矩阵的列，所以矩阵是 $${mat(a, b, c, d)}$。`,
+        `**Step 1: Read the arrows.** The drawing shows $T(e_1) = (${a}, ${c})$ and $T(e_2) = (${b}, ${d})$.\n\n**Step 2: Write them as columns.** In that order they are the columns, which gives $${mat(a, b, c, d)}$.\n\n**Check.** $${mat(a, b, c, d)}${col(1, 0)} = ${col(a, c)}$ and $${mat(a, b, c, d)}${col(0, 1)} = ${col(b, d)}$, the two drawn arrows.`,
+        `**第一步：读出箭头。** 由图得 $T(e_1) = (${a}, ${c})$，$T(e_2) = (${b}, ${d})$。\n\n**第二步：写成列。** 按这个顺序它们就是矩阵的列，得 $${mat(a, b, c, d)}$。\n\n**检验。** $${mat(a, b, c, d)}${col(1, 0)} = ${col(a, c)}$，$${mat(a, b, c, d)}${col(0, 1)} = ${col(b, d)}$，正是图中的两个箭头。`,
       ],
       fig(6, [parallelogram(u, v), ...imageOfSquare(u, v)], altOfImage(u, v)),
+    );
+    return reasoned(
+      choice,
+      wrong.map(([m, en, zh]): [string, string, string] => [same(m)[0], en, zh]),
     );
   },
 );
@@ -185,8 +202,8 @@ const rankFromImage = {
     "the-rank-from-the-image-of-the-basis",
     ["The rank from the image of the basis", "由基的像读秩"],
     [
-      "The image of a linear map is spanned by the images of the basis vectors, and the rank is the dimension of that span. Two arrows that are not parallel span the whole plane, so the rank is two. Two parallel arrows span only a line through the origin, so the rank is one, however long the arrows are.",
-      "线性映射的像由基向量的像张成，秩是这个张成空间的维数。两个不平行的箭头张成整个平面，所以秩是二。两个平行的箭头只张成过原点的一条直线，所以不论箭头多长，秩都是一。",
+      "The image of a linear map is spanned by the images of the basis vectors, and the rank is the dimension of that span. Two arrows that are not parallel span the whole plane, so the rank is two. Two parallel arrows span only a line through the origin, so the rank is one, however long the arrows are. For example, arrows to $(2, 1)$ and $(-4, -2)$ lie on one line, since $2 \\cdot (-2) - 1 \\cdot (-4) = 0$, so the rank is $1$.\n\n> **Watch out.** Arrows pointing in opposite directions are still parallel. The rank counts independent directions, not arrows, so two arrows can give rank $1$.",
+      "线性映射的像由基向量的像张成，秩是这个张成空间的维数。两个不平行的箭头张成整个平面，所以秩是二。两个平行的箭头只张成过原点的一条直线，所以不论箭头多长，秩都是一。例如指向 $(2, 1)$ 和 $(-4, -2)$ 的箭头在同一条直线上，因为 $2 \\cdot (-2) - 1 \\cdot (-4) = 0$，所以秩是 $1$。\n\n> **注意。** 方向相反的箭头仍然平行。秩数的是独立的方向，而不是箭头的个数，所以两个箭头也可能只给出秩 $1$。",
     ],
     (rng) => {
       const full = rng.bool(0.4);
@@ -200,21 +217,59 @@ const rankFromImage = {
         v = [q * w[0], q * w[1]];
       }
       const answer = full ? 2 : 1;
-      return ask(
-        [
-          "The arrows show the images under a linear map $T$ of the two standard basis vectors. What is the rank of $T$?",
-          "箭头表示线性映射 $T$ 下两个标准基向量的像。$T$ 的秩是多少？",
-        ],
-        answer,
-        [3 - answer, 0, 3],
-        [
-          full
-            ? "The two arrows are not parallel, so they span the whole plane and the rank is $2$."
-            : "The two arrows lie on one line through the origin, so their span is that line and the rank is $1$.",
-          full ? "两个箭头不平行，所以张成整个平面，秩是 $2$。" : "两个箭头在过原点的同一条直线上，所以张成的就是这条直线，秩是 $1$。",
-        ],
-        fig(6, imageOfSquare(u, v), altOfImage(u, v)),
-      );
+      const det = cross(u, v);
+      const n = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The arrows show the images under a linear map $T$ of the two standard basis vectors. What is the rank of $T$?",
+            "箭头表示线性映射 $T$ 下两个标准基向量的像。$T$ 的秩是多少？",
+          ),
+          answer,
+          mistakes: [
+            full
+              ? why(1, "The arrows are not parallel, so they span more than one line.", "两个箭头不平行，所以张成的不止一条直线。")
+              : why(
+                  2,
+                  "The arrows lie on one line through the origin, so they give only one direction.",
+                  "两个箭头在过原点的同一条直线上，只给出一个方向。",
+                ),
+            why(0, "The arrows are not zero, so the image contains more than the origin.", "箭头不是零向量，所以像不只含原点。"),
+            why(3, "The image lies in the plane, so its dimension is at most $2$.", "像在平面内，所以维数至多是 $2$。"),
+          ],
+          solution: walked(
+            [
+              [
+                ["Read the arrows", "读出箭头"],
+                t(
+                  `$T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$.`,
+                  `$T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。`,
+                ),
+              ],
+              [
+                ["Test whether they are parallel", "检验是否平行"],
+                t(
+                  full
+                    ? `$${n(u[0])} \\cdot ${n(v[1])} - ${n(u[1])} \\cdot ${n(v[0])} = ${det} \\ne 0$, so the arrows are not parallel and span the whole plane: the rank is $2$.`
+                    : `$${n(u[0])} \\cdot ${n(v[1])} - ${n(u[1])} \\cdot ${n(v[0])} = 0$, so the arrows lie on one line through the origin and span only that line: the rank is $1$.`,
+                  full
+                    ? `$${n(u[0])} \\cdot ${n(v[1])} - ${n(u[1])} \\cdot ${n(v[0])} = ${det} \\ne 0$，所以两个箭头不平行，张成整个平面：秩是 $2$。`
+                    : `$${n(u[0])} \\cdot ${n(v[1])} - ${n(u[1])} \\cdot ${n(v[0])} = 0$，所以两个箭头在过原点的同一条直线上，只张成这条直线：秩是 $1$。`,
+                ),
+              ],
+            ],
+            t(
+              full
+                ? `Rank $2$ means the image is the whole plane, which matches the parallelogram on the two arrows having nonzero area $${Math.abs(det)}$.`
+                : "Rank $1$ means the unit square is flattened onto a line, so the image has zero area, which matches the zero determinant.",
+              full
+                ? `秩为 $2$ 表示像是整个平面，与两个箭头张成的平行四边形面积 $${Math.abs(det)}$ 不为零一致。`
+                : "秩为 $1$ 表示单位正方形被压到一条直线上，像的面积为零，与行列式为零一致。",
+            ),
+          ),
+        }),
+        figure: fig(6, imageOfSquare(u, v), altOfImage(u, v)),
+      };
     },
   ),
   figure: linearAlgebraDrawings1["image-and-rank-of-a-linear-transformation#the-rank-from-the-image-of-the-basis"],
@@ -224,8 +279,8 @@ const kernelFromImage = point(
   "the-kernel-from-collapsed-arrows",
   ["The kernel from collapsed arrows", "由共线的箭头读核"],
   [
-    "When the images of the basis vectors lie on one line, some combination of the basis vectors is sent to zero, and that combination spans the kernel. If the images are $p$ and $q$ times the same vector, then $q$ times the first basis vector minus $p$ times the second goes to zero.",
-    "当基向量的像在同一条直线上时，基向量的某个组合被映到零，这个组合张成核。如果两个像分别是同一向量的 $p$ 倍和 $q$ 倍，那么 $q$ 倍第一个基向量减 $p$ 倍第二个基向量就映到零。",
+    "When the images of the basis vectors lie on one line, some combination of the basis vectors is sent to zero, and that combination spans the kernel. If the images are $p$ and $q$ times the same vector, then $q$ times the first basis vector minus $p$ times the second goes to zero. For example, if $T(e_1) = (1, 2)$ and $T(e_2) = (3, 6)$, the images are $1$ and $3$ times $(1, 2)$, so $T(3, -1) = 3(1, 2) - (3, 6) = (0, 0)$ and $(3, -1)$ spans the kernel.\n\n> **Watch out.** The kernel lives among the inputs, not the outputs: the common direction of the arrows spans the image, not the kernel. Always test a candidate by applying $T$ to it.",
+    "当基向量的像在同一条直线上时，基向量的某个组合被映到零，这个组合张成核。如果两个像分别是同一向量的 $p$ 倍和 $q$ 倍，那么 $q$ 倍第一个基向量减 $p$ 倍第二个基向量就映到零。例如 $T(e_1) = (1, 2)$，$T(e_2) = (3, 6)$ 时，两个像分别是 $(1, 2)$ 的 $1$ 倍和 $3$ 倍，所以 $T(3, -1) = 3(1, 2) - (3, 6) = (0, 0)$，$(3, -1)$ 张成核。\n\n> **注意。** 核在输入之中，而不在输出之中：箭头的公共方向张成的是像，不是核。总要把候选向量代入 $T$ 检验。",
   ],
   (rng) => {
     const w = rng.pick<Point>([
@@ -254,20 +309,55 @@ const kernelFromImage = point(
     const u: Point = [p * w[0], p * w[1]];
     const v: Point = [q * w[0], q * w[1]];
     const answer: Point = [q, -p];
-    const wrong = ([[p, q], [q, p], [p, -q], w] as Point[]).filter((c) => cross(c, answer) !== 0);
-    return choose(
+    const image = (c: Point): Point => [c[0] * u[0] + c[1] * v[0], c[0] * u[1] + c[1] * v[1]];
+    const candidates: [Point, string, string][] = [
+      [
+        [p, q],
+        "This uses the multiples in the same order; the weights must cross over and one must change sign.",
+        "这按原顺序用了倍数；权重要交叉，并且其中一个要变号。",
+      ],
+      [
+        [q, p],
+        "The weights cross over, but one of them must change sign so that the images cancel.",
+        "权重交叉了，但其中一个必须变号，像才能抵消。",
+      ],
+      [
+        [p, -q],
+        "The sign change is right, but the weights must cross over: $q$ goes with $e_1$.",
+        "变号是对的，但权重要交叉：$q$ 对应 $e_1$。",
+      ],
+      [
+        w,
+        "This is the common direction of the arrows, which spans the image, not the kernel.",
+        "这是箭头的公共方向，它张成的是像，不是核。",
+      ],
+    ];
+    const wrong = candidates.filter(([c]) => cross(c, answer) !== 0);
+    const out = image(answer);
+    const choice = choose(
       rng,
       [
         "The arrows show the images under a linear map $T$ of the two standard basis vectors. Which vector spans the kernel of $T$?",
         "箭头表示线性映射 $T$ 下两个标准基向量的像。哪个向量张成 $T$ 的核？",
       ],
       same(col(answer[0], answer[1])),
-      wrong.map((c) => same(col(c[0], c[1]))),
+      wrong.map(([c]) => same(col(c[0], c[1]))),
       [
-        `The drawing shows $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$, which are $${p}$ and $${q}$ times $(${w[0]}, ${w[1]})$. So $(${q})T(e_1) - (${p})T(e_2) = 0$, and the kernel is spanned by $(${answer[0]}, ${answer[1]})$.`,
-        `由图得 $T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$，它们分别是 $(${w[0]}, ${w[1]})$ 的 $${p}$ 倍和 $${q}$ 倍。所以 $(${q})T(e_1) - (${p})T(e_2) = 0$，核由 $(${answer[0]}, ${answer[1]})$ 张成。`,
+        `**Step 1: Read the arrows.** The drawing shows $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$, which are $${p}$ and $${q}$ times $(${w[0]}, ${w[1]})$.\n\n**Step 2: Combine them to zero.** $(${q})T(e_1) - (${p})T(e_2) = 0$, so the kernel is spanned by $(${answer[0]}, ${answer[1]})$.\n\n**Check.** $T(${answer[0]}, ${answer[1]}) = (${q})(${u[0]}, ${u[1]}) + (${-p})(${v[0]}, ${v[1]}) = (${out[0]}, ${out[1]})$.`,
+        `**第一步：读出箭头。** 由图得 $T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$，它们分别是 $(${w[0]}, ${w[1]})$ 的 $${p}$ 倍和 $${q}$ 倍。\n\n**第二步：组合成零。** $(${q})T(e_1) - (${p})T(e_2) = 0$，所以核由 $(${answer[0]}, ${answer[1]})$ 张成。\n\n**检验。** $T(${answer[0]}, ${answer[1]}) = (${q})(${u[0]}, ${u[1]}) + (${-p})(${v[0]}, ${v[1]}) = (${out[0]}, ${out[1]})$。`,
       ],
       fig(7, imageOfSquare(u, v), altOfImage(u, v)),
+    );
+    return reasoned(
+      choice,
+      wrong.map(([c, en, zh]): [string, string, string] => {
+        const o = image(c);
+        return [
+          same(col(c[0], c[1]))[0],
+          `${en} Here $T(${c[0]}, ${c[1]}) = (${o[0]}, ${o[1]})$, not zero.`,
+          `${zh}这里 $T(${c[0]}, ${c[1]}) = (${o[0]}, ${o[1]})$，不是零。`,
+        ];
+      }),
     );
   },
 );
@@ -276,8 +366,8 @@ const eigenvalueFromPair = point(
   "the-eigenvalue-from-a-vector-and-its-image",
   ["The eigenvalue from a vector and its image", "由向量及其像读特征值"],
   [
-    "A vector is an eigenvector when its image lies on the same line through the origin. The eigenvalue is the factor between the two arrows: its size is the ratio of their lengths, and it is negative when the image points the opposite way. A shrinking arrow means an eigenvalue smaller than one in size.",
-    "当向量的像在过原点的同一条直线上时，它就是特征向量。特征值是两个箭头之间的倍数：大小是长度之比，当像指向相反方向时为负。箭头缩短说明特征值的绝对值小于一。",
+    "A vector is an eigenvector when its image lies on the same line through the origin. The eigenvalue is the factor between the two arrows: its size is the ratio of their lengths, and it is negative when the image points the opposite way. A shrinking arrow means an eigenvalue smaller than one in size. For example, if $v = (2, -2)$ and $Av = (-1, 1)$, each coordinate of $Av$ is $-\\tfrac{1}{2}$ times that of $v$, so the eigenvalue is $-\\tfrac{1}{2}$.\n\n> **Watch out.** Divide the image by the vector, not the vector by the image, and keep the sign: an image pointing the opposite way gives a negative eigenvalue.",
+    "当向量的像在过原点的同一条直线上时，它就是特征向量。特征值是两个箭头之间的倍数：大小是长度之比，当像指向相反方向时为负。箭头缩短说明特征值的绝对值小于一。例如 $v = (2, -2)$，$Av = (-1, 1)$ 时，$Av$ 的每个坐标都是 $v$ 的 $-\\tfrac{1}{2}$ 倍，所以特征值是 $-\\tfrac{1}{2}$。\n\n> **注意。** 用像除以向量，而不是用向量除以像，并保留符号：像指向相反方向时特征值为负。",
   ],
   (rng) => {
     const w = rng.pick(primitive.filter((p) => Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
@@ -287,18 +377,57 @@ const eigenvalueFromPair = point(
     const size = half ? 2 : 1;
     const v: Point = [size * w[0], size * w[1]];
     const image: Point = [k.toNumber() * v[0], k.toNumber() * v[1]];
-    return ask(
-      [
-        "The arrows show a vector $v$ and its image $Av$. What eigenvalue does $v$ have?",
-        "箭头表示向量 $v$ 及其像 $Av$。$v$ 的特征值是多少？",
-      ],
-      k,
-      [k.neg(), Q.one.div(k), k.abs().add(Q.one)],
-      [
-        `The drawing shows $v = (${v[0]}, ${v[1]})$ and $Av = (${image[0]}, ${image[1]})$. Dividing matching coordinates gives the factor $${k.toLatex()}$, so that is the eigenvalue.`,
-        `由图得 $v = (${v[0]}, ${v[1]})$，$Av = (${image[0]}, ${image[1]})$。对应坐标相除得到倍数 $${k.toLatex()}$，这就是特征值。`,
-      ],
-      fig(
+    const i = v[0] !== 0 ? 0 : 1;
+    const lam = k.toLatex();
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The arrows show a vector $v$ and its image $Av$. What eigenvalue does $v$ have?",
+          "箭头表示向量 $v$ 及其像 $Av$。$v$ 的特征值是多少？",
+        ),
+        answer: k,
+        mistakes: (
+          [
+            [
+              k.neg(),
+              "The sign is wrong: compare whether $Av$ points the same way as $v$ or the opposite way.",
+              "符号错了：要看 $Av$ 与 $v$ 方向相同还是相反。",
+            ],
+            [
+              Q.one.div(k),
+              "That divides $v$ by $Av$; the eigenvalue is $Av$ divided by $v$.",
+              "这是用 $v$ 除以 $Av$；特征值是 $Av$ 除以 $v$。",
+            ],
+            [
+              k.abs().add(Q.one),
+              "The eigenvalue is the factor between the arrows, not one more than its size.",
+              "特征值是两个箭头之间的倍数，而不是其大小加一。",
+            ],
+          ] as const
+        )
+          .filter(([w], j, all) => !w.eq(k) && all.findIndex(([o]) => o.eq(w)) === j)
+          .map(([w, en, zh]) => why(w, en, zh)),
+        solution: walked(
+          [
+            [
+              ["Read the arrows", "读出箭头"],
+              t(
+                `$v = (${v[0]}, ${v[1]})$ and $Av = (${image[0]}, ${image[1]})$, which lie on one line through the origin.`,
+                `$v = (${v[0]}, ${v[1]})$，$Av = (${image[0]}, ${image[1]})$，它们在过原点的同一条直线上。`,
+              ),
+            ],
+            [
+              ["Divide matching coordinates", "对应坐标相除"],
+              t(`$\\lambda = \\dfrac{${image[i]}}{${v[i]}} = ${lam}$.`, `$\\lambda = \\dfrac{${image[i]}}{${v[i]}} = ${lam}$。`),
+            ],
+          ],
+          t(
+            `$${lam} \\cdot (${v[0]}, ${v[1]}) = (${image[0]}, ${image[1]})$, and $Av$ points ${k.sign() > 0 ? "the same way as" : "opposite to"} $v$, which matches the sign.`,
+            `$${lam} \\cdot (${v[0]}, ${v[1]}) = (${image[0]}, ${image[1]})$，且 $Av$ 与 $v$ 方向${k.sign() > 0 ? "相同" : "相反"}，与符号一致。`,
+          ),
+        ),
+      }),
+      figure: fig(
         6,
         [...vector(image, "Av"), { kind: "arrow", from: [0, 0], to: v }, { kind: "label", at: v, text: "v", dir: rng.bool() ? "n" : "s" }],
         [
@@ -306,7 +435,7 @@ const eigenvalueFromPair = point(
           `指向 (${v[0]}, ${v[1]}) 的箭头 v 和指向 (${image[0]}, ${image[1]}) 的箭头 Av。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -314,8 +443,8 @@ const splitAlongEigen = point(
   "applying-a-matrix-through-eigen-directions",
   ["Applying a matrix through eigen directions", "沿特征方向作用矩阵"],
   [
-    "If a point is a combination of two eigenvectors, the matrix acts on each part separately by scaling it with its own eigenvalue. So write the point as a combination of the two arrows by reading the drawing, scale each part, and add. Scaling the coordinates of the point directly works only when the eigenvectors are the axes.",
-    "如果一个点是两个特征向量的组合，矩阵就分别作用于每一部分，按各自的特征值缩放。所以先从图中把点写成两个箭头的组合，再缩放各部分并相加。直接缩放点的坐标，只有在特征向量就是坐标轴时才成立。",
+    "If a point is a combination of two eigenvectors, the matrix acts on each part separately by scaling it with its own eigenvalue. So write the point as a combination of the two arrows by reading the drawing, scale each part, and add. For example, with $u = (1, 1)$, $w = (1, -1)$, $Au = 2u$, $Aw = 3w$ and $P = (3, 1) = 2u + w$, we get $AP = 4u + 3w = (7, 1)$.\n\n> **Watch out.** Scaling the coordinates of the point directly works only when the eigenvectors are the axes. Each eigenvalue scales only its own part, so keep each with its own arrow.",
+    "如果一个点是两个特征向量的组合，矩阵就分别作用于每一部分，按各自的特征值缩放。所以先从图中把点写成两个箭头的组合，再缩放各部分并相加。例如 $u = (1, 1)$，$w = (1, -1)$，$Au = 2u$，$Aw = 3w$，$P = (3, 1) = 2u + w$ 时，$AP = 4u + 3w = (7, 1)$。\n\n> **注意。** 直接缩放点的坐标，只有在特征向量就是坐标轴时才成立。每个特征值只缩放它自己的那一部分，要与各自的箭头对应。",
   ],
   (rng) => {
     const [u, w] = rng.pick<readonly [Point, Point]>([
@@ -346,18 +475,40 @@ const splitAlongEigen = point(
     const image = (x: number, y: number): Point => [x * a * u[0] + y * b * w[0], x * a * u[1] + y * b * w[1]];
     const answer = image(l1, l2);
     const times = (l: number) => (l === -1 ? "-" : `${l}`);
-    const parts = [image(l2, l1), [l1 * P[0], l2 * P[1]] as Point, [l1 * P[0], l1 * P[1]] as Point, [l2 * P[0], l2 * P[1]] as Point];
-    return choose(
+    const parts: [Point, string, string][] = [
+      [
+        image(l2, l1),
+        "The eigenvalues are swapped: $u$ is scaled by its own eigenvalue, and $w$ by its own.",
+        "特征值对调了：$u$ 按自己的特征值缩放，$w$ 也按自己的。",
+      ],
+      [
+        [l1 * P[0], l2 * P[1]],
+        "This scales the coordinates of $P$, which works only when the eigenvectors are the axes.",
+        "这缩放的是 $P$ 的坐标，只有特征向量就是坐标轴时才成立。",
+      ],
+      [
+        [l1 * P[0], l1 * P[1]],
+        `This scales all of $P$ by $${l1}$, but the part along $w$ is scaled by $${l2}$.`,
+        `这把整个 $P$ 都乘以 $${l1}$，但沿 $w$ 的部分应乘以 $${l2}$。`,
+      ],
+      [
+        [l2 * P[0], l2 * P[1]],
+        `This scales all of $P$ by $${l2}$, but the part along $u$ is scaled by $${l1}$.`,
+        `这把整个 $P$ 都乘以 $${l2}$，但沿 $u$ 的部分应乘以 $${l1}$。`,
+      ],
+    ];
+    const pt = (q: Point) => `(${q[0]}, ${q[1]})`;
+    const choice = choose(
       rng,
       [
         `The arrows are eigenvectors of $A$: $Au = ${times(l1)}u$ and $Aw = ${times(l2)}w$. What is $AP$ for the point $P$ drawn?`,
         `箭头是 $A$ 的特征向量：$Au = ${times(l1)}u$，$Aw = ${times(l2)}w$。对图中的点 $P$，$AP$ 是什么？`,
       ],
       same(col(answer[0], answer[1])),
-      parts.map((c) => same(col(c[0], c[1]))),
+      parts.map(([c]) => same(col(c[0], c[1]))),
       [
-        `Reading the drawing gives $P = (${a})u + (${b})w$. Scaling each part gives $AP = (${a})(${l1})u + (${b})(${l2})w = (${answer[0]}, ${answer[1]})$.`,
-        `由图得 $P = (${a})u + (${b})w$。缩放各部分得 $AP = (${a})(${l1})u + (${b})(${l2})w = (${answer[0]}, ${answer[1]})$。`,
+        `**Step 1: Split the point along the arrows.** Reading the drawing gives $u = ${pt(u)}$, $w = ${pt(w)}$ and $P = ${pt(P)} = (${a})u + (${b})w$.\n\n**Step 2: Scale each part.** $AP = (${a})(${l1})u + (${b})(${l2})w = (${a * l1})${pt(u)} + (${b * l2})${pt(w)} = (${answer[0]}, ${answer[1]})$.\n\n**Check.** $(${a})${pt(u)} + (${b})${pt(w)} = ${pt(P)}$, so the split is right.`,
+        `**第一步：沿箭头分解点。** 由图得 $u = ${pt(u)}$，$w = ${pt(w)}$，$P = ${pt(P)} = (${a})u + (${b})w$。\n\n**第二步：缩放各部分。** $AP = (${a})(${l1})u + (${b})(${l2})w = (${a * l1})${pt(u)} + (${b * l2})${pt(w)} = (${answer[0]}, ${answer[1]})$。\n\n**检验。** $(${a})${pt(u)} + (${b})${pt(w)} = ${pt(P)}$，所以分解正确。`,
       ],
       fig(
         6,
@@ -368,6 +519,10 @@ const splitAlongEigen = point(
         ],
       ),
     );
+    return reasoned(
+      choice,
+      parts.map(([c, en, zh]): [string, string, string] => [same(col(c[0], c[1]))[0], en, zh]),
+    );
   },
 );
 
@@ -375,8 +530,8 @@ const eigenFromShear = point(
   "the-eigen-direction-of-a-drawn-shear",
   ["The eigen direction of a drawn shear", "图中剪切的特征方向"],
   [
-    "An eigenvector of a map is a vector whose image stays on its own line through the origin. In a drawing of a shear combined with uniform scaling, one edge of the square stays on its line while the other tips over. That edge gives the only eigen direction, and every other direction turns.",
-    "映射的特征向量是像仍在自身所在的过原点直线上的向量。在剪切与均匀缩放结合的图中，正方形的一条边留在自己的直线上，另一条边倾斜。这条边给出唯一的特征方向，其他方向都会转动。",
+    "An eigenvector of a map is a vector whose image stays on its own line through the origin. In a drawing of a shear combined with uniform scaling, one edge of the square stays on its line while the other tips over. That edge gives the only eigen direction, and every other direction turns. For example, if $T(e_1) = (2, 0)$ and $T(e_2) = (1, 2)$, then $e_1$ stays on the $x$-axis with factor $2$, while $T(1, 1) = (3, 2)$ is not a multiple of $(1, 1)$.\n\n> **Watch out.** A diagonal direction such as $(1, 1)$ is not automatically an eigenvector. Test each candidate by computing its image and checking that it is a multiple of the candidate.",
+    "映射的特征向量是像仍在自身所在的过原点直线上的向量。在剪切与均匀缩放结合的图中，正方形的一条边留在自己的直线上，另一条边倾斜。这条边给出唯一的特征方向，其他方向都会转动。例如 $T(e_1) = (2, 0)$，$T(e_2) = (1, 2)$ 时，$e_1$ 留在 $x$ 轴上，倍数为 $2$；而 $T(1, 1) = (3, 2)$ 不是 $(1, 1)$ 的倍数。\n\n> **注意。** 像 $(1, 1)$ 这样的对角方向不一定是特征向量。对每个候选向量都要算出它的像，检验像是否是它的倍数。",
   ],
   (rng) => {
     const s = rng.int(1, 3);
@@ -385,19 +540,33 @@ const eigenFromShear = point(
     const u: Point = upper ? [s, 0] : [s, k];
     const v: Point = upper ? [k, s] : [0, s];
     const answer = upper ? col(1, 0) : col(0, 1);
-    return choose(
+    const apply = (x: number, y: number): Point => [x * u[0] + y * v[0], x * u[1] + y * v[1]];
+    const kept = upper ? u : v;
+    const candidates: Point[] = [upper ? [0, 1] : [1, 0], [1, 1], [1, -1]];
+    const choice = choose(
       rng,
       [
         "The arrows show the images under $T$ of the standard basis vectors. Which vector is an eigenvector of $T$?",
         "箭头表示 $T$ 下标准基向量的像。哪个向量是 $T$ 的特征向量？",
       ],
       same(answer),
-      [same(upper ? col(0, 1) : col(1, 0)), same(col(1, 1)), same(col(1, -1))],
+      candidates.map(([x, y]) => same(col(x, y))),
       [
-        `The image of $e_{${upper ? 1 : 2}}$ stays on its own axis, with factor $${s}$, so that basis vector is an eigenvector. The other basis vector tips off its axis, and the eigenvalue $${s}$ is repeated with this one direction only.`,
-        `$e_{${upper ? 1 : 2}}$ 的像留在自己的坐标轴上，倍数是 $${s}$，所以这个基向量是特征向量。另一个基向量偏离了自己的坐标轴，重特征值 $${s}$ 只有这一个方向。`,
+        `**Step 1: Read the arrows.** $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$.\n\n**Step 2: Find the arrow that stays on its axis.** $T(e_{${upper ? 1 : 2}}) = (${kept[0]}, ${kept[1]}) = ${s === 1 ? "" : s}e_{${upper ? 1 : 2}}$, so that basis vector is an eigenvector with eigenvalue $${s}$. The other basis vector tips off its axis, and the eigenvalue $${s}$ is repeated with this one direction only.\n\n**Check.** The matrix is $A = ${mat(u[0], v[0], u[1], v[1])}$, whose characteristic polynomial is $(\\lambda - ${s})^2$, so $${s}$ is the only eigenvalue, and $A - ${s}I = ${mat(u[0] - s, v[0], u[1], v[1] - s)}$ has rank $1$, leaving one eigen direction.`,
+        `**第一步：读出箭头。** $T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。\n\n**第二步：找出留在坐标轴上的箭头。** $T(e_{${upper ? 1 : 2}}) = (${kept[0]}, ${kept[1]}) = ${s === 1 ? "" : s}e_{${upper ? 1 : 2}}$，所以这个基向量是特征向量，特征值为 $${s}$。另一个基向量偏离了自己的坐标轴，重特征值 $${s}$ 只有这一个方向。\n\n**检验。** 矩阵为 $A = ${mat(u[0], v[0], u[1], v[1])}$，特征多项式是 $(\\lambda - ${s})^2$，所以 $${s}$ 是唯一的特征值，而 $A - ${s}I = ${mat(u[0] - s, v[0], u[1], v[1] - s)}$ 的秩为 $1$，只留下一个特征方向。`,
       ],
       fig(5, imageOfSquare(u, v), altOfImage(u, v)),
+    );
+    return reasoned(
+      choice,
+      candidates.map(([x, y]): [string, string, string] => {
+        const o = apply(x, y);
+        return [
+          same(col(x, y))[0],
+          `$T(${x}, ${y}) = (${o[0]}, ${o[1]})$, which is not a multiple of $(${x}, ${y})$, so this direction turns.`,
+          `$T(${x}, ${y}) = (${o[0]}, ${o[1]})$，不是 $(${x}, ${y})$ 的倍数，所以这个方向会转动。`,
+        ];
+      }),
     );
   },
 );

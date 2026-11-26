@@ -1897,8 +1897,8 @@ const useBasisMatrix = point(
   "using-a-matrix-relative-to-a-basis",
   ["Using a matrix relative to a basis", "使用相对于基的矩阵"],
   [
-    "The columns of $[T]_{\\mathcal{B}}$ are the coordinates of $T(\\mathbf{b}_{j})$ in the basis, so the matrix acts on coordinates and returns coordinates. To get an actual vector, the output must be turned back into a combination of the basis vectors.",
-    "$[T]_{\\mathcal{B}}$ 的各列是 $T(\\mathbf{b}_{j})$ 在基下的坐标，所以矩阵作用于坐标并返回坐标。要得到实际的向量，必须把输出还原成基向量的线性组合。",
+    "The columns of $[T]_{\\mathcal{B}}$ are the coordinates of $T(\\mathbf{b}_{j})$ in the basis, so the matrix acts on coordinates and returns coordinates. To get an actual vector, the output must be turned back into a combination of the basis vectors. For example, with $\\mathbf{b}_{1} = (1, 1)$, $\\mathbf{b}_{2} = (1, -1)$ and first column $(2, 1)$, we get $T(\\mathbf{b}_{1}) = 2\\mathbf{b}_{1} + \\mathbf{b}_{2} = (3, 1)$.\n\n> **Watch out.** The product $[T]_{\\mathcal{B}}[\\mathbf{v}]_{\\mathcal{B}}$ is a list of coordinates, not the vector itself. Read the coordinates of the input as a column, and combine the basis vectors with the output coordinates at the end.",
+    "$[T]_{\\mathcal{B}}$ 的各列是 $T(\\mathbf{b}_{j})$ 在基下的坐标，所以矩阵作用于坐标并返回坐标。要得到实际的向量，必须把输出还原成基向量的线性组合。例如 $\\mathbf{b}_{1} = (1, 1)$，$\\mathbf{b}_{2} = (1, -1)$，第一列为 $(2, 1)$ 时，$T(\\mathbf{b}_{1}) = 2\\mathbf{b}_{1} + \\mathbf{b}_{2} = (3, 1)$。\n\n> **注意。** 乘积 $[T]_{\\mathcal{B}}[\\mathbf{v}]_{\\mathcal{B}}$ 是一组坐标，而不是向量本身。把输入的坐标写成列，最后再用输出坐标组合基向量。",
   ],
   (rng) => {
     const b11 = nz(rng, 4);
@@ -1911,8 +1911,10 @@ const useBasisMatrix = point(
     const r = nz(rng, 5);
     const s = nz(rng, 5);
     const answer = (p + q) * b11 + (r + s) * b12;
-    return ask(
-      [
+    const first = p * b11 + r * b12;
+    const second = q * b11 + s * b12;
+    return numberProblem({
+      prompt: text([
         `$[T]_{\\mathcal{B}} = ${mat([
           [p, q],
           [r, s],
@@ -1921,14 +1923,53 @@ const useBasisMatrix = point(
           [p, q],
           [r, s],
         ])}$。求 $T(\\mathbf{b}_{1} + \\mathbf{b}_{2})$ 的第一个元素。`,
-      ],
+      ]),
       answer,
-      [(p + r) * b11 + (q + s) * b12, p + q + r + s, -answer],
-      [
-        `The coordinates of $\\mathbf{b}_{1} + \\mathbf{b}_{2}$ are $(1, 1)$, so the output has coordinates $(${p + q}, ${r + s})$. Its first entry is $${wrap(p + q)} \\cdot ${wrap(b11)} + ${wrap(r + s)} \\cdot ${wrap(b12)} = ${answer}$.`,
-        `$\\mathbf{b}_{1} + \\mathbf{b}_{2}$ 的坐标是 $(1, 1)$，所以输出的坐标是 $(${p + q}, ${r + s})$。它的第一个元素是 $${wrap(p + q)} \\cdot ${wrap(b11)} + ${wrap(r + s)} \\cdot ${wrap(b12)} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          (p + r) * b11 + (q + s) * b12,
+          "That adds the rows of the matrix; the output coordinates are the matrix times the column $(1, 1)$, which adds the columns.",
+          "这把矩阵的行相加了；输出坐标是矩阵乘以列 $(1, 1)$，即两列相加。",
+        ),
+        why(
+          p + q,
+          "That is the first coordinate of the output in the basis; it must be turned back into an actual vector.",
+          "这是输出在基下的第一个坐标；还必须把它还原成实际的向量。",
+        ),
+        why(
+          (p + q) * b11 + (r + s) * b21,
+          "That uses the second entry of $\\mathbf{b}_{1}$; the first entry of the vector combines the first entries of both basis vectors.",
+          "这用了 $\\mathbf{b}_{1}$ 的第二个元素；向量的第一个元素由两个基向量的第一个元素组合而成。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the output coordinates", "求输出坐标"],
+            text([
+              "The coordinates of $\\mathbf{b}_{1} + \\mathbf{b}_{2}$ are $(1, 1)$, so the output coordinates are the sum of the two columns:",
+              "$\\mathbf{b}_{1} + \\mathbf{b}_{2}$ 的坐标是 $(1, 1)$，所以输出坐标是两列之和：",
+            ]),
+            [
+              `${mat([
+                [p, q],
+                [r, s],
+              ])}${vec(1, 1)} = ${vec(p + q, r + s)}`,
+            ],
+          ],
+          [
+            ["Turn the coordinates into a vector", "把坐标还原成向量"],
+            text(["Combine the first entries of the basis vectors:", "组合两个基向量的第一个元素："]),
+            [`${wrap(p + q)} \\cdot ${wrap(b11)} + ${wrap(r + s)} \\cdot ${wrap(b12)} = ${answer}`],
+          ],
+        ],
+        text([
+          `By linearity, $T(\\mathbf{b}_{1}) = ${wrap(p)}\\mathbf{b}_{1} + ${wrap(r)}\\mathbf{b}_{2}$ has first entry $${first}$, and $T(\\mathbf{b}_{2}) = ${wrap(q)}\\mathbf{b}_{1} + ${wrap(s)}\\mathbf{b}_{2}$ has first entry $${second}$; their sum is $${answer}$.`,
+          `由线性，$T(\\mathbf{b}_{1}) = ${wrap(p)}\\mathbf{b}_{1} + ${wrap(r)}\\mathbf{b}_{2}$ 的第一个元素是 $${first}$，$T(\\mathbf{b}_{2}) = ${wrap(q)}\\mathbf{b}_{1} + ${wrap(s)}\\mathbf{b}_{2}$ 的第一个元素是 $${second}$；两者之和为 $${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1936,25 +1977,58 @@ const derivativeShifted = point(
   "the-derivative-with-a-shifted-target-basis",
   ["The derivative with a shifted target basis", "目标基平移后的导数矩阵"],
   [
-    "Each column of a matrix relative to two bases holds the coordinates of an image in the target basis. With the target basis $\\{1, x - c\\}$, the polynomial $2x$ must first be rewritten as $2(x - c) + 2c$, so a constant appears that the standard basis does not show.",
-    "相对于两个基的矩阵，每一列都是像在目标基下的坐标。目标基是 $\\{1, x - c\\}$ 时，多项式 $2x$ 必须先改写成 $2(x - c) + 2c$，于是出现一个在标准基下看不到的常数。",
+    "Each column of a matrix relative to two bases holds the coordinates of an image in the target basis. With the target basis $\\{1, x - c\\}$, the polynomial $2x$ must first be rewritten as $2(x - c) + 2c$, so a constant appears that the standard basis does not show. For example, for $T(p) = p'$ with target basis $\\{1, x - 3\\}$, $T(x^{2}) = 2x = 6 \\cdot 1 + 2(x - 3)$, so the third column is $(6, 2)$.\n\n> **Watch out.** The coefficients of $2x$ in the standard basis are not its coordinates in the shifted basis. The first entry of a column is the coefficient of $1$ after rewriting, which is not zero here.",
+    "相对于两个基的矩阵，每一列都是像在目标基下的坐标。目标基是 $\\{1, x - c\\}$ 时，多项式 $2x$ 必须先改写成 $2(x - c) + 2c$，于是出现一个在标准基下看不到的常数。例如 $T(p) = p'$，目标基为 $\\{1, x - 3\\}$ 时，$T(x^{2}) = 2x = 6 \\cdot 1 + 2(x - 3)$，所以第三列是 $(6, 2)$。\n\n> **注意。** $2x$ 在标准基下的系数不是它在平移后的基下的坐标。一列的第一个元素是改写后 $1$ 的系数，这里它不为零。",
   ],
   (rng) => {
     const c = nz(rng, 9);
     const k = nz(rng, 5);
     const answer = 2 * k * c;
-    return ask(
-      [
-        `$T: P_{2} \\to P_{1}$ is $T(p) = ${poly([k, "p'"])}$, with bases $\\{1, x, x^{2}\\}$ and $\\{1, ${poly([1, "x"], [-c, ""])}\\}$. Find the $(1, 3)$ entry of its matrix.`,
-        `$T: P_{2} \\to P_{1}$ 是 $T(p) = ${poly([k, "p'"])}$，基分别是 $\\{1, x, x^{2}\\}$ 和 $\\{1, ${poly([1, "x"], [-c, ""])}\\}$。求它的矩阵的 $(1, 3)$ 元素。`,
-      ],
+    const shift = poly([1, "x"], [-c, ""]);
+    return numberProblem({
+      prompt: text([
+        `$T: P_{2} \\to P_{1}$ is $T(p) = ${poly([k, "p'"])}$, with bases $\\{1, x, x^{2}\\}$ and $\\{1, ${shift}\\}$. Find the $(1, 3)$ entry of its matrix.`,
+        `$T: P_{2} \\to P_{1}$ 是 $T(p) = ${poly([k, "p'"])}$，基分别是 $\\{1, x, x^{2}\\}$ 和 $\\{1, ${shift}\\}$。求它的矩阵的 $(1, 3)$ 元素。`,
+      ]),
       answer,
-      [2 * k, -answer, 2 * c],
-      [
-        `$T(x^{2}) = ${poly([2 * k, "x"])} = ${poly([2 * k, ""])}(${poly([1, "x"], [-c, ""])}) + ${wrap(answer)}$. The coefficient of $1$ is the first entry of the column, so the entry is $${answer}$.`,
-        `$T(x^{2}) = ${poly([2 * k, "x"])} = ${poly([2 * k, ""])}(${poly([1, "x"], [-c, ""])}) + ${wrap(answer)}$。$1$ 的系数是这一列的第一个元素，所以该元素是 $${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          2 * k,
+          `That is the coefficient of $${shift}$, the second entry of the column; the $(1, 3)$ entry is the coefficient of $1$.`,
+          `这是 $${shift}$ 的系数，即这一列的第二个元素；$(1, 3)$ 元素是 $1$ 的系数。`,
+        ),
+        why(-answer, `The sign is flipped: $x = (${shift}) + ${wrap(c)}$.`, `符号反了：$x = (${shift}) + ${wrap(c)}$。`),
+        why(
+          2 * c,
+          `The factor $${k}$ in $T$ is dropped; $T(x^{2}) = ${poly([2 * k, "x"])}$.`,
+          `漏掉了 $T$ 中的因子 $${k}$；$T(x^{2}) = ${poly([2 * k, "x"])}$。`,
+        ),
+        why(
+          0,
+          "That reads the standard basis; in the shifted basis the image has a constant part.",
+          "这是按标准基读的；在平移后的基下，像含有常数部分。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Apply $T$ to the third basis vector", "对第三个基向量作用 $T$"],
+            t("", ""),
+            [`T(x^{2}) = ${wrap(k)} \\cdot 2x = ${poly([2 * k, "x"])}`],
+          ],
+          [
+            ["Rewrite in the target basis", "用目标基改写"],
+            text([`Write $x = (${shift}) + ${wrap(c)}$:`, `写成 $x = (${shift}) + ${wrap(c)}$：`]),
+            [`${poly([2 * k, "x"])} = ${wrap(answer)} \\cdot 1 + ${wrap(2 * k)}(${shift})`],
+          ],
+        ],
+        text([
+          `$${wrap(answer)} + ${wrap(2 * k)}(${shift}) = ${wrap(answer)} + (${poly([2 * k, "x"], [-answer, ""])}) = ${poly([2 * k, "x"])}$, so the $(1, 3)$ entry is $${answer}$.`,
+          `$${wrap(answer)} + ${wrap(2 * k)}(${shift}) = ${wrap(answer)} + (${poly([2 * k, "x"], [-answer, ""])}) = ${poly([2 * k, "x"])}$，所以 $(1, 3)$ 元素是 $${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1962,8 +2036,8 @@ const entryFromEigenvector = point(
   "a-matrix-entry-from-an-eigenvector",
   ["A matrix entry from an eigenvector", "由特征向量求矩阵元素"],
   [
-    "A known eigenvector gives two equations, one for each row. If one row is fully known, it gives the eigenvalue directly, and then the other row determines an unknown entry. The eigenvalue does not need to be given in advance.",
-    "已知的特征向量给出两个方程，每行一个。如果有一行完全已知，它直接给出特征值，另一行就能确定未知元素。特征值不需要事先给出。",
+    "A known eigenvector gives two equations, one for each row. If one row is fully known, it gives the eigenvalue directly, and then the other row determines an unknown entry. The eigenvalue does not need to be given in advance. For example, if $(1, 2)$ is an eigenvector of $\\begin{pmatrix} 1 & 1 \\\\ 2 & t \\end{pmatrix}$, the first row gives $\\lambda = 1 + 2 = 3$, and the second row gives $2 + 2t = 6$, so $t = 2$.\n\n> **Watch out.** The eigenvalue and the unknown entry are different numbers. The second row must equal $\\lambda$ times the second entry of the eigenvector, not $\\lambda$ itself.",
+    "已知的特征向量给出两个方程，每行一个。如果有一行完全已知，它直接给出特征值，另一行就能确定未知元素。特征值不需要事先给出。例如 $(1, 2)$ 是 $\\begin{pmatrix} 1 & 1 \\\\ 2 & t \\end{pmatrix}$ 的特征向量时，第一行给出 $\\lambda = 1 + 2 = 3$，第二行给出 $2 + 2t = 6$，所以 $t = 2$。\n\n> **注意。** 特征值与未知元素是不同的数。第二行必须等于 $\\lambda$ 乘以特征向量的第二个元素，而不是 $\\lambda$ 本身。",
   ],
   (rng) => {
     const a = nz(rng, 6);
@@ -1972,24 +2046,51 @@ const entryFromEigenvector = point(
     const k = nz(rng, 9);
     const lambda = a + b * m;
     const c = lambda * m - k * m;
-    return ask(
-      [
-        `$${vec(1, m)}$ is an eigenvector of $${mat([
-          [a, b],
-          [c, "t"],
-        ])}$. Find $t$.`,
-        `$${vec(1, m)}$ 是 $${mat([
-          [a, b],
-          [c, "t"],
-        ])}$ 的特征向量。求 $t$。`,
-      ],
-      k,
-      [lambda, -k, lambda === a ? a + 1 : a],
-      [
-        `The first row gives $\\lambda = ${a} + ${wrap(b)} \\cdot ${wrap(m)} = ${lambda}$. The second row gives $${poly([m, "t"], [c, ""])} = ${lambda * m}$, so $t = ${k}$.`,
-        `第一行给出 $\\lambda = ${a} + ${wrap(b)} \\cdot ${wrap(m)} = ${lambda}$。第二行给出 $${poly([m, "t"], [c, ""])} = ${lambda * m}$，所以 $t = ${k}$。`,
-      ],
-    );
+    const matrix = mat([
+      [a, b],
+      [c, "t"],
+    ]);
+    const solved = mat([
+      [a, b],
+      [c, k],
+    ]);
+    const mistakes = [
+      why(lambda, "That is the eigenvalue; $t$ is the entry found from the second row.", "这是特征值；$t$ 是由第二行求出的元素。"),
+      why(-k, "The sign is flipped; solve the second row for $t$ again.", "符号反了；请重新由第二行解出 $t$。"),
+      ...((lambda - c) % m === 0
+        ? [
+            why(
+              (lambda - c) / m,
+              `That sets the second row equal to $\\lambda$; it must equal $\\lambda \\cdot ${wrap(m)} = ${lambda * m}$.`,
+              `这让第二行等于 $\\lambda$；它应当等于 $\\lambda \\cdot ${wrap(m)} = ${lambda * m}$。`,
+            ),
+          ]
+        : []),
+    ].filter((w, i, all) => w.value !== k && all.findIndex((o) => o.value === w.value) === i);
+    return numberProblem({
+      prompt: text([`$${vec(1, m)}$ is an eigenvector of $${matrix}$. Find $t$.`, `$${vec(1, m)}$ 是 $${matrix}$ 的特征向量。求 $t$。`]),
+      answer: k,
+      form: "integer",
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Find the eigenvalue from the first row", "由第一行求特征值"],
+            t("", ""),
+            [`\\lambda = ${a} \\cdot 1 + ${wrap(b)} \\cdot ${wrap(m)} = ${lambda}`],
+          ],
+          [
+            ["Solve the second row", "解第二行"],
+            text([`The second row must give $\\lambda \\cdot ${wrap(m)}$:`, `第二行必须给出 $\\lambda \\cdot ${wrap(m)}$：`]),
+            [`${poly([c, ""], [m, "t"])} = ${lambda * m}`, `t = ${k}`],
+          ],
+        ],
+        text([
+          `$${solved}${vec(1, m)} = ${vec(lambda, lambda * m)} = ${wrap(lambda)}${vec(1, m)}$.`,
+          `$${solved}${vec(1, m)} = ${vec(lambda, lambda * m)} = ${wrap(lambda)}${vec(1, m)}$。`,
+        ]),
+      ),
+    });
   },
 );
 

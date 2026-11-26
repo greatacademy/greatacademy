@@ -1288,8 +1288,8 @@ const linearityFromDrawing: KnowledgePointDef = {
   id: "the-image-of-a-vector-from-a-drawing",
   title: t("The image of a vector from a drawing", "由图求向量的像"),
   explanation: t(
-    "Knowing where a linear map sends the basis vectors tells you where it sends every vector. Write $\\langle p, q \\rangle = p\\mathbf{e}_1 + q\\mathbf{e}_2$. By linearity, $T\\langle p, q \\rangle = p\\,T(\\mathbf{e}_1) + q\\,T(\\mathbf{e}_2)$, so the coordinates of the input say how much of each drawn arrow to take.",
-    "知道线性映射把基向量送到哪里，就知道它把每个向量送到哪里。写出 $\\langle p, q \\rangle = p\\mathbf{e}_1 + q\\mathbf{e}_2$。由线性性，$T\\langle p, q \\rangle = p\\,T(\\mathbf{e}_1) + q\\,T(\\mathbf{e}_2)$，所以输入的坐标说明每个箭头要取多少。",
+    "Knowing where a linear map sends the basis vectors tells you where it sends every vector. Write $\\langle p, q \\rangle = p\\mathbf{e}_1 + q\\mathbf{e}_2$. By linearity, $T\\langle p, q \\rangle = p\\,T(\\mathbf{e}_1) + q\\,T(\\mathbf{e}_2)$, so the coordinates of the input say how much of each drawn arrow to take. For example, if the arrows end at $T(\\mathbf{e}_1) = \\langle 1, 2 \\rangle$ and $T(\\mathbf{e}_2) = \\langle 3, 0 \\rangle$, then $T\\langle 2, -1 \\rangle = 2\\langle 1, 2 \\rangle - \\langle 3, 0 \\rangle = \\langle -1, 4 \\rangle$.\n\n> **Watch out.** Take $p$ copies of the arrow $T(\\mathbf{e}_1)$ and $q$ copies of $T(\\mathbf{e}_2)$; do not mix up which coordinate goes with which arrow.",
+    "知道线性映射把基向量送到哪里，就知道它把每个向量送到哪里。写出 $\\langle p, q \\rangle = p\\mathbf{e}_1 + q\\mathbf{e}_2$。由线性性，$T\\langle p, q \\rangle = p\\,T(\\mathbf{e}_1) + q\\,T(\\mathbf{e}_2)$，所以输入的坐标说明每个箭头要取多少。例如若箭头终点为 $T(\\mathbf{e}_1) = \\langle 1, 2 \\rangle$、$T(\\mathbf{e}_2) = \\langle 3, 0 \\rangle$，则 $T\\langle 2, -1 \\rangle = 2\\langle 1, 2 \\rangle - \\langle 3, 0 \\rangle = \\langle -1, 4 \\rangle$。\n\n> **注意。** 取 $p$ 份箭头 $T(\\mathbf{e}_1)$ 和 $q$ 份 $T(\\mathbf{e}_2)$；不要把坐标与箭头配错。",
   ),
   generate(rng: Rng): Problem {
     const [a, b, c, d] = invertibleEntries(rng);
@@ -1298,17 +1298,19 @@ const linearityFromDrawing: KnowledgePointDef = {
     const x = p * a + q * b;
     const y = p * c + q * d;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          `The drawing shows the images of the basis vectors under a linear map $T$. Find $T${angled(p, q)}$.`,
-          `图中是基向量在线性映射 $T$ 下的像。求 $T${angled(p, q)}$。`,
-        ),
-        math(angled(x, y)),
-        [math(angled(p * a + q * c, p * b + q * d)), math(angled(p + a + b, q + c + d)), math(angled(q * a + p * b, q * c + p * d))],
-        t(
-          `From the drawing, $T(\\mathbf{e}_1) = ${angled(a, c)}$ and $T(\\mathbf{e}_2) = ${angled(b, d)}$. By linearity, $T${angled(p, q)} = ${p}${angled(a, c)} + (${q})${angled(b, d)} = ${angled(x, y)}$.`,
-          `由图得 $T(\\mathbf{e}_1) = ${angled(a, c)}$，$T(\\mathbf{e}_2) = ${angled(b, d)}$。由线性性，$T${angled(p, q)} = ${p}${angled(a, c)} + (${q})${angled(b, d)} = ${angled(x, y)}$。`,
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            `The drawing shows the images of the basis vectors under a linear map $T$. Find $T${angled(p, q)}$.`,
+            `图中是基向量在线性映射 $T$ 下的像。求 $T${angled(p, q)}$。`,
+          ),
+          math(angled(x, y)),
+          wrongImages,
+          t(
+            `From the drawing, $T(\\mathbf{e}_1) = ${angled(a, c)}$ and $T(\\mathbf{e}_2) = ${angled(b, d)}$. By linearity, $T${angled(p, q)} = ${p}${angled(a, c)} + (${q})${angled(b, d)} = ${angled(x, y)}$.`,
+            `由图得 $T(\\mathbf{e}_1) = ${angled(a, c)}$，$T(\\mathbf{e}_2) = ${angled(b, d)}$。由线性性，$T${angled(p, q)} = ${p}${angled(a, c)} + (${q})${angled(b, d)} = ${angled(x, y)}$。`,
+          ),
         ),
       ),
       drawn(
@@ -1318,6 +1320,11 @@ const linearityFromDrawing: KnowledgePointDef = {
           `Two arrows from the origin: T(e₁) to (${a}, ${c}) and T(e₂) to (${b}, ${d}).`,
           `从原点出发的两个箭头：T(e₁) 指向 (${a}, ${c})，T(e₂) 指向 (${b}, ${d})。`,
         ),
+    const wrongImages = [
+      math(angled(p * a + q * c, p * b + q * d)),
+      math(angled(p + a + b, q + c + d)),
+      math(angled(q * a + p * b, q * c + p * d)),
+    ];
       ),
     );
   },
@@ -1331,6 +1338,11 @@ const areaFromDeterminant: KnowledgePointDef = {
   explanation: t(
     "A linear map scales every area by the absolute value of its determinant. The unit square has area $1$, so the parallelogram spanned by the columns of $A$ has area $|\\det A|$. The sign of the determinant says whether the map keeps or flips orientation, and it does not change the area, which is why the absolute value appears.\n\n> **Watch out.** Read the sides as columns: the image of $(1, 0)$ is the first column and the image of $(0, 1)$ the second. Then take $ad - bc$, with a minus sign, not $ad + bc$.",
     "线性映射把每个面积都乘以行列式的绝对值。单位正方形的面积是 $1$，所以由 $A$ 的各列张成的平行四边形面积是 $|\\det A|$。行列式的符号说明映射是否翻转定向，它不改变面积，这就是要取绝对值的原因。\n\n> **注意。** 边要按列读：$(1, 0)$ 的像是第一列，$(0, 1)$ 的像是第二列。然后算 $ad - bc$，中间是减号，不是 $ad + bc$。",
+        [
+          [wrongImages[0]!.en, "This combines the coordinates of the arrows across instead of along each arrow; take $p$ times the whole arrow $T(\\mathbf{e}_1)$.", "这是把箭头的坐标交叉组合了；应取整个箭头 $T(\\mathbf{e}_1)$ 的 $p$ 倍。"],
+          [wrongImages[1]!.en, "The input's coordinates multiply the arrows; they are not added to them.", "输入的坐标是乘以箭头，而不是加到箭头上。"],
+          [wrongImages[2]!.en, "The weights are swapped: $p$ goes with $T(\\mathbf{e}_1)$ and $q$ with $T(\\mathbf{e}_2)$.", "权重交换了：$p$ 配 $T(\\mathbf{e}_1)$，$q$ 配 $T(\\mathbf{e}_2)$。"],
+        ],
   ),
   generate(rng: Rng): Problem {
     const [a, b, c, d] = invertibleEntries(rng);
@@ -1529,8 +1541,8 @@ const eigenvectorFromDrawing: KnowledgePointDef = {
   id: "eigenvectors-in-a-drawing",
   title: t("Eigenvectors in a drawing", "图中的特征向量"),
   explanation: t(
-    "A nonzero vector $\\mathbf{v}$ is an eigenvector of $A$ when $A\\mathbf{v}$ lies on the same line through the origin. The eigenvalue is the stretch factor, negative when the arrow reverses. If $A\\mathbf{v}$ leaves the line, $\\mathbf{v}$ is not an eigenvector at all, however close the two directions look, so compare coordinates to be sure.",
-    "非零向量 $\\mathbf{v}$ 是 $A$ 的特征向量，当且仅当 $A\\mathbf{v}$ 落在过原点的同一条直线上。特征值就是伸缩倍数，箭头反向时为负。如果 $A\\mathbf{v}$ 离开了这条直线，$\\mathbf{v}$ 就不是特征向量，无论两个方向看起来多接近，所以要比较坐标来确认。",
+    "A nonzero vector $\\mathbf{v}$ is an eigenvector of $A$ when $A\\mathbf{v}$ lies on the same line through the origin. The eigenvalue is the stretch factor, negative when the arrow reverses. If $A\\mathbf{v}$ leaves the line, $\\mathbf{v}$ is not an eigenvector at all, however close the two directions look, so compare coordinates to be sure. For example, $\\mathbf{v} = \\langle 1, 2 \\rangle$ with $A\\mathbf{v} = \\langle -2, -4 \\rangle$ is an eigenvector with eigenvalue $-2$, while $A\\mathbf{v} = \\langle -2, -3 \\rangle$ would not be, since $1 \\cdot (-3) - 2 \\cdot (-2) = 1 \\ne 0$.\n\n> **Watch out.** An arrow that points the opposite way is still on the same line; it gives a negative eigenvalue, not a failure.",
+    "非零向量 $\\mathbf{v}$ 是 $A$ 的特征向量，当且仅当 $A\\mathbf{v}$ 落在过原点的同一条直线上。特征值就是伸缩倍数，箭头反向时为负。如果 $A\\mathbf{v}$ 离开了这条直线，$\\mathbf{v}$ 就不是特征向量，无论两个方向看起来多接近，所以要比较坐标来确认。例如 $\\mathbf{v} = \\langle 1, 2 \\rangle$、$A\\mathbf{v} = \\langle -2, -4 \\rangle$ 时 $\\mathbf{v}$ 是特征向量，特征值为 $-2$；而若 $A\\mathbf{v} = \\langle -2, -3 \\rangle$ 则不是，因为 $1 \\cdot (-3) - 2 \\cdot (-2) = 1 \\ne 0$。\n\n> **注意。** 方向相反的箭头仍在同一条直线上；它给出负的特征值，而不是说明不是特征向量。",
   ),
   generate(rng: Rng): Problem {
     const v: Point = rng.pick<Point>([
@@ -1566,26 +1578,79 @@ const eigenvectorFromDrawing: KnowledgePointDef = {
     const value = (x: number) => t(`The eigenvalue is $${frac(x * 2, 2)}$`, `特征值是 $${frac(x * 2, 2)}$`);
     const others = [lambda === -1 ? 1 : -lambda, lambda + 1, lambda - 1].filter((x) => x !== lambda && x !== 0);
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "The drawing shows a vector $\\mathbf{v}$ and its image $A\\mathbf{v}$ under a matrix $A$. What can you conclude?",
-          "图中是向量 $\\mathbf{v}$ 及其在矩阵 $A$ 下的像 $A\\mathbf{v}$。能得出什么结论？",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "The drawing shows a vector $\\mathbf{v}$ and its image $A\\mathbf{v}$ under a matrix $A$. What can you conclude?",
+            "图中是向量 $\\mathbf{v}$ 及其在矩阵 $A$ 下的像 $A\\mathbf{v}$。能得出什么结论？",
+          ),
+          isEigen ? value(lambda) : not,
+          wrongOptions,
+          solution,
         ),
-        isEigen ? value(lambda) : not,
-        isEigen ? [not, ...others.map(value)] : [value(lambda), value(-lambda), value(lambda + 1)],
         isEigen
-          ? t(
-              `Read $\\mathbf{v} = ${angled(v[0], v[1])}$ and $A\\mathbf{v} = ${angled(w[0], w[1])}$. Each coordinate of $A\\mathbf{v}$ is $${frac(lambda * 2, 2)}$ times that of $\\mathbf{v}$, so the two lie on one line through the origin and the factor is the eigenvalue.`,
-              `读出 $\\mathbf{v} = ${angled(v[0], v[1])}$，$A\\mathbf{v} = ${angled(w[0], w[1])}$。$A\\mathbf{v}$ 的每个坐标都是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍，所以二者在过原点的同一条直线上，这个倍数就是特征值。`,
-            )
-          : t(
-              `Read $\\mathbf{v} = ${angled(v[0], v[1])}$ and $A\\mathbf{v} = ${angled(w[0], w[1])}$. The cross product $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = ${v[0] * w[1] - v[1] * w[0]}$ is not zero, so no single factor relates the two and they do not lie on one line through the origin.`,
-              `读出 $\\mathbf{v} = ${angled(v[0], v[1])}$，$A\\mathbf{v} = ${angled(w[0], w[1])}$。叉积 $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = ${v[0] * w[1] - v[1] * w[0]}$ 不为零，所以不存在一个共同的倍数，二者不在过原点的同一条直线上。`,
+          ? [
+              [not.en, `$A\\mathbf{v}$ is exactly $${frac(lambda * 2, 2)}$ times $\\mathbf{v}$, so the two arrows lie on one line through the origin.`, `$A\\mathbf{v}$ 恰好是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍，所以两个箭头在过原点的同一条直线上。`],
+              ...others.map(
+                (x) =>
+                  [
+                    value(x).en,
+                    `Divide a coordinate of $A\\mathbf{v}$ by the matching coordinate of $\\mathbf{v}$: the factor is $${frac(lambda * 2, 2)}$, not $${frac(x * 2, 2)}$.`,
+                    `用 $A\\mathbf{v}$ 的一个坐标除以 $\\mathbf{v}$ 的对应坐标：倍数是 $${frac(lambda * 2, 2)}$，而不是 $${frac(x * 2, 2)}$。`,
+                  ] as const,
+              ),
+            ]
+          : wrongOptions.map(
+              (o) =>
+                [
+                  o.en,
+                  `$A\\mathbf{v}$ is not a multiple of $\\mathbf{v}$: the cross product is $${cross} \\ne 0$, so there is no eigenvalue to read.`,
+                  `$A\\mathbf{v}$ 不是 $\\mathbf{v}$ 的倍数：叉积为 $${cross} \\ne 0$，所以读不出特征值。`,
+                ] as const,
             ),
       ),
       drawn(
         square(reach(v, w)),
+    const wrongOptions = isEigen ? [not, ...others.map(value)] : [value(lambda), value(-lambda), value(lambda + 1)];
+    const cross = v[0] * w[1] - v[1] * w[0];
+    const i = v[0] !== 0 ? 0 : 1;
+    const j = i === 0 ? 1 : 0;
+    const ratio = Q.of(w[i], v[i]);
+    const read: [[string, string], Text, string[]] = [
+      ["Read the arrows", "读出箭头"],
+      t("", ""),
+      [`\\mathbf{v} = ${angled(v[0], v[1])}, \\quad A\\mathbf{v} = ${angled(w[0], w[1])}`],
+    ];
+    const solution = isEigen
+      ? walked(
+          [
+            read,
+            [
+              ["Compare the coordinates", "比较坐标"],
+              t(`Each coordinate of $A\\mathbf{v}$ is $${frac(lambda * 2, 2)}$ times that of $\\mathbf{v}$:`, `$A\\mathbf{v}$ 的每个坐标都是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍：`),
+              [`A\\mathbf{v} = ${frac(lambda * 2, 2)}${angled(v[0], v[1])}`, `\\lambda = ${frac(lambda * 2, 2)}`],
+            ],
+          ],
+          t(
+            `The cross product $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = 0$, so the two arrows lie on one line through the origin.`,
+            `叉积 $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = 0$，所以两个箭头在过原点的同一条直线上。`,
+          ),
+        )
+      : walked(
+          [
+            read,
+            [
+              ["Test whether they are parallel", "检验是否平行"],
+              t("", ""),
+              [`(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = ${cross} \\ne 0`],
+            ],
+          ],
+          t(
+            `Coordinate ${i + 1} would give the factor $${ratio.toLatex()}$, but then coordinate ${j + 1} would be $${ratio.mul(Q.of(v[j])).toLatex()}$, not $${w[j]}$. So $\\mathbf{v}$ is not an eigenvector.`,
+            `由第 ${i + 1} 个坐标得倍数 $${ratio.toLatex()}$，但这样第 ${j + 1} 个坐标应为 $${ratio.mul(Q.of(v[j])).toLatex()}$，而不是 $${w[j]}$。所以 $\\mathbf{v}$ 不是特征向量。`,
+          ),
+        );
         [...labelledArrow(w, "Av"), ...labelledArrow(v, "v", true)],
         t(
           `Two arrows from the origin: v to (${v[0]}, ${v[1]}) and Av to (${w[0]}, ${w[1]}).`,

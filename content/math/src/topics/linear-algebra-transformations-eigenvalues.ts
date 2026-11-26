@@ -4,8 +4,27 @@ import { paren, poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
-import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
+import {
+  article,
+  choiceProblem,
+  numberProblem,
+  pointProblem,
+  say,
+  solutionsProblem,
+  steps,
+  vectorLatex,
+  why,
+  whySet,
+  withMistakes,
+  yesNo,
+} from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** dedupeSaid drops mistakes that repeat the right response or an earlier mistake. */
+function dedupeSaid<T extends { readonly response: string }>(list: readonly T[], right: string): T[] {
+  return list.filter((m, i, all) => m.response !== right && all.findIndex((o) => o.response === m.response) === i);
+}
 
 // Linear Algebra Units 4 & 5: Linear Transformations, Eigenvalues, Diagonalization,
 // Complex Eigenvalues, Generalized Eigenvectors, and Jordan Canonical Form.
@@ -227,6 +246,10 @@ export const standardMatrixOfALinearTransformationInTermsOfTheStandardBasis: Top
     "Construct the standard matrix of a linear transformation using the images of the standard basis vectors.",
     "利用标准基向量的像构造线性变换的标准矩阵。",
   ),
+  intro: t(
+    "Suppose $T(e_1) = (2, 1)$ and $T(e_2) = (-1, 3)$. Writing these images as columns gives the standard matrix $[T] = \\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}$, and then $T(4, 1) = 4T(e_1) + T(e_2) = (8, 4) + (-1, 3) = (7, 7)$.\n\nCheck: $\\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}\\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 8 - 1 \\\\ 4 + 3 \\end{pmatrix} = \\begin{pmatrix} 7 \\\\ 7 \\end{pmatrix}$, the same vector.\n\nIn this lesson we build the standard matrix from the images of $e_1$ and $e_2$ and use it to evaluate the transformation.",
+    "设 $T(e_1) = (2, 1)$，$T(e_2) = (-1, 3)$。把这两个像写成列，得到标准矩阵 $[T] = \\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}$；于是 $T(4, 1) = 4T(e_1) + T(e_2) = (8, 4) + (-1, 3) = (7, 7)$。\n\n检验：$\\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}\\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 8 - 1 \\\\ 4 + 3 \\end{pmatrix} = \\begin{pmatrix} 7 \\\\ 7 \\end{pmatrix}$，是同一个向量。\n\n本课我们由 $e_1$ 和 $e_2$ 的像构造标准矩阵，并用它求变换的值。",
+  ),
   prerequisites: ["the-standard-matrix-of-a-linear-transformation"],
   encompasses: [],
   xp: 14,
@@ -235,8 +258,8 @@ export const standardMatrixOfALinearTransformationInTermsOfTheStandardBasis: Top
       id: "columns-from-standard-basis-images",
       title: t("Columns from Standard Basis Images", "标准基向量的像构成矩阵各列"),
       explanation: t(
-        "Recognize that the $j$-th column of the standard matrix $[T]$ is the image $T(\\mathbf{e}_j)$ of the $j$-th standard basis vector.",
-        "理解标准矩阵 $[T]$ 的第 $j$ 列就是第 $j$ 个标准基向量的像 $T(\\mathbf{e}_j)$。",
+        "The $j$-th column of the standard matrix $[T]$ is the image $T(\\mathbf{e}_j)$ of the $j$-th standard basis vector, because $[T]\\mathbf{e}_j$ picks out column $j$. For example, if $T(e_1) = (3, -2)$ and $T(e_2) = (0, 5)$, then $[T] = \\begin{pmatrix} 3 & 0 \\\\ -2 & 5 \\end{pmatrix}$.\n\n> **Watch out.** The images go in as columns, not rows, and in the order $e_1$, $e_2$.",
+        "标准矩阵 $[T]$ 的第 $j$ 列就是第 $j$ 个标准基向量的像 $T(\\mathbf{e}_j)$，因为 $[T]\\mathbf{e}_j$ 恰好取出第 $j$ 列。例如若 $T(e_1) = (3, -2)$，$T(e_2) = (0, 5)$，则 $[T] = \\begin{pmatrix} 3 & 0 \\\\ -2 & 5 \\end{pmatrix}$。\n\n> **注意。** 像要作为列放入，而不是作为行，并且按 $e_1$、$e_2$ 的顺序。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-8, 8);
@@ -249,79 +272,69 @@ export const standardMatrixOfALinearTransformationInTermsOfTheStandardBasis: Top
           `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation such that $T(e_1) = ${vec2Latex(e1Img)}$ and $T(e_2) = ${vec2Latex(e2Img)}$, where $\\{e_1, e_2\\}$ is the standard basis of $\\mathbb{R}^2$. What is the standard matrix $[T]$?`,
           `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为线性变换，使得 $T(e_1) = ${vec2Latex(e1Img)}$ 且 $T(e_2) = ${vec2Latex(e2Img)}$，其中 $\\{e_1, e_2\\}$ 是 $\\mathbb{R}^2$ 的标准基。求线性变换的标准矩阵 $[T]$。`,
         );
-        const right = t(
-          `$${mat2Latex([
-            [a, b],
-            [c, d],
-          ])}$`,
-          `$${mat2Latex([
-            [a, b],
-            [c, d],
-          ])}$`,
-        );
-        const wrong = [
-          t(
-            `$${mat2Latex([
-              [a, c],
-              [b, d],
-            ])}$`,
-            `$${mat2Latex([
-              [a, c],
-              [b, d],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [b, a],
-              [d, c],
-            ])}$`,
-            `$${mat2Latex([
-              [b, a],
-              [d, c],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [c, d],
-              [a, b],
-            ])}$`,
-            `$${mat2Latex([
-              [c, d],
-              [a, b],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [d, b],
-              [c, a],
-            ])}$`,
-            `$${mat2Latex([
-              [d, b],
-              [c, a],
-            ])}$`,
-          ),
+        const m = (x: Mat2) => t(`$${mat2Latex(x)}$`, `$${mat2Latex(x)}$`);
+        const answer: Mat2 = [
+          [a, b],
+          [c, d],
         ];
-        const solution = t(
-          `The columns of the standard matrix $[T]$ are the images of the standard basis vectors: $[T] = \\begin{pmatrix} T(e_1) & T(e_2) \\end{pmatrix} = ${mat2Latex(
-            [
-              [a, b],
-              [c, d],
-            ],
-          )}$.`,
-          `标准矩阵 $[T]$ 的各列即为标准基向量的像：$[T] = \\begin{pmatrix} T(e_1) & T(e_2) \\end{pmatrix} = ${mat2Latex([
-            [a, b],
+        const right = m(answer);
+        const wrong = [
+          m([
+            [a, c],
+            [b, d],
+          ]),
+          m([
+            [b, a],
+            [d, c],
+          ]),
+          m([
             [c, d],
-          ])}$。`,
+            [a, b],
+          ]),
+          m([
+            [d, b],
+            [c, a],
+          ]),
+        ];
+        const solution = walked(
+          [
+            [
+              ["Place the images as columns", "把像作为列放入"],
+              t("Column $1$ is $T(e_1)$ and column $2$ is $T(e_2)$:", "第 $1$ 列是 $T(e_1)$，第 $2$ 列是 $T(e_2)$："),
+              [`[T] = \\begin{pmatrix} T(e_1) & T(e_2) \\end{pmatrix} = ${mat2Latex(answer)}`],
+            ],
+          ],
+          t(
+            `$[T]e_1 = ${mat2Latex(answer)}${vec2Latex([1, 0])} = ${vec2Latex(e1Img)} = T(e_1)$, and likewise $[T]e_2 = ${vec2Latex(e2Img)}$.`,
+            `$[T]e_1 = ${mat2Latex(answer)}${vec2Latex([1, 0])} = ${vec2Latex(e1Img)} = T(e_1)$，同样 $[T]e_2 = ${vec2Latex(e2Img)}$。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "This puts the images in as rows; each image is a column of $[T]$.",
+            "这是把像作为行放入了；每个像是 $[T]$ 的一列。",
+          ],
+          [wrong[1]!.en, "The columns are swapped: the first column must be $T(e_1)$.", "两列交换了：第一列必须是 $T(e_1)$。"],
+          [
+            wrong[2]!.en,
+            "The rows are swapped: the top entry of each column is the first entry of the image.",
+            "两行交换了：每列的上方元素是像的第一个分量。",
+          ],
+          [
+            wrong[3]!.en,
+            "The diagonal entries are swapped; read each column straight from $T(e_1)$ and $T(e_2)$.",
+            "对角元交换了；每一列应直接照抄 $T(e_1)$ 和 $T(e_2)$。",
+          ],
+        ]);
       },
     },
     {
       id: "evaluating-a-transformation-from-basis-images",
       title: t("Evaluating a transformation from basis images", "由基向量的像求变换的值"),
       explanation: t(
-        "A linear transformation is determined by what it does to the standard basis. Since $(p, q) = p\\,e_1 + q\\,e_2$, linearity gives\n\n$$T(p, q) = p\\,T(e_1) + q\\,T(e_2).$$\n\nThis is the same as multiplying the standard matrix, whose columns are $T(e_1)$ and $T(e_2)$, by the vector $(p, q)$.",
-        "线性变换由它对标准基的作用决定。由于 $(p, q) = p\\,e_1 + q\\,e_2$，线性性给出\n\n$$T(p, q) = p\\,T(e_1) + q\\,T(e_2).$$\n\n这与用标准矩阵（其列为 $T(e_1)$ 和 $T(e_2)$）乘以向量 $(p, q)$ 是一样的。",
+        "A linear transformation is determined by what it does to the standard basis. Since $(p, q) = p\\,e_1 + q\\,e_2$, linearity gives\n\n$$T(p, q) = p\\,T(e_1) + q\\,T(e_2).$$\n\nThis is the same as multiplying the standard matrix, whose columns are $T(e_1)$ and $T(e_2)$, by the vector $(p, q)$. For example, with $T(e_1) = (1, 2)$ and $T(e_2) = (3, 0)$, $T(2, -1) = 2(1, 2) - (3, 0) = (-1, 4)$.\n\n> **Watch out.** Weight each image by the matching entry: $p$ goes with $T(e_1)$ and $q$ with $T(e_2)$.",
+        "线性变换由它对标准基的作用决定。由于 $(p, q) = p\\,e_1 + q\\,e_2$，线性性给出\n\n$$T(p, q) = p\\,T(e_1) + q\\,T(e_2).$$\n\n这与用标准矩阵（其列为 $T(e_1)$ 和 $T(e_2)$）乘以向量 $(p, q)$ 是一样的。例如 $T(e_1) = (1, 2)$，$T(e_2) = (3, 0)$ 时，$T(2, -1) = 2(1, 2) - (3, 0) = (-1, 4)$。\n\n> **注意。** 每个像要乘对应的分量：$p$ 配 $T(e_1)$，$q$ 配 $T(e_2)$。",
       ),
       generate(rng: Rng): Problem {
         const [a, c, b, d] = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)];
@@ -329,23 +342,58 @@ export const standardMatrixOfALinearTransformationInTermsOfTheStandardBasis: Top
         const q = rng.int(-4, 4) || -1;
         const y1 = p * a + q * b;
         const y2 = p * c + q * d;
-        return pointProblem({
-          prompt: t(
-            `A linear transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ has $T(e_1) = ${vec2Latex([a, c])}$ and $T(e_2) = ${vec2Latex([b, d])}$. Find $T\\begin{pmatrix} ${p} \\\\ ${q} \\end{pmatrix} = \\langle y_1, y_2 \\rangle$.`,
-            `线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 满足 $T(e_1) = ${vec2Latex([a, c])}$，$T(e_2) = ${vec2Latex([b, d])}$。求 $T\\begin{pmatrix} ${p} \\\\ ${q} \\end{pmatrix} = \\langle y_1, y_2 \\rangle$。`,
+        const answer = [y1, y2];
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `A linear transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ has $T(e_1) = ${vec2Latex([a, c])}$ and $T(e_2) = ${vec2Latex([b, d])}$. Find $T\\begin{pmatrix} ${p} \\\\ ${q} \\end{pmatrix} = \\langle y_1, y_2 \\rangle$.`,
+              `线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 满足 $T(e_1) = ${vec2Latex([a, c])}$，$T(e_2) = ${vec2Latex([b, d])}$。求 $T\\begin{pmatrix} ${p} \\\\ ${q} \\end{pmatrix} = \\langle y_1, y_2 \\rangle$。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["y_1", "y_2"],
+            solution: walked(
+              [
+                [["Split the input", "拆开输入"], t("", ""), [`${vec2Latex([p, q])} = ${formatLinearComb2(p, "e_1", q, "e_2")}`]],
+                [
+                  ["Use linearity", "用线性性"],
+                  t("", ""),
+                  [`T${vec2Latex([p, q])} = ${formatLinearComb2(p, vec2Latex([a, c]), q, vec2Latex([b, d]))} = ${vec2Latex([y1, y2])}`],
+                ],
+              ],
+              t(
+                `With the standard matrix: $${mat2Latex([
+                  [a, b],
+                  [c, d],
+                ])}${vec2Latex([p, q])} = ${vec2Latex([y1, y2])}$.`,
+                `用标准矩阵：$${mat2Latex([
+                  [a, b],
+                  [c, d],
+                ])}${vec2Latex([p, q])} = ${vec2Latex([y1, y2])}$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([p * a + q * c, p * b + q * d]),
+                "This uses the images as rows; they are the columns of the matrix.",
+                "这是把像当作行来用；它们是矩阵的列。",
+              ),
+              say(
+                vectorLatex([a + b, c + d]),
+                "This adds the images without weighting them by the entries of the input.",
+                "这是直接把像相加，没有乘上输入的分量。",
+              ),
+              say(
+                vectorLatex([q * a + p * b, q * c + p * d]),
+                "The weights are swapped: $p$ goes with $T(e_1)$ and $q$ with $T(e_2)$.",
+                "权重交换了：$p$ 配 $T(e_1)$，$q$ 配 $T(e_2)$。",
+              ),
+            ],
+            vectorLatex(answer),
           ),
-          answer: [y1, y2],
-          vector: true,
-          vars: ["y_1", "y_2"],
-          wrong: [
-            [p * a + q * c, p * b + q * d],
-            [a + b, c + d],
-          ],
-          solution: t(
-            `$T(${p}, ${q}) = ${formatLinearComb2(p, vec2Latex([a, c]), q, vec2Latex([b, d]))} = ${vec2Latex([y1, y2])}$.`,
-            `$T(${p}, ${q}) = ${formatLinearComb2(p, vec2Latex([a, c]), q, vec2Latex([b, d]))} = ${vec2Latex([y1, y2])}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -359,6 +407,10 @@ export const kernelOfALinearTransformation: TopicDef = {
     "Find the kernel (null space) of a linear transformation and determine which vectors lie in the kernel.",
     "求线性变换的核（零空间），并判定向量是否属于核。",
   ),
+  intro: t(
+    "Let $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 6 \\end{pmatrix}$. Setting $A\\mathbf{x} = \\mathbf{0}$ gives $x_1 + 2x_2 = 0$ twice over, so $x_1 = -2x_2$, and the kernel is the line spanned by $(-2, 1)$.\n\nCheck: $A\\begin{pmatrix} -2 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} -2 + 2 \\\\ -6 + 6 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$.\n\nIn this lesson we find the kernel of a transformation by solving $A\\mathbf{x} = \\mathbf{0}$ and describe it by a spanning vector.",
+    "设 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 6 \\end{pmatrix}$。令 $A\\mathbf{x} = \\mathbf{0}$，两行都给出 $x_1 + 2x_2 = 0$，所以 $x_1 = -2x_2$，核是由 $(-2, 1)$ 张成的直线。\n\n检验：$A\\begin{pmatrix} -2 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} -2 + 2 \\\\ -6 + 6 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。\n\n本课我们通过解 $A\\mathbf{x} = \\mathbf{0}$ 求变换的核，并用张成向量来描述它。",
+  ),
   prerequisites: ["standard-matrix-of-a-linear-transformation-in-terms-of-the-standard-basis"],
   encompasses: [],
   xp: 14,
@@ -367,8 +419,8 @@ export const kernelOfALinearTransformation: TopicDef = {
       id: "determining-kernel-of-linear-transformation",
       title: t("Determining the Kernel of a Linear Transformation", "确定线性变换的核"),
       explanation: t(
-        "The kernel is always a subspace of the domain, and you find it by setting the output equal to zero and solving the resulting equations for the input. Find the set of all vectors that are mapped to zero under a linear transformation.",
-        "核总是定义域的子空间，求它时令输出等于零，再解出输入满足的方程。求解在线性变换下映射为零向量的所有向量集合。",
+        "The kernel is always a subspace of the domain, and you find it by setting the output equal to zero and solving the resulting equations for the input. When the second row of a $2 \\times 2$ matrix is a multiple of the first, one equation remains and the kernel is a line. For example, $A = \\begin{pmatrix} 2 & 6 \\\\ 1 & 3 \\end{pmatrix}$ gives $x_1 + 3x_2 = 0$, so the kernel is spanned by $(-3, 1)$.\n\n> **Watch out.** Solve for $x_1$ before substituting: $x_1 + kx_2 = 0$ gives $x_1 = -kx_2$, with the sign changed.",
+        "核总是定义域的子空间，求它时令输出等于零，再解出输入满足的方程。当 $2 \\times 2$ 矩阵的第二行是第一行的倍数时，只剩一个方程，核是一条直线。例如 $A = \\begin{pmatrix} 2 & 6 \\\\ 1 & 3 \\end{pmatrix}$ 给出 $x_1 + 3x_2 = 0$，所以核由 $(-3, 1)$ 张成。\n\n> **注意。** 代入之前先解出 $x_1$：$x_1 + kx_2 = 0$ 给出 $x_1 = -kx_2$，符号要变。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(1, 6);
@@ -378,37 +430,57 @@ export const kernelOfALinearTransformation: TopicDef = {
           [a, k * a],
           [b, k * b],
         ];
-        const basisVec: Vec2 = [-k, 1];
+        const basisVec = [-k, 1];
         const prompt = t(
           `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be the linear transformation defined by $T(\\mathbf{x}) = A\\mathbf{x}$, where $A = ${mat2Latex(mat)}$. Find the basis vector $\\mathbf{v} = \\langle x_1, x_2 \\rangle$ for the kernel $\\ker(T)$ whose second component is $x_2 = 1$.`,
           `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为由 $T(\\mathbf{x}) = A\\mathbf{x}$ 定义的线性变换，其中 $A = ${mat2Latex(mat)}$。求核 $\\ker(T)$ 的基向量 $\\mathbf{v} = \\langle x_1, x_2 \\rangle$，使其第二分量为 $x_2 = 1$。`,
         );
-        const kStr = k === 1 ? "" : k === -1 ? "-" : `${k}`;
-        const negKStr = -k === 1 ? "" : -k === -1 ? "-" : `${-k}`;
-        const solution = t(
-          `The kernel is the null space of $A$, satisfying $A\\mathbf{x} = \\mathbf{0}$. Since row 2 is a multiple of row 1, the equation is $x_1 ${k > 0 ? `+ ${kStr}` : `- ${negKStr}`}x_2 = 0$, giving $x_1 = ${negKStr}x_2$. Setting $x_2 = 1$ gives $x_1 = ${-k}$, so the basis vector is $\\langle ${-k}, 1 \\rangle$.`,
-          `核是满足 $A\\mathbf{x} = \\mathbf{0}$ 的零空间。因为第 2 行是第 1 行的倍数，所以方程为 $x_1 ${k > 0 ? `+ ${kStr}` : `- ${negKStr}`}x_2 = 0$，即 $x_1 = ${negKStr}x_2$。取 $x_2 = 1$ 可得 $x_1 = ${-k}$，因此基向量为 $\\langle ${-k}, 1 \\rangle$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: basisVec,
-          vector: true,
-          solution,
-          wrong: [
-            [k, 1],
-            [-k, -1],
-            [1, -k],
-            [a, b],
+        const eq = `x_1 ${k > 0 ? "+" : "-"} ${Math.abs(k) === 1 ? "" : Math.abs(k)}x_2 = 0`;
+        const solution = walked(
+          [
+            [
+              ["Reduce to one equation", "化为一个方程"],
+              t(
+                `Row 1 divided by $${a}$ and row 2 divided by $${b}$ both give the same equation:`,
+                `第 1 行除以 $${a}$、第 2 行除以 $${b}$，都得到同一个方程：`,
+              ),
+              [eq],
+            ],
+            [["Set $x_2 = 1$", "令 $x_2 = 1$"], t("", ""), [`x_1 = ${-k}`]],
           ],
-        });
+          t(
+            `$A${vec2Latex([-k, 1])} = ${vec2Latex([`${a} \\cdot ${paren(-k)} + ${paren(k * a)}`, `${b} \\cdot ${paren(-k)} + ${paren(k * b)}`])} = ${vec2Latex([0, 0])}$.`,
+            `$A${vec2Latex([-k, 1])} = ${vec2Latex([`${a} \\cdot ${paren(-k)} + ${paren(k * a)}`, `${b} \\cdot ${paren(-k)} + ${paren(k * b)}`])} = ${vec2Latex([0, 0])}$。`,
+          ),
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer: basisVec, vector: true, solution }),
+          dedupeSaid(
+            [
+              say(vectorLatex([k, 1]), `The sign is lost: $${eq}$ gives $x_1 = ${-k}x_2$.`, `符号丢了：$${eq}$ 给出 $x_1 = ${-k}x_2$。`),
+              say(vectorLatex([-k, -1]), "This is in the kernel, but the question fixes $x_2 = 1$.", "它在核中，但题目要求 $x_2 = 1$。"),
+              say(
+                vectorLatex([1, -k]),
+                "The entries are swapped: the second component must be $1$.",
+                "两个分量交换了：第二个分量必须是 $1$。",
+              ),
+              say(
+                vectorLatex([a, b]),
+                "That is the first column of $A$, a vector in the image, not one sent to $\\mathbf{0}$.",
+                "这是 $A$ 的第一列，是像中的向量，而不是被映为 $\\mathbf{0}$ 的向量。",
+              ),
+            ],
+            vectorLatex(basisVec),
+          ),
+        );
       },
     },
     {
       id: "the-kernel-of-a-map-from-r3-to-r2",
       title: t("The kernel of a map from R^3 to R^2", "从 R^3 到 R^2 的映射的核"),
       explanation: t(
-        "The kernel of $T(\\mathbf{x}) = A\\mathbf{x}$ is the solution set of $A\\mathbf{x} = \\mathbf{0}$. For a $2 \\times 3$ matrix already in echelon form with pivots in the first two columns, $x_3$ is free. Set $x_3 = 1$ and solve upward by back substitution: the second row gives $x_2$, then the first row gives $x_1$. The resulting vector spans the kernel.",
-        "$T(\\mathbf{x}) = A\\mathbf{x}$ 的核是 $A\\mathbf{x} = \\mathbf{0}$ 的解集。对已是阶梯形、主元在前两列的 $2 \\times 3$ 矩阵，$x_3$ 是自由变量。令 $x_3 = 1$，用回代向上求解：第二行给出 $x_2$，再由第一行给出 $x_1$。所得向量张成核。",
+        "The kernel of $T(\\mathbf{x}) = A\\mathbf{x}$ is the solution set of $A\\mathbf{x} = \\mathbf{0}$. For a $2 \\times 3$ matrix already in echelon form with pivots in the first two columns, $x_3$ is free. Set $x_3 = 1$ and solve upward by back substitution: the second row gives $x_2$, then the first row gives $x_1$. The resulting vector spans the kernel. For example, with rows $(1, 2, 1)$ and $(0, 1, 3)$: $x_2 = -3$, then $x_1 = -(2 \\cdot (-3) + 1) = 5$, so the kernel is spanned by $(5, -3, 1)$.\n\n> **Watch out.** Use the value of $x_2$ already found when solving the first row; the first row has an $x_2$ term too.",
+        "$T(\\mathbf{x}) = A\\mathbf{x}$ 的核是 $A\\mathbf{x} = \\mathbf{0}$ 的解集。对已是阶梯形、主元在前两列的 $2 \\times 3$ 矩阵，$x_3$ 是自由变量。令 $x_3 = 1$，用回代向上求解：第二行给出 $x_2$，再由第一行给出 $x_1$。所得向量张成核。例如两行为 $(1, 2, 1)$ 和 $(0, 1, 3)$ 时：$x_2 = -3$，于是 $x_1 = -(2 \\cdot (-3) + 1) = 5$，核由 $(5, -3, 1)$ 张成。\n\n> **注意。** 解第一行时要用已求出的 $x_2$；第一行也含 $x_2$ 项。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4);
@@ -416,24 +488,56 @@ export const kernelOfALinearTransformation: TopicDef = {
         const c = rng.int(-4, 4) || 2;
         const x2 = -c;
         const x1 = -(a * x2 + b);
-        return pointProblem({
-          prompt: t(
-            `Let $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = \\begin{pmatrix} 1 & ${a} & ${b} \\\\ 0 & 1 & ${c} \\end{pmatrix}$. Find the vector $\\langle x_1, x_2, x_3 \\rangle$ spanning $\\ker(T)$ with $x_3 = 1$.`,
-            `设 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = \\begin{pmatrix} 1 & ${a} & ${b} \\\\ 0 & 1 & ${c} \\end{pmatrix}$。求张成 $\\ker(T)$ 且 $x_3 = 1$ 的向量 $\\langle x_1, x_2, x_3 \\rangle$。`,
+        const answer = [x1, x2, 1];
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Let $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = \\begin{pmatrix} 1 & ${a} & ${b} \\\\ 0 & 1 & ${c} \\end{pmatrix}$. Find the vector $\\langle x_1, x_2, x_3 \\rangle$ spanning $\\ker(T)$ with $x_3 = 1$.`,
+              `设 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = \\begin{pmatrix} 1 & ${a} & ${b} \\\\ 0 & 1 & ${c} \\end{pmatrix}$。求张成 $\\ker(T)$ 且 $x_3 = 1$ 的向量 $\\langle x_1, x_2, x_3 \\rangle$。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x_1", "x_2", "x_3"],
+            solution: walked(
+              [
+                [
+                  ["Solve the second row", "解第二行"],
+                  t("With $x_3 = 1$:", "取 $x_3 = 1$："),
+                  [`x_2 + ${paren(c)} \\cdot 1 = 0`, `x_2 = ${x2}`],
+                ],
+                [
+                  ["Solve the first row", "解第一行"],
+                  t("Substitute $x_2$ and $x_3$:", "代入 $x_2$ 和 $x_3$："),
+                  [`x_1 = -(${a} \\cdot ${paren(x2)} + ${paren(b)}) = ${x1}`],
+                ],
+              ],
+              t(
+                `Row 1: $${x1} + ${paren(a)} \\cdot ${paren(x2)} + ${paren(b)} = 0$, and row 2: $${x2} + ${paren(c)} = 0$.`,
+                `第 1 行：$${x1} + ${paren(a)} \\cdot ${paren(x2)} + ${paren(b)} = 0$；第 2 行：$${x2} + ${paren(c)} = 0$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([-b, -c, 1]),
+                "The first row also has the term $a x_2$; substitute $x_2$ before solving for $x_1$.",
+                "第一行还有 $a x_2$ 项；求 $x_1$ 前要先代入 $x_2$。",
+              ),
+              say(
+                vectorLatex([a * c - b, c, 1]),
+                `The sign of $x_2$ is lost: $x_2 + ${paren(c)} = 0$ gives $x_2 = ${x2}$.`,
+                `$x_2$ 的符号丢了：$x_2 + ${paren(c)} = 0$ 给出 $x_2 = ${x2}$。`,
+              ),
+              say(
+                vectorLatex([b, c, 1]),
+                "These are the entries of the last column; solving $A\\mathbf{x} = \\mathbf{0}$ moves them across with the opposite sign.",
+                "这是最后一列的元素；解 $A\\mathbf{x} = \\mathbf{0}$ 时移项要变号。",
+              ),
+            ],
+            vectorLatex(answer),
           ),
-          answer: [x1, x2, 1],
-          vector: true,
-          vars: ["x_1", "x_2", "x_3"],
-          wrong: [
-            [-b, -c, 1],
-            [a * c - b, c, 1],
-            [b, c, 1],
-          ],
-          solution: t(
-            `With $x_3 = 1$, the second row gives $x_2 = ${x2}$, and the first row gives $x_1 = -(${a} \\cdot ${paren(x2)} + ${paren(b)}) = ${x1}$.`,
-            `取 $x_3 = 1$，第二行给出 $x_2 = ${x2}$，第一行给出 $x_1 = -(${a} \\cdot ${paren(x2)} + ${paren(b)}) = ${x1}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -444,6 +548,10 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
   id: "image-and-rank-of-a-linear-transformation",
   title: t("The Image and Rank of a Linear Transformation", "线性变换的像与秩"),
   summary: t("Compute the rank and determine the image of a linear transformation.", "计算线性变换的秩并确定其像空间。"),
+  intro: t(
+    "For $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = \\begin{pmatrix} 1 & 2 & 0 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$, the image is the span of the columns. Row 1 and row 2 have pivots and row 3 is zero, so the image is a plane in $\\mathbb{R}^3$ and the rank is $2$.\n\nCheck: column 2 is $2$ times column 1, while column 3 is not a multiple of column 1, so exactly two columns are independent.\n\nIn this lesson we find the rank of a transformation by counting pivots and recognize rows that add nothing to the rank.",
+    "对 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = \\begin{pmatrix} 1 & 2 & 0 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$，像是各列的张成。第 1、2 行有主元，第 3 行为零，所以像是 $\\mathbb{R}^3$ 中的一个平面，秩为 $2$。\n\n检验：第 2 列是第 1 列的 $2$ 倍，而第 3 列不是第 1 列的倍数，所以恰有两列线性无关。\n\n本课我们通过数主元求变换的秩，并识别对秩没有贡献的行。",
+  ),
   prerequisites: ["kernel-of-a-linear-transformation"],
   encompasses: [],
   xp: 14,
@@ -452,8 +560,8 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
       id: "computing-rank-of-linear-transformation",
       title: t("Computing the Rank of a Linear Transformation", "计算线性变换的秩"),
       explanation: t(
-        "The rank of a transformation is the dimension of its range, which equals the rank of any matrix that represents it. Determine the dimension of the image of a linear transformation.",
-        "变换的秩是值域的维数，它等于表示这个变换的任意矩阵的秩。确定线性变换像空间的维数（秩）。",
+        "The rank of a transformation is the dimension of its range, which equals the rank of any matrix that represents it. For a matrix in echelon form, the rank is the number of nonzero rows, one per pivot. For example, $\\begin{pmatrix} 2 & 1 & 5 \\\\ 0 & 3 & -1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ has two pivots, so the transformation has rank $2$ and its image is a plane in $\\mathbb{R}^3$.\n\n> **Watch out.** Count pivots, not all rows: a zero row adds nothing to the image, even though the matrix is $3 \\times 3$.",
+        "变换的秩是值域的维数，它等于表示这个变换的任意矩阵的秩。对阶梯形矩阵，秩就是非零行的个数，每行一个主元。例如 $\\begin{pmatrix} 2 & 1 & 5 \\\\ 0 & 3 & -1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 有两个主元，所以变换的秩为 $2$，像是 $\\mathbb{R}^3$ 中的平面。\n\n> **注意。** 要数主元，而不是数所有行：零行对像没有贡献，即使矩阵是 $3 \\times 3$ 的。",
       ),
       generate: (rng: Rng): Problem => {
         const d1 = rng.int(1, 5);
@@ -496,15 +604,50 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
           `What is the rank of the linear transformation $T: \\mathbb{R}^3 \\to \\mathbb{R}^3$ defined by $T(x) = Ax$, where $A = ${mat3Latex(mat)}$?`,
           `设线性变换 $T: \\mathbb{R}^3 \\to \\mathbb{R}^3$ 定义为 $T(x) = Ax$，其中 $A = ${mat3Latex(mat)}$。求 $T$ 的秩。`,
         );
-        const solution = t(
-          `The rank of $T$ is the dimension of the column space of $A$. Since $A$ is in upper triangular form with ${finalRank} non-zero pivot rows, $\\operatorname{rank}(T) = ${finalRank}$.`,
-          `变换 $T$ 的秩是矩阵 $A$ 的列空间的维数。由于 $A$ 是上三角矩阵且含有 ${finalRank} 个非零主元行，因此 $\\operatorname{rank}(T) = ${finalRank}$。`,
+        const pivots = [`$${d1}$`, `$${d2}$`, `$${d3}$`].slice(0, finalRank).join(finalRank === 3 ? ", " : " and ");
+        const pivotsZh = [`$${d1}$`, `$${d2}$`, `$${d3}$`].slice(0, finalRank).join("、");
+        const solution = walked(
+          [
+            [
+              ["Find the pivots", "找主元"],
+              t(
+                `$A$ is already in echelon form. Its pivots are ${pivots}${finalRank < 3 ? `, and the remaining ${3 - finalRank === 1 ? "row is" : "rows are"} zero` : ""}.`,
+                `$A$ 已是阶梯形。主元为 ${pivotsZh}${finalRank < 3 ? "，其余行为零" : ""}。`,
+              ),
+            ],
+            [
+              ["Count them", "数个数"],
+              t("The rank of $T$ is the number of pivots:", "$T$ 的秩等于主元的个数："),
+              [`\\operatorname{rank}(T) = ${finalRank}`],
+            ],
+          ],
+          t(
+            `By rank-nullity the kernel has dimension $3 - ${finalRank} = ${3 - finalRank}$, one free variable for each column without a pivot.`,
+            `由秩-零化度定理，核的维数为 $3 - ${finalRank} = ${3 - finalRank}$，每个没有主元的列对应一个自由变量。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: finalRank,
+          form: "integer",
           solution,
-          wrong: [0, 1, 2, 3].filter((w) => w !== finalRank),
+          mistakes: [
+            why(
+              3,
+              "That counts all three rows; a zero row has no pivot and adds nothing to the image.",
+              "这是数了全部三行；零行没有主元，对像没有贡献。",
+            ),
+            why(
+              3 - finalRank,
+              "That is the nullity, the number of free variables; the rank counts the pivots.",
+              "这是零化度，即自由变量的个数；秩数的是主元。",
+            ),
+            ...(finalRank === 3
+              ? [why(2, `The third row has the pivot $${d3} \\ne 0$, so it counts too.`, `第三行有主元 $${d3} \\ne 0$，也要算上。`)]
+              : finalRank === 1
+                ? [why(2, "Only the first row is nonzero; the second row has no pivot.", "只有第一行非零；第二行没有主元。")]
+                : [why(1, `The second row has the pivot $${d2}$, so there are two pivots.`, `第二行有主元 $${d2}$，所以有两个主元。`)]),
+          ].filter((w, i, all) => w.value !== finalRank && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -512,8 +655,8 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
       id: "the-rank-of-a-matrix-with-dependent-rows",
       title: t("The rank of a matrix with dependent rows", "行线性相关的矩阵的秩"),
       explanation: t(
-        "The rank of $T(\\mathbf{x}) = A\\mathbf{x}$ is the dimension of its image, which equals the number of linearly independent rows (or columns) of $A$. A row that is a combination of other rows adds nothing: if row 3 equals $p$ times row 1 plus $q$ times row 2, row reduction turns it into zeros. Count the rows that remain non-zero after reduction.",
-        "$T(\\mathbf{x}) = A\\mathbf{x}$ 的秩是其像的维数，等于 $A$ 中线性无关的行（或列）的个数。一行若是其他行的组合，则不增加秩：若第 3 行等于第 1 行的 $p$ 倍加第 2 行的 $q$ 倍，行化简会把它变成零。数一数化简后剩下的非零行。",
+        "The rank of $T(\\mathbf{x}) = A\\mathbf{x}$ is the dimension of its image, which equals the number of linearly independent rows (or columns) of $A$. A row that is a combination of other rows adds nothing: if row 3 equals $p$ times row 1 plus $q$ times row 2, row reduction turns it into zeros. Count the rows that remain non-zero after reduction. For example, the rows $(1, 2, 0)$, $(0, 1, 1)$ and $(2, 5, 1)$ have rank $2$, since $(2, 5, 1) = 2(1, 2, 0) + (0, 1, 1)$.\n\n> **Watch out.** Rows with no zeros can still be dependent; look for one row that is a combination of the others.",
+        "$T(\\mathbf{x}) = A\\mathbf{x}$ 的秩是其像的维数，等于 $A$ 中线性无关的行（或列）的个数。一行若是其他行的组合，则不增加秩：若第 3 行等于第 1 行的 $p$ 倍加第 2 行的 $q$ 倍，行化简会把它变成零。数一数化简后剩下的非零行。例如行 $(1, 2, 0)$、$(0, 1, 1)$、$(2, 5, 1)$ 的秩为 $2$，因为 $(2, 5, 1) = 2(1, 2, 0) + (0, 1, 1)$。\n\n> **注意。** 没有零元素的行仍可能线性相关；要找出某一行是否为其他行的组合。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.int(1, 3);
@@ -522,9 +665,11 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
         const p = rng.int(-2, 2) || 1;
         const q = rng.int(-2, 2);
         let rows: Mat3;
+        let s = 0;
+        let tt = 0;
         if (kind === 1) {
-          const s = rng.int(2, 3);
-          const tt = rng.pick([-2, -1, 2]);
+          s = rng.int(2, 3);
+          tt = rng.pick([-2, -1, 2]);
           rows = [r1, [s * r1[0], s * r1[1], s * r1[2]], [tt * r1[0], tt * r1[1], tt * r1[2]]];
         } else if (kind === 2) {
           rows = [
@@ -540,24 +685,71 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
           rows[0][1] * (rows[1][0] * rows[2][2] - rows[1][2] * rows[2][0]) +
           rows[0][2] * (rows[1][0] * rows[2][1] - rows[1][1] * rows[2][0]);
         const rank = kind === 3 && det === 0 ? 2 : kind;
+        const rowText = (v: readonly number[]) => `(${v.join(", ")})`;
+        const relation =
+          kind === 1
+            ? t(
+                `Row 2 is $${s}$ times row 1 and row 3 is $${tt}$ times row 1.`,
+                `第 2 行是第 1 行的 $${s}$ 倍，第 3 行是第 1 行的 $${tt}$ 倍。`,
+              )
+            : kind === 2
+              ? t(
+                  `Row 2 minus $${p}$ times row 1 is $${rowText(r2)}$, and row 3 equals $${p}$ times row 1 plus $${q}$ times $${rowText(r2)}$, so it adds nothing.`,
+                  `第 2 行减去第 1 行的 $${p}$ 倍得 $${rowText(r2)}$，第 3 行等于第 1 行的 $${p}$ 倍加 $${rowText(r2)}$ 的 $${q}$ 倍，所以它没有贡献。`,
+                )
+              : rank === 3
+                ? t(
+                    `The determinant is $\\det A = ${det} \\ne 0$, so no row is a combination of the others.`,
+                    `行列式 $\\det A = ${det} \\ne 0$，所以没有一行是其他行的组合。`,
+                  )
+                : t("The determinant is $0$, so one row is a combination of the other two.", "行列式为 $0$，所以某一行是另两行的组合。");
         return numberProblem({
           prompt: t(
             `Find the rank of $T(\\mathbf{x}) = A\\mathbf{x}$ for $A = ${mat3Latex(rows)}$.`,
             `求 $T(\\mathbf{x}) = A\\mathbf{x}$ 的秩，其中 $A = ${mat3Latex(rows)}$。`,
           ),
           answer: rank,
-          wrong: [3, 2, 1, 0],
-          solution: t(
-            rank === 3
-              ? `$\\det A = ${det} \\ne 0$, so the rows are independent and the rank is $3$.`
-              : rank === 2
-                ? "Row reduction leaves two non-zero rows, since one row is a combination of the other two, so the rank is $2$."
-                : "Every row is a multiple of the first, so row reduction leaves one non-zero row and the rank is $1$.",
-            rank === 3
-              ? `$\\det A = ${det} \\ne 0$，所以各行线性无关，秩为 $3$。`
-              : rank === 2
-                ? "某一行是另两行的组合，行化简后剩两个非零行，所以秩为 $2$。"
-                : "每一行都是第一行的倍数，行化简后只剩一个非零行，所以秩为 $1$。",
+          form: "integer",
+          mistakes: [
+            why(
+              3,
+              "Three nonzero rows need not be independent; one is a combination of the others.",
+              "三个非零行不一定线性无关；其中一行是其他行的组合。",
+            ),
+            why(
+              2,
+              rank === 3
+                ? `$\\det A = ${det} \\ne 0$, so all three rows are independent.`
+                : "Rows 2 and 3 are both multiples of row 1, so only one row is independent.",
+              rank === 3 ? `$\\det A = ${det} \\ne 0$，所以三行都线性无关。` : "第 2、3 行都是第 1 行的倍数，所以只有一行线性无关。",
+            ),
+            why(
+              1,
+              "Not every row is a multiple of row 1; row 2 has a different direction.",
+              "并非每一行都是第 1 行的倍数；第 2 行方向不同。",
+            ),
+            why(0, "The rank is $0$ only for the zero matrix.", "只有零矩阵的秩才是 $0$。"),
+          ].filter((w, i, all) => w.value !== rank && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [["Look for a relation among the rows", "寻找行之间的关系"], relation],
+              [
+                ["Count the independent rows", "数线性无关的行"],
+                t(
+                  rank === 1
+                    ? "Row reduction leaves only row 1 nonzero."
+                    : rank === 2
+                      ? "Row reduction leaves two nonzero rows."
+                      : "Row reduction leaves three pivots.",
+                  rank === 1 ? "行化简后只有第 1 行非零。" : rank === 2 ? "行化简后剩下两个非零行。" : "行化简后有三个主元。",
+                ),
+                [`\\operatorname{rank}(T) = ${rank}`],
+              ],
+            ],
+            t(
+              `The kernel then has dimension $3 - ${rank} = ${3 - rank}$${rank === 3 ? ", so only $\\mathbf{0}$ is sent to $\\mathbf{0}$" : ""}.`,
+              `于是核的维数为 $3 - ${rank} = ${3 - rank}$${rank === 3 ? "，只有 $\\mathbf{0}$ 被映为 $\\mathbf{0}$" : ""}。`,
+            ),
           ),
         });
       },
@@ -573,6 +765,10 @@ export const imageOfALinearTransformationInTheCartesianPlane: TopicDef = {
     "Identify the geometric nature of the image of a linear transformation in the plane as a point, line, or the entire plane.",
     "在笛卡尔平面中将线性变换的像识别为单点、过原点的直线或整个平面。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & 3 \\\\ 2 & 6 \\end{pmatrix}$ has second column $3$ times the first, so every output $A\\mathbf{x} = x_1(1, 2) + 3x_2(1, 2) = (x_1 + 3x_2)(1, 2)$ is a multiple of $(1, 2)$. The image is the line through the origin with direction $(1, 2)$.\n\nCheck: $A(1, 1) = (4, 8) = 4(1, 2)$, which lies on that line, while $(1, 0)$ does not, since $1 \\cdot 2 - 0 \\cdot 1 = 2 \\ne 0$.\n\nIn this lesson we decide whether the image of a map of the plane is a point, a line or the whole plane, and test whether a vector lies on an image line.",
+    "矩阵 $A = \\begin{pmatrix} 1 & 3 \\\\ 2 & 6 \\end{pmatrix}$ 的第二列是第一列的 $3$ 倍，所以每个输出 $A\\mathbf{x} = x_1(1, 2) + 3x_2(1, 2) = (x_1 + 3x_2)(1, 2)$ 都是 $(1, 2)$ 的倍数。像是过原点、方向为 $(1, 2)$ 的直线。\n\n检验：$A(1, 1) = (4, 8) = 4(1, 2)$ 在这条直线上，而 $(1, 0)$ 不在，因为 $1 \\cdot 2 - 0 \\cdot 1 = 2 \\ne 0$。\n\n本课我们判断平面上映射的像是一个点、一条直线还是整个平面，并检验向量是否在像直线上。",
+  ),
   prerequisites: ["image-and-rank-of-a-linear-transformation"],
   encompasses: [],
   xp: 14,
@@ -581,8 +777,8 @@ export const imageOfALinearTransformationInTheCartesianPlane: TopicDef = {
       id: "geometric-image-in-plane",
       title: t("Geometric Image in the Plane", "平面中的几何像空间"),
       explanation: t(
-        "Determine whether the image of a 2D linear transformation is the origin, a line, or the entire plane $\\mathbb{R}^2$.",
-        "判定二维线性变换的像空间是原点、一条直线还是整个平面 $\\mathbb{R}^2$。",
+        "The image of a linear map of the plane is the span of the columns of its matrix: the origin alone if both columns are zero, a line through the origin if they are parallel and not both zero, and the whole plane $\\mathbb{R}^2$ if they are independent. For example, $\\begin{pmatrix} 2 & -4 \\\\ 1 & -2 \\end{pmatrix}$ has second column $-2$ times the first, so its image is the line spanned by $(2, 1)$.\n\n> **Watch out.** The image of a linear map always contains the origin, so it can never be a line that misses the origin.",
+        "平面上线性映射的像是其矩阵各列的张成：两列都为零时只有原点；两列平行且不全为零时是过原点的直线；两列线性无关时是整个平面 $\\mathbb{R}^2$。例如 $\\begin{pmatrix} 2 & -4 \\\\ 1 & -2 \\end{pmatrix}$ 的第二列是第一列的 $-2$ 倍，所以像是由 $(2, 1)$ 张成的直线。\n\n> **注意。** 线性映射的像总是包含原点，所以不可能是一条不过原点的直线。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(1, 5);
@@ -609,11 +805,46 @@ export const imageOfALinearTransformationInTheCartesianPlane: TopicDef = {
             `不经过原点且垂直于向量 $${vec2Latex([a, b])}$ 的直线`,
           ),
         ];
-        const solution = t(
-          `The columns of $A$ are $${vec2Latex([a, b])}$ and $${k} ${vec2Latex([a, b])}$. Since the second column is a scalar multiple of the first, the column space is 1-dimensional, which is a line through the origin in the direction of $${vec2Latex([a, b])}$.`,
-          `矩阵 $A$ 的列向量为 $${vec2Latex([a, b])}$ 和 $${k} ${vec2Latex([a, b])}$。因为第二列是第一列的倍数，所以列空间是一维的，即过原点且沿向量 $${vec2Latex([a, b])}$ 方向的直线。`,
+        const solution = walked(
+          [
+            [
+              ["Compare the columns", "比较两列"],
+              t(
+                `The columns are $${vec2Latex([a, b])}$ and $${vec2Latex([k * a, k * b])} = ${k}${vec2Latex([a, b])}$, so they are parallel and not zero.`,
+                `两列为 $${vec2Latex([a, b])}$ 和 $${vec2Latex([k * a, k * b])} = ${k}${vec2Latex([a, b])}$，两者平行且非零。`,
+              ),
+            ],
+            [
+              ["Describe the span", "描述张成"],
+              t(
+                `Every output is $x_1${vec2Latex([a, b])} + (${k})x_2${vec2Latex([a, b])} = (x_1 ${k > 0 ? "+" : "-"} ${Math.abs(k)}x_2)${vec2Latex([a, b])}$, a multiple of $${vec2Latex([a, b])}$: the image is the line through the origin in that direction.`,
+                `每个输出都是 $x_1${vec2Latex([a, b])} + (${k})x_2${vec2Latex([a, b])} = (x_1 ${k > 0 ? "+" : "-"} ${Math.abs(k)}x_2)${vec2Latex([a, b])}$，是 $${vec2Latex([a, b])}$ 的倍数：像是沿这个方向的过原点直线。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\det A = ${a} \\cdot ${paren(k * b)} - ${paren(k * a)} \\cdot ${b} = 0$, so the rank is $1$, not $2$: a line, not the plane.`,
+            `$\\det A = ${a} \\cdot ${paren(k * b)} - ${paren(k * a)} \\cdot ${b} = 0$，所以秩为 $1$ 而不是 $2$：是直线，不是整个平面。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The columns are parallel, so they span only a line; the whole plane needs two independent columns.",
+            "两列平行，只能张成一条直线；整个平面需要两列线性无关。",
+          ],
+          [wrong[1]!.en, "The columns are not zero, so the image contains more than the origin.", "两列不为零，所以像不只含原点。"],
+          [
+            wrong[2]!.en,
+            `This line does not pass through the origin, but $A\\mathbf{0} = \\mathbf{0}$ is always in the image.`,
+            "这条直线不过原点，而 $A\\mathbf{0} = \\mathbf{0}$ 总在像中。",
+          ],
+          [
+            wrong[3]!.en,
+            "The image passes through the origin and runs along the columns, not perpendicular to them.",
+            "像经过原点并沿着列的方向，而不是与列垂直。",
+          ],
+        ]);
       },
     },
     {
@@ -621,8 +852,8 @@ export const imageOfALinearTransformationInTheCartesianPlane: TopicDef = {
       figure: linearAlgebraDrawings1["image-of-a-linear-transformation-in-the-cartesian-plane#testing-membership-in-a-line-image"],
       title: t("Testing membership in the image of a rank-one map", "判断向量是否在秩一映射的像中"),
       explanation: t(
-        "When the standard matrix of $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ has rank $1$, both columns are multiples of one non-zero vector $\\mathbf{u}$, and the image is the line through the origin spanned by $\\mathbf{u}$. A vector $(p, q)$ lies on that line exactly when it is parallel to $\\mathbf{u} = (u_1, u_2)$, that is when $p\\,u_2 - q\\,u_1 = 0$.",
-        "当 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 的标准矩阵秩为 $1$ 时，两列都是某个非零向量 $\\mathbf{u}$ 的倍数，像是由 $\\mathbf{u}$ 张成的过原点的直线。向量 $(p, q)$ 在这条直线上当且仅当它与 $\\mathbf{u} = (u_1, u_2)$ 平行，即 $p\\,u_2 - q\\,u_1 = 0$。",
+        "When the standard matrix of $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ has rank $1$, both columns are multiples of one non-zero vector $\\mathbf{u}$, and the image is the line through the origin spanned by $\\mathbf{u}$. A vector $(p, q)$ lies on that line exactly when it is parallel to $\\mathbf{u} = (u_1, u_2)$, that is when $p\\,u_2 - q\\,u_1 = 0$. For example, with $\\mathbf{u} = (2, 3)$, the vector $(4, 6)$ is in the image since $4 \\cdot 3 - 6 \\cdot 2 = 0$, but $(4, 7)$ is not, since $4 \\cdot 3 - 7 \\cdot 2 = -2$.\n\n> **Watch out.** Being close to the line is not enough; the test $p\\,u_2 - q\\,u_1$ must be exactly $0$.",
+        "当 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 的标准矩阵秩为 $1$ 时，两列都是某个非零向量 $\\mathbf{u}$ 的倍数，像是由 $\\mathbf{u}$ 张成的过原点的直线。向量 $(p, q)$ 在这条直线上当且仅当它与 $\\mathbf{u} = (u_1, u_2)$ 平行，即 $p\\,u_2 - q\\,u_1 = 0$。例如 $\\mathbf{u} = (2, 3)$ 时，$(4, 6)$ 在像中，因为 $4 \\cdot 3 - 6 \\cdot 2 = 0$；而 $(4, 7)$ 不在，因为 $4 \\cdot 3 - 7 \\cdot 2 = -2$。\n\n> **注意。** 接近这条直线还不够；检验值 $p\\,u_2 - q\\,u_1$ 必须恰好为 $0$。",
       ),
       generate(rng: Rng): Problem {
         const u1 = rng.int(1, 4) * rng.pick([-1, 1]);
@@ -638,18 +869,47 @@ export const imageOfALinearTransformationInTheCartesianPlane: TopicDef = {
         const p = m * u1;
         const q = m * u2 + (inside ? 0 : rng.pick([-1, 1]));
         const cross = p * u2 - q * u1;
-        return choiceProblem({
+        const problem = choiceProblem({
           prompt: t(
             `Let $T$ have standard matrix $A = ${mat2Latex(A)}$. Is $${vec2Latex([p, q])}$ in the image of $T$?`,
             `设 $T$ 的标准矩阵为 $A = ${mat2Latex(A)}$。$${vec2Latex([p, q])}$ 是否在 $T$ 的像中？`,
           ),
           options: yesNo,
           correct: inside ? 0 : 1,
-          solution: t(
-            `The image is the line spanned by $${vec2Latex([u1, u2])}$. Here $${p} \\cdot ${paren(u2)} - ${paren(q)} \\cdot ${paren(u1)} = ${cross}$, so the vector ${inside ? "is" : "is not"} on that line.`,
-            `像是由 $${vec2Latex([u1, u2])}$ 张成的直线。这里 $${p} \\cdot ${paren(u2)} - ${paren(q)} \\cdot ${paren(u1)} = ${cross}$，所以该向量${inside ? "在" : "不在"}这条直线上。`,
+          solution: walked(
+            [
+              [
+                ["Find the image line", "找出像直线"],
+                t(
+                  `Both columns are multiples of $\\mathbf{u} = ${vec2Latex([u1, u2])}$: they are $${s}\\mathbf{u}$ and $${tt}\\mathbf{u}$. So the image is the line spanned by $\\mathbf{u}$.`,
+                  `两列都是 $\\mathbf{u} = ${vec2Latex([u1, u2])}$ 的倍数：分别为 $${s}\\mathbf{u}$ 和 $${tt}\\mathbf{u}$。所以像是由 $\\mathbf{u}$ 张成的直线。`,
+                ),
+              ],
+              [["Test parallelism", "检验是否平行"], t("", ""), [`${p} \\cdot ${paren(u2)} - ${paren(q)} \\cdot ${paren(u1)} = ${cross}`]],
+            ],
+            inside
+              ? t(
+                  `The test gives $0$, and indeed $${vec2Latex([p, q])} = ${m}\\mathbf{u}$, so the vector is in the image.`,
+                  `检验值为 $0$，而且确实 $${vec2Latex([p, q])} = ${m}\\mathbf{u}$，所以该向量在像中。`,
+                )
+              : t(
+                  `The test gives $${cross} \\ne 0$: $${m}\\mathbf{u} = ${vec2Latex([m * u1, m * u2])}$ has the same first entry but a different second one, so the vector is not in the image.`,
+                  `检验值为 $${cross} \\ne 0$：$${m}\\mathbf{u} = ${vec2Latex([m * u1, m * u2])}$ 的第一个分量相同，但第二个分量不同，所以该向量不在像中。`,
+                ),
           ),
         });
+        return reasoned(problem, [
+          [
+            yesNo[0]!.en,
+            `$${p} \\cdot ${paren(u2)} - ${paren(q)} \\cdot ${paren(u1)} = ${cross} \\ne 0$, so the vector is not parallel to $\\mathbf{u}$.`,
+            `$${p} \\cdot ${paren(u2)} - ${paren(q)} \\cdot ${paren(u1)} = ${cross} \\ne 0$，所以该向量与 $\\mathbf{u}$ 不平行。`,
+          ],
+          [
+            yesNo[1]!.en,
+            `The vector is $${m}$ times $\\mathbf{u}$, which lies on the image line.`,
+            `该向量是 $\\mathbf{u}$ 的 $${m}$ 倍，在像直线上。`,
+          ],
+        ]);
       },
     },
   ],
@@ -663,6 +923,10 @@ export const invertibleMatrixTheoremInTermsOfLinearTransformations: TopicDef = {
     "Apply the Invertible Matrix Theorem to linear transformations, connecting invertibility, trivial kernel, and full image.",
     "应用线性变换视角的逆矩阵定理，联系可逆性、零核与满射像空间。",
   ),
+  intro: t(
+    "The map $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = \\begin{pmatrix} 2 & 1 \\\\ 4 & 2 \\end{pmatrix}$ has $\\det A = 4 - 4 = 0$. So $T$ is not invertible: it sends $(1, -2)$ to $(0, 0)$, so it is not one-to-one, and every output is a multiple of $(1, 2)$, so it is not onto.\n\nCheck: $A\\begin{pmatrix} 1 \\\\ -2 \\end{pmatrix} = \\begin{pmatrix} 2 - 2 \\\\ 4 - 4 \\end{pmatrix} = \\mathbf{0}$, a nonzero vector in the kernel.\n\nIn this lesson we use the determinant to decide at once whether a map of $\\mathbb{R}^2$ is invertible, one-to-one and onto, and find the parameter values that make it fail.",
+    "映射 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = \\begin{pmatrix} 2 & 1 \\\\ 4 & 2 \\end{pmatrix}$，有 $\\det A = 4 - 4 = 0$。所以 $T$ 不可逆：它把 $(1, -2)$ 映为 $(0, 0)$，所以不是单射；每个输出都是 $(1, 2)$ 的倍数，所以不是满射。\n\n检验：$A\\begin{pmatrix} 1 \\\\ -2 \\end{pmatrix} = \\begin{pmatrix} 2 - 2 \\\\ 4 - 4 \\end{pmatrix} = \\mathbf{0}$，是核中的非零向量。\n\n本课我们用行列式一次判定 $\\mathbb{R}^2$ 上的映射是否可逆、是否单射、是否满射，并找出使其不可逆的参数值。",
+  ),
   prerequisites: ["image-of-a-linear-transformation-in-the-cartesian-plane"],
   encompasses: [],
   xp: 14,
@@ -671,8 +935,8 @@ export const invertibleMatrixTheoremInTermsOfLinearTransformations: TopicDef = {
       id: "invertibility-equivalences-for-transformations",
       title: t("Invertibility Equivalences for Transformations", "线性变换可逆性的等价条件"),
       explanation: t(
-        "Identify equivalent conditions for an operator on $\\mathbb{R}^n$ to be invertible: one-to-one, onto, and $\\ker(T) = \\{\\mathbf{0}\\}$.",
-        "识别 $\\mathbb{R}^n$ 上线性变换可逆的等价条件：单射、满射及 $\\ker(T) = \\{\\mathbf{0}\\}$。",
+        "For an operator $T$ on $\\mathbb{R}^n$ with standard matrix $A$, the invertible matrix theorem says these all hold or all fail together: $T$ is invertible, $T$ is one-to-one, $T$ is onto, $\\ker(T) = \\{\\mathbf{0}\\}$, and $\\det A \\ne 0$. For example, $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ has $\\det A = -2 \\ne 0$, so $T$ is invertible, one-to-one and onto.\n\n> **Watch out.** For a map from $\\mathbb{R}^n$ to itself, one-to-one and onto cannot come apart: if one fails, so does the other.",
+        "对 $\\mathbb{R}^n$ 上以 $A$ 为标准矩阵的线性变换 $T$，逆矩阵定理说下列条件同时成立或同时不成立：$T$ 可逆、$T$ 是单射、$T$ 是满射、$\\ker(T) = \\{\\mathbf{0}\\}$、$\\det A \\ne 0$。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ 有 $\\det A = -2 \\ne 0$，所以 $T$ 可逆、是单射也是满射。\n\n> **注意。** 对从 $\\mathbb{R}^n$ 到自身的映射，单射与满射不会分开：一个不成立，另一个也不成立。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-4, 4);
@@ -708,24 +972,90 @@ export const invertibleMatrixTheoremInTermsOfLinearTransformations: TopicDef = {
               t("$\\ker(T) = \\{0\\}$", "$\\ker(T) = \\{0\\}$"),
               t("$\\operatorname{im}(T) = \\mathbb{R}^2$", "$\\operatorname{im}(T) = \\mathbb{R}^2$"),
             ];
-        const solution = isInvertible
-          ? t(
-              `The determinant is $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det} \\neq 0$. By the Invertible Matrix Theorem, $T$ is invertible, which is equivalent to $T$ being one-to-one ($\\ker(T) = \\{0\\}$) and onto ($\\operatorname{im}(T) = \\mathbb{R}^2$).`,
-              `行列式为 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det} \\neq 0$。根据逆矩阵定理，$T$ 可逆，这等价于 $T$ 是单射（$\\ker(T) = \\{0\\}$）且是满射（$\\operatorname{im}(T) = \\mathbb{R}^2$）。`,
-            )
-          : t(
-              `The determinant is $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det} = 0$. By the Invertible Matrix Theorem, $A$ is singular, so $T$ is not invertible, neither one-to-one nor onto.`,
-              `行列式为 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det} = 0$。根据逆矩阵定理，$A$ 是奇异矩阵，因此 $T$ 不可逆，既不是单射也不是满射。`,
-            );
-        return oneOf(rng, prompt, right, wrong, solution);
+        const solution = walked(
+          [
+            [
+              ["Compute the determinant", "计算行列式"],
+              t("", ""),
+              [`\\det A = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}`],
+            ],
+            [
+              ["Apply the theorem", "应用定理"],
+              isInvertible
+                ? t(
+                    "$\\det A \\ne 0$, so by the invertible matrix theorem $T$ is invertible, $\\ker(T) = \\{\\mathbf{0}\\}$ (one-to-one) and $\\operatorname{im}(T) = \\mathbb{R}^2$ (onto).",
+                    "$\\det A \\ne 0$，由逆矩阵定理，$T$ 可逆，$\\ker(T) = \\{\\mathbf{0}\\}$（单射），$\\operatorname{im}(T) = \\mathbb{R}^2$（满射）。",
+                  )
+                : t(
+                    "$\\det A = 0$, so $A$ is singular and, by the invertible matrix theorem, $T$ is neither one-to-one nor onto.",
+                    "$\\det A = 0$，$A$ 是奇异矩阵，由逆矩阵定理，$T$ 既不是单射也不是满射。",
+                  ),
+            ],
+          ],
+          isInvertible
+            ? t(
+                `$A^{-1} = \\frac{1}{${det}}${mat2Latex([
+                  [d, -b],
+                  [-c, a],
+                ])}$ exists, so $T$ can be undone.`,
+                `$A^{-1} = \\frac{1}{${det}}${mat2Latex([
+                  [d, -b],
+                  [-c, a],
+                ])}$ 存在，所以 $T$ 可以被还原。`,
+              )
+            : t(
+                `$A${vec2Latex([-b, a])} = ${vec2Latex([0, c * -b + d * a])}$ with $${vec2Latex([-b, a])} \\ne \\mathbf{0}$, a nonzero vector in the kernel.`,
+                `$A${vec2Latex([-b, a])} = ${vec2Latex([0, c * -b + d * a])}$，且 $${vec2Latex([-b, a])} \\ne \\mathbf{0}$，是核中的非零向量。`,
+              ),
+        );
+        return reasoned(
+          oneOf(rng, prompt, right, wrong, solution),
+          isInvertible
+            ? [
+                [wrong[0]!.en, `The determinant is $${det}$, not $0$.`, `行列式是 $${det}$，不是 $0$。`],
+                [
+                  wrong[1]!.en,
+                  "For a map of $\\mathbb{R}^2$ to itself, one-to-one and onto hold together.",
+                  "对 $\\mathbb{R}^2$ 到自身的映射，单射与满射同时成立。",
+                ],
+                [
+                  wrong[2]!.en,
+                  "For a map of $\\mathbb{R}^2$ to itself, onto and one-to-one hold together.",
+                  "对 $\\mathbb{R}^2$ 到自身的映射，满射与单射同时成立。",
+                ],
+                [
+                  wrong[3]!.en,
+                  "Only the zero map has kernel $\\mathbb{R}^2$; here $\\det A \\ne 0$ makes the kernel $\\{\\mathbf{0}\\}$.",
+                  "只有零映射的核是 $\\mathbb{R}^2$；这里 $\\det A \\ne 0$ 使核为 $\\{\\mathbf{0}\\}$。",
+                ],
+              ]
+            : [
+                [wrong[0]!.en, "The determinant is $0$, so $A$ has no inverse.", "行列式为 $0$，所以 $A$ 没有逆矩阵。"],
+                [
+                  wrong[1]!.en,
+                  "With $\\det A = 0$ the kernel contains a nonzero vector, so $T$ is not one-to-one.",
+                  "$\\det A = 0$ 时核含非零向量，所以 $T$ 不是单射。",
+                ],
+                [
+                  wrong[2]!.en,
+                  `$A${vec2Latex([-b, a])} = \\mathbf{0}$ with a nonzero input, so the kernel is bigger than $\\{\\mathbf{0}\\}$.`,
+                  `$A${vec2Latex([-b, a])} = \\mathbf{0}$ 且输入非零，所以核比 $\\{\\mathbf{0}\\}$ 大。`,
+                ],
+                [
+                  wrong[3]!.en,
+                  "With $\\det A = 0$ the columns are parallel, so the image is at most a line.",
+                  "$\\det A = 0$ 时两列平行，所以像至多是一条直线。",
+                ],
+              ],
+        );
       },
     },
     {
       id: "the-parameter-that-makes-a-transformation-singular",
       title: t("The parameter that makes a transformation singular", "使变换不可逆的参数值"),
       explanation: t(
-        "By the invertible matrix theorem, $T(\\mathbf{x}) = A\\mathbf{x}$ is invertible (one-to-one and onto) exactly when $\\det A \\ne 0$. So $T$ fails to be invertible for the parameter values that make the determinant zero. For $A = \\begin{pmatrix} a & k \\\\ c & d \\end{pmatrix}$, $\\det A = ad - kc = 0$ gives $k = \\frac{ad}{c}$.",
-        "由可逆矩阵定理，$T(\\mathbf{x}) = A\\mathbf{x}$ 可逆（既单又满）当且仅当 $\\det A \\ne 0$。所以使行列式为零的参数值使 $T$ 不可逆。对 $A = \\begin{pmatrix} a & k \\\\ c & d \\end{pmatrix}$，由 $\\det A = ad - kc = 0$ 得 $k = \\frac{ad}{c}$。",
+        "By the invertible matrix theorem, $T(\\mathbf{x}) = A\\mathbf{x}$ is invertible (one-to-one and onto) exactly when $\\det A \\ne 0$. So $T$ fails to be invertible for the parameter values that make the determinant zero. For $A = \\begin{pmatrix} a & k \\\\ c & d \\end{pmatrix}$, $\\det A = ad - kc = 0$ gives $k = \\frac{ad}{c}$. For example, $\\begin{pmatrix} 6 & k \\\\ 2 & 5 \\end{pmatrix}$ has $\\det = 30 - 2k$, which is $0$ for $k = 15$.\n\n> **Watch out.** The determinant is $ad - kc$, the main diagonal minus the other diagonal; solving $ad = kc$ divides by $c$, not by $a$.",
+        "由可逆矩阵定理，$T(\\mathbf{x}) = A\\mathbf{x}$ 可逆（既单又满）当且仅当 $\\det A \\ne 0$。所以使行列式为零的参数值使 $T$ 不可逆。对 $A = \\begin{pmatrix} a & k \\\\ c & d \\end{pmatrix}$，由 $\\det A = ad - kc = 0$ 得 $k = \\frac{ad}{c}$。例如 $\\begin{pmatrix} 6 & k \\\\ 2 & 5 \\end{pmatrix}$ 的行列式为 $30 - 2k$，当 $k = 15$ 时为 $0$。\n\n> **注意。** 行列式是 $ad - kc$，即主对角线减去副对角线；解 $ad = kc$ 时要除以 $c$，而不是 $a$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 4) * rng.pick([-1, 1]);
@@ -739,10 +1069,40 @@ export const invertibleMatrixTheoremInTermsOfLinearTransformations: TopicDef = {
           ),
           answer: k,
           solveFor: "k",
-          wrong: [-k, Q.of(c * d, a), a * d],
-          solution: t(
-            `$\\det A = ${a} \\cdot ${paren(d)} ${c < 0 ? "+" : "-"} ${poly([Math.abs(c), "k"])} = 0$ gives $k = ${k}$. For this $k$, $T$ is neither one-to-one nor onto.`,
-            `由 $\\det A = ${a} \\cdot ${paren(d)} ${c < 0 ? "+" : "-"} ${poly([Math.abs(c), "k"])} = 0$ 得 $k = ${k}$。此时 $T$ 既不是单射也不是满射。`,
+          mistakes: [
+            why(
+              -k,
+              "The sign is flipped; the determinant is $ad - kc$, so $k = \\frac{ad}{c}$.",
+              "符号反了；行列式是 $ad - kc$，所以 $k = \\frac{ad}{c}$。",
+            ),
+            ...(Math.abs(a) !== Math.abs(c)
+              ? [
+                  why(
+                    Q.of(c * d, a),
+                    `That divides by $${a}$; solving $${a} \\cdot ${paren(d)} = ${paren(c)}k$ divides by $${c}$.`,
+                    `这是除以 $${a}$；解 $${a} \\cdot ${paren(d)} = ${paren(c)}k$ 要除以 $${c}$。`,
+                  ),
+                ]
+              : []),
+            ...(c !== 1
+              ? [why(a * d, `That is $ad$ itself; it must still be divided by $${c}$.`, `这是 $ad$ 本身；还要除以 $${c}$。`)]
+              : []),
+          ],
+          solution: walked(
+            [
+              [
+                ["Write the determinant", "写出行列式"],
+                t("", ""),
+                [
+                  `\\det A = ${a} \\cdot ${paren(d)} ${c < 0 ? "+" : "-"} ${poly([Math.abs(c), "k"])} = ${a * d} ${c < 0 ? "+" : "-"} ${poly([Math.abs(c), "k"])}`,
+                ],
+              ],
+              [["Set it to zero", "令其为零"], t("", ""), [`k = \\frac{${a * d}}{${c}} = ${k}`]],
+            ],
+            t(
+              `With $k = ${k}$: $${a} \\cdot ${paren(d)} - ${paren(k)} \\cdot ${paren(c)} = ${a * d} - ${paren(k * c)} = 0$, so $T$ is neither one-to-one nor onto.`,
+              `取 $k = ${k}$：$${a} \\cdot ${paren(d)} - ${paren(k)} \\cdot ${paren(c)} = ${a * d} - ${paren(k * c)} = 0$，所以 $T$ 既不是单射也不是满射。`,
+            ),
           ),
         });
       },
@@ -758,6 +1118,10 @@ export const rankNullityTheoremInTermsOfLinearTransformations: TopicDef = {
     "Apply the Rank-Nullity Theorem to find the rank or nullity of a linear map from the dimension of its domain.",
     "应用秩-零度定理，通过定义域的维数求解线性映射的秩或零度。",
   ),
+  intro: t(
+    "Differentiation $T(p) = p'$ on $P_3$, the polynomials of degree at most $3$, kills exactly the constants, so $\\dim\\ker(T) = 1$. The domain has dimension $4$, so the rank-nullity theorem gives $\\operatorname{rank}(T) = 4 - 1 = 3$.\n\nCheck: the image is all of $P_2$, spanned by $(t)' = 1$, $(t^2)' = 2t$ and $(t^3)' = 3t^2$, which has dimension $3$.\n\nIn this lesson we use $\\operatorname{rank}(T) + \\dim\\ker(T) = \\dim V$ to find one of the numbers from the other two, for matrices and for differentiation.",
+    "在 $P_3$（次数不超过 $3$ 的多项式）上求导 $T(p) = p'$，恰好把常数变为零，所以 $\\dim\\ker(T) = 1$。定义域的维数为 $4$，所以秩-零度定理给出 $\\operatorname{rank}(T) = 4 - 1 = 3$。\n\n检验：像是整个 $P_2$，由 $(t)' = 1$、$(t^2)' = 2t$、$(t^3)' = 3t^2$ 张成，维数为 $3$。\n\n本课我们用 $\\operatorname{rank}(T) + \\dim\\ker(T) = \\dim V$ 由其中两个数求第三个，对矩阵和求导映射都适用。",
+  ),
   prerequisites: ["invertible-matrix-theorem-in-terms-of-linear-transformations"],
   encompasses: [],
   xp: 14,
@@ -766,27 +1130,52 @@ export const rankNullityTheoremInTermsOfLinearTransformations: TopicDef = {
       id: "calculating-via-rank-nullity-theorem",
       title: t("Calculating via Rank-Nullity Theorem", "利用秩-零度定理计算"),
       explanation: t(
-        "The dimension of the domain is shared between the vectors sent to zero and the dimension of the image, so knowing two of the three numbers gives the third. For a linear transformation $T: V \\to W$, compute $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$.",
-        "定义域的维数分成被映射到零的部分和像的维数两部分，所以知道三个数中的两个就能求出第三个。对线性变换 $T: V \\to W$，利用 $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$ 计算其秩。",
+        "The dimension of the domain is shared between the vectors sent to zero and the dimension of the image, so knowing two of the three numbers gives the third. For a linear transformation $T: V \\to W$, compute $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$. For example, $T: \\mathbb{R}^7 \\to \\mathbb{R}^4$ with a $3$-dimensional kernel has rank $7 - 3 = 4$.\n\n> **Watch out.** Subtract from the dimension of the domain $V$, not of the target $W$; the target only bounds the rank from above.",
+        "定义域的维数分成被映射到零的部分和像的维数两部分，所以知道三个数中的两个就能求出第三个。对线性变换 $T: V \\to W$，利用 $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$ 计算其秩。例如核为 $3$ 维的 $T: \\mathbb{R}^7 \\to \\mathbb{R}^4$ 的秩为 $7 - 3 = 4$。\n\n> **注意。** 要从定义域 $V$ 的维数中减，而不是从目标空间 $W$ 的维数中减；目标空间只给出秩的上界。",
       ),
       generate: (rng: Rng): Problem => {
         const dimV = rng.int(4, 9);
         const dimW = rng.int(3, 8);
-        const nullity = rng.int(1, dimV - 1);
+        const nullity = rng.int(Math.max(1, dimV - dimW), dimV - 1);
         const rank = dimV - nullity;
         const prompt = t(
           `Let $T: \\mathbb{R}^{${dimV}} \\to \\mathbb{R}^{${dimW}}$ be a linear transformation. If $\\dim(\\ker(T)) = ${nullity}$, what is the rank of $T$ (that is, $\\dim(\\operatorname{im}(T))$)?`,
           `设 $T: \\mathbb{R}^{${dimV}} \\to \\mathbb{R}^{${dimW}}$ 为线性变换。若 $\\dim(\\ker(T)) = ${nullity}$，求 $T$ 的秩（即 $\\dim(\\operatorname{im}(T))$）。`,
         );
-        const solution = t(
-          `By the Rank-Nullity Theorem, $\\dim(V) = \\dim(\\ker(T)) + \\dim(\\operatorname{im}(T))$. Therefore, $\\operatorname{rank}(T) = ${dimV} - ${nullity} = ${rank}$.`,
-          `由秩-零度定理，$\\dim(V) = \\dim(\\ker(T)) + \\dim(\\operatorname{im}(T))$。因此，$\\operatorname{rank}(T) = ${dimV} - ${nullity} = ${rank}$。`,
+        const solution = walked(
+          [
+            [
+              ["State the theorem", "写出定理"],
+              t("For $T: V \\to W$, the domain splits as:", "对 $T: V \\to W$，定义域的维数分为："),
+              [`\\dim V = \\dim\\ker(T) + \\operatorname{rank}(T)`],
+            ],
+            [["Substitute", "代入"], t("", ""), [`\\operatorname{rank}(T) = ${dimV} - ${nullity} = ${rank}`]],
+          ],
+          t(
+            `$${rank} \\le ${dimW}$, as it must be, since the image lies in $\\mathbb{R}^{${dimW}}$.`,
+            `$${rank} \\le ${dimW}$，正应如此，因为像位于 $\\mathbb{R}^{${dimW}}$ 中。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: rank,
+          form: "integer",
           solution,
-          wrong: [dimV, dimW, nullity, dimV + nullity].filter((w) => w !== rank),
+          mistakes: [
+            why(
+              dimW - nullity,
+              `Subtract from the dimension of the domain, $${dimV}$, not of the target.`,
+              `要从定义域的维数 $${dimV}$ 中减，而不是从目标空间的维数中减。`,
+            ),
+            why(dimV, "That is the whole domain; the kernel's dimensions are lost in the image.", "这是整个定义域；核的维数在像中丢失了。"),
+            why(dimW, "The target only bounds the rank; the image need not fill it.", "目标空间只给出秩的上界；像不一定充满它。"),
+            why(nullity, "That is the nullity itself; the rank is what remains of the domain.", "这是零化度本身；秩是定义域剩下的部分。"),
+            why(
+              dimV + nullity,
+              "Rank and nullity add up to $\\dim V$, so subtract the nullity.",
+              "秩与零化度之和是 $\\dim V$，所以要减去零化度。",
+            ),
+          ].filter((w, i, all) => w.value !== rank && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -794,8 +1183,8 @@ export const rankNullityTheoremInTermsOfLinearTransformations: TopicDef = {
       id: "rank-and-nullity-of-differentiation",
       title: t("Rank and nullity of differentiation", "求导映射的秩与零化度"),
       explanation: t(
-        "The rank-nullity theorem says $\\operatorname{rank}(T) + \\dim\\ker(T) = \\dim V$ for $T: V \\to W$. The space $P_n$ of polynomials of degree at most $n$ has dimension $n + 1$. The map $T(p) = p^{(k)}$, the $k$-th derivative, kills exactly the polynomials of degree less than $k$, so $\\dim\\ker(T) = k$ and the rank is $n + 1 - k$.",
-        "秩–零化度定理指出，对 $T: V \\to W$ 有 $\\operatorname{rank}(T) + \\dim\\ker(T) = \\dim V$。次数不超过 $n$ 的多项式空间 $P_n$ 的维数为 $n + 1$。映射 $T(p) = p^{(k)}$（$k$ 阶导数）恰好把次数小于 $k$ 的多项式变为零，所以 $\\dim\\ker(T) = k$，秩为 $n + 1 - k$。",
+        "The rank-nullity theorem says $\\operatorname{rank}(T) + \\dim\\ker(T) = \\dim V$ for $T: V \\to W$. The space $P_n$ of polynomials of degree at most $n$ has dimension $n + 1$. The map $T(p) = p^{(k)}$, the $k$-th derivative, kills exactly the polynomials of degree less than $k$, so $\\dim\\ker(T) = k$ and the rank is $n + 1 - k$. For example, $T(p) = p''$ on $P_4$ kills $1$ and $t$, so $\\dim\\ker(T) = 2$ and the rank is $5 - 2 = 3$.\n\n> **Watch out.** $P_n$ has dimension $n + 1$, not $n$, because the constant term counts.",
+        "秩–零化度定理指出，对 $T: V \\to W$ 有 $\\operatorname{rank}(T) + \\dim\\ker(T) = \\dim V$。次数不超过 $n$ 的多项式空间 $P_n$ 的维数为 $n + 1$。映射 $T(p) = p^{(k)}$（$k$ 阶导数）恰好把次数小于 $k$ 的多项式变为零，所以 $\\dim\\ker(T) = k$，秩为 $n + 1 - k$。例如 $P_4$ 上的 $T(p) = p''$ 把 $1$ 和 $t$ 变为零，所以 $\\dim\\ker(T) = 2$，秩为 $5 - 2 = 3$。\n\n> **注意。** $P_n$ 的维数是 $n + 1$ 而不是 $n$，因为常数项也算在内。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(2, 9);
@@ -803,16 +1192,58 @@ export const rankNullityTheoremInTermsOfLinearTransformations: TopicDef = {
         const wantRank = rng.int(0, 1) === 0;
         const ans = wantRank ? n + 1 - k : k;
         const d = k === 1 ? "p'" : k === 2 ? "p''" : k === 3 ? "p'''" : `p^{(${k})}`;
+        const killed = ["1", "t", "t^2", "t^3"].slice(0, k).join(", ");
         return numberProblem({
           prompt: t(
             `Let $T: P_{${n}} \\to P_{${n}}$ be $T(p) = ${d}$. Find ${wantRank ? "the rank of $T$" : "$\\dim\\ker(T)$"}.`,
             `设 $T: P_{${n}} \\to P_{${n}}$，$T(p) = ${d}$。求${wantRank ? " $T$ 的秩" : " $\\dim\\ker(T)$"}。`,
           ),
           answer: ans,
-          wrong: [wantRank ? n - k : k - 1, wantRank ? n + 1 : n + 1 - k, n],
-          solution: t(
-            `$\\dim P_{${n}} = ${n + 1}$. The kernel is the polynomials of degree less than $${k}$, of dimension $${k}$, so the rank is $${n + 1} - ${k} = ${n + 1 - k}$.`,
-            `$\\dim P_{${n}} = ${n + 1}$。核由次数小于 $${k}$ 的多项式组成，维数为 $${k}$，所以秩为 $${n + 1} - ${k} = ${n + 1 - k}$。`,
+          form: "integer",
+          mistakes: (wantRank
+            ? [
+                why(
+                  n - k,
+                  `$P_{${n}}$ has dimension $${n + 1}$, counting the constant term, so start from $${n + 1}$.`,
+                  `$P_{${n}}$ 算上常数项维数为 $${n + 1}$，所以从 $${n + 1}$ 开始。`,
+                ),
+                why(n + 1, "That is the whole domain; the kernel's dimensions are lost.", "这是整个定义域；核的维数丢失了。"),
+                why(k, "That is the dimension of the kernel, not the rank.", "这是核的维数，而不是秩。"),
+              ]
+            : [
+                why(
+                  k - 1,
+                  `The kernel contains all of $${killed}$, which is $${k}$ polynomials.`,
+                  `核包含 $${killed}$ 全部，共 $${k}$ 个多项式。`,
+                ),
+                why(n + 1 - k, "That is the rank, the dimension of the image, not of the kernel.", "这是秩，即像的维数，而不是核的维数。"),
+                why(
+                  n,
+                  `Only polynomials of degree below $${k}$ have zero ${k === 1 ? "derivative" : `$${k}$th derivative`}.`,
+                  `只有次数低于 $${k}$ 的多项式的 ${k} 阶导数为零。`,
+                ),
+              ]
+          ).filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the kernel", "求核"],
+                t(
+                  `$${d} = 0$ exactly for the polynomials of degree less than $${k}$, spanned by $${killed}$:`,
+                  `$${d} = 0$ 恰好对次数小于 $${k}$ 的多项式成立，它们由 $${killed}$ 张成：`,
+                ),
+                [`\\dim\\ker(T) = ${k}`],
+              ],
+              [
+                ["Apply rank-nullity", "用秩-零化度定理"],
+                t(`$\\dim P_{${n}} = ${n + 1}$, so:`, `$\\dim P_{${n}} = ${n + 1}$，所以：`),
+                [`\\operatorname{rank}(T) = ${n + 1} - ${k} = ${n + 1 - k}`],
+              ],
+            ],
+            t(
+              `The image is spanned by the ${k === 1 ? "derivatives" : "derivatives"} of $t^{${k}}, \\dots, t^{${n}}$, which have degrees $0$ to $${n - k}$: $${n - k + 1}$ polynomials, matching the rank.`,
+              `像由 $t^{${k}}, \\dots, t^{${n}}$ 的导数张成，它们的次数为 $0$ 到 $${n - k}$：共 $${n - k + 1}$ 个多项式，与秩一致。`,
+            ),
           ),
         });
       },
@@ -832,6 +1263,10 @@ export const matrixOfALinearTransformationRelativeToABasis: TopicDef = {
     "Compute the matrix $[T]_{\\mathcal{B}}$ of a linear transformation relative to a given basis $\\mathcal{B}$.",
     "计算线性变换关于给定基 $\\mathcal{B}$ 的矩阵 $[T]_{\\mathcal{B}}$。",
   ),
+  intro: t(
+    "Suppose $T(b_1) = b_1 + 2b_2$ and $T(b_2) = 3b_1 - b_2$ for a basis $B = \\{b_1, b_2\\}$. The $B$-coordinates of the images are $(1, 2)$ and $(3, -1)$, and these are the columns: $[T]_B = \\begin{pmatrix} 1 & 3 \\\\ 2 & -1 \\end{pmatrix}$.\n\nCheck: $[T]_B \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} 1 \\\\ 2 \\end{pmatrix}$, and $(1, 0)$ is $[b_1]_B$ while $(1, 2)$ is $[T(b_1)]_B$, as it should be.\n\nIn this lesson we build the matrix of a transformation relative to a basis, from the coordinates of the images and from the standard matrix by $P^{-1}AP$.",
+    "设基 $B = \\{b_1, b_2\\}$ 满足 $T(b_1) = b_1 + 2b_2$，$T(b_2) = 3b_1 - b_2$。两个像的 $B$ 坐标为 $(1, 2)$ 和 $(3, -1)$，它们就是各列：$[T]_B = \\begin{pmatrix} 1 & 3 \\\\ 2 & -1 \\end{pmatrix}$。\n\n检验：$[T]_B \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} 1 \\\\ 2 \\end{pmatrix}$，而 $(1, 0)$ 是 $[b_1]_B$，$(1, 2)$ 是 $[T(b_1)]_B$，正应如此。\n\n本课我们求变换关于一组基的矩阵：既由像的坐标直接构造，也由标准矩阵通过 $P^{-1}AP$ 求得。",
+  ),
   prerequisites: ["rank-nullity-theorem-in-terms-of-linear-transformations"],
   encompasses: [],
   xp: 14,
@@ -840,8 +1275,8 @@ export const matrixOfALinearTransformationRelativeToABasis: TopicDef = {
       id: "matrix-relative-to-basis-computation",
       title: t("Matrix Relative to a Basis Computation", "计算关于基的矩阵"),
       explanation: t(
-        "To build the matrix, apply the transformation to each basis vector, write the result in coordinates, and use those coordinates as the columns. Form the matrix $[T]_B$ whose columns are the coordinate vectors $[T(\\mathbf{b}_j)]_B$.",
-        "构造矩阵时，把变换作用在每个基向量上，把结果写成坐标，再用这些坐标作为矩阵的列。构造各列为坐标向量 $[T(\\mathbf{b}_j)]_B$ 的矩阵 $[T]_B$。",
+        "To build the matrix, apply the transformation to each basis vector, write the result in coordinates, and use those coordinates as the columns. Form the matrix $[T]_B$ whose columns are the coordinate vectors $[T(\\mathbf{b}_j)]_B$. For example, $T(b_1) = 2b_1 - b_2$ and $T(b_2) = b_1 + 4b_2$ give $[T]_B = \\begin{pmatrix} 2 & 1 \\\\ -1 & 4 \\end{pmatrix}$.\n\n> **Watch out.** The coefficients of $T(b_j)$ fill column $j$, not row $j$.",
+        "构造矩阵时，把变换作用在每个基向量上，把结果写成坐标，再用这些坐标作为矩阵的列。构造各列为坐标向量 $[T(\\mathbf{b}_j)]_B$ 的矩阵 $[T]_B$。例如 $T(b_1) = 2b_1 - b_2$，$T(b_2) = b_1 + 4b_2$ 给出 $[T]_B = \\begin{pmatrix} 2 & 1 \\\\ -1 & 4 \\end{pmatrix}$。\n\n> **注意。** $T(b_j)$ 的系数填入第 $j$ 列，而不是第 $j$ 行。",
       ),
       generate: (rng: Rng): Problem => {
         const c1 = rng.int(-5, 5);
@@ -854,81 +1289,70 @@ export const matrixOfALinearTransformationRelativeToABasis: TopicDef = {
           `Let $B = \\{b_1, b_2\\}$ be a basis of $\\mathbb{R}^2$, and let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation satisfying $T(b_1) = ${expr1}$ and $T(b_2) = ${expr2}$. What is the matrix representation $[T]_B$?`,
           `设 $B = \\{b_1, b_2\\}$ 为 $\\mathbb{R}^2$ 的一组基，线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 满足 $T(b_1) = ${expr1}$ 且 $T(b_2) = ${expr2}$。求 $T$ 关于基 $B$ 的矩阵表示 $[T]_B$。`,
         );
-        const right = t(
-          `$${mat2Latex([
-            [c1, d1],
-            [c2, d2],
-          ])}$`,
-          `$${mat2Latex([
-            [c1, d1],
-            [c2, d2],
-          ])}$`,
-        );
-        const wrong = [
-          t(
-            `$${mat2Latex([
-              [c1, c2],
-              [d1, d2],
-            ])}$`,
-            `$${mat2Latex([
-              [c1, c2],
-              [d1, d2],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [d1, c1],
-              [d2, c2],
-            ])}$`,
-            `$${mat2Latex([
-              [d1, c1],
-              [d2, c2],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [c2, d2],
-              [c1, d1],
-            ])}$`,
-            `$${mat2Latex([
-              [c2, d2],
-              [c1, d1],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [d2, d1],
-              [c2, c1],
-            ])}$`,
-            `$${mat2Latex([
-              [d2, d1],
-              [c2, c1],
-            ])}$`,
-          ),
+        const m = (x: Mat2) => t(`$${mat2Latex(x)}$`, `$${mat2Latex(x)}$`);
+        const answer: Mat2 = [
+          [c1, d1],
+          [c2, d2],
         ];
-        const solution = t(
-          `The columns of $[T]_B$ are the coordinate vectors of $T(b_1)$ and $T(b_2)$ with respect to $B$: $[T(b_1)]_B = ${vec2Latex([c1, c2])}$ and $[T(b_2)]_B = ${vec2Latex([d1, d2])}$. Thus, $[T]_B = ${mat2Latex(
+        const right = m(answer);
+        const wrong = [
+          m([
+            [c1, c2],
+            [d1, d2],
+          ]),
+          m([
+            [d1, c1],
+            [d2, c2],
+          ]),
+          m([
+            [c2, d2],
+            [c1, d1],
+          ]),
+          m([
+            [d2, d1],
+            [c2, c1],
+          ]),
+        ];
+        const solution = walked(
+          [
             [
-              [c1, d1],
-              [c2, d2],
+              ["Read the coordinates", "读出坐标"],
+              t("The coefficients of each image are its $B$-coordinates:", "每个像的系数就是它的 $B$ 坐标："),
+              [`[T(b_1)]_B = ${vec2Latex([c1, c2])}, \\quad [T(b_2)]_B = ${vec2Latex([d1, d2])}`],
             ],
-          )}$.`,
-          `矩阵 $[T]_B$ 的列向量为 $T(b_1)$ 与 $T(b_2)$ 关于基 $B$ 的坐标向量：$[T(b_1)]_B = ${vec2Latex([c1, c2])}$ 且 $[T(b_2)]_B = ${vec2Latex([d1, d2])}$。因此 $[T]_B = ${mat2Latex(
-            [
-              [c1, d1],
-              [c2, d2],
-            ],
-          )}$。`,
+            [["Place them as columns", "作为列放入"], t("", ""), [`[T]_B = ${mat2Latex(answer)}`]],
+          ],
+          t(
+            `$[T]_B ${vec2Latex([0, 1])} = ${vec2Latex([d1, d2])}$: the coordinates of $b_2$ go to the coordinates of $T(b_2)$.`,
+            `$[T]_B ${vec2Latex([0, 1])} = ${vec2Latex([d1, d2])}$：$b_2$ 的坐标被映为 $T(b_2)$ 的坐标。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "This puts the coordinates in as rows; each $[T(b_j)]_B$ is a column.",
+            "这是把坐标作为行放入了；每个 $[T(b_j)]_B$ 是一列。",
+          ],
+          [wrong[1]!.en, "The columns are swapped: column $1$ must be $[T(b_1)]_B$.", "两列交换了：第 $1$ 列必须是 $[T(b_1)]_B$。"],
+          [
+            wrong[2]!.en,
+            "The rows are swapped: the coefficient of $b_1$ is the top entry of each column.",
+            "两行交换了：$b_1$ 的系数是每一列的上方元素。",
+          ],
+          [
+            wrong[3]!.en,
+            "Both rows and columns are reversed; read column $j$ straight from $T(b_j)$.",
+            "行和列都颠倒了；第 $j$ 列应直接照抄 $T(b_j)$ 的系数。",
+          ],
+        ]);
       },
     },
     {
       id: "changing-a-standard-matrix-to-a-basis",
       title: t("Changing a standard matrix to a basis", "把标准矩阵换到另一组基下"),
       explanation: t(
-        "If $T(\\mathbf{x}) = A\\mathbf{x}$ and $P$ has the basis vectors $b_1, b_2$ as columns, the matrix of $T$ relative to $B$ is\n\n$$[T]_B = P^{-1}AP.$$\n\nThe product $AP$ applies $T$ to each basis vector, and $P^{-1}$ rewrites the results in $B$-coordinates. For $P = \\begin{pmatrix} 1 & k \\\\ 0 & 1 \\end{pmatrix}$, $P^{-1} = \\begin{pmatrix} 1 & -k \\\\ 0 & 1 \\end{pmatrix}$.",
-        "若 $T(\\mathbf{x}) = A\\mathbf{x}$，且 $P$ 以基向量 $b_1, b_2$ 为列，则 $T$ 关于 $B$ 的矩阵为\n\n$$[T]_B = P^{-1}AP.$$\n\n乘积 $AP$ 把 $T$ 作用于每个基向量，$P^{-1}$ 再把结果写成 $B$ 坐标。对 $P = \\begin{pmatrix} 1 & k \\\\ 0 & 1 \\end{pmatrix}$，$P^{-1} = \\begin{pmatrix} 1 & -k \\\\ 0 & 1 \\end{pmatrix}$。",
+        "If $T(\\mathbf{x}) = A\\mathbf{x}$ and $P$ has the basis vectors $b_1, b_2$ as columns, the matrix of $T$ relative to $B$ is\n\n$$[T]_B = P^{-1}AP.$$\n\nThe product $AP$ applies $T$ to each basis vector, and $P^{-1}$ rewrites the results in $B$-coordinates. For $P = \\begin{pmatrix} 1 & k \\\\ 0 & 1 \\end{pmatrix}$, $P^{-1} = \\begin{pmatrix} 1 & -k \\\\ 0 & 1 \\end{pmatrix}$. For example, $A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$ and $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ give $AP = \\begin{pmatrix} 2 & 3 \\\\ 0 & 3 \\end{pmatrix}$ and $P^{-1}AP = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$.\n\n> **Watch out.** The order is $P^{-1}AP$: apply $P$ first, then $A$, then $P^{-1}$. The product $PAP^{-1}$ is a different matrix.",
+        "若 $T(\\mathbf{x}) = A\\mathbf{x}$，且 $P$ 以基向量 $b_1, b_2$ 为列，则 $T$ 关于 $B$ 的矩阵为\n\n$$[T]_B = P^{-1}AP.$$\n\n乘积 $AP$ 把 $T$ 作用于每个基向量，$P^{-1}$ 再把结果写成 $B$ 坐标。对 $P = \\begin{pmatrix} 1 & k \\\\ 0 & 1 \\end{pmatrix}$，$P^{-1} = \\begin{pmatrix} 1 & -k \\\\ 0 & 1 \\end{pmatrix}$。例如 $A = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$，$P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ 给出 $AP = \\begin{pmatrix} 2 & 3 \\\\ 0 & 3 \\end{pmatrix}$，$P^{-1}AP = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$。\n\n> **注意。** 顺序是 $P^{-1}AP$：先作用 $P$，再作用 $A$，最后作用 $P^{-1}$。乘积 $PAP^{-1}$ 是另一个矩阵。",
       ),
       generate(rng: Rng): Problem {
         const A: Mat2 = [
@@ -949,16 +1373,45 @@ export const matrixOfALinearTransformationRelativeToABasis: TopicDef = {
         const i = rng.int(0, 1);
         const j = rng.int(0, 1);
         const pos = ["1", "2"];
+        const ans = M[i]![j]!;
         return numberProblem({
           prompt: t(
             `Let $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = ${mat2Latex(A)}$, and let $B = \\left\\{${vec2Latex([1, 0])}, ${vec2Latex([k, 1])}\\right\\}$. Find the $(${pos[i]}, ${pos[j]})$ entry of $[T]_B$.`,
             `设 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = ${mat2Latex(A)}$，$B = \\left\\{${vec2Latex([1, 0])}, ${vec2Latex([k, 1])}\\right\\}$。求 $[T]_B$ 的 $(${pos[i]}, ${pos[j]})$ 元。`,
           ),
-          answer: M[i]![j]!,
-          wrong: [AP[i]![j]!, mul2(P, mul2(A, Pinv))[i]![j]!, A[i]![j]!],
-          solution: t(
-            `$AP = ${mat2Latex(AP)}$ and $[T]_B = P^{-1}AP = ${mat2Latex(M)}$, so the entry is $${M[i]![j]!}$.`,
-            `$AP = ${mat2Latex(AP)}$，$[T]_B = P^{-1}AP = ${mat2Latex(M)}$，所以该元为 $${M[i]![j]!}$。`,
+          answer: ans,
+          form: "integer",
+          mistakes: [
+            why(
+              AP[i]![j]!,
+              "That is an entry of $AP$; the images must still be rewritten in $B$-coordinates by $P^{-1}$.",
+              "这是 $AP$ 的元；还要用 $P^{-1}$ 把像写成 $B$ 坐标。",
+            ),
+            why(
+              mul2(P, mul2(A, Pinv))[i]![j]!,
+              "That is an entry of $PAP^{-1}$; the order is $P^{-1}AP$.",
+              "这是 $PAP^{-1}$ 的元；顺序应为 $P^{-1}AP$。",
+            ),
+            why(A[i]![j]!, "That is the standard matrix; changing the basis changes the entries.", "这是标准矩阵；换基会改变矩阵的元。"),
+          ].filter((w, n, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === n),
+          solution: walked(
+            [
+              [
+                ["Write $P$ and $P^{-1}$", "写出 $P$ 和 $P^{-1}$"],
+                t("The basis vectors are the columns of $P$:", "基向量是 $P$ 的列："),
+                [`P = ${mat2Latex(P)}, \\quad P^{-1} = ${mat2Latex(Pinv)}`],
+              ],
+              [["Apply $T$ to the basis", "把 $T$ 作用于基"], t("", ""), [`AP = ${mat2Latex(AP)}`]],
+              [
+                ["Rewrite in $B$-coordinates", "写成 $B$ 坐标"],
+                t("", ""),
+                [`[T]_B = P^{-1}AP = ${mat2Latex(M)}`, `\\text{entry } (${pos[i]}, ${pos[j]}) = ${ans}`],
+              ],
+            ],
+            t(
+              `Similar matrices share the trace: $${M[0][0]} + ${paren(M[1][1])} = ${M[0][0] + M[1][1]}$ and $${A[0][0]} + ${paren(A[1][1])} = ${A[0][0] + A[1][1]}$.`,
+              `相似矩阵的迹相同：$${M[0][0]} + ${paren(M[1][1])} = ${M[0][0] + M[1][1]}$，$${A[0][0]} + ${paren(A[1][1])} = ${A[0][0] + A[1][1]}$。`,
+            ),
           ),
         });
       },
@@ -974,6 +1427,10 @@ export const connectionsBetweenMatrixRepresentationsOfALinearTransformation: Top
     "Relate matrix representations of a linear transformation under different bases using similarity transformations.",
     "通过相似变换联系线性变换在不同基下的矩阵表示。",
   ),
+  intro: t(
+    "Let $[T]_B = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$ and let $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ change coordinates from $C$ to $B$. Then $[T]_C = P^{-1}[T]_B P = \\begin{pmatrix} 1 & -1 \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 2 & 3 \\\\ 0 & 3 \\end{pmatrix} = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$. The entries changed, but the trace is $5$ and the determinant is $6$ in both.\n\nCheck: $\\operatorname{tr} [T]_B = 2 + 3 = 5$ and $\\det [T]_B = 2 \\cdot 3 - 1 \\cdot 0 = 6$, the same as for $\\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$.\n\nIn this lesson we relate two matrices of one operator by a similarity and use the quantities they share, such as the trace and the determinant.",
+    "设 $[T]_B = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}$，$P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ 把坐标从 $C$ 换到 $B$。则 $[T]_C = P^{-1}[T]_B P = \\begin{pmatrix} 1 & -1 \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 2 & 3 \\\\ 0 & 3 \\end{pmatrix} = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$。矩阵元变了，但两者的迹都是 $5$，行列式都是 $6$。\n\n检验：$\\operatorname{tr} [T]_B = 2 + 3 = 5$，$\\det [T]_B = 2 \\cdot 3 - 1 \\cdot 0 = 6$，与 $\\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$ 相同。\n\n本课我们用相似关系联系同一算子的两个矩阵，并利用它们共有的量，例如迹和行列式。",
+  ),
   prerequisites: ["matrix-of-a-linear-transformation-relative-to-a-basis"],
   encompasses: [],
   xp: 14,
@@ -982,42 +1439,68 @@ export const connectionsBetweenMatrixRepresentationsOfALinearTransformation: Top
       id: "similarity-under-change-of-basis",
       title: t("Similarity Under Change of Basis", "基变换下的相似关系"),
       explanation: t(
-        "The two matrices describe the same transformation in different coordinates, so converting coordinates before and after relates them by a similarity. Apply the formula $[T]_C = P^{-1} [T]_B P$, where $P$ is the change-of-basis matrix from $C$ to $B$.",
-        "两个矩阵在不同坐标下描述同一个变换，所以在变换前后转换坐标，就把它们用相似关系联系起来。应用公式 $[T]_C = P^{-1} [T]_B P$，其中 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。",
+        "The two matrices describe the same transformation in different coordinates, so converting coordinates before and after relates them by a similarity. Apply the formula $[T]_C = P^{-1} [T]_B P$, where $P$ is the change-of-basis matrix from $C$ to $B$. Similar matrices have the same characteristic polynomial, so they share the trace and the determinant. For example, if $[T]_B$ has trace $5$ and determinant $6$, then so does $[T]_C$ for every other basis $C$.\n\n> **Watch out.** The individual entries do change with the basis; only quantities such as the trace, the determinant and the eigenvalues stay fixed.",
+        "两个矩阵在不同坐标下描述同一个变换，所以在变换前后转换坐标，就把它们用相似关系联系起来。应用公式 $[T]_C = P^{-1} [T]_B P$，其中 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。相似矩阵有相同的特征多项式，所以迹和行列式都相同。例如若 $[T]_B$ 的迹为 $5$、行列式为 $6$，则对任意其他基 $C$，$[T]_C$ 也是如此。\n\n> **注意。** 单个矩阵元会随基改变；只有迹、行列式和特征值这类量保持不变。",
       ),
       generate: (rng: Rng): Problem => {
         const trace = rng.int(-8, 8);
         const det = rng.int(-9, 9);
         const askTrace = rng.bool();
-        if (askTrace) {
-          const prompt = t(
-            `Let $B$ and $C$ be two bases of a vector space $V$, and let $P$ be the change-of-basis matrix from $C$ to $B$. If the matrix of a linear operator $T$ relative to $B$ has trace $\\operatorname{tr}([T]_B) = ${trace}$ and determinant $\\det([T]_B) = ${det}$, what is the trace $\\operatorname{tr}([T]_C)$?`,
-            `设 $B$ 与 $C$ 为向量空间 $V$ 的两组基，且 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。若线性算子 $T$ 关于基 $B$ 的矩阵的迹为 $\\operatorname{tr}([T]_B) = ${trace}$ 且行列式为 $\\det([T]_B) = ${det}$，求 $\\operatorname{tr}([T]_C)$。`,
-          );
-          const solution = t(
-            `The matrices $[T]_B$ and $[T]_C$ are similar via $[T]_C = P^{-1} [T]_B P$. Since similar matrices share the same characteristic polynomial, the trace is invariant under change of basis. Thus, $\\operatorname{tr}([T]_C) = \\operatorname{tr}([T]_B) = ${trace}$.`,
-            `矩阵 $[T]_B$ 与 $[T]_C$ 满足相似关系 $[T]_C = P^{-1} [T]_B P$。因为相似矩阵具有相同的特征多项式，所以迹在基变换下保持不变。故 $\\operatorname{tr}([T]_C) = \\operatorname{tr}([T]_B) = ${trace}$。`,
-          );
-          return numberProblem({
-            prompt,
-            answer: trace,
-            solution,
-            wrong: [-trace, det, 0, trace + 1].filter((w) => w !== trace),
-          });
-        }
+        const name = askTrace ? "\\operatorname{tr}" : "\\det";
+        const ans = askTrace ? trace : det;
         const prompt = t(
-          `Let $B$ and $C$ be two bases of a vector space $V$, and let $P$ be the change-of-basis matrix from $C$ to $B$. If the matrix of a linear operator $T$ relative to $B$ has trace $\\operatorname{tr}([T]_B) = ${trace}$ and determinant $\\det([T]_B) = ${det}$, what is the determinant $\\det([T]_C)$?`,
-          `设 $B$ 与 $C$ 为向量空间 $V$ 的两组基，且 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。若线性算子 $T$ 关于基 $B$ 的矩阵的迹为 $\\operatorname{tr}([T]_B) = ${trace}$ 且行列式为 $\\det([T]_B) = ${det}$，求 $\\det([T]_C)$。`,
+          `Let $B$ and $C$ be two bases of a vector space $V$, and let $P$ be the change-of-basis matrix from $C$ to $B$. If the matrix of a linear operator $T$ relative to $B$ has trace $\\operatorname{tr}([T]_B) = ${trace}$ and determinant $\\det([T]_B) = ${det}$, what is ${askTrace ? "the trace $\\operatorname{tr}([T]_C)$" : "the determinant $\\det([T]_C)$"}?`,
+          `设 $B$ 与 $C$ 为向量空间 $V$ 的两组基，且 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。若线性算子 $T$ 关于基 $B$ 的矩阵的迹为 $\\operatorname{tr}([T]_B) = ${trace}$ 且行列式为 $\\det([T]_B) = ${det}$，求 $${name}([T]_C)$。`,
         );
-        const solution = t(
-          `The matrices $[T]_B$ and $[T]_C$ are similar via $[T]_C = P^{-1} [T]_B P$. Since similar matrices share the same characteristic polynomial, the determinant is invariant under change of basis. Thus, $\\det([T]_C) = \\det([T]_B) = ${det}$.`,
-          `矩阵 $[T]_B$ 与 $[T]_C$ 满足相似关系 $[T]_C = P^{-1} [T]_B P$。因为相似矩阵具有相同的特征多项式，所以行列式在基变换下保持不变。故 $\\det([T]_C) = \\det([T]_B) = ${det}$。`,
+        const solution = walked(
+          [
+            [["Write the similarity", "写出相似关系"], t("", ""), [`[T]_C = P^{-1}[T]_B P`]],
+            [
+              ["Use the invariant", "利用不变量"],
+              askTrace
+                ? t("The trace of a product does not change when its factors are cycled:", "乘积的迹在因子轮换时不变：")
+                : t("The determinant is multiplicative and $\\det(P^{-1})\\det(P) = 1$:", "行列式可乘，且 $\\det(P^{-1})\\det(P) = 1$："),
+              askTrace
+                ? [
+                    `\\operatorname{tr}\\left(P^{-1}([T]_B P)\\right) = \\operatorname{tr}\\left([T]_B P P^{-1}\\right) = \\operatorname{tr}([T]_B) = ${trace}`,
+                  ]
+                : [`\\det\\left(P^{-1}[T]_B P\\right) = \\det(P^{-1})\\det([T]_B)\\det(P) = \\det([T]_B) = ${det}`],
+            ],
+          ],
+          t(
+            `Both matrices have the characteristic polynomial $\\lambda^2 - ${paren(trace)}\\lambda + ${paren(det)}$, whose coefficients are the trace and the determinant.`,
+            `两个矩阵的特征多项式都是 $\\lambda^2 - ${paren(trace)}\\lambda + ${paren(det)}$，其系数正是迹和行列式。`,
+          ),
         );
         return numberProblem({
           prompt,
-          answer: det,
+          answer: ans,
+          form: "integer",
           solution,
-          wrong: [-det, trace, 1, det + 1].filter((w) => w !== det),
+          mistakes: (askTrace
+            ? [
+                why(-trace, "The trace keeps its sign under a change of basis.", "换基时迹的符号不变。"),
+                why(det, "That is the determinant; the question asks for the trace.", "这是行列式；题目问的是迹。"),
+                why(
+                  0,
+                  "The trace is not lost when the basis changes; it is the same for both matrices.",
+                  "换基后迹不会消失；两个矩阵的迹相同。",
+                ),
+              ]
+            : [
+                why(
+                  -det,
+                  "The determinant keeps its sign: $\\det(P^{-1})$ and $\\det(P)$ multiply to $1$.",
+                  "行列式的符号不变：$\\det(P^{-1})$ 与 $\\det(P)$ 之积为 $1$。",
+                ),
+                why(trace, "That is the trace; the question asks for the determinant.", "这是迹；题目问的是行列式。"),
+                why(
+                  1,
+                  "$\\det(P^{-1})\\det(P) = 1$, but $\\det([T]_B)$ remains as a factor.",
+                  "$\\det(P^{-1})\\det(P) = 1$，但 $\\det([T]_B)$ 仍是一个因子。",
+                ),
+              ]
+          ).filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -1025,8 +1508,8 @@ export const connectionsBetweenMatrixRepresentationsOfALinearTransformation: Top
       id: "invariants-shared-by-similar-representations",
       title: t("Invariants shared by similar representations", "相似表示共有的不变量"),
       explanation: t(
-        "Two matrices of the same operator relative to different bases are similar: $[T]_C = P^{-1}[T]_B P$. Similar matrices have the same trace, determinant and eigenvalues, and so do their powers, since $[T]_C^2 = P^{-1}[T]_B^2 P$. So $\\operatorname{tr}([T]_C^2)$ can be computed from $[T]_B$ without knowing $P$.",
-        "同一算子关于不同基的两个矩阵是相似的：$[T]_C = P^{-1}[T]_B P$。相似矩阵有相同的迹、行列式和特征值，它们的幂也是如此，因为 $[T]_C^2 = P^{-1}[T]_B^2 P$。所以无需知道 $P$ 就能由 $[T]_B$ 算出 $\\operatorname{tr}([T]_C^2)$。",
+        "Two matrices of the same operator relative to different bases are similar: $[T]_C = P^{-1}[T]_B P$. Similar matrices have the same trace, determinant and eigenvalues, and so do their powers, since $[T]_C^2 = P^{-1}[T]_B^2 P$. So $\\operatorname{tr}([T]_C^2)$ can be computed from $[T]_B$ without knowing $P$. For example, $[T]_B = \\begin{pmatrix} 1 & 2 \\\\ 3 & 0 \\end{pmatrix}$ has $[T]_B^2 = \\begin{pmatrix} 7 & 2 \\\\ 3 & 6 \\end{pmatrix}$, so $\\operatorname{tr}([T]_C^2) = 13$.\n\n> **Watch out.** The trace of the square is not the square of the trace: $\\operatorname{tr}(M^2) = a^2 + d^2 + 2bc$ includes the off-diagonal entries.",
+        "同一算子关于不同基的两个矩阵是相似的：$[T]_C = P^{-1}[T]_B P$。相似矩阵有相同的迹、行列式和特征值，它们的幂也是如此，因为 $[T]_C^2 = P^{-1}[T]_B^2 P$。所以无需知道 $P$ 就能由 $[T]_B$ 算出 $\\operatorname{tr}([T]_C^2)$。例如 $[T]_B = \\begin{pmatrix} 1 & 2 \\\\ 3 & 0 \\end{pmatrix}$ 有 $[T]_B^2 = \\begin{pmatrix} 7 & 2 \\\\ 3 & 6 \\end{pmatrix}$，所以 $\\operatorname{tr}([T]_C^2) = 13$。\n\n> **注意。** 平方的迹不是迹的平方：$\\operatorname{tr}(M^2) = a^2 + d^2 + 2bc$ 包含非对角元。",
       ),
       generate(rng: Rng): Problem {
         const M: Mat2 = [
@@ -1042,10 +1525,40 @@ export const connectionsBetweenMatrixRepresentationsOfALinearTransformation: Top
             `算子 $T$ 关于基 $B$ 的矩阵为 $[T]_B = ${mat2Latex(M)}$。对另一组基 $C$，求 $\\operatorname{tr}\\left([T]_C^2\\right)$。`,
           ),
           answer: ans,
-          wrong: [tr * tr, M[0][0] ** 2 + M[1][1] ** 2, tr],
-          solution: t(
-            `$[T]_C^2$ is similar to $[T]_B^2 = ${mat2Latex(M2)}$, so its trace is $${M2[0][0]} + ${paren(M2[1][1])} = ${ans}$.`,
-            `$[T]_C^2$ 与 $[T]_B^2 = ${mat2Latex(M2)}$ 相似，所以其迹为 $${M2[0][0]} + ${paren(M2[1][1])} = ${ans}$。`,
+          form: "integer",
+          mistakes: [
+            why(
+              tr * tr,
+              "That squares the trace; the trace of the square also has the term $2bc$ from the off-diagonal entries.",
+              "这是迹的平方；平方的迹还包含非对角元给出的 $2bc$ 项。",
+            ),
+            why(
+              M[0][0] ** 2 + M[1][1] ** 2,
+              "That squares only the diagonal entries; the diagonal of $M^2$ also has the products $bc$.",
+              "这只把对角元平方了；$M^2$ 的对角元还含乘积 $bc$。",
+            ),
+            why(tr, "That is the trace of $[T]_C$ itself, not of its square.", "这是 $[T]_C$ 本身的迹，而不是其平方的迹。"),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Move to the basis $B$", "换到基 $B$"],
+                t(
+                  "$[T]_C^2 = P^{-1}[T]_B^2 P$ is similar to $[T]_B^2$, so it has the same trace.",
+                  "$[T]_C^2 = P^{-1}[T]_B^2 P$ 与 $[T]_B^2$ 相似，所以迹相同。",
+                ),
+              ],
+              [["Square $[T]_B$", "求 $[T]_B$ 的平方"], t("", ""), [`[T]_B^2 = ${mat2Latex(M2)}`]],
+              [
+                ["Add the diagonal", "对角元相加"],
+                t("", ""),
+                [`\\operatorname{tr}\\left([T]_C^2\\right) = ${M2[0][0]} + ${paren(M2[1][1])} = ${ans}`],
+              ],
+            ],
+            t(
+              `By the formula $a^2 + d^2 + 2bc$: $${paren(M[0][0])}^2 + ${paren(M[1][1])}^2 + 2 \\cdot ${paren(M[0][1])} \\cdot ${paren(M[1][0])} = ${ans}$.`,
+              `由公式 $a^2 + d^2 + 2bc$：$${paren(M[0][0])}^2 + ${paren(M[1][1])}^2 + 2 \\cdot ${paren(M[0][1])} \\cdot ${paren(M[1][0])} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -1061,6 +1574,10 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
     "Evaluate and analyze linear maps between distinct vector spaces, such as polynomial and coordinate spaces.",
     "求值并分析不同向量空间之间的线性映射，如多项式空间与坐标空间之间的映射。",
   ),
+  intro: t(
+    "The map $T: P_2 \\to \\mathbb{R}^2$, $T(p) = (p(1), p'(0))$, takes a polynomial and returns a vector. For $p(x) = x^2 + 3x - 2$: $p(1) = 1 + 3 - 2 = 2$ and $p'(x) = 2x + 3$, so $p'(0) = 3$ and $T(p) = (2, 3)$.\n\nCheck: by linearity, $T(x^2) = (1, 0)$, $T(x) = (1, 1)$ and $T(1) = (1, 0)$, so $T(p) = (1, 0) + 3(1, 1) - 2(1, 0) = (2, 3)$.\n\nIn this lesson we evaluate linear maps whose inputs and outputs live in different spaces, such as polynomials and vectors or numbers.",
+    "映射 $T: P_2 \\to \\mathbb{R}^2$，$T(p) = (p(1), p'(0))$，输入多项式，输出向量。对 $p(x) = x^2 + 3x - 2$：$p(1) = 1 + 3 - 2 = 2$，$p'(x) = 2x + 3$，所以 $p'(0) = 3$，$T(p) = (2, 3)$。\n\n检验：由线性性，$T(x^2) = (1, 0)$，$T(x) = (1, 1)$，$T(1) = (1, 0)$，所以 $T(p) = (1, 0) + 3(1, 1) - 2(1, 0) = (2, 3)$。\n\n本课我们对输入和输出位于不同空间（如多项式与向量或数）的线性映射求值。",
+  ),
   prerequisites: ["connections-between-matrix-representations-of-a-linear-transformation"],
   encompasses: [],
   xp: 14,
@@ -1069,8 +1586,8 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
       id: "evaluating-maps-between-distinct-spaces",
       title: t("Evaluating Maps Between Distinct Spaces", "在不同空间之间求值线性映射"),
       explanation: t(
-        "A linear transformation can take inputs from one kind of space, such as polynomials, and produce outputs in another, so apply its rule directly to the given input. Evaluate linear transformations from $\\mathbb{P}_2$ to $\\mathbb{R}^2$ or between other distinct spaces.",
-        "线性变换可以从一种空间（例如多项式空间）取输入，在另一种空间中给出输出，所以直接把它的规则用于给定的输入。求从 $\\mathbb{P}_2$ 到 $\\mathbb{R}^2$ 等不同空间之间的线性映射的值。",
+        "A linear transformation can take inputs from one kind of space, such as polynomials, and produce outputs in another, so apply its rule directly to the given input. Evaluate linear transformations from $\\mathbb{P}_2$ to $\\mathbb{R}^2$ or between other distinct spaces. For example, $T(p) = (p(2), p'(1))$ sends $p(x) = x^2 - x$ to $(4 - 2, 2 \\cdot 1 - 1) = (2, 1)$.\n\n> **Watch out.** Read each entry of the rule carefully: $p'(b)$ means differentiate first and then substitute $b$, not $p(b)$.",
+        "线性变换可以从一种空间（例如多项式空间）取输入，在另一种空间中给出输出，所以直接把它的规则用于给定的输入。求从 $\\mathbb{P}_2$ 到 $\\mathbb{R}^2$ 等不同空间之间的线性映射的值。例如 $T(p) = (p(2), p'(1))$ 把 $p(x) = x^2 - x$ 映为 $(4 - 2, 2 \\cdot 1 - 1) = (2, 1)$。\n\n> **注意。** 仔细读规则的每个分量：$p'(b)$ 表示先求导再代入 $b$，而不是 $p(b)$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(1, 3);
@@ -1078,10 +1595,7 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
         const c = rng.int(1, 4);
         const d = rng.int(-3, 3);
         const e = rng.int(-4, 4);
-        // p(x) = c x^2 + d x + e
-        // T(p) = (p(a), p'(b))^T
-        // p(a) = c * a^2 + d * a + e
-        // p'(b) = 2 * c * b + d
+        // p(x) = c x^2 + d x + e and T(p) = (p(a), p'(b)).
         const val1 = c * a * a + d * a + e;
         const val2 = 2 * c * b + d;
         const polyStr = formatPoly2(c, d, e);
@@ -1092,30 +1606,51 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
         const dEval = d === 0 ? "" : d > 0 ? ` + ${d}(${a})` : ` - ${-d}(${a})`;
         const eEval = e === 0 ? "" : e > 0 ? ` + ${e}` : ` - ${-e}`;
         const dPrime = d === 0 ? "" : d > 0 ? ` + ${d}` : ` - ${-d}`;
-        const solution = t(
-          `Evaluate $p(${a}) = ${c}(${a})^2${dEval}${eEval} = ${val1}$ and $p'(x) = ${2 * c}x${dPrime}$, so $p'(${b}) = ${2 * c}(${b})${dPrime} = ${val2}$. Thus, $T(p) = \\langle ${val1}, ${val2} \\rangle$.`,
-          `求值 $p(${a}) = ${c}(${a})^2${dEval}${eEval} = ${val1}$，而导数为 $p'(x) = ${2 * c}x${dPrime}$，故 $p'(${b}) = ${2 * c}(${b})${dPrime} = ${val2}$。因此 $T(p) = \\langle ${val1}, ${val2} \\rangle$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [val1, val2],
-          vector: true,
-          solution,
-          wrong: [
-            [val2, val1],
-            [val1 + 1, val2],
-            [val1, val2 - 2],
-            [-val1, val2],
+        const solution = walked(
+          [
+            [["Evaluate $p$", "求 $p$ 的值"], t("", ""), [`p(${a}) = ${c}(${a})^2${dEval}${eEval} = ${val1}`]],
+            [
+              ["Differentiate, then substitute", "先求导，再代入"],
+              t("", ""),
+              [`p'(x) = ${formatPoly2(0, 2 * c, d)}`, `p'(${b}) = ${2 * c}(${b})${dPrime} = ${val2}`],
+            ],
           ],
-        });
+          t(
+            `Term by term, $T(x^2) = (${a * a}, ${2 * b})$, $T(x) = (${a}, 1)$ and $T(1) = (1, 0)$, so $T(p) = ${c}(${a * a}, ${2 * b}) + ${paren(d)}(${a}, 1) + ${paren(e)}(1, 0) = (${val1}, ${val2})$.`,
+            `逐项计算，$T(x^2) = (${a * a}, ${2 * b})$，$T(x) = (${a}, 1)$，$T(1) = (1, 0)$，所以 $T(p) = ${c}(${a * a}, ${2 * b}) + ${paren(d)}(${a}, 1) + ${paren(e)}(1, 0) = (${val1}, ${val2})$。`,
+          ),
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer: [val1, val2], vector: true, solution }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([val2, val1]),
+                "The entries are swapped: the first entry is $p(a)$ and the second is $p'(b)$.",
+                "两个分量交换了：第一个分量是 $p(a)$，第二个是 $p'(b)$。",
+              ),
+              say(
+                vectorLatex([val1, c * b * b + d * b + e]),
+                `The second entry is $p'(${b})$; this substitutes $${b}$ into $p$ instead of into $p'$.`,
+                `第二个分量是 $p'(${b})$；这是把 $${b}$ 代入了 $p$，而不是 $p'$。`,
+              ),
+              say(
+                vectorLatex([val1, c * b + d]),
+                `The derivative of $${c}x^2$ is $${2 * c}x$; the factor $2$ is missing.`,
+                `$${c}x^2$ 的导数是 $${2 * c}x$；漏了因子 $2$。`,
+              ),
+            ],
+            vectorLatex([val1, val2]),
+          ),
+        );
       },
     },
     {
       id: "an-integral-map-from-polynomials-to-numbers",
       title: t("An integral map from polynomials to numbers", "从多项式到数的积分映射"),
       explanation: t(
-        "A linear map can go between spaces of different kinds. The map $T: P_2 \\to \\mathbb{R}$, $T(p) = \\int_0^k p(x)\\,dx$, is linear because integrals respect sums and constant multiples. To evaluate it on $p(x) = ax^2 + bx + c$, integrate term by term:\n\n$$T(p) = \\frac{a k^3}{3} + \\frac{b k^2}{2} + ck.$$",
-        "线性映射可以在不同种类的空间之间进行。映射 $T: P_2 \\to \\mathbb{R}$，$T(p) = \\int_0^k p(x)\\,dx$ 是线性的，因为积分保持和与常数倍。要在 $p(x) = ax^2 + bx + c$ 上求值，逐项积分：\n\n$$T(p) = \\frac{a k^3}{3} + \\frac{b k^2}{2} + ck.$$",
+        "A linear map can go between spaces of different kinds. The map $T: P_2 \\to \\mathbb{R}$, $T(p) = \\int_0^k p(x)\\,dx$, is linear because integrals respect sums and constant multiples. To evaluate it on $p(x) = ax^2 + bx + c$, integrate term by term:\n\n$$T(p) = \\frac{a k^3}{3} + \\frac{b k^2}{2} + ck.$$\n\nFor example, with $k = 2$ and $p(x) = 3x^2 + x - 1$, $T(p) = \\frac{3 \\cdot 8}{3} + \\frac{4}{2} - 2 = 8$.\n\n> **Watch out.** Integrating is not substituting: $\\int_0^k x^2\\,dx = \\frac{k^3}{3}$, not $k^2$.",
+        "线性映射可以在不同种类的空间之间进行。映射 $T: P_2 \\to \\mathbb{R}$，$T(p) = \\int_0^k p(x)\\,dx$ 是线性的，因为积分保持和与常数倍。要在 $p(x) = ax^2 + bx + c$ 上求值，逐项积分：\n\n$$T(p) = \\frac{a k^3}{3} + \\frac{b k^2}{2} + ck.$$\n\n例如 $k = 2$，$p(x) = 3x^2 + x - 1$ 时，$T(p) = \\frac{3 \\cdot 8}{3} + \\frac{4}{2} - 2 = 8$。\n\n> **注意。** 积分不是代入：$\\int_0^k x^2\\,dx = \\frac{k^3}{3}$，而不是 $k^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4) || 3;
@@ -1125,16 +1660,52 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
         const ans = Q.of(a * k ** 3, 3)
           .add(Q.of(b * k * k, 2))
           .add(Q.of(c * k));
+        const candidates: readonly (readonly [Q, string, string])[] = [
+          [
+            Q.of(a * k * k + b * k + c),
+            `That is $p(${k})$; the map integrates $p$ from $0$ to $${k}$.`,
+            `这是 $p(${k})$；该映射是把 $p$ 从 $0$ 积分到 $${k}$。`,
+          ],
+          [
+            Q.of(a * k ** 3 + b * k * k + c * k),
+            "The powers were raised but not divided: $x^2$ integrates to $\\frac{x^3}{3}$ and $x$ to $\\frac{x^2}{2}$.",
+            "次数升高了却没有相除：$x^2$ 的积分是 $\\frac{x^3}{3}$，$x$ 的积分是 $\\frac{x^2}{2}$。",
+          ],
+          [
+            Q.of(2 * a * k + b),
+            `That is $p'(${k})$; the map integrates rather than differentiates.`,
+            `这是 $p'(${k})$；该映射是积分而不是求导。`,
+          ],
+        ];
+        const mistakes = candidates
+          .filter(([v], i, all) => !v.eq(ans) && all.findIndex(([o]) => o.eq(v)) === i)
+          .map(([v, en, zh]) => why(v, en, zh));
         return numberProblem({
           prompt: t(
             `Let $T: P_2 \\to \\mathbb{R}$ be $T(p) = \\int_0^{${k}} p(x)\\,dx$. Find $T(p)$ for $p(x) = ${formatPoly2(a, b, c)}$.`,
             `设 $T: P_2 \\to \\mathbb{R}$，$T(p) = \\int_0^{${k}} p(x)\\,dx$。对 $p(x) = ${formatPoly2(a, b, c)}$ 求 $T(p)$。`,
           ),
           answer: ans,
-          wrong: [Q.of(a * k * k + b * k + c), Q.of(a * k ** 3 + b * k * k + c * k), Q.of(2 * a * k + b)],
-          solution: t(
-            `$T(p) = \\frac{${a} \\cdot ${k ** 3}}{3} + \\frac{${b} \\cdot ${k * k}}{2} + ${paren(c)} \\cdot ${k} = ${ans.toLatex()}$.`,
-            `$T(p) = \\frac{${a} \\cdot ${k ** 3}}{3} + \\frac{${b} \\cdot ${k * k}}{2} + ${paren(c)} \\cdot ${k} = ${ans.toLatex()}$。`,
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Integrate each basis polynomial", "对每个基多项式积分"],
+                t("", ""),
+                [
+                  `\\int_0^{${k}} x^2\\,dx = \\frac{${k ** 3}}{3}, \\quad \\int_0^{${k}} x\\,dx = \\frac{${k * k}}{2}, \\quad \\int_0^{${k}} 1\\,dx = ${k}`,
+                ],
+              ],
+              [
+                ["Combine by linearity", "用线性性组合"],
+                t("", ""),
+                [`T(p) = \\frac{${a} \\cdot ${k ** 3}}{3} + \\frac{${b} \\cdot ${k * k}}{2} + ${paren(c)} \\cdot ${k} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `The antiderivative $F(x) = \\frac{${a}}{3}x^3 + \\frac{${b}}{2}x^2 + ${paren(c)}x$ has $F'(x) = p(x)$ and $F(0) = 0$, so $T(p) = F(${k}) = ${ans.toLatex()}$.`,
+              `原函数 $F(x) = \\frac{${a}}{3}x^3 + \\frac{${b}}{2}x^2 + ${paren(c)}x$ 满足 $F'(x) = p(x)$ 且 $F(0) = 0$，所以 $T(p) = F(${k}) = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -1150,6 +1721,10 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
     "Find the matrix representation of a linear map T: V -> W relative to a basis B of V and a basis C of W.",
     "求线性映射 T: V -> W 关于 V 的基 B 与 W 的基 C 的矩阵表示。",
   ),
+  intro: t(
+    "Let $T: P_1 \\to P_2$ be $T(p) = x\\,p(x)$, with $B = \\{1, x\\}$ and $C = \\{1, x, x^2\\}$. Then $T(1) = x$ has $C$-coordinates $(0, 1, 0)$ and $T(x) = x^2$ has $(0, 0, 1)$, so $[T]_{C \\leftarrow B} = \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\\\ 0 & 1 \\end{pmatrix}$, a $3 \\times 2$ matrix.\n\nCheck: $p = 2 + 5x$ has $B$-coordinates $(2, 5)$, and the matrix sends them to $(0, 2, 5)$, which is $2x + 5x^2 = x(2 + 5x)$.\n\nIn this lesson we build the matrix of a map between two spaces, one basis for the inputs and one for the outputs.",
+    "设 $T: P_1 \\to P_2$，$T(p) = x\\,p(x)$，$B = \\{1, x\\}$，$C = \\{1, x, x^2\\}$。则 $T(1) = x$ 的 $C$ 坐标为 $(0, 1, 0)$，$T(x) = x^2$ 的为 $(0, 0, 1)$，所以 $[T]_{C \\leftarrow B} = \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\\\ 0 & 1 \\end{pmatrix}$，是一个 $3 \\times 2$ 矩阵。\n\n检验：$p = 2 + 5x$ 的 $B$ 坐标为 $(2, 5)$，矩阵把它映为 $(0, 2, 5)$，即 $2x + 5x^2 = x(2 + 5x)$。\n\n本课我们求两个空间之间映射的矩阵：输入用一组基，输出用另一组基。",
+  ),
   prerequisites: ["linear-maps-between-two-different-vector-spaces"],
   encompasses: [],
   xp: 14,
@@ -1158,20 +1733,13 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
       id: "matrix-with-two-bases-computation",
       title: t("Matrix with Two Bases Computation", "双基矩阵表示的计算"),
       explanation: t(
-        "When the domain and codomain have different bases, apply the transformation to each input basis vector and write each result in coordinates of the output basis. Construct $[T]_{C \\leftarrow B}$, whose columns are the $C$-coordinate vectors of the images of the $B$-basis vectors.",
-        "当定义域和值域用不同的基时，把变换作用在每个输入基向量上，再把每个结果写成输出基下的坐标。构造矩阵 $[T]_{C \\leftarrow B}$，其各列为基 $B$ 中向量的像在基 $C$ 下的坐标向量。",
+        "When the domain and codomain have different bases, apply the transformation to each input basis vector and write each result in coordinates of the output basis. Construct $[T]_{C \\leftarrow B}$, whose columns are the $C$-coordinate vectors of the images of the $B$-basis vectors. It has one row per vector of $C$ and one column per vector of $B$. For example, $T(p) = p'(x) + 2p(0)$ from $P_2$ to $P_1$ gives $T(1) = 2$, $T(x) = 1$, $T(x^2) = 2x$, so $[T]_{C \\leftarrow B} = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 0 & 2 \\end{pmatrix}$.\n\n> **Watch out.** The matrix is $\\dim W \\times \\dim V$: here $2 \\times 3$, not $3 \\times 2$.",
+        "当定义域和值域用不同的基时，把变换作用在每个输入基向量上，再把每个结果写成输出基下的坐标。构造矩阵 $[T]_{C \\leftarrow B}$，其各列为基 $B$ 中向量的像在基 $C$ 下的坐标向量。它对 $C$ 中每个向量有一行，对 $B$ 中每个向量有一列。例如从 $P_2$ 到 $P_1$ 的 $T(p) = p'(x) + 2p(0)$ 给出 $T(1) = 2$，$T(x) = 1$，$T(x^2) = 2x$，所以 $[T]_{C \\leftarrow B} = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 0 & 2 \\end{pmatrix}$。\n\n> **注意。** 矩阵的大小是 $\\dim W \\times \\dim V$：这里是 $2 \\times 3$，而不是 $3 \\times 2$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(2, 6);
         const b = rng.pick([-5, -4, -3, 3, 4, 5])!;
-        // T: P_2 -> P_1 defined by T(p) = a * p' + b * p(0)
-        // Basis B = {1, x, x^2}, C = {1, x}
-        // T(1) = a(0) + b(1) = b = b*1 + 0*x
-        // T(x) = a(1) + b(0) = a = a*1 + 0*x
-        // T(x^2) = a(2x) + b(0) = 2a*x = 0*1 + (2a)*x
-        // Matrix:
-        // [ b  a  0 ]
-        // [ 0  0  2a]
+        // T(p) = a p' + b p(0) on B = {1, x, x^2}, C = {1, x}: T(1) = b, T(x) = a, T(x^2) = 2a x.
         const mLatex = `\\begin{pmatrix} ${b} & ${a} & 0 \\\\ 0 & 0 & ${2 * a} \\end{pmatrix}`;
         const bTerm = b >= 0 ? `+ ${b}` : `- ${-b}`;
         const prompt = t(
@@ -1179,37 +1747,64 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
           `设 $T: P_2 \\to P_1$ 为由 $T(p) = ${a} p'(x) ${bTerm} p(0)$ 定义的线性映射。设 $B = \\{1, x, x^2\\}$ 为 $P_2$ 的标准基，$C = \\{1, x\\}$ 为 $P_1$ 的标准基。求矩阵 $[T]_{C \\leftarrow B}$。`,
         );
         const right = t(`$${mLatex}$`, `$${mLatex}$`);
+        const m = (s: string) => t(`$${s}$`, `$${s}$`);
         const wrong = [
-          t(
-            `$\\begin{pmatrix} ${a} & ${b} & 0 \\\\ 0 & 0 & ${2 * a} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${a} & ${b} & 0 \\\\ 0 & 0 & ${2 * a} \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} ${b} & 0 \\\\ ${a} & 0 \\\\ 0 & ${2 * a} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${b} & 0 \\\\ ${a} & 0 \\\\ 0 & ${2 * a} \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} ${b} & ${a} & 0 \\\\ 0 & ${2 * a} & 0 \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${b} & ${a} & 0 \\\\ 0 & ${2 * a} & 0 \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} 0 & ${a} & ${b} \\\\ ${2 * a} & 0 & 0 \\end{pmatrix}$`,
-            `$\\begin{pmatrix} 0 & ${a} & ${b} \\\\ ${2 * a} & 0 & 0 \\end{pmatrix}$`,
-          ),
+          m(`\\begin{pmatrix} ${a} & ${b} & 0 \\\\ 0 & 0 & ${2 * a} \\end{pmatrix}`),
+          m(`\\begin{pmatrix} ${b} & 0 \\\\ ${a} & 0 \\\\ 0 & ${2 * a} \\end{pmatrix}`),
+          m(`\\begin{pmatrix} ${b} & ${a} & 0 \\\\ 0 & ${2 * a} & 0 \\end{pmatrix}`),
+          m(`\\begin{pmatrix} 0 & ${a} & ${b} \\\\ ${2 * a} & 0 & 0 \\end{pmatrix}`),
         ];
-        const solution = t(
-          `We compute the images of the basis vectors in $B$ and express them in basis $C$: $T(1) = ${b}$ with coordinates $\\begin{pmatrix} ${b} \\\\ 0 \\end{pmatrix}$, $T(x) = ${a}$ with coordinates $\\begin{pmatrix} ${a} \\\\ 0 \\end{pmatrix}$, and $T(x^2) = ${2 * a}x$ with coordinates $\\begin{pmatrix} 0 \\\\ ${2 * a} \\end{pmatrix}$. Arranging these coordinate vectors as columns yields $[T]_{C \\leftarrow B} = ${mLatex}$.`,
-          `计算基 $B$ 中各基向量在基 $C$ 下的坐标：$T(1) = ${b}$ 的坐标为 $\\begin{pmatrix} ${b} \\\\ 0 \\end{pmatrix}$，$T(x) = ${a}$ 的坐标为 $\\begin{pmatrix} ${a} \\\\ 0 \\end{pmatrix}$，$T(x^2) = ${2 * a}x$ 的坐标为 $\\begin{pmatrix} 0 \\\\ ${2 * a} \\end{pmatrix}$。将各坐标向量按列排列，得到 $[T]_{C \\leftarrow B} = ${mLatex}$。`,
+        const solution = walked(
+          [
+            [
+              ["Apply $T$ to each vector of $B$", "把 $T$ 作用于 $B$ 的每个向量"],
+              t("", ""),
+              [
+                `T(1) = ${a} \\cdot 0 ${bTerm} \\cdot 1 = ${b}`,
+                `T(x) = ${a} \\cdot 1 ${bTerm} \\cdot 0 = ${a}`,
+                `T(x^2) = ${a} \\cdot 2x ${bTerm} \\cdot 0 = ${2 * a}x`,
+              ],
+            ],
+            [
+              ["Write the $C$-coordinates as columns", "把 $C$ 坐标作为列"],
+              t(
+                `In $C = \\{1, x\\}$ the coordinates are $(${b}, 0)$, $(${a}, 0)$ and $(0, ${2 * a})$:`,
+                `在 $C = \\{1, x\\}$ 下坐标为 $(${b}, 0)$、$(${a}, 0)$ 和 $(0, ${2 * a})$：`,
+              ),
+              [`[T]_{C \\leftarrow B} = ${mLatex}`],
+            ],
+          ],
+          t(
+            `For $p = 1 + x + x^2$, with coordinates $(1, 1, 1)$, the matrix gives $(${a + b}, ${2 * a})$, and directly $T(p) = ${a}(1 + 2x) ${bTerm} = ${a + b} + ${2 * a}x$.`,
+            `对 $p = 1 + x + x^2$，坐标为 $(1, 1, 1)$，矩阵给出 $(${a + b}, ${2 * a})$；直接计算 $T(p) = ${a}(1 + 2x) ${bTerm} = ${a + b} + ${2 * a}x$。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, `The first two columns are swapped: column $1$ is $T(1) = ${b}$.`, `前两列交换了：第 $1$ 列是 $T(1) = ${b}$。`],
+          [
+            wrong[1]!.en,
+            "This is $3 \\times 2$; the matrix needs one row per vector of $C$ and one column per vector of $B$, so it is $2 \\times 3$.",
+            "这是 $3 \\times 2$ 的；矩阵对 $C$ 中每个向量有一行，对 $B$ 中每个向量有一列，所以是 $2 \\times 3$。",
+          ],
+          [
+            wrong[2]!.en,
+            `$T(x) = ${a}$ has no $x$ term; the entry $${2 * a}$ comes from $T(x^2)$ and belongs in column $3$.`,
+            `$T(x) = ${a}$ 没有 $x$ 项；元 $${2 * a}$ 来自 $T(x^2)$，应在第 $3$ 列。`,
+          ],
+          [
+            wrong[3]!.en,
+            "The columns are in reverse order and the rows are swapped; follow the order $1, x, x^2$ of $B$ and $1, x$ of $C$.",
+            "列的顺序颠倒、行也交换了；要按 $B$ 的顺序 $1, x, x^2$ 和 $C$ 的顺序 $1, x$。",
+          ],
+        ]);
       },
     },
     {
       id: "the-matrix-of-multiplication-by-a-linear-factor",
       title: t("The matrix of multiplication by a linear factor", "乘以一次因式的映射的矩阵"),
       explanation: t(
-        "To find $[T]_{C \\leftarrow B}$, apply $T$ to each vector of $B$ and write the result in $C$-coordinates; these coordinate vectors are the columns. For $T: P_1 \\to P_2$, $T(p) = (ax + k)p(x)$, with $B = \\{1, x\\}$ and $C = \\{1, x, x^2\\}$:\n\n$$T(1) = k + ax, \\qquad T(x) = kx + ax^2,$$\n\nso the columns are $(k, a, 0)$ and $(0, k, a)$, giving a $3 \\times 2$ matrix.",
-        "要求 $[T]_{C \\leftarrow B}$，把 $T$ 作用于 $B$ 中每个向量，再把结果写成 $C$ 坐标；这些坐标向量就是各列。对 $T: P_1 \\to P_2$，$T(p) = (ax + k)p(x)$，$B = \\{1, x\\}$，$C = \\{1, x, x^2\\}$：\n\n$$T(1) = k + ax, \\qquad T(x) = kx + ax^2,$$\n\n所以各列为 $(k, a, 0)$ 和 $(0, k, a)$，得到一个 $3 \\times 2$ 矩阵。",
+        "To find $[T]_{C \\leftarrow B}$, apply $T$ to each vector of $B$ and write the result in $C$-coordinates; these coordinate vectors are the columns. For $T: P_1 \\to P_2$, $T(p) = (ax + k)p(x)$, with $B = \\{1, x\\}$ and $C = \\{1, x, x^2\\}$:\n\n$$T(1) = k + ax, \\qquad T(x) = kx + ax^2,$$\n\nso the columns are $(k, a, 0)$ and $(0, k, a)$, giving a $3 \\times 2$ matrix. For example, $T(p) = (2x + 3)p(x)$ has matrix $\\begin{pmatrix} 3 & 0 \\\\ 2 & 3 \\\\ 0 & 2 \\end{pmatrix}$.\n\n> **Watch out.** The rows follow the order of $C$: the constant coefficient comes first, then $x$, then $x^2$.",
+        "要求 $[T]_{C \\leftarrow B}$，把 $T$ 作用于 $B$ 中每个向量，再把结果写成 $C$ 坐标；这些坐标向量就是各列。对 $T: P_1 \\to P_2$，$T(p) = (ax + k)p(x)$，$B = \\{1, x\\}$，$C = \\{1, x, x^2\\}$：\n\n$$T(1) = k + ax, \\qquad T(x) = kx + ax^2,$$\n\n所以各列为 $(k, a, 0)$ 和 $(0, k, a)$，得到一个 $3 \\times 2$ 矩阵。例如 $T(p) = (2x + 3)p(x)$ 的矩阵为 $\\begin{pmatrix} 3 & 0 \\\\ 2 & 3 \\\\ 0 & 2 \\end{pmatrix}$。\n\n> **注意。** 各行按 $C$ 的顺序：先是常数项系数，然后是 $x$，再是 $x^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-5, 5) || 2;
@@ -1223,16 +1818,48 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
         const j = rng.int(0, 1);
         const ans = M[i]![j]!;
         const factor = formatPoly2(0, a, k);
+        const matLatex = `\\begin{pmatrix} ${k} & 0 \\\\ ${a} & ${k} \\\\ 0 & ${a} \\end{pmatrix}`;
         return numberProblem({
           prompt: t(
             `Let $T: P_1 \\to P_2$ be $T(p) = (${factor})p(x)$, with bases $B = \\{1, x\\}$ and $C = \\{1, x, x^2\\}$. Find the $(${i + 1}, ${j + 1})$ entry of $[T]_{C \\leftarrow B}$.`,
             `设 $T: P_1 \\to P_2$，$T(p) = (${factor})p(x)$，基为 $B = \\{1, x\\}$ 和 $C = \\{1, x, x^2\\}$。求 $[T]_{C \\leftarrow B}$ 的 $(${i + 1}, ${j + 1})$ 元。`,
           ),
           answer: ans,
-          wrong: [M[2 - i]![j]!, M[i]![1 - j]!, a + k],
-          solution: t(
-            `$T(1) = ${formatPoly2(0, a, k)}$ and $T(x) = ${formatPoly2(a, k, 0)}$, so $[T]_{C \\leftarrow B} = \\begin{pmatrix} ${k} & 0 \\\\ ${a} & ${k} \\\\ 0 & ${a} \\end{pmatrix}$ and the entry is $${ans}$.`,
-            `$T(1) = ${formatPoly2(0, a, k)}$，$T(x) = ${formatPoly2(a, k, 0)}$，所以 $[T]_{C \\leftarrow B} = \\begin{pmatrix} ${k} & 0 \\\\ ${a} & ${k} \\\\ 0 & ${a} \\end{pmatrix}$，该元为 $${ans}$。`,
+          form: "integer",
+          mistakes: [
+            why(
+              M[2 - i]![j]!,
+              "The rows are read upside down; row $1$ holds the constant coefficients.",
+              "行的顺序颠倒了；第 $1$ 行是常数项系数。",
+            ),
+            why(
+              M[i]![1 - j]!,
+              `That entry is in the other column; column ${j + 1} comes from $T(${j === 0 ? "1" : "x"})$.`,
+              `这个元在另一列；第 ${j + 1} 列来自 $T(${j === 0 ? "1" : "x"})$。`,
+            ),
+            why(
+              a + k,
+              "Each entry is a single coefficient of $T(1)$ or $T(x)$, not the sum of the factor's coefficients.",
+              "每个元是 $T(1)$ 或 $T(x)$ 的一个系数，而不是因式系数之和。",
+            ),
+          ].filter((w, n, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === n),
+          solution: walked(
+            [
+              [
+                ["Apply $T$ to the basis $B$", "把 $T$ 作用于基 $B$"],
+                t("", ""),
+                [`T(1) = ${formatPoly2(0, a, k)}`, `T(x) = ${formatPoly2(a, k, 0)}`],
+              ],
+              [
+                ["Write the $C$-coordinates as columns", "把 $C$ 坐标作为列"],
+                t("", ""),
+                [`[T]_{C \\leftarrow B} = ${matLatex}`, `\\text{entry } (${i + 1}, ${j + 1}) = ${ans}`],
+              ],
+            ],
+            t(
+              `For $p = 1 + x$: $${matLatex}${vec2Latex([1, 1])} = (${k}, ${a + k}, ${a})$, and indeed $(${factor})(1 + x) = ${formatPoly2(a, a + k, k)}$.`,
+              `对 $p = 1 + x$：$${matLatex}${vec2Latex([1, 1])} = (${k}, ${a + k}, ${a})$，而确实 $(${factor})(1 + x) = ${formatPoly2(a, a + k, k)}$。`,
+            ),
           ),
         });
       },
@@ -1252,6 +1879,10 @@ export const eigenvaluesAndEigenvectorsOfA2x2Matrix: TopicDef = {
     "Understand the defining equation Av = lambda v for eigenvalues and eigenvectors of a 2x2 matrix.",
     "理解 2x2 矩阵特征值与特征向量的定义方程 Av = lambda v。",
   ),
+  intro: t(
+    "Take $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 2 \\end{pmatrix}$ and $\\mathbf{v} = (1, 0)$. Then $A\\mathbf{v} = (3, 0) = 3\\mathbf{v}$: the matrix only stretches $\\mathbf{v}$, so $\\mathbf{v}$ is an eigenvector with eigenvalue $\\lambda = 3$. By contrast $A(1, 1) = (4, 2)$ is not a multiple of $(1, 1)$.\n\nCheck: $(A - 3I)\\mathbf{v} = \\begin{pmatrix} 0 & 1 \\\\ 0 & -1 \\end{pmatrix}\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$.\n\nIn this lesson we test whether a vector is an eigenvector by computing $A\\mathbf{v}$, and read off its eigenvalue as the stretch factor.",
+    "取 $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 2 \\end{pmatrix}$，$\\mathbf{v} = (1, 0)$。则 $A\\mathbf{v} = (3, 0) = 3\\mathbf{v}$：矩阵只拉伸 $\\mathbf{v}$，所以 $\\mathbf{v}$ 是特征向量，特征值 $\\lambda = 3$。相比之下 $A(1, 1) = (4, 2)$ 不是 $(1, 1)$ 的倍数。\n\n检验：$(A - 3I)\\mathbf{v} = \\begin{pmatrix} 0 & 1 \\\\ 0 & -1 \\end{pmatrix}\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。\n\n本课我们通过计算 $A\\mathbf{v}$ 检验向量是否为特征向量，并把拉伸倍数读作特征值。",
+  ),
   prerequisites: ["matrix-of-a-linear-map-relative-to-two-bases"],
   encompasses: [],
   xp: 14,
@@ -1260,13 +1891,12 @@ export const eigenvaluesAndEigenvectorsOfA2x2Matrix: TopicDef = {
       id: "eigenpair-definition-2x2",
       title: t("Eigenpair Definition for 2x2 Matrices", "2x2 矩阵特征对的定义"),
       explanation: t(
-        "An eigenvector is a nonzero vector that the matrix only stretches or shrinks, so multiplying it by the matrix gives a multiple of itself. Verify whether a given vector is an eigenvector and find its corresponding eigenvalue.",
-        "特征向量是只被矩阵拉伸或缩短的非零向量，所以用矩阵乘它会得到它自身的倍数。检验给定向量是否为特征向量并求解其对应的特征值。",
+        "An eigenvector is a nonzero vector that the matrix only stretches or shrinks, so multiplying it by the matrix gives a multiple of itself. Verify whether a given vector is an eigenvector and find its corresponding eigenvalue. For example, $A = \\begin{pmatrix} -2 & 4 \\\\ 0 & 1 \\end{pmatrix}$ sends $(1, 0)$ to $(-2, 0) = -2(1, 0)$, so the eigenvalue is $-2$.\n\n> **Watch out.** The eigenvalue is the factor $\\lambda$ in $A\\mathbf{v} = \\lambda\\mathbf{v}$; an entry of $A$ that does not act on $\\mathbf{v}$ is not it.",
+        "特征向量是只被矩阵拉伸或缩短的非零向量，所以用矩阵乘它会得到它自身的倍数。检验给定向量是否为特征向量并求解其对应的特征值。例如 $A = \\begin{pmatrix} -2 & 4 \\\\ 0 & 1 \\end{pmatrix}$ 把 $(1, 0)$ 映为 $(-2, 0) = -2(1, 0)$，所以特征值为 $-2$。\n\n> **注意。** 特征值是 $A\\mathbf{v} = \\lambda\\mathbf{v}$ 中的倍数 $\\lambda$；$A$ 中不作用于 $\\mathbf{v}$ 的元不是特征值。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])!;
         const mu = rng.pick([-6, -1, 1, 6])!;
-        // Diagonal or upper-triangular matrix: A = [[lambda, b], [0, mu]]
         const b = rng.int(1, 5);
         const mat: Mat2 = [
           [lambda, b],
@@ -1277,15 +1907,53 @@ export const eigenvaluesAndEigenvectorsOfA2x2Matrix: TopicDef = {
           `For the matrix $A = ${mat2Latex(mat)}$ and vector $v = ${vec2Latex(v)}$, $v$ is an eigenvector satisfying $Av = \\lambda v$. What is the eigenvalue $\\lambda$?`,
           `对于矩阵 $A = ${mat2Latex(mat)}$ 和向量 $v = ${vec2Latex(v)}$，$v$ 是满足 $Av = \\lambda v$ 的特征向量。求对应的特征值 $\\lambda$。`,
         );
-        const solution = t(
-          `Multiply $A$ by $v$: $Av = ${mat2Latex(mat)} ${vec2Latex(v)} = ${vec2Latex([lambda, 0])} = ${lambda} ${vec2Latex(v)}$. Therefore, the eigenvalue is $\\lambda = ${lambda}$.`,
-          `计算矩阵乘积 $Av$：$Av = ${mat2Latex(mat)} ${vec2Latex(v)} = ${vec2Latex([lambda, 0])} = ${lambda} ${vec2Latex(v)}$。因此对应的特征值为 $\\lambda = ${lambda}$。`,
+        const solution = walked(
+          [
+            [["Multiply $A$ by $v$", "计算 $Av$"], t("", ""), [`Av = ${mat2Latex(mat)} ${vec2Latex(v)} = ${vec2Latex([lambda, 0])}`]],
+            [
+              ["Compare with $v$", "与 $v$ 比较"],
+              t("", ""),
+              [`${vec2Latex([lambda, 0])} = ${lambda} ${vec2Latex(v)}`, `\\lambda = ${lambda}`],
+            ],
+          ],
+          t(
+            `$(A ${formatShift(lambda, "I").trim()})v = ${mat2Latex([
+              [0, b],
+              [0, mu - lambda],
+            ])}${vec2Latex(v)} = ${vec2Latex([0, 0])}$.`,
+            `$(A ${formatShift(lambda, "I").trim()})v = ${mat2Latex([
+              [0, b],
+              [0, mu - lambda],
+            ])}${vec2Latex(v)} = ${vec2Latex([0, 0])}$。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: lambda,
+          form: "integer",
           solution,
-          wrong: [mu, -lambda, 0, lambda + 1].filter((w) => w !== lambda),
+          mistakes: [
+            why(
+              mu,
+              `That is the other diagonal entry; it is the eigenvalue of a different eigenvector, not of $${vec2Latex(v)}$.`,
+              `这是另一个对角元；它是另一个特征向量的特征值，而不是 $${vec2Latex(v)}$ 的。`,
+            ),
+            why(
+              -lambda,
+              "The sign is lost: $Av$ is $\\lambda v$ with $\\lambda$ exactly the first entry of $Av$.",
+              "符号丢了：$Av = \\lambda v$，$\\lambda$ 恰好是 $Av$ 的第一个分量。",
+            ),
+            why(
+              b,
+              "The entry above the diagonal multiplies the second component of $v$, which is $0$, so it does not act on $v$.",
+              "对角线上方的元乘的是 $v$ 的第二个分量 $0$，所以它不作用于 $v$。",
+            ),
+            why(
+              0,
+              "That is the second entry of $Av$; the eigenvalue is the ratio of $Av$ to $v$, read from the nonzero component.",
+              "这是 $Av$ 的第二个分量；特征值是 $Av$ 与 $v$ 的比值，要从非零分量读出。",
+            ),
+          ].filter((w, i, all) => w.value !== lambda && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -1293,8 +1961,8 @@ export const eigenvaluesAndEigenvectorsOfA2x2Matrix: TopicDef = {
       id: "reading-an-eigenvalue-from-a-product",
       title: t("Reading an eigenvalue from a product", "由乘积读出特征值"),
       explanation: t(
-        "To check whether $\\mathbf{v}$ is an eigenvector of $A$, compute $A\\mathbf{v}$ and compare it with $\\mathbf{v}$. If $A\\mathbf{v}$ is a scalar multiple $\\lambda\\mathbf{v}$, then $\\mathbf{v}$ is an eigenvector and the scalar is its eigenvalue. Divide any non-zero component of $A\\mathbf{v}$ by the matching component of $\\mathbf{v}$, and check that the other components give the same ratio.",
-        "要检验 $\\mathbf{v}$ 是否是 $A$ 的特征向量，计算 $A\\mathbf{v}$ 并与 $\\mathbf{v}$ 比较。若 $A\\mathbf{v}$ 是标量倍 $\\lambda\\mathbf{v}$，则 $\\mathbf{v}$ 是特征向量，该标量就是其特征值。用 $A\\mathbf{v}$ 的任一非零分量除以 $\\mathbf{v}$ 的对应分量，并检查其他分量给出相同的比值。",
+        "To check whether $\\mathbf{v}$ is an eigenvector of $A$, compute $A\\mathbf{v}$ and compare it with $\\mathbf{v}$. If $A\\mathbf{v}$ is a scalar multiple $\\lambda\\mathbf{v}$, then $\\mathbf{v}$ is an eigenvector and the scalar is its eigenvalue. Divide any non-zero component of $A\\mathbf{v}$ by the matching component of $\\mathbf{v}$, and check that the other components give the same ratio. For example, $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ sends $(1, 1)$ to $(3, 3)$, so the eigenvalue is $3$.\n\n> **Watch out.** When $A$ is not triangular, its diagonal entries are not its eigenvalues; compute $A\\mathbf{v}$.",
+        "要检验 $\\mathbf{v}$ 是否是 $A$ 的特征向量，计算 $A\\mathbf{v}$ 并与 $\\mathbf{v}$ 比较。若 $A\\mathbf{v}$ 是标量倍 $\\lambda\\mathbf{v}$，则 $\\mathbf{v}$ 是特征向量，该标量就是其特征值。用 $A\\mathbf{v}$ 的任一非零分量除以 $\\mathbf{v}$ 的对应分量，并检查其他分量给出相同的比值。例如 $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ 把 $(1, 1)$ 映为 $(3, 3)$，所以特征值为 $3$。\n\n> **注意。** 当 $A$ 不是三角矩阵时，对角元不是它的特征值；要计算 $A\\mathbf{v}$。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.int(-5, 5);
@@ -1313,10 +1981,37 @@ export const eigenvaluesAndEigenvectorsOfA2x2Matrix: TopicDef = {
             `向量 $\\mathbf{v} = ${vec2Latex(v)}$ 是 $A = ${mat2Latex(A)}$ 的特征向量。求其特征值。`,
           ),
           answer: lam,
-          wrong: [first ? l2 : l1, A[0][0], A[0][0] + A[1][1]],
-          solution: t(
-            `$A\\mathbf{v} = ${vec2Latex(Av)} = ${formatLinearComb2(lam, vec2Latex(v), 0, "")}$, so $\\lambda = ${lam}$.`,
-            `$A\\mathbf{v} = ${vec2Latex(Av)} = ${formatLinearComb2(lam, vec2Latex(v), 0, "")}$，所以 $\\lambda = ${lam}$。`,
+          form: "integer",
+          mistakes: [
+            why(
+              first ? l2 : l1,
+              "That is the other eigenvalue of $A$; it belongs to a different eigenvector.",
+              "这是 $A$ 的另一个特征值；它属于另一个特征向量。",
+            ),
+            why(
+              A[0][0],
+              "$A$ is not triangular, so its diagonal entries are not its eigenvalues.",
+              "$A$ 不是三角矩阵，所以对角元不是它的特征值。",
+            ),
+            why(A[0][0] + A[1][1], "That is the trace, the sum of both eigenvalues.", "这是迹，即两个特征值之和。"),
+          ].filter((w, i, all) => w.value !== lam && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Compute $A\\mathbf{v}$", "计算 $A\\mathbf{v}$"],
+                t("", ""),
+                [`A\\mathbf{v} = ${mat2Latex(A)}${vec2Latex(v)} = ${vec2Latex(Av)}`],
+              ],
+              [
+                ["Divide matching components", "对应分量相除"],
+                t("The first component of $\\mathbf{v}$ is not zero:", "$\\mathbf{v}$ 的第一个分量不为零："),
+                [`\\lambda = \\frac{${Av[0]}}{${v[0]}} = ${lam}`],
+              ],
+            ],
+            t(
+              `The second components give the same ratio: $${paren(lam)} \\cdot ${paren(v[1])} = ${Av[1]}$, so $A\\mathbf{v} = ${lam}\\mathbf{v}$.`,
+              `第二个分量给出相同的比值：$${paren(lam)} \\cdot ${paren(v[1])} = ${Av[1]}$，所以 $A\\mathbf{v} = ${lam}\\mathbf{v}$。`,
+            ),
           ),
         });
       },
@@ -1332,6 +2027,10 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
     "Solve the characteristic equation det(A - lambda I) = 0 to find the eigenvalues of a 2x2 matrix.",
     "通过求解特征方程 det(A - lambda I) = 0 计算 2x2 矩阵的特征值。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$, $\\operatorname{tr} A = 7$ and $\\det A = 12 - 2 = 10$, so $\\det(A - \\lambda I) = \\lambda^2 - 7\\lambda + 10 = (\\lambda - 2)(\\lambda - 5)$. The eigenvalues are $2$ and $5$.\n\nCheck: $2 + 5 = 7$ is the trace and $2 \\cdot 5 = 10$ is the determinant.\n\nIn this lesson we find the eigenvalues of a $2 \\times 2$ matrix by solving $\\det(A - \\lambda I) = 0$, first for triangular matrices and then for full ones.",
+    "对 $A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$，$\\operatorname{tr} A = 7$，$\\det A = 12 - 2 = 10$，所以 $\\det(A - \\lambda I) = \\lambda^2 - 7\\lambda + 10 = (\\lambda - 2)(\\lambda - 5)$。特征值为 $2$ 和 $5$。\n\n检验：$2 + 5 = 7$ 是迹，$2 \\cdot 5 = 10$ 是行列式。\n\n本课我们通过解 $\\det(A - \\lambda I) = 0$ 求 $2 \\times 2$ 矩阵的特征值，先求三角矩阵的，再求一般矩阵的。",
+  ),
   prerequisites: ["eigenvalues-and-eigenvectors-of-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -1340,8 +2039,8 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
       id: "solving-characteristic-polynomial-2x2",
       title: t("Solving the Characteristic Polynomial of a 2x2 Matrix", "求解 2x2 矩阵的特征多项式"),
       explanation: t(
-        "The eigenvalues are the numbers that make the matrix minus that multiple of the identity singular, which happens when its determinant is zero. Find the real eigenvalues of a $2 \\times 2$ matrix from its trace and determinant.",
-        "特征值就是使矩阵减去单位矩阵相应倍数后变为奇异的数，也就是使其行列式为零的数。利用矩阵的迹和行列式求 $2 \\times 2$ 矩阵的实特征值。",
+        "The eigenvalues are the numbers that make the matrix minus that multiple of the identity singular, which happens when its determinant is zero. Find the real eigenvalues of a $2 \\times 2$ matrix from its trace and determinant. For a triangular matrix, $\\det(A - \\lambda I)$ is the product of the diagonal entries of $A - \\lambda I$, so the eigenvalues are the diagonal entries. For example, $\\begin{pmatrix} 2 & 5 \\\\ 0 & -1 \\end{pmatrix}$ has $\\det(A - \\lambda I) = (2 - \\lambda)(-1 - \\lambda)$ and eigenvalues $2$ and $-1$.\n\n> **Watch out.** The entry off the diagonal of a triangular matrix does not change its eigenvalues; leave it out.",
+        "特征值就是使矩阵减去单位矩阵相应倍数后变为奇异的数，也就是使其行列式为零的数。利用矩阵的迹和行列式求 $2 \\times 2$ 矩阵的实特征值。对三角矩阵，$\\det(A - \\lambda I)$ 是 $A - \\lambda I$ 对角元之积，所以特征值就是对角元。例如 $\\begin{pmatrix} 2 & 5 \\\\ 0 & -1 \\end{pmatrix}$ 有 $\\det(A - \\lambda I) = (2 - \\lambda)(-1 - \\lambda)$，特征值为 $2$ 和 $-1$。\n\n> **注意。** 三角矩阵对角线以外的元不影响特征值；不要把它算进去。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(-5, 2);
@@ -1355,15 +2054,53 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
           `Find all real eigenvalues of the matrix $A = ${mat2Latex(mat)}$. Enter the eigenvalues separated by commas.`,
           `求矩阵 $A = ${mat2Latex(mat)}$ 的所有实特征值。若有多个特征值，请用逗号分隔。`,
         );
-        const solution = t(
-          `Since $A$ is an upper triangular matrix, its eigenvalues are the diagonal entries: $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$.`,
-          `因为 $A$ 是上三角矩阵，所以它的特征值就是主对角线上的元素：$\\lambda_1 = ${l1}$ 且 $\\lambda_2 = ${l2}$。`,
+        const solution = walked(
+          [
+            [
+              ["Write the determinant", "写出行列式"],
+              t(
+                "$A - \\lambda I$ is triangular, so its determinant is the product of its diagonal entries:",
+                "$A - \\lambda I$ 是三角矩阵，所以其行列式是对角元之积：",
+              ),
+              [`\\det(A - \\lambda I) = (${l1} - \\lambda)(${l2} - \\lambda)`],
+            ],
+            [["Set it to zero", "令其为零"], t("", ""), [`\\lambda_1 = ${l1}, \\quad \\lambda_2 = ${l2}`]],
+          ],
+          t(
+            `The eigenvalues add to $${l1} + ${paren(l2)} = ${l1 + l2} = \\operatorname{tr} A$ and multiply to $${l1} \\cdot ${paren(l2)} = ${l1 * l2} = \\det A$.`,
+            `两特征值之和 $${l1} + ${paren(l2)} = ${l1 + l2} = \\operatorname{tr} A$，之积 $${l1} \\cdot ${paren(l2)} = ${l1 * l2} = \\det A$。`,
+          ),
         );
         return solutionsProblem({
           prompt,
           values: [String(l1), String(l2)],
           solution,
-          wrong: [[String(-l1), String(-l2)], [String(l1), String(-l2)], [String(-l1), String(l2)], [String(l1)], [String(l2)]],
+          mistakes: [
+            whySet(
+              [String(-l1), String(-l2)],
+              "The signs are flipped: $(\\lambda_1 - \\lambda)(\\lambda_2 - \\lambda) = 0$ gives $\\lambda = \\lambda_1$ and $\\lambda = \\lambda_2$.",
+              "符号反了：$(\\lambda_1 - \\lambda)(\\lambda_2 - \\lambda) = 0$ 给出 $\\lambda = \\lambda_1$ 和 $\\lambda = \\lambda_2$。",
+            ),
+            ...(k === l1
+              ? []
+              : [
+                  whySet(
+                    [String(l1), String(k)],
+                    "The entry above the diagonal is not an eigenvalue; both diagonal entries are.",
+                    "对角线上方的元不是特征值；两个对角元才是。",
+                  ),
+                ]),
+            whySet(
+              [String(l1)],
+              "A $2 \\times 2$ matrix has two eigenvalues here; the second diagonal entry is one too.",
+              "这里 $2 \\times 2$ 矩阵有两个特征值；第二个对角元也是。",
+            ),
+            whySet(
+              [String(l2)],
+              "A $2 \\times 2$ matrix has two eigenvalues here; the first diagonal entry is one too.",
+              "这里 $2 \\times 2$ 矩阵有两个特征值；第一个对角元也是。",
+            ),
+          ],
         });
       },
     },
@@ -1371,8 +2108,8 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
       id: "eigenvalues-of-a-full-2x2-matrix",
       title: t("Eigenvalues of a full 2x2 matrix", "一般 2x2 矩阵的特征值"),
       explanation: t(
-        "For a $2 \\times 2$ matrix that is not triangular, the eigenvalues are not on the diagonal. Solve the characteristic equation\n\n$$\\lambda^2 - (\\operatorname{tr} A)\\lambda + \\det A = 0.$$\n\nThe two roots add up to the trace and multiply to the determinant, which is a quick check on the answer.",
-        "对非三角的 $2 \\times 2$ 矩阵，特征值不在对角线上。解特征方程\n\n$$\\lambda^2 - (\\operatorname{tr} A)\\lambda + \\det A = 0.$$\n\n两根之和等于迹，之积等于行列式，可用来快速检验答案。",
+        "For a $2 \\times 2$ matrix that is not triangular, the eigenvalues are not on the diagonal. Solve the characteristic equation\n\n$$\\lambda^2 - (\\operatorname{tr} A)\\lambda + \\det A = 0.$$\n\nThe two roots add up to the trace and multiply to the determinant, which is a quick check on the answer. For example, $\\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$ gives $\\lambda^2 - 7\\lambda + 10 = 0$, with roots $2$ and $5$.\n\n> **Watch out.** The trace and the determinant are the coefficients of the equation, not its roots.",
+        "对非三角的 $2 \\times 2$ 矩阵，特征值不在对角线上。解特征方程\n\n$$\\lambda^2 - (\\operatorname{tr} A)\\lambda + \\det A = 0.$$\n\n两根之和等于迹，之积等于行列式，可用来快速检验答案。例如 $\\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$ 给出 $\\lambda^2 - 7\\lambda + 10 = 0$，根为 $2$ 和 $5$。\n\n> **注意。** 迹和行列式是方程的系数，而不是方程的根。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.int(-6, 6);
@@ -1387,13 +2124,47 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
             `求 $A = ${mat2Latex(A)}$ 的所有特征值，用逗号分隔。`,
           ),
           values: [String(Math.min(l1, l2)), String(Math.max(l1, l2))],
-          wrong: [
-            [String(A[0][0]), String(A[1][1])],
-            [String(-l1), String(-l2)],
+          mistakes: [
+            whySet(
+              [String(A[0][0]), String(A[1][1])],
+              "$A$ is not triangular, so its diagonal entries are not its eigenvalues.",
+              "$A$ 不是三角矩阵，所以对角元不是它的特征值。",
+            ),
+            whySet(
+              [String(-l1), String(-l2)],
+              "The signs are flipped: the roots of $(\\lambda - r)(\\lambda - s) = 0$ are $r$ and $s$.",
+              "符号反了：$(\\lambda - r)(\\lambda - s) = 0$ 的根是 $r$ 和 $s$。",
+            ),
+            whySet(
+              [String(tr), String(det)],
+              "Those are the trace and the determinant, the coefficients of the equation, not its roots.",
+              "这是迹和行列式，即方程的系数，而不是方程的根。",
+            ),
           ],
-          solution: t(
-            `$\\operatorname{tr} A = ${tr}$ and $\\det A = ${det}$, so the characteristic equation is $${formatCharEq(tr, det)}$, with roots $\\lambda = ${l1}$ and $\\lambda = ${l2}$.`,
-            `$\\operatorname{tr} A = ${tr}$，$\\det A = ${det}$，所以特征方程为 $${formatCharEq(tr, det)}$，其根为 $\\lambda = ${l1}$ 和 $\\lambda = ${l2}$。`,
+          solution: walked(
+            [
+              [
+                ["Find the trace and determinant", "求迹和行列式"],
+                t("", ""),
+                [
+                  `\\operatorname{tr} A = ${A[0][0]} + ${paren(A[1][1])} = ${tr}`,
+                  `\\det A = ${paren(A[0][0])} \\cdot ${paren(A[1][1])} - ${paren(A[0][1])} \\cdot ${paren(A[1][0])} = ${det}`,
+                ],
+              ],
+              [
+                ["Solve the characteristic equation", "解特征方程"],
+                t("", ""),
+                [
+                  `${formatCharEq(tr, det)}`,
+                  `(${formatFactor("\\lambda", l1)})(${formatFactor("\\lambda", l2)}) = 0`,
+                  `\\lambda = ${l1}, \\quad \\lambda = ${l2}`,
+                ],
+              ],
+            ],
+            t(
+              `$${l1} + ${paren(l2)} = ${tr}$ and $${l1} \\cdot ${paren(l2)} = ${det}$, matching the trace and the determinant.`,
+              `$${l1} + ${paren(l2)} = ${tr}$，$${l1} \\cdot ${paren(l2)} = ${det}$，与迹和行列式一致。`,
+            ),
           ),
         });
       },
@@ -1409,6 +2180,10 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
     "Find an eigenvector corresponding to a known eigenvalue by solving (A - lambda I)v = 0.",
     "通过求解 (A - lambda I)v = 0 求出已知特征值对应的特征向量。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$ has eigenvalue $5$. Then $A - 5I = \\begin{pmatrix} -1 & 1 \\\\ 2 & -2 \\end{pmatrix}$, whose rows both say $x = y$, so $(1, 1)$ is an eigenvector.\n\nCheck: $A\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 5 \\\\ 5 \\end{pmatrix} = 5\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$.\n\nIn this lesson we find an eigenvector for a known eigenvalue by solving $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$.",
+    "矩阵 $A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$ 有特征值 $5$。于是 $A - 5I = \\begin{pmatrix} -1 & 1 \\\\ 2 & -2 \\end{pmatrix}$，两行都给出 $x = y$，所以 $(1, 1)$ 是特征向量。\n\n检验：$A\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 5 \\\\ 5 \\end{pmatrix} = 5\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$。\n\n本课我们通过解 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 求已知特征值对应的特征向量。",
+  ),
   prerequisites: ["calculating-the-eigenvalues-of-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -1417,8 +2192,8 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
       id: "solving-for-eigenvector-2x2",
       title: t("Solving for an Eigenvector of a 2x2 Matrix", "求解 2x2 矩阵的特征向量"),
       explanation: t(
-        "For each eigenvalue the matrix minus that multiple of the identity has a nonzero null space, and any nonzero vector in it is an eigenvector. Find the nontrivial solutions of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $2 \\times 2$ matrix.",
-        "对每个特征值，矩阵减去单位矩阵的相应倍数后有非零的零空间，其中任何非零向量都是特征向量。求 $2 \\times 2$ 矩阵方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的非零解。",
+        "For each eigenvalue the matrix minus that multiple of the identity has a nonzero null space, and any nonzero vector in it is an eigenvector. Find the nontrivial solutions of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $2 \\times 2$ matrix. For example, $A = \\begin{pmatrix} 1 & 4 \\\\ 0 & 3 \\end{pmatrix}$ with $\\lambda = 3$ gives $A - 3I = \\begin{pmatrix} -2 & 4 \\\\ 0 & 0 \\end{pmatrix}$, so $-2x + 4 = 0$ with $y = 1$, and $\\mathbf{v} = (2, 1)$.\n\n> **Watch out.** Subtract the eigenvalue you were given; using the other diagonal entry gives the eigenvector of the other eigenvalue.",
+        "对每个特征值，矩阵减去单位矩阵的相应倍数后有非零的零空间，其中任何非零向量都是特征向量。求 $2 \\times 2$ 矩阵方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的非零解。例如 $A = \\begin{pmatrix} 1 & 4 \\\\ 0 & 3 \\end{pmatrix}$，$\\lambda = 3$ 时 $A - 3I = \\begin{pmatrix} -2 & 4 \\\\ 0 & 0 \\end{pmatrix}$，取 $y = 1$ 得 $-2x + 4 = 0$，所以 $\\mathbf{v} = (2, 1)$。\n\n> **注意。** 要减去题目给出的特征值；用另一个对角元会得到另一个特征值的特征向量。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(-4, 4);
@@ -1436,31 +2211,56 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
         );
         const rowEq = formatLinearComb2(l1 - l2, "x", b, "y");
         const xTerm = l1 - l2 === -1 ? "-x" : `${l1 - l2}x`;
-        const solution = t(
-          `We solve $(A${formatShift(l2, "I")})\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. This gives $${rowEq} = 0$. Setting $y = 1$ yields $${xTerm} = ${-b}$, so $x = ${m}$. Thus, $\\mathbf{v} = \\langle ${m}, 1 \\rangle$.`,
-          `求解方程 $(A${formatShift(l2, "I")})\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。得到 $${rowEq} = 0$。取 $y = 1$ 可得 $${xTerm} = ${-b}$，解得 $x = ${m}$。因此 $\\mathbf{v} = \\langle ${m}, 1 \\rangle$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [m, 1],
-          vector: true,
-          solution,
-          wrong: [
-            [-m, 1],
-            [m, -1],
-            [1, m],
-            [0, 1],
-            [1, 0],
+        const solution = walked(
+          [
+            [
+              ["Subtract the eigenvalue", "减去特征值"],
+              t("", ""),
+              [`A${formatShift(l2, "I")} = \\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix}`],
+            ],
+            [["Solve the first row", "解第一行"], t("With $y = 1$:", "取 $y = 1$："), [`${rowEq} = 0`, `${xTerm} = ${-b}`, `x = ${m}`]],
           ],
-        });
+          t(
+            `$A${vec2Latex([m, 1])} = ${vec2Latex([l2 * m, l2])} = ${l2}${vec2Latex([m, 1])}$.`,
+            `$A${vec2Latex([m, 1])} = ${vec2Latex([l2 * m, l2])} = ${l2}${vec2Latex([m, 1])}$。`,
+          ),
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer: [m, 1], vector: true, solution }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([-m, 1]),
+                `The sign is lost: $${xTerm} = ${-b}$ gives $x = ${m}$.`,
+                `符号丢了：$${xTerm} = ${-b}$ 给出 $x = ${m}$。`,
+              ),
+              say(
+                vectorLatex([1, m]),
+                "The components are swapped; the second component must be $1$.",
+                "两个分量交换了；第二个分量必须是 $1$。",
+              ),
+              say(
+                vectorLatex([1, 0]),
+                `That is an eigenvector for $\\lambda = ${l1}$, the other eigenvalue.`,
+                `这是另一个特征值 $\\lambda = ${l1}$ 的特征向量。`,
+              ),
+              say(
+                vectorLatex([0, 1]),
+                `$A${vec2Latex([0, 1])} = ${vec2Latex([b, l2])}$ is not a multiple of $${vec2Latex([0, 1])}$, because the entry $${b}$ is not $0$.`,
+                `$A${vec2Latex([0, 1])} = ${vec2Latex([b, l2])}$ 不是 $${vec2Latex([0, 1])}$ 的倍数，因为元 $${b}$ 不为 $0$。`,
+              ),
+            ],
+            vectorLatex([m, 1]),
+          ),
+        );
       },
     },
     {
       id: "eigenvectors-of-a-full-2x2-matrix",
       title: t("Eigenvectors of a full 2x2 matrix", "一般 2x2 矩阵的特征向量"),
       explanation: t(
-        "To find an eigenvector for $\\lambda$, solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. Because $\\lambda$ is an eigenvalue, the two rows of $A - \\lambda I$ are dependent, so one equation is enough. With $\\mathbf{v} = (x, 1)$, a row $(r, s)$ of $A - \\lambda I$ with $r \\ne 0$ gives $rx + s = 0$, so $x = -\\frac{s}{r}$.",
-        "要求 $\\lambda$ 对应的特征向量，解 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。由于 $\\lambda$ 是特征值，$A - \\lambda I$ 的两行线性相关，所以一个方程就够了。取 $\\mathbf{v} = (x, 1)$，$A - \\lambda I$ 中 $r \\ne 0$ 的一行 $(r, s)$ 给出 $rx + s = 0$，所以 $x = -\\frac{s}{r}$。",
+        "To find an eigenvector for $\\lambda$, solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. Because $\\lambda$ is an eigenvalue, the two rows of $A - \\lambda I$ are dependent, so one equation is enough. With $\\mathbf{v} = (x, 1)$, a row $(r, s)$ of $A - \\lambda I$ with $r \\ne 0$ gives $rx + s = 0$, so $x = -\\frac{s}{r}$. For example, $A - \\lambda I = \\begin{pmatrix} 2 & -6 \\\\ -1 & 3 \\end{pmatrix}$ gives $2x - 6 = 0$, so $x = 3$.\n\n> **Watch out.** The fraction is $-\\frac{s}{r}$, the second entry over the first with a minus sign, not $-\\frac{r}{s}$.",
+        "要求 $\\lambda$ 对应的特征向量，解 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。由于 $\\lambda$ 是特征值，$A - \\lambda I$ 的两行线性相关，所以一个方程就够了。取 $\\mathbf{v} = (x, 1)$，$A - \\lambda I$ 中 $r \\ne 0$ 的一行 $(r, s)$ 给出 $rx + s = 0$，所以 $x = -\\frac{s}{r}$。例如 $A - \\lambda I = \\begin{pmatrix} 2 & -6 \\\\ -1 & 3 \\end{pmatrix}$ 给出 $2x - 6 = 0$，所以 $x = 3$。\n\n> **注意。** 分数是 $-\\frac{s}{r}$，即第二个元除以第一个元再取负，而不是 $-\\frac{r}{s}$。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.int(-5, 5);
@@ -1475,6 +2275,20 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
           [A[1][0], A[1][1] - l2],
         ];
         const row = B[0][0] !== 0 ? B[0] : B[1];
+        const candidates: readonly (readonly [Q, string, string])[] = [
+          [x.neg(), "The sign is lost: $rx + s = 0$ gives $x = -\\frac{s}{r}$.", "符号丢了：$rx + s = 0$ 给出 $x = -\\frac{s}{r}$。"],
+          [
+            Q.of(1, j),
+            `That gives an eigenvector for $\\lambda = ${l1}$, the other eigenvalue.`,
+            `这给出的是另一个特征值 $\\lambda = ${l1}$ 的特征向量。`,
+          ],
+          [
+            Q.of(1 + j * k, k),
+            "That is the reciprocal; the fraction is $-\\frac{s}{r}$, not $-\\frac{r}{s}$.",
+            "这是倒数；分数是 $-\\frac{s}{r}$，而不是 $-\\frac{r}{s}$。",
+          ],
+        ];
+        const scaled: Vec2 = [k, 1 + j * k];
         return numberProblem({
           prompt: t(
             `Find $x$ so that $\\mathbf{v} = ${vec2Latex(["x", "1"])}$ is an eigenvector of $A = ${mat2Latex(A)}$ for $\\lambda = ${l2}$.`,
@@ -1482,10 +2296,22 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
           ),
           answer: x,
           solveFor: "x",
-          wrong: [x.neg(), Q.of(1, j), Q.of(1 + j * k, k)],
-          solution: t(
-            `$A - ${paren(l2)}I = ${mat2Latex(B)}$. The row $(${row[0]}, ${row[1]})$ gives $${formatPoly2(0, row[0], row[1])} = 0$, so $x = ${x.toLatex()}$.`,
-            `$A - ${paren(l2)}I = ${mat2Latex(B)}$。行 $(${row[0]}, ${row[1]})$ 给出 $${formatPoly2(0, row[0], row[1])} = 0$，所以 $x = ${x.toLatex()}$。`,
+          mistakes: candidates
+            .filter(([v], i, all) => !v.eq(x) && all.findIndex(([o]) => o.eq(v)) === i)
+            .map(([v, en, zh]) => why(v, en, zh)),
+          solution: walked(
+            [
+              [["Subtract the eigenvalue", "减去特征值"], t("", ""), [`A - ${paren(l2)}I = ${mat2Latex(B)}`]],
+              [
+                ["Use one row", "用一行"],
+                t(`The row $(${row[0]}, ${row[1]})$ with $y = 1$ gives:`, `行 $(${row[0]}, ${row[1]})$ 在 $y = 1$ 时给出：`),
+                [`${formatPoly2(0, row[0], row[1])} = 0`, `x = ${x.toLatex()}`],
+              ],
+            ],
+            t(
+              `$\\mathbf{v}$ is a multiple of $${vec2Latex(scaled)}$, and $A${vec2Latex(scaled)} = ${vec2Latex([l2 * scaled[0], l2 * scaled[1]])} = ${l2}${vec2Latex(scaled)}$.`,
+              `$\\mathbf{v}$ 是 $${vec2Latex(scaled)}$ 的倍数，而 $A${vec2Latex(scaled)} = ${vec2Latex([l2 * scaled[0], l2 * scaled[1]])} = ${l2}${vec2Latex(scaled)}$。`,
+            ),
           ),
         });
       },
@@ -1501,6 +2327,10 @@ export const characteristicEquationOfAMatrix: TopicDef = {
     "Set up and expand the characteristic equation det(A - lambda I) = 0 for square matrices.",
     "列出并展开方阵的特征方程 det(A - lambda I) = 0。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$, $\\operatorname{tr} A = 5$ and $\\det A = 4 - 6 = -2$, so the characteristic equation is $\\lambda^2 - 5\\lambda - 2 = 0$.\n\nCheck: expanding directly, $(1 - \\lambda)(4 - \\lambda) - 2 \\cdot 3 = \\lambda^2 - 5\\lambda + 4 - 6 = \\lambda^2 - 5\\lambda - 2$.\n\nIn this lesson we write the characteristic equation of a $2 \\times 2$ matrix from its trace and determinant, and read coefficients of the $3 \\times 3$ characteristic polynomial.",
+    "对 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$，$\\operatorname{tr} A = 5$，$\\det A = 4 - 6 = -2$，所以特征方程为 $\\lambda^2 - 5\\lambda - 2 = 0$。\n\n检验：直接展开，$(1 - \\lambda)(4 - \\lambda) - 2 \\cdot 3 = \\lambda^2 - 5\\lambda + 4 - 6 = \\lambda^2 - 5\\lambda - 2$。\n\n本课我们由迹和行列式写出 $2 \\times 2$ 矩阵的特征方程，并读出 $3 \\times 3$ 特征多项式的系数。",
+  ),
   prerequisites: ["calculating-the-eigenvectors-of-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -1509,8 +2339,8 @@ export const characteristicEquationOfAMatrix: TopicDef = {
       id: "characteristic-equation-expansion",
       title: t("Characteristic Equation Expansion", "特征方程的展开"),
       explanation: t(
-        "Expanding the determinant of a two by two matrix minus a multiple of the identity always produces the trace and the determinant as the coefficients. Express the characteristic equation in the standard form $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$.",
-        "展开二阶矩阵减去单位矩阵倍数后的行列式，得到的系数总是迹和行列式。将特征方程写为标准形式 $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。",
+        "Expanding the determinant of a two by two matrix minus a multiple of the identity always produces the trace and the determinant as the coefficients. Express the characteristic equation in the standard form $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$. For example, $\\begin{pmatrix} 2 & 1 \\\\ -3 & 0 \\end{pmatrix}$ has trace $2$ and determinant $3$, so its characteristic equation is $\\lambda^2 - 2\\lambda + 3 = 0$.\n\n> **Watch out.** The coefficient of $\\lambda$ is minus the trace, and the constant term is plus the determinant.",
+        "展开二阶矩阵减去单位矩阵倍数后的行列式，得到的系数总是迹和行列式。将特征方程写为标准形式 $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。例如 $\\begin{pmatrix} 2 & 1 \\\\ -3 & 0 \\end{pmatrix}$ 的迹为 $2$、行列式为 $3$，所以特征方程为 $\\lambda^2 - 2\\lambda + 3 = 0$。\n\n> **注意。** $\\lambda$ 的系数是迹的相反数，常数项是行列式本身。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-4, 5);
@@ -1536,9 +2366,23 @@ export const characteristicEquationOfAMatrix: TopicDef = {
         ];
         const trText =
           a === 0 && d === 0 ? "0" : d === 0 ? `${a}` : a === 0 ? `${d}` : `${d >= 0 ? `${a} + ${d}` : `${a} - ${-d}`} = ${tr}`;
-        const solution = t(
-          `The characteristic equation for a $2 \\times 2$ matrix is $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$. Here $\\operatorname{tr}(A) = ${trText}$ and $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$, giving $${formatCharEq(tr, det)}$.`,
-          `$2 \\times 2$ 矩阵的特征方程为 $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。这里 $\\operatorname{tr}(A) = ${trText}$ 且 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$，得到 $${formatCharEq(tr, det)}$。`,
+        const solution = walked(
+          [
+            [["Find the trace", "求迹"], t("", ""), [`\\operatorname{tr}(A) = ${trText}`]],
+            [["Find the determinant", "求行列式"], t("", ""), [`\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}`]],
+            [
+              ["Assemble the equation", "写出方程"],
+              t(
+                "Substitute into $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$:",
+                "代入 $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$：",
+              ),
+              [formatCharEq(tr, det)],
+            ],
+          ],
+          t(
+            `Expanding $(${a} - \\lambda)(${d} - \\lambda) - (${b})(${c})$ directly gives $\\lambda^2 - ${paren(tr)}\\lambda + ${paren(det)}$, the same polynomial.`,
+            `直接展开 $(${a} - \\lambda)(${d} - \\lambda) - (${b})(${c})$ 得 $\\lambda^2 - ${paren(tr)}\\lambda + ${paren(det)}$，是同一个多项式。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [
@@ -1568,36 +2412,88 @@ export const characteristicEquationOfAMatrix: TopicDef = {
       id: "coefficients-of-a-3x3-characteristic-polynomial",
       title: t("Coefficients of a 3x3 characteristic polynomial", "3x3 特征多项式的系数"),
       explanation: t(
-        "For a $3 \\times 3$ matrix the characteristic polynomial is\n\n$$\\det(\\lambda I - A) = \\lambda^3 - (\\operatorname{tr} A)\\lambda^2 + c_1\\lambda - \\det A,$$\n\nwhere $c_1$ is the sum of the three $2 \\times 2$ principal minors. So the coefficient of $\\lambda^2$ is minus the trace and the constant term is minus the determinant, which can be read off without expanding the whole determinant.",
-        "对 $3 \\times 3$ 矩阵，特征多项式为\n\n$$\\det(\\lambda I - A) = \\lambda^3 - (\\operatorname{tr} A)\\lambda^2 + c_1\\lambda - \\det A,$$\n\n其中 $c_1$ 是三个 $2 \\times 2$ 主子式之和。所以 $\\lambda^2$ 的系数是迹的相反数，常数项是行列式的相反数，无需展开整个行列式就能读出。",
+        "For a $3 \\times 3$ matrix the characteristic polynomial is\n\n$$\\det(\\lambda I - A) = \\lambda^3 - (\\operatorname{tr} A)\\lambda^2 + c_1\\lambda - \\det A,$$\n\nwhere $c_1$ is the sum of the three $2 \\times 2$ principal minors. So the coefficient of $\\lambda^2$ is minus the trace and the constant term is minus the determinant, which can be read off without expanding the whole determinant. For example, $A = \\begin{pmatrix} 1 & 0 & 2 \\\\ 0 & 3 & 0 \\\\ 1 & 0 & 1 \\end{pmatrix}$ has trace $5$, so the coefficient of $\\lambda^2$ is $-5$, and its principal minors are $3$, $-1$ and $3$, so $c_1 = 5$.\n\n> **Watch out.** The signs alternate: $-\\operatorname{tr} A$ for $\\lambda^2$, then $+c_1$ for $\\lambda$, then $-\\det A$.",
+        "对 $3 \\times 3$ 矩阵，特征多项式为\n\n$$\\det(\\lambda I - A) = \\lambda^3 - (\\operatorname{tr} A)\\lambda^2 + c_1\\lambda - \\det A,$$\n\n其中 $c_1$ 是三个 $2 \\times 2$ 主子式之和。所以 $\\lambda^2$ 的系数是迹的相反数，常数项是行列式的相反数，无需展开整个行列式就能读出。例如 $A = \\begin{pmatrix} 1 & 0 & 2 \\\\ 0 & 3 & 0 \\\\ 1 & 0 & 1 \\end{pmatrix}$ 的迹为 $5$，所以 $\\lambda^2$ 的系数为 $-5$；它的主子式为 $3$、$-1$、$3$，所以 $c_1 = 5$。\n\n> **注意。** 符号交替：$\\lambda^2$ 的系数是 $-\\operatorname{tr} A$，$\\lambda$ 的系数是 $+c_1$，常数项是 $-\\det A$。",
       ),
       generate(rng: Rng): Problem {
         const m: number[][] = [0, 1, 2].map(() => [0, 1, 2].map(() => rng.int(-4, 4)));
         const M = m as unknown as Mat3;
+        const det3 = (X: Mat3) =>
+          X[0][0] * (X[1][1] * X[2][2] - X[1][2] * X[2][1]) -
+          X[0][1] * (X[1][0] * X[2][2] - X[1][2] * X[2][0]) +
+          X[0][2] * (X[1][0] * X[2][1] - X[1][1] * X[2][0]);
         const tr = M[0][0] + M[1][1] + M[2][2];
-        const det =
-          M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
-          M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) +
-          M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
-        const minors =
-          M[0][0] * M[1][1] - M[0][1] * M[1][0] + (M[0][0] * M[2][2] - M[0][2] * M[2][0]) + (M[1][1] * M[2][2] - M[1][2] * M[2][1]);
+        const det = det3(M);
+        const m12 = M[0][0] * M[1][1] - M[0][1] * M[1][0];
+        const m13 = M[0][0] * M[2][2] - M[0][2] * M[2][0];
+        const m23 = M[1][1] * M[2][2] - M[1][2] * M[2][1];
+        const minors = m12 + m13 + m23;
+        const IminusA = [0, 1, 2].map((r) => [0, 1, 2].map((c) => (r === c ? 1 : 0) - M[r]![c]!)) as unknown as Mat3;
+        const p1 = det3(IminusA);
         const wantLinear = rng.int(0, 1) === 1;
         const ans = wantLinear ? minors : -tr;
+        const minorLine = (a: number, b: number, c: number, d: number, v: number) =>
+          `${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${v}`;
         return numberProblem({
           prompt: t(
             `Find the coefficient of ${wantLinear ? "$\\lambda$" : "$\\lambda^2$"} in $\\det(\\lambda I - A)$ for $A = ${mat3Latex(M)}$.`,
             `对 $A = ${mat3Latex(M)}$，求 $\\det(\\lambda I - A)$ 中 ${wantLinear ? "$\\lambda$" : "$\\lambda^2$"} 的系数。`,
           ),
           answer: ans,
-          wrong: wantLinear ? [-minors, tr, -det] : [tr, minors, -det],
-          solution: t(
-            wantLinear
-              ? `The coefficient of $\\lambda$ is the sum of the three $2 \\times 2$ principal minors, which is $${minors}$.`
-              : `The coefficient of $\\lambda^2$ is $-\\operatorname{tr} A = -(${M[0][0]} + ${paren(M[1][1])} + ${paren(M[2][2])}) = ${-tr}$.`,
-            wantLinear
-              ? `$\\lambda$ 的系数是三个 $2 \\times 2$ 主子式之和，即 $${minors}$。`
-              : `$\\lambda^2$ 的系数为 $-\\operatorname{tr} A = -(${M[0][0]} + ${paren(M[1][1])} + ${paren(M[2][2])}) = ${-tr}$。`,
-          ),
+          form: "integer",
+          mistakes: (wantLinear
+            ? [
+                why(-minors, "The coefficient of $\\lambda$ is $+c_1$, with a plus sign.", "$\\lambda$ 的系数是 $+c_1$，带正号。"),
+                why(tr, "The trace goes with $\\lambda^2$, not with $\\lambda$.", "迹对应 $\\lambda^2$ 项，而不是 $\\lambda$ 项。"),
+                why(-det, "That is the constant term, $-\\det A$.", "这是常数项 $-\\det A$。"),
+              ]
+            : [
+                why(tr, "The coefficient of $\\lambda^2$ is minus the trace.", "$\\lambda^2$ 的系数是迹的相反数。"),
+                why(
+                  minors,
+                  "The sum of the principal minors is the coefficient of $\\lambda$, not of $\\lambda^2$.",
+                  "主子式之和是 $\\lambda$ 的系数，而不是 $\\lambda^2$ 的系数。",
+                ),
+                why(-det, "That is the constant term, $-\\det A$.", "这是常数项 $-\\det A$。"),
+              ]
+          ).filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: wantLinear
+            ? walked(
+                [
+                  [
+                    ["Compute the principal minors", "计算主子式"],
+                    t("Delete one row and the matching column each time:", "每次删去一行及对应的一列："),
+                    [
+                      minorLine(M[0][0], M[0][1], M[1][0], M[1][1], m12),
+                      minorLine(M[0][0], M[0][2], M[2][0], M[2][2], m13),
+                      minorLine(M[1][1], M[1][2], M[2][1], M[2][2], m23),
+                    ],
+                  ],
+                  [["Add them", "相加"], t("", ""), [`c_1 = ${m12} + ${paren(m13)} + ${paren(m23)} = ${minors}`]],
+                ],
+                t(
+                  `At $\\lambda = 1$: $\\det(I - A) = ${p1}$, and $1 - ${paren(tr)} + ${paren(minors)} - ${paren(det)} = ${p1}$.`,
+                  `取 $\\lambda = 1$：$\\det(I - A) = ${p1}$，而 $1 - ${paren(tr)} + ${paren(minors)} - ${paren(det)} = ${p1}$。`,
+                ),
+              )
+            : walked(
+                [
+                  [
+                    ["Find the trace", "求迹"],
+                    t("", ""),
+                    [`\\operatorname{tr} A = ${M[0][0]} + ${paren(M[1][1])} + ${paren(M[2][2])} = ${tr}`],
+                  ],
+                  [
+                    ["Attach the sign", "加上符号"],
+                    t("The coefficient of $\\lambda^2$ is $-\\operatorname{tr} A$:", "$\\lambda^2$ 的系数是 $-\\operatorname{tr} A$："),
+                    [`-${paren(tr)} = ${-tr}`],
+                  ],
+                ],
+                t(
+                  `At $\\lambda = 1$: $\\det(I - A) = ${p1}$, and $1 - ${paren(tr)} + ${paren(minors)} - ${paren(det)} = ${p1}$, using $c_1 = ${minors}$ and $\\det A = ${det}$.`,
+                  `取 $\\lambda = 1$：$\\det(I - A) = ${p1}$，而 $1 - ${paren(tr)} + ${paren(minors)} - ${paren(det)} = ${p1}$，其中 $c_1 = ${minors}$，$\\det A = ${det}$。`,
+                ),
+              ),
         });
       },
     },
@@ -1612,6 +2508,10 @@ export const cayleyHamiltonTheorem: TopicDef = {
     "Apply the Cayley-Hamilton theorem p(A) = 0 to express powers of a matrix in terms of lower powers.",
     "应用凯莱-哈密顿定理 p(A) = 0 将矩阵的高次幂表示为低次幂的线性组合。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ has characteristic equation $\\lambda^2 - 5\\lambda - 2 = 0$. The Cayley-Hamilton theorem says $A$ satisfies it too: $A^2 - 5A - 2I = 0$, so $A^2 = 5A + 2I$.\n\nCheck: $A^2 = \\begin{pmatrix} 7 & 10 \\\\ 15 & 22 \\end{pmatrix}$ and $5A + 2I = \\begin{pmatrix} 5 + 2 & 10 \\\\ 15 & 20 + 2 \\end{pmatrix}$, the same matrix.\n\nIn this lesson we use the Cayley-Hamilton theorem to write $A^2$, $A^3$ and other powers of a $2 \\times 2$ matrix as combinations of $A$ and $I$.",
+    "矩阵 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ 的特征方程为 $\\lambda^2 - 5\\lambda - 2 = 0$。凯莱-哈密顿定理说 $A$ 也满足它：$A^2 - 5A - 2I = 0$，所以 $A^2 = 5A + 2I$。\n\n检验：$A^2 = \\begin{pmatrix} 7 & 10 \\\\ 15 & 22 \\end{pmatrix}$，$5A + 2I = \\begin{pmatrix} 5 + 2 & 10 \\\\ 15 & 20 + 2 \\end{pmatrix}$，是同一个矩阵。\n\n本课我们用凯莱-哈密顿定理把 $2 \\times 2$ 矩阵的 $A^2$、$A^3$ 等幂写成 $A$ 与 $I$ 的组合。",
+  ),
   prerequisites: ["characteristic-equation-of-a-matrix"],
   encompasses: [],
   xp: 14,
@@ -1620,8 +2520,8 @@ export const cayleyHamiltonTheorem: TopicDef = {
       id: "applying-cayley-hamilton-to-powers",
       title: t("Applying Cayley-Hamilton to Matrix Powers", "将凯莱-哈密顿定理应用于矩阵幂"),
       explanation: t(
-        "Every square matrix satisfies its own characteristic equation, so its square can be written using only the matrix itself and the identity. Substitute $A$ into its characteristic polynomial to compute $A^2 = \\operatorname{tr}(A)A - \\det(A)I$.",
-        "每个方阵都满足它自己的特征方程，所以它的平方可以只用矩阵本身和单位矩阵来表示。将矩阵 $A$ 代入其特征多项式，计算 $A^2 = \\operatorname{tr}(A)A - \\det(A)I$。",
+        "Every square matrix satisfies its own characteristic equation, so its square can be written using only the matrix itself and the identity. Substitute $A$ into its characteristic polynomial to compute $A^2 = \\operatorname{tr}(A)A - \\det(A)I$. For example, the equation $\\lambda^2 - 3\\lambda + 4 = 0$ gives $A^2 - 3A + 4I = 0$, so $A^2 = 3A - 4I$.\n\n> **Watch out.** Moving the terms to the other side changes their signs: the coefficients in $A^2 = \\dots$ are the opposites of those in the equation.",
+        "每个方阵都满足它自己的特征方程，所以它的平方可以只用矩阵本身和单位矩阵来表示。将矩阵 $A$ 代入其特征多项式，计算 $A^2 = \\operatorname{tr}(A)A - \\det(A)I$。例如方程 $\\lambda^2 - 3\\lambda + 4 = 0$ 给出 $A^2 - 3A + 4I = 0$，所以 $A^2 = 3A - 4I$。\n\n> **注意。** 把各项移到等号另一边时符号要变：$A^2 = \\dots$ 中的系数与方程中的系数相反。",
       ),
       generate: (rng: Rng): Problem => {
         const tr = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])!;
@@ -1638,9 +2538,19 @@ export const cayleyHamiltonTheorem: TopicDef = {
           t(`$A^2 = ${formatCayleyComb(-tr, -det)}$`, `$A^2 = ${formatCayleyComb(-tr, -det)}$`),
           t(`$A^2 = ${formatCayleyComb(1, det)}$`, `$A^2 = ${formatCayleyComb(1, det)}$`),
         ];
-        const solution = t(
-          `The Cayley-Hamilton theorem states that a matrix satisfies its own characteristic equation: $A^2 ${formatShift(tr, "A")}${formatShift(-det, "I")} = 0$. Solving for $A^2$ gives $A^2 = ${formatCayleyComb(tr, det)}$.`,
-          `凯莱-哈密顿定理指出方阵满足其自身的特征方程：$A^2 ${formatShift(tr, "A")}${formatShift(-det, "I")} = 0$。解出 $A^2$ 得到 $A^2 = ${formatCayleyComb(tr, det)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Substitute $A$ for $\\lambda$", "用 $A$ 代替 $\\lambda$"],
+              t("The constant term becomes a multiple of $I$:", "常数项变为 $I$ 的倍数："),
+              [`A^2${formatShift(tr, "A")}${formatShift(-det, "I")} = 0`],
+            ],
+            [["Solve for $A^2$", "解出 $A^2$"], t("", ""), [`A^2 = ${formatCayleyComb(tr, det)}`]],
+          ],
+          t(
+            `Each eigenvalue satisfies the same relation with $\\lambda$ in place of $A$: $\\lambda^2 = ${formatCayleyComb(tr, det).replace("A", "\\lambda").replace("I", "")}$, which is the characteristic equation rearranged.`,
+            `每个特征值满足把 $A$ 换成 $\\lambda$ 的同一关系：$\\lambda^2 = ${formatCayleyComb(tr, det).replace("A", "\\lambda").replace("I", "")}$，正是特征方程移项后的形式。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [
@@ -1670,8 +2580,8 @@ export const cayleyHamiltonTheorem: TopicDef = {
       id: "reducing-the-cube-of-a-matrix",
       title: t("Reducing the cube of a matrix", "化简矩阵的三次幂"),
       explanation: t(
-        "If $A$ is $2 \\times 2$ with characteristic equation $\\lambda^2 - s\\lambda + p = 0$, the Cayley-Hamilton theorem gives $A^2 = sA - pI$. Multiplying by $A$ and substituting again,\n\n$$A^3 = sA^2 - pA = (s^2 - p)A - spI.$$\n\nSo every power of $A$ is a combination of $A$ and $I$.",
-        "若 $2 \\times 2$ 矩阵 $A$ 的特征方程为 $\\lambda^2 - s\\lambda + p = 0$，凯莱–哈密顿定理给出 $A^2 = sA - pI$。两边乘以 $A$ 再代入一次，\n\n$$A^3 = sA^2 - pA = (s^2 - p)A - spI.$$\n\n所以 $A$ 的每个幂都是 $A$ 与 $I$ 的组合。",
+        "If $A$ is $2 \\times 2$ with characteristic equation $\\lambda^2 - s\\lambda + p = 0$, the Cayley-Hamilton theorem gives $A^2 = sA - pI$. Multiplying by $A$ and substituting again,\n\n$$A^3 = sA^2 - pA = (s^2 - p)A - spI.$$\n\nSo every power of $A$ is a combination of $A$ and $I$. For example, $\\lambda^2 - 3\\lambda + 2 = 0$ gives $A^2 = 3A - 2I$ and $A^3 = 3(3A - 2I) - 2A = 7A - 6I$.\n\n> **Watch out.** After multiplying by $A$, substitute for $A^2$ once more; the answer must contain no $A^2$ term.",
+        "若 $2 \\times 2$ 矩阵 $A$ 的特征方程为 $\\lambda^2 - s\\lambda + p = 0$，凯莱–哈密顿定理给出 $A^2 = sA - pI$。两边乘以 $A$ 再代入一次，\n\n$$A^3 = sA^2 - pA = (s^2 - p)A - spI.$$\n\n所以 $A$ 的每个幂都是 $A$ 与 $I$ 的组合。例如 $\\lambda^2 - 3\\lambda + 2 = 0$ 给出 $A^2 = 3A - 2I$，$A^3 = 3(3A - 2I) - 2A = 7A - 6I$。\n\n> **注意。** 乘以 $A$ 之后要再代入一次 $A^2$；答案中不能有 $A^2$ 项。",
       ),
       generate(rng: Rng): Problem {
         const s = rng.int(-5, 5) || 2;
@@ -1679,16 +2589,70 @@ export const cayleyHamiltonTheorem: TopicDef = {
         const wantA = rng.int(0, 1) === 0;
         const alpha = s * s - p;
         const beta = -s * p;
+        const ans = wantA ? alpha : beta;
+        const C: Mat2 = [
+          [0, -p],
+          [1, s],
+        ];
+        const C3 = mul2(C, mul2(C, C));
         return numberProblem({
           prompt: t(
             `A $2 \\times 2$ matrix $A$ has characteristic equation $${formatCharEq(s, p)}$. Writing $A^3 = \\alpha A + \\beta I$, find $\\${wantA ? "alpha" : "beta"}$.`,
             `$2 \\times 2$ 矩阵 $A$ 的特征方程为 $${formatCharEq(s, p)}$。写成 $A^3 = \\alpha A + \\beta I$，求 $\\${wantA ? "alpha" : "beta"}$。`,
           ),
-          answer: wantA ? alpha : beta,
-          wrong: wantA ? [s * s + p, s * s, s] : [s * p, -p, p * p],
-          solution: t(
-            `$A^2 = ${formatCayleyComb(s, p)}$, so $A^3 = ${formatLinearComb2(s, "A^2", -p, "A")} = ${formatLinearComb2(alpha, "A", beta, "I")}$. Hence $\\alpha = ${alpha}$ and $\\beta = ${beta}$.`,
-            `$A^2 = ${formatCayleyComb(s, p)}$，所以 $A^3 = ${formatLinearComb2(s, "A^2", -p, "A")} = ${formatLinearComb2(alpha, "A", beta, "I")}$。故 $\\alpha = ${alpha}$，$\\beta = ${beta}$。`,
+          answer: ans,
+          form: "integer",
+          mistakes: (wantA
+            ? [
+                why(
+                  s * s + p,
+                  "The sign of $p$ is wrong: $A^3 = sA^2 - pA$ contributes $-p$ to the coefficient of $A$.",
+                  "$p$ 的符号错了：$A^3 = sA^2 - pA$ 给 $A$ 的系数贡献 $-p$。",
+                ),
+                why(
+                  s * s,
+                  "The term $-pA$ from $A \\cdot A^2$ also adds to the coefficient of $A$.",
+                  "由 $A \\cdot A^2$ 得到的 $-pA$ 项也计入 $A$ 的系数。",
+                ),
+                why(s, "That is the coefficient of $A$ in $A^2$, not in $A^3$.", "这是 $A^2$ 中 $A$ 的系数，而不是 $A^3$ 中的。"),
+              ]
+            : [
+                why(s * p, "The sign is lost: $s(-pI) = -spI$.", "符号丢了：$s(-pI) = -spI$。"),
+                why(-p, "That is the coefficient of $I$ in $A^2$, not in $A^3$.", "这是 $A^2$ 中 $I$ 的系数，而不是 $A^3$ 中的。"),
+                why(
+                  p * p,
+                  "The multiple of $I$ comes from $s$ times $-pI$, so it is $-sp$, not $p^2$.",
+                  "$I$ 的倍数来自 $s$ 乘 $-pI$，所以是 $-sp$，而不是 $p^2$。",
+                ),
+              ]
+          ).filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [["Apply Cayley-Hamilton", "应用凯莱-哈密顿定理"], t("", ""), [`A^2 = ${formatCayleyComb(s, p)}`]],
+              [["Multiply by $A$", "乘以 $A$"], t("", ""), [`A^3 = A \\cdot A^2 = ${formatLinearComb2(s, "A^2", -p, "A")}`]],
+              [
+                ["Substitute for $A^2$ again", "再代入 $A^2$"],
+                t("", ""),
+                [
+                  `A^3 = ${s}\\left(${formatCayleyComb(s, p)}\\right)${-p > 0 ? " + " : " - "}${Math.abs(p) === 1 ? "" : Math.abs(p)}A = ${formatLinearComb2(alpha, "A", beta, "I")}`,
+                  `\\${wantA ? "alpha" : "beta"} = ${ans}`,
+                ],
+              ],
+            ],
+            t(
+              `The matrix $C = ${mat2Latex(C)}$ has this characteristic equation, and $C^3 = ${mat2Latex(C3)}$, which equals $${paren(alpha)}C + ${paren(beta)}I = ${mat2Latex(
+                [
+                  [beta, -p * alpha],
+                  [alpha, s * alpha + beta],
+                ],
+              )}$.`,
+              `矩阵 $C = ${mat2Latex(C)}$ 有这个特征方程，且 $C^3 = ${mat2Latex(C3)}$，等于 $${paren(alpha)}C + ${paren(beta)}I = ${mat2Latex(
+                [
+                  [beta, -p * alpha],
+                  [alpha, s * alpha + beta],
+                ],
+              )}$。`,
+            ),
           ),
         });
       },

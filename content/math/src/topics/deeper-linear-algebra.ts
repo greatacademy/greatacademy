@@ -1601,8 +1601,8 @@ const composingTransformations: KnowledgePointDef = {
   id: "the-matrix-of-a-composition-of-two-transformations",
   title: t("The matrix of a composition of two transformations", "两个变换复合的矩阵"),
   explanation: t(
-    "Applying $S$ first and then $T$ sends $\\mathbf{x}$ to $T(S\\mathbf{x})$, so the matrix of the composition is $TS$: the transformation applied first stands on the right. Reversing the factors usually gives a different transformation.",
-    "先作 $S$ 再作 $T$，把 $\\mathbf{x}$ 变成 $T(S\\mathbf{x})$，所以复合的矩阵是 $TS$：先作用的变换写在右边。交换因子通常得到另一个变换。",
+    "Applying $S$ first and then $T$ sends $\\mathbf{x}$ to $T(S\\mathbf{x})$, so the matrix of the composition is $TS$: the transformation applied first stands on the right. Reversing the factors usually gives a different transformation. For example, the reflection $F = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$ followed by the quarter turn $R = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$ has matrix $RF = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$.\n\n> **Watch out.** Write the matrices in the opposite order to the words: the one done first goes on the right.",
+    "先作 $S$ 再作 $T$，把 $\\mathbf{x}$ 变成 $T(S\\mathbf{x})$，所以复合的矩阵是 $TS$：先作用的变换写在右边。交换因子通常得到另一个变换。例如先作反射 $F = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$，再作四分之一圈旋转 $R = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$，矩阵是 $RF = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$。\n\n> **注意。** 矩阵的书写顺序与叙述顺序相反：先作的那个写在右边。",
   ),
   generate(rng) {
     let first: (typeof moves)[number];
@@ -1614,18 +1614,38 @@ const composingTransformations: KnowledgePointDef = {
       right = times(second[1], first[1]);
       reversed = times(first[1], second[1]);
     } while (JSON.stringify(right) === JSON.stringify(reversed));
-    return pickChoice(
-      rng,
-      t(
-        `A transformation of the plane is ${first[0].en}, followed by ${second[0].en}. What is its standard matrix?`,
-        `平面上的一个变换是先作${first[0]["zh-CN"]}，再作${second[0]["zh-CN"]}。它的标准矩阵是什么？`,
+    const options = [both(mat(reversed)), both(mat(first[1])), both(mat(second[1]))];
+    return reasoned(
+      pickChoice(
+        rng,
+        t(
+          `A transformation of the plane is ${first[0].en}, followed by ${second[0].en}. What is its standard matrix?`,
+          `平面上的一个变换是先作${first[0]["zh-CN"]}，再作${second[0]["zh-CN"]}。它的标准矩阵是什么？`,
+        ),
+        both(mat(right)),
+        options,
+        t(
+          `The transformation applied first stands on the right, so the matrix is $${mat(second[1])}${mat(first[1])} = ${mat(right)}$.`,
+          `先作用的变换写在右边，所以矩阵是 $${mat(second[1])}${mat(first[1])} = ${mat(right)}$。`,
+        ),
       ),
-      both(mat(right)),
-      [both(mat(reversed)), both(mat(first[1])), both(mat(second[1]))],
-      t(
-        `The transformation applied first stands on the right, so the matrix is $${mat(second[1])}${mat(first[1])} = ${mat(right)}$.`,
-        `先作用的变换写在右边，所以矩阵是 $${mat(second[1])}${mat(first[1])} = ${mat(right)}$。`,
-      ),
+      [
+        [
+          options[0]!.en,
+          "The factors are in the wrong order: the transformation applied first stands on the right.",
+          "因子顺序反了：先作用的变换写在右边。",
+        ],
+        [
+          options[1]!.en,
+          "That is only the first transformation; the second one is still to be applied.",
+          "这只是第一个变换；还要再作第二个变换。",
+        ],
+        [
+          options[2]!.en,
+          "That is only the second transformation; the first one must be applied before it.",
+          "这只是第二个变换；在它之前还要先作第一个变换。",
+        ],
+      ],
     );
   },
 };
@@ -1634,8 +1654,8 @@ const otherEigenvalue: KnowledgePointDef = {
   id: "the-other-eigenvalue-from-the-trace",
   title: t("The other eigenvalue from the trace", "由迹求另一个特征值"),
   explanation: t(
-    "The eigenvalues of a $2 \\times 2$ matrix add up to its trace and multiply to its determinant. So once one eigenvalue is known, the other follows from the trace, with no need to solve the characteristic equation.",
-    "二阶矩阵的特征值之和等于迹，之积等于行列式。所以知道一个特征值后，由迹就能得到另一个，不必再解特征方程。",
+    "The eigenvalues of a $2 \\times 2$ matrix add up to its trace and multiply to its determinant. So once one eigenvalue is known, the other follows from the trace, with no need to solve the characteristic equation. For example, $\\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$ has trace $7$ and eigenvalue $2$, so the other eigenvalue is $7 - 2 = 5$.\n\n> **Watch out.** The trace is the sum of both eigenvalues; subtract the known one from it.",
+    "二阶矩阵的特征值之和等于迹，之积等于行列式。所以知道一个特征值后，由迹就能得到另一个，不必再解特征方程。例如 $\\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$ 的迹为 $7$，有特征值 $2$，所以另一个特征值是 $7 - 2 = 5$。\n\n> **注意。** 迹是两个特征值之和；要从中减去已知的那个。",
   ),
   generate(rng) {
     const l1 = nonzero(rng, 5);
@@ -1647,10 +1667,28 @@ const otherEigenvalue: KnowledgePointDef = {
       prompt: t(`One eigenvalue of $${mat(A)}$ is $${l1}$. Find the other.`, `$${mat(A)}$ 的一个特征值是 $${l1}$。求另一个。`),
       answer: l2,
       form: "integer",
-      wrong: [l1 - trace, trace, l1 * l2],
-      solution: t(
-        `The trace is $${A[0]![0]} + ${inParens(A[1]![1]!)} = ${trace}$, and the eigenvalues add up to it. So the other is $${trace} - ${inParens(l1)} = ${l2}$.`,
-        `迹是 $${A[0]![0]} + ${inParens(A[1]![1]!)} = ${trace}$，特征值之和等于它。所以另一个是 $${trace} - ${inParens(l1)} = ${l2}$。`,
+      mistakes: [
+        why(
+          l1 - trace,
+          "The subtraction is the wrong way round: the other eigenvalue is the trace minus the known one.",
+          "减法方向反了：另一个特征值是迹减去已知的特征值。",
+        ),
+        why(trace, "That is the trace, the sum of both eigenvalues.", "这是迹，即两个特征值之和。"),
+        why(l1 * l2, "That is the determinant, the product of the eigenvalues.", "这是行列式，即两个特征值之积。"),
+      ].filter((w, i, all) => w.value !== l2 && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Find the trace", "求迹"], t("", ""), [`\\operatorname{tr} A = ${A[0]![0]} + ${inParens(A[1]![1]!)} = ${trace}`]],
+          [
+            ["Subtract the known eigenvalue", "减去已知的特征值"],
+            t("The eigenvalues add up to the trace:", "特征值之和等于迹："),
+            [`\\lambda_2 = ${trace} - ${inParens(l1)} = ${l2}`],
+          ],
+        ],
+        t(
+          `The product $${inParens(l1)} \\cdot ${inParens(l2)} = ${l1 * l2}$ equals $\\det A = ${A[0]![0]!} \\cdot ${inParens(A[1]![1]!)} - ${inParens(A[0]![1]!)} \\cdot ${inParens(A[1]![0]!)}$, as it must.`,
+          `乘积 $${inParens(l1)} \\cdot ${inParens(l2)} = ${l1 * l2}$ 等于 $\\det A = ${A[0]![0]!} \\cdot ${inParens(A[1]![1]!)} - ${inParens(A[0]![1]!)} \\cdot ${inParens(A[1]![0]!)}$，正应如此。`,
+        ),
       ),
     });
   },
@@ -1660,8 +1698,8 @@ const eigenvalueOfAPolynomial: KnowledgePointDef = {
   id: "the-eigenvalue-of-a-polynomial-in-a-matrix",
   title: t("The eigenvalue of a polynomial in a matrix", "矩阵多项式的特征值"),
   explanation: t(
-    "If $A\\mathbf{v} = \\lambda\\mathbf{v}$, then $A^2\\mathbf{v} = \\lambda^2\\mathbf{v}$ and $I\\mathbf{v} = \\mathbf{v}$, and if $A$ is invertible, $A^{-1}\\mathbf{v} = \\lambda^{-1}\\mathbf{v}$. So any such combination of $A$ has the same eigenvector, with the same combination of $\\lambda$ as its eigenvalue.",
-    "若 $A\\mathbf{v} = \\lambda\\mathbf{v}$，则 $A^2\\mathbf{v} = \\lambda^2\\mathbf{v}$，$I\\mathbf{v} = \\mathbf{v}$；若 $A$ 可逆，还有 $A^{-1}\\mathbf{v} = \\lambda^{-1}\\mathbf{v}$。所以 $A$ 的这类组合有相同的特征向量，特征值是 $\\lambda$ 的同样组合。",
+    "If $A\\mathbf{v} = \\lambda\\mathbf{v}$, then $A^2\\mathbf{v} = \\lambda^2\\mathbf{v}$ and $I\\mathbf{v} = \\mathbf{v}$, and if $A$ is invertible, $A^{-1}\\mathbf{v} = \\lambda^{-1}\\mathbf{v}$. So any such combination of $A$ has the same eigenvector, with the same combination of $\\lambda$ as its eigenvalue. For example, if $A\\mathbf{v} = 2\\mathbf{v}$, then $(A^2 - 3A + I)\\mathbf{v} = (4 - 6 + 1)\\mathbf{v} = -\\mathbf{v}$, so the eigenvalue is $-1$.\n\n> **Watch out.** The term $qI$ contributes $q$, not $0$, and $A^{-1}$ contributes $\\frac{1}{\\lambda}$, not $\\lambda$.",
+    "若 $A\\mathbf{v} = \\lambda\\mathbf{v}$，则 $A^2\\mathbf{v} = \\lambda^2\\mathbf{v}$，$I\\mathbf{v} = \\mathbf{v}$；若 $A$ 可逆，还有 $A^{-1}\\mathbf{v} = \\lambda^{-1}\\mathbf{v}$。所以 $A$ 的这类组合有相同的特征向量，特征值是 $\\lambda$ 的同样组合。例如若 $A\\mathbf{v} = 2\\mathbf{v}$，则 $(A^2 - 3A + I)\\mathbf{v} = (4 - 6 + 1)\\mathbf{v} = -\\mathbf{v}$，特征值为 $-1$。\n\n> **注意。** $qI$ 项贡献 $q$，而不是 $0$；$A^{-1}$ 贡献 $\\frac{1}{\\lambda}$，而不是 $\\lambda$。",
   ),
   generate(rng) {
     const l = nonzero(rng, 4);
@@ -1677,10 +1715,36 @@ const eigenvalueOfAPolynomial: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [l * l + p * l, answer - 2 * p * l, l + p + q],
-        solution: t(
-          `Apply each term to $\\mathbf{v}$: $(${l})^2 + ${inParens(p)}(${l}) + ${inParens(q)} = ${answer}$.`,
-          `把每一项作用在 $\\mathbf{v}$ 上：$(${l})^2 + ${inParens(p)}(${l}) + ${inParens(q)} = ${answer}$。`,
+        mistakes: [
+          why(
+            l * l + p * l,
+            `The term $${q}I$ sends $\\mathbf{v}$ to $${q}\\mathbf{v}$, so it adds $${q}$.`,
+            `$${q}I$ 项把 $\\mathbf{v}$ 映为 $${q}\\mathbf{v}$，所以要加上 $${q}$。`,
+          ),
+          why(
+            answer - 2 * p * l,
+            `The middle term is $${inParens(p)} \\cdot ${inParens(l)} = ${p * l}$; its sign was flipped.`,
+            `中间项是 $${inParens(p)} \\cdot ${inParens(l)} = ${p * l}$；符号弄反了。`,
+          ),
+          why(
+            l + p + q,
+            `$A^2$ multiplies $\\mathbf{v}$ by $\\lambda^2 = ${l * l}$, and $${p}A$ by $${p} \\cdot ${inParens(l)}$; the coefficients are not simply added to $\\lambda$.`,
+            `$A^2$ 把 $\\mathbf{v}$ 乘以 $\\lambda^2 = ${l * l}$，$${p}A$ 乘以 $${p} \\cdot ${inParens(l)}$；不能把系数直接与 $\\lambda$ 相加。`,
+          ),
+        ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+        solution: walked(
+          [
+            [
+              ["Apply each term to $\\mathbf{v}$", "把每一项作用于 $\\mathbf{v}$"],
+              t("", ""),
+              [`A^2\\mathbf{v} = ${l * l}\\mathbf{v}, \\quad A\\mathbf{v} = ${l}\\mathbf{v}, \\quad I\\mathbf{v} = \\mathbf{v}`],
+            ],
+            [["Combine", "组合"], t("", ""), [`(${l})^2 + ${inParens(p)}(${l}) + ${inParens(q)} = ${answer}`]],
+          ],
+          t(
+            `So $(${matrix})\\mathbf{v} = ${answer}\\mathbf{v}$: the polynomial $\\lambda^2 + ${inParens(p)}\\lambda + ${inParens(q)}$ evaluated at $\\lambda = ${l}$.`,
+            `所以 $(${matrix})\\mathbf{v} = ${answer}\\mathbf{v}$：即多项式 $\\lambda^2 + ${inParens(p)}\\lambda + ${inParens(q)}$ 在 $\\lambda = ${l}$ 处的值。`,
+          ),
         ),
       });
     }
@@ -1692,10 +1756,39 @@ const eigenvalueOfAPolynomial: KnowledgePointDef = {
         `$A$ 可逆，且对某个非零向量 $\\mathbf{v}$ 有 $A\\mathbf{v} = ${l}\\mathbf{v}$。它也是 $${matrix}$ 的特征向量。求对应的特征值。`,
       ),
       answer,
-      wrong: [p * l + q, Q.of(p, l), Q.of(-p, l).add(Q.of(q))],
-      solution: t(
-        `$A^{-1}\\mathbf{v} = \\frac{1}{${l}}\\mathbf{v}$, so the eigenvalue is $${frac(p, l)} + ${inParens(q)} = ${answer.toLatex()}$.`,
-        `$A^{-1}\\mathbf{v} = \\frac{1}{${l}}\\mathbf{v}$，所以特征值是 $${frac(p, l)} + ${inParens(q)} = ${answer.toLatex()}$。`,
+      mistakes: (
+        [
+          [
+            Q.of(p * l + q),
+            "$A^{-1}$ multiplies the eigenvector by $\\frac{1}{\\lambda}$, not by $\\lambda$.",
+            "$A^{-1}$ 把特征向量乘以 $\\frac{1}{\\lambda}$，而不是 $\\lambda$。",
+          ],
+          [Q.of(p, l), `The term $${q}I$ adds $${q}$ to the eigenvalue.`, `$${q}I$ 项给特征值加上 $${q}$。`],
+          [
+            Q.of(-p, l).add(Q.of(q)),
+            `$\\frac{1}{\\lambda}$ keeps the sign of $\\lambda = ${l}$.`,
+            `$\\frac{1}{\\lambda}$ 与 $\\lambda = ${l}$ 同号。`,
+          ],
+        ] as const
+      )
+        .filter(([v], i, all) => !v.eq(answer) && all.findIndex(([o]) => o.eq(v)) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          [
+            ["Apply $A^{-1}$ to $\\mathbf{v}$", "把 $A^{-1}$ 作用于 $\\mathbf{v}$"],
+            t(
+              `Multiply $A\\mathbf{v} = ${l}\\mathbf{v}$ by $A^{-1}$ and divide by $${l}$:`,
+              `用 $A^{-1}$ 乘 $A\\mathbf{v} = ${l}\\mathbf{v}$，再除以 $${l}$：`,
+            ),
+            [`A^{-1}\\mathbf{v} = \\frac{1}{${l}}\\mathbf{v}`],
+          ],
+          [["Combine", "组合"], t("", ""), [`${frac(p, l)} + ${inParens(q)} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `So $(${matrix})\\mathbf{v} = ${answer.toLatex()}\\,\\mathbf{v}$, with the same eigenvector $\\mathbf{v}$.`,
+          `所以 $(${matrix})\\mathbf{v} = ${answer.toLatex()}\\,\\mathbf{v}$，特征向量仍是 $\\mathbf{v}$。`,
+        ),
       ),
     });
   },
@@ -1705,8 +1798,8 @@ const inverseFromCayleyHamilton: KnowledgePointDef = {
   id: "the-inverse-from-cayley-hamilton",
   title: t("The inverse from Cayley–Hamilton", "由凯莱–哈密顿定理求逆"),
   explanation: t(
-    "A $2 \\times 2$ matrix satisfies $A^2 - (\\operatorname{tr}A)A + (\\det A)I = 0$. When $\\det A \\ne 0$, multiply by $A^{-1}$ and rearrange: $A^{-1} = \\frac{1}{\\det A}\\left((\\operatorname{tr}A)I - A\\right)$. So the inverse of any invertible matrix of this size is a combination of the matrix itself and the identity, and no elimination is needed to find it.",
-    "二阶矩阵满足 $A^2 - (\\operatorname{tr}A)A + (\\det A)I = 0$。当 $\\det A \\ne 0$ 时，乘 $A^{-1}$ 再移项，得 $A^{-1} = \\frac{1}{\\det A}\\left((\\operatorname{tr}A)I - A\\right)$。所以这种大小的可逆矩阵，其逆都是矩阵本身与单位矩阵的组合，求逆时不需要消元。",
+    "A $2 \\times 2$ matrix satisfies $A^2 - (\\operatorname{tr}A)A + (\\det A)I = 0$. When $\\det A \\ne 0$, multiply by $A^{-1}$ and rearrange: $A^{-1} = \\frac{1}{\\det A}\\left((\\operatorname{tr}A)I - A\\right)$. So the inverse of any invertible matrix of this size is a combination of the matrix itself and the identity, and no elimination is needed to find it. For example, $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$ has trace $3$ and determinant $1$, so $A^{-1} = 3I - A = \\begin{pmatrix} 1 & -1 \\\\ -1 & 2 \\end{pmatrix}$.\n\n> **Watch out.** Both coefficients are divided by $\\det A$: $q = \\frac{\\operatorname{tr}A}{\\det A}$ and $p = -\\frac{1}{\\det A}$.",
+    "二阶矩阵满足 $A^2 - (\\operatorname{tr}A)A + (\\det A)I = 0$。当 $\\det A \\ne 0$ 时，乘 $A^{-1}$ 再移项，得 $A^{-1} = \\frac{1}{\\det A}\\left((\\operatorname{tr}A)I - A\\right)$。所以这种大小的可逆矩阵，其逆都是矩阵本身与单位矩阵的组合，求逆时不需要消元。例如 $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$ 的迹为 $3$、行列式为 $1$，所以 $A^{-1} = 3I - A = \\begin{pmatrix} 1 & -1 \\\\ -1 & 2 \\end{pmatrix}$。\n\n> **注意。** 两个系数都要除以 $\\det A$：$q = \\frac{\\operatorname{tr}A}{\\det A}$，$p = -\\frac{1}{\\det A}$。",
   ),
   generate(rng) {
     let A: number[][];
@@ -1728,10 +1821,46 @@ const inverseFromCayleyHamilton: KnowledgePointDef = {
       ),
       answer,
       solveFor: "q",
-      wrong: [Q.of(-trace, d), Q.of(d, trace), trace],
-      solution: t(
-        `Here $\\operatorname{tr}A = ${trace}$ and $\\det A = ${d}$, so $A^2 - ${inParens(trace)}A + ${inParens(d)}I = 0$. Dividing by $${d}A$ gives $A^{-1} = ${frac(-1, d)}A + \\left(${answer.toLatex()}\\right)I$.`,
-        `这里 $\\operatorname{tr}A = ${trace}$，$\\det A = ${d}$，所以 $A^2 - ${inParens(trace)}A + ${inParens(d)}I = 0$。除以 $${d}A$ 得 $A^{-1} = ${frac(-1, d)}A + \\left(${answer.toLatex()}\\right)I$。`,
+      mistakes: (
+        [
+          [
+            Q.of(-trace, d),
+            "The sign is wrong: moving $-(\\operatorname{tr}A)A$ across gives $+(\\operatorname{tr}A)I$ after multiplying by $A^{-1}$.",
+            "符号错了：移项并乘以 $A^{-1}$ 后得到 $+(\\operatorname{tr}A)I$。",
+          ],
+          [
+            Q.of(d, trace),
+            "The fraction is upside down: $q = \\frac{\\operatorname{tr}A}{\\det A}$.",
+            "分数颠倒了：$q = \\frac{\\operatorname{tr}A}{\\det A}$。",
+          ],
+          [Q.of(trace), `The trace must still be divided by $\\det A = ${d}$.`, `迹还要除以 $\\det A = ${d}$。`],
+        ] as const
+      )
+        .filter(([v], i, all) => !v.eq(answer) && all.findIndex(([o]) => o.eq(v)) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        [
+          [
+            ["Write Cayley–Hamilton", "写出凯莱–哈密顿关系"],
+            t(`Here $\\operatorname{tr}A = ${trace}$ and $\\det A = ${d}$:`, `这里 $\\operatorname{tr}A = ${trace}$，$\\det A = ${d}$：`),
+            [`A^2 - ${inParens(trace)}A + ${inParens(d)}I = 0`],
+          ],
+          [
+            ["Multiply by $A^{-1}$", "乘以 $A^{-1}$"],
+            t("", ""),
+            [`A - ${inParens(trace)}I + ${inParens(d)}A^{-1} = 0`, `A^{-1} = ${frac(-1, d)}A + \\left(${answer.toLatex()}\\right)I`],
+          ],
+        ],
+        t(
+          `$\\frac{1}{${d}}\\left(${trace}I - A\\right) = \\frac{1}{${d}}${mat([
+            [A[1]![1]!, -A[0]![1]!],
+            [-A[1]![0]!, A[0]![0]!],
+          ])}$, the usual formula for the inverse of a $2 \\times 2$ matrix.`,
+          `$\\frac{1}{${d}}\\left(${trace}I - A\\right) = \\frac{1}{${d}}${mat([
+            [A[1]![1]!, -A[0]![1]!],
+            [-A[1]![0]!, A[0]![0]!],
+          ])}$，正是二阶矩阵求逆的常用公式。`,
+        ),
       ),
     });
   },
@@ -2961,8 +3090,8 @@ const symmetrizationRank: KnowledgePointDef = {
   id: "the-rank-of-the-symmetrizing-map",
   title: t("The rank of the symmetrizing map", "对称化映射的秩"),
   explanation: t(
-    "The map $T(A) = A + A^T$ on $n \\times n$ matrices sends everything to symmetric matrices, and its kernel is the set of matrices with $A^T = -A$, the skew-symmetric ones. Those have dimension $\\frac{n(n - 1)}{2}$. Rank-nullity then gives the rank as $n^2$ minus this number, which matches the dimension of the symmetric matrices, so the map is onto them.",
-    "$n \\times n$ 矩阵上的映射 $T(A) = A + A^T$ 把一切都映到对称矩阵，它的核是满足 $A^T = -A$ 的矩阵，即反对称矩阵。它们的维数是 $\\frac{n(n - 1)}{2}$。于是秩-零化度定理给出秩等于 $n^2$ 减去这个数，这正是对称矩阵的维数，所以映射是到对称矩阵上的满射。",
+    "The map $T(A) = A + A^T$ on $n \\times n$ matrices sends everything to symmetric matrices, and its kernel is the set of matrices with $A^T = -A$, the skew-symmetric ones. Those have dimension $\\frac{n(n - 1)}{2}$. Rank-nullity then gives the rank as $n^2$ minus this number, which matches the dimension of the symmetric matrices, so the map is onto them. For example, for $n = 3$ the kernel has dimension $\\frac{3 \\cdot 2}{2} = 3$, so the rank is $9 - 3 = 6$.\n\n> **Watch out.** $\\frac{n(n - 1)}{2}$ is the dimension of the kernel; the rank is what is left of $n^2$.",
+    "$n \\times n$ 矩阵上的映射 $T(A) = A + A^T$ 把一切都映到对称矩阵，它的核是满足 $A^T = -A$ 的矩阵，即反对称矩阵。它们的维数是 $\\frac{n(n - 1)}{2}$。于是秩-零化度定理给出秩等于 $n^2$ 减去这个数，这正是对称矩阵的维数，所以映射是到对称矩阵上的满射。例如 $n = 3$ 时核的维数为 $\\frac{3 \\cdot 2}{2} = 3$，所以秩为 $9 - 3 = 6$。\n\n> **注意。** $\\frac{n(n - 1)}{2}$ 是核的维数；秩是 $n^2$ 减去它剩下的部分。",
   ),
   generate(rng) {
     const n = rng.int(2, 30);
@@ -2975,10 +3104,32 @@ const symmetrizationRank: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [kernel, n * n, n],
-      solution: t(
-        `The kernel is the skew-symmetric matrices, of dimension $${kernel}$. So the rank is $${n * n} - ${kernel} = ${answer}$.`,
-        `核是反对称矩阵，维数是 $${kernel}$。所以秩是 $${n * n} - ${kernel} = ${answer}$。`,
+      mistakes: [
+        why(
+          kernel,
+          "That is the nullity, the dimension of the skew-symmetric matrices; the rank is what remains.",
+          "这是零化度，即反对称矩阵的维数；秩是剩下的部分。",
+        ),
+        why(
+          n * n,
+          "The skew-symmetric matrices are sent to $0$, so the rank is less than $n^2$.",
+          "反对称矩阵被映为 $0$，所以秩小于 $n^2$。",
+        ),
+        why(n, "The image is all symmetric matrices, not just the diagonal ones.", "像是全部对称矩阵，而不只是对角矩阵。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the kernel", "求核"],
+            t("$A + A^T = 0$ exactly when $A$ is skew-symmetric:", "$A + A^T = 0$ 当且仅当 $A$ 反对称："),
+            [`\\dim\\ker T = \\frac{${n}(${n} - 1)}{2} = ${kernel}`],
+          ],
+          [["Apply rank-nullity", "用秩-零化度定理"], t("", ""), [`\\operatorname{rank} T = ${n * n} - ${kernel} = ${answer}`]],
+        ],
+        t(
+          `The symmetric $${n} \\times ${n}$ matrices have dimension $\\frac{${n}(${n} + 1)}{2} = ${answer}$, so $T$ is onto them.`,
+          `$${n} \\times ${n}$ 对称矩阵的维数是 $\\frac{${n}(${n} + 1)}{2} = ${answer}$，所以 $T$ 是到它们上的满射。`,
+        ),
       ),
     });
   },
@@ -2988,8 +3139,8 @@ const inverseMapValue: KnowledgePointDef = {
   id: "a-value-of-the-inverse-of-a-linear-map",
   title: t("A value of the inverse of a linear map", "线性映射逆映射的值"),
   explanation: t(
-    "An invertible linear map has an inverse that is itself linear, and its standard matrix is the inverse of the original matrix. So $T^{-1}(\\mathbf{b})$ is the unique solution of $A\\mathbf{x} = \\mathbf{b}$. When the determinant is 1, the two by two inverse swaps the diagonal and negates the other entries, and the arithmetic stays in whole numbers.",
-    "可逆线性映射的逆本身也是线性的，它的标准矩阵就是原矩阵的逆。所以 $T^{-1}(\\mathbf{b})$ 是 $A\\mathbf{x} = \\mathbf{b}$ 的唯一解。当行列式为 1 时，二阶逆矩阵就是交换对角元、把其他元素取负，计算一直停留在整数范围内。",
+    "An invertible linear map has an inverse that is itself linear, and its standard matrix is the inverse of the original matrix. So $T^{-1}(\\mathbf{b})$ is the unique solution of $A\\mathbf{x} = \\mathbf{b}$. When the determinant is 1, the two by two inverse swaps the diagonal and negates the other entries, and the arithmetic stays in whole numbers. For example, $A = \\begin{pmatrix} 1 & 2 \\\\ 1 & 3 \\end{pmatrix}$ has $A^{-1} = \\begin{pmatrix} 3 & -2 \\\\ -1 & 1 \\end{pmatrix}$, so $T^{-1}(1, 1) = (3 - 2, -1 + 1) = (1, 0)$.\n\n> **Watch out.** Multiply by $A^{-1}$, not by $A$: $T^{-1}(\\mathbf{b})$ is the input that $T$ sends to $\\mathbf{b}$.",
+    "可逆线性映射的逆本身也是线性的，它的标准矩阵就是原矩阵的逆。所以 $T^{-1}(\\mathbf{b})$ 是 $A\\mathbf{x} = \\mathbf{b}$ 的唯一解。当行列式为 1 时，二阶逆矩阵就是交换对角元、把其他元素取负，计算一直停留在整数范围内。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 1 & 3 \\end{pmatrix}$ 有 $A^{-1} = \\begin{pmatrix} 3 & -2 \\\\ -1 & 1 \\end{pmatrix}$，所以 $T^{-1}(1, 1) = (3 - 2, -1 + 1) = (1, 0)$。\n\n> **注意。** 要乘 $A^{-1}$ 而不是 $A$：$T^{-1}(\\mathbf{b})$ 是被 $T$ 映为 $\\mathbf{b}$ 的那个输入。",
   ),
   generate(rng) {
     const p = nonzero(rng, 4);
@@ -3015,7 +3166,28 @@ const inverseMapValue: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [x + p * y, y - q * x, -answer, d * x + p * y],
+      mistakes: [
+        why(
+          x + p * y,
+          "That is the first entry of $A\\mathbf{b}$; the inverse map uses $A^{-1}$.",
+          "这是 $A\\mathbf{b}$ 的第一个分量；逆映射要用 $A^{-1}$。",
+        ),
+        why(
+          y - q * x,
+          "That is the second entry of $T^{-1}(\\mathbf{b})$, not the first.",
+          "这是 $T^{-1}(\\mathbf{b})$ 的第二个分量，而不是第一个。",
+        ),
+        why(
+          -answer,
+          "The sign is flipped; only the entries off the diagonal of $A^{-1}$ change sign.",
+          "符号反了；$A^{-1}$ 只有非对角元变号。",
+        ),
+        why(
+          d * x + p * y,
+          "The entry above the diagonal of $A^{-1}$ is $-p$; its sign was not changed.",
+          "$A^{-1}$ 对角线上方的元是 $-p$；这里没有变号。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
       solution: t(
         `Since $\\det A = 1$, the inverse matrix is $${inverse}$. The first entry of the image is $${inParens(d)} \\cdot ${inParens(x)} + ${inParens(-p)} \\cdot ${inParens(y)} = ${answer}$.`,
         `由于 $\\det A = 1$，逆矩阵是 $${inverse}$。像的第一个分量是 $${inParens(d)} \\cdot ${inParens(x)} + ${inParens(-p)} \\cdot ${inParens(y)} = ${answer}$。`,
@@ -3028,8 +3200,8 @@ const determinantInNewBasis: KnowledgePointDef = {
   id: "the-determinant-does-not-depend-on-the-basis",
   title: t("The determinant does not depend on the basis", "行列式不依赖于基"),
   explanation: t(
-    "Matrices of one operator relative to different bases are similar: $[T]_C = P^{-1}[T]_BP$. Taking determinants, the factors $\\det P^{-1}$ and $\\det P$ cancel, because the determinant of a product is the product of the determinants. So the determinant belongs to the operator and not to the basis, and the change of basis matrix need not be used at all.",
-    "同一算子在不同基下的矩阵是相似的：$[T]_C = P^{-1}[T]_BP$。取行列式后，因子 $\\det P^{-1}$ 和 $\\det P$ 相消，因为乘积的行列式等于行列式的乘积。所以行列式属于算子，而不属于基，根本用不着基变换矩阵。",
+    "Matrices of one operator relative to different bases are similar: $[T]_C = P^{-1}[T]_BP$. Taking determinants, the factors $\\det P^{-1}$ and $\\det P$ cancel, because the determinant of a product is the product of the determinants. So the determinant belongs to the operator and not to the basis, and the change of basis matrix need not be used at all. For example, if $[T]_B = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$, then $\\det [T]_C = 8 - 3 = 5$ for every basis $C$.\n\n> **Watch out.** The determinant is $ad - bc$, with a minus sign; computing $P^{-1}$ is unnecessary work.",
+    "同一算子在不同基下的矩阵是相似的：$[T]_C = P^{-1}[T]_BP$。取行列式后，因子 $\\det P^{-1}$ 和 $\\det P$ 相消，因为乘积的行列式等于行列式的乘积。所以行列式属于算子，而不属于基，根本用不着基变换矩阵。例如若 $[T]_B = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$，则对任意基 $C$ 都有 $\\det [T]_C = 8 - 3 = 5$。\n\n> **注意。** 行列式是 $ad - bc$，中间是减号；计算 $P^{-1}$ 是多余的。",
   ),
   generate(rng) {
     const a = rng.int(-6, 6);
@@ -3058,10 +3230,32 @@ const determinantInNewBasis: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + d, -answer, answer + 1, answer - 1, a * d + b * c],
-      solution: t(
-        `Similar matrices have equal determinants, so the value is $\\det [T]_B = ${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${answer}$.`,
-        `相似矩阵的行列式相等，所以值是 $\\det [T]_B = ${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${answer}$。`,
+      mistakes: [
+        why(a + d, "That is the trace; the question asks for the determinant.", "这是迹；题目问的是行列式。"),
+        why(
+          -answer,
+          "The determinant keeps its sign: $\\det P^{-1}$ and $\\det P$ multiply to $1$.",
+          "行列式的符号不变：$\\det P^{-1}$ 与 $\\det P$ 之积为 $1$。",
+        ),
+        why(a * d + b * c, "The determinant is $ad - bc$; the product $bc$ is subtracted.", "行列式是 $ad - bc$；乘积 $bc$ 要减去。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Take determinants", "取行列式"],
+            t("The determinant of a product is the product of the determinants:", "乘积的行列式等于行列式之积："),
+            [`\\det [T]_C = \\det P^{-1} \\cdot \\det [T]_B \\cdot \\det P = \\det [T]_B`],
+          ],
+          [
+            ["Compute it", "计算"],
+            t("", ""),
+            [`\\det [T]_B = ${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${answer}`],
+          ],
+        ],
+        t(
+          `Here $\\det P = 1 + ${inParens(p * q)} - ${inParens(p)} \\cdot ${inParens(q)} = 1$, so $\\det P^{-1} = 1$ as well, and the factors indeed cancel.`,
+          `这里 $\\det P = 1 + ${inParens(p * q)} - ${inParens(p)} \\cdot ${inParens(q)} = 1$，所以 $\\det P^{-1} = 1$，两个因子确实相消。`,
+        ),
       ),
     });
   },
@@ -3071,14 +3265,15 @@ const evaluationKernel: KnowledgePointDef = {
   id: "the-kernel-of-evaluation-at-two-points",
   title: t("The kernel of evaluation at two points", "两点求值映射的核"),
   explanation: t(
-    "The map $p \\mapsto (p(a), p(b))$, with $a \\ne b$, goes from $P_n$ to $\\mathbb{R}^2$. It is onto when $n \\ge 1$, because a line can be drawn with any values at two different points. So its rank is 2, and rank-nullity gives a kernel of dimension $n + 1 - 2$. The kernel is the set of multiples of $(x - a)(x - b)$.",
-    "映射 $p \\mapsto (p(a), p(b))$（$a \\ne b$）从 $P_n$ 到 $\\mathbb{R}^2$。当 $n \\ge 1$ 时它是满射，因为可以画一条直线在两个不同的点上取任意值。所以它的秩是 2，秩-零化度定理给出核的维数 $n + 1 - 2$。核就是 $(x - a)(x - b)$ 的倍式的集合。",
+    "The map $p \\mapsto (p(a), p(b))$, with $a \\ne b$, goes from $P_n$ to $\\mathbb{R}^2$. It is onto when $n \\ge 1$, because a line can be drawn with any values at two different points. So its rank is 2, and rank-nullity gives a kernel of dimension $n + 1 - 2$. The kernel is the set of multiples of $(x - a)(x - b)$. For example, $p \\mapsto (p(0), p(1))$ on $P_3$ has a kernel of dimension $4 - 2 = 2$, spanned by $x(x - 1)$ and $x^2(x - 1)$.\n\n> **Watch out.** $P_n$ has dimension $n + 1$, because the constant term counts.",
+    "映射 $p \\mapsto (p(a), p(b))$（$a \\ne b$）从 $P_n$ 到 $\\mathbb{R}^2$。当 $n \\ge 1$ 时它是满射，因为可以画一条直线在两个不同的点上取任意值。所以它的秩是 2，秩-零化度定理给出核的维数 $n + 1 - 2$。核就是 $(x - a)(x - b)$ 的倍式的集合。例如 $P_3$ 上的 $p \\mapsto (p(0), p(1))$ 的核维数为 $4 - 2 = 2$，由 $x(x - 1)$ 和 $x^2(x - 1)$ 张成。\n\n> **注意。** $P_n$ 的维数是 $n + 1$，因为常数项也算在内。",
   ),
   generate(rng) {
     const n = rng.int(2, 30);
     const a = rng.int(-5, 5);
     const b = rng.pick([...Array(11).keys()].map((i) => i - 5).filter((v) => v !== a));
     const answer = n - 1;
+    const factor = (r: number) => (r === 0 ? "x" : r < 0 ? `x + ${-r}` : `x - ${r}`);
     return numberProblem({
       prompt: t(
         `Let $T: P_{${n}} \\to \\mathbb{R}^2$ be $T(p) = (p(${a}), p(${b}))$. Find the dimension of the kernel of $T$.`,
@@ -3086,10 +3281,41 @@ const evaluationKernel: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n, n + 1, n - 2, 2],
-      solution: t(
-        `The space $P_{${n}}$ has dimension ${n + 1}, and the map is onto $\\mathbb{R}^2$. So the kernel has dimension $${n + 1} - 2 = ${answer}$.`,
-        `空间 $P_{${n}}$ 的维数是 ${n + 1}，映射是到 $\\mathbb{R}^2$ 上的满射。所以核的维数是 $${n + 1} - 2 = ${answer}$。`,
+      mistakes: [
+        why(
+          n,
+          "The map is onto $\\mathbb{R}^2$, so its rank is $2$; subtract $2$, not $1$.",
+          "该映射是到 $\\mathbb{R}^2$ 上的满射，秩为 $2$；要减去 $2$，而不是 $1$。",
+        ),
+        why(
+          n + 1,
+          "That is the whole domain; the two values $p(a)$ and $p(b)$ take away two dimensions.",
+          "这是整个定义域；$p(a)$ 与 $p(b)$ 两个值去掉了两个维数。",
+        ),
+        why(n - 2, `$P_{${n}}$ has dimension $${n + 1}$, counting the constant term.`, `算上常数项，$P_{${n}}$ 的维数是 $${n + 1}$。`),
+        why(
+          2,
+          "That is the rank, the dimension of the image $\\mathbb{R}^2$, not of the kernel.",
+          "这是秩，即像 $\\mathbb{R}^2$ 的维数，而不是核的维数。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Find the dimension of the domain", "求定义域的维数"], t("", ""), [`\\dim P_{${n}} = ${n + 1}`]],
+          [
+            ["Find the rank", "求秩"],
+            t(
+              "A polynomial of degree at most $1$ can take any two values at two different points, so $T$ is onto:",
+              "次数不超过 $1$ 的多项式可在两个不同点上取任意两个值，所以 $T$ 是满射：",
+            ),
+            [`\\operatorname{rank} T = 2`],
+          ],
+          [["Apply rank-nullity", "用秩-零化度定理"], t("", ""), [`\\dim\\ker T = ${n + 1} - 2 = ${answer}`]],
+        ],
+        t(
+          `The kernel is spanned by $(${factor(a)})(${factor(b)})x^j$ for $j = 0, \\dots, ${n - 2}$, which is $${answer}$ polynomials.`,
+          `核由 $(${factor(a)})(${factor(b)})x^j$（$j = 0, \\dots, ${n - 2}$）张成，共 $${answer}$ 个多项式。`,
+        ),
       ),
     });
   },
@@ -3099,8 +3325,8 @@ const characteristicConstant: KnowledgePointDef = {
   id: "the-constant-term-of-a-characteristic-polynomial",
   title: t("The constant term of a characteristic polynomial", "特征多项式的常数项"),
   explanation: t(
-    "Setting $\\lambda = 0$ in $\\det(\\lambda I - A)$ leaves $\\det(-A)$, and this is the constant term of the characteristic polynomial. Pulling the sign out of each of the $n$ rows gives $(-1)^n\\det A$. So for a $3 \\times 3$ matrix, the constant term is $-\\det A$. There is no need to expand the whole polynomial to find it.",
-    "在 $\\det(\\lambda I - A)$ 中令 $\\lambda = 0$，得到 $\\det(-A)$，这就是特征多项式的常数项。从 $n$ 行中各提出一个负号，得 $(-1)^n\\det A$。所以对 $3 \\times 3$ 矩阵，常数项是 $-\\det A$。不需要展开整个多项式就能求出它。",
+    "Setting $\\lambda = 0$ in $\\det(\\lambda I - A)$ leaves $\\det(-A)$, and this is the constant term of the characteristic polynomial. Pulling the sign out of each of the $n$ rows gives $(-1)^n\\det A$. So for a $3 \\times 3$ matrix, the constant term is $-\\det A$. There is no need to expand the whole polynomial to find it. For example, $A = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{pmatrix}$ has $\\det(\\lambda I - A) = (\\lambda - 1)(\\lambda - 2)(\\lambda - 3)$, whose constant term is $-6 = -\\det A$.\n\n> **Watch out.** For an odd size the sign flips: the constant term is $-\\det A$, not $\\det A$.",
+    "在 $\\det(\\lambda I - A)$ 中令 $\\lambda = 0$，得到 $\\det(-A)$，这就是特征多项式的常数项。从 $n$ 行中各提出一个负号，得 $(-1)^n\\det A$。所以对 $3 \\times 3$ 矩阵，常数项是 $-\\det A$。不需要展开整个多项式就能求出它。例如 $A = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3 \\end{pmatrix}$ 有 $\\det(\\lambda I - A) = (\\lambda - 1)(\\lambda - 2)(\\lambda - 3)$，常数项为 $-6 = -\\det A$。\n\n> **注意。** 阶数为奇数时符号改变：常数项是 $-\\det A$，而不是 $\\det A$。",
   ),
   generate(rng) {
     const grid: [[number, number, number], [number, number, number], [number, number, number]] = [
@@ -3117,10 +3343,35 @@ const characteristicConstant: KnowledgePointDef = {
       ),
       answer: -det,
       form: "integer",
-      wrong: [det, trace, -trace, det + 1],
-      solution: t(
-        `The constant term is $\\det(-A) = -\\det A$. Here $\\det A = ${det}$, so the term is $${-det}$.`,
-        `常数项是 $\\det(-A) = -\\det A$。这里 $\\det A = ${det}$，所以常数项是 $${-det}$。`,
+      mistakes: [
+        why(
+          det,
+          "Pulling $-1$ out of each of the three rows gives $(-1)^3 = -1$, so the sign flips.",
+          "从三行中各提出 $-1$ 得 $(-1)^3 = -1$，所以符号改变。",
+        ),
+        why(trace, "The trace belongs to the $\\lambda^2$ term, not the constant term.", "迹属于 $\\lambda^2$ 项，而不是常数项。"),
+        why(
+          -trace,
+          "That is the coefficient of $\\lambda^2$; the constant term comes from $\\det A$.",
+          "这是 $\\lambda^2$ 的系数；常数项来自 $\\det A$。",
+        ),
+      ].filter((w, i, all) => w.value !== -det && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Set $\\lambda = 0$", "令 $\\lambda = 0$"], t("", ""), [`\\det(0 \\cdot I - A) = \\det(-A) = (-1)^3 \\det A`]],
+          [
+            ["Expand $\\det A$ along the first row", "沿第一行展开 $\\det A$"],
+            t("", ""),
+            [
+              `\\det A = ${inParens(grid[0][0])} \\cdot ${inParens(grid[1][1] * grid[2][2] - grid[1][2] * grid[2][1])} - ${inParens(grid[0][1])} \\cdot ${inParens(grid[1][0] * grid[2][2] - grid[1][2] * grid[2][0])} + ${inParens(grid[0][2])} \\cdot ${inParens(grid[1][0] * grid[2][1] - grid[1][1] * grid[2][0])} = ${det}`,
+            ],
+          ],
+          [["Attach the sign", "加上符号"], t("", ""), [`-\\det A = ${-det}`]],
+        ],
+        t(
+          `Expanding along the first column instead: $${inParens(grid[0][0])} \\cdot ${inParens(grid[1][1] * grid[2][2] - grid[1][2] * grid[2][1])} - ${inParens(grid[1][0])} \\cdot ${inParens(grid[0][1] * grid[2][2] - grid[0][2] * grid[2][1])} + ${inParens(grid[2][0])} \\cdot ${inParens(grid[0][1] * grid[1][2] - grid[0][2] * grid[1][1])} = ${det}$, the same determinant.`,
+          `改沿第一列展开：$${inParens(grid[0][0])} \\cdot ${inParens(grid[1][1] * grid[2][2] - grid[1][2] * grid[2][1])} - ${inParens(grid[1][0])} \\cdot ${inParens(grid[0][1] * grid[2][2] - grid[0][2] * grid[2][1])} + ${inParens(grid[2][0])} \\cdot ${inParens(grid[0][1] * grid[1][2] - grid[0][2] * grid[1][1])} = ${det}$，行列式相同。`,
+        ),
       ),
     });
   },
@@ -4101,8 +4352,8 @@ const largestNullityOfComposition: KnowledgePointDef = {
   id: "the-largest-nullity-of-a-composition",
   title: t("The largest nullity of a composition", "复合映射最大的零度"),
   explanation: t(
-    "A vector is killed by $S \\circ T$ when $T$ kills it, or when $T$ sends it into the kernel of $S$. So the kernel of the composition is made of the kernel of $T$ and those vectors that land in the kernel of $S$. Counting dimensions gives $\\operatorname{null}(S \\circ T) \\le \\operatorname{null}(T) + \\operatorname{null}(S)$. The bound is reached when the image of $T$ contains the whole kernel of $S$, which is possible if the two nullities fit in the space.",
-    "向量被 $S \\circ T$ 消灭，是当 $T$ 消灭它，或者 $T$ 把它送入 $S$ 的核时。所以复合映射的核由 $T$ 的核和落入 $S$ 的核的那些向量组成。计算维数得 $\\operatorname{null}(S \\circ T) \\le \\operatorname{null}(T) + \\operatorname{null}(S)$。当 $T$ 的像包含 $S$ 的整个核时取到这个上界，只要两个零度之和不超过空间的维数，这就是可能的。",
+    "A vector is killed by $S \\circ T$ when $T$ kills it, or when $T$ sends it into the kernel of $S$. So the kernel of the composition is made of the kernel of $T$ and those vectors that land in the kernel of $S$. Counting dimensions gives $\\operatorname{null}(S \\circ T) \\le \\operatorname{null}(T) + \\operatorname{null}(S)$. The bound is reached when the image of $T$ contains the whole kernel of $S$, which is possible if the two nullities fit in the space. For example, on a space of dimension $10$, nullities $3$ and $4$ allow $S \\circ T$ a nullity of up to $3 + 4 = 7$.\n\n> **Watch out.** The largest nullity is the sum of the two nullities, not the larger of them.",
+    "向量被 $S \\circ T$ 消灭，是当 $T$ 消灭它，或者 $T$ 把它送入 $S$ 的核时。所以复合映射的核由 $T$ 的核和落入 $S$ 的核的那些向量组成。计算维数得 $\\operatorname{null}(S \\circ T) \\le \\operatorname{null}(T) + \\operatorname{null}(S)$。当 $T$ 的像包含 $S$ 的整个核时取到这个上界，只要两个零度之和不超过空间的维数，这就是可能的。例如在 $10$ 维空间上，零度 $3$ 与 $4$ 使 $S \\circ T$ 的零度最多可达 $3 + 4 = 7$。\n\n> **注意。** 最大的零度是两个零度之和，而不是其中较大的那个。",
   ),
   generate(rng) {
     const n = rng.int(5, 15);
@@ -4116,10 +4367,51 @@ const largestNullityOfComposition: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.max(a, b), Math.min(a, b), a * b, n, n - answer, answer + 1],
-      solution: t(
-        `The nullity of a composition is at most the sum of the nullities, here $${a} + ${b} = ${answer}$. Since this does not exceed ${n}, the image of $T$ can contain the kernel of $S$, and so the bound is reached.`,
-        `复合映射的零度至多是两个零度之和，这里是 $${a} + ${b} = ${answer}$。由于它不超过 ${n}，$T$ 的像可以包含 $S$ 的核，所以能取到这个上界。`,
+      mistakes: [
+        why(
+          Math.max(a, b),
+          "That is the smallest possible nullity; vectors sent by $T$ into the kernel of $S$ add to it.",
+          "这是最小可能的零度；被 $T$ 送入 $S$ 的核的向量还会增加它。",
+        ),
+        why(
+          Math.min(a, b),
+          "The kernel of $S \\circ T$ contains the whole kernel of $T$, so the nullity is at least the larger one.",
+          "$S \\circ T$ 的核包含 $T$ 的整个核，所以零度至少是较大的那个。",
+        ),
+        why(a * b, "Nullities add, they do not multiply: the kernel is built from two pieces.", "零度相加而不是相乘：核由两部分组成。"),
+        why(
+          n,
+          `$T$ has rank $${n - a}$ and only $${b}$ of those dimensions can fall into the kernel of $S$, so not all of the space is killed.`,
+          `$T$ 的秩为 $${n - a}$，其中只有 $${b}$ 维能落入 $S$ 的核，所以不会消灭整个空间。`,
+        ),
+        why(
+          n - answer,
+          "That is the smallest possible rank of $S \\circ T$, not its largest nullity.",
+          "这是 $S \\circ T$ 最小可能的秩，而不是最大的零度。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Bound the nullity", "给出零度的上界"],
+            t(
+              "A vector is killed by $S \\circ T$ when $T$ kills it or sends it into $\\ker S$:",
+              "向量被 $S \\circ T$ 消灭，当且仅当 $T$ 消灭它或把它送入 $\\ker S$：",
+            ),
+            [`\\operatorname{null}(S \\circ T) \\le ${a} + ${b} = ${answer}`],
+          ],
+          [
+            ["Check the bound is reached", "检查能否取到上界"],
+            t(
+              `$${answer} \\le ${n}$, so $T$ can be chosen with an image of dimension $${n - a}$ that contains the $${b}$-dimensional kernel of $S$.`,
+              `$${answer} \\le ${n}$，所以可以选取 $T$，使其 $${n - a}$ 维的像包含 $S$ 的 $${b}$ 维核。`,
+            ),
+          ],
+        ],
+        t(
+          `Then $S \\circ T$ has rank $${n} - ${answer} = ${n - answer}$, which is not negative, as a rank must be.`,
+          `此时 $S \\circ T$ 的秩为 $${n} - ${answer} = ${n - answer}$，不是负数，符合秩的要求。`,
+        ),
       ),
     });
   },
@@ -4129,8 +4421,8 @@ const rankOfRepeatedDerivative: KnowledgePointDef = {
   id: "the-rank-of-a-repeated-derivative",
   title: t("The rank of a repeated derivative", "重复求导的秩"),
   explanation: t(
-    "Differentiation is a linear map on the polynomials of degree at most $n$, a space of dimension $n + 1$ with the powers of $x$ as a basis. Differentiating $k$ times sends $x^j$ to a nonzero multiple of $x^{j - k}$ when $j \\ge k$, and to zero otherwise. So the image is spanned by the powers up to $x^{n - k}$, while the kernel is made of the polynomials of degree below $k$. The dimensions add up to $n + 1$.",
-    "求导是次数不超过 $n$ 的多项式空间上的线性映射，这个空间的维数是 $n + 1$，以 $x$ 的幂为基。求导 $k$ 次，当 $j \\ge k$ 时把 $x^j$ 映到 $x^{j - k}$ 的非零倍数，否则映到零。所以像由不超过 $x^{n - k}$ 的幂张成，而核由次数低于 $k$ 的多项式组成。两个维数之和是 $n + 1$。",
+    "Differentiation is a linear map on the polynomials of degree at most $n$, a space of dimension $n + 1$ with the powers of $x$ as a basis. Differentiating $k$ times sends $x^j$ to a nonzero multiple of $x^{j - k}$ when $j \\ge k$, and to zero otherwise. So the image is spanned by the powers up to $x^{n - k}$, while the kernel is made of the polynomials of degree below $k$. The dimensions add up to $n + 1$. For example, the second derivative on polynomials of degree at most $4$ kills $1$ and $x$, so its rank is $5 - 2 = 3$, with image spanned by $1, x, x^2$.\n\n> **Watch out.** The space has dimension $n + 1$, not $n$, because the constant term counts.",
+    "求导是次数不超过 $n$ 的多项式空间上的线性映射，这个空间的维数是 $n + 1$，以 $x$ 的幂为基。求导 $k$ 次，当 $j \\ge k$ 时把 $x^j$ 映到 $x^{j - k}$ 的非零倍数，否则映到零。所以像由不超过 $x^{n - k}$ 的幂张成，而核由次数低于 $k$ 的多项式组成。两个维数之和是 $n + 1$。例如在次数不超过 $4$ 的多项式上求二阶导数，把 $1$ 和 $x$ 映为零，所以秩为 $5 - 2 = 3$，像由 $1, x, x^2$ 张成。\n\n> **注意。** 这个空间的维数是 $n + 1$ 而不是 $n$，因为常数项也算在内。",
   ),
   generate(rng) {
     const n = rng.int(3, 15);
@@ -4143,10 +4435,42 @@ const rankOfRepeatedDerivative: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n - k, n + 1, answer + 1, k + 1, n, answer - 1, answer + 2],
-      solution: t(
-        `The domain has dimension $${n + 1}$. The kernel is made of the polynomials of degree below ${k}, with dimension ${k}, so the rank is $${n + 1} - ${k} = ${answer}$.`,
-        `定义域的维数是 $${n + 1}$。核由次数低于 ${k} 的多项式组成，维数是 ${k}，所以秩是 $${n + 1} - ${k} = ${answer}$。`,
+      mistakes: [
+        why(
+          n - k,
+          `The space has dimension $${n + 1}$, counting the constant term, so start from $${n + 1}$.`,
+          `算上常数项，空间的维数是 $${n + 1}$，所以要从 $${n + 1}$ 开始。`,
+        ),
+        why(n + 1, "That is the whole domain; the polynomials of low degree are sent to $0$.", "这是整个定义域；低次多项式被映为 $0$。"),
+        why(n, `Differentiating ${k} times kills $${k}$ dimensions, not just one.`, `求导 ${k} 次消去 $${k}$ 个维数，而不只一个。`),
+        why(k, "That is the dimension of the kernel, not the rank.", "这是核的维数，而不是秩。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the dimension of the domain", "求定义域的维数"],
+            t(`The basis is $1, x, \\dots, x^{${n}}$:`, `基为 $1, x, \\dots, x^{${n}}$：`),
+            [`\\dim = ${n + 1}`],
+          ],
+          [
+            ["Find the kernel", "求核"],
+            t(
+              `The polynomials of degree below ${k} have derivative of order ${k} equal to $0$:`,
+              `次数低于 ${k} 的多项式的 ${k} 阶导数为 $0$：`,
+            ),
+            [`\\dim\\ker T = ${k}`],
+          ],
+          [["Apply rank-nullity", "用秩-零化度定理"], t("", ""), [`\\operatorname{rank} T = ${n + 1} - ${k} = ${answer}`]],
+        ],
+        n === k
+          ? t(
+              `The image is the constants, spanned by the derivative of order ${k} of $x^{${n}}$, a nonzero constant: one dimension, matching the rank.`,
+              `像是全体常数，由 $x^{${n}}$ 的 ${k} 阶导数（一个非零常数）张成：一维，与秩一致。`,
+            )
+          : t(
+              `The image is spanned by $1, \\dots, x^{${n - k}}$, the derivatives of $x^{${k}}, \\dots, x^{${n}}$: $${n - k + 1}$ polynomials, matching the rank.`,
+              `像由 $1, \\dots, x^{${n - k}}$ 张成，它们是 $x^{${k}}, \\dots, x^{${n}}$ 的导数：共 $${n - k + 1}$ 个多项式，与秩一致。`,
+            ),
       ),
     });
   },

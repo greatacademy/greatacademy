@@ -980,8 +980,8 @@ const relativeMatrix = point(
   "a-column-of-a-matrix-relative-to-a-drawn-basis",
   ["A column of a matrix relative to a drawn basis", "相对于所画的基的矩阵的一列"],
   [
-    "The first column of $[T]_{\\mathcal{B}}$ holds the coordinates of $T(b_1)$ relative to $\\mathcal{B}$, not its standard coordinates. Write $T(b_1)$ as a combination of $b_1$ and $b_2$.",
-    "$[T]_{\\mathcal{B}}$ 的第一列是 $T(b_1)$ 相对于 $\\mathcal{B}$ 的坐标，不是标准坐标。把 $T(b_1)$ 写成 $b_1$ 和 $b_2$ 的组合。",
+    "The first column of $[T]_{\\mathcal{B}}$ holds the coordinates of $T(b_1)$ relative to $\\mathcal{B}$, not its standard coordinates. Write $T(b_1)$ as a combination of $b_1$ and $b_2$. For example, with $b_1 = (1, 1)$, $b_2 = (1, -1)$ and $T(b_1) = (3, 1)$, the equations $x + y = 3$ and $x - y = 1$ give $T(b_1) = 2b_1 + b_2$, so the first column is $(2, 1)$.\n\n> **Watch out.** The grid coordinates of the arrow $T(b_1)$ are its standard coordinates. Unless the basis is the standard one, the column is the pair of weights on $b_1$ and $b_2$, in that order.",
+    "$[T]_{\\mathcal{B}}$ 的第一列是 $T(b_1)$ 相对于 $\\mathcal{B}$ 的坐标，不是标准坐标。把 $T(b_1)$ 写成 $b_1$ 和 $b_2$ 的组合。例如 $b_1 = (1, 1)$，$b_2 = (1, -1)$，$T(b_1) = (3, 1)$ 时，方程 $x + y = 3$ 与 $x - y = 1$ 给出 $T(b_1) = 2b_1 + b_2$，所以第一列是 $(2, 1)$。\n\n> **注意。** 箭头 $T(b_1)$ 在网格上的坐标是它的标准坐标。除非基是标准基，这一列应是 $b_1$ 与 $b_2$ 上的权重，并按这个顺序排列。",
   ],
   (rng) => {
     const pairs: [Point, Point][] = [
@@ -1022,17 +1022,29 @@ const relativeMatrix = point(
     const a = rng.pick([-2, -1, 1, 2]);
     const b = rng.pick([-2, -1, 1, 2].filter((x) => x !== a));
     const image: Point = [a * u[0] + b * v[0], a * u[1] + b * v[1]];
-    return choose(
+    const n = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const combine = (x: number, y: number): Point => [x * u[0] + y * v[0], x * u[1] + y * v[1]];
+    const wrong: [Point, string, string][] = [
+      [[b, a], "The weights are swapped: the first entry is the weight on $b_1$.", "权重对调了：第一个元素是 $b_1$ 上的权重。"],
+      [
+        image,
+        "These are the standard coordinates of $T(b_1)$ read from the grid, not its coordinates relative to $\\mathcal{B}$.",
+        "这是从网格读出的 $T(b_1)$ 的标准坐标，而不是它相对于 $\\mathcal{B}$ 的坐标。",
+      ],
+      [[-a, b], "The weight on $b_1$ has the wrong sign.", "$b_1$ 上的权重符号错了。"],
+      [[a, -b], "The weight on $b_2$ has the wrong sign.", "$b_2$ 上的权重符号错了。"],
+    ];
+    const choice = choose(
       rng,
       [
         "The drawing shows a basis $\\mathcal{B} = (b_1, b_2)$ and the image $T(b_1)$ under a linear map $T$. What is the first column of $[T]_{\\mathcal{B}}$?",
         "图中是基 $\\mathcal{B} = (b_1, b_2)$ 以及线性映射 $T$ 下的像 $T(b_1)$。$[T]_{\\mathcal{B}}$ 的第一列是什么？",
       ],
       same(col(a, b)),
-      [same(col(b, a)), same(col(image[0], image[1])), same(col(-a, b)), same(col(a, -b))],
+      wrong.map(([c]) => same(col(c[0], c[1]))),
       [
-        `$T(b_1) = ${at(image)} = ${a} ${at(u)} + ${b < 0 ? `(${b})` : b} ${at(v)}$, so the coordinates relative to $\\mathcal{B}$ are $(${a}, ${b})$.`,
-        `$T(b_1) = ${at(image)} = ${a} ${at(u)} + ${b < 0 ? `(${b})` : b} ${at(v)}$，所以相对于 $\\mathcal{B}$ 的坐标为 $(${a}, ${b})$。`,
+        `**Step 1: Read the arrows.** $b_1 = ${at(u)}$, $b_2 = ${at(v)}$ and $T(b_1) = ${at(image)}$.\n\n**Step 2: Write $T(b_1)$ in the basis.** Solving $x b_1 + y b_2 = ${at(image)}$ gives $x = ${a}$ and $y = ${b}$, so the coordinates relative to $\\mathcal{B}$ are $(${a}, ${b})$.\n\n**Check.** $${a} ${at(u)} + ${n(b)} ${at(v)} = ${at(image)}$, the drawn image.`,
+        `**第一步：读出箭头。** $b_1 = ${at(u)}$，$b_2 = ${at(v)}$，$T(b_1) = ${at(image)}$。\n\n**第二步：用基表示 $T(b_1)$。** 解 $x b_1 + y b_2 = ${at(image)}$ 得 $x = ${a}$，$y = ${b}$，所以相对于 $\\mathcal{B}$ 的坐标为 $(${a}, ${b})$。\n\n**检验。** $${a} ${at(u)} + ${n(b)} ${at(v)} = ${at(image)}$，正是图中的像。`,
       ],
       fig(
         7,
@@ -1042,6 +1054,17 @@ const relativeMatrix = point(
           `从原点出发的箭头：b1 指向 ${at(u)}，b2 指向 ${at(v)}，T(b1) 指向 ${at(image)}。`,
         ],
       ),
+    );
+    return reasoned(
+      choice,
+      wrong.map(([c, en, zh]): [string, string, string] => {
+        const o = combine(c[0], c[1]);
+        return [
+          same(col(c[0], c[1]))[0],
+          `${en} These weights give $${n(c[0])} b_1 + ${n(c[1])} b_2 = ${at(o)}$, not $${at(image)}$.`,
+          `${zh}这组权重给出 $${n(c[0])} b_1 + ${n(c[1])} b_2 = ${at(o)}$，而不是 $${at(image)}$。`,
+        ];
+      }),
     );
   },
 );
@@ -1082,26 +1105,49 @@ const characteristicFromPicture = point(
   "the-characteristic-equation-from-drawn-eigenvectors",
   ["The characteristic equation from drawn eigenvectors", "由所画的特征向量写特征方程"],
   [
-    "Each eigenvalue is the factor between a vector and its image. The characteristic equation of a $2 \\times 2$ matrix is $(\\lambda - \\lambda_1)(\\lambda - \\lambda_2) = 0$, whose coefficients are the trace and the determinant.",
-    "每个特征值是向量与其像之间的倍数。$2 \\times 2$ 矩阵的特征方程是 $(\\lambda - \\lambda_1)(\\lambda - \\lambda_2) = 0$，其系数是迹和行列式。",
+    "Each eigenvalue is the factor between a vector and its image. The characteristic equation of a $2 \\times 2$ matrix is $(\\lambda - \\lambda_1)(\\lambda - \\lambda_2) = 0$, whose coefficients are the trace and the determinant. For example, if the drawing shows $Av = 2v$ and $Aw = -w$, the equation is $(\\lambda - 2)(\\lambda + 1) = \\lambda^2 - \\lambda - 2 = 0$.\n\n> **Watch out.** The middle coefficient is minus the trace, and the constant term is plus the determinant. Check by putting each eigenvalue into the equation.",
+    "每个特征值是向量与其像之间的倍数。$2 \\times 2$ 矩阵的特征方程是 $(\\lambda - \\lambda_1)(\\lambda - \\lambda_2) = 0$，其系数是迹和行列式。例如图中 $Av = 2v$，$Aw = -w$ 时，特征方程是 $(\\lambda - 2)(\\lambda + 1) = \\lambda^2 - \\lambda - 2 = 0$。\n\n> **注意。** 一次项系数是迹的相反数，常数项是行列式本身。把每个特征值代入方程来检验。",
   ],
   (rng) => {
     const { l1, l2, figure } = eigenPicture(rng);
     const tr = l1 + l2;
     const det = l1 * l2;
-    return choose(
+    const n = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const wrong: [string, string, string][] = [
+      [
+        characteristic(-tr, det),
+        "The middle coefficient has the wrong sign: it is minus the trace.",
+        "一次项系数的符号错了：它是迹的相反数。",
+      ],
+      [
+        characteristic(tr, -det),
+        "The constant term has the wrong sign: it is the determinant itself.",
+        "常数项的符号错了：它就是行列式本身。",
+      ],
+      [characteristic(det, tr), "The trace and the determinant are swapped.", "迹与行列式对调了。"],
+      [
+        characteristic(-tr, -det),
+        "Both signs are wrong: the equation is $\\lambda^2 - (\\text{trace})\\lambda + \\det = 0$.",
+        "两个符号都错了：方程是 $\\lambda^2 - (\\text{迹})\\lambda + \\det = 0$。",
+      ],
+    ];
+    const choice = choose(
       rng,
       [
         "The drawing shows eigenvectors $v$ and $w$ of a $2 \\times 2$ matrix $A$ with their images. What is the characteristic equation of $A$?",
         "图中是 $2 \\times 2$ 矩阵 $A$ 的特征向量 $v$ 和 $w$ 及其像。$A$ 的特征方程是什么？",
       ],
       same(characteristic(tr, det)),
-      [same(characteristic(-tr, det)), same(characteristic(tr, -det)), same(characteristic(det, tr)), same(characteristic(-tr, -det))],
+      wrong.map(([e]) => same(e)),
       [
-        `$Av$ is $${l1}$ times $v$ and $Aw$ is $${l2}$ times $w$, so the eigenvalues are $${l1}$ and $${l2}$, with sum $${tr}$ and product $${det}$.`,
-        `$Av$ 是 $v$ 的 $${l1}$ 倍，$Aw$ 是 $w$ 的 $${l2}$ 倍，所以特征值为 $${l1}$ 和 $${l2}$，和为 $${tr}$，积为 $${det}$。`,
+        `**Step 1: Read the eigenvalues.** $Av$ is $${l1}$ times $v$ and $Aw$ is $${l2}$ times $w$, so the eigenvalues are $${l1}$ and $${l2}$.\n\n**Step 2: Use the trace and the determinant.** Their sum is $${tr}$ and their product is $${det}$, so the equation is $${characteristic(tr, det)}$.\n\n**Check.** $${n(l1)}^2 - ${n(tr)} \\cdot ${n(l1)} + ${n(det)} = 0$ and $${n(l2)}^2 - ${n(tr)} \\cdot ${n(l2)} + ${n(det)} = 0$.`,
+        `**第一步：读出特征值。** $Av$ 是 $v$ 的 $${l1}$ 倍，$Aw$ 是 $w$ 的 $${l2}$ 倍，所以特征值为 $${l1}$ 和 $${l2}$。\n\n**第二步：用迹和行列式。** 它们的和为 $${tr}$，积为 $${det}$，所以特征方程是 $${characteristic(tr, det)}$。\n\n**检验。** $${n(l1)}^2 - ${n(tr)} \\cdot ${n(l1)} + ${n(det)} = 0$，$${n(l2)}^2 - ${n(tr)} \\cdot ${n(l2)} + ${n(det)} = 0$。`,
       ],
       figure,
+    );
+    return reasoned(
+      choice,
+      wrong.map(([e, en, zh]): [string, string, string] => [same(e)[0], en, zh]),
     );
   },
 );
