@@ -896,8 +896,8 @@ const midpointSum: KnowledgePointDef = {
   id: "a-double-riemann-sum-with-midpoints",
   title: t("A double Riemann sum with midpoints", "取中点的二重黎曼和"),
   explanation: t(
-    "Sampling each subrectangle at its center usually approximates a double integral much better than sampling at a corner. Add up the values of the function at the centers and multiply by the area of one subrectangle.",
-    "在每个小矩形的中心取值，通常比在角上取值更接近二重积分。把函数在各中心的值相加，再乘一个小矩形的面积。",
+    "Sampling each subrectangle at its center usually approximates a double integral much better than sampling at a corner. Add up the values of the function at the centers and multiply by the area of one subrectangle. For $x^2 + 5y$ on $[0, 2]^2$ cut into four unit squares, the centers have $x, y \\in \\{\\frac{1}{2}, \\frac{3}{2}\\}$; the $x^2$ values add to $2\\left(\\frac{1}{4} + \\frac{9}{4}\\right) = 5$ and the $5y$ values to $5 \\cdot 2 \\cdot 2 = 20$, so the sum is $25 \\cdot 1 = 25$.\n\n> **Watch out.** The centers are halfway across each small rectangle, not at its corners, and the total is multiplied by the area of one small rectangle, not of the whole region.",
+    "在每个小矩形的中心取值，通常比在角上取值更接近二重积分。把函数在各中心的值相加，再乘一个小矩形的面积。对 $[0, 2]^2$ 上的 $x^2 + 5y$，分成四个单位正方形，中心的 $x, y \\in \\{\\frac{1}{2}, \\frac{3}{2}\\}$；$x^2$ 的值之和为 $2\\left(\\frac{1}{4} + \\frac{9}{4}\\right) = 5$，$5y$ 的值之和为 $5 \\cdot 2 \\cdot 2 = 20$，所以和为 $25 \\cdot 1 = 25$。\n\n> **注意。** 中心在每个小矩形宽和高的一半处，不在角上；总和乘的是一个小矩形的面积，不是整个区域的面积。",
   ),
   generate(rng) {
     const a = 2 * rng.int(1, 3);
@@ -909,17 +909,59 @@ const midpointSum: KnowledgePointDef = {
     const value = (x: number, y: number) => x * x + k * y;
     const sum = value(x1, y1) + value(x1, y2) + value(x2, y1) + value(x2, y2);
     const area = a * b;
+    const answer = sum * area;
+    const exact = Q.of(16 * a ** 3 * b + 12 * k * a * b * b, 3);
     return numberProblem({
       prompt: t(
         `Divide $[0, ${2 * a}] \\times [0, ${2 * b}]$ into four equal rectangles. Find the midpoint Riemann sum of $f(x, y) = ${f}$.`,
         `把 $[0, ${2 * a}] \\times [0, ${2 * b}]$ 分成四个相等的矩形。求 $f(x, y) = ${f}$ 的中点黎曼和。`,
       ),
-      answer: sum * area,
+      answer,
       form: "integer",
-      wrong: [sum, value(a, b) * 4 * area, (value(0, 0) + value(a, 0) + value(0, b) + value(a, b)) * area],
-      solution: t(
-        `The centers have $x = ${x1}, ${x2}$ and $y = ${y1}, ${y2}$, and the values there add up to $${sum}$. Each rectangle has area $${area}$, so the sum is $${sum * area}$.`,
-        `中心的 $x$ 为 $${x1}, ${x2}$，$y$ 为 $${y1}, ${y2}$，这些点上的函数值之和是 $${sum}$。每个矩形面积为 $${area}$，所以和是 $${sum * area}$。`,
+      mistakes: apart(answer, [
+        why(
+          sum,
+          `That adds the values but forgets to multiply by the area $${area}$ of a rectangle.`,
+          `那是只把值相加，忘了乘以一个矩形的面积 $${area}$。`,
+        ),
+        why(
+          value(a, b) * 4 * area,
+          `That uses the center $(${a}, ${b})$ of the whole region for all four rectangles; each rectangle has its own center.`,
+          `那是四个矩形都用整个区域的中心 $(${a}, ${b})$；每个矩形有自己的中心。`,
+        ),
+        why(
+          (value(0, 0) + value(a, 0) + value(0, b) + value(a, b)) * area,
+          "That samples at the lower-left corners instead of the centers.",
+          "那是在左下角取值，而不是在中心。",
+        ),
+        why(
+          sum * 4 * area,
+          `That multiplies by the area $${4 * area}$ of the whole region; use the area $${area}$ of one rectangle.`,
+          `那是乘以整个区域的面积 $${4 * area}$；要用一个矩形的面积 $${area}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the centers", "找出中心"],
+            t(
+              `Each rectangle is $${a}$ by $${b}$, so the centers have $x = ${x1}, ${x2}$ and $y = ${y1}, ${y2}$.`,
+              `每个矩形为 $${a}$ 乘 $${b}$，所以中心的 $x$ 为 $${x1}, ${x2}$，$y$ 为 $${y1}, ${y2}$。`,
+            ),
+          ],
+          [
+            ["Add the values", "把值相加"],
+            t(
+              `$f$ at the four centers: $${value(x1, y1)}, ${value(x1, y2)}, ${value(x2, y1)}, ${value(x2, y2)}$, which add up to $${sum}$.`,
+              `$f$ 在四个中心的值：$${value(x1, y1)}, ${value(x1, y2)}, ${value(x2, y1)}, ${value(x2, y2)}$，和为 $${sum}$。`,
+            ),
+          ],
+          [["Multiply by the area", "乘以面积"], t(`$${sum} \\cdot ${area} = ${answer}$.`, `$${sum} \\cdot ${area} = ${answer}$。`)],
+        ],
+        t(
+          `The exact integral is $${exact.toLatex()}$. The midpoint rule is exact for the linear part $${k === 1 ? "" : k}y$ and slightly low for the upward-curving $x^2$, so $${answer}$ is just below $${exact.toLatex()}$.`,
+          `精确积分为 $${exact.toLatex()}$。中点法则对线性部分 $${k === 1 ? "" : k}y$ 是精确的，对向上弯曲的 $x^2$ 略偏小，所以 $${answer}$ 略小于 $${exact.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -929,8 +971,8 @@ const integralBySymmetry: KnowledgePointDef = {
   id: "a-double-integral-by-symmetry",
   title: t("A double integral by symmetry", "利用对称性求二重积分"),
   explanation: t(
-    "If a region is symmetric about the $y$-axis and an integrand is odd in $x$, the parts on the two sides cancel and the integral is zero. The same holds for $y$ and the $x$-axis. Only the even terms of the integrand are left to compute.",
-    "如果区域关于 $y$ 轴对称，被积函数关于 $x$ 是奇函数，两侧的部分相互抵消，积分为零。$y$ 和 $x$ 轴也一样。只有被积函数中的偶次项才需要计算。",
+    "If a region is symmetric about the $y$-axis and an integrand is odd in $x$, the parts on the two sides cancel and the integral is zero. The same holds for $y$ and the $x$-axis. Only the even terms of the integrand are left to compute. For $5y - 2x^3 + 4$ over $[-3, 3] \\times [-1, 1]$, the terms $5y$ and $-2x^3$ cancel, and the constant gives $4 \\cdot 6 \\cdot 2 = 48$.\n\n> **Watch out.** A constant is even, so it does not cancel: it contributes the constant times the area. The area of $[-p, p] \\times [-q, q]$ is $2p \\cdot 2q$, not $pq$.",
+    "如果区域关于 $y$ 轴对称，被积函数关于 $x$ 是奇函数，两侧的部分相互抵消，积分为零。$y$ 和 $x$ 轴也一样。只有被积函数中的偶次项才需要计算。对 $[-3, 3] \\times [-1, 1]$ 上的 $5y - 2x^3 + 4$，$5y$ 和 $-2x^3$ 两项抵消，常数给出 $4 \\cdot 6 \\cdot 2 = 48$。\n\n> **注意。** 常数是偶函数，不会抵消：它贡献常数乘以面积。$[-p, p] \\times [-q, q]$ 的面积是 $2p \\cdot 2q$，不是 $pq$。",
   ),
   generate(rng) {
     const p = rng.int(1, 5);
@@ -947,10 +989,44 @@ const integralBySymmetry: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c * p * q, (a + b + c) * area, 0],
-      solution: t(
-        `The rectangle is symmetric about both axes. The term $${poly([a, "x"])}$ is odd in $x$ and $${poly([b, "y^3"])}$ is odd in $y$, so both integrate to zero. What is left is $${c}$ times the area $${area}$, which is $${answer}$.`,
-        `矩形关于两条坐标轴都对称。$${poly([a, "x"])}$ 关于 $x$ 是奇函数，$${poly([b, "y^3"])}$ 关于 $y$ 是奇函数，所以积分都为零。剩下的是 $${c}$ 乘面积 $${area}$，即 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          c * p * q,
+          `The area of $R$ is $${2 * p} \\cdot ${2 * q} = ${area}$, not $${p} \\cdot ${q}$.`,
+          `$R$ 的面积是 $${2 * p} \\cdot ${2 * q} = ${area}$，不是 $${p} \\cdot ${q}$。`,
+        ),
+        why(
+          (a + b + c) * area,
+          "That multiplies every coefficient by the area; the odd terms integrate to zero.",
+          "那是把每个系数都乘以面积；奇次项的积分为零。",
+        ),
+        why(
+          0,
+          `The constant $${c}$ is even and does not cancel; it gives $${c}$ times the area.`,
+          `常数 $${c}$ 是偶函数，不会抵消；它给出 $${c}$ 乘以面积。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Cancel the odd terms", "消去奇次项"],
+            t(
+              `The rectangle is symmetric about both axes. The term $${poly([a, "x"])}$ is odd in $x$ and $${poly([b, "y^3"])}$ is odd in $y$, so both integrate to zero.`,
+              `矩形关于两条坐标轴都对称。$${poly([a, "x"])}$ 关于 $x$ 是奇函数，$${poly([b, "y^3"])}$ 关于 $y$ 是奇函数，所以积分都为零。`,
+            ),
+          ],
+          [
+            ["Integrate the constant", "积分常数项"],
+            t(
+              `What is left is $${c}$ times the area $${2 * p} \\cdot ${2 * q} = ${area}$, which is $${answer}$.`,
+              `剩下的是 $${c}$ 乘面积 $${2 * p} \\cdot ${2 * q} = ${area}$，即 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly, $\\int_{${-p}}^{${p}} x\\,dx = \\frac{${p * p} - ${p * p}}{2} = 0$ and $\\int_{${-q}}^{${q}} y^3\\,dy = \\frac{${q ** 4} - ${q ** 4}}{4} = 0$, so only $${c} \\cdot ${area} = ${answer}$ remains.`,
+          `直接计算，$\\int_{${-p}}^{${p}} x\\,dx = \\frac{${p * p} - ${p * p}}{2} = 0$，$\\int_{${-q}}^{${q}} y^3\\,dy = \\frac{${q ** 4} - ${q ** 4}}{4} = 0$，所以只剩 $${c} \\cdot ${area} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2005,14 +2081,17 @@ const triangularDoubleSum: KnowledgePointDef = {
   id: "a-double-sum-with-a-variable-upper-limit",
   title: t("A double sum with a variable upper limit", "上限含变量的二重和"),
   explanation: t(
-    "When the inner upper limit depends on the outer index, the sum does not separate into a product. Work from the inside out: the inner sum becomes a function of the outer index, and then that is summed. The sum of the triangular numbers has the closed form $\\sum_{i=1}^{n} \\frac{i(i + 1)}{2} = \\frac{n(n + 1)(n + 2)}{6}$.",
-    "内层上限依赖外层下标时，和不能分离成乘积。要由内向外计算：内层和变成外层下标的函数，再对它求和。三角形数之和有闭形式 $\\sum_{i=1}^{n} \\frac{i(i + 1)}{2} = \\frac{n(n + 1)(n + 2)}{6}$。",
+    "When the inner upper limit depends on the outer index, the sum does not separate into a product. Work from the inside out: the inner sum becomes a function of the outer index, and then that is summed. The sum of the triangular numbers has the closed form $\\sum_{i=1}^{n} \\frac{i(i + 1)}{2} = \\frac{n(n + 1)(n + 2)}{6}$. For $\\sum_{i=1}^{2}\\sum_{j=1}^{i} 7j$ the inner sums are $7$ and $7 \\cdot 3 = 21$, so the total is $28 = 7 \\cdot \\frac{2 \\cdot 3 \\cdot 4}{6}$.\n\n> **Watch out.** The inner sum stops at $i$, not at $n$, so the answer is not $\\left(\\sum_{j=1}^{n} j\\right)^2$ or $n$ copies of the largest inner sum.",
+    "内层上限依赖外层下标时，和不能分离成乘积。要由内向外计算：内层和变成外层下标的函数，再对它求和。三角形数之和有闭形式 $\\sum_{i=1}^{n} \\frac{i(i + 1)}{2} = \\frac{n(n + 1)(n + 2)}{6}$。对 $\\sum_{i=1}^{2}\\sum_{j=1}^{i} 7j$，两个内层和是 $7$ 和 $7 \\cdot 3 = 21$，所以总和是 $28 = 7 \\cdot \\frac{2 \\cdot 3 \\cdot 4}{6}$。\n\n> **注意。** 内层和止于 $i$，不是 $n$，所以答案不是 $\\left(\\sum_{j=1}^{n} j\\right)^2$，也不是 $n$ 个最大内层和。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
     const k = rng.int(1, 5);
     const single = (n * (n + 1)) / 2;
-    const answer = (k * n * (n + 1) * (n + 2)) / 6;
+    const squares = (n * (n + 1) * (2 * n + 1)) / 6;
+    const tetra = (n * (n + 1) * (n + 2)) / 6;
+    const answer = k * tetra;
+    const lead = k === 1 ? "" : `${k} \\cdot `;
     return numberProblem({
       prompt: t(
         `Find $\\sum_{i=1}^{${n}} \\sum_{j=1}^{i} ${coefficient(k)}j$.`,
@@ -2020,10 +2099,44 @@ const triangularDoubleSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k * single * single, k * single, k * n * single],
-      solution: t(
-        `The inner sum is $${coefficient(k)}\\frac{i(i + 1)}{2}$. Summing the triangular numbers gives $\\frac{${n} \\cdot ${n + 1} \\cdot ${n + 2}}{6} = ${(n * (n + 1) * (n + 2)) / 6}$, and the total is $${answer}$.`,
-        `内层和是 $${coefficient(k)}\\frac{i(i + 1)}{2}$。三角形数之和是 $\\frac{${n} \\cdot ${n + 1} \\cdot ${n + 2}}{6} = ${(n * (n + 1) * (n + 2)) / 6}$，总和是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          k * single * single,
+          `That lets both sums run to $${n}$ and multiplies them; the inner sum stops at $i$.`,
+          `那是让两个和都加到 $${n}$ 再相乘；内层和止于 $i$。`,
+        ),
+        why(
+          k * single,
+          `That is only the last inner sum, for $i = ${n}$; the inner sums for every $i$ must be added.`,
+          `那只是 $i = ${n}$ 时的最后一个内层和；要把每个 $i$ 的内层和加起来。`,
+        ),
+        why(
+          k * n * single,
+          `That uses the largest inner sum for all $${n}$ values of $i$; for smaller $i$ the inner sum is smaller.`,
+          `那是对 $i$ 的全部 $${n}$ 个取值都用最大的内层和；$i$ 较小时内层和也较小。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Do the inner sum", "计算内层和"],
+            t(
+              `$\\sum_{j=1}^{i} ${coefficient(k)}j = ${coefficient(k)}\\frac{i(i + 1)}{2}$.`,
+              `$\\sum_{j=1}^{i} ${coefficient(k)}j = ${coefficient(k)}\\frac{i(i + 1)}{2}$。`,
+            ),
+          ],
+          [
+            ["Add the triangular numbers", "累加三角形数"],
+            t(
+              `$\\sum_{i=1}^{${n}} \\frac{i(i + 1)}{2} = \\frac{${n} \\cdot ${n + 1} \\cdot ${n + 2}}{6} = ${tetra}$, so the total is $${lead}${tetra}${k === 1 ? "" : ` = ${answer}`}$.`,
+              `$\\sum_{i=1}^{${n}} \\frac{i(i + 1)}{2} = \\frac{${n} \\cdot ${n + 1} \\cdot ${n + 2}}{6} = ${tetra}$，所以总和是 $${lead}${tetra}${k === 1 ? "" : ` = ${answer}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Swap the order: each $j$ appears once for every $i$ from $j$ to $${n}$, that is $${n + 1} - j$ times. So the sum is $${lead}\\sum_{j} j(${n + 1} - j) = ${lead}(${n + 1} \\cdot ${single} - ${squares}) = ${answer}$.`,
+          `交换次序：每个 $j$ 对 $i = j$ 到 $${n}$ 各出现一次，即 $${n + 1} - j$ 次。所以和为 $${lead}\\sum_{j} j(${n + 1} - j) = ${lead}(${n + 1} \\cdot ${single} - ${squares}) = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2033,8 +2146,8 @@ const subintervalsForMesh: KnowledgePointDef = {
   id: "the-fewest-subintervals-for-a-given-mesh",
   title: t("The fewest subintervals for a given mesh", "达到给定网格宽度的最少子区间数"),
   explanation: t(
-    "A regular partition of an interval into $n$ parts has mesh equal to the interval's length divided by $n$. So asking for the mesh to be at most a given size means asking for $n$ to be at least the length divided by that size. Since $n$ must be a whole number, round this quotient up.",
-    "把区间等分成 $n$ 份的正则分割，网格宽度等于区间长度除以 $n$。所以要求网格宽度不超过给定值，就是要求 $n$ 不小于长度除以这个值。由于 $n$ 必须是整数，要把这个商向上取整。",
+    "A regular partition of an interval into $n$ parts has mesh equal to the interval's length divided by $n$. So asking for the mesh to be at most a given size means asking for $n$ to be at least the length divided by that size. Since $n$ must be a whole number, round this quotient up. For $[0, 10]$ and mesh at most $\\frac{3}{2}$, $n \\ge 10 \\div \\frac{3}{2} = \\frac{20}{3}$, so $n = 7$, with mesh $\\frac{10}{7}$.\n\n> **Watch out.** Round up, not down: $6$ pieces of $[0, 10]$ have mesh $\\frac{10}{6} = \\frac{5}{3}$, which is larger than $\\frac{3}{2}$. And divide the length by the size; multiplying them gives nothing meaningful.",
+    "把区间等分成 $n$ 份的正则分割，网格宽度等于区间长度除以 $n$。所以要求网格宽度不超过给定值，就是要求 $n$ 不小于长度除以这个值。由于 $n$ 必须是整数，要把这个商向上取整。对 $[0, 10]$，要求网格宽度不超过 $\\frac{3}{2}$，则 $n \\ge 10 \\div \\frac{3}{2} = \\frac{20}{3}$，所以 $n = 7$，网格宽度为 $\\frac{10}{7}$。\n\n> **注意。** 要向上取整，不能向下：把 $[0, 10]$ 分成 $6$ 份，网格宽度是 $\\frac{10}{6} = \\frac{5}{3}$，比 $\\frac{3}{2}$ 大。要用长度除以给定值；两者相乘没有意义。",
   ),
   generate(rng) {
     const a = rng.int(-5, 5);
@@ -2043,6 +2156,7 @@ const subintervalsForMesh: KnowledgePointDef = {
     const q = rng.pick([3, 4, 5, 6, 7, 8, 9, 11, 13].filter((v) => v % p !== 0 && p % v !== 0));
     const size = Q.of(p, q);
     const answer = Math.ceil((L * q) / p);
+    const fewer = answer - 1;
     return numberProblem({
       prompt: t(
         `What is the smallest $n$ for which the regular partition of $[${a}, ${a + L}]$ into $n$ subintervals has mesh at most $${size.toLatex()}$?`,
@@ -2050,10 +2164,43 @@ const subintervalsForMesh: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [answer + 1, Math.floor((L * q) / p) === answer ? answer - 1 : Math.floor((L * q) / p), L],
-      solution: t(
-        `The mesh is $\\frac{${L}}{n}$. It is small enough when $n \\ge ${L} \\div ${size.toLatex()} = ${Q.of(L * q, p).toLatex()}$, so the smallest whole number is $${answer}$.`,
-        `网格宽度是 $\\frac{${L}}{n}$。当 $n \\ge ${L} \\div ${size.toLatex()} = ${Q.of(L * q, p).toLatex()}$ 时足够小，所以最小的整数是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          fewer,
+          `With $${fewer}$ pieces the mesh is $${Q.of(L, fewer).toLatex()}$, larger than $${size.toLatex()}$: round the quotient up, not down.`,
+          `分成 $${fewer}$ 份时网格宽度为 $${Q.of(L, fewer).toLatex()}$，比 $${size.toLatex()}$ 大：商要向上取整，不能向下。`,
+        ),
+        why(
+          answer + 1,
+          `That works, but $${answer}$ pieces already give mesh $${Q.of(L, answer).toLatex()} \\le ${size.toLatex()}$.`,
+          `这样也行，但 $${answer}$ 份已经使网格宽度 $${Q.of(L, answer).toLatex()} \\le ${size.toLatex()}$。`,
+        ),
+        why(
+          L,
+          `That is the number of pieces for mesh $1$; the required mesh is $${size.toLatex()}$.`,
+          `那是网格宽度为 $1$ 时的份数；要求的网格宽度是 $${size.toLatex()}$。`,
+        ),
+        why(
+          Math.ceil((L * p) / q),
+          "That multiplies the length by the mesh; the number of pieces is the length divided by the mesh.",
+          "那是把长度乘以网格宽度；份数是长度除以网格宽度。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the condition", "写出条件"],
+            t(
+              `The mesh is $\\frac{${L}}{n}$, and $\\frac{${L}}{n} \\le ${size.toLatex()}$ means $n \\ge ${L} \\div ${size.toLatex()} = ${Q.of(L * q, p).toLatex()}$.`,
+              `网格宽度是 $\\frac{${L}}{n}$，$\\frac{${L}}{n} \\le ${size.toLatex()}$ 即 $n \\ge ${L} \\div ${size.toLatex()} = ${Q.of(L * q, p).toLatex()}$。`,
+            ),
+          ],
+          [["Round up", "向上取整"], t(`The smallest whole number that large is $${answer}$.`, `不小于它的最小整数是 $${answer}$。`)],
+        ],
+        t(
+          `$\\frac{${L}}{${answer}} = ${Q.of(L, answer).toLatex()} \\le ${size.toLatex()}$, while $\\frac{${L}}{${fewer}} = ${Q.of(L, fewer).toLatex()} > ${size.toLatex()}$.`,
+          `$\\frac{${L}}{${answer}} = ${Q.of(L, answer).toLatex()} \\le ${size.toLatex()}$，而 $\\frac{${L}}{${fewer}} = ${Q.of(L, fewer).toLatex()} > ${size.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -2064,8 +2211,8 @@ const integralWithMaxMin: KnowledgePointDef = {
   figure: multivariableDrawings3["double-integrals-over-rectangular-domains#integrating-a-maximum-or-minimum-over-a-square"],
   title: t("Integrating a maximum or minimum over a square", "在正方形上对最大值或最小值积分"),
   explanation: t(
-    "Functions like $\\max(x, y)$ have different formulas on the two sides of the diagonal $y = x$, so the square must be split there. By symmetry the two triangles give equal integrals for $\\max$, and it suffices to do one. The minimum and the absolute difference then follow, since $\\max + \\min = x + y$ and $\\max - \\min = |x - y|$.",
-    "像 $\\max(x, y)$ 这样的函数在对角线 $y = x$ 两侧公式不同，所以要在那里把正方形分开。由对称性，$\\max$ 在两个三角形上的积分相等，只需算一个。由于 $\\max + \\min = x + y$，$\\max - \\min = |x - y|$，最小值和绝对差也就随之得到。",
+    "Functions like $\\max(x, y)$ have different formulas on the two sides of the diagonal $y = x$, so the square must be split there. By symmetry the two triangles give equal integrals for $\\max$, and it suffices to do one. The minimum and the absolute difference then follow, since $\\max + \\min = x + y$ and $\\max - \\min = |x - y|$. On $[1, 3] \\times [1, 3]$, the half with $y \\le x$ has $\\max = x$ and gives $\\int_1^3 x(x - 1)\\,dx = \\frac{14}{3}$, so $\\iint \\max(x, y)\\,dA = \\frac{28}{3}$.\n\n> **Watch out.** $\\max$ and $\\min$ do not split $\\iint (x + y)\\,dA$ evenly: $\\max$ is the larger one at every point, so it takes more than half.",
+    "像 $\\max(x, y)$ 这样的函数在对角线 $y = x$ 两侧公式不同，所以要在那里把正方形分开。由对称性，$\\max$ 在两个三角形上的积分相等，只需算一个。由于 $\\max + \\min = x + y$，$\\max - \\min = |x - y|$，最小值和绝对差也就随之得到。在 $[1, 3] \\times [1, 3]$ 上，$y \\le x$ 的一半里 $\\max = x$，给出 $\\int_1^3 x(x - 1)\\,dx = \\frac{14}{3}$，所以 $\\iint \\max(x, y)\\,dA = \\frac{28}{3}$。\n\n> **注意。** $\\max$ 与 $\\min$ 并不平分 $\\iint (x + y)\\,dA$：$\\max$ 在每一点都是较大者，所以占一半以上。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
@@ -2096,8 +2243,39 @@ const integralWithMaxMin: KnowledgePointDef = {
         `计算 $\\iint_R ${kind.latex}\\,dA$，其中 $R = [0, ${a}] \\times [0, ${a}]$。`,
       ),
       answer: kind.value,
-      wrong: [Q.of(cube), Q.of(cube, 2), Q.of(a * a, 2)],
-      solution: t(`${kind.en} $${kind.value.toLatex()}$.`, `${kind.zh} $${kind.value.toLatex()}$。`),
+      mistakes: apart(kind.value, [
+        why(
+          Q.of(cube),
+          `That is $\\iint_R (x + y)\\,dA = ${cube}$, which is $\\max + \\min$ together.`,
+          `那是 $\\iint_R (x + y)\\,dA = ${cube}$，即 $\\max + \\min$ 之和。`,
+        ),
+        why(
+          Q.of(cube, 2),
+          `That splits $\\iint_R (x + y)\\,dA = ${cube}$ evenly; $\\max$ is the larger value at every point and takes $${Q.of(2 * cube, 3).toLatex()}$.`,
+          `那是把 $\\iint_R (x + y)\\,dA = ${cube}$ 平分；$\\max$ 在每一点都是较大者，占 $${Q.of(2 * cube, 3).toLatex()}$。`,
+        ),
+        why(
+          Q.of(a * a, 2),
+          `That is the area $${Q.of(a * a, 2).toLatex()}$ of one triangle; the integrand still has to be integrated over it.`,
+          `那是一个三角形的面积 $${Q.of(a * a, 2).toLatex()}$；还要在它上面积分被积函数。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Split along the diagonal", "沿对角线分开"],
+            t(
+              `On the half with $y \\le x$, $\\max(x, y) = x$ and $\\int_0^{${a}} \\int_0^x x\\,dy\\,dx = \\int_0^{${a}} x^2\\,dx = ${Q.of(cube, 3).toLatex()}$; the other half gives the same.`,
+              `在 $y \\le x$ 的一半上 $\\max(x, y) = x$，$\\int_0^{${a}} \\int_0^x x\\,dy\\,dx = \\int_0^{${a}} x^2\\,dx = ${Q.of(cube, 3).toLatex()}$；另一半相同。`,
+            ),
+          ],
+          [["Combine", "组合"], t(`${kind.en} $${kind.value.toLatex()}$.`, `${kind.zh} $${kind.value.toLatex()}$。`)],
+        ],
+        t(
+          `The three integrals fit together: $\\iint \\max + \\iint \\min = ${Q.of(2 * cube, 3).toLatex()} + ${Q.of(cube, 3).toLatex()} = ${cube} = \\iint (x + y)$, and $\\iint |x - y| = 2\\int_0^{${a}} \\frac{x^2}{2}\\,dx = ${Q.of(cube, 3).toLatex()} = ${Q.of(2 * cube, 3).toLatex()} - ${Q.of(cube, 3).toLatex()}$.`,
+          `三个积分相互吻合：$\\iint \\max + \\iint \\min = ${Q.of(2 * cube, 3).toLatex()} + ${Q.of(cube, 3).toLatex()} = ${cube} = \\iint (x + y)$，且 $\\iint |x - y| = 2\\int_0^{${a}} \\frac{x^2}{2}\\,dx = ${Q.of(cube, 3).toLatex()} = ${Q.of(2 * cube, 3).toLatex()} - ${Q.of(cube, 3).toLatex()}$。`,
+        ),
+      ),
     });
   },
 };
@@ -3196,8 +3374,8 @@ const lineAndParabolaMoment: KnowledgePointDef = {
   figure: multivariableDrawings4["double-integrals-over-type-i-regions#integrating-x-between-a-line-and-a-parabola"],
   title: t("Integrating x between a line and a parabola", "在直线和抛物线之间对 x 积分"),
   explanation: t(
-    "A Type I region is described by first fixing $x$, then letting $y$ run from the lower curve to the upper curve. Here, the curves $y = x^2$ and $y = kx$ cross at $x = 0$ and $x = k$, and the line is on top between them. The inner integral then contributes the height of the region at $x$, multiplied by the integrand, leaving a single integral in $x$.",
-    "I 型区域的描述方法是先固定 $x$，再让 $y$ 从下方曲线取到上方曲线。这里曲线 $y = x^2$ 和 $y = kx$ 相交于 $x = 0$ 和 $x = k$，其间直线在上方。于是内层积分给出区域在 $x$ 处的高度乘以被积函数，只剩下一个关于 $x$ 的积分。",
+    "A Type I region is described by first fixing $x$, then letting $y$ run from the lower curve to the upper curve. Here, the curves $y = x^2$ and $y = kx$ cross at $x = 0$ and $x = k$, and the line is on top between them. The inner integral then contributes the height of the region at $x$, multiplied by the integrand, leaving a single integral in $x$. For $3x$ between $y = \\frac{x^2}{2}$ and $y = x$, the curves cross at $x = 0$ and $x = 2$, and $\\int_0^2 3x\\left(x - \\frac{x^2}{2}\\right) dx = 8 - 6 = 2$.\n\n> **Watch out.** The integrand multiplies the height $kx - x^2$, so the outer integrand is $c(kx^2 - x^3)$; integrating only the height gives $c$ times the area.",
+    "I 型区域的描述方法是先固定 $x$，再让 $y$ 从下方曲线取到上方曲线。这里曲线 $y = x^2$ 和 $y = kx$ 相交于 $x = 0$ 和 $x = k$，其间直线在上方。于是内层积分给出区域在 $x$ 处的高度乘以被积函数，只剩下一个关于 $x$ 的积分。对 $y = \\frac{x^2}{2}$ 与 $y = x$ 之间的 $3x$，两曲线交于 $x = 0$ 和 $x = 2$，而 $\\int_0^2 3x\\left(x - \\frac{x^2}{2}\\right) dx = 8 - 6 = 2$。\n\n> **注意。** 被积函数要乘以高度 $kx - x^2$，所以外层被积函数是 $c(kx^2 - x^3)$；只积分高度得到的是 $c$ 乘以面积。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
@@ -3211,10 +3389,44 @@ const lineAndParabolaMoment: KnowledgePointDef = {
         `计算 $\\iint_D ${integrand}\\,dA$，其中 $D$ 是 $y = x^2$ 和 $y = ${line}$ 之间的区域。`,
       ),
       answer,
-      wrong: [Q.of(c * k ** 3, 6), Q.of(c * k ** 4, 6), Q.of(c * k ** 4, 4), Q.of(c * k ** 4, 3)],
-      solution: t(
-        `The integral is $\\int_0^{${k}} ${integrand}\\left(${line} - x^2\\right) dx$, and integrating gives $${answer.toLatex()}$.`,
-        `积分是 $\\int_0^{${k}} ${integrand}\\left(${line} - x^2\\right) dx$，积分后得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(c * k ** 3, 6),
+          `That is $${c}$ times the area of $D$; the integrand $${integrand}$ multiplies the height.`,
+          `那是 $${c}$ 乘以 $D$ 的面积；被积函数 $${integrand}$ 要乘以高度。`,
+        ),
+        why(
+          Q.of(c * k ** 4, 3),
+          "That integrates from $y = 0$ up to the line; the region starts at the parabola.",
+          "那是从 $y = 0$ 积到直线；区域从抛物线开始。",
+        ),
+        why(
+          Q.of(c * k ** 4, 4),
+          "That is the integral under the parabola; the region lies above it.",
+          "那是抛物线下方的积分；区域在它上方。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Set up the limits", "确定积分限"],
+            t(
+              `The curves cross at $x = 0$ and $x = ${k}$, and $y$ runs from $x^2$ up to $${line}$, so the integral is $\\int_0^{${k}} ${integrand}\\left(${line} - x^2\\right) dx$.`,
+              `两曲线交于 $x = 0$ 和 $x = ${k}$，$y$ 从 $x^2$ 到 $${line}$，所以积分是 $\\int_0^{${k}} ${integrand}\\left(${line} - x^2\\right) dx$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$${c}\\left(\\frac{${k} \\cdot ${k ** 3}}{3} - \\frac{${k ** 4}}{4}\\right) = ${c} \\cdot \\frac{${k ** 4}}{12} = ${answer.toLatex()}$.`,
+              `$${c}\\left(\\frac{${k} \\cdot ${k ** 3}}{3} - \\frac{${k ** 4}}{4}\\right) = ${c} \\cdot \\frac{${k ** 4}}{12} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With horizontal strips, $\\frac{y}{${k}} \\le x \\le \\sqrt{y}$ for $0 \\le y \\le ${k * k}$, and $\\int_0^{${k * k}} \\frac{${c}}{2}\\left(y - \\frac{y^2}{${k * k}}\\right) dy = \\frac{${c}}{2}\\left(\\frac{${k ** 4}}{2} - \\frac{${k ** 4}}{3}\\right) = ${answer.toLatex()}$.`,
+          `用水平条带，$0 \\le y \\le ${k * k}$ 时 $\\frac{y}{${k}} \\le x \\le \\sqrt{y}$，而 $\\int_0^{${k * k}} \\frac{${c}}{2}\\left(y - \\frac{y^2}{${k * k}}\\right) dy = \\frac{${c}}{2}\\left(\\frac{${k ** 4}}{2} - \\frac{${k ** 4}}{3}\\right) = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -3224,8 +3436,8 @@ const reversingToIntegrate: KnowledgePointDef = {
   id: "reversing-the-order-when-an-inner-integral-is-impossible",
   title: t("Reversing the order when an inner integral is impossible", "内层积分无法计算时交换次序"),
   explanation: t(
-    "Functions such as $\\sin(x^2)$ have no elementary antiderivative, so an iterated integral that integrates one with respect to $x$ first cannot be done as written. Sketching the region and describing it in the other order puts $y$ on the inside instead. The inner integral then produces a factor of $x$, and that factor is exactly what makes the substitution $u = x^2$ work on the outside.",
-    "像 $\\sin(x^2)$ 这样的函数没有初等原函数，所以先对 $x$ 积分它的累次积分，按原样无法计算。画出区域，换一种次序描述，让 $y$ 在内层。于是内层积分产生一个因子 $x$，这个因子正好使外层的代换 $u = x^2$ 可行。",
+    "Functions such as $\\sin(x^2)$ have no elementary antiderivative, so an iterated integral that integrates one with respect to $x$ first cannot be done as written. Sketching the region and describing it in the other order puts $y$ on the inside instead. The inner integral then produces a factor of $x$, and that factor is exactly what makes the substitution $u = x^2$ work on the outside. For $\\int_0^1 \\int_y^1 2\\sin(x^2)\\,dx\\,dy$ the region is $0 \\le y \\le x \\le 1$, so it equals $\\int_0^1 2x\\sin(x^2)\\,dx = 1 - \\cos 1$.\n\n> **Watch out.** With $u = x^2$, $x\\,dx = \\frac{du}{2}$, so a factor $\\frac{1}{2}$ appears; and the antiderivative of $\\sin u$ is $-\\cos u$, which fixes the sign.",
+    "像 $\\sin(x^2)$ 这样的函数没有初等原函数，所以先对 $x$ 积分它的累次积分，按原样无法计算。画出区域，换一种次序描述，让 $y$ 在内层。于是内层积分产生一个因子 $x$，这个因子正好使外层的代换 $u = x^2$ 可行。对 $\\int_0^1 \\int_y^1 2\\sin(x^2)\\,dx\\,dy$，区域是 $0 \\le y \\le x \\le 1$，所以它等于 $\\int_0^1 2x\\sin(x^2)\\,dx = 1 - \\cos 1$。\n\n> **注意。** 令 $u = x^2$ 时 $x\\,dx = \\frac{du}{2}$，会出现因子 $\\frac{1}{2}$；$\\sin u$ 的原函数是 $-\\cos u$，这决定了符号。",
   ),
   generate(rng) {
     const c = rng.int(1, 12);
@@ -3242,10 +3454,46 @@ const reversingToIntegrate: KnowledgePointDef = {
         `计算 $\\int_0^{${limit}} \\int_y^{${limit}} ${factor}${name}(x^2)\\,dx\\,dy$。`,
       ),
       answer: value,
-      wrong: [value.mul(Q.of(2)), value.div(Q.of(2)), Q.of(0), value.neg()],
-      solution: t(
-        `Reversing the order gives $\\int_0^{${limit}} \\int_0^{x} ${factor}${name}(x^2)\\,dy\\,dx = \\int_0^{${limit}} ${factor}x${name}(x^2)\\,dx$. With $u = x^2$, this equals $${value.toLatex()}$.`,
-        `交换次序得 $\\int_0^{${limit}} \\int_0^{x} ${factor}${name}(x^2)\\,dy\\,dx = \\int_0^{${limit}} ${factor}x${name}(x^2)\\,dx$。令 $u = x^2$，它等于 $${value.toLatex()}$。`,
+      mistakes: apart(value, [
+        why(
+          value.mul(Q.of(2)),
+          "With $u = x^2$, $x\\,dx = \\frac{du}{2}$; the factor $\\frac{1}{2}$ is missing.",
+          "令 $u = x^2$ 时 $x\\,dx = \\frac{du}{2}$；漏了因子 $\\frac{1}{2}$。",
+        ),
+        why(
+          value.neg(),
+          name === "\\sin"
+            ? "The antiderivative of $\\sin u$ is $-\\cos u$; the sign is lost."
+            : "The antiderivative of $\\cos u$ is $\\sin u$, with a plus sign.",
+          name === "\\sin" ? "$\\sin u$ 的原函数是 $-\\cos u$；符号丢了。" : "$\\cos u$ 的原函数是 $\\sin u$，符号为正。",
+        ),
+        why(
+          Q.of(0),
+          "The integrand is positive on the whole region, so the integral cannot be $0$.",
+          "被积函数在整个区域上为正，所以积分不可能为 $0$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reverse the order", "交换次序"],
+            t(
+              `The region is $0 \\le y \\le x \\le ${limit}$, so the integral is $\\int_0^{${limit}} \\int_0^{x} ${factor}${name}(x^2)\\,dy\\,dx = \\int_0^{${limit}} ${factor}x${name}(x^2)\\,dx$.`,
+              `区域是 $0 \\le y \\le x \\le ${limit}$，所以积分为 $\\int_0^{${limit}} \\int_0^{x} ${factor}${name}(x^2)\\,dy\\,dx = \\int_0^{${limit}} ${factor}x${name}(x^2)\\,dx$。`,
+            ),
+          ],
+          [
+            ["Substitute", "换元"],
+            t(
+              `With $u = x^2$ and $x\\,dx = \\frac{du}{2}$, this is $\\frac{${c}}{2}\\int_0^{${limit.slice(6, -1)}} ${name} u\\,du = ${value.toLatex()}$.`,
+              `令 $u = x^2$，$x\\,dx = \\frac{du}{2}$，它等于 $\\frac{${c}}{2}\\int_0^{${limit.slice(6, -1)}} ${name} u\\,du = ${value.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Differentiating $${name === "\\sin" ? `-\\frac{${c}}{2}\\cos(x^2)` : `\\frac{${c}}{2}\\sin(x^2)`}$ gives back $${factor}x${name}(x^2)$, so the antiderivative used is right.`,
+          `对 $${name === "\\sin" ? `-\\frac{${c}}{2}\\cos(x^2)` : `\\frac{${c}}{2}\\sin(x^2)`}$ 求导得回 $${factor}x${name}(x^2)$，所以所用原函数正确。`,
+        ),
       ),
     });
   },

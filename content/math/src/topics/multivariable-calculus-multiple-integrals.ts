@@ -4,7 +4,19 @@ import { paren, poly, Q } from "@ga/subject-math";
 import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
-import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { choiceProblem, explainedChoice, numberProblem, steps, why } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** asQ turns a number into a rational number so that values can be compared. */
+const asQ = (c: number | Q): Q => (typeof c === "number" ? Q.of(c) : c);
+
+/** distinct drops the mistakes whose value is the answer or repeats an earlier one. */
+function distinct<M extends { readonly value: number | Q }>(answer: number | Q, mistakes: readonly M[]): M[] {
+  return mistakes.filter((m, i, all) => !asQ(m.value).eq(asQ(answer)) && all.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
+}
+
+/** coef writes a coefficient in front of a term, leaving out a 1. */
+const coef = (n: number): string => (n === 1 ? "" : n === -1 ? "-" : `${n}`);
 
 /** Pythagorean triples for clean coordinates. */
 const pythagoreanTriples = [
@@ -39,6 +51,10 @@ export const doubleSummations: TopicDef = {
     "Double summations sum terms over two index variables, evaluating the inner sum first or splitting when separable.",
     "二重求和对两个指标变量上的项求和，先计算内层求和，或在可分离时拆分计算。",
   ),
+  intro: t(
+    "Evaluate $\\sum_{i=1}^{3}\\sum_{j=1}^{4} (5i - j)$ from the inside out. For a fixed $i$ the inner sum has four terms: $\\sum_{j=1}^{4} (5i - j) = 20i - 10$. The outer sum then gives $\\sum_{i=1}^{3} (20i - 10) = 20 \\cdot 6 - 30 = 90$.\n\nCheck: split the summand instead. The term $5i$ is added once for each of the $4$ values of $j$, and the term $j$ once for each of the $3$ values of $i$: $5 \\cdot 4 \\cdot 6 - 3 \\cdot 10 = 120 - 30 = 90$.\n\nIn this lesson we evaluate double sums, splitting them into single sums when the summand separates and working from the inside out when it does not.",
+    "由内向外计算 $\\sum_{i=1}^{3}\\sum_{j=1}^{4} (5i - j)$。固定 $i$ 时，内层和有四项：$\\sum_{j=1}^{4} (5i - j) = 20i - 10$。外层和于是给出 $\\sum_{i=1}^{3} (20i - 10) = 20 \\cdot 6 - 30 = 90$。\n\n检验：改为拆开被加项。$5i$ 这一项对 $j$ 的 $4$ 个取值各加一次，$j$ 这一项对 $i$ 的 $3$ 个取值各加一次：$5 \\cdot 4 \\cdot 6 - 3 \\cdot 10 = 120 - 30 = 90$。\n\n本课我们计算二重和：被加项可分离时拆成单重和，不可分离时由内向外计算。",
+  ),
   prerequisites: ["left-and-right-riemann-sums-in-sigma-notation"],
   encompasses: [],
   xp: 10,
@@ -47,40 +63,71 @@ export const doubleSummations: TopicDef = {
       id: "evaluating-separable-double-summations",
       title: t("Evaluating separable double summations", "计算可分离的二重求和"),
       explanation: t(
-        "When the summand is a sum of a term depending on one index and a term depending on the other, each part can be summed on its own. For a linear summand $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$, sum each term independently using $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$:\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}.$$",
-        "当被加项是只依赖于一个下标的项与只依赖于另一个下标的项之和时，每一部分可以分别求和。对于线性求和项 $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$，利用 $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$ 独立求和：\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}$$",
+        "When the summand is a sum of a term depending on one index and a term depending on the other, each part can be summed on its own. For a linear summand $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$, sum each term independently using $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$:\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}.$$\n\nFor $\\sum_{i=1}^{2}\\sum_{j=1}^{3} (6i + j)$ this gives $6 \\cdot 3 \\cdot 3 + 1 \\cdot 2 \\cdot 6 = 54 + 12 = 66$.\n\n> **Watch out.** The term $ai$ does not depend on $j$, so it is added once for every value of $j$: multiply $\\sum i$ by $n$, the number of values of the other index, not by $m$.",
+        "当被加项是只依赖于一个下标的项与只依赖于另一个下标的项之和时，每一部分可以分别求和。对于线性求和项 $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$，利用 $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$ 独立求和：\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}$$\n\n对 $\\sum_{i=1}^{2}\\sum_{j=1}^{3} (6i + j)$，得 $6 \\cdot 3 \\cdot 3 + 1 \\cdot 2 \\cdot 6 = 54 + 12 = 66$。\n\n> **注意。** $ai$ 这一项与 $j$ 无关，所以对 $j$ 的每个取值都加一次：$\\sum i$ 要乘以另一个下标的取值个数 $n$，而不是 $m$。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 6);
         const n = rng.int(2, 6);
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
-
         const sumI = (m * (m + 1)) / 2;
         const sumJ = (n * (n + 1)) / 2;
         const ans = a * n * sumI + b * m * sumJ;
-
-        const prompt = t(
-          `Evaluate the double sum $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])})$.`,
-          `计算二重求和 $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])})$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Distribute the summation: $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])}) = ${poly([a, `\\sum_{j=1}^{${n}} \\left(\\sum_{i=1}^{${m}} i\\right)`], [b, `\\sum_{i=1}^{${m}} \\left(\\sum_{j=1}^{${n}} j\\right)`])}$.`,
-            `Compute the single sums: $\\sum_{i=1}^{${m}} i = \\frac{${m}(${m + 1})}{2} = ${sumI}$ and $\\sum_{j=1}^{${n}} j = \\frac{${n}(${n + 1})}{2} = ${sumJ}$.`,
-            `Combine with outer limits: $${a}(${n})(${sumI}) + ${paren(b)}(${m})(${sumJ}) = ${a * n * sumI} + (${b * m * sumJ}) = ${ans}$.`,
-          ),
-          steps(
-            `展开求和式：$\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])}) = ${poly([a, `\\sum_{j=1}^{${n}} \\left(\\sum_{i=1}^{${m}} i\\right)`], [b, `\\sum_{i=1}^{${m}} \\left(\\sum_{j=1}^{${n}} j\\right)`])}$。`,
-            `计算一重和：$\\sum_{i=1}^{${m}} i = \\frac{${m}(${m + 1})}{2} = ${sumI}$ 且 $\\sum_{j=1}^{${n}} j = \\frac{${n}(${n + 1})}{2} = ${sumJ}$。`,
-            `代入外层项：$${a}(${n})(${sumI}) + ${paren(b)}(${m})(${sumJ}) = ${a * n * sumI} + (${b * m * sumJ}) = ${ans}$。`,
-          ),
-        );
+        const term = poly([a, "i"], [b, "j"]);
+        const average = Q.of(a * (m + 1), 2).add(Q.of(b * (n + 1), 2));
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the double sum $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${term})$.`,
+            `计算二重求和 $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${term})$ 的值。`,
+          ),
           answer: ans,
-          wrong: [ans + m * n, ans - m * n, a * sumI + b * sumJ],
+          mistakes: distinct(ans, [
+            why(
+              a * sumI + b * sumJ,
+              `That adds each single sum once. The term $${poly([a, "i"])}$ is added for each of the $${n}$ values of $j$, and $${poly([b, "j"])}$ for each of the $${m}$ values of $i$.`,
+              `那是每个单重和只加了一次。$${poly([a, "i"])}$ 对 $j$ 的 $${n}$ 个取值各加一次，$${poly([b, "j"])}$ 对 $i$ 的 $${m}$ 个取值各加一次。`,
+            ),
+            why(
+              a * m * sumI + b * n * sumJ,
+              `The counts are swapped: $\\sum i$ is multiplied by the number of values of $j$, which is $${n}$, not $${m}$.`,
+              `个数配错了：$\\sum i$ 要乘以 $j$ 的取值个数 $${n}$，而不是 $${m}$。`,
+            ),
+            why(
+              (a * n * m * (m - 1)) / 2 + (b * m * n * (n - 1)) / 2,
+              "That sums each index from $0$ to one less than its limit; both indices start at $1$.",
+              "那是让每个下标从 $0$ 加到上限减一；两个下标都从 $1$ 开始。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Split the summand", "拆开被加项"],
+                t(
+                  `$${a}i$ does not depend on $j$ and $${b}j$ does not depend on $i$, so the sum is $${a} \\cdot ${n}\\sum_{i=1}^{${m}} i + ${paren(b)} \\cdot ${m}\\sum_{j=1}^{${n}} j$.`,
+                  `$${a}i$ 与 $j$ 无关，$${b}j$ 与 $i$ 无关，所以和为 $${a} \\cdot ${n}\\sum_{i=1}^{${m}} i + ${paren(b)} \\cdot ${m}\\sum_{j=1}^{${n}} j$。`,
+                ),
+              ],
+              [
+                ["Evaluate the single sums", "计算单重和"],
+                t(
+                  `$\\sum_{i=1}^{${m}} i = \\frac{${m} \\cdot ${m + 1}}{2} = ${sumI}$ and $\\sum_{j=1}^{${n}} j = \\frac{${n} \\cdot ${n + 1}}{2} = ${sumJ}$.`,
+                  `$\\sum_{i=1}^{${m}} i = \\frac{${m} \\cdot ${m + 1}}{2} = ${sumI}$，$\\sum_{j=1}^{${n}} j = \\frac{${n} \\cdot ${n + 1}}{2} = ${sumJ}$。`,
+                ),
+              ],
+              [
+                ["Combine", "合并"],
+                t(
+                  `$${a} \\cdot ${n} \\cdot ${sumI} + ${paren(b)} \\cdot ${m} \\cdot ${sumJ} = ${a * n * sumI} + ${paren(b * m * sumJ)} = ${ans}$.`,
+                  `$${a} \\cdot ${n} \\cdot ${sumI} + ${paren(b)} \\cdot ${m} \\cdot ${sumJ} = ${a * n * sumI} + ${paren(b * m * sumJ)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `There are $${m * n}$ terms, and their average is the summand at the average indices $i = ${Q.of(m + 1, 2).toLatex()}$, $j = ${Q.of(n + 1, 2).toLatex()}$, namely $${average.toLatex()}$. Then $${m * n} \\cdot ${paren(average)} = ${ans}$.`,
+              `共有 $${m * n}$ 项，它们的平均值是被加项在平均下标 $i = ${Q.of(m + 1, 2).toLatex()}$，$j = ${Q.of(n + 1, 2).toLatex()}$ 处的值，即 $${average.toLatex()}$。于是 $${m * n} \\cdot ${paren(average)} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -88,8 +135,8 @@ export const doubleSummations: TopicDef = {
       id: "separable-double-sums-of-products",
       title: t("Separable double sums of products", "可分离的乘积型二重求和"),
       explanation: t(
-        "When the summand is a product of a factor depending only on $i$ and a factor depending only on $j$, the double sum splits into a product of two single sums:\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}.$$\n\nThis works because the inner sum treats $i$ as a constant that can be pulled out.",
-        "当被加项是只依赖 $i$ 的因子与只依赖 $j$ 的因子之积时，二重求和可拆成两个单重求和之积：\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}$$\n\n这是因为内层求和把 $i$ 当作常数，可以提出。",
+        "When the summand is a product of a factor depending only on $i$ and a factor depending only on $j$, the double sum splits into a product of two single sums:\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}.$$\n\nThis works because the inner sum treats $i$ as a constant that can be pulled out. For $\\sum_{i=1}^{3}\\sum_{j=1}^{7} 2ij$ the single sums are $6$ and $28$, so the total is $2 \\cdot 6 \\cdot 28 = 336$.\n\n> **Watch out.** A product separates into a product of sums, not a sum of sums. And $\\sum_{j} j$ adds the values $1, 2, \\dots, n$; it is not the number of terms $n$.",
+        "当被加项是只依赖 $i$ 的因子与只依赖 $j$ 的因子之积时，二重求和可拆成两个单重求和之积：\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}$$\n\n这是因为内层求和把 $i$ 当作常数，可以提出。对 $\\sum_{i=1}^{3}\\sum_{j=1}^{7} 2ij$，两个单重和是 $6$ 和 $28$，所以总和是 $2 \\cdot 6 \\cdot 28 = 336$。\n\n> **注意。** 乘积拆成的是和的乘积，而不是和的和。$\\sum_{j} j$ 把 $1, 2, \\dots, n$ 这些值相加，它不是项数 $n$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -98,14 +145,43 @@ export const doubleSummations: TopicDef = {
         const si = (m * (m + 1)) / 2;
         const sj = (n * (n + 1)) / 2;
         const ans = c * si * sj;
-        const term = c === 1 ? "ij" : `${c}ij`;
+        const term = `${coef(c)}ij`;
+        const lead = c === 1 ? "" : `${c} \\cdot `;
         return numberProblem({
           prompt: t(`Evaluate $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} ${term}$.`, `计算 $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} ${term}$。`),
           answer: ans,
-          wrong: [c * si * n, c * m * sj, c * (si + sj), c * m * n],
-          solution: t(
-            `The sum separates: $${c === 1 ? "" : `${c} \\cdot `}\\left(\\sum_{i=1}^{${m}} i\\right)\\left(\\sum_{j=1}^{${n}} j\\right) = ${c === 1 ? "" : `${c} \\cdot `}${si} \\cdot ${sj} = ${ans}$.`,
-            `求和可分离：$${c === 1 ? "" : `${c} \\cdot `}\\left(\\sum_{i=1}^{${m}} i\\right)\\left(\\sum_{j=1}^{${n}} j\\right) = ${c === 1 ? "" : `${c} \\cdot `}${si} \\cdot ${sj} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c * (si + sj),
+              "That adds the two single sums; a product $ij$ separates into the product of the sums.",
+              "那是把两个单重和相加；乘积 $ij$ 拆成的是两个和的乘积。",
+            ),
+            why(
+              c * si * n,
+              `That counts the $${n}$ values of $j$ instead of adding them: $\\sum_{j=1}^{${n}} j = ${sj}$.`,
+              `那是数了 $j$ 的 $${n}$ 个取值，而不是把它们相加：$\\sum_{j=1}^{${n}} j = ${sj}$。`,
+            ),
+            why(
+              c * m * sj,
+              `That counts the $${m}$ values of $i$ instead of adding them: $\\sum_{i=1}^{${m}} i = ${si}$.`,
+              `那是数了 $i$ 的 $${m}$ 个取值，而不是把它们相加：$\\sum_{i=1}^{${m}} i = ${si}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Separate the sum", "分离求和"],
+                t(
+                  `For a fixed $i$ the inner sum is $${coef(c)}i\\sum_{j=1}^{${n}} j$, so the whole sum is $${lead}\\left(\\sum_{i=1}^{${m}} i\\right)\\left(\\sum_{j=1}^{${n}} j\\right)$.`,
+                  `固定 $i$ 时，内层和为 $${coef(c)}i\\sum_{j=1}^{${n}} j$，所以整个和为 $${lead}\\left(\\sum_{i=1}^{${m}} i\\right)\\left(\\sum_{j=1}^{${n}} j\\right)$。`,
+                ),
+              ],
+              [["Multiply", "相乘"], t(`$${lead}${si} \\cdot ${sj} = ${ans}$.`, `$${lead}${si} \\cdot ${sj} = ${ans}$。`)],
+            ],
+            t(
+              `The $${m * n}$ products $ij$ average $${Q.of(m + 1, 2).toLatex()} \\cdot ${Q.of(n + 1, 2).toLatex()}$, and $${lead}${m * n} \\cdot ${Q.of((m + 1) * (n + 1), 4).toLatex()} = ${ans}$.`,
+              `$${m * n}$ 个乘积 $ij$ 的平均值是 $${Q.of(m + 1, 2).toLatex()} \\cdot ${Q.of(n + 1, 2).toLatex()}$，而 $${lead}${m * n} \\cdot ${Q.of((m + 1) * (n + 1), 4).toLatex()} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -121,6 +197,10 @@ export const partitionsOfIntervals: TopicDef = {
     "A partition P of [a, b] divides the interval into subintervals; the norm ||P|| is the maximum subinterval width.",
     "区间 [a, b] 的分割 P 将区间划分为子区间；分割的模 ||P|| 是各子区间宽度的最大值。",
   ),
+  intro: t(
+    "Cut $[2, 9]$ into $7$ equal pieces: each has width $\\frac{9 - 2}{7} = 1$, so the norm is $\\|P\\| = 1$. Now use the cut points $P = \\{2, 3, 6, 9\\}$ instead. The widths are $1, 3, 3$, and the norm is the largest of them, $\\|P\\| = 3$.\n\nCheck: the widths of any partition add up to the length of the interval, and $1 + 3 + 3 = 7 = 9 - 2$.\n\nIn this lesson we find the widths of the pieces of a partition and its norm, the width of the widest piece.",
+    "把 $[2, 9]$ 切成 $7$ 个相等的小段：每段宽 $\\frac{9 - 2}{7} = 1$，所以模为 $\\|P\\| = 1$。改用分点 $P = \\{2, 3, 6, 9\\}$。各段宽度为 $1, 3, 3$，模是其中最大的，$\\|P\\| = 3$。\n\n检验：任何分割的各段宽度之和都等于区间长度，而 $1 + 3 + 3 = 7 = 9 - 2$。\n\n本课我们求分割各小段的宽度以及分割的模，即最宽小段的宽度。",
+  ),
   prerequisites: ["double-summations"],
   encompasses: [],
   xp: 10,
@@ -129,8 +209,8 @@ export const partitionsOfIntervals: TopicDef = {
       id: "mesh-of-regular-interval-partitions",
       title: t("Mesh of regular interval partitions", "等距区间分割的网格模"),
       explanation: t(
-        "The mesh of a partition is the width of its widest piece, so for equal pieces it is simply the length of the interval divided by the number of pieces. A regular partition of $[a, b]$ into $n$ subintervals has equal widths $\\Delta x = \\frac{b - a}{n}$. The norm (or mesh) is $\\|P\\| = \\Delta x$.",
-        "分割的细度是最宽小段的宽度，所以对于等分的情形，它就是区间长度除以段数。将区间 $[a, b]$ 进行 $n$ 等分所得的等距分割，各子区间宽度均为 $\\Delta x = \\frac{b - a}{n}$。分割的模（网格模）即为 $\\|P\\| = \\Delta x$。",
+        "The mesh of a partition is the width of its widest piece, so for equal pieces it is simply the length of the interval divided by the number of pieces. A regular partition of $[a, b]$ into $n$ subintervals has equal widths $\\Delta x = \\frac{b - a}{n}$. The norm (or mesh) is $\\|P\\| = \\Delta x$. For $[-1, 5]$ cut into $3$ pieces, $\\|P\\| = \\frac{5 - (-1)}{3} = 2$.\n\n> **Watch out.** Subtract a negative left end carefully: $5 - (-1) = 6$, not $4$. And divide by the number of pieces $n$, not by the $n + 1$ cut points.",
+        "分割的细度是最宽小段的宽度，所以对于等分的情形，它就是区间长度除以段数。将区间 $[a, b]$ 进行 $n$ 等分所得的等距分割，各子区间宽度均为 $\\Delta x = \\frac{b - a}{n}$。分割的模（网格模）即为 $\\|P\\| = \\Delta x$。把 $[-1, 5]$ 切成 $3$ 段，$\\|P\\| = \\frac{5 - (-1)}{3} = 2$。\n\n> **注意。** 左端点为负时要小心减法：$5 - (-1) = 6$，不是 $4$。要除以段数 $n$，而不是 $n + 1$ 个分点。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-5, 5);
@@ -138,28 +218,49 @@ export const partitionsOfIntervals: TopicDef = {
         const b = a + L;
         const n = rng.pick([2, 4, 5, 8, 10]);
         const ans = Q.of(L, n);
-
-        const prompt = t(
-          `Find the norm $\\|P\\|$ of a regular partition $P$ dividing the interval $[${a}, ${b}]$ into ${n} equal subintervals.`,
-          `求将区间 $[${a}, ${b}]$ 均分为 ${n} 个子区间的等距分割 $P$ 的模 $\\|P\\|$。`,
-        );
-        const solution = t(
-          steps(
-            `The length of the interval is $b - a = ${b} - (${a}) = ${L}$.`,
-            `For $n = ${n}$ equal subintervals, the width of each subinterval is $\\Delta x = \\frac{b - a}{n} = \\frac{${L}}{${n}} = ${ans.toLatex()}$.`,
-            `The norm of the partition is $\\|P\\| = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `区间总长度为 $b - a = ${b} - (${a}) = ${L}$。`,
-            `均分为 $n = ${n}$ 个子区间，每个子区间的宽度为 $\\Delta x = \\frac{b - a}{n} = \\frac{${L}}{${n}} = ${ans.toLatex()}$。`,
-            `分割的模为 $\\|P\\| = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the norm $\\|P\\|$ of a regular partition $P$ dividing the interval $[${a}, ${b}]$ into ${n} equal subintervals.`,
+            `求将区间 $[${a}, ${b}]$ 均分为 ${n} 个子区间的等距分割 $P$ 的模 $\\|P\\|$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(L), ans.mul(Q.of(2)), Q.of(b - a + 1, n)],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(L),
+              `That is the length of the whole interval; divide it among the $${n}$ pieces.`,
+              `那是整个区间的长度；要把它平分给 $${n}$ 段。`,
+            ),
+            why(
+              Q.of(L, n + 1),
+              `That divides by the $${n + 1}$ cut points; there are $${n}$ pieces between them.`,
+              `那是除以 $${n + 1}$ 个分点；它们之间只有 $${n}$ 段。`,
+            ),
+            ...(a < 0
+              ? [
+                  why(
+                    Q.of(b + a, n),
+                    `The sign of the left end was lost: $${b} - (${a}) = ${L}$, not $${b + a}$.`,
+                    `左端点的符号丢了：$${b} - (${a}) = ${L}$，不是 $${b + a}$。`,
+                  ),
+                ]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [["Find the length", "求长度"], t(`$b - a = ${b} - ${paren(a)} = ${L}$.`, `$b - a = ${b} - ${paren(a)} = ${L}$。`)],
+              [
+                ["Divide among the pieces", "平分给各段"],
+                t(
+                  `Each of the $${n}$ pieces has width $\\frac{${L}}{${n}} = ${ans.toLatex()}$, so $\\|P\\| = ${ans.toLatex()}$.`,
+                  `$${n}$ 段中每段的宽度为 $\\frac{${L}}{${n}} = ${ans.toLatex()}$，所以 $\\|P\\| = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$${n}$ pieces of width $${ans.toLatex()}$ starting at $${a}$ end at $${a} + ${n} \\cdot ${paren(ans)} = ${b}$, the right end.`,
+              `从 $${a}$ 出发，$${n}$ 段宽为 $${ans.toLatex()}$ 的小段终止于 $${a} + ${n} \\cdot ${paren(ans)} = ${b}$，正是右端点。`,
+            ),
+          ),
         });
       },
     },
@@ -167,28 +268,55 @@ export const partitionsOfIntervals: TopicDef = {
       id: "the-norm-of-an-irregular-partition",
       title: t("The norm of an irregular partition", "非等分划分的范数"),
       explanation: t(
-        "A partition $P = \\{x_0, x_1, \\dots, x_n\\}$ of $[a, b]$ need not have equal pieces. Its norm $\\|P\\|$ is the length of the longest subinterval, $\\max_i (x_i - x_{i-1})$. Refining a partition can only keep or shrink the norm, and $\\|P\\| \\to 0$ is what makes Riemann sums converge to the integral.",
-        "区间 $[a, b]$ 的划分 $P = \\{x_0, x_1, \\dots, x_n\\}$ 不必等分。它的范数 $\\|P\\|$ 是最长子区间的长度 $\\max_i (x_i - x_{i-1})$。加细划分只会使范数保持或变小，而 $\\|P\\| \\to 0$ 正是黎曼和收敛到积分的条件。",
+        "A partition $P = \\{x_0, x_1, \\dots, x_n\\}$ of $[a, b]$ need not have equal pieces. Its norm $\\|P\\|$ is the length of the longest subinterval, $\\max_i (x_i - x_{i-1})$. Refining a partition can only keep or shrink the norm, and $\\|P\\| \\to 0$ is what makes Riemann sums converge to the integral. For $P = \\{0, 2, \\frac{5}{2}, 6\\}$ the widths are $2, \\frac{1}{2}, \\frac{7}{2}$, so $\\|P\\| = \\frac{7}{2}$.\n\n> **Watch out.** The norm is a width, the difference of neighboring points. It is not the largest point, not the smallest width, and not the average width.",
+        "区间 $[a, b]$ 的划分 $P = \\{x_0, x_1, \\dots, x_n\\}$ 不必等分。它的范数 $\\|P\\|$ 是最长子区间的长度 $\\max_i (x_i - x_{i-1})$。加细划分只会使范数保持或变小，而 $\\|P\\| \\to 0$ 正是黎曼和收敛到积分的条件。对 $P = \\{0, 2, \\frac{5}{2}, 6\\}$，各段宽度为 $2, \\frac{1}{2}, \\frac{7}{2}$，所以 $\\|P\\| = \\frac{7}{2}$。\n\n> **注意。** 范数是一个宽度，即相邻两点之差。它不是最大的分点，不是最小的宽度，也不是平均宽度。",
       ),
       generate(rng: Rng): Problem {
         const start = rng.int(-4, 3);
         const gaps = Array.from({ length: rng.int(3, 5) }, () => rng.pick([1, 2, 3, 4, 5].map((g) => g / 2)));
         const pts = [start];
         for (const g of gaps) pts.push(pts[pts.length - 1]! + g);
+        const end = pts[pts.length - 1]!;
+        const half = (x: number) => Q.of(Math.round(x * 2), 2);
+        const fmt = (x: number) => half(x).toLatex();
         const max = Math.max(...gaps);
         const min = Math.min(...gaps);
-        const fmt = (x: number) => Q.of(Math.round(x * 2), 2).toLatex();
-        const total = pts[pts.length - 1]! - start;
+        const total = end - start;
+        const answer = half(max);
         return numberProblem({
           prompt: t(
-            `Find the norm $\\|P\\|$ of the partition $P = \\{${pts.map(fmt).join(", ")}\\}$ of $[${fmt(start)}, ${fmt(pts[pts.length - 1]!)}]$.`,
-            `求区间 $[${fmt(start)}, ${fmt(pts[pts.length - 1]!)}]$ 的划分 $P = \\{${pts.map(fmt).join(", ")}\\}$ 的范数 $\\|P\\|$。`,
+            `Find the norm $\\|P\\|$ of the partition $P = \\{${pts.map(fmt).join(", ")}\\}$ of $[${fmt(start)}, ${fmt(end)}]$.`,
+            `求区间 $[${fmt(start)}, ${fmt(end)}]$ 的划分 $P = \\{${pts.map(fmt).join(", ")}\\}$ 的范数 $\\|P\\|$。`,
           ),
-          answer: Q.of(Math.round(max * 2), 2),
-          wrong: [Q.of(Math.round(min * 2), 2), Q.of(Math.round(total * 2), 2 * gaps.length), gaps.length],
-          solution: t(
-            `The subinterval lengths are $${gaps.map((g) => fmt(g)).join(", ")}$. The longest is $${fmt(max)}$, so $\\|P\\| = ${fmt(max)}$.`,
-            `各子区间长度为 $${gaps.map((g) => fmt(g)).join(", ")}$。最长的是 $${fmt(max)}$，所以 $\\|P\\| = ${fmt(max)}$。`,
+          answer,
+          mistakes: distinct(answer, [
+            why(half(min), "That is the shortest subinterval; the norm is the longest one.", "那是最短的子区间；范数是最长的子区间。"),
+            why(
+              Q.of(Math.round(total * 2), 2 * gaps.length),
+              "That is the average width, which is the norm only when all pieces are equal.",
+              "那是平均宽度，只有各段相等时它才是范数。",
+            ),
+            why(
+              half(end),
+              "That is the largest cut point; the norm is a width, the difference of neighboring points.",
+              "那是最大的分点；范数是宽度，即相邻分点之差。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Subtract neighboring points", "相邻分点相减"],
+                t(`The subinterval lengths are $${gaps.map(fmt).join(", ")}$.`, `各子区间长度为 $${gaps.map(fmt).join(", ")}$。`),
+              ],
+              [
+                ["Take the largest", "取最大值"],
+                t(`The longest is $${fmt(max)}$, so $\\|P\\| = ${fmt(max)}$.`, `最长的是 $${fmt(max)}$，所以 $\\|P\\| = ${fmt(max)}$。`),
+              ],
+            ],
+            t(
+              `The lengths add up to $${half(total).toLatex()} = ${fmt(end)} - ${paren(half(start))}$, the length of the interval, and none of them exceeds $${fmt(max)}$.`,
+              `各长度之和为 $${half(total).toLatex()} = ${fmt(end)} - ${paren(half(start))}$，正是区间长度，且没有一个超过 $${fmt(max)}$。`,
+            ),
           ),
         });
       },
@@ -204,6 +332,10 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
     "A partition of a rectangle R = [a, b] × [c, d] creates subrectangles with area ΔA = Δx Δy.",
     "矩形 R = [a, b] × [c, d] 的分割形成多个子矩形，其面积微元为 ΔA = Δx Δy。",
   ),
+  intro: t(
+    "Divide $R = [0, 12] \\times [1, 3]$ into $4$ pieces in $x$ and $2$ in $y$. Each subrectangle is $\\Delta x = 3$ wide and $\\Delta y = 1$ tall, so $\\Delta A = 3$. A Riemann sum adds $f(x_i^*, y_j^*)\\,\\Delta A$ over all $8$ subrectangles; for the constant $f = 1$ it is $8 \\cdot 3 = 24$.\n\nCheck: a constant $1$ must give the area of $R$, and $R$ has area $12 \\cdot 2 = 24$.\n\nIn this lesson we find the area of the subrectangles of a grid and add up double Riemann sums over them.",
+    "把 $R = [0, 12] \\times [1, 3]$ 在 $x$ 方向分成 $4$ 段，在 $y$ 方向分成 $2$ 段。每个子矩形宽 $\\Delta x = 3$，高 $\\Delta y = 1$，所以 $\\Delta A = 3$。黎曼和对全部 $8$ 个子矩形累加 $f(x_i^*, y_j^*)\\,\\Delta A$；对常数 $f = 1$，它等于 $8 \\cdot 3 = 24$。\n\n检验：常数 $1$ 必须给出 $R$ 的面积，而 $R$ 的面积是 $12 \\cdot 2 = 24$。\n\n本课我们求网格中子矩形的面积，并在其上累加二重黎曼和。",
+  ),
   prerequisites: ["partitions-of-intervals"],
   encompasses: [{ topic: "partitions-of-intervals", weight: 0.3 }],
   xp: 10,
@@ -213,8 +345,8 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
       figure: multivariableDrawings3["calculating-double-summations-over-partitions#area-of-subrectangles-in-grid-partitions"],
       title: t("Area of subrectangles in grid partitions", "网格分割中子矩形的面积"),
       explanation: t(
-        "Each small rectangle has the width of one horizontal piece and the height of one vertical piece, so its area is their product. For $R = [a, b] \\times [c, d]$ partitioned by $m$ divisions in $x$ and $n$ divisions in $y$, each subrectangle has area:\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right).$$",
-        "每个小矩形的宽是一个水平小段的宽度，高是一个竖直小段的长度，所以面积是两者的乘积。对于被 $x$ 方向 $m$ 等分、$y$ 方向 $n$ 等分的矩形 $R = [a, b] \\times [c, d]$，每个子矩形的面积为：\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right)$$",
+        "Each small rectangle has the width of one horizontal piece and the height of one vertical piece, so its area is their product. For $R = [a, b] \\times [c, d]$ partitioned by $m$ divisions in $x$ and $n$ divisions in $y$, each subrectangle has area:\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right).$$\n\nFor $[1, 13] \\times [0, 2]$ with $6$ pieces in $x$ and $4$ in $y$, $\\Delta A = 2 \\cdot \\frac{1}{2} = 1$.\n\n> **Watch out.** Divide each side by its own number of pieces and multiply the results. Dividing the whole area by $m + n$ is wrong: there are $mn$ subrectangles.",
+        "每个小矩形的宽是一个水平小段的宽度，高是一个竖直小段的长度，所以面积是两者的乘积。对于被 $x$ 方向 $m$ 等分、$y$ 方向 $n$ 等分的矩形 $R = [a, b] \\times [c, d]$，每个子矩形的面积为：\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right)$$\n\n对 $[1, 13] \\times [0, 2]$，$x$ 方向 $6$ 段，$y$ 方向 $4$ 段，$\\Delta A = 2 \\cdot \\frac{1}{2} = 1$。\n\n> **注意。** 每条边除以它自己的段数，再把结果相乘。用总面积除以 $m + n$ 是错的：子矩形共有 $mn$ 个。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(0, 4);
@@ -225,28 +357,52 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
         const d = c + Ly;
         const m = rng.int(2, 5);
         const n = rng.int(2, 5);
-
         const ans = Q.of(Lx * Ly, m * n);
-
-        const prompt = t(
-          `A rectangle $R = [${a}, ${b}] \\times [${c}, ${d}]$ is divided into regular subrectangles by partitioning $[${a}, ${b}]$ into ${m} subintervals and $[${c}, ${d}]$ into ${n} subintervals. Find the area $\\Delta A$ of each subrectangle.`,
-          `矩形 $R = [${a}, ${b}] \\times [${c}, ${d}]$ 通过将 $[${a}, ${b}]$ 均分为 ${m} 个子区间并将 $[${c}, ${d}]$ 均分为 ${n} 个子区间划分为等距子矩形。求每个子矩形的面积 $\\Delta A$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the grid step sizes: $\\Delta x = \\frac{${b} - ${a}}{${m}} = \\frac{${Lx}}{${m}}$ and $\\Delta y = \\frac{${d} - ${c}}{${n}} = \\frac{${Ly}}{${n}}$.`,
-            `Multiply the dimensions: $\\Delta A = \\Delta x \\cdot \\Delta y = \\left(\\frac{${Lx}}{${m}}\\right)\\left(\\frac{${Ly}}{${n}}\\right) = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `计算步长：$\\Delta x = \\frac{${b} - ${a}}{${m}} = \\frac{${Lx}}{${m}}$ 且 $\\Delta y = \\frac{${d} - ${c}}{${n}} = \\frac{${Ly}}{${n}}$。`,
-            `相乘求得子矩形面积：$\\Delta A = \\Delta x \\cdot \\Delta y = \\left(\\frac{${Lx}}{${m}}\\right)\\left(\\frac{${Ly}}{${n}}\\right) = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `A rectangle $R = [${a}, ${b}] \\times [${c}, ${d}]$ is divided into regular subrectangles by partitioning $[${a}, ${b}]$ into ${m} subintervals and $[${c}, ${d}]$ into ${n} subintervals. Find the area $\\Delta A$ of each subrectangle.`,
+            `矩形 $R = [${a}, ${b}] \\times [${c}, ${d}]$ 通过将 $[${a}, ${b}]$ 均分为 ${m} 个子区间并将 $[${c}, ${d}]$ 均分为 ${n} 个子区间划分为等距子矩形。求每个子矩形的面积 $\\Delta A$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(Lx * Ly), ans.mul(Q.of(2)), Q.of(Lx + Ly, m + n)],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(Lx * Ly),
+              `That is the area of all of $R$; it is shared by $${m * n}$ subrectangles.`,
+              `那是整个 $R$ 的面积；它由 $${m * n}$ 个子矩形分摊。`,
+            ),
+            why(
+              Q.of(Lx * Ly, m + n),
+              `That divides by $${m} + ${n}$; there are $${m} \\cdot ${n} = ${m * n}$ subrectangles.`,
+              `那是除以 $${m} + ${n}$；子矩形共有 $${m} \\cdot ${n} = ${m * n}$ 个。`,
+            ),
+            why(
+              Q.of(Lx + Ly, m + n),
+              "That adds the sides instead of multiplying the widths of a piece in each direction.",
+              "那是把边长相加，而不是把两个方向上一小段的宽度相乘。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the widths", "求宽度"],
+                t(
+                  `$\\Delta x = \\frac{${b} - ${a}}{${m}} = ${Q.of(Lx, m).toLatex()}$ and $\\Delta y = \\frac{${d} - ${c}}{${n}} = ${Q.of(Ly, n).toLatex()}$.`,
+                  `$\\Delta x = \\frac{${b} - ${a}}{${m}} = ${Q.of(Lx, m).toLatex()}$，$\\Delta y = \\frac{${d} - ${c}}{${n}} = ${Q.of(Ly, n).toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `$\\Delta A = \\Delta x\\,\\Delta y = ${Q.of(Lx, m).toLatex()} \\cdot ${Q.of(Ly, n).toLatex()} = ${ans.toLatex()}$.`,
+                  `$\\Delta A = \\Delta x\\,\\Delta y = ${Q.of(Lx, m).toLatex()} \\cdot ${Q.of(Ly, n).toLatex()} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The $${m * n}$ subrectangles together cover $R$: $${m * n} \\cdot ${ans.toLatex()} = ${Lx * Ly} = ${Lx} \\cdot ${Ly}$.`,
+              `$${m * n}$ 个子矩形合起来覆盖 $R$：$${m * n} \\cdot ${ans.toLatex()} = ${Lx * Ly} = ${Lx} \\cdot ${Ly}$。`,
+            ),
+          ),
         });
       },
     },
@@ -254,8 +410,8 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
       id: "a-double-riemann-sum-with-upper-right-corners",
       title: t("A double Riemann sum with upper-right corners", "取右上角的二重黎曼和"),
       explanation: t(
-        "A double Riemann sum adds $f(x_i^*, y_j^*)\\,\\Delta A$ over every subrectangle. On $[0, m] \\times [0, n]$ with unit squares, the upper-right corner of square $(i, j)$ is $(i, j)$ and $\\Delta A = 1$, so for $f(x, y) = x + y$\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j.$$\n\nEach single sum is counted once for every value of the other index.",
-        "二重黎曼和对每个子矩形累加 $f(x_i^*, y_j^*)\\,\\Delta A$。在 $[0, m] \\times [0, n]$ 上用单位正方形划分时，第 $(i, j)$ 个正方形的右上角为 $(i, j)$，且 $\\Delta A = 1$，所以对 $f(x, y) = x + y$ 有\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j$$\n\n每个单重求和都对另一个指标的每个取值计算一次。",
+        "A double Riemann sum adds $f(x_i^*, y_j^*)\\,\\Delta A$ over every subrectangle. On $[0, m] \\times [0, n]$ with unit squares, the upper-right corner of square $(i, j)$ is $(i, j)$ and $\\Delta A = 1$, so for $f(x, y) = x + y$\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j.$$\n\nEach single sum is counted once for every value of the other index. On $[0, 2] \\times [0, 1]$ the corners are $(1, 1)$ and $(2, 1)$, and the sum is $2 + 3 = 5 = 1 \\cdot 3 + 2 \\cdot 1$.\n\n> **Watch out.** The upper-right corners have indices starting at $1$; starting at $0$ gives the lower-left corners and a smaller sum. And the factor $n$ in front of $\\sum i$ is needed.",
+        "二重黎曼和对每个子矩形累加 $f(x_i^*, y_j^*)\\,\\Delta A$。在 $[0, m] \\times [0, n]$ 上用单位正方形划分时，第 $(i, j)$ 个正方形的右上角为 $(i, j)$，且 $\\Delta A = 1$，所以对 $f(x, y) = x + y$ 有\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j$$\n\n每个单重求和都对另一个指标的每个取值计算一次。在 $[0, 2] \\times [0, 1]$ 上，角点为 $(1, 1)$ 和 $(2, 1)$，和为 $2 + 3 = 5 = 1 \\cdot 3 + 2 \\cdot 1$。\n\n> **注意。** 右上角的下标从 $1$ 开始；从 $0$ 开始得到的是左下角，和会变小。$\\sum i$ 前面的因子 $n$ 不能少。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 6);
@@ -265,16 +421,51 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
         const sj = (n * (n + 1)) / 2;
         const ans = c * (n * si + m * sj);
         const f = c === 1 ? "x + y" : `${c}(x + y)`;
+        const lead = c === 1 ? "" : `${c}`;
         return numberProblem({
           prompt: t(
             `$R = [0, ${m}] \\times [0, ${n}]$ is divided into unit squares. Find the Riemann sum of $f(x, y) = ${f}$ using the upper-right corner of each square as the sample point.`,
             `把 $R = [0, ${m}] \\times [0, ${n}]$ 分成单位正方形。以每个正方形的右上角为样本点，求 $f(x, y) = ${f}$ 的黎曼和。`,
           ),
           answer: ans,
-          wrong: [ans - 2 * c * m * n, c * (si + sj), ans - c * m * n, c * m * n * (m + n)],
-          solution: t(
-            `$\\Delta A = 1$, so the sum is $${c === 1 ? "" : c}\\sum_{i=1}^{${m}}\\sum_{j=1}^{${n}} (i + j) = ${c === 1 ? "" : `${c}`}(${n} \\cdot ${si} + ${m} \\cdot ${sj}) = ${ans}$.`,
-            `$\\Delta A = 1$，所以和为 $${c === 1 ? "" : c}\\sum_{i=1}^{${m}}\\sum_{j=1}^{${n}} (i + j) = ${c === 1 ? "" : `${c}`}(${n} \\cdot ${si} + ${m} \\cdot ${sj}) = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c * (si + sj),
+              `That adds each single sum once; $\\sum i$ is counted for each of the $${n}$ values of $j$, and $\\sum j$ for each of the $${m}$ values of $i$.`,
+              `那是每个单重和只加一次；$\\sum i$ 对 $j$ 的 $${n}$ 个取值各计一次，$\\sum j$ 对 $i$ 的 $${m}$ 个取值各计一次。`,
+            ),
+            why(
+              ans - 2 * c * m * n,
+              "That uses the lower-left corners, with indices starting at $0$.",
+              "那是用了左下角，下标从 $0$ 开始。",
+            ),
+            why(
+              ans - c * m * n,
+              "That uses the centers of the squares, not the upper-right corners.",
+              "那是用了正方形的中心，而不是右上角。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set up the sum", "列出和式"],
+                t(
+                  `The corner of square $(i, j)$ is $(i, j)$ and $\\Delta A = 1$, so the sum is $${lead}\\sum_{i=1}^{${m}}\\sum_{j=1}^{${n}} (i + j)$.`,
+                  `第 $(i, j)$ 个正方形的角点是 $(i, j)$，$\\Delta A = 1$，所以和为 $${lead}\\sum_{i=1}^{${m}}\\sum_{j=1}^{${n}} (i + j)$。`,
+                ),
+              ],
+              [
+                ["Split and evaluate", "拆开并计算"],
+                t(
+                  `$${lead}(${n} \\cdot ${si} + ${m} \\cdot ${sj}) = ${lead}${c === 1 ? "" : " \\cdot "}${n * si + m * sj}${c === 1 ? "" : ` = ${ans}`}$.`,
+                  `$${lead}(${n} \\cdot ${si} + ${m} \\cdot ${sj}) = ${lead}${c === 1 ? "" : " \\cdot "}${n * si + m * sj}${c === 1 ? "" : ` = ${ans}`}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The $${m * n}$ corner values of $x + y$ average $${Q.of(m + 1, 2).toLatex()} + ${Q.of(n + 1, 2).toLatex()} = ${Q.of(m + n + 2, 2).toLatex()}$, and $${lead}${c === 1 ? "" : " \\cdot "}${m * n} \\cdot ${Q.of(m + n + 2, 2).toLatex()} = ${ans}$.`,
+              `$x + y$ 在 $${m * n}$ 个角点的值平均为 $${Q.of(m + 1, 2).toLatex()} + ${Q.of(n + 1, 2).toLatex()} = ${Q.of(m + n + 2, 2).toLatex()}$，而 $${lead}${c === 1 ? "" : " \\cdot "}${m * n} \\cdot ${Q.of(m + n + 2, 2).toLatex()} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -290,6 +481,10 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
     "The lower Riemann sum L(f, P) evaluates the function at its infimum on each subrectangle, providing a lower bound on volume.",
     "下黎曼和 L(f, P) 在每个子矩形上取函数值的下确界，给出立体体积的下界近似。",
   ),
+  intro: t(
+    "Take $f(x, y) = x + 2y$ on $[0, 4] \\times [0, 2]$, cut into a $2 \\times 2$ grid of cells $2$ wide and $1$ tall, so $\\Delta A = 2$. Since $f$ increases in both variables, its smallest value on each cell is at the lower-left corner: $(0, 0), (2, 0), (0, 1), (2, 1)$ give $0, 2, 2, 4$. So $L(f, P) = (0 + 2 + 2 + 4) \\cdot 2 = 16$.\n\nCheck: the exact volume is $\\int_0^4\\int_0^2 (x + 2y)\\,dy\\,dx = 16 + 16 = 32$, and a lower sum must not exceed it: $16 \\le 32$.\n\nIn this lesson we compute lower Riemann sums by finding where the function is smallest on each cell.",
+    "取 $[0, 4] \\times [0, 2]$ 上的 $f(x, y) = x + 2y$，分成 $2 \\times 2$ 的网格，每格宽 $2$、高 $1$，所以 $\\Delta A = 2$。由于 $f$ 对两个变量都递增，它在每格上的最小值在左下角：$(0, 0), (2, 0), (0, 1), (2, 1)$ 给出 $0, 2, 2, 4$。所以 $L(f, P) = (0 + 2 + 2 + 4) \\cdot 2 = 16$。\n\n检验：精确体积是 $\\int_0^4\\int_0^2 (x + 2y)\\,dy\\,dx = 16 + 16 = 32$，下和不能超过它：$16 \\le 32$。\n\n本课我们找出函数在每格上最小的位置，计算黎曼下和。",
+  ),
   prerequisites: ["calculating-double-summations-over-partitions"],
   encompasses: [{ topic: "calculating-double-summations-over-partitions", weight: 0.3 }],
   xp: 10,
@@ -298,43 +493,68 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
       id: "computing-lower-riemann-sums-for-monotone-surfaces",
       title: t("Computing lower Riemann sums for monotone surfaces", "计算单调曲面的下黎曼和"),
       explanation: t(
-        "For an increasing function $f(x, y) = ax + by + c$ ($a, b > 0$) on $[0, 2] \\times [0, 2]$ with $2 \\times 2$ grid (sub-squares of width 1), the minimum on each square $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ is at the bottom-left corner $(x_{i-1}, y_{j-1})$:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A.$$",
-        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格（边长为 1 的小正方形）的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个小正方形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 上的最小值取在左下角 $(x_{i-1}, y_{j-1})$：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A$$",
+        "For an increasing function $f(x, y) = ax + by + c$ ($a, b > 0$) on $[0, 2] \\times [0, 2]$ with $2 \\times 2$ grid (sub-squares of width 1), the minimum on each square $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ is at the bottom-left corner $(x_{i-1}, y_{j-1})$:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A.$$\n\nFor $f = x + y + 10$ the corner values are $10, 11, 11, 12$, so $L = 44$.\n\n> **Watch out.** The constant term is part of every cell's value, so it is added four times. And the corners are the lower-left ones; the upper-right corners give the upper sum.",
+        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格（边长为 1 的小正方形）的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个小正方形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 上的最小值取在左下角 $(x_{i-1}, y_{j-1})$：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A$$\n\n对 $f = x + y + 10$，各角点的值为 $10, 11, 11, 12$，所以 $L = 44$。\n\n> **注意。** 常数项出现在每一格的值里，所以要加四次。所用的是左下角；右上角给出的是上和。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const c = rng.int(1, 8);
-
-        // 4 sub-squares: [0, 1]x[0, 1], [1, 2]x[0, 1], [0, 1]x[1, 2], [1, 2]x[1, 2]
-        // Bottom-left corners: (0, 0), (1, 0), (0, 1), (1, 1)
-        // Values: c, a + c, b + c, a + b + c
-        // Sum = 2a + 2b + 4c. Each has area Delta A = 1*1 = 1.
         const ans = 2 * a + 2 * b + 4 * c;
-
-        const prompt = t(
-          `Find the lower Riemann sum $L(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$ over $R = [0, 2] \\times [0, 2]$ using a regular $2 \\times 2$ partition with equal sub-squares of side length $1$.`,
-          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$，在矩形区域 $R = [0, 2] \\times [0, 2]$ 上采用边长为 $1$ 的 $2 \\times 2$ 等距正方形网格分割，求其下黎曼和 $L(f, P)$。`,
-        );
-        const solution = t(
-          steps(
-            `Because $f(x, y)$ is strictly increasing in both $x$ and $y$, the minimum on each sub-square occurs at the lower-left corner.`,
-            `The four bottom-left sample points are $(0, 0), (1, 0), (0, 1), (1, 1)$.`,
-            `Evaluate the function: $f(0, 0) = ${c}$, $f(1, 0) = ${a + c}$, $f(0, 1) = ${b + c}$, $f(1, 1) = ${a + b + c}$.`,
-            `Multiply by $\\Delta A = 1$: $L(f, P) = 1 \\cdot (${c} + ${a + c} + ${b + c} + ${a + b + c}) = ${ans}$.`,
-          ),
-          steps(
-            `由于 $f(x, y)$ 关于 $x$ 和 $y$ 均严格单调递增，故每个子方块上的最小值均取在左下角。`,
-            `四个左下角采样点为 $(0, 0), (1, 0), (0, 1), (1, 1)$。`,
-            `计算各点函数值：$f(0, 0) = ${c}$，$f(1, 0) = ${a + c}$，$f(0, 1) = ${b + c}$，$f(1, 1) = ${a + b + c}$。`,
-            `乘以面积微元 $\\Delta A = 1$：$L(f, P) = 1 \\cdot (${c} + ${a + c} + ${b + c} + ${a + b + c}) = ${ans}$。`,
-          ),
-        );
+        const f = poly([a, "x"], [b, "y"], [c, ""]);
+        const exact = 4 * a + 4 * b + 4 * c;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the lower Riemann sum $L(f, P)$ for $f(x, y) = ${f}$ over $R = [0, 2] \\times [0, 2]$ using a regular $2 \\times 2$ partition with equal sub-squares of side length $1$.`,
+            `对于函数 $f(x, y) = ${f}$，在矩形区域 $R = [0, 2] \\times [0, 2]$ 上采用边长为 $1$ 的 $2 \\times 2$ 等距正方形网格分割，求其下黎曼和 $L(f, P)$。`,
+          ),
           answer: ans,
-          wrong: [ans + 4, ans - 4, ans + 2 * a],
+          mistakes: distinct(ans, [
+            why(
+              6 * a + 6 * b + 4 * c,
+              "That uses the upper-right corners, where $f$ is largest; that is the upper sum.",
+              "那是用了右上角，$f$ 在那里最大；那是上和。",
+            ),
+            why(
+              exact,
+              "That uses the centers of the squares; the lower sum needs the smallest value on each square.",
+              "那是用了正方形的中心；下和要用每个正方形上的最小值。",
+            ),
+            why(
+              2 * a + 2 * b + c,
+              `The constant $${c}$ belongs to all four corner values, so it is added four times.`,
+              `常数 $${c}$ 出现在四个角点的值里，所以要加四次。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Locate the minimum", "确定最小值的位置"],
+                t(
+                  "$f$ increases in $x$ and in $y$, so on each square it is smallest at the lower-left corner: $(0, 0), (1, 0), (0, 1), (1, 1)$.",
+                  "$f$ 关于 $x$ 和 $y$ 都递增，所以在每个正方形上最小值在左下角：$(0, 0), (1, 0), (0, 1), (1, 1)$。",
+                ),
+              ],
+              [
+                ["Evaluate", "求值"],
+                t(
+                  `$f(0, 0) = ${c}$, $f(1, 0) = ${a + c}$, $f(0, 1) = ${b + c}$, $f(1, 1) = ${a + b + c}$.`,
+                  `$f(0, 0) = ${c}$，$f(1, 0) = ${a + c}$，$f(0, 1) = ${b + c}$，$f(1, 1) = ${a + b + c}$。`,
+                ),
+              ],
+              [
+                ["Add with the area", "乘面积相加"],
+                t(
+                  `$\\Delta A = 1$, so $L(f, P) = ${c} + ${a + c} + ${b + c} + ${a + b + c} = ${ans}$.`,
+                  `$\\Delta A = 1$，所以 $L(f, P) = ${c} + ${a + c} + ${b + c} + ${a + b + c} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $\\int_0^2\\int_0^2 f\\,dy\\,dx = ${exact}$, and the lower sum is below it by $${2 * a + 2 * b}$, as it must be.`,
+              `精确体积为 $\\int_0^2\\int_0^2 f\\,dy\\,dx = ${exact}$，下和比它小 $${2 * a + 2 * b}$，理应如此。`,
+            ),
+          ),
         });
       },
     },
@@ -342,8 +562,8 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
       id: "a-lower-sum-for-a-product-function",
       title: t("A lower sum for $cxy$", "函数 $cxy$ 的下和"),
       explanation: t(
-        "For $f(x, y) = cxy$ with $c > 0$ on the first quadrant, $f$ increases in both variables, so its minimum on each subsquare is at the lower-left corner. With an $m \\times m$ regular partition of $[0, mh]^2$, the corners are $(ih, jh)$ for $i, j = 0, \\dots, m - 1$, and\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2.$$",
-        "对第一象限上的 $f(x, y) = cxy$（$c > 0$），$f$ 关于两个变量都递增，所以在每个小正方形上的最小值在左下角取得。对 $[0, mh]^2$ 作 $m \\times m$ 等分，各角点为 $(ih, jh)$，$i, j = 0, \\dots, m - 1$，于是\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2$$",
+        "For $f(x, y) = cxy$ with $c > 0$ on the first quadrant, $f$ increases in both variables, so its minimum on each subsquare is at the lower-left corner. With an $m \\times m$ regular partition of $[0, mh]^2$, the corners are $(ih, jh)$ for $i, j = 0, \\dots, m - 1$, and\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2.$$\n\nFor $6xy$ on $[0, 4]^2$ with a $2 \\times 2$ partition, $h = 2$ and only the corner $(2, 2)$ is nonzero: $L = 24 \\cdot 4 = 96 = 6 \\cdot 16 \\cdot 1^2$.\n\n> **Watch out.** The power of $h$ is $4$: two factors come from $x$ and $y$ and two from the area $h^2$. And the lower-left indices run from $0$ to $m - 1$.",
+        "对第一象限上的 $f(x, y) = cxy$（$c > 0$），$f$ 关于两个变量都递增，所以在每个小正方形上的最小值在左下角取得。对 $[0, mh]^2$ 作 $m \\times m$ 等分，各角点为 $(ih, jh)$，$i, j = 0, \\dots, m - 1$，于是\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2$$\n\n对 $[0, 4]^2$ 上的 $6xy$ 作 $2 \\times 2$ 划分，$h = 2$，只有角点 $(2, 2)$ 处非零：$L = 24 \\cdot 4 = 96 = 6 \\cdot 16 \\cdot 1^2$。\n\n> **注意。** $h$ 的次数是 $4$：两个因子来自 $x$ 和 $y$，两个来自面积 $h^2$。左下角的下标从 $0$ 到 $m - 1$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -352,16 +572,52 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
         const lo = (m * (m - 1)) / 2;
         const hi = (m * (m + 1)) / 2;
         const ans = c * h ** 4 * lo * lo;
+        const side = m * h;
+        const exact = Q.of(c * side ** 4, 4);
         return numberProblem({
           prompt: t(
-            `Find the lower Riemann sum of $f(x, y) = ${c === 1 ? "" : c}xy$ over $[0, ${m * h}] \\times [0, ${m * h}]$ using a regular $${m} \\times ${m}$ partition.`,
-            `用 $${m} \\times ${m}$ 等分划分，求 $f(x, y) = ${c === 1 ? "" : c}xy$ 在 $[0, ${m * h}] \\times [0, ${m * h}]$ 上的下黎曼和。`,
+            `Find the lower Riemann sum of $f(x, y) = ${coef(c)}xy$ over $[0, ${side}] \\times [0, ${side}]$ using a regular $${m} \\times ${m}$ partition.`,
+            `用 $${m} \\times ${m}$ 等分划分，求 $f(x, y) = ${coef(c)}xy$ 在 $[0, ${side}] \\times [0, ${side}]$ 上的下黎曼和。`,
           ),
           answer: ans,
-          wrong: [c * h ** 4 * hi * hi, c * h ** 2 * lo * lo, c * h ** 4 * lo * hi],
-          solution: t(
-            `Each square has side $${h}$ and the minimum is at the lower-left corner, so $L = ${c} \\cdot ${h}^4 \\left(\\sum_{i=0}^{${m - 1}} i\\right)^2 = ${c} \\cdot ${h ** 4} \\cdot ${lo}^2 = ${ans}$.`,
-            `每个正方形边长为 $${h}$，最小值在左下角，所以 $L = ${c} \\cdot ${h}^4 \\left(\\sum_{i=0}^{${m - 1}} i\\right)^2 = ${c} \\cdot ${h ** 4} \\cdot ${lo}^2 = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c * h ** 4 * hi * hi,
+              "That uses the upper-right corners, indices $1$ to $m$; that is the upper sum.",
+              "那是用了右上角，下标从 $1$ 到 $m$；那是上和。",
+            ),
+            why(
+              c * h ** 2 * lo * lo,
+              "One factor $h^2$ is missing: $x$ and $y$ give $h^2$, and the area of a square gives another $h^2$.",
+              "少了一个因子 $h^2$：$x$ 与 $y$ 给出 $h^2$，正方形的面积又给出一个 $h^2$。",
+            ),
+            why(
+              c * h ** 4 * lo * hi,
+              "That mixes the corners, lower in one variable and upper in the other.",
+              "那是混用了角点，一个变量取下端，另一个取上端。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Locate the minimum", "确定最小值的位置"],
+                t(
+                  `Each square has side $${h}$, and $f$ is smallest at the lower-left corner $(${h}i, ${h}j)$ with $i, j = 0, \\dots, ${m - 1}$.`,
+                  `每个正方形边长为 $${h}$，$f$ 在左下角 $(${h}i, ${h}j)$ 处最小，$i, j = 0, \\dots, ${m - 1}$。`,
+                ),
+              ],
+              [
+                ["Separate the sum", "分离求和"],
+                t(
+                  `$L = ${c} \\cdot ${h}^4 \\left(\\sum_{i=0}^{${m - 1}} i\\right)^2 = ${c} \\cdot ${h ** 4} \\cdot ${lo}^2 = ${ans}$.`,
+                  `$L = ${c} \\cdot ${h}^4 \\left(\\sum_{i=0}^{${m - 1}} i\\right)^2 = ${c} \\cdot ${h ** 4} \\cdot ${lo}^2 = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $${c} \\cdot \\frac{${side}^2}{2} \\cdot \\frac{${side}^2}{2} = ${exact.toLatex()}$, and $${ans} \\le ${exact.toLatex()}$.`,
+              `精确体积为 $${c} \\cdot \\frac{${side}^2}{2} \\cdot \\frac{${side}^2}{2} = ${exact.toLatex()}$，而 $${ans} \\le ${exact.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -377,6 +633,10 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
     "The upper Riemann sum U(f, P) evaluates the function at its supremum on each subrectangle, providing an upper bound on volume.",
     "上黎曼和 U(f, P) 在每个子矩形上取函数值的上确界，给出立体体积的上界近似。",
   ),
+  intro: t(
+    "Take $f(x, y) = 2x + y$ on $[0, 2] \\times [0, 4]$, cut into a $2 \\times 2$ grid of cells $1$ wide and $2$ tall, so $\\Delta A = 2$. Since $f$ increases in both variables, its largest value on each cell is at the upper-right corner: $(1, 2), (2, 2), (1, 4), (2, 4)$ give $4, 6, 6, 8$. So $U(f, P) = (4 + 6 + 6 + 8) \\cdot 2 = 48$.\n\nCheck: the exact volume is $\\int_0^2\\int_0^4 (2x + y)\\,dy\\,dx = 16 + 16 = 32$, and an upper sum must not be below it: $48 \\ge 32$.\n\nIn this lesson we compute upper Riemann sums by finding where the function is largest on each cell.",
+    "取 $[0, 2] \\times [0, 4]$ 上的 $f(x, y) = 2x + y$，分成 $2 \\times 2$ 的网格，每格宽 $1$、高 $2$，所以 $\\Delta A = 2$。由于 $f$ 对两个变量都递增，它在每格上的最大值在右上角：$(1, 2), (2, 2), (1, 4), (2, 4)$ 给出 $4, 6, 6, 8$。所以 $U(f, P) = (4 + 6 + 6 + 8) \\cdot 2 = 48$。\n\n检验：精确体积是 $\\int_0^2\\int_0^4 (2x + y)\\,dy\\,dx = 16 + 16 = 32$，上和不能小于它：$48 \\ge 32$。\n\n本课我们找出函数在每格上最大的位置，计算黎曼上和。",
+  ),
   prerequisites: ["approximating-volumes-using-lower-riemann-sums"],
   encompasses: [],
   xp: 10,
@@ -385,42 +645,68 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
       id: "computing-upper-riemann-sums-for-monotone-surfaces",
       title: t("Computing upper Riemann sums for monotone surfaces", "计算单调曲面的上黎曼和"),
       explanation: t(
-        "For an increasing function $f(x, y) = ax + by + c$ ($a, b > 0$) on $[0, 2] \\times [0, 2]$ with $2 \\times 2$ grid, the maximum on each square $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ is at the top-right corner $(x_i, y_j)$:\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A.$$",
-        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个子方块上的最大值取在右上角 $(x_i, y_j)$：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A$$",
+        "For an increasing function $f(x, y) = ax + by + c$ ($a, b > 0$) on $[0, 2] \\times [0, 2]$ with $2 \\times 2$ grid, the maximum on each square $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ is at the top-right corner $(x_i, y_j)$:\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A.$$\n\nFor $f = x + y + 10$ the corner values are $12, 13, 13, 14$, so $U = 52$.\n\n> **Watch out.** The top-right corners are $(1, 1), (2, 1), (1, 2), (2, 2)$, all four away from the origin. The constant term is again added once per square.",
+        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个子方块上的最大值取在右上角 $(x_i, y_j)$：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A$$\n\n对 $f = x + y + 10$，各角点的值为 $12, 13, 13, 14$，所以 $U = 52$。\n\n> **注意。** 右上角是 $(1, 1), (2, 1), (1, 2), (2, 2)$，四个点都不在原点。常数项同样每个正方形加一次。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const c = rng.int(1, 8);
-
-        // 4 sub-squares with corners: (1, 1), (2, 1), (1, 2), (2, 2)
-        // Values: a + b + c, 2a + b + c, a + 2b + c, 2a + 2b + c
-        // Sum = 6a + 6b + 4c. Delta A = 1.
         const ans = 6 * a + 6 * b + 4 * c;
-
-        const prompt = t(
-          `Find the upper Riemann sum $U(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$ over $R = [0, 2] \\times [0, 2]$ using a regular $2 \\times 2$ partition with equal sub-squares of side length $1$.`,
-          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$，在矩形区域 $R = [0, 2] \\times [0, 2]$ 上采用边长为 $1$ 的 $2 \\times 2$ 等距正方形网格分割，求其上黎曼和 $U(f, P)$。`,
-        );
-        const solution = t(
-          steps(
-            `Because $f(x, y)$ is strictly increasing in both $x$ and $y$, the maximum on each sub-square occurs at the upper-right corner.`,
-            `The four top-right sample points are $(1, 1), (2, 1), (1, 2), (2, 2)$.`,
-            `Evaluate the function: $f(1, 1) = ${a + b + c}$, $f(2, 1) = ${2 * a + b + c}$, $f(1, 2) = ${a + 2 * b + c}$, $f(2, 2) = ${2 * a + 2 * b + c}$.`,
-            `Multiply by $\\Delta A = 1$: $U(f, P) = 1 \\cdot (${a + b + c} + ${2 * a + b + c} + ${a + 2 * b + c} + ${2 * a + 2 * b + c}) = ${ans}$.`,
-          ),
-          steps(
-            `由于 $f(x, y)$ 关于 $x$ 和 $y$ 严格单调递增，故每个子方块上的最大值均取在右上角。`,
-            `四个右上角采样点为 $(1, 1), (2, 1), (1, 2), (2, 2)$。`,
-            `计算各点函数值：$f(1, 1) = ${a + b + c}$，$f(2, 1) = ${2 * a + b + c}$，$f(1, 2) = ${a + 2 * b + c}$，$f(2, 2) = ${2 * a + 2 * b + c}$。`,
-            `乘以面积微元 $\\Delta A = 1$：$U(f, P) = 1 \\cdot (${a + b + c} + ${2 * a + b + c} + ${a + 2 * b + c} + ${2 * a + 2 * b + c}) = ${ans}$。`,
-          ),
-        );
+        const f = poly([a, "x"], [b, "y"], [c, ""]);
+        const exact = 4 * a + 4 * b + 4 * c;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the upper Riemann sum $U(f, P)$ for $f(x, y) = ${f}$ over $R = [0, 2] \\times [0, 2]$ using a regular $2 \\times 2$ partition with equal sub-squares of side length $1$.`,
+            `对于函数 $f(x, y) = ${f}$，在矩形区域 $R = [0, 2] \\times [0, 2]$ 上采用边长为 $1$ 的 $2 \\times 2$ 等距正方形网格分割，求其上黎曼和 $U(f, P)$。`,
+          ),
           answer: ans,
-          wrong: [ans + 4, ans - 4, ans - 2 * a],
+          mistakes: distinct(ans, [
+            why(
+              2 * a + 2 * b + 4 * c,
+              "That uses the lower-left corners, where $f$ is smallest; that is the lower sum.",
+              "那是用了左下角，$f$ 在那里最小；那是下和。",
+            ),
+            why(
+              exact,
+              "That uses the centers of the squares; the upper sum needs the largest value on each square.",
+              "那是用了正方形的中心；上和要用每个正方形上的最大值。",
+            ),
+            why(
+              6 * a + 6 * b + c,
+              `The constant $${c}$ belongs to all four corner values, so it is added four times.`,
+              `常数 $${c}$ 出现在四个角点的值里，所以要加四次。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Locate the maximum", "确定最大值的位置"],
+                t(
+                  "$f$ increases in $x$ and in $y$, so on each square it is largest at the upper-right corner: $(1, 1), (2, 1), (1, 2), (2, 2)$.",
+                  "$f$ 关于 $x$ 和 $y$ 都递增，所以在每个正方形上最大值在右上角：$(1, 1), (2, 1), (1, 2), (2, 2)$。",
+                ),
+              ],
+              [
+                ["Evaluate", "求值"],
+                t(
+                  `$f(1, 1) = ${a + b + c}$, $f(2, 1) = ${2 * a + b + c}$, $f(1, 2) = ${a + 2 * b + c}$, $f(2, 2) = ${2 * a + 2 * b + c}$.`,
+                  `$f(1, 1) = ${a + b + c}$，$f(2, 1) = ${2 * a + b + c}$，$f(1, 2) = ${a + 2 * b + c}$，$f(2, 2) = ${2 * a + 2 * b + c}$。`,
+                ),
+              ],
+              [
+                ["Add with the area", "乘面积相加"],
+                t(
+                  `$\\Delta A = 1$, so $U(f, P) = ${a + b + c} + ${2 * a + b + c} + ${a + 2 * b + c} + ${2 * a + 2 * b + c} = ${ans}$.`,
+                  `$\\Delta A = 1$，所以 $U(f, P) = ${a + b + c} + ${2 * a + b + c} + ${a + 2 * b + c} + ${2 * a + 2 * b + c} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $\\int_0^2\\int_0^2 f\\,dy\\,dx = ${exact}$, and the upper sum is above it by $${2 * a + 2 * b}$, as it must be.`,
+              `精确体积为 $\\int_0^2\\int_0^2 f\\,dy\\,dx = ${exact}$，上和比它大 $${2 * a + 2 * b}$，理应如此。`,
+            ),
+          ),
         });
       },
     },
@@ -428,8 +714,8 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
       id: "an-upper-sum-for-a-sum-of-squares",
       title: t("An upper sum for $c(x^2 + y^2)$", "函数 $c(x^2 + y^2)$ 的上和"),
       explanation: t(
-        "For $f(x, y) = c(x^2 + y^2)$ with $c > 0$ on the first quadrant, the maximum on each subsquare is at the upper-right corner. With an $m \\times m$ regular partition of $[0, mh]^2$ the corners are $(ih, jh)$ for $i, j = 1, \\dots, m$, and\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2.$$\n\nThe factor $2m$ appears because each square $i^2$ is counted once for every $j$, and symmetrically for $j^2$.",
-        "对第一象限上的 $f(x, y) = c(x^2 + y^2)$（$c > 0$），每个小正方形上的最大值在右上角。对 $[0, mh]^2$ 作 $m \\times m$ 等分，角点为 $(ih, jh)$，$i, j = 1, \\dots, m$，于是\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2$$\n\n出现因子 $2m$ 是因为每个 $i^2$ 对每个 $j$ 都计算一次，$j^2$ 同理。",
+        "For $f(x, y) = c(x^2 + y^2)$ with $c > 0$ on the first quadrant, the maximum on each subsquare is at the upper-right corner. With an $m \\times m$ regular partition of $[0, mh]^2$ the corners are $(ih, jh)$ for $i, j = 1, \\dots, m$, and\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2.$$\n\nThe factor $2m$ appears because each square $i^2$ is counted once for every $j$, and symmetrically for $j^2$. For $5(x^2 + y^2)$ on $[0, 2]^2$ with a $2 \\times 2$ partition, the corner values of $x^2 + y^2$ are $2, 5, 5, 8$, so $U = 5 \\cdot 20 = 100 = 5 \\cdot 4 \\cdot 5$.\n\n> **Watch out.** Both $x^2$ and $y^2$ contribute, each counted $m$ times, which is where $2m$ comes from; and the power of $h$ is $4$, two from the squares and two from the area.",
+        "对第一象限上的 $f(x, y) = c(x^2 + y^2)$（$c > 0$），每个小正方形上的最大值在右上角。对 $[0, mh]^2$ 作 $m \\times m$ 等分，角点为 $(ih, jh)$，$i, j = 1, \\dots, m$，于是\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2$$\n\n出现因子 $2m$ 是因为每个 $i^2$ 对每个 $j$ 都计算一次，$j^2$ 同理。对 $[0, 2]^2$ 上的 $5(x^2 + y^2)$ 作 $2 \\times 2$ 划分，$x^2 + y^2$ 在各角点的值为 $2, 5, 5, 8$，所以 $U = 5 \\cdot 20 = 100 = 5 \\cdot 4 \\cdot 5$。\n\n> **注意。** $x^2$ 和 $y^2$ 都有贡献，各计 $m$ 次，这就是 $2m$ 的来源；$h$ 的次数是 $4$，两次来自平方，两次来自面积。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 4);
@@ -438,16 +724,65 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
         const s2 = (m * (m + 1) * (2 * m + 1)) / 6;
         const s2lo = ((m - 1) * m * (2 * m - 1)) / 6;
         const ans = c * h ** 4 * 2 * m * s2;
+        const side = m * h;
+        const exact = Q.of(2 * c * side ** 4, 3);
+        const f = c === 1 ? "x^2 + y^2" : `${c}(x^2 + y^2)`;
         return numberProblem({
           prompt: t(
-            `Find the upper Riemann sum of $f(x, y) = ${c === 1 ? "x^2 + y^2" : `${c}(x^2 + y^2)`}$ over $[0, ${m * h}] \\times [0, ${m * h}]$ using a regular $${m} \\times ${m}$ partition.`,
-            `用 $${m} \\times ${m}$ 等分划分，求 $f(x, y) = ${c === 1 ? "x^2 + y^2" : `${c}(x^2 + y^2)`}$ 在 $[0, ${m * h}] \\times [0, ${m * h}]$ 上的上黎曼和。`,
+            `Find the upper Riemann sum of $f(x, y) = ${f}$ over $[0, ${side}] \\times [0, ${side}]$ using a regular $${m} \\times ${m}$ partition.`,
+            `用 $${m} \\times ${m}$ 等分划分，求 $f(x, y) = ${f}$ 在 $[0, ${side}] \\times [0, ${side}]$ 上的上黎曼和。`,
           ),
           answer: ans,
-          wrong: [c * h ** 4 * 2 * m * s2lo, c * h ** 2 * 2 * m * s2, c * h ** 4 * m * s2, c * h ** 4 * 2 * s2],
-          solution: t(
-            `The maximum on each square is at the upper-right corner, so $U = ${c} \\cdot ${h}^4 \\cdot 2 \\cdot ${m} \\sum_{i=1}^{${m}} i^2 = ${c} \\cdot ${h ** 4} \\cdot ${2 * m} \\cdot ${s2} = ${ans}$.`,
-            `每个正方形上的最大值在右上角，所以 $U = ${c} \\cdot ${h}^4 \\cdot 2 \\cdot ${m} \\sum_{i=1}^{${m}} i^2 = ${c} \\cdot ${h ** 4} \\cdot ${2 * m} \\cdot ${s2} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c * h ** 4 * 2 * m * s2lo,
+              "That uses the lower-left corners, indices $0$ to $m - 1$; that is the lower sum.",
+              "那是用了左下角，下标从 $0$ 到 $m - 1$；那是下和。",
+            ),
+            why(
+              c * h ** 2 * 2 * m * s2,
+              "One factor $h^2$ is missing: the squares give $h^2$, and the area of a square gives another $h^2$.",
+              "少了一个因子 $h^2$：平方给出 $h^2$，正方形的面积又给出一个 $h^2$。",
+            ),
+            why(
+              c * h ** 4 * m * s2,
+              "That counts only $x^2$; $y^2$ contributes the same amount, which doubles the sum.",
+              "那是只算了 $x^2$；$y^2$ 贡献同样多，和要加倍。",
+            ),
+            why(
+              c * h ** 4 * 2 * s2,
+              `Each $i^2$ is added once for every one of the $${m}$ values of $j$; the factor $${m}$ is missing.`,
+              `每个 $i^2$ 对 $j$ 的 $${m}$ 个取值都要加一次；少了因子 $${m}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Locate the maximum", "确定最大值的位置"],
+                t(
+                  `$f$ increases in both variables, so each square uses its upper-right corner $(${h}i, ${h}j)$ with $i, j = 1, \\dots, ${m}$, and $\\Delta A = ${h * h}$.`,
+                  `$f$ 关于两个变量都递增，所以每个正方形用右上角 $(${h}i, ${h}j)$，$i, j = 1, \\dots, ${m}$，$\\Delta A = ${h * h}$。`,
+                ),
+              ],
+              [
+                ["Separate the sum", "分离求和"],
+                t(
+                  `$\\sum_{i, j} (i^2 + j^2) = 2 \\cdot ${m}\\sum_{i=1}^{${m}} i^2 = ${2 * m} \\cdot ${s2}$.`,
+                  `$\\sum_{i, j} (i^2 + j^2) = 2 \\cdot ${m}\\sum_{i=1}^{${m}} i^2 = ${2 * m} \\cdot ${s2}$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `$U = ${c} \\cdot ${h}^4 \\cdot ${2 * m} \\cdot ${s2} = ${ans}$.`,
+                  `$U = ${c} \\cdot ${h}^4 \\cdot ${2 * m} \\cdot ${s2} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $\\int_0^{${side}}\\int_0^{${side}} f\\,dy\\,dx = \\frac{2 \\cdot ${c} \\cdot ${side}^4}{3} = ${exact.toLatex()}$, and $${ans} \\ge ${exact.toLatex()}$.`,
+              `精确体积为 $\\int_0^{${side}}\\int_0^{${side}} f\\,dy\\,dx = \\frac{2 \\cdot ${c} \\cdot ${side}^4}{3} = ${exact.toLatex()}$，而 $${ans} \\ge ${exact.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -463,6 +798,10 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
     "For partitions whose subrectangles have different widths, a lower sum weights each infimum by its own area $\\Delta A_{ij} = \\Delta x_i\\,\\Delta y_j$.",
     "对于子矩形宽度不等的分割，下和把每个下确界乘以各自的面积 $\\Delta A_{ij} = \\Delta x_i\\,\\Delta y_j$ 再求和。",
   ),
+  intro: t(
+    "Take $f(x, y) = x + y$ on $[0, 3] \\times [0, 1]$, with $x$ cut at $0, 1, 3$. The two cells are $[0, 1] \\times [0, 1]$ of area $1$ and $[1, 3] \\times [0, 1]$ of area $2$. The minima are at the lower-left corners, $f(0, 0) = 0$ and $f(1, 0) = 1$, so $L = 0 \\cdot 1 + 1 \\cdot 2 = 2$.\n\nCheck: the exact volume is $\\int_0^3\\int_0^1 (x + y)\\,dy\\,dx = \\frac{9}{2} + \\frac{3}{2} = 6$, and $2 \\le 6$.\n\nIn this lesson we compute lower sums over partitions whose cells have different sizes, weighting each minimum by the area of its own cell.",
+    "取 $[0, 3] \\times [0, 1]$ 上的 $f(x, y) = x + y$，$x$ 在 $0, 1, 3$ 处分割。两个小格是面积为 $1$ 的 $[0, 1] \\times [0, 1]$ 和面积为 $2$ 的 $[1, 3] \\times [0, 1]$。最小值在左下角，$f(0, 0) = 0$，$f(1, 0) = 1$，所以 $L = 0 \\cdot 1 + 1 \\cdot 2 = 2$。\n\n检验：精确体积是 $\\int_0^3\\int_0^1 (x + y)\\,dy\\,dx = \\frac{9}{2} + \\frac{3}{2} = 6$，而 $2 \\le 6$。\n\n本课我们在小格大小不等的分割上计算下和，每个最小值乘以它自己那一格的面积。",
+  ),
   prerequisites: ["approximating-volumes-using-lower-riemann-sums"],
   encompasses: [{ topic: "approximating-volumes-using-lower-riemann-sums", weight: 0.3 }],
   xp: 10,
@@ -472,62 +811,78 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       figure: multivariableDrawings3["lower-riemann-sums-over-general-rectangular-partitions#lower-sum-with-unequal-subinterval-widths"],
       title: t("Lower sum with unequal subinterval widths", "非等距子区间下的下黎曼和"),
       explanation: t(
-        "A lower sum uses the smallest value of the function on each small rectangle, which for an increasing function is at the corner nearest the origin. For a partition with cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the lower sum of an increasing function $f(x, y) = ax + by$ is:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j.$$",
-        "下和在每个小矩形上取函数的最小值，对于增函数，最小值在离原点最近的角上。对于分割节点为 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$ 的非等距分割，单调递增函数 $f(x, y) = ax + by$ 的下黎曼和为：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j$$",
+        "A lower sum uses the smallest value of the function on each small rectangle, which for an increasing function is at the corner nearest the origin. For a partition with cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the lower sum of an increasing function $f(x, y) = ax + by$ is:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j.$$\n\nFor $f = x + y$ with $x$ cut at $0, 4, 5$ and $y$ at $0, 1, 2$, the cells have areas $4, 1, 4, 1$ and lower-left values $0, 4, 1, 5$, so $L = 0 + 4 + 4 + 5 = 13$.\n\n> **Watch out.** Each value is multiplied by the area of its own cell, $\\Delta x_i\\,\\Delta y_j$; the cells are not equal, so one common area does not work.",
+        "下和在每个小矩形上取函数的最小值，对于增函数，最小值在离原点最近的角上。对于分割节点为 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$ 的非等距分割，单调递增函数 $f(x, y) = ax + by$ 的下黎曼和为：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j$$\n\n对 $f = x + y$，$x$ 在 $0, 4, 5$ 处分割，$y$ 在 $0, 1, 2$ 处分割，各格面积为 $4, 1, 4, 1$，左下角的值为 $0, 4, 1, 5$，所以 $L = 0 + 4 + 4 + 5 = 13$。\n\n> **注意。** 每个值要乘以它自己那一格的面积 $\\Delta x_i\\,\\Delta y_j$；各格不相等，不能用同一个面积。",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(1, 3);
         const dx2 = rng.int(1, 3);
         const x2 = x1 + dx2;
-
         const y1 = rng.int(1, 3);
         const dy2 = rng.int(1, 3);
         const y2 = y1 + dy2;
-
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
-
-        // f(x, y) = ax + by
-        // Corners:
-        // (0, 0): f=0, area = x1 * y1
-        // (x1, 0): f = a*x1, area = dx2 * y1
-        // (0, y1): f = b*y1, area = x1 * dy2
-        // (x1, y1): f = a*x1 + b*y1, area = dx2 * dy2
-        const term1 = 0;
         const term2 = a * x1 * dx2 * y1;
         const term3 = b * y1 * x1 * dy2;
         const term4 = (a * x1 + b * y1) * dx2 * dy2;
-        const ans = term1 + term2 + term3 + term4;
-
-        const prompt = t(
-          `Find the lower Riemann sum $L(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${x2}] \\times [0, ${y2}]$ with partition points $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
-          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}\\}$，求其下黎曼和 $L(f, P)$。`,
-        );
-        const solution = t(
-          steps(
-            `The subinterval lengths are $\\Delta x_1 = ${x1}$, $\\Delta x_2 = ${dx2}$ and $\\Delta y_1 = ${y1}$, $\\Delta y_2 = ${dy2}$.`,
-            `Because $f$ is increasing, each infimum is at the bottom-left corner of each subrectangle:`,
-            `1. $(0, 0)$: $f(0, 0) = 0$, contribution is $0$.`,
-            `2. $(${x1}, 0)$: $f(${x1}, 0) = ${a * x1}$, contribution is $(${a * x1})(${dx2})(${y1}) = ${term2}$.`,
-            `3. $(0, ${y1})$: $f(0, ${y1}) = ${b * y1}$, contribution is $(${b * y1})(${x1})(${dy2}) = ${term3}$.`,
-            `4. $(${x1}, ${y1})$: $f(${x1}, ${y1}) = ${a * x1 + b * y1}$, contribution is $(${a * x1 + b * y1})(${dx2})(${dy2}) = ${term4}$.`,
-            `Summing all contributions: $L(f, P) = ${term2} + ${term3} + ${term4} = ${ans}$.`,
-          ),
-          steps(
-            `各子区间长度为 $\\Delta x_1 = ${x1}$，$\\Delta x_2 = ${dx2}$ 且 $\\Delta y_1 = ${y1}$，$\\Delta y_2 = ${dy2}$。`,
-            `由于 $f$ 单调递增，每个子矩形上的下确界均取在左下角：`,
-            `1. $(0, 0)$：$f(0, 0) = 0$，贡献为 $0$。`,
-            `2. $(${x1}, 0)$：$f(${x1}, 0) = ${a * x1}$，贡献为 $(${a * x1})(${dx2})(${y1}) = ${term2}$。`,
-            `3. $(0, ${y1})$：$f(0, ${y1}) = ${b * y1}$，贡献为 $(${b * y1})(${x1})(${dy2}) = ${term3}$。`,
-            `4. $(${x1}, ${y1})$：$f(${x1}, ${y1}) = ${a * x1 + b * y1}$，贡献为 $(${a * x1 + b * y1})(${dx2})(${dy2}) = ${term4}$。`,
-            `总和为：$L(f, P) = ${term2} + ${term3} + ${term4} = ${ans}$。`,
-          ),
-        );
+        const ans = term2 + term3 + term4;
+        const upper =
+          (a * x1 + b * y1) * x1 * y1 + (a * x2 + b * y1) * dx2 * y1 + (a * x1 + b * y2) * x1 * dy2 + (a * x2 + b * y2) * dx2 * dy2;
+        const values = 2 * (a * x1 + b * y1);
+        const exact = Q.of(a * x2 * x2 * y2 + b * y2 * y2 * x2, 2);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the lower Riemann sum $L(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${x2}] \\times [0, ${y2}]$ with partition points $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
+            `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}\\}$，求其下黎曼和 $L(f, P)$。`,
+          ),
           answer: ans,
-          wrong: [ans + x1 * y1, ans - x1 * y1, ans * 2],
+          mistakes: distinct(ans, [
+            why(
+              upper,
+              "That uses the upper-right corners, where $f$ is largest; that is the upper sum.",
+              "那是用了右上角，$f$ 在那里最大；那是上和。",
+            ),
+            why(
+              values,
+              "That adds the corner values without multiplying each by the area of its cell.",
+              "那是只把角点的值相加，没有乘以各自小格的面积。",
+            ),
+            why(
+              Q.of(values * x2 * y2, 4),
+              `That gives every cell the same area $\\frac{${x2 * y2}}{4}$; the cells have different areas $\\Delta x_i\\,\\Delta y_j$.`,
+              `那是给每格同样的面积 $\\frac{${x2 * y2}}{4}$；各格面积 $\\Delta x_i\\,\\Delta y_j$ 并不相同。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the widths", "求宽度"],
+                t(
+                  `$\\Delta x_1 = ${x1}$, $\\Delta x_2 = ${dx2}$, $\\Delta y_1 = ${y1}$, $\\Delta y_2 = ${dy2}$.`,
+                  `$\\Delta x_1 = ${x1}$，$\\Delta x_2 = ${dx2}$，$\\Delta y_1 = ${y1}$，$\\Delta y_2 = ${dy2}$。`,
+                ),
+              ],
+              [
+                ["Use the lower-left corners", "用左下角"],
+                t(
+                  `$f$ is increasing, so the minima are $f(0, 0) = 0$, $f(${x1}, 0) = ${a * x1}$, $f(0, ${y1}) = ${b * y1}$, $f(${x1}, ${y1}) = ${a * x1 + b * y1}$.`,
+                  `$f$ 递增，所以各最小值为 $f(0, 0) = 0$，$f(${x1}, 0) = ${a * x1}$，$f(0, ${y1}) = ${b * y1}$，$f(${x1}, ${y1}) = ${a * x1 + b * y1}$。`,
+                ),
+              ],
+              [
+                ["Weight by the areas", "乘以面积"],
+                t(
+                  `$L = 0 + ${a * x1} \\cdot ${dx2} \\cdot ${y1} + ${b * y1} \\cdot ${x1} \\cdot ${dy2} + ${a * x1 + b * y1} \\cdot ${dx2} \\cdot ${dy2} = ${term2} + ${term3} + ${term4} = ${ans}$.`,
+                  `$L = 0 + ${a * x1} \\cdot ${dx2} \\cdot ${y1} + ${b * y1} \\cdot ${x1} \\cdot ${dy2} + ${a * x1 + b * y1} \\cdot ${dx2} \\cdot ${dy2} = ${term2} + ${term3} + ${term4} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $\\int_0^{${x2}}\\int_0^{${y2}} f\\,dy\\,dx = ${exact.toLatex()}$, and $${ans} \\le ${exact.toLatex()}$.`,
+              `精确体积为 $\\int_0^{${x2}}\\int_0^{${y2}} f\\,dy\\,dx = ${exact.toLatex()}$，而 $${ans} \\le ${exact.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -535,8 +890,8 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       id: "a-lower-sum-for-xy-over-an-irregular-grid",
       title: t("A lower sum for $cxy$ over an irregular grid", "不规则网格上 $cxy$ 的下和"),
       explanation: t(
-        "On a general partition each subrectangle $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ has its own area $\\Delta x_i\\,\\Delta y_j$. For $f(x, y) = cxy$ with $c > 0$ on $[0, x_2] \\times [0, y_2]$, the minimum on each piece is at its lower-left corner $(x_{i-1}, y_{j-1})$. Every piece touching an axis has minimum $0$, so only the piece $[x_1, x_2] \\times [y_1, y_2]$ contributes:\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1).$$",
-        "在一般划分中，每个子矩形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 的面积为 $\\Delta x_i\\,\\Delta y_j$。对 $[0, x_2] \\times [0, y_2]$ 上的 $f(x, y) = cxy$（$c > 0$），每块上的最小值在左下角 $(x_{i-1}, y_{j-1})$。贴着坐标轴的块最小值为 $0$，所以只有 $[x_1, x_2] \\times [y_1, y_2]$ 有贡献：\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1)$$",
+        "On a general partition each subrectangle $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ has its own area $\\Delta x_i\\,\\Delta y_j$. For $f(x, y) = cxy$ with $c > 0$ on $[0, x_2] \\times [0, y_2]$, the minimum on each piece is at its lower-left corner $(x_{i-1}, y_{j-1})$. Every piece touching an axis has minimum $0$, so only the piece $[x_1, x_2] \\times [y_1, y_2]$ contributes:\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1).$$\n\nFor $xy$ with $x$ cut at $0, 4, 5$ and $y$ at $0, 1, 3$, $L = 4 \\cdot 1 \\cdot 1 \\cdot 2 = 8$.\n\n> **Watch out.** The surviving value is taken at $(x_1, y_1)$, the lower-left corner of the last cell, and multiplied by that cell's area only, not by the area of the whole rectangle.",
+        "在一般划分中，每个子矩形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 的面积为 $\\Delta x_i\\,\\Delta y_j$。对 $[0, x_2] \\times [0, y_2]$ 上的 $f(x, y) = cxy$（$c > 0$），每块上的最小值在左下角 $(x_{i-1}, y_{j-1})$。贴着坐标轴的块最小值为 $0$，所以只有 $[x_1, x_2] \\times [y_1, y_2]$ 有贡献：\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1)$$\n\n对 $xy$，$x$ 在 $0, 4, 5$ 处分割，$y$ 在 $0, 1, 3$ 处分割，$L = 4 \\cdot 1 \\cdot 1 \\cdot 2 = 8$。\n\n> **注意。** 留下的值取在最后一格的左下角 $(x_1, y_1)$，只乘以这一格的面积，而不是整个矩形的面积。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 3);
@@ -546,16 +901,48 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
         const y2 = y1 + rng.int(1, 3);
         const ans = c * x1 * y1 * (x2 - x1) * (y2 - y1);
         const upper = c * (x1 * x1 + x2 * (x2 - x1)) * (y1 * y1 + y2 * (y2 - y1));
+        const exact = Q.of(c * x2 * x2 * y2 * y2, 4);
         return numberProblem({
           prompt: t(
-            `Find the lower Riemann sum of $f(x, y) = ${c === 1 ? "" : c}xy$ on $[0, ${x2}] \\times [0, ${y2}]$ for the partition with $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
-            `对 $x \\in \\{0, ${x1}, ${x2}\\}$、$y \\in \\{0, ${y1}, ${y2}\\}$ 的划分，求 $f(x, y) = ${c === 1 ? "" : c}xy$ 在 $[0, ${x2}] \\times [0, ${y2}]$ 上的下黎曼和。`,
+            `Find the lower Riemann sum of $f(x, y) = ${coef(c)}xy$ on $[0, ${x2}] \\times [0, ${y2}]$ for the partition with $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
+            `对 $x \\in \\{0, ${x1}, ${x2}\\}$、$y \\in \\{0, ${y1}, ${y2}\\}$ 的划分，求 $f(x, y) = ${coef(c)}xy$ 在 $[0, ${x2}] \\times [0, ${y2}]$ 上的下黎曼和。`,
           ),
           answer: ans,
-          wrong: [upper, c * x1 * y1 * x2 * y2, c * x2 * y2 * (x2 - x1) * (y2 - y1), c * x1 * y1],
-          solution: t(
-            `Only the piece $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ has a nonzero minimum, $f(${x1}, ${y1}) = ${c * x1 * y1}$, and its area is $${x2 - x1} \\cdot ${y2 - y1}$. So $L = ${c * x1 * y1} \\cdot ${(x2 - x1) * (y2 - y1)} = ${ans}$.`,
-            `只有 $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ 这一块的最小值非零，为 $f(${x1}, ${y1}) = ${c * x1 * y1}$，面积为 $${x2 - x1} \\cdot ${y2 - y1}$。所以 $L = ${c * x1 * y1} \\cdot ${(x2 - x1) * (y2 - y1)} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(upper, "That uses the upper-right corners; that is the upper sum.", "那是用了右上角；那是上和。"),
+            why(
+              c * x1 * y1 * x2 * y2,
+              `That multiplies by the area $${x2 * y2}$ of the whole rectangle; only the cell $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ contributes.`,
+              `那是乘以整个矩形的面积 $${x2 * y2}$；只有 $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ 这一格有贡献。`,
+            ),
+            why(
+              c * x2 * y2 * (x2 - x1) * (y2 - y1),
+              `That evaluates at $(${x2}, ${y2})$, the largest value of the last cell; the lower sum needs its smallest value at $(${x1}, ${y1})$.`,
+              `那是在 $(${x2}, ${y2})$ 处取值，即最后一格的最大值；下和要用它在 $(${x1}, ${y1})$ 处的最小值。`,
+            ),
+            why(c * x1 * y1, "That forgets to multiply by the area of the cell.", "那是忘了乘以这一格的面积。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the minima", "求最小值"],
+                t(
+                  `$f$ increases in both variables, so each cell uses its lower-left corner. Three cells touch an axis, where $f = 0$.`,
+                  `$f$ 对两个变量都递增，所以每格用左下角。有三格贴着坐标轴，那里 $f = 0$。`,
+                ),
+              ],
+              [
+                ["Add the one nonzero term", "加上唯一的非零项"],
+                t(
+                  `$f(${x1}, ${y1}) = ${c * x1 * y1}$ and the cell $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ has area $${x2 - x1} \\cdot ${y2 - y1}$, so $L = ${c * x1 * y1} \\cdot ${(x2 - x1) * (y2 - y1)} = ${ans}$.`,
+                  `$f(${x1}, ${y1}) = ${c * x1 * y1}$，小格 $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ 的面积为 $${x2 - x1} \\cdot ${y2 - y1}$，所以 $L = ${c * x1 * y1} \\cdot ${(x2 - x1) * (y2 - y1)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $${c} \\cdot \\frac{${x2}^2}{2} \\cdot \\frac{${y2}^2}{2} = ${exact.toLatex()}$, and $${ans} \\le ${exact.toLatex()}$.`,
+              `精确体积为 $${c} \\cdot \\frac{${x2}^2}{2} \\cdot \\frac{${y2}^2}{2} = ${exact.toLatex()}$，而 $${ans} \\le ${exact.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -571,6 +958,10 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
     "For a general partition, the upper sum adds the products of each subrectangle's supremum with its area $\\Delta A_{ij}$.",
     "对于一般分割，上和把每个子矩形上的上确界与其面积 $\\Delta A_{ij}$ 的乘积相加。",
   ),
+  intro: t(
+    "Take $f(x, y) = 2x + y$ on $[0, 1] \\times [0, 3]$, with $y$ cut at $0, 2, 3$. The cells are $[0, 1] \\times [0, 2]$ of area $2$ and $[0, 1] \\times [2, 3]$ of area $1$. The maxima are at the upper-right corners, $f(1, 2) = 4$ and $f(1, 3) = 5$, so $U = 4 \\cdot 2 + 5 \\cdot 1 = 13$.\n\nCheck: the exact volume is $\\int_0^1\\int_0^3 (2x + y)\\,dy\\,dx = 3 + \\frac{9}{2} = \\frac{15}{2}$, and $13 \\ge \\frac{15}{2}$.\n\nIn this lesson we compute upper sums over partitions whose cells have different sizes, weighting each maximum by the area of its own cell.",
+    "取 $[0, 1] \\times [0, 3]$ 上的 $f(x, y) = 2x + y$，$y$ 在 $0, 2, 3$ 处分割。两格是面积为 $2$ 的 $[0, 1] \\times [0, 2]$ 和面积为 $1$ 的 $[0, 1] \\times [2, 3]$。最大值在右上角，$f(1, 2) = 4$，$f(1, 3) = 5$，所以 $U = 4 \\cdot 2 + 5 \\cdot 1 = 13$。\n\n检验：精确体积是 $\\int_0^1\\int_0^3 (2x + y)\\,dy\\,dx = 3 + \\frac{9}{2} = \\frac{15}{2}$，而 $13 \\ge \\frac{15}{2}$。\n\n本课我们在小格大小不等的分割上计算上和，每个最大值乘以它自己那一格的面积。",
+  ),
   prerequisites: ["approximating-volumes-using-upper-riemann-sums"],
   encompasses: [{ topic: "approximating-volumes-using-upper-riemann-sums", weight: 0.3 }],
   xp: 10,
@@ -579,61 +970,79 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       id: "upper-sum-with-unequal-subinterval-widths",
       title: t("Upper sum with unequal subinterval widths", "非等距子区间下的上黎曼和"),
       explanation: t(
-        "For cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the upper sum of an increasing function $f(x, y) = ax + by$ evaluates the supremum at top-right corners:\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j.$$",
-        "对于分割节点 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$，单调递增函数 $f(x, y) = ax + by$ 的上黎曼和在右上角计算上确界：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j$$",
+        "For cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the upper sum of an increasing function $f(x, y) = ax + by$ evaluates the supremum at top-right corners:\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j.$$\n\nFor $f = x + y$ with $x$ cut at $0, 4, 5$ and $y$ at $0, 1, 2$, the upper-right values are $5, 6, 6, 7$ on cells of area $4, 1, 4, 1$, so $U = 20 + 6 + 24 + 7 = 57$.\n\n> **Watch out.** Pair each corner with the area of the cell it belongs to: $(x_1, y_1)$ goes with $\\Delta x_1\\,\\Delta y_1$, $(x_2, y_1)$ with $\\Delta x_2\\,\\Delta y_1$, and so on.",
+        "对于分割节点 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$，单调递增函数 $f(x, y) = ax + by$ 的上黎曼和在右上角计算上确界：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j$$\n\n对 $f = x + y$，$x$ 在 $0, 4, 5$ 处分割，$y$ 在 $0, 1, 2$ 处分割，右上角的值为 $5, 6, 6, 7$，所在小格面积为 $4, 1, 4, 1$，所以 $U = 20 + 6 + 24 + 7 = 57$。\n\n> **注意。** 每个角点要配上它所在小格的面积：$(x_1, y_1)$ 配 $\\Delta x_1\\,\\Delta y_1$，$(x_2, y_1)$ 配 $\\Delta x_2\\,\\Delta y_1$，依此类推。",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(1, 3);
         const dx2 = rng.int(1, 3);
         const x2 = x1 + dx2;
-
         const y1 = rng.int(1, 3);
         const dy2 = rng.int(1, 3);
         const y2 = y1 + dy2;
-
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
-
-        // Top-right corners:
-        // (x1, y1): f = a*x1 + b*y1, area = x1 * y1
-        // (x2, y1): f = a*x2 + b*y1, area = dx2 * y1
-        // (x1, y2): f = a*x1 + b*y2, area = x1 * dy2
-        // (x2, y2): f = a*x2 + b*y2, area = dx2 * dy2
-        const t1 = (a * x1 + b * y1) * x1 * y1;
-        const t2 = (a * x2 + b * y1) * dx2 * y1;
-        const t3 = (a * x1 + b * y2) * x1 * dy2;
-        const t4 = (a * x2 + b * y2) * dx2 * dy2;
+        const v = [a * x1 + b * y1, a * x2 + b * y1, a * x1 + b * y2, a * x2 + b * y2] as const;
+        const t1 = v[0] * x1 * y1;
+        const t2 = v[1] * dx2 * y1;
+        const t3 = v[2] * x1 * dy2;
+        const t4 = v[3] * dx2 * dy2;
         const ans = t1 + t2 + t3 + t4;
-
-        const prompt = t(
-          `Find the upper Riemann sum $U(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${x2}] \\times [0, ${y2}]$ with partition points $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
-          `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}\\}$，求其上黎曼和 $U(f, P)$。`,
-        );
-        const solution = t(
-          steps(
-            `The subinterval lengths are $\\Delta x_1 = ${x1}$, $\\Delta x_2 = ${dx2}$ and $\\Delta y_1 = ${y1}$, $\\Delta y_2 = ${dy2}$.`,
-            `Because $f$ is increasing, each supremum is at the top-right corner of each subrectangle:`,
-            `1. $(${x1}, ${y1})$: $f(${x1}, ${y1}) = ${a * x1 + b * y1}$, contribution is $(${a * x1 + b * y1})(${x1})(${y1}) = ${t1}$.`,
-            `2. $(${x2}, ${y1})$: $f(${x2}, ${y1}) = ${a * x2 + b * y1}$, contribution is $(${a * x2 + b * y1})(${dx2})(${y1}) = ${t2}$.`,
-            `3. $(${x1}, ${y2})$: $f(${x1}, ${y2}) = ${a * x1 + b * y2}$, contribution is $(${a * x1 + b * y2})(${x1})(${dy2}) = ${t3}$.`,
-            `4. $(${x2}, ${y2})$: $f(${x2}, ${y2}) = ${a * x2 + b * y2}$, contribution is $(${a * x2 + b * y2})(${dx2})(${dy2}) = ${t4}$.`,
-            `Summing all contributions: $U(f, P) = ${t1} + ${t2} + ${t3} + ${t4} = ${ans}$.`,
-          ),
-          steps(
-            `各子区间长度为 $\\Delta x_1 = ${x1}$，$\\Delta x_2 = ${dx2}$ 且 $\\Delta y_1 = ${y1}$，$\\Delta y_2 = ${dy2}$。`,
-            `由于 $f$ 单调递增，每个子矩形上的上确界均取在右上角：`,
-            `1. $(${x1}, ${y1})$：$f(${x1}, ${y1}) = ${a * x1 + b * y1}$，贡献为 $(${a * x1 + b * y1})(${x1})(${y1}) = ${t1}$。`,
-            `2. $(${x2}, ${y1})$：$f(${x2}, ${y1}) = ${a * x2 + b * y1}$，贡献为 $(${a * x2 + b * y1})(${dx2})(${y1}) = ${t2}$。`,
-            `3. $(${x1}, ${y2})$：$f(${x1}, ${y2}) = ${a * x1 + b * y2}$，贡献为 $(${a * x1 + b * y2})(${x1})(${dy2}) = ${t3}$。`,
-            `4. $(${x2}, ${y2})$：$f(${x2}, ${y2}) = ${a * x2 + b * y2}$，贡献为 $(${a * x2 + b * y2})(${dx2})(${dy2}) = ${t4}$。`,
-            `总和为：$U(f, P) = ${t1} + ${t2} + ${t3} + ${t4} = ${ans}$。`,
-          ),
-        );
+        const lower = a * x1 * dx2 * y1 + b * y1 * x1 * dy2 + (a * x1 + b * y1) * dx2 * dy2;
+        const values = v[0] + v[1] + v[2] + v[3];
+        const exact = Q.of(a * x2 * x2 * y2 + b * y2 * y2 * x2, 2);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the upper Riemann sum $U(f, P)$ for $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${x2}] \\times [0, ${y2}]$ with partition points $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
+            `对于函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，在矩形区域 $R = [0, ${x2}] \\times [0, ${y2}]$ 上，采用分割节点 $x \\in \\{0, ${x1}, ${x2}\\}$ 与 $y \\in \\{0, ${y1}, ${y2}\\}$，求其上黎曼和 $U(f, P)$。`,
+          ),
           answer: ans,
-          wrong: [ans - x1 * y1, ans + x1 * y1, ans + 2],
+          mistakes: distinct(ans, [
+            why(
+              lower,
+              "That uses the lower-left corners, where $f$ is smallest; that is the lower sum.",
+              "那是用了左下角，$f$ 在那里最小；那是下和。",
+            ),
+            why(
+              values,
+              "That adds the corner values without multiplying each by the area of its cell.",
+              "那是只把角点的值相加，没有乘以各自小格的面积。",
+            ),
+            why(
+              Q.of(values * x2 * y2, 4),
+              `That gives every cell the same area $\\frac{${x2 * y2}}{4}$; the cells have different areas $\\Delta x_i\\,\\Delta y_j$.`,
+              `那是给每格同样的面积 $\\frac{${x2 * y2}}{4}$；各格面积 $\\Delta x_i\\,\\Delta y_j$ 并不相同。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the widths", "求宽度"],
+                t(
+                  `$\\Delta x_1 = ${x1}$, $\\Delta x_2 = ${dx2}$, $\\Delta y_1 = ${y1}$, $\\Delta y_2 = ${dy2}$.`,
+                  `$\\Delta x_1 = ${x1}$，$\\Delta x_2 = ${dx2}$，$\\Delta y_1 = ${y1}$，$\\Delta y_2 = ${dy2}$。`,
+                ),
+              ],
+              [
+                ["Use the upper-right corners", "用右上角"],
+                t(
+                  `$f$ is increasing, so the maxima are $f(${x1}, ${y1}) = ${v[0]}$, $f(${x2}, ${y1}) = ${v[1]}$, $f(${x1}, ${y2}) = ${v[2]}$, $f(${x2}, ${y2}) = ${v[3]}$.`,
+                  `$f$ 递增，所以各最大值为 $f(${x1}, ${y1}) = ${v[0]}$，$f(${x2}, ${y1}) = ${v[1]}$，$f(${x1}, ${y2}) = ${v[2]}$，$f(${x2}, ${y2}) = ${v[3]}$。`,
+                ),
+              ],
+              [
+                ["Weight by the areas", "乘以面积"],
+                t(
+                  `$U = ${v[0]} \\cdot ${x1 * y1} + ${v[1]} \\cdot ${dx2 * y1} + ${v[2]} \\cdot ${x1 * dy2} + ${v[3]} \\cdot ${dx2 * dy2} = ${ans}$.`,
+                  `$U = ${v[0]} \\cdot ${x1 * y1} + ${v[1]} \\cdot ${dx2 * y1} + ${v[2]} \\cdot ${x1 * dy2} + ${v[3]} \\cdot ${dx2 * dy2} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The exact volume is $\\int_0^{${x2}}\\int_0^{${y2}} f\\,dy\\,dx = ${exact.toLatex()}$, and $${ans} \\ge ${exact.toLatex()}$.`,
+              `精确体积为 $\\int_0^{${x2}}\\int_0^{${y2}} f\\,dy\\,dx = ${exact.toLatex()}$，而 $${ans} \\ge ${exact.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -641,8 +1050,8 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       id: "an-upper-sum-for-xy-over-an-irregular-grid",
       title: t("An upper sum for $cxy$ over an irregular grid", "不规则网格上 $cxy$ 的上和"),
       explanation: t(
-        "For $f(x, y) = cxy$ with $c > 0$ the maximum on each subrectangle is at its upper-right corner $(x_i, y_j)$. Because $f$ is a product, the upper sum factors into one sum for $x$ and one for $y$:\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right).$$\n\nThis saves computing every subrectangle separately.",
-        "对 $f(x, y) = cxy$（$c > 0$），每个子矩形上的最大值在右上角 $(x_i, y_j)$。由于 $f$ 是乘积，上和可分解为 $x$ 的和与 $y$ 的和之积：\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)$$\n\n这样无需逐个计算每个子矩形。",
+        "For $f(x, y) = cxy$ with $c > 0$ the maximum on each subrectangle is at its upper-right corner $(x_i, y_j)$. Because $f$ is a product, the upper sum factors into one sum for $x$ and one for $y$:\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right).$$\n\nThis saves computing every subrectangle separately. For $xy$ with $x$ cut at $0, 4, 5$ and $y$ at $0, 1, 3$, the factors are $4 \\cdot 4 + 5 \\cdot 1 = 21$ and $1 \\cdot 1 + 3 \\cdot 2 = 7$, so $U = 147$.\n\n> **Watch out.** Each cut point is multiplied by the width of the piece that ends at it: $x_i$ goes with $\\Delta x_i = x_i - x_{i-1}$, not with the next width.",
+        "对 $f(x, y) = cxy$（$c > 0$），每个子矩形上的最大值在右上角 $(x_i, y_j)$。由于 $f$ 是乘积，上和可分解为 $x$ 的和与 $y$ 的和之积：\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)$$\n\n这样无需逐个计算每个子矩形。对 $xy$，$x$ 在 $0, 4, 5$ 处分割，$y$ 在 $0, 1, 3$ 处分割，两个因子为 $4 \\cdot 4 + 5 \\cdot 1 = 21$ 和 $1 \\cdot 1 + 3 \\cdot 2 = 7$，所以 $U = 147$。\n\n> **注意。** 每个分点乘以以它为右端的那一段的宽度：$x_i$ 配 $\\Delta x_i = x_i - x_{i-1}$，而不是下一段的宽度。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 3);
@@ -653,16 +1062,60 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
         const sx = x1 * x1 + x2 * (x2 - x1);
         const sy = y1 * y1 + y2 * (y2 - y1);
         const ans = c * sx * sy;
+        const exact = Q.of(c * x2 * x2 * y2 * y2, 4);
         return numberProblem({
           prompt: t(
-            `Find the upper Riemann sum of $f(x, y) = ${c === 1 ? "" : c}xy$ on $[0, ${x2}] \\times [0, ${y2}]$ for the partition with $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
-            `对 $x \\in \\{0, ${x1}, ${x2}\\}$、$y \\in \\{0, ${y1}, ${y2}\\}$ 的划分，求 $f(x, y) = ${c === 1 ? "" : c}xy$ 在 $[0, ${x2}] \\times [0, ${y2}]$ 上的上黎曼和。`,
+            `Find the upper Riemann sum of $f(x, y) = ${coef(c)}xy$ on $[0, ${x2}] \\times [0, ${y2}]$ for the partition with $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
+            `对 $x \\in \\{0, ${x1}, ${x2}\\}$、$y \\in \\{0, ${y1}, ${y2}\\}$ 的划分，求 $f(x, y) = ${coef(c)}xy$ 在 $[0, ${x2}] \\times [0, ${y2}]$ 上的上黎曼和。`,
           ),
           answer: ans,
-          wrong: [c * x1 * y1 * (x2 - x1) * (y2 - y1), c * x2 * x2 * y2 * y2, c * (x1 + x2) * (y1 + y2), c * sx * y2],
-          solution: t(
-            `$\\sum_i x_i\\,\\Delta x_i = ${x1} \\cdot ${x1} + ${x2} \\cdot ${x2 - x1} = ${sx}$ and $\\sum_j y_j\\,\\Delta y_j = ${y1} \\cdot ${y1} + ${y2} \\cdot ${y2 - y1} = ${sy}$, so $U = ${c} \\cdot ${sx} \\cdot ${sy} = ${ans}$.`,
-            `$\\sum_i x_i\\,\\Delta x_i = ${x1} \\cdot ${x1} + ${x2} \\cdot ${x2 - x1} = ${sx}$，$\\sum_j y_j\\,\\Delta y_j = ${y1} \\cdot ${y1} + ${y2} \\cdot ${y2 - y1} = ${sy}$，所以 $U = ${c} \\cdot ${sx} \\cdot ${sy} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c * x1 * y1 * (x2 - x1) * (y2 - y1),
+              "That uses the lower-left corners; that is the lower sum.",
+              "那是用了左下角；那是下和。",
+            ),
+            why(
+              c * x2 * x2 * y2 * y2,
+              `That uses the largest value $f(${x2}, ${y2})$ for the whole rectangle; each cell has its own maximum.`,
+              `那是对整个矩形都用最大值 $f(${x2}, ${y2})$；每格有自己的最大值。`,
+            ),
+            why(
+              c * (x1 + x2) * (y1 + y2),
+              "That adds the cut points without multiplying each by its width.",
+              "那是把分点相加，没有乘以各自的宽度。",
+            ),
+            why(
+              c * sx * y2,
+              `The $y$ factor must also be a sum of $y_j\\,\\Delta y_j$, which is $${sy}$, not $${y2}$.`,
+              `$y$ 的因子也必须是 $y_j\\,\\Delta y_j$ 之和，即 $${sy}$，而不是 $${y2}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Factor the sum", "分解和式"],
+                t(
+                  `$U = ${c}\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)$ because $f$ is a product and each maximum is at an upper-right corner.`,
+                  `因为 $f$ 是乘积，且每个最大值在右上角，所以 $U = ${c}\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)$。`,
+                ),
+              ],
+              [
+                ["Evaluate each factor", "计算每个因子"],
+                t(
+                  `$\\sum_i x_i\\,\\Delta x_i = ${x1} \\cdot ${x1} + ${x2} \\cdot ${x2 - x1} = ${sx}$ and $\\sum_j y_j\\,\\Delta y_j = ${y1} \\cdot ${y1} + ${y2} \\cdot ${y2 - y1} = ${sy}$.`,
+                  `$\\sum_i x_i\\,\\Delta x_i = ${x1} \\cdot ${x1} + ${x2} \\cdot ${x2 - x1} = ${sx}$，$\\sum_j y_j\\,\\Delta y_j = ${y1} \\cdot ${y1} + ${y2} \\cdot ${y2 - y1} = ${sy}$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(`$U = ${c} \\cdot ${sx} \\cdot ${sy} = ${ans}$.`, `$U = ${c} \\cdot ${sx} \\cdot ${sy} = ${ans}$。`),
+              ],
+            ],
+            t(
+              `The exact volume is $${c} \\cdot \\frac{${x2}^2}{2} \\cdot \\frac{${y2}^2}{2} = ${exact.toLatex()}$, and $${ans} \\ge ${exact.toLatex()}$.`,
+              `精确体积为 $${c} \\cdot \\frac{${x2}^2}{2} \\cdot \\frac{${y2}^2}{2} = ${exact.toLatex()}$，而 $${ans} \\ge ${exact.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -678,6 +1131,10 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
     "A bounded function $f$ is integrable on $R$ if $\\sup_P L(f, P) = \\inf_P U(f, P)$; the common value is the double integral $\\iint_R f\\,dA$.",
     "若有界函数 $f$ 满足 $\\sup_P L(f, P) = \\inf_P U(f, P)$，则 $f$ 在 $R$ 上可积，这个公共值就是二重积分 $\\iint_R f\\,dA$。",
   ),
+  intro: t(
+    "Take $f(x, y) = x + y$ on $[0, 1]^2$ with a $2 \\times 2$ grid, so $\\Delta A = \\frac{1}{4}$. The lower-left corner values are $0, \\frac{1}{2}, \\frac{1}{2}, 1$, giving $L = \\frac{1}{2}$, and the upper-right values are $1, \\frac{3}{2}, \\frac{3}{2}, 2$, giving $U = \\frac{3}{2}$. The gap is $U - L = 1$; with $n$ parts each way it is $\\frac{2}{n}$, which shrinks to $0$, so $f$ is integrable.\n\nCheck: the integral $\\int_0^1\\int_0^1 (x + y)\\,dy\\,dx = 1$ lies between the two sums, $\\frac{1}{2} \\le 1 \\le \\frac{3}{2}$.\n\nIn this lesson we measure the gap between upper and lower sums and use it to decide integrability and how fine a partition must be.",
+    "取 $[0, 1]^2$ 上的 $f(x, y) = x + y$，作 $2 \\times 2$ 网格，$\\Delta A = \\frac{1}{4}$。左下角的值为 $0, \\frac{1}{2}, \\frac{1}{2}, 1$，得 $L = \\frac{1}{2}$；右上角的值为 $1, \\frac{3}{2}, \\frac{3}{2}, 2$，得 $U = \\frac{3}{2}$。差为 $U - L = 1$；每个方向分 $n$ 份时差为 $\\frac{2}{n}$，趋于 $0$，所以 $f$ 可积。\n\n检验：积分 $\\int_0^1\\int_0^1 (x + y)\\,dy\\,dx = 1$ 位于两个和之间，$\\frac{1}{2} \\le 1 \\le \\frac{3}{2}$。\n\n本课我们度量上和与下和之差，并用它判断可积性以及分割需要多细。",
+  ),
   prerequisites: ["lower-riemann-sums-over-general-rectangular-partitions", "upper-riemann-sums-over-general-rectangular-partitions"],
   encompasses: [
     { topic: "lower-riemann-sums-over-general-rectangular-partitions", weight: 0.3 },
@@ -689,8 +1146,8 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
       id: "riemann-integrability-criterion-for-double-integrals",
       title: t("Riemann integrability criterion for double integrals", "二重积分的黎曼可积性准则"),
       explanation: t(
-        "A function $f$ is Riemann integrable over $R$ if and only if for every $\\varepsilon > 0$, there exists a partition $P$ such that $U(f, P) - L(f, P) < \\varepsilon$. For $f(x, y) = ax + by$ on $[0, W] \\times [0, H]$ with regular $n \\times n$ subdivisions:\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}.$$",
-        "函数 $f$ 在矩形 $R$ 上黎曼可积，当且仅当对任意 $\\varepsilon > 0$，存在分割 $P$ 使得 $U(f, P) - L(f, P) < \\varepsilon$。对于在 $[0, W] \\times [0, H]$ 上采用 $n \\times n$ 等距分割的函数 $f(x, y) = ax + by$：\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}$$",
+        "A function $f$ is Riemann integrable over $R$ if and only if for every $\\varepsilon > 0$, there exists a partition $P$ such that $U(f, P) - L(f, P) < \\varepsilon$. For $f(x, y) = ax + by$ on $[0, W] \\times [0, H]$ with regular $n \\times n$ subdivisions:\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}.$$\n\nFor $5x + y$ on $[0, 1] \\times [0, 2]$ with $n = 4$, the gap is $(5 + 2) \\cdot \\frac{2}{4} = \\frac{7}{2}$.\n\n> **Watch out.** On each cell $f$ rises by $a\\frac{W}{n} + b\\frac{H}{n}$, and the cells' areas add up to $WH$; so the gap falls like $\\frac{1}{n}$, not $\\frac{1}{n^2}$.",
+        "函数 $f$ 在矩形 $R$ 上黎曼可积，当且仅当对任意 $\\varepsilon > 0$，存在分割 $P$ 使得 $U(f, P) - L(f, P) < \\varepsilon$。对于在 $[0, W] \\times [0, H]$ 上采用 $n \\times n$ 等距分割的函数 $f(x, y) = ax + by$：\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}$$\n\n对 $[0, 1] \\times [0, 2]$ 上的 $5x + y$，$n = 4$ 时差为 $(5 + 2) \\cdot \\frac{2}{4} = \\frac{7}{2}$。\n\n> **注意。** 在每格上 $f$ 增加 $a\\frac{W}{n} + b\\frac{H}{n}$，而各格面积之和是 $WH$；所以差按 $\\frac{1}{n}$ 减小，而不是 $\\frac{1}{n^2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -698,31 +1155,54 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
         const W = rng.int(2, 5);
         const H = rng.int(2, 5);
         const n = rng.int(2, 10);
-
-        const num = (a * W + b * H) * W * H;
+        const rise = a * W + b * H;
+        const num = rise * W * H;
         const ans = Q.of(num, n);
-
-        const prompt = t(
-          `For $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${W}] \\times [0, ${H}]$, find the difference $U(f, P_n) - L(f, P_n)$ between the upper and lower Riemann sums under an $n \\times n$ regular partition with $n = ${n}$.`,
-          `对于矩形区域 $R = [0, ${W}] \\times [0, ${H}]$ 上的函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，求在 $n = ${n}$ 的 $n \\times n$ 等距分割下，上下黎曼和之差 $U(f, P_n) - L(f, P_n)$。`,
-        );
-        const solution = t(
-          steps(
-            `On each subrectangle with sides $\\frac{${W}}{${n}}$ and $\\frac{${H}}{${n}}$, the oscillation of $f$ is $M_{ij} - m_{ij} = ${a}\\left(\\frac{${W}}{${n}}\\right) + ${b}\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$.`,
-            `Summing over all $n^2$ subrectangles with area $\\Delta A = \\frac{${W}\\cdot${H}}{n^2}$ yields:`,
-            `$$U(f, P_n) - L(f, P_n) = n^2 \\left(\\frac{${a * W + b * H}}{${n}}\\right)\\left(\\frac{${W * H}}{n^2}\\right) = \\frac{${num}}{${n}} = ${ans.toLatex()}.$$ `,
-          ),
-          steps(
-            `在边长分别为 $\\frac{${W}}{${n}}$ 与 $\\frac{${H}}{${n}}$ 的每个子矩形上，$f$ 的振幅为 $M_{ij} - m_{ij} = ${a}\\left(\\frac{${W}}{${n}}\\right) + ${b}\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$。`,
-            `对全部 $n^2$ 个面积为 $\\Delta A = \\frac{${W}\\cdot${H}}{n^2}$ 的子矩形累加得到：`,
-            `$$U(f, P_n) - L(f, P_n) = n^2 \\left(\\frac{${a * W + b * H}}{${n}}\\right)\\left(\\frac{${W * H}}{n^2}\\right) = \\frac{${num}}{${n}} = ${ans.toLatex()}$$ `,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `For $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $R = [0, ${W}] \\times [0, ${H}]$, find the difference $U(f, P_n) - L(f, P_n)$ between the upper and lower Riemann sums under an $n \\times n$ regular partition with $n = ${n}$.`,
+            `对于矩形区域 $R = [0, ${W}] \\times [0, ${H}]$ 上的函数 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，求在 $n = ${n}$ 的 $n \\times n$ 等距分割下，上下黎曼和之差 $U(f, P_n) - L(f, P_n)$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(num), ans.mul(Q.of(2)), ans.div(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(num),
+              `That is the gap for a single cell; with $${n}$ parts each way the rise on each cell is divided by $${n}$.`,
+              `那是只有一格时的差；每个方向分成 $${n}$ 份时，每格内的增量要除以 $${n}$。`,
+            ),
+            why(
+              Q.of(num, n * n),
+              `That divides by $n^2 = ${n * n}$; the areas still add up to $${W * H}$, so only the rise per cell shrinks, by $\\frac{1}{${n}}$.`,
+              `那是除以 $n^2 = ${n * n}$；各格面积之和仍为 $${W * H}$，只有每格的增量缩小为 $\\frac{1}{${n}}$。`,
+            ),
+            why(
+              Q.of((a + b) * W * H, n),
+              `The rise across a cell is $${a} \\cdot \\frac{${W}}{${n}} + ${b} \\cdot \\frac{${H}}{${n}}$, so the side lengths multiply the coefficients.`,
+              `一格内的增量是 $${a} \\cdot \\frac{${W}}{${n}} + ${b} \\cdot \\frac{${H}}{${n}}$，所以边长要乘到系数上。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the rise on a cell", "求一格内的增量"],
+                t(
+                  `On a cell $\\frac{${W}}{${n}}$ by $\\frac{${H}}{${n}}$, $f$ rises from its lower-left to its upper-right corner by $${a} \\cdot \\frac{${W}}{${n}} + ${b} \\cdot \\frac{${H}}{${n}} = \\frac{${rise}}{${n}}$.`,
+                  `在 $\\frac{${W}}{${n}}$ 乘 $\\frac{${H}}{${n}}$ 的小格上，$f$ 从左下角到右上角增加 $${a} \\cdot \\frac{${W}}{${n}} + ${b} \\cdot \\frac{${H}}{${n}} = \\frac{${rise}}{${n}}$。`,
+                ),
+              ],
+              [
+                ["Add over the cells", "对各格求和"],
+                t(
+                  `Every cell has the same rise, and the areas add up to $${W * H}$, so $U - L = \\frac{${rise}}{${n}} \\cdot ${W * H} = ${ans.toLatex()}$.`,
+                  `每格的增量相同，面积之和为 $${W * H}$，所以 $U - L = \\frac{${rise}}{${n}} \\cdot ${W * H} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With one cell the gap would be $f(${W}, ${H}) \\cdot ${W * H} = ${num}$, and $${n}$ parts each way divide it by $${n}$: $\\frac{${num}}{${n}} = ${ans.toLatex()}$.`,
+              `只有一格时差为 $f(${W}, ${H}) \\cdot ${W * H} = ${num}$，每个方向分成 $${n}$ 份就把它除以 $${n}$：$\\frac{${num}}{${n}} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -730,25 +1210,60 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
       id: "the-gap-between-upper-and-lower-sums-for-xy",
       title: t("The gap between upper and lower sums for $cxy$", "$cxy$ 上和与下和之差"),
       explanation: t(
-        "A function is integrable when $U(f, P_n) - L(f, P_n) \\to 0$. For $f(x, y) = cxy$ on $[0, a] \\times [0, b]$ with an $n \\times n$ regular partition, each piece contributes $c(x_iy_j - x_{i-1}y_{j-1})\\Delta A$. Summing $ij - (i-1)(j-1) = i + j - 1$ over all $i, j$ gives $n^3$, so\n\n$$U - L = \\frac{c\\,a^2b^2}{n^4} \\cdot n^3 = \\frac{c\\,a^2b^2}{n},$$\n\nwhich tends to $0$ as $n \\to \\infty$.",
-        "当 $U(f, P_n) - L(f, P_n) \\to 0$ 时函数可积。对 $[0, a] \\times [0, b]$ 上的 $f(x, y) = cxy$ 作 $n \\times n$ 等分，每块贡献 $c(x_iy_j - x_{i-1}y_{j-1})\\Delta A$。对所有 $i, j$ 求 $ij - (i-1)(j-1) = i + j - 1$ 的和得 $n^3$，所以\n\n$$U - L = \\frac{c\\,a^2b^2}{n^4} \\cdot n^3 = \\frac{c\\,a^2b^2}{n},$$\n\n当 $n \\to \\infty$ 时趋于 $0$。",
+        "A function is integrable when $U(f, P_n) - L(f, P_n) \\to 0$. For $f(x, y) = cxy$ on $[0, a] \\times [0, b]$ with an $n \\times n$ regular partition, each piece contributes $c(x_iy_j - x_{i-1}y_{j-1})\\Delta A$. Summing $ij - (i-1)(j-1) = i + j - 1$ over all $i, j$ gives $n^3$, so\n\n$$U - L = \\frac{c\\,a^2b^2}{n^4} \\cdot n^3 = \\frac{c\\,a^2b^2}{n},$$\n\nwhich tends to $0$ as $n \\to \\infty$. For $5xy$ on $[0, 1]^2$ with $n = 2$, the upper and lower corner values of $xy$ add to $\\frac{9}{4}$ and $\\frac{1}{4}$, so $U - L = 5 \\cdot 2 \\cdot \\frac{1}{4} = \\frac{5}{2}$.\n\n> **Watch out.** The difference $ij - (i - 1)(j - 1)$ is $i + j - 1$, not $i + j$; and $x_iy_j$ carries $\\frac{ab}{n^2}$ while $\\Delta A$ carries another $\\frac{ab}{n^2}$, which is where $a^2b^2$ comes from.",
+        "当 $U(f, P_n) - L(f, P_n) \\to 0$ 时函数可积。对 $[0, a] \\times [0, b]$ 上的 $f(x, y) = cxy$ 作 $n \\times n$ 等分，每块贡献 $c(x_iy_j - x_{i-1}y_{j-1})\\Delta A$。对所有 $i, j$ 求 $ij - (i-1)(j-1) = i + j - 1$ 的和得 $n^3$，所以\n\n$$U - L = \\frac{c\\,a^2b^2}{n^4} \\cdot n^3 = \\frac{c\\,a^2b^2}{n},$$\n\n当 $n \\to \\infty$ 时趋于 $0$。对 $[0, 1]^2$ 上的 $5xy$，$n = 2$ 时 $xy$ 在上、下角点的值之和为 $\\frac{9}{4}$ 和 $\\frac{1}{4}$，所以 $U - L = 5 \\cdot 2 \\cdot \\frac{1}{4} = \\frac{5}{2}$。\n\n> **注意。** $ij - (i - 1)(j - 1)$ 等于 $i + j - 1$，不是 $i + j$；$x_iy_j$ 带有 $\\frac{ab}{n^2}$，$\\Delta A$ 又带一个 $\\frac{ab}{n^2}$，这就是 $a^2b^2$ 的来源。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 3);
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
         const n = rng.int(2, 6);
-        const ans = Q.of(c * a * a * b * b, n);
+        const k = c * a * a * b * b;
+        const ans = Q.of(k, n);
         return numberProblem({
           prompt: t(
-            `For $f(x, y) = ${c === 1 ? "" : c}xy$ on $[0, ${a}] \\times [0, ${b}]$, find $U(f, P) - L(f, P)$ for the regular $${n} \\times ${n}$ partition $P$.`,
-            `对 $[0, ${a}] \\times [0, ${b}]$ 上的 $f(x, y) = ${c === 1 ? "" : c}xy$，求 $${n} \\times ${n}$ 等分划分 $P$ 的 $U(f, P) - L(f, P)$。`,
+            `For $f(x, y) = ${coef(c)}xy$ on $[0, ${a}] \\times [0, ${b}]$, find $U(f, P) - L(f, P)$ for the regular $${n} \\times ${n}$ partition $P$.`,
+            `对 $[0, ${a}] \\times [0, ${b}]$ 上的 $f(x, y) = ${coef(c)}xy$，求 $${n} \\times ${n}$ 等分划分 $P$ 的 $U(f, P) - L(f, P)$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * a * a * b * b, n * n), Q.of(c * a * b, n), Q.of(c * a * a * b * b, 4), Q.of(2 * c * a * a * b * b, n)],
-          solution: t(
-            `$U - L = \\dfrac{c\\,a^2b^2}{n} = \\dfrac{${c} \\cdot ${a * a} \\cdot ${b * b}}{${n}} = ${ans.toLatex()}$.`,
-            `$U - L = \\dfrac{c\\,a^2b^2}{n} = \\dfrac{${c} \\cdot ${a * a} \\cdot ${b * b}}{${n}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(k, n * n),
+              "That takes $\\sum (i + j - 1)$ to be $n^2$; it is $n^3$, one $n$ for each of $i$, $j$ and the number of terms.",
+              "那是把 $\\sum (i + j - 1)$ 当成 $n^2$；它是 $n^3$。",
+            ),
+            why(
+              Q.of(c * a * b, n),
+              `That keeps only one factor $${a * b}$; the corner values carry $${a * b}$ and the cell area carries $${a * b}$ again.`,
+              `那是只保留了一个因子 $${a * b}$；角点的值带有 $${a * b}$，小格面积又带有 $${a * b}$。`,
+            ),
+            why(
+              Q.of(k * (n + 1), n * n),
+              "That uses $ij - (i - 1)(j - 1) = i + j$; the product $(i - 1)(j - 1)$ also contributes $+1$, so it is $i + j - 1$.",
+              "那是取 $ij - (i - 1)(j - 1) = i + j$；乘积 $(i - 1)(j - 1)$ 还贡献 $+1$，所以是 $i + j - 1$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the gap on a cell", "写出一格上的差"],
+                t(
+                  `With $h = \\frac{${a}}{${n}}$ and $k = \\frac{${b}}{${n}}$, cell $(i, j)$ contributes $${c}hk\\,[ij - (i - 1)(j - 1)] \\cdot hk = ${c}h^2k^2(i + j - 1)$.`,
+                  `取 $h = \\frac{${a}}{${n}}$，$k = \\frac{${b}}{${n}}$，第 $(i, j)$ 格贡献 $${c}hk\\,[ij - (i - 1)(j - 1)] \\cdot hk = ${c}h^2k^2(i + j - 1)$。`,
+                ),
+              ],
+              [
+                ["Add over the cells", "对各格求和"],
+                t(
+                  `$\\sum_{i, j = 1}^{${n}} (i + j - 1) = ${n}^3$, so $U - L = ${c} \\cdot \\frac{${a * a} \\cdot ${b * b}}{${n}^4} \\cdot ${n}^3 = ${ans.toLatex()}$.`,
+                  `$\\sum_{i, j = 1}^{${n}} (i + j - 1) = ${n}^3$，所以 $U - L = ${c} \\cdot \\frac{${a * a} \\cdot ${b * b}}{${n}^4} \\cdot ${n}^3 = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With a single cell the gap would be $f(${a}, ${b}) \\cdot ${a * b} = ${k}$, and the formula $\\frac{${k}}{n}$ gives that at $n = 1$.`,
+              `只有一格时差为 $f(${a}, ${b}) \\cdot ${a * b} = ${k}$，公式 $\\frac{${k}}{n}$ 在 $n = 1$ 时正好给出它。`,
+            ),
           ),
         });
       },
@@ -768,6 +1283,10 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
     "By Fubini's theorem, the double integral of a continuous function over [a, b] × [c, d] equals the iterated integral in either order.",
     "由富比尼定理，连续函数在矩形 [a, b] × [c, d] 上的二重积分等于按任意顺序计算的二次积分。",
   ),
+  intro: t(
+    "Evaluate $\\iint_R (2x + 4y)\\,dA$ over $R = [1, 2] \\times [0, 3]$. Integrating in $y$ first, with $x$ held fixed, gives $\\int_0^3 (2x + 4y)\\,dy = 6x + 18$. Then $\\int_1^2 (6x + 18)\\,dx = 9 + 18 = 27$.\n\nCheck: Fubini's theorem allows the other order. $\\int_1^2 (2x + 4y)\\,dx = 3 + 4y$, and $\\int_0^3 (3 + 4y)\\,dy = 9 + 18 = 27$.\n\nIn this lesson we evaluate double integrals over rectangles as iterated integrals, one variable at a time.",
+    "计算 $\\iint_R (2x + 4y)\\,dA$，其中 $R = [1, 2] \\times [0, 3]$。先固定 $x$ 对 $y$ 积分，得 $\\int_0^3 (2x + 4y)\\,dy = 6x + 18$。再求 $\\int_1^2 (6x + 18)\\,dx = 9 + 18 = 27$。\n\n检验：富比尼定理允许换一个次序。$\\int_1^2 (2x + 4y)\\,dx = 3 + 4y$，而 $\\int_0^3 (3 + 4y)\\,dy = 9 + 18 = 27$。\n\n本课我们把矩形上的二重积分写成二次积分，一次对一个变量积分。",
+  ),
   prerequisites: ["defining-double-integrals-using-lower-and-upper-riemann-sums"],
   encompasses: [],
   xp: 10,
@@ -777,8 +1296,8 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
       figure: multivariableDrawings3["double-integrals-over-rectangular-domains#evaluating-iterated-integrals-over-rectangles"],
       title: t("Evaluating iterated integrals over rectangles", "计算矩形区域上的二次积分"),
       explanation: t(
-        "Integrate with respect to one variable while treating the other as a constant, then integrate the result with respect to the remaining variable. For $R = [a, b] \\times [c, d]$, evaluate by integrating with respect to $y$ then $x$:\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}.$$",
-        "先对一个变量积分，把另一个变量当作常数，再对所得结果关于剩下的变量积分。对于 $R = [a, b] \\times [c, d]$，先对 $y$ 积分再对 $x$ 积分：\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}$$",
+        "Integrate with respect to one variable while treating the other as a constant, then integrate the result with respect to the remaining variable. For $R = [a, b] \\times [c, d]$, evaluate by integrating with respect to $y$ then $x$:\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}.$$\n\nFor $x + 5y$ on $[0, 2] \\times [0, 1]$ this is $1 \\cdot 2 \\cdot 1 + 5 \\cdot 2 \\cdot \\frac{1}{2} = 7$.\n\n> **Watch out.** The antiderivative $\\frac{y^2}{2}$ evaluated from $c$ to $d$ gives $\\frac{d^2 - c^2}{2}$, not $\\frac{(d - c)^2}{2}$. And in the inner integral $px$ is a constant, so it is multiplied by the length $d - c$.",
+        "先对一个变量积分，把另一个变量当作常数，再对所得结果关于剩下的变量积分。对于 $R = [a, b] \\times [c, d]$，先对 $y$ 积分再对 $x$ 积分：\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}$$\n\n对 $[0, 2] \\times [0, 1]$ 上的 $x + 5y$，结果为 $1 \\cdot 2 \\cdot 1 + 5 \\cdot 2 \\cdot \\frac{1}{2} = 7$。\n\n> **注意。** 原函数 $\\frac{y^2}{2}$ 从 $c$ 到 $d$ 取值得 $\\frac{d^2 - c^2}{2}$，不是 $\\frac{(d - c)^2}{2}$。在内层积分中 $px$ 是常数，所以要乘以长度 $d - c$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(0, 3);
@@ -787,33 +1306,59 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
         const d = c + rng.int(1, 4);
         const p = rng.nonZero(-3, 3);
         const q = rng.nonZero(-3, 3);
-
         const intX = (b * b - a * a) * (d - c);
         const intY = (b - a) * (d * d - c * c);
         const num = p * intX + q * intY;
         const ans = Q.of(num, 2);
-
-        const prompt = t(
-          `Evaluate the double integral $\\iint_R (${poly([p, "x"], [q, "y"])})\\,dA$ over the rectangular region $R = [${a}, ${b}] \\times [${c}, ${d}]$.`,
-          `计算二重积分 $\\iint_R (${poly([p, "x"], [q, "y"])})\\,dA$，其中矩形区域为 $R = [${a}, ${b}] \\times [${c}, ${d}]$。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the iterated integral by Fubini's theorem:\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
-            `Integrate with respect to $y$:\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(${d - c})x + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}.$$ `,
-            `Integrate with respect to $x$ from $${a}$ to $${b}$:\n\n$$\\int_{${a}}^{${b}} \\left(${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}\\right) dx = ${ans.toLatex()}.$$ `,
-          ),
-          steps(
-            `由富比尼定理建立二次积分：\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(${d - c})x + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}$$ `,
-            `再对 $x$ 从 $${a}$ 积到 $${b}$：\n\n$$\\int_{${a}}^{${b}} \\left(${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}\\right) dx = ${ans.toLatex()}$$ `,
-          ),
-        );
+        const f = poly([p, "x"], [q, "y"]);
+        const inner = poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""]);
+        const partX = Q.of(p * intX, 2);
+        const partY = Q.of(q * intY, 2);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the double integral $\\iint_R (${f})\\,dA$ over the rectangular region $R = [${a}, ${b}] \\times [${c}, ${d}]$.`,
+            `计算二重积分 $\\iint_R (${f})\\,dA$，其中矩形区域为 $R = [${a}, ${b}] \\times [${c}, ${d}]$。`,
+          ),
           answer: ans,
-          wrong: [ans.neg(), ans.add(Q.of(1)), Q.of(num)],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(num),
+              "The factors $\\frac{1}{2}$ from the antiderivatives $\\frac{x^2}{2}$ and $\\frac{y^2}{2}$ are missing.",
+              "少了原函数 $\\frac{x^2}{2}$ 与 $\\frac{y^2}{2}$ 带来的因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(p * (b - a) ** 2 * (d - c) + q * (b - a) * (d - c) ** 2, 2),
+              "That squares the lengths $b - a$ and $d - c$; the antiderivatives give differences of squares, $b^2 - a^2$ and $d^2 - c^2$.",
+              "那是把长度 $b - a$、$d - c$ 平方；原函数给出的是平方差 $b^2 - a^2$ 与 $d^2 - c^2$。",
+            ),
+            why(
+              Q.of(p * (b * b - a * a) + q * intY, 2),
+              `In the inner integral $${poly([p, "x"])}$ is a constant, so it is multiplied by the length $${d - c}$ of the $y$ interval.`,
+              `在内层积分中 $${poly([p, "x"])}$ 是常数，所以要乘以 $y$ 区间的长度 $${d - c}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_{${c}}^{${d}} (${f})\\,dy = (${poly([p, "x"])})(${d - c}) + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${inner}$.`,
+                  `$\\int_{${c}}^{${d}} (${f})\\,dy = (${poly([p, "x"])})(${d - c}) + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${inner}$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_{${a}}^{${b}} \\left(${inner}\\right) dx = ${ans.toLatex()}$.`,
+                  `$\\int_{${a}}^{${b}} \\left(${inner}\\right) dx = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In the other order, $\\int_{${a}}^{${b}} (${f})\\,dx = ${poly([Q.of(p * (b * b - a * a), 2), ""], [q * (b - a), "y"])}$, and integrating over $[${c}, ${d}]$ gives $${partX.toLatex()} + ${paren(partY)} = ${ans.toLatex()}$.`,
+              `换个次序，$\\int_{${a}}^{${b}} (${f})\\,dx = ${poly([Q.of(p * (b * b - a * a), 2), ""], [q * (b - a), "y"])}$，再在 $[${c}, ${d}]$ 上积分得 $${partX.toLatex()} + ${paren(partY)} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -822,8 +1367,8 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
       figure: multivariableDrawings3["double-integrals-over-rectangular-domains#separable-double-integrals-of-monomials"],
       title: t("Separable double integrals of monomials", "单项式的可分离二重积分"),
       explanation: t(
-        "When the integrand is a product $g(x)h(y)$ and the region is a rectangle, Fubini's theorem lets the double integral split into a product of single integrals:\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}.$$\n\nThis only works on rectangles, where the limits of one variable do not depend on the other.",
-        "当被积函数是乘积 $g(x)h(y)$ 且区域为矩形时，由富比尼定理，二重积分可拆成单重积分之积：\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}$$\n\n这只适用于矩形区域，因为此时一个变量的积分限不依赖另一个变量。",
+        "When the integrand is a product $g(x)h(y)$ and the region is a rectangle, Fubini's theorem lets the double integral split into a product of single integrals:\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}.$$\n\nThis only works on rectangles, where the limits of one variable do not depend on the other. For $5x^2y$ on $[0, 3] \\times [0, 2]$ the factors are $\\int_0^3 x^2\\,dx = 9$ and $\\int_0^2 y\\,dy = 2$, so the integral is $5 \\cdot 9 \\cdot 2 = 90$.\n\n> **Watch out.** Each factor raises the power by one and divides by the new power. The two single integrals are multiplied, not added.",
+        "当被积函数是乘积 $g(x)h(y)$ 且区域为矩形时，由富比尼定理，二重积分可拆成单重积分之积：\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}$$\n\n这只适用于矩形区域，因为此时一个变量的积分限不依赖另一个变量。对 $[0, 3] \\times [0, 2]$ 上的 $5x^2y$，两个因子是 $\\int_0^3 x^2\\,dx = 9$ 和 $\\int_0^2 y\\,dy = 2$，所以积分为 $5 \\cdot 9 \\cdot 2 = 90$。\n\n> **注意。** 每个因子都要把次数加一，再除以新的次数。两个单重积分要相乘，而不是相加。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 4);
@@ -835,17 +1380,53 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
         const iy = Q.of(b ** (q + 1), q + 1);
         const ans = ix.mul(iy).mul(Q.of(c));
         const mono = (v: string, e: number) => (e === 1 ? v : `${v}^{${e}}`);
-        const integrand = `${c === 1 ? "" : c}${mono("x", p)}${mono("y", q)}`;
+        const integrand = `${coef(c)}${mono("x", p)}${mono("y", q)}`;
+        const lead = c === 1 ? "" : `${c} \\cdot `;
+        const bound = c * a ** p * b ** q * a * b;
         return numberProblem({
           prompt: t(
             `Evaluate $\\iint_R ${integrand}\\,dA$ over $R = [0, ${a}] \\times [0, ${b}]$.`,
             `计算 $\\iint_R ${integrand}\\,dA$，其中 $R = [0, ${a}] \\times [0, ${b}]$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * a ** (p + 1) * b ** (q + 1)), Q.of(c * a ** p * b ** q), ans.mul(Q.of(p + 1, p + 2))],
-          solution: t(
-            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} ${mono("x", p)}\\,dx \\cdot \\int_0^{${b}} ${mono("y", q)}\\,dy = ${c === 1 ? "" : `${c} \\cdot `}${ix.toLatex()} \\cdot ${iy.toLatex()} = ${ans.toLatex()}$.`,
-            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} ${mono("x", p)}\\,dx \\cdot \\int_0^{${b}} ${mono("y", q)}\\,dy = ${c === 1 ? "" : `${c} \\cdot `}${ix.toLatex()} \\cdot ${iy.toLatex()} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * a ** (p + 1) * b ** (q + 1)),
+              `The antiderivatives divide by the new powers $${p + 1}$ and $${q + 1}$; those divisions are missing.`,
+              `原函数要除以新的次数 $${p + 1}$ 和 $${q + 1}$；这两个除法漏了。`,
+            ),
+            why(
+              Q.of(c * a ** p * b ** q),
+              `That evaluates the integrand at the corner $(${a}, ${b})$ instead of integrating it.`,
+              `那是在角点 $(${a}, ${b})$ 处取被积函数的值，而不是积分。`,
+            ),
+            why(
+              ix.add(iy).mul(Q.of(c)),
+              "That adds the two single integrals; for a product integrand they multiply.",
+              "那是把两个单重积分相加；被积函数是乘积时它们要相乘。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Separate the integral", "分离积分"],
+                t(
+                  `The region is a rectangle and the integrand is a product, so $\\iint_R ${integrand}\\,dA = ${lead}\\int_0^{${a}} ${mono("x", p)}\\,dx \\cdot \\int_0^{${b}} ${mono("y", q)}\\,dy$.`,
+                  `区域是矩形，被积函数是乘积，所以 $\\iint_R ${integrand}\\,dA = ${lead}\\int_0^{${a}} ${mono("x", p)}\\,dx \\cdot \\int_0^{${b}} ${mono("y", q)}\\,dy$。`,
+                ),
+              ],
+              [
+                ["Evaluate each factor", "计算每个因子"],
+                t(
+                  `$\\int_0^{${a}} ${mono("x", p)}\\,dx = \\frac{${a}^{${p + 1}}}{${p + 1}} = ${ix.toLatex()}$ and $\\int_0^{${b}} ${mono("y", q)}\\,dy = \\frac{${b}^{${q + 1}}}{${q + 1}} = ${iy.toLatex()}$, so the integral is $${lead}${ix.toLatex()} \\cdot ${iy.toLatex()} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} ${mono("x", p)}\\,dx = \\frac{${a}^{${p + 1}}}{${p + 1}} = ${ix.toLatex()}$，$\\int_0^{${b}} ${mono("y", q)}\\,dy = \\frac{${b}^{${q + 1}}}{${q + 1}} = ${iy.toLatex()}$，所以积分为 $${lead}${ix.toLatex()} \\cdot ${iy.toLatex()} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The integrand is at most $${c * a ** p * b ** q}$ on $R$, whose area is $${a * b}$, so the integral can be at most $${bound}$; indeed $${ans.toLatex()} \\le ${bound}$.`,
+              `被积函数在 $R$ 上至多为 $${c * a ** p * b ** q}$，$R$ 的面积为 $${a * b}$，所以积分至多为 $${bound}$；确实 $${ans.toLatex()} \\le ${bound}$。`,
+            ),
           ),
         });
       },
@@ -861,6 +1442,10 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
     "Double integrals over non-rectangular regions are evaluated by describing the domain using variable limits of integration.",
     "通过用变量积分限刻画非矩形区域，可将其上的二重积分转化为二次积分进行计算。",
   ),
+  intro: t(
+    "Integrate $y$ over the triangle bounded by $x = 0$, $y = 0$ and $x + y = 3$. At a fixed $x$ the triangle runs from $y = 0$ up to $y = 3 - x$, so the inner limits depend on $x$: $\\int_0^3 \\int_0^{3 - x} y\\,dy\\,dx = \\int_0^3 \\frac{(3 - x)^2}{2}\\,dx = \\frac{27}{6} = \\frac{9}{2}$.\n\nCheck: describe the triangle the other way, $0 \\le y \\le 3$ and $0 \\le x \\le 3 - y$. Then $\\int_0^3 y(3 - y)\\,dy = \\frac{27}{2} - 9 = \\frac{9}{2}$.\n\nIn this lesson we integrate over regions that are not rectangles by letting the inner limits depend on the outer variable.",
+    "在由 $x = 0$、$y = 0$ 和 $x + y = 3$ 围成的三角形上对 $y$ 积分。固定 $x$ 时，三角形从 $y = 0$ 延伸到 $y = 3 - x$，所以内层积分限依赖 $x$：$\\int_0^3 \\int_0^{3 - x} y\\,dy\\,dx = \\int_0^3 \\frac{(3 - x)^2}{2}\\,dx = \\frac{27}{6} = \\frac{9}{2}$。\n\n检验：换一种方式描述三角形，$0 \\le y \\le 3$，$0 \\le x \\le 3 - y$。则 $\\int_0^3 y(3 - y)\\,dy = \\frac{27}{2} - 9 = \\frac{9}{2}$。\n\n本课我们让内层积分限依赖外层变量，在不是矩形的区域上积分。",
+  ),
   prerequisites: ["double-integrals-over-rectangular-domains"],
   encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
   xp: 10,
@@ -870,38 +1455,63 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
       figure: multivariableDrawings3["double-integrals-over-non-rectangular-domains#integrating-over-triangular-domains"],
       title: t("Integrating over triangular domains", "在三角形区域上求二重积分"),
       explanation: t(
-        "Over a triangle the inner limits depend on the outer variable, because the height of the region changes as you move across it. For a triangular region $T$ bounded by $x = 0$, $y = 0$, and $x + y = c$ ($c > 0$):\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}.$$",
-        "在三角形区域上，内层积分限依赖于外层变量，因为区域的高度随位置而变化。对于由 $x = 0$、$y = 0$ 与 $x + y = c$（$c > 0$）所围成的三角形区域 $T$：\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}$$",
+        "Over a triangle the inner limits depend on the outer variable, because the height of the region changes as you move across it. For a triangular region $T$ bounded by $x = 0$, $y = 0$, and $x + y = c$ ($c > 0$):\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}.$$\n\nFor $5x$ and $x + y = 2$ the integral is $5 \\cdot \\frac{8}{6} = \\frac{20}{3}$.\n\n> **Watch out.** The inner upper limit is $c - x$, the height of the triangle at $x$. Using $c$ integrates over the whole square $[0, c]^2$ instead.",
+        "在三角形区域上，内层积分限依赖于外层变量，因为区域的高度随位置而变化。对于由 $x = 0$、$y = 0$ 与 $x + y = c$（$c > 0$）所围成的三角形区域 $T$：\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}$$\n\n对 $5x$ 与 $x + y = 2$，积分为 $5 \\cdot \\frac{8}{6} = \\frac{20}{3}$。\n\n> **注意。** 内层上限是 $c - x$，即三角形在 $x$ 处的高度。用 $c$ 就变成在整个正方形 $[0, c]^2$ 上积分了。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 10);
         const k = rng.int(1, 6);
         const a = 6 * k;
         const ans = k * c * c * c;
-
-        const prompt = t(
-          `Evaluate the double integral $\\iint_T ${a}x\\,dA$ over the triangular region $T$ bounded by the lines $x = 0$, $y = 0$, and $x + y = ${c}$.`,
-          `计算二重积分 $\\iint_T ${a}x\\,dA$，其中 $T$ 为由直线 $x = 0$、$y = 0$ 与 $x + y = ${c}$ 所围成的三角形区域。`,
-        );
-        const solution = t(
-          steps(
-            `Describe $T$ as $0 \\le x \\le ${c}$ and $0 \\le y \\le ${c} - x$.`,
-            `Set up the iterated integral:\n\n$$\\int_0^{${c}} \\int_0^{${c} - x} ${a}x\\,dy\\,dx = \\int_0^{${c}} ${a}x(${c} - x)\\,dx = ${a} \\int_0^{${c}} (${c}x - x^2)\\,dx.$$`,
-            `Evaluate the antiderivative:\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}.$$`,
-            `Multiply by $${a}$:\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}.$$ `,
-          ),
-          steps(
-            `将区域 $T$ 表示为 $0 \\le x \\le ${c}$ 与 $0 \\le y \\le ${c} - x$。`,
-            `建立二次积分：\n\n$$\\int_0^{${c}} \\int_0^{${c} - x} ${a}x\\,dy\\,dx = \\int_0^{${c}} ${a}x(${c} - x)\\,dx = ${a} \\int_0^{${c}} (${c}x - x^2)\\,dx$$`,
-            `求原函数值：\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}$$`,
-            `乘以常数系数 $${a}$：\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}$$ `,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the double integral $\\iint_T ${a}x\\,dA$ over the triangular region $T$ bounded by the lines $x = 0$, $y = 0$, and $x + y = ${c}$.`,
+            `计算二重积分 $\\iint_T ${a}x\\,dA$，其中 $T$ 为由直线 $x = 0$、$y = 0$ 与 $x + y = ${c}$ 所围成的三角形区域。`,
+          ),
           answer: ans,
-          wrong: [ans * 2, ans - c, ans + c],
+          mistakes: distinct(ans, [
+            why(
+              3 * k * c ** 3,
+              `That takes $y$ from $0$ to $${c}$ for every $x$, which is the square $[0, ${c}]^2$; the triangle stops at $y = ${c} - x$.`,
+              `那是对每个 $x$ 都让 $y$ 从 $0$ 到 $${c}$，那是正方形 $[0, ${c}]^2$；三角形止于 $y = ${c} - x$。`,
+            ),
+            why(
+              2 * k * c ** 3,
+              "That takes $y$ from $0$ to $x$, which is the triangle below the line $y = x$.",
+              "那是让 $y$ 从 $0$ 到 $x$，那是直线 $y = x$ 下方的三角形。",
+            ),
+            why(
+              3 * k * c * c,
+              `That integrates $${a}x$ over $x$ alone and leaves out the height $${c} - x$ of the region.`,
+              `那是只对 $x$ 积分 $${a}x$，漏掉了区域的高度 $${c} - x$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Describe the triangle", "描述三角形"],
+                t(`$T$ is $0 \\le x \\le ${c}$ and $0 \\le y \\le ${c} - x$.`, `$T$ 为 $0 \\le x \\le ${c}$，$0 \\le y \\le ${c} - x$。`),
+              ],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${c} - x} ${a}x\\,dy = ${a}x(${c} - x) = ${poly([a * c, "x"], [-a, "x^2"])}$.`,
+                  `$\\int_0^{${c} - x} ${a}x\\,dy = ${a}x(${c} - x) = ${poly([a * c, "x"], [-a, "x^2"])}$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${c}} (${poly([a * c, "x"], [-a, "x^2"])})\\,dx = ${a}\\left(\\frac{${c}^3}{2} - \\frac{${c}^3}{3}\\right) = ${a} \\cdot \\frac{${c ** 3}}{6} = ${ans}$.`,
+                  `$\\int_0^{${c}} (${poly([a * c, "x"], [-a, "x^2"])})\\,dx = ${a}\\left(\\frac{${c}^3}{2} - \\frac{${c}^3}{3}\\right) = ${a} \\cdot \\frac{${c ** 3}}{6} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In the other order, $\\int_0^{${c}} \\int_0^{${c} - y} ${a}x\\,dx\\,dy = \\int_0^{${c}} ${3 * k}(${c} - y)^2\\,dy = ${k} \\cdot ${c}^3 = ${ans}$.`,
+              `换个次序，$\\int_0^{${c}} \\int_0^{${c} - y} ${a}x\\,dx\\,dy = \\int_0^{${c}} ${3 * k}(${c} - y)^2\\,dy = ${k} \\cdot ${c}^3 = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -911,23 +1521,58 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
         multivariableDrawings4["double-integrals-over-non-rectangular-domains#integrating-over-the-region-between-a-line-and-a-parabola"],
       title: t("Integrating between a line and a parabola", "在直线与抛物线之间积分"),
       explanation: t(
-        "To integrate over the region between $y = x^2$ and $y = kx$, first find where the curves meet: $x^2 = kx$ gives $x = 0$ and $x = k$. For $0 \\le x \\le k$ the line lies above the parabola, so\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}.$$",
-        "要在 $y = x^2$ 与 $y = kx$ 之间的区域上积分，先求交点：$x^2 = kx$ 得 $x = 0$ 和 $x = k$。在 $0 \\le x \\le k$ 上直线在抛物线上方，所以\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}$$",
+        "To integrate over the region between $y = x^2$ and $y = kx$, first find where the curves meet: $x^2 = kx$ gives $x = 0$ and $x = k$. For $0 \\le x \\le k$ the line lies above the parabola, so\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}.$$\n\nFor the constant $8$ between $y = x^2$ and $y = 3x$, the integral is $8 \\cdot \\frac{27}{6} = 36$.\n\n> **Watch out.** The inner integral runs from the lower curve to the upper one, here from $x^2$ up to $kx$. Reversing them gives the negative of the answer.",
+        "要在 $y = x^2$ 与 $y = kx$ 之间的区域上积分，先求交点：$x^2 = kx$ 得 $x = 0$ 和 $x = k$。在 $0 \\le x \\le k$ 上直线在抛物线上方，所以\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}$$\n\n对 $y = x^2$ 与 $y = 3x$ 之间的常数 $8$，积分为 $8 \\cdot \\frac{27}{6} = 36$。\n\n> **注意。** 内层积分从下方曲线到上方曲线，这里从 $x^2$ 到 $kx$。把两者弄反就得到答案的相反数。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 6);
         const c = rng.int(1, 6);
         const ans = Q.of(c * k ** 3, 6);
+        const line = `${coef(k)}x`;
         return numberProblem({
           prompt: t(
-            `Evaluate $\\iint_D ${c}\\,dA$, where $D$ is the region between $y = x^2$ and $y = ${k === 1 ? "" : k}x$.`,
-            `计算 $\\iint_D ${c}\\,dA$，其中 $D$ 是 $y = x^2$ 与 $y = ${k === 1 ? "" : k}x$ 之间的区域。`,
+            `Evaluate $\\iint_D ${c}\\,dA$, where $D$ is the region between $y = x^2$ and $y = ${line}$.`,
+            `计算 $\\iint_D ${c}\\,dA$，其中 $D$ 是 $y = x^2$ 与 $y = ${line}$ 之间的区域。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * k ** 3, 2), Q.of(c * k ** 3, 3), ans.neg(), Q.of(c * k ** 2, 6)],
-          solution: t(
-            `The curves meet at $x = 0$ and $x = ${k}$. So $\\int_0^{${k}} ${c}(${k === 1 ? "" : k}x - x^2)\\,dx = ${c}\\left(\\frac{${k ** 3}}{2} - \\frac{${k ** 3}}{3}\\right) = ${ans.toLatex()}$.`,
-            `两曲线交于 $x = 0$ 和 $x = ${k}$。所以 $\\int_0^{${k}} ${c}(${k === 1 ? "" : k}x - x^2)\\,dx = ${c}\\left(\\frac{${k ** 3}}{2} - \\frac{${k ** 3}}{3}\\right) = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * k ** 3, 2),
+              "That integrates up to the line from $y = 0$; the region starts at the parabola, so subtract $x^2$.",
+              "那是从 $y = 0$ 积到直线；区域从抛物线开始，要减去 $x^2$。",
+            ),
+            why(
+              Q.of(c * k ** 3, 3),
+              "That is the integral under the parabola; the region lies above the parabola and below the line.",
+              "那是抛物线下方的积分；区域在抛物线上方、直线下方。",
+            ),
+            why(
+              ans.neg(),
+              "The limits are upside down; for $0 < x < k$ the line is above the parabola.",
+              "积分上下限颠倒了；在 $0 < x < k$ 上直线在抛物线上方。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the crossings", "求交点"],
+                t(
+                  `$x^2 = ${line}$ at $x = 0$ and $x = ${k}$, and the line is on top between them.`,
+                  `$x^2 = ${line}$ 在 $x = 0$ 和 $x = ${k}$ 处成立，其间直线在上方。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{${k}} \\int_{x^2}^{${line}} ${c}\\,dy\\,dx = ${c}\\int_0^{${k}} (${line} - x^2)\\,dx = ${c}\\left(\\frac{${k ** 3}}{2} - \\frac{${k ** 3}}{3}\\right) = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${k}} \\int_{x^2}^{${line}} ${c}\\,dy\\,dx = ${c}\\int_0^{${k}} (${line} - x^2)\\,dx = ${c}\\left(\\frac{${k ** 3}}{2} - \\frac{${k ** 3}}{3}\\right) = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With horizontal strips, $x$ runs from $\\frac{y}{${k}}$ to $\\sqrt{y}$ for $0 \\le y \\le ${k * k}$: $${c}\\left(\\frac{2}{3} \\cdot ${k ** 3} - \\frac{${k ** 4}}{${2 * k}}\\right) = ${ans.toLatex()}$.`,
+              `用水平条带，$0 \\le y \\le ${k * k}$ 时 $x$ 从 $\\frac{y}{${k}}$ 到 $\\sqrt{y}$：$${c}\\left(\\frac{2}{3} \\cdot ${k ** 3} - \\frac{${k ** 4}}{${2 * k}}\\right) = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -943,6 +1588,10 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
     "Double integrals are linear, additive over non-overlapping subregions, and preserve inequalities.",
     "二重积分具有线性性质、对不重叠子区域的可加性以及保序性。",
   ),
+  intro: t(
+    "On $R = [0, 2] \\times [0, 3]$ suppose $\\iint_R f\\,dA = 4$ and $\\iint_R g\\,dA = -1$. Linearity gives $\\iint_R (3f - 2g + 1)\\,dA = 3 \\cdot 4 - 2 \\cdot (-1) + 1 \\cdot \\operatorname{Area}(R) = 12 + 2 + 6 = 20$.\n\nCheck: try constant functions with those integrals, $f = \\frac{2}{3}$ and $g = -\\frac{1}{6}$ on a region of area $6$. Then $3f - 2g + 1 = \\frac{10}{3}$, and $\\frac{10}{3} \\cdot 6 = 20$.\n\nIn this lesson we combine known double integrals using linearity, remembering that a constant integrates to itself times the area.",
+    "在 $R = [0, 2] \\times [0, 3]$ 上，设 $\\iint_R f\\,dA = 4$，$\\iint_R g\\,dA = -1$。由线性性，$\\iint_R (3f - 2g + 1)\\,dA = 3 \\cdot 4 - 2 \\cdot (-1) + 1 \\cdot \\operatorname{Area}(R) = 12 + 2 + 6 = 20$。\n\n检验：取积分相同的常数函数，在面积为 $6$ 的区域上 $f = \\frac{2}{3}$，$g = -\\frac{1}{6}$。则 $3f - 2g + 1 = \\frac{10}{3}$，而 $\\frac{10}{3} \\cdot 6 = 20$。\n\n本课我们利用线性性组合已知的二重积分，并记住常数的积分等于它乘以面积。",
+  ),
   prerequisites: ["double-integrals-over-non-rectangular-domains"],
   encompasses: [],
   xp: 10,
@@ -951,8 +1600,8 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
       id: "linearity-and-decomposition-of-double-integrals",
       title: t("Linearity and decomposition of double integrals", "二重积分的线性性与区域分解性"),
       explanation: t(
-        "Double integrals are linear just like single integrals, so known integrals of separate functions combine with the same coefficients. By linearity of the double integral:\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA.$$",
-        "二重积分和单积分一样是线性的，所以各个函数的已知积分可以按相同的系数组合。由二重积分的线性性质：\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA$$",
+        "Double integrals are linear just like single integrals, so known integrals of separate functions combine with the same coefficients. By linearity of the double integral:\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA.$$\n\nWith $\\iint_R f\\,dA = 10$ and $\\iint_R g\\,dA = -3$, $\\iint_R (2f + 5g)\\,dA = 20 - 15 = 5$.\n\n> **Watch out.** Keep each coefficient with its own integral and carry the signs: a positive coefficient times a negative integral is negative.",
+        "二重积分和单积分一样是线性的，所以各个函数的已知积分可以按相同的系数组合。由二重积分的线性性质：\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA$$\n\n若 $\\iint_R f\\,dA = 10$，$\\iint_R g\\,dA = -3$，则 $\\iint_R (2f + 5g)\\,dA = 20 - 15 = 5$。\n\n> **注意。** 每个系数要配上它自己的积分，并保留符号：正系数乘以负积分得负数。",
       ),
       generate(rng: Rng): Problem {
         const I1 = rng.nonZero(-8, 8);
@@ -960,26 +1609,48 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
         const alpha = rng.nonZero(-4, 4);
         const beta = rng.nonZero(-4, 4);
         const ans = alpha * I1 + beta * I2;
-
-        const prompt = t(
-          `Suppose $\\iint_R f(x, y)\\,dA = ${I1}$ and $\\iint_R g(x, y)\\,dA = ${I2}$. Find the value of $\\iint_R (${poly([alpha, "f(x, y)"], [beta, "g(x, y)"])})\\,dA$.`,
-          `设 $\\iint_R f(x, y)\\,dA = ${I1}$ 且 $\\iint_R g(x, y)\\,dA = ${I2}$。计算 $\\iint_R (${poly([alpha, "f(x, y)"], [beta, "g(x, y)"])})\\,dA$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Apply linearity: $\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$.`,
-            `Substitute the given integral values:\n\n$$${alpha}(${I1}) + ${paren(beta)}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}.$$ `,
-          ),
-          steps(
-            `应用线性性质：$\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$。`,
-            `代入已知积分值：\n\n$$${alpha}(${I1}) + ${paren(beta)}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}$$ `,
-          ),
-        );
+        const combo = poly([alpha, "f(x, y)"], [beta, "g(x, y)"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Suppose $\\iint_R f(x, y)\\,dA = ${I1}$ and $\\iint_R g(x, y)\\,dA = ${I2}$. Find the value of $\\iint_R (${combo})\\,dA$.`,
+            `设 $\\iint_R f(x, y)\\,dA = ${I1}$ 且 $\\iint_R g(x, y)\\,dA = ${I2}$。计算 $\\iint_R (${combo})\\,dA$ 的值。`,
+          ),
           answer: ans,
-          wrong: [alpha * I1 - beta * I2, -ans, ans + alpha + beta],
+          mistakes: distinct(ans, [
+            why(
+              alpha * I1 - beta * I2,
+              `The sign of the second term is lost: it is $${paren(beta)} \\cdot ${paren(I2)} = ${beta * I2}$.`,
+              `第二项的符号丢了：它是 $${paren(beta)} \\cdot ${paren(I2)} = ${beta * I2}$。`,
+            ),
+            why(I1 + I2, "That adds the two integrals without their coefficients.", "那是把两个积分直接相加，漏了系数。"),
+            why(
+              alpha * I2 + beta * I1,
+              "The coefficients are swapped: $\\alpha$ goes with the integral of $f$.",
+              "系数配错了：$\\alpha$ 应配 $f$ 的积分。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Apply linearity", "应用线性性"],
+                t(
+                  `$\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$.`,
+                  `$\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$。`,
+                ),
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$${alpha} \\cdot ${paren(I1)} + ${paren(beta)} \\cdot ${paren(I2)} = ${alpha * I1} + ${paren(beta * I2)} = ${ans}$.`,
+                  `$${alpha} \\cdot ${paren(I1)} + ${paren(beta)} \\cdot ${paren(I2)} = ${alpha * I1} + ${paren(beta * I2)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `On a region of area $1$ the constants $f = ${I1}$ and $g = ${I2}$ have these integrals, and then $${poly([alpha, "f"], [beta, "g"])} = ${ans}$ everywhere, so its integral is $${ans}$.`,
+              `在面积为 $1$ 的区域上，常数 $f = ${I1}$、$g = ${I2}$ 正好有这些积分，此时处处 $${poly([alpha, "f"], [beta, "g"])} = ${ans}$，所以其积分为 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -988,8 +1659,8 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
       figure: multivariableDrawings4["properties-of-double-integrals#adding-a-constant-to-the-integrand"],
       title: t("Adding a constant to the integrand", "被积函数加上常数"),
       explanation: t(
-        "Linearity says $\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$. The integral of the constant $1$ is the area of $R$, so a constant $k$ adds $k \\cdot \\operatorname{Area}(R)$, not just $k$. On a rectangle $[a, b] \\times [c, d]$ the area is $(b - a)(d - c)$.",
-        "由线性性，$\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$。常数 $1$ 的积分是 $R$ 的面积，所以常数 $k$ 贡献的是 $k \\cdot \\operatorname{Area}(R)$，而不只是 $k$。矩形 $[a, b] \\times [c, d]$ 的面积为 $(b - a)(d - c)$。",
+        "Linearity says $\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$. The integral of the constant $1$ is the area of $R$, so a constant $k$ adds $k \\cdot \\operatorname{Area}(R)$, not just $k$. On a rectangle $[a, b] \\times [c, d]$ the area is $(b - a)(d - c)$. For $R = [0, 5] \\times [0, 2]$ and $\\iint_R f\\,dA = 3$, $\\iint_R (2f + 1)\\,dA = 6 + 1 \\cdot 10 = 16$.\n\n> **Watch out.** The coefficient $\\alpha$ multiplies only the integral of $f$; the constant term contributes its own $k \\cdot \\operatorname{Area}(R)$.",
+        "由线性性，$\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$。常数 $1$ 的积分是 $R$ 的面积，所以常数 $k$ 贡献的是 $k \\cdot \\operatorname{Area}(R)$，而不只是 $k$。矩形 $[a, b] \\times [c, d]$ 的面积为 $(b - a)(d - c)$。对 $R = [0, 5] \\times [0, 2]$ 和 $\\iint_R f\\,dA = 3$，$\\iint_R (2f + 1)\\,dA = 6 + 1 \\cdot 10 = 16$。\n\n> **注意。** 系数 $\\alpha$ 只乘 $f$ 的积分；常数项单独贡献 $k \\cdot \\operatorname{Area}(R)$。",
       ),
       generate(rng: Rng): Problem {
         const I = rng.nonZero(-8, 8);
@@ -1001,16 +1672,52 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
         const d = c + rng.int(1, 3);
         const area = (b - a) * (d - c);
         const ans = alpha * I + k * area;
+        const value = Q.of(ans, area);
         return numberProblem({
           prompt: t(
             `$R = [${a}, ${b}] \\times [${c}, ${d}]$ and $\\iint_R f\\,dA = ${I}$. Find $\\iint_R (${poly([alpha, "f"], [k, ""])})\\,dA$.`,
             `$R = [${a}, ${b}] \\times [${c}, ${d}]$，且 $\\iint_R f\\,dA = ${I}$。求 $\\iint_R (${poly([alpha, "f"], [k, ""])})\\,dA$。`,
           ),
           answer: ans,
-          wrong: [alpha * I + k, alpha * (I + k * area), alpha * I, I + k * area],
-          solution: t(
-            `$\\operatorname{Area}(R) = ${b - a} \\cdot ${d - c} = ${area}$, so the integral is $${alpha} \\cdot ${paren(I)} + ${paren(k)} \\cdot ${area} = ${ans}$.`,
-            `$\\operatorname{Area}(R) = ${b - a} \\cdot ${d - c} = ${area}$，所以积分为 $${alpha} \\cdot ${paren(I)} + ${paren(k)} \\cdot ${area} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              alpha * I + k,
+              `The constant contributes $${k}$ times the area $${area}$ of $R$, not just $${k}$.`,
+              `常数贡献的是 $${k}$ 乘以 $R$ 的面积 $${area}$，而不只是 $${k}$。`,
+            ),
+            why(
+              alpha * (I + k * area),
+              `That multiplies the constant term by $${alpha}$ too; $${alpha}$ multiplies only $f$.`,
+              `那是把常数项也乘了 $${alpha}$；$${alpha}$ 只乘 $f$。`,
+            ),
+            why(
+              alpha * I,
+              "The constant term is left out; it adds $k \\cdot \\operatorname{Area}(R)$.",
+              "漏了常数项；它贡献 $k \\cdot \\operatorname{Area}(R)$。",
+            ),
+            why(I + k * area, `The coefficient $${alpha}$ of $f$ is left out.`, `漏了 $f$ 的系数 $${alpha}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the area", "求面积"],
+                t(
+                  `$\\operatorname{Area}(R) = (${b} - ${paren(a)})(${d} - ${paren(c)}) = ${b - a} \\cdot ${d - c} = ${area}$.`,
+                  `$\\operatorname{Area}(R) = (${b} - ${paren(a)})(${d} - ${paren(c)}) = ${b - a} \\cdot ${d - c} = ${area}$。`,
+                ),
+              ],
+              [
+                ["Apply linearity", "应用线性性"],
+                t(
+                  `$${alpha}\\iint_R f\\,dA + ${paren(k)}\\iint_R 1\\,dA = ${alpha} \\cdot ${paren(I)} + ${paren(k)} \\cdot ${area} = ${ans}$.`,
+                  `$${alpha}\\iint_R f\\,dA + ${paren(k)}\\iint_R 1\\,dA = ${alpha} \\cdot ${paren(I)} + ${paren(k)} \\cdot ${area} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `If $f$ were the constant $${Q.of(I, area).toLatex()}$, which has integral $${I}$ over $R$, the integrand would be the constant $${value.toLatex()}$, and $${paren(value)} \\cdot ${area} = ${ans}$.`,
+              `若 $f$ 是常数 $${Q.of(I, area).toLatex()}$，它在 $R$ 上的积分为 $${I}$，则被积函数是常数 $${value.toLatex()}$，而 $${paren(value)} \\cdot ${area} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -1026,6 +1733,10 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
     "Type I regions lie between two continuous functions of x; Type II regions lie between two continuous functions of y.",
     "X-型区域（Type I）夹在关于 x 的两条连续曲线之间；Y-型区域（Type II）夹在关于 y 的两条连续曲线之间。",
   ),
+  intro: t(
+    "Take the triangle with vertices $(0, 0)$, $(3, 0)$ and $(3, 1)$. With vertical strips it is Type I: $0 \\le x \\le 3$ and $0 \\le y \\le \\frac{x}{3}$. With horizontal strips it is Type II: $0 \\le y \\le 1$ and $3y \\le x \\le 3$, because the slanted side $y = \\frac{x}{3}$ solved for $x$ is $x = 3y$.\n\nCheck: both descriptions give the same area, $\\int_0^3 \\frac{x}{3}\\,dx = \\frac{3}{2}$ and $\\int_0^1 (3 - 3y)\\,dy = \\frac{3}{2}$.\n\nIn this lesson we recognize Type I and Type II descriptions of plane regions and rewrite a region from one type to the other.",
+    "取顶点为 $(0, 0)$、$(3, 0)$、$(3, 1)$ 的三角形。用竖直条带，它是 Type I 型：$0 \\le x \\le 3$，$0 \\le y \\le \\frac{x}{3}$。用水平条带，它是 Type II 型：$0 \\le y \\le 1$，$3y \\le x \\le 3$，因为斜边 $y = \\frac{x}{3}$ 解出 $x$ 是 $x = 3y$。\n\n检验：两种描述给出同样的面积，$\\int_0^3 \\frac{x}{3}\\,dx = \\frac{3}{2}$，$\\int_0^1 (3 - 3y)\\,dy = \\frac{3}{2}$。\n\n本课我们识别平面区域的 Type I 与 Type II 描述，并把区域从一种类型改写成另一种。",
+  ),
   prerequisites: ["properties-of-double-integrals"],
   encompasses: [],
   xp: 10,
@@ -1035,52 +1746,64 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
       figure: multivariableDrawings4["type-i-and-ii-regions-in-two-dimensional-space#identifying-type-i-and-type-ii-regions"],
       title: t("Identifying Type I and Type II regions", "识别 X-型与 Y-型区域"),
       explanation: t(
-        "A region is described with vertical strips when its top and bottom are graphs of functions of the horizontal variable, and with horizontal strips in the opposite case. A region $D$ is **Type I** if $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$. It is **Type II** if $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$.",
-        "当区域的上下边界是水平变量的函数图像时，用竖直条带描述它；反之则用水平条带。若区域可表示为 $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$，则称为 **X-型区域（Type I）**。若可表示为 $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$，则称为 **Y-型区域（Type II）**。",
+        "A region is described with vertical strips when its top and bottom are graphs of functions of the horizontal variable, and with horizontal strips in the opposite case. A region $D$ is **Type I** if $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$. It is **Type II** if $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$. For example $\\{1 \\le y \\le 2,\\ y \\le x \\le y^2\\}$ is a Type II description: $y$ has constant bounds and $x$ lies between two functions of $y$.\n\n> **Watch out.** Decide by which variable has constant bounds. The other variable's bounds are functions of it, and that is the variable integrated first.",
+        "当区域的上下边界是水平变量的函数图像时，用竖直条带描述它；反之则用水平条带。若区域可表示为 $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$，则称为 **X-型区域（Type I）**。若可表示为 $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$，则称为 **Y-型区域（Type II）**。例如 $\\{1 \\le y \\le 2,\\ y \\le x \\le y^2\\}$ 是 Y-型描述：$y$ 的界是常数，$x$ 夹在 $y$ 的两个函数之间。\n\n> **注意。** 要看哪个变量的界是常数。另一个变量的界是它的函数，并且先对另一个变量积分。",
       ),
       generate(rng: Rng): Problem {
         const isType1 = rng.bool();
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
-
-        let desc: Text;
-        let right: Text;
-        let wrong: readonly Text[];
-        let solText: Text;
-
-        if (isType1) {
-          desc = t(
-            `\\{(x, y) : 0 \\le x \\le ${a}, ${poly([b, "x^2"])} \\le y \\le ${poly([b * a, "x"])}\\}`,
-            `\\{(x, y) : 0 \\le x \\le ${a}, ${poly([b, "x^2"])} \\le y \\le ${poly([b * a, "x"])}\\}`,
-          );
-          right = t("Type I", "X-型（Type I）");
-          wrong = [t("Type II", "Y-型（Type II）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
-          solText = t(
-            `the variable $x$ lies between constant bounds $0 \\le x \\le ${a}$, and $y$ is bounded between two functions of $x$: $g_1(x) = ${poly([b, "x^2"])}$ and $g_2(x) = ${poly([b * a, "x"])}$.`,
-            `变量 $x$ 具有常数界 $0 \\le x \\le ${a}$，而 $y$ 夹在 $x$ 的两个函数 $g_1(x) = ${poly([b, "x^2"])}$ 与 $g_2(x) = ${poly([b * a, "x"])}$ 之间。`,
-          );
-        } else {
-          desc = t(
-            `\\{(x, y) : 0 \\le y \\le ${a}, ${poly([b, "y^2"])} \\le x \\le ${poly([b * a, "y"])}\\}`,
-            `\\{(x, y) : 0 \\le y \\le ${a}, ${poly([b, "y^2"])} \\le x \\le ${poly([b * a, "y"])}\\}`,
-          );
-          right = t("Type II", "Y-型（Type II）");
-          wrong = [t("Type I", "X-型（Type I）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
-          solText = t(
-            `the variable $y$ lies between constant bounds $0 \\le y \\le ${a}$, and $x$ is bounded between two functions of $y$: $h_1(y) = ${poly([b, "y^2"])}$ and $h_2(y) = ${poly([b * a, "y"])}$.`,
-            `变量 $y$ 具有常数界 $0 \\le y \\le ${a}$，而 $x$ 夹在 $y$ 的两个函数 $h_1(y) = ${poly([b, "y^2"])}$ 与 $h_2(y) = ${poly([b * a, "y"])}$ 之间。`,
-          );
-        }
-
-        const prompt = t(
-          `The plane region $D$ is written as $D = ${desc.en}$. Is this written form a Type I description, a Type II description, or neither?`,
-          `平面区域 $D$ 写成 $D = ${desc["zh-CN"]}$。这个写法是 X-型（Type I）描述、Y-型（Type II）描述，还是两者皆非？`,
-        );
-        const solution = t(
-          `This is a ${right.en} description, because ${solText.en}`,
-          `这是${right["zh-CN"]}描述，因为${solText["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const [u, v] = isType1 ? ["x", "y"] : ["y", "x"];
+        const lo = poly([b, `${u}^2`]);
+        const hi = poly([b * a, u]);
+        const set = `\\{(x, y) : 0 \\le ${u} \\le ${a}, ${lo} \\le ${v} \\le ${hi}\\}`;
+        const typeI = t("Type I", "X-型（Type I）");
+        const typeII = t("Type II", "Y-型（Type II）");
+        const neither = t("Neither Type I nor Type II", "既非 X-型亦非 Y-型");
+        const right = isType1 ? typeI : typeII;
+        const other = isType1 ? typeII : typeI;
+        return explainedChoice(rng, {
+          prompt: t(
+            `The plane region $D$ is written as $D = ${set}$. Is this written form a Type I description, a Type II description, or neither?`,
+            `平面区域 $D$ 写成 $D = ${set}$。这个写法是 X-型（Type I）描述、Y-型（Type II）描述，还是两者皆非？`,
+          ),
+          correct: right,
+          wrong: [
+            {
+              option: other,
+              why: t(
+                `That type needs constant bounds on $${v}$; here $${v}$ lies between functions of $${u}$.`,
+                `那种类型要求 $${v}$ 的界是常数；这里 $${v}$ 夹在 $${u}$ 的函数之间。`,
+              ),
+            },
+            {
+              option: neither,
+              why: t(
+                `Constant bounds on one variable and function bounds on the other make one of the two types; here $${u}$ has the constant bounds.`,
+                `一个变量的界是常数、另一个变量的界是函数，就是两种类型之一；这里 $${u}$ 的界是常数。`,
+              ),
+            },
+          ],
+          solution: walked(
+            [
+              [
+                ["Find the constant bounds", "找出常数界"],
+                t(`$${u}$ runs between the constants $0$ and $${a}$.`, `$${u}$ 在常数 $0$ 与 $${a}$ 之间。`),
+              ],
+              [
+                ["Read the other bounds", "读出另一组界"],
+                t(
+                  `$${v}$ runs from $${lo}$ to $${hi}$, two functions of $${u}$. So this is a ${right.en} description.`,
+                  `$${v}$ 从 $${lo}$ 到 $${hi}$，是 $${u}$ 的两个函数。所以这是${right["zh-CN"]}描述。`,
+                ),
+              ],
+            ],
+            t(
+              `The bounds are in the right order: $${lo} \\le ${hi}$ for $0 \\le ${u} \\le ${a}$, and they meet at both ends, $${u} = 0$ and $${u} = ${a}$.`,
+              `上下界的顺序正确：$0 \\le ${u} \\le ${a}$ 时 $${lo} \\le ${hi}$，并且两者在两端 $${u} = 0$ 与 $${u} = ${a}$ 处相等。`,
+            ),
+          ),
+        });
       },
     },
     {
@@ -1088,30 +1811,65 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
       figure: multivariableDrawings4["type-i-and-ii-regions-in-two-dimensional-space#rewriting-a-type-i-triangle-as-type-ii"],
       title: t("Rewriting a Type I triangle as Type II", "把 Type I 三角形改写为 Type II"),
       explanation: t(
-        "The triangle $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ is Type I. To describe it as Type II, read off the full range of $y$, which is $0 \\le y \\le ma$, and then solve the slanted side for $x$: $y = mx$ gives $x = \\frac{y}{m}$. A horizontal line at height $y$ enters the triangle at $x = \\frac{y}{m}$ and leaves at $x = a$, so the region is $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$.",
-        "三角形 $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ 是 Type I 型。要写成 Type II 型，先读出 $y$ 的完整范围 $0 \\le y \\le ma$，再把斜边解出 $x$：由 $y = mx$ 得 $x = \\frac{y}{m}$。高度为 $y$ 的水平线在 $x = \\frac{y}{m}$ 进入三角形、在 $x = a$ 离开，所以区域为 $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$。",
+        "The triangle $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ is Type I. To describe it as Type II, read off the full range of $y$, which is $0 \\le y \\le ma$, and then solve the slanted side for $x$: $y = mx$ gives $x = \\frac{y}{m}$. A horizontal line at height $y$ enters the triangle at $x = \\frac{y}{m}$ and leaves at $x = a$, so the region is $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$. For $\\{0 \\le x \\le 1,\\ 0 \\le y \\le 7x\\}$ this is $\\{0 \\le y \\le 7,\\ \\frac{y}{7} \\le x \\le 1\\}$.\n\n> **Watch out.** The slanted side is the left boundary of a horizontal strip and $x = a$ the right one. The top of the $y$ range is the height $ma$ of the corner $(a, ma)$, not $a$.",
+        "三角形 $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ 是 Type I 型。要写成 Type II 型，先读出 $y$ 的完整范围 $0 \\le y \\le ma$，再把斜边解出 $x$：由 $y = mx$ 得 $x = \\frac{y}{m}$。高度为 $y$ 的水平线在 $x = \\frac{y}{m}$ 进入三角形、在 $x = a$ 离开，所以区域为 $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$。对 $\\{0 \\le x \\le 1,\\ 0 \\le y \\le 7x\\}$，结果是 $\\{0 \\le y \\le 7,\\ \\frac{y}{7} \\le x \\le 1\\}$。\n\n> **注意。** 斜边是水平条带的左边界，$x = a$ 是右边界。$y$ 范围的上端是角点 $(a, ma)$ 的高度 $ma$，不是 $a$。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 6);
         const a = rng.int(1, 6);
         const set = (y: string, x: string) => t(`$\\{${y},\\ ${x}\\}$`, `$\\{${y},\\ ${x}\\}$`);
-        return pickChoice(
-          rng,
-          t(
+        return explainedChoice(rng, {
+          prompt: t(
             `Describe $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le ${m}x\\}$ as a Type II region.`,
             `把 $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le ${m}x\\}$ 写成 Type II 型区域。`,
           ),
-          set(`0 \\le y \\le ${m * a}`, `\\frac{y}{${m}} \\le x \\le ${a}`),
-          [
-            set(`0 \\le y \\le ${m * a}`, `0 \\le x \\le \\frac{y}{${m}}`),
-            set(`0 \\le y \\le ${a}`, `\\frac{y}{${m}} \\le x \\le ${a}`),
-            set(`0 \\le y \\le ${m * a}`, `${m}y \\le x \\le ${a}`),
+          correct: set(`0 \\le y \\le ${m * a}`, `\\frac{y}{${m}} \\le x \\le ${a}`),
+          wrong: [
+            {
+              option: set(`0 \\le y \\le ${m * a}`, `0 \\le x \\le \\frac{y}{${m}}`),
+              why: t(
+                `That is the part to the left of the line, above $y = ${m}x$; a horizontal strip of $D$ starts at the line and ends at $x = ${a}$.`,
+                `那是直线左侧、$y = ${m}x$ 上方的部分；$D$ 的水平条带从直线开始，到 $x = ${a}$ 结束。`,
+              ),
+            },
+            {
+              option: set(`0 \\le y \\le ${a}`, `\\frac{y}{${m}} \\le x \\le ${a}`),
+              why: t(
+                `$y$ reaches $${m} \\cdot ${a} = ${m * a}$ at the corner $(${a}, ${m * a})$, not $${a}$.`,
+                `$y$ 在角点 $(${a}, ${m * a})$ 处达到 $${m} \\cdot ${a} = ${m * a}$，不是 $${a}$。`,
+              ),
+            },
+            {
+              option: set(`0 \\le y \\le ${m * a}`, `${m}y \\le x \\le ${a}`),
+              why: t(
+                `Solving $y = ${m}x$ for $x$ gives $x = \\frac{y}{${m}}$, not $${m}y$.`,
+                `由 $y = ${m}x$ 解出 $x$ 得 $x = \\frac{y}{${m}}$，不是 $${m}y$。`,
+              ),
+            },
           ],
-          t(
-            `$y$ runs from $0$ to $${m} \\cdot ${a} = ${m * a}$. At height $y$, $x$ runs from the line $x = \\frac{y}{${m}}$ to $x = ${a}$.`,
-            `$y$ 从 $0$ 到 $${m} \\cdot ${a} = ${m * a}$。在高度 $y$ 处，$x$ 从直线 $x = \\frac{y}{${m}}$ 到 $x = ${a}$。`,
+          solution: walked(
+            [
+              [
+                ["Find the range of y", "求 y 的范围"],
+                t(
+                  `The highest point is the corner $(${a}, ${m * a})$, so $0 \\le y \\le ${m * a}$.`,
+                  `最高点是角点 $(${a}, ${m * a})$，所以 $0 \\le y \\le ${m * a}$。`,
+                ),
+              ],
+              [
+                ["Find the range of x", "求 x 的范围"],
+                t(
+                  `At height $y$ a horizontal line enters at the slanted side $x = \\frac{y}{${m}}$ and leaves at $x = ${a}$.`,
+                  `在高度 $y$ 处，水平线从斜边 $x = \\frac{y}{${m}}$ 进入，在 $x = ${a}$ 离开。`,
+                ),
+              ],
+            ],
+            t(
+              `Both descriptions give the area $\\frac{${m} \\cdot ${a}^2}{2} = ${Q.of(m * a * a, 2).toLatex()}$: $\\int_0^{${a}} ${m}x\\,dx = \\int_0^{${m * a}} \\left(${a} - \\frac{y}{${m}}\\right) dy = ${Q.of(m * a * a, 2).toLatex()}$.`,
+              `两种描述给出同样的面积 $\\frac{${m} \\cdot ${a}^2}{2} = ${Q.of(m * a * a, 2).toLatex()}$：$\\int_0^{${a}} ${m}x\\,dx = \\int_0^{${m * a}} \\left(${a} - \\frac{y}{${m}}\\right) dy = ${Q.of(m * a * a, 2).toLatex()}$。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],
@@ -1125,6 +1883,10 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
     "On a Type I region, integrate with respect to y between the curve limits g1(x) and g2(x), then integrate with respect to x.",
     "在 X-型区域上，先对 y 在上下曲线限界 g1(x) 与 g2(x) 之间积分，再对 x 积分。",
   ),
+  intro: t(
+    "Integrate $y$ over $D = \\{0 \\le x \\le 1,\\ x^2 \\le y \\le x\\}$. The inner integral is $\\int_{x^2}^{x} y\\,dy = \\frac{x^2 - x^4}{2}$, a function of $x$ alone, and the outer one is $\\int_0^1 \\frac{x^2 - x^4}{2}\\,dx = \\frac{1}{2}\\left(\\frac{1}{3} - \\frac{1}{5}\\right) = \\frac{1}{15}$.\n\nCheck: as a Type II region $D$ is $0 \\le y \\le 1$, $y \\le x \\le \\sqrt{y}$, and $\\int_0^1 y(\\sqrt{y} - y)\\,dy = \\frac{2}{5} - \\frac{1}{3} = \\frac{1}{15}$.\n\nIn this lesson we evaluate double integrals over Type I regions, with $y$ integrated first between two curves.",
+    "在 $D = \\{0 \\le x \\le 1,\\ x^2 \\le y \\le x\\}$ 上对 $y$ 积分。内层积分为 $\\int_{x^2}^{x} y\\,dy = \\frac{x^2 - x^4}{2}$，只依赖 $x$；外层为 $\\int_0^1 \\frac{x^2 - x^4}{2}\\,dx = \\frac{1}{2}\\left(\\frac{1}{3} - \\frac{1}{5}\\right) = \\frac{1}{15}$。\n\n检验：作为 Type II 区域，$D$ 为 $0 \\le y \\le 1$，$y \\le x \\le \\sqrt{y}$，而 $\\int_0^1 y(\\sqrt{y} - y)\\,dy = \\frac{2}{5} - \\frac{1}{3} = \\frac{1}{15}$。\n\n本课我们计算 X-型区域上的二重积分，先在两条曲线之间对 $y$ 积分。",
+  ),
   prerequisites: ["type-i-and-ii-regions-in-two-dimensional-space"],
   encompasses: [{ topic: "type-i-and-ii-regions-in-two-dimensional-space", weight: 0.3 }],
   xp: 10,
@@ -1133,8 +1895,8 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
       id: "evaluating-double-integrals-over-parabolic-regions",
       title: t("Evaluating double integrals over parabolic regions", "在抛物线区域上计算二重积分"),
       explanation: t(
-        "Integrate first in the direction whose limits are functions, then integrate the resulting function of the outer variable over its constant limits. For $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$:\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}.$$",
-        "先沿积分限为函数的方向积分，再把所得关于外层变量的函数在常数限上积分。对于区域 $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$：\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}$$",
+        "Integrate first in the direction whose limits are functions, then integrate the resulting function of the outer variable over its constant limits. For $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$:\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}.$$\n\nFor $2x$ over $0 \\le x \\le 3$, $0 \\le y \\le x$, this is $\\int_0^3 2x^2\\,dx = 18$.\n\n> **Watch out.** In the inner integral $kx$ does not depend on $y$, so it is simply multiplied by the length $bx$ of the strip; it is not integrated as a power of $x$.",
+        "先沿积分限为函数的方向积分，再把所得关于外层变量的函数在常数限上积分。对于区域 $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$：\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}$$\n\n对 $0 \\le x \\le 3$，$0 \\le y \\le x$ 上的 $2x$，结果为 $\\int_0^3 2x^2\\,dx = 18$。\n\n> **注意。** 在内层积分中 $kx$ 与 $y$ 无关，所以只需乘以条带的长度 $bx$；不要把它当作 $x$ 的幂来积分。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -1142,28 +1904,52 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
         const m = rng.int(1, 4);
         const k = 3 * m;
         const ans = b * m * a * a * a;
-
-        const prompt = t(
-          `Evaluate the double integral $\\iint_D ${k}x\\,dA$ over the Type I region $D$ bounded by $y = 0$, $y = ${b}x$, and $x = ${a}$.`,
-          `计算二重积分 $\\iint_D ${k}x\\,dA$，其中 $D$ 为由 $y = 0$、$y = ${b}x$ 与 $x = ${a}$ 所围成的 X-型区域。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the iterated integral for the Type I region:\n\n$$\\int_0^{${a}} \\int_0^{${b}x} ${k}x\\,dy\\,dx$$`,
-            `Integrate with respect to $y$:\n\n$$\\int_0^{${b}x} ${k}x\\,dy = ${k}x[y]_0^{${b}x} = ${k * b}x^2.$$`,
-            `Integrate with respect to $x$:\n\n$$\\int_0^{${a}} ${k * b}x^2\\,dx = ${k * b} \\left[\\frac{x^3}{3}\\right]_0^{${a}} = ${b * m}(${a}^3) = ${ans}.$$ `,
-          ),
-          steps(
-            `针对 X-型区域建立二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}x} ${k}x\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\int_0^{${b}x} ${k}x\\,dy = ${k}x[y]_0^{${b}x} = ${k * b}x^2$$`,
-            `再对 $x$ 积分：\n\n$$\\int_0^{${a}} ${k * b}x^2\\,dx = ${k * b} \\left[\\frac{x^3}{3}\\right]_0^{${a}} = ${b * m}(${a}^3) = ${ans}$$ `,
-          ),
-        );
+        const line = `${coef(b)}x`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the double integral $\\iint_D ${k}x\\,dA$ over the Type I region $D$ bounded by $y = 0$, $y = ${line}$, and $x = ${a}$.`,
+            `计算二重积分 $\\iint_D ${k}x\\,dA$，其中 $D$ 为由 $y = 0$、$y = ${line}$ 与 $x = ${a}$ 所围成的 X-型区域。`,
+          ),
           answer: ans,
-          wrong: [ans * 2, ans - a * b, ans + a * b],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(3 * m * b * a ** 3, 2),
+              `That takes $y$ up to $${b * a}$ for every $x$, which is the rectangle $[0, ${a}] \\times [0, ${b * a}]$; the top is the line $y = ${line}$.`,
+              `那是对每个 $x$ 都让 $y$ 到 $${b * a}$，那是矩形 $[0, ${a}] \\times [0, ${b * a}]$；上边界是直线 $y = ${line}$。`,
+            ),
+            why(
+              Q.of(m * b * b * a ** 3, 2),
+              `That integrates $${k}x$ as if the inner variable were $x$; with respect to $y$ it is a constant times the length $${line}$.`,
+              `那是把内层当成对 $x$ 积分 $${k}x$；对 $y$ 积分时它是常数，乘以长度 $${line}$。`,
+            ),
+            why(
+              3 * ans,
+              "The antiderivative of $x^2$ is $\\frac{x^3}{3}$; the division by $3$ is missing.",
+              "$x^2$ 的原函数是 $\\frac{x^3}{3}$；漏了除以 $3$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${line}} ${k}x\\,dy = ${k}x \\cdot ${line} = ${k * b}x^2$.`,
+                  `$\\int_0^{${line}} ${k}x\\,dy = ${k}x \\cdot ${line} = ${k * b}x^2$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${a}} ${k * b}x^2\\,dx = ${k * b} \\cdot \\frac{${a}^3}{3} = ${ans}$.`,
+                  `$\\int_0^{${a}} ${k * b}x^2\\,dx = ${k * b} \\cdot \\frac{${a}^3}{3} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a Type II region, $0 \\le y \\le ${b * a}$ and $\\frac{y}{${b}} \\le x \\le ${a}$: $\\int_0^{${b * a}} \\frac{${k}}{2}\\left(${a * a} - \\frac{y^2}{${b * b}}\\right) dy = \\frac{${k}}{2}\\left(${a * a * a * b} - \\frac{${a * a * a * b}}{3}\\right) = ${ans}$.`,
+              `作为 Type II 区域，$0 \\le y \\le ${b * a}$，$\\frac{y}{${b}} \\le x \\le ${a}$：$\\int_0^{${b * a}} \\frac{${k}}{2}\\left(${a * a} - \\frac{y^2}{${b * b}}\\right) dy = \\frac{${k}}{2}\\left(${a * a * a * b} - \\frac{${a * a * a * b}}{3}\\right) = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1172,23 +1958,58 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
       figure: multivariableDrawings4["double-integrals-over-type-i-regions#integrating-xy-over-a-type-i-triangle"],
       title: t("Integrating $cxy$ over a Type I triangle", "在 Type I 三角形上积分 $cxy$"),
       explanation: t(
-        "For a Type I region the inner integral runs in $y$ between two functions of $x$, and the outer integral runs in $x$ between constants. Over the triangle $0 \\le x \\le a$, $0 \\le y \\le x$:\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}.$$\n\nThe inner result is a function of $x$ alone, which the outer integral then finishes.",
-        "对 Type I 型区域，内层对 $y$ 积分，上下限是 $x$ 的函数；外层对 $x$ 在常数之间积分。在三角形 $0 \\le x \\le a$，$0 \\le y \\le x$ 上：\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}$$\n\n内层结果只依赖 $x$，再由外层积分完成。",
+        "For a Type I region the inner integral runs in $y$ between two functions of $x$, and the outer integral runs in $x$ between constants. Over the triangle $0 \\le x \\le a$, $0 \\le y \\le x$:\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}.$$\n\nThe inner result is a function of $x$ alone, which the outer integral then finishes. Over $0 \\le x \\le 2$, $0 \\le y \\le 2x$ instead, $2xy$ gives $\\int_0^2 2x \\cdot \\frac{4x^2}{2}\\,dx = 16$.\n\n> **Watch out.** The inner limit $y = x$ makes the inner result $\\frac{x^2}{2}$ times $cx$; using $y = a$ instead integrates over the whole square and doubles the answer.",
+        "对 Type I 型区域，内层对 $y$ 积分，上下限是 $x$ 的函数；外层对 $x$ 在常数之间积分。在三角形 $0 \\le x \\le a$，$0 \\le y \\le x$ 上：\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}$$\n\n内层结果只依赖 $x$，再由外层积分完成。若改为 $0 \\le x \\le 2$，$0 \\le y \\le 2x$，则 $2xy$ 给出 $\\int_0^2 2x \\cdot \\frac{4x^2}{2}\\,dx = 16$。\n\n> **注意。** 内层上限 $y = x$ 使内层结果为 $cx$ 乘以 $\\frac{x^2}{2}$；若用 $y = a$，就是在整个正方形上积分，答案翻倍。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
         const c = rng.int(1, 5);
         const ans = Q.of(c * a ** 4, 8);
+        const cc = coef(c);
         return numberProblem({
           prompt: t(
-            `Evaluate $\\iint_D ${c === 1 ? "" : c}xy\\,dA$, where $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le x\\}$.`,
-            `计算 $\\iint_D ${c === 1 ? "" : c}xy\\,dA$，其中 $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le x\\}$。`,
+            `Evaluate $\\iint_D ${cc}xy\\,dA$, where $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le x\\}$.`,
+            `计算 $\\iint_D ${cc}xy\\,dA$，其中 $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le x\\}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * a ** 4, 4), Q.of(c * a ** 3, 6), Q.of(c * a ** 4, 2), Q.of(c * a ** 4, 6)],
-          solution: t(
-            `Inner: $\\int_0^x ${c === 1 ? "" : c}xy\\,dy = \\frac{${c === 1 ? "" : c}x^3}{2}$. Outer: $\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^3}{2}\\,dx = \\frac{${c} \\cdot ${a ** 4}}{8} = ${ans.toLatex()}$.`,
-            `内层：$\\int_0^x ${c === 1 ? "" : c}xy\\,dy = \\frac{${c === 1 ? "" : c}x^3}{2}$。外层：$\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^3}{2}\\,dx = \\frac{${c} \\cdot ${a ** 4}}{8} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * a ** 4, 4),
+              `That is the integral over the square $[0, ${a}]^2$; the inner integral stops at $y = x$.`,
+              `那是正方形 $[0, ${a}]^2$ 上的积分；内层积分止于 $y = x$。`,
+            ),
+            why(
+              Q.of(c * a ** 4, 2),
+              "The outer antiderivative of $x^3$ is $\\frac{x^4}{4}$; the division by $4$ is missing.",
+              "外层 $x^3$ 的原函数是 $\\frac{x^4}{4}$；漏了除以 $4$。",
+            ),
+            why(
+              Q.of(c * a ** 4, 6),
+              "The outer antiderivative of $x^3$ is $\\frac{x^4}{4}$, not $\\frac{x^4}{3}$.",
+              "外层 $x^3$ 的原函数是 $\\frac{x^4}{4}$，不是 $\\frac{x^4}{3}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^x ${cc}xy\\,dy = ${cc}x \\cdot \\frac{x^2}{2} = \\frac{${cc}x^3}{2}$.`,
+                  `$\\int_0^x ${cc}xy\\,dy = ${cc}x \\cdot \\frac{x^2}{2} = \\frac{${cc}x^3}{2}$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${a}} \\frac{${cc}x^3}{2}\\,dx = \\frac{${c} \\cdot ${a}^4}{8} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} \\frac{${cc}x^3}{2}\\,dx = \\frac{${c} \\cdot ${a}^4}{8} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a Type II region, $0 \\le y \\le ${a}$ and $y \\le x \\le ${a}$: $\\int_0^{${a}} ${cc}y \\cdot \\frac{${a * a} - y^2}{2}\\,dy = \\frac{${c}}{2}\\left(\\frac{${a ** 4}}{2} - \\frac{${a ** 4}}{4}\\right) = ${ans.toLatex()}$.`,
+              `作为 Type II 区域，$0 \\le y \\le ${a}$，$y \\le x \\le ${a}$：$\\int_0^{${a}} ${cc}y \\cdot \\frac{${a * a} - y^2}{2}\\,dy = \\frac{${c}}{2}\\left(\\frac{${a ** 4}}{2} - \\frac{${a ** 4}}{4}\\right) = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -1204,6 +2025,10 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
     "On a Type II region, integrate with respect to x between curve limits h1(y) and h2(y), then integrate with respect to y.",
     "在 Y-型区域上，先对 x 在左右曲线限界 h1(y) 与 h2(y) 之间积分，再对 y 积分。",
   ),
+  intro: t(
+    "Integrate $y$ over $D = \\{0 \\le y \\le 1,\\ y \\le x \\le 2 - y\\}$, the triangle with vertices $(0, 0)$, $(2, 0)$ and $(1, 1)$. A horizontal strip at height $y$ has length $2 - 2y$, so $\\int_0^1 \\int_y^{2 - y} y\\,dx\\,dy = \\int_0^1 y(2 - 2y)\\,dy = 1 - \\frac{2}{3} = \\frac{1}{3}$.\n\nCheck: the triangle has area $1$ and its centroid is at height $\\frac{0 + 0 + 1}{3} = \\frac{1}{3}$, so $\\iint_D y\\,dA = 1 \\cdot \\frac{1}{3}$.\n\nIn this lesson we evaluate double integrals over Type II regions, with $x$ integrated first between two curves in $y$.",
+    "在 $D = \\{0 \\le y \\le 1,\\ y \\le x \\le 2 - y\\}$ 上对 $y$ 积分，它是顶点为 $(0, 0)$、$(2, 0)$、$(1, 1)$ 的三角形。高度为 $y$ 的水平条带长为 $2 - 2y$，所以 $\\int_0^1 \\int_y^{2 - y} y\\,dx\\,dy = \\int_0^1 y(2 - 2y)\\,dy = 1 - \\frac{2}{3} = \\frac{1}{3}$。\n\n检验：三角形面积为 $1$，形心高度为 $\\frac{0 + 0 + 1}{3} = \\frac{1}{3}$，所以 $\\iint_D y\\,dA = 1 \\cdot \\frac{1}{3}$。\n\n本课我们计算 Y-型区域上的二重积分，先在两条关于 $y$ 的曲线之间对 $x$ 积分。",
+  ),
   prerequisites: ["type-i-and-ii-regions-in-two-dimensional-space"],
   encompasses: [{ topic: "type-i-and-ii-regions-in-two-dimensional-space", weight: 0.3 }],
   xp: 10,
@@ -1212,8 +2037,8 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
       id: "evaluating-double-integrals-with-horizontal-strips",
       title: t("Evaluating double integrals with horizontal strips", "利用水平微元条计算 Y-型二重积分"),
       explanation: t(
-        "When the region is bounded on the left and right by functions of the vertical variable, integrate with respect to the horizontal variable first. For $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$:\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}.$$",
-        "当区域的左右边界是竖直变量的函数时，先对水平变量积分。对于区域 $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$：\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}$$",
+        "When the region is bounded on the left and right by functions of the vertical variable, integrate with respect to the horizontal variable first. For $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$:\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}.$$\n\nFor $2y$ over $0 \\le y \\le 3$, $0 \\le x \\le y$, this is $\\int_0^3 2y^2\\,dy = 18$.\n\n> **Watch out.** In the inner integral $ky$ is a constant, multiplied by the strip length $ay$. The strip ends at the line $x = ay$, not at $x = ab$.",
+        "当区域的左右边界是竖直变量的函数时，先对水平变量积分。对于区域 $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$：\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}$$\n\n对 $0 \\le y \\le 3$，$0 \\le x \\le y$ 上的 $2y$，结果为 $\\int_0^3 2y^2\\,dy = 18$。\n\n> **注意。** 在内层积分中 $ky$ 是常数，乘以条带长度 $ay$。条带止于直线 $x = ay$，而不是 $x = ab$。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(1, 6);
@@ -1221,28 +2046,52 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
         const m = rng.int(1, 4);
         const k = 3 * m;
         const ans = a * m * b * b * b;
-
-        const prompt = t(
-          `Evaluate the double integral $\\iint_D ${k}y\\,dA$ over the Type II region $D$ bounded by $x = 0$, $x = ${a}y$, and $y = ${b}$.`,
-          `计算二重积分 $\\iint_D ${k}y\\,dA$，其中 $D$ 为由 $x = 0$、$x = ${a}y$ 与 $y = ${b}$ 所围成的 Y-型区域。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the iterated integral with horizontal slices:\n\n$$\\int_0^{${b}} \\int_0^{${a}y} ${k}y\\,dx\\,dy$$`,
-            `Integrate with respect to $x$:\n\n$$\\int_0^{${a}y} ${k}y\\,dx = ${k}y[x]_0^{${a}y} = ${k * a}y^2.$$`,
-            `Integrate with respect to $y$:\n\n$$\\int_0^{${b}} ${k * a}y^2\\,dy = ${k * a} \\left[\\frac{y^3}{3}\\right]_0^{${b}} = ${a * m}(${b}^3) = ${ans}.$$ `,
-          ),
-          steps(
-            `利用水平分割建立二次积分：\n\n$$\\int_0^{${b}} \\int_0^{${a}y} ${k}y\\,dx\\,dy$$`,
-            `先对 $x$ 积分：\n\n$$\\int_0^{${a}y} ${k}y\\,dx = ${k}y[x]_0^{${a}y} = ${k * a}y^2$$`,
-            `再对 $y$ 积分：\n\n$$\\int_0^{${b}} ${k * a}y^2\\,dy = ${k * a} \\left[\\frac{y^3}{3}\\right]_0^{${b}} = ${a * m}(${b}^3) = ${ans}$$ `,
-          ),
-        );
+        const line = `${coef(a)}y`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the double integral $\\iint_D ${k}y\\,dA$ over the Type II region $D$ bounded by $x = 0$, $x = ${line}$, and $y = ${b}$.`,
+            `计算二重积分 $\\iint_D ${k}y\\,dA$，其中 $D$ 为由 $x = 0$、$x = ${line}$ 与 $y = ${b}$ 所围成的 Y-型区域。`,
+          ),
           answer: ans,
-          wrong: [ans * 2, ans - a * b, ans + a * b],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(3 * m * a * b ** 3, 2),
+              `That takes $x$ up to $${a * b}$ for every $y$, which is the rectangle $[0, ${a * b}] \\times [0, ${b}]$; the strip ends at $x = ${line}$.`,
+              `那是对每个 $y$ 都让 $x$ 到 $${a * b}$，那是矩形 $[0, ${a * b}] \\times [0, ${b}]$；条带止于 $x = ${line}$。`,
+            ),
+            why(
+              Q.of(m * a * a * b ** 3, 2),
+              `That integrates $${k}y$ as if the inner variable were $y$; with respect to $x$ it is a constant times the length $${line}$.`,
+              `那是把内层当成对 $y$ 积分 $${k}y$；对 $x$ 积分时它是常数，乘以长度 $${line}$。`,
+            ),
+            why(
+              3 * ans,
+              "The antiderivative of $y^2$ is $\\frac{y^3}{3}$; the division by $3$ is missing.",
+              "$y^2$ 的原函数是 $\\frac{y^3}{3}$；漏了除以 $3$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${line}} ${k}y\\,dx = ${k}y \\cdot ${line} = ${k * a}y^2$.`,
+                  `$\\int_0^{${line}} ${k}y\\,dx = ${k}y \\cdot ${line} = ${k * a}y^2$。`,
+                ),
+              ],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${b}} ${k * a}y^2\\,dy = ${k * a} \\cdot \\frac{${b}^3}{3} = ${ans}$.`,
+                  `$\\int_0^{${b}} ${k * a}y^2\\,dy = ${k * a} \\cdot \\frac{${b}^3}{3} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a Type I region, $0 \\le x \\le ${a * b}$ and $\\frac{x}{${a}} \\le y \\le ${b}$: $\\int_0^{${a * b}} \\frac{${k}}{2}\\left(${b * b} - \\frac{x^2}{${a * a}}\\right) dx = \\frac{${k}}{2}\\left(${a * b ** 3} - \\frac{${a * b ** 3}}{3}\\right) = ${ans}$.`,
+              `作为 Type I 区域，$0 \\le x \\le ${a * b}$，$\\frac{x}{${a}} \\le y \\le ${b}$：$\\int_0^{${a * b}} \\frac{${k}}{2}\\left(${b * b} - \\frac{x^2}{${a * a}}\\right) dx = \\frac{${k}}{2}\\left(${a * b ** 3} - \\frac{${a * b ** 3}}{3}\\right) = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1250,23 +2099,58 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
       id: "integrating-x-over-a-type-ii-parabolic-region",
       title: t("Integrating $cx$ over a Type II parabolic region", "在 Type II 抛物线区域上积分 $cx$"),
       explanation: t(
-        "For a Type II region the inner integral runs in $x$ between two functions of $y$. Over $0 \\le y \\le b$, $0 \\le x \\le y^2$:\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}.$$\n\nIntegrating in $x$ first avoids splitting the region, because its left and right boundaries are single curves in $y$.",
-        "对 Type II 型区域，内层对 $x$ 积分，上下限是 $y$ 的函数。在 $0 \\le y \\le b$，$0 \\le x \\le y^2$ 上：\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}$$\n\n先对 $x$ 积分无需拆分区域，因为左右边界都是关于 $y$ 的单一曲线。",
+        "For a Type II region the inner integral runs in $x$ between two functions of $y$. Over $0 \\le y \\le b$, $0 \\le x \\le y^2$:\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}.$$\n\nIntegrating in $x$ first avoids splitting the region, because its left and right boundaries are single curves in $y$. For $7x$ with $b = 1$ the integral is $\\frac{7}{10}$.\n\n> **Watch out.** The inner result is $\\frac{x^2}{2}$ at $x = y^2$, which is $\\frac{y^4}{2}$, not $\\frac{y^2}{2}$.",
+        "对 Type II 型区域，内层对 $x$ 积分，上下限是 $y$ 的函数。在 $0 \\le y \\le b$，$0 \\le x \\le y^2$ 上：\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}$$\n\n先对 $x$ 积分无需拆分区域，因为左右边界都是关于 $y$ 的单一曲线。对 $7x$ 与 $b = 1$，积分为 $\\frac{7}{10}$。\n\n> **注意。** 内层结果是 $\\frac{x^2}{2}$ 在 $x = y^2$ 处的值，即 $\\frac{y^4}{2}$，不是 $\\frac{y^2}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(1, 5);
         const c = rng.int(1, 6);
         const ans = Q.of(c * b ** 5, 10);
+        const cc = coef(c);
         return numberProblem({
           prompt: t(
-            `Evaluate $\\iint_D ${c === 1 ? "" : c}x\\,dA$, where $D = \\{(x, y) : 0 \\le y \\le ${b},\\ 0 \\le x \\le y^2\\}$.`,
-            `计算 $\\iint_D ${c === 1 ? "" : c}x\\,dA$，其中 $D = \\{(x, y) : 0 \\le y \\le ${b},\\ 0 \\le x \\le y^2\\}$。`,
+            `Evaluate $\\iint_D ${cc}x\\,dA$, where $D = \\{(x, y) : 0 \\le y \\le ${b},\\ 0 \\le x \\le y^2\\}$.`,
+            `计算 $\\iint_D ${cc}x\\,dA$，其中 $D = \\{(x, y) : 0 \\le y \\le ${b},\\ 0 \\le x \\le y^2\\}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * b ** 5, 5), Q.of(c * b ** 3, 6), Q.of(c * b ** 4, 8), Q.of(c * b ** 5, 2)],
-          solution: t(
-            `Inner: $\\int_0^{y^2} ${c === 1 ? "" : c}x\\,dx = \\frac{${c === 1 ? "" : c}y^4}{2}$. Outer: $\\int_0^{${b}} \\frac{${c === 1 ? "" : c}y^4}{2}\\,dy = \\frac{${c} \\cdot ${b ** 5}}{10} = ${ans.toLatex()}$.`,
-            `内层：$\\int_0^{y^2} ${c === 1 ? "" : c}x\\,dx = \\frac{${c === 1 ? "" : c}y^4}{2}$。外层：$\\int_0^{${b}} \\frac{${c === 1 ? "" : c}y^4}{2}\\,dy = \\frac{${c} \\cdot ${b ** 5}}{10} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * b ** 5, 5),
+              "The inner antiderivative of $x$ is $\\frac{x^2}{2}$; the factor $\\frac{1}{2}$ is missing.",
+              "内层 $x$ 的原函数是 $\\frac{x^2}{2}$；漏了因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(c * b ** 3, 6),
+              "That uses $x \\le y$; the right boundary is $x = y^2$, so the inner result is $\\frac{y^4}{2}$.",
+              "那是用了 $x \\le y$；右边界是 $x = y^2$，所以内层结果是 $\\frac{y^4}{2}$。",
+            ),
+            why(
+              Q.of(c * b ** 5, 2),
+              "The outer antiderivative of $y^4$ is $\\frac{y^5}{5}$; the division by $5$ is missing.",
+              "外层 $y^4$ 的原函数是 $\\frac{y^5}{5}$；漏了除以 $5$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{y^2} ${cc}x\\,dx = \\frac{${cc}(y^2)^2}{2} = \\frac{${cc}y^4}{2}$.`,
+                  `$\\int_0^{y^2} ${cc}x\\,dx = \\frac{${cc}(y^2)^2}{2} = \\frac{${cc}y^4}{2}$。`,
+                ),
+              ],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${b}} \\frac{${cc}y^4}{2}\\,dy = \\frac{${c} \\cdot ${b}^5}{10} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${b}} \\frac{${cc}y^4}{2}\\,dy = \\frac{${c} \\cdot ${b}^5}{10} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a Type I region, $0 \\le x \\le ${b * b}$ and $\\sqrt{x} \\le y \\le ${b}$: $\\int_0^{${b * b}} ${cc}x(${b} - \\sqrt{x})\\,dx = ${c}\\left(\\frac{${b ** 5}}{2} - \\frac{2 \\cdot ${b ** 5}}{5}\\right) = ${ans.toLatex()}$.`,
+              `作为 Type I 区域，$0 \\le x \\le ${b * b}$，$\\sqrt{x} \\le y \\le ${b}$：$\\int_0^{${b * b}} ${cc}x(${b} - \\sqrt{x})\\,dx = ${c}\\left(\\frac{${b ** 5}}{2} - \\frac{2 \\cdot ${b ** 5}}{5}\\right) = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -1282,6 +2166,10 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
     "When a region's upper or lower boundary is piecewise defined, split the double integral into a sum over non-overlapping subregions.",
     "当区域的上下边界呈分段定义时，将二重积分拆分为各不重叠子区域上的积分之和。",
   ),
+  intro: t(
+    "Integrate $y$ over the L-shape $R_1 \\cup R_2$ with $R_1 = [0, 1] \\times [0, 3]$ and $R_2 = [1, 4] \\times [0, 1]$. The pieces overlap only along an edge, so the integral is the sum: $\\iint_{R_1} y\\,dA = 1 \\cdot \\frac{9}{2}$ and $\\iint_{R_2} y\\,dA = 3 \\cdot \\frac{1}{2}$, for a total of $\\frac{9}{2} + \\frac{3}{2} = 6$.\n\nCheck: the L-shape is the rectangle $[0, 4] \\times [0, 3]$ minus $[1, 4] \\times [1, 3]$, and $4 \\cdot \\frac{9}{2} - 3 \\cdot \\frac{9 - 1}{2} = 18 - 12 = 6$.\n\nIn this lesson we integrate over regions that split into simpler pieces, adding the integrals over the pieces.",
+    "在 L 形 $R_1 \\cup R_2$ 上对 $y$ 积分，其中 $R_1 = [0, 1] \\times [0, 3]$，$R_2 = [1, 4] \\times [0, 1]$。两块只在一条边上重叠，所以积分是两者之和：$\\iint_{R_1} y\\,dA = 1 \\cdot \\frac{9}{2}$，$\\iint_{R_2} y\\,dA = 3 \\cdot \\frac{1}{2}$，合计 $\\frac{9}{2} + \\frac{3}{2} = 6$。\n\n检验：L 形是矩形 $[0, 4] \\times [0, 3]$ 去掉 $[1, 4] \\times [1, 3]$，而 $4 \\cdot \\frac{9}{2} - 3 \\cdot \\frac{9 - 1}{2} = 18 - 12 = 6$。\n\n本课我们在可分成简单几块的区域上积分，把各块上的积分相加。",
+  ),
   prerequisites: ["double-integrals-over-type-i-regions", "double-integrals-over-type-ii-regions"],
   encompasses: [],
   xp: 10,
@@ -1291,8 +2179,8 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
       figure: multivariableDrawings4["double-integrals-over-partitioned-regions#evaluating-double-integrals-by-domain-decomposition"],
       title: t("Evaluating double integrals by domain decomposition", "通过区域分割计算二重积分"),
       explanation: t(
-        "Splitting a region into simpler pieces lets you use convenient limits on each, and the integral over the whole is the sum of the pieces. If $R = R_1 \\cup R_2$ with disjoint interiors, then $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For two adjacent rectangles $R_1 = [0, c] \\times [0, h_1]$ and $R_2 = [c, d] \\times [0, h_2]$:\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right).$$",
-        "把区域分成更简单的几部分，每部分都可以用方便的积分限，整体上的积分就是各部分积分的和。若 $R = R_1 \\cup R_2$ 且内部不相交，则 $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对于两个相邻矩形 $R_1 = [0, c] \\times [0, h_1]$ 与 $R_2 = [c, d] \\times [0, h_2]$：\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right)$$",
+        "Splitting a region into simpler pieces lets you use convenient limits on each, and the integral over the whole is the sum of the pieces. If $R = R_1 \\cup R_2$ with disjoint interiors, then $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For two adjacent rectangles $R_1 = [0, c] \\times [0, h_1]$ and $R_2 = [c, d] \\times [0, h_2]$:\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right).$$\n\nFor $k = 5$ on $[0, 6] \\times [0, 1] \\cup [6, 7] \\times [0, 2]$ the integral is $5(6 + 2) = 40$.\n\n> **Watch out.** The second rectangle is $d - c$ wide, not $d$: it starts where the first one ends.",
+        "把区域分成更简单的几部分，每部分都可以用方便的积分限，整体上的积分就是各部分积分的和。若 $R = R_1 \\cup R_2$ 且内部不相交，则 $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对于两个相邻矩形 $R_1 = [0, c] \\times [0, h_1]$ 与 $R_2 = [c, d] \\times [0, h_2]$：\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right)$$\n\n对 $[0, 6] \\times [0, 1] \\cup [6, 7] \\times [0, 2]$ 上的 $k = 5$，积分为 $5(6 + 2) = 40$。\n\n> **注意。** 第二个矩形宽 $d - c$，不是 $d$：它从第一个矩形的终点开始。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -1301,32 +2189,61 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
         const h1 = rng.int(1, 6);
         const h2 = rng.int(1, 6);
         const k = rng.int(1, 4);
-
         const area1 = c * h1;
         const area2 = w2 * h2;
         const ans = k * (area1 + area2);
-
-        const prompt = t(
-          `Find the value of $\\iint_R ${k}\\,dA$ over the L-shaped union of two rectangular regions $R_1 = [0, ${c}] \\times [0, ${h1}]$ and $R_2 = [${c}, ${d}] \\times [0, ${h2}]$.`,
-          `计算 $\\iint_R ${k}\\,dA$ 的值，其中积分区域 $R = R_1 \\cup R_2$ 为两个相邻矩形 $R_1 = [0, ${c}] \\times [0, ${h1}]$ 与 $R_2 = [${c}, ${d}] \\times [0, ${h2}]$ 的无缝拼接区域。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the area of each subregion:\n\n$$\\text{Area}(R_1) = ${c} \\times ${h1} = ${area1}, \\quad \\text{Area}(R_2) = (${d} - ${c}) \\times ${h2} = ${w2} \\times ${h2} = ${area2}.$$`,
-            `Total area is $\\text{Area}(R) = ${area1} + ${area2} = ${area1 + area2}$.`,
-            `Multiply by the integrand $k = ${k}$:\n\n$$\\iint_R ${k}\\,dA = ${k}(${area1 + area2}) = ${ans}.$$ `,
-          ),
-          steps(
-            `分别计算每个子矩形的面积：\n\n$$\\text{Area}(R_1) = ${c} \\times ${h1} = ${area1}, \\quad \\text{Area}(R_2) = (${d} - ${c}) \\times ${h2} = ${w2} \\times ${h2} = ${area2}$$`,
-            `总面积为 $\\text{Area}(R) = ${area1} + ${area2} = ${area1 + area2}$。`,
-            `乘以被积常数 $k = ${k}$：\n\n$$\\iint_R ${k}\\,dA = ${k}(${area1 + area2}) = ${ans}$$ `,
-          ),
-        );
+        const H = Math.max(h1, h2);
+        const missing = h1 >= h2 ? w2 * (h1 - h2) : c * (h2 - h1);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of $\\iint_R ${k}\\,dA$ over the L-shaped union of two rectangular regions $R_1 = [0, ${c}] \\times [0, ${h1}]$ and $R_2 = [${c}, ${d}] \\times [0, ${h2}]$.`,
+            `计算 $\\iint_R ${k}\\,dA$ 的值，其中积分区域 $R = R_1 \\cup R_2$ 为两个相邻矩形 $R_1 = [0, ${c}] \\times [0, ${h1}]$ 与 $R_2 = [${c}, ${d}] \\times [0, ${h2}]$ 的无缝拼接区域。`,
+          ),
           answer: ans,
-          wrong: [ans + k * c, ans - k * w2, k * area1],
+          mistakes: distinct(ans, [
+            why(
+              k * (area1 + d * h2),
+              `That gives $R_2$ the width $${d}$; it runs from $${c}$ to $${d}$, so its width is $${w2}$.`,
+              `那是让 $R_2$ 宽 $${d}$；它从 $${c}$ 到 $${d}$，宽为 $${w2}$。`,
+            ),
+            why(
+              k * area1,
+              "That leaves out $R_2$; the integral over the union adds both pieces.",
+              "那漏了 $R_2$；并集上的积分要把两块都加上。",
+            ),
+            why(
+              area1 + area2,
+              `That is the area of $R$; the integrand $${k}$ multiplies it.`,
+              `那是 $R$ 的面积；还要乘以被积函数 $${k}$。`,
+            ),
+            why(
+              k * d * H,
+              `That integrates over the whole bounding rectangle $[0, ${d}] \\times [0, ${H}]$, including the missing corner.`,
+              `那是在整个外接矩形 $[0, ${d}] \\times [0, ${H}]$ 上积分，包括了缺掉的角。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the areas", "求面积"],
+                t(
+                  `$\\operatorname{Area}(R_1) = ${c} \\cdot ${h1} = ${area1}$ and $\\operatorname{Area}(R_2) = (${d} - ${c}) \\cdot ${h2} = ${area2}$.`,
+                  `$\\operatorname{Area}(R_1) = ${c} \\cdot ${h1} = ${area1}$，$\\operatorname{Area}(R_2) = (${d} - ${c}) \\cdot ${h2} = ${area2}$。`,
+                ),
+              ],
+              [
+                ["Add the pieces", "把两块相加"],
+                t(
+                  `$\\iint_R ${k}\\,dA = ${k}(${area1} + ${area2}) = ${ans}$.`,
+                  `$\\iint_R ${k}\\,dA = ${k}(${area1} + ${area2}) = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$R$ is the rectangle $[0, ${d}] \\times [0, ${H}]$ of area $${d * H}$ minus a missing piece of area $${missing}$, so $${k}(${d * H} - ${missing}) = ${ans}$.`,
+              `$R$ 是面积为 $${d * H}$ 的矩形 $[0, ${d}] \\times [0, ${H}]$ 去掉面积为 $${missing}$ 的一块，所以 $${k}(${d * H} - ${missing}) = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1334,8 +2251,8 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
       id: "integrating-x-over-an-l-shaped-region",
       title: t("Integrating $cx$ over an L-shaped region", "在 L 形区域上积分 $cx$"),
       explanation: t(
-        "When a region splits into pieces that overlap only along edges, the integral over the region is the sum of the integrals over the pieces: $\\iint_{R_1 \\cup R_2} f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For a non-constant integrand each piece must be integrated with its own limits. For $f = cx$ on $[p, q] \\times [0, h]$ the integral is $c\\,\\frac{q^2 - p^2}{2}\\,h$.",
-        "当区域可分成只在边上重叠的几块时，区域上的积分等于各块积分之和：$\\iint_{R_1 \\cup R_2} f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对非常数被积函数，每块都要用自己的积分限。对 $[p, q] \\times [0, h]$ 上的 $f = cx$，积分为 $c\\,\\frac{q^2 - p^2}{2}\\,h$。",
+        "When a region splits into pieces that overlap only along edges, the integral over the region is the sum of the integrals over the pieces: $\\iint_{R_1 \\cup R_2} f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For a non-constant integrand each piece must be integrated with its own limits. For $f = cx$ on $[p, q] \\times [0, h]$ the integral is $c\\,\\frac{q^2 - p^2}{2}\\,h$. For $5x$ on $[0, 1] \\times [0, 3] \\cup [1, 2] \\times [0, 1]$ the pieces give $5 \\cdot \\frac{1}{2} \\cdot 3 = \\frac{15}{2}$ and $5 \\cdot \\frac{4 - 1}{2} \\cdot 1 = \\frac{15}{2}$, so the total is $15$.\n\n> **Watch out.** The second piece starts at $x = a$, so its $x$ integral is $\\frac{b^2 - a^2}{2}$, not $\\frac{b^2}{2}$; using $\\frac{b^2}{2}$ counts the strip $[0, a]$ twice.",
+        "当区域可分成只在边上重叠的几块时，区域上的积分等于各块积分之和：$\\iint_{R_1 \\cup R_2} f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对非常数被积函数，每块都要用自己的积分限。对 $[p, q] \\times [0, h]$ 上的 $f = cx$，积分为 $c\\,\\frac{q^2 - p^2}{2}\\,h$。对 $[0, 1] \\times [0, 3] \\cup [1, 2] \\times [0, 1]$ 上的 $5x$，两块分别给出 $5 \\cdot \\frac{1}{2} \\cdot 3 = \\frac{15}{2}$ 和 $5 \\cdot \\frac{4 - 1}{2} \\cdot 1 = \\frac{15}{2}$，合计 $15$。\n\n> **注意。** 第二块从 $x = a$ 开始，所以它的 $x$ 积分是 $\\frac{b^2 - a^2}{2}$，不是 $\\frac{b^2}{2}$；用 $\\frac{b^2}{2}$ 会把 $[0, a]$ 这一条算两次。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 4);
@@ -1346,16 +2263,53 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
         const i1 = Q.of(c * a * a * h1, 2);
         const i2 = Q.of(c * (b * b - a * a) * h2, 2);
         const ans = i1.add(i2);
+        const cc = coef(c);
+        const whole = Q.of(c * b * b * h1, 2);
+        const cut = Q.of(c * (b * b - a * a) * (h1 - h2), 2);
         return numberProblem({
           prompt: t(
-            `Evaluate $\\iint_R ${c === 1 ? "" : c}x\\,dA$ over the L-shaped region $R = R_1 \\cup R_2$ with $R_1 = [0, ${a}] \\times [0, ${h1}]$ and $R_2 = [${a}, ${b}] \\times [0, ${h2}]$.`,
-            `计算 L 形区域 $R = R_1 \\cup R_2$ 上的 $\\iint_R ${c === 1 ? "" : c}x\\,dA$，其中 $R_1 = [0, ${a}] \\times [0, ${h1}]$，$R_2 = [${a}, ${b}] \\times [0, ${h2}]$。`,
+            `Evaluate $\\iint_R ${cc}x\\,dA$ over the L-shaped region $R = R_1 \\cup R_2$ with $R_1 = [0, ${a}] \\times [0, ${h1}]$ and $R_2 = [${a}, ${b}] \\times [0, ${h2}]$.`,
+            `计算 L 形区域 $R = R_1 \\cup R_2$ 上的 $\\iint_R ${cc}x\\,dA$，其中 $R_1 = [0, ${a}] \\times [0, ${h1}]$，$R_2 = [${a}, ${b}] \\times [0, ${h2}]$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * b * b * h1, 2), Q.of(c * b * b * h2, 2), Q.of(c * (a * a * h1 + b * b * h2), 2), i1],
-          solution: t(
-            `$\\iint_{R_1} = ${c} \\cdot \\frac{${a * a}}{2} \\cdot ${h1} = ${i1.toLatex()}$ and $\\iint_{R_2} = ${c} \\cdot \\frac{${b * b} - ${a * a}}{2} \\cdot ${h2} = ${i2.toLatex()}$. The total is $${ans.toLatex()}$.`,
-            `$\\iint_{R_1} = ${c} \\cdot \\frac{${a * a}}{2} \\cdot ${h1} = ${i1.toLatex()}$，$\\iint_{R_2} = ${c} \\cdot \\frac{${b * b} - ${a * a}}{2} \\cdot ${h2} = ${i2.toLatex()}$。总和为 $${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              whole,
+              `That integrates over the bounding rectangle $[0, ${b}] \\times [0, ${h1}]$, including the empty corner above $R_2$.`,
+              `那是在外接矩形 $[0, ${b}] \\times [0, ${h1}]$ 上积分，包括了 $R_2$ 上方的空角。`,
+            ),
+            why(
+              Q.of(c * (a * a * h1 + b * b * h2), 2),
+              `That integrates $x$ from $0$ to $${b}$ on $R_2$; it starts at $x = ${a}$, so use $\\frac{${b * b} - ${a * a}}{2}$.`,
+              `那是在 $R_2$ 上对 $x$ 从 $0$ 积到 $${b}$；它从 $x = ${a}$ 开始，所以要用 $\\frac{${b * b} - ${a * a}}{2}$。`,
+            ),
+            why(i1, "That leaves out $R_2$; the integral over the union adds both pieces.", "那漏了 $R_2$；并集上的积分要把两块都加上。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate over the first piece", "第一块上的积分"],
+                t(
+                  `$\\iint_{R_1} ${cc}x\\,dA = ${c} \\cdot \\frac{${a * a}}{2} \\cdot ${h1} = ${i1.toLatex()}$.`,
+                  `$\\iint_{R_1} ${cc}x\\,dA = ${c} \\cdot \\frac{${a * a}}{2} \\cdot ${h1} = ${i1.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Integrate over the second piece", "第二块上的积分"],
+                t(
+                  `$\\iint_{R_2} ${cc}x\\,dA = ${c} \\cdot \\frac{${b * b} - ${a * a}}{2} \\cdot ${h2} = ${i2.toLatex()}$.`,
+                  `$\\iint_{R_2} ${cc}x\\,dA = ${c} \\cdot \\frac{${b * b} - ${a * a}}{2} \\cdot ${h2} = ${i2.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Add", "相加"],
+                t(`$${i1.toLatex()} + ${i2.toLatex()} = ${ans.toLatex()}$.`, `$${i1.toLatex()} + ${i2.toLatex()} = ${ans.toLatex()}$。`),
+              ],
+            ],
+            t(
+              `The bounding rectangle $[0, ${b}] \\times [0, ${h1}]$ gives $${whole.toLatex()}$, and the empty corner $[${a}, ${b}] \\times [${h2}, ${h1}]$ gives $${cut.toLatex()}$; their difference is $${ans.toLatex()}$.`,
+              `外接矩形 $[0, ${b}] \\times [0, ${h1}]$ 给出 $${whole.toLatex()}$，空角 $[${a}, ${b}] \\times [${h2}, ${h1}]$ 给出 $${cut.toLatex()}$；两者之差为 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -1371,6 +2325,10 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
     "Reversing the order of integration often renders an otherwise intractable iterated integral easily solvable.",
     "通过交换积分次序，往往能将原本难以甚至无法求出初等原函数的二次积分转化为易求的积分。",
   ),
+  intro: t(
+    "The integral $\\int_0^1 \\int_y^1 e^{x^2}\\,dx\\,dy$ cannot be done as written, since $e^{x^2}$ has no elementary antiderivative. Its region is the triangle $0 \\le y \\le x \\le 1$, which is also $0 \\le x \\le 1$, $0 \\le y \\le x$. In that order the inner integral is $\\int_0^x e^{x^2}\\,dy = xe^{x^2}$, and $\\int_0^1 xe^{x^2}\\,dx = \\frac{e - 1}{2}$.\n\nCheck: $e^{x^2}$ lies between $1$ and $e$ on a triangle of area $\\frac{1}{2}$, so the integral lies between $\\frac{1}{2}$ and $\\frac{e}{2}$, and $\\frac{e - 1}{2} \\approx 0.86$ does.\n\nIn this lesson we reverse the order of integration by redescribing the region, which can turn a hard integral into an easy one.",
+    "积分 $\\int_0^1 \\int_y^1 e^{x^2}\\,dx\\,dy$ 按原样无法计算，因为 $e^{x^2}$ 没有初等原函数。它的区域是三角形 $0 \\le y \\le x \\le 1$，也就是 $0 \\le x \\le 1$，$0 \\le y \\le x$。按这个次序，内层积分为 $\\int_0^x e^{x^2}\\,dy = xe^{x^2}$，而 $\\int_0^1 xe^{x^2}\\,dx = \\frac{e - 1}{2}$。\n\n检验：在面积为 $\\frac{1}{2}$ 的三角形上 $e^{x^2}$ 介于 $1$ 与 $e$ 之间，所以积分介于 $\\frac{1}{2}$ 与 $\\frac{e}{2}$ 之间，而 $\\frac{e - 1}{2} \\approx 0.86$ 确实如此。\n\n本课我们通过重新描述区域来交换积分次序，这可以把难算的积分变成容易的积分。",
+  ),
   prerequisites: ["double-integrals-over-partitioned-regions"],
   encompasses: [],
   xp: 10,
@@ -1379,38 +2337,58 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
       id: "reversing-order-to-enable-integration",
       title: t("Reversing order to enable integration", "交换积分次序以求值"),
       explanation: t(
-        "Sketch the region and describe it the other way around; the new order of integration can make an impossible inner integral easy. The integral $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ is evaluated by reversing the order:\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}.$$",
-        "画出区域并换一种方式描述它；新的积分次序可以使原来无法计算的内层积分变得容易。积分 $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ 可通过交换积分次序计算：\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}$$",
+        "Sketch the region and describe it the other way around; the new order of integration can make an impossible inner integral easy. The integral $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ is evaluated by reversing the order:\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}.$$\n\nFor $\\int_0^1 \\int_y^1 3x^2\\,dx\\,dy$ this gives $\\int_0^1 3x^3\\,dx = \\frac{3}{4}$.\n\n> **Watch out.** The region $y \\le x$ lies below the diagonal, so after reversing, $y$ runs from $0$ up to $x$, not from $x$ up to $a$.",
+        "画出区域并换一种方式描述它；新的积分次序可以使原来无法计算的内层积分变得容易。积分 $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ 可通过交换积分次序计算：\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}$$\n\n对 $\\int_0^1 \\int_y^1 3x^2\\,dx\\,dy$，结果为 $\\int_0^1 3x^3\\,dx = \\frac{3}{4}$。\n\n> **注意。** 区域 $y \\le x$ 在对角线下方，所以交换后 $y$ 从 $0$ 到 $x$，而不是从 $x$ 到 $a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
-        const ans = Q.of(a * a * a * a, 4);
-
-        const prompt = t(
-          `Evaluate the iterated integral $\\int_0^{${a}} \\int_y^{${a}} x^2\\,dx\\,dy$ by reversing the order of integration.`,
-          `通过交换积分次序计算二次积分 $\\int_0^{${a}} \\int_y^{${a}} x^2\\,dx\\,dy$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Identify the domain from the limits: $0 \\le y \\le ${a}$ and $y \\le x \\le ${a}$.`,
-            `This is the triangle bounded by $y = 0$, $x = ${a}$, and $y = x$.`,
-            `Reverse the order: for $0 \\le x \\le ${a}$, $y$ ranges from $0$ to $x$:\n\n$$\\int_0^{${a}} \\int_0^x x^2\\,dy\\,dx$$`,
-            `Integrate with respect to $y$:\n\n$$\\int_0^x x^2\\,dy = x^2[y]_0^x = x^3.$$`,
-            `Integrate with respect to $x$:\n\n$$\\int_0^{${a}} x^3\\,dx = \\left[\\frac{x^4}{4}\\right]_0^{${a}} = \\frac{${a}^4}{4} = ${ans.toLatex()}.$$ `,
-          ),
-          steps(
-            `根据原积分限确定积分区域：$0 \\le y \\le ${a}$ 且 $y \\le x \\le ${a}$。`,
-            `该区域是由 $y = 0$、$x = ${a}$ 与 $y = x$ 围成的三角形。`,
-            `交换积分次序：当 $0 \\le x \\le ${a}$ 时，$y$ 从 $0$ 变到 $x$：\n\n$$\\int_0^{${a}} \\int_0^x x^2\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\int_0^x x^2\\,dy = x^2[y]_0^x = x^3$$`,
-            `再对 $x$ 积分：\n\n$$\\int_0^{${a}} x^3\\,dx = \\left[\\frac{x^4}{4}\\right]_0^{${a}} = \\frac{${a}^4}{4} = ${ans.toLatex()}$$ `,
-          ),
-        );
+        const a4 = a ** 4;
+        const ans = Q.of(a4, 4);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the iterated integral $\\int_0^{${a}} \\int_y^{${a}} x^2\\,dx\\,dy$ by reversing the order of integration.`,
+            `通过交换积分次序计算二次积分 $\\int_0^{${a}} \\int_y^{${a}} x^2\\,dx\\,dy$ 的值。`,
+          ),
           answer: ans,
-          wrong: [Q.of(a * a * a * a, 2), Q.of(a * a * a * a, 3), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(a4, 12),
+              `That takes $y$ from $x$ to $${a}$, the triangle above the diagonal; the region $y \\le x$ lies below it.`,
+              `那是让 $y$ 从 $x$ 到 $${a}$，那是对角线上方的三角形；区域 $y \\le x$ 在它下方。`,
+            ),
+            why(
+              Q.of(a4, 3),
+              `That integrates over the whole square $[0, ${a}]^2$; the region is only the half with $y \\le x$.`,
+              `那是在整个正方形 $[0, ${a}]^2$ 上积分；区域只是 $y \\le x$ 的那一半。`,
+            ),
+            why(
+              Q.of(a ** 3, 3),
+              "That leaves out the inner integral, which multiplies $x^2$ by the strip length $x$.",
+              "那是漏了内层积分；它把 $x^2$ 乘以条带长度 $x$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the region", "读出区域"],
+                t(
+                  `The limits say $0 \\le y \\le ${a}$ and $y \\le x \\le ${a}$: the triangle below the diagonal, which is also $0 \\le x \\le ${a}$, $0 \\le y \\le x$.`,
+                  `积分限给出 $0 \\le y \\le ${a}$，$y \\le x \\le ${a}$：对角线下方的三角形，也就是 $0 \\le x \\le ${a}$，$0 \\le y \\le x$。`,
+                ),
+              ],
+              [
+                ["Integrate in the new order", "按新次序积分"],
+                t(
+                  `$\\int_0^{${a}} \\int_0^x x^2\\,dy\\,dx = \\int_0^{${a}} x^3\\,dx = \\frac{${a}^4}{4} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} \\int_0^x x^2\\,dy\\,dx = \\int_0^{${a}} x^3\\,dx = \\frac{${a}^4}{4} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The original order works too: $\\int_y^{${a}} x^2\\,dx = \\frac{${a ** 3} - y^3}{3}$, and $\\int_0^{${a}} \\frac{${a ** 3} - y^3}{3}\\,dy = \\frac{1}{3}\\left(${a4} - \\frac{${a4}}{4}\\right) = ${ans.toLatex()}$.`,
+              `原次序也能算：$\\int_y^{${a}} x^2\\,dx = \\frac{${a ** 3} - y^3}{3}$，而 $\\int_0^{${a}} \\frac{${a ** 3} - y^3}{3}\\,dy = \\frac{1}{3}\\left(${a4} - \\frac{${a4}}{4}\\right) = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1418,23 +2396,53 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
       id: "reversing-an-integral-with-a-square-root-limit",
       title: t("Reversing an integral with a square-root limit", "交换含平方根积分限的积分次序"),
       explanation: t(
-        "The integral $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ covers the region $\\sqrt{y} \\le x \\le a$, $0 \\le y \\le a^2$. Squaring $x = \\sqrt{y}$ gives $y = x^2$, so the same region is $0 \\le x \\le a$, $0 \\le y \\le x^2$. Sketching the region before changing the limits is the safest way to get them right. Reversing the order gives\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx.$$",
-        "积分 $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ 覆盖区域 $\\sqrt{y} \\le x \\le a$，$0 \\le y \\le a^2$。把 $x = \\sqrt{y}$ 两边平方得 $y = x^2$，所以同一区域是 $0 \\le x \\le a$，$0 \\le y \\le x^2$。换限之前先画出区域是最稳妥的做法。交换次序得\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx$$",
+        "The integral $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ covers the region $\\sqrt{y} \\le x \\le a$, $0 \\le y \\le a^2$. Squaring $x = \\sqrt{y}$ gives $y = x^2$, so the same region is $0 \\le x \\le a$, $0 \\le y \\le x^2$. Sketching the region before changing the limits is the safest way to get them right. Reversing the order gives\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx.$$\n\nFor $\\int_0^{36} \\int_{\\sqrt{y}}^{6} x\\,dx\\,dy$ this is $\\int_0^6 x^3\\,dx = 324$.\n\n> **Watch out.** The region is below the parabola $y = x^2$, so $y$ runs from $0$ to $x^2$; letting $y$ run all the way to $a^2$ covers a rectangle.",
+        "积分 $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ 覆盖区域 $\\sqrt{y} \\le x \\le a$，$0 \\le y \\le a^2$。把 $x = \\sqrt{y}$ 两边平方得 $y = x^2$，所以同一区域是 $0 \\le x \\le a$，$0 \\le y \\le x^2$。换限之前先画出区域是最稳妥的做法。交换次序得\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx$$\n\n对 $\\int_0^{36} \\int_{\\sqrt{y}}^{6} x\\,dx\\,dy$，结果为 $\\int_0^6 x^3\\,dx = 324$。\n\n> **注意。** 区域在抛物线 $y = x^2$ 下方，所以 $y$ 从 $0$ 到 $x^2$；让 $y$ 一直到 $a^2$ 就覆盖了一个矩形。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const c = rng.int(1, 6);
         const ans = Q.of(c * a ** 4, 4);
+        const cc = coef(c);
         return numberProblem({
           prompt: t(
-            `Evaluate $\\int_0^{${a * a}} \\int_{\\sqrt{y}}^{${a}} ${c === 1 ? "" : c}x\\,dx\\,dy$ by reversing the order of integration.`,
-            `交换积分次序，计算 $\\int_0^{${a * a}} \\int_{\\sqrt{y}}^{${a}} ${c === 1 ? "" : c}x\\,dx\\,dy$。`,
+            `Evaluate $\\int_0^{${a * a}} \\int_{\\sqrt{y}}^{${a}} ${cc}x\\,dx\\,dy$ by reversing the order of integration.`,
+            `交换积分次序，计算 $\\int_0^{${a * a}} \\int_{\\sqrt{y}}^{${a}} ${cc}x\\,dx\\,dy$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * a ** 3, 3), Q.of(c * a ** 4, 2), Q.of(c * a ** 4, 8), Q.of(c * a ** 3, 4)],
-          solution: t(
-            `The region is $0 \\le x \\le ${a}$, $0 \\le y \\le x^2$. So $\\int_0^{${a}} \\int_0^{x^2} ${c === 1 ? "" : c}x\\,dy\\,dx = \\int_0^{${a}} ${c === 1 ? "" : c}x^3\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${ans.toLatex()}$.`,
-            `区域为 $0 \\le x \\le ${a}$，$0 \\le y \\le x^2$。所以 $\\int_0^{${a}} \\int_0^{x^2} ${c === 1 ? "" : c}x\\,dy\\,dx = \\int_0^{${a}} ${c === 1 ? "" : c}x^3\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * a ** 4, 2),
+              `That lets $y$ run to $${a * a}$ for every $x$, a rectangle; the region lies below $y = x^2$.`,
+              `那是对每个 $x$ 都让 $y$ 到 $${a * a}$，是一个矩形；区域在 $y = x^2$ 下方。`,
+            ),
+            why(
+              Q.of(c * a ** 3, 3),
+              "The inner integral multiplies $cx$ by the strip length $x^2$, so the outer integrand is $cx^3$, not $cx^2$.",
+              "内层积分把 $cx$ 乘以条带长度 $x^2$，所以外层被积函数是 $cx^3$，不是 $cx^2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Redescribe the region", "重新描述区域"],
+                t(
+                  `$\\sqrt{y} \\le x \\le ${a}$ with $0 \\le y \\le ${a * a}$ is the region under $y = x^2$: $0 \\le x \\le ${a}$, $0 \\le y \\le x^2$.`,
+                  `$\\sqrt{y} \\le x \\le ${a}$，$0 \\le y \\le ${a * a}$ 是 $y = x^2$ 下方的区域：$0 \\le x \\le ${a}$，$0 \\le y \\le x^2$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{${a}} \\int_0^{x^2} ${cc}x\\,dy\\,dx = \\int_0^{${a}} ${cc}x^3\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} \\int_0^{x^2} ${cc}x\\,dy\\,dx = \\int_0^{${a}} ${cc}x^3\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The original order also works here: $\\int_{\\sqrt{y}}^{${a}} ${cc}x\\,dx = \\frac{${c}(${a * a} - y)}{2}$, and $\\int_0^{${a * a}} \\frac{${c}(${a * a} - y)}{2}\\,dy = \\frac{${c}}{2} \\cdot \\frac{${a ** 4}}{2} = ${ans.toLatex()}$.`,
+              `这里原次序也能算：$\\int_{\\sqrt{y}}^{${a}} ${cc}x\\,dx = \\frac{${c}(${a * a} - y)}{2}$，而 $\\int_0^{${a * a}} \\frac{${c}(${a * a} - y)}{2}\\,dy = \\frac{${c}}{2} \\cdot \\frac{${a ** 4}}{2} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },

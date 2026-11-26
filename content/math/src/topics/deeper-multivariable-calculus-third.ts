@@ -1629,6 +1629,8 @@ const movingAlongLevel = {
       const q = nz(rng, 9);
       const a = nz(rng, 9);
       const answer = Q.of(-a * p, q);
+      const kc = q === 1 ? "k" : q === -1 ? "-k" : `${q}k`;
+      const kTerm = `${q < 0 ? "-" : "+"} ${Math.abs(q) === 1 ? "" : Math.abs(q)}k`;
       return numberProblem({
         prompt: text([
           `At an instant, a particle has $\\nabla f = ${br(p, q)}$ and $\\mathbf{r}'(t) = ${br(a, "k")}$. Find $k$ so that $\\frac{df}{dt} = 0$ at that instant.`,
@@ -1653,16 +1655,13 @@ const movingAlongLevel = {
             [
               ["Write the rate", "写出变化率"],
               t(
-                `$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}' = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k = ${p * a} + ${paren(q)}k$.`,
-                `$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}' = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)}k = ${p * a} + ${paren(q)}k$。`,
+                `$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}' = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)} \\cdot k = ${p * a} ${kTerm}$.`,
+                `$\\frac{df}{dt} = \\nabla f \\cdot \\mathbf{r}' = ${paren(p)} \\cdot ${paren(a)} + ${paren(q)} \\cdot k = ${p * a} ${kTerm}$。`,
               ),
             ],
             [
               ["Set it to zero", "令其为零"],
-              t(
-                `$${paren(q)}k = ${-p * a}$, so $k = ${answer.toLatex()}$.`,
-                `$${paren(q)}k = ${-p * a}$，所以 $k = ${answer.toLatex()}$。`,
-              ),
+              t(`$${kc} = ${-p * a}$, so $k = ${answer.toLatex()}$.`, `$${kc} = ${-p * a}$，所以 $k = ${answer.toLatex()}$。`),
             ],
           ],
           t(
@@ -2320,8 +2319,8 @@ const lowerDecreasing = point(
   "a-lower-sum-for-a-decreasing-function",
   ["A lower sum for a decreasing function", "递减函数的下和"],
   [
-    "A lower sum uses the smallest value on each cell. For a function decreasing in both variables, that value is at the corner with the largest coordinates, the opposite of an increasing function. So check the direction of change before choosing corners.",
-    "下和用每个小格上的最小值。对两个变量都递减的函数，这个值在坐标最大的角上，与递增函数相反。所以选角之前要先判断变化方向。",
+    "A lower sum uses the smallest value on each cell. For a function decreasing in both variables, that value is at the corner with the largest coordinates, the opposite of an increasing function. So check the direction of change before choosing corners. For $20 - x - y$ on $[0, 2] \\times [0, 1]$ with two unit cells, the minima are at $(1, 1)$ and $(2, 1)$, so $L = 18 + 17 = 35$.\n\n> **Watch out.** For a decreasing function the lower-left corners give the largest values, so using them produces the upper sum.",
+    "下和用每个小格上的最小值。对两个变量都递减的函数，这个值在坐标最大的角上，与递增函数相反。所以选角之前要先判断变化方向。对 $[0, 2] \\times [0, 1]$ 上的 $20 - x - y$，分成两个单位格，最小值在 $(1, 1)$ 和 $(2, 1)$，所以 $L = 18 + 17 = 35$。\n\n> **注意。** 对递减函数，左下角给出的是最大值，用它们得到的是上和。",
   ],
   (rng) => {
     const a = rng.int(1, 4);
@@ -2337,18 +2336,54 @@ const lowerDecreasing = point(
     const xs = evenGrid(m, dx);
     const ys = evenGrid(n, dy);
     const answer = gridSum(xs, ys, f, "high", "high");
-    return ask(
-      [
-        `Find the lower Riemann sum of $f(x, y) = ${poly([c, ""], [-a, "x"], [-b, "y"])}$ on $[0, ${W}] \\times [0, ${H}]$, using $${m}$ equal parts in $x$ and $${n}$ equal parts in $y$.`,
-        `求 $f(x, y) = ${poly([c, ""], [-a, "x"], [-b, "y"])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼下和，$x$ 方向等分为 $${m}$ 份，$y$ 方向等分为 $${n}$ 份。`,
-      ],
+    const upper = gridSum(xs, ys, f, "low", "low");
+    const fx = poly([c, ""], [-a, "x"], [-b, "y"]);
+    return numberProblem({
+      prompt: text([
+        `Find the lower Riemann sum of $f(x, y) = ${fx}$ on $[0, ${W}] \\times [0, ${H}]$, using $${m}$ equal parts in $x$ and $${n}$ equal parts in $y$.`,
+        `求 $f(x, y) = ${fx}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼下和，$x$ 方向等分为 $${m}$ 份，$y$ 方向等分为 $${n}$ 份。`,
+      ]),
       answer,
-      [gridSum(xs, ys, f, "low", "low"), gridSum(xs, ys, f, "high", "low"), gridSum(xs, ys, f, "low", "high")],
-      [
-        `$f$ decreases in both variables, so its minimum on each cell is at the upper right corner. Each cell has area $${dx * dy}$, and adding these corner values times the area gives $${answer}$.`,
-        `$f$ 对两个变量都递减，所以每格的最小值在右上角。每格面积是 $${dx * dy}$，把这些角上的值乘以面积相加，得 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          upper,
+          "That uses the lower-left corners, where a decreasing $f$ is largest; that is the upper sum.",
+          "那是用了左下角，递减的 $f$ 在那里最大；那是上和。",
+        ),
+        why(
+          gridSum(xs, ys, f, "high", "low"),
+          "That uses the lower right corners; $f$ also decreases in $y$, so the minimum is at the top of each cell.",
+          "那是用了右下角；$f$ 关于 $y$ 也递减，所以最小值在每格的顶部。",
+        ),
+        why(
+          gridSum(xs, ys, f, "low", "high"),
+          "That uses the upper left corners; $f$ also decreases in $x$, so the minimum is at the right of each cell.",
+          "那是用了左上角；$f$ 关于 $x$ 也递减，所以最小值在每格的右侧。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Locate the minimum", "确定最小值的位置"],
+            text([
+              `$f$ decreases in $x$ and in $y$, so on each cell it is smallest at the upper right corner, with $x \\in \\{${xs.slice(1).join(", ")}\\}$ and $y \\in \\{${ys.slice(1).join(", ")}\\}$.`,
+              `$f$ 关于 $x$ 和 $y$ 都递减，所以每格的最小值在右上角，$x \\in \\{${xs.slice(1).join(", ")}\\}$，$y \\in \\{${ys.slice(1).join(", ")}\\}$。`,
+            ]),
+          ],
+          [
+            ["Add with the area", "乘面积相加"],
+            text([
+              `Each cell has area $${dx * dy}$, and the corner values times the area add up to $${answer}$.`,
+              `每格面积是 $${dx * dy}$，角上的值乘以面积相加得 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The upper sum from the lower-left corners is $${upper}$, and the lower sum must not exceed it: $${answer} \\le ${upper}$.`,
+          `用左下角得到的上和是 $${upper}$，下和不能超过它：$${answer} \\le ${upper}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2356,8 +2391,8 @@ const upperDecreasing = point(
   "an-upper-sum-for-a-decreasing-function",
   ["An upper sum for a decreasing function", "递减函数的上和"],
   [
-    "An upper sum uses the largest value on each cell. For a function decreasing in both variables, that value is at the corner with the smallest coordinates. A sum that uses upper right corners here would give a lower sum instead of an upper one.",
-    "上和用每个小格上的最大值。对两个变量都递减的函数，这个值在坐标最小的角上。这里如果用右上角，得到的就是下和，而不是上和。",
+    "An upper sum uses the largest value on each cell. For a function decreasing in both variables, that value is at the corner with the smallest coordinates. A sum that uses upper right corners here would give a lower sum instead of an upper one. For $20 - x - y$ on $[0, 2] \\times [0, 1]$ with two unit cells, the maxima are at $(0, 0)$ and $(1, 0)$, so $U = 20 + 19 = 39$.\n\n> **Watch out.** Decide the corner from the direction of change, not from habit: for a decreasing function the upper sum uses the corners nearest the origin.",
+    "上和用每个小格上的最大值。对两个变量都递减的函数，这个值在坐标最小的角上。这里如果用右上角，得到的就是下和，而不是上和。对 $[0, 2] \\times [0, 1]$ 上的 $20 - x - y$，分成两个单位格，最大值在 $(0, 0)$ 和 $(1, 0)$，所以 $U = 20 + 19 = 39$。\n\n> **注意。** 要根据变化方向而不是习惯来选角：对递减函数，上和用离原点最近的角。",
   ],
   (rng) => {
     const a = rng.int(1, 4);
@@ -2373,18 +2408,54 @@ const upperDecreasing = point(
     const xs = evenGrid(m, dx);
     const ys = evenGrid(n, dy);
     const answer = gridSum(xs, ys, f, "low", "low");
-    return ask(
-      [
-        `Find the upper Riemann sum of $f(x, y) = ${poly([c, ""], [-a, "x"], [-b, "y"])}$ on $[0, ${W}] \\times [0, ${H}]$, using $${m}$ equal parts in $x$ and $${n}$ equal parts in $y$.`,
-        `求 $f(x, y) = ${poly([c, ""], [-a, "x"], [-b, "y"])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼上和，$x$ 方向等分为 $${m}$ 份，$y$ 方向等分为 $${n}$ 份。`,
-      ],
+    const lower = gridSum(xs, ys, f, "high", "high");
+    const fx = poly([c, ""], [-a, "x"], [-b, "y"]);
+    return numberProblem({
+      prompt: text([
+        `Find the upper Riemann sum of $f(x, y) = ${fx}$ on $[0, ${W}] \\times [0, ${H}]$, using $${m}$ equal parts in $x$ and $${n}$ equal parts in $y$.`,
+        `求 $f(x, y) = ${fx}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼上和，$x$ 方向等分为 $${m}$ 份，$y$ 方向等分为 $${n}$ 份。`,
+      ]),
       answer,
-      [gridSum(xs, ys, f, "high", "high"), gridSum(xs, ys, f, "high", "low"), gridSum(xs, ys, f, "low", "high")],
-      [
-        `$f$ decreases in both variables, so its maximum on each cell is at the lower left corner. Each cell has area $${dx * dy}$, and adding these corner values times the area gives $${answer}$.`,
-        `$f$ 对两个变量都递减，所以每格的最大值在左下角。每格面积是 $${dx * dy}$，把这些角上的值乘以面积相加，得 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          lower,
+          "That uses the upper right corners, where a decreasing $f$ is smallest; that is the lower sum.",
+          "那是用了右上角，递减的 $f$ 在那里最小；那是下和。",
+        ),
+        why(
+          gridSum(xs, ys, f, "high", "low"),
+          "That uses the lower right corners; $f$ decreases in $x$, so the maximum is at the left of each cell.",
+          "那是用了右下角；$f$ 关于 $x$ 递减，所以最大值在每格的左侧。",
+        ),
+        why(
+          gridSum(xs, ys, f, "low", "high"),
+          "That uses the upper left corners; $f$ decreases in $y$, so the maximum is at the bottom of each cell.",
+          "那是用了左上角；$f$ 关于 $y$ 递减，所以最大值在每格的底部。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Locate the maximum", "确定最大值的位置"],
+            text([
+              `$f$ decreases in $x$ and in $y$, so on each cell it is largest at the lower left corner, with $x \\in \\{${xs.slice(0, -1).join(", ")}\\}$ and $y \\in \\{${ys.slice(0, -1).join(", ")}\\}$.`,
+              `$f$ 关于 $x$ 和 $y$ 都递减，所以每格的最大值在左下角，$x \\in \\{${xs.slice(0, -1).join(", ")}\\}$，$y \\in \\{${ys.slice(0, -1).join(", ")}\\}$。`,
+            ]),
+          ],
+          [
+            ["Add with the area", "乘面积相加"],
+            text([
+              `Each cell has area $${dx * dy}$, and the corner values times the area add up to $${answer}$.`,
+              `每格面积是 $${dx * dy}$，角上的值乘以面积相加得 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The lower sum from the upper right corners is $${lower}$, and the upper sum must not be below it: $${answer} \\ge ${lower}$.`,
+          `用右上角得到的下和是 $${lower}$，上和不能小于它：$${answer} \\ge ${lower}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2402,8 +2473,8 @@ const lowerMixed = point(
   "a-lower-sum-when-the-variables-pull-in-opposite-ways",
   ["A lower sum when the variables pull in opposite ways", "变量作用相反时的下和"],
   [
-    "When $f$ increases in $x$ and decreases in $y$, the minimum on a cell is at the left side and the top, which is the upper left corner. With unequal partitions, each cell also has its own area, so the widths must be tracked term by term.",
-    "当 $f$ 关于 $x$ 递增、关于 $y$ 递减时，每格的最小值在左侧和顶部，即左上角。在不等分的分割下，每格的面积也不同，所以要逐项记录宽度。",
+    "When $f$ increases in $x$ and decreases in $y$, the minimum on a cell is at the left side and the top, which is the upper left corner. With unequal partitions, each cell also has its own area, so the widths must be tracked term by term. For $x - y$ with $x$ divided at $0, 1, 3$ and $y$ at $0, 2$, the cells use $(0, 2)$ and $(1, 2)$, of areas $2$ and $4$: $L = -2 \\cdot 2 + (-1) \\cdot 4 = -8$.\n\n> **Watch out.** Treat each variable on its own: the left end for the increasing $x$, the top end for the decreasing $y$. Neither the lower-left nor the upper-right corner gives the minimum here.",
+    "当 $f$ 关于 $x$ 递增、关于 $y$ 递减时，每格的最小值在左侧和顶部，即左上角。在不等分的分割下，每格的面积也不同，所以要逐项记录宽度。对 $x - y$，$x$ 的分点为 $0, 1, 3$，$y$ 的分点为 $0, 2$，两格用 $(0, 2)$ 和 $(1, 2)$，面积为 $2$ 和 $4$：$L = -2 \\cdot 2 + (-1) \\cdot 4 = -8$。\n\n> **注意。** 每个变量分别考虑：递增的 $x$ 取左端，递减的 $y$ 取上端。这里左下角和右上角都不给出最小值。",
   ],
   (rng) => {
     const a = rng.int(1, 4);
@@ -2412,20 +2483,56 @@ const lowerMixed = point(
     const ys = cuts(rng, 2);
     const f = (x: number, y: number) => a * x - b * y;
     const answer = gridSum(xs, ys, f, "low", "high");
+    const upper = gridSum(xs, ys, f, "high", "low");
     const W = xs[2] as number;
     const H = ys[2] as number;
-    return ask(
-      [
-        `Find the lower Riemann sum of $f(x, y) = ${poly([a, "x"], [-b, "y"])}$ on $[0, ${W}] \\times [0, ${H}]$, with $x$ divided at $${list(xs)}$ and $y$ divided at $${list(ys)}$.`,
-        `求 $f(x, y) = ${poly([a, "x"], [-b, "y"])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼下和，$x$ 的分点是 $${list(xs)}$，$y$ 的分点是 $${list(ys)}$。`,
-      ],
+    const fx = poly([a, "x"], [-b, "y"]);
+    return numberProblem({
+      prompt: text([
+        `Find the lower Riemann sum of $f(x, y) = ${fx}$ on $[0, ${W}] \\times [0, ${H}]$, with $x$ divided at $${list(xs)}$ and $y$ divided at $${list(ys)}$.`,
+        `求 $f(x, y) = ${fx}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼下和，$x$ 的分点是 $${list(xs)}$，$y$ 的分点是 $${list(ys)}$。`,
+      ]),
       answer,
-      [gridSum(xs, ys, f, "high", "low"), gridSum(xs, ys, f, "low", "low"), gridSum(xs, ys, f, "high", "high")],
-      [
-        `$f$ is smallest at the left end in $x$ and the top end in $y$, so each cell uses its upper left corner. Multiplying each value by the area of its cell and adding gives $${answer}$.`,
-        `$f$ 在 $x$ 的左端和 $y$ 的上端最小，所以每格用左上角。把每个值乘以所在小格的面积再相加，得 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          upper,
+          "That uses the lower right corners, where $f$ is largest; that is the upper sum.",
+          "那是用了右下角，$f$ 在那里最大；那是上和。",
+        ),
+        why(
+          gridSum(xs, ys, f, "low", "low"),
+          "That uses the lower left corners; $f$ decreases in $y$, so its minimum is at the top of each cell.",
+          "那是用了左下角；$f$ 关于 $y$ 递减，所以最小值在每格的顶部。",
+        ),
+        why(
+          gridSum(xs, ys, f, "high", "high"),
+          "That uses the upper right corners; $f$ increases in $x$, so its minimum is at the left of each cell.",
+          "那是用了右上角；$f$ 关于 $x$ 递增，所以最小值在每格的左侧。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Locate the minimum", "确定最小值的位置"],
+            text([
+              `$f$ increases in $x$ and decreases in $y$, so each cell uses its upper left corner: $x \\in \\{${list(xs.slice(0, -1))}\\}$, $y \\in \\{${list(ys.slice(1))}\\}$.`,
+              `$f$ 关于 $x$ 递增、关于 $y$ 递减，所以每格用左上角：$x \\in \\{${list(xs.slice(0, -1))}\\}$，$y \\in \\{${list(ys.slice(1))}\\}$。`,
+            ]),
+          ],
+          [
+            ["Weight by the areas", "乘以面积"],
+            text([
+              `The cells have widths $${xs[1]}, ${W - (xs[1] as number)}$ in $x$ and $${ys[1]}, ${H - (ys[1] as number)}$ in $y$; multiplying each corner value by the area of its cell and adding gives $${answer}$.`,
+              `各格在 $x$ 方向宽 $${xs[1]}, ${W - (xs[1] as number)}$，在 $y$ 方向宽 $${ys[1]}, ${H - (ys[1] as number)}$；把每个角上的值乘以所在小格的面积再相加，得 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The upper sum, from the lower right corners, is $${upper}$, and $${answer} \\le ${upper}$.`,
+          `用右下角得到的上和是 $${upper}$，而 $${answer} \\le ${upper}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2433,8 +2540,8 @@ const upperMixed = point(
   "an-upper-sum-when-the-variables-pull-in-opposite-ways",
   ["An upper sum when the variables pull in opposite ways", "变量作用相反时的上和"],
   [
-    "When $f$ increases in $x$ and decreases in $y$, the maximum on a cell is at the right side and the bottom, which is the lower right corner. Neither the upper right nor the lower left corner gives an upper sum for such a function.",
-    "当 $f$ 关于 $x$ 递增、关于 $y$ 递减时，每格的最大值在右侧和底部，即右下角。对这样的函数，右上角和左下角都不能给出上和。",
+    "When $f$ increases in $x$ and decreases in $y$, the maximum on a cell is at the right side and the bottom, which is the lower right corner. Neither the upper right nor the lower left corner gives an upper sum for such a function. For $x - y$ with $x$ divided at $0, 1, 3$ and $y$ at $0, 2$, the cells use $(1, 0)$ and $(3, 0)$, of areas $2$ and $4$: $U = 1 \\cdot 2 + 3 \\cdot 4 = 14$.\n\n> **Watch out.** The right end is for the increasing $x$ and the bottom end for the decreasing $y$; mixing them up gives the lower sum, from the upper left corners.",
+    "当 $f$ 关于 $x$ 递增、关于 $y$ 递减时，每格的最大值在右侧和底部，即右下角。对这样的函数，右上角和左下角都不能给出上和。对 $x - y$，$x$ 的分点为 $0, 1, 3$，$y$ 的分点为 $0, 2$，两格用 $(1, 0)$ 和 $(3, 0)$，面积为 $2$ 和 $4$：$U = 1 \\cdot 2 + 3 \\cdot 4 = 14$。\n\n> **注意。** 递增的 $x$ 取右端，递减的 $y$ 取下端；弄反了就得到用左上角的下和。",
   ],
   (rng) => {
     const a = rng.int(1, 4);
@@ -2443,20 +2550,56 @@ const upperMixed = point(
     const ys = cuts(rng, 2);
     const f = (x: number, y: number) => a * x - b * y;
     const answer = gridSum(xs, ys, f, "high", "low");
+    const lower = gridSum(xs, ys, f, "low", "high");
     const W = xs[2] as number;
     const H = ys[2] as number;
-    return ask(
-      [
-        `Find the upper Riemann sum of $f(x, y) = ${poly([a, "x"], [-b, "y"])}$ on $[0, ${W}] \\times [0, ${H}]$, with $x$ divided at $${list(xs)}$ and $y$ divided at $${list(ys)}$.`,
-        `求 $f(x, y) = ${poly([a, "x"], [-b, "y"])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼上和，$x$ 的分点是 $${list(xs)}$，$y$ 的分点是 $${list(ys)}$。`,
-      ],
+    const fx = poly([a, "x"], [-b, "y"]);
+    return numberProblem({
+      prompt: text([
+        `Find the upper Riemann sum of $f(x, y) = ${fx}$ on $[0, ${W}] \\times [0, ${H}]$, with $x$ divided at $${list(xs)}$ and $y$ divided at $${list(ys)}$.`,
+        `求 $f(x, y) = ${fx}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上的黎曼上和，$x$ 的分点是 $${list(xs)}$，$y$ 的分点是 $${list(ys)}$。`,
+      ]),
       answer,
-      [gridSum(xs, ys, f, "low", "high"), gridSum(xs, ys, f, "high", "high"), gridSum(xs, ys, f, "low", "low")],
-      [
-        `$f$ is largest at the right end in $x$ and the bottom end in $y$, so each cell uses its lower right corner. Multiplying each value by the area of its cell and adding gives $${answer}$.`,
-        `$f$ 在 $x$ 的右端和 $y$ 的下端最大，所以每格用右下角。把每个值乘以所在小格的面积再相加，得 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          lower,
+          "That uses the upper left corners, where $f$ is smallest; that is the lower sum.",
+          "那是用了左上角，$f$ 在那里最小；那是下和。",
+        ),
+        why(
+          gridSum(xs, ys, f, "high", "high"),
+          "That uses the upper right corners; $f$ decreases in $y$, so its maximum is at the bottom of each cell.",
+          "那是用了右上角；$f$ 关于 $y$ 递减，所以最大值在每格的底部。",
+        ),
+        why(
+          gridSum(xs, ys, f, "low", "low"),
+          "That uses the lower left corners; $f$ increases in $x$, so its maximum is at the right of each cell.",
+          "那是用了左下角；$f$ 关于 $x$ 递增，所以最大值在每格的右侧。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Locate the maximum", "确定最大值的位置"],
+            text([
+              `$f$ increases in $x$ and decreases in $y$, so each cell uses its lower right corner: $x \\in \\{${list(xs.slice(1))}\\}$, $y \\in \\{${list(ys.slice(0, -1))}\\}$.`,
+              `$f$ 关于 $x$ 递增、关于 $y$ 递减，所以每格用右下角：$x \\in \\{${list(xs.slice(1))}\\}$，$y \\in \\{${list(ys.slice(0, -1))}\\}$。`,
+            ]),
+          ],
+          [
+            ["Weight by the areas", "乘以面积"],
+            text([
+              `The cells have widths $${xs[1]}, ${W - (xs[1] as number)}$ in $x$ and $${ys[1]}, ${H - (ys[1] as number)}$ in $y$; multiplying each corner value by the area of its cell and adding gives $${answer}$.`,
+              `各格在 $x$ 方向宽 $${xs[1]}, ${W - (xs[1] as number)}$，在 $y$ 方向宽 $${ys[1]}, ${H - (ys[1] as number)}$；把每个角上的值乘以所在小格的面积再相加，得 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The lower sum, from the upper left corners, is $${lower}$, and $${answer} \\ge ${lower}$.`,
+          `用左上角得到的下和是 $${lower}$，而 $${answer} \\ge ${lower}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2464,8 +2607,8 @@ const howFine = point(
   "how-fine-a-partition-must-be",
   ["How fine a partition must be", "分割要多细"],
   [
-    "The definition of the double integral asks that the gap between upper and lower sums can be made as small as desired. For a linear increasing function with $n$ parts each way, the gap is a constant divided by $n$, so a required tolerance gives the size of $n$.",
-    "二重积分的定义要求上和与下和之差可以任意小。对线性递增函数，每个方向分为 $n$ 份时，差是一个常数除以 $n$，所以给定容差就能确定 $n$ 的大小。",
+    "The definition of the double integral asks that the gap between upper and lower sums can be made as small as desired. For a linear increasing function with $n$ parts each way, the gap is a constant divided by $n$, so a required tolerance gives the size of $n$. For $x + y$ on $[0, 2]^2$ the gap is $\\frac{(2 + 2) \\cdot 4}{n} = \\frac{16}{n}$, and $\\frac{16}{n} < 4$ needs $n > 4$, so $n = 5$.\n\n> **Watch out.** The inequality is strict: $n = \\frac{16}{4} = 4$ makes the gap exactly $4$, not less than $4$, so add one to the quotient when it is a whole number.",
+    "二重积分的定义要求上和与下和之差可以任意小。对线性递增函数，每个方向分为 $n$ 份时，差是一个常数除以 $n$，所以给定容差就能确定 $n$ 的大小。对 $[0, 2]^2$ 上的 $x + y$，差为 $\\frac{(2 + 2) \\cdot 4}{n} = \\frac{16}{n}$，$\\frac{16}{n} < 4$ 要求 $n > 4$，所以 $n = 5$。\n\n> **注意。** 不等式是严格的：$n = \\frac{16}{4} = 4$ 使差恰好等于 $4$，并不小于 $4$，所以商为整数时要再加一。",
   ],
   (rng) => {
     const a = rng.int(1, 5);
@@ -2475,18 +2618,57 @@ const howFine = point(
     const E = rng.pick([1, 2, 3, 5]);
     const G = (a * W + b * H) * W * H;
     const answer = Math.floor(G / E) + 1;
-    return ask(
-      [
+    const fewer = answer - 1;
+    return numberProblem({
+      prompt: text([
         `For $f(x, y) = ${poly([a, "x"], [b, "y"])}$ on $[0, ${W}] \\times [0, ${H}]$, with $n$ equal parts in each direction, find the smallest $n$ such that $U(f, P) - L(f, P) < ${E}$.`,
         `对 $[0, ${W}] \\times [0, ${H}]$ 上的 $f(x, y) = ${poly([a, "x"], [b, "y"])}$，每个方向等分为 $n$ 份，求使 $U(f, P) - L(f, P) < ${E}$ 的最小 $n$。`,
-      ],
+      ]),
       answer,
-      [Math.max(answer - 1, 1) === answer ? answer + 1 : answer - 1, G, W * H],
-      [
-        `Each cell contributes its area times the increase across it, and the areas add to $${W * H}$, so the gap is $\\frac{${G}}{n}$. We need $n > ${Q.of(G, E).toLatex()}$, so the smallest integer is $${answer}$.`,
-        `每格贡献面积乘以格内的增量，面积之和是 $${W * H}$，所以差是 $\\frac{${G}}{n}$。需要 $n > ${Q.of(G, E).toLatex()}$，所以最小的整数是 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        ...(fewer >= 1
+          ? [
+              why(
+                fewer,
+                `With $n = ${fewer}$ the gap is $${Q.of(G, fewer).toLatex()}$, which is not less than $${E}$.`,
+                `$n = ${fewer}$ 时差为 $${Q.of(G, fewer).toLatex()}$，并不小于 $${E}$。`,
+              ),
+            ]
+          : []),
+        why(
+          G,
+          `That is the gap for a single cell, $${G}$; the question asks for the number of parts $n$.`,
+          `那是只有一格时的差 $${G}$；题目问的是份数 $n$。`,
+        ),
+        why(
+          W * H,
+          `That is the area $${W * H}$; the gap is the area times the rise across a cell, $\\frac{${a * W + b * H}}{n}$.`,
+          `那是面积 $${W * H}$；差是面积乘以一格内的增量 $\\frac{${a * W + b * H}}{n}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the gap", "求差"],
+            text([
+              `On each cell $f$ rises by $\\frac{${a} \\cdot ${W} + ${b} \\cdot ${H}}{n} = \\frac{${a * W + b * H}}{n}$, and the areas add up to $${W * H}$, so $U - L = \\frac{${G}}{n}$.`,
+              `每格内 $f$ 增加 $\\frac{${a} \\cdot ${W} + ${b} \\cdot ${H}}{n} = \\frac{${a * W + b * H}}{n}$，面积之和为 $${W * H}$，所以 $U - L = \\frac{${G}}{n}$。`,
+            ]),
+          ],
+          [
+            ["Solve the inequality", "解不等式"],
+            text([
+              `$\\frac{${G}}{n} < ${E}$ means $n > ${Q.of(G, E).toLatex()}$, so the smallest whole number is $${answer}$.`,
+              `$\\frac{${G}}{n} < ${E}$ 即 $n > ${Q.of(G, E).toLatex()}$，所以最小的整数是 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `$\\frac{${G}}{${answer}} = ${Q.of(G, answer).toLatex()} < ${E}$${fewer >= 1 ? `, while $\\frac{${G}}{${fewer}} = ${Q.of(G, fewer).toLatex()} \\ge ${E}$` : ""}.`,
+          `$\\frac{${G}}{${answer}} = ${Q.of(G, answer).toLatex()} < ${E}$${fewer >= 1 ? `，而 $\\frac{${G}}{${fewer}} = ${Q.of(G, fewer).toLatex()} \\ge ${E}$` : ""}。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2495,25 +2677,60 @@ const moment = {
     "a-nonconstant-integrand-between-a-line-and-a-parabola",
     ["A nonconstant integrand between a line and a parabola", "直线与抛物线之间的非常数被积函数"],
     [
-      "Over the region between $y = x^{2}$ and $y = mx$, the $y$ integral gives the height $mx - x^{2}$, and the integrand $x$ then multiplies it. The limits for $x$ come from where the curves meet, which is $x = 0$ and $x = m$ here.",
-      "在 $y = x^{2}$ 和 $y = mx$ 之间的区域上，对 $y$ 积分得到高度 $mx - x^{2}$，再乘以被积函数 $x$。$x$ 的积分限来自两曲线的交点，这里是 $x = 0$ 和 $x = m$。",
+      "Over the region between $y = x^{2}$ and $y = mx$, the $y$ integral gives the height $mx - x^{2}$, and the integrand $x$ then multiplies it. The limits for $x$ come from where the curves meet, which is $x = 0$ and $x = m$ here. For $x$ between $y = 2x^{2}$ and $y = 4x$ the curves meet at $x = 0$ and $x = 2$, and $\\int_{0}^{2} x(4x - 2x^{2})\\,dx = \\frac{32}{3} - 8 = \\frac{8}{3}$.\n\n> **Watch out.** The integrand $x$ multiplies the whole height $mx - x^{2}$; integrating only $mx - x^{2}$ gives the area, and integrating $x$ up to the line from $y = 0$ forgets the parabola below.",
+      "在 $y = x^{2}$ 和 $y = mx$ 之间的区域上，对 $y$ 积分得到高度 $mx - x^{2}$，再乘以被积函数 $x$。$x$ 的积分限来自两曲线的交点，这里是 $x = 0$ 和 $x = m$。对 $y = 2x^{2}$ 与 $y = 4x$ 之间的 $x$，两曲线交于 $x = 0$ 和 $x = 2$，而 $\\int_{0}^{2} x(4x - 2x^{2})\\,dx = \\frac{32}{3} - 8 = \\frac{8}{3}$。\n\n> **注意。** 被积函数 $x$ 要乘以整个高度 $mx - x^{2}$；只积分 $mx - x^{2}$ 得到的是面积，而从 $y = 0$ 积到直线则忘了下方的抛物线。",
     ],
     (rng) => {
       const m = rng.int(1, 6);
       const c = rng.int(1, 12);
       const answer = Q.of(c * m ** 4, 12);
-      return ask(
-        [
+      const height = poly([m, "x"], [-1, "x^{2}"]);
+      return numberProblem({
+        prompt: text([
           `Evaluate $\\iint_{D} ${poly([c, "x"])}\\,dA$, where $D$ is the region between $y = x^{2}$ and $y = ${poly([m, "x"])}$.`,
           `求 $\\iint_{D} ${poly([c, "x"])}\\,dA$，其中 $D$ 是 $y = x^{2}$ 和 $y = ${poly([m, "x"])}$ 之间的区域。`,
-        ],
+        ]),
         answer,
-        [Q.of(c * m ** 3, 6), Q.of(c * m ** 4, 4), Q.of(c * m ** 4, 3)],
-        [
-          `The curves meet at $x = 0$ and $x = ${m}$. The integral is $\\int_{0}^{${m}} ${poly([c, "x"])}(${poly([m, "x"], [-1, "x^{2}"])}) \\, dx$, which equals $${answer.toLatex()}$.`,
-          `两曲线交于 $x = 0$ 和 $x = ${m}$。积分是 $\\int_{0}^{${m}} ${poly([c, "x"])}(${poly([m, "x"], [-1, "x^{2}"])}) \\, dx$，等于 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of(c * m ** 3, 6),
+            `That integrates the constant $${c}$ over $D$; the integrand $${poly([c, "x"])}$ multiplies the height.`,
+            `那是在 $D$ 上积分常数 $${c}$；被积函数 $${poly([c, "x"])}$ 要乘以高度。`,
+          ),
+          why(
+            Q.of(c * m ** 4, 3),
+            "That integrates from $y = 0$ up to the line; the region starts at the parabola $y = x^{2}$.",
+            "那是从 $y = 0$ 积到直线；区域从抛物线 $y = x^{2}$ 开始。",
+          ),
+          why(
+            Q.of(c * m ** 4, 4),
+            "That is the integral under the parabola; the region lies above it and below the line.",
+            "那是抛物线下方的积分；区域在抛物线上方、直线下方。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the crossings", "求交点"],
+              text([
+                `$x^{2} = ${poly([m, "x"])}$ at $x = 0$ and $x = ${m}$, and the line is on top between them, so the height is $${height}$.`,
+                `$x^{2} = ${poly([m, "x"])}$ 在 $x = 0$ 和 $x = ${m}$ 处成立，其间直线在上方，所以高度为 $${height}$。`,
+              ]),
+            ],
+            [
+              ["Integrate", "积分"],
+              text([
+                `$\\int_{0}^{${m}} ${poly([c, "x"])}(${height}) \\, dx = ${c}\\left(\\frac{${m ** 4}}{3} - \\frac{${m ** 4}}{4}\\right) = ${answer.toLatex()}$.`,
+                `$\\int_{0}^{${m}} ${poly([c, "x"])}(${height}) \\, dx = ${c}\\left(\\frac{${m ** 4}}{3} - \\frac{${m ** 4}}{4}\\right) = ${answer.toLatex()}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `With horizontal strips, $x$ runs from $\\frac{y}{${m}}$ to $\\sqrt{y}$ for $0 \\le y \\le ${m * m}$, and $\\int_{0}^{${m * m}} \\frac{${c}}{2}\\left(y - \\frac{y^{2}}{${m * m}}\\right) dy = \\frac{${c}}{2}\\left(\\frac{${m ** 4}}{2} - \\frac{${m ** 4}}{3}\\right) = ${answer.toLatex()}$.`,
+            `用水平条带，$0 \\le y \\le ${m * m}$ 时 $x$ 从 $\\frac{y}{${m}}$ 到 $\\sqrt{y}$，而 $\\int_{0}^{${m * m}} \\frac{${c}}{2}\\left(y - \\frac{y^{2}}{${m * m}}\\right) dy = \\frac{${c}}{2}\\left(\\frac{${m ** 4}}{2} - \\frac{${m ** 4}}{3}\\right) = ${answer.toLatex()}$。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings4["double-integrals-over-non-rectangular-domains#a-nonconstant-integrand-between-a-line-and-a-parabola"],
@@ -2523,25 +2740,55 @@ const typeTwoY = point(
   "integrating-y-over-a-region-with-horizontal-strips",
   ["Integrating y over a region with horizontal strips", "用水平条带对 y 积分"],
   [
-    "A region bounded by $x = y^{2}$ on the left and a vertical line on the right is best described by horizontal strips. The $x$ integral gives the width of a strip, $a^{2} - y^{2}$, and the integrand $y$ multiplies it in the outer integral.",
-    "左边界是 $x = y^{2}$、右边界是竖直线的区域，最好用水平条带描述。对 $x$ 积分得到条带的宽度 $a^{2} - y^{2}$，在外层积分中再乘以被积函数 $y$。",
+    "A region bounded by $x = y^{2}$ on the left and a vertical line on the right is best described by horizontal strips. The $x$ integral gives the width of a strip, $a^{2} - y^{2}$, and the integrand $y$ multiplies it in the outer integral. For $y$ over $0 \\le y \\le 1$, $y^{2} \\le x \\le 4$, the width is $4 - y^{2}$ and $\\int_{0}^{1} y(4 - y^{2})\\,dy = 2 - \\frac{1}{4} = \\frac{7}{4}$.\n\n> **Watch out.** The strip starts at the parabola, so its width is $a^{2} - y^{2}$, not $a^{2}$; and the integrand $y$ still multiplies that width, or the result is just a multiple of the area.",
+    "左边界是 $x = y^{2}$、右边界是竖直线的区域，最好用水平条带描述。对 $x$ 积分得到条带的宽度 $a^{2} - y^{2}$，在外层积分中再乘以被积函数 $y$。对 $0 \\le y \\le 1$，$y^{2} \\le x \\le 4$ 上的 $y$，宽度为 $4 - y^{2}$，而 $\\int_{0}^{1} y(4 - y^{2})\\,dy = 2 - \\frac{1}{4} = \\frac{7}{4}$。\n\n> **注意。** 条带从抛物线开始，所以宽度是 $a^{2} - y^{2}$，不是 $a^{2}$；被积函数 $y$ 还要乘以这个宽度，否则结果只是面积的倍数。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
     const c = rng.int(1, 12);
     const answer = Q.of(c * a ** 4, 4);
-    return ask(
-      [
+    const width = poly([a * a, ""], [-1, "y^{2}"]);
+    return numberProblem({
+      prompt: text([
         `Evaluate $\\iint_{D} ${poly([c, "y"])}\\,dA$, where $D = \\{(x, y) : 0 \\le y \\le ${a},\\ y^{2} \\le x \\le ${a * a}\\}$.`,
         `求 $\\iint_{D} ${poly([c, "y"])}\\,dA$，其中 $D = \\{(x, y) : 0 \\le y \\le ${a},\\ y^{2} \\le x \\le ${a * a}\\}$。`,
-      ],
+      ]),
       answer,
-      [Q.of(c * a ** 4, 2), Q.of(c * a ** 3, 3), Q.of(c * a ** 4, 12)],
-      [
-        `The strip at height $y$ has width $${poly([a * a, ""], [-1, "y^{2}"])}$. So the integral is $\\int_{0}^{${a}} ${poly([c, "y"])}(${poly([a * a, ""], [-1, "y^{2}"])}) \\, dy = ${answer.toLatex()}$.`,
-        `高度为 $y$ 的条带宽度是 $${poly([a * a, ""], [-1, "y^{2}"])}$。所以积分是 $\\int_{0}^{${a}} ${poly([c, "y"])}(${poly([a * a, ""], [-1, "y^{2}"])}) \\, dy = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(c * a ** 4, 2),
+          `That uses the width $${a * a}$, the rectangle $[0, ${a * a}] \\times [0, ${a}]$; the strip starts at $x = y^{2}$.`,
+          `那是用了宽度 $${a * a}$，即矩形 $[0, ${a * a}] \\times [0, ${a}]$；条带从 $x = y^{2}$ 开始。`,
+        ),
+        why(
+          Q.of(2 * c * a ** 3, 3),
+          `That is $${c}$ times the area of $D$; the integrand $${poly([c, "y"])}$ multiplies the width.`,
+          `那是 $${c}$ 乘以 $D$ 的面积；被积函数 $${poly([c, "y"])}$ 要乘以宽度。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the width", "求宽度"],
+            text([
+              `The strip at height $y$ runs from $x = y^{2}$ to $x = ${a * a}$, so its width is $${width}$.`,
+              `高度为 $y$ 的条带从 $x = y^{2}$ 到 $x = ${a * a}$，宽度为 $${width}$。`,
+            ]),
+          ],
+          [
+            ["Integrate", "积分"],
+            text([
+              `$\\int_{0}^{${a}} ${poly([c, "y"])}(${width}) \\, dy = ${c}\\left(\\frac{${a ** 4}}{2} - \\frac{${a ** 4}}{4}\\right) = ${answer.toLatex()}$.`,
+              `$\\int_{0}^{${a}} ${poly([c, "y"])}(${width}) \\, dy = ${c}\\left(\\frac{${a ** 4}}{2} - \\frac{${a ** 4}}{4}\\right) = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `With vertical strips, $0 \\le x \\le ${a * a}$ and $0 \\le y \\le \\sqrt{x}$, and $\\int_{0}^{${a * a}} \\frac{${c}x}{2}\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${answer.toLatex()}$.`,
+          `用竖直条带，$0 \\le x \\le ${a * a}$，$0 \\le y \\le \\sqrt{x}$，而 $\\int_{0}^{${a * a}} \\frac{${c}x}{2}\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${answer.toLatex()}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2550,8 +2797,8 @@ const withHole = {
     "a-region-with-a-rectangular-hole",
     ["A region with a rectangular hole", "带矩形空洞的区域"],
     [
-      "Additivity also works by subtraction. An integral over a rectangle with a hole equals the integral over the whole rectangle minus the integral over the hole, which is usually faster than dividing the remaining region into four rectangles.",
-      "可加性也可以用减法。带空洞的矩形上的积分，等于整个矩形上的积分减去空洞上的积分，这通常比把剩余区域分成四个矩形更快。",
+      "Additivity also works by subtraction. An integral over a rectangle with a hole equals the integral over the whole rectangle minus the integral over the hole, which is usually faster than dividing the remaining region into four rectangles. For $x$ over $[0, 4] \\times [0, 2]$ with $(1, 3) \\times (\\frac{1}{2}, \\frac{3}{2})$ removed, the whole rectangle gives $\\frac{16}{2} \\cdot 2 = 16$, the hole gives $\\frac{9 - 1}{2} \\cdot 1 = 4$, and the answer is $16 - 4 = 12$.\n\n> **Watch out.** Subtract the hole, do not add it; and the hole's $x$ integral is $\\frac{b^{2} - a^{2}}{2}$ over its own interval, not over $[0, b]$.",
+      "可加性也可以用减法。带空洞的矩形上的积分，等于整个矩形上的积分减去空洞上的积分，这通常比把剩余区域分成四个矩形更快。对 $[0, 4] \\times [0, 2]$ 去掉 $(1, 3) \\times (\\frac{1}{2}, \\frac{3}{2})$ 上的 $x$，整个矩形给出 $\\frac{16}{2} \\cdot 2 = 16$，空洞给出 $\\frac{9 - 1}{2} \\cdot 1 = 4$，答案为 $16 - 4 = 12$。\n\n> **注意。** 要减去空洞，而不是加上；空洞的 $x$ 积分是在它自己的区间上的 $\\frac{b^{2} - a^{2}}{2}$，不是在 $[0, b]$ 上。",
     ],
     (rng) => {
       const a = rng.int(1, 3);
@@ -2563,18 +2810,61 @@ const withHole = {
       const whole = Q.of(W * W * H, 2);
       const hole = Q.of((b * b - a * a) * (d - c), 2);
       const answer = whole.sub(hole);
-      return ask(
-        [
+      const wrongHole = Q.of(b * b * (d - c), 2);
+      const left = Q.of(a * a * H, 2);
+      const right = Q.of((W * W - b * b) * H, 2);
+      const middle = Q.of((b * b - a * a) * (c + H - d), 2);
+      return numberProblem({
+        prompt: text([
           `Evaluate $\\iint_{R} x\\,dA$, where $R$ is $[0, ${W}] \\times [0, ${H}]$ with the open rectangle $(${a}, ${b}) \\times (${c}, ${d})$ removed.`,
           `求 $\\iint_{R} x\\,dA$，其中 $R$ 是 $[0, ${W}] \\times [0, ${H}]$ 去掉开矩形 $(${a}, ${b}) \\times (${c}, ${d})$。`,
-        ],
+        ]),
         answer,
-        [whole, hole, whole.add(hole)],
-        [
-          `Over the whole rectangle the integral is $${whole.toLatex()}$, and over the hole it is $${hole.toLatex()}$. Subtracting gives $${answer.toLatex()}$.`,
-          `整个矩形上的积分是 $${whole.toLatex()}$，空洞上的积分是 $${hole.toLatex()}$。相减得 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            whole,
+            "That is the integral over the whole rectangle; the hole has not been taken away.",
+            "那是整个矩形上的积分；空洞还没有去掉。",
+          ),
+          why(
+            hole,
+            "That is the integral over the hole itself; the region is what is left around it.",
+            "那是空洞本身上的积分；区域是它周围剩下的部分。",
+          ),
+          why(whole.add(hole), "That adds the hole; removing a piece subtracts its integral.", "那是加上了空洞；去掉一块要减去它的积分。"),
+          why(
+            whole.sub(wrongHole),
+            `That integrates $x$ over $[0, ${b}]$ for the hole; the hole starts at $x = ${a}$.`,
+            `那是对空洞在 $[0, ${b}]$ 上积分 $x$；空洞从 $x = ${a}$ 开始。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Integrate over the whole rectangle", "整个矩形上的积分"],
+              text([`$\\frac{${W}^{2}}{2} \\cdot ${H} = ${whole.toLatex()}$.`, `$\\frac{${W}^{2}}{2} \\cdot ${H} = ${whole.toLatex()}$。`]),
+            ],
+            [
+              ["Integrate over the hole", "空洞上的积分"],
+              text([
+                `$\\frac{${b * b} - ${a * a}}{2} \\cdot ${d - c} = ${hole.toLatex()}$.`,
+                `$\\frac{${b * b} - ${a * a}}{2} \\cdot ${d - c} = ${hole.toLatex()}$。`,
+              ]),
+            ],
+            [
+              ["Subtract", "相减"],
+              text([
+                `$${whole.toLatex()} - ${hole.toLatex()} = ${answer.toLatex()}$.`,
+                `$${whole.toLatex()} - ${hole.toLatex()} = ${answer.toLatex()}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `Cut $R$ into the strip $[0, ${a}]$, the strip $[${b}, ${W}]$ and the parts of $[${a}, ${b}]$ below and above the hole, of total height $${c + H - d}$: $${left.toLatex()} + ${right.toLatex()} + ${middle.toLatex()} = ${answer.toLatex()}$.`,
+            `把 $R$ 分成条带 $[0, ${a}]$、条带 $[${b}, ${W}]$，以及 $[${a}, ${b}]$ 上空洞下方和上方的部分（总高 $${c + H - d}$）：$${left.toLatex()} + ${right.toLatex()} + ${middle.toLatex()} = ${answer.toLatex()}$。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings4["double-integrals-over-partitioned-regions#a-region-with-a-rectangular-hole"],

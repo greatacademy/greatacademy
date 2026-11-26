@@ -765,8 +765,8 @@ const typeOneRegion = point(
   "the-limits-of-a-drawn-type-i-region",
   ["The limits of a drawn type I region", "图中第一型区域的积分限"],
   [
-    "A type I region lies between a bottom curve and a top curve over an interval of $x$. The outer limits are the left and right ends of the region, and the inner limits are the bottom and top curves. The drawing shows which curve is on top and where the two curves meet.",
-    "第一型区域位于 $x$ 的一个区间上的下曲线和上曲线之间。外层积分限是区域的左右端点，内层积分限是下曲线和上曲线。图显示哪条曲线在上面，以及两条曲线在哪里相交。",
+    "A type I region lies between a bottom curve and a top curve over an interval of $x$. The outer limits are the left and right ends of the region, and the inner limits are the bottom and top curves. The drawing shows which curve is on top and where the two curves meet. For the region between $y = (x - 2)^2$ and the line $y = 4$, the curves meet at $x = 0$ and $x = 4$, and the integral is $\\int_0^4 \\int_{(x - 2)^2}^{4} f(x, y)\\,dy\\,dx$.\n\n> **Watch out.** The inner integral runs from the bottom curve up to the top one, and the outer limits are where the curves meet, not the edges of the drawing.",
+    "第一型区域位于 $x$ 的一个区间上的下曲线和上曲线之间。外层积分限是区域的左右端点，内层积分限是下曲线和上曲线。图显示哪条曲线在上面，以及两条曲线在哪里相交。对 $y = (x - 2)^2$ 与直线 $y = 4$ 之间的区域，两者交于 $x = 0$ 和 $x = 4$，积分为 $\\int_0^4 \\int_{(x - 2)^2}^{4} f(x, y)\\,dy\\,dx$。\n\n> **注意。** 内层积分从下曲线到上曲线，外层积分限是两曲线的交点，而不是图的边缘。",
   ],
   (rng) => {
     const c = rng.int(1, 3);
@@ -782,24 +782,66 @@ const typeOneRegion = point(
       const x = lo + ((hi - lo) * i) / 40;
       return [x, f(x)];
     });
-    return choose(
-      rng,
-      [
+    const opt = (latex: string) => t(...same(latex));
+    return explainedChoice(rng, {
+      prompt: t(
         `The shaded region $R$ is bounded by the parabola $y = ${curve}$ and a horizontal line. Which iterated integral equals $\\iint_R f\\,dA$?`,
         `阴影区域 $R$ 由抛物线 $y = ${curve}$ 和一条水平线围成。哪个累次积分等于 $\\iint_R f\\,dA$？`,
+      ),
+      correct: opt(form(lo, hi, curve, `${top}`)),
+      wrong: [
+        {
+          option: opt(form(lo, hi, `${top}`, curve)),
+          why: t(
+            `The limits are upside down: the parabola is the bottom curve and $y = ${top}$ is above it.`,
+            `上下限颠倒了：抛物线是下曲线，$y = ${top}$ 在它上方。`,
+          ),
+        },
+        {
+          option: opt(form(h, hi, curve, `${top}`)),
+          why: t(
+            `That starts at the vertex $x = ${h}$ and covers only the right half; the region begins at $x = ${lo}$.`,
+            `那从顶点 $x = ${h}$ 开始，只覆盖右半边；区域从 $x = ${lo}$ 开始。`,
+          ),
+        },
+        {
+          option: opt(form(lo, hi, "0", curve)),
+          why: t(
+            `That is the region under the parabola, down to $y = 0$; $R$ lies above the parabola and below $y = ${top}$.`,
+            `那是抛物线下方直到 $y = 0$ 的区域；$R$ 在抛物线上方、$y = ${top}$ 下方。`,
+          ),
+        },
+        {
+          option: opt(form(lo - 1, hi + 1, curve, `${top}`)),
+          why: t(
+            `The line meets the parabola at $x = ${lo}$ and $x = ${hi}$; outside them the parabola is above the line.`,
+            `直线与抛物线交于 $x = ${lo}$ 和 $x = ${hi}$；在它们之外抛物线在直线上方。`,
+          ),
+        },
       ],
-      same(form(lo, hi, curve, `${top}`)),
-      [
-        same(form(lo, hi, `${top}`, curve)),
-        same(form(h, hi, curve, `${top}`)),
-        same(form(lo, hi, "0", curve)),
-        same(form(lo - 1, hi + 1, curve, `${top}`)),
-      ],
-      [
-        `In the drawing the horizontal line is $y = ${top}$, which meets the parabola at $x = ${lo}$ and $x = ${hi}$. The parabola is the bottom curve and the line is the top, which gives the limits.`,
-        `图中的水平线是 $y = ${top}$，它与抛物线相交于 $x = ${lo}$ 和 $x = ${hi}$。抛物线是下曲线，直线是上曲线，由此得到积分限。`,
-      ],
-      fig(
+      solution: walked(
+        [
+          [
+            ["Find where the curves meet", "求交点"],
+            t(
+              `The horizontal line is $y = ${top}$, which meets the parabola where $${shifted}^2 = ${c * c}$, at $x = ${lo}$ and $x = ${hi}$.`,
+              `水平线是 $y = ${top}$，它与抛物线相交于 $${shifted}^2 = ${c * c}$ 处，即 $x = ${lo}$ 和 $x = ${hi}$。`,
+            ),
+          ],
+          [
+            ["Order the curves", "确定上下曲线"],
+            t(
+              "The parabola is the bottom curve and the line is the top, which gives the inner limits.",
+              "抛物线是下曲线，直线是上曲线，由此得到内层积分限。",
+            ),
+          ],
+        ],
+        t(
+          `With $f = 1$ the integral is the area $\\int_{${lo}}^{${hi}} \\left(${c * c} - ${shifted}^2\\right) dx = ${Q.of(4 * c ** 3, 3).toLatex()} > 0$, so the curves are in the right order.`,
+          `取 $f = 1$，积分为面积 $\\int_{${lo}}^{${hi}} \\left(${c * c} - ${shifted}^2\\right) dx = ${Q.of(4 * c ** 3, 3).toLatex()} > 0$，所以上下曲线顺序正确。`,
+        ),
+      ),
+      figure: fig(
         { xMin: -4, xMax: 4, yMin: -1, yMax: 12 },
         [
           { kind: "polygon", points: pts },
@@ -811,7 +853,7 @@ const typeOneRegion = point(
           `顶点为 (${h}, ${d}) 的抛物线与高度为 ${top} 的水平线之间的区域。`,
         ],
       ),
-    );
+    });
   },
 );
 
@@ -820,8 +862,8 @@ const changeOrder = {
     "integrating-a-drawn-triangle-the-other-way",
     ["Integrating a drawn triangle the other way", "换一个方向积分图中的三角形"],
     [
-      "To integrate with $x$ first, slice the region by horizontal lines. The outer limits are the lowest and highest values of $y$, and the inner limits say where a horizontal slice enters and leaves the region, written as functions of $y$. A line $y = mx$ must first be solved for $x$, which gives $x = y/m$.",
-      "要先对 $x$ 积分，就用水平线切割区域。外层积分限是 $y$ 的最小值和最大值，内层积分限说明水平切片在哪里进入和离开区域，写成 $y$ 的函数。直线 $y = mx$ 要先解出 $x$，得 $x = y/m$。",
+      "To integrate with $x$ first, slice the region by horizontal lines. The outer limits are the lowest and highest values of $y$, and the inner limits say where a horizontal slice enters and leaves the region, written as functions of $y$. A line $y = mx$ must first be solved for $x$, which gives $x = y/m$. For the triangle with vertices $(0, 0)$, $(4, 0)$ and $(4, 12)$, the slanted edge $y = 3x$ becomes $x = \\frac{y}{3}$, so the integral is $\\int_0^{12} \\int_{y/3}^{4} f(x, y)\\,dx\\,dy$.\n\n> **Watch out.** The outer limit is the height of the top corner, not its $x$-coordinate, and solving $y = mx$ gives $x = \\frac{y}{m}$, not $my$.",
+      "要先对 $x$ 积分，就用水平线切割区域。外层积分限是 $y$ 的最小值和最大值，内层积分限说明水平切片在哪里进入和离开区域，写成 $y$ 的函数。直线 $y = mx$ 要先解出 $x$，得 $x = y/m$。对顶点为 $(0, 0)$、$(4, 0)$、$(4, 12)$ 的三角形，斜边 $y = 3x$ 变为 $x = \\frac{y}{3}$，所以积分为 $\\int_0^{12} \\int_{y/3}^{4} f(x, y)\\,dx\\,dy$。\n\n> **注意。** 外层上限是顶角的高度，而不是它的 $x$ 坐标；由 $y = mx$ 解出的是 $x = \\frac{y}{m}$，不是 $my$。",
     ],
     (rng) => {
       const [mTop, mBottom, a] = rng.pick([
@@ -838,21 +880,67 @@ const changeOrder = {
       const other = below ? form(b, "0", inverse) : form(b, inverse, `${a}`);
       const size = Math.max(a, b) + 1;
       const wrongSlope = mTop === 1 && mBottom === 1 ? "2y" : mTop === 1 ? "\\frac{y}{2}" : `${mTop}y`;
-      return choose(
-        rng,
-        ["Which iterated integral, with $x$ integrated first, covers the shaded triangle?", "哪个先对 $x$ 积分的累次积分覆盖阴影三角形？"],
-        same(right),
-        [
-          same(other),
-          same(below ? form(a, inverse, `${b}`) : form(a, "0", inverse)),
-          same(below ? form(b, wrongSlope, `${a}`) : form(b, "0", wrongSlope)),
-          same(form(b, "0", `${a}`)),
+      const opt = (latex: string) => t(...same(latex));
+      const areaCheck = below ? `\\int_0^{${b}} \\left(${a} - ${inverse}\\right) dy` : `\\int_0^{${b}} ${inverse}\\,dy`;
+      return explainedChoice(rng, {
+        prompt: t(
+          "Which iterated integral, with $x$ integrated first, covers the shaded triangle?",
+          "哪个先对 $x$ 积分的累次积分覆盖阴影三角形？",
+        ),
+        correct: opt(right),
+        wrong: [
+          {
+            option: opt(other),
+            why: t(
+              `That is the other triangle, ${below ? "above" : "below"} the slanted edge; the shaded one lies ${below ? `between the edge and $x = ${a}$` : "between $x = 0$ and the edge"}.`,
+              `那是斜边${below ? "上方" : "下方"}的另一个三角形；阴影部分在${below ? `斜边与 $x = ${a}$ 之间` : "$x = 0$ 与斜边之间"}。`,
+            ),
+          },
+          {
+            option: opt(below ? form(a, inverse, `${b}`) : form(a, "0", inverse)),
+            why: t(
+              `$y$ runs up to the height $${b}$ of the corner $(${a}, ${b})$, not its $x$-coordinate $${a}$.`,
+              `$y$ 一直到角点 $(${a}, ${b})$ 的高度 $${b}$，而不是它的 $x$ 坐标 $${a}$。`,
+            ),
+          },
+          {
+            option: opt(below ? form(b, wrongSlope, `${a}`) : form(b, "0", wrongSlope)),
+            why: t(
+              `On the slanted edge through $(${a}, ${b})$, $x = ${inverse}$, not $${wrongSlope}$.`,
+              `在过 $(${a}, ${b})$ 的斜边上 $x = ${inverse}$，不是 $${wrongSlope}$。`,
+            ),
+          },
+          {
+            option: opt(form(b, "0", `${a}`)),
+            why: t(
+              `That covers the whole rectangle $[0, ${a}] \\times [0, ${b}]$; the slanted edge cuts it in half.`,
+              `那覆盖了整个矩形 $[0, ${a}] \\times [0, ${b}]$；斜边把它分成两半。`,
+            ),
+          },
         ],
-        [
-          `The slanted edge runs through the origin and $(${a}, ${b})$, so on it $x = ${inverse}$. A horizontal slice ${below ? `starts on that edge and ends at $x = ${a}$` : `starts at $x = 0$ and ends on that edge`}, and $y$ runs from $0$ to $${b}$.`,
-          `斜边经过原点和 $(${a}, ${b})$，所以在斜边上 $x = ${inverse}$。水平切片${below ? `从斜边开始，到 $x = ${a}$ 结束` : `从 $x = 0$ 开始，到斜边结束`}，$y$ 从 $0$ 到 $${b}$。`,
-        ],
-        fig(
+        solution: walked(
+          [
+            [
+              ["Solve the edge for x", "把斜边解成 x"],
+              t(
+                `The slanted edge runs through the origin and $(${a}, ${b})$, so on it $x = ${inverse}$.`,
+                `斜边经过原点和 $(${a}, ${b})$，所以在斜边上 $x = ${inverse}$。`,
+              ),
+            ],
+            [
+              ["Read a horizontal slice", "读水平切片"],
+              t(
+                `A horizontal slice ${below ? `starts on that edge and ends at $x = ${a}$` : `starts at $x = 0$ and ends on that edge`}, and $y$ runs from $0$ to $${b}$.`,
+                `水平切片${below ? `从斜边开始，到 $x = ${a}$ 结束` : `从 $x = 0$ 开始，到斜边结束`}，$y$ 从 $0$ 到 $${b}$。`,
+              ),
+            ],
+          ],
+          t(
+            `With $f = 1$ the integral is $${areaCheck} = ${Q.of(a * b, 2).toLatex()}$, the area $\\frac{${a} \\cdot ${b}}{2}$ of the triangle.`,
+            `取 $f = 1$，积分为 $${areaCheck} = ${Q.of(a * b, 2).toLatex()}$，正是三角形的面积 $\\frac{${a} \\cdot ${b}}{2}$。`,
+          ),
+        ),
+        figure: fig(
           { xMin: -1, xMax: size, yMin: -1, yMax: size },
           [
             {
@@ -877,7 +965,7 @@ const changeOrder = {
             `阴影直角三角形，顶点为原点、(${a}, ${b}) 和 ${below ? `(${a}, 0)` : `(0, ${b})`}。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: multivariableDrawings4["changing-the-order-of-integration-in-double-integrals#integrating-a-drawn-triangle-the-other-way"],

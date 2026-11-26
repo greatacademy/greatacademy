@@ -880,8 +880,8 @@ const doubleRect = {
     "a-double-integral-over-a-drawn-rectangle",
     ["A double integral over a drawn rectangle", "所画矩形上的二重积分"],
     [
-      "Over a rectangle, the integral of a linear function equals the area times the value at the center, because the terms that change sign around the center cancel.",
-      "在矩形上，线性函数的积分等于面积乘以中心处的值，因为围绕中心变号的项互相抵消。",
+      "Over a rectangle, the integral of a linear function equals the area times the value at the center, because the terms that change sign around the center cancel. For $x - y + 3$ over $[0, 10] \\times [0, 2]$, the center is $(5, 1)$, where the function is $7$, and the area is $20$, so the integral is $140$.\n\n> **Watch out.** Use the value at the center, not at a corner, and multiply it by the area; the constant term counts too.",
+      "在矩形上，线性函数的积分等于面积乘以中心处的值，因为围绕中心变号的项互相抵消。对 $[0, 10] \\times [0, 2]$ 上的 $x - y + 3$，中心为 $(5, 1)$，函数在那里等于 $7$，面积为 $20$，所以积分为 $140$。\n\n> **注意。** 要用中心处的值而不是角点处的值，并乘以面积；常数项也要算上。",
     ],
     (rng) => {
       const r = gridRect(rng);
@@ -891,31 +891,62 @@ const doubleRect = {
       const area = r.w * r.h;
       const center = Q.of(m * (r.x0 + r.x1) + n * (r.y0 + r.y1) + 2 * c, 2);
       const answer = Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1) + 2 * c), 2);
-      return ask(
-        [
-          `Find $\\iint_R (${terms([
-            [m, "x"],
-            [n, "y"],
-            [c, ""],
-          ])})\\,dA$ over the drawn rectangle $R$.`,
-          `求所画矩形 $R$ 上的 $\\iint_R (${terms([
-            [m, "x"],
-            [n, "y"],
-            [c, ""],
-          ])})\\,dA$。`,
-        ],
-        answer,
-        [center, area, Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1)), 2), Q.of(area * (m * r.x1 + n * r.y1 + c), 1)],
-        [
-          `The area is $${area}$ and the center is $\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)$, where the function equals $${center.toLatex()}$. The product is $${answer.toLatex()}$.`,
-          `面积为 $${area}$，中心为 $\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)$，函数在那里等于 $${center.toLatex()}$。乘积为 $${answer.toLatex()}$。`,
-        ],
-        fig(
+      const f = terms([
+        [m, "x"],
+        [n, "y"],
+        [c, ""],
+      ]);
+      const mid = `\\left(${Q.of(r.x0 + r.x1, 2).toLatex()}, ${Q.of(r.y0 + r.y1, 2).toLatex()}\\right)`;
+      const px = Q.of(m * (r.x1 * r.x1 - r.x0 * r.x0) * r.h, 2);
+      const py = Q.of(n * (r.y1 * r.y1 - r.y0 * r.y0) * r.w, 2);
+      const sum = [px, py, Q.of(c * area)].map((v) => (v.sign() < 0 ? `(${v.toLatex()})` : v.toLatex())).join(" + ");
+      return {
+        ...numberProblem({
+          prompt: t(`Find $\\iint_R (${f})\\,dA$ over the drawn rectangle $R$.`, `求所画矩形 $R$ 上的 $\\iint_R (${f})\\,dA$。`),
+          answer,
+          mistakes: apart(answer, [
+            why(center, `That is the value at the center; multiply it by the area $${area}$.`, `那是中心处的值；还要乘以面积 $${area}$。`),
+            why(area, "That is the area, the integral of $1$; the integrand is not $1$.", "那是面积，即 $1$ 的积分；被积函数不是 $1$。"),
+            why(
+              Q.of(area * (m * (r.x0 + r.x1) + n * (r.y0 + r.y1)), 2),
+              `The constant $${c}$ is left out; it adds $${c} \\cdot ${area}$.`,
+              `漏了常数 $${c}$；它贡献 $${c} \\cdot ${area}$。`,
+            ),
+            why(
+              Q.of(area * (m * r.x1 + n * r.y1 + c), 1),
+              `That uses the value at the corner $(${r.x1}, ${r.y1})$; the average of a linear function is its value at the center.`,
+              `那是用了角点 $(${r.x1}, ${r.y1})$ 处的值；线性函数的平均值是它在中心处的值。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the rectangle", "读出矩形"],
+                t(
+                  `$R = [${r.x0}, ${r.x1}] \\times [${r.y0}, ${r.y1}]$ has area $${r.w} \\cdot ${r.h} = ${area}$ and center $${mid}$.`,
+                  `$R = [${r.x0}, ${r.x1}] \\times [${r.y0}, ${r.y1}]$ 的面积为 $${r.w} \\cdot ${r.h} = ${area}$，中心为 $${mid}$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `At the center the function equals $${center.toLatex()}$, so the integral is $${area} \\cdot ${center.sign() < 0 ? `(${center.toLatex()})` : center.toLatex()} = ${answer.toLatex()}$.`,
+                  `函数在中心处等于 $${center.toLatex()}$，所以积分为 $${area} \\cdot ${center.sign() < 0 ? `(${center.toLatex()})` : center.toLatex()} = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Term by term, the iterated integrals give $${sum} = ${answer.toLatex()}$.`,
+              `逐项计算，二次积分给出 $${sum} = ${answer.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           7,
           [{ kind: "polygon", points: rectangle(r.x0, r.y0, r.x1, r.y1) }],
           [`A shaded rectangle from (${r.x0}, ${r.y0}) to (${r.x1}, ${r.y1}).`, `从 (${r.x0}, ${r.y0}) 到 (${r.x1}, ${r.y1}) 的阴影矩形。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings3["double-integrals-over-rectangular-domains#a-double-integral-over-a-drawn-rectangle"],
@@ -926,8 +957,8 @@ const typeTwoLimits = {
     "type-ii-limits-of-a-drawn-triangle",
     ["Type II limits of a drawn triangle", "所画三角形的 II 型积分限"],
     [
-      "For a type II description, fix $y$ and read the horizontal slice: its left end and right end, written as functions of $y$, are the inner limits, and the range of $y$ gives the outer limits.",
-      "II 型描述中，固定 $y$，读水平截线：它的左端和右端写成 $y$ 的函数就是内层积分限，$y$ 的范围给出外层积分限。",
+      "For a type II description, fix $y$ and read the horizontal slice: its left end and right end, written as functions of $y$, are the inner limits, and the range of $y$ gives the outer limits. For the triangle with corners $(0, 0)$, $(9, 0)$ and $(9, 3)$, the slanted side is $x = 3y$, a slice runs from $x = 3y$ to $x = 9$, and $y$ runs from $0$ to $3$: $\\int_0^3 \\int_{3y}^{9} f\\,dx\\,dy$.\n\n> **Watch out.** Solve the slanted side for $x$: through $(0, 0)$ and $(a, b)$ it is $x = \\frac{a}{b}y$, not $\\frac{b}{a}y$. The outer limit is the height $b$ of the triangle, not its width.",
+      "II 型描述中，固定 $y$，读水平截线：它的左端和右端写成 $y$ 的函数就是内层积分限，$y$ 的范围给出外层积分限。对顶点为 $(0, 0)$、$(9, 0)$、$(9, 3)$ 的三角形，斜边为 $x = 3y$，截线从 $x = 3y$ 到 $x = 9$，$y$ 从 $0$ 到 $3$：$\\int_0^3 \\int_{3y}^{9} f\\,dx\\,dy$。\n\n> **注意。** 要把斜边解成 $x$ 的式子：过 $(0, 0)$ 与 $(a, b)$ 的斜边是 $x = \\frac{a}{b}y$，不是 $\\frac{b}{a}y$。外层上限是三角形的高 $b$，不是宽。",
     ],
     (rng) => {
       const a = rng.int(2, 7);
@@ -935,7 +966,7 @@ const typeTwoLimits = {
       const right = rng.bool();
       const slope = Q.of(a, b).toLatex();
       const edge = `${slope}y`;
-      const form = (lo: string, hi: string, top: string) => same(`\\int_0^{${top}} \\int_{${lo}}^{${hi}} f(x, y)\\,dx\\,dy`);
+      const form = (lo: string, hi: string, top: string) => t(...same(`\\int_0^{${top}} \\int_{${lo}}^{${hi}} f(x, y)\\,dx\\,dy`));
       const points: Point[] = right
         ? [
             [0, 0],
@@ -949,23 +980,60 @@ const typeTwoLimits = {
           ];
       const correct = right ? form(edge, String(a), String(b)) : form("0", edge, String(b));
       const wrongEdge = `${Q.of(b, a).toLatex()}y`;
-      return choose(
-        rng,
-        ["Which iterated integral, with $x$ inside, covers the shaded triangle?", "哪个累次积分（$x$ 在内层）覆盖阴影三角形？"],
+      const otherSide = t(
+        `That is the other triangle, ${right ? `to the left of the slanted side; the shaded one lies between the side and $x = ${a}$` : `to the right of the slanted side; the shaded one lies between $x = 0$ and the side`}.`,
+        `那是另一个三角形，${right ? `在斜边左侧；阴影部分在斜边与 $x = ${a}$ 之间` : `在斜边右侧；阴影部分在 $x = 0$ 与斜边之间`}。`,
+      );
+      const height = t(
+        `$y$ runs up to the height $${b}$ of the triangle, not its width $${a}$.`,
+        `$y$ 一直到三角形的高 $${b}$，而不是宽 $${a}$。`,
+      );
+      const flipped = t(
+        `On the side through $(0, 0)$ and $(${a}, ${b})$, $x = ${edge}$; $${wrongEdge}$ inverts the slope.`,
+        `在过 $(0, 0)$ 与 $(${a}, ${b})$ 的斜边上 $x = ${edge}$；$${wrongEdge}$ 把斜率颠倒了。`,
+      );
+      return explainedChoice(rng, {
+        prompt: t("Which iterated integral, with $x$ inside, covers the shaded triangle?", "哪个累次积分（$x$ 在内层）覆盖阴影三角形？"),
         correct,
-        right
-          ? [form("0", edge, String(b)), form(edge, String(a), String(a)), form(wrongEdge, String(a), String(b))]
-          : [form(edge, String(a), String(b)), form("0", edge, String(a)), form("0", wrongEdge, String(b))],
-        [
-          `The slanted side joins $(0, 0)$ and $(${a}, ${b})$, so on it $x = ${edge}$. A horizontal slice at height $y$ runs ${right ? `from that side to $x = ${a}$` : "from $x = 0$ to that side"}, with $y$ from $0$ to $${b}$.`,
-          `斜边连接 $(0, 0)$ 和 $(${a}, ${b})$，所以斜边上 $x = ${edge}$。高度 $y$ 处的水平截线${right ? `从斜边到 $x = ${a}$` : "从 $x = 0$ 到斜边"}，$y$ 从 $0$ 到 $${b}$。`,
-        ],
-        fig(
+        wrong: right
+          ? [
+              { option: form("0", edge, String(b)), why: otherSide },
+              { option: form(edge, String(a), String(a)), why: height },
+              { option: form(wrongEdge, String(a), String(b)), why: flipped },
+            ]
+          : [
+              { option: form(edge, String(a), String(b)), why: otherSide },
+              { option: form("0", edge, String(a)), why: height },
+              { option: form("0", wrongEdge, String(b)), why: flipped },
+            ],
+        solution: walked(
+          [
+            [
+              ["Find the slanted side", "求斜边"],
+              t(
+                `The slanted side joins $(0, 0)$ and $(${a}, ${b})$, so on it $x = ${edge}$.`,
+                `斜边连接 $(0, 0)$ 和 $(${a}, ${b})$，所以斜边上 $x = ${edge}$。`,
+              ),
+            ],
+            [
+              ["Read a horizontal slice", "读水平截线"],
+              t(
+                `A slice at height $y$ runs ${right ? `from that side to $x = ${a}$` : "from $x = 0$ to that side"}, with $y$ from $0$ to $${b}$.`,
+                `高度 $y$ 处的截线${right ? `从斜边到 $x = ${a}$` : "从 $x = 0$ 到斜边"}，$y$ 从 $0$ 到 $${b}$。`,
+              ),
+            ],
+          ],
+          t(
+            `With $f = 1$ the integral gives $\\int_0^{${b}} ${right ? `\\left(${a} - ${edge}\\right)` : edge}\\,dy = ${Q.of(a * b, 2).toLatex()}$, the area $\\frac{${a} \\cdot ${b}}{2}$ of the triangle.`,
+            `取 $f = 1$，积分为 $\\int_0^{${b}} ${right ? `\\left(${a} - ${edge}\\right)` : edge}\\,dy = ${Q.of(a * b, 2).toLatex()}$，正是三角形的面积 $\\frac{${a} \\cdot ${b}}{2}$。`,
+          ),
+        ),
+        figure: fig(
           { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
           [{ kind: "polygon", points }],
           [`A shaded triangle with corners ${points.map(at).join(", ")}.`, `阴影三角形，顶点为 ${points.map(at).join("、")}。`],
         ),
-      );
+      });
     },
   ),
   figure: multivariableDrawings4["double-integrals-over-type-ii-regions#type-ii-limits-of-a-drawn-triangle"],
@@ -976,8 +1044,8 @@ const partitioned = {
     "a-double-integral-over-a-drawn-l-shape",
     ["A double integral over a drawn L-shape", "所画 L 形上的二重积分"],
     [
-      "Cut the region into rectangles and add the integrals over the pieces. On a rectangle from $x = 0$ to $x = w$ of height $h$, the integral of $x$ is $h \\cdot \\frac{w^2}{2}$.",
-      "把区域切成矩形，再把各块上的积分相加。在从 $x = 0$ 到 $x = w$、高为 $h$ 的矩形上，$x$ 的积分为 $h \\cdot \\frac{w^2}{2}$。",
+      "Cut the region into rectangles and add the integrals over the pieces. On a rectangle from $x = 0$ to $x = w$ of height $h$, the integral of $x$ is $h \\cdot \\frac{w^2}{2}$. For the L-shape with corners $(0, 0)$, $(8, 0)$, $(8, 1)$, $(2, 1)$, $(2, 4)$ and $(0, 4)$, cutting along $y = 1$ gives $1 \\cdot \\frac{64}{2} + 3 \\cdot \\frac{4}{2} = 32 + 6 = 38$.\n\n> **Watch out.** The upper piece is only as wide as the narrow arm and only as tall as the part above the cut; using the full width or the full height counts the empty corner.",
+      "把区域切成矩形，再把各块上的积分相加。在从 $x = 0$ 到 $x = w$、高为 $h$ 的矩形上，$x$ 的积分为 $h \\cdot \\frac{w^2}{2}$。对顶点为 $(0, 0)$、$(8, 0)$、$(8, 1)$、$(2, 1)$、$(2, 4)$、$(0, 4)$ 的 L 形，沿 $y = 1$ 切开得 $1 \\cdot \\frac{64}{2} + 3 \\cdot \\frac{4}{2} = 32 + 6 = 38$。\n\n> **注意。** 上面一块只有窄臂那么宽，也只有切线以上那么高；用整个宽度或整个高度就把空角也算进去了。",
     ],
     (rng) => {
       const w = rng.int(3, 7);
@@ -998,27 +1066,86 @@ const partitioned = {
       const moment = Q.of(low * w * w + (high - low) * narrow * narrow, 2);
       const answer = useX ? moment : Q.of(k * area, 1);
       const prompt = useX ? "x" : String(k);
-      return ask(
-        [`Find $\\iint_R ${prompt}\\,dA$ over the shaded region $R$.`, `求阴影区域 $R$ 上的 $\\iint_R ${prompt}\\,dA$。`],
-        answer,
-        useX
-          ? [Q.of(high * w * w, 2), Q.of(area, 1), Q.of(low * w * w, 2), Q.of(area * w, 2)]
-          : [Q.of(k * w * high, 1), Q.of(area, 1), Q.of(k * w * low, 1), Q.of(k * (w + high), 1)],
-        useX
-          ? [
-              `Cut along $y = ${low}$. The lower piece gives $${low} \\cdot \\frac{${w * w}}{2}$ and the upper piece gives $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$, with sum $${moment.toLatex()}$.`,
-              `沿 $y = ${low}$ 切开。下面一块得 $${low} \\cdot \\frac{${w * w}}{2}$，上面一块得 $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$，和为 $${moment.toLatex()}$。`,
-            ]
-          : [
-              `Cut along $y = ${low}$. The pieces have areas $${w * low}$ and $${narrow * (high - low)}$, so the area is $${area}$ and the integral is $${k} \\cdot ${area} = ${k * area}$.`,
-              `沿 $y = ${low}$ 切开。两块面积为 $${w * low}$ 和 $${narrow * (high - low)}$，所以面积为 $${area}$，积分为 $${k} \\cdot ${area} = ${k * area}$。`,
+      const box = useX ? Q.of(high * w * w, 2) : Q.of(k * w * high);
+      const corner = useX ? Q.of((high - low) * (w * w - narrow * narrow), 2) : Q.of(k * (w - narrow) * (high - low));
+      const boxWhy = t(
+        `That covers the whole box $[0, ${w}] \\times [0, ${high}]$, including the empty corner $[${narrow}, ${w}] \\times [${low}, ${high}]$.`,
+        `那覆盖了整个矩形 $[0, ${w}] \\times [0, ${high}]$，包括空角 $[${narrow}, ${w}] \\times [${low}, ${high}]$。`,
+      );
+      const lowerWhy = t(
+        `That is the lower piece only; the upper arm $[0, ${narrow}] \\times [${low}, ${high}]$ adds to it.`,
+        `那只是下面一块；还要加上上面的窄臂 $[0, ${narrow}] \\times [${low}, ${high}]$。`,
+      );
+      return {
+        ...numberProblem({
+          prompt: t(`Find $\\iint_R ${prompt}\\,dA$ over the shaded region $R$.`, `求阴影区域 $R$ 上的 $\\iint_R ${prompt}\\,dA$。`),
+          answer,
+          mistakes: apart(
+            answer,
+            useX
+              ? [
+                  { value: Q.of(high * w * w, 2), why: boxWhy },
+                  why(
+                    Q.of(area),
+                    `That is the area $${area}$; the integrand $x$ is not $1$.`,
+                    `那是面积 $${area}$；被积函数 $x$ 不是 $1$。`,
+                  ),
+                  { value: Q.of(low * w * w, 2), why: lowerWhy },
+                  why(
+                    Q.of(area * w, 2),
+                    `That multiplies the area by $\\frac{${w}}{2}$, the middle of the bottom piece; the upper arm is centered at $\\frac{${narrow}}{2}$.`,
+                    `那是用面积乘以下面一块的中点 $\\frac{${w}}{2}$；上面窄臂的中点在 $\\frac{${narrow}}{2}$。`,
+                  ),
+                ]
+              : [
+                  { value: Q.of(k * w * high), why: boxWhy },
+                  why(
+                    Q.of(area),
+                    `That is the area $${area}$; the integrand $${k}$ multiplies it.`,
+                    `那是面积 $${area}$；还要乘以被积函数 $${k}$。`,
+                  ),
+                  { value: Q.of(k * w * low), why: lowerWhy },
+                  why(
+                    Q.of(k * (w + high)),
+                    "That adds two side lengths; an integral of a constant is the constant times an area.",
+                    "那是把两条边长相加；常数的积分是常数乘以面积。",
+                  ),
+                ],
+          ),
+          solution: walked(
+            [
+              [
+                ["Cut the region", "切开区域"],
+                t(
+                  `Cut along $y = ${low}$: the lower piece is $[0, ${w}] \\times [0, ${low}]$ and the upper piece is $[0, ${narrow}] \\times [${low}, ${high}]$.`,
+                  `沿 $y = ${low}$ 切开：下面一块是 $[0, ${w}] \\times [0, ${low}]$，上面一块是 $[0, ${narrow}] \\times [${low}, ${high}]$。`,
+                ),
+              ],
+              [
+                ["Add the pieces", "把两块相加"],
+                useX
+                  ? t(
+                      `The lower piece gives $${low} \\cdot \\frac{${w * w}}{2}$ and the upper piece gives $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$, with sum $${moment.toLatex()}$.`,
+                      `下面一块得 $${low} \\cdot \\frac{${w * w}}{2}$，上面一块得 $${high - low} \\cdot \\frac{${narrow * narrow}}{2}$，和为 $${moment.toLatex()}$。`,
+                    )
+                  : t(
+                      `The pieces have areas $${w * low}$ and $${narrow * (high - low)}$, so the area is $${area}$ and the integral is $${k} \\cdot ${area} = ${k * area}$.`,
+                      `两块面积为 $${w * low}$ 和 $${narrow * (high - low)}$，所以面积为 $${area}$，积分为 $${k} \\cdot ${area} = ${k * area}$。`,
+                    ),
+              ],
             ],
-        fig(
+            t(
+              `The box $[0, ${w}] \\times [0, ${high}]$ gives $${box.toLatex()}$ and the empty corner gives $${corner.toLatex()}$; their difference is $${answer.toLatex()}$.`,
+              `矩形 $[0, ${w}] \\times [0, ${high}]$ 给出 $${box.toLatex()}$，空角给出 $${corner.toLatex()}$；两者之差为 $${answer.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           { xMin: -1, xMax: 8, yMin: -1, yMax: 9 },
           [{ kind: "polygon", points }],
           [`A shaded L-shape with corners ${points.map(at).join(", ")}.`, `阴影 L 形，顶点为 ${points.map(at).join("、")}。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings4["double-integrals-over-partitioned-regions#a-double-integral-over-a-drawn-l-shape"],

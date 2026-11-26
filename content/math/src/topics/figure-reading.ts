@@ -1081,8 +1081,8 @@ const limitsFromRegion: KnowledgePointDef = {
   id: "limits-of-integration-from-a-drawing",
   title: t("Limits of integration from a drawing", "从图形确定积分限"),
   explanation: t(
-    "To integrate with $dy$ inside, read the region in vertical slices. The outer limits are the leftmost and rightmost $x$ of the region, numbers. The inner limits are the lower and upper curves that a vertical line meets, functions of $x$. In the region drawn here, a vertical line enters on $y = x^2$ and leaves on $y = x$, for $x$ from $0$ to $1$.",
-    "要让 $dy$ 在内层积分，就用竖直切片读图。外层积分限是区域最左和最右的 $x$，是数字。内层积分限是竖线碰到的下方和上方的曲线，是 $x$ 的函数。在这里画出的区域中，竖线从 $y = x^2$ 进入、从 $y = x$ 离开，$x$ 从 $0$ 到 $1$。",
+    "To integrate with $dy$ inside, read the region in vertical slices. The outer limits are the leftmost and rightmost $x$ of the region, numbers. The inner limits are the lower and upper curves that a vertical line meets, functions of $x$. For the region between $y = x^3$ and $y = x$ with $0 \\le x \\le 1$, a vertical line enters on $y = x^3$ and leaves on $y = x$, so the integral is $\\int_0^1 \\int_{x^3}^{x} f(x, y)\\,dy\\,dx$.\n\n> **Watch out.** The outer limits are numbers and the inner limits are curves in $x$, lower curve first. With $dx$ written inside, the inner limits would have to be functions of $y$.",
+    "要让 $dy$ 在内层积分，就用竖直切片读图。外层积分限是区域最左和最右的 $x$，是数字。内层积分限是竖线碰到的下方和上方的曲线，是 $x$ 的函数。对 $0 \\le x \\le 1$ 中 $y = x^3$ 与 $y = x$ 之间的区域，竖线从 $y = x^3$ 进入、从 $y = x$ 离开，所以积分为 $\\int_0^1 \\int_{x^3}^{x} f(x, y)\\,dy\\,dx$。\n\n> **注意。** 外层积分限是数字，内层积分限是关于 $x$ 的曲线，下方曲线在前。若把 $dx$ 写在内层，内层积分限就必须是 $y$ 的函数。",
   ),
   generate(rng: Rng): Problem {
     const kind = rng.int(0, 2);
@@ -1090,24 +1090,61 @@ const limitsFromRegion: KnowledgePointDef = {
     if (kind === 0) {
       const c = rng.int(1, 3);
       const curve = sampled((x) => x * x, 0, c, 60);
+      const top = term(c, "x");
+      const far = c === 1 ? 2 : c * c;
       return withFigure(
-        pickChoice(
-          rng,
-          t(
+        explainedChoice(rng, {
+          prompt: t(
             "Which iterated integral covers the shaded region, bounded by a line through the origin and the parabola $y = x^2$?",
             "哪个累次积分覆盖阴影区域？该区域由一条过原点的直线和抛物线 $y = x^2$ 围成。",
           ),
-          math(iterated(0, c, "x^2", term(c, "x"))),
-          [
-            math(iterated(0, c, term(c, "x"), "x^2")),
-            math(iterated(0, c === 1 ? 2 : c * c, "x^2", term(c, "x"))),
-            math(`\\int_{0}^{${c}} \\int_{x^2}^{${term(c, "x")}} f(x, y) \\, dx \\, dy`),
+          correct: math(iterated(0, c, "x^2", top)),
+          wrong: [
+            {
+              option: math(iterated(0, c, top, "x^2")),
+              why: t(
+                `The limits are upside down: for $0 < x < ${c}$ the line $y = ${top}$ is above the parabola.`,
+                `上下限颠倒了：在 $0 < x < ${c}$ 上直线 $y = ${top}$ 在抛物线上方。`,
+              ),
+            },
+            {
+              option: math(iterated(0, far, "x^2", top)),
+              why: t(
+                `The curves meet where $x^2 = ${top}$, at $x = ${c}$, not $x = ${far}$.`,
+                `两曲线在 $x^2 = ${top}$ 处相交，即 $x = ${c}$，不是 $x = ${far}$。`,
+              ),
+            },
+            {
+              option: math(`\\int_{0}^{${c}} \\int_{x^2}^{${top}} f(x, y) \\, dx \\, dy`),
+              why: t(
+                "That puts $dx$ inside, but the inner limits are functions of $x$; with $dx$ inside they must be functions of $y$.",
+                "那是把 $dx$ 放在内层，但内层积分限是 $x$ 的函数；$dx$ 在内层时它们必须是 $y$ 的函数。",
+              ),
+            },
           ],
-          t(
-            `The curves meet where $x^2 = ${term(c, "x")}$, at $x = 0$ and $x = ${c}$, the outer limits. Between them a vertical line enters on the lower curve $y = x^2$ and leaves on the upper curve $y = ${term(c, "x")}$.`,
-            `两条曲线相交于 $x^2 = ${term(c, "x")}$，即 $x = 0$ 和 $x = ${c}$，这是外层积分限。在它们之间，竖线从下方曲线 $y = x^2$ 进入，从上方曲线 $y = ${term(c, "x")}$ 离开。`,
+          solution: walked(
+            [
+              [
+                ["Find the outer limits", "求外层积分限"],
+                t(
+                  `The curves meet where $x^2 = ${top}$, at $x = 0$ and $x = ${c}$.`,
+                  `两条曲线相交于 $x^2 = ${top}$，即 $x = 0$ 和 $x = ${c}$。`,
+                ),
+              ],
+              [
+                ["Read a vertical slice", "读竖直切片"],
+                t(
+                  `Between them a vertical line enters on the lower curve $y = x^2$ and leaves on the upper curve $y = ${top}$.`,
+                  `在它们之间，竖线从下方曲线 $y = x^2$ 进入，从上方曲线 $y = ${top}$ 离开。`,
+                ),
+              ],
+            ],
+            t(
+              `With $f = 1$ the integral gives the area $\\int_0^{${c}} (${top} - x^2)\\,dx = ${frac(c ** 3, 6)} > 0$, so the lower limit is indeed below the upper one.`,
+              `取 $f = 1$，积分给出面积 $\\int_0^{${c}} (${top} - x^2)\\,dx = ${frac(c ** 3, 6)} > 0$，所以下限确实在上限下方。`,
+            ),
           ),
-        ),
+        }),
         drawn(
           { xMin: -1, xMax: c + 1, yMin: -1, yMax: c * c + 1 },
           [
@@ -1131,20 +1168,55 @@ const limitsFromRegion: KnowledgePointDef = {
     const corner: Point = below ? [a, 0] : [0, b];
     const right = below ? iterated(0, a, 0, line) : iterated(0, a, line, b);
     return withFigure(
-      pickChoice(
-        rng,
-        t("Which iterated integral covers the shaded triangle?", "哪个累次积分覆盖阴影三角形？"),
-        math(right),
-        [
-          math(below ? iterated(0, a, line, b) : iterated(0, a, 0, line)),
-          math(below ? iterated(0, b, 0, line) : iterated(0, b, line, a)),
-          math(iterated(0, a, 0, b)),
+      explainedChoice(rng, {
+        prompt: t("Which iterated integral covers the shaded triangle?", "哪个累次积分覆盖阴影三角形？"),
+        correct: math(right),
+        wrong: [
+          {
+            option: math(below ? iterated(0, a, line, b) : iterated(0, a, 0, line)),
+            why: t(
+              `That is the other half of the rectangle $[0, ${a}] \\times [0, ${b}]$, ${below ? "above" : "below"} the hypotenuse $y = ${line}$.`,
+              `那是矩形 $[0, ${a}] \\times [0, ${b}]$ 的另一半，在斜边 $y = ${line}$ 的${below ? "上方" : "下方"}。`,
+            ),
+          },
+          {
+            option: math(below ? iterated(0, b, 0, line) : iterated(0, b, line, a)),
+            why: t(
+              `$x$ runs over the width $${a}$ of the triangle; $${b}$ is its height${below ? "" : `, and the top edge is $y = ${b}$`}.`,
+              `$x$ 取遍三角形的宽 $${a}$；$${b}$ 是它的高${below ? "" : `，上边是 $y = ${b}$`}。`,
+            ),
+          },
+          {
+            option: math(iterated(0, a, 0, b)),
+            why: t(
+              `That covers the whole rectangle $[0, ${a}] \\times [0, ${b}]$; the hypotenuse $y = ${line}$ cuts it in half.`,
+              `那覆盖了整个矩形 $[0, ${a}] \\times [0, ${b}]$；斜边 $y = ${line}$ 把它分成两半。`,
+            ),
+          },
         ],
-        t(
-          `The hypotenuse joins $(0, 0)$ and $(${a}, ${b})$, so it is $y = ${line}$. The triangle spans $x$ from $0$ to $${a}$, and a vertical line ${below ? `enters on $y = 0$ and leaves on $y = ${line}$` : `enters on $y = ${line}$ and leaves on $y = ${b}$`}.`,
-          `斜边连接 $(0, 0)$ 和 $(${a}, ${b})$，所以它是 $y = ${line}$。三角形的 $x$ 从 $0$ 到 $${a}$，竖线${below ? `从 $y = 0$ 进入，从 $y = ${line}$ 离开` : `从 $y = ${line}$ 进入，从 $y = ${b}$ 离开`}。`,
+        solution: walked(
+          [
+            [
+              ["Find the hypotenuse", "求斜边"],
+              t(
+                `The hypotenuse joins $(0, 0)$ and $(${a}, ${b})$, so it is $y = ${line}$.`,
+                `斜边连接 $(0, 0)$ 和 $(${a}, ${b})$，所以它是 $y = ${line}$。`,
+              ),
+            ],
+            [
+              ["Read a vertical slice", "读竖直切片"],
+              t(
+                `The triangle spans $x$ from $0$ to $${a}$, and a vertical line ${below ? `enters on $y = 0$ and leaves on $y = ${line}$` : `enters on $y = ${line}$ and leaves on $y = ${b}$`}.`,
+                `三角形的 $x$ 从 $0$ 到 $${a}$，竖线${below ? `从 $y = 0$ 进入，从 $y = ${line}$ 离开` : `从 $y = ${line}$ 进入，从 $y = ${b}$ 离开`}。`,
+              ),
+            ],
+          ],
+          t(
+            `With $f = 1$ the integral is $\\int_0^{${a}} ${below ? line : `\\left(${b} - ${line}\\right)`}\\,dx = ${frac(a * b, 2)}$, the area $\\frac{${a} \\cdot ${b}}{2}$ of the triangle.`,
+            `取 $f = 1$，积分为 $\\int_0^{${a}} ${below ? line : `\\left(${b} - ${line}\\right)`}\\,dx = ${frac(a * b, 2)}$，正是三角形的面积 $\\frac{${a} \\cdot ${b}}{2}$。`,
+          ),
         ),
-      ),
+      }),
       drawn(
         { xMin: -1, xMax: Math.max(a, b) + 1, yMin: -1, yMax: Math.max(a, b) + 1 },
         [
