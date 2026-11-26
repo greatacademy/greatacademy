@@ -271,8 +271,8 @@ const curvatureVertex = {
     "the-curvature-at-the-vertex-of-a-drawn-parabola",
     ["The curvature at the vertex of a drawn parabola", "所画抛物线顶点处的曲率"],
     [
-      "For $y = ax^2$, the formula $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ gives $\\kappa = 2\\lvert a \\rvert$ at the vertex, where $y' = 0$. The curve bends most sharply there, and a narrower parabola has a larger $\\lvert a \\rvert$. Find $a$ from a point of the graph.",
-      "对 $y = ax^2$，公式 $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ 在顶点处（$y' = 0$）给出 $\\kappa = 2\\lvert a \\rvert$。曲线在那里弯得最厉害，抛物线越窄，$\\lvert a \\rvert$ 越大。由图像上的一点求 $a$。",
+      "For $y = ax^2$, the formula $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ gives $\\kappa = 2\\lvert a \\rvert$ at the vertex, where $y' = 0$. The curve bends most sharply there, and a narrower parabola has a larger $\\lvert a \\rvert$. Find $a$ from a point of the graph. A parabola through $(2, 12)$ has $a = \\frac{12}{4} = 3$, so its curvature at the vertex is $6$.\n\n> **Watch out.** $a$ is the height of the point divided by the square of its $x$-coordinate, not the height itself. The curvature is $2\\lvert a \\rvert$, not $\\lvert a \\rvert$, and not its reciprocal, which is the radius of curvature.",
+      "对 $y = ax^2$，公式 $\\kappa = \\frac{\\lvert y'' \\rvert}{(1 + (y')^2)^{3/2}}$ 在顶点处（$y' = 0$）给出 $\\kappa = 2\\lvert a \\rvert$。曲线在那里弯得最厉害，抛物线越窄，$\\lvert a \\rvert$ 越大。由图像上的一点求 $a$。过 $(2, 12)$ 的抛物线有 $a = \\frac{12}{4} = 3$，所以它在顶点处的曲率为 $6$。\n\n> **注意。** $a$ 是该点的高度除以其 $x$ 坐标的平方，不是高度本身。曲率是 $2\\lvert a \\rvert$，不是 $\\lvert a \\rvert$，也不是它的倒数（那是曲率半径）。",
     ],
     (rng) => {
       const k = rng.pick([1, 2, 3]);
@@ -282,18 +282,54 @@ const curvatureVertex = {
       const a = Q.of(s * height, k * k);
       const answer = Q.of(2 * height, k * k);
       const P: Point = [x, s * height];
-      return ask(
-        [
-          `The drawn parabola has the form $y = ax^2$ and passes through the marked point. Find its curvature at the vertex.`,
-          `所画的抛物线形如 $y = ax^2$，并过标记点。求它在顶点处的曲率。`,
-        ],
-        answer,
-        [Q.of(height, k * k), Q.of(k * k, 2 * height), Q.of(4 * height, k * k), height],
-        [
-          `The point $${at(P)}$ gives $a = ${a.toLatex()}$. At the vertex $y' = 0$ and $\\lvert y'' \\rvert = 2\\lvert a \\rvert$, so $\\kappa = ${answer.toLatex()}$.`,
-          `由点 $${at(P)}$ 得 $a = ${a.toLatex()}$。在顶点处 $y' = 0$，$\\lvert y'' \\rvert = 2\\lvert a \\rvert$，所以 $\\kappa = ${answer.toLatex()}$。`,
-        ],
-        fig(
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The drawn parabola has the form $y = ax^2$ and passes through the marked point. Find its curvature at the vertex.",
+            "所画的抛物线形如 $y = ax^2$，并过标记点。求它在顶点处的曲率。",
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              Q.of(height, k * k),
+              `That is $\\lvert a \\rvert$; $y'' = 2a$, so $\\kappa = 2\\lvert a \\rvert$.`,
+              `这是 $\\lvert a \\rvert$；$y'' = 2a$，所以 $\\kappa = 2\\lvert a \\rvert$。`,
+            ),
+            why(
+              Q.of(k * k, 2 * height),
+              "That is $\\frac{1}{\\kappa}$, the radius of curvature.",
+              "这是 $\\frac{1}{\\kappa}$，即曲率半径。",
+            ),
+            why(
+              height,
+              `That takes $a$ to be the height $${s * height}$; $a = \\frac{${s * height}}{${paren(x)}^2} = ${a.toLatex()}$.`,
+              `这把 $a$ 当成了高度 $${s * height}$；$a = \\frac{${s * height}}{${paren(x)}^2} = ${a.toLatex()}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find $a$ from the point", "由点求 $a$"],
+                t(
+                  `The point $${at(P)}$ gives $${s * height} = a \\cdot ${paren(x)}^2$, so $a = ${a.toLatex()}$.`,
+                  `由点 $${at(P)}$ 得 $${s * height} = a \\cdot ${paren(x)}^2$，所以 $a = ${a.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Use the vertex", "在顶点处计算"],
+                t(
+                  `At the vertex $y' = 0$ and $\\lvert y'' \\rvert = 2\\lvert a \\rvert$, so $\\kappa = ${answer.toLatex()}$.`,
+                  `在顶点处 $y' = 0$，$\\lvert y'' \\rvert = 2\\lvert a \\rvert$，所以 $\\kappa = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$y = ${a.eq(Q.of(1)) ? "" : a.eq(Q.of(-1)) ? "-" : a.toLatex()}x^2$ at $x = ${x}$ gives $${a.toLatex()} \\cdot ${k * k} = ${s * height}$, the height of the marked point, and $y'' = ${a.mul(Q.of(2)).toLatex()}$ has absolute value $${answer.toLatex()}$.`,
+              `$y = ${a.eq(Q.of(1)) ? "" : a.eq(Q.of(-1)) ? "-" : a.toLatex()}x^2$ 在 $x = ${x}$ 处得 $${a.toLatex()} \\cdot ${k * k} = ${s * height}$，正是标记点的高度；$y'' = ${a.mul(Q.of(2)).toLatex()}$ 的绝对值为 $${answer.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           9,
           [
             { kind: "curve", f: (v) => (s * height * v * v) / (k * k), accent: true },
@@ -301,7 +337,7 @@ const curvatureVertex = {
           ],
           [`A parabola with its vertex at the origin through the marked point ${at(P)}.`, `顶点在原点、过标记点 ${at(P)} 的抛物线。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings1["the-curvature-of-a-plane-curve#the-curvature-at-the-vertex-of-a-drawn-parabola"],
@@ -312,8 +348,8 @@ const conservativeField = {
     "is-a-drawn-field-conservative",
     ["Is a drawn field conservative?", "所画的向量场是保守场吗？"],
     [
-      "A field $(P, Q)$ on the plane is conservative exactly when $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$. A field that swirls around a point has circulation along a circle around it, so it cannot be conservative.",
-      "平面上的场 $(P, Q)$ 是保守场当且仅当 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。绕一点旋转的场沿绕它的圆有环量，所以不可能是保守场。",
+      "A field $(P, Q)$ on the plane is conservative exactly when $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$. A field that swirls around a point has circulation along a circle around it, so it cannot be conservative. For $(-y, 4x)$, $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 4 + 1 = 5$, and its arrows run counterclockwise around the origin, so it is not conservative.\n\n> **Watch out.** Divergence does not decide the question: a swirl can have zero divergence and still not be conservative, and a field that spreads out can be a gradient. Neither do arrow lengths; only $Q_x - P_y$ does.",
+      "平面上的场 $(P, Q)$ 是保守场当且仅当 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。绕一点旋转的场沿绕它的圆有环量，所以不可能是保守场。对 $(-y, 4x)$，$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 4 + 1 = 5$，箭头绕原点逆时针转，所以它不是保守场。\n\n> **注意。** 散度不能决定这个问题：旋转场的散度可以为零却不是保守场，向外发散的场也可以是梯度场。箭头长度也不能决定；只有 $Q_x - P_y$ 能。",
     ],
     (rng) => {
       const kind = rng.pick(["swirl", "swirl", "radial", "saddle", "shear"] as const);
@@ -341,35 +377,81 @@ const conservativeField = {
           const [u, v] = f(x, y);
           if (u !== 0 || v !== 0) marks.push({ kind: "arrow", from: [x, y], to: [x + scale * u, y + scale * v], accent: true, thin: true });
         }
-      const zero: Pair = ["Yes, its curl is zero", "是，它的旋度为零"];
-      const circulation: Pair = ["No, its circulation around a circle about the origin is not zero", "不是，它绕原点的圆上的环量不为零"];
-      return choose(
-        rng,
-        [
+      const zero = t("Yes, its curl is zero", "是，它的旋度为零");
+      const circulation = t("No, its circulation around a circle about the origin is not zero", "不是，它绕原点的圆上的环量不为零");
+      const flat = t(
+        `Its curl is $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 0$, so its circulation around every closed curve is zero.`,
+        `它的旋度 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 0$，所以沿每条闭曲线的环量都为零。`,
+      );
+      const turning = t(
+        `Its curl is $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$, not zero.`,
+        `它的旋度 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$，不为零。`,
+      );
+      const half = (c: number, v: string) => (Math.abs(c) === 2 ? v : `\\frac{${Math.abs(c)}}{2}${v}`);
+      const yc = kind === "saddle" ? -flip * b : flip * b;
+      const f2 =
+        kind === "shear" ? terms([[flip * a, "xy"]]) : `${flip < 0 ? "-" : ""}${half(a, "x^2")} ${yc < 0 ? "-" : "+"} ${half(b, "y^2")}`;
+      return explainedChoice(rng, {
+        prompt: t(
           `The drawing shows the field $F = (P, Q)$, whose first component is $P = ${P}$. Is $F$ conservative?`,
           `图中是向量场 $F = (P, Q)$，它的第一个分量是 $P = ${P}$。$F$ 是保守场吗？`,
-        ],
-        yes ? zero : circulation,
-        yes
+        ),
+        correct: yes ? zero : circulation,
+        wrong: yes
           ? [
-              circulation,
-              ["No, its divergence is not zero", "不是，它的散度不为零"],
-              ["No, its arrows are not all parallel", "不是，它的箭头并不都平行"],
+              { option: circulation, why: flat },
+              {
+                option: t("No, its divergence is not zero", "不是，它的散度不为零"),
+                why: t("Divergence does not decide whether a field is conservative; the curl does.", "散度不能决定场是否保守；要看旋度。"),
+              },
+              {
+                option: t("No, its arrows are not all parallel", "不是，它的箭头并不都平行"),
+                why: t(
+                  "A conservative field need not be constant; what matters is $Q_x = P_y$.",
+                  "保守场不必是常向量场；关键是 $Q_x = P_y$。",
+                ),
+              },
             ]
           : [
-              zero,
-              ["Yes, its divergence is zero", "是，它的散度为零"],
-              ["Yes, its arrows have the same length on each circle", "是，每个圆上的箭头长度相同"],
+              { option: zero, why: turning },
+              {
+                option: t("Yes, its divergence is zero", "是，它的散度为零"),
+                why: t(
+                  "Zero divergence does not make a field conservative; this swirl has zero divergence but nonzero curl.",
+                  "散度为零不能使场保守；这个旋转场散度为零但旋度不为零。",
+                ),
+              },
+              {
+                option: t("Yes, its arrows have the same length on each circle", "是，每个圆上的箭头长度相同"),
+                why: t(
+                  "Arrow lengths do not decide it; the arrows run around the origin, so the circulation is not zero.",
+                  "箭头长度不能决定这一点；箭头绕原点转，所以环量不为零。",
+                ),
+              },
             ],
-        [
-          `The arrows show $Q = ${R}$, so $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$.`,
-          `由箭头得 $Q = ${R}$，所以 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$。`,
-        ],
-        fig(4, marks, [
+        solution: walked(
+          [
+            [["Read $Q$ from the arrows", "由箭头读出 $Q$"], t(`The arrows show $Q = ${R}$.`, `由箭头得 $Q = ${R}$。`)],
+            [
+              ["Compare the cross partials", "比较交叉偏导"],
+              t(
+                `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$, so the field is ${yes ? "" : "not "}conservative.`,
+                `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${curl}$，所以该场${yes ? "是" : "不是"}保守场。`,
+              ),
+            ],
+          ],
+          yes
+            ? t(`$F = \\nabla f$ with $f = ${f2}$.`, `$F = \\nabla f$，其中 $f = ${f2}$。`)
+            : t(
+                `At $(1, 0)$ the arrow is $(0, ${flip * b})$ and at $(0, 1)$ it is $(${-flip * a}, 0)$: both point ${flip > 0 ? "counterclockwise" : "clockwise"} around the origin, so the circulation does not cancel.`,
+                `在 $(1, 0)$ 处箭头为 $(0, ${flip * b})$，在 $(0, 1)$ 处为 $(${-flip * a}, 0)$：都绕原点${flip > 0 ? "逆时针" : "顺时针"}指向，所以环量不会抵消。`,
+              ),
+        ),
+        figure: fig(4, marks, [
           `A vector field with arrows at the grid points, equal to (${P}, ${R}).`,
           `格点上带箭头的向量场，等于 (${P}, ${R})。`,
         ]),
-      );
+      });
     },
   ),
   figure: multivariableDrawings1["conservative-vector-fields-in-the-cartesian-plane#is-a-drawn-field-conservative"],

@@ -4,14 +4,15 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
-import { gcd, Q } from "@ga/subject-math";
+import { gcd, poly, Q } from "@ga/subject-math";
 import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
 import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
-
+import { explainedChoice } from "../problems.ts";
 import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
 /** square is the view from -r to r on both axes. */
@@ -383,30 +384,60 @@ const fieldFormula = point(
   "the-formula-of-a-drawn-vector-field",
   ["The formula of a drawn vector field", "图中向量场的公式"],
   [
-    "A vector field attaches an arrow to each point, and a few test points identify a formula. On the positive $x$-axis, only the $x$ dependence shows, and on the positive $y$-axis only the $y$ dependence shows. Compare the arrow at $(1, 0)$ and the arrow at $(0, 1)$ with what each formula predicts there.",
-    "向量场给每个点附上一个箭头，用几个测试点就能认出公式。在正 $x$ 轴上只看到对 $x$ 的依赖，在正 $y$ 轴上只看到对 $y$ 的依赖。把 $(1, 0)$ 和 $(0, 1)$ 处的箭头与各个公式的预测对照。",
+    "A vector field attaches an arrow to each point, and a few test points identify a formula. On the positive $x$-axis, only the $x$ dependence shows, and on the positive $y$-axis only the $y$ dependence shows. Compare the arrow at $(1, 0)$ and the arrow at $(0, 1)$ with what each formula predicts there. For $\\langle x, -y \\rangle$ the arrow at $(1, 0)$ is $\\langle 1, 0 \\rangle$, pointing right, and the arrow at $(0, 1)$ is $\\langle 0, -1 \\rangle$, pointing down: the flow comes in along the $y$-axis and leaves along the $x$-axis.\n\n> **Watch out.** Read the direction of each arrow, not only whether it is horizontal or vertical: $\\langle y, 0 \\rangle$ and $\\langle x, 0 \\rangle$ both give horizontal arrows. One test point can fit several formulas, so use a point on each axis.",
+    "向量场给每个点附上一个箭头，用几个测试点就能认出公式。在正 $x$ 轴上只看到对 $x$ 的依赖，在正 $y$ 轴上只看到对 $y$ 的依赖。把 $(1, 0)$ 和 $(0, 1)$ 处的箭头与各个公式的预测对照。对 $\\langle x, -y \\rangle$，$(1, 0)$ 处的箭头是 $\\langle 1, 0 \\rangle$，向右；$(0, 1)$ 处的箭头是 $\\langle 0, -1 \\rangle$，向下：流沿 $y$ 轴流入，沿 $x$ 轴流出。\n\n> **注意。** 要读出每个箭头的方向，而不只是看它水平还是竖直：$\\langle y, 0 \\rangle$ 和 $\\langle x, 0 \\rangle$ 给出的都是水平箭头。一个测试点可能符合好几个公式，所以要在两条轴上各取一点。",
   ],
   (rng) => {
     const right = rng.pick(fieldList);
-    return choose(
-      rng,
-      ["Which formula gives the vector field drawn?", "哪个公式给出图中的向量场？"],
-      same(`\\mathbf{F}(x, y) = ${right.tex}`),
-      rng
+    const vec = (v: readonly [number, number]) => `\\langle ${v[0]}, ${v[1]} \\rangle`;
+    const points: [number, number][] = [
+      [1, 0],
+      [0, 1],
+      [1, 1],
+    ];
+    const differs = (other: (typeof fieldList)[number]) => {
+      const at = points.find(([x, y]) => vec(other.f(x, y)) !== vec(right.f(x, y))) ?? [1, 0];
+      return t(
+        `At $(${at[0]}, ${at[1]})$ this gives $${vec(other.f(at[0], at[1]))}$, but the arrow drawn there is $${vec(right.f(at[0], at[1]))}$.`,
+        `在 $(${at[0]}, ${at[1]})$ 处它给出 $${vec(other.f(at[0], at[1]))}$，但图中该处的箭头是 $${vec(right.f(at[0], at[1]))}$。`,
+      );
+    };
+    return explainedChoice(rng, {
+      prompt: t("Which formula gives the vector field drawn?", "哪个公式给出图中的向量场？"),
+      correct: t(`$\\mathbf{F}(x, y) = ${right.tex}$`, `$\\mathbf{F}(x, y) = ${right.tex}$`),
+      wrong: rng
         .sample(
           fieldList.filter((f) => f !== right),
           3,
         )
-        .map((f) => same(`\\mathbf{F}(x, y) = ${f.tex}`)),
-      [
-        `In the drawing, ${right.clue[0]}. Among the formulas, only $${right.tex}$ behaves like this.`,
-        `图中${right.clue[1]}。在这些公式中，只有 $${right.tex}$ 是这样。`,
-      ],
-      fig(square(3), field(right.f, 0.3), [
+        .map((f) => ({ option: t(`$\\mathbf{F}(x, y) = ${f.tex}$`, `$\\mathbf{F}(x, y) = ${f.tex}$`), why: differs(f) })),
+      solution: walked(
+        [
+          [
+            ["Read the drawing", "读图"],
+            t(
+              `In the drawing, ${right.clue[0]}: the arrows at $(1, 0)$ and $(0, 1)$ are $${vec(right.f(1, 0))}$ and $${vec(right.f(0, 1))}$, up to scale.`,
+              `图中${right.clue[1]}：$(1, 0)$ 与 $(0, 1)$ 处的箭头在比例意义下为 $${vec(right.f(1, 0))}$ 和 $${vec(right.f(0, 1))}$。`,
+            ),
+          ],
+          [
+            ["Match the formula", "对应公式"],
+            t(
+              `Among the formulas, only $${right.tex}$ gives both of these arrows.`,
+              `在这些公式中，只有 $${right.tex}$ 同时给出这两个箭头。`,
+            ),
+          ],
+        ],
+        t(
+          `At a third point, $(1, 1)$, the formula gives $${vec(right.f(1, 1))}$, the arrow drawn there.`,
+          `在第三个点 $(1, 1)$ 处，公式给出 $${vec(right.f(1, 1))}$，正是图中该处的箭头。`,
+        ),
+      ),
+      figure: fig(square(3), field(right.f, 0.3), [
         `A vector field: ${right.clue[0].replaceAll("$", "")}.`,
         `一个向量场：${right.clue[1].replaceAll("$", "")}。`,
       ]),
-    );
+    });
   },
 );
 
@@ -415,16 +446,59 @@ const signs: Record<"positive" | "zero" | "negative", Pair> = {
   zero: ["zero", "零"],
   negative: ["negative", "负"],
 };
-const signOptions = (rng: Rng, value: number, prompt: Pair, solution: Pair, figure: ReturnType<typeof fig>) => {
+/** signOptions asks for the sign of the divergence or curl of a drawn linear field, with a reason for each wrong option. */
+const signOptions = (
+  rng: Rng,
+  value: number,
+  prompt: Pair,
+  reason: Pair,
+  figure: ReturnType<typeof fig>,
+  what: "divergence" | "curl",
+  f: (x: number, y: number) => readonly [number, number],
+) => {
   const correct = value > 0 ? signs.positive : value < 0 ? signs.negative : signs.zero;
-  return choose(
-    rng,
-    prompt,
-    correct,
-    [signs.positive, signs.negative, signs.zero, ["It cannot be told from a drawing", "无法从图中判断"]],
-    solution,
+  const [p, r] = f(1, 0);
+  const [q, s] = f(0, 1);
+  const name: Pair = what === "divergence" ? ["divergence", "散度"] : ["curl", "旋度"];
+  const because = t(`${reason[0]}, so the ${name[0]} is ${correct[0]}.`, `${reason[1]}，所以${name[1]}为${correct[1]}。`);
+  const unknown: Pair = ["It cannot be told from a drawing", "无法从图中判断"];
+  const formula =
+    what === "divergence"
+      ? t(`$P_x + Q_y = ${p} + ${s < 0 ? `(${s})` : s} = ${p + s}$`, `$P_x + Q_y = ${p} + ${s < 0 ? `(${s})` : s} = ${p + s}$`)
+      : t(`$Q_x - P_y = ${r} - ${q < 0 ? `(${q})` : q} = ${r - q}$`, `$Q_x - P_y = ${r} - ${q < 0 ? `(${q})` : q} = ${r - q}$`);
+  return explainedChoice(rng, {
+    prompt: t(prompt[0], prompt[1]),
+    correct: t(correct[0], correct[1]),
+    wrong: [signs.positive, signs.negative, signs.zero, unknown]
+      .filter((o) => o !== correct)
+      .map((o) => ({
+        option: t(o[0], o[1]),
+        why:
+          o === unknown
+            ? t(
+                `A linear field has constant ${name[0]}, and the arrows at two test points fix it.`,
+                `线性场的${name[1]}是常数，两个测试点处的箭头就能确定它。`,
+              )
+            : because,
+      })),
+    solution: walked(
+      [
+        [
+          ["Read two arrows", "读出两个箭头"],
+          t(
+            `The arrow at $(1, 0)$ is $(${p}, ${r})$ and the arrow at $(0, 1)$ is $(${q}, ${s})$.`,
+            `$(1, 0)$ 处的箭头是 $(${p}, ${r})$，$(0, 1)$ 处的箭头是 $(${q}, ${s})$。`,
+          ),
+        ],
+        [["Interpret them", "解读"], because],
+      ],
+      t(
+        `The field is $(${poly([p, "x"], [q, "y"])},\\ ${poly([r, "x"], [s, "y"])})$, so ${formula.en}.`,
+        `该场为 $(${poly([p, "x"], [q, "y"])},\\ ${poly([r, "x"], [s, "y"])})$，所以 ${formula["zh-CN"]}。`,
+      ),
+    ),
     figure,
-  );
+  });
 };
 
 const divergenceSign = {
@@ -432,8 +506,8 @@ const divergenceSign = {
     "the-sign-of-divergence-from-a-drawing",
     ["The sign of divergence from a drawing", "由图判断散度的符号"],
     [
-      "Divergence measures net outflow near a point. Arrows spreading away from the point give positive divergence, arrows converging on it give negative divergence, and a field in which as much flows in as out has zero divergence. A pure rotation has zero divergence because its arrows run around circles and neither gather nor spread.",
-      "散度度量一点附近的净流出。箭头从该点散开时散度为正，向该点汇聚时散度为负，流入与流出相等时散度为零。纯旋转的散度为零，因为箭头沿圆周运行，既不聚集也不散开。",
+      "Divergence measures net outflow near a point. Arrows spreading away from the point give positive divergence, arrows converging on it give negative divergence, and a field in which as much flows in as out has zero divergence. A pure rotation has zero divergence because its arrows run around circles and neither gather nor spread. For $\\langle 4x, -4y \\rangle$ the arrows come in along the $y$-axis and leave along the $x$-axis equally fast, so the divergence is $4 - 4 = 0$.\n\n> **Watch out.** A busy swirl still has zero divergence, since nothing gathers or spreads. A saddle has arrows going both in and out, and they balance only when the two rates are equal.",
+      "散度度量一点附近的净流出。箭头从该点散开时散度为正，向该点汇聚时散度为负，流入与流出相等时散度为零。纯旋转的散度为零，因为箭头沿圆周运行，既不聚集也不散开。对 $\\langle 4x, -4y \\rangle$，箭头沿 $y$ 轴流入、沿 $x$ 轴流出，速率相同，所以散度为 $4 - 4 = 0$。\n\n> **注意。** 旋转得再厉害，散度仍为零，因为既不聚集也不散开。鞍形场的箭头有进有出，只有两个速率相等时才平衡。",
     ],
     (rng) => {
       const kind = rng.pick(["spread", "spread", "saddle", "turn"] as const);
@@ -468,14 +542,13 @@ const divergenceSign = {
         rng,
         value,
         ["The linear vector field drawn has constant divergence. What is its sign?", "图中的线性向量场散度为常数。它的符号是什么？"],
-        [
-          `${reason[0]}. So the divergence is ${value > 0 ? "positive" : value < 0 ? "negative" : "zero"}.`,
-          `${reason[1]}。所以散度为${value > 0 ? "正" : value < 0 ? "负" : "零"}。`,
-        ],
+        reason,
         fig(square(3), field(f, 0.15), [
           `A linear vector field. The arrow at (1, 0) is (${f(1, 0).join(", ")}) and the arrow at (0, 1) is (${f(0, 1).join(", ")}).`,
           `一个线性向量场。(1, 0) 处的箭头是 (${f(1, 0).join(", ")})，(0, 1) 处的箭头是 (${f(0, 1).join(", ")})。`,
         ]),
+        "divergence",
+        f,
       );
     },
   ),
@@ -486,8 +559,8 @@ const curlSign = point(
   "the-sign-of-curl-from-a-drawing",
   ["The sign of curl from a drawing", "由图判断旋度的符号"],
   [
-    "The curl of a plane field tells how a small paddle wheel would spin. It is positive when the wheel turns counterclockwise and negative when it turns clockwise. A field that only spreads or gathers does not turn the wheel at all. A shear does: arrows that grow as you move across them push one side of the wheel harder than the other.",
-    "平面向量场的旋度说明小叶轮怎样转动。叶轮逆时针转时旋度为正，顺时针转时旋度为负。只散开或聚集的场完全不使叶轮转动。剪切则会：箭头沿横向变长，推动叶轮一侧比另一侧更用力。",
+    "The curl of a plane field tells how a small paddle wheel would spin. It is positive when the wheel turns counterclockwise and negative when it turns clockwise. A field that only spreads or gathers does not turn the wheel at all. A shear does: arrows that grow as you move across them push one side of the wheel harder than the other. For $\\langle 0, 4x \\rangle$ the arrows point up to the right of the $y$-axis and down to its left, so a wheel at the origin turns counterclockwise and the curl $4$ is positive.\n\n> **Watch out.** A field need not circle the origin to have curl: parallel shearing arrows still spin a wheel. And a field that only spreads, even at different rates along the two axes, has zero curl.",
+    "平面向量场的旋度说明小叶轮怎样转动。叶轮逆时针转时旋度为正，顺时针转时旋度为负。只散开或聚集的场完全不使叶轮转动。剪切则会：箭头沿横向变长，推动叶轮一侧比另一侧更用力。对 $\\langle 0, 4x \\rangle$，$y$ 轴右侧箭头向上、左侧向下，所以原点处的叶轮逆时针转，旋度 $4$ 为正。\n\n> **注意。** 场不必绕原点旋转才有旋度：平行的剪切箭头同样使叶轮转动。而只散开的场，即使沿两轴的速率不同，旋度也为零。",
   ],
   (rng) => {
     const kind = rng.pick(["turn", "turn", "radial", "shear"] as const);
@@ -534,14 +607,13 @@ const curlSign = point(
       rng,
       value,
       ["The linear vector field drawn has constant scalar curl. What is its sign?", "图中的线性向量场标量旋度为常数。它的符号是什么？"],
-      [
-        `${reason[0]}. So the curl is ${value > 0 ? "positive" : value < 0 ? "negative" : "zero"}.`,
-        `${reason[1]}。所以旋度为${value > 0 ? "正" : value < 0 ? "负" : "零"}。`,
-      ],
+      reason,
       fig(square(3), field(f, 0.15), [
         `A linear vector field. The arrow at (1, 0) is (${f(1, 0).join(", ")}) and the arrow at (0, 1) is (${f(0, 1).join(", ")}).`,
         `一个线性向量场。(1, 0) 处的箭头是 (${f(1, 0).join(", ")})，(0, 1) 处的箭头是 (${f(0, 1).join(", ")})。`,
       ]),
+      "curl",
+      f,
     );
   },
 );
@@ -726,8 +798,8 @@ const connectedness = point(
   "connected-regions-from-a-drawing",
   ["Connected regions from a drawing", "由图判断连通区域"],
   [
-    "A region is connected when any two of its points can be joined by a path inside it. It is simply connected when, in addition, every closed loop inside it can be shrunk to a point without leaving the region, which means that it has no holes. A ring is connected but not simply connected.",
-    "区域连通，是指其中任意两点都能用区域内的路径连接。若还满足区域内每个闭回路都能在不离开区域的情况下缩成一点，也就是没有洞，则称单连通。圆环连通但不单连通。",
+    'A region is connected when any two of its points can be joined by a path inside it. It is simply connected when, in addition, every closed loop inside it can be shrunk to a point without leaving the region, which means that it has no holes. A ring is connected but not simply connected. A square with a smaller square cut from its middle is likewise connected but not simply connected, while a C-shaped strip is simply connected: the gap in the C opens to the outside, so there is no hole for a loop to go around.\n\n> **Watch out.** Simply connected includes connected, so "simply connected but not connected" never happens. A region that is not convex, such as an L or a C, can still be simply connected.',
+    "区域连通，是指其中任意两点都能用区域内的路径连接。若还满足区域内每个闭回路都能在不离开区域的情况下缩成一点，也就是没有洞，则称单连通。圆环连通但不单连通。从正方形中间挖去一个小正方形，同样连通但不单连通；而 C 形带状区域是单连通的：C 的缺口通向外部，没有可供回路绕行的洞。\n\n> **注意。** 单连通本身包含连通，所以“单连通但不连通”不会出现。不是凸的区域，比如 L 形或 C 形，也可以是单连通的。",
   ],
   (rng) => {
     const kind = rng.pick(["disk", "ell", "ring", "twoHoles", "apart"] as const);
@@ -835,14 +907,54 @@ const connectedness = point(
       twoHoles: ["A large shaded disk with two small unshaded disks removed from it.", "一个大的阴影圆盘，其中挖去两个小圆盘。"] as Pair,
       apart: ["Two shaded disks with a gap between them.", "两个阴影圆盘，中间隔开。"] as Pair,
     }[kind];
-    return choose(
-      rng,
-      ["Which description fits the shaded region?", "哪个描述符合阴影区域？"],
-      right,
-      [answers.simple, answers.holes, answers.apart, answers.odd],
-      [`${reason[0]}. So the region is ${right[0]}.`, `${reason[1]}。所以这个区域${right[1]}。`],
-      fig(square(6), marks, altText),
-    );
+    const onePiece: Pair = [
+      "It is one piece: any two of its points can be joined by a path inside it",
+      "它是一整块：其中任意两点都能用区域内的路径连接",
+    ];
+    const whyNot = (option: Pair): Pair => {
+      if (option === answers.odd)
+        return ["Simply connected includes connected, so this never happens", "单连通本身包含连通，所以这种情况不会出现"];
+      if (option === answers.apart) return onePiece;
+      if (right === answers.apart)
+        return ["It is not one piece: no path inside it joins the two disks", "它不是一整块：区域内没有路径能连接两个圆盘"];
+      if (option === answers.simple)
+        return ["A loop around a hole cannot be shrunk to a point inside the region", "绕洞的回路不能在区域内缩成一点"];
+      return ["There is no hole: every loop inside it can be shrunk to a point", "没有洞：其中每个回路都能缩成一点"];
+    };
+    const holeCount = { disk: 0, ell: 0, ring: 1, twoHoles: 2, apart: 0 }[kind];
+    return explainedChoice(rng, {
+      prompt: t("Which description fits the shaded region?", "哪个描述符合阴影区域？"),
+      correct: t(right[0], right[1]),
+      wrong: [answers.simple, answers.holes, answers.apart, answers.odd]
+        .filter((o) => o !== right)
+        .map((o) => {
+          const [en, zh] = whyNot(o);
+          return { option: t(o[0], o[1]), why: t(`${en}.`, `${zh}。`) };
+        }),
+      solution: walked(
+        [
+          [
+            ["Count the pieces", "数块数"],
+            kind === "apart"
+              ? t("The shaded region has two separate pieces, so it is not connected.", "阴影区域有两块分开的部分，所以不连通。")
+              : t("The shaded region is one piece, so it is connected.", "阴影区域是一整块，所以连通。"),
+          ],
+          [
+            ["Look for holes", "寻找洞"],
+            kind === "apart"
+              ? t("A region that is not connected is not simply connected either.", "不连通的区域也不是单连通的。")
+              : holeCount === 0
+                ? t("It has no holes, so it is simply connected.", "它没有洞，所以是单连通的。")
+                : t(
+                    `It has ${holeCount === 1 ? "one hole" : "two holes"}, so it is not simply connected.`,
+                    `它有${holeCount === 1 ? "一个洞" : "两个洞"}，所以不是单连通的。`,
+                  ),
+          ],
+        ],
+        t(`${reason[0]}. So the region is ${right[0]}.`, `${reason[1]}。所以这个区域${right[1]}。`),
+      ),
+      figure: fig(square(6), marks, altText),
+    });
   },
 );
 

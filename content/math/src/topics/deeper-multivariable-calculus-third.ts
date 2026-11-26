@@ -422,8 +422,8 @@ const inverseSquare = point(
   "the-size-of-an-inverse-square-field",
   ["The size of an inverse square field", "平方反比场的大小"],
   [
-    "An inverse square field is written $\\mathbf{F} = \\frac{k\\mathbf{r}}{|\\mathbf{r}|^{3}}$, with a third power below because the numerator also has a length. So its magnitude is $\\frac{k}{|\\mathbf{r}|^{2}}$, and doubling the distance divides the size by four.",
-    "平方反比场写作 $\\mathbf{F} = \\frac{k\\mathbf{r}}{|\\mathbf{r}|^{3}}$，分母是三次方，因为分子也含有长度。所以它的大小是 $\\frac{k}{|\\mathbf{r}|^{2}}$，距离加倍时，大小变为四分之一。",
+    "An inverse square field is written $\\mathbf{F} = \\frac{k\\mathbf{r}}{|\\mathbf{r}|^{3}}$, with a third power below because the numerator also has a length. So its magnitude is $\\frac{k}{|\\mathbf{r}|^{2}}$, and doubling the distance divides the size by four. For $\\frac{100\\langle x, y \\rangle}{(x^2 + y^2)^{3/2}}$ at $(6, 8)$, the distance is $10$ and the magnitude is $\\frac{100}{100} = 1$.\n\n> **Watch out.** The vector $\\mathbf{r}$ on top has length $|\\mathbf{r}|$ too, so one power cancels: the size is $\\frac{k}{|\\mathbf{r}|^2}$, not $\\frac{k}{|\\mathbf{r}|^3}$. And $(x^2 + y^2)^{3/2} = |\\mathbf{r}|^3$, not $|\\mathbf{r}|^2$.",
+    "平方反比场写作 $\\mathbf{F} = \\frac{k\\mathbf{r}}{|\\mathbf{r}|^{3}}$，分母是三次方，因为分子也含有长度。所以它的大小是 $\\frac{k}{|\\mathbf{r}|^{2}}$，距离加倍时，大小变为四分之一。对 $\\frac{100\\langle x, y \\rangle}{(x^2 + y^2)^{3/2}}$ 在 $(6, 8)$ 处，距离为 $10$，大小为 $\\frac{100}{100} = 1$。\n\n> **注意。** 分子上的向量 $\\mathbf{r}$ 也有长度 $|\\mathbf{r}|$，所以约掉一次幂：大小是 $\\frac{k}{|\\mathbf{r}|^2}$，不是 $\\frac{k}{|\\mathbf{r}|^3}$。而 $(x^2 + y^2)^{3/2} = |\\mathbf{r}|^3$，不是 $|\\mathbf{r}|^2$。",
   ],
   (rng) => {
     const [a, b, c] = rng.pick(triples);
@@ -431,18 +431,45 @@ const inverseSquare = point(
     const x = a * rng.pick([-1, 1]);
     const y = b * rng.pick([-1, 1]);
     const answer = Q.of(k, c * c);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Find $|\\mathbf{F}(${x}, ${y})|$ for $\\mathbf{F}(x, y) = \\frac{${k}${br("x", "y")}}{(x^{2} + y^{2})^{3/2}}$.`,
         `对 $\\mathbf{F}(x, y) = \\frac{${k}${br("x", "y")}}{(x^{2} + y^{2})^{3/2}}$，求 $|\\mathbf{F}(${x}, ${y})|$。`,
-      ],
+      ]),
       answer,
-      [Q.of(k, c), Q.of(k, c * c * c), k],
-      [
-        `The distance from the origin is $${c}$. The numerator has length $${k} \\cdot ${c}$ and the denominator is $${c}^{3}$, so the magnitude is $${answer.toLatex()}$.`,
-        `到原点的距离是 $${c}$。分子的长度是 $${k} \\cdot ${c}$，分母是 $${c}^{3}$，所以大小是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(k, c),
+          `$(x^2 + y^2)^{3/2} = ${c}^3$, not $${c}^2$: the magnitude is $\\frac{${k} \\cdot ${c}}{${c}^3}$.`,
+          `$(x^2 + y^2)^{3/2} = ${c}^3$，不是 $${c}^2$：大小为 $\\frac{${k} \\cdot ${c}}{${c}^3}$。`,
+        ),
+        why(
+          Q.of(k, c * c * c),
+          `The vector $${br(x, y)}$ on top has length $${c}$, which cancels one power of the denominator.`,
+          `分子上的向量 $${br(x, y)}$ 长度为 $${c}$，约掉分母的一次幂。`,
+        ),
+        why(k, `$${k}$ is only the constant; the size also depends on the distance $${c}$.`, `$${k}$ 只是常数；大小还取决于距离 $${c}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the distance", "求距离"],
+            t(`$|\\mathbf{r}| = \\sqrt{${x * x} + ${y * y}} = ${c}$.`, `$|\\mathbf{r}| = \\sqrt{${x * x} + ${y * y}} = ${c}$。`),
+          ],
+          [
+            ["Use the inverse square law", "用平方反比律"],
+            t(
+              `$|\\mathbf{F}| = \\frac{${k}}{|\\mathbf{r}|^2} = \\frac{${k}}{${c * c}} = ${answer.toLatex()}$.`,
+              `$|\\mathbf{F}| = \\frac{${k}}{|\\mathbf{r}|^2} = \\frac{${k}}{${c * c}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `By components, $\\mathbf{F}(${x}, ${y}) = \\frac{${k}}{${c ** 3}}${br(x, y)}$, whose length is $\\frac{${k} \\cdot ${c}}{${c ** 3}} = ${answer.toLatex()}$.`,
+          `逐分量计算，$\\mathbf{F}(${x}, ${y}) = \\frac{${k}}{${c ** 3}}${br(x, y)}$，其长度为 $\\frac{${k} \\cdot ${c}}{${c ** 3}} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -450,23 +477,51 @@ const crossPartials = point(
   "the-cross-partial-test-for-a-gradient-field",
   ["The cross-partial test for a gradient field", "梯度场的交叉偏导检验"],
   [
-    "If $\\langle P, Q \\rangle$ is a gradient field with continuous partial derivatives, then $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$, because mixed partials of the potential agree. So the coefficient of $y$ in $P$ must match the coefficient of $x$ in $Q$.",
-    "如果 $\\langle P, Q \\rangle$ 是偏导连续的梯度场，则 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$，因为势函数的混合偏导相等。所以 $P$ 中 $y$ 的系数必须等于 $Q$ 中 $x$ 的系数。",
+    "If $\\langle P, Q \\rangle$ is a gradient field with continuous partial derivatives, then $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$, because mixed partials of the potential agree. So the coefficient of $y$ in $P$ must match the coefficient of $x$ in $Q$. For $\\langle 3x + ky, 14x - 2y \\rangle$, $\\frac{\\partial P}{\\partial y} = k$ and $\\frac{\\partial Q}{\\partial x} = 14$, so $k = 14$.\n\n> **Watch out.** Compare the $y$-term of $P$ with the $x$-term of $Q$; the $x$-term of $P$ and the $y$-term of $Q$ play no part. The two are equal, with no minus sign between them.",
+    "如果 $\\langle P, Q \\rangle$ 是偏导连续的梯度场，则 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$，因为势函数的混合偏导相等。所以 $P$ 中 $y$ 的系数必须等于 $Q$ 中 $x$ 的系数。对 $\\langle 3x + ky, 14x - 2y \\rangle$，$\\frac{\\partial P}{\\partial y} = k$，$\\frac{\\partial Q}{\\partial x} = 14$，所以 $k = 14$。\n\n> **注意。** 比较的是 $P$ 中的 $y$ 项与 $Q$ 中的 $x$ 项；$P$ 中的 $x$ 项和 $Q$ 中的 $y$ 项不起作用。两者相等，中间没有负号。",
   ],
   (rng) => {
     const a = nz(rng, 9);
     const c = nz(rng, 12);
     const d = nz(rng, 9);
     const F = br(`${poly([a, "x"])} + ky`, poly([c, "x"], [d, "y"]));
-    return ask(
-      [`For which $k$ is $\\mathbf{F} = ${F}$ a gradient field?`, `当 $k$ 为何值时，$\\mathbf{F} = ${F}$ 是梯度场？`],
-      c,
-      [-c, a, d],
-      [
-        `$\\frac{\\partial P}{\\partial y} = k$ and $\\frac{\\partial Q}{\\partial x} = ${c}$. These must be equal, so $k = ${c}$.`,
-        `$\\frac{\\partial P}{\\partial y} = k$，$\\frac{\\partial Q}{\\partial x} = ${c}$。二者必须相等，所以 $k = ${c}$。`,
-      ],
-    );
+    return numberProblem({
+      prompt: text([`For which $k$ is $\\mathbf{F} = ${F}$ a gradient field?`, `当 $k$ 为何值时，$\\mathbf{F} = ${F}$ 是梯度场？`]),
+      answer: c,
+      mistakes: apart(c, [
+        why(
+          -c,
+          "The test is $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$, with no minus sign.",
+          "检验条件是 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$，没有负号。",
+        ),
+        why(
+          a,
+          `$${a}$ is $\\frac{\\partial P}{\\partial x}$; the test uses $\\frac{\\partial Q}{\\partial x}$.`,
+          `$${a}$ 是 $\\frac{\\partial P}{\\partial x}$；检验用的是 $\\frac{\\partial Q}{\\partial x}$。`,
+        ),
+        why(
+          d,
+          `$${d}$ is $\\frac{\\partial Q}{\\partial y}$; the test uses $\\frac{\\partial Q}{\\partial x}$.`,
+          `$${d}$ 是 $\\frac{\\partial Q}{\\partial y}$；检验用的是 $\\frac{\\partial Q}{\\partial x}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the cross partials", "求交叉偏导"],
+            t(
+              `$\\frac{\\partial P}{\\partial y} = k$ and $\\frac{\\partial Q}{\\partial x} = ${c}$.`,
+              `$\\frac{\\partial P}{\\partial y} = k$，$\\frac{\\partial Q}{\\partial x} = ${c}$。`,
+            ),
+          ],
+          [["Set them equal", "令二者相等"], t(`They must be equal, so $k = ${c}$.`, `二者必须相等，所以 $k = ${c}$。`)],
+        ],
+        t(
+          `With $k = ${c}$, $f = ${poly([Q.of(a, 2), "x^2"], [c, "xy"], [Q.of(d, 2), "y^2"])}$ has $\\nabla f = ${br(poly([a, "x"], [c, "y"]), poly([c, "x"], [d, "y"]))}$.`,
+          `取 $k = ${c}$，$f = ${poly([Q.of(a, 2), "x^2"], [c, "xy"], [Q.of(d, 2), "y^2"])}$ 满足 $\\nabla f = ${br(poly([a, "x"], [c, "y"]), poly([c, "x"], [d, "y"]))}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -474,8 +529,8 @@ const potentialConstant = point(
   "fixing-the-constant-of-a-potential",
   ["Fixing the constant of a potential", "确定势函数的常数"],
   [
-    "A potential is determined only up to a constant, since the gradient of a constant is zero. One known value fixes it. So after integrating, substitute the given point into the whole expression, including the constant, instead of assuming that the constant is zero.",
-    "势函数只确定到相差一个常数，因为常数的梯度为零。一个已知值就能确定它。所以积分后要把给定点代入包括常数在内的整个表达式，而不是假设常数为零。",
+    "A potential is determined only up to a constant, since the gradient of a constant is zero. One known value fixes it. So after integrating, substitute the given point into the whole expression, including the constant, instead of assuming that the constant is zero. For $\\nabla f = \\langle 2x + y, x \\rangle$ with $f(1, 2) = 10$: $f = x^2 + xy + C$, so $1 + 2 + C = 10$, $C = 7$ and $f(0, 0) = 7$.\n\n> **Watch out.** $f(0, 0)$ is the constant $C$, not the given value $10$ and not the value $3$ of the other terms. Solve $3 + C = 10$ by subtracting: $C = 10 - 3$.",
+    "势函数只确定到相差一个常数，因为常数的梯度为零。一个已知值就能确定它。所以积分后要把给定点代入包括常数在内的整个表达式，而不是假设常数为零。对 $\\nabla f = \\langle 2x + y, x \\rangle$ 且 $f(1, 2) = 10$：$f = x^2 + xy + C$，所以 $1 + 2 + C = 10$，$C = 7$，$f(0, 0) = 7$。\n\n> **注意。** $f(0, 0)$ 是常数 $C$，不是给定的值 $10$，也不是其余各项的值 $3$。解 $3 + C = 10$ 要做减法：$C = 10 - 3$。",
   ],
   (rng) => {
     const p = nz(rng, 4);
@@ -487,15 +542,47 @@ const potentialConstant = point(
     const part = p * x0 * x0 + q * x0 * y0 + r * y0 * y0;
     const answer = v - part;
     const F = br(poly([2 * p, "x"], [q, "y"]), poly([q, "x"], [2 * r, "y"]));
-    return ask(
-      [`$\\nabla f = ${F}$ and $f(${x0}, ${y0}) = ${v}$. Find $f(0, 0)$.`, `$\\nabla f = ${F}$，$f(${x0}, ${y0}) = ${v}$。求 $f(0, 0)$。`],
+    const f = poly([p, "x^{2}"], [q, "xy"], [r, "y^{2}"]);
+    return numberProblem({
+      prompt: text([
+        `$\\nabla f = ${F}$ and $f(${x0}, ${y0}) = ${v}$. Find $f(0, 0)$.`,
+        `$\\nabla f = ${F}$，$f(${x0}, ${y0}) = ${v}$。求 $f(0, 0)$。`,
+      ]),
       answer,
-      [v, part, v + part],
-      [
-        `Integrating gives $f = ${poly([p, "x^{2}"], [q, "xy"], [r, "y^{2}"])} + C$. At the point this is $${part} + C = ${v}$, so $f(0, 0) = C = ${answer}$.`,
-        `积分得 $f = ${poly([p, "x^{2}"], [q, "xy"], [r, "y^{2}"])} + C$。在该点，$${part} + C = ${v}$，所以 $f(0, 0) = C = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          v,
+          `$${v}$ is $f(${x0}, ${y0})$; $f(0, 0)$ is the constant $C$, which must be solved for.`,
+          `$${v}$ 是 $f(${x0}, ${y0})$；$f(0, 0)$ 是常数 $C$，需要解出来。`,
+        ),
+        why(
+          part,
+          `$${part}$ is the value of $${f}$ at the point, without the constant; $C = ${v} - ${paren(part)}$.`,
+          `$${part}$ 是 $${f}$ 在该点的值，不含常数；$C = ${v} - ${paren(part)}$。`,
+        ),
+        why(
+          v + part,
+          `$${part} + C = ${v}$ gives $C = ${v} - ${paren(part)}$: subtract, do not add.`,
+          `由 $${part} + C = ${v}$ 得 $C = ${v} - ${paren(part)}$：要减，不是加。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Integrate", "积分"], t(`$f = ${f} + C$, since its gradient is $${F}$.`, `$f = ${f} + C$，因为它的梯度是 $${F}$。`)],
+          [
+            ["Use the known value", "用已知值"],
+            t(
+              `At $(${x0}, ${y0})$: $${part} + C = ${v}$, so $C = ${answer}$, and $f(0, 0) = C = ${answer}$.`,
+              `在 $(${x0}, ${y0})$ 处：$${part} + C = ${v}$，所以 $C = ${answer}$，$f(0, 0) = C = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$f(${x0}, ${y0}) = ${part} + ${paren(answer)} = ${v}$, the given value.`,
+          `$f(${x0}, ${y0}) = ${part} + ${paren(answer)} = ${v}$，正是给定的值。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -504,8 +591,8 @@ const componentCount = {
     "counting-connected-pieces",
     ["Counting connected pieces", "数连通的块数"],
     [
-      "Removing lines or curves from the plane can split it into pieces, and a removed single point does not. A line separates the plane, a circle separates inside from outside, and two crossing lines make four pieces while two parallel lines make three.",
-      "从平面上去掉直线或曲线可能把它分成几块，而去掉单个点不会。一条直线把平面分开，圆把内外分开；两条相交直线分成四块，两条平行直线分成三块。",
+      "Removing lines or curves from the plane can split it into pieces, and a removed single point does not. A line separates the plane, a circle separates inside from outside, and two crossing lines make four pieces while two parallel lines make three. Removing both the $x$-axis and the circle $x^2 + y^2 = 1$ leaves four pieces: the upper and lower halves of the inside and of the outside.\n\n> **Watch out.** A removed point is not a wall: a path can always bend around it, so the plane stays in one piece. Parallel lines make strips, not quarters, so they leave three pieces, not four.",
+      "从平面上去掉直线或曲线可能把它分成几块，而去掉单个点不会。一条直线把平面分开，圆把内外分开；两条相交直线分成四块，两条平行直线分成三块。同时去掉 $x$ 轴和圆 $x^2 + y^2 = 1$ 后剩下四块：圆内和圆外各自的上半与下半。\n\n> **注意。** 去掉的点不是墙：路径总能绕过它，所以平面仍是一块。平行直线分出的是带状区域而不是四个象限，所以留下三块而不是四块。",
     ],
     (rng) => {
       const a = nz(rng, 9);
@@ -525,13 +612,93 @@ const componentCount = {
         ["The removed set is a circle, which leaves the inside and the outside.", "去掉的是一个圆，留下内部和外部。"],
         ["Only one point is removed, and the rest of the plane stays connected.", "只去掉一个点，平面的其余部分仍然连通。"],
       ];
-      const why = whys[kind] as Pair;
-      return ask(
-        [`How many connected pieces does $\\{(x, y) : ${set}\\}$ have?`, `$\\{(x, y) : ${set}\\}$ 有多少个连通的块？`],
+      const reason = whys[kind] as Pair;
+      const wall: Pair = [
+        "The removed set does separate the plane: a path between points on opposite sides would have to cross it.",
+        "去掉的集合确实把平面分开了：两侧的点之间的路径必须穿过它。",
+      ];
+      const around: Pair = [
+        "A single removed point does not separate the plane: any path through it can bend around it.",
+        "去掉单个点不会把平面分开：经过它的路径都可以绕过去。",
+      ];
+      const reasons: Record<number, Pair>[] = [
+        {
+          1: wall,
+          2: [
+            "One line alone makes two pieces; the second line crosses it and cuts each of them in two.",
+            "一条直线只分出两块；第二条直线与它相交，把每块再分成两块。",
+          ],
+          3: [
+            "Three pieces come from parallel lines; these two lines cross, so they make four.",
+            "三块是平行直线的情形；这两条直线相交，所以分成四块。",
+          ],
+        },
+        {
+          1: wall,
+          2: [
+            `That counts one line; the second line, $x = ${b}$, cuts off a third piece.`,
+            `这只算了一条直线；第二条直线 $x = ${b}$ 又分出第三块。`,
+          ],
+          4: [
+            "Four pieces need crossing lines; parallel lines leave two half-planes and the strip between them.",
+            "四块需要相交直线；平行直线留下两个半平面和它们之间的带状区域。",
+          ],
+        },
+        {
+          1: wall,
+          3: ["A circle has only an inside and an outside.", "圆只有内部和外部。"],
+          4: ["A circle has only an inside and an outside.", "圆只有内部和外部。"],
+        },
+        { 2: around, 3: around, 4: around },
+      ];
+      const witnesses: Pair[] = [
+        [
+          `The points $(${a - 1}, ${b - 1})$, $(${a + 1}, ${b - 1})$, $(${a - 1}, ${b + 1})$ and $(${a + 1}, ${b + 1})$ lie in four different quarters.`,
+          `点 $(${a - 1}, ${b - 1})$、$(${a + 1}, ${b - 1})$、$(${a - 1}, ${b + 1})$、$(${a + 1}, ${b + 1})$ 分别位于四个不同的区域。`,
+        ],
+        [
+          `The points $(${Math.min(a, b) - 1}, 0)$, $(${Q.of(a + b, 2).toLatex()}, 0)$ and $(${Math.max(a, b) + 1}, 0)$ lie left of both lines, between them and right of both.`,
+          `点 $(${Math.min(a, b) - 1}, 0)$、$(${Q.of(a + b, 2).toLatex()}, 0)$、$(${Math.max(a, b) + 1}, 0)$ 分别位于两线左侧、两线之间和两线右侧。`,
+        ],
+        [
+          `The origin is inside the circle and $(${r + 1}, 0)$ is outside it, and every path between them crosses the circle.`,
+          `原点在圆内，$(${r + 1}, 0)$ 在圆外，它们之间的每条路径都穿过圆。`,
+        ],
+        [
+          `The path from $(${a - 1}, ${b})$ through $(${a}, ${b + 1})$ to $(${a + 1}, ${b})$ passes the removed point $(${a}, ${b})$ without touching it.`,
+          `从 $(${a - 1}, ${b})$ 经 $(${a}, ${b + 1})$ 到 $(${a + 1}, ${b})$ 的路径绕过了去掉的点 $(${a}, ${b})$。`,
+        ],
+      ];
+      const witness = witnesses[kind] as Pair;
+      const table = reasons[kind] ?? {};
+      return numberProblem({
+        prompt: text([`How many connected pieces does $\\{(x, y) : ${set}\\}$ have?`, `$\\{(x, y) : ${set}\\}$ 有多少个连通的块？`]),
         answer,
-        [1, 2, 3, 4],
-        [why[0], why[1]],
-      );
+        mistakes: [1, 2, 3, 4].filter((n) => n !== answer).map((n) => why(n, ...(table[n] ?? wall))),
+        solution: walked(
+          [
+            [
+              ["Name the removed set", "认出去掉的集合"],
+              text([
+                [
+                  `The condition removes the lines $x = ${a}$ and $y = ${b}$.`,
+                  `The condition removes the lines $x = ${a}$ and $x = ${b}$.`,
+                  `The condition removes the circle of radius $${r}$ about the origin.`,
+                  `The condition removes only the point $(${a}, ${b})$.`,
+                ][kind] ?? "",
+                [
+                  `条件去掉了直线 $x = ${a}$ 和 $y = ${b}$。`,
+                  `条件去掉了直线 $x = ${a}$ 和 $x = ${b}$。`,
+                  `条件去掉了以原点为圆心、半径为 $${r}$ 的圆。`,
+                  `条件只去掉了点 $(${a}, ${b})$。`,
+                ][kind] ?? "",
+              ]),
+            ],
+            [["Count the pieces", "数块数"], text(reason)],
+          ],
+          text(witness),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings1["connected-and-simply-connected-regions#counting-connected-pieces"],

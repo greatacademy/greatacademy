@@ -13,8 +13,9 @@ import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
-import { numberProblem } from "../problems.ts";
+import { explainedChoice, numberProblem } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
 // ---------------------------------------------------------------------------
@@ -226,10 +227,10 @@ const matchingFieldPlot: KnowledgePointDef = {
   id: "matching-a-plot-to-its-formula",
   title: t("Matching a plot to its formula", "把向量场图与公式对应"),
   explanation: t(
-    "To match a plot with a formula, test a few simple points. On the positive $x$-axis, $\\langle -y, x \\rangle$ gives $\\langle 0, x \\rangle$, an arrow pointing straight up, and on the positive $y$-axis it gives an arrow pointing left; together they show a counterclockwise swirl, drawn here. All arrows of a plot are scaled by one common factor, so the direction and the relative length are what carry information.",
-    "把图与公式对应时，先检验几个简单的点。在 $x$ 轴正半轴上，$\\langle -y, x \\rangle$ 给出 $\\langle 0, x \\rangle$，箭头竖直向上；在 $y$ 轴正半轴上箭头向左；二者合起来就是图中逆时针的旋转。一张图上的所有箭头按同一比例缩放，因此方向和相对长度才是有用的信息。",
+    "To match a plot with a formula, test a few simple points. On the positive $x$-axis, $\\langle -y, 3x \\rangle$ gives $\\langle 0, 3x \\rangle$, an arrow pointing straight up, and on the positive $y$-axis it gives $\\langle -y, 0 \\rangle$, an arrow pointing left and a third as long at the same distance; together they show the counterclockwise swirl drawn here. All arrows of a plot are scaled by one common factor, so the direction and the relative length are what carry information.\n\n> **Watch out.** One test point is rarely enough: $\\langle x, y \\rangle$ and $\\langle x, 0 \\rangle$ agree on the $x$-axis. Test a point on each axis, and remember that a missing arrow means the field is zero there.",
+    "把图与公式对应时，先检验几个简单的点。在 $x$ 轴正半轴上，$\\langle -y, 3x \\rangle$ 给出 $\\langle 0, 3x \\rangle$，箭头竖直向上；在 $y$ 轴正半轴上给出 $\\langle -y, 0 \\rangle$，箭头向左，在同样距离处长度只有三分之一；二者合起来就是图中逆时针的旋转。一张图上的所有箭头按同一比例缩放，因此方向和相对长度才是有用的信息。\n\n> **注意。** 一个检验点通常不够：$\\langle x, y \\rangle$ 与 $\\langle x, 0 \\rangle$ 在 $x$ 轴上相同。每条轴上各取一点检验，并记住没有箭头表示该处场为零。",
   ),
-  figure: quiver((x, y) => [-y, x]),
+  figure: quiver((x, y) => [-y, 3 * x]),
   generate(rng: Rng): Problem {
     const c = rng.int(1, 4);
     const a = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -238,22 +239,51 @@ const matchingFieldPlot: KnowledgePointDef = {
     const [[formula, field], ...rest] = family as [readonly [string, Field], ...(readonly [string, Field])[]];
     const [u1, v1] = field(1, 0);
     const [u2, v2] = field(0, 1);
-    return withFigure(
-      pickChoice(
-        rng,
+    const [u3, v3] = field(1, 1);
+    const differs = (other: Field) => {
+      const [p1, q1] = other(1, 0);
+      if (p1 !== u1 || q1 !== v1)
+        return t(
+          `At $(1, 0)$ this gives $${angled(p1, q1)}$, but the arrow drawn there is $${angled(u1, v1)}$.`,
+          `在 $(1, 0)$ 处它给出 $${angled(p1, q1)}$，但图中该处的箭头是 $${angled(u1, v1)}$。`,
+        );
+      const [p2, q2] = other(0, 1);
+      return t(
+        `At $(0, 1)$ this gives $${angled(p2, q2)}$, but the arrow drawn there is $${angled(u2, v2)}$.`,
+        `在 $(0, 1)$ 处它给出 $${angled(p2, q2)}$，但图中该处的箭头是 $${angled(u2, v2)}$。`,
+      );
+    };
+    return explainedChoice(rng, {
+      prompt: t(
+        "The plot shows a vector field $\\mathbf{F}(x, y)$, with all arrows scaled by one common factor. Which formula is it?",
+        "图中是向量场 $\\mathbf{F}(x, y)$，所有箭头按同一比例缩放。它是哪个公式？",
+      ),
+      correct: math(`\\mathbf{F} = ${formula}`),
+      wrong: rest.map(([other, g]) => ({ option: math(`\\mathbf{F} = ${other}`), why: differs(g) })),
+      solution: walked(
+        [
+          [
+            ["Read two arrows", "读出两个箭头"],
+            t(
+              `The arrows drawn at $(1, 0)$ and $(0, 1)$ are $${angled(u1, v1)}$ and $${angled(u2, v2)}$, up to the common scale.`,
+              `图中 $(1, 0)$ 与 $(0, 1)$ 处的箭头为 $${angled(u1, v1)}$ 和 $${angled(u2, v2)}$（相差共同的比例）。`,
+            ),
+          ],
+          [
+            ["Match the formula", "对应公式"],
+            t(
+              `$\\mathbf{F} = ${formula}$ gives exactly these two vectors; each other formula differs at one of the points.`,
+              `$\\mathbf{F} = ${formula}$ 恰好给出这两个向量；其余公式至少在其中一点不同。`,
+            ),
+          ],
+        ],
         t(
-          "The plot shows a vector field $\\mathbf{F}(x, y)$, with all arrows scaled by one common factor. Which formula is it?",
-          "图中是向量场 $\\mathbf{F}(x, y)$，所有箭头按同一比例缩放。它是哪个公式？",
-        ),
-        math(`\\mathbf{F} = ${formula}`),
-        rest.map(([other]) => math(`\\mathbf{F} = ${other}`)),
-        t(
-          `Test two points. This formula gives $\\mathbf{F}(1, 0) = ${angled(u1, v1)}$ and $\\mathbf{F}(0, 1) = ${angled(u2, v2)}$, which are the directions of the arrows drawn at those points. Each other formula gives a different direction at one of them.`,
-          `检验两个点。这个公式给出 $\\mathbf{F}(1, 0) = ${angled(u1, v1)}$ 和 $\\mathbf{F}(0, 1) = ${angled(u2, v2)}$，正是图中这两点处箭头的方向。其余公式至少在其中一点给出不同的方向。`,
+          `At a third point, $(1, 1)$, the formula gives $${angled(u3, v3)}$, the arrow drawn there.`,
+          `在第三个点 $(1, 1)$ 处，公式给出 $${angled(u3, v3)}$，正是图中该处的箭头。`,
         ),
       ),
-      quiver(field),
-    );
+      figure: quiver(field),
+    });
   },
 };
 
@@ -262,31 +292,62 @@ const divergenceFromPlot: KnowledgePointDef = {
   id: "the-sign-of-divergence-from-a-plot",
   title: t("The sign of divergence from a plot", "从图判断散度的符号"),
   explanation: t(
-    "For $\\mathbf{F} = \\langle ax, by \\rangle$ the divergence is $a + b$. On a plot, $a$ shows along the $x$-axis: arrows pointing away from the origin mean $a > 0$, and arrows pointing toward it mean $a < 0$. In the same way $b$ shows along the $y$-axis, and the longer arrows belong to the larger coefficient. The field drawn here spreads outward along both axes, so its divergence is positive.",
-    "对 $\\mathbf{F} = \\langle ax, by \\rangle$，散度等于 $a + b$。在图上，$a$ 表现在 $x$ 轴上：箭头背离原点说明 $a > 0$，指向原点说明 $a < 0$。同样，$b$ 表现在 $y$ 轴上，箭头较长的一方系数的绝对值较大。这里画出的场沿两条轴都向外扩散，所以散度为正。",
+    "For $\\mathbf{F} = \\langle ax, by \\rangle$ the divergence is $a + b$. On a plot, $a$ shows along the $x$-axis: arrows pointing away from the origin mean $a > 0$, and arrows pointing toward it mean $a < 0$. In the same way $b$ shows along the $y$-axis, and the longer arrows belong to the larger coefficient. The field drawn here, $\\langle 3x, -5y \\rangle$, spreads outward along the $x$-axis but converges more strongly along the $y$-axis, so its divergence $3 - 5 = -2$ is negative.\n\n> **Watch out.** When the two axes disagree, one pointing away and one toward the origin, the direction alone does not settle the sign: compare the lengths at equal distances, and the longer arrows win. Equal lengths in opposite senses give zero.",
+    "对 $\\mathbf{F} = \\langle ax, by \\rangle$，散度等于 $a + b$。在图上，$a$ 表现在 $x$ 轴上：箭头背离原点说明 $a > 0$，指向原点说明 $a < 0$。同样，$b$ 表现在 $y$ 轴上，箭头较长的一方系数的绝对值较大。这里画出的场 $\\langle 3x, -5y \\rangle$ 沿 $x$ 轴向外扩散，但沿 $y$ 轴汇聚得更强，所以散度 $3 - 5 = -2$ 为负。\n\n> **注意。** 两条轴不一致（一条背离原点、一条指向原点）时，仅凭方向不能确定符号：要比较同样距离处的箭头长度，较长的一方占优。长度相等而方向相反时为零。",
   ),
-  figure: quiver((x, y) => [x, 2 * y]),
+  figure: quiver((x, y) => [3 * x, -5 * y]),
   generate(rng: Rng): Problem {
     const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
     const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
     const [right, wrong] = signWords(a + b);
     const direction = (n: number) => (n > 0 ? t("away from the origin", "背离原点") : t("toward the origin", "指向原点"));
-    return withFigure(
-      pickChoice(
-        rng,
+    const longer = Math.abs(a) > Math.abs(b) ? t("$x$-axis", "$x$ 轴") : t("$y$-axis", "$y$ 轴");
+    const because =
+      a + b === 0
+        ? t(
+            `The arrows along the two axes have equal length and point opposite ways, so $a$ and $b$ cancel and $a + b = 0$.`,
+            `两条轴上的箭头等长而方向相反，所以 $a$ 与 $b$ 抵消，$a + b = 0$。`,
+          )
+        : a * b > 0
+          ? t(
+              `The arrows along both axes point ${direction(a).en}, so $a$ and $b$ have the same sign and $a + b$ has it too.`,
+              `两条轴上的箭头都${direction(a)["zh-CN"]}，所以 $a$ 与 $b$ 同号，$a + b$ 也是这个符号。`,
+            )
+          : t(
+              `The axes disagree, and the longer arrows, along the ${longer.en}, point ${direction(Math.abs(a) > Math.abs(b) ? a : b).en}, so that coefficient decides the sign of $a + b$.`,
+              `两条轴不一致，较长的箭头在${longer["zh-CN"]}上，${direction(Math.abs(a) > Math.abs(b) ? a : b)["zh-CN"]}，所以由那个系数决定 $a + b$ 的符号。`,
+            );
+    return explainedChoice(rng, {
+      prompt: t(
+        "The plot shows $\\mathbf{F}(x, y) = \\langle ax, by \\rangle$ for nonzero constants $a$ and $b$, with all arrows scaled by one common factor. What is the sign of $\\operatorname{div} \\mathbf{F}$?",
+        "图中是 $\\mathbf{F}(x, y) = \\langle ax, by \\rangle$，其中 $a$、$b$ 是非零常数，所有箭头按同一比例缩放。$\\operatorname{div} \\mathbf{F}$ 的符号是什么？",
+      ),
+      correct: right,
+      wrong: wrong.map((option) => ({ option, why: because })),
+      solution: walked(
+        [
+          [
+            ["Read the signs", "读出符号"],
+            t(
+              `Here $\\operatorname{div} \\mathbf{F} = a + b$. Arrows on the $x$-axis point ${direction(a).en} and arrows on the $y$-axis point ${direction(b).en}, which gives the signs of $a$ and $b$.`,
+              `这里 $\\operatorname{div} \\mathbf{F} = a + b$。$x$ 轴上的箭头${direction(a)["zh-CN"]}，$y$ 轴上的箭头${direction(b)["zh-CN"]}，由此得到 $a$、$b$ 的符号。`,
+            ),
+          ],
+          [
+            ["Compare the lengths", "比较长度"],
+            t(
+              `At equal distances the lengths compare as $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$, so $a + b$ is a positive multiple of $${a + b}$, which fixes its sign.`,
+              `在同样距离处长度之比为 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$，所以 $a + b$ 是 $${a + b}$ 的正数倍，符号由此确定。`,
+            ),
+          ],
+        ],
         t(
-          "The plot shows $\\mathbf{F}(x, y) = \\langle ax, by \\rangle$ for nonzero constants $a$ and $b$, with all arrows scaled by one common factor. What is the sign of $\\operatorname{div} \\mathbf{F}$?",
-          "图中是 $\\mathbf{F}(x, y) = \\langle ax, by \\rangle$，其中 $a$、$b$ 是非零常数，所有箭头按同一比例缩放。$\\operatorname{div} \\mathbf{F}$ 的符号是什么？",
-        ),
-        right,
-        wrong,
-        t(
-          `Here $\\operatorname{div} \\mathbf{F} = a + b$. Arrows on the $x$-axis point ${direction(a).en} and arrows on the $y$-axis point ${direction(b).en}, so $a$ and $b$ have these signs, and comparing lengths gives $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$. So $a + b$ is a positive multiple of $${a + b}$, which fixes its sign.`,
-          `这里 $\\operatorname{div} \\mathbf{F} = a + b$。$x$ 轴上的箭头${direction(a)["zh-CN"]}，$y$ 轴上的箭头${direction(b)["zh-CN"]}，由此得到 $a$、$b$ 的符号；比较长度得 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$。所以 $a + b$ 是 $${a + b}$ 的正数倍，符号由此确定。`,
+          `The arrows at $(1, 0)$ and $(0, 1)$ are $${angled(a, 0)}$ and $${angled(0, b)}$ up to scale; their outward parts $${a}$ and $${b}$ add to $${a + b}$.`,
+          `$(1, 0)$ 与 $(0, 1)$ 处的箭头在比例意义下为 $${angled(a, 0)}$ 和 $${angled(0, b)}$；它们向外的部分 $${a}$ 与 $${b}$ 相加得 $${a + b}$。`,
         ),
       ),
-      quiver((x, y) => [a * x, b * y]),
-    );
+      figure: quiver((x, y) => [a * x, b * y]),
+    });
   },
 };
 
@@ -295,29 +356,60 @@ const curlFromPlot: KnowledgePointDef = {
   id: "the-sign-of-curl-from-a-plot",
   title: t("The sign of curl from a plot", "从图判断旋度的符号"),
   explanation: t(
-    "The $z$-component of the curl of $\\mathbf{F} = \\langle P, Q \\rangle$ is $Q_x - P_y$, and it measures the spin of a small paddle wheel placed in the flow, positive for counterclockwise. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ this equals $a + b$. On a plot, arrows on the positive $x$-axis pointing up mean $b > 0$, and arrows on the positive $y$-axis pointing left mean $a > 0$.",
-    "$\\mathbf{F} = \\langle P, Q \\rangle$ 旋度的 $z$ 分量是 $Q_x - P_y$，它度量放在流场中的小叶轮的旋转，逆时针为正。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$，它等于 $a + b$。在图上，$x$ 轴正半轴上箭头向上说明 $b > 0$，$y$ 轴正半轴上箭头向左说明 $a > 0$。",
+    "The $z$-component of the curl of $\\mathbf{F} = \\langle P, Q \\rangle$ is $Q_x - P_y$, and it measures the spin of a small paddle wheel placed in the flow, positive for counterclockwise. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ this equals $a + b$. On a plot, arrows on the positive $x$-axis pointing up mean $b > 0$, and arrows on the positive $y$-axis pointing left mean $a > 0$. For $\\langle -y, -5x \\rangle$, the arrows on the positive $x$-axis point down and are five times as long as the leftward ones on the positive $y$-axis, so the curl $-5 + 1 = -4$ is negative: a clockwise spin.\n\n> **Watch out.** Up on the positive $x$-axis and left on the positive $y$-axis both mean counterclockwise. When the two disagree, compare the lengths at equal distances; equal lengths in opposite senses give zero curl.",
+    "$\\mathbf{F} = \\langle P, Q \\rangle$ 旋度的 $z$ 分量是 $Q_x - P_y$，它度量放在流场中的小叶轮的旋转，逆时针为正。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$，它等于 $a + b$。在图上，$x$ 轴正半轴上箭头向上说明 $b > 0$，$y$ 轴正半轴上箭头向左说明 $a > 0$。对 $\\langle -y, -5x \\rangle$，$x$ 轴正半轴上的箭头向下，长度是 $y$ 轴正半轴上向左箭头的五倍，所以旋度 $-5 + 1 = -4$ 为负：顺时针旋转。\n\n> **注意。** $x$ 轴正半轴上向上和 $y$ 轴正半轴上向左都表示逆时针。二者不一致时，要比较同样距离处的长度；长度相等而方向相反时旋度为零。",
   ),
   generate(rng: Rng): Problem {
     const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
     const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
     const [right, wrong] = signWords(a + b);
-    return withFigure(
-      pickChoice(
-        rng,
+    const spin = (n: number) => (n > 0 ? t("counterclockwise", "逆时针") : t("clockwise", "顺时针"));
+    const because =
+      a + b === 0
+        ? t(
+            "The arrows on the two axes have equal length and turn opposite ways, so $a$ and $b$ cancel and the curl is zero.",
+            "两条轴上的箭头等长而转向相反，所以 $a$ 与 $b$ 抵消，旋度为零。",
+          )
+        : a * b > 0
+          ? t(
+              `The arrows on both axes turn ${spin(a).en}, so $a$ and $b$ have the same sign and $a + b$ has it too.`,
+              `两条轴上的箭头都${spin(a)["zh-CN"]}转，所以 $a$ 与 $b$ 同号，$a + b$ 也是这个符号。`,
+            )
+          : t(
+              `The axes disagree, and the longer arrows turn ${spin(Math.abs(a) > Math.abs(b) ? a : b).en}, so that coefficient decides the sign of $a + b$.`,
+              `两条轴不一致，较长的箭头${spin(Math.abs(a) > Math.abs(b) ? a : b)["zh-CN"]}转，所以由那个系数决定 $a + b$ 的符号。`,
+            );
+    return explainedChoice(rng, {
+      prompt: t(
+        "The plot shows $\\mathbf{F}(x, y) = \\langle -ay, bx \\rangle$ for nonzero constants $a$ and $b$, with all arrows scaled by one common factor. What is the sign of the $z$-component of $\\operatorname{curl} \\mathbf{F}$?",
+        "图中是 $\\mathbf{F}(x, y) = \\langle -ay, bx \\rangle$，其中 $a$、$b$ 是非零常数，所有箭头按同一比例缩放。$\\operatorname{curl} \\mathbf{F}$ 的 $z$ 分量的符号是什么？",
+      ),
+      correct: right,
+      wrong: wrong.map((option) => ({ option, why: because })),
+      solution: walked(
+        [
+          [
+            ["Read the signs", "读出符号"],
+            t(
+              `Here $Q_x - P_y = b - (-a) = a + b$. The arrows on the positive $x$-axis point ${b > 0 ? "up" : "down"}, so $b ${b > 0 ? ">" : "<"} 0$, and those on the positive $y$-axis point ${a > 0 ? "left" : "right"}, so $a ${a > 0 ? ">" : "<"} 0$.`,
+              `这里 $Q_x - P_y = b - (-a) = a + b$。$x$ 轴正半轴上的箭头${b > 0 ? "向上" : "向下"}，所以 $b ${b > 0 ? ">" : "<"} 0$；$y$ 轴正半轴上的箭头${a > 0 ? "向左" : "向右"}，所以 $a ${a > 0 ? ">" : "<"} 0$。`,
+            ),
+          ],
+          [
+            ["Compare the lengths", "比较长度"],
+            t(
+              `At equal distances the lengths compare as $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$, so $a + b$ is a positive multiple of $${a + b}$, which fixes its sign.`,
+              `在同样距离处长度之比为 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$，所以 $a + b$ 是 $${a + b}$ 的正数倍，符号由此确定。`,
+            ),
+          ],
+        ],
         t(
-          "The plot shows $\\mathbf{F}(x, y) = \\langle -ay, bx \\rangle$ for nonzero constants $a$ and $b$, with all arrows scaled by one common factor. What is the sign of the $z$-component of $\\operatorname{curl} \\mathbf{F}$?",
-          "图中是 $\\mathbf{F}(x, y) = \\langle -ay, bx \\rangle$，其中 $a$、$b$ 是非零常数，所有箭头按同一比例缩放。$\\operatorname{curl} \\mathbf{F}$ 的 $z$ 分量的符号是什么？",
-        ),
-        right,
-        wrong,
-        t(
-          `Here $Q_x - P_y = b - (-a) = a + b$. The arrows on the positive $x$-axis show the sign of $b$ and those on the positive $y$-axis show the opposite of the first component, which gives the sign of $a$; comparing lengths gives $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$. So $a + b$ is a positive multiple of $${a + b}$, which fixes its sign.`,
-          `这里 $Q_x - P_y = b - (-a) = a + b$。$x$ 轴正半轴上的箭头给出 $b$ 的符号，$y$ 轴正半轴上的箭头给出 $a$ 的符号；比较长度得 $|a|:|b| = ${Math.abs(a)}:${Math.abs(b)}$。所以 $a + b$ 是 $${a + b}$ 的正数倍，符号由此确定。`,
+          `The arrows at $(1, 0)$ and $(0, 1)$ are $${angled(0, b)}$ and $${angled(-a, 0)}$ up to scale, and $Q_x - P_y = ${b} - ${a < 0 ? `${-a}` : `(${-a})`} = ${a + b}$.`,
+          `$(1, 0)$ 与 $(0, 1)$ 处的箭头在比例意义下为 $${angled(0, b)}$ 和 $${angled(-a, 0)}$，且 $Q_x - P_y = ${b} - ${a < 0 ? `${-a}` : `(${-a})`} = ${a + b}$。`,
         ),
       ),
-      quiver((x, y) => [-a * y, b * x]),
-    );
+      figure: quiver((x, y) => [-a * y, b * x]),
+    });
   },
 };
 

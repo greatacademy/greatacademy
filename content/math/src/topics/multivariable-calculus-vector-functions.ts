@@ -6,6 +6,7 @@ import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.
 import {
   choiceProblem,
   equationProblem,
+  explainedChoice,
   expressionProblem,
   intervalProblem,
   numberProblem,
@@ -13,11 +14,10 @@ import {
   pointLatex,
   pointProblem,
   say,
-  steps,
   vectorLatex,
+  verdictChoice,
   why,
   withMistakes,
-  yesNo,
 } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { none, walked } from "./calculus-i-differentiation.ts";
@@ -55,13 +55,6 @@ function located(p: Omit<PointProblem, "wrong">, mistakes: readonly Wrong[]): Pr
 
 /** num writes a decimal to two places, without a negative zero. */
 const num = (x: number): string => String(Number(x.toFixed(2)) || 0);
-
-/** pickChoice builds a multiple choice problem with options shuffled. */
-function pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
-  const options = rng.shuffle([right, ...wrong]);
-  const correct = options.indexOf(right);
-  return choiceProblem({ prompt, options, correct, solution });
-}
 
 /** cubicCurve writes ⟨2at, at², (a/3)t³⟩, the curve whose speed a(t² + 2) makes arc length and curvature exact. */
 function cubicCurve(a: number, sign = 1): string {
@@ -2596,6 +2589,10 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
     "For a plane curve $y = f(x)$, the curvature is $\\kappa(x) = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$.",
     "对于平面曲线 $y = f(x)$，曲率为 $\\kappa(x) = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$。",
   ),
+  intro: t(
+    "Take $y = \\frac{3}{8}x^2$ at $x = 1$. There $f'(1) = \\frac{3}{4}$ and $f''(1) = \\frac{3}{4}$, so $1 + f'^2 = \\frac{25}{16}$, whose $\\frac{3}{2}$ power is $\\frac{125}{64}$, and the curvature is $\\kappa = \\frac{3}{4} \\cdot \\frac{64}{125} = \\frac{48}{125}$.\n\nCheck: at the vertex $x = 0$ the slope is $0$ and $\\kappa = \\frac{3}{4} = \\frac{75}{100}$, larger than $\\frac{48}{125} = \\frac{38.4}{100}$, as it should be: the parabola flattens out as it gets steeper.\n\nIn this lesson we find the curvature of the graph of a function from its first and second derivatives.",
+    "取 $y = \\frac{3}{8}x^2$ 在 $x = 1$ 处。这里 $f'(1) = \\frac{3}{4}$，$f''(1) = \\frac{3}{4}$，所以 $1 + f'^2 = \\frac{25}{16}$，其 $\\frac{3}{2}$ 次幂为 $\\frac{125}{64}$，曲率为 $\\kappa = \\frac{3}{4} \\cdot \\frac{64}{125} = \\frac{48}{125}$。\n\n检验：在顶点 $x = 0$ 处斜率为 $0$，$\\kappa = \\frac{3}{4} = \\frac{75}{100}$，比 $\\frac{48}{125} = \\frac{38.4}{100}$ 大，这是应该的：抛物线越陡越平直。\n\n本课我们由一阶和二阶导数求函数图像的曲率。",
+  ),
   prerequisites: ["introduction-to-curvature", "second-and-higher-order-derivatives"],
   encompasses: [],
   xp: 10,
@@ -2605,34 +2602,53 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
       figure: multivariableDrawings1["the-curvature-of-a-plane-curve#computing-curvature-of-function-graphs"],
       title: t("Computing curvature of function graphs", "计算显式函数图像的曲率"),
       explanation: t(
-        "For a graph the second derivative measures bending, and dividing by a power of one plus the square of the slope corrects for how steep the graph is. For a plane curve given as the graph of a function $y = f(x)$, the curvature formula reduces to:\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}.$$",
-        "对于函数图像，二阶导数衡量弯曲程度，再除以 1 加斜率平方的某次幂，以修正图像陡峭程度的影响。对于由显式函数图像 $y = f(x)$ 给出的平面曲线，曲率公式简化为：\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}$$",
+        "For a graph the second derivative measures bending, and dividing by a power of one plus the square of the slope corrects for how steep the graph is. For a plane curve given as the graph of a function $y = f(x)$, the curvature formula reduces to:\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}.$$\n\nFor $y = \\frac{1}{2}x^2$ at its vertex, $f'(0) = 0$ and $f''(0) = 1$, so $\\kappa(0) = \\frac{1}{1} = 1$: the parabola bends there like a circle of radius $1$.\n\n> **Watch out.** The second derivative of $ax^2$ is $2a$, not $a$. At a vertex the slope is $0$ and the denominator is $1$, so the curvature is $|f''|$ itself; its reciprocal is the radius of curvature, not the curvature.",
+        "对于函数图像，二阶导数衡量弯曲程度，再除以 1 加斜率平方的某次幂，以修正图像陡峭程度的影响。对于由显式函数图像 $y = f(x)$ 给出的平面曲线，曲率公式简化为：\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}$$\n\n对 $y = \\frac{1}{2}x^2$ 在顶点处，$f'(0) = 0$，$f''(0) = 1$，所以 $\\kappa(0) = \\frac{1}{1} = 1$：抛物线在那里像半径为 $1$ 的圆那样弯曲。\n\n> **注意。** $ax^2$ 的二阶导数是 $2a$，不是 $a$。在顶点处斜率为 $0$，分母为 $1$，曲率就是 $|f''|$ 本身；它的倒数是曲率半径，不是曲率。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 40);
         const ans = 2 * a;
-
-        const prompt = t(
-          `Find the curvature $\\kappa(0)$ of the parabola $y = ${poly([a, "x^2"])}$ at its vertex $(0, 0)$.`,
-          `求抛物线 $y = ${poly([a, "x^2"])}$ 在其顶点 $(0, 0)$ 处的曲率 $\\kappa(0)$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute derivatives: $f'(x) = ${2 * a}x \\implies f'(0) = 0$.`,
-            `The second derivative is $f''(x) = ${2 * a} \\implies f''(0) = ${2 * a}$.`,
-            `Substitute into the plane curve curvature formula:\n\n$$\\kappa(0) = \\frac{|f''(0)|}{\\left[1 + (f'(0))^2\\right]^{3/2}} = \\frac{${2 * a}}{\\left[1 + 0^2\\right]^{3/2}} = ${ans}.$$`,
-          ),
-          steps(
-            `求导数：$f'(x) = ${2 * a}x \\implies f'(0) = 0$。`,
-            `二阶导数为 $f''(x) = ${2 * a} \\implies f''(0) = ${2 * a}$。`,
-            `代入平面曲线曲率公式：\n\n$$\\kappa(0) = \\frac{|f''(0)|}{\\left[1 + (f'(0))^2\\right]^{3/2}} = \\frac{${2 * a}}{\\left[1 + 0^2\\right]^{3/2}} = ${ans}$$`,
-          ),
-        );
+        const curve = poly([a, "x^2"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the curvature $\\kappa(0)$ of the parabola $y = ${curve}$ at its vertex $(0, 0)$.`,
+            `求抛物线 $y = ${curve}$ 在其顶点 $(0, 0)$ 处的曲率 $\\kappa(0)$。`,
+          ),
           answer: ans,
-          wrong: [a, ans / 2, ans * 2],
+          mistakes: distinct(ans, [
+            why(
+              a,
+              `$\\frac{d^2}{dx^2}(${curve}) = ${2 * a}$: differentiating $x^2$ twice gives $2$.`,
+              `$\\frac{d^2}{dx^2}(${curve}) = ${2 * a}$：$x^2$ 求两次导得 $2$。`,
+            ),
+            why(
+              Q.of(1, 2 * a),
+              "That is the radius of curvature $\\frac{1}{\\kappa}$; the curvature is its reciprocal.",
+              "这是曲率半径 $\\frac{1}{\\kappa}$；曲率是它的倒数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate", "求导"],
+                t(
+                  `$f'(x) = ${2 * a}x$, so $f'(0) = 0$, and $f''(x) = ${2 * a}$.`,
+                  `$f'(x) = ${2 * a}x$，所以 $f'(0) = 0$；$f''(x) = ${2 * a}$。`,
+                ),
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$\\kappa(0) = \\frac{|f''(0)|}{\\left[1 + 0^2\\right]^{3/2}} = \\frac{${2 * a}}{1} = ${ans}$.`,
+                  `$\\kappa(0) = \\frac{|f''(0)|}{\\left[1 + 0^2\\right]^{3/2}} = \\frac{${2 * a}}{1} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `A circle of radius $\\rho$ near its lowest point is $y \\approx \\frac{x^2}{2\\rho}$. With $\\rho = \\frac{1}{${ans}}$ this is $\\frac{${ans}}{2}x^2 = ${curve}$, the parabola itself.`,
+              `半径为 $\\rho$ 的圆在其最低点附近为 $y \\approx \\frac{x^2}{2\\rho}$。取 $\\rho = \\frac{1}{${ans}}$，得 $\\frac{${ans}}{2}x^2 = ${curve}$，正是这条抛物线。`,
+            ),
+          ),
         });
       },
     },
@@ -2641,8 +2657,8 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
       figure: multivariableDrawings1["the-curvature-of-a-plane-curve#curvature-of-a-graph-from-its-slope-and-concavity"],
       title: t("Curvature of a graph from $f'$ and $f''$", "由 $f'$ 与 $f''$ 求图像的曲率"),
       explanation: t(
-        "For the graph $y = f(x)$ the curvature is\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}.$$\n\nIt grows with the concavity $|f''|$ but is damped where the graph is steep. When the slope is a ratio from a Pythagorean triple, such as $\\frac34$, the denominator is rational: $1 + \\frac{9}{16} = \\frac{25}{16}$, whose $\\frac32$ power is $\\frac{125}{64}$.",
-        "对图像 $y = f(x)$，曲率为\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$$\n\n它随凹凸程度 $|f''|$ 增大，但在图像陡峭处被削弱。当斜率是勾股数之比如 $\\frac34$ 时分母为有理数：$1 + \\frac{9}{16} = \\frac{25}{16}$，其 $\\frac32$ 次幂为 $\\frac{125}{64}$。",
+        "For the graph $y = f(x)$ the curvature is\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}.$$\n\nIt grows with the concavity $|f''|$ but is damped where the graph is steep. When the slope is a ratio from a Pythagorean triple, such as $\\frac34$, the denominator is rational: $1 + \\frac{9}{16} = \\frac{25}{16}$, whose $\\frac32$ power is $\\frac{125}{64}$. So with $f' = \\frac{3}{4}$ and $f'' = 10$, $\\kappa = 10 \\cdot \\frac{64}{125} = \\frac{128}{25}$.\n\n> **Watch out.** Raise $1 + f'^2$ to the power $\\frac{3}{2}$: take the square root and then cube it, not just one of the two. And take $|f''|$: curvature is never negative.",
+        "对图像 $y = f(x)$，曲率为\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$$\n\n它随凹凸程度 $|f''|$ 增大，但在图像陡峭处被削弱。当斜率是勾股数之比如 $\\frac34$ 时分母为有理数：$1 + \\frac{9}{16} = \\frac{25}{16}$，其 $\\frac32$ 次幂为 $\\frac{125}{64}$。所以当 $f' = \\frac{3}{4}$，$f'' = 10$ 时，$\\kappa = 10 \\cdot \\frac{64}{125} = \\frac{128}{25}$。\n\n> **注意。** 要把 $1 + f'^2$ 取 $\\frac{3}{2}$ 次幂：先开平方再立方，两步都不能少。还要取 $|f''|$：曲率从不为负。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, r] = rng.pick([
@@ -2656,24 +2672,59 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
         const slope = Q.of(sg * p, q);
         const k = rng.nonZero(-9, 9);
         const x0 = rng.int(-3, 3);
-        const ans = Q.of(Math.abs(k) * q ** 3, r ** 3);
+        const size = Math.abs(k);
+        const ans = Q.of(size * q ** 3, r ** 3);
         return numberProblem({
           prompt: t(
             `At $x = ${x0}$ a function has $f'(${x0}) = ${slope.toLatex()}$ and $f''(${x0}) = ${k}$. Find the curvature of $y = f(x)$ there.`,
             `某函数在 $x = ${x0}$ 处 $f'(${x0}) = ${slope.toLatex()}$，$f''(${x0}) = ${k}$。求 $y = f(x)$ 在该处的曲率。`,
           ),
           answer: ans,
-          wrong: [Q.of(Math.abs(k)), Q.of(Math.abs(k) * q * q, r * r), Q.of(Math.abs(k) * q, r), Q.of(k * q ** 3, r ** 3)],
-          solution:
+          mistakes: distinct(ans, [
+            why(size, "That leaves out the denominator; a nonzero slope damps the curvature.", "这漏掉了分母；斜率不为零时曲率会被削弱。"),
+            why(
+              Q.of(size * q * q, r * r),
+              `That divides by $1 + f'^2 = \\frac{${r * r}}{${q * q}}$ itself; its power is $\\frac{3}{2}$.`,
+              `这是直接除以 $1 + f'^2 = \\frac{${r * r}}{${q * q}}$；它的指数是 $\\frac{3}{2}$。`,
+            ),
+            why(
+              Q.of(size * q, r),
+              `That divides by the square root $\\frac{${r}}{${q}}$ only; it must also be cubed.`,
+              `这只除以了平方根 $\\frac{${r}}{${q}}$；还要立方。`,
+            ),
+            why(Q.of(k * q ** 3, r ** 3), "Curvature uses $|f''|$, so it is never negative.", "曲率用的是 $|f''|$，所以从不为负。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the denominator", "求分母"],
+                p === 0
+                  ? t("$f' = 0$, so $\\left(1 + f'^2\\right)^{3/2} = 1$.", "$f' = 0$，所以 $\\left(1 + f'^2\\right)^{3/2} = 1$。")
+                  : t(
+                      `$1 + f'^2 = 1 + \\frac{${p * p}}{${q * q}} = \\frac{${r * r}}{${q * q}}$, whose square root is $\\frac{${r}}{${q}}$ and whose $\\frac{3}{2}$ power is $\\frac{${r ** 3}}{${q ** 3}}$.`,
+                      `$1 + f'^2 = 1 + \\frac{${p * p}}{${q * q}} = \\frac{${r * r}}{${q * q}}$，其平方根为 $\\frac{${r}}{${q}}$，$\\frac{3}{2}$ 次幂为 $\\frac{${r ** 3}}{${q ** 3}}$。`,
+                    ),
+              ],
+              [
+                ["Divide", "相除"],
+                p === 0
+                  ? t(`$\\kappa = |${k}| = ${size}$.`, `$\\kappa = |${k}| = ${size}$。`)
+                  : t(
+                      `$\\kappa = \\frac{|${k}|}{${Q.of(r ** 3, q ** 3).toLatex()}} = ${size} \\cdot \\frac{${q ** 3}}{${r ** 3}} = ${ans.toLatex()}$.`,
+                      `$\\kappa = \\frac{|${k}|}{${Q.of(r ** 3, q ** 3).toLatex()}} = ${size} \\cdot \\frac{${q ** 3}}{${r ** 3}} = ${ans.toLatex()}$。`,
+                    ),
+              ],
+            ],
             p === 0
               ? t(
-                  `With $f' = 0$ the denominator is $1$, so $\\kappa = |f''| = ${Math.abs(k)}$.`,
-                  `$f' = 0$ 时分母为 $1$，所以 $\\kappa = |f''| = ${Math.abs(k)}$。`,
+                  `Where the graph is level, curvature and $|f''|$ agree, and here both are $${size}$.`,
+                  `图像水平处，曲率与 $|f''|$ 相等，这里两者都是 $${size}$。`,
                 )
               : t(
-                  `$1 + f'^2 = \\frac{${r * r}}{${q * q}}$, whose $\\frac32$ power is $\\frac{${r ** 3}}{${q ** 3}}$. So $\\kappa = ${Math.abs(k)} \\cdot \\frac{${q ** 3}}{${r ** 3}} = ${ans.toLatex()}$.`,
-                  `$1 + f'^2 = \\frac{${r * r}}{${q * q}}$，其 $\\frac32$ 次幂为 $\\frac{${r ** 3}}{${q ** 3}}$。所以 $\\kappa = ${Math.abs(k)} \\cdot \\frac{${q ** 3}}{${r ** 3}} = ${ans.toLatex()}$。`,
+                  `$${ans.toLatex()} < ${size}$: a steep graph bends less than its concavity $|f''| = ${size}$ alone suggests, as the denominator $\\frac{${r ** 3}}{${q ** 3}} > 1$ says.`,
+                  `$${ans.toLatex()} < ${size}$：陡峭的图像弯得比单看凹凸程度 $|f''| = ${size}$ 要少，正如分母 $\\frac{${r ** 3}}{${q ** 3}} > 1$ 所示。`,
                 ),
+          ),
         });
       },
     },
@@ -2692,6 +2743,10 @@ export const vectorFields: TopicDef = {
     "A vector field assigns a vector F(x, y) or F(x, y, z) to each point in space.",
     "向量场为空间中的每个点赋予一个向量 F(x, y) 或 F(x, y, z)。",
   ),
+  intro: t(
+    "The field $\\mathbf{F}(x, y) = \\langle y, x \\rangle$ attaches an arrow to every point of the plane. At $(3, 4)$, put $x = 3$ and $y = 4$ into each entry: $\\mathbf{F}(3, 4) = \\langle 4, 3 \\rangle$, an arrow drawn with its tail at $(3, 4)$.\n\nCheck: $\\|\\langle 4, 3 \\rangle\\| = 5$, the distance from the origin to $(3, 4)$, as it must be for this field, whose entries are those of the position swapped.\n\nIn this lesson we evaluate vector fields at points and find where a field vanishes.",
+    "向量场 $\\mathbf{F}(x, y) = \\langle y, x \\rangle$ 给平面上的每个点附上一个箭头。在 $(3, 4)$ 处，把 $x = 3$、$y = 4$ 代入每个分量：$\\mathbf{F}(3, 4) = \\langle 4, 3 \\rangle$，这是一个以 $(3, 4)$ 为起点的箭头。\n\n检验：$\\|\\langle 4, 3 \\rangle\\| = 5$，正是原点到 $(3, 4)$ 的距离；这个场的分量就是位置的分量互换，理应如此。\n\n本课我们求向量场在各点的值，并求场为零的点。",
+  ),
   prerequisites: ["defining-vector-valued-functions", "three-dimensional-vectors-in-component-form"],
   encompasses: [],
   xp: 10,
@@ -2700,60 +2755,69 @@ export const vectorFields: TopicDef = {
       id: "evaluating-vector-fields-at-points",
       title: t("Evaluating vector fields at points", "在各点处求向量场的值"),
       explanation: t(
-        "To evaluate a vector field, substitute the coordinates of the point into each component formula to get the vector attached to that point. A vector field in $\\mathbb{R}^3$ is a function $\\mathbf{F}$ that assigns to each point $(x, y, z)$ a three-dimensional vector:\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle.$$",
-        "求向量场的值时，把点的坐标代入每个分量公式，就得到附着在该点的向量。$\\mathbb{R}^3$ 中的向量场是一个函数 $\\mathbf{F}$，它为空间中的每个点 $(x, y, z)$ 赋予一个三维向量：\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle$$",
+        "To evaluate a vector field, substitute the coordinates of the point into each component formula to get the vector attached to that point. A vector field in $\\mathbb{R}^3$ is a function $\\mathbf{F}$ that assigns to each point $(x, y, z)$ a three-dimensional vector:\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle.$$\n\nFor $\\mathbf{F} = \\langle 2x - y, 4yz, x - z \\rangle$ at $(1, 2, 3)$: $P = 2 - 2 = 0$, $Q = 4 \\cdot 2 \\cdot 3 = 24$ and $R = 1 - 3 = -2$, so $\\mathbf{F}(1, 2, 3) = \\langle 0, 24, -2 \\rangle$.\n\n> **Watch out.** The answer is a vector attached to the point, not the point itself, and its entries keep their order $\\langle P, Q, R \\rangle$. Put a negative coordinate in parentheses: $x - z$ at $z = -2$ is $x - (-2) = x + 2$.",
+        "求向量场的值时，把点的坐标代入每个分量公式，就得到附着在该点的向量。$\\mathbb{R}^3$ 中的向量场是一个函数 $\\mathbf{F}$，它为空间中的每个点 $(x, y, z)$ 赋予一个三维向量：\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle$$\n\n对 $\\mathbf{F} = \\langle 2x - y, 4yz, x - z \\rangle$ 在 $(1, 2, 3)$ 处：$P = 2 - 2 = 0$，$Q = 4 \\cdot 2 \\cdot 3 = 24$，$R = 1 - 3 = -2$，所以 $\\mathbf{F}(1, 2, 3) = \\langle 0, 24, -2 \\rangle$。\n\n> **注意。** 答案是附着在该点的向量，不是点本身，分量顺序是 $\\langle P, Q, R \\rangle$。负坐标要加括号：$x - z$ 在 $z = -2$ 时为 $x - (-2) = x + 2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.nonZero(-3, 3);
-        const pt: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
-
-        const ansX = a * pt[0] + b * pt[1];
-        const ansY = c * pt[1] * pt[2];
-        const ansZ = pt[0] - pt[2];
+        const [x, y, z]: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
+        const ansX = a * x + b * y;
+        const ansY = c * y * z;
+        const ansZ = x - z;
         const answer: Vec3 = [ansX, ansY, ansZ];
-
-        const prompt = t(
-          `Evaluate the vector field $\\mathbf{F}(x, y, z) = \\left\\langle ${poly([a, "x"], [b, "y"])}, ${poly([c, "yz"])}, x - z \\right\\rangle$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `计算向量场 $\\mathbf{F}(x, y, z) = \\left\\langle ${poly([a, "x"], [b, "y"])}, ${poly([c, "yz"])}, x - z \\right\\rangle$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的值。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $x = ${pt[0]}$, $y = ${pt[1]}$, and $z = ${pt[2]}$ into each component:`,
-            `$P = ${a}(${pt[0]}) + ${paren(b)}(${pt[1]}) = ${ansX}$`,
-            `$Q = ${c}(${pt[1]})(${pt[2]}) = ${ansY}$`,
-            `$R = ${pt[0]} - (${pt[2]}) = ${ansZ}$`,
-            `The resulting vector is $${v3L(answer)}$.`,
-          ),
-          steps(
-            `将 $x = ${pt[0]}$、$y = ${pt[1]}$ 和 $z = ${pt[2]}$ 代入各分量：`,
-            `$P = ${a}(${pt[0]}) + ${paren(b)}(${pt[1]}) = ${ansX}$`,
-            `$Q = ${c}(${pt[1]})(${pt[2]}) = ${ansY}$`,
-            `$R = ${pt[0]} - (${pt[2]}) = ${ansZ}$`,
-            `最终得到的向量为 $${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [ansY, ansX, ansZ],
-            [-ansX, -ansY, -ansZ],
-            [pt[0], pt[1], pt[2]],
+        const field = `\\left\\langle ${poly([a, "x"], [b, "y"])}, ${poly([c, "yz"])}, x - z \\right\\rangle`;
+        return located(
+          {
+            prompt: t(
+              `Evaluate the vector field $\\mathbf{F}(x, y, z) = ${field}$ at the point $(${x}, ${y}, ${z})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `计算向量场 $\\mathbf{F}(x, y, z) = ${field}$ 在点 $(${x}, ${y}, ${z})$ 处的值。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Substitute into the first entry", "代入第一个分量"],
+                  t(
+                    `$P = ${a} \\cdot ${paren(x)} + ${paren(b)} \\cdot ${paren(y)} = ${ansX}$.`,
+                    `$P = ${a} \\cdot ${paren(x)} + ${paren(b)} \\cdot ${paren(y)} = ${ansX}$。`,
+                  ),
+                ],
+                [
+                  ["Substitute into the other two", "代入另外两个分量"],
+                  t(
+                    `$Q = ${c} \\cdot ${paren(y)} \\cdot ${paren(z)} = ${ansY}$ and $R = ${x} - ${paren(z)} = ${ansZ}$, so $\\mathbf{F}(${x}, ${y}, ${z}) = ${v3L(answer)}$.`,
+                    `$Q = ${c} \\cdot ${paren(y)} \\cdot ${paren(z)} = ${ansY}$，$R = ${x} - ${paren(z)} = ${ansZ}$，所以 $\\mathbf{F}(${x}, ${y}, ${z}) = ${v3L(answer)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `In the other order: $${paren(b)} \\cdot ${paren(y)} + ${paren(a)} \\cdot ${paren(x)} = ${ansX}$, $${paren(z)} \\cdot ${paren(y)} \\cdot ${paren(c)} = ${ansY}$ and $${paren(x)} + ${paren(-z)} = ${ansZ}$.`,
+                `换个顺序算：$${paren(b)} \\cdot ${paren(y)} + ${paren(a)} \\cdot ${paren(x)} = ${ansX}$，$${paren(z)} \\cdot ${paren(y)} \\cdot ${paren(c)} = ${ansY}$，$${paren(x)} + ${paren(-z)} = ${ansZ}$。`,
+              ),
+            ),
+          },
+          [
+            [[ansY, ansX, ansZ], "The first two entries are swapped; $P$ comes first.", "前两个分量对调了；$P$ 在前。"],
+            [[x, y, z], "That is the point itself; the field gives the vector attached to it.", "这是点本身；场给出的是附着在该点的向量。"],
+            [
+              [ansX, ansY, x + z],
+              `$R = x - z$ subtracts $z$: $${x} - ${paren(z)} = ${ansZ}$.`,
+              `$R = x - z$ 要减去 $z$：$${x} - ${paren(z)} = ${ansZ}$。`,
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "finding-where-a-vector-field-vanishes",
       title: t("Finding where a vector field vanishes", "求向量场为零的点"),
       explanation: t(
-        "A point where $\\mathbf{F} = \\mathbf{0}$ is an equilibrium of the field: a particle carried by the flow and placed there stays put. To find it, set every component equal to zero and solve the resulting system. For $\\mathbf{F} = \\langle x + y - p, x - y - q \\rangle$, adding and subtracting the equations gives $x = \\frac{p + q}{2}$ and $y = \\frac{p - q}{2}$.",
-        "使 $\\mathbf{F} = \\mathbf{0}$ 的点是场的平衡点：放在那里随流运动的质点保持不动。求它时令每个分量为零并解所得方程组。对 $\\mathbf{F} = \\langle x + y - p, x - y - q \\rangle$，把两个方程相加、相减得 $x = \\frac{p + q}{2}$，$y = \\frac{p - q}{2}$。",
+        "A point where $\\mathbf{F} = \\mathbf{0}$ is an equilibrium of the field: a particle carried by the flow and placed there stays put. To find it, set every component equal to zero and solve the resulting system. For $\\mathbf{F} = \\langle 2x + 5y - 1, x - 4y + 6 \\rangle$, the system $2x + 5y = 1$, $x - 4y = -6$ gives $x = 4y - 6$, then $13y - 12 = 1$, so $y = 1$, $x = -2$: the field vanishes at $(-2, 1)$.\n\n> **Watch out.** Every component must be zero at the same point: one equation alone gives a whole line. Move each constant to the right with its sign changed, so $2x + 5y - 1 = 0$ becomes $2x + 5y = 1$, not $-1$.",
+        "使 $\\mathbf{F} = \\mathbf{0}$ 的点是场的平衡点：放在那里随流运动的质点保持不动。求它时令每个分量为零并解所得方程组。对 $\\mathbf{F} = \\langle 2x + 5y - 1, x - 4y + 6 \\rangle$，方程组 $2x + 5y = 1$，$x - 4y = -6$ 给出 $x = 4y - 6$，于是 $13y - 12 = 1$，所以 $y = 1$，$x = -2$：场在 $(-2, 1)$ 处为零。\n\n> **注意。** 每个分量必须在同一点为零：只用一个方程得到的是一整条直线。把常数移到右边时要变号，所以 $2x + 5y - 1 = 0$ 变成 $2x + 5y = 1$，不是 $-1$。",
       ),
       generate(rng: Rng): Problem {
         const x = rng.int(-5, 5);
@@ -2769,22 +2833,46 @@ export const vectorFields: TopicDef = {
         }
         const p = a * x + b * y;
         const q = c * x + d * y;
-        return pointProblem({
-          prompt: t(
-            `At which point is $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"], [-p, ""])}, ${poly([c, "x"], [d, "y"], [-q, ""])} \\rangle$ the zero vector?`,
-            `$\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"], [-p, ""])}, ${poly([c, "x"], [d, "y"], [-q, ""])} \\rangle$ 在哪一点为零向量？`,
-          ),
-          answer: [x, y],
-          wrong: [
-            [y, x],
-            [-x, -y],
-            [p, q],
+        const D = a * d - b * c;
+        const first = poly([a, "x"], [b, "y"]);
+        const second = poly([c, "x"], [d, "y"]);
+        return located(
+          {
+            prompt: t(
+              `At which point is $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"], [-p, ""])}, ${poly([c, "x"], [d, "y"], [-q, ""])} \\rangle$ the zero vector?`,
+              `$\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"], [-p, ""])}, ${poly([c, "x"], [d, "y"], [-q, ""])} \\rangle$ 在哪一点为零向量？`,
+            ),
+            answer: [x, y],
+            solution: walked(
+              [
+                [
+                  ["Set both entries to zero", "令两个分量为零"],
+                  t(`$${first} = ${p}$ and $${second} = ${q}$.`, `$${first} = ${p}$ 且 $${second} = ${q}$。`),
+                ],
+                [
+                  ["Solve the system", "解方程组"],
+                  t(
+                    `The determinant is $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$, so $x = \\frac{${p} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(q)}}{${D}} = ${x}$ and $y = \\frac{${a} \\cdot ${paren(q)} - ${paren(c)} \\cdot ${paren(p)}}{${D}} = ${y}$.`,
+                    `行列式为 $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$，所以 $x = \\frac{${p} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(q)}}{${D}} = ${x}$，$y = \\frac{${a} \\cdot ${paren(q)} - ${paren(c)} \\cdot ${paren(p)}}{${D}} = ${y}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$${a} \\cdot ${paren(x)} + ${paren(b)} \\cdot ${paren(y)} = ${p}$ and $${c} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} = ${q}$, so both entries of $\\mathbf{F}(${x}, ${y})$ are $0$.`,
+                `$${a} \\cdot ${paren(x)} + ${paren(b)} \\cdot ${paren(y)} = ${p}$，$${c} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} = ${q}$，所以 $\\mathbf{F}(${x}, ${y})$ 的两个分量都是 $0$。`,
+              ),
+            ),
+          },
+          [
+            [[y, x], "The coordinates are swapped; $x$ comes first.", "坐标对调了；$x$ 在前。"],
+            [
+              [-x, -y],
+              "That solves the system with the constants moved across without changing their signs.",
+              "这是把常数移到另一边时没有变号所解出的结果。",
+            ],
+            [[p, q], "Those are the constants of the system, not its solution.", "这是方程组的常数项，不是它的解。"],
           ],
-          solution: t(
-            `Solve $${poly([a, "x"], [b, "y"])} = ${p}$ and $${poly([c, "x"], [d, "y"])} = ${q}$: the solution is $(${x}, ${y})$.`,
-            `解 $${poly([a, "x"], [b, "y"])} = ${p}$ 与 $${poly([c, "x"], [d, "y"])} = ${q}$：解为 $(${x}, ${y})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -2798,6 +2886,10 @@ export const visualizingVectorFields: TopicDef = {
     "Vector fields are visualized by drawing vectors at representative grid points, displaying direction and magnitude.",
     "通过在代表性网格点绘制向量来可视化向量场，直观显示其方向和大小。",
   ),
+  intro: t(
+    "Sketch $\\mathbf{F}(x, y) = \\langle -y, x \\rangle$ by evaluating it at a few points: $\\mathbf{F}(2, 0) = \\langle 0, 2 \\rangle$ points up, $\\mathbf{F}(0, 2) = \\langle -2, 0 \\rangle$ points left and $\\mathbf{F}(-2, 0) = \\langle 0, -2 \\rangle$ points down. The arrows run around the origin counterclockwise, longer farther out.\n\nCheck: $\\langle -y, x \\rangle \\cdot \\langle x, y \\rangle = -xy + xy = 0$, so every arrow is perpendicular to the line from the origin, as arrows going around circles must be.\n\nIn this lesson we read the direction and pattern of a field from its formula and match formulas with plots.",
+    "通过在几个点求值来画 $\\mathbf{F}(x, y) = \\langle -y, x \\rangle$：$\\mathbf{F}(2, 0) = \\langle 0, 2 \\rangle$ 指向上，$\\mathbf{F}(0, 2) = \\langle -2, 0 \\rangle$ 指向左，$\\mathbf{F}(-2, 0) = \\langle 0, -2 \\rangle$ 指向下。箭头绕原点逆时针转，离原点越远越长。\n\n检验：$\\langle -y, x \\rangle \\cdot \\langle x, y \\rangle = -xy + xy = 0$，所以每个箭头都垂直于从原点出发的直线，绕圆周转的箭头必然如此。\n\n本课我们由公式读出场的方向和形态，并把公式与图对应起来。",
+  ),
   prerequisites: ["vector-fields"],
   encompasses: [{ topic: "vector-fields", weight: 0.3 }],
   xp: 10,
@@ -2807,84 +2899,142 @@ export const visualizingVectorFields: TopicDef = {
       figure: multivariableDrawings1["visualizing-vector-fields#interpreting-vector-field-plots"],
       title: t("Interpreting vector field plots", "解读向量场图像"),
       explanation: t(
-        "A vector field plot shows arrows attached to sample points $(x, y)$. Key patterns include:\n\n- Radial fields: $\\mathbf{F} = \\langle x, y \\rangle$ points directly away from the origin.\n- Rotational fields: $\\mathbf{F} = \\langle -y, x \\rangle$ circulates counterclockwise around the origin.\n- Constant fields: $\\mathbf{F} = \\langle c_1, c_2 \\rangle$ have identical vectors at every point.",
-        "向量场图显示附着在各采样点 $(x, y)$ 处的箭头。主要形态包括：\n\n- 径向场：$\\mathbf{F} = \\langle x, y \\rangle$ 直接背离原点指向外侧。\n- 旋转场：$\\mathbf{F} = \\langle -y, x \\rangle$ 绕原点逆时针环流。\n- 常数场：$\\mathbf{F} = \\langle c_1, c_2 \\rangle$ 在每个点处的向量均相同。",
+        "A vector field plot shows arrows attached to sample points $(x, y)$. Key patterns include:\n\n- Radial fields: $\\mathbf{F} = \\langle x, y \\rangle$ points directly away from the origin.\n- Rotational fields: $\\mathbf{F} = \\langle -y, x \\rangle$ circulates counterclockwise around the origin.\n- Constant fields: $\\mathbf{F} = \\langle c_1, c_2 \\rangle$ have identical vectors at every point.\n\nFor $\\mathbf{F} = \\langle \\frac{1}{2}x, \\frac{1}{2}y \\rangle$ every arrow points away from the origin. For $\\mathbf{F} = \\langle \\frac{1}{2}y, -\\frac{1}{2}x \\rangle$ the arrow at $(1, 0)$ is $\\langle 0, -\\frac{1}{2} \\rangle$, pointing down, so the arrows run clockwise.\n\n> **Watch out.** To tell clockwise from counterclockwise, evaluate at one point such as $(1, 0)$ rather than guessing from the signs. A negative multiple of $\\langle x, y \\rangle$ points inward, not outward.",
+        "向量场图显示附着在各采样点 $(x, y)$ 处的箭头。主要形态包括：\n\n- 径向场：$\\mathbf{F} = \\langle x, y \\rangle$ 直接背离原点指向外侧。\n- 旋转场：$\\mathbf{F} = \\langle -y, x \\rangle$ 绕原点逆时针环流。\n- 常数场：$\\mathbf{F} = \\langle c_1, c_2 \\rangle$ 在每个点处的向量均相同。\n\n对 $\\mathbf{F} = \\langle \\frac{1}{2}x, \\frac{1}{2}y \\rangle$，每个箭头都背离原点。对 $\\mathbf{F} = \\langle \\frac{1}{2}y, -\\frac{1}{2}x \\rangle$，$(1, 0)$ 处的箭头为 $\\langle 0, -\\frac{1}{2} \\rangle$，指向下，所以箭头顺时针转。\n\n> **注意。** 判断顺时针还是逆时针，要在一个点（如 $(1, 0)$）求值，不要凭符号猜。$\\langle x, y \\rangle$ 的负数倍指向内，不是向外。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 9);
         const cStr = c === 1 ? "" : String(c);
+        const outward = t("Points radially outward from the origin", "从原点向外径向发散");
+        const inward = t("Points radially inward toward the origin", "向原点径向汇聚");
+        const ccw = t("Circulates counterclockwise around the origin", "绕原点逆时针环流");
+        const cw = t("Circulates clockwise around the origin", "绕原点顺时针环流");
+        const constant = t("Points in a constant fixed direction", "指向恒定的固定方向");
+        const notConstant = t(
+          `The arrows change from point to point: at $(1, 0)$ and $(0, 1)$ they differ.`,
+          `箭头随点而变：在 $(1, 0)$ 和 $(0, 1)$ 处不同。`,
+        );
+        const perpendicular = t(
+          "Its dot product with $\\langle x, y \\rangle$ is $0$, so the arrows go around the origin, not along lines through it.",
+          "它与 $\\langle x, y \\rangle$ 的点积为 $0$，所以箭头绕原点转，而不是沿过原点的直线。",
+        );
+        const parallel = t(
+          "It is a multiple of $\\langle x, y \\rangle$, so the arrows lie along lines through the origin instead of going around it.",
+          "它是 $\\langle x, y \\rangle$ 的倍数，所以箭头沿过原点的直线，而不是绕原点转。",
+        );
         const kinds = [
           {
             field: `\\langle ${cStr}x, ${cStr}y \\rangle`,
-            why: t(
-              "It is a positive multiple of the position vector $\\langle x, y \\rangle$, so each arrow points away from the origin.",
-              "它是位置向量 $\\langle x, y \\rangle$ 的正数倍，所以每个箭头都背离原点。",
+            at: `\\langle ${c}, 0 \\rangle`,
+            says: t("pointing straight away from the origin.", "正好背离原点。"),
+            right: outward,
+            look: t(
+              `It is $${c}$ times the position vector $\\langle x, y \\rangle$, a positive multiple.`,
+              `它是位置向量 $\\langle x, y \\rangle$ 的 $${c}$ 倍，是正数倍。`,
             ),
-            right: t("Points radially outward from the origin", "从原点向外径向发散"),
             wrong: [
-              t("Circulates counterclockwise around the origin", "绕原点逆时针环流"),
-              t("Points in a constant fixed direction", "指向恒定的固定方向"),
-              t("Points radially inward toward the origin", "向原点径向汇聚"),
+              {
+                option: inward,
+                why: t(
+                  `The multiple $${c}$ is positive, so the arrows point away from the origin.`,
+                  `倍数 $${c}$ 为正，所以箭头背离原点。`,
+                ),
+              },
+              { option: ccw, why: parallel },
+              { option: constant, why: notConstant },
             ],
           },
           {
             field: `\\langle -${cStr}y, ${cStr}x \\rangle`,
-            why: t(
-              "Its dot product with $\\langle x, y \\rangle$ is zero, so each arrow is tangent to a circle about the origin; at a point $(1, 0)$ on the positive $x$-axis it points up.",
-              "它与 $\\langle x, y \\rangle$ 的点积为零，所以每个箭头都与以原点为圆心的圆相切；在 $x$ 轴正半轴的点 $(1, 0)$ 处它指向上方。",
+            at: `\\langle 0, ${c} \\rangle`,
+            says: t(
+              "pointing up: a quarter turn counterclockwise from the direction of $(1, 0)$.",
+              "指向上：从 $(1, 0)$ 的方向逆时针转了四分之一圈。",
             ),
-            right: t("Circulates counterclockwise around the origin", "绕原点逆时针环流"),
+            right: ccw,
+            look: t(
+              "Its dot product with $\\langle x, y \\rangle$ is $0$, so each arrow is tangent to a circle about the origin.",
+              "它与 $\\langle x, y \\rangle$ 的点积为 $0$，所以每个箭头都与以原点为圆心的圆相切。",
+            ),
             wrong: [
-              t("Points radially outward from the origin", "从原点向外径向发散"),
-              t("Circulates clockwise around the origin", "绕原点顺时针环流"),
-              t("Points in a constant fixed direction", "指向恒定的固定方向"),
+              { option: outward, why: perpendicular },
+              {
+                option: cw,
+                why: t(
+                  `At $(1, 0)$ the arrow is $\\langle 0, ${c} \\rangle$, pointing up: that is counterclockwise.`,
+                  `在 $(1, 0)$ 处箭头为 $\\langle 0, ${c} \\rangle$，指向上：这是逆时针。`,
+                ),
+              },
+              { option: constant, why: notConstant },
             ],
           },
           {
             field: `\\langle ${cStr}y, -${cStr}x \\rangle`,
-            why: t(
-              "Its dot product with $\\langle x, y \\rangle$ is zero, so each arrow is tangent to a circle about the origin; at a point $(1, 0)$ on the positive $x$-axis it points down.",
-              "它与 $\\langle x, y \\rangle$ 的点积为零，所以每个箭头都与以原点为圆心的圆相切；在 $x$ 轴正半轴的点 $(1, 0)$ 处它指向下方。",
+            at: `\\langle 0, -${c} \\rangle`,
+            says: t(
+              "pointing down: a quarter turn clockwise from the direction of $(1, 0)$.",
+              "指向下：从 $(1, 0)$ 的方向顺时针转了四分之一圈。",
             ),
-            right: t("Circulates clockwise around the origin", "绕原点顺时针环流"),
+            right: cw,
+            look: t(
+              "Its dot product with $\\langle x, y \\rangle$ is $0$, so each arrow is tangent to a circle about the origin.",
+              "它与 $\\langle x, y \\rangle$ 的点积为 $0$，所以每个箭头都与以原点为圆心的圆相切。",
+            ),
             wrong: [
-              t("Points radially outward from the origin", "从原点向外径向发散"),
-              t("Circulates counterclockwise around the origin", "绕原点逆时针环流"),
-              t("Points radially inward toward the origin", "向原点径向汇聚"),
+              { option: outward, why: perpendicular },
+              {
+                option: ccw,
+                why: t(
+                  `At $(1, 0)$ the arrow is $\\langle 0, -${c} \\rangle$, pointing down: that is clockwise.`,
+                  `在 $(1, 0)$ 处箭头为 $\\langle 0, -${c} \\rangle$，指向下：这是顺时针。`,
+                ),
+              },
+              { option: inward, why: perpendicular },
             ],
           },
           {
             field: `\\langle -${cStr}x, -${cStr}y \\rangle`,
-            why: t(
-              "It is a negative multiple of the position vector $\\langle x, y \\rangle$, so each arrow points toward the origin.",
-              "它是位置向量 $\\langle x, y \\rangle$ 的负数倍，所以每个箭头都指向原点。",
+            at: `\\langle -${c}, 0 \\rangle`,
+            says: t("pointing straight toward the origin.", "正好指向原点。"),
+            right: inward,
+            look: t(
+              `It is $-${c}$ times the position vector $\\langle x, y \\rangle$, a negative multiple.`,
+              `它是位置向量 $\\langle x, y \\rangle$ 的 $-${c}$ 倍，是负数倍。`,
             ),
-            right: t("Points radially inward toward the origin", "向原点径向汇聚"),
             wrong: [
-              t("Points radially outward from the origin", "从原点向外径向发散"),
-              t("Circulates counterclockwise around the origin", "绕原点逆时针环流"),
-              t("Points in a constant fixed direction", "指向恒定的固定方向"),
+              {
+                option: outward,
+                why: t(`The multiple $-${c}$ is negative, so the arrows point toward the origin.`, `倍数 $-${c}$ 为负，所以箭头指向原点。`),
+              },
+              { option: ccw, why: parallel },
+              { option: constant, why: notConstant },
             ],
           },
         ];
         const item = rng.pick(kinds);
-        const prompt = t(
-          `Which geometric description correctly characterizes the vector field $\\mathbf{F}(x, y) = ${item.field}$?`,
-          `以下哪项几何描述正确表征了向量场 $\\mathbf{F}(x, y) = ${item.field}$？`,
-        );
-        const solution = t(
-          `The field $\\mathbf{F}(x, y) = ${item.field}$ ${item.right.en.toLowerCase()}. ${item.why.en}`,
-          `向量场 $\\mathbf{F}(x, y) = ${item.field}$${item.right["zh-CN"]}。${item.why["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, item.right, item.wrong, solution);
+        return explainedChoice(rng, {
+          prompt: t(
+            `Which geometric description correctly characterizes the vector field $\\mathbf{F}(x, y) = ${item.field}$?`,
+            `以下哪项几何描述正确表征了向量场 $\\mathbf{F}(x, y) = ${item.field}$？`,
+          ),
+          correct: item.right,
+          wrong: item.wrong,
+          solution: walked(
+            [
+              [["Compare with the position vector", "与位置向量比较"], item.look],
+              [["Decide", "下结论"], t(`So the field ${item.right.en.toLowerCase()}.`, `所以该场${item.right["zh-CN"]}。`)],
+            ],
+            t(`At $(1, 0)$ the arrow is $${item.at}$, ${item.says.en}`, `在 $(1, 0)$ 处箭头为 $${item.at}$，${item.says["zh-CN"]}`),
+          ),
+        });
       },
     },
     {
       id: "the-direction-of-a-field-arrow-at-a-point",
       title: t("The direction of a field arrow at a point", "某点处场箭头的方向"),
       explanation: t(
-        "A plot of a vector field draws the arrow $\\mathbf{F}(x, y)$ with its tail at $(x, y)$. The signs of the two components already tell the rough direction: a positive first component points right and a negative one left, while a positive second component points up and a negative one down. This is often enough to match a formula with a picture.",
-        "向量场图在点 $(x, y)$ 处画出以该点为起点的箭头 $\\mathbf{F}(x, y)$。两个分量的符号已能说明大致方向：第一分量为正指向右、为负指向左；第二分量为正指向上、为负指向下。这通常足以把公式与图对应起来。",
+        "A plot of a vector field draws the arrow $\\mathbf{F}(x, y)$ with its tail at $(x, y)$. The signs of the two components already tell the rough direction: a positive first component points right and a negative one left, while a positive second component points up and a negative one down. This is often enough to match a formula with a picture. For $\\mathbf{F} = \\langle y^2, x - 3 \\rangle$ at $(1, 2)$, $\\mathbf{F}(1, 2) = \\langle 4, -2 \\rangle$: right and down.\n\n> **Watch out.** Put both coordinates in with their signs: a product of two negatives is positive. The first entry is the horizontal part and the second the vertical part, never the other way round.",
+        "向量场图在点 $(x, y)$ 处画出以该点为起点的箭头 $\\mathbf{F}(x, y)$。两个分量的符号已能说明大致方向：第一分量为正指向右、为负指向左；第二分量为正指向上、为负指向下。这通常足以把公式与图对应起来。对 $\\mathbf{F} = \\langle y^2, x - 3 \\rangle$ 在 $(1, 2)$ 处，$\\mathbf{F}(1, 2) = \\langle 4, -2 \\rangle$：向右下方。\n\n> **注意。** 两个坐标都要连同符号代入：两个负数之积为正。第一个分量是水平部分，第二个是竖直部分，不能弄反。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2896,6 +3046,8 @@ export const visualizingVectorFields: TopicDef = {
         const Qv = swap ? b * x0 : b * x0 * y0;
         const Pe = swap ? poly([a, "xy"]) : poly([a, "y"]);
         const Qe = swap ? poly([b, "x"]) : poly([b, "xy"]);
+        const Pwork = swap ? `${a} \\cdot ${paren(x0)} \\cdot ${paren(y0)}` : `${a} \\cdot ${paren(y0)}`;
+        const Qwork = swap ? `${b} \\cdot ${paren(x0)}` : `${b} \\cdot ${paren(x0)} \\cdot ${paren(y0)}`;
         const dir = (h: number, v: number) =>
           h > 0
             ? v > 0
@@ -2905,20 +3057,57 @@ export const visualizingVectorFields: TopicDef = {
               ? t("Up and to the left", "向左上方")
               : t("Down and to the left", "向左下方");
         const right = dir(P, Qv);
-        const all = [dir(1, 1), dir(1, -1), dir(-1, 1), dir(-1, -1)];
-        return pickChoice(
-          rng,
-          t(
+        const horizontal = P > 0 ? t("right", "右") : t("left", "左");
+        const vertical = Qv > 0 ? t("up", "上") : t("down", "下");
+        return explainedChoice(rng, {
+          prompt: t(
             `In a plot of $\\mathbf{F}(x, y) = \\langle ${Pe}, ${Qe} \\rangle$, which way does the arrow at $(${x0}, ${y0})$ point?`,
             `在 $\\mathbf{F}(x, y) = \\langle ${Pe}, ${Qe} \\rangle$ 的图中，点 $(${x0}, ${y0})$ 处的箭头指向哪里？`,
           ),
-          right,
-          all.filter((o) => o.en !== right.en),
-          t(
-            `$\\mathbf{F}(${x0}, ${y0}) = \\langle ${P}, ${Qv} \\rangle$: the arrow points ${right.en.toLowerCase()}.`,
-            `$\\mathbf{F}(${x0}, ${y0}) = \\langle ${P}, ${Qv} \\rangle$：箭头指${right["zh-CN"]}。`,
+          correct: right,
+          wrong: [
+            {
+              option: dir(-P, Qv),
+              why: t(
+                `The first entry is $${P}$, so the arrow points ${horizontal.en}.`,
+                `第一个分量为 $${P}$，所以箭头指向${horizontal["zh-CN"]}。`,
+              ),
+            },
+            {
+              option: dir(P, -Qv),
+              why: t(
+                `The second entry is $${Qv}$, so the arrow points ${vertical.en}.`,
+                `第二个分量为 $${Qv}$，所以箭头指向${vertical["zh-CN"]}。`,
+              ),
+            },
+            {
+              option: dir(-P, -Qv),
+              why: t("Both signs are reversed: that is the direction of $-\\mathbf{F}$.", "两个符号都反了：那是 $-\\mathbf{F}$ 的方向。"),
+            },
+          ],
+          solution: walked(
+            [
+              [
+                ["Evaluate the field", "求场的值"],
+                t(
+                  `$P = ${Pwork} = ${P}$ and $Q = ${Qwork} = ${Qv}$, so $\\mathbf{F}(${x0}, ${y0}) = \\langle ${P}, ${Qv} \\rangle$.`,
+                  `$P = ${Pwork} = ${P}$，$Q = ${Qwork} = ${Qv}$，所以 $\\mathbf{F}(${x0}, ${y0}) = \\langle ${P}, ${Qv} \\rangle$。`,
+                ),
+              ],
+              [
+                ["Read the signs", "读符号"],
+                t(
+                  `The first entry points ${horizontal.en} and the second ${vertical.en}: the arrow points ${right.en.toLowerCase()}.`,
+                  `第一个分量指向${horizontal["zh-CN"]}，第二个指向${vertical["zh-CN"]}：箭头指${right["zh-CN"]}。`,
+                ),
+              ],
+            ],
+            t(
+              `The tip of the arrow is at $(${x0} + ${paren(P)}, ${y0} + ${paren(Qv)}) = (${x0 + P}, ${y0 + Qv})$, which lies ${horizontal.en === "right" ? "to the right of" : "to the left of"} and ${vertical.en === "up" ? "above" : "below"} the tail $(${x0}, ${y0})$.`,
+              `箭头的尖端在 $(${x0} + ${paren(P)}, ${y0} + ${paren(Qv)}) = (${x0 + P}, ${y0 + Qv})$，位于起点 $(${x0}, ${y0})$ 的${horizontal["zh-CN"]}${vertical["zh-CN"]}方。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],
@@ -2932,6 +3121,10 @@ export const gradientVectorFields: TopicDef = {
     "A gradient vector field is the gradient of a scalar potential function: F = ∇f = ⟨fx, fy, fz⟩.",
     "梯度向量场是标量势函数的梯度：F = ∇f = ⟨fx, fy, fz⟩。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2y$, differentiate in each variable with the other held fixed: $f_x = 2xy$ and $f_y = x^2$, so $\\nabla f = \\langle 2xy, x^2 \\rangle$ and $\\nabla f(3, 1) = \\langle 6, 9 \\rangle$.\n\nCheck: moving from $(3, 1)$ to $(3.01, 1)$ changes $f$ from $9$ to $3.01^2 = 9.0601$, a change of about $0.06 = 6 \\cdot 0.01$, the first entry times the step.\n\nIn this lesson we compute gradient fields, the vector fields made of a function's partial derivatives.",
+    "对 $f(x, y) = x^2y$，固定另一个变量，对每个变量求导：$f_x = 2xy$，$f_y = x^2$，所以 $\\nabla f = \\langle 2xy, x^2 \\rangle$，$\\nabla f(3, 1) = \\langle 6, 9 \\rangle$。\n\n检验：从 $(3, 1)$ 移到 $(3.01, 1)$，$f$ 从 $9$ 变为 $3.01^2 = 9.0601$，变化约为 $0.06 = 6 \\cdot 0.01$，正是第一个分量乘以步长。\n\n本课我们计算梯度场，即由函数的偏导数组成的向量场。",
+  ),
   prerequisites: ["vector-fields"],
   encompasses: [{ topic: "vector-fields", weight: 0.3 }],
   xp: 10,
@@ -2940,79 +3133,117 @@ export const gradientVectorFields: TopicDef = {
       id: "computing-gradient-fields",
       title: t("Computing gradient fields", "计算梯度向量场"),
       explanation: t(
-        "The gradient collects the partial derivatives into a vector, which at each point points in the direction in which the function increases fastest. If $f(x, y, z)$ is a scalar function, its gradient vector field $\\nabla f$ is defined by:\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle.$$",
-        "梯度把各个偏导数组成一个向量，它在每一点都指向函数增长最快的方向。若 $f(x, y, z)$ 为标量函数，其梯度向量场 $\\nabla f$ 定义为：\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle$$",
+        "The gradient collects the partial derivatives into a vector, which at each point points in the direction in which the function increases fastest. If $f(x, y, z)$ is a scalar function, its gradient vector field $\\nabla f$ is defined by:\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle.$$\n\nFor $f = 5x^2 - y^2 + 4z^2$, $\\nabla f = \\langle 10x, -2y, 8z \\rangle$, and at $(1, 2, -1)$ this is $\\langle 10, -4, -8 \\rangle$.\n\n> **Watch out.** The derivative of $ax^2$ is $2ax$: keep the factor $2$. Each entry differentiates in its own variable, in the order $x$, $y$, $z$, and the result is a vector, not the value of $f$.",
+        "梯度把各个偏导数组成一个向量，它在每一点都指向函数增长最快的方向。若 $f(x, y, z)$ 为标量函数，其梯度向量场 $\\nabla f$ 定义为：\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle$$\n\n对 $f = 5x^2 - y^2 + 4z^2$，$\\nabla f = \\langle 10x, -2y, 8z \\rangle$，在 $(1, 2, -1)$ 处为 $\\langle 10, -4, -8 \\rangle$。\n\n> **注意。** $ax^2$ 的导数是 $2ax$：不要丢掉因子 $2$。每个分量对自己的变量求导，顺序为 $x$、$y$、$z$，结果是向量，不是 $f$ 的值。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.nonZero(-3, 3);
-        const pt: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
-
-        const ansX = 2 * a * pt[0];
-        const ansY = 2 * b * pt[1];
-        const ansZ = 2 * c * pt[2];
-        const answer: Vec3 = [ansX, ansY, ansZ];
-
-        const prompt = t(
-          `Compute the gradient vector field $\\nabla f$ of $f(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])}$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `计算函数 $f(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])}$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的梯度向量 $\\nabla f$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Compute partial derivatives: $\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle$.`,
-            `Evaluate at $(${pt[0]}, ${pt[1]}, ${pt[2]})$: $\\nabla f(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${v3L(answer)}$.`,
-          ),
-          steps(
-            `求各偏导数：$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle$。`,
-            `代入点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$：$\\nabla f(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [a * pt[0], b * pt[1], c * pt[2]],
-            [ansY, ansX, ansZ],
-            [-ansX, -ansY, -ansZ],
+        const [x, y, z]: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
+        const answer: Vec3 = [2 * a * x, 2 * b * y, 2 * c * z];
+        const f = poly([a, "x^2"], [b, "y^2"], [c, "z^2"]);
+        const value = a * x * x + b * y * y + c * z * z;
+        return located(
+          {
+            prompt: t(
+              `Compute the gradient vector field $\\nabla f$ of $f(x, y, z) = ${f}$ at the point $(${x}, ${y}, ${z})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `计算函数 $f(x, y, z) = ${f}$ 在点 $(${x}, ${y}, ${z})$ 处的梯度向量 $\\nabla f$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Take the partial derivatives", "求偏导数"],
+                  t(
+                    `$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle$.`,
+                    `$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Evaluate", "代入求值"],
+                  t(
+                    `At $(${x}, ${y}, ${z})$: $\\langle ${2 * a} \\cdot ${paren(x)}, ${2 * b} \\cdot ${paren(y)}, ${2 * c} \\cdot ${paren(z)} \\rangle = ${v3L(answer)}$.`,
+                    `在 $(${x}, ${y}, ${z})$ 处：$\\langle ${2 * a} \\cdot ${paren(x)}, ${2 * b} \\cdot ${paren(y)}, ${2 * c} \\cdot ${paren(z)} \\rangle = ${v3L(answer)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Every term of $f$ has degree $2$, so $\\langle x, y, z \\rangle \\cdot \\nabla f = 2f$: here $${dot3([x, y, z], answer)} = 2 \\cdot ${paren(value)}$.`,
+                `$f$ 的每一项都是二次的，所以 $\\langle x, y, z \\rangle \\cdot \\nabla f = 2f$：这里 $${dot3([x, y, z], answer)} = 2 \\cdot ${paren(value)}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [a * x, b * y, c * z],
+              "The derivative of $ax^2$ is $2ax$; the factor $2$ is missing.",
+              "$ax^2$ 的导数是 $2ax$；漏了因子 $2$。",
+            ],
+            [[answer[1], answer[0], answer[2]], "The first two entries are swapped; $f_x$ comes first.", "前两个分量对调了；$f_x$ 在前。"],
+            [
+              [a * x * x, b * y * y, c * z * z],
+              "Those are the terms of $f$ at the point; the gradient differentiates them first.",
+              "这是 $f$ 的各项在该点的值；梯度要先对它们求导。",
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "the-gradient-of-a-sum-of-products",
       title: t("The gradient of a sum of products", "乘积之和的梯度"),
       explanation: t(
-        "The gradient field $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ is found one partial derivative at a time, treating the other variables as constants. For $f = axy + byz + cxz$, each product contributes to the two variables it contains:\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle.$$",
-        "梯度场 $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ 逐个偏导求出，把其他变量视为常数。对 $f = axy + byz + cxz$，每个乘积对它所含的两个变量都有贡献：\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle$$",
+        "The gradient field $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ is found one partial derivative at a time, treating the other variables as constants. For $f = axy + byz + cxz$, each product contributes to the two variables it contains:\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle.$$\n\nFor $f = 5xy - yz + 6xz$ at $(1, 1, 2)$, $\\nabla f = \\langle 5y + 6z, 5x - z, -y + 6x \\rangle = \\langle 17, 3, 5 \\rangle$.\n\n> **Watch out.** A product such as $axy$ adds to two entries, $ay$ to $f_x$ and $ax$ to $f_y$, and nothing to $f_z$. Each entry of this gradient therefore has two terms.",
+        "梯度场 $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ 逐个偏导求出，把其他变量视为常数。对 $f = axy + byz + cxz$，每个乘积对它所含的两个变量都有贡献：\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle$$\n\n对 $f = 5xy - yz + 6xz$ 在 $(1, 1, 2)$ 处，$\\nabla f = \\langle 5y + 6z, 5x - z, -y + 6x \\rangle = \\langle 17, 3, 5 \\rangle$。\n\n> **注意。** 像 $axy$ 这样的乘积会出现在两个分量里：$f_x$ 中是 $ay$，$f_y$ 中是 $ax$，$f_z$ 中没有它。所以这个梯度的每个分量都有两项。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
         const c = rng.nonZero(-4, 4);
         const [x, y, z] = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
-        const ans = [a * y + c * z, a * x + b * z, b * y + c * x];
-        return pointProblem({
-          prompt: t(
-            `Find $\\nabla f(${x}, ${y}, ${z})$ for $f(x, y, z) = ${poly([a, "xy"], [b, "yz"], [c, "xz"])}$.`,
-            `对 $f(x, y, z) = ${poly([a, "xy"], [b, "yz"], [c, "xz"])}$ 求 $\\nabla f(${x}, ${y}, ${z})$。`,
-          ),
-          answer: ans,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [a * x + c * z, b * y + a * y, c * x + b * z],
-            [a * y, b * z, c * x],
-            [-ans[0]!, -ans[1]!, -ans[2]!],
+        const ans: Vec3 = [a * y + c * z, a * x + b * z, b * y + c * x];
+        const value = a * x * y + b * y * z + c * x * z;
+        return located(
+          {
+            prompt: t(
+              `Find $\\nabla f(${x}, ${y}, ${z})$ for $f(x, y, z) = ${poly([a, "xy"], [b, "yz"], [c, "xz"])}$.`,
+              `对 $f(x, y, z) = ${poly([a, "xy"], [b, "yz"], [c, "xz"])}$ 求 $\\nabla f(${x}, ${y}, ${z})$。`,
+            ),
+            answer: ans,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Differentiate in each variable", "对每个变量求导"],
+                  t(
+                    `$\\nabla f = \\langle ${poly([a, "y"], [c, "z"])}, ${poly([a, "x"], [b, "z"])}, ${poly([b, "y"], [c, "x"])} \\rangle$.`,
+                    `$\\nabla f = \\langle ${poly([a, "y"], [c, "z"])}, ${poly([a, "x"], [b, "z"])}, ${poly([b, "y"], [c, "x"])} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Evaluate", "代入求值"],
+                  t(`At $(${x}, ${y}, ${z})$ this is $${v3L(ans)}$.`, `在 $(${x}, ${y}, ${z})$ 处为 $${v3L(ans)}$。`),
+                ],
+              ],
+              t(
+                `Every term of $f$ has degree $2$, so $\\langle x, y, z \\rangle \\cdot \\nabla f = 2f$: here $${dot3([x, y, z], ans)} = 2 \\cdot ${paren(value)}$.`,
+                `$f$ 的每一项都是二次的，所以 $\\langle x, y, z \\rangle \\cdot \\nabla f = 2f$：这里 $${dot3([x, y, z], ans)} = 2 \\cdot ${paren(value)}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [a * y, b * z, c * x],
+              "Each entry has two terms: every product adds to both of its variables.",
+              "每个分量都有两项：每个乘积对它的两个变量都有贡献。",
+            ],
+            [[ans[1], ans[0], ans[2]], "The first two entries are swapped; $f_x$ comes first.", "前两个分量对调了；$f_x$ 在前。"],
           ],
-          solution: t(
-            `$\\nabla f = \\langle ${poly([a, "y"], [c, "z"])}, ${poly([a, "x"], [b, "z"])}, ${poly([b, "y"], [c, "x"])} \\rangle$, which at $(${x}, ${y}, ${z})$ is $${v3L(ans)}$.`,
-            `$\\nabla f = \\langle ${poly([a, "y"], [c, "z"])}, ${poly([a, "x"], [b, "z"])}, ${poly([b, "y"], [c, "x"])} \\rangle$，在 $(${x}, ${y}, ${z})$ 处为 $${v3L(ans)}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -3026,6 +3257,10 @@ export const conservativeVectorFieldsInTheCartesianPlane: TopicDef = {
     "On a simply connected domain, F = P i + Q j is conservative if and only if ∂P/∂y = ∂Q/∂x.",
     "在单连通区域上，F = P i + Q j 为保守场当且仅当 ∂P/∂y = ∂Q/∂x。",
   ),
+  intro: t(
+    "Is $\\mathbf{F} = \\langle 2xy + 1, x^2 + 3 \\rangle$ the gradient of some function? Compare the cross partials: $\\frac{\\partial P}{\\partial y} = 2x$ and $\\frac{\\partial Q}{\\partial x} = 2x$. They agree everywhere, and the field is defined on the whole plane, so it is conservative; indeed $f = x^2y + x + 3y$ works.\n\nCheck: $f_x = 2xy + 1$ and $f_y = x^2 + 3$, the two entries of $\\mathbf{F}$.\n\nIn this lesson we test plane fields for being conservative by comparing $\\frac{\\partial P}{\\partial y}$ with $\\frac{\\partial Q}{\\partial x}$.",
+    "$\\mathbf{F} = \\langle 2xy + 1, x^2 + 3 \\rangle$ 是某个函数的梯度吗？比较交叉偏导：$\\frac{\\partial P}{\\partial y} = 2x$，$\\frac{\\partial Q}{\\partial x} = 2x$。它们处处相等，而场定义在整个平面上，所以它是保守的；事实上 $f = x^2y + x + 3y$ 就满足要求。\n\n检验：$f_x = 2xy + 1$，$f_y = x^2 + 3$，正是 $\\mathbf{F}$ 的两个分量。\n\n本课我们通过比较 $\\frac{\\partial P}{\\partial y}$ 与 $\\frac{\\partial Q}{\\partial x}$ 来判断平面向量场是否保守。",
+  ),
   prerequisites: ["gradient-vector-fields"],
   encompasses: [{ topic: "gradient-vector-fields", weight: 0.3 }],
   xp: 10,
@@ -3034,33 +3269,55 @@ export const conservativeVectorFieldsInTheCartesianPlane: TopicDef = {
       id: "testing-for-conservative-vector-fields",
       title: t("Testing for conservative vector fields", "判别保守向量场"),
       explanation: t(
-        "Let $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ have continuous first partial derivatives on an open simply connected region $D$. Then $\\mathbf{F}$ is conservative if and only if:\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}.$$",
-        "设 $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ 在开单连通区域 $D$ 上具有连续一阶偏导数。则 $\\mathbf{F}$ 为保守场当且仅当：\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$$",
+        "Let $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ have continuous first partial derivatives on an open simply connected region $D$. Then $\\mathbf{F}$ is conservative if and only if:\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}.$$\n\nFor $\\mathbf{F} = \\langle kxy^2, x^2y + 1 \\rangle$, $\\frac{\\partial P}{\\partial y} = 2kxy$ and $\\frac{\\partial Q}{\\partial x} = 2xy$, so the field is conservative exactly when $k = 1$.\n\n> **Watch out.** Differentiate $P$ in $y$ and $Q$ in $x$, the variable that is not its own; $\\frac{\\partial P}{\\partial x}$ and $\\frac{\\partial Q}{\\partial y}$ play no part. The two sides are equal, with no minus sign between them.",
+        "设 $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ 在开单连通区域 $D$ 上具有连续一阶偏导数。则 $\\mathbf{F}$ 为保守场当且仅当：\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$$\n\n对 $\\mathbf{F} = \\langle kxy^2, x^2y + 1 \\rangle$，$\\frac{\\partial P}{\\partial y} = 2kxy$，$\\frac{\\partial Q}{\\partial x} = 2xy$，所以场保守当且仅当 $k = 1$。\n\n> **注意。** $P$ 对 $y$ 求导，$Q$ 对 $x$ 求导，即对不是“自己”的那个变量；$\\frac{\\partial P}{\\partial x}$ 与 $\\frac{\\partial Q}{\\partial y}$ 不起作用。两边相等，中间没有负号。",
       ),
       generate(rng: Rng): Problem {
-        const cleanA = rng.nonZero(-25, 25);
-        const cleanAns = 2 * cleanA;
-        const cleanPrompt = t(
-          `Find the value of the constant $k$ that makes the vector field $\\mathbf{F}(x, y) = \\left\\langle k x y, ${poly([cleanA, "x^2"], [2, "y^2"])} \\right\\rangle$ conservative on $\\mathbb{R}^2$.`,
-          `求使向量场 $\\mathbf{F}(x, y) = \\left\\langle k x y, ${poly([cleanA, "x^2"], [2, "y^2"])} \\right\\rangle$ 在 $\\mathbb{R}^2$ 上为保守场的常数 $k$ 的值。`,
-        );
-        const cleanSolution = t(
-          steps(
-            `Compute $\\frac{\\partial P}{\\partial y} = \\frac{\\partial}{\\partial y}(kxy) = kx$.`,
-            `Compute $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial}{\\partial x}(${poly([cleanA, "x^2"], [2, "y^2"])}) = ${2 * cleanA}x$.`,
-            `Set $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$: $kx = ${2 * cleanA}x \\implies k = ${cleanAns}$.`,
-          ),
-          steps(
-            `计算 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial}{\\partial y}(kxy) = kx$。`,
-            `计算 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial}{\\partial x}(${poly([cleanA, "x^2"], [2, "y^2"])}) = ${2 * cleanA}x$。`,
-            `令 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$：$kx = ${2 * cleanA}x \\implies k = ${cleanAns}$。`,
-          ),
-        );
+        const A = rng.nonZero(-25, 25);
+        const ans = 2 * A;
+        const Q2 = poly([A, "x^2"], [2, "y^2"]);
         return numberProblem({
-          prompt: cleanPrompt,
-          solution: cleanSolution,
-          answer: cleanAns,
-          wrong: [cleanA, -cleanAns, cleanAns + 1],
+          prompt: t(
+            `Find the value of the constant $k$ that makes the vector field $\\mathbf{F}(x, y) = \\left\\langle k x y, ${Q2} \\right\\rangle$ conservative on $\\mathbb{R}^2$.`,
+            `求使向量场 $\\mathbf{F}(x, y) = \\left\\langle k x y, ${Q2} \\right\\rangle$ 在 $\\mathbb{R}^2$ 上为保守场的常数 $k$ 的值。`,
+          ),
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              A,
+              `$\\frac{\\partial}{\\partial x}(${poly([A, "x^2"])}) = ${2 * A}x$: the derivative of $x^2$ brings a factor $2$.`,
+              `$\\frac{\\partial}{\\partial x}(${poly([A, "x^2"])}) = ${2 * A}x$：$x^2$ 求导带出因子 $2$。`,
+            ),
+            why(
+              -ans,
+              "The test is $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$, with no minus sign.",
+              "检验条件是 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$，没有负号。",
+            ),
+            why(
+              4,
+              "That compares $\\frac{\\partial P}{\\partial x} = ky$ with $\\frac{\\partial Q}{\\partial y} = 4y$; the test uses the cross partials.",
+              "这是比较 $\\frac{\\partial P}{\\partial x} = ky$ 与 $\\frac{\\partial Q}{\\partial y} = 4y$；检验用的是交叉偏导。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the cross partials", "求交叉偏导"],
+                t(
+                  `$\\frac{\\partial P}{\\partial y} = \\frac{\\partial}{\\partial y}(kxy) = kx$ and $\\frac{\\partial Q}{\\partial x} = ${2 * A}x$.`,
+                  `$\\frac{\\partial P}{\\partial y} = \\frac{\\partial}{\\partial y}(kxy) = kx$，$\\frac{\\partial Q}{\\partial x} = ${2 * A}x$。`,
+                ),
+              ],
+              [
+                ["Match them for every $x$", "对每个 $x$ 都相等"],
+                t(`$kx = ${2 * A}x$ for all $x$ gives $k = ${ans}$.`, `对所有 $x$ 有 $kx = ${2 * A}x$，得 $k = ${ans}$。`),
+              ],
+            ],
+            t(
+              `With $k = ${ans}$, $f = ${poly([A, "x^2y"], [Q.of(2, 3), "y^3"])}$ has $f_x = ${poly([ans, "xy"])}$ and $f_y = ${Q2}$, so $\\mathbf{F} = \\nabla f$.`,
+              `取 $k = ${ans}$，$f = ${poly([A, "x^2y"], [Q.of(2, 3), "y^3"])}$ 满足 $f_x = ${poly([ans, "xy"])}$，$f_y = ${Q2}$，所以 $\\mathbf{F} = \\nabla f$。`,
+            ),
+          ),
         });
       },
     },
@@ -3068,8 +3325,8 @@ export const conservativeVectorFieldsInTheCartesianPlane: TopicDef = {
       id: "deciding-whether-a-polynomial-field-is-conservative",
       title: t("Deciding whether a polynomial field is conservative", "判断多项式场是否保守"),
       explanation: t(
-        "On the whole plane, $\\mathbf{F} = \\langle P, Q \\rangle$ with continuous partial derivatives is conservative exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ at every point. For $P = px^2y + r$ and $Q = qx^3 + sy$, the test gives $px^2 = 3qx^2$, which holds for every $x$ only when $p = 3q$. Equality at a single point is not enough; it must hold identically.",
-        "在整个平面上，偏导连续的 $\\mathbf{F} = \\langle P, Q \\rangle$ 是保守的，当且仅当每点都有 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。对 $P = px^2y + r$，$Q = qx^3 + sy$，检验给出 $px^2 = 3qx^2$，只有当 $p = 3q$ 时才对所有 $x$ 成立。在单个点相等是不够的，必须恒等成立。",
+        "On the whole plane, $\\mathbf{F} = \\langle P, Q \\rangle$ with continuous partial derivatives is conservative exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ at every point. For $P = px^2y + r$ and $Q = qx^3 + sy$, the test gives $px^2 = 3qx^2$, which holds for every $x$ only when $p = 3q$. So $\\langle 12x^2y, 4x^3 + y \\rangle$ is conservative, since $12 = 3 \\cdot 4$.\n\n> **Watch out.** Equality at a single point is not enough: at $x = 0$ both sides are $0$ whatever $p$ and $q$ are. The two partials must be the same polynomial.",
+        "在整个平面上，偏导连续的 $\\mathbf{F} = \\langle P, Q \\rangle$ 是保守的，当且仅当每点都有 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。对 $P = px^2y + r$，$Q = qx^3 + sy$，检验给出 $px^2 = 3qx^2$，只有当 $p = 3q$ 时才对所有 $x$ 成立。所以 $\\langle 12x^2y, 4x^3 + y \\rangle$ 是保守的，因为 $12 = 3 \\cdot 4$。\n\n> **注意。** 在单个点相等是不够的：在 $x = 0$ 处无论 $p$、$q$ 为何两边都是 $0$。两个偏导必须是同一个多项式。",
       ),
       generate(rng: Rng): Problem {
         const q = rng.nonZero(-3, 3);
@@ -3077,19 +3334,55 @@ export const conservativeVectorFieldsInTheCartesianPlane: TopicDef = {
         const p = yes ? 3 * q : rng.pick([q, 2 * q, -3 * q, 4 * q]);
         const r = rng.int(-5, 5);
         const s = rng.nonZero(-5, 5);
-        return pickChoice(
-          rng,
-          t(
+        return verdictChoice(rng, {
+          prompt: t(
             `Is $\\mathbf{F}(x, y) = \\langle ${poly([p, "x^2y"], [r, ""])}, ${poly([q, "x^3"], [s, "y"])} \\rangle$ conservative on the plane?`,
             `$\\mathbf{F}(x, y) = \\langle ${poly([p, "x^2y"], [r, ""])}, ${poly([q, "x^3"], [s, "y"])} \\rangle$ 在平面上是保守场吗？`,
           ),
-          yes ? yesNo[0]! : yesNo[1]!,
-          [yes ? yesNo[1]! : yesNo[0]!],
-          t(
-            `$\\frac{\\partial P}{\\partial y} = ${poly([p, "x^2"])}$ and $\\frac{\\partial Q}{\\partial x} = ${poly([3 * q, "x^2"])}$. ${yes ? "They are identical, so the field is conservative." : "They differ, so the field is not conservative."}`,
-            `$\\frac{\\partial P}{\\partial y} = ${poly([p, "x^2"])}$，$\\frac{\\partial Q}{\\partial x} = ${poly([3 * q, "x^2"])}$。${yes ? "二者恒等，所以场是保守的。" : "二者不同，所以场不是保守的。"}`,
+          holds: yes,
+          yes: t(
+            "$\\frac{\\partial P}{\\partial y}$ and $\\frac{\\partial Q}{\\partial x}$ are the same polynomial",
+            "$\\frac{\\partial P}{\\partial y}$ 与 $\\frac{\\partial Q}{\\partial x}$ 是同一个多项式",
           ),
-        );
+          no: t(
+            "$\\frac{\\partial P}{\\partial y}$ and $\\frac{\\partial Q}{\\partial x}$ differ at some point",
+            "$\\frac{\\partial P}{\\partial y}$ 与 $\\frac{\\partial Q}{\\partial x}$ 在某点不相等",
+          ),
+          yesWrong: t(
+            "$\\frac{\\partial P}{\\partial y}$ and $\\frac{\\partial Q}{\\partial x}$ are equal at $x = 0$",
+            "$\\frac{\\partial P}{\\partial y}$ 与 $\\frac{\\partial Q}{\\partial x}$ 在 $x = 0$ 处相等",
+          ),
+          noWrong: t("$P$ and $Q$ have different degrees", "$P$ 与 $Q$ 的次数不同"),
+          solution: walked(
+            [
+              [
+                ["Take the cross partials", "求交叉偏导"],
+                t(
+                  `$\\frac{\\partial P}{\\partial y} = ${poly([p, "x^2"])}$ and $\\frac{\\partial Q}{\\partial x} = ${poly([3 * q, "x^2"])}$.`,
+                  `$\\frac{\\partial P}{\\partial y} = ${poly([p, "x^2"])}$，$\\frac{\\partial Q}{\\partial x} = ${poly([3 * q, "x^2"])}$。`,
+                ),
+              ],
+              [
+                ["Compare", "比较"],
+                yes
+                  ? t("They are the same polynomial, so the field is conservative.", "二者是同一个多项式，所以场是保守的。")
+                  : t(
+                      `They differ, since $${p} \\ne ${3 * q}$, so the field is not conservative.`,
+                      `由于 $${p} \\ne ${3 * q}$，二者不同，所以场不是保守的。`,
+                    ),
+              ],
+            ],
+            yes
+              ? t(
+                  `$f = ${poly([q, "x^3y"], [r, "x"], [Q.of(s, 2), "y^2"])}$ has $\\nabla f = \\langle ${poly([p, "x^2y"], [r, ""])}, ${poly([q, "x^3"], [s, "y"])} \\rangle$.`,
+                  `$f = ${poly([q, "x^3y"], [r, "x"], [Q.of(s, 2), "y^2"])}$ 满足 $\\nabla f = \\langle ${poly([p, "x^2y"], [r, ""])}, ${poly([q, "x^3"], [s, "y"])} \\rangle$。`,
+                )
+              : t(
+                  `At $x = 1$ the two partials are $${p}$ and $${3 * q}$, so they are not equal there.`,
+                  `在 $x = 1$ 处两个偏导分别为 $${p}$ 和 $${3 * q}$，并不相等。`,
+                ),
+          ),
+        });
       },
     },
   ],
@@ -3103,6 +3396,10 @@ export const calculatingPotentialFunctions: TopicDef = {
     "A potential function f satisfies ∇f = F and is found by partial integration and comparing components.",
     "势函数 f 满足 ∇f = F，可通过偏积分和比较分量求得。",
   ),
+  intro: t(
+    "Find $f$ with $\\nabla f = \\langle y\\cos x, \\sin x + 2y \\rangle$. Integrating the first entry in $x$ gives $f = y\\sin x + g(y)$. Then $f_y = \\sin x + g'(y)$ must equal $\\sin x + 2y$, so $g'(y) = 2y$ and $g(y) = y^2 + C$: $f = y\\sin x + y^2 + C$.\n\nCheck: $f_x = y\\cos x$ and $f_y = \\sin x + 2y$, the two entries of the field.\n\nIn this lesson we find potential functions by integrating one component and fixing the leftover function with the others.",
+    "求 $f$ 使 $\\nabla f = \\langle y\\cos x, \\sin x + 2y \\rangle$。把第一个分量对 $x$ 积分得 $f = y\\sin x + g(y)$。于是 $f_y = \\sin x + g'(y)$ 必须等于 $\\sin x + 2y$，所以 $g'(y) = 2y$，$g(y) = y^2 + C$：$f = y\\sin x + y^2 + C$。\n\n检验：$f_x = y\\cos x$，$f_y = \\sin x + 2y$，正是场的两个分量。\n\n本课我们通过积分一个分量、再用其余分量确定剩下的函数来求势函数。",
+  ),
   prerequisites: ["conservative-vector-fields-in-the-cartesian-plane"],
   encompasses: [],
   xp: 10,
@@ -3111,42 +3408,62 @@ export const calculatingPotentialFunctions: TopicDef = {
       id: "finding-potential-functions-by-integration",
       title: t("Finding potential functions by integration", "通过积分求势函数"),
       explanation: t(
-        "To find a potential function $f(x, y)$ such that $\\nabla f = \\langle P, Q \\rangle$:\n\n1. Integrate $P$ with respect to $x$: $f(x, y) = \\int P\\,dx + g(y)$.\n2. Differentiate with respect to $y$: $\\frac{\\partial f}{\\partial y} = Q(x, y)$ to determine $g'(y)$ and $g(y)$.",
-        "求满足 $\\nabla f = \\langle P, Q \\rangle$ 的势函数 $f(x, y)$：\n\n1. 将 $P$ 对 $x$ 偏积分：$f(x, y) = \\int P\\,dx + g(y)$。\n2. 对 $y$ 求偏导：令 $\\frac{\\partial f}{\\partial y} = Q(x, y)$，从而确定 $g'(y)$ 和 $g(y)$。",
+        "To find a potential function $f(x, y)$ such that $\\nabla f = \\langle P, Q \\rangle$:\n\n1. Integrate $P$ with respect to $x$: $f(x, y) = \\int P\\,dx + g(y)$.\n2. Differentiate with respect to $y$: $\\frac{\\partial f}{\\partial y} = Q(x, y)$ to determine $g'(y)$ and $g(y)$.\n\nFor $\\langle 2x + 5y, 5x - 6y \\rangle$, step 1 gives $x^2 + 5xy + g(y)$, step 2 gives $5x + g'(y) = 5x - 6y$, so $g = -3y^2$ and $f = x^2 + 5xy - 3y^2$.\n\n> **Watch out.** The constant of integrating in $x$ is a function $g(y)$, not a number. Do not add the integral of $Q$ in full as well: the $xy$ term would then be counted twice.",
+        "求满足 $\\nabla f = \\langle P, Q \\rangle$ 的势函数 $f(x, y)$：\n\n1. 将 $P$ 对 $x$ 偏积分：$f(x, y) = \\int P\\,dx + g(y)$。\n2. 对 $y$ 求偏导：令 $\\frac{\\partial f}{\\partial y} = Q(x, y)$，从而确定 $g'(y)$ 和 $g(y)$。\n\n对 $\\langle 2x + 5y, 5x - 6y \\rangle$，第一步得 $x^2 + 5xy + g(y)$，第二步得 $5x + g'(y) = 5x - 6y$，所以 $g = -3y^2$，$f = x^2 + 5xy - 3y^2$。\n\n> **注意。** 对 $x$ 积分得到的“常数”是函数 $g(y)$，不是数。不要再把 $Q$ 的积分整个加上：那样 $xy$ 项会算两次。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const b = rng.nonZero(-3, 3);
         const c = rng.int(1, 4);
-
-        // F = <2ax + by, bx + 2cy>
-        // f(x, y) = a*x^2 + b*x*y + c*y^2
         const ans = poly([a, "x^2"], [b, "xy"], [c, "y^2"]);
-
-        const prompt = t(
-          `Find the potential function $f(x, y)$ satisfying $\\nabla f(x, y) = \\left\\langle ${poly([2 * a, "x"], [b, "y"])}, ${poly([b, "x"], [2 * c, "y"])} \\right\\rangle$ with $f(0, 0) = 0$.`,
-          `求满足 $\\nabla f(x, y) = \\left\\langle ${poly([2 * a, "x"], [b, "y"])}, ${poly([b, "x"], [2 * c, "y"])} \\right\\rangle$ 且 $f(0, 0) = 0$ 的势函数 $f(x, y)$。`,
-        );
-        const solution = t(
-          steps(
-            `Integrate the first component $P = ${poly([2 * a, "x"], [b, "y"])}$ with respect to $x$:\n\n` +
-              `$$f(x, y) = ${poly([a, "x^2"], [b, "xy"])} + g(y).$$`,
-            `Differentiate with respect to $y$: $\\frac{\\partial f}{\\partial y} = ${poly([b, "x"])} + g'(y)$.`,
-            `Match with $Q = ${poly([b, "x"], [2 * c, "y"])}$: $g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])} + C$.`,
-            `Using $f(0, 0) = 0$ gives $C = 0$, so $f(x, y) = ${ans}$.`,
-          ),
-          steps(
-            `将第一分量 $P = ${poly([2 * a, "x"], [b, "y"])}$ 对 $x$ 积分：\n\n` + `$$f(x, y) = ${poly([a, "x^2"], [b, "xy"])} + g(y)$$`,
-            `对 $y$ 求偏导：$\\frac{\\partial f}{\\partial y} = ${poly([b, "x"])} + g'(y)$。`,
-            `与第二分量 $Q = ${poly([b, "x"], [2 * c, "y"])}$ 对比：$g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])} + C$。`,
-            `由 $f(0, 0) = 0$ 得 $C = 0$，故 $f(x, y) = ${ans}$。`,
-          ),
-        );
+        const P = poly([2 * a, "x"], [b, "y"]);
+        const Qf = poly([b, "x"], [2 * c, "y"]);
         return expressionProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the potential function $f(x, y)$ satisfying $\\nabla f(x, y) = \\left\\langle ${P}, ${Qf} \\right\\rangle$ with $f(0, 0) = 0$.`,
+            `求满足 $\\nabla f(x, y) = \\left\\langle ${P}, ${Qf} \\right\\rangle$ 且 $f(0, 0) = 0$ 的势函数 $f(x, y)$。`,
+          ),
           answer: ans,
-          wrong: [poly([2 * a, "x^2"], [b, "xy"], [2 * c, "y^2"]), poly([a, "x^2"], [-b, "xy"], [c, "y^2"]), poly([a, "x^2"], [c, "y^2"])],
+          mistakes: [
+            say(
+              poly([a, "x^2"], [2 * b, "xy"], [c, "y^2"]),
+              `That adds the integrals of both entries, so the $${poly([b, "xy"])}$ term is counted twice.`,
+              `这是把两个分量的积分都加上了，所以 $${poly([b, "xy"])}$ 项算了两次。`,
+            ),
+            say(
+              poly([2 * a, "x^2"], [b, "xy"], [2 * c, "y^2"]),
+              `$\\int ${2 * a}x\\,dx = ${poly([a, "x^2"])}$: integrating $x$ gives $\\frac{x^2}{2}$.`,
+              `$\\int ${2 * a}x\\,dx = ${poly([a, "x^2"])}$：$x$ 积分得 $\\frac{x^2}{2}$。`,
+            ),
+            say(
+              poly([a, "x^2"], [b, "xy"]),
+              `That leaves out $g(y) = ${poly([c, "y^2"])}$; its derivative must supply the $${poly([2 * c, "y"])}$ in the second entry.`,
+              `这漏掉了 $g(y) = ${poly([c, "y^2"])}$；第二个分量中的 $${poly([2 * c, "y"])}$ 要靠它的导数提供。`,
+            ),
+          ],
+          solution: walked(
+            [
+              [
+                ["Integrate the first entry in $x$", "把第一个分量对 $x$ 积分"],
+                t(`$f(x, y) = ${poly([a, "x^2"], [b, "xy"])} + g(y)$.`, `$f(x, y) = ${poly([a, "x^2"], [b, "xy"])} + g(y)$。`),
+              ],
+              [
+                ["Match the second entry", "与第二个分量比较"],
+                t(
+                  `$f_y = ${poly([b, "x"])} + g'(y)$ must equal $${Qf}$, so $g'(y) = ${poly([2 * c, "y"])}$ and $g(y) = ${poly([c, "y^2"])} + C$.`,
+                  `$f_y = ${poly([b, "x"])} + g'(y)$ 必须等于 $${Qf}$，所以 $g'(y) = ${poly([2 * c, "y"])}$，$g(y) = ${poly([c, "y^2"])} + C$。`,
+                ),
+              ],
+              [
+                ["Fix the constant", "确定常数"],
+                t(`$f(0, 0) = 0$ gives $C = 0$, so $f(x, y) = ${ans}$.`, `由 $f(0, 0) = 0$ 得 $C = 0$，所以 $f(x, y) = ${ans}$。`),
+              ],
+            ],
+            t(
+              `$f_x = ${P}$ and $f_y = ${Qf}$, the two entries of the field, and $f(0, 0) = 0$.`,
+              `$f_x = ${P}$，$f_y = ${Qf}$，正是场的两个分量，且 $f(0, 0) = 0$。`,
+            ),
+          ),
         });
       },
     },
@@ -3154,8 +3471,8 @@ export const calculatingPotentialFunctions: TopicDef = {
       id: "a-potential-function-in-three-variables",
       title: t("A potential function in three variables", "三元势函数"),
       explanation: t(
-        "In three variables, integrate the first component in $x$, then fix the leftover function of $y$ and $z$ using the second component, and finally fix the leftover function of $z$ using the third. For $\\mathbf{F} = \\langle 2ax + dy, dx + ez, ey + 2cz \\rangle$ the steps give\n\n$$f(x, y, z) = ax^2 + dxy + eyz + cz^2,$$\n\nup to a constant, which the condition $f(0, 0, 0) = 0$ sets to zero.",
-        "在三个变量中，先把第一个分量对 $x$ 积分，再用第二个分量确定剩下的 $y$、$z$ 的函数，最后用第三个分量确定剩下的 $z$ 的函数。对 $\\mathbf{F} = \\langle 2ax + dy, dx + ez, ey + 2cz \\rangle$，这些步骤给出\n\n$$f(x, y, z) = ax^2 + dxy + eyz + cz^2,$$\n\n相差一个常数，条件 $f(0, 0, 0) = 0$ 使它为零。",
+        "In three variables, integrate the first component in $x$, then fix the leftover function of $y$ and $z$ using the second component, and finally fix the leftover function of $z$ using the third. For $\\mathbf{F} = \\langle 2ax + dy, dx + ez, ey + 2cz \\rangle$ the steps give\n\n$$f(x, y, z) = ax^2 + dxy + eyz + cz^2,$$\n\nup to a constant, which the condition $f(0, 0, 0) = 0$ sets to zero. For $\\langle 2x + 5y, 5x + z, y + 8z \\rangle$ this is $f = x^2 + 5xy + yz + 4z^2$, and $f(1, 1, 1) = 11$.\n\n> **Watch out.** A mixed term such as $dxy$ shows up in two components, $dy$ in the first and $dx$ in the second, but belongs in $f$ only once. A square term $2ax$ integrates to $ax^2$, not $2ax^2$.",
+        "在三个变量中，先把第一个分量对 $x$ 积分，再用第二个分量确定剩下的 $y$、$z$ 的函数，最后用第三个分量确定剩下的 $z$ 的函数。对 $\\mathbf{F} = \\langle 2ax + dy, dx + ez, ey + 2cz \\rangle$，这些步骤给出\n\n$$f(x, y, z) = ax^2 + dxy + eyz + cz^2,$$\n\n相差一个常数，条件 $f(0, 0, 0) = 0$ 使它为零。对 $\\langle 2x + 5y, 5x + z, y + 8z \\rangle$，得 $f = x^2 + 5xy + yz + 4z^2$，$f(1, 1, 1) = 11$。\n\n> **注意。** 像 $dxy$ 这样的混合项在两个分量里都出现（第一个分量中是 $dy$，第二个中是 $dx$），但在 $f$ 中只算一次。平方项 $2ax$ 积分得 $ax^2$，不是 $2ax^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3164,21 +3481,51 @@ export const calculatingPotentialFunctions: TopicDef = {
         const e = rng.nonZero(-4, 4);
         const [x, y, z] = [rng.int(-2, 3), rng.int(-2, 3), rng.nonZero(-2, 3)];
         const ans = a * x * x + d * x * y + e * y * z + c * z * z;
+        const f = poly([a, "x^2"], [d, "xy"], [e, "yz"], [c, "z^2"]);
         return numberProblem({
           prompt: t(
             `$\\nabla f = \\langle ${poly([2 * a, "x"], [d, "y"])}, ${poly([d, "x"], [e, "z"])}, ${poly([e, "y"], [2 * c, "z"])} \\rangle$ and $f(0, 0, 0) = 0$. Find $f(${x}, ${y}, ${z})$.`,
             `$\\nabla f = \\langle ${poly([2 * a, "x"], [d, "y"])}, ${poly([d, "x"], [e, "z"])}, ${poly([e, "y"], [2 * c, "z"])} \\rangle$，$f(0, 0, 0) = 0$。求 $f(${x}, ${y}, ${z})$。`,
           ),
           answer: ans,
-          wrong: [
-            2 * a * x * x + d * x * y + e * y * z + 2 * c * z * z,
-            a * x * x + 2 * d * x * y + 2 * e * y * z + c * z * z,
-            a * x * x + c * z * z,
-            -ans,
-          ],
-          solution: t(
-            `$f = ${poly([a, "x^2"], [d, "xy"], [e, "yz"], [c, "z^2"])}$, so $f(${x}, ${y}, ${z}) = ${ans}$.`,
-            `$f = ${poly([a, "x^2"], [d, "xy"], [e, "yz"], [c, "z^2"])}$，所以 $f(${x}, ${y}, ${z}) = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              2 * a * x * x + d * x * y + e * y * z + 2 * c * z * z,
+              `$\\int ${2 * a}x\\,dx = ${poly([a, "x^2"])}$ and $\\int ${2 * c}z\\,dz = ${poly([c, "z^2"])}$: integrating halves the square terms.`,
+              `$\\int ${2 * a}x\\,dx = ${poly([a, "x^2"])}$，$\\int ${2 * c}z\\,dz = ${poly([c, "z^2"])}$：积分后平方项要减半。`,
+            ),
+            why(
+              a * x * x + 2 * d * x * y + 2 * e * y * z + c * z * z,
+              "Each mixed term appears in two components but belongs in $f$ once.",
+              "每个混合项在两个分量中出现，但在 $f$ 中只算一次。",
+            ),
+            why(a * x * x + c * z * z, "The mixed terms $dxy$ and $eyz$ are part of $f$ too.", "混合项 $dxy$ 与 $eyz$ 也是 $f$ 的一部分。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate the first entry in $x$", "把第一个分量对 $x$ 积分"],
+                t(`$f = ${poly([a, "x^2"], [d, "xy"])} + g(y, z)$.`, `$f = ${poly([a, "x^2"], [d, "xy"])} + g(y, z)$。`),
+              ],
+              [
+                ["Use the second entry", "用第二个分量"],
+                t(
+                  `$f_y = ${poly([d, "x"])} + g_y$ must be $${poly([d, "x"], [e, "z"])}$, so $g_y = ${poly([e, "z"])}$ and $g = ${poly([e, "yz"])} + h(z)$.`,
+                  `$f_y = ${poly([d, "x"])} + g_y$ 必须等于 $${poly([d, "x"], [e, "z"])}$，所以 $g_y = ${poly([e, "z"])}$，$g = ${poly([e, "yz"])} + h(z)$。`,
+                ),
+              ],
+              [
+                ["Use the third entry and evaluate", "用第三个分量并求值"],
+                t(
+                  `$f_z = ${poly([e, "y"])} + h'(z)$ must be $${poly([e, "y"], [2 * c, "z"])}$, so $h = ${poly([c, "z^2"])}$ with constant $0$. Then $f = ${f}$ and $f(${x}, ${y}, ${z}) = ${ans}$.`,
+                  `$f_z = ${poly([e, "y"])} + h'(z)$ 必须等于 $${poly([e, "y"], [2 * c, "z"])}$，所以 $h = ${poly([c, "z^2"])}$，常数为 $0$。于是 $f = ${f}$，$f(${x}, ${y}, ${z}) = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The terms at the point are $${a * x * x}$, $${d * x * y}$, $${e * y * z}$ and $${c * z * z}$, which add up to $${ans}$; and $f_x = ${poly([2 * a, "x"], [d, "y"])}$, the first entry.`,
+              `各项在该点的值为 $${a * x * x}$、$${d * x * y}$、$${e * y * z}$、$${c * z * z}$，和为 $${ans}$；且 $f_x = ${poly([2 * a, "x"], [d, "y"])}$，正是第一个分量。`,
+            ),
           ),
         });
       },
@@ -3194,6 +3541,10 @@ export const connectedAndSimplyConnectedRegions: TopicDef = {
     "A region is connected if any two points can be joined by a path, and simply connected if every closed curve can be shrunk to a point without leaving the region.",
     "若区域内任意两点可用路径相连则为连通区域；若每条闭曲线均可在区域内连续收缩为一点（无孔洞）则为单连通区域。",
   ),
+  intro: t(
+    "The annulus $1 < x^2 + y^2 < 4$ is connected: any two of its points can be joined by going around the ring. But the circle $x^2 + y^2 = 2$ inside it cannot be shrunk to a point without crossing the missing disk $x^2 + y^2 \\le 1$, so the annulus is not simply connected.\n\nCheck: fill in the hole to get the disk $x^2 + y^2 < 4$; there the same circle shrinks to the origin, so the hole is exactly what stopped it.\n\nIn this lesson we decide whether plane regions are connected and whether they are simply connected.",
+    "圆环 $1 < x^2 + y^2 < 4$ 是连通的：其中任意两点都能沿环绕行相连。但其中的圆 $x^2 + y^2 = 2$ 不穿过缺失的圆盘 $x^2 + y^2 \\le 1$ 就无法收缩为一点，所以圆环不是单连通的。\n\n检验：把洞补上得到圆盘 $x^2 + y^2 < 4$；在那里同一个圆可以收缩到原点，可见挡住它的正是那个洞。\n\n本课我们判断平面区域是否连通、是否单连通。",
+  ),
   prerequisites: ["conservative-vector-fields-in-the-cartesian-plane"],
   encompasses: [],
   xp: 10,
@@ -3202,78 +3553,123 @@ export const connectedAndSimplyConnectedRegions: TopicDef = {
       id: "classifying-topological-properties-of-planar-regions",
       title: t("Classifying topological properties of planar regions", "分类平面区域的拓扑性质"),
       explanation: t(
-        "A region $D$ in the plane is:\n\n- **Connected**: any two points in $D$ can be joined by a continuous curve lying entirely in $D$.\n- **Simply connected**: $D$ is connected and every simple closed curve in $D$ encloses only points in $D$ (intuitively, $D$ has no 'holes').",
-        "平面区域 $D$：\n\n- **连通**：$D$ 内任意两点均可用完全位于 $D$ 内的连续曲线连接。\n- **单连通**：$D$ 连通，且 $D$ 内的任意简单闭曲线所围成的区域全属于 $D$（直观上，$D$ 没有“孔洞”）。",
+        "A region $D$ in the plane is:\n\n- **Connected**: any two points in $D$ can be joined by a continuous curve lying entirely in $D$.\n- **Simply connected**: $D$ is connected and every simple closed curve in $D$ encloses only points in $D$ (intuitively, $D$ has no 'holes').\n\nThe plane with the segment from $(-1, 0)$ to $(1, 0)$ removed is connected, since a path can go around the segment, but not simply connected: the circle $x^2 + y^2 = 4$ encloses points of the segment, which are missing.\n\n> **Watch out.** Simply connected includes connected, so 'simply connected but not connected' never happens. Removing even one point makes a hole.",
+        "平面区域 $D$：\n\n- **连通**：$D$ 内任意两点均可用完全位于 $D$ 内的连续曲线连接。\n- **单连通**：$D$ 连通，且 $D$ 内的任意简单闭曲线所围成的区域全属于 $D$（直观上，$D$ 没有“孔洞”）。\n\n去掉从 $(-1, 0)$ 到 $(1, 0)$ 的线段后的平面是连通的，因为路径可以绕过线段；但它不是单连通的：圆 $x^2 + y^2 = 4$ 围住了线段上缺失的点。\n\n> **注意。** 单连通本身包含连通，所以“单连通但不连通”不可能出现。哪怕只去掉一个点，也会形成一个洞。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 9);
         const r1 = rng.int(1, 4);
         const r2 = rng.int(5, 10);
         const d = rng.int(2, 8);
+        const both = t("Connected and simply connected", "连通且单连通");
+        const holed = t("Connected but not simply connected", "连通但非单连通");
+        const impossible = t("Simply connected but not connected", "单连通但非连通");
+        const neither = t("Neither connected nor simply connected", "既非连通亦非单连通");
+        const never = t(
+          "Simply connected regions are connected by definition, so this never happens.",
+          "单连通区域按定义就是连通的，所以这种情况不会出现。",
+        );
+        const joined = t("Any two of its points can be joined by a path inside it.", "其中任意两点都能用区域内的路径相连。");
+        const apart = t(
+          "Points in different disks cannot be joined by a path inside the region.",
+          "位于不同圆盘内的点无法用区域内的路径相连。",
+        );
         const scenarios = [
           {
-            desc: t(`The open disk $x^2 + y^2 < ${R * R}$`, `开圆盘 $x^2 + y^2 < ${R * R}$`),
-            right: t("Connected and simply connected", "连通且单连通"),
+            desc: t(`the open disk $x^2 + y^2 < ${R * R}$`, `开圆盘 $x^2 + y^2 < ${R * R}$`),
+            right: both,
+            connected: t("Any two points of the disk are joined by the segment between them.", "圆盘内任意两点由它们之间的线段相连。"),
+            holes: t("The disk has no holes.", "圆盘没有洞。"),
+            check: t(
+              `A loop in the disk can be pulled straight toward the origin, staying inside $x^2 + y^2 < ${R * R}$.`,
+              `圆盘内的环路可以直接向原点收拢，始终留在 $x^2 + y^2 < ${R * R}$ 内。`,
+            ),
             wrong: [
-              t("Connected but not simply connected", "连通但非单连通"),
-              t("Simply connected but not connected", "单连通但非连通"),
-              t("Neither connected nor simply connected", "既非连通亦非单连通"),
+              {
+                option: holed,
+                why: t("There is no hole: every loop in it can be shrunk inside it.", "没有洞：其中每条环路都能在区域内收缩。"),
+              },
+              { option: impossible, why: never },
+              { option: neither, why: joined },
             ],
-            reason: t("An open disk has no holes and is path-connected.", "开圆盘没有孔洞，且是道路连通的。"),
           },
           {
-            desc: t(`The punctured disk $0 < x^2 + y^2 < ${R * R}$`, `去心圆盘 $0 < x^2 + y^2 < ${R * R}$`),
-            right: t("Connected but not simply connected", "连通但非单连通"),
-            wrong: [
-              t("Connected and simply connected", "连通且单连通"),
-              t("Neither connected nor simply connected", "既非连通亦非单连通"),
-              t("Simply connected but not connected", "单连通但非连通"),
-            ],
-            reason: t(
-              "The missing origin creates a hole, so a loop around it cannot be shrunk to a point in the region.",
-              "原点的缺失形成了一个孔洞，围绕原点的闭曲线无法在区域内收缩为一点。",
+            desc: t(`the punctured disk $0 < x^2 + y^2 < ${R * R}$`, `去心圆盘 $0 < x^2 + y^2 < ${R * R}$`),
+            right: holed,
+            connected: t("Any two points can be joined by a path that avoids the origin.", "任意两点都能用避开原点的路径相连。"),
+            holes: t("The missing origin is a hole.", "缺失的原点是一个洞。"),
+            check: t(
+              `The circle $x^2 + y^2 = ${Q.of(R * R, 4).toLatex()}$ lies in the region and goes around the origin, so it cannot be shrunk to a point inside it.`,
+              `圆 $x^2 + y^2 = ${Q.of(R * R, 4).toLatex()}$ 位于区域内并绕着原点，所以无法在区域内收缩为一点。`,
             ),
+            wrong: [
+              {
+                option: both,
+                why: t(
+                  "A loop around the missing origin cannot be shrunk to a point inside the region.",
+                  "绕缺失原点的环路无法在区域内收缩为一点。",
+                ),
+              },
+              { option: neither, why: joined },
+              { option: impossible, why: never },
+            ],
           },
           {
-            desc: t(`The open annulus $${r1 * r1} < x^2 + y^2 < ${r2 * r2}$`, `开圆环 $${r1 * r1} < x^2 + y^2 < ${r2 * r2}$`),
-            right: t("Connected but not simply connected", "连通但非单连通"),
-            wrong: [
-              t("Connected and simply connected", "连通且单连通"),
-              t("Neither connected nor simply connected", "既非连通亦非单连通"),
-              t("Simply connected but not connected", "单连通但非连通"),
-            ],
-            reason: t(
-              `The inner disk $x^2 + y^2 \\le ${r1 * r1}$ is a hole in the region.`,
-              `内圆盘 $x^2 + y^2 \\le ${r1 * r1}$ 构成了该区域的一个孔洞。`,
+            desc: t(`the open annulus $${r1 * r1} < x^2 + y^2 < ${r2 * r2}$`, `开圆环 $${r1 * r1} < x^2 + y^2 < ${r2 * r2}$`),
+            right: holed,
+            connected: t("Any two points can be joined by going around the ring.", "任意两点都能沿环绕行相连。"),
+            holes: t(`The inner disk $x^2 + y^2 \\le ${r1 * r1}$ is a hole.`, `内圆盘 $x^2 + y^2 \\le ${r1 * r1}$ 是一个洞。`),
+            check: t(
+              `The circle $x^2 + y^2 = ${r1 * r2}$ lies in the annulus and goes around the hole, so it cannot be shrunk inside it.`,
+              `圆 $x^2 + y^2 = ${r1 * r2}$ 位于圆环内并绕着洞，所以无法在圆环内收缩。`,
             ),
+            wrong: [
+              {
+                option: both,
+                why: t(
+                  "A loop around the inner hole cannot be shrunk to a point inside the region.",
+                  "绕内部洞的环路无法在区域内收缩为一点。",
+                ),
+              },
+              { option: neither, why: joined },
+              { option: impossible, why: never },
+            ],
           },
           {
             desc: t(
-              `The union of two disjoint disks $(x-${d})^2 + y^2 < 1$ and $(x+${d})^2 + y^2 < 1$`,
+              `the union of two disjoint disks $(x-${d})^2 + y^2 < 1$ and $(x+${d})^2 + y^2 < 1$`,
               `两个互不相交的圆盘 $(x-${d})^2 + y^2 < 1$ 与 $(x+${d})^2 + y^2 < 1$ 的并集`,
             ),
-            right: t("Neither connected nor simply connected", "既非连通亦非单连通"),
-            wrong: [
-              t("Connected and simply connected", "连通且单连通"),
-              t("Connected but not simply connected", "连通但非单连通"),
-              t("Simply connected but not connected", "单连通但非连通"),
-            ],
-            reason: t(
-              "Points in different disks cannot be joined by a path inside the region.",
-              "位于不同圆盘内的点无法通过区域内的路径相连。",
+            right: neither,
+            connected: apart,
+            holes: t("A region that is not connected is not simply connected either.", "不连通的区域也不是单连通的。"),
+            check: t(
+              `The disks are centred $${2 * d}$ apart with radius $1$ each, and $${2 * d} > 2$, so they do not touch.`,
+              `两个圆盘的圆心相距 $${2 * d}$，半径都是 $1$，而 $${2 * d} > 2$，所以它们不相接。`,
             ),
+            wrong: [
+              { option: both, why: apart },
+              { option: holed, why: apart },
+              { option: impossible, why: never },
+            ],
           },
         ];
         const item = rng.pick(scenarios);
-        const prompt = t(
-          `Classify the topological property of the following region in $\\mathbb{R}^2$: ${item.desc.en}.`,
-          `对 $\\mathbb{R}^2$ 中的以下区域分类其拓扑性质：${item.desc["zh-CN"]}。`,
-        );
-        const solution = t(
-          `The region is ${item.right.en.toLowerCase()} because ${item.reason.en.toLowerCase()}`,
-          `该区域为${item.right["zh-CN"]}，因为${item.reason["zh-CN"]}。`,
-        );
-        return pickChoice(rng, prompt, item.right, item.wrong, solution);
+        return explainedChoice(rng, {
+          prompt: t(
+            `Classify the topological property of the following region in $\\mathbb{R}^2$: ${item.desc.en}.`,
+            `对 $\\mathbb{R}^2$ 中的以下区域分类其拓扑性质：${item.desc["zh-CN"]}。`,
+          ),
+          correct: item.right,
+          wrong: item.wrong,
+          solution: walked(
+            [
+              [["Decide whether it is connected", "判断是否连通"], item.connected],
+              [["Look for holes", "寻找洞"], item.holes],
+            ],
+            item.check,
+          ),
+        });
       },
     },
     {
@@ -3281,50 +3677,118 @@ export const connectedAndSimplyConnectedRegions: TopicDef = {
       figure: multivariableDrawings1["connected-and-simply-connected-regions#picking-the-simply-connected-region"],
       title: t("Picking the simply connected region", "挑出单连通区域"),
       explanation: t(
-        "A region is connected if any two of its points can be joined by a path inside it, and simply connected if, in addition, every closed curve in it can be shrunk to a point without leaving it. A disk, a half-plane and a rectangle are simply connected. Even the plane with a ray removed is simply connected, because a loop cannot surround the ray's endpoint without crossing the ray. An annulus, a punctured disk or the plane without the origin each have a hole, and two separate disks are not even connected.",
-        "若区域中任意两点都能用区域内的路径连接，则区域连通；若此外区域内每条闭曲线都能在不离开区域的情况下收缩为一点，则区域单连通。圆盘、半平面与矩形都是单连通的。甚至去掉一条射线的平面也是单连通的，因为环路不穿过射线就无法绕住射线端点。圆环、去心圆盘或去掉原点的平面都有洞，而两个分离的圆盘甚至不连通。",
+        "A region is connected if any two of its points can be joined by a path inside it, and simply connected if, in addition, every closed curve in it can be shrunk to a point without leaving it. A disk, a half-plane and a rectangle are simply connected. Even the plane with a ray removed is simply connected, because a loop cannot surround the ray's endpoint without crossing the ray. An annulus, a punctured disk or the plane without the origin each have a hole, and two separate disks are not even connected. The plane with the segment from $(0, 0)$ to $(1, 0)$ removed is not simply connected: the circle of radius $2$ about the origin surrounds the segment.\n\n> **Watch out.** A removed ray that runs off to infinity makes no hole, but a removed point or a removed segment of finite length does. Being unbounded, like a half-plane, does not stop a region from being simply connected.",
+        "若区域中任意两点都能用区域内的路径连接，则区域连通；若此外区域内每条闭曲线都能在不离开区域的情况下收缩为一点，则区域单连通。圆盘、半平面与矩形都是单连通的。甚至去掉一条射线的平面也是单连通的，因为环路不穿过射线就无法绕住射线端点。圆环、去心圆盘或去掉原点的平面都有洞，而两个分离的圆盘甚至不连通。去掉从 $(0, 0)$ 到 $(1, 0)$ 的线段后的平面不是单连通的：以原点为圆心、半径为 $2$ 的圆绕住了这条线段。\n\n> **注意。** 去掉一条伸向无穷远的射线不会形成洞，但去掉一个点或一条有限长的线段会。像半平面那样无界，并不妨碍区域单连通。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 6);
         const r = rng.int(1, R - 1);
         const c = rng.int(-4, 4);
-        const regions: [Text, boolean][] = [
-          [t(`the half-plane $y > ${c}$`, `半平面 $y > ${c}$`), true],
-          [t(`the plane with the ray $\\{(x, ${c}) : x \\le 0\\}$ removed`, `去掉射线 $\\{(x, ${c}) : x \\le 0\\}$ 的平面`), true],
-          [t(`the open rectangle $0 < x < ${R}$, $${c} < y < ${c + r}$`, `开矩形 $0 < x < ${R}$，$${c} < y < ${c + r}$`), true],
-          [t(`the open disk $(x - ${R})^2 + y^2 < ${r * r}$`, `开圆盘 $(x - ${R})^2 + y^2 < ${r * r}$`), true],
-          [t(`the annulus $${r * r} < x^2 + y^2 < ${R * R}$`, `圆环 $${r * r} < x^2 + y^2 < ${R * R}$`), false],
-          [t(`the punctured disk $0 < x^2 + (y - ${R})^2 < ${r * r}$`, `去心圆盘 $0 < x^2 + (y - ${R})^2 < ${r * r}$`), false],
-          [t(`the plane with the point $(${c}, ${R})$ removed`, `去掉点 $(${c}, ${R})$ 的平面`), false],
+        const disks = t(
+          `the union of the disks $x^2 + y^2 < 1$ and $(x - ${R + 2})^2 + y^2 < 1$`,
+          `圆盘 $x^2 + y^2 < 1$ 与 $(x - ${R + 2})^2 + y^2 < 1$ 之并`,
+        );
+        const regions: [Text, boolean, Text][] = [
           [
+            t(`the half-plane $y > ${c}$`, `半平面 $y > ${c}$`),
+            true,
             t(
-              `the union of the disks $x^2 + y^2 < 1$ and $(x - ${R + 2})^2 + y^2 < 1$`,
-              `圆盘 $x^2 + y^2 < 1$ 与 $(x - ${R + 2})^2 + y^2 < 1$ 之并`,
+              `A loop above the line $y = ${c}$ can be pulled together without reaching the line.`,
+              `直线 $y = ${c}$ 上方的环路可以收拢而不碰到这条直线。`,
             ),
+          ],
+          [
+            t(`the plane with the ray $\\{(x, ${c}) : x \\le 0\\}$ removed`, `去掉射线 $\\{(x, ${c}) : x \\le 0\\}$ 的平面`),
+            true,
+            t(
+              "No loop in the region can go around the ray's endpoint, since that would cross the ray.",
+              "区域内没有环路能绕住射线的端点，因为那样必然穿过射线。",
+            ),
+          ],
+          [
+            t(`the open rectangle $0 < x < ${R}$, $${c} < y < ${c + r}$`, `开矩形 $0 < x < ${R}$，$${c} < y < ${c + r}$`),
+            true,
+            t(
+              "A loop in the rectangle can be shrunk toward any of its points, staying inside.",
+              "矩形内的环路可以向其中任一点收缩，始终留在矩形内。",
+            ),
+          ],
+          [
+            t(`the open disk $(x - ${R})^2 + y^2 < ${r * r}$`, `开圆盘 $(x - ${R})^2 + y^2 < ${r * r}$`),
+            true,
+            t(
+              `A loop in the disk can be shrunk toward its centre $(${R}, 0)$, staying inside.`,
+              `圆盘内的环路可以向圆心 $(${R}, 0)$ 收缩，始终留在圆盘内。`,
+            ),
+          ],
+          [
+            t(`the annulus $${r * r} < x^2 + y^2 < ${R * R}$`, `圆环 $${r * r} < x^2 + y^2 < ${R * R}$`),
             false,
+            t(
+              `The circle $x^2 + y^2 = ${r * R}$ lies in it and goes around the hole $x^2 + y^2 \\le ${r * r}$.`,
+              `圆 $x^2 + y^2 = ${r * R}$ 在其中并绕着洞 $x^2 + y^2 \\le ${r * r}$。`,
+            ),
+          ],
+          [
+            t(`the punctured disk $0 < x^2 + (y - ${R})^2 < ${r * r}$`, `去心圆盘 $0 < x^2 + (y - ${R})^2 < ${r * r}$`),
+            false,
+            t(
+              `A small circle about the missing centre $(0, ${R})$ lies in it and cannot be shrunk inside it.`,
+              `绕缺失圆心 $(0, ${R})$ 的小圆在其中，无法在区域内收缩。`,
+            ),
+          ],
+          [
+            t(`the plane with the point $(${c}, ${R})$ removed`, `去掉点 $(${c}, ${R})$ 的平面`),
+            false,
+            t(
+              `A circle about $(${c}, ${R})$ lies in it and cannot be shrunk without passing through the missing point.`,
+              `绕 $(${c}, ${R})$ 的圆在其中，不经过缺失的点就无法收缩。`,
+            ),
+          ],
+          [
+            disks,
+            false,
+            t(
+              `The disks are centred $${R + 2}$ apart with radius $1$, so they do not touch.`,
+              `两个圆盘圆心相距 $${R + 2}$，半径为 $1$，所以不相接。`,
+            ),
           ],
         ];
-        const [region, yes] = rng.pick(regions);
-        return pickChoice(
-          rng,
-          t(`Is ${region.en} simply connected?`, `${region["zh-CN"]}是单连通的吗？`),
-          yes ? yesNo[0]! : yesNo[1]!,
-          [yes ? yesNo[1]! : yesNo[0]!],
-          yes
-            ? t(
-                `Yes. The region is connected and has no holes, so every closed curve in it can be shrunk to a point inside it.`,
-                `是。该区域连通且没有洞，其中每条闭曲线都能在区域内收缩为一点。`,
-              )
-            : region === regions[7]![0]
-              ? t(
-                  "No. The two disks do not touch, so the region is not even connected, and simple connectivity requires a connected region.",
-                  "不是。两个圆盘不相交，所以区域甚至不连通，而单连通要求区域连通。",
-                )
-              : t(
-                  "No. The region has a hole, so a loop around the hole cannot be shrunk to a point without leaving the region.",
-                  "不是。区域有洞，绕洞的环路不离开区域就无法收缩为一点。",
-                ),
-        );
+        const [region, yes, check] = rng.pick(regions);
+        const split = region === disks;
+        return verdictChoice(rng, {
+          prompt: t(`Is ${region.en} simply connected?`, `${region["zh-CN"]}是单连通的吗？`),
+          holds: yes,
+          yes: t(
+            "it is connected and every closed curve in it can be shrunk to a point inside it",
+            "它连通，且其中每条闭曲线都能在区域内收缩为一点",
+          ),
+          no: t(
+            "it is not connected, or it has a hole that a closed curve in it goes around",
+            "它不连通，或者有一个洞被其中的某条闭曲线绕住",
+          ),
+          yesWrong: t("it is an open set", "它是开集"),
+          noWrong: t("it is unbounded", "它无界"),
+          solution: walked(
+            [
+              [
+                ["Decide whether it is connected", "判断是否连通"],
+                split
+                  ? t("No: the two disks do not touch.", "不：两个圆盘不相接。")
+                  : t("Yes: any two of its points can be joined by a path inside it.", "是：其中任意两点都能用区域内的路径相连。"),
+              ],
+              [
+                ["Look for a loop around a hole", "寻找绕住洞的环路"],
+                split
+                  ? t("A region that is not connected is not simply connected.", "不连通的区域不是单连通的。")
+                  : yes
+                    ? t("No: it has no hole, so it is simply connected.", "没有：它没有洞，所以是单连通的。")
+                    : t("Yes: it has a hole, so it is not simply connected.", "有：它有洞，所以不是单连通的。"),
+              ],
+            ],
+            check,
+          ),
+        });
       },
     },
   ],
@@ -3338,6 +3802,10 @@ export const streamFunctions: TopicDef = {
     "For a 2D divergence-free field F = ⟨P, Q⟩, the stream function ψ satisfies P = ∂ψ/∂y and Q = -∂ψ/∂x, with level curves matching streamlines.",
     "对于二维无散场 F = ⟨P, Q⟩，流函数 ψ 满足 P = ∂ψ/∂y 且 Q = -∂ψ/∂x，其等值线即为流线。",
   ),
+  intro: t(
+    "Take the stream function $\\psi = xy$. Then $P = \\psi_y = x$ and $Q = -\\psi_x = -y$, so the flow is $\\mathbf{F} = \\langle x, -y \\rangle$: it comes in along the $y$-axis and leaves along the $x$-axis, following the hyperbolas $xy = C$.\n\nCheck: $P_x + Q_y = 1 - 1 = 0$, so the flow is incompressible, and $\\mathbf{F} \\cdot \\nabla\\psi = x \\cdot y + (-y) \\cdot x = 0$, so the flow runs along the level curves of $\\psi$.\n\nIn this lesson we find stream functions of incompressible plane flows and recover flows from stream functions.",
+    "取流函数 $\\psi = xy$。则 $P = \\psi_y = x$，$Q = -\\psi_x = -y$，所以流场是 $\\mathbf{F} = \\langle x, -y \\rangle$：它沿 $y$ 轴流入、沿 $x$ 轴流出，沿着双曲线 $xy = C$ 流动。\n\n检验：$P_x + Q_y = 1 - 1 = 0$，所以流动不可压缩；而 $\\mathbf{F} \\cdot \\nabla\\psi = x \\cdot y + (-y) \\cdot x = 0$，所以流动沿 $\\psi$ 的等值线进行。\n\n本课我们求不可压缩平面流的流函数，并由流函数求出流场。",
+  ),
   prerequisites: ["calculating-potential-functions"],
   encompasses: [],
   xp: 10,
@@ -3346,42 +3814,58 @@ export const streamFunctions: TopicDef = {
       id: "finding-stream-functions-for-incompressible-flows",
       title: t("Finding stream functions for incompressible flows", "求不可压缩流场的流函数"),
       explanation: t(
-        "For a two-dimensional incompressible vector field $\\mathbf{F} = \\langle P, Q \\rangle$ with $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$, there exists a scalar stream function $\\psi(x, y)$ such that:\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}.$$ Level curves $\\psi(x, y) = C$ are the streamlines of the velocity field.",
-        "对于满足 $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$ 的二维不可压缩向量场 $\\mathbf{F} = \\langle P, Q \\rangle$，存在标量流函数 $\\psi(x, y)$ 使得：\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}$$ 等值线 $\\psi(x, y) = C$ 即为该速度场的流线。",
+        "For a two-dimensional incompressible vector field $\\mathbf{F} = \\langle P, Q \\rangle$ with $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$, there exists a scalar stream function $\\psi(x, y)$ such that:\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}.$$ Level curves $\\psi(x, y) = C$ are the streamlines of the velocity field. For $\\mathbf{F} = \\langle 2y, -6x \\rangle$, $\\psi_y = 2y$ gives $\\psi = y^2 + g(x)$, and $-g'(x) = -6x$ gives $g = 3x^2$: $\\psi = y^2 + 3x^2$.\n\n> **Watch out.** $Q = -\\psi_x$ carries a minus sign, so integrating $Q$ in $x$ as it stands gives the wrong sign. And $\\int 2y\\,dy = y^2$, not $2y^2$.",
+        "对于满足 $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$ 的二维不可压缩向量场 $\\mathbf{F} = \\langle P, Q \\rangle$，存在标量流函数 $\\psi(x, y)$ 使得：\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}$$ 等值线 $\\psi(x, y) = C$ 即为该速度场的流线。对 $\\mathbf{F} = \\langle 2y, -6x \\rangle$，由 $\\psi_y = 2y$ 得 $\\psi = y^2 + g(x)$，由 $-g'(x) = -6x$ 得 $g = 3x^2$：$\\psi = y^2 + 3x^2$。\n\n> **注意。** $Q = -\\psi_x$ 带有负号，所以把 $Q$ 直接对 $x$ 积分会得到相反的符号。还有 $\\int 2y\\,dy = y^2$，不是 $2y^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
-
-        // F = <2 a y, 2 b x>
-        // P = 2 a y = d psi / dy => psi = a y^2 + g(x)
-        // Q = 2 b x = -d psi / dx => -g'(x) = 2 b x => g(x) = -b x^2
-        // psi = a y^2 - b x^2
         const ans = poly([a, "y^2"], [-b, "x^2"]);
-
-        const prompt = t(
-          `Find the stream function $\\psi(x, y)$ with $\\psi(0, 0) = 0$ for the incompressible planar flow $\\mathbf{F}(x, y) = \\left\\langle ${2 * a}y, ${2 * b}x \\right\\rangle$, satisfying $P = \\frac{\\partial \\psi}{\\partial y}$ and $Q = -\\frac{\\partial \\psi}{\\partial x}$.`,
-          `求满足 $P = \\frac{\\partial \\psi}{\\partial y}$ 与 $Q = -\\frac{\\partial \\psi}{\\partial x}$ 且 $\\psi(0, 0) = 0$ 的不可压缩平面流场 $\\mathbf{F}(x, y) = \\left\\langle ${2 * a}y, ${2 * b}x \\right\\rangle$ 的流函数 $\\psi(x, y)$。`,
-        );
-        const solution = t(
-          steps(
-            `From $P = \\frac{\\partial \\psi}{\\partial y} = ${2 * a}y$, integrate with respect to $y$: $\\psi(x, y) = ${poly([a, "y^2"])} + g(x)$.`,
-            `Differentiate with respect to $x$: $\\frac{\\partial \\psi}{\\partial x} = g'(x)$.`,
-            `Use $Q = -\\frac{\\partial \\psi}{\\partial x} = ${2 * b}x \\implies g'(x) = -${2 * b}x \\implies g(x) = ${poly([-b, "x^2"])} + C$.`,
-            `Since $\\psi(0, 0) = 0$, $C = 0$. Thus $\\psi(x, y) = ${ans}$.`,
-          ),
-          steps(
-            `由 $P = \\frac{\\partial \\psi}{\\partial y} = ${2 * a}y$，对 $y$ 积分得：$\\psi(x, y) = ${poly([a, "y^2"])} + g(x)$。`,
-            `对 $x$ 求偏导：$\\frac{\\partial \\psi}{\\partial x} = g'(x)$。`,
-            `由 $Q = -\\frac{\\partial \\psi}{\\partial x} = ${2 * b}x \\implies g'(x) = -${2 * b}x \\implies g(x) = ${poly([-b, "x^2"])} + C$。`,
-            `由 $\\psi(0, 0) = 0$ 得 $C = 0$。因此 $\\psi(x, y) = ${ans}$。`,
-          ),
-        );
         return expressionProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the stream function $\\psi(x, y)$ with $\\psi(0, 0) = 0$ for the incompressible planar flow $\\mathbf{F}(x, y) = \\left\\langle ${2 * a}y, ${2 * b}x \\right\\rangle$, satisfying $P = \\frac{\\partial \\psi}{\\partial y}$ and $Q = -\\frac{\\partial \\psi}{\\partial x}$.`,
+            `求满足 $P = \\frac{\\partial \\psi}{\\partial y}$ 与 $Q = -\\frac{\\partial \\psi}{\\partial x}$ 且 $\\psi(0, 0) = 0$ 的不可压缩平面流场 $\\mathbf{F}(x, y) = \\left\\langle ${2 * a}y, ${2 * b}x \\right\\rangle$ 的流函数 $\\psi(x, y)$。`,
+          ),
           answer: ans,
-          wrong: [poly([a, "y^2"], [b, "x^2"]), poly([2 * a, "y^2"], [-2 * b, "x^2"]), poly([b, "y^2"], [-a, "x^2"])],
+          mistakes: [
+            say(
+              poly([a, "y^2"], [b, "x^2"]),
+              `$Q = -\\psi_x$, so $\\psi_x = -${2 * b}x$ and the $x^2$ term is negative.`,
+              `$Q = -\\psi_x$，所以 $\\psi_x = -${2 * b}x$，$x^2$ 项为负。`,
+            ),
+            say(
+              poly([2 * a, "y^2"], [-2 * b, "x^2"]),
+              `$\\int ${2 * a}y\\,dy = ${poly([a, "y^2"])}$: integrating halves the coefficient.`,
+              `$\\int ${2 * a}y\\,dy = ${poly([a, "y^2"])}$：积分后系数减半。`,
+            ),
+            say(
+              poly([-a, "y^2"], [b, "x^2"]),
+              "That uses the opposite convention, $P = -\\psi_y$ and $Q = \\psi_x$; here $P = \\psi_y$ and $Q = -\\psi_x$.",
+              "这用的是相反的约定 $P = -\\psi_y$，$Q = \\psi_x$；这里是 $P = \\psi_y$，$Q = -\\psi_x$。",
+            ),
+          ],
+          solution: walked(
+            [
+              [
+                ["Integrate $P$ in $y$", "把 $P$ 对 $y$ 积分"],
+                t(
+                  `$\\psi_y = ${2 * a}y$ gives $\\psi = ${poly([a, "y^2"])} + g(x)$.`,
+                  `由 $\\psi_y = ${2 * a}y$ 得 $\\psi = ${poly([a, "y^2"])} + g(x)$。`,
+                ),
+              ],
+              [
+                ["Match $Q$", "与 $Q$ 比较"],
+                t(
+                  `$-\\psi_x = -g'(x)$ must equal $${2 * b}x$, so $g'(x) = -${2 * b}x$ and $g(x) = ${poly([-b, "x^2"])} + C$; $\\psi(0, 0) = 0$ makes $C = 0$. So $\\psi = ${ans}$.`,
+                  `$-\\psi_x = -g'(x)$ 必须等于 $${2 * b}x$，所以 $g'(x) = -${2 * b}x$，$g(x) = ${poly([-b, "x^2"])} + C$；由 $\\psi(0, 0) = 0$ 得 $C = 0$。所以 $\\psi = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$\\psi_y = ${2 * a}y = P$ and $-\\psi_x = -(${poly([-2 * b, "x"])}) = ${2 * b}x = Q$.`,
+              `$\\psi_y = ${2 * a}y = P$，$-\\psi_x = -(${poly([-2 * b, "x"])}) = ${2 * b}x = Q$。`,
+            ),
+          ),
         });
       },
     },
@@ -3390,8 +3874,8 @@ export const streamFunctions: TopicDef = {
       figure: multivariableDrawings1["stream-functions#a-velocity-field-from-its-stream-function"],
       title: t("A velocity field from its stream function", "由流函数求速度场"),
       explanation: t(
-        "A stream function $\\psi$ determines an incompressible flow through $P = \\frac{\\partial \\psi}{\\partial y}$ and $Q = -\\frac{\\partial \\psi}{\\partial x}$. Such a field is automatically divergence free, since $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$. Differentiating $\\psi$ and evaluating at a point gives the velocity there, which is tangent to the streamline $\\psi = C$ through that point.",
-        "流函数 $\\psi$ 通过 $P = \\frac{\\partial \\psi}{\\partial y}$，$Q = -\\frac{\\partial \\psi}{\\partial x}$ 确定一个不可压缩流。这样的场自动无散，因为 $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$。对 $\\psi$ 求导并在某点取值就得到该点的速度，它与过该点的流线 $\\psi = C$ 相切。",
+        "A stream function $\\psi$ determines an incompressible flow through $P = \\frac{\\partial \\psi}{\\partial y}$ and $Q = -\\frac{\\partial \\psi}{\\partial x}$. Such a field is automatically divergence free, since $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$. Differentiating $\\psi$ and evaluating at a point gives the velocity there, which is tangent to the streamline $\\psi = C$ through that point. For $\\psi = x^2y$ at $(1, 2)$: $P = x^2 = 1$ and $Q = -2xy = -4$, so the velocity is $\\langle 1, -4 \\rangle$.\n\n> **Watch out.** The first entry comes from $\\psi_y$, the derivative in the other variable, and the second is $-\\psi_x$ with its minus sign. The velocity is not $\\nabla\\psi$; it is perpendicular to it.",
+        "流函数 $\\psi$ 通过 $P = \\frac{\\partial \\psi}{\\partial y}$，$Q = -\\frac{\\partial \\psi}{\\partial x}$ 确定一个不可压缩流。这样的场自动无散，因为 $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$。对 $\\psi$ 求导并在某点取值就得到该点的速度，它与过该点的流线 $\\psi = C$ 相切。对 $\\psi = x^2y$ 在 $(1, 2)$ 处：$P = x^2 = 1$，$Q = -2xy = -4$，所以速度为 $\\langle 1, -4 \\rangle$。\n\n> **注意。** 第一个分量来自 $\\psi_y$，即对另一个变量的导数；第二个分量是 $-\\psi_x$，带负号。速度不是 $\\nabla\\psi$，而是与它垂直。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3399,25 +3883,55 @@ export const streamFunctions: TopicDef = {
         const c = rng.nonZero(-3, 3);
         const x = rng.int(-3, 3);
         const y = rng.int(-3, 3);
-        const P = a * x + 2 * c * y;
-        const Qv = -(a * y + 2 * b * x);
-        return pointProblem({
-          prompt: t(
-            `The stream function of a flow is $\\psi(x, y) = ${poly([a, "xy"], [b, "x^2"], [c, "y^2"])}$, with $P = \\psi_y$ and $Q = -\\psi_x$. Find the velocity $\\mathbf{F}(${x}, ${y})$.`,
-            `某流动的流函数为 $\\psi(x, y) = ${poly([a, "xy"], [b, "x^2"], [c, "y^2"])}$，$P = \\psi_y$，$Q = -\\psi_x$。求速度 $\\mathbf{F}(${x}, ${y})$。`,
-          ),
-          answer: [P, Qv],
-          vector: true,
-          wrong: [
-            [-Qv, P],
-            [-Qv, -P],
-            [P, -Qv],
+        const psiY = a * x + 2 * c * y;
+        const psiX = a * y + 2 * b * x;
+        const P = psiY;
+        const Qv = -psiX;
+        return located(
+          {
+            prompt: t(
+              `The stream function of a flow is $\\psi(x, y) = ${poly([a, "xy"], [b, "x^2"], [c, "y^2"])}$, with $P = \\psi_y$ and $Q = -\\psi_x$. Find the velocity $\\mathbf{F}(${x}, ${y})$.`,
+              `某流动的流函数为 $\\psi(x, y) = ${poly([a, "xy"], [b, "x^2"], [c, "y^2"])}$，$P = \\psi_y$，$Q = -\\psi_x$。求速度 $\\mathbf{F}(${x}, ${y})$。`,
+            ),
+            answer: [P, Qv],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Differentiate the stream function", "对流函数求导"],
+                  t(
+                    `$\\psi_y = ${poly([a, "x"], [2 * c, "y"])}$ and $\\psi_x = ${poly([a, "y"], [2 * b, "x"])}$.`,
+                    `$\\psi_y = ${poly([a, "x"], [2 * c, "y"])}$，$\\psi_x = ${poly([a, "y"], [2 * b, "x"])}$。`,
+                  ),
+                ],
+                [
+                  ["Evaluate", "代入求值"],
+                  t(
+                    `At $(${x}, ${y})$, $\\psi_y = ${psiY}$ and $\\psi_x = ${psiX}$, so $\\mathbf{F} = \\langle \\psi_y, -\\psi_x \\rangle = \\langle ${P}, ${Qv} \\rangle$.`,
+                    `在 $(${x}, ${y})$ 处，$\\psi_y = ${psiY}$，$\\psi_x = ${psiX}$，所以 $\\mathbf{F} = \\langle \\psi_y, -\\psi_x \\rangle = \\langle ${P}, ${Qv} \\rangle$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$\\mathbf{F} \\cdot \\nabla\\psi = ${paren(P)} \\cdot ${paren(psiX)} + ${paren(Qv)} \\cdot ${paren(psiY)} = 0$: the velocity runs along the streamline through the point.`,
+                `$\\mathbf{F} \\cdot \\nabla\\psi = ${paren(P)} \\cdot ${paren(psiX)} + ${paren(Qv)} \\cdot ${paren(psiY)} = 0$：速度沿着过该点的流线。`,
+              ),
+            ),
+          },
+          [
+            [
+              [psiX, psiY],
+              "That is $\\nabla\\psi$; the velocity is $\\langle \\psi_y, -\\psi_x \\rangle$.",
+              "这是 $\\nabla\\psi$；速度是 $\\langle \\psi_y, -\\psi_x \\rangle$。",
+            ],
+            [[psiY, psiX], "The second entry is $-\\psi_x$, with a minus sign.", "第二个分量是 $-\\psi_x$，带负号。"],
+            [
+              [-P, -Qv],
+              "That uses the opposite convention $\\langle -\\psi_y, \\psi_x \\rangle$; here $P = \\psi_y$ and $Q = -\\psi_x$.",
+              "这用的是相反的约定 $\\langle -\\psi_y, \\psi_x \\rangle$；这里 $P = \\psi_y$，$Q = -\\psi_x$。",
+            ],
           ],
-          solution: t(
-            `$\\psi_y = ${poly([a, "x"], [2 * c, "y"])}$ and $\\psi_x = ${poly([a, "y"], [2 * b, "x"])}$, so $\\mathbf{F}(${x}, ${y}) = \\langle ${P}, ${Qv} \\rangle$.`,
-            `$\\psi_y = ${poly([a, "x"], [2 * c, "y"])}$，$\\psi_x = ${poly([a, "y"], [2 * b, "x"])}$，所以 $\\mathbf{F}(${x}, ${y}) = \\langle ${P}, ${Qv} \\rangle$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -3435,6 +3949,10 @@ export const theDivergenceOfAVectorField: TopicDef = {
     "The divergence div F = ∇ · F measures the net outward flux of a vector field per unit volume.",
     "散度 div F = ∇ · F 度量向量场单位体积向外的净通量。",
   ),
+  intro: t(
+    "For $\\mathbf{F} = \\langle x^2, yz, 3z \\rangle$, differentiate each component in its own variable: $\\frac{\\partial}{\\partial x}(x^2) = 2x$, $\\frac{\\partial}{\\partial y}(yz) = z$ and $\\frac{\\partial}{\\partial z}(3z) = 3$. So $\\nabla \\cdot \\mathbf{F} = 2x + z + 3$, and at $(1, 2, 3)$ it is $2 + 3 + 3 = 8$: the field spreads out there, like a source.\n\nCheck: the $y$-coordinate $2$ does not enter, because $yz$ is differentiated in $y$ and leaves $z$; changing the point to $(1, 5, 3)$ still gives $8$.\n\nIn this lesson we compute the divergence of a field, as a formula and at a point.",
+    "对 $\\mathbf{F} = \\langle x^2, yz, 3z \\rangle$，把每个分量对它自己的变量求导：$\\frac{\\partial}{\\partial x}(x^2) = 2x$，$\\frac{\\partial}{\\partial y}(yz) = z$，$\\frac{\\partial}{\\partial z}(3z) = 3$。所以 $\\nabla \\cdot \\mathbf{F} = 2x + z + 3$，在 $(1, 2, 3)$ 处为 $2 + 3 + 3 = 8$：场在那里向外发散，像一个源。\n\n检验：$y$ 坐标 $2$ 没有出现，因为 $yz$ 对 $y$ 求导后剩下 $z$；把点换成 $(1, 5, 3)$ 结果仍是 $8$。\n\n本课我们计算向量场的散度，既求公式，也求某点处的值。",
+  ),
   prerequisites: ["vector-fields"],
   encompasses: [],
   xp: 10,
@@ -3443,44 +3961,60 @@ export const theDivergenceOfAVectorField: TopicDef = {
       id: "computing-the-divergence-of-a-vector-field",
       title: t("Computing the divergence of a vector field", "计算向量场的散度"),
       explanation: t(
-        "Divergence adds the rate of change of each component in its own direction, measuring how much the field spreads out from a point. For a three-dimensional vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$, the divergence is the scalar field:\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}.$$",
-        "散度把每个分量沿自身方向的变化率加起来，衡量向量场从一点向外发散的程度。对于三维向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，散度是由下式给出的标量场：\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}$$",
+        "Divergence adds the rate of change of each component in its own direction, measuring how much the field spreads out from a point. For a three-dimensional vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$, the divergence is the scalar field:\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}.$$\n\nFor $\\mathbf{F} = \\langle 5x^2, -y^2, 4z^2 \\rangle$, $\\nabla \\cdot \\mathbf{F} = 10x - 2y + 8z$, which is $16$ at $(1, 1, 1)$.\n\n> **Watch out.** Add the derivatives of the components, not the components themselves, and keep the factor $2$ that differentiating a square brings. The divergence is a number at each point, not a vector.",
+        "散度把每个分量沿自身方向的变化率加起来，衡量向量场从一点向外发散的程度。对于三维向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，散度是由下式给出的标量场：\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}$$\n\n对 $\\mathbf{F} = \\langle 5x^2, -y^2, 4z^2 \\rangle$，$\\nabla \\cdot \\mathbf{F} = 10x - 2y + 8z$，在 $(1, 1, 1)$ 处为 $16$。\n\n> **注意。** 要加的是各分量的导数，不是分量本身；平方求导带出的因子 $2$ 不能丢。散度在每一点是一个数，不是向量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.nonZero(-3, 3);
         const pt: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
-
-        const ans = 2 * a * pt[0] + 2 * b * pt[1] + 2 * c * pt[2];
-
-        const prompt = t(
-          `Compute the divergence $\\operatorname{div}\\mathbf{F}$ of the vector field $\\mathbf{F}(x, y, z) = \\left\\langle ${poly([a, "x^2"])}, ${poly([b, "y^2"])}, ${poly([c, "z^2"])} \\right\\rangle$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$.`,
-          `计算向量场 $\\mathbf{F}(x, y, z) = \\left\\langle ${poly([a, "x^2"])}, ${poly([b, "y^2"])}, ${poly([c, "z^2"])} \\right\\rangle$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的散度 $\\operatorname{div}\\mathbf{F}$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute partial derivatives of the components:\n\n` +
-              `$\\frac{\\partial P}{\\partial x} = ${2 * a}x$\n\n` +
-              `$\\frac{\\partial Q}{\\partial y} = ${2 * b}y$\n\n` +
-              `$\\frac{\\partial R}{\\partial z} = ${2 * c}z$`,
-            `Sum the partial derivatives: $\\operatorname{div}\\mathbf{F} = ${poly([2 * a, "x"], [2 * b, "y"], [2 * c, "z"])}$.`,
-            `Substitute $(${pt[0]}, ${pt[1]}, ${pt[2]})$: $\\operatorname{div}\\mathbf{F}(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${2 * a}(${pt[0]}) + ${paren(2 * b)}(${pt[1]}) + ${paren(2 * c)}(${pt[2]}) = ${ans}$.`,
-          ),
-          steps(
-            `求各分量的偏导数：\n\n` +
-              `$\\frac{\\partial P}{\\partial x} = ${2 * a}x$\n\n` +
-              `$\\frac{\\partial Q}{\\partial y} = ${2 * b}y$\n\n` +
-              `$\\frac{\\partial R}{\\partial z} = ${2 * c}z$`,
-            `将偏导数相加：$\\operatorname{div}\\mathbf{F} = ${poly([2 * a, "x"], [2 * b, "y"], [2 * c, "z"])}$。`,
-            `代入点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$：$\\operatorname{div}\\mathbf{F}(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${2 * a}(${pt[0]}) + ${paren(2 * b)}(${pt[1]}) + ${paren(2 * c)}(${pt[2]}) = ${ans}$。`,
-          ),
-        );
+        const half = a * pt[0] + b * pt[1] + c * pt[2];
+        const ans = 2 * half;
+        const P = poly([a, "x^2"]);
+        const Qy = poly([b, "y^2"]);
+        const R = poly([c, "z^2"]);
+        const at = `(${pt[0]}, ${pt[1]}, ${pt[2]})`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Compute the divergence $\\operatorname{div}\\mathbf{F}$ of the vector field $\\mathbf{F}(x, y, z) = \\left\\langle ${P}, ${Qy}, ${R} \\right\\rangle$ at the point $${at}$.`,
+            `计算向量场 $\\mathbf{F}(x, y, z) = \\left\\langle ${P}, ${Qy}, ${R} \\right\\rangle$ 在点 $${at}$ 处的散度 $\\operatorname{div}\\mathbf{F}$。`,
+          ),
           answer: ans,
-          wrong: [a * pt[0] + b * pt[1] + c * pt[2], -ans, ans + 2],
+          mistakes: distinct(ans, [
+            why(
+              half,
+              `$\\frac{\\partial}{\\partial x}(${P}) = ${2 * a}x$: differentiating a square brings a factor $2$.`,
+              `$\\frac{\\partial}{\\partial x}(${P}) = ${2 * a}x$：平方求导带出因子 $2$。`,
+            ),
+            why(
+              a * pt[0] ** 2 + b * pt[1] ** 2 + c * pt[2] ** 2,
+              "That adds the components themselves; the divergence adds their derivatives.",
+              "这是把分量本身相加；散度加的是它们的导数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate each component in its own variable", "把每个分量对自己的变量求导"],
+                t(
+                  `$\\frac{\\partial P}{\\partial x} = ${2 * a}x$, $\\frac{\\partial Q}{\\partial y} = ${2 * b}y$ and $\\frac{\\partial R}{\\partial z} = ${2 * c}z$, so $\\operatorname{div}\\mathbf{F} = ${poly([2 * a, "x"], [2 * b, "y"], [2 * c, "z"])}$.`,
+                  `$\\frac{\\partial P}{\\partial x} = ${2 * a}x$，$\\frac{\\partial Q}{\\partial y} = ${2 * b}y$，$\\frac{\\partial R}{\\partial z} = ${2 * c}z$，所以 $\\operatorname{div}\\mathbf{F} = ${poly([2 * a, "x"], [2 * b, "y"], [2 * c, "z"])}$。`,
+                ),
+              ],
+              [
+                ["Substitute the point", "代入该点"],
+                t(
+                  `$${2 * a} \\cdot ${paren(pt[0])} + ${paren(2 * b)} \\cdot ${paren(pt[1])} + ${paren(2 * c)} \\cdot ${paren(pt[2])} = ${ans}$.`,
+                  `$${2 * a} \\cdot ${paren(pt[0])} + ${paren(2 * b)} \\cdot ${paren(pt[1])} + ${paren(2 * c)} \\cdot ${paren(pt[2])} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The divergence is $2(${poly([a, "x"], [b, "y"], [c, "z"])})$; at the point the bracket is $${half}$, and twice that is $${ans}$.`,
+              `散度为 $2(${poly([a, "x"], [b, "y"], [c, "z"])})$；在该点括号内为 $${half}$，两倍即 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3488,25 +4022,58 @@ export const theDivergenceOfAVectorField: TopicDef = {
       id: "the-divergence-at-a-point",
       title: t("The divergence at a point", "某点处的散度"),
       explanation: t(
-        "The divergence $\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z$ is a scalar function, so it can change from point to point. Positive divergence at a point means the flow spreads out there, like a source, and negative divergence means it converges, like a sink. Compute the three partial derivatives first, add them, and only then substitute the coordinates.",
-        "散度 $\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z$ 是标量函数，所以随点而变。某点散度为正说明流在那里发散，像源；为负说明汇聚，像汇。先求三个偏导数并相加，再代入坐标。",
+        "The divergence $\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z$ is a scalar function, so it can change from point to point. Positive divergence at a point means the flow spreads out there, like a source, and negative divergence means it converges, like a sink. Compute the three partial derivatives first, add them, and only then substitute the coordinates. For $\\mathbf{F} = \\langle xy^2, 5yz, xz \\rangle$ at $(2, 1, 1)$: $P_x = y^2 = 1$, $Q_y = 5z = 5$ and $R_z = x = 2$, so the divergence is $8$.\n\n> **Watch out.** Each component is differentiated in its own variable only: $P$ in $x$, $Q$ in $y$, $R$ in $z$. The other variables in a term stay as they are, so $\\frac{\\partial}{\\partial y}(5yz) = 5z$, not $5y$.",
+        "散度 $\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z$ 是标量函数，所以随点而变。某点散度为正说明流在那里发散，像源；为负说明汇聚，像汇。先求三个偏导数并相加，再代入坐标。对 $\\mathbf{F} = \\langle xy^2, 5yz, xz \\rangle$ 在 $(2, 1, 1)$ 处：$P_x = y^2 = 1$，$Q_y = 5z = 5$，$R_z = x = 2$，所以散度为 $8$。\n\n> **注意。** 每个分量只对它自己的变量求导：$P$ 对 $x$，$Q$ 对 $y$，$R$ 对 $z$。项中其他变量保持不变，所以 $\\frac{\\partial}{\\partial y}(5yz) = 5z$，不是 $5y$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-4, 4);
         const c = rng.nonZero(-3, 3);
         const [x, y, z] = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
-        const ans = 2 * a * x * y + b * z + 2 * c * x * z;
+        const [px, qy, rz] = [2 * a * x * y, b * z, 2 * c * x * z];
+        const ans = px + qy + rz;
+        const div = poly([2 * a, "xy"], [b, "z"], [2 * c, "xz"]);
         return numberProblem({
           prompt: t(
             `Find $\\nabla \\cdot \\mathbf{F}$ at $(${x}, ${y}, ${z})$ for $\\mathbf{F} = \\langle ${poly([a, "x^2y"])}, ${poly([b, "yz"])}, ${poly([c, "xz^2"])} \\rangle$.`,
             `对 $\\mathbf{F} = \\langle ${poly([a, "x^2y"])}, ${poly([b, "yz"])}, ${poly([c, "xz^2"])} \\rangle$ 求 $(${x}, ${y}, ${z})$ 处的 $\\nabla \\cdot \\mathbf{F}$。`,
           ),
           answer: ans,
-          wrong: [a * x * x + b * y + c * z * z, 2 * a * x * y + b * y + 2 * c * x * z, a * x * x * y + b * y * z + c * x * z * z],
-          solution: t(
-            `$\\nabla \\cdot \\mathbf{F} = ${poly([2 * a, "xy"], [b, "z"], [2 * c, "xz"])}$, which at $(${x}, ${y}, ${z})$ equals $${ans}$.`,
-            `$\\nabla \\cdot \\mathbf{F} = ${poly([2 * a, "xy"], [b, "z"], [2 * c, "xz"])}$，在 $(${x}, ${y}, ${z})$ 处等于 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              a * x * x + b * y + c * z * z,
+              "That differentiates $P$ in $y$, $Q$ in $z$ and $R$ in $x$; each component is differentiated in its own variable.",
+              "这是把 $P$ 对 $y$、$Q$ 对 $z$、$R$ 对 $x$ 求导；每个分量应对它自己的变量求导。",
+            ),
+            why(
+              2 * a * x * y + b * y + 2 * c * x * z,
+              `$\\frac{\\partial}{\\partial y}(${poly([b, "yz"])}) = ${poly([b, "z"])}$, not $${poly([b, "y"])}$.`,
+              `$\\frac{\\partial}{\\partial y}(${poly([b, "yz"])}) = ${poly([b, "z"])}$，不是 $${poly([b, "y"])}$。`,
+            ),
+            why(
+              a * x * x * y + b * y * z + c * x * z * z,
+              "That adds the components themselves; the divergence adds their derivatives.",
+              "这是把分量本身相加；散度加的是它们的导数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the three partial derivatives", "求三个偏导数"],
+                t(
+                  `$P_x = ${poly([2 * a, "xy"])}$, $Q_y = ${poly([b, "z"])}$ and $R_z = ${poly([2 * c, "xz"])}$, so $\\nabla \\cdot \\mathbf{F} = ${div}$.`,
+                  `$P_x = ${poly([2 * a, "xy"])}$，$Q_y = ${poly([b, "z"])}$，$R_z = ${poly([2 * c, "xz"])}$，所以 $\\nabla \\cdot \\mathbf{F} = ${div}$。`,
+                ),
+              ],
+              [
+                ["Substitute the point", "代入该点"],
+                t(`At $(${x}, ${y}, ${z})$ the divergence is $${ans}$.`, `在 $(${x}, ${y}, ${z})$ 处散度为 $${ans}$。`),
+              ],
+            ],
+            t(
+              `Term by term at the point: $P_x = ${px}$, $Q_y = ${qy}$ and $R_z = ${rz}$, which add up to $${ans}$.`,
+              `逐项在该点计算：$P_x = ${px}$，$Q_y = ${qy}$，$R_z = ${rz}$，和为 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -3522,6 +4089,10 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
     "Divergence is linear, obeys product rules with scalar fields, and characterizes incompressible (solenoidal) flows when div F = 0.",
     "散度具有线性性，满足与标量场的乘积法则，当 div F = 0 时表征不可压缩（无散）流场。",
   ),
+  intro: t(
+    "Is $\\mathbf{F} = \\langle 2x + y, z - 5y, 3z + x \\rangle$ incompressible? Its divergence is $\\frac{\\partial}{\\partial x}(2x + y) + \\frac{\\partial}{\\partial y}(z - 5y) + \\frac{\\partial}{\\partial z}(3z + x) = 2 - 5 + 3 = 0$, so it is solenoidal: it creates and destroys no flow anywhere.\n\nCheck: the terms $y$, $z$ and $x$ sit in components that are not differentiated in their variable, so they add nothing; only the coefficients $2$, $-5$ and $3$ count, and they sum to $0$.\n\nIn this lesson we find solenoidal fields and use the product rule $\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,\\nabla \\cdot \\mathbf{F}$.",
+    "$\\mathbf{F} = \\langle 2x + y, z - 5y, 3z + x \\rangle$ 是不可压缩的吗？它的散度为 $\\frac{\\partial}{\\partial x}(2x + y) + \\frac{\\partial}{\\partial y}(z - 5y) + \\frac{\\partial}{\\partial z}(3z + x) = 2 - 5 + 3 = 0$，所以它是无散场：在任何地方都不产生也不消灭流量。\n\n检验：$y$、$z$、$x$ 这几项所在的分量并不对它们求导，所以不起作用；只有系数 $2$、$-5$、$3$ 有贡献，和为 $0$。\n\n本课我们求无散场，并使用乘积法则 $\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,\\nabla \\cdot \\mathbf{F}$。",
+  ),
   prerequisites: ["the-divergence-of-a-vector-field"],
   encompasses: [{ topic: "the-divergence-of-a-vector-field", weight: 0.3 }],
   xp: 10,
@@ -3530,38 +4101,58 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
       id: "solenoidal-fields-and-divergence-properties",
       title: t("Solenoidal fields and divergence properties", "无散场与散度性质"),
       explanation: t(
-        "A field with zero divergence neither creates nor destroys flow at any point, like an incompressible fluid that only moves around. A vector field $\\mathbf{F}$ is called **solenoidal** or **incompressible** if $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$ everywhere.",
-        "散度为零的向量场在任何一点既不产生也不消灭流量，就像只会流动的不可压缩流体。若向量场 $\\mathbf{F}$ 处处满足 $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$，则称其为**无散场**或**不可压缩场**。",
+        "A field with zero divergence neither creates nor destroys flow at any point, like an incompressible fluid that only moves around. A vector field $\\mathbf{F}$ is called **solenoidal** or **incompressible** if $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$ everywhere. For $\\mathbf{F} = \\langle 6x + 2y, -2y - 3z, x + kz \\rangle$, the divergence is $6 - 2 + k$, so $k = -4$ makes it solenoidal.\n\n> **Watch out.** Only the terms of $P$ in $x$, of $Q$ in $y$ and of $R$ in $z$ count: the $2y$, $-3z$ and $x$ add nothing. Solve $\\text{div} = 0$ for $k$, which flips the sign of the rest.",
+        "散度为零的向量场在任何一点既不产生也不消灭流量，就像只会流动的不可压缩流体。若向量场 $\\mathbf{F}$ 处处满足 $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$，则称其为**无散场**或**不可压缩场**。对 $\\mathbf{F} = \\langle 6x + 2y, -2y - 3z, x + kz \\rangle$，散度为 $6 - 2 + k$，所以 $k = -4$ 时它是无散场。\n\n> **注意。** 只有 $P$ 中关于 $x$、$Q$ 中关于 $y$、$R$ 中关于 $z$ 的项有贡献：$2y$、$-3z$ 与 $x$ 都不起作用。由 $\\text{div} = 0$ 解出 $k$ 时，其余部分要变号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
         const drawn = rng.nonZero(-5, 5);
         const b = a + drawn === 0 ? a : drawn;
         const ans = -(a + b);
-
-        const prompt = t(
-          `Find the value of the constant $k$ that makes the vector field $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "x"], [2, "y"])}, ${poly([b, "y"], [-3, "z"])}, x + kz \\rangle$ solenoidal (incompressible) everywhere.`,
-          `求使向量场 $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "x"], [2, "y"])}, ${poly([b, "y"], [-3, "z"])}, x + kz \\rangle$ 处处无散（不可压缩）的常数 $k$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `A vector field is solenoidal when $\\operatorname{div}\\mathbf{F} = 0$.`,
-            `Compute $\\operatorname{div}\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"], [2, "y"])}) + \\frac{\\partial}{\\partial y}(${poly([b, "y"], [-3, "z"])}) + \\frac{\\partial}{\\partial z}(x + kz)$.`,
-            `$\\operatorname{div}\\mathbf{F} = ${a} + (${b}) + k = ${a + b} + k$.`,
-            `Setting $\\operatorname{div}\\mathbf{F} = 0$ gives $k = ${ans}$.`,
-          ),
-          steps(
-            `当 $\\operatorname{div}\\mathbf{F} = 0$ 时，向量场为无散场。`,
-            `计算 $\\operatorname{div}\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"], [2, "y"])}) + \\frac{\\partial}{\\partial y}(${poly([b, "y"], [-3, "z"])}) + \\frac{\\partial}{\\partial z}(x + kz)$。`,
-            `$\\operatorname{div}\\mathbf{F} = ${a} + (${b}) + k = ${a + b} + k$。`,
-            `令 $\\operatorname{div}\\mathbf{F} = 0$ 得 $k = ${ans}$。`,
-          ),
-        );
+        const P = poly([a, "x"], [2, "y"]);
+        const Qf = poly([b, "y"], [-3, "z"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of the constant $k$ that makes the vector field $\\mathbf{F}(x, y, z) = \\langle ${P}, ${Qf}, x + kz \\rangle$ solenoidal (incompressible) everywhere.`,
+            `求使向量场 $\\mathbf{F}(x, y, z) = \\langle ${P}, ${Qf}, x + kz \\rangle$ 处处无散（不可压缩）的常数 $k$ 的值。`,
+          ),
           answer: ans,
-          wrong: [a + b, a - b, b - a, 1 - (a + b)],
+          mistakes: distinct(ans, [
+            why(
+              a + b,
+              `$${a + b} + k = 0$ gives $k = ${ans}$: moving $${a + b}$ across changes its sign.`,
+              `由 $${a + b} + k = 0$ 得 $k = ${ans}$：把 $${a + b}$ 移到另一边要变号。`,
+            ),
+            why(
+              1 - (a + b),
+              "That also adds the coefficients $2$ and $-3$ of $y$ in $P$ and $z$ in $Q$; $P$ is differentiated in $x$ and $Q$ in $y$, so those terms give $0$.",
+              "这把 $P$ 中 $y$ 的系数 $2$ 与 $Q$ 中 $z$ 的系数 $-3$ 也加了进去；$P$ 对 $x$ 求导、$Q$ 对 $y$ 求导，这些项都给出 $0$。",
+            ),
+            why(
+              -(a + b) - 1,
+              "That adds $\\frac{\\partial R}{\\partial x} = 1$; the divergence uses $\\frac{\\partial R}{\\partial z} = k$ only.",
+              "这加上了 $\\frac{\\partial R}{\\partial x} = 1$；散度只用 $\\frac{\\partial R}{\\partial z} = k$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the divergence", "求散度"],
+                t(
+                  `$\\frac{\\partial}{\\partial x}(${P}) + \\frac{\\partial}{\\partial y}(${Qf}) + \\frac{\\partial}{\\partial z}(x + kz) = ${a} + ${paren(b)} + k = ${poly([1, "k"], [a + b, ""])}$.`,
+                  `$\\frac{\\partial}{\\partial x}(${P}) + \\frac{\\partial}{\\partial y}(${Qf}) + \\frac{\\partial}{\\partial z}(x + kz) = ${a} + ${paren(b)} + k = ${poly([1, "k"], [a + b, ""])}$。`,
+                ),
+              ],
+              [
+                ["Set it to zero", "令其为零"],
+                t(`$${poly([1, "k"], [a + b, ""])} = 0$ gives $k = ${ans}$.`, `由 $${poly([1, "k"], [a + b, ""])} = 0$ 得 $k = ${ans}$。`),
+              ],
+            ],
+            t(
+              `With $k = ${ans}$ the three derivatives are $${a}$, $${b}$ and $${ans}$, and $${a} + ${paren(b)} + ${paren(ans)} = 0$.`,
+              `取 $k = ${ans}$，三个导数为 $${a}$、$${b}$、$${ans}$，且 $${a} + ${paren(b)} + ${paren(ans)} = 0$。`,
+            ),
+          ),
         });
       },
     },
@@ -3569,8 +4160,8 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
       id: "the-product-rule-for-divergence",
       title: t("The product rule for divergence", "散度的乘积法则"),
       explanation: t(
-        "The divergence of a scalar function times a field follows a product rule:\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F}).$$\n\nFor $f = x$ the gradient is $\\langle 1, 0, 0 \\rangle$, so the first term is just the first component of $\\mathbf{F}$. The rule saves expanding $f\\mathbf{F}$ before differentiating.",
-        "标量函数乘以场的散度满足乘积法则：\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F})$$\n\n对 $f = x$，梯度为 $\\langle 1, 0, 0 \\rangle$，所以第一项就是 $\\mathbf{F}$ 的第一个分量。这一法则省去了先展开 $f\\mathbf{F}$ 再求导。",
+        "The divergence of a scalar function times a field follows a product rule:\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F}).$$\n\nFor $f = x$ the gradient is $\\langle 1, 0, 0 \\rangle$, so the first term is just the first component of $\\mathbf{F}$. The rule saves expanding $f\\mathbf{F}$ before differentiating. For $f = x$ and $\\mathbf{F} = \\langle x, y, z \\rangle$: $\\nabla x \\cdot \\mathbf{F} = x$ and $x\\,(\\nabla \\cdot \\mathbf{F}) = 3x$, so $\\nabla \\cdot (x\\mathbf{F}) = 4x$.\n\n> **Watch out.** Both terms are needed, and the divergence of $\\mathbf{F}$ is multiplied by $f$ itself: forgetting either term, or the factor $f$, gives a wrong value.",
+        "标量函数乘以场的散度满足乘积法则：\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F})$$\n\n对 $f = x$，梯度为 $\\langle 1, 0, 0 \\rangle$，所以第一项就是 $\\mathbf{F}$ 的第一个分量。这一法则省去了先展开 $f\\mathbf{F}$ 再求导。对 $f = x$，$\\mathbf{F} = \\langle x, y, z \\rangle$：$\\nabla x \\cdot \\mathbf{F} = x$，$x\\,(\\nabla \\cdot \\mathbf{F}) = 3x$，所以 $\\nabla \\cdot (x\\mathbf{F}) = 4x$。\n\n> **注意。** 两项都不能少，而且 $\\mathbf{F}$ 的散度要乘以 $f$ 本身：漏掉任一项或漏掉因子 $f$ 都会出错。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -3584,10 +4175,44 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
             `$\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$。求 $(${x}, ${y}, ${z})$ 处的 $\\nabla \\cdot (x\\mathbf{F})$。`,
           ),
           answer: ans,
-          wrong: [x * (b + c), a * y, b + c, a * y + b + c],
-          solution: t(
-            `$\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$ and $\\nabla \\cdot \\mathbf{F} = ${b + c}$, so $\\nabla \\cdot (x\\mathbf{F}) = ${poly([a, "y"], [b + c, "x"])}$, which is $${ans}$ at the point.`,
-            `$\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$，$\\nabla \\cdot \\mathbf{F} = ${b + c}$，所以 $\\nabla \\cdot (x\\mathbf{F}) = ${poly([a, "y"], [b + c, "x"])}$，在该点为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              x * (b + c),
+              `That leaves out $\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$.`,
+              `这漏掉了 $\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$。`,
+            ),
+            why(
+              a * y,
+              `That leaves out $x\\,(\\nabla \\cdot \\mathbf{F}) = ${poly([b + c, "x"])}$.`,
+              `这漏掉了 $x\\,(\\nabla \\cdot \\mathbf{F}) = ${poly([b + c, "x"])}$。`,
+            ),
+            why(
+              a * y + b + c,
+              `The divergence $${b + c}$ is multiplied by $f = x$, giving $${poly([b + c, "x"])}$.`,
+              `散度 $${b + c}$ 要乘以 $f = x$，得 $${poly([b + c, "x"])}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the two pieces", "计算两部分"],
+                t(
+                  `$\\nabla x = \\langle 1, 0, 0 \\rangle$, so $\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$; and $\\nabla \\cdot \\mathbf{F} = 0 + ${paren(b)} + ${paren(c)} = ${b + c}$.`,
+                  `$\\nabla x = \\langle 1, 0, 0 \\rangle$，所以 $\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$；而 $\\nabla \\cdot \\mathbf{F} = 0 + ${paren(b)} + ${paren(c)} = ${b + c}$。`,
+                ),
+              ],
+              [
+                ["Apply the product rule", "应用乘积法则"],
+                t(
+                  `$\\nabla \\cdot (x\\mathbf{F}) = ${poly([a, "y"], [b + c, "x"])}$, which is $${ans}$ at $(${x}, ${y}, ${z})$.`,
+                  `$\\nabla \\cdot (x\\mathbf{F}) = ${poly([a, "y"], [b + c, "x"])}$，在 $(${x}, ${y}, ${z})$ 处为 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Expand first: $x\\mathbf{F} = \\langle ${poly([a, "xy"])}, ${poly([b, "xy"])}, ${poly([c, "xz"])} \\rangle$, whose divergence is $${poly([a, "y"], [b, "x"], [c, "x"])}$, the same.`,
+              `先展开：$x\\mathbf{F} = \\langle ${poly([a, "xy"])}, ${poly([b, "xy"])}, ${poly([c, "xz"])} \\rangle$，其散度为 $${poly([a, "y"], [b, "x"], [c, "x"])}$，结果相同。`,
+            ),
           ),
         });
       },
@@ -3603,6 +4228,10 @@ export const theCurlOfAVectorField: TopicDef = {
     "The curl of F, curl F = ∇ × F, is a vector field measuring the tendency of particles to rotate about each point.",
     "F 的旋度 curl F = ∇ × F 是一个度量流体微元在各点附近旋转趋势的向量场。",
   ),
+  intro: t(
+    "The field $\\mathbf{F} = \\langle -y, x, 0 \\rangle$ swirls counterclockwise about the $z$-axis. Its curl is $\\left\\langle \\frac{\\partial 0}{\\partial y} - \\frac{\\partial x}{\\partial z}, \\frac{\\partial (-y)}{\\partial z} - \\frac{\\partial 0}{\\partial x}, \\frac{\\partial x}{\\partial x} - \\frac{\\partial (-y)}{\\partial y} \\right\\rangle = \\langle 0, 0, 2 \\rangle$, pointing up the axis of rotation.\n\nCheck: by the right-hand rule, fingers curling counterclockwise in the $xy$-plane put the thumb along $+\\mathbf{k}$, matching the sign of the $\\mathbf{k}$-entry $2$.\n\nIn this lesson we compute the curl of space fields and the scalar curl of plane fields.",
+    "场 $\\mathbf{F} = \\langle -y, x, 0 \\rangle$ 绕 $z$ 轴逆时针旋转。它的旋度为 $\\left\\langle \\frac{\\partial 0}{\\partial y} - \\frac{\\partial x}{\\partial z}, \\frac{\\partial (-y)}{\\partial z} - \\frac{\\partial 0}{\\partial x}, \\frac{\\partial x}{\\partial x} - \\frac{\\partial (-y)}{\\partial y} \\right\\rangle = \\langle 0, 0, 2 \\rangle$，沿旋转轴向上。\n\n检验：按右手定则，四指在 $xy$ 平面内逆时针弯曲时拇指指向 $+\\mathbf{k}$，与 $\\mathbf{k}$ 分量 $2$ 的符号一致。\n\n本课我们计算空间场的旋度和平面场的标量旋度。",
+  ),
   prerequisites: ["the-cross-product-of-two-vectors", "vector-fields"],
   encompasses: [],
   xp: 10,
@@ -3611,56 +4240,70 @@ export const theCurlOfAVectorField: TopicDef = {
       id: "computing-the-curl-of-a-vector-field",
       title: t("Computing the curl of a vector field", "计算向量场的旋度"),
       explanation: t(
-        "Curl measures how much a field rotates around each point, and the determinant pattern is a convenient way to remember its three components. For a vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$ in $\\mathbb{R}^3$, the curl is defined by the formal determinant:\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle.$$",
-        "旋度衡量向量场绕每一点旋转的程度，行列式的形式是记住它三个分量的方便方法。对于 $\\mathbb{R}^3$ 中的向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，旋度通过形式行列式定义：\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$$",
+        "Curl measures how much a field rotates around each point, and the determinant pattern is a convenient way to remember its three components. For a vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$ in $\\mathbb{R}^3$, the curl is defined by the formal determinant:\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle.$$\n\nFor $\\mathbf{F} = \\langle yz, 4xz, xy \\rangle$ the entries are $x - 4x$, $y - y$ and $4z - z$, so $\\nabla \\times \\mathbf{F} = \\langle -3x, 0, 3z \\rangle$.\n\n> **Watch out.** Each entry is a difference taken in a fixed order; reversing it negates the entry. The middle entry is $P_z - R_x$, which the determinant gives with a minus sign in front, so it is easy to get backwards.",
+        "旋度衡量向量场绕每一点旋转的程度，行列式的形式是记住它三个分量的方便方法。对于 $\\mathbb{R}^3$ 中的向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，旋度通过形式行列式定义：\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$$\n\n对 $\\mathbf{F} = \\langle yz, 4xz, xy \\rangle$，三个分量为 $x - 4x$、$y - y$、$4z - z$，所以 $\\nabla \\times \\mathbf{F} = \\langle -3x, 0, 3z \\rangle$。\n\n> **注意。** 每个分量都是按固定顺序作差，顺序反了分量就变号。中间分量是 $P_z - R_x$，行列式展开时它前面带负号，所以很容易弄反。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.nonZero(-3, 3);
         const pt: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
-
-        // F = <a y z, b x z, c x y>
-        // dR/dy = cx, dQ/dz = bx => (c - b) x
-        // dP/dz = ay, dR/dx = cy => (a - c) y
-        // dQ/dx = bz, dP/dy = az => (b - a) z
+        // F = <a y z, b x z, c x y>: curl = <(c - b) x, (a - c) y, (b - a) z>
         const ansX = (c - b) * pt[0];
         const ansY = (a - c) * pt[1];
         const ansZ = (b - a) * pt[2];
         const answer: Vec3 = [ansX, ansY, ansZ];
-
-        const prompt = t(
-          `Calculate the curl $\\operatorname{curl}\\mathbf{F}$ of the vector field $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "yz"])}, ${poly([b, "xz"])}, ${poly([c, "xy"])} \\rangle$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `计算向量场 $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "yz"])}, ${poly([b, "xz"])}, ${poly([c, "xy"])} \\rangle$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的旋度 $\\operatorname{curl}\\mathbf{F}$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the curl formula $\\nabla \\times \\mathbf{F} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$:`,
-            `$\\mathbf{i}$-component: $\\frac{\\partial}{\\partial y}(${poly([c, "xy"])}) - \\frac{\\partial}{\\partial z}(${poly([b, "xz"])}) = ${poly([c, "x"], [-b, "x"])} = ${poly([c - b, "x"])}$`,
-            `$\\mathbf{j}$-component: $\\frac{\\partial}{\\partial z}(${poly([a, "yz"])}) - \\frac{\\partial}{\\partial x}(${poly([c, "xy"])}) = ${poly([a, "y"], [-c, "y"])} = ${poly([a - c, "y"])}$`,
-            `$\\mathbf{k}$-component: $\\frac{\\partial}{\\partial x}(${poly([b, "xz"])}) - \\frac{\\partial}{\\partial y}(${poly([a, "yz"])}) = ${poly([b, "z"], [-a, "z"])} = ${poly([b - a, "z"])}$`,
-            `Evaluate at $(${pt[0]}, ${pt[1]}, ${pt[2]})$ to obtain $${v3L(answer)}$.`,
-          ),
-          steps(
-            `应用旋度公式 $\\nabla \\times \\mathbf{F} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$：`,
-            `$\\mathbf{i}$ 分量：$\\frac{\\partial}{\\partial y}(${poly([c, "xy"])}) - \\frac{\\partial}{\\partial z}(${poly([b, "xz"])}) = ${poly([c, "x"], [-b, "x"])} = ${poly([c - b, "x"])}$`,
-            `$\\mathbf{j}$ 分量：$\\frac{\\partial}{\\partial z}(${poly([a, "yz"])}) - \\frac{\\partial}{\\partial x}(${poly([c, "xy"])}) = ${poly([a, "y"], [-c, "y"])} = ${poly([a - c, "y"])}$`,
-            `$\\mathbf{k}$ 分量：$\\frac{\\partial}{\\partial x}(${poly([b, "xz"])}) - \\frac{\\partial}{\\partial y}(${poly([a, "yz"])}) = ${poly([b, "z"], [-a, "z"])} = ${poly([b - a, "z"])}$`,
-            `在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处求值得到 $${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [-ansX, -ansY, -ansZ],
-            [ansY, ansX, ansZ],
-            [0, 0, 0],
+        const at = `(${pt[0]}, ${pt[1]}, ${pt[2]})`;
+        return located(
+          {
+            prompt: t(
+              `Calculate the curl $\\operatorname{curl}\\mathbf{F}$ of the vector field $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "yz"])}, ${poly([b, "xz"])}, ${poly([c, "xy"])} \\rangle$ at the point $${at}$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `计算向量场 $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "yz"])}, ${poly([b, "xz"])}, ${poly([c, "xy"])} \\rangle$ 在点 $${at}$ 处的旋度 $\\operatorname{curl}\\mathbf{F}$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["The first and last entries", "第一个与最后一个分量"],
+                  t(
+                    `$R_y - Q_z = ${poly([c, "x"], [-b, "x"])} = ${poly([c - b, "x"])}$ and $Q_x - P_y = ${poly([b, "z"], [-a, "z"])} = ${poly([b - a, "z"])}$.`,
+                    `$R_y - Q_z = ${poly([c, "x"], [-b, "x"])} = ${poly([c - b, "x"])}$，$Q_x - P_y = ${poly([b, "z"], [-a, "z"])} = ${poly([b - a, "z"])}$。`,
+                  ),
+                ],
+                [
+                  ["The middle entry", "中间分量"],
+                  t(
+                    `$P_z - R_x = ${poly([a, "y"], [-c, "y"])} = ${poly([a - c, "y"])}$.`,
+                    `$P_z - R_x = ${poly([a, "y"], [-c, "y"])} = ${poly([a - c, "y"])}$。`,
+                  ),
+                ],
+                [
+                  ["Evaluate at the point", "在该点求值"],
+                  t(`At $${at}$ the curl is $${v3L(answer)}$.`, `在 $${at}$ 处旋度为 $${v3L(answer)}$。`),
+                ],
+              ],
+              t(
+                `Every curl has zero divergence, and indeed $\\nabla \\cdot \\langle ${poly([c - b, "x"])}, ${poly([a - c, "y"])}, ${poly([b - a, "z"])} \\rangle = ${c - b} + ${paren(a - c)} + ${paren(b - a)} = 0$.`,
+                `任何旋度场的散度都为零，确实 $\\nabla \\cdot \\langle ${poly([c - b, "x"])}, ${poly([a - c, "y"])}, ${poly([b - a, "z"])} \\rangle = ${c - b} + ${paren(a - c)} + ${paren(b - a)} = 0$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [-ansX, -ansY, -ansZ],
+              "Each difference was taken in the reverse order, which negates every entry.",
+              "每个差都取反了顺序，所有分量都变了号。",
+            ],
+            [[ansX, -ansY, ansZ], "The middle entry is $P_z - R_x$, not $R_x - P_z$.", "中间分量是 $P_z - R_x$，不是 $R_x - P_z$。"],
+            [
+              [(c + b) * pt[0], (a + c) * pt[1], (b + a) * pt[2]],
+              "Each entry is a difference of two partial derivatives, not a sum.",
+              "每个分量是两个偏导数之差，不是之和。",
+            ],
           ],
-        });
+        );
       },
     },
     {
@@ -3668,8 +4311,8 @@ export const theCurlOfAVectorField: TopicDef = {
       figure: multivariableDrawings1["the-curl-of-a-vector-field#the-scalar-curl-of-a-plane-field-at-a-point"],
       title: t("The scalar curl of a plane field at a point", "平面场在某点的标量旋度"),
       explanation: t(
-        "For a plane field $\\mathbf{F} = \\langle P, Q \\rangle$, viewed as $\\langle P, Q, 0 \\rangle$ in space, the curl points along $\\mathbf{k}$ with size\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}.$$\n\nThis scalar curl measures the local rotation: positive means a tiny paddle wheel would spin counterclockwise, negative means clockwise.",
-        "对平面场 $\\mathbf{F} = \\langle P, Q \\rangle$，视为空间中的 $\\langle P, Q, 0 \\rangle$，旋度沿 $\\mathbf{k}$ 方向，大小为\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$$\n\n这个标量旋度衡量局部转动：为正表示小桨轮逆时针转，为负表示顺时针转。",
+        "For a plane field $\\mathbf{F} = \\langle P, Q \\rangle$, viewed as $\\langle P, Q, 0 \\rangle$ in space, the curl points along $\\mathbf{k}$ with size\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}.$$\n\nThis scalar curl measures the local rotation: positive means a tiny paddle wheel would spin counterclockwise, negative means clockwise. For $\\mathbf{F} = \\langle xy^2, x^2 + 4y \\rangle$ at $(1, 2)$: $Q_x = 2x = 2$ and $P_y = 2xy = 4$, so the scalar curl is $-2$, a clockwise spin.\n\n> **Watch out.** It is $Q_x - P_y$, in that order: $Q$ in $x$ minus $P$ in $y$. Reversing the order flips the sign, and so the direction of spin.",
+        "对平面场 $\\mathbf{F} = \\langle P, Q \\rangle$，视为空间中的 $\\langle P, Q, 0 \\rangle$，旋度沿 $\\mathbf{k}$ 方向，大小为\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$$\n\n这个标量旋度衡量局部转动：为正表示小桨轮逆时针转，为负表示顺时针转。对 $\\mathbf{F} = \\langle xy^2, x^2 + 4y \\rangle$ 在 $(1, 2)$ 处：$Q_x = 2x = 2$，$P_y = 2xy = 4$，所以标量旋度为 $-2$，顺时针转。\n\n> **注意。** 是 $Q_x - P_y$，顺序固定：$Q$ 对 $x$ 求导减去 $P$ 对 $y$ 求导。顺序反了符号就变，转向也随之相反。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3678,17 +4321,43 @@ export const theCurlOfAVectorField: TopicDef = {
         const d = rng.nonZero(-4, 4);
         const x = rng.int(-3, 3);
         const y = rng.int(-3, 3);
-        const ans = 3 * c * x * x + d - a * x * x - b;
+        const qx = 3 * c * x * x + d;
+        const py = a * x * x + b;
+        const ans = qx - py;
         return numberProblem({
           prompt: t(
             `Find $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$ at $(${x}, ${y})$ for $\\mathbf{F} = \\langle ${poly([a, "x^2y"], [b, "y"])}, ${poly([c, "x^3"], [d, "x"])} \\rangle$.`,
             `对 $\\mathbf{F} = \\langle ${poly([a, "x^2y"], [b, "y"])}, ${poly([c, "x^3"], [d, "x"])} \\rangle$ 求 $(${x}, ${y})$ 处的 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$。`,
           ),
           answer: ans,
-          wrong: [-ans, 3 * c * x * x + d + a * x * x + b, 3 * c * x * x + d, 2 * a * x * y],
-          solution: t(
-            `$Q_x = ${poly([3 * c, "x^2"], [d, ""])}$ and $P_y = ${poly([a, "x^2"], [b, ""])}$, so the scalar curl is $${poly([3 * c - a, "x^2"], [d - b, ""])}$, which is $${ans}$ at $x = ${x}$.`,
-            `$Q_x = ${poly([3 * c, "x^2"], [d, ""])}$，$P_y = ${poly([a, "x^2"], [b, ""])}$，所以标量旋度为 $${poly([3 * c - a, "x^2"], [d - b, ""])}$，在 $x = ${x}$ 处为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(-ans, "That is $P_y - Q_x$; the scalar curl is $Q_x - P_y$.", "这是 $P_y - Q_x$；标量旋度是 $Q_x - P_y$。"),
+            why(qx + py, `$P_y = ${py}$ is subtracted, not added.`, `$P_y = ${py}$ 应当减去，不是加上。`),
+            why(qx, `That leaves out $P_y = ${poly([a, "x^2"], [b, ""])}$.`, `这漏掉了 $P_y = ${poly([a, "x^2"], [b, ""])}$。`),
+            why(
+              2 * a * x * y,
+              `That is $P_x = ${poly([2 * a, "xy"])}$; the scalar curl differentiates $Q$ in $x$ and $P$ in $y$.`,
+              `这是 $P_x = ${poly([2 * a, "xy"])}$；标量旋度是 $Q$ 对 $x$、$P$ 对 $y$ 求导。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the two partials", "求两个偏导"],
+                t(
+                  `$Q_x = ${poly([3 * c, "x^2"], [d, ""])}$ and $P_y = ${poly([a, "x^2"], [b, ""])}$, so $Q_x - P_y = ${poly([3 * c - a, "x^2"], [d - b, ""])}$.`,
+                  `$Q_x = ${poly([3 * c, "x^2"], [d, ""])}$，$P_y = ${poly([a, "x^2"], [b, ""])}$，所以 $Q_x - P_y = ${poly([3 * c - a, "x^2"], [d - b, ""])}$。`,
+                ),
+              ],
+              [
+                ["Evaluate", "代入求值"],
+                t(`At $x = ${x}$ this is $${ans}$; $y$ does not appear.`, `在 $x = ${x}$ 处它等于 $${ans}$；式中不含 $y$。`),
+              ],
+            ],
+            t(
+              `Separately at the point, $Q_x = ${qx}$ and $P_y = ${py}$, and $${qx} - ${paren(py)} = ${ans}$.`,
+              `分别在该点计算，$Q_x = ${qx}$，$P_y = ${py}$，且 $${qx} - ${paren(py)} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -3704,6 +4373,10 @@ export const propertiesOfTheCurlOperator: TopicDef = {
     "Curl is linear, satisfies curl(∇f) = 0 (gradient fields are irrotational), and div(curl F) = 0 (curl fields are solenoidal).",
     "旋度算子是线性的，满足 curl(∇f) = 0（梯度场无旋）以及 div(curl F) = 0（旋度场无散）。",
   ),
+  intro: t(
+    "Take $f = x^2y$, so $\\nabla f = \\langle 2xy, x^2, 0 \\rangle$. Its curl has $\\mathbf{k}$-entry $\\frac{\\partial}{\\partial x}(x^2) - \\frac{\\partial}{\\partial y}(2xy) = 2x - 2x = 0$, and the other two entries are $0$ because nothing depends on $z$ and the third component is $0$. So $\\nabla \\times \\nabla f = \\mathbf{0}$.\n\nCheck: the $\\mathbf{k}$-entry is $f_{yx} - f_{xy}$, the two mixed partials of $f$ in opposite orders, which are equal for any smooth $f$.\n\nIn this lesson we use the identities $\\nabla \\times \\nabla f = \\mathbf{0}$ and $\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = 0$ and find irrotational fields.",
+    "取 $f = x^2y$，则 $\\nabla f = \\langle 2xy, x^2, 0 \\rangle$。它的旋度的 $\\mathbf{k}$ 分量为 $\\frac{\\partial}{\\partial x}(x^2) - \\frac{\\partial}{\\partial y}(2xy) = 2x - 2x = 0$，另外两个分量为 $0$，因为没有任何量依赖 $z$ 且第三个分量为 $0$。所以 $\\nabla \\times \\nabla f = \\mathbf{0}$。\n\n检验：$\\mathbf{k}$ 分量就是 $f_{yx} - f_{xy}$，即 $f$ 按相反顺序求的两个混合偏导，对光滑的 $f$ 二者相等。\n\n本课我们使用恒等式 $\\nabla \\times \\nabla f = \\mathbf{0}$ 与 $\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = 0$，并求无旋场。",
+  ),
   prerequisites: ["the-curl-of-a-vector-field", "properties-of-the-divergence-operator"],
   encompasses: [{ topic: "the-curl-of-a-vector-field", weight: 0.3 }],
   xp: 10,
@@ -3712,40 +4385,53 @@ export const propertiesOfTheCurlOperator: TopicDef = {
       id: "identities-and-irrotational-fields",
       title: t("Identities and irrotational fields", "重要恒等式与无旋场"),
       explanation: t(
-        "Two fundamental differential identities link grad, curl, and div:\n\n1. $\\operatorname{curl}(\\nabla f) = \\mathbf{0}$ for every twice continuously differentiable scalar function $f$. A vector field with $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$ is called **irrotational**.\n2. $\\operatorname{div}(\\operatorname{curl}\\mathbf{F}) = 0$ for every twice continuously differentiable vector field $\\mathbf{F}$.",
-        "梯度、旋度与散度之间有两个基本微分恒等式：\n\n1. 对任意二阶连续可微标量函数 $f$，有 $\\operatorname{curl}(\\nabla f) = \\mathbf{0}$。满足 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$ 的向量场称为**无旋场**。\n2. 对任意二阶连续可微向量场 $\\mathbf{F}$，有 $\\operatorname{div}(\\operatorname{curl}\\mathbf{F}) = 0$。",
+        "Two fundamental differential identities link grad, curl, and div:\n\n1. $\\operatorname{curl}(\\nabla f) = \\mathbf{0}$ for every twice continuously differentiable scalar function $f$. A vector field with $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$ is called **irrotational**.\n2. $\\operatorname{div}(\\operatorname{curl}\\mathbf{F}) = 0$ for every twice continuously differentiable vector field $\\mathbf{F}$.\n\nFor $\\mathbf{F} = \\langle 3y + z, kx, x \\rangle$, the curl is $\\langle 0 - 0, 1 - 1, k - 3 \\rangle$, so $k = 3$ makes it irrotational; then $\\mathbf{F} = \\nabla(3xy + xz)$.\n\n> **Watch out.** Irrotational means all three entries of the curl vanish. The $\\mathbf{k}$-entry is $Q_x - P_y$, so setting it to zero gives $k = P_y$, with the same sign.",
+        "梯度、旋度与散度之间有两个基本微分恒等式：\n\n1. 对任意二阶连续可微标量函数 $f$，有 $\\operatorname{curl}(\\nabla f) = \\mathbf{0}$。满足 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$ 的向量场称为**无旋场**。\n2. 对任意二阶连续可微向量场 $\\mathbf{F}$，有 $\\operatorname{div}(\\operatorname{curl}\\mathbf{F}) = 0$。\n\n对 $\\mathbf{F} = \\langle 3y + z, kx, x \\rangle$，旋度为 $\\langle 0 - 0, 1 - 1, k - 3 \\rangle$，所以 $k = 3$ 时它无旋；此时 $\\mathbf{F} = \\nabla(3xy + xz)$。\n\n> **注意。** 无旋意味着旋度的三个分量都为零。$\\mathbf{k}$ 分量是 $Q_x - P_y$，令其为零得 $k = P_y$，符号相同。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-25, 25);
         const ans = a;
-
-        const prompt = t(
-          `Find the constant $k$ that makes the vector field $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "y"])}, kx, 3z^2 \\rangle$ irrotational (that is, $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$).`,
-          `求使向量场 $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "y"])}, kx, 3z^2 \\rangle$ 为无旋场（即 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$）的常数 $k$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `A vector field is irrotational if $\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\mathbf{0}$.`,
-            `Compute the components of $\\operatorname{curl}\\mathbf{F}$:\n\n` +
-              `$\\mathbf{i}$-component: $\\frac{\\partial}{\\partial y}(3z^2) - \\frac{\\partial}{\\partial z}(kx) = 0 - 0 = 0$.\n\n` +
-              `$\\mathbf{j}$-component: $\\frac{\\partial}{\\partial z}(${poly([a, "y"])}) - \\frac{\\partial}{\\partial x}(3z^2) = 0 - 0 = 0$.\n\n` +
-              `$\\mathbf{k}$-component: $\\frac{\\partial}{\\partial x}(kx) - \\frac{\\partial}{\\partial y}(${poly([a, "y"])}) = k - (${a})$.`,
-            `For $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$, the $\\mathbf{k}$-component must vanish: $${poly([1, "k"], [-a, ""])} = 0 \\implies k = ${ans}$.`,
-          ),
-          steps(
-            `当 $\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\mathbf{0}$ 时，向量场为无旋场。`,
-            `计算 $\\operatorname{curl}\\mathbf{F}$ 的各分量：\n\n` +
-              `$\\mathbf{i}$ 分量：$\\frac{\\partial}{\\partial y}(3z^2) - \\frac{\\partial}{\\partial z}(kx) = 0 - 0 = 0$。\n\n` +
-              `$\\mathbf{j}$ 分量：$\\frac{\\partial}{\\partial z}(${poly([a, "y"])}) - \\frac{\\partial}{\\partial x}(3z^2) = 0 - 0 = 0$。\n\n` +
-              `$\\mathbf{k}$ 分量：$\\frac{\\partial}{\\partial x}(kx) - \\frac{\\partial}{\\partial y}(${poly([a, "y"])}) = k - (${a})$。`,
-            `要使 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$，$\\mathbf{k}$ 分量必须为零：$${poly([1, "k"], [-a, ""])} = 0 \\implies k = ${ans}$。`,
-          ),
-        );
+        const P = poly([a, "y"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the constant $k$ that makes the vector field $\\mathbf{F}(x, y, z) = \\langle ${P}, kx, 3z^2 \\rangle$ irrotational (that is, $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$).`,
+            `求使向量场 $\\mathbf{F}(x, y, z) = \\langle ${P}, kx, 3z^2 \\rangle$ 为无旋场（即 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$）的常数 $k$ 的值。`,
+          ),
           answer: ans,
-          wrong: [-ans, ans + 1, 0],
+          mistakes: distinct(ans, [
+            why(
+              -ans,
+              `The $\\mathbf{k}$-entry is $Q_x - P_y = k - ${paren(a)}$, so $k = ${a}$, with the same sign as $P_y$.`,
+              `$\\mathbf{k}$ 分量为 $Q_x - P_y = k - ${paren(a)}$，所以 $k = ${a}$，与 $P_y$ 同号。`,
+            ),
+            why(
+              0,
+              `With $k = 0$ the $\\mathbf{k}$-entry is $0 - ${paren(a)} = ${-a}$, not $0$; it vanishes only when $k = ${a}$.`,
+              `取 $k = 0$ 时 $\\mathbf{k}$ 分量为 $0 - ${paren(a)} = ${-a}$，不是 $0$；只有 $k = ${a}$ 时它才为零。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["The first two entries", "前两个分量"],
+                t(
+                  `$R_y - Q_z = 0 - 0 = 0$ and $P_z - R_x = 0 - 0 = 0$, whatever $k$ is.`,
+                  `$R_y - Q_z = 0 - 0 = 0$，$P_z - R_x = 0 - 0 = 0$，与 $k$ 无关。`,
+                ),
+              ],
+              [
+                ["The last entry", "最后一个分量"],
+                t(
+                  `$Q_x - P_y = k - ${paren(a)}$, which is $0$ when $k = ${ans}$.`,
+                  `$Q_x - P_y = k - ${paren(a)}$，当 $k = ${ans}$ 时为 $0$。`,
+                ),
+              ],
+            ],
+            t(
+              `With $k = ${ans}$, $\\mathbf{F} = \\langle ${P}, ${poly([a, "x"])}, 3z^2 \\rangle = \\nabla(${poly([a, "xy"])} + z^3)$, a gradient, so its curl is $\\mathbf{0}$.`,
+              `取 $k = ${ans}$，$\\mathbf{F} = \\langle ${P}, ${poly([a, "x"])}, 3z^2 \\rangle = \\nabla(${poly([a, "xy"])} + z^3)$，是梯度场，所以旋度为 $\\mathbf{0}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3753,33 +4439,66 @@ export const propertiesOfTheCurlOperator: TopicDef = {
       id: "gradient-fields-are-irrotational",
       title: t("Gradient fields are irrotational", "梯度场无旋"),
       explanation: t(
-        "For any function $f$ with continuous second partial derivatives, $\\nabla \\times (\\nabla f) = \\mathbf{0}$, because each component of the curl is a difference of mixed partials such as $f_{zy} - f_{yz}$, which cancel. So every gradient field is irrotational, however complicated $f$ is. A field that is not a gradient may or may not be irrotational, and its curl must be computed to tell.",
-        "对任意二阶偏导连续的函数 $f$，$\\nabla \\times (\\nabla f) = \\mathbf{0}$，因为旋度的每个分量都是 $f_{zy} - f_{yz}$ 这类混合偏导之差，它们相互抵消。所以无论 $f$ 多复杂，梯度场都无旋。不是梯度的场可能无旋也可能有旋，需要计算旋度才能判断。",
+        "For any function $f$ with continuous second partial derivatives, $\\nabla \\times (\\nabla f) = \\mathbf{0}$, because each component of the curl is a difference of mixed partials such as $f_{zy} - f_{yz}$, which cancel. So every gradient field is irrotational, however complicated $f$ is. A field that is not a gradient may or may not be irrotational, and its curl must be computed to tell. For $f = xyz$, $\\nabla f = \\langle yz, xz, xy \\rangle$ and its curl is $\\langle x - x, y - y, z - z \\rangle = \\mathbf{0}$.\n\n> **Watch out.** A field built from the same letters as $f$ need not be a gradient: $\\langle -y, x, 0 \\rangle$ has curl $\\langle 0, 0, 2 \\rangle$. The guarantee holds for $\\nabla f$ only.",
+        "对任意二阶偏导连续的函数 $f$，$\\nabla \\times (\\nabla f) = \\mathbf{0}$，因为旋度的每个分量都是 $f_{zy} - f_{yz}$ 这类混合偏导之差，它们相互抵消。所以无论 $f$ 多复杂，梯度场都无旋。不是梯度的场可能无旋也可能有旋，需要计算旋度才能判断。对 $f = xyz$，$\\nabla f = \\langle yz, xz, xy \\rangle$，其旋度为 $\\langle x - x, y - y, z - z \\rangle = \\mathbf{0}$。\n\n> **注意。** 由与 $f$ 相同字母组成的场不一定是梯度：$\\langle -y, x, 0 \\rangle$ 的旋度是 $\\langle 0, 0, 2 \\rangle$。这一保证只对 $\\nabla f$ 成立。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 5);
         const b = rng.int(2, 5);
         const fs = [`x^{${a}}y^{${b}}z`, `${a}x^2yz^{${b}}`, `e^{${a}x}\\sin(${b}y)`, `x^{${a}}z + y^{${b}}`];
         const f = rng.pick(fs);
-        const right = t("$\\nabla f$", "$\\nabla f$");
-        const wrongs = [
-          t(`$\\langle -${a}y, ${a}x, 0 \\rangle$`, `$\\langle -${a}y, ${a}x, 0 \\rangle$`),
-          t(`$\\langle ${b}yz, 0, 0 \\rangle$`, `$\\langle ${b}yz, 0, 0 \\rangle$`),
-          t(`$\\langle 0, 0, ${a}x + ${b}y \\rangle$`, `$\\langle 0, 0, ${a}x + ${b}y \\rangle$`),
-        ];
-        return pickChoice(
-          rng,
-          t(
+        return explainedChoice(rng, {
+          prompt: t(
             `Let $f(x, y, z) = ${f}$. Which vector field is guaranteed to have zero curl everywhere?`,
             `设 $f(x, y, z) = ${f}$。哪个向量场的旋度处处为零是有保证的？`,
           ),
-          right,
-          wrongs,
-          t(
-            `The curl of a gradient is always $\\mathbf{0}$. The others have nonzero curl: $\\langle 0, 0, ${2 * a} \\rangle$, $\\langle 0, ${b}y, ${-b}z \\rangle$ and $\\langle ${b}, ${-a}, 0 \\rangle$.`,
-            `梯度的旋度总是 $\\mathbf{0}$。其他场旋度非零：$\\langle 0, 0, ${2 * a} \\rangle$、$\\langle 0, ${b}y, ${-b}z \\rangle$ 与 $\\langle ${b}, ${-a}, 0 \\rangle$。`,
+          correct: t("$\\nabla f$", "$\\nabla f$"),
+          wrong: [
+            {
+              option: t(`$\\langle -${a}y, ${a}x, 0 \\rangle$`, `$\\langle -${a}y, ${a}x, 0 \\rangle$`),
+              why: t(
+                `Its curl is $\\langle 0, 0, ${2 * a} \\rangle$: it rotates about the $z$-axis.`,
+                `它的旋度为 $\\langle 0, 0, ${2 * a} \\rangle$：它绕 $z$ 轴旋转。`,
+              ),
+            },
+            {
+              option: t(`$\\langle ${b}yz, 0, 0 \\rangle$`, `$\\langle ${b}yz, 0, 0 \\rangle$`),
+              why: t(
+                `Its curl is $\\langle 0, ${b}y, ${-b}z \\rangle$, not zero.`,
+                `它的旋度为 $\\langle 0, ${b}y, ${-b}z \\rangle$，不为零。`,
+              ),
+            },
+            {
+              option: t(`$\\langle 0, 0, ${a}x + ${b}y \\rangle$`, `$\\langle 0, 0, ${a}x + ${b}y \\rangle$`),
+              why: t(
+                `Its curl is $\\langle ${b}, ${-a}, 0 \\rangle$, not zero.`,
+                `它的旋度为 $\\langle ${b}, ${-a}, 0 \\rangle$，不为零。`,
+              ),
+            },
+          ],
+          solution: walked(
+            [
+              [
+                ["The curl of a gradient", "梯度的旋度"],
+                t(
+                  "The entries of $\\nabla \\times \\nabla f$ are $f_{zy} - f_{yz}$, $f_{xz} - f_{zx}$ and $f_{yx} - f_{xy}$, so $\\nabla f$ has zero curl.",
+                  "$\\nabla \\times \\nabla f$ 的分量为 $f_{zy} - f_{yz}$、$f_{xz} - f_{zx}$、$f_{yx} - f_{xy}$，所以 $\\nabla f$ 的旋度为零。",
+                ),
+              ],
+              [
+                ["The other fields", "其他场"],
+                t(
+                  "None of them is guaranteed to be a gradient, and computing their curls shows each is nonzero.",
+                  "它们都不保证是梯度，计算旋度可知每个都不为零。",
+                ),
+              ],
+            ],
+            t(
+              `Each entry of $\\nabla \\times \\nabla f$ is zero because the mixed partials of $f = ${f}$ are continuous and so equal in either order (Clairaut's theorem).`,
+              `$\\nabla \\times \\nabla f$ 的每个分量都为零，因为 $f = ${f}$ 的混合偏导连续，按任一顺序求都相等（克莱罗定理）。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],

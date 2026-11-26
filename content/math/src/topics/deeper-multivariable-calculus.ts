@@ -244,8 +244,8 @@ const parameterForConservative: KnowledgePointDef = {
   id: "the-parameter-that-makes-a-plane-field-conservative",
   title: t("The parameter that makes a plane field conservative", "使平面向量场保守的参数"),
   explanation: t(
-    "A field $\\langle P, Q \\rangle$ on the whole plane is conservative exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ everywhere. With an unknown coefficient, this must hold as an identity, so comparing the two sides fixes the coefficient.",
-    "全平面上的向量场 $\\langle P, Q \\rangle$ 保守，当且仅当处处有 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。系数未知时，这必须是恒等式，比较两边就确定了系数。",
+    "A field $\\langle P, Q \\rangle$ on the whole plane is conservative exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ everywhere. With an unknown coefficient, this must hold as an identity, so comparing the two sides fixes the coefficient. For $\\langle 7x^2y + x, kx^3 + y \\rangle$, $\\frac{\\partial P}{\\partial y} = 7x^2$ and $\\frac{\\partial Q}{\\partial x} = 3kx^2$, so $3k = 7$ and $k = \\frac{7}{3}$.\n\n> **Watch out.** Differentiating $kx^3$ brings a factor $3$ and $ay^2$ a factor $2$; then solve for $k$ by dividing or multiplying by that factor, the right way round. The two sides are equal, with no minus sign.",
+    "全平面上的向量场 $\\langle P, Q \\rangle$ 保守，当且仅当处处有 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。系数未知时，这必须是恒等式，比较两边就确定了系数。对 $\\langle 7x^2y + x, kx^3 + y \\rangle$，$\\frac{\\partial P}{\\partial y} = 7x^2$，$\\frac{\\partial Q}{\\partial x} = 3kx^2$，所以 $3k = 7$，$k = \\frac{7}{3}$。\n\n> **注意。** $kx^3$ 求导带出因子 $3$，$ay^2$ 求导带出因子 $2$；解 $k$ 时要按正确方向除以或乘以这个因子。两边相等，中间没有负号。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -264,10 +264,61 @@ const parameterForConservative: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [a, answer.neg(), Q.of(a, 2)],
-      solution: t(
-        `We need $\\frac{\\partial P}{\\partial y} = ${py}$ to equal $\\frac{\\partial Q}{\\partial x} = ${qx}$ everywhere, so $k = ${answer.toLatex()}$. The terms in $x$ alone and $y$ alone play no part.`,
-        `需要 $\\frac{\\partial P}{\\partial y} = ${py}$ 处处等于 $\\frac{\\partial Q}{\\partial x} = ${qx}$，所以 $k = ${answer.toLatex()}$。只含 $x$ 或只含 $y$ 的项不起作用。`,
+      mistakes: apart(answer, [
+        cubic
+          ? why(
+              a,
+              "$\\frac{\\partial}{\\partial x}(kx^3) = 3kx^2$: the factor $3$ must be divided out.",
+              "$\\frac{\\partial}{\\partial x}(kx^3) = 3kx^2$：要除去因子 $3$。",
+            )
+          : why(
+              a,
+              `$\\frac{\\partial}{\\partial y}(${poly([a, "y^2"])}) = ${2 * a}y$: differentiating $y^2$ brings a factor $2$.`,
+              `$\\frac{\\partial}{\\partial y}(${poly([a, "y^2"])}) = ${2 * a}y$：$y^2$ 求导带出因子 $2$。`,
+            ),
+        why(
+          answer.neg(),
+          "The test is $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$, with no minus sign.",
+          "检验条件是 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$，没有负号。",
+        ),
+        cubic
+          ? why(
+              3 * a,
+              `$3k = ${a}$ gives $k = ${answer.toLatex()}$: divide by $3$, do not multiply.`,
+              `由 $3k = ${a}$ 得 $k = ${answer.toLatex()}$：要除以 $3$，不是乘以 $3$。`,
+            )
+          : why(
+              Q.of(a, 2),
+              `$k = ${2 * a}$: the factor $2$ multiplies $${a}$, it does not divide it.`,
+              `$k = ${2 * a}$：因子 $2$ 是乘上去的，不是除。`,
+            ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the cross partials", "求交叉偏导"],
+            t(
+              `$\\frac{\\partial P}{\\partial y} = ${py}$ and $\\frac{\\partial Q}{\\partial x} = ${qx}$. The terms in $x$ alone and $y$ alone play no part.`,
+              `$\\frac{\\partial P}{\\partial y} = ${py}$，$\\frac{\\partial Q}{\\partial x} = ${qx}$。只含 $x$ 或只含 $y$ 的项不起作用。`,
+            ),
+          ],
+          [
+            ["Match them as an identity", "令其恒等"],
+            t(
+              `$${qx} = ${py}$ for every point gives $k = ${answer.toLatex()}$.`,
+              `$${qx} = ${py}$ 对每点成立，得 $k = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        cubic
+          ? t(
+              `With $k = ${answer.toLatex()}$, $f = ${poly([Q.of(a, 3), "x^3y"], [Q.of(p, 2), "x^2"], [Q.of(q, 2), "y^2"])}$ has $\\nabla f = \\langle ${P}, ${poly([Q.of(a, 3), "x^3"], [q, "y"])} \\rangle$.`,
+              `取 $k = ${answer.toLatex()}$，$f = ${poly([Q.of(a, 3), "x^3y"], [Q.of(p, 2), "x^2"], [Q.of(q, 2), "y^2"])}$ 满足 $\\nabla f = \\langle ${P}, ${poly([Q.of(a, 3), "x^3"], [q, "y"])} \\rangle$。`,
+            )
+          : t(
+              `With $k = ${2 * a}$, $f = ${poly([a, "xy^2"], [Q.of(p, 2), "x^2"], [q, "y"])}$ has $\\nabla f = \\langle ${P}, ${poly([2 * a, "xy"], [q, ""])} \\rangle$.`,
+              `取 $k = ${2 * a}$，$f = ${poly([a, "xy^2"], [Q.of(p, 2), "x^2"], [q, "y"])}$ 满足 $\\nabla f = \\langle ${P}, ${poly([2 * a, "xy"], [q, ""])} \\rangle$。`,
+            ),
       ),
     });
   },
@@ -1141,8 +1192,8 @@ const divergenceOfRadialPower: KnowledgePointDef = {
   id: "the-divergence-of-a-radial-power-field",
   title: t("The divergence of a radial power field", "径向幂场的散度"),
   explanation: t(
-    "For $\\rho = |\\mathbf{r}|$ the product rule gives $\\nabla \\cdot (\\rho^k\\mathbf{r}) = \\nabla(\\rho^k) \\cdot \\mathbf{r} + 3\\rho^k$. Since $\\nabla(\\rho^k) = k\\rho^{k-2}\\mathbf{r}$, this equals $(k + 3)\\rho^k$. So radial fields need no component work at all. The case $k = -3$ gives zero, which is the field of a point source.",
-    "设 $\\rho = |\\mathbf{r}|$，由乘积法则得 $\\nabla \\cdot (\\rho^k\\mathbf{r}) = \\nabla(\\rho^k) \\cdot \\mathbf{r} + 3\\rho^k$。由于 $\\nabla(\\rho^k) = k\\rho^{k-2}\\mathbf{r}$，它等于 $(k + 3)\\rho^k$。所以径向场完全不必逐个分量计算。$k = -3$ 时结果为零，这就是点源的场。",
+    "For $\\rho = |\\mathbf{r}|$ the product rule gives $\\nabla \\cdot (\\rho^k\\mathbf{r}) = \\nabla(\\rho^k) \\cdot \\mathbf{r} + 3\\rho^k$. Since $\\nabla(\\rho^k) = k\\rho^{k-2}\\mathbf{r}$, this equals $(k + 3)\\rho^k$. So radial fields need no component work at all. The case $k = -3$ gives zero, which is the field of a point source. For $|\\mathbf{r}|^2\\,\\mathbf{r}$ at $(3, 0, 4)$, $\\rho = 5$ and the divergence is $5 \\cdot 25 = 125$.\n\n> **Watch out.** Both terms of the product rule count: $\\nabla \\cdot \\mathbf{r} = 3$ gives $3\\rho^k$, and $\\nabla(\\rho^k) \\cdot \\mathbf{r} = k\\rho^{k-2}\\rho^2$ gives $k\\rho^k$, with the same power $k$.",
+    "设 $\\rho = |\\mathbf{r}|$，由乘积法则得 $\\nabla \\cdot (\\rho^k\\mathbf{r}) = \\nabla(\\rho^k) \\cdot \\mathbf{r} + 3\\rho^k$。由于 $\\nabla(\\rho^k) = k\\rho^{k-2}\\mathbf{r}$，它等于 $(k + 3)\\rho^k$。所以径向场完全不必逐个分量计算。$k = -3$ 时结果为零，这就是点源的场。对 $|\\mathbf{r}|^2\\,\\mathbf{r}$ 在 $(3, 0, 4)$ 处，$\\rho = 5$，散度为 $5 \\cdot 25 = 125$。\n\n> **注意。** 乘积法则的两项都要算：$\\nabla \\cdot \\mathbf{r} = 3$ 给出 $3\\rho^k$，$\\nabla(\\rho^k) \\cdot \\mathbf{r} = k\\rho^{k-2}\\rho^2$ 给出 $k\\rho^k$，幂次同为 $k$。",
   ),
   generate(rng) {
     const [x, y, z, rho] = rng.pick([
@@ -1168,10 +1219,44 @@ const divergenceOfRadialPower: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [3 * size, k * size, (k + 3) * rho ** (k - 1)],
-      solution: t(
-        `Here $|\\mathbf{r}| = ${rho}$, and the divergence is $(${k} + 3)|\\mathbf{r}|${k === 1 ? "" : `^{${k}}`} = ${k + 3} \\cdot ${size} = ${answer}$.`,
-        `这里 $|\\mathbf{r}| = ${rho}$，散度是 $(${k} + 3)|\\mathbf{r}|${k === 1 ? "" : `^{${k}}`} = ${k + 3} \\cdot ${size} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          3 * size,
+          `That is only $|\\mathbf{r}|^{${k}}\\,\\nabla \\cdot \\mathbf{r}$; the term $\\nabla(|\\mathbf{r}|^{${k}}) \\cdot \\mathbf{r} = ${k * size}$ is missing.`,
+          `这只是 $|\\mathbf{r}|^{${k}}\\,\\nabla \\cdot \\mathbf{r}$；漏了 $\\nabla(|\\mathbf{r}|^{${k}}) \\cdot \\mathbf{r} = ${k * size}$ 这一项。`,
+        ),
+        why(
+          k * size,
+          `That is only $\\nabla(|\\mathbf{r}|^{${k}}) \\cdot \\mathbf{r}$; the term $3|\\mathbf{r}|^{${k}} = ${3 * size}$ from $\\nabla \\cdot \\mathbf{r} = 3$ is missing.`,
+          `这只是 $\\nabla(|\\mathbf{r}|^{${k}}) \\cdot \\mathbf{r}$；漏了由 $\\nabla \\cdot \\mathbf{r} = 3$ 得到的 $3|\\mathbf{r}|^{${k}} = ${3 * size}$。`,
+        ),
+        why(
+          (k + 3) * rho ** (k - 1),
+          `$k\\rho^{k-2}\\mathbf{r} \\cdot \\mathbf{r} = k\\rho^{k}$, since $\\mathbf{r} \\cdot \\mathbf{r} = \\rho^2$: the power stays $${k}$.`,
+          `$k\\rho^{k-2}\\mathbf{r} \\cdot \\mathbf{r} = k\\rho^{k}$，因为 $\\mathbf{r} \\cdot \\mathbf{r} = \\rho^2$：幂次仍是 $${k}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the distance", "求距离"],
+            t(
+              `$|\\mathbf{r}| = \\sqrt{${point.map((c) => `${c}^2`).join(" + ")}} = \\sqrt{${rho * rho}} = ${rho}$.`,
+              `$|\\mathbf{r}| = \\sqrt{${point.map((c) => `${c}^2`).join(" + ")}} = \\sqrt{${rho * rho}} = ${rho}$。`,
+            ),
+          ],
+          [
+            ["Use the radial formula", "用径向公式"],
+            t(
+              `$\\nabla \\cdot (|\\mathbf{r}|^{${k}}\\mathbf{r}) = (${k} + 3)|\\mathbf{r}|^{${k}} = ${k + 3} \\cdot ${size} = ${answer}$.`,
+              `$\\nabla \\cdot (|\\mathbf{r}|^{${k}}\\mathbf{r}) = (${k} + 3)|\\mathbf{r}|^{${k}} = ${k + 3} \\cdot ${size} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `By components, $\\frac{\\partial}{\\partial x}(\\rho^{${k}}x) = \\rho^{${k}} + ${k}\\rho^{${k - 2}}x^2$ and likewise for $y$ and $z$; the sum is $3\\rho^{${k}} + ${k}\\rho^{${k - 2}}\\rho^2 = ${3 * size} + ${k * size} = ${answer}$.`,
+          `逐分量计算，$\\frac{\\partial}{\\partial x}(\\rho^{${k}}x) = \\rho^{${k}} + ${k}\\rho^{${k - 2}}x^2$，$y$、$z$ 同理；求和得 $3\\rho^{${k}} + ${k}\\rho^{${k - 2}}\\rho^2 = ${3 * size} + ${k * size} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1182,8 +1267,8 @@ const curlOfRotation: KnowledgePointDef = {
   figure: multivariableDrawings1["properties-of-the-curl-operator#the-curl-of-a-rigid-rotation"],
   title: t("The curl of a rigid rotation", "刚体转动的旋度"),
   explanation: t(
-    "A body rotating with angular velocity $\\boldsymbol{\\omega}$ has the velocity field $\\mathbf{v} = \\boldsymbol{\\omega} \\times \\mathbf{r}$. Its curl is $2\\boldsymbol{\\omega}$, at every point and in every direction. This is the physical meaning of curl: it measures twice the local rate of spin. A field written out in components can often be recognized in this form.",
-    "以角速度 $\\boldsymbol{\\omega}$ 转动的物体，速度场是 $\\mathbf{v} = \\boldsymbol{\\omega} \\times \\mathbf{r}$。它的旋度在每一点都是 $2\\boldsymbol{\\omega}$。这就是旋度的物理意义：它度量局部转速的两倍。写成分量的场常常可以认出是这种形式。",
+    "A body rotating with angular velocity $\\boldsymbol{\\omega}$ has the velocity field $\\mathbf{v} = \\boldsymbol{\\omega} \\times \\mathbf{r}$. Its curl is $2\\boldsymbol{\\omega}$, at every point and in every direction. This is the physical meaning of curl: it measures twice the local rate of spin. A field written out in components can often be recognized in this form. For $\\langle -6y, 6x, 0 \\rangle = \\langle 0, 0, 6 \\rangle \\times \\mathbf{r}$, the curl is $\\langle 0, 0, 12 \\rangle$.\n\n> **Watch out.** The curl is twice $\\boldsymbol{\\omega}$, not $\\boldsymbol{\\omega}$ itself: each entry gets one copy of the spin from each of the two partial derivatives it subtracts.",
+    "以角速度 $\\boldsymbol{\\omega}$ 转动的物体，速度场是 $\\mathbf{v} = \\boldsymbol{\\omega} \\times \\mathbf{r}$。它的旋度在每一点都是 $2\\boldsymbol{\\omega}$。这就是旋度的物理意义：它度量局部转速的两倍。写成分量的场常常可以认出是这种形式。对 $\\langle -6y, 6x, 0 \\rangle = \\langle 0, 0, 6 \\rangle \\times \\mathbf{r}$，旋度为 $\\langle 0, 0, 12 \\rangle$。\n\n> **注意。** 旋度是 $\\boldsymbol{\\omega}$ 的两倍，不是 $\\boldsymbol{\\omega}$ 本身：每个分量所相减的两个偏导数各贡献一份转速。",
   ),
   generate(rng) {
     const p = nonzero(rng, 5);
@@ -1198,10 +1283,35 @@ const curlOfRotation: KnowledgePointDef = {
       prompt: t(`Find the $${name}$-component of the curl of $\\mathbf{F} = ${F}$.`, `求 $\\mathbf{F} = ${F}$ 的旋度的 $${name}$ 分量。`),
       answer,
       form: "integer",
-      wrong: [omega, -answer, 0],
-      solution: t(
-        `This field is $\\boldsymbol{\\omega} \\times \\mathbf{r}$ with $\\boldsymbol{\\omega} = \\langle ${p}, ${q}, ${s} \\rangle$, and its curl is $2\\boldsymbol{\\omega}$. The $${name}$-component is $${answer}$.`,
-        `这个场是 $\\boldsymbol{\\omega} \\times \\mathbf{r}$，其中 $\\boldsymbol{\\omega} = \\langle ${p}, ${q}, ${s} \\rangle$，它的旋度是 $2\\boldsymbol{\\omega}$。$${name}$ 分量是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          omega,
+          `That is $\\omega_${name}$ itself; the curl of $\\boldsymbol{\\omega} \\times \\mathbf{r}$ is $2\\boldsymbol{\\omega}$.`,
+          `这是 $\\omega_${name}$ 本身；$\\boldsymbol{\\omega} \\times \\mathbf{r}$ 的旋度是 $2\\boldsymbol{\\omega}$。`,
+        ),
+        why(-answer, "The two partial derivatives were subtracted in the reverse order.", "两个偏导数相减的顺序反了。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Recognize the rotation", "认出转动"],
+            t(
+              `$\\mathbf{F} = \\boldsymbol{\\omega} \\times \\mathbf{r}$ with $\\boldsymbol{\\omega} = \\langle ${p}, ${q}, ${s} \\rangle$, since $\\boldsymbol{\\omega} \\times \\mathbf{r} = \\langle \\omega_2 z - \\omega_3 y, \\omega_3 x - \\omega_1 z, \\omega_1 y - \\omega_2 x \\rangle$.`,
+              `$\\mathbf{F} = \\boldsymbol{\\omega} \\times \\mathbf{r}$，其中 $\\boldsymbol{\\omega} = \\langle ${p}, ${q}, ${s} \\rangle$，因为 $\\boldsymbol{\\omega} \\times \\mathbf{r} = \\langle \\omega_2 z - \\omega_3 y, \\omega_3 x - \\omega_1 z, \\omega_1 y - \\omega_2 x \\rangle$。`,
+            ),
+          ],
+          [
+            ["Double it", "取两倍"],
+            t(
+              `The curl is $2\\boldsymbol{\\omega}$, so its $${name}$-component is $2 \\cdot ${inParens(omega)} = ${answer}$.`,
+              `旋度是 $2\\boldsymbol{\\omega}$，所以其 $${name}$ 分量为 $2 \\cdot ${inParens(omega)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly: $${["R_y - Q_z", "P_z - R_x", "Q_x - P_y"][which] ?? ""} = ${omega} - ${inParens(-omega)} = ${answer}$.`,
+          `直接计算：$${["R_y - Q_z", "P_z - R_x", "Q_x - P_y"][which] ?? ""} = ${omega} - ${inParens(-omega)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1917,8 +2027,8 @@ const curvatureWithSlope: KnowledgePointDef = {
   figure: multivariableDrawings1["the-curvature-of-a-plane-curve#the-curvature-where-the-slope-is-not-zero"],
   title: t("The curvature where the slope is not zero", "斜率不为零处的曲率"),
   explanation: t(
-    "The curvature of $y = f(x)$ is $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$. At a point where the slope is zero the denominator is 1, so curvature equals $|f''|$. A nonzero slope makes the denominator larger, because the same bending is spread over a longer arc. So the steeper the curve is at a point, the smaller the curvature for the same second derivative.",
-    "$y = f(x)$ 的曲率是 $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$。在斜率为零的点，分母是 1，所以曲率等于 $|f''|$。斜率不为零时分母变大，因为同样的弯曲分布在更长的弧上。所以对相同的二阶导数，曲线在一点越陡，曲率就越小。",
+    "The curvature of $y = f(x)$ is $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$. At a point where the slope is zero the denominator is 1, so curvature equals $|f''|$. A nonzero slope makes the denominator larger, because the same bending is spread over a longer arc. So the steeper the curve is at a point, the smaller the curvature for the same second derivative. With $f' = \\frac{3}{4}$ and $f'' = 10$: $1 + \\frac{9}{16} = \\frac{25}{16}$, whose $\\frac{3}{2}$ power is $\\frac{125}{64}$, so $\\kappa = 10 \\cdot \\frac{64}{125} = \\frac{128}{25}$.\n\n> **Watch out.** The power is $\\frac{3}{2}$: take the square root of $1 + (f')^2$ and then cube it. Using the power $1$ or $\\frac{1}{2}$, or dropping the slope, gives too large a curvature.",
+    "$y = f(x)$ 的曲率是 $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$。在斜率为零的点，分母是 1，所以曲率等于 $|f''|$。斜率不为零时分母变大，因为同样的弯曲分布在更长的弧上。所以对相同的二阶导数，曲线在一点越陡，曲率就越小。设 $f' = \\frac{3}{4}$，$f'' = 10$：$1 + \\frac{9}{16} = \\frac{25}{16}$，其 $\\frac{3}{2}$ 次幂为 $\\frac{125}{64}$，所以 $\\kappa = 10 \\cdot \\frac{64}{125} = \\frac{128}{25}$。\n\n> **注意。** 幂次是 $\\frac{3}{2}$：先对 $1 + (f')^2$ 开平方再立方。用 $1$ 次或 $\\frac{1}{2}$ 次幂，或者丢掉斜率，都会使曲率偏大。",
   ),
   generate(rng) {
     const [p, q, h] = rng.pick(pythagoreanSlopes);
@@ -1934,10 +2044,44 @@ const curvatureWithSlope: KnowledgePointDef = {
         `在 $x = ${a}$ 处，函数满足 $f'(${a}) = ${slope.toLatex()}$，$f''(${a}) = ${s}$。求 $y = f(x)$ 在该处的曲率。`,
       ),
       answer,
-      wrong: [Q.of(size), Q.of(size * q * q, h * h), Q.of(size * q, h), answer.add(Q.of(1))],
-      solution: t(
-        `Here $1 + (f')^2 = ${Q.of(h * h, q * q).toLatex()}$, and raising this to the power $\\frac{3}{2}$ gives $${Q.of(h ** 3, q ** 3).toLatex()}$. Dividing $${size}$ by it gives $${answer.toLatex()}$.`,
-        `这里 $1 + (f')^2 = ${Q.of(h * h, q * q).toLatex()}$，它的 $\\frac{3}{2}$ 次幂是 $${Q.of(h ** 3, q ** 3).toLatex()}$。用它除 $${size}$，得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(size),
+          "That is the curvature where the slope is zero; here the slope makes the denominator larger than $1$.",
+          "这是斜率为零处的曲率；这里斜率使分母大于 $1$。",
+        ),
+        why(
+          Q.of(size * q * q, h * h),
+          `That divides by $1 + (f')^2 = ${Q.of(h * h, q * q).toLatex()}$ itself; the power is $\\frac{3}{2}$.`,
+          `这是直接除以 $1 + (f')^2 = ${Q.of(h * h, q * q).toLatex()}$；幂次应为 $\\frac{3}{2}$。`,
+        ),
+        why(
+          Q.of(size * q, h),
+          `That divides by $\\sqrt{1 + (f')^2} = ${Q.of(h, q).toLatex()}$; the power is $\\frac{3}{2}$, so cube the square root.`,
+          `这是除以 $\\sqrt{1 + (f')^2} = ${Q.of(h, q).toLatex()}$；幂次是 $\\frac{3}{2}$，要把平方根再立方。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compute the denominator", "计算分母"],
+            t(
+              `$1 + (f')^2 = 1 + ${Q.of(p * p, q * q).toLatex()} = ${Q.of(h * h, q * q).toLatex()}$, whose square root is $${Q.of(h, q).toLatex()}$, so the $\\frac{3}{2}$ power is $${Q.of(h ** 3, q ** 3).toLatex()}$.`,
+              `$1 + (f')^2 = 1 + ${Q.of(p * p, q * q).toLatex()} = ${Q.of(h * h, q * q).toLatex()}$，平方根为 $${Q.of(h, q).toLatex()}$，所以 $\\frac{3}{2}$ 次幂为 $${Q.of(h ** 3, q ** 3).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(
+              `$\\kappa = \\frac{|${s}|}{${Q.of(h ** 3, q ** 3).toLatex()}} = ${size} \\cdot ${Q.of(q ** 3, h ** 3).toLatex()} = ${answer.toLatex()}$.`,
+              `$\\kappa = \\frac{|${s}|}{${Q.of(h ** 3, q ** 3).toLatex()}} = ${size} \\cdot ${Q.of(q ** 3, h ** 3).toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()} \\cdot ${Q.of(h ** 3, q ** 3).toLatex()} = ${size} = |f''|$, and $${answer.toLatex()} < ${size}$, as a nonzero slope requires.`,
+          `$${answer.toLatex()} \\cdot ${Q.of(h ** 3, q ** 3).toLatex()} = ${size} = |f''|$，且 $${answer.toLatex()} < ${size}$，符合斜率不为零的情形。`,
+        ),
       ),
     });
   },
@@ -2716,8 +2860,8 @@ const streamCondition: KnowledgePointDef = {
   id: "the-coefficient-that-allows-a-stream-function",
   title: t("The coefficient that allows a stream function", "使流函数存在的系数"),
   explanation: t(
-    "A stream function satisfies $P = \\psi_y$ and $Q = -\\psi_x$. Since the mixed partial derivatives of $\\psi$ agree, this forces $P_x = \\psi_{yx} = \\psi_{xy} = -Q_y$, which is to say that the divergence $P_x + Q_y$ is zero. So a flow in the whole plane has a stream function exactly when it is incompressible. This test can be applied before trying to find $\\psi$ itself.",
-    "流函数满足 $P = \\psi_y$ 和 $Q = -\\psi_x$。由于 $\\psi$ 的混合偏导数相等，这就要求 $P_x = \\psi_{yx} = \\psi_{xy} = -Q_y$，也就是说散度 $P_x + Q_y$ 为零。所以全平面上的流存在流函数，当且仅当它不可压缩。在尝试求 $\\psi$ 本身之前，可以先做这个检验。",
+    "A stream function satisfies $P = \\psi_y$ and $Q = -\\psi_x$. Since the mixed partial derivatives of $\\psi$ agree, this forces $P_x = \\psi_{yx} = \\psi_{xy} = -Q_y$, which is to say that the divergence $P_x + Q_y$ is zero. So a flow in the whole plane has a stream function exactly when it is incompressible. This test can be applied before trying to find $\\psi$ itself. For $\\langle 12x + 5y, 3x + ky \\rangle$ the divergence is $12 + k$, so $k = -12$.\n\n> **Watch out.** Only the $x$-term of $P$ and the $y$-term of $Q$ enter the divergence; the coefficients $5$ and $3$ play no part. Setting $12 + k = 0$ gives $k = -12$, with the opposite sign.",
+    "流函数满足 $P = \\psi_y$ 和 $Q = -\\psi_x$。由于 $\\psi$ 的混合偏导数相等，这就要求 $P_x = \\psi_{yx} = \\psi_{xy} = -Q_y$，也就是说散度 $P_x + Q_y$ 为零。所以全平面上的流存在流函数，当且仅当它不可压缩。在尝试求 $\\psi$ 本身之前，可以先做这个检验。对 $\\langle 12x + 5y, 3x + ky \\rangle$，散度为 $12 + k$，所以 $k = -12$。\n\n> **注意。** 只有 $P$ 中的 $x$ 项和 $Q$ 中的 $y$ 项进入散度；系数 $5$ 和 $3$ 不起作用。由 $12 + k = 0$ 得 $k = -12$，符号相反。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -2731,10 +2875,38 @@ const streamCondition: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a, b, c, -b, -c],
-      solution: t(
-        `The divergence is $${a} + k$, and it must be zero. So $k = ${answer}$.`,
-        `散度是 $${a} + k$，它必须为零。所以 $k = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          a,
+          `$${a} + k = 0$ gives $k = ${answer}$: moving $${a}$ across changes its sign.`,
+          `由 $${a} + k = 0$ 得 $k = ${answer}$：把 $${a}$ 移到另一边要变号。`,
+        ),
+        why(
+          -b,
+          `$${poly([b, "y"])}$ is in $P$, which is differentiated in $x$, so it adds nothing to the divergence.`,
+          `$${poly([b, "y"])}$ 在 $P$ 中，而 $P$ 对 $x$ 求导，所以它对散度没有贡献。`,
+        ),
+        why(
+          -c,
+          `$${poly([c, "x"])}$ is in $Q$, which is differentiated in $y$, so it adds nothing to the divergence.`,
+          `$${poly([c, "x"])}$ 在 $Q$ 中，而 $Q$ 对 $y$ 求导，所以它对散度没有贡献。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Require zero divergence", "要求散度为零"],
+            t(
+              `A stream function exists exactly when $P_x + Q_y = 0$. Here $P_x = ${a}$ and $Q_y = k$.`,
+              `流函数存在当且仅当 $P_x + Q_y = 0$。这里 $P_x = ${a}$，$Q_y = k$。`,
+            ),
+          ],
+          [["Solve", "求解"], t(`$${a} + k = 0$ gives $k = ${answer}$.`, `由 $${a} + k = 0$ 得 $k = ${answer}$。`)],
+        ],
+        t(
+          `With $k = ${answer}$, $\\psi = ${poly([a, "xy"], [Q.of(b, 2), "y^2"], [Q.of(-c, 2), "x^2"])}$ has $\\psi_y = ${poly([a, "x"], [b, "y"])} = P$ and $-\\psi_x = ${poly([c, "x"], [-a, "y"])} = Q$.`,
+          `取 $k = ${answer}$，$\\psi = ${poly([a, "xy"], [Q.of(b, 2), "y^2"], [Q.of(-c, 2), "x^2"])}$ 满足 $\\psi_y = ${poly([a, "x"], [b, "y"])} = P$，$-\\psi_x = ${poly([c, "x"], [-a, "y"])} = Q$。`,
+        ),
       ),
     });
   },
