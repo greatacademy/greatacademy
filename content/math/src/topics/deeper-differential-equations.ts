@@ -1369,8 +1369,8 @@ const recurrenceGrowth: KnowledgePointDef = {
   id: "the-long-run-ratio-of-a-linear-recurrence",
   title: t("The long-run ratio of a linear recurrence", "线性递推的长期比值"),
   explanation: t(
-    "Trying $a_n = x^n$ in $a_{n+2} = pa_{n+1} + qa_n$ gives the characteristic equation $x^2 = px + q$, just as for a differential equation. The solution is a combination of the powers of the two roots. The root of larger size dominates, so the ratio of consecutive terms tends to that root.",
-    "把 $a_n = x^n$ 代入 $a_{n+2} = pa_{n+1} + qa_n$，得特征方程 $x^2 = px + q$，与微分方程的做法一样。解是两个根的幂的组合。绝对值较大的根占主导，所以相邻两项之比趋于这个根。",
+    "Trying $a_n = x^n$ in $a_{n+2} = pa_{n+1} + qa_n$ gives the characteristic equation $x^2 = px + q$, just as for a differential equation. The solution is a combination of the powers of the two roots. The root of larger size dominates, so the ratio of consecutive terms tends to that root.\n\nFor example, $a_{n+2} = a_{n+1} + a_n$ with $a_0 = a_1 = 1$ gives $1, 1, 2, 3, 5, 8, 13, \\ldots$. Its characteristic equation $x^2 = x + 1$ has roots $\\frac{1 \\pm \\sqrt{5}}{2}$, about $1.618$ and $-0.618$. The ratios $\\frac{13}{8} = 1.625$ and $\\frac{8}{5} = 1.6$ already lie close to $1.618$.\n\n> **Watch out.** The ratio tends to a root of the characteristic equation, not to a coefficient of the recurrence. Of the two roots, take the one of larger size, not the one written first. That root wins only when the starting values give it a nonzero coefficient.",
+    "把 $a_n = x^n$ 代入 $a_{n+2} = pa_{n+1} + qa_n$，得特征方程 $x^2 = px + q$，与微分方程的做法一样。解是两个根的幂的组合。绝对值较大的根占主导，所以相邻两项之比趋于这个根。\n\n例如，$a_{n+2} = a_{n+1} + a_n$，$a_0 = a_1 = 1$，得到 $1, 1, 2, 3, 5, 8, 13, \\ldots$。特征方程 $x^2 = x + 1$ 的根是 $\\frac{1 \\pm \\sqrt{5}}{2}$，约为 $1.618$ 和 $-0.618$。比值 $\\frac{13}{8} = 1.625$、$\\frac{8}{5} = 1.6$ 已经很接近 $1.618$。\n\n> **注意。** 比值趋于特征方程的根，而不是递推式的系数。两个根中取绝对值较大的那个，而不是先写出的那个。只有初始值使这个根的系数不为零，它才占主导。",
   ),
   generate(rng) {
     const r = rng.int(2, 7);
@@ -1378,19 +1378,49 @@ const recurrenceGrowth: KnowledgePointDef = {
     const p = r + s;
     const q = -r * s;
     const right = poly([p, "a_{n+1}"], [q, "a_n"]);
-    return numberProblem({
-      prompt: t(
+    const characteristic = poly([1, "x^2"], [-p, "x"], [-q, ""]);
+    const coefficient = Q.of(1 - s, r - s);
+    return explainedNumber(
+      [
         `A sequence has $a_0 = a_1 = 1$ and $a_{n+2} = ${right}$. What does $\\frac{a_{n+1}}{a_n}$ tend to?`,
         `数列满足 $a_0 = a_1 = 1$，$a_{n+2} = ${right}$。$\\frac{a_{n+1}}{a_n}$ 趋于多少？`,
-      ),
-      answer: r,
-      form: "integer",
-      wrong: [s, p, q],
-      solution: t(
-        `The characteristic equation is $${poly([1, "x^2"], [-p, "x"], [-q, ""])} = 0$, with roots $${r}$ and $${s}$. The root of larger size is $${r}$, and it dominates because the starting values give it a nonzero coefficient.`,
-        `特征方程是 $${poly([1, "x^2"], [-p, "x"], [-q, ""])} = 0$，两根是 $${r}$ 和 $${s}$。绝对值较大的根是 $${r}$，初始值使它的系数不为零，所以它占主导。`,
-      ),
-    });
+      ],
+      r,
+      [
+        labelled(
+          ["Form the characteristic equation", "写出特征方程"],
+          `Trying $a_n = x^n$ gives $${characteristic} = 0$, which factors as $(x - ${r})${s < 0 ? `(x + ${-s})` : `(x - ${s})`} = 0$. The roots are $${r}$ and $${s}$.`,
+          `代入 $a_n = x^n$ 得 $${characteristic} = 0$，分解为 $(x - ${r})${s < 0 ? `(x + ${-s})` : `(x - ${s})`} = 0$。两根是 $${r}$ 和 $${s}$。`,
+        ),
+        labelled(
+          ["Pick the dominant root", "选出占主导的根"],
+          `So $a_n = A \\cdot ${r}^n + B \\cdot ${s < 0 ? `(${s})` : s}^n$. From $a_0 = a_1 = 1$, $A = ${coefficient.toLatex()}$, which is not zero. Since $|${s}| < ${r}$, the term in $${r}^n$ outgrows the other, and the ratio tends to $${r}$.`,
+          `所以 $a_n = A \\cdot ${r}^n + B \\cdot ${s < 0 ? `(${s})` : s}^n$。由 $a_0 = a_1 = 1$ 得 $A = ${coefficient.toLatex()}$，不为零。因为 $|${s}| < ${r}$，含 $${r}^n$ 的项增长得更快，比值趋于 $${r}$。`,
+        ),
+      ],
+      [
+        `$${r}$ is a root: $${r}^2 = ${r * r}$ and $${p} \\cdot ${r} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${p * r + q}$.`,
+        `$${r}$ 是根：$${r}^2 = ${r * r}$，$${p} \\cdot ${r} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${p * r + q}$。`,
+      ],
+      [
+        [
+          s,
+          `This is the other root, $${s}$, whose size is smaller, so its powers fade beside those of $${r}$.`,
+          `这是另一个根 $${s}$，它的绝对值较小，它的幂与 $${r}$ 的幂相比可以忽略。`,
+        ],
+        [
+          p,
+          `This is the coefficient $${p}$ of $a_{n+1}$, the sum of the roots, not a root.`,
+          `这是 $a_{n+1}$ 的系数 $${p}$，它是两根之和，不是根。`,
+        ],
+        [
+          q,
+          `This is the coefficient $${q}$ of $a_n$, minus the product of the roots, not a root.`,
+          `这是 $a_n$ 的系数 $${q}$，它是两根之积的相反数，不是根。`,
+        ],
+      ],
+      "integer",
+    );
   },
 };
 

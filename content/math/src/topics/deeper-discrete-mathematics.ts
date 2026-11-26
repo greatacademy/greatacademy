@@ -946,8 +946,8 @@ const firstOrderLimit: KnowledgePointDef = {
   id: "the-limit-of-a-first-order-recurrence",
   title: t("The limit of a first-order recurrence", "一阶递推的极限"),
   explanation: t(
-    "The recurrence $a_{n+1} = ra_n + c$ has the fixed point $L$ with $L = rL + c$. The distance from $L$ is multiplied by $r$ at each step, so if $|r| < 1$ the sequence tends to $L$, whatever the starting value is. The limit can thus be found without solving for the general term.",
-    "递推 $a_{n+1} = ra_n + c$ 有不动点 $L$，满足 $L = rL + c$。每一步到 $L$ 的距离都乘以 $r$，所以当 $|r| < 1$ 时，无论初始值是多少，数列都趋于 $L$。因此不必求出通项就能得到极限。",
+    "The recurrence $a_{n+1} = ra_n + c$ has the fixed point $L$ with $L = rL + c$. The distance from $L$ is multiplied by $r$ at each step, so if $|r| < 1$ the sequence tends to $L$, whatever the starting value is. For $a_{n+1} = \\frac{1}{5}a_n + 8$, $L = \\frac{1}{5}L + 8$ gives $\\frac{4}{5}L = 8$, so the limit is $L = 10$ without solving for the general term.\n\n> **Watch out.** Move $rL$ to the left before dividing: $(1 - r)L = c$, so divide by $1 - r$, not $1 + r$. The starting value plays no part in the limit.",
+    "递推 $a_{n+1} = ra_n + c$ 有不动点 $L$，满足 $L = rL + c$。每一步到 $L$ 的距离都乘以 $r$，所以当 $|r| < 1$ 时，无论初始值是多少，数列都趋于 $L$。对 $a_{n+1} = \\frac{1}{5}a_n + 8$，由 $L = \\frac{1}{5}L + 8$ 得 $\\frac{4}{5}L = 8$，所以不必求通项，极限就是 $L = 10$。\n\n> **注意。** 先把 $rL$ 移到左边再相除：$(1 - r)L = c$，所以要除以 $1 - r$，不是 $1 + r$。初始值与极限无关。",
   ),
   generate(rng) {
     const r = rng.pick([
@@ -973,10 +973,49 @@ const firstOrderLimit: KnowledgePointDef = {
         `数列满足 $a_0 = ${start}$，$a_{n+1} = ${step}$。求 $\\lim_{n \\to \\infty} a_n$。`,
       ),
       answer,
-      wrong: [Q.of(c).div(Q.of(1).add(r)), Q.of(c), Q.of(c).mul(r)],
-      solution: t(
-        `The ratio has size below 1, so the sequence tends to the fixed point. From $L = ${r.toLatex()}L ${c < 0 ? "-" : "+"} ${Math.abs(c)}$ we get $${gap.toLatex()}L = ${c}$, so $L = ${answer.toLatex()}$. The starting value does not matter.`,
-        `比值的绝对值小于 1，所以数列趋于不动点。由 $L = ${r.toLatex()}L ${c < 0 ? "-" : "+"} ${Math.abs(c)}$ 得 $${gap.toLatex()}L = ${c}$，所以 $L = ${answer.toLatex()}$。初始值不起作用。`,
+      mistakes: [
+        why(
+          Q.of(c).div(Q.of(1).add(r)),
+          "That divides by $1 + r$; moving $rL$ to the left gives $(1 - r)L = c$.",
+          "那是除以了 $1 + r$；把 $rL$ 移到左边得 $(1 - r)L = c$。",
+        ),
+        why(
+          Q.of(c),
+          "That is the constant $c$; the limit is the fixed point, which solves $L = rL + c$.",
+          "那是常数 $c$；极限是满足 $L = rL + c$ 的不动点。",
+        ),
+        why(
+          Q.of(c).mul(r),
+          "That multiplies $c$ by the ratio; the fixed point is $\\frac{c}{1 - r}$.",
+          "那是把 $c$ 乘以比；不动点是 $\\frac{c}{1 - r}$。",
+        ),
+        why(
+          Q.of(start),
+          `That is the starting value $a_0 = ${start}$, which does not affect the limit.`,
+          `那是初始值 $a_0 = ${start}$，它不影响极限。`,
+        ),
+      ].filter((m, i, all) => all.findIndex((o) => (o.value as Q).eq(m.value as Q)) === i),
+      solution: walked(
+        [
+          [
+            ["Check the ratio", "检查比值"],
+            t(
+              `$|r| = ${r.abs().toLatex()} < 1$, so the distance to the fixed point shrinks at each step and the sequence tends to it, whatever $a_0$ is.`,
+              `$|r| = ${r.abs().toLatex()} < 1$，所以到不动点的距离每一步都在缩小，无论 $a_0$ 是多少，数列都趋于不动点。`,
+            ),
+          ],
+          [
+            ["Solve for the fixed point", "求不动点"],
+            t(
+              `$L = ${r.toLatex()}L ${c < 0 ? "-" : "+"} ${Math.abs(c)}$ gives $${gap.toLatex()}L = ${c}$, so $L = ${answer.toLatex()}$.`,
+              `由 $L = ${r.toLatex()}L ${c < 0 ? "-" : "+"} ${Math.abs(c)}$ 得 $${gap.toLatex()}L = ${c}$，所以 $L = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `One step of the rule from $L$ stays at $L$: $${r.toLatex()} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${r.mul(answer).add(Q.of(c)).toLatex()}$.`,
+          `从 $L$ 出发用一次递推仍得 $L$：$${r.toLatex()} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${r.mul(answer).add(Q.of(c)).toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -986,8 +1025,8 @@ const recurrenceFromRoots: KnowledgePointDef = {
   id: "a-recurrence-from-its-solutions",
   title: t("A recurrence from its solutions", "由解求递推关系"),
   explanation: t(
-    "The solutions $Ar^n + Bs^n$ tell you the characteristic roots, so the recurrence can be rebuilt from them. The characteristic equation of $a_{n+2} = pa_{n+1} + qa_n$ is $x^2 - px - q = 0$. Comparing it with $(x - r)(x - s) = 0$ gives $p$ as the sum of the roots and $q$ as minus their product.",
-    "解 $Ar^n + Bs^n$ 给出了特征根，所以可以由它们还原递推关系。$a_{n+2} = pa_{n+1} + qa_n$ 的特征方程是 $x^2 - px - q = 0$。与 $(x - r)(x - s) = 0$ 比较，得 $p$ 是两根之和，$q$ 是两根之积的相反数。",
+    "The solutions $Ar^n + Bs^n$ tell you the characteristic roots, so the recurrence can be rebuilt from them. The characteristic equation of $a_{n+2} = pa_{n+1} + qa_n$ is $x^2 - px - q = 0$. Comparing it with $(x - r)(x - s) = 0$ gives $p$ as the sum of the roots and $q$ as minus their product. For the solutions $A \\cdot 7^n + B(-1)^n$, $(x - 7)(x + 1) = x^2 - 6x - 7$, so $p = 6$ and $q = 7$.\n\n> **Watch out.** Match against $x^2 - px - q$, which carries minus signs: $p$ is the sum of the roots, not minus it, and $q$ is minus their product.",
+    "解 $Ar^n + Bs^n$ 给出了特征根，所以可以由它们还原递推关系。$a_{n+2} = pa_{n+1} + qa_n$ 的特征方程是 $x^2 - px - q = 0$。与 $(x - r)(x - s) = 0$ 比较，得 $p$ 是两根之和，$q$ 是两根之积的相反数。对解 $A \\cdot 7^n + B(-1)^n$，$(x - 7)(x + 1) = x^2 - 6x - 7$，所以 $p = 6$，$q = 7$。\n\n> **注意。** 要与带负号的 $x^2 - px - q$ 比较：$p$ 是两根之和，不是它的相反数；$q$ 是两根之积的相反数。",
   ),
   generate(rng) {
     const pool = [-6, -5, -4, -3, -2, 2, 3, 4, 5, 6];
@@ -1003,10 +1042,47 @@ const recurrenceFromRoots: KnowledgePointDef = {
       ),
       answer,
       solveFor: name,
-      wrong: asksP ? [-(r + s), r * s, -r * s] : [r * s, r + s, -(r + s)],
-      solution: t(
-        `The roots $${r}$ and $${s}$ give the characteristic equation $${poly([1, "x^2"], [-(r + s), "x"], [r * s, ""])} = 0$. Comparing it with $x^2 - px - q = 0$ gives $${name} = ${answer}$.`,
-        `根 $${r}$ 和 $${s}$ 给出特征方程 $${poly([1, "x^2"], [-(r + s), "x"], [r * s, ""])} = 0$。与 $x^2 - px - q = 0$ 比较，得 $${name} = ${answer}$。`,
+      mistakes: (asksP
+        ? [
+            why(
+              -(r + s),
+              "The sign is off: the $x$ term of $x^2 - px - q$ is $-px$, so $p$ is the sum of the roots.",
+              "符号错了：$x^2 - px - q$ 的 $x$ 项是 $-px$，所以 $p$ 是两根之和。",
+            ),
+            why(r * s, "That is the product of the roots; $p$ is their sum.", "那是两根之积；$p$ 是两根之和。"),
+            why(-r * s, "That is $q$, the other coefficient.", "那是另一个系数 $q$。"),
+          ]
+        : [
+            why(
+              r * s,
+              "The sign is off: the constant term of $x^2 - px - q$ is $-q$, so $q$ is minus the product.",
+              "符号错了：$x^2 - px - q$ 的常数项是 $-q$，所以 $q$ 是两根之积的相反数。",
+            ),
+            why(r + s, "That is $p$, the sum of the roots.", "那是两根之和 $p$。"),
+            why(-(r + s), "That is minus the sum of the roots; $q$ comes from their product.", "那是两根之和的相反数；$q$ 来自两根之积。"),
+          ]
+      ).filter((m, i, all) => all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the characteristic equation", "写出特征方程"],
+            t(
+              `The roots $${r}$ and $${s}$ give $(x ${r < 0 ? "+" : "-"} ${Math.abs(r)})(x ${s < 0 ? "+" : "-"} ${Math.abs(s)}) = ${poly([1, "x^2"], [-(r + s), "x"], [r * s, ""])} = 0$.`,
+              `根 $${r}$ 和 $${s}$ 给出 $(x ${r < 0 ? "+" : "-"} ${Math.abs(r)})(x ${s < 0 ? "+" : "-"} ${Math.abs(s)}) = ${poly([1, "x^2"], [-(r + s), "x"], [r * s, ""])} = 0$。`,
+            ),
+          ],
+          [
+            ["Compare with $x^2 - px - q = 0$", "与 $x^2 - px - q = 0$ 比较"],
+            t(
+              `$-p = ${-(r + s)}$ and $-q = ${r * s}$, so $p = ${r + s}$ and $q = ${-r * s}$.`,
+              `$-p = ${-(r + s)}$，$-q = ${r * s}$，所以 $p = ${r + s}$，$q = ${-r * s}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The sequence $${inParens(r)}^n$ must satisfy the recurrence, so $${inParens(r)}^2 = pr + q$: $${r + s === 0 ? `${-r * s}` : `${(r + s) * r} ${-r * s < 0 ? "-" : "+"} ${Math.abs(r * s)}`} = ${r * r}$.`,
+          `数列 $${inParens(r)}^n$ 必须满足递推，所以 $${inParens(r)}^2 = pr + q$：$${r + s === 0 ? `${-r * s}` : `${(r + s) * r} ${-r * s < 0 ? "-" : "+"} ${Math.abs(r * s)}`} = ${r * r}$。`,
+        ),
       ),
     });
   },
@@ -1016,8 +1092,8 @@ const parameterForRepeatedRoot: KnowledgePointDef = {
   id: "the-coefficient-that-makes-a-root-repeated",
   title: t("The coefficient that makes a root repeated", "使特征根重复的系数"),
   explanation: t(
-    "The form of the solution of a second-order recurrence depends on the discriminant of its characteristic equation. Positive gives two real roots, negative gives complex roots, and zero gives a repeated root, where the solution changes to $(A + Bn)r^n$. Setting the discriminant to zero finds the coefficient at this boundary between the other two cases.",
-    "二阶递推的解的形式取决于特征方程的判别式。为正时有两个实根，为负时有复根，为零时有重根，此时解变为 $(A + Bn)r^n$。令判别式为零，就求出了处于另外两种情形分界处的系数。",
+    "The form of the solution of a second-order recurrence depends on the discriminant of its characteristic equation. Positive gives two real roots, negative gives complex roots, and zero gives a repeated root, where the solution changes to $(A + Bn)r^n$. Setting the discriminant to zero finds the coefficient at this boundary between the other two cases. For $a_{n+2} = 20a_{n+1} + ka_n$, the equation $x^2 - 20x - k = 0$ has discriminant $400 + 4k$, which is zero at $k = -100$; then $x^2 - 20x + 100 = (x - 10)^2$.\n\n> **Watch out.** The constant term of $x^2 - px - k$ is $-k$, so the discriminant is $p^2 + 4k$, not $p^2 - 4k$. That makes $k = -\\frac{p^2}{4}$ negative, and the repeated root is $\\frac{p}{2}$.",
+    "二阶递推的解的形式取决于特征方程的判别式。为正时有两个实根，为负时有复根，为零时有重根，此时解变为 $(A + Bn)r^n$。令判别式为零，就求出了处于另外两种情形分界处的系数。对 $a_{n+2} = 20a_{n+1} + ka_n$，方程 $x^2 - 20x - k = 0$ 的判别式是 $400 + 4k$，在 $k = -100$ 时为零；此时 $x^2 - 20x + 100 = (x - 10)^2$。\n\n> **注意。** $x^2 - px - k$ 的常数项是 $-k$，所以判别式是 $p^2 + 4k$，不是 $p^2 - 4k$。因此 $k = -\\frac{p^2}{4}$ 是负数，重根是 $\\frac{p}{2}$。",
   ),
   generate(rng) {
     const p = rng.pick(range(-15, 15).filter((v) => v !== 0));
@@ -1030,10 +1106,41 @@ const parameterForRepeatedRoot: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [Q.of(p * p, 4), Q.of(-p * p, 2), Q.of(-p, 2)],
-      solution: t(
-        `The characteristic equation is $${poly([1, "x^2"], [-p, "x"])} - k = 0$, with discriminant $${inParens(p)}^2 + 4k$. Setting this to zero gives $k = ${answer.toLatex()}$, and the repeated root is $${root.toLatex()}$.`,
-        `特征方程是 $${poly([1, "x^2"], [-p, "x"])} - k = 0$，判别式是 $${inParens(p)}^2 + 4k$。令它为零，得 $k = ${answer.toLatex()}$，重根是 $${root.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(p * p, 4),
+          "The sign is off: the constant term is $-k$, so the discriminant is $p^2 + 4k$.",
+          "符号错了：常数项是 $-k$，所以判别式是 $p^2 + 4k$。",
+        ),
+        why(
+          Q.of(-p * p, 2),
+          "That divides by $2$; the discriminant $p^2 + 4k$ is zero when $k = -\\frac{p^2}{4}$.",
+          "那是除以了 $2$；判别式 $p^2 + 4k$ 在 $k = -\\frac{p^2}{4}$ 时为零。",
+        ),
+        why(Q.of(-p, 2), "That is minus half of $p$; square $p$ in the discriminant.", "那是 $p$ 的一半的相反数；判别式中 $p$ 要平方。"),
+        why(root, "That is the repeated root $\\frac{p}{2}$, not the coefficient $k$.", "那是重根 $\\frac{p}{2}$，不是系数 $k$。"),
+      ].filter((m, i, all) => all.findIndex((o) => (o.value as Q).eq(m.value as Q)) === i),
+      solution: walked(
+        [
+          [
+            ["Write the characteristic equation", "写出特征方程"],
+            t(
+              `Trying $a_n = x^n$ gives $${poly([1, "x^2"], [-p, "x"])} - k = 0$.`,
+              `设 $a_n = x^n$，得 $${poly([1, "x^2"], [-p, "x"])} - k = 0$。`,
+            ),
+          ],
+          [
+            ["Set the discriminant to zero", "令判别式为零"],
+            t(
+              `$${inParens(p)}^2 + 4k = ${p * p} + 4k = 0$, so $k = ${answer.toLatex()}$.`,
+              `$${inParens(p)}^2 + 4k = ${p * p} + 4k = 0$，所以 $k = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $k = ${answer.toLatex()}$ the equation is $${poly([1, "x^2"], [-p, "x"])} + ${answer.neg().toLatex()} = \\left(x ${p < 0 ? "+" : "-"} ${root.abs().toLatex()}\\right)^2 = 0$, with the repeated root $${root.toLatex()}$.`,
+          `当 $k = ${answer.toLatex()}$ 时，方程为 $${poly([1, "x^2"], [-p, "x"])} + ${answer.neg().toLatex()} = \\left(x ${p < 0 ? "+" : "-"} ${root.abs().toLatex()}\\right)^2 = 0$，重根为 $${root.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -1044,8 +1151,8 @@ const periodicRecurrence: KnowledgePointDef = {
   figure: discreteDrawings1["second-order-homogeneous-recurrence-relations-with-complex-roots#far-terms-of-a-periodic-recurrence"],
   title: t("Far terms of a periodic recurrence", "周期递推的远项"),
   explanation: t(
-    "When the characteristic roots are complex with modulus one, the powers of the roots just turn around the unit circle. If the angle is a simple fraction of a full turn, the sequence repeats exactly. So a term with a large index can be found by writing out one period and reducing the index by the length of the period.",
-    "特征根是模为一的复数时，根的幂只是在单位圆上旋转。如果角度是整圈的简单分数，数列就严格重复。所以求下标很大的项时，只要写出一个周期，再按周期长度化简下标。",
+    "When the characteristic roots are complex with modulus one, the powers of the roots just turn around the unit circle. If the angle is a simple fraction of a full turn, the sequence repeats exactly. So a term with a large index can be found by writing out one period and reducing the index by the length of the period. For $a_{n+2} = a_{n+1} - a_n$ with $a_0 = 10$ and $a_1 = 12$, the terms run $10, 12, 2, -10, -12, -2$ and then repeat, so the period is $6$. Since $100 = 6 \\cdot 16 + 4$, $a_{100} = a_4 = -12$.\n\n> **Watch out.** Count from $a_0$: a remainder of $4$ means $a_4$, the fifth term listed, not the fourth. The period ends only when two consecutive terms are again $a_0$ and $a_1$.",
+    "特征根是模为一的复数时，根的幂只是在单位圆上旋转。如果角度是整圈的简单分数，数列就严格重复。所以求下标很大的项时，只要写出一个周期，再按周期长度化简下标。对 $a_{n+2} = a_{n+1} - a_n$，$a_0 = 10$，$a_1 = 12$，各项依次是 $10, 12, 2, -10, -12, -2$，然后重复，所以周期是 $6$。因为 $100 = 6 \\cdot 16 + 4$，所以 $a_{100} = a_4 = -12$。\n\n> **注意。** 从 $a_0$ 数起：余数为 $4$ 指的是 $a_4$，即列出的第五项，不是第四项。只有连续两项又是 $a_0$ 和 $a_1$ 时，一个周期才结束。",
   ),
   generate(rng) {
     const p = rng.pick([0, 1, -1]);
@@ -1058,6 +1165,11 @@ const periodicRecurrence: KnowledgePointDef = {
     const rem = rng.int(2, period - 1);
     const N = period * rng.int(5, 40) + rem;
     const answer = terms[rem] as number;
+    const last = terms[period - 1] as number;
+    const sum = (x: number, y: number) => (x === 0 ? `${y}` : y === 0 ? `${x}` : `${x} ${y < 0 ? "-" : "+"} ${Math.abs(y)}`);
+    const equals = (lhs: string, e: string, v: number) => (e === `${v}` ? `$${lhs} = ${v}$` : `$${lhs} = ${e} = ${v}$`);
+    const again = equals(`a_{${period}}`, sum(p * last, -(terms[period - 2] as number)), a0);
+    const again1 = equals(`a_{${period + 1}}`, sum(p * a0, -last), a1);
     return numberProblem({
       prompt: t(
         `A sequence has $a_0 = ${a0}$, $a_1 = ${a1}$ and $a_{n+2} = ${poly([p, "a_{n+1}"], [-1, "a_n"])}$. Find $a_{${N}}$.`,
@@ -1065,10 +1177,38 @@ const periodicRecurrence: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a0, a1, -answer, a0 + a1],
-      solution: t(
-        `The terms run $${terms.join(", ")}$ and then repeat, since the next two are again $${a0}$ and $${a1}$. The period is ${period}, and ${N} leaves remainder ${rem}, so $a_{${N}} = a_{${rem}} = ${answer}$.`,
-        `各项依次是 $${terms.join(", ")}$，然后重复，因为接下来两项又是 $${a0}$ 和 $${a1}$。周期是 ${period}，${N} 除以 ${period} 余 ${rem}，所以 $a_{${N}} = a_{${rem}} = ${answer}$。`,
+      mistakes: [
+        why(
+          terms[rem - 1] as number,
+          `That is $a_{${rem - 1}}$, one place early: count the terms from $a_0$.`,
+          `那是 $a_{${rem - 1}}$，早了一位：要从 $a_0$ 数起。`,
+        ),
+        why(a0, `That is $a_0$; $${N}$ leaves remainder $${rem}$, not $0$.`, `那是 $a_0$；$${N}$ 的余数是 $${rem}$，不是 $0$。`),
+        why(a1, `That is $a_1$; $${N}$ leaves remainder $${rem}$, not $1$.`, `那是 $a_1$；$${N}$ 的余数是 $${rem}$，不是 $1$。`),
+        why(-answer, "The sign is off; read the term straight from the listed period.", "符号错了；直接从列出的周期中读出这一项。"),
+        why(a0 + a1, "That adds the two initial terms; apply the rule as given.", "那是把两个初始项相加；要按给定的规则计算。"),
+      ].filter((m, i, all) => all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["List one period", "列出一个周期"],
+            t(
+              `$${terms.map((v, i) => `a_{${i}} = ${v}`).join(", ")}$, and the next two terms are again $${a0}$ and $${a1}$, so the period is $${period}$.`,
+              `${terms.map((v, i) => `$a_{${i}} = ${v}$`).join("，")}，接下来两项又是 $${a0}$ 和 $${a1}$，所以周期是 $${period}$。`,
+            ),
+          ],
+          [
+            ["Reduce the index", "化简下标"],
+            t(
+              `$${N} = ${period} \\cdot ${(N - rem) / period} + ${rem}$, so $a_{${N}} = a_{${rem}} = ${answer}$.`,
+              `$${N} = ${period} \\cdot ${(N - rem) / period} + ${rem}$，所以 $a_{${N}} = a_{${rem}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The rule after the last listed term gives ${again} and ${again1}, so the terms do repeat.`,
+          `由递推，最后一项之后是 ${again}，${again1}，所以各项确实重复。`,
+        ),
       ),
     });
   },
@@ -1078,8 +1218,8 @@ const productOfFiniteSums: KnowledgePointDef = {
   id: "coefficients-of-a-product-of-finite-sums",
   title: t("Coefficients of a product of finite sums", "有限和之积的系数"),
   explanation: t(
-    "A generating function turns counting into multiplication. In a product of two finite sums, each way of making the power $x^m$ picks one exponent from each factor, with the exponents adding to $m$. So the coefficient counts the pairs of allowed exponents with that sum, which is how limits on choices enter a counting problem.",
-    "生成函数把计数变成乘法。在两个有限和的乘积中，得到幂 $x^m$ 的每种方式都是从每个因子选一个指数，使指数之和为 $m$。所以系数就是和为该值的可选指数对的个数，选择上的限制正是这样进入计数问题的。",
+    "A generating function turns counting into multiplication. In a product of two finite sums, each way of making the power $x^m$ picks one exponent from each factor, with the exponents adding to $m$. So the coefficient counts the pairs of allowed exponents with that sum, which is how limits on choices enter a counting problem. In $(1 + x + \\dots + x^{10})(1 + x + \\dots + x^{12})$, the coefficient of $x^{15}$ counts $i + j = 15$ with $i \\le 10$ and $j \\le 12$: $i$ runs from $3$ to $10$, which gives $8$ pairs.\n\n> **Watch out.** Both limits cut the range: $i \\le a$, and $j = m - i \\le b$ forces $i \\ge m - b$. Counting the whole numbers from the lowest to the highest gives one more than their difference.",
+    "生成函数把计数变成乘法。在两个有限和的乘积中，得到幂 $x^m$ 的每种方式都是从每个因子选一个指数，使指数之和为 $m$。所以系数就是和为该值的可选指数对的个数，选择上的限制正是这样进入计数问题的。在 $(1 + x + \\dots + x^{10})(1 + x + \\dots + x^{12})$ 中，$x^{15}$ 的系数数的是满足 $i + j = 15$、$i \\le 10$、$j \\le 12$ 的数对：$i$ 从 $3$ 取到 $10$，共 $8$ 对。\n\n> **注意。** 两个上限都会截断范围：$i \\le a$，而 $j = m - i \\le b$ 迫使 $i \\ge m - b$。从最小值数到最大值，个数比两者之差多一。",
   ),
   generate(rng) {
     const a = rng.int(3, 8);
@@ -1093,10 +1233,40 @@ const productOfFiniteSums: KnowledgePointDef = {
       prompt: t(`Find the coefficient of $x^{${m}}$ in $${sum(a)}${sum(b)}$.`, `求 $${sum(a)}${sum(b)}$ 中 $x^{${m}}$ 的系数。`),
       answer,
       form: "integer",
-      wrong: [m + 1, Math.min(a, b) + 1, a + b - m + 2],
-      solution: t(
-        `Count pairs $i + j = ${m}$ with $i \\le ${a}$ and $j \\le ${b}$. The first exponent can run from ${low} to ${high}, which gives ${answer} pairs.`,
-        `数满足 $i + j = ${m}$、$i \\le ${a}$、$j \\le ${b}$ 的数对。第一个指数可以从 ${low} 取到 ${high}，共 ${answer} 对。`,
+      mistakes: [
+        why(
+          m + 1,
+          `That counts every split of $${m}$ with no upper limits; the exponents cannot pass $${a}$ and $${b}$.`,
+          `那是不加上限地数了 $${m}$ 的所有拆分；指数不能超过 $${a}$ 和 $${b}$。`,
+        ),
+        why(
+          Math.min(a, b) + 1,
+          "That counts the terms of the shorter factor; the count also depends on the power.",
+          "那是数了较短因子的项数；个数还与幂次有关。",
+        ),
+        why(high - low, "That is the difference of the end values; counting both ends adds one.", "那是两端值之差；两端都算上要再加一。"),
+      ].filter((m, i, all) => all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Set up the count", "列出计数条件"],
+            t(
+              `Each $x^{${m}}$ comes from $x^i \\cdot x^j$ with $i + j = ${m}$, $0 \\le i \\le ${a}$ and $0 \\le j \\le ${b}$.`,
+              `每个 $x^{${m}}$ 都来自 $x^i \\cdot x^j$，其中 $i + j = ${m}$，$0 \\le i \\le ${a}$，$0 \\le j \\le ${b}$。`,
+            ),
+          ],
+          [
+            ["Find the range of $i$", "求 $i$ 的范围"],
+            t(
+              `${m > b ? `$j = ${m} - i \\le ${b}$ gives $i \\ge ${m - b}$` : `$j = ${m} - i \\le ${b}$ holds for every $i \\ge 0$`}, and $j \\ge 0$ gives $i \\le ${m}$. So $i$ runs from $${low}$ to $${high}$, which is $${low === 0 ? `${high} + 1` : `${high} - ${low} + 1`} = ${answer}$ values.`,
+              `${m > b ? `由 $j = ${m} - i \\le ${b}$ 得 $i \\ge ${m - b}$` : `$j = ${m} - i \\le ${b}$ 对所有 $i \\ge 0$ 成立`}，由 $j \\ge 0$ 得 $i \\le ${m}$。所以 $i$ 从 $${low}$ 取到 $${high}$，共 $${low === 0 ? `${high} + 1` : `${high} - ${low} + 1`} = ${answer}$ 个值。`,
+            ),
+          ],
+        ],
+        t(
+          `The extreme pairs are $(${low}, ${m - low})$ and $(${high}, ${m - high})$, and both stay within the limits $${a}$ and $${b}$.`,
+          `两端的数对是 $(${low}, ${m - low})$ 和 $(${high}, ${m - high})$，都在上限 $${a}$ 和 $${b}$ 之内。`,
+        ),
       ),
     });
   },
@@ -1106,8 +1276,8 @@ const seriesFromGeneratingFunction: KnowledgePointDef = {
   id: "summing-a-recursive-series-with-its-generating-function",
   title: t("Summing a recursive series with its generating function", "用生成函数求递推级数的和"),
   explanation: t(
-    "The generating function $G(x) = \\sum a_nx^n$ of a recurrence is a rational function. Evaluating it at a point inside its radius of convergence gives the sum of an infinite series. So a sum like $\\sum \\frac{a_n}{k^n}$ needs no formula for the terms at all: just put $x = \\frac{1}{k}$ into the rational function.",
-    "递推的生成函数 $G(x) = \\sum a_nx^n$ 是有理函数。在收敛半径内的一点取值，就得到一个无穷级数的和。所以像 $\\sum \\frac{a_n}{k^n}$ 这样的和完全不需要通项公式：只要把 $x = \\frac{1}{k}$ 代入这个有理函数。",
+    "The generating function $G(x) = \\sum a_nx^n$ of a recurrence is a rational function. Evaluating it at a point inside its radius of convergence gives the sum of an infinite series. So a sum like $\\sum \\frac{a_n}{k^n}$ needs no formula for the terms at all: just put $x = \\frac{1}{k}$ into the rational function. For $a_0 = 1$, $a_1 = 5$ and $a_{n+2} = a_{n+1} + 6a_n$, $G(x) = \\frac{1 + 4x}{1 - x - 6x^2}$, so $\\sum \\frac{a_n}{10^n} = G\\left(\\frac{1}{10}\\right) = \\frac{100 + 40}{100 - 10 - 6} = \\frac{5}{3}$.\n\n> **Watch out.** The numerator is $a_0 + (a_1 - pa_0)x$, not $a_0 + a_1x$, and the denominator is $1 - px - qx^2$, with both signs minus. Multiply top and bottom by $k^2$ to clear the fractions.",
+    "递推的生成函数 $G(x) = \\sum a_nx^n$ 是有理函数。在收敛半径内的一点取值，就得到一个无穷级数的和。所以像 $\\sum \\frac{a_n}{k^n}$ 这样的和完全不需要通项公式：只要把 $x = \\frac{1}{k}$ 代入这个有理函数。对 $a_0 = 1$，$a_1 = 5$，$a_{n+2} = a_{n+1} + 6a_n$，$G(x) = \\frac{1 + 4x}{1 - x - 6x^2}$，所以 $\\sum \\frac{a_n}{10^n} = G\\left(\\frac{1}{10}\\right) = \\frac{100 + 40}{100 - 10 - 6} = \\frac{5}{3}$。\n\n> **注意。** 分子是 $a_0 + (a_1 - pa_0)x$，不是 $a_0 + a_1x$；分母是 $1 - px - qx^2$，两个符号都是负号。分子分母同乘 $k^2$ 来消去分数。",
   ),
   generate(rng) {
     const p = rng.int(1, 3);
@@ -1129,10 +1299,45 @@ const seriesFromGeneratingFunction: KnowledgePointDef = {
         `数列满足 $a_0 = ${a0}$，$a_1 = ${a1}$，$a_{n+2} = ${poly([p, "a_{n+1}"], [q, "a_n"])}$。求 $\\sum_{n=0}^{\\infty} \\frac{a_n}{${k}^n}$。`,
       ),
       answer,
-      wrong: [Q.of(top, k * k + p * k + q), Q.of(a0 * k + a1, k), Q.of(top, k * k - p * k + q)],
-      solution: t(
-        `The generating function is $G(x) = \\frac{${numerator}}{${denominator}}$. Putting $x = \\frac{1}{${k}}$ and multiplying top and bottom by $${k * k}$ gives $${value}$.`,
-        `生成函数是 $G(x) = \\frac{${numerator}}{${denominator}}$。代入 $x = \\frac{1}{${k}}$，分子分母同乘 $${k * k}$，得 $${value}$。`,
+      mistakes: [
+        why(
+          Q.of(top, k * k + p * k + q),
+          "The signs in the denominator are off: it is $1 - px - qx^2$.",
+          "分母的符号错了：应是 $1 - px - qx^2$。",
+        ),
+        why(
+          Q.of(a0 * k * k + a1 * k, bottom),
+          "That uses $a_0 + a_1x$ as the numerator; its $x$ coefficient is $a_1 - pa_0$.",
+          "那是把 $a_0 + a_1x$ 当作分子；它的 $x$ 系数是 $a_1 - pa_0$。",
+        ),
+        why(Q.of(a0 * k + a1, k), "That adds only the first two terms of the series.", "那是只加了级数的前两项。"),
+        why(
+          Q.of(top, k * k - p * k + q),
+          "The sign of the $qx^2$ term is off: the denominator is $1 - px - qx^2$.",
+          "$qx^2$ 项的符号错了：分母是 $1 - px - qx^2$。",
+        ),
+      ].filter((m, i, all) => all.findIndex((o) => (o.value as Q).eq(m.value as Q)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the generating function", "求生成函数"],
+            t(
+              `Multiplying by $x^{n+2}$ and summing gives $G(x)(${denominator}) = a_0 + (a_1 - pa_0)x$, so $G(x) = \\frac{${numerator}}{${denominator}}$.`,
+              `乘以 $x^{n+2}$ 再求和，得 $G(x)(${denominator}) = a_0 + (a_1 - pa_0)x$，所以 $G(x) = \\frac{${numerator}}{${denominator}}$。`,
+            ),
+          ],
+          [
+            [`Put $x = \\frac{1}{${k}}$`, `代入 $x = \\frac{1}{${k}}$`],
+            t(
+              `Multiplying top and bottom by $${k * k}$: $G\\left(\\frac{1}{${k}}\\right) = ${value}$.`,
+              `分子分母同乘 $${k * k}$：$G\\left(\\frac{1}{${k}}\\right) = ${value}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Multiplying back by the denominator at $x = \\frac{1}{${k}}$, which is $${Q.of(bottom, k * k).toLatex()}$, gives $${answer.mul(Q.of(bottom, k * k)).toLatex()}$, and the numerator there is $${Q.of(a0).add(Q.of(lin, k)).toLatex()}$, the same.`,
+          `乘回分母在 $x = \\frac{1}{${k}}$ 处的值 $${Q.of(bottom, k * k).toLatex()}$，得 $${answer.mul(Q.of(bottom, k * k)).toLatex()}$；而分子在该处的值是 $${Q.of(a0).add(Q.of(lin, k)).toLatex()}$，两者相同。`,
+        ),
       ),
     });
   },

@@ -235,26 +235,61 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-growth-from-the-denominator",
       ["The growth from the denominator", "由分母看增长"],
       [
-        "A factor $1 - rx$ in the denominator contributes a term with $r^{n}$ to the sequence. For large $n$ the root with the largest size dominates, so the ratio of neighboring terms approaches it.",
-        "分母中的因式 $1 - rx$ 给数列贡献一个 $r^{n}$ 项。$n$ 很大时，绝对值最大的那个起主导作用，所以相邻两项的比趋近于它。",
+        "A factor $1 - rx$ in the denominator contributes a term with $r^{n}$ to the sequence. For large $n$ the root with the largest size dominates, so the ratio of neighboring terms approaches it. For $G(x) = \\frac{4}{(1 - 15x)(1 + 3x)}$, $a_n = A \\cdot 15^{n} + B(-3)^{n}$ with $A \\ne 0$, and $15^{n}$ soon swamps $(-3)^{n}$, so $\\frac{a_{n+1}}{a_n}$ approaches $15$.\n\n> **Watch out.** The base comes from the factor, not from the numerator: $1 - rx$ gives $r^{n}$. The ratio tends to the root of largest size alone, not to the sum of the roots.",
+        "分母中的因式 $1 - rx$ 给数列贡献一个 $r^{n}$ 项。$n$ 很大时，绝对值最大的那个起主导作用，所以相邻两项的比趋近于它。对 $G(x) = \\frac{4}{(1 - 15x)(1 + 3x)}$，$a_n = A \\cdot 15^{n} + B(-3)^{n}$，$A \\ne 0$，而 $15^{n}$ 很快压倒 $(-3)^{n}$，所以 $\\frac{a_{n+1}}{a_n}$ 趋近于 $15$。\n\n> **注意。** 底数来自因式，不是来自分子：$1 - rx$ 给出 $r^{n}$。比值只趋近于绝对值最大的根，而不是两根之和。",
       ],
       (rng) => {
         const r = rng.int(2, 12);
         const s = rng.int(1, r - 1) * (rng.bool() ? 1 : -1);
         const top = rng.int(1, 9);
         const inner = s < 0 ? `(1 + ${s === -1 ? "" : -s}x)` : `(1 - ${s === 1 ? "" : s}x)`;
-        return whole(
-          [
+        const share = Q.of(top, r - s);
+        const lead = share.eq(Q.of(1)) ? "" : share.toLatex();
+        const ratio = Q.of(s, r).toLatex();
+        return numberProblem({
+          prompt: t(
             `$G(x) = \\frac{${top}}{(1 - ${r}x)${inner}}$ generates $a_0, a_1, a_2, \\dots$. What does $\\frac{a_{n+1}}{a_n}$ approach for large $n$?`,
             `$G(x) = \\frac{${top}}{(1 - ${r}x)${inner}}$ 生成 $a_0, a_1, a_2, \\dots$。$n$ 很大时 $\\frac{a_{n+1}}{a_n}$ 趋近于多少？`,
-          ],
-          r,
-          [Math.abs(s) === r ? r + 1 : Math.abs(s), r + Math.abs(s), top],
-          [
-            `The terms grow like $${r}^{n}$, since ${r} is larger in size than ${s}.`,
-            `各项按 $${r}^{n}$ 增长，因为 ${r} 的绝对值大于 ${s}。`,
-          ],
-        );
+          ),
+          answer: r,
+          form: "integer",
+          mistakes: [
+            why(
+              Math.abs(s),
+              "That is the size of the other root, whose term grows more slowly.",
+              "那是另一个根的绝对值，它对应的项增长较慢。",
+            ),
+            why(
+              r + Math.abs(s),
+              "That adds the roots; the larger one alone sets the growth.",
+              "那是把两个根相加了；只有较大的根决定增长。",
+            ),
+            why(top, "That is the numerator, which only scales the terms.", "那是分子，它只是把各项放大。"),
+            why(r + s, "That is the sum of the roots; the larger one alone sets the growth.", "那是两根之和；只有较大的根决定增长。"),
+          ].filter((m, i, all) => m.value !== r && all.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Read the roots from the factors", "由因式读出根"],
+                t(
+                  `$(1 - ${r}x)${inner}$ gives terms in $${r}^{n}$ and $${paren(s)}^{n}$, so $a_n = A \\cdot ${r}^{n} + B \\cdot ${paren(s)}^{n}$ with $A \\ne 0$.`,
+                  `$(1 - ${r}x)${inner}$ 给出 $${r}^{n}$ 和 $${paren(s)}^{n}$ 的项，所以 $a_n = A \\cdot ${r}^{n} + B \\cdot ${paren(s)}^{n}$，$A \\ne 0$。`,
+                ),
+              ],
+              [
+                ["Compare the sizes", "比较大小"],
+                t(
+                  `$|${s}| < ${r}$, so for large $n$ the first term dominates and $\\frac{a_{n+1}}{a_n}$ approaches $${r}$.`,
+                  `$|${s}| < ${r}$，所以 $n$ 很大时第一项占主导，$\\frac{a_{n+1}}{a_n}$ 趋近于 $${r}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Partial fractions give $a_n = ${lead}(${r}^{n+1} - ${paren(s)}^{n+1})$, so $\\frac{a_{n+1}}{a_n} = ${r} \\cdot \\frac{1 - (${ratio})^{n+2}}{1 - (${ratio})^{n+1}}$, which tends to $${r}$ because $|${ratio}| < 1$.`,
+              `由部分分式得 $a_n = ${lead}(${r}^{n+1} - ${paren(s)}^{n+1})$，所以 $\\frac{a_{n+1}}{a_n} = ${r} \\cdot \\frac{1 - (${ratio})^{n+2}}{1 - (${ratio})^{n+1}}$，因为 $|${ratio}| < 1$，它趋近于 $${r}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -422,8 +457,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-constant-from-the-start",
       ["The constant from the start", "由初值求常数"],
       [
-        "The general solution adds a multiple of $r^{n}$ to the particular solution. The starting value then fixes that multiple, because at $n = 0$ both powers equal 1.",
-        "通解是在特解上加 $r^{n}$ 的倍数。初值决定这个倍数，因为 $n = 0$ 时两个幂都等于 1。",
+        "The general solution adds a multiple of $r^{n}$ to the particular solution. The starting value then fixes that multiple, because at $n = 0$ both powers equal 1. For $a_n = 5a_{n-1} + 2 \\cdot 7^{n}$ with $a_0 = 10$, $7K = 5K + 14$ gives $K = 7$, and $A + 7 = 10$ gives $A = 3$, so $a_n = 3 \\cdot 5^{n} + 7 \\cdot 7^{n}$.\n\n> **Watch out.** At $n = 0$ the starting value is $A + K$, not $A$: subtract $K$ from $a_0$. Find $K$ first, and remember that dividing by $s^{n-1}$ turns the forcing $c \\cdot s^{n}$ into $cs$.",
+        "通解是在特解上加 $r^{n}$ 的倍数。初值决定这个倍数，因为 $n = 0$ 时两个幂都等于 1。对 $a_n = 5a_{n-1} + 2 \\cdot 7^{n}$，$a_0 = 10$，由 $7K = 5K + 14$ 得 $K = 7$，由 $A + 7 = 10$ 得 $A = 3$，所以 $a_n = 3 \\cdot 5^{n} + 7 \\cdot 7^{n}$。\n\n> **注意。** $n = 0$ 时初值是 $A + K$，不是 $A$：要从 $a_0$ 中减去 $K$。先求 $K$，并记住除以 $s^{n-1}$ 后强迫项 $c \\cdot s^{n}$ 变成 $cs$。",
       ],
       (rng) => {
         const r = rng.pick([-3, -2, 2, 3, 4]);
@@ -432,18 +467,52 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const c = m * (s - r);
         const k = s * m;
         const start = rng.int(-20, 20);
-        return integer(
-          [
+        const A = start - k;
+        const both = (x: number, y: number) => (x === 0 || y === 0 ? `${x + y}` : `${x}${signed(y)} = ${x + y}`);
+        return numberProblem({
+          prompt: t(
             `$a_n = ${r}a_{n-1}${c < 0 ? " - " : " + "}${Math.abs(c) === 1 ? "" : `${Math.abs(c)} \\cdot `}${s}^{n}$ with $a_0 = ${start}$ has the solution $a_n = A \\cdot ${paren(r)}^{n} + K \\cdot ${s}^{n}$. Find $A$.`,
             `$a_n = ${r}a_{n-1}${c < 0 ? " - " : " + "}${Math.abs(c) === 1 ? "" : `${Math.abs(c)} \\cdot `}${s}^{n}$，$a_0 = ${start}$，解为 $a_n = A \\cdot ${paren(r)}^{n} + K \\cdot ${s}^{n}$。求 $A$。`,
-          ],
-          start - k,
-          [k, start + k, start],
-          [
-            `Substituting gives $K = ${k}$, and $A + K = ${start}$ at $n = 0$, so $A = ${start - k}$.`,
-            `代入得 $K = ${k}$，$n = 0$ 时 $A + K = ${start}$，所以 $A = ${start - k}$。`,
-          ],
-        );
+          ),
+          answer: A,
+          form: "integer",
+          mistakes: [
+            why(k, "That is $K$, the coefficient of the particular solution.", "那是特解的系数 $K$。"),
+            why(
+              start + k,
+              "That adds $K$ to $a_0$; at $n = 0$, $A + K = a_0$, so subtract it.",
+              "那是把 $K$ 加到 $a_0$ 上；$n = 0$ 时 $A + K = a_0$，应减去它。",
+            ),
+            why(start, "That is $a_0$ itself, which is $A + K$.", "那是 $a_0$ 本身，它等于 $A + K$。"),
+            why(
+              start - m,
+              "That takes $K = \\frac{c}{s - r}$; dividing by $s^{n-1}$ turns the forcing into $cs$, so $K = \\frac{cs}{s - r}$.",
+              "那是取了 $K = \\frac{c}{s - r}$；除以 $s^{n-1}$ 后强迫项变成 $cs$，所以 $K = \\frac{cs}{s - r}$。",
+            ),
+          ].filter((x, i, all) => x.value !== A && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find $K$", "求 $K$"],
+                t(
+                  `Substituting $K \\cdot ${s}^{n}$ and dividing by $${s}^{n-1}$: $${s}K = ${r}K${signed(c * s)}$, so $${term(s - r, "K")} = ${c * s}$ and $K = ${k}$.`,
+                  `代入 $K \\cdot ${s}^{n}$ 并除以 $${s}^{n-1}$：$${s}K = ${r}K${signed(c * s)}$，所以 $${term(s - r, "K")} = ${c * s}$，$K = ${k}$。`,
+                ),
+              ],
+              [
+                ["Use the starting value", "利用初值"],
+                t(
+                  `At $n = 0$ both powers are $1$, so $A${signed(k)} = ${start}$ and $A = ${start} - ${paren(k)} = ${A}$.`,
+                  `$n = 0$ 时两个幂都是 $1$，所以 $A${signed(k)} = ${start}$，$A = ${start} - ${paren(k)} = ${A}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The rule gives $a_1 = ${both(r * start, c * s)}$, and the formula gives $${both(A * r, k * s)}$.`,
+              `由递推得 $a_1 = ${both(r * start, c * s)}$，由公式得 $${both(A * r, k * s)}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -452,8 +521,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-constant-after-polynomial-forcing",
       ["The constant after polynomial forcing", "多项式强迫项的常数"],
       [
-        "After finding the particular solution $cn + e$, add the homogeneous part $A \\cdot r^{n}$. At $n = 0$ the linear part leaves only $e$, so the starting value gives $A$ at once.",
-        "求出特解 $cn + e$ 后，加上齐次部分 $A \\cdot r^{n}$。$n = 0$ 时线性部分只剩 $e$，所以由初值立刻得到 $A$。",
+        "After finding the particular solution $cn + e$, add the homogeneous part $A \\cdot r^{n}$. At $n = 0$ the linear part leaves only $e$, so the starting value gives $A$ at once. For $a_n = 5a_{n-1} - 8n + 6$ with the particular solution $2n + 1$ and $a_0 = 4$, $A + 1 = 4$ gives $A = 3$, so $a_n = 3 \\cdot 5^{n} + 2n + 1$.\n\n> **Watch out.** At $n = 0$ the term $cn$ vanishes but $e$ does not, so $A = a_0 - e$. Do not subtract $c$, and do not add $e$.",
+        "求出特解 $cn + e$ 后，加上齐次部分 $A \\cdot r^{n}$。$n = 0$ 时线性部分只剩 $e$，所以由初值立刻得到 $A$。对 $a_n = 5a_{n-1} - 8n + 6$，特解为 $2n + 1$，$a_0 = 4$，由 $A + 1 = 4$ 得 $A = 3$，所以 $a_n = 3 \\cdot 5^{n} + 2n + 1$。\n\n> **注意。** $n = 0$ 时 $cn$ 项为零，但 $e$ 不为零，所以 $A = a_0 - e$。不要减去 $c$，也不要加上 $e$。",
       ],
       (rng) => {
         const r = rng.pick([-3, -2, 2, 3, 4]);
@@ -462,18 +531,53 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const alpha = c * (1 - r);
         const beta = e - r * e + r * c;
         const start = rng.int(-20, 20);
-        return integer(
-          [
-            `$a_n = ${r}a_{n-1}${alpha < 0 ? " - " : " + "}${Math.abs(alpha)}n${signed(beta)}$ with $a_0 = ${start}$ has the particular solution $${term(c, "n")}${signed(e)}$. Write $a_n = A \\cdot ${paren(r)}^{n} ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}n${signed(e)}$ and find $A$.`,
-            `$a_n = ${r}a_{n-1}${alpha < 0 ? " - " : " + "}${Math.abs(alpha)}n${signed(beta)}$，$a_0 = ${start}$，特解是 $${term(c, "n")}${signed(e)}$。写成 $a_n = A \\cdot ${paren(r)}^{n} ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}n${signed(e)}$，求 $A$。`,
-          ],
-          start - e,
-          [start + e, e, start - c],
-          [
-            `At $n = 0$, $A + ${paren(e)} = ${start}$, so $A = ${start - e}$.`,
-            `$n = 0$ 时 $A + ${paren(e)} = ${start}$，所以 $A = ${start - e}$。`,
-          ],
-        );
+        const A = start - e;
+        const both = (x: number, y: number) => (x === 0 || y === 0 ? `${x + y}` : `${x}${signed(y)} = ${x + y}`);
+        const general = `A \\cdot ${paren(r)}^{n} ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}n${signed(e)}`;
+        return numberProblem({
+          prompt: t(
+            `$a_n = ${r}a_{n-1}${alpha < 0 ? " - " : " + "}${Math.abs(alpha) === 1 ? "" : Math.abs(alpha)}n${signed(beta)}$ with $a_0 = ${start}$ has the particular solution $${term(c, "n")}${signed(e)}$. Write $a_n = ${general}$ and find $A$.`,
+            `$a_n = ${r}a_{n-1}${alpha < 0 ? " - " : " + "}${Math.abs(alpha) === 1 ? "" : Math.abs(alpha)}n${signed(beta)}$，$a_0 = ${start}$，特解是 $${term(c, "n")}${signed(e)}$。写成 $a_n = ${general}$，求 $A$。`,
+          ),
+          answer: A,
+          form: "integer",
+          mistakes: [
+            why(
+              start + e,
+              "That adds $e$; at $n = 0$, $A + e = a_0$, so subtract it.",
+              "那是加上了 $e$；$n = 0$ 时 $A + e = a_0$，应减去它。",
+            ),
+            why(e, "That is $e$, the constant of the particular solution.", "那是特解的常数 $e$。"),
+            why(start - c, "That subtracts $c$, but $cn$ is zero at $n = 0$.", "那是减去了 $c$，但 $n = 0$ 时 $cn$ 为零。"),
+            why(
+              start,
+              "That is $a_0$ itself; the particular solution still contributes $e$ at $n = 0$.",
+              "那是 $a_0$ 本身；$n = 0$ 时特解仍贡献 $e$。",
+            ),
+          ].filter((x, i, all) => x.value !== A && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Put $n = 0$", "代入 $n = 0$"],
+                t(
+                  `$${paren(r)}^{0} = 1$ and the term $${term(c, "n")}$ vanishes, so $a_0 = A${signed(e)}$.`,
+                  `$${paren(r)}^{0} = 1$，而 $${term(c, "n")}$ 这一项为零，所以 $a_0 = A${signed(e)}$。`,
+                ),
+              ],
+              [
+                ["Solve for $A$", "解出 $A$"],
+                t(
+                  `$A${signed(e)} = ${start}$, so $A = ${start} - ${paren(e)} = ${A}$.`,
+                  `$A${signed(e)} = ${start}$，所以 $A = ${start} - ${paren(e)} = ${A}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The rule gives $a_1 = ${both(r * start, alpha + beta)}$, and the formula gives $${both(A * r, c + e)}$.`,
+              `由递推得 $a_1 = ${both(r * start, alpha + beta)}$，由公式得 $${both(A * r, c + e)}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -578,22 +682,64 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "partial-sums-from-a-factor",
       ["Partial sums from a factor", "因式与部分和"],
       [
-        "Dividing a generating function by $1 - x$ turns a sequence into its partial sums. So the coefficients of $\\frac{1}{(1 - x)(1 - rx)}$ are the sums $1 + r + \\dots + r^{n}$ of a geometric sequence.",
-        "生成函数除以 $1 - x$，就把数列变成它的部分和。所以 $\\frac{1}{(1 - x)(1 - rx)}$ 的系数是等比数列的和 $1 + r + \\dots + r^{n}$。",
+        "Dividing a generating function by $1 - x$ turns a sequence into its partial sums. So the coefficients of $\\frac{1}{(1 - x)(1 - rx)}$ are the sums $1 + r + \\dots + r^{n}$ of a geometric sequence. In $\\frac{1}{(1 - x)(1 - 8x)}$, the coefficient of $x^{3}$ is $1 + 8 + 64 + 512 = 585$.\n\n> **Watch out.** The coefficient of $x^{n}$ adds the $n + 1$ powers from $r^{0}$ to $r^{n}$; it is the whole sum, not the last power $r^{n}$, and it stops at $r^{n}$, not $r^{n+1}$.",
+        "生成函数除以 $1 - x$，就把数列变成它的部分和。所以 $\\frac{1}{(1 - x)(1 - rx)}$ 的系数是等比数列的和 $1 + r + \\dots + r^{n}$。在 $\\frac{1}{(1 - x)(1 - 8x)}$ 中，$x^{3}$ 的系数是 $1 + 8 + 64 + 512 = 585$。\n\n> **注意。** $x^{n}$ 的系数是从 $r^{0}$ 到 $r^{n}$ 共 $n + 1$ 个幂之和；它是整个和，不是最后一个幂 $r^{n}$，而且只加到 $r^{n}$，不到 $r^{n+1}$。",
       ],
       (rng) => {
         const r = rng.int(2, 6);
         const n = rng.int(2, 7);
         const sum = (r ** (n + 1) - 1) / (r - 1);
-        return whole(
-          [
+        const powers = Array.from({ length: n + 1 }, (_, i) => r ** i);
+        const closed = r === 2 ? `2^{${n + 1}} - 1` : `\\frac{${r}^{${n + 1}} - 1}{${r} - 1} = \\frac{${r ** (n + 1) - 1}}{${r - 1}}`;
+        return numberProblem({
+          prompt: t(
             `Find the coefficient of $x^{${n}}$ in $\\frac{1}{(1 - x)(1 - ${r}x)}$.`,
             `求 $\\frac{1}{(1 - x)(1 - ${r}x)}$ 中 $x^{${n}}$ 的系数。`,
-          ],
-          sum,
-          [r ** n, sum - r ** n === r ** n ? sum + 1 : sum - r ** n, r ** (n + 1)],
-          [`It is $1 + ${r} + \\dots + ${r}^{${n}} = ${sum}$.`, `它是 $1 + ${r} + \\dots + ${r}^{${n}} = ${sum}$。`],
-        );
+          ),
+          answer: sum,
+          form: "integer",
+          mistakes: [
+            why(
+              r ** n,
+              `That is the last power $${r}^{${n}}$ alone; the factor $1 - x$ adds all the powers before it too.`,
+              `那只是最后一个幂 $${r}^{${n}}$；因式 $1 - x$ 还要把它之前的幂都加上。`,
+            ),
+            why(
+              sum - r ** n,
+              `That stops at $${n === 2 ? r : `${r}^{${n - 1}}`}$; the sum runs up to $${r}^{${n}}$.`,
+              `那是只加到 $${n === 2 ? r : `${r}^{${n - 1}}`}$；应加到 $${r}^{${n}}$。`,
+            ),
+            why(
+              r ** (n + 1),
+              `That is $${r}^{${n + 1}}$, a single power, one step too far.`,
+              `那是单个幂 $${r}^{${n + 1}}$，而且多了一步。`,
+            ),
+            why(
+              sum + r ** (n + 1),
+              `That adds $${r}^{${n + 1}}$ as well, one power too many.`,
+              `那是还加上了 $${r}^{${n + 1}}$，多了一个幂。`,
+            ),
+          ].filter((x, i, all) => x.value !== sum && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Read the two factors", "看两个因式"],
+                t(
+                  `$\\frac{1}{1 - ${r}x} = \\sum ${r}^{k}x^{k}$, and dividing by $1 - x$ replaces each coefficient by the sum of it and all the earlier ones.`,
+                  `$\\frac{1}{1 - ${r}x} = \\sum ${r}^{k}x^{k}$，再除以 $1 - x$，就把每个系数换成它与之前所有系数之和。`,
+                ),
+              ],
+              [
+                ["Add the powers", "把各幂相加"],
+                t(
+                  `The coefficient of $x^{${n}}$ is $${powers.join(" + ")} = ${sum}$.`,
+                  `$x^{${n}}$ 的系数是 $${powers.join(" + ")} = ${sum}$。`,
+                ),
+              ],
+            ],
+            t(`The geometric sum formula gives $${closed} = ${sum}$.`, `等比数列求和公式给出 $${closed} = ${sum}$。`),
+          ),
+        });
       },
     ),
   ],
@@ -833,31 +979,61 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-sum-of-the-constants",
       ["The sum of the constants", "常数的和"],
       [
-        "The solution has the form $Ar^{n} + Bs^{n} + Kt^{n}$, and at $n = 0$ all three powers equal 1. So the start value minus the particular coefficient gives $A + B$, before using the second condition.",
-        "解的形式是 $Ar^{n} + Bs^{n} + Kt^{n}$，$n = 0$ 时三个幂都等于 1。所以初值减去特解系数就得到 $A + B$，这时还没有用到第二个条件。",
+        "The solution has the form $Ar^{n} + Bs^{n} + Kt^{n}$, and at $n = 0$ all three powers equal 1. So the start value minus the particular coefficient gives $A + B$, before using the second condition. For $a_n = 8a_{n-1} - 7a_{n-2} - 8 \\cdot 5^{n}$, with roots $7$ and $1$, dividing by $5^{n-2}$ gives $25K = 40K - 7K - 200$, so $K = 25$; with $a_0 = 30$, $A + B = 30 - 25 = 5$.\n\n> **Watch out.** At $n = 0$, $a_0 = A + B + K$: subtract $K$ from $a_0$, do not add it. And $K$ comes from the forcing term, not from the starting value.",
+        "解的形式是 $Ar^{n} + Bs^{n} + Kt^{n}$，$n = 0$ 时三个幂都等于 1。所以初值减去特解系数就得到 $A + B$，这时还没有用到第二个条件。对 $a_n = 8a_{n-1} - 7a_{n-2} - 8 \\cdot 5^{n}$，特征根为 $7$ 和 $1$，除以 $5^{n-2}$ 得 $25K = 40K - 7K - 200$，所以 $K = 25$；由 $a_0 = 30$ 得 $A + B = 30 - 25 = 5$。\n\n> **注意。** $n = 0$ 时 $a_0 = A + B + K$：要从 $a_0$ 中减去 $K$，不是加上。而 $K$ 来自强迫项，不是来自初值。",
       ],
       (rng) => {
-        const t = rng.pick([2, 3]);
+        const base = rng.pick([2, 3]);
         const r = rng.pick([4, 5, -2, -3]);
         const s = rng.pick([1, -1, 6].filter((v) => v !== r));
         const m = nz(rng, 3);
-        const c = m * (t - r) * (t - s);
-        const k = t * t * m;
+        const c = m * (base - r) * (base - s);
+        const k = base * base * m;
         const start = rng.int(-30, 30);
         const p = r + s;
         const q = -r * s;
-        return integer(
-          [
-            `$a_n = ${term(p, "a_{n-1}")}${q < 0 ? " - " : " + "}${Math.abs(q) === 1 ? "" : Math.abs(q)}a_{n-2}${c < 0 ? " - " : " + "}${Math.abs(c)} \\cdot ${t}^{n}$ has characteristic roots ${r} and ${s}. With $a_0 = ${start}$, its solution is $A \\cdot ${paren(r)}^{n} + B \\cdot ${paren(s)}^{n} + K \\cdot ${t}^{n}$. Find $A + B$.`,
-            `$a_n = ${term(p, "a_{n-1}")}${q < 0 ? " - " : " + "}${Math.abs(q) === 1 ? "" : Math.abs(q)}a_{n-2}${c < 0 ? " - " : " + "}${Math.abs(c)} \\cdot ${t}^{n}$ 的特征根是 ${r} 和 ${s}。$a_0 = ${start}$ 时，解为 $A \\cdot ${paren(r)}^{n} + B \\cdot ${paren(s)}^{n} + K \\cdot ${t}^{n}$。求 $A + B$。`,
-          ],
-          start - k,
-          [start + k, k, start],
-          [
-            `Substituting $K \\cdot ${t}^{n}$ and dividing by $${t}^{n-2}$ gives $K(${t} - ${paren(r)})(${t} - ${paren(s)}) = ${paren(c)} \\cdot ${t * t}$, so $K = ${k}$. At $n = 0$, $A + B + K = ${start}$, so $A + B = ${start - k}$.`,
-            `代入 $K \\cdot ${t}^{n}$ 并除以 $${t}^{n-2}$，得 $K(${t} - ${paren(r)})(${t} - ${paren(s)}) = ${paren(c)} \\cdot ${t * t}$，所以 $K = ${k}$。当 $n = 0$ 时 $A + B + K = ${start}$，所以 $A + B = ${start - k}$。`,
-          ],
-        );
+        const answer = start - k;
+        const d = (base - r) * (base - s);
+        return numberProblem({
+          prompt: t(
+            `$a_n = ${term(p, "a_{n-1}")}${q < 0 ? " - " : " + "}${Math.abs(q) === 1 ? "" : Math.abs(q)}a_{n-2}${c < 0 ? " - " : " + "}${Math.abs(c)} \\cdot ${base}^{n}$ has characteristic roots ${r} and ${s}. With $a_0 = ${start}$, its solution is $A \\cdot ${paren(r)}^{n} + B \\cdot ${paren(s)}^{n} + K \\cdot ${base}^{n}$. Find $A + B$.`,
+            `$a_n = ${term(p, "a_{n-1}")}${q < 0 ? " - " : " + "}${Math.abs(q) === 1 ? "" : Math.abs(q)}a_{n-2}${c < 0 ? " - " : " + "}${Math.abs(c)} \\cdot ${base}^{n}$ 的特征根是 ${r} 和 ${s}。$a_0 = ${start}$ 时，解为 $A \\cdot ${paren(r)}^{n} + B \\cdot ${paren(s)}^{n} + K \\cdot ${base}^{n}$。求 $A + B$。`,
+          ),
+          answer,
+          form: "integer",
+          mistakes: [
+            why(
+              start + k,
+              "That adds $K$; at $n = 0$, $A + B + K = a_0$, so subtract it.",
+              "那是加上了 $K$；$n = 0$ 时 $A + B + K = a_0$，应减去它。",
+            ),
+            why(k, "That is $K$, the coefficient of the particular solution.", "那是特解的系数 $K$。"),
+            why(start, "That is $a_0$, which is $A + B + K$.", "那是 $a_0$，它等于 $A + B + K$。"),
+            why(start - c, "That subtracts the forcing coefficient instead of $K$.", "那是减去了强迫项的系数，而不是 $K$。"),
+          ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find $K$", "求 $K$"],
+                t(
+                  `Substituting $K \\cdot ${base}^{n}$ and dividing by $${base}^{n-2}$ gives $K(${base} - ${paren(r)})(${base} - ${paren(s)}) = ${paren(c)} \\cdot ${base * base}$, that is, $${d}K = ${c * base * base}$, so $K = ${k}$.`,
+                  `代入 $K \\cdot ${base}^{n}$ 并除以 $${base}^{n-2}$，得 $K(${base} - ${paren(r)})(${base} - ${paren(s)}) = ${paren(c)} \\cdot ${base * base}$，即 $${d}K = ${c * base * base}$，所以 $K = ${k}$。`,
+                ),
+              ],
+              [
+                ["Use $a_0$", "利用 $a_0$"],
+                t(
+                  `At $n = 0$ every power is $1$, so $A + B${signed(k)} = ${start}$ and $A + B = ${start} - ${paren(k)} = ${answer}$.`,
+                  `$n = 0$ 时每个幂都是 $1$，所以 $A + B${signed(k)} = ${start}$，$A + B = ${start} - ${paren(k)} = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$K = ${k}$ balances the forcing, since $(${base} - ${paren(r)})(${base} - ${paren(s)}) \\cdot ${paren(k)} = ${d * k} = ${paren(c)} \\cdot ${base}^{2}$. And $A + B + K = ${answer}${signed(k)} = ${start}$, the starting value.`,
+              `$K = ${k}$ 与强迫项平衡，因为 $(${base} - ${paren(r)})(${base} - ${paren(s)}) \\cdot ${paren(k)} = ${d * k} = ${paren(c)} \\cdot ${base}^{2}$。而 $A + B + K = ${answer}${signed(k)} = ${start}$，正是初值。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -866,26 +1042,63 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "a-constant-particular-solution",
       ["A constant particular solution", "常数特解"],
       [
-        "A constant forcing term calls for a constant particular solution $e$, as long as 1 is not a characteristic root. Substituting gives $e = pe + qe + \\beta$, which is one linear equation.",
-        "常数强迫项对应常数特解 $e$，只要 1 不是特征根。代入得 $e = pe + qe + \\beta$，这是一个一次方程。",
+        "A constant forcing term calls for a constant particular solution $e$, as long as 1 is not a characteristic root. Substituting gives $e = pe + qe + \\beta$, which is one linear equation. For $a_n = 6a_{n-1} + 7a_{n-2} - 24$, $e = 6e + 7e - 24$ gives $12e = 24$, so $e = 2$.\n\n> **Watch out.** Collect the $e$ terms on one side: $(p + q - 1)e = -\\beta$, so the sign of $\\beta$ flips. Then divide by $p + q - 1$, not by $p + q$.",
+        "常数强迫项对应常数特解 $e$，只要 1 不是特征根。代入得 $e = pe + qe + \\beta$，这是一个一次方程。对 $a_n = 6a_{n-1} + 7a_{n-2} - 24$，由 $e = 6e + 7e - 24$ 得 $12e = 24$，所以 $e = 2$。\n\n> **注意。** 把含 $e$ 的项移到同一边：$(p + q - 1)e = -\\beta$，所以 $\\beta$ 的符号要变。然后除以 $p + q - 1$，而不是 $p + q$。",
       ],
       (rng) => {
         const p = rng.pick([2, 3, 4, 5]);
         const q = rng.pick([2, 3, 4, 5, 6]);
         const e = nz(rng, 9);
         const beta = e * (1 - p - q);
-        return integer(
-          [
+        return numberProblem({
+          prompt: t(
             `$a_n = ${p}a_{n-1} + ${q}a_{n-2}${signed(beta)}$ has a constant particular solution $a_n = e$. Find $e$.`,
             `$a_n = ${p}a_{n-1} + ${q}a_{n-2}${signed(beta)}$ 有常数特解 $a_n = e$。求 $e$。`,
-          ],
-          e,
-          [-e, beta, e + p],
-          [
-            `$e = ${p + q}e${signed(beta)}$ gives $${p + q - 1}e = ${-beta}$, so $e = ${e}$.`,
-            `$e = ${p + q}e${signed(beta)}$ 得 $${p + q - 1}e = ${-beta}$，所以 $e = ${e}$。`,
-          ],
-        );
+          ),
+          answer: e,
+          form: "integer",
+          mistakes: [
+            why(
+              -e,
+              "The sign is off: moving the $e$ terms to one side gives $(p + q - 1)e = -\\beta$.",
+              "符号错了：把含 $e$ 的项移到一边得 $(p + q - 1)e = -\\beta$。",
+            ),
+            why(beta, "That is the forcing constant $\\beta$ itself.", "那是强迫项的常数 $\\beta$ 本身。"),
+            why(
+              -beta,
+              `That is $${p + q - 1}e$; divide by $${p + q - 1}$ to get $e$.`,
+              `那是 $${p + q - 1}e$；还要除以 $${p + q - 1}$ 才得到 $e$。`,
+            ),
+            ...(beta % (p + q) === 0
+              ? [
+                  why(
+                    -beta / (p + q),
+                    `That divides by $${p + q}$; the $e$ on the left makes the factor $${p + q - 1}$.`,
+                    `那是除以了 $${p + q}$；左边的 $e$ 使因子成为 $${p + q - 1}$。`,
+                  ),
+                ]
+              : []),
+          ].filter((x, i, all) => x.value !== e && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Substitute $a_n = e$", "代入 $a_n = e$"],
+                t(
+                  `$e = ${p}e + ${q}e${signed(beta)} = ${p + q}e${signed(beta)}$.`,
+                  `$e = ${p}e + ${q}e${signed(beta)} = ${p + q}e${signed(beta)}$。`,
+                ),
+              ],
+              [
+                ["Solve for $e$", "解出 $e$"],
+                t(`$${p + q - 1}e = ${-beta}$, so $e = ${e}$.`, `$${p + q - 1}e = ${-beta}$，所以 $e = ${e}$。`),
+              ],
+            ],
+            t(
+              `Putting $a_n = ${e}$ into the right side gives $${p * e}${signed(q * e)}${signed(beta)} = ${e}$, the constant itself.`,
+              `把 $a_n = ${e}$ 代入右边得 $${p * e}${signed(q * e)}${signed(beta)} = ${e}$，正是这个常数。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -894,26 +1107,55 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "early-terms-from-the-numerator",
       ["Early terms from the numerator", "由分子得前几项"],
       [
-        "In $\\frac{u + vx}{1 - px - qx^{2}}$, multiplying across gives $a_0 = u$ and $a_1 = pu + v$. So the numerator encodes the starting values, and the denominator encodes the recurrence.",
-        "在 $\\frac{u + vx}{1 - px - qx^{2}}$ 中，交叉相乘得 $a_0 = u$，$a_1 = pu + v$。所以分子记录初值，分母记录递推关系。",
+        "In $\\frac{u + vx}{1 - px - qx^{2}}$, multiplying across gives $a_0 = u$ and $a_1 = pu + v$. So the numerator encodes the starting values, and the denominator encodes the recurrence. For $\\frac{3 + 2x}{1 - 7x - 2x^{2}}$, $a_0 = 3$ and $a_1 = 21 + 2 = 23$.\n\n> **Watch out.** The $x$ coefficient $v$ of the numerator is not $a_1$ itself: the $x$ terms of $(1 - px - qx^{2})G(x)$ give $a_1 - pa_0 = v$. The $q$ term only enters from $a_2$ on.",
+        "在 $\\frac{u + vx}{1 - px - qx^{2}}$ 中，交叉相乘得 $a_0 = u$，$a_1 = pu + v$。所以分子记录初值，分母记录递推关系。对 $\\frac{3 + 2x}{1 - 7x - 2x^{2}}$，$a_0 = 3$，$a_1 = 21 + 2 = 23$。\n\n> **注意。** 分子中 $x$ 的系数 $v$ 不是 $a_1$ 本身：$(1 - px - qx^{2})G(x)$ 的 $x$ 项给出 $a_1 - pa_0 = v$。含 $q$ 的项从 $a_2$ 起才起作用。",
       ],
       (rng) => {
         const u = nz(rng, 9);
         const v = nz(rng, 9);
         const p = rng.int(1, 6);
         const q = rng.int(1, 12);
-        return integer(
-          [
-            `$G(x) = \\frac{${u}${signed(v)}x}{1 - ${p === 1 ? "" : p}x - ${q}x^{2}}$ is the generating function of $a_0, a_1, \\dots$. Find $a_1$.`,
-            `$G(x) = \\frac{${u}${signed(v)}x}{1 - ${p === 1 ? "" : p}x - ${q}x^{2}}$ 是 $a_0, a_1, \\dots$ 的生成函数。求 $a_1$。`,
-          ],
-          p * u + v,
-          [v, u + v, q * u + v],
-          [
-            `$a_1 = ${p} \\cdot ${paren(u)} + ${paren(v)} = ${p * u + v}$.`,
-            `$a_1 = ${p} \\cdot ${paren(u)} + ${paren(v)} = ${p * u + v}$。`,
-          ],
-        );
+        const answer = p * u + v;
+        const num = `${u}${v < 0 ? " - " : " + "}${Math.abs(v) === 1 ? "" : Math.abs(v)}x`;
+        const den = `1 - ${p === 1 ? "" : p}x - ${q === 1 ? "" : q}x^{2}`;
+        const series = answer === 0 ? `${u}` : `${u}${answer < 0 ? " - " : " + "}${Math.abs(answer) === 1 ? "" : Math.abs(answer)}x`;
+        return numberProblem({
+          prompt: t(
+            `$G(x) = \\frac{${num}}{${den}}$ is the generating function of $a_0, a_1, \\dots$. Find $a_1$.`,
+            `$G(x) = \\frac{${num}}{${den}}$ 是 $a_0, a_1, \\dots$ 的生成函数。求 $a_1$。`,
+          ),
+          answer,
+          form: "integer",
+          mistakes: [
+            why(
+              v,
+              "That is the $x$ coefficient of the numerator; it equals $a_1 - pa_0$, not $a_1$.",
+              "那是分子中 $x$ 的系数；它等于 $a_1 - pa_0$，不是 $a_1$。",
+            ),
+            why(u + v, "That forgets the factor $p$: $a_1 = pa_0 + v$.", "那是漏掉了因子 $p$：$a_1 = pa_0 + v$。"),
+            why(q * u + v, "That uses $q$; the $x^{2}$ term only enters from $a_2$ on.", "那是用了 $q$；$x^{2}$ 项从 $a_2$ 起才起作用。"),
+            why(u, "That is $a_0$, the constant term of the numerator.", "那是 $a_0$，分子的常数项。"),
+          ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Multiply across", "交叉相乘"],
+                t(`$(${den})(a_0 + a_1x + \\dots) = ${num}$.`, `$(${den})(a_0 + a_1x + \\dots) = ${num}$。`),
+              ],
+              [
+                ["Match the coefficients", "比较系数"],
+                t(
+                  `The constants give $a_0 = ${u}$, and the $x$ terms give $a_1 - ${p === 1 ? "" : p}a_0 = ${v}$, so $a_1 = ${p * u}${signed(v)} = ${answer}$.`,
+                  `比较常数项得 $a_0 = ${u}$，比较 $x$ 的项得 $a_1 - ${p === 1 ? "" : p}a_0 = ${v}$，所以 $a_1 = ${p * u}${signed(v)} = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In $(${den})(${series} + \\dots)$ the $x$ coefficient is $${answer}${signed(-p * u)} = ${v}$, the numerator's.`,
+              `在 $(${den})(${series} + \\dots)$ 中 $x$ 的系数是 $${answer}${signed(-p * u)} = ${v}$，与分子相符。`,
+            ),
+          ),
+        });
       },
     ),
   ],
