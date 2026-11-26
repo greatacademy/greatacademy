@@ -563,8 +563,8 @@ const dependentPair = point(
   "the-dependent-pair-among-four-arrows",
   ["The dependent pair among four arrows", "四个箭头中线性相关的一对"],
   [
-    "Two vectors are linearly dependent exactly when they lie on one line through the origin, in the same direction or in opposite ones.",
-    "两个向量线性相关当且仅当它们在过原点的同一条直线上，方向可以相同也可以相反。",
+    "Two vectors are linearly dependent exactly when they lie on one line through the origin, in the same direction or in opposite ones. In coordinates, $(a, b)$ and $(c, d)$ are dependent exactly when $ad - bc = 0$. For example, $(2, -1)$ and $(-4, 2)$ are dependent, since $2 \\cdot 2 - (-1)(-4) = 0$, while $(2, -1)$ and $(1, 2)$ are not, since $2 \\cdot 2 - (-1) \\cdot 1 = 5$.\n\n> **Watch out.** Arrows pointing in opposite directions still lie on one line, so they are dependent; two arrows that merely look close in direction are not.",
+    "两个向量线性相关当且仅当它们在过原点的同一条直线上，方向可以相同也可以相反。用坐标说，$(a, b)$ 与 $(c, d)$ 线性相关当且仅当 $ad - bc = 0$。例如 $(2, -1)$ 与 $(-4, 2)$ 线性相关，因为 $2 \\cdot 2 - (-1)(-4) = 0$；而 $(2, -1)$ 与 $(1, 2)$ 不相关，因为 $2 \\cdot 2 - (-1) \\cdot 1 = 5$。\n\n> **注意。** 方向相反的箭头仍在同一条直线上，所以线性相关；只是方向看起来接近的两个箭头并不相关。",
   ],
   (rng) => {
     const w = rng.pick(directions);
@@ -580,14 +580,22 @@ const dependentPair = point(
       const [s, e] = [x, y].sort() as [string, string];
       return [`$${s}$ and $${e}$`, `$${s}$ 和 $${e}$`];
     };
-    return choose(
+    const n = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const det = (x: Point, y: Point) => `${n(x[0])} \\cdot ${n(y[1])} - ${n(x[1])} \\cdot ${n(y[0])} = ${cross(x, y)}`;
+    const wrongPairs: [string, Point, string, Point][] = [
+      [na, a, nc, c],
+      [nb, b, nd, d],
+      [nc, c, nd, d],
+      [na, a, nd, d],
+    ];
+    const choice = choose(
       rng,
       ["Which two of the drawn vectors form a linearly dependent set?", "所画向量中哪两个构成线性相关的集合？"],
       pair(na, nb),
-      [pair(na, nc), pair(nb, nd), pair(nc, nd), pair(na, nd)],
+      wrongPairs.map(([x, , y]) => pair(x, y)),
       [
-        `$${na} = ${at(a)}$ and $${nb} = ${at(b)}$ are both multiples of $${at(w)}$, while no other pair lies on one line through the origin.`,
-        `$${na} = ${at(a)}$ 和 $${nb} = ${at(b)}$ 都是 $${at(w)}$ 的倍数，其他任何一对都不在过原点的同一条直线上。`,
+        `**Step 1: Read the arrows.** $${na} = ${at(a)}$, $${nb} = ${at(b)}$, $${nc} = ${at(c)}$ and $${nd} = ${at(d)}$.\n\n**Step 2: Find the pair on one line.** $${na} = ${p} ${at(w)}$ and $${nb} = ${n(q)} ${at(w)}$ are both multiples of $${at(w)}$, so they lie on one line through the origin.\n\n**Check.** $${det(a, b)}$, while every other pair has a nonzero determinant.`,
+        `**第一步：读出箭头。** $${na} = ${at(a)}$，$${nb} = ${at(b)}$，$${nc} = ${at(c)}$，$${nd} = ${at(d)}$。\n\n**第二步：找出共线的一对。** $${na} = ${p} ${at(w)}$，$${nb} = ${n(q)} ${at(w)}$ 都是 $${at(w)}$ 的倍数，所以它们在过原点的同一条直线上。\n\n**检验。** $${det(a, b)}$，而其他每一对的行列式都不为零。`,
       ],
       fig(
         7,
@@ -598,6 +606,14 @@ const dependentPair = point(
         ],
       ),
     );
+    return reasoned(
+      choice,
+      wrongPairs.map(([x, xv, y, yv]): [string, string, string] => [
+        pair(x, y)[0],
+        `$${x} = ${at(xv)}$ and $${y} = ${at(yv)}$ have determinant $${det(xv, yv)}$, not $0$, so they point along different lines.`,
+        `$${x} = ${at(xv)}$ 与 $${y} = ${at(yv)}$ 的行列式为 $${det(xv, yv)}$，不是 $0$，所以它们在不同的直线上。`,
+      ]),
+    );
   },
 );
 
@@ -605,8 +621,8 @@ const subspaceTest = point(
   "is-the-drawn-set-a-subspace",
   ["Is the drawn set a subspace?", "所画的集合是子空间吗？"],
   [
-    "A subset of the plane is a subspace when it contains the origin and is closed under addition and under scalar multiples. The only subspaces of the plane are the origin alone, lines through the origin, and the whole plane.",
-    "平面的子集是子空间，当它包含原点，并对加法和数乘封闭。平面的子空间只有原点本身、过原点的直线和整个平面。",
+    "A subset of the plane is a subspace when it contains the origin and is closed under addition and under scalar multiples. The only subspaces of the plane are the origin alone, lines through the origin, and the whole plane. For example, the two axes together contain $(1, 0)$ and $(0, 1)$ but not their sum $(1, 1)$, so their union is not a subspace.\n\n> **Watch out.** Test the zero vector first: a line that misses the origin already fails. A set that contains the origin can still fail closure, so then test a sum and a negative multiple.",
+    "平面的子集是子空间，当它包含原点，并对加法和数乘封闭。平面的子空间只有原点本身、过原点的直线和整个平面。例如两条坐标轴的并集含 $(1, 0)$ 和 $(0, 1)$，却不含它们的和 $(1, 1)$，所以不是子空间。\n\n> **注意。** 先检验零向量：不过原点的直线已经不是子空间。含原点的集合仍可能不封闭，这时再检验一个和与一个负倍数。",
   ],
   (rng) => {
     const kind = rng.pick(["line", "offset", "cross", "half"] as const);
@@ -614,84 +630,140 @@ const subspaceTest = point(
     const e = rng.pick(directions.filter((v) => cross(v, d) !== 0));
     const yes: Pair = ["Yes, it is a subspace", "是，它是子空间"];
     const zero: Pair = ["No, it does not contain the zero vector", "不是，它不含零向量"];
-    const add: Pair = ["No, it is not closed under addition", "不是，它对加法不封闭"];
-    const scale: Pair = ["No, it is not closed under scalar multiples", "不是，它对数乘不封闭"];
+    const add: Pair = ["No: it contains the zero vector but is not closed under addition", "不是：它含零向量，但对加法不封闭"];
+    const scale: Pair = ["No: it contains the zero vector but is not closed under scalar multiples", "不是：它含零向量，但对数乘不封闭"];
     const correct = { line: yes, offset: zero, cross: add, half: scale }[kind];
-    if (kind === "line")
-      return choose(
-        rng,
-        ["Is the drawn set, the whole line, a subspace of $\\mathbb{R}^2$?", "所画的集合（整条直线）是 $\\mathbb{R}^2$ 的子空间吗？"],
-        correct,
-        [zero, add, scale],
+    const h: Point = [d[1], -d[0]];
+    const sum: Point = [d[0] + e[0], d[1] + e[1]];
+    const noZero: [string, string] = [
+      "The set does not contain the zero vector, so the first claim of this option is false.",
+      "这个集合不含零向量，所以这个选项的前半句不成立。",
+    ];
+    const reasons = {
+      line: [
+        [zero[0], "The line passes through the origin, so the set does contain the zero vector.", "直线过原点，所以集合含零向量。"],
+        [add[0], "Sums of vectors along a line through the origin stay on that line.", "沿过原点直线的向量之和仍在这条直线上。"],
+        [scale[0], "Multiples of a vector along a line through the origin stay on that line.", "沿过原点直线的向量的倍数仍在这条直线上。"],
+      ],
+      offset: [
+        [yes[0], "Every subspace contains the zero vector, and this line misses the origin.", "每个子空间都含零向量，而这条直线不过原点。"],
+        [add[0], ...noZero],
+        [scale[0], ...noZero],
+      ],
+      cross: [
         [
-          "The line passes through the origin, and sums and multiples of vectors along it stay on it.",
-          "直线过原点，沿它的向量的和与倍数仍在直线上。",
+          yes[0],
+          `$${at(d)}$ and $${at(e)}$ are in the set, but their sum $${at(sum)}$ is not.`,
+          `$${at(d)}$ 和 $${at(e)}$ 在集合中，但它们的和 $${at(sum)}$ 不在。`,
         ],
-        fig(
-          6,
-          [{ kind: "line", a: [0, 0], b: d, accent: true }],
-          [`A line through the origin with direction ${at(d)}.`, `过原点、方向为 ${at(d)} 的直线。`],
+        [zero[0], "Both lines pass through the origin, so the set does contain the zero vector.", "两条直线都过原点，所以集合含零向量。"],
+        [
+          scale[0],
+          "A multiple of a vector stays on its own line, so the union is closed under scalar multiples; addition is what fails.",
+          "向量的倍数仍在它自己的直线上，所以并集对数乘封闭；不封闭的是加法。",
+        ],
+      ],
+      half: [
+        [yes[0], `$${at(h)}$ is in the set, but $-1$ times it is not.`, `$${at(h)}$ 在集合中，但它的 $-1$ 倍不在。`],
+        [
+          zero[0],
+          "The origin lies on the edge, and the edge is included, so the set contains the zero vector.",
+          "原点在边界上，而边界包含在内，所以集合含零向量。",
+        ],
+        [
+          add[0],
+          "Two vectors on the shaded side add to a vector on that side, so addition is closed; negative multiples are what fail.",
+          "阴影一侧的两个向量相加仍在这一侧，所以对加法封闭；不封闭的是负倍数。",
+        ],
+      ],
+    }[kind] as [string, string, string][];
+    const finish = (problem: Parameters<typeof reasoned>[0]) => reasoned(problem, reasons);
+    if (kind === "line")
+      return finish(
+        choose(
+          rng,
+          ["Is the drawn set, the whole line, a subspace of $\\mathbb{R}^2$?", "所画的集合（整条直线）是 $\\mathbb{R}^2$ 的子空间吗？"],
+          correct,
+          [zero, add, scale],
+          [
+            `**Step 1: Test the zero vector.** The line passes through the origin, so it contains $(0, 0)$.\n\n**Step 2: Test closure.** Every vector on it is $s${at(d)}$; a sum $s${at(d)} + r${at(d)} = (s + r)${at(d)}$ and a multiple $c \\cdot s${at(d)}$ are again of that form.\n\n**Check.** A line through the origin is one of the three kinds of subspace of the plane, so the answer is yes.`,
+            `**第一步：检验零向量。** 直线过原点，所以含 $(0, 0)$。\n\n**第二步：检验封闭性。** 直线上每个向量都是 $s${at(d)}$；和 $s${at(d)} + r${at(d)} = (s + r)${at(d)}$ 与倍数 $c \\cdot s${at(d)}$ 仍是这种形式。\n\n**检验。** 过原点的直线是平面三类子空间之一，所以答案是“是”。`,
+          ],
+          fig(
+            6,
+            [{ kind: "line", a: [0, 0], b: d, accent: true }],
+            [`A line through the origin with direction ${at(d)}.`, `过原点、方向为 ${at(d)} 的直线。`],
+          ),
         ),
       );
     if (kind === "offset") {
       const p = rng.pick(grid(3).filter((v) => cross(v, d) !== 0));
-      return choose(
-        rng,
-        ["Is the drawn set, the whole line, a subspace of $\\mathbb{R}^2$?", "所画的集合（整条直线）是 $\\mathbb{R}^2$ 的子空间吗？"],
-        correct,
-        [yes, add, scale],
-        ["The line misses the origin, and every subspace contains the zero vector.", "直线不过原点，而每个子空间都含零向量。"],
-        fig(
-          6,
-          [{ kind: "line", a: p, b: [p[0] + d[0], p[1] + d[1]], accent: true }],
-          [`A line through ${at(p)} with direction ${at(d)} that misses the origin.`, `过 ${at(p)}、方向为 ${at(d)} 且不过原点的直线。`],
+      return finish(
+        choose(
+          rng,
+          ["Is the drawn set, the whole line, a subspace of $\\mathbb{R}^2$?", "所画的集合（整条直线）是 $\\mathbb{R}^2$ 的子空间吗？"],
+          correct,
+          [yes, add, scale],
+          [
+            `**Step 1: Read the line.** It passes through $${at(p)}$ with direction $${at(d)}$.\n\n**Step 2: Test the zero vector.** $(0, 0) = ${at(p)} + s${at(d)}$ has no solution, since $${at(p)}$ is not a multiple of $${at(d)}$, so the line misses the origin.\n\n**Check.** Every subspace contains the zero vector, so the line is not a subspace.`,
+            `**第一步：读出直线。** 它过 $${at(p)}$，方向为 $${at(d)}$。\n\n**第二步：检验零向量。** $(0, 0) = ${at(p)} + s${at(d)}$ 无解，因为 $${at(p)}$ 不是 $${at(d)}$ 的倍数，所以直线不过原点。\n\n**检验。** 每个子空间都含零向量，所以这条直线不是子空间。`,
+          ],
+          fig(
+            6,
+            [{ kind: "line", a: p, b: [p[0] + d[0], p[1] + d[1]], accent: true }],
+            [`A line through ${at(p)} with direction ${at(d)} that misses the origin.`, `过 ${at(p)}、方向为 ${at(d)} 且不过原点的直线。`],
+          ),
         ),
       );
     }
     if (kind === "cross")
-      return choose(
+      return finish(
+        choose(
+          rng,
+          [
+            "Is the drawn set, the union of both lines, a subspace of $\\mathbb{R}^2$?",
+            "所画的集合（两条直线的并集）是 $\\mathbb{R}^2$ 的子空间吗？",
+          ],
+          correct,
+          [yes, zero, scale],
+          [
+            `**Step 1: Test the zero vector.** Both lines pass through the origin, so the set contains $(0, 0)$.\n\n**Step 2: Test a sum.** $${at(d)}$ and $${at(e)}$ are in the set, but their sum $${at(sum)}$ lies on neither line.\n\n**Check.** Multiples of a vector stay on its own line, so only addition fails.`,
+            `**第一步：检验零向量。** 两条直线都过原点，所以集合含 $(0, 0)$。\n\n**第二步：检验一个和。** $${at(d)}$ 和 $${at(e)}$ 在集合中，但它们的和 $${at(sum)}$ 不在任何一条直线上。\n\n**检验。** 向量的倍数仍在它自己的直线上，所以只有加法不封闭。`,
+          ],
+          fig(
+            6,
+            [
+              { kind: "line", a: [0, 0], b: d, accent: true },
+              { kind: "line", a: [0, 0], b: e, accent: true },
+            ],
+            [`Two lines through the origin, with directions ${at(d)} and ${at(e)}.`, `两条过原点的直线，方向为 ${at(d)} 和 ${at(e)}。`],
+          ),
+        ),
+      );
+    return finish(
+      choose(
         rng,
         [
-          "Is the drawn set, the union of both lines, a subspace of $\\mathbb{R}^2$?",
-          "所画的集合（两条直线的并集）是 $\\mathbb{R}^2$ 的子空间吗？",
+          "Is the drawn set, the shaded side including its edge, a subspace of $\\mathbb{R}^2$?",
+          "所画的集合（含边界的阴影一侧）是 $\\mathbb{R}^2$ 的子空间吗？",
         ],
         correct,
-        [yes, zero, scale],
+        [yes, zero, add],
         [
-          `$${at(d)}$ and $${at(e)}$ are in the set, but their sum $(${d[0] + e[0]}, ${d[1] + e[1]})$ lies on neither line.`,
-          `$${at(d)}$ 和 $${at(e)}$ 在集合中，但它们的和 $(${d[0] + e[0]}, ${d[1] + e[1]})$ 不在任何一条直线上。`,
+          `**Step 1: Test the zero vector and sums.** The origin is on the included edge, and two vectors on the shaded side add to a vector on that side.\n\n**Step 2: Test a negative multiple.** $${at(h)}$ is on the shaded side, but $-1 \\cdot ${at(h)} = ${at([-h[0], -h[1]])}$ is on the other side.\n\n**Check.** The set fails only closure under scalar multiples.`,
+          `**第一步：检验零向量与和。** 原点在包含的边界上，阴影一侧的两个向量相加仍在这一侧。\n\n**第二步：检验负倍数。** $${at(h)}$ 在阴影一侧，但 $-1 \\cdot ${at(h)} = ${at([-h[0], -h[1]])}$ 在另一侧。\n\n**检验。** 这个集合只是对数乘不封闭。`,
         ],
         fig(
           6,
           [
+            { kind: "region", halfPlanes: [[d[1], -d[0], 0]] },
             { kind: "line", a: [0, 0], b: d, accent: true },
-            { kind: "line", a: [0, 0], b: e, accent: true },
           ],
-          [`Two lines through the origin, with directions ${at(d)} and ${at(e)}.`, `两条过原点的直线，方向为 ${at(d)} 和 ${at(e)}。`],
+          [
+            `The shaded side of the line through the origin with direction ${at(d)} that contains ${at([d[1], -d[0]])}.`,
+            `过原点、方向为 ${at(d)} 的直线的一侧为阴影，这一侧含 ${at([d[1], -d[0]])}。`,
+          ],
         ),
-      );
-    return choose(
-      rng,
-      [
-        "Is the drawn set, the shaded side including its edge, a subspace of $\\mathbb{R}^2$?",
-        "所画的集合（含边界的阴影一侧）是 $\\mathbb{R}^2$ 的子空间吗？",
-      ],
-      correct,
-      [yes, zero, add],
-      [
-        `The shaded side contains the origin and is closed under addition, but $(${d[1]}, ${-d[0]})$ is in it while its negative is not.`,
-        `阴影一侧含原点且对加法封闭，但 $(${d[1]}, ${-d[0]})$ 在其中，它的相反向量却不在。`,
-      ],
-      fig(
-        6,
-        [
-          { kind: "region", halfPlanes: [[d[1], -d[0], 0]] },
-          { kind: "line", a: [0, 0], b: d, accent: true },
-        ],
-        [
-          `The shaded side of the line through the origin with direction ${at(d)} that contains ${at([d[1], -d[0]])}.`,
-          `过原点、方向为 ${at(d)} 的直线的一侧为阴影，这一侧含 ${at([d[1], -d[0]])}。`,
-        ],
       ),
     );
   },
@@ -701,18 +773,19 @@ const changeMatrix = point(
   "the-change-of-coordinates-matrix-from-a-drawn-basis",
   ["The change of coordinates matrix from a drawn basis", "由所画的基写坐标变换矩阵"],
   [
-    "The matrix that turns coordinates relative to $\\mathcal{B}$ into standard coordinates has the basis vectors as its columns, in order.",
-    "把相对于 $\\mathcal{B}$ 的坐标变成标准坐标的矩阵，以基向量为列，按顺序排列。",
+    "The matrix that turns coordinates relative to $\\mathcal{B}$ into standard coordinates has the basis vectors as its columns, in order. For example, with $b_1 = (2, 1)$ and $b_2 = (-1, 3)$ the matrix is $\\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}$, and it sends $(1, 0)$ to $b_1$ and $(0, 1)$ to $b_2$.\n\n> **Watch out.** The basis vectors go in as columns, not rows, and $b_1$ comes first. Read the signs of each arrow's coordinates from the grid.",
+    "把相对于 $\\mathcal{B}$ 的坐标变成标准坐标的矩阵，以基向量为列，按顺序排列。例如 $b_1 = (2, 1)$，$b_2 = (-1, 3)$ 时，矩阵为 $\\begin{pmatrix} 2 & -1 \\\\ 1 & 3 \\end{pmatrix}$，它把 $(1, 0)$ 变成 $b_1$，把 $(0, 1)$ 变成 $b_2$。\n\n> **注意。** 基向量作为列而不是行放入，且 $b_1$ 在前。要从网格读准每个箭头坐标的符号。",
   ],
   (rng) => {
     const [u, v] = independent(rng, 4);
-    return choose(
+    const right = mat(u[0], v[0], u[1], v[1]);
+    const choice = choose(
       rng,
       [
         "The arrows show a basis $\\mathcal{B} = (b_1, b_2)$. Which matrix turns coordinates relative to $\\mathcal{B}$ into standard coordinates?",
         "箭头表示基 $\\mathcal{B} = (b_1, b_2)$。哪个矩阵把相对于 $\\mathcal{B}$ 的坐标变成标准坐标？",
       ],
-      same(mat(u[0], v[0], u[1], v[1])),
+      same(right),
       [
         same(mat(u[0], u[1], v[0], v[1])),
         same(mat(v[0], u[0], v[1], u[1])),
@@ -720,8 +793,8 @@ const changeMatrix = point(
         same(mat(-u[0], v[0], -u[1], v[1])),
       ],
       [
-        `The columns are the basis vectors in order, $b_1 = ${at(u)}$ and $b_2 = ${at(v)}$.`,
-        `各列依次是基向量 $b_1 = ${at(u)}$ 和 $b_2 = ${at(v)}$。`,
+        `**Step 1: Read the arrows.** $b_1 = ${at(u)}$ and $b_2 = ${at(v)}$.\n\n**Step 2: Place them as columns.** $b_1$ is the first column and $b_2$ the second, so the matrix is $${right}$.\n\n**Check.** The matrix times $(1, 0)$ is its first column $${at(u)} = b_1$, as it must be, since $[b_1]_{\\mathcal{B}} = (1, 0)$.`,
+        `**第一步：读出箭头。** $b_1 = ${at(u)}$，$b_2 = ${at(v)}$。\n\n**第二步：按列放入。** $b_1$ 是第一列，$b_2$ 是第二列，所以矩阵为 $${right}$。\n\n**检验。** 矩阵乘 $(1, 0)$ 得第一列 $${at(u)} = b_1$，正应如此，因为 $[b_1]_{\\mathcal{B}} = (1, 0)$。`,
       ],
       fig(
         5,
@@ -729,6 +802,24 @@ const changeMatrix = point(
         [`Arrows from the origin: b1 to ${at(u)} and b2 to ${at(v)}.`, `从原点出发的箭头：b1 指向 ${at(u)}，b2 指向 ${at(v)}。`],
       ),
     );
+    return reasoned(choice, [
+      [
+        same(mat(u[0], u[1], v[0], v[1]))[0],
+        "The basis vectors were placed as rows; they must be the columns.",
+        "基向量被放成了行；它们必须作为列。",
+      ],
+      [same(mat(v[0], u[0], v[1], u[1]))[0], "The columns are in the wrong order: $b_1$ comes first.", "列的顺序反了：$b_1$ 在前。"],
+      [
+        same(mat(u[0], -v[0], u[1], -v[1]))[0],
+        `The second column is $-b_2$; read $b_2 = ${at(v)}$ with its signs from the grid.`,
+        `第二列是 $-b_2$；要从网格按符号读出 $b_2 = ${at(v)}$。`,
+      ],
+      [
+        same(mat(-u[0], v[0], -u[1], v[1]))[0],
+        `The first column is $-b_1$; read $b_1 = ${at(u)}$ with its signs from the grid.`,
+        `第一列是 $-b_1$；要从网格按符号读出 $b_1 = ${at(u)}$。`,
+      ],
+    ]);
   },
 );
 
@@ -736,8 +827,8 @@ const changeBasis = point(
   "standard-coordinates-from-a-drawn-basis",
   ["Standard coordinates from a drawn basis", "由所画的基求标准坐标"],
   [
-    "Coordinates relative to a basis say how much of each basis vector to use. If $[x]_{\\mathcal{B}} = (a, b)$ then $x = a b_1 + b b_2$, so read the basis vectors from the drawing and combine them.",
-    "相对于一组基的坐标说明每个基向量用多少。若 $[x]_{\\mathcal{B}} = (a, b)$，则 $x = a b_1 + b b_2$，所以从图中读出基向量并组合。",
+    "Coordinates relative to a basis say how much of each basis vector to use. If $[x]_{\\mathcal{B}} = (a, b)$ then $x = a b_1 + b b_2$, so read the basis vectors from the drawing and combine them. For example, with $b_1 = (1, 2)$, $b_2 = (3, -1)$ and $[x]_{\\mathcal{B}} = (2, 1)$, $x = 2(1, 2) + 1(3, -1) = (5, 3)$.\n\n> **Watch out.** The first coordinate weights $b_1$ and the second weights $b_2$; swapping the weights gives a different vector.",
+    "相对于一组基的坐标说明每个基向量用多少。若 $[x]_{\\mathcal{B}} = (a, b)$，则 $x = a b_1 + b b_2$，所以从图中读出基向量并组合。例如 $b_1 = (1, 2)$，$b_2 = (3, -1)$，$[x]_{\\mathcal{B}} = (2, 1)$ 时，$x = 2(1, 2) + 1(3, -1) = (5, 3)$。\n\n> **注意。** 第一个坐标是 $b_1$ 的权重，第二个坐标是 $b_2$ 的权重；交换权重会得到另一个向量。",
   ],
   (rng) => {
     const [u, v] = independent(rng, 3);
@@ -747,23 +838,58 @@ const changeBasis = point(
     const first = rng.bool();
     const i = first ? 0 : 1;
     const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
-    return ask(
-      [
-        `The arrows show a basis $\\mathcal{B} = (b_1, b_2)$, and $[x]_{\\mathcal{B}} = (${a}, ${b})$. Find the ${name[0]} standard coordinate of $x$.`,
-        `箭头表示基 $\\mathcal{B} = (b_1, b_2)$，且 $[x]_{\\mathcal{B}} = (${a}, ${b})$。求 $x$ 的${name[1]}个标准坐标。`,
-      ],
-      x[i] as number,
-      [x[1 - i] as number, a * (v[i] as number) + b * (u[i] as number), a + b, (x[i] as number) + 1],
-      [
-        `$x = ${a} ${at(u)} + ${b < 0 ? `(${b})` : b} ${at(v)} = ${at(x)}$.`,
-        `$x = ${a} ${at(u)} + ${b < 0 ? `(${b})` : b} ${at(v)} = ${at(x)}$。`,
-      ],
-      fig(
+    const answer = x[i] as number;
+    const n = (k: number) => (k < 0 ? `(${k})` : `${k}`);
+    const ui = u[i] as number;
+    const vi = v[i] as number;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The arrows show a basis $\\mathcal{B} = (b_1, b_2)$, and $[x]_{\\mathcal{B}} = (${a}, ${b})$. Find the ${name[0]} standard coordinate of $x$.`,
+          `箭头表示基 $\\mathcal{B} = (b_1, b_2)$，且 $[x]_{\\mathcal{B}} = (${a}, ${b})$。求 $x$ 的${name[1]}个标准坐标。`,
+        ),
+        answer,
+        mistakes: [
+          why(
+            x[1 - i] as number,
+            `That is the ${first ? "second" : "first"} standard coordinate of $x$.`,
+            `这是 $x$ 的${first ? "第二" : "第一"}个标准坐标。`,
+          ),
+          why(
+            a * vi + b * ui,
+            "The weights are swapped: $a$ goes with $b_1$ and $b$ with $b_2$.",
+            "权重交换了：$a$ 对应 $b_1$，$b$ 对应 $b_2$。",
+          ),
+          why(
+            a + b,
+            "That adds the weights; each weight must multiply the coordinate of its basis vector.",
+            "这是把权重相加；每个权重要乘它所对应基向量的坐标。",
+          ),
+        ].filter((m, k, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === k),
+        solution: walked(
+          [
+            [["Read the arrows", "读出箭头"], t(`$b_1 = ${at(u)}$ and $b_2 = ${at(v)}$.`, `$b_1 = ${at(u)}$，$b_2 = ${at(v)}$。`)],
+            [
+              ["Combine", "组合"],
+              t(
+                `$x = ${a} b_1 + ${n(b)} b_2$, so its ${name[0]} coordinate is:`,
+                `$x = ${a} b_1 + ${n(b)} b_2$，所以它的${name[1]}个坐标为：`,
+              ),
+              [`${a} \\cdot ${n(ui)} + ${n(b)} \\cdot ${n(vi)} = ${answer}`],
+            ],
+          ],
+          t(
+            `$x = ${a}${at(u)} + ${n(b)}${at(v)} = ${at(x)}$, whose ${name[0]} coordinate is $${answer}$.`,
+            `$x = ${a}${at(u)} + ${n(b)}${at(v)} = ${at(x)}$，它的${name[1]}个坐标是 $${answer}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         4,
         [...arrow(u, "b1"), ...arrow(v, "b2")],
         [`Arrows from the origin: b1 to ${at(u)} and b2 to ${at(v)}.`, `从原点出发的箭头：b1 指向 ${at(u)}，b2 指向 ${at(v)}。`],
       ),
-    );
+    };
   },
 );
 

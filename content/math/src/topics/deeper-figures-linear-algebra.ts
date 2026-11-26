@@ -407,8 +407,8 @@ const coordsInBasis = {
     "reading-a-combination-of-two-arrows",
     ["Reading a combination of two arrows", "读两个箭头的组合"],
     [
-      "Two arrows that are not parallel span the plane, so every point is exactly one combination of them. To read the coefficients, solve the two coordinate equations given by the drawing. The coefficients are not the coordinates of the point, unless the two arrows happen to be the standard basis vectors.",
-      "两个不平行的箭头张成平面，所以每个点都恰好是它们的一个组合。要读出系数，就解图给出的两个坐标方程。除非两个箭头恰好是标准基向量，否则系数不是点的坐标。",
+      "Two arrows that are not parallel span the plane, so every point is exactly one combination of them. To read the coefficients, solve the two coordinate equations given by the drawing. The coefficients are not the coordinates of the point, unless the two arrows happen to be the standard basis vectors. For example, with $u = (1, 1)$, $w = (1, -1)$ and $P = (3, 1)$, the equations $s + t = 3$ and $s - t = 1$ give $s = 2$ and $t = 1$.\n\n> **Watch out.** Read the arrows and the point from the grid first; the answer is a weight, not a coordinate of $P$.",
+      "两个不平行的箭头张成平面，所以每个点都恰好是它们的一个组合。要读出系数，就解图给出的两个坐标方程。除非两个箭头恰好是标准基向量，否则系数不是点的坐标。例如 $u = (1, 1)$，$w = (1, -1)$，$P = (3, 1)$ 时，方程 $s + t = 3$ 与 $s - t = 1$ 给出 $s = 2$，$t = 1$。\n\n> **注意。** 先从网格读出箭头和点；答案是权重，而不是 $P$ 的坐标。",
     ],
     (rng) => {
       const [u, w] = independentPair(rng, 2);
@@ -421,23 +421,68 @@ const coordsInBasis = {
       const [s, c] = rng.pick(options.length > 0 ? options : [[1, 1] as [number, number]]);
       const P: Point = [s * u[0] + c * w[0], s * u[1] + c * w[1]];
       const asksFirst = rng.bool();
-      return ask(
-        asksFirst
-          ? [
-              "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $s$?",
-              "用图中的箭头把点 $P$ 写成 $P = su + tw$。$s$ 是多少？",
-            ]
-          : [
-              "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $t$?",
-              "用图中的箭头把点 $P$ 写成 $P = su + tw$。$t$ 是多少？",
+      const answer = asksFirst ? s : c;
+      const p = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+      const D = cross(u, w);
+      return {
+        ...numberProblem({
+          prompt: asksFirst
+            ? t(
+                "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $s$?",
+                "用图中的箭头把点 $P$ 写成 $P = su + tw$。$s$ 是多少？",
+              )
+            : t(
+                "Write the point $P$ as $P = su + tw$ using the arrows drawn. What is $t$?",
+                "用图中的箭头把点 $P$ 写成 $P = su + tw$。$t$ 是多少？",
+              ),
+          answer,
+          mistakes: [
+            why(
+              asksFirst ? c : s,
+              `That is the other weight; the question asks for $${asksFirst ? "s" : "t"}$, the weight on $${asksFirst ? "u" : "w"}$.`,
+              `这是另一个权重；题目求的是 $${asksFirst ? "u" : "w"}$ 的权重 $${asksFirst ? "s" : "t"}$。`,
+            ),
+            why(-answer, "The sign is flipped; recheck the direction of each arrow.", "符号反了；请重新检查每个箭头的方向。"),
+            why(
+              P[0],
+              "That is the $x$-coordinate of $P$; the weight comes from solving the two equations.",
+              "这是 $P$ 的 $x$ 坐标；权重要解两个方程才能得到。",
+            ),
+            why(
+              P[1],
+              "That is the $y$-coordinate of $P$; the weight comes from solving the two equations.",
+              "这是 $P$ 的 $y$ 坐标；权重要解两个方程才能得到。",
+            ),
+          ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Read the drawing", "读图"],
+                t(
+                  `$u = (${u[0]}, ${u[1]})$, $w = (${w[0]}, ${w[1]})$ and $P = (${P[0]}, ${P[1]})$, so:`,
+                  `$u = (${u[0]}, ${u[1]})$，$w = (${w[0]}, ${w[1]})$，$P = (${P[0]}, ${P[1]})$，所以：`,
+                ),
+                [`${p(u[0])}s + ${p(w[0])}t = ${P[0]}`, `${p(u[1])}s + ${p(w[1])}t = ${P[1]}`],
+              ],
+              [
+                ["Solve", "求解"],
+                t(
+                  `The determinant is $${p(u[0])} \\cdot ${p(w[1])} - ${p(w[0])} \\cdot ${p(u[1])} = ${D}$, and Cramer's rule gives:`,
+                  `行列式为 $${p(u[0])} \\cdot ${p(w[1])} - ${p(w[0])} \\cdot ${p(u[1])} = ${D}$，由克拉默法则得：`,
+                ),
+                [
+                  `s = \\frac{${p(P[0])} \\cdot ${p(w[1])} - ${p(w[0])} \\cdot ${p(P[1])}}{${D}} = ${s}`,
+                  `t = \\frac{${p(u[0])} \\cdot ${p(P[1])} - ${p(P[0])} \\cdot ${p(u[1])}}{${D}} = ${c}`,
+                ],
+              ],
             ],
-        asksFirst ? s : c,
-        [asksFirst ? c : s, -(asksFirst ? s : c), P[0], P[1]],
-        [
-          `The drawing gives $u = (${u[0]}, ${u[1]})$, $w = (${w[0]}, ${w[1]})$ and $P = (${P[0]}, ${P[1]})$. Solving the two coordinate equations gives $s = ${s}$ and $t = ${c}$.`,
-          `由图得 $u = (${u[0]}, ${u[1]})$，$w = (${w[0]}, ${w[1]})$，$P = (${P[0]}, ${P[1]})$。解两个坐标方程得 $s = ${s}$，$t = ${c}$。`,
-        ],
-        fig(
+            t(
+              `$${s}(${u[0]}, ${u[1]}) + ${p(c)}(${w[0]}, ${w[1]}) = (${P[0]}, ${P[1]})$, which is $P$.`,
+              `$${s}(${u[0]}, ${u[1]}) + ${p(c)}(${w[0]}, ${w[1]}) = (${P[0]}, ${P[1]})$，正是 $P$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           8,
           [...vector(u, "u"), ...vector(w, "w"), { kind: "point", at: P, label: "P", dir: "n" }],
           [
@@ -445,7 +490,7 @@ const coordsInBasis = {
             `指向 (${u[0]}, ${u[1]}) 的箭头 u，指向 (${w[0]}, ${w[1]}) 的箭头 w，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: linearAlgebraDrawings1["linear-span-of-vectors-in-n-dimensional-euclidean-space#reading-a-combination-of-two-arrows"],
@@ -456,13 +501,14 @@ const nullSpaceLine = {
     "the-matrix-from-a-drawn-null-space",
     ["The matrix from a drawn null space", "由图中零空间读矩阵"],
     [
-      "A vector lies in the null space when every row of the matrix is perpendicular to it. So a matrix whose null space is a given line through the origin must have rows perpendicular to that line. Rows that point along the line are a common mistake: they give the perpendicular line as the null space instead.",
-      "向量在零空间中，当且仅当矩阵的每一行都与它垂直。所以零空间是过原点某条直线的矩阵，它的行必须垂直于这条直线。行沿直线方向是常见错误：那样得到的零空间是垂直的那条直线。",
+      "A vector lies in the null space when every row of the matrix is perpendicular to it. So a matrix whose null space is a given line through the origin must have rows perpendicular to that line. Rows that point along the line are a common mistake: they give the perpendicular line as the null space instead. For example, if the line passes through $(1, 2)$, the row $(2, -1)$ works because $2 \\cdot 1 + (-1) \\cdot 2 = 0$, so $\\begin{pmatrix} 2 & -1 \\\\ 4 & -2 \\end{pmatrix}$ has that line as its null space.\n\n> **Watch out.** Test each row against a point of the line: the dot product must be $0$. A row along the line has a nonzero dot product with it.",
+      "向量在零空间中，当且仅当矩阵的每一行都与它垂直。所以零空间是过原点某条直线的矩阵，它的行必须垂直于这条直线。行沿直线方向是常见错误：那样得到的零空间是垂直的那条直线。例如直线过 $(1, 2)$ 时，行 $(2, -1)$ 满足要求，因为 $2 \\cdot 1 + (-1) \\cdot 2 = 0$，所以 $\\begin{pmatrix} 2 & -1 \\\\ 4 & -2 \\end{pmatrix}$ 的零空间就是这条直线。\n\n> **注意。** 用直线上的一点检验每一行：点积必须为 $0$。沿直线方向的行与它的点积不为零。",
     ],
     (rng) => {
       const [p, q] = rng.pick(primitive);
       const m = rng.int(1, 3);
       const row = (a: number, b: number) => mat(a, b, m * a, m * b);
+      const n = (x: number) => (x < 0 ? `(${x})` : `${x}`);
       const candidates = (
         [
           [p, q],
@@ -470,14 +516,19 @@ const nullSpaceLine = {
           [p, -q],
         ] as Point[]
       ).filter((c) => dot(c, [p, q]) !== 0);
-      return choose(
+      const others: Point[] = [
+        [q + p, q - p],
+        [p + 2 * q, q - 2 * p],
+      ];
+      const right = row(q, -p);
+      const choice = choose(
         rng,
         ["The line drawn is the null space of a matrix. Which matrix is it?", "图中的直线是某个矩阵的零空间。是哪个矩阵？"],
-        same(row(q, -p)),
-        [...candidates.map((c) => same(row(c[0], c[1]))), same(row(q + p, q - p)), same(row(p + 2 * q, q - 2 * p))],
+        same(right),
+        [...candidates, ...others].map((c) => same(row(c[0], c[1]))),
         [
-          `The line passes through $(${p}, ${q})$, so each row must be perpendicular to that vector. The row $(${q}, ${-p})$ is, since $(${q})(${p}) + (${-p})(${q}) = 0$, and the second row is a multiple of it.`,
-          `直线过点 $(${p}, ${q})$，所以每一行都必须垂直于这个向量。行 $(${q}, ${-p})$ 满足这一点，因为 $(${q})(${p}) + (${-p})(${q}) = 0$，第二行是它的倍数。`,
+          `**Step 1: Read the line.** The line passes through the origin and $(${p}, ${q})$, so the null space is spanned by $(${p}, ${q})$.\n\n**Step 2: Find a perpendicular row.** The row $(${q}, ${n(-p)})$ has $${n(q)} \\cdot ${n(p)} + ${n(-p)} \\cdot ${n(q)} = 0$, and the second row is $${m}$ times it, so the matrix is $${right}$.\n\n**Check.** Both rows are multiples of one nonzero row, so the null space is a line, and $(${p}, ${q})$ lies on it.`,
+          `**第一步：读出直线。** 直线过原点和 $(${p}, ${q})$，所以零空间由 $(${p}, ${q})$ 张成。\n\n**第二步：找垂直的行。** 行 $(${q}, ${n(-p)})$ 满足 $${n(q)} \\cdot ${n(p)} + ${n(-p)} \\cdot ${n(q)} = 0$，第二行是它的 $${m}$ 倍，所以矩阵是 $${right}$。\n\n**检验。** 两行都是同一非零行的倍数，所以零空间是一条直线，且 $(${p}, ${q})$ 在其上。`,
         ],
         fig(
           5,
@@ -485,6 +536,20 @@ const nullSpaceLine = {
           [`A line through the origin and (${p}, ${q}).`, `过原点和 (${p}, ${q}) 的直线。`],
         ),
       );
+      const reason = (c: Point): [string, string, string] => {
+        const d = c[0] * p + c[1] * q;
+        const along = c[0] === p && c[1] === q;
+        return [
+          same(row(c[0], c[1]))[0],
+          along
+            ? `The rows point along the line: $(${p}, ${q})$ times the first row gives $${d}$, not $0$, so the null space is the perpendicular line instead.`
+            : `The first row times $(${p}, ${q})$ is $${n(c[0])} \\cdot ${n(p)} + ${n(c[1])} \\cdot ${n(q)} = ${d}$, not $0$, so the drawn line is not the null space.`,
+          along
+            ? `行沿直线方向：$(${p}, ${q})$ 与第一行的点积是 $${d}$，不是 $0$，所以零空间是垂直的那条直线。`
+            : `第一行与 $(${p}, ${q})$ 的点积是 $${n(c[0])} \\cdot ${n(p)} + ${n(c[1])} \\cdot ${n(q)} = ${d}$，不是 $0$，所以图中的直线不是零空间。`,
+        ];
+      };
+      return reasoned(choice, [...candidates, ...others].map(reason));
     },
   ),
   figure: linearAlgebraDrawings1["the-null-space-of-a-matrix#the-matrix-from-a-drawn-null-space"],

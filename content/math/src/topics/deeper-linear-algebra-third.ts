@@ -1437,26 +1437,51 @@ const subspaceK = point(
   "the-value-that-makes-a-plane-a-subspace",
   ["The value that makes a plane a subspace", "使平面成为子空间的值"],
   [
-    "Every subspace contains the zero vector, so a plane $ax + by + cz = d$ can be a subspace only when $d = 0$. A parameter on the right-hand side therefore has exactly one good value, namely the one that makes the right-hand side vanish.",
-    "每个子空间都含零向量，所以平面 $ax + by + cz = d$ 只有在 $d = 0$ 时才可能是子空间。因此右端的参数恰有一个合适的值，就是使右端为零的那个值。",
+    "Every subspace contains the zero vector, so a plane $ax + by + cz = d$ can be a subspace only when $d = 0$. A parameter on the right-hand side therefore has exactly one good value, namely the one that makes the right-hand side vanish. For example, $2x - y + z = k + 4$ is a subspace exactly when $k + 4 = 0$, that is $k = -4$.\n\n> **Watch out.** It is the whole right-hand side that must be $0$, not $k$ itself.",
+    "每个子空间都含零向量，所以平面 $ax + by + cz = d$ 只有在 $d = 0$ 时才可能是子空间。因此右端的参数恰有一个合适的值，就是使右端为零的那个值。例如 $2x - y + z = k + 4$ 是子空间，当且仅当 $k + 4 = 0$，即 $k = -4$。\n\n> **注意。** 必须为 $0$ 的是整个右端，而不是 $k$ 本身。",
   ],
   (rng) => {
     const a = nz(rng, 5);
     const b = nz(rng, 5);
     const c = nz(rng, 5);
     const m = nz(rng, 12);
-    return ask(
-      [
-        `For which $k$ is $\\{(x, y, z) \\mid ${poly([a, "x"], [b, "y"], [c, "z"])} = ${poly([1, "k"], [-m, ""])}\\}$ a subspace of $\\mathbb{R}^{3}$?`,
-        `当 $k$ 为何值时，$\\{(x, y, z) \\mid ${poly([a, "x"], [b, "y"], [c, "z"])} = ${poly([1, "k"], [-m, ""])}\\}$ 是 $\\mathbb{R}^{3}$ 的子空间？`,
-      ],
-      m,
-      [0, -m, a + b + c === m ? m + 1 : a + b + c],
-      [
-        `The zero vector must satisfy the equation, which forces $${poly([1, "k"], [-m, ""])} = 0$, so $k = ${m}$. Then the plane passes through the origin and is closed under both operations.`,
-        `零向量必须满足方程，这迫使 $${poly([1, "k"], [-m, ""])} = 0$，所以 $k = ${m}$。此时平面过原点，且对两种运算封闭。`,
-      ],
-    );
+    const lhs = poly([a, "x"], [b, "y"], [c, "z"]);
+    const rhs = poly([1, "k"], [-m, ""]);
+    return numberProblem({
+      prompt: text([
+        `For which $k$ is $\\{(x, y, z) \\mid ${lhs} = ${rhs}\\}$ a subspace of $\\mathbb{R}^{3}$?`,
+        `当 $k$ 为何值时，$\\{(x, y, z) \\mid ${lhs} = ${rhs}\\}$ 是 $\\mathbb{R}^{3}$ 的子空间？`,
+      ]),
+      answer: m,
+      form: "integer",
+      mistakes: [
+        why(
+          0,
+          `With $k = 0$ the right-hand side is $${-m}$, so the origin is not on the plane; the whole right-hand side must be $0$.`,
+          `$k = 0$ 时右端为 $${-m}$，原点不在平面上；必须为 $0$ 的是整个右端。`,
+        ),
+        why(-m, "The sign is flipped: move the constant across the equals sign carefully.", "符号反了：把常数移到等号另一边时要小心。"),
+        why(
+          a + b + c,
+          "That puts the point $(1, 1, 1)$ into the equation; the test point is the origin.",
+          "这是把点 $(1, 1, 1)$ 代入方程；应检验的点是原点。",
+        ),
+      ].filter((w, i, all) => w.value !== m && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Put in the zero vector", "代入零向量"],
+            text(["A subspace contains $(0, 0, 0)$, where the left-hand side is $0$:", "子空间含 $(0, 0, 0)$，在该处左端为 $0$："]),
+            [`0 = ${rhs}`],
+          ],
+          [["Solve for $k$", "解出 $k$"], text(["", ""]), [`k = ${m}`]],
+        ],
+        text([
+          `With $k = ${m}$ the equation is $${lhs} = 0$: sums of solutions give $0 + 0 = 0$ and multiples give $c \\cdot 0 = 0$, so the plane is a subspace.`,
+          `$k = ${m}$ 时方程为 $${lhs} = 0$：解的和给出 $0 + 0 = 0$，倍数给出 $c \\cdot 0 = 0$，所以平面是子空间。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1464,33 +1489,65 @@ const inColumnSpace = point(
   "the-value-that-puts-a-vector-in-the-column-space",
   ["The value that puts a vector in the column space", "使向量落入列空间的值"],
   [
-    "If the second column of a $2 \\times 2$ matrix is a multiple of the first, the column space is a line through the origin. A vector lies in it only when it is a multiple of the first column, and this condition on the entries determines the unknown.",
-    "如果 $2 \\times 2$ 矩阵的第二列是第一列的倍数，列空间就是一条过原点的直线。向量位于其中，当且仅当它是第一列的倍数，这个关于元素的条件确定了未知数。",
+    "If the second column of a $2 \\times 2$ matrix is a multiple of the first, the column space is a line through the origin. A vector lies in it only when it is a multiple of the first column, and this condition on the entries determines the unknown. For example, the columns $(2, 3)$ and $(4, 6)$ span the line through $(2, 3)$, so $(6, k)$ is in the column space when $(6, k) = 3(2, 3)$, that is $k = 9$.\n\n> **Watch out.** Find the factor from the known entry first; $k$ is that factor times the second entry of the column, not the factor itself.",
+    "如果 $2 \\times 2$ 矩阵的第二列是第一列的倍数，列空间就是一条过原点的直线。向量位于其中，当且仅当它是第一列的倍数，这个关于元素的条件确定了未知数。例如列 $(2, 3)$ 与 $(4, 6)$ 张成过 $(2, 3)$ 的直线，所以当 $(6, k) = 3(2, 3)$，即 $k = 9$ 时，$(6, k)$ 在列空间中。\n\n> **注意。** 先由已知元素求出倍数；$k$ 是这个倍数乘以列的第二个元素，而不是倍数本身。",
   ],
   (rng) => {
     const a = nz(rng, 5);
     const c = nz(rng, 5);
     const m = nz(rng, 4);
-    const t = nz(rng, 6);
-    const answer = c * t;
-    return ask(
-      [
-        `Find $k$ so that $${vec(a * t, "k")}$ lies in the column space of $${mat([
-          [a, m * a],
-          [c, m * c],
-        ])}$.`,
-        `求 $k$，使 $${vec(a * t, "k")}$ 位于 $${mat([
-          [a, m * a],
-          [c, m * c],
-        ])}$ 的列空间中。`,
-      ],
+    const s = nz(rng, 6);
+    const answer = c * s;
+    const A = mat([
+      [a, m * a],
+      [c, m * c],
+    ]);
+    return numberProblem({
+      prompt: text([
+        `Find $k$ so that $${vec(a * s, "k")}$ lies in the column space of $${A}$.`,
+        `求 $k$，使 $${vec(a * s, "k")}$ 位于 $${A}$ 的列空间中。`,
+      ]),
       answer,
-      [t, c, -answer],
-      [
-        `Column $2$ is $${m}$ times column $1$, so the column space is the line through $${vec(a, c)}$. The first entry requires the factor $${t}$, so $k = ${wrap(t)} \\cdot ${wrap(c)} = ${answer}$.`,
-        `第 $2$ 列是第 $1$ 列的 $${m}$ 倍，所以列空间是过 $${vec(a, c)}$ 的直线。由第一个元素知因子是 $${t}$，所以 $k = ${wrap(t)} \\cdot ${wrap(c)} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          s,
+          "That is the factor; $k$ is the factor times the second entry of the first column.",
+          "这是倍数；$k$ 是倍数乘以第一列的第二个元素。",
+        ),
+        why(
+          c,
+          "That is the second entry of the first column; it still has to be multiplied by the factor.",
+          "这是第一列的第二个元素；还要乘以倍数。",
+        ),
+        why(
+          -answer,
+          "The sign is flipped; recheck the signs of the factor and of the column entry.",
+          "符号反了；请重新检查倍数与列元素的符号。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the column space", "求出列空间"],
+            text([
+              `Column 2 is $${m}$ times column 1, so the column space is the line through $${vec(a, c)}$.`,
+              `第 2 列是第 1 列的 $${m}$ 倍，所以列空间是过 $${vec(a, c)}$ 的直线。`,
+            ]),
+          ],
+          [
+            ["Find the factor", "求出倍数"],
+            text(["The first entries must match:", "第一个元素必须相等："]),
+            [`${poly([a, "s"])} = ${a * s}`, `s = ${s}`],
+          ],
+          [["Find $k$", "求出 $k$"], text(["", ""]), [`k = ${wrap(s)} \\cdot ${wrap(c)} = ${answer}`]],
+        ],
+        text([
+          `$${s}${vec(a, c)} = ${vec(a * s, answer)}$, which matches the vector with $k = ${answer}$.`,
+          `$${s}${vec(a, c)} = ${vec(a * s, answer)}$，与 $k = ${answer}$ 时的向量相同。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1498,8 +1555,8 @@ const nullReverse = point(
   "an-entry-from-a-null-space-vector",
   ["An entry from a null space vector", "由零空间向量求元素"],
   [
-    "A vector in the null space is orthogonal to every row of the matrix. So a known null space vector gives one equation for each row, and this can be used in reverse to find an unknown entry in the matrix from its null space.",
-    "零空间中的向量与矩阵的每一行都正交。所以已知的零空间向量给每一行提供一个方程，反过来可以由零空间求矩阵中的未知元素。",
+    "A vector in the null space is orthogonal to every row of the matrix. So a known null space vector gives one equation for each row, and this can be used in reverse to find an unknown entry in the matrix from its null space. For example, if $(1, 3, 1)$ is in the null space of $(2, -1, k)$, then $2 - 3 + k = 0$, so $k = 1$.\n\n> **Watch out.** The other two products move across the equals sign, so $k$ is minus their sum.",
+    "零空间中的向量与矩阵的每一行都正交。所以已知的零空间向量给每一行提供一个方程，反过来可以由零空间求矩阵中的未知元素。例如若 $(1, 3, 1)$ 在 $(2, -1, k)$ 的零空间中，则 $2 - 3 + k = 0$，所以 $k = 1$。\n\n> **注意。** 另外两个乘积移到等号另一边，所以 $k$ 是它们之和的相反数。",
   ],
   (rng) => {
     const a = nz(rng, 6);
@@ -1507,18 +1564,45 @@ const nullReverse = point(
     const u = nz(rng, 5);
     const v = nz(rng, 5);
     const answer = -(a * u + b * v);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$${vec(u, v, 1)}$ lies in the null space of $A = ${mat([[a, b, "k"]])}$. Find $k$.`,
         `$${vec(u, v, 1)}$ 位于 $A = ${mat([[a, b, "k"]])}$ 的零空间中。求 $k$。`,
-      ],
+      ]),
       answer,
-      [-answer, a * u - b * v, a + b],
-      [
-        `The product must vanish: $${wrap(a)} \\cdot ${wrap(u)} + ${wrap(b)} \\cdot ${wrap(v)} + k = 0$. So $k = ${answer}$.`,
-        `乘积必须为零：$${wrap(a)} \\cdot ${wrap(u)} + ${wrap(b)} \\cdot ${wrap(v)} + k = 0$。所以 $k = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          -answer,
+          "The sign is flipped: the two known products change sign when they move across.",
+          "符号反了：两个已知乘积移项时要变号。",
+        ),
+        why(
+          -(a * u),
+          `The product $${wrap(b)} \\cdot ${wrap(v)}$ from the second entry was left out.`,
+          `漏掉了第二个分量的乘积 $${wrap(b)} \\cdot ${wrap(v)}$。`,
+        ),
+        why(
+          -(a + b),
+          "The entries of the row must be multiplied by the entries of the vector before adding.",
+          "行的元素要先乘以向量的分量再相加。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Multiply the row by the vector", "行乘向量"],
+            text(["A null space vector gives a zero product:", "零空间中的向量使乘积为零："]),
+            [`${wrap(a)} \\cdot ${wrap(u)} + ${wrap(b)} \\cdot ${wrap(v)} + k \\cdot 1 = 0`, `${a * u + b * v} + k = 0`],
+          ],
+          [["Solve for $k$", "解出 $k$"], text(["", ""]), [`k = ${answer}`]],
+        ],
+        text([
+          `$${wrap(a)} \\cdot ${wrap(u)} + ${wrap(b)} \\cdot ${wrap(v)} + ${wrap(answer)} = ${a * u} + ${wrap(b * v)} + ${wrap(answer)} = 0$.`,
+          `$${wrap(a)} \\cdot ${wrap(u)} + ${wrap(b)} \\cdot ${wrap(v)} + ${wrap(answer)} = ${a * u} + ${wrap(b * v)} + ${wrap(answer)} = 0$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1526,8 +1610,8 @@ const scaledBasis = point(
   "coordinates-after-scaling-a-basis",
   ["Coordinates after scaling a basis", "缩放基之后的坐标"],
   [
-    "Coordinates change in the opposite way to the basis. If a basis vector is multiplied by $c$, the same vector needs $\\frac{1}{c}$ as much of it, so the coordinate is divided by $c$. Multiplying the coordinate instead would change the vector.",
-    "坐标的变化与基相反。如果基向量乘以 $c$，同一个向量只需要它的 $\\frac{1}{c}$，所以坐标要除以 $c$。若把坐标也乘以 $c$，向量就变了。",
+    "Coordinates change in the opposite way to the basis. If a basis vector is multiplied by $c$, the same vector needs $\\frac{1}{c}$ as much of it, so the coordinate is divided by $c$. Multiplying the coordinate instead would change the vector. For example, $\\mathbf{x} = 6\\mathbf{b}_1 - 4\\mathbf{b}_2$ has coordinates $(3, 2)$ in the basis $\\{2\\mathbf{b}_1, -2\\mathbf{b}_2\\}$, since $3(2\\mathbf{b}_1) + 2(-2\\mathbf{b}_2) = 6\\mathbf{b}_1 - 4\\mathbf{b}_2$.\n\n> **Watch out.** A longer basis vector needs a smaller coordinate: divide by the factor, and keep track of its sign.",
+    "坐标的变化与基相反。如果基向量乘以 $c$，同一个向量只需要它的 $\\frac{1}{c}$，所以坐标要除以 $c$。若把坐标也乘以 $c$，向量就变了。例如 $\\mathbf{x} = 6\\mathbf{b}_1 - 4\\mathbf{b}_2$ 在基 $\\{2\\mathbf{b}_1, -2\\mathbf{b}_2\\}$ 下的坐标为 $(3, 2)$，因为 $3(2\\mathbf{b}_1) + 2(-2\\mathbf{b}_2) = 6\\mathbf{b}_1 - 4\\mathbf{b}_2$。\n\n> **注意。** 基向量变长，坐标就变小：要除以倍数，并注意倍数的符号。",
   ],
   (rng) => {
     const pool = [-5, -4, -3, -2, 2, 3, 4, 5];
@@ -1538,18 +1622,51 @@ const scaledBasis = point(
     const first = rng.bool();
     const answer = first ? Q.of(p, c) : Q.of(q, d);
     const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
-    return ask(
-      [
+    const [coef, factor, index] = first ? [p, c, 1] : [q, d, 2];
+    const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+    return numberProblem({
+      prompt: text([
         `The coordinates of $\\mathbf{x}$ in the basis $\\{\\mathbf{b}_{1}, \\mathbf{b}_{2}\\}$ are $(${p}, ${q})$. Find the ${name[0]} coordinate of $\\mathbf{x}$ in the basis $\\{${c}\\mathbf{b}_{1}, ${d}\\mathbf{b}_{2}\\}$.`,
         `$\\mathbf{x}$ 在基 $\\{\\mathbf{b}_{1}, \\mathbf{b}_{2}\\}$ 下的坐标是 $(${p}, ${q})$。求 $\\mathbf{x}$ 在基 $\\{${c}\\mathbf{b}_{1}, ${d}\\mathbf{b}_{2}\\}$ 下的${name[1]}个坐标。`,
-      ],
+      ]),
       answer,
-      [first ? p * c : q * d, first ? p : q, answer.neg()],
-      [
-        `$\\mathbf{x} = ${poly([p, "\\mathbf{b}_{1}"], [q, "\\mathbf{b}_{2}"])}$. Writing this in terms of the new vectors divides each coefficient by the factor of its vector, which gives $${answer.toLatex()}$.`,
-        `$\\mathbf{x} = ${poly([p, "\\mathbf{b}_{1}"], [q, "\\mathbf{b}_{2}"])}$。用新向量表示时，每个系数都要除以相应向量的因子，得 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          coef * factor,
+          "The coordinate was multiplied by the factor; a longer basis vector needs a smaller coordinate, so divide.",
+          "坐标乘以了倍数；基向量变长，坐标要变小，所以应除以倍数。",
+        ),
+        why(coef, "That is the old coordinate; it changes when its basis vector is scaled.", "这是旧坐标；基向量缩放后它会改变。"),
+        why(
+          answer.neg(),
+          `The sign is flipped; the factor $${factor}$ keeps its sign in the division.`,
+          `符号反了；除法中倍数 $${factor}$ 保留它的符号。`,
+        ),
+      ].filter((w, i, all) => !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+      solution: walked(
+        [
+          [
+            ["Write x in the old basis", "用旧基表示 x"],
+            text(["", ""]),
+            [`\\mathbf{x} = ${poly([p, "\\mathbf{b}_{1}"], [q, "\\mathbf{b}_{2}"])}`],
+          ],
+          [
+            ["Rewrite with the new vector", "用新向量改写"],
+            text([
+              `Since $\\mathbf{b}_{${index}} = \\frac{1}{${factor}}(${factor}\\mathbf{b}_{${index}})$:`,
+              `由于 $\\mathbf{b}_{${index}} = \\frac{1}{${factor}}(${factor}\\mathbf{b}_{${index}})$：`,
+            ]),
+            [
+              `${coef}\\mathbf{b}_{${index}} = \\frac{${coef}}{${factor}}(${factor}\\mathbf{b}_{${index}}) = ${answer.toLatex()}(${factor}\\mathbf{b}_{${index}})`,
+            ],
+          ],
+        ],
+        text([
+          `$${answer.toLatex()} \\cdot ${wrap(factor)} = ${coef}$, so this coordinate rebuilds the original $${coef}\\mathbf{b}_{${index}}$.`,
+          `$${answer.toLatex()} \\cdot ${wrap(factor)} = ${coef}$，所以这个坐标还原出原来的 $${coef}\\mathbf{b}_{${index}}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1557,8 +1674,8 @@ const betweenBases = point(
   "from-one-basis-to-another",
   ["From one basis to another", "从一个基到另一个基"],
   [
-    "To change between two nonstandard bases, go through the standard coordinates. First use the old basis to rebuild the actual vector, and then solve for the coordinates in the new basis. The coordinates in the old basis cannot simply be reused.",
-    "在两个非标准基之间转换时，要经过标准坐标。先用旧基还原出实际的向量，再求它在新基下的坐标。旧基下的坐标不能直接拿来用。",
+    "To change between two nonstandard bases, go through the standard coordinates. First use the old basis to rebuild the actual vector, and then solve for the coordinates in the new basis. The coordinates in the old basis cannot simply be reused. For example, coordinates $(1, 2)$ in $\\{(1, 1), (1, -1)\\}$ give the vector $(3, -1)$, and in $\\{(1, 0), (1, 1)\\}$ this is $4(1, 0) + (-1)(1, 1)$, so the new coordinates are $(4, -1)$.\n\n> **Watch out.** Neither the old coordinates nor the entries of the vector are the new coordinates; solve the new system.",
+    "在两个非标准基之间转换时，要经过标准坐标。先用旧基还原出实际的向量，再求它在新基下的坐标。旧基下的坐标不能直接拿来用。例如在 $\\{(1, 1), (1, -1)\\}$ 下的坐标 $(1, 2)$ 给出向量 $(3, -1)$，在 $\\{(1, 0), (1, 1)\\}$ 下它是 $4(1, 0) + (-1)(1, 1)$，所以新坐标为 $(4, -1)$。\n\n> **注意。** 旧坐标和向量的分量都不是新坐标；要解新的方程组。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -1573,18 +1690,54 @@ const betweenBases = point(
     const first = rng.bool();
     const answer = first ? x1 - x2 : x2;
     const name: Pair = first ? ["first", "第一"] : ["second", "第二"];
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$\\mathbf{x}$ has coordinates $(${p}, ${q})$ in the basis $\\mathcal{B} = \\left\\{${vec(a, b)}, ${vec(c, d)}\\right\\}$. Find its ${name[0]} coordinate in the basis $\\mathcal{C} = \\left\\{${vec(1, 0)}, ${vec(1, 1)}\\right\\}$.`,
         `$\\mathbf{x}$ 在基 $\\mathcal{B} = \\left\\{${vec(a, b)}, ${vec(c, d)}\\right\\}$ 下的坐标是 $(${p}, ${q})$。求它在基 $\\mathcal{C} = \\left\\{${vec(1, 0)}, ${vec(1, 1)}\\right\\}$ 下的${name[1]}个坐标。`,
-      ],
+      ]),
       answer,
-      [first ? p : q, first ? x1 : x1 - x2, -answer],
-      [
-        `The vector is $${vec(x1, x2)}$. In $\\mathcal{C}$, the coordinates $y_{1}, y_{2}$ satisfy $y_{1} + y_{2} = ${x1}$ and $y_{2} = ${x2}$, so $y_{1} = ${x1 - x2}$ and $y_{2} = ${x2}$.`,
-        `这个向量是 $${vec(x1, x2)}$。在 $\\mathcal{C}$ 下，坐标 $y_{1}, y_{2}$ 满足 $y_{1} + y_{2} = ${x1}$，$y_{2} = ${x2}$，所以 $y_{1} = ${x1 - x2}$，$y_{2} = ${x2}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          first ? p : q,
+          "That is the old coordinate in $\\mathcal{B}$; rebuild the vector and solve in $\\mathcal{C}$.",
+          "这是 $\\mathcal{B}$ 下的旧坐标；要还原出向量，再在 $\\mathcal{C}$ 下求解。",
+        ),
+        first
+          ? why(
+              x1,
+              "That is the first entry of the vector; in $\\mathcal{C}$ the second vector also has first entry $1$, so subtract $y_{2}$.",
+              "这是向量的第一个分量；在 $\\mathcal{C}$ 中第二个向量的第一个分量也是 $1$，所以要减去 $y_{2}$。",
+            )
+          : why(
+              x1 - x2,
+              "That is the first coordinate in $\\mathcal{C}$; the question asks for the second.",
+              "这是 $\\mathcal{C}$ 下的第一个坐标；题目求的是第二个。",
+            ),
+        why(-answer, "The sign is flipped; recheck the subtraction.", "符号反了；请重新检查减法。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Rebuild the vector", "还原向量"],
+            text(["", ""]),
+            [`\\mathbf{x} = ${p}${vec(a, b)} + ${wrap(q)}${vec(c, d)} = ${vec(x1, x2)}`],
+          ],
+          [
+            ["Solve in C", "在 C 下求解"],
+            text([
+              "Coordinates $y_{1}, y_{2}$ in $\\mathcal{C}$ satisfy $y_{1}(1, 0) + y_{2}(1, 1) = \\mathbf{x}$:",
+              "$\\mathcal{C}$ 下的坐标 $y_{1}, y_{2}$ 满足 $y_{1}(1, 0) + y_{2}(1, 1) = \\mathbf{x}$：",
+            ]),
+            [`y_{2} = ${x2}`, `y_{1} = ${x1} - ${wrap(x2)} = ${x1 - x2}`],
+          ],
+        ],
+        text([
+          `$${x1 - x2}${vec(1, 0)} + ${wrap(x2)}${vec(1, 1)} = ${vec(x1, x2)}$, so the ${name[0]} coordinate is $${answer}$.`,
+          `$${x1 - x2}${vec(1, 0)} + ${wrap(x2)}${vec(1, 1)} = ${vec(x1, x2)}$，所以${name[1]}个坐标为 $${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 

@@ -1159,8 +1159,8 @@ const columnSpaceFromLine: KnowledgePointDef = {
   id: "the-column-space-from-a-drawn-line",
   title: t("The column space from a drawn line", "由图中的直线判断列空间"),
   explanation: t(
-    "The column space of a matrix is the set of all combinations of its columns. When the two columns of a matrix are multiples of each other, every combination lies on one line through the origin, so the column space is that line. So to match a drawing, look for a matrix whose columns both point along the line, and not merely whose first column does.",
-    "矩阵的列空间是它各列所有线性组合的集合。矩阵的两列互为倍数时，所有组合都在过原点的一条直线上，所以列空间就是这条直线。要和图对应，就要找两列都沿这条直线的矩阵，而不只是第一列沿这条直线。",
+    "The column space of a matrix is the set of all combinations of its columns. When the two columns of a matrix are multiples of each other, every combination lies on one line through the origin, so the column space is that line. So to match a drawing, look for a matrix whose columns both point along the line, and not merely whose first column does. For example, the line through $(1, 2)$ is the column space of $\\begin{pmatrix} 1 & 3 \\\\ 2 & 6 \\end{pmatrix}$, since its columns $(1, 2)$ and $(3, 6) = 3(1, 2)$ both lie on the line.\n\n> **Watch out.** Read columns top to bottom, not rows left to right. If the two columns are not parallel, the column space is the whole plane, even when one of them lies on the line.",
+    "矩阵的列空间是它各列所有线性组合的集合。矩阵的两列互为倍数时，所有组合都在过原点的一条直线上，所以列空间就是这条直线。要和图对应，就要找两列都沿这条直线的矩阵，而不只是第一列沿这条直线。例如过 $(1, 2)$ 的直线是 $\\begin{pmatrix} 1 & 3 \\\\ 2 & 6 \\end{pmatrix}$ 的列空间，因为它的两列 $(1, 2)$ 和 $(3, 6) = 3(1, 2)$ 都在这条直线上。\n\n> **注意。** 列要从上往下读，而不是按行从左往右读。两列不平行时，即使其中一列在直线上，列空间也是整个平面。",
   ),
   generate(rng) {
     const directions: Point[] = [];
@@ -1168,14 +1168,44 @@ const columnSpaceFromLine: KnowledgePointDef = {
     const [u, v] = rng.pick(directions);
     const k = rng.pick([2, 3, -1, -2]);
     const mat = (p: number, q: number, r: number, s: number) => `\\begin{pmatrix} ${p} & ${q} \\\\ ${r} & ${s} \\end{pmatrix}`;
-    return pickChoice(
+    const n = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const pt = (x: number, y: number) => `(${x}, ${y})`;
+    const right = mat(u, k * u, v, k * v);
+    const swapped = mat(v, k * v, u, k * u);
+    const rows = mat(u, v, k * u + 1, k * v);
+    const oneOnLine = mat(u, k * v, v, k * u - 1);
+    const mirrored = mat(u, u, -v, -v);
+    const detOne = u * (k * u - 1) - k * v * v;
+    const reasons: Reason[] = [
+      [
+        `$${swapped}$`,
+        `Its columns are multiples of $${pt(v, u)}$, the line's direction with its coordinates swapped, so its column space is a different line.`,
+        `它的列是 $${pt(v, u)}$ 的倍数，即直线方向交换坐标后的向量，所以它的列空间是另一条直线。`,
+      ],
+      [
+        `$${rows}$`,
+        `The first row is the line's direction, but the columns $${pt(u, k * u + 1)}$ and $${pt(v, k * v)}$ are not parallel: the determinant is $${-v}$, so the column space is the whole plane.`,
+        `第一行是直线的方向，但列 $${pt(u, k * u + 1)}$ 和 $${pt(v, k * v)}$ 不平行：行列式为 $${-v}$，所以列空间是整个平面。`,
+      ],
+      [
+        `$${oneOnLine}$`,
+        `The first column lies on the line, but the second, $${pt(k * v, k * u - 1)}$, does not: the determinant is $${detOne}$, so the column space is the whole plane.`,
+        `第一列在直线上，但第二列 $${pt(k * v, k * u - 1)}$ 不在：行列式为 $${detOne}$，所以列空间是整个平面。`,
+      ],
+      [
+        `$${mirrored}$`,
+        `Both columns are $${pt(u, -v)}$, which is the line's direction with the sign of $y$ flipped, so its column space is the mirror image of the drawn line.`,
+        `两列都是 $${pt(u, -v)}$，即直线方向的 $y$ 坐标变号后的向量，所以它的列空间是图中直线的镜像。`,
+      ],
+    ];
+    const problem = pickChoice(
       rng,
       t("The drawn line through the origin is the column space of which matrix?", "图中过原点的直线是哪个矩阵的列空间？"),
-      math(mat(u, k * u, v, k * v)),
-      [math(mat(v, k * v, u, k * u)), math(mat(u, v, k * u + 1, k * v)), math(mat(u, k * v, v, k * u - 1)), math(mat(u, u, -v, -v))],
+      math(right),
+      [math(swapped), math(rows), math(oneOnLine), math(mirrored)],
       t(
-        `Both columns are multiples of $(${u}, ${v})$, which is the direction of the line, so every combination of the columns lies on it.`,
-        `两列都是 $(${u}, ${v})$ 的倍数，而这正是直线的方向，所以各列的任何组合都在这条直线上。`,
+        `${stepLabel(1, "Read the line", "读出直线").en} The line passes through the origin and $${pt(u, v)}$, so its direction is $${pt(u, v)}$.\n\n${stepLabel(2, "Read the columns", "读出各列").en} In $${right}$ the columns are $${pt(u, v)}$ and $${pt(k * u, k * v)} = ${n(k)}${pt(u, v)}$, both multiples of the direction.\n\n**Check.** The determinant is $${n(u)} \\cdot ${n(k * v)} - ${n(k * u)} \\cdot ${n(v)} = 0$, so the columns are parallel and every combination of them lies on the drawn line.`,
+        `${stepLabel(1, "Read the line", "读出直线")["zh-CN"]}直线过原点和 $${pt(u, v)}$，所以方向是 $${pt(u, v)}$。\n\n${stepLabel(2, "Read the columns", "读出各列")["zh-CN"]}在 $${right}$ 中，两列是 $${pt(u, v)}$ 和 $${pt(k * u, k * v)} = ${n(k)}${pt(u, v)}$，都是方向的倍数。\n\n**检验。**行列式为 $${n(u)} \\cdot ${n(k * v)} - ${n(k * u)} \\cdot ${n(v)} = 0$，所以两列平行，它们的任何组合都在图中的直线上。`,
       ),
       drawn(
         square(6),
@@ -1186,6 +1216,7 @@ const columnSpaceFromLine: KnowledgePointDef = {
         t(`A line through the origin and the point (${u}, ${v}).`, `一条过原点和点 (${u}, ${v}) 的直线。`),
       ),
     );
+    return reasoned(problem, reasons);
   },
 };
 

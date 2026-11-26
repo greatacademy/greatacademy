@@ -9,6 +9,7 @@ import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { numberProblem, pointLatex, pointProblem, say, why, withMistakes } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
@@ -1000,8 +1001,8 @@ const parameterInSpan: KnowledgePointDef = {
   id: "the-component-that-puts-a-vector-in-a-span",
   title: t("The component that puts a vector in a span", "使向量落在张成空间中的分量"),
   explanation: t(
-    "To decide what a missing component must be, use the known components to find the coefficients of the combination, then let those coefficients fix the last component. A plane in space leaves exactly one value free of choice for each pair of other components.",
-    "要确定缺少的分量，先用已知分量求出线性组合的系数，再由这些系数决定最后一个分量。空间中的平面对其余两个分量的每一组取值，只留下一个可能的值。",
+    "To decide what a missing component must be, use the known components to find the coefficients of the combination, then let those coefficients fix the last component. A plane in space leaves exactly one value free of choice for each pair of other components. For example, for $(3, 4, k)$ in the span of $(1, 1, 2)$ and $(1, 2, 0)$, the first two entries give $c_1 + c_2 = 3$ and $c_1 + 2c_2 = 4$, so $c_2 = 1$, $c_1 = 2$ and $k = 2 \\cdot 2 + 1 \\cdot 0 = 4$.\n\n> **Watch out.** The missing entry uses the same weights as the known entries; adding the third entries without the weights gives the wrong value.",
+    "要确定缺少的分量，先用已知分量求出线性组合的系数，再由这些系数决定最后一个分量。空间中的平面对其余两个分量的每一组取值，只留下一个可能的值。例如 $(3, 4, k)$ 在 $(1, 1, 2)$ 与 $(1, 2, 0)$ 的张成空间中时，前两个分量给出 $c_1 + c_2 = 3$ 与 $c_1 + 2c_2 = 4$，所以 $c_2 = 1$，$c_1 = 2$，$k = 2 \\cdot 2 + 1 \\cdot 0 = 4$。\n\n> **注意。** 缺少的分量要用与已知分量相同的权重；不带权重直接把第三个分量相加会得到错误的值。",
   ),
   generate(rng) {
     const u = [1, rng.int(1, 3), nonzero(rng, 4)];
@@ -1016,10 +1017,41 @@ const parameterInSpan: KnowledgePointDef = {
       ),
       answer: w[2]!,
       solveFor: "k",
-      wrong: [u[2]! + v[2]!, c2 * u[2]! + c1 * v[2]!, w[0]! + w[1]!],
-      solution: t(
-        `Solve $c_1 + c_2 = ${w[0]}$ and $${u[1]}c_1 + ${v[1]}c_2 = ${w[1]}$ to get $c_1 = ${c1}$ and $c_2 = ${c2}$. Then $k = ${c1}(${u[2]}) + ${inParens(c2)}(${v[2]}) = ${w[2]}$.`,
-        `解 $c_1 + c_2 = ${w[0]}$ 和 $${u[1]}c_1 + ${v[1]}c_2 = ${w[1]}$，得 $c_1 = ${c1}$，$c_2 = ${c2}$。于是 $k = ${c1}(${u[2]}) + ${inParens(c2)}(${v[2]}) = ${w[2]}$。`,
+      mistakes: [
+        why(
+          u[2]! + v[2]!,
+          "This adds the third entries without the weights; find $c_1$ and $c_2$ first.",
+          "这是不带权重直接把第三个分量相加；要先求出 $c_1$ 与 $c_2$。",
+        ),
+        why(c2 * u[2]! + c1 * v[2]!, "The weights are swapped: $c_1$ goes with the first vector.", "权重对调了：$c_1$ 乘第一个向量。"),
+        why(
+          w[0]! + w[1]!,
+          "This adds the two known entries; the missing entry comes from the weights of the combination.",
+          "这是把两个已知分量相加；缺少的分量要由组合的权重求出。",
+        ),
+      ].filter((m, i, all) => m.value !== w[2]! && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Equations from the known entries", "由已知分量列方程"],
+            t("The first two entries give:", "前两个分量给出："),
+            [`c_1 + c_2 = ${w[0]}`, `${poly([u[1]!, "c_1"], [v[1]!, "c_2"])} = ${w[1]}`],
+          ],
+          [
+            ["Solve for the weights", "解出权重"],
+            t(`Subtract $${u[1]}$ times the first equation from the second:`, `第二个方程减去第一个方程的 $${u[1]}$ 倍：`),
+            [`c_2 = ${w[1]} - ${u[1]} \\cdot ${inParens(w[0]!)} = ${c2}`, `c_1 = ${w[0]} - ${inParens(c2)} = ${c1}`],
+          ],
+          [
+            ["The third entry", "第三个分量"],
+            t("", ""),
+            [`k = ${c1} \\cdot ${inParens(u[2]!)} + ${inParens(c2)} \\cdot ${inParens(v[2]!)} = ${w[2]}`],
+          ],
+        ],
+        t(
+          `With these weights the second entry is $${u[1]} \\cdot ${inParens(c1)} + ${v[1]} \\cdot ${inParens(c2)} = ${w[1]}$, as given.`,
+          `用这组权重，第二个分量为 $${u[1]} \\cdot ${inParens(c1)} + ${v[1]} \\cdot ${inParens(c2)} = ${w[1]}$，与已知相符。`,
+        ),
       ),
     });
   },
@@ -1029,8 +1061,8 @@ const parameterForDependence: KnowledgePointDef = {
   id: "the-parameter-that-makes-two-vectors-dependent",
   title: t("The parameter that makes two vectors dependent", "使两个向量相关的参数"),
   explanation: t(
-    "Two vectors in the plane are dependent exactly when the determinant of the matrix with those columns is zero. A parameter that appears twice makes this a quadratic equation, and so there can be two values.",
-    "平面上两个向量线性相关，当且仅当以它们为列的矩阵行列式为零。参数出现两次时，这就成了二次方程，所以可能有两个值。",
+    "Two vectors in the plane are dependent exactly when the determinant of the matrix with those columns is zero. A parameter that appears twice makes this a quadratic equation, and so there can be two values. For example, $(k, 2)$ and $(8, k)$ give the determinant $k^2 - 16$, which is zero at $k = 4$ and $k = -4$.\n\n> **Watch out.** Solving $k^2 = 16$ gives two roots; keep the one with the sign the question asks for, and do not stop at $k^2$.",
+    "平面上两个向量线性相关，当且仅当以它们为列的矩阵行列式为零。参数出现两次时，这就成了二次方程，所以可能有两个值。例如 $(k, 2)$ 与 $(8, k)$ 的行列式为 $k^2 - 16$，它在 $k = 4$ 与 $k = -4$ 时为零。\n\n> **注意。** 解 $k^2 = 16$ 得到两个根；要保留题目要求符号的那个，并且不要停在 $k^2$。",
   ),
   generate(rng) {
     const m = rng.int(2, 12);
@@ -1045,10 +1077,44 @@ const parameterForDependence: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [m * m, a + b, -answer],
-      solution: t(
-        `The determinant is $k^2 - ${a * b}$. It is zero at $k = \\pm ${m}$, and the ${positive ? "positive" : "negative"} value is $${answer}$.`,
-        `行列式是 $k^2 - ${a * b}$。它在 $k = \\pm ${m}$ 时为零，取${positive ? "正" : "负"}值 $${answer}$。`,
+      mistakes: [
+        why(m * m, `That is $k^2$; take the square root to find $k$.`, `这是 $k^2$；要开平方才得到 $k$。`),
+        why(
+          a + b,
+          "Adding the two entries does not test dependence; set the determinant to zero.",
+          "把两个元素相加并不能检验相关性；要令行列式为零。",
+        ),
+        why(
+          -answer,
+          `This root has the wrong sign; $k$ is ${positive ? "positive" : "negative"}.`,
+          `这个根的符号不对；$k$ 是${positive ? "正" : "负"}数。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Set the determinant to zero", "令行列式为零"],
+            t("Put the two vectors in the columns:", "把两个向量作为列："),
+            [
+              `\\det ${mat([
+                ["k", b],
+                [a, "k"],
+              ])} = k^2 - ${a} \\cdot ${b} = k^2 - ${a * b} = 0`,
+            ],
+          ],
+          [["Solve", "求解"], t(`$k^2 = ${a * b}$ has two roots:`, `$k^2 = ${a * b}$ 有两个根：`), [`k = \\pm ${m}`]],
+          [
+            ["Choose the sign", "选取符号"],
+            t(
+              `$k$ is ${positive ? "positive" : "negative"}, so $k = ${answer}$.`,
+              `$k$ 为${positive ? "正" : "负"}数，所以 $k = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $k = ${answer}$ the vectors are $(${answer}, ${a})$ and $(${b}, ${answer})$, and $(${b}, ${answer}) = ${frac(b, answer)}(${answer}, ${a})$, since $${frac(b, answer)} \\cdot ${a} = ${frac(b * a, answer)} = ${answer}$.`,
+          `取 $k = ${answer}$，两个向量为 $(${answer}, ${a})$ 与 $(${b}, ${answer})$，而 $(${b}, ${answer}) = ${frac(b, answer)}(${answer}, ${a})$，因为 $${frac(b, answer)} \\cdot ${a} = ${frac(b * a, answer)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1059,8 +1125,8 @@ const planeOfAColumnSpace: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-column-space-of-a-matrix#the-equation-of-a-column-space"],
   title: t("The equation of a column space", "列空间的方程"),
   explanation: t(
-    "The column space of a matrix with two independent columns in $\\mathbb{R}^3$ is a plane through the origin. Its normal is perpendicular to both columns, so the cross product of the columns gives the equation of the plane.",
-    "$\\mathbb{R}^3$ 中有两个独立列的矩阵，其列空间是过原点的平面。法向量与两列都垂直，所以两列的向量积给出平面方程。",
+    "The column space of a matrix with two independent columns in $\\mathbb{R}^3$ is a plane through the origin. Its normal is perpendicular to both columns, so the cross product of the columns gives the equation of the plane. For example, the columns $(1, 0, 1)$ and $(0, 1, 1)$ have cross product $(-1, -1, 1)$, so the column space is $-x - y + z = 0$.\n\n> **Watch out.** An equation that fits only one column is not the plane; put both columns into it and get $0$ each time.",
+    "$\\mathbb{R}^3$ 中有两个独立列的矩阵，其列空间是过原点的平面。法向量与两列都垂直，所以两列的向量积给出平面方程。例如列 $(1, 0, 1)$ 与 $(0, 1, 1)$ 的向量积为 $(-1, -1, 1)$，所以列空间为 $-x - y + z = 0$。\n\n> **注意。** 只符合一列的方程不是这个平面；把两列都代入，每次都要得到 $0$。",
   ),
   generate(rng) {
     let u: number[];
@@ -1071,26 +1137,61 @@ const planeOfAColumnSpace: KnowledgePointDef = {
       v = [rng.int(-2, 3), rng.int(1, 3), rng.int(-2, 3)];
       n = [u[1]! * v[2]! - u[2]! * v[1]!, u[2]! * v[0]! - u[0]! * v[2]!, u[0]! * v[1]! - u[1]! * v[0]!];
     } while (n.some((x) => x === 0) || new Set(n.map(Math.abs)).size < 3);
-    return pickChoice(
-      rng,
-      t(
-        `Which equation describes the column space of $${mat([
-          [u[0]!, v[0]!],
-          [u[1]!, v[1]!],
-          [u[2]!, v[2]!],
-        ])}$?`,
-        `哪个方程描述 $${mat([
-          [u[0]!, v[0]!],
-          [u[1]!, v[1]!],
-          [u[2]!, v[2]!],
-        ])}$ 的列空间？`,
+    const wrongNormals = [
+      [n[1]!, n[0]!, n[2]!],
+      [n[0]!, -n[1]!, n[2]!],
+      [n[2]!, n[1]!, n[0]!],
+    ];
+    const at = (normal: readonly number[], p: readonly number[]) =>
+      `${inParens(normal[0]!)} \\cdot ${inParens(p[0]!)} + ${inParens(normal[1]!)} \\cdot ${inParens(p[1]!)} + ${inParens(normal[2]!)} \\cdot ${inParens(p[2]!)}`;
+    // reason names a column that the wrong plane misses; each wrong normal is not a multiple of n, so one column fails.
+    const reason = (normal: readonly number[]): [string, string, string] => {
+      const [name, p] = dot(normal, u) !== 0 ? ["first", u] : ["second", v];
+      const zh = name === "first" ? "第一" : "第二";
+      return [
+        `$${linear(normal)} = 0$`,
+        `The ${name} column does not satisfy it: $${at(normal, p)} = ${dot(normal, p)} \\neq 0$.`,
+        `${zh}列不满足它：$${at(normal, p)} = ${dot(normal, p)} \\neq 0$。`,
+      ];
+    };
+    return reasoned(
+      pickChoice(
+        rng,
+        t(
+          `Which equation describes the column space of $${mat([
+            [u[0]!, v[0]!],
+            [u[1]!, v[1]!],
+            [u[2]!, v[2]!],
+          ])}$?`,
+          `哪个方程描述 $${mat([
+            [u[0]!, v[0]!],
+            [u[1]!, v[1]!],
+            [u[2]!, v[2]!],
+          ])}$ 的列空间？`,
+        ),
+        both(`${linear(n)} = 0`),
+        wrongNormals.map((w) => both(`${linear(w)} = 0`)),
+        walked(
+          [
+            [
+              ["Cross the columns", "求两列的向量积"],
+              t("The normal of the plane is perpendicular to both columns:", "平面的法向量与两列都垂直："),
+              [
+                `${inParens(u[1]!)} \\cdot ${inParens(v[2]!)} - ${inParens(u[2]!)} \\cdot ${inParens(v[1]!)} = ${n[0]}`,
+                `${inParens(u[2]!)} \\cdot ${inParens(v[0]!)} - ${inParens(u[0]!)} \\cdot ${inParens(v[2]!)} = ${n[1]}`,
+                `${inParens(u[0]!)} \\cdot ${inParens(v[1]!)} - ${inParens(u[1]!)} \\cdot ${inParens(v[0]!)} = ${n[2]}`,
+              ],
+            ],
+            [
+              ["Write the plane", "写出平面"],
+              t("The plane through the origin with this normal is:", "过原点、以此为法向量的平面为："),
+              [`${linear(n)} = 0`],
+            ],
+          ],
+          t(`Both columns satisfy it: $${at(n, u)} = 0$ and $${at(n, v)} = 0$.`, `两列都满足它：$${at(n, u)} = 0$，$${at(n, v)} = 0$。`),
+        ),
       ),
-      both(`${linear(n)} = 0`),
-      [`${linear([n[1]!, n[0]!, n[2]!])} = 0`, `${linear([n[0]!, -n[1]!, n[2]!])} = 0`, `${linear([n[2]!, n[1]!, n[0]!])} = 0`].map(both),
-      t(
-        `The normal is the cross product of the columns, $(${n.join(", ")})$. It has zero dot product with each column, so every combination of the columns satisfies $${linear(n)} = 0$.`,
-        `法向量是两列的向量积 $(${n.join(", ")})$。它与每一列的数量积都为零，所以两列的任何线性组合都满足 $${linear(n)} = 0$。`,
-      ),
+      wrongNormals.map(reason),
     );
   },
 };
@@ -1133,8 +1234,8 @@ const betweenTwoBases: KnowledgePointDef = {
   id: "coordinates-from-one-basis-to-another",
   title: t("Coordinates from one basis to another", "从一组基的坐标到另一组基的坐标"),
   explanation: t(
-    "To pass from coordinates in a basis $\\mathcal{B}$ to coordinates in a basis $\\mathcal{C}$, go through the vector itself: multiply by the matrix $P_{\\mathcal{B}}$ to get the vector, then solve with $P_{\\mathcal{C}}$. So $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C}}^{-1}P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$.",
-    "要从基 $\\mathcal{B}$ 下的坐标得到基 $\\mathcal{C}$ 下的坐标，先经过向量本身：乘 $P_{\\mathcal{B}}$ 得到向量，再用 $P_{\\mathcal{C}}$ 求解。所以 $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C}}^{-1}P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$。",
+    "To pass from coordinates in a basis $\\mathcal{B}$ to coordinates in a basis $\\mathcal{C}$, go through the vector itself: multiply by the matrix $P_{\\mathcal{B}}$ to get the vector, then solve with $P_{\\mathcal{C}}$. So $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C}}^{-1}P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$. For example, with $\\mathcal{B} = \\{(1, 1), (0, 1)\\}$, $\\mathcal{C} = \\{(1, 0), (1, 1)\\}$ and $[\\mathbf{x}]_{\\mathcal{B}} = (2, 1)$, the vector is $(2, 3)$, and $-1(1, 0) + 3(1, 1) = (2, 3)$ gives $[\\mathbf{x}]_{\\mathcal{C}} = (-1, 3)$.\n\n> **Watch out.** The vector itself is a stop on the way, not the answer; it still has to be written in $\\mathcal{C}$.",
+    "要从基 $\\mathcal{B}$ 下的坐标得到基 $\\mathcal{C}$ 下的坐标，先经过向量本身：乘 $P_{\\mathcal{B}}$ 得到向量，再用 $P_{\\mathcal{C}}$ 求解。所以 $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C}}^{-1}P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$。例如 $\\mathcal{B} = \\{(1, 1), (0, 1)\\}$，$\\mathcal{C} = \\{(1, 0), (1, 1)\\}$，$[\\mathbf{x}]_{\\mathcal{B}} = (2, 1)$ 时，向量为 $(2, 3)$，而 $-1(1, 0) + 3(1, 1) = (2, 3)$，所以 $[\\mathbf{x}]_{\\mathcal{C}} = (-1, 3)$。\n\n> **注意。** 向量本身只是中间一步，不是答案；还要把它用 $\\mathcal{C}$ 表示出来。",
   ),
   generate(rng) {
     const C = unimodular(rng);
@@ -1147,18 +1248,53 @@ const betweenTwoBases: KnowledgePointDef = {
     const x = [dot(Bm[0]!, coords), dot(Bm[1]!, coords)];
     const answer = times(inverse2(C), [[x[0]!], [x[1]!]]).map((r) => r[0]!);
     const column = (m: number[][], j: number) => col(m[0]![j]!, m[1]![j]!);
-    return pointProblem({
-      prompt: t(
-        `A vector has coordinates $(${coords.join(", ")})$ in the basis $\\mathcal{B} = \\{${column(Bm, 0)}, ${column(Bm, 1)}\\}$. Find its coordinates in the basis $\\mathcal{C} = \\{${column(C, 0)}, ${column(C, 1)}\\}$.`,
-        `一个向量在基 $\\mathcal{B} = \\{${column(Bm, 0)}, ${column(Bm, 1)}\\}$ 下的坐标是 $(${coords.join(", ")})$。求它在基 $\\mathcal{C} = \\{${column(C, 0)}, ${column(C, 1)}\\}$ 下的坐标。`,
-      ),
-      answer,
-      wrong: [coords, x, times(C, [[x[0]!], [x[1]!]]).map((r) => r[0]!)],
-      solution: t(
-        `The vector itself is $${coords[0]}$ times the first vector of $\\mathcal{B}$ plus $${coords[1]}$ times the second, which is $(${x.join(", ")})$. Solving $P_{\\mathcal{C}}\\mathbf{c} = (${x.join(", ")})$ gives $(${answer.join(", ")})$.`,
-        `向量本身是 $\\mathcal{B}$ 的第一个向量的 $${coords[0]}$ 倍加第二个向量的 $${coords[1]}$ 倍，即 $(${x.join(", ")})$。解 $P_{\\mathcal{C}}\\mathbf{c} = (${x.join(", ")})$，得 $(${answer.join(", ")})$。`,
-      ),
-    });
+    const Ci = inverse2(C);
+    const back = [C[0]![0]! * answer[0]! + C[0]![1]! * answer[1]!, C[1]![0]! * answer[0]! + C[1]![1]! * answer[1]!];
+    return withMistakes(
+      pointProblem({
+        prompt: t(
+          `A vector has coordinates $(${coords.join(", ")})$ in the basis $\\mathcal{B} = \\{${column(Bm, 0)}, ${column(Bm, 1)}\\}$. Find its coordinates in the basis $\\mathcal{C} = \\{${column(C, 0)}, ${column(C, 1)}\\}$.`,
+          `一个向量在基 $\\mathcal{B} = \\{${column(Bm, 0)}, ${column(Bm, 1)}\\}$ 下的坐标是 $(${coords.join(", ")})$。求它在基 $\\mathcal{C} = \\{${column(C, 0)}, ${column(C, 1)}\\}$ 下的坐标。`,
+        ),
+        answer,
+        solution: walked(
+          [
+            [
+              ["Find the vector", "求出向量"],
+              t("Multiply the matrix of $\\mathcal{B}$ by the coordinates:", "用 $\\mathcal{B}$ 的矩阵乘坐标："),
+              [`\\mathbf{x} = ${mat(Bm)}${col(...coords)} = ${col(...x)}`],
+            ],
+            [
+              ["Invert the matrix of C", "求 C 的矩阵的逆"],
+              t(`$\\det P_{\\mathcal{C}} = ${det(C)}$, so:`, `$\\det P_{\\mathcal{C}} = ${det(C)}$，所以：`),
+              [`P_{\\mathcal{C}}^{-1} = ${mat(Ci)}`],
+            ],
+            [["Convert", "转换"], t("", ""), [`[\\mathbf{x}]_{\\mathcal{C}} = ${mat(Ci)}${col(...x)} = ${col(...answer)}`]],
+          ],
+          t(
+            `$${answer[0]}${column(C, 0)} + ${inParens(answer[1]!)}${column(C, 1)} = ${col(...back)} = \\mathbf{x}$.`,
+            `$${answer[0]}${column(C, 0)} + ${inParens(answer[1]!)}${column(C, 1)} = ${col(...back)} = \\mathbf{x}$。`,
+          ),
+        ),
+      }),
+      [
+        say(
+          pointLatex(coords),
+          "These are the $\\mathcal{B}$-coordinates unchanged; they describe the vector in the other basis.",
+          "这是未经转换的 $\\mathcal{B}$ 坐标；它们描述的是另一组基下的向量。",
+        ),
+        say(
+          pointLatex(x),
+          "This is the vector in standard coordinates; it still has to be written in $\\mathcal{C}$.",
+          "这是标准坐标下的向量；还要把它用 $\\mathcal{C}$ 表示。",
+        ),
+        say(
+          pointLatex(times(C, [[x[0]!], [x[1]!]]).map((r) => r[0]!)),
+          "This multiplies the vector by $P_{\\mathcal{C}}$; coordinates in $\\mathcal{C}$ need $P_{\\mathcal{C}}^{-1}$.",
+          "这是用 $P_{\\mathcal{C}}$ 乘向量；求 $\\mathcal{C}$ 坐标要用 $P_{\\mathcal{C}}^{-1}$。",
+        ),
+      ].filter((m, i, all) => m.response !== pointLatex(answer) && all.findIndex((o) => o.response === m.response) === i),
+    );
   },
 };
 
@@ -2439,8 +2575,8 @@ const scalarForEntry: KnowledgePointDef = {
   id: "the-scalar-that-gives-a-combination-a-chosen-entry",
   title: t("The scalar that gives a combination a chosen entry", "使组合取得指定分量的标量"),
   explanation: t(
-    "Vector operations in $\\mathbb{R}^n$ act on each entry separately, so a single entry of $\\mathbf{u} + c\\mathbf{v}$ depends on $c$ through one ordinary linear equation. Solving it fixes $c$, and that decides all the other entries too. Entries of $\\mathbf{v}$ that are zero would make the corresponding entry independent of $c$, which is why a nonzero entry must be used.",
-    "$\\mathbb{R}^n$ 中的向量运算分别作用于每个分量，所以 $\\mathbf{u} + c\\mathbf{v}$ 的一个分量通过一个普通的线性方程依赖于 $c$。解这个方程就确定了 $c$，也决定了其他所有分量。如果 $\\mathbf{v}$ 的某个分量为零，相应分量就与 $c$ 无关，所以必须用非零分量。",
+    "Vector operations in $\\mathbb{R}^n$ act on each entry separately, so a single entry of $\\mathbf{u} + c\\mathbf{v}$ depends on $c$ through one ordinary linear equation. Solving it fixes $c$, and that decides all the other entries too. Entries of $\\mathbf{v}$ that are zero would make the corresponding entry independent of $c$, which is why a nonzero entry must be used. For example, with $\\mathbf{u} = (1, 3, 0, 2)$ and $\\mathbf{v} = (2, -1, 4, 1)$, entry 2 of $\\mathbf{u} + c\\mathbf{v}$ is $3 - c$, and setting it to $5$ gives $c = -2$.\n\n> **Watch out.** Subtract the entry of $\\mathbf{u}$ before dividing by the entry of $\\mathbf{v}$.",
+    "$\\mathbb{R}^n$ 中的向量运算分别作用于每个分量，所以 $\\mathbf{u} + c\\mathbf{v}$ 的一个分量通过一个普通的线性方程依赖于 $c$。解这个方程就确定了 $c$，也决定了其他所有分量。如果 $\\mathbf{v}$ 的某个分量为零，相应分量就与 $c$ 无关，所以必须用非零分量。例如 $\\mathbf{u} = (1, 3, 0, 2)$，$\\mathbf{v} = (2, -1, 4, 1)$ 时，$\\mathbf{u} + c\\mathbf{v}$ 的第 2 个分量为 $3 - c$，令它等于 $5$ 得 $c = -2$。\n\n> **注意。** 先减去 $\\mathbf{u}$ 的分量，再除以 $\\mathbf{v}$ 的分量。",
   ),
   generate(rng) {
     const u = [rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9)];
@@ -2450,16 +2586,50 @@ const scalarForEntry: KnowledgePointDef = {
     const uEntry = u[position - 1] ?? 0;
     const vEntry = v[position - 1] ?? 1;
     const target = uEntry + c * vEntry;
+    const asQ = (x: number | Q) => (typeof x === "number" ? Q.of(x) : x);
     return numberProblem({
       prompt: t(
         `Let $\\mathbf{u} = ${col(...u)}$ and $\\mathbf{v} = ${col(...v)}$ in $\\mathbb{R}^4$. Find $c$ so that entry ${position} of $\\mathbf{u} + c\\mathbf{v}$ equals $${target}$.`,
         `设 $\\mathbb{R}^4$ 中的 $\\mathbf{u} = ${col(...u)}$，$\\mathbf{v} = ${col(...v)}$。求 $c$，使 $\\mathbf{u} + c\\mathbf{v}$ 的第 ${position} 个分量等于 $${target}$。`,
       ),
       answer: c,
-      wrong: [-c, Q.of(target, vEntry), Q.of(target + uEntry, vEntry), c + 1],
-      solution: t(
-        `Entry ${position} gives $${poly([uEntry, ""], [vEntry, "c"])} = ${target}$, so $c = ${c}$.`,
-        `第 ${position} 个分量给出 $${poly([uEntry, ""], [vEntry, "c"])} = ${target}$，所以 $c = ${c}$。`,
+      mistakes: [
+        why(
+          -c,
+          "The sign is flipped; recheck the division by the entry of $\\mathbf{v}$.",
+          "符号反了；请重新检查除以 $\\mathbf{v}$ 的分量那一步。",
+        ),
+        why(
+          Q.of(target, vEntry),
+          "The entry of $\\mathbf{u}$ was left out; subtract it before dividing.",
+          "漏掉了 $\\mathbf{u}$ 的分量；先减去它再除。",
+        ),
+        why(
+          Q.of(target + uEntry, vEntry),
+          "The entry of $\\mathbf{u}$ was added instead of subtracted when it moved across.",
+          "$\\mathbf{u}$ 的分量移项时应减去，这里却加上了。",
+        ),
+      ].filter((w, i, all) => !asQ(w.value).eq(Q.of(c)) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+      solution: walked(
+        [
+          [
+            [`Write entry ${position}`, `写出第 ${position} 个分量`],
+            t(
+              `Entry ${position} of $\\mathbf{u} + c\\mathbf{v}$ is $${uEntry} + ${inParens(vEntry)}c$:`,
+              `$\\mathbf{u} + c\\mathbf{v}$ 的第 ${position} 个分量为 $${uEntry} + ${inParens(vEntry)}c$：`,
+            ),
+            [`${poly([uEntry, ""], [vEntry, "c"])} = ${target}`],
+          ],
+          [
+            ["Solve for $c$", "解出 $c$"],
+            t("", ""),
+            [`${poly([vEntry, "c"])} = ${target} - ${inParens(uEntry)} = ${target - uEntry}`, `c = ${c}`],
+          ],
+        ],
+        t(
+          `$${uEntry} + ${inParens(vEntry)} \\cdot ${inParens(c)} = ${target}$, as required.`,
+          `$${uEntry} + ${inParens(vEntry)} \\cdot ${inParens(c)} = ${target}$，符合要求。`,
+        ),
       ),
     });
   },
@@ -2469,8 +2639,8 @@ const entryInNullSpace: KnowledgePointDef = {
   id: "the-entry-that-puts-a-vector-in-a-null-space",
   title: t("The entry that puts a vector in a null space", "使向量属于零空间的分量"),
   explanation: t(
-    "A vector lies in the null space of a matrix exactly when its dot product with every row is zero. So membership gives one equation for each row. If one entry of the vector is unknown, an equation containing it can be solved for that entry. The other rows must then also hold, and the choice of the vector here makes them hold.",
-    "向量属于矩阵的零空间，当且仅当它与每一行的点积都为零。所以属于关系为每一行给出一个方程。如果向量有一个未知分量，就可以从含它的方程中解出这个分量。其他行也必须成立，这里向量的选取保证了这一点。",
+    "A vector lies in the null space of a matrix exactly when its dot product with every row is zero. So membership gives one equation for each row. If one entry of the vector is unknown, an equation containing it can be solved for that entry. The other rows must then also hold, and the choice of the vector here makes them hold. For example, for rows $(1, 2, 1)$ and $(0, 1, -1)$ and the vector $(k, 1, 1)$, row 2 gives $1 - 1 = 0$ and row 1 gives $k + 2 + 1 = 0$, so $k = -3$.\n\n> **Watch out.** Moving the known terms across the equals sign changes their sign: $k$ is minus their sum, not the sum itself.",
+    "向量属于矩阵的零空间，当且仅当它与每一行的点积都为零。所以属于关系为每一行给出一个方程。如果向量有一个未知分量，就可以从含它的方程中解出这个分量。其他行也必须成立，这里向量的选取保证了这一点。例如行为 $(1, 2, 1)$ 与 $(0, 1, -1)$、向量为 $(k, 1, 1)$ 时，第 2 行给出 $1 - 1 = 0$，第 1 行给出 $k + 2 + 1 = 0$，所以 $k = -3$。\n\n> **注意。** 已知项移到等号另一边要变号：$k$ 是它们之和的相反数，而不是和本身。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
@@ -2492,10 +2662,36 @@ const entryInNullSpace: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, a * y + 2 * b * z, a * y, b * z],
-      solution: t(
-        `Row 1 requires $k + ${inParens(a)} \\cdot ${inParens(y)} + ${inParens(b)} \\cdot ${inParens(z)} = 0$, so $k = ${answer}$. Row 2 also holds, since $${inParens(y)} + ${inParens(c)} \\cdot ${inParens(z)} = 0$.`,
-        `第 1 行要求 $k + ${inParens(a)} \\cdot ${inParens(y)} + ${inParens(b)} \\cdot ${inParens(z)} = 0$，所以 $k = ${answer}$。第 2 行也成立，因为 $${inParens(y)} + ${inParens(c)} \\cdot ${inParens(z)} = 0$。`,
+      mistakes: [
+        why(
+          -answer,
+          "The sign is flipped: the known terms change sign when they move across the equals sign.",
+          "符号反了：已知项移到等号另一边要变号。",
+        ),
+        why(
+          -(a * y),
+          `The term $${inParens(b)} \\cdot ${inParens(z)}$ from the third entry was left out.`,
+          `漏掉了来自第三个分量的项 $${inParens(b)} \\cdot ${inParens(z)}$。`,
+        ),
+        why(
+          -(b * z),
+          `The term $${inParens(a)} \\cdot ${inParens(y)}$ from the second entry was left out.`,
+          `漏掉了来自第二个分量的项 $${inParens(a)} \\cdot ${inParens(y)}$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Row 1 times the vector", "第 1 行乘向量"],
+            t("The product with row 1 must be zero:", "与第 1 行的乘积必须为零："),
+            [`k + ${inParens(a)} \\cdot ${inParens(y)} + ${inParens(b)} \\cdot ${inParens(z)} = 0`, `k + ${inParens(a * y + b * z)} = 0`],
+          ],
+          [["Solve for $k$", "解出 $k$"], t("", ""), [`k = ${answer}`]],
+        ],
+        t(
+          `Row 2 also gives zero, since $${inParens(y)} + ${inParens(c)} \\cdot ${inParens(z)} = 0$, so the vector is in the null space.`,
+          `第 2 行也给出零，因为 $${inParens(y)} + ${inParens(c)} \\cdot ${inParens(z)} = 0$，所以该向量属于零空间。`,
+        ),
       ),
     });
   },
@@ -3409,8 +3605,8 @@ const dimensionOfIntersection: KnowledgePointDef = {
   id: "the-smallest-possible-intersection-of-two-subspaces",
   title: t("The smallest possible intersection of two subspaces", "两个子空间最小可能的交"),
   explanation: t(
-    "Two subspaces cannot avoid each other if they are large enough. The sum $U + V$ lies inside the whole space, so its dimension is at most $n$, and the formula $\\dim(U \\cap V) = \\dim U + \\dim V - \\dim(U + V)$ then forces the intersection to have dimension at least $\\dim U + \\dim V - n$. This is why two planes through the origin in three dimensions always share a line, and it holds whatever the planes are.",
-    "两个子空间足够大时就无法彼此避开。和 $U + V$ 位于整个空间内，所以它的维数至多是 $n$，于是公式 $\\dim(U \\cap V) = \\dim U + \\dim V - \\dim(U + V)$ 迫使交的维数至少是 $\\dim U + \\dim V - n$。这就是三维空间中过原点的两个平面总有一条公共直线的原因，不管是什么平面都成立。",
+    "Two subspaces cannot avoid each other if they are large enough. The sum $U + V$ lies inside the whole space, so its dimension is at most $n$, and the formula $\\dim(U \\cap V) = \\dim U + \\dim V - \\dim(U + V)$ then forces the intersection to have dimension at least $\\dim U + \\dim V - n$. This is why two planes through the origin in three dimensions always share a line, and it holds whatever the planes are. For example, in $\\mathbb{R}^5$ subspaces of dimensions $3$ and $4$ share at least $3 + 4 - 5 = 2$ dimensions.\n\n> **Watch out.** This is the smallest possible intersection, not the usual one; the largest is the smaller of the two dimensions, when one subspace contains the other.",
+    "两个子空间足够大时就无法彼此避开。和 $U + V$ 位于整个空间内，所以它的维数至多是 $n$，于是公式 $\\dim(U \\cap V) = \\dim U + \\dim V - \\dim(U + V)$ 迫使交的维数至少是 $\\dim U + \\dim V - n$。这就是三维空间中过原点的两个平面总有一条公共直线的原因，不管是什么平面都成立。例如在 $\\mathbb{R}^5$ 中，维数为 $3$ 与 $4$ 的子空间至少共有 $3 + 4 - 5 = 2$ 维。\n\n> **注意。** 这是最小可能的交，而不是通常的交；最大的交等于两个维数中较小的那个，此时一个子空间包含另一个。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
@@ -3424,10 +3620,42 @@ const dimensionOfIntersection: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.min(a, b), a + b, answer + 1, answer - 1, n - a],
-      solution: t(
-        `The sum has dimension at most ${n}, so $\\dim(U \\cap V) \\ge ${a} + ${b} - ${n} = ${answer}$. This is reached when $U + V$ is the whole space.`,
-        `和的维数至多是 ${n}，所以 $\\dim(U \\cap V) \\ge ${a} + ${b} - ${n} = ${answer}$。当 $U + V$ 是整个空间时取到这个值。`,
+      mistakes: [
+        why(
+          Math.min(a, b),
+          "That is the largest possible intersection, when one subspace lies inside the other.",
+          "这是最大可能的交，此时一个子空间在另一个之中。",
+        ),
+        why(
+          a + b,
+          `That is more than $${n}$, the dimension of the whole space; subtract $${n}$.`,
+          `这比整个空间的维数 $${n}$ 还大；要减去 $${n}$。`,
+        ),
+        why(
+          n - a,
+          `That is the dimension left over by $U$; the two dimensions are added before subtracting $${n}$.`,
+          `这是 $U$ 剩下的维数；要先把两个维数相加，再减去 $${n}$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Bound the sum", "估计和的维数"],
+            t(
+              `$U + V$ lies in $\\mathbb{R}^{${n}}$, so $\\dim(U + V) \\le ${n}$.`,
+              `$U + V$ 在 $\\mathbb{R}^{${n}}$ 中，所以 $\\dim(U + V) \\le ${n}$。`,
+            ),
+          ],
+          [
+            ["Use the dimension formula", "用维数公式"],
+            t("", ""),
+            [`\\dim(U \\cap V) = ${a} + ${b} - \\dim(U + V) \\ge ${a} + ${b} - ${n} = ${answer}`],
+          ],
+        ],
+        t(
+          `The bound is reached: take $U$ spanned by the first ${a} standard vectors and $V$ by the last ${b}; they share exactly ${answer} of them, since ${a} + ${b} - ${n} = ${answer}.`,
+          `这个下界可以取到：取 $U$ 由前 ${a} 个标准向量张成，$V$ 由后 ${b} 个张成；它们恰好共有 ${answer} 个，因为 ${a} + ${b} - ${n} = ${answer}。`,
+        ),
       ),
     });
   },
@@ -3437,8 +3665,8 @@ const coefficientOfDependentVector: KnowledgePointDef = {
   id: "a-coefficient-in-a-relation-among-dependent-vectors",
   title: t("A coefficient in a relation among dependent vectors", "相关向量关系式中的系数"),
   explanation: t(
-    "When a spanning set contains a dependent vector, removing it leaves a smaller set that spans the same space, and the relation shows exactly why. Writing $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$ gives one equation per coordinate, more than the two unknowns need. If $\\mathbf{v}_1$ and $\\mathbf{v}_2$ are in a staircase shape, the first coordinate gives $a$ at once, and the second coordinate then gives $b$ after allowing for $a$.",
-    "当张成集包含一个相关向量时，去掉它后剩下的较小集合张成同一空间，关系式说明了原因。写出 $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$，每个坐标给出一个方程，比两个未知数需要的多。如果 $\\mathbf{v}_1$、$\\mathbf{v}_2$ 呈阶梯形，第一个坐标直接给出 $a$，第二个坐标在考虑 $a$ 之后给出 $b$。",
+    "When a spanning set contains a dependent vector, removing it leaves a smaller set that spans the same space, and the relation shows exactly why. Writing $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$ gives one equation per coordinate, more than the two unknowns need. If $\\mathbf{v}_1$ and $\\mathbf{v}_2$ are in a staircase shape, the first coordinate gives $a$ at once, and the second coordinate then gives $b$ after allowing for $a$. For example, with $\\mathbf{v}_1 = (1, 2, 0)$, $\\mathbf{v}_2 = (0, 1, 1)$ and $\\mathbf{v}_3 = (3, 5, -1)$, the first coordinate gives $a = 3$ and the second gives $6 + b = 5$, so $b = -1$.\n\n> **Watch out.** The second coordinate of $\\mathbf{v}_3$ is not $b$ itself; first take away the part $a$ contributes.",
+    "当张成集包含一个相关向量时，去掉它后剩下的较小集合张成同一空间，关系式说明了原因。写出 $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$，每个坐标给出一个方程，比两个未知数需要的多。如果 $\\mathbf{v}_1$、$\\mathbf{v}_2$ 呈阶梯形，第一个坐标直接给出 $a$，第二个坐标在考虑 $a$ 之后给出 $b$。例如 $\\mathbf{v}_1 = (1, 2, 0)$，$\\mathbf{v}_2 = (0, 1, 1)$，$\\mathbf{v}_3 = (3, 5, -1)$ 时，第一个坐标给出 $a = 3$，第二个坐标给出 $6 + b = 5$，所以 $b = -1$。\n\n> **注意。** $\\mathbf{v}_3$ 的第二个坐标并不就是 $b$；要先减去 $a$ 贡献的部分。",
   ),
   generate(rng) {
     const [p, q, r] = [nonzero(rng, 4), nonzero(rng, 4), nonzero(rng, 4)];
@@ -3453,10 +3681,41 @@ const coefficientOfDependentVector: KnowledgePointDef = {
       ),
       answer: b,
       form: "integer",
-      wrong: [a, -b, v3[1] ?? 0, v3[2] ?? 0, b + 1],
-      solution: t(
-        `The first coordinate gives $a = ${a}$. The second gives $${inParens(a)} \\cdot ${inParens(p)} + b = ${v3[1]}$, so $b = ${b}$.`,
-        `第一个坐标给出 $a = ${a}$。第二个坐标给出 $${inParens(a)} \\cdot ${inParens(p)} + b = ${v3[1]}$，所以 $b = ${b}$。`,
+      mistakes: [
+        why(
+          a,
+          "That is $a$, the weight on $\\mathbf{v}_1$; the question asks for $b$.",
+          "这是 $\\mathbf{v}_1$ 的权重 $a$；题目求的是 $b$。",
+        ),
+        why(
+          v3[1]!,
+          "That is the second coordinate of $\\mathbf{v}_3$; take away the part $a\\mathbf{v}_1$ contributes first.",
+          "这是 $\\mathbf{v}_3$ 的第二个坐标；要先减去 $a\\mathbf{v}_1$ 贡献的部分。",
+        ),
+        why(-b, "The sign is flipped; recheck the subtraction in the second coordinate.", "符号反了；请重新检查第二个坐标中的减法。"),
+        why(
+          v3[1]! + a * p,
+          "The part from $a\\mathbf{v}_1$ was added instead of subtracted.",
+          "$a\\mathbf{v}_1$ 的部分应减去，这里却加上了。",
+        ),
+      ].filter((w, i, all) => w.value !== b && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["First coordinate", "第一个坐标"],
+            t("Only $\\mathbf{v}_1$ has a nonzero first coordinate:", "只有 $\\mathbf{v}_1$ 的第一个坐标不为零："),
+            [`a \\cdot 1 + b \\cdot 0 = ${a}`, `a = ${a}`],
+          ],
+          [
+            ["Second coordinate", "第二个坐标"],
+            t("", ""),
+            [`${inParens(a)} \\cdot ${inParens(p)} + b \\cdot 1 = ${v3[1]}`, `b = ${v3[1]} - ${inParens(a * p)} = ${b}`],
+          ],
+        ],
+        t(
+          `The third coordinate agrees: $${inParens(a)} \\cdot ${inParens(q)} + ${inParens(b)} \\cdot ${inParens(r)} = ${v3[2]}$.`,
+          `第三个坐标也相符：$${inParens(a)} \\cdot ${inParens(q)} + ${inParens(b)} \\cdot ${inParens(r)} = ${v3[2]}$。`,
+        ),
       ),
     });
   },
@@ -3467,8 +3726,8 @@ const determinantOfChangeOfBasis: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-change-of-coordinates-matrix#the-determinant-of-a-change-of-coordinates-matrix"],
   title: t("The determinant of a change of coordinates matrix", "坐标变换矩阵的行列式"),
   explanation: t(
-    "Let the matrices $B$ and $C$ have two bases as their columns. A vector with $B$-coordinates $\\mathbf{x}$ is $B\\mathbf{x}$, and its $C$-coordinates are therefore $C^{-1}B\\mathbf{x}$. So the matrix that changes coordinates from $B$ to $C$ is $C^{-1}B$, and its determinant is the ratio $\\frac{\\det B}{\\det C}$. The ratio measures how the area of the $B$ parallelogram compares with that of the $C$ parallelogram, and the reverse change has the reciprocal determinant.",
-    "设矩阵 $B$、$C$ 的列是两组基。$B$-坐标为 $\\mathbf{x}$ 的向量是 $B\\mathbf{x}$，所以它的 $C$-坐标是 $C^{-1}B\\mathbf{x}$。因此把坐标从 $B$ 变到 $C$ 的矩阵是 $C^{-1}B$，它的行列式是比值 $\\frac{\\det B}{\\det C}$。这个比值衡量 $B$ 平行四边形的面积与 $C$ 平行四边形面积的比较，反向变换的行列式是其倒数。",
+    "Let the matrices $B$ and $C$ have two bases as their columns. A vector with $B$-coordinates $\\mathbf{x}$ is $B\\mathbf{x}$, and its $C$-coordinates are therefore $C^{-1}B\\mathbf{x}$. So the matrix that changes coordinates from $B$ to $C$ is $C^{-1}B$, and its determinant is the ratio $\\frac{\\det B}{\\det C}$. The ratio measures how the area of the $B$ parallelogram compares with that of the $C$ parallelogram, and the reverse change has the reciprocal determinant. For example, if $\\det B = 6$ and $\\det C = -2$, the change from $\\mathcal{B}$ to $\\mathcal{C}$ has determinant $\\frac{6}{-2} = -3$.\n\n> **Watch out.** The basis being left goes on top: from $\\mathcal{B}$ to $\\mathcal{C}$ is $\\frac{\\det B}{\\det C}$, and the reverse is its reciprocal.",
+    "设矩阵 $B$、$C$ 的列是两组基。$B$-坐标为 $\\mathbf{x}$ 的向量是 $B\\mathbf{x}$，所以它的 $C$-坐标是 $C^{-1}B\\mathbf{x}$。因此把坐标从 $B$ 变到 $C$ 的矩阵是 $C^{-1}B$，它的行列式是比值 $\\frac{\\det B}{\\det C}$。这个比值衡量 $B$ 平行四边形的面积与 $C$ 平行四边形面积的比较，反向变换的行列式是其倒数。例如 $\\det B = 6$，$\\det C = -2$ 时，从 $\\mathcal{B}$ 到 $\\mathcal{C}$ 的变换的行列式为 $\\frac{6}{-2} = -3$。\n\n> **注意。** 被离开的那组基放在分子上：从 $\\mathcal{B}$ 到 $\\mathcal{C}$ 是 $\\frac{\\det B}{\\det C}$，反向是它的倒数。",
   ),
   generate(rng) {
     const pickBasis = (): number[][] => {
@@ -3492,10 +3751,46 @@ const determinantOfChangeOfBasis: KnowledgePointDef = {
         `设 $\\mathcal{B}$ 是 $\\mathbb{R}^2$ 的基 $${basis(b)}$，$\\mathcal{C}$ 是基 $${basis(c)}$。求把坐标从 $\\mathcal{B}$ 变到 $\\mathcal{C}$ 的矩阵的行列式。`,
       ),
       answer,
-      wrong: [Q.of(dc, db), Q.of(db * dc), answer.neg(), answer.add(Q.of(1)), answer.sub(Q.of(1))],
-      solution: t(
-        `The matrix is $C^{-1}B$, whose determinant is $\\frac{\\det B}{\\det C}$. Here $\\det B = ${db}$ and $\\det C = ${dc}$, so the value is $${answer.toLatex()}$.`,
-        `这个矩阵是 $C^{-1}B$，它的行列式是 $\\frac{\\det B}{\\det C}$。这里 $\\det B = ${db}$，$\\det C = ${dc}$，所以值是 $${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(dc, db),
+          "This is upside down: it is the determinant of the change from $\\mathcal{C}$ to $\\mathcal{B}$.",
+          "分子分母颠倒了：这是从 $\\mathcal{C}$ 到 $\\mathcal{B}$ 的变换的行列式。",
+        ),
+        why(
+          Q.of(db * dc),
+          "The determinants are multiplied; $C^{-1}$ contributes $\\frac{1}{\\det C}$, so divide.",
+          "这里把两个行列式相乘了；$C^{-1}$ 贡献的是 $\\frac{1}{\\det C}$，所以要相除。",
+        ),
+        why(answer.neg(), "The sign is flipped; recheck the signs of the two determinants.", "符号反了；请重新检查两个行列式的符号。"),
+      ].filter((w, i, all) => {
+        const asQ = (x: number | Q) => (typeof x === "number" ? Q.of(x) : x);
+        return !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i;
+      }),
+      solution: walked(
+        [
+          [
+            ["The matrix", "矩阵"],
+            t(
+              "A vector with $\\mathcal{B}$-coordinates $\\mathbf{x}$ is $B\\mathbf{x}$, with $\\mathcal{C}$-coordinates $C^{-1}B\\mathbf{x}$, so:",
+              "$\\mathcal{B}$-坐标为 $\\mathbf{x}$ 的向量是 $B\\mathbf{x}$，其 $\\mathcal{C}$-坐标为 $C^{-1}B\\mathbf{x}$，所以：",
+            ),
+            ["\\det(C^{-1}B) = \\frac{\\det B}{\\det C}"],
+          ],
+          [
+            ["The two determinants", "两个行列式"],
+            t("", ""),
+            [
+              `\\det B = ${inParens(b[0]![0]!)} \\cdot ${inParens(b[1]![1]!)} - ${inParens(b[0]![1]!)} \\cdot ${inParens(b[1]![0]!)} = ${db}`,
+              `\\det C = ${inParens(c[0]![0]!)} \\cdot ${inParens(c[1]![1]!)} - ${inParens(c[0]![1]!)} \\cdot ${inParens(c[1]![0]!)} = ${dc}`,
+            ],
+          ],
+          [["Divide", "相除"], t("", ""), [`\\frac{${db}}{${dc}} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `The reverse change has determinant $${Q.of(dc, db).toLatex()}$, and $${answer.toLatex()} \\cdot ${Q.of(dc, db).toLatex()} = 1$, as two inverse changes must give.`,
+          `反向变换的行列式为 $${Q.of(dc, db).toLatex()}$，而 $${answer.toLatex()} \\cdot ${Q.of(dc, db).toLatex()} = 1$，互逆的两个变换理应如此。`,
+        ),
       ),
     });
   },
