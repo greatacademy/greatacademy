@@ -1,8 +1,9 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { numberProblem, yesNo } from "../problems.ts";
+import { explainedChoice, numberProblem, why, yesNo } from "../problems.ts";
 import { oneOf } from "./calculus-common.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { range } from "./methods-of-proof-common.ts";
 
 // Discrete Mathematics unit 1: Boolean algebra.
@@ -278,6 +279,34 @@ const choose = (n: number, k: number): number => (k < 0 || k > n ? 0 : k === 0 ?
 /** fTex writes "f(x, y, z) = expr". */
 const fTex = (e: BExpr, n: number) => `f(${argsTex(n)}) = ${btex(e)}`;
 
+/** fresh drops the mistakes whose value is the answer or repeats an earlier one. */
+const fresh = <M extends { readonly value: unknown }>(answer: number, ms: readonly M[]) =>
+  ms.filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i);
+
+/** Wrong is a wrong option with what is wrong with it. */
+interface Wrong {
+  readonly option: Text;
+  readonly why: Text;
+}
+
+/** firstThree keeps the first three wrong options that differ from the right one and from each other, as oneOf shows them. */
+function firstThree(right: Text, wrong: readonly Wrong[]): Wrong[] {
+  const seen = new Set([right.en]);
+  const kept: Wrong[] = [];
+  for (const w of wrong) {
+    if (seen.has(w.option.en)) continue;
+    seen.add(w.option.en);
+    kept.push(w);
+  }
+  return kept.slice(0, 3);
+}
+
+/** differ finds the first row where two value vectors differ. */
+const differ = (a: readonly number[], b: readonly number[]) => a.findIndex((v, i) => v !== b[i]);
+
+/** cellsOf lists the rows a cube covers. */
+const cellsOf = (c: Cube, n: number) => range(0, 2 ** n - 1).filter((r) => cubeHas(c, bits(r, n)));
+
 /** booleanFunctions introduces functions from {0, 1}ⁿ to {0, 1}. */
 export const booleanFunctions: TopicDef = {
   id: "boolean-functions",
@@ -285,6 +314,10 @@ export const booleanFunctions: TopicDef = {
   summary: t(
     "A Boolean function of $n$ variables maps each of the $2^n$ inputs in $\\{0, 1\\}^n$ to $0$ or $1$; it is given by a truth table or a value vector, and there are $2^{2^n}$ of them.",
     "$n$ 元布尔函数把 $\\{0, 1\\}^n$ 中的 $2^n$ 个输入各映射到 $0$ 或 $1$；它可以用真值表或值向量给出，共有 $2^{2^n}$ 个。",
+  ),
+  intro: t(
+    "The function $f(x, y, z, w) = (x \\wedge y) \\vee (z \\wedge w)$ has $2^4 = 16$ inputs. Listing its values from $(0, 0, 0, 0)$ to $(1, 1, 1, 1)$ in binary order gives the value vector $0001\\,0001\\,0001\\,1111$.\n\nCheck: the input $(1, 1, 0, 0)$ is $1100_2 = 12$, and entry $12$ of the vector, counting from $0$, is $1$; indeed $x \\wedge y = 1$ there.\n\nIn this lesson we count Boolean functions and read their values from value vectors.",
+    "函数 $f(x, y, z, w) = (x \\wedge y) \\vee (z \\wedge w)$ 有 $2^4 = 16$ 个输入。按二进制顺序从 $(0, 0, 0, 0)$ 到 $(1, 1, 1, 1)$ 列出它的值，得到值向量 $0001\\,0001\\,0001\\,1111$。\n\n检验：输入 $(1, 1, 0, 0)$ 是 $1100_2 = 12$，值向量从 $0$ 开始数的第 $12$ 位是 $1$；确实那里 $x \\wedge y = 1$。\n\n本课我们统计布尔函数的个数，并从值向量中读出函数值。",
   ),
   prerequisites: ["truth-tables"],
   encompasses: [],
@@ -295,14 +328,15 @@ export const booleanFunctions: TopicDef = {
       id: "counting-boolean-functions",
       title: t("Counting Boolean functions", "统计布尔函数"),
       explanation: t(
-        "A function of $n$ variables has $2^n$ inputs, and each input independently gets $0$ or $1$: there are $2^{2^n}$ functions. With $n = 2$ there are $2^4 = 16$. If $k$ of the values are fixed, $2^{2^n - k}$ remain; the number taking the value $1$ at exactly $m$ inputs is $\\binom{2^n}{m}$.",
-        "$n$ 元函数有 $2^n$ 个输入，每个输入独立地取 $0$ 或 $1$：共有 $2^{2^n}$ 个函数。$n = 2$ 时有 $2^4 = 16$ 个。若固定其中 $k$ 个值，还剩 $2^{2^n - k}$ 个；恰在 $m$ 个输入处取值 $1$ 的函数有 $\\binom{2^n}{m}$ 个。",
+        "A function of $n$ variables has $2^n$ inputs, and each input independently gets $0$ or $1$: there are $2^{2^n}$ functions. With $n = 5$ there are $32$ inputs and $2^{32}$ functions; with $4$ of those values fixed, $2^{28}$ remain. The number of $4$-variable functions taking the value $1$ at exactly $2$ inputs is $\\binom{16}{2} = 120$.\n\n> **Watch out.** $2^n$ counts the inputs, not the functions; and fixing $k$ values removes $k$ from the exponent $2^n$, so it does not just subtract $k$ functions.",
+        "$n$ 元函数有 $2^n$ 个输入，每个输入独立地取 $0$ 或 $1$：共有 $2^{2^n}$ 个函数。$n = 5$ 时有 $32$ 个输入、$2^{32}$ 个函数；固定其中 $4$ 个值后剩 $2^{28}$ 个。恰在 $2$ 个输入处取值 $1$ 的 $4$ 元函数有 $\\binom{16}{2} = 120$ 个。\n\n> **注意。** $2^n$ 是输入的个数，不是函数的个数；固定 $k$ 个值是从指数 $2^n$ 中减去 $k$，而不是只减去 $k$ 个函数。",
       ),
       generate(rng) {
         if (rng.bool()) {
           const n = rng.int(1, 4);
           const k = rng.int(0, Math.min(3, 2 ** n - 1));
           const value = 2 ** (2 ** n - k);
+          const free = 2 ** n - k;
           const fixed =
             k === 0
               ? t("", "")
@@ -316,26 +350,78 @@ export const booleanFunctions: TopicDef = {
               `$${n}$ 元布尔函数${fixed["zh-CN"]}共有多少个？`,
             ),
             answer: value,
-            wrong: [2 ** n, 2 ** (2 ** n), 2 ** (n - k + 1), value / 2],
-            solution: t(
-              `There are $2^{${n}} = ${2 ** n}$ inputs, of which $${2 ** n - k}$ are free, each taking $0$ or $1$: $2^{${2 ** n - k}} = ${value}$.`,
-              `共有 $2^{${n}} = ${2 ** n}$ 个输入，其中 $${2 ** n - k}$ 个可以自由取 $0$ 或 $1$：$2^{${2 ** n - k}} = ${value}$。`,
+            mistakes: fresh(value, [
+              why(2 ** n, "That counts the inputs, not the functions.", "那是输入的个数，不是函数的个数。"),
+              why(2 ** (2 ** n), "That ignores the values already fixed.", "那是忽略了已经确定的值。"),
+              why(
+                2 ** (2 ** n) - k,
+                "That subtracts the fixed values from the number of functions instead of from the exponent.",
+                "那是从函数个数中减去固定的值，而不是从指数中减去。",
+              ),
+              why(
+                2 ** (2 * n),
+                "That squares the number of inputs instead of raising $2$ to it.",
+                "那是把输入个数平方，而不是以它为 $2$ 的指数。",
+              ),
+            ]),
+            solution: walked(
+              [
+                [["Count the inputs", "数输入"], t(`$2^{${n}} = ${2 ** n}$ inputs.`, `共 $2^{${n}} = ${2 ** n}$ 个输入。`)],
+                ...(k === 0
+                  ? []
+                  : [
+                      [
+                        ["Remove the fixed inputs", "去掉已固定的输入"],
+                        t(`$${2 ** n} - ${k} = ${free}$ values are free.`, `$${2 ** n} - ${k} = ${free}$ 个值是自由的。`),
+                      ] as const,
+                    ]),
+                [
+                  ["Choose each free value", "选择每个自由值"],
+                  t(`Each free value is $0$ or $1$: $2^{${free}} = ${value}$.`, `每个自由值取 $0$ 或 $1$：$2^{${free}} = ${value}$。`),
+                ],
+              ],
+              t(
+                `Halving $${value}$ once for each of the $${free}$ free values gets back to $1$, the single function left when every value is fixed.`,
+                `对 $${free}$ 个自由值各把 $${value}$ 减半一次，回到 $1$，正是所有值都固定时剩下的那一个函数。`,
+              ),
             ),
           });
         }
         const n = rng.int(2, 3);
         const m = rng.int(0, 2 ** n);
         const value = choose(2 ** n, m);
+        const N = 2 ** n;
         return numberProblem({
           prompt: t(
             `How many Boolean functions of $${n}$ variables take the value $1$ at exactly $${m}$ input${m === 1 ? "" : "s"}?`,
             `有多少个 $${n}$ 元布尔函数恰在 $${m}$ 个输入处取值 $1$？`,
           ),
           answer: value,
-          wrong: [2 ** m, choose(n, m) || 1, 2 ** (2 ** n - m), value + 1],
-          solution: t(
-            `Choose which $${m}$ of the $${2 ** n}$ inputs give $1$: $\\binom{${2 ** n}}{${m}} = ${value}$.`,
-            `从 $${2 ** n}$ 个输入中选出取 $1$ 的 $${m}$ 个：$\\binom{${2 ** n}}{${m}} = ${value}$。`,
+          mistakes: fresh(value, [
+            why(
+              2 ** m,
+              `That raises $2$ to the power $${m}$; a function is fixed by choosing which inputs give $1$.`,
+              `那是 $2$ 的 $${m}$ 次方；函数由选出哪些输入取 $1$ 来确定。`,
+            ),
+            why(
+              choose(n, m),
+              `That chooses among the $${n}$ variables, not the $${N}$ inputs.`,
+              `那是从 $${n}$ 个变量中选，而不是从 $${N}$ 个输入中选。`,
+            ),
+            why(2 ** (N - m), "That leaves the other inputs free; they must all give $0$.", "那是让其余输入自由取值；它们都必须取 $0$。"),
+          ]),
+          solution: walked(
+            [
+              [["Count the inputs", "数输入"], t(`$2^{${n}} = ${N}$ inputs.`, `共 $2^{${n}} = ${N}$ 个输入。`)],
+              [
+                ["Choose the inputs that give 1", "选出取 1 的输入"],
+                t(`$\\binom{${N}}{${m}} = ${value}$; every other input gives $0$.`, `$\\binom{${N}}{${m}} = ${value}$；其余输入都取 $0$。`),
+              ],
+            ],
+            t(
+              `Choosing the $${N - m}$ inputs that give $0$ instead gives $\\binom{${N}}{${N - m}} = ${value}$ as well.`,
+              `改为选出取 $0$ 的 $${N - m}$ 个输入，同样得 $\\binom{${N}}{${N - m}} = ${value}$。`,
+            ),
           ),
         });
       },
@@ -344,8 +430,8 @@ export const booleanFunctions: TopicDef = {
       id: "reading-a-value-vector",
       title: t("Value vectors", "值向量"),
       explanation: t(
-        "The value vector lists $f(0, 0, 0), f(0, 0, 1), f(0, 1, 0), \\dots, f(1, 1, 1)$, the inputs in binary counting order. For the vector $0110\\,1001$, the input $(1, 0, 1)$ is $101_2 = 5$, position $5$ counting from $0$, so $f(1, 0, 1) = 0$.",
-        "值向量依次列出 $f(0, 0, 0), f(0, 0, 1), f(0, 1, 0), \\dots, f(1, 1, 1)$，即按二进制计数顺序排列的输入。对值向量 $0110\\,1001$，输入 $(1, 0, 1)$ 是 $101_2 = 5$，从 $0$ 开始数的第 $5$ 位，所以 $f(1, 0, 1) = 0$。",
+        "The value vector lists $f(0, 0, 0), f(0, 0, 1), f(0, 1, 0), \\dots, f(1, 1, 1)$, the inputs in binary counting order. For the four-variable vector $0110\\,1001\\,1001\\,0110$, the input $(1, 0, 1, 1)$ is $1011_2 = 11$, position $11$ counting from $0$, so $f(1, 0, 1, 1) = 1$.\n\n> **Watch out.** Count positions from $0$, not from $1$; and the first variable is the most significant bit, so $(1, 0, 0)$ is position $4$, not position $1$.",
+        "值向量依次列出 $f(0, 0, 0), f(0, 0, 1), f(0, 1, 0), \\dots, f(1, 1, 1)$，即按二进制计数顺序排列的输入。对四元值向量 $0110\\,1001\\,1001\\,0110$，输入 $(1, 0, 1, 1)$ 是 $1011_2 = 11$，从 $0$ 开始数的第 $11$ 位，所以 $f(1, 0, 1, 1) = 1$。\n\n> **注意。** 位置要从 $0$ 开始数，而不是从 $1$；第一个变量是最高位，所以 $(1, 0, 0)$ 是第 $4$ 位，而不是第 $1$ 位。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -353,16 +439,48 @@ export const booleanFunctions: TopicDef = {
         const r = rng.int(0, 2 ** n - 1);
         const x = bits(r, n);
         const value = vec[r]!;
+        const rev = parseInt([...x].reverse().join(""), 2);
+        const other = 1 - value;
+        const reason =
+          r > 0 && vec[r - 1] === other
+            ? t(
+                `That reads entry $${r}$ counting from $1$, one place too early; count from $0$.`,
+                `那是从 $1$ 开始数取了第 $${r}$ 位，早了一位；应从 $0$ 开始数。`,
+              )
+            : vec[rev] === other
+              ? t(
+                  "That reads the bits in reverse order; the first variable is the most significant bit.",
+                  "那是把各位倒过来读了；第一个变量是最高位。",
+                )
+              : t(
+                  `That is the value at another position; the input is position $${r}$, counting from $0$.`,
+                  `那是另一个位置的值；这个输入在从 $0$ 开始数的第 $${r}$ 位。`,
+                );
+        const group = Math.floor(r / 4);
         return numberProblem({
           prompt: t(
             `The Boolean function $f(${argsTex(n)})$ has value vector $${vecTex(vec)}$, listing $f$ at the inputs from $${pointTex(bits(0, n))}$ to $${pointTex(bits(2 ** n - 1, n))}$ in binary order. Find $f${pointTex(x)}$.`,
             `布尔函数 $f(${argsTex(n)})$ 的值向量为 $${vecTex(vec)}$，按二进制顺序列出 $f$ 在 $${pointTex(bits(0, n))}$ 到 $${pointTex(bits(2 ** n - 1, n))}$ 处的值。求 $f${pointTex(x)}$。`,
           ),
           answer: value,
-          wrong: [1 - value],
-          solution: t(
-            `$${x.join("")}_2 = ${r}$, so read entry $${r}$ (counting from $0$): $f${pointTex(x)} = ${value}$.`,
-            `$${x.join("")}_2 = ${r}$，所以读取第 $${r}$ 位（从 $0$ 开始数）：$f${pointTex(x)} = ${value}$。`,
+          mistakes: [{ value: other, why: reason }],
+          solution: walked(
+            [
+              [["Turn the input into a position", "把输入化为位置"], t(`$${x.join("")}_2 = ${r}$.`, `$${x.join("")}_2 = ${r}$。`)],
+              [
+                ["Read the entry", "读出该位"],
+                t(`Entry $${r}$, counting from $0$, is $${value}$.`, `从 $0$ 开始数的第 $${r}$ 位是 $${value}$。`),
+              ],
+            ],
+            n === 2
+              ? t(
+                  `The vector $${vecTex(vec)}$ lists $f$ at $00, 01, 10, 11$; the entry under $${x.join("")}$ is $${value}$.`,
+                  `值向量 $${vecTex(vec)}$ 依次对应 $00, 01, 10, 11$；$${x.join("")}$ 下面的值是 $${value}$。`,
+                )
+              : t(
+                  `In the ${group === 0 ? "first" : "second"} group of four, $${vec.slice(4 * group, 4 * group + 4).join("")}$, the input sits at place $${r % 4}$ counting from $0$, which holds $${value}$.`,
+                  `在第${group === 0 ? "一" : "二"}组四位 $${vec.slice(4 * group, 4 * group + 4).join("")}$ 中，该输入位于从 $0$ 开始数的第 $${r % 4}$ 位，值为 $${value}$。`,
+                ),
           ),
         });
       },
@@ -427,6 +545,44 @@ const PAIRS: readonly (readonly [number, number])[] = [
   [1, 0],
 ];
 
+/** pairTable is the table of an expression at the pair of variables (0, 0), (0, 1), (1, 0), (1, 1), the third variable 0. */
+const pairTable = (e: BExpr, p: readonly [number, number]) =>
+  [
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1],
+  ].map(([a, b]) => {
+    const x = [0, 0, 0];
+    x[p[0]] = a!;
+    x[p[1]] = b!;
+    return beval(e, x);
+  });
+
+/** swapOps replaces binary operations by others throughout an expression. */
+const swapOps = (e: BExpr, m: Partial<Record<BinOp, BinOp>>): BExpr =>
+  e.k === "var" || e.k === "const" ? e : e.k === "not" ? bnot(swapOps(e.a, m)) : bin(m[e.k] ?? e.k, swapOps(e.a, m), swapOps(e.b, m));
+
+/** slips are misreadings of ⊕, ↑ and ↓, with what each gets wrong. */
+const slips: readonly (readonly [Partial<Record<BinOp, BinOp>>, string, string])[] = [
+  [
+    { nand: "nor", nor: "nand" },
+    "That swaps $\\uparrow$ and $\\downarrow$: $\\uparrow$ is $\\neg(\\wedge)$ and $\\downarrow$ is $\\neg(\\vee)$.",
+    "那是把 $\\uparrow$ 和 $\\downarrow$ 弄反了：$\\uparrow$ 是 $\\neg(\\wedge)$，$\\downarrow$ 是 $\\neg(\\vee)$。",
+  ],
+  [{ xor: "or" }, "That reads $\\oplus$ as $\\vee$, but $1 \\oplus 1 = 0$.", "那是把 $\\oplus$ 当成了 $\\vee$，但 $1 \\oplus 1 = 0$。"],
+  [
+    { nand: "and", nor: "or" },
+    "That forgets the negation in $\\uparrow$ or $\\downarrow$.",
+    "那是忘了 $\\uparrow$ 或 $\\downarrow$ 中的否定。",
+  ],
+  [
+    { xor: "iff" },
+    "That reads $\\oplus$ as $1$ when the inputs agree; it is $1$ when they differ.",
+    "那是把 $\\oplus$ 当成输入相同时取 $1$；它在输入不同时取 $1$。",
+  ],
+];
+
 /** booleanFunctionsAndLogicalOperations adds XOR, NAND and NOR. */
 export const booleanFunctionsAndLogicalOperations: TopicDef = {
   id: "boolean-functions-and-logical-operations",
@@ -434,6 +590,10 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
   summary: t(
     "Besides ∧, ∨ and ¬: exclusive or x ⊕ y (1 when exactly one is 1), the Sheffer stroke x ↑ y = ¬(x ∧ y) (NAND) and the Peirce arrow x ↓ y = ¬(x ∨ y) (NOR).",
     "除 ∧、∨、¬ 外还有：异或 x ⊕ y（恰有一个为 1 时取 1）、谢弗竖线 x ↑ y = ¬(x ∧ y)（与非）和皮尔斯箭头 x ↓ y = ¬(x ∨ y)（或非）。",
+  ),
+  intro: t(
+    "With $x = 0$, $y = 1$ and $w = 1$: $x \\oplus y = 1$ because the inputs differ, and then $(x \\oplus y) \\uparrow w = 1 \\uparrow 1 = 0$, since $\\uparrow$ is $0$ only when both inputs are $1$.\n\nCheck: $1 \\uparrow 1 = \\neg(1 \\wedge 1) = \\neg 1 = 0$.\n\nIn this lesson we evaluate expressions with $\\oplus$, $\\uparrow$ and $\\downarrow$ and rewrite them with $\\wedge$, $\\vee$ and $\\neg$.",
+    "取 $x = 0$，$y = 1$，$w = 1$：因为两个输入不同，$x \\oplus y = 1$；于是 $(x \\oplus y) \\uparrow w = 1 \\uparrow 1 = 0$，因为 $\\uparrow$ 只在两个输入都是 $1$ 时取 $0$。\n\n检验：$1 \\uparrow 1 = \\neg(1 \\wedge 1) = \\neg 1 = 0$。\n\n本课我们计算含 $\\oplus$、$\\uparrow$、$\\downarrow$ 的表达式，并用 $\\wedge$、$\\vee$、$\\neg$ 改写它们。",
   ),
   prerequisites: ["boolean-functions", "logical-equivalence"],
   encompasses: [],
@@ -444,8 +604,8 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
       id: "evaluating-xor-nand-and-nor",
       title: t("Evaluating ⊕, ↑ and ↓", "计算 ⊕、↑ 与 ↓"),
       explanation: t(
-        "Exclusive or detects a difference between the inputs, while nand and nor are the negations of and and or, and each can be read from a short truth table. $1 \\oplus 1 = 0$, $1 \\uparrow 1 = 0$ and $0 \\downarrow 0 = 1$; otherwise $\\oplus$ gives $1$ exactly when the inputs differ, $\\uparrow$ gives $1$, and $\\downarrow$ gives $0$. With $x = 1, y = 0, z = 1$: $(x \\uparrow y) \\oplus z = 1 \\oplus 1 = 0$.",
-        "异或用来检测两个输入是否不同，而与非和或非是“与”和“或”的否定，每一个都可以从简短的真值表中读出。$1 \\oplus 1 = 0$，$1 \\uparrow 1 = 0$，$0 \\downarrow 0 = 1$；其余情况下，$\\oplus$ 在输入不同时取 $1$，$\\uparrow$ 取 $1$，$\\downarrow$ 取 $0$。取 $x = 1, y = 0, z = 1$：$(x \\uparrow y) \\oplus z = 1 \\oplus 1 = 0$。",
+        "Exclusive or detects a difference between the inputs, while nand and nor are the negations of and and or, and each can be read from a short truth table. $1 \\oplus 1 = 0$, $1 \\uparrow 1 = 0$ and $0 \\downarrow 0 = 1$; otherwise $\\oplus$ gives $1$ exactly when the inputs differ, $\\uparrow$ gives $1$, and $\\downarrow$ gives $0$. With $x = 0, y = 1, w = 0$: $(x \\downarrow w) \\oplus y = 1 \\oplus 1 = 0$.\n\n> **Watch out.** $\\uparrow$ is $0$ only when both inputs are $1$, and $\\downarrow$ is $1$ only when both are $0$, not the other way round; and $\\oplus$ is $0$ when the inputs agree, even when both are $1$.",
+        "异或用来检测两个输入是否不同，而与非和或非是“与”和“或”的否定，每一个都可以从简短的真值表中读出。$1 \\oplus 1 = 0$，$1 \\uparrow 1 = 0$，$0 \\downarrow 0 = 1$；其余情况下，$\\oplus$ 在输入不同时取 $1$，$\\uparrow$ 取 $1$，$\\downarrow$ 取 $0$。取 $x = 0, y = 1, w = 0$：$(x \\downarrow w) \\oplus y = 1 \\oplus 1 = 0$。\n\n> **注意。** $\\uparrow$ 只在两个输入都是 $1$ 时取 $0$，$\\downarrow$ 只在两个输入都是 $0$ 时取 $1$，不要弄反；$\\oplus$ 在输入相同时取 $0$，两个都是 $1$ 时也是如此。",
       ),
       generate(rng) {
         let e: BExpr;
@@ -453,14 +613,36 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
         while (!/oplus|uparrow|downarrow/.test(btex(e)));
         const x = bits(rng.int(0, 7), 3);
         const value = beval(e, x);
+        const slip = slips.find(([m]) => beval(swapOps(e, m), x) !== value);
+        const reason = slip
+          ? t(slip[1], slip[2])
+          : t("That misreads one of the operations; work from the inside out.", "那是读错了某个运算；应由内向外计算。");
+        const top =
+          e.k === "not"
+            ? t(
+                `The outermost operation negates $${btex(e.a)} = ${beval(e.a, x)}$, giving $${value}$.`,
+                `最外层的运算是对 $${btex(e.a)} = ${beval(e.a, x)}$ 取否定，得 $${value}$。`,
+              )
+            : e.k === "var" || e.k === "const"
+              ? t(`The value is $${value}$.`, `值为 $${value}$。`)
+              : t(
+                  `The outermost operation is $${opTex[e.k]}$ on the values $${beval(e.a, x)}$ and $${beval(e.b, x)}$, and its table gives $${beval(e.a, x)} ${opTex[e.k]} ${beval(e.b, x)} = ${value}$.`,
+                  `最外层的运算是作用在 $${beval(e.a, x)}$ 和 $${beval(e.b, x)}$ 上的 $${opTex[e.k]}$，查它的真值表得 $${beval(e.a, x)} ${opTex[e.k]} ${beval(e.b, x)} = ${value}$。`,
+                );
         return numberProblem({
           prompt: t(
             `Evaluate $${btex(e)}$ at $x = ${x[0]}$, $y = ${x[1]}$, $z = ${x[2]}$.`,
             `求 $${btex(e)}$ 在 $x = ${x[0]}$，$y = ${x[1]}$，$z = ${x[2]}$ 时的值。`,
           ),
           answer: value,
-          wrong: [1 - value],
-          solution: t(`Work from the inside out: ${steps(e, x)}.`, `由内向外计算：${steps(e, x)}。`),
+          mistakes: [{ value: 1 - value, why: reason }],
+          solution: walked(
+            [
+              [["Substitute", "代入"], t(`$x = ${x[0]}$, $y = ${x[1]}$, $z = ${x[2]}$.`, `$x = ${x[0]}$，$y = ${x[1]}$，$z = ${x[2]}$。`)],
+              [["Work from the inside out", "由内向外计算"], t(`${steps(e, x)}.`, `${steps(e, x)}。`)],
+            ],
+            top,
+          ),
         });
       },
     },
@@ -468,8 +650,8 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
       id: "rewriting-xor-nand-and-nor",
       title: t("Rewriting with ∧, ∨ and ¬", "用 ∧、∨、¬ 改写"),
       explanation: t(
-        "De Morgan's laws turn a negated and into an or of negations and a negated or into an and of negations, which rewrites these gates with the basic connectives. $x \\uparrow y = \\neg (x \\wedge y) = \\neg x \\vee \\neg y$, $x \\downarrow y = \\neg x \\wedge \\neg y$, $x \\oplus y = (x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$, and $x \\uparrow x = \\neg x$. Compare truth tables to check any rewriting.",
-        "德摩根律把否定的“与”变成否定的“或”，把否定的“或”变成否定的“与”，从而用基本联结词改写这些门。$x \\uparrow y = \\neg (x \\wedge y) = \\neg x \\vee \\neg y$，$x \\downarrow y = \\neg x \\wedge \\neg y$，$x \\oplus y = (x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$，$x \\uparrow x = \\neg x$。比较真值表即可检验任何改写。",
+        "De Morgan's laws turn a negated and into an or of negations and a negated or into an and of negations, which rewrites these gates with the basic connectives. $z \\uparrow w = \\neg (z \\wedge w) = \\neg z \\vee \\neg w$, $z \\downarrow w = \\neg z \\wedge \\neg w$, $z \\oplus w = (z \\wedge \\neg w) \\vee (\\neg z \\wedge w)$, and $w \\uparrow w = \\neg w$. Compare truth tables to check any rewriting.\n\n> **Watch out.** Negating an $\\wedge$ gives an $\\vee$ of negations, so $z \\uparrow w$ is $\\neg z \\vee \\neg w$, while $\\neg z \\wedge \\neg w$ is $z \\downarrow w$; and $\\oplus$ is not $\\vee$, since it is $0$ when both inputs are $1$.",
+        "德摩根律把否定的“与”变成否定的“或”，把否定的“或”变成否定的“与”，从而用基本联结词改写这些门。$z \\uparrow w = \\neg (z \\wedge w) = \\neg z \\vee \\neg w$，$z \\downarrow w = \\neg z \\wedge \\neg w$，$z \\oplus w = (z \\wedge \\neg w) \\vee (\\neg z \\wedge w)$，$w \\uparrow w = \\neg w$。比较真值表即可检验任何改写。\n\n> **注意。** 否定一个 $\\wedge$ 得到否定的 $\\vee$，所以 $z \\uparrow w$ 是 $\\neg z \\vee \\neg w$，而 $\\neg z \\wedge \\neg w$ 是 $z \\downarrow w$；$\\oplus$ 也不是 $\\vee$，两个输入都是 $1$ 时它取 $0$。",
       ),
       generate(rng) {
         const pair = rng.pick(PAIRS);
@@ -479,16 +661,49 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
         const rights = pool.filter((e) => sameVec(vecOf(e, 3), vec));
         const right = rng.pick(rights);
         const wrong = rng.shuffle(pool.filter((e) => !sameVec(vecOf(e, 3), vec))).slice(0, 3);
-        return oneOf(
-          rng,
-          t(`Which expression is equivalent to $${btex(target)}$?`, `哪个表达式与 $${btex(target)}$ 等价？`),
+        const [p, q] = [VARS[pair[0]]!, VARS[pair[1]]!];
+        const table = pairTable(target, pair);
+        const rows = ["(0, 0)", "(0, 1)", "(1, 0)", "(1, 1)"];
+        const options = firstThree(
           bmath(right),
-          wrong.map(bmath),
-          t(
-            `Both sides have the same truth table, so $${btex(target)} \\equiv ${btex(right)}$.`,
-            `两边真值表相同，所以 $${btex(target)} \\equiv ${btex(right)}$。`,
-          ),
+          wrong.map((w) => {
+            const r = differ(pairTable(w, pair), table);
+            return {
+              option: bmath(w),
+              why: t(
+                `At $(${p}, ${q}) = ${rows[r]}$ it gives $${pairTable(w, pair)[r]}$, but $${btex(target)}$ gives $${table[r]}$.`,
+                `在 $(${p}, ${q}) = ${rows[r]}$ 处它取 $${pairTable(w, pair)[r]}$，而 $${btex(target)}$ 取 $${table[r]}$。`,
+              ),
+            };
+          }),
         );
+        return explainedChoice(rng, {
+          prompt: t(`Which expression is equivalent to $${btex(target)}$?`, `哪个表达式与 $${btex(target)}$ 等价？`),
+          correct: bmath(right),
+          wrong: options,
+          solution: walked(
+            [
+              [
+                ["Tabulate the expression", "列出真值表"],
+                t(
+                  `At $(${p}, ${q}) = (0, 0), (0, 1), (1, 0), (1, 1)$, $${btex(target)}$ takes the values $${table.join(", ")}$.`,
+                  `在 $(${p}, ${q}) = (0, 0), (0, 1), (1, 0), (1, 1)$ 处，$${btex(target)}$ 依次取 $${table.join(", ")}$。`,
+                ),
+              ],
+              [
+                ["Match the table", "对照真值表"],
+                t(
+                  `$${btex(right)}$ takes the same values, so $${btex(target)} \\equiv ${btex(right)}$.`,
+                  `$${btex(right)}$ 取同样的值，所以 $${btex(target)} \\equiv ${btex(right)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At $(${p}, ${q}) = (1, 1)$ both sides give $${table[3]}$, and at $(0, 0)$ both give $${table[0]}$.`,
+              `在 $(${p}, ${q}) = (1, 1)$ 处两边都取 $${table[3]}$，在 $(0, 0)$ 处都取 $${table[0]}$。`,
+            ),
+          ),
+        });
       },
     },
   ],
@@ -518,21 +733,46 @@ function normalFormChoice(rng: Rng, outer: "or" | "and"): ReturnType<typeof oneO
   ][kind]!();
   const name = outer === "or" ? t("disjunctive normal form", "析取范式") : t("conjunctive normal form", "合取范式");
   const [o, i] = outer === "or" ? ["\\vee", "\\wedge"] : ["\\wedge", "\\vee"];
-  const why = [
-    outer === "or"
-      ? t("Yes: it is a disjunction of conjunctions of literals.", "是：它是若干文字合取式的析取。")
-      : t("Yes: it is a conjunction of disjunctions of literals.", "是：它是若干文字析取式的合取。"),
-    t(`No: $${i}$ is applied to expressions containing $${o}$.`, `不是：$${i}$ 作用在含 $${o}$ 的表达式上。`),
-    t("No: $\\neg$ is applied to a compound expression, not a variable.", "不是：$\\neg$ 作用在复合表达式上，而不是变量上。"),
-    t(`No: $${i}$ is applied to an expression containing $${o}$.`, `不是：$${i}$ 作用在含 $${o}$ 的表达式上。`),
+  const top = e.k === "and" ? "\\wedge" : "\\vee";
+  const reason = [
+    t(`every $${o}$ is at the top and every $${i}$ joins only literals`, `每个 $${o}$ 都在最外层，每个 $${i}$ 只连接文字`),
+    t(`$${i}$ is applied to expressions containing $${o}$`, `$${i}$ 作用在含 $${o}$ 的表达式上`),
+    t("$\\neg$ is applied to a compound expression, not a variable", "$\\neg$ 作用在复合表达式上，而不是变量上"),
+    t(`$${i}$ is applied to an expression containing $${o}$`, `$${i}$ 作用在含 $${o}$ 的表达式上`),
   ][kind]!;
-  return oneOf(
-    rng,
-    t(`Is $${btex(e)}$ in ${name.en}?`, `$${btex(e)}$ 是${name["zh-CN"]}吗？`),
-    yesNo[kind === 0 ? 0 : 1]!,
-    [yesNo[kind === 0 ? 1 : 0]!],
-    why,
-  );
+  const yes = kind === 0;
+  return explainedChoice(rng, {
+    prompt: t(`Is $${btex(e)}$ in ${name.en}?`, `$${btex(e)}$ 是${name["zh-CN"]}吗？`),
+    correct: yesNo[yes ? 0 : 1]!,
+    wrong: [
+      {
+        option: yesNo[yes ? 1 : 0]!,
+        why: yes
+          ? t(`Nothing breaks the form: ${reason.en}.`, `没有任何地方破坏这种形式：${reason["zh-CN"]}。`)
+          : t(`That misses what breaks the form: ${reason.en}.`, `那是没看出破坏这种形式的地方：${reason["zh-CN"]}。`),
+      },
+    ],
+    solution: walked(
+      [
+        [["Look at the outermost operation", "看最外层的运算"], t(`The outermost operation is $${top}$.`, `最外层的运算是 $${top}$。`)],
+        [
+          ["Look inside", "看里面"],
+          yes
+            ? t(`It is in ${name.en}: ${reason.en}.`, `它是${name["zh-CN"]}：${reason["zh-CN"]}。`)
+            : t(`It is not in ${name.en}: ${reason.en}.`, `它不是${name["zh-CN"]}：${reason["zh-CN"]}。`),
+        ],
+      ],
+      yes
+        ? t(
+            `Reading it back, it is ${outer === "or" ? "true exactly when one of its terms is true" : "true exactly when all of its clauses are true"}, and each ${outer === "or" ? "term" : "clause"} is built from literals alone.`,
+            `反过来读，它${outer === "or" ? "恰在某一项为真时为真" : "恰在所有子句都为真时为真"}，而每个${outer === "or" ? "项" : "子句"}只由文字构成。`,
+          )
+        : t(
+            `To reach ${name.en} it would still need ${kind === 2 ? "De Morgan's laws" : "distribution"}, which an expression already in that form never needs.`,
+            `要化成${name["zh-CN"]}还需要${kind === 2 ? "德摩根律" : "分配律"}，而已经是这种形式的表达式不需要这一步。`,
+          ),
+    ),
+  });
 }
 
 /** negLit negates a literal without double negation. */
@@ -544,28 +784,63 @@ function distributeChoice(rng: Rng, outer: "or" | "and"): ReturnType<typeof oneO
   const [a, b, c, d] = range(0, 3).map((i) => randomLit(rng, i)) as [BExpr, BExpr, BExpr, BExpr];
   const negated = rng.bool();
   // (a ∨ b) ∧ (c ∨ d) for DNF, (a ∧ b) ∨ (c ∧ d) for CNF, or the same written as a negation.
-  const source = negated
-    ? bnot(bin(outer, bin(inner, negLit(a), negLit(b)), bin(inner, negLit(c), negLit(d))))
-    : bin(inner, bin(outer, a, b), bin(outer, c, d));
+  const plain = bin(inner, bin(outer, a, b), bin(outer, c, d));
+  const source = negated ? bnot(bin(outer, bin(inner, negLit(a), negLit(b)), bin(inner, negLit(c), negLit(d)))) : plain;
   const exact = bin(outer, bin(outer, bin(outer, bin(inner, a, c), bin(inner, a, d)), bin(inner, b, c)), bin(inner, b, d));
   const vec = vecOf(source, 4);
-  const wrongs = [
-    bin(outer, bin(inner, a, b), bin(inner, c, d)),
-    bin(outer, bin(inner, a, c), bin(inner, b, d)),
-    bin(outer, bin(outer, bin(inner, a, c), bin(inner, a, d)), bin(inner, b, c)),
-    bin(outer, bin(inner, negLit(a), c), bin(inner, b, negLit(d))),
-  ].filter((w) => !sameVec(vecOf(w, 4), vec));
+  const [I, O] = outer === "or" ? ["\\wedge", "\\vee"] : ["\\vee", "\\wedge"];
+  const wrongs: Wrong[] = [
+    [
+      bin(outer, bin(inner, a, b), bin(inner, c, d)),
+      t(`That swaps $${I}$ and $${O}$ without distributing.`, `那是只交换了 $${I}$ 和 $${O}$，没有展开。`),
+    ],
+    [
+      bin(outer, bin(inner, a, c), bin(inner, b, d)),
+      t(
+        "That pairs only matching positions; each literal must meet every literal of the other bracket.",
+        "那是只配对了对应位置；每个文字都要与另一个括号的每个文字配对。",
+      ),
+    ],
+    [
+      bin(outer, bin(outer, bin(inner, a, c), bin(inner, a, d)), bin(inner, b, c)),
+      t(`That leaves out the pair $${btex(bin(inner, b, d))}$.`, `那是漏掉了 $${btex(bin(inner, b, d))}$ 这一组。`),
+    ],
+    [
+      bin(outer, bin(inner, negLit(a), c), bin(inner, b, negLit(d))),
+      t("That negates literals that should stay as they are.", "那是否定了本应保持不变的文字。"),
+    ],
+  ]
+    .filter(([w]) => !sameVec(vecOf(w as BExpr, 4), vec))
+    .map(([w, why]) => ({ option: bmath(w as BExpr), why: why as Text }));
   const name = outer === "or" ? t("disjunctive normal form", "析取范式") : t("conjunctive normal form", "合取范式");
-  return oneOf(
-    rng,
-    t(`Which ${name.en} is equivalent to $${btex(source)}$?`, `哪个${name["zh-CN"]}与 $${btex(source)}$ 等价？`),
-    bmath(exact),
-    wrongs.map(bmath),
-    t(
-      `${negated ? "Apply De Morgan's laws, then distribute" : "Distribute"} ${outer === "or" ? "$\\wedge$ over $\\vee$" : "$\\vee$ over $\\wedge$"}: $${btex(exact)}$.`,
-      `${negated ? "先用德摩根律，再" : ""}把 ${outer === "or" ? "$\\wedge$ 对 $\\vee$" : "$\\vee$ 对 $\\wedge$"} 展开：$${btex(exact)}$。`,
+  return explainedChoice(rng, {
+    prompt: t(`Which ${name.en} is equivalent to $${btex(source)}$?`, `哪个${name["zh-CN"]}与 $${btex(source)}$ 等价？`),
+    correct: bmath(exact),
+    wrong: firstThree(bmath(exact), wrongs),
+    solution: walked(
+      [
+        ...(negated
+          ? [
+              [
+                ["Apply De Morgan's laws", "用德摩根律"],
+                t(`$${btex(source)} \\equiv ${btex(plain)}$.`, `$${btex(source)} \\equiv ${btex(plain)}$。`),
+              ] as const,
+            ]
+          : []),
+        [
+          ["Distribute", "展开"],
+          t(
+            `Pair each literal of the first bracket with each literal of the second, joining the pairs with $${O}$: $${btex(exact)}$.`,
+            `把第一个括号的每个文字与第二个括号的每个文字配对，再用 $${O}$ 连接各组：$${btex(exact)}$。`,
+          ),
+        ],
+      ],
+      t(
+        `Two literals in each bracket give $2 \\cdot 2 = 4$ pairs, and $${btex(exact)}$ has exactly four, each taking one literal from each bracket.`,
+        `每个括号有两个文字，共 $2 \\cdot 2 = 4$ 组，$${btex(exact)}$ 恰有四组，每组从每个括号各取一个文字。`,
+      ),
     ),
-  );
+  });
 }
 
 /** disjunctiveNormalForms writes functions as disjunctions of conjunctions of literals. */
@@ -576,6 +851,10 @@ export const disjunctiveNormalForms: TopicDef = {
     "A disjunctive normal form (DNF) is a disjunction of conjunctions of literals; De Morgan's laws and distribution of ∧ over ∨ turn any expression into one.",
     "析取范式（DNF）是若干文字合取式的析取；利用德摩根律和 ∧ 对 ∨ 的分配律，任何表达式都能化成析取范式。",
   ),
+  intro: t(
+    "De Morgan's law turns $\\neg(x \\vee \\neg w) \\vee (y \\wedge z)$ into $(\\neg x \\wedge w) \\vee (y \\wedge z)$: an OR of two terms, each an AND of literals, which is a disjunctive normal form.\n\nCheck: at $x = 0$, $w = 1$ the original is $\\neg(0 \\vee 0) = 1$, and so is the term $\\neg x \\wedge w$.\n\nIn this lesson we recognize disjunctive normal forms and convert expressions into them.",
+    "德摩根律把 $\\neg(x \\vee \\neg w) \\vee (y \\wedge z)$ 化为 $(\\neg x \\wedge w) \\vee (y \\wedge z)$：两个项的“或”，每一项都是文字的“与”，这就是析取范式。\n\n检验：在 $x = 0$，$w = 1$ 处，原式为 $\\neg(0 \\vee 0) = 1$，项 $\\neg x \\wedge w$ 也是 $1$。\n\n本课我们识别析取范式，并把表达式化成析取范式。",
+  ),
   prerequisites: ["boolean-functions-and-logical-operations", "de-morgans-laws-for-logic"],
   encompasses: [],
   xp: 10,
@@ -585,8 +864,8 @@ export const disjunctiveNormalForms: TopicDef = {
       id: "recognizing-disjunctive-normal-forms",
       title: t("Recognizing DNF", "识别析取范式"),
       explanation: t(
-        "A formula is in disjunctive normal form when it is an OR of terms, each term an AND of variables or their negations, with negation only on single variables. $(x \\wedge \\neg y) \\vee z \\vee (\\neg x \\wedge y \\wedge z)$ is in DNF. $(x \\vee y) \\wedge z$ is not ($\\wedge$ over $\\vee$), and neither is $\\neg (x \\wedge y) \\vee z$ ($\\neg$ over a conjunction).",
-        "如果一个公式是若干项的“或”，每一项都是变量或其否定的“与”，且否定只作用在单个变量上，它就是析取范式。$(x \\wedge \\neg y) \\vee z \\vee (\\neg x \\wedge y \\wedge z)$ 是析取范式。$(x \\vee y) \\wedge z$ 不是（$\\wedge$ 作用在 $\\vee$ 上），$\\neg (x \\wedge y) \\vee z$ 也不是（$\\neg$ 作用在合取式上）。",
+        "A formula is in disjunctive normal form when it is an OR of terms, each term an AND of variables or their negations, with negation only on single variables. A single term such as $x \\wedge \\neg y \\wedge w$ is already in DNF. $(x \\vee y) \\wedge z$ is not ($\\wedge$ over $\\vee$), and neither is $\\neg (x \\vee w) \\vee z$ ($\\neg$ over a compound expression).\n\n> **Watch out.** Negation may sit only on single variables, and an $\\wedge$ applied to anything containing $\\vee$ already breaks the form, wherever it sits.",
+        "如果一个公式是若干项的“或”，每一项都是变量或其否定的“与”，且否定只作用在单个变量上，它就是析取范式。像 $x \\wedge \\neg y \\wedge w$ 这样的单个项已经是析取范式。$(x \\vee y) \\wedge z$ 不是（$\\wedge$ 作用在 $\\vee$ 上），$\\neg (x \\vee w) \\vee z$ 也不是（$\\neg$ 作用在复合表达式上）。\n\n> **注意。** 否定只能作用在单个变量上；只要有 $\\wedge$ 作用在含 $\\vee$ 的表达式上，无论在哪里，都会破坏这种形式。",
       ),
       generate: (rng) => normalFormChoice(rng, "or"),
     },
@@ -594,8 +873,8 @@ export const disjunctiveNormalForms: TopicDef = {
       id: "converting-to-disjunctive-normal-form",
       title: t("Converting to DNF", "化为析取范式"),
       explanation: t(
-        "To reach disjunctive normal form, push negations inward with De Morgan's laws and then distribute AND over OR, just as multiplication distributes over addition. $(x \\vee y) \\wedge (z \\vee \\neg w) = (x \\wedge z) \\vee (x \\wedge \\neg w) \\vee (y \\wedge z) \\vee (y \\wedge \\neg w)$, distributing like $(a + b)(c + d) = ac + ad + bc + bd$. Push negations inward first with De Morgan's laws.",
-        "要化成析取范式，先用德摩根律把否定推到里面，再把“与”对“或”分配，就像乘法对加法分配一样。$(x \\vee y) \\wedge (z \\vee \\neg w) = (x \\wedge z) \\vee (x \\wedge \\neg w) \\vee (y \\wedge z) \\vee (y \\wedge \\neg w)$，就像 $(a + b)(c + d) = ac + ad + bc + bd$ 那样展开。先用德摩根律把否定移到变量上。",
+        "To reach disjunctive normal form, push negations inward with De Morgan's laws and then distribute AND over OR, just as multiplication distributes over addition. $(x \\vee \\neg y) \\wedge z = (x \\wedge z) \\vee (\\neg y \\wedge z)$, like $(a + b)c = ac + bc$, and a bracket of three with a bracket of two gives six terms.\n\n> **Watch out.** Every literal of one bracket pairs with every literal of the other, so two brackets of two give four terms, not two; and push negations onto the variables first.",
+        "要化成析取范式，先用德摩根律把否定推到里面，再把“与”对“或”分配，就像乘法对加法分配一样。$(x \\vee \\neg y) \\wedge z = (x \\wedge z) \\vee (\\neg y \\wedge z)$，就像 $(a + b)c = ac + bc$；三个文字的括号与两个文字的括号相乘得六项。\n\n> **注意。** 一个括号的每个文字都要与另一个括号的每个文字配对，所以两个各含两个文字的括号得到四项，而不是两项；要先把否定推到变量上。",
       ),
       generate: (rng) => distributeChoice(rng, "or"),
     },
@@ -615,26 +894,58 @@ function principalChoice(rng: Rng, dnf: boolean): ReturnType<typeof oneOf> {
   const term = (r: number) => (dnf ? minterm(bits(r, 3)) : maxterm(bits(r, 3)));
   const r = rng.pick(good);
   const x = bits(r, 3);
-  return oneOf(
-    rng,
-    dnf
+  const wrong = rng
+    .shuffle(bad)
+    .slice(0, 3)
+    .map((s) => ({
+      option: bmath(term(s)),
+      why: dnf
+        ? t(
+            `This minterm is $1$ only at $${pointTex(bits(s, 3))}$, where $f = 0$.`,
+            `这个极小项只在 $${pointTex(bits(s, 3))}$ 处取 $1$，而那里 $f = 0$。`,
+          )
+        : t(
+            `This maxterm is $0$ only at $${pointTex(bits(s, 3))}$, where $f = 1$.`,
+            `这个极大项只在 $${pointTex(bits(s, 3))}$ 处取 $0$，而那里 $f = 1$。`,
+          ),
+    }));
+  return explainedChoice(rng, {
+    prompt: dnf
       ? t(`Which minterm appears in the principal DNF of $${fTex(e, 3)}$?`, `$${fTex(e, 3)}$ 的主析取范式中出现了哪个极小项？`)
       : t(`Which maxterm appears in the principal CNF of $${fTex(e, 3)}$?`, `$${fTex(e, 3)}$ 的主合取范式中出现了哪个极大项？`),
-    bmath(term(r)),
-    rng
-      .shuffle(bad)
-      .slice(0, 3)
-      .map((s) => bmath(term(s))),
-    dnf
-      ? t(
-          `$f${pointTex(x)} = 1$, and $${btex(term(r))}$ is the conjunction that is $1$ only at $${pointTex(x)}$.`,
-          `$f${pointTex(x)} = 1$，而 $${btex(term(r))}$ 正是只在 $${pointTex(x)}$ 处取 $1$ 的合取式。`,
-        )
-      : t(
-          `$f${pointTex(x)} = 0$, and $${btex(term(r))}$ is the disjunction that is $0$ only at $${pointTex(x)}$.`,
-          `$f${pointTex(x)} = 0$，而 $${btex(term(r))}$ 正是只在 $${pointTex(x)}$ 处取 $0$ 的析取式。`,
-        ),
-  );
+    correct: bmath(term(r)),
+    wrong,
+    solution: walked(
+      [
+        [["Find the value vector", "求值向量"], t(`$f$ has value vector $${vecTex(vec)}$.`, `$f$ 的值向量为 $${vecTex(vec)}$。`)],
+        [
+          [dnf ? "Pick an input where f = 1" : "Pick an input where f = 0", dnf ? "找出 f = 1 的输入" : "找出 f = 0 的输入"],
+          t(`$f${pointTex(x)} = ${dnf ? 1 : 0}$.`, `$f${pointTex(x)} = ${dnf ? 1 : 0}$。`),
+        ],
+        [
+          [dnf ? "Write its minterm" : "Write its maxterm", dnf ? "写出它的极小项" : "写出它的极大项"],
+          dnf
+            ? t(
+                `Use each variable plain where the input is $1$ and negated where it is $0$: $${btex(term(r))}$.`,
+                `输入为 $1$ 的变量直接写，为 $0$ 的取否定：$${btex(term(r))}$。`,
+              )
+            : t(
+                `Use each variable negated where the input is $1$ and plain where it is $0$: $${btex(term(r))}$.`,
+                `输入为 $1$ 的变量取否定，为 $0$ 的直接写：$${btex(term(r))}$。`,
+              ),
+        ],
+      ],
+      dnf
+        ? t(
+            `At $${pointTex(x)}$ every literal of $${btex(term(r))}$ is $1$, so the minterm is $1$ there, and it is $0$ at every other input.`,
+            `在 $${pointTex(x)}$ 处 $${btex(term(r))}$ 的每个文字都是 $1$，所以极小项在那里取 $1$，在其他输入处都取 $0$。`,
+          )
+        : t(
+            `At $${pointTex(x)}$ every literal of $${btex(term(r))}$ is $0$, so the maxterm is $0$ there, and it is $1$ at every other input.`,
+            `在 $${pointTex(x)}$ 处 $${btex(term(r))}$ 的每个文字都是 $0$，所以极大项在那里取 $0$，在其他输入处都取 $1$。`,
+          ),
+    ),
+  });
 }
 
 /** principalCount asks how many minterms (dnf) or maxterms (cnf) the principal normal form has. */
@@ -648,15 +959,35 @@ function principalCount(rng: Rng, dnf: boolean) {
   } while (!usesAll(e, n) || !vec.includes(0) || !vec.includes(1));
   const ones = vec.filter((b) => b === 1).length;
   const value = dnf ? ones : vec.length - ones;
+  const L = vec.length;
   return numberProblem({
     prompt: dnf
       ? t(`How many minterms does the principal DNF of $${fTex(e, n)}$ have?`, `$${fTex(e, n)}$ 的主析取范式有多少个极小项？`)
       : t(`How many maxterms does the principal CNF of $${fTex(e, n)}$ have?`, `$${fTex(e, n)}$ 的主合取范式有多少个极大项？`),
     answer: value,
-    wrong: [vec.length - value, vec.length, value + 1],
-    solution: t(
-      `The value vector is $${vecTex(vec)}$. There is one ${dnf ? "minterm for each $1$" : "maxterm for each $0$"}: $${value}$.`,
-      `值向量为 $${vecTex(vec)}$。每个${dnf ? " $1$ 对应一个极小项" : " $0$ 对应一个极大项"}：共 $${value}$ 个。`,
+    mistakes: fresh(value, [
+      why(
+        L - value,
+        dnf ? "That counts the $0$s, which give the maxterms." : "That counts the $1$s, which give the minterms.",
+        dnf ? "那是数了 $0$ 的个数，它们对应极大项。" : "那是数了 $1$ 的个数，它们对应极小项。",
+      ),
+      why(L, `That counts every one of the $${L}$ inputs.`, `那是把全部 $${L}$ 个输入都数上了。`),
+      why(n, "That counts the variables, not the inputs.", "那是数了变量的个数，而不是输入的个数。"),
+    ]),
+    solution: walked(
+      [
+        [["Find the value vector", "求值向量"], t(`$f$ has value vector $${vecTex(vec)}$.`, `$f$ 的值向量为 $${vecTex(vec)}$。`)],
+        [
+          [dnf ? "Count the 1s" : "Count the 0s", dnf ? "数 1 的个数" : "数 0 的个数"],
+          dnf
+            ? t(`There is one minterm for each $1$: $${value}$.`, `每个 $1$ 对应一个极小项：共 $${value}$ 个。`)
+            : t(`There is one maxterm for each $0$: $${value}$.`, `每个 $0$ 对应一个极大项：共 $${value}$ 个。`),
+        ],
+      ],
+      t(
+        `The other entries number $${L - value}$, and $${value} + ${L - value} = ${L} = 2^{${n}}$, every input once.`,
+        `其余的位有 $${L - value}$ 个，$${value} + ${L - value} = ${L} = 2^{${n}}$，每个输入恰好一次。`,
+      ),
     ),
   });
 }
@@ -669,6 +1000,10 @@ export const principalDisjunctiveNormalForms: TopicDef = {
     "The principal (full) DNF of f is the disjunction of one minterm for each input where f = 1; every non-zero function has exactly one.",
     "f 的主析取范式是对每个使 f = 1 的输入取一个极小项再析取；每个非零函数恰有一个主析取范式。",
   ),
+  intro: t(
+    "The function $g(z, w) = z \\Leftrightarrow w$ is $1$ at $(0, 0)$ and $(1, 1)$, so its principal DNF is $(\\neg z \\wedge \\neg w) \\vee (z \\wedge w)$: one minterm for each input where $g = 1$.\n\nCheck: at $(0, 1)$ and $(1, 0)$, where $g = 0$, each minterm has a literal equal to $0$, so the DNF is $0$ there too.\n\nIn this lesson we count the minterms of a principal DNF and find which minterms belong to it.",
+    "函数 $g(z, w) = z \\Leftrightarrow w$ 在 $(0, 0)$ 和 $(1, 1)$ 处取 $1$，所以它的主析取范式是 $(\\neg z \\wedge \\neg w) \\vee (z \\wedge w)$：每个使 $g = 1$ 的输入对应一个极小项。\n\n检验：在 $g = 0$ 的 $(0, 1)$ 和 $(1, 0)$ 处，每个极小项都有一个文字为 $0$，所以析取范式在那里也是 $0$。\n\n本课我们统计主析取范式的极小项个数，并找出哪些极小项属于它。",
+  ),
   prerequisites: ["disjunctive-normal-forms"],
   encompasses: [],
   xp: 10,
@@ -678,8 +1013,8 @@ export const principalDisjunctiveNormalForms: TopicDef = {
       id: "counting-minterms",
       title: t("Counting minterms", "统计极小项"),
       explanation: t(
-        "$f(x, y) = x \\Rightarrow y$ has value vector $1101$: it is $1$ at three inputs, so its principal DNF $(\\neg x \\wedge \\neg y) \\vee (\\neg x \\wedge y) \\vee (x \\wedge y)$ has three minterms.",
-        "$f(x, y) = x \\Rightarrow y$ 的值向量是 $1101$：在三个输入处取 $1$，所以它的主析取范式 $(\\neg x \\wedge \\neg y) \\vee (\\neg x \\wedge y) \\vee (x \\wedge y)$ 有三个极小项。",
+        "The principal DNF has one minterm for each input where the function is $1$. $f(x, y, z, w) = x \\wedge y$ is $1$ at the four inputs $(1, 1, 0, 0)$, $(1, 1, 0, 1)$, $(1, 1, 1, 0)$ and $(1, 1, 1, 1)$, so its principal DNF has four minterms, even though the formula shows only two variables.\n\n> **Watch out.** Count the $1$s of the value vector, not the $0$s, which give maxterms; and count over all $2^n$ inputs, not over the variables.",
+        "主析取范式中，函数取 $1$ 的每个输入对应一个极小项。$f(x, y, z, w) = x \\wedge y$ 在 $(1, 1, 0, 0)$、$(1, 1, 0, 1)$、$(1, 1, 1, 0)$、$(1, 1, 1, 1)$ 这四个输入处取 $1$，所以它的主析取范式有四个极小项，尽管公式中只出现了两个变量。\n\n> **注意。** 要数值向量中 $1$ 的个数，而不是 $0$ 的个数，后者对应极大项；要在全部 $2^n$ 个输入上数，而不是数变量。",
       ),
       generate: (rng) => principalCount(rng, true),
     },
@@ -687,8 +1022,8 @@ export const principalDisjunctiveNormalForms: TopicDef = {
       id: "minterms-of-a-function",
       title: t("Minterms of a function", "函数的极小项"),
       explanation: t(
-        "The minterm for the input $(1, 0, 1)$ is $x \\wedge \\neg y \\wedge z$: a variable appears plain where the input is $1$ and negated where it is $0$. It belongs to the principal DNF of $f$ exactly when $f(1, 0, 1) = 1$.",
-        "输入 $(1, 0, 1)$ 对应的极小项是 $x \\wedge \\neg y \\wedge z$：输入为 $1$ 的变量直接出现，为 $0$ 的取否定。它出现在 $f$ 的主析取范式中当且仅当 $f(1, 0, 1) = 1$。",
+        "The minterm for the input $(1, 0, 1, 1)$ is $x \\wedge \\neg y \\wedge z \\wedge w$: a variable appears plain where the input is $1$ and negated where it is $0$. It belongs to the principal DNF of $f$ exactly when $f(1, 0, 1, 1) = 1$.\n\n> **Watch out.** Negate the variables where the input is $0$, not where it is $1$; the reverse gives the literals of a maxterm. And a minterm belongs only if $f$ is $1$ at its input.",
+        "输入 $(1, 0, 1, 1)$ 对应的极小项是 $x \\wedge \\neg y \\wedge z \\wedge w$：输入为 $1$ 的变量直接出现，为 $0$ 的取否定。它出现在 $f$ 的主析取范式中当且仅当 $f(1, 0, 1, 1) = 1$。\n\n> **注意。** 要否定输入为 $0$ 的变量，而不是输入为 $1$ 的；反过来得到的是极大项的文字。只有 $f$ 在对应输入处为 $1$ 时，极小项才出现。",
       ),
       generate: (rng) => principalChoice(rng, true),
     },
@@ -703,6 +1038,10 @@ export const conjunctiveNormalForms: TopicDef = {
     "A conjunctive normal form (CNF) is a conjunction of disjunctions of literals; it is obtained by distributing ∨ over ∧.",
     "合取范式（CNF）是若干文字析取式的合取；把 ∨ 对 ∧ 展开即可得到。",
   ),
+  intro: t(
+    "De Morgan's law turns $\\neg(x \\wedge \\neg w) \\wedge (y \\vee z)$ into $(\\neg x \\vee w) \\wedge (y \\vee z)$: an AND of two clauses, each an OR of literals, which is a conjunctive normal form.\n\nCheck: at $x = 1$, $w = 0$ the original is $\\neg(1 \\wedge 1) = 0$, and so is the clause $\\neg x \\vee w$.\n\nIn this lesson we recognize conjunctive normal forms and convert expressions into them.",
+    "德摩根律把 $\\neg(x \\wedge \\neg w) \\wedge (y \\vee z)$ 化为 $(\\neg x \\vee w) \\wedge (y \\vee z)$：两个子句的“与”，每个子句都是文字的“或”，这就是合取范式。\n\n检验：在 $x = 1$，$w = 0$ 处，原式为 $\\neg(1 \\wedge 1) = 0$，子句 $\\neg x \\vee w$ 也是 $0$。\n\n本课我们识别合取范式，并把表达式化成合取范式。",
+  ),
   prerequisites: ["disjunctive-normal-forms"],
   encompasses: [],
   xp: 10,
@@ -712,8 +1051,8 @@ export const conjunctiveNormalForms: TopicDef = {
       id: "recognizing-conjunctive-normal-forms",
       title: t("Recognizing CNF", "识别合取范式"),
       explanation: t(
-        "A formula is in conjunctive normal form when it is an AND of clauses, each clause an OR of variables or their negations. $(x \\vee \\neg y) \\wedge z \\wedge (\\neg x \\vee y \\vee z)$ is in CNF. $(x \\wedge y) \\vee z$ is not, and neither is $\\neg (x \\vee y) \\wedge z$.",
-        "如果一个公式是若干子句的“与”，每个子句都是变量或其否定的“或”，它就是合取范式。$(x \\vee \\neg y) \\wedge z \\wedge (\\neg x \\vee y \\vee z)$ 是合取范式。$(x \\wedge y) \\vee z$ 不是，$\\neg (x \\vee y) \\wedge z$ 也不是。",
+        "A formula is in conjunctive normal form when it is an AND of clauses, each clause an OR of variables or their negations. A single clause such as $x \\vee \\neg y \\vee w$ is already in CNF. $(x \\wedge y) \\vee z$ is not, and neither is $\\neg (x \\wedge w) \\wedge z$.\n\n> **Watch out.** Negation may sit only on single variables, and a $\\vee$ applied to anything containing $\\wedge$ already breaks the form, wherever it sits.",
+        "如果一个公式是若干子句的“与”，每个子句都是变量或其否定的“或”，它就是合取范式。像 $x \\vee \\neg y \\vee w$ 这样的单个子句已经是合取范式。$(x \\wedge y) \\vee z$ 不是，$\\neg (x \\wedge w) \\wedge z$ 也不是。\n\n> **注意。** 否定只能作用在单个变量上；只要有 $\\vee$ 作用在含 $\\wedge$ 的表达式上，无论在哪里，都会破坏这种形式。",
       ),
       generate: (rng) => normalFormChoice(rng, "and"),
     },
@@ -721,8 +1060,8 @@ export const conjunctiveNormalForms: TopicDef = {
       id: "converting-to-conjunctive-normal-form",
       title: t("Converting to CNF", "化为合取范式"),
       explanation: t(
-        "Conjunctive normal form is the dual of disjunctive normal form, so after pushing negations inward you distribute OR over AND instead. $(x \\wedge y) \\vee (z \\wedge w) = (x \\vee z) \\wedge (x \\vee w) \\wedge (y \\vee z) \\wedge (y \\vee w)$: distribute $\\vee$ over $\\wedge$, the dual of the DNF expansion.",
-        "合取范式是析取范式的对偶，所以把否定推到里面之后，改为把“或”对“与”分配。$(x \\wedge y) \\vee (z \\wedge w) = (x \\vee z) \\wedge (x \\vee w) \\wedge (y \\vee z) \\wedge (y \\vee w)$：把 $\\vee$ 对 $\\wedge$ 展开，与析取范式的展开对偶。",
+        "Conjunctive normal form is the dual of disjunctive normal form, so after pushing negations inward you distribute OR over AND instead. $(x \\wedge \\neg y) \\vee w = (x \\vee w) \\wedge (\\neg y \\vee w)$: distribute $\\vee$ over $\\wedge$, the dual of the DNF expansion.\n\n> **Watch out.** Here it is $\\vee$ that is distributed, so each clause takes one literal from each bracket and the clauses are joined by $\\wedge$; two brackets of two give four clauses.",
+        "合取范式是析取范式的对偶，所以把否定推到里面之后，改为把“或”对“与”分配。$(x \\wedge \\neg y) \\vee w = (x \\vee w) \\wedge (\\neg y \\vee w)$：把 $\\vee$ 对 $\\wedge$ 展开，与析取范式的展开对偶。\n\n> **注意。** 这里展开的是 $\\vee$，所以每个子句从每个括号各取一个文字，子句之间用 $\\wedge$ 连接；两个各含两个文字的括号得到四个子句。",
       ),
       generate: (rng) => distributeChoice(rng, "and"),
     },
@@ -737,6 +1076,10 @@ export const principalConjunctiveNormalForms: TopicDef = {
     "The principal (full) CNF of f is the conjunction of one maxterm for each input where f = 0.",
     "f 的主合取范式是对每个使 f = 0 的输入取一个极大项再合取。",
   ),
+  intro: t(
+    "The function $g(z, w) = z \\oplus w$ is $0$ at $(0, 0)$ and $(1, 1)$, so its principal CNF is $(z \\vee w) \\wedge (\\neg z \\vee \\neg w)$: one maxterm for each input where $g = 0$.\n\nCheck: at $(0, 1)$, where $g = 1$, both clauses are $1$, so the CNF is $1$ there too.\n\nIn this lesson we count the maxterms of a principal CNF and find which maxterms belong to it.",
+    "函数 $g(z, w) = z \\oplus w$ 在 $(0, 0)$ 和 $(1, 1)$ 处取 $0$，所以它的主合取范式是 $(z \\vee w) \\wedge (\\neg z \\vee \\neg w)$：每个使 $g = 0$ 的输入对应一个极大项。\n\n检验：在 $g = 1$ 的 $(0, 1)$ 处，两个子句都是 $1$，所以合取范式在那里也是 $1$。\n\n本课我们统计主合取范式的极大项个数，并找出哪些极大项属于它。",
+  ),
   prerequisites: ["conjunctive-normal-forms", "principal-disjunctive-normal-forms"],
   encompasses: [],
   xp: 10,
@@ -746,8 +1089,8 @@ export const principalConjunctiveNormalForms: TopicDef = {
       id: "counting-maxterms",
       title: t("Counting maxterms", "统计极大项"),
       explanation: t(
-        "$f(x, y) = x \\Rightarrow y$ has value vector $1101$: it is $0$ only at $(1, 0)$, so its principal CNF is the single maxterm $\\neg x \\vee y$.",
-        "$f(x, y) = x \\Rightarrow y$ 的值向量是 $1101$：只在 $(1, 0)$ 处取 $0$，所以它的主合取范式只有一个极大项 $\\neg x \\vee y$。",
+        "The principal CNF has one maxterm for each input where the function is $0$. $f(x, y, z, w) = x \\vee y$ is $0$ only when $x = y = 0$, which happens at the four inputs with $z, w$ free, so its principal CNF has four maxterms.\n\n> **Watch out.** Count the $0$s of the value vector, not the $1$s, which give minterms; and count over all $2^n$ inputs.",
+        "主合取范式中，函数取 $0$ 的每个输入对应一个极大项。$f(x, y, z, w) = x \\vee y$ 只在 $x = y = 0$ 时取 $0$，这时 $z, w$ 自由，共四个输入，所以它的主合取范式有四个极大项。\n\n> **注意。** 要数值向量中 $0$ 的个数，而不是 $1$ 的个数，后者对应极小项；要在全部 $2^n$ 个输入上数。",
       ),
       generate: (rng) => principalCount(rng, false),
     },
@@ -755,8 +1098,8 @@ export const principalConjunctiveNormalForms: TopicDef = {
       id: "maxterms-of-a-function",
       title: t("Maxterms of a function", "函数的极大项"),
       explanation: t(
-        "The maxterm for the input $(1, 0, 1)$ is $\\neg x \\vee y \\vee \\neg z$, which is $0$ only there: a variable is negated where the input is $1$. It belongs to the principal CNF exactly when $f(1, 0, 1) = 0$.",
-        "输入 $(1, 0, 1)$ 对应的极大项是 $\\neg x \\vee y \\vee \\neg z$，它只在该处取 $0$：输入为 $1$ 的变量取否定。它出现在主合取范式中当且仅当 $f(1, 0, 1) = 0$。",
+        "The maxterm for the input $(1, 0, 1, 1)$ is $\\neg x \\vee y \\vee \\neg z \\vee \\neg w$, which is $0$ only there: a variable is negated where the input is $1$. It belongs to the principal CNF exactly when $f(1, 0, 1, 1) = 0$.\n\n> **Watch out.** In a maxterm the variables with input $1$ are negated, the opposite of a minterm; and a maxterm belongs only if $f$ is $0$ at its input.",
+        "输入 $(1, 0, 1, 1)$ 对应的极大项是 $\\neg x \\vee y \\vee \\neg z \\vee \\neg w$，它只在该处取 $0$：输入为 $1$ 的变量取否定。它出现在主合取范式中当且仅当 $f(1, 0, 1, 1) = 0$。\n\n> **注意。** 极大项中输入为 $1$ 的变量取否定，与极小项相反；只有 $f$ 在对应输入处为 $0$ 时，极大项才出现。",
       ),
       generate: (rng) => principalChoice(rng, false),
     },
@@ -771,6 +1114,10 @@ export const booleanPolynomials: TopicDef = {
     "Every Boolean function is uniquely a Boolean (Zhegalkin) polynomial: an ⊕-sum of distinct monomials such as 1, x, yz, using x ∧ y = xy, ¬x = x ⊕ 1 and x ∨ y = x ⊕ y ⊕ xy.",
     "每个布尔函数都唯一地表示为布尔（热加尔金）多项式：若干不同单项式（如 1、x、yz）的 ⊕ 和，利用 x ∧ y = xy、¬x = x ⊕ 1、x ∨ y = x ⊕ y ⊕ xy。",
   ),
+  intro: t(
+    "Rewriting $x \\Rightarrow w$ as $\\neg x \\vee w$ and using $\\neg x = 1 \\oplus x$ and $a \\vee b = a \\oplus b \\oplus ab$ gives $(1 \\oplus x) \\oplus w \\oplus (1 \\oplus x)w = 1 \\oplus x \\oplus w \\oplus w \\oplus xw = 1 \\oplus x \\oplus xw$.\n\nCheck: at $x = 1$, $w = 0$ the polynomial is $1 \\oplus 1 \\oplus 0 = 0$, and $1 \\Rightarrow 0$ is $0$ too.\n\nIn this lesson we find the Boolean polynomial of a function and count its monomials.",
+    "把 $x \\Rightarrow w$ 写成 $\\neg x \\vee w$，再用 $\\neg x = 1 \\oplus x$ 和 $a \\vee b = a \\oplus b \\oplus ab$，得 $(1 \\oplus x) \\oplus w \\oplus (1 \\oplus x)w = 1 \\oplus x \\oplus w \\oplus w \\oplus xw = 1 \\oplus x \\oplus xw$。\n\n检验：在 $x = 1$，$w = 0$ 处多项式为 $1 \\oplus 1 \\oplus 0 = 0$，而 $1 \\Rightarrow 0$ 也是 $0$。\n\n本课我们求函数的布尔多项式，并统计它的单项式个数。",
+  ),
   prerequisites: ["boolean-functions-and-logical-operations"],
   encompasses: [],
   xp: 10,
@@ -780,8 +1127,8 @@ export const booleanPolynomials: TopicDef = {
       id: "finding-a-boolean-polynomial",
       title: t("Finding the polynomial", "求布尔多项式"),
       explanation: t(
-        "Every Boolean function can be written as a polynomial using exclusive or and AND, and this form is unique once repeated terms cancel in pairs. Rewrite with $\\neg a = a \\oplus 1$ and $a \\vee b = a \\oplus b \\oplus ab$, expand, and cancel pairs since $a \\oplus a = 0$. For example $x \\vee \\neg y = x \\oplus (y \\oplus 1) \\oplus x(y \\oplus 1) = 1 \\oplus y \\oplus xy$.",
-        "每个布尔函数都可以写成用异或和“与”构成的多项式，重复的项成对抵消之后，这种形式是唯一的。用 $\\neg a = a \\oplus 1$ 与 $a \\vee b = a \\oplus b \\oplus ab$ 改写，展开后两两抵消（$a \\oplus a = 0$）。例如 $x \\vee \\neg y = x \\oplus (y \\oplus 1) \\oplus x(y \\oplus 1) = 1 \\oplus y \\oplus xy$。",
+        "Every Boolean function can be written as a polynomial using exclusive or and AND, and this form is unique once repeated terms cancel in pairs. Rewrite with $\\neg a = a \\oplus 1$ and $a \\vee b = a \\oplus b \\oplus ab$, expand, and cancel pairs since $a \\oplus a = 0$. For example $z \\vee \\neg w = z \\oplus (w \\oplus 1) \\oplus z(w \\oplus 1) = 1 \\oplus w \\oplus zw$.\n\n> **Watch out.** $a \\vee b$ is $a \\oplus b \\oplus ab$, not $a \\oplus b$; and equal monomials cancel in pairs, so a monomial that appears twice drops out.",
+        "每个布尔函数都可以写成用异或和“与”构成的多项式，重复的项成对抵消之后，这种形式是唯一的。用 $\\neg a = a \\oplus 1$ 与 $a \\vee b = a \\oplus b \\oplus ab$ 改写，展开后两两抵消（$a \\oplus a = 0$）。例如 $z \\vee \\neg w = z \\oplus (w \\oplus 1) \\oplus z(w \\oplus 1) = 1 \\oplus w \\oplus zw$。\n\n> **注意。** $a \\vee b$ 是 $a \\oplus b \\oplus ab$，而不是 $a \\oplus b$；相同的单项式成对抵消，出现两次的单项式会消掉。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -796,27 +1143,51 @@ export const booleanPolynomials: TopicDef = {
           const c = [...coeffs];
           const m = rng.int(0, c.length - 1);
           c[m] = 1 - c[m]!;
-          return anfTex(c, n);
+          return { tex: anfTex(c, n), m, added: c[m] === 1 };
         });
         const right = anfTex(coeffs, n);
-        return oneOf(
-          rng,
-          t(`Which Boolean polynomial equals $${btex(e)}$?`, `哪个布尔多项式等于 $${btex(e)}$？`),
-          t(`$${right}$`, `$${right}$`),
-          wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
-            `Rewrite with $\\neg a = a \\oplus 1$, $a \\vee b = a \\oplus b \\oplus ab$ and $a \\Rightarrow b = 1 \\oplus a \\oplus ab$, then cancel equal monomials: $${right}$.`,
-            `用 $\\neg a = a \\oplus 1$、$a \\vee b = a \\oplus b \\oplus ab$、$a \\Rightarrow b = 1 \\oplus a \\oplus ab$ 改写，再消去相同的单项式：$${right}$。`,
+        const count = coeffs.filter((c) => c === 1).length;
+        const last = vec[vec.length - 1]!;
+        return explainedChoice(rng, {
+          prompt: t(`Which Boolean polynomial equals $${btex(e)}$?`, `哪个布尔多项式等于 $${btex(e)}$？`),
+          correct: t(`$${right}$`, `$${right}$`),
+          wrong: firstThree(
+            t(`$${right}$`, `$${right}$`),
+            wrong.map((w) => ({
+              option: t(`$${w.tex}$`, `$${w.tex}$`),
+              why: w.added
+                ? t(
+                    `It has the monomial $${monomialTex(w.m, n)}$, which cancels in the correct expansion.`,
+                    `它含单项式 $${monomialTex(w.m, n)}$，而正确的展开中它被抵消了。`,
+                  )
+                : t(`It leaves out the monomial $${monomialTex(w.m, n)}$.`, `它漏掉了单项式 $${monomialTex(w.m, n)}$。`),
+            })),
           ),
-        );
+          solution: walked(
+            [
+              [
+                ["Rewrite with ⊕ and ∧", "用 ⊕ 和 ∧ 改写"],
+                t(
+                  "Use $\\neg a = a \\oplus 1$, $a \\vee b = a \\oplus b \\oplus ab$, $a \\Rightarrow b = 1 \\oplus a \\oplus ab$ and $a \\Leftrightarrow b = 1 \\oplus a \\oplus b$, then expand.",
+                  "用 $\\neg a = a \\oplus 1$、$a \\vee b = a \\oplus b \\oplus ab$、$a \\Rightarrow b = 1 \\oplus a \\oplus ab$、$a \\Leftrightarrow b = 1 \\oplus a \\oplus b$ 改写，再展开。",
+                ),
+              ],
+              [["Cancel equal monomials", "消去相同的单项式"], t(`What is left is $${right}$.`, `剩下的是 $${right}$。`)],
+            ],
+            t(
+              `At $${pointTex(bits(vec.length - 1, n))}$ every monomial is $1$, so the polynomial is the parity of its $${count}$ monomials, $${count % 2}$, matching $f${pointTex(bits(vec.length - 1, n))} = ${last}$.`,
+              `在 $${pointTex(bits(vec.length - 1, n))}$ 处每个单项式都是 $1$，所以多项式的值是 $${count}$ 个单项式个数的奇偶性 $${count % 2}$，与 $f${pointTex(bits(vec.length - 1, n))} = ${last}$ 一致。`,
+            ),
+          ),
+        });
       },
     },
     {
       id: "counting-monomials",
       title: t("Counting monomials", "统计单项式"),
       explanation: t(
-        "The value vector determines the polynomial. For $f(x, y)$ with values $f(0,0) = a$, the constant term is $a$; the coefficient of $x$ is $f(1,0) \\oplus f(0,0)$; of $y$ is $f(0,1) \\oplus f(0,0)$; of $xy$ is the $\\oplus$ of all four values. For $x \\vee y$ ($0111$) this gives $x \\oplus y \\oplus xy$: three monomials.",
-        "值向量决定多项式。对 $f(x, y)$，常数项是 $f(0,0)$；$x$ 的系数是 $f(1,0) \\oplus f(0,0)$；$y$ 的系数是 $f(0,1) \\oplus f(0,0)$；$xy$ 的系数是四个值的 $\\oplus$。对 $x \\vee y$（$0111$）得到 $x \\oplus y \\oplus xy$：三个单项式。",
+        "The value vector determines the polynomial: the coefficient of a monomial is the $\\oplus$ of $f$ over the inputs whose $1$s lie among its variables. For $f(x, y, z, w) = x \\vee w$, with value vector $0101\\,0101\\,1111\\,1111$, this gives $x \\oplus w \\oplus xw$: three monomials.\n\n> **Watch out.** The number of monomials is not the number of $1$s in the value vector; work out each coefficient, or expand and cancel.",
+        "值向量决定多项式：某个单项式的系数，是 $f$ 在那些 $1$ 都落在该单项式变量中的输入上的值的 $\\oplus$。对值向量为 $0101\\,0101\\,1111\\,1111$ 的 $f(x, y, z, w) = x \\vee w$，得 $x \\oplus w \\oplus xw$：三个单项式。\n\n> **注意。** 单项式的个数不是值向量中 $1$ 的个数；要逐个求出系数，或展开后抵消。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -825,16 +1196,33 @@ export const booleanPolynomials: TopicDef = {
         while (!vec.includes(0) || !vec.includes(1));
         const coeffs = anf(vec, n);
         const count = coeffs.filter((c) => c === 1).length;
+        const ones = vec.filter((b) => b === 1).length;
         return numberProblem({
           prompt: t(
             `The function $f(${argsTex(n)})$ has value vector $${vecTex(vec)}$. How many monomials does its Boolean polynomial have?`,
             `函数 $f(${argsTex(n)})$ 的值向量为 $${vecTex(vec)}$。它的布尔多项式有多少个单项式？`,
           ),
           answer: count,
-          wrong: [vec.filter((b) => b === 1).length, count + 1, Math.max(0, count - 1)],
-          solution: t(
-            `The polynomial is $${anfTex(coeffs, n)}$: $${count}$ monomials.`,
-            `多项式为 $${anfTex(coeffs, n)}$：共 $${count}$ 个单项式。`,
+          mistakes: fresh(count, [
+            why(ones, "That counts the $1$s of the value vector, not the monomials.", "那是值向量中 $1$ 的个数，不是单项式的个数。"),
+            why(vec.length - ones, "That counts the $0$s of the value vector.", "那是值向量中 $0$ 的个数。"),
+            why(2 ** n, `That counts every possible monomial in $${n}$ variables.`, `那是 $${n}$ 个变量的全部可能单项式的个数。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the coefficients", "求系数"],
+                t(
+                  `The constant term is $f${pointTex(bits(0, n))} = ${vec[0]}$, and each other coefficient is the $\\oplus$ of $f$ over the inputs below its monomial. The polynomial is $${anfTex(coeffs, n)}$.`,
+                  `常数项为 $f${pointTex(bits(0, n))} = ${vec[0]}$，其余每个系数是 $f$ 在该单项式以下的输入上的值的 $\\oplus$。多项式为 $${anfTex(coeffs, n)}$。`,
+                ),
+              ],
+              [["Count", "计数"], t(`It has $${count}$ monomial${count === 1 ? "" : "s"}.`, `共 $${count}$ 个单项式。`)],
+            ],
+            t(
+              `At $${pointTex(bits(vec.length - 1, n))}$ every monomial is $1$, so the value there is the parity of $${count}$, which is $${count % 2}$, the last entry of the vector.`,
+              `在 $${pointTex(bits(vec.length - 1, n))}$ 处每个单项式都是 $1$，所以那里的值是 $${count}$ 的奇偶性 $${count % 2}$，正是值向量的最后一位。`,
+            ),
           ),
         });
       },
@@ -858,6 +1246,13 @@ function kmapFunction(rng: Rng): { n: number; vec: number[] } {
   }
 }
 
+/** blocksText lists each block of a cover with the cells it covers. */
+const blocksText = (cover: readonly Cube[], n: number) =>
+  t(
+    `${cover.map((c) => `$${btex(cubeExpr(c))}$ (cells $${cellsOf(c, n).join(", ")}$)`).join("; ")}.`,
+    `${cover.map((c) => `$${btex(cubeExpr(c))}$（格子 $${cellsOf(c, n).join(", ")}$）`).join("；")}。`,
+  );
+
 /** simplifyingLogicalExpressionsUsingKarnaughMaps finds minimal DNFs with Karnaugh maps. */
 export const simplifyingLogicalExpressionsUsingKarnaughMaps: TopicDef = {
   id: "simplifying-logical-expressions-using-karnaugh-maps",
@@ -865,6 +1260,10 @@ export const simplifyingLogicalExpressionsUsingKarnaughMaps: TopicDef = {
   summary: t(
     "A Karnaugh map arranges the truth table in Gray-code order so that adjacent cells differ in one variable; covering the 1s with as few, as large rectangular blocks of size 1, 2, 4 or 8 as possible gives a minimal DNF.",
     "卡诺图按格雷码顺序排列真值表，使相邻格子只差一个变量；用尽可能少、尽可能大的矩形块（大小为 1、2、4 或 8）覆盖所有 1，就得到最简析取范式。",
+  ),
+  intro: t(
+    "For $f(x, y) = \\sum m(1, 2, 3)$, the cells $1, 3$ ($y = 1$) form the block $y$ and the cells $2, 3$ ($x = 1$) form the block $x$, so the minimal DNF is $x \\vee y$; the cell $3$ may lie in both blocks.\n\nCheck: $x \\vee y$ is $0$ only at $(0, 0)$, cell $0$, the one input missing from the list.\n\nIn this lesson we use Karnaugh maps to count and find the terms of a minimal DNF.",
+    "对 $f(x, y) = \\sum m(1, 2, 3)$，格子 $1, 3$（$y = 1$）构成块 $y$，格子 $2, 3$（$x = 1$）构成块 $x$，所以最简析取范式是 $x \\vee y$；格子 $3$ 可以同时属于两个块。\n\n检验：$x \\vee y$ 只在 $(0, 0)$ 即格子 $0$ 处取 $0$，正是列表中缺少的那个输入。\n\n本课我们用卡诺图统计并求出最简析取范式的项。",
   ),
   prerequisites: ["principal-disjunctive-normal-forms"],
   encompasses: [],
@@ -875,23 +1274,63 @@ export const simplifyingLogicalExpressionsUsingKarnaughMaps: TopicDef = {
       id: "terms-in-a-minimal-dnf",
       title: t("Terms in a minimal DNF", "最简析取范式的项数"),
       explanation: t(
-        "For $f(x, y, z) = \\sum m(1, 3, 5, 6, 7)$, the map's 1s are covered by the block $z$ (cells $1, 3, 5, 7$) and the block $x \\wedge y$ (cells $6, 7$): the minimal DNF $z \\vee (x \\wedge y)$ has $2$ terms. Blocks may wrap around the edges of the map.",
-        "对 $f(x, y, z) = \\sum m(1, 3, 5, 6, 7)$，卡诺图中的 1 被块 $z$（格子 $1, 3, 5, 7$）和块 $x \\wedge y$（格子 $6, 7$）覆盖：最简析取范式 $z \\vee (x \\wedge y)$ 有 $2$ 项。块可以跨越卡诺图的边缘。",
+        "Each block of a cover is one term. For $f(x, y, z, w) = \\sum m(0, 1, \\dots, 14)$, every cell but $15$ is a $1$, and four blocks of eight cover them: $\\neg x$, $\\neg y$, $\\neg z$ and $\\neg w$, some of them wrapping around the edges of the map. So the minimal DNF $\\neg x \\vee \\neg y \\vee \\neg z \\vee \\neg w$ has $4$ terms.\n\n> **Watch out.** Count blocks, not $1$s or literals; and blocks may overlap, so a cell already covered can still join a larger block.",
+        "覆盖中的每个块就是一项。对 $f(x, y, z, w) = \\sum m(0, 1, \\dots, 14)$，除格子 $15$ 外都是 $1$，用四个八格块覆盖它们：$\\neg x$、$\\neg y$、$\\neg z$、$\\neg w$，其中有的跨越卡诺图的边缘。所以最简析取范式 $\\neg x \\vee \\neg y \\vee \\neg z \\vee \\neg w$ 有 $4$ 项。\n\n> **注意。** 要数块，而不是数 $1$ 或文字；块可以重叠，已被覆盖的格子仍可并入更大的块。",
       ),
       generate(rng) {
         const { n, vec } = kmapFunction(rng);
         const cover = minimalDnf(vec, n);
         const ones = vec.filter((b) => b === 1).length;
+        const k = cover.length;
         return numberProblem({
           prompt: t(
             `Let $f(${argsTex(n)}) = ${mtex(vec)}$, listing the inputs where $f = 1$ as binary numbers. How many terms does a minimal DNF of $f$ have?`,
             `设 $f(${argsTex(n)}) = ${mtex(vec)}$，即以二进制数列出 $f = 1$ 的输入。$f$ 的最简析取范式有多少项？`,
           ),
-          answer: cover.length,
-          wrong: [ones, cover.length + 1, cover.length - 1, literalCount(cover)],
-          solution: t(
-            `Grouping the 1s into the largest blocks gives $${btex(cubesExpr(cover))}$: $${cover.length}$ term${cover.length === 1 ? "" : "s"}.`,
-            `把 1 合并成尽可能大的块，得到 $${btex(cubesExpr(cover))}$：共 $${cover.length}$ 项。`,
+          answer: k,
+          mistakes: fresh(k, [
+            why(
+              ones,
+              "That makes every $1$ its own term; neighboring $1$s merge into blocks.",
+              "那是把每个 $1$ 都当作一项；相邻的 $1$ 应合并成块。",
+            ),
+            why(
+              literalCount(cover),
+              "That counts the literals of the minimal DNF, not its terms.",
+              "那是数了最简析取范式中文字的个数，而不是项数。",
+            ),
+            why(
+              k + 1,
+              "That splits a block in two; a single larger block covers both parts.",
+              "那是把一个块拆成了两个；一个更大的块就能覆盖两部分。",
+            ),
+            ...(k > 1
+              ? [why(k - 1, "That leaves some $1$ uncovered; no block can be dropped.", "那会使某个 $1$ 没被覆盖；没有哪个块可以去掉。")]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Mark the 1s", "标出 1"],
+                t(
+                  `$f = 1$ at the cells $${range(0, vec.length - 1)
+                    .filter((r) => vec[r] === 1)
+                    .join(", ")}$.`,
+                  `$f = 1$ 的格子为 $${range(0, vec.length - 1)
+                    .filter((r) => vec[r] === 1)
+                    .join(", ")}$。`,
+                ),
+              ],
+              [["Group them into the largest blocks", "合并成最大的块"], blocksText(cover, n)],
+              [
+                ["Count the blocks", "数块"],
+                t(`$${btex(cubesExpr(cover))}$ has $${k}$ term${k === 1 ? "" : "s"}.`, `$${btex(cubesExpr(cover))}$ 共 $${k}$ 项。`),
+              ],
+            ],
+            t(
+              `Together the blocks cover the $${ones}$ cells with $f = 1$ and no other cell, so the $${k}$ terms give exactly $f$.`,
+              `这些块合起来恰好覆盖 $f = 1$ 的 $${ones}$ 个格子，不含其他格子，所以这 $${k}$ 项恰好给出 $f$。`,
+            ),
           ),
         });
       },
@@ -900,8 +1339,8 @@ export const simplifyingLogicalExpressionsUsingKarnaughMaps: TopicDef = {
       id: "finding-a-minimal-dnf",
       title: t("Finding a minimal DNF", "求最简析取范式"),
       explanation: t(
-        "On a Karnaugh map, adjacent cells differ in one variable, so grouping the ones into the largest possible blocks removes variables and gives the shortest formula. For $f(x, y, z) = \\sum m(0, 2, 4, 5)$: cells $0, 2$ ($x = 0$, $z = 0$) form the block $\\neg x \\wedge \\neg z$, and cells $4, 5$ form $x \\wedge \\neg y$. So $f = (\\neg x \\wedge \\neg z) \\vee (x \\wedge \\neg y)$.",
-        "在卡诺图上，相邻格子只有一个变量不同，所以把 1 分组成尽可能大的块就能消去变量，得到最短的公式。对 $f(x, y, z) = \\sum m(0, 2, 4, 5)$：格子 $0, 2$（$x = 0$，$z = 0$）构成块 $\\neg x \\wedge \\neg z$，格子 $4, 5$ 构成 $x \\wedge \\neg y$。所以 $f = (\\neg x \\wedge \\neg z) \\vee (x \\wedge \\neg y)$。",
+        "On a Karnaugh map, adjacent cells differ in one variable, so grouping the ones into the largest possible blocks removes variables and gives the shortest formula. For $f(x, y, z) = \\sum m(0, 1, \\dots, 6)$, every cell but $7$ is a $1$: the blocks of four $\\neg x$ (cells $0$ to $3$), $\\neg y$ (cells $0, 1, 4, 5$) and $\\neg z$ (cells $0, 2, 4, 6$) cover them, so $f = \\neg x \\vee \\neg y \\vee \\neg z$.\n\n> **Watch out.** A block must have $1$, $2$, $4$ or $8$ cells and contain only $1$s; and make each block as large as possible, even if it overlaps another.",
+        "在卡诺图上，相邻格子只有一个变量不同，所以把 1 分组成尽可能大的块就能消去变量，得到最短的公式。对 $f(x, y, z) = \\sum m(0, 1, \\dots, 6)$，除格子 $7$ 外都是 $1$：四格块 $\\neg x$（格子 $0$ 到 $3$）、$\\neg y$（格子 $0, 1, 4, 5$）和 $\\neg z$（格子 $0, 2, 4, 6$）覆盖了它们，所以 $f = \\neg x \\vee \\neg y \\vee \\neg z$。\n\n> **注意。** 块的格子数必须是 $1$、$2$、$4$ 或 $8$，且只含 $1$；每个块都要尽可能大，即使与别的块重叠。",
       ),
       generate(rng) {
         let n: number;
@@ -916,13 +1355,40 @@ export const simplifyingLogicalExpressionsUsingKarnaughMaps: TopicDef = {
           v2[r] = 1 - v2[r]!;
           return v2.includes(1) && v2.includes(0) ? [cubesExpr(minimalDnf(v2, n))] : [];
         });
-        return oneOf(
-          rng,
-          t(`Which is a minimal DNF of $f(${argsTex(n)}) = ${mtex(vec)}$?`, `哪个是 $f(${argsTex(n)}) = ${mtex(vec)}$ 的最简析取范式？`),
-          bmath(right),
-          wrong.filter((w) => !sameVec(vecOf(w, n), vec)).map(bmath),
-          t(`Cover the 1s with the fewest, largest blocks: $f = ${btex(right)}$.`, `用最少、最大的块覆盖所有 1：$f = ${btex(right)}$。`),
-        );
+        const cells = range(0, vec.length - 1).filter((r) => vec[r] === 1);
+        return explainedChoice(rng, {
+          prompt: t(
+            `Which is a minimal DNF of $f(${argsTex(n)}) = ${mtex(vec)}$?`,
+            `哪个是 $f(${argsTex(n)}) = ${mtex(vec)}$ 的最简析取范式？`,
+          ),
+          correct: bmath(right),
+          wrong: firstThree(
+            bmath(right),
+            wrong
+              .filter((w) => !sameVec(vecOf(w, n), vec))
+              .map((w) => {
+                const r = differ(vecOf(w, n), vec);
+                return {
+                  option: bmath(w),
+                  why: t(
+                    `It is $${1 - vec[r]!}$ at cell $${r}$, where $f$ is $${vec[r]}$.`,
+                    `它在格子 $${r}$ 处取 $${1 - vec[r]!}$，而 $f$ 在那里是 $${vec[r]}$。`,
+                  ),
+                };
+              }),
+          ),
+          solution: walked(
+            [
+              [["Mark the 1s", "标出 1"], t(`$f = 1$ at the cells $${cells.join(", ")}$.`, `$f = 1$ 的格子为 $${cells.join(", ")}$。`)],
+              [["Group them into the largest blocks", "合并成最大的块"], blocksText(cover, n)],
+              [["Join the blocks", "连接各块"], t(`$f = ${btex(right)}$.`, `$f = ${btex(right)}$。`)],
+            ],
+            t(
+              `The blocks together cover exactly the cells $${cells.join(", ")}$, so $${btex(right)}$ is $1$ exactly where $f$ is.`,
+              `这些块合起来恰好覆盖格子 $${cells.join(", ")}$，所以 $${btex(right)}$ 恰在 $f$ 为 $1$ 处取 $1$。`,
+            ),
+          ),
+        });
       },
     },
   ],

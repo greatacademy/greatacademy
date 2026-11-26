@@ -110,4 +110,12 @@ export const taughtTopics: readonly string[] = [
   "approximating-values-using-the-generalized-binomial-theorem",
   "the-multinomial-theorem",
   "counting-terms-in-multinomial-expansions",
+  "boolean-functions",
+  "boolean-functions-and-logical-operations",
+  "disjunctive-normal-forms",
+  "principal-disjunctive-normal-forms",
+  "conjunctive-normal-forms",
+  "principal-conjunctive-normal-forms",
+  "boolean-polynomials",
+  "simplifying-logical-expressions-using-karnaugh-maps",
 ];

@@ -236,6 +236,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `differential-equations-systems.ts` | 13 | in progress | coordinator, helper A | first-order systems, independence and general solutions, eigenvalue methods for distinct, repeated and complex eigenvalues, inhomogeneous systems, phase portraits and stability, with third points in `deeper-differential-equations.ts`, `deeper-differential-equations-third.ts`, `deeper-differential-equations-third-2.ts` and `deeper-figures-differential-equations-2.ts` |
 | `discrete-mathematics-counting.ts` | 10 | done | coordinator, helper B | Bayes' theorem, total probability, permutations and combinations with repetition, inclusion-exclusion, constrained integer solutions, partitions and the pigeonhole principle, with third points in `deeper-probability-statistics.ts`, `deeper-discrete-mathematics.ts` and `figure-reading-more.ts` |
 | `discrete-mathematics-series.ts` | 9 | done | coordinator, helper B | finite linear, quadratic and cubic series, the generalized binomial and multinomial theorems, with third points in `deeper-discrete-mathematics.ts` and `deeper-remaining-college-third.ts` |
+| `discrete-mathematics-boolean.ts` | 17 | in progress | coordinator, helper B | Boolean functions, disjunctive and conjunctive normal forms, Boolean polynomials and Karnaugh maps so far, with third points in `deeper-discrete-mathematics.ts` |
 
 ## Open Gaps
 

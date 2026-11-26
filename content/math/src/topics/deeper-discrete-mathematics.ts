@@ -45,8 +45,8 @@ const functionsOfAGivenWeight: KnowledgePointDef = {
   id: "boolean-functions-of-a-given-weight",
   title: t("Boolean functions of a given weight", "给定权重的布尔函数"),
   explanation: t(
-    "The weight of a Boolean function is the number of inputs on which it equals one. A function of $n$ variables has $2^n$ inputs, and choosing the function is the same as choosing which inputs get a one. So the functions of weight $k$ are counted by a binomial coefficient, not by a power of two.",
-    "布尔函数的权重是它取值为一的输入个数。$n$ 元函数有 $2^n$ 个输入，确定函数就是选出哪些输入取一。所以权重为 $k$ 的函数个数是一个二项式系数，而不是二的幂。",
+    "The weight of a Boolean function is the number of inputs on which it equals one. A function of $n$ variables has $2^n$ inputs, and choosing the function is the same as choosing which inputs get a one. So the functions of weight $k$ are counted by a binomial coefficient, not by a power of two: with $5$ variables there are $32$ inputs, and $\\binom{32}{5} = 201376$ functions have weight $5$.\n\n> **Watch out.** Choose among the $2^n$ inputs, not among the $n$ variables; and the inputs left out must all give $0$, so they are not free.",
+    "布尔函数的权重是它取值为一的输入个数。$n$ 元函数有 $2^n$ 个输入，确定函数就是选出哪些输入取一。所以权重为 $k$ 的函数个数是一个二项式系数，而不是二的幂：$5$ 个变量有 $32$ 个输入，权重为 $5$ 的函数有 $\\binom{32}{5} = 201376$ 个。\n\n> **注意。** 要在 $2^n$ 个输入中选，而不是在 $n$ 个变量中选；没被选中的输入都必须取 $0$，它们不是自由的。",
   ),
   generate(rng) {
     const [n, k] = rng.pick([
@@ -59,15 +59,44 @@ const functionsOfAGivenWeight: KnowledgePointDef = {
     const answer = binom(inputs, k);
     return numberProblem({
       prompt: t(
-        `How many Boolean functions of ${n} variables equal 1 on exactly ${k} of their inputs?`,
-        `有多少个 ${n} 元布尔函数恰好在 ${k} 个输入上取值为 1？`,
+        `How many Boolean functions of $${n}$ variables equal $1$ on exactly $${k}$ of their inputs?`,
+        `有多少个 $${n}$ 元布尔函数恰好在 $${k}$ 个输入上取值为 $1$？`,
       ),
       answer,
       form: "integer",
-      wrong: [inputs * k, binom(inputs, k - 1), 2 ** inputs],
-      solution: t(
-        `There are $2^{${n}} = ${inputs}$ inputs, and a function is fixed by choosing which ${k} of them give 1. That makes $\\binom{${inputs}}{${k}} = ${answer}$ functions.`,
-        `共有 $2^{${n}} = ${inputs}$ 个输入，选出取 1 的 ${k} 个输入就确定了函数。所以有 $\\binom{${inputs}}{${k}} = ${answer}$ 个函数。`,
+      mistakes: [
+        why(
+          inputs * k,
+          `That multiplies the $${inputs}$ inputs by $${k}$ instead of choosing $${k}$ of them.`,
+          `那是把 $${inputs}$ 个输入乘以 $${k}$，而不是从中选出 $${k}$ 个。`,
+        ),
+        why(binom(inputs, k - 1), "That chooses one input too few.", "那是少选了一个输入。"),
+        why(2 ** inputs, "That counts the functions of every weight.", "那是所有权重的函数的个数。"),
+        ...(k <= n
+          ? [
+              why(
+                binom(n, k),
+                `That chooses among the $${n}$ variables, not the $${inputs}$ inputs.`,
+                `那是从 $${n}$ 个变量中选，而不是从 $${inputs}$ 个输入中选。`,
+              ),
+            ]
+          : []),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["Count the inputs", "数输入"], t(`$2^{${n}} = ${inputs}$ inputs.`, `共 $2^{${n}} = ${inputs}$ 个输入。`)],
+          [
+            ["Choose the inputs that give 1", "选出取 1 的输入"],
+            t(
+              `$\\binom{${inputs}}{${k}} = ${answer}$; the other inputs give $0$.`,
+              `$\\binom{${inputs}}{${k}} = ${answer}$；其余输入都取 $0$。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing instead the $${inputs - k}$ inputs that give $0$ gives $\\binom{${inputs}}{${inputs - k}} = ${answer}$ as well.`,
+          `改为选出取 $0$ 的 $${inputs - k}$ 个输入，同样得 $\\binom{${inputs}}{${inputs - k}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1022,8 +1051,8 @@ const functionsWithFixedValues: KnowledgePointDef = {
   id: "boolean-functions-with-values-fixed-on-some-inputs",
   title: t("Boolean functions with values fixed on some inputs", "在部分输入上取值固定的布尔函数"),
   explanation: t(
-    "A Boolean function of $n$ variables is nothing more than a choice of 0 or 1 for each of its $2^n$ input rows, and these choices are independent. Fixing the value on some rows removes those choices and leaves the rest free. So each remaining row doubles the count, and the answer is a power of 2 with the number of free rows as exponent.",
-    "$n$ 个变量的布尔函数，不过是为 $2^n$ 个输入行各选 0 或 1，这些选择相互独立。在某些行上固定取值，就去掉了这些选择，其余的行仍然自由。所以每个剩下的行都使个数翻倍，答案是 2 的幂，指数是自由行的个数。",
+    "A Boolean function of $n$ variables is nothing more than a choice of 0 or 1 for each of its $2^n$ input rows, and these choices are independent. Fixing the value on some rows removes those choices and leaves the rest free. So each remaining row doubles the count, and the answer is a power of 2 with the number of free rows as exponent: a function of $5$ variables with its value fixed on $30$ of its $32$ rows has $2^{2} = 4$ choices left.\n\n> **Watch out.** The exponent is the number of free rows, not the number of fixed ones; and the value the fixed rows take does not change the count.",
+    "$n$ 个变量的布尔函数，不过是为 $2^n$ 个输入行各选 0 或 1，这些选择相互独立。在某些行上固定取值，就去掉了这些选择，其余的行仍然自由。所以每个剩下的行都使个数翻倍，答案是 2 的幂，指数是自由行的个数：$5$ 元函数在 $32$ 行中的 $30$ 行上取值固定后，还剩 $2^{2} = 4$ 种选择。\n\n> **注意。** 指数是自由行的个数，而不是固定行的个数；固定行取什么值并不影响个数。",
   ),
   generate(rng) {
     const n = rng.int(3, 4);
@@ -1034,15 +1063,46 @@ const functionsWithFixedValues: KnowledgePointDef = {
     const answer = 2 ** free;
     return numberProblem({
       prompt: t(
-        `How many Boolean functions of ${n} variables take the value ${value} on each of ${fixed} chosen input ${fixed === 1 ? "row" : "rows"}?`,
-        `有多少个 ${n} 元布尔函数，在选定的 ${fixed} 个输入行上都取值 ${value}？`,
+        `How many Boolean functions of $${n}$ variables take the value $${value}$ on each of $${fixed}$ chosen input ${fixed === 1 ? "row" : "rows"}?`,
+        `有多少个 $${n}$ 元布尔函数，在选定的 $${fixed}$ 个输入行上都取值 $${value}$？`,
       ),
       answer,
       form: "integer",
-      wrong: [2 ** rows, 2 ** fixed, free, 2 * free, answer + 1],
-      solution: t(
-        `There are ${rows} rows, and ${free} of them remain free. Each free row has 2 possible values, so the count is $${pow(2, free)}${free === 1 ? "" : ` = ${answer}`}$.`,
-        `一共有 ${rows} 行，其中 ${free} 行仍然自由。每个自由行有 2 种取值，所以个数是 $${pow(2, free)}${free === 1 ? "" : ` = ${answer}`}$。`,
+      mistakes: [
+        why(2 ** rows, "That ignores the fixed rows.", "那是忽略了取值固定的行。"),
+        why(
+          2 ** fixed,
+          "That raises $2$ to the number of fixed rows; it is the free rows that have a choice.",
+          "那是以固定行的个数为指数；有选择的是自由行。",
+        ),
+        why(free, "That counts the free rows, not the ways to fill them.", "那是自由行的个数，而不是填写它们的方式数。"),
+        why(
+          2 * free,
+          "That doubles the number of free rows instead of raising $2$ to it.",
+          "那是把自由行的个数乘以 $2$，而不是以它为 $2$ 的指数。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the free rows", "数自由行"],
+            t(
+              `There are $2^{${n}} = ${rows}$ rows, and $${rows} - ${fixed} = ${free}$ remain free.`,
+              `共有 $2^{${n}} = ${rows}$ 行，其中 $${rows} - ${fixed} = ${free}$ 行仍然自由。`,
+            ),
+          ],
+          [
+            ["Fill the free rows", "填写自由行"],
+            t(
+              `Each free row takes $0$ or $1$, so the count is $${pow(2, free)}${free === 1 ? "" : ` = ${answer}`}$.`,
+              `每个自由行取 $0$ 或 $1$，所以个数是 $${pow(2, free)}${free === 1 ? "" : ` = ${answer}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With every row free there would be $2^{${rows}}$ functions, and fixing a row halves the count: $2^{${rows}} / ${pow(2, fixed)} = ${pow(2, free)}$.`,
+          `若所有行都自由，共有 $2^{${rows}}$ 个函数，每固定一行个数就减半：$2^{${rows}} / ${pow(2, fixed)} = ${pow(2, free)}$。`,
+        ),
       ),
     });
   },
@@ -1052,14 +1112,15 @@ const distributingClauses: KnowledgePointDef = {
   id: "the-number-of-terms-after-distributing-clauses",
   title: t("The number of terms after distributing clauses", "分配子句后的项数"),
   explanation: t(
-    "Distributing $\\wedge$ over $\\vee$ turns a conjunction of clauses into a disjunctive normal form. Each resulting term is made by picking one literal from every clause, just as each term of a product of sums picks one summand from every bracket. So the number of terms is the product of the clause sizes, which is why converting between normal forms can make a formula grow quickly.",
-    "把 $\\wedge$ 对 $\\vee$ 分配，就把子句的合取变成析取范式。得到的每一项都是从每个子句中各选一个文字构成的，正如和的乘积展开时，每一项从每个括号中各选一项。所以项数是各子句大小的乘积，这也是范式转换会使公式迅速变大的原因。",
+    "Distributing $\\wedge$ over $\\vee$ turns a conjunction of clauses into a disjunctive normal form. Each resulting term is made by picking one literal from every clause, just as each term of a product of sums picks one summand from every bracket. So the number of terms is the product of the clause sizes, which is why converting between normal forms can make a formula grow quickly: $(x_1 \\vee x_2 \\vee x_3) \\wedge (x_4 \\vee x_5) \\wedge x_6$ gives $3 \\cdot 2 \\cdot 1 = 6$ terms, such as $x_1 \\wedge x_4 \\wedge x_6$.\n\n> **Watch out.** Multiply the clause sizes; adding them counts the literals, not the terms.",
+    "把 $\\wedge$ 对 $\\vee$ 分配，就把子句的合取变成析取范式。得到的每一项都是从每个子句中各选一个文字构成的，正如和的乘积展开时，每一项从每个括号中各选一项。所以项数是各子句大小的乘积，这也是范式转换会使公式迅速变大的原因：$(x_1 \\vee x_2 \\vee x_3) \\wedge (x_4 \\vee x_5) \\wedge x_6$ 得到 $3 \\cdot 2 \\cdot 1 = 6$ 项，例如 $x_1 \\wedge x_4 \\wedge x_6$。\n\n> **注意。** 要把各子句的大小相乘；相加得到的是文字的个数，而不是项数。",
   ),
   generate(rng) {
     const sizes = range(1, rng.int(2, 4)).map(() => rng.int(2, 6));
     const answer = productOf(sizes);
     const sum = sizes.reduce((a, b) => a + b, 0);
     const list = `${sizes.slice(0, -1).join(", ")} and ${sizes[sizes.length - 1]}`;
+    const rest = answer / sizes[0]!;
     return numberProblem({
       prompt: t(
         `A conjunction has ${sizes.length} clauses, with ${list} literals, and no variable occurs twice. Distributing $\\wedge$ over $\\vee$ gives a disjunctive normal form. How many terms does it have before any simplification?`,
@@ -1067,10 +1128,31 @@ const distributingClauses: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [sum, sizes.length, answer + 1, 2 ** sum],
-      solution: t(
-        `Each term picks one literal from every clause, so there are $${sizes.join(" \\cdot ")} = ${answer}$ terms.`,
-        `每一项从每个子句中各选一个文字，所以有 $${sizes.join(" \\cdot ")} = ${answer}$ 项。`,
+      mistakes: [
+        why(
+          sum,
+          "That adds the clause sizes; each term picks from every clause, so the counts multiply.",
+          "那是把子句大小相加；每一项从每个子句中各选一个，所以个数相乘。",
+        ),
+        why(sizes.length, "That counts the clauses, not the terms.", "那是子句的个数，而不是项数。"),
+        why(
+          2 ** sum,
+          "That counts every set of literals, not one literal from each clause.",
+          "那是所有文字集合的个数，而不是从每个子句各取一个文字。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["Build a term", "构造一项"], t("Each term picks one literal from every clause.", "每一项从每个子句中各选一个文字。")],
+          [
+            ["Multiply the choices", "把选择数相乘"],
+            t(`$${sizes.join(" \\cdot ")} = ${answer}$ terms.`, `共 $${sizes.join(" \\cdot ")} = ${answer}$ 项。`),
+          ],
+        ],
+        t(
+          `For each of the $${sizes[0]}$ literals of the first clause, the other clauses give $${rest}$ ways to finish the term, and $${sizes[0]} \\cdot ${rest} = ${answer}$.`,
+          `第一个子句的 $${sizes[0]}$ 个文字中的每一个，其余子句都有 $${rest}$ 种方式补全这一项，$${sizes[0]} \\cdot ${rest} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1080,25 +1162,46 @@ const clausesOfWidth: KnowledgePointDef = {
   id: "counting-the-clauses-of-a-given-width",
   title: t("Counting the clauses of a given width", "计算给定宽度的子句数"),
   explanation: t(
-    "A clause with exactly $k$ literals on $k$ different variables is built in two independent steps. First choose which $k$ of the $n$ variables appear, which can be done in $\\binom{n}{k}$ ways. Then decide for each chosen variable whether it appears plain or negated, which gives $2^k$ ways. A variable cannot appear in both forms, because such a clause would always be true.",
-    "恰有 $k$ 个文字、涉及 $k$ 个不同变量的子句，分两个独立的步骤构造。先选出 $n$ 个变量中出现的 $k$ 个，有 $\\binom{n}{k}$ 种选法。再决定每个选中的变量是原样出现还是取反出现，有 $2^k$ 种方式。一个变量不能以两种形式同时出现，因为这样的子句永远为真。",
+    "A clause with exactly $k$ literals on $k$ different variables is built in two independent steps. First choose which $k$ of the $n$ variables appear, which can be done in $\\binom{n}{k}$ ways. Then decide for each chosen variable whether it appears plain or negated, which gives $2^k$ ways. A variable cannot appear in both forms, because such a clause would always be true. Over $6$ variables, the clauses that use all $6$ number $\\binom{6}{6} \\cdot 2^{6} = 64$.\n\n> **Watch out.** Choose $k$ of the $n$ variables, not $k$ of the $2n$ literals, which would allow $x$ and $\\neg x$ together; and do not forget the $2^k$ choices of sign.",
+    "恰有 $k$ 个文字、涉及 $k$ 个不同变量的子句，分两个独立的步骤构造。先选出 $n$ 个变量中出现的 $k$ 个，有 $\\binom{n}{k}$ 种选法。再决定每个选中的变量是原样出现还是取反出现，有 $2^k$ 种方式。一个变量不能以两种形式同时出现，因为这样的子句永远为真。在 $6$ 个变量上，用到全部 $6$ 个变量的子句有 $\\binom{6}{6} \\cdot 2^{6} = 64$ 个。\n\n> **注意。** 要从 $n$ 个变量中选 $k$ 个，而不是从 $2n$ 个文字中选 $k$ 个，后者会让 $x$ 与 $\\neg x$ 同时出现；也不要忘了符号的 $2^k$ 种选择。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
     const k = rng.int(2, Math.min(n, 5));
     const choose = binom(n, k);
     const answer = choose * 2 ** k;
+    const ordered = range(0, k - 1).map((i) => 2 * n - 2 * i);
+    const factorial = productOf(range(1, k));
     return numberProblem({
       prompt: t(
-        `Over ${n} variables, how many clauses have exactly ${k} literals on ${k} different variables?`,
-        `在 ${n} 个变量上，有多少个子句恰有 ${k} 个文字，且涉及 ${k} 个不同的变量？`,
+        `Over $${n}$ variables, how many clauses have exactly $${k}$ literals on $${k}$ different variables?`,
+        `在 $${n}$ 个变量上，有多少个子句恰有 $${k}$ 个文字，且涉及 $${k}$ 个不同的变量？`,
       ),
       answer,
       form: "integer",
-      wrong: [choose, 2 ** k, binom(2 * n, k), n ** k],
-      solution: t(
-        `Choose the variables in $\\binom{${n}}{${k}} = ${choose}$ ways and their signs in $2^{${k}} = ${2 ** k}$ ways. The product is $${answer}$.`,
-        `选择变量有 $\\binom{${n}}{${k}} = ${choose}$ 种方法，选择符号有 $2^{${k}} = ${2 ** k}$ 种方法。乘积是 $${answer}$。`,
+      mistakes: [
+        why(choose, "That leaves out the choice of signs.", "那是漏掉了符号的选择。"),
+        why(2 ** k, "That leaves out the choice of variables.", "那是漏掉了变量的选择。"),
+        why(
+          binom(2 * n, k),
+          `That chooses $${k}$ of the $${2 * n}$ literals, which allows a variable to appear both plain and negated.`,
+          `那是从 $${2 * n}$ 个文字中选 $${k}$ 个，会让同一个变量既原样又取反地出现。`,
+        ),
+        why(n ** k, "That picks the variables in order and allows repeats.", "那是按顺序选变量，并且允许重复。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choose the variables", "选变量"],
+            t(`$\\binom{${n}}{${k}} = ${choose}$ ways.`, `有 $\\binom{${n}}{${k}} = ${choose}$ 种方法。`),
+          ],
+          [["Choose the signs", "选符号"], t(`$2^{${k}} = ${2 ** k}$ ways.`, `有 $2^{${k}} = ${2 ** k}$ 种方法。`)],
+          [["Multiply", "相乘"], t(`$${choose} \\cdot ${2 ** k} = ${answer}$.`, `$${choose} \\cdot ${2 ** k} = ${answer}$。`)],
+        ],
+        t(
+          `Picking the literals one at a time, each pick rules out both literals of its variable: $\\frac{${ordered.join(" \\cdot ")}}{${k}!} = \\frac{${productOf(ordered)}}{${factorial}} = ${answer}$.`,
+          `逐个选文字，每选一个就排除它所在变量的两个文字：$\\frac{${ordered.join(" \\cdot ")}}{${k}!} = \\frac{${productOf(ordered)}}{${factorial}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1108,8 +1211,8 @@ const mintermsOfConjunction: KnowledgePointDef = {
   id: "the-minterms-of-a-single-conjunction",
   title: t("The minterms of a single conjunction", "单个合取式的极小项"),
   explanation: t(
-    "A minterm mentions every variable, so a shorter conjunction stands for several minterms at once. The literals that are present fix the values of their variables, and each variable that is missing can take either value. So a conjunction of $k$ literals over $n$ variables is true on $2^{n - k}$ rows, and its principal disjunctive normal form has that many minterms.",
-    "极小项涉及每个变量，所以较短的合取式同时代表多个极小项。出现的文字固定了相应变量的取值，每个没有出现的变量都可以取任一值。所以 $n$ 个变量上 $k$ 个文字的合取式在 $2^{n - k}$ 行上为真，它的主析取范式就有这么多个极小项。",
+    "A minterm mentions every variable, so a shorter conjunction stands for several minterms at once. The literals that are present fix the values of their variables, and each variable that is missing can take either value. So a conjunction of $k$ literals over $n$ variables is true on $2^{n - k}$ rows, and its principal disjunctive normal form has that many minterms: over $10$ variables, $x_1 \\wedge \\neg x_2 \\wedge x_3$ leaves $7$ variables free and has $2^{7} = 128$ minterms.\n\n> **Watch out.** The exponent counts the missing variables, not the literals present; and the rows where the conjunction is false give maxterms, not minterms.",
+    "极小项涉及每个变量，所以较短的合取式同时代表多个极小项。出现的文字固定了相应变量的取值，每个没有出现的变量都可以取任一值。所以 $n$ 个变量上 $k$ 个文字的合取式在 $2^{n - k}$ 行上为真，它的主析取范式就有这么多个极小项：在 $10$ 个变量上，$x_1 \\wedge \\neg x_2 \\wedge x_3$ 留下 $7$ 个自由变量，有 $2^{7} = 128$ 个极小项。\n\n> **注意。** 指数是没有出现的变量的个数，而不是出现的文字个数；合取式为假的行给出的是极大项，而不是极小项。",
   ),
   generate(rng) {
     const n = rng.int(3, 8);
@@ -1118,15 +1221,46 @@ const mintermsOfConjunction: KnowledgePointDef = {
     const answer = 2 ** (n - k);
     return numberProblem({
       prompt: t(
-        `A function of the ${n} variables $x_{1}, \\dots, x_{${n}}$ is $f = ${literals.join(" \\wedge ")}$. How many minterms does its principal disjunctive normal form have?`,
-        `$x_{1}, \\dots, x_{${n}}$ 这 ${n} 个变量的函数是 $f = ${literals.join(" \\wedge ")}$。它的主析取范式有多少个极小项？`,
+        `A function of the $${n}$ variables $x_{1}, \\dots, x_{${n}}$ is $f = ${literals.join(" \\wedge ")}$. How many minterms does its principal disjunctive normal form have?`,
+        `$x_{1}, \\dots, x_{${n}}$ 这 $${n}$ 个变量的函数是 $f = ${literals.join(" \\wedge ")}$。它的主析取范式有多少个极小项？`,
       ),
       answer,
       form: "integer",
-      wrong: [1, n - k, 2 ** k, 2 ** n - answer, k],
-      solution: t(
-        `The formula fixes ${k} of the variables and leaves ${n - k} free, which gives $${pow(2, n - k)}${n - k === 1 ? "" : ` = ${answer}`}$ true rows.`,
-        `这个公式固定了 ${k} 个变量，留下 ${n - k} 个自由变量，于是有 $${pow(2, n - k)}${n - k === 1 ? "" : ` = ${answer}`}$ 个为真的行。`,
+      mistakes: [
+        why(
+          1,
+          "That takes the conjunction for a single minterm, but it does not mention every variable.",
+          "那是把这个合取式当成一个极小项，但它没有涉及每个变量。",
+        ),
+        why(n - k, "That counts the free variables, not the ways to set them.", "那是自由变量的个数，而不是给它们赋值的方式数。"),
+        why(
+          2 ** k,
+          "That raises $2$ to the number of literals present instead of the number missing.",
+          "那是以出现的文字个数为指数，而不是以没有出现的变量个数为指数。",
+        ),
+        why(2 ** n - answer, "That counts the rows where $f$ is false, which give maxterms.", "那是 $f$ 为假的行数，它们给出极大项。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the free variables", "数自由变量"],
+            t(
+              `The formula fixes $${k}$ of the variables and leaves $${n} - ${k} = ${n - k}$ free.`,
+              `这个公式固定了 $${k}$ 个变量，留下 $${n} - ${k} = ${n - k}$ 个自由变量。`,
+            ),
+          ],
+          [
+            ["Count the true rows", "数为真的行"],
+            t(
+              `$${pow(2, n - k)}${n - k === 1 ? "" : ` = ${answer}`}$ rows, one minterm each.`,
+              `共 $${pow(2, n - k)}${n - k === 1 ? "" : ` = ${answer}`}$ 行，每行一个极小项。`,
+            ),
+          ],
+        ],
+        t(
+          `The $${pow(2, k)}$ ways to set the fixed variables split the $2^{${n}}$ rows into equal groups of $${answer}$, and only one way makes $f$ true: $2^{${n}} / ${pow(2, k)} = ${answer}$.`,
+          `固定变量的 $${pow(2, k)}$ 种取法把 $2^{${n}}$ 行分成大小都为 $${answer}$ 的组，只有一种取法使 $f$ 为真：$2^{${n}} / ${pow(2, k)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1136,8 +1270,8 @@ const maxtermsFromMinterms: KnowledgePointDef = {
   id: "the-maxterms-from-the-number-of-minterms",
   title: t("The maxterms from the number of minterms", "由极小项个数求极大项个数"),
   explanation: t(
-    "Every input row of a function falls into exactly one of two groups. A row where the function is true gives a minterm of the principal disjunctive normal form, and a row where it is false gives a maxterm of the principal conjunctive normal form. So the numbers of minterms and maxterms always add to $2^n$, and knowing one tells you the other.",
-    "函数的每个输入行恰好属于两类之一。函数为真的行给出主析取范式的一个极小项，函数为假的行给出主合取范式的一个极大项。所以极小项和极大项的个数之和总是 $2^n$，知道其中一个就知道另一个。",
+    "Every input row of a function falls into exactly one of two groups. A row where the function is true gives a minterm of the principal disjunctive normal form, and a row where it is false gives a maxterm of the principal conjunctive normal form. So the numbers of minterms and maxterms always add to $2^n$, and knowing one tells you the other: a function of $9$ variables with $100$ minterms has $512 - 100 = 412$ maxterms.\n\n> **Watch out.** Subtract from the $2^n$ rows, not from $n$; and the two counts are equal only when the function is true on exactly half of its rows.",
+    "函数的每个输入行恰好属于两类之一。函数为真的行给出主析取范式的一个极小项，函数为假的行给出主合取范式的一个极大项。所以极小项和极大项的个数之和总是 $2^n$，知道其中一个就知道另一个：有 $100$ 个极小项的 $9$ 元函数有 $512 - 100 = 412$ 个极大项。\n\n> **注意。** 要从 $2^n$ 行中减，而不是从 $n$ 中减；只有函数恰在一半的行上为真时，两个个数才相等。",
   ),
   generate(rng) {
     const n = rng.int(2, 8);
@@ -1146,15 +1280,36 @@ const maxtermsFromMinterms: KnowledgePointDef = {
     const answer = rows - m;
     return numberProblem({
       prompt: t(
-        `The principal disjunctive normal form of a function of ${n} variables has ${m} ${m === 1 ? "minterm" : "minterms"}. How many maxterms does its principal conjunctive normal form have?`,
-        `一个 ${n} 元函数的主析取范式有 ${m} 个极小项。它的主合取范式有多少个极大项？`,
+        `The principal disjunctive normal form of a function of $${n}$ variables has $${m}$ ${m === 1 ? "minterm" : "minterms"}. How many maxterms does its principal conjunctive normal form have?`,
+        `一个 $${n}$ 元函数的主析取范式有 $${m}$ 个极小项。它的主合取范式有多少个极大项？`,
       ),
       answer,
       form: "integer",
-      wrong: [m, rows, answer + 1, Math.max(answer - 1, 0)],
-      solution: t(
-        `There are $2^{${n}} = ${rows}$ rows, and ${m} of them are true. The other $${answer}$ give the maxterms.`,
-        `一共有 $2^{${n}} = ${rows}$ 行，其中 ${m} 行为真。其余 $${answer}$ 行给出极大项。`,
+      mistakes: [
+        why(
+          m,
+          "That assumes as many maxterms as minterms; the maxterms come from the other rows.",
+          "那是假定极大项与极小项一样多；极大项来自其余的行。",
+        ),
+        why(rows, "That counts every row, including the true ones.", "那是把所有行都数上了，包括为真的行。"),
+        why(
+          rows / 2,
+          `That assumes $f$ is false on half the rows; it is true on $${m}$ of them.`,
+          `那是假定 $f$ 在一半的行上为假；而它在其中 $${m}$ 行上为真。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the rows", "数行"],
+            t(`$2^{${n}} = ${rows}$ rows, $${m}$ of them true.`, `共 $2^{${n}} = ${rows}$ 行，其中 $${m}$ 行为真。`),
+          ],
+          [
+            ["Take the false rows", "取为假的行"],
+            t(`$${rows} - ${m} = ${answer}$ rows give the maxterms.`, `$${rows} - ${m} = ${answer}$ 行给出极大项。`),
+          ],
+        ],
+        t(`$${m} + ${answer} = ${rows}$, every row counted once.`, `$${m} + ${answer} = ${rows}$，每行恰好数一次。`),
       ),
     });
   },
@@ -1164,8 +1319,8 @@ const monomialsOfDegree: KnowledgePointDef = {
   id: "counting-the-monomials-of-a-given-degree",
   title: t("Counting the monomials of a given degree", "计算给定次数的单项式数"),
   explanation: t(
-    "In a Boolean polynomial, $x \\wedge x = x$, so no variable ever needs an exponent above 1. A monomial is therefore determined by the set of variables it contains, and its degree is the size of that set. Counting monomials of degree $d$ in $n$ variables is the same as counting subsets of size $d$, which is why the answer is a binomial coefficient and not a power.",
-    "在布尔多项式中，$x \\wedge x = x$，所以任何变量的指数都不需要超过 1。因此单项式由它所含变量的集合决定，次数就是这个集合的大小。计算 $n$ 个变量上 $d$ 次单项式的个数，就是计算大小为 $d$ 的子集个数，所以答案是二项式系数，而不是幂。",
+    "In a Boolean polynomial, $x \\wedge x = x$, so no variable ever needs an exponent above 1. A monomial is therefore determined by the set of variables it contains, and its degree is the size of that set. Counting monomials of degree $d$ in $n$ variables is the same as counting subsets of size $d$, which is why the answer is a binomial coefficient and not a power: in $13$ variables there are $\\binom{13}{3} = 286$ monomials of degree $3$.\n\n> **Watch out.** Do not count monomials such as $x^2 y$ or $yx$ separately, since $x^2 = x$ and $yx = xy$; and $2^n$ counts the monomials of every degree together.",
+    "在布尔多项式中，$x \\wedge x = x$，所以任何变量的指数都不需要超过 1。因此单项式由它所含变量的集合决定，次数就是这个集合的大小。计算 $n$ 个变量上 $d$ 次单项式的个数，就是计算大小为 $d$ 的子集个数，所以答案是二项式系数，而不是幂：$13$ 个变量上有 $\\binom{13}{3} = 286$ 个 $3$ 次单项式。\n\n> **注意。** 不要另算 $x^2 y$ 或 $yx$ 这样的单项式，因为 $x^2 = x$，$yx = xy$；$2^n$ 是所有次数的单项式的总数。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
@@ -1173,15 +1328,35 @@ const monomialsOfDegree: KnowledgePointDef = {
     const answer = binom(n, d);
     return numberProblem({
       prompt: t(
-        `How many different monomials of degree ${d} can a Boolean polynomial in ${n} variables contain?`,
-        `${n} 个变量的布尔多项式可以含有多少个不同的 ${d} 次单项式？`,
+        `How many different monomials of degree $${d}$ can a Boolean polynomial in $${n}$ variables contain?`,
+        `$${n}$ 个变量的布尔多项式可以含有多少个不同的 $${d}$ 次单项式？`,
       ),
       answer,
       form: "integer",
-      wrong: [n ** d, 2 ** n, 2 ** d, n * d],
-      solution: t(
-        `A monomial of degree ${d} is a set of ${d} variables, so there are $\\binom{${n}}{${d}} = ${answer}$ of them.`,
-        `${d} 次单项式就是 ${d} 个变量的集合，所以有 $\\binom{${n}}{${d}} = ${answer}$ 个。`,
+      mistakes: [
+        why(
+          n ** d,
+          "That picks the variables in order and allows repeats, but $x^2 = x$ and $yx = xy$.",
+          "那是按顺序选变量并允许重复，但 $x^2 = x$，$yx = xy$。",
+        ),
+        why(2 ** n, "That counts the monomials of every degree.", "那是所有次数的单项式的个数。"),
+        why(binom(n + d - 1, d), "That allows a variable to repeat, but $x^2 = x$.", "那是允许变量重复，但 $x^2 = x$。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Describe a monomial", "描述单项式"],
+            t(
+              `Since $x^2 = x$, a monomial of degree $${d}$ is a set of $${d}$ different variables.`,
+              `因为 $x^2 = x$，$${d}$ 次单项式就是 $${d}$ 个不同变量的集合。`,
+            ),
+          ],
+          [["Count the sets", "数集合"], t(`$\\binom{${n}}{${d}} = ${answer}$.`, `$\\binom{${n}}{${d}} = ${answer}$。`)],
+        ],
+        t(
+          `Choosing instead the $${n - d}$ variables left out gives $\\binom{${n}}{${n - d}} = ${answer}$ as well.`,
+          `改为选出不出现的 $${n - d}$ 个变量，同样得 $\\binom{${n}}{${n - d}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1191,8 +1366,8 @@ const karnaughGroups: KnowledgePointDef = {
   id: "counting-the-groups-of-a-karnaugh-map",
   title: t("Counting the groups of a Karnaugh map", "计算卡诺图中的分组数"),
   explanation: t(
-    "A valid group of $2^j$ cells in a Karnaugh map lets exactly $j$ variables vary while the others stay fixed. To describe such a group, choose which $j$ variables are free, then choose a value for each of the remaining $n - j$ variables. Multiplying the two counts gives every group. It also shows that wrapping around the edges of the map is part of the count.",
-    "卡诺图中 $2^j$ 个格子的有效分组，恰好让 $j$ 个变量变化，其他变量保持固定。要描述这样的分组，先选出哪 $j$ 个变量自由，再为其余 $n - j$ 个变量各选一个值。两个计数相乘，就得到所有分组。这也说明，绕过图边缘的分组也包括在内。",
+    "A valid group of $2^j$ cells in a Karnaugh map lets exactly $j$ variables vary while the others stay fixed. To describe such a group, choose which $j$ variables are free, then choose a value for each of the remaining $n - j$ variables. Multiplying the two counts gives every group. It also shows that wrapping around the edges of the map is part of the count. The $2 \\times 2$ map of $x$ and $y$ has $\\binom{2}{1} \\cdot 2 = 4$ pairs: the rows $x$ and $\\neg x$ and the columns $y$ and $\\neg y$.\n\n> **Watch out.** The fixed variables need values, $2^{n - j}$ ways, as well as the choice of which variables are free; and the free variables get no values, since they run through both.",
+    "卡诺图中 $2^j$ 个格子的有效分组，恰好让 $j$ 个变量变化，其他变量保持固定。要描述这样的分组，先选出哪 $j$ 个变量自由，再为其余 $n - j$ 个变量各选一个值。两个计数相乘，就得到所有分组。这也说明，绕过图边缘的分组也包括在内。$x$ 与 $y$ 的 $2 \\times 2$ 卡诺图有 $\\binom{2}{1} \\cdot 2 = 4$ 个两格组：行 $x$ 与 $\\neg x$，列 $y$ 与 $\\neg y$。\n\n> **注意。** 除了选哪些变量自由，固定的变量还要取值，有 $2^{n - j}$ 种方式；自由变量不取值，因为它们取遍两个值。",
   ),
   generate(rng) {
     const n = rng.int(3, 8);
@@ -1202,15 +1377,40 @@ const karnaughGroups: KnowledgePointDef = {
     const answer = choose * values;
     return numberProblem({
       prompt: t(
-        `A valid group of $${2 ** j}$ cells in a Karnaugh map of ${n} variables lets ${j} ${j === 1 ? "variable" : "variables"} vary and fixes the others. How many different groups of this size are there?`,
-        `${n} 个变量的卡诺图中，$${2 ** j}$ 个格子的有效分组让 ${j} 个变量变化，并固定其他变量。这样大小的不同分组有多少个？`,
+        `A valid group of $${2 ** j}$ cells in a Karnaugh map of $${n}$ variables lets $${j}$ ${j === 1 ? "variable" : "variables"} vary and fixes the others. How many different groups of this size are there?`,
+        `$${n}$ 个变量的卡诺图中，$${2 ** j}$ 个格子的有效分组让 $${j}$ 个变量变化，并固定其他变量。这样大小的不同分组有多少个？`,
       ),
       answer,
       form: "integer",
-      wrong: [choose, values, choose * 2 ** j, 2 ** n],
-      solution: t(
-        `Choose the free variables in $\\binom{${n}}{${j}} = ${choose}$ ways and the values of the others in $${values}$ ways. The product is $${answer}$.`,
-        `选择自由变量有 $\\binom{${n}}{${j}} = ${choose}$ 种方法，选择其他变量的值有 $${values}$ 种方法。乘积是 $${answer}$。`,
+      mistakes: [
+        why(choose, "That leaves out the values of the fixed variables.", "那是漏掉了固定变量的取值。"),
+        why(values, "That leaves out the choice of which variables are free.", "那是漏掉了选哪些变量自由。"),
+        why(
+          choose * 2 ** j,
+          "That gives values to the free variables instead of the fixed ones.",
+          "那是给自由变量取值，而不是给固定变量取值。",
+        ),
+        why(2 ** n, "That counts the cells of the map, not the groups.", "那是卡诺图的格子数，而不是分组数。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choose the free variables", "选自由变量"],
+            t(`$\\binom{${n}}{${j}} = ${choose}$ ways.`, `有 $\\binom{${n}}{${j}} = ${choose}$ 种方法。`),
+          ],
+          [
+            ["Fix the others", "固定其余变量"],
+            t(
+              `The other $${n - j}$ variables take values in $${pow(2, n - j)}${n - j === 1 ? "" : ` = ${values}`}$ ways.`,
+              `其余 $${n - j}$ 个变量的取值有 $${pow(2, n - j)}${n - j === 1 ? "" : ` = ${values}`}$ 种方式。`,
+            ),
+          ],
+          [["Multiply", "相乘"], t(`$${choose} \\cdot ${values} = ${answer}$.`, `$${choose} \\cdot ${values} = ${answer}$。`)],
+        ],
+        t(
+          `Each group is a term with $${n - j}$ literals on different variables, and such terms number $\\binom{${n}}{${n - j}} \\cdot ${pow(2, n - j)} = ${answer}$ too.`,
+          `每个分组都是含 $${n - j}$ 个不同变量文字的项，这样的项也有 $\\binom{${n}}{${n - j}} \\cdot ${pow(2, n - j)} = ${answer}$ 个。`,
+        ),
       ),
     });
   },
