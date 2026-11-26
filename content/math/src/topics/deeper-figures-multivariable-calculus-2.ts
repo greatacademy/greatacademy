@@ -666,8 +666,8 @@ const potentialDifference = point(
   "work-along-a-wandering-path-from-its-endpoints",
   ["Work along a wandering path from its endpoints", "由端点求沿曲折路径的功"],
   [
-    "If $F = \\nabla f$, then $\\int_C F \\cdot dr = f(B) - f(A)$ for a path from $A$ to $B$. The shape of the path plays no part, so only the two ends and the direction of travel are read from the drawing.",
-    "若 $F = \\nabla f$，对从 $A$ 到 $B$ 的路径有 $\\int_C F \\cdot dr = f(B) - f(A)$。路径的形状不起作用，所以只需从图中读出两个端点和行进方向。",
+    "If $F = \\nabla f$, then $\\int_C F \\cdot dr = f(B) - f(A)$ for a path from $A$ to $B$. The shape of the path plays no part, so only the two ends and the direction of travel are read from the drawing. For $f(x, y) = 4xy$ and a winding path from $(1, 2)$ to $(-1, 3)$, the integral is $f(-1, 3) - f(1, 2) = -12 - 8 = -20$.\n\n> **Watch out.** Read the direction from the arrow: the end the arrow points to is $B$. Taking the ends the other way round flips the sign.",
+    "若 $F = \\nabla f$，对从 $A$ 到 $B$ 的路径有 $\\int_C F \\cdot dr = f(B) - f(A)$。路径的形状不起作用，所以只需从图中读出两个端点和行进方向。对 $f(x, y) = 4xy$ 和一条从 $(1, 2)$ 到 $(-1, 3)$ 的弯曲路径，积分为 $f(-1, 3) - f(1, 2) = -12 - 8 = -20$。\n\n> **注意。** 方向由箭头读出：箭头指向的一端是 $B$。把两端弄反，符号就反了。",
   ],
   (rng) => {
     const a = rng.pick([-2, -1, 1, 2, 3]);
@@ -684,26 +684,68 @@ const potentialDifference = point(
             [a, "x^2"],
             [b, "y^2"],
           ]);
-    const dx = rng.pick([-5, -4, -3, 3, 4, 5]);
-    const dy = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
-    const A: Point = [place(rng, dx, 5), place(rng, dy, 5)];
+    let dx = rng.pick([-5, -4, -3, 3, 4, 5]);
+    let dy = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
+    let A: Point = [place(rng, dx, 5), place(rng, dy, 5)];
+    while (f([A[0] + dx, A[1] + dy]) === f(A)) {
+      dx = rng.pick([-5, -4, -3, 3, 4, 5]);
+      dy = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
+      A = [place(rng, dx, 5), place(rng, dy, 5)];
+    }
     const B: Point = [A[0] + dx, A[1] + dy];
     const path = wiggle(A, B, rng.pick([-2.5, -1.5, 1.5, 2.5]));
     const mid = path[20] as Point;
     const next = path[21] as Point;
     const answer = f(B) - f(A);
-    return ask(
-      [
-        `$F = \\nabla f$ with $f(x, y) = ${tex}$. Find $\\int_C F \\cdot dr$ along the drawn path $C$ in the direction of its arrow.`,
-        `$F = \\nabla f$，其中 $f(x, y) = ${tex}$。沿所画路径 $C$ 按箭头方向求 $\\int_C F \\cdot dr$。`,
-      ],
-      answer,
-      [-answer, f(B) + f(A), f(B), f(A)],
-      [
-        `The path runs from $${at(A)}$ to $${at(B)}$, so the integral is $f${at(B)} - f${at(A)} = ${f(B)} - ${paren(f(A))} = ${answer}$.`,
-        `路径从 $${at(A)}$ 到 $${at(B)}$，所以积分为 $f${at(B)} - f${at(A)} = ${f(B)} - ${paren(f(A))} = ${answer}$。`,
-      ],
-      fig(
+    const [p, q] =
+      form === "xy"
+        ? [a * (B[0] * B[1] - A[0] * A[1]), b * (B[0] - A[0])]
+        : [a * (B[0] * B[0] - A[0] * A[0]), b * (B[1] * B[1] - A[1] * A[1])];
+    const [termP, termQ] = form === "xy" ? [terms([[a, "xy"]]), terms([[b, "x"]])] : [terms([[a, "x^2"]]), terms([[b, "y^2"]])];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `$F = \\nabla f$ with $f(x, y) = ${tex}$. Find $\\int_C F \\cdot dr$ along the drawn path $C$ in the direction of its arrow.`,
+          `$F = \\nabla f$，其中 $f(x, y) = ${tex}$。沿所画路径 $C$ 按箭头方向求 $\\int_C F \\cdot dr$。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            -answer,
+            "That takes the ends the wrong way round; the arrow points to the end, which comes first in $f(B) - f(A)$.",
+            "那是把两端弄反了；箭头指向终点，它在 $f(B) - f(A)$ 中排在前面。",
+          ),
+          why(
+            f(B) + f(A),
+            "That adds the two values of $f$; the integral is their difference.",
+            "那是把 $f$ 的两个值相加；积分是它们的差。",
+          ),
+          why(f(B), "That is $f$ at the end alone; the value at the start must be subtracted.", "那只是终点处的 $f$；还要减去起点处的值。"),
+          why(
+            f(A),
+            "That is $f$ at the start alone; the integral is the end value minus the start value.",
+            "那只是起点处的 $f$；积分是终点的值减起点的值。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the ends", "读出两端"],
+              t(`The arrow runs from $A = ${at(A)}$ to $B = ${at(B)}$.`, `箭头从 $A = ${at(A)}$ 指向 $B = ${at(B)}$。`),
+            ],
+            [
+              ["Evaluate f", "求 f 的值"],
+              t(`$f${at(B)} = ${f(B)}$ and $f${at(A)} = ${f(A)}$.`, `$f${at(B)} = ${f(B)}$，$f${at(A)} = ${f(A)}$。`),
+            ],
+            [["Subtract", "相减"], t(`$${f(B)} - ${paren(f(A))} = ${answer}$.`, `$${f(B)} - ${paren(f(A))} = ${answer}$。`)],
+          ],
+          t(
+            `Term by term: $${termP}$ changes by $${p}$ and $${termQ}$ changes by $${q}$ from $A$ to $B$, and $${p} + ${paren(q)} = ${answer}$.`,
+            `逐项计算：从 $A$ 到 $B$，$${termP}$ 改变 $${p}$，$${termQ}$ 改变 $${q}$，而 $${p} + ${paren(q)} = ${answer}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         8,
         [
           { kind: "path", points: path, accent: true },
@@ -716,7 +758,7 @@ const potentialDifference = point(
           `从 ${at(A)} 到 ${at(B)} 的曲线路径，箭头指向 ${at(B)}。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -724,8 +766,8 @@ const pathIndependence = point(
   "comparing-two-drawn-paths-in-a-conservative-field",
   ["Comparing two drawn paths in a conservative field", "比较保守场中的两条所画路径"],
   [
-    "In a conservative field the integral depends only on the ends of the path and their order. Paths with the same start and the same end give equal integrals, and reversing a path changes the sign.",
-    "在保守场中，积分只取决于路径的端点及其顺序。起点和终点相同的路径积分相等，反转路径改变符号。",
+    "In a conservative field the integral depends only on the ends of the path and their order. Paths with the same start and the same end give equal integrals, and reversing a path changes the sign. If one path from $P$ to $R$ gives $8$, every other path from $P$ to $R$ gives $8$ as well, and every path from $R$ to $P$ gives $-8$.\n\n> **Watch out.** Look at both arrows before comparing. The shape of a path never matters, but its direction does: two paths between the same points with opposite arrows give opposite values.",
+    "在保守场中，积分只取决于路径的端点及其顺序。起点和终点相同的路径积分相等，反转路径改变符号。若一条从 $P$ 到 $R$ 的路径给出 $8$，则其他每条从 $P$ 到 $R$ 的路径也给出 $8$，而每条从 $R$ 到 $P$ 的路径给出 $-8$。\n\n> **注意。** 比较之前先看两个箭头。路径的形状无关紧要，但方向要紧：连接相同两点、箭头相反的两条路径给出相反的值。",
   ],
   (rng) => {
     const dx = rng.pick([-6, -5, -4, 4, 5, 6]);
@@ -742,20 +784,65 @@ const pathIndependence = point(
     const m2 = second[20] as Point;
     const m2n = second[21] as Point;
     const answer = same2 ? value : -value;
-    return ask(
-      [
-        `$F$ is a conservative field and $\\int_{C_1} F \\cdot dr = ${value}$. Find $\\int_{C_2} F \\cdot dr$, with each path taken in the direction of its arrow.`,
-        `$F$ 是保守场，$\\int_{C_1} F \\cdot dr = ${value}$。求 $\\int_{C_2} F \\cdot dr$，每条路径按箭头方向。`,
-      ],
-      answer,
-      [-answer, 0, 2 * value],
-      same2
-        ? ["Both paths run from the same start to the same end, so the integrals are equal.", "两条路径的起点和终点都相同，所以积分相等。"]
-        : [
-            "The paths join the same two points in opposite directions, so the integrals have opposite signs.",
-            "两条路径以相反方向连接相同的两点，所以积分符号相反。",
+    return {
+      ...numberProblem({
+        prompt: t(
+          `$F$ is a conservative field and $\\int_{C_1} F \\cdot dr = ${value}$. Find $\\int_{C_2} F \\cdot dr$, with each path taken in the direction of its arrow.`,
+          `$F$ 是保守场，$\\int_{C_1} F \\cdot dr = ${value}$。求 $\\int_{C_2} F \\cdot dr$，每条路径按箭头方向。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            -answer,
+            same2
+              ? "That reverses $C_2$; both arrows point to the same end, so the values are equal."
+              : "That ignores the arrows; $C_2$ runs the opposite way to $C_1$, so its value has the opposite sign.",
+            same2
+              ? "那是把 $C_2$ 反向了；两个箭头指向同一端，所以两个值相等。"
+              : "那是忽略了箭头；$C_2$ 与 $C_1$ 方向相反，所以它的值符号相反。",
+          ),
+          why(0, "That treats $C_2$ as a closed loop; it joins two different points.", "那是把 $C_2$ 当成了闭路；它连接的是两个不同的点。"),
+          why(
+            2 * value,
+            "That adds the two paths together; the question asks for $C_2$ alone.",
+            "那是把两条路径加在一起；题目只问 $C_2$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the arrows", "读出箭头"],
+              t(
+                `$C_1$ runs from $${at(A)}$ to $${at(B)}$, and $C_2$ runs from $${same2 ? at(A) : at(B)}$ to $${same2 ? at(B) : at(A)}$.`,
+                `$C_1$ 从 $${at(A)}$ 到 $${at(B)}$，$C_2$ 从 $${same2 ? at(A) : at(B)}$ 到 $${same2 ? at(B) : at(A)}$。`,
+              ),
+            ],
+            [
+              ["Compare the ends", "比较端点"],
+              same2
+                ? t(
+                    "Both paths run from the same start to the same end, so in a conservative field the integrals are equal.",
+                    "两条路径的起点和终点都相同，所以在保守场中积分相等。",
+                  )
+                : t(
+                    "The paths join the same two points in opposite directions, so the integrals have opposite signs.",
+                    "两条路径以相反方向连接相同的两点，所以积分符号相反。",
+                  ),
+            ],
+            [["Give the value", "写出数值"], t(`$\\int_{C_2} F \\cdot dr = ${answer}$.`, `$\\int_{C_2} F \\cdot dr = ${answer}$。`)],
           ],
-      fig(
+          same2
+            ? t(
+                `Following $C_1$ and then $C_2$ backwards is a closed loop, and $${value} - ${paren(answer)} = 0$, as it must be for a conservative field.`,
+                `沿 $C_1$ 走、再沿 $C_2$ 反向返回构成闭路，而 $${value} - ${paren(answer)} = 0$，正符合保守场的要求。`,
+              )
+            : t(
+                `Following $C_1$ and then $C_2$ is a closed loop, and $${value} + ${paren(answer)} = 0$, as it must be for a conservative field.`,
+                `沿 $C_1$ 走、再沿 $C_2$ 走构成闭路，而 $${value} + ${paren(answer)} = 0$，正符合保守场的要求。`,
+              ),
+        ),
+      }),
+      figure: fig(
         9,
         [
           { kind: "path", points: upper, accent: true },
@@ -772,7 +859,7 @@ const pathIndependence = point(
           `${at(A)} 和 ${at(B)} 之间的两条曲线路径：实线 C1 通向 ${at(B)}，虚线 C2 通向 ${same2 ? at(B) : at(A)}。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -788,8 +875,8 @@ const greenCirculation = {
     "circulation-around-a-drawn-oriented-rectangle",
     ["Circulation around a drawn oriented rectangle", "沿所画有向矩形的环量"],
     [
-      "Green's theorem gives $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$ for a counterclockwise boundary, turning a sum around the edge into a sum over the inside. A clockwise boundary changes the sign.",
-      "格林定理对逆时针边界给出 $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$，把沿边界的求和变成区域内部的求和。顺时针边界改变符号。",
+      "Green's theorem gives $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$ for a counterclockwise boundary, turning a sum around the edge into a sum over the inside. A clockwise boundary changes the sign. For $F = (-5y,\\ 2x)$ around $[0, 2] \\times [0, 1]$ drawn clockwise, the curl is $2 - (-5) = 7$, the area is $2$, and the result is $-14$.\n\n> **Watch out.** Read the arrow before you finish: a clockwise arrow negates the counterclockwise value. And with $P = -ay$, $\\frac{\\partial P}{\\partial y} = -a$, so the curl is $b + a$.",
+      "格林定理对逆时针边界给出 $\\oint_C F \\cdot dr = \\iint_R \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$，把沿边界的求和变成区域内部的求和。顺时针边界改变符号。对 $F = (-5y,\\ 2x)$ 沿按顺时针方向画出的 $[0, 2] \\times [0, 1]$，旋度为 $2 - (-5) = 7$，面积为 $2$，结果为 $-14$。\n\n> **注意。** 最后一定要看箭头：顺时针箭头把逆时针的值变号。而且 $P = -ay$ 时 $\\frac{\\partial P}{\\partial y} = -a$，所以旋度是 $b + a$。",
     ],
     (rng) => {
       const r = gridRect(rng);
@@ -798,23 +885,82 @@ const greenCirculation = {
       const counter = rng.bool();
       const curl = a + b;
       const area = r.w * r.h;
-      const answer = (counter ? 1 : -1) * curl * area;
-      return ask(
-        [
-          `Let $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$. Find $\\oint_C F \\cdot dr$ around the drawn rectangle in the direction of its arrow.`,
-          `设 $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$。沿所画矩形按箭头方向求 $\\oint_C F \\cdot dr$。`,
-        ],
-        answer,
-        [-answer, curl, 2 * (r.w + r.h) * curl, (b - a) * area],
-        [
-          `The curl is $${b} - ${paren(-a)} = ${curl}$ and the area is $${r.w} \\cdot ${r.h} = ${area}$. The arrow runs ${counter ? "counterclockwise" : "clockwise"}, so the result is $${answer}$.`,
-          `旋度为 $${b} - ${paren(-a)} = ${curl}$，面积为 $${r.w} \\cdot ${r.h} = ${area}$。箭头是${counter ? "逆时针" : "顺时针"}方向，所以结果为 $${answer}$。`,
-        ],
-        fig(7, orientedRect(r, counter), [
+      const sign = counter ? 1 : -1;
+      const answer = sign * curl * area || 0;
+      const bottom = -a * r.y0 * r.w;
+      const top = a * r.y1 * r.w;
+      const right = b * r.x1 * r.h;
+      const left = -b * r.x0 * r.h;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `Let $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$. Find $\\oint_C F \\cdot dr$ around the drawn rectangle in the direction of its arrow.`,
+            `设 $F = (${terms([[-a, "y"]])},\\ ${terms([[b, "x"]])})$。沿所画矩形按箭头方向求 $\\oint_C F \\cdot dr$。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              -answer,
+              `That ignores the arrow; it runs ${counter ? "counterclockwise, so no sign change is needed" : "clockwise, which negates the result"}.`,
+              `那是忽略了箭头；它是${counter ? "逆时针方向，不需要变号" : "顺时针方向，结果要变号"}。`,
+            ),
+            why(
+              sign * curl,
+              "That stops at the curl; Green's theorem multiplies it by the area of the rectangle.",
+              "那是停在了旋度上；格林定理要把它乘以矩形的面积。",
+            ),
+            why(
+              sign * 2 * (r.w + r.h) * curl,
+              "That multiplies the curl by the perimeter; the curl is integrated over the area.",
+              "那是用旋度乘以周长；旋度是在面积上积分的。",
+            ),
+            why(
+              sign * b * area,
+              `That uses only $\\frac{\\partial Q}{\\partial x} = ${b}$; $\\frac{\\partial P}{\\partial y}$ is subtracted from it.`,
+              `那是只用了 $\\frac{\\partial Q}{\\partial x} = ${b}$；还要减去 $\\frac{\\partial P}{\\partial y}$。`,
+            ),
+            why(
+              sign * (b - a) * area,
+              `That takes $\\frac{\\partial P}{\\partial y}$ as $${a}$; with $P = ${terms([[-a, "y"]])}$ it is $${-a}$.`,
+              `那是把 $\\frac{\\partial P}{\\partial y}$ 当成 $${a}$；$P = ${terms([[-a, "y"]])}$ 时它是 $${-a}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the curl", "计算旋度"],
+                t(
+                  `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${b} - ${paren(-a)} = ${curl}$.`,
+                  `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${b} - ${paren(-a)} = ${curl}$。`,
+                ),
+              ],
+              [
+                ["Find the area", "求面积"],
+                t(`The rectangle is $${r.w}$ by $${r.h}$, so its area is $${area}$.`, `矩形长 $${r.w}$、宽 $${r.h}$，面积为 $${area}$。`),
+              ],
+              [
+                ["Read the arrow", "看箭头"],
+                t(
+                  counter
+                    ? `The arrow runs counterclockwise, so the result is $${curl} \\cdot ${area} = ${answer}$.`
+                    : `The arrow runs clockwise, so the result is $-(${curl} \\cdot ${area}) = ${answer}$.`,
+                  counter
+                    ? `箭头为逆时针方向，所以结果为 $${curl} \\cdot ${area} = ${answer}$。`
+                    : `箭头为顺时针方向，所以结果为 $-(${curl} \\cdot ${area}) = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Edge by edge counterclockwise, the bottom gives $${bottom}$, the right $${right}$, the top $${top}$ and the left $${left}$, adding to $${curl * area}$${counter ? "" : `, and the clockwise arrow negates it to $${answer}$`}.`,
+              `逆时针逐边计算，底边给出 $${bottom}$，右边 $${right}$，顶边 $${top}$，左边 $${left}$，合计 $${curl * area}$${counter ? "" : `，顺时针箭头使它变号为 $${answer}$`}。`,
+            ),
+          ),
+        }),
+        figure: fig(7, orientedRect(r, counter), [
           `A rectangle from (${r.x0}, ${r.y0}) to (${r.x1}, ${r.y1}) with an arrow going ${counter ? "counterclockwise" : "clockwise"}.`,
           `从 (${r.x0}, ${r.y0}) 到 (${r.x1}, ${r.y1}) 的矩形，箭头为${counter ? "逆时针" : "顺时针"}方向。`,
         ]),
-      );
+      };
     },
   ),
   figure: multivariableDrawings6["greens-theorem-in-circulation-curl-form#circulation-around-a-drawn-oriented-rectangle"],
@@ -824,8 +970,8 @@ const greenHole = point(
   "greens-theorem-on-a-drawn-frame-with-a-hole",
   ["Green's theorem on a drawn frame with a hole", "所画带洞框架上的格林定理"],
   [
-    "For a region with a hole, the boundary is the outer curve taken counterclockwise and the inner curve taken clockwise, so that the region stays on the left. Green's theorem then applies to the area of the region without the hole.",
-    "对带洞区域，边界是逆时针的外曲线和顺时针的内曲线，使区域总在左侧。格林定理于是作用在去掉洞后的面积上。",
+    "For a region with a hole, the boundary is the outer curve taken counterclockwise and the inner curve taken clockwise, so that the region stays on the left. Green's theorem then applies to the area of the region without the hole. For $F = (0,\\ 6x)$ on a $4$ by $4$ frame with a $2$ by $1$ hole, the curl is $6$, the frame has area $16 - 2 = 14$, and the integral is $84$.\n\n> **Watch out.** Subtract the area of the hole; do not add it, and do not use the outer rectangle alone.",
+    "对带洞区域，边界是逆时针的外曲线和顺时针的内曲线，使区域总在左侧。格林定理于是作用在去掉洞后的面积上。对 $F = (0,\\ 6x)$，在 $4 \\times 4$ 的框架上挖去 $2 \\times 1$ 的洞，旋度为 $6$，框架面积为 $16 - 2 = 14$，积分为 $84$。\n\n> **注意。** 要减去洞的面积，不能加上，也不能只用外矩形。",
   ],
   (rng) => {
     const w = rng.int(5, 10);
@@ -839,18 +985,48 @@ const greenHole = point(
     const c = rng.pick([-4, -3, -2, 2, 3, 4, 5]);
     const area = w * h - iw * ih;
     const answer = c * area;
-    return ask(
-      [
-        `Let $F = (0,\\ ${terms([[c, "x"]])})$, and let $R$ be the shaded frame. Find $\\oint_{\\partial R} F \\cdot dr$, with the boundary oriented so that $R$ stays on the left.`,
-        `设 $F = (0,\\ ${terms([[c, "x"]])})$，$R$ 是阴影框架。求 $\\oint_{\\partial R} F \\cdot dr$，边界的方向使 $R$ 总在左侧。`,
-      ],
-      answer,
-      [c * w * h, c * (w * h + iw * ih), c * iw * ih, area],
-      [
-        `The curl is $${c}$. The outer rectangle has area $${w * h}$ and the hole has area $${iw * ih}$, so $R$ has area $${area}$ and the integral is $${answer}$.`,
-        `旋度为 $${c}$。外矩形面积为 $${w * h}$，洞面积为 $${iw * ih}$，所以 $R$ 的面积为 $${area}$，积分为 $${answer}$。`,
-      ],
-      fig(
+    return {
+      ...numberProblem({
+        prompt: t(
+          `Let $F = (0,\\ ${terms([[c, "x"]])})$, and let $R$ be the shaded frame. Find $\\oint_{\\partial R} F \\cdot dr$, with the boundary oriented so that $R$ stays on the left.`,
+          `设 $F = (0,\\ ${terms([[c, "x"]])})$，$R$ 是阴影框架。求 $\\oint_{\\partial R} F \\cdot dr$，边界的方向使 $R$ 总在左侧。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            c * w * h,
+            "That uses the outer rectangle and ignores the hole, which is not part of $R$.",
+            "那是用了外矩形而忽略了洞；洞不属于 $R$。",
+          ),
+          why(c * (w * h + iw * ih), "That adds the area of the hole; it has to be subtracted.", "那是加上了洞的面积；洞的面积要减去。"),
+          why(c * iw * ih, "That uses the hole alone; the region is the frame around it.", "那是只用了洞；区域是它周围的框架。"),
+          why(area, `That is the area of the frame alone; the curl $${c}$ multiplies it.`, `那只是框架的面积；还要乘以旋度 $${c}$。`),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Compute the curl", "计算旋度"],
+              t(
+                `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c} - 0 = ${c}$.`,
+                `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c} - 0 = ${c}$。`,
+              ),
+            ],
+            [
+              ["Find the area of the frame", "求框架面积"],
+              t(
+                `$${w} \\cdot ${h} - ${iw} \\cdot ${ih} = ${w * h} - ${iw * ih} = ${area}$.`,
+                `$${w} \\cdot ${h} - ${iw} \\cdot ${ih} = ${w * h} - ${iw * ih} = ${area}$。`,
+              ),
+            ],
+            [["Multiply", "相乘"], t(`$${c} \\cdot ${area} = ${answer}$.`, `$${c} \\cdot ${area} = ${answer}$。`)],
+          ],
+          t(
+            `Curve by curve: the outer rectangle counterclockwise gives $${c} \\cdot ${w * h} = ${c * w * h}$, and the hole clockwise gives $-${paren(c)} \\cdot ${iw * ih} = ${-c * iw * ih}$; together $${answer}$.`,
+            `逐条曲线计算：外矩形逆时针给出 $${c} \\cdot ${w * h} = ${c * w * h}$，洞顺时针给出 $-${paren(c)} \\cdot ${iw * ih} = ${-c * iw * ih}$；合计 $${answer}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         7,
         [
           {
@@ -872,7 +1048,7 @@ const greenHole = point(
           `从 (${x0}, ${y0}) 到 (${x0 + w}, ${y0 + h}) 的矩形，内有从 (${ix}, ${iy}) 到 (${ix + iw}, ${iy + ih}) 的矩形洞。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -880,8 +1056,8 @@ const fluxSegment = point(
   "flux-of-a-constant-field-across-a-drawn-segment",
   ["Flux of a constant field across a drawn segment", "常向量场穿过所画线段的通量"],
   [
-    "With the normal pointing to the right of the direction of travel, $n\\,ds = (dy, -dx)$. For a constant field $(a, b)$ on a segment with displacement $(\\Delta x, \\Delta y)$, the flux is $a\\,\\Delta y - b\\,\\Delta x$.",
-    "法向量指向行进方向的右侧时，$n\\,ds = (dy, -dx)$。对位移为 $(\\Delta x, \\Delta y)$ 的线段上的常向量场 $(a, b)$，通量为 $a\\,\\Delta y - b\\,\\Delta x$。",
+    "With the normal pointing to the right of the direction of travel, $n\\,ds = (dy, -dx)$. For a constant field $(a, b)$ on a segment with displacement $(\\Delta x, \\Delta y)$, the flux is $a\\,\\Delta y - b\\,\\Delta x$. For $F = (5, 1)$ across an arrow with displacement $(2, 6)$, the flux is $5 \\cdot 6 - 1 \\cdot 2 = 28$.\n\n> **Watch out.** Read the displacement as tip minus tail. Then $a$ goes with $\\Delta y$ and $b$ with $\\Delta x$, and the second product is subtracted; $a\\,\\Delta x + b\\,\\Delta y$ would be the work, not the flux.",
+    "法向量指向行进方向的右侧时，$n\\,ds = (dy, -dx)$。对位移为 $(\\Delta x, \\Delta y)$ 的线段上的常向量场 $(a, b)$，通量为 $a\\,\\Delta y - b\\,\\Delta x$。对 $F = (5, 1)$ 穿过位移为 $(2, 6)$ 的箭头，通量为 $5 \\cdot 6 - 1 \\cdot 2 = 28$。\n\n> **注意。** 位移按箭头减箭尾读出。然后 $a$ 配 $\\Delta y$，$b$ 配 $\\Delta x$，第二个乘积要减去；$a\\,\\Delta x + b\\,\\Delta y$ 是功，不是通量。",
   ],
   (rng) => {
     const [dx, dy] = rng.pick<Point>([
@@ -902,23 +1078,57 @@ const fluxSegment = point(
     const a = rng.pick([-3, -2, -1, 1, 2, 3]);
     const b = rng.pick([-3, -2, -1, 1, 2, 3]);
     const answer = a * dy - b * dx;
-    return ask(
-      [
-        `Find the flux of the constant field $F = (${a}, ${b})$ across the drawn arrow, with the normal pointing to the right of the arrow's direction.`,
-        `求常向量场 $F = (${a}, ${b})$ 穿过所画箭头的通量，法向量指向箭头方向的右侧。`,
-      ],
-      answer,
-      [-answer, a * dx + b * dy, b * dx - a * dy + 1, a * dy + b * dx],
-      [
-        `The displacement is $(${dx}, ${dy})$, so the flux is $(${a})(${dy}) - (${b})(${dx}) = ${answer}$.`,
-        `位移为 $(${dx}, ${dy})$，所以通量为 $(${a})(${dy}) - (${b})(${dx}) = ${answer}$。`,
-      ],
-      fig(
+    const B: Point = [A[0] + dx, A[1] + dy];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `Find the flux of the constant field $F = (${a}, ${b})$ across the drawn arrow, with the normal pointing to the right of the arrow's direction.`,
+          `求常向量场 $F = (${a}, ${b})$ 穿过所画箭头的通量，法向量指向箭头方向的右侧。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            -answer,
+            "That uses the normal on the left of the arrow; the normal here points to its right.",
+            "那是用了箭头左侧的法向量；这里的法向量指向右侧。",
+          ),
+          why(
+            a * dx + b * dy,
+            "That dots the field with the displacement, which gives the work along the arrow, not the flux across it.",
+            "那是用场点乘位移，得到的是沿箭头的功，而不是穿过它的通量。",
+          ),
+          why(
+            a * dy + b * dx,
+            "That adds $b\\,\\Delta x$; with $n\\,ds = (dy, -dx)$ it is subtracted.",
+            "那是加上了 $b\\,\\Delta x$；由 $n\\,ds = (dy, -dx)$，它要减去。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the displacement", "读出位移"],
+              t(`Tip minus tail: $${at(B)} - ${at(A)} = (${dx}, ${dy})$.`, `箭头减箭尾：$${at(B)} - ${at(A)} = (${dx}, ${dy})$。`),
+            ],
+            [
+              ["Apply the flux formula", "代入通量公式"],
+              t(
+                `$a\\,\\Delta y - b\\,\\Delta x = ${paren(a)} \\cdot ${paren(dy)} - ${paren(b)} \\cdot ${paren(dx)} = ${answer}$.`,
+                `$a\\,\\Delta y - b\\,\\Delta x = ${paren(a)} \\cdot ${paren(dy)} - ${paren(b)} \\cdot ${paren(dx)} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Split the arrow into a horizontal move of $${dx}$ and a vertical move of $${dy}$ with the same ends: the horizontal piece gives $-${paren(b)} \\cdot ${paren(dx)} = ${-b * dx}$ and the vertical piece $${paren(a)} \\cdot ${paren(dy)} = ${a * dy}$, which add to $${answer}$.`,
+            `把箭头拆成水平移动 $${dx}$ 和竖直移动 $${dy}$，两端不变：水平段给出 $-${paren(b)} \\cdot ${paren(dx)} = ${-b * dx}$，竖直段给出 $${paren(a)} \\cdot ${paren(dy)} = ${a * dy}$，合计 $${answer}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         6,
-        [{ kind: "arrow", from: A, to: [A[0] + dx, A[1] + dy], accent: true }],
-        [`An arrow from ${at(A)} to ${at([A[0] + dx, A[1] + dy])}.`, `从 ${at(A)} 到 ${at([A[0] + dx, A[1] + dy])} 的箭头。`],
+        [{ kind: "arrow", from: A, to: B, accent: true }],
+        [`An arrow from ${at(A)} to ${at(B)}.`, `从 ${at(A)} 到 ${at(B)} 的箭头。`],
       ),
-    );
+    };
   },
 );
 
@@ -926,8 +1136,8 @@ const greenFlux = point(
   "outward-flux-across-a-drawn-boundary",
   ["Outward flux across a drawn boundary", "穿出所画边界的通量"],
   [
-    "The flux form of Green's theorem says the outward flux across a closed curve is the integral of the divergence over the region inside. When the divergence is constant, that is the divergence times the area.",
-    "格林定理的通量形式指出，穿出闭曲线的通量是散度在内部区域上的积分。散度为常数时，就是散度乘以面积。",
+    "The flux form of Green's theorem says the outward flux across a closed curve is the integral of the divergence over the region inside. When the divergence is constant, that is the divergence times the area. For $F = (5x,\\ y)$ across the triangle $(0, 0)$, $(2, 0)$, $(0, 3)$, the divergence is $6$ and the area $3$, so the flux is $18$.\n\n> **Watch out.** The divergence adds the two coefficients, $P_x + Q_y$, and it multiplies the area; the divergence alone is not the flux.",
+    "格林定理的通量形式指出，穿出闭曲线的通量是散度在内部区域上的积分。散度为常数时，就是散度乘以面积。对 $F = (5x,\\ y)$ 穿出三角形 $(0, 0)$、$(2, 0)$、$(0, 3)$，散度为 $6$，面积为 $3$，所以通量为 $18$。\n\n> **注意。** 散度是两个系数相加，即 $P_x + Q_y$，并且要乘以面积；散度本身不是通量。",
   ],
   (rng) => {
     const a = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
@@ -946,18 +1156,59 @@ const greenFlux = point(
       : rectangle(x0, y0, x0 + w, y0 + h);
     const area = Q.of(triangle ? w * h : 2 * w * h, 2);
     const answer = Q.of((a + b) * (triangle ? w * h : 2 * w * h), 2);
-    return ask(
-      [
-        `Let $F = (${terms([[a, "x"]])},\\ ${terms([[b, "y"]])})$. Find the outward flux of $F$ across the boundary of the shaded region.`,
-        `设 $F = (${terms([[a, "x"]])},\\ ${terms([[b, "y"]])})$。求 $F$ 穿出阴影区域边界的通量。`,
-      ],
-      answer,
-      [Q.of(-(a + b) * (triangle ? w * h : 2 * w * h), 2), Q.of((a - b) * (triangle ? w * h : 2 * w * h), 2), area, a + b],
-      [
-        `The divergence is $${a} + ${paren(b)} = ${a + b}$ and the area is $${area.toLatex()}$, so the flux is $${answer.toLatex()}$.`,
-        `散度为 $${a} + ${paren(b)} = ${a + b}$，面积为 $${area.toLatex()}$，所以通量为 $${answer.toLatex()}$。`,
-      ],
-      fig(
+    return {
+      ...numberProblem({
+        prompt: t(
+          `Let $F = (${terms([[a, "x"]])},\\ ${terms([[b, "y"]])})$. Find the outward flux of $F$ across the boundary of the shaded region.`,
+          `设 $F = (${terms([[a, "x"]])},\\ ${terms([[b, "y"]])})$。求 $F$ 穿出阴影区域边界的通量。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            answer.neg(),
+            "That is the inward flux; the outward normal points away from the region.",
+            "那是向内的通量；外法向量指向区域之外。",
+          ),
+          why(
+            area.mul(Q.of(a - b)),
+            `That subtracts $Q_y = ${b}$; the divergence is $P_x + Q_y$.`,
+            `那是减去了 $Q_y = ${b}$；散度是 $P_x + Q_y$。`,
+          ),
+          why(area, "That is the area alone; the divergence multiplies it.", "那只是面积；还要乘以散度。"),
+          why(a + b, "That is the divergence alone; it has to be integrated over the area.", "那只是散度；还要在面积上积分。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Compute the divergence", "计算散度"],
+              t(`$P_x + Q_y = ${a} + ${paren(b)} = ${a + b}$.`, `$P_x + Q_y = ${a} + ${paren(b)} = ${a + b}$。`),
+            ],
+            [
+              ["Find the area", "求面积"],
+              t(
+                triangle
+                  ? `The right triangle has legs $${w}$ and $${h}$, so its area is $${area.toLatex()}$.`
+                  : `The rectangle is $${w}$ by $${h}$, so its area is $${area.toLatex()}$.`,
+                triangle
+                  ? `直角三角形两直角边为 $${w}$ 和 $${h}$，面积为 $${area.toLatex()}$。`
+                  : `矩形长 $${w}$、宽 $${h}$，面积为 $${area.toLatex()}$。`,
+              ),
+            ],
+            [
+              ["Multiply", "相乘"],
+              t(
+                `$${a + b} \\cdot ${area.toLatex()} = ${answer.toLatex()}$.`,
+                `$${a + b} \\cdot ${area.toLatex()} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Counterclockwise, $\\oint x\\,dy = ${area.toLatex()}$ and $\\oint y\\,dx = -${area.toLatex()}$, so the flux $\\oint (P\\,dy - Q\\,dx)$ is $${a} \\cdot ${area.toLatex()} - ${paren(b)} \\cdot (-${area.toLatex()}) = ${answer.toLatex()}$ again.`,
+            `逆时针时 $\\oint x\\,dy = ${area.toLatex()}$，$\\oint y\\,dx = -${area.toLatex()}$，所以通量 $\\oint (P\\,dy - Q\\,dx)$ 为 $${a} \\cdot ${area.toLatex()} - ${paren(b)} \\cdot (-${area.toLatex()}) = ${answer.toLatex()}$，结果相同。`,
+          ),
+        ),
+      }),
+      figure: fig(
         7,
         [
           { kind: "polygon", points },
@@ -968,7 +1219,7 @@ const greenFlux = point(
           `阴影${triangle ? "三角形" : "矩形"}，顶点为 ${points.map(at).join("、")}。`,
         ],
       ),
-    );
+    };
   },
 );
 

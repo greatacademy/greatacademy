@@ -1246,8 +1246,8 @@ const greenBackwards: KnowledgePointDef = {
   id: "a-coefficient-from-a-known-circulation",
   title: t("A coefficient from a known circulation", "由已知环量求系数"),
   explanation: t(
-    "Green's theorem turns a circulation into the integral of $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$. When this quantity is constant, the circulation is that constant times the area, and a known circulation can be read backwards to find a coefficient of the field.",
-    "格林公式把环量化为 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$ 的积分。这个量是常数时，环量就等于常数乘面积，因此可以由已知环量反过来求向量场的系数。",
+    "Green's theorem turns a circulation into the integral of $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$. When this quantity is constant, the circulation is that constant times the area, and a known circulation can be read backwards to find a coefficient of the field. For $\\langle -ky, 7x \\rangle$ with circulation $60$ around a $3$ by $2$ rectangle, $6(7 + k) = 60$, so $7 + k = 10$ and $k = 3$.\n\n> **Watch out.** $P = -ky$ gives $\\frac{\\partial P}{\\partial y} = -k$, so subtracting it adds $k$. Divide by the area first, then subtract the coefficient from $Q$.",
+    "格林公式把环量化为 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$ 的积分。这个量是常数时，环量就等于常数乘面积，因此可以由已知环量反过来求向量场的系数。对 $\\langle -ky, 7x \\rangle$，沿长 $3$、宽 $2$ 的矩形环量为 $60$，则 $6(7 + k) = 60$，所以 $7 + k = 10$，$k = 3$。\n\n> **注意。** $P = -ky$ 给出 $\\frac{\\partial P}{\\partial y} = -k$，减去它就是加上 $k$。先除以面积，再减去 $Q$ 的系数。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -1263,10 +1263,48 @@ const greenBackwards: KnowledgePointDef = {
       ),
       answer: k,
       solveFor: "k",
-      wrong: [-k, a + k, Q.of(circulation, area)],
-      solution: t(
-        `Here $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${a} + k$, so the circulation is $${area}(${a} + k) = ${circulation}$. Dividing gives $${a} + k = ${a + k}$, so $k = ${k}$.`,
-        `这里 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${a} + k$，所以环量是 $${area}(${a} + k) = ${circulation}$。相除得 $${a} + k = ${a + k}$，所以 $k = ${k}$。`,
+      mistakes: apart(k, [
+        why(
+          -k,
+          `That takes $\\frac{\\partial P}{\\partial y}$ as $k$; with $P = -ky$ it is $-k$, so the curl is $${a} + k$.`,
+          `那是把 $\\frac{\\partial P}{\\partial y}$ 当成 $k$；$P = -ky$ 时它是 $-k$，所以旋度是 $${a} + k$。`,
+        ),
+        why(
+          a + k,
+          `That is the value of $${a} + k$; $k$ is what remains after taking away $${a}$.`,
+          `那是 $${a} + k$ 的值；去掉 $${a}$ 之后剩下的才是 $k$。`,
+        ),
+        why(
+          circulation - a,
+          "That subtracts before dividing by the area; the circulation is the area times the curl.",
+          "那是没有先除以面积就相减；环量是面积乘以旋度。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compute the curl", "计算旋度"],
+            t(
+              `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${a} - (-k) = ${a} + k$, a constant.`,
+              `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${a} - (-k) = ${a} + k$，为常数。`,
+            ),
+          ],
+          [
+            ["Apply Green's theorem", "应用格林定理"],
+            t(`The circulation is $${area}(${a} + k) = ${circulation}$.`, `环量为 $${area}(${a} + k) = ${circulation}$。`),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `Dividing by $${area}$ gives $${a} + k = ${a + k}$, so $k = ${k}$.`,
+              `除以 $${area}$ 得 $${a} + k = ${a + k}$，所以 $k = ${k}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $k = ${k}$, $\\mathbf{F} = \\langle ${poly([-k, "y"])}, ${poly([a, "x"])} \\rangle$ has curl $${a} + ${k < 0 ? `(${k})` : k} = ${a + k}$, and $${a + k} \\cdot ${area} = ${circulation}$.`,
+          `取 $k = ${k}$，$\\mathbf{F} = \\langle ${poly([-k, "y"])}, ${poly([a, "x"])} \\rangle$ 的旋度为 $${a} + ${k < 0 ? `(${k})` : k} = ${a + k}$，而 $${a + k} \\cdot ${area} = ${circulation}$。`,
+        ),
       ),
     });
   },
@@ -2463,8 +2501,8 @@ const conservativeConstant: KnowledgePointDef = {
   id: "the-constant-that-makes-a-field-path-independent",
   title: t("The constant that makes a field path independent", "使场与路径无关的常数"),
   explanation: t(
-    "On the whole plane, a smooth field $\\langle P, Q \\rangle$ has path-independent line integrals exactly when $P_y = Q_x$. If a constant in the field is left unknown, this test becomes an equation for it. Differentiate each component with respect to the other variable, match the coefficients of the resulting monomials, and solve.",
-    "在整个平面上，光滑场 $\\langle P, Q \\rangle$ 的线积分与路径无关，当且仅当 $P_y = Q_x$。如果场中有未知常数，这个检验就成了关于它的方程。对每个分量关于另一个变量求导，比较所得单项式的系数，再求解。",
+    "On the whole plane, a smooth field $\\langle P, Q \\rangle$ has path-independent line integrals exactly when $P_y = Q_x$. If a constant in the field is left unknown, this test becomes an equation for it. Differentiate each component with respect to the other variable, match the coefficients of the resulting monomials, and solve. For $\\langle 3x^2y^5, kx^3y^4 \\rangle$, $P_y = 15x^2y^4$ and $Q_x = 3kx^2y^4$, so $3k = 15$ and $k = 5$.\n\n> **Watch out.** Both derivatives bring down an exponent: $n$ from $y^n$ in $P$ and $m + 1$ from $x^{m+1}$ in $Q$. Leaving out either one gives the wrong $k$.",
+    "在整个平面上，光滑场 $\\langle P, Q \\rangle$ 的线积分与路径无关，当且仅当 $P_y = Q_x$。如果场中有未知常数，这个检验就成了关于它的方程。对每个分量关于另一个变量求导，比较所得单项式的系数，再求解。对 $\\langle 3x^2y^5, kx^3y^4 \\rangle$，$P_y = 15x^2y^4$，$Q_x = 3kx^2y^4$，所以 $3k = 15$，$k = 5$。\n\n> **注意。** 两次求导都会把指数拿下来：$P$ 中 $y^n$ 给出 $n$，$Q$ 中 $x^{m+1}$ 给出 $m + 1$。漏掉任何一个都会得到错误的 $k$。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
@@ -2474,6 +2512,7 @@ const conservativeConstant: KnowledgePointDef = {
     const P = `${coefficient(a)}${powerOf("x", m)}${powerOf("y", n)}`;
     const R = `k${powerOf("x", m + 1)}${powerOf("y", n - 1)}`;
     const common = `${powerOf("x", m)}${powerOf("y", n - 1)}`;
+    const potential = poly([Q.of(a, m + 1), `${powerOf("x", m + 1)}${powerOf("y", n)}`]);
     return numberProblem({
       prompt: t(
         `For which $k$ are the line integrals of $\\mathbf{F} = \\langle ${P}, ${R} \\rangle$ independent of path?`,
@@ -2481,10 +2520,36 @@ const conservativeConstant: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [Q.of(a), Q.of(a * n), Q.of(a, m + 1)],
-      solution: t(
-        `Here $P_y = ${a * n}${common}$ and $Q_x = ${m + 1}k${common}$. Equating them gives $k = ${answer.toLatex()}$.`,
-        `这里 $P_y = ${a * n}${common}$，$Q_x = ${m + 1}k${common}$。令二者相等，得 $k = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(a),
+          "That matches the coefficients of $P$ and $Q$ directly; the test compares their derivatives $P_y$ and $Q_x$.",
+          "那是直接让 $P$ 与 $Q$ 的系数相等；检验比较的是导数 $P_y$ 与 $Q_x$。",
+        ),
+        why(
+          Q.of(a * n),
+          `That leaves out the factor $${m + 1}$ that differentiating $${powerOf("x", m + 1)}$ brings down in $Q_x$.`,
+          `那是漏掉了 $Q_x$ 中对 $${powerOf("x", m + 1)}$ 求导拿下来的因子 $${m + 1}$。`,
+        ),
+        why(
+          Q.of(a, m + 1),
+          `That leaves out the factor $${n}$ that differentiating $${powerOf("y", n)}$ brings down in $P_y$.`,
+          `那是漏掉了 $P_y$ 中对 $${powerOf("y", n)}$ 求导拿下来的因子 $${n}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Differentiate P in y", "对 P 关于 y 求导"], t(`$P_y = ${a * n}${common}$.`, `$P_y = ${a * n}${common}$。`)],
+          [["Differentiate Q in x", "对 Q 关于 x 求导"], t(`$Q_x = ${m + 1}k${common}$.`, `$Q_x = ${m + 1}k${common}$。`)],
+          [
+            ["Solve for k", "解出 k"],
+            t(`$${m + 1}k = ${a * n}$, so $k = ${answer.toLatex()}$.`, `$${m + 1}k = ${a * n}$，所以 $k = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `With this $k$, $f = ${potential}$ is a potential: $f_x = ${P}$ and $f_y = ${poly([answer, `${powerOf("x", m + 1)}${powerOf("y", n - 1)}`])}$.`,
+          `取这个 $k$，$f = ${potential}$ 是势函数：$f_x = ${P}$，$f_y = ${poly([answer, `${powerOf("x", m + 1)}${powerOf("y", n - 1)}`])}$。`,
+        ),
       ),
     });
   },
@@ -4100,8 +4165,8 @@ const astroidArea: KnowledgePointDef = {
   id: "the-area-inside-an-astroid-from-greens-theorem",
   title: t("The area inside an astroid from Green's theorem", "用格林定理求星形线内的面积"),
   explanation: t(
-    "Green's theorem turns the area of a region into $\\frac{1}{2}\\oint_C x\\,dy - y\\,dx$ around its boundary. This is especially useful for a curve given in parametric form, such as the astroid $x = a\\cos^3 t$, $y = a\\sin^3 t$, which would be awkward to describe as a function. Here, the integrand simplifies to $3a^2\\sin^2 t\\cos^2 t$, and only a single integral in $t$ remains.",
-    "格林定理把区域的面积化成沿边界的 $\\frac{1}{2}\\oint_C x\\,dy - y\\,dx$。这对参数形式给出的曲线特别有用，例如星形线 $x = a\\cos^3 t$，$y = a\\sin^3 t$，它写成函数形式很不方便。这里被积函数化简为 $3a^2\\sin^2 t\\cos^2 t$，只剩下一个关于 $t$ 的积分。",
+    "Green's theorem turns the area of a region into $\\frac{1}{2}\\oint_C x\\,dy - y\\,dx$ around its boundary. This is especially useful for a curve given in parametric form, such as the astroid $x = a\\cos^3 t$, $y = a\\sin^3 t$, which would be awkward to describe as a function. Here, the integrand simplifies to $3a^2\\sin^2 t\\cos^2 t$, and only a single integral in $t$ remains. For the astroid $x = \\cos^3 t$, $y = \\sin^3 t$ the area is $\\frac{1}{2} \\cdot 3 \\cdot \\frac{\\pi}{4} = \\frac{3\\pi}{8}$.\n\n> **Watch out.** The astroid lies well inside the circle of radius $a$, so its area is far less than $\\pi a^2$; keep the $\\frac{1}{2}$ of the formula and the $a^2$ from the product of $x$ and $dy$.",
+    "格林定理把区域的面积化成沿边界的 $\\frac{1}{2}\\oint_C x\\,dy - y\\,dx$。这对参数形式给出的曲线特别有用，例如星形线 $x = a\\cos^3 t$，$y = a\\sin^3 t$，它写成函数形式很不方便。这里被积函数化简为 $3a^2\\sin^2 t\\cos^2 t$，只剩下一个关于 $t$ 的积分。对星形线 $x = \\cos^3 t$，$y = \\sin^3 t$，面积为 $\\frac{1}{2} \\cdot 3 \\cdot \\frac{\\pi}{4} = \\frac{3\\pi}{8}$。\n\n> **注意。** 星形线完全落在半径为 $a$ 的圆内，面积远小于 $\\pi a^2$；公式中的 $\\frac{1}{2}$ 要保留，$x$ 与 $dy$ 相乘产生的 $a^2$ 也要保留。",
   ),
   generate(rng) {
     const a = rng.int(2, 30);
@@ -4112,10 +4177,52 @@ const astroidArea: KnowledgePointDef = {
         `星形线 $x = ${a}\\cos^3 t$，$y = ${a}\\sin^3 t$，$0 \\le t \\le 2\\pi$ 围成的面积等于 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(a * a), Q.of(3 * a * a, 4), Q.of(3 * a * a, 16), Q.of(3 * a, 8)],
-      solution: t(
-        `The integrand is $${3 * a * a}\\sin^2 t\\cos^2 t$, and $\\int_0^{2\\pi} \\sin^2 t\\cos^2 t\\,dt = \\frac{\\pi}{4}$. Half of the product is $${answer.toLatex()}\\pi$.`,
-        `被积函数是 $${3 * a * a}\\sin^2 t\\cos^2 t$，且 $\\int_0^{2\\pi} \\sin^2 t\\cos^2 t\\,dt = \\frac{\\pi}{4}$。乘积的一半是 $${answer.toLatex()}\\pi$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(a * a),
+          `That is the area of the circle of radius $${a}$ divided by $\\pi$; the astroid encloses much less.`,
+          `那是半径为 $${a}$ 的圆的面积除以 $\\pi$；星形线围成的面积小得多。`,
+        ),
+        why(Q.of(3 * a * a, 4), "That drops the $\\frac{1}{2}$ of the area formula.", "那是漏掉了面积公式中的 $\\frac{1}{2}$。"),
+        why(
+          Q.of(3 * a * a, 16),
+          "That halves twice; only the formula's $\\frac{1}{2}$ multiplies the integral.",
+          "那是减半了两次；只有公式中的 $\\frac{1}{2}$ 乘以积分。",
+        ),
+        why(
+          Q.of(3 * a, 8),
+          "That keeps only one factor $a$; $x\\,dy$ has $a \\cdot a = a^2$.",
+          "那是只保留了一个因子 $a$；$x\\,dy$ 中有 $a \\cdot a = a^2$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the differentials", "求微分"],
+            t(
+              `$dx = -${3 * a}\\cos^2 t\\sin t\\,dt$ and $dy = ${3 * a}\\sin^2 t\\cos t\\,dt$.`,
+              `$dx = -${3 * a}\\cos^2 t\\sin t\\,dt$，$dy = ${3 * a}\\sin^2 t\\cos t\\,dt$。`,
+            ),
+          ],
+          [
+            ["Simplify the integrand", "化简被积式"],
+            t(
+              `$x\\,dy - y\\,dx = ${3 * a * a}\\sin^2 t\\cos^2 t(\\cos^2 t + \\sin^2 t)\\,dt = ${3 * a * a}\\sin^2 t\\cos^2 t\\,dt$.`,
+              `$x\\,dy - y\\,dx = ${3 * a * a}\\sin^2 t\\cos^2 t(\\cos^2 t + \\sin^2 t)\\,dt = ${3 * a * a}\\sin^2 t\\cos^2 t\\,dt$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$\\int_0^{2\\pi} \\sin^2 t\\cos^2 t\\,dt = \\int_0^{2\\pi} \\frac{\\sin^2 2t}{4}\\,dt = \\frac{\\pi}{4}$, so the area is $\\frac{1}{2} \\cdot ${3 * a * a} \\cdot \\frac{\\pi}{4} = ${answer.toLatex()}\\pi$.`,
+              `$\\int_0^{2\\pi} \\sin^2 t\\cos^2 t\\,dt = \\int_0^{2\\pi} \\frac{\\sin^2 2t}{4}\\,dt = \\frac{\\pi}{4}$，所以面积为 $\\frac{1}{2} \\cdot ${3 * a * a} \\cdot \\frac{\\pi}{4} = ${answer.toLatex()}\\pi$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $\\oint_C x\\,dy$ alone the integrand is $${3 * a * a}\\cos^4 t\\sin^2 t$, and $\\int_0^{2\\pi} \\cos^4 t\\sin^2 t\\,dt = \\frac{\\pi}{8}$ gives the same $${answer.toLatex()}\\pi$.`,
+          `只用 $\\oint_C x\\,dy$，被积函数为 $${3 * a * a}\\cos^4 t\\sin^2 t$，而 $\\int_0^{2\\pi} \\cos^4 t\\sin^2 t\\,dt = \\frac{\\pi}{8}$，给出同样的 $${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },

@@ -3,7 +3,19 @@ import { t } from "@ga/content";
 import { type PlaneMark, paren, plane, poly, Q } from "@ga/subject-math";
 import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
-import { choiceProblem, explainedChoice, numberProblem, pointProblem, steps, why, yesNo } from "../problems.ts";
+import {
+  choiceProblem,
+  explainedChoice,
+  numberProblem,
+  type PointProblem,
+  pointLatex,
+  pointProblem,
+  say,
+  vectorLatex,
+  why,
+  withMistakes,
+  yesNo,
+} from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** asQ turns a number into a rational number so that values can be compared. */
@@ -36,8 +48,22 @@ const pythagoreanTriples = [
   [15, 20, 25],
 ] as const;
 
+/** Wrong is a point or vector that a typical mistake gives, with what to say about it in English and Chinese. */
+type Wrong = readonly [values: readonly (number | Q)[], en: string, zh: string];
+
+/** located builds a point or vector problem whose wrong responses say what went wrong; repeats and the answer are dropped. */
+function located(p: Omit<PointProblem, "wrong">, mistakes: readonly Wrong[]): Problem {
+  const write = p.vector ? vectorLatex : pointLatex;
+  const seen = new Set([write(p.answer)]);
+  const kept = mistakes.filter(([v]) => !seen.has(write(v)) && Boolean(seen.add(write(v))));
+  return withMistakes(
+    pointProblem({ ...p, wrong: kept.map(([v]) => v) }),
+    kept.map(([v, en, zh]) => say(write(v), en, zh)),
+  );
+}
+
 /** Helper for multiple-choice problems with shuffled options. */
-function pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
+function _pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
   const all = [right, ...wrong];
   const perm = rng.shuffle(all.map((_, i) => i));
   const options = perm.map((i) => all[i]!);
@@ -3187,6 +3213,10 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
     "If $\\mathbf{F} = \\nabla f$ is conservative, then $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$, which depends only on the endpoints of $C$.",
     "若 $\\mathbf{F} = \\nabla f$ 为保守场，则 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$，只取决于 $C$ 的端点。",
   ),
+  intro: t(
+    "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle y, x \\rangle$ along any path from $(1, 2)$ to $(3, 5)$. The field is the gradient of $f(x, y) = xy$, so the integral is $f(3, 5) - f(1, 2) = 15 - 2 = 13$.\n\nCheck: along the straight segment $\\mathbf{r}(t) = (1 + 2t, 2 + 3t)$, $0 \\le t \\le 1$, the integrand is $(2 + 3t) \\cdot 2 + (1 + 2t) \\cdot 3 = 7 + 12t$, and $\\int_0^1 (7 + 12t)\\,dt = 13$.\n\nIn this lesson we evaluate line integrals of gradient fields from the values of a potential at the two ends, with no parametrization at all.",
+    "对 $\\mathbf{F} = \\langle y, x \\rangle$，沿从 $(1, 2)$ 到 $(3, 5)$ 的任意路径求 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。这个场是 $f(x, y) = xy$ 的梯度，所以积分是 $f(3, 5) - f(1, 2) = 15 - 2 = 13$。\n\n检验：沿直线段 $\\mathbf{r}(t) = (1 + 2t, 2 + 3t)$，$0 \\le t \\le 1$，被积函数是 $(2 + 3t) \\cdot 2 + (1 + 2t) \\cdot 3 = 7 + 12t$，而 $\\int_0^1 (7 + 12t)\\,dt = 13$。\n\n本课我们由势函数在两端的值计算梯度场的线积分，完全不需要参数化。",
+  ),
   prerequisites: ["gradient-vector-fields", "line-integrals-of-vector-valued-functions-over-parametric-curves"],
   encompasses: [],
   xp: 10,
@@ -3195,8 +3225,8 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
       id: "evaluating-gradient-line-integrals-by-potential-endpoints",
       title: t("Evaluating gradient line integrals by potential endpoints", "通过势函数端点差计算梯度线积分"),
       explanation: t(
-        "By the Fundamental Theorem of Line Integrals, if $\\mathbf{F} = \\nabla f$, then:\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A),$$ where $A$ and $B$ are the initial and terminal points of $C$.",
-        "由曲线积分基本定理，若 $\\mathbf{F} = \\nabla f$，则：\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A),$$ 其中 $A$ 与 $B$ 为曲线 $C$ 的起点与终点。",
+        "By the Fundamental Theorem of Line Integrals, if $\\mathbf{F} = \\nabla f$, then:\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A),$$ where $A$ and $B$ are the initial and terminal points of $C$. For $f(x, y) = 4x^2 - y^2$ from $(1, 2)$ to $(3, 1)$: $f(3, 1) = 35$ and $f(1, 2) = 0$, so the integral is $35$.\n\n> **Watch out.** Take the value at the end minus the value at the start. Squares of negative coordinates are positive: $(-2)^2 = 4$.",
+        "由曲线积分基本定理，若 $\\mathbf{F} = \\nabla f$，则：\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A),$$ 其中 $A$ 与 $B$ 为曲线 $C$ 的起点与终点。对 $f(x, y) = 4x^2 - y^2$，从 $(1, 2)$ 到 $(3, 1)$：$f(3, 1) = 35$，$f(1, 2) = 0$，所以积分为 $35$。\n\n> **注意。** 用终点的值减起点的值。负坐标的平方是正的：$(-2)^2 = 4$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3205,37 +3235,60 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
         const y1 = rng.int(-2, 2);
         const x2Drawn = rng.int(-2, 2);
         const y2 = rng.int(-2, 2);
-
-        // f(x, y) = a * x^2 + b * y^2
-        const fA = a * x1 * x1 + b * y1 * y1;
-        // Moving x2 to 3 makes f(B) differ from f(A) whenever the drawn end has the same value: x^2 grows past every other value.
-        const x2 = a * x2Drawn * x2Drawn + b * y2 * y2 === fA ? 3 : x2Drawn;
-        const fB = a * x2 * x2 + b * y2 * y2;
+        const f = (x: number, y: number) => a * x * x + b * y * y;
+        const fA = f(x1, y1);
+        // When the drawn end has the same value as the start, moving x2 to 3 usually separates them.
+        const x2 = f(x2Drawn, y2) === fA ? 3 : x2Drawn;
+        const fB = f(x2, y2);
         const ans = fB - fA;
-
-        const prompt = t(
-          `Find $\\int_C \\nabla f \\cdot d\\mathbf{r}$ for $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ along any smooth curve $C$ starting at $A(${x1}, ${y1})$ and ending at $B(${x2}, ${y2})$.`,
-          `求势函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 的梯度场沿任意以 $A(${x1}, ${y1})$ 为起点、$B(${x2}, ${y2})$ 为终点的光滑曲线 $C$ 的积分 $\\int_C \\nabla f \\cdot d\\mathbf{r}$。`,
-        );
-        const solution = t(
-          steps(
-            `By the Fundamental Theorem of Line Integrals, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$.`,
-            `Evaluate at endpoint $B$: $f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$.`,
-            `Evaluate at starting point $A$: $f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$.`,
-            `Compute the difference: $f(B) - f(A) = ${fB} - (${fA}) = ${ans}$.`,
-          ),
-          steps(
-            `由曲线积分基本定理，$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。`,
-            `终点 $B$ 处的函数值：$f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$。`,
-            `起点 $A$ 处的函数值：$f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$。`,
-            `两值相减：$f(B) - f(A) = ${fB} - (${fA}) = ${ans}$。`,
-          ),
-        );
+        const signedSquare = (v: number) => v * Math.abs(v);
+        const at = (x: number, y: number) => `${a} \\cdot ${x * x} + ${paren(b)} \\cdot ${y * y}`;
+        const xPart = a * (x2 * x2 - x1 * x1);
+        const yPart = b * (y2 * y2 - y1 * y1);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find $\\int_C \\nabla f \\cdot d\\mathbf{r}$ for $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ along any smooth curve $C$ starting at $A(${x1}, ${y1})$ and ending at $B(${x2}, ${y2})$.`,
+            `求势函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 的梯度场沿任意以 $A(${x1}, ${y1})$ 为起点、$B(${x2}, ${y2})$ 为终点的光滑曲线 $C$ 的积分 $\\int_C \\nabla f \\cdot d\\mathbf{r}$。`,
+          ),
           answer: ans,
-          wrong: [fA - fB, fB + fA, ans + 2],
+          mistakes: distinct(ans, [
+            why(
+              fA - fB,
+              "That is the start value minus the end value; the theorem gives $f(B) - f(A)$.",
+              "那是起点的值减终点的值；定理给出 $f(B) - f(A)$。",
+            ),
+            why(fB, "That is $f(B)$ alone; the value at the start must be subtracted.", "那只是 $f(B)$；还要减去起点处的值。"),
+            why(fB + fA, "That adds the two values; the integral is their difference.", "那是把两个值相加；积分是它们的差。"),
+            why(
+              a * (signedSquare(x2) - signedSquare(x1)) + b * (signedSquare(y2) - signedSquare(y1)),
+              "That keeps the sign of a negative coordinate when squaring it; a square is never negative.",
+              "那是平方时保留了负坐标的符号；平方不会是负数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the theorem", "利用基本定理"],
+                t(
+                  "$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$, whatever the path.",
+                  "无论路径如何，$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。",
+                ),
+              ],
+              [
+                ["Evaluate at the end", "求终点处的值"],
+                t(`$f(${x2}, ${y2}) = ${at(x2, y2)} = ${fB}$.`, `$f(${x2}, ${y2}) = ${at(x2, y2)} = ${fB}$。`),
+              ],
+              [
+                ["Evaluate at the start", "求起点处的值"],
+                t(`$f(${x1}, ${y1}) = ${at(x1, y1)} = ${fA}$.`, `$f(${x1}, ${y1}) = ${at(x1, y1)} = ${fA}$。`),
+              ],
+              [["Subtract", "相减"], t(`$${fB} - ${paren(fA)} = ${ans}$.`, `$${fB} - ${paren(fA)} = ${ans}$。`)],
+            ],
+            t(
+              `Term by term: the $x^2$ part changes by $${a} \\cdot (${x2 * x2} - ${x1 * x1}) = ${xPart}$ and the $y^2$ part by $${paren(b)} \\cdot (${y2 * y2} - ${y1 * y1}) = ${yPart}$, and $${xPart} + ${paren(yPart)} = ${ans}$.`,
+              `逐项计算：$x^2$ 部分改变 $${a} \\cdot (${x2 * x2} - ${x1 * x1}) = ${xPart}$，$y^2$ 部分改变 $${paren(b)} \\cdot (${y2 * y2} - ${y1 * y1}) = ${yPart}$，而 $${xPart} + ${paren(yPart)} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3243,31 +3296,65 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
       id: "evaluating-a-gradient-integral-with-a-mixed-term",
       title: t("A gradient integral with a mixed term", "含交叉项的梯度场积分"),
       explanation: t(
-        "If $\\mathbf{F} = \\nabla f$ and $C$ runs from $A$ to $B$, then $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$, whatever the path. When $\\mathbf{F}$ is given by its components, first recognize the potential. For $f = ax^2y + by$ the gradient is $\\langle 2axy, ax^2 + b \\rangle$, so the integral of that field is a difference of two values of $ax^2y + by$.",
-        "若 $\\mathbf{F} = \\nabla f$ 且 $C$ 从 $A$ 到 $B$，则无论路径如何，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$。当 $\\mathbf{F}$ 以分量给出时，先认出势函数。对 $f = ax^2y + by$，梯度为 $\\langle 2axy, ax^2 + b \\rangle$，所以该场的积分是 $ax^2y + by$ 两个值之差。",
+        "If $\\mathbf{F} = \\nabla f$ and $C$ runs from $A$ to $B$, then $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$, whatever the path. When $\\mathbf{F}$ is given by its components, first recognize the potential. For $f = ax^2y + by$ the gradient is $\\langle 2axy, ax^2 + b \\rangle$, so the integral of that field is a difference of two values of $ax^2y + by$. For $\\mathbf{F} = \\langle 2xy, x^2 + 7 \\rangle = \\nabla(x^2y + 7y)$ from $(0, 0)$ to $(2, 1)$, the integral is $4 + 7 = 11$.\n\n> **Watch out.** The constant $b$ in the second component comes from the term $by$ in $f$; leaving it out loses $b$ times the change in $y$.",
+        "若 $\\mathbf{F} = \\nabla f$ 且 $C$ 从 $A$ 到 $B$，则无论路径如何，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$。当 $\\mathbf{F}$ 以分量给出时，先认出势函数。对 $f = ax^2y + by$，梯度为 $\\langle 2axy, ax^2 + b \\rangle$，所以该场的积分是 $ax^2y + by$ 两个值之差。对 $\\mathbf{F} = \\langle 2xy, x^2 + 7 \\rangle = \\nabla(x^2y + 7y)$，从 $(0, 0)$ 到 $(2, 1)$，积分为 $4 + 7 = 11$。\n\n> **注意。** 第二个分量中的常数 $b$ 来自 $f$ 中的项 $by$；漏掉它就少了 $b$ 乘以 $y$ 的变化量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-5, 5);
         const x0 = rng.int(-2, 2);
         const y0 = rng.int(-2, 2);
-        const x1 = rng.int(-3, 3);
-        let y1 = rng.int(-3, 3);
-        if (x1 === x0 && y1 === y0) y1 += 1;
         const f = (x: number, y: number) => a * x * x * y + b * y;
         const fA = f(x0, y0);
+        let x1 = rng.int(-3, 3);
+        let y1 = rng.int(-3, 3);
+        while (f(x1, y1) === fA) {
+          x1 = rng.int(-3, 3);
+          y1 = rng.int(-3, 3);
+        }
         const fB = f(x1, y1);
         const ans = fB - fA;
+        const leg1 = a * y0 * (x1 * x1 - x0 * x0);
+        const leg2 = (a * x1 * x1 + b) * (y1 - y0);
         return numberProblem({
           prompt: t(
             `$\\mathbf{F} = \\nabla f$ with $f(x, y) = ${poly([a, "x^2y"], [b, "y"])}$, so $\\mathbf{F} = \\langle ${poly([2 * a, "xy"])}, ${poly([a, "x^2"], [b, ""])} \\rangle$. Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $(${x0}, ${y0})$ to $(${x1}, ${y1})$.`,
             `$\\mathbf{F} = \\nabla f$，$f(x, y) = ${poly([a, "x^2y"], [b, "y"])}$，即 $\\mathbf{F} = \\langle ${poly([2 * a, "xy"])}, ${poly([a, "x^2"], [b, ""])} \\rangle$。沿从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的任意路径计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
           ),
           answer: ans,
-          wrong: [-ans, fB + fA, fB, ans + b],
-          solution: t(
-            `$f(${x1}, ${y1}) = ${fB}$ and $f(${x0}, ${y0}) = ${fA}$, so the integral is $${fB} - ${paren(fA)} = ${ans}$.`,
-            `$f(${x1}, ${y1}) = ${fB}$，$f(${x0}, ${y0}) = ${fA}$，所以积分为 $${fB} - ${paren(fA)} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              -ans,
+              "That is the start value minus the end value; the integral is $f(B) - f(A)$.",
+              "那是起点的值减终点的值；积分是 $f(B) - f(A)$。",
+            ),
+            why(fB, "That is $f$ at the end alone; the value at the start must be subtracted.", "那只是终点处的 $f$；还要减去起点处的值。"),
+            why(fB + fA, "That adds the two values of $f$; the integral is their difference.", "那是把 $f$ 的两个值相加；积分是它们的差。"),
+            why(
+              ans - b * (y1 - y0),
+              `That leaves out the term $${poly([b, "y"])}$ of $f$, which gives the constant $${b}$ in the second component.`,
+              `那是漏掉了 $f$ 中的项 $${poly([b, "y"])}$，第二个分量中的常数 $${b}$ 正来自它。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Confirm the potential", "确认势函数"],
+                t(
+                  `$\\frac{\\partial f}{\\partial x} = ${poly([2 * a, "xy"])}$ and $\\frac{\\partial f}{\\partial y} = ${poly([a, "x^2"], [b, ""])}$, the two components of $\\mathbf{F}$.`,
+                  `$\\frac{\\partial f}{\\partial x} = ${poly([2 * a, "xy"])}$，$\\frac{\\partial f}{\\partial y} = ${poly([a, "x^2"], [b, ""])}$，正是 $\\mathbf{F}$ 的两个分量。`,
+                ),
+              ],
+              [
+                ["Evaluate at the ends", "求两端的值"],
+                t(`$f(${x1}, ${y1}) = ${fB}$ and $f(${x0}, ${y0}) = ${fA}$.`, `$f(${x1}, ${y1}) = ${fB}$，$f(${x0}, ${y0}) = ${fA}$。`),
+              ],
+              [["Subtract", "相减"], t(`$${fB} - ${paren(fA)} = ${ans}$.`, `$${fB} - ${paren(fA)} = ${ans}$。`)],
+            ],
+            t(
+              `Take the path that first moves along $y = ${y0}$ to $x = ${x1}$, then along $x = ${x1}$ to $y = ${y1}$. The first leg gives $\\int ${poly([2 * a * y0, "x"])}\\,dx = ${leg1}$, the second gives $\\int (${poly([a * x1 * x1 + b, ""])})\\,dy = ${leg2}$, and $${leg1} + ${paren(leg2)} = ${ans}$.`,
+              `取先沿 $y = ${y0}$ 走到 $x = ${x1}$、再沿 $x = ${x1}$ 走到 $y = ${y1}$ 的路径。第一段给出 $\\int ${poly([2 * a * y0, "x"])}\\,dx = ${leg1}$，第二段给出 $\\int (${poly([a * x1 * x1 + b, ""])})\\,dy = ${leg2}$，而 $${leg1} + ${paren(leg2)} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -3283,6 +3370,10 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
     "On a connected domain $D$, the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is independent of path if and only if $\\mathbf{F} = \\nabla f$ is a gradient field on $D$.",
     "在连通区域 $D$ 上，线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 与路径无关，当且仅当 $\\mathbf{F} = \\nabla f$ 是 $D$ 上的梯度场。",
   ),
+  intro: t(
+    "Compare two paths from $(0, 0)$ to $(2, 3)$ for $\\mathbf{F} = \\langle 2xy, x^2 \\rangle$. Along the straight segment $\\mathbf{r}(t) = (2t, 3t)$, the integrand is $12t^2 \\cdot 2 + 4t^2 \\cdot 3 = 36t^2$, and $\\int_0^1 36t^2\\,dt = 12$. Along the $x$-axis to $(2, 0)$ and then up, the first leg gives $0$ since $y = 0$ and $dy = 0$, and the second gives $\\int_0^3 4\\,dy = 12$. Both paths give $12$.\n\nCheck: $\\mathbf{F} = \\nabla(x^2y)$, and $x^2y$ is $12$ at $(2, 3)$ and $0$ at $(0, 0)$.\n\nIn this lesson we see that a line integral is independent of path exactly when the field has a potential, and test a field for this with $P_y = Q_x$.",
+    "对 $\\mathbf{F} = \\langle 2xy, x^2 \\rangle$，比较从 $(0, 0)$ 到 $(2, 3)$ 的两条路径。沿直线段 $\\mathbf{r}(t) = (2t, 3t)$，被积函数是 $12t^2 \\cdot 2 + 4t^2 \\cdot 3 = 36t^2$，而 $\\int_0^1 36t^2\\,dt = 12$。先沿 $x$ 轴到 $(2, 0)$ 再向上，第一段因 $y = 0$、$dy = 0$ 给出 $0$，第二段给出 $\\int_0^3 4\\,dy = 12$。两条路径都得 $12$。\n\n检验：$\\mathbf{F} = \\nabla(x^2y)$，而 $x^2y$ 在 $(2, 3)$ 处为 $12$，在 $(0, 0)$ 处为 $0$。\n\n本课我们看到：线积分与路径无关恰好当场有势函数时成立，并用 $P_y = Q_x$ 来检验。",
+  ),
   prerequisites: ["the-fundamental-theorem-of-line-integrals"],
   encompasses: [{ topic: "the-fundamental-theorem-of-line-integrals", weight: 0.3 }],
   xp: 10,
@@ -3291,8 +3382,8 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
       id: "equivalence-of-path-independence-and-conservative-fields",
       title: t("Equivalence of path independence and conservative fields", "路径无关性与保守场的等价性"),
       explanation: t(
-        "On an open connected region $D$, the following statements are logically equivalent:\n1. $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is path independent.\n2. $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$ for every closed loop.\n3. $\\mathbf{F} = \\nabla f$ for some potential function $f$.",
-        "在开连通区域 $D$ 上，下列命题等价：\n1. 曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 与路径无关。\n2. 沿任意闭曲线的环量 $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$。\n3. 存在标量势函数 $f$ 使得 $\\mathbf{F} = \\nabla f$。",
+        "On an open connected region $D$, the following statements are logically equivalent:\n1. $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is path independent.\n2. $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$ for every closed loop.\n3. $\\mathbf{F} = \\nabla f$ for some potential function $f$.\n\nFor $\\mathbf{F} = \\nabla(x^2 + 9y^2)$, every path from $(0, 0)$ to $(2, 1)$ gives $4 + 9 = 13$, and every closed loop gives $0$.\n\n> **Watch out.** Path independence lets any path be used, but the value is still $f(B) - f(A)$, the end minus the start; it equals $f(B)$ only when $f(A) = 0$.",
+        "在开连通区域 $D$ 上，下列命题等价：\n1. 曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 与路径无关。\n2. 沿任意闭曲线的环量 $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$。\n3. 存在标量势函数 $f$ 使得 $\\mathbf{F} = \\nabla f$。\n\n对 $\\mathbf{F} = \\nabla(x^2 + 9y^2)$，从 $(0, 0)$ 到 $(2, 1)$ 的每条路径都给出 $4 + 9 = 13$，每条闭路都给出 $0$。\n\n> **注意。** 路径无关允许任选路径，但值仍是 $f(B) - f(A)$，即终点减起点；只有 $f(A) = 0$ 时它才等于 $f(B)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -3304,30 +3395,51 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
         const fA = a * x1 * x1 + b * y1 * y1;
         const fB = a * x2 * x2 + b * y2 * y2;
         const ans = fB - fA;
-
-        const prompt = t(
-          `Since $\\mathbf{F} = \\nabla (${poly([a, "x^2"], [b, "y^2"])})$ is conservative, the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is path independent. Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path starting at $A(${x1}, ${y1})$ and ending at $B(${x2}, ${y2})$.`,
-          `已知 $\\mathbf{F} = \\nabla (${poly([a, "x^2"], [b, "y^2"])})$ 为保守场，曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 具有路径无关性。求沿任意起点为 $A(${x1}, ${y1})$、终点为 $B(${x2}, ${y2})$ 的路径积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Because $\\mathbf{F} = \\nabla f$ with $f(x, y) = ${a}x^2 + ${b}y^2$, path independence allows evaluating $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$.`,
-            `Evaluate $f$ at the terminal point $B(${x2}, ${y2})$: $f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$.`,
-            `Evaluate $f$ at the initial point $A(${x1}, ${y1})$: $f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$.`,
-            `Subtract: $f(B) - f(A) = ${fB} - ${fA} = ${ans}$.`,
-          ),
-          steps(
-            `由于 $\\mathbf{F} = \\nabla f$（其中 $f(x, y) = ${a}x^2 + ${b}y^2$），由路径无关性可知 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$。`,
-            `计算终点 $B(${x2}, ${y2})$ 处的势函数值：$f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$。`,
-            `计算起点 $A(${x1}, ${y1})$ 处的势函数值：$f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$。`,
-            `相减得：$f(B) - f(A) = ${fB} - ${fA} = ${ans}$。`,
-          ),
-        );
+        const xPart = a * (x2 * x2 - x1 * x1);
+        const yPart = b * (y2 * y2 - y1 * y1);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Since $\\mathbf{F} = \\nabla (${poly([a, "x^2"], [b, "y^2"])})$ is conservative, the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is path independent. Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path starting at $A(${x1}, ${y1})$ and ending at $B(${x2}, ${y2})$.`,
+            `已知 $\\mathbf{F} = \\nabla (${poly([a, "x^2"], [b, "y^2"])})$ 为保守场，曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 具有路径无关性。求沿任意起点为 $A(${x1}, ${y1})$、终点为 $B(${x2}, ${y2})$ 的路径积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 的值。`,
+          ),
           answer: ans,
-          wrong: [fA - fB, fB + fA, ans + 2],
+          mistakes: distinct(ans, [
+            why(
+              fA - fB,
+              "That is the start value minus the end value; the integral is $f(B) - f(A)$.",
+              "那是起点的值减终点的值；积分是 $f(B) - f(A)$。",
+            ),
+            why(fB, "That is $f(B)$ alone; the value at the start must be subtracted.", "那只是 $f(B)$；还要减去起点处的值。"),
+            why(fB + fA, "That adds the two values; the integral is their difference.", "那是把两个值相加；积分是它们的差。"),
+            why(
+              xPart,
+              "That keeps only the change in the $x^2$ term; the $y^2$ term changes too.",
+              "那是只算了 $x^2$ 项的改变量；$y^2$ 项也在变。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the potential", "利用势函数"],
+                t(
+                  `$\\mathbf{F} = \\nabla f$ with $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$, so $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$ for every path.`,
+                  `$\\mathbf{F} = \\nabla f$，其中 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$，所以对每条路径 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$。`,
+                ),
+              ],
+              [
+                ["Evaluate at the ends", "求两端的值"],
+                t(
+                  `$f(${x2}, ${y2}) = ${a} \\cdot ${x2 * x2} + ${b} \\cdot ${y2 * y2} = ${fB}$ and $f(${x1}, ${y1}) = ${a} \\cdot ${x1 * x1} + ${b} \\cdot ${y1 * y1} = ${fA}$.`,
+                  `$f(${x2}, ${y2}) = ${a} \\cdot ${x2 * x2} + ${b} \\cdot ${y2 * y2} = ${fB}$，$f(${x1}, ${y1}) = ${a} \\cdot ${x1 * x1} + ${b} \\cdot ${y1 * y1} = ${fA}$。`,
+                ),
+              ],
+              [["Subtract", "相减"], t(`$${fB} - ${fA} = ${ans}$.`, `$${fB} - ${fA} = ${ans}$。`)],
+            ],
+            t(
+              `Term by term: the $x^2$ part changes by $${a} \\cdot (${x2 * x2} - ${x1 * x1}) = ${xPart}$ and the $y^2$ part by $${b} \\cdot (${y2 * y2} - ${y1 * y1}) = ${yPart}$, which add to $${ans}$.`,
+              `逐项计算：$x^2$ 部分改变 $${a} \\cdot (${x2 * x2} - ${x1 * x1}) = ${xPart}$，$y^2$ 部分改变 $${b} \\cdot (${y2 * y2} - ${y1 * y1}) = ${yPart}$，合计 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3335,8 +3447,8 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
       id: "testing-a-linear-field-for-path-independence",
       title: t("Testing a field for path independence", "检验向量场的路径无关性"),
       explanation: t(
-        "On the whole plane, which is simply connected, $\\int_C P\\,dx + Q\\,dy$ is path independent exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ everywhere. For $\\mathbf{F} = \\langle ay + bx^2, cx + dy^3 \\rangle$ this means $a = c$: the terms $bx^2$ and $dy^3$ depend on one variable only and never affect the test.",
-        "在整个平面（单连通）上，$\\int_C P\\,dx + Q\\,dy$ 与路径无关当且仅当处处 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。对 $\\mathbf{F} = \\langle ay + bx^2, cx + dy^3 \\rangle$，这意味着 $a = c$：项 $bx^2$ 与 $dy^3$ 只依赖一个变量，从不影响检验。",
+        "On the whole plane, which is simply connected, $\\int_C P\\,dx + Q\\,dy$ is path independent exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ everywhere. For $\\mathbf{F} = \\langle ay + bx^2, cx + dy^3 \\rangle$ this means $a = c$: the terms $bx^2$ and $dy^3$ depend on one variable only and never affect the test. For $\\langle 2y + x^4, 7x + y^5 \\rangle$, $P_y = 2$ and $Q_x = 7$, so its integrals depend on the path.\n\n> **Watch out.** Differentiate $P$ with respect to $y$ and $Q$ with respect to $x$, not $P_x$ and $Q_y$.",
+        "在整个平面（单连通）上，$\\int_C P\\,dx + Q\\,dy$ 与路径无关当且仅当处处 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。对 $\\mathbf{F} = \\langle ay + bx^2, cx + dy^3 \\rangle$，这意味着 $a = c$：项 $bx^2$ 与 $dy^3$ 只依赖一个变量，从不影响检验。对 $\\langle 2y + x^4, 7x + y^5 \\rangle$，$P_y = 2$，$Q_x = 7$，所以它的积分依赖于路径。\n\n> **注意。** 要对 $P$ 关于 $y$ 求导、对 $Q$ 关于 $x$ 求导，而不是求 $P_x$ 和 $Q_y$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -3345,19 +3457,70 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
         if (!indep && c === a) c = -a;
         const b = rng.nonZero(-4, 4);
         const d = rng.nonZero(-4, 4);
-        return pickChoice(
-          rng,
-          t(
+        const yes = yesNo[0] as Text;
+        const no = yesNo[1] as Text;
+        const viaX = Q.of(b, 3).add(Q.of(c)).add(Q.of(d, 4));
+        const viaY = Q.of(d, 4).add(Q.of(a)).add(Q.of(b, 3));
+        return explainedChoice(rng, {
+          prompt: t(
             `Is $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ independent of path in the plane for $\\mathbf{F} = \\langle ${poly([a, "y"], [b, "x^2"])}, ${poly([c, "x"], [d, "y^3"])} \\rangle$?`,
             `对 $\\mathbf{F} = \\langle ${poly([a, "y"], [b, "x^2"])}, ${poly([c, "x"], [d, "y^3"])} \\rangle$，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 在平面上与路径无关吗？`,
           ),
-          indep ? yesNo[0]! : yesNo[1]!,
-          [indep ? yesNo[1]! : yesNo[0]!],
-          t(
-            `$\\frac{\\partial P}{\\partial y} = ${a}$ and $\\frac{\\partial Q}{\\partial x} = ${c}$. ${indep ? "They agree on the whole plane, so the field is conservative and the integral is path independent." : "They differ, so the field is not conservative and the integral depends on the path."}`,
-            `$\\frac{\\partial P}{\\partial y} = ${a}$，$\\frac{\\partial Q}{\\partial x} = ${c}$。${indep ? "二者在整个平面上相等，所以场是保守的，积分与路径无关。" : "二者不等，所以场不是保守的，积分依赖于路径。"}`,
+          correct: indep ? yes : no,
+          wrong: [
+            indep
+              ? {
+                  option: no,
+                  why: t(
+                    `$P_y = ${a}$ and $Q_x = ${c}$ agree everywhere; the terms $${poly([b, "x^2"])}$ and $${poly([d, "y^3"])}$ play no part in the test`,
+                    `$P_y = ${a}$ 与 $Q_x = ${c}$ 处处相等；项 $${poly([b, "x^2"])}$ 和 $${poly([d, "y^3"])}$ 与检验无关`,
+                  ),
+                }
+              : {
+                  option: yes,
+                  why: t(
+                    `$P_y = ${a}$ but $Q_x = ${c}$; they differ, so the field has no potential`,
+                    `$P_y = ${a}$，而 $Q_x = ${c}$；二者不等，所以场没有势函数`,
+                  ),
+                },
+          ],
+          solution: walked(
+            [
+              [
+                ["Differentiate P in y", "对 P 关于 y 求导"],
+                t(
+                  `$\\frac{\\partial P}{\\partial y} = ${a}$, since $${poly([b, "x^2"])}$ does not involve $y$.`,
+                  `$\\frac{\\partial P}{\\partial y} = ${a}$，因为 $${poly([b, "x^2"])}$ 不含 $y$。`,
+                ),
+              ],
+              [
+                ["Differentiate Q in x", "对 Q 关于 x 求导"],
+                t(
+                  `$\\frac{\\partial Q}{\\partial x} = ${c}$, since $${poly([d, "y^3"])}$ does not involve $x$.`,
+                  `$\\frac{\\partial Q}{\\partial x} = ${c}$，因为 $${poly([d, "y^3"])}$ 不含 $x$。`,
+                ),
+              ],
+              [
+                ["Compare", "比较"],
+                t(
+                  indep
+                    ? "They agree on the whole plane, so the field is conservative and the integral is path independent."
+                    : "They differ, so the field is not conservative and the integral depends on the path.",
+                  indep ? "二者在整个平面上相等，所以场是保守的，积分与路径无关。" : "二者不等，所以场不是保守的，积分依赖于路径。",
+                ),
+              ],
+            ],
+            indep
+              ? t(
+                  `A potential is $f = ${poly([a, "xy"], [Q.of(b, 3), "x^3"], [Q.of(d, 4), "y^4"])}$: its partial derivatives are $${poly([a, "y"], [b, "x^2"])}$ and $${poly([a, "x"], [d, "y^3"])}$.`,
+                  `势函数为 $f = ${poly([a, "xy"], [Q.of(b, 3), "x^3"], [Q.of(d, 4), "y^4"])}$：它的偏导数是 $${poly([a, "y"], [b, "x^2"])}$ 和 $${poly([a, "x"], [d, "y^3"])}$。`,
+                )
+              : t(
+                  `From $(0, 0)$ to $(1, 1)$, going along the $x$-axis first gives $${viaX.toLatex()}$, while going up the $y$-axis first gives $${viaY.toLatex()}$: two different values.`,
+                  `从 $(0, 0)$ 到 $(1, 1)$，先沿 $x$ 轴走得 $${viaX.toLatex()}$，先沿 $y$ 轴走得 $${viaY.toLatex()}$：两个值不同。`,
+                ),
           ),
-        );
+        });
       },
     },
   ],
@@ -3371,6 +3534,10 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
     "The circulation of a conservative vector field around every closed curve $C$ is zero: $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$.",
     "保守向量场沿任意闭曲线 $C$ 的环量为零：$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$。",
   ),
+  intro: t(
+    "Find $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle 0, x \\rangle$ counterclockwise around the square with corners $(0, 0)$, $(1, 0)$, $(1, 1)$ and $(0, 1)$. Only $x\\,dy$ counts. The bottom and top have $dy = 0$, the left side has $x = 0$, and the right side gives $\\int_0^1 1\\,dy = 1$. The circulation is $1$, not $0$, so $\\mathbf{F}$ is not conservative.\n\nCheck: $P = 0$ and $Q = x$, so $P_y = 0$ while $Q_x = 1$; the test for a potential fails as well.\n\nIn this lesson we use closed paths: a conservative field has circulation $0$ around every one, so a single nonzero circulation rules out a potential.",
+    "对 $\\mathbf{F} = \\langle 0, x \\rangle$，沿顶点为 $(0, 0)$、$(1, 0)$、$(1, 1)$、$(0, 1)$ 的正方形逆时针求 $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。只有 $x\\,dy$ 起作用。底边和顶边上 $dy = 0$，左边上 $x = 0$，右边给出 $\\int_0^1 1\\,dy = 1$。环量是 $1$ 而不是 $0$，所以 $\\mathbf{F}$ 不是保守场。\n\n检验：$P = 0$，$Q = x$，所以 $P_y = 0$ 而 $Q_x = 1$；势函数的检验同样不成立。\n\n本课我们利用闭路径：保守场沿每条闭路径的环量都是 $0$，所以只要有一个环量不为零，就排除了势函数。",
+  ),
   prerequisites: ["path-independence-of-line-integrals"],
   encompasses: [{ topic: "path-independence-of-line-integrals", weight: 0.3 }],
   xp: 10,
@@ -3379,34 +3546,57 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
       id: "vanishing-of-circulation-in-conservative-fields",
       title: t("Vanishing of circulation in conservative fields", "保守场沿闭路径环量的消失性"),
       explanation: t(
-        "For any closed path $C$, the starting point $A$ and ending point $B$ coincide ($B = A$). By the Fundamental Theorem:\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0.$$",
-        "对于任意闭路径 $C$，起点 $A$ 与终点 $B$ 重合（$B = A$）。由基本定理：\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$$",
+        "For any closed path $C$, the starting point $A$ and ending point $B$ coincide ($B = A$). By the Fundamental Theorem:\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0.$$\n\nSo $\\nabla(x^4y)$ has circulation $0$ around the square with corners $(0, 0)$, $(1, 0)$, $(1, 1)$, $(0, 1)$, with no edge-by-edge work needed.\n\n> **Watch out.** The answer is a difference of two equal values, so it is $0$; it is not the value of $f$ at the starting point.",
+        "对于任意闭路径 $C$，起点 $A$ 与终点 $B$ 重合（$B = A$）。由基本定理：\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$$\n\n所以 $\\nabla(x^4y)$ 沿顶点为 $(0, 0)$、$(1, 0)$、$(1, 1)$、$(0, 1)$ 的正方形的环量是 $0$，无需逐边计算。\n\n> **注意。** 结果是两个相等的值之差，所以是 $0$；它不是 $f$ 在起点处的值。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
         const b = rng.nonZero(-5, 5);
         const R = rng.int(2, 10);
         const ans = 0;
-
-        const prompt = t(
-          `Evaluate the closed line integral $\\oint_C \\nabla f \\cdot d\\mathbf{r}$ for $f(x, y) = ${poly([a, "x^3"], [b, "y^3"])}$ around the circle $C: x^2 + y^2 = ${R * R}$ traversed counterclockwise.`,
-          `计算闭曲线积分 $\\oint_C \\nabla f \\cdot d\\mathbf{r}$ 的值，其中 $f(x, y) = ${poly([a, "x^3"], [b, "y^3"])}$，曲线 $C$ 为沿逆时针方向遍历的圆周 $x^2 + y^2 = ${R * R}$。`,
-        );
-        const solution = t(
-          steps(
-            `Because $\\mathbf{F} = \\nabla f$ is a gradient field and $C$ is a closed curve, the initial point and terminal point coincide.`,
-            `By the Fundamental Theorem of Line Integrals, $\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$.`,
-          ),
-          steps(
-            `因为 $\\mathbf{F} = \\nabla f$ 是梯度场且 $C$ 是闭合曲线，其起点与终点重合。`,
-            `由曲线积分基本定理，$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$。`,
-          ),
-        );
+        const r = `${R}`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the closed line integral $\\oint_C \\nabla f \\cdot d\\mathbf{r}$ for $f(x, y) = ${poly([a, "x^3"], [b, "y^3"])}$ around the circle $C: x^2 + y^2 = ${R * R}$ traversed counterclockwise.`,
+            `计算闭曲线积分 $\\oint_C \\nabla f \\cdot d\\mathbf{r}$ 的值，其中 $f(x, y) = ${poly([a, "x^3"], [b, "y^3"])}$，曲线 $C$ 为沿逆时针方向遍历的圆周 $x^2 + y^2 = ${R * R}$。`,
+          ),
           answer: ans,
-          wrong: [a * R * R, 2 * a * R, b * R],
+          mistakes: distinct(ans, [
+            why(
+              a * R ** 3,
+              `That is $f(${r}, 0)$, the value at a point of the circle; the integral is the difference of $f$ at the two ends, which coincide.`,
+              `那是 $f(${r}, 0)$，即圆上一点处的值；积分是 $f$ 在两端的值之差，而两端重合。`,
+            ),
+            why(
+              b * R ** 3,
+              `That is $f(0, ${r})$, the value at a point of the circle; the integral is the difference of $f$ at the two ends, which coincide.`,
+              `那是 $f(0, ${r})$，即圆上一点处的值；积分是 $f$ 在两端的值之差，而两端重合。`,
+            ),
+            why(
+              3 * a * R * R,
+              `That is $\\frac{\\partial f}{\\partial x}$ at $(${r}, 0)$; the integral of a gradient around a closed path is $0$.`,
+              `那是 $\\frac{\\partial f}{\\partial x}$ 在 $(${r}, 0)$ 处的值；梯度沿闭路径的积分是 $0$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Note the ends", "注意两端"],
+                t("$C$ is closed, so it starts and ends at the same point $A$.", "$C$ 是闭合的，所以起点和终点是同一点 $A$。"),
+              ],
+              [
+                ["Apply the theorem", "应用基本定理"],
+                t(
+                  "$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$.",
+                  "$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$。",
+                ),
+              ],
+            ],
+            t(
+              `With $\\mathbf{r}(t) = (${r}\\cos t, ${r}\\sin t)$ the integrand is $\\frac{d}{dt} f(\\mathbf{r}(t))$, so the integral over $0 \\le t \\le 2\\pi$ is $f(\\mathbf{r}(2\\pi)) - f(\\mathbf{r}(0)) = f(${r}, 0) - f(${r}, 0) = 0$.`,
+              `取 $\\mathbf{r}(t) = (${r}\\cos t, ${r}\\sin t)$，被积函数是 $\\frac{d}{dt} f(\\mathbf{r}(t))$，所以在 $0 \\le t \\le 2\\pi$ 上的积分是 $f(\\mathbf{r}(2\\pi)) - f(\\mathbf{r}(0)) = f(${r}, 0) - f(${r}, 0) = 0$。`,
+            ),
+          ),
         });
       },
     },
@@ -3415,8 +3605,8 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
       figure: multivariableDrawings6["conservative-vector-fields-and-closed-paths#a-nonzero-circulation-rules-out-a-potential"],
       title: t("A nonzero circulation rules out a potential", "非零环量说明不存在势函数"),
       explanation: t(
-        "If $\\mathbf{F}$ is conservative, its circulation around every closed curve is $0$. So a single closed curve with nonzero circulation proves that $\\mathbf{F}$ has no potential. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ around the counterclockwise circle of radius $R$, with $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$,\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2.$$\n\nThis is nonzero unless $b = -a$, and $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ is indeed conservative.",
-        "若 $\\mathbf{F}$ 是保守的，它沿每条闭曲线的环量都是 $0$。所以只要有一条闭曲线的环量不为零，就证明了 $\\mathbf{F}$ 没有势函数。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$ 沿半径为 $R$ 的逆时针圆，$\\mathbf{r}(t) = (R\\cos t, R\\sin t)$，\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2$$\n\n除非 $b = -a$，这都不为零；而 $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ 确实是保守的。",
+        "If $\\mathbf{F}$ is conservative, its circulation around every closed curve is $0$. So a single closed curve with nonzero circulation proves that $\\mathbf{F}$ has no potential. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ around the counterclockwise circle of radius $R$, with $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$,\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2.$$\n\nThis is nonzero unless $b = -a$, and $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ is indeed conservative. For $\\langle -5y, 2x \\rangle$ around the unit circle the circulation is $7\\pi$.\n\n> **Watch out.** Over a full turn, $\\sin^2 t$ and $\\cos^2 t$ each integrate to $\\pi$, not $2\\pi$. A nonzero circulation proves there is no potential, but a zero circulation on one loop proves nothing.",
+        "若 $\\mathbf{F}$ 是保守的，它沿每条闭曲线的环量都是 $0$。所以只要有一条闭曲线的环量不为零，就证明了 $\\mathbf{F}$ 没有势函数。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$ 沿半径为 $R$ 的逆时针圆，$\\mathbf{r}(t) = (R\\cos t, R\\sin t)$，\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2$$\n\n除非 $b = -a$，这都不为零；而 $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ 确实是保守的。对 $\\langle -5y, 2x \\rangle$ 沿单位圆，环量为 $7\\pi$。\n\n> **注意。** 在一整圈上，$\\sin^2 t$ 与 $\\cos^2 t$ 的积分各为 $\\pi$，不是 $2\\pi$。非零环量证明没有势函数，但一条闭路上环量为零什么也证明不了。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -3424,16 +3614,63 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
         if (b === -a) b = a;
         const R = rng.int(1, 4);
         const ans = (a + b) * R * R;
+        const r = R === 1 ? "" : `${R}`;
         return numberProblem({
           prompt: t(
             `Find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle ${poly([-a, "y"])}, ${poly([b, "x"])} \\rangle$ around the circle $x^2 + y^2 = ${R * R}$, counterclockwise. A nonzero answer shows $\\mathbf{F}$ is not conservative.`,
             `沿逆时针方向的圆 $x^2 + y^2 = ${R * R}$，对 $\\mathbf{F} = \\langle ${poly([-a, "y"])}, ${poly([b, "x"])} \\rangle$ 求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。非零的结果说明 $\\mathbf{F}$ 不是保守的。`,
           ),
           answer: ans,
-          wrong: [0, (b - a) * R * R, 2 * (a + b) * R * R, (a + b) * R],
-          solution: t(
-            `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$, and each of $\\sin^2 t$, $\\cos^2 t$ integrates to $\\pi$ over a full turn. So the circulation is $${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
-            `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$，$\\sin^2 t$ 与 $\\cos^2 t$ 在一整圈上的积分都是 $\\pi$。所以环量为 $${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              0,
+              "That assumes the field is conservative, which is what the circulation tests; here it is not $0$.",
+              "那是假设场是保守的，而这正是环量要检验的；这里它不为 $0$。",
+            ),
+            why(
+              (b - a) * R * R,
+              "That takes the first product as negative; $(-aR\\sin t)(-R\\sin t) = aR^2\\sin^2 t$.",
+              "那是把第一个乘积当成了负的；$(-aR\\sin t)(-R\\sin t) = aR^2\\sin^2 t$。",
+            ),
+            why(
+              2 * (a + b) * R * R,
+              "That integrates $\\sin^2 t$ and $\\cos^2 t$ to $2\\pi$ over a full turn; each gives $\\pi$.",
+              "那是把 $\\sin^2 t$ 与 $\\cos^2 t$ 在一整圈上的积分算成 $2\\pi$；它们各为 $\\pi$。",
+            ),
+            why(
+              (a + b) * R,
+              "That uses $R$ instead of $R^2$; one factor $R$ comes from the field and one from the velocity.",
+              "那是用了 $R$ 而不是 $R^2$；一个因子 $R$ 来自场，另一个来自速度。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Parametrize", "参数化"],
+                t(
+                  `$\\mathbf{r}(t) = (${r}\\cos t, ${r}\\sin t)$ and $\\mathbf{r}'(t) = (-${r}\\sin t, ${r}\\cos t)$, $0 \\le t \\le 2\\pi$.`,
+                  `$\\mathbf{r}(t) = (${r}\\cos t, ${r}\\sin t)$，$\\mathbf{r}'(t) = (-${r}\\sin t, ${r}\\cos t)$，$0 \\le t \\le 2\\pi$。`,
+                ),
+              ],
+              [
+                ["Take the dot product", "求点积"],
+                t(
+                  `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$.`,
+                  `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$。`,
+                ),
+              ],
+              [
+                ["Integrate over a full turn", "在一整圈上积分"],
+                t(
+                  `Each of $\\sin^2 t$ and $\\cos^2 t$ integrates to $\\pi$, so the circulation is $(${a * R * R} + ${paren(b * R * R)})\\pi = ${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `$\\sin^2 t$ 与 $\\cos^2 t$ 的积分各为 $\\pi$，所以环量为 $(${a * R * R} + ${paren(b * R * R)})\\pi = ${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Over a full turn $\\sin^2 t$ and $\\cos^2 t$ both average $\\frac{1}{2}$, so the integrand averages $\\frac{${ans}}{2}$; times the length $2\\pi$ of the interval this is $${ans}\\pi$.`,
+              `在一整圈上 $\\sin^2 t$ 与 $\\cos^2 t$ 的平均值都是 $\\frac{1}{2}$，所以被积函数的平均值是 $\\frac{${ans}}{2}$；乘以区间长度 $2\\pi$ 得 $${ans}\\pi$。`,
+            ),
           ),
         });
       },
@@ -3441,13 +3678,17 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
   ],
 };
 
-/** calculatingPotentialFunctionsForLineIntegrals reconstructs f from F = ⟨P, Q⟩. */
+/** calculatingPotentialFunctionsForLineIntegrals finds potentials by partial integration and evaluates line integrals with them. */
 export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
   id: "calculating-potential-functions-for-line-integrals",
   title: t("Calculating Potential Functions for Line Integrals", "求用于计算曲线积分的势函数"),
   summary: t(
     "To integrate a conservative field, determine the potential function f by partial integration and evaluate f(end) - f(start).",
     "对于保守向量场，先通过逐次偏积分确定势函数 f，再通过计算 f(终点) - f(起点) 快速求出曲线积分值。",
+  ),
+  intro: t(
+    "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle 8x + 5y, 5x \\rangle$ along any path from $(0, 0)$ to $(1, 2)$. Integrating the first component in $x$ gives $f = 4x^2 + 5xy + g(y)$. Then $f_y = 5x + g'(y)$ must equal $5x$, so $g'(y) = 0$ and $f = 4x^2 + 5xy$. The integral is $f(1, 2) - f(0, 0) = 4 + 10 = 14$.\n\nCheck: along $\\mathbf{r}(t) = (t, 2t)$, $0 \\le t \\le 1$, the integrand is $18t \\cdot 1 + 5t \\cdot 2 = 28t$, and $\\int_0^1 28t\\,dt = 14$.\n\nIn this lesson we build a potential from the components of a conservative field, one variable at a time, and use it to evaluate line integrals.",
+    "对 $\\mathbf{F} = \\langle 8x + 5y, 5x \\rangle$，沿从 $(0, 0)$ 到 $(1, 2)$ 的任意路径求 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。把第一个分量对 $x$ 积分得 $f = 4x^2 + 5xy + g(y)$。于是 $f_y = 5x + g'(y)$ 必须等于 $5x$，所以 $g'(y) = 0$，$f = 4x^2 + 5xy$。积分为 $f(1, 2) - f(0, 0) = 4 + 10 = 14$。\n\n检验：沿 $\\mathbf{r}(t) = (t, 2t)$，$0 \\le t \\le 1$，被积函数是 $18t \\cdot 1 + 5t \\cdot 2 = 28t$，而 $\\int_0^1 28t\\,dt = 14$。\n\n本课我们由保守场的分量逐个变量地构造势函数，并用它计算线积分。",
   ),
   prerequisites: ["conservative-vector-fields-in-the-cartesian-plane", "the-fundamental-theorem-of-line-integrals"],
   encompasses: [
@@ -3463,8 +3704,8 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
       id: "recovering-potential-function-from-gradient-components",
       title: t("Recovering potential function from gradient components", "从梯度分量还原势函数并求积分"),
       explanation: t(
-        "Integrate the first component with respect to its variable, then choose the leftover function of the other variable so that its partial derivative matches the second component. For $\\mathbf{F} = \\langle 2ax + by, bx + 2cy \\rangle$, the potential function is $f(x, y) = ax^2 + bxy + cy^2$. The line integral from $(0, 0)$ to $(x_0, y_0)$ is $f(x_0, y_0) - f(0, 0) = ax_0^2 + bx_0 y_0 + cy_0^2$.",
-        "把第一个分量对其变量积分，再选择剩下的另一变量的函数，使它的偏导数与第二个分量一致。对于 $\\mathbf{F} = \\langle 2ax + by, bx + 2cy \\rangle$，其势函数为 $f(x, y) = ax^2 + bxy + cy^2$。从 $(0, 0)$ 到 $(x_0, y_0)$ 的线积分为 $f(x_0, y_0) - f(0, 0) = ax_0^2 + bx_0 y_0 + cy_0^2$。",
+        "Integrate the first component with respect to its variable, then choose the leftover function of the other variable so that its partial derivative matches the second component. For $\\mathbf{F} = \\langle 2ax + by, bx + 2cy \\rangle$, the potential function is $f(x, y) = ax^2 + bxy + cy^2$. For $\\langle 10x + y, x - 6y \\rangle$ this gives $f = 5x^2 + xy - 3y^2$, and the integral from $(0, 0)$ to $(1, 1)$ is $5 + 1 - 3 = 3$.\n\n> **Watch out.** The term $bxy$ from the first integration already accounts for $bx$ in the second component, so $g'(y)$ is only $2cy$; counting $bxy$ twice is a common slip. Integrating also halves the coefficients: $2ax$ becomes $ax^2$.",
+        "把第一个分量对其变量积分，再选择剩下的另一变量的函数，使它的偏导数与第二个分量一致。对于 $\\mathbf{F} = \\langle 2ax + by, bx + 2cy \\rangle$，其势函数为 $f(x, y) = ax^2 + bxy + cy^2$。对 $\\langle 10x + y, x - 6y \\rangle$，得 $f = 5x^2 + xy - 3y^2$，从 $(0, 0)$ 到 $(1, 1)$ 的积分为 $5 + 1 - 3 = 3$。\n\n> **注意。** 第一次积分得到的项 $bxy$ 已经给出了第二个分量中的 $bx$，所以 $g'(y)$ 只有 $2cy$；把 $bxy$ 算两次是常见错误。积分还会使系数减半：$2ax$ 变成 $ax^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3472,34 +3713,68 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
         const c = rng.nonZero(-3, 3);
         const x0 = rng.int(1, 4);
         const y0 = rng.int(1, 4);
-
-        const P_desc = poly([2 * a, "x"], [b, "y"]);
-        const Q_desc = poly([b, "x"], [2 * c, "y"]);
+        const P = poly([2 * a, "x"], [b, "y"]);
+        const Qc = poly([b, "x"], [2 * c, "y"]);
         const ans = a * x0 * x0 + b * x0 * y0 + c * y0 * y0;
-
-        const prompt = t(
-          `Find a potential function for $\\mathbf{F}(x, y) = \\langle ${P_desc}, ${Q_desc} \\rangle$ and evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $(0, 0)$ to $(${x0}, ${y0})$.`,
-          `为向量场 $\\mathbf{F}(x, y) = \\langle ${P_desc}, ${Q_desc} \\rangle$ 求势函数，并计算沿从 $(0, 0)$ 到 $(${x0}, ${y0})$ 任意路径的曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
-        );
-        const solution = t(
-          steps(
-            `Integrate $P$ with respect to $x$: $f(x, y) = \\int (${P_desc})dx = ${poly([a, "x^2"], [b, "xy"])} + g(y)$.`,
-            `Differentiate with respect to $y$: $f_y = ${poly([b, "x"])} + g'(y) = ${Q_desc} \\implies g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])}$.`,
-            `The potential is $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ (up to a constant).`,
-            `Apply the Fundamental Theorem: $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(${x0}, ${y0}) - f(0, 0) = ${a}(${x0})^2 + ${paren(b)}(${x0})(${y0}) + ${paren(c)}(${y0})^2 = ${ans}$.`,
-          ),
-          steps(
-            `对 $x$ 偏积分：$f(x, y) = \\int (${P_desc})dx = ${poly([a, "x^2"], [b, "xy"])} + g(y)$。`,
-            `对 $y$ 求偏导：$f_y = ${poly([b, "x"])} + g'(y) = ${Q_desc} \\implies g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])}$。`,
-            `求得势函数为 $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$（差一任意常数）。`,
-            `应用基本定理：$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(${x0}, ${y0}) - f(0, 0) = ${a}(${x0})^2 + ${paren(b)}(${x0})(${y0}) + ${paren(c)}(${y0})^2 = ${ans}$。`,
-          ),
-        );
+        const f = poly([a, "x^2"], [b, "xy"], [c, "y^2"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find a potential function for $\\mathbf{F}(x, y) = \\langle ${P}, ${Qc} \\rangle$ and evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $(0, 0)$ to $(${x0}, ${y0})$.`,
+            `为向量场 $\\mathbf{F}(x, y) = \\langle ${P}, ${Qc} \\rangle$ 求势函数，并计算沿从 $(0, 0)$ 到 $(${x0}, ${y0})$ 任意路径的曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
           answer: ans,
-          wrong: [ans + 2, -ans, ans * 2],
+          mistakes: distinct(ans, [
+            why(
+              ans + b * x0 * y0,
+              `That counts the term $${poly([b, "xy"])}$ twice; it comes once from integrating $P$ and already gives the $${poly([b, "x"])}$ in $Q$.`,
+              `那是把项 $${poly([b, "xy"])}$ 算了两次；它由积分 $P$ 得到一次，并且已经给出了 $Q$ 中的 $${poly([b, "x"])}$。`,
+            ),
+            why(
+              ans - c * y0 * y0,
+              `That leaves out $g(y) = ${poly([c, "y^2"])}$, the part of $f$ found from the second component.`,
+              `那是漏掉了 $g(y) = ${poly([c, "y^2"])}$，即由第二个分量求出的那部分 $f$。`,
+            ),
+            why(
+              2 * a * x0 * x0 + b * x0 * y0 + 2 * c * y0 * y0,
+              "That keeps the coefficients $2a$ and $2c$ of the field; integrating $2ax$ gives $ax^2$, not $2ax^2$.",
+              "那是保留了场的系数 $2a$ 与 $2c$；$2ax$ 积分得 $ax^2$，不是 $2ax^2$。",
+            ),
+            why(
+              -ans,
+              "That is the start value minus the end value; the integral is $f(B) - f(A)$.",
+              "那是起点的值减终点的值；积分是 $f(B) - f(A)$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate P in x", "对 P 关于 x 积分"],
+                t(
+                  `$f = \\int (${P})\\,dx = ${poly([a, "x^2"], [b, "xy"])} + g(y)$.`,
+                  `$f = \\int (${P})\\,dx = ${poly([a, "x^2"], [b, "xy"])} + g(y)$。`,
+                ),
+              ],
+              [
+                ["Match Q", "与 Q 比较"],
+                t(
+                  `$f_y = ${poly([b, "x"])} + g'(y)$ must equal $${Qc}$, so $g'(y) = ${poly([2 * c, "y"])}$ and $g(y) = ${poly([c, "y^2"])}$.`,
+                  `$f_y = ${poly([b, "x"])} + g'(y)$ 必须等于 $${Qc}$，所以 $g'(y) = ${poly([2 * c, "y"])}$，$g(y) = ${poly([c, "y^2"])}$。`,
+                ),
+              ],
+              [["Write the potential", "写出势函数"], t(`$f(x, y) = ${f}$.`, `$f(x, y) = ${f}$。`)],
+              [
+                ["Evaluate at the ends", "代入两端"],
+                t(
+                  `$f(${x0}, ${y0}) - f(0, 0) = ${a} \\cdot ${x0 * x0} + ${paren(b)} \\cdot ${x0 * y0} + ${paren(c)} \\cdot ${y0 * y0} - 0 = ${ans}$.`,
+                  `$f(${x0}, ${y0}) - f(0, 0) = ${a} \\cdot ${x0 * x0} + ${paren(b)} \\cdot ${x0 * y0} + ${paren(c)} \\cdot ${y0 * y0} - 0 = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Along the segment $\\mathbf{r}(t) = (${poly([x0, "t"])}, ${poly([y0, "t"])})$, $0 \\le t \\le 1$, the integrand is $${poly([2 * ans, "t"])}$, and its integral from $0$ to $1$ is half of $${2 * ans}$, which is $${ans}$.`,
+              `沿线段 $\\mathbf{r}(t) = (${poly([x0, "t"])}, ${poly([y0, "t"])})$，$0 \\le t \\le 1$，被积函数是 $${poly([2 * ans, "t"])}$，它从 $0$ 到 $1$ 的积分是 $${2 * ans}$ 的一半，即 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3507,8 +3782,8 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
       id: "a-potential-function-with-a-cubic-term",
       title: t("A potential function with a cubic term", "含三次项的势函数"),
       explanation: t(
-        "To find $f$ with $\\nabla f = \\langle P, Q \\rangle$, integrate $P$ in $x$, which leaves an unknown $g(y)$, then match $f_y$ with $Q$. For $\\mathbf{F} = \\langle 3ax^2y + b, ax^3 + 2cy \\rangle$:\n\n$$f = \\int (3ax^2y + b)\\,dx = ax^3y + bx + g(y), \\qquad f_y = ax^3 + g'(y) = ax^3 + 2cy,$$\n\nso $g(y) = cy^2$ and $f = ax^3y + bx + cy^2$. The line integral from $A$ to $B$ is $f(B) - f(A)$.",
-        "要求 $f$ 使 $\\nabla f = \\langle P, Q \\rangle$，先把 $P$ 对 $x$ 积分，留下未知的 $g(y)$，再让 $f_y$ 与 $Q$ 一致。对 $\\mathbf{F} = \\langle 3ax^2y + b, ax^3 + 2cy \\rangle$：\n\n$$f = \\int (3ax^2y + b)\\,dx = ax^3y + bx + g(y), \\qquad f_y = ax^3 + g'(y) = ax^3 + 2cy,$$\n\n所以 $g(y) = cy^2$，$f = ax^3y + bx + cy^2$。从 $A$ 到 $B$ 的线积分为 $f(B) - f(A)$。",
+        "To find $f$ with $\\nabla f = \\langle P, Q \\rangle$, integrate $P$ in $x$, which leaves an unknown $g(y)$, then match $f_y$ with $Q$. For $\\mathbf{F} = \\langle 3ax^2y + b, ax^3 + 2cy \\rangle$:\n\n$$f = \\int (3ax^2y + b)\\,dx = ax^3y + bx + g(y), \\qquad f_y = ax^3 + g'(y) = ax^3 + 2cy,$$\n\nso $g(y) = cy^2$ and $f = ax^3y + bx + cy^2$. The line integral from $A$ to $B$ is $f(B) - f(A)$. For $\\langle 12x^2y + 1, 4x^3 + 2y \\rangle$, $f = 4x^3y + x + y^2$, and from $(0, 0)$ to $(1, 1)$ the integral is $6$.\n\n> **Watch out.** The constant $b$ in $P$ integrates to $bx$, and $g(y)$ comes only from $Q$; leaving out either term changes the answer.",
+        "要求 $f$ 使 $\\nabla f = \\langle P, Q \\rangle$，先把 $P$ 对 $x$ 积分，留下未知的 $g(y)$，再让 $f_y$ 与 $Q$ 一致。对 $\\mathbf{F} = \\langle 3ax^2y + b, ax^3 + 2cy \\rangle$：\n\n$$f = \\int (3ax^2y + b)\\,dx = ax^3y + bx + g(y), \\qquad f_y = ax^3 + g'(y) = ax^3 + 2cy,$$\n\n所以 $g(y) = cy^2$，$f = ax^3y + bx + cy^2$。从 $A$ 到 $B$ 的线积分为 $f(B) - f(A)$。对 $\\langle 12x^2y + 1, 4x^3 + 2y \\rangle$，$f = 4x^3y + x + y^2$，从 $(0, 0)$ 到 $(1, 1)$ 的积分为 $6$。\n\n> **注意。** $P$ 中的常数 $b$ 积分得 $bx$，而 $g(y)$ 只来自 $Q$；漏掉任何一项都会改变结果。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-2, 2);
@@ -3522,18 +3797,59 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
         const f = (x: number, y: number) => a * x ** 3 * y + b * x + c * y * y;
         // f is quadratic in y, so at most two values of y repeat f(x0, y0), and this stops.
         while (f(x1, y1) === f(x0, y0)) y1 += 1;
-        const ans = f(x1, y1) - f(x0, y0);
-        const g = (x: number, y: number) => a * x ** 3 * y + c * y * y;
+        const fB = f(x1, y1);
+        const fA = f(x0, y0);
+        const ans = fB - fA;
+        const cubic = a * (x1 ** 3 * y1 - x0 ** 3 * y0);
+        const linear = b * (x1 - x0);
+        const square = c * (y1 * y1 - y0 * y0);
         return numberProblem({
           prompt: t(
             `$\\mathbf{F} = \\langle ${poly([3 * a, "x^2y"], [b, ""])}, ${poly([a, "x^3"], [2 * c, "y"])} \\rangle$. Find a potential function and evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $(${x0}, ${y0})$ to $(${x1}, ${y1})$.`,
             `$\\mathbf{F} = \\langle ${poly([3 * a, "x^2y"], [b, ""])}, ${poly([a, "x^3"], [2 * c, "y"])} \\rangle$。求势函数，并沿从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的任意路径计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
           ),
           answer: ans,
-          wrong: [-ans, g(x1, y1) - g(x0, y0), f(x1, y1) + f(x0, y0), ans + c],
-          solution: t(
-            `$f(x, y) = ${poly([a, "x^3y"], [b, "x"], [c, "y^2"])}$. Then $f(${x1}, ${y1}) = ${f(x1, y1)}$ and $f(${x0}, ${y0}) = ${f(x0, y0)}$, so the integral is $${ans}$.`,
-            `$f(x, y) = ${poly([a, "x^3y"], [b, "x"], [c, "y^2"])}$。于是 $f(${x1}, ${y1}) = ${f(x1, y1)}$，$f(${x0}, ${y0}) = ${f(x0, y0)}$，积分为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              -ans,
+              "That is the start value minus the end value; the integral is $f(B) - f(A)$.",
+              "那是起点的值减终点的值；积分是 $f(B) - f(A)$。",
+            ),
+            why(
+              ans - linear,
+              `That leaves out $${poly([b, "x"])}$, which comes from integrating the constant $${b}$ in $P$.`,
+              `那是漏掉了 $${poly([b, "x"])}$，它由 $P$ 中的常数 $${b}$ 积分得到。`,
+            ),
+            why(
+              ans - square,
+              `That leaves out $g(y) = ${poly([c, "y^2"])}$, which is found by matching $f_y$ with $Q$.`,
+              `那是漏掉了 $g(y) = ${poly([c, "y^2"])}$，它由 $f_y$ 与 $Q$ 比较得出。`,
+            ),
+            why(fB + fA, "That adds the two values of $f$; the integral is their difference.", "那是把 $f$ 的两个值相加；积分是它们的差。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate P in x", "对 P 关于 x 积分"],
+                t(`$f = ${poly([a, "x^3y"], [b, "x"])} + g(y)$.`, `$f = ${poly([a, "x^3y"], [b, "x"])} + g(y)$。`),
+              ],
+              [
+                ["Match Q", "与 Q 比较"],
+                t(
+                  `$f_y = ${poly([a, "x^3"])} + g'(y)$ must equal $${poly([a, "x^3"], [2 * c, "y"])}$, so $g(y) = ${poly([c, "y^2"])}$ and $f = ${poly([a, "x^3y"], [b, "x"], [c, "y^2"])}$.`,
+                  `$f_y = ${poly([a, "x^3"])} + g'(y)$ 必须等于 $${poly([a, "x^3"], [2 * c, "y"])}$，所以 $g(y) = ${poly([c, "y^2"])}$，$f = ${poly([a, "x^3y"], [b, "x"], [c, "y^2"])}$。`,
+                ),
+              ],
+              [
+                ["Evaluate at the ends", "求两端的值"],
+                t(`$f(${x1}, ${y1}) = ${fB}$ and $f(${x0}, ${y0}) = ${fA}$.`, `$f(${x1}, ${y1}) = ${fB}$，$f(${x0}, ${y0}) = ${fA}$。`),
+              ],
+              [["Subtract", "相减"], t(`$${fB} - ${paren(fA)} = ${ans}$.`, `$${fB} - ${paren(fA)} = ${ans}$。`)],
+            ],
+            t(
+              `Term by term: $${poly([a, "x^3y"])}$ changes by $${cubic}$, $${poly([b, "x"])}$ by $${linear}$ and $${poly([c, "y^2"])}$ by $${square}$, and $${cubic} + ${paren(linear)} + ${paren(square)} = ${ans}$.`,
+              `逐项计算：$${poly([a, "x^3y"])}$ 改变 $${cubic}$，$${poly([b, "x"])}$ 改变 $${linear}$，$${poly([c, "y^2"])}$ 改变 $${square}$，而 $${cubic} + ${paren(linear)} + ${paren(square)} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -3549,6 +3865,10 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
     "In $\\mathbb{R}^3$, a conservative line integral $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(P_2) - f(P_1)$ depends only on the endpoints.",
     "在 $\\mathbb{R}^3$ 中，保守场的线积分 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(P_2) - f(P_1)$ 只取决于端点。",
   ),
+  intro: t(
+    "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle y, x, 6z \\rangle$ along any path from $(0, 0, 0)$ to $(2, 1, 1)$. The field is the gradient of $f = xy + 3z^2$, so the integral is $f(2, 1, 1) - f(0, 0, 0) = 2 + 3 = 5$.\n\nCheck: along $\\mathbf{r}(t) = (2t, t, t)$, $0 \\le t \\le 1$, the integrand is $t \\cdot 2 + 2t \\cdot 1 + 6t \\cdot 1 = 10t$, and $\\int_0^1 10t\\,dt = 5$.\n\nIn this lesson we carry the fundamental theorem into space: a gradient field in three variables is integrated from the values of its potential at the two ends.",
+    "对 $\\mathbf{F} = \\langle y, x, 6z \\rangle$，沿从 $(0, 0, 0)$ 到 $(2, 1, 1)$ 的任意路径求 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。这个场是 $f = xy + 3z^2$ 的梯度，所以积分为 $f(2, 1, 1) - f(0, 0, 0) = 2 + 3 = 5$。\n\n检验：沿 $\\mathbf{r}(t) = (2t, t, t)$，$0 \\le t \\le 1$，被积函数是 $t \\cdot 2 + 2t \\cdot 1 + 6t \\cdot 1 = 10t$，而 $\\int_0^1 10t\\,dt = 5$。\n\n本课我们把基本定理推广到空间：三元梯度场的积分由势函数在两端的值求得。",
+  ),
   prerequisites: ["calculating-potential-functions-for-line-integrals"],
   encompasses: [
     {
@@ -3562,8 +3882,8 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
       id: "three-dimensional-gradient-theorem",
       title: t("Three-dimensional gradient theorem", "三维梯度定理计算曲线积分"),
       explanation: t(
-        "The line integral of a gradient field depends only on the endpoints, so evaluate the potential at the end and the start and subtract. For $f(x, y, z) = ax^2 + by^2 + cz^2$, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(x_2, y_2, z_2) - f(x_1, y_1, z_1)$.",
-        "梯度场的曲线积分只取决于端点，所以在终点和起点分别计算势函数再相减。对于势函数 $f(x, y, z) = ax^2 + by^2 + cz^2$，$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(x_2, y_2, z_2) - f(x_1, y_1, z_1)$。",
+        "The line integral of a gradient field depends only on the endpoints, so evaluate the potential at the end and the start and subtract. For $f(x, y, z) = ax^2 + by^2 + cz^2$, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(x_2, y_2, z_2) - f(x_1, y_1, z_1)$. For $f = 4x^2 - y^2 + z^2$ from $(1, 0, 1)$ to $(2, 1, 0)$: $f(2, 1, 0) = 15$ and $f(1, 0, 1) = 5$, so the integral is $10$.\n\n> **Watch out.** There are now three terms at each end; evaluate all of them, and remember that a negative coordinate squared is positive.",
+        "梯度场的曲线积分只取决于端点，所以在终点和起点分别计算势函数再相减。对于势函数 $f(x, y, z) = ax^2 + by^2 + cz^2$，$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(x_2, y_2, z_2) - f(x_1, y_1, z_1)$。对 $f = 4x^2 - y^2 + z^2$，从 $(1, 0, 1)$ 到 $(2, 1, 0)$：$f(2, 1, 0) = 15$，$f(1, 0, 1) = 5$，所以积分为 $10$。\n\n> **注意。** 现在每一端都有三项，要全部算出；负坐标的平方是正的。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3575,34 +3895,65 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
         const x2 = rng.int(-2, 2);
         const y2 = rng.int(-2, 2);
         const z2 = rng.int(-2, 2);
-
         const fA = a * x1 * x1 + b * y1 * y1 + c * z1 * z1;
         const fB = a * x2 * x2 + b * y2 * y2 + c * z2 * z2;
         const ans = fB - fA;
-
-        const prompt = t(
-          `Find $\\int_C \\nabla f \\cdot d\\mathbf{r}$ for $f(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])}$ along any curve $C$ from $A(${x1}, ${y1}, ${z1})$ to $B(${x2}, ${y2}, ${z2})$.`,
-          `求三维势函数 $f(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])}$ 的梯度场沿从 $A(${x1}, ${y1}, ${z1})$ 到 $B(${x2}, ${y2}, ${z2})$ 的曲线积分 $\\int_C \\nabla f \\cdot d\\mathbf{r}$。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the 3D Fundamental Theorem of Line Integrals: $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$.`,
-            `Evaluate at terminal point $B$: $f(${x2}, ${y2}, ${z2}) = ${fB}$.`,
-            `Evaluate at initial point $A$: $f(${x1}, ${y1}, ${z1}) = ${fA}$.`,
-            `The value is $f(B) - f(A) = ${fB} - (${fA}) = ${ans}$.`,
-          ),
-          steps(
-            `应用三维曲线积分基本定理：$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。`,
-            `计算终点 $B$ 处的函数值：$f(${x2}, ${y2}, ${z2}) = ${fB}$。`,
-            `计算起点 $A$ 处的函数值：$f(${x1}, ${y1}, ${z1}) = ${fA}$。`,
-            `求差：$f(B) - f(A) = ${fB} - (${fA}) = ${ans}$。`,
-          ),
-        );
+        const signedSquare = (v: number) => v * Math.abs(v);
+        const xPart = a * (x2 * x2 - x1 * x1);
+        const yPart = b * (y2 * y2 - y1 * y1);
+        const zPart = c * (z2 * z2 - z1 * z1);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find $\\int_C \\nabla f \\cdot d\\mathbf{r}$ for $f(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])}$ along any curve $C$ from $A(${x1}, ${y1}, ${z1})$ to $B(${x2}, ${y2}, ${z2})$.`,
+            `求三维势函数 $f(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])}$ 的梯度场沿从 $A(${x1}, ${y1}, ${z1})$ 到 $B(${x2}, ${y2}, ${z2})$ 的曲线积分 $\\int_C \\nabla f \\cdot d\\mathbf{r}$。`,
+          ),
           answer: ans,
-          wrong: [fA - fB, fB + fA, ans + 2],
+          mistakes: distinct(ans, [
+            why(
+              fA - fB,
+              "That is the start value minus the end value; the theorem gives $f(B) - f(A)$.",
+              "那是起点的值减终点的值；定理给出 $f(B) - f(A)$。",
+            ),
+            why(fB, "That is $f(B)$ alone; the value at the start must be subtracted.", "那只是 $f(B)$；还要减去起点处的值。"),
+            why(fB + fA, "That adds the two values; the integral is their difference.", "那是把两个值相加；积分是它们的差。"),
+            why(
+              a * (signedSquare(x2) - signedSquare(x1)) +
+                b * (signedSquare(y2) - signedSquare(y1)) +
+                c * (signedSquare(z2) - signedSquare(z1)),
+              "That keeps the sign of a negative coordinate when squaring it; a square is never negative.",
+              "那是平方时保留了负坐标的符号；平方不会是负数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the theorem", "利用基本定理"],
+                t(
+                  "$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$ in space as in the plane.",
+                  "在空间中与在平面上一样，$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。",
+                ),
+              ],
+              [
+                ["Evaluate at the end", "求终点处的值"],
+                t(
+                  `$f(${x2}, ${y2}, ${z2}) = ${a} \\cdot ${x2 * x2} + ${paren(b)} \\cdot ${y2 * y2} + ${paren(c)} \\cdot ${z2 * z2} = ${fB}$.`,
+                  `$f(${x2}, ${y2}, ${z2}) = ${a} \\cdot ${x2 * x2} + ${paren(b)} \\cdot ${y2 * y2} + ${paren(c)} \\cdot ${z2 * z2} = ${fB}$。`,
+                ),
+              ],
+              [
+                ["Evaluate at the start", "求起点处的值"],
+                t(
+                  `$f(${x1}, ${y1}, ${z1}) = ${a} \\cdot ${x1 * x1} + ${paren(b)} \\cdot ${y1 * y1} + ${paren(c)} \\cdot ${z1 * z1} = ${fA}$.`,
+                  `$f(${x1}, ${y1}, ${z1}) = ${a} \\cdot ${x1 * x1} + ${paren(b)} \\cdot ${y1 * y1} + ${paren(c)} \\cdot ${z1 * z1} = ${fA}$。`,
+                ),
+              ],
+              [["Subtract", "相减"], t(`$${fB} - ${paren(fA)} = ${ans}$.`, `$${fB} - ${paren(fA)} = ${ans}$。`)],
+            ],
+            t(
+              `Term by term: the $x^2$, $y^2$ and $z^2$ parts change by $${xPart}$, $${yPart}$ and $${zPart}$, and $${xPart} + ${paren(yPart)} + ${paren(zPart)} = ${ans}$.`,
+              `逐项计算：$x^2$、$y^2$、$z^2$ 部分分别改变 $${xPart}$、$${yPart}$、$${zPart}$，而 $${xPart} + ${paren(yPart)} + ${paren(zPart)} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3610,8 +3961,8 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
       id: "a-three-dimensional-potential-with-a-product-term",
       title: t("A three-dimensional potential with a product term", "含乘积项的三维势函数"),
       explanation: t(
-        "In space, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$ just as in the plane. The field $\\mathbf{F} = \\langle ayz, axz, axy + 2bz \\rangle$ is the gradient of $f = axyz + bz^2$: differentiating $axyz$ gives $ayz$, $axz$ and $axy$, and $bz^2$ adds $2bz$ to the last component. So its line integral is a difference of two values of $axyz + bz^2$.",
-        "在空间中同样有 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。场 $\\mathbf{F} = \\langle ayz, axz, axy + 2bz \\rangle$ 是 $f = axyz + bz^2$ 的梯度：$axyz$ 的偏导为 $ayz$、$axz$ 与 $axy$，$bz^2$ 给最后一个分量加上 $2bz$。所以其线积分是 $axyz + bz^2$ 两个值之差。",
+        "In space, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$ just as in the plane. The field $\\mathbf{F} = \\langle ayz, axz, axy + 2bz \\rangle$ is the gradient of $f = axyz + bz^2$: differentiating $axyz$ gives $ayz$, $axz$ and $axy$, and $bz^2$ adds $2bz$ to the last component. So its line integral is a difference of two values of $axyz + bz^2$. For $\\langle 5yz, 5xz, 5xy + 2z \\rangle = \\nabla(5xyz + z^2)$ from $(0, 0, 0)$ to $(1, 1, 2)$, the integral is $10 + 4 = 14$.\n\n> **Watch out.** The last component holds two pieces: $axy$ from the product and $2bz$ from $bz^2$. The term $bz^2$ belongs in $f$; leaving it out loses $b$ times the change in $z^2$.",
+        "在空间中同样有 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。场 $\\mathbf{F} = \\langle ayz, axz, axy + 2bz \\rangle$ 是 $f = axyz + bz^2$ 的梯度：$axyz$ 的偏导为 $ayz$、$axz$ 与 $axy$，$bz^2$ 给最后一个分量加上 $2bz$。所以其线积分是 $axyz + bz^2$ 两个值之差。对 $\\langle 5yz, 5xz, 5xy + 2z \\rangle = \\nabla(5xyz + z^2)$，从 $(0, 0, 0)$ 到 $(1, 1, 2)$，积分为 $10 + 4 = 14$。\n\n> **注意。** 最后一个分量包含两部分：乘积项给出的 $axy$ 与 $bz^2$ 给出的 $2bz$。$bz^2$ 属于 $f$；漏掉它就少了 $b$ 乘以 $z^2$ 的变化量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3621,16 +3972,55 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
         const f = (p: readonly [number, number, number]) => a * p[0] * p[1] * p[2] + b * p[2] * p[2];
         const ans = f(P1) - f(P0);
         const pt = (p: readonly [number, number, number]) => `(${p[0]}, ${p[1]}, ${p[2]})`;
+        const product = a * (P1[0] * P1[1] * P1[2] - P0[0] * P0[1] * P0[2]);
+        const square = b * (P1[2] * P1[2] - P0[2] * P0[2]);
         return numberProblem({
           prompt: t(
             `Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle ${poly([a, "yz"])}, ${poly([a, "xz"])}, ${poly([a, "xy"], [2 * b, "z"])} \\rangle$ along any path from $${pt(P0)}$ to $${pt(P1)}$.`,
             `沿从 $${pt(P0)}$ 到 $${pt(P1)}$ 的任意路径，对 $\\mathbf{F} = \\langle ${poly([a, "yz"])}, ${poly([a, "xz"])}, ${poly([a, "xy"], [2 * b, "z"])} \\rangle$ 计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
           ),
           answer: ans,
-          wrong: [-ans, f(P1), f(P1) + f(P0), ans + b * (P1[2] * P1[2] - P0[2] * P0[2])],
-          solution: t(
-            `$\\mathbf{F} = \\nabla f$ with $f = ${poly([a, "xyz"], [b, "z^2"])}$. $f${pt(P1)} = ${f(P1)}$ and $f${pt(P0)} = ${f(P0)}$, so the integral is $${ans}$.`,
-            `$\\mathbf{F} = \\nabla f$，$f = ${poly([a, "xyz"], [b, "z^2"])}$。$f${pt(P1)} = ${f(P1)}$，$f${pt(P0)} = ${f(P0)}$，积分为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              -ans,
+              "That is the start value minus the end value; the integral is $f(B) - f(A)$.",
+              "那是起点的值减终点的值；积分是 $f(B) - f(A)$。",
+            ),
+            why(
+              f(P1),
+              "That is $f$ at the end alone; the value at the start must be subtracted.",
+              "那只是终点处的 $f$；还要减去起点处的值。",
+            ),
+            why(
+              f(P1) + f(P0),
+              "That adds the two values of $f$; the integral is their difference.",
+              "那是把 $f$ 的两个值相加；积分是它们的差。",
+            ),
+            why(
+              product,
+              `That leaves out the term $${poly([b, "z^2"])}$ of $f$, which gives the $${poly([2 * b, "z"])}$ in the last component.`,
+              `那是漏掉了 $f$ 中的项 $${poly([b, "z^2"])}$，最后一个分量中的 $${poly([2 * b, "z"])}$ 正来自它。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Name the potential", "写出势函数"],
+                t(
+                  `$\\mathbf{F} = \\nabla f$ with $f = ${poly([a, "xyz"], [b, "z^2"])}$: its partial derivatives are the three components.`,
+                  `$\\mathbf{F} = \\nabla f$，$f = ${poly([a, "xyz"], [b, "z^2"])}$：它的三个偏导数正是三个分量。`,
+                ),
+              ],
+              [
+                ["Evaluate at the ends", "求两端的值"],
+                t(`$f${pt(P1)} = ${f(P1)}$ and $f${pt(P0)} = ${f(P0)}$.`, `$f${pt(P1)} = ${f(P1)}$，$f${pt(P0)} = ${f(P0)}$。`),
+              ],
+              [["Subtract", "相减"], t(`$${f(P1)} - ${paren(f(P0))} = ${ans}$.`, `$${f(P1)} - ${paren(f(P0))} = ${ans}$。`)],
+            ],
+            t(
+              `Term by term: $${poly([a, "xyz"])}$ changes by $${product}$ and $${poly([b, "z^2"])}$ by $${square}$, and $${product} + ${paren(square)} = ${ans}$.`,
+              `逐项计算：$${poly([a, "xyz"])}$ 改变 $${product}$，$${poly([b, "z^2"])}$ 改变 $${square}$，而 $${product} + ${paren(square)} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -3646,6 +4036,10 @@ export const conservationOfMechanicalEnergy: TopicDef = {
     "Work done by a conservative force F = -∇U equals negative change in potential energy, ensuring total mechanical energy E = K + U remains constant.",
     "保守力 F = -∇U 所做的功等于势能增量的相反数，保证了系统总机械能 E = K + U 保持守恒。",
   ),
+  intro: t(
+    "A particle moving under a conservative force has kinetic energy $70\\text{ J}$ and potential energy $25\\text{ J}$ at $A$. At $B$ its potential energy is $10\\text{ J}$. The total $K + U = 95\\text{ J}$ stays the same, so its kinetic energy at $B$ is $95 - 10 = 85\\text{ J}$.\n\nCheck: the force does work $U(A) - U(B) = 15\\text{ J}$, and the kinetic energy rises by $85 - 70 = 15\\text{ J}$.\n\nIn this lesson we see why the fundamental theorem makes $K + U$ constant for a force $\\mathbf{F} = -\\nabla U$, and use it to find energies and speeds.",
+    "一个在保守力作用下运动的质点，在 $A$ 处动能为 $70\\text{ J}$，势能为 $25\\text{ J}$。在 $B$ 处它的势能为 $10\\text{ J}$。总量 $K + U = 95\\text{ J}$ 保持不变，所以它在 $B$ 处的动能为 $95 - 10 = 85\\text{ J}$。\n\n检验：力做的功为 $U(A) - U(B) = 15\\text{ J}$，而动能增加了 $85 - 70 = 15\\text{ J}$。\n\n本课我们看到：对力 $\\mathbf{F} = -\\nabla U$，基本定理为什么使 $K + U$ 保持不变，并用它求能量与速率。",
+  ),
   prerequisites: ["the-fundamental-theorem-of-line-integrals"],
   encompasses: [],
   xp: 10,
@@ -3654,38 +4048,53 @@ export const conservationOfMechanicalEnergy: TopicDef = {
       id: "kinetic-and-potential-energy-along-trajectories",
       title: t("Kinetic and potential energy along trajectories", "运动轨迹上的动能与势能转化"),
       explanation: t(
-        "For a conservative force $\\mathbf{F} = -\\nabla U$, work relates to potential energy by $W = -\\Delta U = U_1 - U_2$. By the work-energy theorem, $W = \\Delta K = K_2 - K_1$, yielding conservation: $K_1 + U_1 = K_2 + U_2$.",
-        "对于保守力 $\\mathbf{F} = -\\nabla U$，做功满足 $W = -\\Delta U = U_1 - U_2$。由动能定理 $W = \\Delta K = K_2 - K_1$，得到机械能守恒：$K_1 + U_1 = K_2 + U_2$。",
+        "For a conservative force $\\mathbf{F} = -\\nabla U$, work relates to potential energy by $W = -\\Delta U = U_1 - U_2$. By the work-energy theorem, $W = \\Delta K = K_2 - K_1$, yielding conservation: $K_1 + U_1 = K_2 + U_2$. With $K_A = 5\\text{ J}$, $U_A = 90\\text{ J}$ and $U_B = 40\\text{ J}$, the particle has $K_B = 95 - 40 = 55\\text{ J}$.\n\n> **Watch out.** It is the total $K + U$ that stays fixed, so $K_B = K_A + U_A - U_B$. The potential energy that is lost becomes kinetic energy; adding $U_B$ instead gets the direction wrong.",
+        "对于保守力 $\\mathbf{F} = -\\nabla U$，做功满足 $W = -\\Delta U = U_1 - U_2$。由动能定理 $W = \\Delta K = K_2 - K_1$，得到机械能守恒：$K_1 + U_1 = K_2 + U_2$。若 $K_A = 5\\text{ J}$，$U_A = 90\\text{ J}$，$U_B = 40\\text{ J}$，则质点的 $K_B = 95 - 40 = 55\\text{ J}$。\n\n> **注意。** 保持不变的是总量 $K + U$，所以 $K_B = K_A + U_A - U_B$。失去的势能变成动能；改为加上 $U_B$ 就把方向弄反了。",
       ),
       generate(rng: Rng): Problem {
         const K1 = rng.int(10, 60);
         const U1 = rng.int(20, 80);
         const U2 = rng.int(5, U1);
-
-        // K2 = K1 + U1 - U2
         const ans = K1 + U1 - U2;
-
-        const prompt = t(
-          `A particle moves in a conservative force field with potential energy $U$. At point $A$, it has kinetic energy $K_A = ${K1}\\text{ J}$ and potential energy $U_A = ${U1}\\text{ J}$. At point $B$, its potential energy is $U_B = ${U2}\\text{ J}$. Assuming no non-conservative forces act, find its kinetic energy $K_B$.`,
-          `质点在势能为 $U$ 的保守力场中运动。在点 $A$ 处，其动能为 $K_A = ${K1}\\text{ J}$，势能为 $U_A = ${U1}\\text{ J}$。运动至点 $B$ 处时，其势能变为 $U_B = ${U2}\\text{ J}$。在无非保守力做功的情况下，求其在 $B$ 点处的动能 $K_B$。`,
-        );
-        const solution = t(
-          steps(
-            `By the conservation of mechanical energy: $K_A + U_A = K_B + U_B$.`,
-            `Total mechanical energy is $E = K_A + U_A = ${K1} + ${U1} = ${K1 + U1}\\text{ J}$.`,
-            `Solve for $K_B$: $K_B = E - U_B = ${K1 + U1} - ${U2} = ${ans}\\text{ J}$.`,
-          ),
-          steps(
-            `由机械能守恒定律：$K_A + U_A = K_B + U_B$。`,
-            `系统总机械能为 $E = K_A + U_A = ${K1} + ${U1} = ${K1 + U1}\\text{ J}$。`,
-            `解出 $K_B$：$K_B = E - U_B = ${K1 + U1} - ${U2} = ${ans}\\text{ J}$。`,
-          ),
-        );
+        const E = K1 + U1;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `A particle moves in a conservative force field with potential energy $U$. At point $A$, it has kinetic energy $K_A = ${K1}\\text{ J}$ and potential energy $U_A = ${U1}\\text{ J}$. At point $B$, its potential energy is $U_B = ${U2}\\text{ J}$. Assuming no non-conservative forces act, find its kinetic energy $K_B$.`,
+            `质点在势能为 $U$ 的保守力场中运动。在点 $A$ 处，其动能为 $K_A = ${K1}\\text{ J}$，势能为 $U_A = ${U1}\\text{ J}$。运动至点 $B$ 处时，其势能变为 $U_B = ${U2}\\text{ J}$。在无非保守力做功的情况下，求其在 $B$ 点处的动能 $K_B$。`,
+          ),
           answer: ans,
-          wrong: [K1 + U2, U1 - U2, ans + 10],
+          mistakes: distinct(ans, [
+            why(
+              K1 + U2,
+              "That adds $U_B$ to $K_A$; the kinetic energy grows by the potential energy lost, $U_A - U_B$.",
+              "那是把 $U_B$ 加到 $K_A$ 上；动能增加的是失去的势能 $U_A - U_B$。",
+            ),
+            why(U1 - U2, "That is only the change in kinetic energy; $K_A$ must be added to it.", "那只是动能的变化量；还要加上 $K_A$。"),
+            why(
+              E,
+              "That is the total energy $K_A + U_A$; part of it is still potential energy at $B$.",
+              "那是总能量 $K_A + U_A$；其中一部分在 $B$ 处仍是势能。",
+            ),
+            why(
+              K1 - U1 + U2,
+              "That has the energy flowing the wrong way; falling potential energy raises the kinetic energy.",
+              "那是把能量转化的方向弄反了；势能下降，动能才增加。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Use conservation", "利用守恒"], t("$K_A + U_A = K_B + U_B$.", "$K_A + U_A = K_B + U_B$。")],
+              [["Find the total", "求总能量"], t(`$E = ${K1} + ${U1} = ${E}\\text{ J}$.`, `$E = ${K1} + ${U1} = ${E}\\text{ J}$。`)],
+              [
+                ["Solve for the kinetic energy", "解出动能"],
+                t(`$K_B = ${E} - ${U2} = ${ans}\\text{ J}$.`, `$K_B = ${E} - ${U2} = ${ans}\\text{ J}$。`),
+              ],
+            ],
+            t(
+              `The force does work $U_A - U_B = ${U1 - U2}\\text{ J}$, and the kinetic energy rises by $${ans} - ${K1} = ${ans - K1}\\text{ J}$, the same amount.`,
+              `力做的功为 $U_A - U_B = ${U1 - U2}\\text{ J}$，而动能增加了 $${ans} - ${K1} = ${ans - K1}\\text{ J}$，二者相同。`,
+            ),
+          ),
         });
       },
     },
@@ -3693,8 +4102,8 @@ export const conservationOfMechanicalEnergy: TopicDef = {
       id: "kinetic-energy-after-moving-through-a-conservative-field",
       title: t("Kinetic energy after moving through a conservative field", "在保守场中运动后的动能"),
       explanation: t(
-        "If the only force is $\\mathbf{F} = -\\nabla U$, its work from $A$ to $B$ is $U(A) - U(B)$, and by the work–energy theorem this equals the change in kinetic energy. So $K + U$ stays constant:\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2.$$\n\nMoving to lower potential energy speeds the particle up.",
-        "若唯一的力是 $\\mathbf{F} = -\\nabla U$，它从 $A$ 到 $B$ 做的功为 $U(A) - U(B)$，由动能定理这等于动能的变化。所以 $K + U$ 保持不变：\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2$$\n\n移向较低势能时质点加速。",
+        "If the only force is $\\mathbf{F} = -\\nabla U$, its work from $A$ to $B$ is $U(A) - U(B)$, and by the work–energy theorem this equals the change in kinetic energy. So $K + U$ stays constant:\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2.$$\n\nMoving to lower potential energy speeds the particle up. A particle of mass $3$ with speed $4$ has $K_A = 24$; if $U(A) = 5$ and $U(B) = -7$, then $K_B = 24 + 12 = 36$.\n\n> **Watch out.** Kinetic energy is $\\tfrac12 mv^2$; leaving out the $\\tfrac12$ doubles it. The work is $U(A) - U(B)$, start minus end, because the force is the negative gradient.",
+        "若唯一的力是 $\\mathbf{F} = -\\nabla U$，它从 $A$ 到 $B$ 做的功为 $U(A) - U(B)$，由动能定理这等于动能的变化。所以 $K + U$ 保持不变：\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2$$\n\n移向较低势能时质点加速。质量为 $3$、速率为 $4$ 的质点有 $K_A = 24$；若 $U(A) = 5$，$U(B) = -7$，则 $K_B = 24 + 12 = 36$。\n\n> **注意。** 动能是 $\\tfrac12 mv^2$；漏掉 $\\tfrac12$ 会使它加倍。功是 $U(A) - U(B)$，起点减终点，因为力是负梯度。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.pick([2, 4, 6]);
@@ -3709,10 +4118,40 @@ export const conservationOfMechanicalEnergy: TopicDef = {
             `质量为 $${m}$ 的质点仅受力 $\\mathbf{F} = -\\nabla U$ 作用。在 $A$ 处速率为 $${v}$，$U(A) = ${UA}$；在 $B$ 处 $U(B) = ${UB}$。求它在 $B$ 处的动能。`,
           ),
           answer: ans,
-          wrong: [KA + UB - UA, UA - UB, KA, m * v * v + UA - UB],
-          solution: t(
-            `$K_A = \\frac12 \\cdot ${m} \\cdot ${v}^2 = ${KA}$, and $K_B = K_A + U(A) - U(B) = ${KA} + ${paren(UA)} - ${paren(UB)} = ${ans}$.`,
-            `$K_A = \\frac12 \\cdot ${m} \\cdot ${v}^2 = ${KA}$，$K_B = K_A + U(A) - U(B) = ${KA} + ${paren(UA)} - ${paren(UB)} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              KA + UB - UA,
+              "That takes the work as $U(B) - U(A)$; for $\\mathbf{F} = -\\nabla U$ the work is $U(A) - U(B)$.",
+              "那是把功当成 $U(B) - U(A)$；对 $\\mathbf{F} = -\\nabla U$，功是 $U(A) - U(B)$。",
+            ),
+            why(UA - UB, "That is only the work done; the kinetic energy at $A$ must be added.", "那只是力做的功；还要加上 $A$ 处的动能。"),
+            why(
+              KA,
+              "That keeps the kinetic energy unchanged; the force does work on the particle.",
+              "那是让动能保持不变；力对质点做了功。",
+            ),
+            why(
+              m * v * v + UA - UB,
+              "That takes the kinetic energy as $mv^2$; it is $\\tfrac12 mv^2$.",
+              "那是把动能当成 $mv^2$；动能是 $\\tfrac12 mv^2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Kinetic energy at A", "A 处的动能"],
+                t(`$K_A = \\frac12 \\cdot ${m} \\cdot ${v}^2 = ${KA}$.`, `$K_A = \\frac12 \\cdot ${m} \\cdot ${v}^2 = ${KA}$。`),
+              ],
+              [
+                ["Work done", "力做的功"],
+                t(`$U(A) - U(B) = ${UA} - ${paren(UB)} = ${UA - UB}$.`, `$U(A) - U(B) = ${UA} - ${paren(UB)} = ${UA - UB}$。`),
+              ],
+              [["Add", "相加"], t(`$K_B = ${KA} + ${paren(UA - UB)} = ${ans}$.`, `$K_B = ${KA} + ${paren(UA - UB)} = ${ans}$。`)],
+            ],
+            t(
+              `The total energy is the same at both points: $K_A + U(A) = ${KA} + ${paren(UA)} = ${KA + UA}$ and $K_B + U(B) = ${ans} + ${paren(UB)} = ${ans + UB}$.`,
+              `两点处的总能量相同：$K_A + U(A) = ${KA} + ${paren(UA)} = ${KA + UA}$，$K_B + U(B) = ${ans} + ${paren(UB)} = ${ans + UB}$。`,
+            ),
           ),
         });
       },
@@ -3732,6 +4171,10 @@ export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
     "For a simple closed curve traversed counterclockwise with tangent $\\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle$, the outward unit normal is $\\mathbf{n} = \\dfrac{\\langle y'(t), -x'(t) \\rangle}{\\lVert \\mathbf{r}'(t) \\rVert}$.",
     "对于沿逆时针方向遍历、切向量为 $\\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle$ 的简单闭曲线，向外的单位法向量为 $\\mathbf{n} = \\dfrac{\\langle y'(t), -x'(t) \\rangle}{\\lVert \\mathbf{r}'(t) \\rVert}$。",
   ),
+  intro: t(
+    "Find the outward unit normal on the long side of the triangle with corners $(0, 0)$, $(2, 0)$ and $(0, 2)$, traversed counterclockwise. That side runs from $(2, 0)$ to $(0, 2)$, so its direction is $\\langle -2, 2 \\rangle$. Turning it a quarter turn clockwise gives $\\langle 2, 2 \\rangle$, of length $2\\sqrt{2}$, so $\\mathbf{n} = \\left\\langle \\frac{1}{\\sqrt{2}}, \\frac{1}{\\sqrt{2}} \\right\\rangle$.\n\nCheck: $\\mathbf{n} \\cdot \\langle -2, 2 \\rangle = 0$, so $\\mathbf{n}$ is perpendicular to the side; and from the midpoint $(1, 1)$ it leads to points with $x + y > 2$, outside the triangle.\n\nIn this lesson we find outward unit normals on closed curves traversed counterclockwise by turning the tangent clockwise.",
+    "求沿逆时针方向遍历、顶点为 $(0, 0)$、$(2, 0)$、$(0, 2)$ 的三角形长边上的外单位法向量。这条边从 $(2, 0)$ 到 $(0, 2)$，方向为 $\\langle -2, 2 \\rangle$。把它顺时针旋转四分之一圈得 $\\langle 2, 2 \\rangle$，长度为 $2\\sqrt{2}$，所以 $\\mathbf{n} = \\left\\langle \\frac{1}{\\sqrt{2}}, \\frac{1}{\\sqrt{2}} \\right\\rangle$。\n\n检验：$\\mathbf{n} \\cdot \\langle -2, 2 \\rangle = 0$，所以 $\\mathbf{n}$ 与这条边垂直；从中点 $(1, 1)$ 沿它走，到达 $x + y > 2$ 的点，在三角形之外。\n\n本课我们对逆时针遍历的闭曲线，把切向量顺时针旋转来求外单位法向量。",
+  ),
   prerequisites: ["unit-tangent-vectors", "simple-closed-and-oriented-curves"],
   encompasses: [{ topic: "unit-tangent-vectors", weight: 0.3 }],
   xp: 10,
@@ -3741,41 +4184,63 @@ export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
       figure: multivariableDrawings6["outward-pointing-unit-normal-vectors-in-2d#outward-normals-on-a-circle"],
       title: t("Outward normals on a circle", "圆上的外法向量"),
       explanation: t(
-        "When a closed curve is traversed counterclockwise, the region it encloses is always on the left, so turning the tangent a quarter turn clockwise makes it point away from the region. Turning $\\langle x', y' \\rangle$ clockwise gives $\\langle y', -x' \\rangle$; dividing by its length makes it a unit vector. For the circle $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$, $\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$, so\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\nthe position vector divided by the radius.",
-        "沿逆时针方向遍历闭曲线时，它所围的区域总在左侧，所以把切向量顺时针旋转四分之一圈，就使它指向远离区域的方向。把 $\\langle x', y' \\rangle$ 顺时针旋转得到 $\\langle y', -x' \\rangle$，再除以它的长度就得到单位向量。对于圆 $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$，$\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$，所以\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\n即位置向量除以半径。",
+        "When a closed curve is traversed counterclockwise, the region it encloses is always on the left, so turning the tangent a quarter turn clockwise makes it point away from the region. Turning $\\langle x', y' \\rangle$ clockwise gives $\\langle y', -x' \\rangle$; dividing by its length makes it a unit vector. For the circle $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$, $\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$, so\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\nthe position vector divided by the radius. On $x^2 + y^2 = 2$ at $(1, 1)$ this is $\\left\\langle \\frac{1}{\\sqrt{2}}, \\frac{1}{\\sqrt{2}} \\right\\rangle$.\n\n> **Watch out.** Turning the tangent counterclockwise gives the inward normal, and the tangent itself is not a normal at all. A unit normal also has length $1$, so divide by the radius.",
+        "沿逆时针方向遍历闭曲线时，它所围的区域总在左侧，所以把切向量顺时针旋转四分之一圈，就使它指向远离区域的方向。把 $\\langle x', y' \\rangle$ 顺时针旋转得到 $\\langle y', -x' \\rangle$，再除以它的长度就得到单位向量。对于圆 $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$，$\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$，所以\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\n即位置向量除以半径。在 $x^2 + y^2 = 2$ 上的点 $(1, 1)$ 处，它是 $\\left\\langle \\frac{1}{\\sqrt{2}}, \\frac{1}{\\sqrt{2}} \\right\\rangle$。\n\n> **注意。** 把切向量逆时针旋转得到的是内法向量，切向量本身根本不是法向量。单位法向量的长度为 $1$，所以要除以半径。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, c] = rng.pick(pythagoreanTriples);
         const x = rng.sign() * p;
         const y = rng.sign() * q;
-        const prompt = t(
-          `The circle $x^2 + y^2 = ${c * c}$ is traversed counterclockwise. Find the outward-pointing unit normal vector at the point $(${x}, ${y})$.`,
-          `圆 $x^2 + y^2 = ${c * c}$ 沿逆时针方向遍历。求它在点 $(${x}, ${y})$ 处指向外侧的单位法向量。`,
-        );
         const n = `\\left\\langle ${Q.of(x, c).toLatex()}, ${Q.of(y, c).toLatex()} \\right\\rangle`;
-        const solution = t(
-          steps(
-            `With $\\mathbf{r}(t) = \\langle ${c}\\cos t, ${c}\\sin t \\rangle$, the tangent is $\\langle -${c}\\sin t, ${c}\\cos t \\rangle = \\langle -y, x \\rangle$.`,
-            `Turning it clockwise gives $\\langle x, y \\rangle = \\langle ${x}, ${y} \\rangle$, which has length $${c}$.`,
-            `So $\\mathbf{n} = ${n}$, pointing away from the center.`,
-          ),
-          steps(
-            `取 $\\mathbf{r}(t) = \\langle ${c}\\cos t, ${c}\\sin t \\rangle$，切向量为 $\\langle -${c}\\sin t, ${c}\\cos t \\rangle = \\langle -y, x \\rangle$。`,
-            `把它顺时针旋转得到 $\\langle x, y \\rangle = \\langle ${x}, ${y} \\rangle$，长度为 $${c}$。`,
-            `所以 $\\mathbf{n} = ${n}$，指向远离圆心的方向。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer: [Q.of(x, c), Q.of(y, c)],
-          vector: true,
-          wrong: [
-            [Q.of(-x, c), Q.of(-y, c)],
-            [Q.of(-y, c), Q.of(x, c)],
-            [x, y],
+        return located(
+          {
+            prompt: t(
+              `The circle $x^2 + y^2 = ${c * c}$ is traversed counterclockwise. Find the outward-pointing unit normal vector at the point $(${x}, ${y})$.`,
+              `圆 $x^2 + y^2 = ${c * c}$ 沿逆时针方向遍历。求它在点 $(${x}, ${y})$ 处指向外侧的单位法向量。`,
+            ),
+            answer: [Q.of(x, c), Q.of(y, c)],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Find the tangent", "求切向量"],
+                  t(
+                    `With $\\mathbf{r}(t) = \\langle ${c}\\cos t, ${c}\\sin t \\rangle$, the tangent is $\\langle -${c}\\sin t, ${c}\\cos t \\rangle = \\langle -y, x \\rangle = \\langle ${-y}, ${x} \\rangle$.`,
+                    `取 $\\mathbf{r}(t) = \\langle ${c}\\cos t, ${c}\\sin t \\rangle$，切向量为 $\\langle -${c}\\sin t, ${c}\\cos t \\rangle = \\langle -y, x \\rangle = \\langle ${-y}, ${x} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Turn it clockwise", "顺时针旋转"],
+                  t(
+                    `$\\langle y', -x' \\rangle = \\langle ${x}, ${y} \\rangle$.`,
+                    `$\\langle y', -x' \\rangle = \\langle ${x}, ${y} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Divide by the length", "除以长度"],
+                  t(`Its length is $${c}$, so $\\mathbf{n} = ${n}$.`, `它的长度为 $${c}$，所以 $\\mathbf{n} = ${n}$。`),
+                ],
+              ],
+              t(
+                `$\\left(${Q.of(x, c).toLatex()}\\right)^2 + \\left(${Q.of(y, c).toLatex()}\\right)^2 = \\frac{${p * p} + ${q * q}}{${c * c}} = 1$, and $\\mathbf{n}$ is a positive multiple of the position vector $\\langle ${x}, ${y} \\rangle$, so it points away from the center.`,
+                `$\\left(${Q.of(x, c).toLatex()}\\right)^2 + \\left(${Q.of(y, c).toLatex()}\\right)^2 = \\frac{${p * p} + ${q * q}}{${c * c}} = 1$，且 $\\mathbf{n}$ 是位置向量 $\\langle ${x}, ${y} \\rangle$ 的正倍数，所以它背离圆心。`,
+              ),
+            ),
+          },
+          [
+            [
+              [Q.of(-x, c), Q.of(-y, c)],
+              "That points toward the center: it is the inward normal, from turning the tangent counterclockwise.",
+              "那指向圆心：它是内法向量，是把切向量逆时针旋转得到的。",
+            ],
+            [
+              [Q.of(-y, c), Q.of(x, c)],
+              "That is the unit tangent; the normal is the tangent turned a quarter turn clockwise.",
+              "那是单位切向量；法向量是把切向量顺时针旋转四分之一圈。",
+            ],
+            [[x, y], `That has length $${c}$; divide by the radius to get a unit vector.`, `它的长度是 $${c}$；要除以半径才是单位向量。`],
           ],
-        });
+        );
       },
     },
     {
@@ -3783,8 +4248,8 @@ export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
       figure: multivariableDrawings6["outward-pointing-unit-normal-vectors-in-2d#outward-normals-on-a-polygon"],
       title: t("Outward normals on a polygon side", "多边形边上的外法向量"),
       explanation: t(
-        "On a side of a polygon traversed counterclockwise, the tangent direction is the vector from the start of the side to its end. If that vector is $\\langle d_x, d_y \\rangle$, the outward unit normal is\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\nthe same along the whole side, because a straight side never changes direction.",
-        "沿逆时针方向遍历多边形时，一条边上的切线方向就是从该边起点指向终点的向量。若这个向量为 $\\langle d_x, d_y \\rangle$，则向外的单位法向量为\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\n它在整条边上都相同，因为直边的方向从不改变。",
+        "On a side of a polygon traversed counterclockwise, the tangent direction is the vector from the start of the side to its end. If that vector is $\\langle d_x, d_y \\rangle$, the outward unit normal is\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\nthe same along the whole side, because a straight side never changes direction. On a bottom side from $(-1, 0)$ to $(1, 0)$ the direction is $\\langle 2, 0 \\rangle$, so $\\mathbf{n} = \\frac{\\langle 0, -2 \\rangle}{2} = \\langle 0, -1 \\rangle$, pointing down and out.\n\n> **Watch out.** Only the direction of the side matters, not where it lies. Turn clockwise, to $\\langle d_y, -d_x \\rangle$; the other quarter turn $\\langle -d_y, d_x \\rangle$ points into the polygon.",
+        "沿逆时针方向遍历多边形时，一条边上的切线方向就是从该边起点指向终点的向量。若这个向量为 $\\langle d_x, d_y \\rangle$，则向外的单位法向量为\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\n它在整条边上都相同，因为直边的方向从不改变。对从 $(-1, 0)$ 到 $(1, 0)$ 的底边，方向为 $\\langle 2, 0 \\rangle$，所以 $\\mathbf{n} = \\frac{\\langle 0, -2 \\rangle}{2} = \\langle 0, -1 \\rangle$，向下指向外侧。\n\n> **注意。** 只有边的方向有关，与边的位置无关。要顺时针旋转，得到 $\\langle d_y, -d_x \\rangle$；另一个四分之一圈 $\\langle -d_y, d_x \\rangle$ 指向多边形内部。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, c] = rng.pick(pythagoreanTriples);
@@ -3792,34 +4257,57 @@ export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
         const dy = rng.sign() * q;
         const x0 = rng.int(-4, 4);
         const y0 = rng.int(-4, 4);
-        const prompt = t(
-          `The boundary of a polygon is traversed counterclockwise, and one of its sides runs from $(${x0}, ${y0})$ to $(${x0 + dx}, ${y0 + dy})$. Find the outward-pointing unit normal vector on that side.`,
-          `沿逆时针方向遍历一个多边形的边界，其中一条边从 $(${x0}, ${y0})$ 到 $(${x0 + dx}, ${y0 + dy})$。求这条边上指向外侧的单位法向量。`,
-        );
         const n = `\\left\\langle ${Q.of(dy, c).toLatex()}, ${Q.of(-dx, c).toLatex()} \\right\\rangle`;
-        const solution = t(
-          steps(
-            `The direction of the side is $\\langle ${dx}, ${dy} \\rangle$, of length $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$.`,
-            `Turning it clockwise gives $\\langle ${dy}, ${-dx} \\rangle$.`,
-            `So $\\mathbf{n} = ${n}$.`,
-          ),
-          steps(
-            `这条边的方向为 $\\langle ${dx}, ${dy} \\rangle$，长度为 $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$。`,
-            `把它顺时针旋转得到 $\\langle ${dy}, ${-dx} \\rangle$。`,
-            `所以 $\\mathbf{n} = ${n}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer: [Q.of(dy, c), Q.of(-dx, c)],
-          vector: true,
-          wrong: [
-            [Q.of(-dy, c), Q.of(dx, c)],
-            [Q.of(dx, c), Q.of(dy, c)],
-            [dy, -dx],
+        return located(
+          {
+            prompt: t(
+              `The boundary of a polygon is traversed counterclockwise, and one of its sides runs from $(${x0}, ${y0})$ to $(${x0 + dx}, ${y0 + dy})$. Find the outward-pointing unit normal vector on that side.`,
+              `沿逆时针方向遍历一个多边形的边界，其中一条边从 $(${x0}, ${y0})$ 到 $(${x0 + dx}, ${y0 + dy})$。求这条边上指向外侧的单位法向量。`,
+            ),
+            answer: [Q.of(dy, c), Q.of(-dx, c)],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Find the direction", "求方向"],
+                  t(
+                    `End minus start: $\\langle ${dx}, ${dy} \\rangle$, of length $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$.`,
+                    `终点减起点：$\\langle ${dx}, ${dy} \\rangle$，长度为 $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$。`,
+                  ),
+                ],
+                [
+                  ["Turn it clockwise", "顺时针旋转"],
+                  t(
+                    `$\\langle d_y, -d_x \\rangle = \\langle ${dy}, ${-dx} \\rangle$.`,
+                    `$\\langle d_y, -d_x \\rangle = \\langle ${dy}, ${-dx} \\rangle$。`,
+                  ),
+                ],
+                [["Divide by the length", "除以长度"], t(`$\\mathbf{n} = ${n}$.`, `$\\mathbf{n} = ${n}$。`)],
+              ],
+              t(
+                `$\\mathbf{n} \\cdot \\langle ${dx}, ${dy} \\rangle = \\frac{${dy} \\cdot ${paren(dx)} + ${paren(-dx)} \\cdot ${paren(dy)}}{${c}} = 0$, so $\\mathbf{n}$ is perpendicular to the side, and its length is $\\frac{\\sqrt{${dy * dy} + ${dx * dx}}}{${c}} = 1$.`,
+                `$\\mathbf{n} \\cdot \\langle ${dx}, ${dy} \\rangle = \\frac{${dy} \\cdot ${paren(dx)} + ${paren(-dx)} \\cdot ${paren(dy)}}{${c}} = 0$，所以 $\\mathbf{n}$ 与这条边垂直，且长度为 $\\frac{\\sqrt{${dy * dy} + ${dx * dx}}}{${c}} = 1$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [Q.of(-dy, c), Q.of(dx, c)],
+              "That turns the direction counterclockwise, which points into the polygon.",
+              "那是把方向逆时针旋转，指向多边形内部。",
+            ],
+            [
+              [Q.of(dx, c), Q.of(dy, c)],
+              "That is the unit direction of the side, which runs along it, not across it.",
+              "那是这条边的单位方向，它沿着边而不是横穿边。",
+            ],
+            [
+              [dy, -dx],
+              `That has length $${c}$; divide by the length of the side to get a unit vector.`,
+              `它的长度是 $${c}$；要除以边长才是单位向量。`,
+            ],
           ],
-        });
+        );
       },
     },
   ],
@@ -3833,6 +4321,10 @@ export const circulation: TopicDef = {
     "The circulation of $\\mathbf{F} = \\langle P, Q \\rangle$ around a closed curve $C$ is $\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$: the net flow along the curve.",
     "向量场 $\\mathbf{F} = \\langle P, Q \\rangle$ 沿闭曲线 $C$ 的环量为 $\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$，即沿曲线方向的净流动。",
   ),
+  intro: t(
+    "Find the circulation of $\\mathbf{F} = \\langle -y, 0 \\rangle$ counterclockwise around the square $[0, 1] \\times [0, 1]$. Only $-y\\,dx$ counts. The two vertical sides have $dx = 0$, and the bottom has $y = 0$. Along the top, $y = 1$ and $x$ runs from $1$ to $0$, giving $\\int_1^0 (-1)\\,dx = 1$. The circulation is $1$.\n\nCheck: on the top the field $\\langle -1, 0 \\rangle$ points left, the way a counterclockwise traveller goes there, so a positive value is right.\n\nIn this lesson we measure circulation, the net push of a field along a closed curve, around rectangles and circles, and read its sign.",
+    "求 $\\mathbf{F} = \\langle -y, 0 \\rangle$ 沿正方形 $[0, 1] \\times [0, 1]$ 逆时针方向的环量。只有 $-y\\,dx$ 起作用。两条竖直边上 $dx = 0$，底边上 $y = 0$。在顶边上 $y = 1$，$x$ 从 $1$ 到 $0$，得 $\\int_1^0 (-1)\\,dx = 1$。环量为 $1$。\n\n检验：在顶边上场 $\\langle -1, 0 \\rangle$ 指向左，正是逆时针行进在那里的方向，所以结果为正是对的。\n\n本课我们计算环量，即场沿闭曲线的净推动，对象是矩形和圆，并判断它的符号。",
+  ),
   prerequisites: ["line-integrals-of-vector-valued-functions-over-general-curves"],
   encompasses: [{ topic: "line-integrals-of-vector-valued-functions-over-general-curves", weight: 0.3 }],
   xp: 10,
@@ -3842,8 +4334,8 @@ export const circulation: TopicDef = {
       figure: multivariableDrawings6["circulation#circulation-around-a-rectangle"],
       title: t("Circulation around a rectangle", "沿矩形的环量"),
       explanation: t(
-        "Circulation is the line integral of the tangential component of the field around a closed curve, so it measures how strongly the field pushes along the curve. Around a rectangle, add the four sides: on a horizontal side only $P\\,dx$ contributes, and on a vertical side only $Q\\,dy$, with $dx < 0$ along the top and $dy < 0$ along the left side when traversing counterclockwise.",
-        "环量是场的切向分量沿闭曲线的曲线积分，所以它衡量场沿曲线推动的强弱。沿矩形计算时把四条边相加：在水平边上只有 $P\\,dx$ 有贡献，在竖直边上只有 $Q\\,dy$ 有贡献；逆时针遍历时，顶边上 $dx < 0$，左边上 $dy < 0$。",
+        "Circulation is the line integral of the tangential component of the field around a closed curve, so it measures how strongly the field pushes along the curve. Around a rectangle, add the four sides: on a horizontal side only $P\\,dx$ contributes, and on a vertical side only $Q\\,dy$, with $dx < 0$ along the top and $dy < 0$ along the left side when traversing counterclockwise. For $\\langle 2y, 7x \\rangle$ around $[0, 1] \\times [0, 1]$, the right side gives $7$, the top gives $-2$, and the circulation is $5$.\n\n> **Watch out.** The top is traversed from right to left, so its integral runs from the larger $x$ to the smaller and changes sign. Treating it as left to right adds the two contributions instead of subtracting them.",
+        "环量是场的切向分量沿闭曲线的曲线积分，所以它衡量场沿曲线推动的强弱。沿矩形计算时把四条边相加：在水平边上只有 $P\\,dx$ 有贡献，在竖直边上只有 $Q\\,dy$ 有贡献；逆时针遍历时，顶边上 $dx < 0$，左边上 $dy < 0$。对 $\\langle 2y, 7x \\rangle$ 沿 $[0, 1] \\times [0, 1]$，右边给出 $7$，顶边给出 $-2$，环量为 $5$。\n\n> **注意。** 顶边是从右向左走的，所以它的积分从较大的 $x$ 积到较小的 $x$，会变号。把它当成从左向右，就把两部分相加而不是相减了。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-6, 6);
@@ -3852,27 +4344,56 @@ export const circulation: TopicDef = {
         const W = rng.int(2, 6);
         const H = rng.int(2, 6);
         const ans = (b - a) * W * H;
-        const prompt = t(
-          `Find the circulation of $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ around the boundary of the rectangle $[0, ${W}] \\times [0, ${H}]$, traversed counterclockwise.`,
-          `求 $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ 沿矩形 $[0, ${W}] \\times [0, ${H}]$ 的边界逆时针方向的环量。`,
-        );
-        const solution = t(
-          steps(
-            `Bottom ($y = 0$, $x$ from $0$ to $${W}$): $\\int P\\,dx = \\int_0^{${W}} 0\\,dx = 0$.`,
-            `Right ($x = ${W}$, $y$ from $0$ to $${H}$): $\\int Q\\,dy = \\int_0^{${H}} ${b * W}\\,dy = ${b * W * H}$.`,
-            `Top ($y = ${H}$, $x$ from $${W}$ to $0$): $\\int P\\,dx = \\int_{${W}}^0 ${a * H}\\,dx = ${-a * H * W}$.`,
-            `Left ($x = 0$, $y$ from $${H}$ to $0$): $\\int Q\\,dy = 0$.`,
-            `The circulation is $${b * W * H} + ${paren(-a * H * W)} = ${ans}$.`,
+        return numberProblem({
+          prompt: t(
+            `Find the circulation of $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ around the boundary of the rectangle $[0, ${W}] \\times [0, ${H}]$, traversed counterclockwise.`,
+            `求 $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ 沿矩形 $[0, ${W}] \\times [0, ${H}]$ 的边界逆时针方向的环量。`,
           ),
-          steps(
-            `底边（$y = 0$，$x$ 从 $0$ 到 $${W}$）：$\\int P\\,dx = \\int_0^{${W}} 0\\,dx = 0$。`,
-            `右边（$x = ${W}$，$y$ 从 $0$ 到 $${H}$）：$\\int Q\\,dy = \\int_0^{${H}} ${b * W}\\,dy = ${b * W * H}$。`,
-            `顶边（$y = ${H}$，$x$ 从 $${W}$ 到 $0$）：$\\int P\\,dx = \\int_{${W}}^0 ${a * H}\\,dx = ${-a * H * W}$。`,
-            `左边（$x = 0$，$y$ 从 $${H}$ 到 $0$）：$\\int Q\\,dy = 0$。`,
-            `环量为 $${b * W * H} + ${paren(-a * H * W)} = ${ans}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              (a + b) * W * H,
+              "That runs along the top from left to right; counterclockwise it goes from right to left, which changes the sign of its integral.",
+              "那是把顶边当成从左向右走；逆时针时它从右向左，积分要变号。",
+            ),
+            why(
+              (a - b) * W * H,
+              "That is the clockwise circulation, the negative of the counterclockwise one.",
+              "那是顺时针方向的环量，是逆时针环量的相反数。",
+            ),
+            why(b * W * H, "That counts only the right side; the top contributes too.", "那是只算了右边；顶边也有贡献。"),
+          ]),
+          solution: walked(
+            [
+              [["Bottom side", "底边"], t(`$y = 0$, so $P = 0$ and the bottom gives $0$.`, `$y = 0$，所以 $P = 0$，底边给出 $0$。`)],
+              [
+                ["Right side", "右边"],
+                t(
+                  `$x = ${W}$, $y$ from $0$ to $${H}$: $\\int_0^{${H}} ${b * W}\\,dy = ${b * W * H}$.`,
+                  `$x = ${W}$，$y$ 从 $0$ 到 $${H}$：$\\int_0^{${H}} ${b * W}\\,dy = ${b * W * H}$。`,
+                ),
+              ],
+              [
+                ["Top side", "顶边"],
+                t(
+                  `$y = ${H}$, $x$ from $${W}$ to $0$: $\\int_{${W}}^0 ${a * H}\\,dx = ${-a * H * W}$.`,
+                  `$y = ${H}$，$x$ 从 $${W}$ 到 $0$：$\\int_{${W}}^0 ${a * H}\\,dx = ${-a * H * W}$。`,
+                ),
+              ],
+              [
+                ["Left side and total", "左边与总和"],
+                t(
+                  `$x = 0$, so $Q = 0$ there; the circulation is $${b * W * H} + ${paren(-a * H * W)} = ${ans}$.`,
+                  `$x = 0$，那里 $Q = 0$；环量为 $${b * W * H} + ${paren(-a * H * W)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Clockwise the right side would run down and the top left to right, giving $${-b * W * H} + ${paren(a * H * W)} = ${-ans}$, the negative of $${ans}$, as reversing a curve must.`,
+              `顺时针时右边向下走、顶边从左向右走，得 $${-b * W * H} + ${paren(a * H * W)} = ${-ans}$，正是 $${ans}$ 的相反数，与曲线反向应有的结果一致。`,
+            ),
           ),
-        );
-        return numberProblem({ prompt, solution, answer: ans, wrong: [(a + b) * W * H, (a - b) * W * H, b * W * H] });
+        });
       },
     },
     {
@@ -3880,41 +4401,75 @@ export const circulation: TopicDef = {
       figure: multivariableDrawings6["circulation#circulation-around-a-circle"],
       title: t("Circulation around a circle", "沿圆的环量"),
       explanation: t(
-        "For a rotating field $\\mathbf{F} = \\langle -ky, kx \\rangle$ on the circle of radius $R$, the field is tangent to the circle with constant length $kR$, so $\\mathbf{F} \\cdot \\mathbf{T} = kR$ everywhere. The circulation is that constant times the length of the circle:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2.$$",
-        "对于旋转场 $\\mathbf{F} = \\langle -ky, kx \\rangle$，在半径为 $R$ 的圆上，场与圆相切且长度恒为 $kR$，所以处处有 $\\mathbf{F} \\cdot \\mathbf{T} = kR$。环量就是这个常数乘以圆周长：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2$$",
+        "For a rotating field $\\mathbf{F} = \\langle -ky, kx \\rangle$ on the circle of radius $R$, the field is tangent to the circle with constant length $kR$, so $\\mathbf{F} \\cdot \\mathbf{T} = kR$ everywhere. The circulation is that constant times the length of the circle:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2.$$\n\nFor $\\langle -3y, 3x \\rangle$ on the unit circle, the circulation is $3 \\cdot 2\\pi = 6\\pi$.\n\n> **Watch out.** Both the length of the field, $kR$, and the length of the circle, $2\\pi R$, carry a factor $R$, so the result has $R^2$. The full turn has length $2\\pi R$, not $\\pi R$.",
+        "对于旋转场 $\\mathbf{F} = \\langle -ky, kx \\rangle$，在半径为 $R$ 的圆上，场与圆相切且长度恒为 $kR$，所以处处有 $\\mathbf{F} \\cdot \\mathbf{T} = kR$。环量就是这个常数乘以圆周长：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2$$\n\n对单位圆上的 $\\langle -3y, 3x \\rangle$，环量为 $3 \\cdot 2\\pi = 6\\pi$。\n\n> **注意。** 场的长度 $kR$ 和圆的周长 $2\\pi R$ 都带有因子 $R$，所以结果含 $R^2$。一整圈的长度是 $2\\pi R$，不是 $\\pi R$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.nonZero(-5, 5);
         const R = rng.int(2, 6);
         const ans = 2 * k * R * R;
         const field = `\\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle`;
-        const prompt = t(
-          `The circulation of $\\mathbf{F} = ${field}$ around the circle $x^2 + y^2 = ${R * R}$, traversed counterclockwise, equals $c\\pi$. Find $c$.`,
-          `$\\mathbf{F} = ${field}$ 沿圆 $x^2 + y^2 = ${R * R}$ 逆时针方向的环量等于 $c\\pi$。求 $c$。`,
-        );
-        const solution = t(
-          steps(
-            `With $\\mathbf{r}(t) = \\langle ${R}\\cos t, ${R}\\sin t \\rangle$: $\\mathbf{F} = \\langle ${-k * R}\\sin t, ${k * R}\\cos t \\rangle$ and $\\mathbf{r}'(t) = \\langle -${R}\\sin t, ${R}\\cos t \\rangle$.`,
-            `\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R}\\sin^2 t + ${paren(k * R * R)}\\cos^2 t = ${k * R * R}`,
-            `\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} ${k * R * R}\\,dt = ${ans}\\pi`,
-            `So $c = ${ans}$.`,
+        return numberProblem({
+          prompt: t(
+            `The circulation of $\\mathbf{F} = ${field}$ around the circle $x^2 + y^2 = ${R * R}$, traversed counterclockwise, equals $c\\pi$. Find $c$.`,
+            `$\\mathbf{F} = ${field}$ 沿圆 $x^2 + y^2 = ${R * R}$ 逆时针方向的环量等于 $c\\pi$。求 $c$。`,
           ),
-          steps(
-            `取 $\\mathbf{r}(t) = \\langle ${R}\\cos t, ${R}\\sin t \\rangle$：$\\mathbf{F} = \\langle ${-k * R}\\sin t, ${k * R}\\cos t \\rangle$，$\\mathbf{r}'(t) = \\langle -${R}\\sin t, ${R}\\cos t \\rangle$。`,
-            `\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R}\\sin^2 t + ${paren(k * R * R)}\\cos^2 t = ${k * R * R}`,
-            `\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} ${k * R * R}\\,dt = ${ans}\\pi`,
-            `所以 $c = ${ans}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              k * R * R,
+              "That uses $\\pi R$ for the length of the circle; a full turn has length $2\\pi R$.",
+              "那是把圆周长当成 $\\pi R$；一整圈的长度是 $2\\pi R$。",
+            ),
+            why(
+              2 * k * R,
+              "That leaves out a factor $R$; the field has length $kR$ on the circle, and the circle has length $2\\pi R$.",
+              "那是漏掉了一个因子 $R$；场在圆上的长度是 $kR$，圆周长是 $2\\pi R$。",
+            ),
+            why(
+              -ans,
+              "That has the sign reversed; this field turns the same way as the counterclockwise traversal when $k > 0$.",
+              "那是符号反了；$k > 0$ 时这个场与逆时针行进方向一致。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Parametrize", "参数化"],
+                t(
+                  `$\\mathbf{r}(t) = \\langle ${R}\\cos t, ${R}\\sin t \\rangle$: $\\mathbf{F} = \\langle ${-k * R}\\sin t, ${k * R}\\cos t \\rangle$ and $\\mathbf{r}'(t) = \\langle -${R}\\sin t, ${R}\\cos t \\rangle$.`,
+                  `$\\mathbf{r}(t) = \\langle ${R}\\cos t, ${R}\\sin t \\rangle$：$\\mathbf{F} = \\langle ${-k * R}\\sin t, ${k * R}\\cos t \\rangle$，$\\mathbf{r}'(t) = \\langle -${R}\\sin t, ${R}\\cos t \\rangle$。`,
+                ),
+              ],
+              [
+                ["Take the dot product", "求点积"],
+                t(
+                  `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R}\\sin^2 t + ${paren(k * R * R)}\\cos^2 t = ${k * R * R}$.`,
+                  `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R}\\sin^2 t + ${paren(k * R * R)}\\cos^2 t = ${k * R * R}$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{2\\pi} ${k * R * R}\\,dt = ${ans}\\pi$, so $c = ${ans}$.`,
+                  `$\\int_0^{2\\pi} ${k * R * R}\\,dt = ${ans}\\pi$，所以 $c = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The tangential component is $kR = ${k * R}$ at every point and the circle has length $2\\pi \\cdot ${R} = ${2 * R}\\pi$; their product is $${ans}\\pi$.`,
+              `切向分量处处为 $kR = ${k * R}$，圆周长为 $2\\pi \\cdot ${R} = ${2 * R}\\pi$；二者之积为 $${ans}\\pi$。`,
+            ),
           ),
-        );
-        return numberProblem({ prompt, solution, answer: ans, wrong: [k * R * R, 2 * k * R, -ans] });
+        });
       },
     },
     {
       id: "the-sign-of-the-circulation",
       title: t("The sign of the circulation", "环量的符号"),
       explanation: t(
-        "Positive circulation around a counterclockwise curve means the field flows mostly with the direction of travel, negative means mostly against it, and zero means the flow along the curve cancels out, as it does for every gradient field.",
-        "沿逆时针曲线的环量为正，表示场大体顺着行进方向流动；为负表示大体逆着行进方向；为零表示沿曲线的流动相互抵消，每个梯度场都是如此。",
+        "Positive circulation around a counterclockwise curve means the field flows mostly with the direction of travel, negative means mostly against it, and zero means the flow along the curve cancels out, as it does for every gradient field. For $\\langle -y, 0 \\rangle$ around the unit circle, $\\oint -y\\,dx = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$: positive.\n\n> **Watch out.** A field that points straight out of the circle crosses it without pushing along it, so its circulation is zero, however strong it is.",
+        "沿逆时针曲线的环量为正，表示场大体顺着行进方向流动；为负表示大体逆着行进方向；为零表示沿曲线的流动相互抵消，每个梯度场都是如此。对 $\\langle -y, 0 \\rangle$ 沿单位圆，$\\oint -y\\,dx = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$：为正。\n\n> **注意。** 垂直指向圆外的场只是穿过圆，并不沿圆推动，所以无论多强，它的环量都是零。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.pick(["positive", "negative", "zero"] as const);
@@ -3926,28 +4481,81 @@ export const circulation: TopicDef = {
             : kind === "negative"
               ? `\\langle ${poly([k, "y"])}, ${poly([-k, "x"])} \\rangle`
               : `\\langle ${poly([2 * k, "x"])}, ${poly([2 * k, "y"])} \\rangle`;
-        const options = [t("Positive", "正"), t("Negative", "负"), t("Zero", "零")];
-        const correct = ["positive", "negative", "zero"].indexOf(kind);
-        const prompt = t(
-          `Is the circulation of $\\mathbf{F} = ${field}$ around the circle $x^2 + y^2 = ${R * R}$, traversed counterclockwise, positive, negative or zero?`,
-          `$\\mathbf{F} = ${field}$ 沿圆 $x^2 + y^2 = ${R * R}$ 逆时针方向的环量是正、负还是零？`,
-        );
-        const reason =
-          kind === "positive"
-            ? t(
-                `On the circle $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R} > 0$: the field flows counterclockwise, with the direction of travel.`,
-                `在圆上 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R} > 0$：场沿逆时针方向流动，与行进方向一致。`,
-              )
-            : kind === "negative"
+        const positive = t("Positive", "正");
+        const negative = t("Negative", "负");
+        const zero = t("Zero", "零");
+        const dot = kind === "positive" ? k * R * R : kind === "negative" ? -k * R * R : 0;
+        const notPositive = {
+          option: positive,
+          why:
+            kind === "negative"
+              ? t("The field turns clockwise, against the counterclockwise direction of travel", "场顺时针旋转，与逆时针行进方向相反")
+              : t("The field points straight out of the circle, so it has no component along it", "场垂直指向圆外，沿圆的分量为零"),
+        };
+        const notNegative = {
+          option: negative,
+          why:
+            kind === "positive"
+              ? t("The field turns counterclockwise, with the direction of travel", "场逆时针旋转，与行进方向一致")
+              : t(
+                  "Pointing outward is not flowing backward; the field has no component along the circle",
+                  "指向外侧并不是逆向流动；场沿圆的分量为零",
+                ),
+        };
+        const notZero = {
+          option: zero,
+          why: t(
+            `The field is tangent to the circle, with $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${dot}$ everywhere, so nothing cancels`,
+            `场与圆相切，处处 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${dot}$，没有抵消`,
+          ),
+        };
+        return explainedChoice(rng, {
+          prompt: t(
+            `Is the circulation of $\\mathbf{F} = ${field}$ around the circle $x^2 + y^2 = ${R * R}$, traversed counterclockwise, positive, negative or zero?`,
+            `$\\mathbf{F} = ${field}$ 沿圆 $x^2 + y^2 = ${R * R}$ 逆时针方向的环量是正、负还是零？`,
+          ),
+          correct: kind === "positive" ? positive : kind === "negative" ? negative : zero,
+          wrong: kind === "positive" ? [notNegative, notZero] : kind === "negative" ? [notPositive, notZero] : [notPositive, notNegative],
+          solution: walked(
+            [
+              [
+                ["Parametrize", "参数化"],
+                t(
+                  `$\\mathbf{r}(t) = \\langle ${R === 1 ? "" : R}\\cos t, ${R === 1 ? "" : R}\\sin t \\rangle$, $\\mathbf{r}'(t) = \\langle -${R === 1 ? "" : R}\\sin t, ${R === 1 ? "" : R}\\cos t \\rangle$.`,
+                  `$\\mathbf{r}(t) = \\langle ${R === 1 ? "" : R}\\cos t, ${R === 1 ? "" : R}\\sin t \\rangle$，$\\mathbf{r}'(t) = \\langle -${R === 1 ? "" : R}\\sin t, ${R === 1 ? "" : R}\\cos t \\rangle$。`,
+                ),
+              ],
+              [
+                ["Take the dot product", "求点积"],
+                kind === "zero"
+                  ? t(
+                      `The field is $${2 * k}$ times the position vector, so $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${2 * k * R * R}(-\\cos t\\sin t + \\sin t\\cos t) = 0$.`,
+                      `这个场是位置向量的 $${2 * k}$ 倍，所以 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${2 * k * R * R}(-\\cos t\\sin t + \\sin t\\cos t) = 0$。`,
+                    )
+                  : t(
+                      `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${dot}(\\sin^2 t + \\cos^2 t) = ${dot}$ at every point.`,
+                      `每一点处 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${dot}(\\sin^2 t + \\cos^2 t) = ${dot}$。`,
+                    ),
+              ],
+              [
+                ["Read the sign", "判断符号"],
+                t(
+                  `The circulation is $\\int_0^{2\\pi} ${dot}\\,dt = ${dot === 0 ? "0" : `${2 * dot}\\pi`}$, which is ${kind}.`,
+                  `环量为 $\\int_0^{2\\pi} ${dot}\\,dt = ${dot === 0 ? "0" : `${2 * dot}\\pi`}$，${kind === "positive" ? "为正" : kind === "negative" ? "为负" : "为零"}。`,
+                ),
+              ],
+            ],
+            kind === "zero"
               ? t(
-                  `On the circle $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${-k * R * R} < 0$: the field flows clockwise, against the direction of travel.`,
-                  `在圆上 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${-k * R * R} < 0$：场沿顺时针方向流动，与行进方向相反。`,
+                  `The field is the gradient of $${k}(x^2 + y^2)$, and the circulation of a gradient around a closed curve is $0$.`,
+                  `这个场是 $${k}(x^2 + y^2)$ 的梯度，而梯度场沿闭曲线的环量为 $0$。`,
                 )
               : t(
-                  `The field is the gradient of $${k}(x^2 + y^2)$ and points straight out of the circle, so $\\mathbf{F} \\cdot \\mathbf{T} = 0$ everywhere on it and the circulation is zero.`,
-                  `这个场是 $${k}(x^2 + y^2)$ 的梯度，垂直指向圆外，所以在圆上处处有 $\\mathbf{F} \\cdot \\mathbf{T} = 0$，环量为零。`,
-                );
-        return choiceProblem({ prompt, options, correct, solution: reason });
+                  `At $(${R}, 0)$ the field is $\\langle 0, ${kind === "positive" ? k * R : -k * R} \\rangle$, pointing ${kind === "positive" ? "up, the way" : "down, against the way"} a counterclockwise traveller moves there.`,
+                  `在 $(${R}, 0)$ 处场为 $\\langle 0, ${kind === "positive" ? k * R : -k * R} \\rangle$，指向${kind === "positive" ? "上方，正是" : "下方，与"}逆时针行进在那里的方向${kind === "positive" ? "" : "相反"}。`,
+                ),
+          ),
+        });
       },
     },
   ],
@@ -3961,6 +4569,10 @@ export const fluxInTwoDimensionalVectorFields: TopicDef = {
     "The flux of $\\mathbf{F}$ across a curve $C$ is $\\int_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$, the rate at which the field crosses the curve in the direction of the normal $\\mathbf{n}$.",
     "$\\mathbf{F}$ 穿过曲线 $C$ 的通量为 $\\int_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$，即场沿法向量 $\\mathbf{n}$ 方向穿过曲线的速率。",
   ),
+  intro: t(
+    "Find the flux of the constant field $\\mathbf{F} = \\langle 3, 0 \\rangle$ across the segment from $(0, 0)$ to $(0, 2)$, with the normal on the right of the direction of travel. Travelling up, the right is $\\mathbf{n} = \\langle 1, 0 \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{n} = 3$ at every point, and the segment has length $2$. The flux is $3 \\cdot 2 = 6$.\n\nCheck: with $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$, the flux is $\\int (P\\,dy - Q\\,dx) = \\int_0^2 3\\,dy = 6$.\n\nIn this lesson we measure flux, the rate at which a field crosses a curve, using the component of the field along the normal.",
+    "求常向量场 $\\mathbf{F} = \\langle 3, 0 \\rangle$ 穿过从 $(0, 0)$ 到 $(0, 2)$ 的线段的通量，法向量取在行进方向的右侧。向上走时右侧是 $\\mathbf{n} = \\langle 1, 0 \\rangle$，所以每一点处 $\\mathbf{F} \\cdot \\mathbf{n} = 3$，线段长度为 $2$。通量为 $3 \\cdot 2 = 6$。\n\n检验：由 $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$，通量为 $\\int (P\\,dy - Q\\,dx) = \\int_0^2 3\\,dy = 6$。\n\n本课我们用场沿法向的分量来计算通量，即场穿过曲线的速率。",
+  ),
   prerequisites: ["outward-pointing-unit-normal-vectors-in-2d", "line-integrals-of-scalar-functions-over-line-segments"],
   encompasses: [{ topic: "outward-pointing-unit-normal-vectors-in-2d", weight: 0.4 }],
   xp: 10,
@@ -3969,8 +4581,8 @@ export const fluxInTwoDimensionalVectorFields: TopicDef = {
       id: "flux-of-a-constant-field-across-a-segment",
       title: t("Flux of a constant field across a segment", "常向量场穿过线段的通量"),
       explanation: t(
-        "Flux measures how much of the field crosses the curve rather than running along it, so it uses the normal component $\\mathbf{F} \\cdot \\mathbf{n}$. For a constant field and a straight segment both $\\mathbf{F}$ and $\\mathbf{n}$ are constant, so the flux is $\\mathbf{F} \\cdot \\mathbf{n}$ times the length. With direction $\\langle d_x, d_y \\rangle$ and $\\mathbf{n}$ on its right, this is $P\\,d_y - Q\\,d_x$.",
-        "通量衡量的是场穿过曲线而不是沿曲线流动的部分，所以它使用法向分量 $\\mathbf{F} \\cdot \\mathbf{n}$。对于常向量场和直线段，$\\mathbf{F}$ 和 $\\mathbf{n}$ 都是常量，所以通量等于 $\\mathbf{F} \\cdot \\mathbf{n}$ 乘以长度。若方向为 $\\langle d_x, d_y \\rangle$ 且 $\\mathbf{n}$ 在其右侧，结果就是 $P\\,d_y - Q\\,d_x$。",
+        "Flux measures how much of the field crosses the curve rather than running along it, so it uses the normal component $\\mathbf{F} \\cdot \\mathbf{n}$. For a constant field and a straight segment both $\\mathbf{F}$ and $\\mathbf{n}$ are constant, so the flux is $\\mathbf{F} \\cdot \\mathbf{n}$ times the length. With direction $\\langle d_x, d_y \\rangle$ and $\\mathbf{n}$ on its right, this is $P\\,d_y - Q\\,d_x$. For $\\langle 1, 4 \\rangle$ across the segment from $(0, 0)$ to $(2, 0)$, $\\mathbf{n} = \\langle 0, -1 \\rangle$ and the flux is $-4 \\cdot 2 = -8$.\n\n> **Watch out.** $P\\,d_x + Q\\,d_y$ is the tangential part, which belongs to circulation; flux uses $P\\,d_y - Q\\,d_x$. And the length cancels the $\\frac{1}{\\text{length}}$ in $\\mathbf{n}$, so do not leave it out.",
+        "通量衡量的是场穿过曲线而不是沿曲线流动的部分，所以它使用法向分量 $\\mathbf{F} \\cdot \\mathbf{n}$。对于常向量场和直线段，$\\mathbf{F}$ 和 $\\mathbf{n}$ 都是常量，所以通量等于 $\\mathbf{F} \\cdot \\mathbf{n}$ 乘以长度。若方向为 $\\langle d_x, d_y \\rangle$ 且 $\\mathbf{n}$ 在其右侧，结果就是 $P\\,d_y - Q\\,d_x$。对 $\\langle 1, 4 \\rangle$ 穿过从 $(0, 0)$ 到 $(2, 0)$ 的线段，$\\mathbf{n} = \\langle 0, -1 \\rangle$，通量为 $-4 \\cdot 2 = -8$。\n\n> **注意。** $P\\,d_x + Q\\,d_y$ 是切向部分，属于环量；通量用的是 $P\\,d_y - Q\\,d_x$。长度正好抵消 $\\mathbf{n}$ 中的 $\\frac{1}{\\text{长度}}$，不要漏乘。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, c] = rng.pick(pythagoreanTriples);
@@ -3979,29 +4591,60 @@ export const fluxInTwoDimensionalVectorFields: TopicDef = {
         const P = rng.nonZero(-6, 6);
         const Qc = rng.nonZero(-6, 6);
         const ans = P * dy - Qc * dx;
-        const prompt = t(
-          `Find the flux of the constant field $\\mathbf{F} = \\langle ${P}, ${Qc} \\rangle$ across the segment from $(0, 0)$ to $(${dx}, ${dy})$, with $\\mathbf{n} = \\frac{1}{${c}}\\langle ${dy}, ${-dx} \\rangle$, the unit normal on the right of the direction of travel.`,
-          `求常向量场 $\\mathbf{F} = \\langle ${P}, ${Qc} \\rangle$ 穿过从 $(0, 0)$ 到 $(${dx}, ${dy})$ 的线段的通量，其中 $\\mathbf{n} = \\frac{1}{${c}}\\langle ${dy}, ${-dx} \\rangle$ 是行进方向右侧的单位法向量。`,
-        );
-        const solution = t(
-          steps(
-            `\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${P} \\cdot ${paren(dy)} + ${paren(Qc)} \\cdot ${paren(-dx)}}{${c}} = \\frac{${ans}}{${c}}`,
-            `The segment has length $${c}$, so the flux is $\\frac{${ans}}{${c}} \\cdot ${c} = ${ans}$.`,
+        return numberProblem({
+          prompt: t(
+            `Find the flux of the constant field $\\mathbf{F} = \\langle ${P}, ${Qc} \\rangle$ across the segment from $(0, 0)$ to $(${dx}, ${dy})$, with $\\mathbf{n} = \\frac{1}{${c}}\\langle ${dy}, ${-dx} \\rangle$, the unit normal on the right of the direction of travel.`,
+            `求常向量场 $\\mathbf{F} = \\langle ${P}, ${Qc} \\rangle$ 穿过从 $(0, 0)$ 到 $(${dx}, ${dy})$ 的线段的通量，其中 $\\mathbf{n} = \\frac{1}{${c}}\\langle ${dy}, ${-dx} \\rangle$ 是行进方向右侧的单位法向量。`,
           ),
-          steps(
-            `\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${P} \\cdot ${paren(dy)} + ${paren(Qc)} \\cdot ${paren(-dx)}}{${c}} = \\frac{${ans}}{${c}}`,
-            `线段长度为 $${c}$，所以通量为 $\\frac{${ans}}{${c}} \\cdot ${c} = ${ans}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              P * dx + Qc * dy,
+              "That dots the field with the direction of the segment, the tangential part; flux uses the normal.",
+              "那是用场点乘线段的方向，即切向部分；通量用的是法向量。",
+            ),
+            why(
+              -ans,
+              "That uses the normal on the left of the direction of travel; the given $\\mathbf{n}$ is on the right.",
+              "那是用了行进方向左侧的法向量；给定的 $\\mathbf{n}$ 在右侧。",
+            ),
+            why(
+              Q.of(ans, c),
+              "That is $\\mathbf{F} \\cdot \\mathbf{n}$ alone; it must be multiplied by the length of the segment.",
+              "那只是 $\\mathbf{F} \\cdot \\mathbf{n}$；还要乘以线段的长度。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Take the normal component", "求法向分量"],
+                t(
+                  `$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${P} \\cdot ${paren(dy)} + ${paren(Qc)} \\cdot ${paren(-dx)}}{${c}} = ${Q.of(ans, c).toLatex()}$.`,
+                  `$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${P} \\cdot ${paren(dy)} + ${paren(Qc)} \\cdot ${paren(-dx)}}{${c}} = ${Q.of(ans, c).toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Multiply by the length", "乘以长度"],
+                t(
+                  `The segment has length $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$, so the flux is $${Q.of(ans, c).toLatex()} \\cdot ${c} = ${ans}$.`,
+                  `线段长度为 $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$，所以通量为 $${Q.of(ans, c).toLatex()} \\cdot ${c} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$, the flux is $P\\,d_y - Q\\,d_x = ${P} \\cdot ${paren(dy)} - ${paren(Qc)} \\cdot ${paren(dx)} = ${ans}$.`,
+              `由 $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$，通量为 $P\\,d_y - Q\\,d_x = ${P} \\cdot ${paren(dy)} - ${paren(Qc)} \\cdot ${paren(dx)} = ${ans}$。`,
+            ),
           ),
-        );
-        return numberProblem({ prompt, solution, answer: ans, wrong: [P * dx + Qc * dy, -ans, Q.of(ans, c)] });
+        });
       },
     },
     {
       id: "the-sign-of-the-flux",
       title: t("The sign of the outward flux", "外法向通量的符号"),
       explanation: t(
-        "Positive outward flux across a closed curve means more of the field leaves the region than enters it, negative means more enters than leaves, and zero means the flow in and the flow out balance exactly.",
-        "穿过闭曲线的外法向通量为正，表示离开区域的场多于进入的；为负表示进入的多于离开的；为零表示流入与流出恰好平衡。",
+        "Positive outward flux across a closed curve means more of the field leaves the region than enters it, negative means more enters than leaves, and zero means the flow in and the flow out balance exactly. For $\\langle x, 0 \\rangle$ across the unit circle, $\\mathbf{F} \\cdot \\mathbf{n} = x^2 \\ge 0$ everywhere, so the outward flux is positive.\n\n> **Watch out.** A field that circles around the origin runs along the circle and never crosses it, so its flux is zero even though it is never zero itself.",
+        "穿过闭曲线的外法向通量为正，表示离开区域的场多于进入的；为负表示进入的多于离开的；为零表示流入与流出恰好平衡。对 $\\langle x, 0 \\rangle$ 穿过单位圆，处处 $\\mathbf{F} \\cdot \\mathbf{n} = x^2 \\ge 0$，所以外法向通量为正。\n\n> **注意。** 绕原点旋转的场沿着圆流动，从不穿过它，所以虽然场本身处处不为零，它的通量却是零。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.pick(["positive", "negative", "zero"] as const);
@@ -4013,23 +4656,81 @@ export const fluxInTwoDimensionalVectorFields: TopicDef = {
             : kind === "negative"
               ? `\\langle ${poly([-k, "x"])}, ${poly([-k, "y"])} \\rangle`
               : `\\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle`;
-        const options = [t("Positive", "正"), t("Negative", "负"), t("Zero", "零")];
-        const correct = ["positive", "negative", "zero"].indexOf(kind);
-        const prompt = t(
-          `Is the outward flux of $\\mathbf{F} = ${field}$ across the circle $x^2 + y^2 = ${R * R}$ positive, negative or zero?`,
-          `$\\mathbf{F} = ${field}$ 穿过圆 $x^2 + y^2 = ${R * R}$ 的外法向通量是正、负还是零？`,
-        );
-        const solution =
-          kind === "zero"
-            ? t(
-                `The outward normal is $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$, and $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k}(-yx + xy)}{${R}} = 0$: the field runs along the circle and never crosses it.`,
-                `外法向量为 $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$，$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k}(-yx + xy)}{${R}} = 0$：场沿着圆流动，从不穿过它。`,
-              )
-            : t(
-                `The outward normal is $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$, and $\\mathbf{F} \\cdot \\mathbf{n} = ${kind === "positive" ? "" : "-"}\\frac{${k}(x^2 + y^2)}{${R}} = ${kind === "positive" ? k * R : -k * R}$ everywhere on the circle, so the field points ${kind === "positive" ? "out of" : "into"} the disk and the flux is ${kind}.`,
-                `外法向量为 $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$，在圆上处处有 $\\mathbf{F} \\cdot \\mathbf{n} = ${kind === "positive" ? "" : "-"}\\frac{${k}(x^2 + y^2)}{${R}} = ${kind === "positive" ? k * R : -k * R}$，所以场指向圆盘${kind === "positive" ? "外" : "内"}，通量为${kind === "positive" ? "正" : "负"}。`,
-              );
-        return choiceProblem({ prompt, options, correct, solution });
+        const positive = t("Positive", "正");
+        const negative = t("Negative", "负");
+        const zero = t("Zero", "零");
+        const normal = kind === "positive" ? k * R : kind === "negative" ? -k * R : 0;
+        const notPositive = {
+          option: positive,
+          why:
+            kind === "negative"
+              ? t("The field points toward the origin, into the disk, so more enters than leaves", "场指向原点，进入圆盘，所以流入多于流出")
+              : t(
+                  "Turning around the origin is not leaving the disk; the field runs along the circle",
+                  "绕原点旋转并不是离开圆盘；场沿着圆流动",
+                ),
+        };
+        const notNegative = {
+          option: negative,
+          why:
+            kind === "positive"
+              ? t("The field points away from the origin, out of the disk", "场背离原点，指向圆盘外")
+              : t("The field runs along the circle, so none of it enters the disk", "场沿着圆流动，没有一点进入圆盘"),
+        };
+        const notZero = {
+          option: zero,
+          why: t(
+            `The field points straight ${kind === "positive" ? "out" : "in"}, with $\\mathbf{F} \\cdot \\mathbf{n} = ${normal}$ at every point, so nothing balances`,
+            `场垂直指向${kind === "positive" ? "外" : "内"}，处处 $\\mathbf{F} \\cdot \\mathbf{n} = ${normal}$，没有相互抵消`,
+          ),
+        };
+        return explainedChoice(rng, {
+          prompt: t(
+            `Is the outward flux of $\\mathbf{F} = ${field}$ across the circle $x^2 + y^2 = ${R * R}$ positive, negative or zero?`,
+            `$\\mathbf{F} = ${field}$ 穿过圆 $x^2 + y^2 = ${R * R}$ 的外法向通量是正、负还是零？`,
+          ),
+          correct: kind === "positive" ? positive : kind === "negative" ? negative : zero,
+          wrong: kind === "positive" ? [notNegative, notZero] : kind === "negative" ? [notPositive, notZero] : [notPositive, notNegative],
+          solution: walked(
+            [
+              [
+                ["Write the outward normal", "写出外法向量"],
+                t(
+                  `$\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$ on the circle.`,
+                  `在圆上 $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$。`,
+                ),
+              ],
+              [
+                ["Take the normal component", "求法向分量"],
+                kind === "zero"
+                  ? t(
+                      `$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k}(-yx + xy)}{${R}} = 0$ at every point.`,
+                      `每一点处 $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k}(-yx + xy)}{${R}} = 0$。`,
+                    )
+                  : t(
+                      `$\\mathbf{F} \\cdot \\mathbf{n} = ${kind === "positive" ? "" : "-"}\\frac{${k}(x^2 + y^2)}{${R}} = ${normal}$ at every point.`,
+                      `每一点处 $\\mathbf{F} \\cdot \\mathbf{n} = ${kind === "positive" ? "" : "-"}\\frac{${k}(x^2 + y^2)}{${R}} = ${normal}$。`,
+                    ),
+              ],
+              [
+                ["Read the sign", "判断符号"],
+                t(
+                  `The flux is $${normal}$ times the length $${2 * R}\\pi$, which is ${kind === "zero" ? "$0$" : `$${normal * 2 * R}\\pi$`}: ${kind}.`,
+                  `通量是 $${normal}$ 乘以周长 $${2 * R}\\pi$，即 ${kind === "zero" ? "$0$" : `$${normal * 2 * R}\\pi$`}：${kind === "positive" ? "为正" : kind === "negative" ? "为负" : "为零"}。`,
+                ),
+              ],
+            ],
+            kind === "zero"
+              ? t(
+                  `At $(${R}, 0)$ the field is $\\langle 0, ${k * R} \\rangle$, along the circle, and at $(0, ${R})$ it is $\\langle ${-k * R}, 0 \\rangle$, along the circle again.`,
+                  `在 $(${R}, 0)$ 处场为 $\\langle 0, ${k * R} \\rangle$，沿着圆；在 $(0, ${R})$ 处场为 $\\langle ${-k * R}, 0 \\rangle$，同样沿着圆。`,
+                )
+              : t(
+                  `At $(${R}, 0)$ the field is $\\langle ${normal}, 0 \\rangle$, pointing ${kind === "positive" ? "out of" : "into"} the disk.`,
+                  `在 $(${R}, 0)$ 处场为 $\\langle ${normal}, 0 \\rangle$，指向圆盘${kind === "positive" ? "外" : "内"}。`,
+                ),
+          ),
+        });
       },
     },
   ],
@@ -4043,6 +4744,10 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
     "With $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$ on a counterclockwise curve, the outward flux of $\\mathbf{F} = \\langle P, Q \\rangle$ is $\\oint_C (P\\,dy - Q\\,dx)$.",
     "在逆时针曲线上 $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$，所以 $\\mathbf{F} = \\langle P, Q \\rangle$ 的外法向通量为 $\\oint_C (P\\,dy - Q\\,dx)$。",
   ),
+  intro: t(
+    "Find the outward flux of $\\mathbf{F} = \\langle x, 0 \\rangle$ across the boundary of the square $[0, 1] \\times [0, 1]$. On the top and bottom the normal is vertical and $Q = 0$, so they give nothing. On the left, $x = 0$, so the field is zero there. On the right, $x = 1$ and $\\mathbf{n} = \\langle 1, 0 \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{n} = 1$ along a side of length $1$. The flux is $1$.\n\nCheck: $\\oint (P\\,dy - Q\\,dx) = \\oint x\\,dy$, and only the right side, going up from $y = 0$ to $y = 1$ at $x = 1$, contributes $\\int_0^1 1\\,dy = 1$.\n\nIn this lesson we compute outward flux across closed curves as $\\oint (P\\,dy - Q\\,dx)$, side by side on rectangles and by parametrization on circles.",
+    "求 $\\mathbf{F} = \\langle x, 0 \\rangle$ 穿过正方形 $[0, 1] \\times [0, 1]$ 边界的外法向通量。在顶边和底边上法向量竖直且 $Q = 0$，所以没有贡献。在左边 $x = 0$，场为零。在右边 $x = 1$，$\\mathbf{n} = \\langle 1, 0 \\rangle$，所以沿长度为 $1$ 的边 $\\mathbf{F} \\cdot \\mathbf{n} = 1$。通量为 $1$。\n\n检验：$\\oint (P\\,dy - Q\\,dx) = \\oint x\\,dy$，只有右边（$x = 1$，$y$ 从 $0$ 向上到 $1$）有贡献 $\\int_0^1 1\\,dy = 1$。\n\n本课我们把穿过闭曲线的外法向通量算作 $\\oint (P\\,dy - Q\\,dx)$：在矩形上逐边计算，在圆上用参数化计算。",
+  ),
   prerequisites: ["flux-in-two-dimensional-vector-fields", "line-integrals-with-respect-to-x-and-y"],
   encompasses: [{ topic: "flux-in-two-dimensional-vector-fields", weight: 0.5 }],
   xp: 10,
@@ -4052,8 +4757,8 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
       figure: multivariableDrawings6["calculating-flux-in-two-dimensional-vector-fields#outward-flux-across-a-rectangle"],
       title: t("Outward flux across a rectangle", "穿过矩形的外法向通量"),
       explanation: t(
-        "Since $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$, the outward flux is $\\oint_C (P\\,dy - Q\\,dx)$. Around a rectangle, compute it side by side: the outward normal is $\\langle 1, 0 \\rangle$ on the right side, $\\langle -1, 0 \\rangle$ on the left, $\\langle 0, 1 \\rangle$ on top and $\\langle 0, -1 \\rangle$ on the bottom.",
-        "由于 $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$，外法向通量为 $\\oint_C (P\\,dy - Q\\,dx)$。沿矩形逐边计算：外法向量在右边为 $\\langle 1, 0 \\rangle$，左边为 $\\langle -1, 0 \\rangle$，顶边为 $\\langle 0, 1 \\rangle$，底边为 $\\langle 0, -1 \\rangle$。",
+        "Since $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$, the outward flux is $\\oint_C (P\\,dy - Q\\,dx)$. Around a rectangle, compute it side by side: the outward normal is $\\langle 1, 0 \\rangle$ on the right side, $\\langle -1, 0 \\rangle$ on the left, $\\langle 0, 1 \\rangle$ on top and $\\langle 0, -1 \\rangle$ on the bottom. For $\\langle 3x + y, 2y \\rangle$ across $[0, 1] \\times [0, 1]$, the flux is $3 + 2 = 5$: the $y$ part of $P$ enters on the left exactly as much as it leaves on the right.\n\n> **Watch out.** The left side counts too, with normal $\\langle -1, 0 \\rangle$. A part of $P$ that does not depend on $x$ cancels between the left and right sides, but only if both are included.",
+        "由于 $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$，外法向通量为 $\\oint_C (P\\,dy - Q\\,dx)$。沿矩形逐边计算：外法向量在右边为 $\\langle 1, 0 \\rangle$，左边为 $\\langle -1, 0 \\rangle$，顶边为 $\\langle 0, 1 \\rangle$，底边为 $\\langle 0, -1 \\rangle$。对 $\\langle 3x + y, 2y \\rangle$ 穿过 $[0, 1] \\times [0, 1]$，通量为 $3 + 2 = 5$：$P$ 中的 $y$ 部分从左边流入多少，就从右边流出多少。\n\n> **注意。** 左边也要算，它的法向量是 $\\langle -1, 0 \\rangle$。$P$ 中与 $x$ 无关的部分在左右两边相互抵消，但前提是两边都算进去。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -4063,29 +4768,63 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
         const H = rng.int(2, 6);
         const ans = (a + b) * W * H;
         const field = `\\langle ${poly([a, "x"], [c, "y"])}, ${poly([b, "y"])} \\rangle`;
-        const prompt = t(
-          `Find the outward flux of $\\mathbf{F} = ${field}$ across the boundary of the rectangle $[0, ${W}] \\times [0, ${H}]$.`,
-          `求 $\\mathbf{F} = ${field}$ 穿过矩形 $[0, ${W}] \\times [0, ${H}]$ 边界的外法向通量。`,
-        );
-        const solution = t(
-          steps(
-            `Right ($x = ${W}$, $\\mathbf{n} = \\langle 1, 0 \\rangle$): $\\int_0^{${H}} (${a * W} + ${paren(c)}y)\\,dy = ${Q.of(2 * a * W * H + c * H * H, 2).toLatex()}$.`,
-            `Left ($x = 0$, $\\mathbf{n} = \\langle -1, 0 \\rangle$): $\\int_0^{${H}} -${paren(c)}y\\,dy = ${Q.of(-c * H * H, 2).toLatex()}$.`,
-            `Top ($y = ${H}$, $\\mathbf{n} = \\langle 0, 1 \\rangle$): $\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$. Bottom ($y = 0$): $Q = 0$, so $0$.`,
-            `The terms from $${c}y$ cancel, and the flux is $${a * W * H} + ${paren(b * H * W)} = ${ans}$.`,
-          ),
-          steps(
-            `右边（$x = ${W}$，$\\mathbf{n} = \\langle 1, 0 \\rangle$）：$\\int_0^{${H}} (${a * W} + ${paren(c)}y)\\,dy = ${Q.of(2 * a * W * H + c * H * H, 2).toLatex()}$。`,
-            `左边（$x = 0$，$\\mathbf{n} = \\langle -1, 0 \\rangle$）：$\\int_0^{${H}} -${paren(c)}y\\,dy = ${Q.of(-c * H * H, 2).toLatex()}$。`,
-            `顶边（$y = ${H}$，$\\mathbf{n} = \\langle 0, 1 \\rangle$）：$\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$。底边（$y = 0$）：$Q = 0$，结果为 $0$。`,
-            `来自 $${c}y$ 的项相互抵消，通量为 $${a * W * H} + ${paren(b * H * W)} = ${ans}$。`,
-          ),
-        );
+        const right = Q.of(2 * a * W * H + c * H * H, 2);
+        const left = Q.of(-c * H * H, 2);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the outward flux of $\\mathbf{F} = ${field}$ across the boundary of the rectangle $[0, ${W}] \\times [0, ${H}]$.`,
+            `求 $\\mathbf{F} = ${field}$ 穿过矩形 $[0, ${W}] \\times [0, ${H}]$ 边界的外法向通量。`,
+          ),
           answer: ans,
-          wrong: [Q.of(2 * ans + c * H * H, 2), (a - b) * W * H, a * W * H],
+          mistakes: distinct(ans, [
+            why(
+              right.add(Q.of(b * H * W)),
+              "That leaves out the left side, where the normal is $\\langle -1, 0 \\rangle$ and the $y$ part of $P$ flows in.",
+              "那是漏掉了左边，那里法向量为 $\\langle -1, 0 \\rangle$，$P$ 的 $y$ 部分从那里流入。",
+            ),
+            why(
+              (a - b) * W * H,
+              "That takes the normal on the top as $\\langle 0, -1 \\rangle$; on the top it points up.",
+              "那是把顶边的法向量当成 $\\langle 0, -1 \\rangle$；顶边上它指向上方。",
+            ),
+            why(a * W * H, "That counts only the left and right sides; the top contributes as well.", "那是只算了左右两边；顶边也有贡献。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Right side", "右边"],
+                t(
+                  `$x = ${W}$, $\\mathbf{n} = \\langle 1, 0 \\rangle$: $\\int_0^{${H}} (${poly([a * W, ""], [c, "y"])})\\,dy = ${right.toLatex()}$.`,
+                  `$x = ${W}$，$\\mathbf{n} = \\langle 1, 0 \\rangle$：$\\int_0^{${H}} (${poly([a * W, ""], [c, "y"])})\\,dy = ${right.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Left side", "左边"],
+                t(
+                  `$x = 0$, $\\mathbf{n} = \\langle -1, 0 \\rangle$: $\\int_0^{${H}} ${poly([-c, "y"])}\\,dy = ${left.toLatex()}$.`,
+                  `$x = 0$，$\\mathbf{n} = \\langle -1, 0 \\rangle$：$\\int_0^{${H}} ${poly([-c, "y"])}\\,dy = ${left.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Top and bottom", "顶边与底边"],
+                t(
+                  `Top, $y = ${H}$, $\\mathbf{n} = \\langle 0, 1 \\rangle$: $\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$. Bottom, $y = 0$: $Q = 0$, so $0$.`,
+                  `顶边 $y = ${H}$，$\\mathbf{n} = \\langle 0, 1 \\rangle$：$\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$。底边 $y = 0$：$Q = 0$，结果为 $0$。`,
+                ),
+              ],
+              [
+                ["Add", "相加"],
+                t(
+                  `$${right.toLatex()} + ${paren(left)} + ${paren(b * H * W)} = ${ans}$.`,
+                  `$${right.toLatex()} + ${paren(left)} + ${paren(b * H * W)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The $${poly([c, "y"])}$ part of $P$ gives the same amount on the right and the left with opposite signs, so the flux is $${a} \\cdot ${W} \\cdot ${H} + ${paren(b)} \\cdot ${W} \\cdot ${H} = ${ans}$.`,
+              `$P$ 中 $${poly([c, "y"])}$ 部分在右边和左边给出等量而异号的结果，所以通量为 $${a} \\cdot ${W} \\cdot ${H} + ${paren(b)} \\cdot ${W} \\cdot ${H} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4094,8 +4833,8 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
       figure: multivariableDrawings6["calculating-flux-in-two-dimensional-vector-fields#outward-flux-across-a-circle"],
       title: t("Outward flux across a circle", "穿过圆的外法向通量"),
       explanation: t(
-        "On a circle, parametrize with $x = R\\cos t$, $y = R\\sin t$ for $0 \\le t \\le 2\\pi$, substitute into $\\oint_C (P\\,dy - Q\\,dx)$, and integrate in $t$. The averages $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ and $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ do most of the work.",
-        "在圆上，用 $x = R\\cos t$、$y = R\\sin t$（$0 \\le t \\le 2\\pi$）参数化，代入 $\\oint_C (P\\,dy - Q\\,dx)$ 后对 $t$ 积分。$\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ 和 $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ 这两个结果完成了大部分计算。",
+        "On a circle, parametrize with $x = R\\cos t$, $y = R\\sin t$ for $0 \\le t \\le 2\\pi$, substitute into $\\oint_C (P\\,dy - Q\\,dx)$, and integrate in $t$. The averages $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ and $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ do most of the work. For $\\langle 6x, y \\rangle$ across the unit circle, the flux is $6\\pi + \\pi = 7\\pi$.\n\n> **Watch out.** $-Q\\,dx = -bR\\sin t \\cdot (-R\\sin t)\\,dt = bR^2\\sin^2 t\\,dt$, with a plus sign. Each of $\\cos^2 t$ and $\\sin^2 t$ integrates to $\\pi$ over a full turn, not $2\\pi$.",
+        "在圆上，用 $x = R\\cos t$、$y = R\\sin t$（$0 \\le t \\le 2\\pi$）参数化，代入 $\\oint_C (P\\,dy - Q\\,dx)$ 后对 $t$ 积分。$\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ 和 $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ 这两个结果完成了大部分计算。对 $\\langle 6x, y \\rangle$ 穿过单位圆，通量为 $6\\pi + \\pi = 7\\pi$。\n\n> **注意。** $-Q\\,dx = -bR\\sin t \\cdot (-R\\sin t)\\,dt = bR^2\\sin^2 t\\,dt$，是加号。在一整圈上 $\\cos^2 t$ 与 $\\sin^2 t$ 的积分各为 $\\pi$，不是 $2\\pi$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -4103,23 +4842,60 @@ export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
         const R = rng.int(1, 5);
         const ans = (a + b) * R * R;
         const field = `\\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle`;
-        const prompt = t(
-          `The outward flux of $\\mathbf{F} = ${field}$ across the circle $x^2 + y^2 = ${R * R}$ equals $c\\pi$. Find $c$.`,
-          `$\\mathbf{F} = ${field}$ 穿过圆 $x^2 + y^2 = ${R * R}$ 的外法向通量等于 $c\\pi$。求 $c$。`,
-        );
-        const solution = t(
-          steps(
-            `With $x = ${R}\\cos t$, $y = ${R}\\sin t$: $P\\,dy = ${a * R * R}\\cos^2 t\\,dt$ and $-Q\\,dx = ${b * R * R}\\sin^2 t\\,dt$.`,
-            `\\oint_C (P\\,dy - Q\\,dx) = \\int_0^{2\\pi} (${a * R * R}\\cos^2 t + ${paren(b * R * R)}\\sin^2 t)\\,dt = ${a * R * R}\\pi + ${paren(b * R * R)}\\pi = ${ans}\\pi`,
-            `So $c = ${ans}$.`,
+        const r = R === 1 ? "" : `${R}`;
+        return numberProblem({
+          prompt: t(
+            `The outward flux of $\\mathbf{F} = ${field}$ across the circle $x^2 + y^2 = ${R * R}$ equals $c\\pi$. Find $c$.`,
+            `$\\mathbf{F} = ${field}$ 穿过圆 $x^2 + y^2 = ${R * R}$ 的外法向通量等于 $c\\pi$。求 $c$。`,
           ),
-          steps(
-            `取 $x = ${R}\\cos t$，$y = ${R}\\sin t$：$P\\,dy = ${a * R * R}\\cos^2 t\\,dt$，$-Q\\,dx = ${b * R * R}\\sin^2 t\\,dt$。`,
-            `\\oint_C (P\\,dy - Q\\,dx) = \\int_0^{2\\pi} (${a * R * R}\\cos^2 t + ${paren(b * R * R)}\\sin^2 t)\\,dt = ${a * R * R}\\pi + ${paren(b * R * R)}\\pi = ${ans}\\pi`,
-            `所以 $c = ${ans}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              2 * ans,
+              "That integrates $\\cos^2 t$ and $\\sin^2 t$ to $2\\pi$ over a full turn; each gives $\\pi$.",
+              "那是把 $\\cos^2 t$ 与 $\\sin^2 t$ 在一整圈上的积分算成 $2\\pi$；它们各为 $\\pi$。",
+            ),
+            why(
+              (a - b) * R * R,
+              "That gives $-Q\\,dx$ a minus sign; with $dx = -R\\sin t\\,dt$ it is $+bR^2\\sin^2 t\\,dt$.",
+              "那是给 $-Q\\,dx$ 带了负号；由 $dx = -R\\sin t\\,dt$，它是 $+bR^2\\sin^2 t\\,dt$。",
+            ),
+            why(
+              (a + b) * R,
+              "That uses $R$ instead of $R^2$; one factor $R$ comes from the field and one from $dx$ or $dy$.",
+              "那是用了 $R$ 而不是 $R^2$；一个因子 $R$ 来自场，另一个来自 $dx$ 或 $dy$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Parametrize", "参数化"],
+                t(
+                  `$x = ${r}\\cos t$, $y = ${r}\\sin t$, so $dx = -${r}\\sin t\\,dt$ and $dy = ${r}\\cos t\\,dt$.`,
+                  `$x = ${r}\\cos t$，$y = ${r}\\sin t$，所以 $dx = -${r}\\sin t\\,dt$，$dy = ${r}\\cos t\\,dt$。`,
+                ),
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$P\\,dy - Q\\,dx = (${poly([a * R * R, "\\cos^2 t"], [b * R * R, "\\sin^2 t"])})\\,dt$.`,
+                  `$P\\,dy - Q\\,dx = (${poly([a * R * R, "\\cos^2 t"], [b * R * R, "\\sin^2 t"])})\\,dt$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$${a * R * R}\\pi + ${paren(b * R * R)}\\pi = ${ans}\\pi$, so $c = ${ans}$.`,
+                  `$${a * R * R}\\pi + ${paren(b * R * R)}\\pi = ${ans}\\pi$，所以 $c = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `On the circle $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${poly([a, "x^2"], [b, "y^2"])}}{${R}}$; its average over the circle is $\\frac{${a + b} \\cdot ${R * R}}{2 \\cdot ${R}}$, and times the length $${2 * R}\\pi$ this is $${ans}\\pi$.`,
+              `在圆上 $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$，所以 $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${poly([a, "x^2"], [b, "y^2"])}}{${R}}$；它在圆上的平均值是 $\\frac{${a + b} \\cdot ${R * R}}{2 \\cdot ${R}}$，乘以周长 $${2 * R}\\pi$ 得 $${ans}\\pi$。`,
+            ),
           ),
-        );
-        return numberProblem({ prompt, solution, answer: ans, wrong: [2 * ans, (a - b) * R * R, (a + b) * R] });
+        });
       },
     },
   ],
@@ -4133,6 +4909,10 @@ export const sourceFreeVectorFields: TopicDef = {
     "A plane field $\\mathbf{F} = \\langle P, Q \\rangle$ is source-free when $\\nabla \\cdot \\mathbf{F} = P_x + Q_y = 0$; its outward flux across every simple closed curve is then zero.",
     "当 $\\nabla \\cdot \\mathbf{F} = P_x + Q_y = 0$ 时，平面向量场 $\\mathbf{F} = \\langle P, Q \\rangle$ 是无源的；这时它穿过每条简单闭曲线的外法向通量都为零。",
   ),
+  intro: t(
+    "Is $\\mathbf{F} = \\langle x + y^2, -y \\rangle$ source-free? Its divergence is $P_x + Q_y = 1 + (-1) = 0$ at every point, so it is.\n\nCheck: across the square $[0, 1] \\times [0, 1]$ the outward fluxes are $\\int_0^1 (1 + y^2)\\,dy = \\frac{4}{3}$ on the right, $-\\int_0^1 y^2\\,dy = -\\frac{1}{3}$ on the left, $\\int_0^1 (-1)\\,dx = -1$ on the top and $0$ on the bottom, and they add to $0$.\n\nIn this lesson we recognize source-free fields by their divergence, choose constants that make a field source-free, and use the balance of their flux.",
+    "$\\mathbf{F} = \\langle x + y^2, -y \\rangle$ 是无源场吗？它的散度处处为 $P_x + Q_y = 1 + (-1) = 0$，所以是。\n\n检验：穿过正方形 $[0, 1] \\times [0, 1]$ 的外法向通量，右边为 $\\int_0^1 (1 + y^2)\\,dy = \\frac{4}{3}$，左边为 $-\\int_0^1 y^2\\,dy = -\\frac{1}{3}$，顶边为 $\\int_0^1 (-1)\\,dx = -1$，底边为 $0$，合计 $0$。\n\n本课我们由散度识别无源场，选取常数使场无源，并利用其通量的平衡。",
+  ),
   prerequisites: ["the-divergence-of-a-vector-field", "calculating-flux-in-two-dimensional-vector-fields"],
   encompasses: [{ topic: "the-divergence-of-a-vector-field", weight: 0.3 }],
   xp: 10,
@@ -4141,8 +4921,8 @@ export const sourceFreeVectorFields: TopicDef = {
       id: "recognizing-source-free-fields",
       title: t("Recognizing source-free fields", "识别无源场"),
       explanation: t(
-        "The divergence measures how much a field spreads out from a point, so a field with zero divergence everywhere has no sources or sinks: whatever flows into a region also flows out. To test a field, compute $P_x + Q_y$ and check whether it is identically zero.",
-        "散度衡量场从一点向外发散的程度，所以处处散度为零的场没有源也没有汇：流入一个区域的量也同样流出。要检验一个场，计算 $P_x + Q_y$，看它是否恒等于零。",
+        "The divergence measures how much a field spreads out from a point, so a field with zero divergence everywhere has no sources or sinks: whatever flows into a region also flows out. To test a field, compute $P_x + Q_y$ and check whether it is identically zero. For $\\langle 7x + y^3, -7y + x^5 \\rangle$, $P_x + Q_y = 7 - 7 = 0$, so it is source-free.\n\n> **Watch out.** Differentiate $P$ in $x$ and $Q$ in $y$. A term of $P$ in $y$ alone, or of $Q$ in $x$ alone, never affects the divergence.",
+        "散度衡量场从一点向外发散的程度，所以处处散度为零的场没有源也没有汇：流入一个区域的量也同样流出。要检验一个场，计算 $P_x + Q_y$，看它是否恒等于零。对 $\\langle 7x + y^3, -7y + x^5 \\rangle$，$P_x + Q_y = 7 - 7 = 0$，所以它是无源的。\n\n> **注意。** 要对 $P$ 关于 $x$ 求导、对 $Q$ 关于 $y$ 求导。$P$ 中只含 $y$ 的项、$Q$ 中只含 $x$ 的项从不影响散度。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -4151,43 +4931,110 @@ export const sourceFreeVectorFields: TopicDef = {
         const free = rng.bool();
         const b = free ? -a : rng.pick([a, 2 * a, -2 * a]);
         const field = `\\langle ${poly([a, "x"], [c, "y^2"])}, ${poly([b, "y"], [d, "x^2"])} \\rangle`;
-        const prompt = t(`Is $\\mathbf{F} = ${field}$ source-free?`, `$\\mathbf{F} = ${field}$ 是无源场吗？`);
-        const solution = t(
-          steps(
-            `P_x + Q_y = ${a} + ${paren(b)} = ${a + b}`,
+        const yes = yesNo[0] as Text;
+        const no = yesNo[1] as Text;
+        return explainedChoice(rng, {
+          prompt: t(`Is $\\mathbf{F} = ${field}$ source-free?`, `$\\mathbf{F} = ${field}$ 是无源场吗？`),
+          correct: free ? yes : no,
+          wrong: [
             free
-              ? `The divergence is $${a + b} = 0$ everywhere, so the field is source-free.`
-              : `The divergence is $${a + b} \\ne 0$, so the field is not source-free.`,
+              ? {
+                  option: no,
+                  why: t(
+                    `$P_x = ${a}$ and $Q_y = ${b}$ add to $0$; the terms $${poly([c, "y^2"])}$ and $${poly([d, "x^2"])}$ do not enter the divergence`,
+                    `$P_x = ${a}$ 与 $Q_y = ${b}$ 之和为 $0$；项 $${poly([c, "y^2"])}$ 和 $${poly([d, "x^2"])}$ 不进入散度`,
+                  ),
+                }
+              : {
+                  option: yes,
+                  why: t(
+                    `$P_x + Q_y = ${a} + ${paren(b)} = ${a + b}$, which is not $0$`,
+                    `$P_x + Q_y = ${a} + ${paren(b)} = ${a + b}$，不为 $0$`,
+                  ),
+                },
+          ],
+          solution: walked(
+            [
+              [
+                ["Differentiate P in x", "对 P 关于 x 求导"],
+                t(`$P_x = ${a}$, since $${poly([c, "y^2"])}$ does not involve $x$.`, `$P_x = ${a}$，因为 $${poly([c, "y^2"])}$ 不含 $x$。`),
+              ],
+              [
+                ["Differentiate Q in y", "对 Q 关于 y 求导"],
+                t(`$Q_y = ${b}$, since $${poly([d, "x^2"])}$ does not involve $y$.`, `$Q_y = ${b}$，因为 $${poly([d, "x^2"])}$ 不含 $y$。`),
+              ],
+              [
+                ["Add", "相加"],
+                t(
+                  free
+                    ? `$${a} + ${paren(b)} = 0$ everywhere, so the field is source-free.`
+                    : `$${a} + ${paren(b)} = ${a + b} \\ne 0$, so the field is not source-free.`,
+                  free
+                    ? `处处 $${a} + ${paren(b)} = 0$，所以这个场是无源的。`
+                    : `$${a} + ${paren(b)} = ${a + b} \\ne 0$，所以这个场不是无源的。`,
+                ),
+              ],
+            ],
+            t(
+              `Across the square $[0, 1] \\times [0, 1]$ the $y^2$ terms cancel between the right and left sides, which together give $${a}$, and the $x^2$ terms cancel between the top and bottom, which give $${b}$; the net outward flux is $${a + b}$, ${free ? "zero as it must be" : "not zero"}.`,
+              `穿过正方形 $[0, 1] \\times [0, 1]$，右边与左边的 $y^2$ 项相互抵消，两边合计 $${a}$；顶边与底边的 $x^2$ 项相互抵消，合计 $${b}$；净外法向通量为 $${a + b}$，${free ? "正应为零" : "不为零"}。`,
+            ),
           ),
-          steps(
-            `P_x + Q_y = ${a} + ${paren(b)} = ${a + b}`,
-            free ? `散度处处为 $${a + b} = 0$，所以这个场是无源的。` : `散度为 $${a + b} \\ne 0$，所以这个场不是无源的。`,
-          ),
-        );
-        return choiceProblem({ prompt, options: yesNo, correct: free ? 0 : 1, solution });
+        });
       },
     },
     {
       id: "making-a-field-source-free",
       title: t("Making a field source-free", "使向量场无源"),
       explanation: t(
-        "To choose a constant that makes a field source-free, write the divergence $P_x + Q_y$ in terms of the constant and pick the value that makes it vanish for every point $(x, y)$.",
-        "要选取一个常数使向量场无源，就把散度 $P_x + Q_y$ 用这个常数表示出来，再选出使它对每个点 $(x, y)$ 都为零的值。",
+        "To choose a constant that makes a field source-free, write the divergence $P_x + Q_y$ in terms of the constant and pick the value that makes it vanish for every point $(x, y)$. For $\\langle 6x^2 + y, kxy \\rangle$, $P_x + Q_y = 12x + kx = (12 + k)x$, which vanishes everywhere only for $k = -12$.\n\n> **Watch out.** $\\frac{\\partial}{\\partial x}(ax^2) = 2ax$, so the factor $2$ must be kept; and the divergence must vanish for every $x$, which fixes $k$ completely.",
+        "要选取一个常数使向量场无源，就把散度 $P_x + Q_y$ 用这个常数表示出来，再选出使它对每个点 $(x, y)$ 都为零的值。对 $\\langle 6x^2 + y, kxy \\rangle$，$P_x + Q_y = 12x + kx = (12 + k)x$，它处处为零当且仅当 $k = -12$。\n\n> **注意。** $\\frac{\\partial}{\\partial x}(ax^2) = 2ax$，因子 $2$ 必须保留；散度要对每个 $x$ 都为零，这就完全确定了 $k$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
         const c = rng.nonZero(-5, 5);
         const ans = -2 * a;
         const field = `\\langle ${poly([a, "x^2"], [c, "y"])}, kxy \\rangle`;
-        const prompt = t(
-          `Find the constant $k$ for which $\\mathbf{F} = ${field}$ is source-free.`,
-          `求常数 $k$，使 $\\mathbf{F} = ${field}$ 为无源场。`,
-        );
-        const solution = t(
-          steps(`P_x + Q_y = ${2 * a}x + kx = (${2 * a} + k)x`, `This is zero for every $x$ exactly when $k = ${ans}$.`),
-          steps(`P_x + Q_y = ${2 * a}x + kx = (${2 * a} + k)x`, `它对每个 $x$ 都为零，当且仅当 $k = ${ans}$。`),
-        );
-        return numberProblem({ prompt, solution, answer: ans, solveFor: "k", wrong: [2 * a, -a, a] });
+        return numberProblem({
+          prompt: t(
+            `Find the constant $k$ for which $\\mathbf{F} = ${field}$ is source-free.`,
+            `求常数 $k$，使 $\\mathbf{F} = ${field}$ 为无源场。`,
+          ),
+          answer: ans,
+          solveFor: "k",
+          mistakes: distinct(ans, [
+            why(2 * a, "That has the wrong sign; $k$ must cancel $P_x$, not equal it.", "那是符号错了；$k$ 要抵消 $P_x$，而不是等于它。"),
+            why(
+              -a,
+              `That drops the factor $2$ from $\\frac{\\partial}{\\partial x}(${poly([a, "x^2"])}) = ${poly([2 * a, "x"])}$.`,
+              `那是漏掉了 $\\frac{\\partial}{\\partial x}(${poly([a, "x^2"])}) = ${poly([2 * a, "x"])}$ 中的因子 $2$。`,
+            ),
+            why(a, "That drops both the factor $2$ and the minus sign.", "那是既漏掉了因子 $2$，又漏掉了负号。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate P in x", "对 P 关于 x 求导"],
+                t(
+                  `$P_x = ${poly([2 * a, "x"])}$; the term $${poly([c, "y"])}$ drops out.`,
+                  `$P_x = ${poly([2 * a, "x"])}$；项 $${poly([c, "y"])}$ 消失。`,
+                ),
+              ],
+              [["Differentiate Q in y", "对 Q 关于 y 求导"], t("$Q_y = kx$.", "$Q_y = kx$。")],
+              [
+                ["Make the sum vanish", "令和为零"],
+                t(
+                  `$(${2 * a} + k)x = 0$ for every $x$ exactly when $k = ${ans}$.`,
+                  `$(${2 * a} + k)x = 0$ 对每个 $x$ 成立，当且仅当 $k = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `With $k = ${ans}$, $\\mathbf{F} = \\langle ${poly([a, "x^2"], [c, "y"])}, ${poly([ans, "xy"])} \\rangle$ and $P_x + Q_y = ${poly([2 * a, "x"], [ans, "x"])} = 0$.`,
+              `取 $k = ${ans}$，$\\mathbf{F} = \\langle ${poly([a, "x^2"], [c, "y"])}, ${poly([ans, "xy"])} \\rangle$，而 $P_x + Q_y = ${poly([2 * a, "x"], [ans, "x"])} = 0$。`,
+            ),
+          ),
+        });
       },
     },
     {
@@ -4195,27 +5042,49 @@ export const sourceFreeVectorFields: TopicDef = {
       figure: multivariableDrawings6["source-free-vector-fields#balanced-flux-of-source-free-fields"],
       title: t("Balanced flux of a source-free field", "无源场的通量平衡"),
       explanation: t(
-        "A source-free field creates and destroys nothing inside a region, so its net outward flux across a simple closed curve is zero, a fact Green's theorem will prove. If the boundary is made of several pieces, the outward fluxes across the pieces add up to zero, which lets you find a missing one.",
-        "无源场在区域内既不产生也不消灭任何东西，所以它穿过简单闭曲线的净外法向通量为零，这一事实将由格林公式证明。如果边界由若干段组成，各段的外法向通量之和为零，由此可以求出缺少的那一段。",
+        "A source-free field creates and destroys nothing inside a region, so its net outward flux across a simple closed curve is zero, a fact Green's theorem will prove. If the boundary is made of several pieces, the outward fluxes across the pieces add up to zero, which lets you find a missing one. If three sides of a square have outward fluxes $15$, $-4$ and $6$, the fourth has $-17$.\n\n> **Watch out.** The four fluxes add to zero, so the missing one is the negative of the sum of the other three, not the sum itself.",
+        "无源场在区域内既不产生也不消灭任何东西，所以它穿过简单闭曲线的净外法向通量为零，这一事实将由格林公式证明。如果边界由若干段组成，各段的外法向通量之和为零，由此可以求出缺少的那一段。若正方形三条边的外法向通量为 $15$、$-4$、$6$，则第四条边为 $-17$。\n\n> **注意。** 四个通量之和为零，所以缺少的那个是其余三个之和的相反数，而不是这个和本身。",
       ),
       generate(rng: Rng): Problem {
         const f1 = rng.nonZero(-12, 12);
         const f2 = rng.nonZero(-12, 12);
         const f3 = rng.nonZero(-12, 12);
         const ans = -(f1 + f2 + f3);
-        const prompt = t(
-          `A source-free field $\\mathbf{F}$ has outward fluxes $${f1}$, $${f2}$ and $${f3}$ across three sides of a square. Find its outward flux across the fourth side.`,
-          `无源场 $\\mathbf{F}$ 穿过一个正方形三条边的外法向通量分别为 $${f1}$、$${f2}$ 和 $${f3}$。求它穿过第四条边的外法向通量。`,
-        );
-        const solution = t(
-          steps(
-            `The net outward flux of a source-free field across the boundary is $0$.`,
-            `${f1} + ${paren(f2)} + ${paren(f3)} + x = 0`,
-            `So $x = ${ans}$.`,
+        const sum = f1 + f2 + f3;
+        return numberProblem({
+          prompt: t(
+            `A source-free field $\\mathbf{F}$ has outward fluxes $${f1}$, $${f2}$ and $${f3}$ across three sides of a square. Find its outward flux across the fourth side.`,
+            `无源场 $\\mathbf{F}$ 穿过一个正方形三条边的外法向通量分别为 $${f1}$、$${f2}$ 和 $${f3}$。求它穿过第四条边的外法向通量。`,
           ),
-          steps(`无源场穿过边界的净外法向通量为 $0$。`, `${f1} + ${paren(f2)} + ${paren(f3)} + x = 0`, `所以 $x = ${ans}$。`),
-        );
-        return numberProblem({ prompt, solution, answer: ans, wrong: [f1 + f2 + f3, 0, -(f1 + f2)] });
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              sum,
+              "That is the sum of the three known fluxes; the fourth must cancel it, so it is the negative.",
+              "那是三个已知通量之和；第四个要抵消它，所以是它的相反数。",
+            ),
+            why(
+              0,
+              "That makes the fourth side alone zero; it is the total across all four sides that is zero.",
+              "那是让第四条边单独为零；为零的是四条边的总通量。",
+            ),
+            why(-(f1 + f2), "That leaves out one of the three known fluxes.", "那是漏掉了三个已知通量中的一个。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the balance", "利用平衡"],
+                t("A source-free field has net outward flux $0$ across the boundary.", "无源场穿过边界的净外法向通量为 $0$。"),
+              ],
+              [
+                ["Add the known sides", "把已知各边相加"],
+                t(`$${f1} + ${paren(f2)} + ${paren(f3)} = ${sum}$.`, `$${f1} + ${paren(f2)} + ${paren(f3)} = ${sum}$。`),
+              ],
+              [["Solve for the fourth", "求第四条边"], t(`$${sum} + x = 0$, so $x = ${ans}$.`, `$${sum} + x = 0$，所以 $x = ${ans}$。`)],
+            ],
+            t(`$${f1} + ${paren(f2)} + ${paren(f3)} + ${paren(ans)} = 0$.`, `$${f1} + ${paren(f2)} + ${paren(f3)} + ${paren(ans)} = 0$。`),
+          ),
+        });
       },
     },
   ],
@@ -4233,6 +5102,10 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
     "Circulation $\\oint_C (P\\,dx + Q\\,dy)$ accumulates the field along the tangent $\\mathbf{T}$, while flux $\\oint_C (P\\,dy - Q\\,dx)$ accumulates it across the outward normal $\\mathbf{n}$.",
     "环量 $\\oint_C (P\\,dx + Q\\,dy)$ 沿切向量 $\\mathbf{T}$ 累积场，通量 $\\oint_C (P\\,dy - Q\\,dx)$ 沿向外法向量 $\\mathbf{n}$ 累积场。",
   ),
+  intro: t(
+    "Take $\\mathbf{F} = \\langle 0, x \\rangle$ on the boundary of $[0, 2] \\times [0, 1]$, counterclockwise. Its circulation is $\\oint x\\,dy$: only the right side, at $x = 2$, counts, giving $\\int_0^1 2\\,dy = 2$. Its outward flux is $\\oint (P\\,dy - Q\\,dx) = -\\oint x\\,dx$: the top, run from $x = 2$ to $x = 0$, gives $-\\int_2^0 x\\,dx = 2$, and the bottom, run from $0$ to $2$, gives $-\\int_0^2 x\\,dx = -2$, so the flux is $0$.\n\nCheck: $-x\\,dx$ is the differential of $-\\frac{x^2}{2}$, so its integral around any closed curve is $0$.\n\nIn this lesson we compute both quantities for the same field and curve: circulation along the tangent, flux across the normal.",
+    "取 $\\mathbf{F} = \\langle 0, x \\rangle$，沿 $[0, 2] \\times [0, 1]$ 的边界逆时针方向。它的环量是 $\\oint x\\,dy$：只有右边（$x = 2$）起作用，得 $\\int_0^1 2\\,dy = 2$。它的外法向通量是 $\\oint (P\\,dy - Q\\,dx) = -\\oint x\\,dx$：顶边从 $x = 2$ 走到 $x = 0$，给出 $-\\int_2^0 x\\,dx = 2$；底边从 $0$ 走到 $2$，给出 $-\\int_0^2 x\\,dx = -2$；所以通量为 $0$。\n\n检验：$-x\\,dx$ 是 $-\\frac{x^2}{2}$ 的微分，所以它沿任意闭曲线的积分为 $0$。\n\n本课我们对同一个场和同一条曲线计算两个量：沿切向的环量和穿过法向的通量。",
+  ),
   prerequisites: ["circulation", "calculating-flux-in-two-dimensional-vector-fields"],
   encompasses: [
     { topic: "circulation", weight: 0.3 },
@@ -4244,8 +5117,8 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
       id: "circulation-form-vs-flux-form",
       title: t("Circulation form vs flux form", "环量形式与通量形式的线积分表达式"),
       explanation: t(
-        "Circulation measures flow along the curve using the tangent direction, while flux measures flow across the curve using the outward normal direction. For $\\mathbf{F} = \\langle P, Q \\rangle$:\n- **Circulation**: $\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$.\n- **Outward Flux**: $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx)$.",
-        "环量用切线方向衡量沿曲线的流动，通量则用外法线方向衡量穿过曲线的流动。对于平面向量场 $\\mathbf{F} = \\langle P, Q \\rangle$：\n- **环量**：$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$。\n- **外法向通量**：$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx)$。",
+        "Circulation measures flow along the curve using the tangent direction, while flux measures flow across the curve using the outward normal direction. For $\\mathbf{F} = \\langle P, Q \\rangle$:\n- **Circulation**: $\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$.\n- **Outward Flux**: $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx)$.\n\nFor $\\langle x, 4y \\rangle$ across the boundary of $[0, 1] \\times [0, 3]$, the flux is $(1 + 4) \\cdot 3 = 15$, while the circulation is $0$.\n\n> **Watch out.** The flux of a field like $\\langle ax, by \\rangle$ comes from both $a$ and $b$; its circulation is a different number, here $0$, because the field has no rotation.",
+        "环量用切线方向衡量沿曲线的流动，通量则用外法线方向衡量穿过曲线的流动。对于平面向量场 $\\mathbf{F} = \\langle P, Q \\rangle$：\n- **环量**：$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$。\n- **外法向通量**：$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx)$。\n\n对 $\\langle x, 4y \\rangle$ 穿过 $[0, 1] \\times [0, 3]$ 的边界，通量为 $(1 + 4) \\cdot 3 = 15$，而环量为 $0$。\n\n> **注意。** 像 $\\langle ax, by \\rangle$ 这样的场，其通量同时来自 $a$ 和 $b$；它的环量是另一个数，这里为 $0$，因为这个场没有旋转。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 12);
@@ -4253,31 +5126,49 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
         const W = rng.int(2, 8);
         const H = rng.int(2, 8);
         const ans = (a + b) * W * H;
-        const prompt = t(
-          `Calculate the outward flux $\\oint_C (P\\,dy - Q\\,dx)$ of the vector field $\\mathbf{F} = \\langle ${a}x, ${b}y \\rangle$ across the boundary $C$ of the rectangle $[0, ${W}] \\times [0, ${H}]$, oriented counterclockwise.`,
-          `计算向量场 $\\mathbf{F} = \\langle ${a}x, ${b}y \\rangle$ 穿过逆时针定向的矩形区域 $[0, ${W}] \\times [0, ${H}]$ 边界 $C$ 的外法向通量 $\\oint_C (P\\,dy - Q\\,dx)$。`,
-        );
-        const solution = t(
-          steps(
-            `The outward flux line integral is $\\oint_C (P\\,dy - Q\\,dx)$ where $P(x, y) = ${a}x$ and $Q(x, y) = ${b}y$.`,
-            `By the flux form of Green's theorem, the outward flux equals $\\iint_D (\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y})\\,dA$.`,
-            `Here $\\frac{\\partial P}{\\partial x} = ${a}$ and $\\frac{\\partial Q}{\\partial y} = ${b}$, so the integrand is $${a} + ${b} = ${a + b}$.`,
-            `The area of the rectangle is $W \\times H = ${W} \\times ${H} = ${W * H}$.`,
-            `Thus the outward flux is $(${a + b}) \\times ${W * H} = ${ans}$.`,
-          ),
-          steps(
-            `外法向通量曲线积分为 $\\oint_C (P\\,dy - Q\\,dx)$，其中 $P(x, y) = ${a}x$，$Q(x, y) = ${b}y$。`,
-            `由格林公式通量形式，外法向通量等于 $\\iint_D (\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y})\\,dA$。`,
-            `此处 $\\frac{\\partial P}{\\partial x} = ${a}$，$\\frac{\\partial Q}{\\partial y} = ${b}$，被积函数为 $${a} + ${b} = ${a + b}$。`,
-            `矩形面积为 $W \\times H = ${W} \\times ${H} = ${W * H}$。`,
-            `因此外法向通量为 $(${a + b}) \\times ${W * H} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the outward flux $\\oint_C (P\\,dy - Q\\,dx)$ of the vector field $\\mathbf{F} = \\langle ${a}x, ${b}y \\rangle$ across the boundary $C$ of the rectangle $[0, ${W}] \\times [0, ${H}]$, oriented counterclockwise.`,
+            `计算向量场 $\\mathbf{F} = \\langle ${a}x, ${b}y \\rangle$ 穿过逆时针定向的矩形区域 $[0, ${W}] \\times [0, ${H}]$ 边界 $C$ 的外法向通量 $\\oint_C (P\\,dy - Q\\,dx)$。`,
+          ),
           answer: ans,
-          wrong: [a * W * H, b * W * H, ans + W * H],
+          mistakes: distinct(ans, [
+            why(
+              a * W * H,
+              "That counts only the flow out through the right side; $Q$ carries flow out through the top as well.",
+              "那是只算了从右边流出的部分；$Q$ 也会从顶边带出流量。",
+            ),
+            why(
+              b * W * H,
+              "That counts only the flow out through the top; $P$ carries flow out through the right side as well.",
+              "那是只算了从顶边流出的部分；$P$ 也会从右边带出流量。",
+            ),
+            why(
+              0,
+              "That is the circulation $\\oint (P\\,dx + Q\\,dy)$; the flux uses $P\\,dy - Q\\,dx$.",
+              "那是环量 $\\oint (P\\,dx + Q\\,dy)$；通量用的是 $P\\,dy - Q\\,dx$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the flux form", "用通量形式"],
+                t(
+                  "By the flux form of Green's theorem, $\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$.",
+                  "由格林公式通量形式，$\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$。",
+                ),
+              ],
+              [["Find the divergence", "求散度"], t(`$P_x + Q_y = ${a} + ${b} = ${a + b}$.`, `$P_x + Q_y = ${a} + ${b} = ${a + b}$。`)],
+              [
+                ["Multiply by the area", "乘以面积"],
+                t(`$${a + b} \\cdot ${W} \\cdot ${H} = ${ans}$.`, `$${a + b} \\cdot ${W} \\cdot ${H} = ${ans}$。`),
+              ],
+            ],
+            t(
+              `Edge by edge: the right side gives $\\int_0^{${H}} ${a * W}\\,dy = ${a * W * H}$, the top gives $\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$, and the left and bottom give $0$ because $P = 0$ at $x = 0$ and $Q = 0$ at $y = 0$; the total is $${ans}$.`,
+              `逐边计算：右边给出 $\\int_0^{${H}} ${a * W}\\,dy = ${a * W * H}$，顶边给出 $\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$，左边和底边因 $x = 0$ 处 $P = 0$、$y = 0$ 处 $Q = 0$ 而给出 $0$；合计 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4286,8 +5177,8 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
       figure: multivariableDrawings6["circulation-and-flux-across-simple-closed-plane-curves#circulation-around-a-rectangle-edge-by-edge"],
       title: t("Circulation around a rectangle edge by edge", "逐边计算绕矩形的环量"),
       explanation: t(
-        "The counterclockwise circulation $\\oint_C P\\,dx + Q\\,dy$ around the rectangle $[0, w] \\times [0, h]$ is the sum over its four edges. For $\\mathbf{F} = \\langle ay, bx \\rangle$: the bottom edge has $y = 0$ and the left edge has $x = 0$, so both give $0$. The right edge, going up at $x = w$, gives $\\int_0^h bw\\,dy = bwh$. The top edge, going left at $y = h$, gives $\\int_w^0 ah\\,dx = -awh$. The circulation is $(b - a)wh$.",
-        "绕矩形 $[0, w] \\times [0, h]$ 的逆时针环量 $\\oint_C P\\,dx + Q\\,dy$ 是四条边之和。对 $\\mathbf{F} = \\langle ay, bx \\rangle$：底边 $y = 0$，左边 $x = 0$，都贡献 $0$。右边在 $x = w$ 向上，贡献 $\\int_0^h bw\\,dy = bwh$。顶边在 $y = h$ 向左，贡献 $\\int_w^0 ah\\,dx = -awh$。环量为 $(b - a)wh$。",
+        "The counterclockwise circulation $\\oint_C P\\,dx + Q\\,dy$ around the rectangle $[0, w] \\times [0, h]$ is the sum over its four edges. For $\\mathbf{F} = \\langle ay, bx \\rangle$: the bottom edge has $y = 0$ and the left edge has $x = 0$, so both give $0$. The right edge, going up at $x = w$, gives $\\int_0^h bw\\,dy = bwh$. The top edge, going left at $y = h$, gives $\\int_w^0 ah\\,dx = -awh$. The circulation is $(b - a)wh$. For $\\langle -y, 6x \\rangle$ around $[0, 2] \\times [0, 1]$, the edges give $12$ and $2$, so the circulation is $14$.\n\n> **Watch out.** The answer multiplies by the area $wh$, because each edge integral is a height times a length; adding $w + h$ instead mixes up the two.",
+        "绕矩形 $[0, w] \\times [0, h]$ 的逆时针环量 $\\oint_C P\\,dx + Q\\,dy$ 是四条边之和。对 $\\mathbf{F} = \\langle ay, bx \\rangle$：底边 $y = 0$，左边 $x = 0$，都贡献 $0$。右边在 $x = w$ 向上，贡献 $\\int_0^h bw\\,dy = bwh$。顶边在 $y = h$ 向左，贡献 $\\int_w^0 ah\\,dx = -awh$。环量为 $(b - a)wh$。对 $\\langle -y, 6x \\rangle$ 绕 $[0, 2] \\times [0, 1]$，两条边分别给出 $12$ 和 $2$，环量为 $14$。\n\n> **注意。** 结果乘的是面积 $wh$，因为每条边的积分都是一个值乘以一个长度；改成加 $w + h$ 就把二者混淆了。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -4302,10 +5193,53 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
             `求 $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ 绕矩形 $0 \\le x \\le ${w}$，$0 \\le y \\le ${h}$ 边界的逆时针环量。`,
           ),
           answer: ans,
-          wrong: [(a + b) * w * h, (a - b) * w * h, b * w * h, (b - a) * (w + h)],
-          solution: t(
-            `Bottom and left edges give $0$. Right edge: $${paren(b)} \\cdot ${w} \\cdot ${h} = ${b * w * h}$. Top edge (leftward): $-${paren(a)} \\cdot ${h} \\cdot ${w} = ${-a * w * h}$. Total: $${ans}$.`,
-            `底边与左边贡献 $0$。右边：$${paren(b)} \\cdot ${w} \\cdot ${h} = ${b * w * h}$。顶边（向左）：$-${paren(a)} \\cdot ${h} \\cdot ${w} = ${-a * w * h}$。合计：$${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              (a + b) * w * h,
+              "That runs along the top from left to right; counterclockwise it goes leftward, which changes the sign.",
+              "那是把顶边当成从左向右；逆时针时它向左走，要变号。",
+            ),
+            why(
+              (a - b) * w * h,
+              "That is the clockwise circulation, the negative of the counterclockwise one.",
+              "那是顺时针方向的环量，是逆时针环量的相反数。",
+            ),
+            why(b * w * h, "That counts only the right edge; the top edge contributes too.", "那是只算了右边；顶边也有贡献。"),
+            why(
+              (b - a) * (w + h),
+              "That adds the sides $w + h$ where each edge integral is a value times a length, giving the area $wh$.",
+              "那是把边长相加成 $w + h$；每条边的积分是一个值乘以一个长度，结果是面积 $wh$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Bottom and left edges", "底边与左边"],
+                t(
+                  "$y = 0$ on the bottom makes $P = 0$, and $x = 0$ on the left makes $Q = 0$, so both give $0$.",
+                  "底边 $y = 0$ 使 $P = 0$，左边 $x = 0$ 使 $Q = 0$，所以都给出 $0$。",
+                ),
+              ],
+              [
+                ["Right edge", "右边"],
+                t(
+                  `Going up at $x = ${w}$: $\\int_0^{${h}} ${b * w}\\,dy = ${b * w * h}$.`,
+                  `在 $x = ${w}$ 向上：$\\int_0^{${h}} ${b * w}\\,dy = ${b * w * h}$。`,
+                ),
+              ],
+              [
+                ["Top edge", "顶边"],
+                t(
+                  `Going left at $y = ${h}$: $\\int_{${w}}^0 ${a * h}\\,dx = ${-a * w * h}$.`,
+                  `在 $y = ${h}$ 向左：$\\int_{${w}}^0 ${a * h}\\,dx = ${-a * w * h}$。`,
+                ),
+              ],
+              [["Add", "相加"], t(`$${b * w * h} + ${paren(-a * w * h)} = ${ans}$.`, `$${b * w * h} + ${paren(-a * w * h)} = ${ans}$。`)],
+            ],
+            t(
+              `Clockwise, the right edge runs down and the top runs right, giving $${-b * w * h} + ${paren(a * w * h)} = ${-ans}$, the negative of $${ans}$, as reversing the curve must.`,
+              `顺时针时右边向下、顶边向右，得 $${-b * w * h} + ${paren(a * w * h)} = ${-ans}$，正是 $${ans}$ 的相反数，与曲线反向应有的结果一致。`,
+            ),
           ),
         });
       },
@@ -4321,6 +5255,10 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
     "Green's theorem equates the counterclockwise circulation to the double integral of the curl: $\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$.",
     "格林公式把逆时针方向的环量与旋度的二重积分联系起来：$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$。",
   ),
+  intro: t(
+    "Find the counterclockwise circulation of $\\mathbf{F} = \\langle -y, x \\rangle$ around the unit circle by Green's theorem. The curl is $Q_x - P_y = 1 - (-1) = 2$, a constant, so the circulation is $2$ times the area $\\pi$ of the disk: $2\\pi$.\n\nCheck: with $\\mathbf{r}(t) = (\\cos t, \\sin t)$, the integrand is $\\sin^2 t + \\cos^2 t = 1$, and $\\int_0^{2\\pi} 1\\,dt = 2\\pi$.\n\nIn this lesson we use Green's theorem to turn a circulation around a closed curve into a double integral of $Q_x - P_y$ over the region inside.",
+    "用格林定理求 $\\mathbf{F} = \\langle -y, x \\rangle$ 绕单位圆的逆时针环量。旋度为 $Q_x - P_y = 1 - (-1) = 2$，是常数，所以环量是 $2$ 乘以圆盘面积 $\\pi$：$2\\pi$。\n\n检验：取 $\\mathbf{r}(t) = (\\cos t, \\sin t)$，被积函数为 $\\sin^2 t + \\cos^2 t = 1$，而 $\\int_0^{2\\pi} 1\\,dt = 2\\pi$。\n\n本课我们用格林定理把沿闭曲线的环量化为 $Q_x - P_y$ 在内部区域上的二重积分。",
+  ),
   prerequisites: ["circulation-and-flux-across-simple-closed-plane-curves", "double-integrals-over-rectangular-domains"],
   encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
   xp: 10,
@@ -4330,8 +5268,8 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
       figure: multivariableDrawings6["greens-theorem-in-circulation-curl-form#applying-greens-theorem-for-circulation"],
       title: t("Applying Green's theorem for circulation", "应用格林公式计算环量积分"),
       explanation: t(
-        "Green's theorem trades the circulation around a closed curve for a double integral of the curl over the region inside it, which is often easier. By Green's theorem:\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$ For $P = 0, Q = kx$ over a rectangle of area $A$, $\\oint_C kx\\,dy = kA$.",
-        "格林公式把沿闭曲线的环量换成在其内部区域上旋度的二重积分，后者往往更容易计算。由格林公式：\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$$ 当 $P = 0, Q = kx$ 且区域为面积为 $A$ 的矩形时，$\\oint_C kx\\,dy = kA$。",
+        "Green's theorem trades the circulation around a closed curve for a double integral of the curl over the region inside it, which is often easier. By Green's theorem:\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$ For $P = 0, Q = kx$ over a rectangle of area $A$, $\\oint_C kx\\,dy = kA$. Around $[0, 1] \\times [0, 2]$, $\\oint 7x\\,dy = 7 \\cdot 2 = 14$.\n\n> **Watch out.** The curl is $Q_x - P_y$, in that order. A constant curl multiplies the area of the region, not the length of its boundary.",
+        "格林公式把沿闭曲线的环量换成在其内部区域上旋度的二重积分，后者往往更容易计算。由格林公式：\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$$ 当 $P = 0, Q = kx$ 且区域为面积为 $A$ 的矩形时，$\\oint_C kx\\,dy = kA$。绕 $[0, 1] \\times [0, 2]$，$\\oint 7x\\,dy = 7 \\cdot 2 = 14$。\n\n> **注意。** 旋度是 $Q_x - P_y$，次序不能颠倒。常数旋度乘的是区域的面积，不是边界的长度。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 6);
@@ -4339,28 +5277,38 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
         const H = rng.int(2, 6);
         const area = W * H;
         const ans = k * area;
-
-        const prompt = t(
-          `Use Green's Theorem to evaluate $\\oint_C ${k}x\\,dy$ around the boundary $C$ of the rectangle $D = [0, ${W}] \\times [0, ${H}]$ oriented counterclockwise.`,
-          `应用格林公式计算逆时针沿矩形 $D = [0, ${W}] \\times [0, ${H}]$ 边界 $C$ 的曲线积分 $\\oint_C ${k}x\\,dy$。`,
-        );
-        const solution = t(
-          steps(
-            `Identify components: $P(x, y) = 0$ and $Q(x, y) = ${k}x$.`,
-            `Compute the curl integrand: $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${k} - 0 = ${k}$.`,
-            `Apply Green's Theorem: $\\oint_C ${k}x\\,dy = \\iint_D ${k}\\,dA = ${k} \\times \\text{Area}(D) = ${k}(${W} \\times ${H}) = ${ans}$.`,
-          ),
-          steps(
-            `确定分量：$P(x, y) = 0$ 且 $Q(x, y) = ${k}x$。`,
-            `计算旋度被积函数：$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${k} - 0 = ${k}$。`,
-            `应用格林公式：$\\oint_C ${k}x\\,dy = \\iint_D ${k}\\,dA = ${k} \\times \\text{Area}(D) = ${k}(${W} \\times ${H}) = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Use Green's Theorem to evaluate $\\oint_C ${k}x\\,dy$ around the boundary $C$ of the rectangle $D = [0, ${W}] \\times [0, ${H}]$ oriented counterclockwise.`,
+            `应用格林公式计算逆时针沿矩形 $D = [0, ${W}] \\times [0, ${H}]$ 边界 $C$ 的曲线积分 $\\oint_C ${k}x\\,dy$。`,
+          ),
           answer: ans,
-          wrong: [area, k * (W + H), ans + area],
+          mistakes: distinct(ans, [
+            why(area, `That is the area alone; the curl $${k}$ multiplies it.`, `那只是面积；还要乘以旋度 $${k}$。`),
+            why(
+              k * (W + H),
+              "That multiplies the curl by half the perimeter; Green's theorem integrates the curl over the area.",
+              "那是用旋度乘以半周长；格林定理是在面积上对旋度积分。",
+            ),
+            why(-ans, "That takes the curl as $P_y - Q_x$; it is $Q_x - P_y$.", "那是把旋度当成 $P_y - Q_x$；它是 $Q_x - P_y$。"),
+          ]),
+          solution: walked(
+            [
+              [["Identify the components", "确定分量"], t(`$P = 0$ and $Q = ${k}x$.`, `$P = 0$，$Q = ${k}x$。`)],
+              [["Compute the curl", "计算旋度"], t(`$Q_x - P_y = ${k} - 0 = ${k}$.`, `$Q_x - P_y = ${k} - 0 = ${k}$。`)],
+              [
+                ["Integrate over the rectangle", "在矩形上积分"],
+                t(
+                  `$\\iint_D ${k}\\,dA = ${k} \\cdot ${W} \\cdot ${H} = ${ans}$.`,
+                  `$\\iint_D ${k}\\,dA = ${k} \\cdot ${W} \\cdot ${H} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Directly, only the right edge counts: $dy = 0$ on the horizontal edges and $x = 0$ on the left, and the right edge gives $\\int_0^{${H}} ${k * W}\\,dy = ${ans}$.`,
+              `直接计算，只有右边起作用：水平边上 $dy = 0$，左边上 $x = 0$，右边给出 $\\int_0^{${H}} ${k * W}\\,dy = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4369,8 +5317,8 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
       figure: multivariableDrawings6["greens-theorem-in-circulation-curl-form#circulation-around-a-circle-by-greens-theorem"],
       title: t("Circulation around a circle by Green's theorem", "用格林定理求绕圆的环量"),
       explanation: t(
-        "Green's theorem turns a counterclockwise circulation into a double integral of the scalar curl:\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$\n\nTerms such as $x^2$ in $P$ or $y^3$ in $Q$ drop out of the curl. For $P = -ay + x^2$, $Q = bx + y^3$ the curl is the constant $a + b$, so the circulation around a circle of radius $R$ is $(a + b)\\pi R^2$.",
-        "格林定理把逆时针环量化为标量旋度的二重积分：\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$$\n\n$P$ 中的 $x^2$ 或 $Q$ 中的 $y^3$ 这类项在旋度中消失。对 $P = -ay + x^2$，$Q = bx + y^3$，旋度为常数 $a + b$，所以绕半径 $R$ 的圆的环量为 $(a + b)\\pi R^2$。",
+        "Green's theorem turns a counterclockwise circulation into a double integral of the scalar curl:\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$\n\nTerms such as $x^2$ in $P$ or $y^3$ in $Q$ drop out of the curl. For $P = -ay + x^2$, $Q = bx + y^3$ the curl is the constant $a + b$, so the circulation around a circle of radius $R$ is $(a + b)\\pi R^2$. For $P = -6y + x^2$, $Q = 2x + y^3$ around the unit circle this is $8\\pi$.\n\n> **Watch out.** $P_y = -a$, so $Q_x - P_y = b + a$, not $b - a$. And the area of the disk is $\\pi R^2$, with $R$ squared.",
+        "格林定理把逆时针环量化为标量旋度的二重积分：\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$$\n\n$P$ 中的 $x^2$ 或 $Q$ 中的 $y^3$ 这类项在旋度中消失。对 $P = -ay + x^2$，$Q = bx + y^3$，旋度为常数 $a + b$，所以绕半径 $R$ 的圆的环量为 $(a + b)\\pi R^2$。对 $P = -6y + x^2$，$Q = 2x + y^3$ 绕单位圆，结果为 $8\\pi$。\n\n> **注意。** $P_y = -a$，所以 $Q_x - P_y = b + a$，不是 $b - a$。圆盘面积是 $\\pi R^2$，$R$ 要平方。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -4383,10 +5331,51 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
             `用格林定理求 $\\frac{1}{\\pi}\\oint_C (${poly([-a, "y"], [1, "x^2"])})\\,dx + (${poly([b, "x"], [1, "y^3"])})\\,dy$，$C$ 为逆时针方向的圆 $x^2 + y^2 = ${R * R}$。`,
           ),
           answer: ans,
-          wrong: [(b - a) * R * R, (a + b) * R, 2 * (a + b) * R * R, (a + b) * R * R + 2 * R],
-          solution: t(
-            `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${b} - (-${a}) = ${a + b}$, and the disk has area $${R === 1 ? "" : R * R}\\pi$. So the circulation is $${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
-            `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${b} - (-${a}) = ${a + b}$，圆盘面积为 $${R === 1 ? "" : R * R}\\pi$。所以环量为 $${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              (b - a) * R * R,
+              `That takes $P_y$ as $${a}$; it is $${-a}$, so subtracting it adds $${a}$.`,
+              `那是把 $P_y$ 当成 $${a}$；它是 $${-a}$，减去它就是加上 $${a}$。`,
+            ),
+            why(
+              (a + b) * R,
+              "That uses $\\pi R$ for the area of the disk; it is $\\pi R^2$.",
+              "那是把圆盘面积当成 $\\pi R$；它是 $\\pi R^2$。",
+            ),
+            why(
+              2 * (a + b) * R * R,
+              "That uses $2\\pi R^2$ for the area; the disk has area $\\pi R^2$.",
+              "那是把面积当成 $2\\pi R^2$；圆盘面积是 $\\pi R^2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the curl", "计算旋度"],
+                t(
+                  `$Q_x - P_y = ${b} - (-${a}) = ${a + b}$; the terms $x^2$ and $y^3$ drop out.`,
+                  `$Q_x - P_y = ${b} - (-${a}) = ${a + b}$；$x^2$ 与 $y^3$ 两项消失。`,
+                ),
+              ],
+              [
+                ["Find the area", "求面积"],
+                t(
+                  `The disk of radius $${R}$ has area $${R === 1 ? "" : R * R}\\pi$.`,
+                  `半径为 $${R}$ 的圆盘面积为 $${R === 1 ? "" : R * R}\\pi$。`,
+                ),
+              ],
+              [
+                ["Multiply and divide by π", "相乘再除以 π"],
+                t(
+                  `The circulation is $${a + b} \\cdot ${R === 1 ? "" : R * R}\\pi = ${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `环量为 $${a + b} \\cdot ${R === 1 ? "" : R * R}\\pi = ${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Directly, $x^2\\,dx$ and $y^3\\,dy$ are differentials of $\\frac{x^3}{3}$ and $\\frac{y^4}{4}$, so they give $0$ around the circle; the rest, $\\langle ${poly([-a, "y"])}, ${poly([b, "x"])} \\rangle$, has integrand $${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$, which integrates to $${ans}\\pi$.`,
+              `直接计算，$x^2\\,dx$ 与 $y^3\\,dy$ 分别是 $\\frac{x^3}{3}$ 和 $\\frac{y^4}{4}$ 的微分，绕圆积分为 $0$；其余部分 $\\langle ${poly([-a, "y"])}, ${poly([b, "x"])} \\rangle$ 的被积函数是 $${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$，积分得 $${ans}\\pi$。`,
+            ),
           ),
         });
       },
@@ -4402,6 +5391,10 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
     "When $D$ is a disk or an annulus, the double integral in Green's theorem is easiest in polar coordinates: $\\oint_C (P\\,dx + Q\\,dy) = \\int_0^{2\\pi}\\int (Q_x - P_y)\\,r\\,dr\\,d\\theta$.",
     "当 $D$ 是圆盘或圆环时，格林公式中的二重积分用极坐标计算最方便：$\\oint_C (P\\,dx + Q\\,dy) = \\int_0^{2\\pi}\\int (Q_x - P_y)\\,r\\,dr\\,d\\theta$。",
   ),
+  intro: t(
+    "Find the counterclockwise circulation of $\\mathbf{F} = \\langle -y^3, x^3 \\rangle$ around the unit circle. Green's theorem gives the curl $Q_x - P_y = 3x^2 + 3y^2 = 3r^2$, and in polar coordinates\n\n$$\\int_0^{2\\pi}\\int_0^1 3r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3}{4} = \\frac{3\\pi}{2}.$$\n\nCheck: along $\\mathbf{r}(t) = (\\cos t, \\sin t)$ the integrand is $\\sin^4 t + \\cos^4 t$, and each of $\\sin^4 t$ and $\\cos^4 t$ integrates to $\\frac{3\\pi}{4}$ over a full turn, giving $\\frac{3\\pi}{2}$.\n\nIn this lesson we evaluate the double integral in Green's theorem in polar coordinates when the region is a disk or an annulus.",
+    "求 $\\mathbf{F} = \\langle -y^3, x^3 \\rangle$ 绕单位圆的逆时针环量。格林定理给出旋度 $Q_x - P_y = 3x^2 + 3y^2 = 3r^2$，用极坐标\n\n$$\\int_0^{2\\pi}\\int_0^1 3r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3}{4} = \\frac{3\\pi}{2}$$\n\n检验：沿 $\\mathbf{r}(t) = (\\cos t, \\sin t)$，被积函数为 $\\sin^4 t + \\cos^4 t$，在一整圈上 $\\sin^4 t$ 与 $\\cos^4 t$ 的积分各为 $\\frac{3\\pi}{4}$，合计 $\\frac{3\\pi}{2}$。\n\n本课我们在区域为圆盘或圆环时，用极坐标计算格林定理中的二重积分。",
+  ),
   prerequisites: ["greens-theorem-in-circulation-curl-form", "double-integrals-in-plane-polar-coordinates"],
   encompasses: [
     { topic: "greens-theorem-in-circulation-curl-form", weight: 0.5 },
@@ -4414,8 +5407,8 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
       figure: multivariableDrawings6["greens-theorem-in-polar-coordinates#greens-theorem-over-a-disk-in-polar-coordinates"],
       title: t("Circulation around a circle", "沿圆周的环量"),
       explanation: t(
-        "Once Green's theorem turns the circulation into a double integral, polar coordinates make the integral over the disk straightforward. For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ the curl integrand is $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$. Over the disk of radius $R$, remember the factor $r$ in $dA = r\\,dr\\,d\\theta$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}.$$",
-        "格林公式把环量化为二重积分后，用极坐标计算圆盘上的积分就很直接。对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，旋度被积函数为 $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$。在半径为 $R$ 的圆盘上积分时，别忘了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}$$",
+        "Once Green's theorem turns the circulation into a double integral, polar coordinates make the integral over the disk straightforward. For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ the curl integrand is $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$. Over the disk of radius $R$, remember the factor $r$ in $dA = r\\,dr\\,d\\theta$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}.$$\n\nFor $\\langle -8y^3, 8x^3 \\rangle$ around the unit circle this is $12\\pi$.\n\n> **Watch out.** Leaving out the factor $r$ in $dA$ gives $r^2$ instead of $r^3$ in the integrand. And $P_y = -3ay^2$, so subtracting it adds $3ay^2$.",
+        "格林公式把环量化为二重积分后，用极坐标计算圆盘上的积分就很直接。对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，旋度被积函数为 $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$。在半径为 $R$ 的圆盘上积分时，别忘了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}$$\n\n对 $\\langle -8y^3, 8x^3 \\rangle$ 绕单位圆，结果为 $12\\pi$。\n\n> **注意。** 漏掉 $dA$ 中的因子 $r$，被积函数就成了 $r^2$ 而不是 $r^3$。$P_y = -3ay^2$，减去它就是加上 $3ay^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = 2 * rng.int(1, 3);
@@ -4423,26 +5416,59 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
         const q = rng.int(2, 6);
         const R = rng.int(1, 3);
         const ans = (3 * a * R ** 4) / 2;
-        const prompt = t(
-          `Let $C$ be the circle $x^2 + y^2 = ${R * R}$, oriented counterclockwise, and $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$. Use Green's theorem and polar coordinates to find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
-          `设 $C$ 为逆时针方向的圆周 $x^2 + y^2 = ${R * R}$，$\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$。利用格林公式和极坐标求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
-        );
-        const solution = t(
-          steps(
-            `The curl integrand is $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$; the terms $${p}x$ and $${q}y$ contribute nothing.`,
-            `The region is the disk $0 \\le r \\le ${R}$, $0 \\le \\theta \\le 2\\pi$, with $dA = r\\,dr\\,d\\theta$.`,
-            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^{${R}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a} \\cdot ${R ** 4}}{4} = ${ans}\\pi$.`,
-            `Dividing by $\\pi$ gives $${ans}$.`,
+        return numberProblem({
+          prompt: t(
+            `Let $C$ be the circle $x^2 + y^2 = ${R * R}$, oriented counterclockwise, and $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$. Use Green's theorem and polar coordinates to find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
+            `设 $C$ 为逆时针方向的圆周 $x^2 + y^2 = ${R * R}$，$\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$。利用格林公式和极坐标求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
           ),
-          steps(
-            `旋度被积函数为 $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$；$${p}x$ 与 $${q}y$ 两项不起作用。`,
-            `区域是圆盘 $0 \\le r \\le ${R}$，$0 \\le \\theta \\le 2\\pi$，且 $dA = r\\,dr\\,d\\theta$。`,
-            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^{${R}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a} \\cdot ${R ** 4}}{4} = ${ans}\\pi$。`,
-            `除以 $\\pi$ 得 $${ans}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              2 * a * R ** 3,
+              "That leaves out the factor $r$ in $dA = r\\,dr\\,d\\theta$, integrating $r^2$ instead of $r^3$.",
+              "那是漏掉了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$，积的是 $r^2$ 而不是 $r^3$。",
+            ),
+            why(
+              0,
+              "That uses $Q_x + P_y$, in which the two terms cancel; the curl is $Q_x - P_y$.",
+              "那是用了 $Q_x + P_y$，两项相互抵消；旋度是 $Q_x - P_y$。",
+            ),
+            why(
+              6 * a * R ** 4,
+              "That drops the $\\frac{1}{4}$ from $\\int_0^R r^3\\,dr = \\frac{R^4}{4}$.",
+              "那是漏掉了 $\\int_0^R r^3\\,dr = \\frac{R^4}{4}$ 中的 $\\frac{1}{4}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the curl", "计算旋度"],
+                t(
+                  `$Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$; the terms $${p}x$ and $${q}y$ contribute nothing.`,
+                  `$Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$；$${p}x$ 与 $${q}y$ 两项不起作用。`,
+                ),
+              ],
+              [
+                ["Set up in polar coordinates", "用极坐标表示"],
+                t(
+                  `The disk is $0 \\le r \\le ${R}$, $0 \\le \\theta \\le 2\\pi$, with $dA = r\\,dr\\,d\\theta$.`,
+                  `圆盘为 $0 \\le r \\le ${R}$，$0 \\le \\theta \\le 2\\pi$，且 $dA = r\\,dr\\,d\\theta$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{2\\pi}\\int_0^{${R}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a} \\cdot ${R ** 4}}{4} = ${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `$\\int_0^{2\\pi}\\int_0^{${R}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a} \\cdot ${R ** 4}}{4} = ${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Directly, the terms $${p}x\\,dx$ and $${q}y\\,dy$ are exact and give $0$, and the rest has integrand $${a * R ** 4}(\\sin^4 t + \\cos^4 t)$; since $\\sin^4 t$ and $\\cos^4 t$ each integrate to $\\frac{3\\pi}{4}$, the circulation is $${a * R ** 4} \\cdot \\frac{3\\pi}{2} = ${ans}\\pi$.`,
+              `直接计算，$${p}x\\,dx$ 与 $${q}y\\,dy$ 是全微分，积分为 $0$；其余部分的被积函数为 $${a * R ** 4}(\\sin^4 t + \\cos^4 t)$，由于 $\\sin^4 t$ 与 $\\cos^4 t$ 的积分各为 $\\frac{3\\pi}{4}$，环量为 $${a * R ** 4} \\cdot \\frac{3\\pi}{2} = ${ans}\\pi$。`,
+            ),
           ),
-        );
-        // Forgetting the factor r gives 2aR^3; Q_x + P_y gives 0; dropping the 1/4 gives 6aR^4.
-        return numberProblem({ prompt, solution, answer: ans, wrong: [2 * a * R ** 3, 0, 6 * a * R ** 4] });
+        });
       },
     },
     {
@@ -4450,8 +5476,8 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
       figure: multivariableDrawings6["greens-theorem-in-polar-coordinates#greens-theorem-over-an-annulus-in-polar-coordinates"],
       title: t("Circulation around the boundary of an annulus", "沿圆环边界的环量"),
       explanation: t(
-        "The positively oriented boundary of the annulus $r_1 \\le r \\le r_2$ is the outer circle counterclockwise together with the inner circle clockwise. Green's theorem still applies, with $r$ running from $r_1$ to $r_2$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta.$$ For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ this is $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$.",
-        "圆环 $r_1 \\le r \\le r_2$ 的正向边界由逆时针方向的外圆和顺时针方向的内圆组成。格林公式依然成立，只是 $r$ 从 $r_1$ 积到 $r_2$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta$$ 对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，结果为 $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$。",
+        "The positively oriented boundary of the annulus $r_1 \\le r \\le r_2$ is the outer circle counterclockwise together with the inner circle clockwise. Green's theorem still applies, with $r$ running from $r_1$ to $r_2$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta.$$ For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ this is $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$. For $\\langle -8y^3, 8x^3 \\rangle$ on $1 \\le r \\le 2$, it is $12\\pi \\cdot 15 = 180\\pi$.\n\n> **Watch out.** The inner circle is traversed clockwise, so its part is subtracted: the result has $r_2^4 - r_1^4$, not $r_2^4$ alone and not $r_2^4 + r_1^4$.",
+        "圆环 $r_1 \\le r \\le r_2$ 的正向边界由逆时针方向的外圆和顺时针方向的内圆组成。格林公式依然成立，只是 $r$ 从 $r_1$ 积到 $r_2$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta$$ 对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，结果为 $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$。对 $\\langle -8y^3, 8x^3 \\rangle$ 在 $1 \\le r \\le 2$ 上，结果为 $12\\pi \\cdot 15 = 180\\pi$。\n\n> **注意。** 内圆是顺时针走的，所以它那部分要减去：结果含 $r_2^4 - r_1^4$，既不是只有 $r_2^4$，也不是 $r_2^4 + r_1^4$。",
       ),
       generate(rng: Rng): Problem {
         const a = 2 * rng.int(1, 2);
@@ -4461,27 +5487,61 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
         const r2 = rng.int(r1 + 1, 3);
         const diff = r2 ** 4 - r1 ** 4;
         const ans = (3 * a * diff) / 2;
-        const prompt = t(
-          `Let $D$ be the annulus $${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}$ and $C$ its positively oriented boundary. For $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$, use Green's theorem and polar coordinates to find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
-          `设 $D$ 为圆环 $${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}$，$C$ 为它的正向边界。对 $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$，利用格林公式和极坐标求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
-        );
-        const solution = t(
-          steps(
-            `The curl integrand is $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$; the terms $${p}x$ and $${q}y$ contribute nothing.`,
-            `The annulus is $${r1} \\le r \\le ${r2}$, $0 \\le \\theta \\le 2\\pi$, with $dA = r\\,dr\\,d\\theta$.`,
-            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{${r1}}^{${r2}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a}(${r2 ** 4} - ${r1 ** 4})}{4} = ${ans}\\pi$.`,
-            `Dividing by $\\pi$ gives $${ans}$.`,
+        const outer = (3 * a * r2 ** 4) / 2;
+        const inner = (3 * a * r1 ** 4) / 2;
+        return numberProblem({
+          prompt: t(
+            `Let $D$ be the annulus $${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}$ and $C$ its positively oriented boundary. For $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$, use Green's theorem and polar coordinates to find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
+            `设 $D$ 为圆环 $${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}$，$C$ 为它的正向边界。对 $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$，利用格林公式和极坐标求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
           ),
-          steps(
-            `旋度被积函数为 $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$；$${p}x$ 与 $${q}y$ 两项不起作用。`,
-            `圆环为 $${r1} \\le r \\le ${r2}$，$0 \\le \\theta \\le 2\\pi$，且 $dA = r\\,dr\\,d\\theta$。`,
-            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{${r1}}^{${r2}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a}(${r2 ** 4} - ${r1 ** 4})}{4} = ${ans}\\pi$。`,
-            `除以 $\\pi$ 得 $${ans}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              outer,
+              "That uses the whole disk inside the outer circle; the hole is not part of the region.",
+              "那是用了外圆内的整个圆盘；中间的洞不属于区域。",
+            ),
+            why(
+              outer + inner,
+              "That adds the inner circle; it is traversed clockwise, so its part is subtracted.",
+              "那是加上了内圆部分；内圆顺时针走，它那部分要减去。",
+            ),
+            why(
+              2 * a * (r2 ** 3 - r1 ** 3),
+              "That leaves out the factor $r$ in $dA = r\\,dr\\,d\\theta$.",
+              "那是漏掉了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the curl", "计算旋度"],
+                t(
+                  `$Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$; the terms $${p}x$ and $${q}y$ contribute nothing.`,
+                  `$Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$；$${p}x$ 与 $${q}y$ 两项不起作用。`,
+                ),
+              ],
+              [
+                ["Set up in polar coordinates", "用极坐标表示"],
+                t(
+                  `The annulus is $${r1} \\le r \\le ${r2}$, $0 \\le \\theta \\le 2\\pi$, with $dA = r\\,dr\\,d\\theta$.`,
+                  `圆环为 $${r1} \\le r \\le ${r2}$，$0 \\le \\theta \\le 2\\pi$，且 $dA = r\\,dr\\,d\\theta$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{2\\pi}\\int_{${r1}}^{${r2}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a}(${r2 ** 4} - ${r1 ** 4})}{4} = ${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `$\\int_0^{2\\pi}\\int_{${r1}}^{${r2}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a}(${r2 ** 4} - ${r1 ** 4})}{4} = ${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Circle by circle: counterclockwise, the outer circle alone gives $${outer}\\pi$ and the inner circle $${inner}\\pi$; the boundary takes the inner one clockwise, so the total is $${outer}\\pi - ${inner}\\pi = ${ans}\\pi$.`,
+              `逐个圆计算：逆时针时，外圆单独给出 $${outer}\\pi$，内圆给出 $${inner}\\pi$；边界上内圆是顺时针走的，所以合计 $${outer}\\pi - ${inner}\\pi = ${ans}\\pi$。`,
+            ),
           ),
-        );
-        // Using only the outer circle, adding the inner disk, or forgetting the factor r.
-        const wrong = [(3 * a * r2 ** 4) / 2, (3 * a * (r2 ** 4 + r1 ** 4)) / 2, 2 * a * (r2 ** 3 - r1 ** 3)];
-        return numberProblem({ prompt, solution, answer: ans, wrong: wrong.filter((w) => w !== ans) });
+        });
       },
     },
   ],
@@ -4495,6 +5555,10 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
     "Green's theorem gives area as a boundary integral: $\\operatorname{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$.",
     "格林公式把面积写成边界上的曲线积分：$\\operatorname{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$。",
   ),
+  intro: t(
+    "Find the area of the rectangle $[0, 3] \\times [0, 2]$ from $\\oint_C x\\,dy$, counterclockwise. The field $\\langle 0, x \\rangle$ has curl $1$, so this integral is the area. On the top and bottom $dy = 0$, on the left $x = 0$, and the right edge gives $\\int_0^2 3\\,dy = 6$.\n\nCheck: the rectangle is $3$ by $2$, and $3 \\cdot 2 = 6$.\n\nIn this lesson we compute areas from integrals around the boundary, using fields whose curl is $1$.",
+    "用逆时针方向的 $\\oint_C x\\,dy$ 求矩形 $[0, 3] \\times [0, 2]$ 的面积。场 $\\langle 0, x \\rangle$ 的旋度为 $1$，所以这个积分就是面积。顶边和底边上 $dy = 0$，左边上 $x = 0$，右边给出 $\\int_0^2 3\\,dy = 6$。\n\n检验：矩形长 $3$、宽 $2$，而 $3 \\cdot 2 = 6$。\n\n本课我们利用旋度为 $1$ 的场，由沿边界的积分计算面积。",
+  ),
   prerequisites: ["greens-theorem-in-circulation-curl-form"],
   encompasses: [{ topic: "greens-theorem-in-circulation-curl-form", weight: 0.3 }],
   xp: 10,
@@ -4503,37 +5567,54 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
       id: "area-formulas-from-boundary-integrals",
       title: t("Area formulas from boundary integrals", "由边界曲线积分求解平面区域面积"),
       explanation: t(
-        "Choosing a field whose curl is one makes the double integral equal to the area, so the area can be computed from a line integral around the boundary. Setting $P = -\\frac{y}{2}$ and $Q = \\frac{x}{2}$ yields $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$, giving the area formula:\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx).$$",
-        "选择旋度为 1 的向量场，使二重积分等于面积，这样就能由沿边界的曲线积分算出面积。取 $P = -\\frac{y}{2}$ 与 $Q = \\frac{x}{2}$ 可得 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$，从而得到面积公式：\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$$",
+        "Choosing a field whose curl is one makes the double integral equal to the area, so the area can be computed from a line integral around the boundary. Setting $P = -\\frac{y}{2}$ and $Q = \\frac{x}{2}$ yields $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$, giving the area formula:\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx).$$\n\nFor the ellipse $\\mathbf{r}(t) = (10\\cos t, \\sin t)$, $x\\,dy - y\\,dx = 10\\cos^2 t\\,dt + 10\\sin^2 t\\,dt = 10\\,dt$, so the area is $\\frac{1}{2} \\cdot 10 \\cdot 2\\pi = 10\\pi$.\n\n> **Watch out.** Keep the factor $\\frac{1}{2}$: the field $\\langle -y, x \\rangle$ has curl $2$, so $\\oint_C (x\\,dy - y\\,dx)$ is twice the area.",
+        "选择旋度为 1 的向量场，使二重积分等于面积，这样就能由沿边界的曲线积分算出面积。取 $P = -\\frac{y}{2}$ 与 $Q = \\frac{x}{2}$ 可得 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$，从而得到面积公式：\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$$\n\n对椭圆 $\\mathbf{r}(t) = (10\\cos t, \\sin t)$，$x\\,dy - y\\,dx = 10\\cos^2 t\\,dt + 10\\sin^2 t\\,dt = 10\\,dt$，所以面积为 $\\frac{1}{2} \\cdot 10 \\cdot 2\\pi = 10\\pi$。\n\n> **注意。** 因子 $\\frac{1}{2}$ 不能丢：场 $\\langle -y, x \\rangle$ 的旋度为 $2$，所以 $\\oint_C (x\\,dy - y\\,dx)$ 是面积的两倍。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
         const b = rng.int(2, 8);
         const ans = a * b;
-
-        const prompt = t(
-          `For the ellipse with parametrization $\\mathbf{r}(t) = (${a}\\cos t, ${b}\\sin t)$ for $0 \\le t \\le 2\\pi$, find $\\frac{\\text{Area}(E)}{\\pi}$ using Green's area formula $\\text{Area}(E) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$.`,
-          `对于由参数方程 $\\mathbf{r}(t) = (${a}\\cos t, ${b}\\sin t)$（$0 \\le t \\le 2\\pi$）定义的椭圆，利用格林面积公式 $\\text{Area}(E) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$ 计算 $\\frac{\\text{Area}(E)}{\\pi}$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Compute differentials: $x = ${a}\\cos t, dx = -${a}\\sin t\\,dt$ and $y = ${b}\\sin t, dy = ${b}\\cos t\\,dt$.`,
-            `The integrand is $x\\,dy - y\\,dx = (${a}\\cos t)(${b}\\cos t\\,dt) - (${b}\\sin t)(-${a}\\sin t\\,dt) = ${a * b}(\\cos^2 t + \\sin^2 t)\\,dt = ${a * b}\\,dt$.`,
-            `Integrate around the loop: $\\text{Area}(E) = \\frac{1}{2} \\int_0^{2\\pi} ${a * b}\\,dt = \\frac{1}{2}(${a * b})(2\\pi) = ${a * b}\\pi$.`,
-            `Dividing by $\\pi$ yields $${ans}$.`,
-          ),
-          steps(
-            `计算微分：$x = ${a}\\cos t, dx = -${a}\\sin t\\,dt$ 且 $y = ${b}\\sin t, dy = ${b}\\cos t\\,dt$。`,
-            `被积式为 $x\\,dy - y\\,dx = (${a}\\cos t)(${b}\\cos t\\,dt) - (${b}\\sin t)(-${a}\\sin t\\,dt) = ${a * b}(\\cos^2 t + \\sin^2 t)\\,dt = ${a * b}\\,dt$。`,
-            `闭路积分：$\\text{Area}(E) = \\frac{1}{2} \\int_0^{2\\pi} ${a * b}\\,dt = \\frac{1}{2}(${a * b})(2\\pi) = ${a * b}\\pi$。`,
-            `除以 $\\pi$ 得到 $${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `For the ellipse with parametrization $\\mathbf{r}(t) = (${a}\\cos t, ${b}\\sin t)$ for $0 \\le t \\le 2\\pi$, find $\\frac{\\text{Area}(E)}{\\pi}$ using Green's area formula $\\text{Area}(E) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$.`,
+            `对于由参数方程 $\\mathbf{r}(t) = (${a}\\cos t, ${b}\\sin t)$（$0 \\le t \\le 2\\pi$）定义的椭圆，利用格林面积公式 $\\text{Area}(E) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$ 计算 $\\frac{\\text{Area}(E)}{\\pi}$ 的值。`,
+          ),
           answer: ans,
-          wrong: [2 * a * b, a + b, ans + a * b],
+          mistakes: distinct(ans, [
+            why(2 * ans, "That drops the factor $\\frac{1}{2}$ in the area formula.", "那是漏掉了面积公式中的因子 $\\frac{1}{2}$。"),
+            why(a + b, "That adds the semi-axes; the integrand is their product.", "那是把两个半轴相加；被积式是它们的乘积。"),
+            why(
+              Math.max(a, b) ** 2,
+              "That treats the ellipse as a circle with the longer semi-axis as radius.",
+              "那是把椭圆当成以较长半轴为半径的圆。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the differentials", "求微分"],
+                t(`$dx = -${a}\\sin t\\,dt$ and $dy = ${b}\\cos t\\,dt$.`, `$dx = -${a}\\sin t\\,dt$，$dy = ${b}\\cos t\\,dt$。`),
+              ],
+              [
+                ["Simplify the integrand", "化简被积式"],
+                t(
+                  `$x\\,dy - y\\,dx = ${a * b}\\cos^2 t\\,dt + ${a * b}\\sin^2 t\\,dt = ${a * b}\\,dt$.`,
+                  `$x\\,dy - y\\,dx = ${a * b}\\cos^2 t\\,dt + ${a * b}\\sin^2 t\\,dt = ${a * b}\\,dt$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${a * b}\\,dt = ${a * b}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${a * b}\\,dt = ${a * b}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The other formula agrees: $\\oint_C x\\,dy = \\int_0^{2\\pi} ${a * b}\\cos^2 t\\,dt = ${a * b}\\pi$.`,
+              `另一个公式给出相同结果：$\\oint_C x\\,dy = \\int_0^{2\\pi} ${a * b}\\cos^2 t\\,dt = ${a * b}\\pi$。`,
+            ),
+          ),
         });
       },
     },
@@ -4542,8 +5623,8 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
       figure: multivariableDrawings6["calculating-areas-using-greens-theorem#the-area-of-a-triangle-from-a-boundary-integral"],
       title: t("The area of a triangle from a boundary integral", "用边界积分求三角形面积"),
       explanation: t(
-        "Green's theorem gives the area of a region as $A = \\frac12\\oint_C x\\,dy - y\\,dx$ around its counterclockwise boundary. Along a segment through the origin, $x\\,dy - y\\,dx = 0$, because the point moves straight away from or toward the origin. For the triangle with vertices $(0, 0)$, $(a, b)$, $(c, d)$ only the edge from $(a, b)$ to $(c, d)$ contributes, and it gives $ad - bc$. So\n\n$$A = \\tfrac12(ad - bc)$$\n\nwhen the vertices are in counterclockwise order.",
-        "格林定理给出区域面积 $A = \\frac12\\oint_C x\\,dy - y\\,dx$，沿逆时针边界积分。沿过原点的线段，$x\\,dy - y\\,dx = 0$，因为点径直远离或接近原点。对顶点为 $(0, 0)$、$(a, b)$、$(c, d)$ 的三角形，只有从 $(a, b)$ 到 $(c, d)$ 的边有贡献，其值为 $ad - bc$。所以当顶点为逆时针顺序时\n\n$$A = \\tfrac12(ad - bc)$$",
+        "Green's theorem gives the area of a region as $A = \\frac12\\oint_C x\\,dy - y\\,dx$ around its counterclockwise boundary. Along a segment through the origin, $x\\,dy - y\\,dx = 0$, because the point moves straight away from or toward the origin. For the triangle with vertices $(0, 0)$, $(a, b)$, $(c, d)$ only the edge from $(a, b)$ to $(c, d)$ contributes, and it gives $ad - bc$. So\n\n$$A = \\tfrac12(ad - bc)$$\n\nwhen the vertices are in counterclockwise order. For $(0, 0)$, $(9, 2)$, $(1, 4)$ this is $\\frac{1}{2}(36 - 2) = 17$.\n\n> **Watch out.** The product $bc$ is subtracted, and the result is halved; $ad - bc$ alone is the area of the parallelogram on the two edges.",
+        "格林定理给出区域面积 $A = \\frac12\\oint_C x\\,dy - y\\,dx$，沿逆时针边界积分。沿过原点的线段，$x\\,dy - y\\,dx = 0$，因为点径直远离或接近原点。对顶点为 $(0, 0)$、$(a, b)$、$(c, d)$ 的三角形，只有从 $(a, b)$ 到 $(c, d)$ 的边有贡献，其值为 $ad - bc$。所以当顶点为逆时针顺序时\n\n$$A = \\tfrac12(ad - bc)$$\n\n对 $(0, 0)$、$(9, 2)$、$(1, 4)$，结果为 $\\frac{1}{2}(36 - 2) = 17$。\n\n> **注意。** 乘积 $bc$ 要减去，结果还要减半；单独的 $ad - bc$ 是以两条边为邻边的平行四边形的面积。",
       ),
       generate(rng: Rng): Problem {
         let a = rng.int(1, 6);
@@ -4556,16 +5637,54 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
         }
         const det = a * d - b * c;
         const ans = Q.of(det, 2);
+        const first = Q.of(a * b, 2);
+        const middle = Q.of((a + c) * (d - b), 2);
+        const last = Q.of(-c * d, 2);
         return numberProblem({
           prompt: t(
             `Use $A = \\frac12\\oint_C x\\,dy - y\\,dx$ to find the area of the triangle with vertices $(0, 0)$, $(${a}, ${b})$ and $(${c}, ${d})$.`,
             `用 $A = \\frac12\\oint_C x\\,dy - y\\,dx$ 求顶点为 $(0, 0)$、$(${a}, ${b})$、$(${c}, ${d})$ 的三角形面积。`,
           ),
           answer: ans,
-          wrong: [Q.of(det), Q.of(a * d + b * c, 2), Q.of(a * c + b * d, 2), Q.of(a * d, 2)],
-          solution: t(
-            `The two edges through the origin contribute $0$. The edge from $(${a}, ${b})$ to $(${c}, ${d})$ gives $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$. So $A = \\frac12 \\cdot ${det} = ${ans.toLatex()}$.`,
-            `过原点的两条边贡献 $0$。从 $(${a}, ${b})$ 到 $(${c}, ${d})$ 的边给出 $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$。所以 $A = \\frac12 \\cdot ${det} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(det),
+              "That drops the factor $\\frac{1}{2}$; $ad - bc$ is the area of the parallelogram.",
+              "那是漏掉了因子 $\\frac{1}{2}$；$ad - bc$ 是平行四边形的面积。",
+            ),
+            why(Q.of(a * d + b * c, 2), "That adds $bc$; the edge gives $ad - bc$.", "那是加上了 $bc$；这条边给出的是 $ad - bc$。"),
+            why(
+              Q.of(a * c + b * d, 2),
+              "That uses the dot product $ac + bd$ of the two vertices instead of $ad - bc$.",
+              "那是用了两个顶点的点积 $ac + bd$，而不是 $ad - bc$。",
+            ),
+            why(Q.of(a * d, 2), "That leaves out the term $bc$.", "那是漏掉了 $bc$ 项。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Edges through the origin", "过原点的边"],
+                t(
+                  "On the edges to and from $(0, 0)$ the point moves along a ray, so $x\\,dy - y\\,dx = 0$.",
+                  "在通向和离开 $(0, 0)$ 的边上，点沿射线运动，所以 $x\\,dy - y\\,dx = 0$。",
+                ),
+              ],
+              [
+                ["The third edge", "第三条边"],
+                t(
+                  `From $(${a}, ${b})$ to $(${c}, ${d})$ it gives $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$.`,
+                  `从 $(${a}, ${b})$ 到 $(${c}, ${d})$ 给出 $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$。`,
+                ),
+              ],
+              [
+                ["Halve", "减半"],
+                t(`$A = \\frac{1}{2} \\cdot ${det} = ${ans.toLatex()}$.`, `$A = \\frac{1}{2} \\cdot ${det} = ${ans.toLatex()}$。`),
+              ],
+            ],
+            t(
+              `With $\\oint_C x\\,dy$ alone, the three edges give $${first.toLatex()}$, $${middle.toLatex()}$ and $${last.toLatex()}$, which add to $${ans.toLatex()}$.`,
+              `只用 $\\oint_C x\\,dy$，三条边分别给出 $${first.toLatex()}$、$${middle.toLatex()}$、$${last.toLatex()}$，合计 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -4581,6 +5700,10 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
     "The flux form of Green's theorem equates the outward flux across $C$ to the double integral of the divergence: $\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$.",
     "格林公式的通量形式把穿过 $C$ 的向外通量与散度的二重积分联系起来：$\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$。",
   ),
+  intro: t(
+    "Find the outward flux of $\\mathbf{F} = \\langle x, y \\rangle$ across the unit circle. The divergence is $P_x + Q_y = 1 + 1 = 2$, so by Green's theorem in flux form the flux is $2$ times the area $\\pi$: $2\\pi$.\n\nCheck: on the unit circle $\\mathbf{F}$ is the outward unit normal itself, so $\\mathbf{F} \\cdot \\mathbf{n} = 1$, and the flux is the length $2\\pi$ of the circle.\n\nIn this lesson we compute outward flux across a closed curve as the double integral of the divergence over the region inside.",
+    "求 $\\mathbf{F} = \\langle x, y \\rangle$ 穿过单位圆的外法向通量。散度为 $P_x + Q_y = 1 + 1 = 2$，所以由通量形式的格林公式，通量是 $2$ 乘以面积 $\\pi$：$2\\pi$。\n\n检验：在单位圆上 $\\mathbf{F}$ 就是向外的单位法向量，所以 $\\mathbf{F} \\cdot \\mathbf{n} = 1$，通量就是圆周长 $2\\pi$。\n\n本课我们把穿过闭曲线的外法向通量化为散度在内部区域上的二重积分来计算。",
+  ),
   prerequisites: ["greens-theorem-in-circulation-curl-form", "the-divergence-of-a-vector-field"],
   encompasses: [{ topic: "the-divergence-of-a-vector-field", weight: 0.3 }],
   xp: 10,
@@ -4590,43 +5713,59 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
       figure: multivariableDrawings6["greens-theorem-in-flux-divergence-form#two-dimensional-divergence-theorem"],
       title: t("Two-dimensional divergence theorem", "应用二维散度定理计算通量"),
       explanation: t(
-        "The flux form of Green's theorem says that the net flow out through the boundary equals the total divergence inside the region. Green's theorem in flux form states:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA.$$",
-        "格林公式的通量形式说明，穿过边界向外的净流量等于区域内散度的总和。通量形式的格林公式（平面散度定理）表明：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA$$",
+        "The flux form of Green's theorem says that the net flow out through the boundary equals the total divergence inside the region. Green's theorem in flux form states:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA.$$\n\nFor $\\langle 6x, y \\rangle$ across the boundary of $[0, 1] \\times [0, 2]$ the divergence is $7$ and the area $2$, so the flux is $14$.\n\n> **Watch out.** The divergence adds $P_x$ and $Q_y$, and a constant divergence multiplies the area, not the perimeter.",
+        "格林公式的通量形式说明，穿过边界向外的净流量等于区域内散度的总和。通量形式的格林公式（平面散度定理）表明：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA$$\n\n对 $\\langle 6x, y \\rangle$ 穿过 $[0, 1] \\times [0, 2]$ 的边界，散度为 $7$，面积为 $2$，所以通量为 $14$。\n\n> **注意。** 散度是 $P_x$ 与 $Q_y$ 之和；常数散度乘的是面积，不是周长。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const W = rng.int(2, 6);
         const H = rng.int(2, 6);
-
-        // F = (a*x, b*y) => div F = a + b.
-        // Area = W * H.
-        // Flux = (a + b) * Area.
         const div = a + b;
         const area = W * H;
         const ans = div * area;
-
-        const prompt = t(
-          `Find the outward flux $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$ of $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle$ across the boundary of the rectangle $D = [0, ${W}] \\times [0, ${H}]$.`,
-          `计算向量场 $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle$ 穿过矩形 $D = [0, ${W}] \\times [0, ${H}]$ 边界向外的总通量 $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$。`,
-        );
-        const solution = t(
-          steps(
-            `Calculate the divergence: $\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"])}) + \\frac{\\partial}{\\partial y}(${poly([b, "y"])}) = ${a} + ${b} = ${div}$.`,
-            `Apply the 2D Divergence Theorem: $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = ${div} \\times \\text{Area}(D)$.`,
-            `The area is $${W} \\times ${H} = ${area}$, so the outward flux is $${div} \\times ${area} = ${ans}$.`,
-          ),
-          steps(
-            `计算散度：$\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"])}) + \\frac{\\partial}{\\partial y}(${poly([b, "y"])}) = ${a} + ${b} = ${div}$。`,
-            `应用二维散度定理：$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = ${div} \\times \\text{Area}(D)$。`,
-            `矩形面积为 $${W} \\times ${H} = ${area}$，故向外总通量为 $${div} \\times ${area} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the outward flux $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$ of $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle$ across the boundary of the rectangle $D = [0, ${W}] \\times [0, ${H}]$.`,
+            `计算向量场 $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle$ 穿过矩形 $D = [0, ${W}] \\times [0, ${H}]$ 边界向外的总通量 $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$。`,
+          ),
           answer: ans,
-          wrong: [area, div * (W + H), ans + area],
+          mistakes: distinct(ans, [
+            why(area, `That is the area alone; the divergence $${div}$ multiplies it.`, `那只是面积；还要乘以散度 $${div}$。`),
+            why(
+              div * (W + H),
+              "That multiplies the divergence by half the perimeter; it is integrated over the area.",
+              "那是用散度乘以半周长；散度是在面积上积分的。",
+            ),
+            why(a * area, "That uses only $P_x$; the divergence also includes $Q_y$.", "那是只用了 $P_x$；散度还包括 $Q_y$。"),
+            why(b * area, "That uses only $Q_y$; the divergence also includes $P_x$.", "那是只用了 $Q_y$；散度还包括 $P_x$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the divergence", "计算散度"],
+                t(`$\\text{div}\\,\\mathbf{F} = ${a} + ${b} = ${div}$.`, `$\\text{div}\\,\\mathbf{F} = ${a} + ${b} = ${div}$。`),
+              ],
+              [
+                ["Apply the flux form", "应用通量形式"],
+                t(
+                  `The flux is $\\iint_D ${div}\\,dA = ${div} \\cdot \\text{Area}(D)$.`,
+                  `通量为 $\\iint_D ${div}\\,dA = ${div} \\cdot \\text{Area}(D)$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `The area is $${W} \\cdot ${H} = ${area}$, so the flux is $${div} \\cdot ${area} = ${ans}$.`,
+                  `面积为 $${W} \\cdot ${H} = ${area}$，所以通量为 $${div} \\cdot ${area} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Edge by edge, the right side gives $${a * W} \\cdot ${H} = ${a * W * H}$, the top $${b * H} \\cdot ${W} = ${b * H * W}$, and the left and bottom $0$; the total is $${ans}$.`,
+              `逐边计算，右边给出 $${a * W} \\cdot ${H} = ${a * W * H}$，顶边 $${b * H} \\cdot ${W} = ${b * H * W}$，左边与底边为 $0$；合计 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4634,8 +5773,8 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
       id: "outward-flux-with-a-variable-divergence",
       title: t("Outward flux with a variable divergence", "散度不为常数时的向外通量"),
       explanation: t(
-        "In flux form, Green's theorem says the outward flux across a closed curve equals the integral of the divergence over the enclosed region:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA.$$\n\nWhen the divergence is not constant, evaluate the double integral as an iterated integral. For $\\mathbf{F} = \\langle x^2, ky \\rangle$ on $[0, w] \\times [0, h]$ the divergence is $2x + k$, and\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh.$$",
-        "通量形式的格林定理说，穿过闭曲线的向外通量等于散度在所围区域上的积分：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA$$\n\n散度不是常数时，把二重积分化为累次积分。对 $\\mathbf{F} = \\langle x^2, ky \\rangle$ 在 $[0, w] \\times [0, h]$ 上，散度为 $2x + k$，\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh$$",
+        "In flux form, Green's theorem says the outward flux across a closed curve equals the integral of the divergence over the enclosed region:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA.$$\n\nWhen the divergence is not constant, evaluate the double integral as an iterated integral. For $\\mathbf{F} = \\langle x^2, ky \\rangle$ on $[0, w] \\times [0, h]$ the divergence is $2x + k$, and\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh.$$\n\nFor $\\langle x^2, 6y \\rangle$ on $[0, 2] \\times [0, 1]$ this is $4 + 12 = 16$.\n\n> **Watch out.** $\\int_0^w 2x\\,dx = w^2$, not $2w^2$; and a variable divergence cannot be evaluated at one point and multiplied by the area.",
+        "通量形式的格林定理说，穿过闭曲线的向外通量等于散度在所围区域上的积分：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA$$\n\n散度不是常数时，把二重积分化为累次积分。对 $\\mathbf{F} = \\langle x^2, ky \\rangle$ 在 $[0, w] \\times [0, h]$ 上，散度为 $2x + k$，\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh$$\n\n对 $\\langle x^2, 6y \\rangle$ 在 $[0, 2] \\times [0, 1]$ 上，结果为 $4 + 12 = 16$。\n\n> **注意。** $\\int_0^w 2x\\,dx = w^2$，不是 $2w^2$；可变的散度不能只在一点取值再乘以面积。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.nonZero(-4, 5);
@@ -4648,10 +5787,49 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
             `求 $\\mathbf{F} = \\langle x^2, ${poly([k, "y"])} \\rangle$ 穿过矩形 $0 \\le x \\le ${w}$，$0 \\le y \\le ${h}$ 边界的向外通量。`,
           ),
           answer: ans,
-          wrong: [k * w * h, 2 * w * w * h + k * w * h, (2 * w + k) * w * h, w * w * h - k * w * h],
-          solution: t(
-            `$\\nabla \\cdot \\mathbf{F} = ${poly([2, "x"], [k, ""])}$. Then $\\int_0^{${h}} \\int_0^{${w}} (${poly([2, "x"], [k, ""])})\\,dx\\,dy = ${h}(${w * w} + ${paren(k * w)}) = ${ans}$.`,
-            `$\\nabla \\cdot \\mathbf{F} = ${poly([2, "x"], [k, ""])}$。于是 $\\int_0^{${h}} \\int_0^{${w}} (${poly([2, "x"], [k, ""])})\\,dx\\,dy = ${h}(${w * w} + ${paren(k * w)}) = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              k * w * h,
+              "That leaves out the part $2x$ of the divergence that comes from $x^2$.",
+              "那是漏掉了散度中来自 $x^2$ 的 $2x$ 部分。",
+            ),
+            why(
+              2 * w * w * h + k * w * h,
+              "That integrates $2x$ to $2x^2$; its antiderivative is $x^2$.",
+              "那是把 $2x$ 积成了 $2x^2$；它的原函数是 $x^2$。",
+            ),
+            why(
+              (2 * w + k) * w * h,
+              `That evaluates the divergence at $x = ${w}$ and multiplies by the area; it varies across the rectangle.`,
+              `那是在 $x = ${w}$ 处取散度再乘以面积；散度在矩形上是变化的。`,
+            ),
+            why(w * w * h - k * w * h, `That takes $Q_y$ as $${-k}$; it is $${k}$.`, `那是把 $Q_y$ 当成 $${-k}$；它是 $${k}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Compute the divergence", "计算散度"],
+                t(
+                  `$\\nabla \\cdot \\mathbf{F} = ${poly([2, "x"], [k, ""])}$.`,
+                  `$\\nabla \\cdot \\mathbf{F} = ${poly([2, "x"], [k, ""])}$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${w}} (${poly([2, "x"], [k, ""])})\\,dx = ${w * w} + ${paren(k * w)} = ${w * w + k * w}$.`,
+                  `$\\int_0^{${w}} (${poly([2, "x"], [k, ""])})\\,dx = ${w * w} + ${paren(k * w)} = ${w * w + k * w}$。`,
+                ),
+              ],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(`$\\int_0^{${h}} ${paren(w * w + k * w)}\\,dy = ${ans}$.`, `$\\int_0^{${h}} ${paren(w * w + k * w)}\\,dy = ${ans}$。`),
+              ],
+            ],
+            t(
+              `Edge by edge, the right side has $P = ${w * w}$ and gives $${w * w * h}$, the top has $Q = ${k * h}$ and gives $${k * h * w}$, and the left and bottom give $0$; the total is $${ans}$.`,
+              `逐边计算，右边 $P = ${w * w}$，给出 $${w * w * h}$；顶边 $Q = ${k * h}$，给出 $${k * h * w}$；左边与底边为 $0$；合计 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -4667,6 +5845,10 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
     "For a region with a hole, the outer boundary $C_1$ is traversed counterclockwise and the inner boundary $C_2$ clockwise: $\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D (Q_x - P_y)\\,dA$, with both $\\oint$ taken counterclockwise.",
     "对于含孔的区域，外边界 $C_1$ 取逆时针、内边界 $C_2$ 取顺时针：$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D (Q_x - P_y)\\,dA$，其中两个 $\\oint$ 都按逆时针计算。",
   ),
+  intro: t(
+    "The field $\\mathbf{F} = \\left\\langle \\frac{-y}{x^2 + y^2}, \\frac{x}{x^2 + y^2} \\right\\rangle$ is undefined at the origin and has curl $0$ everywhere else. Its counterclockwise circulation around the unit circle is $2\\pi$. Around the circle of radius $5$, Green's theorem on the annulus between them gives $\\oint_{C_5} - \\oint_{C_1} = \\iint 0\\,dA = 0$, so it is also $2\\pi$.\n\nCheck: on the circle of radius $5$, $\\mathbf{r}(t) = (5\\cos t, 5\\sin t)$ gives the integrand $\\frac{25\\sin^2 t + 25\\cos^2 t}{25} = 1$, and $\\int_0^{2\\pi} 1\\,dt = 2\\pi$.\n\nIn this lesson we apply Green's theorem to regions with holes, taking the inner boundaries clockwise.",
+    "场 $\\mathbf{F} = \\left\\langle \\frac{-y}{x^2 + y^2}, \\frac{x}{x^2 + y^2} \\right\\rangle$ 在原点无定义，在其他各处旋度为 $0$。它绕单位圆的逆时针环量为 $2\\pi$。绕半径为 $5$ 的圆，对二者之间的圆环用格林定理得 $\\oint_{C_5} - \\oint_{C_1} = \\iint 0\\,dA = 0$，所以也是 $2\\pi$。\n\n检验：在半径为 $5$ 的圆上，取 $\\mathbf{r}(t) = (5\\cos t, 5\\sin t)$，被积函数为 $\\frac{25\\sin^2 t + 25\\cos^2 t}{25} = 1$，而 $\\int_0^{2\\pi} 1\\,dt = 2\\pi$。\n\n本课我们把格林定理用于有洞的区域，内边界取顺时针方向。",
+  ),
   prerequisites: ["greens-theorem-in-circulation-curl-form"],
   encompasses: [{ topic: "greens-theorem-in-circulation-curl-form", weight: 0.3 }],
   xp: 10,
@@ -4675,43 +5857,63 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
       id: "greens-theorem-on-multiply-connected-domains",
       title: t("Green's theorem on multiply-connected domains", "复连通区域上格林公式的环量关系"),
       explanation: t(
-        "For a region with a hole, the boundary has two parts, and the inner one is traversed in the opposite direction so that the region stays on the left. For an annular region $D$ between outer boundary $C_1$ and inner boundary $C_2$ (both oriented counterclockwise):\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$",
-        "对于有洞的区域，边界有两部分，内边界要反向绕行，使区域始终在左侧。对于由外边界 $C_1$ 与内边界 $C_2$（均按逆时针定向）围成的环形区域 $D$：\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$$",
+        "For a region with a hole, the boundary has two parts, and the inner one is traversed in the opposite direction so that the region stays on the left. For an annular region $D$ between outer boundary $C_1$ and inner boundary $C_2$ (both oriented counterclockwise):\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$\n\nIf the curl is $0$ on $D$, the two circulations are equal: an inner circulation of $40$ means an outer one of $40$, whatever the radii.\n\n> **Watch out.** A zero curl on $D$ does not make the circulations zero, because the hole may contain a point where $\\mathbf{F}$ is undefined; and the circulation does not grow with the area enclosed.",
+        "对于有洞的区域，边界有两部分，内边界要反向绕行，使区域始终在左侧。对于由外边界 $C_1$ 与内边界 $C_2$（均按逆时针定向）围成的环形区域 $D$：\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$$\n\n若 $D$ 上旋度为 $0$，两个环量相等：内环量为 $40$，外环量就是 $40$，与半径无关。\n\n> **注意。** $D$ 上旋度为零并不使环量为零，因为洞里可能有 $\\mathbf{F}$ 无定义的点；环量也不随所围面积增大。",
       ),
       generate(rng: Rng): Problem {
         const R1 = rng.int(3, 8);
         const R2 = rng.int(1, R1 - 1);
         const innerCirc = rng.int(5, 30);
-
-        // Area = pi * (R1^2 - R2^2)
-        // iint_D curl dA = curl * pi * (R1^2 - R2^2)
-        // If oint_{C1} - oint_{C2} = curl * Area, or let curl = 0 (curl-free field on domain with hole):
-        // If curl = 0, oint_{C1} = oint_{C2}!
-        // Let's test curl-free on punctured plane (e.g. vortex):
-        // If Q_x - P_y = 0 throughout the region between C1 and C2, then oint_{C1} = oint_{C2}!
         const ans = innerCirc;
-
-        const prompt = t(
-          `Suppose $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$ throughout the annular region $D$ between two concentric counterclockwise circles $C_1$ (outer, radius ${R1}) and $C_2$ (inner, radius ${R2}). If $\\oint_{C_2} (P\\,dx + Q\\,dy) = ${innerCirc}$, find $\\oint_{C_1} (P\\,dx + Q\\,dy)$.`,
-          `设在两个同心逆时针圆周 $C_1$（外圆，半径 ${R1}）与 $C_2$（内圆，半径 ${R2}）之间的环形区域 $D$ 内处处满足 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。若内圆周积分 $\\oint_{C_2} (P\\,dx + Q\\,dy) = ${innerCirc}$，求外圆周积分 $\\oint_{C_1} (P\\,dx + Q\\,dy)$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `By Green's Theorem for multiply-connected domains, $\\oint_{C_1} (P\\,dx + Q\\,dy) - \\oint_{C_2} (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$.`,
-            `Since $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 0$, the double integral vanishes: $\\iint_D 0\\,dA = 0$.`,
-            `Therefore, $\\oint_{C_1} (P\\,dx + Q\\,dy) = \\oint_{C_2} (P\\,dx + Q\\,dy) = ${ans}$.`,
-          ),
-          steps(
-            `由复连通区域上的格林公式，$\\oint_{C_1} (P\\,dx + Q\\,dy) - \\oint_{C_2} (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$。`,
-            `因为 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 0$，二重积分恒为零：$\\iint_D 0\\,dA = 0$。`,
-            `因此，$\\oint_{C_1} (P\\,dx + Q\\,dy) = \\oint_{C_2} (P\\,dx + Q\\,dy) = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Suppose $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$ throughout the annular region $D$ between two concentric counterclockwise circles $C_1$ (outer, radius ${R1}) and $C_2$ (inner, radius ${R2}). If $\\oint_{C_2} (P\\,dx + Q\\,dy) = ${innerCirc}$, find $\\oint_{C_1} (P\\,dx + Q\\,dy)$.`,
+            `设在两个同心逆时针圆周 $C_1$（外圆，半径 ${R1}）与 $C_2$（内圆，半径 ${R2}）之间的环形区域 $D$ 内处处满足 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。若内圆周积分 $\\oint_{C_2} (P\\,dx + Q\\,dy) = ${innerCirc}$，求外圆周积分 $\\oint_{C_1} (P\\,dx + Q\\,dy)$ 的值。`,
+          ),
           answer: ans,
-          wrong: [0, -ans, 2 * ans],
+          mistakes: distinct(ans, [
+            why(
+              0,
+              "That applies Green's theorem as if there were no hole; the curl is zero only on the annulus, and the hole can hold a singularity.",
+              "那是把格林定理当成没有洞来用；旋度只在圆环上为零，洞里可能有奇点。",
+            ),
+            why(
+              -ans,
+              "That reverses the sign; both circles are counterclockwise, and their circulations are equal.",
+              "那是符号反了；两个圆都是逆时针的，环量相等。",
+            ),
+            why(
+              Q.of(ans * R1 * R1, R2 * R2),
+              "That scales the circulation by the ratio of the areas; with zero curl on the annulus it does not change.",
+              "那是按面积之比放大了环量；圆环上旋度为零时它不变。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Apply Green's theorem on the annulus", "在圆环上应用格林定理"],
+                t(
+                  "$\\oint_{C_1} (P\\,dx + Q\\,dy) - \\oint_{C_2} (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$.",
+                  "$\\oint_{C_1} (P\\,dx + Q\\,dy) - \\oint_{C_2} (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$。",
+                ),
+              ],
+              [
+                ["Use the zero curl", "利用旋度为零"],
+                t("The integrand is $0$ on $D$, so the right side is $0$.", "被积函数在 $D$ 上为 $0$，所以右边为 $0$。"),
+              ],
+              [
+                ["Conclude", "得出结论"],
+                t(
+                  `$\\oint_{C_1} (P\\,dx + Q\\,dy) = \\oint_{C_2} (P\\,dx + Q\\,dy) = ${ans}$.`,
+                  `$\\oint_{C_1} (P\\,dx + Q\\,dy) = \\oint_{C_2} (P\\,dx + Q\\,dy) = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The difference of the two circulations is $${ans} - ${ans} = 0$, which is the integral of the zero curl over the annulus of area $${R1 * R1 - R2 * R2}\\pi$.`,
+              `两个环量之差为 $${ans} - ${ans} = 0$，正是零旋度在面积为 $${R1 * R1 - R2 * R2}\\pi$ 的圆环上的积分。`,
+            ),
+          ),
         });
       },
     },
@@ -4720,8 +5922,8 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
       figure: multivariableDrawings6["greens-theorem-on-regions-with-holes#an-outer-circulation-from-an-inner-one"],
       title: t("Finding an outer circulation from an inner one", "由内边界环量求外边界环量"),
       explanation: t(
-        "On an annulus $D$ between an inner circle $C_1$ and an outer circle $C_2$, both counterclockwise, Green's theorem reads\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\nbecause the inner circle must be traversed clockwise to keep $D$ on the left. Even if $\\mathbf{F}$ is not defined at the origin, knowing the inner circulation and the curl on $D$ determines the outer one. With constant curl $c$ the right side is $c\\pi(r_2^2 - r_1^2)$.",
-        "在内圆 $C_1$ 与外圆 $C_2$（都取逆时针）之间的圆环 $D$ 上，格林定理为\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\n因为内圆必须顺时针遍历才能使 $D$ 在左侧。即使 $\\mathbf{F}$ 在原点无定义，已知内环量和 $D$ 上的旋度就能确定外环量。旋度为常数 $c$ 时右边为 $c\\pi(r_2^2 - r_1^2)$。",
+        "On an annulus $D$ between an inner circle $C_1$ and an outer circle $C_2$, both counterclockwise, Green's theorem reads\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\nbecause the inner circle must be traversed clockwise to keep $D$ on the left. Even if $\\mathbf{F}$ is not defined at the origin, knowing the inner circulation and the curl on $D$ determines the outer one. With constant curl $c$ the right side is $c\\pi(r_2^2 - r_1^2)$. With curl $5$, an inner circulation of $2\\pi$ around $x^2 + y^2 = 1$ gives $2\\pi + 5 \\cdot 3\\pi = 17\\pi$ around $x^2 + y^2 = 4$.\n\n> **Watch out.** The curl is integrated over the annulus only, with area $\\pi(r_2^2 - r_1^2)$, and that integral is added to the inner circulation.",
+        "在内圆 $C_1$ 与外圆 $C_2$（都取逆时针）之间的圆环 $D$ 上，格林定理为\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\n因为内圆必须顺时针遍历才能使 $D$ 在左侧。即使 $\\mathbf{F}$ 在原点无定义，已知内环量和 $D$ 上的旋度就能确定外环量。旋度为常数 $c$ 时右边为 $c\\pi(r_2^2 - r_1^2)$。旋度为 $5$ 时，绕 $x^2 + y^2 = 1$ 的内环量 $2\\pi$ 给出绕 $x^2 + y^2 = 4$ 的环量 $2\\pi + 5 \\cdot 3\\pi = 17\\pi$。\n\n> **注意。** 旋度只在圆环上积分，面积为 $\\pi(r_2^2 - r_1^2)$，这个积分要加到内环量上。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(1, 3);
@@ -4730,16 +5932,63 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
         const m = rng.nonZero(-6, 6);
         const ring = c * (r2 * r2 - r1 * r1);
         const ans = m + ring;
+        const pi = (n: number) => (n === 0 ? "0" : n === 1 ? "\\pi" : n === -1 ? "-\\pi" : `${n}\\pi`);
         return numberProblem({
           prompt: t(
-            `$\\mathbf{F}$ is not defined at the origin, and $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c}$ everywhere else. Its counterclockwise circulation around $x^2 + y^2 = ${r1 * r1}$ is $${m === 1 ? "" : m === -1 ? "-" : m}\\pi$. Find $\\frac{1}{\\pi}$ times its counterclockwise circulation around $x^2 + y^2 = ${r2 * r2}$.`,
-            `$\\mathbf{F}$ 在原点无定义，在其他地方 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c}$。它绕 $x^2 + y^2 = ${r1 * r1}$ 的逆时针环量为 $${m === 1 ? "" : m === -1 ? "-" : m}\\pi$。求它绕 $x^2 + y^2 = ${r2 * r2}$ 的逆时针环量的 $\\frac{1}{\\pi}$ 倍。`,
+            `$\\mathbf{F}$ is not defined at the origin, and $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c}$ everywhere else. Its counterclockwise circulation around $x^2 + y^2 = ${r1 * r1}$ is $${pi(m)}$. Find $\\frac{1}{\\pi}$ times its counterclockwise circulation around $x^2 + y^2 = ${r2 * r2}$.`,
+            `$\\mathbf{F}$ 在原点无定义，在其他地方 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c}$。它绕 $x^2 + y^2 = ${r1 * r1}$ 的逆时针环量为 $${pi(m)}$。求它绕 $x^2 + y^2 = ${r2 * r2}$ 的逆时针环量的 $\\frac{1}{\\pi}$ 倍。`,
           ),
           answer: ans,
-          wrong: [ring, m - ring, m + c * r2 * r2, m + c * (r2 * r2 + r1 * r1)],
-          solution: t(
-            `The annulus has area $(${r2 * r2} - ${r1 * r1})\\pi$, so $\\oint_{C_2} - \\oint_{C_1} = ${c} \\cdot ${r2 * r2 - r1 * r1}\\pi = ${ring}\\pi$. Then $\\oint_{C_2} = (${m} + ${paren(ring)})\\pi = ${ans}\\pi$, giving $${ans}$.`,
-            `圆环面积为 $(${r2 * r2} - ${r1 * r1})\\pi$，所以 $\\oint_{C_2} - \\oint_{C_1} = ${c} \\cdot ${r2 * r2 - r1 * r1}\\pi = ${ring}\\pi$。于是 $\\oint_{C_2} = (${m} + ${paren(ring)})\\pi = ${ans}\\pi$，结果为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              ring,
+              "That leaves out the inner circulation, as if $\\mathbf{F}$ were defined at the origin.",
+              "那是漏掉了内环量，好像 $\\mathbf{F}$ 在原点有定义一样。",
+            ),
+            why(
+              m - ring,
+              "That subtracts the annulus term; the outer circulation is the inner one plus it.",
+              "那是减去了圆环项；外环量是内环量加上它。",
+            ),
+            why(
+              m + c * r2 * r2,
+              "That integrates the curl over the whole disk; the hole is not part of the annulus.",
+              "那是在整个圆盘上对旋度积分；洞不属于圆环。",
+            ),
+            why(
+              m + c * (r2 * r2 + r1 * r1),
+              "That adds the areas of the two disks; the annulus has area $\\pi(r_2^2 - r_1^2)$.",
+              "那是把两个圆盘的面积相加；圆环面积是 $\\pi(r_2^2 - r_1^2)$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the area of the annulus", "求圆环面积"],
+                t(
+                  `$(${r2 * r2} - ${r1 * r1})\\pi = ${r2 * r2 - r1 * r1}\\pi$.`,
+                  `$(${r2 * r2} - ${r1 * r1})\\pi = ${r2 * r2 - r1 * r1}\\pi$。`,
+                ),
+              ],
+              [
+                ["Apply Green's theorem", "应用格林定理"],
+                t(
+                  `$\\oint_{C_2} - \\oint_{C_1} = ${c} \\cdot ${r2 * r2 - r1 * r1}\\pi = ${pi(ring)}$.`,
+                  `$\\oint_{C_2} - \\oint_{C_1} = ${c} \\cdot ${r2 * r2 - r1 * r1}\\pi = ${pi(ring)}$。`,
+                ),
+              ],
+              [
+                ["Add the inner circulation", "加上内环量"],
+                t(
+                  `$\\oint_{C_2} = (${m} + ${paren(ring)})\\pi = ${pi(ans)}$, so the answer is $${ans}$.`,
+                  `$\\oint_{C_2} = (${m} + ${paren(ring)})\\pi = ${pi(ans)}$，所以答案为 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The outer minus the inner circulation is $(${ans} - ${paren(m)})\\pi = ${pi(ring)}$, which is the curl $${c}$ times the area $${r2 * r2 - r1 * r1}\\pi$.`,
+              `外环量减内环量为 $(${ans} - ${paren(m)})\\pi = ${pi(ring)}$，正是旋度 $${c}$ 乘以面积 $${r2 * r2 - r1 * r1}\\pi$。`,
+            ),
           ),
         });
       },

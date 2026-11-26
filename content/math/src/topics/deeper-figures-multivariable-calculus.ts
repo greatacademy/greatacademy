@@ -1380,8 +1380,8 @@ const workInConstantField = point(
   "work-along-a-drawn-path",
   ["Work along a drawn path", "沿图中路径的功"],
   [
-    "A constant vector field is conservative, so its line integral depends only on the ends of the path. The value is the field dotted with the displacement from start to finish, however the path wanders between them. Going around a closed path gives zero, and reversing the direction changes the sign.",
-    "常向量场是保守场，所以它的线积分只取决于路径的两端。积分值等于向量场与从起点到终点的位移的点积，不管路径中间怎样绕行。沿闭路径积分为零，反向则变号。",
+    "A constant vector field is conservative, so its line integral depends only on the ends of the path. The value is the field dotted with the displacement from start to finish, however the path wanders between them. Going around a closed path gives zero, and reversing the direction changes the sign. For $\\mathbf{F} = \\langle 5, -2 \\rangle$ from $(-2, 1)$ to $(3, 4)$, the displacement is $(5, 3)$ and the work is $25 - 6 = 19$.\n\n> **Watch out.** Dot the field with the displacement $B - A$, not with the coordinates of $B$, and pair the first component of the field with the change in $x$.",
+    "常向量场是保守场，所以它的线积分只取决于路径的两端。积分值等于向量场与从起点到终点的位移的点积，不管路径中间怎样绕行。沿闭路径积分为零，反向则变号。对 $\\mathbf{F} = \\langle 5, -2 \\rangle$，从 $(-2, 1)$ 到 $(3, 4)$，位移是 $(5, 3)$，功为 $25 - 6 = 19$。\n\n> **注意。** 要用场点乘位移 $B - A$，而不是点乘 $B$ 的坐标；并且场的第一个分量与 $x$ 的变化量相乘。",
   ],
   (rng) => {
     const [p, q] = [rng.nonZero(-4, 4), rng.nonZero(-4, 4)];
@@ -1396,18 +1396,69 @@ const workInConstantField = point(
     const last = mid[1] as Point;
     const length = Math.hypot(B[0] - last[0], B[1] - last[1]) || 1;
     const tail: Point = [B[0] - (0.8 * (B[0] - last[0])) / length, B[1] - (0.8 * (B[1] - last[1])) / length];
-    return ask(
-      [
-        `The path $C$ runs from $A$ to $B$. What is $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for the constant field $\\mathbf{F} = \\langle ${p}, ${q} \\rangle$?`,
-        `路径 $C$ 从 $A$ 到 $B$。对常向量场 $\\mathbf{F} = \\langle ${p}, ${q} \\rangle$，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 是多少？`,
-      ],
-      answer,
-      [-answer, p * B[0] + q * B[1], p * dy + q * dx, dx + dy],
-      [
-        `The field is conservative, so only the ends matter. The displacement from $A$ to $B$ is $(${dx}, ${dy})$, and its dot product with the field is $(${p})(${dx}) + (${q})(${dy}) = ${answer}$.`,
-        `这个场是保守场，所以只有两端有关。从 $A$ 到 $B$ 的位移是 $(${dx}, ${dy})$，它与场的点积是 $(${p})(${dx}) + (${q})(${dy}) = ${answer}$。`,
-      ],
-      fig(
+    const corners: Point[] = [A, ...mid, B];
+    const legs = corners.slice(1).map((c, i) => {
+      const s = corners[i] as Point;
+      return p * (c[0] - s[0]) + q * (c[1] - s[1]);
+    });
+    const legSum = legs.map((v, i) => (i === 0 ? `${v}` : `+ ${paren(v)}`)).join(" ");
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The path $C$ runs from $A$ to $B$. What is $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for the constant field $\\mathbf{F} = \\langle ${p}, ${q} \\rangle$?`,
+          `路径 $C$ 从 $A$ 到 $B$。对常向量场 $\\mathbf{F} = \\langle ${p}, ${q} \\rangle$，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 是多少？`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            -answer,
+            "That uses the displacement from $B$ to $A$; the path runs from $A$ to $B$.",
+            "那是用了从 $B$ 到 $A$ 的位移；路径从 $A$ 到 $B$。",
+          ),
+          why(
+            p * B[0] + q * B[1],
+            "That dots the field with the coordinates of $B$; it must be dotted with the displacement $B - A$.",
+            "那是用场点乘 $B$ 的坐标；应当点乘位移 $B - A$。",
+          ),
+          why(
+            p * dy + q * dx,
+            "That pairs each component of the field with the wrong change; the first goes with the change in $x$.",
+            "那是把场的分量与错误的变化量配对；第一个分量对应 $x$ 的变化量。",
+          ),
+          why(
+            dx + dy,
+            "That adds the changes in $x$ and $y$ without multiplying by the components of the field.",
+            "那是把 $x$ 与 $y$ 的变化量相加，却没有乘以场的分量。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Use path independence", "利用路径无关性"],
+              t("A constant field is conservative, so only the two ends of $C$ matter.", "常向量场是保守场，所以只有 $C$ 的两端有关。"),
+            ],
+            [
+              ["Find the displacement", "求位移"],
+              t(
+                `$B - A = (${B[0]} - ${paren(A[0])}, ${B[1]} - ${paren(A[1])}) = (${dx}, ${dy})$.`,
+                `$B - A = (${B[0]} - ${paren(A[0])}, ${B[1]} - ${paren(A[1])}) = (${dx}, ${dy})$。`,
+              ),
+            ],
+            [
+              ["Take the dot product", "求点积"],
+              t(
+                `$${paren(p)} \\cdot ${paren(dx)} + ${paren(q)} \\cdot ${paren(dy)} = ${answer}$.`,
+                `$${paren(p)} \\cdot ${paren(dx)} + ${paren(q)} \\cdot ${paren(dy)} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Leg by leg along the drawn path, the three straight pieces give $${legSum} = ${answer}$, the same value.`,
+            `沿所画路径逐段计算，三条直线段给出 $${legSum} = ${answer}$，结果相同。`,
+          ),
+        ),
+      }),
+      figure: fig(
         square(5),
         [
           { kind: "path", points: [A, ...mid, B], accent: true },
@@ -1420,7 +1471,7 @@ const workInConstantField = point(
           `从位于 (${A[0]}, ${A[1]}) 的 A 到位于 (${B[0]}, ${B[1]}) 的 B 的折线路径。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -1429,8 +1480,8 @@ const greenArea = {
     "an-area-from-greens-theorem-and-a-drawing",
     ["An area from Green's theorem and a drawing", "由格林定理和图求面积"],
     [
-      "By Green's theorem, the integral $\\oint_C x\\,dy$ around a counterclockwise closed curve equals the area enclosed. So the line integral around a polygon can be found by computing the area from a drawing. When the curve runs clockwise the sign changes, so the arrows matter as much as the shape.",
-      "由格林定理，沿逆时针闭曲线的积分 $\\oint_C x\\,dy$ 等于所围面积。所以沿多边形的线积分可以由图算出面积得到。曲线顺时针走时符号改变，所以箭头和形状同样重要。",
+      "By Green's theorem, the integral $\\oint_C x\\,dy$ around a counterclockwise closed curve equals the area enclosed. So the line integral around a polygon can be found by computing the area from a drawing. When the curve runs clockwise the sign changes, so the arrows matter as much as the shape. For the triangle $(0, 0)$, $(4, 0)$, $(0, 3)$ traced clockwise, the area is $6$ and $\\oint_C x\\,dy = -6$.\n\n> **Watch out.** Read the arrows before the shape: a clockwise curve gives minus the area. And a right triangle with legs $w$ and $h$ has area $\\frac{wh}{2}$, half the rectangle.",
+      "由格林定理，沿逆时针闭曲线的积分 $\\oint_C x\\,dy$ 等于所围面积。所以沿多边形的线积分可以由图算出面积得到。曲线顺时针走时符号改变，所以箭头和形状同样重要。对按顺时针方向走的三角形 $(0, 0)$、$(4, 0)$、$(0, 3)$，面积为 $6$，$\\oint_C x\\,dy = -6$。\n\n> **注意。** 先看箭头再看形状：顺时针曲线给出面积的相反数。两直角边为 $w$ 和 $h$ 的直角三角形面积是 $\\frac{wh}{2}$，是矩形的一半。",
     ],
     (rng) => {
       const triangle = rng.bool();
@@ -1463,22 +1514,74 @@ const greenArea = {
         const [ux, uy] = [(q[0] - p[0]) / length, (q[1] - p[1]) / length];
         marks.push({ kind: "arrow", from: [mx - 0.4 * ux, my - 0.4 * uy], to: [mx + 0.4 * ux, my + 0.4 * uy], accent: true });
       });
-      return ask(
-        [
-          "The closed curve $C$ is traced along its arrows. What is $\\oint_C x\\,dy$?",
-          "闭曲线 $C$ 沿箭头方向走。$\\oint_C x\\,dy$ 是多少？",
-        ],
-        answer,
-        [answer.neg(), area.mul(Q.of(2)), Q.of(2 * (w + h))],
-        [
-          `The ${triangle ? "triangle" : "rectangle"} has sides $${w}$ and $${h}$, so it encloses area $${area.toLatex()}$. The curve runs ${ccw ? "counterclockwise, so the integral equals the area" : "clockwise, so the integral is minus the area"}, which is $${answer.toLatex()}$.`,
-          `这个${triangle ? "三角形" : "矩形"}的两边是 $${w}$ 和 $${h}$，所以面积是 $${area.toLatex()}$。曲线是${ccw ? "逆时针，所以积分等于面积" : "顺时针，所以积分等于面积的相反数"}，即 $${answer.toLatex()}$。`,
-        ],
-        fig(square(6), marks, [
+      const sign = ccw ? 1 : -1;
+      const far = triangle ? Q.of(h * (2 * x + w), 2) : Q.of((x + w) * h);
+      const near = Q.of(-x * h);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The closed curve $C$ is traced along its arrows. What is $\\oint_C x\\,dy$?",
+            "闭曲线 $C$ 沿箭头方向走。$\\oint_C x\\,dy$ 是多少？",
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              answer.neg(),
+              `That ignores the arrows; the curve runs ${ccw ? "counterclockwise, so the integral is the area itself" : "clockwise, so the integral is minus the area"}.`,
+              `那是忽略了箭头；曲线${ccw ? "逆时针走，积分就是面积本身" : "顺时针走，积分是面积的相反数"}。`,
+            ),
+            why(
+              area.mul(Q.of(2 * sign)),
+              "That doubles the area, as if $\\oint_C x\\,dy$ were $\\oint_C x\\,dy - y\\,dx$; the field $\\langle 0, x \\rangle$ has curl $1$.",
+              "那是把面积加倍了，好像 $\\oint_C x\\,dy$ 是 $\\oint_C x\\,dy - y\\,dx$；场 $\\langle 0, x \\rangle$ 的旋度是 $1$。",
+            ),
+            why(
+              Q.of(2 * (w + h) * sign),
+              "That uses the perimeter; the integral measures the enclosed area.",
+              "那是用了周长；这个积分度量的是所围面积。",
+            ),
+            ...(triangle
+              ? [
+                  why(
+                    Q.of(w * h * sign),
+                    "That uses the full rectangle $wh$; the right triangle has half of it.",
+                    "那是用了整个矩形 $wh$；直角三角形只有它的一半。",
+                  ),
+                ]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the area", "求面积"],
+                t(
+                  `The ${triangle ? "right triangle has legs" : "rectangle has sides"} $${w}$ and $${h}$, so its area is $${area.toLatex()}$.`,
+                  `这个${triangle ? "直角三角形的两直角边" : "矩形的两边"}为 $${w}$ 和 $${h}$，面积为 $${area.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Read the arrows", "看箭头"],
+                t(
+                  ccw
+                    ? `The curve runs counterclockwise, so $\\oint_C x\\,dy = ${answer.toLatex()}$.`
+                    : `The curve runs clockwise, so $\\oint_C x\\,dy = -${area.toLatex()} = ${answer.toLatex()}$.`,
+                  ccw
+                    ? `曲线逆时针走，所以 $\\oint_C x\\,dy = ${answer.toLatex()}$。`
+                    : `曲线顺时针走，所以 $\\oint_C x\\,dy = -${area.toLatex()} = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Edge by edge counterclockwise, ${triangle ? "the horizontal edge gives" : "the horizontal edges give"} $0$ because $dy = 0$, the ${triangle ? "slanted edge" : "right edge"} gives $${far.toLatex()}$ and the left edge, at $x = ${x}$ going down, gives $${near.toLatex()}$, adding to $${area.toLatex()}$${ccw ? "" : `; clockwise reverses it to $${answer.toLatex()}$`}.`,
+              `逆时针逐边计算，水平边因 $dy = 0$ 给出 $0$，${triangle ? "斜边" : "右边"}给出 $${far.toLatex()}$，左边在 $x = ${x}$ 处向下走，给出 $${near.toLatex()}$，合计 $${area.toLatex()}$${ccw ? "" : `；顺时针时变号为 $${answer.toLatex()}$`}。`,
+            ),
+          ),
+        }),
+        figure: fig(square(6), marks, [
           `A ${triangle ? "right triangle" : "rectangle"} with sides ${w} and ${h}, traced ${ccw ? "counterclockwise" : "clockwise"}.`,
           `两边为 ${w} 和 ${h} 的${triangle ? "直角三角形" : "矩形"}，按${ccw ? "逆时针" : "顺时针"}方向走。`,
         ]),
-      );
+      };
     },
   ),
   figure: multivariableDrawings6["calculating-areas-using-greens-theorem#an-area-from-greens-theorem-and-a-drawing"],
