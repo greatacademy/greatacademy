@@ -3,7 +3,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { type Coefficient, poly, Q } from "@ga/subject-math";
 import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-1.ts";
 import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
@@ -4755,12 +4755,18 @@ const gatesSavedByFactoring: KnowledgePointDef = {
   },
 };
 
+/** unlike keeps the mistakes that differ from the answer and from each other. */
+const unlike = <T extends { readonly value: Coefficient }>(answer: Coefficient, list: readonly T[]) => {
+  const asQ = (v: Coefficient) => (typeof v === "number" ? Q.of(v) : v);
+  return list.filter((m, i) => !asQ(m.value).eq(asQ(answer)) && list.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
+};
+
 const remainderOfARandomVariable: KnowledgePointDef = {
   id: "probabilities-of-a-remainder",
   title: t("Probabilities of a remainder", "余数的概率"),
   explanation: t(
-    "Taking a remainder is a many-to-one transformation with a pattern: all values of the variable in the same residue class map to the same result. To find the probability of a given remainder, identify every listed value in that class and add their probabilities. Values that are far apart can still land on the same result.",
-    "取余数是一种有规律的多对一变换：属于同一剩余类的变量值都映到同一个结果。要求某个余数的概率，就找出表中属于这一类的所有值，把它们的概率相加。相距很远的值也可能得到同一个结果。",
+    "Taking a remainder is a many-to-one transformation with a pattern: all values of the variable in the same residue class map to the same result. To find the probability of a given remainder, identify every listed value in that class and add their probabilities. Values that are far apart can still land on the same result.\n\n> **Watch out.** Check every listed value, not just the first one you find. On division by $3$ the values $1$, $4$, $7$ and $10$ all leave remainder $1$, so if all four are listed, all four probabilities go into $P(Y = 1)$.",
+    "取余数是一种有规律的多对一变换：属于同一剩余类的变量值都映到同一个结果。要求某个余数的概率，就找出表中属于这一类的所有值，把它们的概率相加。相距很远的值也可能得到同一个结果。\n\n> **注意。** 要检查表中的每一个值，而不只是先找到的那一个。除以 $3$ 时，$1$、$4$、$7$、$10$ 的余数都是 $1$，所以如果这四个值都在表中，四个概率都要计入 $P(Y = 1)$。",
   ),
   generate(rng) {
     for (;;) {
@@ -4782,6 +4788,8 @@ const remainderOfARandomVariable: KnowledgePointDef = {
       const table = `| $x$ | ${head} |\n| :---: | ${xs.map(() => ":---:").join(" | ")} |\n| $P(X = x)$ | ${body} |`;
       const values = members.map(([x]) => x).join(", ");
       const adds = members.map(([, p]) => dec1(p)).join(" + ");
+      const divisions = members.map(([x]) => `${x} = ${m} \\cdot ${Math.floor(x / m)}${r === 0 ? "" : ` + ${r}`}`).join(", \\quad ");
+      const listed = xs.indexOf(r);
       return numberProblem({
         prompt: t(
           `The random variable $X$ has the distribution below.\n\n${table}\n\nLet $Y$ be the remainder when $X$ is divided by $${m}$. Find $P(Y = ${r})$.`,
@@ -4789,16 +4797,57 @@ const remainderOfARandomVariable: KnowledgePointDef = {
         ),
         answer,
         form: "decimal",
-        wrong: [
-          Q.of((members[0] as readonly [number, number])[1], 10),
-          Q.of(10 - total, 10),
-          Q.of(1, m),
-          Q.of(total + 1, 10),
-          Q.of(total - 1, 10),
-        ],
-        solution: t(
-          `The listed values that leave remainder $${r}$ on division by $${m}$ are $${values}$. Their probabilities add up: $${adds} = ${dec1(total)}$.`,
-          `表中除以 $${m}$ 余 $${r}$ 的值是 $${values}$。把它们的概率相加：$${adds} = ${dec1(total)}$。`,
+        mistakes: unlike(answer, [
+          why(
+            Q.of((members[0] as readonly [number, number])[1], 10),
+            `That counts only $X = ${(members[0] as readonly [number, number])[0]}$; every listed value with remainder $${r}$ counts.`,
+            `那只算了 $X = ${(members[0] as readonly [number, number])[0]}$；表中余数为 $${r}$ 的每个值都要算。`,
+          ),
+          why(
+            Q.of((members.at(-1) as readonly [number, number])[1], 10),
+            `That counts only $X = ${(members.at(-1) as readonly [number, number])[0]}$; the smaller values in the class count too.`,
+            `那只算了 $X = ${(members.at(-1) as readonly [number, number])[0]}$；这一类中较小的值也要算。`,
+          ),
+          why(
+            Q.of(10 - total, 10),
+            `That is the probability of the other remainders, $P(Y \\ne ${r})$.`,
+            `那是其他余数的概率，即 $P(Y \\ne ${r})$。`,
+          ),
+          why(
+            Q.of(1, m),
+            "That treats the remainders as equally likely; the distribution of $X$ decides their probabilities.",
+            "那是把各余数当作等可能；它们的概率由 $X$ 的分布决定。",
+          ),
+          ...(listed >= 0
+            ? [
+                why(
+                  Q.of(tenths[listed] as number, 10),
+                  `That is $P(X = ${r})$; $Y = ${r}$ also happens for the other values in the class.`,
+                  `那是 $P(X = ${r})$；同一类中的其他值也使 $Y = ${r}$。`,
+                ),
+              ]
+            : []),
+        ]),
+        wrong: [Q.of(total + 1, 10), Q.of(total - 1, 10)],
+        solution: walked(
+          [
+            [
+              ["Find the class", "找出这一类"],
+              t(
+                `The listed values that leave remainder $${r}$ on division by $${m}$ are $${values}$.`,
+                `表中除以 $${m}$ 余 $${r}$ 的值是 $${values}$。`,
+              ),
+              [divisions],
+            ],
+            [
+              ["Add their probabilities", "把概率相加"],
+              t(`$P(Y = ${r}) = ${adds} = ${dec1(total)}$.`, `$P(Y = ${r}) = ${adds} = ${dec1(total)}$。`),
+            ],
+          ],
+          t(
+            `The other listed values carry $${dec1(10 - total)}$, and $${dec1(total)} + ${dec1(10 - total)} = 1$, so no value was counted twice or missed.`,
+            `表中其余的值共占 $${dec1(10 - total)}$，而 $${dec1(total)} + ${dec1(10 - total)} = 1$，所以没有重复或遗漏。`,
+          ),
         ),
       });
     }
@@ -4809,8 +4858,8 @@ const matchingNeighbours: KnowledgePointDef = {
   id: "the-expected-number-of-matching-neighbours",
   title: t("The expected number of matching neighbours", "相邻相同的期望对数"),
   explanation: t(
-    "Linearity of expectation handles counts that have no convenient distribution. Write the count as a sum of indicators, one for each place where the event could occur, and add their expected values. Each indicator's expectation is simply the probability of its event, and the addition is valid whether or not the indicators are independent.",
-    "期望的线性性可以处理那些没有方便分布的计数。把计数写成示性变量的和，事件可能发生的每个位置对应一个，再把它们的期望相加。每个示性变量的期望就是对应事件的概率，无论这些变量是否独立，相加都成立。",
+    "Linearity of expectation handles counts that have no convenient distribution. Write the count as a sum of indicators, one for each place where the event could occur, and add their expected values. Each indicator's expectation is simply the probability of its event, and the addition is valid whether or not the indicators are independent.\n\n> **Watch out.** Count the places carefully. A row of $5$ dice has only $4$ neighbouring pairs, so with $6$ faces the expected number of matches is $\\frac{4}{6} = \\frac{2}{3}$, not $\\frac{5}{6}$.",
+    "期望的线性性可以处理那些没有方便分布的计数。把计数写成示性变量的和，事件可能发生的每个位置对应一个，再把它们的期望相加。每个示性变量的期望就是对应事件的概率，无论这些变量是否独立，相加都成立。\n\n> **注意。** 位置要数准。一排 $5$ 枚骰子只有 $4$ 对相邻的骰子，所以骰子有 $6$ 个面时，匹配对数的期望是 $\\frac{4}{6} = \\frac{2}{3}$，而不是 $\\frac{5}{6}$。",
   ),
   generate(rng) {
     const s = rng.pick([4, 6, 8, 10, 12]);
@@ -4822,10 +4871,52 @@ const matchingNeighbours: KnowledgePointDef = {
         `掷一排 ${n} 枚公平的骰子，每枚有 ${s} 个面。相邻两枚骰子点数相同时，称这一对匹配。求匹配的相邻对数的期望。`,
       ),
       answer,
-      wrong: [Q.of(n, s), Q.of(n - 1, s * s), Q.of(n - 2, s), Q.of(1, s), Q.of(n - 1, s - 1)],
-      solution: t(
-        `There are ${n - 1} neighbouring pairs, and whatever the first die of a pair shows, the second matches it with probability $\\frac{1}{${s}}$. Adding one indicator for each pair gives $\\frac{${n - 1}}{${s}}${gcd(n - 1, s) === 1 ? "" : ` = ${answer.toLatex()}`}$.`,
-        `相邻的对共有 ${n - 1} 个，无论一对中第一枚显示什么，第二枚与它相同的概率都是 $\\frac{1}{${s}}$。对每一对加一个示性变量，得到 $\\frac{${n - 1}}{${s}}${gcd(n - 1, s) === 1 ? "" : ` = ${answer.toLatex()}`}$。`,
+      mistakes: unlike(answer, [
+        why(
+          Q.of(n, s),
+          `That counts ${n} pairs; a row of ${n} dice has only ${n - 1} neighbouring pairs.`,
+          `那是数成了 ${n} 对；一排 ${n} 枚骰子只有 ${n - 1} 对相邻。`,
+        ),
+        why(
+          Q.of(n - 1, s * s),
+          `That uses $\\frac{1}{${s * s}}$, the chance that a pair shows one particular number; a pair can match on any of the ${s} numbers.`,
+          `那用的是 $\\frac{1}{${s * s}}$，即一对都显示某个特定点数的概率；一对可以在 ${s} 个点数中任一个上相同。`,
+        ),
+        why(
+          Q.of(1, s),
+          "That is the expectation for a single pair; add one indicator for every pair.",
+          "那只是一对的期望；每一对都要加一个示性变量。",
+        ),
+      ]),
+      wrong: [Q.of(n - 2, s), Q.of(n - 1, s - 1)],
+      solution: walked(
+        [
+          [
+            ["Write the count as indicators", "把计数写成示性变量"],
+            t(
+              `Let $I_j = 1$ when dice $j$ and $j + 1$ match, for $j = 1, \\ldots, ${n - 1}$. The number of matching pairs is $I_1 + \\cdots + I_{${n - 1}}$.`,
+              `当第 $j$ 枚与第 $j + 1$ 枚骰子相同时令 $I_j = 1$，$j = 1, \\ldots, ${n - 1}$。匹配的对数是 $I_1 + \\cdots + I_{${n - 1}}$。`,
+            ),
+          ],
+          [
+            ["Find each expectation", "求每个期望"],
+            t(
+              `Whatever the first die of a pair shows, the second matches it with probability $\\frac{1}{${s}}$, so $E(I_j) = \\frac{1}{${s}}$.`,
+              `无论一对中第一枚显示什么，第二枚与它相同的概率都是 $\\frac{1}{${s}}$，所以 $E(I_j) = \\frac{1}{${s}}$。`,
+            ),
+          ],
+          [
+            ["Add", "相加"],
+            t(
+              `$${n - 1} \\cdot \\frac{1}{${s}} = \\frac{${n - 1}}{${s}}${gcd(n - 1, s) === 1 ? "" : ` = ${answer.toLatex()}`}$.`,
+              `$${n - 1} \\cdot \\frac{1}{${s}} = \\frac{${n - 1}}{${s}}${gcd(n - 1, s) === 1 ? "" : ` = ${answer.toLatex()}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Neighbouring pairs share a die, so the indicators are not independent, but linearity does not need independence. With just $2$ dice the same reasoning gives one pair and $\\frac{1}{${s}}$, the direct chance of a match.`,
+          `相邻的对共用一枚骰子，所以这些示性变量并不独立，但线性性不需要独立。只有 $2$ 枚骰子时，同样的推理给出一对和 $\\frac{1}{${s}}$，正是直接算出的相同概率。`,
+        ),
       ),
     });
   },
@@ -4835,14 +4926,15 @@ const thirdCentralMoment: KnowledgePointDef = {
   id: "the-third-central-moment-from-raw-moments",
   title: t("The third central moment from raw moments", "由原点矩求三阶中心矩"),
   explanation: t(
-    "The central moments measure spread and asymmetry around the mean, and they can be recovered from the raw moments without knowing the distribution. Expand the power of the difference with the binomial theorem and take expectations term by term, treating the mean as a constant. The sign of the third central moment then shows the skew.",
-    "中心矩度量围绕均值的离散和不对称程度，不必知道分布，也能由原点矩求出。用二项式定理展开差的幂，再逐项取期望，把均值当作常数。三阶中心矩的符号就显示了偏斜的方向。",
+    "The central moments measure spread and asymmetry around the mean, and they can be recovered from the raw moments without knowing the distribution. Expand the power of the difference with the binomial theorem and take expectations term by term, treating the mean as a constant. The sign of the third central moment then shows the skew.\n\n> **Watch out.** The term $3\\mu^2 E(X)$ is $3\\mu^3$, and with the last term $-\\mu^3$ it leaves $+2\\mu^3$. With $E(X) = 1$, $E(X^2) = 3$ and $E(X^3) = 10$ the answer is $10 - 9 + 2 = 3$, not $10 - 9 - 1 = 0$.",
+    "中心矩度量围绕均值的离散和不对称程度，不必知道分布，也能由原点矩求出。用二项式定理展开差的幂，再逐项取期望，把均值当作常数。三阶中心矩的符号就显示了偏斜的方向。\n\n> **注意。** 项 $3\\mu^2 E(X)$ 等于 $3\\mu^3$，与最后一项 $-\\mu^3$ 合起来是 $+2\\mu^3$。当 $E(X) = 1$、$E(X^2) = 3$、$E(X^3) = 10$ 时，答案是 $10 - 9 + 2 = 3$，而不是 $10 - 9 - 1 = 0$。",
   ),
   generate(rng) {
     const m = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
     const s = m * m + rng.int(1, 12);
     const third = rng.int(1, 60);
     const answer = third - 3 * m * s + 2 * m ** 3;
+    const variance = s - m * m;
     return numberProblem({
       prompt: t(
         `$E(X) = ${m}$, $E(X^2) = ${s}$ and $E(X^3) = ${third}$. Find $E\\big((X - E(X))^3\\big)$.`,
@@ -4850,16 +4942,42 @@ const thirdCentralMoment: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [
-        third - m ** 3,
-        third - 3 * m * s,
-        third - 3 * m * s - 2 * m ** 3,
-        third - 3 * m * s + m ** 3,
-        third + 3 * m * s + 2 * m ** 3,
-      ],
-      solution: t(
-        `Write $\\mu$ for the mean and expand: $E\\big((X - \\mu)^3\\big) = E(X^3) - 3\\mu E(X^2) + 3\\mu^2 E(X) - \\mu^3 = E(X^3) - 3\\mu E(X^2) + 2\\mu^3$. This is $${third} - 3 \\cdot ${inParens(m)} \\cdot ${s} + 2 \\cdot ${inParens(m ** 3)} = ${answer}$.`,
-        `记均值为 $\\mu$ 并展开：$E\\big((X - \\mu)^3\\big) = E(X^3) - 3\\mu E(X^2) + 3\\mu^2 E(X) - \\mu^3 = E(X^3) - 3\\mu E(X^2) + 2\\mu^3$。代入得 $${third} - 3 \\cdot ${inParens(m)} \\cdot ${s} + 2 \\cdot ${inParens(m ** 3)} = ${answer}$。`,
+      mistakes: unlike(answer, [
+        why(
+          third - m ** 3,
+          "That is $E(X^3) - \\mu^3$, which leaves out the cross terms of the expansion.",
+          "那是 $E(X^3) - \\mu^3$，漏掉了展开式中的交叉项。",
+        ),
+        why(third - 3 * m * s, "That drops the $2\\mu^3$ term.", "那是漏掉了 $2\\mu^3$ 这一项。"),
+        why(
+          third - 3 * m * s - 2 * m ** 3,
+          "That gives $2\\mu^3$ the wrong sign; $3\\mu^3 - \\mu^3 = +2\\mu^3$.",
+          "那是把 $2\\mu^3$ 的符号弄错了；$3\\mu^3 - \\mu^3 = +2\\mu^3$。",
+        ),
+      ]),
+      wrong: [third - 3 * m * s + m ** 3, third + 3 * m * s + 2 * m ** 3],
+      solution: walked(
+        [
+          [
+            ["Expand", "展开"],
+            t(
+              "Write $\\mu$ for the mean and take expectations term by term, with $\\mu$ a constant.",
+              "记均值为 $\\mu$，把 $\\mu$ 当作常数逐项取期望。",
+            ),
+            ["E\\big((X - \\mu)^3\\big) = E(X^3) - 3\\mu E(X^2) + 3\\mu^2 E(X) - \\mu^3 = E(X^3) - 3\\mu E(X^2) + 2\\mu^3"],
+          ],
+          [
+            ["Substitute", "代入"],
+            t(
+              `$${third} - 3 \\cdot ${inParens(m)} \\cdot ${s} + 2 \\cdot ${inParens(m ** 3)} = ${answer}$.`,
+              `$${third} - 3 \\cdot ${inParens(m)} \\cdot ${s} + 2 \\cdot ${inParens(m ** 3)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `In terms of the variance $\\sigma^2 = ${s} - ${inParens(m * m)} = ${variance}$ the same moment is $E(X^3) - 3\\mu\\sigma^2 - \\mu^3 = ${third} - 3 \\cdot ${inParens(m)} \\cdot ${variance} - ${inParens(m ** 3)} = ${answer}$.`,
+          `用方差 $\\sigma^2 = ${s} - ${inParens(m * m)} = ${variance}$ 表示，同一个矩是 $E(X^3) - 3\\mu\\sigma^2 - \\mu^3 = ${third} - 3 \\cdot ${inParens(m)} \\cdot ${variance} - ${inParens(m ** 3)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -4869,13 +4987,14 @@ const largestOfTwoDraws: KnowledgePointDef = {
   id: "the-distribution-of-the-larger-of-two-draws",
   title: t("The distribution of the larger of two draws", "两次抽取中较大值的分布"),
   explanation: t(
-    "The larger of two uniform draws is not uniform, because large values have more ways to be the maximum. The easy route is through the cumulative probability: the larger value is at most some number exactly when both draws are. Subtracting consecutive cumulative probabilities then gives the probability of each individual value.",
-    "两次均匀抽取中的较大值不再服从均匀分布，因为较大的值有更多方式成为最大值。简便的做法是通过累积概率：较大值不超过某个数，当且仅当两次抽取都不超过它。把相邻的累积概率相减，就得到每个值的概率。",
+    "The larger of two uniform draws is not uniform, because large values have more ways to be the maximum. The easy route is through the cumulative probability: the larger value is at most some number exactly when both draws are. Subtracting consecutive cumulative probabilities then gives the probability of each individual value.\n\n> **Watch out.** Both draws at most $k$ is the event $L \\le k$, not $L = k$; subtract the outcomes where both are at most $k - 1$. With tickets $1$ to $6$, $P(L = 3) = \\frac{9 - 4}{36} = \\frac{5}{36}$, not $\\frac{9}{36}$.",
+    "两次均匀抽取中的较大值不再服从均匀分布，因为较大的值有更多方式成为最大值。简便的做法是通过累积概率：较大值不超过某个数，当且仅当两次抽取都不超过它。把相邻的累积概率相减，就得到每个值的概率。\n\n> **注意。** 两次都不超过 $k$ 是事件 $L \\le k$，而不是 $L = k$；还要减去两次都不超过 $k - 1$ 的结果。奖券编号为 $1$ 到 $6$ 时，$P(L = 3) = \\frac{9 - 4}{36} = \\frac{5}{36}$，而不是 $\\frac{9}{36}$。",
   ),
   generate(rng) {
     const n = rng.int(6, 20);
-    const k = rng.int(2, n);
+    const k = rng.int(3, n);
     const answer = Q.of(2 * k - 1, n * n);
+    const raw = `\\frac{${2 * k - 1}}{${n * n}}${gcd(2 * k - 1, n * n) === 1 ? "" : ` = ${answer.toLatex()}`}`;
     return numberProblem({
       prompt: t(
         `A ticket is drawn at random from tickets numbered $1$ to $${n}$, returned, and a second ticket is drawn. $L$ is the larger of the two numbers (or their common value if they are equal). Find $P(L = ${k})$.`,
@@ -4883,10 +5002,46 @@ const largestOfTwoDraws: KnowledgePointDef = {
       ),
       answer,
       form: "fraction",
-      wrong: [Q.of(k * k, n * n), Q.of(2 * k, n * n), Q.of(2 * k - 2, n * n), Q.of(1, n), Q.of(k, n)],
-      solution: t(
-        `$L \\le ${k}$ requires both draws to be at most $${k}$, which is ${k * k} of the ${n * n} equally likely outcomes, and $L \\le ${k - 1}$ is ${(k - 1) ** 2} of them. So $L = ${k}$ on $${k * k} - ${(k - 1) ** 2} = ${2 * k - 1}$ outcomes, and the probability is $${answer.toLatex()}$.`,
-        `$L \\le ${k}$ 要求两次都不超过 $${k}$，这是 ${n * n} 种等可能结果中的 ${k * k} 种；$L \\le ${k - 1}$ 是其中的 ${(k - 1) ** 2} 种。所以 $L = ${k}$ 有 $${k * k} - ${(k - 1) ** 2} = ${2 * k - 1}$ 种结果，概率是 $${answer.toLatex()}$。`,
+      mistakes: unlike(answer, [
+        why(
+          Q.of(k * k, n * n),
+          `That is $P(L \\le ${k})$; the outcomes with both draws at most $${k - 1}$ must be taken away.`,
+          `那是 $P(L \\le ${k})$；还要去掉两次都不超过 $${k - 1}$ 的结果。`,
+        ),
+        why(Q.of(2 * k, n * n), `That counts the outcome $(${k}, ${k})$ twice.`, `那是把结果 $(${k}, ${k})$ 算了两次。`),
+        why(
+          Q.of(2 * k - 2, n * n),
+          `That leaves out the outcome $(${k}, ${k})$, where both draws equal $${k}$.`,
+          `那是漏掉了两次都等于 $${k}$ 的结果 $(${k}, ${k})$。`,
+        ),
+        why(
+          Q.of(1, n),
+          "That treats the larger value as uniform; large values have more ways to be the maximum.",
+          "那是把较大值当作均匀分布；大的值有更多方式成为最大值。",
+        ),
+      ]),
+      wrong: [Q.of(k, n)],
+      solution: walked(
+        [
+          [
+            ["Use the cumulative probability", "用累积概率"],
+            t(
+              `$L \\le ${k}$ exactly when both draws are at most $${k}$: ${k * k} of the ${n * n} equally likely outcomes. Likewise $L \\le ${k - 1}$ on ${(k - 1) ** 2} of them.`,
+              `$L \\le ${k}$ 当且仅当两次都不超过 $${k}$：${n * n} 种等可能结果中的 ${k * k} 种。同样，$L \\le ${k - 1}$ 有其中的 ${(k - 1) ** 2} 种。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(
+              `$P(L = ${k}) = \\frac{${k * k} - ${(k - 1) ** 2}}{${n * n}} = ${raw}$.`,
+              `$P(L = ${k}) = \\frac{${k * k} - ${(k - 1) ** 2}}{${n * n}} = ${raw}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Count directly: $L = ${k}$ for the ${k - 1} outcomes $(${k}, j)$ with $j < ${k}$, the ${k - 1} outcomes $(j, ${k})$, and $(${k}, ${k})$, which makes $2 \\cdot ${k - 1} + 1 = ${2 * k - 1}$.`,
+          `直接数：$L = ${k}$ 的结果有 $j < ${k}$ 的 ${k - 1} 个 $(${k}, j)$、${k - 1} 个 $(j, ${k})$，以及 $(${k}, ${k})$，共 $2 \\cdot ${k - 1} + 1 = ${2 * k - 1}$ 个。`,
+        ),
       ),
     });
   },
@@ -4896,8 +5051,8 @@ const negativeBinomialThroughBinomial: KnowledgePointDef = {
   id: "negative-binomial-tail-through-the-binomial",
   title: t("A negative binomial tail through the binomial", "用二项分布求负二项分布的累积概率"),
   explanation: t(
-    "A question about waiting for successes can be turned into a question about counting them. Needing no more than a given number of trials to reach a target number of successes means exactly that those trials contain at least the target. So a cumulative negative binomial probability equals a binomial tail, which often has fewer terms to add.",
-    "关于等待成功的问题可以转化成关于计数成功的问题。达到目标成功次数所需的试验不超过某个数，恰好意味着这些试验中至少有目标次数的成功。所以负二项分布的累积概率等于二项分布的尾概率，要加的项往往更少。",
+    "A question about waiting for successes can be turned into a question about counting them. Needing no more than a given number of trials to reach a target number of successes means exactly that those trials contain at least the target. So a cumulative negative binomial probability equals a binomial tail, which often has fewer terms to add.\n\n> **Watch out.** The binomial tail is at least the target, not exactly the target. With success probability $\\frac{1}{2}$, needing at most $3$ trials for $2$ successes means at least $2$ successes in $3$ trials: $\\frac{3}{8} + \\frac{1}{8} = \\frac{1}{2}$, not $\\frac{3}{8}$.",
+    "关于等待成功的问题可以转化成关于计数成功的问题。达到目标成功次数所需的试验不超过某个数，恰好意味着这些试验中至少有目标次数的成功。所以负二项分布的累积概率等于二项分布的尾概率，要加的项往往更少。\n\n> **注意。** 二项分布的尾概率是至少达到目标次数，而不是恰好达到。成功概率为 $\\frac{1}{2}$ 时，至多 $3$ 次试验取得 $2$ 次成功，就是 $3$ 次试验中至少 $2$ 次成功：$\\frac{3}{8} + \\frac{1}{8} = \\frac{1}{2}$，而不是 $\\frac{3}{8}$。",
   ),
   generate(rng) {
     const [pn, pd] = rng.pick([
@@ -4916,9 +5071,16 @@ const negativeBinomialThroughBinomial: KnowledgePointDef = {
         .mul(p.pow(j))
         .mul(q.pow(k - j));
     const answer = range(r, k).reduce((s, j) => s.add(binomialTerm(j)), Q.of(0));
-    const exactly = Q.of(binom(k - 1, r - 1))
-      .mul(p.pow(r))
-      .mul(q.pow(k - r));
+    const waitingTerm = (x: number) =>
+      Q.of(binom(x - 1, r - 1))
+        .mul(p.pow(r))
+        .mul(q.pow(x - r));
+    const exactly = waitingTerm(k);
+    const terms = range(r, k);
+    const termTex = (j: number) => `\\binom{${k}}{${j}}${bracketPow(p, j)}${k === j ? "" : bracketPow(q, k - j)}`;
+    const binomialSum = terms.map(termTex).join(" + ");
+    const binomialValues = terms.map((j) => binomialTerm(j).toLatex()).join(" + ");
+    const waitingValues = terms.map((x) => waitingTerm(x).toLatex()).join(" + ");
     return numberProblem({
       prompt: t(
         `Independent trials each succeed with probability $${p.toLatex()}$. $X$ is the number of trials needed for $${r}$ successes. Find $P(X \\le ${k})$.`,
@@ -4926,10 +5088,46 @@ const negativeBinomialThroughBinomial: KnowledgePointDef = {
       ),
       answer,
       form: "fraction",
-      wrong: [exactly, binomialTerm(r), Q.of(1).sub(answer), answer.sub(exactly), binomialTerm(k)],
-      solution: t(
-        `$X \\le ${k}$ means that the first ${k} trials contain at least ${r} successes. So $P(X \\le ${k}) = \\sum_{j=${r}}^{${k}} \\binom{${k}}{j} \\left(${p.toLatex()}\\right)^{j} \\left(${q.toLatex()}\\right)^{${k} - j} = ${answer.toLatex()}$.`,
-        `$X \\le ${k}$ 表示前 ${k} 次试验中至少有 ${r} 次成功。所以 $P(X \\le ${k}) = \\sum_{j=${r}}^{${k}} \\binom{${k}}{j} \\left(${p.toLatex()}\\right)^{j} \\left(${q.toLatex()}\\right)^{${k} - j} = ${answer.toLatex()}$。`,
+      mistakes: unlike(answer, [
+        why(
+          exactly,
+          `That is $P(X = ${k})$ alone; $X \\le ${k}$ also includes reaching ${r} successes sooner.`,
+          `那只是 $P(X = ${k})$；$X \\le ${k}$ 还包括更早取得 ${r} 次成功。`,
+        ),
+        why(
+          binomialTerm(r),
+          `That is exactly ${r} successes in ${k} trials; more than ${r} successes also means $X \\le ${k}$.`,
+          `那是 ${k} 次试验中恰好 ${r} 次成功；多于 ${r} 次成功也意味着 $X \\le ${k}$。`,
+        ),
+        why(Q.of(1).sub(answer), `That is $P(X > ${k})$, the complement.`, `那是对立事件的概率 $P(X > ${k})$。`),
+        why(
+          answer.sub(exactly),
+          `That is $P(X \\le ${k - 1})$; the case $X = ${k}$ belongs to the event too.`,
+          `那是 $P(X \\le ${k - 1})$；$X = ${k}$ 的情形也属于这个事件。`,
+        ),
+      ]),
+      wrong: [binomialTerm(k)],
+      solution: walked(
+        [
+          [
+            ["Turn waiting into counting", "把等待转化为计数"],
+            t(
+              `$X \\le ${k}$ means that the first ${k} trials contain at least ${r} successes, so $P(X \\le ${k}) = P(B \\ge ${r})$ for $B \\sim \\mathrm{Bin}(${k}, ${p.toLatex()})$.`,
+              `$X \\le ${k}$ 表示前 ${k} 次试验中至少有 ${r} 次成功，所以 $P(X \\le ${k}) = P(B \\ge ${r})$，其中 $B \\sim \\mathrm{Bin}(${k}, ${p.toLatex()})$。`,
+            ),
+          ],
+          [
+            ["Add the binomial terms", "把二项概率相加"],
+            t(
+              `$P(B \\ge ${r}) = ${binomialSum} = ${binomialValues} = ${answer.toLatex()}$.`,
+              `$P(B \\ge ${r}) = ${binomialSum} = ${binomialValues} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Adding the negative binomial probabilities $P(X = x) = \\binom{x - 1}{${r - 1}}${bracketPow(p, r)}${bracketPow(q, 1)}^{x - ${r}}$ for $x = ${terms.join(", ")}$ gives the same total: $${waitingValues} = ${answer.toLatex()}$.`,
+          `把负二项概率 $P(X = x) = \\binom{x - 1}{${r - 1}}${bracketPow(p, r)}${bracketPow(q, 1)}^{x - ${r}}$ 对 $x = ${terms.join(", ")}$ 相加，得到同样的结果：$${waitingValues} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -4939,8 +5137,8 @@ const lengthOfASeries: KnowledgePointDef = {
   id: "the-length-of-a-first-to-win-series",
   title: t("The length of a first-to-win series", "先胜赛制的比赛场数"),
   explanation: t(
-    "A contest played until one side reaches a set number of wins can end with either side winning, so its length combines two negative binomial probabilities. For one side to win in a particular game, it must win that game and exactly one fewer than the target among the games before it. Add the cases for the two sides.",
-    "一直比到一方达到规定胜场数的比赛，可能由任一方结束，所以场数的概率由两个负二项概率组成。一方要在某一场取胜结束，必须赢下这一场，并在之前的比赛中恰好赢目标数减一场。再把双方的情形相加。",
+    "A contest played until one side reaches a set number of wins can end with either side winning, so its length combines two negative binomial probabilities. For one side to win in a particular game, it must win that game and exactly one fewer than the target among the games before it. Add the cases for the two sides.\n\n> **Watch out.** The winner always takes the last game, so only the earlier games are arranged. In a first-to-$3$ series that lasts $4$ games the winner's other $2$ wins fall among the first $3$ games in $\\binom{3}{2} = 3$ ways, not $\\binom{4}{3} = 4$.",
+    "一直比到一方达到规定胜场数的比赛，可能由任一方结束，所以场数的概率由两个负二项概率组成。一方要在某一场取胜结束，必须赢下这一场，并在之前的比赛中恰好赢目标数减一场。再把双方的情形相加。\n\n> **注意。** 最后一场总是由获胜方赢下，所以只排列之前的比赛。先胜 $3$ 场、共打 $4$ 场的比赛中，获胜方的另外 $2$ 场胜利落在前 $3$ 场里，有 $\\binom{3}{2} = 3$ 种方式，而不是 $\\binom{4}{3} = 4$ 种。",
   ),
   generate(rng) {
     const p = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(2, 3), Q.of(1, 4), Q.of(3, 4), Q.of(2, 5), Q.of(3, 5)]);
@@ -4962,25 +5160,70 @@ const lengthOfASeries: KnowledgePointDef = {
       ),
       answer,
       form: "fraction",
-      wrong: [
-        a,
-        b,
-        Q.of(binom(g, w))
-          .mul(p.pow(w))
-          .mul(q.pow(g - w))
-          .add(
-            Q.of(binom(g, w))
-              .mul(q.pow(w))
-              .mul(p.pow(g - w)),
-          ),
-        p
-          .pow(w)
-          .mul(q.pow(g - w))
-          .add(q.pow(w).mul(p.pow(g - w))),
-      ],
-      solution: t(
-        `For a team to finish in game ${g}, it wins that game and ${w - 1} of the ${g - 1} before it, in $\\binom{${g - 1}}{${w - 1}} = ${ways}$ ways. Either team can do this, so the probability is $${ways}\\left[${bracketPow(p, w)}${bracketPow(q, g - w)} + ${bracketPow(q, w)}${bracketPow(p, g - w)}\\right] = ${answer.toLatex()}$.`,
-        `一队要在第 ${g} 场结束比赛，就要赢下这一场和之前 ${g - 1} 场中的 ${w - 1} 场，有 $\\binom{${g - 1}}{${w - 1}} = ${ways}$ 种方式。两队都可能如此，所以概率是 $${ways}\\left[${bracketPow(p, w)}${bracketPow(q, g - w)} + ${bracketPow(q, w)}${bracketPow(p, g - w)}\\right] = ${answer.toLatex()}$。`,
+      mistakes: unlike(answer, [
+        why(
+          a,
+          "That counts only the series that team A wins; team B can also finish in this game.",
+          "那只算了 A 队获胜的情形；B 队也可能在这一场结束比赛。",
+        ),
+        why(
+          b,
+          "That counts only the series that team B wins; team A can also finish in this game.",
+          "那只算了 B 队获胜的情形；A 队也可能在这一场结束比赛。",
+        ),
+        why(
+          Q.of(binom(g, w))
+            .mul(p.pow(w))
+            .mul(q.pow(g - w))
+            .add(
+              Q.of(binom(g, w))
+                .mul(q.pow(w))
+                .mul(p.pow(g - w)),
+            ),
+          `That uses $\\binom{${g}}{${w}}$; the winner must take game ${g}, so only the first ${g - 1} games are arranged.`,
+          `那用的是 $\\binom{${g}}{${w}}$；获胜方必须赢下第 ${g} 场，所以只排列前 ${g - 1} 场。`,
+        ),
+        why(
+          p
+            .pow(w)
+            .mul(q.pow(g - w))
+            .add(q.pow(w).mul(p.pow(g - w))),
+          `That leaves out the factor $${ways}$ for the orders of the earlier games.`,
+          `那是漏掉了前面比赛的排列数 $${ways}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the orders", "数排列方式"],
+            t(
+              `To finish in game ${g}, a team wins that game and ${w - 1} of the ${g - 1} before it, in $\\binom{${g - 1}}{${w - 1}} = ${ways}$ ways.`,
+              `要在第 ${g} 场结束比赛，一队要赢下这一场和之前 ${g - 1} 场中的 ${w - 1} 场，有 $\\binom{${g - 1}}{${w - 1}} = ${ways}$ 种方式。`,
+            ),
+          ],
+          [
+            ["Team A finishes", "A 队结束比赛"],
+            t(
+              `$${ways}${bracketPow(p, w)}${bracketPow(q, g - w)} = ${a.toLatex()}$.`,
+              `$${ways}${bracketPow(p, w)}${bracketPow(q, g - w)} = ${a.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Team B finishes", "B 队结束比赛"],
+            t(
+              `$${ways}${bracketPow(q, w)}${bracketPow(p, g - w)} = ${b.toLatex()}$.`,
+              `$${ways}${bracketPow(q, w)}${bracketPow(p, g - w)} = ${b.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Add the two cases", "两种情形相加"],
+            t(`$${a.toLatex()} + ${b.toLatex()} = ${answer.toLatex()}$.`, `$${a.toLatex()} + ${b.toLatex()} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `In each case the winner has ${w - 1} wins after ${g - 1} games and the loser has ${g - w}, and both are below ${w}, so the series really is still going before game ${g}. The two cases cannot overlap, because only one team wins the series.`,
+          `在每种情形中，打完 ${g - 1} 场时获胜方赢了 ${w - 1} 场，失败方赢了 ${g - w} 场，都少于 ${w} 场，所以第 ${g} 场之前比赛确实还没有结束。两种情形不会重叠，因为只有一队能赢得比赛。`,
+        ),
       ),
     });
   },
@@ -4990,8 +5233,8 @@ const hypergeometricSupport: KnowledgePointDef = {
   id: "the-possible-values-of-a-hypergeometric-variable",
   title: t("The possible values of a hypergeometric variable", "超几何变量的可能取值"),
   explanation: t(
-    "A hypergeometric count cannot take every value from zero up to the sample size. The sample cannot contain more special items than exist, and when the sample is large, it runs out of ordinary items and must include some special ones. These two limits together decide exactly which values have nonzero probability.",
-    "超几何计数并不能取从零到样本量的所有值。样本中的特殊物品不可能比总数还多；而样本较大时，普通物品不够用，必然包含一些特殊物品。这两个限制共同决定了哪些值的概率不为零。",
+    "A hypergeometric count cannot take every value from zero up to the sample size. The sample cannot contain more special items than exist, and when the sample is large, it runs out of ordinary items and must include some special ones. These two limits together decide exactly which values have nonzero probability.\n\n> **Watch out.** Apply both limits before counting. Drawing $6$ from $5$ red and $3$ white, at most $3$ can be white, so at least $3$ are red, and at most $5$ are red: $X$ takes the $3$ values $3$, $4$, $5$, not the $7$ values $0$ to $6$.",
+    "超几何计数并不能取从零到样本量的所有值。样本中的特殊物品不可能比总数还多；而样本较大时，普通物品不够用，必然包含一些特殊物品。这两个限制共同决定了哪些值的概率不为零。\n\n> **注意。** 先用上两个限制再计数。从 $5$ 个红球和 $3$ 个白球中取 $6$ 个，白球至多 $3$ 个，所以红球至少 $3$ 个，而红球至多 $5$ 个：$X$ 只取 $3$、$4$、$5$ 这 $3$ 个值，而不是 $0$ 到 $6$ 这 $7$ 个值。",
   ),
   generate(rng) {
     const R = rng.int(3, 12);
@@ -5015,10 +5258,70 @@ const hypergeometricSupport: KnowledgePointDef = {
             ),
       answer,
       form: "integer",
-      wrong: kind === "smallest" ? [0, lo + 1, lo + 2, n, R, W] : [n + 1, hi + 1, count - 1, count + 1, count + 2, R + 1],
-      solution: t(
-        `At most ${W} of the ${n} marbles can be white, so at least $${n} - ${W} = ${lo}$ are red. At most $\\min(${n}, ${R}) = ${hi}$ are red. So $X$ takes the values from $${lo}$ to $${hi}$${kind === "smallest" ? `, and the smallest is $${lo}$` : `, which is $${hi} - ${lo} + 1 = ${count}$ values`}.`,
-        `取出的 ${n} 个球中白球至多 ${W} 个，所以红球至少 $${n} - ${W} = ${lo}$ 个。红球至多 $\\min(${n}, ${R}) = ${hi}$ 个。所以 $X$ 取值从 $${lo}$ 到 $${hi}$${kind === "smallest" ? `，最小是 $${lo}$` : `，共 $${hi} - ${lo} + 1 = ${count}$ 个值`}。`,
+      mistakes: unlike(
+        answer,
+        kind === "smallest"
+          ? [
+              why(
+                0,
+                `That assumes all ${n} marbles could be white, but there are only ${W} white marbles.`,
+                `那是假设 ${n} 个球可以全是白球，但白球只有 ${W} 个。`,
+              ),
+              why(
+                n,
+                `That is the most red marbles a sample of ${n} could hold, not the fewest.`,
+                `那是 ${n} 个球中红球最多可能的个数，而不是最少的。`,
+              ),
+              why(
+                W,
+                "That is the most white marbles the sample can hold; the red ones fill the rest.",
+                "那是样本中白球最多的个数；其余的才是红球。",
+              ),
+            ]
+          : [
+              why(
+                n + 1,
+                `That counts every value from $0$ to $${n}$; the two limits rule some out.`,
+                `那是把 $0$ 到 $${n}$ 的每个值都算上了；两个限制会排除一些值。`,
+              ),
+              why(
+                hi + 1,
+                `That counts from $0$ to $${hi}$; at least $${lo}$ marbles must be red.`,
+                `那是从 $0$ 数到 $${hi}$；红球至少要有 $${lo}$ 个。`,
+              ),
+              why(
+                count - 1,
+                `That is $${hi} - ${lo}$; counting the values from $${lo}$ to $${hi}$ includes both ends.`,
+                `那是 $${hi} - ${lo}$；从 $${lo}$ 到 $${hi}$ 的值要把两端都算上。`,
+              ),
+            ],
+      ),
+      wrong: kind === "smallest" ? [lo + 1, lo + 2, R] : [count + 1, count + 2, R + 1],
+      solution: walked(
+        [
+          [
+            ["Find the lower limit", "求下限"],
+            t(
+              `At most ${W} of the ${n} marbles can be white, so at least $${n} - ${W} = ${lo}$ are red.`,
+              `取出的 ${n} 个球中白球至多 ${W} 个，所以红球至少 $${n} - ${W} = ${lo}$ 个。`,
+            ),
+          ],
+          [
+            ["Find the upper limit", "求上限"],
+            t(`At most $\\min(${n}, ${R}) = ${hi}$ are red.`, `红球至多 $\\min(${n}, ${R}) = ${hi}$ 个。`),
+          ],
+          [
+            ["Read off the answer", "得出答案"],
+            t(
+              `$X$ takes the values from $${lo}$ to $${hi}$${kind === "smallest" ? `, and the smallest is $${lo}$` : `, which is $${hi} - ${lo} + 1 = ${count}$ values`}.`,
+              `$X$ 取值从 $${lo}$ 到 $${hi}$${kind === "smallest" ? `，最小是 $${lo}$` : `，共 $${hi} - ${lo} + 1 = ${count}$ 个值`}。`,
+            ),
+          ],
+        ],
+        t(
+          `Both ends really occur: $X = ${lo}$ is the sample of all ${W} white marbles with ${lo} red, and $X = ${hi}$ leaves $${n - hi}$ white, which is at most ${W}.`,
+          `两端确实都能取到：$X = ${lo}$ 是取到全部 ${W} 个白球和 ${lo} 个红球，$X = ${hi}$ 时白球有 $${n - hi}$ 个，不超过 ${W} 个。`,
+        ),
       ),
     });
   },
@@ -5028,8 +5331,8 @@ const hypergeometricMode: KnowledgePointDef = {
   id: "the-most-likely-value-of-a-hypergeometric-variable",
   title: t("The most likely value of a hypergeometric variable", "超几何变量最可能的取值"),
   explanation: t(
-    "To find where a probability mass function peaks, compare each probability with the next by taking their ratio. In a hypergeometric distribution the binomial coefficients in that ratio cancel to a short fraction. While the ratio exceeds one the probabilities are rising, and once it falls below one they are falling, so the peak is at the changeover.",
-    "要找概率质量函数的峰值，就用比值比较相邻的两个概率。在超几何分布中，这个比值里的二项式系数约分后是一个简短的分数。比值大于一时概率在上升，小于一时概率在下降，所以峰值就在转折的地方。",
+    "To find where a probability mass function peaks, compare each probability with the next by taking their ratio. In a hypergeometric distribution the binomial coefficients in that ratio cancel to a short fraction. While the ratio exceeds one the probabilities are rising, and once it falls below one they are falling, so the peak is at the changeover.\n\n> **Watch out.** The ratio at $x$ compares $x + 1$ with $x$, so the peak is the first $x$ whose ratio is below one, not the $x + 1$ after it. Drawing $4$ from $5$ red and $5$ white, the ratio is $2$ at $x = 1$ and $\\frac{1}{2}$ at $x = 2$, so $P(X = 3) < P(X = 2)$ and the peak is $x = 2$.",
+    "要找概率质量函数的峰值，就用比值比较相邻的两个概率。在超几何分布中，这个比值里的二项式系数约分后是一个简短的分数。比值大于一时概率在上升，小于一时概率在下降，所以峰值就在转折的地方。\n\n> **注意。** $x$ 处的比值比较的是 $x + 1$ 与 $x$，所以峰值是比值第一次小于一的那个 $x$，而不是它后面的 $x + 1$。从 $5$ 个红球和 $5$ 个白球中取 $4$ 个，$x = 1$ 时比值为 $2$，$x = 2$ 时为 $\\frac{1}{2}$，所以 $P(X = 3) < P(X = 2)$，峰值是 $x = 2$。",
   ),
   generate(rng) {
     for (;;) {
@@ -5054,10 +5357,48 @@ const hypergeometricMode: KnowledgePointDef = {
         ),
         answer: mode,
         form: "integer",
-        wrong: [mode + 1, mode - 1, Math.floor(mean), Math.ceil(mean), mode + 2],
-        solution: t(
-          `The ratio of consecutive probabilities is $\\frac{P(X = x + 1)}{P(X = x)} = \\frac{(${R} - x)(${n} - x)}{(x + 1)(${shifted})}$. At $x = ${mode - 1}$ it is $${ratio(mode - 1).toLatex()} > 1$, and at $x = ${mode}$ it is $${ratio(mode).toLatex()} < 1$. So the probabilities rise up to $x = ${mode}$ and fall after it.`,
-          `相邻概率之比为 $\\frac{P(X = x + 1)}{P(X = x)} = \\frac{(${R} - x)(${n} - x)}{(x + 1)(${shifted})}$。当 $x = ${mode - 1}$ 时比值为 $${ratio(mode - 1).toLatex()} > 1$，当 $x = ${mode}$ 时比值为 $${ratio(mode).toLatex()} < 1$。所以概率一直上升到 $x = ${mode}$，之后下降。`,
+        mistakes: [
+          why(
+            mode + 1,
+            `That is the value after the first ratio below one; the ratio at $x = ${mode}$ being below one means $P(X = ${mode + 1}) < P(X = ${mode})$.`,
+            `那是第一个小于一的比值之后的值；$x = ${mode}$ 处比值小于一，说明 $P(X = ${mode + 1}) < P(X = ${mode})$。`,
+          ),
+          why(
+            mode - 1,
+            `That stops at the last ratio above one; that ratio says $P(X = ${mode}) > P(X = ${mode - 1})$.`,
+            `那是停在了最后一个大于一的比值处；这个比值说明 $P(X = ${mode}) > P(X = ${mode - 1})$。`,
+          ),
+        ],
+        wrong: [Math.floor(mean), Math.ceil(mean), mode + 2],
+        solution: walked(
+          [
+            [
+              ["Form the ratio", "写出比值"],
+              t(
+                "The binomial coefficients of consecutive probabilities cancel to a short fraction.",
+                "相邻两个概率中的二项式系数约分后成为一个简短的分数。",
+              ),
+              [`\\frac{P(X = x + 1)}{P(X = x)} = \\frac{(${R} - x)(${n} - x)}{(x + 1)(${shifted})}`],
+            ],
+            [
+              ["Find where it crosses one", "找出比值越过一的位置"],
+              t(
+                `At $x = ${mode - 1}$ the ratio is $${ratio(mode - 1).toLatex()} > 1$, and at $x = ${mode}$ it is $${ratio(mode).toLatex()} < 1$.`,
+                `当 $x = ${mode - 1}$ 时比值为 $${ratio(mode - 1).toLatex()} > 1$，当 $x = ${mode}$ 时比值为 $${ratio(mode).toLatex()} < 1$。`,
+              ),
+            ],
+            [
+              ["Read off the peak", "得出峰值"],
+              t(
+                `The probabilities rise up to $x = ${mode}$ and fall after it, so $${mode}$ is the most likely value.`,
+                `概率一直上升到 $x = ${mode}$，之后下降，所以最可能的取值是 $${mode}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The mean is $\\frac{${n} \\cdot ${R}}{${R + W}} = ${Q.of(n * R, R + W).toLatex()}$, and the most likely value of a hypergeometric variable is always within $1$ of its mean, as $${mode}$ is.`,
+            `均值为 $\\frac{${n} \\cdot ${R}}{${R + W}} = ${Q.of(n * R, R + W).toLatex()}$，而超几何变量最可能的取值总在均值的 $1$ 以内，$${mode}$ 正是如此。`,
+          ),
         ),
       });
     }
@@ -5141,12 +5482,12 @@ const timeForAtLeastOne: KnowledgePointDef = {
   id: "the-length-needed-for-at-least-one-event",
   title: t("The length needed for at least one event", "至少发生一次所需的长度"),
   explanation: t(
-    "Questions about planning ask for the interval rather than the probability. In a Poisson model the count over a longer interval has a proportionally larger mean, and the probability of no events falls exponentially with length. So set the probability of no events to the allowed level, solve using a logarithm, and round up to reach the requirement.",
-    "规划类的问题求的是区间长度而不是概率。在泊松模型中，区间越长，计数的均值按比例增大，没有事件发生的概率随长度指数下降。所以令没有事件发生的概率等于允许的水平，用对数解出长度，再向上取整以满足要求。",
+    "Questions about planning ask for the interval rather than the probability. In a Poisson model the count over a longer interval has a proportionally larger mean, and the probability of no events falls exponentially with length. So set the probability of no events to the allowed level, solve using a logarithm, and round up to reach the requirement.\n\n> **Watch out.** Round up, never to the nearest whole number. At a rate of $0.5$ per minute, a $90\\%$ chance of at least one event needs $t \\ge \\frac{\\ln 10}{0.5} \\approx 4.61$, so $5$ minutes; $4$ minutes give only $1 - e^{-2} \\approx 86\\%$.",
+    "规划类的问题求的是区间长度而不是概率。在泊松模型中，区间越长，计数的均值按比例增大，没有事件发生的概率随长度指数下降。所以令没有事件发生的概率等于允许的水平，用对数解出长度，再向上取整以满足要求。\n\n> **注意。** 要向上取整，而不是四舍五入。每分钟平均 $0.5$ 次时，要使至少发生一次的概率达到 $90\\%$，需要 $t \\ge \\frac{\\ln 10}{0.5} \\approx 4.61$，所以是 $5$ 分钟；$4$ 分钟只有 $1 - e^{-2} \\approx 86\\%$。",
   ),
   generate(rng) {
-    const hundredths = rng.pick([5, 10, 15, 20, 25, 40, 50]);
     const percent = rng.pick([50, 75, 90, 95, 99]);
+    const hundredths = rng.pick(percent === 50 ? [5, 10, 15, 20] : [5, 10, 15, 20, 25, 40, 50]);
     const rate = hundredths / 100;
     const rest = (100 - percent) / 100;
     const exact = -Math.log(rest) / rate;
@@ -5164,10 +5505,60 @@ const timeForAtLeastOne: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.floor(exact), answer + 1, Math.ceil(percent / 100 / rate), Math.ceil(1 / rate), answer + 2],
-      solution: t(
-        `Over $t$ ${enUnits}s the count is Poisson with mean $${rate}t$, so at least one has probability $1 - e^{-${rate}t}$. This needs $e^{-${rate}t} \\le ${rest}$, or $t \\ge \\frac{-\\ln ${rest}}{${rate}} \\approx ${exact.toFixed(2)}$. The next whole number is $${answer}$.`,
-        `在 $t$ ${zhUnits}内，计数服从均值为 $${rate}t$ 的泊松分布，所以至少发生一次的概率是 $1 - e^{-${rate}t}$。需要 $e^{-${rate}t} \\le ${rest}$，即 $t \\ge \\frac{-\\ln ${rest}}{${rate}} \\approx ${exact.toFixed(2)}$。向上取整得 $${answer}$。`,
+      mistakes: unlike(answer, [
+        why(
+          Math.floor(exact),
+          `That rounds $${exact.toFixed(2)}$ down; that length falls short of $${percent}\\%$.`,
+          `那是把 $${exact.toFixed(2)}$ 向下取整；这个长度达不到 $${percent}\\%$。`,
+        ),
+        why(
+          Math.ceil(percent / 100 / rate),
+          `That treats the probability as $${rate}t$; the chance of at least one is $1 - e^{-${rate}t}$, which grows more slowly.`,
+          `那是把概率当作 $${rate}t$；至少发生一次的概率是 $1 - e^{-${rate}t}$，增长得更慢。`,
+        ),
+        ...(percent > 70
+          ? [
+              why(
+                Math.ceil(1 / rate),
+                `That is about the mean wait for one event, $\\frac{1}{${rate}}$, and waiting that long gives only about $63\\%$, not $${percent}\\%$.`,
+                `那大约是等到一次事件的平均长度 $\\frac{1}{${rate}}$，等这么久只有约 $63\\%$ 的把握，而不是 $${percent}\\%$。`,
+              ),
+            ]
+          : []),
+        why(
+          Math.ceil(-Math.log10(rest) / rate),
+          "That uses the common logarithm; solving an equation in $e$ needs the natural logarithm.",
+          "那用的是常用对数；解含 $e$ 的方程要用自然对数。",
+        ),
+        why(
+          Math.ceil(-Math.log(percent / 100) / rate),
+          `That sets the chance of no event to $${percent}\\%$; it is the chance of at least one that must reach $${percent}\\%$.`,
+          `那是令没有事件发生的概率等于 $${percent}\\%$；要达到 $${percent}\\%$ 的是至少发生一次的概率。`,
+        ),
+      ]),
+      wrong: [answer + 1, answer + 2],
+      solution: walked(
+        [
+          [
+            ["Model the count", "建立计数模型"],
+            t(
+              `Over $t$ ${enUnits}s the count is Poisson with mean $${rate}t$, so at least one has probability $1 - e^{-${rate}t}$.`,
+              `在 $t$ ${zhUnits}内，计数服从均值为 $${rate}t$ 的泊松分布，所以至少发生一次的概率是 $1 - e^{-${rate}t}$。`,
+            ),
+          ],
+          [
+            ["Solve with a logarithm", "用对数求解"],
+            t(
+              `This needs $e^{-${rate}t} \\le ${rest}$, or $t \\ge \\frac{-\\ln ${rest}}{${rate}} \\approx ${exact.toFixed(2)}$.`,
+              `需要 $e^{-${rate}t} \\le ${rest}$，即 $t \\ge \\frac{-\\ln ${rest}}{${rate}} \\approx ${exact.toFixed(2)}$。`,
+            ),
+          ],
+          [["Round up", "向上取整"], t(`The next whole number is $${answer}$.`, `向上取整得 $${answer}$。`)],
+        ],
+        t(
+          `At $t = ${answer}$ the chance is $1 - e^{-${(hundredths * answer) / 100}} \\approx ${(Math.floor((1 - Math.exp(-rate * answer)) * 1000) / 10).toFixed(1)}\\%$, at least $${percent}\\%$, while at $t = ${answer - 1}$ it is only about $${(Math.floor((1 - Math.exp(-rate * (answer - 1))) * 1000) / 10).toFixed(1)}\\%$.`,
+          `$t = ${answer}$ 时概率为 $1 - e^{-${(hundredths * answer) / 100}} \\approx ${(Math.floor((1 - Math.exp(-rate * answer)) * 1000) / 10).toFixed(1)}\\%$，不低于 $${percent}\\%$；而 $t = ${answer - 1}$ 时只有约 $${(Math.floor((1 - Math.exp(-rate * (answer - 1))) * 1000) / 10).toFixed(1)}\\%$。`,
+        ),
       ),
     });
   },

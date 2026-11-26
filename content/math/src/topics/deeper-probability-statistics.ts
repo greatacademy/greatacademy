@@ -230,24 +230,59 @@ const expectationFromTail: KnowledgePointDef = {
   id: "the-expected-value-from-the-tail-probability",
   title: t("The expected value from the tail probability", "由尾部概率求期望"),
   explanation: t(
-    "For a nonnegative random variable, integrating by parts shows that $E[X] = \\int_0^\\infty P(X > t)\\,dt$. This is useful when the tail probability is simpler than the density, because no derivative is needed.",
-    "对非负随机变量，分部积分可得 $E[X] = \\int_0^\\infty P(X > t)\\,dt$。当尾部概率比密度函数简单时，这个公式很有用，因为不必求导。",
+    "For a nonnegative random variable, integrating by parts shows that $E[X] = \\int_0^\\infty P(X > t)\\,dt$. This is useful when the tail probability is simpler than the density, because no derivative is needed. For $P(X > t) = \\left(1 + \\frac{t}{10}\\right)^{-11}$, the substitution $u = 1 + \\frac{t}{10}$ gives $E[X] = 10 \\int_1^\\infty u^{-11}\\,du = \\frac{10}{10} = 1$.\n\n> **Watch out.** Integrate the tail $P(X > t)$ itself, not a density. The antiderivative of $u^{-n}$ is $\\frac{u^{-(n-1)}}{-(n-1)}$, so the integral divides by $n - 1$, not by $n$.",
+    "对非负随机变量，分部积分可得 $E[X] = \\int_0^\\infty P(X > t)\\,dt$。当尾部概率比密度函数简单时，这个公式很有用，因为不必求导。对于 $P(X > t) = \\left(1 + \\frac{t}{10}\\right)^{-11}$，代换 $u = 1 + \\frac{t}{10}$ 得 $E[X] = 10 \\int_1^\\infty u^{-11}\\,du = \\frac{10}{10} = 1$。\n\n> **注意。** 要积分尾部概率 $P(X > t)$ 本身，而不是密度。$u^{-n}$ 的原函数是 $\\frac{u^{-(n-1)}}{-(n-1)}$，所以积分要除以 $n - 1$，而不是 $n$。",
   ),
   generate(rng) {
     const n = rng.int(2, 7);
     const s = rng.int(1, 6);
     const answer = Q.of(s, n - 1);
     const inner = s === 1 ? "1 + t" : `1 + \\frac{t}{${s}}`;
+    const scaled = s === 1 ? "" : `${s} `;
     return numberProblem({
       prompt: t(
         `A nonnegative random variable $X$ has $P(X > t) = \\left(${inner}\\right)^{-${n}}$ for $t \\ge 0$. Find $E[X]$.`,
         `非负随机变量 $X$ 满足：当 $t \\ge 0$ 时，$P(X > t) = \\left(${inner}\\right)^{-${n}}$。求 $E[X]$。`,
       ),
       answer,
-      wrong: [Q.of(s, n), Q.of(s, n + 1), Q.of(n - 1, s)],
-      solution: t(
-        `Integrate the tail: $\\int_0^\\infty \\left(${inner}\\right)^{-${n}}\\,dt = ${s} \\cdot \\frac{1}{${n - 1}}$, using the substitution $u = ${inner}$. So $E[X] = ${answer.toLatex()}$.`,
-        `对尾部概率积分：令 $u = ${inner}$，得 $\\int_0^\\infty \\left(${inner}\\right)^{-${n}}\\,dt = ${s} \\cdot \\frac{1}{${n - 1}}$。所以 $E[X] = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(s, n),
+          `That divides by the power $${n}$; the antiderivative of $u^{-${n}}$ divides by $${n - 1}$.`,
+          `那是除以了幂 $${n}$；$u^{-${n}}$ 的原函数要除以 $${n - 1}$。`,
+        ),
+        why(
+          Q.of(s, n + 1),
+          `That integrates as if the power were $${n + 1}$, as for a density; here the tail itself is integrated.`,
+          `那是按幂为 $${n + 1}$ 积分，就像对密度那样；这里积分的是尾部概率本身。`,
+        ),
+        why(Q.of(n - 1, s), "That is the reciprocal of the mean.", "那是均值的倒数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Substitute", "换元"],
+            t(
+              `With $u = ${inner}$, $dt = ${s === 1 ? "du" : `${s}\\,du`}$ and $u$ runs from $1$ to $\\infty$, so $E[X] = ${scaled}\\int_1^\\infty u^{-${n}}\\,du$.`,
+              `令 $u = ${inner}$，则 $dt = ${s === 1 ? "du" : `${s}\\,du`}$，$u$ 从 $1$ 到 $\\infty$，所以 $E[X] = ${scaled}\\int_1^\\infty u^{-${n}}\\,du$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$\\int_1^\\infty u^{-${n}}\\,du = \\frac{1}{${n - 1}}$, so $E[X] = ${s === 1 ? "" : `\\frac{${s}}{${n - 1}} = `}${answer.toLatex()}$.`,
+              `$\\int_1^\\infty u^{-${n}}\\,du = \\frac{1}{${n - 1}}$，所以 $E[X] = ${s === 1 ? "" : `\\frac{${s}}{${n - 1}} = `}${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          s === 1
+            ? `At $t = 0$ the tail is $1$, as it must be, and $\\left[-\\frac{(1 + t)^{-${n - 1}}}{${n - 1}}\\right]_0^\\infty = \\frac{1}{${n - 1}}$.`
+            : `$\\frac{X}{${s}}$ has tail $(1 + t)^{-${n}}$ and mean $\\frac{1}{${n - 1}}$; stretching by $${s}$ multiplies the mean by $${s}$.`,
+          s === 1
+            ? `在 $t = 0$ 处尾部概率为 $1$，理应如此；而 $\\left[-\\frac{(1 + t)^{-${n - 1}}}{${n - 1}}\\right]_0^\\infty = \\frac{1}{${n - 1}}$。`
+            : `$\\frac{X}{${s}}$ 的尾部概率是 $(1 + t)^{-${n}}$，均值为 $\\frac{1}{${n - 1}}$；拉伸 $${s}$ 倍使均值乘以 $${s}$。`,
+        ),
       ),
     });
   },
@@ -257,13 +292,15 @@ const varianceFromExponentialMgf: KnowledgePointDef = {
   id: "the-variance-from-an-exponential-of-a-quadratic-mgf",
   title: t("The variance from an MGF of the form $e^{at+bt^2}$", "由 $e^{at+bt^2}$ 形式的矩母函数求方差"),
   explanation: t(
-    "Differentiate $M(t)$ twice and set $t = 0$ to get $E[X]$ and $E[X^2]$, and then the variance is $E[X^2] - E[X]^2$. For $M(t) = e^{at+bt^2}$ the variance comes to $2b$, whatever the value of $a$: shifting a distribution does not change its spread.",
-    "对 $M(t)$ 求两次导并令 $t = 0$，得 $E[X]$ 和 $E[X^2]$，方差就是 $E[X^2] - E[X]^2$。对 $M(t) = e^{at+bt^2}$，方差是 $2b$，与 $a$ 无关：平移分布不改变它的分散程度。",
+    "Differentiate $M(t)$ twice and set $t = 0$ to get $E[X]$ and $E[X^2]$, and then the variance is $E[X^2] - E[X]^2$. For $M(t) = e^{at+bt^2}$ the variance comes to $2b$, whatever the value of $a$: shifting a distribution does not change its spread. For $M(t) = e^{50t + 200t^2}$, $E[X] = 50$, $E[X^2] = 2500 + 400$, and the variance is $400$.\n\n> **Watch out.** $M''(0)$ is the second moment, not the variance: subtract the square of $M'(0)$. The variance is twice the coefficient of $t^2$, not the coefficient itself.",
+    "对 $M(t)$ 求两次导并令 $t = 0$，得 $E[X]$ 和 $E[X^2]$，方差就是 $E[X^2] - E[X]^2$。对 $M(t) = e^{at+bt^2}$，方差是 $2b$，与 $a$ 无关：平移分布不改变它的分散程度。对于 $M(t) = e^{50t + 200t^2}$，$E[X] = 50$，$E[X^2] = 2500 + 400$，方差为 $400$。\n\n> **注意。** $M''(0)$ 是二阶矩，不是方差：还要减去 $M'(0)$ 的平方。方差是 $t^2$ 系数的两倍，而不是系数本身。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const b = rng.int(1, 6);
     const answer = 2 * b;
+    const second = a * a + 2 * b;
+    const slope = `${a} + ${2 * b}t`;
     return numberProblem({
       prompt: t(
         `A random variable has moment-generating function $M(t) = e^{${poly([a, "t"], [b, "t^2"])}}$. Find its variance.`,
@@ -271,10 +308,41 @@ const varianceFromExponentialMgf: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [b, a * a, a * a + 2 * b],
-      solution: t(
-        `$M'(0) = ${a}$, and $M''(0) = (${a})^2 + ${2 * b} = ${a * a + 2 * b}$. So the variance is $${a * a + 2 * b} - (${a})^2 = ${answer}$.`,
-        `$M'(0) = ${a}$，$M''(0) = (${a})^2 + ${2 * b} = ${a * a + 2 * b}$。所以方差是 $${a * a + 2 * b} - (${a})^2 = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          b,
+          "That is the coefficient of $t^2$; differentiating $t^2$ twice brings a factor $2$.",
+          "那是 $t^2$ 的系数；对 $t^2$ 求两次导会带出因子 $2$。",
+        ),
+        why(a * a, "That is the square of the mean, which is subtracted, not the variance.", "那是均值的平方，它是要减去的，不是方差。"),
+        why(
+          second,
+          "That is the second moment $M''(0)$; the square of the mean must be subtracted.",
+          "那是二阶矩 $M''(0)$；还要减去均值的平方。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate once", "求一阶导数"],
+            t(`$M'(t) = (${slope})M(t)$, so $M'(0) = ${a}$.`, `$M'(t) = (${slope})M(t)$，所以 $M'(0) = ${a}$。`),
+          ],
+          [
+            ["Differentiate again", "再求导"],
+            t(
+              `$M''(t) = \\left(${2 * b} + (${slope})^2\\right)M(t)$, so $M''(0) = ${2 * b} + ${inParens(a)}^2 = ${second}$.`,
+              `$M''(t) = \\left(${2 * b} + (${slope})^2\\right)M(t)$，所以 $M''(0) = ${2 * b} + ${inParens(a)}^2 = ${second}$。`,
+            ),
+          ],
+          [
+            ["Subtract the square of the mean", "减去均值的平方"],
+            t(`The variance is $${second} - ${inParens(a)}^2 = ${answer}$.`, `方差为 $${second} - ${inParens(a)}^2 = ${answer}$。`),
+          ],
+        ],
+        t(
+          `$e^{\\mu t + \\sigma^2 t^2 / 2}$ is the generating function of a normal variable, and matching $\\frac{\\sigma^2}{2} = ${b}$ gives $\\sigma^2 = ${answer}$.`,
+          `$e^{\\mu t + \\sigma^2 t^2 / 2}$ 是正态变量的矩母函数，对照 $\\frac{\\sigma^2}{2} = ${b}$ 得 $\\sigma^2 = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -284,8 +352,8 @@ const momentFromSeries: KnowledgePointDef = {
   id: "a-moment-from-the-series-of-an-mgf",
   title: t("A moment from the series of an MGF", "由矩母函数的级数求矩"),
   explanation: t(
-    "The series $M(t) = \\sum_k E[X^k]\\frac{t^k}{k!}$ means that the coefficient of $t^k$ is $\\frac{E[X^k]}{k!}$. So a moment can be read off without differentiating, as long as the coefficient is multiplied by $k!$.",
-    "级数 $M(t) = \\sum_k E[X^k]\\frac{t^k}{k!}$ 说明 $t^k$ 的系数是 $\\frac{E[X^k]}{k!}$。所以不必求导就能读出矩，只要把系数乘以 $k!$。",
+    "The series $M(t) = \\sum_k E[X^k]\\frac{t^k}{k!}$ means that the coefficient of $t^k$ is $\\frac{E[X^k]}{k!}$. So a moment can be read off without differentiating, as long as the coefficient is multiplied by $k!$. For $M(t) = 1 + 5t + 40t^2 + \\cdots$, $E[X^2] = 2! \\cdot 40 = 80$.\n\n> **Watch out.** The coefficient is not the moment itself: multiply it by $k!$, not divide by it. For $t^3$ that is $3! = 6$, not $3$.",
+    "级数 $M(t) = \\sum_k E[X^k]\\frac{t^k}{k!}$ 说明 $t^k$ 的系数是 $\\frac{E[X^k]}{k!}$。所以不必求导就能读出矩，只要把系数乘以 $k!$。对于 $M(t) = 1 + 5t + 40t^2 + \\cdots$，$E[X^2] = 2! \\cdot 40 = 80$。\n\n> **注意。** 系数本身不是矩：要乘以 $k!$，而不是除以它。对 $t^3$ 要乘 $3! = 6$，不是 $3$。",
   ),
   generate(rng) {
     const c1 = rng.int(1, 3);
@@ -294,6 +362,7 @@ const momentFromSeries: KnowledgePointDef = {
     const k = rng.int(2, 3);
     const c = k === 2 ? c2 : c3;
     const answer = factorial(k) * c;
+    const times = c === 1 ? `${k}!` : `${k}! \\cdot ${c}`;
     return numberProblem({
       prompt: t(
         `The series of a moment-generating function begins $M(t) = 1 + ${poly([c1, "t"], [c2, "t^2"], [c3, "t^3"])} + \\cdots$. Find $E[X^{${k}}]$.`,
@@ -301,10 +370,34 @@ const momentFromSeries: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c, k * c, answer + c1],
-      solution: t(
-        `The coefficient of $t^{${k}}$ is $\\frac{E[X^{${k}}]}{${k}!}$. So $E[X^{${k}}] = ${k}! \\cdot ${c} = ${answer}$.`,
-        `$t^{${k}}$ 的系数是 $\\frac{E[X^{${k}}]}{${k}!}$。所以 $E[X^{${k}}] = ${k}! \\cdot ${c} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          c,
+          `That is the coefficient of $t^{${k}}$ itself; the moment is $${k}!$ times it.`,
+          `那是 $t^{${k}}$ 的系数本身；矩是它的 $${k}!$ 倍。`,
+        ),
+        why(
+          k * c,
+          `That multiplies by $${k}$ instead of $${k}! = ${factorial(k)}$.`,
+          `那是乘以 $${k}$，而不是 $${k}! = ${factorial(k)}$。`,
+        ),
+        why(Q.of(c, factorial(k)), `That divides by $${k}!$ instead of multiplying.`, `那是除以 $${k}!$，而不是乘以它。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Match the coefficient", "对照系数"],
+            t(
+              `In the series the coefficient of $t^{${k}}$ is $\\frac{E[X^{${k}}]}{${k}!}$, and here it is $${c}$.`,
+              `级数中 $t^{${k}}$ 的系数是 $\\frac{E[X^{${k}}]}{${k}!}$，这里它等于 $${c}$。`,
+            ),
+          ],
+          [["Multiply by the factorial", "乘以阶乘"], t(`$E[X^{${k}}] = ${times} = ${answer}$.`, `$E[X^{${k}}] = ${times} = ${answer}$。`)],
+        ],
+        t(
+          `Dividing back, $\\frac{${answer}}{${k}!} = \\frac{${answer}}{${factorial(k)}} = ${c}$, the coefficient in the series.`,
+          `反过来，$\\frac{${answer}}{${k}!} = \\frac{${answer}}{${factorial(k)}} = ${c}$，正是级数中的系数。`,
+        ),
       ),
     });
   },
@@ -314,8 +407,8 @@ const binomialMode: KnowledgePointDef = {
   id: "the-most-likely-value-of-a-binomial-variable",
   title: t("The most likely value of a binomial variable", "二项变量最可能的取值"),
   explanation: t(
-    "Comparing consecutive probabilities gives $\\frac{P(X=k)}{P(X=k-1)} = \\frac{(n-k+1)p}{k(1-p)}$, which is above one exactly when $k < (n+1)p$. So the probabilities rise and then fall, and the most likely value is the greatest integer below $(n+1)p$. It need not be the mean.",
-    "比较相邻概率得 $\\frac{P(X=k)}{P(X=k-1)} = \\frac{(n-k+1)p}{k(1-p)}$，当且仅当 $k < (n+1)p$ 时它大于一。所以概率先升后降，最可能的取值是小于 $(n+1)p$ 的最大整数，不一定等于均值。",
+    "Comparing consecutive probabilities gives $\\frac{P(X=k)}{P(X=k-1)} = \\frac{(n-k+1)p}{k(1-p)}$, which is above one exactly when $k < (n+1)p$. So the probabilities rise and then fall, and the most likely value is the greatest integer below $(n+1)p$. It need not be the mean. For $n = 50$ and $p = 0.35$, $(n+1)p = 17.85$, so the most likely value is $17$, while the mean is $17.5$.\n\n> **Watch out.** Use $(n+1)p$, not $np$, and round down, not to the nearest integer: the first $k$ above $(n+1)p$ is already past the peak.",
+    "比较相邻概率得 $\\frac{P(X=k)}{P(X=k-1)} = \\frac{(n-k+1)p}{k(1-p)}$，当且仅当 $k < (n+1)p$ 时它大于一。所以概率先升后降，最可能的取值是小于 $(n+1)p$ 的最大整数，不一定等于均值。对于 $n = 50$，$p = 0.35$，$(n+1)p = 17.85$，所以最可能的取值是 $17$，而均值是 $17.5$。\n\n> **注意。** 要用 $(n+1)p$，不是 $np$；并且向下取整，不是四舍五入：大于 $(n+1)p$ 的第一个 $k$ 已经越过了峰值。",
   ),
   generate(rng) {
     let n: number;
@@ -333,25 +426,65 @@ const binomialMode: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [answer + 1, answer - 1, Math.ceil((n * p) / 10) + 1],
-      solution: t(
-        `Here $(n+1)p = ${Q.of((n + 1) * p, 10).toLatex()}$, which is not an integer, and the greatest integer below it is $${answer}$. The mean is $${mean.toLatex()}$, which is close but need not point to the same integer.`,
-        `这里 $(n+1)p = ${Q.of((n + 1) * p, 10).toLatex()}$，不是整数，小于它的最大整数是 $${answer}$。均值是 $${mean.toLatex()}$，二者接近，但不一定对应同一个整数。`,
+      mistakes: apart(answer, [
+        why(
+          answer + 1,
+          "That rounds $(n+1)p$ up; the first value above it is already past the peak.",
+          "那是把 $(n+1)p$ 向上取整了；大于它的第一个值已经越过了峰值。",
+        ),
+        why(
+          Math.floor((n * p) / 10),
+          "That rounds down $np$; the comparison of consecutive probabilities gives $(n+1)p$.",
+          "那是对 $np$ 向下取整；比较相邻概率得到的是 $(n+1)p$。",
+        ),
+        why(n - answer, "That counts the most likely number of failures, not of successes.", "那是最可能的失败次数，不是成功次数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compute (n+1)p", "计算 $(n+1)p$"],
+            t(
+              `$(n+1)p = ${n + 1} \\cdot ${tenths(p)} = ${Q.of((n + 1) * p, 10).toLatex()}$, which is not an integer.`,
+              `$(n+1)p = ${n + 1} \\cdot ${tenths(p)} = ${Q.of((n + 1) * p, 10).toLatex()}$，不是整数。`,
+            ),
+          ],
+          [
+            ["Round down", "向下取整"],
+            t(
+              `The probabilities rise while $k < ${Q.of((n + 1) * p, 10).toLatex()}$ and fall after, so the largest is at $k = ${answer}$. The mean $${mean.toLatex()}$ is close but need not point to the same integer.`,
+              `当 $k < ${Q.of((n + 1) * p, 10).toLatex()}$ 时概率上升，之后下降，所以最大值在 $k = ${answer}$。均值 $${mean.toLatex()}$ 与之接近，但不一定对应同一个整数。`,
+            ),
+          ],
+        ],
+        t(
+          answer === n
+            ? `At $k = ${n}$ the ratio $\\frac{(n-k+1)p}{k(1-p)}$ is $${Q.of(p, n * (10 - p)).toLatex()}$, above $1$, so the probabilities rise all the way to $${n}$.`
+            : `At $k = ${answer}$ the ratio $\\frac{P(X = k + 1)}{P(X = k)} = \\frac{(n-k)p}{(k+1)(1-p)}$ is $${Q.of((n - answer) * p, (answer + 1) * (10 - p)).toLatex()}$, below $1$, so the probabilities fall after $${answer}$.`,
+          answer === n
+            ? `在 $k = ${n}$ 处比值 $\\frac{(n-k+1)p}{k(1-p)}$ 为 $${Q.of(p, n * (10 - p)).toLatex()}$，大于 $1$，所以概率一直上升到 $${n}$。`
+            : `在 $k = ${answer}$ 处比值 $\\frac{P(X = k + 1)}{P(X = k)} = \\frac{(n-k)p}{(k+1)(1-p)}$ 为 $${Q.of((n - answer) * p, (answer + 1) * (10 - p)).toLatex()}$，小于 $1$，所以概率在 $${answer}$ 之后下降。`,
+        ),
       ),
     });
   },
+};
+
+/** distinctMistakes drops explained mistakes that equal the answer or repeat an earlier one, keeping negative values. */
+const distinctMistakes = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
 };
 
 const poissonRatio: KnowledgePointDef = {
   id: "the-poisson-mean-from-a-ratio-of-probabilities",
   title: t("The Poisson mean from a ratio of probabilities", "由概率之比求泊松均值"),
   explanation: t(
-    "In the formula for a Poisson probability most of the factors cancel between neighbours, leaving $\\frac{P(X=k+1)}{P(X=k)} = \\frac{\\lambda}{k+1}$. The exponential disappears, so a ratio of two probabilities gives $\\lambda$ with no logarithm or table.",
-    "在泊松概率公式中，相邻两项的大多数因子都约掉，只剩 $\\frac{P(X=k+1)}{P(X=k)} = \\frac{\\lambda}{k+1}$。指数项消失了，所以由两个概率之比就能求 $\\lambda$，不用对数也不用查表。",
+    "In the formula for a Poisson probability most of the factors cancel between neighbours, leaving $\\frac{P(X=k+1)}{P(X=k)} = \\frac{\\lambda}{k+1}$. The exponential disappears, so a ratio of two probabilities gives $\\lambda$ with no logarithm or table.\n\n> **Watch out.** The denominator is the larger of the two values, $k + 1$, not $k$. If $\\frac{P(X = 3)}{P(X = 2)} = 2$, then $\\frac{\\lambda}{3} = 2$ and $\\lambda = 6$, not $4$.",
+    "在泊松概率公式中，相邻两项的大多数因子都约掉，只剩 $\\frac{P(X=k+1)}{P(X=k)} = \\frac{\\lambda}{k+1}$。指数项消失了，所以由两个概率之比就能求 $\\lambda$，不用对数也不用查表。\n\n> **注意。** 分母是两个值中较大的 $k + 1$，而不是 $k$。若 $\\frac{P(X = 3)}{P(X = 2)} = 2$，则 $\\frac{\\lambda}{3} = 2$，$\\lambda = 6$，而不是 $4$。",
   ),
   generate(rng) {
     const lambda = rng.int(1, 12);
-    const k = rng.int(0, 6);
+    const k = rng.int(1, 6);
     const ratio = Q.of(lambda, k + 1);
     return numberProblem({
       prompt: t(
@@ -359,10 +492,53 @@ const poissonRatio: KnowledgePointDef = {
         `$X$ 服从泊松分布，$\\frac{P(X = ${k + 1})}{P(X = ${k})} = ${ratio.toLatex()}$。求均值 $\\lambda$。`,
       ),
       answer: lambda,
-      wrong: [ratio, ratio.mul(Q.of(k === 0 ? 2 : k)), lambda + k + 1],
-      solution: t(
-        `The ratio is $\\frac{\\lambda}{${k + 1}}$, so $\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$.`,
-        `这个比是 $\\frac{\\lambda}{${k + 1}}$，所以 $\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$。`,
+      mistakes: apart(lambda, [
+        why(
+          ratio,
+          `That takes the ratio itself as $\\lambda$; the ratio is $\\frac{\\lambda}{${k + 1}}$.`,
+          `那是把比值本身当作 $\\lambda$；这个比是 $\\frac{\\lambda}{${k + 1}}$。`,
+        ),
+        why(
+          ratio.mul(Q.of(k)),
+          `That divides by $${k}$; the factorials leave $${k + 1}$, the larger value, in the denominator.`,
+          `那是除以了 $${k}$；阶乘约分后分母留下的是较大的值 $${k + 1}$。`,
+        ),
+        why(
+          Q.of(k + 1).div(ratio),
+          `That turns the ratio upside down, as if it were $\\frac{${k + 1}}{\\lambda}$.`,
+          `那是把比值倒过来了，好像它是 $\\frac{${k + 1}}{\\lambda}$。`,
+        ),
+        why(
+          ratio.add(Q.of(k + 1)),
+          `That adds $${k + 1}$ to the ratio; undoing a division by $${k + 1}$ means multiplying by it.`,
+          `那是给比值加上了 $${k + 1}$；还原除以 $${k + 1}$ 要乘以它。`,
+        ),
+      ]),
+      wrong: [lambda + k + 1],
+      solution: walked(
+        [
+          [
+            ["Cancel the common factors", "约去公共因子"],
+            t(
+              "The exponential and all but one power of $\\lambda$ cancel, and so do all but one factor of the factorials.",
+              "指数项约掉了，$\\lambda$ 的幂只剩一次，阶乘也只剩一个因子。",
+            ),
+            [
+              "\\frac{P(X = k + 1)}{P(X = k)} = \\frac{e^{-\\lambda}\\lambda^{k+1}/(k+1)!}{e^{-\\lambda}\\lambda^{k}/k!} = \\frac{\\lambda}{k + 1}",
+            ],
+          ],
+          [
+            ["Solve for the mean", "解出均值"],
+            t(
+              `With $k = ${k}$, $\\frac{\\lambda}{${k + 1}} = ${ratio.toLatex()}$, so $\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$.`,
+              `$k = ${k}$ 时，$\\frac{\\lambda}{${k + 1}} = ${ratio.toLatex()}$，所以 $\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $\\lambda = ${lambda}$, $P(X = ${k + 1})$ has one more factor $\\frac{${lambda}}{${k + 1}}$ than $P(X = ${k})$, which is the given ratio $${ratio.toLatex()}$.`,
+          `当 $\\lambda = ${lambda}$ 时，$P(X = ${k + 1})$ 比 $P(X = ${k})$ 多一个因子 $\\frac{${lambda}}{${k + 1}}$，正是已知的比值 $${ratio.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -372,8 +548,8 @@ const geometricMemoryless: KnowledgePointDef = {
   id: "the-memoryless-property-of-the-geometric-distribution",
   title: t("The memoryless property of the geometric distribution", "几何分布的无记忆性"),
   explanation: t(
-    "If $X$ counts the trials up to the first success, then $P(X > n) = (1-p)^n$, since the first $n$ trials all fail. Dividing gives $P(X > s + t \\mid X > s) = (1-p)^t$. Failures so far have no effect on the trials still to come.",
-    "如果 $X$ 是到第一次成功为止的试验次数，则 $P(X > n) = (1-p)^n$，因为前 $n$ 次全部失败。相除得 $P(X > s + t \\mid X > s) = (1-p)^t$。已有的失败不影响之后的试验。",
+    "If $X$ counts the trials up to the first success, then $P(X > n) = (1-p)^n$, since the first $n$ trials all fail. Dividing gives $P(X > s + t \\mid X > s) = (1-p)^t$. Failures so far have no effect on the trials still to come.\n\n> **Watch out.** The condition takes the past failures out; it does not leave them in. With $p = 0.2$, $P(X > 7 \\mid X > 5) = 0.8^{2} = 0.64$, not $P(X > 7) = 0.8^{7}$.",
+    "如果 $X$ 是到第一次成功为止的试验次数，则 $P(X > n) = (1-p)^n$，因为前 $n$ 次全部失败。相除得 $P(X > s + t \\mid X > s) = (1-p)^t$。已有的失败不影响之后的试验。\n\n> **注意。** 条件把已有的失败去掉了，而不是保留它们。$p = 0.2$ 时，$P(X > 7 \\mid X > 5) = 0.8^{2} = 0.64$，而不是 $P(X > 7) = 0.8^{7}$。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
@@ -381,16 +557,49 @@ const geometricMemoryless: KnowledgePointDef = {
     const u = rng.int(1, 3);
     const q = Q.of(10 - p, 10);
     const answer = power(q, u);
+    const qTex = tenths(10 - p);
+    const qPow = (e: number) => (e === 1 ? qTex : `${qTex}^{${e}}`);
     return numberProblem({
       prompt: t(
         `$X$ is the number of trials up to and including the first success, with success probability ${tenths(p)} on each trial. Find $P(X > ${s + u} \\mid X > ${s})$.`,
         `$X$ 是到第一次成功（含这一次）为止的试验次数，每次成功的概率是 ${tenths(p)}。求 $P(X > ${s + u} \\mid X > ${s})$。`,
       ),
       answer,
-      wrong: [power(q, s + u), power(q, s), Q.of(p, 10).mul(power(q, u))],
-      solution: t(
-        `The condition says the first $${s}$ trials failed. To pass $${s + u}$, the next $${u}$ must also fail, and they are independent of the past. This has probability $(${tenths(10 - p)})^{${u}} = ${answer.toLatex()}$.`,
-        `条件说明前 $${s}$ 次都失败了。要超过 $${s + u}$，接下来的 $${u}$ 次也必须失败，而它们与之前的试验独立。概率是 $(${tenths(10 - p)})^{${u}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          power(q, s + u),
+          `That is $P(X > ${s + u})$ without the condition; the first $${s}$ failures are already known.`,
+          `那是不带条件的 $P(X > ${s + u})$；前 $${s}$ 次失败已经是已知的了。`,
+        ),
+        why(power(q, s), `That is $P(X > ${s})$, the probability of the condition itself.`, `那是 $P(X > ${s})$，即条件本身的概率。`),
+        why(
+          Q.of(1).sub(answer),
+          `That is the chance of a success within the next $${u}$ trials, the complement.`,
+          `那是接下来 $${u}$ 次内出现成功的概率，即对立事件的概率。`,
+        ),
+      ]),
+      wrong: [Q.of(p, 10).mul(power(q, u))],
+      solution: walked(
+        [
+          [
+            ["Write the tails", "写出尾概率"],
+            t(
+              `$P(X > n) = ${qTex}^{n}$, since the first $n$ trials must all fail.`,
+              `$P(X > n) = ${qTex}^{n}$，因为前 $n$ 次必须全部失败。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(
+              `$P(X > ${s + u} \\mid X > ${s}) = \\frac{${qTex}^{${s + u}}}{${qTex}^{${s}}} = ${qPow(u)} = ${answer.toLatex()}$.`,
+              `$P(X > ${s + u} \\mid X > ${s}) = \\frac{${qTex}^{${s + u}}}{${qTex}^{${s}}} = ${qPow(u)} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly: given that the first $${s}$ trials failed, $X > ${s + u}$ needs the next $${u}$ to fail as well, and they are independent of the past, so the chance is $${qPow(u)} = ${answer.toLatex()}$ again.`,
+          `直接看：已知前 $${s}$ 次失败，$X > ${s + u}$ 要求接下来的 $${u}$ 次也失败，而它们与之前独立，所以概率同样是 $${qPow(u)} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -972,8 +1181,8 @@ const standardizing: KnowledgePointDef = {
   id: "the-constants-that-standardize-a-variable",
   title: t("The constants that standardize a variable", "使变量标准化的常数"),
   explanation: t(
-    "Since $\\text{Var}(aX + b) = a^2\\text{Var}(X)$, the shift $b$ has no effect on spread, and the scale $a$ must be one over the standard deviation to give a variance of 1. Then $E(aX + b) = a\\mu + b$ must be 0, so $b = -\\frac{\\mu}{\\sigma}$. The order matters: fix the scale first and the shift afterwards.",
-    "由于 $\\text{Var}(aX + b) = a^2\\text{Var}(X)$，平移 $b$ 不影响离散程度，要使方差为 1，比例 $a$ 必须是标准差的倒数。这时 $E(aX + b) = a\\mu + b$ 必须为 0，所以 $b = -\\frac{\\mu}{\\sigma}$。顺序很重要：先定比例，再定平移。",
+    "Since $\\text{Var}(aX + b) = a^2\\text{Var}(X)$, the shift $b$ has no effect on spread, and the scale $a$ must be one over the standard deviation to give a variance of 1. Then $E(aX + b) = a\\mu + b$ must be 0, so $b = -\\frac{\\mu}{\\sigma}$. The order matters: fix the scale first and the shift afterwards.\n\n> **Watch out.** The shift is applied after the scaling, so it is $-\\frac{\\mu}{\\sigma}$, not $-\\mu$; and $\\sigma$ is the square root of the variance. With mean $6$ and variance $9$, $a = \\frac{1}{3}$ and $b = -2$, not $-6$ or $-\\frac{2}{3}$.",
+    "由于 $\\text{Var}(aX + b) = a^2\\text{Var}(X)$，平移 $b$ 不影响离散程度，要使方差为 1，比例 $a$ 必须是标准差的倒数。这时 $E(aX + b) = a\\mu + b$ 必须为 0，所以 $b = -\\frac{\\mu}{\\sigma}$。顺序很重要：先定比例，再定平移。\n\n> **注意。** 平移是在缩放之后进行的，所以是 $-\\frac{\\mu}{\\sigma}$，而不是 $-\\mu$；而且 $\\sigma$ 是方差的平方根。均值为 $6$、方差为 $9$ 时，$a = \\frac{1}{3}$，$b = -2$，而不是 $-6$ 或 $-\\frac{2}{3}$。",
   ),
   generate(rng) {
     const mu = nonzero(rng, 20);
@@ -985,10 +1194,44 @@ const standardizing: KnowledgePointDef = {
         `$X$ 的均值是 $${mu}$，方差是 $${sigma * sigma}$。变量 $Z = aX + b$（$a > 0$）的均值是 0，方差是 1。求 $b$。`,
       ),
       answer,
-      wrong: [answer.neg(), Q.of(-mu), Q.of(-mu, sigma * sigma)],
-      solution: t(
-        `A variance of 1 needs $a = \\frac{1}{${sigma}}$. A mean of 0 then needs $b = -\\frac{${inParens(mu)}}{${sigma}} = ${answer.toLatex()}$.`,
-        `方差为 1 要求 $a = \\frac{1}{${sigma}}$。均值为 0 则要求 $b = -\\frac{${inParens(mu)}}{${sigma}} = ${answer.toLatex()}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          answer.neg(),
+          `That has the wrong sign; $b$ must cancel $a\\mu = ${Q.of(mu, sigma).toLatex()}$.`,
+          `那是符号错了；$b$ 要抵消 $a\\mu = ${Q.of(mu, sigma).toLatex()}$。`,
+        ),
+        why(
+          Q.of(-mu),
+          "That shifts before scaling; after multiplying by $a$ the mean is $a\\mu$, so the shift must be $-a\\mu$.",
+          "那是先平移再缩放；乘以 $a$ 之后均值是 $a\\mu$，所以平移量应是 $-a\\mu$。",
+        ),
+        why(
+          Q.of(-mu, sigma * sigma),
+          `That divides by the variance $${sigma * sigma}$; the scale uses the standard deviation $${sigma}$.`,
+          `那是除以了方差 $${sigma * sigma}$；缩放用的是标准差 $${sigma}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Fix the scale", "先定比例"],
+            t(
+              `$\\text{Var}(Z) = a^2 \\cdot ${sigma * sigma} = 1$ with $a > 0$ gives $a = \\frac{1}{${sigma}}$.`,
+              `由 $\\text{Var}(Z) = a^2 \\cdot ${sigma * sigma} = 1$ 且 $a > 0$，得 $a = \\frac{1}{${sigma}}$。`,
+            ),
+          ],
+          [
+            ["Fix the shift", "再定平移"],
+            t(
+              `$E(Z) = \\frac{${inParens(mu)}}{${sigma}} + b = 0$, so $b = ${answer.toLatex()}$.`,
+              `$E(Z) = \\frac{${inParens(mu)}}{${sigma}} + b = 0$，所以 $b = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `So $Z = \\frac{X - ${inParens(mu)}}{${sigma}}$: subtracting the mean leaves mean $0$, and dividing by $${sigma}$ divides the variance $${sigma * sigma}$ by $${sigma * sigma}$.`,
+          `所以 $Z = \\frac{X - ${inParens(mu)}}{${sigma}}$：减去均值后均值为 $0$，除以 $${sigma}$ 使方差 $${sigma * sigma}$ 除以 $${sigma * sigma}$。`,
+        ),
       ),
     });
   },
@@ -998,13 +1241,15 @@ const secondMomentFromMgf: KnowledgePointDef = {
   id: "the-second-moment-from-a-moment-generating-function",
   title: t("The second moment from a moment generating function", "由矩母函数求二阶矩"),
   explanation: t(
-    "The derivatives of a moment generating function at zero are the moments: $M'(0) = E(X)$ and $M''(0) = E(X^2)$. For a power such as $(1 - at)^{-k}$, differentiating twice brings down the factors $ka$ and then $(k + 1)a$. There is no need to know which distribution this is, or to integrate its density.",
-    "矩母函数在零处的各阶导数就是各阶矩：$M'(0) = E(X)$，$M''(0) = E(X^2)$。对 $(1 - at)^{-k}$ 这样的幂函数，求两次导，依次带出因子 $ka$ 和 $(k + 1)a$。不需要知道这是什么分布，也不需要对它的密度积分。",
+    "The derivatives of a moment generating function at zero are the moments: $M'(0) = E(X)$ and $M''(0) = E(X^2)$. For a power such as $(1 - at)^{-k}$, differentiating twice brings down the factors $ka$ and then $(k + 1)a$. There is no need to know which distribution this is, or to integrate its density. For $M(t) = (1 - 20t)^{-3}$, $E(X^2) = 3 \\cdot 4 \\cdot 20^2 = 4800$.\n\n> **Watch out.** The second factor is $k + 1$, not $k$ or $k - 1$: the power moves from $-k$ to $-(k + 1)$. And $E(X^2)$ is not the square of the mean $(ka)^2$.",
+    "矩母函数在零处的各阶导数就是各阶矩：$M'(0) = E(X)$，$M''(0) = E(X^2)$。对 $(1 - at)^{-k}$ 这样的幂函数，求两次导，依次带出因子 $ka$ 和 $(k + 1)a$。不需要知道这是什么分布，也不需要对它的密度积分。对于 $M(t) = (1 - 20t)^{-3}$，$E(X^2) = 3 \\cdot 4 \\cdot 20^2 = 4800$。\n\n> **注意。** 第二个因子是 $k + 1$，不是 $k$ 或 $k - 1$：幂从 $-k$ 变为 $-(k + 1)$。而且 $E(X^2)$ 不是均值的平方 $(ka)^2$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const k = rng.int(2, 6);
     const answer = k * (k + 1) * a * a;
+    const inside = `1 - ${coefficientOf(a)}t`;
+    const scale = a === 1 ? "" : ` \\cdot ${a}`;
     return numberProblem({
       prompt: t(
         `A random variable has moment generating function $M(t) = (1 - ${coefficientOf(a)}t)^{-${k}}$. Find $E(X^2)$.`,
@@ -1012,10 +1257,40 @@ const secondMomentFromMgf: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(k * a) ** 2, k * a, k * (k - 1) * a * a],
-      solution: t(
-        `Differentiating twice gives $M''(t) = ${k} \\cdot ${k + 1} \\cdot ${a}^2(1 - ${coefficientOf(a)}t)^{-${k + 2}}$. At $t = 0$ this is $${answer}$.`,
-        `求两次导得 $M''(t) = ${k} \\cdot ${k + 1} \\cdot ${a}^2(1 - ${coefficientOf(a)}t)^{-${k + 2}}$。在 $t = 0$ 处它是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          (k * a) ** 2,
+          "That is the square of the mean, $(M'(0))^2$, not the second moment.",
+          "那是均值的平方 $(M'(0))^2$，不是二阶矩。",
+        ),
+        why(k * a, "That is the mean $M'(0)$; differentiate once more.", "那是均值 $M'(0)$；还要再求一次导。"),
+        why(
+          k * (k - 1) * a * a,
+          `That uses $${k - 1}$ as the second factor; the power moves from $-${k}$ to $-${k + 1}$, so the factor is $${k + 1}$.`,
+          `那是把第二个因子取成了 $${k - 1}$；幂从 $-${k}$ 变为 $-${k + 1}$，所以因子是 $${k + 1}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate once", "求一阶导数"],
+            t(
+              `$M'(t) = ${k}${scale}(${inside})^{-${k + 1}} = ${k * a}(${inside})^{-${k + 1}}$.`,
+              `$M'(t) = ${k}${scale}(${inside})^{-${k + 1}} = ${k * a}(${inside})^{-${k + 1}}$。`,
+            ),
+          ],
+          [
+            ["Differentiate again and set t = 0", "再求导并令 $t = 0$"],
+            t(
+              `$M''(t) = ${k * a} \\cdot ${k + 1}${scale}(${inside})^{-${k + 2}}$, so $E(X^2) = M''(0) = ${answer}$.`,
+              `$M''(t) = ${k * a} \\cdot ${k + 1}${scale}(${inside})^{-${k + 2}}$，所以 $E(X^2) = M''(0) = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The variance $${answer} - ${k * a}^2 = ${k * a * a}$ is positive, as it must be.`,
+          `方差 $${answer} - ${k * a}^2 = ${k * a * a}$ 是正数，理应如此。`,
+        ),
       ),
     });
   },
@@ -1025,8 +1300,8 @@ const sizeFromVariance: KnowledgePointDef = {
   id: "the-number-of-values-from-a-uniform-variance",
   title: t("The number of values from a uniform variance", "由均匀分布的方差求取值个数"),
   explanation: t(
-    "The variance of a discrete uniform variable on $n$ consecutive integers is $\\frac{n^2 - 1}{12}$, and it depends on $n$ alone, not on where the values begin. So the variance can be inverted: multiply by 12, add 1, and take a square root. The mean plays no part, which also means it cannot be recovered this way.",
-    "$n$ 个连续整数上的离散均匀变量，方差是 $\\frac{n^2 - 1}{12}$，只取决于 $n$，与取值从哪里开始无关。所以可以反解方差：乘以 12，加 1，再开平方。均值不起作用，这也意味着用这种方法求不出均值。",
+    "The variance of a discrete uniform variable on $n$ consecutive integers is $\\frac{n^2 - 1}{12}$, and it depends on $n$ alone, not on where the values begin. So the variance can be inverted: multiply by 12, add 1, and take a square root. The mean plays no part, which also means it cannot be recovered this way.\n\n> **Watch out.** Undo the steps in reverse order and finish with the square root. A variance of $4$ gives $n^2 = 12 \\cdot 4 + 1 = 49$, so $n = 7$, not $49$; and $n$ counts the values, one more than the gap $6$ between the largest and the smallest.",
+    "$n$ 个连续整数上的离散均匀变量，方差是 $\\frac{n^2 - 1}{12}$，只取决于 $n$，与取值从哪里开始无关。所以可以反解方差：乘以 12，加 1，再开平方。均值不起作用，这也意味着用这种方法求不出均值。\n\n> **注意。** 按相反的顺序还原，最后别忘了开平方。方差为 $4$ 时 $n^2 = 12 \\cdot 4 + 1 = 49$，所以 $n = 7$，而不是 $49$；而且 $n$ 是取值的个数，比最大值与最小值之差 $6$ 多一。",
   ),
   generate(rng) {
     const n = rng.int(2, 60);
@@ -1039,10 +1314,35 @@ const sizeFromVariance: KnowledgePointDef = {
       ),
       answer: n,
       form: "integer",
-      wrong: [n + 1, n - 1, 2 * n],
-      solution: t(
-        `From $\\frac{n^2 - 1}{12} = ${variance.toLatex()}$ we get $n^2 = ${n * n}$, so $n = ${n}$.`,
-        `由 $\\frac{n^2 - 1}{12} = ${variance.toLatex()}$ 得 $n^2 = ${n * n}$，所以 $n = ${n}$。`,
+      mistakes: apart(n, [
+        why(n * n, "That is $n^2$; take the square root at the end.", "那是 $n^2$；最后还要开平方。"),
+        why(
+          n - 1,
+          "That is the gap between the largest and the smallest value; $n$ counts the values, one more than the gap.",
+          "那是最大值与最小值之差；$n$ 是取值的个数，比这个差多一。",
+        ),
+        why(
+          start + n - 1,
+          `That is the largest value, $${start} + n - 1$, not the number of values.`,
+          `那是最大的取值 $${start} + n - 1$，而不是取值的个数。`,
+        ),
+      ]),
+      wrong: [n + 1, 2 * n],
+      solution: walked(
+        [
+          [
+            ["Undo the division and the subtraction", "还原除法和减法"],
+            t(
+              `$\\frac{n^2 - 1}{12} = ${variance.toLatex()}$ gives $n^2 = 12 \\cdot ${variance.toLatex()} + 1 = ${n * n}$.`,
+              `由 $\\frac{n^2 - 1}{12} = ${variance.toLatex()}$ 得 $n^2 = 12 \\cdot ${variance.toLatex()} + 1 = ${n * n}$。`,
+            ),
+          ],
+          [["Take the square root", "开平方"], t(`$n = \\sqrt{${n * n}} = ${n}$.`, `$n = \\sqrt{${n * n}} = ${n}$。`)],
+        ],
+        t(
+          `The values run from $${start}$ to $${start + n - 1}$, and $\\frac{${n}^2 - 1}{12} = \\frac{${n * n - 1}}{12} = ${variance.toLatex()}$, the given variance; the starting point $${start}$ never entered.`,
+          `取值从 $${start}$ 到 $${start + n - 1}$，而 $\\frac{${n}^2 - 1}{12} = \\frac{${n * n - 1}}{12} = ${variance.toLatex()}$，正是已知的方差；起点 $${start}$ 始终没有用到。`,
+        ),
       ),
     });
   },
@@ -1052,13 +1352,20 @@ const lambdaFromRatio: KnowledgePointDef = {
   id: "the-poisson-mean-from-consecutive-probabilities",
   title: t("The Poisson mean from consecutive probabilities", "由相邻概率求泊松均值"),
   explanation: t(
-    "Consecutive Poisson probabilities have the simple ratio $\\frac{P(X = k + 1)}{P(X = k)} = \\frac{\\lambda}{k + 1}$, because the exponential factors cancel and the factorials differ by a single factor. So any one such ratio determines $\\lambda$. The same ratio shows that the probabilities rise while $k + 1$ is below $\\lambda$ and fall after that.",
-    "相邻泊松概率的比很简单：$\\frac{P(X = k + 1)}{P(X = k)} = \\frac{\\lambda}{k + 1}$，因为指数因子相消，阶乘只差一个因子。所以任何一个这样的比都能确定 $\\lambda$。同样的比还说明，$k + 1$ 小于 $\\lambda$ 时概率上升，之后下降。",
+    "Consecutive Poisson probabilities have the simple ratio $\\frac{P(X = k + 1)}{P(X = k)} = \\frac{\\lambda}{k + 1}$, because the exponential factors cancel and the factorials differ by a single factor. So any one such ratio determines $\\lambda$. The same ratio shows that the probabilities rise while $k + 1$ is below $\\lambda$ and fall after that.\n\n> **Watch out.** Multiply the ratio by $k + 1$, the larger of the two values. If $\\frac{P(X = 5)}{P(X = 4)} = \\frac{3}{5}$, then $\\lambda = 5 \\cdot \\frac{3}{5} = 3$, not $4 \\cdot \\frac{3}{5}$.",
+    "相邻泊松概率的比很简单：$\\frac{P(X = k + 1)}{P(X = k)} = \\frac{\\lambda}{k + 1}$，因为指数因子相消，阶乘只差一个因子。所以任何一个这样的比都能确定 $\\lambda$。同样的比还说明，$k + 1$ 小于 $\\lambda$ 时概率上升，之后下降。\n\n> **注意。** 比值要乘以两个值中较大的 $k + 1$。若 $\\frac{P(X = 5)}{P(X = 4)} = \\frac{3}{5}$，则 $\\lambda = 5 \\cdot \\frac{3}{5} = 3$，而不是 $4 \\cdot \\frac{3}{5}$。",
   ),
   generate(rng) {
     const lambda = rng.int(1, 12);
     const k = rng.int(1, 6);
     const ratio = Q.of(lambda, k + 1);
+    const trend =
+      lambda > k + 1
+        ? t(`$P(X = ${k + 1}) > P(X = ${k})$`, `$P(X = ${k + 1}) > P(X = ${k})$`)
+        : lambda < k + 1
+          ? t(`$P(X = ${k + 1}) < P(X = ${k})$`, `$P(X = ${k + 1}) < P(X = ${k})$`)
+          : t(`$P(X = ${k + 1}) = P(X = ${k})$`, `$P(X = ${k + 1}) = P(X = ${k})$`);
+    const relation = lambda > k + 1 ? ">" : lambda < k + 1 ? "<" : "=";
     return numberProblem({
       prompt: t(
         `$X$ is Poisson with mean $\\lambda$, and $\\frac{P(X = ${k + 1})}{P(X = ${k})} = ${ratio.toLatex()}$. Find $\\lambda$.`,
@@ -1066,10 +1373,37 @@ const lambdaFromRatio: KnowledgePointDef = {
       ),
       answer: lambda,
       form: "integer",
-      wrong: [lambda + 1, lambda * (k + 1), lambda + k + 1],
-      solution: t(
-        `The ratio equals $\\frac{\\lambda}{${k + 1}}$, so $\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$.`,
-        `这个比等于 $\\frac{\\lambda}{${k + 1}}$，所以 $\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$。`,
+      mistakes: apart(lambda, [
+        why(
+          ratio.mul(Q.of(k)),
+          `That multiplies by $${k}$; the ratio is $\\frac{\\lambda}{${k + 1}}$, so multiply by $${k + 1}$.`,
+          `那是乘以了 $${k}$；这个比是 $\\frac{\\lambda}{${k + 1}}$，所以要乘以 $${k + 1}$。`,
+        ),
+        why(lambda * (k + 1), `That multiplies by $${k + 1}$ twice, once too often.`, `那是乘了两次 $${k + 1}$，多乘了一次。`),
+        why(ratio, "That takes the ratio itself as the mean.", "那是把比值本身当作均值。"),
+      ]),
+      wrong: [lambda + 1, lambda + k + 1],
+      solution: walked(
+        [
+          [
+            ["Write the ratio", "写出比值"],
+            t(
+              `The exponential factors cancel and the factorials differ by the factor $${k + 1}$, so $\\frac{P(X = ${k + 1})}{P(X = ${k})} = \\frac{\\lambda}{${k + 1}}$.`,
+              `指数因子相消，阶乘只差因子 $${k + 1}$，所以 $\\frac{P(X = ${k + 1})}{P(X = ${k})} = \\frac{\\lambda}{${k + 1}}$。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `$\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$.`,
+              `$\\lambda = ${k + 1} \\cdot ${ratio.toLatex()} = ${lambda}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The ratio $${ratio.toLatex()}$ says that ${trend.en}, which agrees with $\\lambda = ${lambda} ${relation} ${k + 1}$.`,
+          `比值 $${ratio.toLatex()}$ 说明 ${trend["zh-CN"]}，这与 $\\lambda = ${lambda} ${relation} ${k + 1}$ 一致。`,
+        ),
       ),
     });
   },
@@ -1822,29 +2156,67 @@ const otherThan = (rng: Rng, lo: number, hi: number, other: number) =>
 const powerOf = (name: string, n: number) => (n === 1 ? name : `${name}^{${n}}`);
 /** timesVariable writes a positive multiple of a variable, leaving out a coefficient of one. */
 const timesVariable = (c: number, name: string) => (c === 1 ? name : `${c}${name}`);
+/** termOf writes a value times its probability, leaving out a factor of one. */
+const termOf = (p: Q, v: number) => (v === 1 ? p.toLatex() : `${v} \\cdot ${p.toLatex()}`);
 
 const modeOfPowerDensity: KnowledgePointDef = {
   id: "the-mode-of-a-density-with-two-power-factors",
   title: t("The mode of a density with two power factors", "含两个幂因子的密度的众数"),
   explanation: t(
-    "To find the mode, maximize the density, and the normalizing constant makes no difference to where the maximum lies. With a product of powers, it is easier to take the logarithm first, because a logarithm turns the product into a sum, and the derivative becomes $\\frac{a}{x} - \\frac{b}{c - x}$. Setting this to zero gives a point that divides the interval in the ratio $a : b$. This is not the mean, which lies closer to the middle of the interval.",
-    "求众数就是使密度最大，归一化常数不影响最大值的位置。对幂的乘积，先取对数更容易，因为对数把乘积变成和，导数变成 $\\frac{a}{x} - \\frac{b}{c - x}$。令它为零，得到把区间按 $a : b$ 分开的点。它不是均值，均值更靠近区间的中间。",
+    "To find the mode, maximize the density, and the normalizing constant makes no difference to where the maximum lies. With a product of powers, it is easier to take the logarithm first, because a logarithm turns the product into a sum, and the derivative becomes $\\frac{a}{x} - \\frac{b}{c - x}$. Setting this to zero gives a point that divides the interval in the ratio $a : b$. This is not the mean, which lies closer to the middle of the interval. For a density proportional to $x^{10}(40 - x)^{30}$ on $[0, 40]$, the mode is $\\frac{10 \\cdot 40}{40} = 10$.\n\n> **Watch out.** The ratio $a : b$ is measured from $0$, so a larger power of $x$ moves the mode to the right; do not swap the two powers. The mode is neither the midpoint nor the mean.",
+    "求众数就是使密度最大，归一化常数不影响最大值的位置。对幂的乘积，先取对数更容易，因为对数把乘积变成和，导数变成 $\\frac{a}{x} - \\frac{b}{c - x}$。令它为零，得到把区间按 $a : b$ 分开的点。它不是均值，均值更靠近区间的中间。对于在 $[0, 40]$ 上与 $x^{10}(40 - x)^{30}$ 成正比的密度，众数为 $\\frac{10 \\cdot 40}{40} = 10$。\n\n> **注意。** 比 $a : b$ 是从 $0$ 量起的，所以 $x$ 的幂越大，众数越靠右；不要把两个幂弄反。众数既不是中点，也不是均值。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
     const b = otherThan(rng, 1, 6, a);
     const c = rng.int(1, 12);
     const answer = Q.of(a * c, a + b);
+    const shown = answer.toLatex() === `\\frac{${a * c}}{${a + b}}` ? "" : ` = ${answer.toLatex()}`;
     return numberProblem({
       prompt: t(
         `A random variable has density proportional to $${powerOf("x", a)}(${c} - x)${b === 1 ? "" : `^{${b}}`}$ on $[0, ${c}]$. Find its mode.`,
         `一个随机变量在 $[0, ${c}]$ 上的密度与 $${powerOf("x", a)}(${c} - x)${b === 1 ? "" : `^{${b}}`}$ 成正比。求它的众数。`,
       ),
       answer,
-      wrong: [Q.of(c, 2), Q.of(b * c, a + b), Q.of(a, a + b), Q.of((a + 1) * c, a + b + 2)],
-      solution: t(
-        `Setting $\\frac{${a}}{x} = \\frac{${b}}{${c} - x}$ gives $x = \\frac{${a} \\cdot ${c}}{${a + b}} = ${answer.toLatex()}$.`,
-        `令 $\\frac{${a}}{x} = \\frac{${b}}{${c} - x}$，得 $x = \\frac{${a} \\cdot ${c}}{${a + b}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(c, 2),
+          "That is the midpoint; the two powers are different, so the peak is off centre.",
+          "那是中点；两个幂不同，所以峰值不在中间。",
+        ),
+        why(
+          Q.of(b * c, a + b),
+          "That swaps the two powers: the point divides the interval in the ratio $a : b$ measured from $0$.",
+          "那是把两个幂弄反了：这个点从 $0$ 量起按 $a : b$ 分开区间。",
+        ),
+        why(Q.of(a, a + b), `That forgets to multiply by the length $${c}$ of the interval.`, `那是忘了乘以区间长度 $${c}$。`),
+        why(
+          Q.of((a + 1) * c, a + b + 2),
+          "That is the mean, which lies closer to the middle than the mode.",
+          "那是均值，它比众数更靠近中间。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the logarithm and differentiate", "取对数并求导"],
+            t(
+              `With a constant $C$, $\\ln f(x) = C + ${a === 1 ? "" : `${a} `}\\ln x + ${b === 1 ? "" : `${b} `}\\ln(${c} - x)$, whose derivative is $\\frac{${a}}{x} - \\frac{${b}}{${c} - x}$.`,
+              `设 $C$ 为常数，$\\ln f(x) = C + ${a === 1 ? "" : `${a} `}\\ln x + ${b === 1 ? "" : `${b} `}\\ln(${c} - x)$，其导数为 $\\frac{${a}}{x} - \\frac{${b}}{${c} - x}$。`,
+            ),
+          ],
+          [
+            ["Set it to zero", "令它为零"],
+            t(
+              `$${a === 1 ? "" : a}(${c} - x) = ${timesVariable(b, "x")}$ gives $x = \\frac{${a * c}}{${a + b}}${shown}$.`,
+              `由 $${a === 1 ? "" : a}(${c} - x) = ${timesVariable(b, "x")}$ 得 $x = \\frac{${a * c}}{${a + b}}${shown}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The point splits $[0, ${c}]$ into $${answer.toLatex()}$ and $${Q.of(b * c, a + b).toLatex()}$, in the ratio $${a} : ${b}$; and the second derivative $-\\frac{${a}}{x^2} - \\frac{${b}}{(${c} - x)^2}$ is negative, so it is a maximum.`,
+          `这个点把 $[0, ${c}]$ 分成 $${answer.toLatex()}$ 和 $${Q.of(b * c, a + b).toLatex()}$，比为 $${a} : ${b}$；二阶导数 $-\\frac{${a}}{x^2} - \\frac{${b}}{(${c} - x)^2}$ 为负，所以是最大值。`,
+        ),
       ),
     });
   },
@@ -1854,8 +2226,8 @@ const powerOfUniform: KnowledgePointDef = {
   id: "a-probability-for-a-power-of-a-uniform-variable",
   title: t("A probability for a power of a uniform variable", "均匀变量的幂的概率"),
   explanation: t(
-    "The distribution function method rewrites an event about $Y$ as an event about $X$. For $Y = X^n$ with $X$ uniform on $[0, 1]$, the event $Y \\le y$ is the same as $X \\le y^{1/n}$, because the power function is increasing there. So $F_Y(y) = y^{1/n}$. This is larger than $y$ itself, as it should be, since raising a number below 1 to a power pushes it towards zero.",
-    "分布函数法把关于 $Y$ 的事件改写成关于 $X$ 的事件。对 $Y = X^n$，$X$ 在 $[0, 1]$ 上均匀，事件 $Y \\le y$ 等同于 $X \\le y^{1/n}$，因为幂函数在那里是增函数。所以 $F_Y(y) = y^{1/n}$。它比 $y$ 本身大，这是应该的，因为小于 1 的数取幂后会被推向零。",
+    "The distribution function method rewrites an event about $Y$ as an event about $X$. For $Y = X^n$ with $X$ uniform on $[0, 1]$, the event $Y \\le y$ is the same as $X \\le y^{1/n}$, because the power function is increasing there. So $F_Y(y) = y^{1/n}$. This is larger than $y$ itself, as it should be, since raising a number below 1 to a power pushes it towards zero. For $Y = X^4$, $P\\left(Y \\le \\frac{1}{16}\\right) = P\\left(X \\le \\frac{1}{2}\\right) = \\frac{1}{2}$.\n\n> **Watch out.** Take the $n$-th root of $y$; the probability is not $y$ itself. And the event $Y \\le y$ is $X \\le y^{1/n}$, not $X > y^{1/n}$.",
+    "分布函数法把关于 $Y$ 的事件改写成关于 $X$ 的事件。对 $Y = X^n$，$X$ 在 $[0, 1]$ 上均匀，事件 $Y \\le y$ 等同于 $X \\le y^{1/n}$，因为幂函数在那里是增函数。所以 $F_Y(y) = y^{1/n}$。它比 $y$ 本身大，这是应该的，因为小于 1 的数取幂后会被推向零。对 $Y = X^4$，$P\\left(Y \\le \\frac{1}{16}\\right) = P\\left(X \\le \\frac{1}{2}\\right) = \\frac{1}{2}$。\n\n> **注意。** 要对 $y$ 开 $n$ 次方；概率不是 $y$ 本身。事件 $Y \\le y$ 是 $X \\le y^{1/n}$，不是 $X > y^{1/n}$。",
   ),
   generate(rng) {
     const n = rng.int(2, 3);
@@ -1869,10 +2241,45 @@ const powerOfUniform: KnowledgePointDef = {
         `设 $X$ 在 $[0, 1]$ 上均匀，$Y = X^{${n}}$。求 $P\\left(Y \\le ${y.toLatex()}\\right)$。`,
       ),
       answer,
-      wrong: [y, Q.of(1).sub(answer), answer.div(Q.of(n)), Q.of(1).sub(y)],
-      solution: t(
-        `The event is the same as $X \\le ${answer.toLatex()}$, whose probability is $${answer.toLatex()}$.`,
-        `这个事件等同于 $X \\le ${answer.toLatex()}$，其概率是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          y,
+          `That is $P(X \\le ${y.toLatex()})$; the event about $Y$ must be turned into one about $X$.`,
+          `那是 $P(X \\le ${y.toLatex()})$；要把关于 $Y$ 的事件化为关于 $X$ 的事件。`,
+        ),
+        why(
+          Q.of(1).sub(answer),
+          `That is $P(X > ${answer.toLatex()})$, the opposite event.`,
+          `那是 $P(X > ${answer.toLatex()})$，即对立事件。`,
+        ),
+        why(answer.div(Q.of(n)), `That divides by $${n}$ instead of taking the root.`, `那是除以 $${n}$，而不是开方。`),
+        why(
+          Q.of(1).sub(y),
+          `That is $1 - ${y.toLatex()}$, the complement of the wrong event.`,
+          `那是 $1 - ${y.toLatex()}$，即错误事件的补。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Rewrite the event", "改写事件"],
+            t(
+              `$X^{${n}}$ is increasing on $[0, 1]$, so $Y \\le ${y.toLatex()}$ is the event $X \\le \\left(${y.toLatex()}\\right)^{1/${n}} = ${answer.toLatex()}$.`,
+              `$X^{${n}}$ 在 $[0, 1]$ 上递增，所以 $Y \\le ${y.toLatex()}$ 就是事件 $X \\le \\left(${y.toLatex()}\\right)^{1/${n}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Use the uniform distribution", "利用均匀分布"],
+            t(
+              `For $X$ uniform on $[0, 1]$, $P\\left(X \\le ${answer.toLatex()}\\right) = ${answer.toLatex()}$.`,
+              `$X$ 在 $[0, 1]$ 上均匀，所以 $P\\left(X \\le ${answer.toLatex()}\\right) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\left(${answer.toLatex()}\\right)^{${n}} = ${y.toLatex()}$, and the probability $${answer.toLatex()}$ is larger than $${y.toLatex()}$, as $F_Y(y) = y^{1/${n}}$ should be.`,
+          `$\\left(${answer.toLatex()}\\right)^{${n}} = ${y.toLatex()}$，而概率 $${answer.toLatex()}$ 大于 $${y.toLatex()}$，$F_Y(y) = y^{1/${n}}$ 理应如此。`,
+        ),
       ),
     });
   },
@@ -1882,8 +2289,8 @@ const squareOnUnevenInterval: KnowledgePointDef = {
   id: "the-square-of-a-uniform-variable-on-an-uneven-interval",
   title: t("The square of a uniform variable on an uneven interval", "不对称区间上均匀变量的平方"),
   explanation: t(
-    "The map $x \\mapsto x^2$ is many-to-one, so the event $X^2 \\le c^2$ is the interval $-c \\le X \\le c$. When the support of $X$ reaches further on the right than on the left, part of this interval may fall outside the support, and that part contributes no probability. So there are two cases: while $c$ is at most the left reach, the length is $2c$; after that, the left end stops at the edge of the support.",
-    "映射 $x \\mapsto x^2$ 是多对一的，所以事件 $X^2 \\le c^2$ 就是区间 $-c \\le X \\le c$。当 $X$ 的支撑在右边比左边伸得更远时，这个区间的一部分可能落在支撑之外，那部分不贡献概率。所以有两种情况：当 $c$ 不超过左边的范围时，长度是 $2c$；超过之后，左端点停在支撑的边缘。",
+    "The map $x \\mapsto x^2$ is many-to-one, so the event $X^2 \\le c^2$ is the interval $-c \\le X \\le c$. When the support of $X$ reaches further on the right than on the left, part of this interval may fall outside the support, and that part contributes no probability. So there are two cases: while $c$ is at most the left reach, the length is $2c$; after that, the left end stops at the edge of the support. For $X$ uniform on $[-10, 30]$, $P(X^2 \\le 400)$ keeps $[-10, 20]$ of the interval $[-20, 20]$, a length of $30$ out of $40$, so it is $\\frac{3}{4}$.\n\n> **Watch out.** Both signs count: $X^2 \\le c^2$ includes $-c \\le X < 0$, not only $0 \\le X \\le c$. But the part of $[-c, c]$ outside the support adds nothing.",
+    "映射 $x \\mapsto x^2$ 是多对一的，所以事件 $X^2 \\le c^2$ 就是区间 $-c \\le X \\le c$。当 $X$ 的支撑在右边比左边伸得更远时，这个区间的一部分可能落在支撑之外，那部分不贡献概率。所以有两种情况：当 $c$ 不超过左边的范围时，长度是 $2c$；超过之后，左端点停在支撑的边缘。若 $X$ 在 $[-10, 30]$ 上均匀，$P(X^2 \\le 400)$ 保留区间 $[-20, 20]$ 中的 $[-10, 20]$，长度为 $40$ 中的 $30$，所以概率是 $\\frac{3}{4}$。\n\n> **注意。** 正负两边都要算：$X^2 \\le c^2$ 包括 $-c \\le X < 0$，而不只是 $0 \\le X \\le c$。但 $[-c, c]$ 落在支撑之外的部分不贡献概率。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -1892,16 +2299,65 @@ const squareOnUnevenInterval: KnowledgePointDef = {
     const inside = c <= a;
     const length = inside ? 2 * c : c + a;
     const answer = Q.of(length, a + b);
+    const lower = inside ? -c : -a;
     return numberProblem({
       prompt: t(
         `Let $X$ be uniform on $[-${a}, ${b}]$. Find $P(X^2 \\le ${c * c})$.`,
         `设 $X$ 在 $[-${a}, ${b}]$ 上均匀。求 $P(X^2 \\le ${c * c})$。`,
       ),
       answer,
-      wrong: [Q.of(inside ? c + a : 2 * c, a + b), Q.of(c, a + b), Q.of(c * c, a + b + c * c), Q.of(c, b)],
-      solution: t(
-        `The event is $${-c} \\le X \\le ${c}$. Inside $[-${a}, ${b}]$, this has length $${length}$, out of a total of $${a + b}$. So the probability is $${answer.toLatex()}$.`,
-        `事件是 $${-c} \\le X \\le ${c}$。在 $[-${a}, ${b}]$ 内，它的长度是 $${length}$，总长度是 $${a + b}$。所以概率是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        inside
+          ? why(
+              Q.of(c + a, a + b),
+              `That cuts the interval at $-${a}$, although $-${c}$ is still inside the support.`,
+              `那是在 $-${a}$ 处截断区间，但 $-${c}$ 仍在支撑之内。`,
+            )
+          : why(
+              Q.of(2 * c, a + b),
+              `That counts the part of $[-${c}, ${c}]$ below $-${a}$, which lies outside the support.`,
+              `那是把 $[-${c}, ${c}]$ 中 $-${a}$ 以下的部分也算进去了，它在支撑之外。`,
+            ),
+        why(
+          Q.of(c, a + b),
+          "That keeps only the positive values of $X$; negative values have positive squares too.",
+          "那只保留了 $X$ 的正值；负值的平方也是正的。",
+        ),
+        why(
+          Q.of(c, b),
+          `That treats $X$ as uniform on $[0, ${b}]$, ignoring its negative values.`,
+          `那是把 $X$ 当成 $[0, ${b}]$ 上的均匀变量，忽略了负值。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Solve for X", "解出 $X$"],
+            t(`$X^2 \\le ${c * c}$ is the event $${-c} \\le X \\le ${c}$.`, `$X^2 \\le ${c * c}$ 就是事件 $${-c} \\le X \\le ${c}$。`),
+          ],
+          [
+            ["Keep the part inside the support", "保留支撑内的部分"],
+            t(
+              inside
+                ? `$-${c}$ is not below $-${a}$, so the whole interval $[${-c}, ${c}]$ lies in $[-${a}, ${b}]$, with length $${length}$.`
+                : `$-${c}$ is below $-${a}$, so only $[-${a}, ${c}]$ lies in the support, with length $${length}$.`,
+              inside
+                ? `$-${c}$ 不小于 $-${a}$，所以整个区间 $[${-c}, ${c}]$ 都在 $[-${a}, ${b}]$ 内，长度为 $${length}$。`
+                : `$-${c}$ 小于 $-${a}$，所以只有 $[-${a}, ${c}]$ 在支撑内，长度为 $${length}$。`,
+            ),
+          ],
+          [
+            ["Divide by the total length", "除以总长度"],
+            t(
+              `$P(X^2 \\le ${c * c}) = \\frac{${length}}{${a + b}}${answer.toLatex() === `\\frac{${length}}{${a + b}}` ? "" : ` = ${answer.toLatex()}`}$.`,
+              `$P(X^2 \\le ${c * c}) = \\frac{${length}}{${a + b}}${answer.toLatex() === `\\frac{${length}}{${a + b}}` ? "" : ` = ${answer.toLatex()}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The kept interval runs from $${lower}$ to $${c}$, a length of $${c} + ${-lower} = ${length}$, shorter than the whole support of length $${a + b}$.`,
+          `保留的区间从 $${lower}$ 到 $${c}$，长度为 $${c} + ${-lower} = ${length}$，比长度为 $${a + b}$ 的整个支撑短。`,
+        ),
       ),
     });
   },
@@ -1911,24 +2367,64 @@ const expectedEmptyBoxes: KnowledgePointDef = {
   id: "the-expected-number-of-empty-boxes",
   title: t("The expected number of empty boxes", "空盒子的期望个数"),
   explanation: t(
-    "Counting the empty boxes directly leads to a complicated distribution, but its mean is simple. Give each box an indicator, equal to 1 if the box is empty, so that the count is the sum of the indicators. Linearity of expectation does not require independence, and the indicators here are certainly dependent. It only requires the mean of each indicator, which is the probability that every ball misses that particular box.",
-    "直接数空盒子会得到复杂的分布，但它的均值很简单。给每个盒子一个示性变量，盒子为空时等于 1，于是个数就是示性变量之和。期望的线性性不要求独立，这里的示性变量显然不独立。只需要每个示性变量的均值，也就是所有球都没落入那个盒子的概率。",
+    "Counting the empty boxes directly leads to a complicated distribution, but its mean is simple. Give each box an indicator, equal to 1 if the box is empty, so that the count is the sum of the indicators. Linearity of expectation does not require independence, and the indicators here are certainly dependent. It only requires the mean of each indicator, which is the probability that every ball misses that particular box.\n\n> **Watch out.** A box is empty when every ball misses it, which has probability $\\left(1 - \\frac{1}{m}\\right)^{n}$, not $\\left(\\frac{1}{m}\\right)^{n}$. With $3$ balls and $2$ boxes each box is empty with probability $\\left(\\frac{1}{2}\\right)^{3} = \\frac{1}{8}$, so the expected number of empty boxes is $2 \\cdot \\frac{1}{8} = \\frac{1}{4}$.",
+    "直接数空盒子会得到复杂的分布，但它的均值很简单。给每个盒子一个示性变量，盒子为空时等于 1，于是个数就是示性变量之和。期望的线性性不要求独立，这里的示性变量显然不独立。只需要每个示性变量的均值，也就是所有球都没落入那个盒子的概率。\n\n> **注意。** 盒子为空意味着每个球都没落入它，概率是 $\\left(1 - \\frac{1}{m}\\right)^{n}$，而不是 $\\left(\\frac{1}{m}\\right)^{n}$。$3$ 个球放入 $2$ 个盒子时，每个盒子为空的概率是 $\\left(\\frac{1}{2}\\right)^{3} = \\frac{1}{8}$，所以空盒子的期望个数是 $2 \\cdot \\frac{1}{8} = \\frac{1}{4}$。",
   ),
   generate(rng) {
     const m = rng.int(2, 8);
     const n = rng.int(2, 5);
     const miss = power(Q.of(m - 1, m), n);
     const answer = miss.mul(Q.of(m));
+    const missTex = `\\left(${Q.of(m - 1, m).toLatex()}\\right)^{${n}}`;
     return numberProblem({
       prompt: t(
         `Each of ${n} balls is placed independently into one of ${m} equally likely boxes. Find the expected number of empty boxes.`,
         `${n} 个球分别独立地等可能放入 ${m} 个盒子之一。求空盒子的期望个数。`,
       ),
       answer,
-      wrong: [miss, power(Q.of(m - 1, m), n - 1).mul(Q.of(m)), power(Q.of(1, m), n).mul(Q.of(m)), answer.add(Q.of(1))],
-      solution: t(
-        `A given box is empty with probability $\\left(${Q.of(m - 1, m).toLatex()}\\right)^{${n}}$. Adding this over the ${m} boxes gives $${answer.toLatex()}$.`,
-        `一个给定的盒子为空的概率是 $\\left(${Q.of(m - 1, m).toLatex()}\\right)^{${n}}$。对 ${m} 个盒子求和，得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          miss,
+          `That is the chance that one box is empty; add it over all ${m} boxes.`,
+          `那是一个盒子为空的概率；还要对 ${m} 个盒子求和。`,
+        ),
+        why(
+          power(Q.of(1, m), n).mul(Q.of(m)),
+          "That uses the chance that every ball lands in the box; an empty box needs every ball to miss it.",
+          "那用的是所有球都落入这个盒子的概率；盒子为空需要每个球都没落入它。",
+        ),
+        why(
+          power(Q.of(m - 1, m), n - 1).mul(Q.of(m)),
+          `That raises to the power $${n - 1}$; all ${n} balls must miss the box.`,
+          `那是取了 $${n - 1}$ 次幂；${n} 个球都要没落入这个盒子。`,
+        ),
+      ]),
+      wrong: [answer.add(Q.of(1))],
+      solution: walked(
+        [
+          [
+            ["Use indicators", "用示性变量"],
+            t(
+              `Let $I_j = 1$ when box $j$ is empty. The number of empty boxes is $I_1 + \\cdots + I_{${m}}$.`,
+              `当第 $j$ 个盒子为空时令 $I_j = 1$。空盒子的个数是 $I_1 + \\cdots + I_{${m}}$。`,
+            ),
+          ],
+          [
+            ["Find each mean", "求每个均值"],
+            t(
+              `Each ball misses box $j$ with probability $${Q.of(m - 1, m).toLatex()}$, independently, so $E(I_j) = ${missTex} = ${miss.toLatex()}$.`,
+              `每个球没落入第 $j$ 个盒子的概率是 $${Q.of(m - 1, m).toLatex()}$，且相互独立，所以 $E(I_j) = ${missTex} = ${miss.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Add", "相加"],
+            t(`$${m} \\cdot ${miss.toLatex()} = ${answer.toLatex()}$.`, `$${m} \\cdot ${miss.toLatex()} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `The expected number of occupied boxes is then $${m} - ${answer.toLatex()} = ${Q.of(m).sub(answer).toLatex()}$, which lies between $1$ and $${Math.min(m, n)}$, as it must: at least one box is used, and at most $\\min(${m}, ${n})$.`,
+          `于是被占用盒子的期望个数是 $${m} - ${answer.toLatex()} = ${Q.of(m).sub(answer).toLatex()}$，介于 $1$ 与 $${Math.min(m, n)}$ 之间，理应如此：至少用到一个盒子，至多 $\\min(${m}, ${n})$ 个。`,
+        ),
       ),
     });
   },
@@ -1938,23 +2434,59 @@ const momentOfPowerDensity: KnowledgePointDef = {
   id: "a-moment-of-a-power-density",
   title: t("A moment of a power density", "幂密度的矩"),
   explanation: t(
-    "The density $f(x) = (k + 1)x^k$ on $[0, 1]$ is a family with a simple moment formula. Multiplying by $x^n$ just raises the exponent, so $E(X^n) = (k + 1)\\int_0^1 x^{k + n}\\,dx = \\frac{k + 1}{k + n + 1}$. The moments fall as $n$ grows, because a number below 1 shrinks when it is raised to a higher power. Larger values of $k$ bring them closer to 1, because the mass then lies nearer to 1.",
-    "$[0, 1]$ 上的密度 $f(x) = (k + 1)x^k$ 是一族矩公式很简单的分布。乘以 $x^n$ 只是提高指数，所以 $E(X^n) = (k + 1)\\int_0^1 x^{k + n}\\,dx = \\frac{k + 1}{k + n + 1}$。矩随 $n$ 增大而减小，因为小于 1 的数取更高次幂时会变小。$k$ 越大，矩越接近 1，因为这时质量更靠近 1。",
+    "The density $f(x) = (k + 1)x^k$ on $[0, 1]$ is a family with a simple moment formula. Multiplying by $x^n$ just raises the exponent, so $E(X^n) = (k + 1)\\int_0^1 x^{k + n}\\,dx = \\frac{k + 1}{k + n + 1}$. The moments fall as $n$ grows, because a number below 1 shrinks when it is raised to a higher power. Larger values of $k$ bring them closer to 1, because the mass then lies nearer to 1. For $f(x) = 21x^{20}$, $E(X^{10}) = \\frac{21}{31}$.\n\n> **Watch out.** Add the exponents $k + n$ before integrating, and then the integral divides by $k + n + 1$, one more than the exponent. Keep the constant $k + 1$ of the density.",
+    "$[0, 1]$ 上的密度 $f(x) = (k + 1)x^k$ 是一族矩公式很简单的分布。乘以 $x^n$ 只是提高指数，所以 $E(X^n) = (k + 1)\\int_0^1 x^{k + n}\\,dx = \\frac{k + 1}{k + n + 1}$。矩随 $n$ 增大而减小，因为小于 1 的数取更高次幂时会变小。$k$ 越大，矩越接近 1，因为这时质量更靠近 1。对于 $f(x) = 21x^{20}$，$E(X^{10}) = \\frac{21}{31}$。\n\n> **注意。** 先把指数相加得 $k + n$ 再积分，积分要除以比指数大一的 $k + n + 1$。还要保留密度中的常数 $k + 1$。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
     const n = rng.int(2, 7);
     const answer = Q.of(k + 1, k + n + 1);
+    const shown = answer.toLatex() === `\\frac{${k + 1}}{${k + n + 1}}` ? "" : ` = ${answer.toLatex()}`;
     return numberProblem({
       prompt: t(
         `A random variable has density $f(x) = ${k + 1}${powerOf("x", k)}$ on $[0, 1]$. Find $E(X^{${n}})$.`,
         `一个随机变量在 $[0, 1]$ 上的密度是 $f(x) = ${k + 1}${powerOf("x", k)}$。求 $E(X^{${n}})$。`,
       ),
       answer,
-      wrong: [Q.of(k + 1, k + n), Q.of(1, n + 1), Q.of(k, k + n), Q.of(k + 1, n + 1)],
-      solution: t(
-        `The integral is $${k + 1}\\int_0^1 x^{${k + n}}\\,dx = ${answer.toLatex()}$.`,
-        `积分是 $${k + 1}\\int_0^1 x^{${k + n}}\\,dx = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(k + 1, k + n),
+          `That divides by the exponent $${k + n}$; integrating $x^{${k + n}}$ divides by $${k + n + 1}$.`,
+          `那是除以了指数 $${k + n}$；积分 $x^{${k + n}}$ 要除以 $${k + n + 1}$。`,
+        ),
+        why(
+          Q.of(1, n + 1),
+          "That is the moment of a uniform variable; this density leans towards $1$.",
+          "那是均匀变量的矩；这个密度偏向 $1$。",
+        ),
+        why(Q.of(k, k + n), "That drops one from both the constant and the denominator.", "那是常数和分母都少了一。"),
+        why(
+          Q.of(k + 1, n + 1),
+          `That leaves out the factor $${powerOf("x", k)}$ of the density when integrating.`,
+          `那是积分时漏掉了密度中的因子 $${powerOf("x", k)}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Set up the integral", "列出积分"],
+            t(
+              `$E(X^{${n}}) = \\int_0^1 x^{${n}} \\cdot ${k + 1}${powerOf("x", k)}\\,dx = ${k + 1}\\int_0^1 x^{${k + n}}\\,dx$.`,
+              `$E(X^{${n}}) = \\int_0^1 x^{${n}} \\cdot ${k + 1}${powerOf("x", k)}\\,dx = ${k + 1}\\int_0^1 x^{${k + n}}\\,dx$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$${k + 1} \\cdot \\frac{1}{${k + n + 1}} = \\frac{${k + 1}}{${k + n + 1}}${shown}$.`,
+              `$${k + 1} \\cdot \\frac{1}{${k + n + 1}} = \\frac{${k + 1}}{${k + n + 1}}${shown}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ lies between $${Q.of(1, n + 1).toLatex()}$, the moment of a uniform variable, and $1$, as it should for a density that leans towards $1$.`,
+          `$${answer.toLatex()}$ 介于均匀变量的矩 $${Q.of(1, n + 1).toLatex()}$ 和 $1$ 之间，偏向 $1$ 的密度理应如此。`,
+        ),
       ),
     });
   },
@@ -1965,22 +2497,53 @@ const varianceOfTriangularDensity: KnowledgePointDef = {
   figure: probabilityDrawings1["variance-of-continuous-random-variables#the-variance-of-a-right-triangular-density"],
   title: t("The variance of a right triangular density", "直角三角形密度的方差"),
   explanation: t(
-    "A density that rises in a straight line from zero has the shape of a right triangle. Its first two moments come from single integrals, with mean $\\frac{2c}{3}$ and second moment $\\frac{c^2}{2}$. Subtracting the square of the mean gives the variance $\\frac{c^2}{18}$. This is smaller than the uniform value $\\frac{c^2}{12}$ on the same interval, because the mass is concentrated towards one end instead of being spread evenly.",
-    "从零开始沿直线上升的密度形如直角三角形。它的前两阶矩由单积分得到，均值是 $\\frac{2c}{3}$，二阶矩是 $\\frac{c^2}{2}$。减去均值的平方，得方差 $\\frac{c^2}{18}$。它小于同一区间上均匀分布的值 $\\frac{c^2}{12}$，因为质量集中在一端而不是均匀分布。",
+    "A density that rises in a straight line from zero has the shape of a right triangle. Its first two moments come from single integrals, with mean $\\frac{2c}{3}$ and second moment $\\frac{c^2}{2}$. Subtracting the square of the mean gives the variance $\\frac{c^2}{18}$. This is smaller than the uniform value $\\frac{c^2}{12}$ on the same interval, because the mass is concentrated towards one end instead of being spread evenly. In the drawing $c = 3$: the density rises to $\\frac{2}{3}$, the mean is $2$, and the variance is $\\frac{9}{18} = \\frac{1}{2}$, below the value $\\frac{9}{12} = \\frac{3}{4}$ of the dashed uniform density. With $c = 60$ the variance is $\\frac{3600}{18} = 200$.\n\n> **Watch out.** The second moment $\\frac{c^2}{2}$ is not the variance: subtract the square of the mean, $\\frac{4c^2}{9}$. And the uniform value $\\frac{c^2}{12}$ does not apply to this sloping density.",
+    "从零开始沿直线上升的密度形如直角三角形。它的前两阶矩由单积分得到，均值是 $\\frac{2c}{3}$，二阶矩是 $\\frac{c^2}{2}$。减去均值的平方，得方差 $\\frac{c^2}{18}$。它小于同一区间上均匀分布的值 $\\frac{c^2}{12}$，因为质量集中在一端而不是均匀分布。图中 $c = 3$：密度升到 $\\frac{2}{3}$，均值是 $2$，方差是 $\\frac{9}{18} = \\frac{1}{2}$，小于虚线所示均匀密度的 $\\frac{9}{12} = \\frac{3}{4}$。当 $c = 60$ 时，方差为 $\\frac{3600}{18} = 200$。\n\n> **注意。** 二阶矩 $\\frac{c^2}{2}$ 不是方差：还要减去均值的平方 $\\frac{4c^2}{9}$。而均匀分布的 $\\frac{c^2}{12}$ 不适用于这个倾斜的密度。",
   ),
   generate(rng) {
     const c = rng.int(2, 30);
     const answer = Q.of(c * c, 18);
+    const [mean, second, square] = [Q.of(2 * c, 3).toLatex(), Q.of(c * c, 2).toLatex(), Q.of(4 * c * c, 9).toLatex()];
     return numberProblem({
       prompt: t(
         `A random variable has density $f(x) = \\frac{2x}{${c * c}}$ on $[0, ${c}]$. Find its variance.`,
         `一个随机变量在 $[0, ${c}]$ 上的密度是 $f(x) = \\frac{2x}{${c * c}}$。求它的方差。`,
       ),
       answer,
-      wrong: [Q.of(c * c, 2), Q.of(4 * c * c, 9), Q.of(c * c, 12), Q.of(c * c, 9)],
-      solution: t(
-        `The mean is $${Q.of(2 * c, 3).toLatex()}$ and the second moment is $${Q.of(c * c, 2).toLatex()}$. Subtracting the square of the mean gives $${answer.toLatex()}$.`,
-        `均值是 $${Q.of(2 * c, 3).toLatex()}$，二阶矩是 $${Q.of(c * c, 2).toLatex()}$。减去均值的平方，得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(c * c, 2), "That is the second moment; the square of the mean must be subtracted.", "那是二阶矩；还要减去均值的平方。"),
+        why(
+          Q.of(4 * c * c, 9),
+          "That is the square of the mean, which is subtracted, not the variance.",
+          "那是均值的平方，它是要减去的，不是方差。",
+        ),
+        why(
+          Q.of(c * c, 12),
+          "That is the variance of a uniform density on the same interval; this density slopes.",
+          "那是同一区间上均匀密度的方差；这个密度是倾斜的。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the two moments", "求两个矩"],
+            t(
+              `$E(X) = \\int_0^{${c}} \\frac{2x^2}{${c * c}}\\,dx = ${mean}$ and $E(X^2) = \\int_0^{${c}} \\frac{2x^3}{${c * c}}\\,dx = ${second}$.`,
+              `$E(X) = \\int_0^{${c}} \\frac{2x^2}{${c * c}}\\,dx = ${mean}$，$E(X^2) = \\int_0^{${c}} \\frac{2x^3}{${c * c}}\\,dx = ${second}$。`,
+            ),
+          ],
+          [
+            ["Subtract the square of the mean", "减去均值的平方"],
+            t(
+              `$\\operatorname{Var}(X) = ${second} - ${square} = ${answer.toLatex()}$.`,
+              `$\\operatorname{Var}(X) = ${second} - ${square} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ is smaller than the uniform value $${Q.of(c * c, 12).toLatex()}$, as it should be for mass bunched towards $${c}$.`,
+          `$${answer.toLatex()}$ 小于均匀分布的值 $${Q.of(c * c, 12).toLatex()}$，质量集中在 $${c}$ 附近时理应如此。`,
+        ),
       ),
     });
   },
@@ -1990,8 +2553,8 @@ const varianceFromFiniteMgf: KnowledgePointDef = {
   id: "the-variance-read-from-a-finite-mgf",
   title: t("The variance read from a finite MGF", "由有限项矩母函数读出方差"),
   explanation: t(
-    "The moment generating function of a discrete variable is $\\sum p_i e^{x_i t}$. So a function written as a sum of exponentials can be read as a table: each exponent is a value of the variable, and its coefficient is the probability. Then the moments can be calculated from this table directly, without differentiating anything. A constant term in the function is the probability of the value 0, since $e^{0t} = 1$.",
-    "离散变量的矩母函数是 $\\sum p_i e^{x_i t}$。所以写成指数函数之和的函数可以读成一张表：每个指数是变量的一个取值，它的系数是相应的概率。于是可以直接从表计算矩，不必求导。函数中的常数项是取值 0 的概率，因为 $e^{0t} = 1$。",
+    "The moment generating function of a discrete variable is $\\sum p_i e^{x_i t}$. So a function written as a sum of exponentials can be read as a table: each exponent is a value of the variable, and its coefficient is the probability. Then the moments can be calculated from this table directly, without differentiating anything. A constant term in the function is the probability of the value 0, since $e^{0t} = 1$. For $M(t) = \\frac{1}{2} + \\frac{1}{2}e^{20t}$, the values $0$ and $20$ give mean $10$, second moment $200$ and variance $200 - 100 = 100$.\n\n> **Watch out.** The exponents are the values and the coefficients are the probabilities, not the other way round. The second moment still needs the square of the mean subtracted.",
+    "离散变量的矩母函数是 $\\sum p_i e^{x_i t}$。所以写成指数函数之和的函数可以读成一张表：每个指数是变量的一个取值，它的系数是相应的概率。于是可以直接从表计算矩，不必求导。函数中的常数项是取值 0 的概率，因为 $e^{0t} = 1$。对于 $M(t) = \\frac{1}{2} + \\frac{1}{2}e^{20t}$，取值 $0$ 和 $20$ 给出均值 $10$、二阶矩 $200$，方差为 $200 - 100 = 100$。\n\n> **注意。** 指数是取值，系数是概率，不要弄反。二阶矩还要减去均值的平方。",
   ),
   generate(rng) {
     const first = rng.int(1, 8);
@@ -2010,10 +2573,48 @@ const varianceFromFiniteMgf: KnowledgePointDef = {
         `一个随机变量的矩母函数是 $M(t) = ${Q.of(first, 10).toLatex()} + ${p.toLatex()}e^{${timesVariable(d, "t")}} + ${q.toLatex()}e^{${timesVariable(e, "t")}}$。求它的方差。`,
       ),
       answer,
-      wrong: [moment, mean, mean.mul(mean), moment.add(mean.mul(mean))],
-      solution: t(
-        `The variable takes the values $0$, $${d}$ and $${e}$. Its mean is $${mean.toLatex()}$ and its second moment is $${moment.toLatex()}$, so the variance is $${answer.toLatex()}$.`,
-        `变量取值 $0$、$${d}$、$${e}$。均值是 $${mean.toLatex()}$，二阶矩是 $${moment.toLatex()}$，所以方差是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(moment, "That is the second moment; the square of the mean must be subtracted.", "那是二阶矩；还要减去均值的平方。"),
+        why(mean, "That is the mean, not the variance.", "那是均值，不是方差。"),
+        why(
+          mean.mul(mean),
+          "That is the square of the mean, which is subtracted, not the variance.",
+          "那是均值的平方，它是要减去的，不是方差。",
+        ),
+        why(
+          moment.add(mean.mul(mean)),
+          "That adds the square of the mean instead of subtracting it.",
+          "那是加上了均值的平方，而不是减去。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Read the table", "读出分布表"],
+            t(
+              `The variable takes the values $0$, $${d}$ and $${e}$ with probabilities $${Q.of(first, 10).toLatex()}$, $${p.toLatex()}$ and $${q.toLatex()}$.`,
+              `变量取值 $0$、$${d}$、$${e}$，概率分别为 $${Q.of(first, 10).toLatex()}$、$${p.toLatex()}$、$${q.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Find the two moments", "求两个矩"],
+            t(
+              `$E(X) = ${termOf(p, d)} + ${termOf(q, e)} = ${mean.toLatex()}$ and $E(X^2) = ${termOf(p, d * d)} + ${termOf(q, e * e)} = ${moment.toLatex()}$.`,
+              `$E(X) = ${termOf(p, d)} + ${termOf(q, e)} = ${mean.toLatex()}$，$E(X^2) = ${termOf(p, d * d)} + ${termOf(q, e * e)} = ${moment.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Subtract the square of the mean", "减去均值的平方"],
+            t(
+              `$\\operatorname{Var}(X) = ${moment.toLatex()} - \\left(${mean.toLatex()}\\right)^2 = ${answer.toLatex()}$.`,
+              `$\\operatorname{Var}(X) = ${moment.toLatex()} - \\left(${mean.toLatex()}\\right)^2 = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The probabilities $${Q.of(first, 10).toLatex()} + ${p.toLatex()} + ${q.toLatex()}$ add to $1$, as $M(0) = 1$ requires, and the variance is positive and below the second moment.`,
+          `概率 $${Q.of(first, 10).toLatex()} + ${p.toLatex()} + ${q.toLatex()}$ 之和为 $1$，符合 $M(0) = 1$，而方差为正且小于二阶矩。`,
+        ),
       ),
     });
   },
@@ -2023,8 +2624,8 @@ const divisibleByEither: KnowledgePointDef = {
   id: "a-uniform-value-divisible-by-one-of-two-numbers",
   title: t("A uniform value divisible by one of two numbers", "均匀取值能被两数之一整除"),
   explanation: t(
-    "Divisible values are easy to count, since $\\lfloor \\frac{N}{a} \\rfloor$ of the numbers from 1 to $N$ are multiples of $a$. But adding the counts for two divisors counts the common multiples twice. Inclusion and exclusion removes them once. For two numbers without a common factor, the common multiples are the multiples of the product. Dividing the final count by $N$ gives the probability, since all values are equally likely.",
-    "能整除的值很容易数，从 1 到 $N$ 中有 $\\lfloor \\frac{N}{a} \\rfloor$ 个 $a$ 的倍数。但把两个除数的个数相加时，公倍数被数了两次。容斥原理把它们去掉一次。对没有公因数的两个数，公倍数就是乘积的倍数。最后的个数除以 $N$ 就是概率，因为所有值等可能。",
+    "Divisible values are easy to count, since $\\lfloor \\frac{N}{a} \\rfloor$ of the numbers from 1 to $N$ are multiples of $a$. But adding the counts for two divisors counts the common multiples twice. Inclusion and exclusion removes them once. For two numbers without a common factor, the common multiples are the multiples of the product. Dividing the final count by $N$ gives the probability, since all values are equally likely.\n\n> **Watch out.** Subtract the common multiples once. From $1$ to $30$ there are $15$ multiples of $2$ and $10$ of $3$, but the $5$ multiples of $6$ are in both lists, so $15 + 10 - 5 = 20$ values qualify, not $25$.",
+    "能整除的值很容易数，从 1 到 $N$ 中有 $\\lfloor \\frac{N}{a} \\rfloor$ 个 $a$ 的倍数。但把两个除数的个数相加时，公倍数被数了两次。容斥原理把它们去掉一次。对没有公因数的两个数，公倍数就是乘积的倍数。最后的个数除以 $N$ 就是概率，因为所有值等可能。\n\n> **注意。** 公倍数要减去一次。从 $1$ 到 $30$ 中，$2$ 的倍数有 $15$ 个，$3$ 的倍数有 $10$ 个，但 $6$ 的 $5$ 个倍数在两份名单里都有，所以符合条件的值有 $15 + 10 - 5 = 20$ 个，而不是 $25$ 个。",
   ),
   generate(rng) {
     const [a, b] = rng.pick([
@@ -2048,10 +2649,37 @@ const divisibleByEither: KnowledgePointDef = {
         `整数 $X$ 在 $\\{1, 2, \\dots, ${n}\\}$ 上均匀。求 $X$ 能被 ${a} 或 ${b} 整除的概率。`,
       ),
       answer,
-      wrong: [Q.of(countA + countB, n), Q.of(both, n), Q.of(countA, n), Q.of(countB, n)],
-      solution: t(
-        `There are $${countA}$ multiples of ${a}, $${countB}$ of ${b} and $${both}$ of ${a * b}. This gives $${countA} + ${countB} - ${both} = ${countA + countB - both}$ values, out of ${n}, so the probability is $${answer.toLatex()}$.`,
-        `${a} 的倍数有 $${countA}$ 个，${b} 的倍数有 $${countB}$ 个，${a * b} 的倍数有 $${both}$ 个。所以共有 $${countA} + ${countB} - ${both} = ${countA + countB - both}$ 个值，总数是 ${n}，概率是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(countA + countB, n),
+          `That counts the multiples of ${a * b} twice; subtract them once.`,
+          `那是把 ${a * b} 的倍数算了两次；要减去一次。`,
+        ),
+        why(Q.of(both, n), `That is the chance of being divisible by both ${a} and ${b}.`, `那是同时能被 ${a} 和 ${b} 整除的概率。`),
+        why(Q.of(countA, n), `That counts only the multiples of ${a}.`, `那只算了 ${a} 的倍数。`),
+        why(Q.of(countB, n), `That counts only the multiples of ${b}.`, `那只算了 ${b} 的倍数。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the multiples", "数倍数"],
+            t(
+              `$\\left\\lfloor \\frac{${n}}{${a}} \\right\\rfloor = ${countA}$, $\\left\\lfloor \\frac{${n}}{${b}} \\right\\rfloor = ${countB}$, and the common multiples are the multiples of ${a * b}: $\\left\\lfloor \\frac{${n}}{${a * b}} \\right\\rfloor = ${both}$.`,
+              `$\\left\\lfloor \\frac{${n}}{${a}} \\right\\rfloor = ${countA}$，$\\left\\lfloor \\frac{${n}}{${b}} \\right\\rfloor = ${countB}$，公倍数就是 ${a * b} 的倍数：$\\left\\lfloor \\frac{${n}}{${a * b}} \\right\\rfloor = ${both}$。`,
+            ),
+          ],
+          [
+            ["Include and exclude", "容斥"],
+            t(
+              `$${countA} + ${countB} - ${both} = ${countA + countB - both}$ values qualify, out of ${n}, so the probability is $${answer.toLatex()}$.`,
+              `符合条件的值有 $${countA} + ${countB} - ${both} = ${countA + countB - both}$ 个，总数是 ${n}，所以概率是 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Split the qualifying values into three groups that do not overlap: $${countA - both}$ multiples of ${a} only, $${countB - both}$ of ${b} only, and $${both}$ of both. They total $${countA - both} + ${countB - both} + ${both} = ${countA + countB - both}$.`,
+          `把符合条件的值分成互不重叠的三组：只是 ${a} 的倍数的 $${countA - both}$ 个，只是 ${b} 的倍数的 $${countB - both}$ 个，两者都是的 $${both}$ 个。合计 $${countA - both} + ${countB - both} + ${both} = ${countA + countB - both}$。`,
+        ),
       ),
     });
   },
@@ -2061,22 +2689,55 @@ const expectedMaximumOfTwo: KnowledgePointDef = {
   id: "the-expected-maximum-of-two-uniform-draws",
   title: t("The expected maximum of two uniform draws", "两次均匀抽取的期望最大值"),
   explanation: t(
-    "The maximum of two independent draws is at most $k$ exactly when both draws are, which has probability $\\frac{k^2}{n^2}$. Subtracting the value for $k - 1$ gives $P(\\max = k) = \\frac{2k - 1}{n^2}$. So large values are more likely than small ones, and the mean lies above the middle of the range. The sum $\\sum k(2k - 1)$ then simplifies by the standard formulas for sums of powers of integers.",
-    "两次独立抽取的最大值不超过 $k$，当且仅当两次都不超过 $k$，概率是 $\\frac{k^2}{n^2}$。减去 $k - 1$ 对应的值，得 $P(\\max = k) = \\frac{2k - 1}{n^2}$。所以大的值比小的值更可能，均值在范围中点之上。然后用整数幂之和的标准公式化简 $\\sum k(2k - 1)$。",
+    "The maximum of two independent draws is at most $k$ exactly when both draws are, which has probability $\\frac{k^2}{n^2}$. Subtracting the value for $k - 1$ gives $P(\\max = k) = \\frac{2k - 1}{n^2}$. So large values are more likely than small ones, and the mean lies above the middle of the range. The sum $\\sum k(2k - 1)$ then simplifies by the standard formulas for sums of powers of integers.\n\n> **Watch out.** The larger draw is not uniform, so its mean is not the middle of the range. With $n = 2$ it is $1$ with probability $\\frac{1}{4}$ and $2$ with probability $\\frac{3}{4}$, so its mean is $\\frac{7}{4}$, not $\\frac{3}{2}$.",
+    "两次独立抽取的最大值不超过 $k$，当且仅当两次都不超过 $k$，概率是 $\\frac{k^2}{n^2}$。减去 $k - 1$ 对应的值，得 $P(\\max = k) = \\frac{2k - 1}{n^2}$。所以大的值比小的值更可能，均值在范围中点之上。然后用整数幂之和的标准公式化简 $\\sum k(2k - 1)$。\n\n> **注意。** 较大值不是均匀分布，所以它的均值不是范围的中点。$n = 2$ 时，它以概率 $\\frac{1}{4}$ 取 $1$，以概率 $\\frac{3}{4}$ 取 $2$，均值是 $\\frac{7}{4}$，而不是 $\\frac{3}{2}$。",
   ),
   generate(rng) {
     const n = rng.int(2, 30);
     const answer = Q.of((n + 1) * (4 * n - 1), 6 * n);
+    const squares = (n * (n + 1) * (2 * n + 1)) / 6;
+    const plain = (n * (n + 1)) / 2;
     return numberProblem({
       prompt: t(
         `Two independent draws are made from the numbers $1, 2, \\dots, ${n}$, each equally likely. Find the expected value of the larger draw.`,
         `从 $1, 2, \\dots, ${n}$ 中独立抽取两次，每个数等可能。求较大的一次的期望值。`,
       ),
       answer,
-      wrong: [Q.of(n + 1, 2), Q.of(2 * (n + 1), 3), Q.of(2 * n, 3), answer.add(Q.of(1))],
-      solution: t(
-        `Here $P(\\max = k) = \\frac{2k - 1}{${n * n}}$. Summing $k$ times this from $1$ to $${n}$ gives $\\frac{(n + 1)(4n - 1)}{6n} = ${answer.toLatex()}$.`,
-        `这里 $P(\\max = k) = \\frac{2k - 1}{${n * n}}$。把 $k$ 乘以它从 $1$ 到 $${n}$ 求和，得 $\\frac{(n + 1)(4n - 1)}{6n} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(n + 1, 2),
+          "That is the mean of a single draw; the larger of two draws tends to be bigger.",
+          "那是单次抽取的均值；两次中较大的那个往往更大。",
+        ),
+        why(n, `That is the largest possible value, $${n}$, not the mean.`, `那是最大可能的取值 $${n}$，而不是均值。`),
+        why(
+          Q.of(2 * n, 3),
+          `That is the answer for a continuous uniform variable on $[0, ${n}]$; here the values are the integers $1$ to $${n}$.`,
+          `那是 $[0, ${n}]$ 上连续均匀变量的答案；这里的取值是整数 $1$ 到 $${n}$。`,
+        ),
+      ]),
+      wrong: [Q.of(2 * (n + 1), 3), answer.add(Q.of(1))],
+      solution: walked(
+        [
+          [
+            ["Find the distribution", "求分布"],
+            t(
+              `$P(\\max \\le k) = \\frac{k^2}{${n * n}}$, so $P(\\max = k) = \\frac{k^2 - (k - 1)^2}{${n * n}} = \\frac{2k - 1}{${n * n}}$.`,
+              `$P(\\max \\le k) = \\frac{k^2}{${n * n}}$，所以 $P(\\max = k) = \\frac{k^2 - (k - 1)^2}{${n * n}} = \\frac{2k - 1}{${n * n}}$。`,
+            ),
+          ],
+          [
+            ["Sum", "求和"],
+            t(
+              `$\\sum_{k=1}^{${n}} k^2 = ${squares}$ and $\\sum_{k=1}^{${n}} k = ${plain}$, so $E(\\max) = \\frac{2 \\cdot ${squares} - ${plain}}{${n * n}} = \\frac{${2 * squares - plain}}{${n * n}} = ${answer.toLatex()}$.`,
+              `$\\sum_{k=1}^{${n}} k^2 = ${squares}$，$\\sum_{k=1}^{${n}} k = ${plain}$，所以 $E(\\max) = \\frac{2 \\cdot ${squares} - ${plain}}{${n * n}} = \\frac{${2 * squares - plain}}{${n * n}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The general formula $\\frac{(n + 1)(4n - 1)}{6n}$ gives $\\frac{${n + 1} \\cdot ${4 * n - 1}}{${6 * n}} = ${answer.toLatex()}$ as well, and this lies between the single-draw mean $${Q.of(n + 1, 2).toLatex()}$ and the largest value $${n}$.`,
+          `一般公式 $\\frac{(n + 1)(4n - 1)}{6n}$ 也给出 $\\frac{${n + 1} \\cdot ${4 * n - 1}}{${6 * n}} = ${answer.toLatex()}$，它介于单次抽取的均值 $${Q.of(n + 1, 2).toLatex()}$ 与最大值 $${n}$ 之间。`,
+        ),
       ),
     });
   },
@@ -2086,8 +2747,8 @@ const twoBernoulliDiffer: KnowledgePointDef = {
   id: "the-probability-that-two-bernoulli-variables-differ",
   title: t("The probability that two Bernoulli variables differ", "两个伯努利变量不相等的概率"),
   explanation: t(
-    "Two independent Bernoulli variables differ in two separate ways: the first is 1 and the second is 0, or the other way round. These cases cannot happen together, so their probabilities add, and each one is a product by independence. Notice that if one of the two parameters is $\\frac{1}{2}$, then the answer is $\\frac{1}{2}$, whatever the other parameter may be. This fact is the basis of some simple randomized schemes.",
-    "两个独立的伯努利变量有两种不相等的方式：第一个是 1 而第二个是 0，或者反过来。这两种情况不能同时发生，所以概率相加，每个概率由独立性是乘积。注意，如果其中一个参数是 $\\frac{1}{2}$，答案就是 $\\frac{1}{2}$，无论另一个参数是多少。这个事实是一些简单随机化方案的基础。",
+    "Two independent Bernoulli variables differ in two separate ways: the first is 1 and the second is 0, or the other way round. These cases cannot happen together, so their probabilities add, and each one is a product by independence. Notice that if one of the two parameters is $\\frac{1}{2}$, then the answer is $\\frac{1}{2}$, whatever the other parameter may be. This fact is the basis of some simple randomized schemes.\n\n> **Watch out.** Count both orders, and do not multiply the parameters themselves. With parameters $0.3$ and $0.6$, $P(X \\ne Y) = 0.3 \\cdot 0.4 + 0.6 \\cdot 0.7 = 0.54$, while $0.3 \\cdot 0.6 = 0.18$ is the chance that both are 1.",
+    "两个独立的伯努利变量有两种不相等的方式：第一个是 1 而第二个是 0，或者反过来。这两种情况不能同时发生，所以概率相加，每个概率由独立性是乘积。注意，如果其中一个参数是 $\\frac{1}{2}$，答案就是 $\\frac{1}{2}$，无论另一个参数是多少。这个事实是一些简单随机化方案的基础。\n\n> **注意。** 两种顺序都要算，而且不要直接把两个参数相乘。参数为 $0.3$ 和 $0.6$ 时，$P(X \\ne Y) = 0.3 \\cdot 0.4 + 0.6 \\cdot 0.7 = 0.54$，而 $0.3 \\cdot 0.6 = 0.18$ 是两者都为 1 的概率。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -2096,16 +2757,50 @@ const twoBernoulliDiffer: KnowledgePointDef = {
     const q = Q.of(b, 10);
     const one = Q.of(1);
     const answer = p.mul(one.sub(q)).add(q.mul(one.sub(p)));
+    const same = p.mul(q).add(one.sub(p).mul(one.sub(q)));
+    const hundredths = (x: number) => `${x / 100}`;
     return numberProblem({
       prompt: t(
         `Independent Bernoulli variables $X$ and $Y$ have parameters $${tenths(a)}$ and $${tenths(b)}$. Find $P(X \\ne Y)$.`,
         `独立的伯努利变量 $X$ 和 $Y$ 的参数是 $${tenths(a)}$ 和 $${tenths(b)}$。求 $P(X \\ne Y)$。`,
       ),
       answer,
-      wrong: [p.mul(q), p.add(q), p.mul(q).add(one.sub(p).mul(one.sub(q))), Q.of(Math.abs(a - b), 10)],
-      solution: t(
-        `The two ways give $${tenths(a)} \\cdot ${tenths(10 - b)} + ${tenths(b)} \\cdot ${tenths(10 - a)} = ${answer.toLatex()}$.`,
-        `两种方式给出 $${tenths(a)} \\cdot ${tenths(10 - b)} + ${tenths(b)} \\cdot ${tenths(10 - a)} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(p.mul(q), "That is the chance that both equal 1, one of the ways they agree.", "那是两者都等于 1 的概率，是相等的情形之一。"),
+        why(
+          p.add(q),
+          "That adds the parameters; each way of differing is a product of two probabilities.",
+          "那是把参数相加；每种不相等的方式都是两个概率之积。",
+        ),
+        why(same, "That is the chance that they are equal, $P(X = Y)$.", "那是两者相等的概率 $P(X = Y)$。"),
+        why(
+          p.mul(one.sub(q)),
+          "That counts only $X = 1, Y = 0$; the order $X = 0, Y = 1$ also counts.",
+          "那只算了 $X = 1, Y = 0$；$X = 0, Y = 1$ 的情形也要算。",
+        ),
+      ]),
+      wrong: [Q.of(Math.abs(a - b), 10)],
+      solution: walked(
+        [
+          [
+            ["List the two ways", "列出两种方式"],
+            t(
+              `$P(X = 1, Y = 0) = ${tenths(a)} \\cdot ${tenths(10 - b)} = ${hundredths(a * (10 - b))}$ and $P(X = 0, Y = 1) = ${tenths(10 - a)} \\cdot ${tenths(b)} = ${hundredths(b * (10 - a))}$, by independence.`,
+              `由独立性，$P(X = 1, Y = 0) = ${tenths(a)} \\cdot ${tenths(10 - b)} = ${hundredths(a * (10 - b))}$，$P(X = 0, Y = 1) = ${tenths(10 - a)} \\cdot ${tenths(b)} = ${hundredths(b * (10 - a))}$。`,
+            ),
+          ],
+          [
+            ["Add", "相加"],
+            t(
+              `$${hundredths(a * (10 - b))} + ${hundredths(b * (10 - a))} = ${hundredths(a * (10 - b) + b * (10 - a))} = ${answer.toLatex()}$.`,
+              `$${hundredths(a * (10 - b))} + ${hundredths(b * (10 - a))} = ${hundredths(a * (10 - b) + b * (10 - a))} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `They are equal with probability $${tenths(a)} \\cdot ${tenths(b)} + ${tenths(10 - a)} \\cdot ${tenths(10 - b)} = ${hundredths(a * b + (10 - a) * (10 - b))}$, and $1 - ${hundredths(a * b + (10 - a) * (10 - b))} = ${hundredths(a * (10 - b) + b * (10 - a))}$ again.`,
+          `两者相等的概率是 $${tenths(a)} \\cdot ${tenths(b)} + ${tenths(10 - a)} \\cdot ${tenths(10 - b)} = ${hundredths(a * b + (10 - a) * (10 - b))}$，而 $1 - ${hundredths(a * b + (10 - a) * (10 - b))} = ${hundredths(a * (10 - b) + b * (10 - a))}$，结果相同。`,
+        ),
       ),
     });
   },
@@ -2115,8 +2810,8 @@ const binomialFactorialMoment: KnowledgePointDef = {
   id: "the-factorial-moment-of-a-binomial-variable",
   title: t("The factorial moment of a binomial variable", "二项变量的阶乘矩"),
   explanation: t(
-    "For a binomial count, $X(X - 1)$ counts the ordered pairs of different trials that both succeed. There are $n(n - 1)$ such pairs, and each succeeds with probability $p^2$, so linearity gives $E[X(X - 1)] = n(n - 1)p^2$. No sum over the distribution is needed. This value is also a quick route to the variance, since $E(X^2)$ equals this factorial moment plus the mean.",
-    "对二项计数，$X(X - 1)$ 数的是两次都成功的不同试验的有序对。这样的对有 $n(n - 1)$ 个，每对成功的概率是 $p^2$，所以由线性性 $E[X(X - 1)] = n(n - 1)p^2$。不需要对分布求和。这个值也是求方差的捷径，因为 $E(X^2)$ 等于这个阶乘矩加上均值。",
+    "For a binomial count, $X(X - 1)$ counts the ordered pairs of different trials that both succeed. There are $n(n - 1)$ such pairs, and each succeeds with probability $p^2$, so linearity gives $E[X(X - 1)] = n(n - 1)p^2$. No sum over the distribution is needed. This value is also a quick route to the variance, since $E(X^2)$ equals this factorial moment plus the mean.\n\n> **Watch out.** The two trials of a pair must be different, so there are $n(n - 1)$ pairs, not $n^2$. With $n = 10$ and $p = \\frac{1}{2}$, $E[X(X - 1)] = 90 \\cdot \\frac{1}{4} = \\frac{45}{2}$, not $100 \\cdot \\frac{1}{4} = 25$.",
+    "对二项计数，$X(X - 1)$ 数的是两次都成功的不同试验的有序对。这样的对有 $n(n - 1)$ 个，每对成功的概率是 $p^2$，所以由线性性 $E[X(X - 1)] = n(n - 1)p^2$。不需要对分布求和。这个值也是求方差的捷径，因为 $E(X^2)$ 等于这个阶乘矩加上均值。\n\n> **注意。** 一对中的两次试验必须不同，所以有 $n(n - 1)$ 对，而不是 $n^2$ 对。$n = 10$、$p = \\frac{1}{2}$ 时，$E[X(X - 1)] = 90 \\cdot \\frac{1}{4} = \\frac{45}{2}$，而不是 $100 \\cdot \\frac{1}{4} = 25$。",
   ),
   generate(rng) {
     const n = rng.int(2, 30);
@@ -2126,16 +2821,48 @@ const binomialFactorialMoment: KnowledgePointDef = {
       .mul(Q.of(n - 1))
       .mul(p)
       .mul(p);
+    const bracket = (x: Q) => (x.isInteger() ? x.toLatex() : `\\left(${x.toLatex()}\\right)`);
     return numberProblem({
       prompt: t(
         `Let $X$ be binomial with $n = ${n}$ and $p = ${p.toLatex()}$. Find $E[X(X - 1)]$.`,
         `设 $X$ 服从二项分布，$n = ${n}$，$p = ${p.toLatex()}$。求 $E[X(X - 1)]$。`,
       ),
       answer,
-      wrong: [size.mul(size).mul(p).mul(p), size.mul(Q.of(n - 1)).mul(p), size.mul(p).mul(Q.of(1).sub(p)), answer.add(size.mul(p))],
-      solution: t(
-        `There are $${n} \\cdot ${n - 1}$ ordered pairs of trials, each succeeding together with probability $\\left(${p.toLatex()}\\right)^2$. So the value is $${answer.toLatex()}$.`,
-        `试验的有序对有 $${n} \\cdot ${n - 1}$ 个，每对同时成功的概率是 $\\left(${p.toLatex()}\\right)^2$。所以值是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          size.mul(size).mul(p).mul(p),
+          `That uses $${n}^2$ pairs, including a trial paired with itself; that is $(E X)^2$.`,
+          `那用了 $${n}^2$ 对，包括了一次试验与自己配对；那是 $(E X)^2$。`,
+        ),
+        why(
+          size.mul(Q.of(n - 1)).mul(p),
+          "That uses $p$ for a pair; both trials of the pair must succeed, which has probability $p^2$.",
+          "那是对一对用了 $p$；一对中两次试验都要成功，概率是 $p^2$。",
+        ),
+        why(answer.add(size.mul(p)), "That is $E(X^2)$, the factorial moment plus the mean.", "那是 $E(X^2)$，即阶乘矩加上均值。"),
+        why(size.mul(p).mul(Q.of(1).sub(p)), "That is the variance $np(1 - p)$.", "那是方差 $np(1 - p)$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the pairs", "数有序对"],
+            t(
+              `$X(X - 1)$ counts the ordered pairs of different trials that both succeed, and there are $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ ordered pairs of different trials.`,
+              `$X(X - 1)$ 数的是两次都成功的不同试验的有序对，不同试验的有序对共有 $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ 个。`,
+            ),
+          ],
+          [
+            ["Use linearity", "用线性性"],
+            t(
+              `Each pair succeeds together with probability $\\left(${p.toLatex()}\\right)^2 = ${p.mul(p).toLatex()}$, so $E[X(X - 1)] = ${n * (n - 1)} \\cdot ${p.mul(p).toLatex()} = ${answer.toLatex()}$.`,
+              `每对同时成功的概率是 $\\left(${p.toLatex()}\\right)^2 = ${p.mul(p).toLatex()}$，所以 $E[X(X - 1)] = ${n * (n - 1)} \\cdot ${p.mul(p).toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `It gives the right variance: $E[X(X - 1)] + E(X) - (E X)^2 = ${answer.toLatex()} + ${size.mul(p).toLatex()} - ${bracket(size.mul(p))}^2 = ${size.mul(p).mul(Q.of(1).sub(p)).toLatex()}$, which is $np(1 - p)$.`,
+          `它给出正确的方差：$E[X(X - 1)] + E(X) - (E X)^2 = ${answer.toLatex()} + ${size.mul(p).toLatex()} - ${bracket(size.mul(p))}^2 = ${size.mul(p).mul(Q.of(1).sub(p)).toLatex()}$，正是 $np(1 - p)$。`,
+        ),
       ),
     });
   },
@@ -2145,8 +2872,8 @@ const thinningPoisson: KnowledgePointDef = {
   id: "the-variance-of-a-thinned-poisson-count",
   title: t("The variance of a thinned Poisson count", "稀疏化泊松计数的方差"),
   explanation: t(
-    "If each event of a Poisson process is kept independently with probability $p$, the events that are kept also form a Poisson process, with rate multiplied by $p$. A Poisson count has variance equal to its mean, so the variance is simply the new mean. The formula for a binomial variance, with its factor $1 - p$, does not apply here, because the total number of events is itself random.",
-    "如果泊松过程的每个事件以概率 $p$ 独立地保留，那么保留下来的事件也构成泊松过程，速率乘以 $p$。泊松计数的方差等于均值，所以方差就是新的均值。带因子 $1 - p$ 的二项方差公式在这里不适用，因为事件总数本身是随机的。",
+    "If each event of a Poisson process is kept independently with probability $p$, the events that are kept also form a Poisson process, with rate multiplied by $p$. A Poisson count has variance equal to its mean, so the variance is simply the new mean. The formula for a binomial variance, with its factor $1 - p$, does not apply here, because the total number of events is itself random.\n\n> **Watch out.** Do not use the binomial variance. With $10$ calls an hour on average and each urgent with probability $0.3$, the urgent calls in an hour have variance $3$, not $10 \\cdot 0.3 \\cdot 0.7 = 2.1$.",
+    "如果泊松过程的每个事件以概率 $p$ 独立地保留，那么保留下来的事件也构成泊松过程，速率乘以 $p$。泊松计数的方差等于均值，所以方差就是新的均值。带因子 $1 - p$ 的二项方差公式在这里不适用，因为事件总数本身是随机的。\n\n> **注意。** 不要用二项方差。平均每小时 $10$ 个电话、每个以概率 $0.3$ 为紧急电话时，一小时内紧急电话数的方差是 $3$，而不是 $10 \\cdot 0.3 \\cdot 0.7 = 2.1$。",
   ),
   generate(rng) {
     const rate = rng.int(2, 20);
@@ -2154,16 +2881,53 @@ const thinningPoisson: KnowledgePointDef = {
     const hours = rng.int(1, 8);
     const total = rate * hours;
     const answer = Q.of(total * part, 10);
+    const binomial = Q.of(total * part * (10 - part), 100);
+    const meanSquare = Q.of(total * part * part, 100);
     return numberProblem({
       prompt: t(
         `Calls arrive as a Poisson process at ${rate} per hour, and each is urgent with probability $${tenths(part)}$, independently. Find the variance of the number of urgent calls in ${hours === 1 ? "one hour" : `${hours} hours`}.`,
         `电话按每小时 ${rate} 个的泊松过程到达，每个电话独立地以概率 $${tenths(part)}$ 为紧急电话。求 ${hours} 小时内紧急电话数的方差。`,
       ),
       answer,
-      wrong: [Q.of(total), Q.of(total * part * (10 - part), 100), Q.of(rate * part, 10), answer.add(Q.of(1))],
-      solution: t(
-        `The urgent calls form a Poisson process with mean $${total} \\cdot ${tenths(part)} = ${answer.toLatex()}$ over this time, and a Poisson count has variance equal to its mean.`,
-        `紧急电话构成泊松过程，这段时间内的均值是 $${total} \\cdot ${tenths(part)} = ${answer.toLatex()}$，而泊松计数的方差等于均值。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(total),
+          "That is the variance of all the calls; only the urgent ones are counted.",
+          "那是全部电话数的方差；只数紧急电话。",
+        ),
+        why(
+          binomial,
+          "That is the binomial variance $np(1 - p)$, but the number of calls is itself random.",
+          "那是二项方差 $np(1 - p)$，但电话总数本身是随机的。",
+        ),
+        why(
+          Q.of(rate * part, 10),
+          `That is the variance for one hour; the question covers ${hours} hours.`,
+          `那是一小时的方差；题目问的是 ${hours} 小时。`,
+        ),
+      ]),
+      wrong: [answer.add(Q.of(1))],
+      solution: walked(
+        [
+          [
+            ["Find the mean of all calls", "求全部电话的均值"],
+            t(
+              `Over ${hours === 1 ? "one hour" : `${hours} hours`} the calls are Poisson with mean $${rate} \\cdot ${hours} = ${total}$.`,
+              `在 ${hours} 小时内，电话数服从均值为 $${rate} \\cdot ${hours} = ${total}$ 的泊松分布。`,
+            ),
+          ],
+          [
+            ["Thin the process", "稀疏化"],
+            t(
+              `The urgent calls are Poisson with mean $${total} \\cdot ${tenths(part)} = ${answer.toLatex()}$, and a Poisson count has variance equal to its mean, so the variance is $${answer.toLatex()}$.`,
+              `紧急电话数服从均值为 $${total} \\cdot ${tenths(part)} = ${answer.toLatex()}$ 的泊松分布，而泊松计数的方差等于均值，所以方差是 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `By the law of total variance, with $N$ the number of calls and $U$ the number of urgent ones: $E[\\operatorname{Var}(U \\mid N)] + \\operatorname{Var}(E[U \\mid N]) = ${total} \\cdot ${tenths(part)} \\cdot ${tenths(10 - part)} + ${tenths(part)}^2 \\cdot ${total} = ${binomial.toLatex()} + ${meanSquare.toLatex()} = ${answer.toLatex()}$.`,
+          `由全方差公式，记 $N$ 为电话总数，$U$ 为紧急电话数：$E[\\operatorname{Var}(U \\mid N)] + \\operatorname{Var}(E[U \\mid N]) = ${total} \\cdot ${tenths(part)} \\cdot ${tenths(10 - part)} + ${tenths(part)}^2 \\cdot ${total} = ${binomial.toLatex()} + ${meanSquare.toLatex()} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -2173,8 +2937,8 @@ const poissonIntervalMultiple: KnowledgePointDef = {
   id: "a-poisson-interval-as-a-multiple-of-an-exponential",
   title: t("A Poisson interval as a multiple of an exponential", "泊松区间概率写成指数的倍数"),
   explanation: t(
-    "Every Poisson probability carries the same factor $e^{-\\lambda}$, so a sum of consecutive probabilities can be written as this factor times a sum of terms $\\frac{\\lambda^k}{k!}$. Writing it in this way keeps the exact value, with no rounding. Take care with which terms belong: both ends of the interval count if the inequalities are not strict, and the term for $k = 0$ equals 1 when it is included.",
-    "每个泊松概率都带有相同的因子 $e^{-\\lambda}$，所以连续几个概率之和可以写成这个因子乘以若干项 $\\frac{\\lambda^k}{k!}$ 之和。这样写保留了精确值，没有舍入。要注意哪些项属于这个和：不等式不严格时，区间两端都算，$k = 0$ 的项如果包含在内就等于 1。",
+    "Every Poisson probability carries the same factor $e^{-\\lambda}$, so a sum of consecutive probabilities can be written as this factor times a sum of terms $\\frac{\\lambda^k}{k!}$. Writing it in this way keeps the exact value, with no rounding. Take care with which terms belong: both ends of the interval count if the inequalities are not strict, and the term for $k = 0$ equals 1 when it is included. With mean $20$, $P(1 \\le X \\le 2) = \\left(20 + \\frac{400}{2}\\right)e^{-20} = 220e^{-20}$.\n\n> **Watch out.** With $\\le$ on both sides, both end terms belong to the sum; do not drop either one, and do not add the term $1$ for $k = 0$ unless $0$ is in the interval.",
+    "每个泊松概率都带有相同的因子 $e^{-\\lambda}$，所以连续几个概率之和可以写成这个因子乘以若干项 $\\frac{\\lambda^k}{k!}$ 之和。这样写保留了精确值，没有舍入。要注意哪些项属于这个和：不等式不严格时，区间两端都算，$k = 0$ 的项如果包含在内就等于 1。均值为 $20$ 时，$P(1 \\le X \\le 2) = \\left(20 + \\frac{400}{2}\\right)e^{-20} = 220e^{-20}$。\n\n> **注意。** 两边都是 $\\le$ 时，两端的项都属于这个和；不要漏掉任何一项，也不要在 $0$ 不在区间内时加上 $k = 0$ 的项 $1$。",
   ),
   generate(rng) {
     const lambda = rng.int(1, 9);
@@ -2186,16 +2950,53 @@ const poissonIntervalMultiple: KnowledgePointDef = {
       return sum;
     };
     const answer = total(lo, hi);
+    const terms = Array.from({ length: hi - lo + 1 }, (_, i) => Q.of(lambda ** (lo + i), factorial(lo + i)).toLatex());
     return numberProblem({
       prompt: t(
         `For a Poisson variable with mean ${lambda}, $P(${lo} \\le X \\le ${hi}) = ce^{-${lambda}}$. Find $c$.`,
         `对均值为 ${lambda} 的泊松变量，$P(${lo} \\le X \\le ${hi}) = ce^{-${lambda}}$。求 $c$。`,
       ),
       answer,
-      wrong: [total(lo + 1, hi), total(lo, hi - 1), total(lo, hi + 1), answer.add(Q.of(1))],
-      solution: t(
-        `The value of $c$ is the sum of $\\frac{${lambda}^k}{k!}$ for $k$ from ${lo} to ${hi}, which is $${answer.toLatex()}$.`,
-        `$c$ 的值是 $k$ 从 ${lo} 到 ${hi} 时 $\\frac{${lambda}^k}{k!}$ 的和，等于 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          total(lo + 1, hi),
+          `That leaves out the term for $k = ${lo}$; the inequality $${lo} \\le X$ includes it.`,
+          `那是漏掉了 $k = ${lo}$ 的项；不等式 $${lo} \\le X$ 包含它。`,
+        ),
+        why(
+          total(lo, hi - 1),
+          `That leaves out the term for $k = ${hi}$; the inequality $X \\le ${hi}$ includes it.`,
+          `那是漏掉了 $k = ${hi}$ 的项；不等式 $X \\le ${hi}$ 包含它。`,
+        ),
+        why(
+          total(lo, hi + 1),
+          `That adds the term for $k = ${hi + 1}$, which lies outside the interval.`,
+          `那是多加了 $k = ${hi + 1}$ 的项，它在区间之外。`,
+        ),
+        why(
+          answer.add(Q.of(1)),
+          lo === 0 ? "That counts the term $1$ for $k = 0$ twice." : "That adds the term $1$ for $k = 0$, which is not in the interval.",
+          lo === 0 ? "那是把 $k = 0$ 的项 $1$ 算了两次。" : "那是加上了 $k = 0$ 的项 $1$，它不在区间内。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Factor out the exponential", "提出指数因子"],
+            t(
+              `Each probability is $e^{-${lambda}}\\frac{${lambda}^k}{k!}$, so $c = \\sum_{${lo} \\le k \\le ${hi}} \\frac{${lambda}^k}{k!}$.`,
+              `每个概率都是 $e^{-${lambda}}\\frac{${lambda}^k}{k!}$，所以 $c = \\sum_{${lo} \\le k \\le ${hi}} \\frac{${lambda}^k}{k!}$。`,
+            ),
+          ],
+          [
+            ["Add the terms", "把各项相加"],
+            t(`$c = ${terms.join(" + ")} = ${answer.toLatex()}$.`, `$c = ${terms.join(" + ")} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `$c$ is part of the full sum $\\sum_{k \\ge 0} \\frac{${lambda}^k}{k!} = ${lambda === 1 ? "e" : `e^{${lambda}}`}$, so $ce^{-${lambda}}$ is a probability below $1$.`,
+          `$c$ 是完整和 $\\sum_{k \\ge 0} \\frac{${lambda}^k}{k!} = ${lambda === 1 ? "e" : `e^{${lambda}}`}$ 的一部分，所以 $ce^{-${lambda}}$ 是小于 $1$ 的概率。`,
+        ),
       ),
     });
   },
@@ -2205,8 +3006,8 @@ const expectedFailures: KnowledgePointDef = {
   id: "the-expected-failures-before-the-last-success",
   title: t("The expected failures before the last success", "最后一次成功前的期望失败次数"),
   explanation: t(
-    "The negative binomial variable can count either all the attempts up to the $r$-th success or only the failures, and it pays to check which is meant. Attempts have mean $\\frac{r}{p}$. Every attempt is either a failure or one of the $r$ successes, so the failures have mean $\\frac{r}{p} - r = \\frac{r(1 - p)}{p}$. Both versions of the variable have the same variance, because they differ only by the constant $r$.",
-    "负二项变量可以数到第 $r$ 次成功为止的全部尝试，也可以只数失败，值得确认指的是哪一个。尝试次数的均值是 $\\frac{r}{p}$。每次尝试要么是失败，要么是 $r$ 次成功之一，所以失败次数的均值是 $\\frac{r}{p} - r = \\frac{r(1 - p)}{p}$。两种变量的方差相同，因为它们只差常数 $r$。",
+    "The negative binomial variable can count either all the attempts up to the $r$-th success or only the failures, and it pays to check which is meant. Attempts have mean $\\frac{r}{p}$. Every attempt is either a failure or one of the $r$ successes, so the failures have mean $\\frac{r}{p} - r = \\frac{r(1 - p)}{p}$. Both versions of the variable have the same variance, because they differ only by the constant $r$.\n\n> **Watch out.** The attempts include the $r$ successes, so take them away. With $r = 3$ and $p = \\frac{1}{4}$ the attempts have mean $12$, and the failures have mean $12 - 3 = 9$, not $12$.",
+    "负二项变量可以数到第 $r$ 次成功为止的全部尝试，也可以只数失败，值得确认指的是哪一个。尝试次数的均值是 $\\frac{r}{p}$。每次尝试要么是失败，要么是 $r$ 次成功之一，所以失败次数的均值是 $\\frac{r}{p} - r = \\frac{r(1 - p)}{p}$。两种变量的方差相同，因为它们只差常数 $r$。\n\n> **注意。** 尝试次数包括 $r$ 次成功，所以要把它们减掉。$r = 3$、$p = \\frac{1}{4}$ 时，尝试次数的均值是 $12$，失败次数的均值是 $12 - 3 = 9$，而不是 $12$。",
   ),
   generate(rng) {
     const r = rng.int(2, 9);
@@ -2223,10 +3024,41 @@ const expectedFailures: KnowledgePointDef = {
         `一名选手每次投篮独立地以概率 $${p.toLatex()}$ 命中，一直投到命中 ${r} 次为止。求未命中次数的期望。`,
       ),
       answer,
-      wrong: [attempts, count.mul(q), count.mul(p).div(q), answer.add(Q.of(1))],
-      solution: t(
-        `The expected number of shots is $${attempts.toLatex()}$, and ${r} of them are scores. So the expected number of misses is $${answer.toLatex()}$.`,
-        `投篮次数的期望是 $${attempts.toLatex()}$，其中 ${r} 次命中。所以未命中次数的期望是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          attempts,
+          `That is the expected number of shots, which includes the ${r} scores.`,
+          `那是投篮次数的期望，其中包括 ${r} 次命中。`,
+        ),
+        why(
+          count.mul(q),
+          `That is $${r}(1 - p)$ without dividing by $p$; each score takes on average $\\frac{1 - p}{p}$ misses.`,
+          `那是 $${r}(1 - p)$，没有除以 $p$；每次命中之前平均有 $\\frac{1 - p}{p}$ 次未命中。`,
+        ),
+        why(count.mul(p).div(q), "That turns $\\frac{1 - p}{p}$ upside down.", "那是把 $\\frac{1 - p}{p}$ 倒过来了。"),
+      ]),
+      wrong: [answer.add(Q.of(1))],
+      solution: walked(
+        [
+          [
+            ["Find the expected shots", "求投篮次数的期望"],
+            t(
+              `The shots needed for ${r} scores have mean $\\frac{r}{p} = ${r} \\div ${p.toLatex()} = ${attempts.toLatex()}$.`,
+              `到第 ${r} 次命中为止的投篮次数均值是 $\\frac{r}{p} = ${r} \\div ${p.toLatex()} = ${attempts.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Take away the scores", "减去命中次数"],
+            t(
+              `${r} of those shots are scores, so the misses have mean $${attempts.toLatex()} - ${r} = ${answer.toLatex()}$.`,
+              `其中 ${r} 次是命中，所以未命中次数的均值是 $${attempts.toLatex()} - ${r} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Each score is preceded on average by $\\frac{1 - p}{p} = ${q.div(p).toLatex()}$ misses, and $${r} \\cdot ${q.div(p).toLatex()} = ${answer.toLatex()}$ agrees.`,
+          `每次命中之前平均有 $\\frac{1 - p}{p} = ${q.div(p).toLatex()}$ 次未命中，而 $${r} \\cdot ${q.div(p).toLatex()} = ${answer.toLatex()}$，结果一致。`,
+        ),
       ),
     });
   },

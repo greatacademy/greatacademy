@@ -1105,8 +1105,8 @@ const cdfDifference = {
     "an-interval-probability-from-a-drawn-cdf",
     ["An interval probability from a drawn CDF", "由图中分布函数读区间概率"],
     [
-      "The cumulative distribution function $F$ gives the probability of being at most $x$. So the probability of landing between $a$ and $b$ is $F(b) - F(a)$, a difference of two heights on the graph. A common slip is to read just $F(b)$, which counts everything up to $b$, including what lies below $a$.",
-      "累积分布函数 $F$ 给出不超过 $x$ 的概率。所以落在 $a$ 与 $b$ 之间的概率是 $F(b) - F(a)$，即图上两个高度之差。常见错误是只读 $F(b)$，它把 $b$ 以下的全部都算进去，包括 $a$ 下面的部分。",
+      "The cumulative distribution function $F$ gives the probability of being at most $x$. So the probability of landing between $a$ and $b$ is $F(b) - F(a)$, a difference of two heights on the graph. A common slip is to read just $F(b)$, which counts everything up to $b$, including what lies below $a$. The drawing passes through $(2, 0.2)$ and $(4, 0.8)$, so $P(2 < X \\le 4) = 0.8 - 0.2 = 0.6$. Likewise, if $F(10) = 0.35$ and $F(25) = 0.9$, then $P(10 < X \\le 25) = 0.55$.\n\n> **Watch out.** Subtract the lower height from the upper one; adding them, or reading only $F(b)$, counts probability that lies outside the interval. And $1 - F(b) + F(a)$ is the probability of missing the interval.",
+      "累积分布函数 $F$ 给出不超过 $x$ 的概率。所以落在 $a$ 与 $b$ 之间的概率是 $F(b) - F(a)$，即图上两个高度之差。常见错误是只读 $F(b)$，它把 $b$ 以下的全部都算进去，包括 $a$ 下面的部分。图中曲线经过 $(2, 0.2)$ 和 $(4, 0.8)$，所以 $P(2 < X \\le 4) = 0.8 - 0.2 = 0.6$。同样，若 $F(10) = 0.35$，$F(25) = 0.9$，则 $P(10 < X \\le 25) = 0.55$。\n\n> **注意。** 用上面的高度减去下面的高度；把两者相加，或者只读 $F(b)$，都会算进区间之外的概率。而 $1 - F(b) + F(a)$ 是落在区间之外的概率。",
     ],
     (rng) => {
       const n = rng.int(4, 6);
@@ -1136,28 +1136,49 @@ const cdfDifference = {
           ) +
           `<line class="accent" stroke="currentColor" x1="${x(n)}" y1="${y(1)}" x2="${x(7)}" y2="${y(1)}"/>`,
       );
-      return ask(
-        [
-          `The graph shows a distribution function $F$. What is $P(${c} < X \\leq ${d})$?`,
-          `图中是分布函数 $F$。$P(${c} < X \\leq ${d})$ 是多少？`,
-        ],
-        P,
-        [
-          Q.of(high, 10).eq(P) ? P.add(Q.of(1, 10)) : Q.of(high, 10),
-          Q.of(10 - high + low === high - low ? 10 - high + low + 1 : 10 - high + low, 10),
-          Q.of(high + low, 10).eq(P) ? Q.of(1, 20) : Q.of(high + low, 10),
-        ],
-        [
-          `The graph has height $${Q.of(high, 10).toLatex()}$ at $x = ${d}$ and height $${Q.of(low, 10).toLatex()}$ at $x = ${c}$. The probability of the interval is the difference, $${P.toLatex()}$.`,
-          `图在 $x = ${d}$ 处的高度是 $${Q.of(high, 10).toLatex()}$，在 $x = ${c}$ 处是 $${Q.of(low, 10).toLatex()}$。区间的概率是它们之差 $${P.toLatex()}$。`,
-        ],
-        {
-          svg,
-          alt: t(
-            `A distribution function through the heights ${F.map((v) => v / 10).join(", ")} at x = 0, 1, 2 and so on.`,
-            `经过高度 ${F.map((v) => v / 10).join("，")} 的分布函数，横坐标依次为 0、1、2 等。`,
-          ),
-        },
+      const [hi, lo] = [Q.of(high, 10).toLatex(), Q.of(low, 10).toLatex()];
+      const mistakes = apart(P, [
+        why(
+          Q.of(high, 10),
+          `This is the height $F(${d})$ alone, which also counts the probability up to $${c}$.`,
+          `这只是高度 $F(${d})$，它把 $${c}$ 以下的概率也算进去了。`,
+        ),
+        why(
+          Q.of(10 - high + low, 10),
+          "This is the probability of missing the interval, $1 - F(b) + F(a)$.",
+          "这是落在区间之外的概率 $1 - F(b) + F(a)$。",
+        ),
+        why(
+          Q.of(high + low, 10),
+          "This adds the two heights; the probability of an interval is their difference.",
+          "这是把两个高度相加了；区间的概率是它们的差。",
+        ),
+      ]).map((m) => ({ response: (typeof m.value === "number" ? Q.of(m.value) : m.value).toLatex(), why: m.why }));
+      return withMistakes(
+        ask(
+          [
+            `The graph shows a distribution function $F$. What is $P(${c} < X \\leq ${d})$?`,
+            `图中是分布函数 $F$。$P(${c} < X \\leq ${d})$ 是多少？`,
+          ],
+          P,
+          [
+            Q.of(high, 10).eq(P) ? P.add(Q.of(1, 10)) : Q.of(high, 10),
+            Q.of(10 - high + low === high - low ? 10 - high + low + 1 : 10 - high + low, 10),
+            Q.of(high + low, 10).eq(P) ? Q.of(1, 20) : Q.of(high + low, 10),
+          ],
+          [
+            `**Step 1: Read the two heights.** The graph has height $${hi}$ at $x = ${d}$ and height $${lo}$ at $x = ${c}$.\n\n**Step 2: Subtract.**\n\n$$P(${c} < X \\leq ${d}) = F(${d}) - F(${c}) = ${hi} - ${lo} = ${P.toLatex()}$$\n\n**Check.** ${low === 0 ? `Nothing lies below $${c}$, so the probability is the height $F(${d})$ itself.` : `Adding back the probability up to $${c}$ gives $${P.toLatex()} + ${lo} = ${hi} = F(${d})$.`}`,
+            `**第一步：读出两个高度。**图在 $x = ${d}$ 处的高度是 $${hi}$，在 $x = ${c}$ 处是 $${lo}$。\n\n**第二步：相减。**\n\n$$P(${c} < X \\leq ${d}) = F(${d}) - F(${c}) = ${hi} - ${lo} = ${P.toLatex()}$$\n\n**检验。**${low === 0 ? `$${c}$ 以下没有概率，所以所求概率就是高度 $F(${d})$ 本身。` : `加回 $${c}$ 以下的概率得 $${P.toLatex()} + ${lo} = ${hi} = F(${d})$。`}`,
+          ],
+          {
+            svg,
+            alt: t(
+              `A distribution function through the heights ${F.map((v) => v / 10).join(", ")} at x = 0, 1, 2 and so on.`,
+              `经过高度 ${F.map((v) => v / 10).join("，")} 的分布函数，横坐标依次为 0、1、2 等。`,
+            ),
+          },
+        ),
+        mistakes,
       );
     },
   ),
@@ -1170,8 +1191,8 @@ const quantileFromCdf = {
     "a-quartile-from-a-drawn-cdf",
     ["A quartile from a drawn CDF", "由图中分布函数读四分位数"],
     [
-      "A percentile reverses the reading of a distribution function. Rather than going up from a value of $x$, start at a height on the vertical axis, go across to the graph and then down to the horizontal axis. The median corresponds to a height of one half, and the quartiles correspond to heights of one quarter and three quarters.",
-      "百分位数把分布函数的读法反过来。不是从 $x$ 的值向上读，而是从纵轴上的高度出发，横向到图，再向下到横轴。中位数对应高度二分之一，四分位数对应高度四分之一和四分之三。",
+      "A percentile reverses the reading of a distribution function. Rather than going up from a value of $x$, start at a height on the vertical axis, go across to the graph and then down to the horizontal axis. The median corresponds to a height of one half, and the quartiles correspond to heights of one quarter and three quarters. The drawing passes through $(1, \\frac{1}{4})$, $(2, \\frac{1}{2})$ and $(6, \\frac{3}{4})$, so its lower quartile is $1$, its median $2$ and its upper quartile $6$. A graph that reaches those heights at $12$, $20$ and $35$ has median $20$.\n\n> **Watch out.** The lower quartile goes with the height $\\frac{1}{4}$ and the upper one with $\\frac{3}{4}$; do not exchange them. And the point where the graph reaches $1$ is the largest value, not a quartile.",
+      "百分位数把分布函数的读法反过来。不是从 $x$ 的值向上读，而是从纵轴上的高度出发，横向到图，再向下到横轴。中位数对应高度二分之一，四分位数对应高度四分之一和四分之三。图中曲线经过 $(1, \\frac{1}{4})$、$(2, \\frac{1}{2})$ 和 $(6, \\frac{3}{4})$，所以下四分位数是 $1$，中位数是 $2$，上四分位数是 $6$。若曲线在 $12$、$20$ 和 $35$ 处达到这些高度，则中位数是 $20$。\n\n> **注意。** 下四分位数对应高度 $\\frac{1}{4}$，上四分位数对应 $\\frac{3}{4}$；不要弄反。曲线达到 $1$ 的点是最大值，不是四分位数。",
     ],
     (rng) => {
       const x0 = rng.int(0, 2);
@@ -1198,24 +1219,49 @@ const quantileFromCdf = {
         (x, y) =>
           `<polyline class="accent" stroke="currentColor" fill="none" points="${x(0)},${y(0)} ${xs.map((v, i) => `${x(v)},${y(heights[i] as number)}`).join(" ")} ${x(end + 1)},${y(1)}"/>`,
       );
-      return ask(
-        [
-          `The graph shows the distribution function of a continuous random variable. What is ${q[0]}?`,
-          `图中是某连续随机变量的分布函数。${q[1]}是多少？`,
-        ],
-        answer,
-        [xs[which === 1 ? 2 : 1] as number, xs[which === 3 ? 2 : 3] as number, xs[4] as number, answer + 1],
-        [
-          `The value reaches the height $${heights[which]}$ at $x = ${answer}$, and that height defines ${q[0]}.`,
-          `函数值在 $x = ${answer}$ 处达到高度 $${heights[which]}$，这个高度对应${q[1]}。`,
-        ],
-        {
-          svg,
-          alt: t(
-            `A distribution function with heights 0, 0.25, 0.5, 0.75 and 1 at x = ${xs.join(", ")}.`,
-            `分布函数在 x = ${xs.join("，")} 处的高度分别为 0、0.25、0.5、0.75 和 1。`,
+      const names: readonly Pair[] = [
+        ["", ""],
+        ["the lower quartile", "下四分位数"],
+        ["the median", "中位数"],
+        ["the upper quartile", "上四分位数"],
+      ];
+      const mistakes = apart(Q.of(answer), [
+        ...[1, 2, 3]
+          .filter((i) => i !== which)
+          .map((i) =>
+            why(
+              xs[i] as number,
+              `This is where the graph reaches the height $${heights[i]}$, which gives ${names[i]?.[0]}.`,
+              `这是曲线达到高度 $${heights[i]}$ 的地方，对应${names[i]?.[1]}。`,
+            ),
           ),
-        },
+        why(
+          xs[4] as number,
+          "This is where the graph reaches $1$, the largest value of the variable.",
+          "这是曲线达到 $1$ 的地方，即变量的最大值。",
+        ),
+      ]).map((m) => ({ response: String(m.value), why: m.why }));
+      return withMistakes(
+        ask(
+          [
+            `The graph shows the distribution function of a continuous random variable. What is ${q[0]}?`,
+            `图中是某连续随机变量的分布函数。${q[1]}是多少？`,
+          ],
+          answer,
+          [xs[which === 1 ? 2 : 1] as number, xs[which === 3 ? 2 : 3] as number, xs[4] as number, answer + 1],
+          [
+            `**Step 1: Choose the height.** ${q[0].replace(/^t/, "T")} has the height $${heights[which]}$ on the vertical axis.\n\n**Step 2: Go across and down.** Across from $${heights[which]}$ the graph is reached at $x = ${answer}$, so ${q[0]} is $${answer}$.\n\n**Check.** The graph gives $F(${answer}) = ${heights[which]}$, and to the left of $${answer}$ it is lower.`,
+            `**第一步：选定高度。**${q[1]}对应纵轴上的高度 $${heights[which]}$。\n\n**第二步：横向再向下。**从 $${heights[which]}$ 横向走，在 $x = ${answer}$ 处碰到曲线，所以${q[1]}是 $${answer}$。\n\n**检验。**由图 $F(${answer}) = ${heights[which]}$，而在 $${answer}$ 左边曲线更低。`,
+          ],
+          {
+            svg,
+            alt: t(
+              `A distribution function with heights 0, 0.25, 0.5, 0.75 and 1 at x = ${xs.join(", ")}.`,
+              `分布函数在 x = ${xs.join("，")} 处的高度分别为 0、0.25、0.5、0.75 和 1。`,
+            ),
+          },
+        ),
+        mistakes,
       );
     },
   ),

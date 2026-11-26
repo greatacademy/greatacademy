@@ -6,8 +6,9 @@ import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
-import { numberProblem, why, withMistakes } from "../problems.ts";
-import { walked } from "./calculus-i-differentiation.ts";
+import { explainedChoice, numberProblem, why, withMistakes } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** apart drops explained mistakes that equal the answer or repeat an earlier one. */
 const apart = (answer: Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
@@ -15,7 +16,7 @@ const apart = (answer: Q, mistakes: readonly { readonly value: number | Q; reado
   return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
 };
 
-import { ask, choose, point, same } from "../university-kit.ts";
+import { ask, choose, point } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
 import { label } from "./figure-reading-more.ts";
 
@@ -122,8 +123,8 @@ const binomialShape = point(
   "the-success-probability-from-the-shape-of-the-bars",
   ["The success probability from the shape of the bars", "由条形形状判断成功概率"],
   [
-    "The mean of $B(n, p)$ is $np$, and the tallest bars stand near it. So a small $p$ piles the bars at the left with a long tail to the right, $p = \\frac{1}{2}$ gives a symmetric chart, and a large $p$ piles them at the right.",
-    "$B(n, p)$ 的均值是 $np$，最高的条形就在它附近。所以 $p$ 较小时条形堆在左边、右边拖尾；$p = \\frac{1}{2}$ 时图形对称；$p$ 较大时条形堆在右边。",
+    "The mean of $B(n, p)$ is $np$, and the tallest bars stand near it. So a small $p$ piles the bars at the left with a long tail to the right, $p = \\frac{1}{2}$ gives a symmetric chart, and a large $p$ piles them at the right.\n\nFor $n = 10$, a chart whose tallest bar stands at $2$ has $p = 0.2$, since $10(0.2) = 2$; with $p = 0.8$ the tallest bar would stand at $8$ instead.\n\nCheck: the bars of that chart trail off in a long tail to the right, which is the shape a small $p$ gives.\n\n> **Watch out.** The tail points away from where the bars pile up. A long tail to the right means a small $p$, not a large one: a chart with $n = 10$, its tallest bar at $8$ and a tail to the left has $p = 0.8$.",
+    "$B(n, p)$ 的均值是 $np$，最高的条形就在它附近。所以 $p$ 较小时条形堆在左边、右边拖尾；$p = \\frac{1}{2}$ 时图形对称；$p$ 较大时条形堆在右边。\n\n当 $n = 10$ 时，最高条形在 $2$ 的图对应 $p = 0.2$，因为 $10(0.2) = 2$；若 $p = 0.8$，最高条形会在 $8$。\n\n检验：这张图的条形向右拖出一条长尾，正是 $p$ 较小时的形状。\n\n> **注意。** 尾巴伸向条形堆积处的反方向。向右的长尾表示 $p$ 小，而不是 $p$ 大：$n = 10$、最高条形在 $8$、向左拖尾的图对应 $p = 0.8$。",
   ],
   (rng) => {
     const n = rng.int(8, 16);
@@ -131,27 +132,56 @@ const binomialShape = point(
     const pmf = Array.from({ length: n + 1 }, (_, k) => binom(n, k) * p ** k * (1 - p) ** (n - k));
     const tallest = pmf.indexOf(Math.max(...pmf));
     const svg = chart([-0.8, n + 0.8], [0, 0.4], intTicks(0, n), tenthTicks(1, 3), (x, y) => pmfBars(0, pmf, x, y));
-    const name = (v: number) => same(String(v));
-    return choose(
-      rng,
-      [
+    const mean = (v: number) => +(n * v).toFixed(6);
+    const shape = (v: number): readonly [string, string] =>
+      v < 0.5
+        ? ["piled at the left with a long tail to the right", "堆在左边、右边拖尾"]
+        : v === 0.5
+          ? ["symmetric", "对称"]
+          : ["piled at the right with a long tail to the left", "堆在右边、左边拖尾"];
+    const option = (v: number) => t(`$p = ${v}$`, `$p = ${v}$`);
+    return explainedChoice(rng, {
+      prompt: t(
         `The chart shows a binomial distribution with $n = ${n}$. Which value of $p$ does it have?`,
         `图中是 $n = ${n}$ 的二项分布。它的 $p$ 是多少？`,
-      ],
-      name(p),
-      [0.2, 0.5, 0.8].filter((v) => v !== p).map(name),
-      [
-        `The bars pile up around $${tallest}$, and the mean $np$ must lie near them. Among the choices, only $p = ${p}$ gives that, since $${n}(${p}) = ${+(n * p).toFixed(6)}$.`,
-        `条形集中在 $${tallest}$ 附近，均值 $np$ 必须在它们附近。选项中只有 $p = ${p}$ 符合，因为 $${n}(${p}) = ${+(n * p).toFixed(6)}$。`,
-      ],
-      {
+      ),
+      correct: option(p),
+      wrong: [0.2, 0.5, 0.8]
+        .filter((v) => v !== p)
+        .map((v) => ({
+          option: option(v),
+          why: t(
+            `With $p = ${v}$ the mean would be $${n}(${v}) = ${mean(v)}$, so the tallest bars would stand near $${mean(v)}$ and the chart would be ${shape(v)[0]}; here the tallest bar stands at $${tallest}$.`,
+            `若 $p = ${v}$，均值为 $${n}(${v}) = ${mean(v)}$，最高的条形应在 $${mean(v)}$ 附近，图形应${shape(v)[1]}；而这里最高的条形在 $${tallest}$。`,
+          ),
+        })),
+      solution: walked(
+        [
+          [
+            ["Find the tallest bar", "找出最高的条形"],
+            t(
+              `The tallest bar stands at $${tallest}$, so the mean $np$ lies near $${tallest}$.`,
+              `最高的条形在 $${tallest}$，所以均值 $np$ 在 $${tallest}$ 附近。`,
+            ),
+          ],
+          [
+            ["Match the mean", "对照均值"],
+            t(
+              `Among the choices only $p = ${p}$ puts the mean there: $${n}(${p}) = ${mean(p)}$.`,
+              `选项中只有 $p = ${p}$ 使均值落在那里：$${n}(${p}) = ${mean(p)}$。`,
+            ),
+          ],
+        ],
+        t(`The chart is ${shape(p)[0]}, which is the shape $p = ${p}$ gives.`, `图形${shape(p)[1]}，正是 $p = ${p}$ 给出的形状。`),
+      ),
+      figure: {
         svg,
         alt: t(
           `A bar chart of a binomial distribution with n = ${n} whose tallest bar stands at ${tallest}.`,
           `n = ${n} 的二项分布条形图，最高的条形在 ${tallest}。`,
         ),
       },
-    );
+    });
   },
 );
 
@@ -159,8 +189,8 @@ const poissonRate = point(
   "the-rate-of-a-poisson-distribution-from-its-bars",
   ["The rate of a Poisson distribution from its bars", "由条形图判断泊松分布的参数"],
   [
-    "A Poisson distribution with rate $\\lambda$ has mean $\\lambda$, and the ratio of neighboring bars is $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{\\lambda}{k}$. So the bars rise while $k < \\lambda$ and fall afterward. For a whole number $\\lambda$, the bars at $\\lambda - 1$ and $\\lambda$ are exactly equal and the tallest.",
-    "参数为 $\\lambda$ 的泊松分布均值为 $\\lambda$，相邻条形之比为 $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{\\lambda}{k}$。所以 $k < \\lambda$ 时条形上升，之后下降。$\\lambda$ 为整数时，$\\lambda - 1$ 和 $\\lambda$ 处的两根条形恰好相等且最高。",
+    "A Poisson distribution with rate $\\lambda$ has mean $\\lambda$, and the ratio of neighboring bars is $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{\\lambda}{k}$. So the bars rise while $k < \\lambda$ and fall afterward. For a whole number $\\lambda$, the bars at $\\lambda - 1$ and $\\lambda$ are exactly equal and the tallest.\n\nIf the two tallest bars are equal and stand at $3$ and $4$, then $\\lambda = 4$, and the bar at $2$ is $\\frac{4}{2} = 2$ times the bar at $1$.\n\nCheck: with $\\lambda = 4$ the ratio at $k = 4$ is $\\frac{4}{4} = 1$, so the bars at $3$ and $4$ are equal, and the ratio at $k = 5$ is $\\frac{4}{5} < 1$, so the bars fall after $4$.\n\n> **Watch out.** $\\lambda$ is the right one of the two equal bars, not the left one: equal bars at $3$ and $4$ give $\\lambda = 4$, not $3$. And the ratio of a bar to the one before it is $\\frac{\\lambda}{k}$, not $\\frac{k}{\\lambda}$: the bar at $2$ is $2$ times the bar at $1$, not $\\frac{1}{2}$ of it.",
+    "参数为 $\\lambda$ 的泊松分布均值为 $\\lambda$，相邻条形之比为 $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{\\lambda}{k}$。所以 $k < \\lambda$ 时条形上升，之后下降。$\\lambda$ 为整数时，$\\lambda - 1$ 和 $\\lambda$ 处的两根条形恰好相等且最高。\n\n若最高的两根条形相等，位于 $3$ 和 $4$，则 $\\lambda = 4$，并且 $2$ 处的条形是 $1$ 处条形的 $\\frac{4}{2} = 2$ 倍。\n\n检验：$\\lambda = 4$ 时，$k = 4$ 处的比为 $\\frac{4}{4} = 1$，所以 $3$ 和 $4$ 处的条形相等；$k = 5$ 处的比为 $\\frac{4}{5} < 1$，所以 $4$ 之后条形下降。\n\n> **注意。** $\\lambda$ 是两根相等条形中右边的一根，不是左边的：相等的条形在 $3$ 和 $4$ 时 $\\lambda = 4$，而不是 $3$。另外，一根条形与前一根之比是 $\\frac{\\lambda}{k}$，不是 $\\frac{k}{\\lambda}$：$2$ 处的条形是 $1$ 处的 $2$ 倍，而不是 $\\frac{1}{2}$。",
   ],
   (rng) => {
     const lambda = rng.int(1, 9);
@@ -177,35 +207,104 @@ const poissonRate = point(
         `0 到 16 的泊松分布条形图，最高的两根条形相等，位于 ${lambda - 1} 和 ${lambda}。`,
       ),
     };
+    const find: Step = [
+      ["Find the equal bars", "找出相等的条形"],
+      t(
+        `The two tallest bars are equal and stand at $${lambda - 1}$ and $${lambda}$. The ratio $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{\\lambda}{k}$ is one only at $k = \\lambda$, the right one of the two, so $\\lambda = ${lambda}$.`,
+        `最高的两根条形相等，位于 $${lambda - 1}$ 和 $${lambda}$。比 $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{\\lambda}{k}$ 只在 $k = \\lambda$ 时为一，即两根中右边的一根，所以 $\\lambda = ${lambda}$。`,
+      ),
+    ];
     const ratio = rng.bool(0.7);
     if (!ratio)
-      return ask(
-        [
-          "The chart shows a Poisson distribution whose rate $\\lambda$ is a whole number. What is $\\lambda$?",
-          "图中是一个泊松分布，其参数 $\\lambda$ 是整数。$\\lambda$ 是多少？",
-        ],
-        lambda,
-        [lambda - 1, lambda + 1, lambda + 2],
-        [
-          `The two tallest bars are equal and stand at $${lambda - 1}$ and $${lambda}$. Their ratio is $\\frac{\\lambda}{k}$, which is one at $k = \\lambda$, so $\\lambda = ${lambda}$.`,
-          `最高的两根条形相等，位于 $${lambda - 1}$ 和 $${lambda}$。它们的比是 $\\frac{\\lambda}{k}$，在 $k = \\lambda$ 时为一，所以 $\\lambda = ${lambda}$。`,
-        ],
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The chart shows a Poisson distribution whose rate $\\lambda$ is a whole number. What is $\\lambda$?",
+            "图中是一个泊松分布，其参数 $\\lambda$ 是整数。$\\lambda$ 是多少？",
+          ),
+          answer: lambda,
+          wrong: [lambda + 2],
+          mistakes: apart(Q.of(lambda), [
+            why(
+              lambda - 1,
+              "This is the left one of the two equal bars. The ratio $\\frac{\\lambda}{k}$ is one at $k = \\lambda$, so $\\lambda$ is the right one.",
+              "这是两根相等条形中左边的一根。比 $\\frac{\\lambda}{k}$ 在 $k = \\lambda$ 时为一，所以 $\\lambda$ 是右边那根。",
+            ),
+            why(
+              lambda + 1,
+              `With $\\lambda = ${lambda + 1}$ the equal bars would stand at $${lambda}$ and $${lambda + 1}$, one place to the right of the drawn ones.`,
+              `若 $\\lambda = ${lambda + 1}$，相等的条形会在 $${lambda}$ 和 $${lambda + 1}$，比图中的向右偏一格。`,
+            ),
+          ]),
+          solution: walked(
+            [find],
+            t(
+              `With $\\lambda = ${lambda}$ the ratio at $k = ${lambda}$ is $\\frac{\\lambda}{k} = 1$, so the bars at $${lambda - 1}$ and $${lambda}$ are equal, and the ratio at $k = ${lambda + 1}$ is $\\frac{${lambda}}{${lambda + 1}} < 1$, so the bars fall after $${lambda}$, as drawn.`,
+              `$\\lambda = ${lambda}$ 时，$k = ${lambda}$ 处的比为 $\\frac{\\lambda}{k} = 1$，所以 $${lambda - 1}$ 和 $${lambda}$ 处的条形相等；$k = ${lambda + 1}$ 处的比为 $\\frac{${lambda}}{${lambda + 1}} < 1$，所以 $${lambda}$ 之后条形下降，与图一致。`,
+            ),
+          ),
+        }),
         figure,
-      );
+      };
     const k = rng.int(1, 6);
-    return ask(
-      [
-        `The chart shows a Poisson distribution whose rate $\\lambda$ is a whole number. Find the exact ratio $\\frac{P(X = ${k})}{P(X = ${k - 1})}$.`,
-        `图中是一个泊松分布，其参数 $\\lambda$ 是整数。求精确比值 $\\frac{P(X = ${k})}{P(X = ${k - 1})}$。`,
-      ],
-      Q.of(lambda, k),
-      [Q.of(k, lambda), Q.of(lambda, k + 1), Q.of(lambda + 1, k)],
-      [
-        `The two tallest bars are equal at $${lambda - 1}$ and $${lambda}$, so $\\lambda = ${lambda}$. The ratio of neighboring bars is $\\frac{\\lambda}{k} = \\frac{${lambda}}{${k}}$.`,
-        `最高的两根条形相等，位于 $${lambda - 1}$ 和 $${lambda}$，所以 $\\lambda = ${lambda}$。相邻条形之比为 $\\frac{\\lambda}{k} = \\frac{${lambda}}{${k}}$。`,
-      ],
+    const answer = Q.of(lambda, k);
+    const quotient =
+      k === 1
+        ? `\\lambda = ${lambda}`
+        : `\\frac{\\lambda}{${k}} = \\frac{${lambda}}{${k}}${answer.toLatex() === `\\frac{${lambda}}{${k}}` ? "" : ` = ${answer.toLatex()}`}`;
+    const trend: readonly [string, string] =
+      k < lambda
+        ? [
+            `greater than one, so the bar at $${k}$ is taller than the bar at $${k - 1}$`,
+            `大于一，所以 $${k}$ 处的条形比 $${k - 1}$ 处的高`,
+          ]
+        : k === lambda
+          ? [`one, so the bars at $${k - 1}$ and $${k}$ are equal`, `为一，所以 $${k - 1}$ 和 $${k}$ 处的条形相等`]
+          : [
+              `less than one, so the bar at $${k}$ is shorter than the bar at $${k - 1}$`,
+              `小于一，所以 $${k}$ 处的条形比 $${k - 1}$ 处的矮`,
+            ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The chart shows a Poisson distribution whose rate $\\lambda$ is a whole number. Find the exact ratio $\\frac{P(X = ${k})}{P(X = ${k - 1})}$.`,
+          `图中是一个泊松分布，其参数 $\\lambda$ 是整数。求精确比值 $\\frac{P(X = ${k})}{P(X = ${k - 1})}$。`,
+        ),
+        answer,
+        wrong: [Q.of(lambda + 1, k)],
+        mistakes: apart(answer, [
+          why(
+            Q.of(k, lambda),
+            `This is the ratio upside down, $\\frac{P(X = ${k - 1})}{P(X = ${k})}$.`,
+            `这是倒过来的比 $\\frac{P(X = ${k - 1})}{P(X = ${k})}$。`,
+          ),
+          why(
+            Q.of(lambda, k + 1),
+            `This is the ratio of the next pair of bars, $\\frac{P(X = ${k + 1})}{P(X = ${k})}$.`,
+            `这是下一对条形之比 $\\frac{P(X = ${k + 1})}{P(X = ${k})}$。`,
+          ),
+          why(
+            Q.of(lambda - 1, k),
+            `This takes $\\lambda = ${lambda - 1}$, the left one of the two equal bars; $\\lambda$ is the right one.`,
+            `这取了 $\\lambda = ${lambda - 1}$，即两根相等条形中左边的一根；$\\lambda$ 是右边那根。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            find,
+            [
+              ["Divide neighboring bars", "相邻条形相除"],
+              t(`$\\frac{P(X = ${k})}{P(X = ${k - 1})} = ${quotient}$.`, `$\\frac{P(X = ${k})}{P(X = ${k - 1})} = ${quotient}$。`),
+            ],
+          ],
+          t(
+            `From the formula, $\\frac{P(X = k)}{P(X = k - 1)} = \\frac{e^{-\\lambda}\\lambda^{k}/k!}{e^{-\\lambda}\\lambda^{k - 1}/(k - 1)!} = \\frac{\\lambda}{k}$. Here the ratio is ${trend[0]}, as the chart shows.`,
+            `由公式，$\\frac{P(X = k)}{P(X = k - 1)} = \\frac{e^{-\\lambda}\\lambda^{k}/k!}{e^{-\\lambda}\\lambda^{k - 1}/(k - 1)!} = \\frac{\\lambda}{k}$。这里的比${trend[1]}，与图一致。`,
+          ),
+        ),
+      }),
       figure,
-    );
+    };
   },
 );
 
@@ -213,8 +312,8 @@ const uniformBars = point(
   "mean-and-variance-from-equal-bars",
   ["Mean and variance from equal bars", "由等高条形求均值和方差"],
   [
-    "Equal bars on the whole numbers from $a$ to $b$ show a discrete uniform distribution. With $n = b - a + 1$ values, its mean is $\\frac{a + b}{2}$ and its variance is $\\frac{n^{2} - 1}{12}$. Shifting the bars moves the mean and leaves the variance alone.",
-    "从 $a$ 到 $b$ 的各整数上等高的条形表示离散均匀分布。共有 $n = b - a + 1$ 个值时，均值为 $\\frac{a + b}{2}$，方差为 $\\frac{n^{2} - 1}{12}$。平移条形会改变均值，但不改变方差。",
+    "Equal bars on the whole numbers from $a$ to $b$ show a discrete uniform distribution. With $n = b - a + 1$ values, its mean is $\\frac{a + b}{2}$ and its variance is $\\frac{n^{2} - 1}{12}$. Shifting the bars moves the mean and leaves the variance alone.\n\nFor equal bars on $2, 3, 4, 5, 6$ there are $n = 6 - 2 + 1 = 5$ values, so the mean is $\\frac{2 + 6}{2} = 4$ and the variance is $\\frac{5^{2} - 1}{12} = 2$.\n\nCheck: the squared distances from $4$ are $4, 1, 0, 1, 4$, which add up to $10$, and each has weight $\\frac{1}{5}$, so the variance is $\\frac{10}{5} = 2$.\n\n> **Watch out.** $n$ counts the values, $b - a + 1$, not the gap $b - a$. Taking $n = 4$ for the bars from $2$ to $6$ gives $\\frac{4^{2} - 1}{12} = \\frac{5}{4}$ instead of $2$.",
+    "从 $a$ 到 $b$ 的各整数上等高的条形表示离散均匀分布。共有 $n = b - a + 1$ 个值时，均值为 $\\frac{a + b}{2}$，方差为 $\\frac{n^{2} - 1}{12}$。平移条形会改变均值，但不改变方差。\n\n在 $2, 3, 4, 5, 6$ 上的等高条形共有 $n = 6 - 2 + 1 = 5$ 个值，所以均值为 $\\frac{2 + 6}{2} = 4$，方差为 $\\frac{5^{2} - 1}{12} = 2$。\n\n检验：到 $4$ 的距离平方为 $4, 1, 0, 1, 4$，和为 $10$，每个的权重都是 $\\frac{1}{5}$，所以方差为 $\\frac{10}{5} = 2$。\n\n> **注意。** $n$ 数的是取值个数 $b - a + 1$，而不是差 $b - a$。对从 $2$ 到 $6$ 的条形取 $n = 4$，会得到 $\\frac{4^{2} - 1}{12} = \\frac{5}{4}$，而不是 $2$。",
   ],
   (rng) => {
     const a = rng.int(1, 5);
@@ -231,25 +330,108 @@ const uniformBars = point(
     );
     const mean = Q.of(a + b, 2);
     const variance = Q.of(n * n - 1, 12);
-    return ask(
-      [
-        `The chart shows the distribution of $X$. Find ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}.`,
-        `图中是 $X$ 的分布。求 ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}。`,
-      ],
-      wantMean ? mean : variance,
-      wantMean ? [Q.of(n, 2), Q.of(b - a, 2), Q.of(a + b, 1)] : [Q.of(n * n, 12), Q.of(n + 1, 12), mean],
-      [
-        `There are $n = ${n}$ equal bars from $${a}$ to $${b}$. ${wantMean ? `The mean is the midpoint, $\\frac{${a} + ${b}}{2} = ${mean.toLatex()}$.` : `So the variance is $\\frac{${n}^{2} - 1}{12} = ${variance.toLatex()}$.`}`,
-        `从 $${a}$ 到 $${b}$ 共有 $n = ${n}$ 根等高的条形。${wantMean ? `均值是中点，$\\frac{${a} + ${b}}{2} = ${mean.toLatex()}$。` : `所以方差为 $\\frac{${n}^{2} - 1}{12} = ${variance.toLatex()}$。`}`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A bar chart with ${n} equal bars of height 1/${n} on the whole numbers from ${a} to ${b}.`,
-          `从 ${a} 到 ${b} 的各整数上有 ${n} 根高度为 1/${n} 的等高条形。`,
-        ),
-      },
+    const values = Array.from({ length: n }, (_, i) => a + i);
+    const figure = {
+      svg,
+      alt: t(
+        `A bar chart with ${n} equal bars of height 1/${n} on the whole numbers from ${a} to ${b}.`,
+        `从 ${a} 到 ${b} 的各整数上有 ${n} 根高度为 1/${n} 的等高条形。`,
+      ),
+    };
+    const read: Step = [
+      ["Read the bars", "读条形"],
+      t(
+        `There are $n = ${b} - ${a} + 1 = ${n}$ equal bars of height $\\frac{1}{${n}}$, on the whole numbers from $${a}$ to $${b}$.`,
+        `从 $${a}$ 到 $${b}$ 的各整数上共有 $n = ${b} - ${a} + 1 = ${n}$ 根高为 $\\frac{1}{${n}}$ 的等高条形。`,
+      ),
+    ];
+    if (wantMean) {
+      const sum = values.reduce((u, v) => u + v, 0);
+      return {
+        ...numberProblem({
+          prompt: t("The chart shows the distribution of $X$. Find $E(X)$.", "图中是 $X$ 的分布。求 $E(X)$。"),
+          answer: mean,
+          mistakes: apart(mean, [
+            why(
+              Q.of(n, 2),
+              `This is half the number of bars. The mean is the middle of the values from $${a}$ to $${b}$, not half of their count.`,
+              `这是条形个数的一半。均值是从 $${a}$ 到 $${b}$ 这些取值的中点，而不是个数的一半。`,
+            ),
+            why(
+              Q.of(b - a, 2),
+              `This is half the gap $${b} - ${a}$, the midpoint measured from $${a}$; the bars start at $${a}$, so add $${a}$ to it.`,
+              `这是差 $${b} - ${a}$ 的一半，即从 $${a}$ 量起的中点；条形从 $${a}$ 开始，还要加上 $${a}$。`,
+            ),
+            why(Q.of(a + b), `This is $${a} + ${b}$ without halving it.`, `这是 $${a} + ${b}$，没有除以 $2$。`),
+          ]),
+          solution: walked(
+            [
+              read,
+              [
+                ["Take the midpoint", "取中点"],
+                t(
+                  `Equal bars balance at their middle: $E(X) = \\frac{${a} + ${b}}{2} = ${mean.toLatex()}$.`,
+                  `等高的条形在中点处平衡：$E(X) = \\frac{${a} + ${b}}{2} = ${mean.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Weighting each value by $\\frac{1}{${n}}$ gives $\\frac{${values.join(" + ")}}{${n}} = \\frac{${sum}}{${n}} = ${mean.toLatex()}$.`,
+              `每个取值乘以权重 $\\frac{1}{${n}}$，得 $\\frac{${values.join(" + ")}}{${n}} = \\frac{${sum}}{${n}} = ${mean.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure,
+      };
+    }
+    const squares = values.map((v) => Q.of((2 * v - a - b) ** 2, 4));
+    const total = Q.of(
+      values.reduce((u, v) => u + (2 * v - a - b) ** 2, 0),
+      4,
     );
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The chart shows the distribution of $X$. Find $\\operatorname{Var}(X)$.",
+          "图中是 $X$ 的分布。求 $\\operatorname{Var}(X)$。",
+        ),
+        answer: variance,
+        mistakes: apart(variance, [
+          why(
+            Q.of(n * n, 12),
+            `This leaves out the $-1$: the variance is $\\frac{n^{2} - 1}{12}$, not $\\frac{n^{2}}{12}$.`,
+            `这漏掉了 $-1$：方差是 $\\frac{n^{2} - 1}{12}$，不是 $\\frac{n^{2}}{12}$。`,
+          ),
+          why(
+            Q.of((n - 1) ** 2 - 1, 12),
+            `This takes $n = ${b} - ${a} = ${n - 1}$, but $n$ counts the values, $${b} - ${a} + 1 = ${n}$.`,
+            `这取了 $n = ${b} - ${a} = ${n - 1}$，但 $n$ 数的是取值个数 $${b} - ${a} + 1 = ${n}$。`,
+          ),
+          why(
+            Q.of((b - a) ** 2, 12),
+            "This is $\\frac{(b - a)^{2}}{12}$, the variance of a continuous uniform density; equal bars on whole numbers have $\\frac{n^{2} - 1}{12}$.",
+            "这是 $\\frac{(b - a)^{2}}{12}$，连续均匀分布的方差；整数上的等高条形的方差是 $\\frac{n^{2} - 1}{12}$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            read,
+            [
+              ["Use the formula", "代入公式"],
+              t(
+                `$\\operatorname{Var}(X) = \\frac{n^{2} - 1}{12} = \\frac{${n}^{2} - 1}{12} = ${variance.toLatex()}$.`,
+                `$\\operatorname{Var}(X) = \\frac{n^{2} - 1}{12} = \\frac{${n}^{2} - 1}{12} = ${variance.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The mean is $${mean.toLatex()}$, and the squared distances from it are $${squares.map((s) => s.toLatex()).join(", ")}$, which add up to $${total.toLatex()}$. Each has weight $\\frac{1}{${n}}$, and $${total.toLatex()} \\div ${n} = ${variance.toLatex()}$.`,
+            `均值为 $${mean.toLatex()}$，到它的距离平方为 $${squares.map((s) => s.toLatex()).join(", ")}$，和为 $${total.toLatex()}$。每个的权重都是 $\\frac{1}{${n}}$，而 $${total.toLatex()} \\div ${n} = ${variance.toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure,
+    };
   },
 );
 
@@ -257,34 +439,97 @@ const bernoulliBars = point(
   "the-variance-from-two-bars",
   ["The variance from two bars", "由两根条形求方差"],
   [
-    "A Bernoulli variable has a bar at $0$ of height $1 - p$ and a bar at $1$ of height $p$. Its mean is the height at $1$, and its variance is $p(1 - p)$, the product of the two heights. The variance is largest when the bars are equal.",
-    "伯努利变量在 $0$ 处有高为 $1 - p$ 的条形，在 $1$ 处有高为 $p$ 的条形。均值就是 $1$ 处的高度，方差 $p(1 - p)$ 是两个高度之积。两根条形相等时方差最大。",
+    "A Bernoulli variable has a bar at $0$ of height $1 - p$ and a bar at $1$ of height $p$. Its mean is the height at $1$, and its variance is $p(1 - p)$, the product of the two heights. The variance is largest when the bars are equal.\n\nWith a bar of height $0.7$ at $0$ and one of height $0.3$ at $1$, $\\operatorname{Var}(X) = 0.3 \\cdot 0.7 = 0.21$, and $\\operatorname{Var}(2X) = 2^{2} \\cdot 0.21 = 0.84$.\n\nCheck: $X^{2} = X$ for a variable that is $0$ or $1$, so $E(X^{2}) = E(X) = 0.3$ and $\\operatorname{Var}(X) = 0.3 - 0.3^{2} = 0.21$.\n\n> **Watch out.** Scaling $X$ by $c$ multiplies the variance by $c^{2}$, not by $c$: $\\operatorname{Var}(2X)$ above is $0.84$, not $2 \\cdot 0.21 = 0.42$. And the height $0.3$ at $1$ is the mean, not the variance.",
+    "伯努利变量在 $0$ 处有高为 $1 - p$ 的条形，在 $1$ 处有高为 $p$ 的条形。均值就是 $1$ 处的高度，方差 $p(1 - p)$ 是两个高度之积。两根条形相等时方差最大。\n\n若 $0$ 处条形高 $0.7$、$1$ 处条形高 $0.3$，则 $\\operatorname{Var}(X) = 0.3 \\cdot 0.7 = 0.21$，而 $\\operatorname{Var}(2X) = 2^{2} \\cdot 0.21 = 0.84$。\n\n检验：只取 $0$ 或 $1$ 的变量满足 $X^{2} = X$，所以 $E(X^{2}) = E(X) = 0.3$，$\\operatorname{Var}(X) = 0.3 - 0.3^{2} = 0.21$。\n\n> **注意。** 把 $X$ 乘以 $c$，方差乘以 $c^{2}$ 而不是 $c$：上面的 $\\operatorname{Var}(2X)$ 是 $0.84$，不是 $2 \\cdot 0.21 = 0.42$。另外，$1$ 处的高度 $0.3$ 是均值，不是方差。",
   ],
   (rng) => {
     const p = rng.pick([1, 2, 3, 4, 6, 7, 8, 9]);
     const c = rng.int(1, 4);
     const svg = chart([-0.8, 1.8], [0, 1.05], intTicks(0, 1), tenthTicks(0, 10, 2), (x, y) => pmfBars(0, [(10 - p) / 10, p / 10], x, y));
-    const answer = Q.of(c * c * p * (10 - p), 100);
+    const q = 10 - p;
+    const answer = Q.of(c * c * p * q, 100);
+    const base = Q.of(p * q, 100);
     const target = c === 1 ? "X" : `${c}X`;
-    return ask(
-      [
-        `The chart shows the distribution of a Bernoulli variable $X$. Find $\\operatorname{Var}(${target})$.`,
-        `图中是伯努利变量 $X$ 的分布。求 $\\operatorname{Var}(${target})$。`,
-      ],
-      answer,
-      [Q.of(c * p * (10 - p), 100), Q.of(c * p, 10), Q.of(c * (10 - p), 10), Q.of(p * (10 - p), 100)],
-      [
-        `The bar at $1$ has height $p = ${p / 10}$ and the bar at $0$ has height $${(10 - p) / 10}$, so $\\operatorname{Var}(X) = ${p / 10} \\cdot ${(10 - p) / 10} = ${Q.of(p * (10 - p), 100).toLatex()}$.${c === 1 ? "" : ` Multiplying by $${c}$ multiplies the variance by $${c * c}$, which gives $${answer.toLatex()}$.`}`,
-        `$1$ 处条形高 $p = ${p / 10}$，$0$ 处条形高 $${(10 - p) / 10}$，所以 $\\operatorname{Var}(X) = ${p / 10} \\cdot ${(10 - p) / 10} = ${Q.of(p * (10 - p), 100).toLatex()}$。${c === 1 ? "" : `乘以 $${c}$ 使方差乘以 $${c * c}$，得 $${answer.toLatex()}$。`}`,
-      ],
-      {
+    const hp = `${p / 10}`;
+    const hq = `${q / 10}`;
+    const scale: Step[] =
+      c === 1
+        ? []
+        : [
+            [
+              ["Scale by the square", "乘以系数的平方"],
+              t(
+                `$\\operatorname{Var}(${c}X) = ${c}^{2}\\operatorname{Var}(X) = ${c * c} \\cdot ${base.toLatex()} = ${answer.toLatex()}$.`,
+                `$\\operatorname{Var}(${c}X) = ${c}^{2}\\operatorname{Var}(X) = ${c * c} \\cdot ${base.toLatex()} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The chart shows the distribution of a Bernoulli variable $X$. Find $\\operatorname{Var}(${target})$.`,
+          `图中是伯努利变量 $X$ 的分布。求 $\\operatorname{Var}(${target})$。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            Q.of(c * p, 10),
+            `This is the mean $E(${target})$, read from the bar at $1$, not the variance.`,
+            `这是由 $1$ 处条形读出的均值 $E(${target})$，不是方差。`,
+          ),
+          why(
+            Q.of(c * q, 10),
+            `This uses only the bar at $0$; the variance multiplies both heights, $p(1 - p)$.`,
+            `这只用了 $0$ 处的条形；方差是两个高度之积 $p(1 - p)$。`,
+          ),
+          why(
+            Q.of(c * p * q, 100),
+            `This multiplies the variance by $${c}$, but scaling by $${c}$ multiplies it by $${c}^{2} = ${c * c}$.`,
+            `这把方差乘以 $${c}$，但乘以 $${c}$ 会使方差乘以 $${c}^{2} = ${c * c}$。`,
+          ),
+          why(
+            base,
+            `This is $\\operatorname{Var}(X)$; $\\operatorname{Var}(${target})$ is $${c * c}$ times it.`,
+            `这是 $\\operatorname{Var}(X)$；$\\operatorname{Var}(${target})$ 是它的 $${c * c}$ 倍。`,
+          ),
+          why(
+            Q.of(p * p, 100),
+            "This squares the height at $1$; the variance is $p(1 - p)$, the product of the two heights.",
+            "这是把 $1$ 处的高度平方；方差是两个高度之积 $p(1 - p)$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the bars", "读条形"],
+              t(
+                `The bar at $1$ has height $p = ${hp}$ and the bar at $0$ has height $1 - p = ${hq}$.`,
+                `$1$ 处条形高 $p = ${hp}$，$0$ 处条形高 $1 - p = ${hq}$。`,
+              ),
+            ],
+            [
+              ["Multiply the heights", "高度相乘"],
+              t(
+                `$\\operatorname{Var}(X) = p(1 - p) = ${hp} \\cdot ${hq} = ${base.toLatex()}$.`,
+                `$\\operatorname{Var}(X) = p(1 - p) = ${hp} \\cdot ${hq} = ${base.toLatex()}$。`,
+              ),
+            ],
+            ...scale,
+          ],
+          t(
+            `Since $X^{2} = X$, $E(X^{2}) = E(X) = ${hp}$, so $\\operatorname{Var}(X) = ${hp} - ${hp}^{2} = ${base.toLatex()}$${c === 1 ? "" : `, and $${c * c} \\cdot ${base.toLatex()} = ${answer.toLatex()}$`}.`,
+            `因为 $X^{2} = X$，$E(X^{2}) = E(X) = ${hp}$，所以 $\\operatorname{Var}(X) = ${hp} - ${hp}^{2} = ${base.toLatex()}$${c === 1 ? "" : `，而 $${c * c} \\cdot ${base.toLatex()} = ${answer.toLatex()}$`}。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           `Two bars: height ${(10 - p) / 10} at 0 and height ${p / 10} at 1.`,
           `两根条形：0 处高 ${(10 - p) / 10}，1 处高 ${p / 10}。`,
         ),
       },
-    );
+    };
   },
 );
 
@@ -292,8 +537,8 @@ const varianceFromBars = point(
   "the-variance-from-three-bars",
   ["The variance from three bars", "由三根条形求方差"],
   [
-    "To find a variance from a chart, list the values and their heights, find the mean $\\mu = \\sum x\\,p(x)$, and then add the squared distances from the mean, each weighted by its bar: $\\sigma^{2} = \\sum (x - \\mu)^{2} p(x)$.",
-    "由条形图求方差时，先列出取值和对应的高度，求出均值 $\\mu = \\sum x\\,p(x)$，再把到均值距离的平方按条形高度加权求和：$\\sigma^{2} = \\sum (x - \\mu)^{2} p(x)$。",
+    "To find a variance from a chart, list the values and their heights, find the mean $\\mu = \\sum x\\,p(x)$, and then add the squared distances from the mean, each weighted by its bar: $\\sigma^{2} = \\sum (x - \\mu)^{2} p(x)$.\n\nFor bars of height $0.3$ at $2$, $0.4$ at $4$ and $0.3$ at $6$, the mean is $2(0.3) + 4(0.4) + 6(0.3) = 4$, and the variance is $2^{2}(0.3) + 0^{2}(0.4) + 2^{2}(0.3) = 2.4$.\n\nCheck: $E(X^{2}) = 4(0.3) + 16(0.4) + 36(0.3) = 18.4$, and $18.4 - 4^{2} = 2.4$.\n\n> **Watch out.** Square the distances before weighting them, and weight both outer bars. Using the distances $2$ unsquared gives $2(0.3) + 2(0.3) = 1.2$, and stopping at $E(X^{2}) = 18.4$ forgets to subtract $\\mu^{2}$.",
+    "由条形图求方差时，先列出取值和对应的高度，求出均值 $\\mu = \\sum x\\,p(x)$，再把到均值距离的平方按条形高度加权求和：$\\sigma^{2} = \\sum (x - \\mu)^{2} p(x)$。\n\n若 $2$ 处条形高 $0.3$、$4$ 处高 $0.4$、$6$ 处高 $0.3$，则均值为 $2(0.3) + 4(0.4) + 6(0.3) = 4$，方差为 $2^{2}(0.3) + 0^{2}(0.4) + 2^{2}(0.3) = 2.4$。\n\n检验：$E(X^{2}) = 4(0.3) + 16(0.4) + 36(0.3) = 18.4$，而 $18.4 - 4^{2} = 2.4$。\n\n> **注意。** 先把距离平方再加权，并且两侧的条形都要算。不平方而直接用距离 $2$，得 $2(0.3) + 2(0.3) = 1.2$；停在 $E(X^{2}) = 18.4$ 则忘了减去 $\\mu^{2}$。",
   ],
   (rng) => {
     const mu = rng.int(3, 7);
@@ -308,22 +553,68 @@ const varianceFromBars = point(
       ),
     );
     const answer = Q.of(2 * side * d * d, 10);
-    return ask(
-      ["The chart shows the distribution of $X$. Find $\\operatorname{Var}(X)$.", "图中是 $X$ 的分布。求 $\\operatorname{Var}(X)$。"],
-      answer,
-      [Q.of(2 * side * d, 10), Q.of(side * d * d, 10), Q.of(d * d, 1)],
-      [
-        `The chart is symmetric about $\\mu = ${mu}$. The middle bar contributes nothing, and each outer bar has height $${side / 10}$ at distance $${d}$, so the variance is $2 \\cdot ${d}^{2} \\cdot ${side / 10} = ${answer.toLatex()}$.`,
-        `图形关于 $\\mu = ${mu}$ 对称。中间的条形贡献为零，两侧条形高 $${side / 10}$、距离均值 $${d}$，所以方差为 $2 \\cdot ${d}^{2} \\cdot ${side / 10} = ${answer.toLatex()}$。`,
-      ],
-      {
+    const s = `${side / 10}`;
+    const m = `${(10 - 2 * side) / 10}`;
+    const square = Q.of((mu - d) ** 2 * side + mu * mu * (10 - 2 * side) + (mu + d) ** 2 * side, 10);
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The chart shows the distribution of $X$. Find $\\operatorname{Var}(X)$.",
+          "图中是 $X$ 的分布。求 $\\operatorname{Var}(X)$。",
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(Q.of(2 * side * d, 10), `This weights the distances $${d}$ without squaring them.`, `这把距离 $${d}$ 直接加权，没有平方。`),
+          why(Q.of(side * d * d, 10), "This counts only one of the two outer bars.", "这只算了两侧条形中的一根。"),
+          why(
+            Q.of(2 * d * d),
+            `This adds the squared distances $${d}^{2} + ${d}^{2}$ without weighting them by the heights of the bars.`,
+            `这把距离平方 $${d}^{2} + ${d}^{2}$ 相加，却没有乘以条形的高度。`,
+          ),
+          why(
+            square,
+            `This is $E(X^{2})$; the square of the mean, $${mu}^{2}$, must still be subtracted.`,
+            `这是 $E(X^{2})$；还要减去均值的平方 $${mu}^{2}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the bars", "读条形"],
+              t(
+                `The bars have heights $${s}$ at $${mu - d}$, $${m}$ at $${mu}$ and $${s}$ at $${mu + d}$.`,
+                `条形高度为：$${mu - d}$ 处 $${s}$，$${mu}$ 处 $${m}$，$${mu + d}$ 处 $${s}$。`,
+              ),
+            ],
+            [
+              ["Find the mean", "求均值"],
+              t(
+                `The chart is symmetric, and its center is the mean: $\\mu = ${mu - d}(${s}) + ${mu}(${m}) + ${mu + d}(${s}) = ${mu}$.`,
+                `图形对称，其中心就是均值：$\\mu = ${mu - d}(${s}) + ${mu}(${m}) + ${mu + d}(${s}) = ${mu}$。`,
+              ),
+            ],
+            [
+              ["Weight the squared distances", "距离平方加权"],
+              t(
+                `$\\sigma^{2} = ${d}^{2}(${s}) + 0^{2}(${m}) + ${d}^{2}(${s}) = ${answer.toLatex()}$.`,
+                `$\\sigma^{2} = ${d}^{2}(${s}) + 0^{2}(${m}) + ${d}^{2}(${s}) = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$E(X^{2}) = ${(mu - d) ** 2}(${s}) + ${mu * mu}(${m}) + ${(mu + d) ** 2}(${s}) = ${square.toLatex()}$, and $${square.toLatex()} - ${mu}^{2} = ${answer.toLatex()}$.`,
+            `$E(X^{2}) = ${(mu - d) ** 2}(${s}) + ${mu * mu}(${m}) + ${(mu + d) ** 2}(${s}) = ${square.toLatex()}$，而 $${square.toLatex()} - ${mu}^{2} = ${answer.toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           `Three bars: height ${side / 10} at ${mu - d}, height ${(10 - 2 * side) / 10} at ${mu}, and height ${side / 10} at ${mu + d}.`,
           `三根条形：${mu - d} 处高 ${side / 10}，${mu} 处高 ${(10 - 2 * side) / 10}，${mu + d} 处高 ${side / 10}。`,
         ),
       },
-    );
+    };
   },
 );
 
@@ -338,8 +629,8 @@ const triangleMean = {
     "the-mean-of-a-triangular-density",
     ["The mean of a triangular density", "三角形密度的均值"],
     [
-      "The mean of a density is the balance point of the region under it. For a triangle, the balance point lies above the average of the three corners' positions, so a triangular density on $[a, b]$ with its peak at $c$ has mean $\\frac{a + b + c}{3}$. A symmetric triangle balances at its peak, and a lopsided one has its mean on the side of the long tail.",
-      "密度的均值是其下方区域的平衡点。三角形的平衡点在三个顶点横坐标的平均值处，所以 $[a, b]$ 上峰值在 $c$ 的三角形密度，均值为 $\\frac{a + b + c}{3}$。对称三角形在峰值处平衡；不对称时，均值偏向长尾一侧。",
+      "The mean of a density is the balance point of the region under it. For a triangle, the balance point lies above the average of the three corners' positions, so a triangular density on $[a, b]$ with its peak at $c$ has mean $\\frac{a + b + c}{3}$. A symmetric triangle balances at its peak, and a lopsided one has its mean on the side of the long tail. The drawing shows triangles on $[0, 6]$: with the peak at $3$ the mean is $3$, and with the peak at $1$ it is $\\frac{0 + 6 + 1}{3} = \\frac{7}{3}$. On $[10, 40]$ with the peak at $16$ the mean is $\\frac{10 + 40 + 16}{3} = 22$.\n\n> **Watch out.** The peak is the mode, not the mean, unless the triangle is symmetric; and the midpoint $\\frac{a + b}{2}$ ignores where the peak is. Average three positions, so divide by $3$, not $2$.",
+      "密度的均值是其下方区域的平衡点。三角形的平衡点在三个顶点横坐标的平均值处，所以 $[a, b]$ 上峰值在 $c$ 的三角形密度，均值为 $\\frac{a + b + c}{3}$。对称三角形在峰值处平衡；不对称时，均值偏向长尾一侧。图中是 $[0, 6]$ 上的三角形：峰值在 $3$ 时均值为 $3$，峰值在 $1$ 时均值为 $\\frac{0 + 6 + 1}{3} = \\frac{7}{3}$。在 $[10, 40]$ 上峰值在 $16$ 时，均值为 $\\frac{10 + 40 + 16}{3} = 22$。\n\n> **注意。** 除非三角形对称，峰值是众数而不是均值；中点 $\\frac{a + b}{2}$ 则忽略了峰值的位置。这里平均的是三个位置，所以除以 $3$，不是 $2$。",
     ],
     (rng) => {
       const a = rng.int(0, 2);
@@ -354,18 +645,36 @@ const triangleMean = {
         (x, y) => curvePath(f, a, b, x, y) + shadeUnder(f, a, b, x, y),
       );
       const answer = Q.of(a + b + c, 3);
-      return ask(
-        ["The graph shows a triangular density of $X$. Find $E(X)$.", "图中是 $X$ 的三角形密度。求 $E(X)$。"],
-        answer,
-        [Q.of(c, 1), Q.of(a + b, 2), Q.of(a + b + c, 2)],
-        [
-          `The corners are at $${a}$, $${b}$ and the peak $${c}$, so the mean is $\\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$.`,
-          `三个顶点的横坐标是 $${a}$、$${b}$ 和峰值 $${c}$，所以均值为 $\\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$。`,
-        ],
-        {
-          svg,
-          alt: t(`A triangular density from ${a} to ${b} with its peak at ${c}.`, `从 ${a} 到 ${b} 的三角形密度，峰值在 ${c}。`),
-        },
+      const mid = Q.of(a + b, 2);
+      const mistakes = apart(answer, [
+        why(
+          c,
+          "This is the peak, the mode; the mean is the balance point of the whole triangle.",
+          "这是峰值，即众数；均值是整个三角形的平衡点。",
+        ),
+        why(mid, "This is the midpoint of the base, which ignores where the peak is.", "这是底边的中点，忽略了峰值的位置。"),
+        why(
+          Q.of(a + b + c, 2),
+          "This divides the sum of three positions by $2$ instead of $3$.",
+          "这是把三个位置之和除以 $2$ 而不是 $3$。",
+        ),
+      ]).map((m) => ({ response: (typeof m.value === "number" ? Q.of(m.value) : m.value).toLatex(), why: m.why }));
+      const side = Q.of(c).cmp(mid) < 0 ? ["right", "右"] : Q.of(c).cmp(mid) > 0 ? ["left", "左"] : null;
+      return withMistakes(
+        ask(
+          ["The graph shows a triangular density of $X$. Find $E(X)$.", "图中是 $X$ 的三角形密度。求 $E(X)$。"],
+          answer,
+          [Q.of(c, 1), Q.of(a + b, 2), Q.of(a + b + c, 2)],
+          [
+            `**Step 1: Read the corners.** The base runs from $${a}$ to $${b}$ and the peak is at $${c}$.\n\n**Step 2: Average the three positions.**\n\n$$E(X) = \\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$$\n\n**Check.** ${side ? `The long tail runs to the ${side[0]}, and the mean $${answer.toLatex()}$ lies to the ${side[0]} of the peak $${c}$.` : `The triangle is symmetric, so it balances at its peak $${c}$.`}`,
+            `**第一步：读出顶点。**底边从 $${a}$ 到 $${b}$，峰值在 $${c}$。\n\n**第二步：对三个位置取平均。**\n\n$$E(X) = \\frac{${a} + ${b} + ${c}}{3} = ${answer.toLatex()}$$\n\n**检验。**${side ? `长尾伸向${side[1]}侧，均值 $${answer.toLatex()}$ 在峰值 $${c}$ 的${side[1]}边。` : `三角形是对称的，所以在峰值 $${c}$ 处平衡。`}`,
+          ],
+          {
+            svg,
+            alt: t(`A triangular density from ${a} to ${b} with its peak at ${c}.`, `从 ${a} 到 ${b} 的三角形密度，峰值在 ${c}。`),
+          },
+        ),
+        mistakes,
       );
     },
   ),
@@ -376,8 +685,8 @@ const modeVersusMean = point(
   "where-the-mode-median-and-mean-fall",
   ["Where the mode, median and mean fall", "众数、中位数和均值的位置"],
   [
-    "The mode is where a density peaks. A long right tail pulls the mean to the right of the median, and both stand to the right of the mode. A long left tail reverses the order. In a symmetric density with one peak, all three coincide.",
-    "众数是密度达到峰值的位置。右侧长尾把均值拉到中位数右边，两者都在众数右边；左侧长尾则顺序相反。单峰对称的密度三者重合。",
+    "The mode is where a density peaks. A long right tail pulls the mean to the right of the median, and both stand to the right of the mode. A long left tail reverses the order. In a symmetric density with one peak, all three coincide. For a triangle on $[0, 30]$ peaked at $3$, the mode is $3$, the median is about $9.9$ and the mean is $\\frac{0 + 30 + 3}{3} = 11$.\n\n> **Watch out.** The mean moves furthest towards the tail, further than the median; the median always lies between the mode and the mean. And the mode is at the peak, not at the middle of the interval.",
+    "众数是密度达到峰值的位置。右侧长尾把均值拉到中位数右边，两者都在众数右边；左侧长尾则顺序相反。单峰对称的密度三者重合。对于 $[0, 30]$ 上峰值在 $3$ 的三角形，众数是 $3$，中位数约为 $9.9$，均值为 $\\frac{0 + 30 + 3}{3} = 11$。\n\n> **注意。** 均值向长尾移得最远，比中位数更远；中位数总在众数和均值之间。众数在峰值处，不在区间的中点。",
   ],
   (rng) => {
     const right = rng.bool();
@@ -389,29 +698,49 @@ const modeVersusMean = point(
     const correct: [string, string] = right
       ? ["mode $<$ median $<$ mean", "众数 $<$ 中位数 $<$ 均值"]
       : ["mean $<$ median $<$ mode", "均值 $<$ 中位数 $<$ 众数"];
-    return choose(
-      rng,
+    const reversed: [string, string] = right
+      ? ["mean $<$ median $<$ mode", "均值 $<$ 中位数 $<$ 众数"]
+      : ["mode $<$ median $<$ mean", "众数 $<$ 中位数 $<$ 均值"];
+    const mean = Q.of(a + b + c, 3).toLatex();
+    const [side, sideZh] = right ? ["right", "右"] : ["left", "左"];
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The graph shows the density of $X$. How are its mode, median and mean ordered?",
+          "图中是 $X$ 的密度。它的众数、中位数和均值如何排序？",
+        ],
+        correct,
+        [reversed, ["mode $=$ median $=$ mean", "众数 $=$ 中位数 $=$ 均值"], ["median $<$ mode $<$ mean", "中位数 $<$ 众数 $<$ 均值"]],
+        [
+          `**Step 1: Find the mode and the tail.** The peak, the mode, is at $${c}$, and the long tail runs to the ${side}.\n\n**Step 2: Order the three.** The tail pulls the mean furthest from the mode, and the median lies between them, so the order is ${correct[0]}.\n\n**Check.** The mean is $\\frac{${a} + ${b} + ${c}}{3} = ${mean}$, which is to the ${side} of the peak $${c}$.`,
+          `**第一步：找出众数和长尾。**峰值即众数在 $${c}$，长尾伸向${sideZh}侧。\n\n**第二步：排序。**长尾把均值拉得离众数最远，中位数在两者之间，所以顺序是${correct[1]}。\n\n**检验。**均值为 $\\frac{${a} + ${b} + ${c}}{3} = ${mean}$，在峰值 $${c}$ 的${sideZh}边。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A lopsided triangular density from ${a} to ${b} with its peak at ${c}.`,
+            `从 ${a} 到 ${b} 不对称的三角形密度，峰值在 ${c}。`,
+          ),
+        },
+      ),
       [
-        "The graph shows the density of $X$. How are its mode, median and mean ordered?",
-        "图中是 $X$ 的密度。它的众数、中位数和均值如何排序？",
+        [
+          reversed[0],
+          `This is the order for a long tail on the other side; here the tail runs to the ${side}.`,
+          `这是长尾在另一侧时的顺序；这里长尾伸向${sideZh}侧。`,
+        ],
+        [
+          "mode $=$ median $=$ mean",
+          "All three coincide only for a symmetric density; this one is lopsided.",
+          "只有对称的密度三者才重合；这个密度是不对称的。",
+        ],
+        [
+          "median $<$ mode $<$ mean",
+          "The median always lies between the mode and the mean, never beyond the mode.",
+          "中位数总在众数和均值之间，不会越过众数。",
+        ],
       ],
-      correct,
-      [
-        right ? ["mean $<$ median $<$ mode", "均值 $<$ 中位数 $<$ 众数"] : ["mode $<$ median $<$ mean", "众数 $<$ 中位数 $<$ 均值"],
-        ["mode $=$ median $=$ mean", "众数 $=$ 中位数 $=$ 均值"],
-        ["median $<$ mode $<$ mean", "中位数 $<$ 众数 $<$ 均值"],
-      ],
-      [
-        `The peak is at $${c}$ and the long tail runs to the ${right ? "right" : "left"}. The tail pulls the mean furthest, then the median, away from the mode.`,
-        `峰值在 $${c}$，长尾伸向${right ? "右" : "左"}侧。长尾把均值拉得最远，其次是中位数，都离开众数。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A lopsided triangular density from ${a} to ${b} with its peak at ${c}.`,
-          `从 ${a} 到 ${b} 不对称的三角形密度，峰值在 ${c}。`,
-        ),
-      },
     );
   },
 );

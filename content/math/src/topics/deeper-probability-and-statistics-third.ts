@@ -6,8 +6,16 @@ import { type KnowledgePointDef, type Problem, type Rng, t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
-import { numberProblem } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** distinctFrom keeps the explained mistakes that differ from the answer and from each other. */
+const distinctFrom = <T extends { readonly value: number | Q }>(answer: number | Q, list: readonly T[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return list.filter((m, i) => key(m.value) !== key(answer) && list.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** nz picks a nonzero integer from -r to r. */
 export const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -80,8 +88,8 @@ const continuityWidth = point(
   "the-width-of-a-corrected-interval",
   ["The width of a corrected interval", "校正后区间的宽度"],
   [
-    "A continuity correction replaces each integer by a unit interval around it. Included endpoints therefore extend the interval by a half, and excluded endpoints pull it in by a half, so strict and weak inequalities give corrected intervals of different widths.",
-    "连续性校正把每个整数换成以它为中心的单位区间。所以包含端点时区间向外扩展一半，不包含端点时向内收缩一半，于是严格不等式与非严格不等式给出的校正区间宽度不同。",
+    "A continuity correction replaces each integer by a unit interval around it. Included endpoints therefore extend the interval by a half, and excluded endpoints pull it in by a half, so strict and weak inequalities give corrected intervals of different widths. The event $100 \\le X < 150$ becomes $[99.5, 149.5]$, of width $50$.\n\n> **Watch out.** An included endpoint moves out by a half and an excluded one moves in by a half. The width is the number of integers in the event, not always $b - a$.",
+    "连续性校正把每个整数换成以它为中心的单位区间。所以包含端点时区间向外扩展一半，不包含端点时向内收缩一半，于是严格不等式与非严格不等式给出的校正区间宽度不同。事件 $100 \\le X < 150$ 变为 $[99.5, 149.5]$，宽度为 $50$。\n\n> **注意。** 包含的端点向外移一半，不包含的端点向内移一半。宽度等于事件中整数的个数，不总是 $b - a$。",
   ],
   (rng) => {
     const a = rng.int(1, 40);
@@ -92,18 +100,47 @@ const continuityWidth = point(
     const high = Q.of(2 * b + (highIn ? 1 : -1), 2);
     const answer = b - a + (lowIn ? 1 : 0) + (highIn ? 0 : -1);
     const event = `${a} ${lowIn ? "\\le" : "<"} X ${highIn ? "\\le" : "<"} ${b}`;
-    return ask(
-      [
+    const [first, last] = [lowIn ? a : a + 1, highIn ? b : b - 1];
+    return numberProblem({
+      prompt: t(
         `An integer variable $X$ is approximated by a continuous variable with a continuity correction. Find the width of the interval that replaces the event $${event}$.`,
         `整数变量 $X$ 用连续变量近似，并做连续性校正。求代替事件 $${event}$ 的区间的宽度。`,
-      ],
+      ),
       answer,
-      [b - a, b - a + 1, b - a - 1, b - a + 2],
-      [
-        `With the correction, the event becomes the interval $[${dec(low)}, ${dec(high)}]$, whose width is $${dec(high)} - ${dec(low)} = ${answer}$.`,
-        `校正后，事件变为区间 $[${dec(low)}, ${dec(high)}]$，其宽度是 $${dec(high)} - ${dec(low)} = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(b - a, "That is the distance between the endpoints, without the correction.", "那是两个端点之间的距离，没有做校正。"),
+        why(
+          b - a + 1,
+          "That widens the interval at both ends, as if both endpoints were included.",
+          "那是在两端都向外扩展，就像两个端点都包含在内。",
+        ),
+        why(
+          b - a - 1,
+          "That narrows the interval at both ends, as if both endpoints were excluded.",
+          "那是在两端都向内收缩，就像两个端点都不包含。",
+        ),
+        why(b - a + 2, "That moves each end out by a whole unit instead of a half.", "那是把每一端向外移了一整个单位，而不是一半。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Correct each end", "校正每一端"],
+            t(
+              `$${a}$ is ${lowIn ? "included, so the interval starts half a unit below it" : "excluded, so the interval starts half a unit above it"}, at $${dec(low)}$; $${b}$ is ${highIn ? "included, so it ends half a unit above it" : "excluded, so it ends half a unit below it"}, at $${dec(high)}$.`,
+              `$${a}$ ${lowIn ? "包含在内，所以区间从它下方半个单位开始" : "不包含，所以区间从它上方半个单位开始"}，即 $${dec(low)}$；$${b}$ ${highIn ? "包含在内，所以区间在它上方半个单位结束" : "不包含，所以区间在它下方半个单位结束"}，即 $${dec(high)}$。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(`The width is $${dec(high)} - ${dec(low)} = ${answer}$.`, `宽度是 $${dec(high)} - ${dec(low)} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `The event contains the integers from $${first}$ to $${last}$, which are $${answer}$ integers, each given a unit of width.`,
+          `事件包含从 $${first}$ 到 $${last}$ 的整数，共 $${answer}$ 个，每个占一个单位宽度。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -111,8 +148,8 @@ const simulateDiscrete = point(
   "simulating-a-discrete-variable-from-a-uniform-draw",
   ["Simulating a discrete variable from a uniform draw", "用均匀随机数模拟离散变量"],
   [
-    "To simulate a discrete variable, divide $[0, 1]$ into pieces with lengths equal to the probabilities. A uniform draw $u$ returns the smallest value whose cumulative probability reaches $u$, so each value appears with the right probability.",
-    "模拟离散变量时，把 $[0, 1]$ 分成长度等于各概率的小段。均匀随机数 $u$ 返回累积概率达到 $u$ 的最小值，所以每个值都以正确的概率出现。",
+    "To simulate a discrete variable, divide $[0, 1]$ into pieces with lengths equal to the probabilities. A uniform draw $u$ returns the smallest value whose cumulative probability reaches $u$, so each value appears with the right probability. With $P(X = 10) = 0.5$, $P(X = 20) = 0.3$, $P(X = 30) = 0.2$, the cumulative probabilities are $0.5, 0.8, 1$, so $u = 0.85$ returns $30$.\n\n> **Watch out.** Compare $u$ with the running totals, not with the single probabilities: $0.85$ exceeds every single probability above, yet it lands in the last piece.",
+    "模拟离散变量时，把 $[0, 1]$ 分成长度等于各概率的小段。均匀随机数 $u$ 返回累积概率达到 $u$ 的最小值，所以每个值都以正确的概率出现。若 $P(X = 10) = 0.5$，$P(X = 20) = 0.3$，$P(X = 30) = 0.2$，累积概率为 $0.5, 0.8, 1$，所以 $u = 0.85$ 返回 $30$。\n\n> **注意。** 要把 $u$ 与累积概率比较，而不是与单个概率比较：$0.85$ 大于上面每个单个概率，但它落在最后一段。",
   ],
   (rng) => {
     const p1 = rng.int(1, 4);
@@ -135,19 +172,62 @@ const simulateDiscrete = point(
     }
     const answer = vs[index] as number;
     const table = vs.map((v, i) => `P(X = ${v}) = ${dec(Q.of(ps[i] as number, 10))}`).join(",\\ ");
-    const others = vs.filter((_, i) => i !== index);
-    return ask(
-      [
-        `$X$ has $${table}$. Using the inverse transform in the order listed, find the value simulated from the uniform draw $u = ${dec(Q.of(u, 100))}$.`,
-        `$X$ 满足 $${table}$。按所列顺序使用逆变换法，求由均匀随机数 $u = ${dec(Q.of(u, 100))}$ 模拟出的值。`,
-      ],
-      answer,
-      others,
-      [
-        `The cumulative probabilities first reach $u$ at $${dec(Q.of(cumulative, 100))}$, which belongs to the value $${answer}$. So the draw returns $${answer}$.`,
-        `累积概率首次达到 $u$ 是在 $${dec(Q.of(cumulative, 100))}$，它对应值 $${answer}$。所以这个随机数返回 $${answer}$。`,
-      ],
+    const uText = dec(Q.of(u, 100));
+    const totals = ps.map((_, i) =>
+      dec(
+        Q.of(
+          ps.slice(0, i + 1).reduce((s, p) => s + p, 0),
+          10,
+        ),
+      ),
     );
+    const before = index === 0 ? "0" : (totals[index - 1] as string);
+    return numberProblem({
+      prompt: t(
+        `$X$ has $${table}$. Using the inverse transform in the order listed, find the value simulated from the uniform draw $u = ${uText}$.`,
+        `$X$ 满足 $${table}$。按所列顺序使用逆变换法，求由均匀随机数 $u = ${uText}$ 模拟出的值。`,
+      ),
+      answer,
+      mistakes: distinctFrom(
+        answer,
+        vs.flatMap((v, i) =>
+          i === index
+            ? []
+            : [
+                i < index
+                  ? why(
+                      v,
+                      `The running total for $${v}$ is $${totals[i]}$, still below $u$, so the draw has passed its piece.`,
+                      `$${v}$ 处的累积概率是 $${totals[i]}$，仍小于 $u$，所以随机数已越过它那一段。`,
+                    )
+                  : why(
+                      v,
+                      `The draw stops at the first running total that reaches $u$; the piece of $${v}$ comes later.`,
+                      `随机数在第一个达到 $u$ 的累积概率处停下；$${v}$ 那一段在更后面。`,
+                    ),
+              ],
+        ),
+      ),
+      solution: walked(
+        [
+          [
+            ["Add up the probabilities", "累加概率"],
+            t(`In the order listed, the running totals are $${totals.join(", ")}$.`, `按所列顺序，累积概率依次为 $${totals.join(", ")}$。`),
+          ],
+          [
+            ["Find the piece", "找到所在的段"],
+            t(
+              `The first total that reaches $u = ${uText}$ is $${dec(Q.of(cumulative, 100))}$, which belongs to the value $${answer}$. So the draw returns $${answer}$.`,
+              `第一个达到 $u = ${uText}$ 的累积概率是 $${dec(Q.of(cumulative, 100))}$，它对应值 $${answer}$。所以这个随机数返回 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${before} < ${uText} < ${dec(Q.of(cumulative, 100))}$, so $u$ lies in the piece of $${answer}$.`,
+          `$${before} < ${uText} < ${dec(Q.of(cumulative, 100))}$，所以 $u$ 落在 $${answer}$ 那一段。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -155,8 +235,8 @@ const notOneToOne = point(
   "when-a-transformation-is-not-one-to-one",
   ["When a transformation is not one to one", "变换不是一一对应时"],
   [
-    "A one-to-one transformation just relabels the values and keeps their probabilities. A transformation such as $Y = X^{2}$ sends two values to the same result, so the probabilities of all the preimages must be added to find the probability of that result.",
-    "一一对应的变换只是给各值换了标签，概率不变。像 $Y = X^{2}$ 这样的变换把两个值送到同一个结果，所以求这个结果的概率时，必须把所有原像的概率相加。",
+    "A one-to-one transformation just relabels the values and keeps their probabilities. A transformation such as $Y = X^{2}$ sends two values to the same result, so the probabilities of all the preimages must be added to find the probability of that result.\n\n> **Watch out.** Look for every preimage, including the negative one. If $P(X = 1) = 0.2$ and $P(X = -1) = 0.3$, then $Y = X^{2}$ has $P(Y = 1) = 0.2 + 0.3 = 0.5$, not $0.2$.",
+    "一一对应的变换只是给各值换了标签，概率不变。像 $Y = X^{2}$ 这样的变换把两个值送到同一个结果，所以求这个结果的概率时，必须把所有原像的概率相加。\n\n> **注意。** 要找出每一个原像，包括负的那个。若 $P(X = 1) = 0.2$，$P(X = -1) = 0.3$，则 $Y = X^{2}$ 满足 $P(Y = 1) = 0.2 + 0.3 = 0.5$，而不是 $0.2$。",
   ],
   (rng) => {
     const cs = [rng.int(1, 6), rng.int(1, 6), rng.int(1, 6), rng.int(1, 6), rng.int(1, 6)];
@@ -167,18 +247,47 @@ const notOneToOne = point(
     const answer = Q.of(top, total);
     const table = cs.map((c, i) => `P(X = ${i - 2}) = ${Q.of(c, total).toLatex()}`).join(",\\ ");
     const y = k * k + s;
-    return ask(
-      [
+    const pOf = (x: number) => Q.of(cs[x + 2] as number, total);
+    const classes = [Q.of(cs[2] as number, total), pOf(1).add(pOf(-1)), pOf(2).add(pOf(-2))];
+    return numberProblem({
+      prompt: t(
         `$${table}$, and $Y = ${poly([1, "X^{2}"], [s, ""])}$. Find $P(Y = ${y})$.`,
         `$${table}$，$Y = ${poly([1, "X^{2}"], [s, ""])}$。求 $P(Y = ${y})$。`,
-      ],
+      ),
       answer,
-      [Q.of(cs[2 + k] as number, total), Q.of(cs[2 - k] as number, total), Q.of(top, 2 * total)],
-      [
-        `$Y = ${y}$ exactly when $X = ${k}$ or $X = ${-k}$. Adding the two probabilities gives $${answer.toLatex()}$.`,
-        `$Y = ${y}$ 当且仅当 $X = ${k}$ 或 $X = ${-k}$。把两个概率相加，得 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(pOf(k), `That counts only $X = ${k}$; $X = ${-k}$ gives the same $Y$.`, `那只算了 $X = ${k}$；$X = ${-k}$ 给出同一个 $Y$。`),
+        why(pOf(-k), `That counts only $X = ${-k}$; $X = ${k}$ gives the same $Y$.`, `那只算了 $X = ${-k}$；$X = ${k}$ 给出同一个 $Y$。`),
+        why(
+          answer.add(pOf(0)),
+          `That also adds $P(X = 0)$, but $X = 0$ gives $Y = ${s}$.`,
+          `那还加上了 $P(X = 0)$，但 $X = 0$ 给出 $Y = ${s}$。`,
+        ),
+        why(Q.of(top, 2 * total), "That averages the two probabilities; they must be added.", "那是把两个概率取平均；应该相加。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the preimages", "找出原像"],
+            t(
+              `$Y = ${y}$ exactly when $X^{2} = ${k * k}$, that is, when $X = ${k}$ or $X = ${-k}$.`,
+              `$Y = ${y}$ 当且仅当 $X^{2} = ${k * k}$，即 $X = ${k}$ 或 $X = ${-k}$。`,
+            ),
+          ],
+          [
+            ["Add their probabilities", "把它们的概率相加"],
+            t(
+              `$P(Y = ${y}) = ${pOf(k).toLatex()} + ${pOf(-k).toLatex()} = ${answer.toLatex()}$.`,
+              `$P(Y = ${y}) = ${pOf(k).toLatex()} + ${pOf(-k).toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$Y$ takes the values $${s}$, $${1 + s}$ and $${4 + s}$ with probabilities $${classes.map((c) => c.toLatex()).join(" + ")} = 1$, so the whole distribution is accounted for.`,
+          `$Y$ 取值 $${s}$、$${1 + s}$、$${4 + s}$，概率之和 $${classes.map((c) => c.toLatex()).join(" + ")} = 1$，整个分布都已计入。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -186,26 +295,52 @@ const squareDensity = point(
   "the-density-of-the-square-of-a-uniform-variable",
   ["The density of the square of a uniform variable", "均匀变量平方的密度"],
   [
-    "Squaring a uniform variable does not give a uniform variable. The change-of-variables formula multiplies by the derivative of the inverse function, $\\frac{1}{2\\sqrt{y}}$, so the density of $Y = X^{2}$ is large near zero, where values of $X$ are squeezed together.",
-    "均匀变量的平方不是均匀变量。变量替换公式要乘以反函数的导数 $\\frac{1}{2\\sqrt{y}}$，所以 $Y = X^{2}$ 的密度在零附近很大，因为那里 $X$ 的值被压缩到一起。",
+    "Squaring a uniform variable does not give a uniform variable. The change-of-variables formula multiplies by the derivative of the inverse function, $\\frac{1}{2\\sqrt{y}}$, so the density of $Y = X^{2}$ is large near zero, where values of $X$ are squeezed together. If $X$ is uniform on $(0, 20)$, then $f_{Y}(25) = \\frac{1}{20} \\cdot \\frac{1}{2 \\cdot 5} = \\frac{1}{200}$.\n\n> **Watch out.** The density of $Y$ is not the density of $X$ read at $\\sqrt{y}$: the factor $\\frac{1}{2\\sqrt{y}}$, with its $2$, is what keeps the total probability equal to $1$.",
+    "均匀变量的平方不是均匀变量。变量替换公式要乘以反函数的导数 $\\frac{1}{2\\sqrt{y}}$，所以 $Y = X^{2}$ 的密度在零附近很大，因为那里 $X$ 的值被压缩到一起。若 $X$ 在 $(0, 20)$ 上服从均匀分布，则 $f_{Y}(25) = \\frac{1}{20} \\cdot \\frac{1}{2 \\cdot 5} = \\frac{1}{200}$。\n\n> **注意。** $Y$ 的密度不是在 $\\sqrt{y}$ 处读出的 $X$ 的密度：因子 $\\frac{1}{2\\sqrt{y}}$（连同其中的 $2$）保证总概率仍为 $1$。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
     const s = rng.int(1, a - 1);
     const y = s * s;
     const answer = Q.of(1, 2 * a * s);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$X$ is uniform on $(0, ${a})$ and $Y = X^{2}$. Find the density $f_{Y}(${y})$.`,
         `$X$ 在 $(0, ${a})$ 上服从均匀分布，$Y = X^{2}$。求密度 $f_{Y}(${y})$。`,
-      ],
+      ),
       answer,
-      [Q.of(1, a), Q.of(1, a * s), Q.of(1, a * a)],
-      [
-        `The inverse is $x = \\sqrt{y}$, with derivative $\\frac{1}{2\\sqrt{y}}$, so $f_{Y}(y) = \\frac{1}{${a}} \\cdot \\frac{1}{2\\sqrt{y}}$. At $y = ${y}$ this is $${answer.toLatex()}$.`,
-        `反函数是 $x = \\sqrt{y}$，导数为 $\\frac{1}{2\\sqrt{y}}$，所以 $f_{Y}(y) = \\frac{1}{${a}} \\cdot \\frac{1}{2\\sqrt{y}}$。在 $y = ${y}$ 处，它等于 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(
+          Q.of(1, a),
+          "That is the density of $X$, without the factor from the derivative of the inverse.",
+          "那是 $X$ 的密度，没有乘反函数导数的因子。",
+        ),
+        why(Q.of(1, a * s), "That drops the $2$ in the derivative of $\\sqrt{y}$.", "那漏掉了 $\\sqrt{y}$ 导数中的 $2$。"),
+        why(Q.of(1, a * a), "That squares the density of $X$ instead of changing variables.", "那是把 $X$ 的密度平方，而不是做变量替换。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the distribution function", "求分布函数"],
+            t(
+              `For $0 < y < ${a * a}$, $F_{Y}(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{${a}}$.`,
+              `当 $0 < y < ${a * a}$ 时，$F_{Y}(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{${a}}$。`,
+            ),
+          ],
+          [
+            ["Differentiate", "求导"],
+            t(
+              `$f_{Y}(y) = \\frac{1}{${a}} \\cdot \\frac{1}{2\\sqrt{y}}$, and at $y = ${y}$, where $\\sqrt{y} = ${s}$, this is $${answer.toLatex()}$.`,
+              `$f_{Y}(y) = \\frac{1}{${a}} \\cdot \\frac{1}{2\\sqrt{y}}$，在 $y = ${y}$ 处，$\\sqrt{y} = ${s}$，它等于 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The density integrates to $F_{Y}(${a * a}) = \\frac{${a}}{${a}} = 1$ over $(0, ${a * a})$, as it must.`,
+          `该密度在 $(0, ${a * a})$ 上的积分是 $F_{Y}(${a * a}) = \\frac{${a}}{${a}} = 1$，符合要求。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -213,8 +348,8 @@ const varianceLinear = point(
   "the-variance-of-a-linear-function",
   ["The variance of a linear function", "线性函数的方差"],
   [
-    "Adding a constant shifts every value but changes no distance from the mean, so it leaves the variance alone. Multiplying by a constant scales distances, and since variance uses squared distances, the factor is squared and a negative sign disappears.",
-    "加常数使每个值平移，但不改变到均值的距离，所以方差不变。乘常数使距离按比例变化，而方差用的是距离的平方，所以因子要平方，负号也随之消失。",
+    "Adding a constant shifts every value but changes no distance from the mean, so it leaves the variance alone. Multiplying by a constant scales distances, and since variance uses squared distances, the factor is squared and a negative sign disappears.\n\n> **Watch out.** Neither the sign of the factor nor the constant survives. If $\\operatorname{Var}(X) = 2$, then $\\operatorname{Var}(-3X + 7) = 9 \\cdot 2 = 18$, not $-6$ and not $18 + 7 = 25$.",
+    "加常数使每个值平移，但不改变到均值的距离，所以方差不变。乘常数使距离按比例变化，而方差用的是距离的平方，所以因子要平方，负号也随之消失。\n\n> **注意。** 因子的符号和常数都不会保留下来。若 $\\operatorname{Var}(X) = 2$，则 $\\operatorname{Var}(-3X + 7) = 9 \\cdot 2 = 18$，既不是 $-6$，也不是 $18 + 7 = 25$。",
   ],
   (rng) => {
     const v = rng.int(1, 20);
@@ -222,18 +357,49 @@ const varianceLinear = point(
     const b = nz(rng, 20);
     const answer = a * a * v;
     const y = rng.bool() ? poly([a, "X"], [b, ""]) : poly([b, ""], [a, "X"]);
-    return ask(
-      [
+    const factor = a < 0 ? `(${a})` : `${a}`;
+    return numberProblem({
+      prompt: t(
         `$\\operatorname{Var}(X) = ${v}$. Find $\\operatorname{Var}(${y})$.`,
         `$\\operatorname{Var}(X) = ${v}$。求 $\\operatorname{Var}(${y})$。`,
-      ],
+      ),
       answer,
-      [a * v, answer + b, Math.abs(a) * v],
-      [
-        `The constant $${b}$ has no effect, and the factor $${a}$ is squared. So the variance is $${a * a} \\cdot ${v} = ${answer}$.`,
-        `常数 $${b}$ 没有影响，因子 $${a}$ 要平方。所以方差是 $${a * a} \\cdot ${v} = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(
+          a * v,
+          `That multiplies by $${a}$ without squaring it; variance scales by $${factor}^{2} = ${a * a}$.`,
+          `那是乘以 $${a}$ 而没有平方；方差按 $${factor}^{2} = ${a * a}$ 倍变化。`,
+        ),
+        why(
+          answer + b,
+          `That adds the constant $${b}$, but a shift changes no distance from the mean.`,
+          `那是加上了常数 $${b}$，但平移不改变到均值的距离。`,
+        ),
+        why(answer * v, "That squares the variance as well as the factor.", "那是把方差也平方了，而只应平方因子。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Drop the constant", "去掉常数"],
+            t(
+              `Adding $${b}$ shifts every value, so $\\operatorname{Var}(${y}) = \\operatorname{Var}(${poly([a, "X"])})$.`,
+              `加 $${b}$ 只是平移每个值，所以 $\\operatorname{Var}(${y}) = \\operatorname{Var}(${poly([a, "X"])})$。`,
+            ),
+          ],
+          [
+            ["Square the factor", "把因子平方"],
+            t(
+              `$\\operatorname{Var}(${poly([a, "X"])}) = ${factor}^{2} \\cdot ${v} = ${a * a} \\cdot ${v} = ${answer}$.`,
+              `$\\operatorname{Var}(${poly([a, "X"])}) = ${factor}^{2} \\cdot ${v} = ${a * a} \\cdot ${v} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `From the definition: the deviation of $${y}$ from its mean is $${a}(X - \\mu)$, its square is $${a * a}(X - \\mu)^{2}$, and the mean of that is $${a * a} \\cdot ${v} = ${answer}$.`,
+          `由定义：$${y}$ 与其均值之差是 $${a}(X - \\mu)$，平方为 $${a * a}(X - \\mu)^{2}$，其均值为 $${a * a} \\cdot ${v} = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -241,8 +407,8 @@ const absoluteDeviation = point(
   "the-expected-distance-from-a-point",
   ["The expected distance from a point", "到一点的期望距离"],
   [
-    "The rule of the lazy statistician integrates $g(x)$ against the density, and in general $E[g(X)]$ is not $g(E[X])$. An absolute value must be split at the point where its inside changes sign, which gives two simple integrals on either side.",
-    "懒惰统计学家法则把 $g(x)$ 对密度积分，一般来说 $E[g(X)]$ 不等于 $g(E[X])$。绝对值要在内部变号的点处分开，这样得到两边两个简单的积分。",
+    "The rule of the lazy statistician integrates $g(x)$ against the density, and in general $E[g(X)]$ is not $g(E[X])$. An absolute value must be split at the point where its inside changes sign, which gives two simple integrals on either side. For $X$ uniform on $[0, 40]$, $E[\\,|X - 10|\\,] = \\frac{1}{40}\\left(\\frac{100}{2} + \\frac{900}{2}\\right) = \\frac{25}{2}$.\n\n> **Watch out.** $|E[X] - 10| = 10$ here, which is smaller than $\\frac{25}{2}$: the distance is averaged over every value of $X$, not taken from the mean.",
+    "懒惰统计学家法则把 $g(x)$ 对密度积分，一般来说 $E[g(X)]$ 不等于 $g(E[X])$。绝对值要在内部变号的点处分开，这样得到两边两个简单的积分。若 $X$ 在 $[0, 40]$ 上服从均匀分布，则 $E[\\,|X - 10|\\,] = \\frac{1}{40}\\left(\\frac{100}{2} + \\frac{900}{2}\\right) = \\frac{25}{2}$。\n\n> **注意。** 这里 $|E[X] - 10| = 10$，小于 $\\frac{25}{2}$：距离要对 $X$ 的每个值取平均，而不是从均值算出。",
   ],
   (rng) => {
     const L = rng.int(3, 12);
@@ -250,15 +416,49 @@ const absoluteDeviation = point(
     const left = c * c;
     const right = (L - c) ** 2;
     const answer = Q.of(left + right, 2 * L);
-    return ask(
-      [`$X$ is uniform on $[0, ${L}]$. Find $E[\\,|X - ${c}|\\,]$.`, `$X$ 在 $[0, ${L}]$ 上服从均匀分布。求 $E[\\,|X - ${c}|\\,]$。`],
+    const atMean = Q.of(Math.abs(L - 2 * c), 2);
+    return numberProblem({
+      prompt: t(
+        `$X$ is uniform on $[0, ${L}]$. Find $E[\\,|X - ${c}|\\,]$.`,
+        `$X$ 在 $[0, ${L}]$ 上服从均匀分布。求 $E[\\,|X - ${c}|\\,]$。`,
+      ),
       answer,
-      [Q.of(Math.abs(L - 2 * c), 2), Q.of(L, 2), Q.of(left + right, L)],
-      [
-        `Split the integral at $${c}$. The two parts give $\\frac{1}{${L}}\\left(\\frac{${left}}{2} + \\frac{${right}}{2}\\right) = ${answer.toLatex()}$.`,
-        `在 $${c}$ 处分开积分。两部分给出 $\\frac{1}{${L}}\\left(\\frac{${left}}{2} + \\frac{${right}}{2}\\right) = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(
+          atMean,
+          `That is $|E[X] - ${c}|$, the distance from the mean, not the mean distance.`,
+          `那是 $|E[X] - ${c}|$，即均值到该点的距离，不是平均距离。`,
+        ),
+        why(Q.of(L, 2), "That is $E[X]$ itself.", "那是 $E[X]$ 本身。"),
+        why(
+          Q.of(left + right, L),
+          "That forgets the factor $\\frac{1}{2}$ from integrating a linear function.",
+          "那忘了积分一次函数时产生的因子 $\\frac{1}{2}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Split at the point", "在该点处分开"],
+            t(
+              `$E[\\,|X - ${c}|\\,] = \\frac{1}{${L}}\\left(\\int_0^${c < 10 ? c : `{${c}}`} (${c} - x)\\,dx + \\int_{${c}}^{${L}} (x - ${c})\\,dx\\right)$.`,
+              `$E[\\,|X - ${c}|\\,] = \\frac{1}{${L}}\\left(\\int_0^${c < 10 ? c : `{${c}}`} (${c} - x)\\,dx + \\int_{${c}}^{${L}} (x - ${c})\\,dx\\right)$。`,
+            ),
+          ],
+          [
+            ["Integrate each part", "分别积分"],
+            t(
+              `The parts are $\\frac{${left}}{2}$ and $\\frac{${right}}{2}$, so the mean is $\\frac{1}{${L}}\\left(\\frac{${left}}{2} + \\frac{${right}}{2}\\right) = ${answer.toLatex()}$.`,
+              `两部分分别是 $\\frac{${left}}{2}$ 和 $\\frac{${right}}{2}$，所以均值是 $\\frac{1}{${L}}\\left(\\frac{${left}}{2} + \\frac{${right}}{2}\\right) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Each part is the area of a triangle under $|x - ${c}|$, and the result is at least $|E[X] - ${c}| = ${atMean.toLatex()}$, as the average of a convex function must be.`,
+          `每部分都是 $|x - ${c}|$ 下方三角形的面积，结果不小于 $|E[X] - ${c}| = ${atMean.toLatex()}$，这正是凸函数的平均值应满足的。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -266,25 +466,44 @@ const shiftedMgf = point(
   "the-mgf-of-a-shifted-exponential-density",
   ["The MGF of a shifted exponential density", "平移指数密度的矩母函数"],
   [
-    "If a density is moved to the right by $c$, the substitution $u = x - c$ in the defining integral pulls out a factor of $e^{ct}$. The remaining integral is the usual exponential one, which converges only for $t$ below the rate.",
-    "如果密度向右平移 $c$，在定义积分中代换 $u = x - c$ 就能提出因子 $e^{ct}$。剩下的积分就是通常的指数积分，只有当 $t$ 小于速率时才收敛。",
+    "If a density is moved to the right by $c$, the substitution $u = x - c$ in the defining integral pulls out a factor of $e^{ct}$. The remaining integral is the usual exponential one, which converges only for $t$ below the rate. The density $20e^{-20(x - 30)}$ for $x > 30$ has the MGF $\\frac{20e^{30t}}{20 - t}$ for $t < 20$.\n\n> **Watch out.** A shift to the right by $c$ multiplies the MGF by $e^{ct}$, with a plus sign, and leaves the denominator $\\lambda - t$ of the unshifted exponential unchanged.",
+    "如果密度向右平移 $c$，在定义积分中代换 $u = x - c$ 就能提出因子 $e^{ct}$。剩下的积分就是通常的指数积分，只有当 $t$ 小于速率时才收敛。密度 $20e^{-20(x - 30)}$（$x > 30$）的矩母函数是 $\\frac{20e^{30t}}{20 - t}$，$t < 20$。\n\n> **注意。** 向右平移 $c$ 使矩母函数乘以 $e^{ct}$，指数取正号，而未平移指数分布的分母 $\\lambda - t$ 不变。",
   ],
   (rng) => {
     const l = rng.int(2, 12);
     const c = rng.int(1, 9);
     const e = poly([c, "t"]);
     const minus = poly([-c, "t"]);
-    return choose(
-      rng,
+    return reasoned(
+      choose(
+        rng,
+        [
+          `$X$ has density $f(x) = ${l}e^{-${l}(x - ${c})}$ for $x > ${c}$. Find its moment-generating function for $t < ${l}$.`,
+          `$X$ 的密度是 $f(x) = ${l}e^{-${l}(x - ${c})}$，$x > ${c}$。求它在 $t < ${l}$ 时的矩母函数。`,
+        ],
+        same(`\\frac{${l}e^{${e}}}{${l} - t}`),
+        [same(`\\frac{${l}}{${l} - t}`), same(`\\frac{${l}e^{${minus}}}{${l} - t}`), same(`\\frac{${l}e^{${e}}}{${l} + t}`)],
+        [
+          `**Step 1: Substitute.** With $u = x - ${c}$, $E[e^{tX}] = e^{${e}} \\int_0^\\infty ${l}e^{-${l}u}e^{tu}\\,du$.\n\n**Step 2: Integrate.** For $t < ${l}$ the integral is $\\frac{${l}}{${l} - t}$, so $M(t) = \\frac{${l}e^{${e}}}{${l} - t}$.\n\n**Check.** $M(0) = \\frac{${l}}{${l}} = 1$, as every MGF must give.`,
+          `**第 1 步：代换。** 令 $u = x - ${c}$，则 $E[e^{tX}] = e^{${e}} \\int_0^\\infty ${l}e^{-${l}u}e^{tu}\\,du$。\n\n**第 2 步：积分。** 当 $t < ${l}$ 时积分等于 $\\frac{${l}}{${l} - t}$，所以 $M(t) = \\frac{${l}e^{${e}}}{${l} - t}$。\n\n**检验。** $M(0) = \\frac{${l}}{${l}} = 1$，任何矩母函数都应如此。`,
+        ],
+      ),
       [
-        `$X$ has density $f(x) = ${l}e^{-${l}(x - ${c})}$ for $x > ${c}$. Find its moment-generating function for $t < ${l}$.`,
-        `$X$ 的密度是 $f(x) = ${l}e^{-${l}(x - ${c})}$，$x > ${c}$。求它在 $t < ${l}$ 时的矩母函数。`,
-      ],
-      same(`\\frac{${l}e^{${e}}}{${l} - t}`),
-      [same(`\\frac{${l}}{${l} - t}`), same(`\\frac{${l}e^{${minus}}}{${l} - t}`), same(`\\frac{${l}e^{${e}}}{${l} + t}`)],
-      [
-        `Substituting $u = x - ${c}$ pulls out $e^{${e}}$, and the remaining integral of $${l}e^{-${l}u}e^{tu}$ is $\\frac{${l}}{${l} - t}$. Their product is the MGF.`,
-        `代换 $u = x - ${c}$ 提出 $e^{${e}}$，剩下 $${l}e^{-${l}u}e^{tu}$ 的积分是 $\\frac{${l}}{${l} - t}$。两者之积就是矩母函数。`,
+        [
+          `$\\frac{${l}}{${l} - t}$`,
+          "That is the MGF of the unshifted exponential; the shift adds a factor.",
+          "那是未平移指数分布的矩母函数；平移会多出一个因子。",
+        ],
+        [
+          `$\\frac{${l}e^{${minus}}}{${l} - t}$`,
+          "A shift to the right gives the factor $e^{ct}$ with a plus sign.",
+          "向右平移给出的因子 $e^{ct}$ 指数为正。",
+        ],
+        [
+          `$\\frac{${l}e^{${e}}}{${l} + t}$`,
+          "The integral of $e^{-(\\lambda - t)u}$ gives $\\lambda - t$ in the denominator.",
+          "$e^{-(\\lambda - t)u}$ 的积分使分母为 $\\lambda - t$。",
+        ],
       ],
     );
   },
@@ -294,37 +513,75 @@ const mgfMoments = point(
   "mean-and-variance-from-the-derivatives-of-an-mgf",
   ["Mean and variance from the derivatives of an MGF", "由矩母函数的导数求均值和方差"],
   [
-    "The derivatives of an MGF at $t = 0$ give the moments: $M'(0) = E[X]$ and $M''(0) = E[X^{2}]$. The variance is then $M''(0) - M'(0)^{2}$. The second derivative alone is not the variance unless the mean is zero.",
-    "矩母函数在 $t = 0$ 处的导数给出各阶矩：$M'(0) = E[X]$，$M''(0) = E[X^{2}]$。于是方差是 $M''(0) - M'(0)^{2}$。除非均值为零，否则二阶导数本身不是方差。",
+    "The derivatives of an MGF at $t = 0$ give the moments: $M'(0) = E[X]$ and $M''(0) = E[X^{2}]$. The variance is then $M''(0) - M'(0)^{2}$. The second derivative alone is not the variance unless the mean is zero. For $M(t) = e^{20t + 50t^{2}}$, $M'(0) = 20$ and $M''(0) = 100 + 400 = 500$, so the variance is $500 - 400 = 100$.\n\n> **Watch out.** The coefficient of $t^{2}$ is half the variance, not the variance itself, and $E[X^{2}]$ adds the square of the mean to it.",
+    "矩母函数在 $t = 0$ 处的导数给出各阶矩：$M'(0) = E[X]$，$M''(0) = E[X^{2}]$。于是方差是 $M''(0) - M'(0)^{2}$。除非均值为零，否则二阶导数本身不是方差。对 $M(t) = e^{20t + 50t^{2}}$，$M'(0) = 20$，$M''(0) = 100 + 400 = 500$，方差是 $500 - 400 = 100$。\n\n> **注意。** $t^{2}$ 的系数是方差的一半，不是方差本身；$E[X^{2}]$ 还要加上均值的平方。",
   ],
   (rng) => {
     const a = nz(rng, 9);
     const b = rng.int(1, 12);
     const exponent = poly([a, "t"], [b, "t^{2}"]);
     const second = 2 * b + a * a;
+    const derivative = t(
+      `$M'(t) = (${poly([a, ""], [2 * b, "t"])})M(t)$, so $M'(0) = ${a}$, and differentiating again, $M''(t) = ${2 * b}M(t) + (${poly([a, ""], [2 * b, "t"])})^{2}M(t)$.`,
+      `$M'(t) = (${poly([a, ""], [2 * b, "t"])})M(t)$，所以 $M'(0) = ${a}$；再求导，$M''(t) = ${2 * b}M(t) + (${poly([a, ""], [2 * b, "t"])})^{2}M(t)$。`,
+    );
     if (rng.bool()) {
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `$X$ has the MGF $M(t) = e^{${exponent}}$. Find $\\operatorname{Var}(X)$.`,
           `$X$ 的矩母函数是 $M(t) = e^{${exponent}}$。求 $\\operatorname{Var}(X)$。`,
-        ],
-        2 * b,
-        [second, b, a * a],
-        [
-          `$M'(0) = ${a}$ and $M''(0) = ${2 * b} + ${a * a} = ${second}$. So the variance is $${second} - ${a * a} = ${2 * b}$.`,
-          `$M'(0) = ${a}$，$M''(0) = ${2 * b} + ${a * a} = ${second}$。所以方差是 $${second} - ${a * a} = ${2 * b}$。`,
-        ],
-      );
+        ),
+        answer: 2 * b,
+        mistakes: distinctFrom(2 * b, [
+          why(
+            second,
+            "That is $M''(0) = E[X^{2}]$; the square of the mean must still be subtracted.",
+            "那是 $M''(0) = E[X^{2}]$，还要减去均值的平方。",
+          ),
+          why(b, "That is the coefficient of $t^{2}$, which is half the variance.", "那是 $t^{2}$ 的系数，它是方差的一半。"),
+          why(a * a, "That is the square of the mean, not the variance.", "那是均值的平方，不是方差。"),
+        ]),
+        solution: walked(
+          [
+            [["Differentiate", "求导"], derivative],
+            [
+              ["Subtract the squared mean", "减去均值的平方"],
+              t(
+                `$M''(0) = ${2 * b} + ${a * a} = ${second}$, so the variance is $${second} - ${a * a} = ${2 * b}$.`,
+                `$M''(0) = ${2 * b} + ${a * a} = ${second}$，所以方差是 $${second} - ${a * a} = ${2 * b}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$e^{\\mu t + \\sigma^{2}t^{2}/2}$ is the MGF of a normal variable, and here $\\frac{\\sigma^{2}}{2} = ${b}$ gives $\\sigma^{2} = ${2 * b}$.`,
+            `$e^{\\mu t + \\sigma^{2}t^{2}/2}$ 是正态变量的矩母函数，这里 $\\frac{\\sigma^{2}}{2} = ${b}$，得 $\\sigma^{2} = ${2 * b}$。`,
+          ),
+        ),
+      });
     }
-    return ask(
-      [`$X$ has the MGF $M(t) = e^{${exponent}}$. Find $E[X^{2}]$.`, `$X$ 的矩母函数是 $M(t) = e^{${exponent}}$。求 $E[X^{2}]$。`],
-      second,
-      [2 * b, b + a * a, a * a],
-      [
-        `$M'(t) = (${poly([a, ""], [2 * b, "t"])})M(t)$, and differentiating again at $t = 0$ gives $M''(0) = ${2 * b} + ${a * a} = ${second}$.`,
-        `$M'(t) = (${poly([a, ""], [2 * b, "t"])})M(t)$，再求导并令 $t = 0$，得 $M''(0) = ${2 * b} + ${a * a} = ${second}$。`,
-      ],
-    );
+    return numberProblem({
+      prompt: t(`$X$ has the MGF $M(t) = e^{${exponent}}$. Find $E[X^{2}]$.`, `$X$ 的矩母函数是 $M(t) = e^{${exponent}}$。求 $E[X^{2}]$。`),
+      answer: second,
+      mistakes: distinctFrom(second, [
+        why(2 * b, "That is the variance; $E[X^{2}]$ adds the square of the mean.", "那是方差；$E[X^{2}]$ 还要加上均值的平方。"),
+        why(
+          b + a * a,
+          "That takes the coefficient of $t^{2}$ as the variance, but it is half the variance.",
+          "那把 $t^{2}$ 的系数当作方差，但它只是方差的一半。",
+        ),
+        why(a * a, "That is the square of the mean alone.", "那只是均值的平方。"),
+      ]),
+      solution: walked(
+        [
+          [["Differentiate", "求导"], derivative],
+          [["Set $t = 0$", "令 $t = 0$"], t(`$M''(0) = ${2 * b} + ${a * a} = ${second}$.`, `$M''(0) = ${2 * b} + ${a * a} = ${second}$。`)],
+        ],
+        t(
+          `$E[X^{2}] = \\operatorname{Var}(X) + E[X]^{2} = ${2 * b} + ${a * a} = ${second}$, with variance $${2 * b}$ from the normal MGF $e^{\\mu t + \\sigma^{2}t^{2}/2}$.`,
+          `$E[X^{2}] = \\operatorname{Var}(X) + E[X]^{2} = ${2 * b} + ${a * a} = ${second}$，其中方差 $${2 * b}$ 由正态矩母函数 $e^{\\mu t + \\sigma^{2}t^{2}/2}$ 得出。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -332,8 +589,8 @@ const missingSummand = point(
   "identifying-the-other-summand-from-mgfs",
   ["Identifying the other summand from MGFs", "由矩母函数识别另一个加数"],
   [
-    "For independent variables, the MGF of the sum is the product of the MGFs. So dividing the MGF of the sum by that of one summand gives the MGF of the other, and the uniqueness property then identifies its distribution and so its mean.",
-    "对独立变量，和的矩母函数等于各矩母函数之积。所以用和的矩母函数除以一个加数的矩母函数，就得到另一个加数的矩母函数，再由唯一性确定它的分布和均值。",
+    "For independent variables, the MGF of the sum is the product of the MGFs. So dividing the MGF of the sum by that of one summand gives the MGF of the other, and the uniqueness property then identifies its distribution and so its mean. If $M_{X}(t) = e^{20(e^{t} - 1)}$ and $M_{X + Y}(t) = e^{50(e^{t} - 1)}$, then $M_{Y}(t) = e^{30(e^{t} - 1)}$ and $E[Y] = 30$.\n\n> **Watch out.** Dividing MGFs subtracts exponents or powers; it does not divide the parameters, and the mean of the sum is not the mean of $Y$.",
+    "对独立变量，和的矩母函数等于各矩母函数之积。所以用和的矩母函数除以一个加数的矩母函数，就得到另一个加数的矩母函数，再由唯一性确定它的分布和均值。若 $M_{X}(t) = e^{20(e^{t} - 1)}$，$M_{X + Y}(t) = e^{50(e^{t} - 1)}$，则 $M_{Y}(t) = e^{30(e^{t} - 1)}$，$E[Y] = 30$。\n\n> **注意。** 矩母函数相除是指数或幂次相减，不是参数相除；和的均值也不是 $Y$ 的均值。",
   ],
   (rng) => {
     if (rng.bool()) {
@@ -341,33 +598,79 @@ const missingSummand = point(
       const n = rng.int(2, 9);
       const m = rng.int(2, 9);
       const base = `${dec(Q.of(100 - p, 100))} + ${dec(Q.of(p, 100))}e^{t}`;
-      return askDecimal(
-        [
+      const answer = Q.of(m * p, 100);
+      const shown = (v: Q) => (v.isInteger() ? dec(v) : `${dec(v)} = ${v.toLatex()}`);
+      return numberProblem({
+        prompt: t(
           `$X$ and $Y$ are independent, $M_{X}(t) = (${base})^{${n}}$ and $M_{X + Y}(t) = (${base})^{${n + m}}$. Find $E[Y]$.`,
           `$X$ 与 $Y$ 独立，$M_{X}(t) = (${base})^{${n}}$，$M_{X + Y}(t) = (${base})^{${n + m}}$。求 $E[Y]$。`,
-        ],
-        Q.of(m * p, 100),
-        [Q.of((n + m) * p, 100), Q.of(m, 1), Q.of(n * p, 100), Q.of(p, 100)],
-        [
-          `Dividing gives $M_{Y}(t) = (${base})^{${m}}$, so $Y$ is binomial with $n = ${m}$ and $p = ${dec(Q.of(p, 100))}$. Its mean is $${dec(Q.of(m * p, 100))}$.`,
-          `相除得 $M_{Y}(t) = (${base})^{${m}}$，所以 $Y$ 服从二项分布，$n = ${m}$，$p = ${dec(Q.of(p, 100))}$。它的均值是 $${dec(Q.of(m * p, 100))}$。`,
-        ],
-      );
+        ),
+        answer,
+        form: "decimal",
+        mistakes: distinctFrom(answer, [
+          why(Q.of((n + m) * p, 100), "That is the mean of the sum $X + Y$.", "那是和 $X + Y$ 的均值。"),
+          why(Q.of(m, 1), "That is the number of trials of $Y$, not its mean.", "那是 $Y$ 的试验次数，不是它的均值。"),
+          why(Q.of(n * p, 100), "That is the mean of $X$.", "那是 $X$ 的均值。"),
+          why(Q.of(p, 100), "That is the success probability of a single trial.", "那是单次试验的成功概率。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Divide the MGFs", "矩母函数相除"],
+              t(
+                `$M_{Y}(t) = \\frac{M_{X + Y}(t)}{M_{X}(t)} = (${base})^{${m}}$, so $Y$ is binomial with $n = ${m}$ and $p = ${dec(Q.of(p, 100))}$.`,
+                `$M_{Y}(t) = \\frac{M_{X + Y}(t)}{M_{X}(t)} = (${base})^{${m}}$，所以 $Y$ 服从二项分布，$n = ${m}$，$p = ${dec(Q.of(p, 100))}$。`,
+              ),
+            ],
+            [
+              ["Take the mean", "求均值"],
+              t(
+                `$E[Y] = np = ${m} \\cdot ${dec(Q.of(p, 100))} = ${shown(answer)}$.`,
+                `$E[Y] = np = ${m} \\cdot ${dec(Q.of(p, 100))} = ${shown(answer)}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$E[X] + E[Y] = ${shown(Q.of(n * p, 100))} + ${dec(answer)} = ${shown(Q.of((n + m) * p, 100))}$, the mean of the binomial sum with $${n + m}$ trials.`,
+            `$E[X] + E[Y] = ${shown(Q.of(n * p, 100))} + ${dec(answer)} = ${shown(Q.of((n + m) * p, 100))}$，正是 $${n + m}$ 次试验的二项和的均值。`,
+          ),
+        ),
+      });
     }
     const a = rng.int(2, 15);
     const b = rng.int(2, 15);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$X$ and $Y$ are independent, $M_{X}(t) = e^{${a}(e^{t} - 1)}$ and $M_{X + Y}(t) = e^{${a + b}(e^{t} - 1)}$. Find $E[Y]$.`,
         `$X$ 与 $Y$ 独立，$M_{X}(t) = e^{${a}(e^{t} - 1)}$，$M_{X + Y}(t) = e^{${a + b}(e^{t} - 1)}$。求 $E[Y]$。`,
-      ],
-      b,
-      [a + b, a, Q.of(a + b, a)],
-      [
-        `Dividing subtracts the exponents, so $M_{Y}(t) = e^{${b}(e^{t} - 1)}$. So $Y$ is Poisson with mean $${b}$.`,
-        `相除时指数相减，所以 $M_{Y}(t) = e^{${b}(e^{t} - 1)}$。所以 $Y$ 服从均值为 $${b}$ 的泊松分布。`,
-      ],
-    );
+      ),
+      answer: b,
+      mistakes: distinctFrom(b, [
+        why(a + b, "That is the mean of the sum $X + Y$.", "那是和 $X + Y$ 的均值。"),
+        why(a, "That is the mean of $X$.", "那是 $X$ 的均值。"),
+        why(
+          Q.of(a + b, a),
+          "That divides the parameters; dividing the MGFs subtracts the exponents.",
+          "那是参数相除；矩母函数相除是指数相减。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Divide the MGFs", "矩母函数相除"],
+            t(
+              `Dividing subtracts the exponents, so $M_{Y}(t) = e^{(${a + b} - ${a})(e^{t} - 1)} = e^{${b}(e^{t} - 1)}$.`,
+              `相除时指数相减，所以 $M_{Y}(t) = e^{(${a + b} - ${a})(e^{t} - 1)} = e^{${b}(e^{t} - 1)}$。`,
+            ),
+          ],
+          [["Identify the distribution", "识别分布"], t(`So $Y$ is Poisson with mean $${b}$.`, `所以 $Y$ 服从均值为 $${b}$ 的泊松分布。`)],
+        ],
+        t(
+          `Means of independent Poisson variables add: $${a} + ${b} = ${a + b}$, the mean of the sum.`,
+          `独立泊松变量的均值相加：$${a} + ${b} = ${a + b}$，正是和的均值。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -375,12 +678,12 @@ const twoPoint = point(
   "the-variance-of-a-two-valued-variable",
   ["The variance of a two-valued variable", "两值变量的方差"],
   [
-    "Any variable with two values $u$ and $v$ is a linear function of a Bernoulli variable, so it can be written as $v + (u - v)X$. Therefore its variance is $(u - v)^{2}p(1 - p)$, and the gap between the values enters squared.",
-    "任何只取两个值 $u$ 和 $v$ 的变量都是伯努利变量的线性函数，可以写成 $v + (u - v)X$。所以它的方差是 $(u - v)^{2}p(1 - p)$，两值之差以平方的形式出现。",
+    "Any variable with two values $u$ and $v$ is a linear function of a Bernoulli variable, so it can be written as $v + (u - v)X$. Therefore its variance is $(u - v)^{2}p(1 - p)$, and the gap between the values enters squared.\n\n> **Watch out.** Square the gap and keep both $p$ and $1 - p$. If $Y = 10$ with probability $\\frac{1}{2}$ and $Y = 4$ otherwise, the gap is $6$ and $\\operatorname{Var}(Y) = 36 \\cdot \\frac{1}{4} = 9$, not $6 \\cdot \\frac{1}{4} = \\frac{3}{2}$.",
+    "任何只取两个值 $u$ 和 $v$ 的变量都是伯努利变量的线性函数，可以写成 $v + (u - v)X$。所以它的方差是 $(u - v)^{2}p(1 - p)$，两值之差以平方的形式出现。\n\n> **注意。** 差要平方，$p$ 和 $1 - p$ 都要保留。若 $Y$ 以概率 $\\frac{1}{2}$ 取 $10$，否则取 $4$，则差为 $6$，$\\operatorname{Var}(Y) = 36 \\cdot \\frac{1}{4} = 9$，而不是 $6 \\cdot \\frac{1}{4} = \\frac{3}{2}$。",
   ],
   (rng) => {
     const u = rng.int(-9, 9);
-    const v = u + nz(rng, 8);
+    const v = u + rng.pick([-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
     const [pn, pd] = rng.pick([
       [1, 2],
       [1, 3],
@@ -392,20 +695,59 @@ const twoPoint = point(
     ] as const);
     const pq = Q.of(pn * (pd - pn), pd * pd);
     const gap = (u - v) ** 2;
-    const answer = pq.mul(Q.of(gap, 1));
+    const answer = pq.mul(Q.of(gap));
     const p = Q.of(pn, pd);
-    return ask(
-      [
+    const q = Q.of(1).sub(p);
+    const slope = u - v < 0 ? `(${u - v})` : `${u - v}`;
+    const mean = p.mul(Q.of(u)).add(q.mul(Q.of(v)));
+    const square = p.mul(Q.of(u * u)).add(q.mul(Q.of(v * v)));
+    const meanTex = mean.isInteger() && mean.sign() >= 0 ? mean.toLatex() : `\\left(${mean.toLatex()}\\right)`;
+    return numberProblem({
+      prompt: t(
         `$Y = ${u}$ with probability $${p.toLatex()}$ and $Y = ${v}$ otherwise. Find $\\operatorname{Var}(Y)$.`,
         `$Y$ 以概率 $${p.toLatex()}$ 取 $${u}$，否则取 $${v}$。求 $\\operatorname{Var}(Y)$。`,
-      ],
+      ),
       answer,
-      [pq, pq.mul(Q.of(Math.abs(u - v), 1)), p.mul(Q.of(gap, 1))],
-      [
-        `$Y$ is a linear function of a Bernoulli variable with slope $${u - v}$. So the variance is $${gap} \\cdot ${pq.toLatex()} = ${answer.toLatex()}$.`,
-        `$Y$ 是伯努利变量的线性函数，斜率为 $${u - v}$。所以方差是 $${gap} \\cdot ${pq.toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(
+          pq,
+          "That is the variance of the Bernoulli variable alone; the gap between the values multiplies it.",
+          "那只是伯努利变量的方差；还要乘以两值之差的平方。",
+        ),
+        why(
+          pq.mul(Q.of(Math.abs(u - v))),
+          `That multiplies by the gap $${Math.abs(u - v)}$ without squaring it.`,
+          `那是乘以差 $${Math.abs(u - v)}$ 而没有平方。`,
+        ),
+        why(
+          p.mul(Q.of(gap)),
+          `That uses $p$ instead of $p(1 - p) = ${pq.toLatex()}$.`,
+          `那是用了 $p$，而不是 $p(1 - p) = ${pq.toLatex()}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write Y through a Bernoulli variable", "用伯努利变量表示 Y"],
+            t(
+              `With $X$ Bernoulli with $p = ${p.toLatex()}$, $Y = ${v} + ${slope}X$.`,
+              `设 $X$ 服从 $p = ${p.toLatex()}$ 的伯努利分布，则 $Y = ${v} + ${slope}X$。`,
+            ),
+          ],
+          [
+            ["Scale the Bernoulli variance", "按比例放大伯努利方差"],
+            t(
+              `$\\operatorname{Var}(X) = ${p.toLatex()} \\cdot ${q.toLatex()} = ${pq.toLatex()}$, so $\\operatorname{Var}(Y) = ${slope}^{2} \\cdot ${pq.toLatex()} = ${gap} \\cdot ${pq.toLatex()} = ${answer.toLatex()}$.`,
+              `$\\operatorname{Var}(X) = ${p.toLatex()} \\cdot ${q.toLatex()} = ${pq.toLatex()}$，所以 $\\operatorname{Var}(Y) = ${slope}^{2} \\cdot ${pq.toLatex()} = ${gap} \\cdot ${pq.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly, $E(Y) = ${mean.toLatex()}$ and $E(Y^{2}) = ${square.toLatex()}$, so $\\operatorname{Var}(Y) = ${square.toLatex()} - ${meanTex}^{2} = ${answer.toLatex()}$.`,
+          `直接计算：$E(Y) = ${mean.toLatex()}$，$E(Y^{2}) = ${square.toLatex()}$，所以 $\\operatorname{Var}(Y) = ${square.toLatex()} - ${meanTex}^{2} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -413,26 +755,33 @@ const whenPoissonWorks = point(
   "when-the-poisson-approximation-is-reliable",
   ["When the Poisson approximation is reliable", "泊松近似何时可靠"],
   [
-    "Matching the mean is not enough for a Poisson approximation. It works when $n$ is large and $p$ is small, since then the variance $np(1 - p)$ is close to the mean. With a large $p$, the two differ and the approximation fails.",
-    "泊松近似仅使均值相同是不够的。只有 $n$ 大且 $p$ 小时才有效，因为这时方差 $np(1 - p)$ 接近均值。当 $p$ 较大时两者相差很大，近似就失效了。",
+    "Matching the mean is not enough for a Poisson approximation. It works when $n$ is large and $p$ is small, since then the variance $np(1 - p)$ is close to the mean. With a large $p$, the two differ and the approximation fails.\n\n> **Watch out.** A shared mean does not make two distributions close. $B(20, 0.5)$ and $\\operatorname{Po}(10)$ both have mean $10$, but the binomial has variance $20 \\cdot 0.5 \\cdot 0.5 = 5$ while the Poisson has variance $10$.",
+    "泊松近似仅使均值相同是不够的。只有 $n$ 大且 $p$ 小时才有效，因为这时方差 $np(1 - p)$ 接近均值。当 $p$ 较大时两者相差很大，近似就失效了。\n\n> **注意。** 均值相同并不说明两个分布接近。$B(20, 0.5)$ 与 $\\operatorname{Po}(10)$ 的均值都是 $10$，但二项分布的方差是 $20 \\cdot 0.5 \\cdot 0.5 = 5$，而泊松分布的方差是 $10$。",
   ],
   (rng) => {
     const l = rng.int(1, 30);
     const n = rng.pick([1000, 2000, 5000, 10000]);
-    const bin = (size: number, p: Q) => same(`B(${size}, ${dec(p)})`);
-    return choose(
-      rng,
-      [
+    const bin = (size: number, p: Q) => t(`$B(${size}, ${dec(p)})$`, `$B(${size}, ${dec(p)})$`);
+    const small = Q.of(l, n);
+    const spread = (k: number) => {
+      const variance = Q.of(l * (k - 1), k);
+      return t(
+        `Here $p = ${dec(Q.of(1, k))}$ is large, so the variance $${k * l} \\cdot ${dec(Q.of(1, k))} \\cdot ${dec(Q.of(k - 1, k))} = ${dec(variance)}$ is smaller than the Poisson variance $${l}$.`,
+        `这里 $p = ${dec(Q.of(1, k))}$ 较大，方差 $${k * l} \\cdot ${dec(Q.of(1, k))} \\cdot ${dec(Q.of(k - 1, k))} = ${dec(variance)}$ 小于泊松分布的方差 $${l}$。`,
+      );
+    };
+    return explainedChoice(rng, {
+      prompt: t(
         `Each binomial below has mean $${l}$. Which is best approximated by $\\operatorname{Po}(${l})$?`,
         `下面的二项分布均值都是 $${l}$。哪一个最适合用 $\\operatorname{Po}(${l})$ 近似？`,
-      ],
-      bin(n, Q.of(l, n)),
-      [bin(2 * l, Q.of(1, 2)), bin(4 * l, Q.of(1, 4)), bin(5 * l, Q.of(1, 5))],
-      [
-        `The approximation needs large $n$ and small $p$. Only $n = ${n}$ has $p = ${dec(Q.of(l, n))}$ so small that the variance is nearly the mean $${l}$.`,
-        `这种近似要求 $n$ 大而 $p$ 小。只有 $n = ${n}$ 时 $p = ${dec(Q.of(l, n))}$ 足够小，方差才接近均值 $${l}$。`,
-      ],
-    );
+      ),
+      correct: bin(n, small),
+      wrong: [2, 4, 5].map((k) => ({ option: bin(k * l, Q.of(1, k)), why: spread(k) })),
+      solution: t(
+        `The approximation needs large $n$ and small $p$, so that the variance $np(1 - p)$ is close to the mean. Only $B(${n}, ${dec(small)})$ qualifies: its variance is $${l} \\cdot ${dec(Q.of(1).sub(small))} = ${dec(Q.of(l * (n - l), n))}$, almost exactly $${l}$.`,
+        `这种近似要求 $n$ 大而 $p$ 小，使方差 $np(1 - p)$ 接近均值。只有 $B(${n}, ${dec(small)})$ 符合：它的方差是 $${l} \\cdot ${dec(Q.of(1).sub(small))} = ${dec(Q.of(l * (n - l), n))}$，几乎正好是 $${l}$。`,
+      ),
+    });
   },
 );
 
@@ -440,41 +789,86 @@ const failures = point(
   "counting-failures-instead-of-trials",
   ["Counting failures instead of trials", "数失败次数而不是试验次数"],
   [
-    "The negative binomial can count trials or failures, and the two differ by the constant $r$. So the mean of the failures is $\\frac{r(1 - p)}{p}$, which is $r$ less than the mean of the trials, while the variance is the same for both versions.",
-    "负二项分布可以数试验次数，也可以数失败次数，两者相差常数 $r$。所以失败次数的均值是 $\\frac{r(1 - p)}{p}$，比试验次数的均值少 $r$，而两种形式的方差相同。",
+    "The negative binomial can count trials or failures, and the two differ by the constant $r$. So the mean of the failures is $\\frac{r(1 - p)}{p}$, which is $r$ less than the mean of the trials, while the variance is the same for both versions. With $p = \\frac{1}{10}$ and $r = 20$, the failures have mean $200 - 20 = 180$ and variance $\\frac{20 \\cdot 0.9}{0.01} = 1800$.\n\n> **Watch out.** Subtracting the constant $r$ lowers the mean by $r$ but leaves the variance unchanged; only the mean changes between the two versions.",
+    "负二项分布可以数试验次数，也可以数失败次数，两者相差常数 $r$。所以失败次数的均值是 $\\frac{r(1 - p)}{p}$，比试验次数的均值少 $r$，而两种形式的方差相同。若 $p = \\frac{1}{10}$，$r = 20$，失败次数的均值是 $200 - 20 = 180$，方差是 $\\frac{20 \\cdot 0.9}{0.01} = 1800$。\n\n> **注意。** 减去常数 $r$ 使均值减少 $r$，但方差不变；两种形式之间只有均值不同。",
   ],
   (rng) => {
     const r = rng.int(2, 9);
     const k = rng.int(2, 6);
     const p = Q.of(1, k);
+    const q = Q.of(k - 1, k);
     if (rng.bool()) {
       const answer = r * (k - 1);
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `Trials with success probability $${p.toLatex()}$ continue until $${r}$ successes. Find the expected number of failures.`,
           `成功概率为 $${p.toLatex()}$ 的试验一直进行到 $${r}$ 次成功。求失败次数的期望。`,
-        ],
+        ),
         answer,
-        [r * k, Q.of(r, k), k - 1],
-        [
-          `The expected number of trials is $${r} \\cdot ${k} = ${r * k}$, and $${r}$ of them are successes. So the expected number of failures is $${answer}$.`,
-          `试验次数的期望是 $${r} \\cdot ${k} = ${r * k}$，其中 $${r}$ 次是成功。所以失败次数的期望是 $${answer}$。`,
-        ],
-      );
+        mistakes: distinctFrom(answer, [
+          why(r * k, "That is the expected number of trials, which includes the successes.", "那是试验次数的期望，其中包括成功的次数。"),
+          why(Q.of(r, k), "That multiplies by $p$ instead of dividing by it.", "那是乘以 $p$，而不是除以 $p$。"),
+          why(k - 1, "That is the expected number of failures before a single success.", "那只是一次成功之前失败次数的期望。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Count the trials", "计算试验次数"],
+              t(
+                `The expected number of trials is $\\frac{r}{p} = ${r} \\cdot ${k} = ${r * k}$.`,
+                `试验次数的期望是 $\\frac{r}{p} = ${r} \\cdot ${k} = ${r * k}$。`,
+              ),
+            ],
+            [
+              ["Remove the successes", "去掉成功次数"],
+              t(
+                `$${r}$ of the trials are successes, so the expected number of failures is $${r * k} - ${r} = ${answer}$.`,
+                `其中 $${r}$ 次是成功，所以失败次数的期望是 $${r * k} - ${r} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\frac{r(1 - p)}{p} = \\frac{${r} \\cdot ${q.toLatex()}}{${p.toLatex()}} = ${answer}$.`,
+            `$\\frac{r(1 - p)}{p} = \\frac{${r} \\cdot ${q.toLatex()}}{${p.toLatex()}} = ${answer}$。`,
+          ),
+        ),
+      });
     }
     const answer = r * (k - 1) * k;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Trials with success probability $${p.toLatex()}$ continue until $${r}$ successes. Find the variance of the number of failures.`,
         `成功概率为 $${p.toLatex()}$ 的试验一直进行到 $${r}$ 次成功。求失败次数的方差。`,
-      ],
+      ),
       answer,
-      [r * (k - 1), r * k * k, answer - r],
-      [
-        `Failures equal trials minus the constant $${r}$, so the variance is that of the trials: $\\frac{r(1 - p)}{p^{2}} = ${r} \\cdot ${k - 1} \\cdot ${k} = ${answer}$.`,
-        `失败次数等于试验次数减去常数 $${r}$，所以方差与试验次数相同：$\\frac{r(1 - p)}{p^{2}} = ${r} \\cdot ${k - 1} \\cdot ${k} = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(r * (k - 1), "That is the mean of the failures, not the variance.", "那是失败次数的均值，不是方差。"),
+        why(r * k * k, "That is $\\frac{r}{p^{2}}$, which leaves out the factor $1 - p$.", "那是 $\\frac{r}{p^{2}}$，漏掉了因子 $1 - p$。"),
+        why(answer - r, "Subtracting the constant $r$ changes the mean, not the variance.", "减去常数 $r$ 改变的是均值，不是方差。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Relate the two counts", "联系两种计数"],
+            t(
+              `Failures equal trials minus the constant $${r}$, so they have the same variance as the trials.`,
+              `失败次数等于试验次数减去常数 $${r}$，所以它们与试验次数的方差相同。`,
+            ),
+          ],
+          [
+            ["Use the variance formula", "使用方差公式"],
+            t(
+              `$\\frac{r(1 - p)}{p^{2}} = \\frac{${r} \\cdot ${q.toLatex()}}{${Q.of(1, k * k).toLatex()}} = ${answer}$.`,
+              `$\\frac{r(1 - p)}{p^{2}} = \\frac{${r} \\cdot ${q.toLatex()}}{${Q.of(1, k * k).toLatex()}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Each failure count before a success is geometric with variance $\\frac{1 - p}{p^{2}} = ${(k - 1) * k}$, and $${r}$ independent ones give $${r} \\cdot ${(k - 1) * k} = ${answer}$.`,
+          `每次成功之前的失败次数服从几何分布，方差为 $\\frac{1 - p}{p^{2}} = ${(k - 1) * k}$，$${r}$ 个独立的相加得 $${r} \\cdot ${(k - 1) * k} = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 

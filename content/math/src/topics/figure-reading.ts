@@ -2516,6 +2516,12 @@ const exponentialTail: KnowledgePointDef = {
   },
 };
 
+/** onceEach keeps the first of the mistakes that share a value. */
+const onceEach = (ms: readonly ReturnType<typeof why>[]): ReturnType<typeof why>[] => {
+  const asQ = (v: ReturnType<typeof why>["value"]) => (v instanceof Q ? v : Q.of(v));
+  return ms.filter((m, i) => ms.findIndex((o) => asQ(o.value).eq(asQ(m.value))) === i);
+};
+
 /** cdfFromGraph asks for an interval probability read from the graph of a distribution function. */
 const cdfFromGraph: KnowledgePointDef = {
   id: "a-probability-from-the-graph-of-a-distribution-function",
@@ -2525,8 +2531,8 @@ const cdfFromGraph: KnowledgePointDef = {
     ],
   title: t("A probability from the graph of a distribution function", "由分布函数图求概率"),
   explanation: t(
-    "The graph of a distribution function $F(x) = P(X \\le x)$ rises from $0$ to $1$ and never falls. The probability of an interval is a difference of heights, not a height: $P(a < X \\le b) = F(b) - F(a)$. Where the graph is steep, the probability is concentrated, and where it is flat, $X$ almost never falls.",
-    "分布函数 $F(x) = P(X \\le x)$ 的图象从 $0$ 上升到 $1$，并且不会下降。区间的概率是高度之差，而不是某个高度：$P(a < X \\le b) = F(b) - F(a)$。图象陡的地方概率集中，平的地方 $X$ 几乎不会落入。",
+    "The graph of a distribution function $F(x) = P(X \\le x)$ rises from $0$ to $1$ and never falls. The probability of an interval is a difference of heights, not a height: $P(a < X \\le b) = F(b) - F(a)$. Where the graph is steep, the probability is concentrated, and where it is flat, $X$ almost never falls. In the drawing, $F(x) = \\frac{x^2}{16}$ on $[0, 4]$, so $P(1 < X \\le 3) = \\frac{9}{16} - \\frac{1}{16} = \\frac{1}{2}$.\n\n> **Watch out.** The height $F(b)$ alone is $P(X \\le b)$, which also counts everything below $a$: subtract $F(a)$. Heights are subtracted, never added.",
+    "分布函数 $F(x) = P(X \\le x)$ 的图象从 $0$ 上升到 $1$，并且不会下降。区间的概率是高度之差，而不是某个高度：$P(a < X \\le b) = F(b) - F(a)$。图象陡的地方概率集中，平的地方 $X$ 几乎不会落入。图中 $[0, 4]$ 上 $F(x) = \\frac{x^2}{16}$，所以 $P(1 < X \\le 3) = \\frac{9}{16} - \\frac{1}{16} = \\frac{1}{2}$。\n\n> **注意。** 单是高度 $F(b)$ 是 $P(X \\le b)$，它把 $a$ 以下的部分也算进去了：要减去 $F(a)$。高度要相减，而不是相加。",
   ),
   generate(rng: Rng): Problem {
     const heights = [0];
@@ -2553,14 +2559,44 @@ const cdfFromGraph: KnowledgePointDef = {
           `图中是随机变量 $X$ 的分布函数 $F$。求 $P(${a} < X \\le ${b})$。`,
         ),
         answer,
-        wrong: [
-          Q.of(heights[b] as number, 10),
-          Q.of(10 - (heights[b] as number), 10),
-          Q.of((heights[b] as number) + (heights[a] as number), 10),
-        ],
-        solution: t(
-          `A probability of an interval is a difference of heights. The graph gives $F(${b}) = ${fmt(heights[b] as number)}$ and $F(${a}) = ${fmt(heights[a] as number)}$, so $P(${a} < X \\le ${b}) = ${fmt(heights[b] as number)} - ${fmt(heights[a] as number)} = ${(F(b) - F(a)).toFixed(1)}$.`,
-          `区间的概率是高度之差。由图得 $F(${b}) = ${fmt(heights[b] as number)}$，$F(${a}) = ${fmt(heights[a] as number)}$，所以 $P(${a} < X \\le ${b}) = ${fmt(heights[b] as number)} - ${fmt(heights[a] as number)} = ${(F(b) - F(a)).toFixed(1)}$。`,
+        mistakes: onceEach([
+          why(
+            Q.of(heights[b] as number, 10),
+            `That is the height $F(${b})$ alone, which also counts the probability below $${a}$.`,
+            `那只是高度 $F(${b})$，它把 $${a}$ 以下的概率也算进去了。`,
+          ),
+          why(
+            Q.of(10 - (heights[b] as number), 10),
+            `That is $1 - F(${b}) = P(X > ${b})$, the probability to the right of $${b}$.`,
+            `那是 $1 - F(${b}) = P(X > ${b})$，即 $${b}$ 右边的概率。`,
+          ),
+          why(
+            Q.of((heights[b] as number) + (heights[a] as number), 10),
+            "That adds the two heights; the probability of an interval is their difference.",
+            "那是把两个高度相加了；区间的概率是它们的差。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the two heights", "读出两个高度"],
+              t(
+                `The graph gives $F(${b}) = ${fmt(heights[b] as number)}$ and $F(${a}) = ${fmt(heights[a] as number)}$.`,
+                `由图得 $F(${b}) = ${fmt(heights[b] as number)}$，$F(${a}) = ${fmt(heights[a] as number)}$。`,
+              ),
+            ],
+            [
+              ["Subtract", "相减"],
+              t(
+                `$P(${a} < X \\le ${b}) = F(${b}) - F(${a}) = ${fmt(heights[b] as number)} - ${fmt(heights[a] as number)} = ${(F(b) - F(a)).toFixed(1)} = ${answer.toLatex()}$.`,
+                `$P(${a} < X \\le ${b}) = F(${b}) - F(${a}) = ${fmt(heights[b] as number)} - ${fmt(heights[a] as number)} = ${(F(b) - F(a)).toFixed(1)} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Adding back the probability up to $${a}$ gives $${(F(b) - F(a)).toFixed(1)} + ${fmt(heights[a] as number)} = ${fmt(heights[b] as number)} = F(${b})$.`,
+            `加回 $${a}$ 以下的概率得 $${(F(b) - F(a)).toFixed(1)} + ${fmt(heights[a] as number)} = ${fmt(heights[b] as number)} = F(${b})$。`,
+          ),
         ),
       }),
       chart(
@@ -2608,8 +2644,8 @@ const percentileFromDensity: KnowledgePointDef = {
   id: "a-percentile-from-a-step-density",
   title: t("A percentile from a step density", "由阶梯密度求百分位数"),
   explanation: t(
-    "The $p$-th percentile of a continuous random variable is the point with area $p$ to its left. With a density made of flat steps, add areas from the left, width times height, until the target is passed; the percentile lies in the step where that happens. Inside that step the remaining area divided by the height gives the distance to go.",
-    "连续随机变量的第 $p$ 百分位数是左侧面积为 $p$ 的点。对由平顶台阶组成的密度，从左向右累加面积（宽乘高），直到超过目标；百分位数就落在这一级台阶内。在这一级中，用剩余面积除以高度就得到还要走的距离。",
+    "The $p$-th percentile of a continuous random variable is the point with area $p$ to its left. With a density made of flat steps, add areas from the left, width times height, until the target is passed; the percentile lies in the step where that happens. Inside that step the remaining area divided by the height gives the distance to go. For height $0.05$ on $[0, 10]$ and height $0.25$ on $[10, 12]$, the first step holds $0.5$, so the $75$th percentile is $10 + \\frac{0.25}{0.25} = 11$.\n\n> **Watch out.** Areas decide the percentile, not widths: the point is not $p$ of the way along the support unless the density is flat. And after the first step, only the area still missing is divided by the second height.",
+    "连续随机变量的第 $p$ 百分位数是左侧面积为 $p$ 的点。对由平顶台阶组成的密度，从左向右累加面积（宽乘高），直到超过目标；百分位数就落在这一级台阶内。在这一级中，用剩余面积除以高度就得到还要走的距离。若在 $[0, 10]$ 上高为 $0.05$，在 $[10, 12]$ 上高为 $0.25$，第一级含面积 $0.5$，所以第 $75$ 百分位数是 $10 + \\frac{0.25}{0.25} = 11$。\n\n> **注意。** 决定百分位数的是面积，不是宽度：除非密度是平的，这一点并不在支撑集的 $p$ 处。过了第一级之后，只有还差的面积才除以第二级的高度。",
   ),
   generate(rng: Rng): Problem {
     const [a, h1, h2, w2] = rng.pick(stepDensities);
@@ -2627,14 +2663,62 @@ const percentileFromDensity: KnowledgePointDef = {
           `图中是随机变量 $X$ 的密度。求满足 $P(X \\le x) = ${frac(p, 100)}$ 的 $x$。`,
         ),
         answer,
-        wrong: [naive, Q.of(a), Q.of(p, 100), Q.of(a).add(Q.of(p, 10 * h2))],
-        solution: t(
+        mistakes: onceEach([
+          why(
+            naive,
+            `That goes $${frac(p, 100)}$ of the way along $[0, ${end}]$, as for a flat density; the steps have different heights.`,
+            `那是沿 $[0, ${end}]$ 走了 $${frac(p, 100)}$ 的路程，就像平坦密度那样；但两级台阶高度不同。`,
+          ),
+          why(
+            Q.of(a),
+            `That is where the steps meet; the area to its left is $${first / 100}$, not $${p / 100}$.`,
+            `那是两级台阶的交界处；它左侧的面积是 $${first / 100}$，不是 $${p / 100}$。`,
+          ),
+          why(
+            Q.of(p, 100),
+            "That is the probability itself, not the point on the axis where it is reached.",
+            "那是概率本身，而不是达到这个概率的横轴上的点。",
+          ),
+          why(
+            Q.of(a).add(Q.of(p, 10 * h2)),
+            "That puts the whole target area into the second step and forgets the area already in the first.",
+            "那是把全部目标面积都放进第二级，忘了第一级已经有的面积。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the area of the first step", "求第一级的面积"],
+              t(
+                `Width $${a}$ times height $${h1 / 10}$ gives $${first / 100}$, which ${inFirst ? "reaches" : "falls short of"} the target $${p / 100}$.`,
+                `宽 $${a}$ 乘高 $${h1 / 10}$ 得 $${first / 100}$，${inFirst ? "已达到" : "还不到"}目标 $${p / 100}$。`,
+              ),
+            ],
+            inFirst
+              ? [
+                  ["Go into the first step", "在第一级内求点"],
+                  t(
+                    `The point lies in the first step, at $x = ${p / 100} \\div ${h1 / 10} = ${answer.toLatex()}$.`,
+                    `这一点在第一级内，$x = ${p / 100} \\div ${h1 / 10} = ${answer.toLatex()}$。`,
+                  ),
+                ]
+              : [
+                  ["Go into the second step", "进入第二级"],
+                  t(
+                    `The remaining area $${(p - first) / 100}$ lies in the second step, of height $${h2 / 10}$, which takes a further width of $${Q.of(p - first, 10 * h2).toLatex()}$. So $x = ${a} + ${Q.of(p - first, 10 * h2).toLatex()} = ${answer.toLatex()}$.`,
+                    `剩余面积 $${(p - first) / 100}$ 在第二级中，其高度为 $${h2 / 10}$，还需要宽度 $${Q.of(p - first, 10 * h2).toLatex()}$。所以 $x = ${a} + ${Q.of(p - first, 10 * h2).toLatex()} = ${answer.toLatex()}$。`,
+                  ),
+                ],
+          ],
           inFirst
-            ? `The first step has area $${a} \\cdot ${h1 / 10} = ${first / 100}$, which reaches the target $${p / 100}$. So the point lies in it, at $x = ${p / 100} \\div ${h1 / 10} = ${answer.toLatex()}$.`
-            : `The first step has area $${a} \\cdot ${h1 / 10} = ${first / 100}$, short of the target $${p / 100}$. The remaining area $${(p - first) / 100}$ lies in the second step, of height $${h2 / 10}$, which takes a further width of $${Q.of(p - first, 10 * h2).toLatex()}$. So $x = ${a} + ${Q.of(p - first, 10 * h2).toLatex()} = ${answer.toLatex()}$.`,
-          inFirst
-            ? `第一级的面积是 $${a} \\cdot ${h1 / 10} = ${first / 100}$，已达到目标 $${p / 100}$。所以这一点在第一级内，$x = ${p / 100} \\div ${h1 / 10} = ${answer.toLatex()}$。`
-            : `第一级的面积是 $${a} \\cdot ${h1 / 10} = ${first / 100}$，还不到目标 $${p / 100}$。剩余面积 $${(p - first) / 100}$ 在第二级中，其高度为 $${h2 / 10}$，还需要宽度 $${Q.of(p - first, 10 * h2).toLatex()}$。所以 $x = ${a} + ${Q.of(p - first, 10 * h2).toLatex()} = ${answer.toLatex()}$。`,
+            ? t(
+                `The area to the left of $${answer.toLatex()}$ is $${answer.toLatex()} \\cdot ${h1 / 10} = ${p / 100}$.`,
+                `$${answer.toLatex()}$ 左侧的面积为 $${answer.toLatex()} \\cdot ${h1 / 10} = ${p / 100}$。`,
+              )
+            : t(
+                `The area to the left of $${answer.toLatex()}$ is $${first / 100} + ${p - first === 10 * h2 ? "" : `${Q.of(p - first, 10 * h2).toLatex()} \\cdot `}${h2 / 10} = ${p / 100}$.`,
+                `$${answer.toLatex()}$ 左侧的面积为 $${first / 100} + ${p - first === 10 * h2 ? "" : `${Q.of(p - first, 10 * h2).toLatex()} \\cdot `}${h2 / 10} = ${p / 100}$。`,
+              ),
         ),
       }),
       chart(
