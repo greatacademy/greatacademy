@@ -143,6 +143,9 @@ function distinct<T extends { readonly value: number | Q }>(list: readonly T[], 
 /** paren wraps a negative number in parentheses for use inside a product. */
 const paren = (x: number) => (x < 0 ? `(${x})` : `${x}`);
 
+/** signed writes "+ n" or "- |n|" after an earlier term. */
+const signed = (n: number) => (n < 0 ? `- ${-n}` : `+ ${n}`);
+
 /** lead writes a leading coefficient in front of a vector or symbol, dropping a 1. */
 const lead = (c: number, body: string) => `${c === 1 ? "" : c === -1 ? "-" : c}${body}`;
 
@@ -3541,6 +3544,10 @@ export const singularValueDecompositionOf2x2Matrices: TopicDef = {
     "Construct the full SVD $A = U \\Sigma V^T$ of a $2 \\times 2$ matrix from eigenvectors of $A^T A$ and $AA^T$.",
     "利用 $A^T A$ 和 $AA^T$ 的特征向量构造 $2 \\times 2$ 矩阵的完整奇异值分解 $A = U \\Sigma V^T$。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 4 & 4 \\\\ -3 & 3 \\end{pmatrix}$, $A^TA = \\begin{pmatrix} 25 & 7 \\\\ 7 & 25 \\end{pmatrix}$ has eigenvalues $32$ and $18$ with unit eigenvectors $\\mathbf{v}_1 = \\frac{1}{\\sqrt{2}}(1, 1)$ and $\\mathbf{v}_2 = \\frac{1}{\\sqrt{2}}(1, -1)$. So $\\sigma_1 = 4\\sqrt{2}$ and $\\sigma_2 = 3\\sqrt{2}$. Then $A\\mathbf{v}_1 = \\frac{1}{\\sqrt{2}}(8, 0)$ gives $\\mathbf{u}_1 = (1, 0)$, and $A\\mathbf{v}_2 = \\frac{1}{\\sqrt{2}}(0, -6)$ gives $\\mathbf{u}_2 = (0, -1)$. Together $A = U\\Sigma V^T$ with $\\Sigma = \\operatorname{diag}(4\\sqrt{2}, 3\\sqrt{2})$.\n\nCheck: the squares of the entries add up to $16 + 16 + 9 + 9 = 50 = 32 + 18 = \\sigma_1^2 + \\sigma_2^2$.\n\nIn this lesson we build the SVD of a $2 \\times 2$ matrix: $V$ from the eigenvectors of $A^TA$, $\\Sigma$ from the square roots of its eigenvalues, and each $\\mathbf{u}_i$ as $A\\mathbf{v}_i / \\sigma_i$.",
+    "对 $A = \\begin{pmatrix} 4 & 4 \\\\ -3 & 3 \\end{pmatrix}$，$A^TA = \\begin{pmatrix} 25 & 7 \\\\ 7 & 25 \\end{pmatrix}$ 的特征值为 $32$ 和 $18$，单位特征向量为 $\\mathbf{v}_1 = \\frac{1}{\\sqrt{2}}(1, 1)$ 和 $\\mathbf{v}_2 = \\frac{1}{\\sqrt{2}}(1, -1)$。所以 $\\sigma_1 = 4\\sqrt{2}$，$\\sigma_2 = 3\\sqrt{2}$。由 $A\\mathbf{v}_1 = \\frac{1}{\\sqrt{2}}(8, 0)$ 得 $\\mathbf{u}_1 = (1, 0)$，由 $A\\mathbf{v}_2 = \\frac{1}{\\sqrt{2}}(0, -6)$ 得 $\\mathbf{u}_2 = (0, -1)$。合起来 $A = U\\Sigma V^T$，其中 $\\Sigma = \\operatorname{diag}(4\\sqrt{2}, 3\\sqrt{2})$。\n\n检验：各元素的平方和为 $16 + 16 + 9 + 9 = 50 = 32 + 18 = \\sigma_1^2 + \\sigma_2^2$。\n\n本课我们构造 $2 \\times 2$ 矩阵的奇异值分解：$V$ 来自 $A^TA$ 的特征向量，$\\Sigma$ 来自其特征值的平方根，每个 $\\mathbf{u}_i$ 为 $A\\mathbf{v}_i / \\sigma_i$。",
+  ),
   prerequisites: ["computing-the-singular-values-of-a-matrix"],
   encompasses: [],
   xp: 16,
@@ -3549,8 +3556,8 @@ export const singularValueDecompositionOf2x2Matrices: TopicDef = {
       id: "svd-2x2-full-rank",
       title: t("SVD of a 2x2 Matrix", "2x2 矩阵的 SVD 分解"),
       explanation: t(
-        "For an $m \\times n$ matrix $A$, the SVD is $A = U \\Sigma V^T$, where $U$ and $V$ are orthogonal matrices and $\\Sigma$ is diagonal containing singular values $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge 0$. The columns of $V$ are orthonormal eigenvectors of $A^T A$, and $u_i = \\frac{1}{\\sigma_i} A v_i$.",
-        "矩阵 $A$ 的奇异值分解为 $A = U \\Sigma V^T$，其中 $U$ 与 $V$ 为正交矩阵，$\\Sigma$ 对角线上为降序奇异值 $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge 0$。$V$ 的各列为 $A^T A$ 的标准正交特征向量，且 $u_i = \\frac{1}{\\sigma_i} A v_i$。",
+        "For an $m \\times n$ matrix $A$, the SVD is $A = U \\Sigma V^T$, where $U$ and $V$ are orthogonal matrices and $\\Sigma$ is diagonal containing singular values $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge 0$. The columns of $V$ are orthonormal eigenvectors of $A^T A$, and $u_i = \\frac{1}{\\sigma_i} A v_i$. For example, a $2 \\times 2$ matrix with singular values $6$ and $2$ has $\\Sigma = \\begin{pmatrix} 6 & 0 \\\\ 0 & 2 \\end{pmatrix}$, whatever its $U$ and $V$ are.\n\n> **Watch out.** $\\Sigma$ holds the singular values themselves, not their squares $\\sigma_i^2$ (those are the eigenvalues of $A^TA$). They are never negative and go down the diagonal from largest to smallest.",
+        "矩阵 $A$ 的奇异值分解为 $A = U \\Sigma V^T$，其中 $U$ 与 $V$ 为正交矩阵，$\\Sigma$ 对角线上为降序奇异值 $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge 0$。$V$ 的各列为 $A^T A$ 的标准正交特征向量，且 $u_i = \\frac{1}{\\sigma_i} A v_i$。例如奇异值为 $6$ 和 $2$ 的 $2 \\times 2$ 矩阵，无论 $U$、$V$ 是什么，都有 $\\Sigma = \\begin{pmatrix} 6 & 0 \\\\ 0 & 2 \\end{pmatrix}$。\n\n> **注意。** $\\Sigma$ 中放的是奇异值本身，不是它们的平方 $\\sigma_i^2$（那是 $A^TA$ 的特征值）。奇异值从不为负，并沿对角线从大到小排列。",
       ),
       generate: (rng: Rng): Problem => {
         const s1 = rng.int(4, 12);
@@ -3614,52 +3621,165 @@ export const singularValueDecompositionOf2x2Matrices: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `In the singular value decomposition $A = U \\Sigma V^T$, the matrix $\\Sigma$ is a diagonal matrix containing the singular values in descending order along its main diagonal: $\\Sigma = ${mat2Latex(
+        const solution = walked(
+          [
             [
-              [s1, 0],
-              [0, s2],
+              ["Place the values", "放置奇异值"],
+              t(
+                "$\\Sigma$ has the shape of $A$, zeros off the diagonal and the singular values themselves on it.",
+                "$\\Sigma$ 与 $A$ 同型，非对角元为零，对角线上是奇异值本身。",
+              ),
             ],
-          )}$.`,
-          `在奇异值分解 $A = U \\Sigma V^T$ 中，$\\Sigma$ 是对角线上按降序排列奇异值的对角矩阵：$\\Sigma = ${mat2Latex([
-            [s1, 0],
-            [0, s2],
-          ])}$。`,
+            [
+              ["Order them", "排序"],
+              t(`The larger, $${s1}$, comes first:`, `较大的 $${s1}$ 在前：`),
+              [
+                `\\Sigma = ${mat2Latex([
+                  [s1, 0],
+                  [0, s2],
+                ])}`,
+              ],
+            ],
+          ],
+          t(
+            `$\\Sigma^T\\Sigma = \\operatorname{diag}(${s1 * s1}, ${s2 * s2})$, whose entries are the eigenvalues $\\sigma_1^2$ and $\\sigma_2^2$ of $A^TA$, largest first.`,
+            `$\\Sigma^T\\Sigma = \\operatorname{diag}(${s1 * s1}, ${s2 * s2})$，其元素正是 $A^TA$ 的特征值 $\\sigma_1^2$ 和 $\\sigma_2^2$，大的在前。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `The singular values go down the diagonal from largest to smallest, so $${s1}$ comes first.`,
+            `奇异值沿对角线从大到小排列，所以 $${s1}$ 在前。`,
+          ],
+          [
+            wrong[1]!.en,
+            `$${s1 * s1}$ and $${s2 * s2}$ are the squares $\\sigma_i^2$, the eigenvalues of $A^TA$; $\\Sigma$ holds $\\sigma_i$.`,
+            `$${s1 * s1}$ 和 $${s2 * s2}$ 是平方 $\\sigma_i^2$，即 $A^TA$ 的特征值；$\\Sigma$ 中放的是 $\\sigma_i$。`,
+          ],
+          [
+            wrong[2]!.en,
+            "$\\Sigma$ is diagonal: the second singular value belongs in the second row and second column.",
+            "$\\Sigma$ 是对角矩阵：第二个奇异值应在第二行第二列。",
+          ],
+          [
+            wrong[3]!.en,
+            "Singular values are lengths $\\|A\\mathbf{v}_i\\|$, so none is negative.",
+            "奇异值是长度 $\\|A\\mathbf{v}_i\\|$，不会为负。",
+          ],
+        ]);
       },
     },
     {
       id: "frobenius-norm-and-determinant-from-singular-values",
       title: t("Matrix quantities from the singular values", "由奇异值求矩阵的量"),
       explanation: t(
-        "In $A = U\\Sigma V^T$ the factors $U$ and $V$ are orthogonal, so they preserve lengths and change neither $\\operatorname{tr}(A^TA)$ nor $|\\det A|$. Since $A^TA = V\\Sigma^2V^T$:\n\n$$\\|A\\|_F^2 = \\sum_{i,j} a_{ij}^2 = \\operatorname{tr}(A^TA) = \\sigma_1^2 + \\sigma_2^2, \\qquad |\\det A| = \\sigma_1\\sigma_2.$$\n\nSo the sum of squares of all entries can be read off from the singular values, and vice versa.",
-        "在 $A = U\\Sigma V^T$ 中，$U$ 与 $V$ 正交，保持长度，不改变 $\\operatorname{tr}(A^TA)$ 与 $|\\det A|$。由于 $A^TA = V\\Sigma^2V^T$：\n\n$$\\|A\\|_F^2 = \\sum_{i,j} a_{ij}^2 = \\operatorname{tr}(A^TA) = \\sigma_1^2 + \\sigma_2^2, \\qquad |\\det A| = \\sigma_1\\sigma_2$$\n\n所以全部元素的平方和可以由奇异值读出，反之亦然。",
+        "In $A = U\\Sigma V^T$ the factors $U$ and $V$ are orthogonal, so they preserve lengths and change neither $\\operatorname{tr}(A^TA)$ nor $|\\det A|$. Since $A^TA = V\\Sigma^2V^T$:\n\n$$\\|A\\|_F^2 = \\sum_{i,j} a_{ij}^2 = \\operatorname{tr}(A^TA) = \\sigma_1^2 + \\sigma_2^2, \\qquad |\\det A| = \\sigma_1\\sigma_2.$$\n\nSo the sum of squares of all entries can be read off from the singular values, and vice versa. For example, $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ has $\\sigma_1^2 + \\sigma_2^2 = 1 + 4 + 9 + 16 = 30$ and $\\sigma_1\\sigma_2 = |4 - 6| = 2$.\n\n> **Watch out.** Square every entry, the off-diagonal ones too; the trace of $A$ itself is not $\\sigma_1^2 + \\sigma_2^2$. The product is the absolute value of $\\det A$, since singular values are never negative.",
+        "在 $A = U\\Sigma V^T$ 中，$U$ 与 $V$ 正交，保持长度，不改变 $\\operatorname{tr}(A^TA)$ 与 $|\\det A|$。由于 $A^TA = V\\Sigma^2V^T$：\n\n$$\\|A\\|_F^2 = \\sum_{i,j} a_{ij}^2 = \\operatorname{tr}(A^TA) = \\sigma_1^2 + \\sigma_2^2, \\qquad |\\det A| = \\sigma_1\\sigma_2$$\n\n所以全部元素的平方和可以由奇异值读出，反之亦然。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ 有 $\\sigma_1^2 + \\sigma_2^2 = 1 + 4 + 9 + 16 = 30$，$\\sigma_1\\sigma_2 = |4 - 6| = 2$。\n\n> **注意。** 每个元素都要平方，非对角元也不例外；$A$ 本身的迹不是 $\\sigma_1^2 + \\sigma_2^2$。乘积是 $\\det A$ 的绝对值，因为奇异值从不为负。",
       ),
       generate(rng: Rng): Problem {
+        const drawn = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5), rng.nonZero(-5, 5)] as const;
+        const askSum = rng.int(0, 1) === 0;
+        // A product of 0 leaves too few distinct wrong answers; moving the corner entry changes det A by ±d ≠ 0.
+        const corner = !askSum && drawn[0] * drawn[3] === drawn[1] * drawn[2] ? drawn[0] + (drawn[0] === 5 ? -1 : 1) : drawn[0];
         const A: Mat2 = [
-          [rng.int(-5, 5), rng.int(-5, 5)],
-          [rng.int(-5, 5), rng.nonZero(-5, 5)],
+          [corner, drawn[1]],
+          [drawn[2], drawn[3]],
         ];
         const fro = A[0][0] ** 2 + A[0][1] ** 2 + A[1][0] ** 2 + A[1][1] ** 2;
         const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
-        const askSum = rng.int(0, 1) === 0;
+        const [[a, b], [c, d]] = A;
+        const squares = `${a * a} + ${b * b} + ${c * c} + ${d * d}`;
+        const answer = askSum ? fro : Math.abs(det);
+        const mistakes = askSum
+          ? [
+              why(
+                a + d,
+                `$${a + d}$ is the trace of $A$; $\\sigma_1^2 + \\sigma_2^2$ is the trace of $A^TA$, the sum of the squares of all entries.`,
+                `$${a + d}$ 是 $A$ 的迹；$\\sigma_1^2 + \\sigma_2^2$ 是 $A^TA$ 的迹，即全部元素的平方和。`,
+              ),
+              why(
+                det * det,
+                `$${det * det}$ is $(\\det A)^2 = \\sigma_1^2\\sigma_2^2$, the product of the squares, not their sum.`,
+                `$${det * det}$ 是 $(\\det A)^2 = \\sigma_1^2\\sigma_2^2$，是平方的乘积，不是和。`,
+              ),
+              why(
+                a * a + d * d,
+                `$${a * a + d * d}$ squares only the diagonal entries; the off-diagonal ones count too.`,
+                `$${a * a + d * d}$ 只平方了对角元；非对角元也要算进去。`,
+              ),
+            ]
+          : [
+              why(
+                det * det,
+                `$${det * det}$ is $(\\det A)^2 = \\sigma_1^2\\sigma_2^2$; take its square root.`,
+                `$${det * det}$ 是 $(\\det A)^2 = \\sigma_1^2\\sigma_2^2$；要开平方。`,
+              ),
+              why(
+                fro,
+                `$${fro}$ is the sum of the squares of the entries, $\\sigma_1^2 + \\sigma_2^2$, not the product.`,
+                `$${fro}$ 是元素的平方和 $\\sigma_1^2 + \\sigma_2^2$，不是乘积。`,
+              ),
+              why(
+                a * d + b * c,
+                `The determinant subtracts the product of the off-diagonal entries: $${a * d} - ${paren(b * c)}$.`,
+                `行列式要减去非对角元之积：$${a * d} - ${paren(b * c)}$。`,
+              ),
+              why(
+                det,
+                `$\\det A = ${det}$ is negative, but singular values are never negative, so their product is $|\\det A|$.`,
+                `$\\det A = ${det}$ 为负，但奇异值从不为负，所以它们的积是 $|\\det A|$。`,
+              ),
+              why(
+                a + d,
+                `$${a + d}$ is the trace of $A$, the sum of its eigenvalues; the product $\\sigma_1\\sigma_2$ comes from the determinant.`,
+                `$${a + d}$ 是 $A$ 的迹，即特征值之和；乘积 $\\sigma_1\\sigma_2$ 来自行列式。`,
+              ),
+            ];
         return numberProblem({
           prompt: t(
             `$A = ${mat2Latex(A)}$ has singular values $\\sigma_1 \\ge \\sigma_2$. Find $${askSum ? "\\sigma_1^2 + \\sigma_2^2" : "\\sigma_1\\sigma_2"}$ without computing the SVD.`,
             `$A = ${mat2Latex(A)}$ 的奇异值为 $\\sigma_1 \\ge \\sigma_2$。不计算奇异值分解，求 $${askSum ? "\\sigma_1^2 + \\sigma_2^2" : "\\sigma_1\\sigma_2"}$。`,
           ),
-          answer: askSum ? fro : Math.abs(det),
-          wrong: askSum ? [A[0][0] + A[1][1], det * det, fro - 2 * det] : [det * det, fro, A[0][0] * A[1][1] + A[0][1] * A[1][0]],
+          answer,
+          mistakes: distinct(mistakes, answer),
           solution: askSum
-            ? t(
-                `$\\sigma_1^2 + \\sigma_2^2 = \\|A\\|_F^2$, the sum of the squares of the entries: $${fro}$.`,
-                `$\\sigma_1^2 + \\sigma_2^2 = \\|A\\|_F^2$，即各元素平方和：$${fro}$。`,
+            ? walked(
+                [
+                  [
+                    ["Use the trace of $A^TA$", "用 $A^TA$ 的迹"],
+                    t(
+                      "$A^TA = V\\Sigma^2V^T$ has trace $\\sigma_1^2 + \\sigma_2^2$, and its diagonal entries are the squared lengths of the columns of $A$.",
+                      "$A^TA = V\\Sigma^2V^T$ 的迹为 $\\sigma_1^2 + \\sigma_2^2$，其对角元是 $A$ 各列长度的平方。",
+                    ),
+                  ],
+                  [["Add the squares", "求平方和"], t("", ""), [`\\sigma_1^2 + \\sigma_2^2 = ${squares} = ${fro}`]],
+                ],
+                t(
+                  `The first column has squared length $${a * a + c * c}$ and the second $${b * b + d * d}$, which add up to $${fro}$.`,
+                  `第一列长度的平方为 $${a * a + c * c}$，第二列为 $${b * b + d * d}$，相加得 $${fro}$。`,
+                ),
               )
-            : t(
-                `$\\sigma_1\\sigma_2 = |\\det A| = |${det}| = ${Math.abs(det)}$.`,
-                `$\\sigma_1\\sigma_2 = |\\det A| = |${det}| = ${Math.abs(det)}$。`,
+            : walked(
+                [
+                  [
+                    ["Use the determinant", "用行列式"],
+                    t(
+                      "$|\\det A| = |\\det U|\\,\\det\\Sigma\\,|\\det V| = \\sigma_1\\sigma_2$, since orthogonal matrices have determinant $\\pm 1$.",
+                      "$|\\det A| = |\\det U|\\,\\det\\Sigma\\,|\\det V| = \\sigma_1\\sigma_2$，因为正交矩阵的行列式为 $\\pm 1$。",
+                    ),
+                  ],
+                  [
+                    ["Compute it", "计算"],
+                    t("", ""),
+                    [`\\det A = ${a * d} - ${paren(b * c)} = ${det}`, `\\sigma_1\\sigma_2 = |${det}| = ${Math.abs(det)}`],
+                  ],
+                ],
+                t(
+                  `$(\\sigma_1\\sigma_2)^2 = ${det * det} = \\det(A^TA)$, the product of the eigenvalues of $A^TA$.`,
+                  `$(\\sigma_1\\sigma_2)^2 = ${det * det} = \\det(A^TA)$，即 $A^TA$ 特征值之积。`,
+                ),
               ),
         });
       },
@@ -3675,6 +3795,10 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
     "Perform SVD on rank-one 2x2 matrices and matrices with repeated singular values, completing orthonormal bases.",
     "对秩为 1 的 2x2 矩阵及具有重奇异值的矩阵进行 SVD 分解，并扩充标准正交基。",
   ),
+  intro: t(
+    "$A = \\begin{pmatrix} 9 & 12 \\\\ 12 & 16 \\end{pmatrix}$ is the outer product of $(3, 4)$ with itself, so it has rank $1$. Its singular values are $\\sigma_1 = 5 \\cdot 5 = 25$ and $\\sigma_2 = 0$, with $\\mathbf{v}_1 = \\frac{1}{5}(3, 4)$ and $\\mathbf{u}_1 = A\\mathbf{v}_1 / 25 = \\frac{1}{5}(3, 4)$. The formula $A\\mathbf{v}_2 / \\sigma_2$ fails for $\\sigma_2 = 0$, so $\\mathbf{u}_2$ is chosen as a unit vector orthogonal to $\\mathbf{u}_1$: $\\frac{1}{5}(-4, 3)$. At the other extreme, $\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ has both singular values equal to $5$, and any orthonormal pair can serve as $V$.\n\nCheck: the squares of the entries of the first matrix add up to $81 + 144 + 144 + 256 = 625 = 25^2 + 0^2$.\n\nIn this lesson we complete the SVD when a singular value is $0$, find the nonzero singular value of a rank-one matrix, and invert a matrix whose singular values are equal.",
+    "$A = \\begin{pmatrix} 9 & 12 \\\\ 12 & 16 \\end{pmatrix}$ 是 $(3, 4)$ 与自身的外积，所以秩为 $1$。它的奇异值为 $\\sigma_1 = 5 \\cdot 5 = 25$ 和 $\\sigma_2 = 0$，$\\mathbf{v}_1 = \\frac{1}{5}(3, 4)$，$\\mathbf{u}_1 = A\\mathbf{v}_1 / 25 = \\frac{1}{5}(3, 4)$。当 $\\sigma_2 = 0$ 时公式 $A\\mathbf{v}_2 / \\sigma_2$ 失效，所以 $\\mathbf{u}_2$ 取与 $\\mathbf{u}_1$ 正交的单位向量：$\\frac{1}{5}(-4, 3)$。另一个极端是 $\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$，两个奇异值都等于 $5$，任何一对标准正交向量都可以作为 $V$。\n\n检验：第一个矩阵各元素的平方和为 $81 + 144 + 144 + 256 = 625 = 25^2 + 0^2$。\n\n本课我们在有奇异值为 $0$ 时补全奇异值分解，求秩一矩阵的非零奇异值，并求奇异值相等的矩阵的逆。",
+  ),
   prerequisites: ["singular-value-decomposition-of-2x2-matrices"],
   encompasses: [],
   xp: 16,
@@ -3683,8 +3807,8 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
       id: "svd-2x2-rank-one",
       title: t("SVD of a Rank-One 2x2 Matrix", "秩为 1 的 2x2 矩阵的 SVD"),
       explanation: t(
-        "When $\\operatorname{rank}(A) = 1$, the second singular value is $\\sigma_2 = 0$. In this case, $u_1 = \\frac{1}{\\sigma_1} A v_1$, and $u_2$ is chosen as any unit vector orthogonal to $u_1$ to complete the orthonormal basis for $\\mathbb{R}^2$.",
-        "当 $\\operatorname{rank}(A) = 1$ 时，第二个奇异值为 $\\sigma_2 = 0$。此时 $u_1 = \\frac{1}{\\sigma_1} A v_1$，而 $u_2$ 选取与 $u_1$ 正交的任意单位向量以补齐 $\\mathbb{R}^2$ 的标准正交基。",
+        "When $\\operatorname{rank}(A) = 1$, the second singular value is $\\sigma_2 = 0$. In this case, $u_1 = \\frac{1}{\\sigma_1} A v_1$, and $u_2$ is chosen as any unit vector orthogonal to $u_1$ to complete the orthonormal basis for $\\mathbb{R}^2$. In the plane, swapping the two entries and negating one of them turns a vector by a right angle. For example, $u_1 = \\frac{1}{5}(3, 4)$ gives $u_2 = \\frac{1}{5}(-4, 3)$, and $\\frac{1}{5}(4, -3)$ works as well.\n\n> **Watch out.** Swap the entries and negate exactly one of them. Negating without swapping, or swapping without negating, gives a unit vector that is not orthogonal to $u_1$; check that the dot product is $0$.",
+        "当 $\\operatorname{rank}(A) = 1$ 时，第二个奇异值为 $\\sigma_2 = 0$。此时 $u_1 = \\frac{1}{\\sigma_1} A v_1$，而 $u_2$ 选取与 $u_1$ 正交的任意单位向量以补齐 $\\mathbb{R}^2$ 的标准正交基。在平面上，把两个分量对调并把其中一个变号，就把向量转了一个直角。例如 $u_1 = \\frac{1}{5}(3, 4)$ 给出 $u_2 = \\frac{1}{5}(-4, 3)$，$\\frac{1}{5}(4, -3)$ 也可以。\n\n> **注意。** 要对调分量并恰好把其中一个变号。只变号不对调，或只对调不变号，得到的单位向量都与 $u_1$ 不正交；要检查点积是否为 $0$。",
       ),
       generate: (rng: Rng): Problem => {
         const u1 = rng.nonZero(-5, 5);
@@ -3706,20 +3830,57 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
           t(`$${vec2Latex([1, 0])}$`, `$${vec2Latex([1, 0])}$`),
         ];
 
-        const solution = t(
-          `The matrix $U$ must be an orthogonal matrix, so its columns must be orthonormal. Since $u_1 = \\frac{1}{\\sqrt{${hypSq}}} ${vec2Latex([u1, u2])}$, the column $u_2$ must be a unit vector orthogonal to $u_1$. The dot product of $u_1$ with $\\frac{1}{\\sqrt{${hypSq}}} ${vec2Latex([-u2, u1])}$ is $\\frac{1}{${hypSq}} [(${u1})(${-u2}) + (${u2})(${u1})] = 0$, making it a valid choice.`,
-          `矩阵 $U$ 必须为正交矩阵，其各列须标准正交。因为 $u_1 = \\frac{1}{\\sqrt{${hypSq}}} ${vec2Latex([u1, u2])}$，所以 $u_2$ 必须是与 $u_1$ 正交的单位向量。计算其与 $\\frac{1}{\\sqrt{${hypSq}}} ${vec2Latex([-u2, u1])}$ 的点积为 $\\frac{1}{${hypSq}} [(${u1})(${-u2}) + (${u2})(${u1})] = 0$，故这是一个有效选择。`,
+        const solution = walked(
+          [
+            [
+              ["State what is needed", "明确要求"],
+              t(
+                `$U$ is orthogonal, so $u_2$ must be a unit vector orthogonal to $u_1 = \\frac{1}{\\sqrt{${hypSq}}}(${u1}, ${u2})$. Since $\\sigma_2 = 0$, the formula $A v_2 / \\sigma_2$ cannot give it.`,
+                `$U$ 是正交矩阵，所以 $u_2$ 必须是与 $u_1 = \\frac{1}{\\sqrt{${hypSq}}}(${u1}, ${u2})$ 正交的单位向量。由于 $\\sigma_2 = 0$，公式 $A v_2 / \\sigma_2$ 给不出它。`,
+              ),
+            ],
+            [
+              ["Turn by a right angle", "转一个直角"],
+              t("Swap the entries and negate the new first one:", "对调两个分量，并把新的第一个分量变号："),
+              [`u_2 = \\frac{1}{\\sqrt{${hypSq}}} ${vec2Latex([-u2, u1])}`],
+            ],
+          ],
+          t(
+            `$u_1 \\cdot u_2 = \\frac{1}{${hypSq}}[${paren(u1)} \\cdot ${paren(-u2)} + ${paren(u2)} \\cdot ${paren(u1)}] = 0$, and $u_2$ has length $\\frac{\\sqrt{${u2 * u2} + ${u1 * u1}}}{\\sqrt{${hypSq}}} = 1$.`,
+            `$u_1 \\cdot u_2 = \\frac{1}{${hypSq}}[${paren(u1)} \\cdot ${paren(-u2)} + ${paren(u2)} \\cdot ${paren(u1)}] = 0$，且 $u_2$ 的长度为 $\\frac{\\sqrt{${u2 * u2} + ${u1 * u1}}}{\\sqrt{${hypSq}}} = 1$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `Negating an entry without swapping leaves the dot product $\\frac{${u1 * u1} - ${u2 * u2}}{${hypSq}} \\ne 0$.`,
+            `只变号不对调，点积为 $\\frac{${u1 * u1} - ${u2 * u2}}{${hypSq}} \\ne 0$。`,
+          ],
+          [
+            wrong[1]!.en,
+            `Swapping without negating gives the dot product $\\frac{${2 * u1 * u2}}{${hypSq}} \\ne 0$; one entry must also change sign.`,
+            `只对调不变号，点积为 $\\frac{${2 * u1 * u2}}{${hypSq}} \\ne 0$；还要把一个分量变号。`,
+          ],
+          [
+            wrong[2]!.en,
+            "That is $u_1$ itself; the columns of $U$ must be orthogonal, not equal.",
+            "这就是 $u_1$ 本身；$U$ 的各列必须正交，而不是相等。",
+          ],
+          [
+            wrong[3]!.en,
+            `$(1, 0)$ has dot product $\\frac{${u1}}{\\sqrt{${hypSq}}} \\ne 0$ with $u_1$; a standard basis vector works only when $u_1$ lies along an axis.`,
+            `$(1, 0)$ 与 $u_1$ 的点积为 $\\frac{${u1}}{\\sqrt{${hypSq}}} \\ne 0$；只有 $u_1$ 沿坐标轴时标准基向量才可以。`,
+          ],
+        ]);
       },
     },
     {
       id: "the-nonzero-singular-value-of-a-rank-one-matrix",
       title: t("The nonzero singular value of a rank-one matrix", "秩一矩阵的非零奇异值"),
       explanation: t(
-        "A rank-one matrix is an outer product $A = \\mathbf{u}\\mathbf{v}^T$. Then $A^TA = \\|\\mathbf{u}\\|^2\\mathbf{v}\\mathbf{v}^T$, whose only nonzero eigenvalue is $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$. So the singular values are\n\n$$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|, \\qquad \\sigma_2 = 0,$$\n\nwith $\\frac{\\mathbf{u}}{\\|\\mathbf{u}\\|}$ and $\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$ as the first left and right singular vectors.",
-        "秩一矩阵是外积 $A = \\mathbf{u}\\mathbf{v}^T$。于是 $A^TA = \\|\\mathbf{u}\\|^2\\mathbf{v}\\mathbf{v}^T$，唯一的非零特征值为 $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$。所以奇异值为\n\n$$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|, \\qquad \\sigma_2 = 0,$$\n\n$\\frac{\\mathbf{u}}{\\|\\mathbf{u}\\|}$ 与 $\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$ 为第一个左、右奇异向量。",
+        "A rank-one matrix is an outer product $A = \\mathbf{u}\\mathbf{v}^T$. Then $A^TA = \\|\\mathbf{u}\\|^2\\mathbf{v}\\mathbf{v}^T$, whose only nonzero eigenvalue is $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$. So the singular values are\n\n$$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|, \\qquad \\sigma_2 = 0,$$\n\nwith $\\frac{\\mathbf{u}}{\\|\\mathbf{u}\\|}$ and $\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$ as the first left and right singular vectors. For example, $\\begin{pmatrix} 3 & 6 \\\\ 4 & 8 \\end{pmatrix} = (3, 4)(1, 2)^T$ has $\\sigma_1 = 5\\sqrt{5}$.\n\n> **Watch out.** Multiply the two lengths; do not add them, and do not stop at $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$, which is the eigenvalue of $A^TA$, the square of $\\sigma_1$.",
+        "秩一矩阵是外积 $A = \\mathbf{u}\\mathbf{v}^T$。于是 $A^TA = \\|\\mathbf{u}\\|^2\\mathbf{v}\\mathbf{v}^T$，唯一的非零特征值为 $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$。所以奇异值为\n\n$$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|, \\qquad \\sigma_2 = 0,$$\n\n$\\frac{\\mathbf{u}}{\\|\\mathbf{u}\\|}$ 与 $\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$ 为第一个左、右奇异向量。例如 $\\begin{pmatrix} 3 & 6 \\\\ 4 & 8 \\end{pmatrix} = (3, 4)(1, 2)^T$ 有 $\\sigma_1 = 5\\sqrt{5}$。\n\n> **注意。** 两个长度要相乘，不要相加；也不要停在 $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$，那是 $A^TA$ 的特征值，即 $\\sigma_1$ 的平方。",
       ),
       generate(rng: Rng): Problem {
         const triples = [
@@ -3744,10 +3905,58 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
             `$A = ${mat2Latex(A)}$ 的秩为 $1$。求其最大奇异值。`,
           ),
           answer: ans,
-          wrong: [ans * ans, r + c, Math.abs(A[0][0]) + Math.abs(A[1][1]), c],
-          solution: t(
-            `$A = ${vec2Latex([p, q])}\\begin{pmatrix} ${a} & ${s * b} \\end{pmatrix}$, so $\\sigma_1 = ${r} \\cdot ${c} = ${ans}$ and $\\sigma_2 = 0$.`,
-            `$A = ${vec2Latex([p, q])}\\begin{pmatrix} ${a} & ${s * b} \\end{pmatrix}$，所以 $\\sigma_1 = ${r} \\cdot ${c} = ${ans}$，$\\sigma_2 = 0$。`,
+          mistakes: distinct(
+            [
+              why(
+                ans * ans,
+                `$${ans * ans}$ is the eigenvalue $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$ of $A^TA$; take its square root.`,
+                `$${ans * ans}$ 是 $A^TA$ 的特征值 $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$；要开平方。`,
+              ),
+              why(
+                r + c,
+                `That adds the lengths $${r}$ and $${c}$; $\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|$ multiplies them.`,
+                `这是把长度 $${r}$ 和 $${c}$ 相加了；$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|$ 要相乘。`,
+              ),
+              why(
+                Math.abs(A[0][0]) + Math.abs(A[1][1]),
+                "That adds the sizes of the diagonal entries; a singular value comes from the whole matrix, not its diagonal.",
+                "这是把对角元的大小相加了；奇异值来自整个矩阵，而不是对角线。",
+              ),
+              why(
+                c,
+                `$${c}$ is the length of the row factor alone; it must be multiplied by the length $${r}$ of the column factor.`,
+                `$${c}$ 只是行因子的长度；还要乘以列因子的长度 $${r}$。`,
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["Factor the matrix", "分解矩阵"],
+                t(
+                  "Every row is a multiple of the same row, so $A$ is a column times a row:",
+                  "每一行都是同一行的倍数，所以 $A$ 是一列乘一行：",
+                ),
+                [`A = ${vec2Latex([p, q])}\\begin{pmatrix} ${a} & ${s * b} \\end{pmatrix}`],
+              ],
+              [
+                ["Find the lengths", "求长度"],
+                t("", ""),
+                [`\\|\\mathbf{u}\\| = \\sqrt{${p * p} + ${q * q}} = ${r}, \\quad \\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b}} = ${c}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `$\\sigma_1 = ${r} \\cdot ${c} = ${ans}$, and $\\sigma_2 = 0$.`,
+                  `$\\sigma_1 = ${r} \\cdot ${c} = ${ans}$，$\\sigma_2 = 0$。`,
+                ),
+              ],
+            ],
+            t(
+              `The squares of the entries of $A$ add up to $${A[0][0] ** 2 + A[0][1] ** 2 + A[1][0] ** 2 + A[1][1] ** 2} = ${ans}^2 = \\sigma_1^2 + \\sigma_2^2$.`,
+              `$A$ 各元素的平方和为 $${A[0][0] ** 2 + A[0][1] ** 2 + A[1][0] ** 2 + A[1][1] ** 2} = ${ans}^2 = \\sigma_1^2 + \\sigma_2^2$。`,
+            ),
           ),
         });
       },
@@ -3763,6 +3972,10 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
     "Find the SVD of rectangular matrices and use the outer product expansion $A = \\sum \\sigma_i \\mathbf{u}_i \\mathbf{v}_i^T$ for low-rank approximation.",
     "求矩形矩阵的奇异值分解，并用外积展开 $A = \\sum \\sigma_i \\mathbf{u}_i \\mathbf{v}_i^T$ 进行低秩逼近。",
   ),
+  intro: t(
+    "Take $\\sigma_1 = 10$, $\\sigma_2 = 5$, $\\mathbf{u}_1 = (1, 0, 0)$, $\\mathbf{u}_2 = (0, 1, 0)$, $\\mathbf{v}_1 = \\frac{1}{5}(3, 4)$ and $\\mathbf{v}_2 = \\frac{1}{5}(-4, 3)$. The $3 \\times 2$ matrix $A = \\sigma_1\\mathbf{u}_1\\mathbf{v}_1^T + \\sigma_2\\mathbf{u}_2\\mathbf{v}_2^T$ is a sum of two rank-one pieces:\n\n$$A = \\begin{pmatrix} 6 & 8 \\\\ 0 & 0 \\\\ 0 & 0 \\end{pmatrix} + \\begin{pmatrix} 0 & 0 \\\\ -4 & 3 \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 6 & 8 \\\\ -4 & 3 \\\\ 0 & 0 \\end{pmatrix}.$$\n\nKeeping only the first piece gives the best rank-one approximation $A_1$, and the error $A - A_1$ is the second piece, with $\\|A - A_1\\|_F^2 = 16 + 9 = 25 = \\sigma_2^2$.\n\nCheck: the squares of the entries of $A$ add up to $36 + 64 + 16 + 9 = 125 = 10^2 + 5^2$.\n\nIn this lesson we write a matrix as a sum of rank-one terms $\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$, measure the error of truncating that sum, and find the smallest rank that meets an error budget.",
+    "取 $\\sigma_1 = 10$，$\\sigma_2 = 5$，$\\mathbf{u}_1 = (1, 0, 0)$，$\\mathbf{u}_2 = (0, 1, 0)$，$\\mathbf{v}_1 = \\frac{1}{5}(3, 4)$，$\\mathbf{v}_2 = \\frac{1}{5}(-4, 3)$。$3 \\times 2$ 矩阵 $A = \\sigma_1\\mathbf{u}_1\\mathbf{v}_1^T + \\sigma_2\\mathbf{u}_2\\mathbf{v}_2^T$ 是两个秩一部分之和：\n\n$$A = \\begin{pmatrix} 6 & 8 \\\\ 0 & 0 \\\\ 0 & 0 \\end{pmatrix} + \\begin{pmatrix} 0 & 0 \\\\ -4 & 3 \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 6 & 8 \\\\ -4 & 3 \\\\ 0 & 0 \\end{pmatrix}$$\n\n只保留第一部分就得到最佳秩一逼近 $A_1$，误差 $A - A_1$ 就是第二部分，$\\|A - A_1\\|_F^2 = 16 + 9 = 25 = \\sigma_2^2$。\n\n检验：$A$ 各元素的平方和为 $36 + 64 + 16 + 9 = 125 = 10^2 + 5^2$。\n\n本课我们把矩阵写成秩一项 $\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 之和，度量截断这个和的误差，并求满足误差要求的最小秩。",
+  ),
   prerequisites: ["singular-value-decomposition-of-2x2-matrices-with-zero-or-repeated-eigenvalues"],
   encompasses: [],
   xp: 16,
@@ -3771,8 +3984,8 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
       id: "svd-outer-product-expansion",
       title: t("Outer Product Expansion of SVD", "SVD 的外积展开式"),
       explanation: t(
-        "Any matrix $A$ of rank $r$ can be written as the sum of $r$ rank-one matrices: $A = \\sum_{i=1}^r \\sigma_i u_i v_i^T$. By the Eckart-Young-Mirsky theorem, the best rank-$k$ approximation to $A$ in both Frobenius and spectral norms is $A_k = \\sum_{i=1}^k \\sigma_i u_i v_i^T$.",
-        "任意秩为 $r$ 的矩阵 $A$ 均可展开为 $r$ 个秩 1 矩阵之和：$A = \\sum_{i=1}^r \\sigma_i u_i v_i^T$。根据 Eckart-Young-Mirsky 定理，在 Frobenius 范数和谱范数下，$A$ 的最佳秩 $k$ 逼近为截断和 $A_k = \\sum_{i=1}^k \\sigma_i u_i v_i^T$。",
+        "Any matrix $A$ of rank $r$ can be written as the sum of $r$ rank-one matrices: $A = \\sum_{i=1}^r \\sigma_i u_i v_i^T$. By the Eckart-Young-Mirsky theorem, the best rank-$k$ approximation to $A$ in both Frobenius and spectral norms is $A_k = \\sum_{i=1}^k \\sigma_i u_i v_i^T$. The outer product $u v^T$ is a column times a row: its $(i, j)$ entry is the $i$-th entry of $u$ times the $j$-th entry of $v$. For example, $\\sigma_1 = 10$, $u_1 = (1, 0)$ and $v_1 = \\frac{1}{5}(3, 4)$ give $A_1 = 10 \\cdot \\frac{1}{5}\\begin{pmatrix} 3 & 4 \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 6 & 8 \\\\ 0 & 0 \\end{pmatrix}$.\n\n> **Watch out.** The rows follow $u$ and the columns follow $v$; $v u^T$ is the transpose. Keep the factor $\\sigma_1$ and the fractions in front of the unit vectors.",
+        "任意秩为 $r$ 的矩阵 $A$ 均可展开为 $r$ 个秩 1 矩阵之和：$A = \\sum_{i=1}^r \\sigma_i u_i v_i^T$。根据 Eckart-Young-Mirsky 定理，在 Frobenius 范数和谱范数下，$A$ 的最佳秩 $k$ 逼近为截断和 $A_k = \\sum_{i=1}^k \\sigma_i u_i v_i^T$。外积 $u v^T$ 是一列乘一行：其 $(i, j)$ 元素是 $u$ 的第 $i$ 个分量乘 $v$ 的第 $j$ 个分量。例如 $\\sigma_1 = 10$，$u_1 = (1, 0)$，$v_1 = \\frac{1}{5}(3, 4)$ 给出 $A_1 = 10 \\cdot \\frac{1}{5}\\begin{pmatrix} 3 & 4 \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 6 & 8 \\\\ 0 & 0 \\end{pmatrix}$。\n\n> **注意。** 行跟随 $u$，列跟随 $v$；$v u^T$ 是它的转置。要保留倍数 $\\sigma_1$ 和单位向量前的分数。",
       ),
       generate: (rng: Rng): Problem => {
         // Singular vectors have length one, so both are written as a fifth of a (3, 4) vector.
@@ -3855,36 +4068,68 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `Compute the outer product $u_1 v_1^T = \\frac{1}{25}${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = \\frac{1}{25}${mat2Latex(
+        const solution = walked(
+          [
             [
-              [u1 * v1, u1 * v2],
-              [u2 * v1, u2 * v2],
+              ["Form the outer product", "构造外积"],
+              t("Rows follow $u_1$ and columns follow $v_1$:", "行跟随 $u_1$，列跟随 $v_1$："),
+              [
+                `u_1 v_1^T = \\frac{1}{25}${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = \\frac{1}{25}${mat2Latex([
+                  [u1 * v1, u1 * v2],
+                  [u2 * v1, u2 * v2],
+                ])}`,
+              ],
             ],
-          )}$. Multiplying by $\\sigma_1 = ${s1}$ gives $A_1 = ${mat2Latex([
-            [a11, a12],
-            [a21, a22],
-          ])}$.`,
-          `计算外积 $u_1 v_1^T = \\frac{1}{25}${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = \\frac{1}{25}${mat2Latex(
             [
-              [u1 * v1, u1 * v2],
-              [u2 * v1, u2 * v2],
+              ["Scale by $\\sigma_1$", "乘以 $\\sigma_1$"],
+              t(`$\\frac{${s1}}{25} = ${scale}$, so`, `$\\frac{${s1}}{25} = ${scale}$，所以`),
+              [
+                `A_1 = ${scale}${mat2Latex([
+                  [u1 * v1, u1 * v2],
+                  [u2 * v1, u2 * v2],
+                ])} = ${mat2Latex([
+                  [a11, a12],
+                  [a21, a22],
+                ])}`,
+              ],
             ],
-          )}$。乘上奇异值 $\\sigma_1 = ${s1}$ 即得 $A_1 = ${mat2Latex([
-            [a11, a12],
-            [a21, a22],
-          ])}$。`,
+          ],
+          t(
+            `$A_1$ has rank $1$: $${paren(a11)} \\cdot ${paren(a22)} - ${paren(a12)} \\cdot ${paren(a21)} = 0$. Its squared entries add up to $${a11 * a11 + a12 * a12 + a21 * a21 + a22 * a22} = ${s1}^2 = \\sigma_1^2$.`,
+            `$A_1$ 的秩为 $1$：$${paren(a11)} \\cdot ${paren(a22)} - ${paren(a12)} \\cdot ${paren(a21)} = 0$。其元素平方和为 $${a11 * a11 + a12 * a12 + a21 * a21 + a22 * a22} = ${s1}^2 = \\sigma_1^2$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "That is $\\sigma_1 v_1 u_1^T$, the transpose: the rows must follow $u_1$.",
+            "这是 $\\sigma_1 v_1 u_1^T$，即转置：行应跟随 $u_1$。",
+          ],
+          [
+            wrong[1]!.en,
+            `That is $${vec2Latex([u1, u2])}\\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix}$ without the factor $\\frac{${s1}}{25} = ${scale}$.`,
+            `这是 $${vec2Latex([u1, u2])}\\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix}$，漏了倍数 $\\frac{${s1}}{25} = ${scale}$。`,
+          ],
+          [
+            wrong[2]!.en,
+            "The off-diagonal signs are flipped; each entry is a product of an entry of $u_1$ and an entry of $v_1$, signs included.",
+            "非对角元的符号反了；每个元素都是 $u_1$ 的一个分量乘 $v_1$ 的一个分量，符号也要带上。",
+          ],
+          [
+            wrong[3]!.en,
+            "The diagonal entries are swapped; the $(1, 1)$ entry is the first entry of $u_1$ times the first entry of $v_1$.",
+            "对角元互换了；$(1, 1)$ 元素是 $u_1$ 的第一个分量乘 $v_1$ 的第一个分量。",
+          ],
+        ]);
       },
     },
     {
       id: "the-error-of-a-truncated-svd",
       title: t("The error of a truncated SVD", "截断奇异值分解的误差"),
       explanation: t(
-        "Keeping the first $k$ terms of $A = \\sum_i \\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ gives the best rank-$k$ approximation $A_k$. The error $A - A_k = \\sum_{i > k}\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ has singular values $\\sigma_{k+1}, \\sigma_{k+2}, \\dots$, so\n\n$$\\|A - A_k\\|_2 = \\sigma_{k+1}, \\qquad \\|A - A_k\\|_F^2 = \\sigma_{k+1}^2 + \\sigma_{k+2}^2 + \\cdots.$$",
-        "保留 $A = \\sum_i \\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 的前 $k$ 项得到最佳秩 $k$ 逼近 $A_k$。误差 $A - A_k = \\sum_{i > k}\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 的奇异值为 $\\sigma_{k+1}, \\sigma_{k+2}, \\dots$，所以\n\n$$\\|A - A_k\\|_2 = \\sigma_{k+1}, \\qquad \\|A - A_k\\|_F^2 = \\sigma_{k+1}^2 + \\sigma_{k+2}^2 + \\cdots$$",
+        "Keeping the first $k$ terms of $A = \\sum_i \\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ gives the best rank-$k$ approximation $A_k$. The error $A - A_k = \\sum_{i > k}\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ has singular values $\\sigma_{k+1}, \\sigma_{k+2}, \\dots$, so\n\n$$\\|A - A_k\\|_2 = \\sigma_{k+1}, \\qquad \\|A - A_k\\|_F^2 = \\sigma_{k+1}^2 + \\sigma_{k+2}^2 + \\cdots.$$\n\nFor example, with singular values $9, 6, 2, 1$ the best rank-$2$ approximation has $\\|A - A_2\\|_2 = 2$ and $\\|A - A_2\\|_F^2 = 4 + 1 = 5$.\n\n> **Watch out.** The error comes from the discarded values, starting with $\\sigma_{k+1}$, not from the last one kept. The spectral error is one singular value, while the squared Frobenius error adds the squares of all the discarded ones.",
+        "保留 $A = \\sum_i \\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 的前 $k$ 项得到最佳秩 $k$ 逼近 $A_k$。误差 $A - A_k = \\sum_{i > k}\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 的奇异值为 $\\sigma_{k+1}, \\sigma_{k+2}, \\dots$，所以\n\n$$\\|A - A_k\\|_2 = \\sigma_{k+1}, \\qquad \\|A - A_k\\|_F^2 = \\sigma_{k+1}^2 + \\sigma_{k+2}^2 + \\cdots$$\n\n例如奇异值为 $9, 6, 2, 1$ 时，最佳秩 $2$ 逼近满足 $\\|A - A_2\\|_2 = 2$，$\\|A - A_2\\|_F^2 = 4 + 1 = 5$。\n\n> **注意。** 误差来自被舍弃的值，从 $\\sigma_{k+1}$ 开始，而不是最后保留的那个。谱范数误差是一个奇异值，而 Frobenius 误差的平方要把所有被舍弃值的平方相加。",
       ),
       generate(rng: Rng): Problem {
         const s4 = rng.int(1, 3);
@@ -3902,18 +4147,87 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
             `某矩阵的奇异值为 $${sig.join(", ")}$。设 $A_{${k}}$ 为由奇异值分解得到的最佳秩 $${k}$ 逼近。求 $${fro ? `\\|A - A_{${k}}\\|_F^2` : `\\|A - A_{${k}}\\|_2`}$。`,
           ),
           answer: ans,
-          wrong: fro
-            ? [rest.reduce((x, y) => x + y, 0), sig[k]! ** 2, sig.slice(k + 1).reduce((x, y) => x + y * y, 0)]
-            : [sig[k - 1]!, sig[k + 1]!, rest.reduce((x, y) => x + y, 0)],
-          solution: fro
-            ? t(
-                `The discarded singular values are $${rest.join(", ")}$, so the squared Frobenius error is $${rest.map((x) => `${x}^2`).join(" + ")} = ${ans}$.`,
-                `舍弃的奇异值为 $${rest.join(", ")}$，所以 Frobenius 误差的平方为 $${rest.map((x) => `${x}^2`).join(" + ")} = ${ans}$。`,
-              )
-            : t(
-                `The spectral-norm error is the first discarded singular value, $\\sigma_{${k + 1}} = ${ans}$.`,
-                `谱范数误差是第一个被舍弃的奇异值 $\\sigma_{${k + 1}} = ${ans}$。`,
-              ),
+          mistakes: distinct(
+            fro
+              ? [
+                  why(
+                    rest.reduce((x, y) => x + y, 0),
+                    "That adds the discarded singular values themselves; the squared Frobenius error adds their squares.",
+                    "这是把被舍弃的奇异值本身相加了；Frobenius 误差的平方要把它们的平方相加。",
+                  ),
+                  why(
+                    sig[k]! ** 2,
+                    `$${sig[k]! ** 2}$ is only $\\sigma_{${k + 1}}^2$; every discarded value contributes its square.`,
+                    `$${sig[k]! ** 2}$ 只是 $\\sigma_{${k + 1}}^2$；每个被舍弃的值都要贡献它的平方。`,
+                  ),
+                  why(
+                    sig.slice(k + 1).reduce((x, y) => x + y * y, 0),
+                    `That leaves out $\\sigma_{${k + 1}} = ${sig[k]}$, the first value that $A_{${k}}$ discards.`,
+                    `这漏掉了 $\\sigma_{${k + 1}} = ${sig[k]}$，它是 $A_{${k}}$ 舍弃的第一个值。`,
+                  ),
+                  why(
+                    sig.slice(0, k).reduce((x, y) => x + y * y, 0),
+                    `That adds the squares of the kept values; it is $\\|A_{${k}}\\|_F^2$, not the error.`,
+                    `这是把保留值的平方相加了；它是 $\\|A_{${k}}\\|_F^2$，不是误差。`,
+                  ),
+                ]
+              : [
+                  why(
+                    sig[k - 1]!,
+                    `$${sig[k - 1]}$ is $\\sigma_{${k}}$, the last value kept; the error starts with the first value discarded.`,
+                    `$${sig[k - 1]}$ 是 $\\sigma_{${k}}$，最后保留的值；误差从第一个被舍弃的值开始。`,
+                  ),
+                  why(
+                    sig[k + 1]!,
+                    `$${sig[k + 1]}$ is $\\sigma_{${k + 2}}$; the largest discarded value is $\\sigma_{${k + 1}} = ${sig[k]}$.`,
+                    `$${sig[k + 1]}$ 是 $\\sigma_{${k + 2}}$；被舍弃的最大值是 $\\sigma_{${k + 1}} = ${sig[k]}$。`,
+                  ),
+                  why(
+                    rest.reduce((x, y) => x + y, 0),
+                    "That adds all the discarded values; the spectral norm of the error is only the largest of them.",
+                    "这是把所有被舍弃的值相加了；误差的谱范数只是其中最大的一个。",
+                  ),
+                  why(
+                    rest.reduce((x, y) => x + y * y, 0),
+                    `$${rest.reduce((x, y) => x + y * y, 0)}$ is the squared Frobenius error; the spectral error is $\\sigma_{${k + 1}}$ alone.`,
+                    `$${rest.reduce((x, y) => x + y * y, 0)}$ 是 Frobenius 误差的平方；谱范数误差只是 $\\sigma_{${k + 1}}$。`,
+                  ),
+                ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["List the discarded values", "列出被舍弃的值"],
+                t(
+                  `$A_{${k}}$ keeps $${sig.slice(0, k).join(", ")}$ and discards $${rest.join(", ")}$; these are the singular values of $A - A_{${k}}$.`,
+                  `$A_{${k}}$ 保留 $${sig.slice(0, k).join(", ")}$，舍弃 $${rest.join(", ")}$；它们就是 $A - A_{${k}}$ 的奇异值。`,
+                ),
+              ],
+              fro
+                ? [
+                    ["Add their squares", "平方相加"],
+                    t("", ""),
+                    [`\\|A - A_{${k}}\\|_F^2 = ${rest.map((x) => `${x}^2`).join(" + ")} = ${ans}`],
+                  ]
+                : [
+                    ["Take the largest", "取最大的"],
+                    t(
+                      `The spectral norm is the largest singular value of the error, $\\sigma_{${k + 1}} = ${ans}$.`,
+                      `谱范数是误差的最大奇异值 $\\sigma_{${k + 1}} = ${ans}$。`,
+                    ),
+                  ],
+            ],
+            fro
+              ? t(
+                  `The kept part has $\\|A_{${k}}\\|_F^2 = ${sig.slice(0, k).reduce((x, y) => x + y * y, 0)}$, and the two add up to $\\|A\\|_F^2 = ${sig.reduce((x, y) => x + y * y, 0)}$.`,
+                  `保留部分有 $\\|A_{${k}}\\|_F^2 = ${sig.slice(0, k).reduce((x, y) => x + y * y, 0)}$，两者相加得 $\\|A\\|_F^2 = ${sig.reduce((x, y) => x + y * y, 0)}$。`,
+                )
+              : t(
+                  `$${ans}$ lies below $\\sigma_{${k}} = ${sig[k - 1]}$ and above $${sig[k + 1]}$, as the largest discarded value should.`,
+                  `$${ans}$ 小于 $\\sigma_{${k}} = ${sig[k - 1]}$，大于 $${sig[k + 1]}$，正是被舍弃的最大值。`,
+                ),
+          ),
         });
       },
     },
@@ -3928,6 +4242,10 @@ export const singularValueDecompositionAndThePseudoinverseMatrix: TopicDef = {
     "Define and compute the Moore-Penrose pseudoinverse $A^+$ from the SVD, and apply it to minimal-norm solutions.",
     "定义并利用奇异值分解计算摩尔-彭罗斯伪逆 $A^+$，并应用于求极小范数解。",
   ),
+  intro: t(
+    "The column $A = (3, 4)$ has one singular value, $\\sigma = 5$, with $\\mathbf{u} = \\frac{1}{5}(3, 4)$. Inverting it and transposing gives $A^+ = V\\Sigma^+U^T = \\frac{1}{25}\\begin{pmatrix} 3 & 4 \\end{pmatrix}$. For $\\mathbf{b} = (1, 2)$, $A^+\\mathbf{b} = \\frac{3 + 8}{25} = \\frac{11}{25}$, the least-squares solution of $Ax = \\mathbf{b}$.\n\nCheck: the residual $\\mathbf{b} - \\frac{11}{25}A = \\frac{1}{25}(-8, 6)$ is orthogonal to $A$, since $3(-8) + 4 \\cdot 6 = 0$.\n\nIn this lesson we build the pseudoinverse $A^+ = V\\Sigma^+U^T$ by inverting the nonzero singular values, for diagonal matrices, single columns and general SVDs.",
+    "列向量 $A = (3, 4)$ 有一个奇异值 $\\sigma = 5$，$\\mathbf{u} = \\frac{1}{5}(3, 4)$。取倒数再转置得 $A^+ = V\\Sigma^+U^T = \\frac{1}{25}\\begin{pmatrix} 3 & 4 \\end{pmatrix}$。对 $\\mathbf{b} = (1, 2)$，$A^+\\mathbf{b} = \\frac{3 + 8}{25} = \\frac{11}{25}$，即 $Ax = \\mathbf{b}$ 的最小二乘解。\n\n检验：残差 $\\mathbf{b} - \\frac{11}{25}A = \\frac{1}{25}(-8, 6)$ 与 $A$ 正交，因为 $3(-8) + 4 \\cdot 6 = 0$。\n\n本课我们通过把非零奇异值取倒数来构造伪逆 $A^+ = V\\Sigma^+U^T$，包括对角矩阵、单列矩阵和一般的奇异值分解。",
+  ),
   prerequisites: ["singular-value-decomposition-of-larger-matrices"],
   encompasses: [],
   xp: 16,
@@ -3936,8 +4254,8 @@ export const singularValueDecompositionAndThePseudoinverseMatrix: TopicDef = {
       id: "moore-penrose-pseudoinverse",
       title: t("Moore-Penrose Pseudoinverse from SVD", "由 SVD 构造摩尔-彭罗斯伪逆"),
       explanation: t(
-        "For a matrix with SVD $A = U \\Sigma V^T$, the Moore-Penrose pseudoinverse is $A^+ = V \\Sigma^+ U^T$, where $\\Sigma^+$ is formed by replacing every non-zero singular value $\\sigma_i$ by its reciprocal $\\frac{1}{\\sigma_i}$ and transposing.",
-        "若矩阵 $A$ 的 SVD 分解为 $A = U \\Sigma V^T$，则其摩尔-彭罗斯伪逆为 $A^+ = V \\Sigma^+ U^T$。其中 $\\Sigma^+$ 是将 $\\Sigma$ 的每个非零奇异值 $\\sigma_i$ 替换为其倒数 $\\frac{1}{\\sigma_i}$ 并转置后得到的矩阵。",
+        "For a matrix with SVD $A = U \\Sigma V^T$, the Moore-Penrose pseudoinverse is $A^+ = V \\Sigma^+ U^T$, where $\\Sigma^+$ is formed by replacing every non-zero singular value $\\sigma_i$ by its reciprocal $\\frac{1}{\\sigma_i}$ and transposing. For example, $\\Sigma = \\begin{pmatrix} 4 & 0 \\\\ 0 & 2 \\end{pmatrix}$ has $\\Sigma^+ = \\begin{pmatrix} \\frac{1}{4} & 0 \\\\ 0 & \\frac{1}{2} \\end{pmatrix}$, and a zero singular value would stay $0$.\n\n> **Watch out.** Each reciprocal stays in the place of its own singular value, even though $\\frac{1}{\\sigma_1}$ is now the smaller entry. Reciprocals of positive numbers are positive, and the off-diagonal entries stay $0$.",
+        "若矩阵 $A$ 的 SVD 分解为 $A = U \\Sigma V^T$，则其摩尔-彭罗斯伪逆为 $A^+ = V \\Sigma^+ U^T$。其中 $\\Sigma^+$ 是将 $\\Sigma$ 的每个非零奇异值 $\\sigma_i$ 替换为其倒数 $\\frac{1}{\\sigma_i}$ 并转置后得到的矩阵。例如 $\\Sigma = \\begin{pmatrix} 4 & 0 \\\\ 0 & 2 \\end{pmatrix}$ 有 $\\Sigma^+ = \\begin{pmatrix} \\frac{1}{4} & 0 \\\\ 0 & \\frac{1}{2} \\end{pmatrix}$，零奇异值则仍为 $0$。\n\n> **注意。** 每个倒数留在它自己的奇异值的位置上，即使 $\\frac{1}{\\sigma_1}$ 现在是较小的元素。正数的倒数仍为正，非对角元仍为 $0$。",
       ),
       generate: (rng: Rng): Problem => {
         // Singular values are listed from largest to smallest.
@@ -4008,45 +4326,120 @@ export const singularValueDecompositionAndThePseudoinverseMatrix: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `For a diagonal matrix with non-zero diagonal entries, the pseudoinverse is obtained by inverting each non-zero diagonal element: $\\Sigma^+ = ${mat2StrLatex(
+        const solution = walked(
+          [
             [
-              [`\\frac{1}{${s1}}`, "0"],
-              ["0", `\\frac{1}{${s2}}`],
+              ["Invert each singular value", "每个奇异值取倒数"],
+              t(
+                `Both singular values are nonzero, so each is replaced by its reciprocal: $\\frac{1}{${s1}}$ and $\\frac{1}{${s2}}$.`,
+                `两个奇异值都非零，所以各自换成倒数：$\\frac{1}{${s1}}$ 和 $\\frac{1}{${s2}}$。`,
+              ),
             ],
-          )}$.`,
-          `对于主对角元非零的对角矩阵，其伪逆只需将每个对角元取倒数：$\\Sigma^+ = ${mat2StrLatex([
-            [`\\frac{1}{${s1}}`, "0"],
-            ["0", `\\frac{1}{${s2}}`],
-          ])}$。`,
+            [
+              ["Keep the places", "保持位置"],
+              t(
+                "Each reciprocal stays where its singular value was, and transposing a square diagonal matrix changes nothing:",
+                "每个倒数留在原奇异值的位置；方的对角矩阵转置后不变：",
+              ),
+              [
+                `\\Sigma^+ = ${mat2StrLatex([
+                  [`\\frac{1}{${s1}}`, "0"],
+                  ["0", `\\frac{1}{${s2}}`],
+                ])}`,
+              ],
+            ],
+          ],
+          t(
+            `$\\Sigma\\Sigma^+ = \\operatorname{diag}(${s1} \\cdot \\frac{1}{${s1}}, ${s2} \\cdot \\frac{1}{${s2}}) = I$, as it should be when no singular value is $0$.`,
+            `$\\Sigma\\Sigma^+ = \\operatorname{diag}(${s1} \\cdot \\frac{1}{${s1}}, ${s2} \\cdot \\frac{1}{${s2}}) = I$，没有奇异值为 $0$ 时正应如此。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `The reciprocals were swapped; $\\frac{1}{${s1}}$ belongs in the place of $${s1}$, and the product with $\\Sigma$ would not be $I$.`,
+            `倒数位置互换了；$\\frac{1}{${s1}}$ 应在 $${s1}$ 的位置，否则与 $\\Sigma$ 的乘积不是 $I$。`,
+          ],
+          [wrong[1]!.en, "The reciprocal of a positive number is positive; no sign changes.", "正数的倒数仍为正；没有变号。"],
+          [
+            wrong[2]!.en,
+            "That is $\\Sigma$ itself; each nonzero singular value must be inverted.",
+            "这是 $\\Sigma$ 本身；每个非零奇异值都要取倒数。",
+          ],
+          [
+            wrong[3]!.en,
+            "The reciprocals belong on the diagonal; moving them off it gives a matrix whose product with $\\Sigma$ is not $I$.",
+            "倒数应在对角线上；移到对角线外得到的矩阵与 $\\Sigma$ 的乘积不是 $I$。",
+          ],
+        ]);
       },
     },
     {
       id: "the-pseudoinverse-of-a-column-vector",
       title: t("The pseudoinverse of a single column", "单列矩阵的伪逆"),
       explanation: t(
-        "A nonzero column $\\mathbf{a}$ has SVD $\\mathbf{a} = \\mathbf{u}\\,\\sigma\\,[1]$ with $\\sigma = \\|\\mathbf{a}\\|$ and $\\mathbf{u} = \\mathbf{a}/\\|\\mathbf{a}\\|$. Inverting the nonzero singular value and transposing gives\n\n$$\\mathbf{a}^+ = \\frac{\\mathbf{a}^T}{\\|\\mathbf{a}\\|^2}.$$\n\nSo $\\mathbf{a}^+\\mathbf{b} = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$, which is the least-squares solution of $\\mathbf{a}x = \\mathbf{b}$.",
-        "非零列 $\\mathbf{a}$ 的奇异值分解为 $\\mathbf{a} = \\mathbf{u}\\,\\sigma\\,[1]$，$\\sigma = \\|\\mathbf{a}\\|$，$\\mathbf{u} = \\mathbf{a}/\\|\\mathbf{a}\\|$。把非零奇异值取倒数再转置得\n\n$$\\mathbf{a}^+ = \\frac{\\mathbf{a}^T}{\\|\\mathbf{a}\\|^2}$$\n\n所以 $\\mathbf{a}^+\\mathbf{b} = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$，即 $\\mathbf{a}x = \\mathbf{b}$ 的最小二乘解。",
+        "A nonzero column $\\mathbf{a}$ has SVD $\\mathbf{a} = \\mathbf{u}\\,\\sigma\\,[1]$ with $\\sigma = \\|\\mathbf{a}\\|$ and $\\mathbf{u} = \\mathbf{a}/\\|\\mathbf{a}\\|$. Inverting the nonzero singular value and transposing gives\n\n$$\\mathbf{a}^+ = \\frac{\\mathbf{a}^T}{\\|\\mathbf{a}\\|^2}.$$\n\nSo $\\mathbf{a}^+\\mathbf{b} = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$, which is the least-squares solution of $\\mathbf{a}x = \\mathbf{b}$. For example, $\\mathbf{a} = (1, 2, 2)$ and $\\mathbf{b} = (3, 0, 3)$ give $\\mathbf{a}^+\\mathbf{b} = \\frac{3 + 0 + 6}{9} = 1$.\n\n> **Watch out.** Divide by $\\|\\mathbf{a}\\|^2 = \\mathbf{a} \\cdot \\mathbf{a}$, the square of the singular value, not by $\\|\\mathbf{b}\\|^2$, and keep $\\mathbf{a} \\cdot \\mathbf{b}$ on top.",
+        "非零列 $\\mathbf{a}$ 的奇异值分解为 $\\mathbf{a} = \\mathbf{u}\\,\\sigma\\,[1]$，$\\sigma = \\|\\mathbf{a}\\|$，$\\mathbf{u} = \\mathbf{a}/\\|\\mathbf{a}\\|$。把非零奇异值取倒数再转置得\n\n$$\\mathbf{a}^+ = \\frac{\\mathbf{a}^T}{\\|\\mathbf{a}\\|^2}$$\n\n所以 $\\mathbf{a}^+\\mathbf{b} = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$，即 $\\mathbf{a}x = \\mathbf{b}$ 的最小二乘解。例如 $\\mathbf{a} = (1, 2, 2)$，$\\mathbf{b} = (3, 0, 3)$ 给出 $\\mathbf{a}^+\\mathbf{b} = \\frac{3 + 0 + 6}{9} = 1$。\n\n> **注意。** 要除以 $\\|\\mathbf{a}\\|^2 = \\mathbf{a} \\cdot \\mathbf{a}$，即奇异值的平方，而不是 $\\|\\mathbf{b}\\|^2$；$\\mathbf{a} \\cdot \\mathbf{b}$ 放在分子上。",
       ),
       generate(rng: Rng): Problem {
         const a = [rng.nonZero(-3, 3), rng.int(-3, 3), rng.nonZero(-3, 3)] as const;
-        const b = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)] as const;
+        const drawn = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)] as const;
+        // b orthogonal to a would make every slip read 0, the answer, so the first entry moves by one.
+        const b = a[0] * drawn[0] + a[1] * drawn[1] + a[2] * drawn[2] === 0 ? ([drawn[0] + 1, drawn[1], drawn[2]] as const) : drawn;
         const dot = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
         const nn = a[0] ** 2 + a[1] ** 2 + a[2] ** 2;
+        const bb = b[0] ** 2 + b[1] ** 2 + b[2] ** 2;
         const ans = Q.of(dot, nn);
+        const products = `${paren(a[0])} \\cdot ${paren(b[0])} + ${paren(a[1])} \\cdot ${paren(b[1])} + ${paren(a[2])} \\cdot ${paren(b[2])}`;
         return numberProblem({
           prompt: t(
             `Let $A = ${vec3Latex(a)}$, a $3 \\times 1$ matrix. Find $A^+\\mathbf{b}$ for $\\mathbf{b} = ${vec3Latex(b)}$.`,
             `设 $A = ${vec3Latex(a)}$ 为 $3 \\times 1$ 矩阵。对 $\\mathbf{b} = ${vec3Latex(b)}$ 求 $A^+\\mathbf{b}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(dot), Q.of(nn, dot === 0 ? 1 : dot), Q.of(dot, nn * nn), ans.neg()],
-          solution: t(
-            `$A^+ = \\frac{1}{${nn}}A^T$, so $A^+\\mathbf{b} = \\frac{${dot}}{${nn}}${ans.isInteger() || ans.d !== BigInt(nn) ? ` = ${ans.toLatex()}` : ""}$.`,
-            `$A^+ = \\frac{1}{${nn}}A^T$，所以 $A^+\\mathbf{b} = \\frac{${dot}}{${nn}}${ans.isInteger() || ans.d !== BigInt(nn) ? ` = ${ans.toLatex()}` : ""}$。`,
+          mistakes: distinct(
+            [
+              why(
+                dot,
+                `$${dot}$ is $A^T\\mathbf{b}$; $A^+ = \\frac{1}{\\|A\\|^2}A^T$ also divides by $\\|A\\|^2 = ${nn}$.`,
+                `$${dot}$ 是 $A^T\\mathbf{b}$；$A^+ = \\frac{1}{\\|A\\|^2}A^T$ 还要除以 $\\|A\\|^2 = ${nn}$。`,
+              ),
+              why(
+                Q.of(nn, dot),
+                `That is the fraction upside down; $A^+\\mathbf{b} = \\frac{A \\cdot \\mathbf{b}}{A \\cdot A} = \\frac{${dot}}{${nn}}$.`,
+                `分式倒过来了；$A^+\\mathbf{b} = \\frac{A \\cdot \\mathbf{b}}{A \\cdot A} = \\frac{${dot}}{${nn}}$。`,
+              ),
+              why(
+                Q.of(dot, bb),
+                `That divides by $\\|\\mathbf{b}\\|^2 = ${bb}$; the singular value belongs to $A$, so divide by $\\|A\\|^2 = ${nn}$.`,
+                `这是除以了 $\\|\\mathbf{b}\\|^2 = ${bb}$；奇异值属于 $A$，应除以 $\\|A\\|^2 = ${nn}$。`,
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["Find the pseudoinverse", "求伪逆"],
+                t(
+                  `The single singular value is $\\sigma = \\|A\\|$, with $\\sigma^2 = ${nn}$, so`,
+                  `唯一的奇异值是 $\\sigma = \\|A\\|$，$\\sigma^2 = ${nn}$，所以`,
+                ),
+                [`A^+ = \\frac{1}{${nn}}A^T`],
+              ],
+              [
+                ["Apply it to $\\mathbf{b}$", "作用于 $\\mathbf{b}$"],
+                t("", ""),
+                [
+                  `A^+\\mathbf{b} = \\frac{${products}}{${nn}} = \\frac{${dot}}{${nn}}${ans.isInteger() || ans.d !== BigInt(nn) ? ` = ${ans.toLatex()}` : ""}`,
+                ],
+              ],
+            ],
+            t(
+              `The residual $\\mathbf{b} - x A$ with $x = ${ans.toLatex()}$ is orthogonal to $A$: $A \\cdot \\mathbf{b} - x\\,(A \\cdot A) = ${dot} - ${paren(dot)} = 0$.`,
+              `取 $x = ${ans.toLatex()}$，残差 $\\mathbf{b} - x A$ 与 $A$ 正交：$A \\cdot \\mathbf{b} - x\\,(A \\cdot A) = ${dot} - ${paren(dot)} = 0$。`,
+            ),
           ),
         });
       },
@@ -4066,6 +4459,10 @@ export const leastSquaresSolutionOfALinearSystemWithoutCollinearity: TopicDef = 
     "Set up the normal equations $A^T A \\mathbf{x} = A^T \\mathbf{b}$ and solve for the unique least-squares solution when $A$ has full column rank.",
     "建立正规方程 $A^T A \\mathbf{x} = A^T \\mathbf{b}$，并在 $A$ 列满秩时求唯一的最小二乘解。",
   ),
+  intro: t(
+    "The system with $A = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $\\mathbf{b} = (0, 2, 1)$ has no solution. The normal equations use $A^TA = \\begin{pmatrix} 3 & 3 \\\\ 3 & 5 \\end{pmatrix}$ and $A^T\\mathbf{b} = (3, 4)$: from $3x_1 + 3x_2 = 3$ and $3x_1 + 5x_2 = 4$ we get $x_2 = \\frac{1}{2}$ and $x_1 = \\frac{1}{2}$. So $\\hat{\\mathbf{x}} = (\\frac{1}{2}, \\frac{1}{2})$, with fitted vector $A\\hat{\\mathbf{x}} = (\\frac{1}{2}, 1, \\frac{3}{2})$.\n\nCheck: the residual $\\mathbf{b} - A\\hat{\\mathbf{x}} = (-\\frac{1}{2}, 1, -\\frac{1}{2})$ is orthogonal to both columns: $-\\frac{1}{2} + 1 - \\frac{1}{2} = 0$ and $0 + 1 - 1 = 0$.\n\nIn this lesson we solve the normal equations when the columns of $A$ are independent, take the shortcut for orthogonal columns, and measure the smallest squared error of the fit.",
+    "$A = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$，$\\mathbf{b} = (0, 2, 1)$ 的方程组无解。正规方程用到 $A^TA = \\begin{pmatrix} 3 & 3 \\\\ 3 & 5 \\end{pmatrix}$ 和 $A^T\\mathbf{b} = (3, 4)$：由 $3x_1 + 3x_2 = 3$ 和 $3x_1 + 5x_2 = 4$ 得 $x_2 = \\frac{1}{2}$，$x_1 = \\frac{1}{2}$。所以 $\\hat{\\mathbf{x}} = (\\frac{1}{2}, \\frac{1}{2})$，拟合向量为 $A\\hat{\\mathbf{x}} = (\\frac{1}{2}, 1, \\frac{3}{2})$。\n\n检验：残差 $\\mathbf{b} - A\\hat{\\mathbf{x}} = (-\\frac{1}{2}, 1, -\\frac{1}{2})$ 与两列都正交：$-\\frac{1}{2} + 1 - \\frac{1}{2} = 0$，$0 + 1 - 1 = 0$。\n\n本课我们在 $A$ 的列线性无关时解正规方程，利用列正交时的捷径，并度量拟合的最小平方误差。",
+  ),
   prerequisites: ["singular-value-decomposition-and-the-pseudoinverse-matrix"],
   encompasses: [],
   xp: 15,
@@ -4074,8 +4471,8 @@ export const leastSquaresSolutionOfALinearSystemWithoutCollinearity: TopicDef = 
       id: "least-squares-normal-equations",
       title: t("Normal Equations for Full-Rank Systems", "正规方程与最小二乘解"),
       explanation: t(
-        "For an inconsistent linear system $A x = b$ where $A$ has linearly independent columns (full column rank), $A^T A$ is invertible. The unique least-squares solution minimizing $\\|b - A x\\|$ satisfies the normal equations $A^T A \\hat{x} = A^T b$, given by $\\hat{x} = (A^T A)^{-1} A^T b$.",
-        "对于矛盾线性方程组 $A x = b$，若 $A$ 为列满秩矩阵，则 $A^T A$ 可逆。使残差范数 $\\|b - A x\\|$ 最小的唯一最小二乘解满足正规方程 $A^T A \\hat{x} = A^T b$，其解为 $\\hat{x} = (A^T A)^{-1} A^T b$。",
+        "For an inconsistent linear system $A x = b$ where $A$ has linearly independent columns (full column rank), $A^T A$ is invertible. The unique least-squares solution minimizing $\\|b - A x\\|$ satisfies the normal equations $A^T A \\hat{x} = A^T b$, given by $\\hat{x} = (A^T A)^{-1} A^T b$. For example, $A = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$ and $b = (0, 3, 3)$ give $A^TA = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}$ and $A^Tb = (6, 3)$, so $\\hat{x} = (2, \\frac{3}{2})$.\n\n> **Watch out.** Use all the equations through $A^T$; solving just two of the rows exactly ignores the others. And $A^Tb$ is not yet the answer: it still has to be solved against $A^TA$.",
+        "对于矛盾线性方程组 $A x = b$，若 $A$ 为列满秩矩阵，则 $A^T A$ 可逆。使残差范数 $\\|b - A x\\|$ 最小的唯一最小二乘解满足正规方程 $A^T A \\hat{x} = A^T b$，其解为 $\\hat{x} = (A^T A)^{-1} A^T b$。例如 $A = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$，$b = (0, 3, 3)$ 给出 $A^TA = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}$，$A^Tb = (6, 3)$，所以 $\\hat{x} = (2, \\frac{3}{2})$。\n\n> **注意。** 要通过 $A^T$ 用上全部方程；只把其中两行解出来会忽略其余的方程。$A^Tb$ 还不是答案：还要用 $A^TA$ 去解。",
       ),
       generate: (rng: Rng): Problem => {
         const xHat1 = rng.int(-3, 3);
@@ -4102,32 +4499,74 @@ export const leastSquaresSolutionOfALinearSystemWithoutCollinearity: TopicDef = 
         const sumB = b1 + b2 + b3;
         const diffB = -b1 + b3;
 
-        const solution = t(
-          `Compute the normal equation components:\n\n$$A^T A = \\begin{pmatrix} 1 & 1 & 1 \\\\ -1 & 0 & 1 \\end{pmatrix} ${mat3x2Latex(A)} = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix},$$\n\n$$A^T b = \\begin{pmatrix} (${b1}) + (${b2}) + (${b3}) \\\\ -(${b1}) + (${b3}) \\end{pmatrix} = \\begin{pmatrix} ${sumB} \\\\ ${diffB} \\end{pmatrix}.$$\n\nSolving $A^T A \\hat{x} = A^T b$ gives $\\hat{x}_1 = \\frac{${sumB}}{3} = ${xHat1}$ and $\\hat{x}_2 = \\frac{${diffB}}{2} = ${xHat2}$. Thus $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$.`,
-          `计算正规方程的各个部分：\n\n$$A^T A = \\begin{pmatrix} 1 & 1 & 1 \\\\ -1 & 0 & 1 \\end{pmatrix} ${mat3x2Latex(A)} = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}$$\n\n$$A^T b = \\begin{pmatrix} (${b1}) + (${b2}) + (${b3}) \\\\ -(${b1}) + (${b3}) \\end{pmatrix} = \\begin{pmatrix} ${sumB} \\\\ ${diffB} \\end{pmatrix}$$\n\n解 $A^T A \\hat{x} = A^T b$ 得 $\\hat{x}_1 = \\frac{${sumB}}{3} = ${xHat1}$，$\\hat{x}_2 = \\frac{${diffB}}{2} = ${xHat2}$。因此 $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$。`,
+        const solution = walked(
+          [
+            [
+              ["Form $A^TA$", "构造 $A^TA$"],
+              t("The two columns are orthogonal, so $A^TA$ is diagonal:", "两列正交，所以 $A^TA$ 是对角的："),
+              [`A^T A = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}`],
+            ],
+            [
+              ["Form $A^Tb$", "构造 $A^Tb$"],
+              t("", ""),
+              [
+                `A^T b = \\begin{pmatrix} ${b1} ${signed(b2)} ${signed(b3)} \\\\ ${-b1} ${signed(b3)} \\end{pmatrix} = ${vec2Latex([sumB, diffB])}`,
+              ],
+            ],
+            [
+              ["Solve", "求解"],
+              t("", ""),
+              [`\\hat{x}_1 = \\frac{${sumB}}{3} = ${xHat1}, \\quad \\hat{x}_2 = \\frac{${diffB}}{2} = ${xHat2}`],
+            ],
+          ],
+          t(
+            `The residual $b - A\\hat{x} = (${b1 - xHat1 + xHat2}, ${b2 - xHat1}, ${b3 - xHat1 - xHat2})$ is orthogonal to both columns: its entries add up to $0$, and $-(${b1 - xHat1 + xHat2}) + (${b3 - xHat1 - xHat2}) = 0$.`,
+            `残差 $b - A\\hat{x} = (${b1 - xHat1 + xHat2}, ${b2 - xHat1}, ${b3 - xHat1 - xHat2})$ 与两列都正交：各分量之和为 $0$，且 $-(${b1 - xHat1 + xHat2}) + (${b3 - xHat1 - xHat2}) = 0$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [xHat1, xHat2],
-          vector: true,
-          vars: ["x_1", "x_2"],
-          solution,
-          wrong: [
-            [xHat2, xHat1],
-            [xHat1, -xHat2],
-            [-xHat1, xHat2],
-            [xHat1 + 1, xHat2 - 1],
-          ],
-        });
+        const wrong = [
+          [sumB, diffB],
+          [b2, b2 - b1],
+          [b2, b3 - b2],
+          [xHat2, xHat1],
+        ];
+        return withMistakes(
+          pointProblem({ prompt, answer: [xHat1, xHat2], vector: true, vars: ["x_1", "x_2"], solution, wrong }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(wrong[0]!),
+                `That is $A^Tb$; the normal equations still divide by the diagonal entries $3$ and $2$ of $A^TA$.`,
+                `这是 $A^Tb$；正规方程还要除以 $A^TA$ 的对角元 $3$ 和 $2$。`,
+              ),
+              say(
+                vectorLatex(wrong[1]!),
+                "That solves the first two equations exactly and ignores the third; least squares uses all three through $A^T$.",
+                "这是把前两个方程精确解出而忽略了第三个；最小二乘要通过 $A^T$ 用上全部三个方程。",
+              ),
+              say(
+                vectorLatex(wrong[2]!),
+                "That solves the last two equations exactly and ignores the first; least squares uses all three through $A^T$.",
+                "这是把后两个方程精确解出而忽略了第一个；最小二乘要通过 $A^T$ 用上全部三个方程。",
+              ),
+              say(
+                vectorLatex(wrong[3]!),
+                `The entries are swapped: $\\hat{x}_1$ comes from the column of ones, $\\frac{${sumB}}{3} = ${xHat1}$.`,
+                `分量顺序反了：$\\hat{x}_1$ 来自全为 1 的那一列，$\\frac{${sumB}}{3} = ${xHat1}$。`,
+              ),
+            ],
+            vectorLatex([xHat1, xHat2]),
+          ),
+        );
       },
     },
     {
       id: "least-squares-with-orthogonal-columns",
       title: t("Least squares with orthogonal columns", "列正交时的最小二乘"),
       explanation: t(
-        "The normal equations $A^TA\\hat{\\mathbf{x}} = A^T\\mathbf{b}$ become very simple when the columns of $A$ are orthogonal: $A^TA$ is diagonal, and each unknown is found separately,\n\n$$\\hat{x}_i = \\frac{\\mathbf{a}_i \\cdot \\mathbf{b}}{\\mathbf{a}_i \\cdot \\mathbf{a}_i}.$$\n\nFor example, the columns $(1, 1, 1)$ and $(-1, 0, 1)$ are orthogonal, which is why centered $x$-values make straight-line fits easy.",
-        "当 $A$ 的列正交时，正规方程 $A^TA\\hat{\\mathbf{x}} = A^T\\mathbf{b}$ 变得非常简单：$A^TA$ 是对角的，每个未知数可以单独求出，\n\n$$\\hat{x}_i = \\frac{\\mathbf{a}_i \\cdot \\mathbf{b}}{\\mathbf{a}_i \\cdot \\mathbf{a}_i}$$\n\n例如列 $(1, 1, 1)$ 与 $(-1, 0, 1)$ 正交，这就是中心化的 $x$ 值让直线拟合变容易的原因。",
+        "The normal equations $A^TA\\hat{\\mathbf{x}} = A^T\\mathbf{b}$ become very simple when the columns of $A$ are orthogonal: $A^TA$ is diagonal, and each unknown is found separately,\n\n$$\\hat{x}_i = \\frac{\\mathbf{a}_i \\cdot \\mathbf{b}}{\\mathbf{a}_i \\cdot \\mathbf{a}_i}.$$\n\nFor example, the columns $(1, 1, 1)$ and $(-1, 0, 1)$ are orthogonal, which is why centered $x$-values make straight-line fits easy. With $\\mathbf{b} = (1, 2, 6)$ they give $\\hat{x}_1 = \\frac{9}{3} = 3$ and $\\hat{x}_2 = \\frac{-1 + 6}{2} = \\frac{5}{2}$.\n\n> **Watch out.** Divide each dot product by $\\mathbf{a}_i \\cdot \\mathbf{a}_i$, the squared length of its own column: for $(-s, 0, s)$ that is $2s^2$, not $s^2$. The first unknown is the average of all of $\\mathbf{b}$, not its middle entry.",
+        "当 $A$ 的列正交时，正规方程 $A^TA\\hat{\\mathbf{x}} = A^T\\mathbf{b}$ 变得非常简单：$A^TA$ 是对角的，每个未知数可以单独求出，\n\n$$\\hat{x}_i = \\frac{\\mathbf{a}_i \\cdot \\mathbf{b}}{\\mathbf{a}_i \\cdot \\mathbf{a}_i}$$\n\n例如列 $(1, 1, 1)$ 与 $(-1, 0, 1)$ 正交，这就是中心化的 $x$ 值让直线拟合变容易的原因。取 $\\mathbf{b} = (1, 2, 6)$，得 $\\hat{x}_1 = \\frac{9}{3} = 3$，$\\hat{x}_2 = \\frac{-1 + 6}{2} = \\frac{5}{2}$。\n\n> **注意。** 每个点积要除以 $\\mathbf{a}_i \\cdot \\mathbf{a}_i$，即它自己那一列长度的平方：对 $(-s, 0, s)$ 是 $2s^2$，不是 $s^2$。第一个未知数是 $\\mathbf{b}$ 全部分量的平均值，不是中间那个分量。",
       ),
       generate(rng: Rng): Problem {
         const s = rng.int(1, 2);
@@ -4136,27 +4575,78 @@ export const leastSquaresSolutionOfALinearSystemWithoutCollinearity: TopicDef = 
           [1, 0],
           [1, s],
         ];
-        const b = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)] as const;
-        const x1 = Q.of(b[0] + b[1] + b[2], 3);
-        const x2 = Q.of(s * (b[2] - b[0]), 2 * s * s);
-        return pointProblem({
-          prompt: t(
-            `Find the least-squares solution $\\hat{\\mathbf{x}}$ of $A\\mathbf{x} = \\mathbf{b}$ with $A = ${mat3x2Latex(A)}$ and $\\mathbf{b} = ${vec3Latex(b)}$.`,
-            `求 $A\\mathbf{x} = \\mathbf{b}$ 的最小二乘解 $\\hat{\\mathbf{x}}$，$A = ${mat3x2Latex(A)}$，$\\mathbf{b} = ${vec3Latex(b)}$。`,
+        const drawn = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)] as const;
+        // Equal end entries would make the second unknown 0, where several slips agree with the answer.
+        const b = drawn[2] === drawn[0] ? ([drawn[0], drawn[1], drawn[2] + 1] as const) : drawn;
+        const sum = b[0] + b[1] + b[2];
+        const top = s * (b[2] - b[0]);
+        const x1 = Q.of(sum, 3);
+        const x2 = Q.of(top, 2 * s * s);
+        const wrong = [
+          [Q.of(sum), Q.of(top)],
+          [x1, Q.of(top, s * s)],
+          [Q.of(b[1]), x2],
+          [x2, x1],
+        ];
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find the least-squares solution $\\hat{\\mathbf{x}}$ of $A\\mathbf{x} = \\mathbf{b}$ with $A = ${mat3x2Latex(A)}$ and $\\mathbf{b} = ${vec3Latex(b)}$.`,
+              `求 $A\\mathbf{x} = \\mathbf{b}$ 的最小二乘解 $\\hat{\\mathbf{x}}$，$A = ${mat3x2Latex(A)}$，$\\mathbf{b} = ${vec3Latex(b)}$。`,
+            ),
+            answer: [x1, x2],
+            vector: true,
+            vars: ["x_1", "x_2"],
+            wrong,
+            solution: walked(
+              [
+                [
+                  ["Check the columns", "检查各列"],
+                  t(
+                    `$(1, 1, 1) \\cdot (${-s}, 0, ${s}) = 0$, so the unknowns separate, with $\\mathbf{a}_1 \\cdot \\mathbf{a}_1 = 3$ and $\\mathbf{a}_2 \\cdot \\mathbf{a}_2 = ${2 * s * s}$.`,
+                    `$(1, 1, 1) \\cdot (${-s}, 0, ${s}) = 0$，所以未知数可以分开求，$\\mathbf{a}_1 \\cdot \\mathbf{a}_1 = 3$，$\\mathbf{a}_2 \\cdot \\mathbf{a}_2 = ${2 * s * s}$。`,
+                  ),
+                ],
+                [
+                  ["Divide the dot products", "点积相除"],
+                  t("", ""),
+                  [
+                    `\\hat{x}_1 = \\frac{${b[0]} ${signed(b[1])} ${signed(b[2])}}{3} = ${x1.toLatex()}, \\quad \\hat{x}_2 = \\frac{${s === 1 ? "" : s}(${b[2]} - ${paren(b[0])})}{${2 * s * s}} = ${x2.toLatex()}`,
+                  ],
+                ],
+              ],
+              t(
+                `The residual is orthogonal to the column of ones: its entries add up to $${sum} - 3 \\cdot ${x1.toLatex().startsWith("-") ? `(${x1.toLatex()})` : x1.toLatex()} = 0$.`,
+                `残差与全为 1 的列正交：其分量之和为 $${sum} - 3 \\cdot ${x1.toLatex().startsWith("-") ? `(${x1.toLatex()})` : x1.toLatex()} = 0$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(wrong[0]!),
+                "That is $A^T\\mathbf{b}$; each dot product must still be divided by the squared length of its column.",
+                "这是 $A^T\\mathbf{b}$；每个点积还要除以所在列长度的平方。",
+              ),
+              say(
+                vectorLatex(wrong[1]!),
+                `The second column $(${-s}, 0, ${s})$ has squared length $${2 * s * s}$, not $${s * s}$: both nonzero entries count.`,
+                `第二列 $(${-s}, 0, ${s})$ 长度的平方是 $${2 * s * s}$，不是 $${s * s}$：两个非零分量都要算。`,
+              ),
+              say(
+                vectorLatex(wrong[2]!),
+                `$${b[1]}$ is the middle entry of $\\mathbf{b}$; $\\hat{x}_1$ is the average of all three, $\\frac{${sum}}{3}$.`,
+                `$${b[1]}$ 是 $\\mathbf{b}$ 的中间分量；$\\hat{x}_1$ 是三个分量的平均值 $\\frac{${sum}}{3}$。`,
+              ),
+              say(
+                vectorLatex(wrong[3]!),
+                "The entries are swapped: $\\hat{x}_1$ belongs to the column of ones.",
+                "分量顺序反了：$\\hat{x}_1$ 对应全为 1 的那一列。",
+              ),
+            ],
+            vectorLatex([x1, x2]),
           ),
-          answer: [x1, x2],
-          vector: true,
-          vars: ["x_1", "x_2"],
-          wrong: [
-            [Q.of(b[0] + b[1] + b[2]), Q.of(s * (b[2] - b[0]))],
-            [x1, Q.of(s * (b[2] - b[0]), s * s)],
-            [Q.of(b[1]), x2],
-          ],
-          solution: t(
-            `The columns are orthogonal, so $\\hat{x}_1 = \\frac{${b[0] + b[1] + b[2]}}{3}$ and $\\hat{x}_2 = \\frac{${s * (b[2] - b[0])}}{${2 * s * s}}$, giving $\\hat{\\mathbf{x}} = \\langle ${x1.toLatex()}, ${x2.toLatex()} \\rangle$.`,
-            `各列正交，所以 $\\hat{x}_1 = \\frac{${b[0] + b[1] + b[2]}}{3}$，$\\hat{x}_2 = \\frac{${s * (b[2] - b[0])}}{${2 * s * s}}$，得 $\\hat{\\mathbf{x}} = \\langle ${x1.toLatex()}, ${x2.toLatex()} \\rangle$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -4170,6 +4660,10 @@ export const leastSquaresSolutionOfALinearSystemWithCollinearity: TopicDef = {
     "Analyze least-squares solutions when collinearity causes infinitely many solutions and identify the minimal-norm solution.",
     "分析列相关引起无穷多解时的最小二乘问题，并确定唯一的极小范数解。",
   ),
+  intro: t(
+    "In $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$ the second column is twice the first, so the column space is the line through $(1, 2)$. For $\\mathbf{b} = (5, 0)$ the projection onto that line is $\\frac{5}{5}(1, 2) = (1, 2)$, so every least-squares solution satisfies $x_1 + 2x_2 = 1$: a whole line of them. The one of smallest norm lies along the row direction $(1, 2)$, which gives $\\hat{\\mathbf{x}} = (\\frac{1}{5}, \\frac{2}{5})$.\n\nCheck: the residual $\\mathbf{b} - (1, 2) = (4, -2)$ is orthogonal to the column space, since $4 \\cdot 1 + (-2) \\cdot 2 = 0$.\n\nIn this lesson we see why dependent columns give infinitely many least-squares solutions, count the solutions from the columns, and find the fitted vector, which stays unique.",
+    "在 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$ 中第二列是第一列的两倍，所以列空间是过 $(1, 2)$ 的直线。对 $\\mathbf{b} = (5, 0)$，它在这条直线上的投影是 $\\frac{5}{5}(1, 2) = (1, 2)$，所以每个最小二乘解都满足 $x_1 + 2x_2 = 1$：解构成一整条直线。其中范数最小的解沿行方向 $(1, 2)$，得 $\\hat{\\mathbf{x}} = (\\frac{1}{5}, \\frac{2}{5})$。\n\n检验：残差 $\\mathbf{b} - (1, 2) = (4, -2)$ 与列空间正交，因为 $4 \\cdot 1 + (-2) \\cdot 2 = 0$。\n\n本课我们说明为什么列相关时最小二乘解有无穷多个，由列判断解的个数，并求出仍然唯一的拟合向量。",
+  ),
   prerequisites: ["least-squares-solution-of-a-linear-system-without-collinearity"],
   encompasses: [],
   xp: 15,
@@ -4178,8 +4672,8 @@ export const leastSquaresSolutionOfALinearSystemWithCollinearity: TopicDef = {
       id: "least-squares-collinear-min-norm",
       title: t("Collinearity and Minimal-Norm Solution", "列相关与极小范数解"),
       explanation: t(
-        "When the columns of $A$ are linearly dependent, $A^T A$ is singular. The normal equations $A^T A \\hat{x} = A^T b$ have infinitely many solutions, forming the affine set $\\hat{x}_0 + \\operatorname{Nul}(A)$. Among all least-squares solutions, there is a unique solution with minimal Euclidean norm $\\|\\hat{x}\\|$, given by the pseudoinverse $\\hat{x}_{\\text{min}} = A^+ b$.",
-        "当 $A$ 的列向量线性相关时，$A^T A$ 奇异。正规方程 $A^T A \\hat{x} = A^T b$ 有无穷多组解，构成仿射集 $\\hat{x}_0 + \\operatorname{Nul}(A)$。在所有最小二乘解中，存在唯一的欧氏范数 $\\|\\hat{x}\\|$ 最小的解，由伪逆给出：$\\hat{x}_{\\text{min}} = A^+ b$。",
+        "When the columns of $A$ are linearly dependent, $A^T A$ is singular. The normal equations $A^T A \\hat{x} = A^T b$ have infinitely many solutions, forming the affine set $\\hat{x}_0 + \\operatorname{Nul}(A)$. Among all least-squares solutions, there is a unique solution with minimal Euclidean norm $\\|\\hat{x}\\|$, given by the pseudoinverse $\\hat{x}_{\\text{min}} = A^+ b$. For example, for $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$ and $b = (5, 0)$ the least-squares solutions are the line $x_1 + 2x_2 = 1$, and the shortest is $(\\frac{1}{5}, \\frac{2}{5})$.\n\n> **Watch out.** A singular $A^TA$ does not mean there is no least-squares solution: the projection of $b$ always exists. It means the solutions are not unique, and $(A^TA)^{-1}$ cannot be used.",
+        "当 $A$ 的列向量线性相关时，$A^T A$ 奇异。正规方程 $A^T A \\hat{x} = A^T b$ 有无穷多组解，构成仿射集 $\\hat{x}_0 + \\operatorname{Nul}(A)$。在所有最小二乘解中，存在唯一的欧氏范数 $\\|\\hat{x}\\|$ 最小的解，由伪逆给出：$\\hat{x}_{\\text{min}} = A^+ b$。例如对 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$ 和 $b = (5, 0)$，最小二乘解是直线 $x_1 + 2x_2 = 1$，其中最短的是 $(\\frac{1}{5}, \\frac{2}{5})$。\n\n> **注意。** $A^TA$ 奇异并不表示没有最小二乘解：$b$ 的投影总是存在的。它表示解不唯一，并且不能用 $(A^TA)^{-1}$。",
       ),
       generate: (rng: Rng): Problem => {
         const c1 = rng.nonZero(-4, 4);
@@ -4205,20 +4699,66 @@ export const leastSquaresSolutionOfALinearSystemWithCollinearity: TopicDef = {
           t("The least-squares solutions form a 2-dimensional vector space.", "所有最小二乘解构成一个 2 维向量空间。"),
         ];
 
-        const solution = t(
-          `The columns of $A$ are linearly dependent since column 2 is $${mult}$ times column 1. Thus $\\operatorname{rank}(A) = 1 < 2$, making $A^T A$ singular. The normal equations are consistent and have infinitely many solutions along a line $\\hat{x}_0 + \\operatorname{Nul}(A)$. The unique solution with the smallest Euclidean norm is given by the pseudoinverse $\\hat{x}_{\\text{min}} = A^+ b$.`,
-          `由于第 2 列是第 1 列的 ${mult} 倍，列向量线性相关，$\\operatorname{rank}(A) = 1 < 2$，导致 $A^T A$ 奇异。正规方程相容且具有无穷多解（构成直线 $\\hat{x}_0 + \\operatorname{Nul}(A)$）。其中欧氏范数最小的解是唯一的，由伪逆 $\\hat{x}_{\\text{min}} = A^+ b$ 给出。`,
+        const solution = walked(
+          [
+            [
+              ["Compare the columns", "比较各列"],
+              t(
+                `Column $2$ is $${mult}$ times column $1$, so $\\operatorname{rank}(A) = 1$ and $A^TA$ is singular.`,
+                `第 $2$ 列是第 $1$ 列的 $${mult}$ 倍，所以 $\\operatorname{rank}(A) = 1$，$A^TA$ 奇异。`,
+              ),
+            ],
+            [
+              ["Describe the solutions", "描述解集"],
+              t(
+                `The projection of $b$ onto the column space always exists, so the normal equations are consistent. Any multiple of $(${-mult}, 1)$ can be added to a solution, so they form a line $\\hat{x}_0 + \\operatorname{Nul}(A)$.`,
+                `$b$ 在列空间上的投影总存在，所以正规方程相容。任一解加上 $(${-mult}, 1)$ 的倍数仍是解，所以解构成直线 $\\hat{x}_0 + \\operatorname{Nul}(A)$。`,
+              ),
+            ],
+            [
+              ["Pick the shortest", "取最短的"],
+              t(
+                "On that line exactly one point is closest to the origin, and it is $\\hat{x}_{\\text{min}} = A^+ b$.",
+                "这条直线上恰有一个点离原点最近，它就是 $\\hat{x}_{\\text{min}} = A^+ b$。",
+              ),
+            ],
+          ],
+          t(
+            `$A(${-mult}, 1) = (${-mult} \\cdot ${paren(c1)} ${signed(mult * c1)}, ${-mult} \\cdot ${paren(c2)} ${signed(mult * c2)}) = (0, 0)$, so $(${-mult}, 1)$ is in the null space.`,
+            `$A(${-mult}, 1) = (${-mult} \\cdot ${paren(c1)} ${signed(mult * c1)}, ${-mult} \\cdot ${paren(c2)} ${signed(mult * c2)}) = (0, 0)$，所以 $(${-mult}, 1)$ 在零空间中。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "That formula needs $A^TA$ to be invertible, and with dependent columns it is singular.",
+            "这个公式要求 $A^TA$ 可逆，而列相关时它是奇异的。",
+          ],
+          [
+            wrong[1]!.en,
+            "A least-squares solution always exists, because $b$ always has a projection onto the column space.",
+            "最小二乘解总是存在，因为 $b$ 在列空间上总有投影。",
+          ],
+          [
+            wrong[2]!.en,
+            "Only vectors with $Ax$ equal to the projection of $b$ qualify, and these form a line, not the whole plane.",
+            "只有使 $Ax$ 等于 $b$ 的投影的向量才是解，它们构成一条直线，而不是整个平面。",
+          ],
+          [
+            wrong[3]!.en,
+            "The null space of $A$ is one-dimensional, so the solutions form a line; they fill the plane only if $A = 0$.",
+            "$A$ 的零空间是一维的，所以解构成一条直线；只有 $A = 0$ 时才会充满平面。",
+          ],
+        ]);
       },
     },
     {
       id: "counting-least-squares-solutions",
       title: t("How many least-squares solutions?", "最小二乘解有几个？"),
       explanation: t(
-        "Every system $A\\mathbf{x} = \\mathbf{b}$ has at least one least-squares solution, because the projection of $\\mathbf{b}$ onto the column space always exists. The solution is unique exactly when the columns of $A$ are linearly independent, so that $A^TA$ is invertible. When the columns are collinear or otherwise dependent, any vector in the null space can be added, and there are infinitely many least-squares solutions.",
-        "每个方程组 $A\\mathbf{x} = \\mathbf{b}$ 至少有一个最小二乘解，因为 $\\mathbf{b}$ 在列空间上的投影总存在。解唯一当且仅当 $A$ 的列线性无关，此时 $A^TA$ 可逆。当列共线或以其他方式相关时，可以加上零空间中的任意向量，最小二乘解有无穷多个。",
+        'Every system $A\\mathbf{x} = \\mathbf{b}$ has at least one least-squares solution, because the projection of $\\mathbf{b}$ onto the column space always exists. The solution is unique exactly when the columns of $A$ are linearly independent, so that $A^TA$ is invertible. When the columns are collinear or otherwise dependent, any vector in the null space can be added, and there are infinitely many least-squares solutions. For example, the columns $(1, 0, 2)$ and $(2, 0, 4)$ are collinear, so a system with them has infinitely many least-squares solutions, whatever $\\mathbf{b}$ is; $(1, 0, 2)$ and $(2, 1, 4)$ are not, so the solution is unique.\n\n> **Watch out.** The answer never depends on $\\mathbf{b}$, and it is never "none". Check whether one column is a multiple of the other in every entry; agreeing in two entries is not enough.',
+        "每个方程组 $A\\mathbf{x} = \\mathbf{b}$ 至少有一个最小二乘解，因为 $\\mathbf{b}$ 在列空间上的投影总存在。解唯一当且仅当 $A$ 的列线性无关，此时 $A^TA$ 可逆。当列共线或以其他方式相关时，可以加上零空间中的任意向量，最小二乘解有无穷多个。例如列 $(1, 0, 2)$ 与 $(2, 0, 4)$ 共线，所以无论 $\\mathbf{b}$ 是什么，方程组都有无穷多个最小二乘解；$(1, 0, 2)$ 与 $(2, 1, 4)$ 不共线，所以解唯一。\n\n> **注意。** 答案与 $\\mathbf{b}$ 无关，也从来不会是“没有”。要检查一列是否在每个分量上都是另一列的同一倍数；只有两个分量相符是不够的。",
       ),
       generate(rng: Rng): Problem {
         const c = [rng.nonZero(-4, 4), rng.int(-4, 4), rng.nonZero(-4, 4)];
@@ -4234,23 +4774,67 @@ export const leastSquaresSolutionOfALinearSystemWithCollinearity: TopicDef = {
         const one = t("Exactly one", "恰好一个");
         const inf = t("Infinitely many", "无穷多个");
         const none = t("None", "没有");
-        return oneOf(
-          rng,
+        const cc = c[0]! ** 2 + c[1]! ** 2 + c[2]! ** 2;
+        const dd = d[0]! ** 2 + d[1]! ** 2 + d[2]! ** 2;
+        const cd = c[0]! * d[0]! + c[1]! * d[1]! + c[2]! * d[2]!;
+        const solution = walked(
+          [
+            [
+              ["Compare the columns", "比较各列"],
+              dependent
+                ? t(
+                    `Every entry of the second column is $${m}$ times the matching entry of the first, so the columns are dependent.`,
+                    `第二列的每个分量都是第一列对应分量的 $${m}$ 倍，所以两列线性相关。`,
+                  )
+                : t(
+                    `The first and third entries of the second column are $${m}$ times those of the first, but the middle one is $${d[1]}$, not $${m * c[1]!}$; so the columns are independent.`,
+                    `第二列的第一、第三个分量是第一列的 $${m}$ 倍，但中间分量是 $${d[1]}$，不是 $${m * c[1]!}$；所以两列线性无关。`,
+                  ),
+            ],
+            [
+              ["Count the solutions", "数解的个数"],
+              dependent
+                ? t(
+                    `A least-squares solution exists, and adding any multiple of $(${-m}, 1)$, which $A$ sends to $\\mathbf{0}$, gives another: infinitely many.`,
+                    `最小二乘解存在，再加上被 $A$ 送到 $\\mathbf{0}$ 的 $(${-m}, 1)$ 的任意倍数仍是解：有无穷多个。`,
+                  )
+                : t("$A^TA$ is invertible, so the normal equations have exactly one solution.", "$A^TA$ 可逆，所以正规方程恰有一个解。"),
+            ],
+          ],
           t(
-            `How many least-squares solutions does $A\\mathbf{x} = \\mathbf{b}$ have for $A = ${mat3x2Latex(A)}$ and $\\mathbf{b} = ${vec3Latex(b)}$?`,
-            `对 $A = ${mat3x2Latex(A)}$ 与 $\\mathbf{b} = ${vec3Latex(b)}$，$A\\mathbf{x} = \\mathbf{b}$ 有几个最小二乘解？`,
+            `$\\det(A^TA) = ${cc} \\cdot ${dd} - ${paren(cd)}^2 = ${cc * dd - cd * cd}$, ${dependent ? "so $A^TA$ is singular" : "which is not $0$"}.`,
+            `$\\det(A^TA) = ${cc} \\cdot ${dd} - ${paren(cd)}^2 = ${cc * dd - cd * cd}$，${dependent ? "所以 $A^TA$ 奇异" : "不为 $0$"}。`,
           ),
-          dependent ? inf : one,
-          [dependent ? one : inf, none],
-          dependent
-            ? t(
-                `The second column is $${m}$ times the first, so the columns are dependent and $A^TA$ is singular. A least-squares solution exists, and adding multiples of $\\langle ${-m}, 1 \\rangle$ gives infinitely many.`,
-                `第二列是第一列的 $${m}$ 倍，列相关，$A^TA$ 奇异。最小二乘解存在，加上 $\\langle ${-m}, 1 \\rangle$ 的倍数得到无穷多个。`,
-              )
-            : t(
-                "The columns are not multiples of each other, so they are independent, $A^TA$ is invertible, and the least-squares solution is unique.",
-                "两列不成倍数，所以线性无关，$A^TA$ 可逆，最小二乘解唯一。",
-              ),
+        );
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `How many least-squares solutions does $A\\mathbf{x} = \\mathbf{b}$ have for $A = ${mat3x2Latex(A)}$ and $\\mathbf{b} = ${vec3Latex(b)}$?`,
+              `对 $A = ${mat3x2Latex(A)}$ 与 $\\mathbf{b} = ${vec3Latex(b)}$，$A\\mathbf{x} = \\mathbf{b}$ 有几个最小二乘解？`,
+            ),
+            dependent ? inf : one,
+            [dependent ? one : inf, none],
+            solution,
+          ),
+          [
+            dependent
+              ? [
+                  one.en,
+                  `The columns are dependent, so $A^TA$ is singular and the solution is not unique.`,
+                  `两列线性相关，所以 $A^TA$ 奇异，解不唯一。`,
+                ]
+              : [
+                  inf.en,
+                  `Agreeing in the outer entries is not enough: the middle entries break the ratio $${m}$, so the columns are independent.`,
+                  `外侧分量相符还不够：中间分量不满足比 $${m}$，所以两列线性无关。`,
+                ],
+            [
+              none.en,
+              "There is always at least one, because $\\mathbf{b}$ always has a projection onto the column space.",
+              "至少总有一个，因为 $\\mathbf{b}$ 在列空间上总有投影。",
+            ],
+          ],
         );
       },
     },
@@ -4265,6 +4849,10 @@ export const findingALeastSquaresSolutionUsingQrFactorization: TopicDef = {
     "Solve least-squares problems stably by turning the normal equations into the triangular system $R\\mathbf{x} = Q^T \\mathbf{b}$.",
     "将正规方程化为上三角方程组 $R\\mathbf{x} = Q^T \\mathbf{b}$，利用 QR 分解稳定地求解最小二乘问题。",
   ),
+  intro: t(
+    "Let $A = QR$ with $Q = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & -1 \\\\ 1 & 1 \\\\ 1 & -1 \\end{pmatrix}$ and $R = \\begin{pmatrix} 2 & 4 \\\\ 0 & 2 \\end{pmatrix}$, so the rows of $A$ are $(1, 3), (1, 1), (1, 3), (1, 1)$. For $\\mathbf{b} = (2, 0, 4, 2)$, $Q^T\\mathbf{b} = (\\frac{2 + 0 + 4 + 2}{2}, \\frac{2 - 0 + 4 - 2}{2}) = (4, 2)$. Back-substitution in $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$ gives $2\\hat{x}_2 = 2$, so $\\hat{x}_2 = 1$, and then $2\\hat{x}_1 + 4 = 4$, so $\\hat{x}_1 = 0$.\n\nCheck: $A\\hat{\\mathbf{x}} = (3, 1, 3, 1)$, and the residual $(-1, -1, 1, 1)$ is orthogonal to both columns of $A$: $-1 - 1 + 1 + 1 = 0$ and $-3 - 1 + 3 + 1 = 0$.\n\nIn this lesson we solve least-squares problems from a QR factorization: compute $Q^T\\mathbf{b}$, back-substitute in $R$, and read off the size of the residual.",
+    "设 $A = QR$，$Q = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & -1 \\\\ 1 & 1 \\\\ 1 & -1 \\end{pmatrix}$，$R = \\begin{pmatrix} 2 & 4 \\\\ 0 & 2 \\end{pmatrix}$，于是 $A$ 的各行为 $(1, 3), (1, 1), (1, 3), (1, 1)$。对 $\\mathbf{b} = (2, 0, 4, 2)$，$Q^T\\mathbf{b} = (\\frac{2 + 0 + 4 + 2}{2}, \\frac{2 - 0 + 4 - 2}{2}) = (4, 2)$。在 $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$ 中回代：$2\\hat{x}_2 = 2$，所以 $\\hat{x}_2 = 1$；再由 $2\\hat{x}_1 + 4 = 4$ 得 $\\hat{x}_1 = 0$。\n\n检验：$A\\hat{\\mathbf{x}} = (3, 1, 3, 1)$，残差 $(-1, -1, 1, 1)$ 与 $A$ 的两列都正交：$-1 - 1 + 1 + 1 = 0$，$-3 - 1 + 3 + 1 = 0$。\n\n本课我们由 QR 分解求最小二乘解：计算 $Q^T\\mathbf{b}$，在 $R$ 中回代，并读出残差的大小。",
+  ),
   prerequisites: ["least-squares-solution-of-a-linear-system-with-collinearity"],
   encompasses: [],
   xp: 15,
@@ -4273,15 +4861,18 @@ export const findingALeastSquaresSolutionUsingQrFactorization: TopicDef = {
       id: "least-squares-qr-solution",
       title: t("Least-Squares via R x = Q^T b", "利用 R x = Q^T b 求解最小二乘"),
       explanation: t(
-        "If $A = Q R$ where $Q$ has orthonormal columns ($Q^T Q = I$) and $R$ is upper triangular and invertible, the normal equations $A^T A \\hat{x} = A^T b$ simplify to $R \\hat{x} = Q^T b$. This upper-triangular system is solved directly by back-substitution without computing $A^T A$.",
-        "若 $A = Q R$，其中 $Q$ 的列标准正交（$Q^T Q = I$），$R$ 为可逆上三角矩阵，则正规方程 $A^T A \\hat{x} = A^T b$ 简化为上三角方程组 $R \\hat{x} = Q^T b$。无需计算 $A^T A$，通过回代即可直接求解。",
+        "If $A = Q R$ where $Q$ has orthonormal columns ($Q^T Q = I$) and $R$ is upper triangular and invertible, the normal equations $A^T A \\hat{x} = A^T b$ simplify to $R \\hat{x} = Q^T b$. This upper-triangular system is solved directly by back-substitution without computing $A^T A$. For example, $R = \\begin{pmatrix} 2 & 3 \\\\ 0 & 4 \\end{pmatrix}$ and $Q^Tb = (7, 4)$ give $\\hat{x}_2 = 1$ from the last row, and then $2\\hat{x}_1 = 7 - 3 = 4$, so $\\hat{x} = (2, 1)$.\n\n> **Watch out.** $Q^Tb$ is the right-hand side, not the solution. Start from the bottom row, and move the known term $r_{12}\\hat{x}_2$ to the right side with its sign changed before dividing by $r_{11}$.",
+        "若 $A = Q R$，其中 $Q$ 的列标准正交（$Q^T Q = I$），$R$ 为可逆上三角矩阵，则正规方程 $A^T A \\hat{x} = A^T b$ 简化为上三角方程组 $R \\hat{x} = Q^T b$。无需计算 $A^T A$，通过回代即可直接求解。例如 $R = \\begin{pmatrix} 2 & 3 \\\\ 0 & 4 \\end{pmatrix}$，$Q^Tb = (7, 4)$，由最后一行得 $\\hat{x}_2 = 1$，再由 $2\\hat{x}_1 = 7 - 3 = 4$ 得 $\\hat{x} = (2, 1)$。\n\n> **注意。** $Q^Tb$ 是右端，不是解。要从最下面一行开始，把已知项 $r_{12}\\hat{x}_2$ 变号移到右边，再除以 $r_{11}$。",
       ),
       generate: (rng: Rng): Problem => {
         const r11 = rng.nonZero(1, 4);
-        const r12 = rng.int(-3, 3);
+        // A zero r12 or a zero second unknown would make back-substitution slips agree with the answer.
+        const r12Drawn = rng.int(-3, 3);
+        const r12 = r12Drawn === 0 ? 1 : r12Drawn;
         const r22 = rng.nonZero(1, 4);
 
-        const xHat2 = rng.int(-3, 3);
+        const x2Drawn = rng.int(-3, 3);
+        const xHat2 = x2Drawn === 0 ? -1 : x2Drawn;
         const xHat1 = rng.int(-3, 3);
 
         const d2 = r22 * xHat2;
@@ -4298,58 +4889,146 @@ export const findingALeastSquaresSolutionUsingQrFactorization: TopicDef = {
           ])}$ 且 $Q^T b = ${vec2Latex([d1, d2])}$。求解其最小二乘解 $\\hat{x}$。以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
 
-        const solution = t(
-          `Solve the triangular system $R \\hat{x} = Q^T b$:\n\n1. From the second row: $${r22}\\hat{x}_2 = ${d2} \\implies \\hat{x}_2 = ${xHat2}$.\n2. From the first row: $${r11}\\hat{x}_1 + (${r12})(${xHat2}) = ${d1} \\implies ${r11}\\hat{x}_1 = ${d1 - r12 * xHat2} \\implies \\hat{x}_1 = ${xHat1}$.\n\nThus $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$.`,
-          `求解上三角方程组 $R \\hat{x} = Q^T b$：\n\n1. 由第 2 行：$${r22}\\hat{x}_2 = ${d2} \\implies \\hat{x}_2 = ${xHat2}$；\n2. 由第 1 行：$${r11}\\hat{x}_1 + (${r12})(${xHat2}) = ${d1} \\implies ${r11}\\hat{x}_1 = ${d1 - r12 * xHat2} \\implies \\hat{x}_1 = ${xHat1}$。\n\n因此 $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$。`,
+        const x1 = lead(r11, "\\hat{x}_1");
+        const solution = walked(
+          [
+            [["Solve the last row", "解最后一行"], t("", ""), [`${lead(r22, "\\hat{x}_2")} = ${d2}`, `\\hat{x}_2 = ${xHat2}`]],
+            [
+              ["Substitute into the first row", "代入第一行"],
+              t(`Move the known term $${r12 * xHat2}$ to the right:`, `把已知项 $${r12 * xHat2}$ 移到右边：`),
+              [
+                `${x1} ${signed(r12 * xHat2)} = ${d1}`,
+                `${x1} = ${d1} - ${paren(r12 * xHat2)} = ${d1 - r12 * xHat2}`,
+                `\\hat{x}_1 = ${xHat1}`,
+              ],
+            ],
+          ],
+          t(
+            `$R\\hat{x} = (${r11} \\cdot ${paren(xHat1)} ${signed(r12)} \\cdot ${paren(xHat2)}, ${r22} \\cdot ${paren(xHat2)}) = (${d1}, ${d2}) = Q^Tb$.`,
+            `$R\\hat{x} = (${r11} \\cdot ${paren(xHat1)} ${signed(r12)} \\cdot ${paren(xHat2)}, ${r22} \\cdot ${paren(xHat2)}) = (${d1}, ${d2}) = Q^Tb$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [xHat1, xHat2],
-          vector: true,
-          vars: ["x_1", "x_2"],
-          solution,
-          wrong: [
-            [xHat2, xHat1],
-            [xHat1, -xHat2],
-            [d1, d2],
-            [xHat1 + 1, xHat2 - 1],
-          ],
-        });
+        const wrong = [
+          [Q.of(d1), Q.of(d2)],
+          [Q.of(d1, r11), Q.of(xHat2)],
+          [Q.of(d1 + r12 * xHat2, r11), Q.of(xHat2)],
+          [Q.of(xHat2), Q.of(xHat1)],
+        ];
+        return withMistakes(
+          pointProblem({ prompt, answer: [xHat1, xHat2], vector: true, vars: ["x_1", "x_2"], solution, wrong }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(wrong[0]!),
+                "That is $Q^Tb$, the right-hand side; it still has to be solved against $R$.",
+                "这是右端 $Q^Tb$；还要用 $R$ 去解。",
+              ),
+              say(
+                vectorLatex(wrong[1]!),
+                `That divides $${d1}$ by $${r11}$ without removing the term $${r12} \\cdot ${paren(xHat2)}$ of the first row.`,
+                `这是直接用 $${d1}$ 除以 $${r11}$，没有去掉第一行中的 $${r12} \\cdot ${paren(xHat2)}$ 项。`,
+              ),
+              say(
+                vectorLatex(wrong[2]!),
+                `The term $${r12 * xHat2}$ was added to the right side; moving it across changes its sign.`,
+                `把 $${r12 * xHat2}$ 加到了右边；移项时要变号。`,
+              ),
+              say(
+                vectorLatex(wrong[3]!),
+                `The entries are swapped: the last row gives $\\hat{x}_2 = ${xHat2}$.`,
+                `分量顺序反了：最后一行给出 $\\hat{x}_2 = ${xHat2}$。`,
+              ),
+            ],
+            vectorLatex([xHat1, xHat2]),
+          ),
+        );
       },
     },
     {
       id: "the-right-hand-side-qtb-in-qr-least-squares",
       title: t("The right-hand side $Q^T\\mathbf{b}$ in QR least squares", "QR 最小二乘中的右端 $Q^T\\mathbf{b}$"),
       explanation: t(
-        "With $A = QR$, where $Q$ has orthonormal columns, the normal equations reduce to the triangular system $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$. The right-hand side is just the dot products of $\\mathbf{b}$ with the columns of $Q$. For instance, the columns $\\frac12(1, 1, 1, 1)$ and $\\frac12(1, -1, 1, -1)$ are orthonormal, and $Q^T\\mathbf{b}$ is half the sum and half the alternating sum of the entries of $\\mathbf{b}$.",
-        "对 $A = QR$（$Q$ 的列标准正交），正规方程化为三角方程组 $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$。右端就是 $\\mathbf{b}$ 与 $Q$ 各列的点积。例如列 $\\frac12(1, 1, 1, 1)$ 与 $\\frac12(1, -1, 1, -1)$ 标准正交，$Q^T\\mathbf{b}$ 为 $\\mathbf{b}$ 各分量之和的一半与交错和的一半。",
+        "With $A = QR$, where $Q$ has orthonormal columns, the normal equations reduce to the triangular system $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$. The right-hand side is just the dot products of $\\mathbf{b}$ with the columns of $Q$. For instance, the columns $\\frac12(1, 1, 1, 1)$ and $\\frac12(1, -1, 1, -1)$ are orthonormal, and $Q^T\\mathbf{b}$ is half the sum and half the alternating sum of the entries of $\\mathbf{b}$: for $\\mathbf{b} = (3, 1, 5, -1)$ that is $(\\frac{8}{2}, \\frac{6}{2}) = (4, 3)$.\n\n> **Watch out.** The factor $\\frac12$ sits in every column of $Q$, so each dot product is multiplied by $\\frac12$ once, not squared to $\\frac14$; and the signs of the second column decide which entries of $\\mathbf{b}$ are subtracted.",
+        "对 $A = QR$（$Q$ 的列标准正交），正规方程化为三角方程组 $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$。右端就是 $\\mathbf{b}$ 与 $Q$ 各列的点积。例如列 $\\frac12(1, 1, 1, 1)$ 与 $\\frac12(1, -1, 1, -1)$ 标准正交，$Q^T\\mathbf{b}$ 为 $\\mathbf{b}$ 各分量之和的一半与交错和的一半：对 $\\mathbf{b} = (3, 1, 5, -1)$，得 $(\\frac{8}{2}, \\frac{6}{2}) = (4, 3)$。\n\n> **注意。** 因子 $\\frac12$ 在 $Q$ 的每一列里，所以每个点积只乘一次 $\\frac12$，不是平方成 $\\frac14$；第二列的符号决定 $\\mathbf{b}$ 的哪些分量要减去。",
       ),
       generate(rng: Rng): Problem {
-        const b = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)] as const;
+        const drawn = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)] as const;
         const alt = rng.int(0, 1) === 0;
+        // A zero sum would let the unhalved and quartered slips agree with the answer.
+        const b = drawn[0] + drawn[1] + drawn[2] + drawn[3] === 0 ? ([drawn[0] + 1, drawn[1], drawn[2], drawn[3]] as const) : drawn;
         const c2 = alt ? [1, -1, 1, -1] : [1, 1, -1, -1];
+        const other = alt ? [1, 1, -1, -1] : [1, -1, 1, -1];
         const s1 = b[0] + b[1] + b[2] + b[3];
-        const s2 = c2[0]! * b[0] + c2[1]! * b[1] + c2[2]! * b[2] + c2[3]! * b[3];
+        const dotWith = (c: readonly number[]) => c[0]! * b[0] + c[1]! * b[1] + c[2]! * b[2] + c[3]! * b[3];
+        const s2 = dotWith(c2);
+        const sOther = dotWith(other);
         const ans = [Q.of(s1, 2), Q.of(s2, 2)];
         const col = (v: readonly number[]) => `\\begin{pmatrix} ${v.join(" \\\\ ")} \\end{pmatrix}`;
-        return pointProblem({
-          prompt: t(
-            `In a QR least-squares solve, $Q = \\frac12\\begin{pmatrix} ${[0, 1, 2, 3].map((i) => `1 & ${c2[i]}`).join(" \\\\ ")} \\end{pmatrix}$. Find $Q^T\\mathbf{b}$ for $\\mathbf{b} = ${col(b)}$.`,
-            `在 QR 最小二乘求解中，$Q = \\frac12\\begin{pmatrix} ${[0, 1, 2, 3].map((i) => `1 & ${c2[i]}`).join(" \\\\ ")} \\end{pmatrix}$。对 $\\mathbf{b} = ${col(b)}$ 求 $Q^T\\mathbf{b}$。`,
-          ),
-          answer: ans,
-          vector: true,
-          wrong: [
-            [s1, s2],
-            [Q.of(s1, 4), Q.of(s2, 4)],
-            [Q.of(s2, 2), Q.of(s1, 2)],
+        const terms = (c: readonly number[]) =>
+          b
+            .map((x, i) => {
+              const v = c[i]! * x;
+              return i === 0 ? String(v) : v < 0 ? `- ${-v}` : `+ ${v}`;
+            })
+            .join(" ");
+        const wrong = [
+          [Q.of(s1), Q.of(s2)],
+          [Q.of(s1, 4), Q.of(s2, 4)],
+          [Q.of(s2, 2), Q.of(s1, 2)],
+          [Q.of(s1, 2), Q.of(sOther, 2)],
+        ];
+        const solution = walked(
+          [
+            [
+              ["Dot with the first column", "与第一列作点积"],
+              t("", ""),
+              [`\\tfrac12(${terms([1, 1, 1, 1])}) = \\tfrac12 \\cdot ${paren(s1)} = ${ans[0]!.toLatex()}`],
+            ],
+            [
+              ["Dot with the second column", "与第二列作点积"],
+              t(`The second column has the signs $(${c2.join(", ")})$:`, `第二列的符号为 $(${c2.join(", ")})$：`),
+              [`\\tfrac12(${terms(c2)}) = \\tfrac12 \\cdot ${paren(s2)} = ${ans[1]!.toLatex()}`],
+            ],
           ],
-          solution: t(
-            `The first entry is $\\frac12(${b.map((x, i) => (i === 0 ? String(x) : x < 0 ? `- ${-x}` : `+ ${x}`)).join(" ")}) = ${ans[0]!.toLatex()}$, and the second is $\\frac12$ times the signed sum $${s2}$, which is $${ans[1]!.toLatex()}$.`,
-            `第一个分量为 $\\frac12(${b.map((x, i) => (i === 0 ? String(x) : x < 0 ? `- ${-x}` : `+ ${x}`)).join(" ")}) = ${ans[0]!.toLatex()}$，第二个是带符号和 $${s2}$ 的 $\\frac12$，即 $${ans[1]!.toLatex()}$。`,
+          t(
+            `$Q^T\\mathbf{b} = (${ans[0]!.toLatex()}, ${ans[1]!.toLatex()})$; doubling gives back the sums $${s1}$ and $${s2}$.`,
+            `$Q^T\\mathbf{b} = (${ans[0]!.toLatex()}, ${ans[1]!.toLatex()})$；乘以 2 回到和 $${s1}$ 与 $${s2}$。`,
           ),
-        });
+        );
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `In a QR least-squares solve, $Q = \\frac12\\begin{pmatrix} ${[0, 1, 2, 3].map((i) => `1 & ${c2[i]}`).join(" \\\\ ")} \\end{pmatrix}$. Find $Q^T\\mathbf{b}$ for $\\mathbf{b} = ${col(b)}$.`,
+              `在 QR 最小二乘求解中，$Q = \\frac12\\begin{pmatrix} ${[0, 1, 2, 3].map((i) => `1 & ${c2[i]}`).join(" \\\\ ")} \\end{pmatrix}$。对 $\\mathbf{b} = ${col(b)}$ 求 $Q^T\\mathbf{b}$。`,
+            ),
+            answer: ans,
+            vector: true,
+            wrong,
+            solution,
+          }),
+          dedupeSaid(
+            [
+              say(vectorLatex(wrong[0]!), "The factor $\\frac12$ of $Q$ was dropped.", "漏掉了 $Q$ 的因子 $\\frac12$。"),
+              say(
+                vectorLatex(wrong[1]!),
+                "The factor $\\frac12$ is applied once per dot product, not squared to $\\frac14$.",
+                "每个点积只乘一次 $\\frac12$，不是平方成 $\\frac14$。",
+              ),
+              say(
+                vectorLatex(wrong[2]!),
+                "The entries are swapped: the first entry comes from the first column, the plain sum.",
+                "分量顺序反了：第一个分量来自第一列，即直接求和。",
+              ),
+              say(
+                vectorLatex(wrong[3]!),
+                `The second entry used the signs $(${other.join(", ")})$; the second column of $Q$ has $(${c2.join(", ")})$.`,
+                `第二个分量用了符号 $(${other.join(", ")})$；$Q$ 的第二列是 $(${c2.join(", ")})$。`,
+              ),
+            ],
+            vectorLatex(ans),
+          ),
+        );
       },
     },
   ],
@@ -4363,6 +5042,10 @@ export const weightedLeastSquares: TopicDef = {
     "Add a diagonal weight matrix to a least-squares problem and solve the weighted normal equations $A^T W^T W A \\mathbf{x} = A^T W^T W \\mathbf{b}$.",
     "在最小二乘问题中引入对角权重矩阵，建立并求解加权正规方程 $A^T W^T W A \\mathbf{x} = A^T W^T W \\mathbf{b}$。",
   ),
+  intro: t(
+    "Two measurements of one quantity read $2$ and $8$, and the first is three times as trustworthy. Fitting $y = c$ by minimizing $3(2 - c)^2 + 1(8 - c)^2$ gives the weighted normal equation $(3 + 1)c = 3 \\cdot 2 + 1 \\cdot 8$, so $c = \\frac{14}{4} = \\frac{7}{2}$, closer to the trusted reading than the plain mean $5$.\n\nCheck: the weighted residuals balance: $3(2 - \\frac{7}{2}) + 1(8 - \\frac{7}{2}) = -\\frac{9}{2} + \\frac{9}{2} = 0$.\n\nIn this lesson we put weights into least squares: build the weighted normal equations $A^T\\Omega A\\hat{\\mathbf{x}} = A^T\\Omega\\mathbf{b}$ and solve them for simple models.",
+    "对同一个量的两次测量读数为 $2$ 和 $8$，第一次的可信度是第二次的三倍。通过极小化 $3(2 - c)^2 + 1(8 - c)^2$ 拟合 $y = c$，得到加权正规方程 $(3 + 1)c = 3 \\cdot 2 + 1 \\cdot 8$，所以 $c = \\frac{14}{4} = \\frac{7}{2}$，比普通平均值 $5$ 更靠近可信的读数。\n\n检验：加权残差相互抵消：$3(2 - \\frac{7}{2}) + 1(8 - \\frac{7}{2}) = -\\frac{9}{2} + \\frac{9}{2} = 0$。\n\n本课我们在最小二乘中引入权重：建立加权正规方程 $A^T\\Omega A\\hat{\\mathbf{x}} = A^T\\Omega\\mathbf{b}$，并对简单模型求解。",
+  ),
   prerequisites: ["finding-a-least-squares-solution-using-qr-factorization"],
   encompasses: [],
   xp: 15,
@@ -4371,12 +5054,14 @@ export const weightedLeastSquares: TopicDef = {
       id: "weighted-least-squares-equations",
       title: t("Weighted Normal Equations", "加权正规方程组"),
       explanation: t(
-        "When data points have varying reliabilities, each residual $r_i$ is multiplied by a weight $w_i$. Minimizing $\\|W(b - A x)\\|^2$ leads to the weighted normal equations $A^T W^T W A \\hat{x} = A^T W^T W b$, or $A^T \\Omega A \\hat{x} = A^T \\Omega b$ with $\\Omega = \\operatorname{diag}(w_1^2, \\dots, w_m^2)$.",
-        "当各数据点可靠性不同时，每个残差 $r_i$ 乘上权重 $w_i$。极小化加权残差 $\\|W(b - A x)\\|^2$ 导出的加权正规方程为 $A^T W^T W A \\hat{x} = A^T W^T W b$，即 $A^T \\Omega A \\hat{x} = A^T \\Omega b$，其中 $\\Omega = \\operatorname{diag}(w_1^2, \\dots, w_m^2)$。",
+        "When data points have varying reliabilities, each residual $r_i$ is multiplied by a weight $w_i$. Minimizing $\\|W(b - A x)\\|^2$ leads to the weighted normal equations $A^T W^T W A \\hat{x} = A^T W^T W b$, or $A^T \\Omega A \\hat{x} = A^T \\Omega b$ with $\\Omega = \\operatorname{diag}(w_1^2, \\dots, w_m^2)$. For example, $A = (1, 2)$ and $W = \\operatorname{diag}(3, 1)$ give $A^T W^T W A = 1^2 \\cdot 9 + 2^2 \\cdot 1 = 13$.\n\n> **Watch out.** Here $W$ multiplies the residuals, so each entry of $A$ is squared and multiplied by the square $w_i^2$, not by $w_i$; and the weights must not be dropped.",
+        "当各数据点可靠性不同时，每个残差 $r_i$ 乘上权重 $w_i$。极小化加权残差 $\\|W(b - A x)\\|^2$ 导出的加权正规方程为 $A^T W^T W A \\hat{x} = A^T W^T W b$，即 $A^T \\Omega A \\hat{x} = A^T \\Omega b$，其中 $\\Omega = \\operatorname{diag}(w_1^2, \\dots, w_m^2)$。例如 $A = (1, 2)$，$W = \\operatorname{diag}(3, 1)$，则 $A^T W^T W A = 1^2 \\cdot 9 + 2^2 \\cdot 1 = 13$。\n\n> **注意。** 这里 $W$ 乘在残差上，所以 $A$ 的每个元素平方后要乘以 $w_i^2$，而不是 $w_i$；也不能漏掉权重。",
       ),
       generate: (rng: Rng): Problem => {
         const w1 = rng.int(1, 4);
-        const w2 = rng.int(1, 4);
+        // Equal weights would make the problem plain least squares, where dropping or not squaring them changes nothing.
+        const w2Drawn = rng.int(1, 4);
+        const w2 = w2Drawn === w1 ? (w1 === 4 ? 3 : w1 + 1) : w2Drawn;
         const w1Sq = w1 * w1;
         const w2Sq = w2 * w2;
 
@@ -4396,20 +5081,55 @@ export const weightedLeastSquares: TopicDef = {
           ])}$），计算加权正规方程中的标量系数 $A^T W^T W A$。`,
         );
 
+        const omega = mat2Latex([
+          [w1Sq, 0],
+          [0, w2Sq],
+        ]);
+        const unsquared = a1 * a1 * w1 + a2 * a2 * w2;
         return numberProblem({
           prompt,
           answer: atOmegaA,
-          solution: t(
-            `The weight squared matrix is $\\Omega = W^T W = ${mat2Latex([
-              [w1Sq, 0],
-              [0, w2Sq],
-            ])}$. Compute $A^T \\Omega A = (${a1})^2(${w1Sq}) + (${a2})^2(${w2Sq}) = ${a1 * a1 * w1Sq} + ${a2 * a2 * w2Sq} = ${atOmegaA}$.`,
-            `权重平方矩阵为 $\\Omega = W^T W = ${mat2Latex([
-              [w1Sq, 0],
-              [0, w2Sq],
-            ])}$。计算 $A^T \\Omega A = (${a1})^2(${w1Sq}) + (${a2})^2(${w2Sq}) = ${a1 * a1 * w1Sq} + ${a2 * a2 * w2Sq} = ${atOmegaA}$。`,
+          mistakes: distinct(
+            [
+              why(
+                a1 * a1 + a2 * a2,
+                `$${a1 * a1 + a2 * a2}$ is $A^TA$; the weights were left out.`,
+                `$${a1 * a1 + a2 * a2}$ 是 $A^TA$；漏掉了权重。`,
+              ),
+              why(
+                unsquared,
+                `$${unsquared}$ multiplies by $w_i$ instead of $w_i^2$; $W^TW$ squares the weights.`,
+                `$${unsquared}$ 乘的是 $w_i$ 而不是 $w_i^2$；$W^TW$ 会把权重平方。`,
+              ),
+              why(
+                a1 * w1 + a2 * w2,
+                `$${a1 * w1 + a2 * w2}$ is the single product $WA$ summed; $A^TW^TWA$ is the squared length of $WA$.`,
+                `$${a1 * w1 + a2 * w2}$ 只是把 $WA$ 的分量相加；$A^TW^TWA$ 是 $WA$ 的长度平方。`,
+              ),
+              why(
+                (a1 * w1 + a2 * w2) ** 2,
+                `$${(a1 * w1 + a2 * w2) ** 2}$ squares the sum of the entries of $WA$; square each entry first, then add.`,
+                `$${(a1 * w1 + a2 * w2) ** 2}$ 是 $WA$ 各分量之和的平方；应先把每个分量平方再相加。`,
+              ),
+            ],
+            atOmegaA,
           ),
-          wrong: [a1 * a1 + a2 * a2, atOmegaA + 2, atOmegaA - 2, a1 * w1 + a2 * w2],
+          solution: walked(
+            [
+              [["Square the weights", "把权重平方"], t("", ""), [`\\Omega = W^T W = ${omega}`]],
+              [
+                ["Sum the weighted squares", "加权平方求和"],
+                t("", ""),
+                [
+                  `A^T \\Omega A = ${paren(a1)}^2 \\cdot ${w1Sq} + ${paren(a2)}^2 \\cdot ${w2Sq} = ${a1 * a1 * w1Sq} + ${a2 * a2 * w2Sq} = ${atOmegaA}`,
+                ],
+              ],
+            ],
+            t(
+              `$WA = (${a1 * w1}, ${a2 * w2})$ has squared length $${paren(a1 * w1)}^2 + ${paren(a2 * w2)}^2 = ${atOmegaA}$.`,
+              `$WA = (${a1 * w1}, ${a2 * w2})$ 的长度平方为 $${paren(a1 * w1)}^2 + ${paren(a2 * w2)}^2 = ${atOmegaA}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4417,26 +5137,60 @@ export const weightedLeastSquares: TopicDef = {
       id: "a-weighted-least-squares-constant-fit",
       title: t("Fitting a constant by weighted least squares", "用加权最小二乘拟合常数"),
       explanation: t(
-        "Weighted least squares minimizes $\\sum_i w_i(y_i - \\hat{y}_i)^2$, solving $A^TWA\\hat{\\mathbf{x}} = A^TW\\mathbf{y}$. For the constant model $y = c$, $A$ is a column of ones, and the solution is the weighted mean\n\n$$\\hat{c} = \\frac{\\sum_i w_iy_i}{\\sum_i w_i}.$$\n\nObservations with larger weights pull the estimate toward themselves.",
-        "加权最小二乘最小化 $\\sum_i w_i(y_i - \\hat{y}_i)^2$，求解 $A^TWA\\hat{\\mathbf{x}} = A^TW\\mathbf{y}$。对常数模型 $y = c$，$A$ 是全 1 列，解为加权平均\n\n$$\\hat{c} = \\frac{\\sum_i w_iy_i}{\\sum_i w_i}$$\n\n权重较大的观测把估计拉向自己。",
+        "Weighted least squares minimizes $\\sum_i w_i(y_i - \\hat{y}_i)^2$, solving $A^TWA\\hat{\\mathbf{x}} = A^TW\\mathbf{y}$. For the constant model $y = c$, $A$ is a column of ones, and the solution is the weighted mean\n\n$$\\hat{c} = \\frac{\\sum_i w_iy_i}{\\sum_i w_i}.$$\n\nObservations with larger weights pull the estimate toward themselves. For example, $y = 1, 4$ with weights $2, 1$ give $\\hat{c} = \\frac{2 \\cdot 1 + 1 \\cdot 4}{2 + 1} = 2$.\n\n> **Watch out.** Divide by the sum of the weights, not by the number of observations, and pair each weight with its own observation.",
+        "加权最小二乘最小化 $\\sum_i w_i(y_i - \\hat{y}_i)^2$，求解 $A^TWA\\hat{\\mathbf{x}} = A^TW\\mathbf{y}$。对常数模型 $y = c$，$A$ 是全 1 列，解为加权平均\n\n$$\\hat{c} = \\frac{\\sum_i w_iy_i}{\\sum_i w_i}$$\n\n权重较大的观测把估计拉向自己。例如 $y = 1, 4$，权重 $2, 1$，得 $\\hat{c} = \\frac{2 \\cdot 1 + 1 \\cdot 4}{2 + 1} = 2$。\n\n> **注意。** 要除以权重之和，而不是观测的个数；每个权重要与它自己的观测配对。",
       ),
       generate(rng: Rng): Problem {
         const y = [rng.int(-5, 9), rng.int(-5, 9), rng.int(-5, 9)];
         const w = [rng.int(1, 5), rng.int(1, 5), rng.int(1, 5)];
         if (w[0] === w[1] && w[1] === w[2]) w[2] = w[2]! + 1;
+        // A zero weighted sum would let forgetting the division agree with the answer.
+        if (w[0]! * y[0]! + w[1]! * y[1]! + w[2]! * y[2]! === 0) y[0] = y[0]! + 1;
         const num = w[0]! * y[0]! + w[1]! * y[1]! + w[2]! * y[2]!;
         const den = w[0]! + w[1]! + w[2]!;
         const ans = Q.of(num, den);
+        const products = [0, 1, 2].map((i) => `${w[i]} \\cdot ${paren(y[i]!)}`).join(" + ");
+        const reversed = w[2]! * y[0]! + w[1]! * y[1]! + w[0]! * y[2]!;
         return numberProblem({
           prompt: t(
             `Fit $y = c$ to the observations $y_1 = ${y[0]}$, $y_2 = ${y[1]}$, $y_3 = ${y[2]}$ by weighted least squares with weights $w_1 = ${w[0]}$, $w_2 = ${w[1]}$, $w_3 = ${w[2]}$. Find $\\hat{c}$.`,
             `用权重 $w_1 = ${w[0]}$，$w_2 = ${w[1]}$，$w_3 = ${w[2]}$ 的加权最小二乘把 $y = c$ 拟合到观测 $y_1 = ${y[0]}$，$y_2 = ${y[1]}$，$y_3 = ${y[2]}$。求 $\\hat{c}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(y[0]! + y[1]! + y[2]!, 3), Q.of(num), Q.of(num, 3), Q.of(w[2]! * y[0]! + w[1]! * y[1]! + w[0]! * y[2]!, den)],
-          solution: t(
-            `$\\hat{c} = \\frac{${w[0]} \\cdot ${y[0]! < 0 ? `(${y[0]})` : y[0]} + ${w[1]} \\cdot ${y[1]! < 0 ? `(${y[1]})` : y[1]} + ${w[2]} \\cdot ${y[2]! < 0 ? `(${y[2]})` : y[2]}}{${den}} = ${ans.toLatex()}$.`,
-            `$\\hat{c} = \\frac{${w[0]} \\cdot ${y[0]! < 0 ? `(${y[0]})` : y[0]} + ${w[1]} \\cdot ${y[1]! < 0 ? `(${y[1]})` : y[1]} + ${w[2]} \\cdot ${y[2]! < 0 ? `(${y[2]})` : y[2]}}{${den}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(
+            [
+              why(Q.of(y[0]! + y[1]! + y[2]!, 3), "That is the plain mean; the weights were ignored.", "这是普通平均值；忽略了权重。"),
+              why(
+                Q.of(num),
+                `$${num}$ is $\\sum w_iy_i$; it still has to be divided by $\\sum w_i = ${den}$.`,
+                `$${num}$ 是 $\\sum w_iy_i$；还要除以 $\\sum w_i = ${den}$。`,
+              ),
+              why(
+                Q.of(num, 3),
+                `That divides by the number of observations, $3$, instead of the sum of the weights, $${den}$.`,
+                `这是除以观测个数 $3$，而不是权重之和 $${den}$。`,
+              ),
+              why(
+                Q.of(reversed, den),
+                `That pairs $w_1$ with $y_3$ and $w_3$ with $y_1$; each weight goes with its own observation.`,
+                `这是把 $w_1$ 与 $y_3$、$w_3$ 与 $y_1$ 配对；每个权重要与自己的观测配对。`,
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [["Weight the observations", "对观测加权"], t("", ""), [`\\sum_i w_iy_i = ${products} = ${num}`]],
+              [
+                ["Divide by the total weight", "除以总权重"],
+                t("", ""),
+                [`\\hat{c} = \\frac{${num}}{${w[0]} + ${w[1]} + ${w[2]}} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `The weighted residuals sum to $0$: $${den} \\cdot ${ans.sign() < 0 ? `\\left(${ans.toLatex()}\\right)` : ans.toLatex()} = ${num} = \\sum_i w_iy_i$.`,
+              `加权残差之和为 $0$：$${den} \\cdot ${ans.sign() < 0 ? `\\left(${ans.toLatex()}\\right)` : ans.toLatex()} = ${num} = \\sum_i w_iy_i$。`,
+            ),
           ),
         });
       },
@@ -4456,6 +5210,10 @@ export const markovChains: TopicDef = {
     "Model discrete-time dynamical systems using stochastic transition matrices and compute state vectors at future steps.",
     "利用随机转移矩阵对离散时间动力系统建模，并计算后续步的状态向量。",
   ),
+  intro: t(
+    "A shop's customers either come back next week or not. Of those who came, $\\frac{9}{10}$ come again; of those who did not, $\\frac{1}{2}$ come. With states (came, did not come), the transition matrix is $P = \\begin{pmatrix} \\frac{9}{10} & \\frac{1}{2} \\\\ \\frac{1}{10} & \\frac{1}{2} \\end{pmatrix}$. A new customer starts at $\\mathbf{x}_0 = (0, 1)$, so $\\mathbf{x}_1 = P\\mathbf{x}_0 = (\\frac{1}{2}, \\frac{1}{2})$ and $\\mathbf{x}_2 = P\\mathbf{x}_1 = (\\frac{9}{20} + \\frac{1}{4}, \\frac{1}{20} + \\frac{1}{4}) = (\\frac{7}{10}, \\frac{3}{10})$.\n\nCheck: every state vector is a probability vector: $\\frac{1}{2} + \\frac{1}{2} = 1$ and $\\frac{7}{10} + \\frac{3}{10} = 1$.\n\nIn this lesson we model chance moves between states with a column-stochastic matrix, step a state vector forward with $\\mathbf{x}_{k+1} = P\\mathbf{x}_k$, and read probabilities of two steps from $P^2$.",
+    "一家店的顾客下周要么再来，要么不来。来过的人中 $\\frac{9}{10}$ 会再来；没来的人中 $\\frac{1}{2}$ 会来。以（来，不来）为状态，转移矩阵为 $P = \\begin{pmatrix} \\frac{9}{10} & \\frac{1}{2} \\\\ \\frac{1}{10} & \\frac{1}{2} \\end{pmatrix}$。新顾客从 $\\mathbf{x}_0 = (0, 1)$ 出发，于是 $\\mathbf{x}_1 = P\\mathbf{x}_0 = (\\frac{1}{2}, \\frac{1}{2})$，$\\mathbf{x}_2 = P\\mathbf{x}_1 = (\\frac{9}{20} + \\frac{1}{4}, \\frac{1}{20} + \\frac{1}{4}) = (\\frac{7}{10}, \\frac{3}{10})$。\n\n检验：每个状态向量都是概率向量：$\\frac{1}{2} + \\frac{1}{2} = 1$，$\\frac{7}{10} + \\frac{3}{10} = 1$。\n\n本课我们用列随机矩阵描述状态间的随机转移，用 $\\mathbf{x}_{k+1} = P\\mathbf{x}_k$ 把状态向量向前推一步，并从 $P^2$ 读出两步的概率。",
+  ),
   prerequisites: ["weighted-least-squares"],
   encompasses: [],
   xp: 14,
@@ -4464,19 +5222,21 @@ export const markovChains: TopicDef = {
       id: "markov-chains-transition",
       title: t("State Transitions in a Markov Chain", "马尔可夫链的状态转移"),
       explanation: t(
-        "A column-stochastic matrix $P$ has non-negative entries with each column summing to 1. Given the state probability vector $x_k$ at step $k$, the state vector at step $k+1$ is given by $x_{k+1} = P x_k$.",
-        "列随机矩阵 $P$ 的元素非负且每列元素之和为 1。已知第 $k$ 步的状态概率向量为 $x_k$，则第 $k+1$ 步的状态向量由 $x_{k+1} = P x_k$ 给出。",
+        "A column-stochastic matrix $P$ has non-negative entries with each column summing to 1. Given the state probability vector $x_k$ at step $k$, the state vector at step $k+1$ is given by $x_{k+1} = P x_k$. For example, $P = \\begin{pmatrix} 0.8 & 0.3 \\\\ 0.2 & 0.7 \\end{pmatrix}$ and $x_0 = (1, 0)$ give $x_1 = (0.8, 0.2)$, the first column of $P$.\n\n> **Watch out.** The state vector is a column multiplied on the right of $P$; multiplying it as a row on the left, $x_k^TP$, combines the rows of $P$ instead and gives the wrong probabilities.",
+        "列随机矩阵 $P$ 的元素非负且每列元素之和为 1。已知第 $k$ 步的状态概率向量为 $x_k$，则第 $k+1$ 步的状态向量由 $x_{k+1} = P x_k$ 给出。例如 $P = \\begin{pmatrix} 0.8 & 0.3 \\\\ 0.2 & 0.7 \\end{pmatrix}$，$x_0 = (1, 0)$，则 $x_1 = (0.8, 0.2)$，即 $P$ 的第一列。\n\n> **注意。** 状态向量是列向量，乘在 $P$ 的右边；把它当行向量乘在左边（$x_k^TP$），组合的是 $P$ 的行，得到的概率是错的。",
       ),
       generate: (rng: Rng): Problem => {
         const aNum = rng.int(6, 9);
-        const bNum = rng.int(1, 4);
+        const bDrawn = rng.int(1, 4);
+        const useStandard = rng.bool();
+        // From the even start, a matrix with p11 + p12 = 1 keeps the even split, and the slips agree with the answer.
+        const bNum = !useStandard && aNum + bDrawn === 10 ? (bDrawn === 4 ? 3 : bDrawn + 1) : bDrawn;
 
         const p11 = Q.of(aNum, 10);
         const p21 = Q.of(10 - aNum, 10);
         const p12 = Q.of(bNum, 10);
         const p22 = Q.of(10 - bNum, 10);
 
-        const useStandard = rng.bool();
         const x01 = useStandard ? Q.one : Q.of(1, 2);
         const x02 = useStandard ? Q.zero : Q.of(1, 2);
 
@@ -4495,36 +5255,74 @@ export const markovChains: TopicDef = {
           `某马尔可夫链的转移矩阵为 $P = ${mat2StrLatex(matStr)}$。若初始状态向量为 $x_0 = ${vec2Latex(x0Str)}$，求一步之后的状态向量 $x_1 = P x_0$。以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
 
-        const solution = t(
-          `Multiply $P$ by $x_0$:\n\n$$x_1 = P x_0 = ${mat2StrLatex(matStr)} ${vec2Latex(x0Str)} = \\begin{pmatrix} (${p11.toLatex()})(${x01.toLatex()}) + (${p12.toLatex()})(${x02.toLatex()}) \\\\ (${p21.toLatex()})(${x01.toLatex()}) + (${p22.toLatex()})(${x02.toLatex()}) \\end{pmatrix} = \\begin{pmatrix} ${y1.toLatex()} \\\\ ${y2.toLatex()} \\end{pmatrix}.$$\n\nThus $x_1 = \\langle ${y1.toLatex()}, ${y2.toLatex()} \\rangle$.`,
-          `计算矩阵与初始状态向量之积：\n\n$$x_1 = P x_0 = ${mat2StrLatex(matStr)} ${vec2Latex(x0Str)} = \\begin{pmatrix} (${p11.toLatex()})(${x01.toLatex()}) + (${p12.toLatex()})(${x02.toLatex()}) \\\\ (${p21.toLatex()})(${x01.toLatex()}) + (${p22.toLatex()})(${x02.toLatex()}) \\end{pmatrix} = \\begin{pmatrix} ${y1.toLatex()} \\\\ ${y2.toLatex()} \\end{pmatrix}$$\n\n故 $x_1 = \\langle ${y1.toLatex()}, ${y2.toLatex()} \\rangle$。`,
+        const solution = walked(
+          [
+            [
+              ["Multiply $P$ by $x_0$", "用 $P$ 乘 $x_0$"],
+              t("Each entry is a row of $P$ times the column $x_0$:", "每个分量是 $P$ 的一行乘以列向量 $x_0$："),
+              [
+                `x_1 = ${mat2StrLatex(matStr)} ${vec2Latex(x0Str)} = \\begin{pmatrix} ${p11.toLatex()} \\cdot ${x01.toLatex()} + ${p12.toLatex()} \\cdot ${x02.toLatex()} \\\\ ${p21.toLatex()} \\cdot ${x01.toLatex()} + ${p22.toLatex()} \\cdot ${x02.toLatex()} \\end{pmatrix} = ${vec2Latex([y1.toLatex(), y2.toLatex()])}`,
+              ],
+            ],
+          ],
+          t(
+            `$x_1$ is a probability vector: $${y1.toLatex()} + ${y2.toLatex()} = 1$.`,
+            `$x_1$ 是概率向量：$${y1.toLatex()} + ${y2.toLatex()} = 1$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [y1, y2],
-          vector: true,
-          vars: ["x_1", "x_2"],
-          solution,
-          wrong: [
-            [y2, y1],
-            [p12, p22],
-            [Q.of(1, 2), Q.of(1, 2)],
-            [p11, p12],
-          ],
-        });
+        const rowWise = [p11.mul(x01).add(p21.mul(x02)), p12.mul(x01).add(p22.mul(x02))];
+        const oneColumn = useStandard ? [p12, p22] : [p11, p21];
+        const wrong = [[y2, y1], rowWise, [x01, x02], oneColumn, [p12, p22]];
+        return withMistakes(
+          pointProblem({ prompt, answer: [y1, y2], vector: true, vars: ["x_1", "x_2"], solution, wrong }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(wrong[0]!),
+                "The entries are swapped: the first entry is the probability of state 1.",
+                "分量顺序反了：第一个分量是状态 1 的概率。",
+              ),
+              say(
+                vectorLatex(wrong[1]!),
+                "That is $x_0^TP$, the row vector times $P$; it combines the rows of $P$. The column $x_0$ goes on the right: $Px_0$.",
+                "这是 $x_0^TP$，即行向量乘 $P$，组合的是 $P$ 的行。列向量 $x_0$ 应乘在右边：$Px_0$。",
+              ),
+              say(vectorLatex(wrong[2]!), "That is $x_0$ itself; the step $P x_0$ was not taken.", "这是 $x_0$ 本身；没有做一步 $Px_0$。"),
+              useStandard
+                ? say(
+                    vectorLatex(wrong[3]!),
+                    "That is the second column of $P$, the moves out of state 2; the chain starts in state 1, so $Px_0$ is the first column.",
+                    "这是 $P$ 的第二列，即从状态 2 出发的转移；链从状态 1 出发，所以 $Px_0$ 是第一列。",
+                  )
+                : say(
+                    vectorLatex(wrong[3]!),
+                    "That is only the first column of $P$; half of the chain starts in state 2, so $Px_0$ averages the two columns.",
+                    "这只是 $P$ 的第一列；有一半从状态 2 出发，所以 $Px_0$ 是两列的平均。",
+                  ),
+              say(
+                vectorLatex(wrong[4]!),
+                "That is only the second column of $P$; half of the chain starts in state 1, so $Px_0$ averages the two columns.",
+                "这只是 $P$ 的第二列；有一半从状态 1 出发，所以 $Px_0$ 是两列的平均。",
+              ),
+            ],
+            vectorLatex([y1, y2]),
+          ),
+        );
       },
     },
     {
       id: "a-two-step-transition-probability",
       title: t("A two-step transition probability", "两步转移概率"),
       explanation: t(
-        "With a column-stochastic matrix $P$, the entry $p_{ij}$ is the probability of moving from state $j$ to state $i$ in one step. Two steps correspond to $P^2$, and summing over the intermediate state $k$ gives\n\n$$(P^2)_{ij} = \\sum_k p_{ik}\\,p_{kj}.$$\n\nFor two states, the probability of being in state 1 two steps after starting there is $p_{11}^2 + p_{12}p_{21}$: stay twice, or leave and come back.",
-        "对列随机矩阵 $P$，元素 $p_{ij}$ 是一步从状态 $j$ 转到状态 $i$ 的概率。两步对应 $P^2$，对中间状态 $k$ 求和得\n\n$$(P^2)_{ij} = \\sum_k p_{ik}\\,p_{kj}$$\n\n对两个状态，从状态 1 出发两步后仍在状态 1 的概率为 $p_{11}^2 + p_{12}p_{21}$：两次都停留，或离开后再回来。",
+        "With a column-stochastic matrix $P$, the entry $p_{ij}$ is the probability of moving from state $j$ to state $i$ in one step. Two steps correspond to $P^2$, and summing over the intermediate state $k$ gives\n\n$$(P^2)_{ij} = \\sum_k p_{ik}\\,p_{kj}.$$\n\nFor two states, the probability of being in state 1 two steps after starting there is $p_{11}^2 + p_{12}p_{21}$: stay twice, or leave and come back. For example, $P = \\begin{pmatrix} 0.8 & 0.3 \\\\ 0.2 & 0.7 \\end{pmatrix}$ gives $(P^2)_{11} = 0.8^2 + 0.3 \\cdot 0.2 = 0.7$.\n\n> **Watch out.** Add one product for every intermediate state, not just one path; and in $p_{ik}p_{kj}$ the first move is $p_{kj}$, out of the starting state $j$.",
+        "对列随机矩阵 $P$，元素 $p_{ij}$ 是一步从状态 $j$ 转到状态 $i$ 的概率。两步对应 $P^2$，对中间状态 $k$ 求和得\n\n$$(P^2)_{ij} = \\sum_k p_{ik}\\,p_{kj}$$\n\n对两个状态，从状态 1 出发两步后仍在状态 1 的概率为 $p_{11}^2 + p_{12}p_{21}$：两次都停留，或离开后再回来。例如 $P = \\begin{pmatrix} 0.8 & 0.3 \\\\ 0.2 & 0.7 \\end{pmatrix}$，$(P^2)_{11} = 0.8^2 + 0.3 \\cdot 0.2 = 0.7$。\n\n> **注意。** 每个中间状态都要加一项乘积，不能只算一条路径；在 $p_{ik}p_{kj}$ 中，第一步是 $p_{kj}$，从出发状态 $j$ 转出。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 9);
-        const b = rng.int(1, 9);
+        const bDrawn = rng.int(1, 9);
+        // With every entry 1/2 each path has the same probability, and the wrong answers collapse.
+        const b = a === 5 && bDrawn === 5 ? 4 : bDrawn;
         const p11 = Q.of(10 - a, 10);
         const p21 = Q.of(a, 10);
         const p12 = Q.of(b, 10);
@@ -4539,15 +5337,98 @@ export const markovChains: TopicDef = {
           ),
           answer: ans,
           form: "decimal",
-          wrong: toTwo ? [p21, p21.mul(p21), p21.mul(p11)] : [p11, p11.mul(p11), p12.mul(p21)],
+          mistakes: distinct(
+            toTwo
+              ? [
+                  why(
+                    p21,
+                    "That is the one-step probability $p_{21}$; two steps need $(P^2)_{21}$.",
+                    "这是一步转移概率 $p_{21}$；两步要用 $(P^2)_{21}$。",
+                  ),
+                  why(
+                    p21.mul(p21),
+                    "That uses $p_{21}$ for both steps; once in state 2, the chain stays there with $p_{22}$.",
+                    "这是两步都用了 $p_{21}$；到了状态 2 之后，留在状态 2 的概率是 $p_{22}$。",
+                  ),
+                  why(
+                    p21.mul(p11),
+                    "That counts only the path $1 \\to 1 \\to 2$; the path $1 \\to 2 \\to 2$, with probability $p_{22}p_{21}$, must be added.",
+                    "这只算了路径 $1 \\to 1 \\to 2$；还要加上路径 $1 \\to 2 \\to 2$，其概率为 $p_{22}p_{21}$。",
+                  ),
+                  why(
+                    p22.mul(p21),
+                    "That counts only the path $1 \\to 2 \\to 2$; the path $1 \\to 1 \\to 2$, with probability $p_{21}p_{11}$, must be added.",
+                    "这只算了路径 $1 \\to 2 \\to 2$；还要加上路径 $1 \\to 1 \\to 2$，其概率为 $p_{21}p_{11}$。",
+                  ),
+                ]
+              : [
+                  why(
+                    p11,
+                    "That is the one-step probability $p_{11}$; two steps need $(P^2)_{11}$.",
+                    "这是一步转移概率 $p_{11}$；两步要用 $(P^2)_{11}$。",
+                  ),
+                  why(
+                    p11.mul(p11),
+                    "That counts only staying twice; leaving and coming back, with probability $p_{12}p_{21}$, must be added.",
+                    "这只算了两次都停留；还要加上离开再回来的概率 $p_{12}p_{21}$。",
+                  ),
+                  why(
+                    p12.mul(p21),
+                    "That counts only leaving and coming back; staying twice, with probability $p_{11}^2$, must be added.",
+                    "这只算了离开再回来；还要加上两次都停留的概率 $p_{11}^2$。",
+                  ),
+                  why(
+                    p11.mul(p11).add(p21.mul(p21)),
+                    "That squares the first column, $p_{11}^2 + p_{21}^2$; the second step back to state 1 from state 2 is $p_{12}$, so the second term is $p_{12}p_{21}$.",
+                    "这是把第一列平方相加 $p_{11}^2 + p_{21}^2$；从状态 2 回到状态 1 的概率是 $p_{12}$，所以第二项是 $p_{12}p_{21}$。",
+                  ),
+                ],
+            ans,
+          ),
           solution: toTwo
-            ? t(
-                `$(P^2)_{21} = p_{21}p_{11} + p_{22}p_{21} = ${p21.toLatex()} \\cdot ${p11.toLatex()} + ${p22.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$.`,
-                `$(P^2)_{21} = p_{21}p_{11} + p_{22}p_{21} = ${p21.toLatex()} \\cdot ${p11.toLatex()} + ${p22.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$。`,
+            ? walked(
+                [
+                  [
+                    ["List the paths", "列出路径"],
+                    t(
+                      "From state 1 to state 2 in two steps: $1 \\to 1 \\to 2$ or $1 \\to 2 \\to 2$.",
+                      "两步从状态 1 到状态 2：$1 \\to 1 \\to 2$ 或 $1 \\to 2 \\to 2$。",
+                    ),
+                  ],
+                  [
+                    ["Add their probabilities", "把概率相加"],
+                    t("", ""),
+                    [
+                      `(P^2)_{21} = p_{21}p_{11} + p_{22}p_{21} = ${p21.toLatex()} \\cdot ${p11.toLatex()} + ${p22.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}`,
+                    ],
+                  ],
+                ],
+                t(
+                  `$(P^2)_{11} = ${p11.mul(p11).add(p12.mul(p21)).toLatex()}$, and the two entries of the first column of $P^2$ add to $1$.`,
+                  `$(P^2)_{11} = ${p11.mul(p11).add(p12.mul(p21)).toLatex()}$，$P^2$ 第一列的两个元素之和为 $1$。`,
+                ),
               )
-            : t(
-                `$(P^2)_{11} = p_{11}^2 + p_{12}p_{21} = \\left(${p11.toLatex()}\\right)^2 + ${p12.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$.`,
-                `$(P^2)_{11} = p_{11}^2 + p_{12}p_{21} = \\left(${p11.toLatex()}\\right)^2 + ${p12.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$。`,
+            : walked(
+                [
+                  [
+                    ["List the paths", "列出路径"],
+                    t(
+                      "From state 1 back to state 1 in two steps: $1 \\to 1 \\to 1$ or $1 \\to 2 \\to 1$.",
+                      "两步从状态 1 回到状态 1：$1 \\to 1 \\to 1$ 或 $1 \\to 2 \\to 1$。",
+                    ),
+                  ],
+                  [
+                    ["Add their probabilities", "把概率相加"],
+                    t("", ""),
+                    [
+                      `(P^2)_{11} = p_{11}^2 + p_{12}p_{21} = \\left(${p11.toLatex()}\\right)^2 + ${p12.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}`,
+                    ],
+                  ],
+                ],
+                t(
+                  `$(P^2)_{21} = ${p21.mul(p11).add(p22.mul(p21)).toLatex()}$, and the two entries of the first column of $P^2$ add to $1$.`,
+                  `$(P^2)_{21} = ${p21.mul(p11).add(p22.mul(p21)).toLatex()}$，$P^2$ 第一列的两个元素之和为 $1$。`,
+                ),
               ),
         });
       },
@@ -4563,6 +5444,10 @@ export const steadyStateVectors: TopicDef = {
     "Find the steady-state probability vector of a regular Markov chain by solving $(P - I)\\mathbf{q} = \\mathbf{0}$ with $\\sum q_i = 1$.",
     "通过求解 $(P - I)\\mathbf{q} = \\mathbf{0}$ 且 $\\sum q_i = 1$，求正则马尔可夫链的稳态概率向量。",
   ),
+  intro: t(
+    "Take $P = \\begin{pmatrix} \\frac{9}{10} & \\frac{1}{5} \\\\ \\frac{1}{10} & \\frac{4}{5} \\end{pmatrix}$. The first row of $(P - I)\\mathbf{q} = \\mathbf{0}$ reads $-\\frac{1}{10}q_1 + \\frac{1}{5}q_2 = 0$, so $q_1 = 2q_2$, and $q_1 + q_2 = 1$ gives $\\mathbf{q} = (\\frac{2}{3}, \\frac{1}{3})$.\n\nCheck: the first entry of $P\\mathbf{q}$ is $\\frac{9}{10} \\cdot \\frac{2}{3} + \\frac{1}{5} \\cdot \\frac{1}{3} = \\frac{9}{15} + \\frac{1}{15} = \\frac{2}{3} = q_1$.\n\nIn this lesson we find steady-state vectors, the probability vectors with $P\\mathbf{q} = \\mathbf{q}$ that a regular chain settles into, by solving $(P - I)\\mathbf{q} = \\mathbf{0}$ or by balancing the flows between states.",
+    "取 $P = \\begin{pmatrix} \\frac{9}{10} & \\frac{1}{5} \\\\ \\frac{1}{10} & \\frac{4}{5} \\end{pmatrix}$。$(P - I)\\mathbf{q} = \\mathbf{0}$ 的第一行为 $-\\frac{1}{10}q_1 + \\frac{1}{5}q_2 = 0$，所以 $q_1 = 2q_2$，再由 $q_1 + q_2 = 1$ 得 $\\mathbf{q} = (\\frac{2}{3}, \\frac{1}{3})$。\n\n检验：$P\\mathbf{q}$ 的第一个分量是 $\\frac{9}{10} \\cdot \\frac{2}{3} + \\frac{1}{5} \\cdot \\frac{1}{3} = \\frac{9}{15} + \\frac{1}{15} = \\frac{2}{3} = q_1$。\n\n本课我们求稳态向量，即正则链最终趋于的、满足 $P\\mathbf{q} = \\mathbf{q}$ 的概率向量：解 $(P - I)\\mathbf{q} = \\mathbf{0}$，或者平衡状态之间的流量。",
+  ),
   prerequisites: ["markov-chains"],
   encompasses: [],
   xp: 15,
@@ -4571,12 +5456,14 @@ export const steadyStateVectors: TopicDef = {
       id: "markov-steady-state-vector",
       title: t("Computing Steady-State Probability Vectors", "计算稳态概率向量"),
       explanation: t(
-        "A probability vector $q$ is a steady-state vector for a transition matrix $P$ if $P q = q$ (so $(P - I) q = 0$) and the components satisfy $q_i \\ge 0$ and $\\sum q_i = 1$. For a $2 \\times 2$ matrix $P = \\begin{pmatrix} 1 - a & b \\\\ a & 1 - b \\end{pmatrix}$, $q = \\frac{1}{a + b} \\begin{pmatrix} b \\\\ a \\end{pmatrix}$.",
-        "概率向量 $q$ 若满足 $P q = q$（即 $(P - I) q = 0$）且其分量非负且和为 1，则称为转移矩阵 $P$ 的稳态向量。对于 $2 \\times 2$ 矩阵 $P = \\begin{pmatrix} 1 - a & b \\\\ a & 1 - b \\end{pmatrix}$，其稳态向量为 $q = \\frac{1}{a + b} \\begin{pmatrix} b \\\\ a \\end{pmatrix}$。",
+        "A probability vector $q$ is a steady-state vector for a transition matrix $P$ if $P q = q$ (so $(P - I) q = 0$) and the components satisfy $q_i \\ge 0$ and $\\sum q_i = 1$. For a $2 \\times 2$ matrix $P = \\begin{pmatrix} 1 - a & b \\\\ a & 1 - b \\end{pmatrix}$, $q = \\frac{1}{a + b} \\begin{pmatrix} b \\\\ a \\end{pmatrix}$. For example, $a = \\frac{1}{10}$ and $b = \\frac{3}{10}$ give $q = (\\frac{3}{4}, \\frac{1}{4})$.\n\n> **Watch out.** $q_1$ goes with $b$, the probability of moving into state 1, not with $a$, the probability of leaving it; and the entries of $P$ are one-step probabilities, not the long-run ones.",
+        "概率向量 $q$ 若满足 $P q = q$（即 $(P - I) q = 0$）且其分量非负且和为 1，则称为转移矩阵 $P$ 的稳态向量。对于 $2 \\times 2$ 矩阵 $P = \\begin{pmatrix} 1 - a & b \\\\ a & 1 - b \\end{pmatrix}$，其稳态向量为 $q = \\frac{1}{a + b} \\begin{pmatrix} b \\\\ a \\end{pmatrix}$。例如 $a = \\frac{1}{10}$，$b = \\frac{3}{10}$，得 $q = (\\frac{3}{4}, \\frac{1}{4})$。\n\n> **注意。** $q_1$ 对应 $b$，即转入状态 1 的概率，而不是离开它的概率 $a$；$P$ 的元素是一步的概率，不是长期的概率。",
       ),
       generate: (rng: Rng): Problem => {
         const aNum = rng.int(1, 8);
-        const bNum = rng.int(1, 8);
+        // Equal rates give the even split, where swapping the entries is no slip.
+        const bDrawn = rng.int(1, 8);
+        const bNum = bDrawn === aNum ? (aNum === 8 ? 7 : aNum + 1) : bDrawn;
         const sum = aNum + bNum;
         const extra = rng.int(1, 5);
         const denom = sum + extra;
@@ -4589,14 +5476,66 @@ export const steadyStateVectors: TopicDef = {
           `对于具有转移矩阵 $P = \\begin{pmatrix} 1 - \\frac{${aNum}}{${denom}} & \\frac{${bNum}}{${denom}} \\\\ \\frac{${aNum}}{${denom}} & 1 - \\frac{${bNum}}{${denom}} \\end{pmatrix}$ 的正则马尔可夫链，求稳态概率向量 $q = \\begin{pmatrix} q_1 \\\\ q_2 \\end{pmatrix}$ 的第一个分量 $q_1$。`,
         );
 
+        const a = `\\frac{${aNum}}{${denom}}`;
+        const b = `\\frac{${bNum}}{${denom}}`;
         return numberProblem({
           prompt,
           answer: q1,
-          solution: t(
-            `The steady-state equation $(P - I) q = 0$ gives $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$, which simplifies to $${aNum} q_1 = ${bNum} q_2$. Together with the probability condition $q_1 + q_2 = 1$, substituting $q_2 = \\frac{${aNum}}{${bNum}} q_1$ gives $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$, so $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$.`,
-            `稳态方程 $(P - I) q = 0$ 给出 $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$，化简得 $${aNum} q_1 = ${bNum} q_2$。结合概率条件 $q_1 + q_2 = 1$，代入 $q_2 = \\frac{${aNum}}{${bNum}} q_1$ 得 $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$，解得 $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$。`,
+          mistakes: distinct(
+            [
+              why(
+                q2,
+                "That is $q_2$: $q_1$ is proportional to the probability of moving into state 1, $b$, not to $a$.",
+                "这是 $q_2$：$q_1$ 与转入状态 1 的概率 $b$ 成正比，而不是 $a$。",
+              ),
+              why(
+                Q.of(1, 2),
+                "The two states are left at different rates, so the long run is not an even split.",
+                "离开两个状态的概率不同，所以长期并不是平分。",
+              ),
+              why(
+                Q.of(bNum, denom),
+                `$${b}$ is the one-step probability of moving from state 2 to state 1, not the long-run share.`,
+                `$${b}$ 是一步从状态 2 转到状态 1 的概率，不是长期份额。`,
+              ),
+              why(
+                Q.of(denom - aNum, denom),
+                `$1 - ${a}$ is the probability of staying in state 1 for one step, not the long-run share.`,
+                `$1 - ${a}$ 是一步内留在状态 1 的概率，不是长期份额。`,
+              ),
+            ],
+            q1,
           ),
-          wrong: [q2, Q.of(1, 2), Q.of(aNum, denom)],
+          solution: walked(
+            [
+              [
+                ["Write the first row of $(P - I)q = 0$", "写出 $(P - I)q = 0$ 的第一行"],
+                t("", ""),
+                [`-${a}q_1 + ${b}q_2 = 0`, `${lead(aNum, "q_1")} = ${lead(bNum, "q_2")}`],
+              ],
+              [
+                ["Normalize", "归一化"],
+                t("With $q_1 + q_2 = 1$:", "由 $q_1 + q_2 = 1$："),
+                [`q_1 = \\frac{${bNum}}{${aNum} + ${bNum}} = ${q1.toLatex()}`],
+              ],
+            ],
+            t(
+              `$q_2 = ${q2.toLatex()}$, and the first entry of $Pq$ is $\\left(1 - ${a}\\right) \\cdot ${q1.toLatex()} + ${b} \\cdot ${q2.toLatex()} = ${Q.of(
+                denom - aNum,
+                denom,
+              )
+                .mul(q1)
+                .add(Q.of(bNum, denom).mul(q2))
+                .toLatex()} = q_1$.`,
+              `$q_2 = ${q2.toLatex()}$，$Pq$ 的第一个分量为 $\\left(1 - ${a}\\right) \\cdot ${q1.toLatex()} + ${b} \\cdot ${q2.toLatex()} = ${Q.of(
+                denom - aNum,
+                denom,
+              )
+                .mul(q1)
+                .add(Q.of(bNum, denom).mul(q2))
+                .toLatex()} = q_1$。`,
+            ),
+          ),
         });
       },
     },
@@ -4604,8 +5543,8 @@ export const steadyStateVectors: TopicDef = {
       id: "the-steady-state-of-a-three-state-chain-by-balance",
       title: t("The steady state of a three-state chain by balance", "用平衡关系求三状态链的稳态"),
       explanation: t(
-        "In a chain on states $1, 2, 3$ that only moves between neighbors, in the long run the flow across each cut must balance: $\\pi_1 p_{21} = \\pi_2 p_{12}$ and $\\pi_2 p_{32} = \\pi_3 p_{23}$, where $p_{ij}$ is the probability of moving from $j$ to $i$. So $\\pi$ is proportional to\n\n$$\\left(1,\\ \\frac{p_{21}}{p_{12}},\\ \\frac{p_{21}p_{32}}{p_{12}p_{23}}\\right),$$\n\nand dividing by the sum makes the entries add to $1$.",
-        "在只在相邻状态间移动的三状态链 $1, 2, 3$ 中，长期来看穿过每个割的流量必须平衡：$\\pi_1 p_{21} = \\pi_2 p_{12}$，$\\pi_2 p_{32} = \\pi_3 p_{23}$，其中 $p_{ij}$ 是从 $j$ 转到 $i$ 的概率。所以 $\\pi$ 与\n\n$$\\left(1,\\ \\frac{p_{21}}{p_{12}},\\ \\frac{p_{21}p_{32}}{p_{12}p_{23}}\\right)$$\n\n成比例，除以总和使各分量之和为 $1$。",
+        "In a chain on states $1, 2, 3$ that only moves between neighbors, in the long run the flow across each cut must balance: $\\pi_1 p_{21} = \\pi_2 p_{12}$ and $\\pi_2 p_{32} = \\pi_3 p_{23}$, where $p_{ij}$ is the probability of moving from $j$ to $i$. So $\\pi$ is proportional to\n\n$$\\left(1,\\ \\frac{p_{21}}{p_{12}},\\ \\frac{p_{21}p_{32}}{p_{12}p_{23}}\\right),$$\n\nand dividing by the sum makes the entries add to $1$. For example, $p_{21} = \\frac{1}{5}$, $p_{12} = \\frac{2}{5}$, $p_{32} = \\frac{1}{5}$, $p_{23} = \\frac{1}{10}$ give the weights $(1, \\frac{1}{2}, 1)$, which sum to $\\frac{5}{2}$, so $\\pi = (\\frac{2}{5}, \\frac{1}{5}, \\frac{2}{5})$.\n\n> **Watch out.** Across each cut, the probability of the state on one side times its move across equals the same on the other side, so each ratio is the move into a state over the move out of it; and the weights must still be divided by their sum.",
+        "在只在相邻状态间移动的三状态链 $1, 2, 3$ 中，长期来看穿过每个割的流量必须平衡：$\\pi_1 p_{21} = \\pi_2 p_{12}$，$\\pi_2 p_{32} = \\pi_3 p_{23}$，其中 $p_{ij}$ 是从 $j$ 转到 $i$ 的概率。所以 $\\pi$ 与\n\n$$\\left(1,\\ \\frac{p_{21}}{p_{12}},\\ \\frac{p_{21}p_{32}}{p_{12}p_{23}}\\right)$$\n\n成比例，除以总和使各分量之和为 $1$。例如 $p_{21} = \\frac{1}{5}$，$p_{12} = \\frac{2}{5}$，$p_{32} = \\frac{1}{5}$，$p_{23} = \\frac{1}{10}$，权重为 $(1, \\frac{1}{2}, 1)$，其和为 $\\frac{5}{2}$，所以 $\\pi = (\\frac{2}{5}, \\frac{1}{5}, \\frac{2}{5})$。\n\n> **注意。** 在每个割上，一侧状态的概率乘以它越过割的转移概率，等于另一侧的同样乘积，所以每个比值是转入某状态的概率除以转出的概率；权重最后还要除以它们的和。",
       ),
       generate(rng: Rng): Problem {
         const up1 = rng.int(1, 5);
@@ -4618,16 +5557,85 @@ export const steadyStateVectors: TopicDef = {
         const which = rng.int(1, 3);
         const ans = (which === 1 ? Q.one : which === 2 ? r2 : r3).div(total);
         const pct = (n: number) => `${n * 10}\\%`;
+        const lead1 = (r: Q) => (r.eq(Q.one) ? "" : `${r.toLatex()}\\,`);
+        const f2 = Q.of(down2, up1);
+        const f3 = Q.of(down2 * down3, up1 * up2);
+        const fTotal = Q.one.add(f2).add(f3);
+        const flipped = (which === 1 ? Q.one : which === 2 ? f2 : f3).div(fTotal);
         return numberProblem({
           prompt: t(
             `A chain moves each step from state 1 to 2 with probability $${pct(up1)}$; from 2 to 1 with probability $${pct(down2)}$ and from 2 to 3 with probability $${pct(up2)}$; from 3 to 2 with probability $${pct(down3)}$; otherwise it stays. Find the long-run probability of state ${which}.`,
             `某链每一步从状态 1 转到 2 的概率为 $${pct(up1)}$；从 2 转到 1 的概率为 $${pct(down2)}$，从 2 转到 3 的概率为 $${pct(up2)}$；从 3 转到 2 的概率为 $${pct(down3)}$；否则停留。求状态 ${which} 的长期概率。`,
           ),
           answer: ans,
-          wrong: [Q.of(1, 3), Q.one.div(total), r3.div(total), r2.div(total), Q.of(up1, up1 + down2)],
-          solution: t(
-            `Balance gives $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$ and $\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$. The weights $1, ${r2.toLatex()}, ${r3.toLatex()}$ sum to $${total.toLatex()}$, so $\\pi_{${which}} = ${ans.toLatex()}$.`,
-            `平衡给出 $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$，$\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$。权重 $1, ${r2.toLatex()}, ${r3.toLatex()}$ 之和为 $${total.toLatex()}$，所以 $\\pi_{${which}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(
+            [
+              ...[1, 2, 3]
+                .filter((k) => k !== which)
+                .map((k) =>
+                  why(
+                    (k === 1 ? Q.one : k === 2 ? r2 : r3).div(total),
+                    `That is the long-run probability of state ${k}, not state ${which}.`,
+                    `这是状态 ${k} 的长期概率，不是状态 ${which} 的。`,
+                  ),
+                ),
+              why(
+                Q.of(1, 3),
+                "The moves between the states differ, so the long run is not an even split.",
+                "各状态之间的转移概率不同，所以长期并不是平分。",
+              ),
+              why(
+                which === 1 ? Q.one : which === 2 ? r2 : r3,
+                `That is the weight of state ${which} before dividing by the total $${total.toLatex()}$.`,
+                `这是状态 ${which} 除以总和 $${total.toLatex()}$ 之前的权重。`,
+              ),
+              why(
+                which === 1 ? Q.of(down2, up1 + down2) : which === 2 ? Q.of(up1, up1 + down2) : Q.of(up2, up2 + down3),
+                which === 3
+                  ? "That balances only states 2 and 3 as if state 1 did not exist; state 1 also holds part of the probability."
+                  : "That balances only states 1 and 2 as if state 3 did not exist; state 3 also holds part of the probability.",
+                which === 3
+                  ? "这只平衡了状态 2 和 3，好像状态 1 不存在；状态 1 也分去一部分概率。"
+                  : "这只平衡了状态 1 和 2，好像状态 3 不存在；状态 3 也分去一部分概率。",
+              ),
+              why(
+                flipped,
+                "The ratios are upside down: each weight is the move into a state over the move back out of it.",
+                "比值颠倒了：每个权重是转入某状态的概率除以从它转回的概率。",
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["Balance the cut between 1 and 2", "平衡 1 与 2 之间的割"],
+                t("", ""),
+                [`\\pi_1 \\cdot ${pct(up1)} = \\pi_2 \\cdot ${pct(down2)}`, `\\pi_2 = ${lead1(r2)}\\pi_1`],
+              ],
+              [
+                ["Balance the cut between 2 and 3", "平衡 2 与 3 之间的割"],
+                t("", ""),
+                [
+                  `\\pi_2 \\cdot ${pct(up2)} = \\pi_3 \\cdot ${pct(down3)}`,
+                  `\\pi_3 = ${lead1(Q.of(up2, down3))}\\pi_2 = ${lead1(r3)}\\pi_1`,
+                ],
+              ],
+              [
+                ["Normalize", "归一化"],
+                t(
+                  `The weights $1, ${r2.toLatex()}, ${r3.toLatex()}$ sum to $${total.toLatex()}$:`,
+                  `权重 $1, ${r2.toLatex()}, ${r3.toLatex()}$ 之和为 $${total.toLatex()}$：`,
+                ),
+                [
+                  `\\pi_{${which}} = \\frac{${(which === 1 ? Q.one : which === 2 ? r2 : r3).toLatex()}}{${total.toLatex()}} = ${ans.toLatex()}`,
+                ],
+              ],
+            ],
+            t(
+              `The three probabilities $${Q.one.div(total).toLatex()}, ${r2.div(total).toLatex()}, ${r3.div(total).toLatex()}$ add to $1$.`,
+              `三个概率 $${Q.one.div(total).toLatex()}, ${r2.div(total).toLatex()}, ${r3.div(total).toLatex()}$ 之和为 $1$。`,
+            ),
           ),
         });
       },
@@ -4647,6 +5655,10 @@ export const linearRegressionWithMatrices: TopicDef = {
     "Fit the line $y = \\beta_0 + \\beta_1 x$ using a design matrix and the normal equations $X^T X \\boldsymbol{\\beta} = X^T \\mathbf{y}$.",
     "利用设计矩阵 $X$ 和正规方程 $X^T X \\boldsymbol{\\beta} = X^T \\mathbf{y}$ 拟合回归直线 $y = \\beta_0 + \\beta_1 x$。",
   ),
+  intro: t(
+    "Fit $y = \\beta_0 + \\beta_1x$ to $(0, 1), (1, 3), (2, 4)$. The design matrix has rows $(1, 0), (1, 1), (1, 2)$, so $X^TX = \\begin{pmatrix} 3 & 3 \\\\ 3 & 5 \\end{pmatrix}$ and $X^T\\mathbf{y} = (1 + 3 + 4, 0 + 3 + 8) = (8, 11)$. Subtracting the first normal equation $3\\beta_0 + 3\\beta_1 = 8$ from the second $3\\beta_0 + 5\\beta_1 = 11$ gives $2\\beta_1 = 3$, so $\\beta_1 = \\frac{3}{2}$ and $\\beta_0 = \\frac{8 - \\frac{9}{2}}{3} = \\frac{7}{6}$.\n\nCheck: the residuals $1 - \\frac{7}{6}, 3 - \\frac{8}{3}, 4 - \\frac{25}{6}$, that is $-\\frac{1}{6}, \\frac{1}{3}, -\\frac{1}{6}$, add to $0$, and $0 \\cdot (-\\frac{1}{6}) + 1 \\cdot \\frac{1}{3} + 2 \\cdot (-\\frac{1}{6}) = 0$.\n\nIn this lesson we write a straight-line fit as a least-squares problem: build the design matrix $X$, form $X^TX$ and $X^T\\mathbf{y}$ from sums of the data, and solve for the intercept and slope.",
+    "用 $y = \\beta_0 + \\beta_1x$ 拟合 $(0, 1), (1, 3), (2, 4)$。设计矩阵的各行为 $(1, 0), (1, 1), (1, 2)$，所以 $X^TX = \\begin{pmatrix} 3 & 3 \\\\ 3 & 5 \\end{pmatrix}$，$X^T\\mathbf{y} = (1 + 3 + 4, 0 + 3 + 8) = (8, 11)$。用第二个正规方程 $3\\beta_0 + 5\\beta_1 = 11$ 减去第一个 $3\\beta_0 + 3\\beta_1 = 8$，得 $2\\beta_1 = 3$，所以 $\\beta_1 = \\frac{3}{2}$，$\\beta_0 = \\frac{8 - \\frac{9}{2}}{3} = \\frac{7}{6}$。\n\n检验：残差 $1 - \\frac{7}{6}, 3 - \\frac{8}{3}, 4 - \\frac{25}{6}$，即 $-\\frac{1}{6}, \\frac{1}{3}, -\\frac{1}{6}$，其和为 $0$，且 $0 \\cdot (-\\frac{1}{6}) + 1 \\cdot \\frac{1}{3} + 2 \\cdot (-\\frac{1}{6}) = 0$。\n\n本课我们把直线拟合写成最小二乘问题：建立设计矩阵 $X$，由数据的和得到 $X^TX$ 与 $X^T\\mathbf{y}$，再解出截距和斜率。",
+  ),
   prerequisites: ["steady-state-vectors"],
   encompasses: [],
   xp: 15,
@@ -4655,12 +5667,14 @@ export const linearRegressionWithMatrices: TopicDef = {
       id: "matrix-linear-regression",
       title: t("Design Matrix and Normal Equations for Linear Regression", "线性回归的设计矩阵与正规方程"),
       explanation: t(
-        "To fit a regression line $y = \\beta_0 + \\beta_1 x$ to $n$ data points $(x_i, y_i)$, set up the design matrix $X = \\begin{pmatrix} 1 & x_1 \\\\ \\vdots & \\vdots \\\\ 1 & x_n \\end{pmatrix}$ and response vector $y = \\begin{pmatrix} y_1 \\\\ \\vdots \\\\ y_n \\end{pmatrix}$. The parameter vector $\\beta = \\begin{pmatrix} \\beta_0 \\\\ \\beta_1 \\end{pmatrix}$ satisfies $X^T X \\beta = X^T y$.",
-        "为了对 $n$ 个数据点 $(x_i, y_i)$ 拟合回归线 $y = \\beta_0 + \\beta_1 x$，建立设计矩阵 $X = \\begin{pmatrix} 1 & x_1 \\\\ \\vdots & \\vdots \\\\ 1 & x_n \\end{pmatrix}$ 与响应向量 $y = \\begin{pmatrix} y_1 \\\\ \\vdots \\\\ y_n \\end{pmatrix}$。回归参数向量 $\\beta = \\begin{pmatrix} \\beta_0 \\\\ \\beta_1 \\end{pmatrix}$ 满足正规方程 $X^T X \\beta = X^T y$。",
+        "To fit a regression line $y = \\beta_0 + \\beta_1 x$ to $n$ data points $(x_i, y_i)$, set up the design matrix $X = \\begin{pmatrix} 1 & x_1 \\\\ \\vdots & \\vdots \\\\ 1 & x_n \\end{pmatrix}$ and response vector $y = \\begin{pmatrix} y_1 \\\\ \\vdots \\\\ y_n \\end{pmatrix}$. The parameter vector $\\beta = \\begin{pmatrix} \\beta_0 \\\\ \\beta_1 \\end{pmatrix}$ satisfies $X^T X \\beta = X^T y$. For example, the points $(-1, 1), (0, 2), (1, 6)$ give $X^TX = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}$ and $X^Ty = (9, 5)$, so $\\beta = (3, \\frac{5}{2})$.\n\n> **Watch out.** $X^Ty$ is the right-hand side, not $\\beta$: each of its entries is divided by the matching diagonal entry of $X^TX$ (here $3$ for $\\beta_0$ and $2$ for $\\beta_1$); and $\\sum x_iy_i$ takes $y$ at $x = -1$ with a minus sign.",
+        "为了对 $n$ 个数据点 $(x_i, y_i)$ 拟合回归线 $y = \\beta_0 + \\beta_1 x$，建立设计矩阵 $X = \\begin{pmatrix} 1 & x_1 \\\\ \\vdots & \\vdots \\\\ 1 & x_n \\end{pmatrix}$ 与响应向量 $y = \\begin{pmatrix} y_1 \\\\ \\vdots \\\\ y_n \\end{pmatrix}$。回归参数向量 $\\beta = \\begin{pmatrix} \\beta_0 \\\\ \\beta_1 \\end{pmatrix}$ 满足正规方程 $X^T X \\beta = X^T y$。例如点 $(-1, 1), (0, 2), (1, 6)$ 给出 $X^TX = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}$，$X^Ty = (9, 5)$，所以 $\\beta = (3, \\frac{5}{2})$。\n\n> **注意。** $X^Ty$ 是右端，不是 $\\beta$：它的每个分量要除以 $X^TX$ 中对应的对角元素（这里 $\\beta_0$ 除以 $3$，$\\beta_1$ 除以 $2$）；$\\sum x_iy_i$ 中 $x = -1$ 处的 $y$ 要带负号。",
       ),
       generate: (rng: Rng): Problem => {
-        const beta0 = rng.int(-4, 4);
+        const b0Drawn = rng.int(-4, 4);
         const beta1 = rng.int(-3, 3);
+        // With both parameters zero every slip of the solve would give the answer again.
+        const beta0 = b0Drawn === 0 && beta1 === 0 ? 1 : b0Drawn;
         const r = rng.nonZero(-2, 2);
 
         // Points x = -1, 0, 1 with residuals orthogonal to Col(X)
@@ -4676,42 +5690,154 @@ export const linearRegressionWithMatrices: TopicDef = {
           `利用正规方程 $X^T X \\beta = X^T y$，求拟合数据点 $(-1, ${y1})$、$(0, ${y2})$ 与 $(1, ${y3})$ 的最小二乘回归直线 $y = \\beta_0 + \\beta_1 x$ 的参数向量 $\\beta = \\langle \\beta_0, \\beta_1 \\rangle$。以 $\\langle \\beta_0, \\beta_1 \\rangle$ 的形式输入向量。`,
         );
 
-        const solution = t(
-          `Set up the design matrix $X$ and response vector $y$:\n\n$$X = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}, \\quad y = ${vec3Latex([y1, y2, y3])}.$$\n\nCompute $X^T X$ and $X^T y$:\n\n$$X^T X = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}, \\quad X^T y = \\begin{pmatrix} (${y1}) + (${y2}) + (${y3}) \\\\ -(${y1}) + (${y3}) \\end{pmatrix} = \\begin{pmatrix} ${sumY} \\\\ ${sumXY} \\end{pmatrix}.$$\n\nSolving $X^T X \\beta = X^T y$ gives $\\beta_0 = \\frac{${sumY}}{3} = ${beta0}$ and $\\beta_1 = \\frac{${sumXY}}{2} = ${beta1}$. Thus $\\beta = \\langle ${beta0}, ${beta1} \\rangle$.`,
-          `建立设计矩阵 $X$ 与响应向量 $y$：\n\n$$X = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}, \\quad y = ${vec3Latex([y1, y2, y3])}$$\n\n计算 $X^T X$ 与 $X^T y$：\n\n$$X^T X = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}, \\quad X^T y = \\begin{pmatrix} (${y1}) + (${y2}) + (${y3}) \\\\ -(${y1}) + (${y3}) \\end{pmatrix} = \\begin{pmatrix} ${sumY} \\\\ ${sumXY} \\end{pmatrix}$$\n\n求解 $X^T X \\beta = X^T y$ 得 $\\beta_0 = \\frac{${sumY}}{3} = ${beta0}$，$\\beta_1 = \\frac{${sumXY}}{2} = ${beta1}$。因此 $\\beta = \\langle ${beta0}, ${beta1} \\rangle$。`,
+        const fits = [beta0 - beta1, beta0, beta0 + beta1];
+        const residuals = [y1 - fits[0]!, y2 - fits[1]!, y3 - fits[2]!];
+        const solution = walked(
+          [
+            [
+              ["Set up $X$ and $y$", "写出 $X$ 与 $y$"],
+              t("", ""),
+              [`X = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}, \\quad y = ${vec3Latex([y1, y2, y3])}`],
+            ],
+            [
+              ["Form the normal equations", "写出正规方程"],
+              t("", ""),
+              [
+                `X^T X = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}`,
+                `X^T y = \\begin{pmatrix} ${y1} ${signed(y2)} ${signed(y3)} \\\\ ${-y1} ${signed(y3)} \\end{pmatrix} = ${vec2Latex([sumY, sumXY])}`,
+              ],
+            ],
+            [
+              ["Divide by the diagonal", "除以对角元素"],
+              t("$X^TX$ is diagonal, so each equation has one unknown:", "$X^TX$ 是对角矩阵，所以每个方程只含一个未知数："),
+              [`\\beta_0 = \\frac{${sumY}}{3} = ${beta0}, \\quad \\beta_1 = \\frac{${sumXY}}{2} = ${beta1}`],
+            ],
+          ],
+          t(
+            `The residuals $${residuals.join(", ")}$ add to $0$, and $-1 \\cdot ${paren(residuals[0]!)} + 0 \\cdot ${paren(residuals[1]!)} + 1 \\cdot ${paren(residuals[2]!)} = 0$, so they are orthogonal to both columns of $X$.`,
+            `残差 $${residuals.join(", ")}$ 之和为 $0$，且 $-1 \\cdot ${paren(residuals[0]!)} + 0 \\cdot ${paren(residuals[1]!)} + 1 \\cdot ${paren(residuals[2]!)} = 0$，所以它们与 $X$ 的两列都正交。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [beta0, beta1],
-          vector: true,
-          vars: ["\\beta_0", "\\beta_1"],
-          solution,
-          wrong: [
-            [beta1, beta0],
-            [beta0, -beta1],
-            [-beta0, beta1],
-            [beta0 + 1, beta1 - 1],
-          ],
-        });
+        const wrong = [
+          [Q.of(sumY), Q.of(sumXY)],
+          [Q.of(sumY, 2), Q.of(sumXY, 3)],
+          [Q.of(beta0), Q.of(-beta1)],
+          [Q.of(beta1), Q.of(beta0)],
+        ];
+        return withMistakes(
+          pointProblem({ prompt, answer: [beta0, beta1], vector: true, vars: ["\\beta_0", "\\beta_1"], solution, wrong }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(wrong[0]!),
+                "That is $X^Ty$, the right-hand side; divide by the diagonal entries $3$ and $2$ of $X^TX$.",
+                "这是右端 $X^Ty$；还要除以 $X^TX$ 的对角元素 $3$ 和 $2$。",
+              ),
+              say(
+                vectorLatex(wrong[1]!),
+                "The diagonal entries are swapped: $\\beta_0$ is divided by $n = 3$ and $\\beta_1$ by $\\sum x_i^2 = 2$.",
+                "对角元素用反了：$\\beta_0$ 除以 $n = 3$，$\\beta_1$ 除以 $\\sum x_i^2 = 2$。",
+              ),
+              say(
+                vectorLatex(wrong[2]!),
+                `The sign of the slope is wrong: $\\sum x_iy_i = (-1) \\cdot ${paren(y1)} + 1 \\cdot ${paren(y3)}$, the last value minus the first.`,
+                `斜率的符号错了：$\\sum x_iy_i = (-1) \\cdot ${paren(y1)} + 1 \\cdot ${paren(y3)}$，即最后一个值减第一个值。`,
+              ),
+              say(
+                vectorLatex(wrong[3]!),
+                "The entries are swapped: the intercept $\\beta_0$ comes first.",
+                "分量顺序反了：截距 $\\beta_0$ 在前。",
+              ),
+            ],
+            vectorLatex([beta0, beta1]),
+          ),
+        );
       },
     },
     {
       id: "the-entries-of-xtx-and-xty",
       title: t("The entries of $X^TX$ and $X^T\\mathbf{y}$", "$X^TX$ 与 $X^T\\mathbf{y}$ 的元素"),
       explanation: t(
-        "For the line $y = \\beta_0 + \\beta_1x$ the design matrix $X$ has a column of ones and a column of $x$-values. Its normal equations $X^TX\\boldsymbol{\\beta} = X^T\\mathbf{y}$ are built from simple sums:\n\n$$X^TX = \\begin{pmatrix} n & \\sum x_i \\\\ \\sum x_i & \\sum x_i^2 \\end{pmatrix}, \\qquad X^T\\mathbf{y} = \\begin{pmatrix} \\sum y_i \\\\ \\sum x_iy_i \\end{pmatrix}.$$\n\nComputing these four sums is the main work of a straight-line fit.",
-        "对直线 $y = \\beta_0 + \\beta_1x$，设计矩阵 $X$ 有一列 1 与一列 $x$ 值。其正规方程 $X^TX\\boldsymbol{\\beta} = X^T\\mathbf{y}$ 由简单的和构成：\n\n$$X^TX = \\begin{pmatrix} n & \\sum x_i \\\\ \\sum x_i & \\sum x_i^2 \\end{pmatrix}, \\qquad X^T\\mathbf{y} = \\begin{pmatrix} \\sum y_i \\\\ \\sum x_iy_i \\end{pmatrix}$$\n\n计算这四个和是直线拟合的主要工作。",
+        "For the line $y = \\beta_0 + \\beta_1x$ the design matrix $X$ has a column of ones and a column of $x$-values. Its normal equations $X^TX\\boldsymbol{\\beta} = X^T\\mathbf{y}$ are built from simple sums:\n\n$$X^TX = \\begin{pmatrix} n & \\sum x_i \\\\ \\sum x_i & \\sum x_i^2 \\end{pmatrix}, \\qquad X^T\\mathbf{y} = \\begin{pmatrix} \\sum y_i \\\\ \\sum x_iy_i \\end{pmatrix}.$$\n\nComputing these four sums is the main work of a straight-line fit. For example, the points $(1, 2), (2, 5), (4, 3)$ give $\\sum x_i = 7$, $\\sum x_i^2 = 21$ and $\\sum x_iy_i = 2 + 10 + 12 = 24$.\n\n> **Watch out.** $\\sum x_i^2$ squares each $x_i$ before adding, which is not $(\\sum x_i)^2$; and the $y$-values appear only in $X^T\\mathbf{y}$, never in $X^TX$.",
+        "对直线 $y = \\beta_0 + \\beta_1x$，设计矩阵 $X$ 有一列 1 与一列 $x$ 值。其正规方程 $X^TX\\boldsymbol{\\beta} = X^T\\mathbf{y}$ 由简单的和构成：\n\n$$X^TX = \\begin{pmatrix} n & \\sum x_i \\\\ \\sum x_i & \\sum x_i^2 \\end{pmatrix}, \\qquad X^T\\mathbf{y} = \\begin{pmatrix} \\sum y_i \\\\ \\sum x_iy_i \\end{pmatrix}$$\n\n计算这四个和是直线拟合的主要工作。例如点 $(1, 2), (2, 5), (4, 3)$ 给出 $\\sum x_i = 7$，$\\sum x_i^2 = 21$，$\\sum x_iy_i = 2 + 10 + 12 = 24$。\n\n> **注意。** $\\sum x_i^2$ 是先把每个 $x_i$ 平方再相加，不是 $(\\sum x_i)^2$；$y$ 值只出现在 $X^T\\mathbf{y}$ 中，从不出现在 $X^TX$ 中。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(3, 4);
         const xs = Array.from({ length: n }, () => rng.int(-3, 5));
         const ys = Array.from({ length: n }, () => rng.int(-4, 8));
-        const pts = xs.map((x, i) => `(${x}, ${ys[i]})`).join(", ");
+        // A line cannot be fitted when every x is the same, and then several slips agree with the answer.
+        if (xs.every((x) => x === xs[0])) xs[0] = xs[0]! + 1;
         const kind = rng.int(0, 2);
+        // A zero Σxy leaves too few distinct slips; raising the y of a nonzero x moves it by that x.
+        const nonzeroAt = xs.findIndex((x) => x !== 0);
+        if (kind === 2 && xs.reduce((a, x, i) => a + x * ys[i]!, 0) === 0) ys[nonzeroAt] = ys[nonzeroAt]! + 1;
+        const pts = xs.map((x, i) => `(${x}, ${ys[i]})`).join(", ");
         const sx = xs.reduce((a, b) => a + b, 0);
         const sxx = xs.reduce((a, b) => a + b * b, 0);
         const sxy = xs.reduce((a, x, i) => a + x * ys[i]!, 0);
+        const sy = ys.reduce((a, b) => a + b, 0);
+        const terms = (f: (i: number) => string) => xs.map((_, i) => f(i)).join(" + ");
+        const expansion = [
+          terms((i) => `${paren(xs[i]!)}^2`),
+          terms((i) => paren(xs[i]!)),
+          terms((i) => `${paren(xs[i]!)} \\cdot ${paren(ys[i]!)}`),
+        ][kind]!;
+        const mistakes = [
+          [
+            why(
+              sx * sx,
+              `$${sx * sx}$ is $(\\sum x_i)^2$; square each $x_i$ first, then add.`,
+              `$${sx * sx}$ 是 $(\\sum x_i)^2$；应先把每个 $x_i$ 平方再相加。`,
+            ),
+            why(
+              sx,
+              `$${sx}$ is $\\sum x_i$, the $(1, 2)$ entry; the $(2, 2)$ entry is the $x$-column times itself.`,
+              `$${sx}$ 是 $\\sum x_i$，即 $(1, 2)$ 元；$(2, 2)$ 元是 $x$ 列与自身的乘积。`,
+            ),
+            why(n, `$${n}$ is the $(1, 1)$ entry, the column of ones times itself.`, `$${n}$ 是 $(1, 1)$ 元，即全 1 列与自身的乘积。`),
+            why(
+              sxy,
+              `$${sxy}$ is $\\sum x_iy_i$, an entry of $X^T\\mathbf{y}$; $X^TX$ has no $y$-values.`,
+              `$${sxy}$ 是 $\\sum x_iy_i$，属于 $X^T\\mathbf{y}$；$X^TX$ 中没有 $y$ 值。`,
+            ),
+          ],
+          [
+            why(
+              n,
+              `$${n}$ is the $(1, 1)$ entry, the column of ones times itself; the $(1, 2)$ entry pairs the ones with the $x$-values.`,
+              `$${n}$ 是 $(1, 1)$ 元，即全 1 列与自身的乘积；$(1, 2)$ 元是全 1 列与 $x$ 列的乘积。`,
+            ),
+            why(sxx, `$${sxx}$ is $\\sum x_i^2$, the $(2, 2)$ entry.`, `$${sxx}$ 是 $\\sum x_i^2$，即 $(2, 2)$ 元。`),
+            why(
+              sy,
+              `$${sy}$ is $\\sum y_i$, the first entry of $X^T\\mathbf{y}$; $X^TX$ has no $y$-values.`,
+              `$${sy}$ 是 $\\sum y_i$，即 $X^T\\mathbf{y}$ 的第一个分量；$X^TX$ 中没有 $y$ 值。`,
+            ),
+            why(
+              Q.of(sx, n),
+              `That is the mean $\\bar{x}$; the entry is the column of ones times the $x$-column, the sum $\\sum x_i$, not divided by $n$.`,
+              `这是平均值 $\\bar{x}$；该元素是全 1 列与 $x$ 列的乘积，即和 $\\sum x_i$，不除以 $n$。`,
+            ),
+          ],
+          [
+            why(
+              sx * sy,
+              `$${sx * sy}$ is $\\sum x_i \\cdot \\sum y_i$; multiply each $x_i$ by its own $y_i$, then add.`,
+              `$${sx * sy}$ 是 $\\sum x_i \\cdot \\sum y_i$；应把每个 $x_i$ 乘以它自己的 $y_i$ 再相加。`,
+            ),
+            why(
+              sy,
+              `$${sy}$ is $\\sum y_i$, the first entry of $X^T\\mathbf{y}$; the second entry weights each $y_i$ by $x_i$.`,
+              `$${sy}$ 是 $\\sum y_i$，即 $X^T\\mathbf{y}$ 的第一个分量；第二个分量要用 $x_i$ 给每个 $y_i$ 加权。`,
+            ),
+            why(
+              sxx,
+              `$${sxx}$ is $\\sum x_i^2$, an entry of $X^TX$, not of $X^T\\mathbf{y}$.`,
+              `$${sxx}$ 是 $\\sum x_i^2$，属于 $X^TX$，不属于 $X^T\\mathbf{y}$。`,
+            ),
+          ],
+        ][kind]!;
         const name = ["the $(2, 2)$ entry of $X^TX$", "the $(1, 2)$ entry of $X^TX$", "the second entry of $X^T\\mathbf{y}$"][kind]!;
         const nameZh = ["$X^TX$ 的 $(2, 2)$ 元", "$X^TX$ 的 $(1, 2)$ 元", "$X^T\\mathbf{y}$ 的第二个分量"][kind]!;
         const ans = [sxx, sx, sxy][kind]!;
@@ -4722,8 +5848,29 @@ export const linearRegressionWithMatrices: TopicDef = {
             `用直线 $y = \\beta_0 + \\beta_1x$ 拟合点 $${pts}$，求${nameZh}。`,
           ),
           answer: ans,
-          wrong: [sx * sx, sxx, sx, sxy, n, ys.reduce((a, b) => a + b, 0)].filter((w) => w !== ans).slice(0, 4),
-          solution: t(`That entry is $${formula} = ${ans}$.`, `该元素为 $${formula} = ${ans}$。`),
+          mistakes: distinct(mistakes, ans),
+          solution: walked(
+            [
+              [
+                ["Name the entry", "确定元素"],
+                t(
+                  `The ${["$x$-column times itself", "column of ones times the $x$-column", "$x$-column times $\\mathbf{y}$"][kind]} gives $${formula}$.`,
+                  `${["$x$ 列与自身的乘积", "全 1 列与 $x$ 列的乘积", "$x$ 列与 $\\mathbf{y}$ 的乘积"][kind]}给出 $${formula}$。`,
+                ),
+              ],
+              [["Add up", "求和"], t("", ""), [`${formula} = ${expansion} = ${ans}`]],
+            ],
+            t(
+              `$X^TX = ${mat2Latex([
+                [n, sx],
+                [sx, sxx],
+              ])}$ and $X^T\\mathbf{y} = ${vec2Latex([sy, sxy])}$.`,
+              `$X^TX = ${mat2Latex([
+                [n, sx],
+                [sx, sxx],
+              ])}$，$X^T\\mathbf{y} = ${vec2Latex([sy, sxy])}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4738,6 +5885,10 @@ export const polynomialRegressionWithMatrices: TopicDef = {
     "Set up Vandermonde design matrices to fit quadratic and higher-degree polynomial models via matrix normal equations.",
     "建立范德蒙德设计矩阵与正规方程以拟合二次及更高阶多项式模型。",
   ),
+  intro: t(
+    "Fit $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ to $(-1, 2), (0, 1), (1, 4)$. The design matrix has the rows $(1, x_i, x_i^2)$: $(1, -1, 1), (1, 0, 0), (1, 1, 1)$. It is square and invertible, so the least-squares fit passes through the points: the middle row gives $\\beta_0 = 1$, the difference of the outer rows gives $2\\beta_1 = 4 - 2$, so $\\beta_1 = 1$, and their sum gives $2 + 2\\beta_2 = 6$, so $\\beta_2 = 2$.\n\nCheck: $1 - 1 + 2 = 2$, $1 = 1$ and $1 + 1 + 2 = 4$, so $y = 1 + x + 2x^2$ meets all three points.\n\nIn this lesson we fit polynomials by least squares: the design matrix gets one column for each power of $x$, and the normal equations are solved just as for a line.",
+    "用 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合 $(-1, 2), (0, 1), (1, 4)$。设计矩阵的各行为 $(1, x_i, x_i^2)$：$(1, -1, 1), (1, 0, 0), (1, 1, 1)$。它是可逆方阵，所以最小二乘拟合经过这些点：中间一行给出 $\\beta_0 = 1$，两端两行之差给出 $2\\beta_1 = 4 - 2$，所以 $\\beta_1 = 1$，两行之和给出 $2 + 2\\beta_2 = 6$，所以 $\\beta_2 = 2$。\n\n检验：$1 - 1 + 2 = 2$，$1 = 1$，$1 + 1 + 2 = 4$，所以 $y = 1 + x + 2x^2$ 经过全部三点。\n\n本课我们用最小二乘拟合多项式：设计矩阵中 $x$ 的每个幂占一列，正规方程的解法与直线相同。",
+  ),
   prerequisites: ["linear-regression-with-matrices"],
   encompasses: [],
   xp: 15,
@@ -4746,8 +5897,8 @@ export const polynomialRegressionWithMatrices: TopicDef = {
       id: "matrix-polynomial-regression",
       title: t("Vandermonde Design Matrix for Polynomial Regression", "多项式回归的范德蒙德设计矩阵"),
       explanation: t(
-        "To fit a polynomial model $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\dots + \\beta_d x^d$ to data points $(x_i, y_i)$, the design matrix $X$ is a Vandermonde matrix with $i$-th row $\\begin{pmatrix} 1 & x_i & x_i^2 & \\dots & x_i^d \\end{pmatrix}$. The coefficient vector $\\beta$ satisfies $X^T X \\beta = X^T y$.",
-        "为了拟合多项式模型 $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\dots + \\beta_d x^d$，设计矩阵 $X$ 为范德蒙德矩阵，其第 $i$ 行为 $\\begin{pmatrix} 1 & x_i & x_i^2 & \\dots & x_i^d \\end{pmatrix}$。系数向量 $\\beta$ 满足正规方程 $X^T X \\beta = X^T y$。",
+        "To fit a polynomial model $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\dots + \\beta_d x^d$ to data points $(x_i, y_i)$, the design matrix $X$ is a Vandermonde matrix with $i$-th row $\\begin{pmatrix} 1 & x_i & x_i^2 & \\dots & x_i^d \\end{pmatrix}$. The coefficient vector $\\beta$ satisfies $X^T X \\beta = X^T y$. For example, a quadratic fit at $x = -2, 1, 3$ has the rows $(1, -2, 4)$, $(1, 1, 1)$ and $(1, 3, 9)$.\n\n> **Watch out.** Each data point gives a row, not a column, and the columns follow the order of the coefficients $\\beta_0, \\beta_1, \\beta_2$: first the ones, then $x_i$, then $x_i^2$, which is not $2x_i$.",
+        "为了拟合多项式模型 $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\dots + \\beta_d x^d$，设计矩阵 $X$ 为范德蒙德矩阵，其第 $i$ 行为 $\\begin{pmatrix} 1 & x_i & x_i^2 & \\dots & x_i^d \\end{pmatrix}$。系数向量 $\\beta$ 满足正规方程 $X^T X \\beta = X^T y$。例如在 $x = -2, 1, 3$ 处作二次拟合，各行为 $(1, -2, 4)$、$(1, 1, 1)$ 和 $(1, 3, 9)$。\n\n> **注意。** 每个数据点给出一行，而不是一列；各列按系数 $\\beta_0, \\beta_1, \\beta_2$ 的顺序排列：先是全 1，再是 $x_i$，然后是 $x_i^2$，而不是 $2x_i$。",
       ),
       generate: (rng: Rng): Problem => {
         const x1 = rng.int(-5, -1);
@@ -4821,12 +5972,41 @@ export const polynomialRegressionWithMatrices: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `Each row of the design matrix for a quadratic polynomial has the form $\\begin{pmatrix} 1 & x_i & x_i^2 \\end{pmatrix}$. Substituting $x_1 = ${x1}$, $x_2 = ${x2}$, and $x_3 = ${x3}$ gives the rows $\\begin{pmatrix} 1 & ${x1} & ${x1Sq} \\end{pmatrix}$, $\\begin{pmatrix} 1 & ${x2} & ${x2Sq} \\end{pmatrix}$, and $\\begin{pmatrix} 1 & ${x3} & ${x3Sq} \\end{pmatrix}$, giving $X = ${mat3Latex(mat)}$.`,
-          `二次多项式拟合设计矩阵的每一行具有形式 $\\begin{pmatrix} 1 & x_i & x_i^2 \\end{pmatrix}$。代入 $x_1 = ${x1}$、$x_2 = ${x2}$、$x_3 = ${x3}$，各行分别为 $\\begin{pmatrix} 1 & ${x1} & ${x1Sq} \\end{pmatrix}$、$\\begin{pmatrix} 1 & ${x2} & ${x2Sq} \\end{pmatrix}$ 与 $\\begin{pmatrix} 1 & ${x3} & ${x3Sq} \\end{pmatrix}$，故 $X = ${mat3Latex(mat)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Write the form of a row", "写出一行的形式"],
+              t(
+                "A point $(x_i, y_i)$ gives the equation $\\beta_0 \\cdot 1 + \\beta_1 x_i + \\beta_2 x_i^2 = y_i$, so its row is $\\begin{pmatrix} 1 & x_i & x_i^2 \\end{pmatrix}$.",
+                "点 $(x_i, y_i)$ 给出方程 $\\beta_0 \\cdot 1 + \\beta_1 x_i + \\beta_2 x_i^2 = y_i$，所以它的行是 $\\begin{pmatrix} 1 & x_i & x_i^2 \\end{pmatrix}$。",
+              ),
+            ],
+            [["Fill in the rows", "填入各行"], t("", ""), [`X = ${mat3Latex(mat)}`]],
+          ],
+          t(
+            `The second row reads $1, ${x2}, ${x2Sq}$, and $${x2Sq} = ${paren(x2)}^2$.`,
+            `第二行为 $1, ${x2}, ${x2Sq}$，且 $${x2Sq} = ${paren(x2)}^2$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The columns are in reverse order; the first column multiplies $\\beta_0$ and is all ones.",
+            "各列顺序反了；第一列乘 $\\beta_0$，应全为 1。",
+          ],
+          [
+            wrong[1]!.en,
+            "The last column holds $2x_i$; the coefficient $\\beta_2$ multiplies $x_i^2$.",
+            "最后一列是 $2x_i$；系数 $\\beta_2$ 乘的是 $x_i^2$。",
+          ],
+          [wrong[2]!.en, "That is $X^T$: each data point must give a row, not a column.", "这是 $X^T$：每个数据点应给出一行，而不是一列。"],
+          [
+            wrong[3]!.en,
+            "The first column holds $0$; the constant term $\\beta_0$ multiplies $x_i^0 = 1$.",
+            "第一列是 $0$；常数项 $\\beta_0$ 乘的是 $x_i^0 = 1$。",
+          ],
+        ]);
       },
     },
     {
@@ -4834,31 +6014,108 @@ export const polynomialRegressionWithMatrices: TopicDef = {
       figure: linearAlgebraDrawings2["polynomial-regression-with-matrices#a-quadratic-fit-through-three-points-interpolates"],
       title: t("A quadratic fit to three points", "三点的二次拟合"),
       explanation: t(
-        "Fitting $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ to three points with distinct $x$-values gives a square, invertible design matrix. The least-squares solution then solves $X\\boldsymbol{\\beta} = \\mathbf{y}$ exactly, so the parabola passes through all three points. For $x = -h, 0, h$:\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}.$$",
-        "用 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合 $x$ 值互不相同的三个点，设计矩阵是可逆方阵。此时最小二乘解恰好满足 $X\\boldsymbol{\\beta} = \\mathbf{y}$，抛物线经过全部三点。对 $x = -h, 0, h$：\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}$$",
+        "Fitting $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ to three points with distinct $x$-values gives a square, invertible design matrix. The least-squares solution then solves $X\\boldsymbol{\\beta} = \\mathbf{y}$ exactly, so the parabola passes through all three points. For $x = -h, 0, h$:\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}.$$\n\nFor example, $(-2, 3), (0, 1), (2, 9)$ give $\\beta_1 = \\frac{9 - 3}{4} = \\frac{3}{2}$ and $\\beta_2 = \\frac{9 + 3 - 2}{8} = \\frac{5}{4}$.\n\n> **Watch out.** The outer points are $2h$ apart, so $\\beta_1$ divides by $2h$, not $h$; and $\\beta_2$ subtracts $2y_0$ and divides by $2h^2$.",
+        "用 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合 $x$ 值互不相同的三个点，设计矩阵是可逆方阵。此时最小二乘解恰好满足 $X\\boldsymbol{\\beta} = \\mathbf{y}$，抛物线经过全部三点。对 $x = -h, 0, h$：\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}$$\n\n例如 $(-2, 3), (0, 1), (2, 9)$ 给出 $\\beta_1 = \\frac{9 - 3}{4} = \\frac{3}{2}$，$\\beta_2 = \\frac{9 + 3 - 2}{8} = \\frac{5}{4}$。\n\n> **注意。** 两端的点相距 $2h$，所以 $\\beta_1$ 要除以 $2h$，不是 $h$；$\\beta_2$ 要减去 $2y_0$ 并除以 $2h^2$。",
       ),
       generate(rng: Rng): Problem {
         const h = rng.int(1, 2);
         const ym = rng.int(-6, 8);
-        const y0 = rng.int(-6, 8);
-        const yp = rng.int(-6, 8);
+        const drawnY0 = rng.int(-6, 8);
+        const drawnYp = rng.int(-6, 8);
         const which = rng.int(1, 2);
+        // With h = 1 and y0 = 0 the slips in the divisor and in 2y0 all give the answer again.
+        const y0 = which === 2 && h === 1 && drawnY0 === 0 ? 1 : drawnY0;
+        // A zero numerator would make every slip in the division give the answer again.
+        const yp = (which === 1 ? drawnYp === ym : drawnYp + ym === 2 * y0) ? drawnYp + 1 : drawnYp;
         const b1 = Q.of(yp - ym, 2 * h);
         const b2 = Q.of(yp + ym - 2 * y0, 2 * h * h);
         const ans = which === 1 ? b1 : b2;
+        const pm = paren(ym);
         return numberProblem({
           prompt: t(
             `Fit $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ by least squares to $(${-h}, ${ym})$, $(0, ${y0})$, $(${h}, ${yp})$. Find $\\beta_{${which}}$.`,
             `用最小二乘把 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合到 $(${-h}, ${ym})$、$(0, ${y0})$、$(${h}, ${yp})$。求 $\\beta_{${which}}$。`,
           ),
           answer: ans,
-          wrong:
+          mistakes: distinct(
             which === 1
-              ? [Q.of(yp - ym), Q.of(yp - ym, h), b2]
-              : [Q.of(yp + ym - 2 * y0), Q.of(yp + ym - 2 * y0, h * h), Q.of(yp + ym - y0, 2 * h * h), b1],
-          solution: t(
-            `Three points with distinct $x$ give an exact fit. Then $\\beta_1 = \\frac{${yp} - ${ym < 0 ? `(${ym})` : ym}}{${2 * h}} = ${b1.toLatex()}$ and $\\beta_2 = \\frac{${yp} + ${ym < 0 ? `(${ym})` : ym} - 2 \\cdot ${y0 < 0 ? `(${y0})` : y0}}{${2 * h * h}} = ${b2.toLatex()}$.`,
-            `$x$ 互不相同的三点给出精确拟合。于是 $\\beta_1 = \\frac{${yp} - ${ym < 0 ? `(${ym})` : ym}}{${2 * h}} = ${b1.toLatex()}$，$\\beta_2 = \\frac{${yp} + ${ym < 0 ? `(${ym})` : ym} - 2 \\cdot ${y0 < 0 ? `(${y0})` : y0}}{${2 * h * h}} = ${b2.toLatex()}$。`,
+              ? [
+                  why(
+                    Q.of(yp - ym),
+                    `$${yp - ym}$ is the rise $y_h - y_{-h}$; divide by the run $2h = ${2 * h}$.`,
+                    `$${yp - ym}$ 是升高量 $y_h - y_{-h}$；还要除以水平距离 $2h = ${2 * h}$。`,
+                  ),
+                  why(
+                    Q.of(yp - ym, h),
+                    `That divides by $h = ${h}$; the outer points are $2h = ${2 * h}$ apart.`,
+                    `这是除以 $h = ${h}$；两端的点相距 $2h = ${2 * h}$。`,
+                  ),
+                  why(
+                    b2,
+                    "That is $\\beta_2$, the coefficient of $x^2$; $\\beta_1$ is the coefficient of $x$.",
+                    "这是 $x^2$ 的系数 $\\beta_2$；$\\beta_1$ 是 $x$ 的系数。",
+                  ),
+                  why(
+                    Q.of(ym - yp, 2 * h),
+                    "The subtraction is the wrong way round: the slope runs from $x = -h$ to $x = h$, so it is $y_h - y_{-h}$ over $2h$.",
+                    "减法顺序反了：斜率从 $x = -h$ 走到 $x = h$，所以是 $y_h - y_{-h}$ 除以 $2h$。",
+                  ),
+                ]
+              : [
+                  why(
+                    Q.of(yp + ym - 2 * y0),
+                    `$${yp + ym - 2 * y0}$ is $y_h + y_{-h} - 2y_0$; it still has to be divided by $2h^2 = ${2 * h * h}$.`,
+                    `$${yp + ym - 2 * y0}$ 是 $y_h + y_{-h} - 2y_0$；还要除以 $2h^2 = ${2 * h * h}$。`,
+                  ),
+                  why(
+                    Q.of(yp + ym - 2 * y0, h * h),
+                    `That divides by $h^2 = ${h * h}$; adding the outer equations gives $2\\beta_2h^2$, so divide by $2h^2$.`,
+                    `这是除以 $h^2 = ${h * h}$；两端方程相加得 $2\\beta_2h^2$，所以要除以 $2h^2$。`,
+                  ),
+                  why(
+                    Q.of(yp + ym - y0, 2 * h * h),
+                    "Adding the outer equations gives $2\\beta_0 = 2y_0$, so subtract $2y_0$, not $y_0$.",
+                    "两端方程相加得 $2\\beta_0 = 2y_0$，所以要减去 $2y_0$，不是 $y_0$。",
+                  ),
+                  why(
+                    b1,
+                    "That is $\\beta_1$, the coefficient of $x$; $\\beta_2$ is the coefficient of $x^2$.",
+                    "这是 $x$ 的系数 $\\beta_1$；$\\beta_2$ 是 $x^2$ 的系数。",
+                  ),
+                ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["The fit is exact", "拟合是精确的"],
+                t(
+                  `Three distinct $x$-values make $X$ square and invertible, so $X\\boldsymbol{\\beta} = \\mathbf{y}$ holds exactly, and $\\beta_0 = y_0 = ${y0}$.`,
+                  `三个互不相同的 $x$ 值使 $X$ 成为可逆方阵，所以 $X\\boldsymbol{\\beta} = \\mathbf{y}$ 精确成立，且 $\\beta_0 = y_0 = ${y0}$。`,
+                ),
+              ],
+              which === 1
+                ? [
+                    ["Subtract the outer equations", "两端方程相减"],
+                    t(`$y_h - y_{-h} = 2\\beta_1h$:`, `$y_h - y_{-h} = 2\\beta_1h$：`),
+                    [`\\beta_1 = \\frac{${yp} - ${pm}}{${2 * h}} = ${b1.toLatex()}`],
+                  ]
+                : [
+                    ["Add the outer equations", "两端方程相加"],
+                    t(`$y_h + y_{-h} = 2\\beta_0 + 2\\beta_2h^2$:`, `$y_h + y_{-h} = 2\\beta_0 + 2\\beta_2h^2$：`),
+                    [`\\beta_2 = \\frac{${yp} + ${pm} - 2 \\cdot ${paren(y0)}}{${2 * h * h}} = ${b2.toLatex()}`],
+                  ],
+            ],
+            t(
+              `With $\\beta_1 = ${b1.toLatex()}$ and $\\beta_2 = ${b2.toLatex()}$, the value at $x = ${h}$ is $${Q.of(y0)
+                .add(b1.mul(Q.of(h)))
+                .add(b2.mul(Q.of(h * h)))
+                .toLatex()} = y_h$.`,
+              `由 $\\beta_1 = ${b1.toLatex()}$，$\\beta_2 = ${b2.toLatex()}$，在 $x = ${h}$ 处的值为 $${Q.of(y0)
+                .add(b1.mul(Q.of(h)))
+                .add(b2.mul(Q.of(h * h)))
+                .toLatex()} = y_h$。`,
+            ),
           ),
         });
       },
@@ -4874,6 +6131,10 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
     "Set up regression models with several predictors and analyze the hat matrix $H = X(X^T X)^{-1} X^T$.",
     "建立多元线性回归模型，并分析帽子矩阵 $H = X(X^T X)^{-1} X^T$ 的几何与代数性质。",
   ),
+  intro: t(
+    "A model with an intercept and two predictors is fitted to $20$ observations, giving $\\hat{y} = 2 + 3x_1 - x_2$. For the observation $x_1 = 1$, $x_2 = 4$, $y = 3$, the row of $X$ is $(1, 1, 4)$, so $\\hat{y} = 2 + 3 - 4 = 1$ and the residual is $e = 3 - 1 = 2$. The hat matrix $H = X(X^TX)^{-1}X^T$ that maps $\\mathbf{y}$ to $\\hat{\\mathbf{y}}$ is $20 \\times 20$, but its trace is the number of parameters, $3$.\n\nCheck: $\\hat{y} + e = 1 + 2 = 3 = y$, and $\\operatorname{tr}(H) = \\operatorname{tr}((X^TX)^{-1}X^TX) = \\operatorname{tr}(I_3) = 3$.\n\nIn this lesson we fit models with several predictors by least squares, compute fitted values and residuals, and use the hat matrix, the projection onto the column space of $X$.",
+    "一个含截距和两个预测变量的模型对 $20$ 个观测进行拟合，得到 $\\hat{y} = 2 + 3x_1 - x_2$。对观测 $x_1 = 1$，$x_2 = 4$，$y = 3$，$X$ 的对应行为 $(1, 1, 4)$，所以 $\\hat{y} = 2 + 3 - 4 = 1$，残差为 $e = 3 - 1 = 2$。把 $\\mathbf{y}$ 映到 $\\hat{\\mathbf{y}}$ 的帽子矩阵 $H = X(X^TX)^{-1}X^T$ 是 $20 \\times 20$ 的，但它的迹等于参数个数 $3$。\n\n检验：$\\hat{y} + e = 1 + 2 = 3 = y$，且 $\\operatorname{tr}(H) = \\operatorname{tr}((X^TX)^{-1}X^TX) = \\operatorname{tr}(I_3) = 3$。\n\n本课我们用最小二乘拟合含多个预测变量的模型，计算拟合值与残差，并使用帽子矩阵，即向 $X$ 的列空间的投影。",
+  ),
   prerequisites: ["polynomial-regression-with-matrices"],
   encompasses: [],
   xp: 16,
@@ -4882,8 +6143,8 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
       id: "multiple-regression-hat-matrix",
       title: t("The Hat Matrix in Multiple Regression", "多元回归中的帽子矩阵"),
       explanation: t(
-        "In multiple linear regression $y = X \\beta + \\varepsilon$, the vector of fitted values is $\\hat{y} = X \\hat{\\beta} = X(X^T X)^{-1} X^T y = H y$. The hat matrix $H = X(X^T X)^{-1} X^T$ is an orthogonal projection matrix onto the column space $\\operatorname{Col}(X)$, satisfying $H^2 = H$ (idempotent), $H^T = H$ (symmetric), and $\\operatorname{tr}(H) = \\operatorname{rank}(X)$.",
-        "在多元线性回归 $y = X \\beta + \\varepsilon$ 中，拟合值向量为 $\\hat{y} = X \\hat{\\beta} = X(X^T X)^{-1} X^T y = H y$。帽子矩阵 $H = X(X^T X)^{-1} X^T$ 是向列空间 $\\operatorname{Col}(X)$ 的正交投影矩阵，满足 $H^2 = H$（幂等）、$H^T = H$（对称）且 $\\operatorname{tr}(H) = \\operatorname{rank}(X)$。",
+        "In multiple linear regression $y = X \\beta + \\varepsilon$, the vector of fitted values is $\\hat{y} = X \\hat{\\beta} = X(X^T X)^{-1} X^T y = H y$. The hat matrix $H = X(X^T X)^{-1} X^T$ is an orthogonal projection matrix onto the column space $\\operatorname{Col}(X)$, satisfying $H^2 = H$ (idempotent), $H^T = H$ (symmetric), and $\\operatorname{tr}(H) = \\operatorname{rank}(X)$. For example, with $n = 30$ observations, an intercept and two predictors, $H$ is $30 \\times 30$ and $\\operatorname{tr}(H) = 3$.\n\n> **Watch out.** $H$ is $n \\times n$, but its trace is $p$, not $n$; the trace $n - p$ belongs to $I - H$, the projection onto the residuals; and the intercept counts as a parameter.",
+        "在多元线性回归 $y = X \\beta + \\varepsilon$ 中，拟合值向量为 $\\hat{y} = X \\hat{\\beta} = X(X^T X)^{-1} X^T y = H y$。帽子矩阵 $H = X(X^T X)^{-1} X^T$ 是向列空间 $\\operatorname{Col}(X)$ 的正交投影矩阵，满足 $H^2 = H$（幂等）、$H^T = H$（对称）且 $\\operatorname{tr}(H) = \\operatorname{rank}(X)$。例如有 $n = 30$ 个观测、一个截距和两个预测变量时，$H$ 是 $30 \\times 30$ 的，$\\operatorname{tr}(H) = 3$。\n\n> **注意。** $H$ 是 $n \\times n$ 的，但它的迹是 $p$，不是 $n$；迹 $n - p$ 属于 $I - H$，即向残差的投影；截距也算一个参数。",
       ),
       generate: (rng: Rng): Problem => {
         const n = rng.int(15, 50);
@@ -4897,11 +6158,52 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
         return numberProblem({
           prompt,
           answer: p,
-          solution: t(
-            `Using the cyclic property of the trace, $\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$. Since there are $p = ${p}$ parameters, the trace of the hat matrix is $${p}$.`,
-            `利用迹的循环性质，$\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$。由于共有 $p = ${p}$ 个参数，故帽子矩阵的迹为 $${p}$。`,
+          mistakes: distinct(
+            [
+              why(
+                n,
+                `$${n}$ is the size of $H$; its trace is the dimension of the column space it projects onto.`,
+                `$${n}$ 是 $H$ 的阶数；它的迹是它投影到的列空间的维数。`,
+              ),
+              why(
+                n - p,
+                `$${n - p}$ is the trace of $I - H$, the projection onto the residuals.`,
+                `$${n - p}$ 是 $I - H$ 的迹，即向残差的投影的迹。`,
+              ),
+              why(
+                p - 1,
+                "The intercept is one of the $p$ parameters and gives a column of $X$ too.",
+                "截距也是 $p$ 个参数之一，同样给出 $X$ 的一列。",
+              ),
+              why(
+                1,
+                "$H^2 = H$ makes every eigenvalue $0$ or $1$; the trace counts the eigenvalues equal to $1$, one for each column of $X$.",
+                "$H^2 = H$ 使每个特征值为 $0$ 或 $1$；迹数的是等于 $1$ 的特征值，$X$ 的每一列对应一个。",
+              ),
+            ],
+            p,
           ),
-          wrong: [n, n - p, p - 1, 1],
+          solution: walked(
+            [
+              [
+                ["Cycle the factors", "循环移动因子"],
+                t("The trace is unchanged when the factors of a product are cycled:", "乘积的因子循环移动时迹不变："),
+                [`\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X)`],
+              ],
+              [
+                ["Read the identity", "读出单位矩阵"],
+                t(
+                  `$X^TX$ is $${p} \\times ${p}$, so the product is $I_{${p}}$:`,
+                  `$X^TX$ 是 $${p} \\times ${p}$ 的，所以乘积是 $I_{${p}}$：`,
+                ),
+                [`\\operatorname{tr}(I_{${p}}) = ${p}`],
+              ],
+            ],
+            t(
+              `$H$ projects onto $\\operatorname{Col}(X)$, which has dimension $\\operatorname{rank}(X) = ${p}$, and $\\operatorname{tr}(I - H) = ${n} - ${p} = ${n - p}$ is the rest.`,
+              `$H$ 投影到 $\\operatorname{Col}(X)$，其维数为 $\\operatorname{rank}(X) = ${p}$，而 $\\operatorname{tr}(I - H) = ${n} - ${p} = ${n - p}$ 是剩下的部分。`,
+            ),
+          ),
         });
       },
     },
@@ -4909,8 +6211,8 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
       id: "a-fitted-value-and-residual-in-multiple-regression",
       title: t("A fitted value and residual in multiple regression", "多元回归中的拟合值与残差"),
       explanation: t(
-        "Once $\\hat{\\boldsymbol{\\beta}} = (X^TX)^{-1}X^T\\mathbf{y}$ is known, the fitted values are $\\hat{\\mathbf{y}} = X\\hat{\\boldsymbol{\\beta}}$: each row of $X$, $(1, x_{i1}, x_{i2})$, is dotted with $\\hat{\\boldsymbol{\\beta}}$. The residual of an observation is $e_i = y_i - \\hat{y}_i$, positive when the observation lies above the fitted plane and negative when it lies below.",
-        "求得 $\\hat{\\boldsymbol{\\beta}} = (X^TX)^{-1}X^T\\mathbf{y}$ 后，拟合值为 $\\hat{\\mathbf{y}} = X\\hat{\\boldsymbol{\\beta}}$：$X$ 的每一行 $(1, x_{i1}, x_{i2})$ 与 $\\hat{\\boldsymbol{\\beta}}$ 作点积。观测的残差为 $e_i = y_i - \\hat{y}_i$，观测在拟合平面上方时为正，下方时为负。",
+        "Once $\\hat{\\boldsymbol{\\beta}} = (X^TX)^{-1}X^T\\mathbf{y}$ is known, the fitted values are $\\hat{\\mathbf{y}} = X\\hat{\\boldsymbol{\\beta}}$: each row of $X$, $(1, x_{i1}, x_{i2})$, is dotted with $\\hat{\\boldsymbol{\\beta}}$. The residual of an observation is $e_i = y_i - \\hat{y}_i$, positive when the observation lies above the fitted plane and negative when it lies below. For example, $\\hat{y} = 1 + 2x_1 - x_2$ at $x_1 = 3$, $x_2 = 2$ gives $\\hat{y} = 5$, so an observation $y = 4$ has residual $-1$.\n\n> **Watch out.** The residual is observed minus fitted, $y_i - \\hat{y}_i$, not the other way round; and the row of $X$ starts with $1$, so the intercept is part of $\\hat{y}_i$.",
+        "求得 $\\hat{\\boldsymbol{\\beta}} = (X^TX)^{-1}X^T\\mathbf{y}$ 后，拟合值为 $\\hat{\\mathbf{y}} = X\\hat{\\boldsymbol{\\beta}}$：$X$ 的每一行 $(1, x_{i1}, x_{i2})$ 与 $\\hat{\\boldsymbol{\\beta}}$ 作点积。观测的残差为 $e_i = y_i - \\hat{y}_i$，观测在拟合平面上方时为正，下方时为负。例如 $\\hat{y} = 1 + 2x_1 - x_2$ 在 $x_1 = 3$，$x_2 = 2$ 处给出 $\\hat{y} = 5$，所以观测 $y = 4$ 的残差为 $-1$。\n\n> **注意。** 残差是观测值减拟合值 $y_i - \\hat{y}_i$，顺序不能反；$X$ 的行以 $1$ 开头，所以截距是 $\\hat{y}_i$ 的一部分。",
       ),
       generate(rng: Rng): Problem {
         const b = [rng.nonZero(-5, 8), rng.nonZero(-4, 4), rng.nonZero(-4, 4)] as const;
@@ -4925,10 +6227,44 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
             `拟合模型为 $\\hat{y} = ${b[0]} ${formatAddVar(b[1], "x_1")} ${formatAddVar(b[2], "x_2")}$。求观测 $x_1 = ${x1}$，$x_2 = ${x2}$，$y = ${y}$ 的残差。`,
           ),
           answer: ans,
-          wrong: [-ans, yhat, y - b[0], y - (b[1] * x1 + b[2] * x2)],
-          solution: t(
-            `$\\hat{y} = ${b[0]} + ${b[1] < 0 ? `(${b[1]})` : b[1]} \\cdot ${x1} + ${b[2] < 0 ? `(${b[2]})` : b[2]} \\cdot ${x2 < 0 ? `(${x2})` : x2} = ${yhat}$, so $e = ${y} - ${yhat < 0 ? `(${yhat})` : yhat} = ${ans}$.`,
-            `$\\hat{y} = ${b[0]} + ${b[1] < 0 ? `(${b[1]})` : b[1]} \\cdot ${x1} + ${b[2] < 0 ? `(${b[2]})` : b[2]} \\cdot ${x2 < 0 ? `(${x2})` : x2} = ${yhat}$，所以 $e = ${y} - ${yhat < 0 ? `(${yhat})` : yhat} = ${ans}$。`,
+          mistakes: distinct(
+            [
+              why(
+                -ans,
+                `That is $\\hat{y} - y$; the residual is observed minus fitted, $${y} - ${paren(yhat)}$.`,
+                `这是 $\\hat{y} - y$；残差是观测值减拟合值，即 $${y} - ${paren(yhat)}$。`,
+              ),
+              why(
+                yhat,
+                `$${yhat}$ is the fitted value $\\hat{y}$; subtract it from the observed $y = ${y}$.`,
+                `$${yhat}$ 是拟合值 $\\hat{y}$；还要用观测值 $y = ${y}$ 减去它。`,
+              ),
+              why(
+                y - (b[1] * x1 + b[2] * x2),
+                `The intercept $${b[0]}$ was left out of $\\hat{y}$; the row of $X$ starts with $1$.`,
+                `$\\hat{y}$ 中漏掉了截距 $${b[0]}$；$X$ 的行以 $1$ 开头。`,
+              ),
+              why(
+                y - b[0],
+                "Only the intercept was subtracted; the predictor terms belong to $\\hat{y}$ too.",
+                "只减去了截距；预测变量的项也属于 $\\hat{y}$。",
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["Compute the fitted value", "计算拟合值"],
+                t("Dot the row $(1, x_1, x_2)$ with the coefficients:", "用行 $(1, x_1, x_2)$ 与系数作点积："),
+                [`\\hat{y} = ${b[0]} + ${paren(b[1])} \\cdot ${x1} + ${paren(b[2])} \\cdot ${paren(x2)} = ${yhat}`],
+              ],
+              [["Subtract", "相减"], t("", ""), [`e = y - \\hat{y} = ${y} - ${paren(yhat)} = ${ans}`]],
+            ],
+            t(
+              `$\\hat{y} + e = ${yhat} ${signed(ans)} = ${y} = y$, and the observation is ${ans > 0 ? "above" : "below"} the fitted plane, as the sign of $e$ says.`,
+              `$\\hat{y} + e = ${yhat} ${signed(ans)} = ${y} = y$，且观测在拟合平面${ans > 0 ? "上方" : "下方"}，与 $e$ 的符号一致。`,
+            ),
           ),
         });
       },

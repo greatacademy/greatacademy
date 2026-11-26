@@ -2384,8 +2384,8 @@ const leastSquaresError: KnowledgePointDef = {
     ],
   title: t("The smallest squared error of a least-squares fit", "最小二乘拟合的最小平方误差"),
   explanation: t(
-    "After finding the least-squares solution, the size of the fit is the length of the residual $\\mathbf{b} - A\\hat{\\mathbf{x}}$. The residual is perpendicular to the column space, so by Pythagoras $\\|\\mathbf{b} - A\\hat{\\mathbf{x}}\\|^2 = \\|\\mathbf{b}\\|^2 - \\|A\\hat{\\mathbf{x}}\\|^2$.",
-    "求出最小二乘解后，拟合的好坏由残差 $\\mathbf{b} - A\\hat{\\mathbf{x}}$ 的长度衡量。残差与列空间垂直，所以由勾股定理，$\\|\\mathbf{b} - A\\hat{\\mathbf{x}}\\|^2 = \\|\\mathbf{b}\\|^2 - \\|A\\hat{\\mathbf{x}}\\|^2$。",
+    "After finding the least-squares solution, the size of the fit is the length of the residual $\\mathbf{b} - A\\hat{\\mathbf{x}}$. The residual is perpendicular to the column space, so by Pythagoras $\\|\\mathbf{b} - A\\hat{\\mathbf{x}}\\|^2 = \\|\\mathbf{b}\\|^2 - \\|A\\hat{\\mathbf{x}}\\|^2$. For a single column, $\\|A\\hat{x}\\|^2 = \\frac{(A^T\\mathbf{b})^2}{A^TA}$. For example, $A = (1, 1, 1)$ and $\\mathbf{b} = (1, 2, 6)$ give $\\|A\\hat{x}\\|^2 = \\frac{9^2}{3} = 27$, so the smallest squared error is $41 - 27 = 14$.\n\n> **Watch out.** The answer is the error, $\\|\\mathbf{b}\\|^2$ minus the squared length of the fit, not the fit itself and not the best $x$. Square $A^T\\mathbf{b}$ before dividing by $A^TA$.",
+    "求出最小二乘解后，拟合的好坏由残差 $\\mathbf{b} - A\\hat{\\mathbf{x}}$ 的长度衡量。残差与列空间垂直，所以由勾股定理，$\\|\\mathbf{b} - A\\hat{\\mathbf{x}}\\|^2 = \\|\\mathbf{b}\\|^2 - \\|A\\hat{\\mathbf{x}}\\|^2$。对单列矩阵，$\\|A\\hat{x}\\|^2 = \\frac{(A^T\\mathbf{b})^2}{A^TA}$。例如 $A = (1, 1, 1)$，$\\mathbf{b} = (1, 2, 6)$ 给出 $\\|A\\hat{x}\\|^2 = \\frac{9^2}{3} = 27$，所以最小平方误差为 $41 - 27 = 14$。\n\n> **注意。** 答案是误差，即 $\\|\\mathbf{b}\\|^2$ 减去拟合部分长度的平方，而不是拟合部分本身，也不是最佳的 $x$。$A^T\\mathbf{b}$ 要先平方再除以 $A^TA$。",
   ),
   generate(rng) {
     const a = [nonzero(rng, 3), nonzero(rng, 3), nonzero(rng, 3)];
@@ -2395,16 +2395,61 @@ const leastSquaresError: KnowledgePointDef = {
     const [aa, ab, bb] = [dot(a, a), dot(a, b), dot(b, b)];
     const xhat = Q.of(ab, aa);
     const answer = Q.of(bb * aa - ab * ab, aa);
+    const xhatTerm = xhat.toNumber() < 0 ? `(${xhat.toLatex()})` : xhat.toLatex();
+    const residualEntry = (v: number, ai: number) => Q.of(v).sub(xhat.mul(Q.of(ai)));
+    const residual = b.map((v, i) => residualEntry(v, a[i]!).toLatex()).join(", ");
     return numberProblem({
       prompt: t(
         `Find the smallest possible value of $\\|A x - \\mathbf{b}\\|^2$ over all numbers $x$, for $A = ${col(...a)}$ and $\\mathbf{b} = ${col(...b)}$.`,
         `$A = ${col(...a)}$，$\\mathbf{b} = ${col(...b)}$。对所有数 $x$，求 $\\|A x - \\mathbf{b}\\|^2$ 的最小值。`,
       ),
       answer,
-      wrong: [bb, Q.of(ab * ab, aa), xhat],
-      solution: t(
-        `The best $x$ is $\\frac{A^T\\mathbf{b}}{A^TA} = ${xhat.toLatex()}$. The fit has squared length $\\frac{(${ab})^2}{${aa}}$, and the rest of $\\|\\mathbf{b}\\|^2 = ${bb}$ is the error: $${bb} - ${Q.of(ab * ab, aa).toLatex()} = ${answer.toLatex()}$.`,
-        `最佳的 $x$ 是 $\\frac{A^T\\mathbf{b}}{A^TA} = ${xhat.toLatex()}$。拟合部分的长度平方是 $\\frac{(${ab})^2}{${aa}}$，$\\|\\mathbf{b}\\|^2 = ${bb}$ 中其余部分就是误差：$${bb} - ${Q.of(ab * ab, aa).toLatex()} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          bb,
+          `$${bb}$ is $\\|\\mathbf{b}\\|^2$, the error for $x = 0$; the best $x$ removes the fitted part.`,
+          `$${bb}$ 是 $\\|\\mathbf{b}\\|^2$，即 $x = 0$ 时的误差；最佳的 $x$ 会去掉拟合部分。`,
+        ),
+        why(
+          Q.of(ab * ab, aa),
+          `$${Q.of(ab * ab, aa).toLatex()}$ is $\\|A\\hat{x}\\|^2$, the squared length of the fit; the error is what is left of $\\|\\mathbf{b}\\|^2 = ${bb}$.`,
+          `$${Q.of(ab * ab, aa).toLatex()}$ 是 $\\|A\\hat{x}\\|^2$，拟合部分长度的平方；误差是 $\\|\\mathbf{b}\\|^2 = ${bb}$ 剩下的部分。`,
+        ),
+        why(
+          xhat,
+          `$${xhat.toLatex()}$ is the best $x$ itself; the question asks for the smallest value of $\\|Ax - \\mathbf{b}\\|^2$.`,
+          `$${xhat.toLatex()}$ 是最佳的 $x$ 本身；题目问的是 $\\|Ax - \\mathbf{b}\\|^2$ 的最小值。`,
+        ),
+        why(
+          bb - ab,
+          `That subtracts $A^T\\mathbf{b} = ${ab}$ itself; the fit has squared length $\\frac{(A^T\\mathbf{b})^2}{A^TA} = ${Q.of(ab * ab, aa).toLatex()}$.`,
+          `这是直接减去了 $A^T\\mathbf{b} = ${ab}$；拟合部分长度的平方是 $\\frac{(A^T\\mathbf{b})^2}{A^TA} = ${Q.of(ab * ab, aa).toLatex()}$。`,
+        ),
+      ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the best $x$", "求最佳的 $x$"],
+            t(
+              `$A^TA = ${aa}$ and $A^T\\mathbf{b} = ${ab}$, so $\\hat{x} = \\frac{${ab}}{${aa}}${xhat.isInteger() || xhat.d !== BigInt(aa) ? ` = ${xhat.toLatex()}` : ""}$.`,
+              `$A^TA = ${aa}$，$A^T\\mathbf{b} = ${ab}$，所以 $\\hat{x} = \\frac{${ab}}{${aa}}${xhat.isInteger() || xhat.d !== BigInt(aa) ? ` = ${xhat.toLatex()}` : ""}$。`,
+            ),
+          ],
+          [
+            ["Measure the fit", "度量拟合部分"],
+            t("", ""),
+            [`\\|A\\hat{x}\\|^2 = \\frac{(${ab})^2}{${aa}} = ${Q.of(ab * ab, aa).toLatex()}`],
+          ],
+          [
+            ["Subtract from $\\|\\mathbf{b}\\|^2$", "从 $\\|\\mathbf{b}\\|^2$ 中减去"],
+            t("By Pythagoras the rest is the error:", "由勾股定理，剩下的就是误差："),
+            [`\\|\\mathbf{b} - A\\hat{x}\\|^2 = ${bb} - ${Q.of(ab * ab, aa).toLatex()} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `The residual $\\mathbf{b} - ${xhatTerm}A = (${residual})$ has squared length $${answer.toLatex()}$ when computed directly.`,
+          `直接计算残差 $\\mathbf{b} - ${xhatTerm}A = (${residual})$，其长度平方为 $${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -2677,8 +2722,8 @@ const pseudoinverseOfADiagonal: KnowledgePointDef = {
   id: "the-pseudoinverse-of-a-diagonal-matrix",
   title: t("The pseudoinverse of a diagonal matrix", "对角矩阵的伪逆"),
   explanation: t(
-    "The pseudoinverse of a diagonal matrix inverts each nonzero entry and leaves each zero as zero. A singular matrix has no true inverse, but on the directions it does not kill, its pseudoinverse undoes it.",
-    "对角矩阵的伪逆把每个非零元素取倒数，零仍然是零。奇异矩阵没有真正的逆，但在它不压缩为零的方向上，伪逆能把它还原。",
+    "The pseudoinverse of a diagonal matrix inverts each nonzero entry and leaves each zero as zero. A singular matrix has no true inverse, but on the directions it does not kill, its pseudoinverse undoes it. For example, $\\operatorname{diag}(2, 0, -4)$ has pseudoinverse $\\operatorname{diag}(\\frac{1}{2}, 0, -\\frac{1}{4})$, whose trace is $\\frac{1}{4}$.\n\n> **Watch out.** Invert entry by entry and then add: the trace of the pseudoinverse is not the reciprocal of the trace. A zero entry stays $0$ and adds nothing.",
+    "对角矩阵的伪逆把每个非零元素取倒数，零仍然是零。奇异矩阵没有真正的逆，但在它不压缩为零的方向上，伪逆能把它还原。例如 $\\operatorname{diag}(2, 0, -4)$ 的伪逆是 $\\operatorname{diag}(\\frac{1}{2}, 0, -\\frac{1}{4})$，迹为 $\\frac{1}{4}$。\n\n> **注意。** 先逐个元素取倒数再相加：伪逆的迹不是迹的倒数。零元素仍为 $0$，对和没有贡献。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -2702,10 +2747,45 @@ const pseudoinverseOfADiagonal: KnowledgePointDef = {
         ])}$ 的伪逆的迹。`,
       ),
       answer,
-      wrong: [a + b, Q.of(1, a + b === 0 ? 1 : a + b), Q.of(1, a * b)],
-      solution: t(
-        `Invert the nonzero entries and keep the zero: the diagonal holds $${frac(1, a)}$, $${frac(1, b)}$ and $0$. The trace is their sum, $${answer.toLatex()}$.`,
-        `非零元素取倒数，零保持不变：对角线上是 $${frac(1, a)}$、$${frac(1, b)}$ 和 $0$。迹是它们的和，$${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          a + b,
+          `$${a + b}$ is the trace of the matrix itself; invert the nonzero entries first.`,
+          `$${a + b}$ 是原矩阵的迹；要先把非零元素取倒数。`,
+        ),
+        why(
+          Q.of(1, a + b),
+          `That inverts the trace, $${frac(1, a + b)}$; the trace of the pseudoinverse adds the reciprocals $${frac(1, a)}$ and $${frac(1, b)}$.`,
+          `这是把迹取了倒数 $${frac(1, a + b)}$；伪逆的迹要把倒数 $${frac(1, a)}$ 和 $${frac(1, b)}$ 相加。`,
+        ),
+        why(
+          Q.of(1, a * b),
+          `That multiplies the reciprocals; the trace adds the diagonal entries $${frac(1, a)}$ and $${frac(1, b)}$.`,
+          `这是把倒数相乘了；迹是对角元 $${frac(1, a)}$ 与 $${frac(1, b)}$ 之和。`,
+        ),
+        why(
+          Q.of(1, Math.abs(a)).add(Q.of(1, Math.abs(b))),
+          `That drops a sign: the reciprocal of a negative entry is negative, so add $${frac(1, a)}$ and $${frac(1, b)}$ with their signs.`,
+          `这里丢了符号：负数的倒数仍是负数，要带符号把 $${frac(1, a)}$ 和 $${frac(1, b)}$ 相加。`,
+        ),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Invert the nonzero entries", "非零元素取倒数"],
+            t("Each nonzero diagonal entry is inverted and the zero stays $0$:", "每个非零对角元取倒数，零仍为 $0$："),
+            [`${frac(1, a)}, \\quad ${frac(1, b)}, \\quad 0`],
+          ],
+          [
+            ["Add the diagonal", "对角元相加"],
+            t("", ""),
+            [`${frac(1, a)} ${b < 0 ? "-" : "+"} ${frac(1, Math.abs(b))} + 0 = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          "The matrix times its pseudoinverse is diagonal with entries $1$, $1$ and $0$: the pseudoinverse undoes the two directions that are not sent to $\\mathbf{0}$.",
+          "矩阵乘它的伪逆是对角矩阵，对角元为 $1$、$1$ 和 $0$：伪逆还原了没有被送到 $\\mathbf{0}$ 的两个方向。",
+        ),
       ),
     });
   },
@@ -2719,8 +2799,8 @@ const rateOfConvergence: KnowledgePointDef = {
   id: "how-fast-a-two-state-chain-settles",
   title: t("How fast a two-state chain settles", "两状态马尔可夫链的收敛速度"),
   explanation: t(
-    "A $2 \\times 2$ stochastic matrix has the eigenvalue $1$, and since the eigenvalues add up to the trace, its other eigenvalue is the trace minus one. Each step multiplies the distance from the steady state by this second eigenvalue, so a value near zero means the chain settles quickly.",
-    "二阶随机矩阵有特征值 $1$，又因为特征值之和等于迹，另一个特征值是迹减一。每走一步，到稳态的距离就乘以这第二个特征值，所以它接近零时，链很快稳定。",
+    "A $2 \\times 2$ stochastic matrix has the eigenvalue $1$, and since the eigenvalues add up to the trace, its other eigenvalue is the trace minus one. Each step multiplies the distance from the steady state by this second eigenvalue, so a value near zero means the chain settles quickly. For example, $P = \\begin{pmatrix} 0.9 & 0.3 \\\\ 0.1 & 0.7 \\end{pmatrix}$ has trace $1.6$, so its second eigenvalue is $0.6$, and each step shrinks the distance to $60\\%$ of what it was.\n\n> **Watch out.** The factor is the second eigenvalue, not the eigenvalue $1$ of the steady state; it is the trace minus $1$, not the sum of the two leaving probabilities, and not the product of the diagonal entries.",
+    "二阶随机矩阵有特征值 $1$，又因为特征值之和等于迹，另一个特征值是迹减一。每走一步，到稳态的距离就乘以这第二个特征值，所以它接近零时，链很快稳定。例如 $P = \\begin{pmatrix} 0.9 & 0.3 \\\\ 0.1 & 0.7 \\end{pmatrix}$ 的迹是 $1.6$，第二个特征值是 $0.6$，每走一步距离缩小为原来的 $60\\%$。\n\n> **注意。** 这个倍数是第二个特征值，不是稳态对应的特征值 $1$；它等于迹减 $1$，不是两个离开概率之和，也不是对角元素的乘积。",
   ),
   generate(rng) {
     const p = rng.int(1, 8);
@@ -2728,6 +2808,7 @@ const rateOfConvergence: KnowledgePointDef = {
     const stay1 = 10 - p;
     const stay2 = 10 - q;
     const answer = Q.of(10 - p - q, 10);
+    const trace = Q.of(stay1 + stay2, 10);
     return numberProblem({
       prompt: t(
         `Each step of a Markov chain multiplies the state by $P = ${mat([
@@ -2740,10 +2821,45 @@ const rateOfConvergence: KnowledgePointDef = {
         ])}$。每一步把到稳态的距离乘以多少？`,
       ),
       answer,
-      wrong: [1, Q.of(p + q, 10), Q.of(stay1 * stay2, 100)],
-      solution: t(
-        `One eigenvalue is $1$, and the trace is $${Q.of(stay1 + stay2, 10).toLatex()}$. So the other is $${Q.of(stay1 + stay2, 10).toLatex()} - 1 = ${answer.toLatex()}$, and this is the factor.`,
-        `一个特征值是 $1$，迹是 $${Q.of(stay1 + stay2, 10).toLatex()}$。所以另一个是 $${Q.of(stay1 + stay2, 10).toLatex()} - 1 = ${answer.toLatex()}$，这就是所求的倍数。`,
+      mistakes: [
+        why(
+          1,
+          "$1$ is the eigenvalue of the steady state, which does not change; the distance from it shrinks by the other eigenvalue.",
+          "$1$ 是稳态对应的特征值，稳态本身不变；到稳态的距离按另一个特征值缩小。",
+        ),
+        why(
+          Q.of(p + q, 10),
+          `$${Q.of(p + q, 10).toLatex()}$ is $1$ minus the factor, the sum of the two leaving probabilities; the factor is the trace minus $1$.`,
+          `$${Q.of(p + q, 10).toLatex()}$ 是 $1$ 减去所求倍数，即两个离开概率之和；所求倍数是迹减 $1$。`,
+        ),
+        why(
+          Q.of(stay1 * stay2, 100),
+          "That multiplies the diagonal entries; the eigenvalues add up to the trace, so the second one is the trace minus $1$.",
+          "这是把对角元素相乘；特征值之和等于迹，所以第二个特征值是迹减 $1$。",
+        ),
+        why(
+          trace,
+          `$${trace.toLatex()}$ is the trace, the sum of both eigenvalues; subtract the eigenvalue $1$.`,
+          `$${trace.toLatex()}$ 是迹，即两个特征值之和；要减去特征值 $1$。`,
+        ),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Use the trace", "利用迹"],
+            t("The eigenvalues add up to the trace:", "特征值之和等于迹："),
+            [`1 + \\lambda_2 = ${Q.of(stay1, 10).toLatex()} + ${Q.of(stay2, 10).toLatex()} = ${trace.toLatex()}`],
+          ],
+          [
+            ["Solve for the second eigenvalue", "解出第二个特征值"],
+            t("", ""),
+            [`\\lambda_2 = ${trace.toLatex()} - 1 = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `The product of the eigenvalues is $\\det P = ${Q.of(stay1 * stay2 - p * q, 100).toLatex()} = 1 \\cdot ${answer.toLatex()}$.`,
+          `两个特征值之积为 $\\det P = ${Q.of(stay1 * stay2 - p * q, 100).toLatex()} = 1 \\cdot ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -2753,8 +2869,8 @@ const slopeFromNormalEquations: KnowledgePointDef = {
   id: "the-slope-from-the-normal-equations",
   title: t("The slope of a regression line from the normal equations", "由正规方程求回归直线的斜率"),
   explanation: t(
-    "For the line $y = b_0 + b_1x$ the matrix $X$ has a column of ones and a column of $x$ values. Solving $X^TX\\mathbf{b} = X^T\\mathbf{y}$ for the slope gives $b_1 = \\frac{n\\sum xy - \\sum x\\sum y}{n\\sum x^2 - (\\sum x)^2}$, which counts the data points $n$ and uses each of the sums.",
-    "对直线 $y = b_0 + b_1x$，矩阵 $X$ 有一列 1 和一列 $x$ 值。由 $X^TX\\mathbf{b} = X^T\\mathbf{y}$ 解出斜率，得 $b_1 = \\frac{n\\sum xy - \\sum x\\sum y}{n\\sum x^2 - (\\sum x)^2}$，其中 $n$ 是数据点的个数，每个和都要用到。",
+    "For the line $y = b_0 + b_1x$ the matrix $X$ has a column of ones and a column of $x$ values. Solving $X^TX\\mathbf{b} = X^T\\mathbf{y}$ for the slope gives $b_1 = \\frac{n\\sum xy - \\sum x\\sum y}{n\\sum x^2 - (\\sum x)^2}$, which counts the data points $n$ and uses each of the sums. For example, $(0, 1), (1, 1), (2, 4)$ have $n = 3$, $\\sum x = 3$, $\\sum y = 6$, $\\sum x^2 = 5$, $\\sum xy = 9$, so $b_1 = \\frac{27 - 18}{15 - 9} = \\frac{3}{2}$.\n\n> **Watch out.** $\\frac{\\sum xy}{\\sum x^2}$ is the slope of a line forced through the origin; with an intercept, both the numerator and the denominator need the correction terms with $\\sum x$, and the fraction must not be turned upside down.",
+    "对直线 $y = b_0 + b_1x$，矩阵 $X$ 有一列 1 和一列 $x$ 值。由 $X^TX\\mathbf{b} = X^T\\mathbf{y}$ 解出斜率，得 $b_1 = \\frac{n\\sum xy - \\sum x\\sum y}{n\\sum x^2 - (\\sum x)^2}$，其中 $n$ 是数据点的个数，每个和都要用到。例如 $(0, 1), (1, 1), (2, 4)$ 有 $n = 3$，$\\sum x = 3$，$\\sum y = 6$，$\\sum x^2 = 5$，$\\sum xy = 9$，所以 $b_1 = \\frac{27 - 18}{15 - 9} = \\frac{3}{2}$。\n\n> **注意。** $\\frac{\\sum xy}{\\sum x^2}$ 是强制过原点的直线的斜率；有截距时，分子和分母都需要含 $\\sum x$ 的修正项，分式也不能颠倒。",
   ),
   generate(rng) {
     const n = 4;
@@ -2762,18 +2878,67 @@ const slopeFromNormalEquations: KnowledgePointDef = {
     const xs = [start, start + 1, start + 2, start + 4];
     const ys = xs.map(() => rng.int(-3, 8));
     if (new Set(ys).size === 1) ys[0]! += 1;
+    // A flat line would leave too few distinct wrong slopes; raising the last y changes n·Σxy − Σx·Σy by 9.
+    if (n * dot(xs, ys) - xs.reduce((a, b) => a + b, 0) * ys.reduce((a, b) => a + b, 0) === 0) ys[3]! += 1;
     const [sx, sy, sxx, sxy] = [xs.reduce((a, b) => a + b, 0), ys.reduce((a, b) => a + b, 0), dot(xs, xs), dot(xs, ys)];
     const denominator = n * sxx - sx * sx;
     const numerator = n * sxy - sx * sy;
     const answer = Q.of(numerator, denominator);
+    const leftOver = Q.of(sy).sub(answer.mul(Q.of(sx)));
+    const intercept = leftOver.div(Q.of(n));
     const points = xs.map((x, i) => `(${x}, ${ys[i]})`).join(", ");
     return numberProblem({
       prompt: t(`Find the slope of the least-squares line through the points $${points}$.`, `求过点 $${points}$ 的最小二乘直线的斜率。`),
       answer,
-      wrong: [sxx === 0 ? 1 : Q.of(sxy, sxx), Q.of(sy, sx === 0 ? 1 : sx), Q.of(denominator, numerator === 0 ? 1 : numerator)],
-      solution: t(
-        `Here $\\sum x = ${sx}$, $\\sum y = ${sy}$, $\\sum x^2 = ${sxx}$ and $\\sum xy = ${sxy}$. So $b_1 = \\frac{${n}(${sxy}) - (${sx})(${sy})}{${n}(${sxx}) - (${sx})^2} = ${answer.toLatex()}$.`,
-        `这里 $\\sum x = ${sx}$，$\\sum y = ${sy}$，$\\sum x^2 = ${sxx}$，$\\sum xy = ${sxy}$。所以 $b_1 = \\frac{${n}(${sxy}) - (${sx})(${sy})}{${n}(${sxx}) - (${sx})^2} = ${answer.toLatex()}$。`,
+      mistakes: distinctFrom(answer, [
+        ...(sxx === 0
+          ? []
+          : [
+              why(
+                Q.of(sxy, sxx),
+                "That is $\\frac{\\sum xy}{\\sum x^2}$, the slope of a line forced through the origin; the line here has an intercept.",
+                "这是 $\\frac{\\sum xy}{\\sum x^2}$，即强制过原点的直线的斜率；这里的直线有截距。",
+              ),
+            ]),
+        ...(sx === 0
+          ? []
+          : [
+              why(
+                Q.of(sy, sx),
+                "That is $\\frac{\\sum y}{\\sum x}$, the ratio of the means, which is the slope only for a line through the origin and the mean point.",
+                "这是 $\\frac{\\sum y}{\\sum x}$，即两个平均值之比，只有直线过原点和平均点时才是斜率。",
+              ),
+            ]),
+        ...(numerator === 0
+          ? []
+          : [
+              why(
+                Q.of(denominator, numerator),
+                "The fraction is upside down: the sums with $y$ go in the numerator.",
+                "分式颠倒了：含 $y$ 的和在分子上。",
+              ),
+            ]),
+        why(Q.of(n * sxy - sx * sy, n * sxx), "The denominator lost its correction $(\\sum x)^2$.", "分母漏掉了修正项 $(\\sum x)^2$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compute the sums", "计算各个和"],
+            t("", ""),
+            [`\\sum x = ${sx}, \\quad \\sum y = ${sy}, \\quad \\sum x^2 = ${sxx}, \\quad \\sum xy = ${sxy}`],
+          ],
+          [
+            ["Put them into the slope", "代入斜率公式"],
+            t("", ""),
+            [
+              `b_1 = \\frac{${n} \\cdot ${inParens(sxy)} - ${inParens(sx)} \\cdot ${inParens(sy)}}{${n} \\cdot ${sxx} - ${inParens(sx)}^2} = \\frac{${numerator}}{${denominator}} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `The intercept is $b_0 = \\frac{\\sum y - b_1\\sum x}{n} = ${intercept.toLatex()}$, and the residuals then add to $0$: $\\sum y - ${n}b_0 - b_1\\sum x = 0$.`,
+          `截距为 $b_0 = \\frac{\\sum y - b_1\\sum x}{n} = ${intercept.toLatex()}$，此时残差之和为 $0$：$\\sum y - ${n}b_0 - b_1\\sum x = 0$。`,
+        ),
       ),
     });
   },
@@ -6038,8 +6203,8 @@ const traceOfHatMatrix: KnowledgePointDef = {
   id: "the-trace-of-a-hat-matrix",
   title: t("The trace of a hat matrix", "帽子矩阵的迹"),
   explanation: t(
-    "The hat matrix $H = X(X^TX)^{-1}X^T$ is the orthogonal projection onto the column space of $X$. A projection has only the eigenvalues 1 and 0, so its trace equals its rank. With an intercept and $k$ predictors, independent columns give the rank $k + 1$, which is the number of fitted coefficients. The complementary projection $I - H$ makes the residuals, and its trace, $n - k - 1$, is the number of residual degrees of freedom.",
-    "帽子矩阵 $H = X(X^TX)^{-1}X^T$ 是到 $X$ 的列空间的正交投影。投影只有特征值 1 和 0，所以它的迹等于它的秩。有截距和 $k$ 个预测变量时，列线性无关，秩是 $k + 1$，也就是拟合系数的个数。互补投影 $I - H$ 给出残差，它的迹 $n - k - 1$ 是残差的自由度。",
+    "The hat matrix $H = X(X^TX)^{-1}X^T$ is the orthogonal projection onto the column space of $X$. A projection has only the eigenvalues 1 and 0, so its trace equals its rank. With an intercept and $k$ predictors, independent columns give the rank $k + 1$, which is the number of fitted coefficients. The complementary projection $I - H$ makes the residuals, and its trace, $n - k - 1$, is the number of residual degrees of freedom. For example, an intercept and $3$ predictors fitted to $25$ observations give $\\operatorname{tr}(H) = 4$ and $\\operatorname{tr}(I - H) = 21$.\n\n> **Watch out.** The intercept adds a column of ones, so the rank is $k + 1$, not $k$; and the trace of $I - H$ subtracts that rank from $n$, the size of the matrices.",
+    "帽子矩阵 $H = X(X^TX)^{-1}X^T$ 是到 $X$ 的列空间的正交投影。投影只有特征值 1 和 0，所以它的迹等于它的秩。有截距和 $k$ 个预测变量时，列线性无关，秩是 $k + 1$，也就是拟合系数的个数。互补投影 $I - H$ 给出残差，它的迹 $n - k - 1$ 是残差的自由度。例如截距加 $3$ 个预测变量拟合 $25$ 个观测，$\\operatorname{tr}(H) = 4$，$\\operatorname{tr}(I - H) = 21$。\n\n> **注意。** 截距增加了一列全 1，所以秩是 $k + 1$，不是 $k$；$I - H$ 的迹是用矩阵的阶数 $n$ 减去这个秩。",
   ),
   generate(rng) {
     const n = rng.int(10, 60);
@@ -6054,10 +6219,61 @@ const traceOfHatMatrix: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [hat ? k : n - k, hat ? n - k - 1 : k + 1, n, answer + 1, answer + 2],
-      solution: t(
-        `The matrix $H$ is a projection onto a space of dimension $${k + 1}$, and the trace of a projection equals its rank. ${hat ? `So the trace is $${answer}$.` : `So the trace of $I - H$ is $${n} - ${k + 1} = ${answer}$.`}`,
-        `矩阵 $H$ 是到 $${k + 1}$ 维空间的投影，投影的迹等于它的秩。${hat ? `所以迹是 $${answer}$。` : `所以 $I - H$ 的迹是 $${n} - ${k + 1} = ${answer}$。`}`,
+      mistakes: distinctFrom(answer, [
+        hat
+          ? why(
+              k,
+              "The intercept adds a column of ones, so $X$ has $k + 1$ columns, not $k$.",
+              "截距增加了一列全 1，所以 $X$ 有 $k + 1$ 列，而不是 $k$ 列。",
+            )
+          : why(
+              n - k,
+              `That subtracts only the $${k}$ predictors; the intercept is a column of $X$ too, so subtract $${k + 1}$.`,
+              `这只减去了 $${k}$ 个预测变量；截距也是 $X$ 的一列，所以要减去 $${k + 1}$。`,
+            ),
+        hat
+          ? why(
+              n - k - 1,
+              `$${n - k - 1}$ is the trace of $I - H$, the residual degrees of freedom.`,
+              `$${n - k - 1}$ 是 $I - H$ 的迹，即残差的自由度。`,
+            )
+          : why(
+              k + 1,
+              `$${k + 1}$ is the trace of $H$; the trace of $I - H$ is what is left of $${n}$.`,
+              `$${k + 1}$ 是 $H$ 的迹；$I - H$ 的迹是 $${n}$ 剩下的部分。`,
+            ),
+        why(
+          n,
+          `$${n}$ is the size of the matrices, the trace of $I$, not of $${symbol}$.`,
+          `$${n}$ 是矩阵的阶数，是 $I$ 的迹，不是 $${symbol}$ 的迹。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the columns", "数出列数"],
+            t(
+              `$X$ has a column of ones and $${k}$ predictor columns, all independent, so $\\operatorname{rank}(X) = ${k + 1}$.`,
+              `$X$ 有一列全 1 和 $${k}$ 个预测变量列，彼此线性无关，所以 $\\operatorname{rank}(X) = ${k + 1}$。`,
+            ),
+          ],
+          [
+            ["Use trace equals rank", "利用迹等于秩"],
+            hat
+              ? t(
+                  `$H$ projects onto $\\operatorname{Col}(X)$, so $\\operatorname{tr}(H) = ${answer}$.`,
+                  `$H$ 投影到 $\\operatorname{Col}(X)$，所以 $\\operatorname{tr}(H) = ${answer}$。`,
+                )
+              : t(
+                  `$I - H$ projects onto the orthogonal complement, of dimension $${n} - ${k + 1}$, so $\\operatorname{tr}(I - H) = ${answer}$.`,
+                  `$I - H$ 投影到正交补，其维数为 $${n} - ${k + 1}$，所以 $\\operatorname{tr}(I - H) = ${answer}$。`,
+                ),
+          ],
+        ],
+        t(
+          `$\\operatorname{tr}(H) + \\operatorname{tr}(I - H) = ${k + 1} + ${n - k - 1} = ${n} = \\operatorname{tr}(I_{${n}})$.`,
+          `$\\operatorname{tr}(H) + \\operatorname{tr}(I - H) = ${k + 1} + ${n - k - 1} = ${n} = \\operatorname{tr}(I_{${n}})$。`,
+        ),
       ),
     });
   },

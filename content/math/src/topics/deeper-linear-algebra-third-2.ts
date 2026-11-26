@@ -7,7 +7,7 @@ import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 import { numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { choose, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
@@ -1863,8 +1863,8 @@ const svdAction = point(
   "the-image-of-a-right-singular-vector",
   ["The image of a right singular vector", "右奇异向量的像"],
   [
-    "The equation $A = U\\Sigma V^{T}$ means $A\\mathbf{v}_{i} = \\sigma_{i}\\mathbf{u}_{i}$, so a right singular vector is sent to a multiple of the matching left singular vector. This gives the image directly, with no need to multiply the three matrices together first.",
-    "等式 $A = U\\Sigma V^{T}$ 意味着 $A\\mathbf{v}_{i} = \\sigma_{i}\\mathbf{u}_{i}$，所以右奇异向量被送到相应左奇异向量的倍数。这直接给出像，不必先把三个矩阵乘起来。",
+    "The equation $A = U\\Sigma V^{T}$ means $A\\mathbf{v}_{i} = \\sigma_{i}\\mathbf{u}_{i}$, so a right singular vector is sent to a multiple of the matching left singular vector. This gives the image directly, with no need to multiply the three matrices together first. For example, if $\\sigma_{2} = 10$ and $\\mathbf{u}_{2} = \\frac{1}{5}(-4, 3)$, then $A\\mathbf{v}_{2} = 10 \\cdot \\frac{1}{5}(-4, 3) = (-8, 6)$.\n\n> **Watch out.** Match the index: $\\mathbf{v}_{2}$ goes with $\\sigma_{2}$ and $\\mathbf{u}_{2}$, not with $\\sigma_{1}$. And the image is $\\sigma_{i}$ times the whole unit vector $\\mathbf{u}_{i}$, so keep both the factor and the fraction in front of $\\mathbf{u}_{i}$.",
+    "等式 $A = U\\Sigma V^{T}$ 意味着 $A\\mathbf{v}_{i} = \\sigma_{i}\\mathbf{u}_{i}$，所以右奇异向量被送到相应左奇异向量的倍数。这直接给出像，不必先把三个矩阵乘起来。例如若 $\\sigma_{2} = 10$，$\\mathbf{u}_{2} = \\frac{1}{5}(-4, 3)$，则 $A\\mathbf{v}_{2} = 10 \\cdot \\frac{1}{5}(-4, 3) = (-8, 6)$。\n\n> **注意。** 下标要对应：$\\mathbf{v}_{2}$ 配 $\\sigma_{2}$ 和 $\\mathbf{u}_{2}$，不配 $\\sigma_{1}$。像是 $\\sigma_{i}$ 乘以整个单位向量 $\\mathbf{u}_{i}$，所以倍数和 $\\mathbf{u}_{i}$ 前面的分数都要保留。",
   ],
   (rng) => {
     const [p, q, c] = rng.pick(triples);
@@ -1887,18 +1887,62 @@ const svdAction = point(
       [b, a],
     ])}`;
     const point2 = `\\frac{1}{${e}}${vec(v[0] as number, v[1] as number)}`;
-    return ask(
-      [
+    const ui = u[entry] as number;
+    const other = (which === 1 ? s2 : s1) * c;
+    const image = `\\frac{${sigma}}{${c}}${vec(u[0] as number, u[1] as number)} = ${vec((sigma / c) * (u[0] as number), (sigma / c) * (u[1] as number))}`;
+    return numberProblem({
+      prompt: text([
         `$A = U\\Sigma V^{T}$ with $U = ${U}$, $\\Sigma = \\operatorname{diag}(${s1 * c}, ${s2 * c})$ and $V = ${V}$. Find the ${name[0]} entry of $A${point2}$.`,
         `$A = U\\Sigma V^{T}$，其中 $U = ${U}$，$\\Sigma = \\operatorname{diag}(${s1 * c}, ${s2 * c})$，$V = ${V}$。求 $A${point2}$ 的${name[1]}个元素。`,
-      ],
+      ]),
       answer,
-      [sigma, (which === 1 ? s2 : s1) * (u[entry] as number), (sigma / c) * (u[1 - entry] as number)],
-      [
-        `This vector is column $${which}$ of $V$, so $A$ sends it to $${sigma}$ times column $${which}$ of $U$. The entry is $${sigma} \\cdot \\frac{${u[entry] as number}}{${c}} = ${answer}$.`,
-        `这个向量是 $V$ 的第 $${which}$ 列，所以 $A$ 把它送到 $U$ 的第 $${which}$ 列的 $${sigma}$ 倍。该元素是 $${sigma} \\cdot \\frac{${u[entry] as number}}{${c}} = ${answer}$。`,
+      mistakes: [
+        why(
+          sigma,
+          `$${sigma}$ is $\\sigma_{${which}}$ alone; the image is $\\sigma_{${which}}$ times the unit vector $\\mathbf{u}_{${which}}$, whose ${name[0]} entry is $\\frac{${ui}}{${c}}$.`,
+          `$${sigma}$ 只是 $\\sigma_{${which}}$；像是 $\\sigma_{${which}}$ 乘以单位向量 $\\mathbf{u}_{${which}}$，后者的${name[1]}个元素是 $\\frac{${ui}}{${c}}$。`,
+        ),
+        why(
+          (other / c) * ui,
+          `That uses $\\sigma_{${3 - which}} = ${other}$; the vector is column $${which}$ of $V$, so it goes with $\\sigma_{${which}} = ${sigma}$.`,
+          `这用了 $\\sigma_{${3 - which}} = ${other}$；这个向量是 $V$ 的第 $${which}$ 列，应配 $\\sigma_{${which}} = ${sigma}$。`,
+        ),
+        why(
+          (sigma / c) * (u[1 - entry] as number),
+          `That is the ${(ordinal[1 - entry] as Pair)[0]} entry of $A\\mathbf{v}_{${which}}$; the question asks for the ${name[0]}.`,
+          `这是 $A\\mathbf{v}_{${which}}$ 的${(ordinal[1 - entry] as Pair)[1]}个元素；题目问的是${name[1]}个。`,
+        ),
+        why(
+          Q.of(ui, c),
+          `$\\frac{${ui}}{${c}}$ is the entry of $\\mathbf{u}_{${which}}$ itself; $A$ also stretches it by $\\sigma_{${which}} = ${sigma}$.`,
+          `$\\frac{${ui}}{${c}}$ 是 $\\mathbf{u}_{${which}}$ 自身的元素；$A$ 还要把它伸长 $\\sigma_{${which}} = ${sigma}$ 倍。`,
+        ),
       ],
-    );
+      solution: walked(
+        [
+          [
+            ["Recognize the vector", "认出这个向量"],
+            text([
+              `The vector is column $${which}$ of $V$, the right singular vector $\\mathbf{v}_{${which}}$.`,
+              `这个向量是 $V$ 的第 $${which}$ 列，即右奇异向量 $\\mathbf{v}_{${which}}$。`,
+            ]),
+          ],
+          [
+            ["Use $A\\mathbf{v}_{i} = \\sigma_{i}\\mathbf{u}_{i}$", "用 $A\\mathbf{v}_{i} = \\sigma_{i}\\mathbf{u}_{i}$"],
+            text([
+              `So $A$ sends it to $\\sigma_{${which}} = ${sigma}$ times column $${which}$ of $U$:`,
+              `所以 $A$ 把它送到 $U$ 的第 $${which}$ 列的 $\\sigma_{${which}} = ${sigma}$ 倍：`,
+            ]),
+            [`A\\mathbf{v}_{${which}} = ${image}`],
+          ],
+          [["Read the entry", "读出元素"], text([`The ${name[0]} entry is $${answer}$.`, `${name[1]}个元素是 $${answer}$。`])],
+        ],
+        text([
+          `$A\\mathbf{v}_{${which}}$ has length $\\sqrt{${wrap((sigma / c) * (u[0] as number))}^{2} + ${wrap((sigma / c) * (u[1] as number))}^{2}} = ${sigma} = \\sigma_{${which}}$, as the image of a unit vector along a singular direction should.`,
+          `$A\\mathbf{v}_{${which}}$ 的长度为 $\\sqrt{${wrap((sigma / c) * (u[0] as number))}^{2} + ${wrap((sigma / c) * (u[1] as number))}^{2}} = ${sigma} = \\sigma_{${which}}$，正是单位奇异方向的像应有的长度。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1906,8 +1950,8 @@ const repeatedInverse = point(
   "the-inverse-when-the-singular-values-are-equal",
   ["The inverse when the singular values are equal", "奇异值相等时的逆"],
   [
-    "If both singular values of a $2 \\times 2$ matrix equal $\\sigma$, then $A^{T}A = \\sigma^{2}I$, so $A$ is $\\sigma$ times an orthogonal matrix. Its inverse is then $\\frac{1}{\\sigma^{2}}A^{T}$, which comes from the transpose and needs no cofactors.",
-    "如果 $2 \\times 2$ 矩阵的两个奇异值都等于 $\\sigma$，则 $A^{T}A = \\sigma^{2}I$，所以 $A$ 是 $\\sigma$ 乘以一个正交矩阵。它的逆矩阵就是 $\\frac{1}{\\sigma^{2}}A^{T}$，由转置得到，不需要余子式。",
+    "If both singular values of a $2 \\times 2$ matrix equal $\\sigma$, then $A^{T}A = \\sigma^{2}I$, so $A$ is $\\sigma$ times an orthogonal matrix. Its inverse is then $\\frac{1}{\\sigma^{2}}A^{T}$, which comes from the transpose and needs no cofactors. For example, $A = \\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ has $A^{T}A = 25I$, so $A^{-1} = \\frac{1}{25}\\begin{pmatrix} 3 & 4 \\\\ -4 & 3 \\end{pmatrix}$.\n\n> **Watch out.** Divide by $\\sigma^{2}$, not by $\\sigma$, and read the entry from $A^{T}$: the transpose swaps the two off-diagonal entries, so the $(1, 2)$ entry of $A^{-1}$ comes from the $(2, 1)$ entry of $A$.",
+    "如果 $2 \\times 2$ 矩阵的两个奇异值都等于 $\\sigma$，则 $A^{T}A = \\sigma^{2}I$，所以 $A$ 是 $\\sigma$ 乘以一个正交矩阵。它的逆矩阵就是 $\\frac{1}{\\sigma^{2}}A^{T}$，由转置得到，不需要余子式。例如 $A = \\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ 有 $A^{T}A = 25I$，所以 $A^{-1} = \\frac{1}{25}\\begin{pmatrix} 3 & 4 \\\\ -4 & 3 \\end{pmatrix}$。\n\n> **注意。** 要除以 $\\sigma^{2}$，而不是 $\\sigma$；并且从 $A^{T}$ 中读元素：转置交换两个非对角元，所以 $A^{-1}$ 的 $(1, 2)$ 元素来自 $A$ 的 $(2, 1)$ 元素。",
   ],
   (rng) => {
     const [p, q, c] = rng.pick(triples);
@@ -1916,24 +1960,68 @@ const repeatedInverse = point(
     const sigma2 = m * m * c * c;
     const entry = m * g * q;
     const answer = Q.of(entry, sigma2);
-    return ask(
-      [
-        `Both singular values of $A = ${mat([
-          [m * p, -entry],
-          [entry, m * p],
-        ])}$ are equal. Find the $(1, 2)$ entry of $A^{-1}$.`,
-        `$A = ${mat([
-          [m * p, -entry],
-          [entry, m * p],
-        ])}$ 的两个奇异值相等。求 $A^{-1}$ 的 $(1, 2)$ 元素。`,
-      ],
+    const sigma = Math.abs(m) * c;
+    const A = mat([
+      [m * p, -entry],
+      [entry, m * p],
+    ]);
+    return numberProblem({
+      prompt: text([
+        `Both singular values of $A = ${A}$ are equal. Find the $(1, 2)$ entry of $A^{-1}$.`,
+        `$A = ${A}$ 的两个奇异值相等。求 $A^{-1}$ 的 $(1, 2)$ 元素。`,
+      ]),
       answer,
-      [answer.neg(), entry, Q.of(entry, Math.abs(m) * c)],
-      [
-        `$A^{T}A = ${sigma2}I$, so $\\sigma^{2} = ${sigma2}$ and $A^{-1} = \\frac{1}{${sigma2}}A^{T}$. The $(1, 2)$ entry of $A^{T}$ is $${entry}$, which gives $${answer.toLatex()}$.`,
-        `$A^{T}A = ${sigma2}I$，所以 $\\sigma^{2} = ${sigma2}$，$A^{-1} = \\frac{1}{${sigma2}}A^{T}$。$A^{T}$ 的 $(1, 2)$ 元素是 $${entry}$，于是得 $${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          answer.neg(),
+          `That divides the $(1, 2)$ entry of $A$ itself, $${-entry}$; the inverse uses $A^{T}$, whose $(1, 2)$ entry is $${entry}$.`,
+          `这是用 $A$ 本身的 $(1, 2)$ 元素 $${-entry}$ 去除的；逆矩阵用的是 $A^{T}$，其 $(1, 2)$ 元素是 $${entry}$。`,
+        ),
+        why(
+          entry,
+          `$${entry}$ is the entry of $A^{T}$; it must still be divided by $\\sigma^{2} = ${sigma2}$.`,
+          `$${entry}$ 是 $A^{T}$ 的元素；还要除以 $\\sigma^{2} = ${sigma2}$。`,
+        ),
+        why(
+          Q.of(entry, sigma),
+          `That divides by $\\sigma = ${sigma}$; since $A^{T}A = \\sigma^{2}I$, the inverse is $A^{T}$ divided by $\\sigma^{2} = ${sigma2}$.`,
+          `这是除以了 $\\sigma = ${sigma}$；由于 $A^{T}A = \\sigma^{2}I$，逆矩阵是 $A^{T}$ 除以 $\\sigma^{2} = ${sigma2}$。`,
+        ),
       ],
-    );
+      solution: walked(
+        [
+          [
+            ["Find $\\sigma^{2}$", "求 $\\sigma^{2}$"],
+            text([
+              "The columns are orthogonal and have the same length, so $A^{T}A$ is a multiple of $I$:",
+              "各列正交且等长，所以 $A^{T}A$ 是 $I$ 的倍数：",
+            ]),
+            [`\\sigma^{2} = ${wrap(m * p)}^{2} + ${wrap(entry)}^{2} = ${sigma2}, \\quad A^{T}A = ${sigma2}I`],
+          ],
+          [
+            ["Invert by transposing", "用转置求逆"],
+            text(["", ""]),
+            [
+              `A^{-1} = \\frac{1}{${sigma2}}A^{T} = \\frac{1}{${sigma2}}${mat([
+                [m * p, entry],
+                [-entry, m * p],
+              ])}`,
+            ],
+          ],
+          [
+            ["Read the entry", "读出元素"],
+            text([
+              `The $(1, 2)$ entry is $\\frac{${entry}}{${sigma2}} = ${answer.toLatex()}$.`,
+              `$(1, 2)$ 元素是 $\\frac{${entry}}{${sigma2}} = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `Row $1$ of $A$ times column $2$ of $A^{-1}$ is $\\frac{1}{${sigma2}}[${wrap(m * p)} \\cdot ${wrap(entry)} + ${wrap(-entry)} \\cdot ${wrap(m * p)}] = 0$, the $(1, 2)$ entry of $I$.`,
+          `$A$ 的第 $1$ 行乘 $A^{-1}$ 的第 $2$ 列为 $\\frac{1}{${sigma2}}[${wrap(m * p)} \\cdot ${wrap(entry)} + ${wrap(-entry)} \\cdot ${wrap(m * p)}] = 0$，正是 $I$ 的 $(1, 2)$ 元素。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1941,8 +2029,8 @@ const rankForError = point(
   "the-smallest-rank-that-meets-an-error-budget",
   ["The smallest rank that meets an error budget", "满足误差要求的最小秩"],
   [
-    "The best rank-$k$ approximation from the SVD has squared Frobenius error equal to the sum of the squares of the discarded singular values. So the smallest rank meeting an error budget is found by adding squares from the small end, not by comparing the singular values themselves with the budget.",
-    "由 SVD 得到的最佳秩 $k$ 近似，其弗罗贝尼乌斯误差的平方等于被舍弃的奇异值的平方和。所以满足误差要求的最小秩要从小的一端累加平方得到，而不是把奇异值本身与要求比较。",
+    "The best rank-$k$ approximation from the SVD has squared Frobenius error equal to the sum of the squares of the discarded singular values. So the smallest rank meeting an error budget is found by adding squares from the small end, not by comparing the singular values themselves with the budget. For example, with singular values $10, 5, 3, 2, 1$ and budget $15$: dropping $1, 2, 3$ costs $1 + 4 + 9 = 14 \\le 15$, while also dropping $5$ would cost $39$, so the smallest rank is $2$.\n\n> **Watch out.** The squares of the discarded values add up, so each one fitting the budget on its own is not enough. Look for the smallest rank that works, not just any rank that works.",
+    "由 SVD 得到的最佳秩 $k$ 近似，其弗罗贝尼乌斯误差的平方等于被舍弃的奇异值的平方和。所以满足误差要求的最小秩要从小的一端累加平方得到，而不是把奇异值本身与要求比较。例如奇异值为 $10, 5, 3, 2, 1$，要求为 $15$：舍弃 $1, 2, 3$ 的代价为 $1 + 4 + 9 = 14 \\le 15$，再舍弃 $5$ 代价就是 $39$，所以最小秩为 $2$。\n\n> **注意。** 被舍弃值的平方要累加，单个满足要求并不够。要找满足要求的最小秩，而不是任意一个满足要求的秩。",
   ],
   (rng) => {
     const values = rng
@@ -1955,18 +2043,64 @@ const rankForError = point(
     const tail = (k: number) => values.slice(k).reduce((sum, s) => sum + s * s, 0);
     const answer = rng.int(1, 4);
     const budget = tail(answer) + rng.int(0, tail(answer - 1) - tail(answer) - 1);
-    return ask(
-      [
+    const kept = (k: number) => values.slice(k).join(", ");
+    const alone = values.filter((s) => s * s > budget).length;
+    const plain = [0, 1, 2, 3, 4, 5].find((k) => values.slice(k).reduce((sum, s) => sum + s, 0) <= budget) ?? 5;
+    return numberProblem({
+      prompt: text([
         `A matrix has singular values $${values.join(", ")}$. Find the smallest $k$ for which the best rank-$k$ approximation has $\\|A - A_{k}\\|_{F}^{2} \\le ${budget}$.`,
         `一个矩阵的奇异值是 $${values.join(", ")}$。求使最佳秩 $k$ 近似满足 $\\|A - A_{k}\\|_{F}^{2} \\le ${budget}$ 的最小 $k$。`,
-      ],
+      ]),
       answer,
-      [answer + 1, answer === 1 ? 5 : answer - 1, answer === 4 ? 3 : 4],
-      [
-        `Rank $${answer}$ discards the squares that add up to $${tail(answer)}$, which meets the budget, while rank $${answer - 1}$ leaves $${tail(answer - 1)}$, which does not. So $k = ${answer}$.`,
-        `秩 $${answer}$ 舍弃的平方和是 $${tail(answer)}$，满足要求，而秩 $${answer - 1}$ 留下 $${tail(answer - 1)}$，不满足。所以 $k = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          answer + 1,
+          `Rank $${answer + 1}$ meets the budget too, but rank $${answer}$ already does, with error $${tail(answer)}$; the question asks for the smallest.`,
+          `秩 $${answer + 1}$ 也满足要求，但秩 $${answer}$ 已经满足，误差为 $${tail(answer)}$；题目要的是最小的。`,
+        ),
+        why(
+          answer - 1,
+          `Rank $${answer - 1}$ discards $${kept(answer - 1)}$, whose squares add up to $${tail(answer - 1)} > ${budget}$.`,
+          `秩 $${answer - 1}$ 舍弃 $${kept(answer - 1)}$，其平方和为 $${tail(answer - 1)} > ${budget}$。`,
+        ),
+        why(
+          alone,
+          `That drops every value whose square alone is at most $${budget}$; the squares of the dropped values add up, to $${tail(alone)}$ here.`,
+          `这是把平方单独不超过 $${budget}$ 的值都舍弃了；被舍弃值的平方要累加，这里是 $${tail(alone)}$。`,
+        ),
+        why(
+          plain,
+          "That compares the sum of the discarded values themselves with the budget; the error adds their squares.",
+          "这是把被舍弃值本身的和与要求比较了；误差要把它们的平方相加。",
+        ),
+      ].filter((m, i, all) => all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Add squares from the small end", "从小的一端累加平方"],
+            text(["Discarding the smallest values first, the error of each rank is:", "先舍弃最小的值，各个秩的误差为："]),
+            [`\\|A - A_{${answer}}\\|_{F}^{2} = ${tail(answer)}, \\quad \\|A - A_{${answer - 1}}\\|_{F}^{2} = ${tail(answer - 1)}`],
+          ],
+          [
+            ["Compare with the budget", "与要求比较"],
+            text([
+              `$${tail(answer)} \\le ${budget}$ but $${tail(answer - 1)} > ${budget}$, so the smallest rank is $k = ${answer}$.`,
+              `$${tail(answer)} \\le ${budget}$，但 $${tail(answer - 1)} > ${budget}$，所以最小秩为 $k = ${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `Rank $${answer}$ discards $${kept(answer)}$, and $${values
+            .slice(answer)
+            .map((s) => `${s}^{2}`)
+            .join(" + ")} = ${tail(answer)}$.`,
+          `秩 $${answer}$ 舍弃 $${kept(answer)}$，而 $${values
+            .slice(answer)
+            .map((s) => `${s}^{2}`)
+            .join(" + ")} = ${tail(answer)}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1974,8 +2108,8 @@ const uniqueFit = point(
   "the-fitted-vector-is-unique-even-when-the-solution-is-not",
   ["The fitted vector is unique even when the solution is not", "即使解不唯一，拟合向量也唯一"],
   [
-    "With dependent columns, the least-squares solution $\\hat{\\mathbf{x}}$ is not unique, but the fitted vector $A\\hat{\\mathbf{x}}$ is, since it is the projection of $\\mathbf{b}$ onto the column space. So it can be found without choosing any particular solution.",
-    "当各列线性相关时，最小二乘解 $\\hat{\\mathbf{x}}$ 不唯一，但拟合向量 $A\\hat{\\mathbf{x}}$ 是唯一的，因为它是 $\\mathbf{b}$ 到列空间的投影。所以不必选取特定的解就能求出它。",
+    "With dependent columns, the least-squares solution $\\hat{\\mathbf{x}}$ is not unique, but the fitted vector $A\\hat{\\mathbf{x}}$ is, since it is the projection of $\\mathbf{b}$ onto the column space. So it can be found without choosing any particular solution. For example, $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$ and $\\mathbf{b} = (5, 0)$ have column space along $(1, 2)$, and $A\\hat{\\mathbf{x}} = \\frac{5}{5}(1, 2) = (1, 2)$ for every least-squares solution.\n\n> **Watch out.** $A\\hat{\\mathbf{x}}$ is the projection, not $\\mathbf{b}$ itself and not the coefficient $\\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$: multiply that coefficient by the first column $\\mathbf{a}$, not by the longer second column.",
+    "当各列线性相关时，最小二乘解 $\\hat{\\mathbf{x}}$ 不唯一，但拟合向量 $A\\hat{\\mathbf{x}}$ 是唯一的，因为它是 $\\mathbf{b}$ 到列空间的投影。所以不必选取特定的解就能求出它。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$，$\\mathbf{b} = (5, 0)$，列空间沿 $(1, 2)$，对每个最小二乘解都有 $A\\hat{\\mathbf{x}} = \\frac{5}{5}(1, 2) = (1, 2)$。\n\n> **注意。** $A\\hat{\\mathbf{x}}$ 是投影，不是 $\\mathbf{b}$ 本身，也不是系数 $\\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$：要把这个系数乘以第一列 $\\mathbf{a}$，而不是更长的第二列。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -1990,24 +2124,69 @@ const uniqueFit = point(
     const entry = rng.int(0, 1);
     const answer = s * (entry === 0 ? a : c);
     const name = ordinal[entry] as Pair;
-    return ask(
-      [
-        `$A = ${mat([
-          [a, m * a],
-          [c, m * c],
-        ])}$ and $\\mathbf{b} = ${vec(b1, b2)}$. The least-squares solutions $\\hat{\\mathbf{x}}$ are not unique. Find the ${name[0]} entry of $A\\hat{\\mathbf{x}}$.`,
-        `$A = ${mat([
-          [a, m * a],
-          [c, m * c],
-        ])}$，$\\mathbf{b} = ${vec(b1, b2)}$。最小二乘解 $\\hat{\\mathbf{x}}$ 不唯一。求 $A\\hat{\\mathbf{x}}$ 的${name[1]}个元素。`,
-      ],
+    const bi = entry === 0 ? b1 : b2;
+    const A = mat([
+      [a, m * a],
+      [c, m * c],
+    ]);
+    return numberProblem({
+      prompt: text([
+        `$A = ${A}$ and $\\mathbf{b} = ${vec(b1, b2)}$. The least-squares solutions $\\hat{\\mathbf{x}}$ are not unique. Find the ${name[0]} entry of $A\\hat{\\mathbf{x}}$.`,
+        `$A = ${A}$，$\\mathbf{b} = ${vec(b1, b2)}$。最小二乘解 $\\hat{\\mathbf{x}}$ 不唯一。求 $A\\hat{\\mathbf{x}}$ 的${name[1]}个元素。`,
+      ]),
       answer,
-      [entry === 0 ? b1 : b2, s, m * answer],
-      [
-        `The column space is the line through $${vec(a, c)}$, and $A\\hat{\\mathbf{x}}$ is the projection of $\\mathbf{b}$ onto it. The coefficient is $\\frac{${dot}}{${norm}} = ${s}$, so the entry is $${answer}$.`,
-        `列空间是过 $${vec(a, c)}$ 的直线，$A\\hat{\\mathbf{x}}$ 是 $\\mathbf{b}$ 到它的投影。系数是 $\\frac{${dot}}{${norm}} = ${s}$，所以该元素是 $${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          bi,
+          `$${bi}$ is the entry of $\\mathbf{b}$; $\\mathbf{b}$ is not in the column space, so $A\\hat{\\mathbf{x}}$ is its projection.`,
+          `$${bi}$ 是 $\\mathbf{b}$ 的元素；$\\mathbf{b}$ 不在列空间中，$A\\hat{\\mathbf{x}}$ 是它的投影。`,
+        ),
+        why(
+          s,
+          `$${s}$ is the coefficient of the projection; multiply it by the ${name[0]} entry $${entry === 0 ? a : c}$ of the column.`,
+          `$${s}$ 是投影的系数；要乘以该列的${name[1]}个元素 $${entry === 0 ? a : c}$。`,
+        ),
+        why(
+          m * answer,
+          `The coefficient $${s}$ belongs to the first column $${vec(a, c)}$; the second column is $${m}$ times longer.`,
+          `系数 $${s}$ 对应第一列 $${vec(a, c)}$；第二列是它的 $${m}$ 倍。`,
+        ),
+        why(
+          bi - answer,
+          `That is the ${name[0]} entry of the residual $\\mathbf{b} - A\\hat{\\mathbf{x}}$, the part of $\\mathbf{b}$ that the fit leaves out.`,
+          `这是残差 $\\mathbf{b} - A\\hat{\\mathbf{x}}$ 的${name[1]}个元素，即拟合没有覆盖的部分。`,
+        ),
+        why(
+          s * (entry === 0 ? c : a),
+          `That is the ${ordinal[1 - entry]![0]} entry of $A\\hat{\\mathbf{x}} = ${vec(s * a, s * c)}$; the question asks for the ${name[0]}.`,
+          `这是 $A\\hat{\\mathbf{x}} = ${vec(s * a, s * c)}$ 的${ordinal[1 - entry]![1]}个元素；题目问的是${name[1]}个。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the column space", "求列空间"],
+            text([
+              `The second column is $${m}$ times the first, so the column space is the line through $\\mathbf{a} = ${vec(a, c)}$.`,
+              `第二列是第一列的 $${m}$ 倍，所以列空间是过 $\\mathbf{a} = ${vec(a, c)}$ 的直线。`,
+            ]),
+          ],
+          [
+            ["Project $\\mathbf{b}$", "投影 $\\mathbf{b}$"],
+            text(["Every least-squares solution gives the same projection:", "每个最小二乘解给出同一个投影："]),
+            [
+              `\\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}} = \\frac{${dot}}{${norm}} = ${s}`,
+              `A\\hat{\\mathbf{x}} = ${s === 1 ? "" : s === -1 ? "-" : s}${vec(a, c)} = ${vec(s * a, s * c)}`,
+            ],
+          ],
+          [["Read the entry", "读出元素"], text([`The ${name[0]} entry is $${answer}$.`, `${name[1]}个元素是 $${answer}$。`])],
+        ],
+        text([
+          `The residual $\\mathbf{b} - A\\hat{\\mathbf{x}} = ${vec(b1 - s * a, b2 - s * c)}$ is orthogonal to $\\mathbf{a}$: $${wrap(b1 - s * a)} \\cdot ${wrap(a)} + ${wrap(b2 - s * c)} \\cdot ${wrap(c)} = 0$.`,
+          `残差 $\\mathbf{b} - A\\hat{\\mathbf{x}} = ${vec(b1 - s * a, b2 - s * c)}$ 与 $\\mathbf{a}$ 正交：$${wrap(b1 - s * a)} \\cdot ${wrap(a)} + ${wrap(b2 - s * c)} \\cdot ${wrap(c)} = 0$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2015,26 +2194,64 @@ const qrResidual = point(
   "the-residual-from-the-qr-factorization",
   ["The residual from the QR factorization", "由 QR 分解求残差"],
   [
-    "The columns of $Q$ are orthonormal, so $Q^{T}\\mathbf{b}$ holds the coordinates of the projection of $\\mathbf{b}$ onto the column space, and its length is the length of that projection. The Pythagorean theorem then gives the squared residual without solving for $\\hat{\\mathbf{x}}$.",
-    "$Q$ 的各列标准正交，所以 $Q^{T}\\mathbf{b}$ 是 $\\mathbf{b}$ 到列空间的投影的坐标，它的长度就是这个投影的长度。于是勾股定理不用解出 $\\hat{\\mathbf{x}}$ 就能给出残差的平方。",
+    "The columns of $Q$ are orthonormal, so $Q^{T}\\mathbf{b}$ holds the coordinates of the projection of $\\mathbf{b}$ onto the column space, and its length is the length of that projection. The Pythagorean theorem then gives the squared residual without solving for $\\hat{\\mathbf{x}}$. For example, $\\|\\mathbf{b}\\|^{2} = 30$ and $Q^{T}\\mathbf{b} = (3, -4)$ give a projection of squared length $9 + 16 = 25$, so the smallest $\\|A\\mathbf{x} - \\mathbf{b}\\|^{2}$ is $30 - 25 = 5$.\n\n> **Watch out.** Subtract the squares of the entries of $Q^{T}\\mathbf{b}$, not the entries themselves and not the square of their sum; and the answer is what is left over, not the squared length of the projection.",
+    "$Q$ 的各列标准正交，所以 $Q^{T}\\mathbf{b}$ 是 $\\mathbf{b}$ 到列空间的投影的坐标，它的长度就是这个投影的长度。于是勾股定理不用解出 $\\hat{\\mathbf{x}}$ 就能给出残差的平方。例如 $\\|\\mathbf{b}\\|^{2} = 30$，$Q^{T}\\mathbf{b} = (3, -4)$，投影的长度平方为 $9 + 16 = 25$，所以 $\\|A\\mathbf{x} - \\mathbf{b}\\|^{2}$ 的最小值是 $30 - 25 = 5$。\n\n> **注意。** 要减去 $Q^{T}\\mathbf{b}$ 各分量的平方，不是分量本身，也不是它们和的平方；答案是剩下的部分，不是投影的长度平方。",
   ],
   (rng) => {
     const p = nz(rng, 6);
     const q = nz(rng, 6);
     const answer = rng.int(1, 30);
-    const N = p * p + q * q + answer;
-    return ask(
-      [
+    const proj = p * p + q * q;
+    const N = proj + answer;
+    return numberProblem({
+      prompt: text([
         `$A = QR$, where $Q$ has orthonormal columns, $\\|\\mathbf{b}\\|^{2} = ${N}$ and $Q^{T}\\mathbf{b} = ${vec(p, q)}$. Find the minimum of $\\|A\\mathbf{x} - \\mathbf{b}\\|^{2}$.`,
         `$A = QR$，其中 $Q$ 的各列标准正交，$\\|\\mathbf{b}\\|^{2} = ${N}$，$Q^{T}\\mathbf{b} = ${vec(p, q)}$。求 $\\|A\\mathbf{x} - \\mathbf{b}\\|^{2}$ 的最小值。`,
-      ],
+      ]),
       answer,
-      [N, p * p + q * q, N - Math.abs(p) - Math.abs(q)],
-      [
-        `The projection of $\\mathbf{b}$ has squared length $${p * p} + ${q * q} = ${p * p + q * q}$. The residual is orthogonal to it, so its squared length is $${N} - ${p * p + q * q} = ${answer}$.`,
-        `$\\mathbf{b}$ 的投影的长度平方是 $${p * p} + ${q * q} = ${p * p + q * q}$。残差与它正交，所以残差的长度平方是 $${N} - ${p * p + q * q} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          N,
+          `$${N}$ is $\\|\\mathbf{b}\\|^{2}$ itself; the part along the column space still has to be removed.`,
+          `$${N}$ 就是 $\\|\\mathbf{b}\\|^{2}$；还要去掉沿列空间的部分。`,
+        ),
+        why(
+          proj,
+          `$${proj}$ is the squared length of the projection $A\\hat{\\mathbf{x}}$; the residual is what is left of $${N}$.`,
+          `$${proj}$ 是投影 $A\\hat{\\mathbf{x}}$ 的长度平方；残差是 $${N}$ 剩下的部分。`,
+        ),
+        why(
+          N - Math.abs(p) - Math.abs(q),
+          "The entries of $Q^{T}\\mathbf{b}$ were subtracted without squaring them.",
+          "减去了 $Q^{T}\\mathbf{b}$ 的分量，没有先平方。",
+        ),
+        why(
+          N - (p + q) ** 2,
+          `That subtracts $(${p} ${q < 0 ? `- ${-q}` : `+ ${q}`})^{2}$, the square of the sum; the Pythagorean theorem adds the squares.`,
+          `这是减去了和的平方 $(${p} ${q < 0 ? `- ${-q}` : `+ ${q}`})^{2}$；勾股定理是把平方相加。`,
+        ),
+        why(
+          N - p * p,
+          `Only the square of the first coordinate, $${p * p}$, was removed; the projection's squared length adds both, $${p * p} + ${q * q}$.`,
+          `只减去了第一个坐标的平方 $${p * p}$；投影的长度平方要把两个都加上：$${p * p} + ${q * q}$。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the projection's length", "求投影的长度"],
+            text(["The columns of $Q$ are orthonormal, so", "$Q$ 的各列标准正交，所以"]),
+            [`\\|A\\hat{\\mathbf{x}}\\|^{2} = \\|Q^{T}\\mathbf{b}\\|^{2} = ${wrap(p)}^{2} + ${wrap(q)}^{2} = ${proj}`],
+          ],
+          [
+            ["Subtract", "相减"],
+            text(["The residual is orthogonal to the projection:", "残差与投影正交："]),
+            [`\\|A\\hat{\\mathbf{x}} - \\mathbf{b}\\|^{2} = ${N} - ${proj} = ${answer}`],
+          ],
+        ],
+        text([`$${proj} + ${answer} = ${N} = \\|\\mathbf{b}\\|^{2}$.`, `$${proj} + ${answer} = ${N} = \\|\\mathbf{b}\\|^{2}$。`]),
+      ),
+    });
   },
 );
 
@@ -2042,43 +2259,72 @@ const weightedSlope = point(
   "a-weighted-slope-through-the-origin",
   ["A weighted slope through the origin", "过原点的加权斜率"],
   [
-    "For the model $y = mx$ with weights $w_{i}$, the weighted normal equation $A^{T}WA\\,m = A^{T}W\\mathbf{y}$ becomes one fraction, $m = \\frac{\\sum w_{i}x_{i}y_{i}}{\\sum w_{i}x_{i}^{2}}$. The weight must appear in both the numerator and the denominator of this fraction.",
-    "对带权重 $w_{i}$ 的模型 $y = mx$，加权正规方程 $A^{T}WA\\,m = A^{T}W\\mathbf{y}$ 化为一个分式 $m = \\frac{\\sum w_{i}x_{i}y_{i}}{\\sum w_{i}x_{i}^{2}}$。权重必须同时出现在这个分式的分子和分母中。",
+    "For the model $y = mx$ with weights $w_{i}$, the weighted normal equation $A^{T}WA\\,m = A^{T}W\\mathbf{y}$ becomes one fraction, $m = \\frac{\\sum w_{i}x_{i}y_{i}}{\\sum w_{i}x_{i}^{2}}$. The weight must appear in both the numerator and the denominator of this fraction. For example, the points $(1, 2), (2, 3)$ with weights $3, 1$ give $m = \\frac{3 \\cdot 1 \\cdot 2 + 1 \\cdot 2 \\cdot 3}{3 \\cdot 1^{2} + 1 \\cdot 2^{2}} = \\frac{12}{7}$.\n\n> **Watch out.** Weighting only the numerator, or neither part, gives a different line; and the denominator holds $x_{i}^{2}$, not $x_{i}y_{i}$.",
+    "对带权重 $w_{i}$ 的模型 $y = mx$，加权正规方程 $A^{T}WA\\,m = A^{T}W\\mathbf{y}$ 化为一个分式 $m = \\frac{\\sum w_{i}x_{i}y_{i}}{\\sum w_{i}x_{i}^{2}}$。权重必须同时出现在这个分式的分子和分母中。例如点 $(1, 2), (2, 3)$，权重 $3, 1$，得 $m = \\frac{3 \\cdot 1 \\cdot 2 + 1 \\cdot 2 \\cdot 3}{3 \\cdot 1^{2} + 1 \\cdot 2^{2}} = \\frac{12}{7}$。\n\n> **注意。** 只给分子加权，或两边都不加权，得到的是另一条直线；分母是 $x_{i}^{2}$，不是 $x_{i}y_{i}$。",
   ],
   (rng) => {
     const xs = rng.sample([-3, -2, -1, 1, 2, 3], 3);
     const ys = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)];
     const ws = [rng.int(1, 5), rng.int(1, 5), rng.int(1, 5)];
+    // Equal weights give the ordinary slope, so leaving them out would not be a slip.
+    if (ws[0] === ws[1] && ws[1] === ws[2]) ws[2] = (ws[2] as number) + 1;
     const sum = (f: (i: number) => number) => f(0) + f(1) + f(2);
     const x = (i: number) => xs[i] as number;
-    const y = (i: number) => ys[i] as number;
     const w = (i: number) => ws[i] as number;
+    // A zero numerator would make the sign slip and the half-weighted slip agree with the answer.
+    if (sum((i) => w(i) * x(i) * (ys[i] as number)) === 0) ys[0] = (ys[0] as number) + 1;
+    const y = (i: number) => ys[i] as number;
     const top = sum((i) => w(i) * x(i) * y(i));
     const bottom = sum((i) => w(i) * x(i) * x(i));
     const answer = Q.of(top, bottom);
+    const plainTop = sum((i) => x(i) * y(i));
+    const plainBottom = sum((i) => x(i) * x(i));
     const data = [0, 1, 2].map((i) => `(${x(i)}, ${y(i)})`).join(", ");
-    return ask(
-      [
+    const terms = (f: (i: number) => string) => [0, 1, 2].map(f).join(" + ");
+    return numberProblem({
+      prompt: text([
         `Fit $y = mx$ by weighted least squares to $${data}$ with weights $${ws.join(", ")}$. Find $m$.`,
         `用加权最小二乘法把 $y = mx$ 拟合到 $${data}$，权重为 $${ws.join(", ")}$。求 $m$。`,
-      ],
+      ]),
       answer,
-      [
-        Q.of(
-          sum((i) => x(i) * y(i)),
-          sum((i) => x(i) * x(i)),
+      mistakes: [
+        why(Q.of(plainTop, plainBottom), "That is the ordinary slope; the weights were left out.", "这是普通的斜率；漏掉了权重。"),
+        why(
+          Q.of(top, plainBottom),
+          `Only the numerator was weighted; the denominator must be $\\sum w_{i}x_{i}^{2} = ${bottom}$, not $${plainBottom}$.`,
+          `只给分子加了权；分母应为 $\\sum w_{i}x_{i}^{2} = ${bottom}$，不是 $${plainBottom}$。`,
         ),
-        Q.of(
-          top,
-          sum((i) => x(i) * x(i)),
+        why(
+          Q.of(plainTop, bottom),
+          `Only the denominator was weighted; the numerator must be $\\sum w_{i}x_{i}y_{i} = ${top}$, not $${plainTop}$.`,
+          `只给分母加了权；分子应为 $\\sum w_{i}x_{i}y_{i} = ${top}$，不是 $${plainTop}$。`,
         ),
-        answer.neg(),
-      ],
-      [
-        `$\\sum w_{i}x_{i}y_{i} = ${top}$ and $\\sum w_{i}x_{i}^{2} = ${bottom}$, so dividing gives $m = ${answer.toLatex()}$.`,
-        `$\\sum w_{i}x_{i}y_{i} = ${top}$，$\\sum w_{i}x_{i}^{2} = ${bottom}$，所以相除得 $m = ${answer.toLatex()}$。`,
-      ],
-    );
+        why(
+          answer.neg(),
+          "The sign is wrong: the products $w_{i}x_{i}y_{i}$ keep the signs of $x_{i}$ and $y_{i}$.",
+          "符号错了：乘积 $w_{i}x_{i}y_{i}$ 要保留 $x_{i}$ 与 $y_{i}$ 的符号。",
+        ),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Weight the numerator", "给分子加权"],
+            text(["", ""]),
+            [`\\sum w_{i}x_{i}y_{i} = ${terms((i) => `${w(i)} \\cdot ${wrap(x(i))} \\cdot ${wrap(y(i))}`)} = ${top}`],
+          ],
+          [
+            ["Weight the denominator", "给分母加权"],
+            text(["", ""]),
+            [`\\sum w_{i}x_{i}^{2} = ${terms((i) => `${w(i)} \\cdot ${wrap(x(i))}^{2}`)} = ${bottom}`],
+          ],
+          [["Divide", "相除"], text(["", ""]), [`m = \\frac{${top}}{${bottom}} = ${answer.toLatex()}`]],
+        ],
+        text([
+          `The weighted residuals are orthogonal to the inputs: $\\sum w_{i}x_{i}(y_{i} - mx_{i}) = ${top} - ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} \\cdot ${bottom} = 0$.`,
+          `加权残差与输入正交：$\\sum w_{i}x_{i}(y_{i} - mx_{i}) = ${top} - ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} \\cdot ${bottom} = 0$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2086,13 +2332,15 @@ const steadyState = point(
   "the-steady-state-of-a-two-state-chain",
   ["The steady state of a two-state chain", "两状态马尔可夫链的稳态"],
   [
-    "A steady state satisfies $P\\mathbf{s} = \\mathbf{s}$ with entries that sum to $1$. In a two-state chain, this says that the flow out of each state balances the flow into it, so each state's share is proportional to the probability of moving into it from the other state.",
-    "稳态满足 $P\\mathbf{s} = \\mathbf{s}$，且各分量之和为 $1$。在两状态链中，这表示流出每个状态的量与流入它的量平衡，所以每个状态的份额与从另一状态转入它的概率成正比。",
+    "A steady state satisfies $P\\mathbf{s} = \\mathbf{s}$ with entries that sum to $1$. In a two-state chain, this says that the flow out of each state balances the flow into it, so each state's share is proportional to the probability of moving into it from the other state. For example, if state 1 is left with probability $\\frac{1}{5}$ and state 2 with probability $\\frac{3}{5}$, then $\\frac{1}{5}s_{1} = \\frac{3}{5}s_{2}$, so $\\mathbf{s} = (\\frac{3}{4}, \\frac{1}{4})$.\n\n> **Watch out.** A state's share goes with the probability of moving into it, which is the probability of leaving the other state; the state that is hard to leave gets the larger share.",
+    "稳态满足 $P\\mathbf{s} = \\mathbf{s}$，且各分量之和为 $1$。在两状态链中，这表示流出每个状态的量与流入它的量平衡，所以每个状态的份额与从另一状态转入它的概率成正比。例如离开状态 1 的概率为 $\\frac{1}{5}$，离开状态 2 的概率为 $\\frac{3}{5}$，则 $\\frac{1}{5}s_{1} = \\frac{3}{5}s_{2}$，所以 $\\mathbf{s} = (\\frac{3}{4}, \\frac{1}{4})$。\n\n> **注意。** 一个状态的份额对应转入它的概率，也就是离开另一个状态的概率；难以离开的状态份额更大。",
   ],
   (rng) => {
     const d = rng.pick([4, 5, 8, 10]);
     const p = rng.int(1, d - 1);
-    const q = rng.int(1, d - 1);
+    // Equal leaving probabilities give the even split, where swapping the shares is no slip.
+    const qDrawn = rng.int(1, d - 1);
+    const q = qDrawn === p ? (p === d - 1 ? p - 1 : p + 1) : qDrawn;
     const a = Q.of(p, d);
     const b = Q.of(q, d);
     const first = rng.bool();
@@ -2102,18 +2350,61 @@ const steadyState = point(
       [a.toLatex(), Q.of(d - q, d).toLatex()],
     ]);
     const name = first ? "1" : "2";
-    return ask(
-      [
+    const s1 = Q.of(q, p + q);
+    const s2 = Q.of(p, p + q);
+    const stay1 = Q.of(d - p, d);
+    const back = stay1.mul(s1).add(b.mul(s2));
+    return numberProblem({
+      prompt: text([
         `A Markov chain has the column-stochastic transition matrix $P = ${P}$. Find the long-run probability of state $${name}$.`,
         `一个马尔可夫链的列随机转移矩阵是 $P = ${P}$。求状态 $${name}$ 的长期概率。`,
-      ],
+      ]),
       answer,
-      [Q.of(first ? p : q, p + q), first ? b : a, Q.of(1, 2)],
-      [
-        `Balance requires $${a.toLatex()}s_{1} = ${b.toLatex()}s_{2}$ with $s_{1} + s_{2} = 1$. So $s_{1} = \\frac{${q}}{${p + q}}$ and $s_{2} = \\frac{${p}}{${p + q}}$, and the requested value is $${answer.toLatex()}$.`,
-        `平衡要求 $${a.toLatex()}s_{1} = ${b.toLatex()}s_{2}$，且 $s_{1} + s_{2} = 1$。所以 $s_{1} = \\frac{${q}}{${p + q}}$，$s_{2} = \\frac{${p}}{${p + q}}$，所求值是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          Q.of(first ? p : q, p + q),
+          `That is the share of the other state: the share of state $${name}$ is proportional to the probability $${(first ? b : a).toLatex()}$ of moving into it, not to the probability $${(first ? a : b).toLatex()}$ of leaving it.`,
+          `这是另一个状态的份额：状态 $${name}$ 的份额与转入它的概率 $${(first ? b : a).toLatex()}$ 成正比，而不是与离开它的概率 $${(first ? a : b).toLatex()}$ 成正比。`,
+        ),
+        why(
+          first ? b : a,
+          `$${(first ? b : a).toLatex()}$ is the one-step probability of moving into state $${name}$; the long-run share also depends on how often the chain leaves it.`,
+          `$${(first ? b : a).toLatex()}$ 是一步转入状态 $${name}$ 的概率；长期份额还取决于离开它的频率。`,
+        ),
+        why(
+          Q.of(1, 2),
+          "The two states are left with different probabilities, so the long run is not an even split.",
+          "离开两个状态的概率不同，所以长期并不是平分。",
+        ),
+        why(
+          first ? Q.of(d - p, d) : Q.of(d - q, d),
+          `$${(first ? Q.of(d - p, d) : Q.of(d - q, d)).toLatex()}$ is the probability of staying in state $${name}$ for one step, not its long-run share.`,
+          `$${(first ? Q.of(d - p, d) : Q.of(d - q, d)).toLatex()}$ 是一步内留在状态 $${name}$ 的概率，不是长期份额。`,
+        ),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Balance the flows", "平衡流量"],
+            text(["What leaves state $1$ must equal what enters it:", "离开状态 $1$ 的量必须等于进入它的量："]),
+            [`${a.toLatex()}s_{1} = ${b.toLatex()}s_{2}`, `${p === 1 ? "" : p}s_{1} = ${q === 1 ? "" : q}s_{2}`],
+          ],
+          [
+            ["Normalize", "归一化"],
+            text(["With $s_{1} + s_{2} = 1$:", "由 $s_{1} + s_{2} = 1$："]),
+            [`s_{1} = \\frac{${q}}{${p} + ${q}} = ${s1.toLatex()}, \\quad s_{2} = \\frac{${p}}{${p} + ${q}} = ${s2.toLatex()}`],
+          ],
+          [
+            ["Read the state", "读出所求状态"],
+            text([`State $${name}$ has $${answer.toLatex()}$.`, `状态 $${name}$ 的概率是 $${answer.toLatex()}$。`]),
+          ],
+        ],
+        text([
+          `The first entry of $P\\mathbf{s}$ is $${stay1.toLatex()} \\cdot ${s1.toLatex()} + ${b.toLatex()} \\cdot ${s2.toLatex()} = ${back.toLatex()} = s_{1}$.`,
+          `$P\\mathbf{s}$ 的第一个分量是 $${stay1.toLatex()} \\cdot ${s1.toLatex()} + ${b.toLatex()} \\cdot ${s2.toLatex()} = ${back.toLatex()} = s_{1}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2121,8 +2412,8 @@ const normalMatrixEntry = point(
   "an-entry-of-the-normal-matrix-is-a-power-sum",
   ["An entry of the normal matrix is a power sum", "正规矩阵的元素是幂和"],
   [
-    "For a quadratic fit, the columns of $X$ are $1$, $x$ and $x^{2}$, so the $(i, j)$ entry of $X^{T}X$ is a sum of powers of the inputs with exponent $i + j - 2$. The matrix can be filled in from these power sums, and no outputs are involved.",
-    "对二次拟合，$X$ 的各列是 $1$、$x$ 和 $x^{2}$，所以 $X^{T}X$ 的 $(i, j)$ 元素是输入的幂和，指数为 $i + j - 2$。这个矩阵可以由这些幂和填出，与输出无关。",
+    "For a quadratic fit, the columns of $X$ are $1$, $x$ and $x^{2}$, so the $(i, j)$ entry of $X^{T}X$ is a sum of powers of the inputs with exponent $i + j - 2$. The matrix can be filled in from these power sums, and no outputs are involved. For example, the inputs $-1, 0, 2$ give the $(2, 3)$ entry $\\sum x_{k}^{3} = -1 + 0 + 8 = 7$.\n\n> **Watch out.** Column $i$ holds $x^{i - 1}$, not $x^{i}$, so the exponent is $i + j - 2$; and each power is taken before adding, so $\\sum x_{k}^{2}$ is not $(\\sum x_{k})^{2}$.",
+    "对二次拟合，$X$ 的各列是 $1$、$x$ 和 $x^{2}$，所以 $X^{T}X$ 的 $(i, j)$ 元素是输入的幂和，指数为 $i + j - 2$。这个矩阵可以由这些幂和填出，与输出无关。例如输入 $-1, 0, 2$ 给出 $(2, 3)$ 元素 $\\sum x_{k}^{3} = -1 + 0 + 8 = 7$。\n\n> **注意。** 第 $i$ 列是 $x^{i - 1}$，不是 $x^{i}$，所以指数是 $i + j - 2$；而且要先取幂再相加，$\\sum x_{k}^{2}$ 不是 $(\\sum x_{k})^{2}$。",
   ],
   (rng) => {
     const xs = rng.sample([-3, -2, -1, 0, 1, 2, 3, 4], 4);
@@ -2132,18 +2423,75 @@ const normalMatrixEntry = point(
     const power = (k: number) => xs.reduce((sum, x) => sum + x ** k, 0);
     const answer = power(e);
     const term = e === 0 ? "1" : e === 1 ? "x_{k}" : `x_{k}^{${e}}`;
-    return ask(
-      [
+    const expansion = e === 0 ? "1 + 1 + 1 + 1" : xs.map((x) => (e === 1 ? wrap(x) : `${wrap(x)}^{${e}}`)).join(" + ");
+    return numberProblem({
+      prompt: text([
         `A quadratic $y = \\beta_{0} + \\beta_{1}x + \\beta_{2}x^{2}$ is fitted to data with inputs $${xs.join(", ")}$, with design matrix $X$. Find the $(${i}, ${j})$ entry of $X^{T}X$.`,
         `用二次式 $y = \\beta_{0} + \\beta_{1}x + \\beta_{2}x^{2}$ 拟合输入为 $${xs.join(", ")}$ 的数据，设计矩阵为 $X$。求 $X^{T}X$ 的 $(${i}, ${j})$ 元素。`,
-      ],
+      ]),
       answer,
-      [power(e + 1), power(i + j), power(Math.max(i, j) - 1), e === 0 ? 3 : 4],
-      [
-        `Column $${i}$ times column $${j}$ gives the sum of $${term}$ over the four inputs, since the exponents add to $${e}$. That sum is $${answer}$.`,
-        `第 $${i}$ 列乘以第 $${j}$ 列，得到 $${term}$ 对四个输入的和，因为指数相加为 $${e}$。这个和是 $${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          power(i + j),
+          `That uses the exponent $${i + j}$; column $${i}$ holds $x^{${i - 1}}$ and column $${j}$ holds $x^{${j - 1}}$, so the exponent is $${e}$.`,
+          `这用了指数 $${i + j}$；第 $${i}$ 列是 $x^{${i - 1}}$，第 $${j}$ 列是 $x^{${j - 1}}$，所以指数是 $${e}$。`,
+        ),
+        why(
+          power(e + 1),
+          `That uses the exponent $${e + 1}$, one too many: the exponents $${i - 1}$ and $${j - 1}$ add to $${e}$.`,
+          `这用了指数 $${e + 1}$，多了一：指数 $${i - 1}$ 与 $${j - 1}$ 相加为 $${e}$。`,
+        ),
+        ...(e >= 2
+          ? [
+              why(
+                power(1) ** e,
+                `That is $(\\sum x_{k})^{${e}}$; raise each input to the power $${e}$ first, then add.`,
+                `这是 $(\\sum x_{k})^{${e}}$；应先把每个输入取 $${e}$ 次幂再相加。`,
+              ),
+              why(
+                power(Math.max(i, j) - 1),
+                `That uses only the exponent $${Math.max(i, j) - 1}$ of column $${Math.max(i, j)}$; the exponents of both columns add.`,
+                `这只用了第 $${Math.max(i, j)}$ 列的指数 $${Math.max(i, j) - 1}$；两列的指数要相加。`,
+              ),
+            ]
+          : e === 1
+            ? [
+                why(
+                  4,
+                  "$4$ is the $(1, 1)$ entry, the number of inputs; this entry pairs the ones with the $x$-values.",
+                  "$4$ 是 $(1, 1)$ 元素，即输入的个数；这个元素是全 1 列与 $x$ 列的乘积。",
+                ),
+              ]
+            : [
+                why(
+                  1,
+                  "Each input contributes $1 \\cdot 1 = 1$, and there are four inputs, so the sum is not $1$.",
+                  "每个输入贡献 $1 \\cdot 1 = 1$，共有四个输入，所以和不是 $1$。",
+                ),
+              ]),
+      ].filter((m, k, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === k),
+      solution: walked(
+        [
+          [
+            ["Find the exponent", "求指数"],
+            text([
+              `Column $${i}$ holds $x^{${i - 1}}$ and column $${j}$ holds $x^{${j - 1}}$, so their product is $${term}$.`,
+              `第 $${i}$ 列是 $x^{${i - 1}}$，第 $${j}$ 列是 $x^{${j - 1}}$，所以它们的乘积是 $${term}$。`,
+            ]),
+          ],
+          [["Add over the inputs", "对各输入求和"], text(["", ""]), [`${expansion} = ${answer}`]],
+        ],
+        i === j
+          ? text([
+              `A diagonal entry is the squared length of column $${i}$ of $X$, so it cannot be negative, and $${answer} \\ge 0$.`,
+              `对角元素是 $X$ 第 $${i}$ 列的长度平方，不可能为负，$${answer} \\ge 0$。`,
+            ])
+          : text([
+              `The $(${j}, ${i})$ entry has the same exponent $${e}$, so it is also $${answer}$, as $X^{T}X$ is symmetric.`,
+              `$(${j}, ${i})$ 元素的指数同样是 $${e}$，所以也是 $${answer}$，因为 $X^{T}X$ 是对称的。`,
+            ]),
+      ),
+    });
   },
 );
 

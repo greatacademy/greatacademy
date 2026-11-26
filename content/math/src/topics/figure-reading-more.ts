@@ -1248,8 +1248,8 @@ const residualFromPlot: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["linear-regression-with-matrices#a-residual-from-a-scatter-plot"],
   title: t("A residual from a scatter plot", "由散点图读残差"),
   explanation: t(
-    "Least squares chooses the line that makes the squared vertical distances to the points as small as possible. Those vertical distances are the residuals: the actual value minus the value on the line. A point above the line has a positive residual, and one below has a negative residual. The horizontal distance to the line plays no part in this at all.",
-    "最小二乘选择的直线，使各点到它的竖直距离的平方尽可能小。这些竖直距离就是残差：实际值减去直线上的值。线上方的点残差为正，下方的点残差为负。到直线的水平距离在这里完全不起作用。",
+    "Least squares chooses the line that makes the squared vertical distances to the points as small as possible. Those vertical distances are the residuals: the actual value minus the value on the line. A point above the line has a positive residual, and one below has a negative residual. The horizontal distance to the line plays no part in this at all. For example, the point $(3, 5)$ and the line $y = x + 1$, which has height $4$ at $x = 3$, give the residual $5 - 4 = 1$.\n\n> **Watch out.** The residual is the point's height minus the line's height, in that order, so a point below the line has a negative residual; neither height alone is the residual.",
+    "最小二乘选择的直线，使各点到它的竖直距离的平方尽可能小。这些竖直距离就是残差：实际值减去直线上的值。线上方的点残差为正，下方的点残差为负。到直线的水平距离在这里完全不起作用。例如点 $(3, 5)$ 与直线 $y = x + 1$，直线在 $x = 3$ 处的高度为 $4$，残差为 $5 - 4 = 1$。\n\n> **注意。** 残差是点的高度减去直线的高度，顺序不能反，所以线下方的点残差为负；单独哪一个高度都不是残差。",
   ),
   generate(rng) {
     const m = rng.pick([1, 2, -1]);
@@ -1269,10 +1269,10 @@ const residualFromPlot: KnowledgePointDef = {
         `图中的直线是 $y = ${lineTex}$。点 ${names[i]} 的残差是多少？`,
       ),
       answer,
-      [-answer, y, fit, x, answer + 1, answer - 1],
+      [],
       t(
-        `At $x = ${x}$ the line has height ${fit}, and the point has height ${y}, so the residual is $${y} - ${fit < 0 ? `(${fit})` : fit} = ${answer}$.`,
-        `在 $x = ${x}$ 处直线的高度是 ${fit}，点的高度是 ${y}，所以残差是 $${y} - ${fit < 0 ? `(${fit})` : fit} = ${answer}$。`,
+        `${stepLabel(1, "Read the point", "读出点").en} Point ${names[i]} is at $(${x}, ${y})$.\n\n${stepLabel(2, "Find the line's height", "求直线的高度").en} At $x = ${x}$ the line has height $${fit}$.\n\n${stepLabel(3, "Subtract", "相减").en} The residual is $${y} - ${fit < 0 ? `(${fit})` : fit} = ${answer}$.\n\n**Check.** The line's height plus the residual gives back the point: $${fit} ${answer < 0 ? `- ${-answer}` : `+ ${answer}`} = ${y}$, and the point is ${answer > 0 ? "above" : "below"} the line, as the sign says.`,
+        `${stepLabel(1, "Read the point", "读出点")["zh-CN"]}点 ${names[i]} 在 $(${x}, ${y})$。\n\n${stepLabel(2, "Find the line's height", "求直线的高度")["zh-CN"]}在 $x = ${x}$ 处直线的高度是 $${fit}$。\n\n${stepLabel(3, "Subtract", "相减")["zh-CN"]}残差是 $${y} - ${fit < 0 ? `(${fit})` : fit} = ${answer}$。\n\n**检验。**直线的高度加上残差回到该点：$${fit} ${answer < 0 ? `- ${-answer}` : `+ ${answer}`} = ${y}$，且点在直线${answer > 0 ? "上方" : "下方"}，与符号一致。`,
       ),
       drawn(
         { xMin: -1, xMax: 6, yMin: -2, yMax: 12, labelEvery: 2 },
@@ -1293,6 +1293,29 @@ const residualFromPlot: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        {
+          value: -answer,
+          why: t(
+            `That subtracts the point's height from the line's; the residual is the point's height minus the line's, so a point ${answer > 0 ? "above" : "below"} the line has a ${answer > 0 ? "positive" : "negative"} residual.`,
+            `这是用直线的高度减去点的高度；残差是点的高度减去直线的高度，所以线${answer > 0 ? "上方" : "下方"}的点残差为${answer > 0 ? "正" : "负"}。`,
+          ),
+        },
+        {
+          value: y,
+          why: t(
+            `$${y}$ is the height of the point; subtract the height $${fit}$ of the line at $x = ${x}$.`,
+            `$${y}$ 是点的高度；还要减去直线在 $x = ${x}$ 处的高度 $${fit}$。`,
+          ),
+        },
+        {
+          value: fit,
+          why: t(
+            `$${fit}$ is the height of the line at $x = ${x}$, the fitted value; the residual is how far the point is from it.`,
+            `$${fit}$ 是直线在 $x = ${x}$ 处的高度，即拟合值；残差是点与它的差。`,
+          ),
+        },
+      ],
     );
   },
 };

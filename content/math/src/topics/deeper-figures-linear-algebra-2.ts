@@ -10,7 +10,7 @@ import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, drawn, label } from "./figure-reading-more.ts";
@@ -2258,8 +2258,8 @@ const leastSquaresLine = point(
   "the-least-squares-line-of-three-drawn-points",
   ["The least squares line of three drawn points", "三个所画点的最小二乘直线"],
   [
-    "For a line $y = mx + k$ through points at $x = -1, 0, 1$, the normal equations $A^{\\mathsf{T}}A \\hat{\\beta} = A^{\\mathsf{T}}y$ are diagonal, since the $x$ values add to zero: $3k = \\sum y_i$ and $2m = \\sum x_i y_i$.",
-    "对 $x = -1, 0, 1$ 处的点拟合直线 $y = mx + k$，由于 $x$ 值之和为零，正规方程 $A^{\\mathsf{T}}A \\hat{\\beta} = A^{\\mathsf{T}}y$ 是对角的：$3k = \\sum y_i$，$2m = \\sum x_i y_i$。",
+    "For a line $y = mx + k$ through points at $x = -1, 0, 1$, the normal equations $A^{\\mathsf{T}}A \\hat{\\beta} = A^{\\mathsf{T}}y$ are diagonal, since the $x$ values add to zero: $3k = \\sum y_i$ and $2m = \\sum x_i y_i$. For example, the points $(-1, 1)$, $(0, 4)$ and $(1, 4)$ give $3k = 9$ and $2m = -1 + 4 = 3$, so the line is $y = \\frac{3}{2}x + 3$.\n\n> **Watch out.** The slope divides by $\\sum x_i^2 = 2$ and the intercept by the number of points, $3$; do not swap them. The least squares line need not pass through the middle point, so its height there is not the intercept.",
+    "对 $x = -1, 0, 1$ 处的点拟合直线 $y = mx + k$，由于 $x$ 值之和为零，正规方程 $A^{\\mathsf{T}}A \\hat{\\beta} = A^{\\mathsf{T}}y$ 是对角的：$3k = \\sum y_i$，$2m = \\sum x_i y_i$。例如点 $(-1, 1)$、$(0, 4)$、$(1, 4)$ 给出 $3k = 9$，$2m = -1 + 4 = 3$，所以直线是 $y = \\frac{3}{2}x + 3$。\n\n> **注意。** 斜率除以 $\\sum x_i^2 = 2$，截距除以点数 $3$，两者不要弄反。最小二乘直线不一定经过中间的点，所以那个点的高度不是截距。",
   ],
   (rng) => {
     const a = rng.int(-4, 4);
@@ -2269,18 +2269,99 @@ const leastSquaresLine = point(
     const sum = a + b + c;
     const m = Q.of(c - a, 2);
     const k = Q.of(sum, 3);
-    return ask(
-      [
-        `Find the ${askSlope ? "slope $m$" : "intercept $k$"} of the least squares line $y = mx + k$ through the three drawn points.`,
-        `求过三个所画点的最小二乘直线 $y = mx + k$ 的${askSlope ? "斜率 $m$" : "截距 $k$"}。`,
-      ],
-      askSlope ? m : k,
-      askSlope ? [Q.of(c - a, 3), Q.of(c - b, 1), Q.of(c - a, 1), k] : [Q.of(sum, 2), Q.of(b, 1), Q.of(sum, 1), m],
-      [
-        `The points are $(-1, ${a})$, $(0, ${b})$ and $(1, ${c})$. ${askSlope ? `Then $2m = -(${a}) + ${c < 0 ? `(${c})` : c} = ${c - a}$, so $m = ${m.toLatex()}$.` : `Then $3k = ${a} + ${b < 0 ? `(${b})` : b} + ${c < 0 ? `(${c})` : c} = ${sum}$, so $k = ${k.toLatex()}$.`}`,
-        `三点为 $(-1, ${a})$、$(0, ${b})$ 和 $(1, ${c})$。${askSlope ? `于是 $2m = -(${a}) + ${c < 0 ? `(${c})` : c} = ${c - a}$，所以 $m = ${m.toLatex()}$。` : `于是 $3k = ${a} + ${b < 0 ? `(${b})` : b} + ${c < 0 ? `(${c})` : c} = ${sum}$，所以 $k = ${k.toLatex()}$。`}`,
-      ],
-      fig(
+    const answer = askSlope ? m : k;
+    const w = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    const mistakes = askSlope
+      ? [
+          why(
+            Q.of(c - a, 3),
+            "That divides by the number of points; the slope divides by $\\sum x_i^2 = 1 + 0 + 1 = 2$.",
+            "这是除以了点数；斜率要除以 $\\sum x_i^2 = 1 + 0 + 1 = 2$。",
+          ),
+          why(
+            c - b,
+            `$${c - b}$ is the slope through the last two points only; the fit uses all three.`,
+            `$${c - b}$ 只是过后两点的斜率；拟合要用全部三个点。`,
+          ),
+          why(
+            b - a,
+            `$${b - a}$ is the slope through the first two points only; the fit uses all three.`,
+            `$${b - a}$ 只是过前两点的斜率；拟合要用全部三个点。`,
+          ),
+          why(
+            c - a,
+            `$${c - a}$ is $\\sum x_i y_i$; the run from $x = -1$ to $x = 1$ is $2$, so divide by $2$.`,
+            `$${c - a}$ 是 $\\sum x_i y_i$；从 $x = -1$ 到 $x = 1$ 的水平距离是 $2$，要除以 $2$。`,
+          ),
+          why(
+            k,
+            `$${k.toLatex()}$ is the intercept $k$; the question asks for the slope.`,
+            `$${k.toLatex()}$ 是截距 $k$；题目问的是斜率。`,
+          ),
+        ]
+      : [
+          why(
+            Q.of(sum, 2),
+            "That divides by $\\sum x_i^2 = 2$; the intercept divides by the number of points, $3$.",
+            "这是除以了 $\\sum x_i^2 = 2$；截距要除以点数 $3$。",
+          ),
+          why(
+            b,
+            `$${b}$ is the height of the middle point; the least squares line need not pass through it, and its intercept is the average height.`,
+            `$${b}$ 是中间点的高度；最小二乘直线不一定经过它，截距是平均高度。`,
+          ),
+          why(sum, `$${sum}$ is $\\sum y_i$; it must be divided by the $3$ points.`, `$${sum}$ 是 $\\sum y_i$；还要除以点数 $3$。`),
+          why(
+            Q.of(a + c, 2),
+            "That averages only the two outer points; the intercept is the average of all three heights.",
+            "这只平均了两端的两个点；截距是三个高度的平均值。",
+          ),
+          why(
+            m,
+            `$${m.toLatex()}$ is the slope $m$; the question asks for the intercept.`,
+            `$${m.toLatex()}$ 是斜率 $m$；题目问的是截距。`,
+          ),
+        ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `Find the ${askSlope ? "slope $m$" : "intercept $k$"} of the least squares line $y = mx + k$ through the three drawn points.`,
+          `求过三个所画点的最小二乘直线 $y = mx + k$ 的${askSlope ? "斜率 $m$" : "截距 $k$"}。`,
+        ),
+        answer,
+        mistakes: mistakes.filter(
+          (x, i, all) => String(x.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(x.value)) === i,
+        ),
+        solution: walked(
+          [
+            [
+              ["Read the points", "读出各点"],
+              t(`The points are $(-1, ${a})$, $(0, ${b})$ and $(1, ${c})$.`, `三点为 $(-1, ${a})$、$(0, ${b})$ 和 $(1, ${c})$。`),
+            ],
+            askSlope
+              ? [
+                  ["Use the slope equation", "用斜率方程"],
+                  t("", ""),
+                  [`2m = \\sum x_i y_i = -${w(a)} + ${w(c)} = ${c - a}`, `m = ${m.toLatex()}`],
+                ]
+              : [
+                  ["Use the intercept equation", "用截距方程"],
+                  t("", ""),
+                  [`3k = \\sum y_i = ${a} + ${w(b)} + ${w(c)} = ${sum}`, `k = ${k.toLatex()}`],
+                ],
+          ],
+          askSlope
+            ? t(
+                `The residuals $y_i - (mx_i + k)$ satisfy $\\sum x_i r_i = ${c - a} - 2m = 0$, as the normal equations require.`,
+                `残差 $y_i - (mx_i + k)$ 满足 $\\sum x_i r_i = ${c - a} - 2m = 0$，正如正规方程所要求的。`,
+              )
+            : t(
+                `The residuals $y_i - (mx_i + k)$ add up to $${sum} - 3k = 0$, since the $mx_i$ terms cancel.`,
+                `残差 $y_i - (mx_i + k)$ 之和为 $${sum} - 3k = 0$，因为各 $mx_i$ 项相互抵消。`,
+              ),
+        ),
+      }),
+      figure: fig(
         5,
         [
           { kind: "point", at: [-1, a], accent: true },
@@ -2289,7 +2370,7 @@ const leastSquaresLine = point(
         ],
         [`Three points: (-1, ${a}), (0, ${b}) and (1, ${c}).`, `三个点：(-1, ${a})、(0, ${b}) 和 (1, ${c})。`],
       ),
-    );
+    };
   },
 );
 
@@ -2304,8 +2385,8 @@ const markovTwo = point(
   "the-steady-state-of-a-drawn-two-state-chain",
   ["The steady state of a drawn two-state chain", "所画两状态链的稳态"],
   [
-    "In the steady state, the flow from $A$ to $B$ equals the flow from $B$ to $A$. If $p$ and $q$ are the probabilities of switching out of $A$ and $B$, then $\\pi_A p = \\pi_B q$ and $\\pi_A + \\pi_B = 1$.",
-    "在稳态中，从 $A$ 到 $B$ 的流量等于从 $B$ 到 $A$ 的流量。若 $p$ 和 $q$ 是离开 $A$ 和 $B$ 的概率，则 $\\pi_A p = \\pi_B q$，$\\pi_A + \\pi_B = 1$。",
+    "In the steady state, the flow from $A$ to $B$ equals the flow from $B$ to $A$. If $p$ and $q$ are the probabilities of switching out of $A$ and $B$, then $\\pi_A p = \\pi_B q$ and $\\pi_A + \\pi_B = 1$. For example, arrows $0.2$ from $A$ to $B$ and $0.6$ from $B$ to $A$ give $0.2\\pi_A = 0.6\\pi_B$, so $\\pi_A = \\frac{6}{8} = \\frac{3}{4}$.\n\n> **Watch out.** A state's share goes with the arrow coming into it, not the arrow leaving it; and an arrow's label is a one-step probability, not the long-run one.",
+    "在稳态中，从 $A$ 到 $B$ 的流量等于从 $B$ 到 $A$ 的流量。若 $p$ 和 $q$ 是离开 $A$ 和 $B$ 的概率，则 $\\pi_A p = \\pi_B q$，$\\pi_A + \\pi_B = 1$。例如从 $A$ 到 $B$ 的箭头为 $0.2$，从 $B$ 到 $A$ 的箭头为 $0.6$，则 $0.2\\pi_A = 0.6\\pi_B$，所以 $\\pi_A = \\frac{6}{8} = \\frac{3}{4}$。\n\n> **注意。** 一个状态的份额对应指向它的箭头，而不是离开它的箭头；箭头上的数是一步的概率，不是长期的概率。",
   ],
   (rng) => {
     const p = rng.int(1, 9);
@@ -2313,25 +2394,62 @@ const markovTwo = point(
     const inA = rng.bool();
     const answer = Q.of(inA ? q : p, p + q);
     const svg = stateDiagram(String(p / 10), String(q / 10));
-    return ask(
-      [
-        `The diagram shows a Markov chain on states $A$ and $B$: the arrows give the probabilities of switching at each step, and otherwise the chain stays where it is. Find the steady-state probability of $${inA ? "A" : "B"}$.`,
-        `图中是状态 $A$ 和 $B$ 上的马尔可夫链：箭头给出每一步切换的概率，否则停留在原状态。求 $${inA ? "A" : "B"}$ 的稳态概率。`,
-      ],
-      answer,
-      [Q.of(inA ? p : q, p + q), Q.of(inA ? q : p, 10), Q.of(1, 2), Q.of(inA ? p : q, 10)],
-      [
-        `The balance $\\pi_A (${p / 10}) = \\pi_B (${q / 10})$ with $\\pi_A + \\pi_B = 1$ gives $\\pi_${inA ? "A" : "B"} = \\frac{${inA ? q : p}}{${p + q}}$, which is $${answer.toLatex()}$.`,
-        `由平衡式 $\\pi_A (${p / 10}) = \\pi_B (${q / 10})$ 和 $\\pi_A + \\pi_B = 1$ 得 $\\pi_${inA ? "A" : "B"} = \\frac{${inA ? q : p}}{${p + q}}$，即 $${answer.toLatex()}$。`,
-      ],
-      {
+    const name = inA ? "A" : "B";
+    const other = inA ? "B" : "A";
+    const into = (inA ? q : p) / 10;
+    const out = (inA ? p : q) / 10;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The diagram shows a Markov chain on states $A$ and $B$: the arrows give the probabilities of switching at each step, and otherwise the chain stays where it is. Find the steady-state probability of $${name}$.`,
+          `图中是状态 $A$ 和 $B$ 上的马尔可夫链：箭头给出每一步切换的概率，否则停留在原状态。求 $${name}$ 的稳态概率。`,
+        ),
+        answer,
+        mistakes: [
+          why(
+            Q.of(inA ? p : q, p + q),
+            `That is the share of $${other}$: the share of $${name}$ goes with the arrow $${into}$ coming into it, not the arrow $${out}$ leaving it.`,
+            `这是 $${other}$ 的份额：$${name}$ 的份额对应指向它的箭头 $${into}$，而不是离开它的箭头 $${out}$。`,
+          ),
+          why(
+            Q.of(inA ? q : p, 10),
+            `$${into}$ is the one-step probability of moving into $${name}$; the long-run share also depends on the arrow leaving it.`,
+            `$${into}$ 是一步转入 $${name}$ 的概率；长期份额还取决于离开它的箭头。`,
+          ),
+          why(Q.of(1, 2), "The two arrows differ, so the long run is not an even split.", "两个箭头的概率不同，所以长期并不是平分。"),
+          why(
+            Q.of(inA ? p : q, 10),
+            `$${out}$ is the probability of leaving $${name}$ in one step, not its long-run share.`,
+            `$${out}$ 是一步内离开 $${name}$ 的概率，不是长期份额。`,
+          ),
+        ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+        solution: walked(
+          [
+            [
+              ["Balance the arrows", "平衡两个箭头"],
+              t("The flow from $A$ to $B$ equals the flow back:", "从 $A$ 到 $B$ 的流量等于反向的流量："),
+              [`${p / 10}\\,\\pi_A = ${q / 10}\\,\\pi_B`],
+            ],
+            [
+              ["Normalize", "归一化"],
+              t("With $\\pi_A + \\pi_B = 1$:", "由 $\\pi_A + \\pi_B = 1$："),
+              [`\\pi_${name} = \\frac{${into}}{${p / 10} + ${q / 10}} = ${answer.toLatex()}`],
+            ],
+          ],
+          t(
+            `$\\pi_${other} = ${Q.one.sub(answer).toLatex()}$, and $${p / 10} \\cdot ${Q.of(q, p + q).toLatex()} = ${q / 10} \\cdot ${Q.of(p, p + q).toLatex()} = ${Q.of(p * q, 10 * (p + q)).toLatex()}$.`,
+            `$\\pi_${other} = ${Q.one.sub(answer).toLatex()}$，且 $${p / 10} \\cdot ${Q.of(q, p + q).toLatex()} = ${q / 10} \\cdot ${Q.of(p, p + q).toLatex()} = ${Q.of(p * q, 10 * (p + q)).toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           `Two states: an arrow from A to B labeled ${p / 10} and an arrow from B to A labeled ${q / 10}.`,
           `两个状态：从 A 到 B 的箭头标 ${p / 10}，从 B 到 A 的箭头标 ${q / 10}。`,
         ),
       },
-    );
+    };
   },
 );
 
