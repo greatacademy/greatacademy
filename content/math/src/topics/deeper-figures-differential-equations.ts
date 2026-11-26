@@ -844,8 +844,8 @@ const rootsFromGraph = point(
   "characteristic-roots-from-a-solution-curve",
   ["Characteristic roots from a solution curve", "由解曲线读特征根"],
   [
-    "A solution $e^{\\alpha t}\\cos(\\beta t)$ has complex characteristic roots $\\alpha \\pm \\beta i$. The envelope decides $\\alpha$: a shrinking wave means negative, a steady wave means zero and a growing wave means positive. The period $T$ between peaks decides $\\beta = 2\\pi / T$. A wave with period two has $\\beta = \\pi$, for instance.",
-    "解 $e^{\\alpha t}\\cos(\\beta t)$ 对应复特征根 $\\alpha \\pm \\beta i$。包络决定 $\\alpha$：波逐渐变小为负，稳定不变为零，逐渐变大为正。相邻波峰之间的周期 $T$ 决定 $\\beta = 2\\pi / T$。例如周期为二的波有 $\\beta = \\pi$。",
+    "A solution $e^{\\alpha t}\\cos(\\beta t)$ has complex characteristic roots $\\alpha \\pm \\beta i$. The envelope decides $\\alpha$: a shrinking wave means negative, a steady wave means zero and a growing wave means positive. The period $T$ between peaks decides $\\beta = 2\\pi / T$. A wave with period two has $\\beta = \\pi$, for instance, and if it shrinks its roots look like $-0.3 \\pm \\pi i$.\n\n> **Watch out.** $\\beta$ is $2\\pi$ divided by the period, not $\\pi$ divided by it, and a curve that crosses zero again and again can never come from real roots.",
+    "解 $e^{\\alpha t}\\cos(\\beta t)$ 对应复特征根 $\\alpha \\pm \\beta i$。包络决定 $\\alpha$：波逐渐变小为负，稳定不变为零，逐渐变大为正。相邻波峰之间的周期 $T$ 决定 $\\beta = 2\\pi / T$。例如周期为二的波有 $\\beta = \\pi$；如果它逐渐变小，特征根形如 $-0.3 \\pm \\pi i$。\n\n> **注意。** $\\beta$ 是 $2\\pi$ 除以周期，而不是 $\\pi$ 除以周期；反复穿过零的曲线不可能来自实根。",
   ],
   (rng) => {
     const period = rng.pick([2, 3, 4]);
@@ -855,7 +855,18 @@ const rootsFromGraph = point(
     const betaTex = period === 2 ? "\\pi" : period === 4 ? "\\frac{\\pi}{2}" : "\\frac{2\\pi}{3}";
     const wrongBeta = period === 2 ? "2\\pi" : period === 4 ? "\\pi" : "\\frac{\\pi}{3}";
     const root = (a: number, b: string) => (a === 0 ? `r = \\pm ${b} i` : `r = ${a} \\pm ${b} i`);
-    return choose(
+    const envelope: Pair =
+      alpha < 0
+        ? ["shrinks, so $\\alpha$ is negative", "变小，所以 $\\alpha$ 为负"]
+        : alpha > 0
+          ? ["grows, so $\\alpha$ is positive", "变大，所以 $\\alpha$ 为正"]
+          : ["keeps its size, so $\\alpha = 0$", "大小不变，所以 $\\alpha = 0$"];
+    const betaLine = period === 3 ? `\\beta = \\frac{2\\pi}{3}` : `\\beta = \\frac{2\\pi}{${period}} = ${betaTex}`;
+    const alphaWrong: Pair = [
+      "The envelope sign is wrong: look at whether the peaks shrink, grow or stay level.",
+      "包络的符号不对：看波峰是变小、变大还是不变。",
+    ];
+    return figureChoice(
       rng,
       [
         "The graph shows a solution of a second-order linear equation with constant coefficients. Which could be its characteristic roots?",
@@ -863,14 +874,26 @@ const rootsFromGraph = point(
       ],
       same(root(alpha, betaTex)),
       [
-        same(root(-alpha === alpha ? 0.2 : -alpha, betaTex)),
-        same(root(alpha, wrongBeta)),
-        same(root(alpha === 0 ? -0.2 : 0, betaTex)),
-        same(`r = ${alpha === 0 ? 1 : alpha}, \\; r = ${alpha === 0 ? -1 : 2 * alpha}`),
+        [same(root(-alpha === alpha ? 0.2 : -alpha, betaTex)), ...alphaWrong],
+        [
+          same(root(alpha, wrongBeta)),
+          "That $\\beta$ does not match the period; $\\beta$ is $2\\pi$ divided by the time between peaks.",
+          "这个 $\\beta$ 与周期不符；$\\beta$ 是 $2\\pi$ 除以相邻波峰的时间间隔。",
+        ],
+        [same(root(alpha === 0 ? -0.2 : 0, betaTex)), ...alphaWrong],
+        [
+          same(`r = ${alpha === 0 ? 1 : alpha}, \\; r = ${alpha === 0 ? -1 : 2 * alpha}`),
+          "Real roots give sums of exponentials, which cross zero at most once; this curve keeps oscillating.",
+          "实根给出指数函数之和，至多穿过零一次；这条曲线一直在振荡。",
+        ],
       ],
       [
-        `The peaks are $${period}$ apart, so $\\beta = ${period === 3 ? betaTex : `\\frac{2\\pi}{${period}} = ${betaTex}`}$. The wave ${alpha < 0 ? "shrinks, so $\\alpha$ is negative" : alpha > 0 ? "grows, so $\\alpha$ is positive" : "keeps its size, so $\\alpha = 0$"}.`,
-        `波峰相距 $${period}$，所以 $\\beta = ${period === 3 ? betaTex : `\\frac{2\\pi}{${period}} = ${betaTex}`}$。波${alpha < 0 ? "变小，所以 $\\alpha$ 为负" : alpha > 0 ? "变大，所以 $\\alpha$ 为正" : "大小不变，所以 $\\alpha = 0$"}。`,
+        stepOf(["Read the period", "读周期"], [`The peaks are $${period}$ apart:`, `波峰相距 $${period}$：`], betaLine),
+        stepOf(["Read the envelope", "读包络"], [`The wave ${envelope[0]}.`, `波${envelope[1]}。`]),
+      ],
+      [
+        `With roots $\\alpha \\pm ${betaTex} i$ the solution $e^{\\alpha t}\\cos(${betaTex} t)$ repeats every $\\frac{2\\pi}{\\beta} = ${period}$, matching the peaks.`,
+        `特征根为 $\\alpha \\pm ${betaTex} i$ 时，解 $e^{\\alpha t}\\cos(${betaTex} t)$ 每隔 $\\frac{2\\pi}{\\beta} = ${period}$ 重复一次，与波峰一致。`,
       ],
       fig(
         { xMin: 0, xMax: 12, yMin: -5, yMax: 5, xName: "t" },

@@ -754,8 +754,8 @@ const repeatedRoot = point(
   "constants-of-a-repeated-root-solution-from-a-drawing",
   ["Constants of a repeated root solution, from a drawing", "由图求重根解的常数"],
   [
-    "With a repeated root $-r$, the solutions are $y = (A + Bt)e^{-rt}$. Then $y(0) = A$ and $y'(0) = B - rA$, so the height and the slope of the curve at $t = 0$ fix both constants.",
-    "重根为 $-r$ 时，解为 $y = (A + Bt)e^{-rt}$。于是 $y(0) = A$，$y'(0) = B - rA$，所以曲线在 $t = 0$ 处的高度和斜率确定两个常数。",
+    "With a repeated root $-r$, the solutions are $y = (A + Bt)e^{-rt}$. Then $y(0) = A$ and $y'(0) = B - rA$, so the height and the slope of the curve at $t = 0$ fix both constants. For $r = 2$, a curve starting at height $1$ with slope $-1$ has $B = -1 + 2 \\cdot 1 = 1$.\n\n> **Watch out.** The drawn slope is $B - rA$, not $B$: the decaying factor pulls the slope down by $rA$, so add $rA$ back.",
+    "重根为 $-r$ 时，解为 $y = (A + Bt)e^{-rt}$。于是 $y(0) = A$，$y'(0) = B - rA$，所以曲线在 $t = 0$ 处的高度和斜率确定两个常数。当 $r = 2$ 时，从高度 $1$、斜率 $-1$ 出发的曲线有 $B = -1 + 2 \\cdot 1 = 1$。\n\n> **注意。** 图中的斜率是 $B - rA$，而不是 $B$：衰减因子使斜率减小了 $rA$，所以要把 $rA$ 加回去。",
   ],
   (rng) => {
     const r = rng.int(1, 3);
@@ -775,17 +775,39 @@ const repeatedRoot = point(
       );
     });
     const coefficient = r === 1 ? "" : r;
-    const tri = `y'' + ${2 * r === 1 ? "" : 2 * r}y' + ${r * r}y = 0`;
-    return ask(
+    const tri = `y'' + ${2 * r}y' + ${r * r === 1 ? "" : r * r}y = 0`;
+    const rA = r === 1 ? "A" : `${r}A`;
+    return figureNumber(
       [
         `The curve solves $${tri}$, and the short dashed segment is its tangent at $t = 0$. Write the solution as $y = (A + Bt)e^{-${coefficient}t}$ and find $B$.`,
         `这条曲线是 $${tri}$ 的解，短虚线段是它在 $t = 0$ 处的切线。把解写成 $y = (A + Bt)e^{-${coefficient}t}$，求 $B$。`,
       ],
       B,
-      [slope, slope - r * A, A, B + 1, -B],
       [
-        `The curve starts at $A = ${A}$ with slope $${slope}$. Since $y'(0) = B - ${r}A$, we get $B = ${slope} + ${r}(${A}) = ${B}$.`,
-        `曲线从 $A = ${A}$ 出发，斜率为 $${slope}$。由 $y'(0) = B - ${r}A$ 得 $B = ${slope} + ${r}(${A}) = ${B}$。`,
+        stepOf(
+          ["Read the drawing", "读图"],
+          [
+            `The curve starts at height $${A}$, and the tangent changes by $${slope}$ from $t = 0$ to $t = 1$.`,
+            `曲线从高度 $${A}$ 出发，切线从 $t = 0$ 到 $t = 1$ 变化了 $${slope}$。`,
+          ],
+          `A = y(0) = ${A}`,
+          `y'(0) = ${slope}`,
+        ),
+        stepOf(
+          ["Use the derivative at 0", "用 0 处的导数"],
+          [`Differentiating, $y'(0) = B - ${rA}$:`, `求导得 $y'(0) = B - ${rA}$：`],
+          `B = ${slope} + ${r} \\cdot ${A} = ${B}`,
+        ),
+      ],
+      [
+        `$y = ${B === 0 ? `${A}` : `(${A} ${B < 0 ? "-" : "+"} ${Math.abs(B) === 1 ? "" : Math.abs(B)}t)`}e^{-${coefficient}t}$ has $y(0) = ${A}$ and $y'(0) = ${B} - ${r} \\cdot ${A} = ${slope}$, matching the tangent.`,
+        `$y = ${B === 0 ? `${A}` : `(${A} ${B < 0 ? "-" : "+"} ${Math.abs(B) === 1 ? "" : Math.abs(B)}t)`}e^{-${coefficient}t}$ 满足 $y(0) = ${A}$，$y'(0) = ${B} - ${r} \\cdot ${A} = ${slope}$，与切线一致。`,
+      ],
+      [
+        [slope, `That takes $B$ as the drawn slope; the slope is $B - ${rA}$.`, `这是把 $B$ 当成图中的斜率；斜率是 $B - ${rA}$。`],
+        [slope - r * A, `That subtracts $${rA}$ again; it has to be added back.`, `这是又减去了 $${rA}$；应当把它加回去。`],
+        [A, "That is $A$, the starting height.", "这是起始高度 $A$。"],
+        [-B, "The sign is flipped; recheck $y'(0) = B - rA$.", "符号反了；重新检查 $y'(0) = B - rA$。"],
       ],
       figureOf(svg, [
         `A curve starting at (0, ${A}), whose tangent there also passes through (1, ${A + slope}).`,
@@ -966,8 +988,8 @@ const superposition = point(
   "a-combination-of-two-drawn-solutions",
   ["A combination of two drawn solutions", "两个所画解的组合"],
   [
-    "If $y_1$ and $y_2$ solve a homogeneous linear equation, so does $c_1 y_1 + c_2 y_2$. Its value at any time is the same combination of the values of $y_1$ and $y_2$ at that time.",
-    "若 $y_1$ 和 $y_2$ 是齐次线性方程的解，则 $c_1 y_1 + c_2 y_2$ 也是。它在任何时刻的值都是 $y_1$ 和 $y_2$ 在该时刻的值的同一组合。",
+    "If $y_1$ and $y_2$ solve a homogeneous linear equation, so does $c_1 y_1 + c_2 y_2$. Its value at any time is the same combination of the values of $y_1$ and $y_2$ at that time. For example, if $y_1(2) = 3$ and $y_2(2) = -1$, then $y = 2y_1 - 3y_2$ has $y(2) = 2 \\cdot 3 - 3 \\cdot (-1) = 9$.\n\n> **Watch out.** Each constant multiplies its own curve: $c_1$ goes with the solid curve and $c_2$ with the dashed one, and a minus sign in front of $c_2$ stays with it.",
+    "若 $y_1$ 和 $y_2$ 是齐次线性方程的解，则 $c_1 y_1 + c_2 y_2$ 也是。它在任何时刻的值都是 $y_1$ 和 $y_2$ 在该时刻的值的同一组合。例如，若 $y_1(2) = 3$，$y_2(2) = -1$，则 $y = 2y_1 - 3y_2$ 满足 $y(2) = 2 \\cdot 3 - 3 \\cdot (-1) = 9$。\n\n> **注意。** 每个常数只乘它自己的曲线：$c_1$ 对应实线，$c_2$ 对应虚线，$c_2$ 前面的负号也跟着它。",
   ],
   (rng) => {
     const v1 = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
@@ -992,16 +1014,36 @@ const superposition = point(
     );
     const answer = c1 * v1 + c2 * v2;
     const combo = `${c1 === -1 ? "-" : c1}y_1 ${c2 < 0 ? "-" : "+"} ${Math.abs(c2) === 1 ? "" : Math.abs(c2)}y_2`;
-    return ask(
+    const inParens = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    const product = `${c1} \\cdot ${inParens(v1)} + ${inParens(c2)} \\cdot ${inParens(v2)}`;
+    return figureNumber(
       [
         `The solid curve is $y_1$ and the dashed curve is $y_2$, both solutions of a homogeneous linear equation. The solution $y = ${combo}$ is also a solution. Find $y(2)$.`,
         `实线是 $y_1$，虚线是 $y_2$，都是齐次线性方程的解。$y = ${combo}$ 也是解。求 $y(2)$。`,
       ],
       answer,
-      [c1 * v2 + c2 * v1, v1 + v2, c1 * v1 - c2 * v2, c1 + c2],
       [
-        `At $t = 2$ the curves are at $y_1 = ${v1}$ and $y_2 = ${v2}$, so $y(2) = ${c1}(${v1}) + ${c2 < 0 ? `(${c2})` : c2}(${v2}) = ${answer}$.`,
-        `在 $t = 2$ 处曲线位于 $y_1 = ${v1}$，$y_2 = ${v2}$，所以 $y(2) = ${c1}(${v1}) + ${c2 < 0 ? `(${c2})` : c2}(${v2}) = ${answer}$。`,
+        stepOf(
+          ["Read the drawing", "读图"],
+          ["At $t = 2$ the marked points give the two values.", "在 $t = 2$ 处，标出的点给出两个值。"],
+          `y_1(2) = ${v1}`,
+          `y_2(2) = ${v2}`,
+        ),
+        stepOf(
+          ["Combine the values", "组合这两个值"],
+          ["Apply the same constants to the values:", "把同样的常数用在这两个值上："],
+          `y(2) = ${product} = ${answer}`,
+        ),
+      ],
+      [
+        `The two products are $${c1 * v1}$ and $${c2 * v2}$, and $${c1 * v1} ${c2 * v2 < 0 ? "-" : "+"} ${Math.abs(c2 * v2)} = ${answer}$.`,
+        `两个乘积分别是 $${c1 * v1}$ 和 $${c2 * v2}$，而 $${c1 * v1} ${c2 * v2 < 0 ? "-" : "+"} ${Math.abs(c2 * v2)} = ${answer}$。`,
+      ],
+      [
+        [c1 * v2 + c2 * v1, "The constants are swapped: $c_1$ goes with the solid curve.", "常数配反了：$c_1$ 对应实线。"],
+        [v1 + v2, "That adds the curves and leaves out the constants.", "这是把两条曲线直接相加，漏掉了常数。"],
+        [c1 * v1 - c2 * v2, "The sign of the second term is flipped.", "第二项的符号反了。"],
+        [c1 + c2, "That adds the constants and leaves out the values read from the drawing.", "这是把常数相加，漏掉了从图中读出的值。"],
       ],
       figureOf(svg, [
         `A solid curve through (2, ${v1}) and a dashed curve through (2, ${v2}).`,
@@ -1015,8 +1057,8 @@ const independentPair = point(
   "are-two-drawn-solutions-independent",
   ["Are two drawn solutions independent?", "两个所画的解线性无关吗？"],
   [
-    "Two solutions are linearly dependent exactly when one is a constant multiple of the other, so their ratio does not change with time. In that case their Wronskian is zero at every time.",
-    "两个解线性相关当且仅当一个是另一个的常数倍，也就是它们的比值不随时间变化。此时它们的朗斯基行列式处处为零。",
+    "Two solutions are linearly dependent exactly when one is a constant multiple of the other, so their ratio does not change with time. In that case their Wronskian is zero at every time. For example, $e^{t}$ and $3e^{t}$ have ratio $3$ everywhere and are dependent, while $e^{t}$ and $e^{-t}$ have ratio $e^{2t}$, which changes, so they are independent.\n\n> **Watch out.** Meeting at one point proves nothing: compare the ratio at two or more times, not the values at one time.",
+    "两个解线性相关当且仅当一个是另一个的常数倍，也就是它们的比值不随时间变化。此时它们的朗斯基行列式处处为零。例如 $e^{t}$ 与 $3e^{t}$ 的比值处处为 $3$，线性相关；而 $e^{t}$ 与 $e^{-t}$ 的比值为 $e^{2t}$，会变化，所以线性无关。\n\n> **注意。** 在某一点相交说明不了什么：要比较两个或更多时刻的比值，而不是某一时刻的值。",
   ],
   (rng) => {
     const dependent = rng.bool();
@@ -1036,7 +1078,8 @@ const independentPair = point(
     );
     const yes: Pair = ["Dependent: the Wronskian is zero at every time", "线性相关：朗斯基行列式处处为零"];
     const no: Pair = ["Independent: the Wronskian is not zero", "线性无关：朗斯基行列式不为零"];
-    return choose(
+    const fy = factor === -1 ? "-" : `${factor}`;
+    return figureChoice(
       rng,
       [
         "The curves are two solutions of a second-order homogeneous linear equation. Which statement is true?",
@@ -1044,18 +1087,55 @@ const independentPair = point(
       ],
       dependent ? yes : no,
       [
-        dependent ? no : yes,
-        ["Dependent, because the curves have the same value at $t = 2$", "线性相关，因为曲线在 $t = 2$ 处的值相同"],
-        ["Independent, because the curves are not the same curve", "线性无关，因为两条曲线不是同一条"],
+        dependent
+          ? [
+              no,
+              "The dashed curve is a fixed multiple of the solid one, so the Wronskian is zero.",
+              "虚线是实线的固定倍数，所以朗斯基行列式为零。",
+            ]
+          : [
+              yes,
+              "The ratio of the curves changes, so neither is a multiple of the other.",
+              "两条曲线的比值在变化，所以谁也不是谁的倍数。",
+            ],
+        [
+          ["Dependent, because the curves have the same value at $t = 2$", "线性相关，因为曲线在 $t = 2$ 处的值相同"],
+          "Values at one time do not decide dependence; the ratio must stay fixed at every time.",
+          "某一时刻的值不能决定是否相关；比值必须在每个时刻都不变。",
+        ],
+        [
+          ["Independent, because the curves are not the same curve", "线性无关，因为两条曲线不是同一条"],
+          "Different curves can still be multiples of each other, like $y$ and $2y$.",
+          "不同的曲线仍可能互为倍数，例如 $y$ 和 $2y$。",
+        ],
+      ],
+      [
+        stepOf(
+          ["Compare the ratio", "比较比值"],
+          dependent
+            ? [
+                `At every time the dashed curve is $${factor}$ times the solid curve, so the ratio stays at $${factor}$.`,
+                `在每个时刻，虚线都是实线的 $${factor}$ 倍，所以比值一直是 $${factor}$。`,
+              ]
+            : ["The ratio of the dashed curve to the solid curve is different at different times.", "虚线与实线的比值在不同时刻不同。"],
+          dependent ? `\\frac{y_2}{y_1} = ${factor}` : `\\frac{y_2}{y_1} \\ne \\text{constant}`,
+        ),
+        stepOf(
+          ["Decide", "判断"],
+          dependent
+            ? ["One is a constant multiple of the other, so they are dependent.", "一个是另一个的常数倍，所以线性相关。"]
+            : ["Neither is a constant multiple of the other, so they are independent.", "谁都不是另一个的常数倍，所以线性无关。"],
+          dependent ? "W(y_1, y_2) = 0" : "W(y_1, y_2) \\ne 0",
+        ),
       ],
       dependent
         ? [
-            `The dashed curve is $${factor}$ times the solid curve at every time, so one is a constant multiple of the other.`,
-            `在每个时刻，虚线都是实线的 $${factor}$ 倍，所以一个是另一个的常数倍。`,
+            `With $y_2 = ${fy}y_1$, $W = y_1 \\cdot (${fy}y_1') - (${fy}y_1) \\cdot y_1' = 0$ at every time.`,
+            `由 $y_2 = ${fy}y_1$，得 $W = y_1 \\cdot (${fy}y_1') - (${fy}y_1) \\cdot y_1' = 0$ 处处成立。`,
           ]
         : [
-            `The ratio of the two curves changes with time, so neither is a constant multiple of the other.`,
-            `两条曲线的比值随时间变化，所以任何一个都不是另一个的常数倍。`,
+            "If the ratio were a constant $c$, the dashed curve would be $c$ times the solid one at every time, and the drawing shows it is not.",
+            "如果比值是常数 $c$，虚线就会处处是实线的 $c$ 倍，而图中并非如此。",
           ],
       figureOf(
         svg,

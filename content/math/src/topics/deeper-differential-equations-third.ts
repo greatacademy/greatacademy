@@ -487,8 +487,8 @@ const zeroConditions = {
     "zero-initial-data-force-the-zero-solution",
     ["Zero initial data force the zero solution", "零初值迫使解为零"],
     [
-      "By the uniqueness theorem, a solution of a homogeneous linear equation with continuous coefficients is fixed by $y(a)$ and $y'(a)$. If both are zero, it is the zero solution. So no nonzero solution can have a graph that touches the axis with zero slope.",
-      "由唯一性定理，系数连续的齐次线性方程的解由 $y(a)$ 和 $y'(a)$ 确定。如果二者都为零，解就是零解。所以非零解的图像不可能以零斜率接触坐标轴。",
+      "By the uniqueness theorem, a solution of a homogeneous linear equation with continuous coefficients is fixed by $y(a)$ and $y'(a)$. If both are zero, it is the zero solution. So no nonzero solution can have a graph that touches the axis with zero slope. For example, if $y'' + xy' + y = 0$ with $y(1) = 0$ and $y'(1) = 0$, then $y(3) = 0$, with no solving needed.\n\n> **Watch out.** Two conditions fix both constants, so nothing is left undetermined; and the zero function is always a solution of a homogeneous linear equation, so it is the one.",
+      "由唯一性定理，系数连续的齐次线性方程的解由 $y(a)$ 和 $y'(a)$ 确定。如果二者都为零，解就是零解。所以非零解的图像不可能以零斜率接触坐标轴。例如，若 $y'' + xy' + y = 0$，$y(1) = 0$，$y'(1) = 0$，则不必求解就有 $y(3) = 0$。\n\n> **注意。** 两个条件确定了两个常数，所以没有任何东西是不确定的；而零函数总是齐次线性方程的解，所以解就是它。",
     ],
     (rng) => {
       const p = nz(rng, 9);
@@ -496,23 +496,55 @@ const zeroConditions = {
       const a = rng.int(-5, 5);
       const b = a + rng.int(1, 6);
       const eq = poly([1, "y''"], [p, "xy'"], [q, "y"]);
-      return choose(
-        rng,
-        [
+      return explainedChoice(rng, {
+        prompt: t(
           `$y$ solves $${eq} = 0$ with $y(${a}) = 0$ and $y'(${a}) = 0$. What is $y(${b})$?`,
           `$y$ 是 $${eq} = 0$ 的解，且 $y(${a}) = 0$，$y'(${a}) = 0$。$y(${b})$ 是多少？`,
+        ),
+        correct: t("$0$", "$0$"),
+        wrong: [
+          {
+            option: t("It cannot be determined without solving the equation", "不解方程无法确定"),
+            why: t(
+              "The uniqueness theorem settles it: only one solution meets both conditions.",
+              "唯一性定理已经决定了它：只有一个解满足两个条件。",
+            ),
+          },
+          {
+            option: t("It depends on the two arbitrary constants", "取决于两个任意常数"),
+            why: t("The two conditions fix both constants, so none is left free.", "两个条件确定了两个常数，没有自由的常数。"),
+          },
+          {
+            option: t(`$${b - a}$`, `$${b - a}$`),
+            why: t(
+              `That is the distance from $${a}$ to $${b}$, which plays no part in the value of $y$.`,
+              `这是从 $${a}$ 到 $${b}$ 的距离，与 $y$ 的值无关。`,
+            ),
+          },
         ],
-        ["$0$", "$0$"],
-        [
-          ["It cannot be determined without solving the equation", "不解方程无法确定"],
-          ["It depends on the two arbitrary constants", "取决于两个任意常数"],
-          [`$${b - a}$`, `$${b - a}$`],
-        ],
-        [
-          `The zero function satisfies the equation and both conditions. The coefficients are continuous, so the solution is unique, and $y$ is zero everywhere.`,
-          `零函数满足方程和两个条件。系数连续，所以解唯一，因此 $y$ 处处为零。`,
-        ],
-      );
+        solution: walked(
+          [
+            [
+              ["Find one solution", "找出一个解"],
+              t(
+                `The zero function $y = 0$ satisfies $${eq} = 0$, and it has $y(${a}) = 0$ and $y'(${a}) = 0$.`,
+                `零函数 $y = 0$ 满足 $${eq} = 0$，且 $y(${a}) = 0$，$y'(${a}) = 0$。`,
+              ),
+            ],
+            [
+              ["Use uniqueness", "利用唯一性"],
+              t(
+                `The coefficients $1$, $${p === 1 ? "" : p === -1 ? "-" : p}x$ and $${q}$ are continuous everywhere, so only one solution meets the two conditions. It is the zero function, and $y(${b}) = 0$.`,
+                `系数 $1$、$${p === 1 ? "" : p === -1 ? "-" : p}x$ 与 $${q}$ 处处连续，所以只有一个解满足这两个条件。它就是零函数，所以 $y(${b}) = 0$。`,
+              ),
+            ],
+          ],
+          t(
+            "Any nonzero solution would touch the axis with zero slope at the starting point, which uniqueness rules out.",
+            "任何非零解都会在起点以零斜率接触坐标轴，而唯一性排除了这种情况。",
+          ),
+        ),
+      });
     },
   ),
   figure: differentialEquationsDrawings1["introduction-to-second-order-linear-odes#zero-initial-data-force-the-zero-solution"],
@@ -522,25 +554,52 @@ const affineCombination = point(
   "combinations-that-solve-a-forced-equation",
   ["Combinations that solve a forced equation", "满足强迫方程的组合"],
   [
-    "Superposition for a forced equation has a condition. If $L[y_{1}] = g$ and $L[y_{2}] = g$, then $L[ay_{1} + by_{2}] = (a + b)g$. So the combination solves the same equation only when $a + b = 1$, unlike the homogeneous case, where any combination works.",
-    "强迫方程的叠加是有条件的。如果 $L[y_{1}] = g$，$L[y_{2}] = g$，则 $L[ay_{1} + by_{2}] = (a + b)g$。所以只有 $a + b = 1$ 时组合才满足同一方程，这与任何组合都成立的齐次情形不同。",
+    "Superposition for a forced equation has a condition. If $L[y_{1}] = g$ and $L[y_{2}] = g$, then $L[ay_{1} + by_{2}] = (a + b)g$. So the combination solves the same equation only when $a + b = 1$, unlike the homogeneous case, where any combination works. For $3y_{1} + by_{2}$ this means $b = -2$.\n\n> **Watch out.** The coefficients must add to $1$, not $0$: with $a + b = 0$ the combination solves the homogeneous equation instead.",
+    "强迫方程的叠加是有条件的。如果 $L[y_{1}] = g$，$L[y_{2}] = g$，则 $L[ay_{1} + by_{2}] = (a + b)g$。所以只有 $a + b = 1$ 时组合才满足同一方程，这与任何组合都成立的齐次情形不同。对 $3y_{1} + by_{2}$，这意味着 $b = -2$。\n\n> **注意。** 系数之和必须是 $1$，而不是 $0$：若 $a + b = 0$，组合满足的是齐次方程。",
   ],
   (rng) => {
     const a = rng.pick([-7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
     const g = rng.pick(["e^{x}", "\\sin x", "x^{2}", "\\cos 2x", "x + 1", "e^{-x}", "7"]);
     const eq = rng.pick(["y'' + 3y' + 2y", "y'' - 4y", "y'' + y", "y'' - y' + 5y"]);
-    return ask(
-      [
+    const answer = 1 - a;
+    return numberProblem({
+      prompt: t(
         `$y_{1}$ and $y_{2}$ both solve $${eq} = ${g}$. For which $b$ does $${a}y_{1} + by_{2}$ also solve it?`,
         `$y_{1}$ 和 $y_{2}$ 都是 $${eq} = ${g}$ 的解。当 $b$ 为何值时，$${a}y_{1} + by_{2}$ 也是它的解？`,
-      ],
-      1 - a,
-      [-a, a, 1 + a],
-      [
-        `Applying the operator to the combination gives $(${a} + b)$ times the right side. This must equal the right side, so $${a} + b = 1$ and $b = ${1 - a}$.`,
-        `把算子作用于这个组合，得到 $(${a} + b)$ 乘以右端。它必须等于右端，所以 $${a} + b = 1$，$b = ${1 - a}$。`,
-      ],
-    );
+      ),
+      answer,
+      mistakes: apart(answer, [
+        why(
+          -a,
+          "That makes the coefficients add to $0$, so the combination solves the homogeneous equation.",
+          "这使系数之和为 $0$，组合满足的是齐次方程。",
+        ),
+        why(
+          a,
+          `That takes $b$ equal to $${a}$; the right side would then be multiplied by $${2 * a}$.`,
+          `这是取 $b$ 等于 $${a}$；右端就会乘以 $${2 * a}$。`,
+        ),
+        why(
+          1 + a,
+          `The sign is off; from $${a} + b = 1$, $b = 1 - ${paren(a)}$.`,
+          `符号错了；由 $${a} + b = 1$ 得 $b = 1 - ${paren(a)}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Apply the operator", "作用算子"],
+            t("The operator is linear, so", "算子是线性的，所以"),
+            [`L[${a}y_{1} + by_{2}] = ${a}L[y_{1}] + bL[y_{2}] = (${a} + b)\\left(${g}\\right)`],
+          ],
+          [["Match the right side", "与右端相等"], t("", ""), [`${a} + b = 1`, `b = ${answer}`]],
+        ],
+        t(
+          `$${a} + ${paren(answer)} = 1$, so $L[${a}y_{1} ${answer < 0 ? "-" : "+"} ${Math.abs(answer) === 1 ? "" : Math.abs(answer)}y_{2}] = 1 \\cdot \\left(${g}\\right)$, the same right side.`,
+          `$${a} + ${paren(answer)} = 1$，所以 $L[${a}y_{1} ${answer < 0 ? "-" : "+"} ${Math.abs(answer) === 1 ? "" : Math.abs(answer)}y_{2}] = 1 \\cdot \\left(${g}\\right)$，右端相同。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -548,25 +607,50 @@ const rateFromWronskian = point(
   "a-rate-from-the-wronskian-of-two-exponentials",
   ["A rate from the Wronskian of two exponentials", "由两个指数函数的朗斯基行列式求速率"],
   [
-    "For exponentials, $W(e^{ax}, e^{kx}) = (k - a)e^{(a + k)x}$. Its value at $0$ is $k - a$, in that order, and it vanishes exactly when the rates agree, so two exponentials with different rates are always independent.",
-    "对指数函数，$W(e^{ax}, e^{kx}) = (k - a)e^{(a + k)x}$。它在 $0$ 处的值是 $k - a$，注意顺序；它恰好在速率相同时为零，所以速率不同的两个指数函数总是线性无关。",
+    "For exponentials, $W(e^{ax}, e^{kx}) = (k - a)e^{(a + k)x}$. Its value at $0$ is $k - a$, in that order, and it vanishes exactly when the rates agree, so two exponentials with different rates are always independent. If $y_{1} = e^{2x}$ and $W(0) = 3$, then $k - 2 = 3$ and $k = 5$.\n\n> **Watch out.** The value at $0$ is $k - a$, the second rate minus the first; reading it as $a - k$, or as $k$ itself, gives the wrong rate.",
+    "对指数函数，$W(e^{ax}, e^{kx}) = (k - a)e^{(a + k)x}$。它在 $0$ 处的值是 $k - a$，注意顺序；它恰好在速率相同时为零，所以速率不同的两个指数函数总是线性无关。若 $y_{1} = e^{2x}$，$W(0) = 3$，则 $k - 2 = 3$，$k = 5$。\n\n> **注意。** $0$ 处的值是 $k - a$，即第二个速率减第一个；把它读成 $a - k$ 或 $k$ 本身，都会得到错误的速率。",
   ],
   (rng) => {
     const a = nz(rng, 8);
     const w = nz(rng, 9);
     const k = a + w;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `For $y_{1} = ${expOf(a)}$ and $y_{2} = e^{kx}$, the Wronskian $W(y_{1}, y_{2})$ has the value $${w}$ at $x = 0$. Find $k$.`,
         `对 $y_{1} = ${expOf(a)}$ 和 $y_{2} = e^{kx}$，朗斯基行列式 $W(y_{1}, y_{2})$ 在 $x = 0$ 处的值是 $${w}$。求 $k$。`,
-      ],
-      k,
-      [a - w, w, -w],
-      [
-        `$W = y_{1}y_{2}' - y_{1}'y_{2}$, which at $0$ is $k - ${paren(a)}$. So $k - ${paren(a)} = ${w}$ and $k = ${k}$.`,
-        `$W = y_{1}y_{2}' - y_{1}'y_{2}$，在 $0$ 处等于 $k - ${paren(a)}$。所以 $k - ${paren(a)} = ${w}$，$k = ${k}$。`,
-      ],
-    );
+      ),
+      answer: k,
+      mistakes: apart(k, [
+        why(a - w, "That uses $a - k$; the Wronskian at $0$ is $k - a$.", "这是用了 $a - k$；朗斯基行列式在 $0$ 处是 $k - a$。"),
+        why(
+          w,
+          `That takes $k$ as the value of $W(0)$; the rate $${a}$ of $y_{1}$ must be added.`,
+          `这是把 $k$ 当成 $W(0)$ 的值；还要加上 $y_{1}$ 的速率 $${a}$。`,
+        ),
+        why(
+          -w,
+          "That is minus the value of the Wronskian, with the rate of $y_{1}$ left out.",
+          "这是朗斯基行列式值的相反数，而且漏掉了 $y_{1}$ 的速率。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Evaluate at 0", "在 0 处求值"],
+            t(
+              "At $x = 0$ both exponentials are $1$, and their derivatives are the rates:",
+              "在 $x = 0$ 处两个指数函数都等于 $1$，导数等于速率：",
+            ),
+            [`W(0) = 1 \\cdot k - ${paren(a)} \\cdot 1 = k - ${paren(a)}`],
+          ],
+          [["Solve for k", "解出 k"], t("", ""), [`k - ${paren(a)} = ${w}`, `k = ${k}`]],
+        ],
+        t(
+          `With $k = ${k}$, $W = (${k} - ${paren(a)})${a + k === 0 ? "" : expOf(a + k)} = ${poly([w, a + k === 0 ? "" : expOf(a + k)])}$, which is $${w}$ at $0$.`,
+          `取 $k = ${k}$，$W = (${k} - ${paren(a)})${a + k === 0 ? "" : expOf(a + k)} = ${poly([w, a + k === 0 ? "" : expOf(a + k)])}$，在 $0$ 处为 $${w}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -574,8 +658,8 @@ const anotherParticular = point(
   "other-solutions-of-the-same-forced-equation",
   ["Other solutions of the same forced equation", "同一强迫方程的其他解"],
   [
-    "A particular solution is not unique. Adding any homogeneous solution gives another one. But doubling the particular part, or dropping part of it, does not work, because the result no longer satisfies the forced equation.",
-    "特解不唯一。加上任何齐次解都得到另一个特解。但把特解部分加倍或去掉其中一部分都不行，因为结果不再满足强迫方程。",
+    "A particular solution is not unique. Adding any homogeneous solution gives another one. But doubling the particular part, or dropping part of it, does not work, because the result no longer satisfies the forced equation. If the general solution is $c_{1}e^{x} + c_{2}e^{-x} + 2x + 1$, then $2x + 1 + 5e^{x}$ is a solution, while $4x + 2$ is not.\n\n> **Watch out.** Every solution must contain the whole particular part, with coefficient $1$; only the homogeneous part can be changed freely.",
+    "特解不唯一。加上任何齐次解都得到另一个特解。但把特解部分加倍或去掉其中一部分都不行，因为结果不再满足强迫方程。若通解是 $c_{1}e^{x} + c_{2}e^{-x} + 2x + 1$，则 $2x + 1 + 5e^{x}$ 是解，而 $4x + 2$ 不是。\n\n> **注意。** 每个解都必须完整地包含特解部分，且系数为 $1$；只有齐次部分可以随意改变。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
@@ -585,23 +669,53 @@ const anotherParticular = point(
     const c = nz(rng, 9);
     const part = linear(p, q);
     const general = poly([1, `c_{1}${expOf(a)}`], [1, `c_{2}${expOf(b)}`], [p, "x"], [q, ""]);
-    return choose(
-      rng,
-      [
+    const both = (latex: string) => t(`$y = ${latex}$`, `$y = ${latex}$`);
+    return explainedChoice(rng, {
+      prompt: t(
         `An equation has the general solution $y = ${general}$. Which of these also solves it?`,
         `一个方程的通解是 $y = ${general}$。下列哪一个也是它的解？`,
+      ),
+      correct: both(poly([p, "x"], [q, ""], [c, expOf(a)])),
+      wrong: [
+        {
+          option: both(poly([c, expOf(a)], [c, expOf(b)])),
+          why: t(`This has no particular part, so it solves only the homogeneous equation.`, `它没有特解部分，所以只满足齐次方程。`),
+        },
+        {
+          option: both(linear(2 * p, 2 * q)),
+          why: t(
+            `This doubles the particular part $${part}$, which doubles the right side as well.`,
+            `它把特解部分 $${part}$ 加倍了，右端也随之加倍。`,
+          ),
+        },
+        {
+          option: both(poly([p, "x"], [c, expOf(a)])),
+          why: t(`This drops the constant $${q}$ of the particular part.`, `它丢掉了特解部分中的常数 $${q}$。`),
+        },
       ],
-      [`$y = ${poly([p, "x"], [q, ""], [c, expOf(a)])}$`, `$y = ${poly([p, "x"], [q, ""], [c, expOf(a)])}$`],
-      [
-        [`$y = ${poly([c, expOf(a)], [c, expOf(b)])}$`, `$y = ${poly([c, expOf(a)], [c, expOf(b)])}$`],
-        [`$y = ${linear(2 * p, 2 * q)}$`, `$y = ${linear(2 * p, 2 * q)}$`],
-        [`$y = ${poly([p, "x"], [c, expOf(a)])}$`, `$y = ${poly([p, "x"], [c, expOf(a)])}$`],
-      ],
-      [
-        `Taking $c_{1} = ${c}$ and $c_{2} = 0$ keeps the particular part $${part}$ whole. The other forms change or drop the particular part, so they are not of the general form.`,
-        `取 $c_{1} = ${c}$，$c_{2} = 0$，完整保留了特解部分 $${part}$。其他形式改变或去掉了特解部分，所以不符合通解的形式。`,
-      ],
-    );
+      solution: walked(
+        [
+          [
+            ["Separate the parts", "分开两部分"],
+            t(
+              `The particular part is $${part}$; the homogeneous part is $${poly([1, `c_{1}${expOf(a)}`], [1, `c_{2}${expOf(b)}`])}$, with any constants.`,
+              `特解部分是 $${part}$；齐次部分是 $${poly([1, `c_{1}${expOf(a)}`], [1, `c_{2}${expOf(b)}`])}$，常数任意。`,
+            ),
+          ],
+          [
+            ["Match the general form", "与通解形式对照"],
+            t(
+              `Taking $c_{1} = ${c}$ and $c_{2} = 0$ gives $${poly([p, "x"], [q, ""], [c, expOf(a)])}$, which keeps the particular part whole.`,
+              `取 $c_{1} = ${c}$，$c_{2} = 0$ 得 $${poly([p, "x"], [q, ""], [c, expOf(a)])}$，它完整保留了特解部分。`,
+            ),
+          ],
+        ],
+        t(
+          `Subtracting the particular part $${part}$ from this solution leaves $${poly([c, expOf(a)])}$, a solution of the homogeneous equation, as it must.`,
+          `从这个解中减去特解部分 $${part}$，剩下 $${poly([c, expOf(a)])}$，它是齐次方程的解，正应如此。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -609,26 +723,57 @@ const coefficientFromWronskianDecay = point(
   "the-coefficient-from-how-the-wronskian-changes",
   ["The coefficient from how the Wronskian changes", "由朗斯基行列式的变化求系数"],
   [
-    "Abel's identity can be read in reverse. For $y'' + Py' + Qy = 0$ with constant $P$, $W(x) = W(0)e^{-Px}$. So two values of the Wronskian determine $P$, while $Q$ plays no part, and the minus sign means that positive $P$ makes $W$ shrink.",
-    "阿贝尔恒等式可以反过来读。对常数 $P$ 的 $y'' + Py' + Qy = 0$，$W(x) = W(0)e^{-Px}$。所以朗斯基行列式的两个值决定 $P$，而 $Q$ 不起作用；负号说明正的 $P$ 使 $W$ 缩小。",
+    "Abel's identity can be read in reverse. For $y'' + Py' + Qy = 0$ with constant $P$, $W(x) = W(0)e^{-Px}$. So two values of the Wronskian determine $P$, while $Q$ plays no part, and the minus sign means that positive $P$ makes $W$ shrink. If $W(0) = 3$ and $W(\\ln 2) = \\frac{3}{4}$, the ratio is $2^{-P} = \\frac{1}{4}$, so $P = 2$.\n\n> **Watch out.** A shrinking Wronskian means a positive $P$, because of the minus sign in $e^{-Px}$; and $P$ is the exponent of the ratio, not the ratio itself.",
+    "阿贝尔恒等式可以反过来读。对常数 $P$ 的 $y'' + Py' + Qy = 0$，$W(x) = W(0)e^{-Px}$。所以朗斯基行列式的两个值决定 $P$，而 $Q$ 不起作用；负号说明正的 $P$ 使 $W$ 缩小。若 $W(0) = 3$，$W(\\ln 2) = \\frac{3}{4}$，比值为 $2^{-P} = \\frac{1}{4}$，所以 $P = 2$。\n\n> **注意。** 朗斯基行列式缩小说明 $P$ 为正，因为 $e^{-Px}$ 中有负号；$P$ 是比值的指数，而不是比值本身。",
   ],
   (rng) => {
     const P = nz(rng, 5);
     const w = rng.pick([1, 2, 3, 5, 6, 7]);
     const value = Q.of(w).mul(Q.of(2).pow(-P));
+    const ratio = Q.of(2).pow(-P);
     const eq = `y'' + Py' + ${rng.int(2, 9)}y = 0`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Two solutions of $${eq}$ have Wronskian $W(0) = ${w}$ and $W(\\ln 2) = ${value.toLatex()}$. Find the constant $P$.`,
         `$${eq}$ 的两个解的朗斯基行列式满足 $W(0) = ${w}$，$W(\\ln 2) = ${value.toLatex()}$。求常数 $P$。`,
-      ],
-      P,
-      [-P, 2 ** Math.abs(P), Q.of(P, 2)],
-      [
-        `$W(\\ln 2) = ${w}e^{-P\\ln 2} = ${w} \\cdot 2^{-P}$. Here the ratio $W(\\ln 2) \\div W(0)$ is $2^{${-P}}$, so $P = ${P}$.`,
-        `$W(\\ln 2) = ${w}e^{-P\\ln 2} = ${w} \\cdot 2^{-P}$。这里比值 $W(\\ln 2) \\div W(0)$ 是 $2^{${-P}}$，所以 $P = ${P}$。`,
-      ],
-    );
+      ),
+      answer: P,
+      mistakes: apart(P, [
+        why(
+          -P,
+          "The sign is flipped; Abel's identity has $e^{-Px}$, so a shrinking $W$ means $P > 0$.",
+          "符号反了；阿贝尔恒等式中是 $e^{-Px}$，所以 $W$ 缩小意味着 $P > 0$。",
+        ),
+        why(
+          ratio,
+          "That is the ratio $W(\\ln 2) \\div W(0)$; $P$ is minus its exponent base $2$.",
+          "这是比值 $W(\\ln 2) \\div W(0)$；$P$ 是它以 $2$ 为底的指数的相反数。",
+        ),
+        why(
+          Q.of(P, 2),
+          "That divides by $2$ instead of by $\\ln 2$; at $x = \\ln 2$, $e^{-P\\ln 2} = 2^{-P}$.",
+          "这是除以 $2$ 而不是 $\\ln 2$；在 $x = \\ln 2$ 处 $e^{-P\\ln 2} = 2^{-P}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write Abel's identity", "写出阿贝尔恒等式"],
+            t("With constant $P$:", "当 $P$ 为常数时："),
+            [`W(\\ln 2) = W(0)e^{-P\\ln 2} = ${w} \\cdot 2^{-P}`],
+          ],
+          [
+            ["Compare with the given value", "与所给值比较"],
+            t("", ""),
+            [`2^{-P} = ${w === 1 ? "" : `${value.toLatex()} \\div ${w} = `}${ratio.toLatex()} = 2^{${-P}}`, `P = ${P}`],
+          ],
+        ],
+        t(
+          `$${w} \\cdot 2^{${-P}} = ${value.toLatex()}$, the given value of $W(\\ln 2)$.`,
+          `$${w} \\cdot 2^{${-P}} = ${value.toLatex()}$，正是所给的 $W(\\ln 2)$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -636,8 +781,8 @@ const quadraticForcing = point(
   "the-constant-term-under-quadratic-forcing",
   ["The constant term under quadratic forcing", "二次强迫项下的常数项"],
   [
-    "For quadratic forcing, try $y_{p} = Ax^{2} + Bx + C$ and match coefficients from the highest power down. The constant term of the equation collects three contributions, $2A + aB + bC$, so the constant $C$ is not simply the forcing constant divided by $b$.",
-    "对二次强迫项，设 $y_{p} = Ax^{2} + Bx + C$，从最高次幂开始比较系数。方程的常数项有三个来源：$2A + aB + bC$，所以 $C$ 并不只是强迫项的常数除以 $b$。",
+    "For quadratic forcing, try $y_{p} = Ax^{2} + Bx + C$ and match coefficients from the highest power down. The constant term of the equation collects three contributions, $2A + aB + bC$, so the constant $C$ is not simply the forcing constant divided by $b$. For $y'' + y' + y = x^{2} + 2x + 3$: $A = 1$, then $2A + B = 2$ gives $B = 0$, and $2A + B + C = 3$ gives $C = 1$.\n\n> **Watch out.** The constant term gets $2A$ from $y_{p}''$ and $aB$ from $ay_{p}'$; subtract both before dividing by $b$.",
+    "对二次强迫项，设 $y_{p} = Ax^{2} + Bx + C$，从最高次幂开始比较系数。方程的常数项有三个来源：$2A + aB + bC$，所以 $C$ 并不只是强迫项的常数除以 $b$。对 $y'' + y' + y = x^{2} + 2x + 3$：$A = 1$；由 $2A + B = 2$ 得 $B = 0$；由 $2A + B + C = 3$ 得 $C = 1$。\n\n> **注意。** 常数项从 $y_{p}''$ 得到 $2A$，从 $ay_{p}'$ 得到 $aB$；两者都要先减去，再除以 $b$。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -650,18 +795,44 @@ const quadraticForcing = point(
     const g0 = 2 * A + a * B + b * C;
     const eq = poly([1, "y''"], [a, "y'"], [b, "y"]);
     const g = poly([g2, "x^{2}"], [g1, "x"], [g0, ""]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `The equation $${eq} = ${g}$ has a particular solution $y_{p} = Ax^{2} + Bx + C$. Find $C$.`,
         `方程 $${eq} = ${g}$ 有特解 $y_{p} = Ax^{2} + Bx + C$。求 $C$。`,
-      ],
-      C,
-      [Q.of(g0, b), A, B],
-      [
-        `Matching $x^{2}$ gives $A = ${A}$, and matching $x$ gives $B = ${B}$. The constant term needs $2A + ${paren(a)}B + ${paren(b)}C = ${g0}$, so $C = ${C}$.`,
-        `比较 $x^{2}$ 的系数得 $A = ${A}$，比较 $x$ 的系数得 $B = ${B}$。常数项要求 $2A + ${paren(a)}B + ${paren(b)}C = ${g0}$，所以 $C = ${C}$。`,
-      ],
-    );
+      ),
+      answer: C,
+      mistakes: apart(C, [
+        why(
+          Q.of(g0, b),
+          `That divides the constant $${g0}$ by $${b}$ directly; $2A$ and $${paren(a)}B$ also land in the constant term.`,
+          `这是直接用 $${g0}$ 除以 $${b}$；$2A$ 与 $${paren(a)}B$ 也落在常数项里。`,
+        ),
+        why(Q.of(g0 - a * B, b), "That leaves out the $2A$ that comes from $y_{p}''$.", "这里漏掉了来自 $y_{p}''$ 的 $2A$。"),
+        why(
+          Q.of(g0 - 2 * A, b),
+          `That leaves out the $${paren(a)}B$ that comes from the $y'$ term.`,
+          `这里漏掉了来自 $y'$ 项的 $${paren(a)}B$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Match from the top power down", "从最高次幂开始比较"],
+            t("Substituting $y_{p}' = 2Ax + B$ and $y_{p}'' = 2A$:", "代入 $y_{p}' = 2Ax + B$，$y_{p}'' = 2A$："),
+            [`x^{2}: \\ ${paren(b)}A = ${g2} \\implies A = ${A}`, `x: \\ 2 \\cdot ${paren(a)}A + ${paren(b)}B = ${g1} \\implies B = ${B}`],
+          ],
+          [
+            ["Match the constants", "比较常数项"],
+            t("", ""),
+            [`2A + ${paren(a)}B + ${paren(b)}C = ${g0}`, `${2 * A} + ${paren(a * B)} + ${paren(b)}C = ${g0} \\implies C = ${C}`],
+          ],
+        ],
+        t(
+          `$2 \\cdot ${paren(A)} + ${paren(a)} \\cdot ${paren(B)} + ${paren(b)} \\cdot ${paren(C)} = ${g0}$, the constant term of the right side.`,
+          `$2 \\cdot ${paren(A)} + ${paren(a)} \\cdot ${paren(B)} + ${paren(b)} \\cdot ${paren(C)} = ${g0}$，正是右端的常数项。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -669,8 +840,8 @@ const resonance = point(
   "the-coefficient-at-resonance",
   ["The coefficient at resonance", "共振时的系数"],
   [
-    "When the forcing frequency equals the natural frequency, $A\\cos\\omega t$ solves the homogeneous equation and cannot be a particular solution. The right form has a factor of $t$, and for $y'' + \\omega^{2}y = F\\cos\\omega t$ it is $y_{p} = \\frac{F}{2\\omega}t\\sin\\omega t$.",
-    "当强迫频率等于固有频率时，$A\\cos\\omega t$ 满足齐次方程，不可能是特解。正确的形式带有因子 $t$，对 $y'' + \\omega^{2}y = F\\cos\\omega t$，它是 $y_{p} = \\frac{F}{2\\omega}t\\sin\\omega t$。",
+    "When the forcing frequency equals the natural frequency, $A\\cos\\omega t$ solves the homogeneous equation and cannot be a particular solution. The right form has a factor of $t$, and for $y'' + \\omega^{2}y = F\\cos\\omega t$ it is $y_{p} = \\frac{F}{2\\omega}t\\sin\\omega t$. For $y'' + 4y = 8\\cos 2t$ this gives $A = \\frac{8}{4} = 2$.\n\n> **Watch out.** The surviving term is $2\\omega A\\cos\\omega t$, from differentiating the product twice; so divide by $2\\omega$, not by $\\omega$ or $\\omega^{2}$.",
+    "当强迫频率等于固有频率时，$A\\cos\\omega t$ 满足齐次方程，不可能是特解。正确的形式带有因子 $t$，对 $y'' + \\omega^{2}y = F\\cos\\omega t$，它是 $y_{p} = \\frac{F}{2\\omega}t\\sin\\omega t$。对 $y'' + 4y = 8\\cos 2t$，得 $A = \\frac{8}{4} = 2$。\n\n> **注意。** 留下的项是对乘积求两次导得到的 $2\\omega A\\cos\\omega t$；所以要除以 $2\\omega$，而不是 $\\omega$ 或 $\\omega^{2}$。",
   ],
   (rng) => {
     const w = rng.int(1, 9);
@@ -680,18 +851,44 @@ const resonance = point(
     const eq = `${poly([1, "y''"], [w * w, "y"])} = ${poly([F, `\\cos ${c}t`])}`;
     const second = poly([2 * w, `A\\cos ${c}t`], [-w * w, `At\\sin ${c}t`]);
     const cancel = poly([w * w, "y_{p}"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `The equation $${eq}$ has a particular solution $y_{p} = At\\sin ${c}t$. Find $A$.`,
         `方程 $${eq}$ 有特解 $y_{p} = At\\sin ${c}t$。求 $A$。`,
-      ],
+      ),
       answer,
-      [Q.of(F, w), Q.of(F, w * w), answer.neg()],
-      [
-        `$y_{p}'' = ${second}$. The terms with $t$ cancel with $${cancel}$, which leaves $${2 * w}A = ${F}$, so $A = ${answer.toLatex()}$.`,
-        `$y_{p}'' = ${second}$。含 $t$ 的项与 $${cancel}$ 抵消，剩下 $${2 * w}A = ${F}$，所以 $A = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(F, w),
+          "That forgets the factor $2$: the product rule produces the cosine term twice.",
+          "这里忘了因子 $2$：乘积法则两次产生余弦项。",
+        ),
+        why(
+          Q.of(F, w * w),
+          "That divides by $\\omega^{2}$, as if the $t\\sin$ terms survived; they cancel.",
+          "这是除以 $\\omega^{2}$，好像含 $t\\sin$ 的项还在；它们其实抵消了。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is flipped; the second derivative of $t\\sin\\omega t$ has $+2\\omega\\cos\\omega t$.",
+          "符号反了；$t\\sin\\omega t$ 的二阶导数中是 $+2\\omega\\cos\\omega t$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Differentiate twice", "求两次导"], t("", ""), [`y_{p}'' = ${second}`]],
+          [
+            ["Substitute", "代入"],
+            t(`The terms with $t$ cancel with $${cancel}$, which leaves`, `含 $t$ 的项与 $${cancel}$ 抵消，剩下`),
+            [`${poly([2 * w, `A\\cos ${c}t`])} = ${poly([F, `\\cos ${c}t`])}`, `A = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `$2 \\cdot ${w} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${F}$, the forcing amplitude.`,
+          `$2 \\cdot ${w} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${F}$，正是强迫振幅。`,
+        ),
+      ),
+    });
   },
 );
 

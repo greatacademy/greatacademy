@@ -454,8 +454,8 @@ const annihilatorOrder: KnowledgePointDef = {
   id: "the-order-of-an-annihilating-operator",
   title: t("The order of an annihilating operator", "零化算子的阶"),
   explanation: t(
-    "The operator $(D - a)^{n+1}$ sends $x^ne^{ax}$ to zero, because each factor lowers the power of $x$ by one. For a sum with different exponential rates, multiply the operators for the separate terms. The order of the product is the total of the separate orders, and no smaller constant-coefficient operator works.",
-    "算子 $(D - a)^{n+1}$ 把 $x^ne^{ax}$ 变成零，因为每个因子都使 $x$ 的幂次降低一。对指数速率不同的和，把各项的算子相乘。乘积的阶是各阶之和，没有更低阶的常系数算子能做到。",
+    "The operator $(D - a)^{n+1}$ sends $x^ne^{ax}$ to zero, because each factor lowers the power of $x$ by one. For a sum with different exponential rates, multiply the operators for the separate terms. The order of the product is the total of the separate orders, and no smaller constant-coefficient operator works. For $xe^{2x} + e^{3x}$ the operator is $(D - 2)^{2}(D - 3)$, of order $3$.\n\n> **Watch out.** $x^{n}e^{ax}$ needs $n + 1$ factors $D - a$, one more than the power; and terms with different rates need their own factors, so the orders add.",
+    "算子 $(D - a)^{n+1}$ 把 $x^ne^{ax}$ 变成零，因为每个因子都使 $x$ 的幂次降低一。对指数速率不同的和，把各项的算子相乘。乘积的阶是各阶之和，没有更低阶的常系数算子能做到。对 $xe^{2x} + e^{3x}$，算子是 $(D - 2)^{2}(D - 3)$，阶为 $3$。\n\n> **注意。** $x^{n}e^{ax}$ 需要 $n + 1$ 个因子 $D - a$，比幂次多一；速率不同的项需要各自的因子，所以阶要相加。",
   ),
   generate(rng) {
     const n = rng.int(0, 3);
@@ -465,19 +465,41 @@ const annihilatorOrder: KnowledgePointDef = {
     const term = (power: number, rate: number) => `${power === 0 ? "" : power === 1 ? "x" : `x^${power}`}e^{${poly([rate, "x"])}}`;
     const answer = n + m + 2;
     const factor = (rate: number, order: number) => (order === 1 ? `(D - ${rate})` : `(D - ${rate})^{${order}}`);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `What is the smallest order of a linear constant-coefficient differential operator that sends $${term(n, a)} + ${term(m, b)}$ to zero?`,
         `能把 $${term(n, a)} + ${term(m, b)}$ 变成零的线性常系数微分算子，最低是几阶？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [Math.max(n, m) + 1, n + m, n + m + 1],
-      solution: t(
-        `The operator $${factor(a, n + 1)}${factor(b, m + 1)}$ does this, and its order is $${n + 1} + ${m + 1} = ${answer}$.`,
-        `算子 $${factor(a, n + 1)}${factor(b, m + 1)}$ 可以做到，它的阶是 $${n + 1} + ${m + 1} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Annihilate each term", "分别零化每一项"],
+          `$${term(n, a)}$ needs $${factor(a, n + 1)}$, and $${term(m, b)}$ needs $${factor(b, m + 1)}$: each factor lowers the power of $x$ by one, and one more removes the exponential.`,
+          `$${term(n, a)}$ 需要 $${factor(a, n + 1)}$，$${term(m, b)}$ 需要 $${factor(b, m + 1)}$：每个因子使 $x$ 的幂次降低一，再多一个就消去指数函数。`,
+        ),
+        labelled(
+          ["Multiply the operators", "把算子相乘"],
+          "The rates differ, so neither factor helps with the other term, and the orders add.",
+          "两个速率不同，所以哪个因子都帮不了另一项，阶要相加。",
+          `${factor(a, n + 1)}${factor(b, m + 1)}`,
+          `${n + 1} + ${m + 1} = ${answer}`,
+        ),
+      ],
+      [
+        `The characteristic polynomial of the product has the root $${a}$ ${n + 1 === 1 ? "once" : `$${n + 1}$ times`} and the root $${b}$ ${m + 1 === 1 ? "once" : `$${m + 1}$ times`}, which is exactly what is needed for $${term(n, a)}$ and $${term(m, b)}$ to be solutions.`,
+        `乘积的特征多项式有根 $${a}$（${n + 1 === 1 ? "单根" : `${n + 1} 重根`}）与根 $${b}$（${m + 1 === 1 ? "单根" : `${m + 1} 重根`}），这恰好是 $${term(n, a)}$ 与 $${term(m, b)}$ 成为解所需要的。`,
+      ],
+      [
+        [
+          Math.max(n, m) + 1,
+          "That annihilates only one of the two terms; the other rate needs its own factors.",
+          "这只零化了其中一项；另一个速率需要自己的因子。",
+        ],
+        [n + m, "Each term needs one factor more than its power of $x$.", "每一项需要的因子数比它的 $x$ 的幂次多一。"],
+        [n + m + 1, "That adds the extra factor only once; each of the two terms needs one.", "这只多加了一个因子；两项各需要一个。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -485,8 +507,8 @@ const boundedSlope: KnowledgePointDef = {
   id: "the-initial-slope-that-keeps-a-solution-bounded",
   title: t("The initial slope that keeps a solution bounded", "使解有界的初始斜率"),
   explanation: t(
-    "With roots of opposite signs, the general solution is $c_1e^{rt} + c_2e^{st}$ with $r > 0 > s$. The first term grows without bound unless $c_1 = 0$. So a bounded solution is a multiple of $e^{st}$ alone, and its initial slope must be $s$ times its initial value.",
-    "两根异号时，通解是 $c_1e^{rt} + c_2e^{st}$，其中 $r > 0 > s$。除非 $c_1 = 0$，否则第一项无限增长。所以有界解只是 $e^{st}$ 的倍数，它的初始斜率必须等于 $s$ 乘以初始值。",
+    "With roots of opposite signs, the general solution is $c_1e^{rt} + c_2e^{st}$ with $r > 0 > s$. The first term grows without bound unless $c_1 = 0$. So a bounded solution is a multiple of $e^{st}$ alone, and its initial slope must be $s$ times its initial value. For $y'' - y' - 2y = 0$ the roots are $2$ and $-1$, so with $y(0) = 3$ the bounded solution is $3e^{-t}$, with slope $-3$.\n\n> **Watch out.** Keep the decaying root $s$, not the growing one, and multiply it by $y(0)$: the slope is $s\\,y(0)$, not $s$ alone.",
+    "两根异号时，通解是 $c_1e^{rt} + c_2e^{st}$，其中 $r > 0 > s$。除非 $c_1 = 0$，否则第一项无限增长。所以有界解只是 $e^{st}$ 的倍数，它的初始斜率必须等于 $s$ 乘以初始值。对 $y'' - y' - 2y = 0$，根是 $2$ 和 $-1$，所以 $y(0) = 3$ 时有界解是 $3e^{-t}$，斜率为 $-3$。\n\n> **注意。** 要保留衰减的根 $s$，而不是增长的根，并乘以 $y(0)$：斜率是 $s\\,y(0)$，而不只是 $s$。",
   ),
   generate(rng) {
     const r = rng.int(1, 6);
@@ -495,19 +517,48 @@ const boundedSlope: KnowledgePointDef = {
     const answer = s * y0;
     const b = -(r + s);
     const c = r * s;
-    return numberProblem({
-      prompt: t(
-        `For $${poly([1, "y''"], [b, "y'"], [c, "y"])} = 0$ with $y(0) = ${y0}$, which value of $y'(0)$ makes the solution bounded as $t \\to \\infty$?`,
-        `对 $${poly([1, "y''"], [b, "y'"], [c, "y"])} = 0$，$y(0) = ${y0}$，$y'(0)$ 取何值时解在 $t \\to \\infty$ 时有界？`,
-      ),
+    const eq = poly([1, "y''"], [b, "y'"], [c, "y"]);
+    const grow = r === 1 ? "e^{t}" : `e^{${r}t}`;
+    const decay = `e^{${poly([s, "t"])}}`;
+    return explainedNumber(
+      [
+        `For $${eq} = 0$ with $y(0) = ${y0}$, which value of $y'(0)$ makes the solution bounded as $t \\to \\infty$?`,
+        `对 $${eq} = 0$，$y(0) = ${y0}$，$y'(0)$ 取何值时解在 $t \\to \\infty$ 时有界？`,
+      ],
       answer,
-      form: "integer",
-      wrong: [r * y0, y0, s],
-      solution: t(
-        `The characteristic roots are $${r}$ and $${s}$. A bounded solution has no $e^{${r === 1 ? "" : r}t}$ term, so $y = ${poly([y0, `e^{${poly([s, "t"])}}`])}$, and $y'(0) = ${answer}$.`,
-        `特征根是 $${r}$ 和 $${s}$。有界解不含 $e^{${r === 1 ? "" : r}t}$ 项，所以 $y = ${poly([y0, `e^{${poly([s, "t"])}}`])}$，$y'(0) = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the roots", "求特征根"],
+          `The characteristic roots are $${r}$ and $${s}$, so $y = c_1${grow} + c_2${decay}$.`,
+          `特征根是 $${r}$ 和 $${s}$，所以 $y = c_1${grow} + c_2${decay}$。`,
+          `${poly([1, "r^2"], [b, "r"], [c, ""])} = (r - ${r})(r + ${-s})`,
+        ),
+        labelled(
+          ["Remove the growing term", "去掉增长项"],
+          `A bounded solution has $c_1 = 0$, so it is $y = ${poly([y0, decay])}$.`,
+          `有界解满足 $c_1 = 0$，所以是 $y = ${poly([y0, decay])}$。`,
+          `y'(0) = ${s} \\cdot ${y0} = ${answer}`,
+        ),
+      ],
+      [
+        `With $y(0) = ${y0}$ and $y'(0) = ${answer}$: $c_1 + c_2 = ${y0}$ and $${r}c_1 ${s === -1 ? "-" : `- ${-s}`}c_2 = ${answer}$ give $c_1 = 0$, so nothing grows.`,
+        `取 $y(0) = ${y0}$，$y'(0) = ${answer}$：$c_1 + c_2 = ${y0}$ 与 $${r}c_1 ${s === -1 ? "-" : `- ${-s}`}c_2 = ${answer}$ 给出 $c_1 = 0$，所以没有增长项。`,
+      ],
+      [
+        [
+          r * y0,
+          `That keeps the growing root $${r}$; the bounded solution uses the decaying root $${s}$.`,
+          `这是保留了增长的根 $${r}$；有界解用的是衰减的根 $${s}$。`,
+        ],
+        [
+          y0,
+          "That makes the slope equal to the value; the slope is the decaying root times the value.",
+          "这是让斜率等于函数值；斜率是衰减的根乘以函数值。",
+        ],
+        [s, `That is the root alone; multiply it by $y(0) = ${y0}$.`, `这只是根本身；还要乘以 $y(0) = ${y0}$。`],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -515,25 +566,54 @@ const peakWithRepeatedRoot: KnowledgePointDef = {
   id: "the-peak-of-a-solution-with-a-repeated-root",
   title: t("The peak of a solution with a repeated root", "重根解的峰值时刻"),
   explanation: t(
-    "With a repeated root $-a$ and $y(0) = 0$, the solution is $y = vte^{-at}$. The factor $t$ makes it rise at first, and the exponential makes it decay later. Setting $y' = 0$ shows the peak is at $t = \\frac{1}{a}$, and this time does not depend on the initial slope $v$.",
-    "重根为 $-a$ 且 $y(0) = 0$ 时，解是 $y = vte^{-at}$。因子 $t$ 使它先上升，指数项使它后来衰减。令 $y' = 0$，得峰值在 $t = \\frac{1}{a}$ 处，这个时刻与初始斜率 $v$ 无关。",
+    "With a repeated root $-a$ and $y(0) = 0$, the solution is $y = vte^{-at}$. The factor $t$ makes it rise at first, and the exponential makes it decay later. Setting $y' = 0$ shows the peak is at $t = \\frac{1}{a}$, and this time does not depend on the initial slope $v$. For example $y'' + 4y' + 4y = 0$ with $y(0) = 0$ and $y'(0) = 5$ gives $y = 5te^{-2t}$, which peaks at $t = \\frac{1}{2}$.\n\n> **Watch out.** The peak is where $y' = 0$, not where $y'' = 0$ (that is the inflection point at $t = \\frac{2}{a}$); the initial slope $v$ changes the height, not the time.",
+    "重根为 $-a$ 且 $y(0) = 0$ 时，解是 $y = vte^{-at}$。因子 $t$ 使它先上升，指数项使它后来衰减。令 $y' = 0$，得峰值在 $t = \\frac{1}{a}$ 处，这个时刻与初始斜率 $v$ 无关。例如 $y'' + 4y' + 4y = 0$，$y(0) = 0$，$y'(0) = 5$：$y = 5te^{-2t}$，峰值在 $t = \\frac{1}{2}$。\n\n> **注意。** 峰值是 $y' = 0$ 的地方，不是 $y'' = 0$ 的地方（那是 $t = \\frac{2}{a}$ 处的拐点）；初始斜率 $v$ 只改变高度，不改变时刻。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const v = rng.int(1, 9);
     const answer = Q.of(1, a);
-    return numberProblem({
-      prompt: t(
-        `Let $${poly([1, "y''"], [2 * a, "y'"], [a * a, "y"])} = 0$ with $y(0) = 0$ and $y'(0) = ${v}$. At what time $t > 0$ is $y$ largest?`,
-        `设 $${poly([1, "y''"], [2 * a, "y'"], [a * a, "y"])} = 0$，$y(0) = 0$，$y'(0) = ${v}$。在什么时刻 $t > 0$，$y$ 最大？`,
-      ),
+    const decay = `e^{${poly([-a, "t"])}}`;
+    const eq = poly([1, "y''"], [2 * a, "y'"], [a * a, "y"]);
+    return explainedNumber(
+      [
+        `Let $${eq} = 0$ with $y(0) = 0$ and $y'(0) = ${v}$. At what time $t > 0$ is $y$ largest?`,
+        `设 $${eq} = 0$，$y(0) = 0$，$y'(0) = ${v}$。在什么时刻 $t > 0$，$y$ 最大？`,
+      ],
       answer,
-      wrong: [Q.of(2, a), Q.of(1, 2 * a), Q.of(v, a)],
-      solution: t(
-        `The solution is $y = ${poly([v, `te^{${poly([-a, "t"])}}`])}$, whose derivative is $${v === 1 ? "" : v}(${poly([1, ""], [-a, "t"])})e^{${poly([-a, "t"])}}$. This vanishes at $t = ${answer.toLatex()}$.`,
-        `解是 $y = ${poly([v, `te^{${poly([-a, "t"])}}`])}$，它的导数是 $${v === 1 ? "" : v}(${poly([1, ""], [-a, "t"])})e^{${poly([-a, "t"])}}$，在 $t = ${answer.toLatex()}$ 处为零。`,
-      ),
-    });
+      [
+        labelled(
+          ["Solve the problem", "求解"],
+          `The root $${-a}$ is repeated, so $y = (c_1 + c_2t)${decay}$. Then $y(0) = c_1 = 0$ and $y'(0) = c_2 = ${v}$.`,
+          `根 $${-a}$ 是重根，所以 $y = (c_1 + c_2t)${decay}$。于是 $y(0) = c_1 = 0$，$y'(0) = c_2 = ${v}$。`,
+          `y = ${poly([v, `t${decay}`])}`,
+        ),
+        labelled(
+          ["Set the derivative to zero", "令导数为零"],
+          `The factor $${decay}$ is never zero, so $y' = 0$ only where $${poly([1, ""], [-a, "t"])} = 0$.`,
+          `因子 $${decay}$ 永不为零，所以 $y' = 0$ 只在 $${poly([1, ""], [-a, "t"])} = 0$ 处。`,
+          `y' = ${v === 1 ? "" : v}(${poly([1, ""], [-a, "t"])})${decay}`,
+          `t = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `$y'$ has the sign of $${poly([1, ""], [-a, "t"])}$: positive before $t = ${answer.toLatex()}$ and negative after, so $y$ rises and then falls, with its largest value there.`,
+        `$y'$ 与 $${poly([1, ""], [-a, "t"])}$ 同号：在 $t = ${answer.toLatex()}$ 之前为正，之后为负，所以 $y$ 先升后降，在该处取最大值。`,
+      ],
+      [
+        [Q.of(2, a), "That is where $y'' = 0$, the inflection point after the peak.", "这是 $y'' = 0$ 的地方，即峰值之后的拐点。"],
+        [
+          Q.of(1, 2 * a),
+          `That takes the decay rate as $${2 * a}$, the coefficient of $y'$; the repeated root is $${-a}$.`,
+          `这是把衰减速率当成 $y'$ 的系数 $${2 * a}$；重根是 $${-a}$。`,
+        ],
+        [
+          Q.of(v, a),
+          "The initial slope only scales the solution; it does not move the peak.",
+          "初始斜率只改变解的大小，不改变峰值的位置。",
+        ],
+      ],
+    );
   },
 };
 
@@ -541,26 +621,57 @@ const firstZeroOfDampedOscillation: KnowledgePointDef = {
   id: "the-first-zero-of-a-damped-oscillation",
   title: t("The first zero of a damped oscillation", "阻尼振动的第一个零点"),
   explanation: t(
-    "With complex roots $-p \\pm qi$ and $y(0) = 0$, the solution is $y = \\frac{v}{q}e^{-pt}\\sin qt$. The exponential is never zero, so the zeros are those of the sine. The first after the start is at $t = \\frac{\\pi}{q}$. Damping shrinks the swings but leaves the spacing of the zeros alone.",
-    "复根为 $-p \\pm qi$ 且 $y(0) = 0$ 时，解是 $y = \\frac{v}{q}e^{-pt}\\sin qt$。指数项永不为零，所以零点就是正弦的零点，起点之后的第一个在 $t = \\frac{\\pi}{q}$ 处。阻尼使振幅缩小，但不改变零点的间距。",
+    "With complex roots $-p \\pm qi$ and $y(0) = 0$, the solution is $y = \\frac{v}{q}e^{-pt}\\sin qt$. The exponential is never zero, so the zeros are those of the sine. The first after the start is at $t = \\frac{\\pi}{q}$. Damping shrinks the swings but leaves the spacing of the zeros alone. For $y'' + 2y' + 5y = 0$ the roots are $-1 \\pm 2i$, so the first zero is at $t = \\frac{\\pi}{2}$.\n\n> **Watch out.** Use the imaginary part $q$, not the real part $p$; and the sine returns to zero after half a period, at $qt = \\pi$, not after a full period.",
+    "复根为 $-p \\pm qi$ 且 $y(0) = 0$ 时，解是 $y = \\frac{v}{q}e^{-pt}\\sin qt$。指数项永不为零，所以零点就是正弦的零点，起点之后的第一个在 $t = \\frac{\\pi}{q}$ 处。阻尼使振幅缩小，但不改变零点的间距。对 $y'' + 2y' + 5y = 0$，根是 $-1 \\pm 2i$，所以第一个零点在 $t = \\frac{\\pi}{2}$。\n\n> **注意。** 要用虚部 $q$，而不是实部 $p$；正弦经过半个周期、即 $qt = \\pi$ 时回到零，而不是一个完整周期。",
   ),
   generate(rng) {
     const p = rng.int(1, 6);
     const q = rng.int(1, 9);
     const v = rng.int(1, 9);
     const answer = Q.of(1, q);
-    return numberProblem({
-      prompt: t(
-        `Let $${poly([1, "y''"], [2 * p, "y'"], [p * p + q * q, "y"])} = 0$ with $y(0) = 0$ and $y'(0) = ${v}$. The first positive zero of $y$ is at $t = c\\pi$. Find $c$.`,
-        `设 $${poly([1, "y''"], [2 * p, "y'"], [p * p + q * q, "y"])} = 0$，$y(0) = 0$，$y'(0) = ${v}$。$y$ 的第一个正零点在 $t = c\\pi$ 处。求 $c$。`,
-      ),
+    const eq = poly([1, "y''"], [2 * p, "y'"], [p * p + q * q, "y"]);
+    const qt = poly([q, "t"]);
+    return explainedNumber(
+      [
+        `Let $${eq} = 0$ with $y(0) = 0$ and $y'(0) = ${v}$. The first positive zero of $y$ is at $t = c\\pi$. Find $c$.`,
+        `设 $${eq} = 0$，$y(0) = 0$，$y'(0) = ${v}$。$y$ 的第一个正零点在 $t = c\\pi$ 处。求 $c$。`,
+      ],
       answer,
-      wrong: [Q.of(1, p), Q.of(2, q), Q.of(1, 2 * q)],
-      solution: t(
-        `The characteristic roots are $${complexRoots(p, q)}$, so $y$ is a multiple of $e^{${poly([-p, "t"])}}\\sin ${poly([q, "t"])}$. The sine first returns to zero at $${poly([q, "t"])} = \\pi$, so $c = ${answer.toLatex()}$.`,
-        `特征根是 $${complexRoots(p, q)}$，所以 $y$ 是 $e^{${poly([-p, "t"])}}\\sin ${poly([q, "t"])}$ 的倍数。正弦在 $${poly([q, "t"])} = \\pi$ 时第一次回到零，所以 $c = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the roots", "求特征根"],
+          `Completing the square, $(r + ${p})^{2} + ${q * q} = 0$, so the roots are $${complexRoots(p, q)}$.`,
+          `配方得 $(r + ${p})^{2} + ${q * q} = 0$，所以根是 $${complexRoots(p, q)}$。`,
+        ),
+        labelled(
+          ["Use y(0) = 0", "用 y(0) = 0"],
+          `The cosine term drops out, so $y$ is a multiple of $e^{${poly([-p, "t"])}}\\sin ${qt}$. The exponential is never zero, and the sine first returns to zero at $${qt} = \\pi$.`,
+          `余弦项消失，所以 $y$ 是 $e^{${poly([-p, "t"])}}\\sin ${qt}$ 的倍数。指数项永不为零，正弦在 $${qt} = \\pi$ 时第一次回到零。`,
+          `t = ${q === 1 ? "\\pi" : `\\frac{\\pi}{${q}}`}, \\quad c = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `At $t = ${q === 1 ? "\\pi" : `\\frac{\\pi}{${q}}`}$, $\\sin ${qt} = \\sin \\pi = 0$, while for smaller $t > 0$ the angle $${qt}$ lies in $(0, \\pi)$, where the sine is positive.`,
+        `在 $t = ${q === 1 ? "\\pi" : `\\frac{\\pi}{${q}}`}$ 处，$\\sin ${qt} = \\sin \\pi = 0$；而对更小的 $t > 0$，角 $${qt}$ 落在 $(0, \\pi)$ 内，正弦为正。`,
+      ],
+      [
+        [
+          Q.of(1, p),
+          `That uses the real part $${p}$; the zeros come from the sine, whose frequency is the imaginary part $${q}$.`,
+          `这是用了实部 $${p}$；零点来自正弦，其频率是虚部 $${q}$。`,
+        ],
+        [
+          Q.of(2, q),
+          "That is a full period; the sine is already zero again after half a period.",
+          "这是一个完整周期；正弦经过半个周期就再次为零。",
+        ],
+        [
+          Q.of(1, 2 * q),
+          `That is where $${qt} = \\frac{\\pi}{2}$, where the sine is $1$, not $0$.`,
+          `这是 $${qt} = \\frac{\\pi}{2}$ 的地方，此时正弦为 $1$，而不是 $0$。`,
+        ],
+      ],
+    );
   },
 };
 
@@ -568,26 +679,50 @@ const forcingAtADoubleRoot: KnowledgePointDef = {
   id: "exponential-forcing-at-a-double-root",
   title: t("Exponential forcing at a double root", "重根处的指数强迫"),
   explanation: t(
-    "If the forcing rate is a double root of the characteristic equation, both $e^{at}$ and $te^{at}$ solve the homogeneous equation, so the trial must be $At^2e^{at}$. Substituting, only the term in which both derivatives hit $t^2$ survives, which gives $2A$ on the left side.",
-    "如果强迫项的速率是特征方程的重根，$e^{at}$ 和 $te^{at}$ 都是齐次方程的解，所以试探解必须是 $At^2e^{at}$。代入后，只有两次求导都作用在 $t^2$ 上的项留下来，左边得到 $2A$。",
+    "If the forcing rate is a double root of the characteristic equation, both $e^{at}$ and $te^{at}$ solve the homogeneous equation, so the trial must be $At^2e^{at}$. Substituting, only the term in which both derivatives hit $t^2$ survives, which gives $2A$ on the left side. For $y'' - 4y' + 4y = 6e^{2t}$ this means $2A = 6$, so $A = 3$.\n\n> **Watch out.** The left side reduces to $2A\\,e^{at}$, so $A$ is half the forcing constant; it is neither the constant itself nor the constant divided by $a^{2}$.",
+    "如果强迫项的速率是特征方程的重根，$e^{at}$ 和 $te^{at}$ 都是齐次方程的解，所以试探解必须是 $At^2e^{at}$。代入后，只有两次求导都作用在 $t^2$ 上的项留下来，左边得到 $2A$。对 $y'' - 4y' + 4y = 6e^{2t}$，即 $2A = 6$，所以 $A = 3$。\n\n> **注意。** 左边化为 $2A\\,e^{at}$，所以 $A$ 是强迫常数的一半；它既不是常数本身，也不是常数除以 $a^{2}$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const k = rng.int(1, 12);
     const answer = Q.of(k, 2);
     const rate = poly([a, "t"]);
-    return numberProblem({
-      prompt: t(
-        `The equation $${poly([1, "y''"], [-2 * a, "y'"], [a * a, "y"])} = ${k}e^{${rate}}$ has a particular solution $At^2e^{${rate}}$. Find $A$.`,
-        `方程 $${poly([1, "y''"], [-2 * a, "y'"], [a * a, "y"])} = ${k}e^{${rate}}$ 有特解 $At^2e^{${rate}}$。求 $A$。`,
-      ),
+    const eq = poly([1, "y''"], [-2 * a, "y'"], [a * a, "y"]);
+    const op = poly([1, "D"], [-a, ""]);
+    return explainedNumber(
+      [
+        `The equation $${eq} = ${k}e^{${rate}}$ has a particular solution $At^2e^{${rate}}$. Find $A$.`,
+        `方程 $${eq} = ${k}e^{${rate}}$ 有特解 $At^2e^{${rate}}$。求 $A$。`,
+      ],
       answer,
-      wrong: [Q.of(k), Q.of(2 * k), Q.of(k, a * a)],
-      solution: t(
-        `Writing the left side as $(${poly([1, "D"], [-a, ""])})^2y$ and using $y = Ae^{${rate}}t^2$, the operator acts only on $t^2$ and gives $2Ae^{${rate}}$. So $2A = ${k}$ and $A = ${answer.toLatex()}$.`,
-        `把左边写成 $(${poly([1, "D"], [-a, ""])})^2y$，代入 $y = Ae^{${rate}}t^2$，算子只作用在 $t^2$ 上，得 $2Ae^{${rate}}$。所以 $2A = ${k}$，$A = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Factor the operator", "分解算子"],
+          `The left side is $(${op})^{2}y$, and $(${op})\\left(f(t)e^{${rate}}\\right) = f'(t)e^{${rate}}$: the factor only differentiates what multiplies the exponential.`,
+          `左边是 $(${op})^{2}y$，且 $(${op})\\left(f(t)e^{${rate}}\\right) = f'(t)e^{${rate}}$：这个因子只对乘在指数函数前面的部分求导。`,
+        ),
+        labelled(
+          ["Apply it twice", "作用两次"],
+          "",
+          "",
+          `(${op})^{2}\\left(At^{2}e^{${rate}}\\right) = A(t^{2})''e^{${rate}} = 2Ae^{${rate}}`,
+          `2A = ${k} \\implies A = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `With $f = ${poly([answer, "t^{2}"])}$: $f' = ${poly([k, "t"])}$ and $f'' = ${k}$, so $(${op})^{2}$ turns $fe^{${rate}}$ into $${k}e^{${rate}}$, the forcing.`,
+        `取 $f = ${poly([answer, "t^{2}"])}$：$f' = ${poly([k, "t"])}$，$f'' = ${k}$，所以 $(${op})^{2}$ 把 $fe^{${rate}}$ 变成 $${k}e^{${rate}}$，正是强迫项。`,
+      ],
+      [
+        [Q.of(k), "That forgets the factor $2$ from differentiating $t^{2}$ twice.", "这里忘了对 $t^{2}$ 求两次导产生的因子 $2$。"],
+        [Q.of(2 * k), "That multiplies by $2$; the equation $2A = k$ calls for dividing.", "这是乘以 $2$；方程 $2A = k$ 要求除以 $2$。"],
+        [
+          Q.of(k, a * a),
+          "That divides by the coefficient of $y$, as for a plain trial $Ae^{at}$; at a double root that trial fails.",
+          "这是像普通试探解 $Ae^{at}$ 那样除以 $y$ 的系数；在重根处那个试探解行不通。",
+        ],
+      ],
+    );
   },
 };
 
@@ -1033,8 +1168,8 @@ const conditionsAtLaterTime: KnowledgePointDef = {
   id: "initial-conditions-at-a-later-time",
   title: t("Initial conditions at a later time", "在较晚时刻给定的初始条件"),
   explanation: t(
-    "A constant-coefficient equation does not change when time is shifted, so $e^{r(t - t_0)}$ is a solution whenever $e^{rt}$ is. When the conditions are given at $t_0$, using this form makes every exponential equal $1$ at that time. The two conditions then become a simple linear system for the constants.",
-    "常系数方程在时间平移下不变，所以只要 $e^{rt}$ 是解，$e^{r(t - t_0)}$ 也是解。条件在 $t_0$ 给出时，用这种形式可以使每个指数函数在该时刻都等于 $1$。两个条件于是变成关于常数的简单线性方程组。",
+    "A constant-coefficient equation does not change when time is shifted, so $e^{r(t - t_0)}$ is a solution whenever $e^{rt}$ is. When the conditions are given at $t_0$, using this form makes every exponential equal $1$ at that time. The two conditions then become a simple linear system for the constants. For $y'' - y = 0$ with $y(2) = 3$ and $y'(2) = 1$, write $y = Ae^{t - 2} + Be^{-(t - 2)}$: then $A + B = 3$ and $A - B = 1$, so $A = 2$.\n\n> **Watch out.** At $t_0$ the exponentials are $1$, but the derivative still multiplies each constant by its own root: $r_1A + r_2B = y'(t_0)$.",
+    "常系数方程在时间平移下不变，所以只要 $e^{rt}$ 是解，$e^{r(t - t_0)}$ 也是解。条件在 $t_0$ 给出时，用这种形式可以使每个指数函数在该时刻都等于 $1$。两个条件于是变成关于常数的简单线性方程组。对 $y'' - y = 0$，$y(2) = 3$，$y'(2) = 1$，写成 $y = Ae^{t - 2} + Be^{-(t - 2)}$：则 $A + B = 3$，$A - B = 1$，所以 $A = 2$。\n\n> **注意。** 在 $t_0$ 处指数函数等于 $1$，但求导时每个常数仍要乘以它自己的根：$r_1A + r_2B = y'(t_0)$。",
   ),
   generate(rng) {
     const u = nonzero(rng, 5);
@@ -1046,18 +1181,48 @@ const conditionsAtLaterTime: KnowledgePointDef = {
     const v = nonzero(rng, 9);
     const answer = Q.of(v - r2 * p, r1 - r2);
     const equation = poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"]);
-    return numberProblem({
-      prompt: t(
+    const B = Q.of(p).sub(answer);
+    return explainedNumber(
+      [
         `Solve $${equation} = 0$ with $y(${t0}) = ${p}$ and $y'(${t0}) = ${v}$. Let $r_1 > r_2$ be the characteristic roots, and write the solution as $y = Ae^{r_1(t - ${t0})} + Be^{r_2(t - ${t0})}$. Find $A$.`,
         `解 $${equation} = 0$，条件为 $y(${t0}) = ${p}$，$y'(${t0}) = ${v}$。设 $r_1 > r_2$ 是特征根，把解写成 $y = Ae^{r_1(t - ${t0})} + Be^{r_2(t - ${t0})}$。求 $A$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(v - r1 * p, r2 - r1), Q.of(v + r2 * p, r1 - r2), Q.of(v, r1 - r2), p],
-      solution: t(
-        `The roots are $r_1 = ${r1}$ and $r_2 = ${r2}$. At $t = ${t0}$ both exponentials equal $1$, so $A + B = ${p}$ and $${poly([r1, "A"], [r2, "B"])} = ${v}$. Eliminating $B$ gives $${poly([r1 - r2, "A"])} = ${v - r2 * p}$, so $A = ${answer.toLatex()}$.`,
-        `特征根是 $r_1 = ${r1}$，$r_2 = ${r2}$。在 $t = ${t0}$ 处两个指数函数都等于 $1$，所以 $A + B = ${p}$，$${poly([r1, "A"], [r2, "B"])} = ${v}$。消去 $B$ 得 $${poly([r1 - r2, "A"])} = ${v - r2 * p}$，所以 $A = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Use the shifted form", "用平移形式"],
+          `The roots are $r_1 = ${r1}$ and $r_2 = ${r2}$. At $t = ${t0}$ both exponentials equal $1$, so`,
+          `特征根是 $r_1 = ${r1}$，$r_2 = ${r2}$。在 $t = ${t0}$ 处两个指数函数都等于 $1$，所以`,
+          `A + B = ${p}`,
+          `${poly([r1, "A"], [r2, "B"])} = ${v}`,
+        ),
+        labelled(
+          ["Eliminate B", "消去 B"],
+          `Subtract $${inParens(r2)}$ times the first equation from the second:`,
+          `从第二式减去第一式的 $${inParens(r2)}$ 倍：`,
+          `${poly([r1 - r2, "A"])} = ${v} - ${inParens(r2)} \\cdot ${inParens(p)} = ${v - r2 * p}`,
+          `A = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Then $B = ${p} - ${signedFactor(answer)} = ${B.toLatex()}$, and $${inParens(r1)} \\cdot ${signedFactor(answer)} + ${inParens(r2)} \\cdot ${signedFactor(B)} = ${v}$, the given slope.`,
+        `于是 $B = ${p} - ${signedFactor(answer)} = ${B.toLatex()}$，且 $${inParens(r1)} \\cdot ${signedFactor(answer)} + ${inParens(r2)} \\cdot ${signedFactor(B)} = ${v}$，正是所给的斜率。`,
+      ],
+      [
+        [Q.of(v - r1 * p, r2 - r1), "That is $B$, the coefficient of the other exponential.", "这是 $B$，即另一个指数函数的系数。"],
+        [
+          Q.of(v + r2 * p, r1 - r2),
+          `That adds $${inParens(r2)} \\cdot y(${t0})$ instead of subtracting it.`,
+          `这是加上 $${inParens(r2)} \\cdot y(${t0})$，而不是减去它。`,
+        ],
+        [
+          Q.of(v, r1 - r2),
+          `That forgets to subtract $${inParens(r2)} \\cdot ${inParens(p)}$ when eliminating $B$.`,
+          `这是消去 $B$ 时忘了减去 $${inParens(r2)} \\cdot ${inParens(p)}$。`,
+        ],
+        [p, "That is $A + B = y(t_0)$, not $A$ alone.", "这是 $A + B = y(t_0)$，而不只是 $A$。"],
+      ],
+    );
   },
 };
 
@@ -1158,8 +1323,8 @@ const equationForMultiplier: KnowledgePointDef = {
   id: "the-equation-for-the-multiplier",
   title: t("The equation for the multiplier", "乘子满足的方程"),
   explanation: t(
-    "To reduce the order of $y'' + py' + qy = 0$ with a known solution $y_1$, substitute $y = vy_1$. The terms containing $v$ itself cancel, because $y_1$ is a solution. What remains is $y_1v'' + (2y_1' + py_1)v' = 0$. For $y_1 = e^{rt}$, dividing by $y_1$ gives $v'' + (2r + p)v' = 0$.",
-    "已知 $y'' + py' + qy = 0$ 的一个解 $y_1$，要降阶就代入 $y = vy_1$。含 $v$ 本身的项会消去，因为 $y_1$ 是解。剩下的是 $y_1v'' + (2y_1' + py_1)v' = 0$。当 $y_1 = e^{rt}$ 时，除以 $y_1$ 得 $v'' + (2r + p)v' = 0$。",
+    "To reduce the order of $y'' + py' + qy = 0$ with a known solution $y_1$, substitute $y = vy_1$. The terms containing $v$ itself cancel, because $y_1$ is a solution. What remains is $y_1v'' + (2y_1' + py_1)v' = 0$. For $y_1 = e^{rt}$, dividing by $y_1$ gives $v'' + (2r + p)v' = 0$. For $y'' - 5y' + 6y = 0$ with $y_1 = e^{2t}$, this is $v'' - v' = 0$, since $2 \\cdot 2 - 5 = -1$.\n\n> **Watch out.** The product rule gives $2r$, not $r$, because $y''$ contributes $2rv'$ and the $py'$ term then adds $p$ with its own sign.",
+    "已知 $y'' + py' + qy = 0$ 的一个解 $y_1$，要降阶就代入 $y = vy_1$。含 $v$ 本身的项会消去，因为 $y_1$ 是解。剩下的是 $y_1v'' + (2y_1' + py_1)v' = 0$。当 $y_1 = e^{rt}$ 时，除以 $y_1$ 得 $v'' + (2r + p)v' = 0$。对 $y'' - 5y' + 6y = 0$，$y_1 = e^{2t}$，结果是 $v'' - v' = 0$，因为 $2 \\cdot 2 - 5 = -1$。\n\n> **注意。** 乘积法则给出的是 $2r$ 而不是 $r$，因为 $y''$ 贡献 $2rv'$，然后 $py'$ 项再带着自己的符号加上 $p$。",
   ),
   generate(rng) {
     const r = nonzero(rng, 6);
@@ -1168,6 +1333,16 @@ const equationForMultiplier: KnowledgePointDef = {
     const answer = 2 * r + p;
     const equation = poly([1, "y''"], [p, "y'"], [r * s, "y"]);
     const known = exponential(r, "t");
+    const reasons: [number, string, string][] = [
+      [
+        r + p,
+        "That counts $r$ once; the product rule gives $2r$ in the coefficient of $v'$.",
+        "这只算了一次 $r$；乘积法则在 $v'$ 的系数中给出 $2r$。",
+      ],
+      [2 * r - p, "The sign of the $y'$ coefficient is flipped; it enters as it stands.", "$y'$ 系数的符号弄反了；它应原样加进去。"],
+      [-answer, "The sign is flipped; recheck the coefficient of $v'$.", "符号反了；重新检查 $v'$ 的系数。"],
+      [p, "That forgets the $2r$ that comes from differentiating the product twice.", "这里忘了对乘积求两次导产生的 $2r$。"],
+    ];
     return numberProblem({
       prompt: t(
         `$y_1 = ${known}$ solves $${equation} = 0$. Substituting $y = v${known}$ gives $v'' + kv' = 0$. Find $k$.`,
@@ -1176,10 +1351,29 @@ const equationForMultiplier: KnowledgePointDef = {
       answer,
       form: "integer",
       solveFor: "k",
-      wrong: [r + p, 2 * r - p, -answer, p],
-      solution: t(
-        `The derivatives of $y = v${known}$ contribute $2r$ to the coefficient of $v'$, and the $y'$ term of the equation contributes its own coefficient. So $k = 2 \\cdot ${inParens(r)} + ${inParens(p)} = ${answer}$.`,
-        `$y = v${known}$ 的导数给 $v'$ 的系数贡献 $2r$，方程的 $y'$ 项再贡献它自己的系数。所以 $k = 2 \\cdot ${inParens(r)} + ${inParens(p)} = ${answer}$。`,
+      mistakes: reasons
+        .filter(([value], i) => value !== answer && reasons.findIndex(([other]) => other === value) === i)
+        .map(([value, en, zh]) => why(value, en, zh)),
+      solution: walked(
+        [
+          labelled(
+            ["Differentiate the product", "对乘积求导"],
+            `With $y = v${known}$:`,
+            `由 $y = v${known}$：`,
+            `y' = \\left(${poly([1, "v'"], [r, "v"])}\\right)${known}`,
+            `y'' = \\left(${poly([1, "v''"], [2 * r, "v'"], [r * r, "v"])}\\right)${known}`,
+          ),
+          labelled(
+            ["Collect the v' terms", "合并 v' 项"],
+            `The terms in $v$ cancel because $y_1$ is a solution. The coefficient of $v'$ is $2r$ from $y''$ plus $${inParens(p)}$ from the $y'$ term.`,
+            `含 $v$ 的项相互抵消，因为 $y_1$ 是解。$v'$ 的系数是来自 $y''$ 的 $2r$，加上来自 $y'$ 项的 $${inParens(p)}$。`,
+            `k = 2 \\cdot ${inParens(r)} + ${inParens(p)} = ${answer}`,
+          ),
+        ],
+        t(
+          `Then $v' = Ce^{${poly([-answer, "t"])}}$, so the new solution contains $e^{(${r} - ${inParens(answer)})t} = ${exponential(s, "t")}$, the other root's exponential.`,
+          `于是 $v' = Ce^{${poly([-answer, "t"])}}$，所以新解含有 $e^{(${r} - ${inParens(answer)})t} = ${exponential(s, "t")}$，即另一个根对应的指数函数。`,
+        ),
       ),
     });
   },
@@ -2611,27 +2805,59 @@ const operatorOnExponential: KnowledgePointDef = {
   id: "a-product-of-operators-on-an-exponential",
   title: t("A product of operators on an exponential", "算子之积作用于指数函数"),
   explanation: t(
-    "Since $De^{cx} = ce^{cx}$, the operator $D - a$ acts on $e^{cx}$ simply by multiplying it by the number $c - a$. Applying a product of such operators then multiplies these numbers together, so a polynomial in $D$ acts on $e^{cx}$ as that polynomial evaluated at $c$. This is the reason the characteristic equation works. If $c$ is a root, the result is zero, and $e^{cx}$ solves the homogeneous equation.",
-    "由于 $De^{cx} = ce^{cx}$，算子 $D - a$ 作用于 $e^{cx}$ 只是乘以数 $c - a$。于是这种算子之积作用时，就把这些数相乘，所以 $D$ 的多项式作用于 $e^{cx}$ 等于该多项式在 $c$ 处的值。这正是特征方程有效的原因。如果 $c$ 是根，结果为零，$e^{cx}$ 就是齐次方程的解。",
+    "Since $De^{cx} = ce^{cx}$, the operator $D - a$ acts on $e^{cx}$ simply by multiplying it by the number $c - a$. Applying a product of such operators then multiplies these numbers together, so a polynomial in $D$ acts on $e^{cx}$ as that polynomial evaluated at $c$. This is the reason the characteristic equation works. If $c$ is a root, the result is zero, and $e^{cx}$ solves the homogeneous equation. For example $(D - 1)(D - 3)e^{2x} = (2 - 1)(2 - 3)e^{2x} = -e^{2x}$.\n\n> **Watch out.** Each factor gives $c - a$, so the numbers multiply; adding them, or using $c + a$, gives the wrong factor.",
+    "由于 $De^{cx} = ce^{cx}$，算子 $D - a$ 作用于 $e^{cx}$ 只是乘以数 $c - a$。于是这种算子之积作用时，就把这些数相乘，所以 $D$ 的多项式作用于 $e^{cx}$ 等于该多项式在 $c$ 处的值。这正是特征方程有效的原因。如果 $c$ 是根，结果为零，$e^{cx}$ 就是齐次方程的解。例如 $(D - 1)(D - 3)e^{2x} = (2 - 1)(2 - 3)e^{2x} = -e^{2x}$。\n\n> **注意。** 每个因子给出 $c - a$，这些数要相乘；把它们相加，或用 $c + a$，都会得到错误的因子。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
     const b = nonzero(rng, 5);
     const c = nonzero(rng, 5);
     const answer = (c - a) * (c - b);
-    return numberProblem({
-      prompt: t(
-        `The operator $(${poly([1, "D"], [-a, ""])})(${poly([1, "D"], [-b, ""])})$ sends $e^{${exponentOf(c, "x")}}$ to $Ke^{${exponentOf(c, "x")}}$. Find $K$.`,
-        `算子 $(${poly([1, "D"], [-a, ""])})(${poly([1, "D"], [-b, ""])})$ 把 $e^{${exponentOf(c, "x")}}$ 变成 $Ke^{${exponentOf(c, "x")}}$。求 $K$。`,
-      ),
+    const fa = poly([1, "D"], [-a, ""]);
+    const fb = poly([1, "D"], [-b, ""]);
+    const e = `e^{${exponentOf(c, "x")}}`;
+    const sg = (n: number) => (n < 0 ? `- ${-n}` : `+ ${n}`);
+    return explainedNumber(
+      [`The operator $(${fa})(${fb})$ sends $${e}$ to $K${e}$. Find $K$.`, `算子 $(${fa})(${fb})$ 把 $${e}$ 变成 $K${e}$。求 $K$。`],
       answer,
-      form: "integer",
-      wrong: [c * c + a * b, (c + a) * (c + b), c - a + (c - b), answer + 1],
-      solution: t(
-        `Each factor $D - r$ multiplies the exponential by $${c} - r$. So $K = (${c} - ${inParens(a)})(${c} - ${inParens(b)}) = ${answer}$.`,
-        `每个因子 $D - r$ 把指数函数乘以 $${c} - r$。所以 $K = (${c} - ${inParens(a)})(${c} - ${inParens(b)}) = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Apply the right factor", "先作用右边的因子"],
+          `Since $D${e} = ${poly([c, e])}$:`,
+          `由于 $D${e} = ${poly([c, e])}$：`,
+          `(${fb})${e} = (${c} - ${inParens(b)})${e} = ${poly([c - b, e])}`,
+        ),
+        labelled(
+          ["Apply the left factor", "再作用左边的因子"],
+          "",
+          "",
+          `(${fa})\\left(${poly([c - b, e])}\\right) = ${inParens(c - b)} \\cdot (${c} - ${inParens(a)})${e} = ${poly([answer, e])}`,
+          `K = ${answer}`,
+        ),
+      ],
+      [
+        `Expanded, the operator is $${poly([1, "D^2"], [-(a + b), "D"], [a * b, ""])}$, and at $D = ${c}$ this is $${c * c} ${sg(-(a + b) * c)} ${sg(a * b)} = ${answer}$.`,
+        `展开后算子为 $${poly([1, "D^2"], [-(a + b), "D"], [a * b, ""])}$，在 $D = ${c}$ 处为 $${c * c} ${sg(-(a + b) * c)} ${sg(a * b)} = ${answer}$。`,
+      ],
+      [
+        [
+          c * c + a * b,
+          "That leaves out the middle term $-(a + b)D$ of the expanded operator.",
+          "这里漏掉了展开后算子的中间项 $-(a + b)D$。",
+        ],
+        [
+          (c + a) * (c + b),
+          "That uses $c + a$ for each factor; $D - a$ multiplies by $c - a$.",
+          "这是每个因子都用了 $c + a$；$D - a$ 乘的是 $c - a$。",
+        ],
+        [
+          c - a + (c - b),
+          "That adds the two numbers; applying one factor after the other multiplies them.",
+          "这是把两个数相加；一个因子接着另一个作用，是把它们相乘。",
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
