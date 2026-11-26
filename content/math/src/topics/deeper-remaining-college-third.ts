@@ -482,8 +482,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "counting-the-true-rows",
       ["Counting the true rows", "数真值行"],
       [
-        "Each extra variable doubles the rows of a truth table, and it does not change the value of a connective that ignores it. So count the true cases for the two variables used, and multiply by the doubling.",
-        "每多一个变量，真值表的行数翻倍，而不用这个变量的联结词的值不变。所以先数用到的两个变量的真值情况，再乘翻倍的倍数。",
+        "Each extra variable doubles the rows of a truth table, and it does not change the value of a connective that ignores it. So count the true cases for the two variables used, and multiply by the doubling. With $9$ variables, $p \\vee q$ is true in $3$ of the $4$ cases for $p$ and $q$, each repeated in $2^{7} = 128$ rows: $3 \\cdot 128 = 384$ rows.\n\n> **Watch out.** Count the rows of the whole table, not just the four cases of $p$ and $q$; each case appears once for every setting of the other variables.",
+        "每多一个变量，真值表的行数翻倍，而不用这个变量的联结词的值不变。所以先数用到的两个变量的真值情况，再乘翻倍的倍数。$9$ 个变量时，$p \\vee q$ 在 $p$、$q$ 的 $4$ 种情况中有 $3$ 种为真，每种在 $2^{7} = 128$ 行中重复：共 $3 \\cdot 128 = 384$ 行。\n\n> **注意。** 要数整个真值表的行，而不只是 $p$、$q$ 的四种情况；其他变量的每种取值都使每种情况出现一次。",
       ],
       (rng) => {
         const row = rng.pick<[string, number]>([
@@ -495,19 +495,54 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           ["\\rightarrow", 3],
         ]);
         const n = rng.int(2, 7);
-        const count = row[1] * 2 ** (n - 2);
-        return whole(
-          [
-            `A truth table has ${n} variables, including $p$ and $q$. In how many of its rows is $p ${row[0]} q$ true?`,
-            `真值表有 ${n} 个变量，其中包括 $p$ 和 $q$。$p ${row[0]} q$ 在多少行中为真？`,
-          ],
-          count,
-          [row[1], 2 ** n, (4 - row[1]) * 2 ** (n - 2) === count ? count + 1 : (4 - row[1]) * 2 ** (n - 2)],
-          [
-            `It is true in ${row[1]} of the 4 cases for $p$ and $q$, and the other variables give $2^{${n - 2}}$ rows for each.`,
-            `在 $p$、$q$ 的 4 种情况中有 ${row[1]} 种为真，其他变量使每种有 $2^{${n - 2}}$ 行。`,
-          ],
-        );
+        const each = 2 ** (n - 2);
+        const count = row[1] * each;
+        const falseRows = (4 - row[1]) * each;
+        const eachText = n === 2 ? "1" : n === 3 ? "2" : `2^{${n - 2}} = ${each}`;
+        const times = (a: number) => (a === 1 || each === 1 ? `${a * each}` : `${a} \\cdot ${each} = ${a * each}`);
+        return numberProblem({
+          prompt: t(
+            `A truth table has $${n}$ variables, including $p$ and $q$. In how many of its rows is $p ${row[0]} q$ true?`,
+            `真值表有 $${n}$ 个变量，其中包括 $p$ 和 $q$。$p ${row[0]} q$ 在多少行中为真？`,
+          ),
+          answer: count,
+          form: "integer",
+          mistakes: [
+            why(
+              row[1],
+              "That counts the cases of $p$ and $q$ alone, ignoring the other variables.",
+              "那是只数了 $p$、$q$ 的情况，忽略了其他变量。",
+            ),
+            why(2 ** n, "That counts every row of the table.", "那是整个真值表的行数。"),
+            why(falseRows, `That counts the rows where $p ${row[0]} q$ is false.`, `那是 $p ${row[0]} q$ 为假的行数。`),
+            why(
+              row[1] * (n - 2),
+              `That multiplies by the number of other variables, $${n - 2}$, instead of the $${each}$ ways to set them.`,
+              `那是乘以其他变量的个数 $${n - 2}$，而不是它们的 $${each}$ 种取值。`,
+            ),
+          ].filter((m, i, all) => m.value !== count && m.value !== 0 && all.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Count the true cases of p and q", "数 p、q 的真值情况"],
+                t(`$p ${row[0]} q$ is true in $${row[1]}$ of the $4$ cases.`, `$p ${row[0]} q$ 在 $4$ 种情况中有 $${row[1]}$ 种为真。`),
+              ],
+              [
+                ["Repeat for the other variables", "乘以其他变量的取值数"],
+                n === 2
+                  ? t("There are no other variables, so each case is a single row.", "没有其他变量，所以每种情况只有一行。")
+                  : t(
+                      `Each case appears in $${eachText}$ rows, so $${times(row[1])}$.`,
+                      `每种情况出现在 $${eachText}$ 行中，所以 $${times(row[1])}$。`,
+                    ),
+              ],
+            ],
+            t(
+              `The false rows number $${times(4 - row[1])}$, and $${count} + ${falseRows} = ${2 ** n} = 2^{${n}}$, the whole table.`,
+              `为假的行有 $${times(4 - row[1])}$ 行，而 $${count} + ${falseRows} = ${2 ** n} = 2^{${n}}$，正是整个真值表。`,
+            ),
+          ),
+        });
       },
     ),
   ],

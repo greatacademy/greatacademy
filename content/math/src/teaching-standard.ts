@@ -132,4 +132,13 @@ export const taughtTopics: readonly string[] = [
   "solving-systems-of-odes-using-variation-of-parameters",
   "the-lotka-volterra-predator-prey-model",
   "the-lotka-volterra-model-with-carrying-capacity",
+  "truth-preserving-boolean-functions",
+  "self-dual-boolean-functions",
+  "monotonic-boolean-functions",
+  "affine-boolean-functions",
+  "functionally-complete-sets",
+  "posts-functional-completeness-theorem",
+  "introduction-to-logic-circuits",
+  "logic-gates-and-combinational-circuits",
+  "simplifying-logic-circuits",
 ];

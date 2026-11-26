@@ -106,8 +106,8 @@ const selfDualCompletions: KnowledgePointDef = {
   id: "completing-a-self-dual-function",
   title: t("Completing a self-dual function", "补全自对偶函数"),
   explanation: t(
-    "A self-dual function satisfies $f(\\bar{x}) = \\overline{f(x)}$, so its value on an input fixes its value on the complementary input. The inputs therefore fall into complementary pairs, with one free choice per pair. Counting completions means counting the pairs that nothing has decided yet, and each of them doubles the count.",
-    "自对偶函数满足 $f(\\bar{x}) = \\overline{f(x)}$，所以它在一个输入上的值决定了在互补输入上的值。于是输入分成互补的对，每一对只有一次自由选择。计算补全的方式，就是数出尚未确定的对，每一对都使个数加倍。",
+    "A self-dual function satisfies $f(\\bar{x}) = \\overline{f(x)}$, so its value on an input fixes its value on the complementary input. The inputs therefore fall into complementary pairs, with one free choice per pair. Counting completions means counting the pairs that nothing has decided yet, and each of them doubles the count. With $6$ variables the $64$ inputs form $32$ pairs; if $10$ values are known, $22$ pairs are free and there are $2^{22} = 4194304$ completions.\n\n> **Watch out.** A known value also fixes the value at the complementary input, so count pairs, not inputs: the $2^n$ inputs give only $2^{n - 1}$ free choices.",
+    "自对偶函数满足 $f(\\bar{x}) = \\overline{f(x)}$，所以它在一个输入上的值决定了在互补输入上的值。于是输入分成互补的对，每一对只有一次自由选择。计算补全的方式，就是数出尚未确定的对，每一对都使个数加倍。$6$ 个变量时 $64$ 个输入组成 $32$ 对；若已知 $10$ 个值，则有 $22$ 对自由，共 $2^{22} = 4194304$ 种补全。\n\n> **注意。** 一个已知的值同时确定了互补输入上的值，所以要数对而不是数输入：$2^n$ 个输入只有 $2^{n - 1}$ 次自由选择。",
   ),
   generate(rng) {
     const [n, k] = rng.pick([
@@ -119,18 +119,59 @@ const selfDualCompletions: KnowledgePointDef = {
     const pairs = 2 ** (n - 1);
     const free = pairs - k;
     const answer = 2 ** free;
-    const shown = free === 1 ? "$2$" : `$2^{${free}} = ${answer}$`;
     return numberProblem({
       prompt: t(
-        `The values of a self-dual Boolean function of ${n} variables are known on ${k} inputs, no two of which are complements. How many such functions have these values?`,
-        `一个 ${n} 元自对偶布尔函数在 ${k} 个输入上的值已知，这些输入两两不互补。有多少个这样的函数取这些值？`,
+        `The values of a self-dual Boolean function of $${n}$ variables are known on $${k}$ input${k === 1 ? "" : "s"}, no two of which are complements. How many such functions have these values?`,
+        `一个 $${n}$ 元自对偶布尔函数在 $${k}$ 个输入上的值已知，这些输入两两不互补。有多少个这样的函数取这些值？`,
       ),
       answer,
       form: "integer",
-      wrong: [2 ** (2 ** n - k), 2 ** pairs, 2 ** (free + 1)],
-      solution: t(
-        `The $2^{${n}}$ inputs form ${pairs} complementary pairs. The known values settle ${k} of them, which leaves ${free} free, so there are ${shown} functions.`,
-        `$2^{${n}}$ 个输入组成 ${pairs} 个互补对。已知的值确定了其中 ${k} 对，还剩 ${free} 对可以自由选择，所以有 ${shown} 个函数。`,
+      mistakes: [
+        why(
+          2 ** (2 ** n - k),
+          "That treats every unknown input as a free choice, but each pair of complements has only one.",
+          "那是把每个未知输入都当作自由选择，但每一对互补输入只有一次选择。",
+        ),
+        why(
+          2 ** pairs,
+          `That ignores the $${k}$ known values, which settle $${k}$ of the pairs.`,
+          `那是忽略了 $${k}$ 个已知值，它们确定了其中 $${k}$ 对。`,
+        ),
+        why(
+          2 ** (2 ** n - 2 * k),
+          "That frees each undecided input on its own, but its value fixes the value at its complement.",
+          "那是让每个未确定的输入各自自由，但它的值决定了互补输入上的值。",
+        ),
+        why(free, "That counts the free pairs, not the ways to fill them.", "那是自由对的个数，而不是填写它们的方式数。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Pair the inputs", "把输入配对"],
+            t(
+              `The $2^{${n}} = ${2 ** n}$ inputs form $${pairs}$ complementary pairs.`,
+              `$2^{${n}} = ${2 ** n}$ 个输入组成 $${pairs}$ 个互补对。`,
+            ),
+          ],
+          [
+            ["Remove the settled pairs", "去掉已确定的对"],
+            t(
+              `The known values settle $${k}$ of them, leaving $${pairs} - ${k} = ${free}$ free.`,
+              `已知的值确定了其中 $${k}$ 对，剩下 $${pairs} - ${k} = ${free}$ 对自由。`,
+            ),
+          ],
+          [
+            ["Fill the free pairs", "填写自由的对"],
+            t(
+              `$${free === 1 ? "2" : `${pow(2, free)} = ${answer}`}$ ways.`,
+              `共 $${free === 1 ? "2" : `${pow(2, free)} = ${answer}`}$ 种方法。`,
+            ),
+          ],
+        ],
+        t(
+          `The known values are one of $${pow(2, k)}$ choices for their pairs, and each leaves the same number of completions: $${pow(2, k)} \\cdot ${answer} = ${pow(2, pairs)}$, the number of self-dual functions of $${n}$ variables.`,
+          `已知的值是它们所在各对的 $${pow(2, k)}$ 种取法之一，每种取法留下的补全数相同：$${pow(2, k)} \\cdot ${answer} = ${pow(2, pairs)}$，正是 $${n}$ 元自对偶函数的个数。`,
+        ),
       ),
     });
   },
@@ -140,25 +181,59 @@ const thresholdWeight: KnowledgePointDef = {
   id: "the-true-inputs-of-a-threshold-function",
   title: t("The true inputs of a threshold function", "阈值函数的真输入"),
   explanation: t(
-    "A threshold function equals one when at least $k$ of its variables equal one. It is monotonic, because turning a zero into a one can never bring the count below the threshold. Its value depends only on how many ones an input has, so its true inputs can be counted by adding a binomial coefficient for each allowed count.",
-    "阈值函数在至少 $k$ 个变量取一时取值为一。它是单调的，因为把零改成一不会使个数降到阈值以下。它的值只取决于输入中一的个数，所以可以对每个允许的个数加上一个二项式系数，数出真输入。",
+    "A threshold function equals one when at least $k$ of its variables equal one. It is monotonic, because turning a zero into a one can never bring the count below the threshold. Its value depends only on how many ones an input has, so its true inputs can be counted by adding a binomial coefficient for each allowed count. With $10$ variables and $k = 8$: $\\binom{10}{8} + \\binom{10}{9} + \\binom{10}{10} = 45 + 10 + 1 = 56$.\n\n> **Watch out.** At least $k$ includes exactly $k$, so the sum starts at $\\binom{n}{k}$; and it counts inputs, so it adds binomial coefficients rather than fixing $k$ particular variables.",
+    "阈值函数在至少 $k$ 个变量取一时取值为一。它是单调的，因为把零改成一不会使个数降到阈值以下。它的值只取决于输入中一的个数，所以可以对每个允许的个数加上一个二项式系数，数出真输入。$10$ 个变量、$k = 8$ 时：$\\binom{10}{8} + \\binom{10}{9} + \\binom{10}{10} = 45 + 10 + 1 = 56$。\n\n> **注意。** 至少 $k$ 个包括恰好 $k$ 个，所以和从 $\\binom{n}{k}$ 开始；它数的是输入，所以要把二项式系数相加，而不是固定 $k$ 个特定的变量。",
   ),
   generate(rng) {
     const [n, k] = rng.pick(range(3, 8).flatMap((n) => range(1, n).map((k) => [n, k] as const)));
     const counts = range(k, n);
     const answer = counts.reduce((s, j) => s + binom(n, j), 0);
     const terms = counts.map((j) => `\\binom{${n}}{${j}}`).join(" + ");
+    const values = counts.map((j) => binom(n, j)).join(" + ");
+    const below = range(0, k - 1);
+    const rest = 2 ** n - answer;
     return numberProblem({
       prompt: t(
-        `The function $f(x_1, \\dots, x_{${n}})$ equals 1 exactly when at least ${k} of its variables equal 1. On how many inputs does it equal 1?`,
-        `函数 $f(x_1, \\dots, x_{${n}})$ 恰好在至少 ${k} 个变量取 1 时取值为 1。它在多少个输入上取值为 1？`,
+        `The function $f(x_1, \\dots, x_{${n}})$ equals $1$ exactly when at least $${k}$ of its variables equal $1$. On how many inputs does it equal $1$?`,
+        `函数 $f(x_1, \\dots, x_{${n}})$ 恰好在至少 $${k}$ 个变量取 $1$ 时取值为 $1$。它在多少个输入上取值为 $1$？`,
       ),
       answer,
       form: "integer",
-      wrong: [binom(n, k), 2 ** n - answer, 2 ** (n - k)],
-      solution: t(
-        `Add over the number of ones an input can have: $${terms} = ${answer}$.`,
-        `按输入中一的个数相加：$${terms} = ${answer}$。`,
+      mistakes: [
+        why(binom(n, k), `That counts only the inputs with exactly $${k}$ ones.`, `那是只数了恰有 $${k}$ 个 $1$ 的输入。`),
+        why(rest, "That counts the inputs on which $f$ is $0$.", "那是 $f$ 取 $0$ 的输入个数。"),
+        why(
+          2 ** (n - k),
+          `That fixes $${k}$ particular variables at $1$; any $${k}$ of them may be the ones.`,
+          `那是把 $${k}$ 个特定的变量固定为 $1$；其实任意 $${k}$ 个都可以。`,
+        ),
+        why(
+          answer - binom(n, k),
+          `That leaves out the inputs with exactly $${k}$ ones, which also count.`,
+          `那是漏掉了恰有 $${k}$ 个 $1$ 的输入，它们也要算。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && m.value !== 0 && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["List the allowed counts of ones", "列出允许的 1 的个数"],
+            t(
+              `An input is true when it has ${counts.length === 1 ? `$${n}$ ones` : `$${k}$ to $${n}$ ones`}.`,
+              `输入含 ${counts.length === 1 ? `$${n}$ 个` : `$${k}$ 到 $${n}$ 个`} $1$ 时为真。`,
+            ),
+          ],
+          [
+            ["Add the binomial coefficients", "把二项式系数相加"],
+            t(
+              `$${terms} = ${counts.length === 1 ? "" : `${values} = `}${answer}$.`,
+              `$${terms} = ${counts.length === 1 ? "" : `${values} = `}${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The inputs with fewer than $${k}$ ones number $${below.map((j) => `\\binom{${n}}{${j}}`).join(" + ")} = ${rest}$, and $${answer} + ${rest} = ${2 ** n} = 2^{${n}}$, every input.`,
+          `少于 $${k}$ 个 $1$ 的输入有 $${below.map((j) => `\\binom{${n}}{${j}}`).join(" + ")} = ${rest}$ 个，而 $${answer} + ${rest} = ${2 ** n} = 2^{${n}}$，正是全部输入。`,
+        ),
       ),
     });
   },
@@ -168,23 +243,51 @@ const gateDepth: KnowledgePointDef = {
   id: "the-depth-of-a-tree-of-gates",
   title: t("The depth of a tree of gates", "门电路树的深度"),
   explanation: t(
-    "Combining many inputs with two-input gates takes one gate fewer than the number of inputs, however they are arranged. The arrangement decides the delay, which is the number of gates on the longest path. Each level can at most double the number of inputs covered, so the best depth is a rounded-up base-two logarithm.",
-    "用两输入门合并多个输入，无论怎样安排，所需的门都比输入少一个。安排方式决定的是延迟，也就是最长路径上门的个数。每一层最多使覆盖的输入翻倍，所以最优深度是向上取整的以二为底的对数。",
+    "Combining many inputs with two-input gates takes one gate fewer than the number of inputs, however they are arranged. The arrangement decides the delay, which is the number of gates on the longest path. Each level can at most double the number of inputs covered, so the best depth is a rounded-up base-two logarithm. For $1000$ inputs: $2^{9} = 512$ is too few and $2^{10} = 1024$ is enough, so the depth is $10$, although $999$ gates are needed.\n\n> **Watch out.** The number of gates is always one less than the number of inputs; the question asks for levels, and $k$ levels reach at most $2^k$ inputs, so round the logarithm up, not down.",
+    "用两输入门合并多个输入，无论怎样安排，所需的门都比输入少一个。安排方式决定的是延迟，也就是最长路径上门的个数。每一层最多使覆盖的输入翻倍，所以最优深度是向上取整的以二为底的对数。$1000$ 个输入时：$2^{9} = 512$ 不够，$2^{10} = 1024$ 足够，所以深度是 $10$，尽管需要 $999$ 个门。\n\n> **注意。** 门的个数总比输入少一个；题目问的是层数，$k$ 层最多覆盖 $2^k$ 个输入，所以对数要向上取整，而不是向下取整。",
   ),
   generate(rng) {
     const n = rng.int(5, 200);
     const answer = Math.ceil(Math.log2(n));
+    const halvings = range(0, answer).map((j) => `$${Math.ceil(n / 2 ** j)}$`);
     return numberProblem({
       prompt: t(
-        `An AND of ${n} inputs is built from two-input AND gates. What is the smallest possible number of gates on the longest path from an input to the output?`,
-        `用两输入与门构造 ${n} 个输入的与。从输入到输出的最长路径上，门的个数最少是多少？`,
+        `An AND of $${n}$ inputs is built from two-input AND gates. What is the smallest possible number of gates on the longest path from an input to the output?`,
+        `用两输入与门构造 $${n}$ 个输入的与。从输入到输出的最长路径上，门的个数最少是多少？`,
       ),
       answer,
       form: "integer",
-      wrong: [n - 1, answer - 1, Math.ceil(n / 2)],
-      solution: t(
-        `A tree with $k$ levels has at most $2^k$ inputs. Since $2^{${answer - 1}} = ${2 ** (answer - 1)}$ is too few and $2^{${answer}} = ${2 ** answer}$ is enough, the answer is ${answer}.`,
-        `$k$ 层的树最多有 $2^k$ 个输入。由于 $2^{${answer - 1}} = ${2 ** (answer - 1)}$ 不够，而 $2^{${answer}} = ${2 ** answer}$ 足够，答案是 ${answer}。`,
+      mistakes: [
+        why(
+          n - 1,
+          "That is the number of gates, which a chain would also need; a balanced tree is far shallower.",
+          "那是门的个数，链状连接也需要这么多；平衡的树要浅得多。",
+        ),
+        why(
+          answer - 1,
+          `That is one level too few: $2^{${answer - 1}} = ${2 ** (answer - 1)}$ is less than $${n}$.`,
+          `那少了一层：$2^{${answer - 1}} = ${2 ** (answer - 1)}$ 小于 $${n}$。`,
+        ),
+        why(Math.ceil(n / 2), "That counts the gates of the first level, not the levels.", "那是第一层的门数，而不是层数。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Bound the inputs of a tree", "估计树的输入数"],
+            t("A tree with $k$ levels of two-input gates has at most $2^k$ inputs.", "$k$ 层两输入门组成的树最多有 $2^k$ 个输入。"),
+          ],
+          [
+            ["Find the smallest k", "求最小的 k"],
+            t(
+              `$2^{${answer - 1}} = ${2 ** (answer - 1)} < ${n} \\le 2^{${answer}} = ${2 ** answer}$, so $${answer}$ levels are needed and enough.`,
+              `$2^{${answer - 1}} = ${2 ** (answer - 1)} < ${n} \\le 2^{${answer}} = ${2 ** answer}$，所以需要且只需 $${answer}$ 层。`,
+            ),
+          ],
+        ],
+        t(
+          `Halving $${n}$ and rounding up, level by level, reaches one output after $${answer}$ halvings: ${halvings.join(", ")}.`,
+          `把 $${n}$ 逐层减半并向上取整，经过 $${answer}$ 次减半得到一个输出：${halvings.join("，")}。`,
+        ),
       ),
     });
   },
@@ -1420,8 +1523,8 @@ const affineDependingOn: KnowledgePointDef = {
   id: "affine-functions-that-depend-on-a-given-number-of-variables",
   title: t("Affine functions that depend on a given number of variables", "依赖给定个数变量的仿射函数"),
   explanation: t(
-    "An affine Boolean function has the form $c \\oplus x_{i_1} \\oplus \\dots \\oplus x_{i_k}$, and the variables in the sum are exactly the ones it depends on, since changing any of them flips the output. So to count them, choose the $k$ variables, then choose the constant $c$. The constant has two values, and it does not change which variables matter.",
-    "仿射布尔函数的形式是 $c \\oplus x_{i_1} \\oplus \\dots \\oplus x_{i_k}$，和中的变量恰好就是它依赖的变量，因为改变其中任何一个都会翻转输出。所以要计数，先选这 $k$ 个变量，再选常数 $c$。常数有两个值，它不改变函数依赖哪些变量。",
+    "An affine Boolean function has the form $c \\oplus x_{i_1} \\oplus \\dots \\oplus x_{i_k}$, and the variables in the sum are exactly the ones it depends on, since changing any of them flips the output. So to count them, choose the $k$ variables, then choose the constant $c$. The constant has two values, and it does not change which variables matter. With $20$ variables, $2\\binom{20}{2} = 380$ affine functions depend on exactly $2$ of them.\n\n> **Watch out.** Keep both values of the constant, since $c \\oplus x_1$ and $\\neg(c \\oplus x_1)$ depend on the same variable; and choose which $k$ variables appear rather than raising $2$ to the power $k$.",
+    "仿射布尔函数的形式是 $c \\oplus x_{i_1} \\oplus \\dots \\oplus x_{i_k}$，和中的变量恰好就是它依赖的变量，因为改变其中任何一个都会翻转输出。所以要计数，先选这 $k$ 个变量，再选常数 $c$。常数有两个值，它不改变函数依赖哪些变量。$20$ 个变量时，恰好依赖其中 $2$ 个变量的仿射函数有 $2\\binom{20}{2} = 380$ 个。\n\n> **注意。** 常数的两个值都要算，因为 $c \\oplus x_1$ 与 $\\neg(c \\oplus x_1)$ 依赖同一个变量；要选出出现的 $k$ 个变量，而不是取 $2$ 的 $k$ 次方。",
   ),
   generate(rng) {
     const n = rng.int(2, 14);
@@ -1430,15 +1533,36 @@ const affineDependingOn: KnowledgePointDef = {
     const answer = 2 * choose;
     return numberProblem({
       prompt: t(
-        `How many affine Boolean functions of ${n} variables depend on exactly ${k} of them?`,
-        `有多少个 ${n} 元仿射布尔函数恰好依赖其中 ${k} 个变量？`,
+        `How many affine Boolean functions of $${n}$ variables depend on exactly $${k}$ of them?`,
+        `有多少个 $${n}$ 元仿射布尔函数恰好依赖其中 $${k}$ 个变量？`,
       ),
       answer,
       form: "integer",
-      wrong: [choose, 2 ** (n + 1), 2 ** k, n, choose + 1],
-      solution: t(
-        `Choose the variables in $\\binom{${n}}{${k}} = ${choose}$ ways, and the constant in 2 ways. That gives $${answer}$.`,
-        `选择变量有 $\\binom{${n}}{${k}} = ${choose}$ 种方法，选择常数有 2 种方法。一共是 $${answer}$ 个。`,
+      mistakes: [
+        why(choose, "That leaves out the two choices of the constant.", "那是漏掉了常数的两种选择。"),
+        why(2 ** (n + 1), "That counts every affine function, whatever it depends on.", "那是所有仿射函数的个数，不论它依赖哪些变量。"),
+        why(
+          2 ** k,
+          `That raises $2$ to the power $${k}$ instead of choosing which $${k}$ variables appear.`,
+          `那是取 $2$ 的 $${k}$ 次方，而不是选出出现的 $${k}$ 个变量。`,
+        ),
+        why(n, "That counts the variables, not the functions.", "那是变量的个数，不是函数的个数。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choose the variables", "选变量"],
+            t(`$\\binom{${n}}{${k}} = ${choose}$ ways.`, `有 $\\binom{${n}}{${k}} = ${choose}$ 种方法。`),
+          ],
+          [
+            ["Choose the constant", "选常数"],
+            t(`$c$ is $0$ or $1$: $2 \\cdot ${choose} = ${answer}$.`, `$c$ 取 $0$ 或 $1$：$2 \\cdot ${choose} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Choosing instead the $${n - k}$ variables left out gives $2\\binom{${n}}{${n - k}} = ${answer}$ as well.`,
+          `改为选出不出现的 $${n - k}$ 个变量，同样得 $2\\binom{${n}}{${n - k}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2691,8 +2815,8 @@ const preserversOfAGivenWeight: KnowledgePointDef = {
   id: "truth-preserving-functions-of-a-given-weight",
   title: t("Truth-preserving functions of a given weight", "给定权重的保值函数"),
   explanation: t(
-    "Preserving or failing to preserve a constant fixes the value of a function on one particular input: all zeros for the constant zero, all ones for the constant one. These two rows of the table are then settled, and the remaining rows are still free. A condition on the number of ones must be split between the fixed rows and the free ones.",
-    "是否保某个常数，决定了函数在一个特定输入上的值：保 0 看全零输入，保 1 看全一输入。这样真值表的两行就确定了，其余各行仍然自由。对取一个数的要求，要分别算在已确定的行和自由的行上。",
+    "Preserving or failing to preserve a constant fixes the value of a function on one particular input: all zeros for the constant zero, all ones for the constant one. These two rows of the table are then settled, and the remaining rows are still free. A condition on the number of ones must be split between the fixed rows and the free ones. With $5$ variables, a function that preserves both $0$ and $1$ and equals $1$ on exactly $4$ inputs already has one $1$ at $(1, \\dots, 1)$, so the other $3$ go among $32 - 2 = 30$ inputs: $\\binom{30}{3} = 4060$ functions.\n\n> **Watch out.** The two fixed rows may already hold some of the $k$ ones, so subtract them before choosing; and only $2^n - 2$ inputs remain free.",
+    "是否保某个常数，决定了函数在一个特定输入上的值：保 0 看全零输入，保 1 看全一输入。这样真值表的两行就确定了，其余各行仍然自由。对取一个数的要求，要分别算在已确定的行和自由的行上。$5$ 个变量时，既保 $0$ 又保 $1$、恰在 $4$ 个输入上取 $1$ 的函数已在 $(1, \\dots, 1)$ 处有一个 $1$，其余 $3$ 个放在 $32 - 2 = 30$ 个输入中：共 $\\binom{30}{3} = 4060$ 个函数。\n\n> **注意。** 两个固定的行可能已经占了 $k$ 个 $1$ 中的几个，要先减去再选；而且只有 $2^n - 2$ 个输入仍然自由。",
   ),
   generate(rng) {
     const [n, k, kind] = rng.pick(
@@ -2725,15 +2849,49 @@ const preserversOfAGivenWeight: KnowledgePointDef = {
     }[fixedOnes];
     return numberProblem({
       prompt: t(
-        `How many Boolean functions of ${n} variables ${condition.en} and equal $1$ on exactly ${k} of their inputs?`,
-        `有多少个 ${n} 元布尔函数${condition["zh-CN"]}，并且恰好在 ${k} 个输入上取值为 $1$？`,
+        `How many Boolean functions of $${n}$ variables ${condition.en} and equal $1$ on exactly $${k}$ of their inputs?`,
+        `有多少个 $${n}$ 元布尔函数${condition["zh-CN"]}，并且恰好在 $${k}$ 个输入上取值为 $1$？`,
       ),
       answer,
       form: "integer",
-      wrong: [binom(2 ** n, k), binom(2 ** n - 1, k), binom(free, k), binom(free, k - 1), binom(free, Math.max(k - 2, 0))],
-      solution: t(
-        `The condition means $${values}$, so two values are settled, and ${ones.en}. ${pickOnes === 1 ? "The one remaining $1$ goes" : `The remaining ${pickOnes} ones go`} among the other $2^{${n}} - 2 = ${free}$ inputs, in $\\binom{${free}}{${pickOnes}} = ${answer}$ ways.`,
-        `这个条件就是 $${values}$，所以两个值已确定，${ones["zh-CN"]}。还要在其余 $2^{${n}} - 2 = ${free}$ 个输入中放 ${pickOnes} 个一，有 $\\binom{${free}}{${pickOnes}} = ${answer}$ 种方法。`,
+      mistakes: [
+        why(binom(2 ** n, k), "That ignores the condition, which fixes two rows of the table.", "那是忽略了条件，它固定了真值表的两行。"),
+        why(binom(2 ** n - 1, k), "That fixes only one of the two rows.", "那是只固定了两行中的一行。"),
+        ...[k, k - 1, k - 2]
+          .filter((j) => j >= 0 && j !== pickOnes)
+          .map((j) =>
+            why(
+              binom(free, j),
+              `That places $${j}$ ones among the free inputs, but the fixed rows hold $${fixedOnes}$ of the $${k}$, so $${pickOnes}$ remain.`,
+              `那是在自由的输入中放了 $${j}$ 个 $1$，但固定的两行占了 $${k}$ 个中的 $${fixedOnes}$ 个，所以只剩 $${pickOnes}$ 个。`,
+            ),
+          ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Fix the two rows", "固定两行"],
+            t(
+              `The condition means $${values}$; of these two values, ${ones.en}.`,
+              `这个条件就是 $${values}$；这两个值中${ones["zh-CN"]}。`,
+            ),
+          ],
+          [
+            ["Count the ones still to place", "数还要放的 1"],
+            t(
+              `$${k} - ${fixedOnes} = ${pickOnes}$ ${pickOnes === 1 ? "one goes" : "ones go"} among the other $2^{${n}} - 2 = ${free}$ inputs.`,
+              `还有 $${k} - ${fixedOnes} = ${pickOnes}$ 个 $1$ 要放在其余 $2^{${n}} - 2 = ${free}$ 个输入中。`,
+            ),
+          ],
+          [
+            ["Choose their places", "选择位置"],
+            t(`$\\binom{${free}}{${pickOnes}} = ${answer}$.`, `$\\binom{${free}}{${pickOnes}} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Choosing the $${free - pickOnes}$ free ${free - pickOnes === 1 ? "input that gets" : "inputs that get"} $0$ instead gives $\\binom{${free}}{${free - pickOnes}} = ${answer}$ as well.`,
+          `改为选出取 $0$ 的 $${free - pickOnes}$ 个自由输入，同样得 $\\binom{${free}}{${free - pickOnes}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2782,8 +2940,8 @@ const smallestCompleteSubset: KnowledgePointDef = {
   id: "the-smallest-complete-subset-of-a-set-of-functions",
   title: t("The smallest complete subset of a set of functions", "函数集的最小完备子集"),
   explanation: t(
-    "Post's theorem turns completeness into a covering question. Record, for each function, which of the five classes it lies outside. A subset is complete exactly when every class is left by at least one chosen function, so finding the smallest complete subset means covering all five classes with as few functions as possible.",
-    "波斯特定理把完备性变成了一个覆盖问题。对每个函数，记下它不属于五个类中的哪些。一个子集完备，当且仅当每个类都至少有一个选中的函数不属于它，所以求最小完备子集，就是用尽量少的函数覆盖全部五个类。",
+    "Post's theorem turns completeness into a covering question. Record, for each function, which of the five classes it lies outside. A subset is complete exactly when every class is left by at least one chosen function, so finding the smallest complete subset means covering all five classes with as few functions as possible. Among $x \\wedge y$, $x \\vee y$ and $1 \\oplus x \\oplus y \\oplus z$, the first two each leave only $S$ and $L$, while the third leaves $T_0$, $T_1$ and $M$; so $\\{x \\vee y, 1 \\oplus x \\oplus y \\oplus z\\}$ is complete and the smallest number is $2$.\n\n> **Watch out.** One function can leave several classes at once, so fewer than five functions may be enough; and every class must be left, including $S$ and $L$, which are easy to forget.",
+    "波斯特定理把完备性变成了一个覆盖问题。对每个函数，记下它不属于五个类中的哪些。一个子集完备，当且仅当每个类都至少有一个选中的函数不属于它，所以求最小完备子集，就是用尽量少的函数覆盖全部五个类。在 $x \\wedge y$、$x \\vee y$、$1 \\oplus x \\oplus y \\oplus z$ 中，前两个都只不属于 $S$ 和 $L$，第三个不属于 $T_0$、$T_1$ 和 $M$；所以 $\\{x \\vee y, 1 \\oplus x \\oplus y \\oplus z\\}$ 完备，最少是 $2$ 个。\n\n> **注意。** 一个函数可以同时不属于几个类，所以不到五个函数也可能够用；每个类都必须有函数不属于它，包括容易忘记的 $S$ 和 $L$。",
   ),
   generate(rng) {
     let chosen = [0, 2, 9, 3];
@@ -2802,6 +2960,10 @@ const smallestCompleteSubset: KnowledgePointDef = {
     const listing = functions.map(([latex]) => latex).join(", \\quad ");
     const lines = functions.map(([latex, f]) => [latex, postEscapes(f).join(", ")] as const);
     const best = part.map((i) => (functions[i] as (typeof postPool)[number])[0]).join(", \\ ");
+    const cover = CLASSES.map((c) => {
+      const [latex] = part.map((i) => functions[i] as (typeof postPool)[number]).find(([, f]) => postEscapes(f).includes(c)) ?? ["?"];
+      return [c, latex] as const;
+    });
     return numberProblem({
       prompt: t(
         `Consider the functions $${listing}$ of the variables $x, y, z$. These functions together are functionally complete. What is the smallest number of them that still form a functionally complete set?`,
@@ -2809,10 +2971,41 @@ const smallestCompleteSubset: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [answer + 1, answer - 1, functions.length, 5, answer + 2],
-      solution: t(
-        `The classes each function lies outside are: ${lines.map(([f, out]) => `$${f}$: $${out}$`).join("; ")}. A complete subset must leave each of $T_0, T_1, S, M, L$, and no ${answer - 1 === 1 ? "single function does" : `${answer - 1} functions do`}. The functions $${best}$ do, so the smallest number is $${answer}$.`,
-        `每个函数不属于的类是：${lines.map(([f, out]) => `$${f}$：$${out}$`).join("；")}。完备子集必须对 $T_0, T_1, S, M, L$ 每一类都有函数不属于它，而任何 ${answer - 1} 个函数都做不到。函数 $${best}$ 可以做到，所以最少是 $${answer}$ 个。`,
+      mistakes: [
+        why(
+          answer - 1,
+          `That is too few: ${answer - 1 === 1 ? "no single function leaves" : `no $${answer - 1}$ of the functions leave`} all five classes.`,
+          `那太少了：任何 $${answer - 1}$ 个函数都不能使五个类都有函数不属于它。`,
+        ),
+        why(functions.length, "That keeps every function, but some of them are not needed.", "那是保留了所有函数，但其中有些并不需要。"),
+        why(
+          5,
+          "That takes one function per class, but one function can leave several classes.",
+          "那是每个类取一个函数，但一个函数可以同时不属于几个类。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && m.value !== 0 && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["List the classes each function leaves", "列出每个函数不属于的类"],
+            t(`${lines.map(([f, out]) => `$${f}$: $${out}$`).join("; ")}.`, `${lines.map(([f, out]) => `$${f}$：$${out}$`).join("；")}。`),
+          ],
+          [
+            ["Rule out smaller subsets", "排除更小的子集"],
+            t(
+              `A complete subset must leave each of $T_0, T_1, S, M, L$, and no ${answer - 1 === 1 ? "single function does" : `$${answer - 1}$ functions do`}.`,
+              `完备子集必须对 $T_0, T_1, S, M, L$ 每一类都有函数不属于它，而任何 $${answer - 1}$ 个函数都做不到。`,
+            ),
+          ],
+          [
+            ["Find a smallest cover", "找出最小的覆盖"],
+            t(`The functions $${best}$ do, so the smallest number is $${answer}$.`, `函数 $${best}$ 可以做到，所以最少是 $${answer}$ 个。`),
+          ],
+        ],
+        t(
+          `Class by class, the chosen functions leave each one: ${cover.map(([c, f]) => `$${c}$ by $${f}$`).join(", ")}.`,
+          `逐类检查，选中的函数使每一类都有函数不属于它：${cover.map(([c, f]) => `$${c}$ 由 $${f}$`).join("，")}。`,
+        ),
       ),
     });
   },
@@ -2826,12 +3019,21 @@ const GATE_OPERATIONS: Readonly<Record<string, (a: number, b: number) => number>
   NOR: (a, b) => 1 - (a | b),
 };
 
+/** PARTNER is the gate a gate is most easily mistaken for. */
+const PARTNER: Readonly<Record<string, string>> = { AND: "OR", OR: "AND", XOR: "OR", NAND: "AND", NOR: "OR" };
+
+/** misreadGate is the operation of the gate a gate is mistaken for. */
+const misreadGate = (op: string) => GATE_OPERATIONS[PARTNER[op] as string] as (a: number, b: number) => number;
+
+/** article is the indefinite article before a gate name read aloud: "an AND", "a NOR". */
+const article = (op: string) => (["AND", "OR", "XOR"].includes(op) ? "an" : "a");
+
 const inputsThatLightACircuit: KnowledgePointDef = {
   id: "counting-the-inputs-that-make-a-circuit-output-one",
   title: t("Counting the inputs that make a circuit output one", "计算使电路输出一的输入个数"),
   explanation: t(
-    "Tracing a circuit on one input tells you a single row of its truth table. To describe the whole circuit, repeat the trace for every combination of inputs, working through the gates in order so that each gate's inputs are known before it is evaluated. With three inputs there are eight rows to fill in.",
-    "在一个输入上追踪电路，只得到真值表的一行。要了解整个电路，就对每种输入组合都追踪一次，并按顺序计算各门，使每个门的输入在计算它之前已经确定。三个输入共有八行要填。",
+    "Tracing a circuit on one input tells you a single row of its truth table. To describe the whole circuit, repeat the trace for every combination of inputs, working through the gates in order so that each gate's inputs are known before it is evaluated. With three inputs there are eight rows to fill in. For $g_{1} = \\mathrm{OR}(x, y)$, $g_{2} = \\mathrm{NOT}(z)$, $g_{3} = \\mathrm{AND}(g_{1}, g_{2})$, the output is $1$ when $z = 0$ and $x$ or $y$ is $1$: on $(0, 1, 0)$, $(1, 0, 0)$ and $(1, 1, 0)$, so $3$ rows.\n\n> **Watch out.** Trace all eight rows and compute $g_{1}$ and $g_{2}$ before $g_{3}$; NAND and NOR give $1$ exactly where AND and OR give $0$.",
+    "在一个输入上追踪电路，只得到真值表的一行。要了解整个电路，就对每种输入组合都追踪一次，并按顺序计算各门，使每个门的输入在计算它之前已经确定。三个输入共有八行要填。对 $g_{1} = \\mathrm{OR}(x, y)$，$g_{2} = \\mathrm{NOT}(z)$，$g_{3} = \\mathrm{AND}(g_{1}, g_{2})$，输出在 $z = 0$ 且 $x$ 或 $y$ 为 $1$ 时为 $1$：即 $(0, 1, 0)$、$(1, 0, 0)$、$(1, 1, 0)$ 三行。\n\n> **注意。** 要追踪全部八行，并先算 $g_{1}$ 和 $g_{2}$ 再算 $g_{3}$；与非门和或非门恰好在与门和或门取 $0$ 的地方取 $1$。",
   ),
   generate(rng) {
     const names = Object.keys(GATE_OPERATIONS);
@@ -2847,6 +3049,11 @@ const inputsThatLightACircuit: KnowledgePointDef = {
       if (answer < 2 || answer > 6) continue;
       const gates = `g_{1} = \\mathrm{${op1}}(x, y)$, $g_{2} = \\mathrm{${op2}}(${second}, z)$, $g_{3} = \\mathrm{${op3}}(g_{1}, g_{2})`;
       const list = lit.map(([x, y, z]) => `(${x}, ${y}, ${z})`).join(", ");
+      const first = lit[0] as (typeof rows)[number];
+      const g1 = f1(first[0], first[1]);
+      const g2 = f2(second === "x" ? first[0] : first[1], first[2]);
+      const misread = (op: string, a: typeof f1, b: typeof f2) =>
+        rows.filter(([x, y, z]) => misreadGate(op)(a(x, y), b(second === "x" ? x : y, z)) === 1).length;
       return numberProblem({
         prompt: t(
           `A circuit has inputs $x, y, z$ and gates $${gates}$, with output $g_{3}$. For how many of the $8$ input combinations is the output $1$?`,
@@ -2854,10 +3061,45 @@ const inputsThatLightACircuit: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [8 - answer, answer + 1, answer - 1, answer + 2, 4],
-        solution: t(
-          `Evaluate $g_{1}$, then $g_{2}$, then $g_{3}$ on each of the eight rows. The output is $1$ exactly on $(x, y, z) = ${list}$, so the count is $${answer}$.`,
-          `在八行中的每一行依次计算 $g_{1}$、$g_{2}$、$g_{3}$。输出为 $1$ 的恰好是 $(x, y, z) = ${list}$，所以有 $${answer}$ 种。`,
+        mistakes: [
+          why(8 - answer, "That counts the inputs on which the output is $0$.", "那是输出为 $0$ 的输入个数。"),
+          why(
+            misread(op3, f1, f2),
+            `That reads the output gate $g_{3}$, ${article(op3)} ${op3} gate, as ${PARTNER[op3]}.`,
+            `那是把输出门 $g_{3}$（${op3} 门）当成了 ${PARTNER[op3]} 门。`,
+          ),
+          why(
+            rows.filter(([x, y, z]) => f3(misreadGate(op1)(x, y), f2(second === "x" ? x : y, z)) === 1).length,
+            `That reads the gate $g_{1}$, ${article(op1)} ${op1} gate, as ${PARTNER[op1]}.`,
+            `那是把门 $g_{1}$（${op1} 门）当成了 ${PARTNER[op1]} 门。`,
+          ),
+          why(
+            rows.filter(([x, y, z]) => f3(f1(x, y), misreadGate(op2)(second === "x" ? x : y, z)) === 1).length,
+            `That reads the gate $g_{2}$, ${article(op2)} ${op2} gate, as ${PARTNER[op2]}.`,
+            `那是把门 $g_{2}$（${op2} 门）当成了 ${PARTNER[op2]} 门。`,
+          ),
+        ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+        solution: walked(
+          [
+            [
+              ["Trace every row", "追踪每一行"],
+              t(
+                "Evaluate $g_{1}$, then $g_{2}$, then $g_{3}$ on each of the eight rows.",
+                "在八行中的每一行依次计算 $g_{1}$、$g_{2}$、$g_{3}$。",
+              ),
+            ],
+            [
+              ["Count the rows with output 1", "数输出为 1 的行"],
+              t(
+                `The output is $1$ exactly on $(x, y, z) = ${list}$, so the count is $${answer}$.`,
+                `输出为 $1$ 的恰好是 $(x, y, z) = ${list}$，所以有 $${answer}$ 种。`,
+              ),
+            ],
+          ],
+          t(
+            `On the first of these rows, $(${first.join(", ")})$: $g_{1} = ${g1}$, $g_{2} = ${g2}$ and $g_{3} = \\mathrm{${op3}}(${g1}, ${g2}) = 1$.`,
+            `在其中第一行 $(${first.join(", ")})$ 上：$g_{1} = ${g1}$，$g_{2} = ${g2}$，$g_{3} = \\mathrm{${op3}}(${g1}, ${g2}) = 1$。`,
+          ),
         ),
       });
     }
@@ -2868,8 +3110,8 @@ const gatesSavedByFactoring: KnowledgePointDef = {
   id: "gates-saved-by-factoring-a-circuit",
   title: t("Gates saved by factoring a circuit", "因式分解节省的门数"),
   explanation: t(
-    "The distributive law often makes a circuit much smaller. A product of two sums multiplied out has one AND for every pair of terms, and these must then be joined by ORs, so the expanded form grows with the product of the two sizes. The factored form grows only with their sum, since each input is used once.",
-    "分配律常常能让电路小很多。两个和式的积展开后，每一对项都要一个与门，再用或门连接起来，所以展开式的规模随两个大小的乘积增长。分解后的形式只随它们的和增长，因为每个输入只用一次。",
+    "The distributive law often makes a circuit much smaller. A product of two sums multiplied out has one AND for every pair of terms, and these must then be joined by ORs, so the expanded form grows with the product of the two sizes. The factored form grows only with their sum, since each input is used once. With $10$ and $12$ variables, the expanded circuit has $120$ ANDs and $119$ ORs, $239$ gates, while the factored one has $9 + 11$ ORs and one AND, $21$ gates: $218$ are saved.\n\n> **Watch out.** Joining $m$ terms takes $m - 1$ OR gates, and the ANDs count too; the question asks for the difference of the two sizes, not either size.",
+    "分配律常常能让电路小很多。两个和式的积展开后，每一对项都要一个与门，再用或门连接起来，所以展开式的规模随两个大小的乘积增长。分解后的形式只随它们的和增长，因为每个输入只用一次。$10$ 个与 $12$ 个变量时，展开的电路有 $120$ 个与门和 $119$ 个或门，共 $239$ 个门；分解的电路有 $9 + 11$ 个或门和一个与门，共 $21$ 个门：节省 $218$ 个。\n\n> **注意。** 连接 $m$ 项需要 $m - 1$ 个或门，与门也要算上；题目问的是两种规模之差，而不是其中某一个规模。",
   ),
   generate(rng) {
     const p = rng.int(2, 7);
@@ -2880,15 +3122,39 @@ const gatesSavedByFactoring: KnowledgePointDef = {
     const answer = expanded - factored;
     return numberProblem({
       prompt: t(
-        `A circuit of two-input AND and OR gates computes an OR of ${pairs} products, each pairing one of ${p} different variables with one of ${q} other different variables. How many gates are saved by replacing it with the circuit for the factored form, an AND of an OR of the ${p} variables and an OR of the ${q} variables?`,
-        `一个由二输入与门和或门组成的电路计算 ${pairs} 个积的或，每个积由 ${p} 个不同变量之一和另外 ${q} 个不同变量之一配成。把它换成分解形式的电路，即 ${p} 个变量的或与 ${q} 个变量的或再取与，能节省多少个门？`,
+        `A circuit of two-input AND and OR gates computes an OR of $${pairs}$ products, each pairing one of $${p}$ different variables with one of $${q}$ other different variables. How many gates are saved by replacing it with the circuit for the factored form, an AND of an OR of the $${p}$ variables and an OR of the $${q}$ variables?`,
+        `一个由二输入与门和或门组成的电路计算 $${pairs}$ 个积的或，每个积由 $${p}$ 个不同变量之一和另外 $${q}$ 个不同变量之一配成。把它换成分解形式的电路，即 $${p}$ 个变量的或与 $${q}$ 个变量的或再取与，能节省多少个门？`,
       ),
       answer,
       form: "integer",
-      wrong: [expanded, factored, pairs, pairs - factored, answer - 1, answer + 1],
-      solution: t(
-        `The expanded circuit uses ${pairs} ANDs and ${pairs - 1} ORs to join them, so ${expanded} gates. The factored one uses $${p - 1} + ${q - 1}$ ORs and one AND, so ${factored} gates. The saving is $${expanded} - ${factored} = ${answer}$.`,
-        `展开的电路用 ${pairs} 个与门和 ${pairs - 1} 个或门连接，共 ${expanded} 个门。分解的电路用 $${p - 1} + ${q - 1}$ 个或门，再加一个与门，共 ${factored} 个门。节省 $${expanded} - ${factored} = ${answer}$ 个。`,
+      mistakes: [
+        why(expanded, "That is the size of the expanded circuit, not the saving.", "那是展开电路的规模，而不是节省的门数。"),
+        why(factored, "That is the size of the factored circuit, not the saving.", "那是分解电路的规模，而不是节省的门数。"),
+        why(pairs, "That counts only the ANDs of the expanded circuit.", "那是只数了展开电路中的与门。"),
+        why(pairs - factored, "That leaves out the ORs that join the products.", "那是漏掉了连接各个积的或门。"),
+      ].filter((m, i, all) => m.value !== answer && m.value !== 0 && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the expanded circuit", "数展开的电路"],
+            t(
+              `$${pairs}$ ANDs and $${pairs - 1}$ ORs to join them: $${expanded}$ gates.`,
+              `$${pairs}$ 个与门和连接它们的 $${pairs - 1}$ 个或门：共 $${expanded}$ 个门。`,
+            ),
+          ],
+          [
+            ["Count the factored circuit", "数分解的电路"],
+            t(
+              `$${p - 1} + ${q - 1}$ ORs and one AND: $${factored}$ gates.`,
+              `$${p - 1} + ${q - 1}$ 个或门和一个与门：共 $${factored}$ 个门。`,
+            ),
+          ],
+          [["Subtract", "相减"], t(`$${expanded} - ${factored} = ${answer}$.`, `$${expanded} - ${factored} = ${answer}$。`)],
+        ],
+        t(
+          `In general the saving is $(2pq - 1) - (p + q - 1) = 2pq - p - q$, and $2 \\cdot ${p} \\cdot ${q} - ${p} - ${q} = ${answer}$.`,
+          `一般地，节省的门数是 $(2pq - 1) - (p + q - 1) = 2pq - p - q$，而 $2 \\cdot ${p} \\cdot ${q} - ${p} - ${q} = ${answer}$。`,
+        ),
       ),
     });
   },

@@ -2,7 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { explainedChoice, numberProblem, why, yesNo } from "../problems.ts";
-import { oneOf } from "./calculus-common.ts";
+import type { oneOf } from "./calculus-common.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { range } from "./methods-of-proof-common.ts";
 
@@ -265,7 +265,7 @@ const POST: readonly PostClass[] = ["T0", "T1", "S", "M", "L"];
 const classTex: Record<PostClass, string> = { T0: "T_0", T1: "T_1", S: "S", M: "M", L: "L" };
 
 /** classText names a Post class in words. */
-const classText: Record<PostClass, Text> = {
+const _classText: Record<PostClass, Text> = {
   T0: t("preserves 0", "保 0"),
   T1: t("preserves 1", "保 1"),
   S: t("self-dual", "自对偶"),
@@ -1402,6 +1402,10 @@ export const truthPreservingBooleanFunctions: TopicDef = {
     "f preserves 0 (f ∈ T₀) if f(0, …, 0) = 0, and preserves 1 (f ∈ T₁) if f(1, …, 1) = 1; compositions of such functions keep the property.",
     "若 f(0, …, 0) = 0，则 f 保 0（f ∈ T₀）；若 f(1, …, 1) = 1，则 f 保 1（f ∈ T₁）；这样的函数复合后仍保持该性质。",
   ),
+  intro: t(
+    "The function $g(x, w) = x \\wedge \\neg w$ has $g(0, 0) = 0 \\wedge 1 = 0$, so it preserves $0$, and $g(1, 1) = 1 \\wedge 0 = 0$, so it does not preserve $1$.\n\nCheck: only the two rows $(0, 0)$ and $(1, 1)$ matter, and the values there are $0$ and $0$.\n\nIn this lesson we decide which of the two properties a function has and count the functions that have them.",
+    "函数 $g(x, w) = x \\wedge \\neg w$ 满足 $g(0, 0) = 0 \\wedge 1 = 0$，所以它保 $0$；而 $g(1, 1) = 1 \\wedge 0 = 0$，所以它不保 $1$。\n\n检验：只有 $(0, 0)$ 和 $(1, 1)$ 这两行起作用，那里的值是 $0$ 和 $0$。\n\n本课我们判断函数具有这两个性质中的哪些，并统计具有它们的函数。",
+  ),
   prerequisites: ["boolean-functions-and-logical-operations"],
   encompasses: [],
   xp: 10,
@@ -1411,8 +1415,8 @@ export const truthPreservingBooleanFunctions: TopicDef = {
       id: "classifying-truth-preservation",
       title: t("Classifying functions", "函数分类"),
       explanation: t(
-        "A function preserves zero when all inputs zero give output zero, and preserves one when all inputs one give output one; check these two rows of the table. $x \\wedge y$ preserves both $0$ and $1$. $x \\Rightarrow y$ preserves $1$ only, since $0 \\Rightarrow 0 = 1$. $x \\oplus y$ preserves $0$ only. $x \\uparrow y$ preserves neither.",
-        "如果所有输入为 0 时输出为 0，函数就保持 0；如果所有输入为 1 时输出为 1，就保持 1；只需检查真值表的这两行。$x \\wedge y$ 既保 $0$ 又保 $1$。$x \\Rightarrow y$ 只保 $1$，因为 $0 \\Rightarrow 0 = 1$。$x \\oplus y$ 只保 $0$。$x \\uparrow y$ 两者都不保。",
+        "A function preserves zero when all inputs zero give output zero, and preserves one when all inputs one give output one; check these two rows of the table. $x \\wedge y$ preserves both $0$ and $1$. $x \\Rightarrow y$ preserves $1$ only, since $0 \\Rightarrow 0 = 1$. $x \\oplus y$ preserves $0$ only. $x \\uparrow y$ preserves neither.\n\n> **Watch out.** Only the rows $(0, \\dots, 0)$ and $(1, \\dots, 1)$ count: preserving $0$ means $f(0, \\dots, 0) = 0$, not that $f$ takes the value $0$ somewhere.",
+        "如果所有输入为 0 时输出为 0，函数就保持 0；如果所有输入为 1 时输出为 1，就保持 1；只需检查真值表的这两行。$x \\wedge y$ 既保 $0$ 又保 $1$。$x \\Rightarrow y$ 只保 $1$，因为 $0 \\Rightarrow 0 = 1$。$x \\oplus y$ 只保 $0$。$x \\uparrow y$ 两者都不保。\n\n> **注意。** 只有 $(0, \\dots, 0)$ 和 $(1, \\dots, 1)$ 这两行起作用：保 $0$ 是指 $f(0, \\dots, 0) = 0$，而不是 $f$ 在某处取值 $0$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 3);
@@ -1432,21 +1436,64 @@ export const truthPreservingBooleanFunctions: TopicDef = {
           t("Preserves 1 only", "只保 1"),
           t("Preserves neither", "两者都不保"),
         ];
-        return oneOf(
-          rng,
-          t(`Which describes $${fTex(e, 3)}$?`, `哪个说法描述了 $${fTex(e, 3)}$？`),
-          options[kind]!,
-          options.filter((_, i) => i !== kind),
-          t(`$f(0, 0, 0) = ${vec[0]}$ and $f(1, 1, 1) = ${vec[7]}$.`, `$f(0, 0, 0) = ${vec[0]}$，$f(1, 1, 1) = ${vec[7]}$。`),
-        );
+        // Option j claims f(0, 0, 0) = zeros[j] and f(1, 1, 1) = ones[j].
+        const zeros = [0, 0, 1, 1];
+        const ones = [1, 0, 1, 0];
+        const whyOf = (j: number) => {
+          const wrong0 = zeros[j] !== vec[0];
+          const wrong1 = ones[j] !== vec[7];
+          if (wrong0 && wrong1)
+            return t(
+              `That needs $f(0, 0, 0) = ${zeros[j]}$ and $f(1, 1, 1) = ${ones[j]}$, but they are $${vec[0]}$ and $${vec[7]}$.`,
+              `那需要 $f(0, 0, 0) = ${zeros[j]}$ 且 $f(1, 1, 1) = ${ones[j]}$，但实际是 $${vec[0]}$ 和 $${vec[7]}$。`,
+            );
+          return wrong0
+            ? t(
+                `That needs $f(0, 0, 0) = ${zeros[j]}$, but $f(0, 0, 0) = ${vec[0]}$.`,
+                `那需要 $f(0, 0, 0) = ${zeros[j]}$，但 $f(0, 0, 0) = ${vec[0]}$。`,
+              )
+            : t(
+                `That needs $f(1, 1, 1) = ${ones[j]}$, but $f(1, 1, 1) = ${vec[7]}$.`,
+                `那需要 $f(1, 1, 1) = ${ones[j]}$，但 $f(1, 1, 1) = ${vec[7]}$。`,
+              );
+        };
+        return explainedChoice(rng, {
+          prompt: t(`Which describes $${fTex(e, 3)}$?`, `哪个说法描述了 $${fTex(e, 3)}$？`),
+          correct: options[kind]!,
+          wrong: range(0, 3)
+            .filter((j) => j !== kind)
+            .map((j) => ({ option: options[j]!, why: whyOf(j) })),
+          solution: walked(
+            [
+              [
+                ["Evaluate at (0, 0, 0)", "在 (0, 0, 0) 处求值"],
+                t(
+                  `${steps(e, [0, 0, 0])}, so $f(0, 0, 0) = ${vec[0]}$ and $f$ ${vec[0] === 0 ? "preserves" : "does not preserve"} $0$.`,
+                  `${steps(e, [0, 0, 0])}，所以 $f(0, 0, 0) = ${vec[0]}$，$f$ ${vec[0] === 0 ? "保" : "不保"} $0$。`,
+                ),
+              ],
+              [
+                ["Evaluate at (1, 1, 1)", "在 (1, 1, 1) 处求值"],
+                t(
+                  `${steps(e, [1, 1, 1])}, so $f(1, 1, 1) = ${vec[7]}$ and $f$ ${vec[7] === 1 ? "preserves" : "does not preserve"} $1$.`,
+                  `${steps(e, [1, 1, 1])}，所以 $f(1, 1, 1) = ${vec[7]}$，$f$ ${vec[7] === 1 ? "保" : "不保"} $1$。`,
+                ),
+              ],
+            ],
+            t(
+              `The value vector $${vecTex(vec)}$ begins with $${vec[0]}$ and ends with $${vec[7]}$, the same two values.`,
+              `值向量 $${vecTex(vec)}$ 以 $${vec[0]}$ 开头、以 $${vec[7]}$ 结尾，正是这两个值。`,
+            ),
+          ),
+        });
       },
     },
     {
       id: "counting-truth-preserving-functions",
       title: t("Counting functions", "统计函数个数"),
       explanation: t(
-        "Of the $2^{2^n}$ functions of $n$ variables, fixing $f(0, \\dots, 0) = 0$ leaves $2^{2^n - 1}$; fixing both $f(0, \\dots, 0) = 0$ and $f(1, \\dots, 1) = 1$ leaves $2^{2^n - 2}$. For $n = 2$: $8$ preserve $0$ and $4$ preserve both.",
-        "在 $2^{2^n}$ 个 $n$ 元函数中，固定 $f(0, \\dots, 0) = 0$ 后剩 $2^{2^n - 1}$ 个；同时固定 $f(0, \\dots, 0) = 0$ 与 $f(1, \\dots, 1) = 1$ 后剩 $2^{2^n - 2}$ 个。$n = 2$ 时：$8$ 个保 $0$，$4$ 个两者都保。",
+        "Of the $2^{2^n}$ functions of $n$ variables, fixing $f(0, \\dots, 0) = 0$ leaves $2^{2^n - 1}$; fixing both $f(0, \\dots, 0) = 0$ and $f(1, \\dots, 1) = 1$ leaves $2^{2^n - 2}$. For $n = 6$: $2^{63}$ functions preserve $0$ and $2^{62}$ preserve both.\n\n> **Watch out.** Each condition fixes one value and takes $1$ off the exponent $2^n$; and a condition such as preserving $0$ but not $1$ fixes two values, just like preserving both.",
+        "在 $2^{2^n}$ 个 $n$ 元函数中，固定 $f(0, \\dots, 0) = 0$ 后剩 $2^{2^n - 1}$ 个；同时固定 $f(0, \\dots, 0) = 0$ 与 $f(1, \\dots, 1) = 1$ 后剩 $2^{2^n - 2}$ 个。$n = 6$ 时：$2^{63}$ 个函数保 $0$，$2^{62}$ 个两者都保。\n\n> **注意。** 每个条件固定一个值，使指数 $2^n$ 减 $1$；像“保 $0$ 但不保 $1$”这样的条件和“两者都保”一样，固定了两个值。",
       ),
       generate(rng) {
         const n = rng.int(1, 5);
@@ -1459,13 +1506,53 @@ export const truthPreservingBooleanFunctions: TopicDef = {
           ["preserve $0$ but not $1$", "保 $0$ 但不保 $1$", 2 ** (N - 2)],
           ["preserve neither $0$ nor $1$", "既不保 $0$ 也不保 $1$", 2 ** (N - 2)],
         ][kind] as [string, string, number];
+        const fixed = kind < 2 ? 1 : 2;
+        const free = N - fixed;
         return numberProblem({
           prompt: t(`How many Boolean functions of $${n}$ variable${n === 1 ? "" : "s"} ${en}?`, `有多少个 $${n}$ 元布尔函数${zh}？`),
           answer: value,
-          wrong: [2 ** N, kind < 2 ? 2 ** (N - 2) : 2 ** (N - 1), N],
-          solution: t(
-            `${kind < 2 ? "One value is fixed" : "Two values are fixed"}, so $${kind < 2 ? N - 1 : N - 2}$ of the $${N}$ values are free: $2^{${kind < 2 ? N - 1 : N - 2}} = ${value}$.`,
-            `${kind < 2 ? "固定了一个值" : "固定了两个值"}，所以 $${N}$ 个值中有 $${kind < 2 ? N - 1 : N - 2}$ 个是自由的：$2^{${kind < 2 ? N - 1 : N - 2}} = ${value}$。`,
+          mistakes: fresh(value, [
+            why(2 ** N, "That counts every function, ignoring the condition.", "那是所有函数的个数，忽略了条件。"),
+            kind < 2
+              ? why(2 ** (N - 2), "That fixes two values; the condition fixes only one.", "那是固定了两个值；条件只固定了一个。")
+              : why(
+                  2 ** (N - 1),
+                  "That fixes only one value; the condition fixes both the first and the last.",
+                  "那是只固定了一个值；条件同时固定了第一个和最后一个值。",
+                ),
+            why(N, "That counts the inputs, not the functions.", "那是输入的个数，不是函数的个数。"),
+            why(
+              2 ** N - fixed,
+              "That subtracts the fixed values from the number of functions instead of from the exponent.",
+              "那是从函数个数中减去固定的值，而不是从指数中减去。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Count the inputs", "数输入"], t(`$2^{${n}} = ${N}$ inputs.`, `共 $2^{${n}} = ${N}$ 个输入。`)],
+              [
+                ["Fix the values the condition sets", "固定条件确定的值"],
+                kind < 2
+                  ? t(
+                      `The condition fixes one value, so $${N} - 1 = ${free}$ values are free.`,
+                      `条件固定了一个值，所以 $${N} - 1 = ${free}$ 个值是自由的。`,
+                    )
+                  : t(
+                      `The condition fixes $f(0, \\dots, 0)$ and $f(1, \\dots, 1)$, so $${N} - 2 = ${free}$ values are free.`,
+                      `条件固定了 $f(0, \\dots, 0)$ 与 $f(1, \\dots, 1)$，所以 $${N} - 2 = ${free}$ 个值是自由的。`,
+                    ),
+              ],
+              [["Choose the free values", "选择自由值"], t(`$2^{${free}} = ${value}$.`, `$2^{${free}} = ${value}$。`)],
+            ],
+            kind < 2
+              ? t(
+                  `The functions that meet the condition and those that do not split the $2^{${N}}$ functions into two equal halves: $2 \\cdot ${value} = ${2 ** N}$.`,
+                  `满足条件的函数与不满足的函数把 $2^{${N}}$ 个函数平分为两半：$2 \\cdot ${value} = ${2 ** N}$。`,
+                )
+              : t(
+                  `The four ways to choose $f(0, \\dots, 0)$ and $f(1, \\dots, 1)$ split the $2^{${N}}$ functions into four equal parts: $4 \\cdot ${value} = ${2 ** N}$.`,
+                  `$f(0, \\dots, 0)$ 与 $f(1, \\dots, 1)$ 的四种取法把 $2^{${N}}$ 个函数分成四等份：$4 \\cdot ${value} = ${2 ** N}$。`,
+                ),
           ),
         });
       },
@@ -1506,6 +1593,10 @@ export const selfDualBooleanFunctions: TopicDef = {
     "The dual of $f$ is $f^*(x_1, \\dots, x_n) = \\neg f(\\neg x_1, \\dots, \\neg x_n)$, obtained by swapping $\\land$ with $\\lor$ and $0$ with $1$; $f$ is self-dual when $f^* = f$, that is, $f$ takes opposite values at opposite inputs.",
     "$f$ 的对偶函数是 $f^*(x_1, \\dots, x_n) = \\neg f(\\neg x_1, \\dots, \\neg x_n)$，可通过交换 $\\land$ 与 $\\lor$、$0$ 与 $1$ 得到；若 $f^* = f$，则 $f$ 是自对偶的，即 $f$ 在相反的输入处取相反的值。",
   ),
+  intro: t(
+    "Flipping every input of $f(x, y, w) = x \\oplus y \\oplus w$ flips each of its three terms, and an odd number of flips flips the value: $f(\\neg x, \\neg y, \\neg w) = \\neg f(x, y, w)$, so $f$ is self-dual.\n\nCheck: at the opposite inputs $(0, 0, 0)$ and $(1, 1, 1)$, $f$ takes the opposite values $0$ and $1$.\n\nIn this lesson we recognize self-dual functions and find the dual of a function.",
+    "把 $f(x, y, w) = x \\oplus y \\oplus w$ 的每个输入都取反，三项各翻转一次，奇数次翻转使值翻转：$f(\\neg x, \\neg y, \\neg w) = \\neg f(x, y, w)$，所以 $f$ 是自对偶的。\n\n检验：在相反的输入 $(0, 0, 0)$ 与 $(1, 1, 1)$ 处，$f$ 取相反的值 $0$ 和 $1$。\n\n本课我们识别自对偶函数，并求函数的对偶。",
+  ),
   prerequisites: ["truth-preserving-boolean-functions"],
   encompasses: [],
   xp: 10,
@@ -1515,8 +1606,8 @@ export const selfDualBooleanFunctions: TopicDef = {
       id: "recognizing-self-dual-functions",
       title: t("Recognizing self-dual functions", "识别自对偶函数"),
       explanation: t(
-        "Check opposite pairs of inputs: $f$ is self-dual exactly when $f(\\neg a) = \\neg f(a)$ for each $a$, so its value vector read backward is its complement. The majority function $(x \\wedge y) \\vee (y \\wedge z) \\vee (x \\wedge z)$ is self-dual; $x \\wedge y$ is not, since $f(0, 1) = 0 = f(1, 0)$.",
-        "检查相反的输入对：$f$ 自对偶当且仅当对每个 $a$ 有 $f(\\neg a) = \\neg f(a)$，即值向量倒过来读正好是它的补。多数函数 $(x \\wedge y) \\vee (y \\wedge z) \\vee (x \\wedge z)$ 是自对偶的；$x \\wedge y$ 不是，因为 $f(0, 1) = 0 = f(1, 0)$。",
+        "Check opposite pairs of inputs: $f$ is self-dual exactly when $f(\\neg a) = \\neg f(a)$ for each $a$, so its value vector read backward is its complement. The majority function of $x, y, w$, $(x \\wedge y) \\vee (y \\wedge w) \\vee (x \\wedge w)$, is self-dual; $x \\wedge y$ is not, since $f(0, 1) = 0 = f(1, 0)$.\n\n> **Watch out.** Compare each input with its opposite, such as $(0, 1, 1)$ with $(1, 0, 0)$, not with a neighbor; and a single opposite pair with equal values already rules self-duality out.",
+        "检查相反的输入对：$f$ 自对偶当且仅当对每个 $a$ 有 $f(\\neg a) = \\neg f(a)$，即值向量倒过来读正好是它的补。$x, y, w$ 的多数函数 $(x \\wedge y) \\vee (y \\wedge w) \\vee (x \\wedge w)$ 是自对偶的；$x \\wedge y$ 不是，因为 $f(0, 1) = 0 = f(1, 0)$。\n\n> **注意。** 要把每个输入与它的相反输入比较，例如 $(0, 1, 1)$ 与 $(1, 0, 0)$，而不是与相邻的输入比较；只要有一对相反输入取值相同，就不是自对偶的。",
       ),
       generate(rng) {
         const value = rng.bool();
@@ -1533,29 +1624,60 @@ export const selfDualBooleanFunctions: TopicDef = {
         }
         const vec = vecOf(e, 3);
         const r = range(0, 7).find((s) => vec[s] === vec[7 - s]);
-        return oneOf(
-          rng,
-          t(`Is $${fTex(e, 3)}$ self-dual?`, `$${fTex(e, 3)}$ 是自对偶的吗？`),
-          yesNo[value ? 0 : 1]!,
-          [yesNo[value ? 1 : 0]!],
-          r === undefined
-            ? t(
-                `Yes: the value vector $${vecTex(vec)}$ read backward is its complement.`,
-                `是：值向量 $${vecTex(vec)}$ 倒过来读正好是它的补。`,
-              )
-            : t(
-                `No: $f${pointTex(bits(r, 3))} = f${pointTex(bits(7 - r, 3))} = ${vec[r]}$ at opposite inputs.`,
-                `不是：在相反的输入处 $f${pointTex(bits(r, 3))} = f${pointTex(bits(7 - r, 3))} = ${vec[r]}$。`,
-              ),
-        );
+        const backward = [...vec].reverse();
+        return explainedChoice(rng, {
+          prompt: t(`Is $${fTex(e, 3)}$ self-dual?`, `$${fTex(e, 3)}$ 是自对偶的吗？`),
+          correct: yesNo[value ? 0 : 1]!,
+          wrong: [
+            {
+              option: yesNo[value ? 1 : 0]!,
+              why:
+                r === undefined
+                  ? t(
+                      "Every pair of opposite inputs gets opposite values, so nothing stops $f$ from being self-dual.",
+                      "每一对相反的输入都取相反的值，所以没有什么妨碍 $f$ 自对偶。",
+                    )
+                  : t(
+                      `At the opposite inputs $${pointTex(bits(r, 3))}$ and $${pointTex(bits(7 - r, 3))}$, $f$ takes the same value $${vec[r]}$.`,
+                      `在相反的输入 $${pointTex(bits(r, 3))}$ 与 $${pointTex(bits(7 - r, 3))}$ 处，$f$ 取同一个值 $${vec[r]}$。`,
+                    ),
+            },
+          ],
+          solution: walked(
+            [
+              [["Find the value vector", "求值向量"], t(`$f$ has value vector $${vecTex(vec)}$.`, `$f$ 的值向量为 $${vecTex(vec)}$。`)],
+              [
+                ["Compare opposite inputs", "比较相反的输入"],
+                r === undefined
+                  ? t(
+                      `Read backward it is $${vecTex(backward)}$, the complement of $${vecTex(vec)}$, so $f$ is self-dual.`,
+                      `倒过来读是 $${vecTex(backward)}$，正是 $${vecTex(vec)}$ 的补，所以 $f$ 是自对偶的。`,
+                    )
+                  : t(
+                      `$f${pointTex(bits(r, 3))} = f${pointTex(bits(7 - r, 3))} = ${vec[r]}$, so $f$ is not self-dual.`,
+                      `$f${pointTex(bits(r, 3))} = f${pointTex(bits(7 - r, 3))} = ${vec[r]}$，所以 $f$ 不是自对偶的。`,
+                    ),
+              ],
+            ],
+            r === undefined
+              ? t(
+                  `In particular $f(0, 0, 0) = ${vec[0]}$ and $f(1, 1, 1) = ${vec[7]}$ are opposite, as they must be.`,
+                  `特别地，$f(0, 0, 0) = ${vec[0]}$ 与 $f(1, 1, 1) = ${vec[7]}$ 相反，正如应有的那样。`,
+                )
+              : t(
+                  `The inputs $${pointTex(bits(r, 3))}$ and $${pointTex(bits(7 - r, 3))}$ differ in every coordinate, so they are opposite, yet $f$ gives $${vec[r]}$ at both.`,
+                  `输入 $${pointTex(bits(r, 3))}$ 与 $${pointTex(bits(7 - r, 3))}$ 的每个坐标都不同，所以它们相反，但 $f$ 在两处都取 $${vec[r]}$。`,
+                ),
+          ),
+        });
       },
     },
     {
       id: "finding-the-dual",
       title: t("Finding the dual", "求对偶函数"),
       explanation: t(
-        "For an expression in $\\wedge$, $\\vee$, $\\neg$, $0$ and $1$, the dual swaps $\\wedge \\leftrightarrow \\vee$ and $0 \\leftrightarrow 1$ and keeps the literals: the dual of $x \\wedge (\\neg y \\vee 0)$ is $x \\vee (\\neg y \\wedge 1)$.",
-        "对由 $\\wedge$、$\\vee$、$\\neg$、$0$、$1$ 组成的表达式，对偶就是交换 $\\wedge \\leftrightarrow \\vee$、$0 \\leftrightarrow 1$，文字保持不变：$x \\wedge (\\neg y \\vee 0)$ 的对偶是 $x \\vee (\\neg y \\wedge 1)$。",
+        "For an expression in $\\wedge$, $\\vee$, $\\neg$, $0$ and $1$, the dual swaps $\\wedge \\leftrightarrow \\vee$ and $0 \\leftrightarrow 1$ and keeps the literals: the dual of $x \\wedge (\\neg y \\vee 0)$ is $x \\vee (\\neg y \\wedge 1)$.\n\n> **Watch out.** Keep the literals as they are: negating the inputs alone gives $f(\\neg x, \\neg y, \\neg z)$, and negating the whole gives $\\neg f$; the dual needs both negations, which the swap makes at once.",
+        "对由 $\\wedge$、$\\vee$、$\\neg$、$0$、$1$ 组成的表达式，对偶就是交换 $\\wedge \\leftrightarrow \\vee$、$0 \\leftrightarrow 1$，文字保持不变：$x \\wedge (\\neg y \\vee 0)$ 的对偶是 $x \\vee (\\neg y \\wedge 1)$。\n\n> **注意。** 文字要保持不变：只把输入取反得到 $f(\\neg x, \\neg y, \\neg z)$，只把整体取反得到 $\\neg f$；对偶需要两次取反，而交换运算一次就完成了。",
       ),
       generate(rng) {
         let e: BExpr;
@@ -1563,17 +1685,42 @@ export const selfDualBooleanFunctions: TopicDef = {
         while (inClass("S", vecOf(e, 3), 3) || !/vee/.test(btex(e)) || !/wedge/.test(btex(e)));
         const d = dual(e);
         const vec = vecOf(d, 3);
-        const wrong = [e, bnot(e), bnot(d), substitute(e, [bnot(X), bnot(Y), bnot(bv(2))])].filter((w) => !sameVec(vecOf(w, 3), vec));
-        return oneOf(
-          rng,
-          t(`Find the dual of $${fTex(e, 3)}$.`, `求 $${fTex(e, 3)}$ 的对偶函数。`),
-          bmath(d),
-          wrong.map(bmath),
-          t(
-            `Swap $\\wedge$ and $\\vee$, keeping the literals: $f^* = ${btex(d)}$, which equals $\\neg f(\\neg x, \\neg y, \\neg z)$.`,
-            `交换 $\\wedge$ 与 $\\vee$，文字不变：$f^* = ${btex(d)}$，它等于 $\\neg f(\\neg x, \\neg y, \\neg z)$。`,
+        const wrong: Wrong[] = [
+          {
+            e,
+            why: t(
+              "That is $f$ itself; $f$ is not self-dual, so its dual differs from it.",
+              "那是 $f$ 本身；$f$ 不是自对偶的，所以它的对偶与它不同。",
+            ),
+          },
+          { e: bnot(e), why: t("That negates $f$ but not its inputs.", "那是只对 $f$ 取反，而没有对输入取反。") },
+          { e: bnot(d), why: t("That is the negation of the dual.", "那是对偶的否定。") },
+          {
+            e: substitute(e, [bnot(X), bnot(Y), bnot(bv(2))]),
+            why: t("That negates the inputs but not the output.", "那是只对输入取反，而没有对输出取反。"),
+          },
+        ]
+          .filter((w) => !sameVec(vecOf(w.e, 3), vec))
+          .map((w) => ({ option: bmath(w.e), why: w.why }));
+        const at0 = beval(d, [0, 0, 0]);
+        return explainedChoice(rng, {
+          prompt: t(`Find the dual of $${fTex(e, 3)}$.`, `求 $${fTex(e, 3)}$ 的对偶函数。`),
+          correct: bmath(d),
+          wrong: firstThree(bmath(d), wrong),
+          solution: walked(
+            [
+              [
+                ["Swap ∧ and ∨", "交换 ∧ 与 ∨"],
+                t("Swap every $\\wedge$ with $\\vee$ and keep the literals.", "把每个 $\\wedge$ 与 $\\vee$ 互换，文字保持不变。"),
+              ],
+              [["Write the dual", "写出对偶"], t(`$f^* = ${btex(d)}$.`, `$f^* = ${btex(d)}$。`)],
+            ],
+            t(
+              `At $(0, 0, 0)$ the dual gives $${at0}$, and $\\neg f(1, 1, 1) = \\neg ${beval(e, [1, 1, 1])} = ${at0}$, as $f^*(x, y, z) = \\neg f(\\neg x, \\neg y, \\neg z)$ requires.`,
+              `在 $(0, 0, 0)$ 处对偶取 $${at0}$，而 $\\neg f(1, 1, 1) = \\neg ${beval(e, [1, 1, 1])} = ${at0}$，正符合 $f^*(x, y, z) = \\neg f(\\neg x, \\neg y, \\neg z)$。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],
@@ -1598,6 +1745,10 @@ export const monotonicBooleanFunctions: TopicDef = {
     "Order inputs componentwise: α ≤ β when each αᵢ ≤ βᵢ. f is monotonic if α ≤ β always gives f(α) ≤ f(β); exactly these functions have a DNF without negations.",
     "按分量比较输入：若每个 αᵢ ≤ βᵢ，则 α ≤ β。若 α ≤ β 总推出 f(α) ≤ f(β)，则 f 是单调的；恰好是这些函数有不含否定的析取范式。",
   ),
+  intro: t(
+    "In $f(x, w) = x \\vee \\neg w$, raising $w$ from $0$ to $1$ while $x = 0$ drops $f$ from $1$ to $0$, so $f$ is not monotonic.\n\nCheck: $(0, 0) \\le (0, 1)$, yet $f(0, 0) = 0 \\vee 1 = 1$ and $f(0, 1) = 0 \\vee 0 = 0$.\n\nIn this lesson we recognize monotonic functions and find pairs of inputs that show a function is not monotonic.",
+    "在 $f(x, w) = x \\vee \\neg w$ 中，保持 $x = 0$ 而把 $w$ 从 $0$ 升为 $1$，$f$ 从 $1$ 降为 $0$，所以 $f$ 不是单调的。\n\n检验：$(0, 0) \\le (0, 1)$，但 $f(0, 0) = 0 \\vee 1 = 1$，$f(0, 1) = 0 \\vee 0 = 0$。\n\n本课我们识别单调函数，并找出说明函数不单调的输入对。",
+  ),
   prerequisites: ["truth-preserving-boolean-functions"],
   encompasses: [],
   xp: 10,
@@ -1607,8 +1758,8 @@ export const monotonicBooleanFunctions: TopicDef = {
       id: "recognizing-monotonic-functions",
       title: t("Recognizing monotonic functions", "识别单调函数"),
       explanation: t(
-        "For value vector $0001\\,0111$ (the majority of $x, y, z$), turning any $0$ into $1$ in an input never lowers $f$: it is monotonic. For $0110\\,0000$, $f(0, 0, 1) = 1$ but $f(1, 0, 1) = 0$ with $(0, 0, 1) \\le (1, 0, 1)$: it is not.",
-        "对值向量 $0001\\,0111$（$x, y, z$ 的多数函数），把输入中任一 $0$ 改为 $1$ 都不会使 $f$ 变小：它是单调的。对 $0110\\,0000$，$(0, 0, 1) \\le (1, 0, 1)$ 但 $f(0, 0, 1) = 1$，$f(1, 0, 1) = 0$：它不是单调的。",
+        "A function is monotonic when turning any $0$ of an input into $1$ never lowers its value. The two-variable vector $0001$ of $x \\wedge y$ is monotonic: its only $1$ is at the top input $(1, 1)$. The vector $0110$ of $x \\oplus y$ is not: $(0, 1) \\le (1, 1)$, but $f(0, 1) = 1$ and $f(1, 1) = 0$.\n\n> **Watch out.** Only comparable inputs matter: $(1, 0, 0)$ and $(0, 1, 1)$ are not comparable, so $f(1, 0, 0) = 1$ with $f(0, 1, 1) = 0$ breaks nothing.",
+        "如果把输入中任一 $0$ 改为 $1$ 都不会使函数值变小，函数就是单调的。$x \\wedge y$ 的二元值向量 $0001$ 是单调的：它唯一的 $1$ 在最高的输入 $(1, 1)$ 处。$x \\oplus y$ 的值向量 $0110$ 不是：$(0, 1) \\le (1, 1)$，但 $f(0, 1) = 1$，$f(1, 1) = 0$。\n\n> **注意。** 只有可比较的输入才有关系：$(1, 0, 0)$ 与 $(0, 1, 1)$ 不可比较，所以 $f(1, 0, 0) = 1$、$f(0, 1, 1) = 0$ 并不破坏单调性。",
       ),
       generate(rng) {
         const value = rng.bool();
@@ -1621,29 +1772,62 @@ export const monotonicBooleanFunctions: TopicDef = {
           while (violations(vec).length === 0);
         }
         const bad = violations(vec)[0];
-        return oneOf(
-          rng,
-          t(
+        const onesAt = range(0, 7)
+          .filter((r) => vec[r] === 1)
+          .map((r) => pointTex(bits(r, 3)))
+          .join(", ");
+        return explainedChoice(rng, {
+          prompt: t(
             `Is the function $f(x, y, z)$ with value vector $${vecTex(vec)}$ monotonic?`,
             `值向量为 $${vecTex(vec)}$ 的函数 $f(x, y, z)$ 是单调的吗？`,
           ),
-          yesNo[value ? 0 : 1]!,
-          [yesNo[value ? 1 : 0]!],
-          bad
-            ? t(
-                `No: $${pointTex(bits(bad[0], 3))} \\le ${pointTex(bits(bad[1], 3))}$ but $f$ drops from $1$ to $0$.`,
-                `不是：$${pointTex(bits(bad[0], 3))} \\le ${pointTex(bits(bad[1], 3))}$，但 $f$ 从 $1$ 降为 $0$。`,
-              )
-            : t("Yes: raising any input from $0$ to $1$ never lowers $f$.", "是：把任一输入从 $0$ 改为 $1$ 都不会使 $f$ 变小。"),
-        );
+          correct: yesNo[value ? 0 : 1]!,
+          wrong: [
+            {
+              option: yesNo[value ? 1 : 0]!,
+              why: bad
+                ? t(
+                    `At $${pointTex(bits(bad[0], 3))} \\le ${pointTex(bits(bad[1], 3))}$, $f$ drops from $1$ to $0$.`,
+                    `在 $${pointTex(bits(bad[0], 3))} \\le ${pointTex(bits(bad[1], 3))}$ 处，$f$ 从 $1$ 降为 $0$。`,
+                  )
+                : t("Raising any input from $0$ to $1$ never lowers $f$ here.", "这里把任一输入从 $0$ 改为 $1$ 都不会使 $f$ 变小。"),
+            },
+          ],
+          solution: walked(
+            [
+              [["Find the 1s", "找出 1"], t(`$f = 1$ at $${onesAt}$.`, `$f = 1$ 的输入为 $${onesAt}$。`)],
+              [
+                ["Look above each 1", "查看每个 1 上方的输入"],
+                bad
+                  ? t(
+                      `$${pointTex(bits(bad[0], 3))} \\le ${pointTex(bits(bad[1], 3))}$, but $f${pointTex(bits(bad[1], 3))} = 0$: $f$ is not monotonic.`,
+                      `$${pointTex(bits(bad[0], 3))} \\le ${pointTex(bits(bad[1], 3))}$，但 $f${pointTex(bits(bad[1], 3))} = 0$：$f$ 不是单调的。`,
+                    )
+                  : t(
+                      "Every input above one of these is also a $1$: $f$ is monotonic.",
+                      "这些输入上方的每个输入也都是 $1$：$f$ 是单调的。",
+                    ),
+              ],
+            ],
+            bad
+              ? t(
+                  `Each coordinate of $${pointTex(bits(bad[0], 3))}$ is at most the matching one of $${pointTex(bits(bad[1], 3))}$, so the two are comparable.`,
+                  `$${pointTex(bits(bad[0], 3))}$ 的每个坐标都不超过 $${pointTex(bits(bad[1], 3))}$ 的对应坐标，所以二者可比较。`,
+                )
+              : t(
+                  `In particular $f(0, 0, 0) = ${vec[0]} \\le f(1, 1, 1) = ${vec[7]}$, as it must be for a monotonic function.`,
+                  `特别地，$f(0, 0, 0) = ${vec[0]} \\le f(1, 1, 1) = ${vec[7]}$，单调函数必须如此。`,
+                ),
+          ),
+        });
       },
     },
     {
       id: "witnessing-non-monotonicity",
       title: t("Witnessing non-monotonicity", "说明非单调性"),
       explanation: t(
-        "To show $f$ is not monotonic, give inputs $\\alpha \\le \\beta$ with $f(\\alpha) = 1$ and $f(\\beta) = 0$. The inputs must be comparable: $(1, 0, 0)$ and $(0, 1, 1)$ are not, since neither is below the other.",
-        "要说明 $f$ 不单调，只需给出 $\\alpha \\le \\beta$ 且 $f(\\alpha) = 1$、$f(\\beta) = 0$。这两个输入必须可比较：$(1, 0, 0)$ 与 $(0, 1, 1)$ 不可比较，因为谁也不在谁下面。",
+        "To show $f$ is not monotonic, give inputs $\\alpha \\le \\beta$ with $f(\\alpha) = 1$ and $f(\\beta) = 0$. For $f(x, y, w) = x \\oplus w$, the pair $\\alpha = (1, 0, 0)$, $\\beta = (1, 0, 1)$ works: $\\alpha \\le \\beta$, $f(\\alpha) = 1$ and $f(\\beta) = 0$.\n\n> **Watch out.** The inputs must be comparable: $(1, 0, 0)$ and $(0, 1, 1)$ are not, since neither is below the other; and $f$ must go from $1$ down to $0$, not up.",
+        "要说明 $f$ 不单调，只需给出 $\\alpha \\le \\beta$ 且 $f(\\alpha) = 1$、$f(\\beta) = 0$。对 $f(x, y, w) = x \\oplus w$，取 $\\alpha = (1, 0, 0)$，$\\beta = (1, 0, 1)$ 即可：$\\alpha \\le \\beta$，$f(\\alpha) = 1$，$f(\\beta) = 0$。\n\n> **注意。** 这两个输入必须可比较：$(1, 0, 0)$ 与 $(0, 1, 1)$ 不可比较，因为谁也不在谁下面；而且 $f$ 必须从 $1$ 降为 $0$，而不是升高。",
       ),
       generate(rng) {
         let vec: number[];
@@ -1661,19 +1845,52 @@ export const monotonicBooleanFunctions: TopicDef = {
             .filter((b) => ((a & b) === a && vec[a]! <= vec[b]!) || ((a & b) !== a && vec[a] === 1 && vec[b] === 0))
             .map((b) => [a, b] as const),
         );
-        return oneOf(
-          rng,
-          t(
+        const whyOf = ([a, b]: readonly [number, number]) =>
+          (a & b) === a
+            ? t(`Here $f$ goes from $${vec[a]}$ to $${vec[b]}$, which is no drop.`, `这里 $f$ 从 $${vec[a]}$ 变为 $${vec[b]}$，没有下降。`)
+            : (a & b) === b
+              ? t(
+                  "Here $\\beta \\le \\alpha$, so the input falls from $\\alpha$ to $\\beta$ instead of rising.",
+                  "这里 $\\beta \\le \\alpha$，所以从 $\\alpha$ 到 $\\beta$ 输入是下降的，而不是升高。",
+                )
+              : t(
+                  "These inputs are not comparable: each has a $1$ where the other has a $0$.",
+                  "这两个输入不可比较：每个都在对方为 $0$ 的某处取 $1$。",
+                );
+        const [ra, rb] = [bits(r, 3), bits(s, 3)];
+        return explainedChoice(rng, {
+          prompt: t(
             `The function $f(x, y, z)$ has value vector $${vecTex(vec)}$. Which pair shows that $f$ is not monotonic?`,
             `函数 $f(x, y, z)$ 的值向量为 $${vecTex(vec)}$。哪一对输入说明 $f$ 不是单调的？`,
           ),
-          pairText([r, s]),
-          rng.shuffle(others).slice(0, 3).map(pairText),
-          t(
-            `$${pointTex(bits(r, 3))} \\le ${pointTex(bits(s, 3))}$, yet $f${pointTex(bits(r, 3))} = 1$ and $f${pointTex(bits(s, 3))} = 0$.`,
-            `$${pointTex(bits(r, 3))} \\le ${pointTex(bits(s, 3))}$，但 $f${pointTex(bits(r, 3))} = 1$，$f${pointTex(bits(s, 3))} = 0$。`,
+          correct: pairText([r, s]),
+          wrong: rng
+            .shuffle(others)
+            .slice(0, 3)
+            .map((p) => ({ option: pairText(p), why: whyOf(p) })),
+          solution: walked(
+            [
+              [
+                ["Compare the inputs", "比较输入"],
+                t(
+                  `$${pointTex(ra)} \\le ${pointTex(rb)}$ coordinate by coordinate.`,
+                  `逐个坐标比较，$${pointTex(ra)} \\le ${pointTex(rb)}$。`,
+                ),
+              ],
+              [
+                ["Read the values", "读出函数值"],
+                t(
+                  `$f${pointTex(ra)} = 1$ and $f${pointTex(rb)} = 0$, so $f$ drops as the input rises.`,
+                  `$f${pointTex(ra)} = 1$，$f${pointTex(rb)} = 0$，所以输入升高时 $f$ 下降了。`,
+                ),
+              ],
+            ],
+            t(
+              `The coordinates satisfy $${ra.map((v, i) => `${v} \\le ${rb[i]}`).join(", ")}$, and entries $${r}$ and $${s}$ of $${vecTex(vec)}$, counting from $0$, are $1$ and $0$.`,
+              `各坐标满足 $${ra.map((v, i) => `${v} \\le ${rb[i]}`).join(", ")}$，而 $${vecTex(vec)}$ 从 $0$ 开始数的第 $${r}$ 位和第 $${s}$ 位分别是 $1$ 和 $0$。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],
@@ -1687,6 +1904,10 @@ export const affineBooleanFunctions: TopicDef = {
     "f is affine (linear) when its Boolean polynomial has no product terms: f = a₀ ⊕ a₁x₁ ⊕ ⋯ ⊕ aₙxₙ. There are 2ⁿ⁺¹ affine functions of n variables.",
     "若 f 的布尔多项式不含乘积项，即 f = a₀ ⊕ a₁x₁ ⊕ ⋯ ⊕ aₙxₙ，则 f 是仿射（线性）的。n 元仿射函数共有 2ⁿ⁺¹ 个。",
   ),
+  intro: t(
+    "Using $\\neg y = 1 \\oplus y$, the function $f(x, y, w) = x \\oplus \\neg y \\oplus w$ becomes $1 \\oplus x \\oplus y \\oplus w$: single variables and a constant joined by $\\oplus$, with no products, so $f$ is affine.\n\nCheck: $f(0, 0, 0) = 0 \\oplus 1 \\oplus 0 = 1$, the constant term of the polynomial.\n\nIn this lesson we recognize affine functions and count them.",
+    "利用 $\\neg y = 1 \\oplus y$，函数 $f(x, y, w) = x \\oplus \\neg y \\oplus w$ 化为 $1 \\oplus x \\oplus y \\oplus w$：用 $\\oplus$ 连接的单个变量和常数，没有乘积，所以 $f$ 是仿射的。\n\n检验：$f(0, 0, 0) = 0 \\oplus 1 \\oplus 0 = 1$，正是多项式的常数项。\n\n本课我们识别仿射函数，并统计它们的个数。",
+  ),
   prerequisites: ["boolean-polynomials"],
   encompasses: [],
   xp: 10,
@@ -1696,8 +1917,8 @@ export const affineBooleanFunctions: TopicDef = {
       id: "recognizing-affine-functions",
       title: t("Recognizing affine functions", "识别仿射函数"),
       explanation: t(
-        "A function is affine when its Boolean polynomial has no products of variables, only single variables combined by exclusive or and possibly a constant. $x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ is affine. $x \\vee y = x \\oplus y \\oplus xy$ is not: its polynomial contains $xy$.",
-        "如果一个函数的布尔多项式中没有变量的乘积，只有用异或连接的单个变量和可能的常数，它就是仿射函数。$x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ 是仿射的。$x \\vee y = x \\oplus y \\oplus xy$ 不是：它的多项式含有 $xy$。",
+        "A function is affine when its Boolean polynomial has no products of variables, only single variables combined by exclusive or and possibly a constant. $x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ is affine. $x \\vee y = x \\oplus y \\oplus xy$ is not: its polynomial contains $xy$.\n\n> **Watch out.** Decide from the polynomial, not from the symbols in the formula: $x \\vee y$ shows no product but its polynomial has $xy$, while $\\Leftrightarrow$ and $\\neg$ only add constants.",
+        "如果一个函数的布尔多项式中没有变量的乘积，只有用异或连接的单个变量和可能的常数，它就是仿射函数。$x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ 是仿射的。$x \\vee y = x \\oplus y \\oplus xy$ 不是：它的多项式含有 $xy$。\n\n> **注意。** 要根据多项式判断，而不是根据公式中的符号：$x \\vee y$ 看不出乘积，但它的多项式含有 $xy$；而 $\\Leftrightarrow$ 与 $\\neg$ 只会添加常数。",
       ),
       generate(rng) {
         const value = rng.bool();
@@ -1707,57 +1928,139 @@ export const affineBooleanFunctions: TopicDef = {
           e = formula3(rng, value ? ["xor", "iff"] : ["and", "or", "xor", "iff", "imp"]);
           vec = vecOf(e, 3);
         } while (inClass("L", vec, 3) !== value);
-        const poly = anfTex(anf(vec, 3), 3);
-        return oneOf(
-          rng,
-          t(`Is $${fTex(e, 3)}$ affine?`, `$${fTex(e, 3)}$ 是仿射的吗？`),
-          yesNo[value ? 0 : 1]!,
-          [yesNo[value ? 1 : 0]!],
-          value
-            ? t(`Yes: its Boolean polynomial is $${poly}$, with no products.`, `是：它的布尔多项式为 $${poly}$，不含乘积项。`)
-            : t(`No: its Boolean polynomial $${poly}$ contains a product.`, `不是：它的布尔多项式 $${poly}$ 含有乘积项。`),
-        );
+        const coeffs = anf(vec, 3);
+        const poly = anfTex(coeffs, 3);
+        const product = coeffs.findIndex((c, m) => c === 1 && degree(m) >= 2);
+        const count = coeffs.filter((c) => c === 1).length;
+        return explainedChoice(rng, {
+          prompt: t(`Is $${fTex(e, 3)}$ affine?`, `$${fTex(e, 3)}$ 是仿射的吗？`),
+          correct: yesNo[value ? 0 : 1]!,
+          wrong: [
+            {
+              option: yesNo[value ? 1 : 0]!,
+              why: value
+                ? t(`Its polynomial $${poly}$ has no products, so $f$ is affine.`, `它的多项式 $${poly}$ 不含乘积，所以 $f$ 是仿射的。`)
+                : t(
+                    `Its polynomial $${poly}$ contains the product $${monomialTex(product, 3)}$.`,
+                    `它的多项式 $${poly}$ 含有乘积 $${monomialTex(product, 3)}$。`,
+                  ),
+            },
+          ],
+          solution: walked(
+            [
+              [["Find the polynomial", "求多项式"], t(`$f = ${poly}$.`, `$f = ${poly}$。`)],
+              [
+                ["Look for products", "查找乘积项"],
+                value
+                  ? t("It has no product of variables, so $f$ is affine.", "它不含变量的乘积，所以 $f$ 是仿射的。")
+                  : t(
+                      `It contains $${monomialTex(product, 3)}$, so $f$ is not affine.`,
+                      `它含有 $${monomialTex(product, 3)}$，所以 $f$ 不是仿射的。`,
+                    ),
+              ],
+            ],
+            t(
+              `At $(1, 1, 1)$ every monomial is $1$, so the polynomial gives the parity of its $${count}$ monomials, $${count % 2}$, matching $f(1, 1, 1) = ${vec[7]}$.`,
+              `在 $(1, 1, 1)$ 处每个单项式都是 $1$，所以多项式的值是 $${count}$ 个单项式个数的奇偶性 $${count % 2}$，与 $f(1, 1, 1) = ${vec[7]}$ 一致。`,
+            ),
+          ),
+        });
       },
     },
     {
       id: "counting-affine-functions",
       title: t("Counting affine functions", "统计仿射函数"),
       explanation: t(
-        "An affine function $a_0 \\oplus a_1 x_1 \\oplus \\dots \\oplus a_n x_n$ is fixed by $n + 1$ bits, so there are $2^{n + 1}$. Those that depend on exactly $k$ variables choose the $k$ variables and the constant: $2\\binom{n}{k}$.",
-        "仿射函数 $a_0 \\oplus a_1 x_1 \\oplus \\dots \\oplus a_n x_n$ 由 $n + 1$ 个比特决定，所以共有 $2^{n + 1}$ 个。恰好依赖 $k$ 个变量的，需选出这 $k$ 个变量及常数项：$2\\binom{n}{k}$ 个。",
+        "An affine function $a_0 \\oplus a_1 x_1 \\oplus \\dots \\oplus a_n x_n$ is fixed by $n + 1$ bits, so there are $2^{n + 1}$. Those that depend on exactly $k$ variables choose the $k$ variables and the constant: $2\\binom{n}{k}$. With $20$ variables there are $2^{21} = 2097152$ affine functions, and $2\\binom{20}{3} = 2280$ of them depend on exactly $3$ variables.\n\n> **Watch out.** The constant $a_0$ doubles each count without changing which variables matter; and depending on exactly $k$ variables means choosing which $k$ coefficients are $1$, not raising $2$ to the power $k$.",
+        "仿射函数 $a_0 \\oplus a_1 x_1 \\oplus \\dots \\oplus a_n x_n$ 由 $n + 1$ 个比特决定，所以共有 $2^{n + 1}$ 个。恰好依赖 $k$ 个变量的，需选出这 $k$ 个变量及常数项：$2\\binom{n}{k}$ 个。$20$ 个变量时有 $2^{21} = 2097152$ 个仿射函数，其中 $2\\binom{20}{3} = 2280$ 个恰好依赖 $3$ 个变量。\n\n> **注意。** 常数 $a_0$ 使每个计数加倍，但不改变函数依赖哪些变量；恰好依赖 $k$ 个变量是指选出哪 $k$ 个系数为 $1$，而不是取 $2$ 的 $k$ 次方。",
       ),
       generate(rng) {
         const n = rng.int(2, 8);
         const kind = rng.int(0, 2);
         const k = rng.int(1, n);
-        const [en, zh, value, why, whyZh] = [
+        const [en, zh, value] = [
+          ["are affine", "是仿射的", 2 ** (n + 1)],
+          ["are affine and preserve $0$", "是仿射的且保 $0$", 2 ** n],
+          [`are affine and depend on exactly $${k}$ of them`, `是仿射的且恰好依赖其中 $${k}$ 个变量`, 2 * choose(n, k)],
+        ][kind] as [string, string, number];
+        const mistakes = [
           [
-            "are affine",
-            "是仿射的",
-            2 ** (n + 1),
-            `There are $n + 1 = ${n + 1}$ free bits: $2^{${n + 1}}$`,
-            `共有 $n + 1 = ${n + 1}$ 个自由比特：$2^{${n + 1}}$`,
+            why(2 ** n, "That leaves out the constant $a_0$.", "那是漏掉了常数 $a_0$。"),
+            why(2 ** (2 ** n), "That counts every Boolean function, affine or not.", "那是所有布尔函数的个数，不论是否仿射。"),
+            why(n + 1, "That counts the coefficients, not the ways to choose them.", "那是系数的个数，而不是选择它们的方式数。"),
           ],
           [
-            "are affine and preserve $0$",
-            "是仿射的且保 $0$",
-            2 ** n,
-            `Setting $a_0 = 0$ leaves $${n}$ free bits: $2^{${n}}$`,
-            `取 $a_0 = 0$，剩 $${n}$ 个自由比特：$2^{${n}}$`,
+            why(2 ** (n + 1), "That keeps the constant free; preserving $0$ forces $a_0 = 0$.", "那是让常数自由；保 $0$ 要求 $a_0 = 0$。"),
+            why(n, "That counts the coefficients, not the ways to choose them.", "那是系数的个数，而不是选择它们的方式数。"),
+            why(
+              2 ** n - 1,
+              "That leaves out the zero function, which is affine and preserves $0$.",
+              "那是漏掉了零函数，它是仿射的并且保 $0$。",
+            ),
           ],
           [
-            `are affine and depend on exactly $${k}$ of them`,
-            `是仿射的且恰好依赖其中 $${k}$ 个变量`,
-            2 * choose(n, k),
-            `Choose the $${k}$ variables and the constant: $2\\binom{${n}}{${k}}$`,
-            `选出 $${k}$ 个变量和常数项：$2\\binom{${n}}{${k}}$`,
+            why(choose(n, k), "That leaves out the two choices of the constant.", "那是漏掉了常数的两种选择。"),
+            why(
+              2 ** (k + 1),
+              `That raises $2$ to the power $${k}$ instead of choosing which $${k}$ variables appear.`,
+              `那是取 $2$ 的 $${k}$ 次方，而不是选出出现的 $${k}$ 个变量。`,
+            ),
+            why(2 ** (n + 1), "That counts every affine function, whatever it depends on.", "那是所有仿射函数的个数，不论它依赖哪些变量。"),
           ],
-        ][kind] as [string, string, number, string, string];
+        ][kind]!;
+        const steps2 = [
+          [
+            [
+              ["Count the coefficients", "数系数"],
+              t(`$a_0, a_1, \\dots, a_{${n}}$ are $${n + 1}$ free bits.`, `$a_0, a_1, \\dots, a_{${n}}$ 是 $${n + 1}$ 个自由比特。`),
+            ],
+            [["Choose them", "选择它们"], t(`$2^{${n + 1}} = ${value}$.`, `$2^{${n + 1}} = ${value}$。`)],
+          ],
+          [
+            [
+              ["Fix the constant", "固定常数"],
+              t(
+                `Preserving $0$ means $f(0, \\dots, 0) = a_0 = 0$, leaving $${n}$ free bits.`,
+                `保 $0$ 即 $f(0, \\dots, 0) = a_0 = 0$，剩 $${n}$ 个自由比特。`,
+              ),
+            ],
+            [["Choose them", "选择它们"], t(`$2^{${n}} = ${value}$.`, `$2^{${n}} = ${value}$。`)],
+          ],
+          [
+            [
+              ["Choose the variables", "选变量"],
+              t(`$\\binom{${n}}{${k}} = ${choose(n, k)}$ ways.`, `有 $\\binom{${n}}{${k}} = ${choose(n, k)}$ 种方法。`),
+            ],
+            [
+              ["Choose the constant", "选常数"],
+              t(
+                `$a_0$ is $0$ or $1$: $2 \\cdot ${choose(n, k)} = ${value}$.`,
+                `$a_0$ 取 $0$ 或 $1$：$2 \\cdot ${choose(n, k)} = ${value}$。`,
+              ),
+            ],
+          ],
+        ][kind] as [readonly [string, string], Text][];
         return numberProblem({
           prompt: t(`How many Boolean functions of $${n}$ variables ${en}?`, `有多少个 $${n}$ 元布尔函数${zh}？`),
           answer: value,
-          wrong: [2 ** n === value ? 2 ** (n + 1) : 2 ** n, choose(n, k), value + 2],
-          solution: t(`${why} $= ${value}$.`, `${whyZh} $= ${value}$。`),
+          mistakes: fresh(value, mistakes),
+          solution: walked(
+            steps2,
+            [
+              t(
+                `Half of the $${2 ** (n + 1)}$ affine functions have $a_0 = 0$ and the other half are their negations, so $2 \\cdot 2^{${n}} = ${2 ** (n + 1)}$.`,
+                `$${2 ** (n + 1)}$ 个仿射函数中一半有 $a_0 = 0$，另一半是它们的否定，所以 $2 \\cdot 2^{${n}} = ${2 ** (n + 1)}$。`,
+              ),
+              t(
+                `Their negations are the affine functions with $a_0 = 1$, so the two halves make $2 \\cdot ${value} = 2^{${n + 1}}$ affine functions in all.`,
+                `它们的否定是 $a_0 = 1$ 的仿射函数，两半合起来共 $2 \\cdot ${value} = 2^{${n + 1}}$ 个仿射函数。`,
+              ),
+              t(
+                `Choosing instead the $${n - k}$ variables left out gives $2\\binom{${n}}{${n - k}} = ${value}$ as well.`,
+                `改为选出不出现的 $${n - k}$ 个变量，同样得 $2\\binom{${n}}{${n - k}} = ${value}$。`,
+              ),
+            ][kind]!,
+          ),
         });
       },
     },
@@ -1895,6 +2198,10 @@ export const functionallyCompleteSets: TopicDef = {
     "A set of operations is functionally complete if every Boolean function can be written using only them; {¬, ∧, ∨} is complete because of the principal DNF, and so are {↑} and {↓}.",
     "若只用一组运算就能写出所有布尔函数，则称这组运算函数完备；由主析取范式知 {¬, ∧, ∨} 是完备的，{↑} 与 {↓} 也是。",
   ),
+  intro: t(
+    "With only $\\downarrow$: $x \\downarrow x = \\neg x$, so $(x \\downarrow x) \\downarrow (w \\downarrow w) = \\neg x \\downarrow \\neg w = \\neg(\\neg x \\vee \\neg w) = x \\wedge w$. Building $\\neg$ and $\\wedge$ this way shows that $\\{\\downarrow\\}$ alone writes every Boolean function.\n\nCheck: at $x = w = 1$, $x \\downarrow x = 0$ and $w \\downarrow w = 0$, and $0 \\downarrow 0 = 1 = 1 \\wedge 1$.\n\nIn this lesson we write functions with $\\uparrow$ or $\\downarrow$ alone and decide whether a set of operations is complete.",
+    "只用 $\\downarrow$：$x \\downarrow x = \\neg x$，所以 $(x \\downarrow x) \\downarrow (w \\downarrow w) = \\neg x \\downarrow \\neg w = \\neg(\\neg x \\vee \\neg w) = x \\wedge w$。这样构造出 $\\neg$ 和 $\\wedge$，就说明仅用 $\\{\\downarrow\\}$ 能写出每个布尔函数。\n\n检验：在 $x = w = 1$ 处，$x \\downarrow x = 0$，$w \\downarrow w = 0$，而 $0 \\downarrow 0 = 1 = 1 \\wedge 1$。\n\n本课我们只用 $\\uparrow$ 或只用 $\\downarrow$ 写出函数，并判断一组运算是否完备。",
+  ),
   prerequisites: ["principal-disjunctive-normal-forms"],
   encompasses: [],
   xp: 10,
@@ -1904,8 +2211,8 @@ export const functionallyCompleteSets: TopicDef = {
       id: "writing-functions-with-nand-or-nor",
       title: t("Using only ↑ or only ↓", "只用 ↑ 或只用 ↓"),
       explanation: t(
-        "NAND alone is enough to build every Boolean function, because it can make NOT, AND and OR, and the same is true of NOR. $x \\uparrow x = \\neg x$, $(x \\uparrow y) \\uparrow (x \\uparrow y) = x \\wedge y$ and $(x \\uparrow x) \\uparrow (y \\uparrow y) = x \\vee y$. Dually, $(x \\downarrow y) \\downarrow (x \\downarrow y) = x \\vee y$ and $(x \\downarrow x) \\downarrow (y \\downarrow y) = x \\wedge y$.",
-        "仅用与非就能构造每个布尔函数，因为它可以构造出非、与和或，或非也是如此。$x \\uparrow x = \\neg x$，$(x \\uparrow y) \\uparrow (x \\uparrow y) = x \\wedge y$，$(x \\uparrow x) \\uparrow (y \\uparrow y) = x \\vee y$。对偶地，$(x \\downarrow y) \\downarrow (x \\downarrow y) = x \\vee y$，$(x \\downarrow x) \\downarrow (y \\downarrow y) = x \\wedge y$。",
+        "NAND alone is enough to build every Boolean function, because it can make NOT, AND and OR, and the same is true of NOR. $w \\uparrow w = \\neg w$, $(z \\uparrow w) \\uparrow (z \\uparrow w) = z \\wedge w$ and $(z \\uparrow z) \\uparrow (w \\uparrow w) = z \\vee w$. Dually, $(z \\downarrow w) \\downarrow (z \\downarrow w) = z \\vee w$ and $(z \\downarrow z) \\downarrow (w \\downarrow w) = z \\wedge w$.\n\n> **Watch out.** Applying $\\uparrow$ to a copy of itself negates it, so $(z \\uparrow w) \\uparrow (z \\uparrow w)$ is $z \\wedge w$, not $z \\vee w$; with $\\downarrow$ the roles of $\\wedge$ and $\\vee$ swap.",
+        "仅用与非就能构造每个布尔函数，因为它可以构造出非、与和或，或非也是如此。$w \\uparrow w = \\neg w$，$(z \\uparrow w) \\uparrow (z \\uparrow w) = z \\wedge w$，$(z \\uparrow z) \\uparrow (w \\uparrow w) = z \\vee w$。对偶地，$(z \\downarrow w) \\downarrow (z \\downarrow w) = z \\vee w$，$(z \\downarrow z) \\downarrow (w \\downarrow w) = z \\wedge w$。\n\n> **注意。** 把 $\\uparrow$ 作用于自身的两个副本就是对它取反，所以 $(z \\uparrow w) \\uparrow (z \\uparrow w)$ 是 $z \\wedge w$，而不是 $z \\vee w$；换成 $\\downarrow$ 时，$\\wedge$ 与 $\\vee$ 的角色互换。",
       ),
       generate(rng) {
         const op = rng.pick(["nand", "nor"] as const);
@@ -1917,35 +2224,98 @@ export const functionallyCompleteSets: TopicDef = {
         const target = rng.pick(targets.filter((g) => pool.some((e) => sameVec(vecOf(e, 3), vecOf(g, 3)))));
         const vec = vecOf(target, 3);
         const right = pool.find((e) => sameVec(vecOf(e, 3), vec))!;
-        return oneOf(
-          rng,
-          t(
+        const [p, q] = [VARS[pair[0]]!, VARS[pair[1]]!];
+        const table = pairTable(target, pair);
+        const rows = ["(0, 0)", "(0, 1)", "(1, 0)", "(1, 1)"];
+        return explainedChoice(rng, {
+          prompt: t(
             `Which expression using only $${opTex[op]}$ is equivalent to $${btex(target)}$?`,
             `哪个只用 $${opTex[op]}$ 的表达式与 $${btex(target)}$ 等价？`,
           ),
-          bmath(right),
-          pool.filter((e) => !sameVec(vecOf(e, 3), vec)).map(bmath),
-          t(`Compare truth tables: $${btex(right)} \\equiv ${btex(target)}$.`, `比较真值表：$${btex(right)} \\equiv ${btex(target)}$。`),
-        );
+          correct: bmath(right),
+          wrong: firstThree(
+            bmath(right),
+            pool
+              .filter((e) => !sameVec(vecOf(e, 3), vec))
+              .map((w) => {
+                const r = differ(pairTable(w, pair), table);
+                return {
+                  option: bmath(w),
+                  why: t(
+                    `At $(${p}, ${q}) = ${rows[r]}$ it gives $${pairTable(w, pair)[r]}$, but $${btex(target)}$ gives $${table[r]}$.`,
+                    `在 $(${p}, ${q}) = ${rows[r]}$ 处它取 $${pairTable(w, pair)[r]}$，而 $${btex(target)}$ 取 $${table[r]}$。`,
+                  ),
+                };
+              }),
+          ),
+          solution: walked(
+            [
+              [
+                ["Tabulate the target", "列出目标的真值表"],
+                t(
+                  `At $(${p}, ${q}) = (0, 0), (0, 1), (1, 0), (1, 1)$, $${btex(target)}$ takes the values $${table.join(", ")}$.`,
+                  `在 $(${p}, ${q}) = (0, 0), (0, 1), (1, 0), (1, 1)$ 处，$${btex(target)}$ 依次取 $${table.join(", ")}$。`,
+                ),
+              ],
+              [
+                ["Match the table", "对照真值表"],
+                t(
+                  `$${btex(right)}$ takes the same values, so $${btex(right)} \\equiv ${btex(target)}$.`,
+                  `$${btex(right)}$ 取同样的值，所以 $${btex(right)} \\equiv ${btex(target)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At $(${p}, ${q}) = (1, 1)$ both sides give $${table[3]}$, and at $(0, 0)$ both give $${table[0]}$.`,
+              `在 $(${p}, ${q}) = (1, 1)$ 处两边都取 $${table[3]}$，在 $(0, 0)$ 处都取 $${table[0]}$。`,
+            ),
+          ),
+        });
       },
     },
     {
       id: "deciding-functional-completeness",
       title: t("Deciding completeness", "判断完备性"),
       explanation: t(
-        "To show a set is complete, build a known complete set from it: $\\{\\Rightarrow, 0\\}$ gives $\\neg x = x \\Rightarrow 0$ and $x \\vee y = \\neg x \\Rightarrow y$. To show it is not, find a property every expression in it keeps: expressions in $\\wedge, \\vee$ are all monotonic, so they never give $\\neg x$.",
-        "要证明一组运算完备，就用它构造出已知的完备集：$\\{\\Rightarrow, 0\\}$ 给出 $\\neg x = x \\Rightarrow 0$ 和 $x \\vee y = \\neg x \\Rightarrow y$。要证明不完备，就找出所有表达式都保持的性质：由 $\\wedge, \\vee$ 构成的表达式都是单调的，因而写不出 $\\neg x$。",
+        "To show a set is complete, build a known complete set from it: $\\{\\vee, \\Leftrightarrow, 0\\}$ gives $\\neg x = x \\Leftrightarrow 0$, and $\\{\\neg, \\vee\\}$ is complete. To show it is not, find a property every expression in it keeps: $\\wedge$, $\\vee$ and $\\Leftrightarrow$ all preserve $1$, so expressions in them give $1$ at $(1, \\dots, 1)$ and never give $\\neg x$.\n\n> **Watch out.** One function a set cannot build is enough to make it incomplete, so look for a property all its operations share; to prove completeness, build $\\neg$ together with $\\wedge$ or $\\vee$.",
+        "要证明一组运算完备，就用它构造出已知的完备集：$\\{\\vee, \\Leftrightarrow, 0\\}$ 给出 $\\neg x = x \\Leftrightarrow 0$，而 $\\{\\neg, \\vee\\}$ 是完备的。要证明不完备，就找出所有表达式都保持的性质：$\\wedge$、$\\vee$、$\\Leftrightarrow$ 都保 $1$，所以由它们构成的表达式在 $(1, \\dots, 1)$ 处都取 $1$，写不出 $\\neg x$。\n\n> **注意。** 只要有一个函数写不出，这组运算就不完备，所以要找出所有运算共有的性质；要证明完备，就构造出 $\\neg$ 以及 $\\wedge$ 或 $\\vee$。",
       ),
       generate(rng) {
         const s = rng.pick(completeSets);
         const ops = rng.shuffle(s.ops);
-        return oneOf(
-          rng,
-          t(`Is $\\{${ops.join(", ")}\\}$ functionally complete?`, `$\\{${ops.join(", ")}\\}$ 函数完备吗？`),
-          yesNo[s.complete ? 0 : 1]!,
-          [yesNo[s.complete ? 1 : 0]!],
-          s.why,
-        );
+        return explainedChoice(rng, {
+          prompt: t(`Is $\\{${ops.join(", ")}\\}$ functionally complete?`, `$\\{${ops.join(", ")}\\}$ 函数完备吗？`),
+          correct: yesNo[s.complete ? 0 : 1]!,
+          wrong: [
+            {
+              option: yesNo[s.complete ? 1 : 0]!,
+              why: s.complete ? t(`It builds a complete set: ${s.why.en}`, `它能构造出完备集：${s.why["zh-CN"]}`) : s.why,
+            },
+          ],
+          solution: walked(
+            [
+              [
+                s.complete ? ["Build a known complete set", "构造已知的完备集"] : ["Find a property they all keep", "找出它们都保持的性质"],
+                s.why,
+              ],
+              [
+                ["Conclude", "得出结论"],
+                s.complete
+                  ? t("So the set is functionally complete.", "所以这组运算函数完备。")
+                  : t("So the set is not functionally complete.", "所以这组运算不是函数完备的。"),
+              ],
+            ],
+            s.complete
+              ? t(
+                  "With $\\neg$ and $\\wedge$ or $\\vee$ in hand, every principal DNF can be written, and so every function with a $1$ somewhere; $0$ itself is $x \\wedge \\neg x$.",
+                  "有了 $\\neg$ 以及 $\\wedge$ 或 $\\vee$，就能写出每个主析取范式，从而写出每个在某处取 $1$ 的函数；$0$ 本身是 $x \\wedge \\neg x$。",
+                )
+              : t(
+                  "A complete set would have to build every function, including the one named above, so this set falls short.",
+                  "完备的集合必须能写出每个函数，包括上面提到的那个，所以这组运算做不到。",
+                ),
+          ),
+        });
       },
     },
   ],
@@ -1954,6 +2324,30 @@ export const functionallyCompleteSets: TopicDef = {
 /** missingClasses lists the Post classes that contain every function of a set. */
 const missingClasses = (vecs: readonly (readonly number[])[], n: number) => POST.filter((c) => vecs.every((v) => inClass(c, v, n)));
 
+/** isIn says in words that a function lies in a Post class. */
+const isIn: Record<PostClass, Text> = {
+  T0: t("preserves $0$", "保 $0$"),
+  T1: t("preserves $1$", "保 $1$"),
+  S: t("is self-dual", "自对偶"),
+  M: t("is monotonic", "单调"),
+  L: t("is affine", "仿射"),
+};
+
+/** isNotIn says in words that a function lies outside a Post class. */
+const isNotIn: Record<PostClass, Text> = {
+  T0: t("does not preserve $0$", "不保 $0$"),
+  T1: t("does not preserve $1$", "不保 $1$"),
+  S: t("is not self-dual", "不自对偶"),
+  M: t("is not monotonic", "不单调"),
+  L: t("is not affine", "不仿射"),
+};
+
+/** classList writes a list of Post classes, or says there are none. */
+const classList = (cs: readonly PostClass[]) =>
+  cs.length === 0
+    ? t("none of them", "一个也没有")
+    : t(`$${cs.map((c) => classTex[c]).join(", ")}$`, `$${cs.map((c) => classTex[c]).join(", ")}$`);
+
 /** postsFunctionalCompletenessTheorem decides completeness with the five Post classes. */
 export const postsFunctionalCompletenessTheorem: TopicDef = {
   id: "posts-functional-completeness-theorem",
@@ -1961,6 +2355,10 @@ export const postsFunctionalCompletenessTheorem: TopicDef = {
   summary: t(
     "Post's theorem: a set of Boolean functions is functionally complete exactly when it is not contained in any of the five classes T₀, T₁, S (self-dual), M (monotonic) and L (affine).",
     "波斯特定理：一组布尔函数函数完备，当且仅当它不包含于 T₀、T₁、S（自对偶）、M（单调）、L（仿射）五个类中的任何一个。",
+  ),
+  intro: t(
+    "The function $f(x, w) = x \\downarrow w$ lies in none of the five classes: $f(0, 0) = 1$ (not $T_0$), $f(1, 1) = 0$ (not $T_1$), $f(0, 1) = f(1, 0) = 0$ at opposite inputs (not $S$), $f$ drops from $f(0, 0) = 1$ to $f(0, 1) = 0$ (not $M$), and its polynomial $1 \\oplus x \\oplus w \\oplus xw$ has a product (not $L$). By Post's theorem, $\\{\\downarrow\\}$ is complete.\n\nCheck: indeed $w \\downarrow w = \\neg w$, and $(x \\downarrow x) \\downarrow (w \\downarrow w) = x \\wedge w$.\n\nIn this lesson we find the Post classes of a function and use them to decide completeness.",
+    "函数 $f(x, w) = x \\downarrow w$ 不属于五个类中的任何一个：$f(0, 0) = 1$（不在 $T_0$ 中），$f(1, 1) = 0$（不在 $T_1$ 中），在相反的输入处 $f(0, 1) = f(1, 0) = 0$（不在 $S$ 中），$f$ 从 $f(0, 0) = 1$ 降为 $f(0, 1) = 0$（不在 $M$ 中），它的多项式 $1 \\oplus x \\oplus w \\oplus xw$ 含乘积（不在 $L$ 中）。由波斯特定理，$\\{\\downarrow\\}$ 完备。\n\n检验：确实 $w \\downarrow w = \\neg w$，且 $(x \\downarrow x) \\downarrow (w \\downarrow w) = x \\wedge w$。\n\n本课我们求函数所属的波斯特类，并用它们判断完备性。",
   ),
   prerequisites: ["functionally-complete-sets", "self-dual-boolean-functions", "monotonic-boolean-functions", "affine-boolean-functions"],
   encompasses: [],
@@ -1971,8 +2369,8 @@ export const postsFunctionalCompletenessTheorem: TopicDef = {
       id: "post-classes-of-a-function",
       title: t("The Post classes of a function", "函数所属的波斯特类"),
       explanation: t(
-        "$x \\wedge y$ preserves $0$ and $1$ and is monotonic, but is not self-dual and not affine ($xy$ is a product): it lies in $3$ of the $5$ classes. $x \\uparrow y$ lies in none, so $\\{\\uparrow\\}$ is complete.",
-        "$x \\wedge y$ 保 $0$、保 $1$ 且单调，但不自对偶也不仿射（$xy$ 是乘积）：它属于 $5$ 个类中的 $3$ 个。$x \\uparrow y$ 不属于任何一个，所以 $\\{\\uparrow\\}$ 完备。",
+        "$x \\wedge w$ preserves $0$ and $1$ and is monotonic, but is not self-dual and not affine ($xw$ is a product): it lies in $3$ of the $5$ classes. $x \\uparrow w$ lies in none, so $\\{\\uparrow\\}$ is complete.\n\n> **Watch out.** Test each of the five classes on its own: a function can lie in several of them at once, or in none, and lying in one says nothing about the others.",
+        "$x \\wedge w$ 保 $0$、保 $1$ 且单调，但不自对偶也不仿射（$xw$ 是乘积）：它属于 $5$ 个类中的 $3$ 个。$x \\uparrow w$ 不属于任何一个，所以 $\\{\\uparrow\\}$ 完备。\n\n> **注意。** 要逐个检验五个类：一个函数可以同时属于其中几个，也可以一个都不属于，属于某一个类并不说明它是否属于其他类。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -1981,16 +2379,57 @@ export const postsFunctionalCompletenessTheorem: TopicDef = {
         while (!usesAll(e, n));
         const vec = vecOf(e, n);
         const inside = missingClasses([vec], n);
+        const outside = POST.filter((c) => !inside.includes(c));
+        const count = inside.length;
         return numberProblem({
           prompt: t(
             `How many of the Post classes $T_0, T_1, S, M, L$ contain $${fTex(e, n)}$?`,
             `波斯特类 $T_0, T_1, S, M, L$ 中有多少个包含 $${fTex(e, n)}$？`,
           ),
-          answer: inside.length,
-          wrong: [5 - inside.length, Math.min(5, inside.length + 1), Math.max(0, inside.length - 1)],
-          solution: t(
-            `The value vector is $${vecTex(vec)}$. ${POST.map((c) => `$${classTex[c]}$: ${inside.includes(c) ? "yes" : "no"}`).join("; ")}. So $${inside.length}$.`,
-            `值向量为 $${vecTex(vec)}$。${POST.map((c) => `$${classTex[c]}$：${inside.includes(c) ? "是" : "否"}`).join("；")}。所以是 $${inside.length}$ 个。`,
+          answer: count,
+          mistakes: fresh(count, [
+            why(5 - count, "That counts the classes that do not contain $f$.", "那是不包含 $f$ 的类的个数。"),
+            ...(outside.length > 0
+              ? [
+                  why(
+                    count + 1,
+                    `That counts $${classTex[outside[0]!]}$ as well, but $f$ ${isNotIn[outside[0]!].en}.`,
+                    `那是把 $${classTex[outside[0]!]}$ 也算上了，但 $f$ ${isNotIn[outside[0]!]["zh-CN"]}。`,
+                  ),
+                ]
+              : []),
+            ...(inside.length > 0
+              ? [
+                  why(
+                    count - 1,
+                    `That leaves out $${classTex[inside[0]!]}$, but $f$ ${isIn[inside[0]!].en}.`,
+                    `那是漏掉了 $${classTex[inside[0]!]}$，而 $f$ ${isIn[inside[0]!]["zh-CN"]}。`,
+                  ),
+                ]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [["Find the value vector", "求值向量"], t(`$f$ has value vector $${vecTex(vec)}$.`, `$f$ 的值向量为 $${vecTex(vec)}$。`)],
+              [
+                ["Test each class", "逐个检验各类"],
+                t(
+                  `${POST.map((c) => `$f$ ${(inside.includes(c) ? isIn : isNotIn)[c].en}`).join("; ")}.`,
+                  `${POST.map((c) => `$f$ ${(inside.includes(c) ? isIn : isNotIn)[c]["zh-CN"]}`).join("；")}。`,
+                ),
+              ],
+              [
+                ["Count", "计数"],
+                t(
+                  `The classes containing $f$ are ${classList(inside).en}: $${count}$.`,
+                  `包含 $f$ 的类为${classList(inside)["zh-CN"]}：共 $${count}$ 个。`,
+                ),
+              ],
+            ],
+            t(
+              `The first and last entries of the vector, $${vec[0]}$ and $${vec[vec.length - 1]}$, settle $T_0$ and $T_1$ at a glance, and they agree with the list.`,
+              `值向量的首末两位 $${vec[0]}$ 与 $${vec[vec.length - 1]}$ 一眼就决定了 $T_0$ 与 $T_1$，与上面的结果一致。`,
+            ),
           ),
         });
       },
@@ -1999,8 +2438,8 @@ export const postsFunctionalCompletenessTheorem: TopicDef = {
       id: "applying-posts-theorem",
       title: t("Applying Post's theorem", "应用波斯特定理"),
       explanation: t(
-        "$\\{x \\wedge y, x \\oplus y\\}$: both preserve $0$, so the set lies in $T_0$ and is not complete. $\\{x \\Rightarrow y, x \\oplus y\\}$: $x \\oplus y$ leaves $T_1$; $x \\Rightarrow y$ leaves $T_0$, $S$, $M$ and $L$: it is complete.",
-        "$\\{x \\wedge y, x \\oplus y\\}$：两者都保 $0$，所以该集合包含于 $T_0$，不完备。$\\{x \\Rightarrow y, x \\oplus y\\}$：$x \\oplus y$ 不在 $T_1$ 中；$x \\Rightarrow y$ 不在 $T_0$、$S$、$M$、$L$ 中：它是完备的。",
+        "$\\{x \\wedge w, x \\oplus w\\}$: both preserve $0$, so the set lies in $T_0$ and is not complete. $\\{x \\Rightarrow w, x \\oplus w\\}$: $x \\oplus w$ leaves $T_1$; $x \\Rightarrow w$ leaves $T_0$, $S$, $M$ and $L$: it is complete.\n\n> **Watch out.** A set is complete only if every one of the five classes has a member outside it; one class that holds every member is enough to make the set incomplete.",
+        "$\\{x \\wedge w, x \\oplus w\\}$：两者都保 $0$，所以该集合包含于 $T_0$，不完备。$\\{x \\Rightarrow w, x \\oplus w\\}$：$x \\oplus w$ 不在 $T_1$ 中；$x \\Rightarrow w$ 不在 $T_0$、$S$、$M$、$L$ 中：它是完备的。\n\n> **注意。** 只有五个类中的每一个都有某个成员不在其中，集合才完备；只要有一个类包含所有成员，集合就不完备。",
       ),
       generate(rng) {
         const value = rng.bool();
@@ -2014,24 +2453,57 @@ export const postsFunctionalCompletenessTheorem: TopicDef = {
         } while (!usesAll(f, 2) || (common.length === 0) !== value || !vecOf(f, 3).includes(0) || !vecOf(f, 3).includes(1));
         const fTexs = `f(x, y) = ${btex(f)}`;
         const gTexs = `g(${argsTex(3)}) = ${btex(g)}`;
-        return oneOf(
-          rng,
-          t(
+        const ofF = missingClasses([vecOf(f, 3)], 3);
+        const ofG = missingClasses([vecOf(g, 3)], 3);
+        const c0 = common[0];
+        return explainedChoice(rng, {
+          prompt: t(
             `Is the set $\\{f, g\\}$ functionally complete, where $${fTexs}$ and $${gTexs}$?`,
             `设 $${fTexs}$，$${gTexs}$。集合 $\\{f, g\\}$ 函数完备吗？`,
           ),
-          yesNo[value ? 0 : 1]!,
-          [yesNo[value ? 1 : 0]!],
-          value
-            ? t(
-                "Yes: for each of $T_0, T_1, S, M, L$, one of $f$ and $g$ lies outside it.",
-                "是：对 $T_0, T_1, S, M, L$ 中的每一个，$f$ 与 $g$ 中都有一个不在其中。",
-              )
-            : t(
-                `No: both $f$ and $g$ lie in $${classTex[common[0]!]}$ (both ${classText[common[0]!].en}).`,
-                `不是：$f$ 与 $g$ 都属于 $${classTex[common[0]!]}$（都${classText[common[0]!]["zh-CN"]}）。`,
-              ),
-        );
+          correct: yesNo[value ? 0 : 1]!,
+          wrong: [
+            {
+              option: yesNo[value ? 1 : 0]!,
+              why: c0
+                ? t(
+                    `Both $f$ and $g$ lie in $${classTex[c0]}$, so every expression in them does too.`,
+                    `$f$ 与 $g$ 都属于 $${classTex[c0]}$，所以由它们构成的每个表达式也都属于它。`,
+                  )
+                : t(
+                    "No class holds both: for each of the five, $f$ or $g$ lies outside it.",
+                    "没有哪个类同时包含两者：对五个类中的每一个，$f$ 或 $g$ 不在其中。",
+                  ),
+            },
+          ],
+          solution: walked(
+            [
+              [["Find the classes of f", "求 f 所属的类"], t(`$f$ lies in ${classList(ofF).en}.`, `$f$ 属于${classList(ofF)["zh-CN"]}。`)],
+              [["Find the classes of g", "求 g 所属的类"], t(`$g$ lies in ${classList(ofG).en}.`, `$g$ 属于${classList(ofG)["zh-CN"]}。`)],
+              [
+                ["Compare", "比较"],
+                c0
+                  ? t(
+                      `Both lie in $${classTex[c0]}$, so $\\{f, g\\}$ is not complete.`,
+                      `两者都属于 $${classTex[c0]}$，所以 $\\{f, g\\}$ 不完备。`,
+                    )
+                  : t(
+                      "No class appears in both lists, so $\\{f, g\\}$ is complete.",
+                      "没有哪个类同时出现在两个列表中，所以 $\\{f, g\\}$ 完备。",
+                    ),
+              ],
+            ],
+            c0
+              ? t(
+                  `$f$ ${isIn[c0].en} and $g$ ${isIn[c0].en} too, so every expression built from them ${isIn[c0].en} as well, which no complete set allows.`,
+                  `$f$ ${isIn[c0]["zh-CN"]}，$g$ 也${isIn[c0]["zh-CN"]}，所以由它们构成的每个表达式都${isIn[c0]["zh-CN"]}，完备的集合不可能这样。`,
+                )
+              : t(
+                  `Each of $T_0, T_1, S, M, L$ is missing from one of the two lists, which is exactly the condition of Post's theorem.`,
+                  `$T_0, T_1, S, M, L$ 中的每一个都不在两个列表之一中，这正是波斯特定理的条件。`,
+                ),
+          ),
+        });
       },
     },
   ],
@@ -2071,6 +2543,32 @@ const circuitText = (e: BExpr) => {
   };
 };
 
+/** outputGate says how the last gate of a circuit turns its inputs into the output. */
+const outputGate = (e: BExpr, x: readonly number[]): Text => {
+  const value = beval(e, x);
+  if (e.k === "not")
+    return t(
+      `The output gate is a NOT gate on $${beval(e.a, x)}$, giving $${value}$.`,
+      `输出门是作用在 $${beval(e.a, x)}$ 上的非门，得 $${value}$。`,
+    );
+  if (e.k === "var" || e.k === "const") return t(`The output is $${value}$.`, `输出为 $${value}$。`);
+  const [a, b] = [beval(e.a, x), beval(e.b, x)];
+  return t(
+    `The output gate is ${gateName[e.k]} on $${a}$ and $${b}$, and $${a} ${opTex[e.k]} ${b} = ${value}$.`,
+    `输出门是作用在 $${a}$ 和 $${b}$ 上的 ${gateName[e.k]} 门，$${a} ${opTex[e.k]} ${b} = ${value}$。`,
+  );
+};
+
+/** circuitSlip explains a wrong output of a traced circuit. */
+const circuitSlip = (e: BExpr, x: readonly number[]): Text => {
+  const value = beval(e, x);
+  const slip = slips.find(([m]) => beval(swapOps(e, m), x) !== value);
+  if (slip) return t(slip[1], slip[2]);
+  if (beval(swapOps(e, { and: "or", or: "and" }), x) !== value)
+    return t("That reads an AND gate as OR, or an OR gate as AND.", "那是把与门当成了或门，或把或门当成了与门。");
+  return t("That gets the output gate wrong; evaluate its inputs first.", "那是把输出门算错了；应先求出它的输入。");
+};
+
 /** introductionToLogicCircuits models circuits of gates as Boolean expressions. */
 export const introductionToLogicCircuits: TopicDef = {
   id: "introduction-to-logic-circuits",
@@ -2078,6 +2576,10 @@ export const introductionToLogicCircuits: TopicDef = {
   summary: t(
     "A logic circuit feeds input bits through gates: AND, OR and NOT compute ∧, ∨ and ¬, and the circuit as a whole computes a Boolean function of its inputs.",
     "逻辑电路让输入比特经过各个门：与门、或门、非门分别计算 ∧、∨、¬，整个电路计算的是输入的一个布尔函数。",
+  ),
+  intro: t(
+    "The circuit $g_1 = \\mathrm{NOT}(w)$, $g_2 = \\mathrm{AND}(x, g_1)$ computes $x \\wedge \\neg w$. With $x = 1$ and $w = 0$: $g_1 = 1$, so the output is $g_2 = 1 \\wedge 1 = 1$.\n\nCheck: the expression gives $1 \\wedge \\neg 0 = 1 \\wedge 1 = 1$ as well.\n\nIn this lesson we trace circuits gate by gate and write the expression a circuit computes.",
+    "电路 $g_1 = \\mathrm{NOT}(w)$，$g_2 = \\mathrm{AND}(x, g_1)$ 计算的是 $x \\wedge \\neg w$。取 $x = 1$，$w = 0$：$g_1 = 1$，所以输出 $g_2 = 1 \\wedge 1 = 1$。\n\n检验：用表达式计算也得 $1 \\wedge \\neg 0 = 1 \\wedge 1 = 1$。\n\n本课我们逐个门地追踪电路，并写出电路计算的表达式。",
   ),
   prerequisites: ["boolean-functions-and-logical-operations"],
   encompasses: [],
@@ -2088,8 +2590,8 @@ export const introductionToLogicCircuits: TopicDef = {
       id: "tracing-a-circuit",
       title: t("Tracing a circuit", "追踪电路"),
       explanation: t(
-        "Evaluate the gates in order from the inputs, since each gate needs the values of the gates feeding it before it can be computed. With $g_1 = \\mathrm{AND}(x, y)$, $g_2 = \\mathrm{NOT}(z)$, $g_3 = \\mathrm{OR}(g_1, g_2)$ and inputs $x = 1, y = 0, z = 0$: $g_1 = 0$, $g_2 = 1$, so the output is $g_3 = 1$.",
-        "从输入开始按顺序计算各个门，因为每个门都需要先知道输入它的那些门的值才能计算。设 $g_1 = \\mathrm{AND}(x, y)$，$g_2 = \\mathrm{NOT}(z)$，$g_3 = \\mathrm{OR}(g_1, g_2)$，输入 $x = 1, y = 0, z = 0$：$g_1 = 0$，$g_2 = 1$，所以输出 $g_3 = 1$。",
+        "Evaluate the gates in order from the inputs, since each gate needs the values of the gates feeding it before it can be computed. With $g_1 = \\mathrm{AND}(x, w)$, $g_2 = \\mathrm{NOT}(y)$, $g_3 = \\mathrm{OR}(g_1, g_2)$ and inputs $x = 1, y = 1, w = 0$: $g_1 = 0$, $g_2 = 0$, so the output is $g_3 = 0$.\n\n> **Watch out.** Compute a gate only after the gates that feed it, using their values, not the original inputs; and a NOT gate flips exactly one bit.",
+        "从输入开始按顺序计算各个门，因为每个门都需要先知道输入它的那些门的值才能计算。设 $g_1 = \\mathrm{AND}(x, w)$，$g_2 = \\mathrm{NOT}(y)$，$g_3 = \\mathrm{OR}(g_1, g_2)$，输入 $x = 1, y = 1, w = 0$：$g_1 = 0$，$g_2 = 0$，所以输出 $g_3 = 0$。\n\n> **注意。** 要在输入某个门的那些门都算好之后再算它，用的是它们的值，而不是原来的输入；非门恰好翻转一个比特。",
       ),
       generate(rng) {
         const e = formula3(rng, ["and", "or"], 3);
@@ -2102,10 +2604,16 @@ export const introductionToLogicCircuits: TopicDef = {
             `某电路的门为 ${c.zh}。当 $x = ${x[0]}$，$y = ${x[1]}$，$z = ${x[2]}$ 时输出是多少？`,
           ),
           answer: value,
-          wrong: [1 - value],
-          solution: t(
-            `The circuit computes $${btex(e)}$; gate by gate: ${steps(e, x)}.`,
-            `电路计算的是 $${btex(e)}$；逐个门计算：${steps(e, x)}。`,
+          mistakes: [{ value: 1 - value, why: circuitSlip(e, x) }],
+          solution: walked(
+            [
+              [
+                ["Write what the circuit computes", "写出电路计算的表达式"],
+                t(`The circuit computes $${btex(e)}$.`, `电路计算的是 $${btex(e)}$。`),
+              ],
+              [["Evaluate gate by gate", "逐个门计算"], t(`${steps(e, x)}.`, `${steps(e, x)}。`)],
+            ],
+            outputGate(e, x),
           ),
         });
       },
@@ -2114,8 +2622,8 @@ export const introductionToLogicCircuits: TopicDef = {
       id: "the-expression-of-a-circuit",
       title: t("The expression of a circuit", "电路的表达式"),
       explanation: t(
-        "Writing each gate as an operation on the expressions of its inputs builds up a formula for the output, one gate at a time. Replace each gate by its operation, working forward: $g_1 = \\mathrm{OR}(x, y)$, $g_2 = \\mathrm{NOT}(g_1)$, $g_3 = \\mathrm{AND}(g_2, z)$ computes $\\neg (x \\vee y) \\wedge z$.",
-        "把每个门写成对其输入表达式的运算，就能一个门接一个门地构造出输出的公式。从前往后把每个门换成对应的运算：$g_1 = \\mathrm{OR}(x, y)$，$g_2 = \\mathrm{NOT}(g_1)$，$g_3 = \\mathrm{AND}(g_2, z)$ 计算的是 $\\neg (x \\vee y) \\wedge z$。",
+        "Writing each gate as an operation on the expressions of its inputs builds up a formula for the output, one gate at a time. Replace each gate by its operation, working forward: $g_1 = \\mathrm{OR}(x, w)$, $g_2 = \\mathrm{NOT}(g_1)$, $g_3 = \\mathrm{AND}(g_2, y)$ computes $\\neg (x \\vee w) \\wedge y$.\n\n> **Watch out.** A gate acts on the whole expression of each gate feeding it: $\\mathrm{NOT}(g_1)$ above is $\\neg (x \\vee w)$, not $\\neg x \\vee w$.",
+        "把每个门写成对其输入表达式的运算，就能一个门接一个门地构造出输出的公式。从前往后把每个门换成对应的运算：$g_1 = \\mathrm{OR}(x, w)$，$g_2 = \\mathrm{NOT}(g_1)$，$g_3 = \\mathrm{AND}(g_2, y)$ 计算的是 $\\neg (x \\vee w) \\wedge y$。\n\n> **注意。** 门作用在输入它的每个门的整个表达式上：上面的 $\\mathrm{NOT}(g_1)$ 是 $\\neg (x \\vee w)$，而不是 $\\neg x \\vee w$。",
       ),
       generate(rng) {
         const e = formula3(rng, ["and", "or"], 3);
@@ -2126,13 +2634,36 @@ export const introductionToLogicCircuits: TopicDef = {
           .filter((w) => !sameVec(vecOf(w, 3), vec));
         const swap = (g: BExpr): BExpr =>
           g.k === "var" || g.k === "const" ? g : g.k === "not" ? bnot(swap(g.a)) : bin(g.k === "and" ? "or" : "and", swap(g.a), swap(g.b));
-        return oneOf(
-          rng,
-          t(`Which expression does the circuit ${c.en} compute?`, `电路 ${c.zh} 计算的是哪个表达式？`),
-          bmath(e),
-          [swap(e), ...wrong].filter((w) => !sameVec(vecOf(w, 3), vec)).map(bmath),
-          t(`Substitute each gate into the next: the output is $${btex(e)}$.`, `把每个门依次代入下一个门：输出为 $${btex(e)}$。`),
-        );
+        const swapped = swap(e);
+        const whyOf = (w: BExpr) => {
+          if (w === swapped) return t("That swaps the AND and OR gates.", "那是把与门和或门弄反了。");
+          const r = differ(vecOf(w, 3), vec);
+          return t(
+            `At $${pointTex(bits(r, 3))}$ it gives $${vecOf(w, 3)[r]}$, but the circuit gives $${vec[r]}$.`,
+            `在 $${pointTex(bits(r, 3))}$ 处它取 $${vecOf(w, 3)[r]}$，而电路输出 $${vec[r]}$。`,
+          );
+        };
+        return explainedChoice(rng, {
+          prompt: t(`Which expression does the circuit ${c.en} compute?`, `电路 ${c.zh} 计算的是哪个表达式？`),
+          correct: bmath(e),
+          wrong: firstThree(
+            bmath(e),
+            [swapped, ...wrong].filter((w) => !sameVec(vecOf(w, 3), vec)).map((w) => ({ option: bmath(w), why: whyOf(w) })),
+          ),
+          solution: walked(
+            [
+              [["List the gates", "列出各门"], t(`${c.en}.`, `${c.zh}。`)],
+              [
+                ["Substitute forward", "从前往后代入"],
+                t(`Putting each gate into the next gives $${btex(e)}$.`, `把每个门依次代入下一个门，得 $${btex(e)}$。`),
+              ],
+            ],
+            t(
+              `At $(1, 1, 1)$ the expression gives $${vec[7]}$, and tracing the gates there, ${steps(e, [1, 1, 1])}, gives the same output.`,
+              `在 $(1, 1, 1)$ 处表达式取 $${vec[7]}$，在那里逐个追踪各门，${steps(e, [1, 1, 1])}，输出相同。`,
+            ),
+          ),
+        });
       },
     },
   ],
@@ -2146,6 +2677,10 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
     "XOR, NAND and NOR gates compute ⊕, ↑ and ↓. Combinational circuits such as the half adder (sum a ⊕ b, carry a ∧ b) and the full adder add binary numbers bit by bit.",
     "异或门、与非门、或非门分别计算 ⊕、↑、↓。半加器（和 a ⊕ b，进位 a ∧ b）与全加器等组合电路可以逐位相加二进制数。",
   ),
+  intro: t(
+    "A half adder adds two bits $a$ and $b$ with an XOR gate for the sum and an AND gate for the carry. For $a = b = 1$: the sum is $1 \\oplus 1 = 0$ and the carry is $1 \\wedge 1 = 1$, so $1 + 1 = 10_2$.\n\nCheck: $10_2 = 2 = 1 + 1$.\n\nIn this lesson we trace circuits with XOR, NAND and NOR gates and follow the carries of a ripple-carry adder.",
+    "半加器用异或门求和、用与门求进位，把两个比特 $a$ 与 $b$ 相加。$a = b = 1$ 时：和为 $1 \\oplus 1 = 0$，进位为 $1 \\wedge 1 = 1$，所以 $1 + 1 = 10_2$。\n\n检验：$10_2 = 2 = 1 + 1$。\n\n本课我们追踪含异或门、与非门、或非门的电路，并跟踪行波进位加法器的进位。",
+  ),
   prerequisites: ["introduction-to-logic-circuits"],
   encompasses: [],
   xp: 10,
@@ -2155,8 +2690,8 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
       id: "tracing-circuits-with-xor-nand-and-nor",
       title: t("Circuits with XOR, NAND and NOR", "含异或门、与非门、或非门的电路"),
       explanation: t(
-        "These gates are traced exactly like the basic ones, using their truth tables: exclusive or is one when the inputs differ, and NAND and NOR negate AND and OR. With $g_1 = \\mathrm{NAND}(x, y)$, $g_2 = \\mathrm{XOR}(g_1, z)$ and $x = y = z = 1$: $g_1 = 0$, so the output is $g_2 = 0 \\oplus 1 = 1$.",
-        "这些门的追踪方法与基本门完全相同，只需用它们的真值表：异或在输入不同时为 1，与非和或非是与和或的否定。设 $g_1 = \\mathrm{NAND}(x, y)$，$g_2 = \\mathrm{XOR}(g_1, z)$，$x = y = z = 1$：$g_1 = 0$，所以输出 $g_2 = 0 \\oplus 1 = 1$。",
+        "These gates are traced exactly like the basic ones, using their truth tables: exclusive or is one when the inputs differ, and NAND and NOR negate AND and OR. With $g_1 = \\mathrm{NAND}(x, w)$, $g_2 = \\mathrm{XOR}(g_1, y)$ and $x = y = w = 1$: $g_1 = 0$, so the output is $g_2 = 0 \\oplus 1 = 1$.\n\n> **Watch out.** NAND is $0$ only when both inputs are $1$ and NOR is $1$ only when both are $0$; and XOR of two equal bits is $0$, even when both are $1$.",
+        "这些门的追踪方法与基本门完全相同，只需用它们的真值表：异或在输入不同时为 1，与非和或非是与和或的否定。设 $g_1 = \\mathrm{NAND}(x, w)$，$g_2 = \\mathrm{XOR}(g_1, y)$，$x = y = w = 1$：$g_1 = 0$，所以输出 $g_2 = 0 \\oplus 1 = 1$。\n\n> **注意。** 与非门只在两个输入都是 $1$ 时取 $0$，或非门只在两个输入都是 $0$ 时取 $1$；两个相同比特的异或是 $0$，两个都是 $1$ 时也是如此。",
       ),
       generate(rng) {
         let e: BExpr;
@@ -2171,10 +2706,16 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
             `某电路的门为 ${c.zh}。当 $x = ${x[0]}$，$y = ${x[1]}$，$z = ${x[2]}$ 时输出是多少？`,
           ),
           answer: value,
-          wrong: [1 - value],
-          solution: t(
-            `The circuit computes $${btex(e)}$; gate by gate: ${steps(e, x)}.`,
-            `电路计算的是 $${btex(e)}$；逐个门计算：${steps(e, x)}。`,
+          mistakes: [{ value: 1 - value, why: circuitSlip(e, x) }],
+          solution: walked(
+            [
+              [
+                ["Write what the circuit computes", "写出电路计算的表达式"],
+                t(`The circuit computes $${btex(e)}$.`, `电路计算的是 $${btex(e)}$。`),
+              ],
+              [["Evaluate gate by gate", "逐个门计算"], t(`${steps(e, x)}.`, `${steps(e, x)}。`)],
+            ],
+            outputGate(e, x),
           ),
         });
       },
@@ -2183,8 +2724,8 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
       id: "ripple-carry-adders",
       title: t("Adders", "加法器"),
       explanation: t(
-        "A full adder takes bits $a, b$ and a carry-in $c$; its sum is $a \\oplus b \\oplus c$ and its carry-out is $(a \\wedge b) \\vee (c \\wedge (a \\oplus b))$, which is $1$ when at least two inputs are $1$. Chaining full adders from the rightmost bit adds binary numbers: in $0111 + 0101$, the carries into positions $1, 2, 3$ are $1, 1, 1$.",
-        "全加器输入比特 $a, b$ 和进位 $c$；和为 $a \\oplus b \\oplus c$，进位输出为 $(a \\wedge b) \\vee (c \\wedge (a \\oplus b))$，即至少两个输入为 $1$ 时为 $1$。从最右边一位开始串联全加器就能相加二进制数：在 $0111 + 0101$ 中，进入第 $1, 2, 3$ 位的进位都是 $1$。",
+        "A full adder takes bits $a, b$ and a carry-in $c$; its sum is $a \\oplus b \\oplus c$ and its carry-out is $(a \\wedge b) \\vee (c \\wedge (a \\oplus b))$, which is $1$ when at least two inputs are $1$. Chaining full adders from the rightmost bit adds binary numbers: in $101101_2 + 000111_2 = 110100_2$, the carries into positions $1, 2, 3, 4$ are all $1$ and the carry into position $5$ is $0$.\n\n> **Watch out.** Number positions from $0$ at the right, and include the carry coming in: a sum bit is $a \\oplus b \\oplus c$, not $a \\oplus b$.",
+        "全加器输入比特 $a, b$ 和进位 $c$；和为 $a \\oplus b \\oplus c$，进位输出为 $(a \\wedge b) \\vee (c \\wedge (a \\oplus b))$，即至少两个输入为 $1$ 时为 $1$。从最右边一位开始串联全加器就能相加二进制数：在 $101101_2 + 000111_2 = 110100_2$ 中，进入第 $1, 2, 3, 4$ 位的进位都是 $1$，进入第 $5$ 位的进位是 $0$。\n\n> **注意。** 位置从右边的 $0$ 开始编号，并且要算上进来的进位：和的一位是 $a \\oplus b \\oplus c$，而不是 $a \\oplus b$。",
       ),
       generate(rng) {
         const w = rng.int(3, 5);
@@ -2196,6 +2737,25 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
         const sumBit = ((a + b) >> k) & 1;
         const value = askSum ? sumBit : carry(k);
         const bin = (v: number) => v.toString(2).padStart(w, "0");
+        const low = (a % 2 ** k) + (b % 2 ** k);
+        const lowBin = (v: number) => (v % 2 ** k).toString(2).padStart(k, "0");
+        const [ak, bk] = [(a >> k) & 1, (b >> k) & 1];
+        const reason = askSum
+          ? carry(k) === 1
+            ? t(`That leaves out the carry of $1$ coming into position $${k}$.`, `那是漏掉了进入第 $${k}$ 位的进位 $1$。`)
+            : t(
+                `That adds a carry, but the bits below position $${k}$ add up to $${low}$, less than $${2 ** k}$, so nothing carries in.`,
+                `那是加上了进位，但第 $${k}$ 位以下各位之和为 $${low}$，小于 $${2 ** k}$，所以没有进位。`,
+              )
+          : carry(k) === 1
+            ? t(
+                `The bits below position $${k}$ add up to $${low}$, which reaches $${2 ** k}$, so a carry does come in.`,
+                `第 $${k}$ 位以下各位之和为 $${low}$，达到 $${2 ** k}$，所以确实有进位。`,
+              )
+            : t(
+                `The bits below position $${k}$ add up to $${low}$, less than $${2 ** k}$, so nothing carries in.`,
+                `第 $${k}$ 位以下各位之和为 $${low}$，小于 $${2 ** k}$，所以没有进位。`,
+              );
         return numberProblem({
           prompt: askSum
             ? t(
@@ -2207,10 +2767,37 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
                 `一个行波进位加法器计算 $${bin(a)}_2 + ${bin(b)}_2$。从右往左从 $0$ 开始给位编号，进入第 $${k}$ 位的进位是多少？`,
               ),
           answer: value,
-          wrong: [1 - value],
-          solution: t(
-            `$${bin(a)}_2 + ${bin(b)}_2 = ${(a + b).toString(2)}_2$. Adding the bits below position $${k}$ gives carry $${carry(k)}$${askSum ? `, and position $${k}$ holds $${(a >> k) & 1} \\oplus ${(b >> k) & 1} \\oplus ${carry(k)} = ${sumBit}$` : ""}.`,
-            `$${bin(a)}_2 + ${bin(b)}_2 = ${(a + b).toString(2)}_2$。第 $${k}$ 位以下各位相加产生进位 $${carry(k)}$${askSum ? `，第 $${k}$ 位为 $${(a >> k) & 1} \\oplus ${(b >> k) & 1} \\oplus ${carry(k)} = ${sumBit}$` : ""}。`,
+          mistakes: [{ value: 1 - value, why: reason }],
+          solution: walked(
+            [
+              [
+                ["Add the lower bits", "相加较低的各位"],
+                t(
+                  `Below position $${k}$: $${lowBin(a)}_2 + ${lowBin(b)}_2 = ${low.toString(2)}_2$, so the carry into position $${k}$ is $${carry(k)}$.`,
+                  `第 $${k}$ 位以下：$${lowBin(a)}_2 + ${lowBin(b)}_2 = ${low.toString(2)}_2$，所以进入第 $${k}$ 位的进位是 $${carry(k)}$。`,
+                ),
+              ],
+              ...(askSum
+                ? [
+                    [
+                      ["Add position k", "相加第 k 位"],
+                      t(
+                        `$${ak} \\oplus ${bk} \\oplus ${carry(k)} = ${sumBit}$.`,
+                        `$${ak} \\oplus ${bk} \\oplus ${carry(k)} = ${sumBit}$。`,
+                      ),
+                    ] as const,
+                  ]
+                : []),
+            ],
+            askSum
+              ? t(
+                  `$${bin(a)}_2 + ${bin(b)}_2 = ${(a + b).toString(2)}_2$, and its bit in position $${k}$, counting from $0$ at the right, is $${sumBit}$.`,
+                  `$${bin(a)}_2 + ${bin(b)}_2 = ${(a + b).toString(2)}_2$，其从右边 $0$ 开始数的第 $${k}$ 位是 $${sumBit}$。`,
+                )
+              : t(
+                  `The lower $${k}$ bits add up to $${low}$, which ${carry(k) === 1 ? "is at least" : "is less than"} $2^{${k}} = ${2 ** k}$, so the carry is $${carry(k)}$.`,
+                  `较低的 $${k}$ 位之和为 $${low}$，${carry(k) === 1 ? "不小于" : "小于"} $2^{${k}} = ${2 ** k}$，所以进位是 $${carry(k)}$。`,
+                ),
           ),
         });
       },
@@ -2243,6 +2830,10 @@ export const simplifyingLogicCircuits: TopicDef = {
     "Write the circuit's expression, simplify it with the laws of Boolean algebra or a Karnaugh map, and build the smaller equivalent circuit.",
     "写出电路的表达式，用布尔代数定律或卡诺图化简，再搭建等价的更小电路。",
   ),
+  intro: t(
+    "The circuit for $x \\wedge (\\neg x \\vee w)$ uses three gates, but distributing gives $(x \\wedge \\neg x) \\vee (x \\wedge w) = x \\wedge w$: a single AND gate does the same job.\n\nCheck: at $x = 1$, $w = 0$ both give $0$; at $x = w = 1$ both give $1$; and at $x = 0$ both give $0$.\n\nIn this lesson we replace circuits by a single gate and simplify circuits with Karnaugh maps.",
+    "$x \\wedge (\\neg x \\vee w)$ 的电路用了三个门，但展开得 $(x \\wedge \\neg x) \\vee (x \\wedge w) = x \\wedge w$：一个与门就能完成同样的工作。\n\n检验：在 $x = 1$，$w = 0$ 处两者都是 $0$；在 $x = w = 1$ 处都是 $1$；在 $x = 0$ 处都是 $0$。\n\n本课我们用一个门替换电路，并用卡诺图化简电路。",
+  ),
   prerequisites: ["logic-gates-and-combinational-circuits", "simplifying-logical-expressions-using-karnaugh-maps"],
   encompasses: [],
   xp: 10,
@@ -2252,8 +2843,8 @@ export const simplifyingLogicCircuits: TopicDef = {
       id: "replacing-a-circuit-by-one-gate",
       title: t("Replacing a circuit by one gate", "用一个门替换电路"),
       explanation: t(
-        "$(x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$ uses five gates but equals $x \\oplus y$, a single XOR gate. By absorption, $x \\vee (x \\wedge y) = x$ needs no gate at all: a wire from $x$.",
-        "$(x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$ 用了五个门，却等于 $x \\oplus y$，一个异或门即可。由吸收律，$x \\vee (x \\wedge y) = x$ 完全不需要门：从 $x$ 引一根导线即可。",
+        "$(z \\wedge \\neg w) \\vee (\\neg z \\wedge w)$ uses five gates but equals $z \\oplus w$, a single XOR gate. By absorption, $w \\vee (w \\wedge z) = w$ needs no gate at all: a wire from $w$.\n\n> **Watch out.** Compare all four rows of the truth table: two circuits that agree on one input can still differ on another; and NAND negates AND, while NOR negates OR.",
+        "$(z \\wedge \\neg w) \\vee (\\neg z \\wedge w)$ 用了五个门，却等于 $z \\oplus w$，一个异或门即可。由吸收律，$w \\vee (w \\wedge z) = w$ 完全不需要门：从 $w$ 引一根导线即可。\n\n> **注意。** 要比较真值表的全部四行：在一个输入处相同的两个电路，在另一个输入处仍可能不同；与非门是与门的否定，或非门是或门的否定。",
       ),
       generate(rng) {
         const [tmpl, gate] = rng.pick(singleGates);
@@ -2265,30 +2856,67 @@ export const simplifyingLogicCircuits: TopicDef = {
           g === "wire"
             ? t(`A wire from $${p}$ (no gate)`, `从 $${p}$ 引出的导线（不需要门）`)
             : t(`One ${gateName[g]} gate`, `一个 ${gateName[g]} 门`);
+        const exprOf = (g: BinOp | "wire") => (g === "wire" ? bv(pair[0]) : bin(g, bv(pair[0]), bv(pair[1])));
         const all: (BinOp | "wire")[] = ["xor", "nand", "nor", "and", "or", "iff", "wire"];
-        return oneOf(
-          rng,
-          t(`The circuit ${c.en} computes $${btex(e)}$. What can replace it?`, `电路 ${c.zh} 计算的是 $${btex(e)}$。可以用什么替换它？`),
-          name(gate),
-          rng
+        const table = pairTable(e, pair);
+        const rows = ["(0, 0)", "(0, 1)", "(1, 0)", "(1, 1)"];
+        const right = gate === "wire" ? p : `${p} ${opTex[gate]} ${q}`;
+        return explainedChoice(rng, {
+          prompt: t(
+            `The circuit ${c.en} computes $${btex(e)}$. What can replace it?`,
+            `电路 ${c.zh} 计算的是 $${btex(e)}$。可以用什么替换它？`,
+          ),
+          correct: name(gate),
+          wrong: rng
             .shuffle(all.filter((g) => g !== gate))
             .slice(0, 3)
-            .map(name),
-          gate === "wire"
-            ? t(`By absorption, $${btex(e)} = ${p}$.`, `由吸收律，$${btex(e)} = ${p}$。`)
-            : t(
-                `$${btex(e)} = ${p} ${opTex[gate]} ${q}$, the ${gateName[gate]} gate.`,
-                `$${btex(e)} = ${p} ${opTex[gate]} ${q}$，即 ${gateName[gate]} 门。`,
-              ),
-        );
+            .map((g) => {
+              const other = pairTable(exprOf(g), pair);
+              const r = differ(other, table);
+              return {
+                option: name(g),
+                why: t(
+                  `At $(${p}, ${q}) = ${rows[r]}$ it gives $${other[r]}$, but the circuit gives $${table[r]}$.`,
+                  `在 $(${p}, ${q}) = ${rows[r]}$ 处它取 $${other[r]}$，而电路输出 $${table[r]}$。`,
+                ),
+              };
+            }),
+          solution: walked(
+            [
+              [
+                ["Tabulate the circuit", "列出电路的真值表"],
+                t(
+                  `At $(${p}, ${q}) = (0, 0), (0, 1), (1, 0), (1, 1)$ the circuit gives $${table.join(", ")}$.`,
+                  `在 $(${p}, ${q}) = (0, 0), (0, 1), (1, 0), (1, 1)$ 处电路依次输出 $${table.join(", ")}$。`,
+                ),
+              ],
+              [
+                ["Name the function", "认出这个函数"],
+                gate === "wire"
+                  ? t(
+                      `That is the table of $${p}$ itself: by absorption, $${btex(e)} = ${p}$.`,
+                      `这正是 $${p}$ 本身的真值表：由吸收律，$${btex(e)} = ${p}$。`,
+                    )
+                  : t(
+                      `That is the table of $${right}$, the ${gateName[gate]} gate.`,
+                      `这正是 $${right}$ 的真值表，即 ${gateName[gate]} 门。`,
+                    ),
+              ],
+            ],
+            t(
+              `At $(${p}, ${q}) = (1, 0)$ both $${btex(e)}$ and $${right}$ give $${table[2]}$, and at $(0, 1)$ both give $${table[1]}$.`,
+              `在 $(${p}, ${q}) = (1, 0)$ 处 $${btex(e)}$ 与 $${right}$ 都取 $${table[2]}$，在 $(0, 1)$ 处都取 $${table[1]}$。`,
+            ),
+          ),
+        });
       },
     },
     {
       id: "simplifying-a-circuit",
       title: t("Simplifying a circuit", "化简电路"),
       explanation: t(
-        "Find the value vector of the circuit, simplify the function with a Karnaugh map, and build a smaller circuit that computes the same function. The circuit for $(x \\wedge y) \\vee (x \\wedge \\neg y \\wedge z) \\vee (\\neg x \\wedge y \\wedge z)$ has value vector $0001\\,0111$, whose Karnaugh map groups into $(x \\wedge y) \\vee (x \\wedge z) \\vee (y \\wedge z)$: fewer, smaller gates.",
-        "求出电路的值向量，用卡诺图化简这个函数，再搭建一个计算同一函数的更小电路。$(x \\wedge y) \\vee (x \\wedge \\neg y \\wedge z) \\vee (\\neg x \\wedge y \\wedge z)$ 对应电路的值向量是 $0001\\,0111$，其卡诺图合并为 $(x \\wedge y) \\vee (x \\wedge z) \\vee (y \\wedge z)$：门更少、更小。",
+        "Find the value vector of the circuit, simplify the function with a Karnaugh map, and build a smaller circuit that computes the same function. The circuit for $(x \\wedge w) \\vee (x \\wedge \\neg w) \\vee (\\neg x \\wedge w)$ is $0$ only at $x = w = 0$, so its Karnaugh map groups into the two blocks $x$ and $w$: one OR gate, $x \\vee w$, replaces the whole circuit.\n\n> **Watch out.** The simpler expression must agree with the circuit at every input; a shorter formula that differs in a single cell is not a simplification.",
+        "求出电路的值向量，用卡诺图化简这个函数，再搭建一个计算同一函数的更小电路。$(x \\wedge w) \\vee (x \\wedge \\neg w) \\vee (\\neg x \\wedge w)$ 的电路只在 $x = w = 0$ 时为 $0$，所以其卡诺图合并为 $x$ 与 $w$ 两个块：一个或门 $x \\vee w$ 就能替换整个电路。\n\n> **注意。** 更简单的表达式必须在每个输入处都与电路一致；只在一个格子上不同的更短公式也不是化简。",
       ),
       generate(rng) {
         let e: BExpr;
@@ -2307,16 +2935,43 @@ export const simplifyingLogicCircuits: TopicDef = {
           return v2.includes(1) && v2.includes(0) ? [cubesExpr(minimalDnf(v2, 3))] : [];
         });
         const c = circuitText(e);
-        return oneOf(
-          rng,
-          t(`Which simpler expression is equivalent to the circuit ${c.en}?`, `哪个更简单的表达式与电路 ${c.zh} 等价？`),
-          bmath(right),
-          wrong.filter((w) => !sameVec(vecOf(w, 3), vec)).map(bmath),
-          t(
-            `The circuit computes $${btex(e)}$, with value vector $${vecTex(vec)}$; a Karnaugh map gives $${btex(right)}$.`,
-            `电路计算的是 $${btex(e)}$，值向量为 $${vecTex(vec)}$；用卡诺图得到 $${btex(right)}$。`,
+        const cells = range(0, 7).filter((r) => vec[r] === 1);
+        return explainedChoice(rng, {
+          prompt: t(`Which simpler expression is equivalent to the circuit ${c.en}?`, `哪个更简单的表达式与电路 ${c.zh} 等价？`),
+          correct: bmath(right),
+          wrong: firstThree(
+            bmath(right),
+            wrong
+              .filter((w) => !sameVec(vecOf(w, 3), vec))
+              .map((w) => {
+                const r = differ(vecOf(w, 3), vec);
+                return {
+                  option: bmath(w),
+                  why: t(
+                    `At $${pointTex(bits(r, 3))}$ it gives $${1 - vec[r]!}$, but the circuit gives $${vec[r]}$.`,
+                    `在 $${pointTex(bits(r, 3))}$ 处它取 $${1 - vec[r]!}$，而电路输出 $${vec[r]}$。`,
+                  ),
+                };
+              }),
           ),
-        );
+          solution: walked(
+            [
+              [
+                ["Find the value vector", "求值向量"],
+                t(
+                  `The circuit computes $${btex(e)}$, with value vector $${vecTex(vec)}$.`,
+                  `电路计算的是 $${btex(e)}$，值向量为 $${vecTex(vec)}$。`,
+                ),
+              ],
+              [["Group the 1s on a Karnaugh map", "在卡诺图上合并 1"], blocksText(cover, 3)],
+              [["Join the blocks", "连接各块"], t(`$${btex(right)}$.`, `$${btex(right)}$。`)],
+            ],
+            t(
+              `The blocks together cover exactly the cells $${cells.join(", ")}$ where the circuit gives $1$, so $${btex(right)}$ agrees with it everywhere.`,
+              `这些块合起来恰好覆盖电路输出 $1$ 的格子 $${cells.join(", ")}$，所以 $${btex(right)}$ 在每处都与电路一致。`,
+            ),
+          ),
+        });
       },
     },
   ],
