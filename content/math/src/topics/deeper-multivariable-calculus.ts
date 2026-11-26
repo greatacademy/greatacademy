@@ -1314,8 +1314,8 @@ const closingASurface: KnowledgePointDef = {
   id: "flux-through-an-open-surface-by-closing-it",
   title: t("Flux through an open surface by closing it", "补成闭曲面求开曲面的通量"),
   explanation: t(
-    "The divergence theorem needs a closed surface. For a cap, add the flat base to close it: the outward flux through both is the integral of the divergence over the solid. Then subtract the flux through the base, which is usually simple to find directly.",
-    "散度定理需要闭曲面。对曲面帽，加上平的底面使它封闭：穿过两者向外的通量等于散度在立体上的积分。再减去穿过底面的通量，这一项通常可以直接算出。",
+    "The divergence theorem needs a closed surface. For a cap, add the flat base to close it: the outward flux through both is the integral of the divergence over the solid. Then subtract the flux through the base, which is usually simple to find directly. For $\\langle 4x, 4y, z + 1 \\rangle$ through the cap $z = 1 - x^2 - y^2$, the divergence $9$ times the volume $\\frac{\\pi}{2}$ gives $\\frac{9}{2}\\pi$; the base gives $-\\pi$, so the cap has $\\frac{9}{2}\\pi + \\pi = \\frac{11}{2}\\pi$.\n\n> **Watch out.** The outward normal of the base points down, so its flux is negative and subtracting it adds to the total; and the solid under the paraboloid has volume $\\frac{\\pi}{2}R^4$, half of the cylinder around it.",
+    "散度定理需要闭曲面。对曲面帽，加上平的底面使它封闭：穿过两者向外的通量等于散度在立体上的积分。再减去穿过底面的通量，这一项通常可以直接算出。对 $\\langle 4x, 4y, z + 1 \\rangle$ 穿过曲面帽 $z = 1 - x^2 - y^2$，散度 $9$ 乘以体积 $\\frac{\\pi}{2}$ 得 $\\frac{9}{2}\\pi$；底面给出 $-\\pi$，所以曲面帽的通量为 $\\frac{9}{2}\\pi + \\pi = \\frac{11}{2}\\pi$。\n\n> **注意。** 底面的外法向朝下，所以它的通量为负，减去它就是加到总量上；抛物面下方立体的体积是 $\\frac{\\pi}{2}R^4$，是外接圆柱的一半。",
   ),
   generate(rng) {
     const R = rng.int(1, 4);
@@ -1333,10 +1333,58 @@ const closingASurface: KnowledgePointDef = {
       ),
       answer,
       solveFor: "c",
-      wrong: [total, total.sub(Q.of(k * R * R)), Q.of(div * R ** 4)],
-      solution: t(
-        `Close the cap with the disk $z = 0$. The divergence is $${div}$ and the solid has volume $\\frac{\\pi}{2}(${R * R})^2$, so the total outward flux is $${total.toLatex()}\\pi$. Through the base the outward normal points down, giving $-${k} \\cdot ${R * R}\\pi$. So the cap has $${total.toLatex()}\\pi + ${k * R * R}\\pi = ${answer.toLatex()}\\pi$.`,
-        `用圆盘 $z = 0$ 封闭曲面帽。散度是 $${div}$，立体体积是 $\\frac{\\pi}{2}(${R * R})^2$，所以向外的总通量是 $${total.toLatex()}\\pi$。底面向外的法向朝下，通量是 $-${k} \\cdot ${R * R}\\pi$。所以曲面帽的通量是 $${total.toLatex()}\\pi + ${k * R * R}\\pi = ${answer.toLatex()}\\pi$。`,
+      mistakes: apart(answer, [
+        why(
+          total,
+          "That is the flux out of the closed surface; the flux through the base must be removed.",
+          "那是穿出闭曲面的通量；还要去掉穿过底面的通量。",
+        ),
+        why(
+          total.sub(Q.of(k * R * R)),
+          "That adds the base's flux instead of removing it; the base's outward flux is negative, so removing it increases the total.",
+          "那是把底面的通量加上而不是去掉；底面向外的通量为负，去掉它会使总量增大。",
+        ),
+        why(
+          Q.of(div * R ** 4),
+          "That forgets the half in the volume $\\frac{\\pi}{2}R^4$ of the solid and also ignores the base.",
+          "那是漏了立体体积 $\\frac{\\pi}{2}R^4$ 中的一半，也没有考虑底面。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Close the surface", "封闭曲面"],
+            t(
+              `Add the disk $x^2 + y^2 \\le ${R * R}$ at $z = 0$, with outward normal $-\\mathbf{k}$.`,
+              `加上 $z = 0$ 处的圆盘 $x^2 + y^2 \\le ${R * R}$，外法向为 $-\\mathbf{k}$。`,
+            ),
+          ],
+          [
+            ["Use the divergence theorem", "用散度定理"],
+            t(
+              `The divergence is $${div}$ and the solid has volume $\\int_0^{2\\pi}\\int_0^{${R}} (${R * R} - r^2)\\,r\\,dr\\,d\\theta = ${Q.of(R ** 4, 2).toLatex()}\\pi$, so the total outward flux is $${total.toLatex()}\\pi$.`,
+              `散度为 $${div}$，立体体积为 $\\int_0^{2\\pi}\\int_0^{${R}} (${R * R} - r^2)\\,r\\,dr\\,d\\theta = ${Q.of(R ** 4, 2).toLatex()}\\pi$，所以向外的总通量为 $${total.toLatex()}\\pi$。`,
+            ),
+          ],
+          [
+            ["Find the flux through the base", "求穿过底面的通量"],
+            t(
+              `On $z = 0$ the third component is $${k}$, so $\\mathbf{F} \\cdot (-\\mathbf{k}) = ${-k}$ over area $${R * R}\\pi$, giving $${-k * R * R}\\pi$.`,
+              `在 $z = 0$ 上第三个分量为 $${k}$，所以 $\\mathbf{F} \\cdot (-\\mathbf{k}) = ${-k}$，面积为 $${R * R}\\pi$，得 $${-k * R * R}\\pi$。`,
+            ),
+          ],
+          [
+            ["Remove the base", "去掉底面"],
+            t(
+              `$${total.toLatex()}\\pi - (${-k * R * R}\\pi) = ${answer.toLatex()}\\pi$, so $c = ${answer.toLatex()}$.`,
+              `$${total.toLatex()}\\pi - (${-k * R * R}\\pi) = ${answer.toLatex()}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Slicing instead: at height $z$ the solid is a disk of area $\\pi(${R * R} - z)$, and $\\int_0^{${R * R}} \\pi(${R * R} - z)\\,dz = ${Q.of(R ** 4, 2).toLatex()}\\pi$, the same volume.`,
+          `改用切片：高度 $z$ 处立体的截面是面积为 $\\pi(${R * R} - z)$ 的圆盘，而 $\\int_0^{${R * R}} \\pi(${R * R} - z)\\,dz = ${Q.of(R ** 4, 2).toLatex()}\\pi$，体积相同。`,
+        ),
       ),
     });
   },
@@ -1346,8 +1394,8 @@ const swappingStokesSurface: KnowledgePointDef = {
   id: "swapping-a-surface-with-the-same-boundary-in-stokes-theorem",
   title: t("Swapping a surface with the same boundary in Stokes' theorem", "斯托克斯公式中换成边界相同的曲面"),
   explanation: t(
-    "Stokes' theorem makes the flux of a curl depend only on the boundary curve. So a hard surface such as a hemisphere can be replaced with the flat disk that has the same boundary and orientation, where the normal is constant and the integral is easy.",
-    "斯托克斯公式说明旋度的通量只取决于边界曲线。所以半球这样难算的曲面可以换成边界和定向都相同的平面圆盘，那里法向量是常数，积分很容易。",
+    "Stokes' theorem makes the flux of a curl depend only on the boundary curve. So a hard surface such as a hemisphere can be replaced with the flat disk that has the same boundary and orientation, where the normal is constant and the integral is easy. For $\\langle -y, x, z^2 \\rangle$ over the upper hemisphere of radius $7$, the curl is $\\langle 0, 0, 2 \\rangle$ and the disk has area $49\\pi$, so the flux is $98\\pi$.\n\n> **Watch out.** Use the area $\\pi R^2$ of the disk, not the area $2\\pi R^2$ of the hemisphere; and the third component of the curl is $a - (-a) = 2a$, not $a$.",
+    "斯托克斯公式说明旋度的通量只取决于边界曲线。所以半球这样难算的曲面可以换成边界和定向都相同的平面圆盘，那里法向量是常数，积分很容易。对 $\\langle -y, x, z^2 \\rangle$ 与半径为 $7$ 的上半球面，旋度为 $\\langle 0, 0, 2 \\rangle$，圆盘面积为 $49\\pi$，所以通量为 $98\\pi$。\n\n> **注意。** 用的是圆盘的面积 $\\pi R^2$，不是半球面的面积 $2\\pi R^2$；旋度的第三个分量是 $a - (-a) = 2a$，不是 $a$。",
   ),
   generate(rng) {
     const R = rng.int(1, 6);
@@ -1362,10 +1410,51 @@ const swappingStokesSurface: KnowledgePointDef = {
       ),
       answer,
       solveFor: "c",
-      wrong: [a * R * R, 2 * answer, 2 * a * R ** 3],
-      solution: t(
-        `The disk $x^2 + y^2 \\le ${R * R}$ has the same boundary circle. The curl is $\\langle 0, 0, ${2 * a} \\rangle$, so the flux through the disk is $${2 * a}$ times the area $${R * R}\\pi$, which gives $c = ${answer}$.`,
-        `圆盘 $x^2 + y^2 \\le ${R * R}$ 有相同的边界圆。旋度是 $\\langle 0, 0, ${2 * a} \\rangle$，所以穿过圆盘的通量是 $${2 * a}$ 乘面积 $${R * R}\\pi$，得 $c = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          a * R * R,
+          `That takes the third component of the curl to be $${a}$; it is $${a} - (${-a}) = ${2 * a}$.`,
+          `那是把旋度的第三个分量当成了 $${a}$；它是 $${a} - (${-a}) = ${2 * a}$。`,
+        ),
+        why(
+          2 * answer,
+          "That uses the area $2\\pi R^2$ of the hemisphere; the curl's flux is taken through the flat disk, of area $\\pi R^2$.",
+          "那是用了半球面的面积 $2\\pi R^2$；旋度的通量是穿过平面圆盘计算的，其面积为 $\\pi R^2$。",
+        ),
+        why(
+          2 * a * R ** 3,
+          `That multiplies by $${R}^3$; the disk's area is $\\pi \\cdot ${R}^2$.`,
+          `那是乘以了 $${R}^3$；圆盘面积是 $\\pi \\cdot ${R}^2$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the curl", "求旋度"],
+            t(
+              `The term $${poly([p, "z^2"])}$ depends only on $z$ and has no curl, and $\\frac{\\partial}{\\partial x}(${poly([a, "x"])}) - \\frac{\\partial}{\\partial y}(${poly([-a, "y"])}) = ${2 * a}$, so $\\nabla \\times \\mathbf{F} = \\langle 0, 0, ${2 * a} \\rangle$.`,
+              `$${poly([p, "z^2"])}$ 项只依赖 $z$，没有旋度，而 $\\frac{\\partial}{\\partial x}(${poly([a, "x"])}) - \\frac{\\partial}{\\partial y}(${poly([-a, "y"])}) = ${2 * a}$，所以 $\\nabla \\times \\mathbf{F} = \\langle 0, 0, ${2 * a} \\rangle$。`,
+            ),
+          ],
+          [
+            ["Swap the surface", "换曲面"],
+            t(
+              `The disk $x^2 + y^2 \\le ${R * R}$ with upward normal has the same boundary circle and orientation.`,
+              `取向上的圆盘 $x^2 + y^2 \\le ${R * R}$，它的边界圆和定向都相同。`,
+            ),
+          ],
+          [
+            ["Integrate over the disk", "在圆盘上积分"],
+            t(
+              `The flux is $${2 * a}$ times the area $${R * R}\\pi$, that is $${answer}\\pi$, so $c = ${answer}$.`,
+              `通量为 $${2 * a}$ 乘以面积 $${R * R}\\pi$，即 $${answer}\\pi$，所以 $c = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Around the circle $\\langle ${R === 1 ? "" : R}\\cos t, ${R === 1 ? "" : R}\\sin t, 0 \\rangle$, $\\mathbf{F} \\cdot \\mathbf{r}' = ${a * R * R === -1 ? "-" : coefficient(a * R * R)}(\\sin^2 t + \\cos^2 t) = ${a * R * R}$, and $\\int_0^{2\\pi} ${a * R * R}\\,dt = ${answer}\\pi$.`,
+          `沿圆 $\\langle ${R === 1 ? "" : R}\\cos t, ${R === 1 ? "" : R}\\sin t, 0 \\rangle$，$\\mathbf{F} \\cdot \\mathbf{r}' = ${a * R * R === -1 ? "-" : coefficient(a * R * R)}(\\sin^2 t + \\cos^2 t) = ${a * R * R}$，而 $\\int_0^{2\\pi} ${a * R * R}\\,dt = ${answer}\\pi$。`,
+        ),
       ),
     });
   },
@@ -2779,8 +2868,8 @@ const torusArea: KnowledgePointDef = {
   figure: multivariableDrawings7["areas-of-parametric-surfaces#the-surface-area-of-a-torus"],
   title: t("The surface area of a torus", "环面的面积"),
   explanation: t(
-    "For the torus $\\langle (R + r\\cos v)\\cos u, (R + r\\cos v)\\sin u, r\\sin v \\rangle$, the area element is $r(R + r\\cos v)\\,du\\,dv$. Over a full turn of $v$, the cosine term integrates to zero, which leaves $4\\pi^2Rr$. This equals the length of the tube's central circle times the circumference of the tube.",
-    "对环面 $\\langle (R + r\\cos v)\\cos u, (R + r\\cos v)\\sin u, r\\sin v \\rangle$，面积元是 $r(R + r\\cos v)\\,du\\,dv$。$v$ 转一整圈时余弦项积分为零，剩下 $4\\pi^2Rr$。它等于管子中心圆的长度乘以管子的周长。",
+    "For the torus $\\langle (R + r\\cos v)\\cos u, (R + r\\cos v)\\sin u, r\\sin v \\rangle$, the area element is $r(R + r\\cos v)\\,du\\,dv$. Over a full turn of $v$, the cosine term integrates to zero, which leaves $4\\pi^2Rr$. This equals the length of the tube's central circle times the circumference of the tube. For $R = 2$ and $r = 1$ the area is $8\\pi^2$.\n\n> **Watch out.** Each of $u$ and $v$ runs over $[0, 2\\pi]$ and contributes its own $2\\pi$, so the factor is $(2\\pi)^2 = 4\\pi^2$; and the area is $Rr$ times it, not $R^2$ or $r^2$.",
+    "对环面 $\\langle (R + r\\cos v)\\cos u, (R + r\\cos v)\\sin u, r\\sin v \\rangle$，面积元是 $r(R + r\\cos v)\\,du\\,dv$。$v$ 转一整圈时余弦项积分为零，剩下 $4\\pi^2Rr$。它等于管子中心圆的长度乘以管子的周长。对 $R = 2$，$r = 1$，面积为 $8\\pi^2$。\n\n> **注意。** $u$ 与 $v$ 都在 $[0, 2\\pi]$ 上变化，各贡献一个 $2\\pi$，所以因子是 $(2\\pi)^2 = 4\\pi^2$；面积是它乘以 $Rr$，不是 $R^2$ 或 $r^2$。",
   ),
   generate(rng) {
     const R = rng.int(3, 12);
@@ -2793,10 +2882,51 @@ const torusArea: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * R * r, 4 * R * R, 4 * r * r],
-      solution: t(
-        `The area element is $${coefficient(r)}(${R} + ${coefficient(r)}\\cos v)$. The cosine integrates to zero, so the area is $(2\\pi)^2 \\cdot ${r} \\cdot ${R}$, and $c = ${answer}$.`,
-        `面积元是 $${coefficient(r)}(${R} + ${coefficient(r)}\\cos v)$。余弦项积分为零，所以面积是 $(2\\pi)^2 \\cdot ${r} \\cdot ${R}$，$c = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          2 * R * r,
+          "That keeps only one factor $2$; each of the two parameters contributes its own $2\\pi$.",
+          "那是只保留了一个因子 $2$；两个参数各贡献一个 $2\\pi$。",
+        ),
+        why(
+          4 * R * R,
+          `That uses $${R}$ twice; the area element has the factor $r = ${r}$ in front.`,
+          `那是两次用了 $${R}$；面积元前面的因子是 $r = ${r}$。`,
+        ),
+        why(
+          4 * r * r,
+          `That uses $${r}$ twice; after the cosine term drops out, $${R}$ remains in the bracket.`,
+          `那是两次用了 $${r}$；余弦项消去后，括号中留下的是 $${R}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the area element", "写出面积元"],
+            t(
+              `$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${coefficient(r)}(${R} + ${coefficient(r)}\\cos v)$.`,
+              `$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${coefficient(r)}(${R} + ${coefficient(r)}\\cos v)$。`,
+            ),
+          ],
+          [
+            ["Integrate in v", "对 v 积分"],
+            t(
+              `$\\int_0^{2\\pi} ${coefficient(r)}(${R} + ${coefficient(r)}\\cos v)\\,dv = ${2 * r * R}\\pi$, since the cosine integrates to zero.`,
+              `$\\int_0^{2\\pi} ${coefficient(r)}(${R} + ${coefficient(r)}\\cos v)\\,dv = ${2 * r * R}\\pi$，因为余弦项积分为零。`,
+            ),
+          ],
+          [
+            ["Integrate in u", "对 u 积分"],
+            t(
+              `$2\\pi \\cdot ${2 * r * R}\\pi = ${answer}\\pi^2$, so $c = ${answer}$.`,
+              `$2\\pi \\cdot ${2 * r * R}\\pi = ${answer}\\pi^2$，所以 $c = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The tube has circumference $${2 * r}\\pi$ and its central circle has length $${2 * R}\\pi$; their product is $${answer}\\pi^2$.`,
+          `管子的周长为 $${2 * r}\\pi$，中心圆的长度为 $${2 * R}\\pi$；两者之积为 $${answer}\\pi^2$。`,
+        ),
       ),
     });
   },
@@ -2807,24 +2937,66 @@ const sphereSecondMoment: KnowledgePointDef = {
   figure: multivariableDrawings7["surface-integrals-over-parametric-surfaces#a-surface-integral-over-a-sphere-by-symmetry"],
   title: t("A surface integral over a sphere by symmetry", "用对称性求球面上的面积分"),
   explanation: t(
-    "On a sphere of radius $R$, the coordinates play the same role, so $x^2$, $y^2$ and $z^2$ have equal integrals. Their sum is the constant $R^2$, so each one has the average value $\\frac{R^2}{3}$. Multiplying by the area $4\\pi R^2$ gives the integral with no parametrization at all.",
-    "在半径为 $R$ 的球面上，各坐标地位相同，所以 $x^2$、$y^2$、$z^2$ 的积分相等。它们的和是常数 $R^2$，所以每一个的平均值都是 $\\frac{R^2}{3}$。乘以面积 $4\\pi R^2$，就不用参数化得到了积分。",
+    "On a sphere of radius $R$, the coordinates play the same role, so $x^2$, $y^2$ and $z^2$ have equal integrals. Their sum is the constant $R^2$, so each one has the average value $\\frac{R^2}{3}$. Multiplying by the area $4\\pi R^2$ gives the integral with no parametrization at all. For $\\iint_S 9x^2\\,dS$ over the unit sphere, the average of $x^2$ is $\\frac{1}{3}$, so the integral is $9 \\cdot \\frac{1}{3} \\cdot 4\\pi = 12\\pi$.\n\n> **Watch out.** The average of one square is $\\frac{R^2}{3}$, not $R^2$, since the three squares share $R^2$; and it multiplies the area $4\\pi R^2$ of the sphere, not the volume of the ball.",
+    "在半径为 $R$ 的球面上，各坐标地位相同，所以 $x^2$、$y^2$、$z^2$ 的积分相等。它们的和是常数 $R^2$，所以每一个的平均值都是 $\\frac{R^2}{3}$。乘以面积 $4\\pi R^2$，就不用参数化得到了积分。对单位球面上的 $\\iint_S 9x^2\\,dS$，$x^2$ 的平均值为 $\\frac{1}{3}$，所以积分为 $9 \\cdot \\frac{1}{3} \\cdot 4\\pi = 12\\pi$。\n\n> **注意。** 一个平方的平均值是 $\\frac{R^2}{3}$，不是 $R^2$，因为三个平方分享 $R^2$；它乘的是球面面积 $4\\pi R^2$，而不是球体的体积。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
     const R = rng.int(1, 6);
     const answer = Q.of(4 * k * R ** 4, 3);
     const name = rng.pick(["x", "y", "z"]);
+    const single = Q.of(4 * R ** 4, 3);
     return numberProblem({
       prompt: t(
         `Let $S$ be the sphere $x^2 + y^2 + z^2 = ${R * R}$. The integral $\\iint_S ${coefficient(k)}${name}^2\\,dS$ equals $c\\pi$. Find $c$.`,
         `设 $S$ 是球面 $x^2 + y^2 + z^2 = ${R * R}$。积分 $\\iint_S ${coefficient(k)}${name}^2\\,dS$ 等于 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(4 * k * R ** 4), Q.of(2 * k * R ** 4, 3), Q.of(4 * k * R * R, 3)],
-      solution: t(
-        `The average of $${name}^2$ is $\\frac{${R * R}}{3}$, and the area is $${4 * R * R}\\pi$. So $c = ${k} \\cdot ${Q.of(R * R, 3).toLatex()} \\cdot ${4 * R * R} = ${answer.toLatex()}$.`,
-        `$${name}^2$ 的平均值是 $\\frac{${R * R}}{3}$，面积是 $${4 * R * R}\\pi$。所以 $c = ${k} \\cdot ${Q.of(R * R, 3).toLatex()} \\cdot ${4 * R * R} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(4 * k * R ** 4),
+          `That uses $${R * R}$ as the average of $${name}^2$; the three squares share it, so each averages a third of it.`,
+          `那是把 $${R * R}$ 当作 $${name}^2$ 的平均值；三个平方分享它，所以每个的平均值是它的三分之一。`,
+        ),
+        why(
+          Q.of(4 * k * R * R, 3),
+          `That multiplies by $4\\pi$ in place of the area $${4 * R * R}\\pi$.`,
+          `那是乘以 $4\\pi$，而不是面积 $${4 * R * R}\\pi$。`,
+        ),
+        why(
+          Q.of(4 * k * R ** 5, 9),
+          "That multiplies by the volume of the ball; the integral is over the sphere.",
+          "那是乘以球体的体积；积分是在球面上。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the symmetry", "利用对称性"],
+            t(
+              `$x^2 + y^2 + z^2 = ${R * R}$ on $S$ and the three squares have equal integrals, so $${name}^2$ averages $${Q.of(R * R, 3).toLatex()}$.`,
+              `在 $S$ 上 $x^2 + y^2 + z^2 = ${R * R}$，三个平方的积分相等，所以 $${name}^2$ 的平均值为 $${Q.of(R * R, 3).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply by the area", "乘以面积"],
+            t(
+              `$\\iint_S ${name}^2\\,dS = ${Q.of(R * R, 3).toLatex()} \\cdot ${4 * R * R}\\pi = ${single.toLatex()}\\pi$.`,
+              `$\\iint_S ${name}^2\\,dS = ${Q.of(R * R, 3).toLatex()} \\cdot ${4 * R * R}\\pi = ${single.toLatex()}\\pi$。`,
+            ),
+          ],
+          [
+            ["Apply the coefficient", "乘以系数"],
+            t(
+              `$c = ${k === 1 ? "" : `${k} \\cdot `}${single.toLatex()} = ${answer.toLatex()}$.`,
+              `$c = ${k === 1 ? "" : `${k} \\cdot `}${single.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `In spherical coordinates, $\\iint_S z^2\\,dS = \\int_0^{2\\pi}\\int_0^{\\pi} ${R === 1 ? "" : R ** 4}\\cos^2\\phi\\sin\\phi\\,d\\phi\\,d\\theta = 2\\pi \\cdot \\frac{2}{3}${R === 1 ? "" : ` \\cdot ${R ** 4}`} = ${single.toLatex()}\\pi$, the same as by symmetry.`,
+          `用球坐标，$\\iint_S z^2\\,dS = \\int_0^{2\\pi}\\int_0^{\\pi} ${R === 1 ? "" : R ** 4}\\cos^2\\phi\\sin\\phi\\,d\\phi\\,d\\theta = 2\\pi \\cdot \\frac{2}{3}${R === 1 ? "" : ` \\cdot ${R ** 4}`} = ${single.toLatex()}\\pi$，与对称性的结果相同。`,
+        ),
       ),
     });
   },
@@ -2899,8 +3071,8 @@ const fluxThroughTiltedTriangle: KnowledgePointDef = {
   figure: multivariableDrawings7["flux-in-three-dimensional-vector-fields#the-flux-of-a-constant-field-through-a-tilted-triangle"],
   title: t("The flux of a constant field through a tilted triangle", "常向量场穿过倾斜三角形的通量"),
   explanation: t(
-    "The flux of a constant field through a flat surface is the dot product of the field with the area vector, whose size is the area and whose direction is the normal. For a triangle, half the cross product of two edges is that area vector. So there is no integral to do, only one cross product and one dot product.",
-    "常向量场穿过平面的通量，是场与面积向量的点积，面积向量的大小是面积，方向是法向。对三角形，两条边叉积的一半就是这个面积向量。所以不需要积分，只要做一次叉积和一次点积。",
+    "The flux of a constant field through a flat surface is the dot product of the field with the area vector, whose size is the area and whose direction is the normal. For a triangle, half the cross product of two edges is that area vector. So there is no integral to do, only one cross product and one dot product. For the triangle with vertices $(8, 0, 0)$, $(0, 8, 0)$, $(0, 0, 8)$, the area vector is $\\frac{1}{2}\\langle 64, 64, 64 \\rangle$, and $\\langle 1, 1, 1 \\rangle$ has flux $96$ through it.\n\n> **Watch out.** A triangle is half the parallelogram, so halve the cross product; and the normal pointing away from the origin has positive components, so check the sign of the cross product before taking the dot product.",
+    "常向量场穿过平面的通量，是场与面积向量的点积，面积向量的大小是面积，方向是法向。对三角形，两条边叉积的一半就是这个面积向量。所以不需要积分，只要做一次叉积和一次点积。对顶点为 $(8, 0, 0)$、$(0, 8, 0)$、$(0, 0, 8)$ 的三角形，面积向量为 $\\frac{1}{2}\\langle 64, 64, 64 \\rangle$，$\\langle 1, 1, 1 \\rangle$ 穿过它的通量为 $96$。\n\n> **注意。** 三角形是平行四边形的一半，所以叉积要减半；背离原点的法向量各分量为正，所以做点积之前要检查叉积的符号。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -2911,16 +3083,58 @@ const fluxThroughTiltedTriangle: KnowledgePointDef = {
     const s = nonzero(rng, 5);
     const twice = p * b * c + q * a * c + s * a * b;
     const answer = Q.of(twice, 2);
+    const pn = (n: number) => (n < 0 ? `(${n})` : `${n}`);
     return numberProblem({
       prompt: t(
         `A triangle has vertices $(${a}, 0, 0)$, $(0, ${b}, 0)$ and $(0, 0, ${c})$, with its normal pointing away from the origin. Find the flux of $\\mathbf{F} = \\langle ${p}, ${q}, ${s} \\rangle$ through it.`,
         `三角形的顶点是 $(${a}, 0, 0)$、$(0, ${b}, 0)$、$(0, 0, ${c})$，法向背离原点。求 $\\mathbf{F} = \\langle ${p}, ${q}, ${s} \\rangle$ 穿过它的通量。`,
       ),
       answer,
-      wrong: [Q.of(twice), answer.neg(), Q.of((p + q + s) * a * b * c, 2)],
-      solution: t(
-        `Half the cross product of two edges is $\\frac{1}{2}\\langle ${b * c}, ${a * c}, ${a * b} \\rangle$. Its dot product with $\\mathbf{F}$ is $\\frac{${twice}}{2} = ${answer.toLatex()}$.`,
-        `两条边叉积的一半是 $\\frac{1}{2}\\langle ${b * c}, ${a * c}, ${a * b} \\rangle$。它与 $\\mathbf{F}$ 的点积是 $\\frac{${twice}}{2} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(twice),
+          "That uses the whole cross product, which is the area vector of a parallelogram; the triangle is half of it.",
+          "那是用了整个叉积，它是平行四边形的面积向量；三角形只有一半。",
+        ),
+        why(
+          answer.neg(),
+          "That has the wrong sign; the normal pointing away from the origin has positive components.",
+          "那是符号错了；背离原点的法向量各分量为正。",
+        ),
+        why(
+          Q.of((p + q + s) * a * b * c, 2),
+          "That multiplies the sum of the components of $\\mathbf{F}$ by $abc$; each component pairs with its own entry of the area vector.",
+          "那是用 $\\mathbf{F}$ 各分量之和乘以 $abc$；每个分量要与面积向量中对应的项相乘。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take two edges", "取两条边"],
+            t(
+              `From $(${a}, 0, 0)$, the edges are $\\langle ${-a}, ${b}, 0 \\rangle$ and $\\langle ${-a}, 0, ${c} \\rangle$.`,
+              `从 $(${a}, 0, 0)$ 出发，两条边为 $\\langle ${-a}, ${b}, 0 \\rangle$ 与 $\\langle ${-a}, 0, ${c} \\rangle$。`,
+            ),
+          ],
+          [
+            ["Take half the cross product", "取叉积的一半"],
+            t(
+              `$\\frac{1}{2}\\langle ${b * c}, ${a * c}, ${a * b} \\rangle$, which points away from the origin.`,
+              `$\\frac{1}{2}\\langle ${b * c}, ${a * c}, ${a * b} \\rangle$，它背离原点。`,
+            ),
+          ],
+          [
+            ["Dot with F", "与 F 作点积"],
+            t(
+              `$\\frac{1}{2}(${p * b * c} + ${pn(q * a * c)} + ${pn(s * a * b)}) = ${answer.toLatex()}$.`,
+              `$\\frac{1}{2}(${p * b * c} + ${pn(q * a * c)} + ${pn(s * a * b)}) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The vector $\\langle ${b * c}, ${a * c}, ${a * b} \\rangle$ is normal to the triangle: its dot products with the two edges are $${-a * b * c} + ${a * b * c} = 0$ and $${-a * b * c} + ${a * b * c} = 0$.`,
+          `向量 $\\langle ${b * c}, ${a * c}, ${a * b} \\rangle$ 与三角形垂直：它与两条边的点积为 $${-a * b * c} + ${a * b * c} = 0$ 与 $${-a * b * c} + ${a * b * c} = 0$。`,
+        ),
       ),
     });
   },
@@ -4233,24 +4447,64 @@ const coneSurfaceArea: KnowledgePointDef = {
   figure: multivariableDrawings7["areas-of-surfaces#the-area-of-a-cone-above-a-disk"],
   title: t("The area of a cone above a disk", "圆盘上方的圆锥面积"),
   explanation: t(
-    "The surface area above a region is $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$. On the cone $z = k\\sqrt{x^2 + y^2}$, the two partial derivatives change from point to point, but $z_x^2 + z_y^2 = k^2$ everywhere. So the square root is a constant, and the surface area is that constant times the area of the region below. The tilt of the cone is the same at all its points.",
-    "区域上方的曲面面积是 $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$。在圆锥面 $z = k\\sqrt{x^2 + y^2}$ 上，两个偏导数随点而变，但处处有 $z_x^2 + z_y^2 = k^2$。所以平方根是常数，曲面面积就是这个常数乘以下方区域的面积。圆锥在所有点的倾斜程度都相同。",
+    "The surface area above a region is $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$. On the cone $z = k\\sqrt{x^2 + y^2}$, the two partial derivatives change from point to point, but $z_x^2 + z_y^2 = k^2$ everywhere. So the square root is a constant, and the surface area is that constant times the area of the region below. The tilt of the cone is the same at all its points. For $z = \\frac{20}{21}\\sqrt{x^2 + y^2}$ above $x^2 + y^2 \\le 441$, the constant is $\\sqrt{1 + \\frac{400}{441}} = \\frac{29}{21}$, and the area is $\\frac{29}{21} \\cdot 441\\pi = 609\\pi$.\n\n> **Watch out.** The constant is $\\sqrt{1 + k^2}$, not the slope $k$ and not $1 + k^2$; and it multiplies the area $\\pi r^2$ of the disk, not its radius.",
+    "区域上方的曲面面积是 $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$。在圆锥面 $z = k\\sqrt{x^2 + y^2}$ 上，两个偏导数随点而变，但处处有 $z_x^2 + z_y^2 = k^2$。所以平方根是常数，曲面面积就是这个常数乘以下方区域的面积。圆锥在所有点的倾斜程度都相同。对 $z = \\frac{20}{21}\\sqrt{x^2 + y^2}$ 在 $x^2 + y^2 \\le 441$ 上方的部分，常数为 $\\sqrt{1 + \\frac{400}{441}} = \\frac{29}{21}$，面积为 $\\frac{29}{21} \\cdot 441\\pi = 609\\pi$。\n\n> **注意。** 常数是 $\\sqrt{1 + k^2}$，不是斜率 $k$，也不是 $1 + k^2$；它乘的是圆盘的面积 $\\pi r^2$，而不是半径。",
   ),
   generate(rng) {
     const [p, q, h] = rng.pick(pythagoreanSlopes);
     const r = rng.int(2, 9);
     const answer = Q.of(h * r * r, q);
     const slope = Q.of(p, q);
+    const factor = Q.of(h, q);
     return numberProblem({
       prompt: t(
         `The part of the cone $z = ${slope.toLatex()}\\sqrt{x^2 + y^2}$ above the disk $x^2 + y^2 \\le ${r * r}$ has area $c\\pi$. Find $c$.`,
         `圆锥面 $z = ${slope.toLatex()}\\sqrt{x^2 + y^2}$ 在圆盘 $x^2 + y^2 \\le ${r * r}$ 上方部分的面积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(r * r), Q.of(p * r * r, q), Q.of(h * h * r * r, q * q), Q.of(h * r, q)],
-      solution: t(
-        `Here $\\sqrt{1 + z_x^2 + z_y^2} = \\sqrt{1 + \\left(${slope.toLatex()}\\right)^2} = ${Q.of(h, q).toLatex()}$, and the disk has area $${r * r}\\pi$. So $c = ${answer.toLatex()}$.`,
-        `这里 $\\sqrt{1 + z_x^2 + z_y^2} = \\sqrt{1 + \\left(${slope.toLatex()}\\right)^2} = ${Q.of(h, q).toLatex()}$，圆盘的面积是 $${r * r}\\pi$。所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(r * r),
+          "That is the area of the disk; the tilted cone is larger by the factor $\\sqrt{1 + k^2}$.",
+          "那是圆盘的面积；倾斜的锥面要大一个因子 $\\sqrt{1 + k^2}$。",
+        ),
+        why(
+          Q.of(p * r * r, q),
+          "That multiplies by the slope $k$ in place of $\\sqrt{1 + k^2}$.",
+          "那是乘以斜率 $k$，而不是 $\\sqrt{1 + k^2}$。",
+        ),
+        why(
+          Q.of(h * h * r * r, q * q),
+          "That multiplies by $1 + k^2$ without taking the square root.",
+          "那是乘以 $1 + k^2$ 而没有开平方。",
+        ),
+        why(
+          Q.of(h * r, q),
+          `That multiplies by the radius $${r}$; the factor multiplies the area of the disk.`,
+          `那是乘以半径 $${r}$；因子应乘以圆盘的面积。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the constant", "求常数"],
+            t(
+              `$\\sqrt{1 + z_x^2 + z_y^2} = \\sqrt{1 + \\left(${slope.toLatex()}\\right)^2} = \\sqrt{\\frac{${h * h}}{${q * q}}} = ${factor.toLatex()}$.`,
+              `$\\sqrt{1 + z_x^2 + z_y^2} = \\sqrt{1 + \\left(${slope.toLatex()}\\right)^2} = \\sqrt{\\frac{${h * h}}{${q * q}}} = ${factor.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply by the disk", "乘以圆盘面积"],
+            t(
+              `$${factor.toLatex()} \\cdot ${r * r}\\pi = ${answer.toLatex()}\\pi$, so $c = ${answer.toLatex()}$.`,
+              `$${factor.toLatex()} \\cdot ${r * r}\\pi = ${answer.toLatex()}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The cone has base radius $${r}$ and slant height $${r} \\cdot ${factor.toLatex()} = ${Q.of(h * r, q).toLatex()}$, and $\\pi R \\ell = \\pi \\cdot ${r} \\cdot ${Q.of(h * r, q).toLatex()} = ${answer.toLatex()}\\pi$.`,
+          `圆锥底面半径为 $${r}$，母线长为 $${r} \\cdot ${factor.toLatex()} = ${Q.of(h * r, q).toLatex()}$，而 $\\pi R \\ell = \\pi \\cdot ${r} \\cdot ${Q.of(h * r, q).toLatex()} = ${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },
@@ -4261,8 +4515,8 @@ const integralOverCylinder: KnowledgePointDef = {
   figure: multivariableDrawings7["parametrizations-of-cylinders#integrating-the-height-over-a-cylinder"],
   title: t("Integrating the height over a cylinder", "在圆柱面上对高度积分"),
   explanation: t(
-    "A surface integral over a parametrized surface is $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$. On the cylinder $\\langle R\\cos u, R\\sin u, v \\rangle$, the length of the cross product is just $R$, so the area element is $R\\,du\\,dv$. Then a function of the height alone integrates to the factor $2\\pi$ around the cylinder times a single integral along its height.",
-    "参数曲面上的曲面积分是 $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$。在圆柱面 $\\langle R\\cos u, R\\sin u, v \\rangle$ 上，叉积的长度就是 $R$，所以面积元是 $R\\,du\\,dv$。于是只与高度有关的函数，积分结果是绕圆柱一周的因子 $2\\pi$ 乘以沿高度的单积分。",
+    "A surface integral over a parametrized surface is $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$. On the cylinder $\\langle R\\cos u, R\\sin u, v \\rangle$, the length of the cross product is just $R$, so the area element is $R\\,du\\,dv$. Then a function of the height alone integrates to the factor $2\\pi$ around the cylinder times a single integral along its height. For $\\iint_S z\\,dS$ over $x^2 + y^2 = 100$, $0 \\le z \\le 10$, this is $10 \\cdot 2\\pi \\cdot 50 = 1000\\pi$.\n\n> **Watch out.** The area element is $R\\,du\\,dv$, not $du\\,dv$, so the radius stays as a factor; and $\\int_0^h z\\,dz = \\frac{h^2}{2}$, whose $\\frac{1}{2}$ cancels the $2$ of $2\\pi$.",
+    "参数曲面上的曲面积分是 $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$。在圆柱面 $\\langle R\\cos u, R\\sin u, v \\rangle$ 上，叉积的长度就是 $R$，所以面积元是 $R\\,du\\,dv$。于是只与高度有关的函数，积分结果是绕圆柱一周的因子 $2\\pi$ 乘以沿高度的单积分。对 $x^2 + y^2 = 100$，$0 \\le z \\le 10$ 上的 $\\iint_S z\\,dS$，结果为 $10 \\cdot 2\\pi \\cdot 50 = 1000\\pi$。\n\n> **注意。** 面积元是 $R\\,du\\,dv$，不是 $du\\,dv$，所以半径作为因子要保留；而 $\\int_0^h z\\,dz = \\frac{h^2}{2}$，其中的 $\\frac{1}{2}$ 与 $2\\pi$ 的 $2$ 相消。",
   ),
   generate(rng) {
     const c = rng.int(1, 6);
@@ -4270,6 +4524,7 @@ const integralOverCylinder: KnowledgePointDef = {
     const h = rng.int(1, 9);
     const answer = c * r * h * h;
     const integrand = c === 1 ? "z" : `${c}z`;
+    const height = Q.of(c * h * h, 2);
     return numberProblem({
       prompt: t(
         `The surface $S$ is the side of the cylinder $x^2 + y^2 = ${r * r}$, $0 \\le z \\le ${h}$. The integral $\\iint_S ${integrand}\\,dS$ equals $c\\pi$. Find $c$.`,
@@ -4277,10 +4532,49 @@ const integralOverCylinder: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c * r * h, c * r * r * h, 2 * answer, c * h * h, answer + 1],
-      solution: t(
-        `The area element is $${r}\\,du\\,dv$, so the integral is $${r} \\cdot 2\\pi \\cdot \\int_0^{${h}} ${integrand}\\,dz = ${answer}\\pi$.`,
-        `面积元是 $${r}\\,du\\,dv$，所以积分是 $${r} \\cdot 2\\pi \\cdot \\int_0^{${h}} ${integrand}\\,dz = ${answer}\\pi$。`,
+      mistakes: apart(answer, [
+        why(c * h * h, `That leaves out the radius; the area element is $${r}\\,du\\,dv$.`, `那是漏掉了半径；面积元是 $${r}\\,du\\,dv$。`),
+        why(
+          2 * answer,
+          "That forgets the $\\frac{1}{2}$ in $\\int_0^h z\\,dz = \\frac{h^2}{2}$.",
+          "那是漏掉了 $\\int_0^h z\\,dz = \\frac{h^2}{2}$ 中的 $\\frac{1}{2}$。",
+        ),
+        why(
+          2 * c * r * h,
+          `That integrates the constant $${c}$ in place of $${integrand}$.`,
+          `那是对常数 $${c}$ 而不是对 $${integrand}$ 积分。`,
+        ),
+        why(
+          c * r * r * h * h,
+          `That uses the area element $${r * r}\\,du\\,dv$; it is $${r}\\,du\\,dv$.`,
+          `那是用了面积元 $${r * r}\\,du\\,dv$；它应是 $${r}\\,du\\,dv$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the area element", "求面积元"],
+            t(
+              `On $\\langle ${r}\\cos u, ${r}\\sin u, v \\rangle$, $dS = ${r}\\,du\\,dv$.`,
+              `在 $\\langle ${r}\\cos u, ${r}\\sin u, v \\rangle$ 上，$dS = ${r}\\,du\\,dv$。`,
+            ),
+          ],
+          [
+            ["Integrate along the height", "沿高度积分"],
+            t(`$\\int_0^{${h}} ${integrand}\\,dz = ${height.toLatex()}$.`, `$\\int_0^{${h}} ${integrand}\\,dz = ${height.toLatex()}$。`),
+          ],
+          [
+            ["Go around the cylinder", "绕柱面一周"],
+            t(
+              `$${r} \\cdot 2\\pi \\cdot ${height.toLatex()} = ${answer}\\pi$, so $c = ${answer}$.`,
+              `$${r} \\cdot 2\\pi \\cdot ${height.toLatex()} = ${answer}\\pi$，所以 $c = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The side has area $2\\pi \\cdot ${r}${h === 1 ? "" : ` \\cdot ${h}`} = ${2 * r * h}\\pi$ and the average of $${integrand}$ over it is $${Q.of(c * h, 2).toLatex()}$; their product is $${answer}\\pi$.`,
+          `侧面的面积为 $2\\pi \\cdot ${r}${h === 1 ? "" : ` \\cdot ${h}`} = ${2 * r * h}\\pi$，$${integrand}$ 在其上的平均值为 $${Q.of(c * h, 2).toLatex()}$；两者之积为 $${answer}\\pi$。`,
+        ),
       ),
     });
   },
@@ -4291,8 +4585,8 @@ const inverseSquareFlux: KnowledgePointDef = {
   figure: multivariableDrawings7["flux-through-closed-surfaces#the-flux-of-an-inverse-square-field-through-a-sphere"],
   title: t("The flux of an inverse square field through a sphere", "平方反比场穿过球面的通量"),
   explanation: t(
-    "On a sphere of radius $R$ centered at the origin, the field $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ points along the outward normal, with constant size $\\frac{|k|}{R^2}$. Multiplying by the area $4\\pi R^2$ cancels the radius, so every such sphere gets the same flux. The divergence theorem cannot be used directly on the ball here, because the field is not defined at the center.",
-    "在以原点为心、半径为 $R$ 的球面上，场 $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ 沿外法线方向，大小恒为 $\\frac{|k|}{R^2}$。乘以面积 $4\\pi R^2$，半径就消去了，所以所有这样的球面通量都相同。这里不能直接对球体用散度定理，因为场在球心没有定义。",
+    "On a sphere of radius $R$ centered at the origin, the field $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ points along the outward normal, with constant size $\\frac{|k|}{R^2}$. Multiplying by the area $4\\pi R^2$ cancels the radius, so every such sphere gets the same flux. The divergence theorem cannot be used directly on the ball here, because the field is not defined at the center. For $k = 12$ and the sphere $x^2 + y^2 + z^2 = 100$, $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{12}{100}$ and the area is $400\\pi$, so the flux is $48\\pi$.\n\n> **Watch out.** The divergence of this field is $0$ away from the origin, but the answer is not $0$: the field blows up at the center, inside the sphere. And the normal component is $\\frac{k}{R^2}$, not $k$ or $\\frac{k}{R}$, since $\\|\\mathbf{r}\\|^3$ in the denominator leaves $R^2$ after one factor cancels $\\mathbf{r}$.",
+    "在以原点为心、半径为 $R$ 的球面上，场 $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ 沿外法线方向，大小恒为 $\\frac{|k|}{R^2}$。乘以面积 $4\\pi R^2$，半径就消去了，所以所有这样的球面通量都相同。这里不能直接对球体用散度定理，因为场在球心没有定义。对 $k = 12$ 与球面 $x^2 + y^2 + z^2 = 100$，$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{12}{100}$，面积为 $400\\pi$，所以通量为 $48\\pi$。\n\n> **注意。** 这个场在原点以外散度为 $0$，但答案不是 $0$：场在球心处趋于无穷，而球心在球面内部。法向分量是 $\\frac{k}{R^2}$，不是 $k$ 或 $\\frac{k}{R}$，因为分母 $\\|\\mathbf{r}\\|^3$ 与分子 $\\mathbf{r}$ 约去一个因子后还剩 $R^2$。",
   ),
   generate(rng) {
     const k = nonzero(rng, 9);
@@ -4306,10 +4600,49 @@ const inverseSquareFlux: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [0, 4 * k * r * r, 4 * k * r, k, -answer],
-      solution: t(
-        `On the sphere, $\\mathbf{F} \\cdot \\mathbf{n} = ${Q.of(k, r * r).toLatex()}$, and the area is $${4 * r * r}\\pi$. The product is $${answer}\\pi$.`,
-        `在球面上，$\\mathbf{F} \\cdot \\mathbf{n} = ${Q.of(k, r * r).toLatex()}$，面积是 $${4 * r * r}\\pi$。乘积是 $${answer}\\pi$。`,
+      mistakes: apart(answer, [
+        why(
+          0,
+          "That applies the divergence theorem to the ball; the field blows up at the origin, inside the sphere, so the theorem does not apply there.",
+          "那是对球体用了散度定理；场在球面内部的原点处没有定义，所以那里不能用这个定理。",
+        ),
+        why(
+          4 * k * r * r,
+          `That takes the normal component to be $${k}$; on the sphere it is $\\frac{${k}}{${r * r}}$.`,
+          `那是把法向分量当成了 $${k}$；在球面上它是 $\\frac{${k}}{${r * r}}$。`,
+        ),
+        why(
+          4 * k * r,
+          `That divides by $${r}$ only once; the normal component is $\\frac{${k}}{${r}^2}$.`,
+          `那是只除了一次 $${r}$；法向分量是 $\\frac{${k}}{${r}^2}$。`,
+        ),
+        why(
+          -answer,
+          "That has the wrong sign; the field points along the outward normal exactly when the coefficient is positive.",
+          "那是符号错了；系数为正时场恰好沿外法线方向。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the normal component", "求法向分量"],
+            t(
+              `On the sphere of radius $${r}$, $\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{${r}}$ and $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k * r * r}}{${r ** 4}} = ${Q.of(k, r * r).toLatex()}$.`,
+              `在半径为 $${r}$ 的球面上，$\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{${r}}$，$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k * r * r}}{${r ** 4}} = ${Q.of(k, r * r).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply by the area", "乘以面积"],
+            t(
+              `The area is $${4 * r * r}\\pi$, so the flux is $${Q.of(k, r * r).toLatex()} \\cdot ${4 * r * r}\\pi = ${answer}\\pi$ and $c = ${answer}$.`,
+              `面积为 $${4 * r * r}\\pi$，所以通量为 $${Q.of(k, r * r).toLatex()} \\cdot ${4 * r * r}\\pi = ${answer}\\pi$，$c = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The radius cancels: on any sphere about the origin the flux is $4\\pi \\cdot ${k < 0 ? `(${k})` : k} =${answer}\\pi$, as on the unit sphere, where $\\mathbf{F} \\cdot \\mathbf{n} = ${k}$ and the area is $4\\pi$.`,
+          `半径消去了：在任何以原点为心的球面上，通量都是 $4\\pi \\cdot ${k < 0 ? `(${k})` : k} =${answer}\\pi$，与单位球面相同，那里 $\\mathbf{F} \\cdot \\mathbf{n} = ${k}$，面积为 $4\\pi$。`,
+        ),
       ),
     });
   },

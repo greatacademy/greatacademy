@@ -2492,8 +2492,8 @@ const singularPoint = point(
   "where-the-normal-vector-disappears",
   ["Where the normal vector disappears", "法向量消失的位置"],
   [
-    "The tangent plane formula uses $\\mathbf{r}_{u} \\times \\mathbf{r}_{v}$ as the normal. Where this cross product is zero, the parametrization is not regular and the formula gives no plane at all. To find such a point, set all three components of the cross product to zero.",
-    "切平面公式用 $\\mathbf{r}_{u} \\times \\mathbf{r}_{v}$ 作法向量。在这个叉积为零的地方，参数化不正则，公式给不出任何平面。要找这样的点，就令叉积的三个分量都为零。",
+    "The tangent plane formula uses $\\mathbf{r}_{u} \\times \\mathbf{r}_{v}$ as the normal. Where this cross product is zero, the parametrization is not regular and the formula gives no plane at all. To find such a point, set all three components of the cross product to zero. For the cone $\\langle u\\cos v, u\\sin v, u \\rangle$, $\\mathbf{r}_{u} \\times \\mathbf{r}_{v} = \\langle -u\\cos v, -u\\sin v, u \\rangle$, which is zero only at $u = 0$, the vertex.\n\n> **Watch out.** A factor $u - a$ vanishes at $u = a$, not at $u = -a$; and every component must vanish at once, so solve them together.",
+    "切平面公式用 $\\mathbf{r}_{u} \\times \\mathbf{r}_{v}$ 作法向量。在这个叉积为零的地方，参数化不正则，公式给不出任何平面。要找这样的点，就令叉积的三个分量都为零。对锥面 $\\langle u\\cos v, u\\sin v, u \\rangle$，$\\mathbf{r}_{u} \\times \\mathbf{r}_{v} = \\langle -u\\cos v, -u\\sin v, u \\rangle$，只在 $u = 0$（即顶点）处为零。\n\n> **注意。** 因子 $u - a$ 在 $u = a$ 处为零，而不是在 $u = -a$ 处；而且所有分量必须同时为零，所以要联立求解。",
   ],
   (rng) => {
     const a = nz(rng, 6);
@@ -2501,20 +2501,62 @@ const singularPoint = point(
     const askU = rng.bool();
     const answer = askU ? a : b;
     const name = askU ? "u" : "v";
+    const other = askU ? "v" : "u";
     const uTerm = poly([1, "u"], [-a, ""]);
     const vTerm = poly([1, "v"], [-b, ""]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `For $\\mathbf{r}(u, v) = \\langle u, (${vTerm})^{2}, (${uTerm})(${vTerm}) \\rangle$, $\\mathbf{r}_{u} \\times \\mathbf{r}_{v}$ is zero at exactly one point. Find its value of $${name}$.`,
         `对 $\\mathbf{r}(u, v) = \\langle u, (${vTerm})^{2}, (${uTerm})(${vTerm}) \\rangle$，$\\mathbf{r}_{u} \\times \\mathbf{r}_{v}$ 恰在一点为零。求该点的 $${name}$ 值。`,
-      ],
+      ),
       answer,
-      [-answer, askU ? b : a, a * b],
-      [
-        `$\\mathbf{r}_{u} \\times \\mathbf{r}_{v} = \\langle -2(${vTerm})^{2}, -(${uTerm}), 2(${vTerm}) \\rangle$. All three components vanish only at $u = ${a}$ and $v = ${b}$, so $${name} = ${answer}$.`,
-        `$\\mathbf{r}_{u} \\times \\mathbf{r}_{v} = \\langle -2(${vTerm})^{2}, -(${uTerm}), 2(${vTerm}) \\rangle$。三个分量只在 $u = ${a}$，$v = ${b}$ 时都为零，所以 $${name} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          -answer,
+          `That has the wrong sign; the factor $${askU ? uTerm : vTerm}$ is zero at $${name} = ${answer}$.`,
+          `那是符号错了；因子 $${askU ? uTerm : vTerm}$ 在 $${name} = ${answer}$ 处为零。`,
+        ),
+        why(
+          askU ? b : a,
+          `That is the value of $${other}$ at the point, not of $${name}$.`,
+          `那是该点的 $${other}$ 值，而不是 $${name}$ 值。`,
+        ),
+        why(
+          a * b,
+          `That multiplies the two coordinates of the point; the question asks for $${name}$ alone.`,
+          `那是把该点的两个坐标相乘；题目只问 $${name}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the tangent vectors", "求切向量"],
+            t(
+              `$\\mathbf{r}_{u} = \\langle 1, 0, ${vTerm} \\rangle$ and $\\mathbf{r}_{v} = \\langle 0, 2(${vTerm}), ${uTerm} \\rangle$.`,
+              `$\\mathbf{r}_{u} = \\langle 1, 0, ${vTerm} \\rangle$，$\\mathbf{r}_{v} = \\langle 0, 2(${vTerm}), ${uTerm} \\rangle$。`,
+            ),
+          ],
+          [
+            ["Take the cross product", "求叉积"],
+            t(
+              `$\\mathbf{r}_{u} \\times \\mathbf{r}_{v} = \\langle -2(${vTerm})^{2}, -(${uTerm}), 2(${vTerm}) \\rangle$.`,
+              `$\\mathbf{r}_{u} \\times \\mathbf{r}_{v} = \\langle -2(${vTerm})^{2}, -(${uTerm}), 2(${vTerm}) \\rangle$。`,
+            ),
+          ],
+          [
+            ["Set every component to zero", "令各分量为零"],
+            t(
+              `The second component gives $u = ${a}$ and the third gives $v = ${b}$, so $${name} = ${answer}$.`,
+              `第二个分量给出 $u = ${a}$，第三个分量给出 $v = ${b}$，所以 $${name} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `At $(u, v) = (${a}, ${b})$, $\\mathbf{r}_{v} = \\langle 0, 0, 0 \\rangle$, so its cross product with $\\mathbf{r}_{u} = \\langle 1, 0, 0 \\rangle$ is zero.`,
+          `在 $(u, v) = (${a}, ${b})$ 处，$\\mathbf{r}_{v} = \\langle 0, 0, 0 \\rangle$，所以它与 $\\mathbf{r}_{u} = \\langle 1, 0, 0 \\rangle$ 的叉积为零。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -2523,8 +2565,8 @@ const ellipticCone = {
     "the-parameter-of-a-point-on-an-elliptic-cone",
     ["The parameter of a point on an elliptic cone", "椭圆锥上一点的参数"],
     [
-      "An elliptic cone is parametrized by $\\langle au\\cos v, bu\\sin v, u \\rangle$, where dividing the first two coordinates by $a$ and $b$ removes the scaling. Then $\\cos^{2}v + \\sin^{2}v = 1$ gives $u$, and this is also the height of the point above the vertex.",
-      "椭圆锥的参数式是 $\\langle au\\cos v, bu\\sin v, u \\rangle$，把前两个坐标分别除以 $a$ 和 $b$ 可以去掉缩放。再由 $\\cos^{2}v + \\sin^{2}v = 1$ 得 $u$，它也是该点在顶点上方的高度。",
+      "An elliptic cone is parametrized by $\\langle au\\cos v, bu\\sin v, u \\rangle$, where dividing the first two coordinates by $a$ and $b$ removes the scaling. Then $\\cos^{2}v + \\sin^{2}v = 1$ gives $u$, and this is also the height of the point above the vertex. For $\\langle 6u\\cos v, 7u\\sin v, u \\rangle$ through $x = 18$, $y = 28$, $u\\cos v = 3$ and $u\\sin v = 4$, so $u = 5$.\n\n> **Watch out.** Divide by $a$ and $b$ before squaring, and take the square root at the end: $u$ is $\\sqrt{(x/a)^{2} + (y/b)^{2}}$, not the sum $|x/a| + |y/b|$.",
+      "椭圆锥的参数式是 $\\langle au\\cos v, bu\\sin v, u \\rangle$，把前两个坐标分别除以 $a$ 和 $b$ 可以去掉缩放。再由 $\\cos^{2}v + \\sin^{2}v = 1$ 得 $u$，它也是该点在顶点上方的高度。对 $\\langle 6u\\cos v, 7u\\sin v, u \\rangle$ 经过 $x = 18$，$y = 28$ 的点，$u\\cos v = 3$，$u\\sin v = 4$，所以 $u = 5$。\n\n> **注意。** 先除以 $a$ 和 $b$ 再平方，最后开平方：$u$ 是 $\\sqrt{(x/a)^{2} + (y/b)^{2}}$，而不是和 $|x/a| + |y/b|$。",
     ],
     (rng) => {
       const [A, B, C] = rng.pick(triples);
@@ -2534,18 +2576,62 @@ const ellipticCone = {
       const x = a * A * k * rng.pick([-1, 1]);
       const y = b * B * k * rng.pick([-1, 1]);
       const answer = C * k;
-      return ask(
-        [
+      const p = Q.of(x, a);
+      const q = Q.of(y, b);
+      return numberProblem({
+        prompt: t(
           `The cone $\\mathbf{r}(u, v) = \\langle ${a}u\\cos v, ${b}u\\sin v, u \\rangle$, $u \\ge 0$, contains a point with $x = ${x}$ and $y = ${y}$. Find $u$ at this point.`,
           `锥面 $\\mathbf{r}(u, v) = \\langle ${a}u\\cos v, ${b}u\\sin v, u \\rangle$，$u \\ge 0$，上有一点满足 $x = ${x}$，$y = ${y}$。求该点的 $u$。`,
-        ],
+        ),
         answer,
-        [(A + B) * k, a * C * k, answer * answer],
-        [
-          `$u\\cos v = ${Q.of(x, a).toLatex()}$ and $u\\sin v = ${Q.of(y, b).toLatex()}$. Squaring and adding gives $u^{2} = ${answer * answer}$, and with $u \\ge 0$ we get $u = ${answer}$.`,
-          `$u\\cos v = ${Q.of(x, a).toLatex()}$，$u\\sin v = ${Q.of(y, b).toLatex()}$。平方后相加，得 $u^{2} = ${answer * answer}$，由 $u \\ge 0$ 得 $u = ${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            (A + B) * k,
+            "That adds $|u\\cos v|$ and $|u\\sin v|$; square them, add, and take the root.",
+            "那是把 $|u\\cos v|$ 与 $|u\\sin v|$ 相加；应平方相加再开平方。",
+          ),
+          why(
+            a * C * k,
+            `That keeps the factor $${a}$; divide $x$ by $${a}$ and $y$ by $${b}$ first.`,
+            `那是保留了因子 $${a}$；要先把 $x$ 除以 $${a}$，$y$ 除以 $${b}$。`,
+          ),
+          why(answer * answer, "That is $u^{2}$; take the square root.", "那是 $u^{2}$；还要开平方。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Remove the scaling", "去掉缩放"],
+              t(
+                `$u\\cos v = \\frac{${x}}{${a}} = ${p.toLatex()}$ and $u\\sin v = \\frac{${y}}{${b}} = ${q.toLatex()}$.`,
+                `$u\\cos v = \\frac{${x}}{${a}} = ${p.toLatex()}$，$u\\sin v = \\frac{${y}}{${b}} = ${q.toLatex()}$。`,
+              ),
+            ],
+            [
+              ["Square and add", "平方相加"],
+              t(
+                `$u^{2} = ${p.mul(p).toLatex()} + ${q.mul(q).toLatex()} = ${answer * answer}$, and $u \\ge 0$ gives $u = ${answer}$.`,
+                `$u^{2} = ${p.mul(p).toLatex()} + ${q.mul(q).toLatex()} = ${answer * answer}$，由 $u \\ge 0$ 得 $u = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `With $u = ${answer}$, $\\cos v = ${p.div(Q.of(answer)).toLatex()}$ and $\\sin v = ${q.div(Q.of(answer)).toLatex()}$, and $\\cos^{2}v + \\sin^{2}v = ${p
+              .div(Q.of(answer))
+              .mul(p.div(Q.of(answer)))
+              .toLatex()} + ${q
+              .div(Q.of(answer))
+              .mul(q.div(Q.of(answer)))
+              .toLatex()} = 1$.`,
+            `取 $u = ${answer}$，$\\cos v = ${p.div(Q.of(answer)).toLatex()}$，$\\sin v = ${q.div(Q.of(answer)).toLatex()}$，而 $\\cos^{2}v + \\sin^{2}v = ${p
+              .div(Q.of(answer))
+              .mul(p.div(Q.of(answer)))
+              .toLatex()} + ${q
+              .div(Q.of(answer))
+              .mul(q.div(Q.of(answer)))
+              .toLatex()} = 1$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings7["parametrizations-of-ellipsoids-and-cones#the-parameter-of-a-point-on-an-elliptic-cone"],
@@ -2555,25 +2641,55 @@ const twoSheets = point(
   "the-gap-between-the-sheets-of-a-hyperboloid",
   ["The gap between the sheets of a hyperboloid", "双叶双曲面两叶之间的间隙"],
   [
-    "A hyperboloid of two sheets has $\\cosh u$ in its parametrization for $z$, and since $\\cosh u \\ge 1$, the value $z = c\\cosh u$ is never smaller than $c$. So one parametrization covers only the upper sheet, and there is a gap of $2c$ between the sheets.",
-    "双叶双曲面的 $z$ 参数式含 $\\cosh u$，由于 $\\cosh u \\ge 1$，$z = c\\cosh u$ 不会小于 $c$。所以一个参数式只覆盖上叶，两叶之间有 $2c$ 的间隙。",
+    "A hyperboloid of two sheets has $\\cosh u$ in its parametrization for $z$, and since $\\cosh u \\ge 1$, the value $z = c\\cosh u$ is never smaller than $c$. So one parametrization covers only the upper sheet, and there is a gap of $2c$ between the sheets. For $\\frac{x^{2} + y^{2}}{16} - z^{2} = -1$, $c = 1$, the sheets cross the $z$-axis at $z = \\pm 1$, and the gap is $2$.\n\n> **Watch out.** The number under $z^{2}$ is $c^{2}$, so take its square root before doubling; the number under $x^{2} + y^{2}$ plays no part, since the sheets come closest on the $z$-axis.",
+    "双叶双曲面的 $z$ 参数式含 $\\cosh u$，由于 $\\cosh u \\ge 1$，$z = c\\cosh u$ 不会小于 $c$。所以一个参数式只覆盖上叶，两叶之间有 $2c$ 的间隙。对 $\\frac{x^{2} + y^{2}}{16} - z^{2} = -1$，$c = 1$，两叶与 $z$ 轴交于 $z = \\pm 1$，间隙为 $2$。\n\n> **注意。** $z^{2}$ 下的数是 $c^{2}$，要先开平方再加倍；$x^{2} + y^{2}$ 下的数不起作用，因为两叶在 $z$ 轴上最接近。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
     const c = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== a));
     const answer = 2 * c;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Find the distance between the two sheets of the hyperboloid $\\frac{x^{2} + y^{2}}{${a * a}} - \\frac{z^{2}}{${c * c}} = -1$, measured along the $z$-axis.`,
         `求双曲面 $\\frac{x^{2} + y^{2}}{${a * a}} - \\frac{z^{2}}{${c * c}} = -1$ 的两叶之间沿 $z$ 轴的距离。`,
-      ],
+      ),
       answer,
-      [c, 2 * a, 2 * c * c],
-      [
-        `On the $z$-axis, $x = y = 0$, which gives $z^{2} = ${c * c}$. So the sheets cross the axis at $z = ${c}$ and $z = ${-c}$, and the distance between them is $${answer}$.`,
-        `在 $z$ 轴上 $x = y = 0$，得 $z^{2} = ${c * c}$。所以两叶与轴交于 $z = ${c}$ 和 $z = ${-c}$，它们之间的距离是 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          c,
+          `That is the distance from one vertex to the origin; the other sheet is $${c}$ away on the other side.`,
+          `那是一个顶点到原点的距离；另一叶在另一侧也相距 $${c}$。`,
+        ),
+        why(
+          2 * a,
+          "That uses the number under $x^{2} + y^{2}$; the sheets come closest on the $z$-axis, where it plays no part.",
+          "那是用了 $x^{2} + y^{2}$ 下的数；两叶在 $z$ 轴上最接近，那里它不起作用。",
+        ),
+        why(2 * c * c, `That doubles $${c * c}$ without taking its square root.`, `那是没有对 $${c * c}$ 开平方就加倍了。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Go to the z-axis", "取 z 轴上的点"],
+            t(
+              `$x = y = 0$ gives $\\frac{z^{2}}{${c * c}} = 1$, so $z^{2} = ${c * c}$.`,
+              `$x = y = 0$ 给出 $\\frac{z^{2}}{${c * c}} = 1$，所以 $z^{2} = ${c * c}$。`,
+            ),
+          ],
+          [
+            ["Find the vertices", "求顶点"],
+            t(
+              `$z = ${c}$ and $z = ${-c}$, so the distance is $${c} - (${-c}) = ${answer}$.`,
+              `$z = ${c}$ 与 $z = ${-c}$，所以距离为 $${c} - (${-c}) = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `At $(0, 0, ${c})$, $\\frac{0}{${a * a}} - \\frac{${c * c}}{${c * c}} = -1$; and for $|z| < ${c}$ the left side is larger than $-1$, so no point lies between the vertices.`,
+          `在 $(0, 0, ${c})$ 处，$\\frac{0}{${a * a}} - \\frac{${c * c}}{${c * c}} = -1$；而当 $|z| < ${c}$ 时左边大于 $-1$，所以两个顶点之间没有点。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -2582,25 +2698,66 @@ const torusArea = {
     "the-surface-area-of-a-torus",
     ["The surface area of a torus", "环面的面积"],
     [
-      "Revolving a curve about an axis gives an area equal to the length of the curve times the distance traveled by its centroid. For a circle of radius $r$ whose center is at distance $R$ from the axis, this gives $2\\pi r \\cdot 2\\pi R$, which is why $\\pi^{2}$ appears.",
-      "曲线绕轴旋转所得的面积，等于曲线的长度乘以其形心走过的距离。对半径为 $r$、圆心到轴的距离为 $R$ 的圆，结果是 $2\\pi r \\cdot 2\\pi R$，这就是出现 $\\pi^{2}$ 的原因。",
+      "Revolving a curve about an axis gives an area equal to the length of the curve times the distance traveled by its centroid. For a circle of radius $r$ whose center is at distance $R$ from the axis, this gives $2\\pi r \\cdot 2\\pi R$, which is why $\\pi^{2}$ appears. For $x^{2} + (y - 10)^{2} = 64$, $r = 8$ and $R = 10$, so the area is $16\\pi \\cdot 20\\pi = 320\\pi^{2}$.\n\n> **Watch out.** Both factors are circumferences, each with its own $2\\pi$: the curve's length $2\\pi r$ uses the small radius, and the path $2\\pi R$ of the center uses the distance from the axis to the center.",
+      "曲线绕轴旋转所得的面积，等于曲线的长度乘以其形心走过的距离。对半径为 $r$、圆心到轴的距离为 $R$ 的圆，结果是 $2\\pi r \\cdot 2\\pi R$，这就是出现 $\\pi^{2}$ 的原因。对 $x^{2} + (y - 10)^{2} = 64$，$r = 8$，$R = 10$，所以面积为 $16\\pi \\cdot 20\\pi = 320\\pi^{2}$。\n\n> **注意。** 两个因子都是周长，各带一个 $2\\pi$：曲线的长度 $2\\pi r$ 用小半径，圆心走过的路程 $2\\pi R$ 用轴到圆心的距离。",
     ],
     (rng) => {
       const r = rng.int(1, 6);
       const R = r + rng.int(1, 6);
       const answer = 4 * R * r;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `The circle $x^{2} + (y - ${R})^{2} = ${r * r}$ is revolved about the $x$-axis. Find the area of the resulting torus divided by $\\pi^{2}$.`,
           `圆 $x^{2} + (y - ${R})^{2} = ${r * r}$ 绕 $x$ 轴旋转。求所得环面的面积除以 $\\pi^{2}$ 的值。`,
-        ],
+        ),
         answer,
-        [2 * R * r, 4 * r * r, 4 * R * R],
-        [
-          `The circle has length $${2 * r}\\pi$, and its center travels $${2 * R}\\pi$ around the axis. The area is the product, so dividing by $\\pi^{2}$ gives $${answer}$.`,
-          `圆的周长是 $${2 * r}\\pi$，圆心绕轴走过 $${2 * R}\\pi$。面积是两者之积，除以 $\\pi^{2}$ 得 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            2 * R * r,
+            "That keeps only one factor $2$; each of the two circumferences has its own $2\\pi$.",
+            "那是只保留了一个因子 $2$；两个周长各有自己的 $2\\pi$。",
+          ),
+          why(
+            4 * r * r,
+            `That uses the small radius $${r}$ for the path of the center; the center is $${R}$ from the axis.`,
+            `那是用小半径 $${r}$ 计算圆心的路程；圆心到轴的距离是 $${R}$。`,
+          ),
+          why(
+            4 * R * R,
+            `That uses $${R}$ for the length of the circle; the circle has radius $${r}$.`,
+            `那是用 $${R}$ 计算圆的长度；圆的半径是 $${r}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the circle", "读出圆的数据"],
+              t(
+                `The circle has radius $r = ${r}$ and center $(0, ${R})$, at distance $R = ${R}$ from the axis.`,
+                `圆的半径为 $r = ${r}$，圆心 $(0, ${R})$ 到轴的距离为 $R = ${R}$。`,
+              ),
+            ],
+            [
+              ["Find the two lengths", "求两个长度"],
+              t(
+                `The circle has length $${2 * r}\\pi$, and its center travels $${2 * R}\\pi$.`,
+                `圆的周长为 $${2 * r}\\pi$，圆心走过 $${2 * R}\\pi$。`,
+              ),
+            ],
+            [
+              ["Multiply", "相乘"],
+              t(
+                `$${2 * r}\\pi \\cdot ${2 * R}\\pi = ${answer}\\pi^{2}$, so the answer is $${answer}$.`,
+                `$${2 * r}\\pi \\cdot ${2 * R}\\pi = ${answer}\\pi^{2}$，所以答案为 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `As a parametric surface the area element is $${r === 1 ? "" : r}(${R} + ${r === 1 ? "" : r}\\cos v)\\,du\\,dv$; the cosine integrates to zero over a full turn, leaving $(2\\pi)^{2} \\cdot ${r * R} = ${answer}\\pi^{2}$.`,
+            `作为参数曲面，面积元为 $${r === 1 ? "" : r}(${R} + ${r === 1 ? "" : r}\\cos v)\\,du\\,dv$；余弦项在一整圈上积分为零，剩下 $(2\\pi)^{2} \\cdot ${r * R} = ${answer}\\pi^{2}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings7["surfaces-of-revolution#the-surface-area-of-a-torus"],
@@ -2611,25 +2768,68 @@ const paraboloidSurface = {
     "a-surface-integral-over-a-paraboloid",
     ["A surface integral over a paraboloid", "抛物面上的曲面积分"],
     [
-      "On a curved graph, the area factor $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ varies from point to point. On $z = \\frac{x^{2} + y^{2}}{2}$ it equals $\\sqrt{1 + r^{2}}$, and polar coordinates supply the factor $r$ that makes the integral elementary.",
-      "在曲面图像上，面积因子 $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ 随点变化。在 $z = \\frac{x^{2} + y^{2}}{2}$ 上，它等于 $\\sqrt{1 + r^{2}}$，极坐标提供的因子 $r$ 使积分成为初等的。",
+      "On a curved graph, the area factor $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ varies from point to point. On $z = \\frac{x^{2} + y^{2}}{2}$ it equals $\\sqrt{1 + r^{2}}$, and polar coordinates supply the factor $r$ that makes the integral elementary. Above the disk $x^{2} + y^{2} \\le 48$, $1 + r^{2}$ runs from $1$ to $49$, so $\\frac{1}{\\pi}\\iint_{S} dS = 2 \\cdot \\frac{1}{3}(7^{3} - 1) = 228$.\n\n> **Watch out.** The lower limit $r = 0$ gives $1 + r^{2} = 1$, not $0$, so subtract $1$ from the cube; and the angle contributes $2\\pi$, which leaves a factor $2$ after dividing by $\\pi$.",
+      "在曲面图像上，面积因子 $\\sqrt{1 + g_{x}^{2} + g_{y}^{2}}$ 随点变化。在 $z = \\frac{x^{2} + y^{2}}{2}$ 上，它等于 $\\sqrt{1 + r^{2}}$，极坐标提供的因子 $r$ 使积分成为初等的。在圆盘 $x^{2} + y^{2} \\le 48$ 上方，$1 + r^{2}$ 从 $1$ 变到 $49$，所以 $\\frac{1}{\\pi}\\iint_{S} dS = 2 \\cdot \\frac{1}{3}(7^{3} - 1) = 228$。\n\n> **注意。** 下限 $r = 0$ 给出 $1 + r^{2} = 1$ 而不是 $0$，所以立方之后要减 $1$；角度贡献 $2\\pi$，除以 $\\pi$ 后还剩因子 $2$。",
     ],
     (rng) => {
       const n = rng.int(2, 6);
       const k = rng.int(1, 9);
       const answer = Q.of(2 * k * (n ** 3 - 1), 3);
-      return ask(
-        [
-          `$S$ is the part of $z = \\frac{x^{2} + y^{2}}{2}$ above the disk $x^{2} + y^{2} \\le ${n * n - 1}$. Find $\\frac{1}{\\pi}\\iint_{S} ${k}\\,dS$.`,
-          `$S$ 是 $z = \\frac{x^{2} + y^{2}}{2}$ 在圆盘 $x^{2} + y^{2} \\le ${n * n - 1}$ 上方的部分。求 $\\frac{1}{\\pi}\\iint_{S} ${k}\\,dS$。`,
-        ],
+      const kk = k === 1 ? "" : `${k}`;
+      const integrand = k === 1 ? "dS" : `${k}\\,dS`;
+      return numberProblem({
+        prompt: t(
+          `$S$ is the part of $z = \\frac{x^{2} + y^{2}}{2}$ above the disk $x^{2} + y^{2} \\le ${n * n - 1}$. Find $\\frac{1}{\\pi}\\iint_{S} ${integrand}$.`,
+          `$S$ 是 $z = \\frac{x^{2} + y^{2}}{2}$ 在圆盘 $x^{2} + y^{2} \\le ${n * n - 1}$ 上方的部分。求 $\\frac{1}{\\pi}\\iint_{S} ${integrand}$。`,
+        ),
         answer,
-        [k * (n * n - 1), Q.of(2 * k * n ** 3, 3), Q.of(k * (n ** 3 - 1), 3)],
-        [
-          `$dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$. The radial integral is $\\frac{1}{3}(${n}^{3} - 1)$, as $1 + r^{2}$ reaches $${n * n}$. The angle gives $2\\pi$, so the value is $${answer.toLatex()}$.`,
-          `$dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$。径向积分是 $\\frac{1}{3}(${n}^{3} - 1)$，因为 $1 + r^{2}$ 的上限是 $${n * n}$。角度给出 $2\\pi$，所以结果是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            k * (n * n - 1),
+            "That integrates over the flat disk; the paraboloid is tilted, so each piece of it carries the area factor $\\sqrt{1 + r^{2}}$.",
+            "那是在平面圆盘上积分；抛物面是倾斜的，每一小块都要带面积因子 $\\sqrt{1 + r^{2}}$。",
+          ),
+          why(
+            Q.of(2 * k * n ** 3, 3),
+            "That drops the lower limit; at $r = 0$, $1 + r^{2} = 1$, so $1$ must be subtracted from the cube.",
+            "那是漏了下限；在 $r = 0$ 处 $1 + r^{2} = 1$，所以立方之后要减去 $1$。",
+          ),
+          why(
+            Q.of(k * (n ** 3 - 1), 3),
+            "That forgets the angle; $\\theta$ runs over $2\\pi$, which leaves a factor $2$ after dividing by $\\pi$.",
+            "那是漏了角度；$\\theta$ 走过 $2\\pi$，除以 $\\pi$ 后还剩因子 $2$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the area factor", "求面积因子"],
+              t(
+                "$g_{x} = x$ and $g_{y} = y$, so $dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$.",
+                "$g_{x} = x$，$g_{y} = y$，所以 $dS = \\sqrt{1 + r^{2}}\\,r\\,dr\\,d\\theta$。",
+              ),
+            ],
+            [
+              ["Integrate in r", "对 r 积分"],
+              t(
+                `$\\int_{0}^{\\sqrt{${n * n - 1}}} ${kk}\\sqrt{1 + r^{2}}\\,r\\,dr = ${kk === "" ? "" : `${k} \\cdot `}\\frac{1}{3}(${n}^{3} - 1)$, as $1 + r^{2}$ runs from $1$ to $${n * n}$.`,
+                `$\\int_{0}^{\\sqrt{${n * n - 1}}} ${kk}\\sqrt{1 + r^{2}}\\,r\\,dr = ${kk === "" ? "" : `${k} \\cdot `}\\frac{1}{3}(${n}^{3} - 1)$，因为 $1 + r^{2}$ 从 $1$ 变到 $${n * n}$。`,
+              ),
+            ],
+            [
+              ["Integrate in θ and divide by π", "对 θ 积分并除以 π"],
+              t(
+                `$\\frac{2\\pi}{\\pi} \\cdot ${Q.of(k * (n ** 3 - 1), 3).toLatex()} = ${answer.toLatex()}$.`,
+                `$\\frac{2\\pi}{\\pi} \\cdot ${Q.of(k * (n ** 3 - 1), 3).toLatex()} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            "Differentiating $\\frac{1}{3}(1 + r^{2})^{3/2}$ gives $\\frac{1}{3} \\cdot \\frac{3}{2}(1 + r^{2})^{1/2} \\cdot 2r = r\\sqrt{1 + r^{2}}$, the radial integrand.",
+            "对 $\\frac{1}{3}(1 + r^{2})^{3/2}$ 求导得 $\\frac{1}{3} \\cdot \\frac{3}{2}(1 + r^{2})^{1/2} \\cdot 2r = r\\sqrt{1 + r^{2}}$，正是径向被积函数。",
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings7["surface-integrals-over-cartesian-surfaces#a-surface-integral-over-a-paraboloid"],
@@ -2640,25 +2840,59 @@ const hemisphereFlux = {
     "the-flux-through-a-hemisphere",
     ["The flux through a hemisphere", "穿过半球面的通量"],
     [
-      "On a sphere of radius $R$ centered at the origin, a radial field $k\\langle x, y, z \\rangle$ is normal to the surface. So its normal component is the constant $kR$, and the flux is this constant times the surface area, without evaluating any cross product.",
-      "在圆心位于原点、半径为 $R$ 的球面上，径向场 $k\\langle x, y, z \\rangle$ 垂直于曲面。所以它的法向分量是常数 $kR$，通量等于这个常数乘以曲面面积，不必计算任何叉积。",
+      "On a sphere of radius $R$ centered at the origin, a radial field $k\\langle x, y, z \\rangle$ is normal to the surface. So its normal component is the constant $kR$, and the flux is this constant times the surface area, without evaluating any cross product. For $10\\langle x, y, z \\rangle$ through the upper half of the unit sphere, the normal component is $10$ and the area is $2\\pi$, so the flux is $20\\pi$.\n\n> **Watch out.** The normal component is $kR$, not $k$, since $\\langle x, y, z \\rangle$ has length $R$ on the sphere; and a hemisphere has area $2\\pi R^{2}$, half of the sphere's $4\\pi R^{2}$.",
+      "在圆心位于原点、半径为 $R$ 的球面上，径向场 $k\\langle x, y, z \\rangle$ 垂直于曲面。所以它的法向分量是常数 $kR$，通量等于这个常数乘以曲面面积，不必计算任何叉积。对 $10\\langle x, y, z \\rangle$ 穿过单位球面的上半部分，法向分量为 $10$，面积为 $2\\pi$，所以通量为 $20\\pi$。\n\n> **注意。** 法向分量是 $kR$ 而不是 $k$，因为 $\\langle x, y, z \\rangle$ 在球面上的长度是 $R$；半球面的面积是 $2\\pi R^{2}$，是整个球面 $4\\pi R^{2}$ 的一半。",
     ],
     (rng) => {
       const R = rng.int(1, 6);
       const k = nz(rng, 9);
       const answer = 2 * k * R ** 3;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `Find $\\frac{1}{\\pi}\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}$ for $\\mathbf{F} = ${br(poly([k, "x"]), poly([k, "y"]), poly([k, "z"]))}$, where $S$ is the upper hemisphere of $x^{2} + y^{2} + z^{2} = ${R * R}$, with the outward normal.`,
           `求 $\\frac{1}{\\pi}\\iint_{S} \\mathbf{F} \\cdot d\\mathbf{S}$，其中 $\\mathbf{F} = ${br(poly([k, "x"]), poly([k, "y"]), poly([k, "z"]))}$，$S$ 是 $x^{2} + y^{2} + z^{2} = ${R * R}$ 的上半球面，取外法向。`,
-        ],
+        ),
         answer,
-        [4 * k * R ** 3, 2 * k * R * R, k * R ** 3],
-        [
-          `$\\mathbf{F} \\cdot \\mathbf{n} = ${k * R}$ everywhere, and the hemisphere has area $${2 * R * R}\\pi$. The product divided by $\\pi$ is $${answer}$.`,
-          `处处有 $\\mathbf{F} \\cdot \\mathbf{n} = ${k * R}$，半球面的面积是 $${2 * R * R}\\pi$。两者之积除以 $\\pi$ 等于 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            4 * k * R ** 3,
+            "That uses the whole sphere; the upper hemisphere has half its area, $2\\pi R^{2}$.",
+            "那是用了整个球面；上半球面只有一半的面积 $2\\pi R^{2}$。",
+          ),
+          why(
+            2 * k * R * R,
+            `That takes the normal component to be $${k}$; on the sphere it is $kR = ${k * R}$.`,
+            `那是把法向分量当成了 $${k}$；在球面上它是 $kR = ${k * R}$。`,
+          ),
+          why(
+            k * R ** 3,
+            "That uses the area $\\pi R^{2}$ of the flat disk under the hemisphere; the hemisphere itself has area $2\\pi R^{2}$.",
+            "那是用了半球面下方平面圆盘的面积 $\\pi R^{2}$；半球面本身的面积是 $2\\pi R^{2}$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the normal component", "求法向分量"],
+              t(
+                `$\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{${R}}$, so $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k === 1 ? "" : k === -1 ? "-" : k}(x^{2} + y^{2} + z^{2})}{${R}} = ${k * R}$ everywhere on $S$.`,
+                `$\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{${R}}$，所以在 $S$ 上处处有 $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k === 1 ? "" : k === -1 ? "-" : k}(x^{2} + y^{2} + z^{2})}{${R}} = ${k * R}$。`,
+              ),
+            ],
+            [
+              ["Multiply by the area", "乘以面积"],
+              t(
+                `The hemisphere has area $${2 * R * R}\\pi$, so the flux is $${answer}\\pi$ and the value is $${answer}$.`,
+                `半球面的面积为 $${2 * R * R}\\pi$，所以通量为 $${answer}\\pi$，所求值为 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Close $S$ with the disk $z = 0$, where $\\mathbf{F} \\cdot (-\\mathbf{k}) = 0$. Then the divergence $${3 * k}$ times the volume $${Q.of(2 * R ** 3, 3).toLatex()}\\pi$ of the half ball gives $${answer}\\pi$, the same.`,
+            `用圆盘 $z = 0$ 封闭 $S$，在那里 $\\mathbf{F} \\cdot (-\\mathbf{k}) = 0$。于是散度 $${3 * k}$ 乘以半球体的体积 $${Q.of(2 * R ** 3, 3).toLatex()}\\pi$ 得 $${answer}\\pi$，结果相同。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings7["calculating-flux-through-parametric-surfaces#the-flux-through-a-hemisphere"],
@@ -2669,8 +2903,8 @@ const downwardFlux = {
     "downward-flux-through-a-tilted-plane",
     ["Downward flux through a tilted plane", "穿过斜平面的向下通量"],
     [
-      "For a graph $z = g(x, y)$, the upward normal element is $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$. The downward one is its negative. Both the minus signs and the slopes matter: using only the third component of the field would treat the plane as horizontal.",
-      "对图像 $z = g(x, y)$，向上的法向面元是 $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$，向下的是它的相反数。负号和斜率都很重要：只用场的第三个分量，等于把平面当作水平面。",
+      "For a graph $z = g(x, y)$, the upward normal element is $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$. The downward one is its negative. Both the minus signs and the slopes matter: using only the third component of the field would treat the plane as horizontal. For $z = 5x + y$ and $\\mathbf{F} = \\langle 1, 1, 1 \\rangle$, the downward element is $\\langle 5, 1, -1 \\rangle\\,dA$, the dot product is $5$, and above $[0, 1] \\times [0, 1]$ the downward flux is $5$.\n\n> **Watch out.** Downward means the third component of the element is $-1$, so the slopes enter with plus signs; and the constant term of the plane does not change the normal at all.",
+      "对图像 $z = g(x, y)$，向上的法向面元是 $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$，向下的是它的相反数。负号和斜率都很重要：只用场的第三个分量，等于把平面当作水平面。对 $z = 5x + y$ 与 $\\mathbf{F} = \\langle 1, 1, 1 \\rangle$，向下的面元是 $\\langle 5, 1, -1 \\rangle\\,dA$，点积为 $5$，在 $[0, 1] \\times [0, 1]$ 上方向下的通量为 $5$。\n\n> **注意。** 向下意味着面元的第三个分量是 $-1$，所以斜率带正号进入；平面的常数项完全不影响法向量。",
     ],
     (rng) => {
       const a = nz(rng, 4);
@@ -2683,18 +2917,57 @@ const downwardFlux = {
       const H = rng.int(1, 5);
       const dot = p * a + q * b - r;
       const answer = dot * W * H;
-      return ask(
-        [
+      const pn = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+      return numberProblem({
+        prompt: t(
           `Find the downward flux of $\\mathbf{F} = ${br(p, q, r)}$ through the part of the plane $z = ${poly([a, "x"], [b, "y"], [c, ""])}$ above $[0, ${W}] \\times [0, ${H}]$.`,
           `求 $\\mathbf{F} = ${br(p, q, r)}$ 向下穿过平面 $z = ${poly([a, "x"], [b, "y"], [c, ""])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上方部分的通量。`,
-        ],
+        ),
         answer,
-        [-answer, -r * W * H, (p * a + q * b + r) * W * H],
-        [
-          `The downward element is $${br(a, b, -1)}\\,dA$, and its dot product with $\\mathbf{F}$ is $${dot}$. The rectangle has area $${W * H}$, so the flux is $${answer}$.`,
-          `向下的面元是 $${br(a, b, -1)}\\,dA$，它与 $\\mathbf{F}$ 的点积是 $${dot}$。矩形面积是 $${W * H}$，所以通量是 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            -answer,
+            "That is the upward flux; the downward element is the negative of $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$.",
+            "那是向上的通量；向下的面元是 $\\langle -g_{x}, -g_{y}, 1 \\rangle\\,dA$ 的相反数。",
+          ),
+          why(
+            -r * W * H,
+            "That keeps only the third component, as if the plane were horizontal; its slopes tilt the normal.",
+            "那是只保留了第三个分量，好像平面是水平的；它的斜率使法向量倾斜。",
+          ),
+          why(
+            (p * a + q * b + r) * W * H,
+            "That flips the slopes but not the third component; downward, the element ends in $-1$.",
+            "那是只把斜率变了号，第三个分量没有变；向下时面元的最后一个分量是 $-1$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the downward element", "求向下的面元"],
+              t(
+                `$g_{x} = ${a}$ and $g_{y} = ${b}$, so the downward element is $${br(a, b, -1)}\\,dA$.`,
+                `$g_{x} = ${a}$，$g_{y} = ${b}$，所以向下的面元是 $${br(a, b, -1)}\\,dA$。`,
+              ),
+            ],
+            [
+              ["Dot with F", "与 F 作点积"],
+              t(`$${p * a} + ${pn(q * b)} + ${pn(-r)} = ${dot}$.`, `$${p * a} + ${pn(q * b)} + ${pn(-r)} = ${dot}$。`),
+            ],
+            [
+              ["Multiply by the area", "乘以面积"],
+              t(
+                `The rectangle has area $${W * H}$, so the flux is $${dot} \\cdot ${W * H} = ${answer}$.`,
+                `矩形面积为 $${W * H}$，所以通量为 $${dot} \\cdot ${W * H} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The element $${br(a, b, -1)}$ is perpendicular to the direction $${br(1, 0, a)}$ in the plane, since $${a} - ${pn(a)} = 0$, and its third component is negative, so it points down.`,
+            `面元 $${br(a, b, -1)}$ 与平面内的方向 $${br(1, 0, a)}$ 垂直，因为 $${a} - ${pn(a)} = 0$；它的第三个分量为负，所以指向下方。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings7["calculating-flux-through-cartesian-surfaces#downward-flux-through-a-tilted-plane"],
@@ -2705,8 +2978,8 @@ const closedCylinder = {
     "the-flux-out-of-a-closed-cylinder",
     ["The flux out of a closed cylinder", "穿出闭合圆柱的通量"],
     [
-      "A closed cylinder has three faces, and each is handled separately. On the side the normal is radial, on the top it is $\\mathbf{k}$, and on the bottom it is $-\\mathbf{k}$. A face where $z = 0$ gives no flux from a field whose third component is a multiple of $z$.",
-      "闭合圆柱有三个面，要分别处理。侧面的法向量沿径向，顶面是 $\\mathbf{k}$，底面是 $-\\mathbf{k}$。对第三个分量是 $z$ 的倍数的场，$z = 0$ 的面没有通量。",
+      "A closed cylinder has three faces, and each is handled separately. On the side the normal is radial, on the top it is $\\mathbf{k}$, and on the bottom it is $-\\mathbf{k}$. A face where $z = 0$ gives no flux from a field whose third component is a multiple of $z$. For $\\langle x, y, 10z \\rangle$ out of $x^{2} + y^{2} \\le 1$, $0 \\le z \\le 1$, the side gives $2\\pi$, the top $10\\pi$ and the bottom $0$, for $12\\pi$ in all.\n\n> **Watch out.** All three faces must be counted: the side carries the $x$ and $y$ parts, the top carries the $z$ part, and only the bottom, at $z = 0$, gives nothing.",
+      "闭合圆柱有三个面，要分别处理。侧面的法向量沿径向，顶面是 $\\mathbf{k}$，底面是 $-\\mathbf{k}$。对第三个分量是 $z$ 的倍数的场，$z = 0$ 的面没有通量。对 $\\langle x, y, 10z \\rangle$ 穿出 $x^{2} + y^{2} \\le 1$，$0 \\le z \\le 1$，侧面得 $2\\pi$，顶面得 $10\\pi$，底面得 $0$，共 $12\\pi$。\n\n> **注意。** 三个面都要算：侧面承载 $x$ 与 $y$ 部分，顶面承载 $z$ 部分，只有在 $z = 0$ 的底面没有贡献。",
     ],
     (rng) => {
       const R = rng.int(1, 6);
@@ -2714,18 +2987,59 @@ const closedCylinder = {
       const k = rng.int(1, 9);
       const answer = R * R * h * (2 + k);
       const F = br("x", "y", poly([k, "z"]));
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `Find $\\frac{1}{\\pi}$ times the outward flux of $\\mathbf{F} = ${F}$ through the closed cylinder $x^{2} + y^{2} \\le ${R * R}$, $0 \\le z \\le ${h}$, using all of its faces.`,
           `用圆柱的所有面，求 $\\mathbf{F} = ${F}$ 穿出闭合圆柱 $x^{2} + y^{2} \\le ${R * R}$，$0 \\le z \\le ${h}$ 的外通量乘以 $\\frac{1}{\\pi}$ 的值。`,
-        ],
+        ),
         answer,
-        [k * R * R * h, 2 * R * R * h, 2 * R * R * h * (1 + k)],
-        [
-          `On the side $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$ over area $${2 * R * h}\\pi$, which gives $${2 * R * R * h}\\pi$. The top gives $${k * h} \\cdot ${R * R}\\pi$ and the bottom gives $0$. Dividing the sum by $\\pi$ gives $${answer}$.`,
-          `在侧面 $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$，面积是 $${2 * R * h}\\pi$，得 $${2 * R * R * h}\\pi$。顶面给出 $${k * h} \\cdot ${R * R}\\pi$，底面给出 $0$。总和除以 $\\pi$ 得 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            k * R * R * h,
+            "That counts only the top; the side also has flux, from the $x$ and $y$ parts of the field.",
+            "那是只算了顶面；侧面也有通量，来自场的 $x$ 与 $y$ 部分。",
+          ),
+          why(
+            2 * R * R * h,
+            "That counts only the side; the top, where $z$ is at its largest, has flux as well.",
+            "那是只算了侧面；顶面上 $z$ 最大，也有通量。",
+          ),
+          why(
+            2 * R * R * h * (1 + k),
+            "That counts the top twice; the bottom lies at $z = 0$ and gives nothing.",
+            "那是把顶面算了两次；底面在 $z = 0$ 处，没有贡献。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["The side", "侧面"],
+              t(
+                `$\\mathbf{n} = \\frac{\\langle x, y, 0 \\rangle}{${R}}$, so $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$ over area $${2 * R * h}\\pi$, giving $${2 * R * R * h}\\pi$.`,
+                `$\\mathbf{n} = \\frac{\\langle x, y, 0 \\rangle}{${R}}$，所以 $\\mathbf{F} \\cdot \\mathbf{n} = ${R}$，面积为 $${2 * R * h}\\pi$，得 $${2 * R * R * h}\\pi$。`,
+              ),
+            ],
+            [
+              ["The top and bottom", "顶面与底面"],
+              t(
+                `On the top $\\mathbf{F} \\cdot \\mathbf{k} = ${k * h}$ over area $${R * R}\\pi$, giving $${k * h * R * R}\\pi$; on the bottom $z = 0$, so it gives $0$.`,
+                `在顶面 $\\mathbf{F} \\cdot \\mathbf{k} = ${k * h}$，面积为 $${R * R}\\pi$，得 $${k * h * R * R}\\pi$；底面 $z = 0$，得 $0$。`,
+              ),
+            ],
+            [
+              ["Add", "相加"],
+              t(
+                `$${2 * R * R * h}\\pi + ${k * h * R * R}\\pi = ${answer}\\pi$, so the value is $${answer}$.`,
+                `$${2 * R * R * h}\\pi + ${k * h * R * R}\\pi = ${answer}\\pi$，所以所求值为 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\operatorname{div} \\mathbf{F} = ${2 + k}$ and the solid has volume $${R * R * h}\\pi$; their product is $${answer}\\pi$, as the divergence theorem requires.`,
+            `$\\operatorname{div} \\mathbf{F} = ${2 + k}$，立体体积为 $${R * R * h}\\pi$；两者之积为 $${answer}\\pi$，与散度定理一致。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings7["calculating-flux-through-closed-surfaces#the-flux-out-of-a-closed-cylinder"],

@@ -995,8 +995,8 @@ const matchingParametrizations: KnowledgePointDef = {
   figure: multivariableDrawings7["parametric-surfaces#matching-a-drawing-to-its-parametrization"],
   title: t("Matching a drawing to its parametrization", "把图形与参数化对应"),
   explanation: t(
-    "To see what a parametrization draws, eliminate the parameters. In $\\langle u \\cos v, u \\sin v, u^2 \\rangle$ we have $x^2 + y^2 = u^2 = z$, a paraboloid. In $\\langle 2 \\cos v, 2 \\sin v, u \\rangle$ we have $x^2 + y^2 = 4$ with $z$ free, a cylinder. In $\\langle u \\cos v, u \\sin v, 2u \\rangle$ the height grows in proportion to the distance from the axis, a cone.",
-    "要看参数化画出什么，就消去参数。在 $\\langle u \\cos v, u \\sin v, u^2 \\rangle$ 中，$x^2 + y^2 = u^2 = z$，是抛物面。在 $\\langle 2 \\cos v, 2 \\sin v, u \\rangle$ 中，$x^2 + y^2 = 4$ 而 $z$ 任意，是圆柱面。在 $\\langle u \\cos v, u \\sin v, 2u \\rangle$ 中，高度与到轴的距离成正比，是锥面。",
+    "To see what a parametrization draws, eliminate the parameters. In $\\langle u \\cos v, u \\sin v, u^2 \\rangle$ we have $x^2 + y^2 = u^2 = z$, a paraboloid. In $\\langle 7 \\cos v, 7 \\sin v, u \\rangle$ we have $x^2 + y^2 = 49$ with $z$ free, a cylinder. In $\\langle u \\cos v, u \\sin v, u \\rangle$ the height equals the distance from the axis, a cone.\n\n> **Watch out.** A cone and a paraboloid share the horizontal part $\\langle u \\cos v, u \\sin v \\rangle$; the power of $u$ in $z$ tells them apart. A height proportional to $u$ rises in straight lines from a sharp tip, while a height proportional to $u^2$ makes a bowl that is flat at the bottom.",
+    "要看参数化画出什么，就消去参数。在 $\\langle u \\cos v, u \\sin v, u^2 \\rangle$ 中，$x^2 + y^2 = u^2 = z$，是抛物面。在 $\\langle 7 \\cos v, 7 \\sin v, u \\rangle$ 中，$x^2 + y^2 = 49$ 而 $z$ 任意，是圆柱面。在 $\\langle u \\cos v, u \\sin v, u \\rangle$ 中，高度等于到轴的距离，是锥面。\n\n> **注意。** 锥面与抛物面的水平部分都是 $\\langle u \\cos v, u \\sin v \\rangle$；区分它们的是 $z$ 中 $u$ 的次数。高度与 $u$ 成正比时，曲面从尖顶沿直线升起；高度与 $u^2$ 成正比时，曲面是底部平坦的碗形。",
   ),
   generate(rng: Rng): Problem {
     const a = rng.int(2, 6);
@@ -1010,7 +1010,11 @@ const matchingParametrizations: KnowledgePointDef = {
         u: [0, a * 1.6] as Point,
         v: [0, 2 * PI] as Point,
         look: t("an upright cylinder", "竖直的圆柱面"),
-        why: t(`Here $x^2 + y^2 = ${a * a}$ with $z$ free.`, `这里 $x^2 + y^2 = ${a * a}$，而 $z$ 任意。`),
+        eq: t(`$x^2 + y^2 = ${a * a}$ with $z$ free`, `$x^2 + y^2 = ${a * a}$，而 $z$ 任意`),
+        check: t(
+          `At $(u, v) = (1, 0)$ the point is $(${a}, 0, 1)$, and $${a}^2 + 0^2 = ${a * a}$`,
+          `在 $(u, v) = (1, 0)$ 处，点为 $(${a}, 0, 1)$，而 $${a}^2 + 0^2 = ${a * a}$`,
+        ),
       },
       {
         formula: threeD("u \\cos v", "u \\sin v", `${k}u`),
@@ -1018,9 +1022,13 @@ const matchingParametrizations: KnowledgePointDef = {
         u: [0, 2] as Point,
         v: [0, 2 * PI] as Point,
         look: t("a cone with its tip at the origin", "顶点在原点的锥面"),
-        why: t(
-          `Here $z = ${k}\\sqrt{x^2 + y^2}$, so the height grows in proportion to the distance from the axis.`,
-          `这里 $z = ${k}\\sqrt{x^2 + y^2}$，高度与到轴的距离成正比。`,
+        eq: t(
+          `$z = ${k}\\sqrt{x^2 + y^2}$, so the height grows in proportion to the distance from the axis`,
+          `$z = ${k}\\sqrt{x^2 + y^2}$，高度与到轴的距离成正比`,
+        ),
+        check: t(
+          `At $(u, v) = (1, 0)$ the point is $(1, 0, ${k})$, and $${k}\\sqrt{1^2 + 0^2} = ${k}$`,
+          `在 $(u, v) = (1, 0)$ 处，点为 $(1, 0, ${k})$，而 $${k}\\sqrt{1^2 + 0^2} = ${k}$`,
         ),
       },
       {
@@ -1029,7 +1037,11 @@ const matchingParametrizations: KnowledgePointDef = {
         u: [0, 1.5] as Point,
         v: [0, 2 * PI] as Point,
         look: t("a bowl opening upward", "向上张开的碗形曲面"),
-        why: t(`Here $z = ${k}(x^2 + y^2)$, a paraboloid.`, `这里 $z = ${k}(x^2 + y^2)$，是抛物面。`),
+        eq: t(`$z = ${k}(x^2 + y^2)$, a paraboloid`, `$z = ${k}(x^2 + y^2)$，是抛物面`),
+        check: t(
+          `At $(u, v) = (2, 0)$ the point is $(2, 0, ${4 * k})$, and $${k}(2^2 + 0^2) = ${4 * k}$`,
+          `在 $(u, v) = (2, 0)$ 处，点为 $(2, 0, ${4 * k})$，而 $${k}(2^2 + 0^2) = ${4 * k}$`,
+        ),
       },
       {
         formula: threeD(`${a} \\sin u \\cos v`, `${a} \\sin u \\sin v`, `${a} \\cos u`),
@@ -1037,7 +1049,11 @@ const matchingParametrizations: KnowledgePointDef = {
         u: [0, PI] as Point,
         v: [0, 2 * PI] as Point,
         look: t("a sphere", "球面"),
-        why: t(`Here $x^2 + y^2 + z^2 = ${a * a}$.`, `这里 $x^2 + y^2 + z^2 = ${a * a}$。`),
+        eq: t(`$x^2 + y^2 + z^2 = ${a * a}$`, `$x^2 + y^2 + z^2 = ${a * a}$`),
+        check: t(
+          `At $(u, v) = (\\frac{\\pi}{2}, 0)$ the point is $(${a}, 0, 0)$, and $${a}^2 + 0^2 + 0^2 = ${a * a}$`,
+          `在 $(u, v) = (\\frac{\\pi}{2}, 0)$ 处，点为 $(${a}, 0, 0)$，而 $${a}^2 + 0^2 + 0^2 = ${a * a}$`,
+        ),
       },
       {
         formula: threeD("u", "v", poly([k, "u"], [1, "v"])),
@@ -1045,26 +1061,42 @@ const matchingParametrizations: KnowledgePointDef = {
         u: [-1, 1] as Point,
         v: [-1, 1] as Point,
         look: t("a flat tilted sheet", "倾斜的平面片"),
-        why: t(`Here $z = ${poly([k, "x"], [1, "y"])}$, a plane.`, `这里 $z = ${poly([k, "x"], [1, "y"])}$，是平面。`),
+        eq: t(`$z = ${poly([k, "x"], [1, "y"])}$, a plane`, `$z = ${poly([k, "x"], [1, "y"])}$，是平面`),
+        check: t(
+          `At $(u, v) = (1, 1)$ the point is $(1, 1, ${k + 1})$, and $${k} \\cdot 1 + 1 = ${k + 1}$`,
+          `在 $(u, v) = (1, 1)$ 处，点为 $(1, 1, ${k + 1})$，而 $${k} \\cdot 1 + 1 = ${k + 1}$`,
+        ),
       },
     ];
     const chosen = rng.int(0, kinds.length - 1);
     const pick = kinds[chosen] as (typeof kinds)[number];
-    return withFigure(
-      pickChoice(
-        rng,
-        t("Which parametrization draws this surface?", "哪个参数化画出这个曲面？"),
-        math(pick.formula),
-        rng.shuffle(kinds.filter((_, i) => i !== chosen)).map((o) => math(o.formula)),
-        t(`The drawing is ${pick.look.en}. ${pick.why.en}`, `图形是${pick.look["zh-CN"]}。${pick.why["zh-CN"]}`),
+    return explainedChoice(rng, {
+      prompt: t("Which parametrization draws this surface?", "哪个参数化画出这个曲面？"),
+      correct: math(pick.formula),
+      wrong: rng.shuffle(kinds.filter((_, i) => i !== chosen)).map((o) => ({
+        option: math(o.formula),
+        why: t(`That draws ${o.look.en}, since ${o.eq.en}`, `那画出的是${o.look["zh-CN"]}，因为${o.eq["zh-CN"]}`),
+      })),
+      solution: walked(
+        [
+          [["Read the drawing", "读图"], t(`The drawing is ${pick.look.en}.`, `图形是${pick.look["zh-CN"]}。`)],
+          [
+            ["Eliminate the parameters", "消去参数"],
+            t(
+              `For $${pick.formula}$ we get ${pick.eq.en}, which is ${pick.look.en}.`,
+              `对 $${pick.formula}$，得 ${pick.eq["zh-CN"]}，正是${pick.look["zh-CN"]}。`,
+            ),
+          ],
+        ],
+        t(`${pick.check.en}, so that point lies on the surface.`, `${pick.check["zh-CN"]}，所以该点在这个曲面上。`),
       ),
-      wireframe(
+      figure: wireframe(
         pick.r,
         pick.u,
         pick.v,
         t(`A mesh drawing with the z-axis up: ${pick.look.en}.`, `网格图，z 轴向上：${pick.look["zh-CN"]}。`),
       ),
-    );
+    });
   },
 };
 
