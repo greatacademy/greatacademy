@@ -118,8 +118,8 @@ const residueClock: KnowledgePointDef = {
   figure: proofDrawings1["modular-congruence#walking-around-a-residue-clock"],
   title: t("Walking around a residue clock", "在余数钟面上走"),
   explanation: t(
-    "The residues modulo $n$ sit on a circle, because adding $n$ brings you back to where you started. Each full turn of $n$ steps changes nothing, so only the remainder of the step count matters. Moving backward works the same way: the walk simply runs the other way around the clock.",
-    "模 $n$ 的余数排在一个圆上，因为加上 $n$ 就回到原处。每走满 $n$ 步一整圈，位置不变，所以只有步数除以 $n$ 的余数起作用。往回走也一样，只是沿钟面反方向走。",
+    "The residues modulo $n$ sit on a circle, because adding $n$ brings you back to where you started. Each full turn of $n$ steps changes nothing, so only the remainder of the step count matters. Moving backward works the same way: the walk simply runs the other way around the clock.\n\n> **Watch out.** The answer is where the walk ends, not the remainder of the step count alone: add that remainder to the starting residue, or take it away when the walk runs counterclockwise.",
+    "模 $n$ 的余数排在一个圆上，因为加上 $n$ 就回到原处。每走满 $n$ 步一整圈，位置不变，所以只有步数除以 $n$ 的余数起作用。往回走也一样，只是沿钟面反方向走。\n\n> **注意。** 答案是走到的位置，而不只是步数的余数：要把这个余数加到起点上，逆时针走时则从起点减去。",
   ),
   generate(rng) {
     const n = rng.int(5, 12);
@@ -128,18 +128,38 @@ const residueClock: KnowledgePointDef = {
     const clockwise = rng.bool();
     const answer = (((start + (clockwise ? steps : -steps)) % n) + n) % n;
     const other = (((start + (clockwise ? -steps : steps)) % n) + n) % n;
+    const r = steps % n;
     const at = ring(n, 85);
     const names = Array.from({ length: n }, (_, i) => String(i));
+    const sign = clockwise ? "+" : "-";
     return numeric(
       t(
         `The clock shows the residues modulo $${n}$. Start at the ringed ${start} and move ${steps} steps ${clockwise ? "clockwise" : "counterclockwise"}. Which residue do you reach?`,
         `钟面上是模 $${n}$ 的余数。从带圈的 ${start} 出发，沿${clockwise ? "顺" : "逆"}时针走 ${steps} 步。走到哪个余数？`,
       ),
       answer,
-      [other, steps % n, start + steps, (answer + 1) % n],
-      t(
-        `${steps} steps is ${Math.floor(steps / n)} full ${steps < 2 * n ? "turn" : "turns"} and ${steps % n} more, and full turns change nothing. So only the last ${steps % n} of the steps matter, going ${clockwise ? "clockwise" : "counterclockwise"} from ${start}, which ends at ${answer}.`,
-        `${steps} 步是 ${Math.floor(steps / n)} 整圈再加 ${steps % n} 步，整圈不改变位置。所以从 ${start} 沿${clockwise ? "顺" : "逆"}时针走 ${steps % n} 步，走到 ${answer}。`,
+      [other, r, start + steps, (answer + 1) % n],
+      walked(
+        [
+          [
+            ["Drop the full turns", "去掉整圈"],
+            t(
+              `$${steps} = ${n} \\cdot ${Math.floor(steps / n)} + ${r}$, and each full turn of $${n}$ steps changes nothing, so only $${r}$ steps matter.`,
+              `$${steps} = ${n} \\cdot ${Math.floor(steps / n)} + ${r}$，每走满 $${n}$ 步一圈位置不变，所以只有 $${r}$ 步起作用。`,
+            ),
+          ],
+          [
+            ["Take the remaining steps", "走剩下的步数"],
+            t(
+              `${clockwise ? "Clockwise" : "Counterclockwise"} from ${start}: $${start} ${sign} ${r} \\equiv ${answer} \\pmod{${n}}$.`,
+              `从 ${start} 沿${clockwise ? "顺" : "逆"}时针走：$${start} ${sign} ${r} \\equiv ${answer} \\pmod{${n}}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${start} ${sign} ${steps} = ${clockwise ? start + steps : start - steps}$, which leaves remainder $${answer}$ on division by $${n}$, the same residue.`,
+          `$${start} ${sign} ${steps} = ${clockwise ? start + steps : start - steps}$，除以 $${n}$ 的余数是 $${answer}$，是同一个余数。`,
+        ),
       ),
       {
         svg: svgDocument(220, ringed(at[start] as Point) + names.map((name, i) => node(at[i] as Point, name)).join("")),
@@ -149,6 +169,28 @@ const residueClock: KnowledgePointDef = {
         ),
       },
       "integer",
+      [
+        why(
+          other,
+          `That walks the other way around the clock; the walk goes ${clockwise ? "clockwise" : "counterclockwise"}.`,
+          `这是朝钟面的另一个方向走；应沿${clockwise ? "顺" : "逆"}时针走。`,
+        ),
+        why(
+          r,
+          `$${r}$ is the remainder of the step count; the walk starts at ${start}, not at $0$.`,
+          `$${r}$ 是步数的余数；起点是 ${start}，不是 $0$。`,
+        ),
+        why(
+          start + steps,
+          `$${start + steps}$ is not a residue on the clock; reduce it modulo $${n}$.`,
+          `$${start + steps}$ 不是钟面上的余数；要对 $${n}$ 取模。`,
+        ),
+        why(
+          (answer + 1) % n,
+          "That is the residue next to where the walk ends; count the remaining steps again.",
+          "这是终点旁边的余数；把剩下的步数重新数一遍。",
+        ),
+      ],
     );
   },
 };
@@ -196,8 +238,8 @@ const remainderTable: KnowledgePointDef = {
   id: "filling-a-remainder-table",
   title: t("Filling a remainder table", "填余数表"),
   explanation: t(
-    "Give each number a row by its remainder on one modulus and a column by its remainder on the other. Counting 0, 1, 2, and so on walks diagonally through the table, wrapping at the edges. When the moduli are coprime the walk meets every cell exactly once, which is the Chinese Remainder Theorem seen as a picture.",
-    "按一个模的余数给每个数定行，按另一个模的余数定列。从 0、1、2 依次数下去，就沿对角线走过表格，到边上再绕回来。两个模互质时，这条路线每格恰好经过一次，这就是中国剩余定理的图像。",
+    "Give each number a row by its remainder on one modulus and a column by its remainder on the other. Counting 0, 1, 2, and so on walks diagonally through the table, wrapping at the edges. When the moduli are coprime the walk meets every cell exactly once, which is the Chinese Remainder Theorem seen as a picture.\n\n> **Watch out.** A cell's number is not built from its row and column by adding or multiplying them. It is the one number below $mn$ with both remainders, so search one row's numbers for the right column.",
+    "按一个模的余数给每个数定行，按另一个模的余数定列。从 0、1、2 依次数下去，就沿对角线走过表格，到边上再绕回来。两个模互质时，这条路线每格恰好经过一次，这就是中国剩余定理的图像。\n\n> **注意。** 格子里的数不是把行号和列号相加或相乘得到的。它是小于 $mn$ 且同时有这两个余数的那个数，所以要在一行的数里找出列号对的那个。",
   ),
   generate(rng) {
     const [m, n] = rng.pick([
@@ -212,6 +254,9 @@ const remainderTable: KnowledgePointDef = {
     ] as const);
     const placed = rng.int(Math.floor((m * n) / 3), Math.floor((m * n) / 2));
     const answer = rng.int(placed + 1, m * n - 1);
+    const row = answer % m;
+    const column = answer % n;
+    const inRow = Array.from({ length: n }, (_, k) => row + k * m);
     const cells = Array.from({ length: m }, (_, r) =>
       Array.from({ length: n }, (_, c) => {
         const x = Array.from({ length: m * n }, (_, v) => v).find((v) => v % m === r && v % n === c) as number;
@@ -219,16 +264,44 @@ const remainderTable: KnowledgePointDef = {
         return x <= placed ? String(x) : "";
       }),
     );
+    const off = (x: number): [string, string] =>
+      x >= m * n
+        ? [
+            `$${x}$ is beyond the table, which holds the numbers from $0$ to $${m * n - 1}$.`,
+            `$${x}$ 超出了表格，表中只有 $0$ 到 $${m * n - 1}$ 的数。`,
+          ]
+        : [
+            `$${x}$ belongs in row $${x % m}$, column $${x % n}$, not in the ringed cell.`,
+            `$${x}$ 应放在第 $${x % m}$ 行、第 $${x % n}$ 列，不在带圈的格子里。`,
+          ];
     return numeric(
       t(
         `Each whole number $x$ from 0 to ${m * n - 1} belongs in the cell with row $x \\bmod ${m}$ and column $x \\bmod ${n}$. The numbers up to ${placed} are in place. Which number belongs in the ringed cell?`,
         `从 0 到 ${m * n - 1} 的每个整数 $x$ 都放在第 $x \\bmod ${m}$ 行、第 $x \\bmod ${n}$ 列。不超过 ${placed} 的数已经放好。带圈的格子里应放哪个数？`,
       ),
       answer,
-      [answer + m, answer + n, Math.abs(answer - m), Math.abs(answer - n), (answer % m) * (answer % n), (answer % m) + (answer % n)],
-      t(
-        `The ringed cell asks for remainder ${answer % m} on ${m} and remainder ${answer % n} on ${n}. Since ${m} and ${n} are coprime, exactly one number below ${m * n} does both, and it is ${answer}.`,
-        `带圈的格子要求除以 ${m} 余 ${answer % m}，除以 ${n} 余 ${answer % n}。${m} 和 ${n} 互质，所以小于 ${m * n} 的数中恰有一个同时满足，就是 ${answer}。`,
+      [answer + m, answer + n, Math.abs(answer - m), Math.abs(answer - n), row * column, row + column],
+      walked(
+        [
+          [
+            ["Read the cell", "读出格子"],
+            t(
+              `The ringed cell is in row $${row}$ and column $${column}$: remainder $${row}$ on $${m}$ and $${column}$ on $${n}$.`,
+              `带圈的格子在第 $${row}$ 行、第 $${column}$ 列：除以 $${m}$ 余 $${row}$，除以 $${n}$ 余 $${column}$。`,
+            ),
+          ],
+          [
+            ["Search the row", "在这一行中查找"],
+            t(
+              `The numbers below $${m * n}$ in row $${row}$ are $${inRow.join(", ")}$, and the one that leaves $${column}$ on division by $${n}$ is $${answer}$.`,
+              `第 $${row}$ 行中小于 $${m * n}$ 的数是 $${inRow.join(", ")}$，其中除以 $${n}$ 余 $${column}$ 的是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer} = ${m} \\cdot ${Math.floor(answer / m)} + ${row}$ and $${answer} = ${n} \\cdot ${Math.floor(answer / n)} + ${column}$. Since $${m}$ and $${n}$ are coprime, no other number below $${m * n}$ shares both remainders.`,
+          `$${answer} = ${m} \\cdot ${Math.floor(answer / m)} + ${row}$，$${answer} = ${n} \\cdot ${Math.floor(answer / n)} + ${column}$。$${m}$ 和 $${n}$ 互质，所以小于 $${m * n}$ 的数中没有别的数同时有这两个余数。`,
+        ),
       ),
       grid(
         Array.from({ length: m }, (_, i) => String(i)),
@@ -240,6 +313,22 @@ const remainderTable: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        why(
+          row * column,
+          "That multiplies the row and column numbers; the cell holds the number with those two remainders.",
+          "这是把行号和列号相乘；格子里放的是有这两个余数的数。",
+        ),
+        why(
+          row + column,
+          "That adds the row and column numbers; the cell holds the number with those two remainders.",
+          "这是把行号和列号相加；格子里放的是有这两个余数的数。",
+        ),
+        why(answer + m, ...off(answer + m)),
+        why(answer + n, ...off(answer + n)),
+        why(Math.abs(answer - m), ...off(Math.abs(answer - m))),
+        why(Math.abs(answer - n), ...off(Math.abs(answer - n))),
+      ],
     );
   },
 };

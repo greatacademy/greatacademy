@@ -999,7 +999,7 @@ const remainderForAFactor: KnowledgePointDef = {
             t(`$n = ${a * b}q + ${r}$ for some integer $q$.`, `存在整数 $q$ 使 $n = ${a * b}q + ${r}$。`),
           ],
           [
-            ["Drop the multiple of " + a, `去掉 ${a} 的倍数`],
+            [`Drop the multiple of ${a}`, `去掉 ${a} 的倍数`],
             t(
               `$${a * b}q = ${a}(${b}q)$ is a multiple of $${a}$, so $n$ leaves the same remainder as $${r} = ${a} \\cdot ${Math.floor(r / a)} + ${answer}$: the remainder is $${answer}$.`,
               `$${a * b}q = ${a}(${b}q)$ 是 $${a}$ 的倍数，所以 $n$ 的余数与 $${r} = ${a} \\cdot ${Math.floor(r / a)} + ${answer}$ 相同：余数是 $${answer}$。`,
@@ -1535,8 +1535,8 @@ const nonCoprimeRemainders: KnowledgePointDef = {
   id: "two-congruences-with-moduli-that-share-a-factor",
   title: t("Two congruences with moduli that share a factor", "模数有公因数的两个同余式"),
   explanation: t(
-    "When the moduli share a factor, the Chinese remainder theorem does not apply directly. Two congruences can then conflict, and they are consistent only if the remainders agree modulo the gcd of the moduli. When they are consistent, the solutions repeat with period equal to the lcm of the moduli, not with period equal to their product.",
-    "模数有公因数时，不能直接用中国剩余定理。这时两个同余式可能冲突，只有余数模两个模数的最大公因数相同时才相容。相容时，解的周期是两个模数的最小公倍数，而不是它们的乘积。",
+    "When the moduli share a factor, the Chinese remainder theorem does not apply directly. Two congruences can then conflict, and they are consistent only if the remainders agree modulo the gcd of the moduli. When they are consistent, the solutions repeat with period equal to the lcm of the moduli, not with period equal to their product.\n\n> **Watch out.** The period is $\\operatorname{lcm}(m, n)$, which is smaller than $mn$ here, so the smallest positive solution lies below the lcm. The lcm itself is a period, not a solution.",
+    "模数有公因数时，不能直接用中国剩余定理。这时两个同余式可能冲突，只有余数模两个模数的最大公因数相同时才相容。相容时，解的周期是两个模数的最小公倍数，而不是它们的乘积。\n\n> **注意。** 周期是 $\\operatorname{lcm}(m, n)$，这里它小于 $mn$，所以最小正解在最小公倍数以下。最小公倍数本身是周期，不是解。",
   ),
   generate(rng) {
     const g = rng.int(2, 6);
@@ -1549,6 +1549,12 @@ const nonCoprimeRemainders: KnowledgePointDef = {
     const x = rng.int(Math.max(m, n), lcm - 1);
     const a = x % m;
     const b = x % n;
+    const run: number[] = [];
+    for (let y = a === 0 ? m : a; y <= x; y += m) run.push(y);
+    const off = (y: number): [string, string] => [
+      `$${y}$ leaves remainder $${y % m}$ on division by $${m}$ and $${y % n}$ on division by $${n}$.`,
+      `$${y}$ 除以 $${m}$ 余 $${y % m}$，除以 $${n}$ 余 $${y % n}$。`,
+    ];
     return numberProblem({
       prompt: t(
         `Find the smallest positive integer $x$ with $x \\equiv ${a} \\pmod{${m}}$ and $x \\equiv ${b} \\pmod{${n}}$.`,
@@ -1557,9 +1563,45 @@ const nonCoprimeRemainders: KnowledgePointDef = {
       answer: x,
       form: "integer",
       wrong: [x + lcm, lcm, a + b],
-      solution: t(
-        `Both moduli are multiples of ${g}, and the remainders agree modulo ${g}, so solutions exist and repeat every $\\operatorname{lcm}(${m}, ${n}) = ${lcm}$. Going through the numbers that leave ${a} on division by ${m}, the first that leaves ${b} on division by ${n} is $${x}$.`,
-        `两个模数都是 ${g} 的倍数，余数模 ${g} 相同，所以有解，且每隔 $\\operatorname{lcm}(${m}, ${n}) = ${lcm}$ 重复。逐个检查除以 ${m} 余 ${a} 的数，第一个除以 ${n} 余 ${b} 的是 $${x}$。`,
+      mistakes: firstOf([
+        why(
+          x + lcm,
+          `That satisfies both, but it is not the smallest: subtract the period $${lcm}$.`,
+          `它同时满足两个同余式，但不是最小的：减去周期 $${lcm}$。`,
+        ),
+        why(
+          lcm,
+          `$${lcm}$ is the period of the solutions, not a solution: it leaves remainder $0$ on both divisions.`,
+          `$${lcm}$ 是解的周期，不是解：两次除法的余数都是 $0$。`,
+        ),
+        why(a + b, ...off(a + b)),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Check that the congruences agree", "检查同余式是否相容"],
+            t(
+              `$\\gcd(${m}, ${n}) = ${g}$, and both remainders leave $${a % g}$ on division by $${g}$, so solutions exist and repeat every $\\operatorname{lcm}(${m}, ${n}) = ${lcm}$.`,
+              `$\\gcd(${m}, ${n}) = ${g}$，两个余数除以 $${g}$ 都余 $${a % g}$，所以有解，且每隔 $\\operatorname{lcm}(${m}, ${n}) = ${lcm}$ 重复。`,
+            ),
+          ],
+          [
+            ["Search one congruence", "沿一个同余式查找"],
+            run.length === 1
+              ? t(
+                  `The first positive number that leaves $${a}$ on division by $${m}$ is $${x}$, and it already leaves $${b}$ on division by $${n}$.`,
+                  `除以 $${m}$ 余 $${a}$ 的第一个正整数是 $${x}$，它除以 $${n}$ 恰好余 $${b}$。`,
+                )
+              : t(
+                  `The positive numbers that leave $${a}$ on division by $${m}$ begin $${run.join(", ")}$, and the first of them that leaves $${b}$ on division by $${n}$ is $${x}$.`,
+                  `除以 $${m}$ 余 $${a}$ 的正整数依次是 $${run.join(", ")}$，其中第一个除以 $${n}$ 余 $${b}$ 的是 $${x}$。`,
+                ),
+          ],
+        ],
+        t(
+          `$${x} = ${m} \\cdot ${Math.floor(x / m)} + ${a}$ and $${x} = ${n} \\cdot ${Math.floor(x / n)} + ${b}$, with $${x} < ${lcm}$.`,
+          `$${x} = ${m} \\cdot ${Math.floor(x / m)} + ${a}$，$${x} = ${n} \\cdot ${Math.floor(x / n)} + ${b}$，且 $${x} < ${lcm}$。`,
+        ),
       ),
     });
   },
@@ -3795,8 +3837,8 @@ const cycleLengthOfPowers: KnowledgePointDef = {
   id: "the-cycle-length-of-powers-modulo-n",
   title: t("The cycle length of powers modulo $n$", "模 $n$ 的幂的循环长度"),
   explanation: t(
-    "Because a congruence can be multiplied by the same number on both sides, each power's remainder is decided by the one before it. Once a power of a number coprime to the modulus reaches remainder $1$, the next power repeats the base, and the whole cycle starts over. This is why very large powers can be reduced by working with the length of that cycle.",
-    "由于同余式两边可以乘同一个数，每个幂的余数都由前一个幂的余数决定。与模互素的数的某个幂的余数一旦为 $1$，下一个幂就回到底数，整个循环重新开始。这就是可以利用循环长度化简很大的幂的原因。",
+    "Because a congruence can be multiplied by the same number on both sides, each power's remainder is decided by the one before it. Once a power of a number coprime to the modulus reaches remainder $1$, the next power repeats the base, and the whole cycle starts over. This is why very large powers can be reduced by working with the length of that cycle.\n\n> **Watch out.** The cycle length divides $\\varphi(m)$ but is often smaller, so neither $\\varphi(m)$ nor $m - 1$ can be taken on trust. List the remainders until the first $1$ appears.",
+    "由于同余式两边可以乘同一个数，每个幂的余数都由前一个幂的余数决定。与模互素的数的某个幂的余数一旦为 $1$，下一个幂就回到底数，整个循环重新开始。这就是可以利用循环长度化简很大的幂的原因。\n\n> **注意。** 循环长度整除 $\\varphi(m)$，但常常更小，所以不能想当然地取 $\\varphi(m)$ 或 $m - 1$。要把余数列出来，直到第一次出现 $1$。",
   ),
   generate(rng) {
     const pairs = [...Array(11).keys()]
@@ -3815,9 +3857,38 @@ const cycleLengthOfPowers: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [totient(m), m - 1, answer + 1],
-      solution: t(
-        `Multiplying by ${a} and reducing modulo ${m} at each step, the powers of ${a} leave the remainders ${remainders.join(", ")}. The first remainder of 1 is number ${answer} in this list, so $k = ${answer}$.`,
-        `每步乘以 ${a} 并对 ${m} 取模，${a} 的各次幂的余数依次是 ${remainders.join(", ")}。余数 1 第一次出现在第 ${answer} 个位置，所以 $k = ${answer}$。`,
+      mistakes: firstOf([
+        why(
+          totient(m),
+          `$\\varphi(${m}) = ${totient(m)}$ is a multiple of the cycle length; the first power $\\equiv 1$ can come sooner.`,
+          `$\\varphi(${m}) = ${totient(m)}$ 是循环长度的倍数；第一个 $\\equiv 1$ 的幂可能更早出现。`,
+        ),
+        why(
+          m - 1,
+          `$${m - 1}$ is not where the cycle has to close; list the remainders to find the first $1$.`,
+          `循环不一定在 $${m - 1}$ 处闭合；列出余数，找到第一个 $1$。`,
+        ),
+        why(answer + 1, "That counts one step past the first remainder $1$.", "这数到了第一个余数 $1$ 之后的一步。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["List the remainders", "列出余数"],
+            t(`Multiply by $${a}$ and reduce modulo $${m}$ at each step:`, `每步乘以 $${a}$ 并对 $${m}$ 取模：`),
+            remainders.map((r, i) => `${a}^{${i + 1}} \\equiv ${r}`),
+          ],
+          [
+            ["Find the first 1", "找出第一个 1"],
+            t(
+              `The first remainder $1$ comes at the power $${answer}$, so $k = ${answer}$.`,
+              `余数 $1$ 第一次出现在第 $${answer}$ 次幂，所以 $k = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `One more factor gives $${a}^{${answer + 1}} \\equiv 1 \\cdot ${a} \\equiv ${a % m}$, the first remainder again, so the cycle starts over.`,
+          `再乘一次得 $${a}^{${answer + 1}} \\equiv 1 \\cdot ${a} \\equiv ${a % m}$，又回到第一个余数，循环重新开始。`,
+        ),
       ),
     });
   },
@@ -4616,8 +4687,8 @@ const residueOfLongSum: KnowledgePointDef = {
   id: "the-residue-of-a-long-sum",
   title: t("The residue of a long sum", "长求和的剩余"),
   explanation: t(
-    "The least nonnegative residue of a sum like $1 + 2 + \\dots + n$ can be found without adding the terms one by one. The closed form $\\frac{n(n + 1)}{2}$ gives the whole sum at once, and dividing that by the modulus gives the residue. Take care not to reduce $n$ first and then apply the formula, because the division by 2 does not always behave well with congruences. Reducing after computing the exact integer is always safe.",
-    "像 $1 + 2 + \\dots + n$ 这样的和，其最小非负剩余不必逐项相加。封闭式 $\\frac{n(n + 1)}{2}$ 一下子给出整个和，再除以模就得到剩余。注意不要先化简 $n$ 再套公式，因为除以 2 与同余的配合并不总是可靠。算出精确的整数后再化简总是安全的。",
+    "The least nonnegative residue of a sum like $1 + 2 + \\dots + n$ can be found without adding the terms one by one. The closed form $\\frac{n(n + 1)}{2}$ gives the whole sum at once, and dividing that by the modulus gives the residue. Take care not to reduce $n$ first and then apply the formula, because the division by 2 does not always behave well with congruences. Reducing after computing the exact integer is always safe.\n\n> **Watch out.** Divide $n(n + 1)$ by $2$ before reducing. The residue of $n(n + 1)$ alone belongs to twice the sum.",
+    "像 $1 + 2 + \\dots + n$ 这样的和，其最小非负剩余不必逐项相加。封闭式 $\\frac{n(n + 1)}{2}$ 一下子给出整个和，再除以模就得到剩余。注意不要先化简 $n$ 再套公式，因为除以 2 与同余的配合并不总是可靠。算出精确的整数后再化简总是安全的。\n\n> **注意。** 先把 $n(n + 1)$ 除以 $2$ 再约化。只约化 $n(n + 1)$ 得到的是和的两倍的剩余。",
   ),
   generate(rng) {
     const n = rng.int(10, 200);
@@ -4625,6 +4696,7 @@ const residueOfLongSum: KnowledgePointDef = {
     const sum = (n * (n + 1)) / 2;
     const answer = sum % m;
     const reduced = n % m;
+    const twice = n * (n + 1);
     return numberProblem({
       prompt: t(
         `Find the least nonnegative residue of $1 + 2 + \\dots + ${n}$ modulo ${m}.`,
@@ -4632,10 +4704,37 @@ const residueOfLongSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [reduced, (n * (n + 1)) % m, ((reduced * (reduced + 1)) >> 1) % m, (answer + 1) % m],
-      solution: t(
-        `The sum is $\\frac{${n} \\cdot ${n + 1}}{2} = ${sum}$, and dividing by ${m} leaves the remainder $${answer}$.`,
-        `和是 $\\frac{${n} \\cdot ${n + 1}}{2} = ${sum}$，除以 ${m} 余 $${answer}$。`,
+      wrong: [reduced, twice % m, ((reduced * (reduced + 1)) >> 1) % m, (answer + 1) % m],
+      mistakes: firstOf([
+        why(reduced, `That is the residue of $${n}$, the last term, not of the sum.`, `这是最后一项 $${n}$ 的剩余，而不是和的剩余。`),
+        why(twice % m, "That leaves out the division by $2$ in the closed form.", "这漏掉了封闭式中的除以 $2$。"),
+        why(
+          ((reduced * (reduced + 1)) >> 1) % m,
+          `That reduces $${n}$ before using the formula; the division by $2$ goes wrong after reducing.`,
+          `这是先约化 $${n}$ 再用公式；约化之后除以 $2$ 会出错。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the closed form", "用封闭式"],
+            t(
+              `$1 + 2 + \\dots + ${n} = \\frac{${n} \\cdot ${n + 1}}{2} = ${sum}$.`,
+              `$1 + 2 + \\dots + ${n} = \\frac{${n} \\cdot ${n + 1}}{2} = ${sum}$。`,
+            ),
+          ],
+          [
+            ["Divide by the modulus", "除以模"],
+            t(
+              `$${sum} = ${m} \\cdot ${Math.floor(sum / m)} + ${answer}$, so the residue is $${answer}$.`,
+              `$${sum} = ${m} \\cdot ${Math.floor(sum / m)} + ${answer}$，所以剩余是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Twice the sum is $${n} \\cdot ${n + 1} = ${twice} \\equiv ${twice % m}$, and $2 \\cdot ${answer} = ${2 * answer} \\equiv ${(2 * answer) % m} \\pmod{${m}}$, as it should be.`,
+          `和的两倍是 $${n} \\cdot ${n + 1} = ${twice} \\equiv ${twice % m}$，而 $2 \\cdot ${answer} = ${2 * answer} \\equiv ${(2 * answer) % m} \\pmod{${m}}$，正好吻合。`,
+        ),
       ),
     });
   },
@@ -4645,8 +4744,8 @@ const missingDigit: KnowledgePointDef = {
   id: "the-missing-digit-for-divisibility-by-nine",
   title: t("The missing digit for divisibility by nine", "被九整除所缺的数字"),
   explanation: t(
-    "Since $10 \\equiv 1 \\pmod 9$, every power of 10 is also congruent to 1, and so a number is congruent to the sum of its digits modulo 9. This proves the digit test for divisibility by 9, and it turns a question about a long number into a question about a small sum. A missing digit must bring the digit sum to a multiple of 9, and among the digits only 0 and 9 have the same effect.",
-    "由于 $10 \\equiv 1 \\pmod 9$，10 的每个幂也同余于 1，所以一个数模 9 同余于它的各位数字之和。这证明了被 9 整除的数字判别法，也把关于长数字的问题变成了关于小和数的问题。所缺的数字必须使数字和成为 9 的倍数，而在所有数字中只有 0 和 9 的效果相同。",
+    "Since $10 \\equiv 1 \\pmod 9$, every power of 10 is also congruent to 1, and so a number is congruent to the sum of its digits modulo 9. This proves the digit test for divisibility by 9, and it turns a question about a long number into a question about a small sum. A missing digit must bring the digit sum to a multiple of 9, and among the digits only 0 and 9 have the same effect.\n\n> **Watch out.** The remainder of the known digits is not the missing digit. The missing digit is the gap from the known sum up to the next multiple of $9$.",
+    "由于 $10 \\equiv 1 \\pmod 9$，10 的每个幂也同余于 1，所以一个数模 9 同余于它的各位数字之和。这证明了被 9 整除的数字判别法，也把关于长数字的问题变成了关于小和数的问题。所缺的数字必须使数字和成为 9 的倍数，而在所有数字中只有 0 和 9 的效果相同。\n\n> **注意。** 已知数字之和的余数不是所缺的数字。所缺的数字是已知数字之和到下一个 $9$ 的倍数的差。",
   ),
   generate(rng) {
     const first = rng.int(1, 9);
@@ -4658,6 +4757,11 @@ const missingDigit: KnowledgePointDef = {
     const known = first + second + third + adjusted;
     const answer = (9 - (known % 9)) % 9;
     const shown = `${first}${second}\\square${third}${adjusted}`;
+    const full = Number(`${first}${second}${answer}${third}${adjusted}`);
+    const offBy = (d: number): [string, string] => [
+      `Then the digit sum is $${known + d}$, which is not a multiple of $9$.`,
+      `那样数字之和是 $${known + d}$，不是 $9$ 的倍数。`,
+    ];
     return numberProblem({
       prompt: t(
         `The digit $\\square$ makes the number $${shown}$ divisible by 9. Find the digit.`,
@@ -4666,9 +4770,33 @@ const missingDigit: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [9 - answer, (answer + 3) % 10, answer + 1, answer === 1 ? 2 : answer - 1],
-      solution: t(
-        `The known digits add to $${known}$, and the next multiple of 9 is $${known + answer}$. So the missing digit is $${answer}$.`,
-        `已知数字之和是 $${known}$，下一个 9 的倍数是 $${known + answer}$。所以所缺的数字是 $${answer}$。`,
+      mistakes: firstOf([
+        why(
+          9 - answer,
+          `That is the remainder of the known digits; the missing digit tops $${known}$ up to a multiple of $9$.`,
+          `这是已知数字之和的余数；所缺的数字要把 $${known}$ 补到 $9$ 的倍数。`,
+        ),
+        why(answer + 1, ...offBy(answer + 1)),
+        why(answer === 1 ? 2 : answer - 1, ...offBy(answer === 1 ? 2 : answer - 1)),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the known digits", "把已知数字相加"],
+            t(
+              `$${first} + ${second} + ${third} + ${adjusted} = ${known}$.`,
+              `$${first} + ${second} + ${third} + ${adjusted} = ${known}$。`,
+            ),
+          ],
+          [
+            ["Reach the next multiple of 9", "补到下一个 9 的倍数"],
+            t(
+              `The next multiple of $9$ is $${known + answer}$, so the missing digit is $${known + answer} - ${known} = ${answer}$.`,
+              `下一个 $9$ 的倍数是 $${known + answer}$，所以所缺的数字是 $${known + answer} - ${known} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(`$${full} = 9 \\cdot ${full / 9}$.`, `$${full} = 9 \\cdot ${full / 9}$。`),
       ),
     });
   },
@@ -4678,8 +4806,8 @@ const selfAdditiveInverses: KnowledgePointDef = {
   id: "the-residues-equal-to-their-own-additive-inverse",
   title: t("The residues equal to their own additive inverse", "等于自身加法逆元的剩余"),
   explanation: t(
-    "Most residues pair up with a different additive inverse, since $x$ and $n - x$ are usually different. A residue equal to its own inverse must satisfy $2x \\equiv 0 \\pmod n$. The residue 0 always qualifies. When $n$ is even, the residue $\\frac{n}{2}$ also qualifies, and there are no others. So the count depends only on the parity of $n$, which also tells us about the pairing of the other residues.",
-    "大多数剩余与一个不同的加法逆元配对，因为 $x$ 和 $n - x$ 通常不同。等于自身逆元的剩余必须满足 $2x \\equiv 0 \\pmod n$。剩余 0 总是满足。当 $n$ 是偶数时，剩余 $\\frac{n}{2}$ 也满足，没有其他的了。所以个数只取决于 $n$ 的奇偶性，这也说明了其余剩余的配对情况。",
+    "Most residues pair up with a different additive inverse, since $x$ and $n - x$ are usually different. A residue equal to its own inverse must satisfy $2x \\equiv 0 \\pmod n$. The residue 0 always qualifies. When $n$ is even, the residue $\\frac{n}{2}$ also qualifies, and there are no others. So the count depends only on the parity of $n$, which also tells us about the pairing of the other residues.\n\n> **Watch out.** $2x \\equiv 0$ is not the same as $x \\equiv 0$. For an even modulus, $2 \\cdot \\frac{n}{2} = n \\equiv 0$ as well.",
+    "大多数剩余与一个不同的加法逆元配对，因为 $x$ 和 $n - x$ 通常不同。等于自身逆元的剩余必须满足 $2x \\equiv 0 \\pmod n$。剩余 0 总是满足。当 $n$ 是偶数时，剩余 $\\frac{n}{2}$ 也满足，没有其他的了。所以个数只取决于 $n$ 的奇偶性，这也说明了其余剩余的配对情况。\n\n> **注意。** $2x \\equiv 0$ 与 $x \\equiv 0$ 不同。对偶数模，$2 \\cdot \\frac{n}{2} = n \\equiv 0$ 也成立。",
   ),
   generate(rng) {
     const n = rng.int(3, 60);
@@ -4693,9 +4821,48 @@ const selfAdditiveInverses: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [even ? 1 : 2, 0, Math.floor(n / 2), n],
-      solution: t(
-        `The condition is $2x \\equiv 0 \\pmod{${n}}$. ${even ? `Its solutions are $0$ and $${n / 2}$` : "Since the modulus is odd, its only solution is $0$"}, so the count is $${answer}$.`,
-        `条件是 $2x \\equiv 0 \\pmod{${n}}$。${even ? `它的解是 $0$ 和 $${n / 2}$` : "由于模是奇数，它唯一的解是 $0$"}，所以个数是 $${answer}$。`,
+      mistakes: firstOf([
+        even
+          ? why(
+              1,
+              `That counts only $0$; with an even modulus, $2x \\equiv 0$ has another solution.`,
+              `这只数了 $0$；模为偶数时，$2x \\equiv 0$ 还有一个解。`,
+            )
+          : why(2, `$\\frac{${n}}{2}$ is not a whole number, so it is not a residue.`, `$\\frac{${n}}{2}$ 不是整数，所以不是剩余。`),
+        why(0, "$0$ always works, since $-0 = 0$.", "$0$ 总是满足，因为 $-0 = 0$。"),
+        why(
+          Math.floor(n / 2),
+          "That counts the pairs $x$ and $n - x$; only residues paired with themselves count.",
+          "这数的是 $x$ 与 $n - x$ 组成的对；只有与自身配对的剩余才算。",
+        ),
+        why(n, "Most residues differ from their inverse $n - x$.", "大多数剩余与它的逆元 $n - x$ 不同。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Rewrite the condition", "改写条件"],
+            t(
+              `$x \\equiv -x$ means $2x \\equiv 0 \\pmod{${n}}$, so $${n} \\mid 2x$.`,
+              `$x \\equiv -x$ 意味着 $2x \\equiv 0 \\pmod{${n}}$，即 $${n} \\mid 2x$。`,
+            ),
+          ],
+          [
+            ["Solve in the range", "在范围内求解"],
+            t(
+              `For $0 \\le x < ${n}$, $2x$ lies in $[0, ${2 * n})$, so $2x = 0$ or $2x = ${n}$. ${even ? `Both work: $x = 0$ and $x = ${n / 2}$` : `Only $2x = 0$ works, since $${n}$ is odd`}, so the count is $${answer}$.`,
+              `当 $0 \\le x < ${n}$ 时，$2x$ 在 $[0, ${2 * n})$ 中，所以 $2x = 0$ 或 $2x = ${n}$。${even ? `两者都可以：$x = 0$ 和 $x = ${n / 2}$` : `由于 $${n}$ 是奇数，只有 $2x = 0$ 可以`}，所以个数是 $${answer}$。`,
+            ),
+          ],
+        ],
+        even
+          ? t(
+              `$${n / 2} + ${n / 2} = ${n} \\equiv 0$, so $${n / 2}$ is its own inverse.`,
+              `$${n / 2} + ${n / 2} = ${n} \\equiv 0$，所以 $${n / 2}$ 是自身的逆元。`,
+            )
+          : t(
+              `Every other residue $x$ pairs with $${n} - x \\ne x$, which leaves only $0$ unpaired.`,
+              `其余每个剩余 $x$ 都与 $${n} - x \\ne x$ 配对，只剩 $0$ 没有配对。`,
+            ),
       ),
     });
   },
@@ -4705,13 +4872,14 @@ const selfMultiplicativeInverses: KnowledgePointDef = {
   id: "counting-the-residues-that-are-their-own-inverse",
   title: t("Counting the residues that are their own inverse", "计算自身就是逆元的剩余"),
   explanation: t(
-    "A residue is its own multiplicative inverse when $x^2 \\equiv 1 \\pmod n$. The residues 1 and $n - 1$ always work. For a prime modulus there are no others, because $n$ dividing $(x - 1)(x + 1)$ forces it to divide one of the factors. For a composite modulus, the factors can share out the prime powers of $n$, and so there may be more solutions, for example 3 and 5 modulo 8.",
-    "当 $x^2 \\equiv 1 \\pmod n$ 时，剩余是它自身的乘法逆元。剩余 1 和 $n - 1$ 总是可行。对素数模没有其他解，因为 $n$ 整除 $(x - 1)(x + 1)$ 就必须整除其中一个因子。对合数模，两个因子可以分担 $n$ 的素数幂，所以可能有更多的解，例如模 8 时的 3 和 5。",
+    "A residue is its own multiplicative inverse when $x^2 \\equiv 1 \\pmod n$. The residues 1 and $n - 1$ always work. For a prime modulus there are no others, because $n$ dividing $(x - 1)(x + 1)$ forces it to divide one of the factors. For a composite modulus, the factors can share out the prime powers of $n$, and so there may be more solutions, for example 3 and 5 modulo 8.\n\n> **Watch out.** Being its own inverse is much rarer than having an inverse: count the solutions of $x^2 \\equiv 1$, not all residues coprime to $n$.",
+    "当 $x^2 \\equiv 1 \\pmod n$ 时，剩余是它自身的乘法逆元。剩余 1 和 $n - 1$ 总是可行。对素数模没有其他解，因为 $n$ 整除 $(x - 1)(x + 1)$ 就必须整除其中一个因子。对合数模，两个因子可以分担 $n$ 的素数幂，所以可能有更多的解，例如模 8 时的 3 和 5。\n\n> **注意。** 自身就是逆元比有逆元少见得多：要数 $x^2 \\equiv 1$ 的解，而不是所有与 $n$ 互素的剩余。",
   ),
   generate(rng) {
     const n = rng.int(5, 60);
     const solutions = [...Array(n).keys()].filter((x) => (x * x) % n === 1);
     const answer = solutions.length;
+    const half = solutions.filter((x) => 2 * x < n);
     return numberProblem({
       prompt: t(
         `How many residues $x$ in $\\{0, 1, \\dots, ${n - 1}\\}$ are their own multiplicative inverse modulo ${n}?`,
@@ -4720,9 +4888,32 @@ const selfMultiplicativeInverses: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2, totient(n), 1, answer + 2],
-      solution: t(
-        `The solutions of $x^2 \\equiv 1 \\pmod{${n}}$ are $${solutions.join(", ")}$, which makes $${answer}$.`,
-        `$x^2 \\equiv 1 \\pmod{${n}}$ 的解是 $${solutions.join(", ")}$，共 $${answer}$ 个。`,
+      mistakes: firstOf([
+        why(
+          2,
+          `$1$ and $${n - 1}$ are not the only ones for this modulus; test the other residues too.`,
+          `对这个模，$1$ 和 $${n - 1}$ 不是仅有的解；其他剩余也要检验。`,
+        ),
+        why(
+          totient(n),
+          "That counts every residue with an inverse, not those equal to their own inverse.",
+          "这数的是所有有逆元的剩余，而不是等于自身逆元的剩余。",
+        ),
+        why(1, `$${n - 1}$ works as well: $(${n - 1})^2 \\equiv (-1)^2 = 1$.`, `$${n - 1}$ 也满足：$(${n - 1})^2 \\equiv (-1)^2 = 1$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Test the squares", "检验平方"],
+            t(`The residues with $x^2 \\equiv 1 \\pmod{${n}}$ are:`, `满足 $x^2 \\equiv 1 \\pmod{${n}}$ 的剩余是：`),
+            solutions.map((x) => `${x}^2 = ${x * x} = ${n} \\cdot ${(x * x - 1) / n} + 1`),
+          ],
+          [["Count", "计数"], t(`That makes $${answer}$.`, `共 $${answer}$ 个。`)],
+        ],
+        t(
+          `The solutions pair up as $x$ and $${n} - x$, since $(${n} - x)^2 \\equiv x^2$: ${half.map((x) => `$${x}, ${n - x}$`).join("; ")}.`,
+          `解按 $x$ 与 $${n} - x$ 成对出现，因为 $(${n} - x)^2 \\equiv x^2$：${half.map((x) => `$${x}, ${n - x}$`).join("；")}。`,
+        ),
       ),
     });
   },
@@ -5001,8 +5192,8 @@ const modulusOfCongruence: KnowledgePointDef = {
   id: "counting-the-moduli-for-which-two-numbers-are-congruent",
   title: t("Counting the moduli for which two numbers are congruent", "计算使两数同余的模"),
   explanation: t(
-    "By definition, $a \\equiv b \\pmod m$ means that $m$ divides $a - b$. So the moduli that make two given numbers congruent are exactly the divisors of their difference. Moduli are usually taken to be greater than 1, which removes one divisor from the count. The size of the numbers does not matter, only their difference, so that a question about large numbers can come down to factoring a small one.",
-    "按定义，$a \\equiv b \\pmod m$ 意味着 $m$ 整除 $a - b$。所以使两个给定的数同余的模，恰好是它们之差的因数。模通常取大于 1 的数，这样要从个数中去掉一个因数。这两个数本身的大小不重要，只有差才重要，所以关于大数的问题可以归结为分解一个小数。",
+    "By definition, $a \\equiv b \\pmod m$ means that $m$ divides $a - b$. So the moduli that make two given numbers congruent are exactly the divisors of their difference. Moduli are usually taken to be greater than 1, which removes one divisor from the count. The size of the numbers does not matter, only their difference, so that a question about large numbers can come down to factoring a small one.\n\n> **Watch out.** Only divisors of the difference work, not every number up to it, and $m = 1$ is left out of the count.",
+    "按定义，$a \\equiv b \\pmod m$ 意味着 $m$ 整除 $a - b$。所以使两个给定的数同余的模，恰好是它们之差的因数。模通常取大于 1 的数，这样要从个数中去掉一个因数。这两个数本身的大小不重要，只有差才重要，所以关于大数的问题可以归结为分解一个小数。\n\n> **注意。** 只有差的因数才行，而不是不超过差的每个数，并且 $m = 1$ 不计入。",
   ),
   generate(rng) {
     const a = rng.int(1, 200);
@@ -5010,6 +5201,7 @@ const modulusOfCongruence: KnowledgePointDef = {
     const b = a + difference;
     const divisors = divisorsOf(difference);
     const answer = divisors.length - 1;
+    const pairs = divisors.filter((d) => d * d <= difference).map((d) => `${d} \\cdot ${difference / d}`);
     return numberProblem({
       prompt: t(
         `For how many integers $m > 1$ is $${b} \\equiv ${a} \\pmod m$ true?`,
@@ -5018,9 +5210,37 @@ const modulusOfCongruence: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [divisors.length, difference, difference - 1, answer + 2],
-      solution: t(
-        `The modulus $m$ must divide $${b} - ${a} = ${difference}$, which has $${divisors.length}$ positive divisors. Leaving out 1 gives $${answer}$.`,
-        `模 $m$ 必须整除 $${b} - ${a} = ${difference}$，它有 $${divisors.length}$ 个正因数。去掉 1，得 $${answer}$。`,
+      mistakes: firstOf([
+        why(divisors.length, "That includes $m = 1$, which the question leaves out.", "这包括了 $m = 1$，而题目不计入它。"),
+        why(
+          difference,
+          `Not every number up to $${difference}$ works; only its divisors do.`,
+          `并不是不超过 $${difference}$ 的每个数都行；只有它的因数才行。`,
+        ),
+        why(
+          difference - 1,
+          `Not every number from $2$ to $${difference}$ works; only the divisors of $${difference}$ do.`,
+          `并不是 $2$ 到 $${difference}$ 的每个数都行；只有 $${difference}$ 的因数才行。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the difference", "求差"],
+            t(`$m$ must divide $${b} - ${a} = ${difference}$.`, `$m$ 必须整除 $${b} - ${a} = ${difference}$。`),
+          ],
+          [
+            ["Count the divisors above 1", "数出大于 1 的因数"],
+            t(
+              `The divisors of $${difference}$ are $${divisors.join(", ")}$: $${divisors.length}$ of them, and leaving out $1$ gives $${answer}$.`,
+              `$${difference}$ 的因数是 $${divisors.join(", ")}$：共 $${divisors.length}$ 个，去掉 $1$ 得 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The divisors come in pairs with product $${difference}$: $${pairs.join(", \\ ")}$, which accounts for all $${divisors.length}$.`,
+          `因数成对出现，乘积为 $${difference}$：$${pairs.join(", \\ ")}$，正好是全部 $${divisors.length}$ 个。`,
+        ),
       ),
     });
   },

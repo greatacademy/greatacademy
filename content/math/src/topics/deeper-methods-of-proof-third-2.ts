@@ -494,8 +494,8 @@ const linearCombination = point(
   "a-linear-combination-of-congruences",
   ["A linear combination of congruences", "同余式的线性组合"],
   [
-    "Congruences can be multiplied by constants and added or subtracted, so a whole linear combination can be reduced using only the remainders. A subtraction may give a negative value, and then a multiple of the modulus must be added to bring it into the standard range.",
-    "同余式可以乘以常数并相加或相减，所以整个线性组合只需用余数来化简。减法可能得到负值，这时要加上模的倍数，把它变到标准范围内。",
+    "Congruences can be multiplied by constants and added or subtracted, so a whole linear combination can be reduced using only the remainders. A subtraction may give a negative value, and then a multiple of the modulus must be added to bring it into the standard range.\n\n> **Watch out.** A negative value is not yet a remainder. Add a multiple of the modulus to it, rather than dropping its minus sign.",
+    "同余式可以乘以常数并相加或相减，所以整个线性组合只需用余数来化简。减法可能得到负值，这时要加上模的倍数，把它变到标准范围内。\n\n> **注意。** 负值还不是余数。要给它加上模的倍数，而不是去掉负号。",
   ],
   (rng) => {
     const m = rng.int(5, 15);
@@ -512,17 +512,35 @@ const linearCombination = point(
     } while ((k * r - l * s) % m === 0);
     const raw = k * r - l * s;
     const answer = ((raw % m) + m) % m;
-    return ask(
-      [
-        `Suppose $a \\equiv ${r} \\pmod{${m}}$ and $b \\equiv ${s} \\pmod{${m}}$. Find the remainder $x$ with $0 \\le x < ${m}$ and $${k}a - ${l}b \\equiv x \\pmod{${m}}$.`,
-        `设 $a \\equiv ${r} \\pmod{${m}}$，$b \\equiv ${s} \\pmod{${m}}$。求满足 $0 \\le x < ${m}$ 且 $${k}a - ${l}b \\equiv x \\pmod{${m}}$ 的余数 $x$。`,
-      ],
-      answer,
-      [(k * r + l * s) % m, Math.abs(raw) % m, (((r - s) % m) + m) % m],
-      [
-        `Substituting the remainders gives $${k} \\cdot ${r} - ${l} \\cdot ${s} = ${raw}$, and reducing this modulo $${m}$ gives $${answer}$.`,
-        `代入余数，得 $${k} \\cdot ${r} - ${l} \\cdot ${s} = ${raw}$，把它模 $${m}$ 化简，得 $${answer}$。`,
-      ],
+    const q = Math.floor(raw / m);
+    const shown = raw < 0 ? `(${raw})` : String(raw);
+    const times = q < 0 ? `(${q})` : String(q);
+    return withMistakes(
+      ask(
+        [
+          `Suppose $a \\equiv ${r} \\pmod{${m}}$ and $b \\equiv ${s} \\pmod{${m}}$. Find the remainder $x$ with $0 \\le x < ${m}$ and $${k}a - ${l}b \\equiv x \\pmod{${m}}$.`,
+          `设 $a \\equiv ${r} \\pmod{${m}}$，$b \\equiv ${s} \\pmod{${m}}$。求满足 $0 \\le x < ${m}$ 且 $${k}a - ${l}b \\equiv x \\pmod{${m}}$ 的余数 $x$。`,
+        ],
+        answer,
+        [(k * r + l * s) % m, Math.abs(raw) % m, (((r - s) % m) + m) % m],
+        [
+          `**Step 1: Substitute the remainders.** $${k} \\cdot ${r} - ${l} \\cdot ${s} = ${k * r} - ${l * s} = ${raw}$.\n\n**Step 2: Reduce.** $${raw} = ${m} \\cdot ${times} + ${answer}$, so the remainder is $${answer}$.\n\n**Check.** $${answer} - ${shown} = ${answer - raw} = ${m} \\cdot ${-q}$, a multiple of $${m}$, and $0 \\le ${answer} < ${m}$.`,
+          `**第一步：代入余数。** $${k} \\cdot ${r} - ${l} \\cdot ${s} = ${k * r} - ${l * s} = ${raw}$。\n\n**第二步：化简。** $${raw} = ${m} \\cdot ${times} + ${answer}$，所以余数是 $${answer}$。\n\n**检验。** $${answer} - ${shown} = ${answer - raw} = ${m} \\cdot ${-q}$，是 $${m}$ 的倍数，且 $0 \\le ${answer} < ${m}$。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String((k * r + l * s) % m),
+          `That adds the two terms; the combination subtracts $${l}b$.`,
+          `这是把两项相加；组合中是减去 $${l}b$。`,
+        ),
+        say(
+          String(Math.abs(raw) % m),
+          `That drops the minus sign of $${raw}$; add a multiple of $${m}$ instead.`,
+          `这是去掉了 $${raw}$ 的负号；应加上 $${m}$ 的倍数。`,
+        ),
+        say(String((((r - s) % m) + m) % m), `That leaves out the coefficients $${k}$ and $${l}$.`, `这漏掉了系数 $${k}$ 和 $${l}$。`),
+      ]),
     );
   },
 );
@@ -531,8 +549,8 @@ const twoCancellations = point(
   "combining-two-cancellations",
   ["Combining two cancellations", "结合两次约分"],
   [
-    "Cancelling $k$ from a congruence divides the modulus by $\\gcd(k, m)$. Two different cancellations give two moduli, and a number congruent under both is congruent under their least common multiple, so the two facts together are stronger than either one alone.",
-    "从同余式中约去 $k$ 时，模要除以 $\\gcd(k, m)$。两次不同的约分给出两个模，在两者下都同余的数在它们的最小公倍数下也同余，所以两个事实合起来比单独任何一个都强。",
+    "Cancelling $k$ from a congruence divides the modulus by $\\gcd(k, m)$. Two different cancellations give two moduli, and a number congruent under both is congruent under their least common multiple, so the two facts together are stronger than either one alone.\n\n> **Watch out.** Combine the two moduli by their least common multiple, not their product, and keep both rather than only the larger one.",
+    "从同余式中约去 $k$ 时，模要除以 $\\gcd(k, m)$。两次不同的约分给出两个模，在两者下都同余的数在它们的最小公倍数下也同余，所以两个事实合起来比单独任何一个都强。\n\n> **注意。** 两个模要取最小公倍数来合并，而不是取乘积，并且两个都要用上，不能只取较大的那个。",
   ],
   (rng) => {
     let m: number;
@@ -549,17 +567,36 @@ const twoCancellations = point(
       m2 = m / gcd(k2, m);
     } while (m1 % m2 === 0 || m2 % m1 === 0);
     const answer = lcm(m1, m2);
-    return ask(
-      [
-        `Suppose $${k1}a \\equiv ${k1}b \\pmod{${m}}$ and $${k2}a \\equiv ${k2}b \\pmod{${m}}$. What is the largest $n$ for which $a \\equiv b \\pmod{n}$ must hold?`,
-        `设 $${k1}a \\equiv ${k1}b \\pmod{${m}}$，$${k2}a \\equiv ${k2}b \\pmod{${m}}$。使 $a \\equiv b \\pmod{n}$ 必定成立的最大 $n$ 是多少？`,
-      ],
-      answer,
-      [m1, m2, m1 * m2 === answer ? m + 1 : m1 * m2],
-      [
-        `Since $\\gcd(${k1}, ${m}) = ${gcd(k1, m)}$ and $\\gcd(${k2}, ${m}) = ${gcd(k2, m)}$, the two congruences give $a \\equiv b$ modulo $${m1}$ and modulo $${m2}$. Together these give the least common multiple, which is $${answer}$.`,
-        `因为 $\\gcd(${k1}, ${m}) = ${gcd(k1, m)}$，$\\gcd(${k2}, ${m}) = ${gcd(k2, m)}$，两个同余式分别给出模 $${m1}$ 和模 $${m2}$ 下的 $a \\equiv b$。合起来就得到它们的最小公倍数，即 $${answer}$。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `Suppose $${k1}a \\equiv ${k1}b \\pmod{${m}}$ and $${k2}a \\equiv ${k2}b \\pmod{${m}}$. What is the largest $n$ for which $a \\equiv b \\pmod{n}$ must hold?`,
+          `设 $${k1}a \\equiv ${k1}b \\pmod{${m}}$，$${k2}a \\equiv ${k2}b \\pmod{${m}}$。使 $a \\equiv b \\pmod{n}$ 必定成立的最大 $n$ 是多少？`,
+        ],
+        answer,
+        [m1, m2, m1 * m2 === answer ? m + 1 : m1 * m2],
+        [
+          `**Step 1: Cancel each factor.** $\\gcd(${k1}, ${m}) = ${gcd(k1, m)}$ and $\\gcd(${k2}, ${m}) = ${gcd(k2, m)}$, so the two congruences give $a \\equiv b \\pmod{${m1}}$ and $a \\equiv b \\pmod{${m2}}$.\n\n**Step 2: Combine the moduli.** $a - b$ is a multiple of both $${m1}$ and $${m2}$, so of $\\operatorname{lcm}(${m1}, ${m2}) = ${answer}$.\n\n**Check.** $${answer} = ${m1} \\cdot ${answer / m1} = ${m2} \\cdot ${answer / m2}$, and $${answer}$ divides $${m}$, as a modulus got by cancelling must.`,
+          `**第一步：分别约分。** $\\gcd(${k1}, ${m}) = ${gcd(k1, m)}$，$\\gcd(${k2}, ${m}) = ${gcd(k2, m)}$，所以两个同余式分别给出 $a \\equiv b \\pmod{${m1}}$ 和 $a \\equiv b \\pmod{${m2}}$。\n\n**第二步：合并模。** $a - b$ 既是 $${m1}$ 的倍数，又是 $${m2}$ 的倍数，所以是 $\\operatorname{lcm}(${m1}, ${m2}) = ${answer}$ 的倍数。\n\n**检验。** $${answer} = ${m1} \\cdot ${answer / m1} = ${m2} \\cdot ${answer / m2}$，且 $${answer}$ 整除 $${m}$，约分得到的模必须如此。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(m1),
+          `That uses only the first congruence; the second also gives modulus $${m2}$.`,
+          `这只用了第一个同余式；第二个还给出模 $${m2}$。`,
+        ),
+        say(
+          String(m2),
+          `That uses only the second congruence; the first also gives modulus $${m1}$.`,
+          `这只用了第二个同余式；第一个还给出模 $${m1}$。`,
+        ),
+        say(
+          String(m1 * m2),
+          `$${m1}$ and $${m2}$ share the factor $${gcd(m1, m2)}$, so they combine to their least common multiple, not their product.`,
+          `$${m1}$ 和 $${m2}$ 有公因数 $${gcd(m1, m2)}$，所以合并得到最小公倍数，而不是乘积。`,
+        ),
+      ]),
     );
   },
 );
@@ -568,8 +605,8 @@ const powerResidue = point(
   "a-power-of-a-large-number-modulo-m",
   ["A power of a large number modulo m", "大数的幂模 m"],
   [
-    "Induction on the multiplication property proves that $a \\equiv b \\pmod{m}$ implies $a^{n} \\equiv b^{n} \\pmod{m}$. So a large base can be replaced by its remainder before the power is taken, and the result can be reduced after each multiplication.",
-    "对乘法性质用归纳法可证 $a \\equiv b \\pmod{m}$ 蕴涵 $a^{n} \\equiv b^{n} \\pmod{m}$。所以取幂之前可以把大底数换成它的余数，每次相乘后还能把结果化简。",
+    "Induction on the multiplication property proves that $a \\equiv b \\pmod{m}$ implies $a^{n} \\equiv b^{n} \\pmod{m}$. So a large base can be replaced by its remainder before the power is taken, and the result can be reduced after each multiplication.\n\n> **Watch out.** Only the base is replaced by its remainder; the exponent stays. Raise the remainder to the power instead of multiplying it by the exponent.",
+    "对乘法性质用归纳法可证 $a \\equiv b \\pmod{m}$ 蕴涵 $a^{n} \\equiv b^{n} \\pmod{m}$。所以取幂之前可以把大底数换成它的余数，每次相乘后还能把结果化简。\n\n> **注意。** 只有底数换成余数，指数不变。要求余数的幂，而不是把余数乘以指数。",
   ],
   (rng) => {
     const m = rng.int(5, 15);
@@ -577,14 +614,30 @@ const powerResidue = point(
     const a = m * rng.int(3, 40) + r;
     const n = rng.int(2, 6);
     const answer = powMod(r, n, m);
-    return ask(
-      [`Find the remainder when $${a}^{${n}}$ is divided by $${m}$.`, `求 $${a}^{${n}}$ 除以 $${m}$ 的余数。`],
-      answer,
-      [r, (r * n) % m, (a * n) % m],
-      [
-        `Since $${a} \\equiv ${r} \\pmod{${m}}$, we have $${a}^{${n}} \\equiv ${r}^{${n}} \\equiv ${answer} \\pmod{${m}}$.`,
-        `由于 $${a} \\equiv ${r} \\pmod{${m}}$，所以 $${a}^{${n}} \\equiv ${r}^{${n}} \\equiv ${answer} \\pmod{${m}}$。`,
-      ],
+    const powers = Array.from({ length: n }, (_, i) => `$$${r}^{${i + 1}} \\equiv ${powMod(r, i + 1, m)}$$`);
+    const whole = r ** n;
+    return withMistakes(
+      ask(
+        [`Find the remainder when $${a}^{${n}}$ is divided by $${m}$.`, `求 $${a}^{${n}}$ 除以 $${m}$ 的余数。`],
+        answer,
+        [r, (r * n) % m, (a * n) % m],
+        [
+          `**Step 1: Reduce the base.** $${a} = ${m} \\cdot ${(a - r) / m} + ${r}$, so $${a} \\equiv ${r}$ and $${a}^{${n}} \\equiv ${r}^{${n}} \\pmod{${m}}$.\n\n**Step 2: Multiply and reduce.** Multiplying by $${r}$ and reducing modulo $${m}$ at each step:\n\n${powers.join("\n\n")}\n\nSo the remainder is $${answer}$.\n\n**Check.** $${r}^{${n}} = ${whole} = ${m} \\cdot ${(whole - answer) / m} + ${answer}$.`,
+          `**第一步：化简底数。** $${a} = ${m} \\cdot ${(a - r) / m} + ${r}$，所以 $${a} \\equiv ${r}$，$${a}^{${n}} \\equiv ${r}^{${n}} \\pmod{${m}}$。\n\n**第二步：相乘并化简。** 每步乘以 $${r}$ 并模 $${m}$ 化简：\n\n${powers.join("\n\n")}\n\n所以余数是 $${answer}$。\n\n**检验。** $${r}^{${n}} = ${whole} = ${m} \\cdot ${(whole - answer) / m} + ${answer}$。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(r),
+          `That is the remainder of the base alone; it still has to be raised to the power $${n}$.`,
+          `这只是底数的余数；还要求它的 $${n}$ 次幂。`,
+        ),
+        say(
+          String((r * n) % m),
+          `That multiplies the remainder by $${n}$ instead of raising it to the power $${n}$.`,
+          `这是把余数乘以 $${n}$，而不是求它的 $${n}$ 次幂。`,
+        ),
+      ]),
     );
   },
 );
@@ -593,24 +646,39 @@ const contrapositiveValue = point(
   "the-residue-that-makes-a-contrapositive-true",
   ["The residue that makes a contrapositive true", "使逆否命题成立的余数"],
   [
-    "A claim about non-congruence is usually easier in contrapositive form, where it is a direct calculation. To make such a claim true, work out what the contrapositive requires: if $n \\equiv s$, then $n^{2} \\equiv s^{2}$, and this value decides the residue.",
-    "关于不同余的命题，用逆否形式通常更容易，这时只需直接计算。要使这样的命题成立，先弄清逆否命题的要求：如果 $n \\equiv s$，那么 $n^{2} \\equiv s^{2}$，这个值就决定了余数。",
+    "A claim about non-congruence is usually easier in contrapositive form, where it is a direct calculation. To make such a claim true, work out what the contrapositive requires: if $n \\equiv s$, then $n^{2} \\equiv s^{2}$, and this value decides the residue.\n\n> **Watch out.** The residue $r$ belongs to $n^{2}$, not to $n$: square $s$ and then reduce the square into the range from $0$ to $m - 1$.",
+    "关于不同余的命题，用逆否形式通常更容易，这时只需直接计算。要使这样的命题成立，先弄清逆否命题的要求：如果 $n \\equiv s$，那么 $n^{2} \\equiv s^{2}$，这个值就决定了余数。\n\n> **注意。** 余数 $r$ 属于 $n^{2}$，而不是 $n$：先把 $s$ 平方，再把平方化简到 $0$ 到 $m - 1$ 的范围内。",
   ],
   (rng) => {
     const m = rng.int(5, 20);
     const s = rng.int(2, m - 1);
     const answer = (s * s) % m;
-    return ask(
-      [
-        `For which $r$ with $0 \\le r < ${m}$ is the claim "if $n^{2} \\not\\equiv r \\pmod{${m}}$, then $n \\not\\equiv ${s} \\pmod{${m}}$" true for every integer $n$?`,
-        `对于满足 $0 \\le r < ${m}$ 的哪个 $r$，命题“如果 $n^{2} \\not\\equiv r \\pmod{${m}}$，那么 $n \\not\\equiv ${s} \\pmod{${m}}$”对每个整数 $n$ 都成立？`,
-      ],
-      answer,
-      [s, (2 * s) % m, s * s],
-      [
-        `The contrapositive says that $n \\equiv ${s}$ implies $n^{2} \\equiv r$. Since $n^{2} \\equiv ${s * s} \\equiv ${answer} \\pmod{${m}}$, the value must be $r = ${answer}$.`,
-        `逆否命题是：$n \\equiv ${s}$ 蕴涵 $n^{2} \\equiv r$。由于 $n^{2} \\equiv ${s * s} \\equiv ${answer} \\pmod{${m}}$，所以 $r = ${answer}$。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `For which $r$ with $0 \\le r < ${m}$ is the claim "if $n^{2} \\not\\equiv r \\pmod{${m}}$, then $n \\not\\equiv ${s} \\pmod{${m}}$" true for every integer $n$?`,
+          `对于满足 $0 \\le r < ${m}$ 的哪个 $r$，命题“如果 $n^{2} \\not\\equiv r \\pmod{${m}}$，那么 $n \\not\\equiv ${s} \\pmod{${m}}$”对每个整数 $n$ 都成立？`,
+        ],
+        answer,
+        [s, (2 * s) % m, s * s],
+        [
+          `**Step 1: Take the contrapositive.** The claim is equivalent to: if $n \\equiv ${s} \\pmod{${m}}$, then $n^{2} \\equiv r \\pmod{${m}}$.\n\n**Step 2: Compute the square.** If $n \\equiv ${s}$, then $n^{2} \\equiv ${s}^{2} = ${s * s} = ${m} \\cdot ${Math.floor((s * s) / m)} + ${answer}$, so $r = ${answer}$.\n\n**Check.** With $r = ${answer}$, every $n \\equiv ${s}$ has $n^{2} \\equiv ${answer}$, so $n^{2} \\not\\equiv ${answer}$ rules out $n \\equiv ${s}$; any other $r$ fails at $n = ${s}$.`,
+          `**第一步：取逆否命题。** 原命题等价于：如果 $n \\equiv ${s} \\pmod{${m}}$，那么 $n^{2} \\equiv r \\pmod{${m}}$。\n\n**第二步：计算平方。** 若 $n \\equiv ${s}$，则 $n^{2} \\equiv ${s}^{2} = ${s * s} = ${m} \\cdot ${Math.floor((s * s) / m)} + ${answer}$，所以 $r = ${answer}$。\n\n**检验。** 取 $r = ${answer}$ 时，每个 $n \\equiv ${s}$ 都有 $n^{2} \\equiv ${answer}$，所以 $n^{2} \\not\\equiv ${answer}$ 排除了 $n \\equiv ${s}$；其他的 $r$ 在 $n = ${s}$ 时都不成立。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(s),
+          "That is the residue of $n$; the claim asks for the residue of $n^{2}$.",
+          "这是 $n$ 的余数；命题问的是 $n^{2}$ 的余数。",
+        ),
+        say(String((2 * s) % m), `That doubles $${s}$ instead of squaring it.`, `这是把 $${s}$ 乘以 2，而不是平方。`),
+        say(
+          String(s * s),
+          `$${s * s}$ is not in the range from $0$ to $${m - 1}$; reduce it modulo $${m}$.`,
+          `$${s * s}$ 不在 $0$ 到 $${m - 1}$ 的范围内；要模 $${m}$ 化简。`,
+        ),
+      ]),
     );
   },
 );
@@ -619,8 +687,8 @@ const solutionAboveModulus = point(
   "a-solution-beyond-the-modulus",
   ["A solution beyond the modulus", "大于模的解"],
   [
-    "After dividing a congruence by the common factor, the solutions form a single class modulo the reduced modulus. So they repeat more often than the original modulus suggests, and the next solution beyond a given number is found by using the reduced step.",
-    "同余式除以公因数后，解构成约化模下的一个剩余类。所以解重复的周期比原来的模所暗示的更短，超过给定数的下一个解要用约化后的步长来求。",
+    "After dividing a congruence by the common factor, the solutions form a single class modulo the reduced modulus. So they repeat more often than the original modulus suggests, and the next solution beyond a given number is found by using the reduced step.\n\n> **Watch out.** The solutions repeat every $\\frac{m}{g}$, not every $m$, so adding $m$ to the smallest solution can skip a smaller one above $m$.",
+    "同余式除以公因数后，解构成约化模下的一个剩余类。所以解重复的周期比原来的模所暗示的更短，超过给定数的下一个解要用约化后的步长来求。\n\n> **注意。** 解每隔 $\\frac{m}{g}$ 重复一次，而不是每隔 $m$，所以给最小的解加上 $m$ 可能跳过大于 $m$ 的更小的解。",
   ],
   (rng) => {
     const g = rng.int(2, 4);
@@ -635,17 +703,34 @@ const solutionAboveModulus = point(
     while ((u * x0 - c) % reduced !== 0) x0++;
     let answer = m + 1;
     while ((answer - x0) % reduced !== 0) answer++;
-    return ask(
-      [
-        `Find the smallest integer $x > ${m}$ that satisfies $${a}x \\equiv ${b} \\pmod{${m}}$.`,
-        `求满足 $${a}x \\equiv ${b} \\pmod{${m}}$ 且 $x > ${m}$ 的最小整数 $x$。`,
-      ],
-      answer,
-      [x0 + m === answer ? answer + m : x0 + m, x0, answer + reduced],
-      [
-        `Dividing by $${g}$ gives $${u}x \\equiv ${c} \\pmod{${reduced}}$, so $x \\equiv ${x0} \\pmod{${reduced}}$. The first such integer above $${m}$ is $${answer}$.`,
-        `除以 $${g}$，得 $${u}x \\equiv ${c} \\pmod{${reduced}}$，所以 $x \\equiv ${x0} \\pmod{${reduced}}$。大于 $${m}$ 的第一个这样的整数是 $${answer}$。`,
-      ],
+    const run: number[] = [];
+    for (let x = x0; x <= answer; x += reduced) run.push(x);
+    return withMistakes(
+      ask(
+        [
+          `Find the smallest integer $x > ${m}$ that satisfies $${a}x \\equiv ${b} \\pmod{${m}}$.`,
+          `求满足 $${a}x \\equiv ${b} \\pmod{${m}}$ 且 $x > ${m}$ 的最小整数 $x$。`,
+        ],
+        answer,
+        [x0 + m === answer ? answer + m : x0 + m, x0, answer + reduced],
+        [
+          `**Step 1: Divide by the common factor.** Dividing by $${g}$ gives $${u}x \\equiv ${c} \\pmod{${reduced}}$.\n\n**Step 2: Solve the reduced congruence.** $${u} \\cdot ${x0} = ${u * x0} \\equiv ${c} \\pmod{${reduced}}$, so $x \\equiv ${x0} \\pmod{${reduced}}$.\n\n**Step 3: Step past the modulus.** The solutions run $${run.join(", ")}$, and the first above $${m}$ is $${answer}$.\n\n**Check.** $${a} \\cdot ${answer} = ${a * answer} = ${m} \\cdot ${(a * answer - b) / m} + ${b}$.`,
+          `**第一步：除以公因数。** 除以 $${g}$，得 $${u}x \\equiv ${c} \\pmod{${reduced}}$。\n\n**第二步：解约化后的同余式。** $${u} \\cdot ${x0} = ${u * x0} \\equiv ${c} \\pmod{${reduced}}$，所以 $x \\equiv ${x0} \\pmod{${reduced}}$。\n\n**第三步：越过模。** 解依次是 $${run.join(", ")}$，大于 $${m}$ 的第一个是 $${answer}$。\n\n**检验。** $${a} \\cdot ${answer} = ${a * answer} = ${m} \\cdot ${(a * answer - b) / m} + ${b}$。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(x0 + m),
+          `That steps by $${m}$; the solutions repeat every $${reduced}$, so a smaller one lies above $${m}$.`,
+          `这是按 $${m}$ 跳；解每隔 $${reduced}$ 重复一次，所以大于 $${m}$ 的解还有更小的。`,
+        ),
+        say(String(x0), `$${x0}$ is a solution, but it is not greater than $${m}$.`, `$${x0}$ 是解，但不大于 $${m}$。`),
+        say(
+          String(answer + reduced),
+          `That is a solution, but a smaller one also lies above $${m}$.`,
+          `这是解，但大于 $${m}$ 的解中还有更小的。`,
+        ),
+      ]),
     );
   },
 );
@@ -654,8 +739,8 @@ const solutionCount = point(
   "counting-the-solutions-of-a-linear-congruence",
   ["Counting the solutions of a linear congruence", "计算线性同余式的解数"],
   [
-    "The equation $ax \\equiv b \\pmod{m}$ has solutions exactly when $g = \\gcd(a, m)$ divides $b$. In that case there are $g$ solutions among the residues modulo $m$, all of them congruent modulo $\\frac{m}{g}$. If $g$ does not divide $b$, there are none.",
-    "方程 $ax \\equiv b \\pmod{m}$ 有解当且仅当 $g = \\gcd(a, m)$ 整除 $b$。这时在模 $m$ 的剩余中有 $g$ 个解，它们模 $\\frac{m}{g}$ 同余。如果 $g$ 不整除 $b$，就没有解。",
+    "The equation $ax \\equiv b \\pmod{m}$ has solutions exactly when $g = \\gcd(a, m)$ divides $b$. In that case there are $g$ solutions among the residues modulo $m$, all of them congruent modulo $\\frac{m}{g}$. If $g$ does not divide $b$, there are none.\n\n> **Watch out.** When $g$ divides $b$ there are $g$ solutions modulo $m$, not just one; when it does not, there are none at all, not $g$.",
+    "方程 $ax \\equiv b \\pmod{m}$ 有解当且仅当 $g = \\gcd(a, m)$ 整除 $b$。这时在模 $m$ 的剩余中有 $g$ 个解，它们模 $\\frac{m}{g}$ 同余。如果 $g$ 不整除 $b$，就没有解。\n\n> **注意。** $g$ 整除 $b$ 时，模 $m$ 有 $g$ 个解，而不只是一个；不整除时则一个解也没有，而不是 $g$ 个。",
   ],
   (rng) => {
     const g = rng.int(2, 6);
@@ -667,22 +752,53 @@ const solutionCount = point(
     const solvable = rng.bool();
     const b = solvable ? g * rng.int(1, reduced - 1) : g * rng.int(0, reduced - 1) + rng.int(1, g - 1);
     const answer = solvable ? g : 0;
-    return ask(
-      [
-        `How many solutions $x \\in \\{0, 1, \\dots, ${m - 1}\\}$ does $${a}x \\equiv ${b} \\pmod{${m}}$ have?`,
-        `$${a}x \\equiv ${b} \\pmod{${m}}$ 在 $x \\in \\{0, 1, \\dots, ${m - 1}\\}$ 中有多少个解？`,
-      ],
-      answer,
-      [1, solvable ? 0 : g, m],
-      solvable
-        ? [
-            `$\\gcd(${a}, ${m}) = ${g}$ divides $${b}$, so there are solutions. They repeat every $${reduced}$, which gives $${g}$ of them below $${m}$.`,
-            `$\\gcd(${a}, ${m}) = ${g}$ 整除 $${b}$，所以有解。解每隔 $${reduced}$ 重复一次，所以小于 $${m}$ 的解有 $${g}$ 个。`,
-          ]
-        : [
-            `$\\gcd(${a}, ${m}) = ${g}$ does not divide $${b}$. The left side and the modulus are multiples of $${g}$, but $${b}$ is not, so there are no solutions.`,
-            `$\\gcd(${a}, ${m}) = ${g}$ 不整除 $${b}$。左边和模都是 $${g}$ 的倍数，而 $${b}$ 不是，所以没有解。`,
-          ],
+    const roots = Array.from({ length: m }, (_, x) => x).filter((x) => (a * x - b) % m === 0);
+    const products = [...new Set(Array.from({ length: m }, (_, x) => (a * x) % m))].sort((p, q) => p - q);
+    const first = roots[0] ?? 0;
+    return withMistakes(
+      ask(
+        [
+          `How many solutions $x \\in \\{0, 1, \\dots, ${m - 1}\\}$ does $${a}x \\equiv ${b} \\pmod{${m}}$ have?`,
+          `$${a}x \\equiv ${b} \\pmod{${m}}$ 在 $x \\in \\{0, 1, \\dots, ${m - 1}\\}$ 中有多少个解？`,
+        ],
+        answer,
+        [1, solvable ? 0 : g, m],
+        solvable
+          ? [
+              `**Step 1: Test the gcd.** $\\gcd(${a}, ${m}) = ${g}$ divides $${b} = ${g} \\cdot ${b / g}$, so there are solutions.\n\n**Step 2: Count them.** Dividing by $${g}$ gives $${u}x \\equiv ${b / g} \\pmod{${reduced}}$, with one solution modulo $${reduced}$. Below $${m}$ it appears $${g}$ times: $${roots.join(", ")}$.\n\n**Check.** $${a} \\cdot ${first} = ${a * first} = ${m} \\cdot ${(a * first - b) / m} + ${b}$, and the others differ from $${first}$ by multiples of $${reduced}$.`,
+              `**第一步：检验最大公因数。** $\\gcd(${a}, ${m}) = ${g}$ 整除 $${b} = ${g} \\cdot ${b / g}$，所以有解。\n\n**第二步：计数。** 除以 $${g}$，得 $${u}x \\equiv ${b / g} \\pmod{${reduced}}$，模 $${reduced}$ 有一个解。在小于 $${m}$ 的数中它出现 $${g}$ 次：$${roots.join(", ")}$。\n\n**检验。** $${a} \\cdot ${first} = ${a * first} = ${m} \\cdot ${(a * first - b) / m} + ${b}$，其余的解与 $${first}$ 相差 $${reduced}$ 的倍数。`,
+            ]
+          : [
+              `**Step 1: Test the gcd.** $\\gcd(${a}, ${m}) = ${g}$, and $${b} = ${g} \\cdot ${Math.floor(b / g)} + ${b % g}$, so $${g}$ does not divide $${b}$.\n\n**Step 2: Rule out every $x$.** $${a}x - ${m}k$ is a multiple of $${g}$ for all integers $x$ and $k$, but $${b}$ is not, so there are no solutions.\n\n**Check.** The residues of $${a}x$ modulo $${m}$ are $${products.join(", ")}$, all multiples of $${g}$, and $${b}$ is not among them.`,
+              `**第一步：检验最大公因数。** $\\gcd(${a}, ${m}) = ${g}$，而 $${b} = ${g} \\cdot ${Math.floor(b / g)} + ${b % g}$，所以 $${g}$ 不整除 $${b}$。\n\n**第二步：排除每个 $x$。** 对所有整数 $x$ 和 $k$，$${a}x - ${m}k$ 都是 $${g}$ 的倍数，而 $${b}$ 不是，所以没有解。\n\n**检验。** $${a}x$ 模 $${m}$ 的剩余是 $${products.join(", ")}$，都是 $${g}$ 的倍数，$${b}$ 不在其中。`,
+            ],
+      ),
+      sayApart(
+        String(answer),
+        solvable
+          ? [
+              say(
+                "1",
+                `There is one solution modulo $${reduced}$, but it appears $${g}$ times below $${m}$.`,
+                `模 $${reduced}$ 有一个解，但在小于 $${m}$ 的数中它出现 $${g}$ 次。`,
+              ),
+              say("0", `$${g}$ divides $${b}$, so solutions exist.`, `$${g}$ 整除 $${b}$，所以有解。`),
+              say(
+                String(m),
+                "Not every residue works; test the gcd against the right-hand side.",
+                "并不是每个剩余都行；要用最大公因数检验右边。",
+              ),
+            ]
+          : [
+              say(
+                String(g),
+                `$${g}$ counts the solutions only when it divides the right-hand side, and $${g}$ does not divide $${b}$.`,
+                `只有 $${g}$ 整除右边时，解数才是 $${g}$，而 $${g}$ 不整除 $${b}$。`,
+              ),
+              say("1", `No residue works, since $${g}$ does not divide $${b}$.`, `没有剩余满足，因为 $${g}$ 不整除 $${b}$。`),
+              say(String(m), `No residue works, since $${g}$ does not divide $${b}$.`, `没有剩余满足，因为 $${g}$ 不整除 $${b}$。`),
+            ],
+      ),
     );
   },
 );

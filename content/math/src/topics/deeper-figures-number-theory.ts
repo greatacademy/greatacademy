@@ -231,8 +231,8 @@ const inverseInTable = point(
   "an-inverse-read-from-a-multiplication-table",
   ["An inverse read from a multiplication table", "由乘法表读逆元"],
   [
-    "A multiplication table modulo $n$ shows every inverse at a glance. The inverse of $a$ is the number whose column meets the row of $a$ at the entry $1$. So one finds the $1$ in that row and reads the header of its column. A row without any $1$ belongs to a residue that has no inverse at all.",
-    "模 $n$ 的乘法表一眼显示所有的逆元。$a$ 的逆元是这样的数：它的列与 $a$ 的行相交处的元素是 $1$。所以在这一行中找到 $1$，再读它所在列的表头。没有 $1$ 的行属于没有逆元的剩余。",
+    "A multiplication table modulo $n$ shows every inverse at a glance. The inverse of $a$ is the number whose column meets the row of $a$ at the entry $1$. So one finds the $1$ in that row and reads the header of its column. A row without any $1$ belongs to a residue that has no inverse at all.\n\n> **Watch out.** The answer is a column header, not an entry of the table and not the row's own header. The entry $n - 1$ marks the column where the product is $-1$, not $1$.",
+    "模 $n$ 的乘法表一眼显示所有的逆元。$a$ 的逆元是这样的数：它的列与 $a$ 的行相交处的元素是 $1$。所以在这一行中找到 $1$，再读它所在列的表头。没有 $1$ 的行属于没有逆元的剩余。\n\n> **注意。** 答案是列的表头，不是表中的元素，也不是这一行自己的表头。元素 $n - 1$ 所在的列使乘积为 $-1$，而不是 $1$。",
   ],
   (rng) => {
     const n = rng.pick([5, 7, 8, 9, 10, 11, 12]);
@@ -249,21 +249,43 @@ const inverseInTable = point(
       body += label(x, top + cell / 2 + 4, String(i)) + label(left + cell / 2, y + 4, String(i));
       for (let j = 1; j < n; j++) body += label(center(j)[0], y + 4, String((i * j) % n));
     }
-    return ask(
-      [
-        "The table shows products of nonzero residues modulo a whole number. What is the multiplicative inverse of the residue whose row is highlighted?",
-        "表中是模某个整数的非零剩余的乘积。高亮行对应的剩余的乘法逆元是多少？",
-      ],
-      inverse,
-      [n - inverse, a, (a * a) % n, (inverse % (n - 1)) + 1],
-      [
-        `The highlighted row belongs to $${a}$, and its entry $1$ lies in the column headed $${inverse}$, so $${a} \\cdot ${inverse} \\equiv 1 \\pmod{${n}}$.`,
-        `高亮行属于 $${a}$，它的元素 $1$ 在表头为 $${inverse}$ 的列，所以 $${a} \\cdot ${inverse} \\equiv 1 \\pmod{${n}}$。`,
-      ],
-      {
-        svg: svgDocument(n * cell + 16, body),
-        alt: t(`The multiplication table modulo ${n} with the row of ${a} highlighted.`, `模 ${n} 的乘法表，${a} 所在的行高亮。`),
-      },
+    const row = Array.from({ length: n - 1 }, (_, j) => (a * (j + 1)) % n);
+    const seen = new Set([String(inverse)]);
+    const mistakes = [
+      say(
+        String(n - inverse),
+        `In that column the row of $${a}$ shows $${n - 1}$, which is $-1$, not $1$.`,
+        `在这一列中，$${a}$ 的行显示 $${n - 1}$，即 $-1$，而不是 $1$。`,
+      ),
+      say(
+        String(a),
+        "That is the header of the row; the inverse is the header of the column where the $1$ lies.",
+        "这是行的表头；逆元是 $1$ 所在列的表头。",
+      ),
+      say(
+        String((a * a) % n),
+        `That is the entry in column $${a}$; read the header of the column holding $1$, not an entry.`,
+        `这是第 $${a}$ 列的元素；要读出 $1$ 所在列的表头，而不是某个元素。`,
+      ),
+    ].filter((m) => !seen.has(m.response) && Boolean(seen.add(m.response)));
+    return withMistakes(
+      ask(
+        [
+          "The table shows products of nonzero residues modulo a whole number. What is the multiplicative inverse of the residue whose row is highlighted?",
+          "表中是模某个整数的非零剩余的乘积。高亮行对应的剩余的乘法逆元是多少？",
+        ],
+        inverse,
+        [n - inverse, a, (a * a) % n, (inverse % (n - 1)) + 1],
+        [
+          `**Step 1: Read the row.** The highlighted row belongs to $${a}$, and its entries are $${row.join(", ")}$.\n\n**Step 2: Find the 1.** The entry $1$ lies in the column headed $${inverse}$, so the inverse of $${a}$ modulo $${n}$ is $${inverse}$.\n\n**Check.** $${a} \\cdot ${inverse} = ${a * inverse} = ${n} \\cdot ${(a * inverse - 1) / n} + 1$, so $${a} \\cdot ${inverse} \\equiv 1 \\pmod{${n}}$.`,
+          `**第一步：读出这一行。** 高亮行属于 $${a}$，它的元素是 $${row.join(", ")}$。\n\n**第二步：找到 1。** 元素 $1$ 在表头为 $${inverse}$ 的列，所以 $${a}$ 模 $${n}$ 的逆元是 $${inverse}$。\n\n**检验。** $${a} \\cdot ${inverse} = ${a * inverse} = ${n} \\cdot ${(a * inverse - 1) / n} + 1$，所以 $${a} \\cdot ${inverse} \\equiv 1 \\pmod{${n}}$。`,
+        ],
+        {
+          svg: svgDocument(n * cell + 16, body),
+          alt: t(`The multiplication table modulo ${n} with the row of ${a} highlighted.`, `模 ${n} 的乘法表，${a} 所在的行高亮。`),
+        },
+      ),
+      mistakes,
     );
   },
 );
@@ -381,14 +403,15 @@ const congruenceInRows = point(
   "a-congruence-read-from-rows-of-integers",
   ["A congruence read from rows of integers", "由整数排成的行读同余"],
   [
-    "Writing the integers in rows of length $n$ sorts them by their remainder modulo $n$. Two numbers are congruent modulo $n$ exactly when they fall in the same column, since moving down one row adds $n$. So the row length is the modulus, and the first row lists the remainders from zero up to one less than the modulus.",
-    "把整数写成长度为 $n$ 的行，就按模 $n$ 的余数把它们分类。两个数模 $n$ 同余恰好当它们在同一列，因为向下移动一行就加上 $n$。所以行长就是模，第一行列出从零到模减一的余数。",
+    "Writing the integers in rows of length $n$ sorts them by their remainder modulo $n$. Two numbers are congruent modulo $n$ exactly when they fall in the same column, since moving down one row adds $n$. So the row length is the modulus, and the first row lists the remainders from zero up to one less than the modulus.\n\n> **Watch out.** The column gives the remainder and the row gives the quotient. Columns start at remainder $0$, not $1$.",
+    "把整数写成长度为 $n$ 的行，就按模 $n$ 的余数把它们分类。两个数模 $n$ 同余恰好当它们在同一列，因为向下移动一行就加上 $n$。所以行长就是模，第一行列出从零到模减一的余数。\n\n> **注意。** 列给出余数，行给出商。列从余数 $0$ 开始，而不是从 $1$ 开始。",
   ],
   (rng) => {
     const n = rng.int(5, 10);
     const rows = rng.int(3, 5);
     const value = rng.int(0, n * rows - 1);
     const remainder = value % n;
+    const quotient = Math.floor(value / n);
     const cell = 30;
     const left = 160 - (n * cell) / 2;
     let body = `<rect class="accent" fill="currentColor" fill-opacity="0.3" stroke="none" x="${left + (value % n) * cell}" y="${8 + Math.floor(value / n) * cell}" width="${cell}" height="${cell}"/>`;
@@ -401,26 +424,50 @@ const congruenceInRows = point(
       alt: t(`The integers from 0 written in rows of ${n}, with ${value} highlighted.`, `从 0 开始的整数，每行 ${n} 个，${value} 高亮。`),
     };
     if (rng.bool()) {
-      return ask(
-        [
-          "The integers are written in rows of equal length, which is the modulus. What is the remainder of the highlighted number?",
-          "整数写成等长的行，行长就是模。高亮的数的余数是多少？",
-        ],
-        remainder,
-        [Math.floor(value / n), (remainder + 1) % n, n - remainder === remainder ? n - 1 : n - remainder, value % (n + 1)],
-        [
-          `Each row has $${n}$ numbers, and the highlighted $${value}$ is in the column headed by $${remainder}$, so its remainder modulo $${n}$ is $${remainder}$.`,
-          `每行有 $${n}$ 个数，高亮的 $${value}$ 在以 $${remainder}$ 开头的列，所以它模 $${n}$ 的余数是 $${remainder}$。`,
-        ],
-        svg,
+      const back = n - remainder === remainder ? n - 1 : n - remainder;
+      const seen = new Set([String(remainder)]);
+      const mistakes = [
+        say(
+          String(quotient),
+          "That is the row the number sits in, which counts the quotient; the column gives the remainder.",
+          "这是数所在的行，数的是商；列才给出余数。",
+        ),
+        say(
+          String((remainder + 1) % n),
+          "That counts the columns from $1$; the first column holds remainder $0$.",
+          "这是从 $1$ 开始数列；第一列的余数是 $0$。",
+        ),
+        say(String(back), "That counts the columns from the right-hand end of the row.", "这是从行的右端开始数列。"),
+        say(
+          String(value % (n + 1)),
+          `That divides by $${n + 1}$; each row has $${n}$ numbers.`,
+          `这是除以 $${n + 1}$；每行只有 $${n}$ 个数。`,
+        ),
+      ].filter((m) => !seen.has(m.response) && Boolean(seen.add(m.response)));
+      return withMistakes(
+        ask(
+          [
+            "The integers are written in rows of equal length, which is the modulus. What is the remainder of the highlighted number?",
+            "整数写成等长的行，行长就是模。高亮的数的余数是多少？",
+          ],
+          remainder,
+          [quotient, (remainder + 1) % n, back, value % (n + 1)],
+          [
+            `**Step 1: Read the modulus.** Each row has $${n}$ numbers, so the modulus is $${n}$.\n\n**Step 2: Read the column.** The highlighted $${value}$ is in the column headed by $${remainder}$, so its remainder modulo $${n}$ is $${remainder}$.\n\n**Check.** $${value} = ${n} \\cdot ${quotient} + ${remainder}$: the quotient $${quotient}$ counts the rows above it, and $0 \\le ${remainder} < ${n}$.`,
+            `**第一步：读出模。** 每行有 $${n}$ 个数，所以模是 $${n}$。\n\n**第二步：读出列。** 高亮的 $${value}$ 在以 $${remainder}$ 开头的列，所以它模 $${n}$ 的余数是 $${remainder}$。\n\n**检验。** $${value} = ${n} \\cdot ${quotient} + ${remainder}$：商 $${quotient}$ 是它上面的行数，且 $0 \\le ${remainder} < ${n}$。`,
+          ],
+          svg,
+        ),
+        mistakes,
       );
     }
-    const answer = value + rng.int(4, 9) * n;
+    const k = rng.int(4, 9);
+    const answer = value + k * n;
     const offsets = rng.sample(
       Array.from({ length: n - 1 }, (_, i) => i + 1),
       3,
     );
-    return choose(
+    const problem = choose(
       rng,
       [
         "The integers are written in rows of equal length, which is the modulus. Which number is congruent to the highlighted one?",
@@ -429,10 +476,18 @@ const congruenceInRows = point(
       same(String(answer)),
       offsets.map((d) => same(String(answer + d))),
       [
-        `Each row has $${n}$ numbers, so the modulus is $${n}$. The highlighted $${value}$ has remainder $${remainder}$, and so does $${answer}$, because the difference is a multiple of $${n}$.`,
-        `每行有 $${n}$ 个数，所以模是 $${n}$。高亮的 $${value}$ 余数是 $${remainder}$，$${answer}$ 也是，因为差是 $${n}$ 的倍数。`,
+        `**Step 1: Read the modulus.** Each row has $${n}$ numbers, so the modulus is $${n}$, and the highlighted $${value}$ has remainder $${remainder}$.\n\n**Step 2: Compare the remainders.** $${answer} = ${n} \\cdot ${Math.floor(answer / n)} + ${remainder}$ has the same remainder, so it falls in the same column.\n\n**Check.** $${answer} - ${value} = ${k * n} = ${n} \\cdot ${k}$, a multiple of $${n}$.`,
+        `**第一步：读出模。** 每行有 $${n}$ 个数，所以模是 $${n}$，高亮的 $${value}$ 余数是 $${remainder}$。\n\n**第二步：比较余数。** $${answer} = ${n} \\cdot ${Math.floor(answer / n)} + ${remainder}$ 的余数相同，所以它在同一列。\n\n**检验。** $${answer} - ${value} = ${k * n} = ${n} \\cdot ${k}$，是 $${n}$ 的倍数。`,
       ],
       svg,
+    );
+    return reasoned(
+      problem,
+      offsets.map((d) => [
+        `$${answer + d}$`,
+        `$${answer + d} - ${value} = ${answer + d - value}$, which is not a multiple of $${n}$: it has remainder $${(remainder + d) % n}$, not $${remainder}$.`,
+        `$${answer + d} - ${value} = ${answer + d - value}$，不是 $${n}$ 的倍数：它的余数是 $${(remainder + d) % n}$，而不是 $${remainder}$。`,
+      ]),
     );
   },
 );

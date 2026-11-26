@@ -40,7 +40,7 @@ export function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonl
   );
 }
 
-/** numeric builds a number problem with its figure. */
+/** numeric builds a number problem with its figure, saying what is wrong with each typical mistake; a repeated mistake is kept once. */
 export function numeric(
   prompt: Text,
   answer: number | Q,
@@ -48,8 +48,16 @@ export function numeric(
   solution: Text,
   figure: Figure,
   form: "number" | "integer" | "fraction" | "decimal" = "number",
+  mistakes: readonly { value: number | Q; why: Text }[] = [],
 ): Problem {
-  return { ...numberProblem({ prompt, answer, form, wrong: [...wrong], solution }), figure };
+  const seen = new Set<string>();
+  const firstMistakes = mistakes.filter((m) => {
+    const key = String(m.value);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return { ...numberProblem({ prompt, answer, form, wrong: [...wrong], mistakes: firstMistakes, solution }), figure };
 }
 
 /** square is the view from -r to r on both axes. */

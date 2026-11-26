@@ -432,26 +432,43 @@ const clockNegative = point(
   "a-negative-number-on-a-residue-clock",
   ["A negative number on a residue clock", "剩余类时钟上的负数"],
   [
-    "Every integer lands on exactly one residue: the remainder $r$ with $0 \\le r < n$. A negative number means walking counterclockwise from $0$, so $-a$ lands on $n - (a \\bmod n)$ unless $n$ divides $a$.",
-    "每个整数恰好落在一个剩余类上：余数 $r$，$0 \\le r < n$。负数表示从 $0$ 逆时针走，所以除非 $n$ 整除 $a$，$-a$ 落在 $n - (a \\bmod n)$ 上。",
+    "Every integer lands on exactly one residue: the remainder $r$ with $0 \\le r < n$. A negative number means walking counterclockwise from $0$, so $-a$ lands on $n - (a \\bmod n)$ unless $n$ divides $a$.\n\n> **Watch out.** $-a$ does not land on the residue of $a$. The walk runs counterclockwise, so the answer is $n$ minus the residue of $a$, not the residue itself.",
+    "每个整数恰好落在一个剩余类上：余数 $r$，$0 \\le r < n$。负数表示从 $0$ 逆时针走，所以除非 $n$ 整除 $a$，$-a$ 落在 $n - (a \\bmod n)$ 上。\n\n> **注意。** $-a$ 并不落在 $a$ 的剩余上。走的方向是逆时针，所以答案是 $n$ 减去 $a$ 的剩余，而不是这个剩余本身。",
   ],
   (rng) => {
     const n = rng.int(5, 12);
     const a = rng.int(n + 1, 50);
     const value = -a;
     const answer = mod(value, n);
-    return ask(
+    const k = Math.ceil(a / n);
+    return withMistakes(
+      ask(
+        [
+          `The clock shows $\\mathbb{Z}_{${n}}$. Which residue on it is the class of $${value}$?`,
+          `时钟表示 $\\mathbb{Z}_{${n}}$。它上面哪个剩余类是 $${value}$ 的类？`,
+        ],
+        answer,
+        [mod(a, n), mod(answer + 1, n), mod(answer - 1, n), n - answer + 1],
+        [
+          `**Step 1: Reduce the size.** $${a} = ${n} \\cdot ${Math.floor(a / n)} + ${mod(a, n)}$, so $${value}$ is $${mod(a, n)}$ steps counterclockwise from $0$, after whole turns.\n\n**Step 2: Bring it into range.** Add multiples of $${n}$ until the value lies between $0$ and $${n - 1}$: $${value} + ${n} \\cdot ${k} = ${answer}$.\n\n**Check.** $${answer} - (${value}) = ${answer + a} = ${n} \\cdot ${k}$, a multiple of $${n}$, so $${value}$ and $${answer}$ share a class.`,
+          `**第一步：去掉整圈。** $${a} = ${n} \\cdot ${Math.floor(a / n)} + ${mod(a, n)}$，所以去掉整圈后，$${value}$ 是从 $0$ 逆时针走 $${mod(a, n)}$ 步。\n\n**第二步：变到范围内。** 加上 $${n}$ 的倍数，直到结果在 $0$ 到 $${n - 1}$ 之间：$${value} + ${n} \\cdot ${k} = ${answer}$。\n\n**检验。** $${answer} - (${value}) = ${answer + a} = ${n} \\cdot ${k}$，是 $${n}$ 的倍数，所以 $${value}$ 与 $${answer}$ 在同一个类中。`,
+        ],
+        figureOf(clock(n), [`A clock of the residues 0 to ${n - 1}.`, `0 到 ${n - 1} 的剩余类时钟。`]),
+      ),
       [
-        `The clock shows $\\mathbb{Z}_{${n}}$. Which residue on it is the class of $${value}$?`,
-        `时钟表示 $\\mathbb{Z}_{${n}}$。它上面哪个剩余类是 $${value}$ 的类？`,
-      ],
-      answer,
-      [mod(a, n), mod(answer + 1, n), mod(answer - 1, n), n - answer + 1],
-      [
-        `Add multiples of $${n}$ until the value lies between $0$ and $${n - 1}$: $${value} + ${n}(${Math.ceil(a / n)}) = ${answer}$.`,
-        `加上 $${n}$ 的倍数，直到结果在 $0$ 到 $${n - 1}$ 之间：$${value} + ${n}(${Math.ceil(a / n)}) = ${answer}$。`,
-      ],
-      figureOf(clock(n), [`A clock of the residues 0 to ${n - 1}.`, `0 到 ${n - 1} 的剩余类时钟。`]),
+        say(
+          String(mod(a, n)),
+          `That is the class of $${a}$; $${value}$ walks the other way around the clock.`,
+          `这是 $${a}$ 的类；$${value}$ 是沿时钟反方向走。`,
+        ),
+        say(
+          String(n - answer + 1),
+          `That is one more than the class of $${a}$, and it walks the wrong way as well.`,
+          `这比 $${a}$ 的类多一，而且方向也走反了。`,
+        ),
+        say(String(mod(answer + 1, n)), "That stops one step short of the full walk.", "这比完整的走法少走了一步。"),
+        say(String(mod(answer - 1, n)), "That takes one step too many.", "这多走了一步。"),
+      ].filter((m, i, all) => m.response !== String(answer) && all.findIndex((x) => x.response === m.response) === i),
     );
   },
 );

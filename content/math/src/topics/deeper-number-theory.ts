@@ -4,6 +4,7 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
+import { say, withMistakes } from "../problems.ts";
 
 import { ask, divisors, factorize, point, powMod, primesUpTo, totient } from "../university-kit.ts";
 
@@ -123,8 +124,8 @@ const solutionSpacing = point(
   "how-solutions-of-a-congruence-are-spaced",
   ["How solutions of a congruence are spaced", "同余式解的间隔"],
   [
-    "When $d = \\gcd(a, n)$ divides $b$, the congruence $a x \\equiv b \\pmod{n}$ has $d$ solutions modulo $n$. They are evenly spaced, $\\frac{n}{d}$ apart, because adding $\\frac{n}{d}$ to $x$ adds a multiple of $n$ to $a x$. So one solution quickly gives all of them.",
-    "当 $d = \\gcd(a, n)$ 整除 $b$ 时，同余式 $a x \\equiv b \\pmod{n}$ 模 $n$ 有 $d$ 个解。它们等距分布，间隔 $\\frac{n}{d}$，因为给 $x$ 加 $\\frac{n}{d}$ 使 $a x$ 增加 $n$ 的倍数。所以由一个解很快就能得到全部解。",
+    "When $d = \\gcd(a, n)$ divides $b$, the congruence $a x \\equiv b \\pmod{n}$ has $d$ solutions modulo $n$. They are evenly spaced, $\\frac{n}{d}$ apart, because adding $\\frac{n}{d}$ to $x$ adds a multiple of $n$ to $a x$. So one solution quickly gives all of them.\n\n> **Watch out.** $d$ is how many solutions there are, not how far apart they lie. The spacing is $\\frac{n}{d}$, the modulus shared out among the $d$ solutions.",
+    "当 $d = \\gcd(a, n)$ 整除 $b$ 时，同余式 $a x \\equiv b \\pmod{n}$ 模 $n$ 有 $d$ 个解。它们等距分布，间隔 $\\frac{n}{d}$，因为给 $x$ 加 $\\frac{n}{d}$ 使 $a x$ 增加 $n$ 的倍数。所以由一个解很快就能得到全部解。\n\n> **注意。** $d$ 是解的个数，而不是解之间的间隔。间隔是 $\\frac{n}{d}$，即模被 $d$ 个解平分。",
   ],
   (rng) => {
     const d = rng.int(2, 6);
@@ -133,17 +134,38 @@ const solutionSpacing = point(
     while (gcd(u, m) !== 1) u++;
     const [a, n] = [d * u, d * m];
     const b = a * rng.int(1, m - 1);
-    return ask(
+    const roots = Array.from({ length: n }, (_, x) => x).filter((x) => (a * x - (b % n)) % n === 0);
+    const first = roots[0] ?? 0;
+    return withMistakes(
+      ask(
+        [
+          `The solutions of $${a} x \\equiv ${b % n} \\pmod{${n}}$ are evenly spaced. How far apart are they?`,
+          `$${a} x \\equiv ${b % n} \\pmod{${n}}$ 的解是等距分布的。它们相隔多少？`,
+        ],
+        m,
+        [d, n, u, m + d].filter((v) => v !== m),
+        [
+          `**Step 1: Count the solutions.** $\\gcd(${a}, ${n}) = ${d}$, and $${d}$ divides $${b % n}$, so there are $${d}$ solutions modulo $${n}$.\n\n**Step 2: Share out the modulus.** Evenly spaced around $${n}$, they lie $\\frac{${n}}{${d}} = ${m}$ apart: adding $${m}$ to $x$ adds $${a} \\cdot ${m} = ${n} \\cdot ${u}$ to $${a}x$.\n\n**Check.** The solutions are $${roots.join(", ")}$, and consecutive ones differ by $${m}$; for instance $${a} \\cdot ${first} = ${a * first} = ${n} \\cdot ${(a * first - (b % n)) / n} + ${b % n}$.`,
+          `**第一步：数出解的个数。** $\\gcd(${a}, ${n}) = ${d}$，且 $${d}$ 整除 $${b % n}$，所以模 $${n}$ 有 $${d}$ 个解。\n\n**第二步：平分模。** 它们在 $${n}$ 中等距分布，间隔 $\\frac{${n}}{${d}} = ${m}$：给 $x$ 加 $${m}$，$${a}x$ 就增加 $${a} \\cdot ${m} = ${n} \\cdot ${u}$。\n\n**检验。** 解是 $${roots.join(", ")}$，相邻两个相差 $${m}$；例如 $${a} \\cdot ${first} = ${a * first} = ${n} \\cdot ${(a * first - (b % n)) / n} + ${b % n}$。`,
+        ],
+      ),
       [
-        `The solutions of $${a} x \\equiv ${b % n} \\pmod{${n}}$ are evenly spaced. How far apart are they?`,
-        `$${a} x \\equiv ${b % n} \\pmod{${n}}$ 的解是等距分布的。它们相隔多少？`,
-      ],
-      m,
-      [d, n, u, m + d].filter((v) => v !== m),
-      [
-        `$\\gcd(${a}, ${n}) = ${d}$, so there are ${d} solutions, spaced $\\frac{${n}}{${d}} = ${m}$ apart.`,
-        `$\\gcd(${a}, ${n}) = ${d}$，所以有 ${d} 个解，间隔 $\\frac{${n}}{${d}} = ${m}$。`,
-      ],
+        say(
+          String(d),
+          `$${d}$ is how many solutions there are; the spacing is the modulus divided by $${d}$.`,
+          `$${d}$ 是解的个数；间隔是模除以 $${d}$。`,
+        ),
+        say(
+          String(n),
+          `That is the modulus; $${d}$ solutions fit inside it, so they lie closer together.`,
+          `这是模；模内有 $${d}$ 个解，所以它们靠得更近。`,
+        ),
+        say(
+          String(u),
+          `$${u}$ is the coefficient divided by $${d}$; the spacing comes from the modulus, not the coefficient.`,
+          `$${u}$ 是系数除以 $${d}$；间隔来自模，而不是系数。`,
+        ),
+      ].filter((m2, i, all) => m2.response !== String(m) && all.findIndex((x) => x.response === m2.response) === i),
     );
   },
 );
