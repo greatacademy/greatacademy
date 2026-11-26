@@ -219,7 +219,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `methods-of-proof-functions.ts` | 19 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third-2.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-methods-of-proof.ts` and `figure-reading-more.ts` too |
 | `methods-of-proof-number-theory.ts` | 13 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third-2.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-number-theory.ts` and `figure-reading-college.ts` too |
 | `methods-of-proof-congruence.ts` | 14 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third-2.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-number-theory.ts`, `deeper-number-theory.ts` and `figure-reading-college.ts` too; `numeric` in `figure-reading-more.ts` takes mistakes |
-| `linear-algebra-preliminaries.ts` | 25 | in progress | coordinator | the 16 set topics are done, with third points in `deeper-linear-algebra-third.ts`, `deeper-methods-of-proof.ts`, `deeper-figures-methods-of-proof.ts`, `deeper-figures-proofs-algebra-numbers.ts` and `figure-reading-more.ts`; the 9 line and plane topics are next |
+| `linear-algebra-preliminaries.ts` | 25 | done | coordinator | the 16 set topics and the 9 line and plane topics, with third points in `deeper-linear-algebra-third.ts`, `deeper-linear-algebra.ts`, `deeper-methods-of-proof.ts`, `deeper-figures-methods-of-proof.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-linear-algebra.ts`, `deeper-figures-linear-algebra-2.ts`, `figure-reading.ts` and `figure-reading-more.ts` |
 
 ## Open Gaps
 

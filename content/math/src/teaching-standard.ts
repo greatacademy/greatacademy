@@ -163,4 +163,13 @@ export const taughtTopics: readonly string[] = [
   "visualizing-cartesian-products",
   "indexed-sets",
   "sets-and-functions",
+  "the-vector-equation-of-a-line",
+  "the-parametric-equations-of-a-line",
+  "the-cartesian-equation-of-a-line",
+  "the-vector-equation-of-a-plane",
+  "the-cartesian-equation-of-a-plane",
+  "the-parametric-equations-of-a-plane",
+  "the-intersection-of-two-planes",
+  "the-shortest-distance-between-a-plane-and-a-point",
+  "the-intersection-between-a-line-and-a-plane",
 ];

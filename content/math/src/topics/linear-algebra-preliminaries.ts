@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { intervalLatex, poly, q } from "@ga/subject-math";
+import { intervalLatex, poly, type Q, q } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 
 import {
@@ -8,9 +8,11 @@ import {
   equationProblem,
   intervalProblem,
   numberProblem,
+  pointLatex,
   pointProblem,
   say,
   solutionsProblem,
+  vectorLatex,
   why,
   whySet,
   withMistakes,
@@ -3083,6 +3085,10 @@ export const theVectorEquationOfALine: TopicDef = {
     "Determine the vector equation of a line in 3D space given a point and direction vector, and test collinear points.",
     "根据空间一点及方向向量确定直线的向量方程，并检验空间点是否位于直线上。",
   ),
+  intro: t(
+    "Start at the point $(1, 2, 0)$ and walk in the direction $\\langle 2, -1, 3 \\rangle$. After $t$ steps you are at $\\langle 1, 2, 0 \\rangle + t\\langle 2, -1, 3 \\rangle$, so $t = 2$ puts you at $(5, 0, 6)$, and $t = -1$ at $(-1, 3, -3)$, a step backwards. Every real $t$ gives a point, and together these points make the line.\n\nCheck: $(5, 0, 6) - (1, 2, 0) = \\langle 4, -2, 6 \\rangle = 2\\langle 2, -1, 3 \\rangle$, so that point is two direction vectors from the start.\n\nIn this lesson we write the vector equation of a line from a point and a direction, and find the point for a given value of the parameter.",
+    "从点 $(1, 2, 0)$ 出发，沿方向 $\\langle 2, -1, 3 \\rangle$ 走。走 $t$ 步后位于 $\\langle 1, 2, 0 \\rangle + t\\langle 2, -1, 3 \\rangle$，所以 $t = 2$ 时在 $(5, 0, 6)$，$t = -1$ 时在 $(-1, 3, -3)$，即往回走了一步。每个实数 $t$ 都给出一个点，这些点合起来就是这条直线。\n\n检验：$(5, 0, 6) - (1, 2, 0) = \\langle 4, -2, 6 \\rangle = 2\\langle 2, -1, 3 \\rangle$，所以这个点离起点恰好两个方向向量。\n\n本课我们由一点和一个方向写出直线的向量方程，并求参数取给定值时对应的点。",
+  ),
   prerequisites: ["calculating-the-magnitude-of-cartesian-vectors-in-3d"],
   encompasses: [],
   xp: 10,
@@ -3093,8 +3099,8 @@ export const theVectorEquationOfALine: TopicDef = {
       figure: linearAlgebraDrawings1["the-vector-equation-of-a-line#vector-equation-from-point-and-direction"],
       title: t("Vector equation from a point and direction vector", "由点和方向向量求直线向量方程"),
       explanation: t(
-        "A line in 3D passing through point $P(x_0, y_0, z_0)$ with position vector $\\mathbf{r}_0 = \\langle x_0, y_0, z_0 \\rangle$ and parallel to direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$ has vector equation $\\mathbf{r}(t) = \\mathbf{r}_0 + t \\mathbf{v}$, where $t \\in \\mathbb{R}$ is the scalar parameter.",
-        "三维空间中通过点 $P(x_0, y_0, z_0)$（位置向量 $\\mathbf{r}_0 = \\langle x_0, y_0, z_0 \\rangle$）且平行于方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$ 的直线，其向量方程为 $\\mathbf{r}(t) = \\mathbf{r}_0 + t \\mathbf{v}$，其中 $t \\in \\mathbb{R}$ 为标量参数。",
+        "A line in 3D passing through point $P(x_0, y_0, z_0)$ with position vector $\\mathbf{r}_0 = \\langle x_0, y_0, z_0 \\rangle$ and parallel to direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$ has vector equation $\\mathbf{r}(t) = \\mathbf{r}_0 + t \\mathbf{v}$, where $t \\in \\mathbb{R}$ is the scalar parameter. Through $(1, 0, 2)$ with direction $\\langle 3, 1, -1 \\rangle$: $\\mathbf{r}(t) = \\langle 1, 0, 2 \\rangle + t\\langle 3, 1, -1 \\rangle$.\n\n> **Watch out.** The point is added as it stands and the direction is the one multiplied by $t$. Swapping them gives a different line, through the point $(a, b, c)$; and each entry is copied with its own sign.",
+        "三维空间中通过点 $P(x_0, y_0, z_0)$（位置向量 $\\mathbf{r}_0 = \\langle x_0, y_0, z_0 \\rangle$）且平行于方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$ 的直线，其向量方程为 $\\mathbf{r}(t) = \\mathbf{r}_0 + t \\mathbf{v}$，其中 $t \\in \\mathbb{R}$ 为标量参数。过 $(1, 0, 2)$、方向为 $\\langle 3, 1, -1 \\rangle$ 的直线：$\\mathbf{r}(t) = \\langle 1, 0, 2 \\rangle + t\\langle 3, 1, -1 \\rangle$。\n\n> **注意。** 点按原样相加，与 $t$ 相乘的是方向向量。两者互换会得到另一条直线，它经过点 $(a, b, c)$；而且每个分量都要带着自己的符号照抄。",
       ),
       generate(rng) {
         const x0 = rng.int(-6, 6);
@@ -3106,22 +3112,44 @@ export const theVectorEquationOfALine: TopicDef = {
 
         const r0: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
+        const end: Vec3 = add3(r0, v);
 
         const rightEq = `\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}`;
-        const wrong1 = `\\mathbf{r}(t) = ${vec3Latex(v)} + t${vec3Latex(r0)}`; // swapped
+        const wrong1 = `\\mathbf{r}(t) = ${vec3Latex(v)} + t${vec3Latex(r0)}`;
         const wrong2 = `\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex([a, -b, c])}`;
         const wrong3 = `\\mathbf{r}(t) = ${vec3Latex([x0, y0, -z0])} + t${vec3Latex(v)}`;
-        return oneOf(
+        return explained(
           rng,
           t(
             `Find the vector equation of the line passing through point $P${pt3Latex(r0)}$ with direction vector $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求过点 $P${pt3Latex(r0)}$ 且以 $\\mathbf{v} = ${vec3Latex(v)}$ 为方向向量的直线的向量方程。`,
           ),
           t(`$${rightEq}$`, `$${rightEq}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `The vector equation of a line is $\\mathbf{r}(t) = \\mathbf{r}_0 + t\\mathbf{v}$, where $\\mathbf{r}_0$ is the position vector of the point on the line and $\\mathbf{v}$ is the direction vector:\n\n$$\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$$`,
-            `空间直线的向量方程为 $\\mathbf{r}(t) = \\mathbf{r}_0 + t\\mathbf{v}$，其中 $\\mathbf{r}_0$ 是已知点的位置向量，$\\mathbf{v}$ 是方向向量：\n\n$$\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$$`,
+          [
+            [
+              t(`$${wrong1}$`, `$${wrong1}$`),
+              "The point and the direction are swapped: the direction vector is the one multiplied by $t$.",
+              "点和方向弄反了：与 $t$ 相乘的应是方向向量。",
+            ],
+            [t(`$${wrong2}$`, `$${wrong2}$`), "The second entry of the direction has the wrong sign.", "方向向量的第二个分量符号错了。"],
+            [
+              t(`$${wrong3}$`, `$${wrong3}$`),
+              `The third entry of the point has the wrong sign: at $t = 0$ the line must pass through $P$, where $z = ${z0}$.`,
+              `点的第三个分量符号错了：$t = 0$ 时直线必须经过 $P$，那里 $z = ${z0}$。`,
+            ],
+          ],
+          walked(
+            [
+              [
+                ["Take the position vector of the point", "取点的位置向量"],
+                t(`$\\mathbf{r}_0 = ${vec3Latex(r0)}$.`, `$\\mathbf{r}_0 = ${vec3Latex(r0)}$。`),
+              ],
+              [["Add a multiple of the direction", "加上方向向量的倍数"], t("", ""), [rightEq]],
+            ],
+            t(
+              `At $t = 0$ the equation gives $${pt3Latex(r0)}$, which is $P$, and at $t = 1$ it gives $${pt3Latex(end)}$, one direction vector further on.`,
+              `$t = 0$ 时方程给出 $${pt3Latex(r0)}$，即 $P$；$t = 1$ 时给出 $${pt3Latex(end)}$，恰好再前进一个方向向量。`,
+            ),
           ),
         );
       },
@@ -3130,8 +3158,8 @@ export const theVectorEquationOfALine: TopicDef = {
       id: "points-on-a-vector-line",
       title: t("Points on a vector line", "直线上的点与参数值"),
       explanation: t(
-        "Each value of parameter $t$ in $\\mathbf{r}(t) = \\mathbf{r}_0 + t\\mathbf{v}$ corresponds to a specific point on the line. Conversely, a point $Q$ lies on the line if and only if there exists a single scalar $t$ such that $\\vec{OQ} = \\mathbf{r}_0 + t\\mathbf{v}$.",
-        "在直线向量方程 $\\mathbf{r}(t) = \\mathbf{r}_0 + t\\mathbf{v}$ 中，参数 $t$ 的每一个实数值都对应直线上的一点。反之，点 $Q$ 在直线上当且仅当存在单一标量 $t$ 满足 $\\vec{OQ} = \\mathbf{r}_0 + t\\mathbf{v}$。",
+        "Each value of parameter $t$ in $\\mathbf{r}(t) = \\mathbf{r}_0 + t\\mathbf{v}$ corresponds to a specific point on the line. Conversely, a point $Q$ lies on the line if and only if there exists a single scalar $t$ such that $\\vec{OQ} = \\mathbf{r}_0 + t\\mathbf{v}$. For $\\mathbf{r}(t) = \\langle 1, 0, 2 \\rangle + t\\langle 3, 1, -1 \\rangle$, the value $t = 2$ gives $(1 + 6, 0 + 2, 2 - 2) = (7, 2, 0)$.\n\n> **Watch out.** The same $t$ multiplies every entry of the direction, and a negative $t$ moves backwards along it. Each coordinate is its starting value plus $t$ times its own direction entry.",
+        "在直线向量方程 $\\mathbf{r}(t) = \\mathbf{r}_0 + t\\mathbf{v}$ 中，参数 $t$ 的每一个实数值都对应直线上的一点。反之，点 $Q$ 在直线上当且仅当存在单一标量 $t$ 满足 $\\vec{OQ} = \\mathbf{r}_0 + t\\mathbf{v}$。对 $\\mathbf{r}(t) = \\langle 1, 0, 2 \\rangle + t\\langle 3, 1, -1 \\rangle$，$t = 2$ 给出 $(1 + 6, 0 + 2, 2 - 2) = (7, 2, 0)$。\n\n> **注意。** 同一个 $t$ 乘方向向量的每个分量，负的 $t$ 表示沿方向往回走。每个坐标都是它的起始值加上 $t$ 乘它自己的方向分量。",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -3149,19 +3177,52 @@ export const theVectorEquationOfALine: TopicDef = {
         const w1: Vec3 = [x0 + a * (tVal + 1), y0 + b * tVal, z0 + c * tVal];
         const w2: Vec3 = [x0 - a * tVal, y0 - b * tVal, z0 - c * tVal];
         const w3: Vec3 = [x0 + a, y0 + b, z0 + c];
-        return pointProblem({
-          prompt: t(
-            `A line is given by $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$. Find the coordinates $(x, y, z)$ of the point corresponding to parameter $t = ${tVal}$.`,
-            `已知直线的向量方程为 $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$。求参数 $t = ${tVal}$ 时对应的空间点坐标 $(x, y, z)$。`,
-          ),
-          answer: ptAtT,
-          vars: ["x", "y", "z"],
-          solution: t(
-            `Substitute $t = ${tVal}$ into each coordinate:\n\n$$x = ${x0} + (${a})(${tVal}) = ${ptAtT[0]}, \\quad y = ${y0} + (${b})(${tVal}) = ${ptAtT[1]}, \\quad z = ${z0} + (${c})(${tVal}) = ${ptAtT[2]}$$`,
-            `将 $t = ${tVal}$ 代入各分量：\n\n$$x = ${x0} + (${a})(${tVal}) = ${ptAtT[0]}, \\quad y = ${y0} + (${b})(${tVal}) = ${ptAtT[1]}, \\quad z = ${z0} + (${c})(${tVal}) = ${ptAtT[2]}$$`,
-          ),
-          wrong: [w1, w2, w3],
-        });
+        const back: Vec3 = [ptAtT[0] - x0, ptAtT[1] - y0, ptAtT[2] - z0];
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `A line is given by $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$. Find the coordinates $(x, y, z)$ of the point corresponding to parameter $t = ${tVal}$.`,
+              `已知直线的向量方程为 $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$。求参数 $t = ${tVal}$ 时对应的空间点坐标 $(x, y, z)$。`,
+            ),
+            answer: ptAtT,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Scale the direction", "方向向量乘以参数"],
+                  t("", ""),
+                  [`${tVal}${vec3Latex(v)} = ${vec3Latex([a * tVal, b * tVal, c * tVal])}`],
+                ],
+                [
+                  ["Add the starting point", "加上起点"],
+                  t("", ""),
+                  [`${vec3Latex(r0)} + ${vec3Latex([a * tVal, b * tVal, c * tVal])} = ${vec3Latex(ptAtT)}`],
+                ],
+              ],
+              t(
+                `$${pt3Latex(ptAtT)} - ${pt3Latex(r0)} = ${vec3Latex(back)}$, which is $${tVal}$ times $${vec3Latex(v)}$, so the point lies $${tVal}$ direction vectors from the start.`,
+                `$${pt3Latex(ptAtT)} - ${pt3Latex(r0)} = ${vec3Latex(back)}$，正是 $${vec3Latex(v)}$ 的 $${tVal}$ 倍，所以这个点离起点 $${tVal}$ 个方向向量。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              pointLatex(w1),
+              "The $x$-coordinate uses a different multiple of the direction from the others; the same $t$ multiplies every entry.",
+              "$x$ 坐标用的方向向量倍数与其他坐标不同；同一个 $t$ 乘每个分量。",
+            ),
+            say(
+              pointLatex(w2),
+              `That moves the wrong way along the line: it uses $t = ${-tVal}$.`,
+              `这是沿直线往相反方向走：用的是 $t = ${-tVal}$。`,
+            ),
+            say(
+              pointLatex(w3),
+              `That is the point at $t = 1$; the direction must be multiplied by $${tVal}$.`,
+              `这是 $t = 1$ 时的点；方向向量要乘以 $${tVal}$。`,
+            ),
+          ].filter((s) => s.response !== pointLatex(ptAtT)),
+        );
       },
     },
   ],
@@ -3176,6 +3237,10 @@ export const theParametricEquationsOfALine: TopicDef = {
     "Formulate and interpret the parametric scalar equations of a line in 3D.",
     "建立并分析三维空间中直线的参数方程，提取方向向量与基准点。",
   ),
+  intro: t(
+    "The vector equation $\\mathbf{r}(t) = \\langle 4, -1, 2 \\rangle + t\\langle 1, 3, -2 \\rangle$ says three things at once, one for each coordinate: $x = 4 + t$, $y = -1 + 3t$ and $z = 2 - 2t$. Read the other way, the constants give the point $(4, -1, 2)$ at $t = 0$, and the coefficients of $t$ give the direction $\\langle 1, 3, -2 \\rangle$.\n\nCheck: at $t = 1$ the three equations give $(5, 2, 0)$, and $(5, 2, 0) - (4, -1, 2) = \\langle 1, 3, -2 \\rangle$, the direction.\n\nIn this lesson we split the vector equation of a line into its parametric equations, and read a point and a direction back from them.",
+    "向量方程 $\\mathbf{r}(t) = \\langle 4, -1, 2 \\rangle + t\\langle 1, 3, -2 \\rangle$ 一下子说了三件事，每个坐标一件：$x = 4 + t$，$y = -1 + 3t$，$z = 2 - 2t$。反过来读，常数给出 $t = 0$ 时的点 $(4, -1, 2)$，$t$ 的系数给出方向 $\\langle 1, 3, -2 \\rangle$。\n\n检验：$t = 1$ 时三个方程给出 $(5, 2, 0)$，而 $(5, 2, 0) - (4, -1, 2) = \\langle 1, 3, -2 \\rangle$，正是方向向量。\n\n本课我们把直线的向量方程拆成参数方程，并从参数方程读回一点和一个方向。",
+  ),
   prerequisites: ["the-vector-equation-of-a-line"],
   encompasses: [],
   xp: 10,
@@ -3185,8 +3250,8 @@ export const theParametricEquationsOfALine: TopicDef = {
       id: "deriving-parametric-equations-of-a-line",
       title: t("Deriving parametric equations of a line", "求直线的参数方程"),
       explanation: t(
-        "A line is fixed by one point and a direction, and each coordinate of a point on it is the starting coordinate plus a multiple of the matching direction component. Breaking the vector equation $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ into scalar components gives the parametric equations of the line:\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$",
-        "一条直线由一个点和一个方向确定，直线上点的每个坐标都等于起点坐标加上相应方向分量的倍数。将直线的向量方程 $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ 按分量展开，即得到直线的参数方程：\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$",
+        "A line is fixed by one point and a direction, and each coordinate of a point on it is the starting coordinate plus a multiple of the matching direction component. Breaking the vector equation $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ into scalar components gives the parametric equations of the line:\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$\n\nThrough $(2, 0, -1)$ with direction $\\langle 1, -3, 4 \\rangle$: $x = 2 + t$, $y = -3t$, $z = -1 + 4t$.\n\n> **Watch out.** The constants come from the point and the coefficients of $t$ from the direction, entry by entry. A sign copied wrongly in either one gives a different line.",
+        "一条直线由一个点和一个方向确定，直线上点的每个坐标都等于起点坐标加上相应方向分量的倍数。将直线的向量方程 $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ 按分量展开，即得到直线的参数方程：\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$\n\n过 $(2, 0, -1)$、方向为 $\\langle 1, -3, 4 \\rangle$ 的直线：$x = 2 + t$，$y = -3t$，$z = -1 + 4t$。\n\n> **注意。** 常数来自点，$t$ 的系数来自方向向量，逐个分量对应。任何一个符号抄错，都会得到另一条直线。",
       ),
       generate(rng) {
         const x0 = rng.int(-6, 6);
@@ -3200,7 +3265,7 @@ export const theParametricEquationsOfALine: TopicDef = {
         const v: Vec3 = [a, b, c];
 
         const rightForm = paramLineLatex(p, v);
-        const wrong1 = paramLineLatex(v, p); // swapped point and dir
+        const wrong1 = paramLineLatex(v, p);
         const wrong2 = paramLineLatex(p, [a, -b, c]);
         const wrong3 = paramLineLatex([x0, y0, -z0], v);
         return reasoned(
@@ -3212,9 +3277,15 @@ export const theParametricEquationsOfALine: TopicDef = {
             ),
             t(`$${rightForm}$`, `$${rightForm}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
-              `The parametric equations are $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$:\n\n$$${rightForm}$$`,
-              `直线的参数方程为 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$：\n\n$$${rightForm}$$`,
+            walked(
+              [
+                [["Write the vector equation", "写出向量方程"], t("", ""), [`\\mathbf{r}(t) = ${vec3Latex(p)} + t${vec3Latex(v)}`]],
+                [["Split it into coordinates", "按坐标拆开"], t("", ""), [rightForm]],
+              ],
+              t(
+                `At $t = 0$ the equations give $${pt3Latex(p)}$, which is $P$, and the coefficients of $t$ are $${a}, ${b}, ${c}$, the entries of $\\mathbf{v}$.`,
+                `$t = 0$ 时方程给出 $${pt3Latex(p)}$，即 $P$；$t$ 的系数是 $${a}, ${b}, ${c}$，正是 $\\mathbf{v}$ 的分量。`,
+              ),
             ),
           ),
           [
@@ -3241,8 +3312,8 @@ export const theParametricEquationsOfALine: TopicDef = {
       id: "direction-vector-and-points-from-parametric-form",
       title: t("Direction vector and points from parametric equations", "从参数方程读取方向向量与点"),
       explanation: t(
-        "From the parametric equations $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$, the coefficients of parameter $t$ form the direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$, while setting $t = 0$ yields the base point $(x_0, y_0, z_0)$.",
-        "从空间直线的参数方程 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ 中，参数 $t$ 的系数构成了直线的方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$；令 $t = 0$ 即可得到直线上的一基准点 $(x_0, y_0, z_0)$。",
+        "From the parametric equations $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$, the coefficients of parameter $t$ form the direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$, while setting $t = 0$ yields the base point $(x_0, y_0, z_0)$. From $x = 3 - 2t$, $y = t$, $z = -1 + 5t$, the direction is $\\langle -2, 1, 5 \\rangle$ and the base point is $(3, 0, -1)$.\n\n> **Watch out.** The direction is made of the coefficients of $t$, signs included, not of the constants. A coefficient written $-2t$ gives the entry $-2$, and a term $t$ with no number gives $1$.",
+        "从空间直线的参数方程 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ 中，参数 $t$ 的系数构成了直线的方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$；令 $t = 0$ 即可得到直线上的一基准点 $(x_0, y_0, z_0)$。由 $x = 3 - 2t$，$y = t$，$z = -1 + 5t$，方向向量是 $\\langle -2, 1, 5 \\rangle$，基准点是 $(3, 0, -1)$。\n\n> **注意。** 方向向量由 $t$ 的系数组成，包括符号，而不是由常数组成。写成 $-2t$ 的项给出分量 $-2$，不带数字的 $t$ 给出 $1$。",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -3255,21 +3326,49 @@ export const theParametricEquationsOfALine: TopicDef = {
         const p: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
         const lineStr = paramLineLatex(p, v);
+        const next: Vec3 = add3(p, v);
 
-        return pointProblem({
-          prompt: t(
-            `A line is given by parametric equations:\n\n$$${lineStr}$$\n\nIdentify a direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$ of this line.`,
-            `已知直线的参数方程为：\n\n$$${lineStr}$$\n\n确定该直线的一个方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$。`,
-          ),
-          answer: v,
-          vars: ["x", "y", "z"],
-          vector: true,
-          solution: t(
-            `The components of the direction vector are the coefficients of parameter $t$: $a = ${a}, b = ${b}, c = ${c}$, so $\\mathbf{v} = ${vec3Latex(v)}$.`,
-            `方向向量的分量即为参数 $t$ 的系数：$a = ${a}, b = ${b}, c = ${c}$，因此 $\\mathbf{v} = ${vec3Latex(v)}$。`,
-          ),
-          wrong: [p, [a, -b, c], [-a, b, -c]],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `A line is given by parametric equations:\n\n$$${lineStr}$$\n\nIdentify a direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$ of this line.`,
+              `已知直线的参数方程为：\n\n$$${lineStr}$$\n\n确定该直线的一个方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$。`,
+            ),
+            answer: v,
+            vars: ["x", "y", "z"],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Read the coefficients of $t$", "读出 $t$ 的系数"],
+                  t(`In $x$, $y$ and $z$ they are $${a}$, $${b}$ and $${c}$.`, `在 $x$、$y$、$z$ 中分别是 $${a}$、$${b}$、$${c}$。`),
+                ],
+                [["Form the direction", "组成方向向量"], t(`$\\mathbf{v} = ${vec3Latex(v)}$.`, `$\\mathbf{v} = ${vec3Latex(v)}$。`)],
+              ],
+              t(
+                `$t = 0$ and $t = 1$ give the points $${pt3Latex(p)}$ and $${pt3Latex(next)}$, and their difference is $${vec3Latex(v)}$.`,
+                `$t = 0$ 和 $t = 1$ 给出点 $${pt3Latex(p)}$ 和 $${pt3Latex(next)}$，它们的差是 $${vec3Latex(v)}$。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              vectorLatex(p),
+              "Those are the constants, which give a point of the line; the direction is made of the coefficients of $t$.",
+              "这些是常数，给出直线上的一点；方向向量由 $t$ 的系数组成。",
+            ),
+            say(
+              vectorLatex([a, -b, c]),
+              "The second entry has the wrong sign: read the sign in front of $t$ in the equation for $y$.",
+              "第二个分量符号错了：要读 $y$ 的方程中 $t$ 前面的符号。",
+            ),
+            say(
+              vectorLatex([-a, b, -c]),
+              "The first and third entries have the wrong signs: read the sign in front of each $t$.",
+              "第一和第三个分量符号错了：要读每个 $t$ 前面的符号。",
+            ),
+          ].filter((s) => s.response !== vectorLatex(v)),
+        );
       },
     },
   ],
@@ -3284,6 +3383,10 @@ export const theCartesianEquationOfALine: TopicDef = {
     "Convert between parametric and symmetric Cartesian forms of a line, handling components with zero direction.",
     "在参数方程与对称式（点向式）方程间进行转换，并处理方向向量分量为零的情形。",
   ),
+  intro: t(
+    "On the line $x = 1 + 2t$, $y = -3 + t$, $z = 4 - 3t$, each coordinate tells you the parameter: $t = \\frac{x - 1}{2}$, $t = y + 3$ and $t = \\frac{z - 4}{-3}$. A point lies on the line exactly when these three values agree, which is the single statement $\\frac{x - 1}{2} = \\frac{y + 3}{1} = \\frac{z - 4}{-3}$, with no parameter left.\n\nCheck: the point $(5, -1, -2)$, from $t = 2$, gives $\\frac{4}{2} = \\frac{2}{1} = \\frac{-6}{-3} = 2$.\n\nIn this lesson we turn a line into symmetric equations, and handle a direction with a zero entry, where one coordinate is constant.",
+    "在直线 $x = 1 + 2t$，$y = -3 + t$，$z = 4 - 3t$ 上，每个坐标都给出参数的值：$t = \\frac{x - 1}{2}$，$t = y + 3$，$t = \\frac{z - 4}{-3}$。一个点在直线上，当且仅当这三个值相等，也就是一个不含参数的式子 $\\frac{x - 1}{2} = \\frac{y + 3}{1} = \\frac{z - 4}{-3}$。\n\n检验：由 $t = 2$ 得到的点 $(5, -1, -2)$ 给出 $\\frac{4}{2} = \\frac{2}{1} = \\frac{-6}{-3} = 2$。\n\n本课我们把直线写成对称式方程，并处理方向向量有零分量、因而某个坐标为常数的情形。",
+  ),
   prerequisites: ["the-parametric-equations-of-a-line"],
   encompasses: [],
   xp: 10,
@@ -3293,8 +3396,8 @@ export const theCartesianEquationOfALine: TopicDef = {
       id: "symmetric-equations-of-a-line",
       title: t("Symmetric equations of a line", "空间直线的点向式对称方程"),
       explanation: t(
-        "Solving each parametric equation for the parameter and setting the results equal removes the parameter, leaving equations in the coordinates alone. Eliminating parameter $t$ from $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ (with $a, b, c \\neq 0$) yields the symmetric equations of the line:\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$",
-        "从每个参数方程中解出参数并令它们相等，就消去了参数，只剩下关于坐标的方程。从参数方程 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$（$a, b, c \\neq 0$）中消去参数 $t$，得到直线的对称式（点向式）方程：\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$",
+        "Solving each parametric equation for the parameter and setting the results equal removes the parameter, leaving equations in the coordinates alone. Eliminating parameter $t$ from $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ (with $a, b, c \\neq 0$) yields the symmetric equations of the line:\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$\n\nThrough $(2, -1, 0)$ with direction $\\langle 3, 1, -2 \\rangle$: $\\frac{x - 2}{3} = \\frac{y + 1}{1} = \\frac{z}{-2}$.\n\n> **Watch out.** The numerators subtract the point and the denominators are the direction. So a coordinate $-1$ of the point appears as $y + 1$, and the point, not the direction, goes in the numerators.",
+        "从每个参数方程中解出参数并令它们相等，就消去了参数，只剩下关于坐标的方程。从参数方程 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$（$a, b, c \\neq 0$）中消去参数 $t$，得到直线的对称式（点向式）方程：\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$\n\n过 $(2, -1, 0)$、方向为 $\\langle 3, 1, -2 \\rangle$ 的直线：$\\frac{x - 2}{3} = \\frac{y + 1}{1} = \\frac{z}{-2}$。\n\n> **注意。** 分子减去点的坐标，分母是方向向量的分量。所以点的坐标 $-1$ 写成 $y + 1$，而放在分子里的是点，不是方向。",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -3314,17 +3417,57 @@ export const theCartesianEquationOfALine: TopicDef = {
 
         const p: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
-        return oneOf(
+        const q: Vec3 = add3(p, v);
+        const math = (s: string) => t(`$${s}$`, `$${s}$`);
+        return explained(
           rng,
           t(
             `Find the symmetric Cartesian equations of the line passing through point $P${pt3Latex(p)}$ with direction vector $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求通过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{v} = ${vec3Latex(v)}$ 为方向向量的直线的对称式方程。`,
           ),
-          t(`$${rightSym}$`, `$${rightSym}$`),
-          [wrong1, wrong2, wrong3, wrong4, wrong5].map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
-            `Solving for $t$ in each coordinate gives $t = \\frac{${symNum("x", x0)}}{${a}} = \\frac{${symNum("y", y0)}}{${b}} = \\frac{${symNum("z", z0)}}{${c}}$. Thus the symmetric equations are:\n\n$$${rightSym}$$`,
-            `在每个参数方程中解出 $t$，得 $t = \\frac{${symNum("x", x0)}}{${a}} = \\frac{${symNum("y", y0)}}{${b}} = \\frac{${symNum("z", z0)}}{${c}}$。联立即得对称式方程：\n\n$$${rightSym}$$`,
+          math(rightSym),
+          [
+            [
+              math(wrong1),
+              "The point and the direction are swapped: the numerators subtract the point, and the denominators are the direction.",
+              "点和方向弄反了：分子减去点的坐标，分母是方向向量的分量。",
+            ],
+            [
+              math(wrong2),
+              `The numerator for $x$ has the wrong sign: it is $x$ minus the first coordinate of $P$, which is $${x0}$.`,
+              `$x$ 的分子符号错了：应是 $x$ 减去 $P$ 的第一个坐标 $${x0}$。`,
+            ],
+            [
+              math(wrong3),
+              "The denominator under $y$ has the wrong sign: it is the second entry of the direction.",
+              "$y$ 下面的分母符号错了：它是方向向量的第二个分量。",
+            ],
+            [
+              math(wrong4),
+              `The numerator for $y$ has the wrong sign: it is $y$ minus the second coordinate of $P$, which is $${y0}$.`,
+              `$y$ 的分子符号错了：应是 $y$ 减去 $P$ 的第二个坐标 $${y0}$。`,
+            ],
+            [
+              math(wrong5),
+              "The denominator under $x$ has the wrong sign: it is the first entry of the direction.",
+              "$x$ 下面的分母符号错了：它是方向向量的第一个分量。",
+            ],
+          ],
+          walked(
+            [
+              [
+                ["Solve each coordinate for $t$", "从每个坐标解出 $t$"],
+                t(
+                  `From $x = ${x0} + ${a < 0 ? `(${a})` : a}t$ and the others, $t = ${symPart(x0, a, "x")}$, $t = ${symPart(y0, b, "y")}$ and $t = ${symPart(z0, c, "z")}$.`,
+                  `由 $x = ${x0} + ${a < 0 ? `(${a})` : a}t$ 等，得 $t = ${symPart(x0, a, "x")}$，$t = ${symPart(y0, b, "y")}$，$t = ${symPart(z0, c, "z")}$。`,
+                ),
+              ],
+              [["Set the three values equal", "令三个值相等"], t("", ""), [rightSym]],
+            ],
+            t(
+              `The point $P$ makes all three fractions $0$, and the point $${pt3Latex(q)}$, from $t = 1$, makes them all $1$.`,
+              `点 $P$ 使三个分式都等于 $0$，由 $t = 1$ 得到的点 $${pt3Latex(q)}$ 使它们都等于 $1$。`,
+            ),
           ),
         );
       },
@@ -3333,8 +3476,8 @@ export const theCartesianEquationOfALine: TopicDef = {
       id: "handling-zero-direction-components",
       title: t("Lines with zero direction components", "方向向量含零分量的直线方程"),
       explanation: t(
-        "If one direction component is zero, say $c = 0$, the coordinate $z$ is constant ($z = z_0$) and the line lies in the plane $z = z_0$. The symmetric equations are written as $\\frac{x - x_0}{a} = \\frac{y - y_0}{b}, \\; z = z_0$.",
-        "若方向向量的一个分量为零（例如 $c = 0$），则该坐标为常数（$z = z_0$），直线平行于坐标平面并位于平面 $z = z_0$ 内。此时对称式方程写作 $\\frac{x - x_0}{a} = \\frac{y - y_0}{b}, \\; z = z_0$。",
+        "If one direction component is zero, say $c = 0$, the coordinate $z$ is constant ($z = z_0$) and the line lies in the plane $z = z_0$. The symmetric equations are written as $\\frac{x - x_0}{a} = \\frac{y - y_0}{b}, \\; z = z_0$. Through $(1, 2, 5)$ with direction $\\langle 3, -1, 0 \\rangle$: $\\frac{x - 1}{3} = \\frac{y - 2}{-1}, \\; z = 5$.\n\n> **Watch out.** A fraction with denominator $0$ is not allowed, so the zero entry gets no fraction. Its coordinate is fixed at the value it has at the point, which is $z_0$, not $0$.",
+        "若方向向量的一个分量为零（例如 $c = 0$），则该坐标为常数（$z = z_0$），直线平行于坐标平面并位于平面 $z = z_0$ 内。此时对称式方程写作 $\\frac{x - x_0}{a} = \\frac{y - y_0}{b}, \\; z = z_0$。过 $(1, 2, 5)$、方向为 $\\langle 3, -1, 0 \\rangle$ 的直线：$\\frac{x - 1}{3} = \\frac{y - 2}{-1}, \\; z = 5$。\n\n> **注意。** 分母为 $0$ 的分式是不允许的，所以零分量不写成分式。它的坐标固定为点在该坐标上的值 $z_0$，而不是 $0$。",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -3357,17 +3500,57 @@ export const theCartesianEquationOfALine: TopicDef = {
 
         const p: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
-        return oneOf(
+        const q: Vec3 = add3(p, v);
+        const math = (s: string) => t(`$${s}$`, `$${s}$`);
+        return explained(
           rng,
           t(
             `A line passes through point $P${pt3Latex(p)}$ with direction vector $\\mathbf{v} = ${vec3Latex(v)}$. Which expression correctly gives its Cartesian symmetric equations?`,
             `一条直线过点 $P${pt3Latex(p)}$，其方向向量为 $\\mathbf{v} = ${vec3Latex(v)}$。下列哪个表达式正确表示了其对称式方程？`,
           ),
-          t(`$${rightEq}$`, `$${rightEq}$`),
-          [wrong1, wrong2, wrong3, wrong4, wrong5].map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
-            `Because the $z$-component of the direction vector is $0$, $z$ remains constantly equal to $z_0 = ${z0}$. Equating the parameters for $x$ and $y$ gives:\n\n$$${rightEq}$$`,
-            `因为方向向量的 $z$ 分量为 $0$，所以 $z$ 恒等于常数 $z_0 = ${z0}$。将 $x$ 与 $y$ 的参数联立，得到方程为 $${rightEq}$。`,
+          math(rightEq),
+          [
+            [
+              math(wrong1),
+              "A fraction with denominator $0$ has no value; a zero entry of the direction makes its coordinate constant instead.",
+              "分母为 $0$ 的分式没有意义；方向向量的零分量应使对应坐标为常数。",
+            ],
+            [
+              math(wrong2),
+              "The constant coordinate keeps the value it has at $P$, not $0$.",
+              "不变的坐标保持它在 $P$ 处的值，而不是 $0$。",
+            ],
+            [
+              math(wrong3),
+              "That fixes $z$ at the $x$-coordinate of $P$; it keeps the $z$-coordinate of $P$.",
+              "这把 $z$ 固定为 $P$ 的 $x$ 坐标；应保持 $P$ 的 $z$ 坐标。",
+            ],
+            [
+              math(wrong4),
+              "The line passes through $P$, so the constant coordinate equals the $z$-coordinate of $P$.",
+              "直线经过 $P$，所以不变的坐标等于 $P$ 的 $z$ 坐标。",
+            ],
+            [
+              math(wrong5),
+              "The denominators are swapped: the first entry of the direction goes under $x$.",
+              "分母弄反了：方向向量的第一个分量应在 $x$ 下面。",
+            ],
+          ],
+          walked(
+            [
+              [
+                ["Fix the coordinate with zero direction", "固定方向分量为零的坐标"],
+                t(
+                  `The $z$-entry of $\\mathbf{v}$ is $0$, so $z = ${z0} + 0t = ${z0}$ all along the line.`,
+                  `$\\mathbf{v}$ 的 $z$ 分量是 $0$，所以整条直线上 $z = ${z0} + 0t = ${z0}$。`,
+                ),
+              ],
+              [["Eliminate $t$ from the others", "从其余坐标中消去 $t$"], t("", ""), [rightEq]],
+            ],
+            t(
+              `At $P$ both fractions are $0$ and $z = ${z0}$; at $${pt3Latex(q)}$, from $t = 1$, both fractions are $1$ and still $z = ${z0}$.`,
+              `在 $P$ 处两个分式都等于 $0$ 且 $z = ${z0}$；在由 $t = 1$ 得到的 $${pt3Latex(q)}$ 处，两个分式都等于 $1$，仍有 $z = ${z0}$。`,
+            ),
           ),
         );
       },
@@ -3384,6 +3567,10 @@ export const theVectorEquationOfAPlane: TopicDef = {
     "Formulate the vector equation of a plane using a normal vector n and position vector r0.",
     "利用平面的法向量 n 与已知点 r0 建立平面的点法式向量方程。",
   ),
+  intro: t(
+    "A tabletop is flat, and a pencil standing upright on it points the same way wherever it stands. That upright direction, here $\\mathbf{n} = \\langle 1, 2, 2 \\rangle$, is a normal vector, and a point $\\mathbf{r}$ is on the plane through $\\mathbf{r}_0 = \\langle 3, 0, 1 \\rangle$ exactly when $\\mathbf{r} - \\mathbf{r}_0$ lies flat, at right angles to $\\mathbf{n}$: $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$. Multiplying out gives $\\mathbf{n} \\cdot \\mathbf{r} = \\mathbf{n} \\cdot \\mathbf{r}_0 = 3 + 0 + 2 = 5$.\n\nCheck: the point $(1, 1, 1)$ gives $\\mathbf{n} \\cdot \\mathbf{r} = 1 + 2 + 2 = 5$, so it is on the plane, and $(1, 1, 1) - (3, 0, 1) = \\langle -2, 1, 0 \\rangle$ has dot product $-2 + 2 + 0 = 0$ with $\\mathbf{n}$.\n\nIn this lesson we write the vector equation of a plane from a point and a normal vector, and find a normal vector from three points of the plane.",
+    "桌面是平的，竖立在桌面上的铅笔不论放在哪里都指向同一个方向。这个竖直方向，例如 $\\mathbf{n} = \\langle 1, 2, 2 \\rangle$，就是法向量。点 $\\mathbf{r}$ 在过 $\\mathbf{r}_0 = \\langle 3, 0, 1 \\rangle$ 的平面上，当且仅当 $\\mathbf{r} - \\mathbf{r}_0$ 平躺在平面里，与 $\\mathbf{n}$ 垂直：$\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$。展开得 $\\mathbf{n} \\cdot \\mathbf{r} = \\mathbf{n} \\cdot \\mathbf{r}_0 = 3 + 0 + 2 = 5$。\n\n检验：点 $(1, 1, 1)$ 给出 $\\mathbf{n} \\cdot \\mathbf{r} = 1 + 2 + 2 = 5$，所以它在平面上；而 $(1, 1, 1) - (3, 0, 1) = \\langle -2, 1, 0 \\rangle$ 与 $\\mathbf{n}$ 的点积是 $-2 + 2 + 0 = 0$。\n\n本课我们由一点和一个法向量写出平面的向量方程，并由平面上的三个点求出法向量。",
+  ),
   prerequisites: ["the-cross-product-of-two-vectors"],
   encompasses: [],
   xp: 10,
@@ -3394,8 +3581,8 @@ export const theVectorEquationOfAPlane: TopicDef = {
       figure: linearAlgebraDrawings1["the-vector-equation-of-a-plane#normal-vector-and-vector-plane-equation"],
       title: t("Normal vector and the vector equation of a plane", "法向量与平面的点法式向量方程"),
       explanation: t(
-        "A plane in 3D is determined by a point $P(x_0, y_0, z_0)$ with position vector $\\mathbf{r}_0$ and a non-zero normal vector $\\mathbf{n} = \\langle A, B, C \\rangle$ perpendicular to the plane. The vector equation is $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$, or equivalently $\\mathbf{n} \\cdot \\mathbf{r} = d$ where $d = \\mathbf{n} \\cdot \\mathbf{r}_0$.",
-        "空间平面由一点 $P(x_0, y_0, z_0)$（位置向量 $\\mathbf{r}_0$）与垂直于平面的非零法向量 $\\mathbf{n} = \\langle A, B, C \\rangle$ 唯一确定。其点法式向量方程为 $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$，或等价地写作 $\\mathbf{n} \\cdot \\mathbf{r} = d$，其中 $d = \\mathbf{n} \\cdot \\mathbf{r}_0$。",
+        "A plane in 3D is determined by a point $P(x_0, y_0, z_0)$ with position vector $\\mathbf{r}_0$ and a non-zero normal vector $\\mathbf{n} = \\langle A, B, C \\rangle$ perpendicular to the plane. The vector equation is $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$, or equivalently $\\mathbf{n} \\cdot \\mathbf{r} = d$ where $d = \\mathbf{n} \\cdot \\mathbf{r}_0$. Through $(2, -1, 4)$ with $\\mathbf{n} = \\langle 3, 1, -2 \\rangle$: $d = 6 - 1 - 8 = -3$, so $\\langle 3, 1, -2 \\rangle \\cdot \\mathbf{r} = -3$.\n\n> **Watch out.** $d$ is the dot product of the normal with the point, so every one of the three products counts, each with its sign. A negative entry times a negative coordinate is positive, and $d$ itself may be negative.",
+        "空间平面由一点 $P(x_0, y_0, z_0)$（位置向量 $\\mathbf{r}_0$）与垂直于平面的非零法向量 $\\mathbf{n} = \\langle A, B, C \\rangle$ 唯一确定。其点法式向量方程为 $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = 0$，或等价地写作 $\\mathbf{n} \\cdot \\mathbf{r} = d$，其中 $d = \\mathbf{n} \\cdot \\mathbf{r}_0$。过 $(2, -1, 4)$、$\\mathbf{n} = \\langle 3, 1, -2 \\rangle$ 的平面：$d = 6 - 1 - 8 = -3$，所以 $\\langle 3, 1, -2 \\rangle \\cdot \\mathbf{r} = -3$。\n\n> **注意。** $d$ 是法向量与点的点积，三个乘积都要算上，各带自己的符号。负分量乘负坐标得正数，而 $d$ 本身也可能是负数。",
       ),
       generate(rng) {
         const A = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -3408,6 +3595,24 @@ export const theVectorEquationOfAPlane: TopicDef = {
         const n: Vec3 = [A, B, C];
         const r0: Vec3 = [x0, y0, z0];
         const d = dot3(n, r0);
+        const other: Vec3 = [x0 + B, y0 - A, z0];
+        const mistakes = [
+          why(
+            -d,
+            "That is $d$ with the wrong sign: $d = \\mathbf{n} \\cdot \\mathbf{r}_0$ is the dot product itself.",
+            "这是符号反了的 $d$：$d = \\mathbf{n} \\cdot \\mathbf{r}_0$ 就是点积本身。",
+          ),
+          why(
+            d - C * z0,
+            "The product of the third entries is missing: the dot product adds all three products.",
+            "漏掉了第三个分量的乘积：点积要把三个乘积都加起来。",
+          ),
+          why(
+            A + B + C + x0 + y0 + z0,
+            "That adds the entries instead of multiplying them in pairs: the dot product is $Ax_0 + By_0 + Cz_0$.",
+            "这是把分量相加，而不是成对相乘：点积是 $Ax_0 + By_0 + Cz_0$。",
+          ),
+        ].filter((m, i, all) => m.value !== d && all.findIndex((x) => x.value === m.value) === i);
 
         return numberProblem({
           prompt: t(
@@ -3415,11 +3620,23 @@ export const theVectorEquationOfAPlane: TopicDef = {
             `求通过点 $P${pt3Latex(r0)}$ 且法向量为 $\\mathbf{n} = ${vec3Latex(n)}$ 的平面的标量积方程 $\\mathbf{n} \\cdot \\mathbf{r} = d$ 中的常数 $d$。`,
           ),
           answer: d,
-          solution: t(
-            `The constant is $d = \\mathbf{n} \\cdot \\mathbf{r}_0 = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}$. Thus the equation is $${vec3Latex(n)} \\cdot \\mathbf{r} = ${d}$.`,
-            `常数项为 $d = \\mathbf{n} \\cdot \\mathbf{r}_0 = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}$。因此方程为 $${vec3Latex(n)} \\cdot \\mathbf{r} = ${d}$。`,
+          solution: walked(
+            [
+              [
+                ["Use the point of the plane", "用平面上的点"],
+                t(
+                  "$P$ is on the plane, so $\\mathbf{r} = \\mathbf{r}_0$ must satisfy $\\mathbf{n} \\cdot \\mathbf{r} = d$, which gives $d = \\mathbf{n} \\cdot \\mathbf{r}_0$.",
+                  "$P$ 在平面上，所以 $\\mathbf{r} = \\mathbf{r}_0$ 必须满足 $\\mathbf{n} \\cdot \\mathbf{r} = d$，得 $d = \\mathbf{n} \\cdot \\mathbf{r}_0$。",
+                ),
+              ],
+              [["Compute the dot product", "计算点积"], t("", ""), [`d = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}`]],
+            ],
+            t(
+              `The point $${pt3Latex(other)}$ is $P$ moved by $${vec3Latex([B, -A, 0])}$, which is perpendicular to $\\mathbf{n}$ since $(${A})(${B}) + (${B})(${-A}) = 0$, so it is on the plane too, and indeed $\\mathbf{n} \\cdot ${vec3Latex(other)} = ${dot3(n, other)}$.`,
+              `点 $${pt3Latex(other)}$ 是 $P$ 沿 $${vec3Latex([B, -A, 0])}$ 移动所得，这个向量与 $\\mathbf{n}$ 垂直，因为 $(${A})(${B}) + (${B})(${-A}) = 0$，所以它也在平面上；确实 $\\mathbf{n} \\cdot ${vec3Latex(other)} = ${dot3(n, other)}$。`,
+            ),
           ),
-          wrong: [-d, 0, d + 1, d - 1],
+          mistakes,
         });
       },
     },
@@ -3428,8 +3645,8 @@ export const theVectorEquationOfAPlane: TopicDef = {
       figure: linearAlgebraDrawings1["the-vector-equation-of-a-plane#plane-through-three-points-vector-form"],
       title: t("Plane passing through three points", "过不共线三点的平面向量法向量"),
       explanation: t(
-        "Given three non-collinear points $P, Q, R$, displacement vectors $\\vec{PQ} = \\mathbf{q} - \\mathbf{p}$ and $\\vec{PR} = \\mathbf{r} - \\mathbf{p}$ both lie parallel to the plane. A normal vector to the plane is given by their cross product: $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$.",
-        "给定不共线的三点 $P, Q, R$，位移向量 $\\vec{PQ} = \\mathbf{q} - \\mathbf{p}$ 与 $\\vec{PR} = \\mathbf{r} - \\mathbf{p}$ 均平行于该平面。平面的法向量由两向量的叉积给出：$\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$。",
+        "Given three non-collinear points $P, Q, R$, displacement vectors $\\vec{PQ} = \\mathbf{q} - \\mathbf{p}$ and $\\vec{PR} = \\mathbf{r} - \\mathbf{p}$ both lie parallel to the plane. A normal vector to the plane is given by their cross product: $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$. For $P(0, 0, 0)$, $Q(1, 0, 0)$ and $R(0, 1, 0)$: $\\langle 1, 0, 0 \\rangle \\times \\langle 0, 1, 0 \\rangle = \\langle 0, 0, 1 \\rangle$, straight up from the $xy$-plane.\n\n> **Watch out.** The middle entry of a cross product carries a minus sign: $u_3v_1 - u_1v_3$, not $u_1v_3 - u_3v_1$. And the order matters: $\\vec{PR} \\times \\vec{PQ}$ points the opposite way.",
+        "给定不共线的三点 $P, Q, R$，位移向量 $\\vec{PQ} = \\mathbf{q} - \\mathbf{p}$ 与 $\\vec{PR} = \\mathbf{r} - \\mathbf{p}$ 均平行于该平面。平面的法向量由两向量的叉积给出：$\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$。对 $P(0, 0, 0)$、$Q(1, 0, 0)$、$R(0, 1, 0)$：$\\langle 1, 0, 0 \\rangle \\times \\langle 0, 1, 0 \\rangle = \\langle 0, 0, 1 \\rangle$，垂直于 $xy$ 平面向上。\n\n> **注意。** 叉积的中间分量带负号：是 $u_3v_1 - u_1v_3$，不是 $u_1v_3 - u_3v_1$。而且顺序要紧：$\\vec{PR} \\times \\vec{PQ}$ 指向相反方向。",
       ),
       generate(rng) {
         const P: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
@@ -3445,24 +3662,56 @@ export const theVectorEquationOfAPlane: TopicDef = {
         const Q = add3(P, u);
         const R = add3(P, v);
 
-        const wrong1: Vec3 = [-n[0], -n[1], n[2]];
-        const wrong2: Vec3 = [n[1], n[0], n[2]];
-        const wrong3: Vec3 = add3(u, v);
-
-        return pointProblem({
-          prompt: t(
-            `Find a normal vector $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$ for the plane containing the three points $P${pt3Latex(P)}$, $Q${pt3Latex(Q)}$, and $R${pt3Latex(R)}$.`,
-            `求包含点 $P${pt3Latex(P)}$、$Q${pt3Latex(Q)}$ 与 $R${pt3Latex(R)}$ 的平面的法向量 $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$。`,
-          ),
-          answer: n,
-          vars: ["x", "y", "z"],
-          vector: true,
-          solution: t(
-            `Compute $\\vec{PQ} = ${vec3Latex(u)}$ and $\\vec{PR} = ${vec3Latex(v)}$. Then evaluate the cross product:\n\n$$\\mathbf{n} = \\vec{PQ} \\times \\vec{PR} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = ${vec3Latex(n)}$$`,
-            `先求位移向量 $\\vec{PQ} = ${vec3Latex(u)}$ 与 $\\vec{PR} = ${vec3Latex(v)}$。然后计算其叉积：\n\n$$\\mathbf{n} = \\vec{PQ} \\times \\vec{PR} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = ${vec3Latex(n)}$$`,
-          ),
-          wrong: [wrong1, wrong2, wrong3],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find a normal vector $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$ for the plane containing the three points $P${pt3Latex(P)}$, $Q${pt3Latex(Q)}$, and $R${pt3Latex(R)}$.`,
+              `求包含点 $P${pt3Latex(P)}$、$Q${pt3Latex(Q)}$ 与 $R${pt3Latex(R)}$ 的平面的法向量 $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$。`,
+            ),
+            answer: n,
+            vars: ["x", "y", "z"],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Find two vectors in the plane", "求平面内的两个向量"],
+                  t(
+                    `$\\vec{PQ} = ${vec3Latex(u)}$ and $\\vec{PR} = ${vec3Latex(v)}$.`,
+                    `$\\vec{PQ} = ${vec3Latex(u)}$，$\\vec{PR} = ${vec3Latex(v)}$。`,
+                  ),
+                ],
+                [
+                  ["Take their cross product", "求它们的叉积"],
+                  t("", ""),
+                  [
+                    `\\mathbf{n} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = ${vec3Latex(n)}`,
+                  ],
+                ],
+              ],
+              t(
+                `$\\mathbf{n} \\cdot \\vec{PQ} = ${dot3(n, u)}$ and $\\mathbf{n} \\cdot \\vec{PR} = ${dot3(n, v)}$, so $\\mathbf{n}$ is perpendicular to both directions of the plane.`,
+                `$\\mathbf{n} \\cdot \\vec{PQ} = ${dot3(n, u)}$，$\\mathbf{n} \\cdot \\vec{PR} = ${dot3(n, v)}$，所以 $\\mathbf{n}$ 与平面内的两个方向都垂直。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              vectorLatex([-n[0], -n[1], -n[2]]),
+              "That is $\\vec{PR} \\times \\vec{PQ}$: the order of a cross product matters, and reversing it reverses the vector.",
+              "这是 $\\vec{PR} \\times \\vec{PQ}$：叉积的顺序要紧，顺序反了，向量也反向。",
+            ),
+            say(
+              vectorLatex([n[0], -n[1], n[2]]),
+              "The middle entry has the wrong sign: it is $u_3v_1 - u_1v_3$.",
+              "中间分量符号错了：它是 $u_3v_1 - u_1v_3$。",
+            ),
+            say(
+              vectorLatex(add3(u, v)),
+              "That is $\\vec{PQ} + \\vec{PR}$, which lies in the plane; a normal must be perpendicular to it.",
+              "这是 $\\vec{PQ} + \\vec{PR}$，它在平面内；法向量必须与平面垂直。",
+            ),
+          ].filter((s, i, all) => s.response !== vectorLatex(n) && all.findIndex((x) => x.response === s.response) === i),
+        );
       },
     },
   ],
@@ -3477,6 +3726,10 @@ export const theCartesianEquationOfAPlane: TopicDef = {
     "Find the general Cartesian equation Ax + By + Cz + D = 0 of a plane and identify its normal vector.",
     "建立平面的点法式一般方程 Ax + By + Cz + D = 0，并由系数识别其法向量。",
   ),
+  intro: t(
+    "Write $\\mathbf{r} = \\langle x, y, z \\rangle$ in $\\langle 2, -1, 3 \\rangle \\cdot (\\mathbf{r} - \\langle 1, 1, 0 \\rangle) = 0$ and multiply out: $2(x - 1) - (y - 1) + 3z = 0$, which is $2x - y + 3z - 1 = 0$. The coefficients $2, -1, 3$ are the normal vector again, and the constant $-1$ holds the point.\n\nCheck: $(1, 1, 0)$ gives $2 - 1 + 0 - 1 = 0$, so the plane passes through the point it was built from.\n\nIn this lesson we write the Cartesian equation of a plane from a point and a normal, and read a normal vector off a Cartesian equation.",
+    "把 $\\mathbf{r} = \\langle x, y, z \\rangle$ 代入 $\\langle 2, -1, 3 \\rangle \\cdot (\\mathbf{r} - \\langle 1, 1, 0 \\rangle) = 0$ 并展开：$2(x - 1) - (y - 1) + 3z = 0$，即 $2x - y + 3z - 1 = 0$。系数 $2, -1, 3$ 又是法向量，常数 $-1$ 记下了那个点。\n\n检验：$(1, 1, 0)$ 给出 $2 - 1 + 0 - 1 = 0$，所以平面经过构造它所用的那个点。\n\n本课我们由一点和法向量写出平面的一般方程，并从一般方程读出法向量。",
+  ),
   prerequisites: ["the-vector-equation-of-a-plane"],
   encompasses: [],
   xp: 10,
@@ -3487,8 +3740,8 @@ export const theCartesianEquationOfAPlane: TopicDef = {
       figure: linearAlgebraDrawings1["the-cartesian-equation-of-a-plane#general-linear-equation-of-a-plane"],
       title: t("General linear equation of a plane", "平面的一般方程"),
       explanation: t(
-        "A plane is the set of points whose displacement from a fixed point is perpendicular to a normal vector, and the coefficients of the equation are that normal vector's components. Expanding $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$ gives the general linear equation of a plane in $\\mathbb{R}^3$:\n\n$$Ax + By + Cz + D = 0, \\quad \\text{where } D = -(Ax_0 + By_0 + Cz_0)$$",
-        "平面是到一个定点的位移与法向量垂直的点的集合，方程的系数就是法向量的各个分量。展开点法式方程 $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$，得到三维空间平面的线性一般方程：\n\n$$Ax + By + Cz + D = 0, \\quad \\text{其中 } D = -(Ax_0 + By_0 + Cz_0)$$",
+        "A plane is the set of points whose displacement from a fixed point is perpendicular to a normal vector, and the coefficients of the equation are that normal vector's components. Expanding $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$ gives the general linear equation of a plane in $\\mathbb{R}^3$:\n\n$$Ax + By + Cz + D = 0, \\quad \\text{where } D = -(Ax_0 + By_0 + Cz_0)$$\n\nThrough $(1, -2, 3)$ with $\\mathbf{n} = \\langle 2, 1, -1 \\rangle$: $D = -(2 - 2 - 3) = 3$, so $2x + y - z + 3 = 0$.\n\n> **Watch out.** $D$ is minus the dot product $Ax_0 + By_0 + Cz_0$, because the point's terms move to the left side. Writing $+(Ax_0 + By_0 + Cz_0)$ gives a parallel plane that misses the point.",
+        "平面是到一个定点的位移与法向量垂直的点的集合，方程的系数就是法向量的各个分量。展开点法式方程 $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$，得到三维空间平面的线性一般方程：\n\n$$Ax + By + Cz + D = 0, \\quad \\text{其中 } D = -(Ax_0 + By_0 + Cz_0)$$\n\n过 $(1, -2, 3)$、$\\mathbf{n} = \\langle 2, 1, -1 \\rangle$：$D = -(2 - 2 - 3) = 3$，所以 $2x + y - z + 3 = 0$。\n\n> **注意。** $D$ 是点积 $Ax_0 + By_0 + Cz_0$ 的相反数，因为点的各项移到了左边。写成 $+(Ax_0 + By_0 + Cz_0)$ 会得到一个不经过该点的平行平面。",
       ),
       generate(rng) {
         const A = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -3500,24 +3753,57 @@ export const theCartesianEquationOfAPlane: TopicDef = {
 
         const D = -(A * x0 + B * y0 + C * z0);
         const rightEq = planeEqLatex(A, B, C, D);
-        const wrong1 = planeEqLatex(A, B, C, -D);
-        const wrong2 = planeEqLatex(A, -B, C, D);
-        const wrong3 = planeEqLatex(A, B, C, D + 2);
-
         const p: Vec3 = [x0, y0, z0];
         const n: Vec3 = [A, B, C];
-        return equationProblem({
-          prompt: t(
-            `Find the general equation of the plane passing through $P${pt3Latex(p)}$ with normal vector $\\mathbf{n} = ${vec3Latex(n)}$. Express the equation in the form $Ax + By + Cz + D = 0$.`,
-            `求过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{n} = ${vec3Latex(n)}$ 为法向量的平面的点法式一般方程（写成 $Ax + By + Cz + D = 0$ 的形式）。`,
+        const mistakes = [
+          say(
+            planeEqLatex(A, B, C, -D),
+            "The constant has the wrong sign: $D = -(Ax_0 + By_0 + Cz_0)$, so this plane misses $P$.",
+            "常数符号错了：$D = -(Ax_0 + By_0 + Cz_0)$，所以这个平面不经过 $P$。",
           ),
-          answer: rightEq,
-          solution: t(
-            `Substitute into $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$:\n\n$$${joinTerms([fmtTerm(A, "x", x0), fmtTerm(B, "y", y0), fmtTerm(C, "z", z0)])} = 0 \\implies ${rightEq}$$`,
-            `代入点法式方程 $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$：\n\n$$${joinTerms([fmtTerm(A, "x", x0), fmtTerm(B, "y", y0), fmtTerm(C, "z", z0)])} = 0 \\implies ${rightEq}$$`,
+          say(
+            planeEqLatex(A, -B, C, D),
+            "The coefficient of $y$ has the wrong sign: the coefficients are the entries of $\\mathbf{n}$.",
+            "$y$ 的系数符号错了：系数就是 $\\mathbf{n}$ 的分量。",
           ),
-          wrong: [wrong1, wrong2, wrong3],
-        });
+          say(
+            planeEqLatex(x0, y0, z0, D),
+            "The point and the normal are mixed up: the coefficients of $x$, $y$ and $z$ come from $\\mathbf{n}$, not from $P$.",
+            "点和法向量弄混了：$x$、$y$、$z$ 的系数来自 $\\mathbf{n}$，不是来自 $P$。",
+          ),
+        ].filter((m, i, all) => m.response !== rightEq && all.findIndex((x) => x.response === m.response) === i);
+        return withMistakes(
+          equationProblem({
+            prompt: t(
+              `Find the general equation of the plane passing through $P${pt3Latex(p)}$ with normal vector $\\mathbf{n} = ${vec3Latex(n)}$. Express the equation in the form $Ax + By + Cz + D = 0$.`,
+              `求过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{n} = ${vec3Latex(n)}$ 为法向量的平面的点法式一般方程（写成 $Ax + By + Cz + D = 0$ 的形式）。`,
+            ),
+            answer: rightEq,
+            solution: walked(
+              [
+                [
+                  ["Write the point-normal form", "写出点法式"],
+                  t("", ""),
+                  [`${joinTerms([fmtTerm(A, "x", x0), fmtTerm(B, "y", y0), fmtTerm(C, "z", z0)])} = 0`],
+                ],
+                [
+                  ["Expand and collect the constant", "展开并合并常数"],
+                  t(
+                    `$D = -((${A})(${x0}) + (${B})(${y0}) + (${C})(${z0})) = ${D}$.`,
+                    `$D = -((${A})(${x0}) + (${B})(${y0}) + (${C})(${z0})) = ${D}$。`,
+                  ),
+                  [rightEq],
+                ],
+              ],
+              t(
+                `Substituting $P$: $(${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) + (${D}) = 0$, so the plane passes through $P$.`,
+                `代入 $P$：$(${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) + (${D}) = 0$，所以平面经过 $P$。`,
+              ),
+            ),
+            wrong: mistakes.map((m) => m.response),
+          }),
+          mistakes,
+        );
       },
     },
     {
@@ -3525,8 +3811,8 @@ export const theCartesianEquationOfAPlane: TopicDef = {
       figure: linearAlgebraDrawings1["the-cartesian-equation-of-a-plane#identifying-normal-vectors-from-cartesian-form"],
       title: t("Identifying normal vectors and parallel planes", "由一般方程读取法向量与平行平面"),
       explanation: t(
-        "In the equation $Ax + By + Cz + D = 0$, the coefficients $\\langle A, B, C \\rangle$ give a normal vector to the plane. Two planes are parallel if their normal vectors are scalar multiples of each other: $\\mathbf{n}_1 = k \\mathbf{n}_2$.",
-        "在平面方程 $Ax + By + Cz + D = 0$ 中，各坐标项系数 $\\langle A, B, C \\rangle$ 即为平面的一个法向量。两平面相互平行当且仅当它们的法向量成比例：$\\mathbf{n}_1 = k \\mathbf{n}_2$。",
+        "In the equation $Ax + By + Cz + D = 0$, the coefficients $\\langle A, B, C \\rangle$ give a normal vector to the plane. Two planes are parallel if their normal vectors are scalar multiples of each other: $\\mathbf{n}_1 = k \\mathbf{n}_2$. The plane $3x - y + 2z - 7 = 0$ has normal $\\langle 3, -1, 2 \\rangle$, and $6x - 2y + 4z + 1 = 0$ is parallel to it.\n\n> **Watch out.** Only the coefficients of $x$, $y$ and $z$ form the normal; the constant $D$ only moves the plane and is never an entry. Read each coefficient with the sign in front of it.",
+        "在平面方程 $Ax + By + Cz + D = 0$ 中，各坐标项系数 $\\langle A, B, C \\rangle$ 即为平面的一个法向量。两平面相互平行当且仅当它们的法向量成比例：$\\mathbf{n}_1 = k \\mathbf{n}_2$。平面 $3x - y + 2z - 7 = 0$ 的法向量是 $\\langle 3, -1, 2 \\rangle$，而 $6x - 2y + 4z + 1 = 0$ 与它平行。\n\n> **注意。** 只有 $x$、$y$、$z$ 的系数组成法向量；常数 $D$ 只是平移平面，从来不是法向量的分量。每个系数都要连同前面的符号一起读。",
       ),
       generate(rng) {
         const A = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -3537,24 +3823,50 @@ export const theCartesianEquationOfAPlane: TopicDef = {
         const planeStr = planeEqLatex(A, B, C, D);
         const n: Vec3 = [A, B, C];
 
-        return pointProblem({
-          prompt: t(
-            `The plane $\\Pi$ is defined by the equation:\n\n$$${planeStr}$$\n\nIdentify a normal vector $\\mathbf{n} = \\langle A, B, C \\rangle$ perpendicular to this plane.`,
-            `平面 $\\Pi$ 由下列方程给出：\n\n$$${planeStr}$$\n\n确定垂直于该平面的一个法向量 $\\mathbf{n} = \\langle A, B, C \\rangle$。`,
-          ),
-          answer: n,
-          vars: ["x", "y", "z"],
-          vector: true,
-          solution: t(
-            `The coefficients of $x, y, z$ in $Ax + By + Cz + D = 0$ directly define a normal vector $\\mathbf{n} = \\langle A, B, C \\rangle = ${vec3Latex(n)}$.`,
-            `在方程 $Ax + By + Cz + D = 0$ 中，$x, y, z$ 的系数直接构成了平面的法向量 $\\mathbf{n} = \\langle A, B, C \\rangle = ${vec3Latex(n)}$.`,
-          ),
-          wrong: [
-            [A, -B, C],
-            [A, B, D],
-            [B, A, C],
-          ],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `The plane $\\Pi$ is defined by the equation:\n\n$$${planeStr}$$\n\nIdentify a normal vector $\\mathbf{n} = \\langle A, B, C \\rangle$ perpendicular to this plane.`,
+              `平面 $\\Pi$ 由下列方程给出：\n\n$$${planeStr}$$\n\n确定垂直于该平面的一个法向量 $\\mathbf{n} = \\langle A, B, C \\rangle$。`,
+            ),
+            answer: n,
+            vars: ["x", "y", "z"],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Read the coefficients", "读出系数"],
+                  t(
+                    `The coefficients of $x$, $y$ and $z$ are $${A}$, $${B}$ and $${C}$; the constant $${D}$ is left out.`,
+                    `$x$、$y$、$z$ 的系数分别是 $${A}$、$${B}$、$${C}$；常数 $${D}$ 不计入。`,
+                  ),
+                ],
+                [["Form the normal", "组成法向量"], t(`$\\mathbf{n} = ${vec3Latex(n)}$.`, `$\\mathbf{n} = ${vec3Latex(n)}$。`)],
+              ],
+              t(
+                `The vectors $${vec3Latex([B, -A, 0])}$ and $${vec3Latex([C, 0, -A])}$ lie in the plane's direction, since they make $Ax + By + Cz$ zero, and $\\mathbf{n}$ is perpendicular to both: $(${A})(${B}) + (${B})(${-A}) = 0$ and $(${A})(${C}) + (${C})(${-A}) = 0$.`,
+                `向量 $${vec3Latex([B, -A, 0])}$ 和 $${vec3Latex([C, 0, -A])}$ 平行于平面，因为它们使 $Ax + By + Cz$ 为零；而 $\\mathbf{n}$ 与两者都垂直：$(${A})(${B}) + (${B})(${-A}) = 0$，$(${A})(${C}) + (${C})(${-A}) = 0$。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              vectorLatex([A, -B, C]),
+              "The second entry has the wrong sign: read the sign in front of $y$.",
+              "第二个分量符号错了：要读 $y$ 前面的符号。",
+            ),
+            say(
+              vectorLatex([A, B, D]),
+              "The constant $D$ is not part of the normal: the third entry is the coefficient of $z$.",
+              "常数 $D$ 不属于法向量：第三个分量是 $z$ 的系数。",
+            ),
+            say(
+              vectorLatex([B, A, C]),
+              "The first two entries are swapped: the first entry is the coefficient of $x$.",
+              "前两个分量交换了：第一个分量是 $x$ 的系数。",
+            ),
+          ].filter((s, i, all) => s.response !== vectorLatex(n) && all.findIndex((x) => x.response === s.response) === i),
+        );
       },
     },
   ],
@@ -3569,6 +3881,10 @@ export const theParametricEquationsOfAPlane: TopicDef = {
     "Express a plane in parametric form r = r0 + su + tv with two linearly independent direction vectors.",
     "利用两个线性无关的平行向量建立平面的双参数方程 r = r0 + su + tv。",
   ),
+  intro: t(
+    "On a sheet of graph paper you can reach any square from a corner by some steps along the rows and some along the columns. A plane works the same way with two directions: from $(1, 0, 2)$, take $s$ steps of $\\langle 1, 1, 0 \\rangle$ and $t$ steps of $\\langle 0, 1, 1 \\rangle$ to reach $\\mathbf{r}(s, t) = \\langle 1, 0, 2 \\rangle + s\\langle 1, 1, 0 \\rangle + t\\langle 0, 1, 1 \\rangle$. With $s = 2$ and $t = -1$ this is $(3, 1, 1)$.\n\nCheck: $(3, 1, 1) - (1, 0, 2) = \\langle 2, 1, -1 \\rangle$, and $2\\langle 1, 1, 0 \\rangle - \\langle 0, 1, 1 \\rangle = \\langle 2, 1, -1 \\rangle$ as well.\n\nIn this lesson we write the two-parameter equation of a plane from a point and two directions, and find the point for given values of the parameters.",
+    "在方格纸上，从一个角出发，沿行走若干步、沿列走若干步，就能到达任何一个方格。平面也是这样，只用两个方向：从 $(1, 0, 2)$ 出发，走 $s$ 步 $\\langle 1, 1, 0 \\rangle$ 和 $t$ 步 $\\langle 0, 1, 1 \\rangle$，到达 $\\mathbf{r}(s, t) = \\langle 1, 0, 2 \\rangle + s\\langle 1, 1, 0 \\rangle + t\\langle 0, 1, 1 \\rangle$。$s = 2$、$t = -1$ 时得 $(3, 1, 1)$。\n\n检验：$(3, 1, 1) - (1, 0, 2) = \\langle 2, 1, -1 \\rangle$，而 $2\\langle 1, 1, 0 \\rangle - \\langle 0, 1, 1 \\rangle$ 也等于 $\\langle 2, 1, -1 \\rangle$。\n\n本课我们由一点和两个方向写出平面的双参数方程，并求参数取给定值时对应的点。",
+  ),
   prerequisites: ["the-vector-equation-of-a-plane"],
   encompasses: [],
   xp: 10,
@@ -3579,8 +3895,8 @@ export const theParametricEquationsOfAPlane: TopicDef = {
       figure: linearAlgebraDrawings1["the-parametric-equations-of-a-plane#two-parameter-form-of-a-plane"],
       title: t("Two-parameter vector form of a plane", "平面的双参数方程"),
       explanation: t(
-        "A plane through $P(x_0, y_0, z_0)$ spanned by two non-parallel vectors $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ has the two-parameter vector equation:\n\n$$\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}, \\quad s, t \\in \\mathbb{R}$$",
-        "过点 $P(x_0, y_0, z_0)$ 且由两个不平行的向量 $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ 张成的平面，其双参数向量方程为：\n\n$$\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}, \\quad s, t \\in \\mathbb{R}$$",
+        "A plane through $P(x_0, y_0, z_0)$ spanned by two non-parallel vectors $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ has the two-parameter vector equation:\n\n$$\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}, \\quad s, t \\in \\mathbb{R}$$\n\nThrough $(0, 2, -1)$ spanned by $\\langle 1, 0, 3 \\rangle$ and $\\langle 2, -1, 0 \\rangle$: $\\mathbf{r}(s, t) = \\langle 0, 2, -1 \\rangle + s\\langle 1, 0, 3 \\rangle + t\\langle 2, -1, 0 \\rangle$.\n\n> **Watch out.** The point stands alone and each direction gets its own parameter. Putting the point under a parameter, or copying an entry with the wrong sign, describes a different plane.",
+        "过点 $P(x_0, y_0, z_0)$ 且由两个不平行的向量 $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ 张成的平面，其双参数向量方程为：\n\n$$\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}, \\quad s, t \\in \\mathbb{R}$$\n\n过 $(0, 2, -1)$、由 $\\langle 1, 0, 3 \\rangle$ 和 $\\langle 2, -1, 0 \\rangle$ 张成的平面：$\\mathbf{r}(s, t) = \\langle 0, 2, -1 \\rangle + s\\langle 1, 0, 3 \\rangle + t\\langle 2, -1, 0 \\rangle$。\n\n> **注意。** 点单独写，每个方向各配一个参数。把点放在参数后面，或把某个分量的符号抄错，描述的就是另一个平面。",
       ),
       generate(rng) {
         const x0 = rng.int(-4, 4);
@@ -3597,18 +3913,37 @@ export const theParametricEquationsOfAPlane: TopicDef = {
         const wrong1 = `\\mathbf{r}(s, t) = ${vec3Latex(u)} + s${vec3Latex(r0)} + t${vec3Latex(v)}`;
         const wrong2 = `\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex([v[0], -v[1], v[2]])}`;
         const wrong3 = `\\mathbf{r}(s, t) = ${vec3Latex([x0, -y0, z0])} + s${vec3Latex(u)} + t${vec3Latex(v)}`;
+        const math = (s: string) => t(`$${s}$`, `$${s}$`);
 
-        return oneOf(
+        return explained(
           rng,
           t(
             `Find the two-parameter vector equation of the plane passing through $P${pt3Latex(r0)}$ parallel to spanning vectors $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求通过点 $P${pt3Latex(r0)}$ 且平行于两张成向量 $\\mathbf{u} = ${vec3Latex(u)}$ 与 $\\mathbf{v} = ${vec3Latex(v)}$ 的平面的双参数向量方程。`,
           ),
-          t(`$${rightEq}$`, `$${rightEq}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `A plane is described by $\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}$. Substituting the point $\\mathbf{r}_0 = ${vec3Latex(r0)}$ and direction vectors gives:\n\n$$${rightEq}$$`,
-            `平面的双参数方程形式为 $\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}$。代入已知点与方向向量得到：\n\n$$${rightEq}$$`,
+          math(rightEq),
+          [
+            [
+              math(wrong1),
+              "The point and the direction $\\mathbf{u}$ are swapped: the point stands alone, and $s$ multiplies $\\mathbf{u}$.",
+              "点和方向 $\\mathbf{u}$ 弄反了：点单独写，$s$ 乘的是 $\\mathbf{u}$。",
+            ],
+            [math(wrong2), "The second entry of $\\mathbf{v}$ has the wrong sign.", "$\\mathbf{v}$ 的第二个分量符号错了。"],
+            [
+              math(wrong3),
+              `The second coordinate of the point has the wrong sign: at $s = t = 0$ the plane must pass through $P$, where $y = ${y0}$.`,
+              `点的第二个坐标符号错了：$s = t = 0$ 时平面必须经过 $P$，那里 $y = ${y0}$。`,
+            ],
+          ],
+          walked(
+            [
+              [["Start from the point", "从点出发"], t(`$\\mathbf{r}_0 = ${vec3Latex(r0)}$.`, `$\\mathbf{r}_0 = ${vec3Latex(r0)}$。`)],
+              [["Add a multiple of each direction", "加上每个方向的倍数"], t("", ""), [rightEq]],
+            ],
+            t(
+              `At $s = t = 0$ the equation gives $${pt3Latex(r0)}$, which is $P$, and at $s = 1, t = 0$ it gives $${pt3Latex(add3(r0, u))}$, one step of $\\mathbf{u}$ away.`,
+              `$s = t = 0$ 时方程给出 $${pt3Latex(r0)}$，即 $P$；$s = 1, t = 0$ 时给出 $${pt3Latex(add3(r0, u))}$，恰好沿 $\\mathbf{u}$ 走了一步。`,
+            ),
           ),
         );
       },
@@ -3617,8 +3952,8 @@ export const theParametricEquationsOfAPlane: TopicDef = {
       id: "points-and-parameters-on-a-plane",
       title: t("Points and parameters on a plane", "平面上的点与参数确定"),
       explanation: t(
-        "Evaluating the parametric form $\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}$ at specific parameter values $(s, t)$ produces the coordinates of a point on the plane.",
-        "在平面的参数方程 $\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}$ 中代入特定的参数值对 $(s, t)$，即可求出该平面上对应点的坐标。",
+        "Evaluating the parametric form $\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}$ at specific parameter values $(s, t)$ produces the coordinates of a point on the plane. For $\\mathbf{r}(s, t) = \\langle 1, 0, 2 \\rangle + s\\langle 1, 1, 0 \\rangle + t\\langle 0, 2, -1 \\rangle$ at $s = 3, t = -1$: $(1 + 3 + 0, 0 + 3 - 2, 2 + 0 + 1) = (4, 1, 3)$.\n\n> **Watch out.** $s$ goes with $\\mathbf{u}$ and $t$ with $\\mathbf{v}$; exchanging them gives another point of the plane. A negative parameter subtracts its direction, and the starting point is always added.",
+        "在平面的参数方程 $\\mathbf{r}(s, t) = \\mathbf{r}_0 + s\\mathbf{u} + t\\mathbf{v}$ 中代入特定的参数值对 $(s, t)$，即可求出该平面上对应点的坐标。对 $\\mathbf{r}(s, t) = \\langle 1, 0, 2 \\rangle + s\\langle 1, 1, 0 \\rangle + t\\langle 0, 2, -1 \\rangle$，取 $s = 3, t = -1$：$(1 + 3 + 0, 0 + 3 - 2, 2 + 0 + 1) = (4, 1, 3)$。\n\n> **注意。** $s$ 配 $\\mathbf{u}$，$t$ 配 $\\mathbf{v}$；两者交换会得到平面上的另一个点。负的参数表示减去它的方向，而起点总是要加上的。",
       ),
       generate(rng) {
         const x0 = rng.int(-4, 4);
@@ -3631,25 +3966,56 @@ export const theParametricEquationsOfAPlane: TopicDef = {
         const tVal = rng.pick([-2, -1, 1, 2]);
 
         const r0: Vec3 = [x0, y0, z0];
-        const ptResult: Vec3 = [x0 + sVal * u[0] + tVal * v[0], y0 + sVal * u[1] + tVal * v[1], z0 + sVal * u[2] + tVal * v[2]];
+        const at = (s: number, tt: number): Vec3 => [x0 + s * u[0] + tt * v[0], y0 + s * u[1] + tt * v[1], z0 + s * u[2] + tt * v[2]];
+        const ptResult = at(sVal, tVal);
+        const su: Vec3 = [sVal * u[0], sVal * u[1], sVal * u[2]];
+        const tv: Vec3 = [tVal * v[0], tVal * v[1], tVal * v[2]];
 
-        const w1: Vec3 = [ptResult[0] + 1, ptResult[1], ptResult[2]];
-        const w2: Vec3 = [ptResult[0], ptResult[1] - 1, ptResult[2]];
-        const w3: Vec3 = [x0 - sVal * u[0], y0 - sVal * u[1], z0 - sVal * u[2]];
-
-        return pointProblem({
-          prompt: t(
-            `A plane has parametric equation $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$. Find the coordinates $(x, y, z)$ corresponding to parameters $s = ${sVal}$ and $t = ${tVal}$.`,
-            `已知平面的参数方程为 $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$。求参数取值 $s = ${sVal}$ 且 $t = ${tVal}$ 时对应的空间点坐标 $(x, y, z)$。`,
-          ),
-          answer: ptResult,
-          vars: ["x", "y", "z"],
-          solution: t(
-            `Calculate each coordinate:\n\n$$x = ${x0} + (${sVal})(${u[0]}) + (${tVal})(${v[0]}) = ${ptResult[0]}$$\n$$y = ${y0} + (${sVal})(${u[1]}) + (${tVal})(${v[1]}) = ${ptResult[1]}$$\n$$z = ${z0} + (${sVal})(${u[2]}) + (${tVal})(${v[2]}) = ${ptResult[2]}$$`,
-            `代入计算各分量：\n\n$$x = ${x0} + (${sVal})(${u[0]}) + (${tVal})(${v[0]}) = ${ptResult[0]}$$\n$$y = ${y0} + (${sVal})(${u[1]}) + (${tVal})(${v[1]}) = ${ptResult[1]}$$\n$$z = ${z0} + (${sVal})(${u[2]}) + (${tVal})(${v[2]}) = ${ptResult[2]}$$`,
-          ),
-          wrong: [w1, w2, w3],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `A plane has parametric equation $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$. Find the coordinates $(x, y, z)$ corresponding to parameters $s = ${sVal}$ and $t = ${tVal}$.`,
+              `已知平面的参数方程为 $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$。求参数取值 $s = ${sVal}$ 且 $t = ${tVal}$ 时对应的空间点坐标 $(x, y, z)$。`,
+            ),
+            answer: ptResult,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Scale each direction", "每个方向乘以它的参数"],
+                  t("", ""),
+                  [`${sVal}${vec3Latex(u)} = ${vec3Latex(su)}, \\quad ${tVal}${vec3Latex(v)} = ${vec3Latex(tv)}`],
+                ],
+                [
+                  ["Add them to the starting point", "加到起点上"],
+                  t("", ""),
+                  [`${vec3Latex(r0)} + ${vec3Latex(su)} + ${vec3Latex(tv)} = ${vec3Latex(ptResult)}`],
+                ],
+              ],
+              t(
+                `$${pt3Latex(ptResult)} - ${pt3Latex(r0)} = ${vec3Latex(add3(su, tv))}$, which is $${sVal}\\mathbf{u} + (${tVal})\\mathbf{v}$, so the point is reached from $P$ by exactly those steps.`,
+                `$${pt3Latex(ptResult)} - ${pt3Latex(r0)} = ${vec3Latex(add3(su, tv))}$，正是 $${sVal}\\mathbf{u} + (${tVal})\\mathbf{v}$，所以从 $P$ 恰好走这些步就到达该点。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              pointLatex(at(tVal, sVal)),
+              "The parameters are exchanged: $s$ multiplies $\\mathbf{u}$ and $t$ multiplies $\\mathbf{v}$.",
+              "参数交换了：$s$ 乘 $\\mathbf{u}$，$t$ 乘 $\\mathbf{v}$。",
+            ),
+            say(
+              pointLatex(at(sVal, -tVal)),
+              `That uses $t = ${-tVal}$: the sign of $t$ was dropped or flipped.`,
+              `这用的是 $t = ${-tVal}$：$t$ 的符号丢了或反了。`,
+            ),
+            say(
+              pointLatex(add3(su, tv)),
+              "The starting point is missing: add $\\mathbf{r}_0$ to the two scaled directions.",
+              "漏掉了起点：要把 $\\mathbf{r}_0$ 加到两个缩放后的方向上。",
+            ),
+          ].filter((s, i, all) => s.response !== pointLatex(ptResult) && all.findIndex((x) => x.response === s.response) === i),
+        );
       },
     },
   ],
@@ -3664,6 +4030,10 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
     "Find the direction vector and line equation of the intersection of two non-parallel planes using cross products.",
     "利用两平面法向量的叉积求两相交平面的交线方向向量及直线方程。",
   ),
+  intro: t(
+    "Two walls of a room meet along a corner line. The floor plane $z = 0$ has normal $\\langle 0, 0, 1 \\rangle$ and the wall $x = 0$ has normal $\\langle 1, 0, 0 \\rangle$; the line where they meet runs along the $y$-axis, perpendicular to both normals, and indeed $\\langle 0, 0, 1 \\rangle \\times \\langle 1, 0, 0 \\rangle = \\langle 0, 1, 0 \\rangle$.\n\nCheck: the point $(0, 5, 0)$ satisfies both $z = 0$ and $x = 0$, so it is on the line, and it lies along $\\langle 0, 1, 0 \\rangle$ from the origin.\n\nIn this lesson we find the direction of the line where two planes meet, and a point on that line.",
+    "房间的两面墙沿一条墙角线相交。地面 $z = 0$ 的法向量是 $\\langle 0, 0, 1 \\rangle$，墙面 $x = 0$ 的法向量是 $\\langle 1, 0, 0 \\rangle$；它们的交线沿 $y$ 轴，与两个法向量都垂直，确实 $\\langle 0, 0, 1 \\rangle \\times \\langle 1, 0, 0 \\rangle = \\langle 0, 1, 0 \\rangle$。\n\n检验：点 $(0, 5, 0)$ 同时满足 $z = 0$ 和 $x = 0$，所以它在交线上，并且它在原点沿 $\\langle 0, 1, 0 \\rangle$ 的方向上。\n\n本课我们求两平面交线的方向，以及交线上的一个点。",
+  ),
   prerequisites: ["the-cartesian-equation-of-a-plane"],
   encompasses: [],
   xp: 10,
@@ -3674,8 +4044,8 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
       figure: linearAlgebraDrawings1["the-intersection-of-two-planes#direction-vector-of-plane-intersection"],
       title: t("Direction vector of the line of intersection", "两平面交线的方向向量"),
       explanation: t(
-        "The line of intersection $L$ of two non-parallel planes $\\Pi_1$ and $\\Pi_2$ lies in both planes, so its direction vector $\\mathbf{v}$ is perpendicular to both normal vectors $\\mathbf{n}_1$ and $\\mathbf{n}_2$. Thus, a direction vector is given by their cross product:\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$$",
-        "两相交平面 $\\Pi_1$ 与 $\\Pi_2$ 的交线 $L$ 同时位于两个平面内，因此该交线的方向向量 $\\mathbf{v}$ 必定同时垂直于两平面的法向量 $\\mathbf{n}_1$ 与 $\\mathbf{n}_2$。因此交线的方向向量可由其叉积给出：\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$$",
+        "The line of intersection $L$ of two non-parallel planes $\\Pi_1$ and $\\Pi_2$ lies in both planes, so its direction vector $\\mathbf{v}$ is perpendicular to both normal vectors $\\mathbf{n}_1$ and $\\mathbf{n}_2$. Thus, a direction vector is given by their cross product:\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$$\n\nFor $x + y = 3$ and $y + z = 1$: $\\langle 1, 1, 0 \\rangle \\times \\langle 0, 1, 1 \\rangle = \\langle 1, -1, 1 \\rangle$.\n\n> **Watch out.** The direction comes from the cross product of the normals, not their sum. Adding the normals gives a vector that is not perpendicular to either of them, so it points out of both planes.",
+        "两相交平面 $\\Pi_1$ 与 $\\Pi_2$ 的交线 $L$ 同时位于两个平面内，因此该交线的方向向量 $\\mathbf{v}$ 必定同时垂直于两平面的法向量 $\\mathbf{n}_1$ 与 $\\mathbf{n}_2$。因此交线的方向向量可由其叉积给出：\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$$\n\n对 $x + y = 3$ 和 $y + z = 1$：$\\langle 1, 1, 0 \\rangle \\times \\langle 0, 1, 1 \\rangle = \\langle 1, -1, 1 \\rangle$。\n\n> **注意。** 方向来自两个法向量的叉积，而不是它们的和。两个法向量相加得到的向量与两者都不垂直，会指向两个平面之外。",
       ),
       generate(rng) {
         let n1: Vec3;
@@ -3692,32 +4062,64 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
         const plane1Str = planeEqLatex(n1[0], n1[1], n1[2], d1);
         const plane2Str = planeEqLatex(n2[0], n2[1], n2[2], d2);
 
-        const wrong1: Vec3 = [-v[0], -v[1], v[2]];
-        const wrong2: Vec3 = [v[1], v[0], v[2]];
-        const wrong3: Vec3 = add3(n1, n2);
-
-        return pointProblem({
-          prompt: t(
-            `Find a direction vector $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ for the line of intersection between the two planes:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
-            `求下列两平面交线的方向向量 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
-          ),
-          answer: v,
-          vars: ["x", "y", "z"],
-          vector: true,
-          solution: t(
-            `The direction vector is perpendicular to both normal vectors $\\mathbf{n}_1 = ${vec3Latex(n1)}$ and $\\mathbf{n}_2 = ${vec3Latex(n2)}$:\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2 = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${n1[0]} & ${n1[1]} & ${n1[2]} \\\\ ${n2[0]} & ${n2[1]} & ${n2[2]} \\end{vmatrix} = ${vec3Latex(v)}$$`,
-            `交线的方向向量垂直于两平面的法向量 $\\mathbf{n}_1 = ${vec3Latex(n1)}$ 与 $\\mathbf{n}_2 = ${vec3Latex(n2)}$：\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2 = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${n1[0]} & ${n1[1]} & ${n1[2]} \\\\ ${n2[0]} & ${n2[1]} & ${n2[2]} \\end{vmatrix} = ${vec3Latex(v)}$$`,
-          ),
-          wrong: [wrong1, wrong2, wrong3],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find a direction vector $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ for the line of intersection between the two planes:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+              `求下列两平面交线的方向向量 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+            ),
+            answer: v,
+            vars: ["x", "y", "z"],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Read the normals", "读出法向量"],
+                  t(
+                    `$\\mathbf{n}_1 = ${vec3Latex(n1)}$ and $\\mathbf{n}_2 = ${vec3Latex(n2)}$.`,
+                    `$\\mathbf{n}_1 = ${vec3Latex(n1)}$，$\\mathbf{n}_2 = ${vec3Latex(n2)}$。`,
+                  ),
+                ],
+                [
+                  ["Take their cross product", "求它们的叉积"],
+                  t("", ""),
+                  [
+                    `\\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${n1[0]} & ${n1[1]} & ${n1[2]} \\\\ ${n2[0]} & ${n2[1]} & ${n2[2]} \\end{vmatrix} = ${vec3Latex(v)}`,
+                  ],
+                ],
+              ],
+              t(
+                `$\\mathbf{v} \\cdot \\mathbf{n}_1 = ${dot3(v, n1)}$ and $\\mathbf{v} \\cdot \\mathbf{n}_2 = ${dot3(v, n2)}$, so $\\mathbf{v}$ runs along both planes.`,
+                `$\\mathbf{v} \\cdot \\mathbf{n}_1 = ${dot3(v, n1)}$，$\\mathbf{v} \\cdot \\mathbf{n}_2 = ${dot3(v, n2)}$，所以 $\\mathbf{v}$ 同时沿着两个平面。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              vectorLatex([-v[0], -v[1], -v[2]]),
+              "That is $\\mathbf{n}_2 \\times \\mathbf{n}_1$: the order asked for is $\\mathbf{n}_1 \\times \\mathbf{n}_2$, and reversing it reverses the vector.",
+              "这是 $\\mathbf{n}_2 \\times \\mathbf{n}_1$：题目要的顺序是 $\\mathbf{n}_1 \\times \\mathbf{n}_2$，顺序反了，向量也反向。",
+            ),
+            say(
+              vectorLatex([v[0], -v[1], v[2]]),
+              "The middle entry has the wrong sign: in a cross product it is $a_3b_1 - a_1b_3$.",
+              "中间分量符号错了：叉积中它是 $a_3b_1 - a_1b_3$。",
+            ),
+            say(
+              vectorLatex(add3(n1, n2)),
+              "That is $\\mathbf{n}_1 + \\mathbf{n}_2$; the line's direction must be perpendicular to both normals, which the cross product gives.",
+              "这是 $\\mathbf{n}_1 + \\mathbf{n}_2$；交线的方向必须与两个法向量都垂直，这要用叉积求。",
+            ),
+          ].filter((s, i, all) => s.response !== vectorLatex(v) && all.findIndex((x) => x.response === s.response) === i),
+        );
       },
     },
     {
       id: "line-of-intersection-equations",
       title: t("Parametric equation of the line of intersection", "两平面交线的方程求解"),
       explanation: t(
-        "To find the line of intersection, determine a direction vector $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ and find a common point $P_0$ by setting one coordinate to zero (e.g. $z = 0$) and solving the resulting $2 \\times 2$ linear system.",
-        "求解两平面的交线方程时，先由法向量叉积 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ 得到方向向量，再通过令某一坐标为零（例如 $z = 0$）解二元一次方程组求得两平面的一个公共交点 $P_0$，从而写出交线的参数方程。",
+        "To find the line of intersection, determine a direction vector $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ and find a common point $P_0$ by setting one coordinate to zero (e.g. $z = 0$) and solving the resulting $2 \\times 2$ linear system. For $x - 2z - 3 = 0$ and $y + z + 1 = 0$, setting $z = 0$ gives $x = 3$ and $y = -1$, so $(3, -1, 0)$ is on the line.\n\n> **Watch out.** Solving $x - 3 = 0$ gives $x = 3$: the constant changes sign when it moves across. And the point must satisfy both planes, so substitute it into each one.",
+        "求解两平面的交线方程时，先由法向量叉积 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ 得到方向向量，再通过令某一坐标为零（例如 $z = 0$）解二元一次方程组求得两平面的一个公共交点 $P_0$，从而写出交线的参数方程。对 $x - 2z - 3 = 0$ 和 $y + z + 1 = 0$，令 $z = 0$ 得 $x = 3$，$y = -1$，所以 $(3, -1, 0)$ 在交线上。\n\n> **注意。** 解 $x - 3 = 0$ 得 $x = 3$：常数移到另一边要变号。而且这个点必须同时满足两个平面，所以要分别代入两个方程检验。",
       ),
       generate(rng) {
         const p0: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), 0];
@@ -3731,26 +4133,58 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
 
         const plane1Str = planeEqLatex(n1[0], n1[1], n1[2], d1);
         const plane2Str = planeEqLatex(n2[0], n2[1], n2[2], d2);
+        const next = add3(p0, v);
 
-        const wrong2: Vec3 = [p0[0] + 1, p0[1], 0];
-
-        return pointProblem({
-          prompt: t(
-            `Find the coordinates $(x, y, z)$ of the point on the line of intersection of the two planes with $z = 0$:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
-            `求下列两平面交线上 $z = 0$ 的交点坐标 $(x, y, z)$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
-          ),
-          answer: p0,
-          vars: ["x", "y", "z"],
-          solution: t(
-            `Setting $z = 0$ in both plane equations yields $x = ${p0[0]}$ and $y = ${p0[1]}$, giving intersection point $P_0${pt3Latex(p0)}$.`,
-            `令 $z = 0$，分别代入两平面方程解得 $x = ${p0[0]}$ 与 $y = ${p0[1]}$，得到交点 $P_0${pt3Latex(p0)}$。`,
-          ),
-          wrong: [wrong2, [p0[0], p0[1] + 1, 0], [p0[1], p0[0], 0]],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find the coordinates $(x, y, z)$ of the point on the line of intersection of the two planes with $z = 0$:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+              `求下列两平面交线上 $z = 0$ 的交点坐标 $(x, y, z)$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+            ),
+            answer: p0,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [["Set $z = 0$", "令 $z = 0$"], t("", ""), [`${planeEqLatex(1, 0, 0, d1)}, \\quad ${planeEqLatex(0, 1, 0, d2)}`]],
+                [
+                  ["Solve for $x$ and $y$", "解出 $x$ 和 $y$"],
+                  t(
+                    `$x = ${p0[0]}$ and $y = ${p0[1]}$, so the point is $${pt3Latex(p0)}$.`,
+                    `$x = ${p0[0]}$，$y = ${p0[1]}$，所以交点是 $${pt3Latex(p0)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Substituting $${pt3Latex(p0)}$ makes both left sides $0$. The point $${pt3Latex(next)}$, one direction vector further along, satisfies both planes as well.`,
+                `代入 $${pt3Latex(p0)}$，两个方程的左边都等于 $0$。再沿方向向量前进一步的点 $${pt3Latex(next)}$ 也同时满足两个平面。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              pointLatex([-p0[0], -p0[1], 0]),
+              "The constants kept their signs when they moved across: from $x + d = 0$, $x = -d$.",
+              "常数移项时没有变号：由 $x + d = 0$ 得 $x = -d$。",
+            ),
+            say(
+              pointLatex([p0[1], p0[0], 0]),
+              "The values of $x$ and $y$ are swapped: the first plane gives $x$ and the second gives $y$.",
+              "$x$ 和 $y$ 的值交换了：第一个平面给出 $x$，第二个给出 $y$。",
+            ),
+            say(
+              pointLatex([-p0[0], p0[1], 0]),
+              "The value of $x$ has the wrong sign: the constant of the first plane changes sign when it moves across.",
+              "$x$ 的值符号错了：第一个平面的常数移项时要变号。",
+            ),
+          ].filter((s, i, all) => s.response !== pointLatex(p0) && all.findIndex((x) => x.response === s.response) === i),
+        );
       },
     },
   ],
 };
+
+/** asQ turns a coefficient into an exact rational. */
+const asQ = (c: number | Q): Q => (typeof c === "number" ? q(c) : c);
 
 // ─── 1.3.8 The Shortest Distance Between a Plane and a Point ─────────────────
 
@@ -3760,6 +4194,10 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
   summary: t(
     "Calculate the shortest perpendicular distance from a point to a plane and the distance between parallel planes.",
     "计算空间一点到平面的垂直距离以及两平行平面之间的最短距离。",
+  ),
+  intro: t(
+    "A lamp hangs from a ceiling, and the shortest way down to the floor is straight down, along the floor's normal. For the point $(1, 2, 7)$ and the plane $x + 2y + 2z - 2 = 0$: substituting gives $1 + 4 + 14 - 2 = 17$, and dividing by the length of the normal, $\\sqrt{1 + 4 + 4} = 3$, gives the distance $\\frac{17}{3}$.\n\nCheck: the point $(0, 0, 1)$ is on the plane, since $0 + 0 + 2 - 2 = 0$, so its distance comes out as $\\frac{0}{3} = 0$, as it should.\n\nIn this lesson we find the distance from a point to a plane, and the distance between two parallel planes.",
+    "吊灯挂在天花板上，到地面最短的路是竖直向下，沿着地面的法向量。对点 $(1, 2, 7)$ 和平面 $x + 2y + 2z - 2 = 0$：代入得 $1 + 4 + 14 - 2 = 17$，再除以法向量的长度 $\\sqrt{1 + 4 + 4} = 3$，得距离 $\\frac{17}{3}$。\n\n检验：点 $(0, 0, 1)$ 在平面上，因为 $0 + 0 + 2 - 2 = 0$，所以算出它的距离是 $\\frac{0}{3} = 0$，理应如此。\n\n本课我们求点到平面的距离，以及两个平行平面之间的距离。",
   ),
   prerequisites: ["the-cartesian-equation-of-a-plane"],
   encompasses: [],
@@ -3771,8 +4209,8 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
       figure: linearAlgebraDrawings1["the-shortest-distance-between-a-plane-and-a-point#point-plane-distance-formula"],
       title: t("Point-plane distance formula", "点到平面的距离计算"),
       explanation: t(
-        "The shortest path from a point to a plane runs along the normal direction, so the distance is the size of the projection onto the unit normal. The shortest perpendicular distance from a point $P_0(x_0, y_0, z_0)$ to the plane $Ax + By + Cz + D = 0$ is given by the formula:\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
-        "从点到平面的最短路径沿法线方向，所以距离等于在单位法向量上投影的大小。从空间点 $P_0(x_0, y_0, z_0)$ 到平面 $Ax + By + Cz + D = 0$ 的最短垂直距离公式为：\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
+        "The shortest path from a point to a plane runs along the normal direction, so the distance is the size of the projection onto the unit normal. The shortest perpendicular distance from a point $P_0(x_0, y_0, z_0)$ to the plane $Ax + By + Cz + D = 0$ is given by the formula:\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$\n\nFrom $(2, 0, 1)$ to $2x + y + 2z + 3 = 0$: $d = \\frac{|4 + 0 + 2 + 3|}{\\sqrt{9}} = 3$.\n\n> **Watch out.** Include $D$ in the numerator, and divide by the length of the normal, $\\sqrt{A^2 + B^2 + C^2}$, not by its square. Without the division, the answer changes whenever the equation is multiplied through by a number.",
+        "从点到平面的最短路径沿法线方向，所以距离等于在单位法向量上投影的大小。从空间点 $P_0(x_0, y_0, z_0)$ 到平面 $Ax + By + Cz + D = 0$ 的最短垂直距离公式为：\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$\n\n从 $(2, 0, 1)$ 到 $2x + y + 2z + 3 = 0$：$d = \\frac{|4 + 0 + 2 + 3|}{\\sqrt{9}} = 3$。\n\n> **注意。** 分子要包括 $D$，分母是法向量的长度 $\\sqrt{A^2 + B^2 + C^2}$，不是它的平方。不做这个除法，方程两边同乘一个数，答案就会跟着变。",
       ),
       generate(rng) {
         const quadruples: readonly [number, number, number, number][] = [
@@ -3793,10 +4231,27 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
         const targetD = rng.pick([1, 2, 3, 4, 5]) * norm;
         const baseVal = sA * x0 + sB * y0 + sC * z0;
         const D = targetD - baseVal;
-        const dist = Math.abs(baseVal + D) / norm;
+        const dist = targetD / norm;
 
         const planeStr = planeEqLatex(sA, sB, sC, D);
         const p0: Vec3 = [x0, y0, z0];
+        const mistakes = [
+          why(
+            targetD,
+            `That is the numerator alone: divide by the length of the normal, $${norm}$.`,
+            `这只是分子：还要除以法向量的长度 $${norm}$。`,
+          ),
+          why(
+            q(targetD, norm * norm),
+            `That divides by $A^2 + B^2 + C^2 = ${norm * norm}$; the denominator is its square root, $${norm}$.`,
+            `这是除以 $A^2 + B^2 + C^2 = ${norm * norm}$；分母应是它的平方根 $${norm}$。`,
+          ),
+          why(
+            q(Math.abs(baseVal), norm),
+            "The constant $D$ is missing from the numerator: it is $|Ax_0 + By_0 + Cz_0 + D|$.",
+            "分子漏掉了常数 $D$：分子是 $|Ax_0 + By_0 + Cz_0 + D|$。",
+          ),
+        ].filter((m, i, all) => !asQ(m.value).eq(q(dist)) && all.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
 
         return numberProblem({
           prompt: t(
@@ -3804,11 +4259,25 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
             `求点 $P${pt3Latex(p0)}$ 到平面 $${planeStr}$ 的最短距离。`,
           ),
           answer: dist,
-          solution: t(
-            `Applying the distance formula:\n\n$$d = \\frac{|(${sA})(${x0}) + (${sB})(${y0}) + (${sC})(${z0}) + (${D})|}{\\sqrt{(${sA})^2 + (${sB})^2 + (${sC})^2}} = \\frac{|${baseVal + D}|}{${norm}} = ${dist}$$`,
-            `代入点到平面的距离公式：\n\n$$d = \\frac{|(${sA})(${x0}) + (${sB})(${y0}) + (${sC})(${z0}) + (${D})|}{\\sqrt{(${sA})^2 + (${sB})^2 + (${sC})^2}} = \\frac{|${baseVal + D}|}{${norm}} = ${dist}$$`,
+          solution: walked(
+            [
+              [
+                ["Substitute the point", "代入点的坐标"],
+                t("", ""),
+                [`(${sA})(${x0}) + (${sB})(${y0}) + (${sC})(${z0}) + (${D}) = ${targetD}`],
+              ],
+              [
+                ["Divide by the length of the normal", "除以法向量的长度"],
+                t("", ""),
+                [`d = \\frac{|${targetD}|}{\\sqrt{(${sA})^2 + (${sB})^2 + (${sC})^2}} = \\frac{${targetD}}{${norm}} = ${dist}`],
+              ],
+            ],
+            t(
+              `Moving from $P$ against the normal by $\\frac{${targetD}}{${norm * norm}}\\mathbf{n}$ lowers $Ax + By + Cz + D$ by $\\frac{${targetD}}{${norm * norm}} \\cdot ${norm * norm} = ${targetD}$, to $0$, so that point is on the plane, and the step has length $\\frac{${targetD}}{${norm * norm}} \\cdot ${norm} = ${dist}$.`,
+              `从 $P$ 逆着法向量移动 $\\frac{${targetD}}{${norm * norm}}\\mathbf{n}$，$Ax + By + Cz + D$ 减少 $\\frac{${targetD}}{${norm * norm}} \\cdot ${norm * norm} = ${targetD}$，变为 $0$，所以到达的点在平面上，而这一步的长度是 $\\frac{${targetD}}{${norm * norm}} \\cdot ${norm} = ${dist}$。`,
+            ),
           ),
-          wrong: [dist + 1, Math.max(1, dist - 1), dist * norm],
+          mistakes,
         });
       },
     },
@@ -3817,8 +4286,8 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
       figure: linearAlgebraDrawings1["the-shortest-distance-between-a-plane-and-a-point#distance-between-parallel-planes"],
       title: t("Distance between parallel planes", "两平行平面间的距离"),
       explanation: t(
-        "Parallel planes share a normal vector, so the distance between them is the distance from any point of one plane to the other. The distance between two parallel planes $\\Pi_1: Ax + By + Cz + D_1 = 0$ and $\\Pi_2: Ax + By + Cz + D_2 = 0$ is:\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
-        "平行平面有相同的法向量，所以它们之间的距离等于一个平面上任意一点到另一个平面的距离。两平行平面 $\\Pi_1: Ax + By + Cz + D_1 = 0$ 与 $\\Pi_2: Ax + By + Cz + D_2 = 0$ 之间的距离公式为：\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
+        "Parallel planes share a normal vector, so the distance between them is the distance from any point of one plane to the other. The distance between two parallel planes $\\Pi_1: Ax + By + Cz + D_1 = 0$ and $\\Pi_2: Ax + By + Cz + D_2 = 0$ is:\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$\n\nFor $x + 2y + 2z - 1 = 0$ and $x + 2y + 2z + 8 = 0$: $d = \\frac{|-1 - 8|}{3} = 3$.\n\n> **Watch out.** Subtract the constants, $D_1 - D_2$, rather than adding them, and only when the two equations have exactly the same $A$, $B$ and $C$; otherwise first scale one equation to match.",
+        "平行平面有相同的法向量，所以它们之间的距离等于一个平面上任意一点到另一个平面的距离。两平行平面 $\\Pi_1: Ax + By + Cz + D_1 = 0$ 与 $\\Pi_2: Ax + By + Cz + D_2 = 0$ 之间的距离公式为：\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$\n\n对 $x + 2y + 2z - 1 = 0$ 和 $x + 2y + 2z + 8 = 0$：$d = \\frac{|-1 - 8|}{3} = 3$。\n\n> **注意。** 常数要相减 $D_1 - D_2$，而不是相加，而且只有两个方程的 $A$、$B$、$C$ 完全相同时才能这样做；否则先把一个方程乘一个数使系数一致。",
       ),
       generate(rng) {
         const quadruples: readonly [number, number, number, number][] = [
@@ -3836,6 +4305,23 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
 
         const plane1Str = planeEqLatex(A, B, C, D1);
         const plane2Str = planeEqLatex(A, B, C, D2);
+        const mistakes = [
+          why(
+            diff,
+            `That is $|D_1 - D_2|$ alone: divide by the length of the normal, $${norm}$.`,
+            `这只是 $|D_1 - D_2|$：还要除以法向量的长度 $${norm}$。`,
+          ),
+          why(
+            q(Math.abs(D1 + D2), norm),
+            "That adds the constants; the distance uses their difference $|D_1 - D_2|$.",
+            "这是把常数相加；距离用的是它们的差 $|D_1 - D_2|$。",
+          ),
+          why(
+            q(diff, norm * norm),
+            `That divides by $A^2 + B^2 + C^2 = ${norm * norm}$; the denominator is its square root, $${norm}$.`,
+            `这是除以 $A^2 + B^2 + C^2 = ${norm * norm}$；分母应是它的平方根 $${norm}$。`,
+          ),
+        ].filter((m, i, all) => !asQ(m.value).eq(q(dist)) && all.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
 
         return numberProblem({
           prompt: t(
@@ -3843,11 +4329,27 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
             `求两平行平面之间的距离：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
           ),
           answer: dist,
-          solution: t(
-            `Using the parallel plane distance formula:\n\n$$d = \\frac{|${fmtSub(D1, D2)}|}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}$$`,
-            `应用平行平面间距离公式：\n\n$$d = \\frac{|${fmtSub(D1, D2)}|}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}$$`,
+          solution: walked(
+            [
+              [
+                ["Compare the constants", "比较常数"],
+                t(
+                  `The normals are both $${vec3Latex([A, B, C])}$, so $|D_1 - D_2| = |${fmtSub(D1, D2)}| = ${diff}$.`,
+                  `两个法向量都是 $${vec3Latex([A, B, C])}$，所以 $|D_1 - D_2| = |${fmtSub(D1, D2)}| = ${diff}$。`,
+                ),
+              ],
+              [
+                ["Divide by the length of the normal", "除以法向量的长度"],
+                t("", ""),
+                [`d = \\frac{${diff}}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}`],
+              ],
+            ],
+            t(
+              `Any point of $\\Pi_1$ has $Ax + By + Cz = ${-D1}$, so in $\\Pi_2$ it gives $${-D1} + (${D2}) = ${diff}$, and the point-to-plane formula gives $\\frac{${diff}}{${norm}} = ${dist}$ again.`,
+              `$\\Pi_1$ 上任意一点都有 $Ax + By + Cz = ${-D1}$，代入 $\\Pi_2$ 得 $${-D1} + (${D2}) = ${diff}$，用点到平面的公式同样得到 $\\frac{${diff}}{${norm}} = ${dist}$。`,
+            ),
           ),
-          wrong: [dist + 2, diff, dist + 1],
+          mistakes,
         });
       },
     },
@@ -3863,6 +4365,10 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
     "Find the point of intersection between a line and a plane by substituting parametric equations, and identify parallel or contained lines.",
     "通过将直线参数方程代入平面方程求解两者的交点，并判定平行与包含关系。",
   ),
+  intro: t(
+    "A ray of light from $(0, 0, 10)$ travels along $\\langle 1, 2, -2 \\rangle$ towards the floor $z = 0$. Its points are $(t, 2t, 10 - 2t)$, and it reaches the floor when $10 - 2t = 0$, at $t = 5$, so it lands at $(5, 10, 0)$. A line parallel to the floor would never land, or would lie on the floor all along.\n\nCheck: $(5, 10, 0)$ has $z = 0$, so it is on the floor, and $(5, 10, 0) - (0, 0, 10) = \\langle 5, 10, -10 \\rangle = 5\\langle 1, 2, -2 \\rangle$.\n\nIn this lesson we find where a line meets a plane, and tell when a line is parallel to a plane or lies in it.",
+    "一束光从 $(0, 0, 10)$ 出发，沿 $\\langle 1, 2, -2 \\rangle$ 射向地面 $z = 0$。光线上的点是 $(t, 2t, 10 - 2t)$，当 $10 - 2t = 0$，即 $t = 5$ 时到达地面，落在 $(5, 10, 0)$。与地面平行的直线要么永远落不到地面，要么一直躺在地面上。\n\n检验：$(5, 10, 0)$ 的 $z = 0$，所以在地面上；而 $(5, 10, 0) - (0, 0, 10) = \\langle 5, 10, -10 \\rangle = 5\\langle 1, 2, -2 \\rangle$。\n\n本课我们求直线与平面的交点，并判断直线何时与平面平行或位于平面内。",
+  ),
   prerequisites: ["the-parametric-equations-of-a-line", "the-cartesian-equation-of-a-plane"],
   encompasses: [],
   xp: 10,
@@ -3872,8 +4378,8 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
       id: "finding-point-of-intersection-line-and-plane",
       title: t("Finding the point of intersection between a line and a plane", "求直线与平面的交点坐标"),
       explanation: t(
-        "To find the intersection of a line $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ and plane $Ax + By + Cz + D = 0$, substitute the parametric expressions for $x, y, z$ into the plane equation and solve the linear equation for $t$. Substituting $t$ back into the parametric equations gives the intersection point.",
-        "求直线 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ 与平面 $Ax + By + Cz + D = 0$ 的交点时，将直线的参数表达式代入平面方程解出一元一次方程中的参数 $t$，再将求得的 $t$ 代回直线的参数方程即可得到交点坐标。",
+        "To find the intersection of a line $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ and plane $Ax + By + Cz + D = 0$, substitute the parametric expressions for $x, y, z$ into the plane equation and solve the linear equation for $t$. Substituting $t$ back into the parametric equations gives the intersection point. For $x = 1 + t, y = 2t, z = 3 - t$ and $x + y + z - 8 = 0$: $(1 + t) + 2t + (3 - t) - 8 = 2t - 4 = 0$, so $t = 2$ and the point is $(3, 4, 1)$.\n\n> **Watch out.** The value of $t$ is not the answer: put it back into all three parametric equations. And solving $2t - 4 = 0$ gives $t = 2$, not $-2$.",
+        "求直线 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ 与平面 $Ax + By + Cz + D = 0$ 的交点时，将直线的参数表达式代入平面方程解出一元一次方程中的参数 $t$，再将求得的 $t$ 代回直线的参数方程即可得到交点坐标。对 $x = 1 + t, y = 2t, z = 3 - t$ 和 $x + y + z - 8 = 0$：$(1 + t) + 2t + (3 - t) - 8 = 2t - 4 = 0$，所以 $t = 2$，交点是 $(3, 4, 1)$。\n\n> **注意。** $t$ 的值不是答案：要把它代回三个参数方程。而且解 $2t - 4 = 0$ 得 $t = 2$，不是 $-2$。",
       ),
       generate(rng) {
         const A = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -3896,38 +4402,61 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
         const z0 = rng.int(-4, 4);
         const tSol = rng.pick([-3, -2, -1, 1, 2, 3]);
 
-        const xInt = x0 + a * tSol;
-        const yInt = y0 + b * tSol;
-        const zInt = z0 + c * tSol;
-        const D = -(A * xInt + B * yInt + C * zInt);
-
         const p0: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
-        const ptIntersect: Vec3 = [xInt, yInt, zInt];
+        const at = (s: number): Vec3 => [x0 + a * s, y0 + b * s, z0 + c * s];
+        const ptIntersect = at(tSol);
+        const D = -(A * ptIntersect[0] + B * ptIntersect[1] + C * ptIntersect[2]);
 
         const lineStr = paramLineLatex(p0, v);
         const planeStr = planeEqLatex(A, B, C, D);
 
-        const w1: Vec3 = [xInt + 1, yInt, zInt];
-        const w2: Vec3 = [x0, y0, z0];
-        const w3: Vec3 = [xInt, yInt - 1, zInt];
-
         const constTerm = A * x0 + B * y0 + C * z0 + D;
         const eqStep = `${poly([denom, "t"], [constTerm, ""])} = 0`;
 
-        return pointProblem({
-          prompt: t(
-            `Find the coordinates $(x, y, z)$ of the point of intersection between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
-            `求下列直线与平面的交点坐标 $(x, y, z)$：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
-          ),
-          answer: ptIntersect,
-          vars: ["x", "y", "z"],
-          solution: t(
-            `Substitute $x(t), y(t), z(t)$ into the plane equation and solve for $t$:\n\n$$${eqStep} \\implies t = ${tSol}$$\n\nSubstituting $t = ${tSol}$ into the line gives $(x, y, z) = ${pt3Latex(ptIntersect)}$.`,
-            `将参数表达式 $x(t), y(t), z(t)$ 代入平面方程并解出 $t$：\n\n$$${eqStep} \\implies t = ${tSol}$$\n\n将 $t = ${tSol}$ 代回直线方程得交点坐标 $(x, y, z) = ${pt3Latex(ptIntersect)}$。`,
-          ),
-          wrong: [w1, w2, w3],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find the coordinates $(x, y, z)$ of the point of intersection between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
+              `求下列直线与平面的交点坐标 $(x, y, z)$：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
+            ),
+            answer: ptIntersect,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [["Substitute the line into the plane", "把直线代入平面方程"], t("", ""), [`${eqStep} \\implies t = ${tSol}`]],
+                [
+                  ["Put $t$ back into the line", "把 $t$ 代回直线"],
+                  t(
+                    `$t = ${tSol}$ gives $(x, y, z) = ${pt3Latex(ptIntersect)}$.`,
+                    `$t = ${tSol}$ 给出 $(x, y, z) = ${pt3Latex(ptIntersect)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `$(${A})(${ptIntersect[0]}) + (${B})(${ptIntersect[1]}) + (${C})(${ptIntersect[2]}) + (${D}) = 0$, so the point is on the plane, and it is on the line since it came from $t = ${tSol}$.`,
+                `$(${A})(${ptIntersect[0]}) + (${B})(${ptIntersect[1]}) + (${C})(${ptIntersect[2]}) + (${D}) = 0$，所以该点在平面上；它由 $t = ${tSol}$ 得来，所以也在直线上。`,
+              ),
+            ),
+          }),
+          [
+            say(
+              pointLatex(at(-tSol)),
+              `That is the point at $t = ${-tSol}$: the equation $${eqStep}$ gives $t = ${tSol}$, so watch the sign when solving it.`,
+              `这是 $t = ${-tSol}$ 时的点：方程 $${eqStep}$ 给出 $t = ${tSol}$，解方程时注意符号。`,
+            ),
+            say(
+              pointLatex(p0),
+              "That is the line's starting point, at $t = 0$; it is not on the plane. Solve for $t$ first.",
+              "这是直线的起点，即 $t = 0$ 时的点，它不在平面上。要先解出 $t$。",
+            ),
+            say(
+              pointLatex([a * tSol, b * tSol, c * tSol]),
+              "The starting point of the line is missing: each coordinate is its starting value plus $t$ times its direction entry.",
+              "漏掉了直线的起点：每个坐标都是起始值加上 $t$ 乘方向分量。",
+            ),
+          ].filter((s, i, all) => s.response !== pointLatex(ptIntersect) && all.findIndex((x) => x.response === s.response) === i),
+        );
       },
     },
     {
@@ -3935,16 +4464,15 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
       figure: linearAlgebraDrawings1["the-intersection-between-a-line-and-a-plane#parallel-and-contained-lines"],
       title: t("Parallel and contained lines relative to a plane", "直线与平面的平行与包含关系"),
       explanation: t(
-        "If the direction vector $\\mathbf{v}$ of a line is orthogonal to the normal vector $\\mathbf{n}$ of a plane ($\\mathbf{n} \\cdot \\mathbf{v} = 0$), then the line is parallel to the plane. If the base point $P_0$ of the line also satisfies the plane equation, the line is entirely contained within the plane (infinite intersections). Otherwise, the line never meets the plane (no intersections).",
-        "若直线的方向向量 $\\mathbf{v}$ 与平面的法向量 $\\mathbf{n}$ 垂直（$\\mathbf{n} \\cdot \\mathbf{v} = 0$），则直线平行于该平面。若直线的基准点 $P_0$ 同时满足该平面方程，则整条直线完全包含于该平面内（有无穷多个交点）；否则，直线与平面没有交点（完全平行）。",
+        "If the direction vector $\\mathbf{v}$ of a line is orthogonal to the normal vector $\\mathbf{n}$ of a plane ($\\mathbf{n} \\cdot \\mathbf{v} = 0$), then the line is parallel to the plane. If the base point $P_0$ of the line also satisfies the plane equation, the line is entirely contained within the plane (infinite intersections). Otherwise, the line never meets the plane (no intersections). The line $x = 1 + t, y = 2 - t, z = 0$ and the plane $x + y + z - 3 = 0$ have $\\mathbf{n} \\cdot \\mathbf{v} = 1 - 1 + 0 = 0$, and $(1, 2, 0)$ gives $1 + 2 + 0 - 3 = 0$, so the line lies in the plane.\n\n> **Watch out.** $\\mathbf{n} \\cdot \\mathbf{v} = 0$ means the line runs parallel to the plane, not perpendicular to it; a line perpendicular to the plane has $\\mathbf{v}$ along $\\mathbf{n}$. Then test one point of the line to tell the two parallel cases apart.",
+        "若直线的方向向量 $\\mathbf{v}$ 与平面的法向量 $\\mathbf{n}$ 垂直（$\\mathbf{n} \\cdot \\mathbf{v} = 0$），则直线平行于该平面。若直线的基准点 $P_0$ 同时满足该平面方程，则整条直线完全包含于该平面内（有无穷多个交点）；否则，直线与平面没有交点（完全平行）。直线 $x = 1 + t, y = 2 - t, z = 0$ 与平面 $x + y + z - 3 = 0$ 有 $\\mathbf{n} \\cdot \\mathbf{v} = 1 - 1 + 0 = 0$，而 $(1, 2, 0)$ 给出 $1 + 2 + 0 - 3 = 0$，所以直线在平面内。\n\n> **注意。** $\\mathbf{n} \\cdot \\mathbf{v} = 0$ 表示直线与平面平行，而不是垂直；与平面垂直的直线，其 $\\mathbf{v}$ 沿着 $\\mathbf{n}$。然后检验直线上的一个点，才能分清两种平行情形。",
       ),
       generate(rng) {
         const A = rng.pick([-3, -2, -1, 1, 2, 3]);
         const B = rng.pick([-3, -2, -1, 1, 2, 3]);
         const C = rng.pick([-3, -2, -1, 1, 2, 3]);
 
-        // Direction vector orthogonal to [A, B, C]
-        // Let v = [B, -A, 0] so A*B + B*(-A) + C*0 = 0
+        // Direction vector orthogonal to [A, B, C]: v = [B, -A, 0], so A*B + B*(-A) + C*0 = 0.
         const v: Vec3 = [B, -A, 0];
         const x0 = rng.int(-4, 4);
         const y0 = rng.int(-4, 4);
@@ -3952,48 +4480,72 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
         const p0: Vec3 = [x0, y0, z0];
 
         const isContained = rng.bool();
-        const D = isContained ? -(A * x0 + B * y0 + C * z0) : -(A * x0 + B * y0 + C * z0) + rng.pick([-5, -4, 4, 5]);
+        const offset = isContained ? 0 : rng.pick([-5, -4, 4, 5]);
+        const D = -(A * x0 + B * y0 + C * z0) + offset;
+        const next = add3(p0, v);
 
         const lineStr = paramLineLatex(p0, v);
         const planeStr = planeEqLatex(A, B, C, D);
+        const contained = t(
+          "The line lies entirely in the plane (infinitely many points of intersection)",
+          "直线完全落在平面内（有无穷多个交点）",
+        );
+        const parallel = t("The line is strictly parallel to the plane (no intersection)", "直线与平面严格平行（没有交点）");
+        const onePoint = t("The line intersects the plane at exactly one point", "直线与平面相交于唯一单点");
+        const perpendicular = t("The line is perpendicular to the plane", "直线与平面垂直");
+        const dotLine = `\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0`;
+        const pointLine = `(${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) + (${D}) = ${offset}`;
 
-        if (isContained) {
-          return oneOf(
-            rng,
-            t(
-              `Determine the geometric relationship between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
-              `确定下列直线与平面之间的几何位置关系：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
-            ),
-            t("The line lies entirely in the plane (infinitely many points of intersection)", "直线完全落在平面内（有无穷多个交点）"),
+        return explained(
+          rng,
+          t(
+            `Determine the geometric relationship between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
+            `确定下列直线与平面之间的几何位置关系：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
+          ),
+          isContained ? contained : parallel,
+          [
+            isContained
+              ? [
+                  parallel,
+                  `The point $${pt3Latex(p0)}$ of the line satisfies the plane equation, so the line does meet the plane, and being parallel to it, it lies in it.`,
+                  `直线上的点 $${pt3Latex(p0)}$ 满足平面方程，所以直线与平面有公共点；它又与平面平行，所以整条直线在平面内。`,
+                ]
+              : [
+                  contained,
+                  `The point $${pt3Latex(p0)}$ of the line gives $${offset}$, not $0$, in the plane equation, so the line is not in the plane.`,
+                  `直线上的点 $${pt3Latex(p0)}$ 代入平面方程得 $${offset}$，不是 $0$，所以直线不在平面内。`,
+                ],
             [
-              t("The line is strictly parallel to the plane (no intersection)", "直线与平面严格平行（没有交点）"),
-              t("The line intersects the plane at exactly one point", "直线与平面相交于唯一单点"),
-              t("The line is perpendicular to the plane", "直线与平面垂直"),
+              onePoint,
+              "Since $\\mathbf{n} \\cdot \\mathbf{v} = 0$, moving along the line never changes the value of $Ax + By + Cz + D$, so it cannot cross the plane at just one point.",
+              "由于 $\\mathbf{n} \\cdot \\mathbf{v} = 0$，沿直线移动时 $Ax + By + Cz + D$ 的值不变，所以直线不可能只在一点穿过平面。",
+            ],
+            [
+              perpendicular,
+              "A line perpendicular to the plane has its direction along $\\mathbf{n}$, so $\\mathbf{n} \\cdot \\mathbf{v}$ would not be $0$; here it is $0$.",
+              "与平面垂直的直线方向沿着 $\\mathbf{n}$，那样 $\\mathbf{n} \\cdot \\mathbf{v}$ 不会是 $0$；而这里它是 $0$。",
+            ],
+          ],
+          walked(
+            [
+              [["Compare the direction with the normal", "比较方向向量与法向量"], t("", ""), [dotLine]],
+              [
+                ["Test a point of the line", "检验直线上的一点"],
+                t(
+                  isContained
+                    ? "The value is $0$, so the point is on the plane and the whole line lies in it."
+                    : "The value is not $0$, so the point is off the plane and the line never meets it.",
+                  isContained ? "值为 $0$，所以该点在平面上，整条直线都在平面内。" : "值不为 $0$，所以该点不在平面上，直线与平面永不相交。",
+                ),
+                [pointLine],
+              ],
             ],
             t(
-              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0$, so the line is parallel to the plane. Testing initial point $P_0${pt3Latex(p0)}$ in the plane equation gives $0 = 0$. Thus the line lies entirely within the plane.`,
-              `法向量与方向向量的点积为 $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0$，说明直线平行于平面。将直线的基准点 $P_0${pt3Latex(p0)}$ 代入平面方程满足等式，因此整条直线完全包含在平面内。`,
+              `The point $${pt3Latex(next)}$, at $t = 1$, gives the same value $${offset}$, as it must for a line parallel to the plane.`,
+              `$t = 1$ 时的点 $${pt3Latex(next)}$ 给出同样的值 $${offset}$，与平面平行的直线理应如此。`,
             ),
-          );
-        } else {
-          return oneOf(
-            rng,
-            t(
-              `Determine the geometric relationship between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
-              `确定下列直线与平面之间的几何位置关系：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
-            ),
-            t("The line is strictly parallel to the plane (no intersection)", "直线与平面严格平行（没有交点）"),
-            [
-              t("The line lies entirely in the plane (infinitely many points of intersection)", "直线完全落在平面内（有无穷多个交点）"),
-              t("The line intersects the plane at exactly one point", "直线与平面相交于唯一单点"),
-              t("The line is perpendicular to the plane", "直线与平面垂直"),
-            ],
-            t(
-              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0$, so the line is parallel to the plane. Substituting $P_0${pt3Latex(p0)}$ does not satisfy the plane equation. Thus the line is strictly parallel to the plane with no points of intersection.`,
-              `点积 $\\mathbf{n} \\cdot \\mathbf{v} = 0$ 说明方向向量垂直于法向量（直线平行于平面）。将基准点代入平面方程不成立，因此直线与平面严格平行，无交点。`,
-            ),
-          );
-        }
+          ),
+        );
       },
     },
   ],

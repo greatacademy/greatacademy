@@ -1474,8 +1474,8 @@ const lineFromDrawing: KnowledgePointDef = {
   id: "the-equation-of-a-drawn-line",
   title: t("The equation of a drawn line", "由图写直线的方程"),
   explanation: t(
-    "A vector equation $\\mathbf{r} = \\mathbf{a} + t\\mathbf{d}$ needs a point on the line and a direction along it. Two marked points $P$ and $Q$ give both: take $\\mathbf{a} = P$ and $\\mathbf{d} = Q - P$. The direction is a difference of the two points, not their sum, and the point has to be a position on the line, not the direction itself.",
-    "向量方程 $\\mathbf{r} = \\mathbf{a} + t\\mathbf{d}$ 需要直线上的一点和沿直线的方向。标出的两点 $P$、$Q$ 同时给出这两者：取 $\\mathbf{a} = P$，$\\mathbf{d} = Q - P$。方向是两点之差而不是和，而且起点必须是直线上的位置，而不是方向本身。",
+    "A vector equation $\\mathbf{r} = \\mathbf{a} + t\\mathbf{d}$ needs a point on the line and a direction along it. Two marked points $P$ and $Q$ give both: take $\\mathbf{a} = P$ and $\\mathbf{d} = Q - P$. The direction is a difference of the two points, not their sum, and the point has to be a position on the line, not the direction itself. Through $P(1, 2)$ and $Q(3, 3)$: $Q - P = \\langle 2, 1 \\rangle$, so $\\mathbf{r} = \\langle 1, 2 \\rangle + t\\langle 2, 1 \\rangle$.\n\n> **Watch out.** The direction is the difference $Q - P$, not the point $Q$ itself, and the vector standing alone must be a point of the line. Swapping the two gives a line through the wrong place.",
+    "向量方程 $\\mathbf{r} = \\mathbf{a} + t\\mathbf{d}$ 需要直线上的一点和沿直线的方向。标出的两点 $P$、$Q$ 同时给出这两者：取 $\\mathbf{a} = P$，$\\mathbf{d} = Q - P$。方向是两点之差而不是和，而且起点必须是直线上的位置，而不是方向本身。过 $P(1, 2)$ 和 $Q(3, 3)$：$Q - P = \\langle 2, 1 \\rangle$，所以 $\\mathbf{r} = \\langle 1, 2 \\rangle + t\\langle 2, 1 \\rangle$。\n\n> **注意。** 方向是差 $Q - P$，而不是点 $Q$ 本身；单独写的那个向量必须是直线上的点。两者交换，直线就经过了错误的位置。",
   ),
   generate(rng: Rng): Problem {
     let P: Point;
@@ -1487,15 +1487,34 @@ const lineFromDrawing: KnowledgePointDef = {
     const Q: Point = [P[0] + d[0], P[1] + d[1]];
     const line = (a: Point, b: Point) => math(`\\mathbf{r} = ${angled(a[0], a[1])} + t${angled(b[0], b[1])}`);
     return withFigure(
-      pickChoice(
-        rng,
-        t("Which vector equation describes the line through the marked points?", "哪个向量方程描述了过标出两点的直线？"),
-        line(P, d),
-        [line(d, P), line(P, [-d[1], d[0]]), line(P, Q)],
-        t(
-          `Read $P = (${P[0]}, ${P[1]})$ and $Q = (${Q[0]}, ${Q[1]})$. The direction is $Q - P = ${angled(d[0], d[1])}$, and the line starts from the position $P$. Putting $t = 1$ gives $Q$, which confirms the equation.`,
-          `读出 $P = (${P[0]}, ${P[1]})$，$Q = (${Q[0]}, ${Q[1]})$。方向是 $Q - P = ${angled(d[0], d[1])}$，直线从位置 $P$ 出发。令 $t = 1$ 得到 $Q$，验证了方程。`,
+      reasoned(
+        pickChoice(
+          rng,
+          t("Which vector equation describes the line through the marked points?", "哪个向量方程描述了过标出两点的直线？"),
+          line(P, d),
+          [line(d, P), line(P, [-d[1], d[0]]), line(P, Q)],
+          t(
+            `**Step 1: Read the points.** $P = (${P[0]}, ${P[1]})$ and $Q = (${Q[0]}, ${Q[1]})$.\n\n**Step 2: Form the equation.** The direction is $Q - P = ${angled(d[0], d[1])}$, and the line starts from the position $P$: $\\mathbf{r} = ${angled(P[0], P[1])} + t${angled(d[0], d[1])}$.\n\n**Check.** $t = 0$ gives $P$ and $t = 1$ gives $${angled(P[0], P[1])} + ${angled(d[0], d[1])} = ${angled(Q[0], Q[1])}$, which is $Q$.`,
+            `**第一步：读出两点。** $P = (${P[0]}, ${P[1]})$，$Q = (${Q[0]}, ${Q[1]})$。\n\n**第二步：写出方程。** 方向是 $Q - P = ${angled(d[0], d[1])}$，直线从位置 $P$ 出发：$\\mathbf{r} = ${angled(P[0], P[1])} + t${angled(d[0], d[1])}$。\n\n**检验。** $t = 0$ 得 $P$，$t = 1$ 得 $${angled(P[0], P[1])} + ${angled(d[0], d[1])} = ${angled(Q[0], Q[1])}$，正是 $Q$。`,
+          ),
         ),
+        [
+          [
+            line(d, P).en,
+            "The point and the direction are swapped: the vector standing alone must be a point of the line, here $P$.",
+            "点和方向交换了：单独写的向量必须是直线上的点，这里是 $P$。",
+          ],
+          [
+            line(P, [-d[1], d[0]]).en,
+            "That direction is perpendicular to the line: its dot product with $Q - P$ is $0$.",
+            "这个方向与直线垂直：它与 $Q - P$ 的点积是 $0$。",
+          ],
+          [
+            line(P, Q).en,
+            "That uses the point $Q$ as the direction; the direction is the difference $Q - P$.",
+            "这把点 $Q$ 当作方向；方向应是差 $Q - P$。",
+          ],
+        ],
       ),
       drawn(
         square(5),

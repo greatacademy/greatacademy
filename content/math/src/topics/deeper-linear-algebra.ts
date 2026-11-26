@@ -8,7 +8,8 @@ import { poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
-import { numberProblem, pointProblem } from "../problems.ts";
+import { numberProblem, pointLatex, pointProblem, say, why, withMistakes } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
 /** Grid is a matrix of numbers written by rows. */
@@ -86,14 +87,32 @@ const perpendicularPlanes: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-intersection-of-two-planes#the-parameter-that-makes-two-planes-perpendicular"],
   title: t("The parameter that makes two planes perpendicular", "使两平面垂直的参数"),
   explanation: t(
-    "The angle between two planes is the angle between their normal vectors. So two planes are perpendicular exactly when the dot product of their normals is zero, which gives one linear equation for an unknown coefficient.",
-    "两平面的夹角就是它们法向量的夹角。所以两平面垂直，当且仅当法向量的数量积为零，这就给未知系数列出一个一次方程。",
+    "The angle between two planes is the angle between their normal vectors. So two planes are perpendicular exactly when the dot product of their normals is zero, which gives one linear equation for an unknown coefficient. For $x + 2y - z = 3$ and $2x + y + kz = 1$: $2 + 2 - k = 0$, so $k = 4$.\n\n> **Watch out.** Perpendicular planes have perpendicular normals, so their dot product is $0$; it is parallel planes whose normals are multiples of each other. Keep the sign when $k$ moves across: $4 - k = 0$ gives $k = 4$, not $-4$.",
+    "两平面的夹角就是它们法向量的夹角。所以两平面垂直，当且仅当法向量的数量积为零，这就给未知系数列出一个一次方程。对 $x + 2y - z = 3$ 和 $2x + y + kz = 1$：$2 + 2 - k = 0$，所以 $k = 4$。\n\n> **注意。** 互相垂直的平面，法向量互相垂直，数量积为 $0$；法向量成倍数关系的是平行平面。$k$ 移项时要保留符号：$4 - k = 0$ 得 $k = 4$，不是 $-4$。",
   ),
   generate(rng) {
     const n = [nonzero(rng, 4), nonzero(rng, 4), rng.pick([1, -1])];
     const p = nonzero(rng, 4);
     const q = nonzero(rng, 4);
-    const k = -(n[0]! * p + n[1]! * q) * n[2]!;
+    const known = dot(n, [p, q, 0]);
+    const k = -known * n[2]!;
+    const mistakes = [
+      why(
+        -k,
+        `The sign was lost when solving: $${known} + ${inParens(n[2]!)}k = 0$ gives $k = ${k}$ only after moving $${known}$ across with its sign changed.`,
+        `解方程时丢了符号：$${known} + ${inParens(n[2]!)}k = 0$，把 $${known}$ 变号移到另一边才能解出 $k$。`,
+      ),
+      why(
+        known,
+        "That is the dot product of the known entries alone; $k$ must make the whole dot product, its own term included, equal to $0$.",
+        "这只是已知分量的数量积；$k$ 要使包括它自己那一项在内的整个数量积等于 $0$。",
+      ),
+      why(
+        known + n[2]!,
+        "That adds the third entry of the first normal instead of multiplying it by $k$.",
+        "这是把第一个法向量的第三个分量加上去，而不是乘以 $k$。",
+      ),
+    ].filter((m, i, all) => m.value !== k && all.findIndex((x) => x.value === m.value) === i);
     return numberProblem({
       prompt: t(
         `The planes $${linear(n)} = 3$ and $${poly([p, "x"], [q, "y"], [1, "kz"])} = 1$ are perpendicular. Find $k$.`,
@@ -101,11 +120,24 @@ const perpendicularPlanes: KnowledgePointDef = {
       ),
       answer: k,
       solveFor: "k",
-      wrong: [-k, n[0]! * p + n[1]! * q + n[2]!],
-      solution: t(
-        `The normals $(${n.join(", ")})$ and $(${p}, ${q}, k)$ must have dot product zero: $${dot(n, [p, q, 0])} + ${inParens(n[2]!)}k = 0$. So $k = ${k}$.`,
-        `法向量 $(${n.join(", ")})$ 与 $(${p}, ${q}, k)$ 的数量积必须为零：$${dot(n, [p, q, 0])} + ${inParens(n[2]!)}k = 0$。所以 $k = ${k}$。`,
+      solution: walked(
+        [
+          [
+            ["Set the dot product of the normals to zero", "令法向量的数量积为零"],
+            t(`The normals are $(${n.join(", ")})$ and $(${p}, ${q}, k)$:`, `法向量是 $(${n.join(", ")})$ 和 $(${p}, ${q}, k)$：`),
+            [`${n[0]}(${p}) + ${inParens(n[1]!)}(${q}) + ${inParens(n[2]!)}k = 0`],
+          ],
+          [
+            ["Solve for $k$", "解出 $k$"],
+            t(`$${known} + ${inParens(n[2]!)}k = 0$, so $k = ${k}$.`, `$${known} + ${inParens(n[2]!)}k = 0$，所以 $k = ${k}$。`),
+          ],
+        ],
+        t(
+          `$${n[0]}(${p}) + ${inParens(n[1]!)}(${q}) + ${inParens(n[2]!)}(${k}) = ${known} + ${inParens(n[2]! * k)} = 0$, so the normals are perpendicular.`,
+          `$${n[0]}(${p}) + ${inParens(n[1]!)}(${q}) + ${inParens(n[2]!)}(${k}) = ${known} + ${inParens(n[2]! * k)} = 0$，所以两个法向量垂直。`,
+        ),
       ),
+      mistakes,
     });
   },
 };
@@ -115,14 +147,31 @@ const parallelPlaneThroughPoint: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-cartesian-equation-of-a-plane#the-plane-through-a-point-parallel-to-a-plane"],
   title: t("The plane through a point parallel to a plane", "过一点且与已知平面平行的平面"),
   explanation: t(
-    "Parallel planes share a normal vector, so their equations differ only in the constant on the right. To find the plane through a given point, keep the left side and substitute the point to get the new constant.",
-    "平行平面有相同的法向量，所以它们的方程只有右边的常数不同。要求过某点的平行平面，保留左边不变，把点代入得到新的常数。",
+    "Parallel planes share a normal vector, so their equations differ only in the constant on the right. To find the plane through a given point, keep the left side and substitute the point to get the new constant. Parallel to $x - 2y + z = 5$ through $(1, 1, 3)$: $1 - 2 + 3 = 2$, so the plane is $x - 2y + z = 2$.\n\n> **Watch out.** The old constant belongs to the other plane and plays no part: the new constant comes from the point alone. Substitute every coordinate, each with its sign.",
+    "平行平面有相同的法向量，所以它们的方程只有右边的常数不同。要求过某点的平行平面，保留左边不变，把点代入得到新的常数。与 $x - 2y + z = 5$ 平行且过 $(1, 1, 3)$：$1 - 2 + 3 = 2$，所以平面是 $x - 2y + z = 2$。\n\n> **注意。** 原来的常数属于另一个平面，不起作用：新的常数只由点决定。每个坐标都要连同符号代入。",
   ),
   generate(rng) {
     const n = [nonzero(rng, 5), nonzero(rng, 5), nonzero(rng, 5)];
     const P = [nonzero(rng, 4), nonzero(rng, 4), nonzero(rng, 4)];
     const old = dot(n, P) + rng.pick([-7, -3, 2, 5, 9]);
     const d = dot(n, P);
+    const mistakes = [
+      why(
+        old,
+        "That is the constant of the given plane, which does not pass through the point; the parallel plane needs its own constant.",
+        "这是已知平面的常数，那个平面不经过该点；平行平面需要它自己的常数。",
+      ),
+      why(
+        -d,
+        "The sign is wrong: $d$ is the value of the left side at the point, not its opposite.",
+        "符号错了：$d$ 是左边在该点处的值，不是它的相反数。",
+      ),
+      why(
+        d + old,
+        "The old constant was added on; it only places the other plane and plays no part here.",
+        "把原来的常数也加上了；它只决定另一个平面的位置，这里不起作用。",
+      ),
+    ].filter((m, i, all) => m.value !== d && all.findIndex((x) => x.value === m.value) === i);
     return numberProblem({
       prompt: t(
         `The plane $${linear(n)} = d$ is parallel to $${linear(n)} = ${old}$ and passes through $(${P.join(", ")})$. Find $d$.`,
@@ -130,11 +179,27 @@ const parallelPlaneThroughPoint: KnowledgePointDef = {
       ),
       answer: d,
       solveFor: "d",
-      wrong: [old, -d, d + old],
-      solution: t(
-        `Substitute the point into the left side: $${n[0]}(${P[0]}) + ${inParens(n[1]!)}(${P[1]}) + ${inParens(n[2]!)}(${P[2]}) = ${d}$. The old constant plays no part, because it only places the other plane.`,
-        `把点代入左边：$${n[0]}(${P[0]}) + ${inParens(n[1]!)}(${P[1]}) + ${inParens(n[2]!)}(${P[2]}) = ${d}$。原来的常数不起作用，它只决定另一个平面的位置。`,
+      solution: walked(
+        [
+          [
+            ["Keep the left side", "保留左边"],
+            t(
+              `Parallel planes share the normal $(${n.join(", ")})$, so the left side stays $${linear(n)}$.`,
+              `平行平面有相同的法向量 $(${n.join(", ")})$，所以左边仍是 $${linear(n)}$。`,
+            ),
+          ],
+          [
+            ["Substitute the point", "代入点"],
+            t("", ""),
+            [`d = ${n[0]}(${P[0]}) + ${inParens(n[1]!)}(${P[1]}) + ${inParens(n[2]!)}(${P[2]}) = ${d}`],
+          ],
+        ],
+        t(
+          `$${d} \\ne ${old}$, so the two planes are different, with the same normal, hence parallel, and the point satisfies $${linear(n)} = ${d}$.`,
+          `$${d} \\ne ${old}$，所以两个平面不同，而法向量相同，因此平行；该点满足 $${linear(n)} = ${d}$。`,
+        ),
       ),
+      mistakes,
     });
   },
 };
@@ -144,8 +209,8 @@ const footOfPerpendicular: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-shortest-distance-between-a-plane-and-a-point#the-foot-of-the-perpendicular-on-a-plane"],
   title: t("The foot of the perpendicular on a plane", "平面上的垂足"),
   explanation: t(
-    "The nearest point of a plane to a point $P$ lies on the line through $P$ along the normal $\\mathbf{n}$. Substitute $P + s\\mathbf{n}$ into the plane's equation, solve for $s$, and the point at that $s$ is the foot of the perpendicular.",
-    "平面上离点 $P$ 最近的点，在过 $P$ 且沿法向量 $\\mathbf{n}$ 的直线上。把 $P + s\\mathbf{n}$ 代入平面方程，解出 $s$，对应的点就是垂足。",
+    "The nearest point of a plane to a point $P$ lies on the line through $P$ along the normal $\\mathbf{n}$. Substitute $P + s\\mathbf{n}$ into the plane's equation, solve for $s$, and the point at that $s$ is the foot of the perpendicular. From $(1, 2, 4)$ to $z = 0$: $4 + s = 0$ gives $s = -4$, and the foot is $(1, 2, 0)$.\n\n> **Watch out.** Step from $P$ by $s\\mathbf{n}$ exactly once, with the sign of $s$ found from the equation. Stepping twice as far reaches the mirror image of $P$ on the other side of the plane.",
+    "平面上离点 $P$ 最近的点，在过 $P$ 且沿法向量 $\\mathbf{n}$ 的直线上。把 $P + s\\mathbf{n}$ 代入平面方程，解出 $s$，对应的点就是垂足。从 $(1, 2, 4)$ 到 $z = 0$：$4 + s = 0$ 得 $s = -4$，垂足是 $(1, 2, 0)$。\n\n> **注意。** 从 $P$ 出发只走一次 $s\\mathbf{n}$，$s$ 的符号由方程决定。走两倍远会到达 $P$ 关于平面的对称点。",
   ),
   generate(rng) {
     const n = rng.pick([
@@ -159,19 +224,53 @@ const footOfPerpendicular: KnowledgePointDef = {
     const s = nonzero(rng, 2);
     const P = foot.map((x, i) => x - s * n[i]!);
     const d = dot(n, foot);
-    return pointProblem({
-      prompt: t(
-        `Find the point of the plane $${linear(n)} = ${d}$ nearest to $P = (${P.join(", ")})$. Answer as $(x, y, z)$.`,
-        `求平面 $${linear(n)} = ${d}$ 上离点 $P = (${P.join(", ")})$ 最近的点，写成 $(x, y, z)$。`,
-      ),
-      answer: foot,
-      vars: ["x", "y", "z"],
-      wrong: [P, foot.map((x, i) => x + s * n[i]!)],
-      solution: t(
-        `Follow the normal: $(${P.join(", ")}) + s(${n.join(", ")})$ lies on the plane when $${dot(n, P)} + ${dot(n, n)}s = ${d}$, so $s = ${s}$. The nearest point is $(${foot.join(", ")})$.`,
-        `沿法向量走：$(${P.join(", ")}) + s(${n.join(", ")})$ 在平面上，要求 $${dot(n, P)} + ${dot(n, n)}s = ${d}$，所以 $s = ${s}$。最近的点是 $(${foot.join(", ")})$。`,
-      ),
-    });
+    return withMistakes(
+      pointProblem({
+        prompt: t(
+          `Find the point of the plane $${linear(n)} = ${d}$ nearest to $P = (${P.join(", ")})$. Answer as $(x, y, z)$.`,
+          `求平面 $${linear(n)} = ${d}$ 上离点 $P = (${P.join(", ")})$ 最近的点，写成 $(x, y, z)$。`,
+        ),
+        answer: foot,
+        vars: ["x", "y", "z"],
+        solution: walked(
+          [
+            [
+              ["Follow the normal from $P$", "从 $P$ 沿法向量走"],
+              t(
+                `The point $(${P.join(", ")}) + s(${n.join(", ")})$ is on the plane when`,
+                `点 $(${P.join(", ")}) + s(${n.join(", ")})$ 在平面上，要求`,
+              ),
+              [`${dot(n, P)} + ${dot(n, n)}s = ${d}`],
+            ],
+            [
+              ["Solve and step", "解出并移动"],
+              t(`$s = ${s}$, so the nearest point is $(${foot.join(", ")})$.`, `$s = ${s}$，所以最近的点是 $(${foot.join(", ")})$。`),
+            ],
+          ],
+          t(
+            `$${linear(n)}$ at $(${foot.join(", ")})$ is $${d}$, so the point is on the plane, and $(${foot.join(", ")}) - P = (${foot.map((x, i) => x - P[i]!).join(", ")})$ is $${s}$ times the normal.`,
+            `$${linear(n)}$ 在 $(${foot.join(", ")})$ 处等于 $${d}$，所以该点在平面上；而 $(${foot.join(", ")}) - P = (${foot.map((x, i) => x - P[i]!).join(", ")})$ 是法向量的 $${s}$ 倍。`,
+          ),
+        ),
+      }),
+      [
+        say(
+          pointLatex(P),
+          "That is $P$ itself, which is not on the plane: step along the normal until the equation holds.",
+          "这是 $P$ 本身，它不在平面上：要沿法向量移动，直到满足方程。",
+        ),
+        say(
+          pointLatex(foot.map((x, i) => x + s * n[i]!)),
+          "That steps twice as far and reaches the mirror image of $P$ on the other side of the plane.",
+          "这走了两倍远，到达的是 $P$ 关于平面的对称点。",
+        ),
+        say(
+          pointLatex(P.map((x, i) => x - s * n[i]!)),
+          "That steps the wrong way along the normal: the sign of $s$ comes from solving the equation.",
+          "这是沿法向量反方向走：$s$ 的符号要由解方程得出。",
+        ),
+      ].filter((m) => m.response !== pointLatex(foot)),
+    );
   },
 };
 
@@ -180,15 +279,33 @@ const lineParallelToPlane: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-intersection-between-a-line-and-a-plane#the-parameter-that-makes-a-line-parallel-to-a-plane"],
   title: t("The parameter that makes a line parallel to a plane", "使直线与平面平行的参数"),
   explanation: t(
-    "A line is parallel to a plane, or lies in it, exactly when its direction is perpendicular to the plane's normal. Setting the dot product of the direction and the normal to zero gives an equation for an unknown component of the direction.",
-    "直线与平面平行或在平面内，当且仅当直线的方向与平面的法向量垂直。令方向与法向量的数量积为零，就得到方向中未知分量的方程。",
+    "A line is parallel to a plane, or lies in it, exactly when its direction is perpendicular to the plane's normal. Setting the dot product of the direction and the normal to zero gives an equation for an unknown component of the direction. For the direction $(2, k, 1)$ and the plane $x + y - z = 4$: $2 + k - 1 = 0$, so $k = -1$.\n\n> **Watch out.** A line parallel to a plane has its direction perpendicular to the normal, $\\mathbf{n} \\cdot \\mathbf{v} = 0$. The plane's constant and the line's point do not enter this condition; they only decide whether the line lies in the plane.",
+    "直线与平面平行或在平面内，当且仅当直线的方向与平面的法向量垂直。令方向与法向量的数量积为零，就得到方向中未知分量的方程。对方向 $(2, k, 1)$ 和平面 $x + y - z = 4$：$2 + k - 1 = 0$，所以 $k = -1$。\n\n> **注意。** 与平面平行的直线，方向与法向量垂直，$\\mathbf{n} \\cdot \\mathbf{v} = 0$。平面的常数和直线上的点不进入这个条件；它们只决定直线是否在平面内。",
   ),
   generate(rng) {
     const n = [nonzero(rng, 3), rng.pick([1, -1]), nonzero(rng, 3)];
     const a = nonzero(rng, 4);
     const c = nonzero(rng, 4);
-    const k = -(n[0]! * a + n[2]! * c) * n[1]!;
+    const known = n[0]! * a + n[2]! * c;
+    const k = -known * n[1]!;
     const d = dot(n, [1, 0, 2]) + rng.pick([3, 5, 8]);
+    const mistakes = [
+      why(
+        -k,
+        `The sign was lost when solving $${known} + ${inParens(n[1]!)}k = 0$.`,
+        `解 $${known} + ${inParens(n[1]!)}k = 0$ 时丢了符号。`,
+      ),
+      why(
+        d,
+        "The plane's constant only says where the plane sits; the condition is on the direction: $\\mathbf{n} \\cdot \\mathbf{v} = 0$.",
+        "平面的常数只表示平面的位置；条件是关于方向的：$\\mathbf{n} \\cdot \\mathbf{v} = 0$。",
+      ),
+      why(
+        a + c,
+        "That adds the known entries of the direction without multiplying them by the entries of the normal.",
+        "这是把方向的已知分量相加，没有乘以法向量的对应分量。",
+      ),
+    ].filter((m, i, all) => m.value !== k && all.findIndex((x) => x.value === m.value) === i);
     return numberProblem({
       prompt: t(
         `The line $\\mathbf{r} = (1, 0, 2) + s(${a}, k, ${c})$ does not meet the plane $${linear(n)} = ${d}$. Find $k$.`,
@@ -196,11 +313,27 @@ const lineParallelToPlane: KnowledgePointDef = {
       ),
       answer: k,
       solveFor: "k",
-      wrong: [-k, d, a + c],
-      solution: t(
-        `A line that misses a plane is parallel to it, so its direction is perpendicular to the normal: $${n[0]}(${a}) + ${inParens(n[1]!)}k + ${inParens(n[2]!)}(${c}) = 0$. So $k = ${k}$.`,
-        `与平面没有公共点的直线和平面平行，所以方向与法向量垂直：$${n[0]}(${a}) + ${inParens(n[1]!)}k + ${inParens(n[2]!)}(${c}) = 0$。所以 $k = ${k}$。`,
+      solution: walked(
+        [
+          [
+            ["Turn the condition into a dot product", "把条件写成数量积"],
+            t(
+              "A line that misses a plane is parallel to it, so its direction is perpendicular to the normal:",
+              "与平面没有公共点的直线和平面平行，所以方向与法向量垂直：",
+            ),
+            [`${n[0]}(${a}) + ${inParens(n[1]!)}k + ${inParens(n[2]!)}(${c}) = 0`],
+          ],
+          [
+            ["Solve for $k$", "解出 $k$"],
+            t(`$${known} + ${inParens(n[1]!)}k = 0$, so $k = ${k}$.`, `$${known} + ${inParens(n[1]!)}k = 0$，所以 $k = ${k}$。`),
+          ],
+        ],
+        t(
+          `With $k = ${k}$ the dot product is $${known} + ${inParens(n[1]! * k)} = 0$. The point $(1, 0, 2)$ gives $${dot(n, [1, 0, 2])} \\ne ${d}$, so the line is off the plane and, being parallel, never meets it.`,
+          `$k = ${k}$ 时数量积为 $${known} + ${inParens(n[1]! * k)} = 0$。点 $(1, 0, 2)$ 代入得 $${dot(n, [1, 0, 2])} \\ne ${d}$，所以直线不在平面上，又与平面平行，永不相交。`,
+        ),
       ),
+      mistakes,
     });
   },
 };
@@ -1590,12 +1723,18 @@ const shiftTerm = (n: number) => `${n < 0 ? "-" : "+"} ${withCoefficient(Math.ab
 /** binomial2 counts the ways to choose two things from n. */
 const binomial2 = (n: number) => (n * (n - 1)) / 2;
 
+/** asQ turns a coefficient into an exact rational. */
+const asQ = (c: number | Q): Q => (typeof c === "number" ? Q.of(c) : c);
+/** distinctFrom keeps the mistakes whose values differ from the answer and from each other. */
+const distinctFrom = <M extends { value: number | Q }>(answer: number | Q, ms: readonly M[]): M[] =>
+  ms.filter((m, i) => !asQ(m.value).eq(asQ(answer)) && ms.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
+
 const lineMeetsHorizontalPlane: KnowledgePointDef = {
   id: "where-a-line-meets-a-plane-of-constant-height",
   title: t("Where a line meets a plane of constant height", "直线与等高平面的交点"),
   explanation: t(
-    "A point lies on a parametric line for exactly one value of the parameter, so a condition on one coordinate decides the whole point. To find where a line meets the plane $z = k$, solve the $z$ equation for $t$, then put that value of $t$ into the other coordinates. All three coordinates must use the same value of the parameter.",
-    "参数直线上的一个点恰好对应一个参数值，所以对一个坐标的条件就决定了整个点。要求直线与平面 $z = k$ 的交点，先从 $z$ 的方程解出 $t$，再把这个 $t$ 代入其他坐标。三个坐标必须使用同一个参数值。",
+    "A point lies on a parametric line for exactly one value of the parameter, so a condition on one coordinate decides the whole point. To find where a line meets the plane $z = k$, solve the $z$ equation for $t$, then put that value of $t$ into the other coordinates. All three coordinates must use the same value of the parameter. The line $x = 1 + 2t$, $z = 3 + t$ meets $z = 5$ where $3 + t = 5$, at $t = 2$, so $x = 1 + 4 = 5$.\n\n> **Watch out.** The value of $t$ is not the coordinate asked for: put it into the $x$ equation. And $t$ solves $c + rt = k$, so $t = \\frac{k - c}{r}$; dropping the starting height $c$ or the division by $r$ gives a different point.",
+    "参数直线上的一个点恰好对应一个参数值，所以对一个坐标的条件就决定了整个点。要求直线与平面 $z = k$ 的交点，先从 $z$ 的方程解出 $t$，再把这个 $t$ 代入其他坐标。三个坐标必须使用同一个参数值。直线 $x = 1 + 2t$，$z = 3 + t$ 与 $z = 5$ 相交于 $3 + t = 5$，即 $t = 2$，所以 $x = 1 + 4 = 5$。\n\n> **注意。** $t$ 的值不是所求的坐标：要把它代入 $x$ 的方程。而且 $t$ 是 $c + rt = k$ 的解，$t = \\frac{k - c}{r}$；漏掉起始高度 $c$ 或漏除以 $r$，得到的是另一个点。",
   ),
   generate(rng) {
     const a = rng.int(-5, 5);
@@ -1607,17 +1746,49 @@ const lineMeetsHorizontalPlane: KnowledgePointDef = {
     const k = rng.pick([...Array(21).keys()].map((i) => i - 10).filter((v) => v !== c));
     const time = Q.of(k - c, r);
     const answer = Q.of(a).add(time.mul(Q.of(p)));
+    const z = poly([c, ""], [r, "t"]);
     return numberProblem({
       prompt: t(
-        `The line $x = ${poly([a, ""], [p, "t"])}$, $y = ${poly([b, ""], [q, "t"])}$, $z = ${poly([c, ""], [r, "t"])}$ meets the plane $z = ${k}$. Find the $x$-coordinate of that point.`,
-        `直线 $x = ${poly([a, ""], [p, "t"])}$，$y = ${poly([b, ""], [q, "t"])}$，$z = ${poly([c, ""], [r, "t"])}$ 与平面 $z = ${k}$ 相交。求交点的 $x$ 坐标。`,
+        `The line $x = ${poly([a, ""], [p, "t"])}$, $y = ${poly([b, ""], [q, "t"])}$, $z = ${z}$ meets the plane $z = ${k}$. Find the $x$-coordinate of that point.`,
+        `直线 $x = ${poly([a, ""], [p, "t"])}$，$y = ${poly([b, ""], [q, "t"])}$，$z = ${z}$ 与平面 $z = ${k}$ 相交。求交点的 $x$ 坐标。`,
       ),
       answer,
-      wrong: [time, Q.of(a + p * (k - c)), Q.of(a).add(Q.of(k, r).mul(Q.of(p))), Q.of(a).sub(time.mul(Q.of(p))), answer.add(Q.of(1))],
-      solution: t(
-        `Setting $z = ${k}$ gives $t = ${time.toLatex()}$. Then $x = ${poly([a, ""], [p, "t"])} = ${answer.toLatex()}$.`,
-        `令 $z = ${k}$，得 $t = ${time.toLatex()}$。于是 $x = ${poly([a, ""], [p, "t"])} = ${answer.toLatex()}$。`,
+      solution: walked(
+        [
+          [["Find $t$ from the height", "由高度求 $t$"], t("", ""), [`${z} = ${k} \\implies t = ${time.toLatex()}`]],
+          [
+            ["Put $t$ into $x$", "把 $t$ 代入 $x$"],
+            t("", ""),
+            [`x = ${a} + ${inParens(p)} \\cdot \\left(${time.toLatex()}\\right) = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `At $t = ${time.toLatex()}$, $z = ${c} + ${inParens(r)} \\cdot \\left(${time.toLatex()}\\right) = ${k}$, so the point is on the plane.`,
+          `$t = ${time.toLatex()}$ 时，$z = ${c} + ${inParens(r)} \\cdot \\left(${time.toLatex()}\\right) = ${k}$，所以该点在平面上。`,
+        ),
       ),
+      mistakes: distinctFrom(answer, [
+        why(
+          time,
+          "That is the value of the parameter $t$; put it into the equation for $x$.",
+          "这是参数 $t$ 的值；还要把它代入 $x$ 的方程。",
+        ),
+        why(
+          Q.of(a + p * (k - c)),
+          `That uses $t = ${k - c}$: solving $${z} = ${k}$ also divides by $${r}$.`,
+          `这用的是 $t = ${k - c}$：解 $${z} = ${k}$ 时还要除以 $${r}$。`,
+        ),
+        why(
+          Q.of(a).add(Q.of(k, r).mul(Q.of(p))),
+          `That uses $t = \\frac{${k}}{${r}}$, leaving out the starting height $${c}$.`,
+          `这用的是 $t = \\frac{${k}}{${r}}$，漏掉了起始高度 $${c}$。`,
+        ),
+        why(
+          Q.of(a).sub(time.mul(Q.of(p))),
+          "The step $pt$ was subtracted instead of added: $x = a + pt$.",
+          "把 $pt$ 减掉了，应当加上：$x = a + pt$。",
+        ),
+      ]),
     });
   },
 };
@@ -1626,8 +1797,8 @@ const pointOnSymmetricLine: KnowledgePointDef = {
   id: "a-point-on-a-line-in-symmetric-form",
   title: t("A point on a line in symmetric form", "对称式直线上的点"),
   explanation: t(
-    "In the symmetric form of a line, the three fractions share one value, and that shared value is the parameter $t$. So once one coordinate is known, its fraction gives $t$, and every other coordinate follows by solving its own fraction. There is no need to convert to parametric equations first, although the working is exactly the same.",
-    "在直线的对称式中，三个分式取同一个值，这个共同的值就是参数 $t$。所以一旦知道一个坐标，它的分式就给出 $t$，其他坐标都可以由各自的分式解出。不需要先化成参数方程，尽管计算实质上是一样的。",
+    "In the symmetric form of a line, the three fractions share one value, and that shared value is the parameter $t$. So once one coordinate is known, its fraction gives $t$, and every other coordinate follows by solving its own fraction. There is no need to convert to parametric equations first, although the working is exactly the same. On $\\frac{x - 1}{2} = \\frac{y + 3}{4} = \\frac{z}{5}$ with $x = 7$: the common value is $\\frac{6}{2} = 3$, so $y = -3 + 4 \\cdot 3 = 9$.\n\n> **Watch out.** Multiply the common value by the denominator under $y$, not the one under $x$, and add back the starting value: $y + 3$ means the line starts at $y = -3$.",
+    "在直线的对称式中，三个分式取同一个值，这个共同的值就是参数 $t$。所以一旦知道一个坐标，它的分式就给出 $t$，其他坐标都可以由各自的分式解出。不需要先化成参数方程，尽管计算实质上是一样的。在 $\\frac{x - 1}{2} = \\frac{y + 3}{4} = \\frac{z}{5}$ 上取 $x = 7$：共同值是 $\\frac{6}{2} = 3$，所以 $y = -3 + 4 \\cdot 3 = 9$。\n\n> **注意。** 共同值要乘以 $y$ 下面的分母，而不是 $x$ 下面的，然后加回起始值：$y + 3$ 表示直线从 $y = -3$ 出发。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -1647,11 +1818,36 @@ const pointOnSymmetricLine: KnowledgePointDef = {
         `直线 $${line}$ 上的一点满足 $x = ${x}$。求它的 $y$ 坐标。`,
       ),
       answer,
-      wrong: [shift, Q.of(b).sub(shift), Q.of(b).add(Q.of(p * (x - a), q)), value],
-      solution: t(
-        `The common value of the fractions is $${value.toLatex()}$. So $y = ${b} + ${q} \\cdot \\left(${value.toLatex()}\\right) = ${answer.toLatex()}$.`,
-        `这些分式的共同值是 $${value.toLatex()}$。所以 $y = ${b} + ${q} \\cdot \\left(${value.toLatex()}\\right) = ${answer.toLatex()}$。`,
+      solution: walked(
+        [
+          [["Find the common value", "求共同值"], t("", ""), [`\\frac{${x} ${signedTerm(-a)}}{${p}} = ${value.toLatex()}`]],
+          [
+            ["Solve the $y$ fraction", "解 $y$ 的分式"],
+            t("", ""),
+            [
+              `\\frac{y ${signedTerm(-b)}}{${q}} = ${value.toLatex()} \\implies y = ${b} + ${q} \\cdot \\left(${value.toLatex()}\\right) = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `$\\frac{${answer.toLatex()} ${signedTerm(-b)}}{${q}} = ${value.toLatex()}$, the same value as the $x$ fraction, so the point is on the line.`,
+          `$\\frac{${answer.toLatex()} ${signedTerm(-b)}}{${q}} = ${value.toLatex()}$，与 $x$ 的分式值相同，所以该点在直线上。`,
+        ),
       ),
+      mistakes: distinctFrom(answer, [
+        why(shift, `That is the change in $y$ alone; add the starting value $${b}$.`, `这只是 $y$ 的变化量；还要加上起始值 $${b}$。`),
+        why(Q.of(b).sub(shift), "The change in $y$ was subtracted: $y = b + q \\cdot t$.", "把 $y$ 的变化量减掉了：$y = b + q \\cdot t$。"),
+        why(
+          Q.of(b).add(Q.of(p * (x - a), q)),
+          "The denominators are swapped: the $x$ fraction divides by its own denominator, and $y$ multiplies by its own.",
+          "分母弄反了：$x$ 的分式除以它自己的分母，$y$ 乘以它自己的分母。",
+        ),
+        why(
+          value,
+          "That is the common value of the fractions; solve the $y$ fraction for $y$.",
+          "这是分式的共同值；还要由 $y$ 的分式解出 $y$。",
+        ),
+      ]),
     });
   },
 };
@@ -1660,8 +1856,8 @@ const planeIntercept: KnowledgePointDef = {
   id: "the-intercept-of-a-plane-on-an-axis",
   title: t("The intercept of a plane on an axis", "平面在坐标轴上的截距"),
   explanation: t(
-    "Every point on the $x$-axis has the form $(x, 0, 0)$. Putting this into the equation $\\mathbf{n} \\cdot \\mathbf{r} = d$ leaves only the term with the first component of the normal, so $n_1 x = d$. The intercept therefore divides $d$ by that one component. The other two components of the normal affect the other two intercepts instead.",
-    "$x$ 轴上的每个点都形如 $(x, 0, 0)$。把它代入方程 $\\mathbf{n} \\cdot \\mathbf{r} = d$，只留下含法向量第一个分量的项，所以 $n_1 x = d$。因此截距就是 $d$ 除以这一个分量。法向量的另外两个分量影响的是另外两个截距。",
+    "Every point on the $x$-axis has the form $(x, 0, 0)$. Putting this into the equation $\\mathbf{n} \\cdot \\mathbf{r} = d$ leaves only the term with the first component of the normal, so $n_1 x = d$. The intercept therefore divides $d$ by that one component. The other two components of the normal affect the other two intercepts instead. The plane $\\langle 2, 5, -1 \\rangle \\cdot \\mathbf{r} = 6$ meets the $x$-axis where $2x = 6$, at $x = 3$.\n\n> **Watch out.** Divide $d$ by $n_1$, not $n_1$ by $d$, and keep both signs. The components of $y$ and $z$ drop out because those coordinates are $0$ on the $x$-axis.",
+    "$x$ 轴上的每个点都形如 $(x, 0, 0)$。把它代入方程 $\\mathbf{n} \\cdot \\mathbf{r} = d$，只留下含法向量第一个分量的项，所以 $n_1 x = d$。因此截距就是 $d$ 除以这一个分量。法向量的另外两个分量影响的是另外两个截距。平面 $\\langle 2, 5, -1 \\rangle \\cdot \\mathbf{r} = 6$ 与 $x$ 轴相交于 $2x = 6$，即 $x = 3$。\n\n> **注意。** 是 $d$ 除以 $n_1$，不是 $n_1$ 除以 $d$，两者的符号都要保留。$y$ 和 $z$ 的分量消失，是因为在 $x$ 轴上这两个坐标为 $0$。",
   ),
   generate(rng) {
     const n1 = nonzero(rng, 9);
@@ -1675,11 +1871,41 @@ const planeIntercept: KnowledgePointDef = {
         `一个平面的方程是 $\\langle ${n1}, ${n2}, ${n3} \\rangle \\cdot \\mathbf{r} = ${d}$。求它与 $x$ 轴交点的 $x$ 坐标。`,
       ),
       answer,
-      wrong: [Q.of(n1, d), Q.of(d, n2), answer.neg(), Q.of(d), answer.add(Q.of(1))],
-      solution: t(
-        `At $(x, 0, 0)$, the equation becomes $${poly([n1, "x"])} = ${d}$, so $x = ${answer.toLatex()}$.`,
-        `在 $(x, 0, 0)$ 处，方程变成 $${poly([n1, "x"])} = ${d}$，所以 $x = ${answer.toLatex()}$。`,
+      solution: walked(
+        [
+          [
+            ["Put a point of the $x$-axis in", "代入 $x$ 轴上的点"],
+            t("At $(x, 0, 0)$ the terms in $y$ and $z$ vanish:", "在 $(x, 0, 0)$ 处，含 $y$ 和 $z$ 的项为零："),
+            [`${n1}x + ${inParens(n2)} \\cdot 0 + ${inParens(n3)} \\cdot 0 = ${d}`],
+          ],
+          [
+            ["Solve for $x$", "解出 $x$"],
+            t(`$x = \\frac{${d}}{${n1}} = ${answer.toLatex()}$.`, `$x = \\frac{${d}}{${n1}} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `$\\langle ${n1}, ${n2}, ${n3} \\rangle \\cdot \\langle ${answer.toLatex()}, 0, 0 \\rangle = ${n1} \\cdot ${answer.toLatex()} = ${d}$, so the point is on the plane.`,
+          `$\\langle ${n1}, ${n2}, ${n3} \\rangle \\cdot \\langle ${answer.toLatex()}, 0, 0 \\rangle = ${n1} \\cdot ${answer.toLatex()} = ${d}$，所以该点在平面上。`,
+        ),
       ),
+      mistakes: distinctFrom(answer, [
+        why(
+          Q.of(n1, d),
+          "The fraction is upside down: $n_1 x = d$ gives $x = \\frac{d}{n_1}$.",
+          "分数上下颠倒了：$n_1 x = d$ 得 $x = \\frac{d}{n_1}$。",
+        ),
+        why(
+          Q.of(d, n2),
+          "That divides by the $y$ component; on the $x$-axis $y = 0$, so only $n_1$ remains.",
+          "这是除以 $y$ 的分量；在 $x$ 轴上 $y = 0$，只剩下 $n_1$。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is wrong: divide $d$ by $n_1$, keeping both signs.",
+          "符号错了：用 $d$ 除以 $n_1$，两者的符号都要保留。",
+        ),
+        why(Q.of(d), `That forgets to divide by $n_1 = ${n1}$.`, `漏除以 $n_1 = ${n1}$。`),
+      ]),
     });
   },
 };
@@ -1689,8 +1915,8 @@ const planeConstantFromSpan: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["the-parametric-equations-of-a-plane#the-scalar-equation-from-a-parametric-plane"],
   title: t("The scalar equation from a parametric plane", "由参数平面求标量方程"),
   explanation: t(
-    "Both spanning vectors of a plane are perpendicular to its normal, so their cross product $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ is a normal. The value $\\mathbf{n} \\cdot \\mathbf{r}$ is the same at every point of the plane, because moving along $\\mathbf{u}$ or $\\mathbf{v}$ does not change it. So the base point supplies the constant $d = \\mathbf{n} \\cdot \\mathbf{p}$.",
-    "平面的两个张成向量都垂直于法向量，所以它们的叉积 $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ 就是法向量。$\\mathbf{n} \\cdot \\mathbf{r}$ 的值在平面上每一点都相同，因为沿 $\\mathbf{u}$ 或 $\\mathbf{v}$ 移动都不改变它。所以基点给出常数 $d = \\mathbf{n} \\cdot \\mathbf{p}$。",
+    "Both spanning vectors of a plane are perpendicular to its normal, so their cross product $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ is a normal. The value $\\mathbf{n} \\cdot \\mathbf{r}$ is the same at every point of the plane, because moving along $\\mathbf{u}$ or $\\mathbf{v}$ does not change it. So the base point supplies the constant $d = \\mathbf{n} \\cdot \\mathbf{p}$. Through $(1, 0, 2)$ spanned by $\\langle 1, 0, 0 \\rangle$ and $\\langle 0, 1, 0 \\rangle$: $\\mathbf{n} = \\langle 0, 0, 1 \\rangle$ and $d = 2$, the plane $z = 2$.\n\n> **Watch out.** The constant comes from the base point, not from a spanning vector: $\\mathbf{n} \\cdot \\mathbf{u} = 0$ for each spanning vector. The order $\\mathbf{u} \\times \\mathbf{v}$ matters too, since $\\mathbf{v} \\times \\mathbf{u}$ flips the sign of $d$.",
+    "平面的两个张成向量都垂直于法向量，所以它们的叉积 $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ 就是法向量。$\\mathbf{n} \\cdot \\mathbf{r}$ 的值在平面上每一点都相同，因为沿 $\\mathbf{u}$ 或 $\\mathbf{v}$ 移动都不改变它。所以基点给出常数 $d = \\mathbf{n} \\cdot \\mathbf{p}$。过 $(1, 0, 2)$、由 $\\langle 1, 0, 0 \\rangle$ 和 $\\langle 0, 1, 0 \\rangle$ 张成的平面：$\\mathbf{n} = \\langle 0, 0, 1 \\rangle$，$d = 2$，即平面 $z = 2$。\n\n> **注意。** 常数来自基点，而不是张成向量：每个张成向量都有 $\\mathbf{n} \\cdot \\mathbf{u} = 0$。$\\mathbf{u} \\times \\mathbf{v}$ 的顺序也要紧，$\\mathbf{v} \\times \\mathbf{u}$ 会使 $d$ 变号。",
   ),
   generate(rng) {
     const point = [nonzero(rng, 5), nonzero(rng, 5), nonzero(rng, 5)];
@@ -1698,6 +1924,7 @@ const planeConstantFromSpan: KnowledgePointDef = {
     const v = [0, 1, nonzero(rng, 3)] as const;
     const normal = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
     const answer = dot(normal, point);
+    const moved = point.map((x, i) => x + u[i]!);
     return numberProblem({
       prompt: t(
         `A plane has equation $\\mathbf{r}(s, t) = \\langle ${point.join(", ")} \\rangle + s\\langle ${u.join(", ")} \\rangle + t\\langle ${v.join(", ")} \\rangle$. With $\\mathbf{n}$ the cross product of the first spanning vector with the second, write the plane as $\\mathbf{n} \\cdot \\mathbf{r} = d$. Find $d$.`,
@@ -1705,11 +1932,43 @@ const planeConstantFromSpan: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, dot(u, point), dot(v, point), answer + 1],
-      solution: t(
-        `The cross product is $\\mathbf{n} = \\langle ${normal.join(", ")} \\rangle$. Its dot product with the base point is $${answer}$.`,
-        `叉积是 $\\mathbf{n} = \\langle ${normal.join(", ")} \\rangle$。它与基点的点积是 $${answer}$。`,
+      solution: walked(
+        [
+          [
+            ["Take the cross product", "求叉积"],
+            t("", ""),
+            [
+              `\\mathbf{n} = \\langle ${u.join(", ")} \\rangle \\times \\langle ${v.join(", ")} \\rangle = \\langle ${normal.join(", ")} \\rangle`,
+            ],
+          ],
+          [
+            ["Dot it with the base point", "与基点作点积"],
+            t("", ""),
+            [`d = \\langle ${normal.join(", ")} \\rangle \\cdot \\langle ${point.join(", ")} \\rangle = ${answer}`],
+          ],
+        ],
+        t(
+          `$\\mathbf{n} \\cdot \\mathbf{u} = ${dot(normal, u)}$ and $\\mathbf{n} \\cdot \\mathbf{v} = ${dot(normal, v)}$, and the point $\\langle ${moved.join(", ")} \\rangle$ at $s = 1$, $t = 0$ also gives $\\mathbf{n} \\cdot \\mathbf{r} = ${dot(normal, moved)}$.`,
+          `$\\mathbf{n} \\cdot \\mathbf{u} = ${dot(normal, u)}$，$\\mathbf{n} \\cdot \\mathbf{v} = ${dot(normal, v)}$；$s = 1$、$t = 0$ 时的点 $\\langle ${moved.join(", ")} \\rangle$ 同样给出 $\\mathbf{n} \\cdot \\mathbf{r} = ${dot(normal, moved)}$。`,
+        ),
       ),
+      mistakes: distinctFrom(answer, [
+        why(
+          -answer,
+          "The sign is flipped, as with $\\mathbf{v} \\times \\mathbf{u}$: take the first spanning vector times the second.",
+          "符号反了，就像用了 $\\mathbf{v} \\times \\mathbf{u}$：要用第一个张成向量乘第二个。",
+        ),
+        why(
+          dot(u, point),
+          "That dots the first spanning vector with the point; the normal is the cross product of the two spanning vectors.",
+          "这是第一个张成向量与点的点积；法向量是两个张成向量的叉积。",
+        ),
+        why(
+          dot(v, point),
+          "That dots the second spanning vector with the point; the normal is the cross product of the two spanning vectors.",
+          "这是第二个张成向量与点的点积；法向量是两个张成向量的叉积。",
+        ),
+      ]),
     });
   },
 };

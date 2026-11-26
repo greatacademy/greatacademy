@@ -10,6 +10,7 @@ import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { arrowLine, drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure over the plane from -r to r, with its description in both languages. */
@@ -70,8 +71,8 @@ const lineEquation = point(
   "the-equation-of-a-drawn-line-from-two-points",
   ["The equation of a drawn line from two points", "由两点写出所画直线的方程"],
   [
-    "Read two grid points of the line. Their difference $(d_1, d_2)$ is a direction, so $(d_2, -d_1)$ is a normal, which gives the coefficients of $x$ and $y$. Substituting one of the points gives the constant.",
-    "读出直线上的两个格点。它们的差 $(d_1, d_2)$ 是方向，所以 $(d_2, -d_1)$ 是法向量，给出 $x$ 和 $y$ 的系数。代入其中一点得到常数。",
+    "Read two grid points of the line. Their difference $(d_1, d_2)$ is a direction, so $(d_2, -d_1)$ is a normal, which gives the coefficients of $x$ and $y$. Substituting one of the points gives the constant. Through $(0, 1)$ and $(1, 3)$: the direction is $(1, 2)$, the normal $(2, -1)$, and $(0, 1)$ gives $2x - y = -1$.\n\n> **Watch out.** The normal is $(d_2, -d_1)$: swap the entries of the direction and change the sign of one. The constant must come from substituting a marked point, with its sign.",
+    "读出直线上的两个格点。它们的差 $(d_1, d_2)$ 是方向，所以 $(d_2, -d_1)$ 是法向量，给出 $x$ 和 $y$ 的系数。代入其中一点得到常数。过 $(0, 1)$ 和 $(1, 3)$：方向是 $(1, 2)$，法向量是 $(2, -1)$，代入 $(0, 1)$ 得 $2x - y = -1$。\n\n> **注意。** 法向量是 $(d_2, -d_1)$：交换方向的两个分量，再改变其中一个的符号。常数必须由代入标出的点得到，并带着它的符号。",
   ],
   (rng) => {
     const d = rng.pick(slanted);
@@ -81,14 +82,14 @@ const lineEquation = point(
     const A = rng.pick(candidates);
     const B: Point = [A[0] + d[0], A[1] + d[1]];
     const c = a * A[0] + b * A[1];
-    return choose(
+    const choice = choose(
       rng,
       ["Which equation describes the drawn line?", "哪个方程描述所画的直线？"],
       same(linear(a, b, c)),
       [same(linear(a, -b, c)), same(linear(b, a, c)), same(linear(a, b, c + (c === -1 ? 2 : 1))), same(linear(a, b, -c))],
       [
-        `The line passes through $${at(A)}$ and $${at(B)}$, so a direction is $${at(d)}$ and a normal is $(${a}, ${b})$. Substituting $${at(A)}$ gives the constant $${c}$.`,
-        `直线过 $${at(A)}$ 和 $${at(B)}$，所以方向为 $${at(d)}$，法向量为 $(${a}, ${b})$。代入 $${at(A)}$ 得常数 $${c}$。`,
+        `**Step 1: Read a direction and a normal.** The line passes through $${at(A)}$ and $${at(B)}$, so a direction is $${at(d)}$ and a normal is $(${a}, ${b})$.\n\n**Step 2: Find the constant.** Substituting $${at(A)}$ gives $${a}(${A[0]}) + (${b})(${A[1]}) = ${c}$.\n\n**Check.** The other point $${at(B)}$ gives $${a}(${B[0]}) + (${b})(${B[1]}) = ${a * B[0] + b * B[1]}$ as well.`,
+        `**第一步：读出方向和法向量。** 直线过 $${at(A)}$ 和 $${at(B)}$，所以方向为 $${at(d)}$，法向量为 $(${a}, ${b})$。\n\n**第二步：求常数。** 代入 $${at(A)}$ 得 $${a}(${A[0]}) + (${b})(${A[1]}) = ${c}$。\n\n**检验。** 另一点 $${at(B)}$ 也给出 $${a}(${B[0]}) + (${b})(${B[1]}) = ${a * B[0] + b * B[1]}$。`,
       ],
       fig(
         7,
@@ -100,6 +101,28 @@ const lineEquation = point(
         [`A line with marked points at ${at(A)} and ${at(B)}.`, `一条直线，标出的点位于 ${at(A)} 和 ${at(B)}。`],
       ),
     );
+    return reasoned(choice, [
+      [
+        same(linear(a, -b, c))[0],
+        "The coefficient of $y$ has the wrong sign: the normal is $(d_2, -d_1)$.",
+        "$y$ 的系数符号错了：法向量是 $(d_2, -d_1)$。",
+      ],
+      [
+        same(linear(b, a, c))[0],
+        "The coefficients of $x$ and $y$ are exchanged; this line has a different slope.",
+        "$x$ 和 $y$ 的系数交换了；这条直线的斜率不同。",
+      ],
+      [
+        same(linear(a, b, c + (c === -1 ? 2 : 1)))[0],
+        "The constant is off: substitute a marked point to find it.",
+        "常数不对：要代入一个标出的点来求。",
+      ],
+      [
+        same(linear(a, b, -c))[0],
+        "The constant has the wrong sign: substituting a marked point gives its value with its sign.",
+        "常数符号错了：代入标出的点得到的值带着它自己的符号。",
+      ],
+    ]);
   },
 );
 

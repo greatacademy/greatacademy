@@ -9,6 +9,7 @@ import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { drawn } from "./figure-reading-more.ts";
 
 type Compass = "ne" | "nw" | "se" | "sw";
@@ -596,22 +597,22 @@ const vectorEquationOfLine = point(
   "the-vector-equation-of-a-drawn-line",
   ["The vector equation of a drawn line", "图中直线的向量方程"],
   [
-    "A vector equation of a line is a point on the line plus a parameter times a direction along it. Any point on the line and any nonzero multiple of the direction will do. Exchanging the point and the direction gives a different line, and a direction read with its coordinates swapped gives a line with the wrong slope.",
-    "直线的向量方程是直线上一点加参数乘以沿直线的方向。可以取直线上任一点和方向的任一非零倍数。交换点和方向会得到另一条直线，读方向时交换坐标则得到斜率错误的直线。",
+    "A vector equation of a line is a point on the line plus a parameter times a direction along it. Any point on the line and any nonzero multiple of the direction will do. Exchanging the point and the direction gives a different line, and a direction read with its coordinates swapped gives a line with the wrong slope. Through $A(1, 1)$ and $B(3, 2)$: $B - A = (2, 1)$, so $\\mathbf{r} = (1, 1) + t(2, 1)$.\n\n> **Watch out.** Read the direction as $B - A$ with $x$ first and $y$ second. A direction with its entries swapped, or a point with its signs flipped, describes a different line.",
+    "直线的向量方程是直线上一点加参数乘以沿直线的方向。可以取直线上任一点和方向的任一非零倍数。交换点和方向会得到另一条直线，读方向时交换坐标则得到斜率错误的直线。过 $A(1, 1)$ 和 $B(3, 2)$：$B - A = (2, 1)$，所以 $\\mathbf{r} = (1, 1) + t(2, 1)$。\n\n> **注意。** 方向按 $B - A$ 读，先 $x$ 后 $y$。分量交换的方向，或符号反了的点，描述的是另一条直线。",
   ],
   (rng) => {
     const d = rng.pick(primitive.filter((p) => Math.abs(p[0]) !== Math.abs(p[1]) && Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
     const A = rng.pick(nonzero(3).filter((p) => cross(p, d) !== 0));
     const B: Point = [A[0] + d[0], A[1] + d[1]];
     const eq = (p: Point, q: Point) => `\\mathbf{r} = ${col(p[0], p[1])} + t${col(q[0], q[1])}`;
-    return choose(
+    const choice = choose(
       rng,
       ["Which equation describes the line drawn through $A$ and $B$?", "哪个方程描述了图中过 $A$ 和 $B$ 的直线？"],
       same(eq(A, d)),
       [same(eq(d, A)), same(eq(A, [d[1], d[0]])), same(eq(A, [-d[1], d[0]])), same(eq([-A[0], -A[1]], d))],
       [
-        `The drawing gives $A = (${A[0]}, ${A[1]})$ and $B = (${B[0]}, ${B[1]})$, so the direction is $B - A = (${d[0]}, ${d[1]})$. Starting at $A$ and moving along that direction gives the equation.`,
-        `由图得 $A = (${A[0]}, ${A[1]})$，$B = (${B[0]}, ${B[1]})$，所以方向是 $B - A = (${d[0]}, ${d[1]})$。从 $A$ 出发沿这个方向移动就得到方程。`,
+        `**Step 1: Read the points.** The drawing gives $A = (${A[0]}, ${A[1]})$ and $B = (${B[0]}, ${B[1]})$.\n\n**Step 2: Form the equation.** The direction is $B - A = (${d[0]}, ${d[1]})$; starting at $A$ and moving along it gives $${eq(A, d)}$.\n\n**Check.** $t = 1$ gives $(${A[0]} + ${d[0] < 0 ? `(${d[0]})` : d[0]}, ${A[1]} + ${d[1] < 0 ? `(${d[1]})` : d[1]}) = (${B[0]}, ${B[1]})$, which is $B$.`,
+        `**第一步：读出两点。** 由图得 $A = (${A[0]}, ${A[1]})$，$B = (${B[0]}, ${B[1]})$。\n\n**第二步：写出方程。** 方向是 $B - A = (${d[0]}, ${d[1]})$；从 $A$ 出发沿它移动得 $${eq(A, d)}$。\n\n**检验。** $t = 1$ 得 $(${A[0]} + ${d[0] < 0 ? `(${d[0]})` : d[0]}, ${A[1]} + ${d[1] < 0 ? `(${d[1]})` : d[1]}) = (${B[0]}, ${B[1]})$，正是 $B$。`,
       ],
       fig(
         6,
@@ -626,6 +627,28 @@ const vectorEquationOfLine = point(
         ],
       ),
     );
+    return reasoned(choice, [
+      [
+        same(eq(d, A))[0],
+        "The point and the direction are swapped: the vector standing alone must be a point of the line, here $A$.",
+        "点和方向交换了：单独写的向量必须是直线上的点，这里是 $A$。",
+      ],
+      [
+        same(eq(A, [d[1], d[0]]))[0],
+        "The entries of the direction are swapped: read $B - A$ with $x$ first, then $y$.",
+        "方向的分量交换了：$B - A$ 要先读 $x$，再读 $y$。",
+      ],
+      [
+        same(eq(A, [-d[1], d[0]]))[0],
+        "That direction is perpendicular to the line: its dot product with $B - A$ is $0$.",
+        "这个方向与直线垂直：它与 $B - A$ 的点积是 $0$。",
+      ],
+      [
+        same(eq([-A[0], -A[1]], d))[0],
+        "The signs of the point are flipped, so this line passes through $-A$, not $A$.",
+        "点的符号反了，所以这条直线经过 $-A$，而不是 $A$。",
+      ],
+    ]);
   },
 );
 
