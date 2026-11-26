@@ -2,12 +2,14 @@
 // eigenvectors: the reverse question, a harder case or a common trap.
 // See `deeperLinearAlgebraThirdPoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { say, withMistakes } from "../problems.ts";
+import { numberProblem, say, why, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -17,6 +19,9 @@ const mat = (rows: readonly (readonly (number | string)[])[]) =>
 /** vec writes a column vector. */
 const vec = (...entries: readonly (number | string)[]) => mat(entries.map((entry) => [entry]));
 /** wrap puts parentheses around a negative number. */
+/** text turns an English and Chinese pair into a text. */
+const text = ([en, zh]: Pair): Text => t(en, zh);
+
 const wrap = (n: number) => (n < 0 ? `(${n})` : `${n}`);
 
 const squaresBounded = point(
@@ -289,8 +294,8 @@ const detEffect = point(
   "how-a-row-operation-changes-the-determinant",
   ["How a row operation changes the determinant", "行运算如何改变行列式"],
   [
-    "The three row operations act differently on the determinant. A swap changes its sign, scaling a row multiplies it by the scale factor, and adding a multiple of one row to another leaves it unchanged, which is why elimination can be used to compute determinants.",
-    "三种行运算对行列式的作用不同。交换两行使它变号，把一行乘以常数使它乘以这个常数，把一行的倍数加到另一行则不改变它，这就是可以用消元计算行列式的原因。",
+    "The three row operations act differently on the determinant. A swap changes its sign, scaling a row multiplies it by the scale factor, and adding a multiple of one row to another leaves it unchanged, which is why elimination can be used to compute determinants. From $\\det A = 5$: a swap gives $-5$, tripling a row gives $15$, and $R_2 + 4R_1 \\to R_2$ keeps $5$.\n\n> **Watch out.** Adding a multiple of a row never changes the determinant, whatever the multiple. A scaling multiplies by its factor; it does not add it.",
+    "三种行运算对行列式的作用不同。交换两行使它变号，把一行乘以常数使它乘以这个常数，把一行的倍数加到另一行则不改变它，这就是可以用消元计算行列式的原因。由 $\\det A = 5$：交换得 $-5$，某行乘以 $3$ 得 $15$，$R_2 + 4R_1 \\to R_2$ 仍为 $5$。\n\n> **注意。** 把一行的倍数加到另一行，不论倍数多少，行列式都不变。数乘是乘以因子，不是加上它。",
   ],
   (rng) => {
     const d = nz(rng, 12);
@@ -298,27 +303,68 @@ const detEffect = point(
     const kind = rng.int(0, 2);
     const op = ["R_{1} \\leftrightarrow R_{3}", `${c}R_{2} \\to R_{2}`, `${poly([1, "R_{3}"], [c, "R_{1}"])} \\to R_{3}`][kind] as string;
     const answer = [-d, c * d, d][kind] as number;
-    const whys: Pair[] = [
-      [`A swap of two rows changes the sign of the determinant, so it becomes $${-d}$.`, `交换两行使行列式变号，所以它变为 $${-d}$。`],
+    const factor = [-1, c, 1][kind] as number;
+    const name = (
       [
-        `Scaling one row by $${c}$ multiplies the determinant by $${c}$, so it becomes $${c * d}$.`,
-        `把一行乘以 $${c}$，行列式也乘以 $${c}$，所以它变为 $${c * d}$。`,
-      ],
+        ["The operation swaps two rows, which multiplies the determinant by $-1$.", "该运算交换两行，使行列式乘以 $-1$。"],
+        [
+          `The operation scales row $2$ by $${c}$, which multiplies the determinant by $${c}$.`,
+          `该运算把第 $2$ 行乘以 $${c}$，使行列式乘以 $${c}$。`,
+        ],
+        [
+          "The operation adds a multiple of row $1$ to row $3$, which multiplies the determinant by $1$.",
+          "该运算把第 $1$ 行的倍数加到第 $3$ 行，使行列式乘以 $1$。",
+        ],
+      ] as const
+    )[kind] as Pair;
+    const undo = (
       [
-        `Adding a multiple of one row to another leaves the determinant unchanged, so it stays $${d}$.`,
-        `把一行的倍数加到另一行，行列式不变，所以它仍是 $${d}$。`,
-      ],
-    ];
-    const why = whys[kind] as Pair;
-    return ask(
-      [
+        [`Swapping rows $1$ and $3$ back turns $${answer}$ into $${d}$ again.`, `再交换第 $1$、$3$ 行，$${answer}$ 又变回 $${d}$。`],
+        [
+          `Scaling row $2$ by $\\frac{1}{${c}}$ turns $${answer}$ back into $${d}$.`,
+          `把第 $2$ 行乘以 $\\frac{1}{${c}}$，$${answer}$ 又变回 $${d}$。`,
+        ],
+        [
+          `Subtracting the same multiple again restores the matrix, and the determinant stays $${d}$ throughout.`,
+          `再减去同样的倍数就还原了矩阵，行列式始终是 $${d}$。`,
+        ],
+      ] as const
+    )[kind] as Pair;
+    return numberProblem({
+      prompt: text([
         `A $3 \\times 3$ matrix has determinant $${d}$. Find the determinant after the operation $${op}$.`,
         `一个 $3 \\times 3$ 矩阵的行列式是 $${d}$。求进行运算 $${op}$ 后的行列式。`,
-      ],
+      ]),
       answer,
-      [d, -d, c * d, c + d],
-      why,
-    );
+      mistakes: [
+        why(
+          d,
+          "This operation changes the determinant; only adding a multiple of a row leaves it unchanged.",
+          "这个运算会改变行列式；只有加上一行的倍数才不改变它。",
+        ),
+        why(-d, "Only a swap changes the sign; this operation is not a swap.", "只有交换才改变符号；这个运算不是交换。"),
+        why(
+          c * d,
+          `Only scaling a row multiplies the determinant by $${c}$; here $${c}$ is not a scale factor.`,
+          `只有数乘一行才使行列式乘以 $${c}$；这里 $${c}$ 不是数乘因子。`,
+        ),
+        why(
+          c + d,
+          `No row operation adds $${c}$ to the determinant: a scaling multiplies, and a row addition changes nothing.`,
+          `没有哪种行运算会给行列式加上 $${c}$：数乘是相乘，行倍加则不改变。`,
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [["Name the operation", "认出运算类型"], text(name)],
+          [
+            ["Apply the factor", "乘上因子"],
+            t(`$${wrap(factor)} \\cdot ${wrap(d)} = ${answer}$.`, `$${wrap(factor)} \\cdot ${wrap(d)} = ${answer}$。`),
+          ],
+        ],
+        text(undo),
+      ),
+    });
   },
 );
 
@@ -326,8 +372,8 @@ const columnClear = point(
   "clearing-an-entry-with-a-column-operation",
   ["Clearing an entry with a column operation", "用列运算消去元素"],
   [
-    "Zeros can be created with column operations as well as row operations. The operation $C_{2} - mC_{1} \\to C_{2}$ clears the $(1, 2)$ entry when $m$ is that entry divided by the $(1, 1)$ entry, and it also changes the entry below by $m$ times the entry to its left.",
-    "零元素既可以用行运算产生，也可以用列运算产生。当 $m$ 等于 $(1, 2)$ 元素除以 $(1, 1)$ 元素时，运算 $C_{2} - mC_{1} \\to C_{2}$ 消去 $(1, 2)$ 元素，同时下面的元素要减去 $m$ 乘以它左边的元素。",
+    "Zeros can be created with column operations as well as row operations. The operation $C_{2} - mC_{1} \\to C_{2}$ clears the $(1, 2)$ entry when $m$ is that entry divided by the $(1, 1)$ entry, and it also changes the entry below by $m$ times the entry to its left. In $\\begin{pmatrix} 2 & 6 \\\\ 1 & 5 \\end{pmatrix}$, $m = 3$ and the new $(2, 2)$ entry is $5 - 3 \\cdot 1 = 2$.\n\n> **Watch out.** A column operation works down the columns: the $(2, 2)$ entry loses $m$ times the $(2, 1)$ entry, the one to its left, not the $(1, 1)$ entry above.",
+    "零元素既可以用行运算产生，也可以用列运算产生。当 $m$ 等于 $(1, 2)$ 元素除以 $(1, 1)$ 元素时，运算 $C_{2} - mC_{1} \\to C_{2}$ 消去 $(1, 2)$ 元素，同时下面的元素要减去 $m$ 乘以它左边的元素。在 $\\begin{pmatrix} 2 & 6 \\\\ 1 & 5 \\end{pmatrix}$ 中，$m = 3$，新的 $(2, 2)$ 元素为 $5 - 3 \\cdot 1 = 2$。\n\n> **注意。** 列运算是沿列进行的：$(2, 2)$ 元素减去的是 $m$ 乘以 $(2, 1)$ 元素，即它左边的元素，而不是上面的 $(1, 1)$ 元素。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -335,24 +381,40 @@ const columnClear = point(
     const c = nz(rng, 7);
     const d = nz(rng, 9);
     const answer = d - m * c;
-    return ask(
-      [
-        `A column operation $C_{2} - mC_{1} \\to C_{2}$ clears the $(1, 2)$ entry of $${mat([
-          [a, m * a],
-          [c, d],
-        ])}$. Find the new $(2, 2)$ entry.`,
-        `列运算 $C_{2} - mC_{1} \\to C_{2}$ 消去 $${mat([
-          [a, m * a],
-          [c, d],
-        ])}$ 的 $(1, 2)$ 元素。求新的 $(2, 2)$ 元素。`,
-      ],
+    const M = mat([
+      [a, m * a],
+      [c, d],
+    ]);
+    return numberProblem({
+      prompt: text([
+        `A column operation $C_{2} - mC_{1} \\to C_{2}$ clears the $(1, 2)$ entry of $${M}$. Find the new $(2, 2)$ entry.`,
+        `列运算 $C_{2} - mC_{1} \\to C_{2}$ 消去 $${M}$ 的 $(1, 2)$ 元素。求新的 $(2, 2)$ 元素。`,
+      ]),
       answer,
-      [d + m * c, d, d - m * a],
-      [
-        `Clearing requires $m = ${m}$. Then the $(2, 2)$ entry becomes $${d} - ${wrap(m)} \\cdot ${wrap(c)} = ${answer}$.`,
-        `要消去该元素需 $m = ${m}$。于是 $(2, 2)$ 元素变为 $${d} - ${wrap(m)} \\cdot ${wrap(c)} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(d + m * c, "The sign is wrong: the operation subtracts $m$ times column $1$.", "符号错了：该运算减去的是第 $1$ 列的 $m$ 倍。"),
+        why(
+          d,
+          "The operation changes the whole of column $2$, so the $(2, 2)$ entry changes too.",
+          "该运算改变整个第 $2$ 列，所以 $(2, 2)$ 元素也会改变。",
+        ),
+        why(
+          d - m * a,
+          "That subtracts $m$ times the $(1, 1)$ entry; in row $2$ the entry of column $1$ is the $(2, 1)$ entry.",
+          "这减去的是 $m$ 乘以 $(1, 1)$ 元素；第 $2$ 行中第 $1$ 列的元素是 $(2, 1)$ 元素。",
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [["Find $m$", "求 $m$"], t("", ""), [`m = \\frac{${m * a}}{${a}} = ${m}`]],
+          [["Change the entry below", "改变下方的元素"], t("", ""), [`${d} - ${wrap(m)} \\cdot ${wrap(c)} = ${answer}`]],
+        ],
+        t(
+          `The $(1, 2)$ entry becomes $${m * a} - ${wrap(m)} \\cdot ${wrap(a)} = 0$, so $m = ${m}$ is the right multiplier.`,
+          `$(1, 2)$ 元素变为 $${m * a} - ${wrap(m)} \\cdot ${wrap(a)} = 0$，所以 $m = ${m}$ 是正确的乘数。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -360,8 +422,8 @@ const breakdownK = point(
   "the-coefficient-that-makes-the-second-pivot-vanish",
   ["The coefficient that makes the second pivot vanish", "使第二个主元消失的系数"],
   [
-    "Elimination on a $2 \\times 2$ system gives a second pivot that depends on the entries. Elimination breaks down exactly when this pivot is zero, which means the second row of the coefficient matrix is a multiple of the first, whatever the right-hand side is.",
-    "对 $2 \\times 2$ 方程组消元，得到的第二个主元依赖于各个元素。当且仅当这个主元为零时消元失败，这意味着系数矩阵的第二行是第一行的倍数，与右端无关。",
+    "Elimination on a $2 \\times 2$ system gives a second pivot that depends on the entries. Elimination breaks down exactly when this pivot is zero, which means the second row of the coefficient matrix is a multiple of the first, whatever the right-hand side is. For $x + 2y = 1$, $3x + ky = 0$, the second pivot is $k - 6$, which vanishes at $k = 6$.\n\n> **Watch out.** The second pivot is $k$ minus the multiplier times the first row's $y$-coefficient, so $k$ is a product, not a sum. The right-hand sides play no part.",
+    "对 $2 \\times 2$ 方程组消元，得到的第二个主元依赖于各个元素。当且仅当这个主元为零时消元失败，这意味着系数矩阵的第二行是第一行的倍数，与右端无关。对 $x + 2y = 1$，$3x + ky = 0$，第二个主元是 $k - 6$，在 $k = 6$ 时为零。\n\n> **注意。** 第二个主元是 $k$ 减去乘数与第一行 $y$ 系数之积，所以 $k$ 是积而不是和。右端常数不起作用。",
   ],
   (rng) => {
     const a = nz(rng, 6);
@@ -369,18 +431,51 @@ const breakdownK = point(
     const b = rng.int(-9, 9);
     const d = rng.int(-9, 9);
     const answer = a * c;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `For which $k$ does Gaussian elimination on $\\begin{cases} ${poly([1, "x"], [a, "y"])} = ${b} \\\\ ${poly([c, "x"], [1, "ky"])} = ${d} \\end{cases}$ give a second pivot of zero?`,
         `当 $k$ 为何值时，对 $\\begin{cases} ${poly([1, "x"], [a, "y"])} = ${b} \\\\ ${poly([c, "x"], [1, "ky"])} = ${d} \\end{cases}$ 做高斯消元时第二个主元为零？`,
-      ],
+      ]),
       answer,
-      [-answer, a + c, a],
-      [
-        `The operation $${poly([1, "R_{2}"], [-c, "R_{1}"])} \\to R_{2}$ leaves the second pivot $k - ${wrap(c)} \\cdot ${wrap(a)}$. This is zero when $k = ${answer}$.`,
-        `运算 $${poly([1, "R_{2}"], [-c, "R_{1}"])} \\to R_{2}$ 留下第二个主元 $k - ${wrap(c)} \\cdot ${wrap(a)}$。当 $k = ${answer}$ 时它为零。`,
-      ],
-    );
+      solveFor: "k",
+      mistakes: [
+        why(
+          -answer,
+          "The sign is flipped: the second pivot is $k$ minus the product, so $k$ equals the product.",
+          "符号反了：第二个主元是 $k$ 减去该积，所以 $k$ 等于这个积。",
+        ),
+        why(
+          a + c,
+          "That adds the entries; the multiplier multiplies the $y$-coefficient of row $1$.",
+          "这是把元素相加；乘数要乘以第 $1$ 行的 $y$ 系数。",
+        ),
+        why(
+          a,
+          "That is the $y$-coefficient of row $1$ alone; it must be multiplied by the multiplier.",
+          "这只是第 $1$ 行的 $y$ 系数；还要乘以乘数。",
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [
+            ["Clear the $x$-term", "消去 $x$ 项"],
+            t(
+              `Use $${poly([1, "R_{2}"], [-c, "R_{1}"])} \\to R_{2}$; the multiplier is $${c}$.`,
+              `用 $${poly([1, "R_{2}"], [-c, "R_{1}"])} \\to R_{2}$；乘数是 $${c}$。`,
+            ),
+          ],
+          [
+            ["Set the second pivot to zero", "令第二个主元为零"],
+            t("", ""),
+            [`k - ${wrap(c)} \\cdot ${wrap(a)} = 0 \\implies k = ${answer}`],
+          ],
+        ],
+        t(
+          `With $k = ${answer}$, row $2$ of the coefficients is $(${c}, ${answer}) = ${wrap(c)} \\cdot (1, ${a})$, a multiple of row $1$, so elimination leaves no pivot.`,
+          `$k = ${answer}$ 时，系数的第 $2$ 行为 $(${c}, ${answer}) = ${wrap(c)} \\cdot (1, ${a})$，是第 $1$ 行的倍数，所以消元后没有主元。`,
+        ),
+      ),
+    });
   },
 );
 

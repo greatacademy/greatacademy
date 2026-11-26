@@ -349,8 +349,8 @@ const countingLeibnizTerms: KnowledgePointDef = {
   id: "counting-the-terms-of-the-leibniz-formula",
   title: t("Counting the terms of the Leibniz formula", "数莱布尼茨公式的项"),
   explanation: t(
-    "Each term of the Leibniz formula takes exactly one entry from every row and every column, so an $n \\times n$ determinant has $n!$ terms. Once some entries are fixed, the remaining rows and columns can still be matched in any order: fixing $r$ entries in different rows and columns leaves $(n-r)!$ terms.",
-    "莱布尼茨公式的每一项都从每行每列各取一个元素，所以 $n$ 阶行列式有 $n!$ 项。固定一些元素后，其余的行和列仍可任意配对：固定不同行不同列的 $r$ 个元素，还剩 $(n-r)!$ 项。",
+    "Each term of the Leibniz formula takes exactly one entry from every row and every column, so an $n \\times n$ determinant has $n!$ terms. Once some entries are fixed, the remaining rows and columns can still be matched in any order: fixing $r$ entries in different rows and columns leaves $(n-r)!$ terms. In a $4 \\times 4$ determinant, $a_{23}$ appears in $3! = 6$ of the $24$ terms.\n\n> **Watch out.** Fixing an entry removes a whole row and a whole column, so the count drops from $n!$ to $(n-1)!$, not to $n! - 1$ or $n - 1$.",
+    "莱布尼茨公式的每一项都从每行每列各取一个元素，所以 $n$ 阶行列式有 $n!$ 项。固定一些元素后，其余的行和列仍可任意配对：固定不同行不同列的 $r$ 个元素，还剩 $(n-r)!$ 项。在四阶行列式中，$a_{23}$ 出现在 $24$ 项中的 $3! = 6$ 项里。\n\n> **注意。** 固定一个元素就去掉整整一行和一列，所以项数从 $n!$ 降到 $(n-1)!$，而不是 $n! - 1$ 或 $n - 1$。",
   ),
   generate(rng) {
     const n = rng.int(4, 7);
@@ -369,10 +369,44 @@ const countingLeibnizTerms: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [factorial(n), factorial(n - r + 1), n - r],
-      solution: t(
-        `${r === 1 ? "Fixing one entry uses up one row and one column" : "Fixing two entries uses up two rows and two columns"}. The other ${n - r} rows can be matched with the other ${n - r} columns in $${n - r}! = ${answer}$ ways.`,
-        `固定 ${r} 个元素用去 ${r} 行和 ${r} 列。其余 ${n - r} 行与其余 ${n - r} 列有 $${n - r}! = ${answer}$ 种配法。`,
+      mistakes: [
+        why(
+          factorial(n),
+          `That is the number of all terms; only those using the fixed ${r === 1 ? "entry" : "entries"} count.`,
+          `这是全部项数；只数用到固定元素的项。`,
+        ),
+        why(
+          factorial(n - r + 1),
+          `That fixes only one entry; fixing ${r} entries leaves $(${n} - ${r})!$ terms.`,
+          `这只固定了一个元素；固定 ${r} 个元素后剩 $(${n} - ${r})!$ 项。`,
+        ),
+        why(
+          n - r,
+          `That counts the remaining rows; they can be matched with the remaining columns in $(${n - r})!$ ways.`,
+          `这是剩下的行数；它们与剩下的列有 $(${n - r})!$ 种配法。`,
+        ),
+      ].filter((m, x, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === x),
+      solution: walked(
+        [
+          [
+            ["Remove the fixed rows and columns", "去掉固定的行和列"],
+            t(
+              `${r === 1 ? "Fixing one entry uses up one row and one column" : "Fixing two entries uses up two rows and two columns"}, leaving ${n - r} rows and ${n - r} columns.`,
+              `固定 ${r} 个元素用去 ${r} 行和 ${r} 列，还剩 ${n - r} 行和 ${n - r} 列。`,
+            ),
+          ],
+          [
+            ["Match the rest", "配对其余部分"],
+            t(
+              `The other rows can be matched with the other columns in $${n - r}! = ${answer}$ ways.`,
+              `其余各行与其余各列有 $${n - r}! = ${answer}$ 种配法。`,
+            ),
+          ],
+        ],
+        t(
+          `Every one of the $${n}! = ${factorial(n)}$ terms uses one entry of row ${i}; split among its ${n} entries, each appears in $\\frac{${factorial(n)}}{${n}} = ${factorial(n - 1)}$ terms${r === 1 ? "" : `, and the second fixed entry divides that count by ${n - 1}, giving $${answer}$`}.`,
+          `全部 $${n}! = ${factorial(n)}$ 项都各用第 ${i} 行的一个元素；分到它的 ${n} 个元素上，每个出现在 $\\frac{${factorial(n)}}{${n}} = ${factorial(n - 1)}$ 项中${r === 1 ? "" : `，第二个固定元素再把这个数除以 ${n - 1}，得 $${answer}$`}。`,
+        ),
       ),
     });
   },
@@ -382,8 +416,8 @@ const expandingAlongASparseRow: KnowledgePointDef = {
   id: "expanding-a-4x4-determinant-along-a-sparse-row",
   title: t("Expanding a 4×4 determinant along a sparse row", "沿零多的行展开四阶行列式"),
   explanation: t(
-    "Laplace expansion may use any row or column, and each zero removes a term. When a row has one nonzero entry, the determinant is that entry times its cofactor, a single $3 \\times 3$ determinant. Remember the sign $(-1)^{i+j}$ of the position.",
-    "拉普拉斯展开可以沿任何一行或一列，每个零都少一项。若某行只有一个非零元素，行列式就等于该元素乘它的代数余子式，也就是一个三阶行列式。别忘了位置的符号 $(-1)^{i+j}$。",
+    "Laplace expansion may use any row or column, and each zero removes a term. When a row has one nonzero entry, the determinant is that entry times its cofactor, a single $3 \\times 3$ determinant. Remember the sign $(-1)^{i+j}$ of the position. If row $2$ is $(0, 5, 0, 0)$, the determinant is $(-1)^{2+2} \\cdot 5 = 5$ times the minor of position $(2, 2)$.\n\n> **Watch out.** The cofactor is the minor with the sign $(-1)^{i+j}$, and the entry itself multiplies it. Leaving out either the sign or the entry gives the wrong value.",
+    "拉普拉斯展开可以沿任何一行或一列，每个零都少一项。若某行只有一个非零元素，行列式就等于该元素乘它的代数余子式，也就是一个三阶行列式。别忘了位置的符号 $(-1)^{i+j}$。若第 $2$ 行是 $(0, 5, 0, 0)$，行列式就是 $(-1)^{2+2} \\cdot 5 = 5$ 乘以 $(2, 2)$ 位置的余子式。\n\n> **注意。** 代数余子式是带符号 $(-1)^{i+j}$ 的余子式，还要乘以该元素本身。漏掉符号或元素都会得到错误的值。",
   ),
   generate(rng) {
     const row = rng.int(0, 3);
@@ -395,17 +429,57 @@ const expandingAlongASparseRow: KnowledgePointDef = {
         return j === column ? v : 0;
       }),
     );
-    const minor = det(m.filter((_, i) => i !== row).map((r) => r.filter((_, j) => j !== column)));
+    const sub = m.filter((_, i) => i !== row).map((r) => r.filter((_, j) => j !== column));
+    const minor = det(sub);
     const sign = (row + column) % 2 === 0 ? 1 : -1;
     const answer = sign * v * minor;
     return numberProblem({
       prompt: t(`Find $\\det ${mat(m)}$.`, `求 $\\det ${mat(m)}$。`),
       answer,
       form: "integer",
-      wrong: [-answer, minor, v * minor],
-      solution: t(
-        `Row ${row + 1} has one nonzero entry, $${v}$, in column ${column + 1}. Its sign is $(-1)^{${row + 1}+${column + 1}} = ${sign}$, and deleting its row and column leaves a determinant of $${minor}$. So the value is $${sign} \\cdot ${inParens(v)} \\cdot ${inParens(minor)} = ${answer}$.`,
-        `第 ${row + 1} 行只有一个非零元素 $${v}$，在第 ${column + 1} 列。它的符号是 $(-1)^{${row + 1}+${column + 1}} = ${sign}$，删去所在行列后的行列式为 $${minor}$。所以值为 $${sign} \\cdot ${inParens(v)} \\cdot ${inParens(minor)} = ${answer}$。`,
+      mistakes: [
+        why(
+          -answer,
+          `The sign of position $(${row + 1}, ${column + 1})$ is $(-1)^{${row + 1}+${column + 1}} = ${sign}$.`,
+          `位置 $(${row + 1}, ${column + 1})$ 的符号是 $(-1)^{${row + 1}+${column + 1}} = ${sign}$。`,
+        ),
+        why(
+          minor,
+          `That is the minor alone; it must still be multiplied by the entry $${v}$ and the sign $${sign}$.`,
+          `这只是余子式；还要乘以元素 $${v}$ 和符号 $${sign}$。`,
+        ),
+        why(
+          v * minor,
+          `The sign of the position is missing: $(-1)^{${row + 1}+${column + 1}} = ${sign}$.`,
+          `漏了位置的符号：$(-1)^{${row + 1}+${column + 1}} = ${sign}$。`,
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [
+            ["Expand along the sparse row", "沿零多的行展开"],
+            t(
+              `Row ${row + 1} has one nonzero entry, $${v}$, in column ${column + 1}, with sign $(-1)^{${row + 1}+${column + 1}} = ${sign}$.`,
+              `第 ${row + 1} 行只有一个非零元素 $${v}$，在第 ${column + 1} 列，符号为 $(-1)^{${row + 1}+${column + 1}} = ${sign}$。`,
+            ),
+          ],
+          [
+            ["Find the minor", "求余子式"],
+            t("Deleting its row and column leaves", "删去所在的行和列，剩下"),
+            [`\\det ${mat(sub)} = ${minor}`],
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `$${sign} \\cdot ${inParens(v)} \\cdot ${inParens(minor)} = ${answer}$.`,
+              `$${sign} \\cdot ${inParens(v)} \\cdot ${inParens(minor)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The other three entries of row ${row + 1} are $0$, so their terms vanish and $${answer}$ is the whole determinant.`,
+          `第 ${row + 1} 行的其余三个元素都是 $0$，它们的项都消失，所以 $${answer}$ 就是整个行列式。`,
+        ),
       ),
     });
   },
@@ -415,8 +489,8 @@ const whenCramerFails: KnowledgePointDef = {
   id: "the-parameter-where-cramers-rule-does-not-apply",
   title: t("The parameter where Cramer's rule does not apply", "克拉默法则失效时的参数"),
   explanation: t(
-    "Cramer's rule divides by the determinant of the coefficient matrix, so it applies only when that determinant is not zero. For a system with a parameter, write the determinant in terms of the parameter and find where it vanishes.",
-    "克拉默法则要除以系数矩阵的行列式，所以只有行列式不为零时才适用。对含参数的方程组，把行列式写成参数的式子，找出它为零的位置。",
+    "Cramer's rule divides by the determinant of the coefficient matrix, so it applies only when that determinant is not zero. For a system with a parameter, write the determinant in terms of the parameter and find where it vanishes. For $x + 2y = 1$, $3x + ky = 4$, the determinant is $k - 6$, so the rule fails at $k = 6$.\n\n> **Watch out.** Only the coefficients enter the determinant, never the right-hand sides. Solve $ak - bc = 0$ for $k$; do not stop at the product $bc$.",
+    "克拉默法则要除以系数矩阵的行列式，所以只有行列式不为零时才适用。对含参数的方程组，把行列式写成参数的式子，找出它为零的位置。对 $x + 2y = 1$，$3x + ky = 4$，行列式是 $k - 6$，所以在 $k = 6$ 时法则失效。\n\n> **注意。** 只有系数进入行列式，右端常数从不进入。要从 $ak - bc = 0$ 解出 $k$，不能停在积 $bc$ 上。",
   ),
   generate(rng) {
     const a = rng.pick([1, 2, -1, -2]);
@@ -431,10 +505,37 @@ const whenCramerFails: KnowledgePointDef = {
       ),
       answer: k,
       solveFor: "k",
-      wrong: [-k, b * c, a * c],
-      solution: t(
-        `The determinant of the coefficient matrix is $${a}k - ${inParens(b)}(${c})$. It is zero when $k = ${k}$, and the rule would then divide by zero.`,
-        `系数矩阵的行列式是 $${a}k - ${inParens(b)}(${c})$。当 $k = ${k}$ 时它为零，这时法则要除以零。`,
+      mistakes: [
+        why(-k, "The sign is flipped: $ak - bc = 0$ gives $k = \\frac{bc}{a}$.", "符号反了：由 $ak - bc = 0$ 得 $k = \\frac{bc}{a}$。"),
+        why(
+          b * c,
+          `That is the product $bc$; it still has to be divided by the coefficient $${a}$ of $k$.`,
+          `这是积 $bc$；还要除以 $k$ 的系数 $${a}$。`,
+        ),
+        why(
+          a * c,
+          "That multiplies the two $x$-coefficients; the determinant pairs the diagonal entries and the off-diagonal entries.",
+          "这把两个 $x$ 系数相乘了；行列式是对角元之积减去非对角元之积。",
+        ),
+      ].filter((w, i, all) => w.value !== k && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the determinant", "写出行列式"],
+            t("", ""),
+            [
+              `\\det ${mat([
+                [a, b],
+                [c, "k"],
+              ])} = ${a}k - ${inParens(b)}(${c})`,
+            ],
+          ],
+          [["Set it to zero", "令它为零"], t(`$${a}k = ${b * c}$, so $k = ${k}$.`, `$${a}k = ${b * c}$，所以 $k = ${k}$。`)],
+        ],
+        t(
+          `At $k = ${k}$ the determinant is $${a} \\cdot ${inParens(k)} - ${b * c < 0 ? `(${b * c})` : b * c} = 0$, and the rule would divide by zero.`,
+          `$k = ${k}$ 时行列式为 $${a} \\cdot ${inParens(k)} - ${b * c < 0 ? `(${b * c})` : b * c} = 0$，这时法则要除以零。`,
+        ),
       ),
     });
   },
@@ -444,8 +545,8 @@ const determinantOfACombination: KnowledgePointDef = {
   id: "the-determinant-of-a-product-of-a-scalar-a-transpose-and-an-inverse",
   title: t("The determinant of a scaled product with a transpose and an inverse", "含数乘、转置和逆的乘积的行列式"),
   explanation: t(
-    "Determinants multiply, a transpose keeps the determinant, and an inverse takes its reciprocal. A scalar multiplies every row, so for an $n \\times n$ matrix $\\det(cA) = c^n \\det A$, with the power $n$ and not $1$.",
-    "行列式对乘积可乘，转置不改变行列式，取逆则变为倒数。数乘作用于每一行，所以 $n$ 阶矩阵满足 $\\det(cA) = c^n \\det A$，指数是 $n$ 而不是 $1$。",
+    "Determinants multiply, a transpose keeps the determinant, and an inverse takes its reciprocal. A scalar multiplies every row, so for an $n \\times n$ matrix $\\det(cA) = c^n \\det A$, with the power $n$ and not $1$. For $3 \\times 3$ matrices with $\\det A = 2$ and $\\det B = 4$: $\\det(2A^T B^{-1}) = 8 \\cdot 2 \\cdot \\frac{1}{4} = 4$.\n\n> **Watch out.** The inverse puts $\\det B$ in the denominator, not $\\det A$. The scalar enters as $c^n$, once for each row.",
+    "行列式对乘积可乘，转置不改变行列式，取逆则变为倒数。数乘作用于每一行，所以 $n$ 阶矩阵满足 $\\det(cA) = c^n \\det A$，指数是 $n$ 而不是 $1$。对 $\\det A = 2$、$\\det B = 4$ 的三阶矩阵：$\\det(2A^T B^{-1}) = 8 \\cdot 2 \\cdot \\frac{1}{4} = 4$。\n\n> **注意。** 求逆使 $\\det B$ 进入分母，而不是 $\\det A$。数乘以 $c^n$ 的形式出现，每行一次。",
   ),
   generate(rng) {
     const n = rng.int(2, 4);
@@ -453,16 +554,45 @@ const determinantOfACombination: KnowledgePointDef = {
     const a = nonzero(rng, 5);
     const b = rng.pick([1, -1, 2, -2, 4]);
     const answer = Q.of(c ** n * a, b);
+    const asQ = (v: number | Q): Q => (typeof v === "number" ? Q.of(v) : v);
     return numberProblem({
       prompt: t(
         `$A$ and $B$ are ${n}×${n} matrices with $\\det A = ${a}$ and $\\det B = ${b}$. Find $\\det(${c}A^{T}B^{-1})$.`,
         `$A$、$B$ 是 ${n} 阶矩阵，$\\det A = ${a}$，$\\det B = ${b}$。求 $\\det(${c}A^{T}B^{-1})$。`,
       ),
       answer,
-      wrong: [Q.of(c * a, b), c ** n * a * b, Q.of(c ** n * b, a)],
-      solution: t(
-        `The scalar contributes $(${c})^{${n}} = ${c ** n}$, the transpose keeps $${a}$, and the inverse gives $\\frac{1}{${b}}$. Together that is $${answer.toLatex()}$.`,
-        `数乘贡献 $(${c})^{${n}} = ${c ** n}$，转置保持 $${a}$，取逆得 $\\frac{1}{${b}}$。合起来是 $${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(c * a, b),
+          `The scalar multiplies all ${n} rows, so it contributes $(${c})^{${n}}$, not $${c}$.`,
+          `数乘作用于全部 ${n} 行，所以贡献 $(${c})^{${n}}$，不是 $${c}$。`,
+        ),
+        why(
+          c ** n * a * b,
+          "The inverse takes the reciprocal: $\\det B^{-1} = \\frac{1}{\\det B}$.",
+          "取逆是取倒数：$\\det B^{-1} = \\frac{1}{\\det B}$。",
+        ),
+        why(
+          Q.of(c ** n * b, a),
+          "The inverse is on $B$, so $\\det B$ goes in the denominator, not $\\det A$.",
+          "求逆的是 $B$，所以 $\\det B$ 在分母，而不是 $\\det A$。",
+        ),
+      ].filter((w, x, all) => !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === x),
+      solution: walked(
+        [
+          [["Split the product", "拆开乘积"], t("", ""), [`\\det(${c}A^{T}B^{-1}) = (${c})^{${n}} \\det(A^{T}) \\det(B^{-1})`]],
+          [
+            ["Use each rule", "逐项用规则"],
+            t(
+              `$(${c})^{${n}} = ${c ** n}$, $\\det A^T = ${a}$ and $\\det B^{-1} = \\frac{1}{${b}}$, so the product is $${answer.toLatex()}$.`,
+              `$(${c})^{${n}} = ${c ** n}$，$\\det A^T = ${a}$，$\\det B^{-1} = \\frac{1}{${b}}$，所以乘积为 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Multiplying back by $\\det B = ${b}$ gives $${answer.toLatex()} \\cdot ${inParens(b)} = ${c ** n * a} = ${c ** n} \\cdot ${inParens(a)}$, the determinant of $${c}A^{T}$.`,
+          `再乘回 $\\det B = ${b}$，得 $${answer.toLatex()} \\cdot ${inParens(b)} = ${c ** n * a} = ${c ** n} \\cdot ${inParens(a)}$，正是 $${c}A^{T}$ 的行列式。`,
+        ),
       ),
     });
   },
@@ -2758,8 +2888,8 @@ const numeratorDeterminant: KnowledgePointDef = {
   id: "the-numerator-determinant-in-cramers-rule",
   title: t("The numerator determinant in Cramer's rule", "克拉默法则中分子的行列式"),
   explanation: t(
-    "Cramer's rule says that an unknown of the system $A\\mathbf{x} = \\mathbf{b}$ equals $\\frac{\\det A_j}{\\det A}$, where $A_j$ is the matrix $A$ with its $j$th column replaced by $\\mathbf{b}$. The rule can be read backwards as well. If the value of an unknown and the determinant of $A$ are known, the determinant of $A_j$ is their product, and it can be found without seeing a single entry of either matrix.",
-    "克拉默法则指出，方程组 $A\\mathbf{x} = \\mathbf{b}$ 的未知数等于 $\\frac{\\det A_j}{\\det A}$，其中 $A_j$ 是把 $A$ 的第 $j$ 列换成 $\\mathbf{b}$ 得到的矩阵。这个法则也可以反过来读。如果知道未知数的值和 $A$ 的行列式，$A_j$ 的行列式就是它们的积，不必看到两个矩阵的任何元素就能求出。",
+    "Cramer's rule says that an unknown of the system $A\\mathbf{x} = \\mathbf{b}$ equals $\\frac{\\det A_j}{\\det A}$, where $A_j$ is the matrix $A$ with its $j$th column replaced by $\\mathbf{b}$. The rule can be read backwards as well. If the value of an unknown and the determinant of $A$ are known, the determinant of $A_j$ is their product, and it can be found without seeing a single entry of either matrix. With $\\det A = 4$ and $x_2 = -3$: $\\det A_2 = -12$.\n\n> **Watch out.** $\\det A_j$ is the numerator, so it is the product $x_j \\det A$, not a sum or a quotient. Keep the signs of both factors.",
+    "克拉默法则指出，方程组 $A\\mathbf{x} = \\mathbf{b}$ 的未知数等于 $\\frac{\\det A_j}{\\det A}$，其中 $A_j$ 是把 $A$ 的第 $j$ 列换成 $\\mathbf{b}$ 得到的矩阵。这个法则也可以反过来读。如果知道未知数的值和 $A$ 的行列式，$A_j$ 的行列式就是它们的积，不必看到两个矩阵的任何元素就能求出。$\\det A = 4$、$x_2 = -3$ 时：$\\det A_2 = -12$。\n\n> **注意。** $\\det A_j$ 是分子，所以它是积 $x_j \\det A$，不是和也不是商。两个因子的符号都要保留。",
   ),
   generate(rng) {
     // A factor of size one would make the answer one of the numbers given.
@@ -2774,10 +2904,30 @@ const numeratorDeterminant: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, d + k, answer + 1, 2 * answer, answer - 1],
-      solution: t(
-        `By Cramer's rule, $x_{${j}} = \\frac{\\det A_{${j}}}{\\det A}$. So $\\det A_{${j}} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$.`,
-        `由克拉默法则，$x_{${j}} = \\frac{\\det A_{${j}}}{\\det A}$。所以 $\\det A_{${j}} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$。`,
+      mistakes: [
+        why(
+          -answer,
+          "The sign is flipped: multiply $x_j$ and $\\det A$ with both of their signs.",
+          "符号反了：把 $x_j$ 与 $\\det A$ 连同符号相乘。",
+        ),
+        why(
+          d + k,
+          "That adds the two numbers; Cramer's rule makes $\\det A_j$ their product.",
+          "这是两数相加；由克拉默法则，$\\det A_j$ 是它们的积。",
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [["Write Cramer's rule", "写出克拉默法则"], t("", ""), [`x_{${j}} = \\frac{\\det A_{${j}}}{\\det A}`]],
+          [
+            ["Multiply by $\\det A$", "乘以 $\\det A$"],
+            t(
+              `$\\det A_{${j}} = x_{${j}} \\det A = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$.`,
+              `$\\det A_{${j}} = x_{${j}} \\det A = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(`$\\frac{${answer}}{${d}} = ${k} = x_{${j}}$, as given.`, `$\\frac{${answer}}{${d}} = ${k} = x_{${j}}$，与已知相符。`),
       ),
     });
   },
@@ -2787,8 +2937,8 @@ const determinantAfterOperations: KnowledgePointDef = {
   id: "the-determinant-after-a-sequence-of-row-operations",
   title: t("The determinant after a sequence of row operations", "一系列行变换后的行列式"),
   explanation: t(
-    "Each kind of row operation has its own effect on a determinant, and in a sequence the effects simply multiply. Swapping two rows changes the sign, and multiplying a row by $c$ multiplies the determinant by $c$. Adding a multiple of one row to another changes nothing at all, however large that multiple is. So in a long sequence, only the swaps and the scalings need to be tracked, and the order does not matter.",
-    "每种行变换对行列式都有各自的影响，在一系列变换中这些影响直接相乘。交换两行改变符号，把一行乘以 $c$ 使行列式乘以 $c$。把一行的倍数加到另一行则完全不改变行列式，不管这个倍数多大。所以在一长串变换中，只需跟踪交换和数乘，顺序无关紧要。",
+    "Each kind of row operation has its own effect on a determinant, and in a sequence the effects simply multiply. Swapping two rows changes the sign, and multiplying a row by $c$ multiplies the determinant by $c$. Adding a multiple of one row to another changes nothing at all, however large that multiple is. So in a long sequence, only the swaps and the scalings need to be tracked, and the order does not matter. From $\\det = 3$, two swaps and doubling a row give $6$.\n\n> **Watch out.** Two swaps cancel each other, and the multiple in a row addition never enters the answer. Count the swaps and multiply the scalings, nothing else.",
+    "每种行变换对行列式都有各自的影响，在一系列变换中这些影响直接相乘。交换两行改变符号，把一行乘以 $c$ 使行列式乘以 $c$。把一行的倍数加到另一行则完全不改变行列式，不管这个倍数多大。所以在一长串变换中，只需跟踪交换和数乘，顺序无关紧要。由 $\\det = 3$ 出发，两次交换再把某行乘以 $2$，得 $6$。\n\n> **注意。** 两次交换相互抵消，行倍加中的倍数从不进入答案。只数交换次数、乘上数乘因子，别的都不用管。",
   ),
   generate(rng) {
     const d = nonzero(rng, 9);
@@ -2808,10 +2958,50 @@ const determinantAfterOperations: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, answer * m, answer + m, d, c + d],
-      solution: t(
-        `${swaps === 1 ? "The swap changes the sign" : "The two swaps cancel"}, the scaling multiplies by ${c}, and adding a multiple of a row changes nothing. So the result is $${answer}$.`,
-        `${swaps === 1 ? "交换改变符号" : "两次交换相互抵消"}，数乘使行列式乘以 ${c}，加上一行的倍数不改变行列式。所以结果是 $${answer}$。`,
+      mistakes: [
+        why(
+          -answer,
+          swaps === 1
+            ? "The swap changes the sign; that factor $-1$ is missing."
+            : "Two swaps cancel: the sign changes twice and comes back.",
+          swaps === 1 ? "交换改变符号；漏了因子 $-1$。" : "两次交换相互抵消：符号变两次又变回来。",
+        ),
+        why(
+          answer * m,
+          `Adding $${m}$ times a row to another leaves the determinant unchanged; $${m}$ does not enter the answer.`,
+          `把一行的 $${m}$ 倍加到另一行不改变行列式；$${m}$ 不进入答案。`,
+        ),
+        why(
+          answer + m,
+          `A row addition adds nothing to the determinant, $${m}$ or otherwise.`,
+          `行倍加不会给行列式加上任何数，包括 $${m}$。`,
+        ),
+        why(d, `Multiplying row 3 by ${c} multiplies the determinant by ${c}.`, `第 3 行乘以 ${c}，行列式就乘以 ${c}。`),
+        why(
+          c + d,
+          `Scaling a row multiplies the determinant by ${c}; it does not add ${c}.`,
+          `数乘一行是使行列式乘以 ${c}，不是加上 ${c}。`,
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [
+            ["Find each factor", "求每个因子"],
+            t(
+              `${swaps === 1 ? "The swap gives $-1$" : "The two swaps give $(-1)^2 = 1$"}, the scaling gives ${c}, and the row addition gives $1$.`,
+              `${swaps === 1 ? "交换给出 $-1$" : "两次交换给出 $(-1)^2 = 1$"}，数乘给出 ${c}，行倍加给出 $1$。`,
+            ),
+          ],
+          [
+            ["Multiply them into the determinant", "乘到行列式上"],
+            t("", ""),
+            [`${sign} \\cdot ${c} \\cdot 1 \\cdot ${inParens(d)} = ${answer}`],
+          ],
+        ],
+        t(
+          `Undoing the operations, $${answer}$ divided by ${c} and multiplied by $${sign}$ gives back $${d}$.`,
+          `撤销这些变换：$${answer}$ 除以 ${c} 再乘以 $${sign}$，又得到 $${d}$。`,
+        ),
       ),
     });
   },
@@ -2821,8 +3011,8 @@ const equalOffDiagonalSingular: KnowledgePointDef = {
   id: "the-parameter-that-makes-an-equal-off-diagonal-matrix-singular",
   title: t("The parameter that makes an equal off-diagonal matrix singular", "使非对角元相等的矩阵奇异的参数"),
   explanation: t(
-    "A determinant with a pattern can often be factored by row operations instead of being expanded. In a matrix with $x$ on the diagonal and one constant $a$ everywhere else, every row has the same sum $x + 2a$. Adding all the rows to the first makes this a common factor. Subtracting $a$ times that row of ones from the others then leaves a triangular matrix, and the determinant is $(x - a)^2(x + 2a)$.",
-    "有规律的行列式常常可以用行变换分解因式，而不必展开。对角线上是 $x$、其他位置都是常数 $a$ 的矩阵，每一行的和都是 $x + 2a$。把所有行加到第一行，这就成为公因子。再从其他行减去这个全 1 行的 $a$ 倍，就得到三角矩阵，行列式是 $(x - a)^2(x + 2a)$。",
+    "A determinant with a pattern can often be factored by row operations instead of being expanded. In a matrix with $x$ on the diagonal and one constant $a$ everywhere else, every row has the same sum $x + 2a$. Adding all the rows to the first makes this a common factor. Subtracting $a$ times that row of ones from the others then leaves a triangular matrix, and the determinant is $(x - a)^2(x + 2a)$. With $a = 3$ the matrix is singular at $x = 3$ and at $x = -6$.\n\n> **Watch out.** The second root comes from the row sum $x + 2a$, so it is $-2a$, not $-a$. There are two off-diagonal entries in each row.",
+    "有规律的行列式常常可以用行变换分解因式，而不必展开。对角线上是 $x$、其他位置都是常数 $a$ 的矩阵，每一行的和都是 $x + 2a$。把所有行加到第一行，这就成为公因子。再从其他行减去这个全 1 行的 $a$ 倍，就得到三角矩阵，行列式是 $(x - a)^2(x + 2a)$。$a = 3$ 时，矩阵在 $x = 3$ 和 $x = -6$ 时奇异。\n\n> **注意。** 第二个根来自行和 $x + 2a$，所以是 $-2a$，不是 $-a$。每行有两个非对角元素。",
   ),
   generate(rng) {
     const a = nonzero(rng, 20);
@@ -2842,10 +3032,46 @@ const equalOffDiagonalSingular: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-a, 2 * a, 3 * a, -3 * a],
-      solution: t(
-        `Each row has the sum $${poly([1, "x"], [2 * a, ""])}$, and row operations give the determinant $(${poly([1, "x"], [-a, ""])})^2(${poly([1, "x"], [2 * a, ""])})$. So the other value is $x = ${answer}$.`,
-        `每一行的和都是 $${poly([1, "x"], [2 * a, ""])}$，行变换给出行列式 $(${poly([1, "x"], [-a, ""])})^2(${poly([1, "x"], [2 * a, ""])})$。所以另一个值是 $x = ${answer}$。`,
+      mistakes: [
+        why(
+          -a,
+          "Each row has two off-diagonal entries, so the row sum is $x + 2a$ and the root is $-2a$.",
+          "每行有两个非对角元，所以行和是 $x + 2a$，根是 $-2a$。",
+        ),
+        why(2 * a, "The sign is flipped: $x + 2a = 0$ gives $x = -2a$.", "符号反了：由 $x + 2a = 0$ 得 $x = -2a$。"),
+        why(3 * a, "The row sum is $x + 2a$; setting it to zero gives $-2a$.", "行和是 $x + 2a$；令它为零得 $-2a$。"),
+        why(
+          -3 * a,
+          "The row sum has the diagonal $x$ plus two copies of $a$, so the root is $-2a$.",
+          "行和是对角元 $x$ 加上两个 $a$，所以根是 $-2a$。",
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [
+            ["Factor out the row sum", "提出行和"],
+            t(
+              `Each row has the sum $${poly([1, "x"], [2 * a, ""])}$; adding all rows to the first makes it a common factor.`,
+              `每一行的和都是 $${poly([1, "x"], [2 * a, ""])}$；把所有行加到第一行，它就成为公因子。`,
+            ),
+          ],
+          [
+            ["Reduce to triangular form", "化为三角形"],
+            t("Subtracting multiples of the row of ones leaves", "减去全 1 行的倍数后得"),
+            [`\\det = (${poly([1, "x"], [-a, ""])})^2(${poly([1, "x"], [2 * a, ""])})`],
+          ],
+          [
+            ["Find the other root", "求另一个根"],
+            t(
+              `The factor $${poly([1, "x"], [2 * a, ""])}$ vanishes at $x = ${answer}$.`,
+              `因子 $${poly([1, "x"], [2 * a, ""])}$ 在 $x = ${answer}$ 时为零。`,
+            ),
+          ],
+        ],
+        t(
+          `At $x = ${answer}$ each row sums to $${answer} + ${inParens(a)} + ${inParens(a)} = 0$, so the columns add up to the zero vector and the matrix is singular.`,
+          `$x = ${answer}$ 时每行之和为 $${answer} + ${inParens(a)} + ${inParens(a)} = 0$，所以各列之和是零向量，矩阵奇异。`,
+        ),
       ),
     });
   },
@@ -2855,8 +3081,8 @@ const firstUnknownOfBidiagonal: KnowledgePointDef = {
   id: "the-first-unknown-of-a-4x4-bidiagonal-system",
   title: t("The first unknown of a 4×4 bidiagonal system", "4×4 双对角方程组的第一个未知数"),
   explanation: t(
-    "In a triangular system with only one extra term in each equation, back substitution becomes a short chain. The last equation gives the last unknown at once, and each equation above it uses only the value just found. So the work grows with the number of equations, not its square, and this is why banded systems are so cheap to solve. The first unknown is found last, and any slip along the chain will reach it.",
-    "在每个方程只多一项的三角方程组中，回代变成一条短链。最后一个方程直接给出最后一个未知数，它上面的每个方程只用刚求出的值。所以工作量随方程个数增长，而不是随其平方增长，这就是带状方程组容易求解的原因。第一个未知数最后求出，链上的任何差错都会影响它。",
+    "In a triangular system with only one extra term in each equation, back substitution becomes a short chain. The last equation gives the last unknown at once, and each equation above it uses only the value just found. So the work grows with the number of equations, not its square, and this is why banded systems are so cheap to solve. The first unknown is found last, and any slip along the chain will reach it. From $x_2 = 4$ and $x_1 + 3x_2 = 10$: $x_1 = 10 - 12 = -2$.\n\n> **Watch out.** Each step uses the value just found, not the right-hand side above it. The constant of the first equation is not $x_1$ until the $x_2$ term is moved across.",
+    "在每个方程只多一项的三角方程组中，回代变成一条短链。最后一个方程直接给出最后一个未知数，它上面的每个方程只用刚求出的值。所以工作量随方程个数增长，而不是随其平方增长，这就是带状方程组容易求解的原因。第一个未知数最后求出，链上的任何差错都会影响它。由 $x_2 = 4$ 与 $x_1 + 3x_2 = 10$：$x_1 = 10 - 12 = -2$。\n\n> **注意。** 每一步用刚求出的值，而不是上面一个方程的右端。第一个方程的常数要先移走 $x_2$ 项才是 $x_1$。",
   ),
   generate(rng) {
     const [a, b, c] = [nonzero(rng, 4), nonzero(rng, 4), nonzero(rng, 4)];
@@ -2872,10 +3098,48 @@ const firstUnknownOfBidiagonal: KnowledgePointDef = {
       prompt: t(`Solve by back substitution: $${system}$. Find $x_1$.`, `用回代求解：$${system}$。求 $x_1$。`),
       answer,
       form: "integer",
-      wrong: [r1, x2, r1 - a * r2, -answer, answer + 1, answer + 2, answer - 1],
-      solution: t(
-        `Working upward, $x_3 = ${x3}$, then $x_2 = ${x2}$, and then $x_1 = ${r1} ${a > 0 ? "-" : "+"} ${Math.abs(a)} \\cdot ${inParens(x2)} = ${answer}$.`,
-        `自下而上，$x_3 = ${x3}$，然后 $x_2 = ${x2}$，再得 $x_1 = ${r1} ${a > 0 ? "-" : "+"} ${Math.abs(a)} \\cdot ${inParens(x2)} = ${answer}$。`,
+      mistakes: [
+        why(
+          r1,
+          "That is the constant of the first equation; the term with $x_2$ still has to be moved across.",
+          "这是第一个方程的常数；还要把含 $x_2$ 的项移过去。",
+        ),
+        why(x2, "That is $x_2$; one more step up the chain gives $x_1$.", "这是 $x_2$；沿链再往上一步才得到 $x_1$。"),
+        why(
+          r1 - a * r2,
+          "That uses the constant of the second equation in place of $x_2$; substitute the value of $x_2$ found from it.",
+          "这用第二个方程的常数代替了 $x_2$；要代入由它求出的 $x_2$ 的值。",
+        ),
+        why(-answer, "The sign is flipped: move the $x_2$ term across with its sign.", "符号反了：把 $x_2$ 项连同符号移过去。"),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [
+            ["Find $x_3$", "求 $x_3$"],
+            t(
+              `$x_3 = ${r3} - ${inParens(c)} \\cdot ${inParens(x4)} = ${x3}$.`,
+              `$x_3 = ${r3} - ${inParens(c)} \\cdot ${inParens(x4)} = ${x3}$。`,
+            ),
+          ],
+          [
+            ["Find $x_2$", "求 $x_2$"],
+            t(
+              `$x_2 = ${r2} - ${inParens(b)} \\cdot ${inParens(x3)} = ${x2}$.`,
+              `$x_2 = ${r2} - ${inParens(b)} \\cdot ${inParens(x3)} = ${x2}$。`,
+            ),
+          ],
+          [
+            ["Find $x_1$", "求 $x_1$"],
+            t(
+              `$x_1 = ${r1} - ${inParens(a)} \\cdot ${inParens(x2)} = ${answer}$.`,
+              `$x_1 = ${r1} - ${inParens(a)} \\cdot ${inParens(x2)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `In the first equation, $${answer} + ${inParens(a)} \\cdot ${inParens(x2)} = ${r1}$.`,
+          `代入第一个方程：$${answer} + ${inParens(a)} \\cdot ${inParens(x2)} = ${r1}$。`,
+        ),
       ),
     });
   },

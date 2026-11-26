@@ -9,8 +9,10 @@ import { Q, svgDocument } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
+import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure over the plane from -r to r, with its description in both languages. */
@@ -130,8 +132,8 @@ const cramerFromDrawing = point(
   "a-cramer-determinant-from-the-crossing-of-two-lines",
   ["A Cramer determinant from the crossing of two lines", "由两直线的交点求克莱姆行列式"],
   [
-    "The crossing of the two lines of a system is its solution. Cramer's rule says $x = \\frac{D_x}{D}$ and $y = \\frac{D_y}{D}$, so the coordinates of the crossing and $D$ together give $D_x$ and $D_y$.",
-    "方程组两条直线的交点就是它的解。克莱姆法则给出 $x = \\frac{D_x}{D}$，$y = \\frac{D_y}{D}$，所以交点坐标和 $D$ 一起给出 $D_x$ 和 $D_y$。",
+    "The crossing of the two lines of a system is its solution. Cramer's rule says $x = \\frac{D_x}{D}$ and $y = \\frac{D_y}{D}$, so the coordinates of the crossing and $D$ together give $D_x$ and $D_y$. If the lines cross at $(2, -1)$ and $D = 5$: $D_x = 10$ and $D_y = -5$.\n\n> **Watch out.** $D_x$ goes with the $x$-coordinate and $D_y$ with the $y$-coordinate, and each is a product with $D$, not a sum.",
+    "方程组两条直线的交点就是它的解。克莱姆法则给出 $x = \\frac{D_x}{D}$，$y = \\frac{D_y}{D}$，所以交点坐标和 $D$ 一起给出 $D_x$ 和 $D_y$。若两直线交于 $(2, -1)$ 且 $D = 5$：$D_x = 10$，$D_y = -5$。\n\n> **注意。** $D_x$ 对应 $x$ 坐标，$D_y$ 对应 $y$ 坐标，而且都是与 $D$ 的积，不是和。",
   ],
   (rng) => {
     const x0 = rng.int(-4, 4);
@@ -144,18 +146,52 @@ const cramerFromDrawing = point(
     const name = askX ? "D_x" : "D_y";
     const other = askX ? y0 : x0;
     const here: Point = [x0, y0];
-    return ask(
-      [
-        `The drawn lines are the two equations of a $2 \\times 2$ system whose coefficient determinant is $D = ${D}$. Using Cramer's rule, find $${name}$.`,
-        `所画的直线是一个 $2 \\times 2$ 方程组的两个方程，其系数行列式 $D = ${D}$。用克莱姆法则求 $${name}$。`,
-      ],
-      value * D,
-      [other * D, -value * D, value + D, value - D],
-      [
-        `The lines cross at $${at(here)}$, so $${askX ? "x" : "y"} = ${value}$. Since $${askX ? "x" : "y"} = \\frac{${name}}{D}$, we get $${name} = ${value}(${D}) = ${value * D}$.`,
-        `两直线交于 $${at(here)}$，所以 $${askX ? "x" : "y"} = ${value}$。由 $${askX ? "x" : "y"} = \\frac{${name}}{D}$ 得 $${name} = ${value}(${D}) = ${value * D}$。`,
-      ],
-      fig(
+    const answer = value * D;
+    const coord = askX ? "x" : "y";
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The drawn lines are the two equations of a $2 \\times 2$ system whose coefficient determinant is $D = ${D}$. Using Cramer's rule, find $${name}$.`,
+          `所画的直线是一个 $2 \\times 2$ 方程组的两个方程，其系数行列式 $D = ${D}$。用克莱姆法则求 $${name}$。`,
+        ),
+        answer,
+        mistakes: [
+          why(
+            other * D,
+            `That uses the other coordinate; $${name}$ goes with $${coord}$.`,
+            `这用了另一个坐标；$${name}$ 对应 $${coord}$。`,
+          ),
+          why(
+            -answer,
+            "The sign is flipped: multiply the coordinate and $D$ with both of their signs.",
+            "符号反了：坐标与 $D$ 连同符号相乘。",
+          ),
+          why(
+            value + D,
+            `Cramer's rule gives $${coord} = \\frac{${name}}{D}$, so $${name}$ is a product, not a sum.`,
+            `克莱姆法则给出 $${coord} = \\frac{${name}}{D}$，所以 $${name}$ 是积而不是和。`,
+          ),
+          why(value - D, `$${name}$ is the coordinate times $D$, not their difference.`, `$${name}$ 是坐标乘以 $D$，不是两者之差。`),
+        ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+        solution: walked(
+          [
+            [
+              ["Read the crossing", "读出交点"],
+              t(`The lines cross at $${at(here)}$, so $${coord} = ${value}$.`, `两直线交于 $${at(here)}$，所以 $${coord} = ${value}$。`),
+            ],
+            [
+              ["Use Cramer's rule", "用克莱姆法则"],
+              t("", ""),
+              [`${coord} = \\frac{${name}}{D} \\implies ${name} = ${value} \\cdot ${D < 0 ? `(${D})` : D} = ${answer}`],
+            ],
+          ],
+          t(
+            `$\\frac{${answer}}{${D}} = ${value}$, the ${coord}-coordinate of the crossing.`,
+            `$\\frac{${answer}}{${D}} = ${value}$，正是交点的 ${coord} 坐标。`,
+          ),
+        ),
+      }),
+      figure: fig(
         6,
         [
           { kind: "line", a: here, b: [x0 + u[0], y0 + u[1]], accent: true },
@@ -163,7 +199,7 @@ const cramerFromDrawing = point(
         ],
         [`Two lines crossing at ${at(here)}.`, `两条直线相交于 ${at(here)}。`],
       ),
-    );
+    };
   },
 );
 
@@ -295,8 +331,8 @@ const furtherDeterminant = point(
   "determinant-rules-from-a-drawn-pair-of-columns",
   ["Determinant rules from a drawn pair of columns", "由所画的两列用行列式性质计算"],
   [
-    "The two arrows are the columns of the matrix, so their coordinates give every entry. Read the columns and compute $\\det A = a_{11}a_{22} - a_{12}a_{21}$. Then use $\\det(A^2) = (\\det A)^2$, $\\det(kA) = k^2 \\det A$ for a $2 \\times 2$ matrix, and $\\det(A^{\\mathsf{T}}) = \\det A$.",
-    "两个箭头是矩阵的列，所以它们的坐标给出每个元素。读出两列并计算 $\\det A = a_{11}a_{22} - a_{12}a_{21}$。再用 $\\det(A^2) = (\\det A)^2$，$2 \\times 2$ 矩阵的 $\\det(kA) = k^2 \\det A$，以及 $\\det(A^{\\mathsf{T}}) = \\det A$。",
+    "The two arrows are the columns of the matrix, so their coordinates give every entry. Read the columns and compute $\\det A = a_{11}a_{22} - a_{12}a_{21}$. Then use $\\det(A^2) = (\\det A)^2$, $\\det(kA) = k^2 \\det A$ for a $2 \\times 2$ matrix, and $\\det(A^{\\mathsf{T}}) = \\det A$. With columns $(1, 1)$ and $(0, 3)$: $\\det A = 3$ and $\\det(2A) = 12$.\n\n> **Watch out.** A scalar comes out once per row, so $\\det(kA) = k^2 \\det A$ and $\\det(-A) = \\det A$ for $2 \\times 2$ matrices. A transpose does not change the determinant.",
+    "两个箭头是矩阵的列，所以它们的坐标给出每个元素。读出两列并计算 $\\det A = a_{11}a_{22} - a_{12}a_{21}$。再用 $\\det(A^2) = (\\det A)^2$，$2 \\times 2$ 矩阵的 $\\det(kA) = k^2 \\det A$，以及 $\\det(A^{\\mathsf{T}}) = \\det A$。两列为 $(1, 1)$ 与 $(0, 3)$ 时：$\\det A = 3$，$\\det(2A) = 12$。\n\n> **注意。** 数乘因子每行提出一次，所以对 $2 \\times 2$ 矩阵 $\\det(kA) = k^2 \\det A$，$\\det(-A) = \\det A$。转置不改变行列式。",
   ],
   (rng) => {
     const [u, v] = independent(rng, 3);
@@ -313,23 +349,63 @@ const furtherDeterminant = point(
           : kind === "transpose"
             ? `\\det(A^{\\mathsf{T}}) = \\det A`
             : `\\det(-A) = (-1)^2 (${d})`;
-    return ask(
-      [
-        `The arrows show the columns of a $2 \\times 2$ matrix $A$, first column $c_1$ and second column $c_2$. Find $\\det(${name})$.`,
-        `箭头表示 $2 \\times 2$ 矩阵 $A$ 的列，第一列 $c_1$，第二列 $c_2$。求 $\\det(${name})$。`,
-      ],
-      answer,
-      [-answer, 2 * d, k * d, d + 1],
-      [
-        `The columns are $${at(u)}$ and $${at(v)}$, so $\\det A = ${d}$. Then $${rule} = ${answer}$.`,
-        `两列为 $${at(u)}$ 和 $${at(v)}$，所以 $\\det A = ${d}$。于是 $${rule} = ${answer}$。`,
-      ],
-      fig(
+    const signWhy: Pair =
+      kind === "minus"
+        ? [
+            "Negating a $2 \\times 2$ matrix multiplies the determinant by $(-1)^2 = 1$, so the sign stays.",
+            "把 $2 \\times 2$ 矩阵取负，行列式乘以 $(-1)^2 = 1$，符号不变。",
+          ]
+        : kind === "transpose"
+          ? ["A transpose keeps the determinant, sign included.", "转置不改变行列式，符号也不变。"]
+          : [
+              "The sign is wrong: read the columns in order, $c_1$ first, and keep the sign of $\\det A$.",
+              "符号错了：按顺序读列，先 $c_1$，并保留 $\\det A$ 的符号。",
+            ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The arrows show the columns of a $2 \\times 2$ matrix $A$, first column $c_1$ and second column $c_2$. Find $\\det(${name})$.`,
+          `箭头表示 $2 \\times 2$ 矩阵 $A$ 的列，第一列 $c_1$，第二列 $c_2$。求 $\\det(${name})$。`,
+        ),
+        answer,
+        mistakes: [
+          why(-answer, signWhy[0], signWhy[1]),
+          why(
+            2 * d,
+            kind === "square"
+              ? "Squaring the matrix squares the determinant; it does not double it."
+              : "No rule here doubles the determinant.",
+            kind === "square" ? "矩阵平方使行列式平方，而不是加倍。" : "这里没有哪条规则使行列式加倍。",
+          ),
+          why(
+            k * d,
+            `The scalar comes out once for each of the two rows: $${k}^2$, not $${k}$.`,
+            `数乘因子对两行各提出一次：是 $${k}^2$，不是 $${k}$。`,
+          ),
+        ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+        solution: walked(
+          [
+            [
+              ["Read the columns", "读出两列"],
+              t(
+                `$c_1 = ${at(u)}$ and $c_2 = ${at(v)}$, so $\\det A = ${d}$.`,
+                `$c_1 = ${at(u)}$，$c_2 = ${at(v)}$，所以 $\\det A = ${d}$。`,
+              ),
+            ],
+            [["Apply the rule", "应用规则"], t("", ""), [`${rule} = ${answer}`]],
+          ],
+          t(
+            `$\\det A = (${u[0]})(${v[1]}) - (${v[0]})(${u[1]}) = ${d}$, and the rule turns it into $${answer}$.`,
+            `$\\det A = (${u[0]})(${v[1]}) - (${v[0]})(${u[1]}) = ${d}$，按规则变为 $${answer}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         4,
         [...arrow(u, "c1"), ...arrow(v, "c2")],
         [`Arrows from the origin: c1 to ${at(u)} and c2 to ${at(v)}.`, `从原点出发的箭头：c1 指向 ${at(u)}，c2 指向 ${at(v)}。`],
       ),
-    );
+    };
   },
 );
 
@@ -337,8 +413,8 @@ const zeroDeterminant = point(
   "the-entry-that-makes-a-determinant-zero-from-a-drawing",
   ["The entry that makes a determinant zero, from a drawing", "由图求使行列式为零的元素"],
   [
-    "A $2 \\times 2$ determinant is zero exactly when the columns lie on one line through the origin. Read the drawn column, and require the other to be a multiple of it.",
-    "$2 \\times 2$ 行列式为零当且仅当两列在过原点的同一条直线上。读出所画的列，并要求另一列是它的倍数。",
+    "A $2 \\times 2$ determinant is zero exactly when the columns lie on one line through the origin. Read the drawn column, and require the other to be a multiple of it. If the arrow is $(2, 1)$ and the other column is $(6, x)$, it is $3$ times the arrow, so $x = 3$.\n\n> **Watch out.** The other column must be the same multiple of the arrow in both entries. Find the multiple from the known first entry, then apply it to the second.",
+    "$2 \\times 2$ 行列式为零当且仅当两列在过原点的同一条直线上。读出所画的列，并要求另一列是它的倍数。若箭头是 $(2, 1)$，另一列为 $(6, x)$，它是箭头的 $3$ 倍，所以 $x = 3$。\n\n> **注意。** 另一列的两个元素必须是箭头的同一个倍数。先由已知的第一个元素求出倍数，再作用到第二个元素上。",
   ],
   (rng) => {
     const w = rng.pick(slanted);
@@ -351,19 +427,53 @@ const zeroDeterminant = point(
     const entries = flip
       ? `\\begin{pmatrix} ${u[0]} & ${c} \\\\ ${u[1]} & x \\end{pmatrix}`
       : `\\begin{pmatrix} ${c} & ${u[0]} \\\\ x & ${u[1]} \\end{pmatrix}`;
-    return ask(
-      [
-        `The arrow shows the column $c$ of a matrix, and the other column is $(${c}, x)$. Find $x$ so that the determinant of the matrix is zero.`,
-        `箭头表示矩阵的列 $c$，另一列为 $(${c}, x)$。求 $x$，使矩阵的行列式为零。`,
-      ],
-      answer,
-      [-answer, c, answer + 1, u[1]],
-      [
-        `The arrow is $${at(u)}$, so the matrix is $${entries}$. The other column must lie on the same line, which has direction $${at(w)}$. Since $${c} = ${m}(${w[0]})$, we need $x = ${m}(${w[1]}) = ${answer}$.`,
-        `箭头为 $${at(u)}$，所以矩阵为 $${entries}$。另一列必须在同一直线上，该直线方向为 $${at(w)}$。由 $${c} = ${m}(${w[0]})$ 得 $x = ${m}(${w[1]}) = ${answer}$。`,
-      ],
-      fig(7, arrow(u, "c"), [`An arrow from the origin to ${at(u)}.`, `从原点指向 ${at(u)} 的箭头。`]),
-    );
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The arrow shows the column $c$ of a matrix, and the other column is $(${c}, x)$. Find $x$ so that the determinant of the matrix is zero.`,
+          `箭头表示矩阵的列 $c$，另一列为 $(${c}, x)$。求 $x$，使矩阵的行列式为零。`,
+        ),
+        answer,
+        solveFor: "x",
+        mistakes: [
+          why(
+            -answer,
+            "The sign is flipped: both entries of the other column use the same multiple of the arrow.",
+            "符号反了：另一列的两个元素用的是箭头的同一个倍数。",
+          ),
+          why(
+            c,
+            "That copies the first entry; the second entry must be the same multiple of the arrow's second coordinate.",
+            "这照抄了第一个元素；第二个元素必须是箭头第二个坐标的同一倍数。",
+          ),
+          why(
+            u[1],
+            "That copies the arrow's second coordinate; the other column is a multiple of the arrow, not equal to it.",
+            "这照抄了箭头的第二个坐标；另一列是箭头的倍数，不一定等于它。",
+          ),
+        ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+        solution: walked(
+          [
+            [
+              ["Read the arrow", "读出箭头"],
+              t(`The arrow is $${at(u)}$, so the matrix is $${entries}$.`, `箭头为 $${at(u)}$，所以矩阵为 $${entries}$。`),
+            ],
+            [
+              ["Make the columns parallel", "使两列平行"],
+              t(
+                `The line has direction $${at(w)}$, and $${c} = ${m}(${w[0]})$, so $x = ${m}(${w[1]}) = ${answer}$.`,
+                `该直线方向为 $${at(w)}$，且 $${c} = ${m}(${w[0]})$，所以 $x = ${m}(${w[1]}) = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$(${u[0]})(${answer}) - (${c})(${u[1]}) = ${u[0] * answer} - ${c * u[1] < 0 ? `(${c * u[1]})` : c * u[1]} = 0$.`,
+            `$(${u[0]})(${answer}) - (${c})(${u[1]}) = ${u[0] * answer} - ${c * u[1] < 0 ? `(${c * u[1]})` : c * u[1]} = 0$。`,
+          ),
+        ),
+      }),
+      figure: fig(7, arrow(u, "c"), [`An arrow from the origin to ${at(u)}.`, `从原点指向 ${at(u)} 的箭头。`]),
+    };
   },
 );
 

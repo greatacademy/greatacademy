@@ -8,8 +8,10 @@ import { Q } from "@ga/subject-math";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
+import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
 type Compass = "ne" | "nw" | "se" | "sw";
@@ -124,25 +126,57 @@ const determinantFromSquare = point(
   "the-determinant-from-a-transformed-square",
   ["The determinant from a transformed square", "由变换后的正方形读行列式"],
   [
-    "The size of a two by two determinant is the area of the image of the unit square. Its sign tells the orientation: it is positive when the turn from the image of the first basis vector to the image of the second is counterclockwise, and negative when that turn is clockwise.",
-    "二阶行列式的大小是单位正方形的像的面积。它的符号表示定向：从第一个基向量的像到第二个基向量的像的转向是逆时针时为正，是顺时针时为负。",
+    "The size of a two by two determinant is the area of the image of the unit square. Its sign tells the orientation: it is positive when the turn from the image of the first basis vector to the image of the second is counterclockwise, and negative when that turn is clockwise. If $T(e_1) = (2, 0)$ and $T(e_2) = (1, 3)$, the image has area $6$ and the turn is counterclockwise, so $\\det T = 6$.\n\n> **Watch out.** The columns are the images of $e_1$ and $e_2$, and the determinant subtracts the cross products: $a_{11}a_{22} - a_{12}a_{21}$. A clockwise turn makes it negative even though the area is positive.",
+    "二阶行列式的大小是单位正方形的像的面积。它的符号表示定向：从第一个基向量的像到第二个基向量的像的转向是逆时针时为正，是顺时针时为负。若 $T(e_1) = (2, 0)$，$T(e_2) = (1, 3)$，像的面积是 $6$，转向是逆时针，所以 $\\det T = 6$。\n\n> **注意。** 两列分别是 $e_1$ 和 $e_2$ 的像，行列式是交叉乘积之差：$a_{11}a_{22} - a_{12}a_{21}$。顺时针转向使它为负，尽管面积是正的。",
   ],
   (rng) => {
     const [u, v] = independentPair(rng, 3);
     const det = cross(u, v);
-    return ask(
-      [
-        "A linear map $T$ sends the dashed unit square to the shaded region. What is the determinant of $T$?",
-        "线性映射 $T$ 把虚线单位正方形映成阴影区域。$T$ 的行列式是多少？",
-      ],
-      det,
-      [-det, u[0] * v[1] + u[1] * v[0], u[0] + v[1], dot(u, v)],
-      [
-        `The columns are $(${u[0]}, ${u[1]})$ and $(${v[0]}, ${v[1]})$, so the determinant is $(${u[0]})(${v[1]}) - (${v[0]})(${u[1]}) = ${det}$. The turn from $T(e_1)$ to $T(e_2)$ is ${det > 0 ? "counterclockwise, which matches the positive sign" : "clockwise, which matches the negative sign"}.`,
-        `两列是 $(${u[0]}, ${u[1]})$ 和 $(${v[0]}, ${v[1]})$，所以行列式是 $(${u[0]})(${v[1]}) - (${v[0]})(${u[1]}) = ${det}$。从 $T(e_1)$ 到 $T(e_2)$ 的转向是${det > 0 ? "逆时针，与正号一致" : "顺时针，与负号一致"}。`,
-      ],
-      fig(6, [parallelogram(u, v), ...imageOfSquare(u, v)], altOfImage(u, v)),
-    );
+    const sum = u[0] * v[1] + u[1] * v[0];
+    return {
+      ...numberProblem({
+        prompt: t(
+          "A linear map $T$ sends the dashed unit square to the shaded region. What is the determinant of $T$?",
+          "线性映射 $T$ 把虚线单位正方形映成阴影区域。$T$ 的行列式是多少？",
+        ),
+        answer: det,
+        mistakes: [
+          why(
+            -det,
+            `The sign is wrong: the turn from $T(e_1)$ to $T(e_2)$ is ${det > 0 ? "counterclockwise" : "clockwise"}.`,
+            `符号错了：从 $T(e_1)$ 到 $T(e_2)$ 的转向是${det > 0 ? "逆时针" : "顺时针"}。`,
+          ),
+          why(sum, "The two cross products are added; the determinant subtracts them.", "这把两个交叉乘积相加了；行列式是相减。"),
+          why(
+            u[0] + v[1],
+            "That adds the diagonal entries, which gives the trace, not the determinant.",
+            "这是对角元之和，即迹，而不是行列式。",
+          ),
+          why(
+            dot(u, v),
+            "That is the dot product of the columns; the determinant measures the area they span.",
+            "这是两列的点积；行列式度量的是它们张成的面积。",
+          ),
+        ].filter((w, i, all) => w.value !== det && all.findIndex((o) => o.value === w.value) === i),
+        solution: walked(
+          [
+            [
+              ["Read the columns", "读出两列"],
+              t(
+                `$T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$.`,
+                `$T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。`,
+              ),
+            ],
+            [["Compute the determinant", "计算行列式"], t("", ""), [`(${u[0]})(${v[1]}) - (${v[0]})(${u[1]}) = ${det}`]],
+          ],
+          t(
+            `The turn from $T(e_1)$ to $T(e_2)$ is ${det > 0 ? "counterclockwise, which matches the positive sign" : "clockwise, which matches the negative sign"}, and the shaded area is $${Math.abs(det)}$.`,
+            `从 $T(e_1)$ 到 $T(e_2)$ 的转向是${det > 0 ? "逆时针，与正号一致" : "顺时针，与负号一致"}，阴影面积为 $${Math.abs(det)}$。`,
+          ),
+        ),
+      }),
+      figure: fig(6, [parallelogram(u, v), ...imageOfSquare(u, v)], altOfImage(u, v)),
+    };
   },
 );
 

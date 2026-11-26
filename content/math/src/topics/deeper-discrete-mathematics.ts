@@ -7,7 +7,7 @@ import { poly, Q } from "@ga/subject-math";
 import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-1.ts";
 import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, why } from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** inParens puts a negative number in parentheses, for use inside a sum or under a power. */
@@ -2062,8 +2062,8 @@ const rearrangingForAugmentedMatrix: KnowledgePointDef = {
   id: "equations-out-of-standard-form-in-an-augmented-matrix",
   title: t("Equations out of standard form in an augmented matrix", "增广矩阵中不是标准形式的方程"),
   explanation: t(
-    "An augmented matrix can only be read off once every equation has its unknowns on the left, in the agreed order, and its constant on the right. An equation that arrives in another shape must be rearranged first. Moving a term across the equals sign changes its sign, and that sign is what the matrix records.",
-    "只有当每个方程的未知数都按约定顺序放在左边、常数放在右边时，才能直接写出增广矩阵。形式不同的方程要先整理。把一项移到等号另一边时符号会改变，矩阵记录的正是改变后的符号。",
+    "An augmented matrix can only be read off once every equation has its unknowns on the left, in the agreed order, and its constant on the right. An equation that arrives in another shape must be rearranged first. Moving a term across the equals sign changes its sign, and that sign is what the matrix records. For $2x + 3 = 4y + 7$: $2x - 4y = 4$, so the row is $(2, -4 \\mid 4)$.\n\n> **Watch out.** Every term that crosses the equals sign changes sign, the constants included. Read the entries only after the equation is in standard form.",
+    "只有当每个方程的未知数都按约定顺序放在左边、常数放在右边时，才能直接写出增广矩阵。形式不同的方程要先整理。把一项移到等号另一边时符号会改变，矩阵记录的正是改变后的符号。对 $2x + 3 = 4y + 7$：$2x - 4y = 4$，所以这一行是 $(2, -4 \\mid 4)$。\n\n> **注意。** 每一项移过等号都要变号，常数也不例外。要先化成标准形式，再读出各元素。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
@@ -2073,17 +2073,42 @@ const rearrangingForAugmentedMatrix: KnowledgePointDef = {
     const e = rng.pick(range(1, 12).filter((v) => v !== c));
     const kind = rng.pick(["y", "z", "rhs"] as const);
     const answer = kind === "y" ? -b : kind === "z" ? d : e - c;
-    const wrong =
+    const mistakes =
       kind === "y"
-        ? [b, d, -d, a, -a, -c, -b - 1, 1 - b]
+        ? [
+            why(b, "The $y$-term moves from the right side to the left, so its sign changes.", "$y$ 项从右边移到左边，符号要改变。"),
+            why(-d, "That is the entry of $z$; the question asks for the column of $y$.", "这是 $z$ 的元素；题目问的是 $y$ 这一列。"),
+            why(a, "That is the coefficient of $x$; the column of $y$ comes next.", "这是 $x$ 的系数；$y$ 这一列在它后面。"),
+          ]
         : kind === "z"
-          ? [-d, b, -b, a, -a, e, c, d + 1, d + 2]
-          : [e + c, c - e, e, c, a, e - c + 1];
+          ? [
+              why(-d, "The $z$-term moves from the right side to the left, so its sign changes.", "$z$ 项从右边移到左边，符号要改变。"),
+              why(-b, "That is the entry of $y$; the question asks for the column of $z$.", "这是 $y$ 的元素；题目问的是 $z$ 这一列。"),
+              why(a, "That is the coefficient of $x$; the column of $z$ is the third.", "这是 $x$ 的系数；$z$ 这一列是第三列。"),
+            ]
+          : [
+              why(
+                e + c,
+                `The constant $${c}$ moves from the left to the right, so it is subtracted.`,
+                `常数 $${c}$ 从左边移到右边，所以要减去它。`,
+              ),
+              why(
+                c - e,
+                "The sign is flipped: the constants end up on the right, so the entry is $e - c$, not $c - e$.",
+                "符号反了：常数最终在右边，所以元素是右边减左边。",
+              ),
+              why(e, `The constant $${c}$ on the left must also move to the right.`, `左边的常数 $${c}$ 也要移到右边。`),
+            ];
     const where = {
       y: t("the column of $y$", "$y$ 这一列"),
       z: t("the column of $z$", "$z$ 这一列"),
       rhs: t("the column of constants", "常数列"),
     }[kind];
+    const standard = `${sumOfTerms([
+      [a, "x"],
+      [-b, "y"],
+      [d, "z"],
+    ])} = ${e - c}`;
     return numberProblem({
       prompt: t(
         `The equation $${a}x + ${c} = ${b}y - ${d}z + ${e}$ is one row of a system in the unknowns $x, y, z$. In the augmented matrix $[A \\mid \\mathbf{b}]$, with columns in that order, what is the entry of this row in ${where.en}?`,
@@ -2091,20 +2116,23 @@ const rearrangingForAugmentedMatrix: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong,
-      solution: t(
-        `Move the unknowns to the left and the constants to the right. The term in $y$ changes sign and so does the term in $z$, which gives $${sumOfTerms(
+      mistakes: mistakes.filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
           [
-            [a, "x"],
-            [-b, "y"],
-            [d, "z"],
+            ["Put the equation in standard form", "化成标准形式"],
+            t(
+              "Move the unknowns to the left and the constants to the right; each term that crosses changes sign:",
+              "把未知数移到左边，常数移到右边；移过等号的每一项都变号：",
+            ),
+            [standard],
           ],
-        )} = ${e - c}$. The entry in ${where.en} is $${answer}$.`,
-        `把未知数移到左边，常数移到右边。含 $y$ 的项和含 $z$ 的项都要变号，得到 $${sumOfTerms([
-          [a, "x"],
-          [-b, "y"],
-          [d, "z"],
-        ])} = ${e - c}$。${where["zh-CN"]}的元素是 $${answer}$。`,
+          [["Read the entry", "读出元素"], t(`The entry in ${where.en} is $${answer}$.`, `${where["zh-CN"]}的元素是 $${answer}$。`)],
+        ],
+        t(
+          `Moving everything back, $${a}x + ${c} = ${b}y - ${d}z + ${e}$ again, since $${e - c} + ${c} = ${e}$.`,
+          `把各项移回去，又得到 $${a}x + ${c} = ${b}y - ${d}z + ${e}$，因为 $${e - c} + ${c} = ${e}$。`,
+        ),
       ),
     });
   },
@@ -2114,8 +2142,8 @@ const zerosOfRowEchelonForm: KnowledgePointDef = {
   id: "zero-entries-forced-by-row-echelon-form",
   title: t("Zero entries forced by row echelon form", "行阶梯形强制出现的零元素"),
   explanation: t(
-    "Row echelon form forces some entries to be zero and leaves the others free. Each pivot lies strictly to the right of the pivot above it, so the rows need longer and longer runs of leading zeros, and any row with no pivot is zero throughout. Entries above a pivot or to its right may be anything.",
-    "行阶梯形要求一部分元素为零，其余元素不受限制。每个主元都严格位于上一行主元的右边，所以各行开头的零越来越多，而没有主元的行全部为零。主元上方和右边的元素可以取任意值。",
+    "Row echelon form forces some entries to be zero and leaves the others free. Each pivot lies strictly to the right of the pivot above it, so the rows need longer and longer runs of leading zeros, and any row with no pivot is zero throughout. Entries above a pivot or to its right may be anything. A $3 \\times 4$ matrix with $2$ pivots needs at least $1$ zero in row $2$ and $4$ in the zero row $3$, so $5$ in all.\n\n> **Watch out.** The $i$th pivot row has at least $i - 1$ leading zeros, not $i$: the first row needs none. A row without a pivot contributes all $n$ of its entries.",
+    "行阶梯形要求一部分元素为零，其余元素不受限制。每个主元都严格位于上一行主元的右边，所以各行开头的零越来越多，而没有主元的行全部为零。主元上方和右边的元素可以取任意值。有 $2$ 个主元的 $3 \\times 4$ 矩阵，第 $2$ 行至少有 $1$ 个零，零行第 $3$ 行有 $4$ 个，共至少 $5$ 个。\n\n> **注意。** 第 $i$ 个主元行开头至少有 $i - 1$ 个零，而不是 $i$ 个：第一行不需要零。没有主元的行贡献它全部 $n$ 个元素。",
   ),
   generate(rng) {
     const [m, n, r] = rng.pick(
@@ -2138,10 +2166,49 @@ const zerosOfRowEchelonForm: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [stairs + rest, (r * (r + 1)) / 2 + blank, blank + r, stairs + (m - r) * (n - r), answer + 1, answer + 2, m * n],
-      solution: t(
-        `Each pivot sits strictly to the right of the one above it, so the $i$th pivot row has at least $i - 1$ leading zeros. That forces $\\frac{${r} \\cdot ${r - 1}}{2} = ${stairs}$ ${stairs === 1 ? "zero" : "zeros"}, and pivots in the first ${r} columns with every other entry nonzero use no more. ${restEn} The minimum is $${answer}$.`,
-        `每个主元都严格在上一行主元的右边，所以第 $i$ 个主元行开头至少有 $i - 1$ 个零。这要求 $\\frac{${r} \\cdot ${r - 1}}{2} = ${stairs}$ 个零；主元放在前 ${r} 列、其余元素都不为零时不会多用。${restZh}最少是 $${answer}$ 个。`,
+      mistakes: [
+        why(
+          stairs + rest,
+          "A row without a pivot is zero in every entry, so it adds all of its entries, not one.",
+          "没有主元的行每个元素都是零，所以它贡献全部元素，而不是一个。",
+        ),
+        why(
+          (r * (r + 1)) / 2 + blank,
+          "That gives the $i$th pivot row $i$ leading zeros; it needs only $i - 1$, and the first row none.",
+          "这让第 $i$ 个主元行开头有 $i$ 个零；其实只需 $i - 1$ 个，第一行不需要。",
+        ),
+        why(
+          blank + r,
+          "The staircase needs $0 + 1 + \\cdots + (r - 1)$ zeros, not one per pivot.",
+          "台阶需要 $0 + 1 + \\cdots + (r - 1)$ 个零，而不是每个主元一个。",
+        ),
+        why(
+          stairs + (m - r) * (n - r),
+          `A zero row has $${n}$ entries, all zero, not $${n} - ${r}$.`,
+          `零行有 $${n}$ 个元素，全为零，而不是 $${n} - ${r}$ 个。`,
+        ),
+        why(
+          m * n,
+          "That counts every entry; the entries at and right of each pivot may be nonzero.",
+          "这数的是全部元素；主元及其右边的元素可以不为零。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the staircase", "数台阶中的零"],
+            t(
+              `The $i$th pivot row has at least $i - 1$ leading zeros, which forces $0 + 1 + \\cdots + ${r - 1} = ${stairs}$ ${stairs === 1 ? "zero" : "zeros"}.`,
+              `第 $i$ 个主元行开头至少有 $i - 1$ 个零，这要求 $0 + 1 + \\cdots + ${r - 1} = ${stairs}$ 个零。`,
+            ),
+          ],
+          [["Count the zero rows", "数零行"], t(restEn, restZh)],
+          [["Add", "相加"], t(`The minimum is $${stairs} + ${blank} = ${answer}$.`, `最少是 $${stairs} + ${blank} = ${answer}$ 个。`)],
+        ],
+        t(
+          `Putting the pivots in the first ${r} columns and every other allowed entry nonzero reaches exactly $${answer}$ zeros, so the bound is attained.`,
+          `把主元放在前 ${r} 列、其余允许的元素都不为零，恰好有 $${answer}$ 个零，所以下界可以达到。`,
+        ),
       ),
     });
   },
@@ -2151,8 +2218,8 @@ const backSubstitutionCost: KnowledgePointDef = {
   id: "counting-the-operations-of-back-substitution",
   title: t("Counting the operations of back substitution", "计算回代的运算次数"),
   explanation: t(
-    "The cost of back substitution comes from how much of each row is already known. The last unknown needs one division and nothing else. Every row above it has one more known unknown to multiply and subtract, so the work grows row by row, and adding it up gives a triangular number, far below the cost of elimination.",
-    "回代的运算量取决于每一行已知的未知数有多少。最后一个未知数只需要一次除法。往上每一行都多一个已知未知数要相乘再相减，所以工作量逐行增加，加起来是一个三角形数，远小于消元的运算量。",
+    "The cost of back substitution comes from how much of each row is already known. The last unknown needs one division and nothing else. Every row above it has one more known unknown to multiply and subtract, so the work grows row by row, and adding it up gives a triangular number, far below the cost of elimination. With $4$ unknowns there are $0 + 1 + 2 + 3 = 6$ multiplications.\n\n> **Watch out.** The row solved $j$th from the bottom has $j - 1$ known unknowns, not $j$, so the sum runs from $0$ to $n - 1$. Divisions, one per row, are counted separately.",
+    "回代的运算量取决于每一行已知的未知数有多少。最后一个未知数只需要一次除法。往上每一行都多一个已知未知数要相乘再相减，所以工作量逐行增加，加起来是一个三角形数，远小于消元的运算量。有 $4$ 个未知数时共有 $0 + 1 + 2 + 3 = 6$ 次乘法。\n\n> **注意。** 从下往上第 $j$ 个求解的行有 $j - 1$ 个已知未知数，而不是 $j$ 个，所以求和从 $0$ 到 $n - 1$。除法每行一次，要另外计数。",
   ),
   generate(rng) {
     const n = rng.int(4, 30);
@@ -2172,16 +2239,70 @@ const backSubstitutionCost: KnowledgePointDef = {
             ),
       answer,
       form: "integer",
-      wrong: [n * n, (n * (n + 1)) / 2, n * (n - 1), n * (n + 1), products, 2 * n - 1],
+      mistakes: [
+        why(
+          n * n,
+          "That is the total of all three operations; multiplications alone number $\\frac{n(n-1)}{2}$.",
+          "这是三种运算的总数；仅乘法是 $\\frac{n(n-1)}{2}$ 次。",
+        ),
+        why(
+          (n * (n + 1)) / 2,
+          "That gives the $j$th row $j$ multiplications; it has only $j - 1$ known unknowns.",
+          "这让第 $j$ 行做 $j$ 次乘法；它只有 $j - 1$ 个已知未知数。",
+        ),
+        why(n * (n - 1), "That counts multiplications and subtractions but leaves out the divisions.", "这数了乘法和减法，却漏了除法。"),
+        why(
+          n * (n + 1),
+          "That gives each row one operation too many of each kind; the row solved $j$th has $j - 1$ known unknowns.",
+          "这让每行的每种运算都多了一次；第 $j$ 个求解的行有 $j - 1$ 个已知未知数。",
+        ),
+        why(products, "Those are the multiplications only; the subtractions and divisions count too.", "这只是乘法；减法和除法也要计入。"),
+        why(
+          2 * n - 1,
+          "The work grows row by row, so the count is a sum over the rows, not a fixed amount per row.",
+          "工作量逐行增加，所以次数是各行之和，而不是每行固定的量。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
       solution:
         kind === "mul"
-          ? t(
-              `The row solved $j$th from the bottom contains $j - 1$ unknowns already found, and each one is multiplied by its coefficient once. So the count is $0 + 1 + \\cdots + ${n - 1} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}$.`,
-              `从下往上第 $j$ 个求解的行含 $j - 1$ 个已求出的未知数，每个都要与系数相乘一次。所以次数是 $0 + 1 + \\cdots + ${n - 1} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}$。`,
+          ? walked(
+              [
+                [
+                  ["Count per row", "逐行计数"],
+                  t(
+                    "The row solved $j$th from the bottom contains $j - 1$ unknowns already found, each multiplied by its coefficient once.",
+                    "从下往上第 $j$ 个求解的行含 $j - 1$ 个已求出的未知数，每个都要与系数相乘一次。",
+                  ),
+                ],
+                [["Add the rows", "各行相加"], t("", ""), [`0 + 1 + \\cdots + ${n - 1} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}`]],
+              ],
+              t(
+                `For a small case, $3$ unknowns need $0 + 1 + 2 = 3 = \\frac{3 \\cdot 2}{2}$ multiplications, matching the formula.`,
+                `小情形验证：$3$ 个未知数需要 $0 + 1 + 2 = 3 = \\frac{3 \\cdot 2}{2}$ 次乘法，与公式一致。`,
+              ),
             )
-          : t(
-              `A row with $j - 1$ known unknowns uses $j - 1$ multiplications, $j - 1$ subtractions and one division. There are $\\frac{${n} \\cdot ${n - 1}}{2} = ${products}$ multiplications, as many subtractions and ${n} divisions, so the total is $2 \\cdot ${products} + ${n} = ${answer}$.`,
-              `含 $j - 1$ 个已知未知数的行要做 $j - 1$ 次乘法、$j - 1$ 次减法和一次除法。乘法有 $\\frac{${n} \\cdot ${n - 1}}{2} = ${products}$ 次，减法同样多，除法 ${n} 次，总数是 $2 \\cdot ${products} + ${n} = ${answer}$。`,
+          : walked(
+              [
+                [
+                  ["Count per row", "逐行计数"],
+                  t(
+                    "A row with $j - 1$ known unknowns uses $j - 1$ multiplications, $j - 1$ subtractions and one division.",
+                    "含 $j - 1$ 个已知未知数的行要做 $j - 1$ 次乘法、$j - 1$ 次减法和一次除法。",
+                  ),
+                ],
+                [
+                  ["Add the rows", "各行相加"],
+                  t(
+                    `There are $\\frac{${n} \\cdot ${n - 1}}{2} = ${products}$ multiplications, as many subtractions and ${n} divisions:`,
+                    `乘法有 $\\frac{${n} \\cdot ${n - 1}}{2} = ${products}$ 次，减法同样多，除法 ${n} 次：`,
+                  ),
+                  [`2 \\cdot ${products} + ${n} = ${answer}`],
+                ],
+              ],
+              t(
+                `$2 \\cdot \\frac{n(n-1)}{2} + n = n^2$, and $${n}^2 = ${answer}$.`,
+                `$2 \\cdot \\frac{n(n-1)}{2} + n = n^2$，而 $${n}^2 = ${answer}$。`,
+              ),
             ),
     });
   },
