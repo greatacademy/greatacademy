@@ -3403,8 +3403,8 @@ const adjacencyFromGraph: KnowledgePointDef = {
   figure: discreteDrawings2["adjacency-matrices#an-entry-of-the-adjacency-matrix-from-a-drawing"],
   title: t("Walk counts from a drawn graph", "由图数走法"),
   explanation: t(
-    "The entry in row $i$ and column $j$ of the adjacency matrix counts the edges between those vertices, and the same entry of the matrix squared counts walks of length two. A walk of length two from $i$ to $j$ passes through some common neighbor, so counting those neighbors on a drawing gives the same number without any multiplication. This is why powers of the matrix count walks.",
-    "邻接矩阵第 $i$ 行第 $j$ 列的元素是这两个顶点之间的边数，矩阵平方的同一元素是长度为 2 的走法数。从 $i$ 到 $j$ 长度为 2 的走法要经过一个公共邻点，所以在图上数这些邻点，不用做乘法就能得到同样的数。这就是矩阵的幂能计数走法的原因。",
+    "The entry in row $i$ and column $j$ of the adjacency matrix counts the edges between those vertices, and the same entry of the matrix squared counts walks of length two. A walk of length two from $i$ to $j$ passes through some common neighbor, so counting those neighbors on a drawing gives the same number without any multiplication. This is why powers of the matrix count walks. In the drawing, $i$ and $j$ are joined by one edge and have the two common neighbors $k$ and $l$, so the entry of $A$ is $1$ and the same entry of $A^2$ is $2$: the walks $i, k, j$ and $i, l, j$. Two vertices with $9$ common neighbors have $9$ walks of length $2$ between them.\n\n> **Watch out.** Count only the vertices adjacent to both ends, not all the neighbors of one end. And the edge between $i$ and $j$ itself is a walk of length $1$, so it does not count here.",
+    "邻接矩阵第 $i$ 行第 $j$ 列的元素是这两个顶点之间的边数，矩阵平方的同一元素是长度为 2 的走法数。从 $i$ 到 $j$ 长度为 2 的走法要经过一个公共邻点，所以在图上数这些邻点，不用做乘法就能得到同样的数。这就是矩阵的幂能计数走法的原因。图中 $i$ 与 $j$ 之间有一条边，并有两个公共邻点 $k$ 和 $l$，所以 $A$ 的该元为 $1$，$A^2$ 的同一元为 $2$：走法为 $i, k, j$ 和 $i, l, j$。有 $9$ 个公共邻点的两个顶点之间有 $9$ 种长度为 $2$ 的走法。\n\n> **注意。** 只数与两端都相邻的顶点，而不是一端的所有邻点。$i$ 与 $j$ 之间的边本身是长度为 $1$ 的走法，这里不算。",
   ),
   generate(rng) {
     const n = rng.int(5, 6);
@@ -3417,6 +3417,9 @@ const adjacencyFromGraph: KnowledgePointDef = {
     const common = Array.from({ length: n }, (_, i) => i).filter((i) => has(a, i) && has(b, i));
     const degree = (v: number) => edges.filter(([p, q]) => p === v || q === v).length;
     const answer = common.length;
+    const around = (v: number) => Array.from({ length: n }, (_, i) => i).filter((i) => has(v, i));
+    const listOf = (vs: readonly number[], zh: boolean) =>
+      vs.length === 0 ? (zh ? "没有" : "none") : vs.map((i) => names[i]).join(zh ? "、" : ", ");
     return numeric(
       t(
         `How many walks of length 2 go from ${names[a]} to ${names[b]} in this graph?`,
@@ -3424,13 +3427,37 @@ const adjacencyFromGraph: KnowledgePointDef = {
       ),
       answer,
       [degree(a), degree(b), answer + 1, answer + 2, answer + 3],
-      t(
+      walked(
+        [
+          [
+            ["List the neighbors", "列出邻点"],
+            t(
+              `The neighbors of ${names[a]} are ${listOf(around(a), false)}, and the neighbors of ${names[b]} are ${listOf(around(b), false)}.`,
+              `${names[a]} 的邻点是 ${listOf(around(a), true)}，${names[b]} 的邻点是 ${listOf(around(b), true)}。`,
+            ),
+          ],
+          [
+            ["Keep the common ones", "留下公共邻点"],
+            answer === 0
+              ? t(
+                  `No vertex is on both lists, so there are no walks of length 2 from ${names[a]} to ${names[b]}.`,
+                  `没有顶点同时在两个列表中，所以从 ${names[a]} 到 ${names[b]} 没有长度为 2 的走法。`,
+                )
+              : t(
+                  `${common.length === 1 ? "The only common neighbor is" : "The common neighbors are"} ${listOf(common, false)}, and each gives one walk, so there ${answer === 1 ? "is" : "are"} ${answer}.`,
+                  `公共邻点是 ${listOf(common, true)}，每个给出一种走法，所以共 ${answer} 种。`,
+                ),
+          ],
+        ],
         answer === 0
-          ? `${names[a]} and ${names[b]} have no common neighbor, so there are no such walks.`
-          : `${common.length === 1 ? "The only common neighbor" : "The common neighbors"} of ${names[a]} and ${names[b]} ${common.length === 1 ? "is" : "are"} ${common.map((i) => names[i]).join(", ")}, and each gives one walk.`,
-        answer === 0
-          ? `${names[a]} 和 ${names[b]} 没有公共邻点，所以没有这样的走法。`
-          : `${names[a]} 和 ${names[b]} 的公共邻点是 ${common.map((i) => names[i]).join("、")}，每个给出一种走法。`,
+          ? t(
+              `Each walk of length 2 from ${names[a]} goes through one of its neighbors, and none of them is joined to ${names[b]}.`,
+              `从 ${names[a]} 出发长度为 2 的走法都经过它的某个邻点，而这些邻点都不与 ${names[b]} 相连。`,
+            )
+          : t(
+              `The walks are ${common.map((i) => `$${names[a]}, ${names[i]}, ${names[b]}$`).join("; ")}: ${answer} in all, each using two edges of the drawing.`,
+              `这些走法是 ${common.map((i) => `$${names[a]}, ${names[i]}, ${names[b]}$`).join("；")}：共 ${answer} 种，每种都用到图中的两条边。`,
+            ),
       ),
       graphFigure(
         names,
@@ -3442,6 +3469,37 @@ const adjacencyFromGraph: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        {
+          value: degree(a),
+          why: t(
+            `That counts every neighbor of ${names[a]}; only those also joined to ${names[b]} give a walk.`,
+            `那数了 ${names[a]} 的所有邻点；只有同时与 ${names[b]} 相连的邻点才给出走法。`,
+          ),
+        },
+        {
+          value: degree(b),
+          why: t(
+            `That counts every neighbor of ${names[b]}; only those also joined to ${names[a]} give a walk.`,
+            `那数了 ${names[b]} 的所有邻点；只有同时与 ${names[a]} 相连的邻点才给出走法。`,
+          ),
+        },
+        {
+          value: answer + 1,
+          why: t(
+            `That is one too many: a neighbor of only one of ${names[a]} and ${names[b]} gives no walk, and neither does the edge between them.`,
+            `多了一：只与 ${names[a]}、${names[b]} 之一相邻的顶点不给出走法，它们之间的边也不算。`,
+          ),
+        },
+        {
+          value: answer + 2,
+          why: t("That is two too many: check each vertex for edges to both ends.", "多了二：逐个检查顶点是否与两端都相连。"),
+        },
+        {
+          value: answer + 3,
+          why: t("That is three too many: check each vertex for edges to both ends.", "多了三：逐个检查顶点是否与两端都相连。"),
+        },
+      ].filter((x) => x.value !== answer),
     );
   },
 };

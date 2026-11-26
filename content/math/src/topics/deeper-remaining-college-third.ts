@@ -37,8 +37,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         "the-first-edge-from-a-given-start",
         ["The first edge from a given start", "从给定起点出发的第一条边"],
         [
-          "Prim's algorithm grows a single tree from its starting vertex. So the first edge is the smallest entry in the row of that vertex, even when a smaller edge exists elsewhere in the matrix.",
-          "普里姆算法从起点开始长成一棵树。所以第一条边是这个顶点所在行中最小的元素，即使矩阵别处有更小的边。",
+          "Prim's algorithm grows a single tree from its starting vertex. So the first edge is the smallest entry in the row of that vertex, even when a smaller edge exists elsewhere in the matrix. In the drawing, the start is $B$: the first edge is the smallest entry of row $B$, $2$, to $C$, while the $1$ between $A$ and $C$ is smaller but does not touch $B$. On six vertices, if row $E$ holds $31, 27, 40, 35, 29$ and the matrix has a $25$ elsewhere, Prim's algorithm from $E$ first adds the edge of weight $27$.\n\n> **Watch out.** Look only at the row of the starting vertex; the smallest entry of the whole matrix may not touch it. And Prim's algorithm takes the smallest entry of that row, not the largest.",
+          "普里姆算法从起点开始长成一棵树。所以第一条边是这个顶点所在行中最小的元素，即使矩阵别处有更小的边。图中起点是 $B$：第一条边是 $B$ 行最小的元素 $2$，连到 $C$；$A$ 与 $C$ 之间的 $1$ 虽然更小，但它不与 $B$ 相连。在六个顶点上，若 $E$ 行为 $31, 27, 40, 35, 29$，而矩阵别处有一个 $25$，则从 $E$ 出发的普里姆算法先加入权为 $27$ 的边。\n\n> **注意。** 只看起点所在的行；整个矩阵的最小元素可能不与它相连。而且普里姆算法取这一行最小的元素，不是最大的。",
         ],
         (rng) => {
           const w = rng.sample([3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 23], 6);
@@ -52,15 +52,57 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           const start = rng.int(0, 3);
           const name = ["A", "B", "C", "D"][start] as string;
           const row = (rows[start] as (number | string)[]).filter((x): x is number => typeof x === "number");
-          return whole(
-            [
+          const answer = Math.min(...row);
+          const others = [0, 1, 2, 3].filter((j) => j !== start);
+          const to = ["A", "B", "C", "D"][(rows[start] as (number | string)[]).indexOf(answer)] as string;
+          const entries = others.map((j) => `${["A", "B", "C", "D"][j]}\\colon ${(rows[start] as (number | string)[])[j]}`).join(",\\ ");
+          const lightest = Math.min(...w);
+          return numberProblem({
+            prompt: t(
               `The edge weights of a complete graph on $A, B, C, D$ are given by $${mat(rows)}$. Prim's algorithm starts at $${name}$. What is the weight of the first edge it adds?`,
               `完全图（顶点 $A, B, C, D$）的边权由 $${mat(rows)}$ 给出。普里姆算法从 $${name}$ 开始。它加入的第一条边的权是多少？`,
-            ],
-            Math.min(...row),
-            [Math.max(...row), Math.min(...w), (row[1] as number) + 1],
-            [`The smallest entry in the row of $${name}$ is ${Math.min(...row)}.`, `$${name}$ 所在行中最小的元素是 ${Math.min(...row)}。`],
-          );
+            ),
+            answer,
+            form: "integer",
+            mistakes: [
+              why(
+                Math.max(...row),
+                `That is the largest entry of row $${name}$; Prim's algorithm takes the lightest edge.`,
+                `那是 $${name}$ 行最大的元素；普里姆算法取最轻的边。`,
+              ),
+              why(
+                lightest,
+                `That is the smallest entry of the whole matrix, but its edge does not touch $${name}$.`,
+                `那是整个矩阵中最小的元素，但它的边不与 $${name}$ 相连。`,
+              ),
+              why(
+                (row[1] as number) + 1,
+                `That is not the smallest entry of row $${name}$; compare its three entries again.`,
+                `那不是 $${name}$ 行中最小的元素；重新比较这一行的三个元素。`,
+              ),
+            ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+            solution: walked(
+              [
+                [["Read the row of the start", "读起点所在的行"], t(`Row $${name}$ holds $${entries}$.`, `$${name}$ 行为 $${entries}$。`)],
+                [
+                  ["Take the smallest", "取最小的元素"],
+                  t(
+                    `The smallest is $${answer}$, so the first edge is $${name}${to}$, of weight $${answer}$.`,
+                    `最小的是 $${answer}$，所以第一条边是 $${name}${to}$，权为 $${answer}$。`,
+                  ),
+                ],
+              ],
+              lightest === answer
+                ? t(
+                    `Here $${answer}$ is also the smallest entry of the whole matrix, and its edge touches $${name}$, so nothing lighter could come first.`,
+                    `这里 $${answer}$ 也是整个矩阵中最小的元素，而且它的边与 $${name}$ 相连，所以不可能有更轻的边先加入。`,
+                  )
+                : t(
+                    `The matrix's smallest entry, $${lightest}$, lies outside row $${name}$, so its edge does not touch the tree yet and cannot be first.`,
+                    `矩阵中最小的元素 $${lightest}$ 不在 $${name}$ 行，所以它的边还没有接触到树，不可能最先加入。`,
+                  ),
+            ),
+          });
         },
       ),
       figure: discreteDrawings2["applying-prims-algorithm-to-a-distance-matrix#the-first-edge-from-a-given-start"],
@@ -778,22 +820,50 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         "the-ones-in-an-incidence-matrix",
         ["The ones in an incidence matrix", "关联矩阵中 1 的个数"],
         [
-          "Each column of the incidence matrix of a simple graph has exactly two ones, one for each end of the edge. So the total number of ones is twice the number of edges, whatever the vertex count.",
-          "简单图的关联矩阵每一列恰有两个 1，对应边的两个端点。所以 1 的总数是边数的两倍，与顶点数无关。",
+          "Each column of the incidence matrix of a simple graph has exactly two ones, one for each end of the edge. So the total number of ones is twice the number of edges, whatever the vertex count. The drawing shows a simple graph with $4$ edges, whose incidence matrix holds $2 \\cdot 4 = 8$ ones. A simple graph with $30$ vertices and $60$ edges has $2 \\cdot 60 = 120$ ones in its incidence matrix.\n\n> **Watch out.** Each edge has two ends, so it puts two ones in its column, not one. And the number of vertices does not enter the count; it only sets how many rows there are.",
+          "简单图的关联矩阵每一列恰有两个 1，对应边的两个端点。所以 1 的总数是边数的两倍，与顶点数无关。图中的简单图有 $4$ 条边，它的关联矩阵中有 $2 \\cdot 4 = 8$ 个 1。有 $30$ 个顶点、$60$ 条边的简单图，其关联矩阵中有 $2 \\cdot 60 = 120$ 个 1。\n\n> **注意。** 每条边有两个端点，所以它在所在列放两个 1，而不是一个。顶点数不影响这个个数；它只决定有多少行。",
         ],
         (rng) => {
           const v = rng.int(4, 20);
           const e = rng.int(3, 40);
           const usable = Math.min(e, (v * (v - 1)) / 2);
-          return whole(
-            [
+          const answer = 2 * usable;
+          return numberProblem({
+            prompt: t(
               `A simple graph has ${v} vertices and ${usable} edges. How many entries of its incidence matrix equal 1?`,
               `简单图有 ${v} 个顶点、${usable} 条边。它的关联矩阵中有多少个元素等于 1？`,
-            ],
-            2 * usable,
-            [usable, v * usable, 2 * v],
-            [`Each of the ${usable} columns holds two ones.`, `${usable} 列中每列有两个 1。`],
-          );
+            ),
+            answer,
+            form: "integer",
+            mistakes: [
+              why(
+                usable,
+                "That puts one $1$ in each column; an edge has two ends, so its column has two.",
+                "那是每列只放一个 $1$；一条边有两个端点，所以它的列有两个。",
+              ),
+              why(v * usable, "That is the number of all the entries, zeros included.", "那是所有元素的个数，包括零。"),
+              why(2 * v, "That doubles the number of vertices; the ones come from the edges.", "那是把顶点数加倍；1 来自边。"),
+            ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+            solution: walked(
+              [
+                [
+                  ["Look at one column", "看一列"],
+                  t(
+                    `Each of the ${usable} columns stands for an edge and has a $1$ in the rows of its two ends.`,
+                    `${usable} 列中每列代表一条边，在它两个端点所在的行为 $1$。`,
+                  ),
+                ],
+                [
+                  ["Add the columns", "把各列相加"],
+                  t(`So the matrix holds $2 \\cdot ${usable} = ${answer}$ ones.`, `所以矩阵中共有 $2 \\cdot ${usable} = ${answer}$ 个 1。`),
+                ],
+              ],
+              t(
+                `Counting by rows instead, each row holds as many ones as its vertex's degree, and by the handshake lemma the ${v} degrees add up to $2 \\cdot ${usable} = ${answer}$.`,
+                `改为按行计数，每行 1 的个数等于该顶点的度，由握手定理，${v} 个顶点的度数之和为 $2 \\cdot ${usable} = ${answer}$。`,
+              ),
+            ),
+          });
         },
       ),
       figure: discreteDrawings2["incidence-matrices#the-ones-in-an-incidence-matrix"],
@@ -904,25 +974,60 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "counting-accepting-branches",
       ["Counting accepting branches", "数接受的分支"],
       [
-        "A nondeterministic machine accepts when at least one branch accepts, so a single branch is enough. Counting how many branches accept shows how rare the right guesses can be among all the leaves.",
-        "非确定型机器只要有一个分支接受就接受，所以一个分支就够了。数有多少分支接受，可以看出在所有叶子中正确的猜测可以多么稀少。",
+        "A nondeterministic machine accepts when at least one branch accepts, so a single branch is enough. Counting how many branches accept shows how rare the right guesses can be among all the leaves. With $2$ moves at each of $4$ steps there are $2^4 = 16$ branches; if the first $3$ choices must each be the correct one, only the last choice is free, so $2$ branches accept.\n\n> **Watch out.** The fixed choices contribute a factor of $1$ each, and only the free ones multiply. With $3$ moves at each of $5$ steps and the first $2$ fixed, $3^3 = 27$ branches accept, not $3^2 = 9$.",
+        "非确定型机器只要有一个分支接受就接受，所以一个分支就够了。数有多少分支接受，可以看出在所有叶子中正确的猜测可以多么稀少。每步有 $2$ 种选择、共 $4$ 步时有 $2^4 = 16$ 个分支；若前 $3$ 次选择都必须是正确的那一个，只有最后一次可以任意，所以有 $2$ 个分支接受。\n\n> **注意。** 固定的选择每次只贡献因子 $1$，只有任意的选择才相乘。每步有 $3$ 种选择、共 $5$ 步、前 $2$ 次固定时，接受的分支有 $3^3 = 27$ 个，而不是 $3^2 = 9$ 个。",
       ],
       (rng) => {
         const b = rng.int(2, 4);
         const d = rng.int(3, 7);
         const k = rng.int(1, d - 1);
-        return whole(
-          [
+        const answer = b ** (d - k);
+        const pw = (x: number, e: number) => (e === 1 ? `${x}` : `${x}^{${e}}`);
+        return numberProblem({
+          prompt: t(
             `A nondeterministic machine has exactly ${b} moves at each of its ${d} steps. A branch accepts when its first ${k} choices are the one correct choice each, whatever follows. How many branches accept?`,
             `一台非确定型机器在 ${d} 步中每步恰有 ${b} 种选择。一个分支接受，当且仅当前 ${k} 次选择都是唯一正确的选择，后面不限。有多少分支接受？`,
-          ],
-          b ** (d - k),
-          [b ** d, b ** k, d - k],
-          [
-            `The first ${k} choices are fixed, and the other ${d - k} are free, which gives $${b}^{${d - k}}$.`,
-            `前 ${k} 次选择固定，其余 ${d - k} 次任意，所以是 $${b}^{${d - k}}$。`,
-          ],
-        );
+          ),
+          answer,
+          form: "integer",
+          mistakes: [
+            why(b ** d, "That counts every branch, accepting or not.", "那是所有分支的个数，不论是否接受。"),
+            why(
+              b ** k,
+              `That lets the ${k} fixed choices vary; they are fixed, and the other ${d - k} are the free ones.`,
+              `那是让 ${k} 次固定的选择变化；它们是固定的，任意的是其余 ${d - k} 次。`,
+            ),
+            why(
+              d - k,
+              "That is the number of free steps, not the number of branches they make.",
+              "那是任意的步数，而不是它们产生的分支数。",
+            ),
+            why(b ** d - answer, "That counts the branches that reject.", "那是拒绝的分支数。"),
+          ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["The fixed choices", "固定的选择"],
+                t(
+                  `Each of the first ${k} choices must be the one correct move, so they allow only one way.`,
+                  `前 ${k} 次选择都必须是唯一正确的那一个，所以只有一种方式。`,
+                ),
+              ],
+              [
+                ["The free choices", "任意的选择"],
+                t(
+                  `Each of the other ${d - k} steps has ${b} moves, so the accepting branches number`,
+                  `其余 ${d - k} 步每步有 ${b} 种选择，所以接受的分支数为`,
+                ),
+                [d - k === 1 ? `${answer}` : `${pw(b, d - k)} = ${answer}`],
+              ],
+            ],
+            t(
+              `There are $${pw(b, d)} = ${b ** d}$ branches in all, and the accepting ones are the fraction $\\frac{1}{${pw(b, k)}}$ of them: $\\frac{${b ** d}}{${b ** k}} = ${answer}$.`,
+              `分支共有 $${pw(b, d)} = ${b ** d}$ 个，接受的分支占其中的 $\\frac{1}{${pw(b, k)}}$：$\\frac{${b ** d}}{${b ** k}} = ${answer}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -931,24 +1036,65 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-output-on-the-tape",
       ["The output on the tape", "纸带上的输出"],
       [
-        "A Turing machine computes by rewriting its tape as it moves. To find the output, follow the transitions one symbol at a time, keeping track of what gets written in each cell.",
-        "图灵机边移动边改写纸带来计算。要求输出，就一个符号一个符号地跟随转移，记下每个格子写入了什么。",
+        "A Turing machine computes by rewriting its tape as it moves. To find the output, follow the transitions one symbol at a time, keeping track of what gets written in each cell. A machine that writes $1$ over $0$ and $0$ over $1$ while moving right turns $0110$ into $1001$, and read as a binary number that is $1001_2 = 9$.\n\n> **Watch out.** The machine rewrites each cell in place; it does not reverse the string. On $0011$ the tape ends as $1100$, which is $12$, not $0011$ read backwards.",
+        "图灵机边移动边改写纸带来计算。要求输出，就一个符号一个符号地跟随转移，记下每个格子写入了什么。一台向右移动时把 $0$ 改写成 $1$、把 $1$ 改写成 $0$ 的机器会把 $0110$ 变成 $1001$，作为二进制数读就是 $1001_2 = 9$。\n\n> **注意。** 机器在原位改写每个格子，并不把串倒过来。对 $0011$，纸带最后为 $1100$，即 $12$，而不是把 $0011$ 倒过来读。",
       ],
       (rng) => {
         const n = rng.int(5, 9);
         const bits = Array.from({ length: n }, () => rng.int(0, 1));
         const text = bits.join("");
         const out = bits.map((b) => 1 - b).join("");
-        return chooseFilled(
-          rng,
-          [
-            `A Turing machine starts on the first symbol of $${text}$. Its transitions are $\\delta(q_0, 0) = (q_0, 1, R)$ and $\\delta(q_0, 1) = (q_0, 0, R)$, and it halts on a blank. What is on the tape at the end?`,
-            `图灵机从 $${text}$ 的第一个符号开始。转移是 $\\delta(q_0, 0) = (q_0, 1, R)$，$\\delta(q_0, 1) = (q_0, 0, R)$，遇到空白停机。最后纸带上是什么？`,
-          ],
-          out,
-          [text, [...out].reverse().join(""), [...text].reverse().join("")],
-          [`Each symbol is replaced by the other one as the head moves right.`, `读写头向右移动时，每个符号都换成另一个。`],
-        );
+        const answer = Number.parseInt(out, 2);
+        const input = Number.parseInt(text, 2);
+        const terms = (s: string) =>
+          [...s]
+            .map((c, i) => (c === "1" ? s.length - 1 - i : -1))
+            .filter((e) => e >= 0)
+            .map((e) => (e === 0 ? "1" : e === 1 ? "2" : `2^{${e}}`))
+            .join(" + ");
+        const value = (s: string, v: number) => (v === 0 ? `${s}_2 = 0` : `${s}_2 = ${terms(s)} = ${v}`);
+        return numberProblem({
+          prompt: t(
+            `A Turing machine starts on the first symbol of $${text}$. Its transitions are $\\delta(q_0, 0) = (q_0, 1, R)$ and $\\delta(q_0, 1) = (q_0, 0, R)$, and it halts on a blank. Read as a binary number, what is on the tape at the end? Give it in decimal.`,
+            `图灵机从 $${text}$ 的第一个符号开始。转移是 $\\delta(q_0, 0) = (q_0, 1, R)$，$\\delta(q_0, 1) = (q_0, 0, R)$，遇到空白停机。把最后纸带上的内容当作二进制数，它的十进制值是多少？`,
+          ),
+          answer,
+          form: "integer",
+          mistakes: [
+            why(input, "That is the value of the input; the machine flips every symbol.", "那是输入的值；机器会把每个符号都取反。"),
+            why(
+              Number.parseInt([...out].reverse().join(""), 2),
+              "That reads the tape from right to left; the leftmost symbol is the most significant.",
+              "那是从右往左读纸带；最左边的符号是最高位。",
+            ),
+            why(
+              2 ** n - input,
+              `That subtracts the input from $2^{${n}}$; flipping all ${n} bits subtracts it from $2^{${n}} - 1$.`,
+              `那是用 $2^{${n}}$ 减去输入；把 ${n} 位全部取反相当于用 $2^{${n}} - 1$ 减去输入。`,
+            ),
+          ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Follow the transitions", "跟随转移"],
+                t(
+                  "Moving right, the machine writes $1$ over each $0$ and $0$ over each $1$, then halts at the blank:",
+                  "机器向右移动，把每个 $0$ 改写成 $1$、每个 $1$ 改写成 $0$，然后在空白处停机：",
+                ),
+                [`${text} \\to ${out}`],
+              ],
+              [
+                ["Read it in binary", "按二进制读"],
+                t("The leftmost symbol is the most significant:", "最左边的符号是最高位："),
+                [value(out, answer)],
+              ],
+            ],
+            t(
+              `Every place holds a $1$ in exactly one of the two strings, so the input and the output add to $${"1".repeat(n)}_2$: $${input} + ${answer} = ${2 ** n - 1} = 2^{${n}} - 1$.`,
+              `每一位恰好在两个串中的一个里是 $1$，所以输入与输出之和为 $${"1".repeat(n)}_2$：$${input} + ${answer} = ${2 ** n - 1} = 2^{${n}} - 1$。`,
+            ),
+          ),
+        });
       },
     ),
   ],

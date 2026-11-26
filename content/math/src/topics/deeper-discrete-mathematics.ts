@@ -1582,8 +1582,8 @@ const treeAfterANewEdge: KnowledgePointDef = {
   id: "updating-a-spanning-tree-after-a-new-edge",
   title: t("Updating a spanning tree after a new edge", "新增一条边后更新生成树"),
   explanation: t(
-    "A new edge need not mean rerunning Kruskal's algorithm. Adding the edge to the minimum spanning tree creates exactly one cycle. By the cycle property, the heaviest edge on that cycle can be left out of a minimum spanning tree. So compare the new edge with the heaviest edge on the tree path between its ends, and keep the lighter.",
-    "新增一条边不必重新运行克鲁斯卡尔算法。把这条边加入最小生成树，恰好产生一个圈。根据圈性质，圈上最重的边可以不在最小生成树中。所以把新边与其两端之间树路径上最重的边比较，保留较轻的那条。",
+    "A new edge need not mean rerunning Kruskal's algorithm. Adding the edge to the minimum spanning tree creates exactly one cycle. By the cycle property, the heaviest edge on that cycle can be left out of a minimum spanning tree. So compare the new edge with the heaviest edge on the tree path between its ends, and keep the lighter. A minimum spanning tree of weight $400$ whose path from $u$ to $v$ has weights $30$, $45$ and $35$ gains a new edge $uv$ of weight $28$: it is lighter than $45$, so it replaces that edge, and the tree now weighs $400 - 45 + 28 = 383$.\n\n> **Watch out.** Compare the new edge only with the heaviest edge on the cycle it closes, not with the lightest one and not with the rest of the tree. And if the new edge is the heaviest on that cycle, the tree does not change at all.",
+    "新增一条边不必重新运行克鲁斯卡尔算法。把这条边加入最小生成树，恰好产生一个圈。根据圈性质，圈上最重的边可以不在最小生成树中。所以把新边与其两端之间树路径上最重的边比较，保留较轻的那条。一棵权为 $400$ 的最小生成树中，$u$ 到 $v$ 的路径上边权为 $30$、$45$、$35$，新增一条权为 $28$ 的边 $uv$：它比 $45$ 轻，所以替换那条边，现在树的权为 $400 - 45 + 28 = 383$。\n\n> **注意。** 新边只与它所构成的圈上最重的边比较，不是与最轻的边比较，也不是与树的其余部分比较。如果新边是这个圈上最重的边，树就完全不变。",
   ),
   generate(rng) {
     const a = rng.int(2, 20);
@@ -1600,14 +1600,62 @@ const treeAfterANewEdge: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [W + w, W - top, W - Math.min(a, b, c) + w],
-      solution: t(
+      mistakes: [
+        why(
+          W + w,
+          "That keeps every old edge and adds the new one, but then the tree has a cycle.",
+          "那是保留所有旧边再加上新边，但这样树中就有圈了。",
+        ),
+        why(
+          W - top,
+          "That removes the heaviest path edge but forgets to add the new edge in its place.",
+          "那是去掉了路径上最重的边，却忘了用新边代替它。",
+        ),
+        why(
+          W - Math.min(a, b, c) + w,
+          "That swaps out the lightest edge on the path; the heaviest edge on the cycle is the one to leave out.",
+          "那是换掉了路径上最轻的边；应当舍去的是圈上最重的边。",
+        ),
+        why(
+          W - top + w,
+          "That swaps in the new edge even though it is heavier than every edge on the path, which makes the tree heavier.",
+          "新边比路径上的每条边都重，却仍把它换进来，这会使树变重。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the cycle", "找出圈"],
+            t(
+              `The new edge and the tree path between $u$ and $v$ form a cycle with weights ${a}, ${b}, ${c} and ${w}.`,
+              `新边与树中 $u$、$v$ 之间的路径构成一个圈，边权为 ${a}、${b}、${c} 和 ${w}。`,
+            ),
+          ],
+          w < top
+            ? [
+                ["Leave out the heaviest edge", "舍去最重的边"],
+                t(
+                  `The heaviest edge on the cycle is the path edge of weight ${top}, so the new edge replaces it: $${W} - ${top} + ${w} = ${answer}$.`,
+                  `圈上最重的边是路径上权为 ${top} 的边，所以新边替换它：$${W} - ${top} + ${w} = ${answer}$。`,
+                ),
+              ]
+            : [
+                ["Leave out the heaviest edge", "舍去最重的边"],
+                t(
+                  `The heaviest edge on the cycle is the new edge itself, since $${w} > ${top}$, so the tree stays as it is, with weight ${answer}.`,
+                  `圈上最重的边就是新边本身，因为 $${w} > ${top}$，所以树不变，权重仍是 ${answer}。`,
+                ),
+              ],
+        ],
         w < top
-          ? `The new edge closes a cycle whose heaviest edge has weight ${top}. Since ${w} is lighter, it replaces that edge, which gives $${W} - ${top} + ${w} = ${answer}$.`
-          : `The new edge closes a cycle, and at weight ${w} it is the heaviest edge on it. So the tree stays as it is, with weight ${answer}.`,
-        w < top
-          ? `新边形成一个圈，圈上其他边中最重的权重是 ${top}。由于 ${w} 更轻，它替换那条边，得 $${W} - ${top} + ${w} = ${answer}$。`
-          : `新边形成一个圈，权重为 ${w} 的它是圈上最重的边。所以树不变，权重仍是 ${answer}。`,
+          ? t(
+              `The tree became lighter by $${top} - ${w} = ${top - w}$, and $${W} - ${top - w} = ${answer}$.`,
+              `树变轻了 $${top} - ${w} = ${top - w}$，而 $${W} - ${top - w} = ${answer}$。`,
+            )
+          : t(
+              `Swapping the new edge in would give $${W} - ${top} + ${w} = ${W - top + w}$, more than ${W}, so keeping the old tree is right.`,
+              `若把新边换进来，会得到 $${W} - ${top} + ${w} = ${W - top + w}$，比 ${W} 大，所以保留原来的树是对的。`,
+            ),
       ),
     });
   },
@@ -1617,8 +1665,8 @@ const productAutomaton: KnowledgePointDef = {
   id: "the-states-of-a-product-automaton",
   title: t("The states of a product automaton", "乘积自动机的状态数"),
   explanation: t(
-    "To check two conditions at once, a finite automaton runs one automaton for each condition side by side. A state of the combined machine is a pair of states, so the sizes multiply. When the two conditions track independent counts, every pair must be remembered separately, and no automaton with fewer states can do the job.",
-    "要同时检查两个条件，有限自动机让对应每个条件的自动机并行运行。组合机器的状态是一对状态，所以状态数相乘。当两个条件跟踪的是相互独立的计数时，每一对都必须分别记住，状态更少的自动机无法胜任。",
+    "To check two conditions at once, a finite automaton runs one automaton for each condition side by side. A state of the combined machine is a pair of states, so the sizes multiply. When the two conditions track independent counts, every pair must be remembered separately, and no automaton with fewer states can do the job.\n\n> **Watch out.** The sizes multiply, they do not add: the machine must know both counts at once. Counting $0$s modulo $2$ and $1$s modulo $3$ needs $2 \\cdot 3 = 6$ states, not $2 + 3 = 5$.",
+    "要同时检查两个条件，有限自动机让对应每个条件的自动机并行运行。组合机器的状态是一对状态，所以状态数相乘。当两个条件跟踪的是相互独立的计数时，每一对都必须分别记住，状态更少的自动机无法胜任。\n\n> **注意。** 状态数相乘，而不是相加：机器必须同时知道两个计数。数 $0$ 的个数模 $2$、$1$ 的个数模 $3$ 需要 $2 \\cdot 3 = 6$ 个状态，而不是 $2 + 3 = 5$ 个。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -1631,10 +1679,40 @@ const productAutomaton: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b, a + b - 1, 2 ** Math.max(a, b)],
-      solution: t(
-        `The machine must remember the count of 0s modulo ${a} and the count of 1s modulo ${b}. Two different pairs can always be told apart by some continuation, so each needs its own state, and there are $${a} \\cdot ${b} = ${answer}$ pairs.`,
-        `机器必须记住 0 的个数模 ${a} 和 1 的个数模 ${b}。两个不同的数对总能被某个后续串区分，所以每一对都需要自己的状态，共有 $${a} \\cdot ${b} = ${answer}$ 对。`,
+      mistakes: [
+        why(
+          a + b,
+          "That adds the sizes of the two machines; a state must record both remainders at once, so the sizes multiply.",
+          "那是把两台机器的状态数相加；一个状态必须同时记下两个余数，所以状态数相乘。",
+        ),
+        why(Math.max(a, b), "That keeps track of only one of the two counts.", "那只追踪了两个计数中的一个。"),
+        why(
+          2 ** (a + b),
+          "That counts sets of states, as in a subset construction; only pairs of remainders are needed.",
+          "那是在数状态的集合，像子集构造那样；这里只需要余数对。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["What must be remembered", "需要记住什么"],
+            t(
+              `The machine must remember the count of 0s modulo $${a}$ and the count of 1s modulo $${b}$, that is, a pair of remainders.`,
+              `机器必须记住 0 的个数模 $${a}$ 和 1 的个数模 $${b}$，即一对余数。`,
+            ),
+          ],
+          [
+            ["Count the pairs", "数余数对"],
+            t(
+              `Two different pairs can always be told apart by some continuation, so each needs its own state: $${a} \\cdot ${b} = ${answer}$.`,
+              `两个不同的数对总能被某个后续串区分，所以每一对都需要自己的状态：$${a} \\cdot ${b} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `For example, the pairs $(0, 0)$ and $(1, 0)$ differ: appending $${a - 1}$ zeros leads to acceptance from the second but not the first. The product machine with $${answer}$ states does the job, so $${answer}$ is the smallest number.`,
+          `例如数对 $(0, 0)$ 与 $(1, 0)$ 不同：再添上 $${a - 1}$ 个 0，后者被接受而前者不被接受。有 $${answer}$ 个状态的乘积机器可以胜任，所以 $${answer}$ 是最小值。`,
+        ),
       ),
     });
   },
@@ -1644,8 +1722,8 @@ const divideAndConquerExponent: KnowledgePointDef = {
   id: "the-exponent-of-a-divide-and-conquer-recurrence",
   title: t("The exponent of a divide-and-conquer recurrence", "分治递推的指数"),
   explanation: t(
-    "For $T(n) = aT\\left(\\frac{n}{b}\\right) + n^c$, the amount of work per level changes by a factor of $\\frac{a}{b^c}$. If this is above one, the bottom level dominates and $T(n) = \\Theta(n^{\\log_b a})$. If it is below one, the top level dominates and $T(n) = \\Theta(n^c)$. So comparing $a$ with $b^c$ decides the growth.",
-    "对 $T(n) = aT\\left(\\frac{n}{b}\\right) + n^c$，每层的工作量按因子 $\\frac{a}{b^c}$ 变化。这个因子大于一时，最底层占主导，$T(n) = \\Theta(n^{\\log_b a})$。小于一时，最顶层占主导，$T(n) = \\Theta(n^c)$。所以比较 $a$ 与 $b^c$ 就能决定增长速度。",
+    "For $T(n) = aT\\left(\\frac{n}{b}\\right) + n^c$, the amount of work per level changes by a factor of $\\frac{a}{b^c}$. If this is above one, the bottom level dominates and $T(n) = \\Theta(n^{\\log_b a})$. If it is below one, the top level dominates and $T(n) = \\Theta(n^c)$. So comparing $a$ with $b^c$ decides the growth.\n\n> **Watch out.** Compare $a$ with $b^c$, not with $b$. For $T(n) = 3T\\left(\\frac{n}{2}\\right) + n^2$ we have $3 > 2$ but $3 < 2^2 = 4$, so the top level dominates and $T(n) = \\Theta(n^2)$.",
+    "对 $T(n) = aT\\left(\\frac{n}{b}\\right) + n^c$，每层的工作量按因子 $\\frac{a}{b^c}$ 变化。这个因子大于一时，最底层占主导，$T(n) = \\Theta(n^{\\log_b a})$。小于一时，最顶层占主导，$T(n) = \\Theta(n^c)$。所以比较 $a$ 与 $b^c$ 就能决定增长速度。\n\n> **注意。** 要把 $a$ 与 $b^c$ 比较，而不是与 $b$ 比较。对 $T(n) = 3T\\left(\\frac{n}{2}\\right) + n^2$，虽然 $3 > 2$，但 $3 < 2^2 = 4$，所以最顶层占主导，$T(n) = \\Theta(n^2)$。",
   ),
   generate(rng) {
     const bottom = range(2, 5).flatMap((b) => range(1, 4).flatMap((e) => range(0, e - 1).map((c) => [b ** e, b, c, e] as const)));
@@ -1655,6 +1733,8 @@ const divideAndConquerExponent: KnowledgePointDef = {
     const power = b ** c;
     const bigger = a > power;
     const threshold = c === 1 ? `${b}` : `${b}^{${c}} = ${power}`;
+    const ratio = power === 1 ? `${a}` : `\\frac{${a}}{${power}}`;
+    const root = answer === 1 ? `${b}` : `${b}^{${answer}}`;
     return numberProblem({
       prompt: t(
         `Let $T(n) = ${a}T\\left(\\frac{n}{${b}}\\right) + ${work}$. Then $T(n) = \\Theta(n^k)$. Find $k$.`,
@@ -1662,14 +1742,65 @@ const divideAndConquerExponent: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: bigger ? [c, a, answer + 1] : [Math.floor(Math.log(a) / Math.log(b)), a, answer + 1],
-      solution: t(
+      mistakes: [
+        ...(bigger
+          ? [
+              why(
+                c,
+                `That is the exponent of the work term, but $${a} > ${threshold}$, so the bottom level dominates.`,
+                `那是工作量项的指数，但 $${a} > ${threshold}$，所以最底层占主导。`,
+              ),
+            ]
+          : [
+              why(
+                Math.floor(Math.log(a) / Math.log(b)),
+                `That comes from $\\log_{${b}} ${a}$, but $${a} < ${threshold}$, so the top level dominates.`,
+                `那来自 $\\log_{${b}} ${a}$，但 $${a} < ${threshold}$，所以最顶层占主导。`,
+              ),
+            ]),
+        why(a, "That takes the number of subproblems as the exponent.", "那是把子问题的个数当成了指数。"),
+        why(
+          answer + 1,
+          `That adds one to the exponent; an extra factor appears only when $a = b^c$, and even then it is $\\log n$, not $n$.`,
+          `那给指数加了一；只有 $a = b^c$ 时才会多出因子，而且那时多出的是 $\\log n$，不是 $n$。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Compare the subproblems with the shrinking work", "比较子问题个数与工作量的缩小"],
+            c === 0
+              ? t(
+                  `There are $${a}$ subproblems and the work per call is constant, so each level does $${a}$ times the work of the level above.`,
+                  `共有 $${a}$ 个子问题，每次调用的工作量是常数，所以每层的工作量是上一层的 $${a}$ 倍。`,
+                )
+              : t(
+                  `There are $${a}$ subproblems and the work per call shrinks by a factor of $${threshold}$, so each level does $${ratio}$ times the work of the level above.`,
+                  `共有 $${a}$ 个子问题，每次调用的工作量缩小为原来的 $\\frac{1}{${power}}$，所以每层的工作量是上一层的 $${ratio}$ 倍。`,
+                ),
+          ],
+          [
+            ["Decide which level dominates", "判断哪一层占主导"],
+            bigger
+              ? t(
+                  `Here $${a} > ${threshold}$, so the work grows level by level and the bottom level dominates: $k = \\log_{${b}} ${a} = ${answer}$.`,
+                  `这里 $${a} > ${threshold}$，工作量逐层增大，最底层占主导：$k = \\log_{${b}} ${a} = ${answer}$。`,
+                )
+              : t(
+                  `Here $${a} < ${threshold}$, so the work shrinks level by level and the top level dominates: $k$ is the exponent of the work term, $${answer}$.`,
+                  `这里 $${a} < ${threshold}$，工作量逐层减小，最顶层占主导：$k$ 是工作量项的指数 $${answer}$。`,
+                ),
+          ],
+        ],
         bigger
-          ? `Here $${a} > ${threshold}$, so the bottom level dominates and $k = \\log_{${b}} ${a} = ${answer}$.`
-          : `Here $${a} < ${threshold}$, so the top level dominates and $k$ is the exponent of the work term, ${answer}.`,
-        bigger
-          ? `这里 $${a} > ${threshold}$，所以最底层占主导，$k = \\log_{${b}} ${a} = ${answer}$。`
-          : `这里 $${a} < ${threshold}$，所以最顶层占主导，$k$ 是工作量项的指数 ${answer}。`,
+          ? t(
+              `$${root} = ${a}$, so $\\log_{${b}} ${a} = ${answer}$ exactly, and $${answer} > ${c}$: the leaves outweigh the work term, as they should.`,
+              `$${root} = ${a}$，所以 $\\log_{${b}} ${a} = ${answer}$ 恰好成立，且 $${answer} > ${c}$：叶子的总量超过工作量项，与结论一致。`,
+            )
+          : t(
+              `The levels form a geometric series with ratio $${ratio} < 1$, whose sum is a constant times the top level's work, so the total is a constant multiple of that work.`,
+              `各层构成公比为 $${ratio} < 1$ 的等比数列，其和是顶层工作量的常数倍，所以总量是该工作量的常数倍。`,
+            ),
       ),
     });
   },
@@ -3153,8 +3284,8 @@ const traceOfCube: KnowledgePointDef = {
   figure: discreteDrawings2["adjacency-matrices#the-trace-of-the-cube-of-an-adjacency-matrix"],
   title: t("The trace of the cube of an adjacency matrix", "邻接矩阵立方的迹"),
   explanation: t(
-    "The diagonal entry $(A^3)_{ii}$ counts the walks of length 3 that start and end at vertex $i$. In a simple graph, such a walk must go around a triangle. Each triangle gives six of these walks across the whole diagonal, since it can start at any of three corners and go in either of two directions. So the trace is six times the number of triangles.",
-    "对角元 $(A^3)_{ii}$ 计算从顶点 $i$ 出发并回到 $i$、长度为 3 的路线。在简单图中，这样的路线必须绕一个三角形。每个三角形在整条对角线上给出六条这样的路线，因为可以从三个角中任一个出发，并沿两个方向之一行走。所以迹是三角形个数的六倍。",
+    "The diagonal entry $(A^3)_{ii}$ counts the walks of length 3 that start and end at vertex $i$. In a simple graph, such a walk must go around a triangle. Each triangle gives six of these walks across the whole diagonal, since it can start at any of three corners and go in either of two directions. So the trace is six times the number of triangles. The drawing shows a graph with one triangle: each of its corners has diagonal entry $2$, the pendant vertex has $0$, and the trace is $6$. The complete graph on $6$ vertices has $\\binom{6}{3} = 20$ triangles, so its trace is $6 \\cdot 20 = 120$.\n\n> **Watch out.** Each triangle counts six times, not once and not three times: three starting corners, each with two directions. And $\\operatorname{tr}(A^2)$, twice the number of edges, is a different count.",
+    "对角元 $(A^3)_{ii}$ 计算从顶点 $i$ 出发并回到 $i$、长度为 3 的路线。在简单图中，这样的路线必须绕一个三角形。每个三角形在整条对角线上给出六条这样的路线，因为可以从三个角中任一个出发，并沿两个方向之一行走。所以迹是三角形个数的六倍。图中的图有一个三角形：三角形每个角的对角元为 $2$，悬挂顶点为 $0$，迹为 $6$。$6$ 个顶点的完全图有 $\\binom{6}{3} = 20$ 个三角形，所以它的迹是 $6 \\cdot 20 = 120$。\n\n> **注意。** 每个三角形算六次，不是一次，也不是三次：三个出发的角，每个有两个方向。而 $\\operatorname{tr}(A^2)$ 等于边数的两倍，是另一种计数。",
   ),
   generate(rng) {
     const size = 5;
@@ -3182,6 +3313,15 @@ const traceOfCube: KnowledgePointDef = {
     }
     const edges = grid.flat().reduce((a, b) => a + b, 0) / 2;
     const answer = 6 * triangles;
+    const corners = range(0, size - 1).flatMap((i) =>
+      range(i + 1, size - 1).flatMap((j) =>
+        range(j + 1, size - 1)
+          .filter((k) => at(i, j) * at(j, k) * at(i, k) === 1)
+          .map((k) => [i, j, k] as const),
+      ),
+    );
+    const listed = corners.map(([i, j, k]) => `\\{${i + 1}, ${j + 1}, ${k + 1}\\}`).join(",\\ ");
+    const diagonal = range(0, size - 1).map((v) => 2 * corners.filter((c) => c.includes(v)).length);
     return numberProblem({
       prompt: t(
         `A simple graph has adjacency matrix $A = ${matrix(grid)}$. Find $\\operatorname{tr}(A^3)$.`,
@@ -3189,10 +3329,45 @@ const traceOfCube: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [triangles, 3 * triangles, 2 * edges, answer + 1],
-      solution: t(
-        `The graph has ${triangles} ${triangles === 1 ? "triangle" : "triangles"}, and each gives 6 closed walks of length 3. So the trace is $${answer}$.`,
-        `这个图有 ${triangles} 个三角形，每个给出 6 条长度为 3 的闭路线。所以迹是 $${answer}$。`,
+      mistakes: [
+        why(triangles, "That is the number of triangles; each one gives six closed walks.", "那是三角形的个数；每个三角形给出六条闭途径。"),
+        why(
+          3 * triangles,
+          "That counts the three starting corners but not the two directions around each triangle.",
+          "那数了三个出发的角，却没有算绕三角形的两个方向。",
+        ),
+        why(
+          2 * edges,
+          "That is $\\operatorname{tr}(A^2)$, twice the number of edges, not the closed walks of length 3.",
+          "那是 $\\operatorname{tr}(A^2)$，即边数的两倍，不是长度为 3 的闭途径。",
+        ),
+        why(answer + 1, "The trace must be a multiple of $6$: recount the triangles.", "迹一定是 $6$ 的倍数：重新数三角形。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the triangles", "找出三角形"],
+            t(
+              `Numbering the vertices $1$ to $5$ by the rows, the triples joined in pairs are $${listed}$: ${triangles} ${triangles === 1 ? "triangle" : "triangles"}.`,
+              `按行把顶点编号为 $1$ 到 $5$，两两相连的三元组为 $${listed}$：共 ${triangles} 个三角形。`,
+            ),
+          ],
+          [
+            ["Count six walks each", "每个算六条途径"],
+            t(
+              triangles === 1
+                ? `The triangle gives $3$ starting corners times $2$ directions, so the trace is $${answer}$.`
+                : `Each triangle gives $3$ starting corners times $2$ directions, so the trace is $6 \\cdot ${triangles} = ${answer}$.`,
+              triangles === 1
+                ? `这个三角形有 $3$ 个出发的角，每个 $2$ 个方向，所以迹是 $${answer}$。`
+                : `每个三角形有 $3$ 个出发的角，每个 $2$ 个方向，所以迹是 $6 \\cdot ${triangles} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Vertex by vertex, $(A^3)_{ii}$ is twice the number of triangles at $i$: $${diagonal.join(" + ")} = ${answer}$.`,
+          `逐个顶点看，$(A^3)_{ii}$ 是含 $i$ 的三角形个数的两倍：$${diagonal.join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3202,8 +3377,8 @@ const pathDistanceSum: KnowledgePointDef = {
   id: "the-sum-of-the-distance-matrix-of-a-path",
   title: t("The sum of the distance matrix of a path", "路径图距离矩阵的元素和"),
   explanation: t(
-    "On a path with $n$ vertices, there are $n - d$ pairs of vertices at distance $d$. So the distances between unordered pairs add to $\\sum_{d = 1}^{n - 1} d(n - d) = \\binom{n + 1}{3}$. A distance matrix records each pair twice, once above the diagonal and once below it, while the diagonal itself is all zeros. The sum of all its entries is therefore double this total.",
-    "在 $n$ 个顶点的路径上，距离为 $d$ 的顶点对有 $n - d$ 个。所以无序顶点对的距离之和是 $\\sum_{d = 1}^{n - 1} d(n - d) = \\binom{n + 1}{3}$。距离矩阵把每对记录两次，对角线上方一次，下方一次，而对角线全是零。因此它所有元素之和是这个总数的两倍。",
+    "On a path with $n$ vertices, there are $n - d$ pairs of vertices at distance $d$. So the distances between unordered pairs add to $\\sum_{d = 1}^{n - 1} d(n - d) = \\binom{n + 1}{3}$. A distance matrix records each pair twice, once above the diagonal and once below it, while the diagonal itself is all zeros. The sum of all its entries is therefore double this total. On a path with $40$ vertices the pairs add to $\\binom{41}{3} = 10660$, so the distance matrix sums to $2 \\cdot 10660 = 21320$.\n\n> **Watch out.** Double the total over pairs, since the matrix lists each pair above and below the diagonal. And the distances are not all $1$: only the $n - 1$ neighboring pairs are at distance $1$.",
+    "在 $n$ 个顶点的路径上，距离为 $d$ 的顶点对有 $n - d$ 个。所以无序顶点对的距离之和是 $\\sum_{d = 1}^{n - 1} d(n - d) = \\binom{n + 1}{3}$。距离矩阵把每对记录两次，对角线上方一次，下方一次，而对角线全是零。因此它所有元素之和是这个总数的两倍。在有 $40$ 个顶点的路径上，各对距离之和为 $\\binom{41}{3} = 10660$，所以距离矩阵之和为 $2 \\cdot 10660 = 21320$。\n\n> **注意。** 要把各对的总和加倍，因为矩阵在对角线上方和下方各列一次每对顶点。而且距离并不都是 $1$：只有 $n - 1$ 对相邻顶点的距离是 $1$。",
   ),
   generate(rng) {
     const n = rng.int(3, 30);
@@ -3216,10 +3391,37 @@ const pathDistanceSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [half, n * (n - 1), 2 * (n - 1), n * n],
-      solution: t(
-        `The unordered pairs contribute $\\binom{${n + 1}}{3} = ${half}$, and the matrix counts each pair twice, which gives $${answer}$.`,
-        `无序顶点对贡献 $\\binom{${n + 1}}{3} = ${half}$，矩阵把每对计算两次，于是得 $${answer}$。`,
+      mistakes: [
+        why(half, "That counts each pair once; the matrix lists every pair twice.", "那是每对只算一次；矩阵把每对列了两次。"),
+        why(
+          n * (n - 1),
+          "That counts every entry off the diagonal as $1$; farther pairs have larger distances.",
+          "那是把对角线外的每个元都算作 $1$；更远的顶点对距离更大。",
+        ),
+        why(2 * (n - 1), "That adds only the entries equal to $1$, the neighboring pairs.", "那只加了等于 $1$ 的元，即相邻的顶点对。"),
+        why(n * n, "That is the number of entries, not their sum.", "那是元的个数，不是它们的和。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Add over the pairs", "对各对求和"],
+            t(
+              `There are $${n} - d$ pairs at distance $d$, so the pairs add to $\\sum_{d = 1}^{${n - 1}} d(${n} - d) = \\binom{${n + 1}}{3} = ${half}$.`,
+              `距离为 $d$ 的顶点对有 $${n} - d$ 个，所以各对之和为 $\\sum_{d = 1}^{${n - 1}} d(${n} - d) = \\binom{${n + 1}}{3} = ${half}$。`,
+            ),
+          ],
+          [
+            ["Double", "加倍"],
+            t(
+              `The matrix lists each pair twice, so its entries add to $2 \\cdot ${half} = ${answer}$.`,
+              `矩阵把每对列了两次，所以各元之和为 $2 \\cdot ${half} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `In closed form, $2\\binom{n + 1}{3} = \\frac{(n + 1)n(n - 1)}{3} = \\frac{${n + 1} \\cdot ${n} \\cdot ${n - 1}}{3} = ${answer}$.`,
+          `用封闭形式，$2\\binom{n + 1}{3} = \\frac{(n + 1)n(n - 1)}{3} = \\frac{${n + 1} \\cdot ${n} \\cdot ${n - 1}}{3} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3230,12 +3432,18 @@ const dagMostEdges: KnowledgePointDef = {
   figure: discreteDrawings2["directed-acyclic-graphs#the-most-edges-of-a-directed-acyclic-graph"],
   title: t("The most edges of a directed acyclic graph", "有向无环图的最多边数"),
   explanation: t(
-    "A directed acyclic graph can be placed in a topological order, with every edge pointing forward. So for each pair of vertices, only the forward edge is possible, and this gives at most one edge per pair. Adding every forward edge reaches that limit without creating a cycle. An edge in both directions between a pair of vertices would already be a cycle of length two.",
-    "有向无环图可以排成拓扑序，每条边都指向前方。所以对每对顶点，只可能有向前的那条边，这样每对最多一条边。加上所有向前的边，就达到这个上限，而不产生圈。一对顶点之间两个方向都有边，本身就已经是长度为二的圈。",
+    "A directed acyclic graph can be placed in a topological order, with every edge pointing forward. So for each pair of vertices, only the forward edge is possible, and this gives at most one edge per pair. Adding every forward edge reaches that limit without creating a cycle. An edge in both directions between a pair of vertices would already be a cycle of length two. The drawing shows $4$ vertices in topological order with every forward arc, $\\frac{4 \\cdot 3}{2} = 6$ arcs in all. On $50$ vertices the most is $\\binom{50}{2} = 1225$.\n\n> **Watch out.** Each pair of vertices allows one arc, not two, since arcs both ways would form a cycle. And the bound is reached: adding every forward arc of a topological order creates no cycle.",
+    "有向无环图可以排成拓扑序，每条边都指向前方。所以对每对顶点，只可能有向前的那条边，这样每对最多一条边。加上所有向前的边，就达到这个上限，而不产生圈。一对顶点之间两个方向都有边，本身就已经是长度为二的圈。图中 $4$ 个顶点按拓扑序排列，画出了所有向前的弧，共 $\\frac{4 \\cdot 3}{2} = 6$ 条。$50$ 个顶点时最多有 $\\binom{50}{2} = 1225$ 条。\n\n> **注意。** 每对顶点只允许一条弧，而不是两条，因为两个方向的弧会构成圈。而且这个上限能够达到：加上拓扑序中所有向前的弧不会产生圈。",
   ),
   generate(rng) {
     const n = rng.int(3, 40);
     const answer = binom(n, 2);
+    const descending =
+      n <= 4
+        ? range(1, n - 1)
+            .reverse()
+            .join(" + ")
+        : `${n - 1} + ${n - 2} + \\dots + 1`;
     return numberProblem({
       prompt: t(
         `What is the largest number of edges a directed acyclic graph on ${n} vertices can have?`,
@@ -3243,10 +3451,45 @@ const dagMostEdges: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n * (n - 1), n - 1, answer - 1, n * n],
-      solution: t(
-        `A topological order allows one forward edge for each pair of vertices, so the largest number is $\\binom{${n}}{2} = ${answer}$.`,
-        `拓扑序允许每对顶点有一条向前的边，所以最大值是 $\\binom{${n}}{2} = ${answer}$。`,
+      mistakes: [
+        why(
+          n * (n - 1),
+          "That allows arcs both ways between each pair, which would form cycles of length two.",
+          "那是让每对顶点之间两个方向都有弧，这会构成长度为二的圈。",
+        ),
+        why(
+          n - 1,
+          "That is the number of arcs of a directed path; many more fit without a cycle.",
+          "那是有向路径的弧数；不产生圈还能放下多得多的弧。",
+        ),
+        why(
+          answer - 1,
+          "That is one too few: every forward arc of a topological order can be present at once.",
+          "少了一：拓扑序中所有向前的弧可以同时存在。",
+        ),
+        why(n * n, "That counts every ordered pair, loops and both directions included.", "那数了所有有序对，包括环和两个方向。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Order the vertices", "给顶点排序"],
+            t(
+              "In a topological order every arc points forward, so each pair of vertices has at most one arc, and all the forward arcs together form no cycle.",
+              "在拓扑序中每条弧都指向前方，所以每对顶点至多一条弧，而所有向前的弧放在一起也不构成圈。",
+            ),
+          ],
+          [
+            ["Count the pairs", "数顶点对"],
+            t(
+              `So the largest number is the number of pairs, $\\binom{${n}}{2} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}$.`,
+              `所以最大值是顶点对的个数，$\\binom{${n}}{2} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Counting the forward arcs from each vertex in turn: $${descending} = ${answer}$.`,
+          `逐个顶点数向前的弧：$${descending} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3257,8 +3500,8 @@ const twoChains: KnowledgePointDef = {
   figure: discreteDrawings2["topological-ordering#the-topological-orderings-of-two-separate-paths"],
   title: t("The topological orderings of two separate paths", "两条独立路径的拓扑排序"),
   explanation: t(
-    "A directed path allows only one order of its own vertices. If a graph consists of two separate paths, a topological ordering is any way of shuffling them together that keeps each path in order. Such a shuffle is decided by which positions go to the first path, and the vertices then fill those positions in their only possible order. So the count is one binomial coefficient.",
-    "有向路径只允许它自身顶点的一种顺序。如果一个图由两条独立的路径组成，拓扑排序就是把它们混合在一起、同时保持每条路径内部顺序的任何方式。这样的混合由哪些位置分给第一条路径决定，然后顶点按唯一可能的顺序填入这些位置。所以计数就是一个二项式系数。",
+    "A directed path allows only one order of its own vertices. If a graph consists of two separate paths, a topological ordering is any way of shuffling them together that keeps each path in order. Such a shuffle is decided by which positions go to the first path, and the vertices then fill those positions in their only possible order. So the count is one binomial coefficient. The drawing shows paths of $2$ and $3$ vertices: choosing the $2$ positions of the first path among $5$ gives $\\frac{5 \\cdot 4}{2} = 10$ orderings. Paths of $12$ and $2$ vertices give $\\binom{14}{2} = 91$.\n\n> **Watch out.** The two paths are shuffled together, not placed one after the other, so there are far more than $2$ orderings. And choose positions only for one path, since the other path fills the rest in its one order.",
+    "有向路径只允许它自身顶点的一种顺序。如果一个图由两条独立的路径组成，拓扑排序就是把它们混合在一起、同时保持每条路径内部顺序的任何方式。这样的混合由哪些位置分给第一条路径决定，然后顶点按唯一可能的顺序填入这些位置。所以计数就是一个二项式系数。图中是 $2$ 个顶点和 $3$ 个顶点的两条路径：在 $5$ 个位置中选出第一条路径的 $2$ 个位置，得 $\\frac{5 \\cdot 4}{2} = 10$ 种排序。$12$ 个顶点和 $2$ 个顶点的两条路径给出 $\\binom{14}{2} = 91$ 种。\n\n> **注意。** 两条路径是混合在一起的，而不是一条接在另一条后面，所以排序远不止 $2$ 种。而且只需为一条路径选位置，另一条路径按它唯一的顺序填满其余位置。",
   ),
   generate(rng) {
     const a = rng.int(2, 10);
@@ -3271,10 +3514,45 @@ const twoChains: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b, a * b, 2 ** (a + b), 2],
-      solution: t(
-        `Choose which ${a} of the ${a + b} positions go to the first path, in $\\binom{${a + b}}{${a}} = ${answer}$ ways.`,
-        `选择 ${a + b} 个位置中哪 ${a} 个分给第一条路径，有 $\\binom{${a + b}}{${a}} = ${answer}$ 种方法。`,
+      mistakes: [
+        why(a + b, "That is the number of vertices, not the number of orderings.", "那是顶点数，不是排序数。"),
+        why(
+          a * b,
+          "That multiplies the path lengths; count the ways to choose positions instead.",
+          "那是把两条路径的顶点数相乘；应当数选位置的方法。",
+        ),
+        why(
+          2 ** (a + b),
+          `That counts every subset of the positions; the first path takes exactly ${a} of them.`,
+          `那数了位置的所有子集；第一条路径恰好占 ${a} 个位置。`,
+        ),
+        why(
+          2,
+          "That only puts one whole path before the other; the paths can be shuffled together.",
+          "那只是把一整条路径放在另一条之前；两条路径可以混合排列。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choose positions", "选位置"],
+            t(
+              `An ordering has ${a + b} positions, and it is decided by which ${a} of them go to the first path.`,
+              `一个排序有 ${a + b} 个位置，它由其中哪 ${a} 个分给第一条路径决定。`,
+            ),
+          ],
+          [
+            ["Count the choices", "数选法"],
+            t(
+              `Each path fills its positions in its only order, so there are $\\binom{${a + b}}{${a}} = ${answer}$ orderings.`,
+              `每条路径按唯一的顺序填入它的位置，所以有 $\\binom{${a + b}}{${a}} = ${answer}$ 种排序。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing instead the ${b} positions of the second path gives $\\binom{${a + b}}{${b}} = ${answer}$ as well.`,
+          `改为选第二条路径的 ${b} 个位置，同样得到 $\\binom{${a + b}}{${b}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3285,13 +3563,14 @@ const bfsDiscovered: KnowledgePointDef = {
   figure: discreteDrawings2["breadth-first-search#the-vertices-a-breadth-first-search-finds-by-a-given-level"],
   title: t("The vertices a breadth-first search finds by a given level", "广度优先搜索到某层时找到的顶点"),
   explanation: t(
-    "A breadth-first search finds vertices in order of their distance from the start, finishing each level before moving to the next. In a complete $m$-ary tree started at the root, level $j$ has $m^j$ vertices, because each vertex on one level has $m$ children on the next. The number found once level $d$ is finished is the geometric sum of all the levels up to $d$.",
-    "广度优先搜索按到起点的距离顺序找到顶点，完成一层后才进入下一层。在从根出发的完全 $m$ 叉树中，第 $j$ 层有 $m^j$ 个顶点，因为一层的每个顶点在下一层有 $m$ 个孩子。第 $d$ 层完成时找到的顶点数，就是到第 $d$ 层为止所有层的几何级数和。",
+    "A breadth-first search finds vertices in order of their distance from the start, finishing each level before moving to the next. In a complete $m$-ary tree started at the root, level $j$ has $m^j$ vertices, because each vertex on one level has $m$ children on the next. The number found once level $d$ is finished is the geometric sum of all the levels up to $d$. In the drawing, a complete binary tree searched through level $2$ has found $1 + 2 + 4 = 7$ vertices. In a complete $10$-ary tree, once level $3$ is finished the search has found $1 + 10 + 100 + 1000 = 1111$.\n\n> **Watch out.** Count every level from the root, level $0$, up to level $d$, not only level $d$ itself. And the levels multiply by $m$ each time; they do not grow by adding $m$.",
+    "广度优先搜索按到起点的距离顺序找到顶点，完成一层后才进入下一层。在从根出发的完全 $m$ 叉树中，第 $j$ 层有 $m^j$ 个顶点，因为一层的每个顶点在下一层有 $m$ 个孩子。第 $d$ 层完成时找到的顶点数，就是到第 $d$ 层为止所有层的几何级数和。图中的完全二叉树搜索到第 $2$ 层时，已找到 $1 + 2 + 4 = 7$ 个顶点。在完全 $10$ 叉树中，第 $3$ 层完成时，搜索已找到 $1 + 10 + 100 + 1000 = 1111$ 个顶点。\n\n> **注意。** 要数从根所在的第 $0$ 层到第 $d$ 层的每一层，而不只是第 $d$ 层。而且各层每次乘以 $m$，不是每次加 $m$。",
   ),
   generate(rng) {
     const m = rng.int(2, 6);
     const d = rng.int(1, 7);
     const answer = (m ** (d + 1) - 1) / (m - 1);
+    const levels = range(0, d).map((j) => m ** j);
     return numberProblem({
       prompt: t(
         `A breadth-first search starts at the root of a complete ${m}-ary tree of height ${d + 2}, with the root on level 0. How many vertices have been discovered once level ${d} is finished?`,
@@ -3299,10 +3578,34 @@ const bfsDiscovered: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [m ** d, m ** (d + 1), m * d + 1, answer - 1],
-      solution: t(
-        `The levels contain powers of ${m}, so the total is $\\frac{${m}^{${d + 1}} - 1}{${m} - 1} = ${answer}$.`,
-        `各层的顶点数是 ${m} 的幂，所以总数是 $\\frac{${m}^{${d + 1}} - 1}{${m} - 1} = ${answer}$。`,
+      mistakes: [
+        why(m ** d, `That counts only level ${d}; the levels before it were found too.`, `那只数了第 ${d} 层；之前各层也都已找到。`),
+        why(m ** (d + 1), `That is the size of level ${d + 1}, the next level.`, `那是下一层，即第 ${d + 1} 层的顶点数。`),
+        why(
+          m * d + 1,
+          `That adds ${m} vertices per level; each level has ${m} times as many as the one before.`,
+          `那是每层加 ${m} 个顶点；每层的顶点数是上一层的 ${m} 倍。`,
+        ),
+        why(answer - 1, "That leaves out the root, which is found first.", "那漏掉了最先找到的根。"),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Size each level", "求每层的大小"],
+            t(
+              `Level $j$ has $${m}^j$ vertices, so levels $0$ to $${d}$ hold $${levels.join(", ")}$.`,
+              `第 $j$ 层有 $${m}^j$ 个顶点，所以第 $0$ 层到第 $${d}$ 层分别有 $${levels.join(", ")}$ 个。`,
+            ),
+          ],
+          [
+            ["Add the levels", "各层相加"],
+            t(`Together they hold $${levels.join(" + ")} = ${answer}$ vertices.`, `合计 $${levels.join(" + ")} = ${answer}$ 个顶点。`),
+          ],
+        ],
+        t(
+          `The geometric sum formula gives $\\frac{${m}^{${d + 1}} - 1}{${m} - 1} = ${answer}$ as well.`,
+          `几何级数求和公式同样给出 $\\frac{${m}^{${d + 1}} - 1}{${m} - 1} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3313,12 +3616,13 @@ const primStar: KnowledgePointDef = {
   figure: discreteDrawings2["prims-algorithm#the-spanning-tree-of-a-graph-with-sum-weights"],
   title: t("The spanning tree of a graph with sum weights", "和权图的生成树"),
   explanation: t(
-    "Prim's algorithm grows a tree by always adding the cheapest edge that leaves it. When vertices are numbered and an edge between $i$ and $j$ weighs $i + j$, the cheapest edge reaching any new vertex $j$ comes from the smallest vertex already in the tree. If the tree contains vertex 1, every new vertex is attached directly to vertex 1, so the tree is a star.",
-    "普里姆算法总是加入离开当前树的最便宜的边，使树增长。当顶点编号，且 $i$、$j$ 之间的边权为 $i + j$ 时，到达任何新顶点 $j$ 的最便宜的边，来自树中最小的顶点。如果树含顶点 1，每个新顶点都直接连到顶点 1，所以这棵树是星形。",
+    "Prim's algorithm grows a tree by always adding the cheapest edge that leaves it. When vertices are numbered and an edge between $i$ and $j$ weighs $i + j$, the cheapest edge reaching any new vertex $j$ comes from the smallest vertex already in the tree. If the tree contains vertex 1, every new vertex is attached directly to vertex 1, so the tree is a star. The drawing shows $4$ vertices: the new vertices are reached from vertex 1 at weights $3$, $4$ and $5$, so the tree weighs $12$, and the dashed edges of weights $5$, $6$ and $7$ are never chosen. With $50$ vertices the star's edges weigh $3, 4, \\dots, 51$, which add to $\\frac{49(3 + 51)}{2} = 1323$.\n\n> **Watch out.** Each weight is $1 + j$, so remember the $1$ on every one of the $n - 1$ edges. And no edge reaches vertex $j$ more cheaply than the one from vertex $1$, so the largest weights never enter the tree.",
+    "普里姆算法总是加入离开当前树的最便宜的边，使树增长。当顶点编号，且 $i$、$j$ 之间的边权为 $i + j$ 时，到达任何新顶点 $j$ 的最便宜的边，来自树中最小的顶点。如果树含顶点 1，每个新顶点都直接连到顶点 1，所以这棵树是星形。图中有 $4$ 个顶点：新顶点从顶点 1 以权 $3$、$4$、$5$ 到达，所以树的权为 $12$，权为 $5$、$6$、$7$ 的虚线边从不被选中。有 $50$ 个顶点时，星形的边权为 $3, 4, \\dots, 51$，其和为 $\\frac{49(3 + 51)}{2} = 1323$。\n\n> **注意。** 每条边的权是 $1 + j$，所以 $n - 1$ 条边中每一条都别忘了那个 $1$。而且没有哪条边到达顶点 $j$ 比从顶点 $1$ 出发的更便宜，所以最大的权永远不会进入树。",
   ),
   generate(rng) {
     const n = rng.int(3, 40);
     const answer = n - 1 + (n * (n + 1)) / 2 - 1;
+    const weights = n <= 4 ? range(3, n + 1).join(", ") : `3, 4, \\dots, ${n + 1}`;
     return numberProblem({
       prompt: t(
         `A complete graph has vertices $1, 2, \\dots, ${n}$, and the edge between $i$ and $j$ has weight $i + j$. Find the total weight of a minimum spanning tree.`,
@@ -3326,10 +3630,45 @@ const primStar: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n * n - 1, (n * (n + 1)) / 2 - 1, ((n - 1) * (n * (n + 1))) / 2, answer + 1],
-      solution: t(
-        `Every vertex $j \\ge 2$ joins vertex 1 with an edge of weight $1 + j$. These weights add to $${n - 1} + ${(n * (n + 1)) / 2 - 1} = ${answer}$.`,
-        `每个顶点 $j \\ge 2$ 通过权为 $1 + j$ 的边连到顶点 1。这些权重之和是 $${n - 1} + ${(n * (n + 1)) / 2 - 1} = ${answer}$。`,
+      mistakes: [
+        why(
+          n * n - 1,
+          `That gives every edge the largest weight, $1 + ${n}$; the edges to smaller vertices are lighter.`,
+          `那是给每条边都用了最大的权 $1 + ${n}$；连到较小顶点的边更轻。`,
+        ),
+        why(
+          (n * (n + 1)) / 2 - 1,
+          "That adds $2 + 3 + \\dots + n$ but leaves out the $1$ in each weight $1 + j$.",
+          "那是把 $2 + 3 + \\dots + n$ 相加，却漏掉了每个权 $1 + j$ 中的 $1$。",
+        ),
+        why(
+          ((n - 1) * (n * (n + 1))) / 2,
+          "That multiplies where it should add; add the weights of the edges one by one.",
+          "那是该加的地方做了乘法；应把各边的权逐一相加。",
+        ),
+        why(answer + 1, `That is one too many: the weights run from $3$ to $${n + 1}$.`, `多了一：权从 $3$ 到 $${n + 1}$。`),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Attach each vertex to 1", "每个顶点连到 1"],
+            t(
+              `Every vertex $j \\ge 2$ joins vertex 1 with an edge of weight $1 + j$, the lightest edge at $j$, so the weights are $${weights}$.`,
+              `每个顶点 $j \\ge 2$ 通过权为 $1 + j$ 的边连到顶点 1，这是 $j$ 处最轻的边，所以各边权为 $${weights}$。`,
+            ),
+          ],
+          [
+            ["Add the weights", "把权相加"],
+            t(
+              `The ${n - 1} ones and $${n <= 4 ? range(2, n).join(" + ") : `2 + 3 + \\dots + ${n}`}$ add to $${n - 1} + ${(n * (n + 1)) / 2 - 1} = ${answer}$.`,
+              `${n - 1} 个 1 与 $${n <= 4 ? range(2, n).join(" + ") : `2 + 3 + \\dots + ${n}`}$ 之和为 $${n - 1} + ${(n * (n + 1)) / 2 - 1} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `As an arithmetic series of ${n - 1} terms from $3$ to $${n + 1}$: $\\frac{${n - 1}(3 + ${n + 1})}{2} = ${answer}$.`,
+          `看作从 $3$ 到 $${n + 1}$ 的 ${n - 1} 项等差数列：$\\frac{${n - 1}(3 + ${n + 1})}{2} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3340,8 +3679,8 @@ const gridPaths: KnowledgePointDef = {
   figure: discreteDrawings2["shortest-paths-in-unweighted-graphs#the-shortest-paths-across-a-grid-graph"],
   title: t("The shortest paths across a grid graph", "网格图中的最短路径"),
   explanation: t(
-    "In a grid graph, moving from one corner to the opposite corner needs a fixed number of steps in each direction, and any shortest path uses no others. A shortest path is therefore a sequence of steps, in which we only choose the order of the two kinds. Choosing the positions of one kind decides the whole sequence, which gives a binomial coefficient instead of a search.",
-    "在网格图中，从一个角走到对角，每个方向需要固定的步数，任何最短路径都不会多走。因此最短路径就是一列步子，我们只选择两种步子的顺序。选定其中一种步子的位置，就决定了整个序列，于是得到一个二项式系数，而不必搜索。",
+    "In a grid graph, moving from one corner to the opposite corner needs a fixed number of steps in each direction, and any shortest path uses no others. A shortest path is therefore a sequence of steps, in which we only choose the order of the two kinds. Choosing the positions of one kind decides the whole sequence, which gives a binomial coefficient instead of a search. The drawing shows a grid $3$ steps wide and $2$ steps high: a shortest path makes $3$ steps across and $2$ up, and choosing the $2$ positions of the steps up among $5$ gives $\\frac{5 \\cdot 4}{2} = 10$ paths. A grid $12$ steps wide and $3$ high has $\\binom{15}{3} = 455$.\n\n> **Watch out.** The length of a shortest path is $a + b$, but the question asks how many there are. And a shortest path never steps back, so the steps are of only two kinds and only their order varies.",
+    "在网格图中，从一个角走到对角，每个方向需要固定的步数，任何最短路径都不会多走。因此最短路径就是一列步子，我们只选择两种步子的顺序。选定其中一种步子的位置，就决定了整个序列，于是得到一个二项式系数，而不必搜索。图中的网格宽 $3$ 步、高 $2$ 步：最短路径横走 $3$ 步、向上 $2$ 步，在 $5$ 个位置中选出向上的 $2$ 步，得 $\\frac{5 \\cdot 4}{2} = 10$ 条路径。宽 $12$ 步、高 $3$ 步的网格有 $\\binom{15}{3} = 455$ 条。\n\n> **注意。** 最短路径的长度是 $a + b$，但问题问的是有多少条。而且最短路径从不后退，所以步子只有两种，变化的只是它们的顺序。",
   ),
   generate(rng) {
     const a = rng.int(2, 10);
@@ -3354,10 +3693,37 @@ const gridPaths: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b, (a + 1) * (b + 1), 2 ** (a + b), a * b],
-      solution: t(
-        `A shortest path has $${a} + ${b} = ${a + b}$ steps, and ${a} of them increase $i$. So there are $\\binom{${a + b}}{${a}} = ${answer}$ paths.`,
-        `最短路径有 $${a} + ${b} = ${a + b}$ 步，其中 ${a} 步增加 $i$。所以有 $\\binom{${a + b}}{${a}} = ${answer}$ 条路径。`,
+      mistakes: [
+        why(a + b, "That is the length of a shortest path, not the number of them.", "那是最短路径的长度，不是它们的条数。"),
+        why((a + 1) * (b + 1), "That is the number of vertices of the grid.", "那是网格的顶点数。"),
+        why(
+          2 ** (a + b),
+          `That lets each step go either way freely; exactly ${a} of the steps must increase $i$.`,
+          `那是让每一步随意选方向；恰好要有 ${a} 步增加 $i$。`,
+        ),
+        why(a * b, "That multiplies the side lengths; count the orders of the steps instead.", "那是把两边长相乘；应当数步子的排列顺序。"),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the steps", "数步数"],
+            t(
+              `A shortest path has $${a} + ${b} = ${a + b}$ steps: ${a} that increase $i$ and ${b} that increase $j$.`,
+              `最短路径有 $${a} + ${b} = ${a + b}$ 步：${a} 步增加 $i$，${b} 步增加 $j$。`,
+            ),
+          ],
+          [
+            ["Choose their order", "选顺序"],
+            t(
+              `Choosing which ${a} of the ${a + b} steps increase $i$ decides the path, so there are $\\binom{${a + b}}{${a}} = ${answer}$ paths.`,
+              `选出 ${a + b} 步中哪 ${a} 步增加 $i$，就决定了路径，所以有 $\\binom{${a + b}}{${a}} = ${answer}$ 条路径。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing instead the ${b} steps that increase $j$ gives $\\binom{${a + b}}{${b}} = ${answer}$ as well.`,
+          `改为选出增加 $j$ 的 ${b} 步，同样得到 $\\binom{${a + b}}{${b}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3367,8 +3733,8 @@ const mooreCount: KnowledgePointDef = {
   id: "counting-the-tables-of-a-moore-machine",
   title: t("Counting the tables of a Moore machine", "计算Moore 机的表"),
   explanation: t(
-    "A Moore machine's table has two independent parts. Each pair of a state and an input symbol needs a next state, which makes $as$ entries with $s$ choices each. Each state also needs one output, which makes $s$ entries with $b$ choices each. The output belongs to the state and not to the transition, and this is what makes the count smaller than for a Mealy machine.",
-    "Moore 机的表有两个独立的部分。每一对状态和输入符号需要一个下一状态，共 $as$ 项，每项有 $s$ 种选择。每个状态还需要一个输出，共 $s$ 项，每项有 $b$ 种选择。输出属于状态而不属于转移，这使得计数比Mealy 机要小。",
+    "A Moore machine's table has two independent parts. Each pair of a state and an input symbol needs a next state, which makes $as$ entries with $s$ choices each. Each state also needs one output, which makes $s$ entries with $b$ choices each. The output belongs to the state and not to the transition, and this is what makes the count smaller than for a Mealy machine.\n\n> **Watch out.** There is one output per state, not one per transition. With $2$ states, $2$ input symbols and $2$ output symbols there are $2^4 \\cdot 2^2 = 64$ tables, not $2^4 \\cdot 2^4 = 256$.",
+    "Moore 机的表有两个独立的部分。每一对状态和输入符号需要一个下一状态，共 $as$ 项，每项有 $s$ 种选择。每个状态还需要一个输出，共 $s$ 项，每项有 $b$ 种选择。输出属于状态而不属于转移，这使得计数比Mealy 机要小。\n\n> **注意。** 每个状态一个输出，而不是每个转移一个输出。有 $2$ 个状态、$2$ 个输入符号和 $2$ 个输出符号时，共有 $2^4 \\cdot 2^2 = 64$ 种表，而不是 $2^4 \\cdot 2^4 = 256$ 种。",
   ),
   generate(rng) {
     const s = rng.int(2, 5);
@@ -3383,10 +3749,42 @@ const mooreCount: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [s ** entries, (s * b) ** entries, s ** a * b, s ** entries + b ** s],
-      solution: t(
-        `There are ${entries} next states with ${s} choices each, and ${s} outputs with ${b} choices each. So the count is $${s}^{${entries}} \\cdot ${b}^{${s}} = ${answer}$.`,
-        `有 ${entries} 个下一状态，每个 ${s} 种选择；有 ${s} 个输出，每个 ${b} 种选择。所以个数是 $${s}^{${entries}} \\cdot ${b}^{${s}} = ${answer}$。`,
+      mistakes: [
+        why(s ** entries, "That counts only the next states and leaves out the outputs.", "那只数了下一状态，漏掉了输出。"),
+        why(
+          (s * b) ** entries,
+          "That puts an output on every transition, as in a Mealy machine; a Moore machine has one output per state.",
+          "那是给每个转移都配一个输出，像 Mealy 机那样；Moore 机每个状态只有一个输出。",
+        ),
+        why(
+          s ** entries + b ** s,
+          "That adds the two parts; every choice of next states combines with every choice of outputs, so they multiply.",
+          "那是把两部分相加；每种下一状态的选法都能与每种输出的选法搭配，所以应相乘。",
+        ),
+        why(s ** a * b, "That fills in only one row of the table, with one output.", "那只填了表中的一行和一个输出。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Next states", "下一状态"],
+            t(
+              `There are $${s} \\cdot ${a} = ${entries}$ pairs of a state and an input symbol, each with $${s}$ choices: $${s}^{${entries}} = ${s ** entries}$ ways.`,
+              `状态与输入符号的配对共 $${s} \\cdot ${a} = ${entries}$ 个，每个有 $${s}$ 种选择：共 $${s}^{${entries}} = ${s ** entries}$ 种。`,
+            ),
+          ],
+          [
+            ["Outputs", "输出"],
+            t(
+              `Each of the $${s}$ states has one output with $${b}$ choices: $${b}^{${s}} = ${b ** s}$ ways.`,
+              `$${s}$ 个状态各有一个输出，每个有 $${b}$ 种选择：共 $${b}^{${s}} = ${b ** s}$ 种。`,
+            ),
+          ],
+          [["Multiply", "相乘"], t("The two parts are independent:", "两部分相互独立："), [`${s ** entries} \\cdot ${b ** s} = ${answer}`]],
+        ],
+        t(
+          `A Mealy machine with the same sizes would have $(${s} \\cdot ${b})^{${entries}} = ${s}^{${entries}} \\cdot ${b}^{${entries}}$ tables; the Moore count has $${b}^{${s}}$ in place of $${b}^{${entries}}$, which is smaller, as it should be.`,
+          `同样规模的 Mealy 机有 $(${s} \\cdot ${b})^{${entries}} = ${s}^{${entries}} \\cdot ${b}^{${entries}}$ 种表；Moore 机的计数中是 $${b}^{${s}}$ 而不是 $${b}^{${entries}}$，确实更小。`,
+        ),
       ),
     });
   },
@@ -3396,8 +3794,8 @@ const noTwoOnes: KnowledgePointDef = {
   id: "the-accepted-strings-of-a-given-length-with-no-two-ones-together",
   title: t("Accepted strings of a given length with no two ones together", "没有相邻 1 的给定长度串"),
   explanation: t(
-    "The states of a DFA can be used to count its accepted strings. For strings with no two consecutive ones, the DFA remembers whether the last symbol was a 1. A valid string of length $n$ either ends in 0, after any valid string of length $n - 1$, or ends in 01, after any valid string of length $n - 2$. So the counts follow the Fibonacci recurrence.",
-    "DFA 的状态可以用来计算它接受的串的个数。对没有两个连续 1 的串，DFA 记住最后一个符号是否为 1。长度为 $n$ 的有效串，要么以 0 结尾（前面是任意长度为 $n - 1$ 的有效串），要么以 01 结尾（前面是任意长度为 $n - 2$ 的有效串）。所以这些个数满足斐波那契递推。",
+    "The states of a DFA can be used to count its accepted strings. For strings with no two consecutive ones, the DFA remembers whether the last symbol was a 1. A valid string of length $n$ either ends in 0, after any valid string of length $n - 1$, or ends in 01, after any valid string of length $n - 2$. So the counts follow the Fibonacci recurrence.\n\n> **Watch out.** The counts start from $1$ for the empty string and $2$ for length $1$, not from $1, 1$. Length $3$ gives $5$ strings, namely $000, 001, 010, 100, 101$, not the Fibonacci number $2$ or $3$.",
+    "DFA 的状态可以用来计算它接受的串的个数。对没有两个连续 1 的串，DFA 记住最后一个符号是否为 1。长度为 $n$ 的有效串，要么以 0 结尾（前面是任意长度为 $n - 1$ 的有效串），要么以 01 结尾（前面是任意长度为 $n - 2$ 的有效串）。所以这些个数满足斐波那契递推。\n\n> **注意。** 个数从空串的 $1$ 和长度 $1$ 的 $2$ 开始，而不是从 $1, 1$ 开始。长度为 $3$ 时有 $5$ 个串，即 $000, 001, 010, 100, 101$，而不是斐波那契数 $2$ 或 $3$。",
   ),
   generate(rng) {
     const n = rng.int(2, 30);
@@ -3413,10 +3811,44 @@ const noTwoOnes: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 ** n, shorter, n + 1, answer + 1],
-      solution: t(
-        `The counts start at 1 for the empty string and 2 for length 1, and each is the sum of the previous two. For length ${n}, this gives $${shorter} + ${shortest} = ${answer}$.`,
-        `个数从空串的 1 和长度 1 的 2 开始，每个都是前两个之和。长度为 ${n} 时，得 $${shorter} + ${shortest} = ${answer}$。`,
+      mistakes: [
+        why(2 ** n, "That counts every binary string of that length.", "那是该长度的所有二进制串的个数。"),
+        why(shorter, "That counts only the valid strings that end in 0.", "那只数了以 0 结尾的有效串。"),
+        why(shortest, "That counts only the valid strings that end in 1, that is, in 01.", "那只数了以 1（即 01）结尾的有效串。"),
+        why(n + 1, "That counts only the strings with at most one 1.", "那只数了至多含一个 1 的串。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split by the last symbol", "按最后一个符号分类"],
+            t(
+              `A valid string of length $${n}$ ends in 0 after a valid string of length $${n - 1}$, or in 01 after a valid string of length $${n - 2}$, so each count is the sum of the two before it.`,
+              `长度为 $${n}$ 的有效串，要么是长度为 $${n - 1}$ 的有效串后接 0，要么是长度为 $${n - 2}$ 的有效串后接 01，所以每个个数都是前两个之和。`,
+            ),
+          ],
+          [
+            ["Run the recurrence", "运用递推"],
+            t(
+              "Starting from $1$ for the empty string and $2$ for length $1$, the counts are",
+              "从空串的 $1$ 和长度 $1$ 的 $2$ 开始，个数依次为",
+            ),
+            range(0, Math.floor(n / 8))
+              .map((r) => counts.slice(8 * r, Math.min(8 * r + 8, n + 1)).join(",\\ "))
+              .filter((row) => row !== ""),
+          ],
+          [
+            ["Read off length n", "读出长度 n 的值"],
+            t(
+              `The count for length $${n}$ is the sum of the counts for lengths $${n - 1}$ and $${n - 2}$:`,
+              `长度 $${n}$ 的个数是长度 $${n - 1}$ 与 $${n - 2}$ 的个数之和：`,
+            ),
+            [`${shorter} + ${shortest} = ${answer}`],
+          ],
+        ],
+        t(
+          "For length $3$ the list can be checked by hand: $000, 001, 010, 100, 101$ are the $5$ strings without two adjacent 1s, which is the fourth count in the list.",
+          "长度为 $3$ 时可以直接核对：没有相邻 1 的串是 $000, 001, 010, 100, 101$，共 $5$ 个，正是列表中的第四个数。",
+        ),
       ),
     });
   },
@@ -3426,8 +3858,8 @@ const regexBlock: KnowledgePointDef = {
   id: "the-strings-of-a-given-length-with-a-single-block-of-ones",
   title: t("The strings of a given length with a single block of ones", "只有一段 1 的给定长度串"),
   explanation: t(
-    "A string matching $0^*1^*0^*$ is either all zeros or has one unbroken block of ones. A block is decided by where it starts and where it ends, which amounts to choosing two of the $n + 1$ gaps between and around the symbols. Adding the all-zero string gives the total. Different splits can produce the same all-zero string, so it must be counted only once.",
-    "匹配 $0^*1^*0^*$ 的串，要么全是零，要么有一段连续的 1。这一段由它的起点和终点决定，相当于从符号之间及两端的 $n + 1$ 个间隙中选两个。再加上全零串，就得到总数。不同的拆分可以产生同一个全零串，所以它只能算一次。",
+    "A string matching $0^*1^*0^*$ is either all zeros or has one unbroken block of ones. A block is decided by where it starts and where it ends, which amounts to choosing two of the $n + 1$ gaps between and around the symbols. Adding the all-zero string gives the total. Different splits can produce the same all-zero string, so it must be counted only once.\n\n> **Watch out.** Count strings, not splits. For length $2$ the string $00$ comes from three splits, $00 \\cdot \\varepsilon \\cdot \\varepsilon$, $0 \\cdot \\varepsilon \\cdot 0$ and $\\varepsilon \\cdot \\varepsilon \\cdot 00$, yet it is one string; the total is $\\binom{3}{2} + 1 = 4$.",
+    "匹配 $0^*1^*0^*$ 的串，要么全是零，要么有一段连续的 1。这一段由它的起点和终点决定，相当于从符号之间及两端的 $n + 1$ 个间隙中选两个。再加上全零串，就得到总数。不同的拆分可以产生同一个全零串，所以它只能算一次。\n\n> **注意。** 要数串，而不是拆分。长度为 $2$ 时，串 $00$ 来自三种拆分 $00 \\cdot \\varepsilon \\cdot \\varepsilon$、$0 \\cdot \\varepsilon \\cdot 0$ 和 $\\varepsilon \\cdot \\varepsilon \\cdot 00$，但它只是一个串；总数为 $\\binom{3}{2} + 1 = 4$。",
   ),
   generate(rng) {
     const n = rng.int(3, 35);
@@ -3440,10 +3872,39 @@ const regexBlock: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [blocks, 2 ** n, n + 1, binom(n + 2, 2)],
-      solution: t(
-        `A block of ones can be chosen in $\\binom{${n + 1}}{2} = ${blocks}$ ways, and the all-zero string adds one more, which gives $${answer}$.`,
-        `一段 1 有 $\\binom{${n + 1}}{2} = ${blocks}$ 种选法，全零串再加一个，于是得 $${answer}$。`,
+      mistakes: [
+        why(blocks, "That leaves out the all-zero string, which also matches.", "那漏掉了全零串，它也匹配。"),
+        why(2 ** n, "That counts every binary string of that length.", "那是该长度的所有二进制串的个数。"),
+        why(
+          n + 1,
+          "That counts only the strings $0^k1^{n-k}$, which match $0^*1^*$.",
+          "那只数了形如 $0^k1^{n-k}$ 的串，它们匹配的是 $0^*1^*$。",
+        ),
+        why(
+          binom(n + 2, 2),
+          `That counts the splits into three parts; the all-zero string comes from $${n + 1}$ splits but is one string.`,
+          `那数的是分成三段的拆分；全零串来自 $${n + 1}$ 种拆分，但只是一个串。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Strings with a block of ones", "含一段 1 的串"],
+            t(
+              `The block starts and ends at two of the $${n + 1}$ gaps between and around the symbols: $\\binom{${n + 1}}{2} = ${blocks}$ ways.`,
+              `这一段的起点和终点是符号之间及两端的 $${n + 1}$ 个间隙中的两个：共 $\\binom{${n + 1}}{2} = ${blocks}$ 种。`,
+            ),
+          ],
+          [
+            ["Add the all-zero string", "加上全零串"],
+            t("The string with no ones matches too, and it is counted once:", "不含 1 的串也匹配，只算一次："),
+            [`${blocks} + 1 = ${answer}`],
+          ],
+        ],
+        t(
+          `Counting blocks by their length instead, a block of length $L$ has $${n} - L + 1$ positions, so there are $${n} + ${n - 1} + \\dots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${blocks}$ blocks, as before.`,
+          `改为按长度数：长度为 $L$ 的一段有 $${n} - L + 1$ 个位置，所以共有 $${n} + ${n - 1} + \\dots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${blocks}$ 段，与前面相同。`,
+        ),
       ),
     });
   },
@@ -3453,8 +3914,8 @@ const tmConfigurations: KnowledgePointDef = {
   id: "counting-the-configurations-of-a-turing-machine",
   title: t("Counting the configurations of a Turing machine", "计算图灵机的格局数"),
   explanation: t(
-    "A configuration records everything needed to continue a computation: the current state, the position of the head, and the contents of the tape. On a tape limited to $c$ cells, these parts are independent, so the count is the product of the number of states, the $c$ head positions, and the number of tape contents. This count is what bounds how long a machine can run without repeating.",
-    "格局记录了继续计算所需的一切：当前状态、读写头的位置和纸带的内容。在限于 $c$ 个单元的纸带上，这些部分相互独立，所以个数是状态数、$c$ 个读写头位置和纸带内容数的乘积。这个计数决定了机器在不重复的情况下最多能运行多久。",
+    "A configuration records everything needed to continue a computation: the current state, the position of the head, and the contents of the tape. On a tape limited to $c$ cells, these parts are independent, so the count is the product of the number of states, the $c$ head positions, and the number of tape contents. This count is what bounds how long a machine can run without repeating.\n\n> **Watch out.** Each cell holds its own symbol, so the tape contents number $g^c$, not $g \\cdot c$. With $2$ symbols and $3$ cells there are $2^3 = 8$ contents, not $6$.",
+    "格局记录了继续计算所需的一切：当前状态、读写头的位置和纸带的内容。在限于 $c$ 个单元的纸带上，这些部分相互独立，所以个数是状态数、$c$ 个读写头位置和纸带内容数的乘积。这个计数决定了机器在不重复的情况下最多能运行多久。\n\n> **注意。** 每个单元各有自己的符号，所以纸带内容有 $g^c$ 种，而不是 $g \\cdot c$ 种。$2$ 个符号、$3$ 个单元时有 $2^3 = 8$ 种内容，而不是 $6$ 种。",
   ),
   generate(rng) {
     const q = rng.int(2, 9);
@@ -3469,10 +3930,39 @@ const tmConfigurations: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [q * tapes, tapes, q * c * g, (q + c) * tapes],
-      solution: t(
-        `There are ${q} states, ${c} head positions and $${g}^{${c}} = ${tapes}$ tape contents, so the product is $${answer}$.`,
-        `有 ${q} 个状态、${c} 个读写头位置和 $${g}^{${c}} = ${tapes}$ 种纸带内容，所以乘积是 $${answer}$。`,
+      mistakes: [
+        why(q * tapes, "That leaves out the position of the head.", "那漏掉了读写头的位置。"),
+        why(tapes, "That counts only the tape contents.", "那只数了纸带内容。"),
+        why(
+          q * c * g,
+          `That gives the tape $${g}$ contents in all; each of the $${c}$ cells has its own $${g}$ choices.`,
+          `那让纸带总共只有 $${g}$ 种内容；其实 $${c}$ 个单元各有 $${g}$ 种选择。`,
+        ),
+        why(
+          (q + c) * tapes,
+          "That adds the states and head positions; they combine independently, so they multiply.",
+          "那是把状态数与读写头位置数相加；它们相互独立地搭配，应相乘。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count each part", "数每个部分"],
+            t(
+              `There are $${q}$ states, $${c}$ head positions and $${g}^{${c}} = ${tapes}$ tape contents.`,
+              `有 $${q}$ 个状态、$${c}$ 个读写头位置和 $${g}^{${c}} = ${tapes}$ 种纸带内容。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t("The three parts are independent:", "三个部分相互独立："),
+            [`${q} \\cdot ${c} \\cdot ${tapes} = ${answer}`],
+          ],
+        ],
+        t(
+          `Grouping the other way, the $${q} \\cdot ${c} = ${q * c}$ pairs of a state and a head position each go with $${tapes}$ tapes, and $${q * c} \\cdot ${tapes} = ${answer}$.`,
+          `换一种分组：状态与读写头位置的 $${q} \\cdot ${c} = ${q * c}$ 种配对，每种都与 $${tapes}$ 种纸带搭配，$${q * c} \\cdot ${tapes} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3482,8 +3972,8 @@ const sumOfPowersOrder: KnowledgePointDef = {
   id: "the-order-of-a-sum-of-powers",
   title: t("The order of a sum of powers", "幂和的阶"),
   explanation: t(
-    "A loop that does $i^p$ work on its $i$th pass has total cost $\\sum_{i = 1}^n i^p$. Each of the $n$ terms is at most $n^p$, so the sum is $O(n^{p + 1})$. This exponent cannot be lowered, since the larger half of the terms are each at least $\\left(\\frac{n}{2}\\right)^p$. So summing raises the exponent by exactly one, whatever the constant in front.",
-    "第 $i$ 次循环做 $i^p$ 的工作，总代价是 $\\sum_{i = 1}^n i^p$。$n$ 个项中每一项最多是 $n^p$，所以和是 $O(n^{p + 1})$。这个指数不能再降低，因为较大的一半项每项至少是 $\\left(\\frac{n}{2}\\right)^p$。所以求和恰好使指数增加一，与前面的常数无关。",
+    "A loop that does $i^p$ work on its $i$th pass has total cost $\\sum_{i = 1}^n i^p$. Each of the $n$ terms is at most $n^p$, so the sum is $O(n^{p + 1})$. This exponent cannot be lowered, since the larger half of the terms are each at least $\\left(\\frac{n}{2}\\right)^p$. So summing raises the exponent by exactly one, whatever the constant in front.\n\n> **Watch out.** The sum has $n$ terms, so its exponent is one more than that of a single term. $\\sum_{i=1}^{n} i^2$ is $\\Theta(n^3)$, not $\\Theta(n^2)$.",
+    "第 $i$ 次循环做 $i^p$ 的工作，总代价是 $\\sum_{i = 1}^n i^p$。$n$ 个项中每一项最多是 $n^p$，所以和是 $O(n^{p + 1})$。这个指数不能再降低，因为较大的一半项每项至少是 $\\left(\\frac{n}{2}\\right)^p$。所以求和恰好使指数增加一，与前面的常数无关。\n\n> **注意。** 和有 $n$ 项，所以它的指数比单独一项的指数大一。$\\sum_{i=1}^{n} i^2$ 是 $\\Theta(n^3)$，而不是 $\\Theta(n^2)$。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -3498,10 +3988,54 @@ const sumOfPowersOrder: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [p, p + 2, a + p, a * p],
-      solution: t(
-        `Each of the $n$ terms is at most $${a}${top}$, and the larger half are all a constant times that size. So the exponent is $${p} + 1 = ${answer}$.`,
-        `$n$ 项中每项最多是 $${a}${top}$，较大的一半项都是这个大小的常数倍。所以指数是 $${p} + 1 = ${answer}$。`,
+      mistakes: [
+        why(
+          p,
+          "That is the exponent of a single term; adding up $n$ terms raises it by one.",
+          "那是单独一项的指数；把 $n$ 项加起来使它增加一。",
+        ),
+        why(
+          p + 2,
+          `That is an upper bound, but not the smallest: the sum is already $O(n^{${answer}})$.`,
+          `那是一个上界，但不是最小的：这个和已经是 $O(n^{${answer}})$。`,
+        ),
+        why(
+          a + p,
+          `That adds the constant $${a}$ to the exponent; a constant factor does not change the order.`,
+          `那把常数 $${a}$ 加到了指数上；常数因子不改变阶。`,
+        ),
+        why(
+          a * p,
+          `That multiplies the exponent by the constant $${a}$; a constant factor does not change the order.`,
+          `那把指数乘以常数 $${a}$；常数因子不改变阶。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Bound from above", "从上方估计"],
+            t(`Each of the $n$ terms is at most $${a}${top}$:`, `$n$ 项中每项最多是 $${a}${top}$：`),
+            [`\\sum_{i=1}^{n} ${a}${term} \\le n \\cdot ${a}${top} = ${a}n^{${answer}}`],
+          ],
+          [
+            ["Bound from below", "从下方估计"],
+            t(
+              `The larger half of the terms, about $\\frac{n}{2}$ of them, are each at least $${a}${p === 1 ? "\\cdot \\frac{n}{2}" : `\\left(\\frac{n}{2}\\right)^{${p}}`}$, so the sum is at least a constant times $n^{${answer}}$, namely $\\frac{${a}}{2^{${answer}}} n^{${answer}}$.`,
+              `较大的一半项约有 $\\frac{n}{2}$ 个，每项至少是 $${a}${p === 1 ? "\\cdot \\frac{n}{2}" : `\\left(\\frac{n}{2}\\right)^{${p}}`}$，所以和至少是 $n^{${answer}}$ 的常数倍，即 $\\frac{${a}}{2^{${answer}}} n^{${answer}}$。`,
+            ),
+          ],
+          [
+            ["Read off the exponent", "读出指数"],
+            t(
+              `So the sum grows like $n^{${answer}}$ and $k = ${p} + 1 = ${answer}$.`,
+              `所以这个和的增长与 $n^{${answer}}$ 相当，$k = ${p} + 1 = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The integral gives the same order: $\\int_0^n ${a}${p === 1 ? "x" : `x^{${p}}`}\\,dx = \\frac{${a}}{${answer}} n^{${answer}}$, which lies between the two bounds.`,
+          `积分给出同样的阶：$\\int_0^n ${a}${p === 1 ? "x" : `x^{${p}}`}\\,dx = \\frac{${a}}{${answer}} n^{${answer}}$，它介于上下两个界之间。`,
+        ),
       ),
     });
   },
@@ -3511,8 +4045,8 @@ const omegaThreshold: KnowledgePointDef = {
   id: "the-threshold-where-an-exponential-overtakes-a-power",
   title: t("The threshold where an exponential overtakes a power", "指数函数超过幂函数的临界点"),
   explanation: t(
-    "The statement $2^n = \\Omega(n^p)$ only needs its inequality to hold from some point on. Small values of $n$ can behave differently, and an inequality may hold at first, fail for a while, and then hold for good. So the threshold $n_0$ is one more than the last value where the inequality fails, and it is not the first value where it happens to hold.",
-    "$2^n = \\Omega(n^p)$ 只要求不等式从某一点起成立。较小的 $n$ 可以表现不同，不等式可能开始成立，失败一段时间，然后一直成立。所以临界值 $n_0$ 比不等式失败的最后一个值大一，而不是它碰巧成立的第一个值。",
+    "The statement $2^n = \\Omega(n^p)$ only needs its inequality to hold from some point on. Small values of $n$ can behave differently, and an inequality may hold at first, fail for a while, and then hold for good. So the threshold $n_0$ is one more than the last value where the inequality fails, and it is not the first value where it happens to hold.\n\n> **Watch out.** An early success does not settle the threshold. $2^n \\ge n^2$ holds at $n = 1$ and $n = 2$, fails at $n = 3$ since $8 < 9$, and holds from $n = 4$ on, so $n_0 = 4$, not $1$.",
+    "$2^n = \\Omega(n^p)$ 只要求不等式从某一点起成立。较小的 $n$ 可以表现不同，不等式可能开始成立，失败一段时间，然后一直成立。所以临界值 $n_0$ 比不等式失败的最后一个值大一，而不是它碰巧成立的第一个值。\n\n> **注意。** 开始时成立并不能确定临界值。$2^n \\ge n^2$ 在 $n = 1$ 和 $n = 2$ 时成立，在 $n = 3$ 时因 $8 < 9$ 而不成立，从 $n = 4$ 起一直成立，所以 $n_0 = 4$，而不是 $1$。",
   ),
   generate(rng) {
     const c = rng.int(1, 60);
@@ -3532,10 +4066,45 @@ const omegaThreshold: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [first, last, answer + 1, answer + 2, c],
-      solution: t(
-        `At $n = ${last}$, the left side is $${2 ** last}$ and the right side is $${c * last ** p}$, so the inequality fails. At $n = ${answer}$, it is $${2 ** answer} \\ge ${c * answer ** p}$, and it holds from then on.`,
-        `当 $n = ${last}$ 时，左边是 $${2 ** last}$，右边是 $${c * last ** p}$，所以不等式不成立。当 $n = ${answer}$ 时，$${2 ** answer} \\ge ${c * answer ** p}$，此后一直成立。`,
+      mistakes: [
+        why(
+          first,
+          `The inequality holds at $n = ${first}$, but it fails again at $n = ${last}$, so it does not hold for all $n \\ge ${first}$.`,
+          `不等式在 $n = ${first}$ 时成立，但在 $n = ${last}$ 时又不成立，所以并非对所有 $n \\ge ${first}$ 都成立。`,
+        ),
+        why(
+          last,
+          "That is the last value where the inequality fails; the threshold is the next one.",
+          "那是不等式不成立的最后一个值；临界值是下一个。",
+        ),
+        why(
+          answer + 1,
+          `The inequality already holds for all $n \\ge ${answer}$, so this is not the smallest.`,
+          `不等式已经对所有 $n \\ge ${answer}$ 成立，所以这不是最小的。`,
+        ),
+        why(
+          c,
+          "That is the constant in the inequality, not the point from which it holds.",
+          "那是不等式中的常数，而不是它开始成立的位置。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the last failure", "找出最后一次不成立"],
+            t(`At $n = ${last}$ the inequality fails:`, `在 $n = ${last}$ 时不等式不成立：`),
+            [`2^{${last}} = ${2 ** last} < ${c * last ** p} = ${c === 1 ? "" : `${c} \\cdot `}${last}^{${p}}`],
+          ],
+          [
+            ["Check the next value", "检验下一个值"],
+            t(`At $n = ${answer}$ it holds:`, `在 $n = ${answer}$ 时成立：`),
+            [`2^{${answer}} = ${2 ** answer} \\ge ${c * answer ** p} = ${c === 1 ? "" : `${c} \\cdot `}${answer}^{${p}}`],
+          ],
+        ],
+        t(
+          `It keeps holding from there: each step doubles the left side, while the right side grows by the factor $\\left(\\frac{n + 1}{n}\\right)^{${p}} \\le \\left(\\frac{${answer + 1}}{${answer}}\\right)^{${p}} < 2$. So $n_0 = ${answer}$.`,
+          `此后一直成立：每一步左边加倍，而右边只增大为 $\\left(\\frac{n + 1}{n}\\right)^{${p}} \\le \\left(\\frac{${answer + 1}}{${answer}}\\right)^{${p}} < 2$ 倍。所以 $n_0 = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -5172,8 +5741,8 @@ const traceOfDirectedSquare: KnowledgePointDef = {
   figure: discreteDrawings2["adjacency-matrices-of-directed-graphs#the-trace-of-the-square-of-a-directed-adjacency-matrix"],
   title: t("The trace of the square of a directed adjacency matrix", "有向图邻接矩阵平方的迹"),
   explanation: t(
-    "The diagonal of the square of an adjacency matrix counts closed walks of length two. In a directed graph without loops, such a walk leaves a vertex and returns at once, so it needs arcs in both directions between two vertices. This means the trace can be read from the matrix by looking for symmetric pairs of ones, without squaring.",
-    "邻接矩阵平方的对角线计算长度为二的闭途径。在没有环的有向图中，这样的途径离开一个顶点又立刻返回，所以两个顶点之间必须有两个方向的弧。因此不必做平方，只要在矩阵中寻找对称的一对一，就能读出迹。",
+    "The diagonal of the square of an adjacency matrix counts closed walks of length two. In a directed graph without loops, such a walk leaves a vertex and returns at once, so it needs arcs in both directions between two vertices. This means the trace can be read from the matrix by looking for symmetric pairs of ones, without squaring. In the drawing, only $1$ and $2$ are joined both ways, so the diagonal of $A^2$ is $1, 1, 0$ and the trace is $2$. A directed graph on $8$ vertices with $3$ pairs joined both ways has trace $2 \\cdot 3 = 6$, however many one-way arcs it has.\n\n> **Watch out.** Each pair joined both ways counts twice, once from each end. And one-way arcs add nothing, so the trace is not the number of arcs.",
+    "邻接矩阵平方的对角线计算长度为二的闭途径。在没有环的有向图中，这样的途径离开一个顶点又立刻返回，所以两个顶点之间必须有两个方向的弧。因此不必做平方，只要在矩阵中寻找对称的一对一，就能读出迹。图中只有 $1$ 和 $2$ 双向相连，所以 $A^2$ 的对角线为 $1, 1, 0$，迹为 $2$。一个有 $8$ 个顶点、$3$ 对双向相连顶点的有向图，不论单向弧有多少，迹都是 $2 \\cdot 3 = 6$。\n\n> **注意。** 每对双向相连的顶点算两次，从两端各算一次。单向弧不起作用，所以迹不是弧的条数。",
   ),
   generate(rng) {
     const n = rng.pick([4, 5]);
@@ -5200,10 +5769,67 @@ const traceOfDirectedSquare: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [pairs.length, arcs, 2 * arcs, answer + 2, answer + 4, n],
-      solution: t(
-        `The trace of $M^2$ counts closed walks of length two, and each pair of vertices joined in both directions gives exactly two of them, one starting at each end. The pairs with symmetric ones in $M$ are $${names}$, so the trace is $2 \\cdot ${pairs.length} = ${answer}$.`,
-        `$M^2$ 的迹计算长度为二的闭途径，每对双向相连的顶点恰好给出两条，分别从两端出发。$M$ 中有对称的一的顶点对是 $${names}$，所以迹是 $2 \\cdot ${pairs.length} = ${answer}$。`,
+      mistakes: [
+        why(
+          pairs.length,
+          "That counts each pair joined both ways once; it gives a closed walk from each end.",
+          "那是每对双向相连的顶点只算一次；它从两端各给出一条闭途径。",
+        ),
+        why(
+          arcs,
+          "That counts every arc; only arcs with a partner in the other direction close a walk of length two.",
+          "那数了所有的弧；只有反方向也有弧的弧才能构成长度为二的闭途径。",
+        ),
+        why(
+          2 * arcs,
+          "That doubles every arc; one-way arcs give no closed walk of length two.",
+          "那是把所有的弧加倍；单向弧不给出长度为二的闭途径。",
+        ),
+        why(
+          answer + 2,
+          "That counts one pair too many: check that both $M_{ij}$ and $M_{ji}$ are $1$.",
+          "多数了一对：检查 $M_{ij}$ 和 $M_{ji}$ 是否都为 $1$。",
+        ),
+        why(
+          answer + 4,
+          "That counts two pairs too many: check that both $M_{ij}$ and $M_{ji}$ are $1$.",
+          "多数了两对：检查 $M_{ij}$ 和 $M_{ji}$ 是否都为 $1$。",
+        ),
+        why(
+          n,
+          "That is the number of vertices; most of them need not lie on a closed walk of length two.",
+          "那是顶点数；大多数顶点不一定在长度为二的闭途径上。",
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the pairs joined both ways", "找出双向相连的顶点对"],
+            t(
+              `A closed walk of length two goes out along an arc and straight back, so it needs symmetric ones in $M$. These are at the pairs $${names}$.`,
+              `长度为二的闭途径沿一条弧出去又立刻返回，所以需要 $M$ 中对称的一。它们位于顶点对 $${names}$。`,
+            ),
+          ],
+          [
+            ["Count two walks per pair", "每对算两条途径"],
+            t(
+              pairs.length === 1
+                ? `The pair gives two closed walks, one from each end, so the trace is $${answer}$.`
+                : `Each pair gives two closed walks, one from each end, so the trace is $2 \\cdot ${pairs.length} = ${answer}$.`,
+              pairs.length === 1
+                ? `这一对给出两条闭途径，从两端各一条，所以迹是 $${answer}$。`
+                : `每对给出两条闭途径，从两端各一条，所以迹是 $2 \\cdot ${pairs.length} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Row by row, $(M^2)_{ii}$ counts the vertices joined to $i$ both ways: $${range(0, n - 1)
+            .map((i) => range(0, n - 1).filter((j) => entry(i, j) === 1 && entry(j, i) === 1).length)
+            .join(" + ")} = ${answer}$.`,
+          `逐行看，$(M^2)_{ii}$ 是与 $i$ 双向相连的顶点数：$${range(0, n - 1)
+            .map((i) => range(0, n - 1).filter((j) => entry(i, j) === 1 && entry(j, i) === 1).length)
+            .join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -5214,8 +5840,8 @@ const whereKahnStops: KnowledgePointDef = {
   figure: discreteDrawings2["kahns-algorithm#where-kahns-algorithm-stops-on-a-graph-with-a-cycle"],
   title: t("Where Kahn's algorithm stops on a graph with a cycle", "Kahn 算法在含环图上的停止位置"),
   explanation: t(
-    "On a graph with a directed cycle, Kahn's algorithm cannot finish. Vertices on the cycle never reach in-degree zero, since each waits for the one before it, and anything that can be reached from the cycle waits too. The algorithm outputs everything else and then stops with vertices left over, and this is how it detects a cycle.",
-    "在含有向环的图上，Kahn 算法无法完成。环上的顶点入度永远到不了零，因为每个都在等它前面的顶点；从环出发能到达的顶点也都要等。算法输出其余所有顶点，然后在还有顶点剩余时停止，它正是这样检测到环的。",
+    "On a graph with a directed cycle, Kahn's algorithm cannot finish. Vertices on the cycle never reach in-degree zero, since each waits for the one before it, and anything that can be reached from the cycle waits too. The algorithm outputs everything else and then stops with vertices left over, and this is how it detects a cycle. In the drawing, $S$ leads into the cycle $A, B, C$, and $C$ leads on to $T$: the algorithm outputs $S$ and stops, with the $4$ vertices $A$, $B$, $C$ and $T$ left over. With the arcs $(S, A), (A, B), (B, C), (C, A)$ and an arc from $C$ to each of six more vertices, the algorithm outputs only $S$ and stops with $9$ of the $10$ vertices left.\n\n> **Watch out.** The vertices after the cycle are stuck too, even though they are not on it. And the vertices of in-degree zero at the start are not the whole output: removing them can free others.",
+    "在含有向环的图上，Kahn 算法无法完成。环上的顶点入度永远到不了零，因为每个都在等它前面的顶点；从环出发能到达的顶点也都要等。算法输出其余所有顶点，然后在还有顶点剩余时停止，它正是这样检测到环的。图中 $S$ 通向环 $A, B, C$，$C$ 再通向 $T$：算法输出 $S$ 后停止，剩下 $A$、$B$、$C$、$T$ 这 $4$ 个顶点。若有弧 $(S, A), (A, B), (B, C), (C, A)$，并从 $C$ 到另外六个顶点各有一条弧，则算法只输出 $S$ 就停止，$10$ 个顶点中剩下 $9$ 个。\n\n> **注意。** 环之后的顶点虽然不在环上，也同样被卡住。而且开始时入度为零的顶点并不是全部输出：删去它们可能使其他顶点变为可用。",
   ),
   generate(rng) {
     const n = rng.pick([6, 7]);
@@ -5261,10 +5887,50 @@ const whereKahnStops: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n, n - answer, initial, answer + 1, answer - 1],
-      solution: t(
-        `Remove vertices of in-degree zero one at a time. The algorithm can output $${letterList(output)}$, after which each of $${left}$ still has an incoming arc from another remaining vertex, because of a directed cycle among them. So it stops after $${answer}$ ${answer === 1 ? "vertex" : "vertices"}.`,
-        `依次删去入度为零的顶点。算法可以输出 $${letterList(output)}$，之后 $${left}$ 中每个顶点仍有来自其他剩余顶点的入弧，因为它们之中有有向环。所以它输出 $${answer}$ 个顶点后停止。`,
+      mistakes: [
+        why(
+          n,
+          "That assumes the algorithm finishes; the cycle stops it with vertices left over.",
+          "那是假定算法能完成；环会使它在还有顶点剩余时停止。",
+        ),
+        why(n - answer, "That is the number of vertices left over, not the number output.", "那是剩下的顶点数，不是输出的顶点数。"),
+        why(
+          initial,
+          "That counts only the vertices of in-degree zero at the start; removing them frees others.",
+          "那只数了开始时入度为零的顶点；删去它们会使其他顶点变为可用。",
+        ),
+        why(
+          answer + 1,
+          "That is one too many: after the last output, every remaining vertex still has an incoming arc.",
+          "多了一：最后一次输出后，剩下的每个顶点都仍有入弧。",
+        ),
+        why(
+          answer - 1,
+          "That is one too few: recheck which vertices are freed after each output.",
+          "少了一：重新检查每次输出后哪些顶点变为可用。",
+        ),
+      ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Output vertices of in-degree zero", "输出入度为零的顶点"],
+            t(
+              `Removing vertices of in-degree zero one at a time, the algorithm outputs $${letterList(output)}$.`,
+              `依次删去入度为零的顶点，算法输出 $${letterList(output)}$。`,
+            ),
+          ],
+          [
+            ["See where it stops", "看它停在哪里"],
+            t(
+              `Then each of $${left}$ still has an incoming arc from another remaining vertex, so it stops after $${answer}$ ${answer === 1 ? "vertex" : "vertices"}.`,
+              `之后 $${left}$ 中每个顶点仍有来自其他剩余顶点的入弧，所以它输出 $${answer}$ 个顶点后停止。`,
+            ),
+          ],
+        ],
+        t(
+          `The vertices left over contain the directed cycle $${[...onCycle, onCycle[0] as number].map((v) => "ABCDEFGH"[v]).join(" \\to ")}$, and $${answer} + ${n - answer} = ${n}$ accounts for every vertex.`,
+          `剩下的顶点中含有有向环 $${[...onCycle, onCycle[0] as number].map((v) => "ABCDEFGH"[v]).join(" \\to ")}$，而 $${answer} + ${n - answer} = ${n}$ 正好是全部顶点。`,
+        ),
       ),
     });
   },
@@ -5275,8 +5941,8 @@ const tentativeLabel: KnowledgePointDef = {
   figure: discreteDrawings2["dijkstras-algorithm#a-tentative-distance-during-dijkstras-algorithm"],
   title: t("A tentative distance during Dijkstra's algorithm", "Dijkstra 算法过程中的暂定距离"),
   explanation: t(
-    "Dijkstra's algorithm keeps a tentative distance for every vertex and improves it as vertices are finalized. A tentative distance is the best route found so far that passes only through finalized vertices, so it may be larger than the true distance. Each time a vertex is finalized, compare the route through it with the current label and keep the smaller.",
-    "Dijkstra 算法为每个顶点保存一个暂定距离，并在顶点确定时改进它。暂定距离是目前找到的、只经过已确定顶点的最佳路线，所以可能大于真实距离。每确定一个顶点，就把经过它的路线与当前标记比较，保留较小的。",
+    "Dijkstra's algorithm keeps a tentative distance for every vertex and improves it as vertices are finalized. A tentative distance is the best route found so far that passes only through finalized vertices, so it may be larger than the true distance. Each time a vertex is finalized, compare the route through it with the current label and keep the smaller. In the drawing, once $A$ is finalized, $B$ has tentative distance $7$ and $C$ has $2$; once $C$ is finalized too, the route through it improves the label of $B$ to $\\min(7, 2 + 3) = 5$. With $AB\\colon 60$, $AC\\colon 22$, $CB\\colon 25$, finalizing $A$ and then $C$ lowers the label of $B$ from $60$ to $\\min(60, 22 + 25) = 47$.\n\n> **Watch out.** The route through the newly finalized vertex is its distance plus the edge, not the edge alone. And keep the old label when it is smaller; a label only ever goes down.",
+    "Dijkstra 算法为每个顶点保存一个暂定距离，并在顶点确定时改进它。暂定距离是目前找到的、只经过已确定顶点的最佳路线，所以可能大于真实距离。每确定一个顶点，就把经过它的路线与当前标记比较，保留较小的。图中确定 $A$ 后，$B$ 的暂定距离为 $7$，$C$ 为 $2$；再确定 $C$ 后，经过它的路线把 $B$ 的标记改进为 $\\min(7, 2 + 3) = 5$。若 $AB\\colon 60$、$AC\\colon 22$、$CB\\colon 25$，先确定 $A$ 再确定 $C$，$B$ 的标记从 $60$ 降为 $\\min(60, 22 + 25) = 47$。\n\n> **注意。** 经过新确定顶点的路线长度是它的距离加上边权，而不只是边权。旧标记更小时要保留它；标记只会下降。",
   ),
   generate(rng) {
     const pairs = range(0, 4).flatMap((i) => range(i + 1, 4).map((j) => [i, j] as const));
@@ -5318,10 +5984,62 @@ const tentativeLabel: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [through, old ?? through + 1, answer + 1, nearestDistance, answer - 1, answer + 2],
-        solution: t(
-          `From $A$, the smallest edge leads to $${close}$ with weight $${nearestDistance}$, so $${close}$ is finalized next. Before that, $${name}$ ${oldEn}. The route through $${close}$ costs $${nearestDistance} + ${through} = ${answer}$, which is smaller, so the label becomes $${answer}$.`,
-          `从 $A$ 出发，最小的边通向 $${close}$，权为 $${nearestDistance}$，所以接下来确定 $${close}$。在此之前，$${name}$ ${oldZh}。经过 $${close}$ 的路线长度是 $${nearestDistance} + ${through} = ${answer}$，更小，所以标记变为 $${answer}$。`,
+        mistakes: [
+          why(
+            through,
+            `That is the edge from $${close}$ alone; the route also needs the distance $${nearestDistance}$ to $${close}$.`,
+            `那只是从 $${close}$ 出发的边；路线还要加上到 $${close}$ 的距离 $${nearestDistance}$。`,
+          ),
+          ...(old === undefined
+            ? [
+                why(
+                  through + 1,
+                  "That is one more than the edge alone; add the distance to the finalized vertex instead.",
+                  "那是边权加一；应当加上到已确定顶点的距离。",
+                ),
+              ]
+            : [
+                why(
+                  old,
+                  "That is the old label from the edge from $A$; the route through the finalized vertex is shorter.",
+                  "那是来自 $A$ 的边给出的旧标记；经过已确定顶点的路线更短。",
+                ),
+              ]),
+          why(answer + 1, "That is one too many: add the distance and the edge again.", "多了一：重新把距离与边权相加。"),
+          why(
+            nearestDistance,
+            "That is the distance of the finalized vertex, not of the one asked about.",
+            "那是已确定顶点的距离，不是所问顶点的距离。",
+          ),
+          why(answer - 1, "That is one too few: add the distance and the edge again.", "少了一：重新把距离与边权相加。"),
+          why(answer + 2, "That is two too many: add the distance and the edge again.", "多了二：重新把距离与边权相加。"),
+        ].filter((x, i, all) => x.value !== answer && all.findIndex((o) => o.value === x.value) === i),
+        solution: walked(
+          [
+            [
+              ["Finalize the nearest vertex", "确定最近的顶点"],
+              t(
+                `From $A$, the smallest edge leads to $${close}$ with weight $${nearestDistance}$, so $${close}$ is finalized next. Before that, $${name}$ ${oldEn}.`,
+                `从 $A$ 出发，最小的边通向 $${close}$，权为 $${nearestDistance}$，所以接下来确定 $${close}$。在此之前，$${name}$ ${oldZh}。`,
+              ),
+            ],
+            [
+              ["Update the label", "更新标记"],
+              t(
+                `The route through $${close}$ costs $${nearestDistance} + ${through} = ${answer}$, which is smaller, so the label becomes $${answer}$.`,
+                `经过 $${close}$ 的路线长度是 $${nearestDistance} + ${through} = ${answer}$，更小，所以标记变为 $${answer}$。`,
+              ),
+            ],
+          ],
+          old === undefined
+            ? t(
+                `The route $A, ${close}, ${name}$ is the only one so far through finalized vertices, and $${nearestDistance} + ${through} = ${answer}$.`,
+                `路线 $A, ${close}, ${name}$ 是目前唯一一条只经过已确定顶点的路线，且 $${nearestDistance} + ${through} = ${answer}$。`,
+              )
+            : t(
+                `Of the two routes through finalized vertices, the direct edge costs $${old}$ and $A, ${close}, ${name}$ costs $${answer}$, and $\\min(${old}, ${answer}) = ${answer}$.`,
+                `在只经过已确定顶点的两条路线中，直接的边长 $${old}$，$A, ${close}, ${name}$ 长 $${answer}$，而 $\\min(${old}, ${answer}) = ${answer}$。`,
+              ),
         ),
       });
     }
@@ -5332,8 +6050,8 @@ const mealyToMooreStates: KnowledgePointDef = {
   id: "the-states-of-a-moore-machine-from-a-mealy-machine",
   title: t("The states of a Moore machine from a Mealy machine", "由 Mealy 机得到的 Moore 机的状态数"),
   explanation: t(
-    "A Mealy machine attaches outputs to transitions, whereas a Moore machine attaches them to states. To convert, a state entered with two different outputs must be split, since one Moore state can show only one output. So each new state is a pair of an old state and an output with which it is entered.",
-    "Mealy 机把输出放在转移上，而 Moore 机把输出放在状态上。转换时，以两种不同输出进入的状态必须拆分，因为一个 Moore 状态只能显示一种输出。所以每个新状态都是一个旧状态和进入它时的一个输出组成的对。",
+    "A Mealy machine attaches outputs to transitions, whereas a Moore machine attaches them to states. To convert, a state entered with two different outputs must be split, since one Moore state can show only one output. So each new state is a pair of an old state and an output with which it is entered.\n\n> **Watch out.** Split only the states entered with two different outputs. If $q_1$ is entered as $q_1/0$ from two different rows, that gives the single pair $(q_1, 0)$, so $q_1$ stays one state.",
+    "Mealy 机把输出放在转移上，而 Moore 机把输出放在状态上。转换时，以两种不同输出进入的状态必须拆分，因为一个 Moore 状态只能显示一种输出。所以每个新状态都是一个旧状态和进入它时的一个输出组成的对。\n\n> **注意。** 只拆分以两种不同输出进入的状态。若 $q_1$ 从两行都以 $q_1/0$ 进入，只得到一个对 $(q_1, 0)$，所以 $q_1$ 仍是一个状态。",
   ),
   generate(rng) {
     for (;;) {
@@ -5356,6 +6074,7 @@ const mealyToMooreStates: KnowledgePointDef = {
       const startEntered = table.some((row) => row.some(([to]) => to === 0));
       const answer = pairs.size + (startEntered ? 0 : 1);
       if (answer === k) continue;
+      const split = range(0, k - 1).filter((q) => pairs.has(`${q},0`) && pairs.has(`${q},1`)).length;
       const cell = ([to, out]: readonly [number, number]) => `q_{${to}}/${out}`;
       const shown = automatonTable(table.map((row) => [cell(row[0]), cell(row[1])]));
       const list = [...pairs]
@@ -5369,10 +6088,58 @@ const mealyToMooreStates: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [k, 2 * k, pairs.size + 1, answer + 1, answer - 1],
-        solution: t(
-          `The pairs that occur in the table are $${list}$, which is ${pairs.size} pairs. ${startEntered ? "The state $q_0$ is entered by some transition, so no extra state is needed" : "The state $q_0$ is never entered, so it needs one extra state"}. That gives $${answer}$ states.`,
-          `表中出现的对是 $${list}$，共 ${pairs.size} 个。${startEntered ? "状态 $q_0$ 有转移进入，所以不需要额外的状态" : "状态 $q_0$ 从未被进入，所以需要一个额外的状态"}。这样共有 $${answer}$ 个状态。`,
+        mistakes: [
+          why(
+            k,
+            "That keeps the states as they are; a state entered with two different outputs must be split.",
+            "那是保持状态不变；以两种不同输出进入的状态必须拆分。",
+          ),
+          why(
+            2 * k,
+            "That splits every state into both outputs, including pairs that never occur.",
+            "那是把每个状态都按两种输出拆分，包括从未出现的对。",
+          ),
+          startEntered
+            ? why(
+                pairs.size + 1,
+                "That adds an extra state for $q_0$, but $q_0$ is entered by some transition.",
+                "那为 $q_0$ 额外加了一个状态，但 $q_0$ 有转移进入。",
+              )
+            : why(
+                pairs.size,
+                "That leaves out the extra state for $q_0$, which is never entered.",
+                "那漏掉了为 $q_0$ 加的额外状态，而 $q_0$ 从未被进入。",
+              ),
+        ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+        solution: walked(
+          [
+            [
+              ["List the pairs", "列出所有对"],
+              t(`The pairs of a state and an output that occur in the table are`, `表中出现的状态与输出的对为`),
+              [list],
+            ],
+            [
+              ["The start state", "初始状态"],
+              startEntered
+                ? t(
+                    "The state $q_0$ is entered by some transition, so no extra state is needed.",
+                    "状态 $q_0$ 有转移进入，所以不需要额外的状态。",
+                  )
+                : t("The state $q_0$ is never entered, so it needs one extra state.", "状态 $q_0$ 从未被进入，所以需要一个额外的状态。"),
+            ],
+            [
+              ["Count", "计数"],
+              t(
+                "Each pair, and the extra state if there is one, becomes a state of the Moore machine:",
+                "每个对（以及额外的状态，如果有）成为 Moore 机的一个状态：",
+              ),
+              [startEntered ? `${pairs.size}` : `${pairs.size} + 1 = ${answer}`],
+            ],
+          ],
+          t(
+            `Every one of the $${k}$ states is reached, and $${split}$ of them are entered with both outputs and split in two, so the count is also $${k} + ${split} = ${answer}$.`,
+            `$${k}$ 个状态都能到达，其中 $${split}$ 个以两种输出进入而被一分为二，所以个数也是 $${k} + ${split} = ${answer}$。`,
+          ),
         ),
       });
     }
@@ -5383,8 +6150,8 @@ const acceptedStringsByLength: KnowledgePointDef = {
   id: "counting-the-accepted-strings-of-a-given-length",
   title: t("Counting the accepted strings of a given length", "计算给定长度的被接受字符串"),
   explanation: t(
-    "Listing every string of a given length is slow, since the number doubles with each symbol. A deterministic automaton gives a better way, because each string follows exactly one path. Keep a count of the strings of the current length that end in each state, and let each count flow along the two outgoing transitions to produce the next length.",
-    "列出给定长度的所有字符串很慢，因为每多一个符号，数量就翻倍。确定性自动机提供了更好的办法，因为每个字符串恰好走一条路径。记录当前长度的字符串结束于每个状态的个数，让每个计数沿两条出边转移，就得到下一长度的计数。",
+    "Listing every string of a given length is slow, since the number doubles with each symbol. A deterministic automaton gives a better way, because each string follows exactly one path. Keep a count of the strings of the current length that end in each state, and let each count flow along the two outgoing transitions to produce the next length.\n\n> **Watch out.** Every state sends its count along both of its transitions, so the counts for length $n$ add up to $2^n$. If both transitions of $q_1$ lead to $q_2$ and $3$ strings end in $q_1$, then $q_2$ receives $6$ from it, not $3$.",
+    "列出给定长度的所有字符串很慢，因为每多一个符号，数量就翻倍。确定性自动机提供了更好的办法，因为每个字符串恰好走一条路径。记录当前长度的字符串结束于每个状态的个数，让每个计数沿两条出边转移，就得到下一长度的计数。\n\n> **注意。** 每个状态都把它的计数沿两条转移送出，所以长度为 $n$ 的计数之和是 $2^n$。若 $q_1$ 的两条转移都指向 $q_2$，且有 $3$ 个串结束于 $q_1$，则 $q_2$ 从它那里得到 $6$，而不是 $3$。",
   ),
   generate(rng) {
     for (;;) {
@@ -5408,9 +6175,14 @@ const acceptedStringsByLength: KnowledgePointDef = {
         table.map(([a, b]) => [`q_{${a}}`, `q_{${b}}`]),
         accepting,
       );
-      const lastThree = steps.slice(length - 2).map((v, i) => [length - 2 + i, v.join(", ")] as const);
-      const trail = lastThree.map(([n, v]) => `length $${n}$: $(${v})$`).join(", ");
-      const trailZh = lastThree.map(([n, v]) => `长度 $${n}$：$(${v})$`).join("，");
+      const vectors = steps.map((v) => `(${v.join(", ")})`);
+      const rows = range(0, Math.ceil(vectors.length / 4) - 1).map(
+        (r) => `${r === 0 ? "" : "\\to "}${vectors.slice(4 * r, 4 * r + 4).join(" \\to ")}`,
+      );
+      const order = range(0, k - 1)
+        .map((q) => `q_{${q}}`)
+        .join(", ");
+      const picked = accepting.map((q) => last[q] as number);
       return numberProblem({
         prompt: t(
           `A DFA over the alphabet $\\{0, 1\\}$ has transition table $${shown}$. How many strings of length ${length} does it accept?`,
@@ -5418,10 +6190,45 @@ const acceptedStringsByLength: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [2 ** length - answer, accepted(steps[length - 1] as number[]), 2 ** (length - 1), answer + 1, answer - 1, answer + 2],
-        solution: t(
-          `Keep a vector of how many strings of each length end in $q_0, q_1, \\dots$, starting from one string at $q_0$, and send each count along both transitions. The last vectors are ${trail}. Adding the entries for accepting states gives $${answer}$.`,
-          `用一个向量记录每种长度的字符串结束于 $q_0, q_1, \\dots$ 的个数，从 $q_0$ 上的一个字符串开始，把每个计数沿两条转移送出。最后几个向量是 ${trailZh}。把接受状态对应的元素相加得 $${answer}$。`,
+        mistakes: [
+          why(2 ** length - answer, "That counts the strings the DFA rejects.", "那是 DFA 拒绝的字符串的个数。"),
+          why(
+            accepted(steps[length - 1] as number[]),
+            `That stops one step early, counting the accepted strings of length $${length - 1}$.`,
+            `那少走了一步，数的是长度为 $${length - 1}$ 的被接受字符串。`,
+          ),
+          why(
+            2 ** (length - 1),
+            "That assumes half of all strings are accepted; the counts depend on the table.",
+            "那假定恰好一半的字符串被接受；个数取决于转移表。",
+          ),
+          ...(accepting.length > 1
+            ? [why(picked[0] as number, "That adds the count of only one of the accepting states.", "那只加了其中一个接受状态的计数。")]
+            : []),
+        ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+        solution: walked(
+          [
+            [
+              ["Pass the counts along", "传递计数"],
+              t(
+                `Start with one string, the empty one, at $q_0$, and at each step send every count along both transitions. The counts for lengths $0$ to $${length}$, in the order $${order}$, are`,
+                `从 $q_0$ 上的一个字符串（空串）开始，每一步把每个计数沿两条转移送出。长度 $0$ 到 $${length}$ 的计数（按 $${order}$ 的顺序）为`,
+              ),
+              rows,
+            ],
+            [
+              ["Add the accepting states", "把接受状态相加"],
+              t(
+                `The accepting states are $${accepting.map((q) => `q_{${q}}`).join(", ")}$:`,
+                `接受状态为 $${accepting.map((q) => `q_{${q}}`).join(", ")}$：`,
+              ),
+              [accepting.length > 1 ? `${picked.join(" + ")} = ${answer}` : `${answer}`],
+            ],
+          ],
+          t(
+            `The counts for length $${length}$ add to $${last.join(" + ")} = ${2 ** length} = 2^{${length}}$, the number of binary strings of that length, so no string was lost or counted twice.`,
+            `长度 $${length}$ 的计数之和为 $${last.join(" + ")} = ${2 ** length} = 2^{${length}}$，正是该长度的二进制串的个数，所以没有字符串被漏掉或重复计数。`,
+          ),
         ),
       });
     }
@@ -5432,8 +6239,8 @@ const subsetConstructionStates: KnowledgePointDef = {
   id: "the-states-of-the-subset-construction",
   title: t("The states of the subset construction", "子集构造的状态数"),
   explanation: t(
-    "The subset construction turns a nondeterministic automaton into a deterministic one whose states are sets of the original states. There may be many subsets in principle, but only those actually reached from the start matter. So build them as you go: follow both symbols from each new set, and stop when no new set appears. The empty set counts if reached.",
-    "子集构造把非确定性自动机变成确定性自动机，新状态是原状态的集合。理论上子集可能很多，但只有从起始状态实际到达的才重要。所以边走边构造：从每个新集合沿两个符号出发，直到没有新集合出现。到达的空集也要计入。",
+    "The subset construction turns a nondeterministic automaton into a deterministic one whose states are sets of the original states. There may be many subsets in principle, but only those actually reached from the start matter. So build them as you go: follow both symbols from each new set, and stop when no new set appears. The empty set counts if reached.\n\n> **Watch out.** Count only the subsets actually reached, and include $\\varnothing$ when it is reached. An NFA with $3$ states has $2^3 = 8$ subsets, but if only $\\{q_0\\}$, $\\{q_1\\}$, $\\{q_0, q_2\\}$ and $\\varnothing$ are reached, the DFA has $4$ states.",
+    "子集构造把非确定性自动机变成确定性自动机，新状态是原状态的集合。理论上子集可能很多，但只有从起始状态实际到达的才重要。所以边走边构造：从每个新集合沿两个符号出发，直到没有新集合出现。到达的空集也要计入。\n\n> **注意。** 只数实际到达的子集，到达 $\\varnothing$ 时也要计入。有 $3$ 个状态的 NFA 有 $2^3 = 8$ 个子集，但若只到达 $\\{q_0\\}$、$\\{q_1\\}$、$\\{q_0, q_2\\}$ 和 $\\varnothing$，DFA 就有 $4$ 个状态。",
   ),
   generate(rng) {
     for (;;) {
@@ -5466,10 +6273,50 @@ const subsetConstructionStates: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [2 ** k, k, answer + 1, answer - 1, 2 ** k - 1],
-        solution: t(
-          `Start from $\\{q_0\\}$ and, for each new set, take the union of the transitions of its members on each symbol. The sets that appear are $${list}$, and these lead to no others, so the DFA has $${answer}$ states.`,
-          `从 $\\{q_0\\}$ 开始，对每个新集合，在每个符号上取其成员转移的并集。出现的集合是 $${list}$，它们不再产生新的集合，所以 DFA 有 $${answer}$ 个状态。`,
+        mistakes: [
+          why(
+            2 ** k,
+            `That counts all $2^{${k}}$ subsets; only the ones reached from $\\{q_0\\}$ become states.`,
+            `那数了全部 $2^{${k}}$ 个子集；只有从 $\\{q_0\\}$ 到达的才成为状态。`,
+          ),
+          why(2 ** k - 1, "That counts every nonempty subset, reached or not.", "那数了所有非空子集，不论是否到达。"),
+          why(
+            k,
+            "That keeps one state per state of the NFA; the states of the DFA are sets.",
+            "那是每个 NFA 状态对应一个状态；DFA 的状态是集合。",
+          ),
+          ...(found.includes(0)
+            ? [
+                why(
+                  answer - 1,
+                  "That leaves out $\\varnothing$, which is reached and counts as a state.",
+                  "那漏掉了 $\\varnothing$，它被到达，也算一个状态。",
+                ),
+              ]
+            : []),
+        ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+        solution: walked(
+          [
+            [
+              ["Build the reached sets", "构造到达的集合"],
+              t(
+                "Start from $\\{q_0\\}$ and, for each new set, take the union of its members' entries on each symbol:",
+                "从 $\\{q_0\\}$ 开始，对每个新集合，在每个符号上取其成员表项的并集：",
+              ),
+              found.map(
+                (s) =>
+                  `${setLatex(s)} \\xrightarrow{0} ${setLatex(step(s, 0))},\\quad ${setLatex(s)} \\xrightarrow{1} ${setLatex(step(s, 1))}`,
+              ),
+            ],
+            [
+              ["Count them", "数一数"],
+              t(`The sets reached are $${list}$, which is $${answer}$ states.`, `到达的集合是 $${list}$，共 $${answer}$ 个状态。`),
+            ],
+          ],
+          t(
+            `Every set on the right of an arrow is already in the list, so the construction is closed and no further set appears; and $${answer}$ is less than the $2^{${k}} = ${2 ** k}$ subsets in all.`,
+            `箭头右边的每个集合都已在列表中，所以构造已经封闭，不会再出现新的集合；而 $${answer}$ 小于全部子集的个数 $2^{${k}} = ${2 ** k}$。`,
+          ),
         ),
       });
     }
