@@ -8,7 +8,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { lowestTerms, numberProblem } from "../problems.ts";
+import { lowestTerms, numberProblem, why } from "../problems.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** nonzero picks a nonzero integer from -r to r. */
@@ -30,8 +30,8 @@ const levelThroughAPoint: KnowledgePointDef = {
   id: "the-level-of-the-solution-through-a-point",
   title: t("The level of the solution through a point", "过一点的解所在的等值线"),
   explanation: t(
-    "The solutions of an exact equation $M\\,dx + N\\,dy = 0$ are the level curves $F(x, y) = C$ of its potential function. An initial condition picks one of these curves. So build $F$ with $F_x = M$ and $F_y = N$, and evaluate it at the given point to find $C$.",
-    "恰当方程 $M\\,dx + N\\,dy = 0$ 的解是势函数的等值线 $F(x, y) = C$。初始条件选出其中一条。所以先由 $F_x = M$ 和 $F_y = N$ 构造 $F$，再把给定的点代入，求出 $C$。",
+    "The solutions of an exact equation $M\\,dx + N\\,dy = 0$ are the level curves $F(x, y) = C$ of its potential function. An initial condition picks one of these curves. So build $F$ with $F_x = M$ and $F_y = N$, and evaluate it at the given point to find $C$. For $(2x + y)\\,dx + (x + 2y)\\,dy = 0$, $F = x^{2} + xy + y^{2}$, and through $(1, 2)$ the curve is $F = 7$.\n\n> **Watch out.** The term $xy$ appears when integrating $M$ and again when integrating $N$, but it belongs in $F$ only once. Adding both integrals counts it twice.",
+    "恰当方程 $M\\,dx + N\\,dy = 0$ 的解是势函数的等值线 $F(x, y) = C$。初始条件选出其中一条。所以先由 $F_x = M$ 和 $F_y = N$ 构造 $F$，再把给定的点代入，求出 $C$。对 $(2x + y)\\,dx + (x + 2y)\\,dy = 0$，$F = x^{2} + xy + y^{2}$，过 $(1, 2)$ 的曲线是 $F = 7$。\n\n> **注意。** 对 $M$ 积分和对 $N$ 积分都会出现 $xy$ 项，但它在 $F$ 中只出现一次。把两个积分相加会把它算两次。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
@@ -43,19 +43,45 @@ const levelThroughAPoint: KnowledgePointDef = {
     const M = poly([2 * a, "x"], [b, "y"]);
     const N = poly([b, "x"], [2 * c, "y"]);
     const F = poly([a, "x^2"], [b, "xy"], [c, "y^2"]);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `The solution of $(${M})\\,dx + (${N})\\,dy = 0$ through the point $(${p}, ${q})$ is the curve $F(x, y) = C$, where $F$ has no constant term. Find $C$.`,
         `$(${M})\\,dx + (${N})\\,dy = 0$ 过点 $(${p}, ${q})$ 的解是曲线 $F(x, y) = C$，其中 $F$ 没有常数项。求 $C$。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [a * p * p + c * q * q, 2 * answer, a * p * p + 2 * b * p * q + c * q * q],
-      solution: t(
-        `Integrating gives $F(x, y) = ${F}$; the $xy$ term comes once, from either integration. At the point, $C = ${answer}$.`,
-        `积分得 $F(x, y) = ${F}$；$xy$ 项只算一次，它在两次积分中都会出现。代入这一点得 $C = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Build the potential", "构造势函数"],
+          `Integrating $M$ in $x$ gives $${poly([a, "x^2"], [b, "xy"])} + h(y)$. Then $F_y = ${poly([b, "x"])} + h'(y)$ must equal $N$, so $h'(y) = ${poly([2 * c, "y"])}$ and $h(y) = ${poly([c, "y^2"])}$.`,
+          `对 $M$ 关于 $x$ 积分得 $${poly([a, "x^2"], [b, "xy"])} + h(y)$。于是 $F_y = ${poly([b, "x"])} + h'(y)$ 必须等于 $N$，所以 $h'(y) = ${poly([2 * c, "y"])}$，$h(y) = ${poly([c, "y^2"])}$。`,
+          `F(x, y) = ${F}`,
+        ),
+        labelled(
+          ["Evaluate at the point", "代入该点"],
+          "",
+          "",
+          `C = ${a === 1 ? "" : `${a} \\cdot `}${inParens(p)}^{2} + ${inParens(b)} \\cdot ${inParens(p)} \\cdot ${inParens(q)} + ${c === 1 ? "" : `${c} \\cdot `}${inParens(q)}^{2} = ${answer}`,
+        ),
+      ],
+      [
+        `$F_x = ${M}$ and $F_y = ${N}$, so $F$ is a potential for the equation, and the point $(${p}, ${q})$ gives $F = ${answer}$.`,
+        `$F_x = ${M}$，$F_y = ${N}$，所以 $F$ 是该方程的势函数，点 $(${p}, ${q})$ 给出 $F = ${answer}$。`,
+      ],
+      [
+        [a * p * p + c * q * q, "That leaves out the cross term $xy$ of $F$.", "这里漏掉了 $F$ 中的交叉项 $xy$。"],
+        [
+          2 * answer,
+          "That takes $F = Mx + Ny$; $F$ comes from integrating $M$ and $N$, which halves each term.",
+          "这是取了 $F = Mx + Ny$；$F$ 要对 $M$、$N$ 积分得到，每一项都要减半。",
+        ],
+        [
+          a * p * p + 2 * b * p * q + c * q * q,
+          "That counts the term $xy$ twice, once from each integration; it belongs in $F$ only once.",
+          "这里把 $xy$ 项算了两次，两次积分各算一次；它在 $F$ 中只出现一次。",
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -63,14 +89,15 @@ const bifurcationValue: KnowledgePointDef = {
   id: "the-parameter-where-equilibria-appear",
   title: t("The parameter where equilibria appear", "平衡解出现时的参数值"),
   explanation: t(
-    "As a parameter changes, the equilibria of an equation can merge and vanish. This change is called a bifurcation. For a quadratic right-hand side, the equilibria are its roots, and the change happens where the discriminant is zero. At that value there is exactly one equilibrium.",
-    "参数变化时，方程的平衡解可能合并并消失，这种变化叫作分岔。右端是二次式时，平衡解就是它的根，变化发生在判别式为零的地方。此时恰有一个平衡解。",
+    "As a parameter changes, the equilibria of an equation can merge and vanish. This change is called a bifurcation. For a quadratic right-hand side, the equilibria are its roots, and the change happens where the discriminant is zero. At that value there is exactly one equilibrium. For $y' = 2y^{2} + 8y + k$, the discriminant $64 - 8k$ is zero at $k = 8$, where the only equilibrium is $y = -2$.\n\n> **Watch out.** The discriminant of $ay^{2} + by + k$ is $b^{2} - 4ak$: the factor $4a$ divides $b^{2}$, so $k = \\frac{b^{2}}{4a}$, and $k$ has the same sign as $a$ here.",
+    "参数变化时，方程的平衡解可能合并并消失，这种变化叫作分岔。右端是二次式时，平衡解就是它的根，变化发生在判别式为零的地方。此时恰有一个平衡解。对 $y' = 2y^{2} + 8y + k$，判别式 $64 - 8k$ 在 $k = 8$ 时为零，此时唯一的平衡解是 $y = -2$。\n\n> **注意。** $ay^{2} + by + k$ 的判别式是 $b^{2} - 4ak$：要用 $4a$ 去除 $b^{2}$，所以 $k = \\frac{b^{2}}{4a}$，这里 $k$ 与 $a$ 同号。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
     const B = nonzero(rng, 9);
     const answer = a * B * B;
     const right = poly([a, "y^2"], [2 * a * B, "y"]);
+    const disc = 4 * a * a * B * B;
     return numberProblem({
       prompt: t(
         `For which value of $k$ does $y' = ${right} + k$ have exactly one equilibrium solution?`,
@@ -78,10 +105,32 @@ const bifurcationValue: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [B * B, -answer, 4 * answer],
-      solution: t(
-        `The discriminant of the right-hand side is $${inParens(2 * a * B)}^2 - 4 \\cdot ${a} \\cdot k$. Setting it to zero gives $k = ${answer}$.`,
-        `右端的判别式是 $${inParens(2 * a * B)}^2 - 4 \\cdot ${a} \\cdot k$。令它为零，得 $k = ${answer}$。`,
+      mistakes: [
+        ...(a === 1 ? [] : [why(B * B, `That leaves out the leading coefficient $${a}$.`, `这里漏掉了首项系数 $${a}$。`)]),
+        why(
+          -answer,
+          "The sign is flipped; $b^{2} - 4ak = 0$ gives $k = \\frac{b^{2}}{4a}$, which is positive here.",
+          "符号反了；由 $b^{2} - 4ak = 0$ 得 $k = \\frac{b^{2}}{4a}$，这里是正的。",
+        ),
+        why(
+          4 * answer,
+          `That divides $b^{2}$ by $${a}$ only; the discriminant has $4 \\cdot ${a} \\cdot k$.`,
+          `这里只用 $${a}$ 去除 $b^{2}$；判别式中是 $4 \\cdot ${a} \\cdot k$。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Set the discriminant to zero", "令判别式为零"],
+            t("The equilibria are the roots of the right side, and there is exactly one when", "平衡解是右端的根，恰有一个当且仅当"),
+            [`${inParens(2 * a * B)}^2 - 4 \\cdot ${a} \\cdot k = ${disc} - ${4 * a}k = 0`],
+          ],
+          [["Solve for k", "解出 k"], t("", ""), [`k = \\frac{${disc}}{${4 * a}} = ${answer}`]],
+        ],
+        t(
+          `With $k = ${answer}$, $${right} + ${answer} = ${a === 1 ? "" : a}(y ${B < 0 ? "-" : "+"} ${Math.abs(B)})^{2}$, which is zero only at $y = ${-B}$.`,
+          `当 $k = ${answer}$ 时，$${right} + ${answer} = ${a === 1 ? "" : a}(y ${B < 0 ? "-" : "+"} ${Math.abs(B)})^{2}$，只在 $y = ${-B}$ 处为零。`,
+        ),
       ),
     });
   },
@@ -1793,8 +1842,8 @@ const constantBernoulliSolution: KnowledgePointDef = {
   id: "the-nonzero-constant-solution-of-a-bernoulli-equation",
   title: t("The constant solution of a Bernoulli equation", "伯努利方程的常数解"),
   explanation: t(
-    "With constant coefficients, $y' + py = qy^n$ is autonomous, so its constant solutions come from setting $y' = 0$. Besides $y = 0$, this gives $y^{n-1} = \\frac{p}{q}$. No substitution is needed. In the linear equation for $v = y^{1-n}$, the same value appears as the equilibrium, which is why solutions may level off there.",
-    "系数为常数时，$y' + py = qy^n$ 是自治方程，所以令 $y' = 0$ 就得到它的常数解。除了 $y = 0$，还有 $y^{n-1} = \\frac{p}{q}$。这不需要任何代换。在关于 $v = y^{1-n}$ 的线性方程中，同一个值表现为平衡解，所以解可能在那里趋于平稳。",
+    "With constant coefficients, $y' + py = qy^n$ is autonomous, so its constant solutions come from setting $y' = 0$. Besides $y = 0$, this gives $y^{n-1} = \\frac{p}{q}$. No substitution is needed. In the linear equation for $v = y^{1-n}$, the same value appears as the equilibrium, which is why solutions may level off there. For $y' + 18y = 2y^{3}$, $y^{2} = 9$, so the positive constant solution is $y = 3$.\n\n> **Watch out.** $\\frac{p}{q}$ is $y^{n-1}$, not $y$: take the $(n - 1)$-th root at the end. For $n = 2$ the two are the same, but for $n = 3$ the ratio $9$ gives $y = 3$.",
+    "系数为常数时，$y' + py = qy^n$ 是自治方程，所以令 $y' = 0$ 就得到它的常数解。除了 $y = 0$，还有 $y^{n-1} = \\frac{p}{q}$。这不需要任何代换。在关于 $v = y^{1-n}$ 的线性方程中，同一个值表现为平衡解，所以解可能在那里趋于平稳。对 $y' + 18y = 2y^{3}$，$y^{2} = 9$，所以正常数解是 $y = 3$。\n\n> **注意。** $\\frac{p}{q}$ 是 $y^{n-1}$ 而不是 $y$：最后要开 $n - 1$ 次方。$n = 2$ 时两者相同，但 $n = 3$ 时比值 $9$ 给出 $y = 3$。",
   ),
   generate(rng) {
     const answer = rng.int(2, 6);
@@ -1803,19 +1852,53 @@ const constantBernoulliSolution: KnowledgePointDef = {
     const ratio = answer ** (n - 1);
     const p = q * ratio;
     const left = n === 2 ? "y" : `y^{${n - 1}}`;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `Find the positive constant solution of $y' + ${poly([p, "y"])} = ${poly([q, `y^{${n}}`])}$.`,
         `求 $y' + ${poly([p, "y"])} = ${poly([q, `y^{${n}}`])}$ 的正常数解。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [p, ratio + 1, q, n],
-      solution: t(
-        `A constant solution has $y' = 0$, so $${poly([p, "y"])} = ${poly([q, `y^{${n}}`])}$. Dividing by $y$ and by the coefficient gives $${left} = ${ratio}$, so the positive solution is $y = ${answer}$.`,
-        `常数解满足 $y' = 0$，所以 $${poly([p, "y"])} = ${poly([q, `y^{${n}}`])}$。两边除以 $y$ 和系数，得 $${left} = ${ratio}$，所以正解是 $y = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Set the derivative to zero", "令导数为零"],
+          "A constant solution has $y' = 0$, so",
+          "常数解满足 $y' = 0$，所以",
+          `${poly([p, "y"])} = ${poly([q, `y^{${n}}`])}`,
+        ),
+        labelled(
+          ["Solve for the nonzero value", "解出非零值"],
+          `Dividing by $${poly([q, "y"])}$ gives $${left} = ${ratio}$, so the positive solution is $y = ${answer}$.`,
+          `两边除以 $${poly([q, "y"])}$，得 $${left} = ${ratio}$，所以正解是 $y = ${answer}$。`,
+        ),
+      ],
+      [
+        `At $y = ${answer}$: $${p} \\cdot ${answer} = ${p * answer}$ and $${q === 1 ? "" : `${q} \\cdot `}${answer}^{${n}} = ${q * answer ** n}$, so the two sides agree and $y' = 0$.`,
+        `当 $y = ${answer}$ 时：$${p} \\cdot ${answer} = ${p * answer}$，$${q === 1 ? "" : `${q} \\cdot `}${answer}^{${n}} = ${q * answer ** n}$，两边相等，$y' = 0$。`,
+      ],
+      [
+        ...(n > 2
+          ? [
+              [
+                ratio,
+                `That is $y^{${n - 1}}$; take the root of order $${n - 1}$ to get $y$.`,
+                `这是 $y^{${n - 1}}$；要开 $${n - 1}$ 次方才得到 $y$。`,
+              ] as const,
+            ]
+          : []),
+        [p, `That is the coefficient $${p}$ itself; divide it by $${q}$ first.`, `这是系数 $${p}$ 本身；要先除以 $${q}$。`],
+        [
+          q,
+          `That is the coefficient of $y^{${n}}$; the constant solution comes from $p$ divided by $q$.`,
+          `这是 $y^{${n}}$ 的系数；常数解来自 $p$ 除以 $q$。`,
+        ],
+        [n, "That is the exponent; the constant solution comes from the coefficients.", "这是指数；常数解来自系数。"],
+        [
+          Q.of(q, p),
+          `That inverts the ratio; $${left} = \\frac{p}{q}$, not $\\frac{q}{p}$.`,
+          `这是把比值颠倒了；$${left} = \\frac{p}{q}$，不是 $\\frac{q}{p}$。`,
+        ],
+      ],
+    );
   },
 };
 
@@ -1824,8 +1907,8 @@ const clairautLinesThroughPoint: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["clairaut-differential-equations#the-solution-lines-through-a-point"],
   title: t("The solution lines through a point", "过一点的解直线"),
   explanation: t(
-    "The general solutions of Clairaut's equation $y = xy' + (y')^2$ are the lines $y = cx + c^2$. To find those through a given point, substitute its coordinates and solve the resulting quadratic in $c$. A point below the singular parabola $y = -\\frac{x^2}{4}$ gets no line, one on it gets one, and one above it gets two.",
-    "克莱罗方程 $y = xy' + (y')^2$ 的通解是直线 $y = cx + c^2$。要找过给定点的直线，就代入该点的坐标，解关于 $c$ 的二次方程。奇解抛物线 $y = -\\frac{x^2}{4}$ 下方的点没有这样的直线，线上的点有一条，上方的点有两条。",
+    "The general solutions of Clairaut's equation $y = xy' + (y')^2$ are the lines $y = cx + c^2$. To find those through a given point, substitute its coordinates and solve the resulting quadratic in $c$. A point below the singular parabola $y = -\\frac{x^2}{4}$ gets no line, one on it gets one, and one above it gets two. Through $(-1, 6)$: $c^{2} - c - 6 = 0$, so $c = -2$ or $c = 3$.\n\n> **Watch out.** The point lies on $y = cx + c^{2}$ when $c^{2} + x_{0}c - y_{0} = 0$, with $y_{0}$ moved across with a minus sign; the roots are slopes, so neither coordinate of the point is an answer.",
+    "克莱罗方程 $y = xy' + (y')^2$ 的通解是直线 $y = cx + c^2$。要找过给定点的直线，就代入该点的坐标，解关于 $c$ 的二次方程。奇解抛物线 $y = -\\frac{x^2}{4}$ 下方的点没有这样的直线，线上的点有一条，上方的点有两条。过 $(-1, 6)$：$c^{2} - c - 6 = 0$，所以 $c = -2$ 或 $c = 3$。\n\n> **注意。** 点在 $y = cx + c^{2}$ 上当且仅当 $c^{2} + x_{0}c - y_{0} = 0$，$y_{0}$ 移项后带负号；根是斜率，所以点的两个坐标都不是答案。",
   ),
   generate(rng) {
     const u = rng.int(-6, 6);
@@ -1834,19 +1917,51 @@ const clairautLinesThroughPoint: KnowledgePointDef = {
     const large = Math.max(u, w);
     const x0 = -(small + large);
     const y0 = -small * large;
-    return numberProblem({
-      prompt: t(
+    const quad = poly([1, "c^2"], [x0, "c"], [-y0, ""]);
+    return explainedNumber(
+      [
         `Two solution lines of $y = xy' + (y')^2$ pass through the point $(${x0}, ${y0})$. Find the larger of their slopes.`,
         `$y = xy' + (y')^2$ 有两条解直线经过点 $(${x0}, ${y0})$。求它们中较大的斜率。`,
-      ),
-      answer: large,
-      form: "integer",
-      wrong: [small, x0, y0, -large],
-      solution: t(
-        `A line $y = cx + c^2$ passes through the point when $${poly([1, "c^2"], [x0, "c"], [-y0, ""])} = 0$. The roots are $c = ${small}$ and $c = ${large}$, so the larger slope is $${large}$.`,
-        `直线 $y = cx + c^2$ 过这一点，当且仅当 $${poly([1, "c^2"], [x0, "c"], [-y0, ""])} = 0$。根是 $c = ${small}$ 和 $c = ${large}$，所以较大的斜率是 $${large}$。`,
-      ),
-    });
+      ],
+      large,
+      [
+        labelled(
+          ["Substitute the point", "代入该点"],
+          `The solution lines are $y = cx + c^{2}$. Putting in $x = ${x0}$, $y = ${y0}$:`,
+          `解直线是 $y = cx + c^{2}$。代入 $x = ${x0}$、$y = ${y0}$：`,
+          `${y0} = ${inParens(x0)}c + c^{2}`,
+          `${quad} = 0`,
+        ),
+        labelled(
+          ["Solve the quadratic", "解二次方程"],
+          `The roots are $c = ${small}$ and $c = ${large}$, so the larger slope is $${large}$.`,
+          `根是 $c = ${small}$ 和 $c = ${large}$，所以较大的斜率是 $${large}$。`,
+        ),
+      ],
+      [
+        `$${large} \\cdot ${inParens(x0)} + ${inParens(large)}^{2} = ${large * x0} + ${large * large} = ${y0}$, so the line with slope $${large}$ does pass through the point.`,
+        `$${large} \\cdot ${inParens(x0)} + ${inParens(large)}^{2} = ${large * x0} + ${large * large} = ${y0}$，所以斜率为 $${large}$ 的直线确实经过该点。`,
+      ],
+      [
+        [small, "That is the smaller of the two slopes.", "这是两个斜率中较小的一个。"],
+        [
+          x0,
+          "That is the $x$-coordinate of the point; the slopes are the roots of the quadratic in $c$.",
+          "这是点的 $x$ 坐标；斜率是关于 $c$ 的二次方程的根。",
+        ],
+        [
+          y0,
+          "That is the $y$-coordinate of the point; the slopes are the roots of the quadratic in $c$.",
+          "这是点的 $y$ 坐标；斜率是关于 $c$ 的二次方程的根。",
+        ],
+        [
+          -large,
+          "The sign is flipped; read each root of the quadratic with its own sign.",
+          "符号反了；二次方程的每个根要按各自的符号读出。",
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1954,25 +2069,45 @@ const constantSolutionValue: KnowledgePointDef = {
   id: "the-initial-value-that-gives-a-constant-solution",
   title: t("The initial value that gives a constant solution", "得到常数解的初值"),
   explanation: t(
-    "The general solution of $y' = py + q$ is a particular solution plus $Ce^{pt}$. Among all these solutions, exactly one has $C = 0$, and it is a constant. A constant has zero derivative, so setting $py + q = 0$ finds it at once, without any integration. Starting at this value, nothing ever changes. Starting anywhere else, the solution moves away from it or towards it depending on the sign of $p$.",
-    "$y' = py + q$ 的通解是一个特解加上 $Ce^{pt}$。在所有这些解中，恰有一个 $C = 0$，它是常数。常数的导数为零，所以令 $py + q = 0$ 就立刻求出它，不必积分。从这个值出发，什么都不会改变。从其他值出发，解会离开它或趋向它，取决于 $p$ 的符号。",
+    "The general solution of $y' = py + q$ is a particular solution plus $Ce^{pt}$. Among all these solutions, exactly one has $C = 0$, and it is a constant. A constant has zero derivative, so setting $py + q = 0$ finds it at once, without any integration. Starting at this value, nothing ever changes. Starting anywhere else, the solution moves away from it or towards it depending on the sign of $p$. For $y' = 2y - 6$, $2y - 6 = 0$ gives the constant solution $y = 3$.\n\n> **Watch out.** Solve $py + q = 0$ for $y$: move $q$ across with its sign changed and then divide by $p$, so $y = -\\frac{q}{p}$, not $\\frac{q}{p}$ and not $-q$.",
+    "$y' = py + q$ 的通解是一个特解加上 $Ce^{pt}$。在所有这些解中，恰有一个 $C = 0$，它是常数。常数的导数为零，所以令 $py + q = 0$ 就立刻求出它，不必积分。从这个值出发，什么都不会改变。从其他值出发，解会离开它或趋向它，取决于 $p$ 的符号。对 $y' = 2y - 6$，由 $2y - 6 = 0$ 得常数解 $y = 3$。\n\n> **注意。** 由 $py + q = 0$ 解出 $y$：$q$ 移项要变号，再除以 $p$，所以 $y = -\\frac{q}{p}$，不是 $\\frac{q}{p}$，也不是 $-q$。",
   ),
   generate(rng) {
     const p = nonzero(rng, 9);
     const q = nonzero(rng, 12);
     const answer = Q.of(-q, p);
-    return numberProblem({
-      prompt: t(
-        `For which value of $y(0)$ is the solution of $y' = ${poly([p, "y"], [q, ""])}$ constant?`,
-        `当 $y(0)$ 取何值时，$y' = ${poly([p, "y"], [q, ""])}$ 的解是常数？`,
-      ),
+    const right = poly([p, "y"], [q, ""]);
+    return explainedNumber(
+      [`For which value of $y(0)$ is the solution of $y' = ${right}$ constant?`, `当 $y(0)$ 取何值时，$y' = ${right}$ 的解是常数？`],
       answer,
-      wrong: [Q.of(q, p), Q.of(p, q), Q.of(-q), Q.of(0)],
-      solution: t(
-        `A constant solution has $y' = 0$, so $${poly([p, "y"], [q, ""])} = 0$, which gives $y = ${answer.toLatex()}$.`,
-        `常数解满足 $y' = 0$，所以 $${poly([p, "y"], [q, ""])} = 0$，得 $y = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Set the derivative to zero", "令导数为零"],
+          "A constant solution has $y' = 0$, so",
+          "常数解满足 $y' = 0$，所以",
+          `${right} = 0`,
+        ),
+        labelled(
+          ["Solve for y", "解出 y"],
+          `So $y = ${answer.toLatex()}$, and the solution is constant exactly when it starts there.`,
+          `所以 $y = ${answer.toLatex()}$，解为常数当且仅当它从这里出发。`,
+        ),
+      ],
+      [
+        `At $y = ${answer.toLatex()}$: $${p} \\cdot \\left(${answer.toLatex()}\\right) ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${-q} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = 0$, so $y' = 0$ and $y$ never changes.`,
+        `当 $y = ${answer.toLatex()}$ 时：$${p} \\cdot \\left(${answer.toLatex()}\\right) ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${-q} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = 0$，所以 $y' = 0$，$y$ 不再变化。`,
+      ],
+      [
+        [Q.of(q, p), "The sign is flipped; moving $q$ across changes its sign.", "符号反了；$q$ 移项要变号。"],
+        [Q.of(p, q), "That inverts the fraction; divide by the coefficient of $y$.", "这是把分数颠倒了；要除以 $y$ 的系数。"],
+        [Q.of(-q), `That forgets to divide by $${p}$, the coefficient of $y$.`, `这里忘了除以 $y$ 的系数 $${p}$。`],
+        [
+          Q.of(0),
+          "That is where $y$ itself is zero; the constant solution is where $y'$ is zero.",
+          "这是 $y$ 本身为零的地方；常数解是 $y'$ 为零的地方。",
+        ],
+      ],
+    );
   },
 };
 
@@ -1980,26 +2115,70 @@ const noTransientExponential: KnowledgePointDef = {
   id: "the-initial-value-with-no-transient-under-exponential-forcing",
   title: t("The initial value with no transient under exponential forcing", "指数强迫下没有瞬态项的初值"),
   explanation: t(
-    "The solutions of a forced linear equation differ from each other only by a multiple of the homogeneous solution, which is the transient. The initial value decides that multiple. So a solution with no transient is the particular solution alone, and its value at $t = 0$ is just the coefficient found by undetermined coefficients. Any other starting value adds a term $Ce^{-at}$, in addition to the response to the forcing.",
-    "受迫线性方程的解之间只差齐次解的一个倍数，这就是瞬态项。初值决定这个倍数。所以没有瞬态项的解就是特解本身，它在 $t = 0$ 的值就是待定系数法求出的系数。任何其他初值都会在受迫响应之外增加一项 $Ce^{-at}$。",
+    "The solutions of a forced linear equation differ from each other only by a multiple of the homogeneous solution, which is the transient. The initial value decides that multiple. So a solution with no transient is the particular solution alone, and its value at $t = 0$ is just the coefficient found by undetermined coefficients. Any other starting value adds a term $Ce^{-at}$, in addition to the response to the forcing. For $y' + 3y = 10e^{2t}$, $A(2 + 3) = 10$ gives $A = 2$, so $y(0) = 2$.\n\n> **Watch out.** Differentiating $Ae^{ct}$ brings down $c$, so the coefficient is $\\frac{b}{c + a}$: leaving out $c$ or $a$, or writing $a - c$, gives a different starting value.",
+    "受迫线性方程的解之间只差齐次解的一个倍数，这就是瞬态项。初值决定这个倍数。所以没有瞬态项的解就是特解本身，它在 $t = 0$ 的值就是待定系数法求出的系数。任何其他初值都会在受迫响应之外增加一项 $Ce^{-at}$。对 $y' + 3y = 10e^{2t}$，由 $A(2 + 3) = 10$ 得 $A = 2$，所以 $y(0) = 2$。\n\n> **注意。** 对 $Ae^{ct}$ 求导会带下 $c$，所以系数是 $\\frac{b}{c + a}$：漏掉 $c$ 或 $a$，或写成 $a - c$，都会得到不同的初值。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const c = different(rng, -6, 6, -a) || a + 1;
     const b = rng.int(2, 12);
     const answer = Q.of(b, a + c);
-    return numberProblem({
-      prompt: t(
-        `Find the value of $y(0)$ for which the solution of $${poly([1, "y'"], [a, "y"])} = ${b}e^{${exponentOf(c, "t")}}$ has no term in $e^{${exponentOf(-a, "t")}}$.`,
-        `求 $y(0)$ 的值，使 $${poly([1, "y'"], [a, "y"])} = ${b}e^{${exponentOf(c, "t")}}$ 的解不含 $e^{${exponentOf(-a, "t")}}$ 项。`,
-      ),
+    const ect = `e^{${exponentOf(c, "t")}}`;
+    const cA = c === 1 ? "" : c === -1 ? "-" : `${c}`;
+    const al = answer.toLatex();
+    const Aect = `${al === "1" ? "" : al === "-1" ? "-" : al}${ect}`;
+    return explainedNumber(
+      [
+        `Find the value of $y(0)$ for which the solution of $${poly([1, "y'"], [a, "y"])} = ${b}${ect}$ has no term in $e^{${exponentOf(-a, "t")}}$.`,
+        `求 $y(0)$ 的值，使 $${poly([1, "y'"], [a, "y"])} = ${b}${ect}$ 的解不含 $e^{${exponentOf(-a, "t")}}$ 项。`,
+      ],
       answer,
-      wrong: [Q.of(b, a), Q.of(b, c), Q.of(b), a === c ? Q.of(b, a + c + 1) : Q.of(b, a - c)],
-      solution: t(
-        `Trying $y = Ae^{${exponentOf(c, "t")}}$ gives $A(${c} + ${a}) = ${b}$, so $A = ${answer.toLatex()}$. With no transient, $y(0) = A$.`,
-        `设 $y = Ae^{${exponentOf(c, "t")}}$，得 $A(${c} + ${a}) = ${b}$，所以 $A = ${answer.toLatex()}$。没有瞬态项时，$y(0) = A$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the particular solution", "求特解"],
+          `Try $y = A${ect}$, so $y' = ${cA}A${ect}$ and`,
+          `设 $y = A${ect}$，则 $y' = ${cA}A${ect}$，于是`,
+          `(${c} + ${a})A = ${b}`,
+          `A = ${answer.toLatex()}`,
+        ),
+        labelled(
+          ["Remove the transient", "去掉瞬态项"],
+          `Every solution is $${Aect} + Ce^{${exponentOf(-a, "t")}}$, with $y(0) = ${answer.toLatex()} + C$. No transient means $C = 0$, so $y(0) = ${answer.toLatex()}$.`,
+          `每个解都是 $${Aect} + Ce^{${exponentOf(-a, "t")}}$，且 $y(0) = ${answer.toLatex()} + C$。没有瞬态项即 $C = 0$，所以 $y(0) = ${answer.toLatex()}$。`,
+        ),
+      ],
+      [
+        `$y = ${Aect}$ gives $y' + ${a}y = (${c} + ${a})\\left(${Aect}\\right) = ${b}${ect}$, the forcing.`,
+        `$y = ${Aect}$ 给出 $y' + ${a}y = (${c} + ${a})\\left(${Aect}\\right) = ${b}${ect}$，正是强迫项。`,
+      ],
+      [
+        [
+          Q.of(b, a),
+          `That leaves out $y' = ${cA}A${ect}$; differentiating brings down the $${c}$.`,
+          `这里漏掉了 $y' = ${cA}A${ect}$；求导会带下 $${c}$。`,
+        ],
+        [Q.of(b, c), `That leaves out the term $${a}y$.`, `这里漏掉了 $${a}y$ 项。`],
+        [
+          Q.of(b),
+          "That takes the coefficient of the forcing as $A$; $A$ must satisfy the equation.",
+          "这是把强迫项的系数当成 $A$；$A$ 必须满足方程。",
+        ],
+        ...(a === c
+          ? []
+          : [
+              [
+                Q.of(b, a - c),
+                `That uses $${a} - ${inParens(c)}$; the derivative adds $${cA}A$.`,
+                `这里用了 $${a} - ${inParens(c)}$；导数加上的是 $${cA}A$。`,
+              ] as const,
+            ]),
+        [
+          Q.of(0),
+          "Starting at $0$ does not remove the transient; $C$ is fixed by $y(0) = A + C$.",
+          "从 $0$ 出发并不能去掉瞬态项；$C$ 由 $y(0) = A + C$ 确定。",
+        ],
+      ],
+    );
   },
 };
 
@@ -2007,26 +2186,54 @@ const boundedAtOrigin: KnowledgePointDef = {
   id: "the-solution-that-stays-bounded-at-the-origin",
   title: t("The solution that stays bounded at the origin", "在原点附近有界的解"),
   explanation: t(
-    "A coefficient that is singular at $x = 0$ can act in place of an initial condition. For $y' + \\frac{k}{x}y = c$, the integrating factor $x^k$ gives $y = \\frac{cx}{k + 1} + Cx^{-k}$. With $k > 0$, the second term grows without bound as $x$ approaches zero unless $C = 0$. So requiring the solution to stay bounded there picks out exactly one solution from the whole family.",
-    "在 $x = 0$ 处奇异的系数可以起到初始条件的作用。对 $y' + \\frac{k}{x}y = c$，积分因子 $x^k$ 给出 $y = \\frac{cx}{k + 1} + Cx^{-k}$。当 $k > 0$ 时，除非 $C = 0$，否则第二项在 $x$ 趋近零时无限增大。所以要求解在那里有界，就从整个解族中选出了唯一一个解。",
+    "A coefficient that is singular at $x = 0$ can act in place of an initial condition. For $y' + \\frac{k}{x}y = c$, the integrating factor $x^k$ gives $y = \\frac{cx}{k + 1} + Cx^{-k}$. With $k > 0$, the second term grows without bound as $x$ approaches zero unless $C = 0$. So requiring the solution to stay bounded there picks out exactly one solution from the whole family. For $y' + \\frac{2}{x}y = 6$, $y = 2x + Cx^{-2}$, and the bounded solution $y = 2x$ has $y(1) = 2$.\n\n> **Watch out.** Integrating $cx^{k}$ gives $\\frac{cx^{k + 1}}{k + 1}$, so after dividing by $x^{k}$ the denominator is $k + 1$, not $k$; and the solution is evaluated at the given $x$, not at $x = 1$.",
+    "在 $x = 0$ 处奇异的系数可以起到初始条件的作用。对 $y' + \\frac{k}{x}y = c$，积分因子 $x^k$ 给出 $y = \\frac{cx}{k + 1} + Cx^{-k}$。当 $k > 0$ 时，除非 $C = 0$，否则第二项在 $x$ 趋近零时无限增大。所以要求解在那里有界，就从整个解族中选出了唯一一个解。对 $y' + \\frac{2}{x}y = 6$，$y = 2x + Cx^{-2}$，有界解 $y = 2x$ 满足 $y(1) = 2$。\n\n> **注意。** 对 $cx^{k}$ 积分得 $\\frac{cx^{k + 1}}{k + 1}$，所以除以 $x^{k}$ 后分母是 $k + 1$，不是 $k$；并且要在给定的 $x$ 处求值，而不是在 $x = 1$ 处。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
     const c = rng.int(2, 12);
     const x0 = rng.int(1, 6);
     const answer = Q.of(c * x0, k + 1);
-    return numberProblem({
-      prompt: t(
+    const xk = k === 1 ? "x" : `x^{${k}}`;
+    return explainedNumber(
+      [
         `A solution of $y' + \\frac{${k}}{x}y = ${c}$ on $x > 0$ stays bounded as $x \\to 0^+$. Find $y(${x0})$.`,
         `$y' + \\frac{${k}}{x}y = ${c}$ 在 $x > 0$ 上的一个解在 $x \\to 0^+$ 时有界。求 $y(${x0})$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(c * x0, k), Q.of(c * x0), Q.of(c, k + 1), answer.add(Q.of(1))],
-      solution: t(
-        `Integrating gives $y = \\frac{${c}x}{${k + 1}} + Cx^{-${k}}$, and boundedness forces $C = 0$. So $y(${x0}) = ${answer.toLatex()}$.`,
-        `积分得 $y = \\frac{${c}x}{${k + 1}} + Cx^{-${k}}$，有界性要求 $C = 0$。所以 $y(${x0}) = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Multiply by the integrating factor", "乘以积分因子"],
+          `The integrating factor is $e^{\\int ${k}/x \\, dx} = ${xk}$, so`,
+          `积分因子是 $e^{\\int ${k}/x \\, dx} = ${xk}$，所以`,
+          `(${xk}y)' = ${c}${xk}`,
+          `${xk}y = \\frac{${c}x^{${k + 1}}}{${k + 1}} + C`,
+          `y = \\frac{${c}x}{${k + 1}} + Cx^{-${k}}`,
+        ),
+        labelled(
+          ["Use boundedness", "利用有界性"],
+          `As $x \\to 0^+$, $Cx^{-${k}}$ blows up unless $C = 0$. So $y = \\frac{${c}x}{${k + 1}}$ and $y(${x0}) = ${answer.toLatex()}$.`,
+          `当 $x \\to 0^+$ 时，除非 $C = 0$，否则 $Cx^{-${k}}$ 无界。所以 $y = \\frac{${c}x}{${k + 1}}$，$y(${x0}) = ${answer.toLatex()}$。`,
+        ),
+      ],
+      [
+        `$y = \\frac{${c}x}{${k + 1}}$ gives $y' + \\frac{${k}}{x}y = \\frac{${c}}{${k + 1}} + \\frac{${c * k}}{${k + 1}} = ${c}$, and it tends to $0$ as $x \\to 0^+$.`,
+        `$y = \\frac{${c}x}{${k + 1}}$ 给出 $y' + \\frac{${k}}{x}y = \\frac{${c}}{${k + 1}} + \\frac{${c * k}}{${k + 1}} = ${c}$，且当 $x \\to 0^+$ 时趋于 $0$。`,
+      ],
+      [
+        [
+          Q.of(c * x0, k),
+          `That divides by $${k}$; integrating $${c}${xk}$ gives a denominator of $${k + 1}$.`,
+          `这里除以了 $${k}$；对 $${c}${xk}$ 积分得到的分母是 $${k + 1}$。`,
+        ],
+        [
+          Q.of(c * x0),
+          "That takes $y = cx$; the term $\\frac{k}{x}y$ also changes the solution.",
+          "这是取了 $y = cx$；$\\frac{k}{x}y$ 项也会改变解。",
+        ],
+        [Q.of(c, k + 1), "That is the value at $x = 1$; evaluate at the given $x$.", "这是在 $x = 1$ 处的值；要在给定的 $x$ 处求值。"],
+      ],
+    );
   },
 };
 
@@ -2034,8 +2241,8 @@ const eulerHomogeneous: KnowledgePointDef = {
   id: "eulers-theorem-for-homogeneous-functions",
   title: t("Euler's theorem for homogeneous functions", "齐次函数的欧拉定理"),
   explanation: t(
-    "A function homogeneous of degree $n$ satisfies $f(sx, sy) = s^n f(x, y)$ for all $s$. Differentiating both sides with respect to $s$ and then setting $s = 1$ gives $xf_x + yf_y = nf$. So this particular combination of partial derivatives depends only on the degree and on the value of the function at the point. Neither the formula for $f$ nor the separate partial derivatives need to be known.",
-    "$n$ 次齐次函数对所有 $s$ 满足 $f(sx, sy) = s^n f(x, y)$。两边对 $s$ 求导，再令 $s = 1$，得 $xf_x + yf_y = nf$。所以这个特定的偏导数组合只取决于次数和函数在该点的值。既不需要知道 $f$ 的公式，也不需要知道各个偏导数。",
+    "A function homogeneous of degree $n$ satisfies $f(sx, sy) = s^n f(x, y)$ for all $s$. Differentiating both sides with respect to $s$ and then setting $s = 1$ gives $xf_x + yf_y = nf$. So this particular combination of partial derivatives depends only on the degree and on the value of the function at the point. Neither the formula for $f$ nor the separate partial derivatives need to be known. For $f = x^{2}y$, of degree $3$, at $(1, 2)$: $xf_x + yf_y = 1 \\cdot 4 + 2 \\cdot 1 = 6 = 3 \\cdot 2$.\n\n> **Watch out.** The factor is the degree $n$ itself, not $n - 1$ (the degree of the partial derivatives), and the value is multiplied by $n$, not added to it.",
+    "$n$ 次齐次函数对所有 $s$ 满足 $f(sx, sy) = s^n f(x, y)$。两边对 $s$ 求导，再令 $s = 1$，得 $xf_x + yf_y = nf$。所以这个特定的偏导数组合只取决于次数和函数在该点的值。既不需要知道 $f$ 的公式，也不需要知道各个偏导数。对 $3$ 次的 $f = x^{2}y$，在 $(1, 2)$ 处：$xf_x + yf_y = 1 \\cdot 4 + 2 \\cdot 1 = 6 = 3 \\cdot 2$。\n\n> **注意。** 因子就是次数 $n$ 本身，而不是偏导数的次数 $n - 1$；并且函数值要乘以 $n$，而不是加上 $n$。",
   ),
   generate(rng) {
     const n = rng.int(2, 6);
@@ -2043,19 +2250,48 @@ const eulerHomogeneous: KnowledgePointDef = {
     const b = rng.int(1, 6);
     const v = nonzero(rng, 9);
     const answer = n * v;
-    return numberProblem({
-      prompt: t(
-        `A differentiable function $f$ is homogeneous of degree ${n}, with $f(${a}, ${b}) = ${v}$. Find $${a}f_x(${a}, ${b}) + ${b}f_y(${a}, ${b})$.`,
-        `可微函数 $f$ 是 ${n} 次齐次函数，$f(${a}, ${b}) = ${v}$。求 $${a}f_x(${a}, ${b}) + ${b}f_y(${a}, ${b})$。`,
-      ),
+    const ca = a === 1 ? "" : `${a}`;
+    const cb = b === 1 ? "" : `${b}`;
+    return explainedNumber(
+      [
+        `A differentiable function $f$ is homogeneous of degree ${n}, with $f(${a}, ${b}) = ${v}$. Find $${ca}f_x(${a}, ${b}) + ${cb}f_y(${a}, ${b})$.`,
+        `可微函数 $f$ 是 ${n} 次齐次函数，$f(${a}, ${b}) = ${v}$。求 $${ca}f_x(${a}, ${b}) + ${cb}f_y(${a}, ${b})$。`,
+      ],
       answer,
-      form: "integer",
-      wrong: [v, n + v, (n - 1) * v, -answer, answer + 1],
-      solution: t(
-        `Euler's theorem gives $xf_x + yf_y = nf$, which here is $${n} \\cdot ${inParens(v)} = ${answer}$.`,
-        `欧拉定理给出 $xf_x + yf_y = nf$，这里是 $${n} \\cdot ${inParens(v)} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Differentiate the homogeneity relation", "对齐次关系求导"],
+          "Differentiate $f(sx, sy) = s^{n}f(x, y)$ with respect to $s$ and set $s = 1$:",
+          "将 $f(sx, sy) = s^{n}f(x, y)$ 对 $s$ 求导，再令 $s = 1$：",
+          "xf_x(x, y) + yf_y(x, y) = nf(x, y)",
+        ),
+        labelled(
+          ["Apply it at the point", "在该点应用"],
+          `At $(${a}, ${b})$ the expression asked for is exactly $xf_x + yf_y$:`,
+          `在 $(${a}, ${b})$ 处，所求的式子正是 $xf_x + yf_y$：`,
+          `${ca}f_x(${a}, ${b}) + ${cb}f_y(${a}, ${b}) = ${n} \\cdot ${inParens(v)} = ${answer}`,
+        ),
+      ],
+      [
+        `The function $f = ${v === 1 ? "" : v === -1 ? "-" : v}${a === 1 ? `x^{${n}}` : `\\left(\\frac{x}{${a}}\\right)^{${n}}`}$ is homogeneous of degree ${n} with $f(${a}, ${b}) = ${v}$, and for it $${ca}f_x = ${n} \\cdot ${inParens(v)}$ while $f_y = 0$, giving $${answer}$ again.`,
+        `函数 $f = ${v === 1 ? "" : v === -1 ? "-" : v}${a === 1 ? `x^{${n}}` : `\\left(\\frac{x}{${a}}\\right)^{${n}}`}$ 是 ${n} 次齐次函数，$f(${a}, ${b}) = ${v}$，对它有 $${ca}f_x = ${n} \\cdot ${inParens(v)}$，$f_y = 0$，同样得到 $${answer}$。`,
+      ],
+      [
+        [
+          v,
+          `That is $f(${a}, ${b})$ itself; Euler's theorem multiplies it by the degree.`,
+          `这是 $f(${a}, ${b})$ 本身；欧拉定理要把它乘以次数。`,
+        ],
+        [n + v, "That adds the degree to the value; Euler's theorem multiplies them.", "这是把次数加到函数值上；欧拉定理是两者相乘。"],
+        [
+          (n - 1) * v,
+          `That uses $n - 1 = ${n - 1}$, the degree of the partial derivatives; the factor is the degree $${n}$ of $f$.`,
+          `这里用了偏导数的次数 $n - 1 = ${n - 1}$；因子是 $f$ 的次数 $${n}$。`,
+        ],
+        [-answer, `The sign is flipped; $xf_x + yf_y = nf$ with a plus sign.`, `符号反了；$xf_x + yf_y = nf$，是正号。`],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -2063,26 +2299,53 @@ const powerMakingExact: KnowledgePointDef = {
   id: "the-power-of-x-that-makes-an-equation-exact",
   title: t("The power of x that makes an equation exact", "使方程恰当的 x 的幂"),
   explanation: t(
-    "To find an integrating factor of a given shape, multiply through by it and apply the test for exactness. With the factor $x^m$, the equation $ay\\,dx + bx\\,dy = 0$ has $M = ax^m y$ and $N = bx^{m + 1}$. So $M_y = ax^m$ and $N_x = b(m + 1)x^m$. The powers of $x$ agree automatically, so exactness becomes one equation for $m$, and the exponent need not be a whole number.",
-    "要求给定形状的积分因子，就乘上它，再用恰当性检验。用因子 $x^m$，方程 $ay\\,dx + bx\\,dy = 0$ 有 $M = ax^m y$，$N = bx^{m + 1}$。所以 $M_y = ax^m$，$N_x = b(m + 1)x^m$。$x$ 的幂自动相同，于是恰当性成为关于 $m$ 的一个方程，指数不一定是整数。",
+    "To find an integrating factor of a given shape, multiply through by it and apply the test for exactness. With the factor $x^m$, the equation $ay\\,dx + bx\\,dy = 0$ has $M = ax^m y$ and $N = bx^{m + 1}$. So $M_y = ax^m$ and $N_x = b(m + 1)x^m$. The powers of $x$ agree automatically, so exactness becomes one equation for $m$, and the exponent need not be a whole number. For $3y\\,dx + 2x\\,dy = 0$, $3 = 2(m + 1)$ gives $m = \\frac{1}{2}$.\n\n> **Watch out.** Differentiating $bx^{m + 1}$ in $x$ brings down $m + 1$, not $m$, so subtract $1$ from $\\frac{a}{b}$ at the end; and it is $\\frac{a}{b}$, the coefficient of $y\\,dx$ over that of $x\\,dy$.",
+    "要求给定形状的积分因子，就乘上它，再用恰当性检验。用因子 $x^m$，方程 $ay\\,dx + bx\\,dy = 0$ 有 $M = ax^m y$，$N = bx^{m + 1}$。所以 $M_y = ax^m$，$N_x = b(m + 1)x^m$。$x$ 的幂自动相同，于是恰当性成为关于 $m$ 的一个方程，指数不一定是整数。对 $3y\\,dx + 2x\\,dy = 0$，由 $3 = 2(m + 1)$ 得 $m = \\frac{1}{2}$。\n\n> **注意。** 对 $bx^{m + 1}$ 关于 $x$ 求导带下的是 $m + 1$ 而不是 $m$，所以最后要从 $\\frac{a}{b}$ 中减去 $1$；并且是 $\\frac{a}{b}$，即 $y\\,dx$ 的系数比 $x\\,dy$ 的系数。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const b = different(rng, 1, 9, a);
     const ratio = Q.of(a, b);
     const answer = ratio.sub(Q.of(1));
-    return numberProblem({
-      prompt: t(
-        `Find $m$ so that multiplying $${a === 1 ? "" : a}y\\,dx + ${b === 1 ? "" : b}x\\,dy = 0$ by $x^m$ makes the equation exact.`,
-        `求 $m$，使 $${a === 1 ? "" : a}y\\,dx + ${b === 1 ? "" : b}x\\,dy = 0$ 乘以 $x^m$ 后成为恰当方程。`,
-      ),
+    const ac = a === 1 ? "" : `${a}`;
+    const bc = b === 1 ? "" : `${b}`;
+    return explainedNumber(
+      [
+        `Find $m$ so that multiplying $${ac}y\\,dx + ${bc}x\\,dy = 0$ by $x^m$ makes the equation exact.`,
+        `求 $m$，使 $${ac}y\\,dx + ${bc}x\\,dy = 0$ 乘以 $x^m$ 后成为恰当方程。`,
+      ],
       answer,
-      wrong: [ratio, Q.of(b, a).sub(Q.of(1)), ratio.add(Q.of(1)), answer.neg()],
-      solution: t(
-        `Exactness requires $${a} = ${b}(m + 1)$, so $m = ${ratio.toLatex()} - 1 = ${answer.toLatex()}$.`,
-        `恰当性要求 $${a} = ${b}(m + 1)$，所以 $m = ${ratio.toLatex()} - 1 = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Multiply and differentiate", "相乘并求偏导"],
+          "After multiplying, $M$ and $N$ are",
+          "相乘后 $M$ 与 $N$ 为",
+          `M = ${ac}x^{m}y, \\quad N = ${bc}x^{m + 1}`,
+          `M_y = ${ac}x^{m}, \\quad N_x = ${bc}(m + 1)x^{m}`,
+        ),
+        labelled(
+          ["Solve the exactness condition", "解恰当性条件"],
+          "Setting $M_y = N_x$ and cancelling $x^{m}$:",
+          "令 $M_y = N_x$ 并约去 $x^{m}$：",
+          `${a} = ${b}(m + 1)`,
+          `m = ${ratio.toLatex()} - 1 = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `With $m = ${answer.toLatex()}$, $${b}(m + 1) = ${b} \\cdot ${ratio.toLatex()} = ${a}$, so $M_y$ and $N_x$ are both $${ac}x^{${answer.toLatex()}}$.`,
+        `当 $m = ${answer.toLatex()}$ 时，$${b}(m + 1) = ${b} \\cdot ${ratio.toLatex()} = ${a}$，所以 $M_y$ 与 $N_x$ 都是 $${ac}x^{${answer.toLatex()}}$。`,
+      ],
+      [
+        [ratio, `That is $m + 1$; subtract $1$ to get $m$.`, `这是 $m + 1$；要减去 $1$ 才得到 $m$。`],
+        [
+          Q.of(b, a).sub(Q.of(1)),
+          "That inverts the ratio; exactness gives $a = b(m + 1)$, so $m + 1 = \\frac{a}{b}$.",
+          "这是把比值颠倒了；恰当性给出 $a = b(m + 1)$，所以 $m + 1 = \\frac{a}{b}$。",
+        ],
+        [ratio.add(Q.of(1)), "That adds $1$ instead of subtracting it.", "这是加了 $1$，而不是减去 $1$。"],
+        [answer.neg(), "The sign is flipped; recheck $m = \\frac{a}{b} - 1$.", "符号反了；重新检查 $m = \\frac{a}{b} - 1$。"],
+      ],
+    );
   },
 };
 
@@ -2720,27 +2983,53 @@ const bernoulliCoefficient: KnowledgePointDef = {
   id: "the-coefficient-after-a-bernoulli-substitution",
   title: t("The coefficient after a Bernoulli substitution", "伯努利代换后的系数"),
   explanation: t(
-    "The substitution $v = y^{1 - n}$ turns $y' + py = qy^n$ into a linear equation. Dividing by $y^n$ gives $y^{-n}y' + py^{1 - n} = q$, and since $v' = (1 - n)y^{-n}y'$, multiplying by $1 - n$ gives $v' + (1 - n)pv = (1 - n)q$. Both the coefficient of $v$ and the new right side pick up the factor $1 - n$. For $n \\ge 2$, this factor is negative, which reverses the sign of the coefficient.",
-    "代换 $v = y^{1 - n}$ 把 $y' + py = qy^n$ 变成线性方程。除以 $y^n$ 得 $y^{-n}y' + py^{1 - n} = q$，由于 $v' = (1 - n)y^{-n}y'$，再乘以 $1 - n$ 得 $v' + (1 - n)pv = (1 - n)q$。$v$ 的系数和新的右边都多了因子 $1 - n$。当 $n \\ge 2$ 时，这个因子是负的，使系数变号。",
+    "The substitution $v = y^{1 - n}$ turns $y' + py = qy^n$ into a linear equation. Dividing by $y^n$ gives $y^{-n}y' + py^{1 - n} = q$, and since $v' = (1 - n)y^{-n}y'$, multiplying by $1 - n$ gives $v' + (1 - n)pv = (1 - n)q$. Both the coefficient of $v$ and the new right side pick up the factor $1 - n$. For $n \\ge 2$, this factor is negative, which reverses the sign of the coefficient. For $y' + 4y = 3y^{2}$, $v = y^{-1}$ gives $v' - 4v = -3$, so $K = -4$.\n\n> **Watch out.** The factor is $1 - n$, not $n$ or $n - 1$, and $K$ comes from the coefficient $p$ of $y$, not from the coefficient $q$ on the right.",
+    "代换 $v = y^{1 - n}$ 把 $y' + py = qy^n$ 变成线性方程。除以 $y^n$ 得 $y^{-n}y' + py^{1 - n} = q$，由于 $v' = (1 - n)y^{-n}y'$，再乘以 $1 - n$ 得 $v' + (1 - n)pv = (1 - n)q$。$v$ 的系数和新的右边都多了因子 $1 - n$。当 $n \\ge 2$ 时，这个因子是负的，使系数变号。对 $y' + 4y = 3y^{2}$，$v = y^{-1}$ 给出 $v' - 4v = -3$，所以 $K = -4$。\n\n> **注意。** 因子是 $1 - n$，不是 $n$，也不是 $n - 1$；并且 $K$ 来自 $y$ 的系数 $p$，而不是右边的系数 $q$。",
   ),
   generate(rng) {
     const p = nonzero(rng, 9);
     const q = rng.int(2, 9);
     const n = rng.int(2, 6);
     const answer = (1 - n) * p;
-    return numberProblem({
-      prompt: t(
-        `The substitution $v = y^{${1 - n}}$ turns $${poly([1, "y'"], [p, "y"])} = ${q}y^{${n}}$ into a linear equation $v' + Kv = g$. Find $K$.`,
-        `代换 $v = y^{${1 - n}}$ 把 $${poly([1, "y'"], [p, "y"])} = ${q}y^{${n}}$ 变成线性方程 $v' + Kv = g$。求 $K$。`,
-      ),
+    const lhs = poly([1, "y'"], [p, "y"]);
+    const fn = n === 2 ? "-" : `${1 - n}`;
+    return explainedNumber(
+      [
+        `The substitution $v = y^{${1 - n}}$ turns $${lhs} = ${q}y^{${n}}$ into a linear equation $v' + Kv = g$. Find $K$.`,
+        `代换 $v = y^{${1 - n}}$ 把 $${lhs} = ${q}y^{${n}}$ 变成线性方程 $v' + Kv = g$。求 $K$。`,
+      ],
       answer,
-      form: "integer",
-      wrong: [p, -answer, (1 - n) * q, n * p],
-      solution: t(
-        `Multiplying the equation by $(1 - n)y^{-n}$ with $n = ${n}$ gives $K = ${1 - n} \\cdot ${inParens(p)} = ${answer}$.`,
-        `当 $n = ${n}$ 时，方程乘以 $(1 - n)y^{-n}$，得 $K = ${1 - n} \\cdot ${inParens(p)} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Divide by the power of y", "除以 y 的幂"],
+          `Dividing by $y^{${n}}$:`,
+          `除以 $y^{${n}}$：`,
+          `y^{${-n}}y' ${p < 0 ? "-" : "+"} ${Math.abs(p) === 1 ? "" : Math.abs(p)}y^{${1 - n}} = ${q}`,
+        ),
+        labelled(
+          ["Rewrite in terms of v", "用 v 改写"],
+          `Since $v' = ${fn}y^{${-n}}y'$, multiply by $${1 - n}$:`,
+          `由于 $v' = ${fn}y^{${-n}}y'$，两边乘以 $${1 - n}$：`,
+          `v' + ${inParens(1 - n)} \\cdot ${inParens(p)}v = ${(1 - n) * q}`,
+          `K = ${answer}`,
+        ),
+      ],
+      [
+        `Term by term: $${fn}y^{${-n}}y' = v'$, $${1 - n} \\cdot ${inParens(p)}y^{${1 - n}} = ${poly([answer, "v"])}$ and $${1 - n} \\cdot ${q} = ${(1 - n) * q}$, so the equation is $${poly([1, "v'"], [answer, "v"])} = ${(1 - n) * q}$.`,
+        `逐项看：$${fn}y^{${-n}}y' = v'$，$${1 - n} \\cdot ${inParens(p)}y^{${1 - n}} = ${poly([answer, "v"])}$，$${1 - n} \\cdot ${q} = ${(1 - n) * q}$，所以方程是 $${poly([1, "v'"], [answer, "v"])} = ${(1 - n) * q}$。`,
+      ],
+      [
+        [p, `That forgets to multiply by $1 - n = ${1 - n}$.`, `这里忘了乘以 $1 - n = ${1 - n}$。`],
+        [
+          -answer,
+          `That multiplies by $n - 1 = ${n - 1}$; the factor from $v'$ is $1 - n = ${1 - n}$.`,
+          `这是乘以 $n - 1 = ${n - 1}$；由 $v'$ 得到的因子是 $1 - n = ${1 - n}$。`,
+        ],
+        [(1 - n) * q, "That is the new right side $g$; $K$ is the coefficient of $v$.", "这是新的右边 $g$；$K$ 是 $v$ 的系数。"],
+        [n * p, `That multiplies by $n = ${n}$; the factor is $1 - n = ${1 - n}$.`, `这是乘以 $n = ${n}$；因子是 $1 - n = ${1 - n}$。`],
+      ],
+      "integer",
+    );
   },
 };
 

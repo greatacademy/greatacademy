@@ -2,11 +2,20 @@
 // methods to variation of parameters: the reverse question, a harder case or a common
 // trap. See `deeperDifferentialEquationsThirdPoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { t } from "@ga/content";
 import { linear, paren, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -17,26 +26,55 @@ const integratingFactorPower = point(
   "the-integrating-factor-after-standardizing",
   ["The integrating factor after standardizing", "化为标准形式后的积分因子"],
   [
-    "The integrating factor $e^{\\int P \\, dx}$ uses $P$ from the standard form, with $y'$ having coefficient $1$. So divide first. For $axy' + by = g$ on $x > 0$, $P = \\frac{b}{ax}$, which makes the integrating factor $x^{b/a}$.",
-    "积分因子 $e^{\\int P \\, dx}$ 中的 $P$ 来自标准形式，即 $y'$ 的系数为 $1$。所以要先相除。对 $x > 0$ 上的 $axy' + by = g$，$P = \\frac{b}{ax}$，所以积分因子是 $x^{b/a}$。",
+    "The integrating factor $e^{\\int P \\, dx}$ uses $P$ from the standard form, with $y'$ having coefficient $1$. So divide first. For $axy' + by = g$ on $x > 0$, $P = \\frac{b}{ax}$, which makes the integrating factor $x^{b/a}$. For $2xy' + 3y = x^{2}$, $P = \\frac{3}{2x}$ and the factor is $x^{3/2}$.\n\n> **Watch out.** Divide by the whole coefficient $ax$ of $y'$, not just by $x$: skipping the division by $a$ gives $x^{b}$, and dividing the wrong way gives $x^{a/b}$.",
+    "积分因子 $e^{\\int P \\, dx}$ 中的 $P$ 来自标准形式，即 $y'$ 的系数为 $1$。所以要先相除。对 $x > 0$ 上的 $axy' + by = g$，$P = \\frac{b}{ax}$，所以积分因子是 $x^{b/a}$。对 $2xy' + 3y = x^{2}$，$P = \\frac{3}{2x}$，积分因子是 $x^{3/2}$。\n\n> **注意。** 要除以 $y'$ 的整个系数 $ax$，而不只是除以 $x$：漏掉除以 $a$ 会得到 $x^{b}$，除反了会得到 $x^{a/b}$。",
   ],
   (rng) => {
     const a = rng.int(2, 7);
     const b = nz(rng, 12);
     const answer = Q.of(b, a);
     const g = rng.pick(["x^{2}", "e^{x}", "\\sin x", "7"]);
-    return ask(
-      [
-        `For $x > 0$, an integrating factor of $${a}xy' ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}y = ${g}$ has the form $x^{m}$. Find $m$.`,
-        `当 $x > 0$ 时，$${a}xy' ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}y = ${g}$ 的一个积分因子形如 $x^{m}$。求 $m$。`,
-      ],
+    const by = `${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}y`;
+    const m = answer.toLatex();
+    const mc = m === "1" ? "" : m === "-1" ? "-" : m;
+    return numberProblem({
+      prompt: t(
+        `For $x > 0$, an integrating factor of $${a}xy' ${by} = ${g}$ has the form $x^{m}$. Find $m$.`,
+        `当 $x > 0$ 时，$${a}xy' ${by} = ${g}$ 的一个积分因子形如 $x^{m}$。求 $m$。`,
+      ),
       answer,
-      [b, Q.of(a, b), answer.neg()],
-      [
-        `Dividing by $${a}x$ gives $P(x) = \\frac{${b}}{${a}x}$, so $\\int P \\, dx = ${answer.toLatex()}\\ln x$ and the integrating factor is $x^{${answer.toLatex()}}$.`,
-        `除以 $${a}x$ 得 $P(x) = \\frac{${b}}{${a}x}$，所以 $\\int P \\, dx = ${answer.toLatex()}\\ln x$，积分因子是 $x^{${answer.toLatex()}}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(b, `That skips dividing by $${a}$, the number in the coefficient of $y'$.`, `这里漏掉了除以 $y'$ 系数中的 $${a}$。`),
+        why(
+          Q.of(a, b),
+          "That divides the wrong way round; $P$ is the coefficient of $y$ over the coefficient of $y'$.",
+          "这是除反了；$P$ 是 $y$ 的系数除以 $y'$ 的系数。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is flipped; the integrating factor uses $+\\int P \\, dx$.",
+          "符号反了；积分因子用的是 $+\\int P \\, dx$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Put the equation in standard form", "化为标准形式"],
+            t(`Divide by $${a}x$:`, `除以 $${a}x$：`),
+            [`y' + \\frac{${b}}{${a}x}y = \\frac{${g}}{${a}x}`],
+          ],
+          [
+            ["Integrate P", "对 P 积分"],
+            t("", ""),
+            [`\\int \\frac{${b}}{${a}x} \\, dx = ${mc}\\ln x`, `e^{${mc}\\ln x} = x^{${m}}, \\quad m = ${m}`],
+          ],
+        ],
+        t(
+          `$\\frac{(x^{m})'}{x^{m}} = \\frac{m}{x} = ${m}\\cdot\\frac{1}{x} = \\frac{${b}}{${a}x}$, which is $P$, as an integrating factor requires.`,
+          `$\\frac{(x^{m})'}{x^{m}} = \\frac{m}{x} = ${m}\\cdot\\frac{1}{x} = \\frac{${b}}{${a}x}$，正是 $P$，符合积分因子的要求。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -44,8 +82,8 @@ const steadyMean = point(
   "the-mean-level-of-the-steady-state",
   ["The mean level of the steady state", "稳态的平均水平"],
   [
-    "When a constant is added to a sinusoidal forcing, linearity splits the response. The constant part gives a steady level $\\frac{c}{k}$ for $y' + ky = c$, and the sinusoid oscillates around it with average zero, so its amplitude does not change the mean level.",
-    "当正弦强迫项加上一个常数时，线性使响应分开。常数部分对 $y' + ky = c$ 给出稳定水平 $\\frac{c}{k}$，正弦部分围绕它振荡，平均值为零，所以其振幅不改变平均水平。",
+    "When a constant is added to a sinusoidal forcing, linearity splits the response. The constant part gives a steady level $\\frac{c}{k}$ for $y' + ky = c$, and the sinusoid oscillates around it with average zero, so its amplitude does not change the mean level. For $y' + 4y = 12 + 5\\cos x$ the level is $\\frac{12}{4} = 3$.\n\n> **Watch out.** The level is the constant forcing divided by $k$, not the forcing $c$ itself, and the amplitude $A$ of the cosine adds nothing to it.",
+    "当正弦强迫项加上一个常数时，线性使响应分开。常数部分对 $y' + ky = c$ 给出稳定水平 $\\frac{c}{k}$，正弦部分围绕它振荡，平均值为零，所以其振幅不改变平均水平。对 $y' + 4y = 12 + 5\\cos x$，水平是 $\\frac{12}{4} = 3$。\n\n> **注意。** 水平是常数强迫项除以 $k$，而不是强迫项 $c$ 本身；余弦的振幅 $A$ 对它没有贡献。",
   ],
   (rng) => {
     const k = rng.int(2, 9);
@@ -53,18 +91,53 @@ const steadyMean = point(
     const c = k * m;
     const A = rng.int(2, 40);
     const w = rng.int(1, 9);
-    return ask(
-      [
-        `The steady-state solution of $y' + ${k}y = ${c} + ${A}\\cos ${w === 1 ? "" : w}x$ oscillates around a constant level. Find that level.`,
-        `$y' + ${k}y = ${c} + ${A}\\cos ${w === 1 ? "" : w}x$ 的稳态解围绕一个常数水平振荡。求这个水平。`,
-      ],
-      m,
-      [c, Q.of(A, k), Q.of(c + A, k)],
-      [
-        `The constant forcing has the constant response $\\frac{${c}}{${k}} = ${m}$. The cosine forcing gives a sinusoid with mean zero, so the level is $${m}$.`,
-        `常数强迫项的响应是常数 $\\frac{${c}}{${k}} = ${m}$。余弦强迫项给出平均值为零的正弦型函数，所以水平是 $${m}$。`,
-      ],
-    );
+    const wx = `${w === 1 ? "" : w}x`;
+    return numberProblem({
+      prompt: t(
+        `The steady-state solution of $y' + ${k}y = ${c} + ${A}\\cos ${wx}$ oscillates around a constant level. Find that level.`,
+        `$y' + ${k}y = ${c} + ${A}\\cos ${wx}$ 的稳态解围绕一个常数水平振荡。求这个水平。`,
+      ),
+      answer: m,
+      mistakes: apart(m, [
+        why(
+          c,
+          `That is the constant forcing itself; the steady response to it is the forcing divided by $${k}$.`,
+          `这是常数强迫项本身；对它的稳态响应要除以 $${k}$。`,
+        ),
+        why(
+          Q.of(A, k),
+          "That treats the amplitude of the cosine as a constant forcing; the cosine part averages to zero.",
+          "这是把余弦的振幅当成常数强迫项；余弦部分的平均值为零。",
+        ),
+        why(
+          Q.of(c + A, k),
+          "That adds the amplitude of the cosine to the constant; the cosine part averages to zero.",
+          "这是把余弦的振幅加到常数上；余弦部分的平均值为零。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Split the forcing", "拆分强迫项"],
+            t(
+              `By linearity the steady state is $y_{c} + y_{s}$, where $y_{c}' + ${k}y_{c} = ${c}$ and $y_{s}' + ${k}y_{s} = ${A}\\cos ${wx}$.`,
+              `由线性，稳态解是 $y_{c} + y_{s}$，其中 $y_{c}' + ${k}y_{c} = ${c}$，$y_{s}' + ${k}y_{s} = ${A}\\cos ${wx}$。`,
+            ),
+          ],
+          [
+            ["Find the level", "求水平"],
+            t(
+              `The constant response is $y_{c} = \\frac{${c}}{${k}} = ${m}$. The response $y_{s}$ is a combination of $\\cos ${wx}$ and $\\sin ${wx}$, whose average is zero, so the level is $${m}$.`,
+              `常数响应是 $y_{c} = \\frac{${c}}{${k}} = ${m}$。响应 $y_{s}$ 是 $\\cos ${wx}$ 与 $\\sin ${wx}$ 的组合，平均值为零，所以水平是 $${m}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$y_{c} = ${m}$ has $y_{c}' = 0$, and $0 + ${k} \\cdot ${paren(m)} = ${c}$, the constant forcing.`,
+          `$y_{c} = ${m}$ 满足 $y_{c}' = 0$，且 $0 + ${k} \\cdot ${paren(m)} = ${c}$，正是常数强迫项。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -72,26 +145,46 @@ const straightLineFromSubstitution = point(
   "straight-line-solutions-from-a-constant-in-v",
   ["Straight-line solutions from a constant in v", "由 v 为常数得到直线解"],
   [
-    "After $v = ax + y$, the equation is autonomous in $v$, so its equilibria are worth finding. Each constant $v = m$ means $ax + y = m$, a straight-line solution of the original equation with slope $-a$ and intercept $m$.",
-    "代换 $v = ax + y$ 后，方程关于 $v$ 是自治的，所以应当求它的平衡解。每个常数 $v = m$ 就是 $ax + y = m$，这是原方程的一条直线解，斜率为 $-a$，截距为 $m$。",
+    "After $v = ax + y$, the equation is autonomous in $v$, so its equilibria are worth finding. Each constant $v = m$ means $ax + y = m$, a straight-line solution of the original equation with slope $-a$ and intercept $m$. For $y' = (2x + y)^{2} - 6$, $v' = v^{2} - 4$, so $v = \\pm 2$ and the lines are $y = -2x \\pm 2$.\n\n> **Watch out.** $v' = a + y'$, so the $a$ from differentiating $ax$ must be added before setting $v' = 0$; forgetting it gives $v^{2} = q$ instead of $v^{2} = q - a$.",
+    "代换 $v = ax + y$ 后，方程关于 $v$ 是自治的，所以应当求它的平衡解。每个常数 $v = m$ 就是 $ax + y = m$，这是原方程的一条直线解，斜率为 $-a$，截距为 $m$。对 $y' = (2x + y)^{2} - 6$，$v' = v^{2} - 4$，所以 $v = \\pm 2$，直线是 $y = -2x \\pm 2$。\n\n> **注意。** $v' = a + y'$，所以在令 $v' = 0$ 之前要加上对 $ax$ 求导得到的 $a$；漏掉它会得到 $v^{2} = q$，而不是 $v^{2} = q - a$。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
     const m = rng.int(1, 9);
     const q = a + m * m;
     const inner = poly([a, "x"], [1, "y"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$y' = (${inner})^{2} - ${q}$ has two straight-line solutions, found by setting $v = ${inner}$ equal to a constant. Find the larger $y$-intercept of the two.`,
         `$y' = (${inner})^{2} - ${q}$ 有两条直线解，令 $v = ${inner}$ 等于常数即可求得。求两者中较大的 $y$ 轴截距。`,
-      ],
-      m,
-      [m * m, -m, q],
-      [
-        `$v' = ${a} + y' = v^{2} - ${q} + ${a} = v^{2} - ${m * m}$, which is zero when $v = \\pm ${m}$. So the lines are $y = ${poly([-a, "x"])} \\pm ${m}$, and the larger intercept is $${m}$.`,
-        `$v' = ${a} + y' = v^{2} - ${q} + ${a} = v^{2} - ${m * m}$，当 $v = \\pm ${m}$ 时为零。所以直线是 $y = ${poly([-a, "x"])} \\pm ${m}$，较大的截距是 $${m}$。`,
-      ],
-    );
+      ),
+      answer: m,
+      mistakes: apart(m, [
+        why(m * m, `That is $v^{2}$; the intercept is the constant value of $v$ itself.`, `这是 $v^{2}$；截距是 $v$ 本身的常数值。`),
+        why(-m, "That is the smaller of the two intercepts.", "这是两条直线中较小的截距。"),
+        why(
+          q,
+          `That reads the constant $${q}$ off the equation; $v'$ also contains the $${a}$ from differentiating $${poly([a, "x"])}$.`,
+          `这是直接读出方程中的常数 $${q}$；$v'$ 中还有对 $${poly([a, "x"])}$ 求导得到的 $${a}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Write the equation for v", "写出 v 的方程"], t("", ""), [`v' = ${a} + y' = v^{2} - ${q} + ${a} = v^{2} - ${m * m}`]],
+          [
+            ["Set v constant", "令 v 为常数"],
+            t(
+              `$v' = 0$ when $v = \\pm ${m}$. So the lines are $y = ${poly([-a, "x"])} \\pm ${m}$, and the larger intercept is $${m}$.`,
+              `当 $v = \\pm ${m}$ 时 $v' = 0$。所以直线是 $y = ${poly([-a, "x"])} \\pm ${m}$，较大的截距是 $${m}$。`,
+            ),
+          ],
+        ],
+        t(
+          `On $y = ${poly([-a, "x"], [m, ""])}$, $y' = ${-a}$ and $(${inner})^{2} - ${q} = ${m * m} - ${q} = ${-a}$.`,
+          `在 $y = ${poly([-a, "x"], [m, ""])}$ 上，$y' = ${-a}$，而 $(${inner})^{2} - ${q} = ${m * m} - ${q} = ${-a}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -99,8 +192,8 @@ const bernoulliCoefficient = point(
   "the-linear-equation-from-a-bernoulli-equation",
   ["The linear equation from a Bernoulli equation", "由伯努利方程得到的线性方程"],
   [
-    "For $y' + ky = cy^{n}$, the substitution $v = y^{1 - n}$ gives $v' + (1 - n)kv = (1 - n)c$. Both sides are multiplied by $1 - n$, which is negative for $n \\ge 2$, and this factor is often forgotten or written as $n - 1$.",
-    "对 $y' + ky = cy^{n}$，代换 $v = y^{1 - n}$ 得 $v' + (1 - n)kv = (1 - n)c$。两边都乘以 $1 - n$，当 $n \\ge 2$ 时它是负数，这个因子常被漏掉或写成 $n - 1$。",
+    "For $y' + ky = cy^{n}$, the substitution $v = y^{1 - n}$ gives $v' + (1 - n)kv = (1 - n)c$. Both sides are multiplied by $1 - n$, which is negative for $n \\ge 2$, and this factor is often forgotten or written as $n - 1$. For $y' + 2y = 5y^{3}$, $v = y^{-2}$ gives $v' - 4v = -10$.\n\n> **Watch out.** The factor $1 - n$ multiplies both $P$ and $Q$, not just one of them, and for $n \\ge 2$ it is negative, so the signs of both change.",
+    "对 $y' + ky = cy^{n}$，代换 $v = y^{1 - n}$ 得 $v' + (1 - n)kv = (1 - n)c$。两边都乘以 $1 - n$，当 $n \\ge 2$ 时它是负数，这个因子常被漏掉或写成 $n - 1$。对 $y' + 2y = 5y^{3}$，$v = y^{-2}$ 给出 $v' - 4v = -10$。\n\n> **注意。** 因子 $1 - n$ 同时乘到 $P$ 和 $Q$ 上，而不只是其中一个；当 $n \\ge 2$ 时它是负数，所以两者都要变号。",
   ],
   (rng) => {
     const k = nz(rng, 9);
@@ -110,18 +203,44 @@ const bernoulliCoefficient = point(
     const answer = (1 - n) * (left ? k : c);
     const eq = `y' ${k < 0 ? "-" : "+"} ${Math.abs(k) === 1 ? "" : Math.abs(k)}y = ${poly([c, `y^{${n}}`])}`;
     const name = left ? "P" : "Q";
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `The substitution $v = y^{${1 - n}}$ turns $${eq}$ into $v' + Pv = Q$. Find $${name}$.`,
         `代换 $v = y^{${1 - n}}$ 把 $${eq}$ 变成 $v' + Pv = Q$。求 $${name}$。`,
-      ],
+      ),
       answer,
-      [-answer, left ? k : c, left ? (1 - n) * c : (1 - n) * k],
-      [
-        `$v' = ${poly([1 - n, `y^{${-n}}y'`])}$. Multiplying the equation by $${poly([1 - n, `y^{${-n}}`])}$ gives $${poly([1, "v'"], [(1 - n) * k, "v"])} = ${(1 - n) * c}$, so $${name} = ${answer}$.`,
-        `$v' = ${poly([1 - n, `y^{${-n}}y'`])}$。方程乘以 $${poly([1 - n, `y^{${-n}}`])}$，得 $${poly([1, "v'"], [(1 - n) * k, "v"])} = ${(1 - n) * c}$，所以 $${name} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          -answer,
+          `That multiplies by $n - 1 = ${n - 1}$; the factor from $v' = (1 - n)y^{-n}y'$ is $1 - n = ${1 - n}$.`,
+          `这是乘以 $n - 1 = ${n - 1}$；由 $v' = (1 - n)y^{-n}y'$ 得到的因子是 $1 - n = ${1 - n}$。`,
+        ),
+        why(left ? k : c, `That forgets to multiply by $1 - n = ${1 - n}$.`, `这里忘了乘以 $1 - n = ${1 - n}$。`),
+        why(
+          left ? (1 - n) * c : (1 - n) * k,
+          left
+            ? "That is $Q$, the right side; $P$ is the coefficient of $v$."
+            : "That is $P$, the coefficient of $v$; $Q$ is the right side.",
+          left ? "这是右端 $Q$；$P$ 是 $v$ 的系数。" : "这是 $v$ 的系数 $P$；$Q$ 是右端。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Differentiate v", "对 v 求导"], t("", ""), [`v = y^{${1 - n}}, \\quad v' = ${poly([1 - n, `y^{${-n}}y'`])}`]],
+          [
+            ["Multiply the equation", "方程两边相乘"],
+            t(
+              `Multiplying the equation by $${poly([1 - n, `y^{${-n}}`])}$ gives $${poly([1, "v'"], [(1 - n) * k, "v"])} = ${(1 - n) * c}$, so $${name} = ${answer}$.`,
+              `方程两边乘以 $${poly([1 - n, `y^{${-n}}`])}$，得 $${poly([1, "v'"], [(1 - n) * k, "v"])} = ${(1 - n) * c}$，所以 $${name} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Term by term: $${poly([1 - n, `y^{${-n}}`])} \\cdot y' = v'$, $${poly([1 - n, `y^{${-n}}`])} \\cdot ${paren(k)}y = ${(1 - n) * k}v$ and $${poly([1 - n, `y^{${-n}}`])} \\cdot ${paren(c)}y^{${n}} = ${(1 - n) * c}$.`,
+          `逐项看：$${poly([1 - n, `y^{${-n}}`])} \\cdot y' = v'$，$${poly([1 - n, `y^{${-n}}`])} \\cdot ${paren(k)}y = ${(1 - n) * k}v$，$${poly([1 - n, `y^{${-n}}`])} \\cdot ${paren(c)}y^{${n}} = ${(1 - n) * c}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -129,31 +248,56 @@ const recognizingHomogeneous = point(
   "recognizing-a-homogeneous-right-side",
   ["Recognizing a homogeneous right side", "识别齐次的右端"],
   [
-    "The $v$ substitution works only when the right side depends on $\\frac{y}{x}$ alone, which means every term of the numerator and the denominator has the same total degree. A single term of different degree, such as a constant, breaks this.",
-    "只有当右端只依赖于 $\\frac{y}{x}$ 时，$v$ 代换才有效，也就是分子和分母的每一项总次数都相同。只要有一项次数不同（例如一个常数），就不成立。",
+    "The $v$ substitution works only when the right side depends on $\\frac{y}{x}$ alone, which means every term of the numerator and the denominator has the same total degree. A single term of different degree, such as a constant, breaks this. For example $\\frac{x^{2} + y^{2}}{xy} = \\frac{1 + (y/x)^{2}}{y/x}$, while $\\frac{x^{2} + y^{2} + 1}{xy}$ keeps a leftover $\\frac{1}{x^{2}}$.\n\n> **Watch out.** Count the total degree of every single term, $xy$ included, which has degree $2$. One term of degree $1$ or $0$ is enough to stop the right side from depending on $\\frac{y}{x}$ alone.",
+    "只有当右端只依赖于 $\\frac{y}{x}$ 时，$v$ 代换才有效，也就是分子和分母的每一项总次数都相同。只要有一项次数不同（例如一个常数），就不成立。例如 $\\frac{x^{2} + y^{2}}{xy} = \\frac{1 + (y/x)^{2}}{y/x}$，而 $\\frac{x^{2} + y^{2} + 1}{xy}$ 会剩下一个 $\\frac{1}{x^{2}}$。\n\n> **注意。** 要数出每一项的总次数，$xy$ 也算，它的次数是 $2$。只要有一项次数为 $1$ 或 $0$，右端就不只依赖于 $\\frac{y}{x}$。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
     const b = rng.int(2, 9);
     const c = rng.int(1, 9);
     const den = `${b}xy`;
-    return choose(
-      rng,
-      [
+    const both = (latex: string) => t(`$y' = ${latex}$`, `$y' = ${latex}$`);
+    return explainedChoice(rng, {
+      prompt: t(
         `Which of these equations can be written with its right side as a function of $\\frac{y}{x}$ alone?`,
         `下列哪个方程的右端可以写成只依赖于 $\\frac{y}{x}$ 的函数？`,
+      ),
+      correct: both(`\\frac{x^{2} + ${a}y^{2}}{${den}}`),
+      wrong: [
+        {
+          option: both(`\\frac{x^{2} + ${a}y^{2} + ${c}}{${den}}`),
+          why: t("The constant term has degree $0$ while the others have degree $2$.", "常数项的次数是 $0$，而其他项的次数是 $2$。"),
+        },
+        {
+          option: both(`\\frac{x + ${a}y^{2}}{${den}}`),
+          why: t("The term $x$ has degree $1$ while the others have degree $2$.", "$x$ 这一项的次数是 $1$，而其他项的次数是 $2$。"),
+        },
+        {
+          option: both(`\\frac{x^{2} + ${a}y}{${den}}`),
+          why: t(`The term $${a}y$ has degree $1$ while the others have degree $2$.`, `$${a}y$ 这一项的次数是 $1$，而其他项的次数是 $2$。`),
+        },
       ],
-      [`$y' = \\frac{x^{2} + ${a}y^{2}}{${den}}$`, `$y' = \\frac{x^{2} + ${a}y^{2}}{${den}}$`],
-      [
-        [`$y' = \\frac{x^{2} + ${a}y^{2} + ${c}}{${den}}$`, `$y' = \\frac{x^{2} + ${a}y^{2} + ${c}}{${den}}$`],
-        [`$y' = \\frac{x + ${a}y^{2}}{${den}}$`, `$y' = \\frac{x + ${a}y^{2}}{${den}}$`],
-        [`$y' = \\frac{x^{2} + ${a}y}{${den}}$`, `$y' = \\frac{x^{2} + ${a}y}{${den}}$`],
-      ],
-      [
-        `In $\\frac{x^{2} + ${a}y^{2}}{${den}}$ every term has degree $2$, so dividing the top and bottom by $x^{2}$ leaves only $\\frac{y}{x}$. Each other choice has a term of a different degree.`,
-        `在 $\\frac{x^{2} + ${a}y^{2}}{${den}}$ 中，每一项的次数都是 $2$，所以分子分母同除以 $x^{2}$，只剩下 $\\frac{y}{x}$。其他选项都有次数不同的项。`,
-      ],
-    );
+      solution: walked(
+        [
+          [
+            ["Check the degrees", "检查次数"],
+            t(
+              `In $\\frac{x^{2} + ${a}y^{2}}{${den}}$ the terms $x^{2}$, $${a}y^{2}$ and $${den}$ all have degree $2$.`,
+              `在 $\\frac{x^{2} + ${a}y^{2}}{${den}}$ 中，$x^{2}$、$${a}y^{2}$ 与 $${den}$ 的次数都是 $2$。`,
+            ),
+          ],
+          [
+            ["Divide by x squared", "同除以 x 的平方"],
+            t("Dividing the top and bottom by $x^{2}$:", "分子分母同除以 $x^{2}$："),
+            [`\\frac{x^{2} + ${a}y^{2}}{${den}} = \\frac{1 + ${a}\\left(\\frac{y}{x}\\right)^{2}}{${b}\\frac{y}{x}}`],
+          ],
+        ],
+        t(
+          `Replacing $x, y$ by $2x, 2y$ multiplies the top and the bottom by $4$, so the right side does not change, as a function of $\\frac{y}{x}$ alone must behave.`,
+          `把 $x, y$ 换成 $2x, 2y$，分子分母都乘以 $4$，所以右端不变，这正是只依赖于 $\\frac{y}{x}$ 的函数应有的性质。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -161,26 +305,59 @@ const riccatiLinearKnown = point(
   "riccati-equations-with-a-non-constant-known-solution",
   ["Riccati equations with a non-constant known solution", "已知解不是常数的里卡蒂方程"],
   [
-    "The substitution $y = y_{1} + \\frac{1}{u}$ also works when $y_{1}$ depends on $x$, and then the linear equation for $u$ has a variable coefficient. For $y' = y^{2} + \\cdots$ it is $u' = -2y_{1}u - 1$, so the coefficient comes from the known solution.",
-    "当 $y_{1}$ 依赖于 $x$ 时，代换 $y = y_{1} + \\frac{1}{u}$ 同样有效，此时 $u$ 的线性方程系数是变量。对 $y' = y^{2} + \\cdots$，它是 $u' = -2y_{1}u - 1$，所以系数来自已知解。",
+    "The substitution $y = y_{1} + \\frac{1}{u}$ also works when $y_{1}$ depends on $x$, and then the linear equation for $u$ has a variable coefficient. For $y' = y^{2} + \\cdots$ it is $u' = -2y_{1}u - 1$, so the coefficient comes from the known solution. With $y_{1} = 3x$ the equation is $u' = -6xu - 1$, so $g(1) = -6$.\n\n> **Watch out.** The coefficient is $-2y_{1}$, from the cross term $\\frac{2y_{1}}{u}$ of $\\left(y_{1} + \\frac{1}{u}\\right)^{2}$: the factor $2$ and the minus sign both stay, and $y_{1}$ is evaluated at the given $x$.",
+    "当 $y_{1}$ 依赖于 $x$ 时，代换 $y = y_{1} + \\frac{1}{u}$ 同样有效，此时 $u$ 的线性方程系数是变量。对 $y' = y^{2} + \\cdots$，它是 $u' = -2y_{1}u - 1$，所以系数来自已知解。当 $y_{1} = 3x$ 时方程是 $u' = -6xu - 1$，所以 $g(1) = -6$。\n\n> **注意。** 系数 $-2y_{1}$ 来自 $\\left(y_{1} + \\frac{1}{u}\\right)^{2}$ 的交叉项 $\\frac{2y_{1}}{u}$：因子 $2$ 和负号都要保留，并且 $y_{1}$ 要在给定的 $x$ 处取值。",
   ],
   (rng) => {
     const k = rng.int(1, 9);
     const x0 = nz(rng, 6);
     const answer = -2 * k * x0;
     const y1 = poly([k, "x"]);
-    return ask(
-      [
-        `$y_{1} = ${y1}$ solves $y' = ${poly([1, "y^{2}"], [-k * k, "x^{2}"], [k, ""])}$. The substitution $y = y_{1} + \\frac{1}{u}$ gives $u' = g(x)u - 1$. Find $g(${x0})$.`,
-        `$y_{1} = ${y1}$ 是 $y' = ${poly([1, "y^{2}"], [-k * k, "x^{2}"], [k, ""])}$ 的解。代换 $y = y_{1} + \\frac{1}{u}$ 得 $u' = g(x)u - 1$。求 $g(${x0})$。`,
-      ],
+    const eq = poly([1, "y^{2}"], [-k * k, "x^{2}"], [k, ""]);
+    return numberProblem({
+      prompt: t(
+        `$y_{1} = ${y1}$ solves $y' = ${eq}$. The substitution $y = y_{1} + \\frac{1}{u}$ gives $u' = g(x)u - 1$. Find $g(${x0})$.`,
+        `$y_{1} = ${y1}$ 是 $y' = ${eq}$ 的解。代换 $y = y_{1} + \\frac{1}{u}$ 得 $u' = g(x)u - 1$。求 $g(${x0})$。`,
+      ),
       answer,
-      [-answer, -k * x0, -2 * k],
-      [
-        `$y' = ${k} - \\frac{u'}{u^{2}}$, and the right side becomes $\\frac{${2 * k}x}{u} + \\frac{1}{u^{2}} + ${k}$. So $u' = ${poly([-2 * k, "x"])}u - 1$ and $g(${x0}) = ${answer}$.`,
-        `$y' = ${k} - \\frac{u'}{u^{2}}$，右端变成 $\\frac{${2 * k}x}{u} + \\frac{1}{u^{2}} + ${k}$。所以 $u' = ${poly([-2 * k, "x"])}u - 1$，$g(${x0}) = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          -answer,
+          "The sign is flipped; multiplying by $-u^{2}$ makes the coefficient $-2y_{1}$.",
+          "符号反了；两边乘以 $-u^{2}$ 后系数是 $-2y_{1}$。",
+        ),
+        why(
+          -k * x0,
+          "That loses the factor $2$ of the cross term $\\frac{2y_{1}}{u}$.",
+          "这里丢掉了交叉项 $\\frac{2y_{1}}{u}$ 中的因子 $2$。",
+        ),
+        why(
+          -2 * k,
+          `That uses the slope $${k}$ of $y_{1}$; the coefficient is $-2y_{1}$ evaluated at $x = ${x0}$.`,
+          `这里用了 $y_{1}$ 的斜率 $${k}$；系数是 $-2y_{1}$ 在 $x = ${x0}$ 处的值。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Substitute", "代换"],
+            t(
+              `With $y = ${y1} + \\frac{1}{u}$, the left side is $y' = ${k} - \\frac{u'}{u^{2}}$ and the right side is $\\frac{${2 * k}x}{u} + \\frac{1}{u^{2}} + ${k}$, since $y_{1}^{2} - ${k * k}x^{2} = 0$.`,
+              `令 $y = ${y1} + \\frac{1}{u}$，左边是 $y' = ${k} - \\frac{u'}{u^{2}}$，右边是 $\\frac{${2 * k}x}{u} + \\frac{1}{u^{2}} + ${k}$，因为 $y_{1}^{2} - ${k * k}x^{2} = 0$。`,
+            ),
+          ],
+          [
+            ["Multiply by minus u squared", "两边乘以负的 u 平方"],
+            t("", ""),
+            [`u' = ${poly([-2 * k, "x"])}u - 1`, `g(${x0}) = ${-2 * k} \\cdot ${paren(x0)} = ${answer}`],
+          ],
+        ],
+        t(
+          `$y_{1} = ${y1}$ does solve the equation: $y_{1}' = ${k}$ and $${k * k}x^{2} - ${k * k}x^{2} + ${k} = ${k}$. And $g = -2y_{1} = ${poly([-2 * k, "x"])}$ agrees with the general rule.`,
+          `$y_{1} = ${y1}$ 确实是解：$y_{1}' = ${k}$，且 $${k * k}x^{2} - ${k * k}x^{2} + ${k} = ${k}$。而 $g = -2y_{1} = ${poly([-2 * k, "x"])}$ 与一般规律一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -188,26 +365,52 @@ const clairautThroughPoint = point(
   "clairaut-lines-through-a-given-point",
   ["Clairaut lines through a given point", "过定点的克莱罗直线"],
   [
-    "The special d'Alembert equation $y = xy' + g(y')$ is a Clairaut equation, and its general solution is the family of lines $y = cx + g(c)$. To find the solutions through a point, substitute the point and solve for the slope $c$.",
-    "特殊的达朗贝尔方程 $y = xy' + g(y')$ 是克莱罗方程，通解是直线族 $y = cx + g(c)$。要求过某点的解，把点代入并解出斜率 $c$。",
+    "The special d'Alembert equation $y = xy' + g(y')$ is a Clairaut equation, and its general solution is the family of lines $y = cx + g(c)$. To find the solutions through a point, substitute the point and solve for the slope $c$. For $y = cx + c^{2}$ through $(-3, -2)$, $c^{2} - 3c + 2 = 0$ gives $c = 1$ and $c = 2$.\n\n> **Watch out.** Substitute $x_{0}$ for $x$ and $y_{0}$ for $y$, then solve the quadratic in $c$; its roots are the slopes, not the coordinates of the point, and the larger root is asked for.",
+    "特殊的达朗贝尔方程 $y = xy' + g(y')$ 是克莱罗方程，通解是直线族 $y = cx + g(c)$。要求过某点的解，把点代入并解出斜率 $c$。对 $y = cx + c^{2}$，过 $(-3, -2)$ 时 $c^{2} - 3c + 2 = 0$，得 $c = 1$ 与 $c = 2$。\n\n> **注意。** 把 $x_{0}$ 代入 $x$，$y_{0}$ 代入 $y$，再解关于 $c$ 的二次方程；它的根是斜率，而不是点的坐标，并且要的是较大的根。",
   ],
   (rng) => {
     const c1 = rng.int(-6, 5);
     const c2 = c1 + rng.int(1, 6);
     const x0 = -(c1 + c2);
     const y0 = -c1 * c2;
-    return ask(
-      [
+    const quad = poly([1, "c^{2}"], [x0, "c"], [-y0, ""]);
+    return numberProblem({
+      prompt: t(
         `The general solution of $y = xy' + (y')^{2}$ is the family of lines $y = cx + c^{2}$. Two of them pass through $(${x0}, ${y0})$. Find the larger value of $c$.`,
         `$y = xy' + (y')^{2}$ 的通解是直线族 $y = cx + c^{2}$。其中两条经过 $(${x0}, ${y0})$。求较大的 $c$。`,
-      ],
-      c2,
-      [c1, -c1, x0],
-      [
-        `Substituting gives $${poly([1, "c^{2}"], [x0, "c"], [-y0, ""])} = 0$, whose roots are $${c1}$ and $${c2}$. The larger is $${c2}$.`,
-        `代入得 $${poly([1, "c^{2}"], [x0, "c"], [-y0, ""])} = 0$，根是 $${c1}$ 和 $${c2}$。较大的是 $${c2}$。`,
-      ],
-    );
+      ),
+      answer: c2,
+      mistakes: apart(c2, [
+        why(c1, "That is the smaller of the two slopes.", "这是两个斜率中较小的一个。"),
+        why(
+          -c1,
+          "That flips the sign of the smaller root; the two roots of $c^{2} + x_{0}c - y_{0} = 0$ are read off with their own signs.",
+          "这是把较小根的符号弄反了；$c^{2} + x_{0}c - y_{0} = 0$ 的两个根要按各自的符号读出。",
+        ),
+        why(
+          x0,
+          "That is the $x$-coordinate of the point; the slope is a root of the quadratic in $c$.",
+          "这是点的 $x$ 坐标；斜率是关于 $c$ 的二次方程的根。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Substitute the point", "代入该点"],
+            t(`Putting $x = ${x0}$ and $y = ${y0}$ into $y = cx + c^{2}$:`, `把 $x = ${x0}$、$y = ${y0}$ 代入 $y = cx + c^{2}$：`),
+            [`${y0} = ${paren(x0)}c + c^{2}`, `${quad} = 0`],
+          ],
+          [
+            ["Solve for c", "解出 c"],
+            t(`The roots are $${c1}$ and $${c2}$; the larger is $${c2}$.`, `根是 $${c1}$ 和 $${c2}$；较大的是 $${c2}$。`),
+          ],
+        ],
+        t(
+          `$${c2} \\cdot ${paren(x0)} + ${paren(c2)}^{2} = ${c2 * x0} + ${c2 * c2} = ${y0}$, so the line $y = ${poly([c2, "x"], [c2 * c2, ""]) || "0"}$ passes through the point.`,
+          `$${c2} \\cdot ${paren(x0)} + ${paren(c2)}^{2} = ${c2 * x0} + ${c2 * c2} = ${y0}$，所以直线 $y = ${poly([c2, "x"], [c2 * c2, ""]) || "0"}$ 经过该点。`,
+        ),
+      ),
+    });
   },
 );
 

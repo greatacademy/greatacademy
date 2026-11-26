@@ -2067,8 +2067,8 @@ const phaseLineFromGraph: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["phase-lines-of-first-order-odes#stable-equilibria-from-a-graph"],
   title: t("Stable equilibria from a graph", "由图判断稳定平衡点"),
   explanation: t(
-    "For $\\frac{dx}{dt} = f(x)$, the equilibria are the zeros of $f$. Where $f > 0$ the solution moves right and where $f < 0$ it moves left. So a zero where the graph of $f$ crosses from above the axis to below it attracts from both sides and is stable, and a zero where it crosses from below to above repels and is unstable.",
-    "对 $\\frac{dx}{dt} = f(x)$，平衡点是 $f$ 的零点。$f > 0$ 处解向右移动，$f < 0$ 处解向左移动。所以 $f$ 的图象从轴上方穿到下方的零点从两侧吸引解，是稳定的；从下方穿到上方的零点排斥解，是不稳定的。",
+    "For $\\frac{dx}{dt} = f(x)$, the equilibria are the zeros of $f$. Where $f > 0$ the solution moves right and where $f < 0$ it moves left. So a zero where the graph of $f$ crosses from above the axis to below it attracts from both sides and is stable, and a zero where it crosses from below to above repels and is unstable. If a cubic rises through $-3$, falls through $0$ and rises through $3$, only $0$ is stable.\n\n> **Watch out.** Simple zeros of a curve alternate between crossing downward and crossing upward, so the stable and the unstable equilibria alternate too: they cannot all be stable, or all unstable.",
+    "对 $\\frac{dx}{dt} = f(x)$，平衡点是 $f$ 的零点。$f > 0$ 处解向右移动，$f < 0$ 处解向左移动。所以 $f$ 的图象从轴上方穿到下方的零点从两侧吸引解，是稳定的；从下方穿到上方的零点排斥解，是不稳定的。若一条三次曲线在 $-3$ 处上升穿过、在 $0$ 处下降穿过、在 $3$ 处上升穿过，则只有 $0$ 是稳定的。\n\n> **注意。** 曲线的单零点处，向下穿过与向上穿过交替出现，所以稳定与不稳定的平衡点也交替出现：它们不可能全都稳定，也不可能全都不稳定。",
   ),
   generate(rng: Rng): Problem {
     const p = rng.int(-4, -2);
@@ -2080,22 +2080,63 @@ const phaseLineFromGraph: KnowledgePointDef = {
     const outer = t(`$x = ${p}$ and $x = ${r}$ only`, `只有 $x = ${p}$ 和 $x = ${r}$`);
     const middle = t(`$x = ${q}$ only`, `只有 $x = ${q}$`);
     const right = s < 0 ? outer : middle;
-    const wrong = [s < 0 ? middle : outer, t("All three zeros", "三个零点都是"), t("None of the zeros", "没有一个零点是")];
-    return withFigure(
-      pickChoice(
-        rng,
+    const down = s < 0 ? `$x = ${p}$ and $x = ${r}$` : `$x = ${q}$`;
+    const downZh = s < 0 ? `$x = ${p}$ 和 $x = ${r}$` : `$x = ${q}$`;
+    const up = s < 0 ? `$x = ${q}$` : `$x = ${p}$ and $x = ${r}$`;
+    const upZh = s < 0 ? `$x = ${q}$` : `$x = ${p}$ 和 $x = ${r}$`;
+    const sign = (x: number) => (f(x) > 0 ? "+" : "-");
+    return explainedChoice(rng, {
+      prompt: t(
+        "The graph shows $y = f(x)$ for the equation $\\frac{dx}{dt} = f(x)$. Which equilibria are stable?",
+        "图中是方程 $\\frac{dx}{dt} = f(x)$ 中 $y = f(x)$ 的图象。哪些平衡点是稳定的？",
+      ),
+      correct: right,
+      wrong: [
+        {
+          option: s < 0 ? middle : outer,
+          why: t(
+            `At ${up} the graph crosses upward, from $f < 0$ to $f > 0$, so solutions move away.`,
+            `在 ${upZh} 处图象向上穿过，由 $f < 0$ 变为 $f > 0$，解会离开。`,
+          ),
+        },
+        {
+          option: t("All three zeros", "三个零点都是"),
+          why: t(
+            "Downward and upward crossings alternate, so the three zeros cannot all be stable.",
+            "向下与向上的穿过交替出现，所以三个零点不可能都稳定。",
+          ),
+        },
+        {
+          option: t("None of the zeros", "没有一个零点是"),
+          why: t(
+            `At ${down} the graph crosses downward, so solutions on both sides move toward it.`,
+            `在 ${downZh} 处图象向下穿过，两侧的解都向它移动。`,
+          ),
+        },
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the equilibria", "找平衡点"],
+            t(
+              `The graph crosses the axis at $x = ${p}$, $x = ${q}$ and $x = ${r}$.`,
+              `图象与轴交于 $x = ${p}$、$x = ${q}$ 和 $x = ${r}$。`,
+            ),
+          ],
+          [
+            ["Read the crossings", "看穿过的方向"],
+            t(
+              `A zero is stable when the graph crosses the axis going downward, so that $f > 0$ on its left and $f < 0$ on its right. Here that happens at ${down}; at ${up} the graph crosses upward.`,
+              `图象向下穿过轴的零点是稳定的，因为其左侧 $f > 0$，右侧 $f < 0$。这里这样的零点是${downZh}；在 ${upZh} 处图象向上穿过。`,
+            ),
+          ],
+        ],
         t(
-          "The graph shows $y = f(x)$ for the equation $\\frac{dx}{dt} = f(x)$. Which equilibria are stable?",
-          "图中是方程 $\\frac{dx}{dt} = f(x)$ 中 $y = f(x)$ 的图象。哪些平衡点是稳定的？",
-        ),
-        right,
-        wrong,
-        t(
-          `The zeros are $x = ${p}$, $x = ${q}$ and $x = ${r}$. A zero is stable when the graph crosses the axis going downward, so that $f > 0$ on its left and $f < 0$ on its right. Here that happens at ${s < 0 ? `$x = ${p}$ and $x = ${r}$` : `$x = ${q}$`}.`,
-          `零点是 $x = ${p}$、$x = ${q}$ 和 $x = ${r}$。图象向下穿过轴的零点是稳定的，因为其左侧 $f > 0$，右侧 $f < 0$。这里这样的零点是${s < 0 ? `$x = ${p}$ 和 $x = ${r}$` : `$x = ${q}$`}。`,
+          `The sign of $f$ on the four stretches, from left to right, is $${sign(p - 0.5)}, ${sign((p + q) / 2)}, ${sign((q + r) / 2)}, ${sign(r + 0.5)}$, so the arrows point toward ${down} from both sides.`,
+          `$f$ 在从左到右四段上的符号是 $${sign(p - 0.5)}, ${sign((p + q) / 2)}, ${sign((q + r) / 2)}, ${sign(r + 0.5)}$，所以箭头从两侧指向 ${downZh}。`,
         ),
       ),
-      drawn(
+      figure: drawn(
         { xMin: -6, xMax: 6, yMin: -6, yMax: 6, labelEvery: 2 },
         [{ kind: "curve", f: (x) => f(x), accent: true }],
         t(
@@ -2103,7 +2144,7 @@ const phaseLineFromGraph: KnowledgePointDef = {
           `一条三次曲线，与 x 轴交于 ${p}、${q} 和 ${r}，在第一个和最后一个交点处${s > 0 ? "上升" : "下降"}穿过。`,
         ),
       ),
-    );
+    });
   },
 };
 

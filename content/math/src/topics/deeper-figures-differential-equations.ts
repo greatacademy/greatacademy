@@ -9,7 +9,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { explainedChoice, numberProblem } from "../problems.ts";
 
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { choose, type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
@@ -88,8 +88,8 @@ const stableFromGraph = {
     "stability-from-the-graph-of-the-right-side",
     ["Stability from the graph of the right side", "由右端函数的图判断稳定性"],
     [
-      "For an autonomous equation $y' = f(y)$, equilibria are the zeros of $f$. Where the graph of $f$ crosses the axis going from positive to negative, solutions on both sides move toward the equilibrium, so it is stable. Where the graph crosses from negative to positive, solutions move away, so it is unstable.",
-      "对自治方程 $y' = f(y)$，平衡点是 $f$ 的零点。$f$ 的图从正到负穿过轴的地方，两侧的解都向平衡点移动，所以它稳定。图从负到正穿过轴的地方，解向外移动，所以它不稳定。",
+      "For an autonomous equation $y' = f(y)$, equilibria are the zeros of $f$. Where the graph of $f$ crosses the axis going from positive to negative, solutions on both sides move toward the equilibrium, so it is stable. Where the graph crosses from negative to positive, solutions move away, so it is unstable. For a parabola opening up through $-1$ and $3$, $f$ goes from $+$ to $-$ at $-1$, which is stable, and from $-$ to $+$ at $3$, which is unstable.\n\n> **Watch out.** The direction of the crossing decides, not the height of the graph: the turning point of the parabola is not an equilibrium at all, since $f$ is not zero there.",
+      "对自治方程 $y' = f(y)$，平衡点是 $f$ 的零点。$f$ 的图从正到负穿过轴的地方，两侧的解都向平衡点移动，所以它稳定。图从负到正穿过轴的地方，解向外移动，所以它不稳定。对开口向上、过 $-1$ 和 $3$ 的抛物线，$f$ 在 $-1$ 处由 $+$ 变 $-$，是稳定的；在 $3$ 处由 $-$ 变 $+$，是不稳定的。\n\n> **注意。** 起决定作用的是穿过轴的方向，而不是图的高低：抛物线的顶点根本不是平衡点，因为 $f$ 在那里不为零。",
     ],
     (rng) => {
       const a = rng.int(-4, 1);
@@ -99,16 +99,52 @@ const stableFromGraph = {
       const f = (y: number) => (up ? 1 : -1) * shrink * (y - a) * (y - b);
       const stable = up ? a : b;
       const unstable = up ? b : a;
-      return ask(
+      return figureNumber(
         [
           "The graph shows $f(y)$ for the autonomous equation $y' = f(y)$. At which value of $y$ is there a stable equilibrium?",
           "图中是自治方程 $y' = f(y)$ 的 $f(y)$。在 $y$ 的哪个值处有稳定平衡点？",
         ],
         stable,
-        [unstable, (a + b) % 2 === 0 ? (a + b) / 2 : stable + 5, Math.abs(stable)],
         [
-          `The graph crosses the axis at $y = ${a}$ and $y = ${b}$. At $y = ${stable}$ it goes from positive to negative, so solutions on both sides move toward it and it is stable.`,
-          `图在 $y = ${a}$ 和 $y = ${b}$ 处穿过轴。在 $y = ${stable}$ 处它从正变负，两侧的解都向它移动，所以它稳定。`,
+          stepOf(
+            ["Find the equilibria", "找平衡点"],
+            [
+              `The graph crosses the axis at $y = ${a}$ and $y = ${b}$, so these are the equilibria.`,
+              `图在 $y = ${a}$ 和 $y = ${b}$ 处穿过轴，所以它们是平衡点。`,
+            ],
+          ),
+          stepOf(
+            ["Read the direction of each crossing", "看每次穿过的方向"],
+            [
+              `The parabola opens ${up ? "up" : "down"}, so $f > 0$ ${up ? "outside" : "between"} the zeros and $f < 0$ ${up ? "between" : "outside"} them. At $y = ${stable}$ the graph goes from positive to negative, so solutions on both sides move toward it and it is stable; at $y = ${unstable}$ it goes from negative to positive.`,
+              `抛物线开口向${up ? "上" : "下"}，所以在零点${up ? "之外" : "之间"} $f > 0$，在零点${up ? "之间" : "之外"} $f < 0$。在 $y = ${stable}$ 处图由正变负，两侧的解都向它移动，所以它稳定；在 $y = ${unstable}$ 处图由负变正。`,
+            ],
+          ),
+        ],
+        [
+          `Just below $${stable}$, $y' = f(y) > 0$ pushes $y$ up toward $${stable}$, and just above it $y' < 0$ pushes $y$ down toward $${stable}$.`,
+          `在 $${stable}$ 稍下方，$y' = f(y) > 0$ 使 $y$ 向上趋近 $${stable}$；在它稍上方，$y' < 0$ 使 $y$ 向下趋近 $${stable}$。`,
+        ],
+        [
+          [
+            unstable,
+            "That equilibrium is unstable: the graph crosses there from negative to positive, so solutions move away.",
+            "那个平衡点不稳定：图在那里由负变正，解会离开。",
+          ],
+          [
+            Q.of(a + b, 2),
+            "That is the turning point of the parabola, where $f$ is not zero, so it is not an equilibrium.",
+            "这是抛物线的顶点，$f$ 在那里不为零，所以不是平衡点。",
+          ],
+          ...(stable < 0
+            ? [
+                [
+                  Math.abs(stable),
+                  "The sign is lost; read the zero with its sign from the axis.",
+                  "丢掉了负号；要从轴上连同符号读出零点。",
+                ] as const,
+              ]
+            : []),
         ],
         fig(
           { ...square(6), xName: "y", yName: "f(y)" },
@@ -129,8 +165,8 @@ const limitFromPhaseLine = point(
   "the-long-run-value-from-a-phase-line",
   ["The long-run value from a phase line", "由相线读长期值"],
   [
-    "A phase line marks the equilibria of an autonomous equation and shows by arrows which way solutions move between them. A solution starting between two equilibria moves in the direction of the arrow on that interval and tends to the equilibrium the arrow points to. The starting value decides only which interval applies.",
-    "相线标出自治方程的平衡点，并用箭头表示解在它们之间的移动方向。从两个平衡点之间出发的解，沿该区间上箭头的方向移动，趋向箭头所指的平衡点。初值只决定适用哪个区间。",
+    "A phase line marks the equilibria of an autonomous equation and shows by arrows which way solutions move between them. A solution starting between two equilibria moves in the direction of the arrow on that interval and tends to the equilibrium the arrow points to. The starting value decides only which interval applies. With equilibria at $-1$ and $2$ and the arrow between them pointing right, $y(0) = 0$ gives the limit $2$.\n\n> **Watch out.** A solution can never pass an equilibrium, so the limit is the end of the starting interval that the arrow points to, not an equilibrium further along and not the starting value.",
+    "相线标出自治方程的平衡点，并用箭头表示解在它们之间的移动方向。从两个平衡点之间出发的解，沿该区间上箭头的方向移动，趋向箭头所指的平衡点。初值只决定适用哪个区间。若平衡点在 $-1$ 和 $2$，它们之间的箭头指向右，则 $y(0) = 0$ 的极限是 $2$。\n\n> **注意。** 解永远不能越过平衡点，所以极限是初始区间中箭头所指的那一端，而不是更远处的平衡点，也不是初值。",
   ],
   (rng) => {
     const e1 = rng.int(-6, -3);
@@ -157,16 +193,57 @@ const limitFromPhaseLine = point(
       body += `<polygon class="accent" points="${mid + 8 * s},60 ${mid - 6 * s},53 ${mid - 6 * s},67" fill="currentColor" stroke="none"/>`;
     }
     body += label(310, 64, "y");
-    return ask(
+    const below =
+      interval === 0 ? `below $${e1}$` : interval === 3 ? `above $${e3}$` : `between $${edges[interval]}$ and $${edges[interval + 1]}$`;
+    const belowZh =
+      interval === 0 ? `$${e1}$ 以下` : interval === 3 ? `$${e3}$ 以上` : `$${edges[interval]}$ 与 $${edges[interval + 1]}$ 之间`;
+    return figureNumber(
       [
         `The phase line of an autonomous equation is drawn, with dots at the equilibria. If $y(0) = ${y0}$, what is $\\lim_{t \\to \\infty} y(t)$?`,
         `图中是某自治方程的相线，点表示平衡点。若 $y(0) = ${y0}$，$\\lim_{t \\to \\infty} y(t)$ 是多少？`,
       ],
       answer,
-      [other, y0, e2 === answer ? e1 : e2, e3 === answer ? e1 : e3].filter((v) => v !== answer),
       [
-        `The value $${y0}$ lies in an interval whose arrow points ${goesRight ? "right" : "left"}, so the solution moves ${goesRight ? "up" : "down"} toward the equilibrium at $${answer}$ and never reaches past it.`,
-        `值 $${y0}$ 所在区间的箭头指向${goesRight ? "右" : "左"}，所以解${goesRight ? "增大" : "减小"}并趋向 $${answer}$ 处的平衡点，不会越过它。`,
+        stepOf(
+          ["Locate the starting value", "确定初值所在区间"],
+          [
+            `The equilibria are $${e1}$, $${e2}$ and $${e3}$, and $${y0}$ lies ${below}.`,
+            `平衡点是 $${e1}$、$${e2}$ 和 $${e3}$，$${y0}$ 位于${belowZh}。`,
+          ],
+        ),
+        stepOf(
+          ["Follow the arrow", "沿箭头走"],
+          [
+            `The arrow on that interval points ${goesRight ? "right" : "left"}, so the solution moves ${goesRight ? "up" : "down"} toward the equilibrium at $${answer}$ and never reaches past it.`,
+            `该区间上的箭头指向${goesRight ? "右" : "左"}，所以解${goesRight ? "增大" : "减小"}并趋向 $${answer}$ 处的平衡点，不会越过它。`,
+          ],
+        ),
+      ],
+      [
+        `The arrows on the two sides of $${answer}$ both point toward it, so it attracts, and nothing lies between $${y0}$ and $${answer}$ to stop the solution earlier.`,
+        `$${answer}$ 两侧的箭头都指向它，所以它吸引解，而 $${y0}$ 与 $${answer}$ 之间没有别的平衡点让解提前停下。`,
+      ],
+      [
+        ...(eq.includes(other)
+          ? [
+              [
+                other,
+                "That equilibrium is at the end of the interval the arrow points away from.",
+                "这个平衡点在箭头背离的那一端。",
+              ] as const,
+            ]
+          : []),
+        [y0, "That is the starting value; the solution moves along the arrow.", "这是初值；解会沿箭头移动。"],
+        ...[e1, e2, e3]
+          .filter((e) => e !== answer && e !== other)
+          .map(
+            (e) =>
+              [
+                e,
+                "That equilibrium lies beyond another one, and a solution cannot pass an equilibrium.",
+                "这个平衡点在另一个平衡点之外，而解不能越过平衡点。",
+              ] as const,
+          ),
       ],
       {
         svg: svgDocument(100, body),
