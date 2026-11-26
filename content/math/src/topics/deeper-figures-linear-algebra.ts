@@ -729,8 +729,8 @@ const projectionFromDrawing = {
     "the-projection-onto-a-drawn-line",
     ["The projection onto a drawn line", "向图中直线投影"],
     [
-      "The projection of a vector onto a line through the origin is the point of the line closest to its tip. With a direction $u$ read from the line, it equals $\\frac{v \\cdot u}{u \\cdot u}u$. The difference between the vector and its projection is perpendicular to the line, which gives a way to check the result.",
-      "向量在过原点直线上的投影是直线上离其终点最近的点。从直线上读出方向 $u$ 后，投影等于 $\\frac{v \\cdot u}{u \\cdot u}u$。向量与投影之差垂直于直线，可以用来检验结果。",
+      "The projection of a vector onto a line through the origin is the point of the line closest to its tip. With a direction $u$ read from the line, it equals $\\frac{v \\cdot u}{u \\cdot u}u$. The difference between the vector and its projection is perpendicular to the line, which gives a way to check the result. For example, $v = (3, 1)$ and the line through $(1, 1)$ give $\\frac{4}{2}(1, 1) = (2, 2)$, and $(3, 1) - (2, 2) = (1, -1)$ is perpendicular to $(1, 1)$.\n\n> **Watch out.** A direction read from a drawing is rarely a unit vector, so divide $v \\cdot u$ by $u \\cdot u$ before scaling $u$.",
+      "向量在过原点直线上的投影是直线上离其终点最近的点。从直线上读出方向 $u$ 后，投影等于 $\\frac{v \\cdot u}{u \\cdot u}u$。向量与投影之差垂直于直线，可以用来检验结果。例如 $v = (3, 1)$，直线过 $(1, 1)$ 时投影是 $\\frac{4}{2}(1, 1) = (2, 2)$，而 $(3, 1) - (2, 2) = (1, -1)$ 与 $(1, 1)$ 垂直。\n\n> **注意。** 从图中读出的方向很少是单位向量，所以要先用 $v \\cdot u$ 除以 $u \\cdot u$，再去乘 $u$。",
     ],
     (rng) => {
       const u = rng.pick(primitive.filter((p) => Math.abs(p[0]) <= 2 && Math.abs(p[1]) <= 2));
@@ -744,26 +744,46 @@ const projectionFromDrawing = {
       const v: Point = [a * u[0] + b * n[0], a * u[1] + b * n[1]];
       const proj: Point = [a * u[0], a * u[1]];
       const rest: Point = [b * n[0], b * n[1]];
-      return choose(
-        rng,
+      const wrong = [rest, u, v, [-proj[0], -proj[1]], [dot(v, u) * u[0], dot(v, u) * u[1]]] as Point[];
+      const slips: [string, string][] = [
+        ["That is the part of $v$ perpendicular to the line, $v$ minus its projection.", "这是 $v$ 垂直于直线的部分，即 $v$ 减去投影。"],
         [
-          "The arrow $v$ and a line through the origin are drawn. What is the projection of $v$ onto the line?",
-          "图中画出了箭头 $v$ 和一条过原点的直线。$v$ 在这条直线上的投影是什么？",
+          `That is the direction $u$ read from the line, not yet scaled by the factor $${a}$.`,
+          `这是从直线上读出的方向 $u$，还没有乘以倍数 $${a}$。`,
         ],
-        same(col(proj[0], proj[1])),
-        ([rest, u, v, [-proj[0], -proj[1]], [dot(v, u) * u[0], dot(v, u) * u[1]]] as Point[]).map((c) => same(col(c[0], c[1]))),
+        ["That is $v$ itself, but $v$ does not lie on the line.", "这是 $v$ 本身，但 $v$ 不在这条直线上。"],
         [
-          `Take $u = (${u[0]}, ${u[1]})$ on the line. Then $v \\cdot u = ${dot(v, u)}$ and $u \\cdot u = ${dot(u, u)}$, so the factor is $${a}$ and the projection is $(${proj[0]}, ${proj[1]})$.`,
-          `在直线上取 $u = (${u[0]}, ${u[1]})$。则 $v \\cdot u = ${dot(v, u)}$，$u \\cdot u = ${dot(u, u)}$，所以倍数是 $${a}$，投影是 $(${proj[0]}, ${proj[1]})$。`,
+          `The sign of the factor is flipped; $v \\cdot u = ${dot(v, u)}$ gives the factor $${a}$.`,
+          `倍数的符号反了；$v \\cdot u = ${dot(v, u)}$ 给出倍数 $${a}$。`,
         ],
-        fig(
-          6,
-          [{ kind: "line", a: [0, 0], b: u }, ...vector(v, "v")],
+        [
+          `That scales $u$ by $v \\cdot u$ without dividing by $u \\cdot u = ${dot(u, u)}$.`,
+          `这是用 $v \\cdot u$ 去乘 $u$，没有除以 $u \\cdot u = ${dot(u, u)}$。`,
+        ],
+      ];
+      return reasoned(
+        choose(
+          rng,
           [
-            `A line through the origin and (${u[0]}, ${u[1]}), and an arrow v to (${v[0]}, ${v[1]}).`,
-            `过原点和 (${u[0]}, ${u[1]}) 的直线，以及指向 (${v[0]}, ${v[1]}) 的箭头 v。`,
+            "The arrow $v$ and a line through the origin are drawn. What is the projection of $v$ onto the line?",
+            "图中画出了箭头 $v$ 和一条过原点的直线。$v$ 在这条直线上的投影是什么？",
           ],
+          same(col(proj[0], proj[1])),
+          wrong.map((c) => same(col(c[0], c[1]))),
+          [
+            `**Step 1: Read a direction.** Take $u = (${u[0]}, ${u[1]})$ on the line; the arrow is $v = (${v[0]}, ${v[1]})$.\n\n**Step 2: Find the factor.** $v \\cdot u = ${dot(v, u)}$ and $u \\cdot u = ${dot(u, u)}$, so the factor is $\\frac{${dot(v, u)}}{${dot(u, u)}} = ${a}$.\n\n**Step 3: Scale the direction.** The projection is $${a}u = (${proj[0]}, ${proj[1]})$.\n\n**Check.** $v$ minus the projection is $(${rest[0]}, ${rest[1]})$, and $(${rest[0]})(${u[0]}) + (${rest[1]})(${u[1]}) = 0$, so it is perpendicular to the line.`,
+            `**第一步：读出方向。** 在直线上取 $u = (${u[0]}, ${u[1]})$；箭头是 $v = (${v[0]}, ${v[1]})$。\n\n**第二步：求倍数。** $v \\cdot u = ${dot(v, u)}$，$u \\cdot u = ${dot(u, u)}$，所以倍数是 $\\frac{${dot(v, u)}}{${dot(u, u)}} = ${a}$。\n\n**第三步：伸缩方向。** 投影是 $${a}u = (${proj[0]}, ${proj[1]})$。\n\n**检验。** $v$ 减去投影得 $(${rest[0]}, ${rest[1]})$，而 $(${rest[0]})(${u[0]}) + (${rest[1]})(${u[1]}) = 0$，所以它垂直于直线。`,
+          ],
+          fig(
+            6,
+            [{ kind: "line", a: [0, 0], b: u }, ...vector(v, "v")],
+            [
+              `A line through the origin and (${u[0]}, ${u[1]}), and an arrow v to (${v[0]}, ${v[1]}).`,
+              `过原点和 (${u[0]}, ${u[1]}) 的直线，以及指向 (${v[0]}, ${v[1]}) 的箭头 v。`,
+            ],
+          ),
         ),
+        wrong.map((c, i): [string, string, string] => [same(col(c[0], c[1]))[0], ...(slips[i] as [string, string])]),
       );
     },
   ),
@@ -833,8 +853,8 @@ const orthogonalTransform = {
     "applying-a-drawn-orthogonal-map",
     ["Applying a drawn orthogonal map", "作用图中的正交映射"],
     [
-      "An orthogonal map sends the standard basis to perpendicular unit vectors, and a drawing of these two arrows fixes the whole map. A point $(x, y)$ goes to $x$ times the first arrow plus $y$ times the second. Using the transpose instead applies the inverse map, which sends the point somewhere else unless the map is its own inverse.",
-      "正交映射把标准基映成互相垂直的单位向量，这两个箭头的图就确定了整个映射。点 $(x, y)$ 映到 $x$ 倍第一个箭头加 $y$ 倍第二个箭头。用转置矩阵则是作用逆映射，除非映射是自身的逆，否则点会被送到别处。",
+      "An orthogonal map sends the standard basis to perpendicular unit vectors, and a drawing of these two arrows fixes the whole map. A point $(x, y)$ goes to $x$ times the first arrow plus $y$ times the second. Using the transpose instead applies the inverse map, which sends the point somewhere else unless the map is its own inverse. For example, if $T(e_1) = (0, 1)$ and $T(e_2) = (-1, 0)$, then $T(2, 3) = 2(0, 1) + 3(-1, 0) = (-3, 2)$.\n\n> **Watch out.** The drawn arrows are the columns of the matrix of $T$. Combine them with the coordinates of the point; reading them as rows applies the inverse map instead.",
+      "正交映射把标准基映成互相垂直的单位向量，这两个箭头的图就确定了整个映射。点 $(x, y)$ 映到 $x$ 倍第一个箭头加 $y$ 倍第二个箭头。用转置矩阵则是作用逆映射，除非映射是自身的逆，否则点会被送到别处。例如 $T(e_1) = (0, 1)$，$T(e_2) = (-1, 0)$ 时，$T(2, 3) = 2(0, 1) + 3(-1, 0) = (-3, 2)$。\n\n> **注意。** 图中的箭头是 $T$ 的矩阵的列。要用点的坐标去组合这两列；把它们当作行来用，作用的就是逆映射。",
     ],
     (rng) => {
       const u = rng.pick<Point>([
@@ -848,28 +868,44 @@ const orthogonalTransform = {
       const P: Point = [rng.nonZero(-4, 4), rng.nonZero(-4, 4)];
       const image: Point = [P[0] * u[0] + P[1] * v[0], P[0] * u[1] + P[1] * v[1]];
       const inverse: Point = [P[0] * u[0] + P[1] * u[1], P[0] * v[0] + P[1] * v[1]];
-      return choose(
-        rng,
+      const wrong = [inverse, [-image[0], -image[1]], P, [image[1], image[0]], [image[0], -image[1]], [-image[0], image[1]]] as Point[];
+      const slips: [string, string][] = [
+        ["That uses the arrows as rows, which applies the inverse map $T^{T}$.", "这是把箭头当作行来用，作用的是逆映射 $T^{T}$。"],
+        ["Both signs are flipped, as if each arrow pointed the other way.", "两个符号都反了，好像每个箭头都指向相反方向。"],
+        ["That is $P$ itself; the map was not applied.", "这是 $P$ 本身；没有作用映射。"],
+        ["The two coordinates of $T(P)$ are swapped.", "$T(P)$ 的两个坐标交换了。"],
         [
-          "The arrows show the images of the standard basis under an orthogonal map $T$. What is $T(P)$ for the point $P$ drawn?",
-          "箭头表示正交映射 $T$ 下标准基的像。对图中的点 $P$，$T(P)$ 是什么？",
+          "Only the second coordinate has its sign flipped; recheck the direction of each arrow.",
+          "只有第二个坐标的符号反了；重新看每个箭头的方向。",
         ],
-        same(col(image[0], image[1])),
-        ([inverse, [-image[0], -image[1]], P, [image[1], image[0]], [image[0], -image[1]], [-image[0], image[1]]] as Point[]).map((c) =>
-          same(col(c[0], c[1])),
-        ),
         [
-          `The drawing gives $P = (${P[0]}, ${P[1]})$, $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$. So $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$.`,
-          `由图得 $P = (${P[0]}, ${P[1]})$，$T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。所以 $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$。`,
+          "Only the first coordinate has its sign flipped; recheck the direction of each arrow.",
+          "只有第一个坐标的符号反了；重新看每个箭头的方向。",
         ],
-        fig(
-          5,
-          [...imageOfSquare(u, v), { kind: "point", at: P, label: "P", dir: "n" }],
+      ];
+      return reasoned(
+        choose(
+          rng,
           [
-            `Arrows T(e1) to (${u[0]}, ${u[1]}) and T(e2) to (${v[0]}, ${v[1]}), and the point P at (${P[0]}, ${P[1]}).`,
-            `指向 (${u[0]}, ${u[1]}) 的箭头 T(e1)，指向 (${v[0]}, ${v[1]}) 的箭头 T(e2)，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
+            "The arrows show the images of the standard basis under an orthogonal map $T$. What is $T(P)$ for the point $P$ drawn?",
+            "箭头表示正交映射 $T$ 下标准基的像。对图中的点 $P$，$T(P)$ 是什么？",
           ],
+          same(col(image[0], image[1])),
+          wrong.map((c) => same(col(c[0], c[1]))),
+          [
+            `The drawing gives $P = (${P[0]}, ${P[1]})$, $T(e_1) = (${u[0]}, ${u[1]})$ and $T(e_2) = (${v[0]}, ${v[1]})$. So $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$.`,
+            `由图得 $P = (${P[0]}, ${P[1]})$，$T(e_1) = (${u[0]}, ${u[1]})$，$T(e_2) = (${v[0]}, ${v[1]})$。所以 $T(P) = (${P[0]})T(e_1) + (${P[1]})T(e_2) = (${image[0]}, ${image[1]})$。`,
+          ],
+          fig(
+            5,
+            [...imageOfSquare(u, v), { kind: "point", at: P, label: "P", dir: "n" }],
+            [
+              `Arrows T(e1) to (${u[0]}, ${u[1]}) and T(e2) to (${v[0]}, ${v[1]}), and the point P at (${P[0]}, ${P[1]}).`,
+              `指向 (${u[0]}, ${u[1]}) 的箭头 T(e1)，指向 (${v[0]}, ${v[1]}) 的箭头 T(e2)，以及位于 (${P[0]}, ${P[1]}) 的点 P。`,
+            ],
+          ),
         ),
+        wrong.map((c, i): [string, string, string] => [same(col(c[0], c[1]))[0], ...(slips[i] as [string, string])]),
       );
     },
   ),

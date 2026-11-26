@@ -2321,8 +2321,8 @@ const reflectionFromProjection: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["projection-matrices-linear-transformations-and-their-properties#the-reflection-matrix-from-a-projection"],
   title: t("The reflection matrix from a projection", "由投影矩阵得反射矩阵"),
   explanation: t(
-    "To reflect $\\mathbf{x}$ in a line, move to its projection $P\\mathbf{x}$ and go the same distance again, which gives $2P\\mathbf{x} - \\mathbf{x}$. So the reflection matrix is $R = 2P - I$, where $P = \\frac{\\mathbf{u}\\mathbf{u}^T}{\\mathbf{u}^T\\mathbf{u}}$ is the projection onto the line along $\\mathbf{u}$.",
-    "要把 $\\mathbf{x}$ 关于直线反射，先走到投影 $P\\mathbf{x}$，再走同样的距离，得到 $2P\\mathbf{x} - \\mathbf{x}$。所以反射矩阵是 $R = 2P - I$，其中 $P = \\frac{\\mathbf{u}\\mathbf{u}^T}{\\mathbf{u}^T\\mathbf{u}}$ 是到方向 $\\mathbf{u}$ 的直线上的投影。",
+    "To reflect $\\mathbf{x}$ in a line, move to its projection $P\\mathbf{x}$ and go the same distance again, which gives $2P\\mathbf{x} - \\mathbf{x}$. So the reflection matrix is $R = 2P - I$, where $P = \\frac{\\mathbf{u}\\mathbf{u}^T}{\\mathbf{u}^T\\mathbf{u}}$ is the projection onto the line along $\\mathbf{u}$. For example, along $(1, 2)$ the projection is $\\frac{1}{5}\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$, so $R = \\frac{1}{5}\\begin{pmatrix} -3 & 4 \\\\ 4 & 3 \\end{pmatrix}$.\n\n> **Watch out.** Subtract $I$ only on the diagonal, and keep the order $2P - I$: the matrix $I - 2P$ reflects in the perpendicular line instead.",
+    "要把 $\\mathbf{x}$ 关于直线反射，先走到投影 $P\\mathbf{x}$，再走同样的距离，得到 $2P\\mathbf{x} - \\mathbf{x}$。所以反射矩阵是 $R = 2P - I$，其中 $P = \\frac{\\mathbf{u}\\mathbf{u}^T}{\\mathbf{u}^T\\mathbf{u}}$ 是到方向 $\\mathbf{u}$ 的直线上的投影。例如沿 $(1, 2)$ 的投影是 $\\frac{1}{5}\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$，所以 $R = \\frac{1}{5}\\begin{pmatrix} -3 & 4 \\\\ 4 & 3 \\end{pmatrix}$。\n\n> **注意。** $I$ 只在对角线上减去，并且顺序是 $2P - I$：矩阵 $I - 2P$ 是关于垂直直线的反射。",
   ),
   generate(rng) {
     const p = nonzero(rng, 5);
@@ -2336,9 +2336,38 @@ const reflectionFromProjection: KnowledgePointDef = {
         `$R$ 是关于过原点、方向为 $${col(p, q)}$ 的直线的反射矩阵。求 $R$ 第 1 行第 ${corner ? 1 : 2} 列的元素。`,
       ),
       answer,
-      wrong: corner
-        ? [Q.of(p * p, uu), Q.of(2 * p * p, uu), Q.of(q * q - p * p, uu)]
-        : [Q.of(p * q, uu), Q.of(-2 * p * q, uu), Q.of(2 * p * q)],
+      mistakes: (corner
+        ? [
+            why(
+              Q.of(p * p, uu),
+              "That is the entry of the projection $P$; the reflection is $2P - I$.",
+              "这是投影 $P$ 的元素；反射是 $2P - I$。",
+            ),
+            why(Q.of(2 * p * p, uu), "That is $2P$ without subtracting $I$ on the diagonal.", "这是 $2P$，没有在对角线上减去 $I$。"),
+            why(
+              Q.of(q * q - p * p, uu),
+              "That is the entry of $I - 2P$, the reflection in the perpendicular line.",
+              "这是 $I - 2P$ 的元素，即关于垂直直线的反射。",
+            ),
+          ]
+        : [
+            why(
+              Q.of(p * q, uu),
+              "That is the entry of the projection $P$; the reflection is $2P - I$.",
+              "这是投影 $P$ 的元素；反射是 $2P - I$。",
+            ),
+            why(
+              Q.of(-2 * p * q, uu),
+              "That is the entry of $I - 2P$, the reflection in the perpendicular line.",
+              "这是 $I - 2P$ 的元素，即关于垂直直线的反射。",
+            ),
+            why(
+              Q.of(2 * p * q),
+              `That uses $2\\mathbf{u}\\mathbf{u}^T$ without dividing by $\\mathbf{u}^T\\mathbf{u} = ${uu}$.`,
+              `这是用了 $2\\mathbf{u}\\mathbf{u}^T$，没有除以 $\\mathbf{u}^T\\mathbf{u} = ${uu}$。`,
+            ),
+          ]
+      ).filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
       solution: t(
         `$P$ has entry $${frac(corner ? p * p : p * q, uu)}$ in that place. Then $R = 2P - I$ gives $${corner ? `2\\left(${frac(p * p, uu)}\\right) - 1` : `2\\left(${frac(p * q, uu)}\\right)`} = ${answer.toLatex()}$.`,
         `$P$ 在该位置的元素是 $${frac(corner ? p * p : p * q, uu)}$。由 $R = 2P - I$ 得 $${corner ? `2\\left(${frac(p * p, uu)}\\right) - 1` : `2\\left(${frac(p * q, uu)}\\right)`} = ${answer.toLatex()}$。`,
@@ -5437,8 +5466,8 @@ const traceOfReflection: KnowledgePointDef = {
     ],
   title: t("The trace of a reflection through a subspace", "关于子空间的反射的迹"),
   explanation: t(
-    "The orthogonal projection $P$ onto a subspace has the eigenvalue 1 on the subspace and 0 on its orthogonal complement. The reflection through the subspace is $R = 2P - I$, which keeps the subspace and reverses its complement, so that its eigenvalues are $1$ and $-1$. Since the trace is the sum of the eigenvalues, it counts the dimension of the subspace minus that of its complement, with no need to know any entry of the matrix.",
-    "到子空间的正交投影 $P$ 在子空间上特征值为 1，在其正交补上特征值为 0。关于子空间的反射是 $R = 2P - I$，它保持子空间不动，把正交补反向，所以特征值是 $1$ 和 $-1$。由于迹是特征值之和，它等于子空间的维数减去其正交补的维数，不需要知道矩阵的任何元素。",
+    "The orthogonal projection $P$ onto a subspace has the eigenvalue 1 on the subspace and 0 on its orthogonal complement. The reflection through the subspace is $R = 2P - I$, which keeps the subspace and reverses its complement, so that its eigenvalues are $1$ and $-1$. Since the trace is the sum of the eigenvalues, it counts the dimension of the subspace minus that of its complement, with no need to know any entry of the matrix. For example, the reflection of $\\mathbb{R}^{5}$ through a plane has eigenvalues $1, 1, -1, -1, -1$ and trace $2 - 3 = -1$.\n\n> **Watch out.** The complement is reversed, not sent to zero: it contributes $-1$ for each of its dimensions, so the trace is $2k - n$, not $k$. Equivalently $\\operatorname{tr}(R) = 2\\operatorname{tr}(P) - \\operatorname{tr}(I)$.",
+    "到子空间的正交投影 $P$ 在子空间上特征值为 1，在其正交补上特征值为 0。关于子空间的反射是 $R = 2P - I$，它保持子空间不动，把正交补反向，所以特征值是 $1$ 和 $-1$。由于迹是特征值之和，它等于子空间的维数减去其正交补的维数，不需要知道矩阵的任何元素。例如 $\\mathbb{R}^{5}$ 关于一个平面的反射的特征值是 $1, 1, -1, -1, -1$，迹为 $2 - 3 = -1$。\n\n> **注意。** 正交补被反向，而不是变为零：它的每一维贡献 $-1$，所以迹是 $2k - n$，而不是 $k$。也可以写成 $\\operatorname{tr}(R) = 2\\operatorname{tr}(P) - \\operatorname{tr}(I)$。",
   ),
   generate(rng) {
     const n = rng.int(3, 15);
@@ -5451,10 +5480,40 @@ const traceOfReflection: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, 2 * k, n - k, 2 * k + n, answer + 1],
-      solution: t(
-        `The eigenvalue 1 occurs ${k} ${k === 1 ? "time" : "times"} and the eigenvalue $-1$ occurs ${n - k} ${n - k === 1 ? "time" : "times"}. So the trace is $${k} - ${n - k} = ${answer}$.`,
-        `特征值 1 出现 ${k} 次，特征值 $-1$ 出现 ${n - k} 次。所以迹是 $${k} - ${n - k} = ${answer}$。`,
+      mistakes: [
+        why(-answer, "That is the trace of $I - 2P$, the reflection through the complement.", "这是 $I - 2P$ 的迹，即关于正交补的反射。"),
+        why(
+          2 * k,
+          "That is $\\operatorname{tr}(2P)$; subtracting $I$ also subtracts its trace.",
+          "这是 $\\operatorname{tr}(2P)$；减去 $I$ 也要减去它的迹。",
+        ),
+        why(
+          k,
+          "That is the trace of $P$, which sends the complement to zero; $R$ reverses it instead.",
+          "这是 $P$ 的迹，$P$ 把正交补变为零；而 $R$ 把它反向。",
+        ),
+        why(n - k, "That is the dimension of the complement alone.", "这只是正交补的维数。"),
+        why(
+          2 * k + n,
+          "That adds $\\operatorname{tr}(I)$; the reflection is $2P - I$, so it is subtracted.",
+          "这是加上了 $\\operatorname{tr}(I)$；反射是 $2P - I$，应当减去。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the eigenvalues", "数出特征值"],
+            t(
+              `$R$ keeps the ${k}-dimensional subspace and reverses its ${n - k}-dimensional complement: the eigenvalue $1$ occurs ${k} ${k === 1 ? "time" : "times"} and the eigenvalue $-1$ occurs ${n - k} ${n - k === 1 ? "time" : "times"}.`,
+              `$R$ 保持 ${k} 维子空间不动，把 ${n - k} 维的正交补反向：特征值 $1$ 出现 ${k} 次，特征值 $-1$ 出现 ${n - k} 次。`,
+            ),
+          ],
+          [["Add them", "求和"], t("", ""), [`\\operatorname{tr}(R) = ${k} - ${n - k} = ${answer}`]],
+        ],
+        t(
+          `From $R = 2P - I$: $\\operatorname{tr}(R) = 2 \\cdot ${k} - ${n} = ${answer}$.`,
+          `由 $R = 2P - I$：$\\operatorname{tr}(R) = 2 \\cdot ${k} - ${n} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -5464,8 +5523,8 @@ const determinantFromQr: KnowledgePointDef = {
   id: "the-determinant-from-a-qr-factorization",
   title: t("The determinant from a QR factorization", "由 QR 分解求行列式"),
   explanation: t(
-    "In a factorization $A = QR$ of a square matrix, $Q$ is orthogonal, so that its determinant is $1$ or $-1$, and $R$ is upper triangular, so that its determinant is the product of its diagonal entries. Together these give the absolute value of $\\det A$, but they do not need any of the entries above the diagonal. Geometrically, the diagonal entries of $R$ are the lengths left over after each step of the Gram-Schmidt process.",
-    "在方阵的分解 $A = QR$ 中，$Q$ 是正交矩阵，行列式是 $1$ 或 $-1$，$R$ 是上三角矩阵，行列式是对角元之积。两者合起来给出 $\\det A$ 的绝对值，不需要对角线上方的任何元素。从几何上看，$R$ 的对角元是格拉姆-施密特过程每一步后剩下的长度。",
+    "In a factorization $A = QR$ of a square matrix, $Q$ is orthogonal, so that its determinant is $1$ or $-1$, and $R$ is upper triangular, so that its determinant is the product of its diagonal entries. Together these give the absolute value of $\\det A$, but they do not need any of the entries above the diagonal. Geometrically, the diagonal entries of $R$ are the lengths left over after each step of the Gram-Schmidt process. For example, if $R$ has diagonal entries $2, 3, 4$, then $|\\det A| = 2 \\cdot 3 \\cdot 4 = 24$, whatever stands above the diagonal.\n\n> **Watch out.** Multiply the diagonal entries; do not add them, and leave out the entries above the diagonal. Squaring gives $\\det(A^{T}A)$, not $|\\det A|$.",
+    "在方阵的分解 $A = QR$ 中，$Q$ 是正交矩阵，行列式是 $1$ 或 $-1$，$R$ 是上三角矩阵，行列式是对角元之积。两者合起来给出 $\\det A$ 的绝对值，不需要对角线上方的任何元素。从几何上看，$R$ 的对角元是格拉姆-施密特过程每一步后剩下的长度。例如 $R$ 的对角元为 $2, 3, 4$ 时，无论对角线上方是什么，$|\\det A| = 2 \\cdot 3 \\cdot 4 = 24$。\n\n> **注意。** 要把对角元相乘，不是相加，也不要算进对角线上方的元素。平方得到的是 $\\det(A^{T}A)$，而不是 $|\\det A|$。",
   ),
   generate(rng) {
     const [r1, r2, r3] = [rng.int(1, 9), rng.int(1, 9), rng.int(2, 9)];
@@ -5486,10 +5545,47 @@ const determinantFromQr: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [r1 + r2 + r3, answer * Math.abs(p), answer * Math.abs(p * q * s), answer + 1, answer * answer],
-      solution: t(
-        `Since $|\\det Q| = 1$, we get $|\\det A| = \\det R = ${r1} \\cdot ${r2} \\cdot ${r3} = ${answer}$.`,
-        `由于 $|\\det Q| = 1$，得 $|\\det A| = \\det R = ${r1} \\cdot ${r2} \\cdot ${r3} = ${answer}$。`,
+      mistakes: [
+        why(
+          r1 + r2 + r3,
+          "That adds the diagonal entries; the determinant of a triangular matrix is their product.",
+          "这是把对角元相加；三角矩阵的行列式是对角元之积。",
+        ),
+        why(
+          answer * Math.abs(p),
+          `That also multiplies in the entry $${p}$ above the diagonal, which does not affect $\\det R$.`,
+          `这还乘上了对角线上方的元素 $${p}$，它不影响 $\\det R$。`,
+        ),
+        why(
+          answer * Math.abs(p * q * s),
+          "That multiplies all the nonzero entries; only the diagonal counts for a triangular matrix.",
+          "这是把所有非零元素相乘；三角矩阵只看对角元。",
+        ),
+        why(
+          answer * answer,
+          "That is $(\\det R)^{2} = \\det(A^{T}A)$; since $|\\det Q| = 1$, $|\\det A|$ is $\\det R$ itself.",
+          "这是 $(\\det R)^{2} = \\det(A^{T}A)$；由于 $|\\det Q| = 1$，$|\\det A|$ 就是 $\\det R$。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Use that Q is orthogonal", "利用 Q 是正交矩阵"],
+            t(
+              "$Q^{T}Q = I$ gives $(\\det Q)^{2} = 1$, so $|\\det Q| = 1$ and $|\\det A| = |\\det Q|\\,|\\det R| = |\\det R|$.",
+              "由 $Q^{T}Q = I$ 得 $(\\det Q)^{2} = 1$，所以 $|\\det Q| = 1$，$|\\det A| = |\\det Q|\\,|\\det R| = |\\det R|$。",
+            ),
+          ],
+          [
+            ["Multiply the diagonal of R", "把 R 的对角元相乘"],
+            t("$R$ is upper triangular, so only its diagonal counts:", "$R$ 是上三角矩阵，所以只看对角元："),
+            [`\\det R = ${r1} \\cdot ${r2} \\cdot ${r3} = ${answer}`],
+          ],
+        ],
+        t(
+          `Expanding $\\det R$ down the first column gives $${r1}\\left(${r2} \\cdot ${r3} - (${s}) \\cdot 0\\right) = ${answer}$; the entries $${p}$, $${q}$, $${s}$ above the diagonal drop out.`,
+          `沿第一列展开 $\\det R$，得 $${r1}\\left(${r2} \\cdot ${r3} - (${s}) \\cdot 0\\right) = ${answer}$；对角线上方的元素 $${p}$、$${q}$、$${s}$ 都消失了。`,
+        ),
       ),
     });
   },

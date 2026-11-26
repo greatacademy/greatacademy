@@ -658,8 +658,8 @@ const orthogonalInverse = {
     "the-inverse-of-an-orthogonal-matrix-is-its-transpose",
     ["The inverse of an orthogonal matrix is its transpose", "正交矩阵的逆是它的转置"],
     [
-      "An orthogonal transformation preserves dot products, so its matrix satisfies $Q^{T}Q = I$. Its inverse therefore needs no elimination: it is the transpose. An entry of the inverse is read from the reflected position, and it is not the reciprocal of the entry.",
-      "正交变换保持点积，所以它的矩阵满足 $Q^{T}Q = I$。因此求逆不需要消元：逆矩阵就是转置。逆矩阵的元素从关于对角线对称的位置读出，而不是原元素的倒数。",
+      "An orthogonal transformation preserves dot products, so its matrix satisfies $Q^{T}Q = I$. Its inverse therefore needs no elimination: it is the transpose. An entry of the inverse is read from the reflected position, and it is not the reciprocal of the entry. For example, for $Q = \\frac{1}{5}\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ the $(1, 2)$ entry of $Q^{-1}$ is the $(2, 1)$ entry of $Q$, which is $\\frac{4}{5}$.\n\n> **Watch out.** Transposing moves an entry across the main diagonal and keeps its sign. The inverse of a matrix is never found by taking reciprocals of its entries.",
+      "正交变换保持点积，所以它的矩阵满足 $Q^{T}Q = I$。因此求逆不需要消元：逆矩阵就是转置。逆矩阵的元素从关于对角线对称的位置读出，而不是原元素的倒数。例如对 $Q = \\frac{1}{5}\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$，$Q^{-1}$ 的 $(1, 2)$ 元素是 $Q$ 的 $(2, 1)$ 元素，即 $\\frac{4}{5}$。\n\n> **注意。** 转置把元素沿主对角线翻到对称位置，并保持它的符号。矩阵的逆绝不是把各元素取倒数。",
     ],
     (rng) => {
       const [p, q, c] = rng.pick(triples);
@@ -679,18 +679,52 @@ const orthogonalInverse = {
       const value = (rows[j] as number[])[i] as number;
       const other = (rows[i] as number[])[j] as number;
       const answer = Q.of(value, c);
-      return ask(
-        [
+      const col = [(rows[0] as number[])[i] as number, (rows[1] as number[])[i] as number];
+      return numberProblem({
+        prompt: text([
           `$Q = \\frac{1}{${c}}${mat(rows)}$ is orthogonal. Find the $(${i + 1}, ${j + 1})$ entry of $Q^{-1}$.`,
           `$Q = \\frac{1}{${c}}${mat(rows)}$ 是正交矩阵。求 $Q^{-1}$ 的 $(${i + 1}, ${j + 1})$ 元素。`,
-        ],
+        ]),
         answer,
-        [Q.of(other, c), Q.of(c, value), answer.neg()],
-        [
-          `Since $Q^{-1} = Q^{T}$, this entry equals the $(${j + 1}, ${i + 1})$ entry of $Q$, which is $${answer.toLatex()}$.`,
-          `由于 $Q^{-1} = Q^{T}$，这个元素等于 $Q$ 的 $(${j + 1}, ${i + 1})$ 元素，即 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: [
+          why(
+            Q.of(other, c),
+            `That is the $(${i + 1}, ${j + 1})$ entry of $Q$ itself; the inverse reads it from the reflected position $(${j + 1}, ${i + 1})$.`,
+            `这是 $Q$ 本身的 $(${i + 1}, ${j + 1})$ 元素；逆矩阵要从对称位置 $(${j + 1}, ${i + 1})$ 读出。`,
+          ),
+          why(
+            Q.of(c, value),
+            "That is the reciprocal of the entry; the inverse of a matrix is not taken entry by entry.",
+            "这是元素的倒数；矩阵的逆不能逐个元素求。",
+          ),
+          why(
+            answer.neg(),
+            "The sign was changed; transposing moves an entry without changing its sign.",
+            "符号被改变了；转置只移动元素，不改变它的符号。",
+          ),
+        ].filter((w, k, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === k),
+        solution: walked(
+          [
+            [
+              ["Invert by transposing", "用转置求逆"],
+              text(["Since $Q^{T}Q = I$, the inverse is the transpose:", "因为 $Q^{T}Q = I$，逆矩阵就是转置："]),
+              [`Q^{-1} = Q^{T}`],
+            ],
+            [
+              ["Read the reflected entry", "读出对称位置的元素"],
+              text([
+                `The $(${i + 1}, ${j + 1})$ entry of $Q^{T}$ is the $(${j + 1}, ${i + 1})$ entry of $Q$.`,
+                `$Q^{T}$ 的 $(${i + 1}, ${j + 1})$ 元素是 $Q$ 的 $(${j + 1}, ${i + 1})$ 元素。`,
+              ]),
+              [`(Q^{-1})_{${i + 1}${j + 1}} = Q_{${j + 1}${i + 1}} = ${answer.toLatex()}`],
+            ],
+          ],
+          text([
+            `Row $${i + 1}$ of $Q^{-1}$ is $\\frac{1}{${c}}(${col.join(", ")})$, which holds the answer in position $${j + 1}$, and its dot product with column $${i + 1}$ of $Q$ is $\\frac{${col.map((x) => `${wrap(x)}^{2}`).join(" + ")}}{${c * c}} = 1$, as $Q^{-1}Q = I$ requires.`,
+            `$Q^{-1}$ 的第 $${i + 1}$ 行是 $\\frac{1}{${c}}(${col.join(", ")})$，其第 $${j + 1}$ 个位置正是答案；它与 $Q$ 的第 $${i + 1}$ 列的点积为 $\\frac{${col.map((x) => `${wrap(x)}^{2}`).join(" + ")}}{${c * c}} = 1$，符合 $Q^{-1}Q = I$。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: linearAlgebraDrawings2["orthogonal-linear-transformations#the-inverse-of-an-orthogonal-matrix-is-its-transpose"],
@@ -700,26 +734,60 @@ const rowsFromNullities = point(
   "the-number-of-rows-from-the-two-null-spaces",
   ["The number of rows from the two null spaces", "由两个零空间求行数"],
   [
-    "The two null spaces of a matrix determine its shape together with the rank. The rank is the number of columns minus the dimension of the null space, and it is also the number of rows minus the dimension of the left null space, so these two equations link the rows and columns.",
-    "矩阵的两个零空间与秩一起决定它的形状。秩等于列数减去零空间的维数，也等于行数减去左零空间的维数，所以这两个等式把行数和列数联系起来。",
+    "The two null spaces of a matrix determine its shape together with the rank. The rank is the number of columns minus the dimension of the null space, and it is also the number of rows minus the dimension of the left null space, so these two equations link the rows and columns. For example, $7$ columns with $\\dim \\operatorname{Null}(A) = 3$ give rank $4$, and $\\dim \\operatorname{Null}(A^{T}) = 2$ then gives $4 + 2 = 6$ rows.\n\n> **Watch out.** The null space of $A$ is tied to the columns and the left null space to the rows. Subtract $\\dim \\operatorname{Null}(A)$ from the columns to get the rank, then add $\\dim \\operatorname{Null}(A^{T})$ back to get the rows.",
+    "矩阵的两个零空间与秩一起决定它的形状。秩等于列数减去零空间的维数，也等于行数减去左零空间的维数，所以这两个等式把行数和列数联系起来。例如 $7$ 列且 $\\dim \\operatorname{Null}(A) = 3$ 时秩为 $4$，再由 $\\dim \\operatorname{Null}(A^{T}) = 2$ 得行数为 $4 + 2 = 6$。\n\n> **注意。** $A$ 的零空间与列相联系，左零空间与行相联系。先用列数减去 $\\dim \\operatorname{Null}(A)$ 得到秩，再加上 $\\dim \\operatorname{Null}(A^{T})$ 得到行数。",
   ],
   (rng) => {
     const n = rng.int(3, 9);
     const p = rng.int(0, n - 1);
     const q = rng.int(0, 4);
     const answer = n - p + q;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$A$ has $${n}$ columns, $\\dim \\operatorname{Null}(A) = ${p}$ and $\\dim \\operatorname{Null}(A^{T}) = ${q}$. How many rows does $A$ have?`,
         `$A$ 有 $${n}$ 列，$\\dim \\operatorname{Null}(A) = ${p}$，$\\dim \\operatorname{Null}(A^{T}) = ${q}$。$A$ 有多少行？`,
-      ],
+      ]),
       answer,
-      [n, n + p + q, n + p - q === answer ? n - p : n + p - q],
-      [
-        `The rank is $${n} - ${p} = ${n - p}$. Rows minus $\\dim \\operatorname{Null}(A^{T})$ is also the rank, so the number of rows is $${n - p} + ${q} = ${answer}$.`,
-        `秩是 $${n} - ${p} = ${n - p}$。行数减去 $\\dim \\operatorname{Null}(A^{T})$ 也等于秩，所以行数是 $${n - p} + ${q} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          n,
+          "That assumes $A$ is square; the two null spaces can differ in dimension.",
+          "这是假设 $A$ 是方阵；两个零空间的维数可以不同。",
+        ),
+        why(
+          n - p,
+          "That is the rank; the rows are the rank plus $\\dim \\operatorname{Null}(A^{T})$.",
+          "这是秩；行数等于秩加上 $\\dim \\operatorname{Null}(A^{T})$。",
+        ),
+        why(
+          n + p + q,
+          "Both null space dimensions were added to the columns; $\\dim \\operatorname{Null}(A)$ must be subtracted to reach the rank.",
+          "把两个零空间的维数都加到了列数上；要减去 $\\dim \\operatorname{Null}(A)$ 才得到秩。",
+        ),
+        why(
+          n + p - q,
+          "The two null spaces were swapped: $\\dim \\operatorname{Null}(A)$ belongs with the columns and $\\dim \\operatorname{Null}(A^{T})$ with the rows.",
+          "两个零空间弄反了：$\\dim \\operatorname{Null}(A)$ 与列相联系，$\\dim \\operatorname{Null}(A^{T})$ 与行相联系。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Find the rank from the columns", "由列数求秩"], text(["", ""]), [`r = ${n} - ${p} = ${n - p}`]],
+          [
+            ["Add back the left null space", "加上左零空间的维数"],
+            text([
+              "Rows minus $\\dim \\operatorname{Null}(A^{T})$ is also the rank:",
+              "行数减去 $\\dim \\operatorname{Null}(A^{T})$ 也等于秩：",
+            ]),
+            [`m = r + ${q} = ${n - p} + ${q} = ${answer}`],
+          ],
+        ],
+        text([
+          `Both counts give the same rank: $${answer} - ${q} = ${n - p}$ from the rows and $${n} - ${p} = ${n - p}$ from the columns.`,
+          `两种算法给出相同的秩：由行数得 $${answer} - ${q} = ${n - p}$，由列数得 $${n} - ${p} = ${n - p}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -727,25 +795,58 @@ const coefficientSquaredNorm = point(
   "a-component-divides-by-the-squared-length",
   ["A component divides by the squared length", "分量要除以长度的平方"],
   [
-    "For an orthogonal basis that is not orthonormal, a coordinate is $\\frac{\\mathbf{x} \\cdot \\mathbf{u}}{\\|\\mathbf{u}\\|^{2}}$. Taking the dot product of $\\mathbf{x}$ with a basis vector picks up two factors of the length, one from each $\\mathbf{u}$, so dividing once by the length is a common mistake.",
-    "对不是标准正交的正交基，坐标是 $\\frac{\\mathbf{x} \\cdot \\mathbf{u}}{\\|\\mathbf{u}\\|^{2}}$。$\\mathbf{x}$ 与基向量作点积会带来两个长度因子，所以只除以一次长度是常见的错误。",
+    "For an orthogonal basis that is not orthonormal, a coordinate is $\\frac{\\mathbf{x} \\cdot \\mathbf{u}}{\\|\\mathbf{u}\\|^{2}}$. Taking the dot product of $\\mathbf{x}$ with a basis vector picks up two factors of the length, one from each $\\mathbf{u}$, so dividing once by the length is a common mistake. For example, $\\|\\mathbf{u}_{1}\\| = 3$ and $\\mathbf{x} \\cdot \\mathbf{u}_{1} = 18$ give the coefficient $\\frac{18}{9} = 2$.\n\n> **Watch out.** Divide by the squared length $\\|\\mathbf{u}\\|^{2}$, not by $\\|\\mathbf{u}\\|$ and not by twice the length.",
+    "对不是标准正交的正交基，坐标是 $\\frac{\\mathbf{x} \\cdot \\mathbf{u}}{\\|\\mathbf{u}\\|^{2}}$。$\\mathbf{x}$ 与基向量作点积会带来两个长度因子，所以只除以一次长度是常见的错误。例如 $\\|\\mathbf{u}_{1}\\| = 3$，$\\mathbf{x} \\cdot \\mathbf{u}_{1} = 18$ 时系数为 $\\frac{18}{9} = 2$。\n\n> **注意。** 要除以长度的平方 $\\|\\mathbf{u}\\|^{2}$，不是除以 $\\|\\mathbf{u}\\|$，也不是除以长度的两倍。",
   ],
   (rng) => {
     const n = rng.int(2, 7);
     const c = nz(rng, 9);
     const dot = c * n * n;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$\\{\\mathbf{u}_{1}, \\mathbf{u}_{2}\\}$ is an orthogonal basis of a plane containing $\\mathbf{x}$, with $\\|\\mathbf{u}_{1}\\| = ${n}$ and $\\mathbf{x} \\cdot \\mathbf{u}_{1} = ${dot}$. Find the coefficient of $\\mathbf{u}_{1}$ in $\\mathbf{x}$.`,
         `$\\{\\mathbf{u}_{1}, \\mathbf{u}_{2}\\}$ 是含 $\\mathbf{x}$ 的平面的正交基，$\\|\\mathbf{u}_{1}\\| = ${n}$，$\\mathbf{x} \\cdot \\mathbf{u}_{1} = ${dot}$。求 $\\mathbf{x}$ 中 $\\mathbf{u}_{1}$ 的系数。`,
-      ],
-      c,
-      [c * n, dot, Q.of(c, n)],
-      [
-        `Dotting with $\\mathbf{u}_{1}$ removes the $\\mathbf{u}_{2}$ term and leaves the coefficient times $\\|\\mathbf{u}_{1}\\|^{2} = ${n * n}$. So the coefficient is $\\frac{${dot}}{${n * n}} = ${c}$.`,
-        `与 $\\mathbf{u}_{1}$ 作点积消去 $\\mathbf{u}_{2}$ 项，剩下系数乘以 $\\|\\mathbf{u}_{1}\\|^{2} = ${n * n}$。所以系数是 $\\frac{${dot}}{${n * n}} = ${c}$。`,
-      ],
-    );
+      ]),
+      answer: c,
+      mistakes: [
+        why(
+          c * n,
+          `That divides by the length $${n}$ only once; the dot product carries $\\|\\mathbf{u}_{1}\\|^{2} = ${n * n}$.`,
+          `这只除以了一次长度 $${n}$；点积中含有 $\\|\\mathbf{u}_{1}\\|^{2} = ${n * n}$。`,
+        ),
+        why(
+          dot,
+          "That is the dot product itself; it must be divided by $\\|\\mathbf{u}_{1}\\|^{2}$, since the basis is not orthonormal.",
+          "这是点积本身；基不是标准正交的，所以还要除以 $\\|\\mathbf{u}_{1}\\|^{2}$。",
+        ),
+        why(
+          Q.of(c * n, 2),
+          `That divides by $2 \\cdot ${n}$; the squared length is $${n} \\cdot ${n} = ${n * n}$.`,
+          `这是除以了 $2 \\cdot ${n}$；长度的平方是 $${n} \\cdot ${n} = ${n * n}$。`,
+        ),
+      ].filter((w, i, all) => String(w.value) !== String(c) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Dot with the basis vector", "与基向量作点积"],
+            text([
+              "Writing $\\mathbf{x} = c_{1}\\mathbf{u}_{1} + c_{2}\\mathbf{u}_{2}$, the $\\mathbf{u}_{2}$ term drops out because $\\mathbf{u}_{2} \\cdot \\mathbf{u}_{1} = 0$:",
+              "写 $\\mathbf{x} = c_{1}\\mathbf{u}_{1} + c_{2}\\mathbf{u}_{2}$，因为 $\\mathbf{u}_{2} \\cdot \\mathbf{u}_{1} = 0$，$\\mathbf{u}_{2}$ 项消失：",
+            ]),
+            [`\\mathbf{x} \\cdot \\mathbf{u}_{1} = c_{1}\\|\\mathbf{u}_{1}\\|^{2}`],
+          ],
+          [
+            ["Divide by the squared length", "除以长度的平方"],
+            text(["", ""]),
+            [`c_{1} = \\frac{${dot}}{${n}^{2}} = \\frac{${dot}}{${n * n}} = ${c}`],
+          ],
+        ],
+        text([
+          `$${wrap(c)} \\cdot ${n * n} = ${dot}$, which is the given dot product.`,
+          `$${wrap(c)} \\cdot ${n * n} = ${dot}$，正是已知的点积。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -753,8 +854,8 @@ const projectionMatrix = point(
   "numbers-attached-to-a-projection-matrix",
   ["Numbers attached to a projection matrix", "投影矩阵的相关数值"],
   [
-    "An orthogonal projection onto a subspace of dimension $k$ in $\\mathbb{R}^{m}$ has eigenvalue $1$ with multiplicity $k$ and eigenvalue $0$ with multiplicity $m - k$. So its trace and rank are $k$, and $I - P$ is the projection onto the complement, whose trace and rank are $m - k$.",
-    "$\\mathbb{R}^{m}$ 中到 $k$ 维子空间的正交投影有重数为 $k$ 的特征值 $1$ 和重数为 $m - k$ 的特征值 $0$。所以它的迹和秩都是 $k$，而 $I - P$ 是到正交补的投影，其迹和秩都是 $m - k$。",
+    "An orthogonal projection onto a subspace of dimension $k$ in $\\mathbb{R}^{m}$ has eigenvalue $1$ with multiplicity $k$ and eigenvalue $0$ with multiplicity $m - k$. So its trace and rank are $k$, and $I - P$ is the projection onto the complement, whose trace and rank are $m - k$. For example, the projection of $\\mathbb{R}^{3}$ onto a plane has eigenvalues $1, 1, 0$, so $\\operatorname{tr}(P) = 2$ and $\\operatorname{rank}(I - P) = 1$.\n\n> **Watch out.** Since $P^{2} = P$, the trace of $P^{2}$ is the trace of $P$, not its square. Numbers about $P$ count the subspace, and numbers about $I - P$ or the null space of $P$ count the complement.",
+    "$\\mathbb{R}^{m}$ 中到 $k$ 维子空间的正交投影有重数为 $k$ 的特征值 $1$ 和重数为 $m - k$ 的特征值 $0$。所以它的迹和秩都是 $k$，而 $I - P$ 是到正交补的投影，其迹和秩都是 $m - k$。例如 $\\mathbb{R}^{3}$ 到一个平面的投影的特征值是 $1, 1, 0$，所以 $\\operatorname{tr}(P) = 2$，$\\operatorname{rank}(I - P) = 1$。\n\n> **注意。** 因为 $P^{2} = P$，$P^{2}$ 的迹就是 $P$ 的迹，而不是它的平方。关于 $P$ 的数计的是子空间，关于 $I - P$ 或 $P$ 的零空间的数计的是正交补。",
   ],
   (rng) => {
     const m = rng.int(3, 9);
@@ -790,15 +891,60 @@ const projectionMatrix = point(
         `$I$ 的迹是 $${m}$，$P$ 的迹是 $${k}$，所以差是 $${m - k}$。`,
       ],
     ];
-    return ask(
-      [
+    const slips = [
+      why(
+        m,
+        `That is $\\operatorname{tr}(I) = ${m}$, the size of the whole space.`,
+        `这是 $\\operatorname{tr}(I) = ${m}$，整个空间的维数。`,
+      ),
+      kind < 2
+        ? why(
+            m - k,
+            `That counts the $${m - k}$ eigenvalues equal to $0$, which belong to the complement.`,
+            `这数的是 $${m - k}$ 个等于 $0$ 的特征值，它们属于正交补。`,
+          )
+        : why(
+            k,
+            `That is the dimension $${k}$ of the subspace itself, which belongs to $P$, not to the complement.`,
+            `这是子空间本身的维数 $${k}$，它属于 $P$，而不属于正交补。`,
+          ),
+      ...(kind === 1
+        ? [why(k * k, "That squares the trace; but $P^{2} = P$, so the trace stays the same.", "这是把迹平方了；但 $P^{2} = P$，迹不变。")]
+        : []),
+      ...(kind === 4
+        ? [
+            why(
+              m + k,
+              "That adds the trace of $P$ to the trace of $I$; the trace of $I - P$ subtracts it.",
+              "这是把 $P$ 的迹加到 $I$ 的迹上；$I - P$ 的迹应当减去它。",
+            ),
+          ]
+        : []),
+    ];
+    return numberProblem({
+      prompt: text([
         `$P$ is the orthogonal projection matrix of $\\mathbb{R}^{${m}}$ onto a subspace of dimension $${k}$. Find $${item}$.`,
         `$P$ 是 $\\mathbb{R}^{${m}}$ 到一个 $${k}$ 维子空间的正交投影矩阵。求 $${item}$。`,
-      ],
+      ]),
       answer,
-      [m, kind < 2 ? m - k : k, k * k, m + k],
-      whys[kind] as Pair,
-    );
+      mistakes: slips.filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["List the eigenvalues", "列出特征值"],
+            text([
+              `$P$ keeps the $${k}$-dimensional subspace and sends its $${m - k}$-dimensional complement to zero, so its eigenvalues are $1$ with multiplicity $${k}$ and $0$ with multiplicity $${m - k}$.`,
+              `$P$ 保持 $${k}$ 维子空间不动，把 $${m - k}$ 维的正交补变为零，所以它的特征值是重数为 $${k}$ 的 $1$ 和重数为 $${m - k}$ 的 $0$。`,
+            ]),
+          ],
+          [["Read off the number", "读出所求的数"], text(whys[kind] as Pair), [`${item} = ${answer}`]],
+        ],
+        text([
+          `The subspace and its complement fill the space: $${k} + ${m - k} = ${m}$, matching $\\operatorname{tr}(P) + \\operatorname{tr}(I - P) = \\operatorname{tr}(I)$.`,
+          `子空间与正交补合起来是整个空间：$${k} + ${m - k} = ${m}$，与 $\\operatorname{tr}(P) + \\operatorname{tr}(I - P) = \\operatorname{tr}(I)$ 一致。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -806,39 +952,107 @@ const symmetricLineFit = point(
   "a-least-squares-line-with-centered-inputs",
   ["A least-squares line with centered inputs", "输入居中的最小二乘直线"],
   [
-    "When the inputs sum to zero, the two columns of the design matrix are orthogonal, so the normal equations separate. The intercept is then the mean of the outputs, and the slope is $\\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$. The endpoints alone do not determine the slope.",
-    "当输入之和为零时，设计矩阵的两列正交，所以正规方程彼此分离。此时截距是输出的平均值，斜率是 $\\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$。仅凭两个端点不能确定斜率。",
+    "When the inputs sum to zero, the two columns of the design matrix are orthogonal, so the normal equations separate. The intercept is then the mean of the outputs, and the slope is $\\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$. The endpoints alone do not determine the slope. For example, through $(-2, 1), (-1, 2), (0, 2), (1, 4), (2, 6)$ the intercept is $\\frac{15}{5} = 3$ and the slope is $\\frac{12}{10} = \\frac{6}{5}$.\n\n> **Watch out.** Divide $\\sum x_{i}y_{i}$ by $\\sum x_{i}^{2}$, not by the number of points, and take the intercept as the mean of all outputs, not the middle output.",
+    "当输入之和为零时，设计矩阵的两列正交，所以正规方程彼此分离。此时截距是输出的平均值，斜率是 $\\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$。仅凭两个端点不能确定斜率。例如经过 $(-2, 1), (-1, 2), (0, 2), (1, 4), (2, 6)$ 时，截距是 $\\frac{15}{5} = 3$，斜率是 $\\frac{12}{10} = \\frac{6}{5}$。\n\n> **注意。** 要用 $\\sum x_{i}y_{i}$ 除以 $\\sum x_{i}^{2}$，而不是除以点的个数；截距是全部输出的平均值，而不是中间那个输出。",
   ],
   (rng) => {
     const ys = [rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9)] as const;
     const pts = ys.map((y, i) => `(${i - 2}, ${y})`).join(", ");
     const sum = ys.reduce((a, b) => a + b, 0);
     const sxy = ys.reduce((a, y, i) => a + (i - 2) * y, 0);
+    const paren = (x: Q) => (x.sign() < 0 ? `\\left(${x.toLatex()}\\right)` : x.toLatex());
     if (rng.bool()) {
       const answer = Q.of(sxy, 10);
-      return ask(
-        [`Find the slope of the least-squares line $y = c + mx$ through $${pts}$.`, `求经过 $${pts}$ 的最小二乘直线 $y = c + mx$ 的斜率。`],
+      return numberProblem({
+        prompt: text([
+          `Find the slope of the least-squares line $y = c + mx$ through $${pts}$.`,
+          `求经过 $${pts}$ 的最小二乘直线 $y = c + mx$ 的斜率。`,
+        ]),
         answer,
-        [Q.of(ys[4] - ys[0], 4), Q.of(sxy, 5), Q.of(sum, 5)],
-        [
-          `The inputs sum to zero, so $m = \\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$. Here $\\sum x_{i}y_{i} = ${sxy}$ and $\\sum x_{i}^{2} = 10$, so $m = ${answer.toLatex()}$.`,
-          `输入之和为零，所以 $m = \\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$。这里 $\\sum x_{i}y_{i} = ${sxy}$，$\\sum x_{i}^{2} = 10$，所以 $m = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: [
+          why(
+            Q.of(ys[4] - ys[0], 4),
+            "That is the slope through the two endpoints; least squares uses every point.",
+            "这是经过两个端点的斜率；最小二乘要用到所有的点。",
+          ),
+          why(
+            Q.of(sxy, 5),
+            "That divides $\\sum x_{i}y_{i}$ by the number of points; the divisor is $\\sum x_{i}^{2} = 10$.",
+            "这是用 $\\sum x_{i}y_{i}$ 除以点的个数；除数应是 $\\sum x_{i}^{2} = 10$。",
+          ),
+          why(
+            Q.of(sum, 5),
+            "That is the mean of the outputs, which is the intercept, not the slope.",
+            "这是输出的平均值，它是截距而不是斜率。",
+          ),
+        ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+        solution: walked(
+          [
+            [
+              ["See that the columns are orthogonal", "看出两列正交"],
+              text([
+                "The inputs $-2, -1, 0, 1, 2$ sum to zero, so the column of ones is orthogonal to the column of inputs and the slope has its own equation:",
+                "输入 $-2, -1, 0, 1, 2$ 之和为零，所以全为 $1$ 的列与输入列正交，斜率有单独的方程：",
+              ]),
+              ["m = \\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}"],
+            ],
+            [
+              ["Compute the two sums", "计算两个和"],
+              text(["", ""]),
+              [
+                `\\sum x_{i}y_{i} = ${sxy}, \\quad \\sum x_{i}^{2} = 4 + 1 + 0 + 1 + 4 = 10`,
+                `m = \\frac{${sxy}}{10} = ${answer.toLatex()}`,
+              ],
+            ],
+          ],
+          text([
+            `The residuals weighted by the inputs sum to zero: $\\sum x_{i}y_{i} - m\\sum x_{i}^{2} = ${sxy} - ${paren(answer)} \\cdot 10 = 0$.`,
+            `以输入为权的残差之和为零：$\\sum x_{i}y_{i} - m\\sum x_{i}^{2} = ${sxy} - ${paren(answer)} \\cdot 10 = 0$。`,
+          ]),
+        ),
+      });
     }
     const answer = Q.of(sum, 5);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Find the intercept of the least-squares line $y = c + mx$ through $${pts}$.`,
         `求经过 $${pts}$ 的最小二乘直线 $y = c + mx$ 的截距。`,
-      ],
+      ]),
       answer,
-      [ys[2], sum, Q.of(sxy, 10)],
-      [
-        `The inputs sum to zero, so the normal equations separate and $c$ is the mean of the outputs. That is $\\frac{${sum}}{5} = ${answer.toLatex()}$.`,
-        `输入之和为零，所以正规方程彼此分离，$c$ 是输出的平均值，即 $\\frac{${sum}}{5} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          ys[2],
+          "That is the output at $x = 0$ alone; the intercept is the mean of all five outputs.",
+          "这只是 $x = 0$ 处的输出；截距是全部五个输出的平均值。",
+        ),
+        why(sum, "That is the sum of the outputs; it still has to be divided by the $5$ points.", "这是输出之和；还要除以 $5$ 个点。"),
+        why(
+          Q.of(sxy, 10),
+          "That is the slope $\\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$, not the intercept.",
+          "这是斜率 $\\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$，不是截距。",
+        ),
+      ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["See that the columns are orthogonal", "看出两列正交"],
+            text([
+              "The inputs $-2, -1, 0, 1, 2$ sum to zero, so the normal equations separate and the intercept has its own equation $5c = \\sum y_{i}$.",
+              "输入 $-2, -1, 0, 1, 2$ 之和为零，所以正规方程彼此分离，截距有单独的方程 $5c = \\sum y_{i}$。",
+            ]),
+          ],
+          [
+            ["Take the mean of the outputs", "求输出的平均值"],
+            text(["", ""]),
+            [`\\sum y_{i} = ${sum}`, `c = \\frac{${sum}}{5} = ${answer.toLatex()}`],
+          ],
+        ],
+        text([
+          `The residuals sum to zero: $\\sum y_{i} - 5c - m\\sum x_{i} = ${sum} - 5 \\cdot ${paren(answer)} - 0 = 0$.`,
+          `残差之和为零：$\\sum y_{i} - 5c - m\\sum x_{i} = ${sum} - 5 \\cdot ${paren(answer)} - 0 = 0$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -846,8 +1060,8 @@ const bestMultipleOfX = point(
   "the-best-multiple-of-x-ignores-even-terms",
   ["The best multiple of x ignores even terms", "最佳的 x 倍数与偶次项无关"],
   [
-    "The best approximation of $f$ by a multiple of $x$ on $[-1, 1]$ has the coefficient $\\frac{\\langle f, x \\rangle}{\\langle x, x \\rangle}$. Even terms of $f$ are orthogonal to $x$ on this symmetric interval and contribute nothing, while higher odd powers contribute only part of their coefficient.",
-    "在 $[-1, 1]$ 上，用 $x$ 的倍数逼近 $f$ 的最佳系数是 $\\frac{\\langle f, x \\rangle}{\\langle x, x \\rangle}$。在这个对称区间上，$f$ 的偶次项与 $x$ 正交，没有贡献，而更高的奇次幂只贡献其系数的一部分。",
+    "The best approximation of $f$ by a multiple of $x$ on $[-1, 1]$ has the coefficient $\\frac{\\langle f, x \\rangle}{\\langle x, x \\rangle}$. Even terms of $f$ are orthogonal to $x$ on this symmetric interval and contribute nothing, while higher odd powers contribute only part of their coefficient. For example, for $f(x) = x^{3} + x^{2} + 2x$ the term $x^{2}$ drops out, $x^{3}$ contributes $\\frac{2/5}{2/3} = \\frac{3}{5}$, and $c = 2 + \\frac{3}{5} = \\frac{13}{5}$.\n\n> **Watch out.** A higher odd power $x^{n}$ is not orthogonal to $x$, but it is not a multiple of $x$ either: it adds $\\frac{3}{n + 2}$ times its coefficient, using $\\int_{-1}^{1} x^{n+1}\\,dx = \\frac{2}{n + 2}$.",
+    "在 $[-1, 1]$ 上，用 $x$ 的倍数逼近 $f$ 的最佳系数是 $\\frac{\\langle f, x \\rangle}{\\langle x, x \\rangle}$。在这个对称区间上，$f$ 的偶次项与 $x$ 正交，没有贡献，而更高的奇次幂只贡献其系数的一部分。例如对 $f(x) = x^{3} + x^{2} + 2x$，$x^{2}$ 项消失，$x^{3}$ 贡献 $\\frac{2/5}{2/3} = \\frac{3}{5}$，所以 $c = 2 + \\frac{3}{5} = \\frac{13}{5}$。\n\n> **注意。** 更高的奇次幂 $x^{n}$ 与 $x$ 不正交，但也不是 $x$ 的倍数：由 $\\int_{-1}^{1} x^{n+1}\\,dx = \\frac{2}{n + 2}$，它贡献其系数的 $\\frac{3}{n + 2}$ 倍。",
   ],
   (rng) => {
     const n = rng.pick([3, 5, 7]);
@@ -857,18 +1071,60 @@ const bestMultipleOfX = point(
     const f = poly([k, `x^{${n}}`], [m, "x^{2}"], [b, "x"]);
     const part = Q.of(3 * k, n + 2);
     const answer = part.add(Q.of(b, 1));
-    return ask(
-      [
+    const inner = Q.of(2 * k, n + 2).add(Q.of(2 * b, 3));
+    return numberProblem({
+      prompt: text([
         `With $\\langle f, g \\rangle = \\int_{-1}^{1} f(x)g(x)\\,dx$, find $c$ so that $cx$ is the multiple of $x$ closest to $f(x) = ${f}$.`,
         `在 $\\langle f, g \\rangle = \\int_{-1}^{1} f(x)g(x)\\,dx$ 下，求 $c$，使 $cx$ 是最接近 $f(x) = ${f}$ 的 $x$ 的倍数。`,
-      ],
+      ]),
       answer,
-      [Q.of(b, 1), Q.of(b + k, 1), answer.add(Q.of(m, 1)), Q.of(3 * k, n + 1).add(Q.of(b, 1))],
-      [
-        `$\\langle x, x \\rangle = \\frac{2}{3}$ and $\\langle x^{${n}}, x \\rangle = \\frac{2}{${n + 2}}$, while the term in $x^{2}$ is orthogonal to $x$. So $c = ${b} + ${wrap(k)} \\cdot \\frac{3}{${n + 2}} = ${answer.toLatex()}$.`,
-        `$\\langle x, x \\rangle = \\frac{2}{3}$，$\\langle x^{${n}}, x \\rangle = \\frac{2}{${n + 2}}$，而 $x^{2}$ 项与 $x$ 正交。所以 $c = ${b} + ${wrap(k)} \\cdot \\frac{3}{${n + 2}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          Q.of(b, 1),
+          `That keeps only the term in $x$; $x^{${n}}$ is not orthogonal to $x$ and also contributes.`,
+          `这只保留了 $x$ 项；$x^{${n}}$ 与 $x$ 不正交，也有贡献。`,
+        ),
+        why(
+          Q.of(b + k, 1),
+          `That counts all of $x^{${n}}$ as if it were $x$; it contributes only $\\frac{3}{${n + 2}}$ of its coefficient.`,
+          `这是把 $x^{${n}}$ 整个当作 $x$ 来算；它只贡献其系数的 $\\frac{3}{${n + 2}}$。`,
+        ),
+        why(
+          answer.add(Q.of(m, 1)),
+          "That also adds the coefficient of $x^{2}$; an even term is orthogonal to $x$ on $[-1, 1]$.",
+          "这还加上了 $x^{2}$ 的系数；在 $[-1, 1]$ 上偶次项与 $x$ 正交。",
+        ),
+        why(
+          Q.of(3 * k, n + 1).add(Q.of(b, 1)),
+          `That integrates $x^{${n + 1}}$ as $\\frac{2}{${n + 1}}$; the exponent rises to $${n + 2}$, giving $\\frac{2}{${n + 2}}$.`,
+          `这是把 $x^{${n + 1}}$ 的积分算成了 $\\frac{2}{${n + 1}}$；指数升到 $${n + 2}$，应得 $\\frac{2}{${n + 2}}$。`,
+        ),
+      ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Compute the inner products with x", "计算与 x 的内积"],
+            text(["The term in $x^{2}$ gives an odd integrand and drops out:", "$x^{2}$ 项的被积函数是奇函数，积分为零："]),
+            [
+              "\\langle x, x \\rangle = \\int_{-1}^{1} x^{2}\\,dx = \\frac{2}{3}",
+              `\\langle x^{${n}}, x \\rangle = \\int_{-1}^{1} x^{${n + 1}}\\,dx = \\frac{2}{${n + 2}}, \\quad \\langle x^{2}, x \\rangle = 0`,
+              `\\langle f, x \\rangle = ${wrap(k)} \\cdot \\frac{2}{${n + 2}} + ${wrap(b)} \\cdot \\frac{2}{3} = ${inner.toLatex()}`,
+            ],
+          ],
+          [
+            ["Divide by the inner product of x with itself", "除以 x 与自身的内积"],
+            text(["", ""]),
+            [
+              `c = \\frac{\\langle f, x \\rangle}{\\langle x, x \\rangle} = ${b} + ${wrap(k)} \\cdot \\frac{3}{${n + 2}} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        text([
+          `The error $f - cx$ is orthogonal to $x$: $c \\cdot \\frac{2}{3} = ${answer.mul(Q.of(2, 3)).toLatex()}$, which equals $\\langle f, x \\rangle$.`,
+          `误差 $f - cx$ 与 $x$ 正交：$c \\cdot \\frac{2}{3} = ${answer.mul(Q.of(2, 3)).toLatex()}$，正等于 $\\langle f, x \\rangle$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -876,26 +1132,65 @@ const gramLength = point(
   "the-length-of-the-new-vector-without-computing-it",
   ["The length of the new vector without computing it", "不计算新向量求其长度"],
   [
-    "Gram-Schmidt writes $\\mathbf{x}_{2}$ as a multiple of $\\mathbf{x}_{1}$ plus an orthogonal vector $\\mathbf{w}$, so the Pythagorean theorem gives the length of $\\mathbf{w}$ from dot products alone. The subtracted squared length is $\\frac{(\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2})^{2}}{\\|\\mathbf{x}_{1}\\|^{2}}$.",
-    "格拉姆-施密特过程把 $\\mathbf{x}_{2}$ 写成 $\\mathbf{x}_{1}$ 的倍数加上一个正交向量 $\\mathbf{w}$，所以勾股定理仅由点积就能给出 $\\mathbf{w}$ 的长度。减去的长度平方是 $\\frac{(\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2})^{2}}{\\|\\mathbf{x}_{1}\\|^{2}}$。",
+    "Gram-Schmidt writes $\\mathbf{x}_{2}$ as a multiple of $\\mathbf{x}_{1}$ plus an orthogonal vector $\\mathbf{w}$, so the Pythagorean theorem gives the length of $\\mathbf{w}$ from dot products alone. The subtracted squared length is $\\frac{(\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2})^{2}}{\\|\\mathbf{x}_{1}\\|^{2}}$. For example, $\\|\\mathbf{x}_{1}\\|^{2} = 4$, $\\|\\mathbf{x}_{2}\\|^{2} = 10$ and $\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2} = 6$ give $\\|\\mathbf{w}\\|^{2} = 10 - \\frac{36}{4} = 1$.\n\n> **Watch out.** The dot product is squared before dividing by $\\|\\mathbf{x}_{1}\\|^{2}$, and that part is subtracted from $\\|\\mathbf{x}_{2}\\|^{2}$; it is not itself the answer.",
+    "格拉姆-施密特过程把 $\\mathbf{x}_{2}$ 写成 $\\mathbf{x}_{1}$ 的倍数加上一个正交向量 $\\mathbf{w}$，所以勾股定理仅由点积就能给出 $\\mathbf{w}$ 的长度。减去的长度平方是 $\\frac{(\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2})^{2}}{\\|\\mathbf{x}_{1}\\|^{2}}$。例如 $\\|\\mathbf{x}_{1}\\|^{2} = 4$，$\\|\\mathbf{x}_{2}\\|^{2} = 10$，$\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2} = 6$ 时 $\\|\\mathbf{w}\\|^{2} = 10 - \\frac{36}{4} = 1$。\n\n> **注意。** 点积要先平方再除以 $\\|\\mathbf{x}_{1}\\|^{2}$，并且这部分要从 $\\|\\mathbf{x}_{2}\\|^{2}$ 中减去；它本身不是答案。",
   ],
   (rng) => {
     const M = rng.int(2, 20);
     const d = nz(rng, 9);
     const N = Math.ceil((d * d) / M) + rng.int(1, 12);
     const answer = Q.of(N * M - d * d, M);
-    return ask(
-      [
+    const removed = Q.of(d * d, M);
+    return numberProblem({
+      prompt: text([
         `$\\|\\mathbf{x}_{1}\\|^{2} = ${M}$, $\\|\\mathbf{x}_{2}\\|^{2} = ${N}$ and $\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2} = ${d}$. Gram-Schmidt gives $\\mathbf{w} = \\mathbf{x}_{2} - \\frac{\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2}}{\\|\\mathbf{x}_{1}\\|^{2}}\\mathbf{x}_{1}$. Find $\\|\\mathbf{w}\\|^{2}$.`,
         `$\\|\\mathbf{x}_{1}\\|^{2} = ${M}$，$\\|\\mathbf{x}_{2}\\|^{2} = ${N}$，$\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2} = ${d}$。格拉姆-施密特过程给出 $\\mathbf{w} = \\mathbf{x}_{2} - \\frac{\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2}}{\\|\\mathbf{x}_{1}\\|^{2}}\\mathbf{x}_{1}$。求 $\\|\\mathbf{w}\\|^{2}$。`,
-      ],
+      ]),
       answer,
-      [Q.of(N * M - d, M), Q.of(d * d, M), N],
-      [
-        `The multiple of $\\mathbf{x}_{1}$ is orthogonal to $\\mathbf{w}$ and has squared length $\\frac{${d * d}}{${M}}$. By the Pythagorean theorem, $\\|\\mathbf{w}\\|^{2} = ${N} - \\frac{${d * d}}{${M}} = ${answer.toLatex()}$.`,
-        `$\\mathbf{x}_{1}$ 的这个倍数与 $\\mathbf{w}$ 正交，长度平方是 $\\frac{${d * d}}{${M}}$。由勾股定理，$\\|\\mathbf{w}\\|^{2} = ${N} - \\frac{${d * d}}{${M}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          Q.of(N * M - d, M),
+          `That subtracts $\\frac{${d}}{${M}}$; the dot product must be squared, giving $\\frac{${d * d}}{${M}}$.`,
+          `这减去的是 $\\frac{${d}}{${M}}$；点积要平方，应为 $\\frac{${d * d}}{${M}}$。`,
+        ),
+        why(
+          removed,
+          "That is the squared length of the removed multiple of $\\mathbf{x}_{1}$, not of $\\mathbf{w}$.",
+          "这是被减去的 $\\mathbf{x}_{1}$ 倍数的长度平方，不是 $\\mathbf{w}$ 的。",
+        ),
+        why(
+          N,
+          "That is $\\|\\mathbf{x}_{2}\\|^{2}$ itself; the part along $\\mathbf{x}_{1}$ was not removed.",
+          "这是 $\\|\\mathbf{x}_{2}\\|^{2}$ 本身；没有减去沿 $\\mathbf{x}_{1}$ 的部分。",
+        ),
+      ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the removed squared length", "求减去部分的长度平方"],
+            text([
+              "The removed part is $\\frac{\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2}}{\\|\\mathbf{x}_{1}\\|^{2}}\\mathbf{x}_{1}$, so its squared length is",
+              "减去的部分是 $\\frac{\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2}}{\\|\\mathbf{x}_{1}\\|^{2}}\\mathbf{x}_{1}$，所以它的长度平方是",
+            ]),
+            [
+              `\\frac{(\\mathbf{x}_{1} \\cdot \\mathbf{x}_{2})^{2}}{\\|\\mathbf{x}_{1}\\|^{2}} = \\frac{${wrap(d)}^{2}}{${M}} = ${removed.toLatex()}`,
+            ],
+          ],
+          [
+            ["Use the Pythagorean theorem", "用勾股定理"],
+            text([
+              "That part is orthogonal to $\\mathbf{w}$, and the two add up to $\\mathbf{x}_{2}$:",
+              "这部分与 $\\mathbf{w}$ 正交，两者相加等于 $\\mathbf{x}_{2}$：",
+            ]),
+            [`\\|\\mathbf{w}\\|^{2} = ${N} - ${removed.toLatex()} = ${answer.toLatex()}`],
+          ],
+        ],
+        text([
+          `The two orthogonal parts rebuild $\\mathbf{x}_{2}$: $${answer.toLatex()} + ${removed.toLatex()} = ${N}$.`,
+          `两个正交的部分合成 $\\mathbf{x}_{2}$：$${answer.toLatex()} + ${removed.toLatex()} = ${N}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -903,8 +1198,8 @@ const gramDependent = point(
   "the-step-where-gram-schmidt-produces-zero",
   ["The step where Gram-Schmidt produces zero", "格拉姆-施密特过程产生零向量的步骤"],
   [
-    "Gram-Schmidt produces the zero vector exactly at the first vector that depends on those before it, because everything in that vector is removed by the projections. So running it on a dependent list finds the dependency, and the zero vector must be dropped before continuing.",
-    "格拉姆-施密特过程恰好在第一个依赖于前面向量的向量处产生零向量，因为这个向量的所有部分都被投影减去了。所以对线性相关的向量组运行它就能发现相关性，继续之前必须去掉零向量。",
+    "Gram-Schmidt produces the zero vector exactly at the first vector that depends on those before it, because everything in that vector is removed by the projections. So running it on a dependent list finds the dependency, and the zero vector must be dropped before continuing. For example, with $\\mathbf{x}_{1} = (1, 0)$ and $\\mathbf{x}_{2} = (2, 0)$, $\\mathbf{w}_{2} = \\mathbf{x}_{2} - 2\\mathbf{x}_{1} = \\mathbf{0}$.\n\n> **Watch out.** Look for the first vector that is a combination of the vectors before it, not of the vectors after it. A vector independent of the earlier ones always leaves a nonzero $\\mathbf{w}_{k}$.",
+    "格拉姆-施密特过程恰好在第一个依赖于前面向量的向量处产生零向量，因为这个向量的所有部分都被投影减去了。所以对线性相关的向量组运行它就能发现相关性，继续之前必须去掉零向量。例如 $\\mathbf{x}_{1} = (1, 0)$，$\\mathbf{x}_{2} = (2, 0)$ 时 $\\mathbf{w}_{2} = \\mathbf{x}_{2} - 2\\mathbf{x}_{1} = \\mathbf{0}$。\n\n> **注意。** 要找的是第一个能由它前面的向量组合出的向量，而不是由后面的向量组合出的。与前面向量线性无关的向量总是留下非零的 $\\mathbf{w}_{k}$。",
   ],
   (rng) => {
     const a = nz(rng, 2);
@@ -931,18 +1226,64 @@ const gramDependent = point(
         : answer === 3
           ? poly([p, "\\mathbf{x}_{1}"], [q, "\\mathbf{x}_{2}"])
           : poly([p, "\\mathbf{x}_{1}"], [q, "\\mathbf{x}_{2}"], [r, "\\mathbf{x}_{3}"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Gram-Schmidt is applied in order to $\\mathbf{x}_{1}, \\mathbf{x}_{2}, \\mathbf{x}_{3}, \\mathbf{x}_{4} = ${shown}$. At which step $k$ is $\\mathbf{w}_{k}$ first the zero vector?`,
         `对 $\\mathbf{x}_{1}, \\mathbf{x}_{2}, \\mathbf{x}_{3}, \\mathbf{x}_{4} = ${shown}$ 依次运用格拉姆-施密特过程。在第几步 $k$，$\\mathbf{w}_{k}$ 首次成为零向量？`,
-      ],
+      ]),
       answer,
-      [2, 3, 4, 1],
-      [
-        `$\\mathbf{x}_{${answer}} = ${relation}$, and the vectors before it are independent. So the projections remove all of $\\mathbf{x}_{${answer}}$, and $\\mathbf{w}_{${answer}} = \\mathbf{0}$ is the first zero.`,
-        `$\\mathbf{x}_{${answer}} = ${relation}$，而它前面的向量线性无关。所以投影减去了 $\\mathbf{x}_{${answer}}$ 的全部，$\\mathbf{w}_{${answer}} = \\mathbf{0}$ 是第一个零向量。`,
-      ],
-    );
+      mistakes: [1, 2, 3, 4]
+        .filter((k) => k !== answer)
+        .map((k) =>
+          k === 1
+            ? why(
+                1,
+                "$\\mathbf{w}_{1} = \\mathbf{x}_{1}$, which is not zero; nothing is subtracted at the first step.",
+                "$\\mathbf{w}_{1} = \\mathbf{x}_{1}$，它不是零向量；第一步什么也不减。",
+              )
+            : k < answer
+              ? why(
+                  k,
+                  `$\\mathbf{x}_{${k}}$ is independent of the vectors before it, so $\\mathbf{w}_{${k}}$ is not zero.`,
+                  `$\\mathbf{x}_{${k}}$ 与它前面的向量线性无关，所以 $\\mathbf{w}_{${k}}$ 不是零向量。`,
+                )
+              : why(
+                  k,
+                  `The zero comes earlier: $\\mathbf{x}_{${answer}}$ already depends on the vectors before it.`,
+                  `零向量出现得更早：$\\mathbf{x}_{${answer}}$ 已经依赖于它前面的向量。`,
+                ),
+        ),
+      solution: walked(
+        [
+          [
+            ["Check the earlier vectors", "检查前面的向量"],
+            text(
+              answer === 2
+                ? [
+                    "$\\mathbf{x}_{1}$ is not zero, so $\\mathbf{w}_{1} = \\mathbf{x}_{1}$ is nonzero.",
+                    "$\\mathbf{x}_{1}$ 不是零向量，所以 $\\mathbf{w}_{1} = \\mathbf{x}_{1}$ 非零。",
+                  ]
+                : [
+                    `The vectors before $\\mathbf{x}_{${answer}}$ are independent, since their first nonzero entries sit in different places, so $\\mathbf{w}_{1}, \\dots, \\mathbf{w}_{${answer - 1}}$ are all nonzero.`,
+                    `$\\mathbf{x}_{${answer}}$ 前面的向量的首个非零分量位置各不相同，所以它们线性无关，$\\mathbf{w}_{1}, \\dots, \\mathbf{w}_{${answer - 1}}$ 都不是零向量。`,
+                  ],
+            ),
+          ],
+          [
+            ["Find the dependent vector", "找出相关的向量"],
+            text([
+              `$\\mathbf{x}_{${answer}}$ lies in the span of the earlier vectors, so the projections remove all of it:`,
+              `$\\mathbf{x}_{${answer}}$ 在前面向量张成的空间中，所以投影减去了它的全部：`,
+            ]),
+            [`\\mathbf{x}_{${answer}} = ${relation}`, `\\mathbf{w}_{${answer}} = \\mathbf{0}`],
+          ],
+        ],
+        text([
+          `Computing $${relation}$ entry by entry reproduces the listed $\\mathbf{x}_{${answer}}$.`,
+          `逐个分量计算 $${relation}$，正好得到所列的 $\\mathbf{x}_{${answer}}$。`,
+        ]),
+      ),
+    });
   },
 );
 

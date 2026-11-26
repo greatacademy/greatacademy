@@ -2057,8 +2057,8 @@ export const orthogonalMatrices: TopicDef = {
       id: "orthogonal-matrix-inverse-properties",
       title: t("Inverse and Properties of an Orthogonal Matrix", "正交矩阵的逆及其性质"),
       explanation: t(
-        "A square matrix $Q$ is orthogonal if and only if $Q^T Q = I$, which means $Q^{-1} = Q^T$. The columns of $Q$ form an orthonormal basis of $\\mathbb{R}^n$, and $\\det(Q) = \\pm 1$. For example, $Q = \\frac{1}{13}\\begin{pmatrix} 5 & 12 \\\\ 12 & -5 \\end{pmatrix}$ is symmetric and orthogonal, so $Q^{-1} = Q^T = Q$.\n\n> **Watch out.** Transposing reflects the entries across the main diagonal and changes no signs. A candidate inverse can always be tested: its product with $Q$ must be $I$.",
-        "方阵 $Q$ 是正交矩阵当且仅当 $Q^T Q = I$，这意味着 $Q^{-1} = Q^T$。$Q$ 的列向量构成 $\\mathbb{R}^n$ 的一组标准正交基，且 $\\det(Q) = \\pm 1$。例如 $Q = \\frac{1}{13}\\begin{pmatrix} 5 & 12 \\\\ 12 & -5 \\end{pmatrix}$ 既对称又正交，所以 $Q^{-1} = Q^T = Q$。\n\n> **注意。** 转置是把元素沿主对角线翻折，不改变任何符号。候选的逆矩阵总可以检验：它与 $Q$ 的乘积必须是 $I$。",
+        "A square matrix $Q$ is orthogonal if and only if $Q^T Q = I$, which means $Q^{-1} = Q^T$. The columns of $Q$ form an orthonormal basis of $\\mathbb{R}^n$, and $\\det(Q) = \\pm 1$. For example, $Q = \\frac{1}{13}\\begin{pmatrix} 5 & 12 \\\\ 12 & -5 \\end{pmatrix}$ is symmetric and orthogonal, so $Q^{-1} = Q^T = Q$.\n\n> **Watch out.** Transposing reflects the entries across the main diagonal and changes no signs, and a matrix inverse is never taken entry by entry. A candidate inverse can always be tested: its product with $Q$ must be $I$.",
+        "方阵 $Q$ 是正交矩阵当且仅当 $Q^T Q = I$，这意味着 $Q^{-1} = Q^T$。$Q$ 的列向量构成 $\\mathbb{R}^n$ 的一组标准正交基，且 $\\det(Q) = \\pm 1$。例如 $Q = \\frac{1}{13}\\begin{pmatrix} 5 & 12 \\\\ 12 & -5 \\end{pmatrix}$ 既对称又正交，所以 $Q^{-1} = Q^T = Q$。\n\n> **注意。** 转置是把元素沿主对角线翻折，不改变任何符号；矩阵的逆也绝不能逐个元素求。候选的逆矩阵总可以检验：它与 $Q$ 的乘积必须是 $I$。",
       ),
       generate: (rng: Rng): Problem => {
         const triples = [
@@ -2111,32 +2111,68 @@ export const orthogonalMatrices: TopicDef = {
         );
 
         const right = t(`$${qInvLatex}$`, `$${qInvLatex}$`);
-        const wrongNum = [
-          [
-            [-a, b],
-            [-b, -a],
-          ],
-          [
-            [-a, -b],
-            [b, -a],
-          ],
-          [
-            [b, a],
-            [-a, b],
-          ],
-          [
-            [a, -b],
-            [-b, -a],
-          ],
-        ];
-        const wrong = wrongNum.map((m) => t(`$${over(m)}$`, `$${over(m)}$`));
-        const corner = (m: number[][]) => frac(m[0]![0]! * qNum[0]![0]! + m[0]![1]! * qNum[1]![0]!, d * d);
-        const named = (i: number): [string, string] =>
-          !isReflection && i === 0
-            ? ["This is $-Q$, not $Q^T$. ", "这是 $-Q$，不是 $Q^T$。"]
-            : !isReflection && i === 1
-              ? ["This is $-Q^T$; transposing changes no signs. ", "这是 $-Q^T$；转置不改变符号。"]
-              : ["", ""];
+        const reciprocals = matLatex(qNum.map((row) => row.map((x) => frac(d, x))));
+        const slips: [string, string, string][] = isReflection
+          ? [
+              [
+                over([
+                  [-a, -b],
+                  [-b, a],
+                ]),
+                "This is the adjugate, with the diagonal swapped and the off-diagonal entries negated, but it was not divided by $\\det Q = -1$.",
+                "这是伴随矩阵：交换了对角元素、改变了非对角元素的符号，但没有除以 $\\det Q = -1$。",
+              ],
+              [
+                over([
+                  [a, -b],
+                  [-b, -a],
+                ]),
+                "This changes the signs of the off-diagonal entries as if $Q$ were a rotation; this $Q$ is symmetric, so $Q^T = Q$.",
+                "这是把 $Q$ 当作旋转矩阵，改变了非对角元素的符号；这个 $Q$ 是对称的，所以 $Q^T = Q$。",
+              ],
+              [
+                over([
+                  [-a, b],
+                  [b, a],
+                ]),
+                "This only swaps the diagonal entries; the transpose leaves the diagonal in place.",
+                "这只是交换了对角元素；转置不移动对角元素。",
+              ],
+              [
+                reciprocals,
+                "This inverts each entry; a matrix inverse is not taken entry by entry.",
+                "这是把每个元素取倒数；矩阵的逆不能逐个元素求。",
+              ],
+            ]
+          : [
+              [
+                qLatex,
+                "This is $Q$ itself; the inverse is the transpose, which swaps the off-diagonal entries.",
+                "这就是 $Q$ 本身；逆矩阵是转置，要交换两个非对角元素。",
+              ],
+              [
+                over([
+                  [-a, b],
+                  [-b, -a],
+                ]),
+                "This negates every entry of $Q$; the inverse undoes $Q$, and $-Q$ does not.",
+                "这是把 $Q$ 的每个元素变号；逆矩阵要撤销 $Q$，而 $-Q$ 做不到。",
+              ],
+              [
+                over([
+                  [-a, -b],
+                  [b, -a],
+                ]),
+                "This is $-Q^T$, the adjugate divided by $-1$; but $\\det Q = 1$ for this rotation.",
+                "这是 $-Q^T$，即伴随矩阵除以 $-1$；但这个旋转矩阵的 $\\det Q = 1$。",
+              ],
+              [
+                reciprocals,
+                "This inverts each entry; a matrix inverse is not taken entry by entry.",
+                "这是把每个元素取倒数；矩阵的逆不能逐个元素求。",
+              ],
+            ];
+        const wrong = slips.map(([m]) => t(`$${m}$`, `$${m}$`));
 
         const solution = walked(
           [
@@ -2157,11 +2193,7 @@ export const orthogonalMatrices: TopicDef = {
 
         return reasoned(
           oneOf(rng, prompt, right, wrong, solution),
-          wrongNum.map((m, i): [string, string, string] => [
-            wrong[i]!.en,
-            `${named(i)[0]}Its product with $Q$ has top-left entry $${corner(m)}$, not $1$.`,
-            `${named(i)[1]}它与 $Q$ 的乘积左上元素为 $${corner(m)}$，不是 $1$。`,
-          ]),
+          slips.map(([, en, zh], i): [string, string, string] => [wrong[i]!.en, en, zh]),
         );
       },
     },
@@ -2250,6 +2282,10 @@ export const orthogonalLinearTransformations: TopicDef = {
     "Understand orthogonal transformations as length-preserving and angle-preserving maps (isometries) in ℝⁿ.",
     "理解正交变换是 ℝⁿ 中保长度与保夹角的映射（等距变换）。",
   ),
+  intro: t(
+    "The rotation $T(x) = Qx$ with $Q = \\frac{1}{5}\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$ sends $u = (1, 2)$ to $Tu = \\frac{1}{5}(3 - 8, 4 + 6) = (-1, 2)$. Both vectors have squared length $1 + 4 = 5$: the map moved $u$ without stretching it.\n\nCheck: $v = (2, 0)$ goes to $Tv = (\\frac{6}{5}, \\frac{8}{5})$, and $Tu \\cdot Tv = -\\frac{6}{5} + \\frac{16}{5} = 2 = u \\cdot v$, so the dot product is kept as well.\n\nIn this lesson we use the fact that an orthogonal transformation keeps dot products, and with them lengths, distances and angles, to compute lengths of images without knowing the map.",
+    "旋转 $T(x) = Qx$，其中 $Q = \\frac{1}{5}\\begin{pmatrix} 3 & -4 \\\\ 4 & 3 \\end{pmatrix}$，把 $u = (1, 2)$ 变为 $Tu = \\frac{1}{5}(3 - 8, 4 + 6) = (-1, 2)$。两个向量的长度平方都是 $1 + 4 = 5$：这个映射移动了 $u$，但没有拉伸它。\n\n检验：$v = (2, 0)$ 变为 $Tv = (\\frac{6}{5}, \\frac{8}{5})$，而 $Tu \\cdot Tv = -\\frac{6}{5} + \\frac{16}{5} = 2 = u \\cdot v$，点积也保持不变。\n\n本课我们利用正交变换保持点积、从而保持长度、距离和夹角这一事实，在不知道映射本身的情况下求像的长度。",
+  ),
   prerequisites: ["orthogonal-matrices", "standard-matrix-of-a-linear-transformation-in-terms-of-the-standard-basis"],
   encompasses: [],
   xp: 14,
@@ -2259,8 +2295,8 @@ export const orthogonalLinearTransformations: TopicDef = {
       figure: linearAlgebraDrawings2["orthogonal-linear-transformations#orthogonal-transformation-preserves-geometry"],
       title: t("Preservation of Lengths and Dot Products Under Orthogonal Transformations", "正交变换下长度与点积的保持性"),
       explanation: t(
-        "A linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ is orthogonal (an isometry) if and only if $T(u) \\cdot T(v) = u \\cdot v$ for all $u, v \\in \\mathbb{R}^n$. Consequently, it preserves lengths: $|T(u)| = |u|$, and preserves angles between vectors.",
-        "线性变换 $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ 是正交变换（等距变换）当且仅当对所有 $u, v \\in \\mathbb{R}^n$ 均有 $T(u) \\cdot T(v) = u \\cdot v$。因此它保持向量长度不变：$|T(u)| = |u|$，且保持向量间的夹角不变。",
+        "A linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ is orthogonal (an isometry) if and only if $T(u) \\cdot T(v) = u \\cdot v$ for all $u, v \\in \\mathbb{R}^n$. Consequently, it preserves lengths: $\\|T(u)\\| = \\|u\\|$, and preserves angles between vectors. So $\\|T(au - bv)\\|^2 = \\|au - bv\\|^2$, which expands to $a^2\\|u\\|^2 - 2ab\\,(u \\cdot v) + b^2\\|v\\|^2$. For example, with $\\|u\\| = 3$, $\\|v\\| = 2$ and $u \\cdot v = 1$, $\\|T(u - 2v)\\|^2 = 9 - 4(1) + 4(4) = 21$.\n\n> **Watch out.** The cross term $-2ab\\,(u \\cdot v)$ carries the factor $2$ and the sign of the combination; dropping it treats $u$ and $v$ as orthogonal. Square the coefficients too: $\\|2v\\|^2 = 4\\|v\\|^2$.",
+        "线性变换 $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ 是正交变换（等距变换）当且仅当对所有 $u, v \\in \\mathbb{R}^n$ 均有 $T(u) \\cdot T(v) = u \\cdot v$。因此它保持向量长度不变：$\\|T(u)\\| = \\|u\\|$，且保持向量间的夹角不变。所以 $\\|T(au - bv)\\|^2 = \\|au - bv\\|^2$，展开为 $a^2\\|u\\|^2 - 2ab\\,(u \\cdot v) + b^2\\|v\\|^2$。例如 $\\|u\\| = 3$，$\\|v\\| = 2$，$u \\cdot v = 1$ 时，$\\|T(u - 2v)\\|^2 = 9 - 4(1) + 4(4) = 21$。\n\n> **注意。** 交叉项 $-2ab\\,(u \\cdot v)$ 带有因子 $2$ 和组合中的符号；漏掉它就等于把 $u$ 与 $v$ 当成了正交。系数也要平方：$\\|2v\\|^2 = 4\\|v\\|^2$。",
       ),
       generate: (rng: Rng): Problem => {
         const nu = rng.pick([2, 3, 4, 5]);
@@ -2272,27 +2308,65 @@ export const orthogonalLinearTransformations: TopicDef = {
         const val = c1 * c1 * nu * nu - 2 * c1 * c2 * dot + c2 * c2 * nv * nv;
         const c1Str = c1 === 1 ? "" : `${c1}`;
         const c2Str = c2 === 1 ? "" : `${c2}`;
+        const low = (c1 * nu - c2 * nv) ** 2;
+        const high = (c1 * nu + c2 * nv) ** 2;
 
         const prompt = t(
           `Let $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ be an orthogonal linear transformation. Suppose $u, v \\in \\mathbb{R}^n$ satisfy $\\|u\\| = ${nu}$, $\\|v\\| = ${nv}$, and $u \\cdot v = ${dot}$.\nEvaluate $\\|T(${c1Str}u - ${c2Str}v)\\|^2$.`,
           `设 $T: \\mathbb{R}^n \\to \\mathbb{R}^n$ 为正交线性变换。已知向量 $u, v \\in \\mathbb{R}^n$ 满足 $\\|u\\| = ${nu}$、$\\|v\\| = ${nv}$ 且 $u \\cdot v = ${dot}$。\n求 $\\|T(${c1Str}u - ${c2Str}v)\\|^2$ 的值。`,
         );
 
-        const solution = t(
-          `Because $T$ is an orthogonal transformation, it is an isometry that preserves lengths and dot products:\n$$\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2 = ${c1 === 1 ? "" : c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 === 1 ? "" : c2 * c2}\\|v\\|^2 = ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}$$`,
-          `因为 $T$ 是正交变换，它是保持长度与点积不变的等距变换：\n$$\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2 = ${c1 === 1 ? "" : c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 === 1 ? "" : c2 * c2}\\|v\\|^2 = ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}$$`,
+        const solution = walked(
+          [
+            [
+              ["Remove $T$", "去掉 $T$"],
+              t(
+                "An orthogonal transformation preserves lengths, so the image has the same length as the vector itself.",
+                "正交变换保持长度，所以像与原向量长度相同。",
+              ),
+              [`\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2`],
+            ],
+            [
+              ["Expand the square", "展开平方"],
+              t("", ""),
+              [
+                `= ${c1 === 1 ? "" : c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 === 1 ? "" : c2 * c2}\\|v\\|^2`,
+                `= ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}`,
+              ],
+            ],
+          ],
+          t(
+            `By the Cauchy–Schwarz inequality the squared length must lie between $(${c1 * nu} - ${c2 * nv})^2 = ${low}$ and $(${c1 * nu} + ${c2 * nv})^2 = ${high}$, and $${val}$ does.`,
+            `由柯西–施瓦茨不等式，长度平方必须介于 $(${c1 * nu} - ${c2 * nv})^2 = ${low}$ 与 $(${c1 * nu} + ${c2 * nv})^2 = ${high}$ 之间，$${val}$ 符合。`,
+          ),
         );
 
         return numberProblem({
           prompt,
           answer: val,
           solution,
-          wrong: [
-            c1 * c1 * nu * nu + c2 * c2 * nv * nv,
-            c1 * c1 * nu * nu + 2 * c1 * c2 * dot + c2 * c2 * nv * nv,
-            val + 6,
-            Math.abs(val - 4) || val + 2,
-          ],
+          mistakes: [
+            why(
+              c1 * c1 * nu * nu + c2 * c2 * nv * nv,
+              "The cross term $-2ab\\,(u \\cdot v)$ was dropped, as if $u$ and $v$ were orthogonal.",
+              "漏掉了交叉项 $-2ab\\,(u \\cdot v)$，相当于把 $u$ 与 $v$ 当成了正交。",
+            ),
+            why(
+              c1 * c1 * nu * nu + 2 * c1 * c2 * dot + c2 * c2 * nv * nv,
+              "The cross term was added; the combination is a difference, so it is subtracted.",
+              "交叉项被加上了；组合是相减，所以交叉项要减去。",
+            ),
+            why(
+              c1 * c1 * nu * nu - c1 * c2 * dot + c2 * c2 * nv * nv,
+              "The factor $2$ in the cross term is missing.",
+              "交叉项缺少因子 $2$。",
+            ),
+            why(
+              c1 * nu * nu - 2 * c1 * c2 * dot + c2 * nv * nv,
+              "The coefficients in front of $\\|u\\|^2$ and $\\|v\\|^2$ were not squared.",
+              "$\\|u\\|^2$ 与 $\\|v\\|^2$ 前面的系数没有平方。",
+            ),
+          ].filter((w, i, all) => w.value !== val && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -2301,8 +2375,8 @@ export const orthogonalLinearTransformations: TopicDef = {
       figure: linearAlgebraDrawings2["orthogonal-linear-transformations#distances-under-an-orthogonal-transformation"],
       title: t("Distances under an orthogonal transformation", "正交变换下的距离"),
       explanation: t(
-        "An orthogonal transformation preserves inner products, $\\langle T u, T v \\rangle = \\langle u, v \\rangle$, and therefore lengths, distances and angles. To find $\\|Tu - Tv\\|^2$, use linearity to write it as $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ and expand:\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2.$$",
-        "正交变换保持内积，$\\langle T u, T v \\rangle = \\langle u, v \\rangle$，因此保持长度、距离与角度。求 $\\|Tu - Tv\\|^2$ 时，用线性把它写成 $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ 再展开：\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2$$",
+        "An orthogonal transformation preserves inner products, $\\langle T u, T v \\rangle = \\langle u, v \\rangle$, and therefore lengths, distances and angles. To find $\\|Tu - Tv\\|^2$, use linearity to write it as $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ and expand:\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2.$$\n\nFor example, with $\\|u\\| = 4$, $\\|v\\| = 3$ and $\\langle u, v \\rangle = 5$, $\\|Tu - Tv\\|^2 = 16 - 10 + 9 = 15$.\n\n> **Watch out.** The distance between $Tu$ and $Tv$ is not $\\|u\\| - \\|v\\|$: that difference ignores the angle between the vectors. Keep the term $-2\\langle u, v \\rangle$ with its factor $2$.",
+        "正交变换保持内积，$\\langle T u, T v \\rangle = \\langle u, v \\rangle$，因此保持长度、距离与角度。求 $\\|Tu - Tv\\|^2$ 时，用线性把它写成 $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ 再展开：\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2$$\n\n例如 $\\|u\\| = 4$，$\\|v\\| = 3$，$\\langle u, v \\rangle = 5$ 时，$\\|Tu - Tv\\|^2 = 16 - 10 + 9 = 15$。\n\n> **注意。** $Tu$ 与 $Tv$ 之间的距离不是 $\\|u\\| - \\|v\\|$：这个差忽略了两个向量之间的夹角。要保留带因子 $2$ 的项 $-2\\langle u, v \\rangle$。",
       ),
       generate: (rng: Rng): Problem => {
         const A = rng.int(2, 6);
@@ -2315,10 +2389,37 @@ export const orthogonalLinearTransformations: TopicDef = {
             `$T$ 是正交线性变换，$\\|u\\| = ${A}$，$\\|v\\| = ${B}$，$\\langle u, v \\rangle = ${C}$。求 $\\|T u - T v\\|^2$。`,
           ),
           answer: ans,
-          wrong: [A * A + B * B + 2 * C, A * A + B * B - C, (A - B) ** 2],
-          solution: t(
-            `$\\|Tu - Tv\\|^2 = \\|u - v\\|^2 = ${A * A} - 2(${C}) + ${B * B} = ${ans}$.`,
-            `$\\|Tu - Tv\\|^2 = \\|u - v\\|^2 = ${A * A} - 2(${C}) + ${B * B} = ${ans}$。`,
+          mistakes: [
+            why(
+              A * A + B * B + 2 * C,
+              "The term $2\\langle u, v \\rangle$ was added; in $\\|u - v\\|^2$ it is subtracted.",
+              "$2\\langle u, v \\rangle$ 被加上了；在 $\\|u - v\\|^2$ 中它要减去。",
+            ),
+            why(
+              A * A + B * B - C,
+              "The factor $2$ in front of $\\langle u, v \\rangle$ is missing.",
+              "$\\langle u, v \\rangle$ 前面缺少因子 $2$。",
+            ),
+            why(
+              (A - B) ** 2,
+              "That squares the difference of the lengths, which ignores the angle between $u$ and $v$.",
+              "这是长度之差的平方，忽略了 $u$ 与 $v$ 之间的夹角。",
+            ),
+            why(
+              A * A + B * B,
+              "The inner product term was dropped, as if $u$ and $v$ were orthogonal.",
+              "漏掉了内积项，相当于把 $u$ 与 $v$ 当成了正交。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [["Use linearity", "利用线性"], t("", ""), [`\\|Tu - Tv\\|^2 = \\|T(u - v)\\|^2 = \\|u - v\\|^2`]],
+              [["Expand", "展开"], t("", ""), [`\\|u - v\\|^2 = ${A * A} - 2(${C}) + ${B * B} = ${ans}`]],
+            ],
+            t(
+              `The distance squared must lie between $(${A} - ${B})^2 = ${(A - B) ** 2}$ and $(${A} + ${B})^2 = ${(A + B) ** 2}$, and $${ans}$ does.`,
+              `距离的平方必须介于 $(${A} - ${B})^2 = ${(A - B) ** 2}$ 与 $(${A} + ${B})^2 = ${(A + B) ** 2}$ 之间，$${ans}$ 符合。`,
+            ),
           ),
         });
       },
@@ -2334,6 +2435,10 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
     "Relate the four fundamental subspaces of an $m \\times n$ matrix: $(\\operatorname{Col} A)^{\\perp} = \\operatorname{Nul} A^T$ and $(\\operatorname{Row} A)^{\\perp} = \\operatorname{Nul} A$.",
     "建立 $m \\times n$ 矩阵四个基本子空间的正交关系：$(\\operatorname{Col} A)^{\\perp} = \\operatorname{Nul} A^T$ 与 $(\\operatorname{Row} A)^{\\perp} = \\operatorname{Nul} A$。",
   ),
+  intro: t(
+    "The $2 \\times 3$ matrix $A = \\begin{pmatrix} 1 & 2 & 3 \\\\ 2 & 4 & 6 \\end{pmatrix}$ has rank $1$: its second row is twice the first. Its row space is the line through $(1, 2, 3)$ in $\\mathbb{R}^3$, and its null space is the plane spanned by $(-2, 1, 0)$ and $(-3, 0, 1)$, of dimension $3 - 1 = 2$. Its left null space in $\\mathbb{R}^2$ is spanned by $(2, -1)$, of dimension $2 - 1 = 1$.\n\nCheck: $(1, 2, 3) \\cdot (-2, 1, 0) = 0$ and $(1, 2, 3) \\cdot (-3, 0, 1) = 0$, so the null space is orthogonal to the row space, and the dimensions add up: $1 + 2 = 3$ and $1 + 1 = 2$.\n\nIn this lesson we read the dimensions of the four fundamental subspaces from $m$, $n$ and the rank, and use the fact that they pair up as orthogonal complements.",
+    "$2 \\times 3$ 矩阵 $A = \\begin{pmatrix} 1 & 2 & 3 \\\\ 2 & 4 & 6 \\end{pmatrix}$ 的秩为 $1$：第二行是第一行的两倍。它的行空间是 $\\mathbb{R}^3$ 中过 $(1, 2, 3)$ 的直线，零空间是由 $(-2, 1, 0)$ 与 $(-3, 0, 1)$ 张成的平面，维数为 $3 - 1 = 2$。它在 $\\mathbb{R}^2$ 中的左零空间由 $(2, -1)$ 张成，维数为 $2 - 1 = 1$。\n\n检验：$(1, 2, 3) \\cdot (-2, 1, 0) = 0$，$(1, 2, 3) \\cdot (-3, 0, 1) = 0$，所以零空间与行空间正交，维数也对得上：$1 + 2 = 3$，$1 + 1 = 2$。\n\n本课我们由 $m$、$n$ 和秩读出四个基本子空间的维数，并利用它们两两互为正交补这一事实。",
+  ),
   prerequisites: ["orthogonal-complements", "the-column-space-of-a-matrix", "the-null-space-of-a-matrix"],
   encompasses: [],
   xp: 14,
@@ -2342,8 +2447,8 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
       id: "fundamental-subspaces-orthogonal-complements",
       title: t("Orthogonal Complement Relations of Fundamental Subspaces", "基本子空间的正交补关系"),
       explanation: t(
-        "For any $m \\times n$ real matrix $A$, the fundamental theorem of linear algebra states that $(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$ in $\\mathbb{R}^n$, and $(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$ in $\\mathbb{R}^m$. Moreover, $\\dim(\\operatorname{Row}(A)) = \\dim(\\operatorname{Col}(A)) = r$, $\\dim(\\operatorname{Nul}(A)) = n - r$, and $\\dim(\\operatorname{Nul}(A^T)) = m - r$.",
-        "对于任意 $m \\times n$ 实矩阵 $A$，线性代数基本定理指出：在 $\\mathbb{R}^n$ 中有 $(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$，在 $\\mathbb{R}^m$ 中有 $(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$。此外，$\\dim(\\operatorname{Row}(A)) = \\dim(\\operatorname{Col}(A)) = r$，$\\dim(\\operatorname{Nul}(A)) = n - r$，且 $\\dim(\\operatorname{Nul}(A^T)) = m - r$。",
+        "For any $m \\times n$ real matrix $A$, the fundamental theorem of linear algebra states that $(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$ in $\\mathbb{R}^n$, and $(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$ in $\\mathbb{R}^m$. Moreover, $\\dim(\\operatorname{Row}(A)) = \\dim(\\operatorname{Col}(A)) = r$, $\\dim(\\operatorname{Nul}(A)) = n - r$, and $\\dim(\\operatorname{Nul}(A^T)) = m - r$. For example, a $5 \\times 3$ matrix of rank $2$ has $\\dim (\\operatorname{Col}(A))^\\perp = 5 - 2 = 3$ and $\\dim (\\operatorname{Row}(A))^\\perp = 3 - 2 = 1$.\n\n> **Watch out.** The column space lives in $\\mathbb{R}^m$, one coordinate per row, and the row space lives in $\\mathbb{R}^n$, one coordinate per column. Subtract the rank from the dimension of the space the subspace lives in.",
+        "对于任意 $m \\times n$ 实矩阵 $A$，线性代数基本定理指出：在 $\\mathbb{R}^n$ 中有 $(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$，在 $\\mathbb{R}^m$ 中有 $(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$。此外，$\\dim(\\operatorname{Row}(A)) = \\dim(\\operatorname{Col}(A)) = r$，$\\dim(\\operatorname{Nul}(A)) = n - r$，且 $\\dim(\\operatorname{Nul}(A^T)) = m - r$。例如秩为 $2$ 的 $5 \\times 3$ 矩阵有 $\\dim (\\operatorname{Col}(A))^\\perp = 5 - 2 = 3$，$\\dim (\\operatorname{Row}(A))^\\perp = 3 - 2 = 1$。\n\n> **注意。** 列空间位于 $\\mathbb{R}^m$ 中，每行对应一个坐标；行空间位于 $\\mathbb{R}^n$ 中，每列对应一个坐标。要用子空间所在空间的维数减去秩。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.pick([3, 4, 5, 6, 7]);
@@ -2353,29 +2458,73 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
 
         const askColComp = rng.bool();
         const targetSpace = askColComp ? "(\\operatorname{Col}(A))^\\perp" : "(\\operatorname{Row}(A))^\\perp";
-        const targetZh = askColComp ? "列空间的正交补 (\\operatorname{Col}(A))^\\perp" : "行空间的正交补 (\\operatorname{Row}(A))^\\perp";
+        const targetZh = askColComp ? "列空间的正交补" : "行空间的正交补";
         const answerVal = askColComp ? m - r : n - r;
+        const home = askColComp ? m : n;
+        const other = askColComp ? n : m;
 
         const prompt = t(
           `Let $A$ be ${article(m)} $${m} \\times ${n}$ matrix with rank $r = ${r}$. What is the dimension of $${targetSpace}$?`,
-          `设 $A$ 为一个秩 $r = ${r}$ 的 $${m} \\times ${n}$ 矩阵。求 $${targetZh}$ 的维数。`,
+          `设 $A$ 为一个秩 $r = ${r}$ 的 $${m} \\times ${n}$ 矩阵。求${targetZh} $${targetSpace}$ 的维数。`,
         );
 
-        const explanationPart = askColComp
-          ? `$(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$ in $\\mathbb{R}^{${m}}$, so $\\dim((\\operatorname{Col}(A))^\\perp) = m - r = ${m} - ${r} = ${answerVal}$.`
-          : `$(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$ in $\\mathbb{R}^{${n}}$, so $\\dim((\\operatorname{Row}(A))^\\perp) = n - r = ${n} - ${r} = ${answerVal}$.`;
-
-        const explanationZh = askColComp
-          ? `在 $\\mathbb{R}^{${m}}$ 中，$(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)$，因此 $\\dim((\\operatorname{Col}(A))^\\perp) = m - r = ${m} - ${r} = ${answerVal}$。`
-          : `在 $\\mathbb{R}^{${n}}$ 中，$(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)$，因此 $\\dim((\\operatorname{Row}(A))^\\perp) = n - r = ${n} - ${r} = ${answerVal}$。`;
-
-        const solution = t(`By the Fundamental Theorem of Linear Algebra, ${explanationPart}`, `由线性代数基本定理，${explanationZh}`);
+        const solution = walked(
+          [
+            [
+              ["Name the complement", "确定正交补"],
+              askColComp
+                ? t(
+                    `The column space lives in $\\mathbb{R}^{${m}}$, and its orthogonal complement there is the left null space.`,
+                    `列空间位于 $\\mathbb{R}^{${m}}$ 中，它在其中的正交补是左零空间。`,
+                  )
+                : t(
+                    `The row space lives in $\\mathbb{R}^{${n}}$, and its orthogonal complement there is the null space.`,
+                    `行空间位于 $\\mathbb{R}^{${n}}$ 中，它在其中的正交补是零空间。`,
+                  ),
+              [
+                askColComp
+                  ? "(\\operatorname{Col}(A))^\\perp = \\operatorname{Nul}(A^T)"
+                  : "(\\operatorname{Row}(A))^\\perp = \\operatorname{Nul}(A)",
+              ],
+            ],
+            [
+              ["Subtract the rank", "减去秩"],
+              t("", ""),
+              [`\\dim ${targetSpace} = ${askColComp ? "m" : "n"} - r = ${home} - ${r} = ${answerVal}`],
+            ],
+          ],
+          t(
+            `A subspace and its complement fill the space: $${r} + ${answerVal} = ${home}$.`,
+            `子空间与其正交补的维数之和等于整个空间的维数：$${r} + ${answerVal} = ${home}$。`,
+          ),
+        );
 
         return numberProblem({
           prompt,
           answer: answerVal,
           solution,
-          wrong: [r, askColComp ? n - r : m - r, m, n, answerVal + 1, Math.max(1, answerVal - 1)],
+          mistakes: [
+            why(
+              r,
+              "That is the dimension of the subspace itself; its complement has what is left over.",
+              "这是子空间本身的维数；正交补的维数是剩下的部分。",
+            ),
+            why(
+              other - r,
+              askColComp
+                ? "That subtracts the rank from $n$; the column space lives in $\\mathbb{R}^m$, one coordinate per row."
+                : "That subtracts the rank from $m$; the row space lives in $\\mathbb{R}^n$, one coordinate per column.",
+              askColComp
+                ? "这是用 $n$ 减去秩；列空间位于 $\\mathbb{R}^m$ 中，每行对应一个坐标。"
+                : "这是用 $m$ 减去秩；行空间位于 $\\mathbb{R}^n$ 中，每列对应一个坐标。",
+            ),
+            why(home, "That is the dimension of the whole space; the rank must be subtracted.", "这是整个空间的维数；还要减去秩。"),
+            why(
+              other,
+              "That is the dimension of the other space, and the rank was not subtracted.",
+              "这是另一个空间的维数，而且没有减去秩。",
+            ),
+          ].filter((w, i, all) => w.value !== answerVal && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -2383,8 +2532,8 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
       id: "dimensions-of-the-four-subspaces",
       title: t("Dimensions of the four fundamental subspaces", "四个基本子空间的维数"),
       explanation: t(
-        "For an $m \\times n$ matrix $A$ of rank $r$, the four fundamental subspaces have dimensions fixed by $m$, $n$ and $r$ alone:\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r.$$\n\nThe row space and null space live in $\\mathbb{R}^n$ and are orthogonal complements, so their dimensions add to $n$; the column space and left null space live in $\\mathbb{R}^m$ and add to $m$.",
-        "对秩为 $r$ 的 $m \\times n$ 矩阵 $A$，四个基本子空间的维数只由 $m$、$n$、$r$ 决定：\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r$$\n\n行空间与零空间位于 $\\mathbb{R}^n$ 中且互为正交补，维数之和为 $n$；列空间与左零空间位于 $\\mathbb{R}^m$ 中，维数之和为 $m$。",
+        "For an $m \\times n$ matrix $A$ of rank $r$, the four fundamental subspaces have dimensions fixed by $m$, $n$ and $r$ alone:\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r.$$\n\nThe row space and null space live in $\\mathbb{R}^n$ and are orthogonal complements, so their dimensions add to $n$; the column space and left null space live in $\\mathbb{R}^m$ and add to $m$. For example, a $4 \\times 6$ matrix of rank $3$ has a null space of dimension $6 - 3 = 3$ and a left null space of dimension $4 - 3 = 1$.\n\n> **Watch out.** The null space uses $n$, the number of columns, because $Ax = 0$ has one unknown per column; the left null space uses $m$, the number of rows.",
+        "对秩为 $r$ 的 $m \\times n$ 矩阵 $A$，四个基本子空间的维数只由 $m$、$n$、$r$ 决定：\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r$$\n\n行空间与零空间位于 $\\mathbb{R}^n$ 中且互为正交补，维数之和为 $n$；列空间与左零空间位于 $\\mathbb{R}^m$ 中，维数之和为 $m$。例如秩为 $3$ 的 $4 \\times 6$ 矩阵，零空间维数为 $6 - 3 = 3$，左零空间维数为 $4 - 3 = 1$。\n\n> **注意。** 零空间用 $n$（列数），因为 $Ax = 0$ 每列对应一个未知数；左零空间用 $m$（行数）。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(3, 8);
@@ -2398,16 +2547,48 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
         ];
         const ans = [n - r, m - r, r][kind]!;
         const name = names[kind]!;
+        const formulas = ["n - r", "m - r", "r"];
+        const shown = [`${n} - ${r} = ${n - r}`, `${m} - ${r} = ${m - r}`, `${r}`];
         return numberProblem({
           prompt: t(
             `$A$ is a $${m} \\times ${n}$ matrix of rank $${r}$. What is the dimension of ${name.en}?`,
             `$A$ 是秩为 $${r}$ 的 $${m} \\times ${n}$ 矩阵。${name["zh-CN"]}的维数是多少？`,
           ),
           answer: ans,
-          wrong: [n - r, m - r, r, m, n].filter((w) => w !== ans),
-          solution: t(
-            `$\\dim \\operatorname{Row}(A) = r = ${r}$, $\\dim \\operatorname{Nul}(A) = n - r = ${n - r}$ and $\\dim \\operatorname{Nul}(A^T) = m - r = ${m - r}$. So the answer is $${ans}$.`,
-            `$\\dim \\operatorname{Row}(A) = r = ${r}$，$\\dim \\operatorname{Nul}(A) = n - r = ${n - r}$，$\\dim \\operatorname{Nul}(A^T) = m - r = ${m - r}$。所以答案是 $${ans}$。`,
+          mistakes: [
+            why(
+              n - r,
+              "That is $n - r$, the dimension of the null space, which lives in $\\mathbb{R}^n$.",
+              "这是 $n - r$，即零空间的维数，零空间位于 $\\mathbb{R}^n$ 中。",
+            ),
+            why(
+              m - r,
+              "That is $m - r$, the dimension of the left null space, which lives in $\\mathbb{R}^m$.",
+              "这是 $m - r$，即左零空间的维数，左零空间位于 $\\mathbb{R}^m$ 中。",
+            ),
+            why(r, "That is the rank, the dimension of the row and column spaces.", "这是秩，即行空间与列空间的维数。"),
+            why(m, "That is the number of rows; the rank still has to be subtracted.", "这是行数；还要减去秩。"),
+            why(n, "That is the number of columns; the rank still has to be subtracted.", "这是列数；还要减去秩。"),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["List the dimensions", "列出维数"],
+                t("", ""),
+                [
+                  `\\dim \\operatorname{Row}(A) = r = ${r}, \\quad \\dim \\operatorname{Nul}(A) = n - r = ${n - r}, \\quad \\dim \\operatorname{Nul}(A^T) = m - r = ${m - r}`,
+                ],
+              ],
+              [
+                ["Pick the one asked for", "选出所求的一个"],
+                t(`For ${name.en}, the dimension is $${formulas[kind]!}$.`, `${name["zh-CN"]}的维数是 $${formulas[kind]!}$。`),
+                [`${shown[kind]!}`],
+              ],
+            ],
+            t(
+              `The complements add up: $${r} + ${n - r} = ${n}$ columns and $${r} + ${m - r} = ${m}$ rows.`,
+              `互为正交补的维数之和对得上：$${r} + ${n - r} = ${n}$ 列，$${r} + ${m - r} = ${m}$ 行。`,
+            ),
           ),
         });
       },
@@ -2427,6 +2608,10 @@ export const projectingVectorsOntoOneDimensionalSubspaces: TopicDef = {
     "Calculate the orthogonal projection of a vector onto a line and find the orthogonal component.",
     "计算向量在直线上的正交投影，并求解与该直线正交的分量。",
   ),
+  intro: t(
+    "Project $y = (3, 1)$ onto the line spanned by $u = (1, 1)$. The dot products are $y \\cdot u = 3 + 1 = 4$ and $u \\cdot u = 1 + 1 = 2$, so the projection is $\\frac{4}{2}u = (2, 2)$, and what is left over is $z = (3, 1) - (2, 2) = (1, -1)$.\n\nCheck: $z \\cdot u = 1 - 1 = 0$, so the leftover part is perpendicular to the line, and $(2, 2) + (1, -1) = (3, 1)$ gives back $y$.\n\nIn this lesson we project vectors onto lines with the formula $\\frac{y \\cdot u}{u \\cdot u}u$ and split each vector into a part along the line and a part perpendicular to it.",
+    "把 $y = (3, 1)$ 投影到 $u = (1, 1)$ 张成的直线上。点积为 $y \\cdot u = 3 + 1 = 4$，$u \\cdot u = 1 + 1 = 2$，所以投影是 $\\frac{4}{2}u = (2, 2)$，剩下的部分是 $z = (3, 1) - (2, 2) = (1, -1)$。\n\n检验：$z \\cdot u = 1 - 1 = 0$，剩余部分与直线垂直，而 $(2, 2) + (1, -1) = (3, 1)$ 正好还原 $y$。\n\n本课我们用公式 $\\frac{y \\cdot u}{u \\cdot u}u$ 把向量投影到直线上，并把每个向量分解为沿直线的部分与垂直于直线的部分。",
+  ),
   prerequisites: ["orthogonal-vectors-in-euclidean-spaces"],
   encompasses: [],
   xp: 14,
@@ -2435,8 +2620,8 @@ export const projectingVectorsOntoOneDimensionalSubspaces: TopicDef = {
       id: "vector-projection-onto-line-formula",
       title: t("Formula for Projection Onto a Vector", "向量在直线上的投影公式"),
       explanation: t(
-        "The orthogonal projection of a vector $y$ onto the one-dimensional subspace spanned by a nonzero vector $u$ is $\\operatorname{proj}_u(y) = \\frac{y \\cdot u}{u \\cdot u} u$. The component of $y$ orthogonal to $u$ is $z = y - \\operatorname{proj}_u(y)$.",
-        "向量 $y$ 在由非零向量 $u$ 张成的一维子空间上的正交投影为 $\\operatorname{proj}_u(y) = \\frac{y \\cdot u}{u \\cdot u} u$。向量 $y$ 与 $u$ 正交的分量为 $z = y - \\operatorname{proj}_u(y)$。",
+        "The orthogonal projection of a vector $y$ onto the one-dimensional subspace spanned by a nonzero vector $u$ is $\\operatorname{proj}_u(y) = \\frac{y \\cdot u}{u \\cdot u} u$. The component of $y$ orthogonal to $u$ is $z = y - \\operatorname{proj}_u(y)$. For example, $y = (3, 1, 2)$ and $u = (1, 1, 0)$ give $y \\cdot u = 4$ and $u \\cdot u = 2$, so $\\operatorname{proj}_u(y) = 2u = (2, 2, 0)$.\n\n> **Watch out.** Divide by $u \\cdot u$, the squared length of $u$, not by $\\|u\\|$; the fraction is the number of copies of $u$. The projection is that multiple of $u$, a vector, not the fraction itself.",
+        "向量 $y$ 在由非零向量 $u$ 张成的一维子空间上的正交投影为 $\\operatorname{proj}_u(y) = \\frac{y \\cdot u}{u \\cdot u} u$。向量 $y$ 与 $u$ 正交的分量为 $z = y - \\operatorname{proj}_u(y)$。例如 $y = (3, 1, 2)$，$u = (1, 1, 0)$ 时 $y \\cdot u = 4$，$u \\cdot u = 2$，所以 $\\operatorname{proj}_u(y) = 2u = (2, 2, 0)$。\n\n> **注意。** 要除以 $u \\cdot u$，即 $u$ 的长度平方，而不是 $\\|u\\|$；这个分数表示有几个 $u$。投影是 $u$ 的这个倍数，是向量，而不是分数本身。",
       ),
       generate: (rng: Rng): Problem => {
         const u = [rng.pick([-2, -1, 1, 2]), rng.pick([-2, -1, 1, 2]), rng.pick([-1, 0, 1])];
@@ -2447,32 +2632,77 @@ export const projectingVectorsOntoOneDimensionalSubspaces: TopicDef = {
         const z = [-u[1]!, u[0]!, 0];
         const y = [scale * u[0]! + z[0]!, scale * u[1]! + z[1]!, scale * u[2]! + z[2]!];
         const proj = [scale * u[0]!, scale * u[1]!, scale * u[2]!];
+        const undivided = u.map((x) => scale * uDotU * x);
 
         const prompt = t(
           `Find the orthogonal projection $\\operatorname{proj}_u(y)$ of the vector $y$ onto the subspace spanned by $u$ in $\\mathbb{R}^3$:\n$$y = ${colVecLatex(y)}, \\quad u = ${colVecLatex(u)}$$\nEnter your answer as a vector $\\langle v_1, v_2, v_3 \\rangle$.`,
           `求向量 $y$ 在由 $u$ 张成的一维子空间上的正交投影 $\\operatorname{proj}_u(y)$：\n$$y = ${colVecLatex(y)}, \\quad u = ${colVecLatex(u)}$$\n请以向量 $\\langle v_1, v_2, v_3 \\rangle$ 的形式作答。`,
         );
 
-        const solution = t(
-          `Compute $y \\cdot u$ and $u \\cdot u$:\n$$y \\cdot u = ${scale * uDotU}, \\quad u \\cdot u = ${uDotU}$$\nThen:\n$$\\operatorname{proj}_u(y) = \\frac{y \\cdot u}{u \\cdot u} u = \\frac{${scale * uDotU}}{${uDotU}} ${colVecLatex(u)} = ${colVecLatex(proj)}$$`,
-          `计算点积 $y \\cdot u$ 与 $u \\cdot u$：\n$$y \\cdot u = ${scale * uDotU}, \\quad u \\cdot u = ${uDotU}$$\n因此：\n$$\\operatorname{proj}_u(y) = \\frac{y \\cdot u}{u \\cdot u} u = \\frac{${scale * uDotU}}{${uDotU}} ${colVecLatex(u)} = ${colVecLatex(proj)}$$`,
+        const solution = walked(
+          [
+            [
+              ["Compute the two dot products", "计算两个点积"],
+              t("", ""),
+              [
+                `y \\cdot u = ${signedSum(y.map((x, i) => `(${x})(${u[i]!})`))} = ${scale * uDotU}`,
+                `u \\cdot u = ${u.map((x) => `(${x})^2`).join(" + ")} = ${uDotU}`,
+              ],
+            ],
+            [
+              ["Scale $u$", "缩放 $u$"],
+              t(
+                `The fraction $\\frac{y \\cdot u}{u \\cdot u}$ is the number of copies of $u$.`,
+                `分数 $\\frac{y \\cdot u}{u \\cdot u}$ 表示有几个 $u$。`,
+              ),
+              [
+                `\\operatorname{proj}_u(y) = \\frac{${scale * uDotU}}{${uDotU}} ${colVecLatex(u)} = ${scale}${colVecLatex(u)} = ${colVecLatex(proj)}`,
+              ],
+            ],
+          ],
+          t(
+            `What is left over, $y - \\operatorname{proj}_u(y) = ${colVecLatex(z)}$, is perpendicular to $u$: $(${z[0]!})(${u[0]!}) + (${z[1]!})(${u[1]!}) + (0)(${u[2]!}) = 0$.`,
+            `剩余部分 $y - \\operatorname{proj}_u(y) = ${colVecLatex(z)}$ 与 $u$ 垂直：$(${z[0]!})(${u[0]!}) + (${z[1]!})(${u[1]!}) + (0)(${u[2]!}) = 0$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: proj,
-          vector: true,
-          solution,
-          wrong: [z, [-proj[0]!, -proj[1]!, -proj[2]!], [(scale + 1) * u[0]!, (scale + 1) * u[1]!, (scale + 1) * u[2]!], y],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt,
+            answer: proj,
+            vector: true,
+            solution,
+            wrong: [z, undivided, y],
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(z),
+                "That is the part of $y$ perpendicular to $u$, $y - \\operatorname{proj}_u(y)$; the projection is the part along $u$.",
+                "这是 $y$ 中垂直于 $u$ 的部分 $y - \\operatorname{proj}_u(y)$；投影是沿 $u$ 的部分。",
+              ),
+              say(
+                vectorLatex(undivided),
+                "That multiplies $u$ by $y \\cdot u$ without dividing by $u \\cdot u$.",
+                "这是用 $y \\cdot u$ 乘 $u$，却没有除以 $u \\cdot u$。",
+              ),
+              say(
+                vectorLatex(y),
+                "That is $y$ itself; $y$ is not on the line, so its projection differs from it.",
+                "这就是 $y$ 本身；$y$ 不在直线上，所以它的投影与它不同。",
+              ),
+            ],
+            vectorLatex(proj),
+          ),
+        );
       },
     },
     {
       id: "the-component-orthogonal-to-a-line",
       title: t("The component orthogonal to a line", "垂直于直线的分量"),
       explanation: t(
-        "Every vector $y$ splits uniquely as $y = \\hat{y} + z$ with $\\hat{y}$ on the line spanned by $u$ and $z$ orthogonal to $u$. First compute the projection $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}\\,u$, then subtract: $z = y - \\hat{y}$. A quick check is $z \\cdot u = 0$.",
-        "每个向量 $y$ 都能唯一分解为 $y = \\hat{y} + z$，其中 $\\hat{y}$ 在 $u$ 张成的直线上，$z$ 与 $u$ 正交。先求投影 $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}\\,u$，再相减：$z = y - \\hat{y}$。可用 $z \\cdot u = 0$ 快速检验。",
+        "Every vector $y$ splits uniquely as $y = \\hat{y} + z$ with $\\hat{y}$ on the line spanned by $u$ and $z$ orthogonal to $u$. First compute the projection $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}\\,u$, then subtract: $z = y - \\hat{y}$. A quick check is $z \\cdot u = 0$. For example, $y = (4, 2)$ and $u = (1, 1)$ give $\\frac{6}{2} = 3$, so $\\hat{y} = (3, 3)$ and $z = (1, -1)$.\n\n> **Watch out.** Subtract the projection, not $u$ itself, and subtract in the order $y - \\hat{y}$; the reverse order gives $-z$. The answer is the perpendicular part, not $\\hat{y}$.",
+        "每个向量 $y$ 都能唯一分解为 $y = \\hat{y} + z$，其中 $\\hat{y}$ 在 $u$ 张成的直线上，$z$ 与 $u$ 正交。先求投影 $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}\\,u$，再相减：$z = y - \\hat{y}$。可用 $z \\cdot u = 0$ 快速检验。例如 $y = (4, 2)$，$u = (1, 1)$ 时 $\\frac{6}{2} = 3$，所以 $\\hat{y} = (3, 3)$，$z = (1, -1)$。\n\n> **注意。** 要减去投影，而不是 $u$ 本身，并且按 $y - \\hat{y}$ 的顺序相减；顺序反了得到的是 $-z$。所求的是垂直部分，不是 $\\hat{y}$。",
       ),
       generate: (rng: Rng): Problem => {
         const u = [rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
@@ -2482,23 +2712,61 @@ export const projectingVectorsOntoOneDimensionalSubspaces: TopicDef = {
         const y = [k * u[0]! + z[0]!, k * u[1]! + z[1]!];
         const uu = u[0]! * u[0]! + u[1]! * u[1]!;
         const yu = y[0]! * u[0]! + y[1]! * u[1]!;
-        return pointProblem({
-          prompt: t(
-            `Write $y = (${y.join(", ")})$ as $\\hat{y} + z$ with $\\hat{y}$ a multiple of $u = (${u.join(", ")})$ and $z \\perp u$. Find $z$.`,
-            `把 $y = (${y.join(", ")})$ 写成 $\\hat{y} + z$，其中 $\\hat{y}$ 是 $u = (${u.join(", ")})$ 的倍数且 $z \\perp u$。求 $z$。`,
+        const yhat = [k * u[0]!, k * u[1]!];
+        const minusU = [y[0]! - u[0]!, y[1]! - u[1]!];
+        const reversed = [-z[0]!, -z[1]!];
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Write $y = (${y.join(", ")})$ as $\\hat{y} + z$ with $\\hat{y}$ a multiple of $u = (${u.join(", ")})$ and $z \\perp u$. Find $z$.`,
+              `把 $y = (${y.join(", ")})$ 写成 $\\hat{y} + z$，其中 $\\hat{y}$ 是 $u = (${u.join(", ")})$ 的倍数且 $z \\perp u$。求 $z$。`,
+            ),
+            answer: z,
+            vector: true,
+            wrong: [yhat, reversed, minusU],
+            solution: walked(
+              [
+                [
+                  ["Find the coefficient", "求系数"],
+                  t("", ""),
+                  [
+                    `\\frac{y \\cdot u}{u \\cdot u} = \\frac{(${y[0]!})(${u[0]!}) + (${y[1]!})(${u[1]!})}{(${u[0]!})^2 + (${u[1]!})^2} = \\frac{${yu}}{${uu}} = ${k}`,
+                  ],
+                ],
+                [["Form the projection", "写出投影"], t("", ""), [`\\hat{y} = ${k}(${u.join(", ")}) = (${yhat.join(", ")})`]],
+                [
+                  ["Subtract", "相减"],
+                  t("", ""),
+                  [`z = y - \\hat{y} = (${y[0]!} - (${yhat[0]!}), ${y[1]!} - (${yhat[1]!})) = (${z.join(", ")})`],
+                ],
+              ],
+              t(
+                `$z \\cdot u = (${z[0]!})(${u[0]!}) + (${z[1]!})(${u[1]!}) = 0$, and $\\hat{y} + z = (${y.join(", ")}) = y$.`,
+                `$z \\cdot u = (${z[0]!})(${u[0]!}) + (${z[1]!})(${u[1]!}) = 0$，且 $\\hat{y} + z = (${y.join(", ")}) = y$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(yhat),
+                "That is $\\hat{y}$, the part along $u$; the question asks for the perpendicular part $z = y - \\hat{y}$.",
+                "这是沿 $u$ 的部分 $\\hat{y}$；题目要的是垂直部分 $z = y - \\hat{y}$。",
+              ),
+              say(
+                vectorLatex(reversed),
+                "That is $\\hat{y} - y$; subtract in the order $y - \\hat{y}$.",
+                "这是 $\\hat{y} - y$；应按 $y - \\hat{y}$ 的顺序相减。",
+              ),
+              say(
+                vectorLatex(minusU),
+                "That subtracts $u$ itself; subtract the projection $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}u$ instead.",
+                "这是减去了 $u$ 本身；应减去投影 $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}u$。",
+              ),
+            ],
+            vectorLatex(z),
           ),
-          answer: z,
-          vector: true,
-          wrong: [
-            [k * u[0]!, k * u[1]!],
-            [-z[0]!, -z[1]!],
-            [y[0]! - u[0]!, y[1]! - u[1]!],
-          ],
-          solution: t(
-            `$\\frac{y \\cdot u}{u \\cdot u} = \\frac{${yu}}{${uu}} = ${k}$, so $\\hat{y} = (${k * u[0]!}, ${k * u[1]!})$ and $z = y - \\hat{y} = (${z.join(", ")})$.`,
-            `$\\frac{y \\cdot u}{u \\cdot u} = \\frac{${yu}}{${uu}} = ${k}$，所以 $\\hat{y} = (${k * u[0]!}, ${k * u[1]!})$，$z = y - \\hat{y} = (${z.join(", ")})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -2512,6 +2780,10 @@ export const componentsOfAVectorWithRespectToAnOrthogonalOrOrthonormalBasis: Top
     "Express a vector as a linear combination of orthogonal basis vectors using Fourier coefficients.",
     "利用傅里叶系数将向量表示为正交基向量的线性组合。",
   ),
+  intro: t(
+    "The vectors $u_1 = (1, 1)$ and $u_2 = (1, -1)$ are orthogonal, so the coordinates of $y = (5, 1)$ need no system of equations: $c_1 = \\frac{y \\cdot u_1}{u_1 \\cdot u_1} = \\frac{6}{2} = 3$ and $c_2 = \\frac{y \\cdot u_2}{u_2 \\cdot u_2} = \\frac{4}{2} = 2$.\n\nCheck: $3(1, 1) + 2(1, -1) = (5, 1)$, which is $y$.\n\nIn this lesson we find coordinates relative to orthogonal and orthonormal bases one dot product at a time, and read lengths straight from orthonormal coordinates.",
+    "向量 $u_1 = (1, 1)$ 与 $u_2 = (1, -1)$ 正交，所以求 $y = (5, 1)$ 的坐标不需要解方程组：$c_1 = \\frac{y \\cdot u_1}{u_1 \\cdot u_1} = \\frac{6}{2} = 3$，$c_2 = \\frac{y \\cdot u_2}{u_2 \\cdot u_2} = \\frac{4}{2} = 2$。\n\n检验：$3(1, 1) + 2(1, -1) = (5, 1)$，正是 $y$。\n\n本课我们逐个用点积求向量关于正交基与标准正交基的坐标，并直接由标准正交坐标读出长度。",
+  ),
   prerequisites: ["projecting-vectors-onto-one-dimensional-subspaces", "orthogonal-sets-in-euclidean-spaces"],
   encompasses: [],
   xp: 14,
@@ -2520,8 +2792,8 @@ export const componentsOfAVectorWithRespectToAnOrthogonalOrOrthonormalBasis: Top
       id: "coordinates-relative-to-orthogonal-basis",
       title: t("Fourier Coefficients with Respect to an Orthogonal Basis", "正交基下的傅里叶坐标分量"),
       explanation: t(
-        "If $\\mathcal{B} = \\{u_1, \\dots, u_p\\}$ is an orthogonal basis, any vector $y$ in the span can be written as $y = c_1 u_1 + \\dots + c_p u_p$, where the coordinates are $c_j = \\frac{y \\cdot u_j}{u_j \\cdot u_j}$. If $\\mathcal{B}$ is orthonormal, $c_j = y \\cdot u_j$.",
-        "若 $\\mathcal{B} = \\{u_1, \\dots, u_p\\}$ 是一组正交基，则其张成空间中的任意向量 $y$ 均可表示为 $y = c_1 u_1 + \\dots + c_p u_p$，其中坐标分量为 $c_j = \\frac{y \\cdot u_j}{u_j \\cdot u_j}$。若 $\\mathcal{B}$ 为标准正交基，则 $c_j = y \\cdot u_j$。",
+        "If $\\mathcal{B} = \\{u_1, \\dots, u_p\\}$ is an orthogonal basis, any vector $y$ in the span can be written as $y = c_1 u_1 + \\dots + c_p u_p$, where the coordinates are $c_j = \\frac{y \\cdot u_j}{u_j \\cdot u_j}$. If $\\mathcal{B}$ is orthonormal, $c_j = y \\cdot u_j$. For example, with $u_1 = (1, 1, 0)$, $u_2 = (1, -1, 0)$ and $u_3 = (0, 0, 1)$, the vector $y = (5, 1, 2)$ has $c_1 = \\frac{6}{2} = 3$, $c_2 = \\frac{4}{2} = 2$ and $c_3 = 2$.\n\n> **Watch out.** Divide each dot product by $u_j \\cdot u_j$; only for an orthonormal basis is that divisor $1$. Keep the signs of the basis entries: $y \\cdot (1, -1, 0) = y_1 - y_2$.",
+        "若 $\\mathcal{B} = \\{u_1, \\dots, u_p\\}$ 是一组正交基，则其张成空间中的任意向量 $y$ 均可表示为 $y = c_1 u_1 + \\dots + c_p u_p$，其中坐标分量为 $c_j = \\frac{y \\cdot u_j}{u_j \\cdot u_j}$。若 $\\mathcal{B}$ 为标准正交基，则 $c_j = y \\cdot u_j$。例如 $u_1 = (1, 1, 0)$，$u_2 = (1, -1, 0)$，$u_3 = (0, 0, 1)$ 时，向量 $y = (5, 1, 2)$ 的坐标为 $c_1 = \\frac{6}{2} = 3$，$c_2 = \\frac{4}{2} = 2$，$c_3 = 2$。\n\n> **注意。** 每个点积都要除以 $u_j \\cdot u_j$；只有标准正交基的这个除数才是 $1$。注意基向量分量的符号：$y \\cdot (1, -1, 0) = y_1 - y_2$。",
       ),
       generate: (rng: Rng): Problem => {
         const u1 = [1, 1, 0];
@@ -2533,32 +2805,76 @@ export const componentsOfAVectorWithRespectToAnOrthogonalOrOrthonormalBasis: Top
         const c3 = rng.int(-4, 4);
 
         const y = [c1 + c2, c1 - c2, c3];
+        const answer = [c1, c2, c3];
+        const undivided = [2 * c1, 2 * c2, c3];
+        const flipped = [c1, -c2, c3];
 
         const prompt = t(
           `Let $\\mathcal{B} = \\{u_1, u_2, u_3\\}$ be an orthogonal basis of $\\mathbb{R}^3$, where:\n$$u_1 = ${colVecLatex(u1)}, \\quad u_2 = ${colVecLatex(u2)}, \\quad u_3 = ${colVecLatex(u3)}$$\nFind the coordinate vector $[y]_{\\mathcal{B}}$ for $y = ${colVecLatex(y)}$. Enter your answer as a vector $\\langle c_1, c_2, c_3 \\rangle$.`,
           `设 $\\mathcal{B} = \\{u_1, u_2, u_3\\}$ 为 $\\mathbb{R}^3$ 的一组正交基，其中：\n$$u_1 = ${colVecLatex(u1)}, \\quad u_2 = ${colVecLatex(u2)}, \\quad u_3 = ${colVecLatex(u3)}$$\n求向量 $y = ${colVecLatex(y)}$ 在基 $\\mathcal{B}$ 下的坐标向量 $[y]_{\\mathcal{B}}$。请以向量 $\\langle c_1, c_2, c_3 \\rangle$ 的形式作答。`,
         );
 
-        const solution = t(
-          `Compute each Fourier coordinate $c_j = \\frac{y \\cdot u_j}{u_j \\cdot u_j}$:\n$$c_1 = \\frac{${y[0]! + y[1]!}}{2} = ${c1}, \\quad c_2 = \\frac{${y[0]! - y[1]!}}{2} = ${c2}, \\quad c_3 = \\frac{${c3}}{1} = ${c3}$$\nThus $[y]_{\\mathcal{B}} = ${colVecLatex([c1, c2, c3])}$.`,
-          `计算各傅里叶坐标分量 $c_j = \\frac{y \\cdot u_j}{u_j \\cdot u_j}$：\n$$c_1 = \\frac{${y[0]! + y[1]!}}{2} = ${c1}, \\quad c_2 = \\frac{${y[0]! - y[1]!}}{2} = ${c2}, \\quad c_3 = \\frac{${c3}}{1} = ${c3}$$\n因此 $[y]_{\\mathcal{B}} = ${colVecLatex([c1, c2, c3])}$。`,
+        const solution = walked(
+          [
+            [
+              ["Dot $y$ with each basis vector", "把 $y$ 与每个基向量做点积"],
+              t("", ""),
+              [
+                `y \\cdot u_1 = ${y[0]!} + (${y[1]!}) = ${2 * c1}, \\quad y \\cdot u_2 = ${y[0]!} - (${y[1]!}) = ${2 * c2}, \\quad y \\cdot u_3 = ${c3}`,
+              ],
+            ],
+            [
+              ["Divide by the squared lengths", "除以长度平方"],
+              t(
+                "Here $u_1 \\cdot u_1 = u_2 \\cdot u_2 = 2$ and $u_3 \\cdot u_3 = 1$.",
+                "这里 $u_1 \\cdot u_1 = u_2 \\cdot u_2 = 2$，$u_3 \\cdot u_3 = 1$。",
+              ),
+              [`c_1 = \\frac{${2 * c1}}{2} = ${c1}, \\quad c_2 = \\frac{${2 * c2}}{2} = ${c2}, \\quad c_3 = \\frac{${c3}}{1} = ${c3}`],
+            ],
+          ],
+          t(
+            `$${c1}u_1 + (${c2})u_2 + (${c3})u_3 = (${c1} + (${c2}), ${c1} - (${c2}), ${c3}) = (${y.join(", ")})$, which is $y$.`,
+            `$${c1}u_1 + (${c2})u_2 + (${c3})u_3 = (${c1} + (${c2}), ${c1} - (${c2}), ${c3}) = (${y.join(", ")})$，正是 $y$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [c1, c2, c3],
-          vector: true,
-          solution,
-          wrong: [y, [c2, c1, c3], [-c1, -c2, -c3], [c1 + 1, c2 - 1, c3]],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt,
+            answer,
+            vector: true,
+            solution,
+            wrong: [y, undivided, flipped],
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(y),
+                "Those are the standard coordinates of $y$; coordinates relative to $\\mathcal{B}$ are the weights on $u_1$, $u_2$, $u_3$.",
+                "这是 $y$ 的标准坐标；关于 $\\mathcal{B}$ 的坐标是 $u_1$、$u_2$、$u_3$ 上的权重。",
+              ),
+              say(
+                vectorLatex(undivided),
+                "Those are the dot products $y \\cdot u_j$; each must be divided by $u_j \\cdot u_j = 2$ for $u_1$ and $u_2$.",
+                "这是点积 $y \\cdot u_j$；对 $u_1$ 与 $u_2$ 还要除以 $u_j \\cdot u_j = 2$。",
+              ),
+              say(
+                vectorLatex(flipped),
+                "The sign of $c_2$ is flipped: $y \\cdot u_2 = y_1 - y_2$, not $y_2 - y_1$.",
+                "$c_2$ 的符号反了：$y \\cdot u_2 = y_1 - y_2$，而不是 $y_2 - y_1$。",
+              ),
+            ],
+            vectorLatex(answer),
+          ),
+        );
       },
     },
     {
       id: "length-from-orthonormal-coordinates",
       title: t("Length from orthonormal coordinates", "由标准正交坐标求长度"),
       explanation: t(
-        "If $\\{u_1, \\dots, u_n\\}$ is an orthonormal basis and $x = c_1u_1 + \\dots + c_nu_n$, then all cross terms vanish and every $\\|u_i\\| = 1$, so\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2.$$\n\nLengths can be read straight from the coordinates, exactly as with the standard basis. This fails for a basis that is only orthogonal: there each $c_i^2$ must be weighted by $\\|u_i\\|^2$.",
-        "若 $\\{u_1, \\dots, u_n\\}$ 是标准正交基且 $x = c_1u_1 + \\dots + c_nu_n$，则所有交叉项为零且每个 $\\|u_i\\| = 1$，所以\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2$$\n\n长度可以直接从坐标读出，与标准基完全一样。对只是正交的基这不成立：那时每个 $c_i^2$ 都要乘以 $\\|u_i\\|^2$。",
+        "If $\\{u_1, \\dots, u_n\\}$ is an orthonormal basis and $x = c_1u_1 + \\dots + c_nu_n$, then all cross terms vanish and every $\\|u_i\\| = 1$, so\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2.$$\n\nLengths can be read straight from the coordinates, exactly as with the standard basis. This fails for a basis that is only orthogonal: there each $c_i^2$ must be weighted by $\\|u_i\\|^2$. For example, $x = 2u_1 - u_2 + 2u_3$ has $\\|x\\|^2 = 4 + 1 + 4 = 9$, so $\\|x\\| = 3$.\n\n> **Watch out.** Square every coefficient before adding, so negative coefficients count positively, and take the square root at the end. The sum of the coefficients is not a length.",
+        "若 $\\{u_1, \\dots, u_n\\}$ 是标准正交基且 $x = c_1u_1 + \\dots + c_nu_n$，则所有交叉项为零且每个 $\\|u_i\\| = 1$，所以\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2$$\n\n长度可以直接从坐标读出，与标准基完全一样。对只是正交的基这不成立：那时每个 $c_i^2$ 都要乘以 $\\|u_i\\|^2$。例如 $x = 2u_1 - u_2 + 2u_3$ 有 $\\|x\\|^2 = 4 + 1 + 4 = 9$，所以 $\\|x\\| = 3$。\n\n> **注意。** 先把每个系数平方再相加，负系数的贡献也是正的；最后要开平方。系数之和不是长度。",
       ),
       generate: (rng: Rng): Problem => {
         const quads: [number[], number][] = [
@@ -2573,16 +2889,41 @@ export const componentsOfAVectorWithRespectToAnOrthogonalOrOrthonormalBasis: Top
         ];
         const [base, n] = rng.pick(quads);
         const c = rng.shuffle(base.map((x) => (rng.int(0, 1) === 0 ? x : -x)));
+        const sum = c.reduce((s, x) => s + x, 0);
+        const absSum = c.reduce((s, x) => s + Math.abs(x), 0);
+        const largest = Math.max(...c.map((x) => Math.abs(x)));
         return numberProblem({
           prompt: t(
             `$\\{u_1, u_2, u_3, u_4\\}$ is an orthonormal basis of $\\mathbb{R}^4$ and $x = ${formatLinEq(c, ["u_1", "u_2", "u_3", "u_4"])}$. Find $\\|x\\|$.`,
             `$\\{u_1, u_2, u_3, u_4\\}$ 是 $\\mathbb{R}^4$ 的标准正交基，$x = ${formatLinEq(c, ["u_1", "u_2", "u_3", "u_4"])}$。求 $\\|x\\|$。`,
           ),
           answer: n,
-          wrong: [n * n, c.reduce((s, x) => s + x, 0), c.reduce((s, x) => s + Math.abs(x), 0)],
-          solution: t(
-            `$\\|x\\|^2 = ${c.map((x) => `${x * x}`).join(" + ")} = ${n * n}$, so $\\|x\\| = ${n}$.`,
-            `$\\|x\\|^2 = ${c.map((x) => `${x * x}`).join(" + ")} = ${n * n}$，所以 $\\|x\\| = ${n}$。`,
+          mistakes: [
+            why(n * n, "That is $\\|x\\|^2$; take the square root to get the length.", "这是 $\\|x\\|^2$；开平方才是长度。"),
+            why(
+              sum,
+              "That adds the coefficients; the length adds their squares and then takes a square root.",
+              "这是把系数相加；长度是把系数平方相加再开平方。",
+            ),
+            why(
+              absSum,
+              "That adds the sizes of the coefficients; the length adds their squares and then takes a square root.",
+              "这是把系数的绝对值相加；长度是把系数平方相加再开平方。",
+            ),
+          ].filter((w, i, all) => w.value !== n && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Add the squares of the coefficients", "把系数的平方相加"],
+                t("The basis is orthonormal, so the cross terms vanish.", "基是标准正交的，所以交叉项为零。"),
+                [`\\|x\\|^2 = ${c.map((x) => `(${x})^2`).join(" + ")} = ${c.map((x) => `${x * x}`).join(" + ")} = ${n * n}`],
+              ],
+              [["Take the square root", "开平方"], t("", ""), [`\\|x\\| = \\sqrt{${n * n}} = ${n}`]],
+            ],
+            t(
+              `The length is at least the largest coefficient size, $${largest}$, and at most the sum of the sizes, $${absSum}$; $${n}$ lies between them.`,
+              `长度不小于系数绝对值中最大的 $${largest}$，也不大于系数绝对值之和 $${absSum}$；$${n}$ 介于两者之间。`,
+            ),
           ),
         });
       },
@@ -2598,6 +2939,10 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesOrthogonalBases: Top
     "Compute the projection of a vector onto a subspace spanned by an orthogonal basis.",
     "计算向量在由正交基张成的子空间上的正交投影。",
   ),
+  intro: t(
+    "Let $W$ be spanned by the orthogonal vectors $u_1 = (1, 1, 0)$ and $u_2 = (0, 0, 1)$, and take $y = (3, 1, 4)$. Each basis vector gets its own coefficient: $\\frac{y \\cdot u_1}{u_1 \\cdot u_1} = \\frac{4}{2} = 2$ and $\\frac{y \\cdot u_2}{u_2 \\cdot u_2} = \\frac{4}{1} = 4$, so $\\hat{y} = 2u_1 + 4u_2 = (2, 2, 4)$.\n\nCheck: $y - \\hat{y} = (1, -1, 0)$ has dot product $1 - 1 = 0$ with $u_1$ and $0$ with $u_2$, so it is orthogonal to $W$, as the leftover of a projection must be.\n\nIn this lesson we project onto subspaces by adding the projections onto the vectors of an orthogonal basis, and use the leftover to find distances.",
+    "设 $W$ 由正交向量 $u_1 = (1, 1, 0)$ 与 $u_2 = (0, 0, 1)$ 张成，取 $y = (3, 1, 4)$。每个基向量都有自己的系数：$\\frac{y \\cdot u_1}{u_1 \\cdot u_1} = \\frac{4}{2} = 2$，$\\frac{y \\cdot u_2}{u_2 \\cdot u_2} = \\frac{4}{1} = 4$，所以 $\\hat{y} = 2u_1 + 4u_2 = (2, 2, 4)$。\n\n检验：$y - \\hat{y} = (1, -1, 0)$ 与 $u_1$ 的点积为 $1 - 1 = 0$，与 $u_2$ 的点积为 $0$，所以它与 $W$ 正交，这正是投影剩余部分应有的性质。\n\n本课我们把在正交基各向量上的投影相加，得到在子空间上的投影，并用剩余部分求距离。",
+  ),
   prerequisites: ["components-of-a-vector-with-respect-to-an-orthogonal-or-orthonormal-basis"],
   encompasses: [],
   xp: 14,
@@ -2606,8 +2951,8 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesOrthogonalBases: Top
       id: "projecting-onto-subspace-orthogonal-basis",
       title: t("Orthogonal Projection onto a Subspace via Orthogonal Basis", "利用正交基求解子空间上的正交投影"),
       explanation: t(
-        "With an orthogonal basis, the projection onto the subspace is simply the sum of the projections onto each basis vector separately. Let $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$ where $\\{u_1, \\dots, u_k\\}$ is an orthogonal basis. The orthogonal projection of $y$ onto $W$ is $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$.",
-        "有了正交基，在子空间上的投影就等于在每个基向量上分别投影后的和。设 $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$，其中 $\\{u_1, \\dots, u_k\\}$ 是一组正交基。向量 $y$ 在 $W$ 上的正交投影为 $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$。",
+        "With an orthogonal basis, the projection onto the subspace is simply the sum of the projections onto each basis vector separately. Let $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$ where $\\{u_1, \\dots, u_k\\}$ is an orthogonal basis. The orthogonal projection of $y$ onto $W$ is $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$. For example, with $u_1 = (1, 1, 0, 0)$ and $u_2 = (0, 0, 1, 1)$, the vector $y = (3, 1, 0, 4)$ has coefficients $\\frac{4}{2} = 2$ and $\\frac{4}{2} = 2$, so $\\hat{y} = (2, 2, 2, 2)$.\n\n> **Watch out.** Every basis vector contributes a term, and each dot product is divided by its own $u_i \\cdot u_i$. The sum formula needs an orthogonal basis; for any other basis use the normal equations.",
+        "有了正交基，在子空间上的投影就等于在每个基向量上分别投影后的和。设 $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$，其中 $\\{u_1, \\dots, u_k\\}$ 是一组正交基。向量 $y$ 在 $W$ 上的正交投影为 $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$。例如 $u_1 = (1, 1, 0, 0)$，$u_2 = (0, 0, 1, 1)$ 时，向量 $y = (3, 1, 0, 4)$ 的系数为 $\\frac{4}{2} = 2$ 与 $\\frac{4}{2} = 2$，所以 $\\hat{y} = (2, 2, 2, 2)$。\n\n> **注意。** 每个基向量都贡献一项，每个点积都要除以它自己的 $u_i \\cdot u_i$。求和公式要求基是正交的；对其他基要用正规方程。",
       ),
       generate: (rng: Rng): Problem => {
         const u1 = [1, 1, 0, 0];
@@ -2621,32 +2966,77 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesOrthogonalBases: Top
         const y = [k1 + z1, k1 - z1, k2 + z2, k2 - z2];
         const proj = [k1, k1, k2, k2];
         const z = [z1, -z1, z2, -z2];
+        const firstOnly = [k1, k1, 0, 0];
+        const secondOnly = [0, 0, k2, k2];
+        const undivided = [2 * k1, 2 * k1, 2 * k2, 2 * k2];
 
         const prompt = t(
           `Let $W = \\operatorname{span}\\{u_1, u_2\\} \\subset \\mathbb{R}^4$, where $u_1 = ${colVecLatex(u1)}$ and $u_2 = ${colVecLatex(u2)}$.\nFind the orthogonal projection $\\hat{y} = \\operatorname{proj}_W(y)$ of $y = ${colVecLatex(y)}$ onto $W$. Enter your answer as a vector $\\langle v_1, v_2, v_3, v_4 \\rangle$.`,
           `设 $W = \\operatorname{span}\\{u_1, u_2\\} \\subset \\mathbb{R}^4$，其中 $u_1 = ${colVecLatex(u1)}$ 且 $u_2 = ${colVecLatex(u2)}$。\n求向量 $y = ${colVecLatex(y)}$ 在子空间 $W$ 上的正交投影 $\\hat{y} = \\operatorname{proj}_W(y)$。请以向量 $\\langle v_1, v_2, v_3, v_4 \\rangle$ 的形式作答。`,
         );
 
-        const solution = t(
-          `Because $u_1 \\cdot u_2 = 0$, the orthogonal projection is the sum of projections onto $u_1$ and $u_2$:\n$$\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1} u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2} u_2 = \\frac{${2 * k1}}{2} u_1 + \\frac{${2 * k2}}{2} u_2 = ${colVecLatex(proj)}$$`,
-          `因 $u_1 \\cdot u_2 = 0$，正交投影等于在 $u_1$ 与 $u_2$ 上的分量投影之和：\n$$\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1} u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2} u_2 = \\frac{${2 * k1}}{2} u_1 + \\frac{${2 * k2}}{2} u_2 = ${colVecLatex(proj)}$$`,
+        const solution = walked(
+          [
+            [
+              ["Find each coefficient", "求每个系数"],
+              t(
+                "Because $u_1 \\cdot u_2 = 0$, each basis vector gets its own coefficient.",
+                "因为 $u_1 \\cdot u_2 = 0$，每个基向量各有自己的系数。",
+              ),
+              [
+                `\\frac{y \\cdot u_1}{u_1 \\cdot u_1} = \\frac{${y[0]!} + (${y[1]!})}{2} = ${k1}, \\quad \\frac{y \\cdot u_2}{u_2 \\cdot u_2} = \\frac{${y[2]!} + (${y[3]!})}{2} = ${k2}`,
+              ],
+            ],
+            [["Add the two projections", "把两个投影相加"], t("", ""), [`\\hat{y} = ${k1}u_1 + (${k2})u_2 = ${colVecLatex(proj)}`]],
+          ],
+          t(
+            `The leftover $y - \\hat{y} = (${z.join(", ")})$ is orthogonal to $W$: its dot product with $u_1$ is $${z1} + (${-z1}) = 0$ and with $u_2$ is $${z2} + (${-z2}) = 0$.`,
+            `剩余部分 $y - \\hat{y} = (${z.join(", ")})$ 与 $W$ 正交：它与 $u_1$ 的点积为 $${z1} + (${-z1}) = 0$，与 $u_2$ 的点积为 $${z2} + (${-z2}) = 0$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: proj,
-          vector: true,
-          solution,
-          wrong: [z, [k1, k1, 0, 0], [0, 0, k2, k2], [-k1, -k1, -k2, -k2]],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt,
+            answer: proj,
+            vector: true,
+            solution,
+            wrong: [z, firstOnly, secondOnly, undivided],
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(z),
+                "That is the leftover $y - \\hat{y}$, the part orthogonal to $W$.",
+                "这是剩余部分 $y - \\hat{y}$，即与 $W$ 正交的部分。",
+              ),
+              say(
+                vectorLatex(firstOnly),
+                "Only the projection onto $u_1$ was kept; add the projection onto $u_2$ as well.",
+                "只保留了在 $u_1$ 上的投影；还要加上在 $u_2$ 上的投影。",
+              ),
+              say(
+                vectorLatex(secondOnly),
+                "Only the projection onto $u_2$ was kept; add the projection onto $u_1$ as well.",
+                "只保留了在 $u_2$ 上的投影；还要加上在 $u_1$ 上的投影。",
+              ),
+              say(
+                vectorLatex(undivided),
+                "The dot products were not divided by $u_i \\cdot u_i = 2$.",
+                "点积没有除以 $u_i \\cdot u_i = 2$。",
+              ),
+            ],
+            vectorLatex(proj),
+          ),
+        );
       },
     },
     {
       id: "distance-to-a-plane-with-an-orthogonal-basis",
       title: t("Distance from a point to a plane through the origin", "点到过原点平面的距离"),
       explanation: t(
-        "With an orthogonal basis $\\{u_1, u_2\\}$ of a plane $W$, the projection is $\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1}u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2}u_2$. The distance from $y$ to $W$ is the length of what is left over, $\\|y - \\hat{y}\\|$, because $\\hat{y}$ is the closest point of $W$ to $y$ and $y - \\hat{y}$ is orthogonal to $W$.",
-        "用平面 $W$ 的正交基 $\\{u_1, u_2\\}$，投影为 $\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1}u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2}u_2$。$y$ 到 $W$ 的距离是剩余部分的长度 $\\|y - \\hat{y}\\|$，因为 $\\hat{y}$ 是 $W$ 中离 $y$ 最近的点，而 $y - \\hat{y}$ 与 $W$ 正交。",
+        "With an orthogonal basis $\\{u_1, u_2\\}$ of a plane $W$, the projection is $\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1}u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2}u_2$. The distance from $y$ to $W$ is the length of what is left over, $\\|y - \\hat{y}\\|$, because $\\hat{y}$ is the closest point of $W$ to $y$ and $y - \\hat{y}$ is orthogonal to $W$. For example, for the plane spanned by $u_1 = (1, 0, 0)$ and $u_2 = (0, 1, 0)$, the point $y = (2, 3, 4)$ has $\\hat{y} = (2, 3, 0)$, and its distance to the plane is $\\|(0, 0, 4)\\| = 4$.\n\n> **Watch out.** The distance is the length of $y - \\hat{y}$, not of $\\hat{y}$. Take the square root of the sum of squares at the end.",
+        "用平面 $W$ 的正交基 $\\{u_1, u_2\\}$，投影为 $\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1}u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2}u_2$。$y$ 到 $W$ 的距离是剩余部分的长度 $\\|y - \\hat{y}\\|$，因为 $\\hat{y}$ 是 $W$ 中离 $y$ 最近的点，而 $y - \\hat{y}$ 与 $W$ 正交。例如对 $u_1 = (1, 0, 0)$ 与 $u_2 = (0, 1, 0)$ 张成的平面，点 $y = (2, 3, 4)$ 的投影为 $\\hat{y} = (2, 3, 0)$，它到平面的距离是 $\\|(0, 0, 4)\\| = 4$。\n\n> **注意。** 距离是 $y - \\hat{y}$ 的长度，不是 $\\hat{y}$ 的长度。最后要对平方和开平方。",
       ),
       generate: (rng: Rng): Problem => {
         const frames = [
@@ -2660,16 +3050,53 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesOrthogonalBases: Top
         const y = [0, 1, 2].map((i) => a * f.u1[i]! + b * f.u2[i]! + k * f.n[i]!);
         const ans = Math.abs(k) * f.len;
         const yhat = [0, 1, 2].map((i) => a * f.u1[i]! + b * f.u2[i]!);
+        const left = f.n.map((x) => x * k);
+        const dotWith = (v: readonly number[], w: readonly number[]) => v.reduce((s, x, i) => s + x * w[i]!, 0);
+        const uu1 = dotWith(f.u1, f.u1);
+        const uu2 = dotWith(f.u2, f.u2);
         return numberProblem({
           prompt: t(
             `$u_1 = (${f.u1.join(", ")})$ and $u_2 = (${f.u2.join(", ")})$ are an orthogonal basis of a plane $W$. Find the distance from $y = (${y.join(", ")})$ to $W$.`,
             `$u_1 = (${f.u1.join(", ")})$ 与 $u_2 = (${f.u2.join(", ")})$ 是平面 $W$ 的正交基。求 $y = (${y.join(", ")})$ 到 $W$ 的距离。`,
           ),
           answer: ans,
-          wrong: [ans * ans, Math.abs(k), f.len],
-          solution: t(
-            `The coefficients are $${a}$ and $${b}$, so $\\hat{y} = (${yhat.join(", ")})$ and $y - \\hat{y} = (${f.n.map((x) => x * k).join(", ")})$, whose length is $${ans}$.`,
-            `系数为 $${a}$ 与 $${b}$，所以 $\\hat{y} = (${yhat.join(", ")})$，$y - \\hat{y} = (${f.n.map((x) => x * k).join(", ")})$，其长度为 $${ans}$。`,
+          mistakes: [
+            why(ans * ans, "That is the squared distance; take the square root.", "这是距离的平方；还要开平方。"),
+            why(
+              Math.abs(k),
+              `That is the size of the multiple of $(${f.n.join(", ")})$ left over; the leftover vector has length $${f.len}$ times that.`,
+              `这只是剩余部分中 $(${f.n.join(", ")})$ 的倍数的大小；剩余向量的长度是它的 $${f.len}$ 倍。`,
+            ),
+            why(
+              f.len,
+              "That is the length of a unit of the leftover direction; the leftover $y - \\hat{y}$ is a multiple of it.",
+              "这只是剩余方向上一个单位向量的长度；剩余部分 $y - \\hat{y}$ 是它的倍数。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the coefficients", "求系数"],
+                t("", ""),
+                [
+                  `\\frac{y \\cdot u_1}{u_1 \\cdot u_1} = \\frac{${dotWith(y, f.u1)}}{${uu1}} = ${a}, \\quad \\frac{y \\cdot u_2}{u_2 \\cdot u_2} = \\frac{${dotWith(y, f.u2)}}{${uu2}} = ${b}`,
+                ],
+              ],
+              [
+                ["Project and subtract", "投影并相减"],
+                t("", ""),
+                [`\\hat{y} = (${yhat.join(", ")}), \\quad y - \\hat{y} = (${left.join(", ")})`],
+              ],
+              [
+                ["Take the length", "求长度"],
+                t("", ""),
+                [`\\|y - \\hat{y}\\| = \\sqrt{${left.map((x) => `(${x})^2`).join(" + ")}} = \\sqrt{${ans * ans}} = ${ans}`],
+              ],
+            ],
+            t(
+              `The leftover is orthogonal to the plane: $(${left.join(", ")}) \\cdot u_1 = ${dotWith(left, f.u1)}$ and $(${left.join(", ")}) \\cdot u_2 = ${dotWith(left, f.u2)}$.`,
+              `剩余部分与平面正交：$(${left.join(", ")}) \\cdot u_1 = ${dotWith(left, f.u1)}$，$(${left.join(", ")}) \\cdot u_2 = ${dotWith(left, f.u2)}$。`,
+            ),
           ),
         });
       },
@@ -2685,6 +3112,10 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBases: Topi
     "Project vectors onto subspaces using the normal equations $A^T A \\hat{\\mathbf{x}} = A^T \\mathbf{y}$ and the projection matrix $P = A(A^T A)^{-1} A^T$.",
     "利用正规方程 $A^T A \\hat{\\mathbf{x}} = A^T \\mathbf{y}$ 及投影矩阵 $P = A(A^T A)^{-1} A^T$ 将向量投影到子空间。",
   ),
+  intro: t(
+    "The columns $(1, 0, 1)$ and $(0, 1, 1)$ of $A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 1 \\end{pmatrix}$ are not orthogonal, so to project $y = (1, 2, 0)$ onto their span we solve the normal equations. Here $A^TA = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $A^Ty = (1, 2)$; the system $2\\hat{x}_1 + \\hat{x}_2 = 1$, $\\hat{x}_1 + 2\\hat{x}_2 = 2$ gives $\\hat{x} = (0, 1)$, so the projection is $A\\hat{x} = (0, 1, 1)$.\n\nCheck: the error $y - A\\hat{x} = (1, 1, -1)$ has dot product $1 + 0 - 1 = 0$ with the first column and $0 + 1 - 1 = 0$ with the second, so it is orthogonal to the column space.\n\nIn this lesson we project onto a column space with any basis by solving $A^TA\\hat{x} = A^Ty$ and multiplying by $A$.",
+    "矩阵 $A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 1 \\end{pmatrix}$ 的两列 $(1, 0, 1)$ 与 $(0, 1, 1)$ 不正交，所以要把 $y = (1, 2, 0)$ 投影到它们张成的空间上，就要解正规方程。这里 $A^TA = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$，$A^Ty = (1, 2)$；方程组 $2\\hat{x}_1 + \\hat{x}_2 = 1$，$\\hat{x}_1 + 2\\hat{x}_2 = 2$ 的解为 $\\hat{x} = (0, 1)$，所以投影是 $A\\hat{x} = (0, 1, 1)$。\n\n检验：误差 $y - A\\hat{x} = (1, 1, -1)$ 与第一列的点积为 $1 + 0 - 1 = 0$，与第二列的点积为 $0 + 1 - 1 = 0$，所以它与列空间正交。\n\n本课我们对任意基解 $A^TA\\hat{x} = A^Ty$，再乘以 $A$，求在列空间上的投影。",
+  ),
   prerequisites: ["projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases"],
   encompasses: [],
   xp: 14,
@@ -2693,8 +3124,8 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBases: Topi
       id: "least-squares-normal-equations-solution",
       title: t("Normal Equations for Non-Orthogonal Bases", "非正交基下的正规方程求解"),
       explanation: t(
-        "When the columns of $A$ form an arbitrary (not necessarily orthogonal) basis of $W = \\operatorname{Col}(A)$, the projection $\\hat{y} = A \\hat{x}$ is found by solving the normal equations $A^T A \\hat{x} = A^T y$.",
-        "当矩阵 $A$ 的各列构成子空间 $W = \\operatorname{Col}(A)$ 的任意基（不必正交）时，投影 $\\hat{y} = A \\hat{x}$ 可通过求解正规方程 $A^T A \\hat{x} = A^T y$ 确定。",
+        "When the columns of $A$ form an arbitrary (not necessarily orthogonal) basis of $W = \\operatorname{Col}(A)$, the projection $\\hat{y} = A \\hat{x}$ is found by solving the normal equations $A^T A \\hat{x} = A^T y$. For example, with columns $(1, 0, 1)$ and $(0, 1, 1)$ and $y = (1, 2, 0)$, $A^TA = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $A^Ty = (1, 2)$, so $\\hat{x} = (0, 1)$.\n\n> **Watch out.** When the columns are not orthogonal, $A^TA$ has nonzero entries off the diagonal, so the entries of $A^Ty$ cannot be divided separately: solve the whole system. The answer $\\hat{x}$ holds the coefficients of the columns, not the projection itself.",
+        "当矩阵 $A$ 的各列构成子空间 $W = \\operatorname{Col}(A)$ 的任意基（不必正交）时，投影 $\\hat{y} = A \\hat{x}$ 可通过求解正规方程 $A^T A \\hat{x} = A^T y$ 确定。例如两列为 $(1, 0, 1)$ 与 $(0, 1, 1)$，$y = (1, 2, 0)$ 时，$A^TA = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$，$A^Ty = (1, 2)$，所以 $\\hat{x} = (0, 1)$。\n\n> **注意。** 列不正交时 $A^TA$ 的非对角元素不为零，不能把 $A^Ty$ 的各元素分别相除：要解整个方程组。答案 $\\hat{x}$ 是各列的系数，不是投影本身。",
       ),
       generate: (rng: Rng): Problem => {
         const A = [
@@ -2716,31 +3147,72 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBases: Topi
 
         const aty1 = y[0]! + y[2]!;
         const aty2 = y[1]! + y[2]!;
-        const solution = t(
-          `Compute $A^T A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $A^T y = \\begin{pmatrix} ${aty1} \\\\ ${aty2} \\end{pmatrix}$.\nSolving the normal equations $\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix} \\hat{x} = \\begin{pmatrix} ${aty1} \\\\ ${aty2} \\end{pmatrix}$ gives $\\hat{x} = ${colVecLatex([x1, x2])}$.`,
-          `计算 $A^T A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ 以及 $A^T y = \\begin{pmatrix} ${aty1} \\\\ ${aty2} \\end{pmatrix}$。\n求解正规方程 $\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix} \\hat{x} = \\begin{pmatrix} ${aty1} \\\\ ${aty2} \\end{pmatrix}$ 得 $\\hat{x} = ${colVecLatex([x1, x2])}$。`,
+        const answer = [x1, x2];
+        const halved = [Q.of(aty1, 2), Q.of(aty2, 2)];
+        const solution = walked(
+          [
+            [
+              ["Form the normal equations", "写出正规方程"],
+              t("", ""),
+              [
+                `A^TA = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}, \\quad A^Ty = ${colVecLatex([`${y[0]!} + (${y[2]!})`, `${y[1]!} + (${y[2]!})`])} = ${colVecLatex([aty1, aty2])}`,
+              ],
+            ],
+            [
+              ["Solve the $2 \\times 2$ system", "解 $2 \\times 2$ 方程组"],
+              t(
+                "Twice the first equation minus the second removes $\\hat{x}_2$, and twice the second minus the first removes $\\hat{x}_1$.",
+                "第一个方程的两倍减去第二个方程消去 $\\hat{x}_2$，第二个方程的两倍减去第一个方程消去 $\\hat{x}_1$。",
+              ),
+              [
+                `3\\hat{x}_1 = 2(${aty1}) - (${aty2}) = ${3 * x1}, \\quad \\hat{x}_1 = ${x1}`,
+                `3\\hat{x}_2 = 2(${aty2}) - (${aty1}) = ${3 * x2}, \\quad \\hat{x}_2 = ${x2}`,
+              ],
+            ],
+          ],
+          t(
+            `The error $y - A\\hat{x} = (${zScale}, ${zScale}, ${-zScale})$ is orthogonal to both columns: $${zScale} + (${-zScale}) = 0$ each time.`,
+            `误差 $y - A\\hat{x} = (${zScale}, ${zScale}, ${-zScale})$ 与两列都正交：每次都是 $${zScale} + (${-zScale}) = 0$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [x1, x2],
-          vector: true,
-          solution,
-          wrong: [
-            [x2, x1],
-            [-x1, -x2],
-            [x1 + 1, x2 - 1],
-            [y[0]!, y[1]!],
-          ],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt,
+            answer,
+            vector: true,
+            solution,
+            wrong: [[aty1, aty2], halved, [y[0]!, y[1]!]],
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([aty1, aty2]),
+                "That is $A^Ty$, the right side; the system $A^TA\\hat{x} = A^Ty$ still has to be solved.",
+                "这是右边的 $A^Ty$；还要解方程组 $A^TA\\hat{x} = A^Ty$。",
+              ),
+              say(
+                vectorLatex(halved),
+                "That divides each entry of $A^Ty$ by $2$, ignoring the off-diagonal $1$s of $A^TA$; the columns are not orthogonal.",
+                "这是把 $A^Ty$ 的每个元素除以 $2$，忽略了 $A^TA$ 中非对角的 $1$；两列并不正交。",
+              ),
+              say(
+                vectorLatex([y[0]!, y[1]!]),
+                "That reads off the first two entries of $y$, which ignores the third row of $A$.",
+                "这是直接读出 $y$ 的前两个分量，忽略了 $A$ 的第三行。",
+              ),
+            ],
+            vectorLatex(answer),
+          ),
+        );
       },
     },
     {
       id: "projection-onto-a-column-space",
       title: t("The projection onto a column space", "向列空间的投影"),
       explanation: t(
-        "When the columns of $A$ are independent but not orthogonal, the projection of $b$ onto $\\operatorname{Col}(A)$ is $\\hat{b} = A\\hat{x}$, where $\\hat{x}$ solves the normal equations $A^TA\\hat{x} = A^Tb$. Solve the small square system first, then multiply by $A$. The error $b - \\hat{b}$ is orthogonal to every column of $A$.",
-        "当 $A$ 的列线性无关但不正交时，$b$ 在 $\\operatorname{Col}(A)$ 上的投影为 $\\hat{b} = A\\hat{x}$，其中 $\\hat{x}$ 满足法方程 $A^TA\\hat{x} = A^Tb$。先解这个小的方阵方程组，再乘以 $A$。误差 $b - \\hat{b}$ 与 $A$ 的每一列都正交。",
+        "When the columns of $A$ are independent but not orthogonal, the projection of $b$ onto $\\operatorname{Col}(A)$ is $\\hat{b} = A\\hat{x}$, where $\\hat{x}$ solves the normal equations $A^TA\\hat{x} = A^Tb$. Solve the small square system first, then multiply by $A$. The error $b - \\hat{b}$ is orthogonal to every column of $A$. For example, with columns $(1, 0, 0)$ and $(1, 1, 0)$ and $b = (2, 3, 4)$, $A^TA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $A^Tb = (2, 5)$ give $\\hat{x} = (-1, 3)$, so $\\hat{b} = -1(1, 0, 0) + 3(1, 1, 0) = (2, 3, 0)$.\n\n> **Watch out.** $\\hat{x}$ only lists the weights on the columns; the projection is $A\\hat{x}$, a vector in the same space as $b$. The answer must lie in the column space, so $b$ itself is not the projection unless its error is zero.",
+        "当 $A$ 的列线性无关但不正交时，$b$ 在 $\\operatorname{Col}(A)$ 上的投影为 $\\hat{b} = A\\hat{x}$，其中 $\\hat{x}$ 满足法方程 $A^TA\\hat{x} = A^Tb$。先解这个小的方阵方程组，再乘以 $A$。误差 $b - \\hat{b}$ 与 $A$ 的每一列都正交。例如两列为 $(1, 0, 0)$ 与 $(1, 1, 0)$，$b = (2, 3, 4)$ 时，$A^TA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$，$A^Tb = (2, 5)$，得 $\\hat{x} = (-1, 3)$，所以 $\\hat{b} = -1(1, 0, 0) + 3(1, 1, 0) = (2, 3, 0)$。\n\n> **注意。** $\\hat{x}$ 只列出各列的权重；投影是 $A\\hat{x}$，与 $b$ 在同一个空间中。答案必须在列空间中，所以除非误差为零，$b$ 本身不是投影。",
       ),
       generate: (rng: Rng): Problem => {
         const c1 = [1, rng.int(-2, 2), rng.int(-2, 2)];
@@ -2763,20 +3235,63 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBases: Topi
         ];
         const Atb = [c1.reduce((s, x, i) => s + x * b[i]!, 0), c2.reduce((s, x, i) => s + x * b[i]!, 0)];
         const A = [0, 1, 2].map((i) => [c1[i]!, c2[i]!]);
-        return pointProblem({
-          prompt: t(
-            `Find the projection of $b = ${colVecLatex(b)}$ onto the column space of $A = ${matLatex(A)}$.`,
-            `求 $b = ${colVecLatex(b)}$ 在 $A = ${matLatex(A)}$ 的列空间上的投影。`,
+        const err = n.map((x) => k * x);
+        const padded = [xh[0]!, xh[1]!, 0];
+        const dotWith = (v: readonly number[], w: readonly number[]) => v.reduce((s, x, i) => s + x * w[i]!, 0);
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `Find the projection of $b = ${colVecLatex(b)}$ onto the column space of $A = ${matLatex(A)}$.`,
+              `求 $b = ${colVecLatex(b)}$ 在 $A = ${matLatex(A)}$ 的列空间上的投影。`,
+            ),
+            answer: p,
+            vector: true,
+            vars: ["x", "y", "z"],
+            wrong: [b, err, padded],
+            solution: walked(
+              [
+                [["Form the normal equations", "写出正规方程"], t("", ""), [`A^TA = ${matLatex(AtA)}, \\quad A^Tb = ${colVecLatex(Atb)}`]],
+                [
+                  ["Solve for $\\hat{x}$", "解出 $\\hat{x}$"],
+                  t(
+                    `The system $${formatLinEq(AtA[0]!, ["\\hat{x}_1", "\\hat{x}_2"])} = ${Atb[0]!}$, $${formatLinEq(AtA[1]!, ["\\hat{x}_1", "\\hat{x}_2"])} = ${Atb[1]!}$ has the solution:`,
+                    `方程组 $${formatLinEq(AtA[0]!, ["\\hat{x}_1", "\\hat{x}_2"])} = ${Atb[0]!}$，$${formatLinEq(AtA[1]!, ["\\hat{x}_1", "\\hat{x}_2"])} = ${Atb[1]!}$ 的解为：`,
+                  ),
+                  [`\\hat{x} = ${colVecLatex(xh)}`],
+                ],
+                [
+                  ["Multiply by $A$", "乘以 $A$"],
+                  t("", ""),
+                  [`A\\hat{x} = ${xh[0]!}${colVecLatex(c1)} + (${xh[1]!})${colVecLatex(c2)} = ${colVecLatex(p)}`],
+                ],
+              ],
+              t(
+                `The error $b - A\\hat{x} = (${err.join(", ")})$ is orthogonal to the columns: its dot products with them are $${dotWith(err, c1)}$ and $${dotWith(err, c2)}$.`,
+                `误差 $b - A\\hat{x} = (${err.join(", ")})$ 与各列正交：它与两列的点积为 $${dotWith(err, c1)}$ 与 $${dotWith(err, c2)}$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(b),
+                "That is $b$ itself; $b$ is not in the column space, so its projection differs from it.",
+                "这就是 $b$ 本身；$b$ 不在列空间中，所以它的投影与它不同。",
+              ),
+              say(
+                vectorLatex(err),
+                "That is the error $b - A\\hat{x}$, the part orthogonal to the column space.",
+                "这是误差 $b - A\\hat{x}$，即与列空间正交的部分。",
+              ),
+              say(
+                vectorLatex(padded),
+                "Those are the weights $\\hat{x}$; multiply by $A$ to get the projection.",
+                "这是权重 $\\hat{x}$；还要乘以 $A$ 才是投影。",
+              ),
+            ],
+            vectorLatex(p),
           ),
-          answer: p,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [b, [k * n[0]!, k * n[1]!, k * n[2]!], [xh[0]!, xh[1]!, 0]],
-          solution: t(
-            `$A^TA = ${matLatex(AtA)}$ and $A^Tb = ${colVecLatex(Atb)}$, so $\\hat{x} = ${colVecLatex(xh)}$ and $A\\hat{x} = ${colVecLatex(p)}$.`,
-            `$A^TA = ${matLatex(AtA)}$，$A^Tb = ${colVecLatex(Atb)}$，所以 $\\hat{x} = ${colVecLatex(xh)}$，$A\\hat{x} = ${colVecLatex(p)}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -2793,6 +3308,10 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
     "Apply orthogonal projections to find the shortest distance from a point to a subspace (best approximation theorem).",
     "应用正交投影求解点到子空间的最短距离（最佳逼近定理）。",
   ),
+  intro: t(
+    "The plane $W$ given by $x_1 + 2x_2 + 2x_3 = 0$ has normal $n = (1, 2, 2)$ with $\\|n\\| = 3$. For $y = (3, 0, 3)$, $y \\cdot n = 3 + 0 + 6 = 9$, so the part of $y$ along $n$ is $\\frac{9}{9}n = (1, 2, 2)$, the closest point of $W$ is $\\hat{y} = (2, -2, 1)$, and the distance is $\\frac{|y \\cdot n|}{\\|n\\|} = \\frac{9}{3} = 3$.\n\nCheck: $\\hat{y}$ lies in $W$, since $2 - 4 + 2 = 0$, and $\\|y - \\hat{y}\\| = \\|(1, 2, 2)\\| = 3$.\n\nIn this lesson we use projections to find the shortest distance from a point to a subspace and the least-squares line through the origin.",
+    "由 $x_1 + 2x_2 + 2x_3 = 0$ 给出的平面 $W$ 的法向量为 $n = (1, 2, 2)$，$\\|n\\| = 3$。对 $y = (3, 0, 3)$，$y \\cdot n = 3 + 0 + 6 = 9$，所以 $y$ 沿 $n$ 的部分是 $\\frac{9}{9}n = (1, 2, 2)$，$W$ 中最近的点是 $\\hat{y} = (2, -2, 1)$，距离为 $\\frac{|y \\cdot n|}{\\|n\\|} = \\frac{9}{3} = 3$。\n\n检验：$\\hat{y}$ 在 $W$ 中，因为 $2 - 4 + 2 = 0$，并且 $\\|y - \\hat{y}\\| = \\|(1, 2, 2)\\| = 3$。\n\n本课我们用投影求点到子空间的最短距离，以及过原点的最小二乘直线。",
+  ),
   prerequisites: ["projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases"],
   encompasses: [],
   xp: 14,
@@ -2801,8 +3320,8 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
       id: "shortest-distance-to-subspace",
       title: t("Shortest Distance from a Vector to a Subspace", "向量到子空间的最短距离"),
       explanation: t(
-        "By the Best Approximation Theorem, the distance from a vector $y$ to a subspace $W$ is the distance to its orthogonal projection $\\hat{y} = \\operatorname{proj}_W(y)$, given by $|y - \\hat{y}|$.",
-        "由最佳逼近定理，向量 $y$ 到子空间 $W$ 的最短距离等于它到其正交投影 $\\hat{y} = \\operatorname{proj}_W(y)$ 的距离，即 $|y - \\hat{y}|$。",
+        "By the Best Approximation Theorem, the distance from a vector $y$ to a subspace $W$ is the distance to its orthogonal projection $\\hat{y} = \\operatorname{proj}_W(y)$, given by $\\|y - \\hat{y}\\|$. For a plane through the origin with normal $n$, $y - \\hat{y}$ is the projection of $y$ onto $n$, so the distance is $\\frac{|y \\cdot n|}{\\|n\\|}$. For example, the plane $x_1 + 2x_2 + 2x_3 = 0$ and $y = (3, 0, 3)$ give $\\frac{9}{3} = 3$.\n\n> **Watch out.** Divide $|y \\cdot n|$ by $\\|n\\|$, not by $\\|n\\|^2$: dividing by $\\|n\\|^2$ gives the coefficient of $n$ in the projection, not a length. A distance is never negative.",
+        "由最佳逼近定理，向量 $y$ 到子空间 $W$ 的最短距离等于它到其正交投影 $\\hat{y} = \\operatorname{proj}_W(y)$ 的距离，即 $\\|y - \\hat{y}\\|$。对法向量为 $n$ 的过原点平面，$y - \\hat{y}$ 是 $y$ 在 $n$ 上的投影，所以距离为 $\\frac{|y \\cdot n|}{\\|n\\|}$。例如平面 $x_1 + 2x_2 + 2x_3 = 0$ 与 $y = (3, 0, 3)$ 给出 $\\frac{9}{3} = 3$。\n\n> **注意。** 要用 $|y \\cdot n|$ 除以 $\\|n\\|$，而不是 $\\|n\\|^2$：除以 $\\|n\\|^2$ 得到的是投影中 $n$ 的系数，不是长度。距离永远不是负数。",
       ),
       generate: (rng: Rng): Problem => {
         const normals = [
@@ -2828,6 +3347,7 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
         // A part inside the plane keeps y off the normal line.
         const inside = rng.pick([-1, 1, 2]);
         const y = [sign * multiple * n[0]! + inside * n[1]!, sign * multiple * n[1]! - inside * n[0]!, sign * multiple * n[2]!];
+        const yhat = y.map((x, i) => x - sign * multiple * n[i]!);
 
         const eqStr = `${formatLinEq(n, ["x_1", "x_2", "x_3"])} = 0`;
         const prompt = t(
@@ -2835,16 +3355,54 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
           `求点 $y = ${colVecLatex(y)}$ 到子空间 $W = \\{x \\in \\mathbb{R}^3 : ${eqStr}\\}$ 的最短距离。`,
         );
 
-        const solution = t(
-          `The distance from $y$ to the plane $W$ with normal vector $n = ${colVecLatex(n)}$ is given by the length of the projection onto the normal vector line:\n$$d = \\frac{|y \\cdot n|}{\\|n\\|} = \\frac{|${targetDot}|}{${norm}} = ${dist}$$`,
-          `点 $y$ 到以 $n = ${colVecLatex(n)}$ 为法向量的平面 $W$ 的最短距离为在法向量上的投影长度：\n$$d = \\frac{|y \\cdot n|}{\\|n\\|} = \\frac{|${targetDot}|}{${norm}} = ${dist}$$`,
+        const solution = walked(
+          [
+            [
+              ["Read off a normal vector", "读出法向量"],
+              t("The coefficients of the equation give a normal to the plane.", "方程的系数给出平面的法向量。"),
+              [`n = ${colVecLatex(n)}, \\quad \\|n\\| = \\sqrt{${n.map((x) => `${x * x}`).join(" + ")}} = ${norm}`],
+            ],
+            [
+              ["Dot $y$ with $n$", "把 $y$ 与 $n$ 做点积"],
+              t("", ""),
+              [`y \\cdot n = ${signedSum(y.map((x, i) => `(${x})(${n[i]!})`))} = ${targetDot}`],
+            ],
+            [
+              ["Divide by the length of $n$", "除以 $n$ 的长度"],
+              t(
+                "The part of $y$ along $n$ is $y - \\hat{y}$, and its length is the distance.",
+                "$y$ 沿 $n$ 的部分就是 $y - \\hat{y}$，它的长度就是距离。",
+              ),
+              [`d = \\frac{|y \\cdot n|}{\\|n\\|} = \\frac{${Math.abs(targetDot)}}{${norm}} = ${dist}`],
+            ],
+          ],
+          t(
+            `The closest point $\\hat{y} = y - \\frac{${targetDot}}{${norm * norm}}n = (${yhat.join(", ")})$ lies in $W$: $${signedSum(yhat.map((x, i) => `(${n[i]!})(${x})`))} = 0$.`,
+            `最近点 $\\hat{y} = y - \\frac{${targetDot}}{${norm * norm}}n = (${yhat.join(", ")})$ 在 $W$ 中：$${signedSum(yhat.map((x, i) => `(${n[i]!})(${x})`))} = 0$。`,
+          ),
         );
 
         return numberProblem({
           prompt,
           answer: dist,
           solution,
-          wrong: [Math.abs(targetDot), multiple, dist + 1, dist * dist],
+          mistakes: [
+            why(
+              Math.abs(targetDot),
+              "That is $|y \\cdot n|$; it still has to be divided by $\\|n\\|$.",
+              "这是 $|y \\cdot n|$；还要除以 $\\|n\\|$。",
+            ),
+            why(
+              multiple,
+              "That divides by $\\|n\\|^2$, which gives the coefficient of $n$ in the projection, not the distance.",
+              "这是除以了 $\\|n\\|^2$，得到的是投影中 $n$ 的系数，而不是距离。",
+            ),
+            why(
+              dist * dist,
+              "That is the squared distance, $\\frac{(y \\cdot n)^2}{\\|n\\|^2}$; take its square root.",
+              "这是距离的平方 $\\frac{(y \\cdot n)^2}{\\|n\\|^2}$；还要开平方。",
+            ),
+          ].filter((w, i, all) => w.value !== dist && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -2852,8 +3410,8 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
       id: "least-squares-line-through-the-origin",
       title: t("The least-squares line through the origin", "过原点的最小二乘直线"),
       explanation: t(
-        "Fitting $y = mx$ to data points $(x_i, y_i)$ asks for the least-squares solution of the overdetermined system $x_i m = y_i$. Its matrix has the single column $x = (x_1, \\dots, x_n)$, so the normal equation is $(x \\cdot x)\\,m = x \\cdot y$ and\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}.$$\n\nThis is the projection coefficient of the data vector $y$ onto the line spanned by $x$.",
-        "用 $y = mx$ 拟合数据点 $(x_i, y_i)$，就是求超定方程组 $x_i m = y_i$ 的最小二乘解。它的矩阵只有一列 $x = (x_1, \\dots, x_n)$，所以法方程为 $(x \\cdot x)\\,m = x \\cdot y$，\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}$$\n\n这正是数据向量 $y$ 在 $x$ 张成的直线上的投影系数。",
+        "Fitting $y = mx$ to data points $(x_i, y_i)$ asks for the least-squares solution of the overdetermined system $x_i m = y_i$. Its matrix has the single column $x = (x_1, \\dots, x_n)$, so the normal equation is $(x \\cdot x)\\,m = x \\cdot y$ and\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}.$$\n\nThis is the projection coefficient of the data vector $y$ onto the line spanned by $x$. For example, the points $(1, 2)$, $(2, 4)$ and $(3, 5)$ give $\\sum x_iy_i = 2 + 8 + 15 = 25$ and $\\sum x_i^2 = 14$, so $m = \\frac{25}{14}$.\n\n> **Watch out.** The numerator is $\\sum x_iy_i$ and the denominator is $\\sum x_i^2$; neither the ratio $\\frac{\\sum y_i}{\\sum x_i}$ nor a division by the number of points gives the least-squares slope.",
+        "用 $y = mx$ 拟合数据点 $(x_i, y_i)$，就是求超定方程组 $x_i m = y_i$ 的最小二乘解。它的矩阵只有一列 $x = (x_1, \\dots, x_n)$，所以法方程为 $(x \\cdot x)\\,m = x \\cdot y$，\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}$$\n\n这正是数据向量 $y$ 在 $x$ 张成的直线上的投影系数。例如点 $(1, 2)$、$(2, 4)$、$(3, 5)$ 给出 $\\sum x_iy_i = 2 + 8 + 15 = 25$，$\\sum x_i^2 = 14$，所以 $m = \\frac{25}{14}$。\n\n> **注意。** 分子是 $\\sum x_iy_i$，分母是 $\\sum x_i^2$；比值 $\\frac{\\sum y_i}{\\sum x_i}$ 或除以点的个数都得不到最小二乘斜率。",
       ),
       generate: (rng: Rng): Problem => {
         const xs = rng.shuffle([1, 2, 3, 4, -1, -2]).slice(0, 3);
@@ -2862,24 +3420,57 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
         const sxy = xs.reduce((s, x, i) => s + x * ys[i]!, 0);
         const sxx = xs.reduce((s, x) => s + x * x, 0);
         const m = Q.of(sxy, sxx);
+        const sx = xs.reduce((s, x) => s + x, 0);
+        const sy = ys.reduce((s, y) => s + y, 0);
         const pts = xs.map((x, i) => `$(${x}, ${ys[i]!})$`).join(", ");
+        const mShown = sxy < 0 ? `(${m.toLatex()})` : m.toLatex();
         return numberProblem({
           prompt: t(
             `Find the slope $m$ of the least-squares line $y = mx$ through the origin for the points ${pts}.`,
             `对点 ${pts} 求过原点的最小二乘直线 $y = mx$ 的斜率 $m$。`,
           ),
           answer: m,
-          wrong: [
-            Q.of(sxx, sxy === 0 ? 1 : sxy),
-            Q.of(
-              ys.reduce((s, y) => s + y, 0),
-              xs.reduce((s, x) => s + x, 0) || 1,
+          mistakes: [
+            ...(sxy === 0
+              ? []
+              : [
+                  why(
+                    Q.of(sxx, sxy),
+                    "The fraction is upside down; the slope is $\\frac{\\sum x_iy_i}{\\sum x_i^2}$.",
+                    "分数颠倒了；斜率是 $\\frac{\\sum x_iy_i}{\\sum x_i^2}$。",
+                  ),
+                ]),
+            ...(sx === 0
+              ? []
+              : [
+                  why(
+                    Q.of(sy, sx),
+                    "That is $\\frac{\\sum y_i}{\\sum x_i}$, the ratio of the sums; least squares weights each point by its $x_i$.",
+                    "这是和的比值 $\\frac{\\sum y_i}{\\sum x_i}$；最小二乘要按每个点的 $x_i$ 加权。",
+                  ),
+                ]),
+            why(
+              Q.of(sxy, 3),
+              "That divides $\\sum x_iy_i$ by the number of points; divide by $\\sum x_i^2$.",
+              "这是用 $\\sum x_iy_i$ 除以点的个数；应除以 $\\sum x_i^2$。",
             ),
-            Q.of(sxy, 3),
-          ],
-          solution: t(
-            `$\\sum x_iy_i = ${sxy}$ and $\\sum x_i^2 = ${sxx}$, so $m = ${m.toLatex()}$.`,
-            `$\\sum x_iy_i = ${sxy}$，$\\sum x_i^2 = ${sxx}$，所以 $m = ${m.toLatex()}$。`,
+          ].filter((w, i, all) => String(w.value) !== String(m) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+          solution: walked(
+            [
+              [
+                ["Form the two sums", "求两个和"],
+                t("", ""),
+                [
+                  `\\sum x_iy_i = ${signedSum(xs.map((x, i) => `(${x})(${ys[i]!})`))} = ${sxy}`,
+                  `\\sum x_i^2 = ${xs.map((x) => `(${x})^2`).join(" + ")} = ${sxx}`,
+                ],
+              ],
+              [["Divide", "相除"], t("", ""), [`m = \\frac{${sxy}}{${sxx}} = ${m.toLatex()}`]],
+            ],
+            t(
+              `The residuals $y_i - mx_i$ are orthogonal to the $x$ data, as the normal equation requires: $\\sum x_i(y_i - mx_i) = ${sxy} - ${mShown} \\cdot ${sxx} = 0$.`,
+              `残差 $y_i - mx_i$ 与 $x$ 数据正交，符合法方程：$\\sum x_i(y_i - mx_i) = ${sxy} - ${mShown} \\cdot ${sxx} = 0$。`,
+            ),
           ),
         });
       },
@@ -2895,6 +3486,10 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
     "Study the algebraic and geometric properties of projection matrices: $P^2 = P$, $P^T = P$, their eigenvalues, and their trace.",
     "研究投影矩阵的代数与几何性质：$P^2 = P$、$P^T = P$、特征值及迹。",
   ),
+  intro: t(
+    "The matrix that projects $\\mathbb{R}^2$ onto the line through $a = (1, 1)$ is $P = \\frac{aa^T}{a^Ta} = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$. Projecting twice changes nothing: $P^2 = \\frac{1}{4}\\begin{pmatrix} 2 & 2 \\\\ 2 & 2 \\end{pmatrix} = P$, and its trace is $\\frac{1}{2} + \\frac{1}{2} = 1$, the dimension of the line.\n\nCheck: $P(1, 1) = (1, 1)$, so vectors on the line stay put (eigenvalue $1$), and $P(1, -1) = (0, 0)$, so perpendicular vectors are sent to zero (eigenvalue $0$).\n\nIn this lesson we use the properties $P^2 = P$, $P^T = P$ and $\\operatorname{tr}(P) = \\dim W$, and compute entries of projection matrices.",
+    "把 $\\mathbb{R}^2$ 投影到过 $a = (1, 1)$ 的直线上的矩阵是 $P = \\frac{aa^T}{a^Ta} = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$。投影两次不再改变任何东西：$P^2 = \\frac{1}{4}\\begin{pmatrix} 2 & 2 \\\\ 2 & 2 \\end{pmatrix} = P$，它的迹为 $\\frac{1}{2} + \\frac{1}{2} = 1$，即直线的维数。\n\n检验：$P(1, 1) = (1, 1)$，直线上的向量保持不动（特征值 $1$）；$P(1, -1) = (0, 0)$，垂直的向量被送到零（特征值 $0$）。\n\n本课我们利用性质 $P^2 = P$、$P^T = P$ 与 $\\operatorname{tr}(P) = \\dim W$，并计算投影矩阵的元素。",
+  ),
   prerequisites: ["projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases"],
   encompasses: [],
   xp: 14,
@@ -2903,8 +3498,8 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
       id: "properties-of-orthogonal-projector",
       title: t("Algebraic Invariants of Projection Matrices", "投影矩阵的代数不变量"),
       explanation: t(
-        "An orthogonal projection matrix $P$ onto a subspace $W \\subseteq \\mathbb{R}^n$ satisfies $P^2 = P$ and $P^T = P$. Its trace equals the dimension of $W$: $\\operatorname{tr}(P) = \\dim(W)$, and its eigenvalues are restricted to $0$ and $1$.",
-        "将向量正交投影到子空间 $W \\subseteq \\mathbb{R}^n$ 的投影矩阵 $P$ 满足 $P^2 = P$ 与 $P^T = P$。它的迹等于子空间 $W$ 的维数：$\\operatorname{tr}(P) = \\dim(W)$，且其特征值仅为 $0$ 与 $1$。",
+        "An orthogonal projection matrix $P$ onto a subspace $W \\subseteq \\mathbb{R}^n$ satisfies $P^2 = P$ and $P^T = P$. Its trace equals the dimension of $W$: $\\operatorname{tr}(P) = \\dim(W)$, and its eigenvalues are restricted to $0$ and $1$. For example, the projection of $\\mathbb{R}^3$ onto a plane has eigenvalues $1, 1, 0$, so $\\operatorname{tr}(P^5) = \\operatorname{tr}(P) = 2$.\n\n> **Watch out.** Powers of a projection are the projection itself, $P^m = P$, not the identity. The trace counts the dimension of $W$, not of the whole space $\\mathbb{R}^n$.",
+        "将向量正交投影到子空间 $W \\subseteq \\mathbb{R}^n$ 的投影矩阵 $P$ 满足 $P^2 = P$ 与 $P^T = P$。它的迹等于子空间 $W$ 的维数：$\\operatorname{tr}(P) = \\dim(W)$，且其特征值仅为 $0$ 与 $1$。例如 $\\mathbb{R}^3$ 到一个平面的投影的特征值为 $1, 1, 0$，所以 $\\operatorname{tr}(P^5) = \\operatorname{tr}(P) = 2$。\n\n> **注意。** 投影的幂就是投影本身，$P^m = P$，而不是单位矩阵。迹数的是 $W$ 的维数，不是整个空间 $\\mathbb{R}^n$ 的维数。",
       ),
       generate: (rng: Rng): Problem => {
         const n = rng.pick([4, 5, 6, 7, 8]);
@@ -2916,16 +3511,53 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
           `设 $P$ 为将 $\\mathbb{R}^{${n}}$ 中的向量正交投影到 $${k}$ 维子空间 $W$ 上的投影矩阵。\n求矩阵幂的迹 $\\operatorname{tr}(P^{${power}})$ 的值。`,
         );
 
-        const solution = t(
-          `Because $P$ is a projection matrix, it is idempotent: $P^2 = P$, which implies $P^{${power}} = P$. The trace of any orthogonal projection matrix equals the dimension of the subspace onto which it projects: $\\operatorname{tr}(P) = \\dim(W) = ${k}$.`,
-          `因为 $P$ 是投影矩阵，它是幂等的：$P^2 = P$，因此 $P^{${power}} = P$。任何正交投影矩阵的迹均等于其所投影的子空间维数：$\\operatorname{tr}(P) = \\dim(W) = ${k}$。`,
+        const solution = walked(
+          [
+            [
+              ["Reduce the power", "化简幂"],
+              t(
+                "Projecting a second time changes nothing, so $P^2 = P$, and then every higher power is $P$ as well.",
+                "再投影一次不会改变任何东西，所以 $P^2 = P$，从而更高次幂也都等于 $P$。",
+              ),
+              [`P^{${power}} = P`],
+            ],
+            [
+              ["Add the eigenvalues", "把特征值相加"],
+              t(
+                `$P$ has eigenvalue $1$ on the $${k}$ directions of $W$ and $0$ on the $${n - k}$ directions of $W^\\perp$.`,
+                `$P$ 在 $W$ 的 $${k}$ 个方向上特征值为 $1$，在 $W^\\perp$ 的 $${n - k}$ 个方向上特征值为 $0$。`,
+              ),
+              [`\\operatorname{tr}(P) = ${k}(1) + ${n - k}(0) = ${k}`],
+            ],
+          ],
+          t(
+            `$I - P$ projects onto $W^\\perp$ and has trace $${n - k}$; together $${k} + ${n - k} = ${n} = \\operatorname{tr}(I)$.`,
+            `$I - P$ 投影到 $W^\\perp$ 上，迹为 $${n - k}$；两者之和 $${k} + ${n - k} = ${n} = \\operatorname{tr}(I)$。`,
+          ),
         );
 
         return numberProblem({
           prompt,
           answer: k,
           solution,
-          wrong: [n, n - k, 0, 1, k * 2],
+          mistakes: [
+            why(
+              n,
+              "That is the trace of the identity; powers of a projection stay $P$, they do not become $I$.",
+              "这是单位矩阵的迹；投影的幂仍是 $P$，不会变成 $I$。",
+            ),
+            why(n - k, "That is the dimension of $W^\\perp$, the trace of $I - P$.", "这是 $W^\\perp$ 的维数，即 $I - P$ 的迹。"),
+            why(
+              power * k,
+              `That multiplies the trace by the exponent $${power}$; the power of $P$ is $P$ itself.`,
+              `这是把迹乘以了指数 $${power}$；$P$ 的幂就是 $P$ 本身。`,
+            ),
+            why(
+              1,
+              `Only a projection onto a line has trace $1$; here $W$ has dimension $${k}$.`,
+              `只有向直线的投影迹才为 $1$；这里 $W$ 的维数是 $${k}$。`,
+            ),
+          ].filter((w, i, all) => w.value !== k && all.findIndex((o) => o.value === w.value) === i),
         });
       },
     },
@@ -2933,8 +3565,8 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
       id: "an-entry-of-the-projection-matrix-onto-a-line",
       title: t("The projection matrix onto a line", "向直线投影的矩阵"),
       explanation: t(
-        "The matrix that projects $\\mathbb{R}^n$ onto the line spanned by $a$ is\n\n$$P = \\frac{aa^T}{a^Ta},$$\n\nso its $(i, j)$ entry is $\\frac{a_ia_j}{\\|a\\|^2}$. It is symmetric, satisfies $P^2 = P$, and has trace $1$, the dimension of the line. Scaling $a$ does not change $P$.",
-        "把 $\\mathbb{R}^n$ 投影到 $a$ 张成的直线上的矩阵为\n\n$$P = \\frac{aa^T}{a^Ta},$$\n\n所以它的 $(i, j)$ 元为 $\\frac{a_ia_j}{\\|a\\|^2}$。它是对称的，满足 $P^2 = P$，迹为 $1$，即直线的维数。把 $a$ 乘以常数不改变 $P$。",
+        "The matrix that projects $\\mathbb{R}^n$ onto the line spanned by $a$ is\n\n$$P = \\frac{aa^T}{a^Ta},$$\n\nso its $(i, j)$ entry is $\\frac{a_ia_j}{\\|a\\|^2}$. It is symmetric, satisfies $P^2 = P$, and has trace $1$, the dimension of the line. Scaling $a$ does not change $P$. For example, for $a = (1, 2, 2)$, $\\|a\\|^2 = 9$ and $P_{12} = \\frac{(1)(2)}{9} = \\frac{2}{9}$.\n\n> **Watch out.** Divide by $\\|a\\|^2 = a \\cdot a$, the sum of the squares of the entries. Off the diagonal the numerator uses two different entries, $a_i$ and $a_j$.",
+        "把 $\\mathbb{R}^n$ 投影到 $a$ 张成的直线上的矩阵为\n\n$$P = \\frac{aa^T}{a^Ta},$$\n\n所以它的 $(i, j)$ 元为 $\\frac{a_ia_j}{\\|a\\|^2}$。它是对称的，满足 $P^2 = P$，迹为 $1$，即直线的维数。把 $a$ 乘以常数不改变 $P$。例如对 $a = (1, 2, 2)$，$\\|a\\|^2 = 9$，$P_{12} = \\frac{(1)(2)}{9} = \\frac{2}{9}$。\n\n> **注意。** 要除以 $\\|a\\|^2 = a \\cdot a$，即各分量的平方和。在非对角位置，分子用的是两个不同的分量 $a_i$ 与 $a_j$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = [rng.nonZero(-3, 3), rng.int(-3, 3), rng.nonZero(-3, 3)];
@@ -2948,17 +3580,43 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
             `$P$ 是把 $\\mathbb{R}^3$ 正交投影到 $a = (${a.join(", ")})$ 张成的直线上的矩阵。求元素 $P_{${i}${j}}$。`,
           ),
           answer: ans,
-          wrong: [
-            Q.of(a[i - 1]! * a[j - 1]!),
-            Q.of(
-              a[i - 1]! * a[j - 1]!,
-              a.reduce((s, x) => s + Math.abs(x), 0),
+          mistakes: [
+            why(
+              Q.of(a[i - 1]! * a[j - 1]!),
+              "That is the entry of $aa^T$; it still has to be divided by $a^Ta = \\|a\\|^2$.",
+              "这是 $aa^T$ 的元素；还要除以 $a^Ta = \\|a\\|^2$。",
             ),
-            ans.neg(),
-          ],
-          solution: t(
-            `$\\|a\\|^2 = ${aa}$, so $P_{${i}${j}} = \\frac{a_{${i}}a_{${j}}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$.`,
-            `$\\|a\\|^2 = ${aa}$，所以 $P_{${i}${j}} = \\frac{a_{${i}}a_{${j}}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$。`,
+            why(
+              Q.of(
+                a[i - 1]! * a[j - 1]!,
+                a.reduce((s, x) => s + Math.abs(x), 0),
+              ),
+              "That divides by the sum of the sizes of the entries; divide by the sum of their squares.",
+              "这是除以各分量绝对值之和；应除以各分量的平方和。",
+            ),
+            ...(i === j
+              ? []
+              : [
+                  why(
+                    Q.of(a[i - 1]! * a[i - 1]!, aa),
+                    `That is the diagonal entry $P_{${i}${i}}$; the entry $P_{${i}${j}}$ uses $a_{${i}}a_{${j}}$.`,
+                    `这是对角元 $P_{${i}${i}}$；元素 $P_{${i}${j}}$ 用的是 $a_{${i}}a_{${j}}$。`,
+                  ),
+                ]),
+          ].filter((w, k, all) => String(w.value) !== String(ans) && all.findIndex((o) => String(o.value) === String(w.value)) === k),
+          solution: walked(
+            [
+              [["Find $\\|a\\|^2$", "求 $\\|a\\|^2$"], t("", ""), [`\\|a\\|^2 = ${a.map((x) => `(${x})^2`).join(" + ")} = ${aa}`]],
+              [
+                ["Form the entry", "写出元素"],
+                t("", ""),
+                [`P_{${i}${j}} = \\frac{a_{${i}}a_{${j}}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `The diagonal entries $${a.map((x) => `\\frac{${x * x}}{${aa}}`).join(", ")}$ add up to $1$, the trace of a projection onto a line.`,
+              `对角元 $${a.map((x) => `\\frac{${x * x}}{${aa}}`).join(", ")}$ 之和为 $1$，正是向直线投影的迹。`,
+            ),
           ),
         });
       },
@@ -2974,6 +3632,10 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
     "Compute orthogonal projections in general inner product spaces and find best approximations of functions.",
     "在广义内积空间中计算正交投影，并求解函数的最佳逼近。",
   ),
+  intro: t(
+    "Under $\\langle f, g \\rangle = \\int_{-1}^{1} f(t)g(t)\\,dt$ the functions $1$ and $t$ are orthogonal, so the best linear approximation of $f(t) = t^2$ needs two coefficients: $\\frac{\\langle t^2, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\frac{2/3}{2} = \\frac{1}{3}$ and $\\frac{\\langle t^2, t \\rangle}{\\langle t, t \\rangle} = 0$, because $t^3$ is odd. The projection is the constant $\\hat{f} = \\frac{1}{3}$.\n\nCheck: the error $t^2 - \\frac{1}{3}$ is orthogonal to $1$, since $\\int_{-1}^{1} (t^2 - \\frac{1}{3})\\,dt = \\frac{2}{3} - \\frac{2}{3} = 0$, and to $t$, since $t^3 - \\frac{t}{3}$ is odd.\n\nIn this lesson we project functions onto subspaces of polynomials with integral inner products and find best approximations.",
+    "在 $\\langle f, g \\rangle = \\int_{-1}^{1} f(t)g(t)\\,dt$ 下，函数 $1$ 与 $t$ 正交，所以 $f(t) = t^2$ 的最佳一次逼近需要两个系数：$\\frac{\\langle t^2, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\frac{2/3}{2} = \\frac{1}{3}$，以及 $\\frac{\\langle t^2, t \\rangle}{\\langle t, t \\rangle} = 0$，因为 $t^3$ 是奇函数。投影是常数 $\\hat{f} = \\frac{1}{3}$。\n\n检验：误差 $t^2 - \\frac{1}{3}$ 与 $1$ 正交，因为 $\\int_{-1}^{1} (t^2 - \\frac{1}{3})\\,dt = \\frac{2}{3} - \\frac{2}{3} = 0$；它也与 $t$ 正交，因为 $t^3 - \\frac{t}{3}$ 是奇函数。\n\n本课我们用积分内积把函数投影到多项式子空间上，求最佳逼近。",
+  ),
   prerequisites: ["projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases", "orthogonal-sets-in-inner-product-spaces"],
   encompasses: [],
   xp: 14,
@@ -2982,8 +3644,8 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
       id: "polynomial-best-approximation-inner-product",
       title: t("Best Linear Approximation of a Polynomial", "多项式的最佳一次多项式逼近"),
       explanation: t(
-        "In the inner product space $C[-1, 1]$ with $\\langle f, g \\rangle = \\int_{-1}^1 f(t)g(t)\\,dt$, the polynomials $\\{1, t\\}$ form an orthogonal basis for $P_1$. The orthogonal projection of $f(t) = a t^2 + b t + c$ onto $P_1$ is $\\hat{f}(t) = b t + \\left(\\frac{a}{3} + c\\right)$.",
-        "在赋有内积 $\\langle f, g \\rangle = \\int_{-1}^1 f(t)g(t)\\,dt$ 的内积空间 $C[-1, 1]$ 中，多项式 $\\{1, t\\}$ 构成 $P_1$ 的一组正交基。二次多项式 $f(t) = a t^2 + b t + c$ 在 $P_1$ 上的正交投影为 $\\hat{f}(t) = b t + \\left(\\frac{a}{3} + c\\right)$。",
+        "In the inner product space $C[-1, 1]$ with $\\langle f, g \\rangle = \\int_{-1}^1 f(t)g(t)\\,dt$, the polynomials $\\{1, t\\}$ form an orthogonal basis for $P_1$. The orthogonal projection of $f(t) = a t^2 + b t + c$ onto $P_1$ is $\\hat{f}(t) = b t + \\left(\\frac{a}{3} + c\\right)$. For example, $f(t) = 3t^2 + 2t + 1$ projects to $\\hat{f}(t) = 2t + (1 + 1) = 2t + 2$.\n\n> **Watch out.** $t^2$ is not orthogonal to $1$ on $[-1, 1]$, so the $t^2$ term cannot simply be dropped: it contributes $\\frac{a}{3}$ to the constant. Divide $\\langle f, 1 \\rangle$ by $\\langle 1, 1 \\rangle = 2$, not by $1$.",
+        "在赋有内积 $\\langle f, g \\rangle = \\int_{-1}^1 f(t)g(t)\\,dt$ 的内积空间 $C[-1, 1]$ 中，多项式 $\\{1, t\\}$ 构成 $P_1$ 的一组正交基。二次多项式 $f(t) = a t^2 + b t + c$ 在 $P_1$ 上的正交投影为 $\\hat{f}(t) = b t + \\left(\\frac{a}{3} + c\\right)$。例如 $f(t) = 3t^2 + 2t + 1$ 的投影为 $\\hat{f}(t) = 2t + (1 + 1) = 2t + 2$。\n\n> **注意。** 在 $[-1, 1]$ 上 $t^2$ 与 $1$ 不正交，所以不能直接丢掉 $t^2$ 项：它给常数项贡献 $\\frac{a}{3}$。要用 $\\langle f, 1 \\rangle$ 除以 $\\langle 1, 1 \\rangle = 2$，而不是除以 $1$。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -2994,15 +3656,38 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
         const constantTerm = m + c;
         const rightPoly = formatPoly(b, constantTerm);
         const polyOriginal = formatPoly2(a, b, c);
+        const dropped = formatPoly(b, c);
+        const unscaled = formatPoly(b, a + c);
+        const undivided = formatPoly(b, 2 * constantTerm);
 
         const prompt = t(
           `In $C[-1, 1]$ with inner product $\\langle f, g \\rangle = \\int_{-1}^1 f(t)g(t)\\,dt$, find the orthogonal projection $\\hat{f} = \\operatorname{proj}_{P_1}(f)$ of $f(t) = ${polyOriginal}$ onto the subspace of linear polynomials $P_1 = \\operatorname{span}\\{1, t\\}$. Enter your answer as an expression in $t$.`,
           `在赋有内积 $\\langle f, g \\rangle = \\int_{-1}^1 f(t)g(t)\\,dt$ 的 $C[-1, 1]$ 空间中，求函数 $f(t) = ${polyOriginal}$ 在一次多项式子空间 $P_1 = \\operatorname{span}\\{1, t\\}$ 上的正交投影 $\\hat{f} = \\operatorname{proj}_{P_1}(f)$。请以关于 $t$ 的表达式形式作答。`,
         );
 
-        const solution = t(
-          `Because $\\{1, t\\}$ is an orthogonal basis on $[-1, 1]$:\n$$\\hat{f}(t) = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} (1) + \\frac{\\langle f, t \\rangle}{\\langle t, t \\rangle} t$$\nComputing the integrals: $\\langle 1, 1 \\rangle = 2$, $\\langle t, t \\rangle = \\frac{2}{3}$, $\\langle f, 1 \\rangle = \\frac{2(${a})}{3} + 2(${c}) = 2(${m + c})$, and $\\langle f, t \\rangle = \\frac{2(${b})}{3}$.\nTherefore $\\hat{f}(t) = ${rightPoly}$.`,
-          `因 $\\{1, t\\}$ 是 $[-1, 1]$ 上的正交基：\n$$\\hat{f}(t) = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} (1) + \\frac{\\langle f, t \\rangle}{\\langle t, t \\rangle} t$$\n计算各积分：$\\langle 1, 1 \\rangle = 2$、$\\langle t, t \\rangle = \\frac{2}{3}$、$\\langle f, 1 \\rangle = \\frac{2(${a})}{3} + 2(${c}) = 2(${m + c})$ 以及 $\\langle f, t \\rangle = \\frac{2(${b})}{3}$。\n因此 $\\hat{f}(t) = ${rightPoly}$。`,
+        const solution = walked(
+          [
+            [
+              ["Compute the inner products", "计算内积"],
+              t(
+                "Odd powers integrate to zero over $[-1, 1]$, and $\\int_{-1}^{1} t^{2k}\\,dt = \\frac{2}{2k + 1}$.",
+                "奇次幂在 $[-1, 1]$ 上的积分为零，而 $\\int_{-1}^{1} t^{2k}\\,dt = \\frac{2}{2k + 1}$。",
+              ),
+              [
+                `\\langle 1, 1 \\rangle = 2, \\quad \\langle t, t \\rangle = \\frac{2}{3}`,
+                `\\langle f, 1 \\rangle = \\frac{2(${a})}{3} + 2(${c}) = ${2 * constantTerm}, \\quad \\langle f, t \\rangle = \\frac{2(${b})}{3}`,
+              ],
+            ],
+            [
+              ["Divide and combine", "相除并组合"],
+              t("", ""),
+              [`\\hat{f}(t) = \\frac{${2 * constantTerm}}{2} \\cdot 1 + \\frac{2(${b})/3}{2/3}\\,t = ${rightPoly}`],
+            ],
+          ],
+          t(
+            `The error $f - \\hat{f} = ${a}\\left(t^2 - \\frac{1}{3}\\right)$ is orthogonal to $1$, because $\\int_{-1}^{1} \\left(t^2 - \\frac{1}{3}\\right)dt = \\frac{2}{3} - \\frac{2}{3} = 0$, and to $t$, because its product with $t$ is odd.`,
+            `误差 $f - \\hat{f} = ${a}\\left(t^2 - \\frac{1}{3}\\right)$ 与 $1$ 正交，因为 $\\int_{-1}^{1} \\left(t^2 - \\frac{1}{3}\\right)dt = \\frac{2}{3} - \\frac{2}{3} = 0$；它也与 $t$ 正交，因为它与 $t$ 的乘积是奇函数。`,
+          ),
         );
 
         return expressionProblem({
@@ -3010,7 +3695,27 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
           answer: rightPoly,
           prefix: "\\hat{f}(t) =",
           solution,
-          wrong: [formatPoly(b, c), formatPoly(b, 3 * m + c), formatPoly(-b, constantTerm), formatPoly(m, c)],
+          wrong: [dropped, unscaled, undivided],
+          mistakes: dedupeSaid(
+            [
+              say(
+                dropped,
+                "That drops the $t^2$ term; $t^2$ is not orthogonal to $1$ and adds $\\frac{a}{3}$ to the constant.",
+                "这是丢掉了 $t^2$ 项；$t^2$ 与 $1$ 不正交，它给常数项加上 $\\frac{a}{3}$。",
+              ),
+              say(
+                unscaled,
+                "That replaces $t^2$ by $1$; its projection onto the constants is $\\frac{1}{3}$, not $1$.",
+                "这是把 $t^2$ 换成了 $1$；它在常数上的投影是 $\\frac{1}{3}$，不是 $1$。",
+              ),
+              say(
+                undivided,
+                "That is $\\langle f, 1 \\rangle$ itself; it must be divided by $\\langle 1, 1 \\rangle = 2$.",
+                "这是 $\\langle f, 1 \\rangle$ 本身；还要除以 $\\langle 1, 1 \\rangle = 2$。",
+              ),
+            ],
+            rightPoly,
+          ),
         });
       },
     },
@@ -3018,8 +3723,8 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
       id: "the-best-constant-approximation",
       title: t("The best constant approximation", "最佳常数逼近"),
       explanation: t(
-        "In $C[0, 1]$ with $\\langle f, g \\rangle = \\int_0^1 f(x)g(x)\\,dx$, the constants form a one-dimensional subspace spanned by $1$, with $\\langle 1, 1 \\rangle = 1$. The closest constant to $f$ is its projection\n\n$$\\hat{f} = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 f(x)\\,dx,$$\n\nthe average value of $f$ on the interval. For a polynomial $a + bx + cx^2$ this is $a + \\frac{b}{2} + \\frac{c}{3}$.",
-        "在 $\\langle f, g \\rangle = \\int_0^1 f(x)g(x)\\,dx$ 的 $C[0, 1]$ 中，常数构成由 $1$ 张成的一维子空间，且 $\\langle 1, 1 \\rangle = 1$。离 $f$ 最近的常数是它的投影\n\n$$\\hat{f} = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 f(x)\\,dx,$$\n\n即 $f$ 在该区间上的平均值。对多项式 $a + bx + cx^2$，它为 $a + \\frac{b}{2} + \\frac{c}{3}$。",
+        "In $C[0, 1]$ with $\\langle f, g \\rangle = \\int_0^1 f(x)g(x)\\,dx$, the constants form a one-dimensional subspace spanned by $1$, with $\\langle 1, 1 \\rangle = 1$. The closest constant to $f$ is its projection\n\n$$\\hat{f} = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 f(x)\\,dx,$$\n\nthe average value of $f$ on the interval. For a polynomial $a + bx + cx^2$ this is $a + \\frac{b}{2} + \\frac{c}{3}$. For example, $f(x) = 3x^2 + 2x + 1$ has best constant $1 + 1 + 1 = 3$.\n\n> **Watch out.** The best constant is the average over the whole interval, not the value $f(0)$, not $f(1)$, and not the average of the two endpoint values. Integrate each power: $x^k$ contributes $\\frac{1}{k + 1}$ times its coefficient.",
+        "在 $\\langle f, g \\rangle = \\int_0^1 f(x)g(x)\\,dx$ 的 $C[0, 1]$ 中，常数构成由 $1$ 张成的一维子空间，且 $\\langle 1, 1 \\rangle = 1$。离 $f$ 最近的常数是它的投影\n\n$$\\hat{f} = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 f(x)\\,dx,$$\n\n即 $f$ 在该区间上的平均值。对多项式 $a + bx + cx^2$，它为 $a + \\frac{b}{2} + \\frac{c}{3}$。例如 $f(x) = 3x^2 + 2x + 1$ 的最佳常数为 $1 + 1 + 1 = 3$。\n\n> **注意。** 最佳常数是整个区间上的平均值，不是 $f(0)$，不是 $f(1)$，也不是两端值的平均。逐项积分：$x^k$ 贡献其系数的 $\\frac{1}{k + 1}$ 倍。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-4, 4);
@@ -3033,10 +3738,40 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
             `在 $\\langle f, g \\rangle = \\int_0^1 f(x) g(x)\\,dx$ 下，求离 $f(x) = ${f}$ 最近的常数 $k$。`,
           ),
           answer: ans,
-          wrong: [Q.of(a), Q.of(a + b + c), Q.of(2 * a + b + c, 2)],
-          solution: t(
-            `$k = \\int_0^1 (${f})\\,dx = ${signedSum([`${a}`, frac(b, 2), frac(c, 3)])} = ${ans.toLatex()}$.`,
-            `$k = \\int_0^1 (${f})\\,dx = ${signedSum([`${a}`, frac(b, 2), frac(c, 3)])} = ${ans.toLatex()}$。`,
+          mistakes: [
+            why(
+              Q.of(a),
+              "That is $f(0)$, the value at one end; the closest constant is the average over $[0, 1]$.",
+              "这是一端的值 $f(0)$；最近的常数是 $[0, 1]$ 上的平均值。",
+            ),
+            why(
+              Q.of(a + b + c),
+              "That is $f(1)$, the value at one end; the closest constant is the average over $[0, 1]$.",
+              "这是一端的值 $f(1)$；最近的常数是 $[0, 1]$ 上的平均值。",
+            ),
+            why(
+              Q.of(2 * a + b + c, 2),
+              "That averages the two endpoint values; the projection averages over the whole interval.",
+              "这是两端值的平均；投影是对整个区间求平均。",
+            ),
+          ].filter((w, i, all) => String(w.value) !== String(ans) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+          solution: walked(
+            [
+              [
+                ["Project onto the constants", "投影到常数上"],
+                t("Since $\\langle 1, 1 \\rangle = \\int_0^1 1\\,dx = 1$:", "因为 $\\langle 1, 1 \\rangle = \\int_0^1 1\\,dx = 1$："),
+                [`k = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 (${f})\\,dx`],
+              ],
+              [
+                ["Integrate term by term", "逐项积分"],
+                t("", ""),
+                [`k = ${signedSum([`${a}`, frac(b, 2), frac(c, 3)])} = \\frac{${6 * a + 3 * b + 2 * c}}{6} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              "The error $f - k$ is orthogonal to the constants, as the leftover of a projection must be: $\\int_0^1 (f - k)\\,dx = \\int_0^1 f\\,dx - k \\int_0^1 1\\,dx = k - k = 0$.",
+              "误差 $f - k$ 与常数正交，这正是投影剩余部分应有的性质：$\\int_0^1 (f - k)\\,dx = \\int_0^1 f\\,dx - k \\int_0^1 1\\,dx = k - k = 0$。",
+            ),
           ),
         });
       },
@@ -3056,6 +3791,10 @@ export const gramSchmidtProcessForTwoVectors: TopicDef = {
     "Apply the Gram-Schmidt process to orthogonalize two linearly independent vectors.",
     "应用施密特正交化过程将两个线性无关的向量正交化。",
   ),
+  intro: t(
+    "Start from $x_1 = (1, 1)$ and $x_2 = (2, 0)$, which are independent but not orthogonal. Keep $v_1 = x_1$ and remove from $x_2$ its projection onto $v_1$: the coefficient is $\\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{2}{2} = 1$, so $v_2 = (2, 0) - (1, 1) = (1, -1)$.\n\nCheck: $v_1 \\cdot v_2 = 1 - 1 = 0$, and $x_2 = v_1 + v_2$, so $v_1$ and $v_2$ span the same plane as $x_1$ and $x_2$.\n\nIn this lesson we turn two independent vectors into an orthogonal pair with the same span, under the dot product and under other inner products.",
+    "从线性无关但不正交的 $x_1 = (1, 1)$ 与 $x_2 = (2, 0)$ 出发。保留 $v_1 = x_1$，并从 $x_2$ 中去掉它在 $v_1$ 上的投影：系数为 $\\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{2}{2} = 1$，所以 $v_2 = (2, 0) - (1, 1) = (1, -1)$。\n\n检验：$v_1 \\cdot v_2 = 1 - 1 = 0$，且 $x_2 = v_1 + v_2$，所以 $v_1$ 与 $v_2$ 张成的平面与 $x_1$、$x_2$ 相同。\n\n本课我们在点积和其他内积下，把两个线性无关的向量变成张成空间相同的一对正交向量。",
+  ),
   prerequisites: ["projecting-vectors-onto-one-dimensional-subspaces"],
   encompasses: [],
   xp: 14,
@@ -3064,8 +3803,8 @@ export const gramSchmidtProcessForTwoVectors: TopicDef = {
       id: "gram-schmidt-step-two-vectors",
       title: t("Orthogonalizing Two Vectors", "正交化两个向量"),
       explanation: t(
-        "Given linearly independent vectors $x_1, x_2$, the Gram-Schmidt process defines $v_1 = x_1$ and $v_2 = x_2 - \\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} v_1$. Then $\\{v_1, v_2\\}$ is an orthogonal basis for $\\operatorname{span}\\{x_1, x_2\\}$.",
-        "给定线性无关的向量 $x_1, x_2$，施密特正交化过程取 $v_1 = x_1$ 及 $v_2 = x_2 - \\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} v_1$。则 $\\{v_1, v_2\\}$ 是 $\\operatorname{span}\\{x_1, x_2\\}$ 的一组正交基。",
+        "Given linearly independent vectors $x_1, x_2$, the Gram-Schmidt process defines $v_1 = x_1$ and $v_2 = x_2 - \\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} v_1$. Then $\\{v_1, v_2\\}$ is an orthogonal basis for $\\operatorname{span}\\{x_1, x_2\\}$. For example, $x_1 = (1, 1, 0)$ and $x_2 = (3, 1, 1)$ give the coefficient $\\frac{4}{2} = 2$, so $v_2 = (3, 1, 1) - 2(1, 1, 0) = (1, -1, 1)$.\n\n> **Watch out.** Subtract the projection from $x_2$; adding it, or subtracting $x_2$ from the projection, leaves a vector that is not orthogonal to $v_1$ or points the wrong way. Check the result with $v_1 \\cdot v_2 = 0$.",
+        "给定线性无关的向量 $x_1, x_2$，施密特正交化过程取 $v_1 = x_1$ 及 $v_2 = x_2 - \\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} v_1$。则 $\\{v_1, v_2\\}$ 是 $\\operatorname{span}\\{x_1, x_2\\}$ 的一组正交基。例如 $x_1 = (1, 1, 0)$，$x_2 = (3, 1, 1)$ 时系数为 $\\frac{4}{2} = 2$，所以 $v_2 = (3, 1, 1) - 2(1, 1, 0) = (1, -1, 1)$。\n\n> **注意。** 要从 $x_2$ 中减去投影；加上投影，或用投影减去 $x_2$，得到的向量要么与 $v_1$ 不正交，要么方向相反。用 $v_1 \\cdot v_2 = 0$ 检验结果。",
       ),
       generate: (rng: Rng): Problem => {
         const x1 = [rng.pick([-2, -1, 1, 2]), rng.pick([-2, -1, 1, 2]), 0];
@@ -3076,6 +3815,9 @@ export const gramSchmidtProcessForTwoVectors: TopicDef = {
 
         const x2 = [k * x1[0]! + z[0]!, k * x1[1]! + z[1]!, k * x1[2]! + z[2]!];
         const v2 = z;
+        const added = [x2[0]! + k * x1[0]!, x2[1]! + k * x1[1]!, x2[2]! + k * x1[2]!];
+        const projection = x1.map((x) => k * x);
+        const reversed = v2.map((x) => -x);
 
         const prompt = t(
           `Apply the Gram-Schmidt process to the basis $\\{x_1, x_2\\}$ of a subspace in $\\mathbb{R}^3$, setting $v_1 = x_1$:\n$$x_1 = ${colVecLatex(x1)}, \\quad x_2 = ${colVecLatex(x2)}$$\nFind the second orthogonal vector $v_2 = x_2 - \\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} v_1$. Enter your answer as a vector $\\langle v_{21}, v_{22}, v_{23} \\rangle$.`,
@@ -3083,31 +3825,65 @@ export const gramSchmidtProcessForTwoVectors: TopicDef = {
         );
 
         const x2DotV1 = k * v1NormSq;
-        const solution = t(
-          `Calculate the projection coefficient:\n$$\\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{${x2DotV1}}{${v1NormSq}} = ${k}$$\nSubtract the projection from $x_2$:\n$$v_2 = ${colVecLatex(x2)} - (${k})${colVecLatex(x1)} = ${colVecLatex(v2)}$$`,
-          `计算投影系数：\n$$\\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{${x2DotV1}}{${v1NormSq}} = ${k}$$\n从 $x_2$ 中减去投影分量：\n$$v_2 = ${colVecLatex(x2)} - (${k})${colVecLatex(x1)} = ${colVecLatex(v2)}$$`,
+        const solution = walked(
+          [
+            [
+              ["Find the projection coefficient", "求投影系数"],
+              t("", ""),
+              [
+                `\\frac{x_2 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{(${x2[0]!})(${x1[0]!}) + (${x2[1]!})(${x1[1]!}) + (${x2[2]!})(0)}{(${x1[0]!})^2 + (${x1[1]!})^2} = \\frac{${x2DotV1}}{${v1NormSq}} = ${k}`,
+              ],
+            ],
+            [
+              ["Subtract the projection from $x_2$", "从 $x_2$ 中减去投影"],
+              t("", ""),
+              [`v_2 = ${colVecLatex(x2)} - (${k})${colVecLatex(x1)} = ${colVecLatex(v2)}`],
+            ],
+          ],
+          t(
+            `$v_1 \\cdot v_2 = (${x1[0]!})(${v2[0]!}) + (${x1[1]!})(${v2[1]!}) + (0)(${v2[2]!}) = 0$, so the two vectors are orthogonal.`,
+            `$v_1 \\cdot v_2 = (${x1[0]!})(${v2[0]!}) + (${x1[1]!})(${v2[1]!}) + (0)(${v2[2]!}) = 0$，两个向量正交。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: v2,
-          vector: true,
-          solution,
-          wrong: [
-            [x2[0]! + k * x1[0]!, x2[1]! + k * x1[1]!, x2[2]! + k * x1[2]!],
-            x2,
-            [-v2[0]!, -v2[1]!, -v2[2]!],
-            [v2[0]! + 1, v2[1]! - 1, v2[2]!],
-          ],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt,
+            answer: v2,
+            vector: true,
+            solution,
+            wrong: [added, x2, projection, reversed],
+          }),
+          dedupeSaid(
+            [
+              say(vectorLatex(added), "The projection was added to $x_2$; it must be subtracted.", "投影被加到了 $x_2$ 上；应当减去。"),
+              say(
+                vectorLatex(x2),
+                "That is $x_2$ unchanged; its projection onto $v_1$ still has to be removed.",
+                "这是没有改动的 $x_2$；还要去掉它在 $v_1$ 上的投影。",
+              ),
+              say(
+                vectorLatex(projection),
+                "That is the projection of $x_2$ onto $v_1$, the part being removed, not what is left.",
+                "这是 $x_2$ 在 $v_1$ 上的投影，即要去掉的部分，而不是剩下的部分。",
+              ),
+              say(
+                vectorLatex(reversed),
+                "That is the projection minus $x_2$; subtract in the order $x_2$ minus the projection.",
+                "这是投影减去 $x_2$；应按 $x_2$ 减去投影的顺序。",
+              ),
+            ],
+            vectorLatex(v2),
+          ),
+        );
       },
     },
     {
       id: "gram-schmidt-under-a-weighted-inner-product",
       title: t("Gram–Schmidt under a weighted inner product", "加权内积下的格拉姆–施密特"),
       explanation: t(
-        "The Gram–Schmidt step $w_2 = v_2 - \\frac{\\langle v_2, v_1 \\rangle}{\\langle v_1, v_1 \\rangle}v_1$ works for any inner product, but every bracket must be computed with that inner product. Under $\\langle x, y \\rangle = a x_1 y_1 + x_2 y_2$ the result is orthogonal to $v_1$ in the weighted sense, and usually not for the ordinary dot product.",
-        "格拉姆–施密特步骤 $w_2 = v_2 - \\frac{\\langle v_2, v_1 \\rangle}{\\langle v_1, v_1 \\rangle}v_1$ 对任何内积都适用，但每个括号都要用该内积计算。在 $\\langle x, y \\rangle = a x_1 y_1 + x_2 y_2$ 下，结果在加权意义下与 $v_1$ 正交，通常对普通点积并不正交。",
+        "The Gram–Schmidt step $w_2 = v_2 - \\frac{\\langle v_2, v_1 \\rangle}{\\langle v_1, v_1 \\rangle}v_1$ works for any inner product, but every bracket must be computed with that inner product. Under $\\langle x, y \\rangle = a x_1 y_1 + x_2 y_2$ the result is orthogonal to $v_1$ in the weighted sense, and usually not for the ordinary dot product. For example, with $\\langle x, y \\rangle = 2x_1y_1 + x_2y_2$, $v_1 = (1, 1)$ and $v_2 = (1, 4)$, $\\frac{2 + 4}{2 + 1} = 2$, so $w_2 = (1, 4) - 2(1, 1) = (-1, 2)$.\n\n> **Watch out.** Use the weighted inner product in both the numerator and the denominator. The answer is checked with the same inner product: here $2(-1)(1) + (2)(1) = 0$, while the ordinary dot product $-1 + 2$ is not zero.",
+        "格拉姆–施密特步骤 $w_2 = v_2 - \\frac{\\langle v_2, v_1 \\rangle}{\\langle v_1, v_1 \\rangle}v_1$ 对任何内积都适用，但每个括号都要用该内积计算。在 $\\langle x, y \\rangle = a x_1 y_1 + x_2 y_2$ 下，结果在加权意义下与 $v_1$ 正交，通常对普通点积并不正交。例如在 $\\langle x, y \\rangle = 2x_1y_1 + x_2y_2$ 下，$v_1 = (1, 1)$，$v_2 = (1, 4)$，$\\frac{2 + 4}{2 + 1} = 2$，所以 $w_2 = (1, 4) - 2(1, 1) = (-1, 2)$。\n\n> **注意。** 分子和分母都要用加权内积。检验时也要用同一个内积：这里 $2(-1)(1) + (2)(1) = 0$，而普通点积 $-1 + 2$ 不为零。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(2, 5);
@@ -3117,23 +3893,62 @@ export const gramSchmidtProcessForTwoVectors: TopicDef = {
         const q = s * (a + 1) - a * p;
         const w2 = [p - s, q - s];
         const ip = a * p + q;
-        return pointProblem({
-          prompt: t(
-            `On $\\mathbb{R}^2$ use $\\langle x, y \\rangle = ${a} x_1 y_1 + x_2 y_2$. Apply Gram–Schmidt to $v_1 = (1, 1)$, $v_2 = (${p}, ${q})$ and find $w_2$.`,
-            `在 $\\mathbb{R}^2$ 上使用 $\\langle x, y \\rangle = ${a} x_1 y_1 + x_2 y_2$。对 $v_1 = (1, 1)$，$v_2 = (${p}, ${q})$ 作格拉姆–施密特正交化，求 $w_2$。`,
+        const plain = [Q.of(2 * p - (p + q), 2), Q.of(2 * q - (p + q), 2)];
+        const mixed = [Q.of(2 * p - ip, 2), Q.of(2 * q - ip, 2)];
+        const added = [p + s, q + s];
+        const sShown = s < 0 ? `(${s})` : `${s}`;
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `On $\\mathbb{R}^2$ use $\\langle x, y \\rangle = ${a} x_1 y_1 + x_2 y_2$. Apply Gram–Schmidt to $v_1 = (1, 1)$, $v_2 = (${p}, ${q})$ and find $w_2$.`,
+              `在 $\\mathbb{R}^2$ 上使用 $\\langle x, y \\rangle = ${a} x_1 y_1 + x_2 y_2$。对 $v_1 = (1, 1)$，$v_2 = (${p}, ${q})$ 作格拉姆–施密特正交化，求 $w_2$。`,
+            ),
+            answer: w2,
+            vector: true,
+            wrong: [plain, mixed, added, [p, q]],
+            solution: walked(
+              [
+                [
+                  ["Compute both brackets with the weighted inner product", "用加权内积计算两个括号"],
+                  t("", ""),
+                  [
+                    `\\langle v_2, v_1 \\rangle = ${a}(${p})(1) + (${q})(1) = ${ip}, \\quad \\langle v_1, v_1 \\rangle = ${a}(1)(1) + (1)(1) = ${a + 1}`,
+                  ],
+                ],
+                [
+                  ["Subtract the projection", "减去投影"],
+                  t(`The coefficient is $\\frac{${ip}}{${a + 1}} = ${s}$.`, `系数为 $\\frac{${ip}}{${a + 1}} = ${s}$。`),
+                  [`w_2 = (${p}, ${q}) - ${sShown}(1, 1) = (${w2.join(", ")})`],
+                ],
+              ],
+              t(
+                `$\\langle w_2, v_1 \\rangle = ${a}(${w2[0]!})(1) + (${w2[1]!})(1) = 0$, so $w_2$ is orthogonal to $v_1$ in this inner product.`,
+                `$\\langle w_2, v_1 \\rangle = ${a}(${w2[0]!})(1) + (${w2[1]!})(1) = 0$，所以在这个内积下 $w_2$ 与 $v_1$ 正交。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(plain),
+                "That uses the ordinary dot product; both brackets must use the weighted inner product.",
+                "这是用了普通点积；两个括号都要用加权内积。",
+              ),
+              say(
+                vectorLatex(mixed),
+                "Only the numerator used the weight; $\\langle v_1, v_1 \\rangle$ must be weighted too.",
+                "只有分子用了权重；$\\langle v_1, v_1 \\rangle$ 也要加权。",
+              ),
+              say(vectorLatex(added), "The projection was added; it must be subtracted.", "投影被加上了；应当减去。"),
+              say(
+                vectorLatex([p, q]),
+                "That is $v_2$ unchanged; its projection onto $v_1$ still has to be removed.",
+                "这是没有改动的 $v_2$；还要去掉它在 $v_1$ 上的投影。",
+              ),
+            ],
+            vectorLatex(w2),
           ),
-          answer: w2,
-          vector: true,
-          wrong: [
-            [Q.of(2 * p - (p + q), 2), Q.of(2 * q - (p + q), 2)],
-            [p + s, q + s],
-            [p, q],
-          ],
-          solution: t(
-            `$\\langle v_2, v_1 \\rangle = ${ip}$ and $\\langle v_1, v_1 \\rangle = ${a + 1}$, so the coefficient is $${s}$ and $w_2 = (${p}, ${q}) - ${s < 0 ? `(${s})` : s}(1, 1) = (${w2.join(", ")})$.`,
-            `$\\langle v_2, v_1 \\rangle = ${ip}$，$\\langle v_1, v_1 \\rangle = ${a + 1}$，所以系数为 $${s}$，$w_2 = (${p}, ${q}) - ${s < 0 ? `(${s})` : s}(1, 1) = (${w2.join(", ")})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -3147,6 +3962,10 @@ export const gramSchmidtProcessInTheGeneralCase: TopicDef = {
     "Apply the general Gram-Schmidt algorithm to construct an orthogonal basis from three or more vectors.",
     "应用一般施密特正交化算法从三个或更多向量构造正交基。",
   ),
+  intro: t(
+    "Suppose Gram–Schmidt has already produced the orthogonal vectors $v_1 = (1, 1, 0)$ and $v_2 = (1, -1, 0)$, and the next vector is $x_3 = (2, 0, 3)$. Both projections are removed: $\\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{2}{2} = 1$ and $\\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} = \\frac{2}{2} = 1$, so $v_3 = (2, 0, 3) - (1, 1, 0) - (1, -1, 0) = (0, 0, 3)$.\n\nCheck: $v_3 \\cdot v_1 = 0$ and $v_3 \\cdot v_2 = 0$, so all three vectors are mutually orthogonal.\n\nIn this lesson we continue Gram–Schmidt past two vectors, removing from each new vector its projections onto all earlier ones, and recognize the step at which a dependent vector gives zero.",
+    "设格拉姆–施密特已经得到正交向量 $v_1 = (1, 1, 0)$ 与 $v_2 = (1, -1, 0)$，下一个向量是 $x_3 = (2, 0, 3)$。两个投影都要去掉：$\\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{2}{2} = 1$，$\\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} = \\frac{2}{2} = 1$，所以 $v_3 = (2, 0, 3) - (1, 1, 0) - (1, -1, 0) = (0, 0, 3)$。\n\n检验：$v_3 \\cdot v_1 = 0$，$v_3 \\cdot v_2 = 0$，三个向量两两正交。\n\n本课我们把格拉姆–施密特推广到两个以上的向量，从每个新向量中去掉它在之前所有向量上的投影，并识别线性相关的向量在哪一步得到零。",
+  ),
   prerequisites: ["gram-schmidt-process-for-two-vectors", "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases"],
   encompasses: [],
   xp: 14,
@@ -3155,8 +3974,8 @@ export const gramSchmidtProcessInTheGeneralCase: TopicDef = {
       id: "gram-schmidt-three-vectors-formula",
       title: t("Third Vector in Gram-Schmidt Process", "施密特过程中的第三个正交向量"),
       explanation: t(
-        "For three linearly independent vectors $\\{x_1, x_2, x_3\\}$, after finding orthogonal vectors $v_1 = x_1$ and $v_2 = x_2 - \\operatorname{proj}_{v_1}(x_2)$, the third orthogonal vector is $v_3 = x_3 - \\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} v_1 - \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} v_2$.",
-        "对于三个线性无关的向量 $\\{x_1, x_2, x_3\\}$，在求得正交向量 $v_1 = x_1$ 与 $v_2 = x_2 - \\operatorname{proj}_{v_1}(x_2)$ 后，第三个正交向量由下式给出：$v_3 = x_3 - \\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} v_1 - \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} v_2$。",
+        "For three linearly independent vectors $\\{x_1, x_2, x_3\\}$, after finding orthogonal vectors $v_1 = x_1$ and $v_2 = x_2 - \\operatorname{proj}_{v_1}(x_2)$, the third orthogonal vector is $v_3 = x_3 - \\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} v_1 - \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} v_2$. For example, with $v_1 = (1, 0, 0)$, $v_2 = (0, 1, 0)$ and $x_3 = (2, -1, 5)$, the coefficients are $2$ and $-1$, so $v_3 = (2, -1, 5) - 2v_1 + v_2 = (0, 0, 5)$.\n\n> **Watch out.** Remove the projection onto every earlier $v$, each with its own coefficient. Removing only one leaves a vector that is not orthogonal to the other.",
+        "对于三个线性无关的向量 $\\{x_1, x_2, x_3\\}$，在求得正交向量 $v_1 = x_1$ 与 $v_2 = x_2 - \\operatorname{proj}_{v_1}(x_2)$ 后，第三个正交向量由下式给出：$v_3 = x_3 - \\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} v_1 - \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} v_2$。例如 $v_1 = (1, 0, 0)$，$v_2 = (0, 1, 0)$，$x_3 = (2, -1, 5)$ 时，两个系数为 $2$ 与 $-1$，所以 $v_3 = (2, -1, 5) - 2v_1 + v_2 = (0, 0, 5)$。\n\n> **注意。** 要去掉在之前每个 $v$ 上的投影，每个都有自己的系数。只去掉一个，得到的向量与另一个不正交。",
       ),
       generate: (rng: Rng): Problem => {
         const v1 = [1, 0, 0];
@@ -3168,32 +3987,74 @@ export const gramSchmidtProcessInTheGeneralCase: TopicDef = {
 
         const x3 = [c1, c2, c3];
         const v3 = [0, 0, c3];
+        const onlyFirst = [0, c2, c3];
+        const onlySecond = [c1, 0, c3];
+        const added = [2 * c1, 2 * c2, c3];
 
         const prompt = t(
           `In the Gram-Schmidt process for $\\mathbb{R}^3$, suppose the first two orthogonal vectors obtained are:\n$$v_1 = ${colVecLatex(v1)}, \\quad v_2 = ${colVecLatex(v2)}$$\nGiven $x_3 = ${colVecLatex(x3)}$, compute the third orthogonal vector:\n$$v_3 = x_3 - \\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} v_1 - \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} v_2$$\nEnter your answer as a vector $\\langle v_{31}, v_{32}, v_{33} \\rangle$.`,
           `在 $\\mathbb{R}^3$ 的施密特正交化过程中，设已求得前两个正交向量为：\n$$v_1 = ${colVecLatex(v1)}, \\quad v_2 = ${colVecLatex(v2)}$$\n已知 $x_3 = ${colVecLatex(x3)}$，计算第三个正交向量：\n$$v_3 = x_3 - \\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} v_1 - \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} v_2$$\n请以向量 $\\langle v_{31}, v_{32}, v_{33} \\rangle$ 的形式作答。`,
         );
 
-        const solution = t(
-          `Calculate the projection coefficients:\n$$\\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} = ${c1}, \\quad \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} = ${c2}$$\nSubtract both projections from $x_3$:\n$$v_3 = ${colVecLatex(x3)} - (${c1})${colVecLatex(v1)} - (${c2})${colVecLatex(v2)} = ${colVecLatex(v3)}$$`,
-          `计算各投影分量系数：\n$$\\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} = ${c1}, \\quad \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} = ${c2}$$\n从 $x_3$ 中减去两个投影分量：\n$$v_3 = ${colVecLatex(x3)} - (${c1})${colVecLatex(v1)} - (${c2})${colVecLatex(v2)} = ${colVecLatex(v3)}$$`,
+        const solution = walked(
+          [
+            [
+              ["Find both coefficients", "求两个系数"],
+              t("Both $v_1$ and $v_2$ have length $1$.", "$v_1$ 与 $v_2$ 的长度都是 $1$。"),
+              [
+                `\\frac{x_3 \\cdot v_1}{v_1 \\cdot v_1} = \\frac{${c1}}{1} = ${c1}, \\quad \\frac{x_3 \\cdot v_2}{v_2 \\cdot v_2} = \\frac{${c2}}{1} = ${c2}`,
+              ],
+            ],
+            [
+              ["Subtract both projections", "减去两个投影"],
+              t("", ""),
+              [`v_3 = ${colVecLatex(x3)} - (${c1})${colVecLatex(v1)} - (${c2})${colVecLatex(v2)} = ${colVecLatex(v3)}`],
+            ],
+          ],
+          t(
+            `$v_3 \\cdot v_1 = 0$ and $v_3 \\cdot v_2 = 0$, since $v_3$ has only a third entry, so $v_1$, $v_2$, $v_3$ are mutually orthogonal.`,
+            `$v_3 \\cdot v_1 = 0$，$v_3 \\cdot v_2 = 0$，因为 $v_3$ 只有第三个分量，所以 $v_1$、$v_2$、$v_3$ 两两正交。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: v3,
-          vector: true,
-          solution,
-          wrong: [[c1, 0, c3], [0, c2, c3], x3, [0, 0, -c3]],
-        });
+        return withMistakes(
+          pointProblem({
+            prompt,
+            answer: v3,
+            vector: true,
+            solution,
+            wrong: [onlySecond, onlyFirst, x3, added],
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(onlySecond),
+                "Only the projection onto $v_2$ was removed; the projection onto $v_1$ must go as well.",
+                "只去掉了在 $v_2$ 上的投影；在 $v_1$ 上的投影也要去掉。",
+              ),
+              say(
+                vectorLatex(onlyFirst),
+                "Only the projection onto $v_1$ was removed; the projection onto $v_2$ must go as well.",
+                "只去掉了在 $v_1$ 上的投影；在 $v_2$ 上的投影也要去掉。",
+              ),
+              say(
+                vectorLatex(x3),
+                "That is $x_3$ unchanged; its projections onto $v_1$ and $v_2$ still have to be removed.",
+                "这是没有改动的 $x_3$；还要去掉它在 $v_1$ 与 $v_2$ 上的投影。",
+              ),
+              say(vectorLatex(added), "The projections were added; they must be subtracted.", "投影被加上了；应当减去。"),
+            ],
+            vectorLatex(v3),
+          ),
+        );
       },
     },
     {
       id: "the-third-gram-schmidt-vector",
       title: t("The third Gram–Schmidt vector", "第三个格拉姆–施密特向量"),
       explanation: t(
-        "In the general case each new vector has its projections onto all earlier ones removed:\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2.$$\n\nWhen $v_1$ and $v_2$ are already orthogonal, $w_1 = v_1$ and $w_2 = v_2$, and only this last step is needed. Subtracting both projections is essential; removing only one leaves a vector that is not orthogonal to the other.",
-        "一般情形下，每个新向量都要去掉它在之前所有向量上的投影：\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2$$\n\n当 $v_1$ 与 $v_2$ 已经正交时，$w_1 = v_1$，$w_2 = v_2$，只需这最后一步。两个投影都要减去；只去掉一个会留下与另一个不正交的向量。",
+        "In the general case each new vector has its projections onto all earlier ones removed:\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2.$$\n\nWhen $v_1$ and $v_2$ are already orthogonal, $w_1 = v_1$ and $w_2 = v_2$, and only this last step is needed. For example, with $w_1 = (1, 1, 1)$, $w_2 = (1, -1, 0)$ and $v_3 = (3, 1, -1)$, the coefficients are $\\frac{3}{3} = 1$ and $\\frac{2}{2} = 1$, so $w_3 = (3, 1, -1) - (1, 1, 1) - (1, -1, 0) = (1, 1, -2)$.\n\n> **Watch out.** Subtracting both projections is essential; removing only one leaves a vector that is not orthogonal to the other. Divide each dot product by its own $w_i \\cdot w_i$.",
+        "一般情形下，每个新向量都要去掉它在之前所有向量上的投影：\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2$$\n\n当 $v_1$ 与 $v_2$ 已经正交时，$w_1 = v_1$，$w_2 = v_2$，只需这最后一步。例如 $w_1 = (1, 1, 1)$，$w_2 = (1, -1, 0)$，$v_3 = (3, 1, -1)$ 时，两个系数为 $\\frac{3}{3} = 1$ 与 $\\frac{2}{2} = 1$，所以 $w_3 = (3, 1, -1) - (1, 1, 1) - (1, -1, 0) = (1, 1, -2)$。\n\n> **注意。** 两个投影都要减去；只去掉一个会留下与另一个不正交的向量。每个点积都要除以它自己的 $w_i \\cdot w_i$。",
       ),
       generate: (rng: Rng): Problem => {
         const frames = [
@@ -3226,20 +4087,64 @@ export const gramSchmidtProcessInTheGeneralCase: TopicDef = {
         const w3 = n.map((x) => k * x);
         const n1 = w1.reduce((s, x) => s + x * x, 0);
         const n2 = w2.reduce((s, x) => s + x * x, 0);
-        return pointProblem({
-          prompt: t(
-            `$v_1 = (${w1.join(", ")})$ and $v_2 = (${w2.join(", ")})$ are orthogonal. Gram–Schmidt continues with $v_3 = (${v3.join(", ")})$. Find $w_3$.`,
-            `$v_1 = (${w1.join(", ")})$ 与 $v_2 = (${w2.join(", ")})$ 正交。格拉姆–施密特继续处理 $v_3 = (${v3.join(", ")})$。求 $w_3$。`,
+        const onlyFirst = [0, 1, 2].map((i) => v3[i]! - a * w1[i]!);
+        const onlySecond = [0, 1, 2].map((i) => v3[i]! - b * w2[i]!);
+        const added = [0, 1, 2].map((i) => v3[i]! + a * w1[i]! + b * w2[i]!);
+        const dotWith = (v: readonly number[], w: readonly number[]) => v.reduce((s, x, i) => s + x * w[i]!, 0);
+        const times = (c: number, name: string) => (c === 1 ? name : c === -1 ? `(-1)${name}` : c < 0 ? `(${c})${name}` : `${c}${name}`);
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `$v_1 = (${w1.join(", ")})$ and $v_2 = (${w2.join(", ")})$ are orthogonal. Gram–Schmidt continues with $v_3 = (${v3.join(", ")})$. Find $w_3$.`,
+              `$v_1 = (${w1.join(", ")})$ 与 $v_2 = (${w2.join(", ")})$ 正交。格拉姆–施密特继续处理 $v_3 = (${v3.join(", ")})$。求 $w_3$。`,
+            ),
+            answer: w3,
+            vector: true,
+            vars: ["x", "y", "z"],
+            wrong: [onlyFirst, onlySecond, v3, added],
+            solution: walked(
+              [
+                [
+                  ["Find both coefficients", "求两个系数"],
+                  t("Here $w_1 = v_1$ and $w_2 = v_2$.", "这里 $w_1 = v_1$，$w_2 = v_2$。"),
+                  [
+                    `\\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1} = \\frac{${a * n1}}{${n1}} = ${a}, \\quad \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2} = \\frac{${b * n2}}{${n2}} = ${b}`,
+                  ],
+                ],
+                [
+                  ["Subtract both projections", "减去两个投影"],
+                  t("", ""),
+                  [`w_3 = v_3 - ${times(a, "w_1")} - ${times(b, "w_2")} = (${w3.join(", ")})`],
+                ],
+              ],
+              t(
+                `$w_3 \\cdot w_1 = ${dotWith(w3, w1)}$ and $w_3 \\cdot w_2 = ${dotWith(w3, w2)}$, so $w_3$ is orthogonal to both earlier vectors.`,
+                `$w_3 \\cdot w_1 = ${dotWith(w3, w1)}$，$w_3 \\cdot w_2 = ${dotWith(w3, w2)}$，所以 $w_3$ 与之前两个向量都正交。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(onlyFirst),
+                "Only the projection onto $w_1$ was removed; the result is not orthogonal to $w_2$.",
+                "只去掉了在 $w_1$ 上的投影；结果与 $w_2$ 不正交。",
+              ),
+              say(
+                vectorLatex(onlySecond),
+                "Only the projection onto $w_2$ was removed; the result is not orthogonal to $w_1$.",
+                "只去掉了在 $w_2$ 上的投影；结果与 $w_1$ 不正交。",
+              ),
+              say(
+                vectorLatex(v3),
+                "That is $v_3$ unchanged; its projections onto $w_1$ and $w_2$ still have to be removed.",
+                "这是没有改动的 $v_3$；还要去掉它在 $w_1$ 与 $w_2$ 上的投影。",
+              ),
+              say(vectorLatex(added), "The projections were added; they must be subtracted.", "投影被加上了；应当减去。"),
+            ],
+            vectorLatex(w3),
           ),
-          answer: w3,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [[0, 1, 2].map((i) => v3[i]! - a * w1[i]!), [0, 1, 2].map((i) => v3[i]! - b * w2[i]!), w3.map((x) => -x)],
-          solution: t(
-            `$\\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1} = \\frac{${a * n1}}{${n1}} = ${a}$ and $\\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2} = \\frac{${b * n2}}{${n2}} = ${b}$, so $w_3 = v_3 - ${a === 1 ? "" : a < 0 ? `(${a})` : a}w_1 - ${b === 1 ? "" : b < 0 ? `(${b})` : b}w_2 = (${w3.join(", ")})$.`,
-            `$\\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1} = \\frac{${a * n1}}{${n1}} = ${a}$，$\\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2} = \\frac{${b * n2}}{${n2}} = ${b}$，所以 $w_3 = v_3 - ${a === 1 ? "" : a < 0 ? `(${a})` : a}w_1 - ${b === 1 ? "" : b < 0 ? `(${b})` : b}w_2 = (${w3.join(", ")})$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -3253,6 +4158,10 @@ export const qrFactorization: TopicDef = {
     "Compute the QR factorization A = QR where Q has orthonormal columns and R is upper triangular.",
     "计算 QR 分解 A = QR，其中 Q 具有标准正交列，R 为上三角矩阵。",
   ),
+  intro: t(
+    "Factor $A = \\begin{pmatrix} 3 & -1 \\\\ 4 & 7 \\end{pmatrix}$. The first column has length $5$, so $r_{11} = 5$ and $q_1 = (\\frac{3}{5}, \\frac{4}{5})$. Next $r_{12} = q_1 \\cdot a_2 = \\frac{-3 + 28}{5} = 5$, and the leftover $a_2 - 5q_1 = (-4, 3)$ has length $r_{22} = 5$, so $q_2 = (-\\frac{4}{5}, \\frac{3}{5})$ and $R = \\begin{pmatrix} 5 & 5 \\\\ 0 & 5 \\end{pmatrix}$.\n\nCheck: $QR$ has second column $5q_1 + 5q_2 = (3, 4) + (-4, 3) = (-1, 7)$, which is $a_2$, and its first column $5q_1 = (3, 4)$ is $a_1$.\n\nIn this lesson we build the factorization $A = QR$ from Gram–Schmidt and read the entries of $R$ as dot products $r_{ij} = q_i \\cdot a_j$.",
+    "分解 $A = \\begin{pmatrix} 3 & -1 \\\\ 4 & 7 \\end{pmatrix}$。第一列长度为 $5$，所以 $r_{11} = 5$，$q_1 = (\\frac{3}{5}, \\frac{4}{5})$。接着 $r_{12} = q_1 \\cdot a_2 = \\frac{-3 + 28}{5} = 5$，剩余部分 $a_2 - 5q_1 = (-4, 3)$ 的长度为 $r_{22} = 5$，所以 $q_2 = (-\\frac{4}{5}, \\frac{3}{5})$，$R = \\begin{pmatrix} 5 & 5 \\\\ 0 & 5 \\end{pmatrix}$。\n\n检验：$QR$ 的第二列为 $5q_1 + 5q_2 = (3, 4) + (-4, 3) = (-1, 7)$，正是 $a_2$；第一列 $5q_1 = (3, 4)$ 正是 $a_1$。\n\n本课我们由格拉姆–施密特得到分解 $A = QR$，并把 $R$ 的元素看作点积 $r_{ij} = q_i \\cdot a_j$。",
+  ),
   prerequisites: ["gram-schmidt-process-in-the-general-case", "orthogonal-matrices"],
   encompasses: [],
   xp: 14,
@@ -3261,8 +4170,8 @@ export const qrFactorization: TopicDef = {
       id: "qr-decomposition-r-matrix",
       title: t("Upper Triangular Factor R in QR Decomposition", "QR 分解中的上三角矩阵 R"),
       explanation: t(
-        "The entries of the upper triangular factor are the dot products of the orthonormal vectors with the original columns, recording how each column was built. If $A = [a_1 \\ a_2]$ has linearly independent columns, its $QR$ factorization $A = QR$ produces an upper triangular matrix $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$, where $r_{11} = |a_1|$, $r_{12} = q_1 \\cdot a_2$, and $r_{22} = |a_2 - r_{12} q_1| > 0$.",
-        "上三角因子的元素是标准正交向量与原来各列的点积，记录了每一列是怎样构成的。若 $A = [a_1 \\ a_2]$ 的各列线性无关，其 $QR$ 分解 $A = QR$ 产生的上三角矩阵为 $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$，其中 $r_{11} = |a_1|$，$r_{12} = q_1 \\cdot a_2$ 且 $r_{22} = |a_2 - r_{12} q_1| > 0$。",
+        "The entries of the upper triangular factor are the dot products of the orthonormal vectors with the original columns, recording how each column was built. If $A = [a_1 \\ a_2]$ has linearly independent columns, its $QR$ factorization $A = QR$ produces an upper triangular matrix $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$, where $r_{11} = \\|a_1\\|$, $r_{12} = q_1 \\cdot a_2$, and $r_{22} = \\|a_2 - r_{12} q_1\\| > 0$. For example, $A = \\begin{pmatrix} 3 & -1 \\\\ 4 & 7 \\end{pmatrix}$ has $r_{11} = 5$, $r_{12} = \\frac{-3 + 28}{5} = 5$ and $r_{22} = \\|(-4, 3)\\| = 5$.\n\n> **Watch out.** $r_{12} = q_1 \\cdot a_2$ sits above the diagonal, because $a_2$ uses both $q_1$ and $q_2$ while $a_1$ uses only $q_1$. The entry $r_{22}$ is the length of what is left of $a_2$ after removing its $q_1$ part, not $\\|a_2\\|$.",
+        "上三角因子的元素是标准正交向量与原来各列的点积，记录了每一列是怎样构成的。若 $A = [a_1 \\ a_2]$ 的各列线性无关，其 $QR$ 分解 $A = QR$ 产生的上三角矩阵为 $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$，其中 $r_{11} = \\|a_1\\|$，$r_{12} = q_1 \\cdot a_2$ 且 $r_{22} = \\|a_2 - r_{12} q_1\\| > 0$。例如 $A = \\begin{pmatrix} 3 & -1 \\\\ 4 & 7 \\end{pmatrix}$ 有 $r_{11} = 5$，$r_{12} = \\frac{-3 + 28}{5} = 5$，$r_{22} = \\|(-4, 3)\\| = 5$。\n\n> **注意。** $r_{12} = q_1 \\cdot a_2$ 在对角线上方，因为 $a_2$ 用到 $q_1$ 和 $q_2$，而 $a_1$ 只用到 $q_1$。$r_{22}$ 是 $a_2$ 去掉 $q_1$ 部分后剩余部分的长度，不是 $\\|a_2\\|$。",
       ),
       generate: (rng: Rng): Problem => {
         const a1Candidates = [
@@ -3309,63 +4218,83 @@ export const qrFactorization: TopicDef = {
         );
 
         const right = t(`$R = ${matLatex(R)}$`, `$R = ${matLatex(R)}$`);
-        const wrong = [
-          t(
-            `$R = ${matLatex([
+        const slips: [number[][], string, string][] = [
+          [
+            [
               [r11, r22],
               [0, r12],
-            ])}$`,
-            `$R = ${matLatex([
-              [r11, r22],
-              [0, r12],
-            ])}$`,
-          ),
-          t(
-            `$R = ${matLatex([
+            ],
+            `This swaps $r_{12}$ and $r_{22}$: the dot product $q_1 \\cdot a_2 = ${r12}$ belongs above the diagonal, and the leftover length $${r22}$ on it.`,
+            `这是把 $r_{12}$ 与 $r_{22}$ 对调了：点积 $q_1 \\cdot a_2 = ${r12}$ 应在对角线上方，剩余部分的长度 $${r22}$ 应在对角线上。`,
+          ],
+          [
+            [
               [r11, 0],
               [r12, r22],
-            ])}$`,
-            `$R = ${matLatex([
-              [r11, 0],
-              [r12, r22],
-            ])}$`,
-          ),
-          t(
-            `$R = ${matLatex([
+            ],
+            "This puts $r_{12}$ below the diagonal; $R$ is upper triangular, because $a_1$ uses only $q_1$ while $a_2$ uses both.",
+            "这是把 $r_{12}$ 放到了对角线下方；$R$ 是上三角矩阵，因为 $a_1$ 只用到 $q_1$，而 $a_2$ 两个都用到。",
+          ],
+          [
+            [
               [r11, r12],
               [0, -r22],
-            ])}$`,
-            `$R = ${matLatex([
-              [r11, r12],
-              [0, -r22],
-            ])}$`,
-          ),
-          t(
-            `$R = ${matLatex([
+            ],
+            "This takes $q_2$ in the opposite direction; with a positive diagonal, $r_{22}$ is the length $\\|a_2 - r_{12}q_1\\|$.",
+            "这是把 $q_2$ 取成了相反方向；对角线为正时，$r_{22}$ 是长度 $\\|a_2 - r_{12}q_1\\|$。",
+          ],
+          [
+            [
               [r11, 0],
               [0, r22],
-            ])}$`,
-            `$R = ${matLatex([
-              [r11, 0],
-              [0, r22],
-            ])}$`,
-          ),
+            ],
+            `This drops $r_{12}$, as if the columns of $A$ were orthogonal; here $q_1 \\cdot a_2 = ${r12}$.`,
+            `这是丢掉了 $r_{12}$，相当于把 $A$ 的两列当成了正交；这里 $q_1 \\cdot a_2 = ${r12}$。`,
+          ],
         ];
+        const wrong = slips.map(([m]) => t(`$R = ${matLatex(m)}$`, `$R = ${matLatex(m)}$`));
 
-        const solution = t(
-          `First, compute $r_{11} = \\|a_1\\| = \\sqrt{(${a})^2 + (${b})^2} = 5$, giving $q_1 = \\begin{pmatrix} ${frac(a, 5)} \\\\ ${frac(b, 5)} \\end{pmatrix}$.\nNext, $r_{12} = q_1 \\cdot a_2 = \\frac{(${a})(${a2x}) + (${b})(${a2y})}{5} = ${r12}$.\nFinally, $a_2 - r_{12} q_1 = \\begin{pmatrix} ${frac(-b * r22, 5)} \\\\ ${frac(a * r22, 5)} \\end{pmatrix}$, with norm $r_{22} = ${r22}$.\nThus $R = ${matLatex(R)}$.`,
-          `首先计算 $r_{11} = \\|a_1\\| = \\sqrt{(${a})^2 + (${b})^2} = 5$，得到 $q_1 = \\begin{pmatrix} ${frac(a, 5)} \\\\ ${frac(b, 5)} \\end{pmatrix}$。\n接着计算 $r_{12} = q_1 \\cdot a_2 = \\frac{(${a})(${a2x}) + (${b})(${a2y})}{5} = ${r12}$。\n最后，计算正交分量 $a_2 - r_{12} q_1 = \\begin{pmatrix} ${frac(-b * r22, 5)} \\\\ ${frac(a * r22, 5)} \\end{pmatrix}$，其范数为 $r_{22} = ${r22}$。\n因此 $R = ${matLatex(R)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Normalize the first column", "把第一列单位化"],
+              t("", ""),
+              [
+                `r_{11} = \\|a_1\\| = \\sqrt{(${a})^2 + (${b})^2} = 5, \\quad q_1 = \\begin{pmatrix} ${frac(a, 5)} \\\\ ${frac(b, 5)} \\end{pmatrix}`,
+              ],
+            ],
+            [
+              ["Dot $q_1$ with the second column", "把 $q_1$ 与第二列做点积"],
+              t("", ""),
+              [`r_{12} = q_1 \\cdot a_2 = \\frac{(${a})(${a2x}) + (${b})(${a2y})}{5} = ${r12}`],
+            ],
+            [
+              ["Measure what is left", "求剩余部分的长度"],
+              t("", ""),
+              [
+                `a_2 - r_{12}q_1 = \\begin{pmatrix} ${frac(-b * r22, 5)} \\\\ ${frac(a * r22, 5)} \\end{pmatrix}, \\quad r_{22} = ${r22}`,
+                `R = ${matLatex(R)}`,
+              ],
+            ],
+          ],
+          t(
+            `With $q_2 = \\begin{pmatrix} ${frac(-b, 5)} \\\\ ${frac(a, 5)} \\end{pmatrix}$, the second column of $QR$ is $${r12 < 0 ? `(${r12})` : r12}q_1 + ${r22}q_2 = (${a2x}, ${a2y})$, which is $a_2$.`,
+            `取 $q_2 = \\begin{pmatrix} ${frac(-b, 5)} \\\\ ${frac(a, 5)} \\end{pmatrix}$，$QR$ 的第二列为 $${r12 < 0 ? `(${r12})` : r12}q_1 + ${r22}q_2 = (${a2x}, ${a2y})$，正是 $a_2$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(
+          oneOf(rng, prompt, right, wrong, solution),
+          slips.map(([, en, zh], i): [string, string, string] => [wrong[i]!.en, en, zh]),
+        );
       },
     },
     {
       id: "r-from-q-transpose-a",
       title: t("Recovering $R$ as $Q^TA$", "由 $Q^TA$ 求 $R$"),
       explanation: t(
-        "If $A = QR$ and $Q$ has orthonormal columns, then $Q^TQ = I$, so multiplying on the left by $Q^T$ gives $R = Q^TA$. Each entry is a dot product: $r_{ij} = q_i \\cdot a_j$, the $i$th column of $Q$ dotted with the $j$th column of $A$. The entries below the diagonal come out as zero automatically.",
-        "若 $A = QR$ 且 $Q$ 的列标准正交，则 $Q^TQ = I$，在左边乘以 $Q^T$ 得 $R = Q^TA$。每个元素都是点积：$r_{ij} = q_i \\cdot a_j$，即 $Q$ 的第 $i$ 列与 $A$ 的第 $j$ 列的点积。对角线以下的元素自动为零。",
+        "If $A = QR$ and $Q$ has orthonormal columns, then $Q^TQ = I$, so multiplying on the left by $Q^T$ gives $R = Q^TA$. Each entry is a dot product: $r_{ij} = q_i \\cdot a_j$, the $i$th column of $Q$ dotted with the $j$th column of $A$. The entries below the diagonal come out as zero automatically. For example, if $q_1 = \\frac{1}{3}(1, 2, 2)$ and $a_1 = (3, 6, 6)$, then $r_{11} = \\frac{1}{3}(3 + 12 + 12) = 9$.\n\n> **Watch out.** In $r_{ij}$ the first index picks the column of $Q$ and the second the column of $A$; swapping them gives an entry below the diagonal. Keep the factor in front of $Q$: its columns are unit vectors.",
+        "若 $A = QR$ 且 $Q$ 的列标准正交，则 $Q^TQ = I$，在左边乘以 $Q^T$ 得 $R = Q^TA$。每个元素都是点积：$r_{ij} = q_i \\cdot a_j$，即 $Q$ 的第 $i$ 列与 $A$ 的第 $j$ 列的点积。对角线以下的元素自动为零。例如 $q_1 = \\frac{1}{3}(1, 2, 2)$，$a_1 = (3, 6, 6)$ 时，$r_{11} = \\frac{1}{3}(3 + 12 + 12) = 9$。\n\n> **注意。** 在 $r_{ij}$ 中，第一个下标选 $Q$ 的列，第二个下标选 $A$ 的列；对调会得到对角线下方的元素。不要丢掉 $Q$ 前面的因子：它的列是单位向量。",
       ),
       generate: (rng: Rng): Problem => {
         const q1 = [1, 2, 2];
@@ -3390,16 +4319,68 @@ export const qrFactorization: TopicDef = {
           [q1, a2],
           [q2, a2],
         ][which]!;
+        const otherPair = [
+          [
+            3 * r12,
+            "That dots $q_1$ with $a_2$, which gives $r_{12}$; $r_{11}$ uses the first column of $A$.",
+            "这是 $q_1$ 与 $a_2$ 的点积，即 $r_{12}$；$r_{11}$ 用的是 $A$ 的第一列。",
+          ],
+          [
+            0,
+            "That dots $q_2$ with $a_1$, which gives the entry $r_{21}$ below the diagonal; $r_{12}$ dots $q_1$ with $a_2$.",
+            "这是 $q_2$ 与 $a_1$ 的点积，即对角线下方的元素 $r_{21}$；$r_{12}$ 是 $q_1$ 与 $a_2$ 的点积。",
+          ],
+          [
+            3 * r12,
+            "That dots $q_1$ with $a_2$, which gives $r_{12}$; $r_{22}$ uses the second column of $Q$.",
+            "这是 $q_1$ 与 $a_2$ 的点积，即 $r_{12}$；$r_{22}$ 用的是 $Q$ 的第二列。",
+          ],
+        ][which]! as [number, string, string];
+        const a2Squared = a2.reduce((s, x) => s + x * x, 0);
         return numberProblem({
           prompt: t(
             `$A = ${matLatex(A)} = QR$ with $Q = ${matLatex(Qm)}$. Find $${label}$.`,
             `$A = ${matLatex(A)} = QR$，其中 $Q = ${matLatex(Qm)}$。求 $${label}$。`,
           ),
           answer: ans,
-          wrong: [ans / 3, -ans, 3 * r11 + 3 * r22 - ans || 1, ans * 3],
-          solution: t(
-            `$${label} = q_{${which === 2 ? 2 : 1}} \\cdot a_{${which === 0 ? 1 : 2}} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$.`,
-            `$${label} = q_{${which === 2 ? 2 : 1}} \\cdot a_{${which === 0 ? 1 : 2}} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$。`,
+          mistakes: [
+            why(
+              ans * 3,
+              "The factor $\\frac{1}{3}$ of the column of $Q$ was dropped; the columns of $Q$ are unit vectors.",
+              "丢掉了 $Q$ 的列前面的因子 $\\frac{1}{3}$；$Q$ 的列是单位向量。",
+            ),
+            why(
+              ans / 3,
+              "The factor $\\frac{1}{3}$ was applied twice; only the column of $Q$ carries it.",
+              "因子 $\\frac{1}{3}$ 被用了两次；只有 $Q$ 的列带有它。",
+            ),
+            why(...otherPair),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Write the entry as a dot product", "把元素写成点积"],
+                t(
+                  "Since $Q^TQ = I$, $R = Q^TA$, so $r_{ij}$ is column $i$ of $Q$ dotted with column $j$ of $A$.",
+                  "因为 $Q^TQ = I$，$R = Q^TA$，所以 $r_{ij}$ 是 $Q$ 的第 $i$ 列与 $A$ 的第 $j$ 列的点积。",
+                ),
+                [`${label} = q_{${which === 2 ? 2 : 1}} \\cdot a_{${which === 0 ? 1 : 2}}`],
+              ],
+              [
+                ["Compute it", "计算"],
+                t("", ""),
+                [`${label} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}`],
+              ],
+            ],
+            which === 0
+              ? t(
+                  `$a_1 = ${label}\\,q_1$, so $${label}$ must be the length of $a_1$: $\\|a_1\\| = \\sqrt{${a1.map((x) => `${x * x}`).join(" + ")}} = ${3 * r11}$.`,
+                  `$a_1 = ${label}\\,q_1$，所以 $${label}$ 必须等于 $a_1$ 的长度：$\\|a_1\\| = \\sqrt{${a1.map((x) => `${x * x}`).join(" + ")}} = ${3 * r11}$。`,
+                )
+              : t(
+                  `Since $a_2 = r_{12}q_1 + r_{22}q_2$ with orthonormal $q$'s, $\\|a_2\\|^2 = r_{12}^2 + r_{22}^2$: $${a2Squared} = ${9 * r12 * r12} + ${9 * r22 * r22}$.`,
+                  `因为 $a_2 = r_{12}q_1 + r_{22}q_2$ 且各 $q$ 标准正交，$\\|a_2\\|^2 = r_{12}^2 + r_{22}^2$：$${a2Squared} = ${9 * r12 * r12} + ${9 * r22 * r22}$。`,
+                ),
           ),
         });
       },

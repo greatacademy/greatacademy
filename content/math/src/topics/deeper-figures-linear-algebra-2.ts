@@ -1562,8 +1562,8 @@ const componentsOrthogonal = {
     "a-coordinate-relative-to-a-drawn-orthogonal-basis",
     ["A coordinate relative to a drawn orthogonal basis", "相对于所画正交基的坐标"],
     [
-      "When the basis vectors are perpendicular, the coordinate along $b_i$ is $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$, and no system has to be solved.",
-      "当基向量互相垂直时，沿 $b_i$ 的坐标是 $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$，无需解方程组。",
+      "When the basis vectors are perpendicular, the coordinate along $b_i$ is $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$, and no system has to be solved. For example, with $b_1 = (1, 1)$, $b_2 = (-1, 1)$ and $w = (3, 1)$, $c_1 = \\frac{4}{2} = 2$ and $c_2 = \\frac{-2}{2} = -1$, and indeed $2(1, 1) - (-1, 1) = (3, 1)$.\n\n> **Watch out.** Divide by $b_i \\cdot b_i$, the squared length of the basis vector, not by $w \\cdot w$; and dot $w$ with the basis vector whose coordinate is asked for.",
+      "当基向量互相垂直时，沿 $b_i$ 的坐标是 $\\frac{w \\cdot b_i}{b_i \\cdot b_i}$，无需解方程组。例如 $b_1 = (1, 1)$，$b_2 = (-1, 1)$，$w = (3, 1)$ 时，$c_1 = \\frac{4}{2} = 2$，$c_2 = \\frac{-2}{2} = -1$，确实 $2(1, 1) - (-1, 1) = (3, 1)$。\n\n> **注意。** 要除以基向量长度的平方 $b_i \\cdot b_i$，而不是 $w \\cdot w$；并且要用所求坐标对应的那个基向量与 $w$ 作点积。",
     ],
     (rng) => {
       const b1 = rng.pick<Point>([...slanted, [2, 0], [0, 2], [1, 0], [0, 1]]);
@@ -1575,18 +1575,62 @@ const componentsOrthogonal = {
       const top = dot(w, b);
       const bottom = dot(b, b);
       const other = first ? b2 : b1;
-      return ask(
-        [
-          `The arrows show an orthogonal basis $(b_1, b_2)$ and a vector $w = c_1 b_1 + c_2 b_2$. Find $c_${first ? 1 : 2}$.`,
-          `箭头表示正交基 $(b_1, b_2)$ 和向量 $w = c_1 b_1 + c_2 b_2$。求 $c_${first ? 1 : 2}$。`,
-        ],
-        Q.of(top, bottom),
-        [top, Q.of(dot(w, other), dot(other, other)), Q.of(bottom, top === 0 ? 1 : top), Q.of(top, bottom + 1)],
-        [
-          `$w = ${at(w)}$ and $b_${first ? 1 : 2} = ${at(b)}$, so the coordinate is $\\frac{${top}}{${bottom}} = ${Q.of(top, bottom).toLatex()}$.`,
-          `$w = ${at(w)}$，$b_${first ? 1 : 2} = ${at(b)}$，所以坐标为 $\\frac{${top}}{${bottom}} = ${Q.of(top, bottom).toLatex()}$。`,
-        ],
-        fig(
+      const answer = Q.of(top, bottom);
+      const rest = Q.of(dot(w, other), dot(other, other));
+      const [me, them] = first ? [1, 2] : [2, 1];
+      const paren = (x: Q) => (x.sign() < 0 ? `\\left(${x.toLatex()}\\right)` : x.toLatex());
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The arrows show an orthogonal basis $(b_1, b_2)$ and a vector $w = c_1 b_1 + c_2 b_2$. Find $c_${me}$.`,
+            `箭头表示正交基 $(b_1, b_2)$ 和向量 $w = c_1 b_1 + c_2 b_2$。求 $c_${me}$。`,
+          ),
+          answer,
+          mistakes: [
+            why(
+              top,
+              `That is $w \\cdot b_${me}$ itself; it still has to be divided by $b_${me} \\cdot b_${me} = ${bottom}$.`,
+              `这是 $w \\cdot b_${me}$ 本身；还要除以 $b_${me} \\cdot b_${me} = ${bottom}$。`,
+            ),
+            why(
+              rest,
+              `That is the coordinate $c_${them}$ along the other basis vector $b_${them}$.`,
+              `这是沿另一个基向量 $b_${them}$ 的坐标 $c_${them}$。`,
+            ),
+            ...(top === 0
+              ? []
+              : [why(Q.of(bottom, top), "The fraction is upside down: the dot product goes on top.", "分数上下颠倒了：点积应在分子上。")]),
+            why(
+              Q.of(top, dot(w, w)),
+              `That divides by $w \\cdot w = ${dot(w, w)}$; the divisor is the squared length of $b_${me}$.`,
+              `这是除以了 $w \\cdot w = ${dot(w, w)}$；除数应是 $b_${me}$ 长度的平方。`,
+            ),
+          ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+          solution: walked(
+            [
+              [
+                ["Read the arrows", "读出箭头"],
+                t(
+                  `$w = ${at(w)}$ and $b_${me} = ${at(b)}$; the basis is orthogonal, so dotting with $b_${me}$ removes the $b_${them}$ term.`,
+                  `$w = ${at(w)}$，$b_${me} = ${at(b)}$；基是正交的，所以与 $b_${me}$ 作点积会消去 $b_${them}$ 项。`,
+                ),
+              ],
+              [
+                ["Divide by the squared length", "除以长度的平方"],
+                t("", ""),
+                [
+                  `w \\cdot b_${me} = ${top}, \\quad b_${me} \\cdot b_${me} = ${bottom}`,
+                  `c_${me} = \\frac{${top}}{${bottom}} = ${answer.toLatex()}`,
+                ],
+              ],
+            ],
+            t(
+              `With $c_${them} = ${rest.toLatex()}$ along $b_${them} = ${at(other)}$, $${answer.toLatex()}\\,${at(b)} + ${paren(rest)}\\,${at(other)} = ${at(w)}$.`,
+              `沿 $b_${them} = ${at(other)}$ 的坐标 $c_${them} = ${rest.toLatex()}$，于是 $${answer.toLatex()}\\,${at(b)} + ${paren(rest)}\\,${at(other)} = ${at(w)}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           7,
           [...arrow(b1, "b1", false), ...arrow(b2, "b2", false), ...arrow(w, "w")],
           [
@@ -1594,7 +1638,7 @@ const componentsOrthogonal = {
             `从原点出发的箭头：b1 指向 ${at(b1)}，b2 指向 ${at(b2)}，w 指向 ${at(w)}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure:
@@ -1608,8 +1652,8 @@ const gramSchmidt = {
     "a-gram-schmidt-step-on-two-drawn-arrows",
     ["A Gram-Schmidt step on two drawn arrows", "对两个所画箭头做格拉姆-施密特一步"],
     [
-      "Gram-Schmidt keeps $u$ and replaces $v$ by $v - \\frac{v \\cdot u}{u \\cdot u} u$, which removes the part of $v$ along $u$. What remains is perpendicular to $u$, and that gives an orthogonal pair spanning the same plane.",
-      "格拉姆-施密特保留 $u$，把 $v$ 换成 $v - \\frac{v \\cdot u}{u \\cdot u} u$，也就是去掉 $v$ 沿 $u$ 的部分。剩下的部分垂直于 $u$，于是得到张成同一平面的一对正交向量。",
+      "Gram-Schmidt keeps $u$ and replaces $v$ by $v - \\frac{v \\cdot u}{u \\cdot u} u$, which removes the part of $v$ along $u$. What remains is perpendicular to $u$, and that gives an orthogonal pair spanning the same plane. For example, $u = (2, 1)$ and $v = (1, 3)$ give $\\frac{5}{5} = 1$ and $w = (1, 3) - (2, 1) = (-1, 2)$, and $w \\cdot u = -2 + 2 = 0$.\n\n> **Watch out.** The answer is what is left after subtracting, not the part along $u$ that is subtracted. Divide $v \\cdot u$ by $u \\cdot u$ before scaling $u$.",
+      "格拉姆-施密特保留 $u$，把 $v$ 换成 $v - \\frac{v \\cdot u}{u \\cdot u} u$，也就是去掉 $v$ 沿 $u$ 的部分。剩下的部分垂直于 $u$，于是得到张成同一平面的一对正交向量。例如 $u = (2, 1)$，$v = (1, 3)$ 时倍数为 $\\frac{5}{5} = 1$，$w = (1, 3) - (2, 1) = (-1, 2)$，而 $w \\cdot u = -2 + 2 = 0$。\n\n> **注意。** 答案是减去之后剩下的部分，而不是被减去的沿 $u$ 的部分。要先用 $v \\cdot u$ 除以 $u \\cdot u$，再去乘 $u$。",
     ],
     (rng) => {
       const u = rng.pick<Point>([...slanted, [2, 1], [1, 0], [0, 1], [2, 0]]);
@@ -1621,23 +1665,59 @@ const gramSchmidt = {
       const vi = v[i] as number;
       const name: Pair = i === 0 ? ["first", "第一"] : ["second", "第二"];
       const answer = Q.of(vi * uu - vu * ui, uu);
-      return ask(
-        [
-          `Apply one step of Gram-Schmidt to the drawn vectors, keeping $u$, and let $w = v - \\frac{v \\cdot u}{u \\cdot u} u$. Find the ${name[0]} coordinate of $w$.`,
-          `对所画向量做一步格拉姆-施密特，保留 $u$，令 $w = v - \\frac{v \\cdot u}{u \\cdot u} u$。求 $w$ 的${name[1]}个坐标。`,
-        ],
-        answer,
-        [Q.of(vu * ui, uu), vi - vu * ui, Q.of(vi * uu + vu * ui, uu), Q.of(vi * uu - vu * ui, vu)],
-        [
-          `$v \\cdot u = ${vu}$ and $u \\cdot u = ${uu}$, so that coordinate is $${vi} - \\frac{${vu}}{${uu}}(${ui}) = ${answer.toLatex()}$.`,
-          `$v \\cdot u = ${vu}$，$u \\cdot u = ${uu}$，所以该坐标为 $${vi} - \\frac{${vu}}{${uu}}(${ui}) = ${answer.toLatex()}$。`,
-        ],
-        fig(
+      const w0 = Q.of(v[0] * uu - vu * u[0], uu);
+      const w1 = Q.of(v[1] * uu - vu * u[1], uu);
+      const factor = Q.of(vu, uu);
+      return {
+        ...numberProblem({
+          prompt: t(
+            `Apply one step of Gram-Schmidt to the drawn vectors, keeping $u$, and let $w = v - \\frac{v \\cdot u}{u \\cdot u} u$. Find the ${name[0]} coordinate of $w$.`,
+            `对所画向量做一步格拉姆-施密特，保留 $u$，令 $w = v - \\frac{v \\cdot u}{u \\cdot u} u$。求 $w$ 的${name[1]}个坐标。`,
+          ),
+          answer,
+          mistakes: [
+            why(
+              Q.of(vu * ui, uu),
+              "That is the coordinate of the part along $u$, which is subtracted; $w$ is what is left.",
+              "这是沿 $u$ 的那部分的坐标，它是被减去的；$w$ 是剩下的部分。",
+            ),
+            why(
+              vi - vu * ui,
+              `That subtracts $v \\cdot u$ times $u$ without dividing by $u \\cdot u = ${uu}$.`,
+              `这是减去了 $v \\cdot u$ 倍的 $u$，没有除以 $u \\cdot u = ${uu}$。`,
+            ),
+            why(Q.of(vi * uu + vu * ui, uu), "The part along $u$ was added instead of subtracted.", "把沿 $u$ 的部分加上了，应当减去。"),
+            why(
+              Q.of(vi * vu - uu * ui, vu),
+              `That uses the factor $\\frac{u \\cdot u}{v \\cdot u}$, upside down: it is $\\frac{v \\cdot u}{u \\cdot u}$, with $u \\cdot u = ${uu}$ below.`,
+              `倍数上下颠倒了：应为 $\\frac{v \\cdot u}{u \\cdot u}$，$u \\cdot u = ${uu}$ 在分母上。`,
+            ),
+          ].filter((m, k, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === k),
+          solution: walked(
+            [
+              [
+                ["Read the arrows and the factor", "读出箭头并求倍数"],
+                t(`$u = ${at(u)}$ and $v = ${at(v)}$.`, `$u = ${at(u)}$，$v = ${at(v)}$。`),
+                [`v \\cdot u = ${vu}, \\quad u \\cdot u = ${uu}, \\quad \\frac{v \\cdot u}{u \\cdot u} = ${factor.toLatex()}`],
+              ],
+              [
+                ["Subtract the part along u", "减去沿 u 的部分"],
+                t(`Take the ${name[0]} coordinates of $v$ and $u$:`, `取 $v$ 和 $u$ 的${name[1]}个坐标：`),
+                [`${vi} - ${factor.sign() < 0 ? `\\left(${factor.toLatex()}\\right)` : factor.toLatex()}(${ui}) = ${answer.toLatex()}`],
+              ],
+            ],
+            t(
+              `The whole vector is $w = (${w0.toLatex()}, ${w1.toLatex()})$, and $w \\cdot u = (${w0.toLatex()})(${u[0]}) + (${w1.toLatex()})(${u[1]}) = 0$, so it is perpendicular to $u$.`,
+              `整个向量是 $w = (${w0.toLatex()}, ${w1.toLatex()})$，而 $w \\cdot u = (${w0.toLatex()})(${u[0]}) + (${w1.toLatex()})(${u[1]}) = 0$，所以它垂直于 $u$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           6,
           [...arrow(u, "u"), ...arrow(v, "v", false)],
           [`Arrows from the origin: u to ${at(u)} and v to ${at(v)}.`, `从原点出发的箭头：u 指向 ${at(u)}，v 指向 ${at(v)}。`],
         ),
-      );
+      };
     },
   ),
   figure: linearAlgebraDrawings2["gram-schmidt-process-for-two-vectors#a-gram-schmidt-step-on-two-drawn-arrows"],
@@ -1647,8 +1727,8 @@ const projectionEntry = point(
   "an-entry-of-the-projection-matrix-onto-a-drawn-line",
   ["An entry of the projection matrix onto a drawn line", "到所画直线的投影矩阵的元素"],
   [
-    "If $d$ is a direction of a line through the origin, the matrix of the orthogonal projection onto it is $\\frac{d d^{\\mathsf{T}}}{d \\cdot d}$, so the entry in row $i$ and column $j$ is $\\frac{d_i d_j}{d \\cdot d}$.",
-    "若 $d$ 是过原点直线的方向，到它的正交投影矩阵为 $\\frac{d d^{\\mathsf{T}}}{d \\cdot d}$，所以第 $i$ 行第 $j$ 列的元素是 $\\frac{d_i d_j}{d \\cdot d}$。",
+    "If $d$ is a direction of a line through the origin, the matrix of the orthogonal projection onto it is $\\frac{d d^{\\mathsf{T}}}{d \\cdot d}$, so the entry in row $i$ and column $j$ is $\\frac{d_i d_j}{d \\cdot d}$. For example, $d = (1, 2)$ gives $d \\cdot d = 5$ and $P = \\frac{1}{5}\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$, so the entry in row $1$ and column $2$ is $\\frac{2}{5}$.\n\n> **Watch out.** Use one direction throughout: any point on the line works, but the same $d$ must appear in $d d^{\\mathsf{T}}$ and in $d \\cdot d$. Also keep $P$ apart from $I - P$, which projects onto the perpendicular line.",
+    "若 $d$ 是过原点直线的方向，到它的正交投影矩阵为 $\\frac{d d^{\\mathsf{T}}}{d \\cdot d}$，所以第 $i$ 行第 $j$ 列的元素是 $\\frac{d_i d_j}{d \\cdot d}$。例如 $d = (1, 2)$ 时 $d \\cdot d = 5$，$P = \\frac{1}{5}\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$，所以第 $1$ 行第 $2$ 列的元素是 $\\frac{2}{5}$。\n\n> **注意。** 自始至终用同一个方向：直线上任一点都可以，但 $d d^{\\mathsf{T}}$ 和 $d \\cdot d$ 中必须是同一个 $d$。还要分清 $P$ 和 $I - P$，后者投影到垂直的直线上。",
   ],
   (rng) => {
     const d = rng.pick(slanted);
@@ -1660,18 +1740,55 @@ const projectionEntry = point(
     const top = (d[i] as number) * (d[j] as number);
     const dd = dot(d, d);
     const tip: Point = [2 * d[0], 2 * d[1]];
-    return ask(
-      [
-        `$P$ is the matrix of the orthogonal projection onto the drawn line through the origin. Find the entry of $P$ in row $${i + 1}$ and column $${j + 1}$.`,
-        `$P$ 是到所画过原点直线的正交投影矩阵。求 $P$ 第 $${i + 1}$ 行第 $${j + 1}$ 列的元素。`,
-      ],
-      Q.of(top, dd),
-      [top, Q.of(dd - top, dd), Q.of(1, dd), Q.of(top, dd + 1)],
-      [
-        `A direction is $d = ${at(d)}$, so $d \\cdot d = ${dd}$, and the entry is $\\frac{(${d[i]})(${d[j]})}{${dd}} = ${Q.of(top, dd).toLatex()}$.`,
-        `方向为 $d = ${at(d)}$，所以 $d \\cdot d = ${dd}$，该元素为 $\\frac{(${d[i]})(${d[j]})}{${dd}} = ${Q.of(top, dd).toLatex()}$。`,
-      ],
-      fig(
+    const answer = Q.of(top, dd);
+    const di = d[i] as number;
+    const second = Q.of(di * d[1], dd);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `$P$ is the matrix of the orthogonal projection onto the drawn line through the origin. Find the entry of $P$ in row $${i + 1}$ and column $${j + 1}$.`,
+          `$P$ 是到所画过原点直线的正交投影矩阵。求 $P$ 第 $${i + 1}$ 行第 $${j + 1}$ 列的元素。`,
+        ),
+        answer,
+        mistakes: [
+          why(
+            top,
+            `That is the entry of $d d^{\\mathsf{T}}$; it still has to be divided by $d \\cdot d = ${dd}$.`,
+            `这是 $d d^{\\mathsf{T}}$ 的元素；还要除以 $d \\cdot d = ${dd}$。`,
+          ),
+          why(
+            i === j ? Q.of(dd - top, dd) : Q.of(-top, dd),
+            "That is the entry of $I - P$, the projection onto the perpendicular line.",
+            "这是 $I - P$ 的元素，即到垂直直线的投影。",
+          ),
+          why(
+            Q.of(4 * top, dd),
+            `That takes the far point $${at(tip)}$ in $d d^{\\mathsf{T}}$ but $${at(d)}$ in $d \\cdot d$; the same direction must be used in both.`,
+            `这是在 $d d^{\\mathsf{T}}$ 中用了远处的点 $${at(tip)}$，在 $d \\cdot d$ 中却用了 $${at(d)}$；两处必须用同一个方向。`,
+          ),
+        ].filter((m, k, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === k),
+        solution: walked(
+          [
+            [
+              ["Read a direction", "读出方向"],
+              t(`The marked point gives $d = ${at(d)}$.`, `标出的点给出 $d = ${at(d)}$。`),
+              [`d \\cdot d = (${d[0]})^{2} + (${d[1]})^{2} = ${dd}`],
+            ],
+            [
+              ["Take the entry of the outer product", "取外积的元素"],
+              t("", ""),
+              [
+                `P_{${i + 1}${j + 1}} = \\frac{d_{${i + 1}} d_{${j + 1}}}{d \\cdot d} = \\frac{(${d[i]})(${d[j]})}{${dd}} = ${answer.toLatex()}`,
+              ],
+            ],
+          ],
+          t(
+            `$P$ keeps $d$ fixed: row $${i + 1}$ of $P$ times $d$ is $${Q.of(di * d[0], dd).toLatex()}(${d[0]}) + ${second.sign() < 0 ? `\\left(${second.toLatex()}\\right)` : second.toLatex()}(${d[1]}) = ${di}$, the matching entry of $d$.`,
+            `$P$ 保持 $d$ 不变：$P$ 的第 $${i + 1}$ 行乘以 $d$ 得 $${Q.of(di * d[0], dd).toLatex()}(${d[0]}) + ${second.sign() < 0 ? `\\left(${second.toLatex()}\\right)` : second.toLatex()}(${d[1]}) = ${di}$，正是 $d$ 的对应分量。`,
+          ),
+        ),
+      }),
+      figure: fig(
         7,
         [
           { kind: "line", a: [0, 0], b: d, accent: true },
@@ -1683,7 +1800,7 @@ const projectionEntry = point(
           `一条过原点的直线，标出的点位于 ${at(d)} 和 ${at(tip)}。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -1691,40 +1808,62 @@ const columnSpaceMatrix = point(
   "the-matrix-whose-column-space-is-a-drawn-line",
   ["The matrix whose column space is a drawn line", "列空间是所画直线的矩阵"],
   [
-    "The column space is spanned by the columns, so a rank one matrix with column space a given line has every column a multiple of its direction. The rows of such a matrix need not lie on the line: that describes the row space.",
-    "列空间由列张成，所以以给定直线为列空间的秩一矩阵，每一列都是直线方向的倍数。这样的矩阵的行不必在直线上：那描述的是行空间。",
+    "The column space is spanned by the columns, so a rank one matrix with column space a given line has every column a multiple of its direction. The rows of such a matrix need not lie on the line: that describes the row space. For example, for the line through $(1, 2)$, the matrix $\\begin{pmatrix} 1 & 3 \\\\ 2 & 6 \\end{pmatrix}$ has columns $(1, 2)$ and $3(1, 2)$.\n\n> **Watch out.** Check the columns, read top to bottom, not the rows. A column with the coordinates of the direction swapped, or a perpendicular direction, lies on a different line.",
+    "列空间由列张成，所以以给定直线为列空间的秩一矩阵，每一列都是直线方向的倍数。这样的矩阵的行不必在直线上：那描述的是行空间。例如对过 $(1, 2)$ 的直线，矩阵 $\\begin{pmatrix} 1 & 3 \\\\ 2 & 6 \\end{pmatrix}$ 的两列是 $(1, 2)$ 和 $3(1, 2)$。\n\n> **注意。** 要检查从上往下读的列，而不是行。坐标交换了的方向或垂直的方向，所在的是另一条直线。",
   ],
   (rng) => {
     const d = rng.pick(slanted);
     const a = rng.pick([-3, -2, -1, 1, 2, 3]);
     const b = rng.pick([-3, -2, -1, 1, 2, 3].filter((x) => x !== a));
     const tip: Point = [2 * d[0], 2 * d[1]];
-    return choose(
-      rng,
-      ["Which matrix has the drawn line through the origin as its column space?", "哪个矩阵以所画的过原点直线为列空间？"],
-      same(mat(a * d[0], b * d[0], a * d[1], b * d[1])),
+    const wrong = [
+      same(mat(a * d[0], a * d[1], b * d[0], b * d[1])),
+      same(mat(a * d[1], b * d[1], a * d[0], b * d[0])),
+      same(mat(a * d[0], b * d[1], a * d[1], b * d[0])),
+      same(mat(-a * d[1], -b * d[1], a * d[0], b * d[0])),
+    ];
+    const slips: Pair[] = [
       [
-        same(mat(a * d[0], a * d[1], b * d[0], b * d[1])),
-        same(mat(a * d[1], b * d[1], a * d[0], b * d[0])),
-        same(mat(a * d[0], b * d[1], a * d[1], b * d[0])),
-        same(mat(-a * d[1], -b * d[1], a * d[0], b * d[0])),
+        "Its rows are multiples of the direction, so the line is its row space; its columns lie on another line.",
+        "它的行是方向的倍数，所以这条直线是它的行空间；它的列在另一条直线上。",
       ],
       [
-        `A direction of the line is $${at(d)}$, and both columns of this matrix, $${at([a * d[0], a * d[1]])}$ and $${at([b * d[0], b * d[1]])}$, are multiples of it.`,
-        `直线方向为 $${at(d)}$，这个矩阵的两列 $${at([a * d[0], a * d[1]])}$ 和 $${at([b * d[0], b * d[1]])}$ 都是它的倍数。`,
+        `Its columns are multiples of $${at([d[1], d[0]])}$, the direction with its coordinates swapped.`,
+        `它的列是 $${at([d[1], d[0]])}$ 的倍数，即坐标交换了的方向。`,
       ],
-      fig(
-        7,
+      [
+        `Only the first column lies on the line; the second is a multiple of $${at([d[1], d[0]])}$, with the coordinates swapped.`,
+        `只有第一列在直线上；第二列是 $${at([d[1], d[0]])}$ 的倍数，坐标交换了。`,
+      ],
+      [
+        `Its columns are multiples of $${at([-d[1], d[0]])}$, which is perpendicular to the line.`,
+        `它的列是 $${at([-d[1], d[0]])}$ 的倍数，与直线垂直。`,
+      ],
+    ];
+    return reasoned(
+      choose(
+        rng,
+        ["Which matrix has the drawn line through the origin as its column space?", "哪个矩阵以所画的过原点直线为列空间？"],
+        same(mat(a * d[0], b * d[0], a * d[1], b * d[1])),
+        wrong,
         [
-          { kind: "line", a: [0, 0], b: d, accent: true },
-          { kind: "point", at: d },
-          { kind: "point", at: tip },
+          `**Step 1: Read a direction.** The marked point gives the direction $${at(d)}$ of the line.\n\n**Step 2: Test the columns.** The columns of this matrix are $${at([a * d[0], a * d[1]])} = ${a}${at(d)}$ and $${at([b * d[0], b * d[1]])} = ${b}${at(d)}$, both multiples of the direction, so they span the line.\n\n**Check.** Its determinant is $(${a * d[0]})(${b * d[1]}) - (${b * d[0]})(${a * d[1]}) = 0$, so the rank is one and the column space is no bigger than the line.`,
+          `**第一步：读出方向。** 标出的点给出直线的方向 $${at(d)}$。\n\n**第二步：检查各列。** 这个矩阵的两列是 $${at([a * d[0], a * d[1]])} = ${a}${at(d)}$ 和 $${at([b * d[0], b * d[1]])} = ${b}${at(d)}$，都是方向的倍数，所以它们张成这条直线。\n\n**检验。** 它的行列式为 $(${a * d[0]})(${b * d[1]}) - (${b * d[0]})(${a * d[1]}) = 0$，所以秩为一，列空间不比这条直线大。`,
         ],
-        [
-          `A line through the origin, with marked points at ${at(d)} and ${at(tip)}.`,
-          `一条过原点的直线，标出的点位于 ${at(d)} 和 ${at(tip)}。`,
-        ],
+        fig(
+          7,
+          [
+            { kind: "line", a: [0, 0], b: d, accent: true },
+            { kind: "point", at: d },
+            { kind: "point", at: tip },
+          ],
+          [
+            `A line through the origin, with marked points at ${at(d)} and ${at(tip)}.`,
+            `一条过原点的直线，标出的点位于 ${at(d)} 和 ${at(tip)}。`,
+          ],
+        ),
       ),
+      wrong.map((w, i): [string, string, string] => [w[0], ...(slips[i] as Pair)]),
     );
   },
 );
