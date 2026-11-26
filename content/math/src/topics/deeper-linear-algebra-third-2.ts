@@ -409,25 +409,48 @@ const pythagorasReverse = point(
   "a-missing-length-from-the-pythagorean-theorem",
   ["A missing length from the Pythagorean theorem", "由勾股定理求缺失的长度"],
   [
-    "If $\\mathbf{u}$ and $\\mathbf{v}$ are orthogonal, the cross term of $\\|\\mathbf{u} + \\mathbf{v}\\|^{2}$ vanishes and the squared lengths add. This also runs in reverse: the squared length of one vector is the difference of the other two, and it is not the square of the difference of the lengths.",
-    "如果 $\\mathbf{u}$ 与 $\\mathbf{v}$ 正交，$\\|\\mathbf{u} + \\mathbf{v}\\|^{2}$ 的交叉项为零，长度的平方相加。这也可以反过来用：一个向量长度的平方是另外两个长度平方之差，而不是长度之差的平方。",
+    "If $\\mathbf{u}$ and $\\mathbf{v}$ are orthogonal, the cross term of $\\|\\mathbf{u} + \\mathbf{v}\\|^{2}$ vanishes and the squared lengths add. This also runs in reverse: the squared length of one vector is the difference of the other two, and it is not the square of the difference of the lengths. For example, $\\|\\mathbf{u}\\| = 3$ and $\\|\\mathbf{u} + \\mathbf{v}\\| = 5$ give $\\|\\mathbf{v}\\|^{2} = 25 - 9 = 16$, not $(5 - 3)^{2} = 4$.\n\n> **Watch out.** Subtract the squares, not the lengths, and subtract rather than add: $\\mathbf{u} + \\mathbf{v}$ is the hypotenuse, the longest side.",
+    "如果 $\\mathbf{u}$ 与 $\\mathbf{v}$ 正交，$\\|\\mathbf{u} + \\mathbf{v}\\|^{2}$ 的交叉项为零，长度的平方相加。这也可以反过来用：一个向量长度的平方是另外两个长度平方之差，而不是长度之差的平方。例如 $\\|\\mathbf{u}\\| = 3$，$\\|\\mathbf{u} + \\mathbf{v}\\| = 5$ 给出 $\\|\\mathbf{v}\\|^{2} = 25 - 9 = 16$，而不是 $(5 - 3)^{2} = 4$。\n\n> **注意。** 要减平方而不是减长度，而且是相减不是相加：$\\mathbf{u} + \\mathbf{v}$ 是斜边，是最长的边。",
   ],
   (rng) => {
     const a = rng.int(1, 12);
     const c = a + rng.int(1, 9);
     const answer = c * c - a * a;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$\\mathbf{u}$ and $\\mathbf{v}$ are orthogonal, $\\|\\mathbf{u}\\| = ${a}$ and $\\|\\mathbf{u} + \\mathbf{v}\\| = ${c}$. Find $\\|\\mathbf{v}\\|^{2}$.`,
         `$\\mathbf{u}$ 与 $\\mathbf{v}$ 正交，$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{u} + \\mathbf{v}\\| = ${c}$。求 $\\|\\mathbf{v}\\|^{2}$。`,
-      ],
+      ]),
       answer,
-      [(c - a) ** 2, c * c + a * a, c - a],
-      [
-        `Orthogonality gives $\\|\\mathbf{u} + \\mathbf{v}\\|^{2} = \\|\\mathbf{u}\\|^{2} + \\|\\mathbf{v}\\|^{2}$. So $\\|\\mathbf{v}\\|^{2} = ${c * c} - ${a * a} = ${answer}$.`,
-        `由正交性得 $\\|\\mathbf{u} + \\mathbf{v}\\|^{2} = \\|\\mathbf{u}\\|^{2} + \\|\\mathbf{v}\\|^{2}$。所以 $\\|\\mathbf{v}\\|^{2} = ${c * c} - ${a * a} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          (c - a) ** 2,
+          "That squares the difference of the lengths; subtract the squares instead.",
+          "这是长度之差的平方；应当是平方之差。",
+        ),
+        why(
+          c * c + a * a,
+          "That adds the squares, but $\\mathbf{u} + \\mathbf{v}$ is the hypotenuse; subtract.",
+          "这是把平方相加，但 $\\mathbf{u} + \\mathbf{v}$ 是斜边；要相减。",
+        ),
+        why(c - a, "That subtracts the lengths; the squared lengths are what add.", "这是长度相减；相加的是长度的平方。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Use the Pythagorean theorem", "利用勾股定理"],
+            text(["Orthogonality removes the cross term:", "正交性消去了交叉项："]),
+            [`\\|\\mathbf{u} + \\mathbf{v}\\|^{2} = \\|\\mathbf{u}\\|^{2} + \\|\\mathbf{v}\\|^{2}`],
+          ],
+          [["Solve for the missing square", "解出缺失的平方"], text(["", ""]), [`\\|\\mathbf{v}\\|^{2} = ${c * c} - ${a * a} = ${answer}`]],
+        ],
+        text([
+          `$${a * a} + ${answer} = ${c * c} = ${c}^{2}$, so the three lengths fit a right triangle.`,
+          `$${a * a} + ${answer} = ${c * c} = ${c}^{2}$，三个长度构成直角三角形。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -435,8 +458,8 @@ const complementPart = point(
   "the-part-of-a-vector-in-the-orthogonal-complement",
   ["The part of a vector in the orthogonal complement", "向量在正交补中的部分"],
   [
-    "Every vector splits uniquely as $\\mathbf{x} = \\mathbf{w} + \\mathbf{z}$ with $\\mathbf{w}$ in $W$ and $\\mathbf{z}$ in $W^{\\perp}$. When $W$ is spanned by one vector, $\\mathbf{w}$ is the projection onto it, and $\\mathbf{z}$ is what remains after subtracting that projection from $\\mathbf{x}$.",
-    "每个向量都可以唯一分解为 $\\mathbf{x} = \\mathbf{w} + \\mathbf{z}$，其中 $\\mathbf{w}$ 在 $W$ 中，$\\mathbf{z}$ 在 $W^{\\perp}$ 中。当 $W$ 由一个向量张成时，$\\mathbf{w}$ 是到它上面的投影，$\\mathbf{z}$ 是从 $\\mathbf{x}$ 中减去投影后剩下的部分。",
+    "Every vector splits uniquely as $\\mathbf{x} = \\mathbf{w} + \\mathbf{z}$ with $\\mathbf{w}$ in $W$ and $\\mathbf{z}$ in $W^{\\perp}$. When $W$ is spanned by one vector, $\\mathbf{w}$ is the projection onto it, and $\\mathbf{z}$ is what remains after subtracting that projection from $\\mathbf{x}$. For example, with $W = \\operatorname{span}\\{(1, 1, 1)\\}$ and $\\mathbf{x} = (3, 1, 2)$, the coefficient is $\\frac{6}{3} = 2$, so $\\mathbf{w} = (2, 2, 2)$ and $\\mathbf{z} = (1, -1, 0)$.\n\n> **Watch out.** Subtract the projection $\\mathbf{w}$, not the spanning vector itself, and check that $\\mathbf{z}$ is orthogonal to the spanning vector.",
+    "每个向量都可以唯一分解为 $\\mathbf{x} = \\mathbf{w} + \\mathbf{z}$，其中 $\\mathbf{w}$ 在 $W$ 中，$\\mathbf{z}$ 在 $W^{\\perp}$ 中。当 $W$ 由一个向量张成时，$\\mathbf{w}$ 是到它上面的投影，$\\mathbf{z}$ 是从 $\\mathbf{x}$ 中减去投影后剩下的部分。例如 $W = \\operatorname{span}\\{(1, 1, 1)\\}$，$\\mathbf{x} = (3, 1, 2)$ 时，系数为 $\\frac{6}{3} = 2$，所以 $\\mathbf{w} = (2, 2, 2)$，$\\mathbf{z} = (1, -1, 0)$。\n\n> **注意。** 要减去投影 $\\mathbf{w}$，而不是张成向量本身；还要检验 $\\mathbf{z}$ 与张成向量正交。",
   ],
   (rng) => {
     const [u1, u2, u3] = rng.pick([
@@ -463,18 +486,46 @@ const complementPart = point(
     const dot = x[0] * u1 + x[1] * u2 + x[2] * u3;
     const norm = u1 * u1 + u2 * u2 + u3 * u3;
     const uj = [u1, u2, u3][j] as number;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$W = \\operatorname{span}\\left\\{${vec(u1, u2, u3)}\\right\\}$ and $\\mathbf{x} = ${vec(x[0], x[1], x[2])} = \\mathbf{w} + \\mathbf{z}$ with $\\mathbf{w} \\in W$, $\\mathbf{z} \\in W^{\\perp}$. Find the ${name[0]} entry of $\\mathbf{z}$.`,
         `$W = \\operatorname{span}\\left\\{${vec(u1, u2, u3)}\\right\\}$，$\\mathbf{x} = ${vec(x[0], x[1], x[2])} = \\mathbf{w} + \\mathbf{z}$，其中 $\\mathbf{w} \\in W$，$\\mathbf{z} \\in W^{\\perp}$。求 $\\mathbf{z}$ 的${name[1]}个元素。`,
-      ],
+      ]),
       answer,
-      [s * uj, (x[j] as number) - uj, x[j] as number],
-      [
-        `The projection coefficient is $\\frac{${dot}}{${norm}} = ${s}$, so $\\mathbf{w}$ is $${s}$ times the spanning vector. Subtracting gives $\\mathbf{z} = ${vec(z[0], z[1], z[2])}$, and the requested entry is $${answer}$.`,
-        `投影系数是 $\\frac{${dot}}{${norm}} = ${s}$，所以 $\\mathbf{w}$ 是张成向量的 $${s}$ 倍。相减得 $\\mathbf{z} = ${vec(z[0], z[1], z[2])}$，所求元素是 $${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(s * uj, "That is the entry of $\\mathbf{w}$, the part in $W$.", "这是 $\\mathbf{w}$ 的元素，即在 $W$ 中的部分。"),
+        why(
+          (x[j] as number) - uj,
+          `That subtracts the spanning vector itself; subtract the projection, $${s}$ times it.`,
+          `这是减去张成向量本身；要减去投影，即它的 $${s}$ 倍。`,
+        ),
+        why(
+          x[j] as number,
+          "That is the entry of $\\mathbf{x}$; the projection must be subtracted.",
+          "这是 $\\mathbf{x}$ 的元素；还要减去投影。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the projection coefficient", "求投影系数"],
+            text(["Let $\\mathbf{u}$ be the spanning vector:", "设 $\\mathbf{u}$ 为张成向量："]),
+            [`\\frac{\\mathbf{x} \\cdot \\mathbf{u}}{\\mathbf{u} \\cdot \\mathbf{u}} = \\frac{${dot}}{${norm}} = ${s}`],
+          ],
+          [["Form the projection", "写出投影"], text(["", ""]), [`\\mathbf{w} = ${s}${vec(u1, u2, u3)} = ${vec(s * u1, s * u2, s * u3)}`]],
+          [
+            ["Subtract", "相减"],
+            text([`The ${name[0]} entry of $\\mathbf{z}$ is $${answer}$:`, `$\\mathbf{z}$ 的${name[1]}个元素是 $${answer}$：`]),
+            [`\\mathbf{z} = \\mathbf{x} - \\mathbf{w} = ${vec(z[0], z[1], z[2])}`],
+          ],
+        ],
+        text([
+          `$\\mathbf{z} \\cdot \\mathbf{u} = ${wrap(z[0])} \\cdot ${wrap(u1)} + ${wrap(z[1])} \\cdot ${wrap(u2)} + ${wrap(z[2])} \\cdot ${wrap(u3)} = 0$, so $\\mathbf{z}$ is in $W^{\\perp}$.`,
+          `$\\mathbf{z} \\cdot \\mathbf{u} = ${wrap(z[0])} \\cdot ${wrap(u1)} + ${wrap(z[1])} \\cdot ${wrap(u2)} + ${wrap(z[2])} \\cdot ${wrap(u3)} = 0$，所以 $\\mathbf{z}$ 在 $W^{\\perp}$ 中。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -482,8 +533,8 @@ const combosDot = point(
   "the-inner-product-of-two-combinations-of-an-orthogonal-set",
   ["The inner product of two combinations of an orthogonal set", "正交组的两个组合的内积"],
   [
-    "When two combinations of an orthogonal set are multiplied out, every product of two different vectors vanishes. Only the matching terms remain, and each is the product of the two coefficients and the squared length of its vector. The lengths must be squared.",
-    "把正交组的两个组合乘开时，两个不同向量的乘积都为零。只剩下对应的项，每一项都是两个系数与相应向量长度平方的积。长度必须取平方。",
+    "When two combinations of an orthogonal set are multiplied out, every product of two different vectors vanishes. Only the matching terms remain, and each is the product of the two coefficients and the squared length of its vector. The lengths must be squared. For example, with lengths $1$, $2$ and $3$, $(\\mathbf{u}_{1} + 2\\mathbf{u}_{2} - \\mathbf{u}_{3}) \\cdot (3\\mathbf{u}_{1} - \\mathbf{u}_{2} + 2\\mathbf{u}_{3}) = 3 \\cdot 1 + (-2) \\cdot 4 + (-2) \\cdot 9 = -23$.\n\n> **Watch out.** Multiply by the squared lengths, not the lengths, and keep the signs of the coefficients. The set is orthogonal, not orthonormal, so the lengths cannot be dropped.",
+    "把正交组的两个组合乘开时，两个不同向量的乘积都为零。只剩下对应的项，每一项都是两个系数与相应向量长度平方的积。长度必须取平方。例如长度为 $1$、$2$、$3$ 时，$(\\mathbf{u}_{1} + 2\\mathbf{u}_{2} - \\mathbf{u}_{3}) \\cdot (3\\mathbf{u}_{1} - \\mathbf{u}_{2} + 2\\mathbf{u}_{3}) = 3 \\cdot 1 + (-2) \\cdot 4 + (-2) \\cdot 9 = -23$。\n\n> **注意。** 要乘长度的平方而不是长度，并保留系数的符号。这是正交组而不是标准正交组，长度不能省略。",
   ],
   (rng) => {
     const a = rng.int(1, 5);
@@ -498,18 +549,50 @@ const combosDot = point(
     const answer = p * e * a * a + q * f * b * b + r * g * c * c;
     const left = poly([p, "\\mathbf{u}_{1}"], [q, "\\mathbf{u}_{2}"], [r, "\\mathbf{u}_{3}"]);
     const right = poly([e, "\\mathbf{u}_{1}"], [f, "\\mathbf{u}_{2}"], [g, "\\mathbf{u}_{3}"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$\\{\\mathbf{u}_{1}, \\mathbf{u}_{2}, \\mathbf{u}_{3}\\}$ is orthogonal with lengths $${a}$, $${b}$ and $${c}$. Find $(${left}) \\cdot (${right})$.`,
         `$\\{\\mathbf{u}_{1}, \\mathbf{u}_{2}, \\mathbf{u}_{3}\\}$ 是正交组，长度分别为 $${a}$、$${b}$ 和 $${c}$。求 $(${left}) \\cdot (${right})$。`,
-      ],
+      ]),
       answer,
-      [p * e * a + q * f * b + r * g * c, p * e + q * f + r * g, -answer],
-      [
-        `All cross terms vanish, which leaves $${wrap(p * e)} \\cdot ${a * a} + ${wrap(q * f)} \\cdot ${b * b} + ${wrap(r * g)} \\cdot ${c * c} = ${answer}$.`,
-        `所有交叉项都为零，剩下 $${wrap(p * e)} \\cdot ${a * a} + ${wrap(q * f)} \\cdot ${b * b} + ${wrap(r * g)} \\cdot ${c * c} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          p * e * a + q * f * b + r * g * c,
+          "The lengths were not squared: $\\mathbf{u}_{i} \\cdot \\mathbf{u}_{i} = \\|\\mathbf{u}_{i}\\|^{2}$.",
+          "长度没有平方：$\\mathbf{u}_{i} \\cdot \\mathbf{u}_{i} = \\|\\mathbf{u}_{i}\\|^{2}$。",
+        ),
+        why(
+          p * e + q * f + r * g,
+          "That treats the set as orthonormal; the lengths are not $1$.",
+          "这是把它当作标准正交组；长度不是 $1$。",
+        ),
+        why(-answer, "The sign is flipped; multiply the coefficients with their signs.", "符号反了；系数要带着符号相乘。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Drop the cross terms", "去掉交叉项"],
+            text([
+              "Each $\\mathbf{u}_{i} \\cdot \\mathbf{u}_{j}$ with $i \\ne j$ is $0$, so only matching terms remain:",
+              "$i \\ne j$ 时 $\\mathbf{u}_{i} \\cdot \\mathbf{u}_{j} = 0$，所以只剩对应项：",
+            ]),
+            [
+              `${wrap(p)} \\cdot ${wrap(e)}\\|\\mathbf{u}_{1}\\|^{2} + ${wrap(q)} \\cdot ${wrap(f)}\\|\\mathbf{u}_{2}\\|^{2} + ${wrap(r)} \\cdot ${wrap(g)}\\|\\mathbf{u}_{3}\\|^{2}`,
+            ],
+          ],
+          [
+            ["Substitute the squared lengths", "代入长度的平方"],
+            text(["", ""]),
+            [`${wrap(p * e)} \\cdot ${a * a} + ${wrap(q * f)} \\cdot ${b * b} + ${wrap(r * g)} \\cdot ${c * c} = ${answer}`],
+          ],
+        ],
+        text([
+          `Take $\\mathbf{u}_{1} = (${a}, 0, 0)$, $\\mathbf{u}_{2} = (0, ${b}, 0)$, $\\mathbf{u}_{3} = (0, 0, ${c})$, an orthogonal set with these lengths. The combinations are $(${p * a}, ${q * b}, ${r * c})$ and $(${e * a}, ${f * b}, ${g * c})$, whose dot product is $${answer}$.`,
+          `取 $\\mathbf{u}_{1} = (${a}, 0, 0)$，$\\mathbf{u}_{2} = (0, ${b}, 0)$，$\\mathbf{u}_{3} = (0, 0, ${c})$，它是具有这些长度的正交组。两个组合是 $(${p * a}, ${q * b}, ${r * c})$ 与 $(${e * a}, ${f * b}, ${g * c})$，点积为 $${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -517,8 +600,8 @@ const orthogonalShift = point(
   "shifting-a-function-to-make-it-orthogonal",
   ["Shifting a function to make it orthogonal", "平移函数使其正交"],
   [
-    "Orthogonality in a function space is an integral condition, so a shift can be solved from a linear equation. The condition $\\langle f, x - c \\rangle = 0$ gives $c = \\frac{\\langle f, x \\rangle}{\\langle f, 1 \\rangle}$, which depends on $f$ and is not always the midpoint of the interval.",
-    "函数空间中的正交性是一个积分条件，所以平移量可以由线性方程解出。条件 $\\langle f, x - c \\rangle = 0$ 给出 $c = \\frac{\\langle f, x \\rangle}{\\langle f, 1 \\rangle}$，它依赖于 $f$，并不总是区间的中点。",
+    "Orthogonality in a function space is an integral condition, so a shift can be solved from a linear equation. The condition $\\langle f, x - c \\rangle = 0$ gives $c = \\frac{\\langle f, x \\rangle}{\\langle f, 1 \\rangle}$, which depends on $f$ and is not always the midpoint of the interval. For example, on $[0, 3]$ with $f(x) = x$, $\\langle f, x \\rangle = \\int_0^3 x^2\\,dx = 9$ and $\\langle f, 1 \\rangle = \\int_0^3 x\\,dx = \\frac{9}{2}$, so $c = 2$, not the midpoint $\\frac{3}{2}$.\n\n> **Watch out.** Both integrals run over the whole interval $[0, L]$, so keep the powers of $L$ until they cancel. A constant factor in $f$ cancels too.",
+    "函数空间中的正交性是一个积分条件，所以平移量可以由线性方程解出。条件 $\\langle f, x - c \\rangle = 0$ 给出 $c = \\frac{\\langle f, x \\rangle}{\\langle f, 1 \\rangle}$，它依赖于 $f$，并不总是区间的中点。例如在 $[0, 3]$ 上取 $f(x) = x$，$\\langle f, x \\rangle = \\int_0^3 x^2\\,dx = 9$，$\\langle f, 1 \\rangle = \\int_0^3 x\\,dx = \\frac{9}{2}$，所以 $c = 2$，不是中点 $\\frac{3}{2}$。\n\n> **注意。** 两个积分都在整个区间 $[0, L]$ 上，所以要保留 $L$ 的幂直到它们约去。$f$ 中的常数因子也会约去。",
   ],
   (rng) => {
     const m = rng.int(0, 2);
@@ -526,18 +609,47 @@ const orthogonalShift = point(
     const k = rng.int(1, 5);
     const answer = Q.of(L * (m + 1), m + 2);
     const f = poly([k, m === 0 ? "" : m === 1 ? "x" : "x^{2}"]);
-    return ask(
-      [
+    const upper = m === 0 ? "x" : `x^{${m + 1}}`;
+    const lower = m === 0 ? "1" : m === 1 ? "x" : "x^{2}";
+    return numberProblem({
+      prompt: text([
         `With $\\langle f, g \\rangle = \\int_{0}^{${L}} f(x)g(x)\\,dx$, find $c$ so that $f(x) = ${f}$ and $g(x) = x - c$ are orthogonal.`,
         `在 $\\langle f, g \\rangle = \\int_{0}^{${L}} f(x)g(x)\\,dx$ 下，求 $c$，使 $f(x) = ${f}$ 与 $g(x) = x - c$ 正交。`,
-      ],
+      ]),
       answer,
-      [Q.of(L, 2).eq(answer) ? Q.of(L * (m + 2), m + 1) : Q.of(L, 2), Q.of(m + 1, m + 2), Q.of(L * (m + 2), m + 1), Q.of(k * L, 2)],
-      [
-        `The constant $${k}$ cancels. We need $\\int_{0}^{${L}} ${m === 0 ? "x" : `x^{${m + 1}}`}\\,dx = c\\int_{0}^{${L}} ${m === 0 ? "1" : m === 1 ? "x" : "x^{2}"}\\,dx$, so $c = ${L} \\cdot \\frac{${m + 1}}{${m + 2}} = ${answer.toLatex()}$.`,
-        `常数 $${k}$ 可以约去。需要 $\\int_{0}^{${L}} ${m === 0 ? "x" : `x^{${m + 1}}`}\\,dx = c\\int_{0}^{${L}} ${m === 0 ? "1" : m === 1 ? "x" : "x^{2}"}\\,dx$，所以 $c = ${L} \\cdot \\frac{${m + 1}}{${m + 2}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(Q.of(L, 2), `That is the midpoint of $[0, ${L}]$; the shift depends on $f$.`, `这是 $[0, ${L}]$ 的中点；平移量依赖于 $f$。`),
+        why(
+          Q.of(m + 1, m + 2),
+          `The powers of $${L}$ do not cancel completely; one factor $${L}$ remains.`,
+          `$${L}$ 的幂不会完全约去；还剩一个因子 $${L}$。`,
+        ),
+        why(
+          Q.of(L * (m + 2), m + 1),
+          "The fraction is upside down; $c = \\frac{\\langle f, x \\rangle}{\\langle f, 1 \\rangle}$.",
+          "分数颠倒了；$c = \\frac{\\langle f, x \\rangle}{\\langle f, 1 \\rangle}$。",
+        ),
+        why(Q.of(k * L, 2), `The constant $${k}$ appears on both sides and cancels.`, `常数 $${k}$ 在两边都出现，可以约去。`),
+      ].filter((w, i, all) => all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Write the condition", "写出条件"],
+            text([
+              `The constant $${k}$ cancels from $\\langle f, x - c \\rangle = 0$:`,
+              `由 $\\langle f, x - c \\rangle = 0$，常数 $${k}$ 约去：`,
+            ]),
+            [`\\int_{0}^{${L}} ${upper}\\,dx = c\\int_{0}^{${L}} ${lower}\\,dx`],
+          ],
+          [["Integrate", "积分"], text(["", ""]), [`\\frac{${L}^{${m + 2}}}{${m + 2}} = c \\cdot \\frac{${L}^{${m + 1}}}{${m + 1}}`]],
+          [["Solve for c", "解出 c"], text(["", ""]), [`c = ${L} \\cdot \\frac{${m + 1}}{${m + 2}} = ${answer.toLatex()}`]],
+        ],
+        text([
+          `With this $c$, $c \\cdot \\frac{${L}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()} \\cdot \\frac{${L}^{${m + 1}}}{${m + 1}} = \\frac{${L}^{${m + 2}}}{${m + 2}}$, so the two integrals agree and $\\langle f, g \\rangle = 0$.`,
+          `取此 $c$，$c \\cdot \\frac{${L}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()} \\cdot \\frac{${L}^{${m + 1}}}{${m + 1}} = \\frac{${L}^{${m + 2}}}{${m + 2}}$，两个积分相等，$\\langle f, g \\rangle = 0$。`,
+        ]),
+      ),
+    });
   },
 );
 

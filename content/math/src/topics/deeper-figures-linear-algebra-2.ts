@@ -1371,26 +1371,52 @@ const dotFromArrows = {
     "the-dot-product-of-two-drawn-arrows",
     ["The dot product of two drawn arrows", "两个所画箭头的点积"],
     [
-      "Read the coordinates of each arrow, multiply matching coordinates and add. The sign agrees with the angle: positive when it is acute, negative when it is obtuse, zero when it is right.",
-      "读出每个箭头的坐标，对应坐标相乘再相加。符号与夹角一致：锐角为正，钝角为负，直角为零。",
+      "Read the coordinates of each arrow, multiply matching coordinates and add. The sign agrees with the angle: positive when it is acute, negative when it is obtuse, zero when it is right. For example, arrows to $(3, 1)$ and $(-1, 2)$ give $(3)(-1) + (1)(2) = -1$, a slightly obtuse angle.\n\n> **Watch out.** Multiply first coordinate with first coordinate and second with second; pairing them crosswise gives a different number. Read the signs of the coordinates from the side of the axis each tip lies on.",
+      "读出每个箭头的坐标，对应坐标相乘再相加。符号与夹角一致：锐角为正，钝角为负，直角为零。例如指向 $(3, 1)$ 与 $(-1, 2)$ 的箭头给出 $(3)(-1) + (1)(2) = -1$，夹角略大于直角。\n\n> **注意。** 第一个坐标乘第一个坐标，第二个乘第二个；交叉配对会得到另一个数。坐标的符号要根据箭头尖端在坐标轴哪一侧来读。",
     ],
     (rng) => {
       const [u, v] = independent(rng, 5);
       const answer = dot(u, v);
-      return ask(
-        ["Find $u \\cdot v$ for the drawn vectors.", "求所画向量的点积 $u \\cdot v$。"],
-        answer,
-        [-answer, cross(u, v), u[0] * v[1] + u[1] * v[0], answer + 1],
-        [
-          `$u = ${at(u)}$ and $v = ${at(v)}$, so $u \\cdot v = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${answer}$.`,
-          `$u = ${at(u)}$，$v = ${at(v)}$，所以 $u \\cdot v = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${answer}$。`,
-        ],
-        fig(
+      const p = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+      const angle: Pair = answer > 0 ? ["acute", "锐角"] : answer < 0 ? ["obtuse", "钝角"] : ["right", "直角"];
+      return {
+        ...numberProblem({
+          prompt: t("Find $u \\cdot v$ for the drawn vectors.", "求所画向量的点积 $u \\cdot v$。"),
+          answer,
+          mistakes: [
+            why(-answer, "The sign is flipped; check the signs of the coordinates you read.", "符号反了；检查读出的坐标的符号。"),
+            why(
+              cross(u, v),
+              "That is $u_1v_2 - u_2v_1$, the determinant, not the dot product.",
+              "这是 $u_1v_2 - u_2v_1$，即行列式，不是点积。",
+            ),
+            why(
+              u[0] * v[1] + u[1] * v[0],
+              "The coordinates are paired crosswise; multiply first with first and second with second.",
+              "坐标交叉配对了；应当第一个乘第一个，第二个乘第二个。",
+            ),
+          ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [["Read the arrows", "读出箭头"], t(`$u = ${at(u)}$ and $v = ${at(v)}$.`, `$u = ${at(u)}$，$v = ${at(v)}$。`)],
+              [
+                ["Multiply and add", "相乘再相加"],
+                t("", ""),
+                [`u \\cdot v = ${p(u[0])} \\cdot ${p(v[0])} + ${p(u[1])} \\cdot ${p(v[1])} = ${answer}`],
+              ],
+            ],
+            t(
+              `The sign agrees with the picture: the angle between the arrows is ${angle[0]}, and the dot product is ${answer > 0 ? "positive" : answer < 0 ? "negative" : "zero"}.`,
+              `符号与图一致：两个箭头的夹角是${angle[1]}，点积${answer > 0 ? "为正" : answer < 0 ? "为负" : "为零"}。`,
+            ),
+          ),
+        }),
+        figure: fig(
           6,
           [...arrow(u, "u"), ...arrow(v, "v")],
           [`Arrows from the origin: u to ${at(u)} and v to ${at(v)}.`, `从原点出发的箭头：u 指向 ${at(u)}，v 指向 ${at(v)}。`],
         ),
-      );
+      };
     },
   ),
   figure: linearAlgebraDrawings2["dot-product-in-n-dimensional-euclidean-space#the-dot-product-of-two-drawn-arrows"],
@@ -1400,8 +1426,8 @@ const normOfDifference = point(
   "the-distance-between-the-tips-of-two-arrows",
   ["The distance between the tips of two arrows", "两箭头尖端之间的距离"],
   [
-    "The distance between the tips of $u$ and $v$ is the norm $\\lVert u - v \\rVert$, not the difference of the two norms.",
-    "$u$ 和 $v$ 的尖端之间的距离是范数 $\\lVert u - v \\rVert$，不是两个范数之差。",
+    "The distance between the tips of $u$ and $v$ is the norm $\\lVert u - v \\rVert$, not the difference of the two norms. For example, tips at $(4, 1)$ and $(1, -3)$ give $u - v = (3, 4)$ and $\\lVert u - v \\rVert = \\sqrt{9 + 16} = 5$.\n\n> **Watch out.** Subtract the vectors first and take the norm last. The answer is a length, so take the square root of the sum of squares.",
+    "$u$ 和 $v$ 的尖端之间的距离是范数 $\\lVert u - v \\rVert$，不是两个范数之差。例如尖端在 $(4, 1)$ 与 $(1, -3)$ 时，$u - v = (3, 4)$，$\\lVert u - v \\rVert = \\sqrt{9 + 16} = 5$。\n\n> **注意。** 先把向量相减，最后再取范数。答案是长度，所以要对平方和开平方。",
   ],
   (rng) => {
     const triples: readonly [number, number, number][] = [
@@ -1423,20 +1449,45 @@ const normOfDifference = point(
     while ((bx === 0 && by === 0) || (bx + dx === 0 && by + dy === 0)) [bx, by] = [inRange(dx), inRange(dy)];
     const b: Point = [bx, by];
     const a: Point = [bx + dx, by + dy];
-    return ask(
-      ["Find $\\lVert u - v \\rVert$ for the drawn vectors.", "求所画向量的 $\\lVert u - v \\rVert$。"],
-      r,
-      [r * r, p + q, r + 1, Math.abs(p - q)],
-      [
-        `$u - v = ${at(a)} - ${at(b)} = (${dx}, ${dy})$, so the norm is $\\sqrt{${dx * dx} + ${dy * dy}} = ${r}$.`,
-        `$u - v = ${at(a)} - ${at(b)} = (${dx}, ${dy})$，所以范数为 $\\sqrt{${dx * dx} + ${dy * dy}} = ${r}$。`,
-      ],
-      drawn(
+    return {
+      ...numberProblem({
+        prompt: t("Find $\\lVert u - v \\rVert$ for the drawn vectors.", "求所画向量的 $\\lVert u - v \\rVert$。"),
+        answer: r,
+        mistakes: [
+          why(r * r, "That is $\\lVert u - v \\rVert^2$; take the square root.", "这是 $\\lVert u - v \\rVert^2$；还要开平方。"),
+          why(
+            p + q,
+            "That adds the sizes of the coordinate differences; square them, add and take the root.",
+            "这是把坐标差的绝对值相加；要平方、相加再开方。",
+          ),
+          why(
+            Math.abs(p - q),
+            "That subtracts the sizes of the coordinate differences; square them, add and take the root.",
+            "这是把坐标差的绝对值相减；要平方、相加再开方。",
+          ),
+        ].filter((w, i, all) => w.value !== r && all.findIndex((o) => o.value === w.value) === i),
+        solution: walked(
+          [
+            [["Read the arrows", "读出箭头"], t(`$u = ${at(a)}$ and $v = ${at(b)}$.`, `$u = ${at(a)}$，$v = ${at(b)}$。`)],
+            [["Subtract", "相减"], t("", ""), [`u - v = ${at(a)} - ${at(b)} = (${dx}, ${dy})`]],
+            [
+              ["Take the norm", "取范数"],
+              t("", ""),
+              [`\\lVert u - v \\rVert = \\sqrt{${dx < 0 ? `(${dx})` : dx}^2 + ${dy < 0 ? `(${dy})` : dy}^2} = \\sqrt{${r * r}} = ${r}`],
+            ],
+          ],
+          t(
+            `Going from the tip of $v$ by $${dx}$ across and $${dy}$ up lands on the tip of $u$: $(${bx} + ${dx < 0 ? `(${dx})` : dx}, ${by} + ${dy < 0 ? `(${dy})` : dy}) = ${at(a)}$.`,
+            `从 $v$ 的尖端横向走 $${dx}$、纵向走 $${dy}$ 就到达 $u$ 的尖端：$(${bx} + ${dx < 0 ? `(${dx})` : dx}, ${by} + ${dy < 0 ? `(${dy})` : dy}) = ${at(a)}$。`,
+          ),
+        ),
+      }),
+      figure: drawn(
         { xMin: -10, xMax: 10, yMin: -10, yMax: 10, labelEvery: 2 },
         [...arrow(a, "u"), ...arrow(b, "v")],
         t(`Arrows from the origin: u to ${at(a)} and v to ${at(b)}.`, `从原点出发的箭头：u 指向 ${at(a)}，v 指向 ${at(b)}。`),
       ),
-    );
+    };
   },
 );
 
@@ -1444,8 +1495,8 @@ const complementVector = point(
   "a-vector-of-the-orthogonal-complement-of-a-drawn-line",
   ["A vector of the orthogonal complement of a drawn line", "所画直线的正交补中的向量"],
   [
-    "The orthogonal complement of a line through the origin holds every vector whose dot product with a direction of the line is zero.",
-    "过原点直线的正交补包含所有与直线方向点积为零的向量。",
+    "The orthogonal complement of a line through the origin holds every vector whose dot product with a direction of the line is zero. For example, if the line passes through $(2, 1)$, then $(-1, 2)$ is in $L^{\\perp}$, since $(2)(-1) + (1)(2) = 0$, and so is every multiple of it.\n\n> **Watch out.** Swapping the two coordinates is not enough; one of them must also change sign. A vector along the line itself is never in $L^{\\perp}$.",
+    "过原点直线的正交补包含所有与直线方向点积为零的向量。例如直线经过 $(2, 1)$ 时，$(-1, 2)$ 在 $L^{\\perp}$ 中，因为 $(2)(-1) + (1)(2) = 0$，它的每个倍数也在。\n\n> **注意。** 只交换两个坐标还不够；其中一个还必须变号。沿直线本身的向量永远不在 $L^{\\perp}$ 中。",
   ],
   (rng) => {
     const d = rng.pick(slanted);
@@ -1459,30 +1510,49 @@ const complementVector = point(
       [k * d[1] + 1, k * d[0]],
     ];
     const tip: Point = [2 * d[0], 2 * d[1]];
-    return choose(
-      rng,
-      [
-        "$L$ is the drawn line through the origin. Which vector lies in $L^{\\perp}$?",
-        "$L$ 是所画的过原点的直线。哪个向量在 $L^{\\perp}$ 中？",
-      ],
-      same(col(answer[0], answer[1])),
-      tries.filter((v) => dot(v, d) !== 0).map((v) => same(col(v[0], v[1]))),
-      [
-        `The direction of $L$ is $${at(d)}$, and $${at(answer)} \\cdot ${at(d)} = 0$.`,
-        `$L$ 的方向为 $${at(d)}$，而 $${at(answer)} \\cdot ${at(d)} = 0$。`,
-      ],
-      fig(
-        7,
+    const p = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const reasons = tries
+      .map((v, i): [string, string, string] => [
+        same(col(v[0], v[1]))[0],
+        i === 0
+          ? `This vector lies along $L$ itself; its dot product with $${at(d)}$ is $${dot(v, d)}$.`
+          : i === 1
+            ? `The coordinates are swapped but no sign is changed, so the dot product with $${at(d)}$ is $${dot(v, d)}$, not $0$.`
+            : `Its dot product with the direction $${at(d)}$ is $${dot(v, d)}$, not $0$.`,
+        i === 0
+          ? `这个向量就在 $L$ 上；它与 $${at(d)}$ 的点积为 $${dot(v, d)}$。`
+          : i === 1
+            ? `坐标交换了但没有变号，所以它与 $${at(d)}$ 的点积为 $${dot(v, d)}$，不是 $0$。`
+            : `它与方向 $${at(d)}$ 的点积为 $${dot(v, d)}$，不是 $0$。`,
+      ])
+      .filter((_, i) => dot(tries[i] as Point, d) !== 0);
+    return reasoned(
+      choose(
+        rng,
         [
-          { kind: "line", a: [0, 0], b: d, accent: true },
-          { kind: "point", at: d },
-          { kind: "point", at: tip },
+          "$L$ is the drawn line through the origin. Which vector lies in $L^{\\perp}$?",
+          "$L$ 是所画的过原点的直线。哪个向量在 $L^{\\perp}$ 中？",
         ],
+        same(col(answer[0], answer[1])),
+        tries.filter((v) => dot(v, d) !== 0).map((v) => same(col(v[0], v[1]))),
         [
-          `A line through the origin, with marked points at ${at(d)} and ${at(tip)}.`,
-          `一条过原点的直线，标出的点位于 ${at(d)} 和 ${at(tip)}。`,
+          `**Step 1: Read a direction of the line.** The line passes through the marked point $${at(d)}$, so $${at(d)}$ is a direction of $L$.\n\n**Step 2: Test the dot product.** $${at(answer)} \\cdot ${at(d)} = ${p(answer[0])} \\cdot ${p(d[0])} + ${p(answer[1])} \\cdot ${p(d[1])} = 0$, so $${at(answer)}$ is in $L^{\\perp}$.\n\n**Check.** The second marked point $${at(tip)}$ gives $${at(answer)} \\cdot ${at(tip)} = 0$ as well, as it must for every point of $L$.`,
+          `**第一步：读出直线的方向。** 直线经过标出的点 $${at(d)}$，所以 $${at(d)}$ 是 $L$ 的方向。\n\n**第二步：检验点积。** $${at(answer)} \\cdot ${at(d)} = ${p(answer[0])} \\cdot ${p(d[0])} + ${p(answer[1])} \\cdot ${p(d[1])} = 0$，所以 $${at(answer)}$ 在 $L^{\\perp}$ 中。\n\n**检验。** 第二个标出的点 $${at(tip)}$ 同样给出 $${at(answer)} \\cdot ${at(tip)} = 0$，$L$ 上每个点都应如此。`,
         ],
+        fig(
+          7,
+          [
+            { kind: "line", a: [0, 0], b: d, accent: true },
+            { kind: "point", at: d },
+            { kind: "point", at: tip },
+          ],
+          [
+            `A line through the origin, with marked points at ${at(d)} and ${at(tip)}.`,
+            `一条过原点的直线，标出的点位于 ${at(d)} 和 ${at(tip)}。`,
+          ],
+        ),
       ),
+      reasons,
     );
   },
 );

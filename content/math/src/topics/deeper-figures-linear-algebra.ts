@@ -775,8 +775,8 @@ const orthogonalPair = {
     "spotting-the-perpendicular-pair",
     ["Spotting the perpendicular pair", "找出垂直的一对"],
     [
-      "Two vectors are orthogonal exactly when their dot product is zero. Reading coordinates from a drawing and testing the dot product is more reliable than judging angles by eye, particularly when the arrows have different lengths or do not lie along the grid lines of the drawing.",
-      "两个向量正交，当且仅当它们的点积为零。从图中读出坐标并计算点积，比用眼睛判断角度更可靠，尤其是箭头长度不同或不沿网格线的时候。",
+      "Two vectors are orthogonal exactly when their dot product is zero. Reading coordinates from a drawing and testing the dot product is more reliable than judging angles by eye, particularly when the arrows have different lengths or do not lie along the grid lines of the drawing. For example, arrows to $(2, 1)$ and $(-1, 3)$ look almost perpendicular, but $(2)(-1) + (1)(3) = 1 \\ne 0$; the arrow to $(-1, 2)$ is the perpendicular one.\n\n> **Watch out.** Test each candidate pair with the dot product instead of trusting the eye. An angle that looks right may be a few degrees off.",
+      "两个向量正交，当且仅当它们的点积为零。从图中读出坐标并计算点积，比用眼睛判断角度更可靠，尤其是箭头长度不同或不沿网格线的时候。例如指向 $(2, 1)$ 与 $(-1, 3)$ 的箭头看起来几乎垂直，但 $(2)(-1) + (1)(3) = 1 \\ne 0$；指向 $(-1, 2)$ 的箭头才与 $(2, 1)$ 垂直。\n\n> **注意。** 每一对候选都用点积检验，不要相信眼睛。看起来是直角的角可能差几度。",
     ],
     (rng) => {
       const x = rng.pick(nonzero(3).filter((p) => p[0] !== 0 && p[1] !== 0));
@@ -790,23 +790,38 @@ const orthogonalPair = {
         return [`$${m}$ and $${n}$`, `$${m}$ 和 $${n}$`];
       };
       const vs = [x, y, c, d];
-      return choose(
-        rng,
-        ["Which two of the arrows drawn are perpendicular?", "图中哪两个箭头互相垂直？"],
-        pair(0, 1),
-        [pair(0, 2), pair(1, 3), pair(2, 3), pair(0, 3), pair(1, 2)],
-        [
-          `Reading coordinates gives $(${x[0]}, ${x[1]})$ and $(${y[0]}, ${y[1]})$ for these two arrows, whose dot product is $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$. No other pair has dot product zero.`,
-          `读出这两个箭头的坐标为 $(${x[0]}, ${x[1]})$ 和 $(${y[0]}, ${y[1]})$，点积是 $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$。其他各对的点积都不为零。`,
-        ],
-        fig(
-          4,
-          vs.flatMap((v, i) => vector(v, names[i] as string)),
+      const wrongPairs: [number, number][] = [
+        [0, 2],
+        [1, 3],
+        [2, 3],
+        [0, 3],
+        [1, 2],
+      ];
+      const reading = vs.map((v, i) => `${names[i]} = (${v[0]}, ${v[1]})`).join(", ");
+      return reasoned(
+        choose(
+          rng,
+          ["Which two of the arrows drawn are perpendicular?", "图中哪两个箭头互相垂直？"],
+          pair(0, 1),
+          wrongPairs.map(([i, j]) => pair(i, j)),
           [
-            `Four arrows from the origin: ${vs.map((v, i) => `${names[i]} to (${v[0]}, ${v[1]})`).join(", ")}.`,
-            `从原点出发的四个箭头：${vs.map((v, i) => `${names[i]} 指向 (${v[0]}, ${v[1]})`).join("，")}。`,
+            `**Step 1: Read the arrows.** $${reading}$.\n\n**Step 2: Find the zero dot product.** $(${x[0]}, ${x[1]})$ and $(${y[0]}, ${y[1]})$ give $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$, so ${pair(0, 1)[0]} are perpendicular.\n\n**Check.** The other pairs give dot products ${wrongPairs.map(([i, j]) => `$${dot(vs[i] as Point, vs[j] as Point)}$`).join(", ")}, none of them zero.`,
+            `**第一步：读出箭头。** $${reading}$。\n\n**第二步：找出点积为零的一对。** $(${x[0]}, ${x[1]})$ 与 $(${y[0]}, ${y[1]})$ 给出 $(${x[0]})(${y[0]}) + (${x[1]})(${y[1]}) = 0$，所以 ${pair(0, 1)[1]} 互相垂直。\n\n**检验。** 其他各对的点积为 ${wrongPairs.map(([i, j]) => `$${dot(vs[i] as Point, vs[j] as Point)}$`).join("，")}，都不为零。`,
           ],
+          fig(
+            4,
+            vs.flatMap((v, i) => vector(v, names[i] as string)),
+            [
+              `Four arrows from the origin: ${vs.map((v, i) => `${names[i]} to (${v[0]}, ${v[1]})`).join(", ")}.`,
+              `从原点出发的四个箭头：${vs.map((v, i) => `${names[i]} 指向 (${v[0]}, ${v[1]})`).join("，")}。`,
+            ],
+          ),
         ),
+        wrongPairs.map(([i, j]): [string, string, string] => [
+          pair(i, j)[0],
+          `Their dot product is $${dot(vs[i] as Point, vs[j] as Point)}$, not $0$, so the angle only looks right.`,
+          `它们的点积为 $${dot(vs[i] as Point, vs[j] as Point)}$，不为 $0$，夹角只是看起来像直角。`,
+        ]),
       );
     },
   ),

@@ -2249,8 +2249,8 @@ const completingARotation: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["orthogonal-matrices#completing-an-orthogonal-matrix"],
   title: t("Completing an orthogonal matrix", "补全正交矩阵"),
   explanation: t(
-    "The columns of an orthogonal matrix are perpendicular unit vectors. In the plane, a unit vector $(a, b)$ leaves two perpendicular unit vectors, $(-b, a)$ and $(b, -a)$. The determinant decides between them: $+1$ gives a rotation and $-1$ a reflection.",
-    "正交矩阵的列是互相垂直的单位向量。在平面上，单位向量 $(a, b)$ 只有两个垂直的单位向量：$(-b, a)$ 和 $(b, -a)$。行列式决定选哪一个：$+1$ 是旋转，$-1$ 是反射。",
+    "The columns of an orthogonal matrix are perpendicular unit vectors. In the plane, a unit vector $(a, b)$ leaves two perpendicular unit vectors, $(-b, a)$ and $(b, -a)$. The determinant decides between them: $+1$ gives a rotation and $-1$ a reflection. For example, the first column $\\left(\\frac{3}{5}, \\frac{4}{5}\\right)$ with determinant $1$ forces the second column $\\left(-\\frac{4}{5}, \\frac{3}{5}\\right)$, since $\\frac{3}{5} \\cdot \\frac{3}{5} - \\left(-\\frac{4}{5}\\right)\\frac{4}{5} = 1$.\n\n> **Watch out.** Swapping the entries is not enough; one of them must also change sign, or the columns are not perpendicular. Compute the determinant to choose the sign rather than guessing.",
+    "正交矩阵的列是互相垂直的单位向量。在平面上，单位向量 $(a, b)$ 只有两个垂直的单位向量：$(-b, a)$ 和 $(b, -a)$。行列式决定选哪一个：$+1$ 是旋转，$-1$ 是反射。例如第一列为 $\\left(\\frac{3}{5}, \\frac{4}{5}\\right)$、行列式为 $1$ 时，第二列必须是 $\\left(-\\frac{4}{5}, \\frac{3}{5}\\right)$，因为 $\\frac{3}{5} \\cdot \\frac{3}{5} - \\left(-\\frac{4}{5}\\right)\\frac{4}{5} = 1$。\n\n> **注意。** 只交换两个分量还不够；其中一个还必须变号，否则两列不垂直。要计算行列式来确定符号，而不是猜。",
   ),
   generate(rng) {
     const [p, q, r] = rng.pick(triples);
@@ -2272,10 +2272,45 @@ const completingARotation: KnowledgePointDef = {
         `矩阵 $${matrix}$ 是正交矩阵，行列式为 $${rotation ? 1 : -1}$。求 $x + y$。`,
       ),
       answer,
-      wrong: [answer.mul(Q.of(-1)), a.add(b), x.sub(y)],
-      solution: t(
-        `The second column is a unit vector perpendicular to the first, so $(x, y)$ is $\\pm(${b.mul(Q.of(-1)).toLatex()}, ${a.toLatex()})$. The determinant $${rotation ? 1 : -1}$ picks $x = ${x.toLatex()}$ and $y = ${y.toLatex()}$, whose sum is $${answer.toLatex()}$.`,
-        `第二列是与第一列垂直的单位向量，所以 $(x, y)$ 是 $\\pm(${b.mul(Q.of(-1)).toLatex()}, ${a.toLatex()})$。行列式 $${rotation ? 1 : -1}$ 确定 $x = ${x.toLatex()}$，$y = ${y.toLatex()}$，它们的和是 $${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          answer.mul(Q.of(-1)),
+          `That is the other perpendicular unit vector, which gives determinant $${rotation ? -1 : 1}$.`,
+          `这是另一个垂直的单位向量，它给出的行列式是 $${rotation ? -1 : 1}$。`,
+        ),
+        why(
+          a.add(b),
+          "That copies the first column; the second column must be perpendicular to it.",
+          "这是照抄第一列；第二列必须与它垂直。",
+        ),
+        why(x.sub(y), "That is $x - y$; the question asks for $x + y$.", "这是 $x - y$；题目要求 $x + y$。"),
+      ].filter((w, i, all) => all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["List the perpendicular unit vectors", "列出垂直的单位向量"],
+            t(
+              "The second column is a unit vector perpendicular to the first, so it is one of two vectors:",
+              "第二列是与第一列垂直的单位向量，所以只能是两个向量之一：",
+            ),
+            [`(x, y) = \\pm\\left(${b.mul(Q.of(-1)).toLatex()}, ${a.toLatex()}\\right)`],
+          ],
+          [
+            ["Use the determinant", "利用行列式"],
+            t(
+              `The determinant $${rotation ? 1 : -1}$ picks $x = ${x.toLatex()}$ and $y = ${y.toLatex()}$:`,
+              `行列式 $${rotation ? 1 : -1}$ 确定 $x = ${x.toLatex()}$，$y = ${y.toLatex()}$：`,
+            ),
+            [
+              `\\det = \\left(${a.toLatex()}\\right)\\left(${y.toLatex()}\\right) - \\left(${x.toLatex()}\\right)\\left(${b.toLatex()}\\right) = ${rotation ? 1 : -1}`,
+              `x + y = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `The second column has $x^2 + y^2 = ${x.mul(x).add(y.mul(y)).toLatex()}$, and its dot product with the first column is $${a.mul(x).add(b.mul(y)).toLatex()}$, as an orthogonal matrix requires.`,
+          `第二列满足 $x^2 + y^2 = ${x.mul(x).add(y.mul(y)).toLatex()}$，与第一列的点积为 $${a.mul(x).add(b.mul(y)).toLatex()}$，符合正交矩阵的要求。`,
+        ),
       ),
     });
   },
@@ -3969,8 +4004,8 @@ const cosineFromDot: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["dot-product-in-n-dimensional-euclidean-space#the-cosine-of-an-angle-from-norms-and-a-dot-product"],
   title: t("The cosine of an angle from norms and a dot product", "由范数和点积求夹角余弦"),
   explanation: t(
-    "In $\\mathbb{R}^n$, the angle between two nonzero vectors is defined through the formula $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$. The Cauchy-Schwarz inequality guarantees that the resulting cosine lies between $-1$ and $1$. So a dot product divided by the two norms gives the cosine, even in dimensions where no picture of the angle can be drawn.",
-    "在 $\\mathbb{R}^n$ 中，两个非零向量的夹角由公式 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ 定义。柯西-施瓦茨不等式保证得到的余弦在 $-1$ 和 $1$ 之间。所以点积除以两个范数就得到余弦，即使在无法画出夹角的高维空间也是如此。",
+    "In $\\mathbb{R}^n$, the angle between two nonzero vectors is defined through the formula $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$. The Cauchy-Schwarz inequality guarantees that the resulting cosine lies between $-1$ and $1$. So a dot product divided by the two norms gives the cosine, even in dimensions where no picture of the angle can be drawn. For example, $\\|\\mathbf{u}\\| = 4$, $\\|\\mathbf{v}\\| = 5$ and $\\mathbf{u} \\cdot \\mathbf{v} = -6$ give $\\cos\\theta = \\frac{-6}{20} = -\\frac{3}{10}$, an obtuse angle.\n\n> **Watch out.** Divide by the product of the norms, not their sum, and keep the sign of the dot product: a negative dot product means an obtuse angle.",
+    "在 $\\mathbb{R}^n$ 中，两个非零向量的夹角由公式 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ 定义。柯西-施瓦茨不等式保证得到的余弦在 $-1$ 和 $1$ 之间。所以点积除以两个范数就得到余弦，即使在无法画出夹角的高维空间也是如此。例如 $\\|\\mathbf{u}\\| = 4$，$\\|\\mathbf{v}\\| = 5$，$\\mathbf{u} \\cdot \\mathbf{v} = -6$ 给出 $\\cos\\theta = \\frac{-6}{20} = -\\frac{3}{10}$，是钝角。\n\n> **注意。** 要除以范数之积，而不是范数之和；还要保留点积的符号：点积为负说明夹角是钝角。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -3984,10 +4019,27 @@ const cosineFromDot: KnowledgePointDef = {
         `在 $\\mathbb{R}^n$ 中，$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$，$\\mathbf{u} \\cdot \\mathbf{v} = ${c}$。求它们夹角的余弦。`,
       ),
       answer,
-      wrong: [answer.neg(), Q.of(c, a + b), Q.of(c, a * a * b * b), Q.of(a * b, c)],
-      solution: t(
-        `The cosine is $\\frac{${c}}{${a} \\cdot ${b}} = ${answer.toLatex()}$.`,
-        `余弦是 $\\frac{${c}}{${a} \\cdot ${b}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(answer.neg(), "The sign is flipped; the cosine has the sign of the dot product.", "符号反了；余弦与点积同号。"),
+        why(Q.of(c, a + b), "That divides by the sum of the norms; divide by their product.", "这是除以范数之和；要除以范数之积。"),
+        why(Q.of(c, a * a * b * b), "That divides by the product of the squared norms.", "这是除以范数平方之积。"),
+        why(Q.of(a * b, c), "The fraction is upside down; the dot product goes on top.", "分数颠倒了；点积在分子上。"),
+      ].filter((w, i, all) => all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [["Multiply the norms", "范数相乘"], t("", ""), [`\\|\\mathbf{u}\\|\\|\\mathbf{v}\\| = ${a} \\cdot ${b} = ${a * b}`]],
+          [
+            ["Divide the dot product", "用点积相除"],
+            t("", ""),
+            [
+              `\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = \\frac{${c}}{${a * b}} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `$|${c}| < ${a * b}$, so the cosine lies strictly between $-1$ and $1$, as Cauchy–Schwarz requires.`,
+          `$|${c}| < ${a * b}$，所以余弦严格介于 $-1$ 与 $1$ 之间，符合柯西–施瓦茨不等式。`,
+        ),
       ),
     });
   },
@@ -3998,8 +4050,8 @@ const unitVectorEntry: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["norm-of-a-vector-in-n-dimensional-euclidean-space#an-entry-of-a-unit-vector"],
   title: t("An entry of a unit vector", "单位向量的分量"),
   explanation: t(
-    "Dividing a nonzero vector by its norm gives a vector of length one in the same direction. Each entry is divided by the same number, so the ratios between entries do not change. These entries are the direction cosines of the vector, the cosines of its angles with the coordinate axes, and their squares always add to one.",
-    "把非零向量除以它的范数，就得到同方向的单位长度向量。每个分量都除以同一个数，所以分量之间的比不变。这些分量是向量的方向余弦，即它与各坐标轴夹角的余弦，它们的平方和总是 1。",
+    "Dividing a nonzero vector by its norm gives a vector of length one in the same direction. Each entry is divided by the same number, so the ratios between entries do not change. These entries are the direction cosines of the vector, the cosines of its angles with the coordinate axes, and their squares always add to one. For example, $\\mathbf{v} = (2, -3, 6)$ has norm $\\sqrt{4 + 9 + 36} = 7$, so its unit vector is $\\left(\\frac{2}{7}, -\\frac{3}{7}, \\frac{6}{7}\\right)$.\n\n> **Watch out.** Divide by the norm itself, not by its square, and keep the sign of each entry: normalizing changes the length, never the direction.",
+    "把非零向量除以它的范数，就得到同方向的单位长度向量。每个分量都除以同一个数，所以分量之间的比不变。这些分量是向量的方向余弦，即它与各坐标轴夹角的余弦，它们的平方和总是 1。例如 $\\mathbf{v} = (2, -3, 6)$ 的范数为 $\\sqrt{4 + 9 + 36} = 7$，所以它的单位向量是 $\\left(\\frac{2}{7}, -\\frac{3}{7}, \\frac{6}{7}\\right)$。\n\n> **注意。** 要除以范数本身，而不是范数的平方；还要保留每个分量的符号：单位化只改变长度，不改变方向。",
   ),
   generate(rng) {
     const [x, y, z, norm] = rng.pick([
@@ -4024,10 +4076,43 @@ const unitVectorEntry: KnowledgePointDef = {
         `设 $\\mathbf{v} = ${col(...entries)}$。求 $\\mathbf{v}$ 方向的单位向量的第 ${position} 个分量。`,
       ),
       answer,
-      wrong: [Q.of(entry), Q.of(entry, norm * norm * scale * scale), answer.neg(), Q.of(norm * scale, entry)],
-      solution: t(
-        `First the norm: $\\|\\mathbf{v}\\| = \\sqrt{${entries.map((e) => `(${e})^2`).join(" + ")}} = ${norm * scale}$. A unit vector divides each entry by the norm: $\\frac{${entry}}{${norm * scale}} = ${answer.toLatex()}$.`,
-        `先求范数：$\\|\\mathbf{v}\\| = \\sqrt{${entries.map((e) => `(${e})^2`).join(" + ")}} = ${norm * scale}$。单位向量是每个分量除以范数：$\\frac{${entry}}{${norm * scale}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(entry),
+          "That is the entry of $\\mathbf{v}$ itself; divide it by the norm.",
+          "这是 $\\mathbf{v}$ 本身的分量；还要除以范数。",
+        ),
+        why(
+          Q.of(entry, norm * norm * scale * scale),
+          `That divides by $\\|\\mathbf{v}\\|^2 = ${norm * norm * scale * scale}$; divide by $\\|\\mathbf{v}\\| = ${norm * scale}$.`,
+          `这是除以 $\\|\\mathbf{v}\\|^2 = ${norm * norm * scale * scale}$；要除以 $\\|\\mathbf{v}\\| = ${norm * scale}$。`,
+        ),
+        why(
+          answer.neg(),
+          "The sign is flipped; the unit vector points the same way as $\\mathbf{v}$.",
+          "符号反了；单位向量与 $\\mathbf{v}$ 同向。",
+        ),
+        why(Q.of(norm * scale, entry), "The fraction is upside down; the entry goes on top.", "分数颠倒了；分量在分子上。"),
+      ].filter((w, i, all) => all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the norm", "求范数"],
+            t("", ""),
+            [
+              `\\|\\mathbf{v}\\| = \\sqrt{${entries.map((e) => `(${e})^2`).join(" + ")}} = \\sqrt{${norm * norm * scale * scale}} = ${norm * scale}`,
+            ],
+          ],
+          [
+            ["Divide the entry", "分量相除"],
+            t(`Entry ${position} of $\\mathbf{v}$ is $${entry}$:`, `$\\mathbf{v}$ 的第 ${position} 个分量是 $${entry}$：`),
+            [`\\frac{${entry}}{${norm * scale}} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `The unit vector is $\\frac{1}{${norm}}(${[sign * x, y, z].join(", ")})$, and $\\frac{${[x, y, z].map((e) => `${e * e}`).join(" + ")}}{${norm * norm}} = 1$.`,
+          `单位向量是 $\\frac{1}{${norm}}(${[sign * x, y, z].join(", ")})$，且 $\\frac{${[x, y, z].map((e) => `${e * e}`).join(" + ")}}{${norm * norm}} = 1$。`,
+        ),
       ),
     });
   },
@@ -4037,8 +4122,8 @@ const monomialNorm: KnowledgePointDef = {
   id: "the-norm-of-a-power-function",
   title: t("The norm of a power function", "幂函数的范数"),
   explanation: t(
-    "With the inner product $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$, the squared norm of $f$ is the integral of $f^2$. For $f(t) = ct^n$ this squares both factors, giving $c^2t^{2n}$, which integrates to $\\frac{c^2}{2n + 1}$. Note that the exponent doubles before integrating, which is why the denominator is $2n + 1$ and not $n + 1$.",
-    "用内积 $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$，$f$ 的范数平方是 $f^2$ 的积分。对 $f(t) = ct^n$，两个因子都要平方，得 $c^2t^{2n}$，积分后是 $\\frac{c^2}{2n + 1}$。注意指数在积分前先翻倍，所以分母是 $2n + 1$，而不是 $n + 1$。",
+    "With the inner product $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$, the squared norm of $f$ is the integral of $f^2$. For $f(t) = ct^n$ this squares both factors, giving $c^2t^{2n}$, which integrates to $\\frac{c^2}{2n + 1}$. For example, $f(t) = 2t^3$ has $\\|f\\|^2 = \\int_0^1 4t^6\\,dt = \\frac{4}{7}$.\n\n> **Watch out.** The exponent doubles before integrating, which is why the denominator is $2n + 1$ and not $n + 1$. The coefficient is squared too.",
+    "用内积 $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$，$f$ 的范数平方是 $f^2$ 的积分。对 $f(t) = ct^n$，两个因子都要平方，得 $c^2t^{2n}$，积分后是 $\\frac{c^2}{2n + 1}$。例如 $f(t) = 2t^3$ 有 $\\|f\\|^2 = \\int_0^1 4t^6\\,dt = \\frac{4}{7}$。\n\n> **注意。** 指数在积分前先翻倍，所以分母是 $2n + 1$，而不是 $n + 1$。系数也要平方。",
   ),
   generate(rng) {
     const c = rng.int(2, 12);
@@ -4050,10 +4135,39 @@ const monomialNorm: KnowledgePointDef = {
         `用 $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$，对 $f(t) = ${c}t^{${n}}$ 求 $\\|f\\|^2$。`,
       ),
       answer,
-      wrong: [Q.of(c * c, n + 1), Q.of(c, 2 * n + 1), Q.of(c * c, 2 * n), Q.of(c, n + 1)],
-      solution: t(
-        `$\\|f\\|^2 = \\langle f, f \\rangle = \\int_0^1 ${c * c}t^{${2 * n}}\\,dt = \\frac{${c * c}}{${2 * n + 1}} = ${answer.toLatex()}$, using the power rule on the square of $f$.`,
-        `对 $f$ 的平方用幂法则：$\\|f\\|^2 = \\langle f, f \\rangle = \\int_0^1 ${c * c}t^{${2 * n}}\\,dt = \\frac{${c * c}}{${2 * n + 1}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(c * c, n + 1),
+          `That integrates $t^{${n}}$; the square of $f$ contains $t^{${2 * n}}$.`,
+          `这是对 $t^{${n}}$ 积分；$f$ 的平方含有 $t^{${2 * n}}$。`,
+        ),
+        why(Q.of(c, 2 * n + 1), `The coefficient must be squared too: $${c}^2 = ${c * c}$.`, `系数也要平方：$${c}^2 = ${c * c}$。`),
+        why(
+          Q.of(c * c, 2 * n),
+          `Integrating $t^{${2 * n}}$ raises the exponent to $${2 * n + 1}$, so divide by $${2 * n + 1}$.`,
+          `对 $t^{${2 * n}}$ 积分，指数升为 $${2 * n + 1}$，所以要除以 $${2 * n + 1}$。`,
+        ),
+        why(
+          Q.of(c, n + 1),
+          "That is $\\int_0^1 f(t)\\,dt$, not $\\langle f, f \\rangle$; square $f$ first.",
+          "这是 $\\int_0^1 f(t)\\,dt$，不是 $\\langle f, f \\rangle$；要先把 $f$ 平方。",
+        ),
+      ].filter((w, i, all) => all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [["Square the function", "把函数平方"], t("", ""), [`f(t)^2 = (${c}t^{${n}})^2 = ${c * c}t^{${2 * n}}`]],
+          [
+            ["Integrate", "积分"],
+            t("", ""),
+            [
+              `\\|f\\|^2 = \\int_0^1 ${c * c}t^{${2 * n}}\\,dt = ${c * c}\\left[\\frac{t^{${2 * n + 1}}}{${2 * n + 1}}\\right]_0^1 = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `On $[0, 1]$, $${c * c}t^{${2 * n}} \\le ${c * c}$, so $\\|f\\|^2$ must be below $${c * c}$, and $${answer.toLatex()}$ is.`,
+          `在 $[0, 1]$ 上 $${c * c}t^{${2 * n}} \\le ${c * c}$，所以 $\\|f\\|^2$ 必须小于 $${c * c}$，而 $${answer.toLatex()}$ 确实如此。`,
+        ),
       ),
     });
   },
@@ -4067,8 +4181,8 @@ const triangleBounds: KnowledgePointDef = {
     ],
   title: t("The range of a norm from the triangle inequality", "由三角不等式求范数的范围"),
   explanation: t(
-    "The triangle inequality gives an upper bound, $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$, reached when the vectors point the same way. Applying it again to $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ gives the lower bound $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$, reached when they point opposite ways. Orthogonal vectors give a value strictly in between.",
-    "三角不等式给出上界 $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$，当两个向量同向时达到。对 $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ 再用一次，得到下界 $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$，当它们反向时达到。正交向量给出的值严格介于两者之间。",
+    "The triangle inequality gives an upper bound, $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$, reached when the vectors point the same way. Applying it again to $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ gives the lower bound $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$, reached when they point opposite ways. Orthogonal vectors give a value strictly in between. For example, with $\\|\\mathbf{u}\\| = 3$ and $\\|\\mathbf{v}\\| = 7$, the norm $\\|\\mathbf{u} + \\mathbf{v}\\|$ can be anything from $4$ to $10$, and orthogonal vectors give $\\sqrt{58}$.\n\n> **Watch out.** The smallest value is the absolute difference $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$, not $0$ and not the smaller norm: the two vectors can cancel only as much as the shorter one allows.",
+    "三角不等式给出上界 $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$，当两个向量同向时达到。对 $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ 再用一次，得到下界 $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$，当它们反向时达到。正交向量给出的值严格介于两者之间。例如 $\\|\\mathbf{u}\\| = 3$，$\\|\\mathbf{v}\\| = 7$ 时，$\\|\\mathbf{u} + \\mathbf{v}\\|$ 可以取 $4$ 到 $10$ 之间的任何值，正交时为 $\\sqrt{58}$。\n\n> **注意。** 最小值是差的绝对值 $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$，不是 $0$，也不是较小的范数：两个向量最多只能抵消较短那个的长度。",
   ),
   generate(rng) {
     const a = rng.int(1, 30);
@@ -4083,10 +4197,53 @@ const triangleBounds: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [other, a * b, a * a + b * b, Math.max(a, b)],
-      solution: t(
-        `The norm lies between $|${a} - ${b}| = ${Math.abs(a - b)}$ and $${a} + ${b} = ${a + b}$. The value $${answer}$ is reached when the vectors point ${largest ? "the same way" : "opposite ways"}.`,
-        `范数介于 $|${a} - ${b}| = ${Math.abs(a - b)}$ 和 $${a} + ${b} = ${a + b}$ 之间。值 $${answer}$ 在两个向量${largest ? "同向" : "反向"}时达到。`,
+      mistakes: [
+        why(
+          other,
+          largest
+            ? "That is the smallest value, reached when the vectors point opposite ways."
+            : "That is the largest value, reached when the vectors point the same way.",
+          largest ? "这是最小值，在两个向量反向时达到。" : "这是最大值，在两个向量同向时达到。",
+        ),
+        why(a * b, "Norms of a sum are bounded by sums of norms, not products.", "和的范数由范数之和来界定，而不是乘积。"),
+        why(
+          a * a + b * b,
+          "That is $\\|\\mathbf{u} + \\mathbf{v}\\|^2$ for orthogonal vectors, a squared norm and not an extreme.",
+          "这是正交时的 $\\|\\mathbf{u} + \\mathbf{v}\\|^2$，是范数的平方，也不是最值。",
+        ),
+        why(
+          Math.max(a, b),
+          "Adding $\\mathbf{v}$ can make the sum longer or shorter than the longer vector.",
+          "加上 $\\mathbf{v}$ 可以使和比较长的向量更长或更短。",
+        ),
+        why(
+          Math.min(a, b),
+          `The smaller norm is not a bound; the shortest sum is $|${a} - ${b}|$.`,
+          `较小的范数不是界；最短的和是 $|${a} - ${b}|$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write both bounds", "写出上下界"],
+            t("By the triangle inequality and its reverse form:", "由三角不等式及其反向形式："),
+            [
+              `|${a} - ${b}| \\le \\|\\mathbf{u} + \\mathbf{v}\\| \\le ${a} + ${b}`,
+              `${Math.abs(a - b)} \\le \\|\\mathbf{u} + \\mathbf{v}\\| \\le ${a + b}`,
+            ],
+          ],
+          [
+            [largest ? "Take the upper bound" : "Take the lower bound", largest ? "取上界" : "取下界"],
+            t(
+              `The value $${answer}$ is reached when $\\mathbf{v}$ points ${largest ? "the same way as" : "opposite to"} $\\mathbf{u}$.`,
+              `当 $\\mathbf{v}$ 与 $\\mathbf{u}$ ${largest ? "同向" : "反向"}时达到 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $\\mathbf{v} = ${largest ? "" : "-"}${frac(b, a)}\\mathbf{u}$, $\\|\\mathbf{v}\\| = ${b}$ and $\\|\\mathbf{u} + \\mathbf{v}\\| = \\left|1 ${largest ? "+" : "-"} ${frac(b, a)}\\right| \\cdot ${a} = ${answer}$.`,
+          `取 $\\mathbf{v} = ${largest ? "" : "-"}${frac(b, a)}\\mathbf{u}$，则 $\\|\\mathbf{v}\\| = ${b}$，且 $\\|\\mathbf{u} + \\mathbf{v}\\| = \\left|1 ${largest ? "+" : "-"} ${frac(b, a)}\\right| \\cdot ${a} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -4096,8 +4253,8 @@ const trigonometricNorm: KnowledgePointDef = {
   id: "the-norm-of-a-sum-of-orthogonal-trigonometric-functions",
   title: t("The norm of a sum of orthogonal trigonometric functions", "正交三角函数之和的范数"),
   explanation: t(
-    "On $[-\\pi, \\pi]$ with the integral inner product, $\\sin mt$ and $\\cos nt$ are orthogonal for all positive whole $m$ and $n$, since their product is an odd function. Each has squared norm $\\pi$. The Pythagorean theorem then applies to any combination of them, so the squared norm is found without squaring and integrating the whole expression.",
-    "在 $[-\\pi, \\pi]$ 上用积分内积，对所有正整数 $m$、$n$，$\\sin mt$ 和 $\\cos nt$ 都正交，因为它们的积是奇函数。它们的范数平方都是 $\\pi$。于是勾股定理适用于它们的任何组合，所以不必把整个式子平方再积分，就能求出范数平方。",
+    "On $[-\\pi, \\pi]$ with the integral inner product, $\\sin mt$ and $\\cos nt$ are orthogonal for all positive whole $m$ and $n$, since their product is an odd function. Each has squared norm $\\pi$. The Pythagorean theorem then applies to any combination of them, so the squared norm is found without squaring and integrating the whole expression. For example, $f(t) = 3\\sin 2t + 4\\cos 5t$ has $\\|f\\|^2 = 9\\pi + 16\\pi = 25\\pi$.\n\n> **Watch out.** Square each coefficient separately and add; do not square their sum. There is no cross term, because $\\langle \\sin mt, \\cos nt \\rangle = 0$.",
+    "在 $[-\\pi, \\pi]$ 上用积分内积，对所有正整数 $m$、$n$，$\\sin mt$ 和 $\\cos nt$ 都正交，因为它们的积是奇函数。它们的范数平方都是 $\\pi$。于是勾股定理适用于它们的任何组合，所以不必把整个式子平方再积分，就能求出范数平方。例如 $f(t) = 3\\sin 2t + 4\\cos 5t$ 有 $\\|f\\|^2 = 9\\pi + 16\\pi = 25\\pi$。\n\n> **注意。** 各系数分别平方再相加；不要把它们的和平方。没有交叉项，因为 $\\langle \\sin mt, \\cos nt \\rangle = 0$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -4114,10 +4271,39 @@ const trigonometricNorm: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(a + b) ** 2, 2 * answer, a + b, Math.abs(a * a - b * b) + 1],
-      solution: t(
-        `The two terms are orthogonal, and each basic function has squared norm $\\pi$. So $c = ${a}^2 + ${b}^2 = ${answer}$.`,
-        `两项正交，每个基本函数的范数平方都是 $\\pi$。所以 $c = ${a}^2 + ${b}^2 = ${answer}$。`,
+      mistakes: [
+        why(
+          (a + b) ** 2,
+          "That squares the sum of the coefficients, keeping a cross term that is zero.",
+          "这是把系数之和平方，保留了一个为零的交叉项。",
+        ),
+        why(
+          2 * answer,
+          "Each of $\\sin mt$ and $\\cos nt$ has squared norm $\\pi$ on $[-\\pi, \\pi]$, not $2\\pi$.",
+          "在 $[-\\pi, \\pi]$ 上 $\\sin mt$ 与 $\\cos nt$ 的范数平方都是 $\\pi$，不是 $2\\pi$。",
+        ),
+        why(a + b, "The coefficients must be squared: $\\|a f\\|^2 = a^2\\|f\\|^2$.", "系数要平方：$\\|a f\\|^2 = a^2\\|f\\|^2$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Use orthogonality", "利用正交性"],
+            t(
+              "The product of a sine and a cosine is odd, so the cross term integrates to $0$:",
+              "正弦与余弦之积是奇函数，所以交叉项的积分为 $0$：",
+            ),
+            [`\\|f\\|^2 = ${a}^2\\|\\sin ${withCoefficient(m, "t")}\\|^2 + ${b}^2\\|\\cos ${withCoefficient(n, "t")}\\|^2`],
+          ],
+          [
+            ["Use the squared norms", "代入范数平方"],
+            t("Each basic function has squared norm $\\pi$:", "每个基本函数的范数平方都是 $\\pi$："),
+            [`\\|f\\|^2 = ${a * a}\\pi + ${b * b}\\pi = ${answer}\\pi`],
+          ],
+        ],
+        t(
+          `$\\int_{-\\pi}^{\\pi} \\sin^2 ${withCoefficient(m, "t")}\\,dt = \\int_{-\\pi}^{\\pi} \\frac{1 - \\cos ${withCoefficient(2 * m, "t")}}{2}\\,dt = \\pi$, which confirms the squared norm used, so $c = ${answer}$.`,
+          `$\\int_{-\\pi}^{\\pi} \\sin^2 ${withCoefficient(m, "t")}\\,dt = \\int_{-\\pi}^{\\pi} \\frac{1 - \\cos ${withCoefficient(2 * m, "t")}}{2}\\,dt = \\pi$，证实了所用的范数平方，所以 $c = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -5098,8 +5284,8 @@ const traceInnerProduct: KnowledgePointDef = {
   id: "the-trace-inner-product-of-two-matrices",
   title: t("The trace inner product of two matrices", "两个矩阵的迹内积"),
   explanation: t(
-    "The formula $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$ makes the space of matrices into an inner product space. Each diagonal entry of $A^TB$ is the dot product of a column of $A$ with the matching column of $B$, so the trace adds up the products of all the matching entries. So this is just the usual dot product with the matrices written out as long vectors, and it does not need the matrix product to be computed in full.",
-    "公式 $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$ 使矩阵空间成为内积空间。$A^TB$ 的每个对角元是 $A$ 的一列与 $B$ 对应列的点积，所以迹把所有对应元素之积加起来。因此这就是把矩阵写成长向量后通常的点积，不需要完整计算矩阵乘积。",
+    "The formula $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$ makes the space of matrices into an inner product space. Each diagonal entry of $A^TB$ is the dot product of a column of $A$ with the matching column of $B$, so the trace adds up the products of all the matching entries. So this is just the usual dot product with the matrices written out as long vectors, and it does not need the matrix product to be computed in full. For example, $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & -1 \\end{pmatrix}$ and $B = \\begin{pmatrix} 3 & 1 \\\\ 4 & 2 \\end{pmatrix}$ give $\\langle A, B \\rangle = 3 + 2 + 0 - 2 = 3$.\n\n> **Watch out.** The transpose matters: $\\operatorname{tr}(AB)$ multiplies rows of $A$ by columns of $B$ and is a different number in general. Neither is it the product of the two traces.",
+    "公式 $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$ 使矩阵空间成为内积空间。$A^TB$ 的每个对角元是 $A$ 的一列与 $B$ 对应列的点积，所以迹把所有对应元素之积加起来。因此这就是把矩阵写成长向量后通常的点积，不需要完整计算矩阵乘积。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & -1 \\end{pmatrix}$ 与 $B = \\begin{pmatrix} 3 & 1 \\\\ 4 & 2 \\end{pmatrix}$ 给出 $\\langle A, B \\rangle = 3 + 2 + 0 - 2 = 3$。\n\n> **注意。** 转置不能省：$\\operatorname{tr}(AB)$ 是 $A$ 的行乘 $B$ 的列，一般是另一个数。它也不是两个迹的乘积。",
   ),
   generate(rng) {
     const entry = () => rng.int(-5, 5);
@@ -5123,10 +5309,35 @@ const traceInnerProduct: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [traceOfProduct, sumOfDiagonal(a) * sumOfDiagonal(b), -answer, answer + 1, answer - 1, answer + 2],
-      solution: t(
-        `The trace adds up the products of the matching entries: $${terms} = ${answer}$.`,
-        `迹把对应元素之积加起来：$${terms} = ${answer}$。`,
+      mistakes: [
+        why(
+          traceOfProduct,
+          "That is $\\operatorname{tr}(AB)$; the transpose of $A$ is missing.",
+          "这是 $\\operatorname{tr}(AB)$；漏掉了 $A$ 的转置。",
+        ),
+        why(
+          sumOfDiagonal(a) * sumOfDiagonal(b),
+          "That multiplies the two traces; the inner product pairs every entry of $A$ with the matching entry of $B$.",
+          "这是两个迹相乘；内积要把 $A$ 的每个元素与 $B$ 的对应元素配对。",
+        ),
+        why(-answer, "The sign is flipped; recheck the products of negative entries.", "符号反了；检查负元素的乘积。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Pair the matching entries", "对应元素配对"],
+            t(
+              "Each diagonal entry of $A^TB$ is a column of $A$ dotted with the same column of $B$, so the trace pairs every entry with its partner:",
+              "$A^TB$ 的每个对角元是 $A$ 的一列与 $B$ 同一列的点积，所以迹把每个元素与对应元素配对：",
+            ),
+            [`\\langle A, B \\rangle = ${terms}`],
+          ],
+          [["Add", "相加"], t("", ""), [`\\langle A, B \\rangle = ${answer}`]],
+        ],
+        t(
+          `The diagonal of $A^TB$ is $${dot([a[0]![0]!, a[1]![0]!], [b[0]![0]!, b[1]![0]!])}$ and $${dot([a[0]![1]!, a[1]![1]!], [b[0]![1]!, b[1]![1]!])}$, whose sum is $${answer}$.`,
+          `$A^TB$ 的对角元为 $${dot([a[0]![0]!, a[1]![0]!], [b[0]![0]!, b[1]![0]!])}$ 与 $${dot([a[0]![1]!, a[1]![1]!], [b[0]![1]!, b[1]![1]!])}$，其和为 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -5136,8 +5347,8 @@ const scalarInComplexInnerProduct: KnowledgePointDef = {
   id: "pulling-a-scalar-out-of-a-complex-inner-product",
   title: t("Pulling a scalar out of a complex inner product", "从复内积中提出标量"),
   explanation: t(
-    "A complex inner product treats its two slots differently. Under the convention that it is linear in the first slot, a scalar comes out of that slot unchanged, but it comes out of the second slot conjugated. Swapping the two vectors also conjugates the value. These rules are needed to keep $\\langle \\mathbf{v}, \\mathbf{v} \\rangle$ real and positive. Some books use the opposite convention, which is why the slot that is linear must always be stated.",
-    "复内积对两个位置的处理不同。按第一个位置线性的约定，标量从这个位置提出时不变，但从第二个位置提出时要取共轭。交换两个向量也使值取共轭。这些规则是为了保持 $\\langle \\mathbf{v}, \\mathbf{v} \\rangle$ 为正实数。有些书使用相反的约定，所以必须说明哪个位置是线性的。",
+    "A complex inner product treats its two slots differently. Under the convention that it is linear in the first slot, a scalar comes out of that slot unchanged, but it comes out of the second slot conjugated. Swapping the two vectors also conjugates the value. These rules are needed to keep $\\langle \\mathbf{v}, \\mathbf{v} \\rangle$ real and positive. Some books use the opposite convention, which is why the slot that is linear must always be stated. For example, if $\\langle \\mathbf{u}, \\mathbf{v} \\rangle = 1 + 2i$, then $\\langle \\mathbf{u}, i\\mathbf{v} \\rangle = \\bar{i}(1 + 2i) = -i(1 + 2i) = 2 - i$.\n\n> **Watch out.** Conjugate the scalar only when it leaves the second slot, and conjugate the whole value when the two vectors swap places. Then multiply out with $i^2 = -1$.",
+    "复内积对两个位置的处理不同。按第一个位置线性的约定，标量从这个位置提出时不变，但从第二个位置提出时要取共轭。交换两个向量也使值取共轭。这些规则是为了保持 $\\langle \\mathbf{v}, \\mathbf{v} \\rangle$ 为正实数。有些书使用相反的约定，所以必须说明哪个位置是线性的。例如若 $\\langle \\mathbf{u}, \\mathbf{v} \\rangle = 1 + 2i$，则 $\\langle \\mathbf{u}, i\\mathbf{v} \\rangle = \\bar{i}(1 + 2i) = -i(1 + 2i) = 2 - i$。\n\n> **注意。** 只有标量从第二个位置提出时才取共轭；两个向量交换位置时整个值取共轭。然后用 $i^2 = -1$ 展开。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -5173,16 +5384,46 @@ const scalarInComplexInnerProduct: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [
-        -answer,
-        asksReal ? (conjugated[0] ?? 0) : kind === 0 ? (conjugated[1] ?? 0) : (straight[1] ?? 0),
-        asksReal ? im : re,
-        answer + 1,
-        answer - 1,
-      ],
-      solution: t(
-        `${reason}. So the value is $${poly([re, ""], [im, "i"])}$, and ${asksReal ? "$x$" : "$y$"} is $${answer}$.`,
-        `${reasonZh}。所以值是 $${poly([re, ""], [im, "i"])}$，${asksReal ? "$x$" : "$y$"} 是 $${answer}$。`,
+      mistakes: [
+        why(-answer, "The sign is flipped; recheck $i^2 = -1$ and the conjugations.", "符号反了；检查 $i^2 = -1$ 与共轭。"),
+        why(
+          asksReal ? (conjugated[0] ?? 0) : kind === 0 ? (conjugated[1] ?? 0) : (straight[1] ?? 0),
+          kind === 0
+            ? "That conjugates the scalar, but it comes out of the first slot unchanged."
+            : kind === 1
+              ? "That leaves the scalar as it is, but it comes out of the second slot conjugated."
+              : "That forgets that swapping the two vectors conjugates the value.",
+          kind === 0
+            ? "这是把标量取了共轭，但它从第一个位置提出时不变。"
+            : kind === 1
+              ? "这是没有取共轭，但标量从第二个位置提出时要取共轭。"
+              : "这是忘了交换两个向量会使值取共轭。",
+        ),
+        why(
+          asksReal ? im : re,
+          `That is the ${asksReal ? "imaginary" : "real"} part; the question asks for the ${asksReal ? "real" : "imaginary"} part.`,
+          `这是${asksReal ? "虚部" : "实部"}；题目问的是${asksReal ? "实部" : "虚部"}。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Take the scalar out", "提出标量"],
+            t(`${reason}:`, `${reasonZh}：`),
+            [
+              [
+                `${expression} = (${scalar})(${value})`,
+                `${expression} = (${poly([p, ""], [-q, "i"])})(${value})`,
+                `${expression} = \\overline{(${scalar})(${value})}`,
+              ][kind] ?? "",
+            ],
+          ],
+          [["Multiply out", "展开"], t("Using $i^2 = -1$:", "利用 $i^2 = -1$："), [`${expression} = ${poly([re, ""], [im, "i"])}`]],
+        ],
+        t(
+          `So ${asksReal ? "$x$" : "$y$"} is $${answer}$. The size checks out: $${inParens(re)}^2 + ${inParens(im)}^2 = ${re * re + im * im} = (${p * p + q * q})(${a * a + b * b})$, the product of $|${scalar}|^2$ and $|${value}|^2$.`,
+          `所以 ${asksReal ? "$x$" : "$y$"} 是 $${answer}$。模长也对得上：$${inParens(re)}^2 + ${inParens(im)}^2 = ${re * re + im * im} = (${p * p + q * q})(${a * a + b * b})$，即 $|${scalar}|^2$ 与 $|${value}|^2$ 之积。`,
+        ),
       ),
     });
   },
