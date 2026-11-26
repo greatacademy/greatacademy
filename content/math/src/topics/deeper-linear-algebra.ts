@@ -602,8 +602,8 @@ const multiplyingBlocks: KnowledgePointDef = {
   id: "multiplying-partitioned-matrices",
   title: t("Multiplying partitioned matrices", "分块矩阵的乘法"),
   explanation: t(
-    "Blocks multiply like entries as long as the sizes match, keeping the order of each product. So the top right block of $\\begin{pmatrix} A & B \\\\ 0 & D \\end{pmatrix}\\begin{pmatrix} E & G \\\\ 0 & H \\end{pmatrix}$ is $AG + BH$.",
-    "只要尺寸相配，分块矩阵可以像数一样相乘，但每个乘积的顺序要保持。所以 $\\begin{pmatrix} A & B \\\\ 0 & D \\end{pmatrix}\\begin{pmatrix} E & G \\\\ 0 & H \\end{pmatrix}$ 的右上块是 $AG + BH$。",
+    "Blocks multiply like entries as long as the sizes match, keeping the order of each product. So the top right block of $\\begin{pmatrix} A & B \\\\ 0 & D \\end{pmatrix}\\begin{pmatrix} E & G \\\\ 0 & H \\end{pmatrix}$ is $AG + BH$: row of blocks $(A, B)$ times column of blocks $(G, H)$.\n\n> **Watch out.** Keep each block on the left where it stands: $AG$ and $BH$, never $GA$ or $HB$, since blocks seldom commute. And the block entry needs both products, not just one.",
+    "只要尺寸相配，分块矩阵可以像数一样相乘，但每个乘积的顺序要保持。所以 $\\begin{pmatrix} A & B \\\\ 0 & D \\end{pmatrix}\\begin{pmatrix} E & G \\\\ 0 & H \\end{pmatrix}$ 的右上块是 $AG + BH$：块行 $(A, B)$ 乘以块列 $(G, H)$。\n\n> **注意。** 每个块保持原来左边的位置：是 $AG$ 与 $BH$，绝不是 $GA$ 或 $HB$，因为块很少可交换。而且这个块需要两个乘积之和，不是只取其一。",
   ),
   generate(rng) {
     const small = (): number[][] => [
@@ -623,10 +623,45 @@ const multiplyingBlocks: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [AG[i]![j]!, BH[i]![j]!, times(G, A)[i]![j]! + times(H, B)[i]![j]!],
-      solution: t(
-        `The top right block is $AG + BH$. Its entry is $${AG[i]![j]!} + ${inParens(BH[i]![j]!)} = ${answer}$.`,
-        `右上块是 $AG + BH$。该元素为 $${AG[i]![j]!} + ${inParens(BH[i]![j]!)} = ${answer}$。`,
+      mistakes: [
+        why(
+          AG[i]![j]!,
+          "That is the entry of $AG$ alone; the top right block is $AG + BH$, so $BH$ is missing.",
+          "这只是 $AG$ 的元素；右上块是 $AG + BH$，漏了 $BH$。",
+        ),
+        why(
+          BH[i]![j]!,
+          "That is the entry of $BH$ alone; the top right block is $AG + BH$, so $AG$ is missing.",
+          "这只是 $BH$ 的元素；右上块是 $AG + BH$，漏了 $AG$。",
+        ),
+        why(
+          times(G, A)[i]![j]! + times(H, B)[i]![j]!,
+          "The order of the products is reversed: the blocks of $M$ stay on the left, as in $AG$ and $BH$.",
+          "乘积的顺序反了：$M$ 的块要留在左边，即 $AG$ 与 $BH$。",
+        ),
+      ].filter((w, x, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === x),
+      solution: walked(
+        [
+          [
+            ["Multiply the blocks", "按块相乘"],
+            t(
+              "Block row $1$ of $M$ is $(A, B)$ and block column $2$ of $N$ is $(G, H)$, so the top right block of $MN$ is $AG + BH$.",
+              "$M$ 的第 $1$ 块行是 $(A, B)$，$N$ 的第 $2$ 块列是 $(G, H)$，所以 $MN$ 的右上块是 $AG + BH$。",
+            ),
+          ],
+          [
+            ["Find the two entries", "求两个元素"],
+            t(
+              `Row ${i + 1} of $A$ times column ${j + 1} of $G$ gives $${AG[i]![j]!}$, and row ${i + 1} of $B$ times column ${j + 1} of $H$ gives $${BH[i]![j]!}$.`,
+              `$A$ 的第 ${i + 1} 行乘以 $G$ 的第 ${j + 1} 列得 $${AG[i]![j]!}$，$B$ 的第 ${i + 1} 行乘以 $H$ 的第 ${j + 1} 列得 $${BH[i]![j]!}$。`,
+            ),
+            [`${AG[i]![j]!} + ${inParens(BH[i]![j]!)} = ${answer}`],
+          ],
+        ],
+        t(
+          `Row ${i + 1} of $M$ is $(${[...A[i]!, ...B[i]!].join(", ")})$ and column ${j + 3} of $N$ is $(${[G[0]![j]!, G[1]![j]!, H[0]![j]!, H[1]![j]!].join(", ")})$; their dot product is $${dot([...A[i]!, ...B[i]!], [G[0]![j]!, G[1]![j]!, H[0]![j]!, H[1]![j]!])}$.`,
+          `$M$ 的第 ${i + 1} 行是 $(${[...A[i]!, ...B[i]!].join(", ")})$，$N$ 的第 ${j + 3} 列是 $(${[G[0]![j]!, G[1]![j]!, H[0]![j]!, H[1]![j]!].join(", ")})$；二者的点积是 $${dot([...A[i]!, ...B[i]!], [G[0]![j]!, G[1]![j]!, H[0]![j]!, H[1]![j]!])}$。`,
+        ),
       ),
     });
   },
@@ -640,8 +675,8 @@ const consistent3x3: KnowledgePointDef = {
   id: "the-constant-that-makes-a-singular-3x3-system-consistent",
   title: t("The constant that makes a singular 3×3 system consistent", "使奇异三阶方程组相容的常数"),
   explanation: t(
-    "When elimination turns a row of the coefficient matrix to zero, the same steps act on the right side, and the system has solutions only if that side also becomes zero. This condition fixes the missing constant.",
-    "消元把系数矩阵的某一行化为零时，同样的步骤也作用在右边，只有右边也变成零，方程组才有解。这个条件决定了缺少的常数。",
+    "When elimination turns a row of the coefficient matrix to zero, the same steps act on the right side, and the system has solutions only if that side also becomes zero. This condition fixes the missing constant. If row $3$ of the coefficients is $2R_1 + R_2$ and the right sides of rows $1$ and $2$ are $4$ and $1$, then $k = 2 \\cdot 4 + 1 = 9$.\n\n> **Watch out.** Find the combination from the coefficients first, then apply exactly the same multiples to the right-hand sides; adding the right sides without the multiples gives the wrong constant.",
+    "消元把系数矩阵的某一行化为零时，同样的步骤也作用在右边，只有右边也变成零，方程组才有解。这个条件决定了缺少的常数。若系数的第 $3$ 行是 $2R_1 + R_2$，而第 $1$、$2$ 行右端为 $4$ 和 $1$，则 $k = 2 \\cdot 4 + 1 = 9$。\n\n> **注意。** 先由系数找出组合，再对右端用完全相同的倍数；不带倍数直接把右端相加，得到的常数是错的。",
   ),
   generate(rng) {
     const r1 = [1, nonzero(rng, 3), nonzero(rng, 3)];
@@ -657,10 +692,38 @@ const consistent3x3: KnowledgePointDef = {
       prompt: t(`For which $k$ does the system $${system}$ have a solution?`, `$k$ 取何值时，方程组 $${system}$ 有解？`),
       answer: k,
       solveFor: "k",
-      wrong: [e1 + e2, alpha * e2 + beta * e1, 0],
-      solution: t(
-        `On the left, row 3 equals $${alpha}$ times row 1 plus $${beta}$ times row 2. The right side must follow the same relation: $k = ${alpha}(${e1}) + ${inParens(beta)}(${e2}) = ${k}$.`,
-        `左边第 3 行等于第 1 行的 $${alpha}$ 倍加第 2 行的 $${beta}$ 倍。右边必须满足同样的关系：$k = ${alpha}(${e1}) + ${inParens(beta)}(${e2}) = ${k}$。`,
+      mistakes: [
+        why(
+          e1 + e2,
+          "That adds the right sides without the multiples; row 3 is a combination with the multiples found from the coefficients.",
+          "这是不带倍数直接把右端相加；第 3 行是带着由系数求出的倍数的组合。",
+        ),
+        why(alpha * e2 + beta * e1, "The two multiples are attached to the wrong rows.", "两个倍数配错了行。"),
+        why(
+          0,
+          "The right side of the zero row must vanish, not $k$ itself: $k$ has to match the combination of the other right sides.",
+          "必须为零的是零行的右端，而不是 $k$ 本身：$k$ 要与其他右端的组合相符。",
+        ),
+      ].filter((w, i, all) => w.value !== k && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the combination", "找出组合"],
+            t(
+              `In every column, row 3 of the coefficients equals $${alpha}$ times row 1 plus $${inParens(beta)}$ times row 2, so $${poly([1, "R_3"], [-alpha, "R_1"], [-beta, "R_2"])} \\to R_3$ turns it into zeros.`,
+              `在每一列中，系数的第 3 行都等于第 1 行的 $${alpha}$ 倍加第 2 行的 $${inParens(beta)}$ 倍，所以 $${poly([1, "R_3"], [-alpha, "R_1"], [-beta, "R_2"])} \\to R_3$ 把它化为零。`,
+            ),
+          ],
+          [
+            ["Make the right side zero too", "使右端也为零"],
+            t("The same step on the right side must give $0$:", "同一步作用在右端也必须得 $0$："),
+            [`k - ${inParens(alpha)}(${e1}) - ${inParens(beta)}(${e2}) = 0 \\implies k = ${k}`],
+          ],
+        ],
+        t(
+          `With $k = ${k}$, the third equation is $${alpha}$ times the first plus $${inParens(beta)}$ times the second, coefficients and right side alike, so it adds no new condition and the first two equations, with independent rows, have solutions.`,
+          `$k = ${k}$ 时，第三个方程恰是第一个的 $${alpha}$ 倍加第二个的 $${inParens(beta)}$ 倍，系数与右端都如此，所以它不增加新条件，而前两个方程的行线性无关，有解。`,
+        ),
       ),
     });
   },
@@ -670,8 +733,8 @@ const clearingAbovePivot: KnowledgePointDef = {
   id: "clearing-above-a-pivot-to-reach-rref",
   title: t("Clearing above a pivot to reach reduced form", "清除主元上方的元素得到简化阶梯形"),
   explanation: t(
-    "From echelon form, reduced form takes one more pass: starting at the last pivot, subtract multiples of its row from the rows above until each pivot is the only nonzero entry of its column. This also changes the entries in the free columns.",
-    "从阶梯形到简化阶梯形还要再做一轮：从最后一个主元开始，从上方各行减去该行的倍数，直到每个主元是所在列唯一的非零元素。这也会改变自由列中的元素。",
+    "From echelon form, reduced form takes one more pass: starting at the last pivot, subtract multiples of its row from the rows above until each pivot is the only nonzero entry of its column. This also changes the entries in the free columns. In $\\begin{pmatrix} 1 & 2 & 7 \\\\ 0 & 1 & 3 \\end{pmatrix}$, $R_1 - 2R_2 \\to R_1$ makes the last entry of row 1 equal to $7 - 2 \\cdot 3 = 1$.\n\n> **Watch out.** The whole row is subtracted, so every entry to the right changes, not just the one above the pivot. The multiple is the entry above the pivot, with its sign.",
+    "从阶梯形到简化阶梯形还要再做一轮：从最后一个主元开始，从上方各行减去该行的倍数，直到每个主元是所在列唯一的非零元素。这也会改变自由列中的元素。在 $\\begin{pmatrix} 1 & 2 & 7 \\\\ 0 & 1 & 3 \\end{pmatrix}$ 中，$R_1 - 2R_2 \\to R_1$ 使第 1 行最后一个元素变为 $7 - 2 \\cdot 3 = 1$。\n\n> **注意。** 减去的是整行，所以右边的每个元素都会改变，而不只是主元上方的那个。倍数就是主元上方的元素，连同它的符号。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
@@ -691,10 +754,44 @@ const clearingAbovePivot: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [b, b + a * c, c],
-      solution: t(
-        `Row 1 needs a zero in column 2, so replace it by row 1 minus $${a}$ times row 2. The last entry becomes $${b} - ${inParens(a)}(${c}) = ${answer}$.`,
-        `第 1 行第 2 列要变成零，所以用第 1 行减去第 2 行的 $${a}$ 倍。最后一个元素变成 $${b} - ${inParens(a)}(${c}) = ${answer}$。`,
+      mistakes: [
+        why(
+          b,
+          "The row operation changes the whole of row 1, so its last entry changes too.",
+          "行运算改变整个第 1 行，所以它的最后一个元素也会变。",
+        ),
+        why(
+          b + a * c,
+          `Row 2 is subtracted $${a}$ times, so $${inParens(a)}(${c})$ is subtracted from the last entry, not added.`,
+          `第 2 行被减去 $${a}$ 倍，所以最后一个元素要减去 $${inParens(a)}(${c})$，而不是加上。`,
+        ),
+        why(
+          c,
+          "That is the entry of row 2; the question asks for row 1 after the operation.",
+          "这是第 2 行的元素；题目问的是变换后的第 1 行。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Choose the operation", "选择变换"],
+            t(
+              `The entry above the second pivot is $${a}$, so $${poly([1, "R_1"], [-a, "R_2"])} \\to R_1$ clears it.`,
+              `第二个主元上方的元素是 $${a}$，所以 $${poly([1, "R_1"], [-a, "R_2"])} \\to R_1$ 把它消去。`,
+            ),
+          ],
+          [["Update the last entry", "更新最后一个元素"], t("", ""), [`${b} - ${inParens(a)}(${c}) = ${answer}`]],
+        ],
+        t(
+          `The result $${mat([
+            [1, 0, answer],
+            [0, 1, c],
+          ])}$ is in reduced form, and adding $${inParens(a)}$ times row 2 back gives row 1 again: $${answer} + ${inParens(a)}(${c}) = ${b}$.`,
+          `结果 $${mat([
+            [1, 0, answer],
+            [0, 1, c],
+          ])}$ 是简化阶梯形，再把第 2 行的 $${inParens(a)}$ 倍加回去又得到原来的第 1 行：$${answer} + ${inParens(a)}(${c}) = ${b}$。`,
+        ),
       ),
     });
   },
@@ -704,8 +801,8 @@ const solvingWithAnInverse: KnowledgePointDef = {
   id: "solving-a-system-from-a-given-inverse",
   title: t("Solving a system from a given inverse", "由已知的逆矩阵解方程组"),
   explanation: t(
-    "If the inverse of $A$ is known, there is no need to eliminate: multiplying $A\\mathbf{x} = \\mathbf{b}$ on the left by $A^{-1}$ gives $\\mathbf{x} = A^{-1}\\mathbf{b}$. The answer comes from one matrix-vector product with the inverse, not with $A$.",
-    "已知 $A$ 的逆就不必消元：在 $A\\mathbf{x} = \\mathbf{b}$ 两边左乘 $A^{-1}$，得 $\\mathbf{x} = A^{-1}\\mathbf{b}$。答案来自逆矩阵与向量的一次乘法，而不是 $A$ 与向量的乘法。",
+    "If the inverse of $A$ is known, there is no need to eliminate: multiplying $A\\mathbf{x} = \\mathbf{b}$ on the left by $A^{-1}$ gives $\\mathbf{x} = A^{-1}\\mathbf{b}$. The answer comes from one matrix-vector product with the inverse, not with $A$. With $A^{-1} = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$ and $\\mathbf{b} = (1, 3)$, $\\mathbf{x} = (2 + 3, 1 + 3) = (5, 4)$.\n\n> **Watch out.** Multiply $\\mathbf{b}$ by $A^{-1}$, not by $A$: $A\\mathbf{b}$ answers a different question.",
+    "已知 $A$ 的逆就不必消元：在 $A\\mathbf{x} = \\mathbf{b}$ 两边左乘 $A^{-1}$，得 $\\mathbf{x} = A^{-1}\\mathbf{b}$。答案来自逆矩阵与向量的一次乘法，而不是 $A$ 与向量的乘法。取 $A^{-1} = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$，$\\mathbf{b} = (1, 3)$，则 $\\mathbf{x} = (2 + 3, 1 + 3) = (5, 4)$。\n\n> **注意。** 要用 $A^{-1}$ 乘 $\\mathbf{b}$，而不是 $A$：$A\\mathbf{b}$ 回答的是另一个问题。",
   ),
   generate(rng) {
     const inverse = unimodular(rng);
@@ -713,19 +810,55 @@ const solvingWithAnInverse: KnowledgePointDef = {
     if (b[0] === 0 && b[1] === 0) b[0] = 1;
     const x = [dot(inverse[0]!, b), dot(inverse[1]!, b)];
     const A = inverse2(inverse);
-    return pointProblem({
-      prompt: t(
-        `The matrix $A$ has $A^{-1} = ${mat(inverse)}$. Solve $A\\mathbf{x} = ${col(b[0]!, b[1]!)}$. Answer as $(x_1, x_2)$.`,
-        `矩阵 $A$ 满足 $A^{-1} = ${mat(inverse)}$。解 $A\\mathbf{x} = ${col(b[0]!, b[1]!)}$，写成 $(x_1, x_2)$。`,
-      ),
-      answer: x,
-      vars: ["x_1", "x_2"],
-      wrong: [[dot(A[0]!, b), dot(A[1]!, b)], b, [x[1]!, x[0]!]],
-      solution: t(
-        `$\\mathbf{x} = A^{-1}\\mathbf{b}$, so $x_1 = ${inverse[0]![0]}(${b[0]}) + ${inParens(inverse[0]![1]!)}(${b[1]}) = ${x[0]}$ and $x_2 = ${inverse[1]![0]}(${b[0]}) + ${inParens(inverse[1]![1]!)}(${b[1]}) = ${x[1]}$.`,
-        `$\\mathbf{x} = A^{-1}\\mathbf{b}$，所以 $x_1 = ${inverse[0]![0]}(${b[0]}) + ${inParens(inverse[0]![1]!)}(${b[1]}) = ${x[0]}$，$x_2 = ${inverse[1]![0]}(${b[0]}) + ${inParens(inverse[1]![1]!)}(${b[1]}) = ${x[1]}$。`,
-      ),
-    });
+    const row = (r: readonly number[], v: readonly number[]) =>
+      `${inParens(r[0]!)} \\cdot ${inParens(v[0]!)} + ${inParens(r[1]!)} \\cdot ${inParens(v[1]!)}`;
+    return withMistakes(
+      pointProblem({
+        prompt: t(
+          `The matrix $A$ has $A^{-1} = ${mat(inverse)}$. Solve $A\\mathbf{x} = ${col(b[0]!, b[1]!)}$. Answer as $(x_1, x_2)$.`,
+          `矩阵 $A$ 满足 $A^{-1} = ${mat(inverse)}$。解 $A\\mathbf{x} = ${col(b[0]!, b[1]!)}$，写成 $(x_1, x_2)$。`,
+        ),
+        answer: x,
+        vars: ["x_1", "x_2"],
+        solution: walked(
+          [
+            [
+              ["Multiply both sides by $A^{-1}$", "两边左乘 $A^{-1}$"],
+              t(
+                "$A^{-1}A\\mathbf{x} = \\mathbf{x}$, so $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
+                "$A^{-1}A\\mathbf{x} = \\mathbf{x}$，所以 $\\mathbf{x} = A^{-1}\\mathbf{b}$。",
+              ),
+            ],
+            [
+              ["Compute the product", "计算乘积"],
+              t("Each row of $A^{-1}$ times $\\mathbf{b}$:", "$A^{-1}$ 的每一行乘 $\\mathbf{b}$："),
+              [`x_1 = ${row(inverse[0]!, b)} = ${x[0]}`, `x_2 = ${row(inverse[1]!, b)} = ${x[1]}`],
+            ],
+          ],
+          t(
+            `$A = ${mat(A)}$, and $A\\mathbf{x}$ has entries $${row(A[0]!, x)} = ${b[0]}$ and $${row(A[1]!, x)} = ${b[1]}$, which is $\\mathbf{b}$.`,
+            `$A = ${mat(A)}$，$A\\mathbf{x}$ 的分量为 $${row(A[0]!, x)} = ${b[0]}$ 与 $${row(A[1]!, x)} = ${b[1]}$，正是 $\\mathbf{b}$。`,
+          ),
+        ),
+      }),
+      [
+        say(
+          pointLatex([dot(A[0]!, b), dot(A[1]!, b)]),
+          "That is $A\\mathbf{b}$: the vector was multiplied by $A$ instead of by its inverse.",
+          "这是 $A\\mathbf{b}$：用 $A$ 而不是它的逆去乘向量。",
+        ),
+        say(
+          pointLatex(b),
+          "That is $\\mathbf{b}$ itself; it still has to be multiplied by $A^{-1}$.",
+          "这是 $\\mathbf{b}$ 本身；还要用 $A^{-1}$ 去乘。",
+        ),
+        say(
+          pointLatex([x[1]!, x[0]!]),
+          "The two entries are swapped: row 1 of $A^{-1}$ gives $x_1$.",
+          "两个分量颠倒了：$A^{-1}$ 的第 1 行给出 $x_1$。",
+        ),
+      ].filter((m, i, all) => m.response !== pointLatex(x) && all.findIndex((o) => o.response === m.response) === i),
+    );
   },
 };
 
@@ -2107,8 +2240,8 @@ const vandermonde: KnowledgePointDef = {
   id: "the-determinant-of-a-vandermonde-matrix",
   title: t("The determinant of a Vandermonde matrix", "范德蒙德矩阵的行列式"),
   explanation: t(
-    "A matrix with rows $(1, a, a^2)$, $(1, b, b^2)$ and $(1, c, c^2)$ has a determinant that factors completely. Subtracting the first row from the others clears the first column, and each new row then has a common factor, such as $b - a$. What remains gives $(b - a)(c - a)(c - b)$. It vanishes exactly when two of the numbers coincide.",
-    "行为 $(1, a, a^2)$、$(1, b, b^2)$、$(1, c, c^2)$ 的矩阵，行列式可以完全分解。从其他行减去第一行，就清除了第一列，每个新行都有公因子，例如 $b - a$。剩下的部分给出 $(b - a)(c - a)(c - b)$。它为零，当且仅当有两个数相等。",
+    "A matrix with rows $(1, a, a^2)$, $(1, b, b^2)$ and $(1, c, c^2)$ has a determinant that factors completely. Subtracting the first row from the others clears the first column, and each new row then has a common factor, such as $b - a$. What remains gives $(b - a)(c - a)(c - b)$. It vanishes exactly when two of the numbers coincide. For $a = 1$, $b = 2$, $c = 4$: $(2 - 1)(4 - 1)(4 - 2) = 6$.\n\n> **Watch out.** Each factor is a later number minus an earlier one. Reversing one factor, say $a - b$ for $b - a$, flips the sign of the whole product.",
+    "行为 $(1, a, a^2)$、$(1, b, b^2)$、$(1, c, c^2)$ 的矩阵，行列式可以完全分解。从其他行减去第一行，就清除了第一列，每个新行都有公因子，例如 $b - a$。剩下的部分给出 $(b - a)(c - a)(c - b)$。它为零，当且仅当有两个数相等。对 $a = 1$，$b = 2$，$c = 4$：$(2 - 1)(4 - 1)(4 - 2) = 6$。\n\n> **注意。** 每个因子都是后面的数减前面的数。把一个因子反过来，比如把 $b - a$ 写成 $a - b$，整个乘积就变号。",
   ),
   generate(rng) {
     const pool = [...Array(12).keys()].map((i) => i - 5);
@@ -2131,10 +2264,43 @@ const vandermonde: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, a * b * c, b - a + (c - a) + (c - b)],
-      solution: t(
-        `This is a Vandermonde matrix with $a = ${a}$, $b = ${b}$, $c = ${c}$, so its determinant is $(b - a)(c - a)(c - b) = ${inParens(b - a)} \\cdot ${inParens(c - a)} \\cdot ${inParens(c - b)} = ${answer}$.`,
-        `这是 $a = ${a}$，$b = ${b}$，$c = ${c}$ 的范德蒙德矩阵，所以行列式是 $(b - a)(c - a)(c - b) = ${inParens(b - a)} \\cdot ${inParens(c - a)} \\cdot ${inParens(c - b)} = ${answer}$。`,
+      mistakes: [
+        why(
+          -answer,
+          "The sign is flipped: one factor was taken as an earlier number minus a later one. Each factor is a later number minus an earlier one.",
+          "符号反了：有一个因子写成了前面的数减后面的数。每个因子都应是后面的数减前面的数。",
+        ),
+        why(
+          a * b * c,
+          "That multiplies the numbers themselves; the determinant multiplies their differences.",
+          "这是把这几个数本身相乘；行列式是它们的差相乘。",
+        ),
+        why(b - a + (c - a) + (c - b), "That adds the differences; the determinant is their product.", "这是把差相加；行列式是差的乘积。"),
+        why(
+          (b - a) * (c - a),
+          "The factor $c - b$ is missing: there is one difference for each pair of the three numbers.",
+          "漏了因子 $c - b$：三个数中每一对都有一个差。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Name $a$, $b$ and $c$", "认出 $a$、$b$、$c$"],
+            t(
+              `The second column holds $a = ${a}$, $b = ${b}$, $c = ${c}$ and the third their squares, so this is a Vandermonde matrix with determinant $(b - a)(c - a)(c - b)$.`,
+              `第二列是 $a = ${a}$，$b = ${b}$，$c = ${c}$，第三列是它们的平方，所以这是范德蒙德矩阵，行列式为 $(b - a)(c - a)(c - b)$。`,
+            ),
+          ],
+          [
+            ["Multiply the differences", "差相乘"],
+            t("", ""),
+            [`${inParens(b - a)} \\cdot ${inParens(c - a)} \\cdot ${inParens(c - b)} = ${answer}`],
+          ],
+        ],
+        t(
+          `Subtracting row 1 from rows 2 and 3 leaves $\\begin{vmatrix} ${b - a} & ${b * b - a * a} \\\\ ${c - a} & ${c * c - a * a} \\end{vmatrix} = ${inParens(b - a)} \\cdot ${inParens(c * c - a * a)} - ${inParens(c - a)} \\cdot ${inParens(b * b - a * a)} = ${answer}$.`,
+          `从第 2、3 行减去第 1 行，剩下 $\\begin{vmatrix} ${b - a} & ${b * b - a * a} \\\\ ${c - a} & ${c * c - a * a} \\end{vmatrix} = ${inParens(b - a)} \\cdot ${inParens(c * c - a * a)} - ${inParens(c - a)} \\cdot ${inParens(b * b - a * a)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2144,8 +2310,8 @@ const powerOfElementary: KnowledgePointDef = {
   id: "a-power-of-an-elementary-matrix",
   title: t("A power of an elementary matrix", "初等矩阵的幂"),
   explanation: t(
-    "Multiplying by the elementary matrix for $R_3 + kR_1 \\to R_3$ performs that row operation. Doing it $n$ times adds $k$ times the first row to the third row $n$ times, and the first row never changes. So the total effect is $R_3 + nkR_1 \\to R_3$. The entry grows by adding, not by multiplying, even though the matrix is being raised to a power.",
-    "乘以 $R_3 + kR_1 \\to R_3$ 的初等矩阵，就是执行这个行运算。做 $n$ 次，就是把第一行的 $k$ 倍加到第三行 $n$ 次，而第一行始终不变。所以总效果是 $R_3 + nkR_1 \\to R_3$。尽管矩阵在求幂，这个元素却是按加法增长，而不是按乘法。",
+    "Multiplying by the elementary matrix for $R_3 + kR_1 \\to R_3$ performs that row operation. Doing it $n$ times adds $k$ times the first row to the third row $n$ times, and the first row never changes. So the total effect is $R_3 + nkR_1 \\to R_3$. The entry grows by adding, not by multiplying, even though the matrix is being raised to a power. With $k = 2$, the $(3, 1)$ entry of $E^{5}$ is $5 \\cdot 2 = 10$.\n\n> **Watch out.** The entry is $nk$, not $k^{n}$: each factor adds another $k$ times the unchanged row $1$.",
+    "乘以 $R_3 + kR_1 \\to R_3$ 的初等矩阵，就是执行这个行运算。做 $n$ 次，就是把第一行的 $k$ 倍加到第三行 $n$ 次，而第一行始终不变。所以总效果是 $R_3 + nkR_1 \\to R_3$。尽管矩阵在求幂，这个元素却是按加法增长，而不是按乘法。取 $k = 2$，$E^{5}$ 的 $(3, 1)$ 元素为 $5 \\cdot 2 = 10$。\n\n> **注意。** 该元素是 $nk$，而不是 $k^{n}$：每个因子都再加上一次不变的第 $1$ 行的 $k$ 倍。",
   ),
   generate(rng) {
     const k = nonzero(rng, 9);
@@ -2166,10 +2332,43 @@ const powerOfElementary: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k ** n, k + n, k, (n + 1) * k],
-      solution: t(
-        `Each factor adds $${k}$ times row 1 to row 3, and row 1 stays fixed. After ${n} factors, the entry is $${n} \\cdot ${inParens(k)} = ${answer}$.`,
-        `每个因子把第 1 行的 $${k}$ 倍加到第 3 行，第 1 行保持不变。${n} 个因子之后，这个元素是 $${n} \\cdot ${inParens(k)} = ${answer}$。`,
+      mistakes: [
+        why(
+          k ** n,
+          `That raises the multiplier to the power. Row 1 never changes, so each factor adds the same $${k}$ again.`,
+          `这是把乘数求幂。第 1 行始终不变，所以每个因子都再加上同一个 $${k}$。`,
+        ),
+        why(
+          k + n,
+          `The ${n} factors count how many times $${k}$ is added, so multiply: $${n} \\cdot ${inParens(k)}$.`,
+          `${n} 个因子表示 $${k}$ 被加了几次，所以要相乘：$${n} \\cdot ${inParens(k)}$。`,
+        ),
+        why(k, "That is the entry of $E$ itself, a single factor.", "这是 $E$ 本身的元素，只是一个因子。"),
+        why(
+          (n + 1) * k,
+          `That counts one factor too many: $E^{${n}}$ has $${n}$ factors.`,
+          `多算了一个因子：$E^{${n}}$ 有 $${n}$ 个因子。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Read $E$ as a row operation", "把 $E$ 读作行运算"],
+            t(
+              `$E$ performs $${poly([1, "R_3"], [k, "R_1"])} \\to R_3$ and leaves row 1 as it is.`,
+              `$E$ 执行 $${poly([1, "R_3"], [k, "R_1"])} \\to R_3$，第 1 行保持不变。`,
+            ),
+          ],
+          [
+            [`Repeat it ${n} times`, `重复 ${n} 次`],
+            t(`Each factor adds another $${k}$ times the same row 1 to row 3:`, `每个因子都把同一个第 1 行的 $${k}$ 倍再加到第 3 行：`),
+            [`${n} \\cdot ${inParens(k)} = ${answer}`],
+          ],
+        ],
+        t(
+          `For two factors, row 3 of $E$ times column 1 of $E$ is $${inParens(k)} \\cdot 1 + 0 \\cdot 0 + 1 \\cdot ${inParens(k)} = ${2 * k}$, so the entry of $E^{2}$ is $2 \\cdot ${inParens(k)}$, growing by $${k}$ per factor.`,
+          `两个因子时，$E$ 的第 3 行乘 $E$ 的第 1 列为 $${inParens(k)} \\cdot 1 + 0 \\cdot 0 + 1 \\cdot ${inParens(k)} = ${2 * k}$，所以 $E^{2}$ 的该元素为 $2 \\cdot ${inParens(k)}$，每多一个因子增加 $${k}$。`,
+        ),
       ),
     });
   },

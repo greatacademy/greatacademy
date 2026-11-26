@@ -208,8 +208,8 @@ const singularFromLines = {
     "ranks-of-a-system-from-its-drawn-lines",
     ["Ranks of a system from its drawn lines", "由所画直线判断方程组的秩"],
     [
-      "Crossing lines have independent rows, so both ranks are $2$. Parallel lines have dependent coefficient rows but an inconsistent augmented matrix, so the ranks are $1$ and $2$. One line drawn twice has both ranks equal to $1$.",
-      "相交的直线行向量无关，两个秩都是 $2$。平行线的系数行相关而增广矩阵不相容，秩分别为 $1$ 和 $2$。同一条直线重合时两个秩都是 $1$。",
+      "Crossing lines have independent rows, so both ranks are $2$. Parallel lines have dependent coefficient rows but an inconsistent augmented matrix, so the ranks are $1$ and $2$. One line drawn twice has both ranks equal to $1$. So $x + y = 1$ and $x + y = 3$, two parallel lines, give ranks $1$ and $2$ and no solution.\n\n> **Watch out.** The augmented matrix contains $A$, so its rank is never smaller than $\\operatorname{rank} A$. Parallel lines that are distinct and one line drawn twice both have $\\operatorname{rank} A = 1$; only the right-hand side tells them apart.",
+      "相交的直线行向量无关，两个秩都是 $2$。平行线的系数行相关而增广矩阵不相容，秩分别为 $1$ 和 $2$。同一条直线重合时两个秩都是 $1$。所以 $x + y = 1$ 与 $x + y = 3$ 这两条平行线给出秩 $1$ 和 $2$，方程组无解。\n\n> **注意。** 增广矩阵包含 $A$，所以它的秩从不小于 $\\operatorname{rank} A$。不重合的平行线与重合的一条直线都有 $\\operatorname{rank} A = 1$；只有右端能把它们区分开。",
     ],
     (rng) => {
       const kind = rng.pick(["cross", "parallel", "same"] as const);
@@ -235,32 +235,69 @@ const singularFromLines = {
           "$\\operatorname{rank} A = 1$，$\\operatorname{rank} [A \\mid b] = 1$：无穷多解",
         ],
       };
-      const why: Record<typeof kind, Pair> = {
-        cross: ["The lines cross at one point, so the coefficient rows are independent.", "两直线交于一点，所以系数行线性无关。"],
+      const seen: Record<typeof kind, Pair> = {
+        cross: ["The drawing shows two lines that cross at one point.", "图中两条直线交于一点。"],
+        parallel: ["The drawing shows two distinct lines with the same direction.", "图中是方向相同、互不重合的两条直线。"],
+        same: ["The drawing shows a single line, so the two equations coincide.", "图中只有一条直线，所以两个方程重合。"],
+      };
+      const ranks: Record<typeof kind, Pair> = {
+        cross: [
+          "Lines with different directions have independent coefficient rows, so $\\operatorname{rank} A = 2$, and then $\\operatorname{rank} [A \\mid b] = 2$ as well.",
+          "方向不同的直线，系数行线性无关，所以 $\\operatorname{rank} A = 2$，于是 $\\operatorname{rank} [A \\mid b] = 2$。",
+        ],
         parallel: [
-          "The lines are parallel and distinct, so the coefficient rows are dependent while the equations contradict each other.",
-          "两直线平行且不重合，所以系数行相关，而两个方程互相矛盾。",
+          "Parallel lines have proportional coefficient rows, so $\\operatorname{rank} A = 1$; the right-hand sides break the proportion, so $\\operatorname{rank} [A \\mid b] = 2$.",
+          "平行线的系数行成比例，所以 $\\operatorname{rank} A = 1$；右端破坏了这个比例，所以 $\\operatorname{rank} [A \\mid b] = 2$。",
         ],
         same: [
-          "Both equations describe the same line, so each row of the augmented matrix is a multiple of the other.",
-          "两个方程描述同一条直线，所以增广矩阵的每一行都是另一行的倍数。",
+          "Each whole row of the augmented matrix is a multiple of the other, so both ranks are $1$.",
+          "增广矩阵的每一整行都是另一行的倍数，所以两个秩都是 $1$。",
         ],
       };
-      return choose(
+      const checks: Record<typeof kind, Pair> = {
+        cross: [
+          "The crossing point is the one solution, matching ranks equal to the $2$ unknowns.",
+          "交点就是唯一解，与两个秩都等于未知数个数 $2$ 相符。",
+        ],
+        parallel: [
+          "No point lies on both lines, matching $\\operatorname{rank} A < \\operatorname{rank} [A \\mid b]$.",
+          "没有点同时在两条直线上，与 $\\operatorname{rank} A < \\operatorname{rank} [A \\mid b]$ 相符。",
+        ],
+        same: [
+          "Every point of the line solves both equations: rank $1$ with $2$ unknowns leaves one free variable.",
+          "直线上每一点都满足两个方程：秩 $1$、未知数 $2$ 个，留下一个自由变量。",
+        ],
+      };
+      const reasons: Record<typeof kind, Pair> = {
+        cross: [
+          "Rank $2$ for $A$ needs two lines that meet in exactly one point, which the drawing does not show.",
+          "$A$ 的秩为 $2$ 需要两条恰交于一点的直线，图中不是这样。",
+        ],
+        parallel: [
+          "Ranks $1$ and $2$ mean two distinct parallel lines, which the drawing does not show.",
+          "秩为 $1$ 和 $2$ 表示两条不重合的平行线，图中不是这样。",
+        ],
+        same: [
+          "Both ranks $1$ mean one line drawn twice, which the drawing does not show.",
+          "两个秩都为 $1$ 表示同一条直线画了两次，图中不是这样。",
+        ],
+      };
+      const impossible: Pair = [
+        "$\\operatorname{rank} A = 2$ and $\\operatorname{rank} [A \\mid b] = 1$: no solution",
+        "$\\operatorname{rank} A = 2$，$\\operatorname{rank} [A \\mid b] = 1$：无解",
+      ];
+      const choice = choose(
         rng,
         [
           "The drawing shows the lines of the two equations of a system $Ax = b$; a single line means the two coincide. Which statement is true?",
           "图中是方程组 $Ax = b$ 两个方程的直线；只有一条直线表示两者重合。哪个说法正确？",
         ],
         options[kind],
+        [...(["cross", "parallel", "same"] as const).filter((k) => k !== kind).map((k) => options[k]), impossible],
         [
-          ...(["cross", "parallel", "same"] as const).filter((k) => k !== kind).map((k) => options[k]),
-          [
-            "$\\operatorname{rank} A = 2$ and $\\operatorname{rank} [A \\mid b] = 1$: no solution",
-            "$\\operatorname{rank} A = 2$，$\\operatorname{rank} [A \\mid b] = 1$：无解",
-          ],
+          `**Step 1: Read the drawing.** ${seen[kind][0]}\n\n**Step 2: Turn it into ranks.** ${ranks[kind][0]}\n\n**Check.** ${checks[kind][0]}`,
+          `**第一步：读图。** ${seen[kind][1]}\n\n**第二步：化为秩。** ${ranks[kind][1]}\n\n**检验。** ${checks[kind][1]}`,
         ],
-        why[kind],
         fig(
           7,
           marks,
@@ -271,6 +308,14 @@ const singularFromLines = {
               : ["A single line.", "一条直线。"],
         ),
       );
+      return reasoned(choice, [
+        ...(["cross", "parallel", "same"] as const).map((k) => [options[k][0], ...reasons[k]] as const),
+        [
+          impossible[0],
+          "The augmented matrix contains $A$, so its rank is never smaller than $\\operatorname{rank} A$.",
+          "增广矩阵包含 $A$，所以它的秩从不小于 $\\operatorname{rank} A$。",
+        ],
+      ]);
     },
   ),
   figure:
@@ -281,8 +326,8 @@ const elementaryShape = point(
   "the-row-operation-of-a-drawn-elementary-matrix",
   ["The row operation of a drawn elementary matrix", "由图读初等矩阵的行变换"],
   [
-    "An elementary matrix is the identity after one row operation. Its columns are the images of the basis vectors, so read those arrows, write the matrix and compare it with the identity.",
-    "初等矩阵是单位矩阵经过一次行变换的结果。它的列是基向量的像，所以读出这两个箭头，写出矩阵，再与单位矩阵比较。",
+    "An elementary matrix is the identity after one row operation. Its columns are the images of the basis vectors, so read those arrows, write the matrix and compare it with the identity. Arrows to $(1, 0)$ and $(2, 1)$ give $\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix}$, the identity after $R_1 \\to R_1 + 2R_2$.\n\n> **Watch out.** The arrows are columns, not rows: the second coordinate of $T(e_1)$ is the $(2, 1)$ entry, so a shear of row $2$ moves the first arrow.",
+    "初等矩阵是单位矩阵经过一次行变换的结果。它的列是基向量的像，所以读出这两个箭头，写出矩阵，再与单位矩阵比较。指向 $(1, 0)$ 与 $(2, 1)$ 的箭头给出 $\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix}$，即单位矩阵做 $R_1 \\to R_1 + 2R_2$ 的结果。\n\n> **注意。** 箭头是列而不是行：$T(e_1)$ 的第二个坐标是 $(2, 1)$ 元素，所以对第 $2$ 行的倍加移动的是第一个箭头。",
   ],
   (rng) => {
     const shears = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -303,7 +348,33 @@ const elementaryShape = point(
       cases.filter((x) => x !== chosen),
       3,
     );
-    return choose(
+    const E = mat(a, b, c, d);
+    const which: Pair =
+      a === 0
+        ? [
+            "Both diagonal entries are $0$ and both off-diagonal entries are $1$: the rows of the identity are swapped.",
+            "两个对角元素为 $0$，两个非对角元素为 $1$：单位矩阵的两行交换了。",
+          ]
+        : b !== 0
+          ? [
+              `Only the $(1, 2)$ entry differs, now $${b}$: row $1$ gained $${b}$ times row $2$.`,
+              `只有 $(1, 2)$ 元素不同，变为 $${b}$：第 $1$ 行加上了第 $2$ 行的 $${b}$ 倍。`,
+            ]
+          : c !== 0
+            ? [
+                `Only the $(2, 1)$ entry differs, now $${c}$: row $2$ gained $${c}$ times row $1$.`,
+                `只有 $(2, 1)$ 元素不同，变为 $${c}$：第 $2$ 行加上了第 $1$ 行的 $${c}$ 倍。`,
+              ]
+            : a !== 1
+              ? [
+                  `Only the $(1, 1)$ entry differs, now $${a}$: row $1$ was multiplied by $${a}$.`,
+                  `只有 $(1, 1)$ 元素不同，变为 $${a}$：第 $1$ 行乘以了 $${a}$。`,
+                ]
+              : [
+                  `Only the $(2, 2)$ entry differs, now $${d}$: row $2$ was multiplied by $${d}$.`,
+                  `只有 $(2, 2)$ 元素不同，变为 $${d}$：第 $2$ 行乘以了 $${d}$。`,
+                ];
+    const choice = choose(
       rng,
       [
         "The arrows show the columns of an elementary matrix $E$, the images of $e_1$ and $e_2$. Which row operation on the identity gives $E$?",
@@ -312,8 +383,8 @@ const elementaryShape = point(
       same(chosen.op),
       others.map((x) => same(x.op)),
       [
-        `The arrows give $E = ${mat(a, b, c, d)}$, which differs from the identity exactly by $${chosen.op}$.`,
-        `由箭头得 $E = ${mat(a, b, c, d)}$，它与单位矩阵的差别正是 $${chosen.op}$。`,
+        `**Step 1: Read the arrows as columns.** $T(e_1) = ${at(u)}$ is column $1$ and $T(e_2) = ${at(v)}$ is column $2$, so $E = ${E}$.\n\n**Step 2: Compare with the identity.** ${which[0]} That is $${chosen.op}$.\n\n**Check.** Doing $${chosen.op}$ on $\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}$ gives $${E}$, whose columns are the two drawn arrows.`,
+        `**第一步：把箭头读作列。** $T(e_1) = ${at(u)}$ 是第 $1$ 列，$T(e_2) = ${at(v)}$ 是第 $2$ 列，所以 $E = ${E}$。\n\n**第二步：与单位矩阵比较。** ${which[1]}即 $${chosen.op}$。\n\n**检验。** 对 $\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}$ 做 $${chosen.op}$ 得 $${E}$，它的两列正是所画的两个箭头。`,
       ],
       fig(
         5,
@@ -323,6 +394,17 @@ const elementaryShape = point(
           `从原点出发的箭头：T(e1) 指向 ${at(u)}，T(e2) 指向 ${at(v)}。`,
         ],
       ),
+    );
+    return reasoned(
+      choice,
+      others.map((x) => {
+        const [p, q, r, s] = x.m;
+        return [
+          same(x.op)[0],
+          `On the identity this gives $${mat(p, q, r, s)}$, whose columns would point to $(${p}, ${r})$ and $(${q}, ${s})$, not to the drawn arrows.`,
+          `对单位矩阵做这一变换得 $${mat(p, q, r, s)}$，它的两列应指向 $(${p}, ${r})$ 与 $(${q}, ${s})$，与所画箭头不符。`,
+        ] as const;
+      }),
     );
   },
 );

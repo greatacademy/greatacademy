@@ -483,8 +483,8 @@ const lineOfSolutions = point(
   "reading-a-point-on-the-solution-line",
   ["Reading a point on the solution line", "读取解直线上的点"],
   [
-    "When a singular system is consistent, elimination leaves one equation, and one variable is free. Each choice of the free variable gives a solution, and the other variable is then determined, so the solutions form a line rather than a single point.",
-    "当奇异方程组相容时，消元后只剩一个方程，有一个变量是自由的。自由变量的每种取值都给出一个解，另一个变量随之确定，所以解构成一条直线，而不是一个点。",
+    "When a singular system is consistent, elimination leaves one equation, and one variable is free. Each choice of the free variable gives a solution, and the other variable is then determined, so the solutions form a line rather than a single point. For $x + 2y = 5$ drawn twice, $y = 1$ gives $x = 3$ and $y = 2$ gives $x = 1$.\n\n> **Watch out.** Divide out the common factor first so that the equation reads $x + ay = b$, then move $ay$ across with its sign: $x = b - ay$.",
+    "当奇异方程组相容时，消元后只剩一个方程，有一个变量是自由的。自由变量的每种取值都给出一个解，另一个变量随之确定，所以解构成一条直线，而不是一个点。对重复出现的 $x + 2y = 5$，$y = 1$ 给出 $x = 3$，$y = 2$ 给出 $x = 1$。\n\n> **注意。** 先约去公因子，使方程成为 $x + ay = b$，再把 $ay$ 连同符号移过去：$x = b - ay$。",
   ],
   (rng) => {
     const p = nz(rng, 4);
@@ -493,18 +493,47 @@ const lineOfSolutions = point(
     const b = rng.int(-9, 9);
     const Y = nz(rng, 6);
     const answer = b - a * Y;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `The system $\\begin{cases} ${poly([p, "x"], [p * a, "y"])} = ${p * b} \\\\ ${poly([q, "x"], [q * a, "y"])} = ${q * b} \\end{cases}$ has infinitely many solutions. Find $x$ in the solution with $y = ${Y}$.`,
         `方程组 $\\begin{cases} ${poly([p, "x"], [p * a, "y"])} = ${p * b} \\\\ ${poly([q, "x"], [q * a, "y"])} = ${q * b} \\end{cases}$ 有无穷多解。求 $y = ${Y}$ 的那个解中的 $x$。`,
-      ],
+      ]),
       answer,
-      [b + a * Y, b - Y, Y],
-      [
-        `Elimination leaves one equation, equivalent to $${poly([1, "x"], [a, "y"])} = ${b}$. Substituting $y = ${Y}$ gives $x = ${answer}$.`,
-        `消元后只剩一个方程，等价于 $${poly([1, "x"], [a, "y"])} = ${b}$。代入 $y = ${Y}$，得 $x = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(b + a * Y, "The term with $y$ was moved across without changing its sign.", "含 $y$ 的项移过去时没有变号。"),
+        why(
+          b - Y,
+          `The coefficient of $y$ is missing: after dividing by $${p}$ it is $${a}$, not $1$.`,
+          `漏了 $y$ 的系数：除以 $${p}$ 后它是 $${a}$，不是 $1$。`,
+        ),
+        why(
+          Y,
+          "That is the value of $y$ given in the question; $x$ comes from the remaining equation.",
+          "这是题目给出的 $y$ 值；$x$ 要由剩下的方程求出。",
+        ),
+        why(
+          p * b - p * a * Y,
+          `The common factor $${p}$ was not divided out of the first equation.`,
+          `没有从第一个方程中约去公因子 $${p}$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Reduce to one equation", "化为一个方程"],
+            t(
+              `The second equation is $${q / p}$ times the first, so elimination leaves one equation. Dividing the first by $${p}$ gives $${poly([1, "x"], [a, "y"])} = ${b}$.`,
+              `第二个方程是第一个的 $${q / p}$ 倍，所以消元后只剩一个方程。把第一个方程除以 $${p}$，得 $${poly([1, "x"], [a, "y"])} = ${b}$。`,
+            ),
+          ],
+          [["Substitute the free variable", "代入自由变量"], t("", ""), [`x = ${b} - ${wrap(a)} \\cdot ${wrap(Y)} = ${answer}`]],
+        ],
+        t(
+          `In the second equation, $${q} \\cdot ${wrap(answer)} + ${wrap(q * a)} \\cdot ${wrap(Y)} = ${q * b}$.`,
+          `代入第二个方程：$${q} \\cdot ${wrap(answer)} + ${wrap(q * a)} \\cdot ${wrap(Y)} = ${q * b}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -512,8 +541,8 @@ const pairSums = point(
   "three-unknowns-from-their-pairwise-sums",
   ["Three unknowns from their pairwise sums", "由两两之和求三个未知数"],
   [
-    "If the sums of three unknowns in pairs are known, elimination gives each unknown. Each appears in two of the equations, so adding all three gives twice the total, and subtracting the equation that omits a variable isolates that variable.",
-    "如果已知三个未知数的两两之和，消元就能得到每个未知数。每个未知数出现在两个方程中，所以三个方程相加得到总和的两倍，再减去不含某变量的方程，就能分离出这个变量。",
+    "If the sums of three unknowns in pairs are known, elimination gives each unknown. Each appears in two of the equations, so adding all three gives twice the total, and subtracting the equation that omits a variable isolates that variable. From $x + y = 5$, $y + z = 7$, $x + z = 6$: the total is $\\frac{18}{2} = 9$, so $x = 9 - 7 = 2$.\n\n> **Watch out.** Adding the three equations counts each unknown twice, so halve the sum before subtracting. Then subtract the equation that leaves out the unknown you want.",
+    "如果已知三个未知数的两两之和，消元就能得到每个未知数。每个未知数出现在两个方程中，所以三个方程相加得到总和的两倍，再减去不含某变量的方程，就能分离出这个变量。由 $x + y = 5$，$y + z = 7$，$x + z = 6$：总和为 $\\frac{18}{2} = 9$，所以 $x = 9 - 7 = 2$。\n\n> **注意。** 三个方程相加时每个未知数都算了两次，所以先除以 $2$ 再相减。然后减去不含所求未知数的那个方程。",
   ],
   (rng) => {
     const x = rng.int(-9, 9);
@@ -526,18 +555,55 @@ const pairSums = point(
     const answer = [x, y, z][which] as number;
     const other = [b, c, a][which] as number;
     const name = ["x", "y", "z"][which] as string;
-    return ask(
-      [
+    const half = Q.of(a + b + c, 2);
+    return numberProblem({
+      prompt: text([
         `Solve $x + y = ${a}$, $y + z = ${b}$, $x + z = ${c}$. Find $${name}$.`,
         `解方程组 $x + y = ${a}$，$y + z = ${b}$，$x + z = ${c}$。求 $${name}$。`,
-      ],
+      ]),
       answer,
-      [2 * answer, Q.of(a + b + c, 2), a + b + c - other],
-      [
-        `Adding all three equations and halving gives $x + y + z = ${Q.of(a + b + c, 2).toLatex()}$. The equation without $${name}$ has sum $${other}$, so $${name} = ${answer}$.`,
-        `三个方程相加再除以 $2$，得 $x + y + z = ${Q.of(a + b + c, 2).toLatex()}$。不含 $${name}$ 的方程之和是 $${other}$，所以 $${name} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          a + b + c - other,
+          "The sum of the three equations is twice $x + y + z$; halve it before subtracting.",
+          "三个方程之和是 $x + y + z$ 的两倍；相减之前要先除以 $2$。",
+        ),
+        why(
+          half,
+          "That is the total $x + y + z$; subtract the equation without the unknown you want.",
+          "这是总和 $x + y + z$；还要减去不含所求未知数的方程。",
+        ),
+        why(
+          2 * answer,
+          "That is twice the unknown: the halving was skipped or done twice.",
+          "这是未知数的两倍：漏了除以 $2$，或多除了一次。",
+        ),
+      ].filter(
+        (w, i, all) =>
+          !Q.of(answer).eq(typeof w.value === "number" ? Q.of(w.value) : w.value) &&
+          all.findIndex((o) => `${o.value}` === `${w.value}`) === i,
+      ),
+      solution: walked(
+        [
+          [
+            ["Add all three equations", "三个方程相加"],
+            t(
+              `Each unknown appears twice: $2(x + y + z) = ${a} + ${wrap(b)} + ${wrap(c)} = ${a + b + c}$, so $x + y + z = ${half.toLatex()}$.`,
+              `每个未知数出现两次：$2(x + y + z) = ${a} + ${wrap(b)} + ${wrap(c)} = ${a + b + c}$，所以 $x + y + z = ${half.toLatex()}$。`,
+            ),
+          ],
+          [
+            [`Remove the pair without $${name}$`, `减去不含 $${name}$ 的一对`],
+            t("", ""),
+            [`${name} = ${half.toLatex()} - ${wrap(other)} = ${answer}`],
+          ],
+        ],
+        t(
+          `The other two unknowns follow the same way: $x = ${x}$, $y = ${y}$, $z = ${z}$, and then $x + y = ${a}$, $y + z = ${b}$, $x + z = ${c}$ as given.`,
+          `另外两个未知数同样求出：$x = ${x}$，$y = ${y}$，$z = ${z}$，于是 $x + y = ${a}$，$y + z = ${b}$，$x + z = ${c}$，与题设一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -545,8 +611,8 @@ const pivotAfterReducing = point(
   "pivot-columns-of-a-matrix-not-in-echelon-form",
   ["Pivot columns of a matrix not in echelon form", "非阶梯形矩阵的主元列"],
   [
-    "The pivot columns of a matrix are found by reducing it, and the leading entries of the original rows do not show them. A column that is a multiple of an earlier column can never hold a pivot, since it reduces to the same multiple of the reduced column.",
-    "矩阵的主元列要通过化简才能找到，原来各行的首元并不能说明它们。是前面某列倍数的列不可能含主元，因为它化简后仍是化简后那一列的同一倍数。",
+    "The pivot columns of a matrix are found by reducing it, and the leading entries of the original rows do not show them. A column that is a multiple of an earlier column can never hold a pivot, since it reduces to the same multiple of the reduced column. In $\\begin{pmatrix} 1 & 2 & 1 \\\\ 2 & 4 & 5 \\end{pmatrix}$, $R_2 - 2R_1$ gives $(0, 0, 3)$, so the second pivot is in column $3$, not column $2$.\n\n> **Watch out.** Eliminate below the first pivot before looking for the next one. A nonzero entry in the original matrix may become zero, so the next pivot is the leftmost column that is still nonzero below row $1$.",
+    "矩阵的主元列要通过化简才能找到，原来各行的首元并不能说明它们。是前面某列倍数的列不可能含主元，因为它化简后仍是化简后那一列的同一倍数。在 $\\begin{pmatrix} 1 & 2 & 1 \\\\ 2 & 4 & 5 \\end{pmatrix}$ 中，$R_2 - 2R_1$ 得 $(0, 0, 3)$，所以第二个主元在第 $3$ 列，而不在第 $2$ 列。\n\n> **注意。** 先消去第一个主元下方的元素，再找下一个主元。原矩阵中的非零元素可能变成零，所以下一个主元在第 $1$ 行以下仍非零的最左边一列。",
   ],
   (rng) => {
     const m = nz(rng, 4);
@@ -567,18 +633,54 @@ const pivotAfterReducing = point(
     const row = (k: number, l: number) => r1.map((entry, i) => k * entry + l * (w[i] as number));
     const r2 = row(s, 1);
     const r3 = row(u, v);
-    return ask(
-      [
+    const vw = w.map((x) => v * x);
+    return numberProblem({
+      prompt: text([
         `$A = ${mat([r1, r2, r3])}$ has rank $2$. Column $1$ is a pivot column. Which column is the second pivot column?`,
         `$A = ${mat([r1, r2, r3])}$ 的秩是 $2$。第 $1$ 列是主元列。第二个主元列是哪一列？`,
+      ]),
+      answer: column,
+      mistakes: [
+        why(1, "Column $1$ holds the first pivot; the question asks for the second.", "第 $1$ 列含第一个主元；题目问的是第二个。"),
+        ...[2, 3, 4]
+          .filter((c) => c !== column)
+          .map((c) =>
+            c < column
+              ? why(
+                  c,
+                  `After eliminating below the first pivot, column $${c}$ has only zeros in rows $2$ and $3$, so it holds no pivot.`,
+                  `消去第一个主元下方的元素后，第 $${c}$ 列在第 $2$、$3$ 行全是零，所以不含主元。`,
+                )
+              : why(
+                  c,
+                  `A column further left is already nonzero below row $1$ after elimination, and the next pivot takes the leftmost such column.`,
+                  `消元后更靠左的一列在第 $1$ 行以下已经非零，下一个主元取最左边的这样一列。`,
+                ),
+          ),
       ],
-      column,
-      [2, 3, 4, 1],
-      [
-        `Eliminating below the first pivot leaves two rows proportional to $(${w.join(", ")})$. Its first nonzero entry is in column $${column}$, so the next pivot is there.`,
-        `消去第一个主元下方的元素后，剩下的两行都与 $(${w.join(", ")})$ 成比例。它的第一个非零元素在第 $${column}$ 列，所以下一个主元在那里。`,
-      ],
-    );
+      solution: walked(
+        [
+          [
+            ["Eliminate below the first pivot", "消去第一个主元下方的元素"],
+            t(
+              `$${poly([1, "R_{2}"], [-s, "R_{1}"])} \\to R_{2}$ and $${poly([1, "R_{3}"], [-u, "R_{1}"])} \\to R_{3}$ leave rows $(${w.join(", ")})$ and $(${vw.join(", ")})$.`,
+              `$${poly([1, "R_{2}"], [-s, "R_{1}"])} \\to R_{2}$ 与 $${poly([1, "R_{3}"], [-u, "R_{1}"])} \\to R_{3}$ 留下行 $(${w.join(", ")})$ 与 $(${vw.join(", ")})$。`,
+            ),
+          ],
+          [
+            ["Find the next leading entry", "找下一个首元"],
+            t(
+              `The first nonzero entry of $(${w.join(", ")})$ is in column $${column}$, so the second pivot column is column $${column}$.`,
+              `$(${w.join(", ")})$ 的第一个非零元素在第 $${column}$ 列，所以第二个主元列是第 $${column}$ 列。`,
+            ),
+          ],
+        ],
+        t(
+          `$${poly([1, "R_{3}"], [-v, "R_{2}"])} \\to R_{3}$ then clears row $3$ completely, leaving two nonzero rows: rank $2$, as stated.`,
+          `再做 $${poly([1, "R_{3}"], [-v, "R_{2}"])} \\to R_{3}$，第 $3$ 行全部消为零，剩下两个非零行：秩为 $2$，与题设一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -586,8 +688,8 @@ const rankDecides = point(
   "comparing-the-two-ranks-of-a-system",
   ["Comparing the two ranks of a system", "比较方程组的两个秩"],
   [
-    "The number of solutions of a linear system follows from three numbers: the rank of $A$, the rank of the augmented matrix and the number of unknowns. Different ranks mean no solution. Equal ranks give one solution when they equal the number of unknowns and infinitely many otherwise.",
-    "线性方程组解的个数由三个数决定：$A$ 的秩、增广矩阵的秩和未知数的个数。两个秩不同表示无解。秩相同时，若等于未知数个数则有唯一解，否则有无穷多解。",
+    "The number of solutions of a linear system follows from three numbers: the rank of $A$, the rank of the augmented matrix and the number of unknowns. Different ranks mean no solution. Equal ranks give one solution when they equal the number of unknowns and infinitely many otherwise. With $4$ unknowns and both ranks $3$, one variable is free: infinitely many solutions.\n\n> **Watch out.** Compare the common rank with the number of unknowns, not with the number of equations. Extra equations can be redundant and change nothing.",
+    "线性方程组解的个数由三个数决定：$A$ 的秩、增广矩阵的秩和未知数的个数。两个秩不同表示无解。秩相同时，若等于未知数个数则有唯一解，否则有无穷多解。$4$ 个未知数、两个秩都是 $3$ 时，有一个自由变量：无穷多解。\n\n> **注意。** 要把共同的秩与未知数个数比较，而不是与方程个数比较。多出来的方程可能是多余的，什么也不改变。",
   ],
   (rng) => {
     const m = rng.int(2, 7);
@@ -629,7 +731,24 @@ const rankDecides = point(
         `两个秩都等于 $${r}$，小于未知数个数 $${n}$，所以有 $${n - r}$ 个自由变量。`,
       ],
     ];
-    return choose(
+    const compare: Pair =
+      r === r2
+        ? [`The two ranks are equal, both $${r}$, so the system is consistent.`, `两个秩相等，都是 $${r}$，所以方程组相容。`]
+        : [`The ranks differ: $${r} \\ne ${r2}$.`, `两个秩不同：$${r} \\ne ${r2}$。`];
+    const checks: Pair[] = [
+      [
+        `$\\operatorname{rank}([A \\mid \\mathbf{b}])$ exceeds $\\operatorname{rank}(A)$ by one, which happens only when elimination leaves a row $[0 \\ \\cdots \\ 0 \\mid c]$ with $c \\ne 0$.`,
+        `$\\operatorname{rank}([A \\mid \\mathbf{b}])$ 比 $\\operatorname{rank}(A)$ 大 $1$，只有消元留下 $c \\ne 0$ 的行 $[0 \\ \\cdots \\ 0 \\mid c]$ 时才会这样。`,
+      ],
+      [`$${n} - ${r} = 0$ free variables, so the solution has no parameter.`, `自由变量个数为 $${n} - ${r} = 0$，所以解中没有参数。`],
+      [
+        `$${n} - ${r} = ${n - r}$ free variable${n - r === 1 ? "" : "s"}, each of which can take any value.`,
+        `自由变量个数为 $${n} - ${r} = ${n - r}$，每个都可以任意取值。`,
+      ],
+    ];
+    const said = whys[kind] as Pair;
+    const check = checks[kind] as Pair;
+    const choice = choose(
       rng,
       [
         `A system of $${m}$ equations in $${n}$ unknowns has $\\operatorname{rank}(A) = ${r}$ and $\\operatorname{rank}([A \\mid \\mathbf{b}]) = ${r2}$. How many solutions does it have?`,
@@ -637,8 +756,33 @@ const rankDecides = point(
       ],
       correct,
       wrongs,
-      whys[kind] as Pair,
+      [
+        `**Step 1: Compare the ranks.** ${compare[0]}\n\n**Step 2: Decide.** ${said[0]}\n\n**Check.** ${check[0]}`,
+        `**第一步：比较两个秩。** ${compare[1]}\n\n**第二步：下结论。** ${said[1]}\n\n**检验。** ${check[1]}`,
+      ],
     );
+    return reasoned(choice, [
+      ["No solution", "The two ranks are equal, so elimination leaves no contradictory row.", "两个秩相等，所以消元不会留下矛盾的行。"],
+      [
+        "Exactly one solution",
+        r === r2
+          ? `The rank $${r}$ is less than the $${n}$ unknowns, so some variables are free.`
+          : "The ranks differ, so the system has no solution at all.",
+        r === r2 ? `秩 $${r}$ 小于未知数个数 $${n}$，所以有自由变量。` : "两个秩不同，所以方程组根本无解。",
+      ],
+      [
+        "Infinitely many solutions",
+        r === r2
+          ? `The rank equals the $${n}$ unknowns, so no variable is free.`
+          : "The ranks differ, so the system has no solution at all.",
+        r === r2 ? `秩等于未知数个数 $${n}$，所以没有自由变量。` : "两个秩不同，所以方程组根本无解。",
+      ],
+      [
+        "Exactly two solutions",
+        "A linear system never has exactly two solutions: with two, every point of the line through them would be a solution too.",
+        "线性方程组不可能恰有两个解：若有两个解，过它们的直线上每一点都是解。",
+      ],
+    ]);
   },
 );
 
@@ -646,8 +790,8 @@ const detOfElementary = point(
   "the-determinant-of-an-elementary-matrix",
   ["The determinant of an elementary matrix", "初等矩阵的行列式"],
   [
-    "An elementary matrix comes from doing one row operation on the identity, so its determinant records the effect of the operation. A shear has determinant $1$, a scaling has the scale factor, and a swap has $-1$, and in every case this is nonzero, so the matrix is invertible.",
-    "初等矩阵由对单位矩阵做一次行运算得到，所以它的行列式记录了这个运算的效果。剪切的行列式是 $1$，缩放的行列式是缩放因子，交换的行列式是 $-1$，而且都不为零，所以矩阵可逆。",
+    "An elementary matrix comes from doing one row operation on the identity, so its determinant records the effect of the operation. A shear has determinant $1$, a scaling has the scale factor, and a swap has $-1$, and in every case this is nonzero, so the matrix is invertible. For example, $\\begin{pmatrix} 1 & 0 \\\\ 0 & 4 \\end{pmatrix}$ has determinant $4$ and $\\begin{pmatrix} 1 & 4 \\\\ 0 & 1 \\end{pmatrix}$ has determinant $1$.\n\n> **Watch out.** The multiplier of a shear sits off the diagonal and does not change the determinant; only a scaling puts its factor into $\\det E$.",
+    "初等矩阵由对单位矩阵做一次行运算得到，所以它的行列式记录了这个运算的效果。剪切的行列式是 $1$，缩放的行列式是缩放因子，交换的行列式是 $-1$，而且都不为零，所以矩阵可逆。例如 $\\begin{pmatrix} 1 & 0 \\\\ 0 & 4 \\end{pmatrix}$ 的行列式是 $4$，$\\begin{pmatrix} 1 & 4 \\\\ 0 & 1 \\end{pmatrix}$ 的行列式是 $1$。\n\n> **注意。** 剪切的乘数在对角线之外，不改变行列式；只有缩放才把它的因子带进 $\\det E$。",
   ],
   (rng) => {
     const c = rng.pick([-9, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
@@ -675,25 +819,66 @@ const detOfElementary = point(
       ]),
     ][kind] as string;
     const answer = [1, 1, c, c, -1][kind] as number;
-    const whys: Pair[] = [
-      [
-        "This matrix adds a multiple of one row to the other, a shear, so its determinant is $1$.",
-        "这个矩阵把一行的倍数加到另一行，是剪切，所以行列式是 $1$。",
-      ],
-      [
-        "This matrix adds a multiple of one row to the other, a shear, so its determinant is $1$.",
-        "这个矩阵把一行的倍数加到另一行，是剪切，所以行列式是 $1$。",
-      ],
-      [`This matrix scales one row by $${c}$, so its determinant is $${c}$.`, `这个矩阵把一行乘以 $${c}$，所以行列式是 $${c}$。`],
-      [`This matrix scales one row by $${c}$, so its determinant is $${c}$.`, `这个矩阵把一行乘以 $${c}$，所以行列式是 $${c}$。`],
-      ["This matrix swaps the two rows, so its determinant is $-1$.", "这个矩阵交换两行，所以行列式是 $-1$。"],
+    const group = [0, 0, 1, 1, 2][kind] as number;
+    const namings: Pair[] = [
+      ["This matrix adds a multiple of one row to the other, a shear.", "这个矩阵把一行的倍数加到另一行，是剪切。"],
+      [`This matrix scales one row by $${c}$.`, `这个矩阵把一行乘以 $${c}$。`],
+      ["This matrix swaps the two rows.", "这个矩阵交换两行。"],
     ];
-    return ask(
-      [`Find the determinant of the elementary matrix $${E}$.`, `求初等矩阵 $${E}$ 的行列式。`],
+    const effects: Pair[] = [
+      ["A shear leaves the determinant of $I$ unchanged, so the determinant is $1$.", "剪切不改变 $I$ 的行列式，所以行列式是 $1$。"],
+      [`Scaling a row by $${c}$ multiplies the determinant by $${c}$.`, `一行乘以 $${c}$ 使行列式乘以 $${c}$。`],
+      ["Swapping two rows reverses the sign, so the determinant is $-1$.", "交换两行使行列式变号，所以行列式是 $-1$。"],
+    ];
+    const named = namings[group] as Pair;
+    const product = [
+      kind === 0 ? `1 \\cdot 1 - 0 \\cdot ${wrap(c)} = 1` : `1 \\cdot 1 - ${wrap(c)} \\cdot 0 = 1`,
+      kind === 2 ? `${wrap(c)} \\cdot 1 - 0 \\cdot 0 = ${c}` : `1 \\cdot ${wrap(c)} - 0 \\cdot 0 = ${c}`,
+      `0 \\cdot 0 - 1 \\cdot 1 = -1`,
+    ][group] as string;
+    const mistakes = [
+      [
+        why(
+          c,
+          "The multiplier is off the diagonal; the determinant of a triangular matrix is the product of its diagonal, $1 \\cdot 1$.",
+          "乘数在对角线之外；三角矩阵的行列式是对角元素之积 $1 \\cdot 1$。",
+        ),
+        why(
+          0,
+          "The diagonal entries are both $1$, so the determinant is $1$, not $0$.",
+          "对角元素都是 $1$，所以行列式是 $1$，而不是 $0$。",
+        ),
+        why(-1, "Only a swap changes the sign; a shear keeps it.", "只有交换改变符号；剪切不改变。"),
+      ],
+      [
+        why(
+          1,
+          `The diagonal holds $${c}$, so the product of the diagonal is $${c}$, not $1$.`,
+          `对角线上有 $${c}$，所以对角元素之积是 $${c}$，而不是 $1$。`,
+        ),
+        why(-c, "Scaling a row does not bring in a sign change.", "数乘一行不会带来符号变化。"),
+      ],
+      [
+        why(1, "A swap reverses the sign of $\\det I = 1$.", "交换使 $\\det I = 1$ 变号。"),
+        why(
+          0,
+          "The diagonal is zero but the matrix is not triangular: $ad - bc = 0 - 1$.",
+          "对角线为零，但矩阵不是三角矩阵：$ad - bc = 0 - 1$。",
+        ),
+      ],
+    ][group] as ReturnType<typeof why>[];
+    return numberProblem({
+      prompt: text([`Find the determinant of the elementary matrix $${E}$.`, `求初等矩阵 $${E}$ 的行列式。`]),
       answer,
-      [c, 1, -1, 0],
-      whys[kind] as Pair,
-    );
+      mistakes: mistakes.filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [["Name the row operation", "说出行运算"], text(named)],
+          [["Read off its effect", "读出它的效果"], text(effects[group] as Pair)],
+        ],
+        t(`By $ad - bc$: $${product}$.`, `用 $ad - bc$：$${product}$。`),
+      ),
+    });
   },
 );
 
@@ -701,8 +886,8 @@ const rightMultiply = point(
   "multiplying-on-the-right-acts-on-columns",
   ["Multiplying on the right acts on columns", "右乘作用于列"],
   [
-    "Multiplying by an elementary matrix on the left performs a row operation, and multiplying on the right performs a column operation. So $AE$ with $E = \\begin{pmatrix} 1 & 0 \\\\ c & 1 \\end{pmatrix}$ adds $c$ times column $2$ to column $1$ of $A$, which changes the first row too.",
-    "左乘初等矩阵做行运算，右乘初等矩阵做列运算。所以当 $E = \\begin{pmatrix} 1 & 0 \\\\ c & 1 \\end{pmatrix}$ 时，$AE$ 把 $A$ 的第 $2$ 列的 $c$ 倍加到第 $1$ 列，这也会改变第一行。",
+    "Multiplying by an elementary matrix on the left performs a row operation, and multiplying on the right performs a column operation. So $AE$ with $E = \\begin{pmatrix} 1 & 0 \\\\ c & 1 \\end{pmatrix}$ adds $c$ times column $2$ to column $1$ of $A$, which changes the first row too. With $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ and $c = 3$, column $1$ of $AE$ is $(1 + 3 \\cdot 2, 3 + 3 \\cdot 4) = (7, 15)$.\n\n> **Watch out.** On the right, the entry $c$ in row $2$, column $1$ of $E$ adds column $2$ to column $1$, the reverse of what the same $E$ does to rows on the left.",
+    "左乘初等矩阵做行运算，右乘初等矩阵做列运算。所以当 $E = \\begin{pmatrix} 1 & 0 \\\\ c & 1 \\end{pmatrix}$ 时，$AE$ 把 $A$ 的第 $2$ 列的 $c$ 倍加到第 $1$ 列，这也会改变第一行。取 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$，$c = 3$，$AE$ 的第 $1$ 列为 $(1 + 3 \\cdot 2, 3 + 3 \\cdot 4) = (7, 15)$。\n\n> **注意。** 右乘时，$E$ 第 $2$ 行第 $1$ 列的 $c$ 把第 $2$ 列加到第 $1$ 列，与同一个 $E$ 左乘时对行的作用方向相反。",
   ],
   (rng) => {
     const a = nz(rng, 7);
@@ -711,30 +896,55 @@ const rightMultiply = point(
     const q = rng.int(-7, 7);
     const c = nz(rng, 5);
     const answer = a + c * b;
-    return ask(
-      [
-        `$A = ${mat([
-          [a, b],
-          [p, q],
-        ])}$ and $E = ${mat([
-          [1, 0],
-          [c, 1],
-        ])}$. Find the $(1, 1)$ entry of $AE$.`,
-        `$A = ${mat([
-          [a, b],
-          [p, q],
-        ])}$，$E = ${mat([
-          [1, 0],
-          [c, 1],
-        ])}$。求 $AE$ 的 $(1, 1)$ 元素。`,
-      ],
+    const A = mat([
+      [a, b],
+      [p, q],
+    ]);
+    const E = mat([
+      [1, 0],
+      [c, 1],
+    ]);
+    const AE = mat([
+      [answer, b],
+      [p + c * q, q],
+    ]);
+    return numberProblem({
+      prompt: text([`$A = ${A}$ and $E = ${E}$. Find the $(1, 1)$ entry of $AE$.`, `$A = ${A}$，$E = ${E}$。求 $AE$ 的 $(1, 1)$ 元素。`]),
       answer,
-      [a, c * a + b, a + b],
-      [
-        `On the right, $E$ acts on columns, adding $${c}$ times column $2$ to column $1$. So the entry is $${a} + ${wrap(c)} \\cdot ${wrap(b)} = ${answer}$.`,
-        `$E$ 右乘时作用于列，把第 $2$ 列的 $${c}$ 倍加到第 $1$ 列。所以该元素是 $${a} + ${wrap(c)} \\cdot ${wrap(b)} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          a,
+          "That treats $E$ as a row operation on row $2$, which would leave row $1$ alone. On the right, $E$ changes column $1$, row $1$ included.",
+          "这是把 $E$ 当成对第 $2$ 行的行运算，那样第 $1$ 行不变。右乘时 $E$ 改变的是第 $1$ 列，包括第 $1$ 行。",
+        ),
+        why(
+          c * a + b,
+          `That is the $(1, 2)$ entry of $AE^{T}$: column $1$ added to column $2$. Here $${c}$ times column $2$ is added to column $1$.`,
+          `这是 $AE^{T}$ 的 $(1, 2)$ 元素：把第 $1$ 列加到第 $2$ 列。这里是把第 $2$ 列的 $${c}$ 倍加到第 $1$ 列。`,
+        ),
+        why(a + b, `The multiplier $${c}$ is missing: column $2$ is added $${c}$ times.`, `漏了乘数 $${c}$：第 $2$ 列要加 $${c}$ 倍。`),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Read $E$ as a column operation", "把 $E$ 读作列运算"],
+            text([
+              `On the right, $E$ acts on columns: column $1$ of $AE$ is column $1$ of $A$ plus $${c}$ times column $2$.`,
+              `右乘时 $E$ 作用于列：$AE$ 的第 $1$ 列是 $A$ 的第 $1$ 列加上第 $2$ 列的 $${c}$ 倍。`,
+            ]),
+          ],
+          [
+            ["Row 1 of $A$ times column 1 of $E$", "$A$ 的第 1 行乘 $E$ 的第 1 列"],
+            t("", ""),
+            [`${a} \\cdot 1 + ${wrap(b)} \\cdot ${wrap(c)} = ${answer}`, `AE = ${AE}`],
+          ],
+        ],
+        t(
+          `$\\det E = 1$, so $\\det(AE)$ must equal $\\det A = ${a * q - b * p}$: indeed $${wrap(answer)} \\cdot ${wrap(q)} - ${wrap(b)} \\cdot ${wrap(p + c * q)} = ${a * q - b * p}$.`,
+          `$\\det E = 1$，所以 $\\det(AE)$ 应等于 $\\det A = ${a * q - b * p}$：确实 $${wrap(answer)} \\cdot ${wrap(q)} - ${wrap(b)} \\cdot ${wrap(p + c * q)} = ${a * q - b * p}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -742,26 +952,58 @@ const productNotInverse = point(
   "a-product-of-eliminations-picks-up-an-extra-term",
   ["A product of eliminations picks up an extra term", "消元矩阵之积多出一项"],
   [
-    "The inverse of a product of elimination matrices just collects the multipliers, which is why $L$ is easy to write. The product itself does not: the row subtracted later has already been changed, so an extra term appears when one operation builds on another.",
-    "消元矩阵之积的逆矩阵只是把乘数收集起来，所以 $L$ 很容易写出。乘积本身却不是这样：后面减去的行已经被改变，所以当一个运算以另一个为基础时，会多出一项。",
+    "The inverse of a product of elimination matrices just collects the multipliers, which is why $L$ is easy to write. The product itself does not: the row subtracted later has already been changed, so an extra term appears when one operation builds on another. After $R_2 - 2R_1$, $R_3 - R_1$ and $R_3 - 3R_2$, the $(3, 1)$ entry of the product is $-1 + (-3)(-2) = 5$.\n\n> **Watch out.** The answer is not just $-b$: by the time $R_3 - cR_2$ acts, row $2$ already holds $-a$ times row $1$, which adds $ac$.",
+    "消元矩阵之积的逆矩阵只是把乘数收集起来，所以 $L$ 很容易写出。乘积本身却不是这样：后面减去的行已经被改变，所以当一个运算以另一个为基础时，会多出一项。经过 $R_2 - 2R_1$、$R_3 - R_1$、$R_3 - 3R_2$ 后，乘积的 $(3, 1)$ 元素为 $-1 + (-3)(-2) = 5$。\n\n> **注意。** 答案不只是 $-b$：$R_3 - cR_2$ 作用时，第 $2$ 行已含第 $1$ 行的 $-a$ 倍，于是多出 $ac$。",
   ],
   (rng) => {
     const a = nz(rng, 5);
     const b = nz(rng, 5);
     const c = nz(rng, 5);
     const answer = a * c - b;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$E_{1}$, $E_{2}$, $E_{3}$ perform $${poly([1, "R_{2}"], [-a, "R_{1}"])} \\to R_{2}$, then $${poly([1, "R_{3}"], [-b, "R_{1}"])} \\to R_{3}$, then $${poly([1, "R_{3}"], [-c, "R_{2}"])} \\to R_{3}$. Find the $(3, 1)$ entry of $E_{3}E_{2}E_{1}$.`,
         `$E_{1}$、$E_{2}$、$E_{3}$ 依次进行 $${poly([1, "R_{2}"], [-a, "R_{1}"])} \\to R_{2}$、$${poly([1, "R_{3}"], [-b, "R_{1}"])} \\to R_{3}$、$${poly([1, "R_{3}"], [-c, "R_{2}"])} \\to R_{3}$。求 $E_{3}E_{2}E_{1}$ 的 $(3, 1)$ 元素。`,
-      ],
+      ]),
       answer,
-      [-b, -b - a * c, b],
-      [
-        `When $E_{3}$ acts, row $2$ already contains $${-a}$ times row $1$. So row $3$ gets $${-b}$ from $E_{2}$ and $${wrap(-c)} \\cdot ${wrap(-a)}$ from $E_{3}$, which is $${answer}$.`,
-        `$E_{3}$ 作用时，第 $2$ 行已含第 $1$ 行的 $${-a}$ 倍。所以第 $3$ 行从 $E_{2}$ 得到 $${-b}$，从 $E_{3}$ 得到 $${wrap(-c)} \\cdot ${wrap(-a)}$，共 $${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          -b,
+          `That counts only $E_{2}$. When $E_{3}$ subtracts row $2$, that row already holds $${-a}$ times row $1$, which adds $${wrap(-c)} \\cdot ${wrap(-a)} = ${a * c}$.`,
+          `这只算了 $E_{2}$。$E_{3}$ 减去第 $2$ 行时，这一行已含第 $1$ 行的 $${-a}$ 倍，于是多出 $${wrap(-c)} \\cdot ${wrap(-a)} = ${a * c}$。`,
+        ),
+        why(
+          -b - a * c,
+          `The extra term has the wrong sign: $${wrap(-c)} \\cdot ${wrap(-a)} = ${a * c}$.`,
+          `多出的一项符号错了：$${wrap(-c)} \\cdot ${wrap(-a)} = ${a * c}$。`,
+        ),
+        why(
+          b,
+          "That is the $(3, 1)$ entry of the inverse $L$, which only collects the multipliers.",
+          "这是逆矩阵 $L$ 的 $(3, 1)$ 元素，逆矩阵只是收集乘数。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Apply $E_{1}$ and $E_{2}$ to $I$", "对 $I$ 做 $E_{1}$ 与 $E_{2}$"],
+            text([
+              `Row $2$ becomes $(${-a}, 1, 0)$ and row $3$ becomes $(${-b}, 0, 1)$.`,
+              `第 $2$ 行变为 $(${-a}, 1, 0)$，第 $3$ 行变为 $(${-b}, 0, 1)$。`,
+            ]),
+          ],
+          [
+            ["Apply $E_{3}$", "再做 $E_{3}$"],
+            text([`Row $3$ minus $${wrap(c)}$ times the new row $2$:`, `第 $3$ 行减去新第 $2$ 行的 $${wrap(c)}$ 倍：`]),
+            [`${wrap(-b)} - ${wrap(c)} \\cdot ${wrap(-a)} = ${answer}`],
+          ],
+        ],
+        t(
+          `$L = (E_{3}E_{2}E_{1})^{-1}$ has $${a}$, $${b}$, $${c}$ below the diagonal. Row $3$ of the product, $(${answer}, ${-c}, 1)$, times column $1$ of $L$, $(1, ${a}, ${b})$, is $${answer} + ${wrap(-c)} \\cdot ${wrap(a)} + ${wrap(b)} = 0$, as $I$ requires.`,
+          `$L = (E_{3}E_{2}E_{1})^{-1}$ 对角线下方为 $${a}$、$${b}$、$${c}$。乘积的第 $3$ 行 $(${answer}, ${-c}, 1)$ 乘 $L$ 的第 $1$ 列 $(1, ${a}, ${b})$，得 $${answer} + ${wrap(-c)} \\cdot ${wrap(a)} + ${wrap(b)} = 0$，符合 $I$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -769,31 +1011,55 @@ const nullVectorOfSingular = point(
   "a-nonzero-solution-of-a-singular-system",
   ["A nonzero solution of a singular system", "奇异方程组的非零解"],
   [
-    "A $2 \\times 2$ matrix fails to be invertible exactly when $A\\mathbf{x} = \\mathbf{0}$ has a nonzero solution. When one column is a multiple of the other, this multiple gives such a solution directly, so the determinant does not need to be computed first.",
-    "$2 \\times 2$ 矩阵不可逆，当且仅当 $A\\mathbf{x} = \\mathbf{0}$ 有非零解。当一列是另一列的倍数时，这个倍数直接给出这样的解，所以不必先计算行列式。",
+    "A $2 \\times 2$ matrix fails to be invertible exactly when $A\\mathbf{x} = \\mathbf{0}$ has a nonzero solution. When one column is a multiple of the other, this multiple gives such a solution directly, so the determinant does not need to be computed first. In $\\begin{pmatrix} 1 & -3 \\\\ 2 & -6 \\end{pmatrix}$ column $2$ is $-3$ times column $1$, so $3 \\cdot \\text{column } 1 + 1 \\cdot \\text{column } 2 = \\mathbf{0}$ and $(3, 1)$ is a solution.\n\n> **Watch out.** If column $2$ is $-k$ times column $1$, the solution $(t, 1)$ has $t = k$, with the sign flipped: the two columns must cancel.",
+    "$2 \\times 2$ 矩阵不可逆，当且仅当 $A\\mathbf{x} = \\mathbf{0}$ 有非零解。当一列是另一列的倍数时，这个倍数直接给出这样的解，所以不必先计算行列式。在 $\\begin{pmatrix} 1 & -3 \\\\ 2 & -6 \\end{pmatrix}$ 中第 $2$ 列是第 $1$ 列的 $-3$ 倍，所以 $3 \\cdot$ 第 $1$ 列 $+ 1 \\cdot$ 第 $2$ 列 $= \\mathbf{0}$，$(3, 1)$ 是一个解。\n\n> **注意。** 若第 $2$ 列是第 $1$ 列的 $-k$ 倍，解 $(t, 1)$ 中 $t = k$，符号相反：两列必须相互抵消。",
   ],
   (rng) => {
     const a = nz(rng, 6);
     const c = nz(rng, 6);
-    const t = nz(rng, 6);
-    return ask(
-      [
-        `$A = ${mat([
-          [a, -a * t],
-          [c, -c * t],
-        ])}$ is singular. Find $t$ so that $${vec("t", 1)}$ solves $A\\mathbf{x} = \\mathbf{0}$.`,
-        `$A = ${mat([
-          [a, -a * t],
-          [c, -c * t],
-        ])}$ 是奇异矩阵。求 $t$，使 $${vec("t", 1)}$ 是 $A\\mathbf{x} = \\mathbf{0}$ 的解。`,
-      ],
-      t,
-      [-t, a, c],
-      [
-        `The first equation is $${poly([a, "t"], [-a * t, ""])} = 0$, which gives $t = ${t}$. The second equation agrees, since the rows are proportional.`,
-        `第一个方程是 $${poly([a, "t"], [-a * t, ""])} = 0$，得 $t = ${t}$。第二个方程也一致，因为两行成比例。`,
-      ],
-    );
+    const k = nz(rng, 6);
+    const A = mat([
+      [a, -a * k],
+      [c, -c * k],
+    ]);
+    return numberProblem({
+      prompt: text([
+        `$A = ${A}$ is singular. Find $t$ so that $${vec("t", 1)}$ solves $A\\mathbf{x} = \\mathbf{0}$.`,
+        `$A = ${A}$ 是奇异矩阵。求 $t$，使 $${vec("t", 1)}$ 是 $A\\mathbf{x} = \\mathbf{0}$ 的解。`,
+      ]),
+      answer: k,
+      mistakes: [
+        why(
+          -k,
+          `Column 2 is $${-k}$ times column 1, so column 1 must be taken $${k}$ times to cancel it; the sign flips.`,
+          `第 2 列是第 1 列的 $${-k}$ 倍，所以要取第 1 列的 $${k}$ 倍才能抵消；符号相反。`,
+        ),
+        why(
+          a,
+          "That is the $(1, 1)$ entry of $A$; solve the first equation for $t$.",
+          "这是 $A$ 的 $(1, 1)$ 元素；要从第一个方程解出 $t$。",
+        ),
+        why(
+          c,
+          "That is the $(2, 1)$ entry of $A$; solve the first equation for $t$.",
+          "这是 $A$ 的 $(2, 1)$ 元素；要从第一个方程解出 $t$。",
+        ),
+      ].filter((w, i, all) => w.value !== k && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the first equation", "写出第一个方程"],
+            text([`Row 1 of $A$ times $(t, 1)$ must be $0$:`, `$A$ 的第 1 行乘 $(t, 1)$ 必须为 $0$：`]),
+            [`${poly([a, "t"], [-a * k, ""])} = 0`],
+          ],
+          [["Solve for $t$", "解出 $t$"], t("", ""), [`t = \\frac{${a * k}}{${a}} = ${k}`]],
+        ],
+        t(
+          `The second equation agrees: $${c} \\cdot ${wrap(k)} + ${wrap(-c * k)} \\cdot 1 = 0$, since the rows are proportional.`,
+          `第二个方程也成立：$${c} \\cdot ${wrap(k)} + ${wrap(-c * k)} \\cdot 1 = 0$，因为两行成比例。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -801,8 +1067,8 @@ const blockInverse = point(
   "the-inverse-of-a-block-diagonal-matrix",
   ["The inverse of a block diagonal matrix", "分块对角矩阵的逆"],
   [
-    "When a matrix has a block in the upper left and a separate entry at the lower right, row operations never mix them. So the inverse is found block by block, with the usual $2 \\times 2$ formula for the first block, and no full reduction of $[A \\mid I]$ is needed.",
-    "当矩阵左上角有一个块、右下角有一个单独元素时，行运算不会把它们混在一起。所以逆矩阵可以逐块求出，第一块用通常的 $2 \\times 2$ 公式，不需要完整化简 $[A \\mid I]$。",
+    "When a matrix has a block in the upper left and a separate entry at the lower right, row operations never mix them. So the inverse is found block by block, with the usual $2 \\times 2$ formula for the first block, and no full reduction of $[A \\mid I]$ is needed. For $\\begin{pmatrix} 2 & 1 & 0 \\\\ 1 & 1 & 0 \\\\ 0 & 0 & 4 \\end{pmatrix}$ the inverse has the block $\\begin{pmatrix} 1 & -1 \\\\ -1 & 2 \\end{pmatrix}$ and the corner $\\frac{1}{4}$.\n\n> **Watch out.** Divide by the determinant of the $2 \\times 2$ block only; the lone entry $e$ affects just the corner $\\frac{1}{e}$.",
+    "当矩阵左上角有一个块、右下角有一个单独元素时，行运算不会把它们混在一起。所以逆矩阵可以逐块求出，第一块用通常的 $2 \\times 2$ 公式，不需要完整化简 $[A \\mid I]$。对 $\\begin{pmatrix} 2 & 1 & 0 \\\\ 1 & 1 & 0 \\\\ 0 & 0 & 4 \\end{pmatrix}$，逆矩阵的块为 $\\begin{pmatrix} 1 & -1 \\\\ -1 & 2 \\end{pmatrix}$，角上为 $\\frac{1}{4}$。\n\n> **注意。** 只除以 $2 \\times 2$ 块的行列式；单独的元素 $e$ 只影响角上的 $\\frac{1}{e}$。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -815,32 +1081,72 @@ const blockInverse = point(
     const first = rng.bool();
     const answer = first ? Q.of(-b, det) : Q.of(-c, det);
     const where = first ? "(1, 2)" : "(2, 1)";
-    return ask(
-      [
-        `Find the $${where}$ entry of $A^{-1}$ for $A = ${mat([
-          [a, b, 0],
-          [c, d, 0],
-          [0, 0, e],
-        ])}$.`,
-        `对 $A = ${mat([
-          [a, b, 0],
-          [c, d, 0],
-          [0, 0, e],
-        ])}$，求 $A^{-1}$ 的 $${where}$ 元素。`,
-      ],
+    const A = mat([
+      [a, b, 0],
+      [c, d, 0],
+      [0, 0, e],
+    ]);
+    const adj = mat([
+      [d, -b],
+      [-c, a],
+    ]);
+    const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+    return numberProblem({
+      prompt: text([`Find the $${where}$ entry of $A^{-1}$ for $A = ${A}$.`, `对 $A = ${A}$，求 $A^{-1}$ 的 $${where}$ 元素。`]),
       answer,
-      [answer.neg(), first ? -b : -c, Q.of(1, e)],
-      [
-        `The upper left block has determinant $${det}$, and its inverse is $${det === 1 ? "" : `\\frac{1}{${det}}`}${mat([
-          [d, -b],
-          [-c, a],
-        ])}$. So this entry is $${answer.toLatex()}$.`,
-        `左上角的块的行列式是 $${det}$，其逆矩阵是 $${det === 1 ? "" : `\\frac{1}{${det}}`}${mat([
-          [d, -b],
-          [-c, a],
-        ])}$。所以该元素是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          answer.neg(),
+          "The off-diagonal entries of a $2 \\times 2$ inverse change sign; this keeps the original sign.",
+          "$2 \\times 2$ 逆矩阵的非对角元素要变号；这里保留了原来的符号。",
+        ),
+        why(Q.of(first ? -b : -c), `The division by the block's determinant $${det}$ is missing.`, `漏了除以该块的行列式 $${det}$。`),
+        why(
+          Q.of(first ? -c : -b, det),
+          `That is the other off-diagonal entry; the $${where}$ entry comes from $${first ? b : c}$.`,
+          `这是另一个非对角元素；$${where}$ 元素来自 $${first ? b : c}$。`,
+        ),
+        why(
+          Q.of(1, e),
+          "That is the $(3, 3)$ entry of $A^{-1}$, from the lone block $e$.",
+          "这是 $A^{-1}$ 的 $(3, 3)$ 元素，来自单独的块 $e$。",
+        ),
+      ].filter((w, i, all) => !asQ(w.value).eq(answer) && all.findIndex((o) => asQ(o.value).eq(asQ(w.value))) === i),
+      solution: walked(
+        [
+          [
+            ["Split into blocks", "分块"],
+            text([
+              `Row operations never mix the upper left block $B = ${mat([
+                [a, b],
+                [c, d],
+              ])}$ with the entry $${e}$, so the $${where}$ entry of $A^{-1}$ is that of $B^{-1}$.`,
+              `行运算不会把左上角的块 $B = ${mat([
+                [a, b],
+                [c, d],
+              ])}$ 与元素 $${e}$ 混在一起，所以 $A^{-1}$ 的 $${where}$ 元素就是 $B^{-1}$ 的。`,
+            ]),
+          ],
+          [
+            ["Invert the block", "求块的逆"],
+            text([
+              `$\\det B = ${a} \\cdot ${wrap(d)} - ${wrap(b)} \\cdot ${wrap(c)} = ${det}$, so`,
+              `$\\det B = ${a} \\cdot ${wrap(d)} - ${wrap(b)} \\cdot ${wrap(c)} = ${det}$，所以`,
+            ]),
+            [`B^{-1} = \\frac{1}{${det}}${adj}`, `\\frac{${first ? -b : -c}}{${det}} = ${answer.toLatex()}`],
+          ],
+        ],
+        first
+          ? t(
+              `Row 1 of $B$ times column 2 of $B^{-1}$ must be $0$: $\\frac{1}{${det}}\\left(${a} \\cdot ${wrap(-b)} + ${wrap(b)} \\cdot ${wrap(a)}\\right) = 0$.`,
+              `$B$ 的第 1 行乘 $B^{-1}$ 的第 2 列必须为 $0$：$\\frac{1}{${det}}\\left(${a} \\cdot ${wrap(-b)} + ${wrap(b)} \\cdot ${wrap(a)}\\right) = 0$。`,
+            )
+          : t(
+              `Row 2 of $B$ times column 1 of $B^{-1}$ must be $0$: $\\frac{1}{${det}}\\left(${c} \\cdot ${wrap(d)} + ${wrap(d)} \\cdot ${wrap(-c)}\\right) = 0$.`,
+              `$B$ 的第 2 行乘 $B^{-1}$ 的第 1 列必须为 $0$：$\\frac{1}{${det}}\\left(${c} \\cdot ${wrap(d)} + ${wrap(d)} \\cdot ${wrap(-c)}\\right) = 0$。`,
+            ),
+      ),
+    });
   },
 );
 
