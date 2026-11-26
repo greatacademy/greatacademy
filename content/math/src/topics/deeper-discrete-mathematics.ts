@@ -297,8 +297,8 @@ const twosComplement: KnowledgePointDef = {
   id: "reading-twos-complement",
   title: t("Reading two's complement", "读二进制补码"),
   explanation: t(
-    "Computers subtract by adding negative numbers written in two's complement. In this code the leading bit of an eight-bit pattern has the weight $-128$ instead of $128$, while all the other bits keep their usual weights. So a pattern that starts with one stands for a negative number, found by adding up the weights.",
-    "计算机通过加上用补码表示的负数来做减法。在这种编码中，八位模式的最高位权重是 $-128$ 而不是 $128$，其余各位的权重不变。所以以一开头的模式表示负数，把各位权重相加就能得到它的值。",
+    "Computers subtract by adding negative numbers written in two's complement. In this code the leading bit of an $n$-bit pattern has the weight $-2^{n-1}$ instead of $2^{n-1}$, while all the other bits keep their usual weights. So a pattern that starts with one stands for a negative number, found by adding up the weights. In six bits, for example, the leading bit weighs $-32$, so $101101$ stands for $-32 + 8 + 4 + 1 = -19$.\n\n> **Watch out.** Only the leading bit changes sign; the others still count positively. Flipping the bits alone gives a number one too large, because the two's complement of $x$ is the flipped pattern plus one.",
+    "计算机通过加上用补码表示的负数来做减法。在这种编码中，$n$ 位模式的最高位权重是 $-2^{n-1}$ 而不是 $2^{n-1}$，其余各位的权重不变。所以以一开头的模式表示负数，把各位权重相加就能得到它的值。例如在六位中，最高位的权重是 $-32$，所以 $101101$ 表示 $-32 + 8 + 4 + 1 = -19$。\n\n> **注意。** 只有最高位变号，其余各位仍按正数计。只把各位取反得到的数大了一，因为 $x$ 的补码是取反后再加一。",
   ),
   generate(rng) {
     const v = rng.int(128, 255);
@@ -307,15 +307,48 @@ const twosComplement: KnowledgePointDef = {
     const answer = v - 256;
     return numberProblem({
       prompt: t(
-        `The 8-bit pattern $${bits}$ is an integer in two's complement. What is its value?`,
-        `8 位模式 $${bits}$ 是用补码表示的整数。它的值是多少？`,
+        `The $8$-bit pattern $${bits}$ is an integer in two's complement. What is its value?`,
+        `$8$ 位模式 $${bits}$ 是用补码表示的整数。它的值是多少？`,
       ),
       answer,
       form: "integer",
-      wrong: [v, 128 - v, v - 255],
-      solution: t(
-        `The leading bit has weight $-128$, and the remaining bits make ${rest}. So the value is $-128 + ${rest} = ${answer}$.`,
-        `最高位的权重是 $-128$，其余各位合起来是 ${rest}。所以值是 $-128 + ${rest} = ${answer}$。`,
+      mistakes: [
+        why(
+          v,
+          `That reads the pattern as an unsigned number, giving the leading bit the weight $128$ instead of $-128$.`,
+          `那是把模式当作无符号数来读，给了最高位权重 $128$ 而不是 $-128$。`,
+        ),
+        ...(rest > 0
+          ? [
+              why(
+                128 - v,
+                `That puts the minus sign on the other bits, $-${rest}$, instead of on the leading bit.`,
+                `那是把负号放在其余各位 $-${rest}$ 上，而不是放在最高位上。`,
+              ),
+            ]
+          : []),
+        why(
+          v - 255,
+          "That negates the flipped pattern without adding one, which gives a number one too large.",
+          "那是把取反后的模式取负而没有加一，结果大了一。",
+        ),
+        why(rest, "That drops the leading bit instead of giving it the weight $-128$.", "那是丢掉了最高位，而不是给它权重 $-128$。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split off the leading bit", "分出最高位"],
+            t(
+              `The leading $1$ has the weight $-128$, and the other seven bits $${bits.slice(1)}$ are worth $${rest}$.`,
+              `最高位的 $1$ 权重是 $-128$，其余七位 $${bits.slice(1)}$ 的值是 $${rest}$。`,
+            ),
+          ],
+          [["Add the weights", "把权重相加"], t(`$-128 + ${rest} = ${answer}$.`, `$-128 + ${rest} = ${answer}$。`)],
+        ],
+        t(
+          `Read without a sign the pattern is $${v}$, and the leading bit then counts $256$ too much: $${v} - 256 = ${answer}$.`,
+          `不计符号时这个模式是 $${v}$，此时最高位多算了 $256$：$${v} - 256 = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -325,8 +358,8 @@ const binaryPeriod: KnowledgePointDef = {
   id: "the-period-of-a-binary-fraction",
   title: t("The period of a binary fraction", "二进制小数的周期"),
   explanation: t(
-    "A fraction with an odd denominator $q$ has a binary expansion that repeats from the first digit. The length of the repeating block is the smallest $k$ for which $2^k$ leaves remainder one on division by $q$. The numerator does not matter as long as the fraction is in lowest terms and below one.",
-    "分母 $q$ 为奇数的分数，其二进制展开从第一位起就循环。循环节的长度是使 $2^k$ 除以 $q$ 余一的最小 $k$。只要分数是最简的且小于一，分子就不起作用。",
+    "A fraction with an odd denominator $q$ has a binary expansion that repeats from the first digit. The length of the repeating block is the smallest $k$ for which $2^k$ leaves remainder one on division by $q$. The numerator does not matter as long as the fraction is in lowest terms and below one. For $\\frac{5}{127}$ the block has length $7$, since $2^7 = 128 = 127 + 1$ and no smaller power of $2$ exceeds $127$.\n\n> **Watch out.** The period is the first power that leaves remainder one. The numbers $q - 1$ and $\\varphi(q)$ are always multiples of it, but they are often larger.",
+    "分母 $q$ 为奇数的分数，其二进制展开从第一位起就循环。循环节的长度是使 $2^k$ 除以 $q$ 余一的最小 $k$。只要分数是最简的且小于一，分子就不起作用。$\\frac{5}{127}$ 的循环节长 $7$，因为 $2^7 = 128 = 127 + 1$，而更小的 $2$ 的幂都不超过 $127$。\n\n> **注意。** 周期是第一个余一的幂。$q - 1$ 和 $\\varphi(q)$ 总是它的倍数，但常常比它大。",
   ),
   generate(rng) {
     const q = rng.pick(
@@ -337,7 +370,8 @@ const binaryPeriod: KnowledgePointDef = {
     const p = rng.pick(range(1, q - 1).filter((i) => gcd(i, q) === 1));
     const powers = powersMod(2, q);
     const answer = powers.length;
-    const list = powers.join(", ");
+    const list = powers.map((r, i) => `${pow(2, i + 1)} \\equiv ${r}`).join(", \\; ");
+    const k = (2 ** answer - 1) / q;
     return numberProblem({
       prompt: t(
         `How long is the repeating block in the binary expansion of $\\frac{${p}}{${q}}$?`,
@@ -345,10 +379,38 @@ const binaryPeriod: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [q - 1, totient(q), answer + 1],
-      solution: t(
-        `The powers $2^1, 2^2, \\dots$ leave the remainders ${list} on division by ${q}. The first remainder of 1 is at the power ${answer}, so the block has length ${answer}.`,
-        `幂 $2^1, 2^2, \\dots$ 除以 ${q} 的余数依次是 ${list}。第一个余 1 的是第 ${answer} 次幂，所以循环节长度是 ${answer}。`,
+      mistakes: [
+        why(
+          q - 1,
+          `That is $q - 1 = ${q - 1}$; the period divides it when $q$ is prime, but it is the first power with remainder $1$ that counts.`,
+          `那是 $q - 1 = ${q - 1}$；$q$ 为质数时周期整除它，但要的是第一个余 $1$ 的幂。`,
+        ),
+        why(
+          totient(q),
+          `That is $\\varphi(${q}) = ${totient(q)}$, which the period divides but need not equal.`,
+          `那是 $\\varphi(${q}) = ${totient(q)}$，周期整除它，但不一定等于它。`,
+        ),
+        why(answer + 1, "That counts one power past the first remainder of $1$.", "那是数过了第一个余 $1$ 的幂，多数了一个。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["List the remainders of the powers of $2$", "列出 $2$ 的幂的余数"], t(`Modulo $${q}$: $${list}$.`, `模 $${q}$：$${list}$。`)],
+          [
+            ["Find the first remainder of $1$", "找第一个余 $1$ 的幂"],
+            t(
+              `It appears at $${pow(2, answer)}$, so the block has length $${answer}$.`,
+              `它出现在 $${pow(2, answer)}$，所以循环节长度是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          k === 1
+            ? `$${pow(2, answer)} - 1 = ${q}$ is the denominator itself, and a fraction over $${pow(2, answer)} - 1$ repeats a block of $${answer}$ binary digits.`
+            : `$${pow(2, answer)} - 1 = ${2 ** answer - 1} = ${q} \\cdot ${k}$, so $\\frac{1}{${q}} = \\frac{${k}}{${2 ** answer - 1}}$, and a fraction over $${pow(2, answer)} - 1$ repeats a block of $${answer}$ binary digits.`,
+          k === 1
+            ? `$${pow(2, answer)} - 1 = ${q}$ 就是分母本身，而分母为 $${pow(2, answer)} - 1$ 的分数循环一个 $${answer}$ 位的二进制块。`
+            : `$${pow(2, answer)} - 1 = ${2 ** answer - 1} = ${q} \\cdot ${k}$，所以 $\\frac{1}{${q}} = \\frac{${k}}{${2 ** answer - 1}}$，而分母为 $${pow(2, answer)} - 1$ 的分数循环一个 $${answer}$ 位的二进制块。`,
+        ),
       ),
     });
   },
@@ -358,8 +420,8 @@ const bitsOfAHexNumber: KnowledgePointDef = {
   id: "the-number-of-bits-of-a-hexadecimal-integer",
   title: t("The number of bits of a hexadecimal integer", "十六进制整数的位数"),
   explanation: t(
-    "Each hexadecimal digit stands for exactly four bits, so converting between the two bases never needs arithmetic. The one exception is the leading digit. It may start with zeros in its four bits, and these are not written. So only the leading digit needs thought when counting the bits of the number.",
-    "每个十六进制数字恰好对应四个二进制位，所以这两种进制之间的转换不需要计算。唯一的例外是最高位的数字。它的四位可能以零开头，而这些零不写出来。所以数二进制位数时，只有最高位数字需要留意。",
+    "Each hexadecimal digit stands for exactly four bits, so converting between the two bases never needs arithmetic. The one exception is the leading digit. It may start with zeros in its four bits, and these are not written. So only the leading digit needs thought when counting the bits of the number. For $\\mathrm{3A0F51C2}_{16}$ the seven later digits give $28$ bits and the leading $3 = 11_2$ gives $2$ more, so the number has $30$ bits.\n\n> **Watch out.** Give every digit after the first a full four bits, even a $0$; give the leading digit only as many bits as its own binary numeral has.",
+    "每个十六进制数字恰好对应四个二进制位，所以这两种进制之间的转换不需要计算。唯一的例外是最高位的数字。它的四位可能以零开头，而这些零不写出来。所以数二进制位数时，只有最高位数字需要留意。$\\mathrm{3A0F51C2}_{16}$ 后面七个数字给出 $28$ 位，最高位 $3 = 11_2$ 再给出 $2$ 位，所以这个数有 $30$ 位。\n\n> **注意。** 第一位之后的每个数字都算满四位，即使是 $0$；最高位数字只算它自己的二进制数字的位数。",
   ),
   generate(rng) {
     const k = rng.int(2, 6);
@@ -370,17 +432,59 @@ const bitsOfAHexNumber: KnowledgePointDef = {
     const hex = `${lead.toString(16).toUpperCase()}${tail}`;
     const leadBits = lead.toString(2);
     const answer = 4 * (k - 1) + leadBits.length;
+    const L = leadBits.length;
+    const leadDigit = lead.toString(16).toUpperCase();
     return numberProblem({
       prompt: t(
-        `How many bits does $${hex}_{16}$ have when written in binary without leading zeros?`,
-        `$${hex}_{16}$ 写成不带前导零的二进制时有多少位？`,
+        `How many bits does $\\mathrm{${hex}}_{16}$ have when written in binary without leading zeros?`,
+        `$\\mathrm{${hex}}_{16}$ 写成不带前导零的二进制时有多少位？`,
       ),
       answer,
       form: "integer",
-      wrong: [4 * k, 4 * (k - 1), k],
-      solution: t(
-        `${k === 2 ? "The digit after the first gives" : `The ${k - 1} digits after the first give`} $${4 * (k - 1)}$ bits. The first digit is $${leadBits}$ in binary, which adds ${leadBits.length}, for a total of ${answer}.`,
-        `第一位之后的 ${k - 1} 个数字给出 $${4 * (k - 1)}$ 位。第一位数字的二进制是 $${leadBits}$，再加 ${leadBits.length} 位，共 ${answer} 位。`,
+      mistakes: [
+        why(
+          4 * k,
+          `That gives the leading digit a full four bits, but $${leadBits}$ has only $${L}$.`,
+          `那是给最高位数字算了满四位，但 $${leadBits}$ 只有 $${L}$ 位。`,
+        ),
+        why(4 * (k - 1), "That leaves out the bits of the leading digit.", "那是漏掉了最高位数字的二进制位。"),
+        why(k, "That counts hexadecimal digits, not bits.", "那是数了十六进制数字的个数，而不是二进制位数。"),
+        why(
+          4 * (k - 1) + 1,
+          `That gives the leading digit a single bit, but $${leadBits}$ has $${L}$.`,
+          `那是给最高位数字只算了一位，但 $${leadBits}$ 有 $${L}$ 位。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the later digits", "数后面的数字"],
+            t(
+              k === 2
+                ? "The one digit after the first gives $4$ bits."
+                : `The $${k - 1}$ digits after the first give $4 \\cdot ${k - 1} = ${4 * (k - 1)}$ bits.`,
+              k === 2
+                ? "第一位之后的一个数字给出 $4$ 位。"
+                : `第一位之后的 $${k - 1}$ 个数字给出 $4 \\cdot ${k - 1} = ${4 * (k - 1)}$ 位。`,
+            ),
+          ],
+          [
+            ["Count the leading digit", "数最高位数字"],
+            t(
+              `$\\mathrm{${leadDigit}}_{16} = ${leadBits}_2$ has $${L}$ ${L === 1 ? "bit" : "bits"}, for a total of $${4 * (k - 1)} + ${L} = ${answer}$.`,
+              `$\\mathrm{${leadDigit}}_{16} = ${leadBits}_2$ 有 $${L}$ 位，共 $${4 * (k - 1)} + ${L} = ${answer}$ 位。`,
+            ),
+          ],
+        ],
+        L === 4
+          ? t(
+              `The leading digit $${leadBits}$ already starts with a $1$, so all $4 \\cdot ${k} = ${answer}$ bits count.`,
+              `最高位数字 $${leadBits}$ 已经以 $1$ 开头，所以 $4 \\cdot ${k} = ${answer}$ 位全都算。`,
+            )
+          : t(
+              `Padded to four bits the leading digit is $${leadBits.padStart(4, "0")}$; dropping its $${4 - L}$ leading ${L === 3 ? "zero" : "zeros"} from all $${4 * k}$ bits gives $${4 * k} - ${4 - L} = ${answer}$.`,
+              `补足四位时最高位数字是 $${leadBits.padStart(4, "0")}$；从全部 $${4 * k}$ 位中去掉它的 $${4 - L}$ 个前导零，得 $${4 * k} - ${4 - L} = ${answer}$。`,
+            ),
       ),
     });
   },
@@ -390,8 +494,8 @@ const digitSumRemainder: KnowledgePointDef = {
   id: "remainders-from-the-digit-sum-in-base-b",
   title: t("Remainders from the digit sum in base b", "由数字和求 b 进制数的余数"),
   explanation: t(
-    "The rule that a number and its digit sum have the same remainder on division by nine works in every base. In base $b$, each power of $b$ leaves remainder one on division by $b - 1$. So each digit counts as itself, and the remainder can be found without converting the number to decimal.",
-    "一个数与其数字和除以九的余数相同，这条规则在任何进制中都成立。在 $b$ 进制中，$b$ 的每个幂除以 $b - 1$ 都余一。所以每个数字都只算它本身，不必把数转换成十进制就能求出余数。",
+    "The rule that a number and its digit sum have the same remainder on division by nine works in every base. In base $b$, each power of $b$ leaves remainder one on division by $b - 1$. So each digit counts as itself, and the remainder can be found without converting the number to decimal. For $3221_4$ the digit sum is $3 + 2 + 2 + 1 = 8 = 3 \\cdot 2 + 2$, so the remainder on division by $3$ is $2$; indeed $3221_4 = 233 = 3 \\cdot 77 + 2$.\n\n> **Watch out.** Divide by $b - 1$, not by $9$ or by $b$; and reduce the digit sum itself, which is the remainder only when it is below $b - 1$.",
+    "一个数与其数字和除以九的余数相同，这条规则在任何进制中都成立。在 $b$ 进制中，$b$ 的每个幂除以 $b - 1$ 都余一。所以每个数字都只算它本身，不必把数转换成十进制就能求出余数。$3221_4$ 的数字和是 $3 + 2 + 2 + 1 = 8 = 3 \\cdot 2 + 2$，所以它除以 $3$ 余 $2$；确实 $3221_4 = 233 = 3 \\cdot 77 + 2$。\n\n> **注意。** 要除以 $b - 1$，而不是 $9$ 或 $b$；数字和本身还要再取余，只有它小于 $b - 1$ 时才就是余数。",
   ),
   generate(rng) {
     const b = rng.int(5, 9);
@@ -401,17 +505,54 @@ const digitSumRemainder: KnowledgePointDef = {
     const sum = digits.reduce((s, x) => s + x, 0);
     const answer = sum % (b - 1);
     const last = others[2] as number;
+    const d = b - 1;
+    const quotient = Math.floor(sum / d);
+    const value = digits.reduce((s, x) => s * b + x, 0);
+    const split = (qt: number) => `${qt === 1 ? `${d}` : `${d} \\cdot ${qt}`}${answer === 0 ? "" : ` + ${answer}`}`;
     return numberProblem({
       prompt: t(
-        `What is the remainder when $${digits.join("")}_{${b}}$ is divided by ${b - 1}?`,
-        `$${digits.join("")}_{${b}}$ 除以 ${b - 1} 的余数是多少？`,
+        `What is the remainder when $${digits.join("")}_{${b}}$ is divided by $${d}$?`,
+        `$${digits.join("")}_{${b}}$ 除以 $${d}$ 的余数是多少？`,
       ),
       answer,
       form: "integer",
-      wrong: [sum, last % (b - 1), (sum + 1) % (b - 1)],
-      solution: t(
-        `Each power of ${b} leaves remainder 1 on division by ${b - 1}, so only the digit sum matters. It is $${digits.join(" + ")} = ${sum}$, which leaves remainder ${answer}.`,
-        `${b} 的每个幂除以 ${b - 1} 都余 1，所以只看数字和。它是 $${digits.join(" + ")} = ${sum}$，余数是 ${answer}。`,
+      mistakes: [
+        why(sum, `That is the digit sum itself, which still has to be divided by $${d}$.`, `那是数字和本身，它还要再除以 $${d}$ 取余。`),
+        why(
+          last % d,
+          `That uses only the last digit, which decides the remainder on division by $${b}$, not by $${d}$.`,
+          `那是只用了最后一位，它决定的是除以 $${b}$ 的余数，而不是除以 $${d}$ 的余数。`,
+        ),
+        why((sum + 1) % d, "That is one off from the remainder of the digit sum.", "那与数字和的余数差了一。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Replace the number by its digit sum", "用数字和代替这个数"],
+            t(
+              `Each power of $${b}$ is one more than a multiple of $${d}$, so the number leaves the same remainder as $${digits.join(" + ")} = ${sum}$.`,
+              `$${b}$ 的每个幂都比 $${d}$ 的某个倍数多一，所以这个数与 $${digits.join(" + ")} = ${sum}$ 的余数相同。`,
+            ),
+          ],
+          [
+            ["Divide the digit sum", "用数字和做除法"],
+            quotient === 0
+              ? t(
+                  `$${sum}$ is already below $${d}$, so the remainder is $${answer}$.`,
+                  `$${sum}$ 已经小于 $${d}$，所以余数是 $${answer}$。`,
+                )
+              : sum === d
+                ? t(`The digit sum is $${d}$ itself, so the remainder is $0$.`, `数字和就是 $${d}$ 本身，所以余数是 $0$。`)
+                : t(
+                    `$${sum} = ${split(quotient)}$, so the remainder is $${answer}$.`,
+                    `$${sum} = ${split(quotient)}$，所以余数是 $${answer}$。`,
+                  ),
+          ],
+        ],
+        t(
+          `In decimal $${digits.join("")}_{${b}} = ${value} = ${split(Math.floor(value / d))}$.`,
+          `化成十进制，$${digits.join("")}_{${b}} = ${value} = ${split(Math.floor(value / d))}$。`,
+        ),
       ),
     });
   },
@@ -421,8 +562,8 @@ const fermatTest: KnowledgePointDef = {
   id: "the-fermat-primality-test",
   title: t("The Fermat primality test", "费马素性检验"),
   explanation: t(
-    "Fermat's little theorem says that $a^{n-1}$ leaves remainder one on division by a prime $n$, when $a$ is not a multiple of it. So a different remainder proves that $n$ is composite, even though no factor has been found. Repeated squaring makes the power quick to compute, even for very large numbers.",
-    "费马小定理说，当 $n$ 是素数且 $a$ 不是它的倍数时，$a^{n-1}$ 除以 $n$ 余一。所以余数不是一就证明了 $n$ 是合数，尽管并没有找到因子。反复平方使这个幂很快就能算出，即使数非常大也是如此。",
+    "Fermat's little theorem says that $a^{n-1}$ leaves remainder one on division by a prime $n$, when $a$ is not a multiple of it. So a different remainder proves that $n$ is composite, even though no factor has been found. Repeated squaring makes the power quick to compute, even for very large numbers. With the base $10$ and $n = 21$: $10^2 \\equiv 16$, $10^4 \\equiv 4$, $10^8 \\equiv 16$, $10^{16} \\equiv 4$, and $20 = 16 + 4$ gives $10^{20} \\equiv 4 \\cdot 4 = 16 \\pmod{21}$, so $21$ is composite.\n\n> **Watch out.** Raise $a$ to the power $n - 1$, not $n$. A remainder of one does not prove that $n$ is prime: some composite numbers pass the test for some bases.",
+    "费马小定理说，当 $n$ 是素数且 $a$ 不是它的倍数时，$a^{n-1}$ 除以 $n$ 余一。所以余数不是一就证明了 $n$ 是合数，尽管并没有找到因子。反复平方使这个幂很快就能算出，即使数非常大也是如此。取底 $10$、$n = 21$：$10^2 \\equiv 16$，$10^4 \\equiv 4$，$10^8 \\equiv 16$，$10^{16} \\equiv 4$，由 $20 = 16 + 4$ 得 $10^{20} \\equiv 4 \\cdot 4 = 16 \\pmod{21}$，所以 $21$ 是合数。\n\n> **注意。** 要把 $a$ 升到 $n - 1$ 次幂，而不是 $n$ 次。余数是一并不能证明 $n$ 是素数：有些合数对某些底也能通过检验。",
   ),
   generate(rng) {
     const composites = range(4, 49)
@@ -440,17 +581,44 @@ const fermatTest: KnowledgePointDef = {
       .filter((v) => (e & v) !== 0)
       .reverse();
     const split = parts.length > 1 ? `$${e} = ${parts.join(" + ")}$` : "";
+    const factors = parts.map((v) => powMod(a, v, n)).filter((v) => v !== 1);
+    const product = factors.length > 1 ? `$${factors.join(" \\cdot ")} \\equiv ${answer}$` : `$${answer}$`;
+    const d = range(2, n - 1).find((i) => n % i === 0) as number;
     return numberProblem({
       prompt: t(
-        `To test whether ${n} is prime with the base ${a}, find the remainder of $${a}^{${e}}$ on division by ${n}.`,
-        `用底 ${a} 检验 ${n} 是否为素数：求 $${a}^{${e}}$ 除以 ${n} 的余数。`,
+        `To test whether $${n}$ is prime with the base $${a}$, find the remainder of $${a}^{${e}}$ on division by $${n}$.`,
+        `用底 $${a}$ 检验 $${n}$ 是否为素数：求 $${a}^{${e}}$ 除以 $${n}$ 的余数。`,
       ),
       answer,
       form: "integer",
-      wrong: [1, n - 1, (answer * a) % n],
-      solution: t(
-        `Squaring gives $${squares.join(", \\quad ")}$. ${split ? `Using ${split}, the product is ${answer}.` : `So the remainder is ${answer}.`} This is not 1, so ${n} is composite.`,
-        `反复平方得 $${squares.join(", \\quad ")}$。${split ? `由 ${split}，乘积是 ${answer}。` : `所以余数是 ${answer}。`}它不是 1，所以 ${n} 是合数。`,
+      mistakes: [
+        why(
+          1,
+          `That is the remainder a prime would give; $${n}$ is composite, so the power need not leave $1$, and here it does not.`,
+          `那是素数才会给出的余数；$${n}$ 是合数，这个幂不一定余 $1$，这里也确实不余 $1$。`,
+        ),
+        why(
+          n - 1,
+          `That is $-1$ modulo $${n}$, a guess rather than the remainder the squarings give.`,
+          `那是模 $${n}$ 的 $-1$，是猜出来的，而不是反复平方算出的余数。`,
+        ),
+        why((answer * a) % n, `That is the remainder of $${a}^{${n}}$, one power too many.`, `那是 $${a}^{${n}}$ 的余数，多乘了一次。`),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["Square repeatedly", "反复平方"], t(`Modulo $${n}$: $${squares.join(", \\; ")}$.`, `模 $${n}$：$${squares.join(", \\; ")}$。`)],
+          [
+            ["Combine the squares", "组合各次平方"],
+            split
+              ? t(`Since ${split}, the remainder is ${product}.`, `因为 ${split}，余数是 ${product}。`)
+              : t(`$${e}$ is itself a power of $2$, so the remainder is $${answer}$.`, `$${e}$ 本身是 $2$ 的幂，所以余数是 $${answer}$。`),
+          ],
+          [
+            ["Draw the conclusion", "得出结论"],
+            t(`The remainder is not $1$, so $${n}$ is composite.`, `余数不是 $1$，所以 $${n}$ 是合数。`),
+          ],
+        ],
+        t(`Indeed $${n} = ${d} \\cdot ${n / d}$ is composite.`, `确实 $${n} = ${d} \\cdot ${n / d}$ 是合数。`),
       ),
     });
   },
@@ -460,8 +628,8 @@ const coprimeInARange: KnowledgePointDef = {
   id: "counting-coprime-integers-in-a-range",
   title: t("Counting coprime integers in a range", "数区间内的互素整数"),
   explanation: t(
-    "Whether an integer is coprime to $n$ depends only on its remainder on division by $n$. So the pattern of coprime integers repeats with period $n$, with exactly $\\varphi(n)$ of them in each block. A range made of whole blocks therefore contains a multiple of $\\varphi(n)$, and this is not the totient of the range's end.",
-    "一个整数是否与 $n$ 互素，只取决于它除以 $n$ 的余数。所以互素整数的分布以 $n$ 为周期重复，每一段恰有 $\\varphi(n)$ 个。因此由完整的若干段组成的区间，其个数是 $\\varphi(n)$ 的倍数，这并不是区间端点的欧拉函数值。",
+    "Whether an integer is coprime to $n$ depends only on its remainder on division by $n$. So the pattern of coprime integers repeats with period $n$, with exactly $\\varphi(n)$ of them in each block. A range made of whole blocks therefore contains a multiple of $\\varphi(n)$. From $1$ to $120$ there are ten blocks of $12$, each holding the four integers coprime to $12$ that sit at $1$, $5$, $7$, $11$, so $10 \\cdot 4 = 40$ integers are coprime to $12$.\n\n> **Watch out.** The count is not $\\varphi$ of the range's end: $\\varphi(120) = 32$ also leaves out the multiples of $5$, which may well be coprime to $12$.",
+    "一个整数是否与 $n$ 互素，只取决于它除以 $n$ 的余数。所以互素整数的分布以 $n$ 为周期重复，每一段恰有 $\\varphi(n)$ 个。因此由完整的若干段组成的区间，其个数是 $\\varphi(n)$ 的倍数。从 $1$ 到 $120$ 有十段长 $12$ 的区间，每段在 $1$、$5$、$7$、$11$ 位置上有四个与 $12$ 互素的整数，所以有 $10 \\cdot 4 = 40$ 个整数与 $12$ 互素。\n\n> **注意。** 个数不是区间端点的欧拉函数值：$\\varphi(120) = 32$ 还去掉了 $5$ 的倍数，而它们可能与 $12$ 互素。",
   ),
   generate(rng) {
     const n = rng.pick(range(6, 60).filter((v) => totient(v) < v - 1));
@@ -469,14 +637,50 @@ const coprimeInARange: KnowledgePointDef = {
     const N = n * m;
     const phi = totient(n);
     const answer = m * phi;
+    const primes = range(2, n).filter((p) => n % p === 0 && totient(p) === p - 1);
+    const fractions = primes.map((p) => `\\frac{${p - 1}}{${p}}`).join(" \\cdot ");
+    const residues = range(1, n).filter((r) => gcd(r, n) === 1);
     return numberProblem({
-      prompt: t(`How many of the integers from 1 to ${N} are coprime to ${n}?`, `从 1 到 ${N} 的整数中，有多少个与 ${n} 互素？`),
+      prompt: t(
+        `How many of the integers from $1$ to $${N}$ are coprime to $${n}$?`,
+        `从 $1$ 到 $${N}$ 的整数中，有多少个与 $${n}$ 互素？`,
+      ),
       answer,
       form: "integer",
-      wrong: [phi, N - answer, answer + m],
-      solution: t(
-        `The range splits into ${m} blocks of length ${n}, and each holds $\\varphi(${n}) = ${phi}$ integers coprime to ${n}. That makes $${m} \\cdot ${phi} = ${answer}$.`,
-        `这个区间分成 ${m} 段，每段长 ${n}，每段有 $\\varphi(${n}) = ${phi}$ 个与 ${n} 互素的整数。所以共有 $${m} \\cdot ${phi} = ${answer}$ 个。`,
+      mistakes: [
+        why(phi, `That counts a single block of $${n}$, not all $${m}$ blocks.`, `那只数了一段长 $${n}$ 的区间，而不是全部 $${m}$ 段。`),
+        why(N - answer, `That counts the integers that share a factor with $${n}$.`, `那数的是与 $${n}$ 有公因数的整数。`),
+        why(
+          totient(N),
+          `That is $\\varphi(${N})$, which also leaves out integers that share a factor with $${m}$ but not with $${n}$.`,
+          `那是 $\\varphi(${N})$，它还去掉了与 $${m}$ 有公因数、却与 $${n}$ 互素的整数。`,
+        ),
+        why(answer + m, "That counts one extra integer in each block.", "那是每段都多数了一个整数。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split the range into blocks", "把区间分段"],
+            t(
+              `$${N} = ${n} \\cdot ${m}$, so the range is $${m}$ blocks of $${n}$ consecutive integers.`,
+              `$${N} = ${n} \\cdot ${m}$，所以这个区间是 $${m}$ 段连续 $${n}$ 个整数。`,
+            ),
+          ],
+          [
+            ["Count one block", "数一段"],
+            phi <= 12
+              ? t(
+                  `The remainders coprime to $${n}$ are $${residues.join(", ")}$, so each block holds $\\varphi(${n}) = ${phi}$.`,
+                  `与 $${n}$ 互素的余数是 $${residues.join(", ")}$，所以每段有 $\\varphi(${n}) = ${phi}$ 个。`,
+                )
+              : t(`Each block holds $\\varphi(${n}) = ${phi}$.`, `每段有 $\\varphi(${n}) = ${phi}$ 个。`),
+          ],
+          [["Multiply", "相乘"], t(`$${m} \\cdot ${phi} = ${answer}$.`, `$${m} \\cdot ${phi} = ${answer}$。`)],
+        ],
+        t(
+          `Removing the multiples of each prime factor of $${n}$ from all $${N}$ integers gives $${N} \\cdot ${fractions} = ${answer}$.`,
+          `从全部 $${N}$ 个整数中去掉 $${n}$ 的每个质因数的倍数，得 $${N} \\cdot ${fractions} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -486,25 +690,57 @@ const orderModN: KnowledgePointDef = {
   id: "the-order-of-a-number-modulo-n",
   title: t("The order of a number modulo n", "数模 n 的阶"),
   explanation: t(
-    "Euler's theorem guarantees that $a^{\\varphi(n)}$ leaves remainder one, but a smaller power may already do so. The smallest such positive exponent is called the order of $a$ modulo $n$, and it always divides $\\varphi(n)$. Knowing the order is what lets you reduce an exponent as far as it can possibly go.",
-    "欧拉定理保证 $a^{\\varphi(n)}$ 余一，但更小的幂可能已经余一。满足这一点的最小正指数叫作 $a$ 模 $n$ 的阶，它总是整除 $\\varphi(n)$。知道了阶，才能把指数化简到最小。",
+    "Euler's theorem guarantees that $a^{\\varphi(n)}$ leaves remainder one, but a smaller power may already do so. The smallest such positive exponent is called the order of $a$ modulo $n$, and it always divides $\\varphi(n)$. Knowing the order is what lets you reduce an exponent as far as it can possibly go. Modulo $26$, the powers of $3$ are $3$, $9$, $27 \\equiv 1$, so $3$ has order $3$, although $\\varphi(26) = 12$.\n\n> **Watch out.** The order is the first exponent that gives remainder one. $\\varphi(n)$, $n - 1$ and every multiple of the order give one as well, but they need not be the smallest.",
+    "欧拉定理保证 $a^{\\varphi(n)}$ 余一，但更小的幂可能已经余一。满足这一点的最小正指数叫作 $a$ 模 $n$ 的阶，它总是整除 $\\varphi(n)$。知道了阶，才能把指数化简到最小。模 $26$ 时，$3$ 的幂依次是 $3$、$9$、$27 \\equiv 1$，所以 $3$ 的阶是 $3$，尽管 $\\varphi(26) = 12$。\n\n> **注意。** 阶是第一个给出余数一的指数。$\\varphi(n)$ 以及阶的每个倍数也都给出一，但它们不一定是最小的。",
   ),
   generate(rng) {
     const n = rng.int(7, 25);
     const a = rng.pick(range(2, n - 2).filter((i) => gcd(i, n) === 1));
     const powers = powersMod(a, n);
     const answer = powers.length;
+    const phi = totient(n);
+    const list = powers.map((r, i) => `${pow(a, i + 1)} \\equiv ${r}`).join(", \\; ");
     return numberProblem({
       prompt: t(
-        `What is the smallest positive integer $k$ for which $${a}^k$ leaves remainder 1 on division by ${n}?`,
-        `使 $${a}^k$ 除以 ${n} 余 1 的最小正整数 $k$ 是多少？`,
+        `What is the smallest positive integer $k$ for which $${a}^k$ leaves remainder $1$ on division by $${n}$?`,
+        `使 $${a}^k$ 除以 $${n}$ 余 $1$ 的最小正整数 $k$ 是多少？`,
       ),
       answer,
       solveFor: "k",
-      wrong: [totient(n), n - 1, 2 * answer],
-      solution: t(
-        `The powers of ${a} leave the remainders ${powers.join(", ")}. The remainder 1 first appears at the power ${answer}, and ${answer} divides $\\varphi(${n}) = ${totient(n)}$.`,
-        `${a} 的幂的余数依次是 ${powers.join(", ")}。余数 1 第一次出现在第 ${answer} 次幂，并且 ${answer} 整除 $\\varphi(${n}) = ${totient(n)}$。`,
+      mistakes: [
+        why(
+          phi,
+          `That is $\\varphi(${n}) = ${phi}$, which Euler's theorem guarantees, but a smaller power already gives $1$.`,
+          `那是 $\\varphi(${n}) = ${phi}$，欧拉定理保证它可行，但更小的幂已经余 $1$。`,
+        ),
+        why(
+          n - 1,
+          `That is $n - 1 = ${n - 1}$, the exponent of Fermat's little theorem, which need not even give $1$ when $${n}$ is not prime.`,
+          `那是 $n - 1 = ${n - 1}$，费马小定理的指数；$${n}$ 不是质数时它甚至不一定余 $1$。`,
+        ),
+        why(
+          2 * answer,
+          `That is twice the order: $${a}^{${2 * answer}}$ also gives $1$, but it is not the smallest such power.`,
+          `那是阶的两倍：$${a}^{${2 * answer}}$ 也余 $1$，但它不是最小的。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["List the powers", "列出各次幂"], t(`Modulo $${n}$: $${list}$.`, `模 $${n}$：$${list}$。`)],
+          [
+            ["Find the first remainder of $1$", "找第一个余 $1$ 的幂"],
+            t(`It is $${pow(a, answer)}$, so $k = ${answer}$.`, `它是 $${pow(a, answer)}$，所以 $k = ${answer}$。`),
+          ],
+        ],
+        phi === answer
+          ? t(
+              `The order must divide $\\varphi(${n}) = ${phi}$, and here it equals it.`,
+              `阶必须整除 $\\varphi(${n}) = ${phi}$，这里恰好等于它。`,
+            )
+          : t(
+              `The order must divide $\\varphi(${n}) = ${phi}$, and indeed $${phi} = ${answer} \\cdot ${phi / answer}$.`,
+              `阶必须整除 $\\varphi(${n}) = ${phi}$，确实 $${phi} = ${answer} \\cdot ${phi / answer}$。`,
+            ),
       ),
     });
   },
@@ -514,24 +750,62 @@ const linearCipherKeys: KnowledgePointDef = {
   id: "counting-keys-of-a-linear-cipher",
   title: t("Counting keys of a linear cipher", "线性密码的密钥个数"),
   explanation: t(
-    "A linear cipher $E(x) = ax + b$ can only be decrypted if $a$ has an inverse modulo the alphabet size $m$, which requires $a$ to be coprime to $m$. The shift $b$ may be anything. So the number of keys is $m\\varphi(m)$, and for a small alphabet the cipher can be broken simply by trying them all.",
-    "线性密码 $E(x) = ax + b$ 要能解密，$a$ 必须在模字母表大小 $m$ 下有逆元，这要求 $a$ 与 $m$ 互素。平移量 $b$ 可以任取。所以密钥个数是 $m\\varphi(m)$，字母表较小时，只要逐个尝试就能破解。",
+    "A linear cipher $E(x) = ax + b$ can only be decrypted if $a$ has an inverse modulo the alphabet size $m$, which requires $a$ to be coprime to $m$. The shift $b$ may be anything. So the number of keys is $m\\varphi(m)$, and for a small alphabet the cipher can be broken simply by trying them all. On an alphabet of $8$ symbols the multiplier must be $1$, $3$, $5$ or $7$, so there are $4 \\cdot 8 = 32$ keys.\n\n> **Watch out.** A nonzero multiplier is not enough: it must be coprime to $m$. The shift, on the other hand, is free, $b = 0$ included.",
+    "线性密码 $E(x) = ax + b$ 要能解密，$a$ 必须在模字母表大小 $m$ 下有逆元，这要求 $a$ 与 $m$ 互素。平移量 $b$ 可以任取。所以密钥个数是 $m\\varphi(m)$，字母表较小时，只要逐个尝试就能破解。在 $8$ 个符号的字母表上，乘数只能是 $1$、$3$、$5$ 或 $7$，所以有 $4 \\cdot 8 = 32$ 个密钥。\n\n> **注意。** 乘数非零还不够，它必须与 $m$ 互素。而平移量可以任取，包括 $b = 0$。",
   ),
   generate(rng) {
     const m = rng.int(10, 50);
     const phi = totient(m);
     const answer = m * phi;
+    const primes = range(2, m).filter((p) => m % p === 0 && totient(p) === p - 1);
+    const fractions = primes.map((p) => `\\frac{${p - 1}}{${p}}`).join(" \\cdot ");
     return numberProblem({
       prompt: t(
-        `How many keys $(a, b)$ does the linear cipher $E(x) = ax + b$ have on an alphabet of ${m} symbols, if every key must allow decryption?`,
-        `在 ${m} 个符号的字母表上，线性密码 $E(x) = ax + b$ 有多少个密钥 $(a, b)$？要求每个密钥都能解密。`,
+        `How many keys $(a, b)$ does the linear cipher $E(x) = ax + b$ have on an alphabet of $${m}$ symbols, if every key must allow decryption?`,
+        `在 $${m}$ 个符号的字母表上，线性密码 $E(x) = ax + b$ 有多少个密钥 $(a, b)$？要求每个密钥都能解密。`,
       ),
       answer,
       form: "integer",
-      wrong: [m * m, m * (m - 1), phi],
-      solution: t(
-        `The multiplier must be coprime to ${m}, which allows $\\varphi(${m}) = ${phi}$ values, and the shift has ${m} values. That makes $${phi} \\cdot ${m} = ${answer}$ keys.`,
-        `乘数必须与 ${m} 互素，有 $\\varphi(${m}) = ${phi}$ 种取法，平移量有 ${m} 种取法。所以有 $${phi} \\cdot ${m} = ${answer}$ 个密钥。`,
+      mistakes: [
+        why(
+          m * m,
+          `That lets the multiplier be anything, but only multipliers coprime to $${m}$ can be undone.`,
+          `那是让乘数任取，但只有与 $${m}$ 互素的乘数才能还原。`,
+        ),
+        why(
+          m * (m - 1),
+          `That allows every nonzero multiplier, but only the $${phi}$ coprime to $${m}$ can be undone.`,
+          `那是允许所有非零乘数，但只有与 $${m}$ 互素的 $${phi}$ 个才能还原。`,
+        ),
+        why(phi, `That counts only the multipliers and leaves out the $${m}$ shifts.`, `那只数了乘数，漏掉了 $${m}$ 种平移量。`),
+        why(phi * (m - 1), "That leaves out the shift $b = 0$, which is allowed.", "那是漏掉了平移量 $b = 0$，而它是允许的。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the multipliers", "数乘数"],
+            t(
+              `$a$ must be coprime to $${m}$: $\\varphi(${m}) = ${m} \\cdot ${fractions} = ${phi}$ choices.`,
+              `$a$ 必须与 $${m}$ 互素：$\\varphi(${m}) = ${m} \\cdot ${fractions} = ${phi}$ 种取法。`,
+            ),
+          ],
+          [
+            ["Count the shifts and multiply", "数平移量并相乘"],
+            t(
+              `$b$ may be any of the $${m}$ symbols, so there are $${phi} \\cdot ${m} = ${answer}$ keys.`,
+              `$b$ 可以是 $${m}$ 个符号中的任何一个，所以有 $${phi} \\cdot ${m} = ${answer}$ 个密钥。`,
+            ),
+          ],
+        ],
+        phi === m - 1
+          ? t(
+              `$${m}$ is prime, so every multiplier from $1$ to $${m - 1}$ is coprime to it: $${m - 1} \\cdot ${m} = ${answer}$.`,
+              `$${m}$ 是质数，所以 $1$ 到 $${m - 1}$ 的每个乘数都与它互素：$${m - 1} \\cdot ${m} = ${answer}$。`,
+            )
+          : t(
+              `Of the $${m * m}$ pairs, the $${m - phi}$ multipliers sharing a factor with $${m}$ spoil $${(m - phi) * m}$, and $${m * m} - ${(m - phi) * m} = ${answer}$.`,
+              `在 $${m * m}$ 对中，与 $${m}$ 有公因数的 $${m - phi}$ 个乘数作废了 $${(m - phi) * m}$ 对，而 $${m * m} - ${(m - phi) * m} = ${answer}$。`,
+            ),
       ),
     });
   },
@@ -541,8 +815,8 @@ const discreteLog: KnowledgePointDef = {
   id: "recovering-a-private-exponent-by-search",
   title: t("Recovering a private exponent by search", "通过搜索恢复私有指数"),
   explanation: t(
-    "An eavesdropper on the Diffie–Hellman protocol sees the prime, the base and the public values. Finding a private exponent from these is the discrete logarithm problem. With a small prime, one can simply list powers of the base until the public value appears. The protocol is secure only because this search is hopeless for a huge prime.",
-    "窃听迪菲–赫尔曼协议的人能看到素数、底和公开值。由这些求私有指数，就是离散对数问题。素数很小时，只要依次列出底的幂，直到公开值出现。这个协议之所以安全，只是因为素数巨大时这种搜索毫无希望。",
+    "An eavesdropper on the Diffie–Hellman protocol sees the prime, the base and the public values. Finding a private exponent from these is the discrete logarithm problem. With a small prime, one can simply list powers of the base until the public value appears. The protocol is secure only because this search is hopeless for a huge prime. With $p = 53$, $g = 2$ and the public value $11$, the powers $2, 4, 8, 16, 32$ stay below $53$, and $2^6 = 64 = 53 + 11$, so the private exponent is $6$.\n\n> **Watch out.** The answer is the exponent, not the public value; and stop at the first power that matches, since adding the order of $g$ to it gives the same value again.",
+    "窃听迪菲–赫尔曼协议的人能看到素数、底和公开值。由这些求私有指数，就是离散对数问题。素数很小时，只要依次列出底的幂，直到公开值出现。这个协议之所以安全，只是因为素数巨大时这种搜索毫无希望。取 $p = 53$、$g = 2$，公开值为 $11$：幂 $2, 4, 8, 16, 32$ 都小于 $53$，而 $2^6 = 64 = 53 + 11$，所以私有指数是 $6$。\n\n> **注意。** 答案是指数，而不是公开值；要在第一个相符的幂处停下，因为再加上 $g$ 的阶会再次得到同一个值。",
   ),
   generate(rng) {
     const options = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43].flatMap((p) =>
@@ -553,20 +827,52 @@ const discreteLog: KnowledgePointDef = {
     );
     const [p, g, x] = rng.pick(options);
     const A = powMod(g, x, p);
-    const list = range(2, x)
-      .map((j) => `${g}^{${j}} \\equiv ${powMod(g, j, p)}`)
-      .join(", \\quad ");
+    const list = range(1, x)
+      .map((j) => `${pow(g, j)} \\equiv ${powMod(g, j, p)}`)
+      .join(", \\; ");
+    const order = powersMod(g, p).length;
+    const big = g ** x;
     return numberProblem({
       prompt: t(
-        `In the Diffie–Hellman protocol with prime ${p} and base ${g}, the public value is ${A}. Find the smallest positive private exponent that gives this value.`,
-        `在素数为 ${p}、底为 ${g} 的迪菲–赫尔曼协议中，公开值是 ${A}。求给出这个值的最小正私有指数。`,
+        `In the Diffie–Hellman protocol with prime $${p}$ and base $${g}$, the public value is $${A}$. Find the smallest positive private exponent that gives this value.`,
+        `在素数为 $${p}$、底为 $${g}$ 的迪菲–赫尔曼协议中，公开值是 $${A}$。求给出这个值的最小正私有指数。`,
       ),
       answer: x,
       form: "integer",
-      wrong: [x + 1, p - 1 - x, A],
-      solution: t(
-        `List the powers modulo ${p}: $${list}$. The value ${A} first appears at the exponent ${x}.`,
-        `列出模 ${p} 的幂：$${list}$。值 ${A} 第一次出现在指数 ${x} 处。`,
+      mistakes: [
+        why(x + 1, "That is one power past the first match.", "那是越过第一个相符的幂又多走了一步。"),
+        why(
+          p - 1 - x,
+          `That exponent gives the inverse of $${A}$, since $${g}^{${p - 1}} \\equiv 1$; it does not give $${A}$ itself.`,
+          `这个指数给出的是 $${A}$ 的逆，因为 $${g}^{${p - 1}} \\equiv 1$；它给不出 $${A}$ 本身。`,
+        ),
+        why(A, "That is the public value itself, not the exponent that produces it.", "那是公开值本身，而不是产生它的指数。"),
+        why(
+          x + order,
+          `That also gives $${A}$, but it is not the smallest exponent: the powers repeat every $${order}$ steps.`,
+          `它也给出 $${A}$，但不是最小的指数：幂每 $${order}$ 步重复一次。`,
+        ),
+      ].filter((m, i, all) => m.value !== x && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["List the powers", "列出各次幂"], t(`Modulo $${p}$: $${list}$.`, `模 $${p}$：$${list}$。`)],
+          [
+            ["Stop at the public value", "在公开值处停下"],
+            t(
+              `$${A}$ first appears at $${pow(g, x)}$, so the private exponent is $${x}$.`,
+              `$${A}$ 第一次出现在 $${pow(g, x)}$，所以私有指数是 $${x}$。`,
+            ),
+          ],
+        ],
+        big < p
+          ? t(
+              `$${g}^{${x}} = ${big}$ is already below $${p}$, so it is the public value itself.`,
+              `$${g}^{${x}} = ${big}$ 已经小于 $${p}$，所以它就是公开值本身。`,
+            )
+          : t(
+              `$${g}^{${x}} = ${big} = ${Math.floor(big / p) === 1 ? `${p}` : `${p} \\cdot ${Math.floor(big / p)}`} + ${A}$.`,
+              `$${g}^{${x}} = ${big} = ${Math.floor(big / p) === 1 ? `${p}` : `${p} \\cdot ${Math.floor(big / p)}`} + ${A}$。`,
+            ),
       ),
     });
   },
@@ -576,8 +882,8 @@ const rsaFactorFromTotient: KnowledgePointDef = {
   id: "factoring-an-rsa-modulus-from-its-totient",
   title: t("Factoring an RSA modulus from its totient", "由欧拉函数值分解 RSA 模数"),
   explanation: t(
-    "For $n = pq$, we have $\\varphi(n) = n - (p + q) + 1$. So anyone who learns $\\varphi(n)$ also learns the sum $p + q$, and the primes are then the two roots of a quadratic with a known sum and product. Keeping $\\varphi(n)$ secret is therefore just as important as keeping the primes secret.",
-    "对 $n = pq$，有 $\\varphi(n) = n - (p + q) + 1$。所以知道 $\\varphi(n)$ 的人也就知道了和 $p + q$，而这两个素数就是已知和与积的二次方程的两根。因此 $\\varphi(n)$ 的保密与素数本身的保密同样重要。",
+    "For $n = pq$, we have $\\varphi(n) = n - (p + q) + 1$. So anyone who learns $\\varphi(n)$ also learns the sum $p + q$, and the primes are then the two roots of a quadratic with a known sum and product. Keeping $\\varphi(n)$ secret is therefore just as important as keeping the primes secret. For $n = 3233$ and $\\varphi(n) = 3120$ the sum is $3233 - 3120 + 1 = 114$, and $x^2 - 114x + 3233 = (x - 53)(x - 61)$ gives the primes $53$ and $61$.\n\n> **Watch out.** The sum is $n - \\varphi(n) + 1$; forgetting the $+ 1$ makes the quadratic fail to factor. The sum itself is not one of the primes.",
+    "对 $n = pq$，有 $\\varphi(n) = n - (p + q) + 1$。所以知道 $\\varphi(n)$ 的人也就知道了和 $p + q$，而这两个素数就是已知和与积的二次方程的两根。因此 $\\varphi(n)$ 的保密与素数本身的保密同样重要。对 $n = 3233$、$\\varphi(n) = 3120$，和是 $3233 - 3120 + 1 = 114$，而 $x^2 - 114x + 3233 = (x - 53)(x - 61)$ 给出两个素数 $53$ 和 $61$。\n\n> **注意。** 和是 $n - \\varphi(n) + 1$；漏掉 $+ 1$ 会使二次式无法分解。和本身并不是其中的素数。",
   ),
   generate(rng) {
     const primes = [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
@@ -586,6 +892,7 @@ const rsaFactorFromTotient: KnowledgePointDef = {
     const n = p * q;
     const phi = (p - 1) * (q - 1);
     const sum = p + q;
+    const gap = q - p;
     return numberProblem({
       prompt: t(
         `An RSA modulus $n = ${n}$ is a product of two primes, and $\\varphi(n) = ${phi}$. Find the larger prime.`,
@@ -593,10 +900,43 @@ const rsaFactorFromTotient: KnowledgePointDef = {
       ),
       answer: q,
       form: "integer",
-      wrong: [p, sum, n - phi],
-      solution: t(
-        `The sum of the primes is $${n} - ${phi} + 1 = ${sum}$. They are the roots of $${poly([1, "x^2"], [-sum, "x"], [n, ""])} = 0$, namely ${p} and ${q}.`,
-        `两个素数之和是 $${n} - ${phi} + 1 = ${sum}$。它们是 $${poly([1, "x^2"], [-sum, "x"], [n, ""])} = 0$ 的两根，即 ${p} 和 ${q}。`,
+      mistakes: [
+        why(p, "That is the smaller of the two primes.", "那是两个素数中较小的一个。"),
+        why(sum, `That is the sum $p + q = ${sum}$, not one of the primes.`, `那是和 $p + q = ${sum}$，而不是其中一个素数。`),
+        why(
+          n - phi,
+          `That is $n - \\varphi(n) = ${n - phi}$, which is $p + q - 1$, one less than the sum and not a prime factor.`,
+          `那是 $n - \\varphi(n) = ${n - phi}$，即 $p + q - 1$，比和少一，也不是质因数。`,
+        ),
+      ].filter((m, i, all) => m.value !== q && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the sum of the primes", "求两个素数之和"],
+            t(
+              `$p + q = n - \\varphi(n) + 1 = ${n} - ${phi} + 1 = ${sum}$.`,
+              `$p + q = n - \\varphi(n) + 1 = ${n} - ${phi} + 1 = ${sum}$。`,
+            ),
+          ],
+          [
+            ["Find their difference", "求它们的差"],
+            t(
+              `$(q - p)^2 = (p + q)^2 - 4pq = ${sum * sum} - ${4 * n} = ${gap * gap}$, so $q - p = ${gap}$.`,
+              `$(q - p)^2 = (p + q)^2 - 4pq = ${sum * sum} - ${4 * n} = ${gap * gap}$，所以 $q - p = ${gap}$。`,
+            ),
+          ],
+          [
+            ["Solve for the larger prime", "解出较大的素数"],
+            t(
+              `$q = \\frac{${sum} + ${gap}}{2} = ${q}$, and $p = ${p}$; they are the roots of $${poly([1, "x^2"], [-sum, "x"], [n, ""])} = 0$.`,
+              `$q = \\frac{${sum} + ${gap}}{2} = ${q}$，$p = ${p}$；它们是 $${poly([1, "x^2"], [-sum, "x"], [n, ""])} = 0$ 的两根。`,
+            ),
+          ],
+        ],
+        t(
+          `$${p} \\cdot ${q} = ${n}$ and $${p - 1} \\cdot ${q - 1} = ${phi}$.`,
+          `$${p} \\cdot ${q} = ${n}$，且 $${p - 1} \\cdot ${q - 1} = ${phi}$。`,
+        ),
       ),
     });
   },
@@ -1572,8 +1912,8 @@ const integersWithBits: KnowledgePointDef = {
   id: "integers-with-a-given-number-of-binary-digits-and-ones",
   title: t("Integers with a given number of binary digits and ones", "给定二进制位数和 1 的个数的整数"),
   explanation: t(
-    "The leading digit of a positive binary integer is always 1, because a leading 0 would simply not be written. So in an integer with $n$ digits and $k$ ones, one of the ones is already placed. The remaining $k - 1$ ones can occupy any of the other $n - 1$ positions, which gives a binomial coefficient with both numbers reduced by one.",
-    "正二进制整数的最高位总是 1，因为最高位的 0 根本不会写出来。所以在 $n$ 位、含 $k$ 个 1 的整数中，已经有一个 1 的位置确定了。其余 $k - 1$ 个 1 可以占据另外 $n - 1$ 个位置中的任意位置，于是得到两个数都减一的二项式系数。",
+    "The leading digit of a positive binary integer is always $1$, because a leading $0$ would simply not be written. So in an integer with $n$ digits and $k$ ones, one of the ones is already placed. The remaining $k - 1$ ones can occupy any of the other $n - 1$ positions, which gives a binomial coefficient with both numbers reduced by one. With $20$ digits and $3$ ones, the other two ones go among the last $19$ digits in $\\binom{19}{2} = 171$ ways.\n\n> **Watch out.** Choose $k - 1$ places among $n - 1$, not $k$ among $n$: the leading place is not free, since it must hold a $1$.",
+    "正二进制整数的最高位总是 $1$，因为最高位的 $0$ 根本不会写出来。所以在 $n$ 位、含 $k$ 个 1 的整数中，已经有一个 1 的位置确定了。其余 $k - 1$ 个 1 可以占据另外 $n - 1$ 个位置中的任意位置，于是得到两个数都减一的二项式系数。$20$ 位、含 $3$ 个 1 时，另外两个 1 放在后 $19$ 位中，有 $\\binom{19}{2} = 171$ 种方法。\n\n> **注意。** 要在 $n - 1$ 个位置中选 $k - 1$ 个，而不是在 $n$ 个中选 $k$ 个：最高位不是自由的，它必须是 $1$。",
   ),
   generate(rng) {
     const n = rng.int(3, 16);
@@ -1581,15 +1921,60 @@ const integersWithBits: KnowledgePointDef = {
     const answer = binom(n - 1, k - 1);
     return numberProblem({
       prompt: t(
-        `How many positive integers have exactly ${n} binary digits, with no leading zeros, of which exactly ${k} ${k === 1 ? "is" : "are"} 1?`,
-        `有多少个正整数恰有 ${n} 位二进制数字（最高位不为零），其中恰有 ${k} 个 1？`,
+        `How many positive integers have exactly $${n}$ binary digits, with no leading zeros, of which exactly $${k}$ ${k === 1 ? "is" : "are"} $1$?`,
+        `有多少个正整数恰有 $${n}$ 位二进制数字（最高位不为零），其中恰有 $${k}$ 个 $1$？`,
       ),
       answer,
       form: "integer",
-      wrong: [binom(n, k), 2 ** (n - 1), n - 1, answer + 1],
-      solution: t(
-        `The first digit is 1, and the other ones go among the remaining ${n - 1} digits. Their places can be chosen in $\\binom{${n - 1}}{${k - 1}} = ${answer}$ ways.`,
-        `最高位是 1，其余的 1 放在另外 ${n - 1} 位中。选择它们的位置有 $\\binom{${n - 1}}{${k - 1}} = ${answer}$ 种方法。`,
+      mistakes: [
+        why(
+          binom(n, k),
+          `That chooses $${k}$ places among all $${n}$, allowing a leading $0$.`,
+          `那是在全部 $${n}$ 位中选 $${k}$ 个，允许了最高位为 $0$。`,
+        ),
+        why(
+          2 ** (n - 1),
+          `That counts every $${n}$-digit integer, whatever its number of ones.`,
+          `那数的是所有 $${n}$ 位整数，不管其中有几个 1。`,
+        ),
+        ...(k < n
+          ? [
+              why(
+                binom(n - 1, k),
+                `That puts all $${k}$ ones among the last $${n - 1}$ digits, forgetting the $1$ already in front.`,
+                `那是把全部 $${k}$ 个 1 都放进后 $${n - 1}$ 位，忘了最高位已经是 $1$。`,
+              ),
+            ]
+          : []),
+        why(n - 1, "That counts the free places, not the ways to fill them.", "那数的是可自由选择的位置，而不是填法。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Place the leading one", "放好最高位的 1"],
+            t(
+              k === 1
+                ? `The first digit is $1$, and no ones are left for the other $${n - 1}$ digits.`
+                : `The first digit is $1$, leaving $${k - 1}$ ${k === 2 ? "one" : "ones"} for the other $${n - 1}$ digits.`,
+              k === 1 ? `最高位是 $1$，其余 $${n - 1}$ 位不再有 1。` : `最高位是 $1$，其余 $${n - 1}$ 位中还要放 $${k - 1}$ 个 1。`,
+            ),
+          ],
+          [
+            ["Choose their places", "选出它们的位置"],
+            t(`$\\binom{${n - 1}}{${k - 1}} = ${answer}$.`, `$\\binom{${n - 1}}{${k - 1}} = ${answer}$。`),
+          ],
+        ],
+        k === 1
+          ? t(
+              `The only such integer is $2^{${n - 1}}$, a $1$ followed by $${n - 1}$ zeros.`,
+              `唯一这样的整数是 $2^{${n - 1}}$，即 $1$ 后跟 $${n - 1}$ 个零。`,
+            )
+          : k === n
+            ? t(`The only such integer is $2^{${n}} - 1$, all ones.`, `唯一这样的整数是 $2^{${n}} - 1$，全是 1。`)
+            : t(
+                `Choosing instead the places of the $${n - k}$ zeros among the last $${n - 1}$ digits gives $\\binom{${n - 1}}{${n - k}} = ${answer}$ as well.`,
+                `改为在后 $${n - 1}$ 位中选出 $${n - k}$ 个零的位置，同样得 $\\binom{${n - 1}}{${n - k}} = ${answer}$。`,
+              ),
       ),
     });
   },
@@ -1599,14 +1984,16 @@ const dividingByPowerOfTwo: KnowledgePointDef = {
   id: "dividing-by-a-power-of-two-in-binary",
   title: t("Dividing by a power of two in binary", "二进制中除以 2 的幂"),
   explanation: t(
-    "Dividing by 2 in binary moves every digit one place to the right, just as dividing by 10 does in decimal. So dividing by $2^k$, which is written as a 1 followed by $k$ zeros, removes the last $k$ digits of the number. Those digits form the remainder, and the digits left over form the quotient. No long division is needed at all.",
-    "在二进制中除以 2，就是把每一位右移一位，正如十进制中除以 10。所以除以 $2^k$（写作 1 后跟 $k$ 个零），就是去掉数的最后 $k$ 位。这些位构成余数，留下的位构成商。根本不需要长除法。",
+    "Dividing by $2$ in binary moves every digit one place to the right, just as dividing by $10$ does in decimal. So dividing by $2^k$, which is written as a $1$ followed by $k$ zeros, removes the last $k$ digits of the number. Those digits form the remainder, and the digits left over form the quotient. No long division is needed at all. Dividing $\\mathrm{10110111001}_{2} = 1465$ by $\\mathrm{10000000}_{2} = 2^7$ cuts off the last seven digits $\\mathrm{0111001}_{2} = 57$, leaving the quotient $\\mathrm{1011}_{2} = 11$; indeed $128 \\cdot 11 + 57 = 1465$.\n\n> **Watch out.** Cut off as many digits as the divisor has zeros, not as many as it has digits. The digits cut off are the remainder, not the quotient.",
+    "在二进制中除以 $2$，就是把每一位右移一位，正如十进制中除以 $10$。所以除以 $2^k$（写作 $1$ 后跟 $k$ 个零），就是去掉数的最后 $k$ 位。这些位构成余数，留下的位构成商。根本不需要长除法。$\\mathrm{10110111001}_{2} = 1465$ 除以 $\\mathrm{10000000}_{2} = 2^7$，去掉最后七位 $\\mathrm{0111001}_{2} = 57$，留下商 $\\mathrm{1011}_{2} = 11$；确实 $128 \\cdot 11 + 57 = 1465$。\n\n> **注意。** 去掉的位数等于除数中零的个数，而不是除数的位数。去掉的那些位是余数，不是商。",
   ),
   generate(rng) {
     const k = rng.int(2, 6);
     const x = rng.int(100, 4000);
     const divisor = 2 ** k;
     const answer = Math.floor(x / divisor);
+    const r = x % divisor;
+    const bits = x.toString(2);
     return numberProblem({
       prompt: t(
         `Find the quotient, ignoring the remainder, when $${binary(x)}$ is divided by $${binary(divisor)}$. Write it in decimal.`,
@@ -1614,10 +2001,46 @@ const dividingByPowerOfTwo: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.floor(x / 2 ** (k - 1)), Math.floor(x / 2 ** (k + 1)), x % divisor, x * divisor],
-      solution: t(
-        `The divisor is $2^{${k}}$, so remove the last ${k} digits. This leaves $${binary(answer)} = ${answer}$.`,
-        `除数是 $2^{${k}}$，所以去掉最后 ${k} 位。留下 $${binary(answer)} = ${answer}$。`,
+      mistakes: [
+        why(
+          Math.floor(x / 2 ** (k - 1)),
+          `That cuts off only $${k - 1}$ digits, but the divisor has $${k}$ zeros.`,
+          `那只去掉了 $${k - 1}$ 位，但除数有 $${k}$ 个零。`,
+        ),
+        why(
+          Math.floor(x / 2 ** (k + 1)),
+          `That cuts off $${k + 1}$ digits, counting the $1$ of the divisor as well as its zeros.`,
+          `那去掉了 $${k + 1}$ 位，把除数的 $1$ 也和零一起算上了。`,
+        ),
+        why(r, "That is the remainder, made by the digits cut off, not the quotient.", "那是余数，由去掉的那些位组成，而不是商。"),
+        why(
+          x * divisor,
+          `That multiplies, appending $${k}$ zeros instead of cutting off digits.`,
+          `那是做了乘法，添上 $${k}$ 个零，而不是去掉若干位。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Read the divisor", "读出除数"],
+            t(
+              `$${binary(divisor)} = 2^{${k}}$, a $1$ followed by $${k}$ zeros, so cut off the last $${k}$ digits.`,
+              `$${binary(divisor)} = 2^{${k}}$，即 $1$ 后跟 $${k}$ 个零，所以去掉最后 $${k}$ 位。`,
+            ),
+          ],
+          [
+            ["Cut off the digits", "去掉这些位"],
+            t(
+              `$\\mathrm{${bits}}_{2}$ splits into $\\mathrm{${bits.slice(0, -k)}}_{2}$ and the remainder $\\mathrm{${bits.slice(-k)}}_{2} = ${r}$.`,
+              `$\\mathrm{${bits}}_{2}$ 分成 $\\mathrm{${bits.slice(0, -k)}}_{2}$ 和余数 $\\mathrm{${bits.slice(-k)}}_{2} = ${r}$。`,
+            ),
+          ],
+          [["Convert the quotient", "把商化成十进制"], t(`$${binary(answer)} = ${answer}$.`, `$${binary(answer)} = ${answer}$。`)],
+        ],
+        t(
+          `$${answer === 1 ? divisor : `${divisor} \\cdot ${answer}`}${r === 0 ? "" : ` + ${r}`} = ${x}$, which is $${binary(x)}$.`,
+          `$${answer === 1 ? divisor : `${divisor} \\cdot ${answer}`}${r === 0 ? "" : ` + ${r}`} = ${x}$，正是 $${binary(x)}$。`,
+        ),
       ),
     });
   },
@@ -1627,8 +2050,8 @@ const hexOnes: KnowledgePointDef = {
   id: "counting-the-ones-of-a-hexadecimal-number",
   title: t("Counting the ones of a hexadecimal number", "计算十六进制数中 1 的个数"),
   explanation: t(
-    "Each hexadecimal digit corresponds to exactly four binary digits, because $16 = 2^4$. So a hexadecimal numeral converts to binary one digit at a time, with no carrying and no arithmetic on the whole number. This makes questions about individual bits easy to answer. In particular, the number of ones in the whole number is the sum of the counts for each digit.",
-    "每个十六进制数字恰好对应四个二进制数字，因为 $16 = 2^4$。所以十六进制数可以逐位转换成二进制，不需要进位，也不需要对整个数做运算。这使得关于单个位的问题很容易回答。特别地，整个数中 1 的个数，就是每个数字对应个数的和。",
+    "Each hexadecimal digit corresponds to exactly four binary digits, because $16 = 2^4$. So a hexadecimal numeral converts to binary one digit at a time, with no carrying and no arithmetic on the whole number. This makes questions about individual bits easy to answer. In particular, the number of ones in the whole number is the sum of the counts for each digit. For $\\mathrm{3E09C1}_{16} = \\mathrm{0011\\ 1110\\ 0000\\ 1001\\ 1100\\ 0001}_{2}$ the counts are $2 + 3 + 0 + 2 + 2 + 1 = 10$.\n\n> **Watch out.** Count the ones in each digit's four bits, not the digits or their values: $\\mathrm{F}$ holds four ones, while $8$ holds just one.",
+    "每个十六进制数字恰好对应四个二进制数字，因为 $16 = 2^4$。所以十六进制数可以逐位转换成二进制，不需要进位，也不需要对整个数做运算。这使得关于单个位的问题很容易回答。特别地，整个数中 1 的个数，就是每个数字对应个数的和。$\\mathrm{3E09C1}_{16} = \\mathrm{0011\\ 1110\\ 0000\\ 1001\\ 1100\\ 0001}_{2}$ 各位的个数是 $2 + 3 + 0 + 2 + 2 + 1 = 10$。\n\n> **注意。** 要数每个数字四位中的 1，而不是数数字的个数或它们的值：$\\mathrm{F}$ 有四个 1，而 $8$ 只有一个。",
   ),
   generate(rng) {
     const length = rng.int(3, 5);
@@ -1637,17 +2060,36 @@ const hexOnes: KnowledgePointDef = {
     const counts = digits.map((d) => d.toString(2).split("0").join("").length);
     const answer = counts.reduce((a, b) => a + b, 0);
     const parts = digits.map((d) => d.toString(2).padStart(4, "0")).join("\\ ");
+    const digitSum = digits.reduce((a, b) => a + b, 0);
     return numberProblem({
       prompt: t(
-        `How many of the binary digits of $\\mathrm{${numeral}}_{16}$ are 1?`,
-        `$\\mathrm{${numeral}}_{16}$ 的二进制数字中有多少个 1？`,
+        `How many of the binary digits of $\\mathrm{${numeral}}_{16}$ are $1$?`,
+        `$\\mathrm{${numeral}}_{16}$ 的二进制数字中有多少个 $1$？`,
       ),
       answer,
       form: "integer",
-      wrong: [4 * length, 4 * length - answer, length, answer + 1],
-      solution: t(
-        `Digit by digit, the number is $\\mathrm{${parts}}_{2}$, which has ${answer} ${answer === 1 ? "one" : "ones"}.`,
-        `逐位写出，这个数是 $\\mathrm{${parts}}_{2}$，其中有 ${answer} 个 1。`,
+      mistakes: [
+        why(4 * length, "That counts every bit, zeros included.", "那是把所有位都数了，包括零。"),
+        why(4 * length - answer, "That counts the zeros instead of the ones.", "那数的是零而不是 1。"),
+        why(
+          length,
+          "That counts the hexadecimal digits, not the ones in their bits.",
+          "那数的是十六进制数字的个数，而不是它们各位中的 1。",
+        ),
+        why(digitSum, "That adds the values of the digits instead of counting their ones.", "那是把各数字的值相加，而不是数它们中的 1。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Convert digit by digit", "逐位转换"],
+            t(`$\\mathrm{${numeral}}_{16} = \\mathrm{${parts}}_{2}$.`, `$\\mathrm{${numeral}}_{16} = \\mathrm{${parts}}_{2}$。`),
+          ],
+          [["Add the counts", "把个数相加"], t(`$${counts.join(" + ")} = ${answer}$.`, `$${counts.join(" + ")} = ${answer}$。`)],
+        ],
+        t(
+          `There are $${4 * length - answer}$ zeros, and $${answer} + ${4 * length - answer} = ${4 * length}$ accounts for all $${length}$ groups of four bits.`,
+          `零有 $${4 * length - answer}$ 个，而 $${answer} + ${4 * length - answer} = ${4 * length}$ 正好是 $${length}$ 组四位的总数。`,
+        ),
       ),
     });
   },
@@ -1657,8 +2099,8 @@ const placesInPowerBase: KnowledgePointDef = {
   id: "the-number-of-places-of-a-fraction-in-a-power-of-two-base",
   title: t("The number of places of a fraction in a power of two base", "分数在 2 的幂进制下的位数"),
   explanation: t(
-    "A fraction with odd numerator and denominator $2^k$ terminates after exactly $k$ places in base 2. In base 4 or base 8, each digit stands for a block of two or three binary digits. So the binary places are grouped into blocks from the point, and a block that is only partly filled still needs a digit. That is why the count rounds up.",
-    "分子为奇数、分母为 $2^k$ 的分数，在二进制下恰好在 $k$ 位后终止。在四进制或八进制下，每个数字代表两个或三个二进制数字组成的一组。所以从小数点起把二进制位分组，只填了一部分的组仍然需要一个数字。这就是计数要向上取整的原因。",
+    "A fraction with odd numerator and denominator $2^k$ terminates after exactly $k$ places in base $2$. In base $4$ or base $8$, each digit stands for a block of two or three binary digits. So the binary places are grouped into blocks from the point, and a block that is only partly filled still needs a digit. That is why the count rounds up. In base $16$, with blocks of four, $\\frac{3}{2^{10}}$ has $10$ binary places and so $3$ places: $\\frac{3}{1024} = \\frac{12}{16^3} = \\mathrm{0.00C}_{16}$.\n\n> **Watch out.** Round up, not down: a last block that is only partly filled still takes a digit. Group from the point, so the padding zeros go on the right.",
+    "分子为奇数、分母为 $2^k$ 的分数，在二进制下恰好在 $k$ 位后终止。在四进制或八进制下，每个数字代表两个或三个二进制数字组成的一组。所以从小数点起把二进制位分组，只填了一部分的组仍然需要一个数字。这就是计数要向上取整的原因。在十六进制下每组四位，$\\frac{3}{2^{10}}$ 有 $10$ 个二进制位，所以有 $3$ 位：$\\frac{3}{1024} = \\frac{12}{16^3} = \\mathrm{0.00C}_{16}$。\n\n> **注意。** 要向上取整，而不是向下：只填了一部分的最后一组仍要占一位。从小数点起分组，所以补的零在右边。",
   ),
   generate(rng) {
     const k = rng.int(2, 12);
@@ -1667,17 +2109,56 @@ const placesInPowerBase: KnowledgePointDef = {
     const block = rng.int(2, 3);
     const base = 2 ** block;
     const answer = Math.ceil(k / block);
+    const down = Math.floor(k / block);
+    const numerator = m * 2 ** (block * answer - k);
     return numberProblem({
       prompt: t(
-        `How many digits does $\\frac{${m}}{${denominator}}$ have after the point when written in base ${base}?`,
-        `$\\frac{${m}}{${denominator}}$ 用 ${base} 进制写出时，小数点后有多少位？`,
+        `How many digits does $\\frac{${m}}{${denominator}}$ have after the point when written in base $${base}$?`,
+        `$\\frac{${m}}{${denominator}}$ 用 $${base}$ 进制写出时，小数点后有多少位？`,
       ),
       answer,
       form: "integer",
-      wrong: [k, Math.floor(k / block) === answer ? answer + 1 : Math.floor(k / block), k * block, denominator],
-      solution: t(
-        `In base 2 there are ${k} places, because $${denominator} = 2^{${k}}$. Grouping them in blocks of ${block} takes ${answer} ${answer === 1 ? "block" : "blocks"}.`,
-        `在二进制下有 ${k} 位，因为 $${denominator} = 2^{${k}}$。把它们按 ${block} 位一组分组，需要 ${answer} 组。`,
+      mistakes: [
+        why(
+          k,
+          `That is the number of binary places, before grouping them in blocks of $${block}$.`,
+          `那是二进制的位数，还没有按 $${block}$ 位一组分组。`,
+        ),
+        down === answer
+          ? why(
+              answer + 1,
+              `That adds a block too many: the $${k}$ places fill exactly $${answer}$ blocks of $${block}$.`,
+              `那多算了一组：$${k}$ 位恰好填满 $${answer}$ 组，每组 $${block}$ 位。`,
+            )
+          : why(
+              down,
+              "That rounds down, dropping the partly filled last block, which still needs a digit.",
+              "那是向下取整，丢掉了只填了一部分的最后一组，而它仍需要一位。",
+            ),
+        why(k * block, "That multiplies by the block size instead of dividing by it.", "那是乘以每组的位数，而不是除以它。"),
+        why(denominator, "That is the denominator, not a number of places.", "那是分母，而不是位数。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count the binary places", "数二进制位"],
+            t(
+              `$${denominator} = 2^{${k}}$ and $${m}$ is odd, so there are $${k}$ places in base $2$.`,
+              `$${denominator} = 2^{${k}}$，且 $${m}$ 是奇数，所以二进制下有 $${k}$ 位。`,
+            ),
+          ],
+          [
+            ["Group them", "分组"],
+            t(
+              `$${base} = 2^{${block}}$, so group the places in blocks of $${block}$: that takes $${answer}$ ${answer === 1 ? "block" : "blocks"}.`,
+              `$${base} = 2^{${block}}$，所以按 $${block}$ 位一组分组：需要 $${answer}$ 组。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\frac{${m}}{${denominator}} = \\frac{${numerator}}{${pow(base, answer)}}$, and $${numerator}$ is not a multiple of $${base}$, so ${answer === 1 ? "the single place is" : `the last of the $${answer}$ places is`} not zero.`,
+          `$\\frac{${m}}{${denominator}} = \\frac{${numerator}}{${pow(base, answer)}}$，而 $${numerator}$ 不是 $${base}$ 的倍数，所以${answer === 1 ? "这一位" : `这 $${answer}$ 位的最后一位`}不是零。`,
+        ),
       ),
     });
   },
@@ -1687,8 +2168,8 @@ const affineDecrypt: KnowledgePointDef = {
   id: "decrypting-a-letter-of-an-affine-cipher",
   title: t("Decrypting a letter of an affine cipher", "解密仿射密码的字母"),
   explanation: t(
-    "An affine cipher encrypts a letter number $x$ as $y = ax + b$ modulo 26. To undo it, undo the steps in reverse order: subtract $b$, then multiply by the inverse of $a$ modulo 26. The inverse exists exactly when $a$ is coprime to 26, which is why only those values make usable keys. Dividing by $a$ as an ordinary fraction does not work.",
-    "仿射密码把字母编号 $x$ 加密成模 26 的 $y = ax + b$。要还原，就按相反的顺序撤销各步：先减去 $b$，再乘以 $a$ 模 26 的逆。逆存在当且仅当 $a$ 与 26 互素，所以只有这些值才能作为可用的密钥。像普通分数那样除以 $a$ 是行不通的。",
+    "An affine cipher encrypts a letter number $x$ as $y = ax + b$ modulo $26$. To undo it, undo the steps in reverse order: subtract $b$, then multiply by the inverse of $a$ modulo $26$. The inverse exists exactly when $a$ is coprime to $26$, which is why only those values make usable keys. Dividing by $a$ as an ordinary fraction does not work. The same steps work for any alphabet: with $29$ symbols and $y = 3x + 7$, the ciphertext $4$ gives $4 - 7 = -3 \\equiv 26$, and $3^{-1} \\equiv 10$ since $30 \\equiv 1$, so $x \\equiv 10 \\cdot 26 = 260 \\equiv 28 \\pmod{29}$.\n\n> **Watch out.** Subtract $b$ first and multiply by $a^{-1}$ second. Multiplying first, or adding $b$, undoes the wrong steps.",
+    "仿射密码把字母编号 $x$ 加密成模 $26$ 的 $y = ax + b$。要还原，就按相反的顺序撤销各步：先减去 $b$，再乘以 $a$ 模 $26$ 的逆。逆存在当且仅当 $a$ 与 $26$ 互素，所以只有这些值才能作为可用的密钥。像普通分数那样除以 $a$ 是行不通的。同样的步骤适用于任何字母表：$29$ 个符号、$y = 3x + 7$ 时，密文 $4$ 给出 $4 - 7 = -3 \\equiv 26$，而 $3^{-1} \\equiv 10$，因为 $30 \\equiv 1$，所以 $x \\equiv 10 \\cdot 26 = 260 \\equiv 28 \\pmod{29}$。\n\n> **注意。** 先减去 $b$，再乘以 $a^{-1}$。先做乘法，或者加上 $b$，撤销的就不是原来的步骤。",
   ),
   generate(rng) {
     const a = rng.pick([3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]);
@@ -1697,6 +2178,8 @@ const affineDecrypt: KnowledgePointDef = {
     const y = (a * x + b) % 26;
     const inverse = range(1, 25).find((v) => (a * v) % 26 === 1) ?? 1;
     const difference = (((y - b) % 26) + 26) % 26;
+    const product = inverse * difference;
+    const encrypted = a * x + b;
     return numberProblem({
       prompt: t(
         `Letters are numbered $\\mathrm{A} = 0, \\dots, \\mathrm{Z} = 25$. A letter was encrypted as $x \\mapsto ${a}x + ${b} \\pmod{26}$, and the result is $${y}$. Find the original letter's number $x$.`,
@@ -1704,10 +2187,49 @@ const affineDecrypt: KnowledgePointDef = {
       ),
       answer: x,
       form: "integer",
-      wrong: [difference, (a * y + b) % 26, (inverse * y) % 26, (inverse * (y + b)) % 26, (x + 1) % 26],
-      solution: t(
-        `Modulo 26, the inverse of ${a} is ${inverse}, and $${y} - ${b} \\equiv ${difference}$. So $x \\equiv ${inverse} \\cdot ${difference} \\equiv ${x}$.`,
-        `模 26 时，${a} 的逆是 ${inverse}，且 $${y} - ${b} \\equiv ${difference}$。所以 $x \\equiv ${inverse} \\cdot ${difference} \\equiv ${x}$。`,
+      mistakes: [
+        why(
+          difference,
+          `That subtracts $${b}$ but never multiplies by the inverse of $${a}$.`,
+          `那是减去了 $${b}$，却没有乘以 $${a}$ 的逆。`,
+        ),
+        why((a * y + b) % 26, "That encrypts the ciphertext again instead of decrypting it.", "那是把密文又加密了一次，而不是解密。"),
+        why(
+          (inverse * y) % 26,
+          `That multiplies by the inverse but forgets to subtract $${b}$ first.`,
+          `那是乘了逆元，却忘了先减去 $${b}$。`,
+        ),
+        why((inverse * (y + b)) % 26, `That adds $${b}$ instead of subtracting it.`, `那是加上了 $${b}$，而不是减去它。`),
+        why((x + 1) % 26, "That is one letter off; recheck the reduction modulo $26$.", "那差了一个字母；请重新检查模 $26$ 的约简。"),
+      ].filter((m, i, all) => m.value !== x && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            [`Find the inverse of $${a}$`, `求 $${a}$ 的逆`],
+            t(
+              `$${a} \\cdot ${inverse} = ${a * inverse} = ${a * inverse === 27 ? "26" : `26 \\cdot ${(a * inverse - 1) / 26}`} + 1$, so $${a}^{-1} \\equiv ${inverse} \\pmod{26}$.`,
+              `$${a} \\cdot ${inverse} = ${a * inverse} = ${a * inverse === 27 ? "26" : `26 \\cdot ${(a * inverse - 1) / 26}`} + 1$，所以 $${a}^{-1} \\equiv ${inverse} \\pmod{26}$。`,
+            ),
+          ],
+          [
+            [`Subtract $${b}$`, `减去 $${b}$`],
+            t(
+              `$${y} - ${b} = ${y - b}${y - b === difference ? "" : ` \\equiv ${difference}`}$.`,
+              `$${y} - ${b} = ${y - b}${y - b === difference ? "" : ` \\equiv ${difference}`}$。`,
+            ),
+          ],
+          [
+            [`Multiply by $${inverse}$`, `乘以 $${inverse}$`],
+            t(
+              `$x \\equiv ${inverse} \\cdot ${difference} = ${product}${product === x ? "" : ` \\equiv ${x}`} \\pmod{26}$.`,
+              `$x \\equiv ${inverse} \\cdot ${difference} = ${product}${product === x ? "" : ` \\equiv ${x}`} \\pmod{26}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Encrypting $x = ${x}$ gives $${a} \\cdot ${x} + ${b} = ${encrypted}${encrypted === y ? "" : ` \\equiv ${y}`} \\pmod{26}$, the given result.`,
+          `加密 $x = ${x}$ 得 $${a} \\cdot ${x} + ${b} = ${encrypted}${encrypted === y ? "" : ` \\equiv ${y}`} \\pmod{26}$，正是给出的结果。`,
+        ),
       ),
     });
   },
