@@ -928,8 +928,8 @@ const stabilityThreshold: KnowledgePointDef = {
   id: "the-parameter-range-for-asymptotic-stability",
   title: t("The parameter range for asymptotic stability", "渐近稳定的参数范围"),
   explanation: t(
-    "A two-dimensional linear system is asymptotically stable exactly when its matrix has negative trace and positive determinant. With a parameter in the matrix, each condition gives an inequality. Both must hold, so the stable range is bounded by the stricter of the two conditions.",
-    "二维线性系统渐近稳定，当且仅当矩阵的迹为负、行列式为正。矩阵含参数时，每个条件都给出一个不等式。两个都必须成立，所以稳定范围由更严格的那个条件决定。",
+    "A two-dimensional linear system is asymptotically stable exactly when its matrix has negative trace and positive determinant. With a parameter in the matrix, each condition gives an inequality. Both must hold, so the stable range is bounded by the stricter of the two conditions. For $\\begin{pmatrix} -2 & 1 \\\\ 3 & k \\end{pmatrix}$: the trace needs $k < 2$ and the determinant $-2k - 3 > 0$ needs $k < -\\tfrac{3}{2}$, so $K = -\\tfrac{3}{2}$.\n\n> **Watch out.** Dividing $-ak > bc$ by the negative number $-a$ reverses the inequality; and the answer is the smaller of the two bounds, not the first one found.",
+    "二维线性系统渐近稳定，当且仅当矩阵的迹为负、行列式为正。矩阵含参数时，每个条件都给出一个不等式。两个都必须成立，所以稳定范围由更严格的那个条件决定。对 $\\begin{pmatrix} -2 & 1 \\\\ 3 & k \\end{pmatrix}$：迹要求 $k < 2$，行列式 $-2k - 3 > 0$ 要求 $k < -\\tfrac{3}{2}$，所以 $K = -\\tfrac{3}{2}$。\n\n> **注意。** 用负数 $-a$ 去除 $-ak > bc$ 时不等号要反向；答案是两个界中较小的那个，而不是先求出的那个。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -939,18 +939,50 @@ const stabilityThreshold: KnowledgePointDef = {
     const detBound = (-b * c) / a;
     const answer = detBound < a ? fromDet : Q.of(a);
     const other = detBound < a ? Q.of(a) : fromDet;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `The system $\\mathbf{x}' = ${matrix2(-a, b, c, "k")}\\mathbf{x}$ is asymptotically stable exactly when $k < K$. Find $K$.`,
         `系统 $\\mathbf{x}' = ${matrix2(-a, b, c, "k")}\\mathbf{x}$ 渐近稳定，当且仅当 $k < K$。求 $K$。`,
-      ),
+      ],
       answer,
-      wrong: [other, answer.neg(), Q.of(b * c)],
-      solution: t(
-        `A negative trace requires $k < ${a}$. A positive determinant requires $${poly([-a, "k"], [-b * c, ""])} > 0$, that is, $k < ${fromDet.toLatex()}$. The stricter bound is $K = ${answer.toLatex()}$.`,
-        `迹为负要求 $k < ${a}$。行列式为正要求 $${poly([-a, "k"], [-b * c, ""])} > 0$，即 $k < ${fromDet.toLatex()}$。更严格的界是 $K = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Require a negative trace", "要求迹为负"], "", "", `\\operatorname{tr}(A) = k - ${a} < 0, \\qquad k < ${a}`),
+        labelled(
+          ["Require a positive determinant", "要求行列式为正"],
+          `Dividing by $-${a}$ reverses the inequality:`,
+          `除以 $-${a}$ 时不等号反向：`,
+          `\\det(A) = ${poly([-a, "k"], [-b * c, ""])} > 0, \\qquad k < ${fromDet.toLatex()}`,
+        ),
+        labelled(
+          ["Take the stricter bound", "取更严格的界"],
+          "Both conditions must hold:",
+          "两个条件都必须成立：",
+          `K = \\min\\left(${a}, ${fromDet.toLatex()}\\right) = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Just below $K$, at $k = ${answer.sub(Q.of(1)).toLatex()}$, the trace is $${answer.sub(Q.of(1 + a)).toLatex()} < 0$ and the determinant is $${Q.of(
+          -a,
+        )
+          .mul(answer.sub(Q.of(1)))
+          .sub(Q.of(b * c))
+          .toLatex()} > 0$.`,
+        `在 $K$ 稍下方取 $k = ${answer.sub(Q.of(1)).toLatex()}$，迹为 $${answer.sub(Q.of(1 + a)).toLatex()} < 0$，行列式为 $${Q.of(-a)
+          .mul(answer.sub(Q.of(1)))
+          .sub(Q.of(b * c))
+          .toLatex()} > 0$。`,
+      ],
+      [
+        [
+          other,
+          "That is the weaker bound; both conditions must hold, so take the smaller.",
+          "这是较弱的界；两个条件都必须成立，所以取较小的。",
+        ],
+        [answer.neg(), "The sign is flipped.", "符号反了。"],
+        [Q.of(b * c), "That forgets to divide by $-a$ in the determinant condition.", "这是在行列式条件中忘了除以 $-a$。"],
+        [Q.of(b * c, a), "Dividing by $-a$ changes the sign of the bound.", "除以 $-a$ 会改变界的符号。"],
+      ],
+    );
   },
 };
 
@@ -3112,27 +3144,47 @@ const companionProduct: KnowledgePointDef = {
   id: "the-product-of-the-eigenvalues-of-a-companion-matrix",
   title: t("The product of the eigenvalues of a companion matrix", "友矩阵特征值之积"),
   explanation: t(
-    "When $y''' + ay'' + by' + cy = 0$ is written as a system for $(y, y', y'')$, the eigenvalues of the matrix are the roots of $r^3 + ar^2 + br + c$. By Vieta's formulas, the product of three roots of a monic cubic is $-c$, and their sum is $-a$. For a matrix, these numbers are the determinant and the trace, so a quick check of the sign against the bottom row of the matrix is available.",
-    "把 $y''' + ay'' + by' + cy = 0$ 写成 $(y, y', y'')$ 的方程组时，矩阵的特征值是 $r^3 + ar^2 + br + c$ 的根。由韦达定理，首一三次多项式三个根之积是 $-c$，和是 $-a$。对矩阵来说，这两个数就是行列式和迹，所以可以对照矩阵的最后一行快速检查符号。",
+    "When $y''' + ay'' + by' + cy = 0$ is written as a system for $(y, y', y'')$, the eigenvalues of the matrix are the roots of $r^3 + ar^2 + br + c$. By Vieta's formulas, the product of three roots of a monic cubic is $-c$, and their sum is $-a$. For a matrix, these numbers are the determinant and the trace, so a quick check of the sign against the bottom row of the matrix is available. For $y''' + 2y'' - y' + 6y = 0$ the product of the eigenvalues is $-6$.\n\n> **Watch out.** For a quadratic $r^2 + pr + q$ the product of the roots is $+q$, but for a cubic it is $-c$: the sign alternates with the degree.",
+    "把 $y''' + ay'' + by' + cy = 0$ 写成 $(y, y', y'')$ 的方程组时，矩阵的特征值是 $r^3 + ar^2 + br + c$ 的根。由韦达定理，首一三次多项式三个根之积是 $-c$，和是 $-a$。对矩阵来说，这两个数就是行列式和迹，所以可以对照矩阵的最后一行快速检查符号。对 $y''' + 2y'' - y' + 6y = 0$，特征值之积为 $-6$。\n\n> **注意。** 对二次式 $r^2 + pr + q$，根之积是 $+q$；但对三次式是 $-c$：符号随次数交替变化。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
     const b = nonzero(rng, 9);
     const c = nonzero(rng, 12);
     const answer = -c;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `The equation $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$ is written as a system $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x} = (y, y', y'')$. Find the product of the eigenvalues of $A$.`,
         `方程 $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$ 写成方程组 $\\mathbf{x}' = A\\mathbf{x}$，其中 $\\mathbf{x} = (y, y', y'')$。求 $A$ 的特征值之积。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [c, -a, -b, a, answer + 1],
-      solution: t(
-        `The eigenvalues are the roots of the cubic with constant term $${c}$. The product of its roots is the negative of this, which is $${answer}$.`,
-        `特征值是常数项为 $${c}$ 的三次多项式的根。根之积是常数项的相反数，即 $${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Write the companion matrix", "写出友矩阵"],
+          "The last row holds the coefficients with their signs changed:",
+          "最后一行是改变符号后的系数：",
+          `A = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ ${-c} & ${-b} & ${-a} \\end{pmatrix}`,
+        ),
+        labelled(
+          ["Take the determinant", "求行列式"],
+          "The product of the eigenvalues is the determinant; expand along the first column:",
+          "特征值之积等于行列式；按第一列展开：",
+          `\\det(A) = ${inParens(-c)} \\cdot \\det\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = ${answer}`,
+        ),
+      ],
+      [
+        `By Vieta's formulas the roots of $${poly([1, "r^3"], [a, "r^2"], [b, "r"], [c, ""])}$ multiply to minus the constant term, $${answer}$.`,
+        `由韦达定理，$${poly([1, "r^3"], [a, "r^2"], [b, "r"], [c, ""])}$ 的根之积为常数项的相反数 $${answer}$。`,
+      ],
+      [
+        [c, "That uses the quadratic rule; for a cubic the product of the roots is $-c$.", "这是用了二次式的规律；三次式的根之积是 $-c$。"],
+        [-a, "That is the sum of the eigenvalues, the trace.", "这是特征值之和，即迹。"],
+        [a, "That is the coefficient of $y''$, which belongs to the sum of the roots.", "这是 $y''$ 的系数，它与根之和有关。"],
+        [-b, "That is an entry of the last row, not the determinant.", "这是最后一行中的一个元素，而不是行列式。"],
+        [b, "That is the coefficient of $y'$, the sum of products of pairs of roots.", "这是 $y'$ 的系数，即两两根之积的和。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3140,8 +3192,8 @@ const oscillationRate: KnowledgePointDef = {
   id: "the-growth-rate-of-an-oscillating-system",
   title: t("The growth rate of an oscillating system", "振荡系统的增长率"),
   explanation: t(
-    "When a real two-by-two matrix has complex eigenvalues $\\alpha \\pm i\\beta$, every solution of $\\mathbf{x}' = A\\mathbf{x}$ is $e^{\\alpha t}$ times a combination of a sine and a cosine. So $\\alpha$ alone decides whether the spiral grows, shrinks or closes. The two eigenvalues add to the trace of the matrix, and the imaginary parts cancel. Hence $\\alpha$ is half of the trace, and there is no need to solve a quadratic equation to find it.",
-    "当实二阶矩阵有复特征值 $\\alpha \\pm i\\beta$ 时，$\\mathbf{x}' = A\\mathbf{x}$ 的每个解都是 $e^{\\alpha t}$ 乘以正弦和余弦的组合。所以只有 $\\alpha$ 决定螺线是增长、收缩还是闭合。两个特征值之和是矩阵的迹，虚部相消。因此 $\\alpha$ 是迹的一半，不必解二次方程。",
+    "When a real two-by-two matrix has complex eigenvalues $\\alpha \\pm i\\beta$, every solution of $\\mathbf{x}' = A\\mathbf{x}$ is $e^{\\alpha t}$ times a combination of a sine and a cosine. So $\\alpha$ alone decides whether the spiral grows, shrinks or closes. The two eigenvalues add to the trace of the matrix, and the imaginary parts cancel. Hence $\\alpha$ is half of the trace, and there is no need to solve a quadratic equation to find it. For $A = \\begin{pmatrix} 3 & -5 \\\\ 2 & -1 \\end{pmatrix}$ the trace is $2$, so $\\alpha = 1$ and the spiral grows.\n\n> **Watch out.** Halve the trace: the trace is $2\\alpha$, the sum of both eigenvalues. The determinant gives $\\alpha^2 + \\beta^2$, not $\\alpha$.",
+    "当实二阶矩阵有复特征值 $\\alpha \\pm i\\beta$ 时，$\\mathbf{x}' = A\\mathbf{x}$ 的每个解都是 $e^{\\alpha t}$ 乘以正弦和余弦的组合。所以只有 $\\alpha$ 决定螺线是增长、收缩还是闭合。两个特征值之和是矩阵的迹，虚部相消。因此 $\\alpha$ 是迹的一半，不必解二次方程。对 $A = \\begin{pmatrix} 3 & -5 \\\\ 2 & -1 \\end{pmatrix}$，迹为 $2$，所以 $\\alpha = 1$，螺线向外增长。\n\n> **注意。** 要把迹减半：迹是 $2\\alpha$，即两个特征值之和。行列式给出的是 $\\alpha^2 + \\beta^2$，而不是 $\\alpha$。",
   ),
   generate(rng) {
     const a = rng.int(-6, 6);
@@ -3150,18 +3202,34 @@ const oscillationRate: KnowledgePointDef = {
     const m = Math.floor(((a - d) * (a - d)) / (4 * b)) + rng.int(1, 3);
     const flip = rng.pick([1, -1]);
     const answer = Q.of(a + d, 2);
-    return numberProblem({
-      prompt: t(
+    const det = a * d + b * m;
+    const beta2 = Q.of(det).sub(answer.mul(answer));
+    return explainedNumber(
+      [
         `The matrix $A = ${matrix2(a, flip * b, -flip * m, d)}$ has complex eigenvalues. Every solution of $\\mathbf{x}' = A\\mathbf{x}$ is $e^{\\alpha t}$ times a bounded oscillation. Find $\\alpha$.`,
         `矩阵 $A = ${matrix2(a, flip * b, -flip * m, d)}$ 有复特征值。$\\mathbf{x}' = A\\mathbf{x}$ 的每个解都是 $e^{\\alpha t}$ 乘以有界振荡。求 $\\alpha$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(a + d), answer.neg(), Q.of(a * d + b * m), answer.add(Q.of(1))],
-      solution: t(
-        `The real part of the eigenvalues is half of the trace, so $\\alpha = \\frac{${inParens(a)} + ${inParens(d)}}{2} = ${answer.toLatex()}$.`,
-        `特征值的实部是迹的一半，所以 $\\alpha = \\frac{${inParens(a)} + ${inParens(d)}}{2} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the trace", "求迹"],
+          "The eigenvalues $\\alpha \\pm i\\beta$ add to $2\\alpha$:",
+          "特征值 $\\alpha \\pm i\\beta$ 之和为 $2\\alpha$：",
+          `\\operatorname{tr}(A) = ${inParens(a)} + ${inParens(d)} = ${a + d} = 2\\alpha`,
+        ),
+        labelled(["Halve it", "取一半"], "", "", `\\alpha = ${answer.toLatex()}`),
+      ],
+      [
+        `$\\det(A) = ${det}$, and $\\beta^2 = \\det(A) - \\alpha^2 = ${beta2.toLatex()} > 0$, so the eigenvalues are indeed complex with real part $${answer.toLatex()}$.`,
+        `$\\det(A) = ${det}$，且 $\\beta^2 = \\det(A) - \\alpha^2 = ${beta2.toLatex()} > 0$，所以特征值确实是复数，实部为 $${answer.toLatex()}$。`,
+      ],
+      [
+        [Q.of(a + d), "That is the whole trace, $2\\alpha$; halve it.", "这是整个迹 $2\\alpha$；还要取一半。"],
+        [answer.neg(), "The sign is flipped: $\\alpha$ has the sign of the trace.", "符号反了：$\\alpha$ 与迹同号。"],
+        [Q.of(det), "That is the determinant, which gives $\\alpha^2 + \\beta^2$.", "这是行列式，它给出的是 $\\alpha^2 + \\beta^2$。"],
+        [Q.of(a - d, 2), "That halves the difference of the diagonal entries; use their sum.", "这是把对角元素之差减半；应该用它们的和。"],
+      ],
+    );
   },
 };
 

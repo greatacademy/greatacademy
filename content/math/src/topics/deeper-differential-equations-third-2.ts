@@ -2,11 +2,19 @@
 // eigenvalues to numerical methods: the reverse question, a harder case or a common trap.
 // See `deeperDifferentialEquationsThird2Points`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
-
+import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -24,8 +32,8 @@ const pairedEigenvector = point(
   "the-eigenvector-paired-with-a-generalized-eigenvector",
   ["The eigenvector paired with a generalized eigenvector", "与广义特征向量配对的特征向量"],
   [
-    "A defective system also has the solution $e^{\\lambda t}(t\\mathbf{v} + \\mathbf{w})$. It is easiest to choose $\\mathbf{w}$ first and compute $\\mathbf{v} = (A - \\lambda I)\\mathbf{w}$, which is automatically an eigenvector, because $(A - \\lambda I)^{2}$ is the zero matrix.",
-    "亏损方程组还有解 $e^{\\lambda t}(t\\mathbf{v} + \\mathbf{w})$。最简单的做法是先选 $\\mathbf{w}$，再计算 $\\mathbf{v} = (A - \\lambda I)\\mathbf{w}$；它自动是特征向量，因为 $(A - \\lambda I)^{2}$ 是零矩阵。",
+    "A defective system also has the solution $e^{\\lambda t}(t\\mathbf{v} + \\mathbf{w})$. It is easiest to choose $\\mathbf{w}$ first and compute $\\mathbf{v} = (A - \\lambda I)\\mathbf{w}$, which is automatically an eigenvector, because $(A - \\lambda I)^{2}$ is the zero matrix. For $A = \\begin{pmatrix} 4 & 1 \\\\ -1 & 2 \\end{pmatrix}$ with $\\lambda = 3$ and $\\mathbf{w} = (1, 0)$: $A - 3I = \\begin{pmatrix} 1 & 1 \\\\ -1 & -1 \\end{pmatrix}$, so $\\mathbf{v} = (1, -1)$.\n\n> **Watch out.** Subtract $\\lambda$ from the diagonal before multiplying; and multiplying by $(1, 0)$ or $(0, 1)$ picks out a column of the matrix, not a row.",
+    "亏损方程组还有解 $e^{\\lambda t}(t\\mathbf{v} + \\mathbf{w})$。最简单的做法是先选 $\\mathbf{w}$，再计算 $\\mathbf{v} = (A - \\lambda I)\\mathbf{w}$；它自动是特征向量，因为 $(A - \\lambda I)^{2}$ 是零矩阵。对 $A = \\begin{pmatrix} 4 & 1 \\\\ -1 & 2 \\end{pmatrix}$，$\\lambda = 3$，$\\mathbf{w} = (1, 0)$：$A - 3I = \\begin{pmatrix} 1 & 1 \\\\ -1 & -1 \\end{pmatrix}$，所以 $\\mathbf{v} = (1, -1)$。\n\n> **注意。** 先从对角线减去 $\\lambda$ 再相乘；乘以 $(1, 0)$ 或 $(0, 1)$ 取出的是矩阵的一列，而不是一行。",
   ],
   (rng) => {
     const p = nz(rng, 4);
@@ -40,18 +48,36 @@ const pairedEigenvector = point(
     const raw = useFirst ? (firstEntry ? l + p * q : -q * q) : firstEntry ? p * p : l - p * q;
     const other = (firstEntry ? v[1] : v[0]) as number;
     const name: Pair = firstEntry ? ["first", "第一"] : ["second", "第二"];
-    return ask(
-      [
+    const row = (useFirst ? [p * q, p * p] : [-q * q, -p * q])[firstEntry ? 0 : 1] as number;
+    const [v1, v2] = v as [number, number];
+    const N = mat(p * q, p * p, -q * q, -p * q);
+    return numberProblem({
+      prompt: t(
         `$A = ${A}$ has the repeated eigenvalue $${l}$ and is defective. For $\\mathbf{w} = ${w}$, find the ${name[0]} entry of $\\mathbf{v} = (A - \\lambda I)\\mathbf{w}$.`,
         `$A = ${A}$ 有重特征值 $${l}$，且是亏损的。对 $\\mathbf{w} = ${w}$，求 $\\mathbf{v} = (A - \\lambda I)\\mathbf{w}$ 的${name[1]}个分量。`,
-      ],
+      ),
       answer,
-      [raw, -answer, other],
-      [
-        `Subtracting $${l}$ from the diagonal gives $A - \\lambda I = ${mat(p * q, p * p, -q * q, -p * q)}$. Multiplying by $\\mathbf{w}$ picks out a column, which is $\\mathbf{v} = ${vec(v[0] as number, v[1] as number)}$. So the entry is $${answer}$.`,
-        `对角线减去 $${l}$，得 $A - \\lambda I = ${mat(p * q, p * p, -q * q, -p * q)}$。乘以 $\\mathbf{w}$ 就取出一列，即 $\\mathbf{v} = ${vec(v[0] as number, v[1] as number)}$。所以这个分量是 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(raw, "That multiplies by $A$; subtract $\\lambda$ from the diagonal first.", "这是乘了 $A$；要先从对角线减去 $\\lambda$。"),
+        why(-answer, "The sign is flipped.", "符号反了。"),
+        why(other, "That is the other entry of $\\mathbf{v}$.", "这是 $\\mathbf{v}$ 的另一个分量。"),
+        why(row, "That reads a row; multiplying by $\\mathbf{w}$ picks out a column.", "这是读了一行；乘以 $\\mathbf{w}$ 取出的是一列。"),
+      ]),
+      solution: walked(
+        [
+          [["Subtract the eigenvalue", "减去特征值"], t("", ""), [`A - ${paren(l)}I = ${N}`]],
+          [
+            ["Multiply by w", "乘以 w"],
+            t(`It picks out column ${useFirst ? 1 : 2}:`, `它取出第 ${useFirst ? 1 : 2} 列：`),
+            [`\\mathbf{v} = ${N}${w} = ${vec(v1, v2)}`],
+          ],
+        ],
+        t(
+          `$\\mathbf{v}$ is an eigenvector: $${N}${vec(v1, v2)} = ${vec(0, 0)}$, as $(A - \\lambda I)^{2} = 0$ requires.`,
+          `$\\mathbf{v}$ 是特征向量：$${N}${vec(v1, v2)} = ${vec(0, 0)}$，正如 $(A - \\lambda I)^{2} = 0$ 所要求的。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -59,8 +85,8 @@ const exponentialForcingVector = point(
   "an-exponential-forcing-vector",
   ["An exponential forcing vector", "指数强迫向量"],
   [
-    "For $\\mathbf{x}' = A\\mathbf{x} + e^{mt}\\mathbf{b}$, when $m$ is not an eigenvalue, try $\\mathbf{x}_{p} = e^{mt}\\mathbf{a}$. This gives $(mI - A)\\mathbf{a} = \\mathbf{b}$. The two entries are coupled, so a triangular system is solved from the bottom row up.",
-    "对 $\\mathbf{x}' = A\\mathbf{x} + e^{mt}\\mathbf{b}$，当 $m$ 不是特征值时，设 $\\mathbf{x}_{p} = e^{mt}\\mathbf{a}$，得 $(mI - A)\\mathbf{a} = \\mathbf{b}$。两个分量是耦合的，所以三角形方程组要从最后一行向上解。",
+    "For $\\mathbf{x}' = A\\mathbf{x} + e^{mt}\\mathbf{b}$, when $m$ is not an eigenvalue, try $\\mathbf{x}_{p} = e^{mt}\\mathbf{a}$. This gives $(mI - A)\\mathbf{a} = \\mathbf{b}$. The two entries are coupled, so a triangular system is solved from the bottom row up. For $x_{1}' = x_{1} + x_{2} + 3e^{2t}$, $x_{2}' = -x_{2} + 3e^{2t}$: the second row gives $3a_{2} = 3$, so $a_{2} = 1$, and the first gives $a_{1} - 1 = 3$, so $a_{1} = 4$.\n\n> **Watch out.** Carry $a_{2}$ into the first equation: dropping the coupling term $\\beta a_{2}$, or moving it with the wrong sign, gives the wrong $a_{1}$.",
+    "对 $\\mathbf{x}' = A\\mathbf{x} + e^{mt}\\mathbf{b}$，当 $m$ 不是特征值时，设 $\\mathbf{x}_{p} = e^{mt}\\mathbf{a}$，得 $(mI - A)\\mathbf{a} = \\mathbf{b}$。两个分量是耦合的，所以三角形方程组要从最后一行向上解。对 $x_{1}' = x_{1} + x_{2} + 3e^{2t}$，$x_{2}' = -x_{2} + 3e^{2t}$：第二行给出 $3a_{2} = 3$，所以 $a_{2} = 1$；第一行给出 $a_{1} - 1 = 3$，所以 $a_{1} = 4$。\n\n> **注意。** 要把 $a_{2}$ 代入第一个方程：漏掉耦合项 $\\beta a_{2}$，或移项时符号弄错，都会得到错误的 $a_{1}$。",
   ],
   (rng) => {
     const alpha = nz(rng, 5);
@@ -74,18 +100,50 @@ const exponentialForcingVector = point(
     const e = expOf(m);
     const first = poly([alpha, "x_{1}"], [beta, "x_{2}"], [f1, e]);
     const second = poly([delta, "x_{2}"], [f2, e]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$x_{1}' = ${first}$, $x_{2}' = ${second}$ has a particular solution with $x_{1} = a_{1}${e}$ and $x_{2} = a_{2}${e}$. Find $a_{1}$.`,
         `$x_{1}' = ${first}$，$x_{2}' = ${second}$ 有一个特解，其中 $x_{1} = a_{1}${e}$，$x_{2} = a_{2}${e}$。求 $a_{1}$。`,
-      ],
-      a1,
-      [Q.of(f1, m - alpha), -a1, a2],
-      [
-        `The second equation gives $${poly([m - delta, "a_{2}"])} = ${f2}$, so $a_{2} = ${a2}$. The first gives $${poly([m - alpha, "a_{1}"], [-beta * a2, ""])} = ${f1}$, so $a_{1} = ${a1}$.`,
-        `第二个方程给出 $${poly([m - delta, "a_{2}"])} = ${f2}$，所以 $a_{2} = ${a2}$。第一个方程给出 $${poly([m - alpha, "a_{1}"], [-beta * a2, ""])} = ${f1}$，所以 $a_{1} = ${a1}$。`,
-      ],
-    );
+      ),
+      answer: a1,
+      mistakes: apart(a1, [
+        why(
+          Q.of(f1, m - alpha),
+          "That drops the coupling term $\\beta a_{2}$ from the first equation.",
+          "这是在第一个方程中漏掉了耦合项 $\\beta a_{2}$。",
+        ),
+        why(Q.of(f1 - beta * a2, m - alpha), "The coupling term moved across with the wrong sign.", "耦合项移项时符号弄错了。"),
+        why(
+          -a1,
+          "The sign is flipped: the system is $(mI - A)\\mathbf{a} = \\mathbf{b}$.",
+          "符号反了：方程组是 $(mI - A)\\mathbf{a} = \\mathbf{b}$。",
+        ),
+        why(a2, "That is $a_{2}$, from the second equation.", "这是由第二个方程得到的 $a_{2}$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Solve the second equation", "解第二个方程"],
+            t(`Substituting $x_{2} = a_{2}${e}$ and dividing by $${e}$:`, `代入 $x_{2} = a_{2}${e}$ 并除以 $${e}$：`),
+            [
+              `${poly([m, "a_{2}"])} = ${poly([delta, "a_{2}"], [f2, ""])}, \\qquad ${poly([m - delta, "a_{2}"])} = ${f2}, \\qquad a_{2} = ${a2}`,
+            ],
+          ],
+          [
+            ["Carry it into the first", "代入第一个方程"],
+            t("", ""),
+            [
+              `${poly([m, "a_{1}"])} = ${poly([alpha, "a_{1}"], [beta * a2, ""], [f1, ""])}`,
+              `${poly([m - alpha, "a_{1}"])} = ${f1 + beta * a2}, \\qquad a_{1} = ${a1}`,
+            ],
+          ],
+        ],
+        t(
+          `In the first equation: $${m} \\cdot ${paren(a1)} = ${m * a1}$ and $${paren(alpha)} \\cdot ${paren(a1)} + ${paren(beta)} \\cdot ${paren(a2)} + ${paren(f1)} = ${m * a1}$.`,
+          `代回第一个方程：$${m} \\cdot ${paren(a1)} = ${m * a1}$，而 $${paren(alpha)} \\cdot ${paren(a1)} + ${paren(beta)} \\cdot ${paren(a2)} + ${paren(f1)} = ${m * a1}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -93,8 +151,8 @@ const nullcline = point(
   "the-line-where-trajectories-turn",
   ["The line where trajectories turn", "轨线转向的直线"],
   [
-    "A nullcline organizes a phase portrait. Trajectories have horizontal tangents where $y' = 0$ and vertical tangents where $x' = 0$. It is easy to swap these: the horizontal crossings come from the equation for $y'$, not the one for $x'$.",
-    "零斜线帮助整理相图。轨线在 $y' = 0$ 处切线水平，在 $x' = 0$ 处切线竖直。这两者容易弄反：水平穿越来自 $y'$ 的方程，而不是 $x'$ 的方程。",
+    "A nullcline organizes a phase portrait. Trajectories have horizontal tangents where $y' = 0$ and vertical tangents where $x' = 0$. It is easy to swap these: the horizontal crossings come from the equation for $y'$, not the one for $x'$. For $x' = x + 2y$, $y' = 3x - y$ the tangents are horizontal on $3x - y = 0$, the line of slope $3$.\n\n> **Watch out.** Horizontal means no vertical motion, so set $y' = 0$; and solve for $y$ carefully, since $cx + dy = 0$ gives the slope $-\\frac{c}{d}$ with a minus sign.",
+    "零斜线帮助整理相图。轨线在 $y' = 0$ 处切线水平，在 $x' = 0$ 处切线竖直。这两者容易弄反：水平穿越来自 $y'$ 的方程，而不是 $x'$ 的方程。对 $x' = x + 2y$，$y' = 3x - y$，切线在 $3x - y = 0$ 上水平，即斜率为 $3$ 的直线。\n\n> **注意。** 水平意味着没有竖直方向的运动，所以令 $y' = 0$；解出 $y$ 时要小心，$cx + dy = 0$ 给出的斜率是 $-\\frac{c}{d}$，带负号。",
   ],
   (rng) => {
     const a = nz(rng, 6);
@@ -107,18 +165,44 @@ const nullcline = point(
     const other = horizontal ? Q.of(-a, b) : Q.of(-c, d);
     const name: Pair = horizontal ? ["horizontal", "水平"] : ["vertical", "竖直"];
     const eq = horizontal ? poly([c, "x"], [d, "y"]) : poly([a, "x"], [b, "y"]);
-    return ask(
-      [
+    const [k, l] = horizontal ? [c, d] : [a, b];
+    return numberProblem({
+      prompt: t(
         `For $x' = ${poly([a, "x"], [b, "y"])}$, $y' = ${poly([c, "x"], [d, "y"])}$, trajectories have ${name[0]} tangents along a line through the origin. Find its slope.`,
         `对 $x' = ${poly([a, "x"], [b, "y"])}$，$y' = ${poly([c, "x"], [d, "y"])}$，轨线沿一条过原点的直线切线${name[1]}。求这条直线的斜率。`,
-      ],
+      ),
       answer,
-      [other, answer.neg(), other.neg()],
-      [
-        `${horizontal ? "A horizontal tangent needs $y' = 0$" : "A vertical tangent needs $x' = 0$"}, so $${eq} = 0$. Solving for $y$ gives the slope $${answer.toLatex()}$.`,
-        `${horizontal ? "切线水平要求 $y' = 0$" : "切线竖直要求 $x' = 0$"}，所以 $${eq} = 0$。解出 $y$，得斜率 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          other,
+          horizontal ? "That sets $x' = 0$, which gives vertical tangents." : "That sets $y' = 0$, which gives horizontal tangents.",
+          horizontal ? "这是令 $x' = 0$，它给出的是竖直切线。" : "这是令 $y' = 0$，它给出的是水平切线。",
+        ),
+        why(answer.neg(), "The sign is lost when solving for $y$.", "解出 $y$ 时丢了负号。"),
+        why(other.neg(), "That uses the other equation and also loses the sign.", "这是用了另一个方程，而且还丢了负号。"),
+        why(
+          Q.of(l, k),
+          "That inverts the ratio: solving $kx + ly = 0$ gives $y = -\\frac{k}{l}x$.",
+          "这是把比值颠倒了：由 $kx + ly = 0$ 得 $y = -\\frac{k}{l}x$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Pick the equation", "选取方程"],
+            horizontal
+              ? t("A horizontal tangent needs no vertical motion, so $y' = 0$:", "切线水平要求没有竖直方向的运动，所以 $y' = 0$：")
+              : t("A vertical tangent needs no horizontal motion, so $x' = 0$:", "切线竖直要求没有水平方向的运动，所以 $x' = 0$："),
+            [`${eq} = 0`],
+          ],
+          [["Solve for y", "解出 y"], t("", ""), [`y = ${poly([answer, "x"])}`, `\\text{slope} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `At the point $(1, ${answer.toLatex()})$ on the line, $${horizontal ? "y'" : "x'"} = ${k} + ${paren(l)} \\cdot ${paren(answer)} = 0$, so the velocity there is ${horizontal ? "horizontal" : "vertical"}.`,
+          `在直线上的点 $(1, ${answer.toLatex()})$ 处，$${horizontal ? "y'" : "x'"} = ${k} + ${paren(l)} \\cdot ${paren(answer)} = 0$，所以那里的速度是${horizontal ? "水平" : "竖直"}的。`,
+        ),
+      ),
+    });
   },
 );
 

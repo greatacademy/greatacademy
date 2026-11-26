@@ -1257,8 +1257,8 @@ const straightLine = point(
   "the-eigenvalue-of-a-drawn-straight-line-solution",
   ["The eigenvalue of a drawn straight-line solution", "所画直线解的特征值"],
   [
-    "If the direction $v$ of a straight line through the origin is an eigenvector of $A$, solutions of $x' = Ax$ that start on the line stay on it, and they are $x = ce^{\\lambda t}v$ with $Av = \\lambda v$. Read $v$ from the drawing and compute $Av$.",
-    "若过原点直线的方向 $v$ 是 $A$ 的特征向量，$x' = Ax$ 从直线上出发的解就留在直线上，形如 $x = ce^{\\lambda t}v$，其中 $Av = \\lambda v$。从图中读出 $v$，再计算 $Av$。",
+    "If the direction $v$ of a straight line through the origin is an eigenvector of $A$, solutions of $x' = Ax$ that start on the line stay on it, and they are $x = ce^{\\lambda t}v$ with $Av = \\lambda v$. Read $v$ from the drawing and compute $Av$. For $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$ and the line through $(1, 1)$: $Av = (3, 3) = 3v$, so $\\lambda = 3$.\n\n> **Watch out.** Use the direction of the solid line, not the dashed one; and $\\lambda$ is the factor in $Av = \\lambda v$, not the trace or the determinant of $A$.",
+    "若过原点直线的方向 $v$ 是 $A$ 的特征向量，$x' = Ax$ 从直线上出发的解就留在直线上，形如 $x = ce^{\\lambda t}v$，其中 $Av = \\lambda v$。从图中读出 $v$，再计算 $Av$。对 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$ 和过 $(1, 1)$ 的直线：$Av = (3, 3) = 3v$，所以 $\\lambda = 3$。\n\n> **注意。** 要用实线的方向，而不是虚线；$\\lambda$ 是 $Av = \\lambda v$ 中的倍数，不是 $A$ 的迹或行列式。",
   ],
   (rng) => {
     const [v1, v2] = rng.pick<[Point, Point]>([
@@ -1308,16 +1308,35 @@ const straightLine = point(
       { kind: "point", at: [2 * v1[0], 2 * v1[1]] },
       { kind: "line", a: [0, 0], b: v2, dashed: true },
     ];
-    return ask(
+    const times = (k: number, v: string) => `${k === 1 ? "" : k === -1 ? "-" : k}${v}`;
+    return figureNumber(
       [
         `The solid line and the dashed line carry the straight-line solutions of $x' = ${A}x$. Find the eigenvalue that belongs to the solid line.`,
         `实线和虚线上是 $x' = ${A}x$ 的直线解。求属于实线的特征值。`,
       ],
       l1,
-      [l2, a + d, a * d - b * c, -l1],
       [
-        `The solid line has direction $v = (${v1[0]}, ${v1[1]})$, and $Av = (${l1 * v1[0]}, ${l1 * v1[1]}) = ${l1}v$.`,
-        `实线方向为 $v = (${v1[0]}, ${v1[1]})$，而 $Av = (${l1 * v1[0]}, ${l1 * v1[1]}) = ${l1}v$。`,
+        stepOf(
+          ["Read the direction", "读出方向"],
+          ["The solid line passes through the origin and the marked point:", "实线经过原点和标出的点："],
+          `v = (${v1[0]}, ${v1[1]})`,
+        ),
+        stepOf(
+          ["Multiply by A", "乘以 A"],
+          ["", ""],
+          `Av = ${A}\\begin{pmatrix} ${v1[0]} \\\\ ${v1[1]} \\end{pmatrix} = \\begin{pmatrix} ${l1 * v1[0]} \\\\ ${l1 * v1[1]} \\end{pmatrix} = ${times(l1, "v")}`,
+          `\\lambda = ${l1}`,
+        ),
+      ],
+      [
+        `The dashed direction $(${v2[0]}, ${v2[1]})$ gives the other eigenvalue $${l2}$, and $${l1} + ${l2 < 0 ? `(${l2})` : l2} = ${a + d}$, the trace of the matrix.`,
+        `虚线方向 $(${v2[0]}, ${v2[1]})$ 给出另一个特征值 $${l2}$，且 $${l1} + ${l2 < 0 ? `(${l2})` : l2} = ${a + d}$，正是矩阵的迹。`,
+      ],
+      [
+        [l2, "That belongs to the dashed line.", "这是属于虚线的特征值。"],
+        [a + d, "That is the trace, the sum of both eigenvalues.", "这是迹，即两个特征值之和。"],
+        [a * d - b * c, "That is the determinant, the product of both eigenvalues.", "这是行列式，即两个特征值之积。"],
+        [-l1, "The sign is flipped: compare $Av$ with $v$ entry by entry.", "符号反了：要逐个分量比较 $Av$ 与 $v$。"],
       ],
       drawn(
         { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },
@@ -1336,8 +1355,8 @@ const traceDeterminant = {
     "the-type-of-equilibrium-from-the-trace-determinant-plane",
     ["The type of equilibrium from the trace-determinant plane", "由迹-行列式平面判断平衡点类型"],
     [
-      "For $x' = Ax$ with trace $T$ and determinant $D$: $D < 0$ is a saddle. If $D > 0$, the sign of $T$ decides stable or unstable, and the parabola $D = \\frac{T^2}{4}$ separates nodes, below it, from spirals, above it. $T = 0$ with $D > 0$ is a center.",
-      "对迹为 $T$、行列式为 $D$ 的 $x' = Ax$：$D < 0$ 是鞍点。若 $D > 0$，$T$ 的符号决定稳定或不稳定，抛物线 $D = \\frac{T^2}{4}$ 把结点（下方）和螺旋点（上方）分开。$T = 0$ 且 $D > 0$ 是中心。",
+      "For $x' = Ax$ with trace $T$ and determinant $D$: $D < 0$ is a saddle. If $D > 0$, the sign of $T$ decides stable or unstable, and the parabola $D = \\frac{T^2}{4}$ separates nodes, below it, from spirals, above it. $T = 0$ with $D > 0$ is a center. For $T = -2$ and $D = 5$: $D > 0$, $T < 0$ and $T^2 = 4 < 20 = 4D$, so the origin is a stable spiral.\n\n> **Watch out.** Check the sign of $D$ first: a point with $D < 0$ is a saddle whatever the sign of $T$. Above the parabola means $T^2 < 4D$, which gives spirals, not nodes.",
+      "对迹为 $T$、行列式为 $D$ 的 $x' = Ax$：$D < 0$ 是鞍点。若 $D > 0$，$T$ 的符号决定稳定或不稳定，抛物线 $D = \\frac{T^2}{4}$ 把结点（下方）和螺旋点（上方）分开。$T = 0$ 且 $D > 0$ 是中心。对 $T = -2$，$D = 5$：$D > 0$，$T < 0$，且 $T^2 = 4 < 20 = 4D$，所以原点是稳定螺旋点。\n\n> **注意。** 先看 $D$ 的符号：$D < 0$ 的点无论 $T$ 的符号如何都是鞍点。在抛物线上方意味着 $T^2 < 4D$，对应螺旋点而不是结点。",
     ],
     (rng) => {
       const T0 = rng.int(-6, 6);
@@ -1374,17 +1393,62 @@ const traceDeterminant = {
         { kind: "curve", f: (v) => (v * v) / 4, dashed: true },
         { kind: "point", at: [T, D], label: "A", dir: "ne", accent: true },
       ];
-      return choose(
+      const because = (k: keyof typeof names): Because<Pair> => {
+        const [en, zh] = ((): Pair => {
+          if (k === "saddle") return [`A saddle needs $D < 0$, but here $D = ${D}$.`, `鞍点要求 $D < 0$，而这里 $D = ${D}$。`];
+          if (k === "center")
+            return T !== 0
+              ? [`A center needs $T = 0$, but here $T = ${T}$.`, `中心要求 $T = 0$，而这里 $T = ${T}$。`]
+              : [`A center needs $D > 0$, but here $D = ${D}$.`, `中心要求 $D > 0$，而这里 $D = ${D}$。`];
+          if (D < 0) return [`Nodes and spirals need $D > 0$, but here $D = ${D}$.`, `结点和螺旋点要求 $D > 0$，而这里 $D = ${D}$。`];
+          if (T === 0)
+            return [
+              "With $T = 0$ the eigenvalues have zero real part, so solutions neither grow nor decay.",
+              "$T = 0$ 时特征值的实部为零，解既不增长也不衰减。",
+            ];
+          const stableKind = k.startsWith("stable");
+          if (stableKind && T > 0) return [`Stable types need $T < 0$, but here $T = ${T}$.`, `稳定类型要求 $T < 0$，而这里 $T = ${T}$。`];
+          if (!stableKind && T < 0)
+            return [`Unstable types need $T > 0$, but here $T = ${T}$.`, `不稳定类型要求 $T > 0$，而这里 $T = ${T}$。`];
+          return k.endsWith("spiral")
+            ? [
+                `A spiral lies above the parabola, with $T^2 < 4D$, but here $T^2 = ${T * T}$ and $4D = ${4 * D}$.`,
+                `螺旋点在抛物线上方，满足 $T^2 < 4D$，而这里 $T^2 = ${T * T}$，$4D = ${4 * D}$。`,
+              ]
+            : [
+                `A node lies below the parabola, with $T^2 > 4D$, but here $T^2 = ${T * T}$ and $4D = ${4 * D}$.`,
+                `结点在抛物线下方，满足 $T^2 > 4D$，而这里 $T^2 = ${T * T}$，$4D = ${4 * D}$。`,
+              ];
+        })();
+        return [names[k], en, zh];
+      };
+      const linear = T === 0 ? "" : ` ${T > 0 ? "-" : "+"} ${Math.abs(T) === 1 ? "" : Math.abs(T)}\\lambda`;
+      const quadratic = `\\lambda^2${linear} ${D < 0 ? "-" : "+"} ${Math.abs(D)}`;
+      return figureChoice(
         rng,
         [
           "In the plane of trace $T$ and determinant $D$, the point $A$ shows a matrix, and the dashed curve is $D = \\frac{T^2}{4}$. What type of equilibrium does $x' = Ax$ have at the origin?",
           "在迹 $T$ 和行列式 $D$ 的平面上，点 $A$ 表示一个矩阵，虚线是 $D = \\frac{T^2}{4}$。$x' = Ax$ 在原点的平衡点是什么类型？",
         ],
         names[kind],
-        wrong.map((k) => names[k]),
+        wrong.map(because),
         [
-          `$A$ has $T = ${T}$ and $D = ${D}$. ${D < 0 ? "A negative determinant means a saddle." : T === 0 ? "Zero trace with a positive determinant means a center." : `The determinant is positive, $T$ is ${T < 0 ? "negative, so it is stable" : "positive, so it is unstable"}, and $A$ lies ${T * T < 4 * D ? "above the parabola, which means a spiral" : "below the parabola, which means a node"}.`}`,
-          `$A$ 的 $T = ${T}$，$D = ${D}$。${D < 0 ? "行列式为负表示鞍点。" : T === 0 ? "迹为零且行列式为正表示中心。" : `行列式为正，$T$ ${T < 0 ? "为负，所以稳定" : "为正，所以不稳定"}，$A$ 在抛物线${T * T < 4 * D ? "上方，表示螺旋点" : "下方，表示结点"}。`}`,
+          stepOf(["Read the point", "读出该点"], ["", ""], `T = ${T}, \\qquad D = ${D}`),
+          stepOf(
+            ["Apply the tests", "应用判别条件"],
+            D < 0
+              ? ["A negative determinant means a saddle.", "行列式为负表示鞍点。"]
+              : T === 0
+                ? ["Zero trace with a positive determinant means a center.", "迹为零且行列式为正表示中心。"]
+                : [
+                    `The determinant is positive, $T$ is ${T < 0 ? "negative, so it is stable" : "positive, so it is unstable"}, and $A$ lies ${T * T < 4 * D ? "above the parabola, which means a spiral" : "below the parabola, which means a node"}.`,
+                    `行列式为正，$T$ ${T < 0 ? "为负，所以稳定" : "为正，所以不稳定"}，$A$ 在抛物线${T * T < 4 * D ? "上方，表示螺旋点" : "下方，表示结点"}。`,
+                  ],
+          ),
+        ],
+        [
+          `The eigenvalues solve $${quadratic} = 0$, whose discriminant is $T^2 - 4D = ${T * T - 4 * D}$: ${T * T - 4 * D < 0 ? "they are complex with real part $\\frac{T}{2}$" : D < 0 ? "they are real with product $D < 0$, so of opposite signs" : "they are real with the sign of $T$"}.`,
+          `特征值满足 $${quadratic} = 0$，判别式为 $T^2 - 4D = ${T * T - 4 * D}$：${T * T - 4 * D < 0 ? "它们是复数，实部为 $\\frac{T}{2}$" : D < 0 ? "它们是实数，积为 $D < 0$，所以异号" : "它们是实数，符号与 $T$ 相同"}。`,
         ],
         drawn(
           { xMin: -7, xMax: 7, yMin: -6, yMax: 10, xName: "T", yName: "D" },

@@ -8,7 +8,7 @@ import { linear, paren, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { ask, type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** apart drops the mistakes whose value is the answer or repeats an earlier one. */
@@ -1255,8 +1255,8 @@ const eliminatingOneVariable = point(
   "a-second-order-equation-from-a-system",
   ["A second-order equation from a system", "由方程组得到二阶方程"],
   [
-    "A system of two first-order equations can be reduced to one second-order equation. Eliminating $x_{2}$ from a system with matrix $A$ gives $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$, whose coefficients are the trace and determinant of the matrix.",
-    "两个一阶方程组成的方程组可以化为一个二阶方程。从矩阵为 $A$ 的方程组中消去 $x_{2}$，得 $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$，系数就是矩阵的迹和行列式。",
+    "A system of two first-order equations can be reduced to one second-order equation. Eliminating $x_{2}$ from a system with matrix $A$ gives $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$, whose coefficients are the trace and determinant of the matrix. For $x_{1}' = x_{1} + 2x_{2}$, $x_{2}' = 3x_{1} + 4x_{2}$ the trace is $5$ and the determinant $-2$, so $x_{1}'' - 5x_{1}' - 2x_{1} = 0$.\n\n> **Watch out.** The coefficient of $x_{1}'$ is minus the trace, while the coefficient of $x_{1}$ is the determinant itself, with $bc$ subtracted.",
+    "两个一阶方程组成的方程组可以化为一个二阶方程。从矩阵为 $A$ 的方程组中消去 $x_{2}$，得 $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$，系数就是矩阵的迹和行列式。对 $x_{1}' = x_{1} + 2x_{2}$，$x_{2}' = 3x_{1} + 4x_{2}$，迹为 $5$，行列式为 $-2$，所以 $x_{1}'' - 5x_{1}' - 2x_{1} = 0$。\n\n> **注意。** $x_{1}'$ 的系数是迹的相反数，而 $x_{1}$ 的系数就是行列式本身，其中要减去 $bc$。",
   ],
   (rng) => {
     const a = nz(rng, 7);
@@ -1268,18 +1268,51 @@ const eliminatingOneVariable = point(
     const det = a * d - b * c;
     const answer = useDet ? det : -tr;
     const name = useDet ? "q" : "p";
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `From $x_{1}' = ${poly([a, "x_{1}"], [b, "x_{2}"])}$, $x_{2}' = ${poly([c, "x_{1}"], [d, "x_{2}"])}$, eliminating $x_{2}$ gives $x_{1}'' + px_{1}' + qx_{1} = 0$. Find $${name}$.`,
         `从 $x_{1}' = ${poly([a, "x_{1}"], [b, "x_{2}"])}$，$x_{2}' = ${poly([c, "x_{1}"], [d, "x_{2}"])}$ 中消去 $x_{2}$，得 $x_{1}'' + px_{1}' + qx_{1} = 0$。求 $${name}$。`,
-      ],
+      ),
       answer,
-      [useDet ? a * d + b * c : tr, useDet ? -det : a - d, useDet ? tr : det],
-      [
-        `The trace is $${tr}$ and the determinant is $${det}$, and the equation is $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$. So $${name} = ${answer}$.`,
-        `迹是 $${tr}$，行列式是 $${det}$，方程是 $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$。所以 $${name} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(
+        answer,
+        useDet
+          ? [
+              why(a * d + b * c, "The product $bc$ is subtracted in the determinant, not added.", "行列式中要减去乘积 $bc$，而不是加上。"),
+              why(-det, "The sign is flipped: $q$ is the determinant itself.", "符号反了：$q$ 就是行列式本身。"),
+              why(tr, "That is the trace, which belongs with $x_{1}'$.", "这是迹，它对应的是 $x_{1}'$。"),
+            ]
+          : [
+              why(tr, "The sign is flipped: $p$ is minus the trace.", "符号反了：$p$ 是迹的相反数。"),
+              why(a - d, "That subtracts the diagonal entries; the trace adds them.", "这是把对角线元素相减；迹是相加。"),
+              why(det, "That is the determinant, which belongs with $x_{1}$.", "这是行列式，它对应的是 $x_{1}$。"),
+            ],
+      ),
+      solution: walked(
+        [
+          [
+            ["Find the trace and determinant", "求迹与行列式"],
+            t("", ""),
+            [
+              `\\operatorname{tr}(A) = ${a} ${d < 0 ? "-" : "+"} ${Math.abs(d)} = ${tr}`,
+              `\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}`,
+            ],
+          ],
+          [
+            ["Read the coefficient", "读出系数"],
+            t(
+              "The equation is $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$:",
+              "方程为 $x_{1}'' - \\operatorname{tr}(A)x_{1}' + \\det(A)x_{1} = 0$：",
+            ),
+            [`${poly([1, "x_{1}''"], [-tr, "x_{1}'"], [det, "x_{1}"])} = 0, \\qquad ${name} = ${answer}`],
+          ],
+        ],
+        t(
+          `The characteristic polynomial of $A$ is $\\det(A - \\lambda I) = (${a} - \\lambda)(${d} - \\lambda) - ${paren(b * c)} = ${poly([1, "\\lambda^2"], [-tr, "\\lambda"], [det, ""])}$, the same coefficients as the second-order equation.`,
+          `$A$ 的特征多项式为 $\\det(A - \\lambda I) = (${a} - \\lambda)(${d} - \\lambda) - ${paren(b * c)} = ${poly([1, "\\lambda^2"], [-tr, "\\lambda"], [det, ""])}$，与二阶方程的系数相同。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1287,8 +1320,8 @@ const thirdOrderState = point(
   "the-state-velocity-of-a-third-order-equation",
   ["The state velocity of a third-order equation", "三阶方程的状态速度"],
   [
-    "A third-order equation needs three state variables: $x_{1} = y$, $x_{2} = y'$ and $x_{3} = y''$. The first two equations just pass along the next variable. All the content is in $x_{3}'$, which is the forcing minus the other terms moved to the right side.",
-    "三阶方程需要三个状态变量：$x_{1} = y$，$x_{2} = y'$，$x_{3} = y''$。前两个方程只是传递下一个变量。所有内容都在 $x_{3}'$ 中，它等于强迫项减去移到右边的其他项。",
+    "A third-order equation needs three state variables: $x_{1} = y$, $x_{2} = y'$ and $x_{3} = y''$. The first two equations just pass along the next variable. All the content is in $x_{3}'$, which is the forcing minus the other terms moved to the right side. For $y''' + 2y'' + y' + 3y = t$ at $t = 1$ with $y = 1$, $y' = 0$, $y'' = 2$: $x_{3}' = 1 - 4 - 0 - 3 = -6$.\n\n> **Watch out.** Each term changes sign when it moves to the right side, the forcing does not, and the forcing is evaluated at the same time as the state.",
+    "三阶方程需要三个状态变量：$x_{1} = y$，$x_{2} = y'$，$x_{3} = y''$。前两个方程只是传递下一个变量。所有内容都在 $x_{3}'$ 中，它等于强迫项减去移到右边的其他项。对 $y''' + 2y'' + y' + 3y = t$，在 $t = 1$ 时 $y = 1$，$y' = 0$，$y'' = 2$：$x_{3}' = 1 - 4 - 0 - 3 = -6$。\n\n> **注意。** 各项移到右边时都要变号，强迫项不变号，并且强迫项要与状态在同一时刻取值。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -1303,18 +1336,52 @@ const thirdOrderState = point(
     const g = p * T + q;
     const answer = g - a * x3 - b * x2 - c * x1;
     const eq = poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"]);
-    return ask(
-      [
-        `Write $${eq} = ${linear(p, q).replace(/x/g, "t")}$ as a system with $x_{1} = y$, $x_{2} = y'$, $x_{3} = y''$. If $y(${T}) = ${x1}$, $y'(${T}) = ${x2}$ and $y''(${T}) = ${x3}$, find $x_{3}'(${T})$.`,
-        `把 $${eq} = ${linear(p, q).replace(/x/g, "t")}$ 写成方程组，其中 $x_{1} = y$，$x_{2} = y'$，$x_{3} = y''$。如果 $y(${T}) = ${x1}$，$y'(${T}) = ${x2}$，$y''(${T}) = ${x3}$，求 $x_{3}'(${T})$。`,
-      ],
+    const forcing = linear(p, q).replace(/x/g, "t");
+    return numberProblem({
+      prompt: t(
+        `Write $${eq} = ${forcing}$ as a system with $x_{1} = y$, $x_{2} = y'$, $x_{3} = y''$. If $y(${T}) = ${x1}$, $y'(${T}) = ${x2}$ and $y''(${T}) = ${x3}$, find $x_{3}'(${T})$.`,
+        `把 $${eq} = ${forcing}$ 写成方程组，其中 $x_{1} = y$，$x_{2} = y'$，$x_{3} = y''$。如果 $y(${T}) = ${x1}$，$y'(${T}) = ${x2}$，$y''(${T}) = ${x3}$，求 $x_{3}'(${T})$。`,
+      ),
       answer,
-      [g + a * x3 + b * x2 + c * x1, g, -a * x3 - b * x2 - c * x1],
-      [
-        `$x_{3}' = y''' = ${g} - ${paren(a)} \\cdot ${paren(x3)} - ${paren(b)} \\cdot ${paren(x2)} - ${paren(c)} \\cdot ${paren(x1)} = ${answer}$, where $${g}$ is the forcing at $t = ${T}$.`,
-        `$x_{3}' = y''' = ${g} - ${paren(a)} \\cdot ${paren(x3)} - ${paren(b)} \\cdot ${paren(x2)} - ${paren(c)} \\cdot ${paren(x1)} = ${answer}$，其中 $${g}$ 是 $t = ${T}$ 时的强迫项。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          g + a * x3 + b * x2 + c * x1,
+          "That keeps the signs of the terms; moving them to the right side changes them.",
+          "这是保留了各项的符号；移到右边时要变号。",
+        ),
+        why(g, "That is the forcing alone; subtract the other terms too.", "这只是强迫项；还要减去其他各项。"),
+        why(-a * x3 - b * x2 - c * x1, "That leaves out the forcing.", "这里漏掉了强迫项。"),
+        why(
+          q - a * x3 - b * x2 - c * x1,
+          `That evaluates the forcing at $t = 0$ instead of $t = ${T}$.`,
+          `这是在 $t = 0$ 而不是 $t = ${T}$ 处计算强迫项。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Solve for the highest derivative", "解出最高阶导数"],
+            t("", ""),
+            [
+              `x_{3}' = y''' = ${forcing} ${poly([-a, "x_{3}"], [-b, "x_{2}"], [-c, "x_{1}"])
+                .replace(/^(?!-)/, "+ ")
+                .replace(/^-/, "- ")}`,
+            ],
+          ],
+          [
+            ["Substitute", "代入"],
+            t(`The forcing at $t = ${T}$ is $${g}$:`, `$t = ${T}$ 时强迫项为 $${g}$：`),
+            [
+              `x_{3}'(${T}) = ${g} - ${paren(a)} \\cdot ${paren(x3)} - ${paren(b)} \\cdot ${paren(x2)} - ${paren(c)} \\cdot ${paren(x1)} = ${answer}`,
+            ],
+          ],
+        ],
+        t(
+          `Back in the equation: $${answer} + ${paren(a)} \\cdot ${paren(x3)} + ${paren(b)} \\cdot ${paren(x2)} + ${paren(c)} \\cdot ${paren(x1)} = ${g}$, the forcing at $t = ${T}$.`,
+          `代回方程：$${answer} + ${paren(a)} \\cdot ${paren(x3)} + ${paren(b)} \\cdot ${paren(x2)} + ${paren(c)} \\cdot ${paren(x1)} = ${g}$，正是 $t = ${T}$ 时的强迫项。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1323,8 +1390,8 @@ const dependentVectors = {
     "the-entry-that-makes-vector-solutions-dependent",
     ["The entry that makes vector solutions dependent", "使向量解线性相关的分量"],
     [
-      "For a linear system, two solutions are dependent exactly when their Wronskian is zero, and checking one time is enough. So requiring $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$ gives an equation for an unknown entry, which makes the initial vectors parallel.",
-      "对线性方程组，两个解线性相关，当且仅当它们的朗斯基行列式为零，而且检查一个时刻就够了。所以令 $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$，就得到未知分量的方程，这使初始向量平行。",
+      "For a linear system, two solutions are dependent exactly when their Wronskian is zero, and checking one time is enough. So requiring $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$ gives an equation for an unknown entry, which makes the initial vectors parallel. For $\\mathbf{x}_{1}(0) = (2, 6)$ and $\\mathbf{x}_{2}(0) = (3, k)$: $2k - 18 = 0$, so $k = 9$.\n\n> **Watch out.** The determinant is $a k - b c$ with the vectors as columns; solving $ak = bc$ divides by $a$, and the answer keeps the sign of $bc$.",
+      "对线性方程组，两个解线性相关，当且仅当它们的朗斯基行列式为零，而且检查一个时刻就够了。所以令 $\\det(\\mathbf{x}_{1}(0), \\mathbf{x}_{2}(0)) = 0$，就得到未知分量的方程，这使初始向量平行。对 $\\mathbf{x}_{1}(0) = (2, 6)$，$\\mathbf{x}_{2}(0) = (3, k)$：$2k - 18 = 0$，所以 $k = 9$。\n\n> **注意。** 以向量为列，行列式为 $ak - bc$；解 $ak = bc$ 要除以 $a$，答案与 $bc$ 同号。",
     ],
     (rng) => {
       const a = rng.int(2, 6);
@@ -1332,18 +1399,33 @@ const dependentVectors = {
       const b = a * m;
       const c = nz(rng, 9);
       const answer = m * c;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `Two solutions of a linear system have $\\mathbf{x}_{1}(0) = \\begin{pmatrix} ${a} \\\\ ${b} \\end{pmatrix}$ and $\\mathbf{x}_{2}(0) = \\begin{pmatrix} ${c} \\\\ k \\end{pmatrix}$. For which $k$ are they linearly dependent?`,
           `线性方程组的两个解满足 $\\mathbf{x}_{1}(0) = \\begin{pmatrix} ${a} \\\\ ${b} \\end{pmatrix}$，$\\mathbf{x}_{2}(0) = \\begin{pmatrix} ${c} \\\\ k \\end{pmatrix}$。当 $k$ 为何值时，它们线性相关？`,
-        ],
+        ),
         answer,
-        [-answer, Q.of(a * c, b), b + c],
-        [
-          `The determinant is $${a}k - ${paren(b)} \\cdot ${paren(c)}$. Setting it to zero gives $k = \\frac{${b * c}}{${a}} = ${answer}$, and then the vectors are parallel.`,
-          `行列式是 $${a}k - ${paren(b)} \\cdot ${paren(c)}$。令它为零，得 $k = \\frac{${b * c}}{${a}} = ${answer}$，此时两个向量平行。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(-answer, "The sign is off: $ak - bc = 0$ gives $k = bc/a$.", "符号错了：$ak - bc = 0$ 给出 $k = bc/a$。"),
+          why(Q.of(a * c, b), "That divides by the wrong entry: solve $ak = bc$ for $k$.", "这是除错了元素：应从 $ak = bc$ 解出 $k$。"),
+          why(b + c, "That adds entries; dependence needs the determinant to vanish.", "这是把元素相加；线性相关要求行列式为零。"),
+          why(b * c, "That forgets to divide by $a$.", "这里忘了除以 $a$。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Set the Wronskian to zero", "令朗斯基行列式为零"],
+              t("", ""),
+              [`\\det\\begin{pmatrix} ${a} & ${c} \\\\ ${b} & k \\end{pmatrix} = ${a}k - ${paren(b)} \\cdot ${paren(c)} = 0`],
+            ],
+            [["Solve", "求解"], t("", ""), [`k = \\frac{${b * c}}{${a}} = ${answer}`]],
+          ],
+          t(
+            `With $k = ${answer}$, $\\mathbf{x}_{2}(0) = (${c}, ${answer})$ is $${Q.of(c, a).toLatex()}$ times $(${a}, ${b})$, so the vectors are parallel.`,
+            `取 $k = ${answer}$ 时，$\\mathbf{x}_{2}(0) = (${c}, ${answer})$ 是 $(${a}, ${b})$ 的 $${Q.of(c, a).toLatex()}$ 倍，所以两个向量平行。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -1354,8 +1436,8 @@ const longRunOfGeneral = point(
   "the-long-run-depends-on-the-growing-coefficient",
   ["The long run depends on the growing coefficient", "长期行为取决于增长项的系数"],
   [
-    "With one decaying and one growing mode, almost every solution grows. It tends to zero only if the coefficient of the growing mode is exactly zero, which happens when the initial state lies along the decaying eigenvector. So decompose the initial state before deciding.",
-    "有一个衰减模式和一个增长模式时，几乎所有解都增长。只有增长模式的系数恰好为零时解才趋于零，也就是初始状态在衰减的特征向量方向上。所以判断之前要先分解初始状态。",
+    "With one decaying and one growing mode, almost every solution grows. It tends to zero only if the coefficient of the growing mode is exactly zero, which happens when the initial state lies along the decaying eigenvector. So decompose the initial state before deciding. For $\\mathbf{x} = c_{1}e^{-t}(1, 2) + c_{2}e^{t}(1, 5)$ and $\\mathbf{x}(0) = (3, 6)$: $c_{1} = 3$, $c_{2} = 0$, so the solution decays.\n\n> **Watch out.** The general solution always shows both modes; what decides the long run is whether $c_{2}$ is zero for this initial state, so solve for the constants first.",
+    "有一个衰减模式和一个增长模式时，几乎所有解都增长。只有增长模式的系数恰好为零时解才趋于零，也就是初始状态在衰减的特征向量方向上。所以判断之前要先分解初始状态。对 $\\mathbf{x} = c_{1}e^{-t}(1, 2) + c_{2}e^{t}(1, 5)$，$\\mathbf{x}(0) = (3, 6)$：$c_{1} = 3$，$c_{2} = 0$，所以解衰减。\n\n> **注意。** 通解总是同时写出两个模式；决定长期行为的是对这个初始状态 $c_{2}$ 是否为零，所以要先求出常数。",
   ],
   (rng) => {
     const a = rng.int(1, 5);
@@ -1373,19 +1455,71 @@ const longRunOfGeneral = point(
     const correct = q === 0 ? decay : grow;
     const m = (v: number) => `\\begin{pmatrix} 1 \\\\ ${v} \\end{pmatrix}`;
     const general = `c_{1}${expOf(-a, "t")}${m(v1)} + c_{2}${expOf(b, "t")}${m(v2)}`;
-    return choose(
-      rng,
-      [
+    const opt = (pair: Pair) => t(pair[0], pair[1]);
+    const stayWhy = t(
+      "Only an equilibrium stays put, and the origin is the only equilibrium here; the exponentials change with $t$.",
+      "只有平衡点才保持不动，而这里唯一的平衡点是原点；指数项随 $t$ 变化。",
+    );
+    const otherWhy = t(
+      "A nonzero constant limit needs a zero eigenvalue, but both rates here are nonzero.",
+      "趋于非零常向量需要零特征值，而这里两个速率都不为零。",
+    );
+    return explainedChoice(rng, {
+      prompt: t(
         `A system has general solution $\\mathbf{x}(t) = ${general}$. What happens as $t \\to \\infty$ to the solution with $\\mathbf{x}(0) = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$?`,
         `一个方程组的通解是 $\\mathbf{x}(t) = ${general}$。当 $t \\to \\infty$ 时，满足 $\\mathbf{x}(0) = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$ 的解会怎样？`,
+      ),
+      correct: opt(correct),
+      wrong: [
+        q === 0
+          ? {
+              option: opt(grow),
+              why: t(
+                "The growing mode has coefficient $c_{2} = 0$ for this initial state, so it is absent.",
+                "对这个初始状态，增长模式的系数 $c_{2} = 0$，所以它不出现。",
+              ),
+            }
+          : {
+              option: opt(decay),
+              why: t(
+                "That happens only when the coefficient of the growing mode is zero, and here it is not.",
+                "只有增长模式的系数为零时才会这样，而这里它不为零。",
+              ),
+            },
+        { option: opt(stay), why: stayWhy },
+        { option: opt(other), why: otherWhy },
       ],
-      correct,
-      [decay, grow, stay, other].filter((o) => o !== correct),
-      [
-        `Matching at $t = 0$ gives $c_{1} = ${p}$ and $c_{2} = ${q}$. ${q === 0 ? "The growing mode is absent, so only the decaying term remains and the solution tends to zero." : "The growing mode is present, so the solution grows without bound."}`,
-        `在 $t = 0$ 处比较，得 $c_{1} = ${p}$，$c_{2} = ${q}$。${q === 0 ? "增长模式不出现，只剩衰减项，所以解趋于零。" : "增长模式存在，所以解无限增大。"}`,
-      ],
-    );
+      solution: walked(
+        [
+          [
+            ["Match at t = 0", "在 t = 0 处比较"],
+            t("", ""),
+            [`c_{1} + c_{2} = ${x0}, \\qquad ${poly([v1, "c_{1}"], [v2, "c_{2}"])} = ${y0}`, `c_{1} = ${p}, \\qquad c_{2} = ${q}`],
+          ],
+          [
+            ["Look at the growing mode", "看增长模式"],
+            q === 0
+              ? t(
+                  `The coefficient of $${expOf(b, "t")}$ is $0$, so only the decaying term remains and the solution tends to zero.`,
+                  `$${expOf(b, "t")}$ 的系数为 $0$，只剩衰减项，所以解趋于零。`,
+                )
+              : t(
+                  `The coefficient of $${expOf(b, "t")}$ is $${q} \\ne 0$, so that term grows without bound.`,
+                  `$${expOf(b, "t")}$ 的系数为 $${q} \\ne 0$，这一项无限增大。`,
+                ),
+          ],
+        ],
+        q === 0
+          ? t(
+              `The initial state lies along the decaying eigenvector: $${y0} = ${paren(v1)} \\cdot ${paren(x0)}$.`,
+              `初始状态在衰减的特征向量方向上：$${y0} = ${paren(v1)} \\cdot ${paren(x0)}$。`,
+            )
+          : t(
+              `The initial state is off the decaying eigenvector, since $${paren(v1)} \\cdot ${paren(x0)} = ${v1 * x0} \\ne ${y0}$.`,
+              `初始状态不在衰减的特征向量方向上，因为 $${paren(v1)} \\cdot ${paren(x0)} = ${v1 * x0} \\ne ${y0}$。`,
+            ),
+      ),
+    });
   },
 );
 
@@ -1393,8 +1527,8 @@ const crossingTime = point(
   "when-two-decoupled-components-agree",
   ["When two decoupled components agree", "两个解耦分量何时相等"],
   [
-    "Each component of a decoupled system is its own exponential, so comparing them is simple algebra. Setting $pe^{at} = qe^{bt}$ gives $e^{(a - b)t} = \\frac{q}{p}$, and taking logarithms gives the time when the components agree.",
-    "解耦方程组的每个分量都是各自的指数函数，所以比较它们只是简单的代数。令 $pe^{at} = qe^{bt}$，得 $e^{(a - b)t} = \\frac{q}{p}$，取对数就得到两个分量相等的时刻。",
+    "Each component of a decoupled system is its own exponential, so comparing them is simple algebra. Setting $pe^{at} = qe^{bt}$ gives $e^{(a - b)t} = \\frac{q}{p}$, and taking logarithms gives the time when the components agree. For $3e^{2t} = 12e^{-t}$: $e^{3t} = 4$, so $3t = 2\\ln 2$ and $t = \\tfrac{2}{3}\\ln 2$.\n\n> **Watch out.** Dividing the exponentials subtracts the rates, so divide by $a - b$, not $a + b$; and remember to divide at all after taking logarithms.",
+    "解耦方程组的每个分量都是各自的指数函数，所以比较它们只是简单的代数。令 $pe^{at} = qe^{bt}$，得 $e^{(a - b)t} = \\frac{q}{p}$，取对数就得到两个分量相等的时刻。对 $3e^{2t} = 12e^{-t}$：$e^{3t} = 4$，所以 $3t = 2\\ln 2$，$t = \\tfrac{2}{3}\\ln 2$。\n\n> **注意。** 指数相除时速率相减，所以要除以 $a - b$ 而不是 $a + b$；取对数之后别忘了还要相除。",
   ],
   (rng) => {
     const b = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3]);
@@ -1405,18 +1539,41 @@ const crossingTime = point(
     const answer = Q.of(m, a - b);
     const meet = `${poly([p, expOf(a, "t")])} = ${poly([q, expOf(b, "t")])}`;
     const logs = `${poly([a - b, "t"])} = ${poly([m, "\\ln 2"])}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$x_{1}' = ${poly([a, "x_{1}"])}$ and $x_{2}' = ${poly([b, "x_{2}"])}$, with $x_{1}(0) = ${p}$ and $x_{2}(0) = ${q}$. The components agree at $t = k\\ln 2$. Find $k$.`,
         `$x_{1}' = ${poly([a, "x_{1}"])}$，$x_{2}' = ${poly([b, "x_{2}"])}$，且 $x_{1}(0) = ${p}$，$x_{2}(0) = ${q}$。两个分量在 $t = k\\ln 2$ 时相等。求 $k$。`,
-      ],
+      ),
       answer,
-      [m, answer.neg(), Q.of(m, a + b === 0 ? 1 : a + b)],
-      [
-        `$${meet}$ means $${expOf(a - b, "t")} = ${2 ** m}$. So $${logs}$ and $k = ${answer.toLatex()}$.`,
-        `$${meet}$ 即 $${expOf(a - b, "t")} = ${2 ** m}$。所以 $${logs}$，$k = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(m, "That stops at the logarithm; divide by the difference of the rates.", "这是停在了取对数这一步；还要除以速率之差。"),
+        why(answer.neg(), "The sign is flipped: divide by $a - b$, not $b - a$.", "符号反了：应除以 $a - b$，而不是 $b - a$。"),
+        ...(a + b === 0
+          ? []
+          : [
+              why(Q.of(m, a + b), "That adds the rates; dividing the exponentials subtracts them.", "这是把速率相加；指数相除时速率相减。"),
+            ]),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the components", "写出各分量"],
+            t("Each component is its own exponential, and they agree when", "每个分量都是各自的指数函数，二者相等时"),
+            [`${meet}`],
+          ],
+          [
+            ["Divide", "相除"],
+            t("", ""),
+            [p === 1 ? `${expOf(a - b, "t")} = ${q}` : `${expOf(a - b, "t")} = \\frac{${q}}{${p}} = ${2 ** m}`],
+          ],
+          [["Take logarithms", "取对数"], t("", ""), [`${logs}`, `k = ${answer.toLatex()}`]],
+        ],
+        t(
+          `At $t = ${poly([answer, "\\ln 2"])}$, $${expOf(a - b, "t")} = 2^{${a - b} \\cdot ${answer.toLatex()}} = 2^{${m}} = ${2 ** m}$, which is $x_{2}(0)/x_{1}(0) = ${q}/${p}$.`,
+          `在 $t = ${poly([answer, "\\ln 2"])}$ 时，$${expOf(a - b, "t")} = 2^{${a - b} \\cdot ${answer.toLatex()}} = 2^{${m}} = ${2 ** m}$，正是 $x_{2}(0)/x_{1}(0) = ${q}/${p}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1424,8 +1581,8 @@ const secondEigenvalue = point(
   "the-second-eigenvalue-from-the-trace",
   ["The second eigenvalue from the trace", "由迹求第二个特征值"],
   [
-    "Once one eigenvalue is known, there is no need to factor again. The trace equals the sum of the eigenvalues, so the other is the trace minus the known one. The product with the known one should then equal the determinant, which is a useful check.",
-    "知道一个特征值后，不必重新因式分解。迹等于特征值之和，所以另一个等于迹减去已知的那个。它与已知特征值的积应等于行列式，这是一个有用的检验。",
+    "Once one eigenvalue is known, there is no need to factor again. The trace equals the sum of the eigenvalues, so the other is the trace minus the known one. The product with the known one should then equal the determinant, which is a useful check. For $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$ with $\\lambda = 3$: the other is $2 - 3 = -1$, and $3 \\cdot (-1) = -3 = \\det(A)$.\n\n> **Watch out.** Subtract the known eigenvalue from the trace; the trace itself, the determinant and the negative of the known eigenvalue are not the answer.",
+    "知道一个特征值后，不必重新因式分解。迹等于特征值之和，所以另一个等于迹减去已知的那个。它与已知特征值的积应等于行列式，这是一个有用的检验。对 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$，$\\lambda = 3$：另一个是 $2 - 3 = -1$，且 $3 \\cdot (-1) = -3 = \\det(A)$。\n\n> **注意。** 要用迹减去已知特征值；迹本身、行列式和已知特征值的相反数都不是答案。",
   ],
   (rng) => {
     const l1 = nz(rng, 7);
@@ -1435,18 +1592,33 @@ const secondEigenvalue = point(
     const c = a * d - l1 * l2;
     const b = 1;
     const m = `\\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `One eigenvalue of $A = ${m}$ is $\\lambda = ${l1}$. Find the other eigenvalue.`,
         `$A = ${m}$ 的一个特征值是 $\\lambda = ${l1}$。求另一个特征值。`,
-      ],
-      l2,
-      [-l1, a + d, a * d - c],
-      [
-        `The trace is $${a + d}$, so the other eigenvalue is $${a + d} - ${paren(l1)} = ${l2}$. Check: $${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2}$, which is the determinant.`,
-        `迹是 $${a + d}$，所以另一个特征值是 $${a + d} - ${paren(l1)} = ${l2}$。检验：$${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2}$，等于行列式。`,
-      ],
-    );
+      ),
+      answer: l2,
+      mistakes: apart(l2, [
+        why(-l1, "That is the negative of the known eigenvalue; use the trace.", "这是已知特征值的相反数；要用迹。"),
+        why(
+          a + d,
+          "That is the trace, the sum of both eigenvalues; subtract the known one.",
+          "这是迹，即两个特征值之和；还要减去已知的那个。",
+        ),
+        why(a * d - c, "That is the determinant, the product of the eigenvalues.", "这是行列式，即特征值之积。"),
+        why(a + d + l1, "That adds the known eigenvalue to the trace; subtract it.", "这是把已知特征值加到迹上；应当减去。"),
+      ]),
+      solution: walked(
+        [
+          [["Find the trace", "求迹"], t("", ""), [`\\operatorname{tr}(A) = ${a} + ${paren(d)} = ${a + d}`]],
+          [["Subtract the known eigenvalue", "减去已知特征值"], t("", ""), [`\\lambda_{2} = ${a + d} - ${paren(l1)} = ${l2}`]],
+        ],
+        t(
+          `$${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2}$, and $\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(c)} = ${a * d - c}$.`,
+          `$${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2}$，而 $\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(c)} = ${a * d - c}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1454,8 +1626,8 @@ const initialDirectionThatDecays = point(
   "the-initial-direction-that-decays",
   ["The initial direction that decays", "衰减的初始方向"],
   [
-    "When $A$ has one negative and one positive eigenvalue, only the initial states along the eigenvector of the negative one give a solution that tends to zero. Any other initial state has some of the growing mode. So find this eigenvector from $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$.",
-    "当 $A$ 有一个负特征值和一个正特征值时，只有沿负特征值的特征向量方向的初始状态，才给出趋于零的解。其他初始状态都含有增长模式。所以由 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 求这个特征向量。",
+    "When $A$ has one negative and one positive eigenvalue, only the initial states along the eigenvector of the negative one give a solution that tends to zero. Any other initial state has some of the growing mode. So find this eigenvector from $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. For $A = \\begin{pmatrix} -1 & 0 \\\\ 6 & 2 \\end{pmatrix}$ and $\\lambda = -1$, the second row gives $6 + 3m = 0$, so $m = -2$.\n\n> **Watch out.** Subtracting a negative eigenvalue adds to the diagonal: $g - (-s) = g + s$; and the eigenvector belongs to the negative eigenvalue, not the positive one.",
+    "当 $A$ 有一个负特征值和一个正特征值时，只有沿负特征值的特征向量方向的初始状态，才给出趋于零的解。其他初始状态都含有增长模式。所以由 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 求这个特征向量。对 $A = \\begin{pmatrix} -1 & 0 \\\\ 6 & 2 \\end{pmatrix}$，$\\lambda = -1$，第二行给出 $6 + 3m = 0$，所以 $m = -2$。\n\n> **注意。** 减去负的特征值等于在对角元素上加：$g - (-s) = g + s$；特征向量属于负特征值，而不是正特征值。",
   ],
   (rng) => {
     const s = rng.int(1, 6);
@@ -1463,18 +1635,37 @@ const initialDirectionThatDecays = point(
     const m = nz(rng, 5);
     const entry = m * (-s - g);
     const A = `\\begin{pmatrix} ${-s} & 0 \\\\ ${entry} & ${g} \\end{pmatrix}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `For $\\mathbf{x}' = ${A}\\mathbf{x}$, the solution with $\\mathbf{x}(0) = \\begin{pmatrix} 1 \\\\ m \\end{pmatrix}$ tends to $\\mathbf{0}$ as $t \\to \\infty$. Find $m$.`,
         `对 $\\mathbf{x}' = ${A}\\mathbf{x}$，满足 $\\mathbf{x}(0) = \\begin{pmatrix} 1 \\\\ m \\end{pmatrix}$ 的解在 $t \\to \\infty$ 时趋于 $\\mathbf{0}$。求 $m$。`,
-      ],
-      m,
-      [-m, entry, Q.of(entry, g)],
-      [
-        `The negative eigenvalue is $${-s}$. The second row of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ reads $${entry} + ${g + s}m = 0$, so $m = ${m}$.`,
-        `负特征值是 $${-s}$。$(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的第二行是 $${entry} + ${g + s}m = 0$，所以 $m = ${m}$。`,
-      ],
-    );
+      ),
+      answer: m,
+      mistakes: apart(m, [
+        why(-m, "The sign is off: move the entry across before dividing.", "符号错了：先把该元素移项再相除。"),
+        why(entry, "That is the matrix entry itself; solve the second row for $m$.", "这是矩阵元素本身；要由第二行解出 $m$。"),
+        why(
+          Q.of(-entry, g),
+          `That forgets to subtract $\\lambda = ${-s}$ from the entry $${g}$.`,
+          `这是忘了从元素 $${g}$ 中减去 $\\lambda = ${-s}$。`,
+        ),
+        why(Q.of(entry, g), "That divides by the diagonal entry alone and loses the sign.", "这是只除以对角元素，而且符号也丢了。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Pick the decaying eigenvalue", "选取衰减的特征值"],
+            t("The matrix is triangular, so its eigenvalues are its diagonal entries:", "矩阵是三角矩阵，特征值就是对角元素："),
+            [`\\lambda = ${-s}, \\qquad A - ${paren(-s)}I = \\begin{pmatrix} 0 & 0 \\\\ ${entry} & ${g + s} \\end{pmatrix}`],
+          ],
+          [["Solve the second row", "解第二行"], t("", ""), [`${entry} + ${g + s}m = 0`, `m = ${m}`]],
+        ],
+        t(
+          `$A\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${-s} \\\\ ${-s * m} \\end{pmatrix} = ${-s === -1 ? "-" : -s}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$, so the solution is $e^{${-s === -1 ? "-" : -s}t}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$, which tends to $\\mathbf{0}$.`,
+          `$A\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${-s} \\\\ ${-s * m} \\end{pmatrix} = ${-s === -1 ? "-" : -s}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$，所以解为 $e^{${-s === -1 ? "-" : -s}t}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$，趋于 $\\mathbf{0}$。`,
+        ),
+      ),
+    });
   },
 );
 

@@ -1,14 +1,31 @@
-import type { Problem, Rng, TopicDef } from "@ga/content";
+import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
-import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, steps, why, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 /** par wraps a negative number in parentheses for use as a factor. */
 const par = (n: number): string => (n < 0 ? `(${n})` : String(n));
 
 /** signed writes a number as a following term: "+ 3" or "- 3". */
 const signed = (n: number): string => (n < 0 ? `- ${-n}` : `+ ${n}`);
+
+/** parQ wraps a negative rational number in parentheses for use as a factor. */
+const parQ = (q: Q): string => (q.sign() < 0 ? `\\left(${q.toLatex()}\\right)` : q.toLatex());
+
+/** Mistake is a wrong value with what to say about it. */
+type Mistake = { readonly value: number | Q; readonly why: Text };
+
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly Mistake[]): Mistake[] => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
+
+/** cf writes a coefficient before a symbol: "" for 1 and "-" for -1. */
+const cf = (n: number): string => (n === 1 ? "" : n === -1 ? "-" : String(n));
 
 /** mat writes a 2 by 2 matrix in LaTeX. */
 const mat = (a: number | string, b: number | string, c: number | string, d: number | string): string =>
@@ -44,6 +61,10 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
     "A first-order linear system $x_1' = ax_1 + bx_2$, $x_2' = cx_1 + dx_2$ is written in matrix form as $\\mathbf{x}' = A\\mathbf{x}$ and characterized by the trace and determinant of $A$.",
     "一阶线性方程组 $x_1' = ax_1 + bx_2$，$x_2' = cx_1 + dx_2$ 可写成矩阵形式 $\\mathbf{x}' = A\\mathbf{x}$，由 $A$ 的迹与行列式刻画。",
   ),
+  intro: t(
+    "Two tanks exchange salt so that $x_1' = 2x_1 + x_2$ and $x_2' = x_1 + 2x_2$. Collecting the coefficients gives $\\mathbf{x}' = A\\mathbf{x}$ with $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$, whose trace is $2 + 2 = 4$ and determinant $4 - 1 = 3$. At the state $\\mathbf{x} = (1, 0)$ the velocity is $A\\mathbf{x} = (2, 1)$.\n\nCheck: $\\det(A - \\lambda I) = \\lambda^2 - 4\\lambda + 3 = (\\lambda - 1)(\\lambda - 3)$, and the eigenvalues $1$ and $3$ add to the trace $4$ and multiply to the determinant $3$.\n\nIn this lesson we write linear systems in matrix form, read off the trace and determinant, and compute the velocity at a given state.",
+    "两个水箱交换盐分，使 $x_1' = 2x_1 + x_2$，$x_2' = x_1 + 2x_2$。把系数汇集起来得 $\\mathbf{x}' = A\\mathbf{x}$，$A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$，其迹为 $2 + 2 = 4$，行列式为 $4 - 1 = 3$。在状态 $\\mathbf{x} = (1, 0)$ 处，速度为 $A\\mathbf{x} = (2, 1)$。\n\n检验：$\\det(A - \\lambda I) = \\lambda^2 - 4\\lambda + 3 = (\\lambda - 1)(\\lambda - 3)$，特征值 $1$ 与 $3$ 之和为迹 $4$，之积为行列式 $3$。\n\n本课我们把线性方程组写成矩阵形式，读出迹与行列式，并求给定状态下的速度。",
+  ),
   prerequisites: ["general-solutions-of-linear-odes"],
   encompasses: [],
   xp: 10,
@@ -52,8 +73,8 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
       id: "matrix-form-of-first-order-linear-systems",
       title: t("Trace of the coefficient matrix in a linear system", "线性系统系数矩阵的迹"),
       explanation: t(
-        "A linear system collects the coefficients into a matrix, and the trace of that matrix equals the sum of its eigenvalues. For a $2 \\times 2$ system $\\mathbf{x}' = A \\mathbf{x}$ where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the trace is $\\operatorname{tr}(A) = a + d$.",
-        "线性方程组把系数汇集成一个矩阵，这个矩阵的迹等于其特征值之和。对于二阶线性常微分方程组 $\\mathbf{x}' = A \\mathbf{x}$（系数矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$），其主对角线元素之和称为迹：$\\operatorname{tr}(A) = a + d$。",
+        "A linear system collects the coefficients into a matrix, and the trace of that matrix equals the sum of its eigenvalues. For a $2 \\times 2$ system $\\mathbf{x}' = A \\mathbf{x}$ where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the trace is $\\operatorname{tr}(A) = a + d$. For $x_1' = 3x_1 + 5x_2$, $x_2' = 2x_1 + 4x_2$ the trace is $3 + 4 = 7$.\n\n> **Watch out.** The trace adds the diagonal entries, the coefficient of $x_1$ in the first equation and of $x_2$ in the second; it is not the determinant $ad - bc$, and the off-diagonal entries $b$ and $c$ play no part.",
+        "线性方程组把系数汇集成一个矩阵，这个矩阵的迹等于其特征值之和。对于二阶线性常微分方程组 $\\mathbf{x}' = A \\mathbf{x}$（系数矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$），其主对角线元素之和称为迹：$\\operatorname{tr}(A) = a + d$。对 $x_1' = 3x_1 + 5x_2$，$x_2' = 2x_1 + 4x_2$，迹为 $3 + 4 = 7$。\n\n> **注意。** 迹是对角线元素之和，即第一个方程中 $x_1$ 的系数与第二个方程中 $x_2$ 的系数之和；它不是行列式 $ad - bc$，非对角元素 $b$、$c$ 不参与。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 15);
@@ -61,29 +82,36 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
         const b = rng.int(1, 8);
         const c = rng.int(1, 8);
         const ans = a + d;
-
-        const prompt = t(
-          `Consider the linear system of differential equations $x_1' = ${a}x_1 + ${b}x_2$ and $x_2' = ${c}x_1 + ${d}x_2$. Find the trace $\\operatorname{tr}(A)$ of the coefficient matrix $A$.`,
-          `考虑线性微分方程组 $x_1' = ${a}x_1 + ${b}x_2$ 与 $x_2' = ${c}x_1 + ${d}x_2$。求其系数矩阵 $A$ 的迹 $\\operatorname{tr}(A)$。`,
-        );
-        const solution = t(
-          steps(
-            `Write the system in matrix form $\\mathbf{x}' = A\\mathbf{x}$: $\\begin{pmatrix} x_1' \\\\ x_2' \\end{pmatrix} = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix} \\begin{pmatrix} x_1 \\\\ x_2 \\end{pmatrix}$.`,
-            `The trace of a matrix is the sum of its diagonal entries: $\\operatorname{tr}(A) = A_{11} + A_{22}$.`,
-            `Calculate: $\\operatorname{tr}(A) = ${a} + ${d} = ${ans}$.`,
-          ),
-          steps(
-            `将方程组写为矩阵形式 $\\mathbf{x}' = A\\mathbf{x}$：$\\begin{pmatrix} x_1' \\\\ x_2' \\end{pmatrix} = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix} \\begin{pmatrix} x_1 \\\\ x_2 \\end{pmatrix}$。`,
-            `矩阵的迹等于主对角线元素之和：$\\operatorname{tr}(A) = A_{11} + A_{22}$。`,
-            `计算得出：$\\operatorname{tr}(A) = ${a} + ${d} = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Consider the linear system of differential equations $x_1' = ${poly([a, "x_1"], [b, "x_2"])}$ and $x_2' = ${poly([c, "x_1"], [d, "x_2"])}$. Find the trace $\\operatorname{tr}(A)$ of the coefficient matrix $A$.`,
+            `考虑线性微分方程组 $x_1' = ${poly([a, "x_1"], [b, "x_2"])}$ 与 $x_2' = ${poly([c, "x_1"], [d, "x_2"])}$。求其系数矩阵 $A$ 的迹 $\\operatorname{tr}(A)$。`,
+          ),
           answer: ans,
-          wrong: [a * d - b * c, a * d, ans + 1],
+          mistakes: apart(ans, [
+            why(
+              a * d - b * c,
+              "That is the determinant $ad - bc$; the trace adds the diagonal.",
+              "这是行列式 $ad - bc$；迹是对角线元素之和。",
+            ),
+            why(a * d, "That multiplies the diagonal entries; the trace adds them.", "这是把对角线元素相乘；迹是相加。"),
+            why(b + c, "That adds the off-diagonal entries; the trace uses the diagonal.", "这是把非对角元素相加；迹用的是对角线元素。"),
+            why(
+              a + b,
+              "That adds the first row; the trace takes one entry from each row, on the diagonal.",
+              "这是把第一行相加；迹是每行取对角线上的一个元素。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Write the matrix", "写出矩阵"], t("", ""), [`A = ${mat(a, b, c, d)}`]],
+              [["Add the diagonal", "对角线相加"], t("", ""), [`\\operatorname{tr}(A) = ${a} + ${d} = ${ans}`]],
+            ],
+            t(
+              `$\\det(A - \\lambda I) = ${poly([1, "\\lambda^2"], [-ans, "\\lambda"], [a * d - b * c, ""])}$, so the eigenvalues add to $${ans}$, the trace.`,
+              `$\\det(A - \\lambda I) = ${poly([1, "\\lambda^2"], [-ans, "\\lambda"], [a * d - b * c, ""])}$，所以特征值之和为 $${ans}$，即迹。`,
+            ),
+          ),
         });
       },
     },
@@ -91,24 +119,39 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
       id: "the-initial-velocity-of-a-linear-system",
       title: t("The initial velocity of a linear system", "线性方程组的初始速度"),
       explanation: t(
-        "Reading the system as $\\mathbf{x}' = A\\mathbf{x}$ tells you the velocity at any state: multiply $A$ by the state vector. At $t = 0$,\n\n$$\\mathbf{x}'(0) = A\\mathbf{x}(0), \\qquad x_2'(0) = cx_1(0) + dx_2(0)$$\n\nfor $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$. Each row of $A$ gives one component, so use the second row for $x_2'$.",
-        "把方程组看作 $\\mathbf{x}' = A\\mathbf{x}$，就能得到任意状态下的速度：用 $A$ 乘以状态向量。在 $t = 0$ 时，对 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，\n\n$$\\mathbf{x}'(0) = A\\mathbf{x}(0), \\qquad x_2'(0) = cx_1(0) + dx_2(0).$$\n\n$A$ 的每一行给出一个分量，所以求 $x_2'$ 要用第二行。",
+        "Reading the system as $\\mathbf{x}' = A\\mathbf{x}$ tells you the velocity at any state: multiply $A$ by the state vector. At $t = 0$,\n\n$$\\mathbf{x}'(0) = A\\mathbf{x}(0), \\qquad x_2'(0) = cx_1(0) + dx_2(0)$$\n\nfor $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$. Each row of $A$ gives one component, so use the second row for $x_2'$. For $x_2' = 3x_1 - x_2$ at $\\mathbf{x}(0) = (2, 5)$: $x_2'(0) = 6 - 5 = 1$.\n\n> **Watch out.** Pair each coefficient with its own variable: $c$ multiplies $x_1(0)$ and $d$ multiplies $x_2(0)$; the first row gives $x_1'$, not $x_2'$.",
+        "把方程组看作 $\\mathbf{x}' = A\\mathbf{x}$，就能得到任意状态下的速度：用 $A$ 乘以状态向量。在 $t = 0$ 时，对 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，\n\n$$\\mathbf{x}'(0) = A\\mathbf{x}(0), \\qquad x_2'(0) = cx_1(0) + dx_2(0).$$\n\n$A$ 的每一行给出一个分量，所以求 $x_2'$ 要用第二行。对 $x_2' = 3x_1 - x_2$，$\\mathbf{x}(0) = (2, 5)$：$x_2'(0) = 6 - 5 = 1$。\n\n> **注意。** 每个系数要乘它自己的变量：$c$ 乘 $x_1(0)$，$d$ 乘 $x_2(0)$；第一行给出的是 $x_1'$，不是 $x_2'$。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c, d] = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6) || 2, rng.int(-6, 6)];
         const p = rng.int(-5, 5) || 1;
         const q = rng.int(-5, 5) || -2;
         const ans = c * p + d * q;
+        const first = a * p + b * q;
         return numberProblem({
           prompt: t(
             `$x_1' = ${poly([a, "x_1"], [b, "x_2"])}$, $x_2' = ${poly([c, "x_1"], [d, "x_2"])}$ with $x_1(0) = ${p}$ and $x_2(0) = ${q}$. Find $x_2'(0)$.`,
             `$x_1' = ${poly([a, "x_1"], [b, "x_2"])}$，$x_2' = ${poly([c, "x_1"], [d, "x_2"])}$，$x_1(0) = ${p}$，$x_2(0) = ${q}$。求 $x_2'(0)$。`,
           ),
           answer: ans,
-          wrong: [a * p + b * q, c * q + d * p, c + d].filter((w) => w !== ans),
-          solution: t(
-            `$x_2'(0) = ${par(c)} \\cdot ${par(p)} + ${par(d)} \\cdot ${par(q)} = ${ans}$.`,
-            `$x_2'(0) = ${par(c)} \\cdot ${par(p)} + ${par(d)} \\cdot ${par(q)} = ${ans}$。`,
+          mistakes: apart(ans, [
+            why(first, "That uses the first equation, which gives $x_1'(0)$.", "这是用了第一个方程，它给出的是 $x_1'(0)$。"),
+            why(
+              c * q + d * p,
+              "That swaps the initial values: $c$ goes with $x_1(0)$ and $d$ with $x_2(0)$.",
+              "这是把初值交换了：$c$ 对应 $x_1(0)$，$d$ 对应 $x_2(0)$。",
+            ),
+            why(c + d, "That adds the coefficients without multiplying by the state.", "这是把系数直接相加，没有乘以状态。"),
+          ]),
+          solution: walked(
+            [
+              [["Take the second row", "取第二行"], t("", ""), [`x_2'(0) = c\\,x_1(0) + d\\,x_2(0)`]],
+              [["Substitute", "代入"], t("", ""), [`x_2'(0) = ${par(c)} \\cdot ${par(p)} + ${par(d)} \\cdot ${par(q)} = ${ans}`]],
+            ],
+            t(
+              `$A\\mathbf{x}(0) = ${mat(a, b, c, d)}${vec(p, q)} = ${vec(first, ans)}$, whose second entry is $${ans}$.`,
+              `$A\\mathbf{x}(0) = ${mat(a, b, c, d)}${vec(p, q)} = ${vec(first, ans)}$，第二个分量为 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -124,6 +167,10 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
     "With the state variables $x_1 = y$, $x_2 = y'$, the second-order ODE $y'' + py' + qy = 0$ becomes the first-order system $\\mathbf{x}' = A\\mathbf{x}$ with a companion matrix.",
     "取状态变量 $x_1 = y$，$x_2 = y'$，二阶方程 $y'' + py' + qy = 0$ 化为以友矩阵为系数的一阶系统 $\\mathbf{x}' = A\\mathbf{x}$。",
   ),
+  intro: t(
+    "Take $y'' + 3y' + 2y = 0$ and set $x_1 = y$, $x_2 = y'$. Then $x_1' = x_2$ and $x_2' = y'' = -2x_1 - 3x_2$, so $\\mathbf{x}' = A\\mathbf{x}$ with the companion matrix $A = \\begin{pmatrix} 0 & 1 \\\\ -2 & -3 \\end{pmatrix}$.\n\nCheck: $\\det(A - \\lambda I) = \\lambda(\\lambda + 3) + 2 = \\lambda^2 + 3\\lambda + 2$, the characteristic polynomial of the original equation, with roots $-1$ and $-2$.\n\nIn this lesson we rewrite higher-order homogeneous equations as first-order systems and read the companion matrix.",
+    "考虑 $y'' + 3y' + 2y = 0$，令 $x_1 = y$，$x_2 = y'$。则 $x_1' = x_2$，$x_2' = y'' = -2x_1 - 3x_2$，所以 $\\mathbf{x}' = A\\mathbf{x}$，友矩阵为 $A = \\begin{pmatrix} 0 & 1 \\\\ -2 & -3 \\end{pmatrix}$。\n\n检验：$\\det(A - \\lambda I) = \\lambda(\\lambda + 3) + 2 = \\lambda^2 + 3\\lambda + 2$，正是原方程的特征多项式，根为 $-1$ 和 $-2$。\n\n本课我们把高阶齐次方程改写为一阶方程组，并读出友矩阵。",
+  ),
   prerequisites: ["introduction-to-systems-of-linear-odes"],
   encompasses: [{ topic: "introduction-to-systems-of-linear-odes", weight: 0.3 }],
   xp: 10,
@@ -132,38 +179,47 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
       id: "companion-matrix-of-scalar-homogeneous-odes",
       title: t("Companion matrix representation of a second-order ODE", "二阶常微分方程的友矩阵表示"),
       explanation: t(
-        "Introducing the derivative as a second unknown turns one second order equation into a system of two first order equations. Setting $x_1 = y, x_2 = y'$ for $y'' + p y' + q y = 0$ yields $x_1' = x_2$ and $x_2' = -q x_1 - p x_2$. The determinant of the companion matrix is $\\det(A) = q$.",
-        "把导数作为第二个未知函数引入，就把一个二阶方程化为两个一阶方程组成的方程组。对于方程 $y'' + p y' + q y = 0$，设 $x_1 = y, x_2 = y'$，得 $x_1' = x_2$ 且 $x_2' = -q x_1 - p x_2$。友矩阵 $\\begin{pmatrix} 0 & 1 \\\\ -q & -p \\end{pmatrix}$ 的行列式为 $\\det(A) = q$。",
+        "Introducing the derivative as a second unknown turns one second order equation into a system of two first order equations. Setting $x_1 = y, x_2 = y'$ for $y'' + p y' + q y = 0$ yields $x_1' = x_2$ and $x_2' = -q x_1 - p x_2$. The determinant of the companion matrix is $\\det(A) = q$. For $y'' + 3y' + 2y = 0$, $A = \\begin{pmatrix} 0 & 1 \\\\ -2 & -3 \\end{pmatrix}$ and $\\det(A) = 0 - (-2) = 2$.\n\n> **Watch out.** $\\det(A) = (0)(-p) - (1)(-q)$: the two minus signs cancel, so the determinant is $+q$, and $p$ does not enter it.",
+        "把导数作为第二个未知函数引入，就把一个二阶方程化为两个一阶方程组成的方程组。对于方程 $y'' + p y' + q y = 0$，设 $x_1 = y, x_2 = y'$，得 $x_1' = x_2$ 且 $x_2' = -q x_1 - p x_2$。友矩阵 $\\begin{pmatrix} 0 & 1 \\\\ -q & -p \\end{pmatrix}$ 的行列式为 $\\det(A) = q$。对 $y'' + 3y' + 2y = 0$，$A = \\begin{pmatrix} 0 & 1 \\\\ -2 & -3 \\end{pmatrix}$，$\\det(A) = 0 - (-2) = 2$。\n\n> **注意。** $\\det(A) = (0)(-p) - (1)(-q)$：两个负号相消，所以行列式是 $+q$，$p$ 不参与。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(1, 10);
         const q = rng.int(2, 35);
         const ans = q;
-
-        const prompt = t(
-          `Convert the second-order linear ODE $y'' + ${poly([p, "y'"])} + ${poly([q, "y"])} = 0$ into a first-order system $\\mathbf{x}' = A \\mathbf{x}$ using $x_1 = y$ and $x_2 = y'$. Find the determinant $\\det(A)$ of the resulting companion matrix $A$.`,
-          `通过令 $x_1 = y$ 与 $x_2 = y'$，将二阶线性微分方程 $y'' + ${poly([p, "y'"])} + ${poly([q, "y"])} = 0$ 转化为一阶微分方程组 $\\mathbf{x}' = A \\mathbf{x}$。求友矩阵 $A$ 的行列式 $\\det(A)$。`,
-        );
-        const solution = t(
-          steps(
-            `Define $x_1 = y$ and $x_2 = y'$. Then $x_1' = x_2$.`,
-            `From the ODE, $y'' = -${poly([q, "y"])} - ${poly([p, "y'"])} \\implies x_2' = -${poly([q, "x"])}_1 - ${poly([p, "x"])}_2$.`,
-            `The companion matrix is $A = \\begin{pmatrix} 0 & 1 \\\\ -${q} & -${p} \\end{pmatrix}$.`,
-            `Compute the determinant: $\\det(A) = (0)(-${p}) - (1)(-${q}) = ${ans}$.`,
-          ),
-          steps(
-            `设状态变量 $x_1 = y$，$x_2 = y'$。则第一状态方程为 $x_1' = x_2$。`,
-            `由原微分方程移项得 $y'' = -${poly([q, "y"])} - ${poly([p, "y'"])} \\implies x_2' = -${poly([q, "x"])}_1 - ${poly([p, "x"])}_2$。`,
-            `对应的友矩阵为 $A = \\begin{pmatrix} 0 & 1 \\\\ -${q} & -${p} \\end{pmatrix}$。`,
-            `计算行列式：$\\det(A) = (0)(-${p}) - (1)(-${q}) = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Convert the second-order linear ODE $${poly([1, "y''"], [p, "y'"], [q, "y"])} = 0$ into a first-order system $\\mathbf{x}' = A \\mathbf{x}$ using $x_1 = y$ and $x_2 = y'$. Find the determinant $\\det(A)$ of the resulting companion matrix $A$.`,
+            `通过令 $x_1 = y$ 与 $x_2 = y'$，将二阶线性微分方程 $${poly([1, "y''"], [p, "y'"], [q, "y"])} = 0$ 转化为一阶微分方程组 $\\mathbf{x}' = A \\mathbf{x}$。求友矩阵 $A$ 的行列式 $\\det(A)$。`,
+          ),
           answer: ans,
-          wrong: [-q, p, -p],
+          mistakes: apart(ans, [
+            why(-q, "The sign is off: $-(1)(-q) = +q$.", "符号错了：$-(1)(-q) = +q$。"),
+            why(
+              p,
+              "That is the coefficient of $y'$, which sits in the trace, not the determinant.",
+              "这是 $y'$ 的系数，它出现在迹中，而不是行列式中。",
+            ),
+            why(-p, "That is the trace $-p$ of the companion matrix.", "这是友矩阵的迹 $-p$。"),
+            why(
+              q - p,
+              "That mixes the coefficient $p$ in; the entry $0$ removes it from the determinant.",
+              "这是把 $p$ 也算进去了；元素 $0$ 使它不出现在行列式中。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Build the system", "建立方程组"],
+                t("Solve the equation for $y''$:", "从方程解出 $y''$："),
+                [`x_1' = x_2, \\qquad x_2' = ${poly([-q, "x_1"], [-p, "x_2"])}`, `A = ${mat(0, 1, -q, -p)}`],
+              ],
+              [["Take the determinant", "求行列式"], t("", ""), [`\\det(A) = (0)(${-p}) - (1)(${-q}) = ${ans}`]],
+            ],
+            t(
+              `$\\det(A - \\lambda I) = \\lambda^2 + ${p === 1 ? "" : p}\\lambda + ${q}$, the characteristic polynomial of the equation, whose constant term is $\\det(A) = ${q}$.`,
+              `$\\det(A - \\lambda I) = \\lambda^2 + ${p === 1 ? "" : p}\\lambda + ${q}$，正是方程的特征多项式，其常数项为 $\\det(A) = ${q}$。`,
+            ),
+          ),
         });
       },
     },
@@ -171,8 +227,8 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
       id: "the-companion-matrix-of-a-third-order-equation",
       title: t("The companion matrix of a third-order equation", "三阶方程的伴随矩阵"),
       explanation: t(
-        "For $y''' + ay'' + by' + cy = 0$, set $x_1 = y$, $x_2 = y'$, $x_3 = y''$. Then $x_1' = x_2$, $x_2' = x_3$ and $x_3' = -cx_1 - bx_2 - ax_3$, so\n\n$$A = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ -c & -b & -a \\end{pmatrix}.$$\n\nThe last row holds the coefficients with their signs changed, in the order $y, y', y''$.",
-        "对 $y''' + ay'' + by' + cy = 0$，令 $x_1 = y$，$x_2 = y'$，$x_3 = y''$。则 $x_1' = x_2$，$x_2' = x_3$，$x_3' = -cx_1 - bx_2 - ax_3$，所以\n\n$$A = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ -c & -b & -a \\end{pmatrix}.$$\n\n最后一行是改变符号后的系数，按 $y, y', y''$ 的顺序排列。",
+        "For $y''' + ay'' + by' + cy = 0$, set $x_1 = y$, $x_2 = y'$, $x_3 = y''$. Then $x_1' = x_2$, $x_2' = x_3$ and $x_3' = -cx_1 - bx_2 - ax_3$, so\n\n$$A = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ -c & -b & -a \\end{pmatrix}.$$\n\nThe last row holds the coefficients with their signs changed, in the order $y, y', y''$. For $y''' + 2y'' - 5y' + 3y = 0$ the last row is $(-3, 5, -2)$.\n\n> **Watch out.** The order is reversed from the way the equation is written: $A_{31}$ goes with $y$, so it is $-c$, and $A_{33}$ goes with $y''$; each sign is changed because the terms move to the other side.",
+        "对 $y''' + ay'' + by' + cy = 0$，令 $x_1 = y$，$x_2 = y'$，$x_3 = y''$。则 $x_1' = x_2$，$x_2' = x_3$，$x_3' = -cx_1 - bx_2 - ax_3$，所以\n\n$$A = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ -c & -b & -a \\end{pmatrix}.$$\n\n最后一行是改变符号后的系数，按 $y, y', y''$ 的顺序排列。对 $y''' + 2y'' - 5y' + 3y = 0$，最后一行为 $(-3, 5, -2)$。\n\n> **注意。** 顺序与方程的书写顺序相反：$A_{31}$ 对应 $y$，所以是 $-c$，$A_{33}$ 对应 $y''$；因为各项移到等号另一边，每个符号都要改变。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-6, 9) || 2;
@@ -180,16 +236,52 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
         const c = rng.int(-6, 9) || 5;
         const col = rng.int(1, 3);
         const ans = col === 1 ? -c : col === 2 ? -b : -a;
+        const named = col === 1 ? "y" : col === 2 ? "y'" : "y''";
         return numberProblem({
           prompt: t(
             `Write $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$ as $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x} = (y, y', y'')$. Find the entry $A_{3${col}}$.`,
             `把 $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$ 写成 $\\mathbf{x}' = A\\mathbf{x}$，其中 $\\mathbf{x} = (y, y', y'')$。求元素 $A_{3${col}}$。`,
           ),
           answer: ans,
-          wrong: [-ans, col === 1 ? -a : -c, col === 2 ? -a : -b].filter((w) => w !== ans),
-          solution: t(
-            `$x_3' = y''' = ${poly([-c, "x_1"], [-b, "x_2"], [-a, "x_3"])}$, so the third row is $(${-c}, ${-b}, ${-a})$ and $A_{3${col}} = ${ans}$.`,
-            `$x_3' = y''' = ${poly([-c, "x_1"], [-b, "x_2"], [-a, "x_3"])}$，所以第三行为 $(${-c}, ${-b}, ${-a})$，$A_{3${col}} = ${ans}$。`,
+          mistakes: apart(ans, [
+            why(
+              -ans,
+              "That keeps the sign from the equation; moving the term across changes it.",
+              "这是保留了方程中的符号；移项后符号要改变。",
+            ),
+            why(
+              col === 1 ? -a : -c,
+              "That reads the coefficients in the order written; column $1$ goes with $y$ and column $3$ with $y''$.",
+              "这是按书写顺序读系数；第 $1$ 列对应 $y$，第 $3$ 列对应 $y''$。",
+            ),
+            why(col === 2 ? -a : -b, "That takes the coefficient of a different derivative.", "这是取了另一个导数的系数。"),
+            ...(col === 1
+              ? []
+              : [
+                  why(
+                    0,
+                    "That is an entry of the first two rows; the third row holds the coefficients.",
+                    "这是前两行中的元素；系数在第三行。",
+                  ),
+                ]),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Solve for the highest derivative", "解出最高阶导数"],
+                t("", ""),
+                [`x_3' = y''' = ${poly([-c, "x_1"], [-b, "x_2"], [-a, "x_3"])}`],
+              ],
+              [
+                ["Read the third row", "读出第三行"],
+                t(`Column ${col} goes with $${named}$:`, `第 ${col} 列对应 $${named}$：`),
+                [`(${-c}, ${-b}, ${-a}), \\qquad A_{3${col}} = ${ans}`],
+              ],
+            ],
+            t(
+              `Moving the third row back across: $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$, the original equation.`,
+              `把第三行移回等号另一边：$${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$，正是原方程。`,
+            ),
           ),
         });
       },
@@ -205,6 +297,10 @@ export const expressingInhomogeneousOdesAsFirstOrderSystems: TopicDef = {
     "An inhomogeneous ODE $y'' + py' + qy = f(t)$ becomes $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{g}(t)$, where $\\mathbf{g}(t) = (0, f(t))^T$ carries the forcing.",
     "非齐次方程 $y'' + py' + qy = f(t)$ 化为 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{g}(t)$，外力集中在 $\\mathbf{g}(t) = (0, f(t))^T$ 中。",
   ),
+  intro: t(
+    "Take $y'' + 3y' + 2y = e^{t}$ with $y(0) = 1$, $y'(0) = 0$. With $x_1 = y$ and $x_2 = y'$, the system is $x_1' = x_2$ and $x_2' = -2x_1 - 3x_2 + e^{t}$, that is $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{g}(t)$ with $\\mathbf{g}(t) = (0, e^{t})$. At $t = 0$, $x_2'(0) = -2 - 0 + 1 = -1$.\n\nCheck: the original equation gives $y''(0) = e^{0} - 3y'(0) - 2y(0) = 1 - 0 - 2 = -1$.\n\nIn this lesson we carry a forcing term into the first-order system as a forcing vector.",
+    "考虑 $y'' + 3y' + 2y = e^{t}$，$y(0) = 1$，$y'(0) = 0$。取 $x_1 = y$，$x_2 = y'$，方程组为 $x_1' = x_2$，$x_2' = -2x_1 - 3x_2 + e^{t}$，即 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{g}(t)$，$\\mathbf{g}(t) = (0, e^{t})$。在 $t = 0$ 时，$x_2'(0) = -2 - 0 + 1 = -1$。\n\n检验：由原方程得 $y''(0) = e^{0} - 3y'(0) - 2y(0) = 1 - 0 - 2 = -1$。\n\n本课我们把强迫项作为强迫向量带入一阶方程组。",
+  ),
   prerequisites: ["expressing-homogeneous-odes-as-first-order-systems"],
   encompasses: [
     {
@@ -218,35 +314,37 @@ export const expressingInhomogeneousOdesAsFirstOrderSystems: TopicDef = {
       id: "forcing-vector-in-first-order-companion-systems",
       title: t("Forcing vector in first-order companion systems", "一阶伴随系统中的外力激励向量"),
       explanation: t(
-        "The forcing term of the original equation appears only in the equation for the highest derivative, so it occupies the last entry of the forcing vector. For $y'' + p y' + q y = K t^2$, state variables $x_1 = y, x_2 = y'$ yield $\\mathbf{x}' = A \\mathbf{x} + \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$. At $t = 2$, the second component is $4K$.",
-        "原方程的强迫项只出现在最高阶导数的方程中，所以它位于强迫向量的最后一个分量。对于 $y'' + p y' + q y = K t^2$，转化为状态空间形式后外力激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$。在 $t = 2$ 处第二分量为 $4K$。",
+        "The forcing term of the original equation appears only in the equation for the highest derivative, so it occupies the last entry of the forcing vector. For $y'' + p y' + q y = K t^2$, state variables $x_1 = y, x_2 = y'$ yield $\\mathbf{x}' = A \\mathbf{x} + \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$. At $t = 2$, the second component is $4K$; for $K = 5$ it is $20$.\n\n> **Watch out.** The first component of $\\mathbf{g}$ is $0$, because $x_1' = x_2$ has no forcing; and evaluate $t^{2}$, not $t$, at the given time.",
+        "原方程的强迫项只出现在最高阶导数的方程中，所以它位于强迫向量的最后一个分量。对于 $y'' + p y' + q y = K t^2$，转化为状态空间形式后外力激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$。在 $t = 2$ 处第二分量为 $4K$；$K = 5$ 时为 $20$。\n\n> **注意。** $\\mathbf{g}$ 的第一个分量是 $0$，因为 $x_1' = x_2$ 没有强迫项；在给定时刻要计算 $t^{2}$ 而不是 $t$。",
       ),
       generate(rng: Rng): Problem {
         const K = rng.int(2, 40);
         const ans = 4 * K;
-
-        const prompt = t(
-          `When the inhomogeneous differential equation $y'' + 3y' + 2y = ${K}t^2$ is expressed as a first-order system $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{g}(t)$ with $\\mathbf{x} = \\begin{pmatrix} y \\\\ y' \\end{pmatrix}$, evaluate the second component $g_2(2)$ at $t = 2$.`,
-          `将非齐次常微分方程 $y'' + 3y' + 2y = ${K}t^2$ 化为一阶微分方程组 $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{g}(t)$（其中状态向量 $\\mathbf{x} = \\begin{pmatrix} y \\\\ y' \\end{pmatrix}$）。求激励向量第二分量在 $t = 2$ 处的值 $g_2(2)$。`,
-        );
-        const solution = t(
-          steps(
-            `With $x_1 = y$ and $x_2 = y'$, we have $x_1' = x_2$ and $x_2' = -2x_1 - 3x_2 + ${K}t^2$.`,
-            `The forcing vector is $\\mathbf{g}(t) = \\begin{pmatrix} 0 \\\\ ${K}t^2 \\end{pmatrix}$.`,
-            `Evaluate at $t = 2$: $g_2(2) = ${K}(2)^2 = ${K} \\times 4 = ${ans}$.`,
-          ),
-          steps(
-            `设状态变量 $x_1 = y$，$x_2 = y'$，得到方程 $x_1' = x_2$ 与 $x_2' = -2x_1 - 3x_2 + ${K}t^2$。`,
-            `对应的外部激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} 0 \\\\ ${K}t^2 \\end{pmatrix}$。`,
-            `在 $t = 2$ 处求值：$g_2(2) = ${K}(2)^2 = ${K} \\times 4 = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `When the inhomogeneous differential equation $y'' + 3y' + 2y = ${K}t^2$ is expressed as a first-order system $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{g}(t)$ with $\\mathbf{x} = \\begin{pmatrix} y \\\\ y' \\end{pmatrix}$, evaluate the second component $g_2(2)$ at $t = 2$.`,
+            `将非齐次常微分方程 $y'' + 3y' + 2y = ${K}t^2$ 化为一阶微分方程组 $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{g}(t)$（其中状态向量 $\\mathbf{x} = \\begin{pmatrix} y \\\\ y' \\end{pmatrix}$）。求激励向量第二分量在 $t = 2$ 处的值 $g_2(2)$。`,
+          ),
           answer: ans,
-          wrong: [K, 2 * K, ans + 2],
+          mistakes: apart(ans, [
+            why(K, "That is the coefficient alone; evaluate $t^{2}$ at $t = 2$.", "这只是系数；还要在 $t = 2$ 处计算 $t^{2}$。"),
+            why(2 * K, "That uses $t$ in place of $t^{2}$.", "这是用 $t$ 代替了 $t^{2}$。"),
+            why(0, "That is $g_1$; the forcing sits in the second component.", "这是 $g_1$；强迫项在第二个分量中。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Build the system", "建立方程组"],
+                t("", ""),
+                [`x_1' = x_2, \\qquad x_2' = -2x_1 - 3x_2 + ${K}t^2`, `\\mathbf{g}(t) = ${vec(0, `${K}t^2`)}`],
+              ],
+              [["Evaluate", "求值"], t("", ""), [`g_2(2) = ${K} \\cdot 2^2 = ${ans}`]],
+            ],
+            t(
+              `The original equation has $y'' = ${K}t^2 - 3y' - 2y$, whose forcing part at $t = 2$ is $${K} \\cdot 4 = ${ans}$.`,
+              `原方程给出 $y'' = ${K}t^2 - 3y' - 2y$，其强迫部分在 $t = 2$ 处为 $${K} \\cdot 4 = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -254,8 +352,8 @@ export const expressingInhomogeneousOdesAsFirstOrderSystems: TopicDef = {
       id: "the-state-velocity-of-a-forced-equation",
       title: t("The state velocity of a forced equation", "受迫方程的状态速度"),
       explanation: t(
-        "With $x_1 = y$ and $x_2 = y'$, the forced equation $y'' + py' + qy = g(t)$ becomes\n\n$$x_1' = x_2, \\qquad x_2' = -qx_1 - px_2 + g(t).$$\n\nThe forcing enters only the last equation, and it is evaluated at the same time as the state. So the velocity of $x_2$ at time $t_0$ uses $y(t_0)$, $y'(t_0)$ and $g(t_0)$ together.",
-        "令 $x_1 = y$，$x_2 = y'$，受迫方程 $y'' + py' + qy = g(t)$ 化为\n\n$$x_1' = x_2, \\qquad x_2' = -qx_1 - px_2 + g(t).$$\n\n强迫项只出现在最后一个方程中，并且与状态在同一时刻取值。所以 $t_0$ 时刻 $x_2$ 的变化率要同时用到 $y(t_0)$、$y'(t_0)$ 和 $g(t_0)$。",
+        "With $x_1 = y$ and $x_2 = y'$, the forced equation $y'' + py' + qy = g(t)$ becomes\n\n$$x_1' = x_2, \\qquad x_2' = -qx_1 - px_2 + g(t).$$\n\nThe forcing enters only the last equation, and it is evaluated at the same time as the state. So the velocity of $x_2$ at time $t_0$ uses $y(t_0)$, $y'(t_0)$ and $g(t_0)$ together. For $y'' + y' + 2y = 3t$ with $y(1) = 1$, $y'(1) = 2$: $x_2'(1) = -2 - 2 + 3 = -1$.\n\n> **Watch out.** Moving $py'$ and $qy$ across changes their signs, but the forcing stays positive; and $g$ is evaluated at $t_0$, not at $0$.",
+        "令 $x_1 = y$，$x_2 = y'$，受迫方程 $y'' + py' + qy = g(t)$ 化为\n\n$$x_1' = x_2, \\qquad x_2' = -qx_1 - px_2 + g(t).$$\n\n强迫项只出现在最后一个方程中，并且与状态在同一时刻取值。所以 $t_0$ 时刻 $x_2$ 的变化率要同时用到 $y(t_0)$、$y'(t_0)$ 和 $g(t_0)$。对 $y'' + y' + 2y = 3t$，$y(1) = 1$，$y'(1) = 2$：$x_2'(1) = -2 - 2 + 3 = -1$。\n\n> **注意。** 把 $py'$ 和 $qy$ 移项时符号改变，但强迫项保持正号；$g$ 要在 $t_0$ 而不是 $0$ 处取值。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(-5, 6) || 2;
@@ -272,15 +370,36 @@ export const expressingInhomogeneousOdesAsFirstOrderSystems: TopicDef = {
             `取 $x_1 = y$，$x_2 = y'$，把 $${poly([1, "y''"], [p, "y'"], [q, "y"])} = ${poly([m, "t"], [k, ""])}$ 写成方程组。若 $y(1) = ${y1}$，$y'(1) = ${v1}$，求 $x_2'(1)$。`,
           ),
           answer: ans,
-          wrong: [-q * y1 - p * v1, g + q * y1 + p * v1, k - q * y1 - p * v1, v1],
-          solution: t(
-            steps(
-              `The system is $x_1' = x_2$, $x_2' = ${poly([-q, "x_1"], [-p, "x_2"])} + g(t)$ with $g(t) = ${poly([m, "t"], [k, ""])}$.`,
-              `At $t = 1$: $g(1) = ${g}$, so $x_2'(1) = ${-q} \\cdot ${par(y1)} ${signed(-p)} \\cdot ${par(v1)} + ${par(g)} = ${ans}$.`,
+          mistakes: apart(ans, [
+            why(-q * y1 - p * v1, "That leaves out the forcing $g(1)$.", "这里漏掉了强迫项 $g(1)$。"),
+            why(
+              g + q * y1 + p * v1,
+              "That keeps the signs of $py'$ and $qy$; moving them across changes them.",
+              "这是保留了 $py'$ 和 $qy$ 的符号；移项后符号要改变。",
             ),
-            steps(
-              `方程组为 $x_1' = x_2$，$x_2' = ${poly([-q, "x_1"], [-p, "x_2"])} + g(t)$，其中 $g(t) = ${poly([m, "t"], [k, ""])}$。`,
-              `在 $t = 1$ 时 $g(1) = ${g}$，所以 $x_2'(1) = ${-q} \\cdot ${par(y1)} ${signed(-p)} \\cdot ${par(v1)} + ${par(g)} = ${ans}$。`,
+            why(
+              k - q * y1 - p * v1,
+              "That evaluates the forcing at $t = 0$ instead of $t = 1$.",
+              "这是在 $t = 0$ 而不是 $t = 1$ 处计算强迫项。",
+            ),
+            why(v1, "That is $x_1'(1) = y'(1)$, the other component.", "这是另一个分量 $x_1'(1) = y'(1)$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Build the system", "建立方程组"],
+                t("", ""),
+                [`x_1' = x_2, \\qquad x_2' = ${poly([-q, "x_1"], [-p, "x_2"])} + g(t)`, `g(1) = ${poly([m, ""], [k, ""])} = ${g}`],
+              ],
+              [
+                ["Substitute at t = 1", "在 t = 1 处代入"],
+                t("", ""),
+                [`x_2'(1) = ${par(-q)} \\cdot ${par(y1)} + ${par(-p)} \\cdot ${par(v1)} + ${par(g)} = ${ans}`],
+              ],
+            ],
+            t(
+              `In the original equation: $${ans} ${signed(p)} \\cdot ${par(v1)} ${signed(q)} \\cdot ${par(y1)} = ${g} = g(1)$.`,
+              `代回原方程：$${ans} ${signed(p)} \\cdot ${par(v1)} ${signed(q)} \\cdot ${par(y1)} = ${g} = g(1)$。`,
             ),
           ),
         });
@@ -297,6 +416,10 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
     "Vector solutions $\\mathbf{x}_1(t), \\mathbf{x}_2(t)$ are linearly independent if and only if their Wronskian $W(t) = \\det\\begin{pmatrix} \\mathbf{x}_1(t) & \\mathbf{x}_2(t) \\end{pmatrix}$ is non-zero.",
     "向量解 $\\mathbf{x}_1(t), \\mathbf{x}_2(t)$ 线性无关当且仅当其朗斯基行列式 $W(t) = \\det\\begin{pmatrix} \\mathbf{x}_1(t) & \\mathbf{x}_2(t) \\end{pmatrix}$ 不为零。",
   ),
+  intro: t(
+    "The system $\\mathbf{x}' = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}\\mathbf{x}$ has the solutions $\\mathbf{x}_1 = e^{t}(1, 1)$ and $\\mathbf{x}_2 = e^{-t}(1, -1)$. Their Wronskian is $W(t) = \\det\\begin{pmatrix} e^{t} & e^{-t} \\\\ e^{t} & -e^{-t} \\end{pmatrix} = -1 - 1 = -2$, which is never zero, so the two solutions are independent.\n\nCheck: the trace of the matrix is $0$, and Abel's formula gives $W(t) = W(0)e^{0 \\cdot t} = -2$ for every $t$.\n\nIn this lesson we test vector solutions for independence with the Wronskian and follow how it changes in time.",
+    "方程组 $\\mathbf{x}' = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}\\mathbf{x}$ 有解 $\\mathbf{x}_1 = e^{t}(1, 1)$ 和 $\\mathbf{x}_2 = e^{-t}(1, -1)$。它们的朗斯基行列式为 $W(t) = \\det\\begin{pmatrix} e^{t} & e^{-t} \\\\ e^{t} & -e^{-t} \\end{pmatrix} = -1 - 1 = -2$，始终不为零，所以两个解线性无关。\n\n检验：矩阵的迹为 $0$，阿贝尔公式给出对每个 $t$ 都有 $W(t) = W(0)e^{0 \\cdot t} = -2$。\n\n本课我们用朗斯基行列式检验向量解的线性无关性，并研究它随时间的变化。",
+  ),
   prerequisites: ["expressing-homogeneous-odes-as-first-order-systems"],
   encompasses: [],
   xp: 10,
@@ -305,37 +428,43 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
       id: "wronskian-of-vector-solutions",
       title: t("Wronskian determinant of vector solutions", "向量解组的朗斯基行列式"),
       explanation: t(
-        "For vector solutions the Wronskian is the determinant of the matrix whose columns are the solutions, and it tests whether they are independent. For $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ and $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$, the Wronskian at $t = 0$ is $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$.",
-        "对于向量解，朗斯基行列式是以这些解为列的矩阵的行列式，用来检验它们是否线性无关。对于向量解 $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ 与 $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$，在 $t = 0$ 处的朗斯基行列式为 $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$。",
+        "For vector solutions the Wronskian is the determinant of the matrix whose columns are the solutions, and it tests whether they are independent. For $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ and $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$, the Wronskian at $t = 0$ is $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$. For $a = 2$ and $b = 7$ it is $5$.\n\n> **Watch out.** The solutions are the columns, so $W(0) = (1)(b) - (1)(a)$: the second solution's entry comes first, and the exponentials are all $1$ at $t = 0$.",
+        "对于向量解，朗斯基行列式是以这些解为列的矩阵的行列式，用来检验它们是否线性无关。对于向量解 $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ 与 $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$，在 $t = 0$ 处的朗斯基行列式为 $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$。对 $a = 2$，$b = 7$，它是 $5$。\n\n> **注意。** 解是列，所以 $W(0) = (1)(b) - (1)(a)$：第二个解的分量在前；在 $t = 0$ 时所有指数都等于 $1$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 10);
         const diff = rng.int(2, 25);
         const b = a + diff;
         const ans = diff;
-
-        const prompt = t(
-          `Calculate the initial Wronskian $W(0) = \\det(\\mathbf{x}_1(0), \\mathbf{x}_2(0))$ for the two vector solutions $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ ${a} \\end{pmatrix}e^{2t}$ and $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ ${b} \\end{pmatrix}e^{-3t}$.`,
-          `计算两个向量解 $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ ${a} \\end{pmatrix}e^{2t}$ 与 $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ ${b} \\end{pmatrix}e^{-3t}$ 在 $t = 0$ 处的初始朗斯基行列式 $W(0) = \\det(\\mathbf{x}_1(0), \\mathbf{x}_2(0))$。`,
-        );
-        const solution = t(
-          steps(
-            `At $t = 0$, the vector solutions are $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ ${a} \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 1 \\\\ ${b} \\end{pmatrix}$.`,
-            `Form the fundamental matrix at $t = 0$: $X(0) = \\begin{pmatrix} 1 & 1 \\\\ ${a} & ${b} \\end{pmatrix}$.`,
-            `Calculate the determinant: $W(0) = (1)(${b}) - (1)(${a}) = ${b} - ${a} = ${ans}$.`,
-          ),
-          steps(
-            `在 $t = 0$ 时，两向量解分别为 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ ${a} \\end{pmatrix}$ 与 $\\mathbf{x}_2(0) = \\begin{pmatrix} 1 \\\\ ${b} \\end{pmatrix}$。`,
-            `构成 $t = 0$ 处的基本矩阵：$X(0) = \\begin{pmatrix} 1 & 1 \\\\ ${a} & ${b} \\end{pmatrix}$。`,
-            `计算行列式：$W(0) = (1)(${b}) - (1)(${a}) = ${b} - ${a} = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the initial Wronskian $W(0) = \\det(\\mathbf{x}_1(0), \\mathbf{x}_2(0))$ for the two vector solutions $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ ${a} \\end{pmatrix}e^{2t}$ and $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ ${b} \\end{pmatrix}e^{-3t}$.`,
+            `计算两个向量解 $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ ${a} \\end{pmatrix}e^{2t}$ 与 $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ ${b} \\end{pmatrix}e^{-3t}$ 在 $t = 0$ 处的初始朗斯基行列式 $W(0) = \\det(\\mathbf{x}_1(0), \\mathbf{x}_2(0))$。`,
+          ),
           answer: ans,
-          wrong: [a + b, a * b, -ans],
+          mistakes: apart(ans, [
+            why(-ans, "The order is reversed; $W(0) = (1)(b) - (1)(a)$.", "顺序反了；$W(0) = (1)(b) - (1)(a)$。"),
+            why(a + b, "That adds the products; a determinant subtracts them.", "这是把乘积相加；行列式是相减。"),
+            why(
+              a * b,
+              "That multiplies the lower entries; the determinant is $1 \\cdot b - 1 \\cdot a$.",
+              "这是把下面两个分量相乘；行列式是 $1 \\cdot b - 1 \\cdot a$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate at t = 0", "在 t = 0 处求值"],
+                t("The exponentials are $1$, and the solutions form the columns:", "指数都等于 $1$，解作为各列："),
+                [`X(0) = ${mat(1, 1, a, b)}`],
+              ],
+              [["Take the determinant", "求行列式"], t("", ""), [`W(0) = (1)(${b}) - (1)(${a}) = ${ans}`]],
+            ],
+            t(
+              `$W(0) = ${ans} \\ne 0$, and indeed $(1, ${a})$ is not a multiple of $(1, ${b})$, so the solutions are independent.`,
+              `$W(0) = ${ans} \\ne 0$；确实 $(1, ${a})$ 不是 $(1, ${b})$ 的倍数，所以两个解线性无关。`,
+            ),
+          ),
         });
       },
     },
@@ -343,8 +472,8 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
       id: "the-growth-rate-of-the-wronskian",
       title: t("The growth rate of the Wronskian", "朗斯基行列式的增长率"),
       explanation: t(
-        "Abel's formula says how the Wronskian of two solutions of $\\mathbf{x}' = A\\mathbf{x}$ changes in time without solving the system:\n\n$$W(t) = W(0)\\,e^{\\operatorname{tr}(A)\\,t}.$$\n\nThe exponential never vanishes, so the Wronskian is either zero for all $t$ or zero for no $t$. Solutions that are independent at one time stay independent, and the rate in the exponent is the trace, not the determinant.",
-        "阿贝尔公式不用解方程组就说明了 $\\mathbf{x}' = A\\mathbf{x}$ 两个解的朗斯基行列式如何随时间变化：\n\n$$W(t) = W(0)\\,e^{\\operatorname{tr}(A)\\,t}.$$\n\n指数函数从不为零，所以朗斯基行列式要么恒为零，要么处处不为零。在某一时刻线性无关的解始终线性无关，指数中的速率是迹而不是行列式。",
+        "Abel's formula says how the Wronskian of two solutions of $\\mathbf{x}' = A\\mathbf{x}$ changes in time without solving the system:\n\n$$W(t) = W(0)\\,e^{\\operatorname{tr}(A)\\,t}.$$\n\nThe exponential never vanishes, so the Wronskian is either zero for all $t$ or zero for no $t$. Solutions that are independent at one time stay independent, and the rate in the exponent is the trace, not the determinant. For $A = \\begin{pmatrix} 3 & 1 \\\\ 2 & -5 \\end{pmatrix}$ the rate is $3 - 5 = -2$.\n\n> **Watch out.** The exponent uses the trace $a + d$; the determinant, the difference $a - d$ and the product $ad$ are all different numbers.",
+        "阿贝尔公式不用解方程组就说明了 $\\mathbf{x}' = A\\mathbf{x}$ 两个解的朗斯基行列式如何随时间变化：\n\n$$W(t) = W(0)\\,e^{\\operatorname{tr}(A)\\,t}.$$\n\n指数函数从不为零，所以朗斯基行列式要么恒为零，要么处处不为零。在某一时刻线性无关的解始终线性无关，指数中的速率是迹而不是行列式。对 $A = \\begin{pmatrix} 3 & 1 \\\\ 2 & -5 \\end{pmatrix}$，速率为 $3 - 5 = -2$。\n\n> **注意。** 指数用的是迹 $a + d$；行列式、差 $a - d$ 和积 $ad$ 都是不同的数。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c, d] = [rng.int(-7, 7), rng.int(-7, 7) || 1, rng.int(-7, 7), rng.int(-7, 7)];
@@ -356,10 +485,21 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
             `$\\mathbf{x}' = ${mat(a, b, c, d)}\\mathbf{x}$ 的两个解满足 $W(0) = ${w0}$，于是 $W(t) = ${w0}e^{kt}$。求 $k$。`,
           ),
           answer: ans,
-          wrong: [a * d - b * c, a - d, -ans, a * d],
-          solution: t(
-            `By Abel's formula the rate is the trace: $k = ${a} ${signed(d)} = ${ans}$.`,
-            `由阿贝尔公式，速率等于迹：$k = ${a} ${signed(d)} = ${ans}$。`,
+          mistakes: apart(ans, [
+            why(a * d - b * c, "That is the determinant; Abel's formula uses the trace.", "这是行列式；阿贝尔公式用的是迹。"),
+            why(a - d, "That subtracts the diagonal entries; the trace adds them.", "这是把对角线元素相减；迹是相加。"),
+            why(-ans, "The sign is flipped; $W' = \\operatorname{tr}(A)W$.", "符号反了；$W' = \\operatorname{tr}(A)W$。"),
+            why(a * d, "That multiplies the diagonal entries; the trace adds them.", "这是把对角线元素相乘；迹是相加。"),
+          ]),
+          solution: walked(
+            [
+              [["Use Abel's formula", "用阿贝尔公式"], t("", ""), [`W(t) = W(0)\\,e^{\\operatorname{tr}(A)\\,t}`]],
+              [["Take the trace", "求迹"], t("", ""), [`k = ${a} ${signed(d)} = ${ans}`]],
+            ],
+            t(
+              `The eigenvalues of $A$ add to the trace $${ans}$, and the Wronskian of two eigen-solutions $e^{\\lambda_1 t}\\mathbf{v}_1$, $e^{\\lambda_2 t}\\mathbf{v}_2$ carries $e^{(\\lambda_1 + \\lambda_2)t}$.`,
+              `$A$ 的特征值之和为迹 $${ans}$，两个特征解 $e^{\\lambda_1 t}\\mathbf{v}_1$、$e^{\\lambda_2 t}\\mathbf{v}_2$ 的朗斯基行列式含因子 $e^{(\\lambda_1 + \\lambda_2)t}$。`,
+            ),
           ),
         });
       },
@@ -375,6 +515,10 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
     "The general solution of $\\mathbf{x}' = A\\mathbf{x}$ is $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$, and an initial condition $\\mathbf{x}(0) = \\mathbf{x}_0$ fixes the constants.",
     "$\\mathbf{x}' = A\\mathbf{x}$ 的通解为 $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$，初值条件 $\\mathbf{x}(0) = \\mathbf{x}_0$ 唯一确定常数。",
   ),
+  intro: t(
+    "The system $\\mathbf{x}' = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}\\mathbf{x}$ has the general solution $\\mathbf{x} = c_1e^{t}(1, 1) + c_2e^{-t}(1, -1)$. For $\\mathbf{x}(0) = (3, 1)$, setting $t = 0$ gives $c_1 + c_2 = 3$ and $c_1 - c_2 = 1$, so $c_1 = 2$ and $c_2 = 1$.\n\nCheck: $2(1, 1) + 1(1, -1) = (3, 1)$.\n\nIn this lesson we combine independent solutions into the general solution and fit its constants to an initial state.",
+    "方程组 $\\mathbf{x}' = \\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}\\mathbf{x}$ 的通解为 $\\mathbf{x} = c_1e^{t}(1, 1) + c_2e^{-t}(1, -1)$。对 $\\mathbf{x}(0) = (3, 1)$，令 $t = 0$ 得 $c_1 + c_2 = 3$，$c_1 - c_2 = 1$，所以 $c_1 = 2$，$c_2 = 1$。\n\n检验：$2(1, 1) + 1(1, -1) = (3, 1)$。\n\n本课我们把线性无关的解组合成通解，并用初始状态确定其中的常数。",
+  ),
   prerequisites: ["linear-independence-for-homogeneous-systems-of-odes"],
   encompasses: [],
   xp: 10,
@@ -383,36 +527,38 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
       id: "fundamental-set-and-superposition-of-vector-solutions",
       title: t("Superposition and initial condition coefficients", "基本解组线性组合与初值系数确定"),
       explanation: t(
-        "When the solutions start at the standard unit vectors, the coefficients needed for any initial condition are simply the entries of the initial vector. If $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$, then $\\mathbf{x}(0) = \\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix}$. For initial vector $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$, the coefficients are $c_1 = u_0$ and $c_2 = v_0$.",
-        "当各个解从标准单位向量出发时，任意初始条件所需的系数就是初始向量的各个分量。若规范化基本解在初值处满足 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 且 $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$，则任意初值 $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$ 的组合系数直接为 $c_1 = u_0$ 与 $c_2 = v_0$。",
+        "When the solutions start at the standard unit vectors, the coefficients needed for any initial condition are simply the entries of the initial vector. If $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$, then $\\mathbf{x}(0) = \\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix}$. For initial vector $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$, the coefficients are $c_1 = u_0$ and $c_2 = v_0$. For $\\mathbf{x}(0) = (4, 9)$, $c_1 = 4$ and $c_2 = 9$.\n\n> **Watch out.** Each coefficient matches one entry: $c_1$ is the first entry and $c_2$ the second; they are not multiplied together.",
+        "当各个解从标准单位向量出发时，任意初始条件所需的系数就是初始向量的各个分量。若规范化基本解在初值处满足 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 且 $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$，则任意初值 $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$ 的组合系数直接为 $c_1 = u_0$ 与 $c_2 = v_0$。对 $\\mathbf{x}(0) = (4, 9)$，$c_1 = 4$，$c_2 = 9$。\n\n> **注意。** 每个系数对应一个分量：$c_1$ 是第一个分量，$c_2$ 是第二个；它们不相乘。",
       ),
       generate(rng: Rng): Problem {
         const u0 = rng.int(2, 20);
         const v0 = rng.int(2, 20);
         const ans = u0 + v0;
-
-        const prompt = t(
-          `Suppose a fundamental set of solutions satisfies $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$. The general solution $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$ satisfies the initial condition $\\mathbf{x}(0) = \\begin{pmatrix} ${u0} \\\\ ${v0} \\end{pmatrix}$. Find the sum of coefficients $c_1 + c_2$.`,
-          `设某齐次系统的基本解组满足规范化初值 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 与 $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$。通解 $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$ 满足初始条件 $\\mathbf{x}(0) = \\begin{pmatrix} ${u0} \\\\ ${v0} \\end{pmatrix}$。求系数之和 $c_1 + c_2$。`,
-        );
-        const solution = t(
-          steps(
-            `Evaluate at $t = 0$: $\\mathbf{x}(0) = c_1 \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} + c_2 \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix}$.`,
-            `Equate to the given initial vector: $\\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix} = \\begin{pmatrix} ${u0} \\\\ ${v0} \\end{pmatrix} \\implies c_1 = ${u0},\\ c_2 = ${v0}$.`,
-            `Sum the coefficients: $c_1 + c_2 = ${u0} + ${v0} = ${ans}$.`,
-          ),
-          steps(
-            `代入 $t = 0$ 处的值：$\\mathbf{x}(0) = c_1 \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} + c_2 \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix}$。`,
-            `与已知初始向量对比：$\\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix} = \\begin{pmatrix} ${u0} \\\\ ${v0} \\end{pmatrix} \\implies c_1 = ${u0},\\ c_2 = ${v0}$。`,
-            `求系数之和：$c_1 + c_2 = ${u0} + ${v0} = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Suppose a fundamental set of solutions satisfies $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$. The general solution $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$ satisfies the initial condition $\\mathbf{x}(0) = \\begin{pmatrix} ${u0} \\\\ ${v0} \\end{pmatrix}$. Find the sum of coefficients $c_1 + c_2$.`,
+            `设某齐次系统的基本解组满足规范化初值 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 与 $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$。通解 $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$ 满足初始条件 $\\mathbf{x}(0) = \\begin{pmatrix} ${u0} \\\\ ${v0} \\end{pmatrix}$。求系数之和 $c_1 + c_2$。`,
+          ),
           answer: ans,
-          wrong: [u0 * v0, Math.abs(u0 - v0), ans + 2],
+          mistakes: apart(ans, [
+            why(u0 * v0, "That multiplies the coefficients; the question asks for their sum.", "这是把系数相乘；题目要求的是和。"),
+            why(Math.abs(u0 - v0), "That subtracts the coefficients; add them.", "这是把系数相减；应当相加。"),
+            why(u0, "That is $c_1$ alone; add $c_2$.", "这只是 $c_1$；还要加上 $c_2$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate at t = 0", "在 t = 0 处求值"],
+                t("", ""),
+                [`\\mathbf{x}(0) = c_1${vec(1, 0)} + c_2${vec(0, 1)} = ${vec("c_1", "c_2")} = ${vec(u0, v0)}`],
+              ],
+              [["Add", "相加"], t("", ""), [`c_1 + c_2 = ${u0} + ${v0} = ${ans}`]],
+            ],
+            t(
+              `$${u0}${vec(1, 0)} + ${v0}${vec(0, 1)} = ${vec(u0, v0)}$, the given initial state.`,
+              `$${u0}${vec(1, 0)} + ${v0}${vec(0, 1)} = ${vec(u0, v0)}$，正是给定的初始状态。`,
+            ),
+          ),
         });
       },
     },
@@ -420,12 +566,13 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
       id: "fitting-the-general-solution-to-an-initial-state",
       title: t("Fitting the general solution to an initial state", "用初始状态确定通解"),
       explanation: t(
-        "The general solution $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$ reduces at $t = 0$ to $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$, because every exponential equals $1$ there. That is a linear system for the constants. With $\\mathbf{v}_1 = (1, m_1)$ and $\\mathbf{v}_2 = (1, m_2)$,\n\n$$c_1 + c_2 = x_1(0), \\qquad m_1c_1 + m_2c_2 = x_2(0).$$",
-        "通解 $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$ 在 $t = 0$ 时化为 $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$，因为那时每个指数都等于 $1$。这是关于常数的线性方程组。当 $\\mathbf{v}_1 = (1, m_1)$，$\\mathbf{v}_2 = (1, m_2)$ 时，\n\n$$c_1 + c_2 = x_1(0), \\qquad m_1c_1 + m_2c_2 = x_2(0).$$",
+        "The general solution $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$ reduces at $t = 0$ to $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$, because every exponential equals $1$ there. That is a linear system for the constants. With $\\mathbf{v}_1 = (1, m_1)$ and $\\mathbf{v}_2 = (1, m_2)$,\n\n$$c_1 + c_2 = x_1(0), \\qquad m_1c_1 + m_2c_2 = x_2(0).$$\n\nFor $\\mathbf{v}_1 = (1, 1)$, $\\mathbf{v}_2 = (1, 2)$ and $\\mathbf{x}(0) = (5, 7)$: subtracting gives $c_2 = 2$, then $c_1 = 3$.\n\n> **Watch out.** To eliminate $c_1$, subtract $m_1$ times the first equation, not the first equation itself; and divide by $m_2 - m_1$ at the end.",
+        "通解 $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$ 在 $t = 0$ 时化为 $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$，因为那时每个指数都等于 $1$。这是关于常数的线性方程组。当 $\\mathbf{v}_1 = (1, m_1)$，$\\mathbf{v}_2 = (1, m_2)$ 时，\n\n$$c_1 + c_2 = x_1(0), \\qquad m_1c_1 + m_2c_2 = x_2(0).$$\n\n对 $\\mathbf{v}_1 = (1, 1)$，$\\mathbf{v}_2 = (1, 2)$，$\\mathbf{x}(0) = (5, 7)$：相减得 $c_2 = 2$，于是 $c_1 = 3$。\n\n> **注意。** 消去 $c_1$ 时要减去第一个方程的 $m_1$ 倍，而不是第一个方程本身；最后还要除以 $m_2 - m_1$。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.nonZero(-4, 4);
-        const l2 = l1 + rng.int(1, 4) || l1 + 5;
+        const l2raw = l1 + rng.int(1, 4);
+        const l2 = l2raw === 0 ? 1 : l2raw;
         const m1 = rng.nonZero(-4, 4);
         const m2 = m1 + rng.pick([-2, -1, 1, 2]);
         const c1 = rng.int(-5, 5) || 2;
@@ -438,15 +585,32 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
             `某方程组的通解为 $\\mathbf{x}(t) = c_1 e^{${ex(l1)}}${vec(1, m1)} + c_2 e^{${ex(l2)}}${vec(1, m2)}$。当 $\\mathbf{x}(0) = ${vec(p, q)}$ 时求 $c_2$。`,
           ),
           answer: c2,
-          wrong: [c1, -c2, q - p, p],
-          solution: t(
-            steps(
-              `At $t = 0$: $c_1 + c_2 = ${p}$ and $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$.`,
-              `Subtract $${par(m1)}$ times the first equation from the second: ${m2 - m1 === 1 ? `$c_2 = ${c2}$` : `$${poly([m2 - m1, "c_2"])} = ${q - m1 * p}$, so $c_2 = ${c2}$`}.`,
+          mistakes: apart(c2, [
+            why(c1, "That is $c_1$, the coefficient of the other solution.", "这是另一个解的系数 $c_1$。"),
+            why(-c2, "The sign is flipped in the elimination.", "消元时符号弄反了。"),
+            why(
+              q - p,
+              "That subtracts the first equation itself; subtract $m_1$ times it.",
+              "这是直接减去第一个方程；应减去它的 $m_1$ 倍。",
             ),
-            steps(
-              `在 $t = 0$ 时：$c_1 + c_2 = ${p}$，$${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$。`,
-              `用第二式减去第一式的 $${par(m1)}$ 倍：${m2 - m1 === 1 ? `$c_2 = ${c2}$` : `$${poly([m2 - m1, "c_2"])} = ${q - m1 * p}$，所以 $c_2 = ${c2}$`}。`,
+            why(p, "That is $c_1 + c_2$, the first equation's total.", "这是 $c_1 + c_2$，第一个方程的右边。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set t = 0", "令 t = 0"],
+                t("Every exponential is $1$:", "每个指数都等于 $1$："),
+                [`c_1 + c_2 = ${p}`, `${poly([m1, "c_1"], [m2, "c_2"])} = ${q}`],
+              ],
+              [
+                ["Eliminate c_1", "消去 c_1"],
+                t(`Subtract $${par(m1)}$ times the first equation:`, `减去第一个方程的 $${par(m1)}$ 倍：`),
+                [...(m2 - m1 === 1 ? [] : [`${poly([m2 - m1, "c_2"])} = ${q - m1 * p}`]), `c_2 = ${c2}`],
+              ],
+            ],
+            t(
+              `With $c_1 = ${c1}$ and $c_2 = ${c2}$: $${cf(c1)}${vec(1, m1)} ${c2 < 0 ? "-" : "+"} ${cf(Math.abs(c2))}${vec(1, m2)} = ${vec(p, q)}$.`,
+              `取 $c_1 = ${c1}$，$c_2 = ${c2}$：$${cf(c1)}${vec(1, m1)} ${c2 < 0 ? "-" : "+"} ${cf(Math.abs(c2))}${vec(1, m2)} = ${vec(p, q)}$。`,
             ),
           ),
         });
@@ -467,6 +631,10 @@ export const solvingDecoupledHomogeneousSystemsOfOdes: TopicDef = {
     "A decoupled system $x_1' = \\lambda_1 x_1$, $x_2' = \\lambda_2 x_2$ is two independent equations with solutions $x_1 = c_1 e^{\\lambda_1 t}$, $x_2 = c_2 e^{\\lambda_2 t}$.",
     "解耦方程组 $x_1' = \\lambda_1 x_1$，$x_2' = \\lambda_2 x_2$ 是两个独立的方程，解为 $x_1 = c_1 e^{\\lambda_1 t}$，$x_2 = c_2 e^{\\lambda_2 t}$。",
   ),
+  intro: t(
+    "Solve $x_1' = 2x_1$, $x_2' = -x_2$ with $x_1(0) = 3$ and $x_2(0) = 4$. Each equation contains only its own unknown, so each is solved alone: $x_1 = 3e^{2t}$ and $x_2 = 4e^{-t}$. At $t = \\ln 2$ the exponentials become powers of two, so $x_1 = 3 \\cdot 4 = 12$ and $x_2 = 4 \\cdot \\tfrac{1}{2} = 2$.\n\nCheck: $x_1' = 6e^{2t} = 2x_1$ and $x_2' = -4e^{-t} = -x_2$, and at $t = 0$ the solutions give $3$ and $4$.\n\nIn this lesson we solve systems whose matrix is diagonal, one component at a time.",
+    "解 $x_1' = 2x_1$，$x_2' = -x_2$，$x_1(0) = 3$，$x_2(0) = 4$。每个方程只含自己的未知函数，所以分别求解：$x_1 = 3e^{2t}$，$x_2 = 4e^{-t}$。在 $t = \\ln 2$ 时指数变成 $2$ 的幂，所以 $x_1 = 3 \\cdot 4 = 12$，$x_2 = 4 \\cdot \\tfrac{1}{2} = 2$。\n\n检验：$x_1' = 6e^{2t} = 2x_1$，$x_2' = -4e^{-t} = -x_2$，且在 $t = 0$ 时两个解分别为 $3$ 和 $4$。\n\n本课我们求解矩阵为对角矩阵的方程组，一次处理一个分量。",
+  ),
   prerequisites: ["general-solutions-of-first-order-linear-systems-of-odes"],
   encompasses: [
     {
@@ -480,34 +648,39 @@ export const solvingDecoupledHomogeneousSystemsOfOdes: TopicDef = {
       id: "independent-exponential-solutions-of-diagonal-systems",
       title: t("Initial velocity in decoupled linear systems", "解耦系统的初始演化导数值"),
       explanation: t(
-        "In a decoupled system each equation involves only its own unknown, so each component grows or decays exponentially at its own rate. For decoupled equations $x_1' = \\lambda_1 x_1$, the initial derivative is $x_1'(0) = \\lambda_1 x_1(0)$.",
-        "在解耦的方程组中，每个方程只含自己的未知函数，所以每个分量按各自的速率指数增长或衰减。在解耦系统 $x_1' = \\lambda_1 x_1$ 中，初始演化速度直接由 $x_1'(0) = \\lambda_1 x_1(0)$ 计算得到。",
+        "In a decoupled system each equation involves only its own unknown, so each component grows or decays exponentially at its own rate. For decoupled equations $x_1' = \\lambda_1 x_1$, the initial derivative is $x_1'(0) = \\lambda_1 x_1(0)$. For $x_1' = 4x_1$ with $x_1(0) = 3$, $x_1'(0) = 12$.\n\n> **Watch out.** The rate of $x_1$ multiplies $x_1(0)$ only; the second equation and $x_2(0)$ play no part in $x_1'(0)$.",
+        "在解耦的方程组中，每个方程只含自己的未知函数，所以每个分量按各自的速率指数增长或衰减。在解耦系统 $x_1' = \\lambda_1 x_1$ 中，初始演化速度直接由 $x_1'(0) = \\lambda_1 x_1(0)$ 计算得到。对 $x_1' = 4x_1$，$x_1(0) = 3$，$x_1'(0) = 12$。\n\n> **注意。** $x_1$ 的速率只乘 $x_1(0)$；第二个方程和 $x_2(0)$ 与 $x_1'(0)$ 无关。",
       ),
       generate(rng: Rng): Problem {
         const lambda = rng.int(2, 12);
         const x0 = rng.int(2, 15);
         const ans = lambda * x0;
-
-        const prompt = t(
-          `Consider the decoupled linear system $x_1' = ${lambda}x_1$ and $x_2' = -5x_2$ with initial values $x_1(0) = ${x0}$ and $x_2(0) = 4$. Find the initial derivative $x_1'(0)$.`,
-          `考虑解耦线性微分方程组 $x_1' = ${lambda}x_1$ 与 $x_2' = -5x_2$，初值为 $x_1(0) = ${x0}$ 和 $x_2(0) = 4$。求导数值 $x_1'(0)$。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute the initial condition $x_1(0) = ${x0}$ directly into the first decoupled differential equation: $x_1'(0) = ${lambda} x_1(0)$.`,
-            `Calculate the product: $x_1'(0) = ${lambda} \\times ${x0} = ${ans}$.`,
-          ),
-          steps(
-            `直接将初值 $x_1(0) = ${x0}$ 代入第一个解耦微分方程：$x_1'(0) = ${lambda} x_1(0)$。`,
-            `计算乘积：$x_1'(0) = ${lambda} \\times ${x0} = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Consider the decoupled linear system $x_1' = ${lambda}x_1$ and $x_2' = -5x_2$ with initial values $x_1(0) = ${x0}$ and $x_2(0) = 4$. Find the initial derivative $x_1'(0)$.`,
+            `考虑解耦线性微分方程组 $x_1' = ${lambda}x_1$ 与 $x_2' = -5x_2$，初值为 $x_1(0) = ${x0}$ 和 $x_2(0) = 4$。求导数值 $x_1'(0)$。`,
+          ),
           answer: ans,
-          wrong: [ans + lambda, x0, lambda],
+          mistakes: apart(ans, [
+            why(x0, "That is $x_1(0)$ itself; multiply it by the rate.", "这是 $x_1(0)$ 本身；还要乘以速率。"),
+            why(lambda, "That is the rate alone; multiply it by $x_1(0)$.", "这只是速率；还要乘以 $x_1(0)$。"),
+            why(-20, "That is $x_2'(0)$, from the other equation.", "这是另一个方程给出的 $x_2'(0)$。"),
+            why(4 * lambda, "That multiplies the rate of $x_1$ by $x_2(0)$.", "这是用 $x_1$ 的速率乘了 $x_2(0)$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the first equation", "用第一个方程"],
+                t("It involves $x_1$ alone:", "它只含 $x_1$："),
+                [`x_1'(0) = ${lambda}\\,x_1(0)`],
+              ],
+              [["Substitute", "代入"], t("", ""), [`x_1'(0) = ${lambda} \\cdot ${x0} = ${ans}`]],
+            ],
+            t(
+              `The solution is $x_1 = ${x0}e^{${lambda}t}$, whose derivative $${ans}e^{${lambda}t}$ equals $${ans}$ at $t = 0$.`,
+              `解为 $x_1 = ${x0}e^{${lambda}t}$，其导数 $${ans}e^{${lambda}t}$ 在 $t = 0$ 时等于 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -515,8 +688,8 @@ export const solvingDecoupledHomogeneousSystemsOfOdes: TopicDef = {
       id: "evaluating-a-decoupled-solution",
       title: t("Evaluating a decoupled solution", "求解耦方程组的解在某时刻的值"),
       explanation: t(
-        "In a decoupled system each equation involves one unknown, so each solves on its own: $x_1' = ax_1$ gives $x_1 = x_1(0)e^{at}$ and $x_2' = bx_2$ gives $x_2 = x_2(0)e^{bt}$. At $t = \\ln 2$ the exponentials become powers of two, since\n\n$$e^{a\\ln 2} = 2^a.$$\n\nA negative rate gives a fraction such as $2^{-2} = \\tfrac{1}{4}$.",
-        "在解耦方程组中，每个方程只含一个未知函数，因此可以分别求解：$x_1' = ax_1$ 得 $x_1 = x_1(0)e^{at}$，$x_2' = bx_2$ 得 $x_2 = x_2(0)e^{bt}$。在 $t = \\ln 2$ 时指数变成 $2$ 的幂，因为\n\n$$e^{a\\ln 2} = 2^a.$$\n\n负的速率给出分数，例如 $2^{-2} = \\tfrac{1}{4}$。",
+        "In a decoupled system each equation involves one unknown, so each solves on its own: $x_1' = ax_1$ gives $x_1 = x_1(0)e^{at}$ and $x_2' = bx_2$ gives $x_2 = x_2(0)e^{bt}$. At $t = \\ln 2$ the exponentials become powers of two, since\n\n$$e^{a\\ln 2} = 2^a.$$\n\nA negative rate gives a fraction such as $2^{-2} = \\tfrac{1}{4}$. For $x_1' = 3x_1$ with $x_1(0) = 5$: $x_1(\\ln 2) = 5 \\cdot 8 = 40$.\n\n> **Watch out.** $e^{a\\ln 2}$ is $2^a$, not $a$ or $2a$; and each component keeps its own rate, so do not swap them.",
+        "在解耦方程组中，每个方程只含一个未知函数，因此可以分别求解：$x_1' = ax_1$ 得 $x_1 = x_1(0)e^{at}$，$x_2' = bx_2$ 得 $x_2 = x_2(0)e^{bt}$。在 $t = \\ln 2$ 时指数变成 $2$ 的幂，因为\n\n$$e^{a\\ln 2} = 2^a.$$\n\n负的速率给出分数，例如 $2^{-2} = \\tfrac{1}{4}$。对 $x_1' = 3x_1$，$x_1(0) = 5$：$x_1(\\ln 2) = 5 \\cdot 8 = 40$。\n\n> **注意。** $e^{a\\ln 2}$ 等于 $2^a$，不是 $a$ 或 $2a$；每个分量保留自己的速率，不要交换。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 2;
@@ -533,19 +706,47 @@ export const solvingDecoupledHomogeneousSystemsOfOdes: TopicDef = {
             `解 $x_1' = ${poly([a, "x_1"])}$，$x_2' = ${poly([b, "x_2"])}$，$x_1(0) = ${p}$，$x_2(0) = ${q}$，并求 $x_1(\\ln 2) + x_2(\\ln 2)$。`,
           ),
           answer: ans,
-          wrong: [
-            Q.of(p * a + q * b),
-            Q.of(p)
-              .mul(two.pow(-a))
-              .add(Q.of(q).mul(two.pow(-b))),
-            Q.of(p + q),
-            Q.of(p)
-              .mul(two.pow(b))
-              .add(Q.of(q).mul(two.pow(a))),
-          ],
-          solution: t(
-            `$x_1 = ${poly([p, `e^{${ex(a)}}`])}$ and $x_2 = ${poly([q, `e^{${ex(b)}}`])}$. At $t = \\ln 2$: $${p} \\cdot 2^{${a}} + ${par(q)} \\cdot 2^{${b}} = ${ans.toLatex()}$.`,
-            `$x_1 = ${poly([p, `e^{${ex(a)}}`])}$，$x_2 = ${poly([q, `e^{${ex(b)}}`])}$。在 $t = \\ln 2$ 时：$${p} \\cdot 2^{${a}} + ${par(q)} \\cdot 2^{${b}} = ${ans.toLatex()}$。`,
+          mistakes: apart(ans, [
+            why(
+              p * a + q * b,
+              "That multiplies by the rates; the exponentials become $2^{a}$ and $2^{b}$.",
+              "这是乘以速率；指数应变成 $2^{a}$ 与 $2^{b}$。",
+            ),
+            why(
+              Q.of(p)
+                .mul(two.pow(-a))
+                .add(Q.of(q).mul(two.pow(-b))),
+              "The signs of the exponents are flipped.",
+              "指数的符号弄反了。",
+            ),
+            why(p + q, "That is the value at $t = 0$, not at $t = \\ln 2$.", "这是 $t = 0$ 时的值，不是 $t = \\ln 2$ 时的值。"),
+            why(
+              Q.of(p)
+                .mul(two.pow(b))
+                .add(Q.of(q).mul(two.pow(a))),
+              "That swaps the rates of the two components.",
+              "这是把两个分量的速率交换了。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Solve each equation", "分别求解"],
+                t("", ""),
+                [`x_1 = ${poly([p, `e^{${ex(a)}}`])}, \\qquad x_2 = ${poly([q, `e^{${ex(b)}}`])}`],
+              ],
+              [
+                ["Evaluate at t = ln 2", "在 t = ln 2 处求值"],
+                t("Use $e^{k\\ln 2} = 2^k$:", "用 $e^{k\\ln 2} = 2^k$："),
+                [
+                  `${p} \\cdot 2^{${a}} + ${par(q)} \\cdot 2^{${b}} = ${p} \\cdot ${two.pow(a).toLatex()} + ${par(q)} \\cdot ${parQ(two.pow(b))} = ${ans.toLatex()}`,
+                ],
+              ],
+            ],
+            t(
+              `At $t = 0$ the solutions give $${p}$ and $${q}$, the initial values, and $x_1' = ${poly([a * p, `e^{${ex(a)}}`])} = ${poly([a, "x_1"])}$ as required.`,
+              `在 $t = 0$ 时两个解分别为 $${p}$ 和 $${q}$，正是初值；且 $x_1' = ${poly([a * p, `e^{${ex(a)}}`])} = ${poly([a, "x_1"])}$，符合方程。`,
+            ),
           ),
         });
       },
@@ -561,6 +762,10 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
     "When $A$ has distinct real eigenvalues $\\lambda_1 \\ne \\lambda_2$ with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$, the general solution is $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$.",
     "当 $A$ 有互异实特征值 $\\lambda_1 \\ne \\lambda_2$ 及特征向量 $\\mathbf{v}_1, \\mathbf{v}_2$ 时，通解为 $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$。",
   ),
+  intro: t(
+    "Take $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$. Its characteristic polynomial is $(1 - \\lambda)^2 - 4 = (\\lambda - 3)(\\lambda + 1)$, so the eigenvalues are $3$ and $-1$, with eigenvectors $(1, 1)$ and $(1, -1)$. The general solution of $\\mathbf{x}' = A\\mathbf{x}$ is $\\mathbf{x} = c_1e^{3t}(1, 1) + c_2e^{-t}(1, -1)$.\n\nCheck: $A(1, 1) = (3, 3) = 3(1, 1)$ and $A(1, -1) = (-1, 1) = -(1, -1)$.\n\nIn this lesson we find eigenvalues and eigenvectors and build the general solution from them.",
+    "取 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$。其特征多项式为 $(1 - \\lambda)^2 - 4 = (\\lambda - 3)(\\lambda + 1)$，所以特征值为 $3$ 和 $-1$，特征向量为 $(1, 1)$ 和 $(1, -1)$。$\\mathbf{x}' = A\\mathbf{x}$ 的通解为 $\\mathbf{x} = c_1e^{3t}(1, 1) + c_2e^{-t}(1, -1)$。\n\n检验：$A(1, 1) = (3, 3) = 3(1, 1)$，$A(1, -1) = (-1, 1) = -(1, -1)$。\n\n本课我们求特征值与特征向量，并由它们构造通解。",
+  ),
   prerequisites: ["solving-decoupled-homogeneous-systems-of-odes"],
   encompasses: [],
   xp: 10,
@@ -569,38 +774,45 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
       id: "eigenvalue-eigenvector-method-for-linear-systems",
       title: t("Eigenvalues of a triangular coefficient matrix", "三角系数矩阵的特征值"),
       explanation: t(
-        "The eigenvalues of a triangular matrix are its diagonal entries, and each eigenvalue with its eigenvector gives an exponential solution of the system. For a triangular matrix $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$, the eigenvalues are the diagonal entries $\\lambda = a$ and $\\lambda = d$.",
-        "三角矩阵的特征值就是它的对角元素，每个特征值及其特征向量给出方程组的一个指数解。对于下三角矩阵 $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$，特征值即为其主对角线上的元素 $\\lambda = a$ 与 $\\lambda = d$。",
+        "The eigenvalues of a triangular matrix are its diagonal entries, and each eigenvalue with its eigenvector gives an exponential solution of the system. For a triangular matrix $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$, the eigenvalues are the diagonal entries $\\lambda = a$ and $\\lambda = d$. For $A = \\begin{pmatrix} 2 & 0 \\\\ 7 & 5 \\end{pmatrix}$ they are $2$ and $5$.\n\n> **Watch out.** The zero above the diagonal makes $\\det(A - \\lambda I) = (a - \\lambda)(d - \\lambda)$, so the entry $c$ has no effect; the eigenvalues are not the trace or the determinant.",
+        "三角矩阵的特征值就是它的对角元素，每个特征值及其特征向量给出方程组的一个指数解。对于下三角矩阵 $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$，特征值即为其主对角线上的元素 $\\lambda = a$ 与 $\\lambda = d$。对 $A = \\begin{pmatrix} 2 & 0 \\\\ 7 & 5 \\end{pmatrix}$，它们是 $2$ 和 $5$。\n\n> **注意。** 对角线上方的零使 $\\det(A - \\lambda I) = (a - \\lambda)(d - \\lambda)$，所以元素 $c$ 不起作用；特征值不是迹，也不是行列式。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 10);
         const diff = rng.int(2, 20);
         const d = a + diff;
         const c = rng.int(1, 8);
-        const ans = d; // larger eigenvalue
-
-        const prompt = t(
-          `Find the larger eigenvalue $\\lambda$ of the system coefficient matrix $A = \\begin{pmatrix} ${a} & 0 \\\\ ${c} & ${d} \\end{pmatrix}$.`,
-          `求系统系数矩阵 $A = \\begin{pmatrix} ${a} & 0 \\\\ ${c} & ${d} \\end{pmatrix}$ 中较大的特征值 $\\lambda$。`,
-        );
-        const solution = t(
-          steps(
-            `The characteristic polynomial is $\\det(A - \\lambda I) = (${a} - \\lambda)(${d} - \\lambda) - (0)(${c}) = (${a} - \\lambda)(${d} - \\lambda) = 0$.`,
-            `The eigenvalues are the diagonal elements: $\\lambda_1 = ${a}$ and $\\lambda_2 = ${d}$.`,
-            `The larger eigenvalue is $\\lambda = ${ans}$.`,
-          ),
-          steps(
-            `计算特征多项式：$\\det(A - \\lambda I) = (${a} - \\lambda)(${d} - \\lambda) - (0)(${c}) = (${a} - \\lambda)(${d} - \\lambda) = 0$。`,
-            `由于是三角矩阵，特征值即为主对角线元素：$\\lambda_1 = ${a}$ 与 $\\lambda_2 = ${d}$。`,
-            `较大的特征值为 $\\lambda = ${ans}$。`,
-          ),
-        );
-
+        const ans = d;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the larger eigenvalue $\\lambda$ of the system coefficient matrix $A = \\begin{pmatrix} ${a} & 0 \\\\ ${c} & ${d} \\end{pmatrix}$.`,
+            `求系统系数矩阵 $A = \\begin{pmatrix} ${a} & 0 \\\\ ${c} & ${d} \\end{pmatrix}$ 中较大的特征值 $\\lambda$。`,
+          ),
           answer: ans,
-          wrong: [a, a + d, a * d],
+          mistakes: apart(ans, [
+            why(a, "That is the smaller of the two eigenvalues.", "这是两个特征值中较小的一个。"),
+            why(a + d, "That is the trace, the sum of the eigenvalues.", "这是迹，即特征值之和。"),
+            why(a * d, "That is the determinant, the product of the eigenvalues.", "这是行列式，即特征值之积。"),
+            why(
+              c,
+              "That is the entry below the diagonal, which does not enter the characteristic polynomial.",
+              "这是对角线下方的元素，它不出现在特征多项式中。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Form the characteristic polynomial", "写出特征多项式"],
+                t("The zero entry removes the product of the off-diagonal entries:", "零元素使非对角元素之积消失："),
+                [`\\det(A - \\lambda I) = (${a} - \\lambda)(${d} - \\lambda) - 0 \\cdot ${c} = (${a} - \\lambda)(${d} - \\lambda)`],
+              ],
+              [["Read the roots", "读出根"], t("", ""), [`\\lambda_1 = ${a}, \\qquad \\lambda_2 = ${d}`, `\\lambda = ${ans}`]],
+            ],
+            t(
+              `$A - ${d}I = \\begin{pmatrix} ${a - d} & 0 \\\\ ${c} & 0 \\end{pmatrix}$ has a column of zeros, so its determinant is $0$ and $${d}$ is an eigenvalue.`,
+              `$A - ${d}I = \\begin{pmatrix} ${a - d} & 0 \\\\ ${c} & 0 \\end{pmatrix}$ 有一列全为零，行列式为 $0$，所以 $${d}$ 是特征值。`,
+            ),
+          ),
         });
       },
     },
@@ -608,8 +820,8 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
       id: "finding-an-eigenvector-of-the-coefficient-matrix",
       title: t("Finding an eigenvector of the coefficient matrix", "求系数矩阵的特征向量"),
       explanation: t(
-        "Each eigenvalue $\\lambda$ of $A$ gives a solution $e^{\\lambda t}\\mathbf{v}$, where $\\mathbf{v}$ solves $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. Because $A - \\lambda I$ is singular, its two rows are proportional and one row is enough. Writing $\\mathbf{v} = (1, m)$, the first row of $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ gives\n\n$$(a - \\lambda) + bm = 0, \\qquad m = \\frac{\\lambda - a}{b}.$$",
-        "$A$ 的每个特征值 $\\lambda$ 给出一个解 $e^{\\lambda t}\\mathbf{v}$，其中 $\\mathbf{v}$ 满足 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。由于 $A - \\lambda I$ 奇异，它的两行成比例，只用一行就够了。设 $\\mathbf{v} = (1, m)$，由 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的第一行得\n\n$$(a - \\lambda) + bm = 0, \\qquad m = \\frac{\\lambda - a}{b}.$$",
+        "Each eigenvalue $\\lambda$ of $A$ gives a solution $e^{\\lambda t}\\mathbf{v}$, where $\\mathbf{v}$ solves $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. Because $A - \\lambda I$ is singular, its two rows are proportional and one row is enough. Writing $\\mathbf{v} = (1, m)$, the first row of $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ gives\n\n$$(a - \\lambda) + bm = 0, \\qquad m = \\frac{\\lambda - a}{b}.$$\n\nFor $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$ and $\\lambda = 3$: $-2 + 2m = 0$, so $m = 1$.\n\n> **Watch out.** Subtract $\\lambda$ from the diagonal entry $a$ only, and move $a - \\lambda$ across before dividing: $m = (\\lambda - a)/b$, not $(a - \\lambda)/b$.",
+        "$A$ 的每个特征值 $\\lambda$ 给出一个解 $e^{\\lambda t}\\mathbf{v}$，其中 $\\mathbf{v}$ 满足 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。由于 $A - \\lambda I$ 奇异，它的两行成比例，只用一行就够了。设 $\\mathbf{v} = (1, m)$，由 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的第一行得\n\n$$(a - \\lambda) + bm = 0, \\qquad m = \\frac{\\lambda - a}{b}.$$\n\n对 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$，$\\lambda = 3$：$-2 + 2m = 0$，所以 $m = 1$。\n\n> **注意。** 只从对角元素 $a$ 中减去 $\\lambda$，并且先把 $a - \\lambda$ 移项再除：$m = (\\lambda - a)/b$，而不是 $(a - \\lambda)/b$。",
       ),
       generate(rng: Rng): Problem {
         const l1 = rng.nonZero(-5, 5);
@@ -623,10 +835,29 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
             `$A = ${mat(a, b, c, d)}$ 的一个特征值为 $\\lambda = ${l1}$。求 $m$，使 $${vec(1, "m")}$ 是对应的特征向量，从而 $e^{${ex(l1)}}${vec(1, "m")}$ 是 $\\mathbf{x}' = A\\mathbf{x}$ 的解。`,
           ),
           answer: m1,
-          wrong: [m2, -m1, l1 - a, l2],
-          solution: t(
-            `The first row of $A - ${par(l1)}I$ is $(${a - l1}, ${b})$, so $${poly([a - l1, ""], [b, "m"])} = 0$ and $m = ${m1}$.`,
-            `$A - ${par(l1)}I$ 的第一行为 $(${a - l1}, ${b})$，所以 $${poly([a - l1, ""], [b, "m"])} = 0$，$m = ${m1}$。`,
+          mistakes: apart(m1, [
+            why(m2, "That is the eigenvector of the other eigenvalue.", "这是另一个特征值的特征向量。"),
+            why(
+              -m1,
+              "The sign is off: move $a - \\lambda$ across before dividing by $b$.",
+              "符号错了：先把 $a - \\lambda$ 移项，再除以 $b$。",
+            ),
+            why(l1 - a, "That forgets to divide by the entry $b$.", "这是忘了除以元素 $b$。"),
+            why(l2, "That is the other eigenvalue, not an eigenvector entry.", "这是另一个特征值，而不是特征向量的分量。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Subtract the eigenvalue", "减去特征值"],
+                t("The first row of $A - \\lambda I$:", "$A - \\lambda I$ 的第一行："),
+                [`(${a} - ${par(l1)}, ${b}) = (${a - l1}, ${b})`],
+              ],
+              [["Solve for m", "解出 m"], t("", ""), [`${poly([a - l1, ""], [b, "m"])} = 0`, `m = ${m1}`]],
+            ],
+            t(
+              `The second row agrees: $${c} + ${par(d - l1)} \\cdot ${par(m1)} = 0$.`,
+              `第二行也成立：$${c} + ${par(d - l1)} \\cdot ${par(m1)} = 0$。`,
+            ),
           ),
         });
       },
@@ -642,6 +873,10 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
     "For $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x}(0) = \\mathbf{x}_0$, find the constants by solving $c_1 \\mathbf{v}_1 + c_2 \\mathbf{v}_2 = \\mathbf{x}_0$.",
     "对 $\\mathbf{x}' = A\\mathbf{x}$，$\\mathbf{x}(0) = \\mathbf{x}_0$，通过解 $c_1 \\mathbf{v}_1 + c_2 \\mathbf{v}_2 = \\mathbf{x}_0$ 确定常数。",
   ),
+  intro: t(
+    "Solve $\\mathbf{x}' = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}\\mathbf{x}$ with $\\mathbf{x}(0) = (5, 1)$. The eigenvalues are $3$ and $-1$ with eigenvectors $(1, 1)$ and $(1, -1)$. At $t = 0$: $c_1 + c_2 = 5$ and $c_1 - c_2 = 1$, so $c_1 = 3$, $c_2 = 2$, and $\\mathbf{x} = 3e^{3t}(1, 1) + 2e^{-t}(1, -1)$.\n\nCheck: at $t = 0$ this gives $(3 + 2, 3 - 2) = (5, 1)$.\n\nIn this lesson we solve initial value problems for systems with distinct eigenvalues and read the long-run behavior of the solution.",
+    "解 $\\mathbf{x}' = \\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}\\mathbf{x}$，$\\mathbf{x}(0) = (5, 1)$。特征值为 $3$ 和 $-1$，特征向量为 $(1, 1)$ 和 $(1, -1)$。在 $t = 0$ 时：$c_1 + c_2 = 5$，$c_1 - c_2 = 1$，所以 $c_1 = 3$，$c_2 = 2$，$\\mathbf{x} = 3e^{3t}(1, 1) + 2e^{-t}(1, -1)$。\n\n检验：在 $t = 0$ 时得 $(3 + 2, 3 - 2) = (5, 1)$。\n\n本课我们求解互异特征值方程组的初值问题，并读出解的长期行为。",
+  ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
     {
@@ -655,36 +890,37 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
       id: "initial-value-problems-for-diagonalizable-systems",
       title: t("Initial rate of change in diagonalized systems", "对角化系统中的初始变化率"),
       explanation: t(
-        "The system itself gives the derivative at the start: multiply the coefficient matrix by the initial vector. For $\\mathbf{x}' = A \\mathbf{x}$, the initial derivative vector is $\\mathbf{x}'(0) = A \\mathbf{x}(0)$.",
-        "方程组本身给出了初始时刻的导数：用系数矩阵乘以初始向量。对于系统 $\\mathbf{x}' = A \\mathbf{x}$，初值处的演化导数向量为 $\\mathbf{x}'(0) = A \\mathbf{x}(0)$。",
+        "The system itself gives the derivative at the start: multiply the coefficient matrix by the initial vector. For $\\mathbf{x}' = A \\mathbf{x}$, the initial derivative vector is $\\mathbf{x}'(0) = A \\mathbf{x}(0)$. For $A = \\operatorname{diag}(3, 5)$ and $\\mathbf{x}(0) = (2, 4)$, $\\mathbf{x}'(0) = (6, 20)$.\n\n> **Watch out.** With a diagonal matrix the first row is $(\\lambda_1, 0)$, so $x_1'(0) = \\lambda_1 x_1(0)$: pair the first eigenvalue with the first entry of $\\mathbf{x}(0)$.",
+        "方程组本身给出了初始时刻的导数：用系数矩阵乘以初始向量。对于系统 $\\mathbf{x}' = A \\mathbf{x}$，初值处的演化导数向量为 $\\mathbf{x}'(0) = A \\mathbf{x}(0)$。对 $A = \\operatorname{diag}(3, 5)$，$\\mathbf{x}(0) = (2, 4)$，$\\mathbf{x}'(0) = (6, 20)$。\n\n> **注意。** 对角矩阵的第一行是 $(\\lambda_1, 0)$，所以 $x_1'(0) = \\lambda_1 x_1(0)$：第一个特征值要与 $\\mathbf{x}(0)$ 的第一个分量配对。",
       ),
       generate(rng: Rng): Problem {
         const lambda1 = rng.int(2, 10);
         const lambda2 = rng.int(2, 10);
         const x0 = rng.int(2, 15);
         const y0 = rng.int(2, 15);
-        const ans = lambda1 * x0; // x1'(0)
-
-        const prompt = t(
-          `A diagonal linear system satisfies $\\mathbf{x}' = \\begin{pmatrix} ${lambda1} & 0 \\\\ 0 & ${lambda2} \\end{pmatrix} \\mathbf{x}$ with initial state $\\mathbf{x}(0) = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$. Find the initial rate of change $x_1'(0)$ of the first state variable.`,
-          `对角线性微分方程组满足 $\\mathbf{x}' = \\begin{pmatrix} ${lambda1} & 0 \\\\ 0 & ${lambda2} \\end{pmatrix} \\mathbf{x}$，初始状态为 $\\mathbf{x}(0) = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$。求第一状态变量的初始变化率 $x_1'(0)$。`,
-        );
-        const solution = t(
-          steps(
-            `The first row of the matrix equation reads $x_1'(t) = ${lambda1} x_1(t)$.`,
-            `Evaluate at $t = 0$: $x_1'(0) = ${lambda1} x_1(0) = ${lambda1} \\times ${x0} = ${ans}$.`,
-          ),
-          steps(
-            `矩阵方程的第一行展开为标量方程：$x_1'(t) = ${lambda1} x_1(t)$。`,
-            `在 $t = 0$ 处求值：$x_1'(0) = ${lambda1} x_1(0) = ${lambda1} \\times ${x0} = ${ans}$。`,
-          ),
-        );
-
+        const ans = lambda1 * x0;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `A diagonal linear system satisfies $\\mathbf{x}' = \\begin{pmatrix} ${lambda1} & 0 \\\\ 0 & ${lambda2} \\end{pmatrix} \\mathbf{x}$ with initial state $\\mathbf{x}(0) = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$. Find the initial rate of change $x_1'(0)$ of the first state variable.`,
+            `对角线性微分方程组满足 $\\mathbf{x}' = \\begin{pmatrix} ${lambda1} & 0 \\\\ 0 & ${lambda2} \\end{pmatrix} \\mathbf{x}$，初始状态为 $\\mathbf{x}(0) = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$。求第一状态变量的初始变化率 $x_1'(0)$。`,
+          ),
           answer: ans,
-          wrong: [lambda2 * y0, x0 + y0, ans + lambda1],
+          mistakes: apart(ans, [
+            why(lambda2 * y0, "That is $x_2'(0)$, from the second row.", "这是由第二行得到的 $x_2'(0)$。"),
+            why(lambda1 * y0, "That pairs the first eigenvalue with $x_2(0)$.", "这是把第一个特征值与 $x_2(0)$ 配对。"),
+            why(x0 + y0, "That adds the initial values without the matrix.", "这是不经矩阵直接把初值相加。"),
+            why(lambda1, "That is the rate alone; multiply it by $x_1(0)$.", "这只是速率；还要乘以 $x_1(0)$。"),
+          ]),
+          solution: walked(
+            [
+              [["Take the first row", "取第一行"], t("", ""), [`x_1' = ${lambda1}x_1 + 0 \\cdot x_2`]],
+              [["Evaluate at t = 0", "在 t = 0 处求值"], t("", ""), [`x_1'(0) = ${lambda1} \\cdot ${x0} = ${ans}`]],
+            ],
+            t(
+              `The solution has $x_1 = ${x0}e^{${lambda1}t}$, whose derivative at $t = 0$ is $${lambda1} \\cdot ${x0} = ${ans}$.`,
+              `解中 $x_1 = ${x0}e^{${lambda1}t}$，其在 $t = 0$ 处的导数为 $${lambda1} \\cdot ${x0} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -692,8 +928,8 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
       id: "the-long-run-direction-of-a-solution",
       title: t("The long-run direction of a solution", "解的长期方向"),
       explanation: t(
-        "For $\\mathbf{x}(t) = c_1e^{\\lambda_1 t}\\mathbf{v}_1 + c_2e^{\\lambda_2 t}\\mathbf{v}_2$ with $\\lambda_1 > \\lambda_2$, the term with the larger eigenvalue dominates as $t \\to \\infty$ whenever $c_1 \\ne 0$. The ratio $x_2/x_1$ then tends to the slope of $\\mathbf{v}_1$. If the initial state lies on the line of $\\mathbf{v}_2$, then $c_1 = 0$ and the solution keeps the direction of $\\mathbf{v}_2$ forever. So find the constants from $\\mathbf{x}(0)$ before deciding.",
-        "对 $\\mathbf{x}(t) = c_1e^{\\lambda_1 t}\\mathbf{v}_1 + c_2e^{\\lambda_2 t}\\mathbf{v}_2$（$\\lambda_1 > \\lambda_2$），只要 $c_1 \\ne 0$，当 $t \\to \\infty$ 时含较大特征值的项占主导，比值 $x_2/x_1$ 趋于 $\\mathbf{v}_1$ 的斜率。若初始状态落在 $\\mathbf{v}_2$ 所在直线上，则 $c_1 = 0$，解始终保持 $\\mathbf{v}_2$ 的方向。所以先由 $\\mathbf{x}(0)$ 求出常数再下结论。",
+        "For $\\mathbf{x}(t) = c_1e^{\\lambda_1 t}\\mathbf{v}_1 + c_2e^{\\lambda_2 t}\\mathbf{v}_2$ with $\\lambda_1 > \\lambda_2$, the term with the larger eigenvalue dominates as $t \\to \\infty$ whenever $c_1 \\ne 0$. The ratio $x_2/x_1$ then tends to the slope of $\\mathbf{v}_1$. If the initial state lies on the line of $\\mathbf{v}_2$, then $c_1 = 0$ and the solution keeps the direction of $\\mathbf{v}_2$ forever. So find the constants from $\\mathbf{x}(0)$ before deciding. For $\\mathbf{x} = 3e^{3t}(1, 1) + 2e^{-t}(1, -1)$ the ratio tends to $1$.\n\n> **Watch out.** The ratio at $t = 0$ is not the long-run ratio, since the two terms grow at different rates; and the answer is a slope of an eigenvector, not an eigenvalue.",
+        "对 $\\mathbf{x}(t) = c_1e^{\\lambda_1 t}\\mathbf{v}_1 + c_2e^{\\lambda_2 t}\\mathbf{v}_2$（$\\lambda_1 > \\lambda_2$），只要 $c_1 \\ne 0$，当 $t \\to \\infty$ 时含较大特征值的项占主导，比值 $x_2/x_1$ 趋于 $\\mathbf{v}_1$ 的斜率。若初始状态落在 $\\mathbf{v}_2$ 所在直线上，则 $c_1 = 0$，解始终保持 $\\mathbf{v}_2$ 的方向。所以先由 $\\mathbf{x}(0)$ 求出常数再下结论。对 $\\mathbf{x} = 3e^{3t}(1, 1) + 2e^{-t}(1, -1)$，比值趋于 $1$。\n\n> **注意。** $t = 0$ 时的比值不是长期比值，因为两项增长速率不同；答案是特征向量的斜率，而不是特征值。",
       ),
       generate(rng: Rng): Problem {
         // Neither eigenvalue is 0, so no solution step writes e^{0t}.
@@ -713,22 +949,57 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
             `解 $\\mathbf{x}' = ${mat(a, b, c, d)}\\mathbf{x}$，$\\mathbf{x}(0) = ${vec(p, q)}$。求 $\\lim_{t \\to \\infty} \\frac{x_2(t)}{x_1(t)}$。`,
           ),
           answer: ans,
-          wrong: [c1 === 0 ? m1 : m2, l1, ...(p === 0 ? [] : [Q.of(q, p)])],
-          solution: t(
-            steps(
-              `The eigenvalues are $${l1}$ and $${l2}$ with eigenvectors $${vec(1, m1)}$ and $${vec(1, m2)}$.`,
-              `From $c_1 + c_2 = ${p}$ and $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$: $c_1 = ${c1}$, $c_2 = ${c2}$.`,
-              c1 === 0
-                ? `Since $c_1 = 0$, the solution stays on the line of $${vec(1, m2)}$ and the ratio is $${m2}$.`
-                : `Since $c_1 \\ne 0$, the term $e^{${ex(l1)}}$ dominates and the ratio tends to $${m1}$.`,
-            ),
-            steps(
-              `特征值为 $${l1}$ 与 $${l2}$，特征向量为 $${vec(1, m1)}$ 与 $${vec(1, m2)}$。`,
-              `由 $c_1 + c_2 = ${p}$ 与 $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$ 得 $c_1 = ${c1}$，$c_2 = ${c2}$。`,
-              c1 === 0
-                ? `因为 $c_1 = 0$，解始终在 $${vec(1, m2)}$ 所在直线上，比值为 $${m2}$。`
-                : `因为 $c_1 \\ne 0$，$e^{${ex(l1)}}$ 项占主导，比值趋于 $${m1}$。`,
-            ),
+          mistakes: apart(ans, [
+            c1 === 0
+              ? why(m1, "Here $c_1 = 0$, so the growing term is absent and cannot dominate.", "这里 $c_1 = 0$，增长项不存在，无法占主导。")
+              : why(
+                  m2,
+                  "That is the slope of the decaying direction; the term with the larger eigenvalue dominates.",
+                  "这是衰减方向的斜率；含较大特征值的项占主导。",
+                ),
+            why(l1, "That is an eigenvalue, not the slope of an eigenvector.", "这是特征值，而不是特征向量的斜率。"),
+            ...(p === 0
+              ? []
+              : [
+                  why(
+                    Q.of(q, p),
+                    "That is the ratio at $t = 0$, which changes as the terms grow at different rates.",
+                    "这是 $t = 0$ 时的比值；由于两项增长速率不同，比值会变化。",
+                  ),
+                ]),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the eigenpairs", "求特征对"],
+                t("", ""),
+                [`\\lambda_1 = ${l1},\\ \\mathbf{v}_1 = ${vec(1, m1)}, \\qquad \\lambda_2 = ${l2},\\ \\mathbf{v}_2 = ${vec(1, m2)}`],
+              ],
+              [
+                ["Fit the constants", "确定常数"],
+                t("", ""),
+                [`c_1 + c_2 = ${p}, \\qquad ${poly([m1, "c_1"], [m2, "c_2"])} = ${q}`, `c_1 = ${c1}, \\qquad c_2 = ${c2}`],
+              ],
+              [
+                ["Find the dominant term", "找出主导项"],
+                c1 === 0
+                  ? t(
+                      `Since $c_1 = 0$, the solution stays on the line of $${vec(1, m2)}$:`,
+                      `因为 $c_1 = 0$，解始终在 $${vec(1, m2)}$ 所在直线上：`,
+                    )
+                  : t(`Since $c_1 \\ne 0$, the term $e^{${ex(l1)}}$ dominates:`, `因为 $c_1 \\ne 0$，$e^{${ex(l1)}}$ 项占主导：`),
+                [`\\lim_{t \\to \\infty} \\frac{x_2}{x_1} = ${ans}`],
+              ],
+            ],
+            c1 === 0
+              ? t(
+                  `$\\mathbf{x}(t) = ${cf(c2)}e^{${ex(l2)}}${vec(1, m2)}$, so $x_2/x_1 = ${m2}$ for every $t$.`,
+                  `$\\mathbf{x}(t) = ${cf(c2)}e^{${ex(l2)}}${vec(1, m2)}$，所以对每个 $t$ 都有 $x_2/x_1 = ${m2}$。`,
+                )
+              : t(
+                  `Dividing $x_1$ and $x_2$ by $e^{${ex(l1)}}$ leaves $${poly([c1, ""], [c2, `e^{${ex(l2 - l1)}}`])}$ and $${poly([m1 * c1, ""], [m2 * c2, `e^{${ex(l2 - l1)}}`])}$, which tend to $${c1}$ and $${m1 * c1}$; their ratio is $${m1}$.`,
+                  `把 $x_1$ 与 $x_2$ 都除以 $e^{${ex(l1)}}$，得 $${poly([c1, ""], [c2, `e^{${ex(l2 - l1)}}`])}$ 与 $${poly([m1 * c1, ""], [m2 * c2, `e^{${ex(l2 - l1)}}`])}$，它们分别趋于 $${c1}$ 与 $${m1 * c1}$，比值为 $${m1}$。`,
+                ),
           ),
         });
       },
@@ -744,6 +1015,10 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
     "When $A$ has a repeated eigenvalue $\\lambda$ with only one eigenvector $\\mathbf{v}$, a generalized eigenvector $\\mathbf{w}$ with $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$ gives $\\mathbf{x}(t) = e^{\\lambda t}(c_1 \\mathbf{v} + c_2(t\\mathbf{v} + \\mathbf{w}))$.",
     "当 $A$ 有二重特征值 $\\lambda$ 且只有一个特征向量 $\\mathbf{v}$ 时，取满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$ 的广义特征向量 $\\mathbf{w}$，得 $\\mathbf{x}(t) = e^{\\lambda t}(c_1 \\mathbf{v} + c_2(t\\mathbf{v} + \\mathbf{w}))$。",
   ),
+  intro: t(
+    "Take $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$. Its characteristic polynomial is $(\\lambda - 3)^2$, and $A - 3I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ has only the eigenvector $\\mathbf{v} = (1, 0)$. The vector $\\mathbf{w} = (0, 1)$ satisfies $(A - 3I)\\mathbf{w} = \\mathbf{v}$, so $\\mathbf{x} = e^{3t}\\big(c_1(1, 0) + c_2(t(1, 0) + (0, 1))\\big)$.\n\nCheck: $x_2 = c_2e^{3t}$ solves $x_2' = 3x_2$, and $x_1 = (c_1 + c_2t)e^{3t}$ has $x_1' = 3x_1 + c_2e^{3t} = 3x_1 + x_2$.\n\nIn this lesson we solve systems with a repeated eigenvalue and a single eigenvector, where a factor of $t$ appears.",
+    "取 $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$。其特征多项式为 $(\\lambda - 3)^2$，而 $A - 3I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ 只有特征向量 $\\mathbf{v} = (1, 0)$。向量 $\\mathbf{w} = (0, 1)$ 满足 $(A - 3I)\\mathbf{w} = \\mathbf{v}$，所以 $\\mathbf{x} = e^{3t}\\big(c_1(1, 0) + c_2(t(1, 0) + (0, 1))\\big)$。\n\n检验：$x_2 = c_2e^{3t}$ 满足 $x_2' = 3x_2$，$x_1 = (c_1 + c_2t)e^{3t}$ 满足 $x_1' = 3x_1 + c_2e^{3t} = 3x_1 + x_2$。\n\n本课我们求解有重特征值且只有一个特征向量的方程组，此时解中出现因子 $t$。",
+  ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
     {
@@ -757,8 +1032,8 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
       id: "generalized-eigenvectors-for-defective-systems",
       title: t("Generalized eigenvectors for defective systems", "亏损矩阵的广义特征向量"),
       explanation: t(
-        "When a matrix lacks enough eigenvectors, a generalized eigenvector provides a second solution that includes a factor of time. For a Jordan block $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$, $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$. If the eigenvector is $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$, then $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ satisfies $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$. A repeated eigenvalue $\\lambda$ makes the characteristic polynomial $(r - \\lambda)^2$, so a trace of $2\\lambda$ and a determinant of $\\lambda^2$.",
-        "当矩阵的特征向量不够时，广义特征向量提供了含有时间因子的第二个解。对于若尔当块矩阵 $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$，有 $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$。若特征向量为 $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$，则广义特征向量 $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$。 二重特征值 $\\lambda$ 使特征多项式为 $(r - \\lambda)^2$，所以迹为 $2\\lambda$，行列式为 $\\lambda^2$。",
+        "When a matrix lacks enough eigenvectors, a generalized eigenvector provides a second solution that includes a factor of time. For a Jordan block $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$, $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$. If the eigenvector is $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$, then $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ satisfies $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$. A repeated eigenvalue $\\lambda$ makes the characteristic polynomial $(r - \\lambda)^2$, so a trace of $2\\lambda$ and a determinant of $\\lambda^2$. For $A = \\begin{pmatrix} 5 & 1 \\\\ -1 & 3 \\end{pmatrix}$: trace $8$, determinant $16$, so $\\lambda = 4$.\n\n> **Watch out.** When the matrix is not triangular its diagonal entries are not the eigenvalues; the repeated eigenvalue is half the trace.",
+        "当矩阵的特征向量不够时，广义特征向量提供了含有时间因子的第二个解。对于若尔当块矩阵 $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$，有 $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$。若特征向量为 $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$，则广义特征向量 $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$。 二重特征值 $\\lambda$ 使特征多项式为 $(r - \\lambda)^2$，所以迹为 $2\\lambda$，行列式为 $\\lambda^2$。对 $A = \\begin{pmatrix} 5 & 1 \\\\ -1 & 3 \\end{pmatrix}$：迹为 $8$，行列式为 $16$，所以 $\\lambda = 4$。\n\n> **注意。** 矩阵不是三角矩阵时，对角元素不是特征值；二重特征值等于迹的一半。",
       ),
       generate(rng: Rng): Problem {
         const lambda = rng.int(2, 12);
@@ -771,29 +1046,39 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
         const ans = lambda;
         const p = lambda + a;
         const q = lambda - a;
-
-        const prompt = t(
-          `Find the repeated eigenvalue $\\lambda$ of the defective system matrix $A = \\begin{pmatrix} ${p} & ${b} \\\\ ${c} & ${q} \\end{pmatrix}$.`,
-          `求亏损系统矩阵 $A = \\begin{pmatrix} ${p} & ${b} \\\\ ${c} & ${q} \\end{pmatrix}$ 的二重特征值 $\\lambda$。`,
-        );
-        const solution = t(
-          steps(
-            `The trace is $${2 * lambda}$ and the determinant is $${par(p)} \\cdot ${par(q)} - ${par(b)} \\cdot ${par(c)} = ${lambda * lambda}$.`,
-            `The characteristic polynomial is $\\lambda^2 - ${2 * lambda}\\lambda + ${lambda * lambda} = (\\lambda - ${lambda})^2$.`,
-            `The repeated eigenvalue is $\\lambda = ${ans}$.`,
-          ),
-          steps(
-            `迹为 $${2 * lambda}$，行列式为 $${par(p)} \\cdot ${par(q)} - ${par(b)} \\cdot ${par(c)} = ${lambda * lambda}$。`,
-            `特征多项式为 $\\lambda^2 - ${2 * lambda}\\lambda + ${lambda * lambda} = (\\lambda - ${lambda})^2$。`,
-            `解得二重特征值为 $\\lambda = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the repeated eigenvalue $\\lambda$ of the defective system matrix $A = \\begin{pmatrix} ${p} & ${b} \\\\ ${c} & ${q} \\end{pmatrix}$.`,
+            `求亏损系统矩阵 $A = \\begin{pmatrix} ${p} & ${b} \\\\ ${c} & ${q} \\end{pmatrix}$ 的二重特征值 $\\lambda$。`,
+          ),
           answer: ans,
-          wrong: [2 * lambda, p, q, lambda * lambda],
+          mistakes: apart(ans, [
+            why(2 * lambda, "That is the trace; a repeated eigenvalue is half of it.", "这是迹；二重特征值是它的一半。"),
+            why(p, "That is a diagonal entry; this matrix is not triangular.", "这是一个对角元素；这个矩阵不是三角矩阵。"),
+            why(q, "That is a diagonal entry; this matrix is not triangular.", "这是一个对角元素；这个矩阵不是三角矩阵。"),
+            why(lambda * lambda, "That is the determinant, the square of the eigenvalue.", "这是行列式，即特征值的平方。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the trace and determinant", "求迹与行列式"],
+                t("", ""),
+                [
+                  `\\operatorname{tr}(A) = ${p} + ${par(q)} = ${2 * lambda}`,
+                  `\\det(A) = ${par(p)} \\cdot ${par(q)} - ${par(b)} \\cdot ${par(c)} = ${lambda * lambda}`,
+                ],
+              ],
+              [
+                ["Factor", "因式分解"],
+                t("", ""),
+                [`\\lambda^2 - ${2 * lambda}\\lambda + ${lambda * lambda} = (\\lambda - ${lambda})^2`, `\\lambda = ${ans}`],
+              ],
+            ],
+            t(
+              `The discriminant is $${2 * lambda}^2 - 4 \\cdot ${lambda * lambda} = 0$, so the root is repeated, and $A - ${lambda}I = ${mat(a, b, c, -a)}$ is not zero, so there is only one eigenvector.`,
+              `判别式为 $${2 * lambda}^2 - 4 \\cdot ${lambda * lambda} = 0$，所以是重根；而 $A - ${lambda}I = ${mat(a, b, c, -a)}$ 不为零矩阵，所以只有一个特征向量。`,
+            ),
+          ),
         });
       },
     },
@@ -801,8 +1086,8 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
       id: "the-secular-term-of-a-defective-system",
       title: t("The secular term of a defective system", "亏损方程组的长期项"),
       explanation: t(
-        "When $A$ has a repeated eigenvalue $\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A)$ but only one eigenvector, the matrix $N = A - \\lambda I$ satisfies $N^2 = 0$. Then $e^{At} = e^{\\lambda t}(I + tN)$, so\n\n$$\\mathbf{x}(t) = e^{\\lambda t}\\big(\\mathbf{x}(0) + t\\,\\mathbf{w}\\big), \\qquad \\mathbf{w} = (A - \\lambda I)\\mathbf{x}(0).$$\n\nThe vector $\\mathbf{w}$ multiplies the extra factor $t$ that appears only in the repeated case.",
-        "当 $A$ 有重特征值 $\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A)$ 而只有一个特征向量时，矩阵 $N = A - \\lambda I$ 满足 $N^2 = 0$。于是 $e^{At} = e^{\\lambda t}(I + tN)$，从而\n\n$$\\mathbf{x}(t) = e^{\\lambda t}\\big(\\mathbf{x}(0) + t\\,\\mathbf{w}\\big), \\qquad \\mathbf{w} = (A - \\lambda I)\\mathbf{x}(0).$$\n\n向量 $\\mathbf{w}$ 乘的是只在重根情形出现的额外因子 $t$。",
+        "When $A$ has a repeated eigenvalue $\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A)$ but only one eigenvector, the matrix $N = A - \\lambda I$ satisfies $N^2 = 0$. Then $e^{At} = e^{\\lambda t}(I + tN)$, so\n\n$$\\mathbf{x}(t) = e^{\\lambda t}\\big(\\mathbf{x}(0) + t\\,\\mathbf{w}\\big), \\qquad \\mathbf{w} = (A - \\lambda I)\\mathbf{x}(0).$$\n\nThe vector $\\mathbf{w}$ multiplies the extra factor $t$ that appears only in the repeated case. For $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$ and $\\mathbf{x}(0) = (2, 5)$: $\\mathbf{w} = (5, 0)$.\n\n> **Watch out.** Multiply by $A - \\lambda I$, not by $A$: subtract $\\lambda$ from both diagonal entries first.",
+        "当 $A$ 有重特征值 $\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A)$ 而只有一个特征向量时，矩阵 $N = A - \\lambda I$ 满足 $N^2 = 0$。于是 $e^{At} = e^{\\lambda t}(I + tN)$，从而\n\n$$\\mathbf{x}(t) = e^{\\lambda t}\\big(\\mathbf{x}(0) + t\\,\\mathbf{w}\\big), \\qquad \\mathbf{w} = (A - \\lambda I)\\mathbf{x}(0).$$\n\n向量 $\\mathbf{w}$ 乘的是只在重根情形出现的额外因子 $t$。对 $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$，$\\mathbf{x}(0) = (2, 5)$：$\\mathbf{w} = (5, 0)$。\n\n> **注意。** 要乘 $A - \\lambda I$ 而不是 $A$：先从两个对角元素中减去 $\\lambda$。",
       ),
       generate(rng: Rng): Problem {
         const l = rng.int(-4, 4);
@@ -822,15 +1107,39 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
             `矩阵 $A = ${mat(a, b, c, d)}$ 有重特征值。$\\mathbf{x}' = A\\mathbf{x}$ 满足 $\\mathbf{x}(0) = ${vec(p, q)}$ 的解形如 $e^{\\lambda t}(\\mathbf{x}(0) + t\\mathbf{w})$。求 $w_{${comp}}$。`,
           ),
           answer: ans,
-          wrong: [comp === 1 ? a * p + b * q : c * p + d * q, -ans, comp === 1 ? w2 : w1],
-          solution: t(
-            steps(
-              `$\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A) = ${l}$, so $A - ${par(l)}I = ${mat(n11, n12, n21, n22)}$.`,
-              `$\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}$, so $w_{${comp}} = ${ans}$.`,
+          mistakes: apart(ans, [
+            why(
+              comp === 1 ? a * p + b * q : c * p + d * q,
+              "That multiplies by $A$; subtract $\\lambda I$ first.",
+              "这是乘了 $A$；要先减去 $\\lambda I$。",
             ),
-            steps(
-              `$\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A) = ${l}$，所以 $A - ${par(l)}I = ${mat(n11, n12, n21, n22)}$。`,
-              `$\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}$，所以 $w_{${comp}} = ${ans}$。`,
+            why(-ans, "The sign is flipped.", "符号反了。"),
+            why(comp === 1 ? w2 : w1, "That is the other component of $\\mathbf{w}$.", "这是 $\\mathbf{w}$ 的另一个分量。"),
+            why(
+              comp === 1 ? p : q,
+              "That is the entry of $\\mathbf{x}(0)$; $\\mathbf{w}$ is $(A - \\lambda I)\\mathbf{x}(0)$.",
+              "这是 $\\mathbf{x}(0)$ 的分量；$\\mathbf{w}$ 是 $(A - \\lambda I)\\mathbf{x}(0)$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the eigenvalue", "求特征值"],
+                t("", ""),
+                [
+                  `\\lambda = \\tfrac{1}{2}\\operatorname{tr}(A) = \\tfrac{1}{2}(${a} + ${par(d)}) = ${l}`,
+                  `A - ${par(l)}I = ${mat(n11, n12, n21, n22)}`,
+                ],
+              ],
+              [
+                ["Multiply", "相乘"],
+                t("", ""),
+                [`\\mathbf{w} = ${mat(n11, n12, n21, n22)}${vec(p, q)} = ${vec(w1, w2)}`, `w_{${comp}} = ${ans}`],
+              ],
+            ],
+            t(
+              `Since $N^2 = 0$, $N\\mathbf{w} = N^2\\mathbf{x}(0)$ must vanish, and indeed $${mat(n11, n12, n21, n22)}${vec(w1, w2)} = ${vec(0, 0)}$.`,
+              `由于 $N^2 = 0$，$N\\mathbf{w} = N^2\\mathbf{x}(0)$ 必为零；确实 $${mat(n11, n12, n21, n22)}${vec(w1, w2)} = ${vec(0, 0)}$。`,
             ),
           ),
         });
@@ -846,6 +1155,10 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
   summary: t(
     "Complex eigenvalues $\\alpha \\pm i\\beta$ give spiraling solutions with angular frequency $\\beta$ inside the envelope $e^{\\alpha t}$.",
     "共轭复特征值 $\\alpha \\pm i\\beta$ 给出角频率为 $\\beta$、包络为 $e^{\\alpha t}$ 的螺旋解。",
+  ),
+  intro: t(
+    "Take $A = \\begin{pmatrix} 1 & -2 \\\\ 2 & 1 \\end{pmatrix}$. Its characteristic polynomial is $(1 - \\lambda)^2 + 4$, so $\\lambda = 1 \\pm 2i$. The real solutions are $e^{t}$ times combinations of $\\cos 2t$ and $\\sin 2t$, for example $\\mathbf{x} = e^{t}(\\cos 2t, \\sin 2t)$: a spiral turning at angular frequency $2$ while its size grows like $e^{t}$.\n\nCheck: the trace $2$ is $2\\alpha$ and the determinant $5$ is $\\alpha^2 + \\beta^2 = 1 + 4$.\n\nIn this lesson we turn complex eigenvalues into real oscillating solutions and read their frequency and growth rate.",
+    "取 $A = \\begin{pmatrix} 1 & -2 \\\\ 2 & 1 \\end{pmatrix}$。其特征多项式为 $(1 - \\lambda)^2 + 4$，所以 $\\lambda = 1 \\pm 2i$。实解是 $e^{t}$ 乘以 $\\cos 2t$ 与 $\\sin 2t$ 的组合，例如 $\\mathbf{x} = e^{t}(\\cos 2t, \\sin 2t)$：以角频率 $2$ 旋转、尺寸按 $e^{t}$ 增长的螺旋线。\n\n检验：迹 $2$ 等于 $2\\alpha$，行列式 $5$ 等于 $\\alpha^2 + \\beta^2 = 1 + 4$。\n\n本课我们把复特征值化为实的振荡解，并读出其频率与增长率。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
@@ -864,36 +1177,50 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
         ],
       title: t("Angular frequency from complex eigenvalues", "复特征值的旋转角频率"),
       explanation: t(
-        "A pair of complex eigenvalues produces rotating solutions, with the real part controlling growth and the imaginary part setting the angular frequency. For $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$, the characteristic roots are $\\lambda = \\alpha \\pm i\\beta$, producing trajectories oscillating with angular speed $\\beta$.",
-        "一对复特征值产生旋转的解，实部控制增长，虚部决定角频率。对于标准旋转伸缩矩阵 $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$，其特征值为 $\\lambda = \\alpha \\pm i\\beta$，轨迹具有旋转角频率 $\\beta$。",
+        "A pair of complex eigenvalues produces rotating solutions, with the real part controlling growth and the imaginary part setting the angular frequency. For $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$, the characteristic roots are $\\lambda = \\alpha \\pm i\\beta$, producing trajectories oscillating with angular speed $\\beta$. For $A = \\begin{pmatrix} 2 & -5 \\\\ 5 & 2 \\end{pmatrix}$ the frequency is $5$.\n\n> **Watch out.** The real part $\\alpha$ is the growth rate, not the frequency; and the frequency is $\\beta$ itself, not $\\beta^2$ from the characteristic equation.",
+        "一对复特征值产生旋转的解，实部控制增长，虚部决定角频率。对于标准旋转伸缩矩阵 $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$，其特征值为 $\\lambda = \\alpha \\pm i\\beta$，轨迹具有旋转角频率 $\\beta$。对 $A = \\begin{pmatrix} 2 & -5 \\\\ 5 & 2 \\end{pmatrix}$，频率为 $5$。\n\n> **注意。** 实部 $\\alpha$ 是增长率，不是频率；频率是 $\\beta$ 本身，而不是特征方程中的 $\\beta^2$。",
       ),
       generate(rng: Rng): Problem {
         const alpha = rng.int(1, 10);
         const beta = rng.int(2, 35);
         const ans = beta;
-
-        const prompt = t(
-          `Find the angular frequency $\\beta > 0$ of the oscillating solution components for the linear system $\\mathbf{x}' = \\begin{pmatrix} ${alpha} & -${beta} \\\\ ${beta} & ${alpha} \\end{pmatrix} \\mathbf{x}$.`,
-          `求线性微分方程组 $\\mathbf{x}' = \\begin{pmatrix} ${alpha} & -${beta} \\\\ ${beta} & ${alpha} \\end{pmatrix} \\mathbf{x}$ 的解向量振荡角频率 $\\beta > 0$。`,
-        );
-        const solution = t(
-          steps(
-            `The characteristic equation is $\\det(A - \\lambda I) = (${alpha} - \\lambda)^2 + ${beta * beta} = 0$.`,
-            `Solve for $\\lambda$: $(\\lambda - ${alpha})^2 = -${beta * beta} \\implies \\lambda = ${alpha} \\pm ${beta}i$.`,
-            `The imaginary part gives the angular frequency $\\beta = ${ans}\\text{ rad/s}$.`,
-          ),
-          steps(
-            `计算特征方程：$\\det(A - \\lambda I) = (${alpha} - \\lambda)^2 + ${beta * beta} = 0$。`,
-            `解得共轭复根：$(\\lambda - ${alpha})^2 = -${beta * beta} \\implies \\lambda = ${alpha} \\pm ${beta}i$。`,
-            `虚部即为解的角频率 $\\beta = ${ans}\\text{ 弧度/秒}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the angular frequency $\\beta > 0$ of the oscillating solution components for the linear system $\\mathbf{x}' = \\begin{pmatrix} ${alpha} & -${beta} \\\\ ${beta} & ${alpha} \\end{pmatrix} \\mathbf{x}$.`,
+            `求线性微分方程组 $\\mathbf{x}' = \\begin{pmatrix} ${alpha} & -${beta} \\\\ ${beta} & ${alpha} \\end{pmatrix} \\mathbf{x}$ 的解向量振荡角频率 $\\beta > 0$。`,
+          ),
           answer: ans,
-          wrong: [alpha, beta * beta, alpha + beta],
+          mistakes: apart(ans, [
+            why(alpha, "That is the real part, which sets the growth rate.", "这是实部，它决定增长率。"),
+            why(
+              beta * beta,
+              "That is $\\beta^2$ from the characteristic equation; take its square root.",
+              "这是特征方程中的 $\\beta^2$；还要开平方。",
+            ),
+            why(
+              alpha + beta,
+              "That adds the real and imaginary parts; the frequency is the imaginary part alone.",
+              "这是把实部与虚部相加；频率只是虚部。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Form the characteristic equation", "写出特征方程"],
+                t("", ""),
+                [`\\det(A - \\lambda I) = (${alpha} - \\lambda)^2 + ${beta * beta} = 0`],
+              ],
+              [
+                ["Solve", "求解"],
+                t("", ""),
+                [`(\\lambda - ${alpha})^2 = -${beta * beta}, \\qquad \\lambda = ${alpha} \\pm ${beta}i`, `\\beta = ${ans}`],
+              ],
+            ],
+            t(
+              `The trace $${2 * alpha}$ is $2\\alpha$ and the determinant $${alpha * alpha + beta * beta}$ is $${alpha}^2 + ${beta}^2$, as the roots $${alpha} \\pm ${beta}i$ require.`,
+              `迹 $${2 * alpha}$ 等于 $2\\alpha$，行列式 $${alpha * alpha + beta * beta}$ 等于 $${alpha}^2 + ${beta}^2$，与根 $${alpha} \\pm ${beta}i$ 相符。`,
+            ),
+          ),
         });
       },
     },
@@ -901,8 +1228,8 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
       id: "the-frequency-of-a-general-oscillating-system",
       title: t("The frequency of a general oscillating system", "一般振荡方程组的频率"),
       explanation: t(
-        "The eigenvalues of a $2 \\times 2$ matrix are $\\lambda = \\alpha \\pm \\beta i$ with\n\n$$\\alpha = \\tfrac{1}{2}\\operatorname{tr}(A), \\qquad \\beta^2 = \\det(A) - \\alpha^2,$$\n\nwhenever the right side of the second formula is positive. The real solutions are then $e^{\\alpha t}$ times combinations of $\\cos \\beta t$ and $\\sin \\beta t$. The frequency comes from both the trace and the determinant, not from an off-diagonal entry alone.",
-        "$2 \\times 2$ 矩阵的特征值为 $\\lambda = \\alpha \\pm \\beta i$，其中\n\n$$\\alpha = \\tfrac{1}{2}\\operatorname{tr}(A), \\qquad \\beta^2 = \\det(A) - \\alpha^2,$$\n\n前提是第二个式子右边为正。此时实解是 $e^{\\alpha t}$ 乘以 $\\cos \\beta t$ 与 $\\sin \\beta t$ 的组合。频率同时由迹和行列式决定，而不是仅由某个非对角元素决定。",
+        "The eigenvalues of a $2 \\times 2$ matrix are $\\lambda = \\alpha \\pm \\beta i$ with\n\n$$\\alpha = \\tfrac{1}{2}\\operatorname{tr}(A), \\qquad \\beta^2 = \\det(A) - \\alpha^2,$$\n\nwhenever the right side of the second formula is positive. The real solutions are then $e^{\\alpha t}$ times combinations of $\\cos \\beta t$ and $\\sin \\beta t$. The frequency comes from both the trace and the determinant, not from an off-diagonal entry alone. For $A = \\begin{pmatrix} 3 & -5 \\\\ 2 & -1 \\end{pmatrix}$: $\\alpha = 1$, $\\det(A) = 7$, $\\beta^2 = 6$, so $\\beta = \\sqrt{6}$.\n\n> **Watch out.** Subtract $\\alpha^2$ from the determinant before taking the square root, and give $\\beta$, not $\\beta^2$.",
+        "$2 \\times 2$ 矩阵的特征值为 $\\lambda = \\alpha \\pm \\beta i$，其中\n\n$$\\alpha = \\tfrac{1}{2}\\operatorname{tr}(A), \\qquad \\beta^2 = \\det(A) - \\alpha^2,$$\n\n前提是第二个式子右边为正。此时实解是 $e^{\\alpha t}$ 乘以 $\\cos \\beta t$ 与 $\\sin \\beta t$ 的组合。频率同时由迹和行列式决定，而不是仅由某个非对角元素决定。对 $A = \\begin{pmatrix} 3 & -5 \\\\ 2 & -1 \\end{pmatrix}$：$\\alpha = 1$，$\\det(A) = 7$，$\\beta^2 = 6$，所以 $\\beta = \\sqrt{6}$。\n\n> **注意。** 先从行列式中减去 $\\alpha^2$ 再开平方，答案是 $\\beta$ 而不是 $\\beta^2$。",
       ),
       generate(rng: Rng): Problem {
         const al = rng.int(-3, 3);
@@ -913,21 +1240,39 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
         const v = rng.pick(divs) * rng.pick([-1, 1]);
         const w = n / v;
         const [a, b, c, d] = [al + u, -v, w, al - u];
+        const det = a * d - b * c;
         return numberProblem({
           prompt: t(
             `The real solutions of $\\mathbf{x}' = ${mat(a, b, c, d)}\\mathbf{x}$ are $e^{\\alpha t}$ times combinations of $\\cos \\beta t$ and $\\sin \\beta t$ with $\\beta > 0$. Find $\\beta$.`,
             `$\\mathbf{x}' = ${mat(a, b, c, d)}\\mathbf{x}$ 的实解是 $e^{\\alpha t}$ 乘以 $\\cos \\beta t$ 与 $\\sin \\beta t$ 的组合，其中 $\\beta > 0$。求 $\\beta$。`,
           ),
           answer: be,
-          wrong: [be * be, Math.abs(v), al, a * d - b * c],
-          solution: t(
-            steps(
-              `$\\operatorname{tr}(A) = ${2 * al}$ and $\\det(A) = ${a * d - b * c}$, so $\\alpha = ${al}$.`,
-              `$\\beta^2 = ${a * d - b * c} - ${par(al)}^2 = ${be * be}$, so $\\beta = ${be}$.`,
+          mistakes: apart(be, [
+            why(be * be, "That is $\\beta^2$; take its square root.", "这是 $\\beta^2$；还要开平方。"),
+            why(
+              Math.abs(v),
+              "That reads an off-diagonal entry; the frequency comes from the trace and determinant.",
+              "这是读了非对角元素；频率由迹和行列式决定。",
             ),
-            steps(
-              `$\\operatorname{tr}(A) = ${2 * al}$，$\\det(A) = ${a * d - b * c}$，所以 $\\alpha = ${al}$。`,
-              `$\\beta^2 = ${a * d - b * c} - ${par(al)}^2 = ${be * be}$，所以 $\\beta = ${be}$。`,
+            why(al, "That is $\\alpha$, the growth rate.", "这是增长率 $\\alpha$。"),
+            why(
+              det,
+              "That is the determinant before subtracting $\\alpha^2$ and taking the root.",
+              "这是行列式，还没有减去 $\\alpha^2$ 并开平方。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the trace and determinant", "求迹与行列式"],
+                t("", ""),
+                [`\\operatorname{tr}(A) = ${2 * al}, \\qquad \\det(A) = ${det}, \\qquad \\alpha = ${al}`],
+              ],
+              [["Find beta", "求 beta"], t("", ""), [`\\beta^2 = ${det} - ${par(al)}^2 = ${be * be}`, `\\beta = ${be}`]],
+            ],
+            t(
+              `The roots $${al === 0 ? "" : `${al} `}\\pm ${be === 1 ? "" : be}i$ have sum $${2 * al}$, the trace, and product $${al * al} + ${be * be} = ${det}$, the determinant.`,
+              `根 $${al === 0 ? "" : `${al} `}\\pm ${be === 1 ? "" : be}i$ 之和为 $${2 * al}$，即迹；之积为 $${al * al} + ${be * be} = ${det}$，即行列式。`,
             ),
           ),
         });
@@ -944,6 +1289,10 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
     "For $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ with a constant vector $\\mathbf{b}$ and invertible $A$, the constant particular solution is $\\mathbf{x}_p = -A^{-1}\\mathbf{b}$.",
     "对常向量激励 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ 且 $A$ 可逆，常数特解为 $\\mathbf{x}_p = -A^{-1}\\mathbf{b}$。",
   ),
+  intro: t(
+    "Find the constant solution of $x_1' = -2x_1 + x_2 + 1$, $x_2' = x_1 - 2x_2 + 4$. A constant solution has zero derivative, so $-2x_1 + x_2 = -1$ and $x_1 - 2x_2 = -4$. Doubling the second and adding gives $-3x_2 = -9$, so $x_2 = 3$ and $x_1 = 2$. The general solution is this constant plus the solution of the homogeneous system.\n\nCheck: $-4 + 3 + 1 = 0$ and $2 - 6 + 4 = 0$.\n\nIn this lesson we find the constant particular solution of a system with constant forcing.",
+    "求 $x_1' = -2x_1 + x_2 + 1$，$x_2' = x_1 - 2x_2 + 4$ 的常数解。常数解的导数为零，所以 $-2x_1 + x_2 = -1$，$x_1 - 2x_2 = -4$。把第二式乘 $2$ 后相加得 $-3x_2 = -9$，所以 $x_2 = 3$，$x_1 = 2$。通解是这个常数解加上齐次方程组的解。\n\n检验：$-4 + 3 + 1 = 0$，$2 - 6 + 4 = 0$。\n\n本课我们求常数强迫项方程组的常数特解。",
+  ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [],
   xp: 10,
@@ -952,37 +1301,39 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
       id: "undetermined-coefficients-for-constant-forcing-vectors",
       title: t("Steady-state particular solution for constant forcing", "常数激励下的稳态特解向量"),
       explanation: t(
-        "With constant forcing, try a constant particular solution; setting the derivative to zero leaves a linear system for the steady state. For $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$ where $A = \\operatorname{diag}(a, d)$, setting $\\mathbf{x}_p = \\mathbf{c}$ gives $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0} \\implies c_1 = -b_1 / a$.",
-        "当强迫项是常数时，试探常数特解；令导数为零，就得到关于稳态的线性方程组。对于对角系统 $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$，设常数特解 $\\mathbf{x}_p = \\mathbf{c}$，代入平衡条件 $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0}$，得第一分量为 $c_1 = -b_1 / a$。",
+        "With constant forcing, try a constant particular solution; setting the derivative to zero leaves a linear system for the steady state. For $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$ where $A = \\operatorname{diag}(a, d)$, setting $\\mathbf{x}_p = \\mathbf{c}$ gives $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0} \\implies c_1 = -b_1 / a$. For $x_1' = -4x_1 + 12$ the steady state is $x_1 = 3$.\n\n> **Watch out.** At the steady state the derivative is zero, not $x_1$; so solve $-ax_1 + b_1 = 0$ by dividing $b_1$ by $a$, not by subtracting.",
+        "当强迫项是常数时，试探常数特解；令导数为零，就得到关于稳态的线性方程组。对于对角系统 $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$，设常数特解 $\\mathbf{x}_p = \\mathbf{c}$，代入平衡条件 $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0}$，得第一分量为 $c_1 = -b_1 / a$。对 $x_1' = -4x_1 + 12$，稳态为 $x_1 = 3$。\n\n> **注意。** 稳态时为零的是导数，而不是 $x_1$；解 $-ax_1 + b_1 = 0$ 要用 $b_1$ 除以 $a$，而不是相减。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
         const c1 = rng.int(2, 25);
-        const b1 = a * c1; // so -b1 / a = -c1
+        const b1 = a * c1;
         const ans = c1;
-
-        const prompt = t(
-          `Find the magnitude of the steady-state value $|x_1|$ for the decoupled inhomogeneous system $x_1' = -${a}x_1 + ${b1}$.`,
-          `求非齐次一阶常微分方程 $x_1' = -${a}x_1 + ${b1}$ 的稳态平衡值 $|x_1|$ 的大小。`,
-        );
-        const solution = t(
-          steps(
-            `At steady state, the derivative vanishes: $x_1' = 0$.`,
-            `Set the right-hand side to zero: $-${a}x_1 + ${b1} = 0$.`,
-            `Solve for $x_1$: $x_1 = \\frac{${b1}}{${a}} = ${ans}$.`,
-          ),
-          steps(
-            `在稳态平衡点处，状态变化率为零：$x_1' = 0$。`,
-            `令导数项为零：$-${a}x_1 + ${b1} = 0$。`,
-            `解得稳态值：$x_1 = \\frac{${b1}}{${a}} = ${ans}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the magnitude of the steady-state value $|x_1|$ for the decoupled inhomogeneous system $x_1' = -${a}x_1 + ${b1}$.`,
+            `求非齐次一阶常微分方程 $x_1' = -${a}x_1 + ${b1}$ 的稳态平衡值 $|x_1|$ 的大小。`,
+          ),
           answer: ans,
-          wrong: [b1, a, ans + a],
+          mistakes: apart(ans, [
+            why(b1, "That is the forcing term; divide it by the rate.", "这是强迫项；还要除以速率。"),
+            why(a, "That is the rate, not the steady state.", "这是速率，不是稳态值。"),
+            why(
+              b1 - a,
+              "That subtracts the rate; solving $-ax_1 + b_1 = 0$ divides by it.",
+              "这是减去速率；解 $-ax_1 + b_1 = 0$ 应除以速率。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Set the derivative to zero", "令导数为零"], t("", ""), [`-${a}x_1 + ${b1} = 0`]],
+              [["Solve", "求解"], t("", ""), [`x_1 = \\frac{${b1}}{${a}} = ${ans}`]],
+            ],
+            t(
+              `$-${a} \\cdot ${ans} + ${b1} = 0$, so $x_1 = ${ans}$ makes the derivative vanish.`,
+              `$-${a} \\cdot ${ans} + ${b1} = 0$，所以 $x_1 = ${ans}$ 使导数为零。`,
+            ),
+          ),
         });
       },
     },
@@ -990,8 +1341,8 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
       id: "the-equilibrium-of-a-coupled-forced-system",
       title: t("The equilibrium of a coupled forced system", "耦合受迫方程组的平衡解"),
       explanation: t(
-        "For $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ with a constant vector $\\mathbf{b}$, a constant particular solution $\\mathbf{x}_p$ must have zero derivative, so\n\n$$A\\mathbf{x}_p + \\mathbf{b} = \\mathbf{0}, \\qquad \\mathbf{x}_p = -A^{-1}\\mathbf{b}.$$\n\nWhen the system is coupled this is a genuine linear system: solve both equations together rather than dividing each forcing term by a diagonal entry.",
-        "对 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$（$\\mathbf{b}$ 为常向量），常数特解 $\\mathbf{x}_p$ 的导数为零，所以\n\n$$A\\mathbf{x}_p + \\mathbf{b} = \\mathbf{0}, \\qquad \\mathbf{x}_p = -A^{-1}\\mathbf{b}.$$\n\n方程组耦合时这是一个真正的线性方程组：要把两个方程联立求解，而不是把各强迫项分别除以对角元素。",
+        "For $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ with a constant vector $\\mathbf{b}$, a constant particular solution $\\mathbf{x}_p$ must have zero derivative, so\n\n$$A\\mathbf{x}_p + \\mathbf{b} = \\mathbf{0}, \\qquad \\mathbf{x}_p = -A^{-1}\\mathbf{b}.$$\n\nWhen the system is coupled this is a genuine linear system: solve both equations together rather than dividing each forcing term by a diagonal entry. For $x_1' = -2x_1 + x_2 + 1$, $x_2' = x_1 - 2x_2 + 4$ the equilibrium is $(2, 3)$.\n\n> **Watch out.** Move the constants across with their signs changed: $A\\mathbf{x}_p = -\\mathbf{b}$; and dividing $-b_1$ by $a$ ignores the coupling term.",
+        "对 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$（$\\mathbf{b}$ 为常向量），常数特解 $\\mathbf{x}_p$ 的导数为零，所以\n\n$$A\\mathbf{x}_p + \\mathbf{b} = \\mathbf{0}, \\qquad \\mathbf{x}_p = -A^{-1}\\mathbf{b}.$$\n\n方程组耦合时这是一个真正的线性方程组：要把两个方程联立求解，而不是把各强迫项分别除以对角元素。对 $x_1' = -2x_1 + x_2 + 1$，$x_2' = x_1 - 2x_2 + 4$，平衡解为 $(2, 3)$。\n\n> **注意。** 常数移项时要变号：$A\\mathbf{x}_p = -\\mathbf{b}$；用 $a$ 去除 $-b_1$ 忽略了耦合项。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c, d] = rng.pick([
@@ -1014,10 +1365,36 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
             `求 $x_1' = ${poly([a, "x_1"], [b, "x_2"], [b1, ""])}$，$x_2' = ${poly([c, "x_1"], [d, "x_2"], [b2, ""])}$ 的常数解，并给出分量 $x_{${comp}}$。`,
           ),
           answer: ans,
-          wrong: [comp === 1 ? y : x, -ans, comp === 1 ? Q.of(-b1, a) : Q.of(-b2, d)],
-          solution: t(
-            `Set both right sides to zero: $${poly([a, "x_1"], [b, "x_2"])} = ${-b1}$ and $${poly([c, "x_1"], [d, "x_2"])} = ${-b2}$. Solving gives $x_1 = ${x}$, $x_2 = ${y}$.`,
-            `令两个右端为零：$${poly([a, "x_1"], [b, "x_2"])} = ${-b1}$，$${poly([c, "x_1"], [d, "x_2"])} = ${-b2}$。解得 $x_1 = ${x}$，$x_2 = ${y}$。`,
+          mistakes: apart(ans, [
+            why(comp === 1 ? y : x, "That is the other component.", "这是另一个分量。"),
+            why(-ans, "The sign is flipped: the constants change sign when moved across.", "符号反了：常数移项时要变号。"),
+            why(
+              comp === 1 ? Q.of(-b1, a) : Q.of(-b2, d),
+              "That divides by the diagonal entry and ignores the coupling term.",
+              "这是除以对角元素，忽略了耦合项。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set both derivatives to zero", "令两个导数为零"],
+                t("", ""),
+                [`${poly([a, "x_1"], [b, "x_2"])} = ${-b1}`, `${poly([c, "x_1"], [d, "x_2"])} = ${-b2}`],
+              ],
+              [
+                ["Solve together", "联立求解"],
+                t(`The determinant is $${a * d - b * c}$, so Cramer's rule gives:`, `行列式为 $${a * d - b * c}$，由克拉默法则得：`),
+                [
+                  `x_1 = ${par(-b1)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(-b2)} = ${x}`,
+                  `x_2 = ${par(a)} \\cdot ${par(-b2)} - ${par(c)} \\cdot ${par(-b1)} = ${y}`,
+                  `x_{${comp}} = ${ans}`,
+                ],
+              ],
+            ],
+            t(
+              `$${par(a)} \\cdot ${par(x)} + ${par(b)} \\cdot ${par(y)} ${signed(b1)} = 0$ and $${par(c)} \\cdot ${par(x)} + ${par(d)} \\cdot ${par(y)} ${signed(b2)} = 0$.`,
+              `$${par(a)} \\cdot ${par(x)} + ${par(b)} \\cdot ${par(y)} ${signed(b1)} = 0$，$${par(c)} \\cdot ${par(x)} + ${par(d)} \\cdot ${par(y)} ${signed(b2)} = 0$。`,
+            ),
           ),
         });
       },
@@ -1037,6 +1414,10 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
     "In the phase plane (x, y), trajectories follow the vector field (x', y'), with trajectory slope dy/dx = y'/x' defining phase curves.",
     "在相平面 (x, y) 中，状态轨迹沿向量场 (x', y') 演化流动，其相曲线的切线斜率由 dy/dx = y'/x' 确定。",
   ),
+  intro: t(
+    "For $x' = y$, $y' = -4x$ the velocity at $(1, 2)$ is $(2, -4)$, so the trajectory through that point has slope $\\frac{dy}{dx} = \\frac{-4}{2} = -2$. Dividing the equations removes time: $\\frac{dy}{dx} = -\\frac{4x}{y}$, so $y\\,dy = -4x\\,dx$ and $4x^2 + y^2 = C$. Through $(1, 2)$, $C = 8$: the trajectory is an ellipse.\n\nCheck: $\\frac{d}{dt}(4x^2 + y^2) = 8xy + 2y(-4x) = 0$, so the quantity is indeed constant.\n\nIn this lesson we draw trajectories in the phase plane from their slopes and from quantities they conserve.",
+    "对 $x' = y$，$y' = -4x$，在 $(1, 2)$ 处速度为 $(2, -4)$，所以过该点的轨线斜率为 $\\frac{dy}{dx} = \\frac{-4}{2} = -2$。两式相除消去时间：$\\frac{dy}{dx} = -\\frac{4x}{y}$，于是 $y\\,dy = -4x\\,dx$，$4x^2 + y^2 = C$。过 $(1, 2)$ 时 $C = 8$：轨线是一个椭圆。\n\n检验：$\\frac{d}{dt}(4x^2 + y^2) = 8xy + 2y(-4x) = 0$，所以这个量确实保持不变。\n\n本课我们根据斜率和守恒量在相平面上画出轨线。",
+  ),
   prerequisites: ["solving-decoupled-homogeneous-systems-of-odes"],
   encompasses: [
     {
@@ -1050,8 +1431,8 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
       id: "direction-fields-and-trajectories-in-the-phase-plane",
       title: t("Trajectory slope in the phase plane", "相平面上状态轨迹的切线斜率"),
       explanation: t(
-        "A phase trajectory hides time and shows only the path, and its slope is the ratio of the vertical rate to the horizontal rate. The slope of a phase trajectory is $\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$. For $x' = a x$ and $y' = b y$, $\\frac{dy}{dx} = \\frac{b y}{a x}$.",
-        "相轨线隐去了时间，只显示路径，它的斜率是竖直变化率与水平变化率之比。相轨迹的斜率由链式法则给出：$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$。对于系统 $x' = a x, y' = b y$，切线斜率为 $\\frac{dy}{dx} = \\frac{b y}{a x}$。",
+        "A phase trajectory hides time and shows only the path, and its slope is the ratio of the vertical rate to the horizontal rate. The slope of a phase trajectory is $\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$. For $x' = a x$ and $y' = b y$, $\\frac{dy}{dx} = \\frac{b y}{a x}$. For $x' = 2x$, $y' = 3y$ at $(1, 4)$ the slope is $\\frac{12}{2} = 6$.\n\n> **Watch out.** The vertical rate $y'$ goes on top; and evaluate both rates at the point, not just their coefficients.",
+        "相轨线隐去了时间，只显示路径，它的斜率是竖直变化率与水平变化率之比。相轨迹的斜率由链式法则给出：$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$。对于系统 $x' = a x, y' = b y$，切线斜率为 $\\frac{dy}{dx} = \\frac{b y}{a x}$。对 $x' = 2x$，$y' = 3y$，在 $(1, 4)$ 处斜率为 $\\frac{12}{2} = 6$。\n\n> **注意。** 竖直变化率 $y'$ 在分子上；要在该点计算两个变化率，而不只是用它们的系数。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -1060,27 +1441,32 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
         const y0 = rng.nonZero(-5, 5);
         const ans = Q.of(b * y0, a * x0);
         const xp = poly([a, "x"]);
-
-        const prompt = t(
-          `For the linear autonomous system $x' = ${xp}$ and $y' = ${b}y$, evaluate the trajectory slope $\\frac{dy}{dx}$ at the point $(x, y) = (${x0}, ${y0})$ in the phase plane.`,
-          `对于线性自治方程组 $x' = ${xp}$ 与 $y' = ${b}y$，计算相平面上在点 $(x, y) = (${x0}, ${y0})$ 处的轨迹切线斜率 $\\frac{dy}{dx}$。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the chain rule for the parametric trajectory: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${xp}}$.`,
-            `Substitute $(x, y) = (${x0}, ${y0})$: $\\frac{dy}{dx} = \\frac{${b} \\cdot ${par(y0)}}{${a} \\cdot ${par(x0)}} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `由参数曲线求导法则：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${xp}}$。`,
-            `代入点 $(x, y) = (${x0}, ${y0})$：$\\frac{dy}{dx} = \\frac{${b} \\cdot ${par(y0)}}{${a} \\cdot ${par(x0)}} = ${ans.toLatex()}$。`,
-          ),
-        );
-
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `For the linear autonomous system $x' = ${xp}$ and $y' = ${b}y$, evaluate the trajectory slope $\\frac{dy}{dx}$ at the point $(x, y) = (${x0}, ${y0})$ in the phase plane.`,
+            `对于线性自治方程组 $x' = ${xp}$ 与 $y' = ${b}y$，计算相平面上在点 $(x, y) = (${x0}, ${y0})$ 处的轨迹切线斜率 $\\frac{dy}{dx}$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(a * x0, b * y0), Q.of(b, a), Q.of(y0, x0), Q.of(b * x0, a * y0)],
+          mistakes: apart(ans, [
+            why(Q.of(a * x0, b * y0), "That is upside down: $y'$ goes on top.", "上下颠倒了：$y'$ 在分子上。"),
+            why(Q.of(b, a), "That uses only the coefficients; evaluate the rates at the point.", "这里只用了系数；要在该点计算变化率。"),
+            why(Q.of(y0, x0), "That leaves out the rates $${b}$ and $${a}$.", "这里漏掉了速率 $${b}$ 与 $${a}$。"),
+            why(Q.of(b * x0, a * y0), "That swaps the coordinates of the point.", "这是把点的坐标交换了。"),
+          ]),
+          solution: walked(
+            [
+              [["Divide the rates", "两个变化率相除"], t("", ""), [`\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${xp}}`]],
+              [
+                ["Substitute the point", "代入该点"],
+                t("", ""),
+                [`\\frac{dy}{dx} = \\frac{${b} \\cdot ${par(y0)}}{${a} \\cdot ${par(x0)}} = ${ans.toLatex()}`],
+              ],
+            ],
+            t(
+              `The velocity at the point is $(${a * x0}, ${b * y0})$, and rise over run is $${b * y0} \\div ${par(a * x0)} = ${ans.toLatex()}$.`,
+              `该点的速度为 $(${a * x0}, ${b * y0})$，纵向比横向为 $${b * y0} \\div ${par(a * x0)} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1088,8 +1474,8 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
       id: "the-conserved-quantity-along-a-trajectory",
       title: t("The conserved quantity along a trajectory", "沿轨线守恒的量"),
       explanation: t(
-        "Dividing $y' = -kx$ by $x' = y$ removes time and gives the trajectory equation $\\frac{dy}{dx} = -\\frac{kx}{y}$. Separating, $y\\,dy = -kx\\,dx$, so\n\n$$kx^2 + y^2 = C$$\n\nstays constant along each trajectory. The trajectories are ellipses around the origin, and the starting point fixes which ellipse: substitute it to find $C$.",
-        "用 $y' = -kx$ 除以 $x' = y$ 消去时间，得到轨线方程 $\\frac{dy}{dx} = -\\frac{kx}{y}$。分离变量，$y\\,dy = -kx\\,dx$，所以\n\n$$kx^2 + y^2 = C$$\n\n沿每条轨线保持不变。轨线是绕原点的椭圆，起点决定是哪一个椭圆：代入起点求出 $C$。",
+        "Dividing $y' = -kx$ by $x' = y$ removes time and gives the trajectory equation $\\frac{dy}{dx} = -\\frac{kx}{y}$. Separating, $y\\,dy = -kx\\,dx$, so\n\n$$kx^2 + y^2 = C$$\n\nstays constant along each trajectory. The trajectories are ellipses around the origin, and the starting point fixes which ellipse: substitute it to find $C$. For $k = 4$ through $(1, 2)$: $C = 4 + 4 = 8$.\n\n> **Watch out.** The factor $k$ goes with $x^2$, not $y^2$, and both coordinates are squared, so a negative coordinate still adds.",
+        "用 $y' = -kx$ 除以 $x' = y$ 消去时间，得到轨线方程 $\\frac{dy}{dx} = -\\frac{kx}{y}$。分离变量，$y\\,dy = -kx\\,dx$，所以\n\n$$kx^2 + y^2 = C$$\n\n沿每条轨线保持不变。轨线是绕原点的椭圆，起点决定是哪一个椭圆：代入起点求出 $C$。对 $k = 4$ 过 $(1, 2)$：$C = 4 + 4 = 8$。\n\n> **注意。** 因子 $k$ 乘的是 $x^2$ 而不是 $y^2$；两个坐标都要平方，所以负坐标仍然是加上去的。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 9);
@@ -1102,8 +1488,26 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
             `$x' = y$，$y' = -${k}x$ 过点 $(${p}, ${q})$ 的轨线为 $${k}x^2 + y^2 = C$。求 $C$。`,
           ),
           answer: ans,
-          wrong: [p * p + q * q, k * p * p - q * q, k * p + q, p * p + k * q * q],
-          solution: t(`$C = ${k} \\cdot ${par(p)}^2 + ${par(q)}^2 = ${ans}$.`, `$C = ${k} \\cdot ${par(p)}^2 + ${par(q)}^2 = ${ans}$。`),
+          mistakes: apart(ans, [
+            why(p * p + q * q, "That leaves out the factor $k$ on $x^2$.", "这里漏掉了 $x^2$ 前的因子 $k$。"),
+            why(k * p * p - q * q, "The squares add: $y^2$ is never negative.", "平方项是相加的：$y^2$ 不会为负。"),
+            why(k * p + q, "That forgets to square the coordinates.", "这里忘了把坐标平方。"),
+            why(p * p + k * q * q, "That puts $k$ on $y^2$ instead of $x^2$.", "这是把 $k$ 放在了 $y^2$ 而不是 $x^2$ 前。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Separate the variables", "分离变量"],
+                t("", ""),
+                [`\\frac{dy}{dx} = -\\frac{${k}x}{y}, \\qquad y\\,dy = -${k}x\\,dx, \\qquad ${k}x^2 + y^2 = C`],
+              ],
+              [["Substitute the point", "代入该点"], t("", ""), [`C = ${k} \\cdot ${par(p)}^2 + ${par(q)}^2 = ${ans}`]],
+            ],
+            t(
+              `Along any solution $\\frac{d}{dt}(${k}x^2 + y^2) = ${2 * k}xy + 2y(-${k}x) = 0$, so $C$ keeps the value $${ans}$ found at the start.`,
+              `沿任意解 $\\frac{d}{dt}(${k}x^2 + y^2) = ${2 * k}xy + 2y(-${k}x) = 0$，所以 $C$ 始终保持起点处的值 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1118,6 +1522,10 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
     "Equilibrium points satisfy $A\\mathbf{x}_0 = \\mathbf{0}$. When $\\det A \\ne 0$, the origin is the only equilibrium, classified by the trace and determinant.",
     "平衡点满足 $A\\mathbf{x}_0 = \\mathbf{0}$。当 $\\det A \\ne 0$ 时，原点是唯一的平衡点，其类型由迹与行列式确定。",
   ),
+  intro: t(
+    "Take $\\mathbf{x}' = A\\mathbf{x}$ with $A = \\begin{pmatrix} -3 & 1 \\\\ 1 & -2 \\end{pmatrix}$. The determinant is $6 - 1 = 5 \\ne 0$, so the origin is the only equilibrium. The trace is $-5 < 0$ and the determinant is positive, so both eigenvalues have negative real parts and every solution tends to the origin: it is asymptotically stable.\n\nCheck: the eigenvalues solve $\\lambda^2 + 5\\lambda + 5 = 0$, so $\\lambda = \\frac{-5 \\pm \\sqrt{5}}{2}$, and both are negative.\n\nIn this lesson we find the equilibria of linear systems and decide their stability from the trace and determinant.",
+    "取 $\\mathbf{x}' = A\\mathbf{x}$，$A = \\begin{pmatrix} -3 & 1 \\\\ 1 & -2 \\end{pmatrix}$。行列式为 $6 - 1 = 5 \\ne 0$，所以原点是唯一的平衡点。迹为 $-5 < 0$ 且行列式为正，所以两个特征值的实部都为负，每个解都趋于原点：原点渐近稳定。\n\n检验：特征值满足 $\\lambda^2 + 5\\lambda + 5 = 0$，所以 $\\lambda = \\frac{-5 \\pm \\sqrt{5}}{2}$，两者都为负。\n\n本课我们求线性方程组的平衡点，并由迹与行列式判断其稳定性。",
+  ),
   prerequisites: ["phase-planes-and-phase-portraits"],
   encompasses: [],
   xp: 10,
@@ -1126,39 +1534,41 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
       id: "classification-of-isolated-critical-points",
       title: t("Determinant test for isolated critical points", "孤立平衡点的行列式判定准则"),
       explanation: t(
-        "The origin is the only equilibrium of a linear system exactly when the matrix is invertible, that is, when its determinant is not zero. A linear system $A \\mathbf{x} = \\mathbf{0}$ has an isolated critical point at the origin if and only if $\\det(A) \\ne 0$.",
-        "线性方程组只有原点一个平衡点，当且仅当矩阵可逆，也就是行列式不为零。线性系统 $A \\mathbf{x} = \\mathbf{0}$ 在原点具有孤立平衡点当且仅当系数矩阵行列式 $\\det(A) \\ne 0$。",
+        "The origin is the only equilibrium of a linear system exactly when the matrix is invertible, that is, when its determinant is not zero. A linear system $A \\mathbf{x} = \\mathbf{0}$ has an isolated critical point at the origin if and only if $\\det(A) \\ne 0$. For $A = \\begin{pmatrix} 4 & 2 \\\\ 3 & 5 \\end{pmatrix}$, $\\det(A) = 20 - 6 = 14$, so the origin is isolated.\n\n> **Watch out.** The determinant subtracts the product of the off-diagonal entries: $ad - bc$, not $ad + bc$ and not the trace $a + d$.",
+        "线性方程组只有原点一个平衡点，当且仅当矩阵可逆，也就是行列式不为零。线性系统 $A \\mathbf{x} = \\mathbf{0}$ 在原点具有孤立平衡点当且仅当系数矩阵行列式 $\\det(A) \\ne 0$。对 $A = \\begin{pmatrix} 4 & 2 \\\\ 3 & 5 \\end{pmatrix}$，$\\det(A) = 20 - 6 = 14$，所以原点是孤立的。\n\n> **注意。** 行列式要减去非对角元素之积：$ad - bc$，不是 $ad + bc$，也不是迹 $a + d$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
         const d = rng.int(2, 8);
         const b = rng.int(1, 4);
         const c = rng.int(1, 4);
-        const detA = a * d - b * c;
-        const ans = detA;
-
-        const prompt = t(
-          `Calculate the determinant $\\det(A)$ for $A = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}$ to verify that the origin is an isolated equilibrium point.`,
-          `计算矩阵 $A = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}$ 的行列式 $\\det(A)$，以判定原点是否为孤立平衡点。`,
-        );
-        const solution = t(
-          steps(
-            `The determinant of a $2 \\times 2$ matrix is $\\det(A) = ad - bc$.`,
-            `Substitute entries: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${a * d} - ${b * c} = ${ans}$.`,
-            `Since $\\det(A) \\ne 0$, the origin is the unique isolated equilibrium point.`,
-          ),
-          steps(
-            `二阶方阵的行列式公式为 $\\det(A) = ad - bc$。`,
-            `代入元素计算：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${a * d} - ${b * c} = ${ans}$。`,
-            `因为 $\\det(A) \\ne 0$，所以原点是系统唯一的孤立平衡点。`,
-          ),
-        );
-
+        const ans = a * d - b * c;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the determinant $\\det(A)$ for $A = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}$ to verify that the origin is an isolated equilibrium point.`,
+            `计算矩阵 $A = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}$ 的行列式 $\\det(A)$，以判定原点是否为孤立平衡点。`,
+          ),
           answer: ans,
-          wrong: [a + d, a * d, detA + 2],
+          mistakes: apart(ans, [
+            why(a + d, "That is the trace, the sum of the diagonal entries.", "这是迹，即对角线元素之和。"),
+            why(a * d, "That leaves out the product $bc$ of the off-diagonal entries.", "这里漏掉了非对角元素之积 $bc$。"),
+            why(a * d + b * c, "The off-diagonal product is subtracted, not added.", "非对角元素之积要减去，而不是加上。"),
+          ]),
+          solution: walked(
+            [
+              [["Use the formula", "用公式"], t("", ""), [`\\det(A) = ad - bc`]],
+              [["Substitute", "代入"], t("", ""), [`\\det(A) = ${a} \\cdot ${d} - ${b} \\cdot ${c} = ${a * d} - ${b * c} = ${ans}`]],
+            ],
+            ans === 0
+              ? t(
+                  `With $\\det(A) = 0$ the rows are proportional, so the equilibria fill a line through the origin and the origin is not isolated.`,
+                  `$\\det(A) = 0$ 时两行成比例，平衡点充满一条过原点的直线，原点不是孤立的。`,
+                )
+              : t(
+                  `Since $\\det(A) = ${ans} \\ne 0$, the only solution of $A\\mathbf{x} = \\mathbf{0}$ is $\\mathbf{x} = \\mathbf{0}$, so the origin is the unique, isolated equilibrium.`,
+                  `由于 $\\det(A) = ${ans} \\ne 0$，$A\\mathbf{x} = \\mathbf{0}$ 只有解 $\\mathbf{x} = \\mathbf{0}$，所以原点是唯一的孤立平衡点。`,
+                ),
+          ),
         });
       },
     },
@@ -1166,8 +1576,8 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
       id: "deciding-asymptotic-stability-from-trace-and-determinant",
       title: t("Deciding asymptotic stability from trace and determinant", "由迹和行列式判断渐近稳定性"),
       explanation: t(
-        "The origin of $\\mathbf{x}' = A\\mathbf{x}$ is asymptotically stable exactly when both eigenvalues have negative real parts. For a $2 \\times 2$ matrix that is equivalent to\n\n$$\\operatorname{tr}(A) < 0 \\quad\\text{and}\\quad \\det(A) > 0.$$\n\nA negative determinant means a saddle, which is unstable even if the trace is negative, and a positive trace means growth.",
-        "$\\mathbf{x}' = A\\mathbf{x}$ 的原点渐近稳定，当且仅当两个特征值的实部都为负。对 $2 \\times 2$ 矩阵，这等价于\n\n$$\\operatorname{tr}(A) < 0 \\quad\\text{且}\\quad \\det(A) > 0.$$\n\n行列式为负意味着鞍点，即使迹为负也不稳定；迹为正则意味着增长。",
+        "The origin of $\\mathbf{x}' = A\\mathbf{x}$ is asymptotically stable exactly when both eigenvalues have negative real parts. For a $2 \\times 2$ matrix that is equivalent to\n\n$$\\operatorname{tr}(A) < 0 \\quad\\text{and}\\quad \\det(A) > 0.$$\n\nA negative determinant means a saddle, which is unstable even if the trace is negative, and a positive trace means growth. For $A = \\begin{pmatrix} -1 & 3 \\\\ 2 & -2 \\end{pmatrix}$ the trace is $-3$ but the determinant is $2 - 6 = -4$, so the origin is an unstable saddle.\n\n> **Watch out.** A negative trace alone is not enough; check the sign of the determinant too.",
+        "$\\mathbf{x}' = A\\mathbf{x}$ 的原点渐近稳定，当且仅当两个特征值的实部都为负。对 $2 \\times 2$ 矩阵，这等价于\n\n$$\\operatorname{tr}(A) < 0 \\quad\\text{且}\\quad \\det(A) > 0.$$\n\n行列式为负意味着鞍点，即使迹为负也不稳定；迹为正则意味着增长。对 $A = \\begin{pmatrix} -1 & 3 \\\\ 2 & -2 \\end{pmatrix}$，迹为 $-3$，但行列式为 $2 - 6 = -4$，所以原点是不稳定的鞍点。\n\n> **注意。** 仅有迹为负是不够的；还要检查行列式的符号。",
       ),
       generate(rng: Rng): Problem {
         let [a, b, c, d] = [0, 0, 0, 0];
@@ -1177,18 +1587,55 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
         const tr = a + d;
         const det = a * d - b * c;
         const stable = tr < 0 && det > 0;
-        return choiceProblem({
+        const problem = choiceProblem({
           prompt: t(
             `Is the origin an asymptotically stable equilibrium of $\\mathbf{x}' = ${mat(a, b, c, d)}\\mathbf{x}$?`,
             `原点是 $\\mathbf{x}' = ${mat(a, b, c, d)}\\mathbf{x}$ 的渐近稳定平衡点吗？`,
           ),
           options: yesNo,
           correct: stable ? 0 : 1,
-          solution: t(
-            `$\\operatorname{tr}(A) = ${tr}$ and $\\det(A) = ${det}$. ${stable ? "Both conditions hold, so it is asymptotically stable." : det < 0 ? "The determinant is negative, so the origin is a saddle and is unstable." : "The trace is positive, so solutions grow and the origin is unstable."}`,
-            `$\\operatorname{tr}(A) = ${tr}$，$\\det(A) = ${det}$。${stable ? "两个条件都成立，所以渐近稳定。" : det < 0 ? "行列式为负，原点是鞍点，不稳定。" : "迹为正，解会增长，原点不稳定。"}`,
+          solution: walked(
+            [
+              [
+                ["Find the trace and determinant", "求迹与行列式"],
+                t("", ""),
+                [
+                  `\\operatorname{tr}(A) = ${a} ${signed(d)} = ${tr}`,
+                  `\\det(A) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${det}`,
+                ],
+              ],
+              [
+                ["Apply the test", "应用判别法"],
+                stable
+                  ? t(
+                      "Both $\\operatorname{tr}(A) < 0$ and $\\det(A) > 0$ hold, so the origin is asymptotically stable.",
+                      "$\\operatorname{tr}(A) < 0$ 与 $\\det(A) > 0$ 都成立，所以原点渐近稳定。",
+                    )
+                  : det < 0
+                    ? t("The determinant is negative, so the origin is a saddle and is unstable.", "行列式为负，原点是鞍点，不稳定。")
+                    : t("The trace is positive, so solutions grow and the origin is unstable.", "迹为正，解会增长，原点不稳定。"),
+              ],
+            ],
+            t(
+              `The eigenvalues solve $${poly([1, "\\lambda^2"], [-tr, "\\lambda"], [det, ""])} = 0$: their sum is $${tr}$ and their product is $${det}$, ${stable ? "so both real parts are negative" : det < 0 ? "so they are real with opposite signs" : "so their real parts add to a positive number"}.`,
+              `特征值满足 $${poly([1, "\\lambda^2"], [-tr, "\\lambda"], [det, ""])} = 0$：它们之和为 $${tr}$，之积为 $${det}$，${stable ? "所以两个实部都为负" : det < 0 ? "所以它们是符号相反的实数" : "所以它们的实部之和为正"}。`,
+            ),
           ),
         });
+        return reasoned(problem, [
+          [
+            "Yes",
+            det < 0
+              ? "A negative determinant makes the origin a saddle, which is unstable whatever the trace."
+              : "A positive trace means the eigenvalues have a positive real part, so solutions grow.",
+            det < 0 ? "行列式为负使原点成为鞍点，无论迹如何都不稳定。" : "迹为正意味着特征值有正的实部，解会增长。",
+          ],
+          [
+            "No",
+            "A negative trace together with a positive determinant gives eigenvalues with negative real parts.",
+            "迹为负且行列式为正，特征值的实部都为负。",
+          ],
+        ]);
       },
     },
   ],
