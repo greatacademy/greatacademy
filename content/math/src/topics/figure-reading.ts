@@ -2397,8 +2397,8 @@ const uniformFromDensity: KnowledgePointDef = {
   figure: probabilityDrawings1["the-continuous-uniform-distribution#a-uniform-probability-from-its-density"],
   title: t("A uniform probability from its density", "由密度图求均匀分布的概率"),
   explanation: t(
-    "The density of a uniform distribution on $[a, b]$ is a flat rectangle of height $\\frac{1}{b - a}$, whose total area is $1$. A probability is the area over an interval, here width times height. The drawing gives all that is needed: the ends of the rectangle fix the height, and the shaded part gives the width.",
-    "$[a, b]$ 上均匀分布的密度是一个高为 $\\frac{1}{b - a}$ 的平顶矩形，总面积为 $1$。概率就是区间上的面积，这里等于宽乘高。图上已给出所需的一切：矩形的两端确定高度，阴影部分给出宽度。",
+    "The density of a uniform distribution on $[a, b]$ is a flat rectangle of height $\\frac{1}{b - a}$, whose total area is $1$. A probability is the area over an interval, here width times height. The drawing gives all that is needed: the ends of the rectangle fix the height, and the shaded part gives the width. In the drawing the rectangle runs from $1$ to $6$, so its height is $\\frac{1}{5}$, and the shaded interval from $2$ to $4$ has probability $2 \\cdot \\frac{1}{5} = \\frac{2}{5}$. On a wider support such as $[10, 30]$ the height is $\\frac{1}{20}$, so $P(12 \\le X \\le 17) = 5 \\cdot \\frac{1}{20} = \\frac{1}{4}$.\n\n> **Watch out.** The height is one over the width $b - a$, not one over the right end $b$. And a probability is an area: multiply the shaded width by the height.",
+    "$[a, b]$ 上均匀分布的密度是一个高为 $\\frac{1}{b - a}$ 的平顶矩形，总面积为 $1$。概率就是区间上的面积，这里等于宽乘高。图上已给出所需的一切：矩形的两端确定高度，阴影部分给出宽度。图中矩形从 $1$ 到 $6$，所以高为 $\\frac{1}{5}$，从 $2$ 到 $4$ 的阴影区间的概率是 $2 \\cdot \\frac{1}{5} = \\frac{2}{5}$。在更宽的区间如 $[10, 30]$ 上，高为 $\\frac{1}{20}$，所以 $P(12 \\le X \\le 17) = 5 \\cdot \\frac{1}{20} = \\frac{1}{4}$。\n\n> **注意。** 高是宽度 $b - a$ 的倒数，而不是右端点 $b$ 的倒数。概率是面积：要用阴影的宽度乘以高。",
   ),
   generate(rng: Rng): Problem {
     const a = rng.int(0, 3);
@@ -2417,10 +2417,41 @@ const uniformFromDensity: KnowledgePointDef = {
           "图中是均匀随机变量 $X$ 的密度。求 $X$ 落在阴影区间内的概率。",
         ),
         answer: Q.of(d - c, w),
-        wrong: [Q.of(d - c, b), Q.of(w - (d - c), w), Q.of(d, b), Q.of(d - c)],
-        solution: t(
-          `The rectangle runs from $${a}$ to $${b}$, so its height is $\\frac{1}{${w}}$. The shaded width is $${d} - ${c} = ${d - c}$, so the probability is $${d - c} \\cdot \\frac{1}{${w}} = ${frac(d - c, w)}$.`,
-          `矩形从 $${a}$ 到 $${b}$，所以高为 $\\frac{1}{${w}}$。阴影宽度是 $${d} - ${c} = ${d - c}$，所以概率是 $${d - c} \\cdot \\frac{1}{${w}} = ${frac(d - c, w)}$。`,
+        mistakes: onceEach([
+          why(
+            Q.of(d - c, b),
+            `That divides by the right end $${b}$; the height is one over the width $${b} - ${a} = ${w}$.`,
+            `那是除以右端点 $${b}$；高应是宽度 $${b} - ${a} = ${w}$ 的倒数。`,
+          ),
+          why(Q.of(w - (d - c), w), "That is the area of the unshaded part of the rectangle.", "那是矩形中没有阴影部分的面积。"),
+          why(
+            Q.of(d, b),
+            `That treats the density as starting at $0$ instead of at $${a}$.`,
+            `那是把密度当成从 $0$ 开始，而不是从 $${a}$ 开始。`,
+          ),
+          why(Q.of(d - c), "That is the shaded width alone, not multiplied by the height.", "那只是阴影的宽度，没有乘以高。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the height", "读出高度"],
+              t(
+                `The rectangle runs from $${a}$ to $${b}$, a width of $${w}$, so its height is $\\frac{1}{${w}}$.`,
+                `矩形从 $${a}$ 到 $${b}$，宽为 $${w}$，所以高为 $\\frac{1}{${w}}$。`,
+              ),
+            ],
+            [
+              ["Multiply width by height", "宽乘以高"],
+              t(
+                `The shaded width is $${d} - ${c} = ${d - c}$, so the probability is $${d - c === 1 ? "" : `${d - c} \\cdot `}\\frac{1}{${w}}${d - c === 1 ? "" : ` = ${frac(d - c, w)}`}$.`,
+                `阴影宽度是 $${d} - ${c} = ${d - c}$，所以概率是 $${d - c === 1 ? "" : `${d - c} \\cdot `}\\frac{1}{${w}}${d - c === 1 ? "" : ` = ${frac(d - c, w)}`}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The unshaded part has width $${w - (d - c)}$ and area $${frac(w - (d - c), w)}$, and $${frac(d - c, w)} + ${frac(w - (d - c), w)} = 1$, the whole area under the density.`,
+            `无阴影部分宽 $${w - (d - c)}$，面积为 $${frac(w - (d - c), w)}$，而 $${frac(d - c, w)} + ${frac(w - (d - c), w)} = 1$，正是密度下的全部面积。`,
+          ),
         ),
       }),
       chart(
@@ -2457,8 +2488,8 @@ const exponentialTail: KnowledgePointDef = {
   id: "a-tail-probability-from-the-density-curve",
   title: t("A tail probability from the density curve", "由密度曲线求尾部概率"),
   explanation: t(
-    "The density $f(x) = \\lambda e^{-\\lambda x}$ starts at height $\\lambda$ on the vertical axis, so a drawing shows the rate directly. Integrating from $c$ to infinity gives the tail area $P(X > c) = e^{-\\lambda c}$. The complement $1 - e^{-\\lambda c}$ is the area on the other side, and a common slip is to report the height $\\lambda e^{-\\lambda c}$ of the curve instead of an area.",
-    "密度 $f(x) = \\lambda e^{-\\lambda x}$ 在纵轴上的起始高度是 $\\lambda$，所以图上可以直接看出速率。从 $c$ 积分到无穷得到尾部面积 $P(X > c) = e^{-\\lambda c}$。补数 $1 - e^{-\\lambda c}$ 是另一侧的面积；常见的错误是把曲线的高度 $\\lambda e^{-\\lambda c}$ 当成面积。",
+    "The density $f(x) = \\lambda e^{-\\lambda x}$ starts at height $\\lambda$ on the vertical axis, so a drawing shows the rate directly. Integrating from $c$ to infinity gives the tail area $P(X > c) = e^{-\\lambda c}$. The complement $1 - e^{-\\lambda c}$ is the area on the other side. For a curve that starts at height $10$, the tail beyond $c = 0.7$ is $e^{-10 \\cdot 0.7} = e^{-7}$, a tiny area.\n\n> **Watch out.** The height $\\lambda e^{-\\lambda c}$ of the curve at $c$ is not a probability; the probability is the shaded area $e^{-\\lambda c}$, with no $\\lambda$ in front.",
+    "密度 $f(x) = \\lambda e^{-\\lambda x}$ 在纵轴上的起始高度是 $\\lambda$，所以图上可以直接看出速率。从 $c$ 积分到无穷得到尾部面积 $P(X > c) = e^{-\\lambda c}$。补数 $1 - e^{-\\lambda c}$ 是另一侧的面积。若曲线从高度 $10$ 开始，$c = 0.7$ 右侧的尾部是 $e^{-10 \\cdot 0.7} = e^{-7}$，面积非常小。\n\n> **注意。** 曲线在 $c$ 处的高度 $\\lambda e^{-\\lambda c}$ 不是概率；概率是阴影面积 $e^{-\\lambda c}$，前面没有 $\\lambda$。",
   ),
   generate(rng: Rng): Problem {
     const [n, d] = rng.pick<readonly [number, number]>([
@@ -2484,19 +2515,45 @@ const exponentialTail: KnowledgePointDef = {
       (i * d) / n,
       n === 1 ? String(i * d) : frac(i * d, n).replace(/\\frac\{(\d+)\}\{(\d+)\}/, "$1/$2"),
     ]);
+    const heightLatex = rate === 1 ? `${k + 1}e^{-${k}}` : `${rateLatex}e^{-${k}}`;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "The drawing shows the density of an exponential random variable $X$. What is the probability of the shaded tail?",
-          "图中是指数随机变量 $X$ 的密度。阴影尾部的概率是多少？",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "The drawing shows the density of an exponential random variable $X$. What is the probability of the shaded tail?",
+            "图中是指数随机变量 $X$ 的密度。阴影尾部的概率是多少？",
+          ),
+          math(`e^{-${k}}`),
+          [math(`1 - e^{-${k}}`), math(heightLatex), math(`e^{-${k + 1}}`)],
+          t(
+            `**Step 1: Read the rate and the cut.** The curve starts at height $\\lambda = ${rateLatex}$ and the shaded part begins at $c = ${cLatex}$, so $\\lambda c = ${k}$.\n\n**Step 2: Take the tail area.** $P(X > c) = e^{-\\lambda c} = e^{-${k}}$.\n\n**Check.** The unshaded area is $1 - e^{-${k}}$, and the two areas add to $1$, the whole area under the density.`,
+            `**第一步：读出速率和分界点。**曲线从高度 $\\lambda = ${rateLatex}$ 开始，阴影部分从 $c = ${cLatex}$ 开始，所以 $\\lambda c = ${k}$。\n\n**第二步：求尾部面积。**$P(X > c) = e^{-\\lambda c} = e^{-${k}}$。\n\n**检验。**无阴影部分的面积是 $1 - e^{-${k}}$，两块面积之和为 $1$，正是密度下的全部面积。`,
+          ),
         ),
-        math(`e^{-${k}}`),
-        [math(`1 - e^{-${k}}`), math(rate === 1 ? `${k + 1}e^{-${k}}` : `${rateLatex}e^{-${k}}`), math(`e^{-${k + 1}}`)],
-        t(
-          `The curve starts at height $\\lambda = ${rateLatex}$ and the shaded part begins at $c = ${cLatex}$. The tail area is $e^{-\\lambda c} = e^{-${k}}$, because $\\lambda c = ${k}$.`,
-          `曲线从高度 $\\lambda = ${rateLatex}$ 开始，阴影部分从 $c = ${cLatex}$ 开始。尾部面积是 $e^{-\\lambda c} = e^{-${k}}$，因为 $\\lambda c = ${k}$。`,
-        ),
+        [
+          [
+            `$1 - e^{-${k}}$`,
+            `That is $P(X \\le c)$, the unshaded area to the left of the cut.`,
+            "那是 $P(X \\le c)$，即分界点左侧无阴影部分的面积。",
+          ],
+          rate === 1
+            ? [
+                `$${heightLatex}$`,
+                "That puts a factor in front of the tail; the tail of an exponential is $e^{-\\lambda c}$ alone.",
+                "那在尾部概率前多乘了一个因子；指数分布的尾部就是 $e^{-\\lambda c}$。",
+              ]
+            : [
+                `$${heightLatex}$`,
+                "That is the height $\\lambda e^{-\\lambda c}$ of the curve at the cut, not an area.",
+                "那是曲线在分界点处的高度 $\\lambda e^{-\\lambda c}$，而不是面积。",
+              ],
+          [
+            `$e^{-${k + 1}}$`,
+            `That takes $\\lambda c = ${k + 1}$; the cut at $${cLatex}$ gives $\\lambda c = ${k}$.`,
+            `那是取了 $\\lambda c = ${k + 1}$；分界点 $${cLatex}$ 给出的是 $\\lambda c = ${k}$。`,
+          ],
+        ],
       ),
       chart(
         {

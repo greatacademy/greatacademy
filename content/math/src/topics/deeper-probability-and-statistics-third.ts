@@ -7,8 +7,8 @@ import { dec, poly, Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
-import { reasoned } from "../wrong-reasons.ts";
+import { choose, type Pair, point, same } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** distinctFrom keeps the explained mistakes that differ from the answer and from each other. */
@@ -876,8 +876,8 @@ const binomialProbability = point(
   "a-binomial-probability-from-the-normal-table",
   ["A binomial probability from the normal table", "由正态分布表求二项概率"],
   [
-    "To use the normal table for a binomial probability, correct for continuity first and then standardize. The direction of the correction depends on whether the endpoint is included, and an upper tail is one minus the table value.",
-    "用正态分布表求二项概率时，要先做连续性校正，再标准化。校正的方向取决于端点是否包含在内，上尾概率等于一减去表中的值。",
+    "To use the normal table for a binomial probability, correct for continuity first and then standardize. The direction of the correction depends on whether the endpoint is included, and an upper tail is one minus the table value. For $X \\sim B(400, 0.5)$ the mean is $200$ and the standard deviation is $\\sqrt{400 \\cdot 0.5 \\cdot 0.5} = 10$, so $P(X \\ge 210)$ becomes $P(X > 209.5)$, with $z = \\frac{209.5 - 200}{10} = 0.95$, and the probability is $1 - \\Phi(0.95)$.\n\n> **Watch out.** Move the boundary half a unit so that the bar at an included endpoint stays in: $X \\ge k$ and $X < k$ both correct to $k - 0.5$, while $X \\le k$ and $X > k$ correct to $k + 0.5$. An upper tail is $1 - \\Phi(z)$, not $\\Phi(z)$.",
+    "用正态分布表求二项概率时，要先做连续性校正，再标准化。校正的方向取决于端点是否包含在内，上尾概率等于一减去表中的值。对 $X \\sim B(400, 0.5)$，均值为 $200$，标准差为 $\\sqrt{400 \\cdot 0.5 \\cdot 0.5} = 10$，所以 $P(X \\ge 210)$ 变为 $P(X > 209.5)$，$z = \\frac{209.5 - 200}{10} = 0.95$，概率为 $1 - \\Phi(0.95)$。\n\n> **注意。** 边界要移动半个单位，使包含在内的端点处的条形留在事件中：$X \\ge k$ 和 $X < k$ 都校正为 $k - 0.5$，而 $X \\le k$ 和 $X > k$ 校正为 $k + 0.5$。上尾概率是 $1 - \\Phi(z)$，而不是 $\\Phi(z)$。",
   ],
   (rng) => {
     const z = 10 * rng.pick([1, 3, 5, 7, 9, 11, 13, 15, 17, 19]);
@@ -889,18 +889,63 @@ const binomialProbability = point(
     const raw = (k - 50) * 20;
     const answer = lower ? phi(z) : oneMinus(phi(z));
     const trap = lower ? phi(raw) : oneMinus(phi(raw));
-    return askDecimal(
-      [
+    const boundary = dec(Q.of(boundaryTwice, 2));
+    return numberProblem({
+      prompt: t(
         `$X \\sim B(100, 0.5)$. Use a normal approximation with continuity correction to find $P(${event})$. Use $${given(z)}$ and $${given(raw)}$.`,
         `$X \\sim B(100, 0.5)$。用带连续性校正的正态近似求 $P(${event})$。利用 $${given(z)}$ 和 $${given(raw)}$。`,
-      ],
+      ),
       answer,
-      [trap, oneMinus(answer), oneMinus(trap)],
-      [
-        `The mean is $50$ and the standard deviation is $5$. The corrected boundary is $${dec(Q.of(boundaryTwice, 2))}$, which gives $z = ${zText(z)}$, so the probability is $${dec(answer)}$.`,
-        `均值是 $50$，标准差是 $5$。校正后的边界是 $${dec(Q.of(boundaryTwice, 2))}$，于是 $z = ${zText(z)}$，所以概率是 $${dec(answer)}$。`,
-      ],
-    );
+      form: "decimal",
+      mistakes: distinctFrom(answer, [
+        why(
+          trap,
+          `That standardizes $${k}$ itself; the continuity correction moves the boundary to $${boundary}$ first.`,
+          `那是直接把 $${k}$ 标准化；连续性校正要先把边界移到 $${boundary}$。`,
+        ),
+        lower
+          ? why(oneMinus(answer), "That is the upper tail; this event lies below the boundary.", "那是上尾概率；这个事件在边界以下。")
+          : why(
+              oneMinus(answer),
+              "That is the table value, the lower tail; an upper tail is one minus it.",
+              "那是表中的值，即下尾概率；上尾概率要用一减去它。",
+            ),
+        why(
+          oneMinus(trap),
+          "That skips the continuity correction and takes the wrong tail as well.",
+          "那既没有做连续性校正，又取错了尾部。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the mean and spread", "求均值与标准差"],
+            t(
+              "$\\mu = 100 \\cdot 0.5 = 50$ and $\\sigma = \\sqrt{100 \\cdot 0.5 \\cdot 0.5} = 5$.",
+              "$\\mu = 100 \\cdot 0.5 = 50$，$\\sigma = \\sqrt{100 \\cdot 0.5 \\cdot 0.5} = 5$。",
+            ),
+          ],
+          [
+            ["Correct for continuity", "做连续性校正"],
+            t(
+              `$P(${event})$ becomes $P(X ${lower ? "<" : ">"} ${boundary})$, keeping the bar at $${kind === 0 || kind === 2 ? k : lower ? k - 1 : k + 1}$ in the event.`,
+              `$P(${event})$ 变为 $P(X ${lower ? "<" : ">"} ${boundary})$，把 $${kind === 0 || kind === 2 ? k : lower ? k - 1 : k + 1}$ 处的条形留在事件中。`,
+            ),
+          ],
+          [
+            ["Standardize", "标准化"],
+            t(
+              `$z = \\frac{${boundary} - 50}{5} = ${zText(z)}$, so the probability is $${lower ? "" : "1 - "}\\Phi(${zText(z)}) = ${dec(answer)}$.`,
+              `$z = \\frac{${boundary} - 50}{5} = ${zText(z)}$，所以概率为 $${lower ? "" : "1 - "}\\Phi(${zText(z)}) = ${dec(answer)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The boundary $${boundary}$ lies above the mean $50$, so the ${lower ? "lower tail must exceed" : "upper tail must fall below"} $0.5$, and $${dec(answer)}$ does.`,
+          `边界 $${boundary}$ 在均值 $50$ 之上，所以${lower ? "下尾概率应大于" : "上尾概率应小于"} $0.5$，而 $${dec(answer)}$ 正是如此。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -908,8 +953,8 @@ const poissonProbability = point(
   "a-poisson-tail-from-the-normal-table",
   ["A Poisson tail from the normal table", "由正态分布表求泊松尾概率"],
   [
-    "A Poisson variable with a large mean is close to normal, with variance equal to its mean. The standard deviation is therefore the square root of $\\lambda$, and because the variable counts, the boundary needs a continuity correction before it is standardized.",
-    "均值较大的泊松变量接近正态分布，方差等于均值。所以标准差是 $\\lambda$ 的平方根，而且由于变量是计数的，边界在标准化之前要做连续性校正。",
+    "A Poisson variable with a large mean is close to normal, with variance equal to its mean. The standard deviation is therefore the square root of $\\lambda$, and because the variable counts, the boundary needs a continuity correction before it is standardized. For $X \\sim \\operatorname{Po}(400)$ the standard deviation is $\\sqrt{400} = 20$, so $P(X \\ge 431)$ becomes $P(X > 430.5)$, with $z = \\frac{430.5 - 400}{20} = 1.525$.\n\n> **Watch out.** Standardize with $\\sqrt{\\lambda}$, not with $\\lambda$ itself. And $X \\ge m$ and $X < m$ both correct to $m - 0.5$, since $X < m$ means $X \\le m - 1$.",
+    "均值较大的泊松变量接近正态分布，方差等于均值。所以标准差是 $\\lambda$ 的平方根，而且由于变量是计数的，边界在标准化之前要做连续性校正。对 $X \\sim \\operatorname{Po}(400)$，标准差是 $\\sqrt{400} = 20$，所以 $P(X \\ge 431)$ 变为 $P(X > 430.5)$，$z = \\frac{430.5 - 400}{20} = 1.525$。\n\n> **注意。** 标准化时除以 $\\sqrt{\\lambda}$，而不是 $\\lambda$ 本身。$X \\ge m$ 和 $X < m$ 都校正为 $m - 0.5$，因为 $X < m$ 就是 $X \\le m - 1$。",
   ],
   (rng) => {
     const large = rng.bool();
@@ -921,18 +966,58 @@ const poissonProbability = point(
     const upper = rng.bool();
     const event = upper ? `X \\ge ${m}` : `X < ${m}`;
     const answer = upper ? oneMinus(phi(z)) : phi(z);
-    return askDecimal(
-      [
+    return numberProblem({
+      prompt: t(
         `$X \\sim \\operatorname{Po}(${l})$. Use a normal approximation with continuity correction to find $P(${event})$. Use $${givenAmong(z)}$.`,
         `$X \\sim \\operatorname{Po}(${l})$。用带连续性校正的正态近似求 $P(${event})$。利用 $${givenAmong(z)}$。`,
-      ],
+      ),
       answer,
-      [oneMinus(answer), phi(z).sub(Q.of(1, 2)), Q.of(1, 1).sub(phi(z).sub(Q.of(1, 2)))],
-      [
-        `The mean is $${l}$ and the standard deviation is $${s}$. The corrected boundary is $${dec(boundary)}$, which gives $z = ${zText(z)}$, so the probability is $${dec(answer)}$.`,
-        `均值是 $${l}$，标准差是 $${s}$。校正后的边界是 $${dec(boundary)}$，于是 $z = ${zText(z)}$，所以概率是 $${dec(answer)}$。`,
-      ],
-    );
+      form: "decimal",
+      mistakes: distinctFrom(answer, [
+        upper
+          ? why(
+              oneMinus(answer),
+              "That is the table value, the lower tail; an upper tail is one minus it.",
+              "那是表中的值，即下尾概率；上尾概率要用一减去它。",
+            )
+          : why(oneMinus(answer), "That is the upper tail; this event lies below the boundary.", "那是上尾概率；这个事件在边界以下。"),
+        why(phi(z).sub(Q.of(1, 2)), "That is only the area between the mean and the boundary.", "那只是均值与边界之间的面积。"),
+        why(
+          Q.of(1, 1).sub(phi(z).sub(Q.of(1, 2))),
+          "That subtracts only the area between the mean and the boundary from $1$.",
+          "那只是用 $1$ 减去均值与边界之间的面积。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the mean and spread", "求均值与标准差"],
+            t(
+              `For a Poisson variable the variance equals the mean, $${l}$, so $\\sigma = \\sqrt{${l}} = ${s}$.`,
+              `泊松变量的方差等于均值 $${l}$，所以 $\\sigma = \\sqrt{${l}} = ${s}$。`,
+            ),
+          ],
+          [
+            ["Correct for continuity", "做连续性校正"],
+            t(
+              `$P(${event})$ becomes $P(X ${upper ? ">" : "<"} ${dec(boundary)})$.`,
+              `$P(${event})$ 变为 $P(X ${upper ? ">" : "<"} ${dec(boundary)})$。`,
+            ),
+          ],
+          [
+            ["Standardize", "标准化"],
+            t(
+              `$z = \\frac{${dec(boundary)} - ${l}}{${s}} = ${zText(z)}$, so the probability is $${upper ? "1 - " : ""}\\Phi(${zText(z)}) = ${dec(answer)}$.`,
+              `$z = \\frac{${dec(boundary)} - ${l}}{${s}} = ${zText(z)}$，所以概率为 $${upper ? "1 - " : ""}\\Phi(${zText(z)}) = ${dec(answer)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The boundary $${dec(boundary)}$ lies above the mean $${l}$, so the ${upper ? "upper tail must fall below" : "lower tail must exceed"} $0.5$, and $${dec(answer)}$ does.`,
+          `边界 $${dec(boundary)}$ 在均值 $${l}$ 之上，所以${upper ? "上尾概率应小于" : "下尾概率应大于"} $0.5$，而 $${dec(answer)}$ 正是如此。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -941,8 +1026,8 @@ const rectangle = {
     "a-rectangle-probability-from-the-joint-cdf",
     ["A rectangle probability from the joint CDF", "由联合分布函数求矩形概率"],
     [
-      "The joint CDF gives the probability of a corner region. To isolate a rectangle, subtract the two regions on its left and below, and then add back the lower left corner, which has been subtracted twice. This is inclusion and exclusion applied to the CDF.",
-      "联合分布函数给出角形区域的概率。要分离出一个矩形，先减去它左边和下边的两个区域，再加回被减了两次的左下角。这就是容斥原理在分布函数上的应用。",
+      "The joint CDF gives the probability of a corner region. To isolate a rectangle, subtract the two regions on its left and below, and then add back the lower left corner, which has been subtracted twice. This is inclusion and exclusion applied to the CDF. In the drawing the shaded cell $X = 2$, $Y = 2$ gets $F(2, 2) - F(1, 2) - F(2, 1) + F(1, 1) = \\frac{12}{12} - \\frac{8}{12} - \\frac{8}{12} + \\frac{6}{12} = \\frac{2}{12}$. The same rule works for any rectangle: if $F(10, 20) = 0.3$, $F(40, 20) = 0.5$, $F(10, 50) = 0.45$ and $F(40, 50) = 0.9$, then $P(10 < X \\le 40,\\ 20 < Y \\le 50) = 0.9 - 0.45 - 0.5 + 0.3 = 0.25$.\n\n> **Watch out.** Add the lower left corner back once. Without it the answer is too small, because that corner lies inside both regions that were subtracted.",
+      "联合分布函数给出角形区域的概率。要分离出一个矩形，先减去它左边和下边的两个区域，再加回被减了两次的左下角。这就是容斥原理在分布函数上的应用。图中阴影单元格 $X = 2$，$Y = 2$ 的概率为 $F(2, 2) - F(1, 2) - F(2, 1) + F(1, 1) = \\frac{12}{12} - \\frac{8}{12} - \\frac{8}{12} + \\frac{6}{12} = \\frac{2}{12}$。同样的法则适用于任何矩形：若 $F(10, 20) = 0.3$，$F(40, 20) = 0.5$，$F(10, 50) = 0.45$，$F(40, 50) = 0.9$，则 $P(10 < X \\le 40,\\ 20 < Y \\le 50) = 0.9 - 0.45 - 0.5 + 0.3 = 0.25$。\n\n> **注意。** 左下角要加回一次。不加回，答案就偏小，因为这个角同时落在被减去的两个区域里。",
     ],
     (rng) => {
       const a = rng.int(0, 3);
@@ -956,15 +1041,56 @@ const rectangle = {
       const x = (n: number) => dec(Q.of(n, 100));
       const data = `F(${a}, ${c}) = ${x(A)},\\ F(${b}, ${c}) = ${x(A + r)},\\ F(${a}, ${d}) = ${x(A + s)},\\ F(${b}, ${d}) = ${x(A + r + s + q)}`;
       const event = `${a} < X \\le ${b},\\ ${c} < Y \\le ${d}`;
-      return askDecimal(
-        [`A joint CDF has $${data}$. Find $P(${event})$.`, `联合分布函数满足 $${data}$。求 $P(${event})$。`],
-        Q.of(q, 100),
-        [Q.of(r + s + q, 100), Q.of(q + A, 100), Q.of(A + r + s + q, 100)],
-        [
-          `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$.`,
-          `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$。`,
-        ],
-      );
+      const answer = Q.of(q, 100);
+      return numberProblem({
+        prompt: t(`A joint CDF has $${data}$. Find $P(${event})$.`, `联合分布函数满足 $${data}$。求 $P(${event})$。`),
+        answer,
+        form: "decimal",
+        mistakes: distinctFrom(answer, [
+          why(
+            Q.of(r + s + q, 100),
+            `That subtracts only the lower left corner $F(${a}, ${c})$, not the two regions beside the rectangle.`,
+            `那只减去了左下角 $F(${a}, ${c})$，没有减去矩形旁边的两个区域。`,
+          ),
+          why(
+            Q.of(q + A, 100),
+            `That adds $F(${a}, ${c})$ back twice; it was subtracted twice, so it comes back once.`,
+            `那把 $F(${a}, ${c})$ 加回了两次；它被减了两次，只需加回一次。`,
+          ),
+          why(
+            Q.of(A + r + s + q, 100),
+            `That is $F(${b}, ${d})$ alone, the whole corner region below and to the left of $(${b}, ${d})$.`,
+            `那只是 $F(${b}, ${d})$，即 $(${b}, ${d})$ 左下方的整个角形区域。`,
+          ),
+          why(
+            Q.of(q - A, 100),
+            `That forgets to add back the corner $F(${a}, ${c})$, which was subtracted twice.`,
+            `那忘了加回被减了两次的角 $F(${a}, ${c})$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Set up inclusion and exclusion", "写出容斥式"],
+              t(
+                `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c})$.`,
+                `$P = F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c})$。`,
+              ),
+            ],
+            [
+              ["Substitute", "代入"],
+              t(
+                `$P = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$.`,
+                `$P = ${x(A + r + s + q)} - ${x(A + s)} - ${x(A + r)} + ${x(A)} = ${x(q)}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The four pieces, the corner $F(${a}, ${c}) = ${x(A)}$, the strip below the rectangle $${x(r)}$, the strip to its left $${x(s)}$ and the rectangle $${x(q)}$, add up to $${x(A + r + s + q)} = F(${b}, ${d})$.`,
+            `四块，即角 $F(${a}, ${c}) = ${x(A)}$、矩形下方的条 $${x(r)}$、矩形左侧的条 $${x(s)}$ 与矩形 $${x(q)}$，之和为 $${x(A + r + s + q)} = F(${b}, ${d})$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: probabilityDrawings1["the-joint-cdf-of-two-discrete-random-variables#a-rectangle-probability-from-the-joint-cdf"],
@@ -974,8 +1100,8 @@ const marginalMean = point(
   "a-mean-through-the-marginal-distribution",
   ["A mean through the marginal distribution", "通过边缘分布求均值"],
   [
-    "The mean of one variable in a two-way table needs its marginal distribution: add across the other variable first, and then weight each value by its total. Using only one row would give a conditional mean rather than the overall mean.",
-    "求两向表中一个变量的均值，需要它的边缘分布：先对另一个变量求和，再用各自的总和给每个值加权。只用一行得到的是条件均值，而不是总体均值。",
+    "The mean of one variable in a two-way table needs its marginal distribution: add across the other variable first, and then weight each value by its total. Using only one row would give a conditional mean rather than the overall mean. If $P(0, 1) = 0.1$, $P(0, 5) = 0.3$, $P(1, 1) = 0.2$ and $P(1, 5) = 0.4$, the marginals are $P(Y = 1) = 0.3$ and $P(Y = 5) = 0.7$, so $E[Y] = 0.3 + 5 \\cdot 0.7 = 3.8$.\n\n> **Watch out.** Add each column over both values of $X$ before weighting. The row $X = 0$ alone, rescaled, gives $E[Y \\mid X = 0] = \\frac{0.1 + 5 \\cdot 0.3}{0.4} = 4$, a conditional mean.",
+    "求两向表中一个变量的均值，需要它的边缘分布：先对另一个变量求和，再用各自的总和给每个值加权。只用一行得到的是条件均值，而不是总体均值。若 $P(0, 1) = 0.1$，$P(0, 5) = 0.3$，$P(1, 1) = 0.2$，$P(1, 5) = 0.4$，则边缘概率为 $P(Y = 1) = 0.3$，$P(Y = 5) = 0.7$，所以 $E[Y] = 0.3 + 5 \\cdot 0.7 = 3.8$。\n\n> **注意。** 加权之前要先把每一列对 $X$ 的两个值求和。只用 $X = 0$ 这一行并重新缩放，得到的是条件均值 $E[Y \\mid X = 0] = \\frac{0.1 + 5 \\cdot 0.3}{0.4} = 4$。",
   ],
   (rng) => {
     const row0 = [rng.int(1, 6), rng.int(1, 6), rng.int(1, 6)] as const;
@@ -989,18 +1115,47 @@ const marginalMean = point(
     const cell = (x: number, y: number, c: number) => `P(${x}, ${y}) = ${Q.of(c, total).toLatex()}`;
     const data = [...row0.map((c, i) => cell(0, i + 1, c)), ...row1.map((c, i) => cell(1, i + 1, c))].join(",\\ ");
     const rowTotal = row0[0] + row0[1] + row0[2];
-    return ask(
-      [
+    const reduced = answer.toLatex() === `\\frac{${top}}{${total}}` ? answer.toLatex() : `\\frac{${top}}{${total}} = ${answer.toLatex()}`;
+    const column = (i: 0 | 1 | 2) => `P(Y = ${i + 1}) = \\frac{${row0[i]} + ${row1[i]}}{${total}} = \\frac{${row0[i] + row1[i]}}{${total}}`;
+    return numberProblem({
+      prompt: t(
         `$X \\in \\{0, 1\\}$ and $Y \\in \\{1, 2, 3\\}$ have the joint probabilities $${data}$, where the arguments are $(x, y)$. Find $E[Y]$.`,
         `$X \\in \\{0, 1\\}$ 与 $Y \\in \\{1, 2, 3\\}$ 的联合概率为 $${data}$，其中自变量是 $(x, y)$。求 $E[Y]$。`,
-      ],
+      ),
       answer,
-      [Q.of(row0[0] + 2 * row0[1] + 3 * row0[2], rowTotal), 2, Q.of(top, 6)],
-      [
-        `The marginal probabilities of $Y$ have numerators $${m1}$, $${m2}$, $${m3}$ over $${total}$. So $E[Y] = \\frac{${m1} + 2 \\cdot ${m2} + 3 \\cdot ${m3}}{${total}} = ${answer.toLatex()}$.`,
-        `$Y$ 的边缘概率分子是 $${m1}$、$${m2}$、$${m3}$，分母是 $${total}$。所以 $E[Y] = \\frac{${m1} + 2 \\cdot ${m2} + 3 \\cdot ${m3}}{${total}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(
+          Q.of(row0[0] + 2 * row0[1] + 3 * row0[2], rowTotal),
+          "That uses only the row $X = 0$, which gives the conditional mean $E[Y \\mid X = 0]$.",
+          "那只用了 $X = 0$ 这一行，得到的是条件均值 $E[Y \\mid X = 0]$。",
+        ),
+        why(2, "That averages the values $1, 2, 3$ and ignores their probabilities.", "那直接平均了取值 $1, 2, 3$，忽略了它们的概率。"),
+        why(
+          Q.of(top, 6),
+          `That divides by the six cells instead of the common denominator $${total}$.`,
+          `那是除以六个格子，而不是公分母 $${total}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add down each column", "按列求和"],
+            t(`$${column(0)}$, $${column(1)}$ and $${column(2)}$.`, `$${column(0)}$，$${column(1)}$，$${column(2)}$。`),
+          ],
+          [
+            ["Weight the values", "按概率加权"],
+            t(
+              `$E[Y] = \\frac{${m1} + 2 \\cdot ${m2} + 3 \\cdot ${m3}}{${total}} = ${reduced}$.`,
+              `$E[Y] = \\frac{${m1} + 2 \\cdot ${m2} + 3 \\cdot ${m3}}{${total}} = ${reduced}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The marginal numerators add to $${m1} + ${m2} + ${m3} = ${total}$, so the marginal is a distribution, and $${answer.toLatex()}$ lies between $1$ and $3$.`,
+          `边缘概率的分子之和为 $${m1} + ${m2} + ${m3} = ${total}$，所以边缘分布是一个分布，且 $${answer.toLatex()}$ 在 $1$ 与 $3$ 之间。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1009,8 +1164,8 @@ const triangleMarginal = {
     "marginals-of-a-non-constant-density-on-a-triangle",
     ["Marginals of a non-constant density on a triangle", "三角形上非常数密度的边缘分布"],
     [
-      "On a triangle, the limits of the integral for a marginal depend on the fixed variable. On $0 \\le y \\le x \\le 1$, integrating out $y$ runs from $0$ to $x$, while integrating out $x$ runs from $y$ to $1$, so the two marginals have different forms.",
-      "在三角形上，求边缘密度的积分限依赖于固定的变量。在 $0 \\le y \\le x \\le 1$ 上，对 $y$ 积分时从 $0$ 到 $x$，对 $x$ 积分时从 $y$ 到 $1$，所以两个边缘密度形式不同。",
+      "On a triangle, the limits of the integral for a marginal depend on the fixed variable. On $0 \\le y \\le x \\le 1$, integrating out $y$ runs from $0$ to $x$, while integrating out $x$ runs from $y$ to $1$, so the two marginals have different forms. In the drawing the vertical slice at $x = 0.4$ runs from $y = 0$ up to $0.4$, and the horizontal slice at $y = 0.2$ runs from $x = 0.2$ across to $1$. Even the constant density $f = 2$ on this triangle gives two different marginals, $f_{X}(x) = 2x$ and $f_{Y}(y) = 2(1 - y)$.\n\n> **Watch out.** Integrating from $0$ to $1$ in both directions ignores the triangle. Read the limits from a slice through the region at the fixed value.",
+      "在三角形上，求边缘密度的积分限依赖于固定的变量。在 $0 \\le y \\le x \\le 1$ 上，对 $y$ 积分时从 $0$ 到 $x$，对 $x$ 积分时从 $y$ 到 $1$，所以两个边缘密度形式不同。图中 $x = 0.4$ 处的竖直切片从 $y = 0$ 向上到 $0.4$，$y = 0.2$ 处的水平切片从 $x = 0.2$ 横向到 $1$。即使是这个三角形上的常数密度 $f = 2$，两个边缘密度也不同：$f_{X}(x) = 2x$，$f_{Y}(y) = 2(1 - y)$。\n\n> **注意。** 两个方向都从 $0$ 积分到 $1$，就忽略了三角形。积分限要从固定值处穿过区域的切片读出。",
     ],
     (rng) => {
       const [p, q] = rng.pick([
@@ -1037,32 +1192,97 @@ const triangleMarginal = {
       const four = Q.of(4, 1).mul(v);
       const density = "f(x, y) = 8xy";
       const region = "0 \\le y \\le x \\le 1";
+      const at = v.toLatex();
+      const diagonal = Q.of(8, 1).mul(square);
       if (rng.bool()) {
-        return ask(
-          [
-            `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{X}(${v.toLatex()})$.`,
-            `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{X}(${v.toLatex()})$。`,
-          ],
-          forX,
-          [forY, four, Q.of(8, 1).mul(square)],
-          [
-            `$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x^{3}$, since $y$ runs from $0$ to $x$. At this point the value is $${forX.toLatex()}$.`,
-            `$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x^{3}$，因为 $y$ 从 $0$ 到 $x$。在这一点的值是 $${forX.toLatex()}$。`,
-          ],
-        );
+        return numberProblem({
+          prompt: t(
+            `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{X}(${at})$.`,
+            `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{X}(${at})$。`,
+          ),
+          answer: forX,
+          mistakes: distinctFrom(forX, [
+            why(
+              forY,
+              "That integrates $x$ from $y$ to $1$, which gives the other marginal $f_{Y}$.",
+              "那是对 $x$ 从 $y$ 积分到 $1$，得到的是另一个边缘密度 $f_{Y}$。",
+            ),
+            why(
+              four,
+              "That integrates $y$ from $0$ to $1$, giving $4x$; on the triangle $y$ stops at $x$.",
+              "那是对 $y$ 从 $0$ 积分到 $1$，得到 $4x$；在三角形上 $y$ 只到 $x$。",
+            ),
+            why(
+              diagonal,
+              "That sets $y = x$ in the density instead of integrating over $y$.",
+              "那是在密度中令 $y = x$，而没有对 $y$ 积分。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Read the limits", "读积分限"], t("For a fixed $x$, $y$ runs from $0$ up to $x$.", "固定 $x$ 时，$y$ 从 $0$ 到 $x$。")],
+              [
+                ["Integrate out y", "对 y 积分"],
+                t(
+                  "$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x \\cdot x^{2} = 4x^{3}$.",
+                  "$f_{X}(x) = \\int_{0}^{x} 8xy\\,dy = 4x \\cdot x^{2} = 4x^{3}$。",
+                ),
+              ],
+              [
+                ["Evaluate", "代值"],
+                t(
+                  `$f_{X}(${at}) = 4\\left(${at}\\right)^{3} = ${forX.toLatex()}$.`,
+                  `$f_{X}(${at}) = 4\\left(${at}\\right)^{3} = ${forX.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              "$\\int_0^1 4x^{3}\\,dx = 1$, so $4x^{3}$ is a density on $[0, 1]$, as a marginal must be.",
+              "$\\int_0^1 4x^{3}\\,dx = 1$，所以 $4x^{3}$ 是 $[0, 1]$ 上的密度，边缘密度理应如此。",
+            ),
+          ),
+        });
       }
-      return ask(
-        [
-          `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{Y}(${v.toLatex()})$.`,
-          `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{Y}(${v.toLatex()})$。`,
-        ],
-        forY,
-        [forX, four, Q.of(8, 1).mul(square)],
-        [
-          `$f_{Y}(y) = \\int_{y}^{1} 8xy\\,dx = 4y(1 - y^{2})$, since $x$ runs from $y$ to $1$. At this point the value is $${forY.toLatex()}$.`,
-          `$f_{Y}(y) = \\int_{y}^{1} 8xy\\,dx = 4y(1 - y^{2})$，因为 $x$ 从 $y$ 到 $1$。在这一点的值是 $${forY.toLatex()}$。`,
-        ],
-      );
+      return numberProblem({
+        prompt: t(
+          `$(X, Y)$ has density $${density}$ on $${region}$. Find $f_{Y}(${at})$.`,
+          `$(X, Y)$ 在 $${region}$ 上的密度是 $${density}$。求 $f_{Y}(${at})$。`,
+        ),
+        answer: forY,
+        mistakes: distinctFrom(forY, [
+          why(
+            forX,
+            "That integrates $y$ from $0$ to $x$, which gives the other marginal $f_{X}$.",
+            "那是对 $y$ 从 $0$ 积分到 $x$，得到的是另一个边缘密度 $f_{X}$。",
+          ),
+          why(
+            four,
+            "That integrates $x$ from $0$ to $1$, giving $4y$; on the triangle $x$ starts at $y$.",
+            "那是对 $x$ 从 $0$ 积分到 $1$，得到 $4y$；在三角形上 $x$ 从 $y$ 开始。",
+          ),
+          why(diagonal, "That sets $x = y$ in the density instead of integrating over $x$.", "那是在密度中令 $x = y$，而没有对 $x$ 积分。"),
+        ]),
+        solution: walked(
+          [
+            [["Read the limits", "读积分限"], t("For a fixed $y$, $x$ runs from $y$ across to $1$.", "固定 $y$ 时，$x$ 从 $y$ 到 $1$。")],
+            [
+              ["Integrate out x", "对 x 积分"],
+              t("$f_{Y}(y) = \\int_y^1 8xy\\,dx = 4y(1 - y^{2})$.", "$f_{Y}(y) = \\int_y^1 8xy\\,dx = 4y(1 - y^{2})$。"),
+            ],
+            [
+              ["Evaluate", "代值"],
+              t(
+                `$f_{Y}(${at}) = 4 \\cdot ${at}\\left(1 - ${square.toLatex()}\\right) = ${forY.toLatex()}$.`,
+                `$f_{Y}(${at}) = 4 \\cdot ${at}\\left(1 - ${square.toLatex()}\\right) = ${forY.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            "$\\int_0^1 4y(1 - y^{2})\\,dy = 2 - 1 = 1$, so $4y(1 - y^{2})$ is a density on $[0, 1]$, as a marginal must be.",
+            "$\\int_0^1 4y(1 - y^{2})\\,dy = 2 - 1 = 1$，所以 $4y(1 - y^{2})$ 是 $[0, 1]$ 上的密度，边缘密度理应如此。",
+          ),
+        ),
+      });
     },
   ),
   figure: probabilityDrawings1["marginal-distributions-for-continuous-random-variables#marginals-of-a-non-constant-density-on-a-triangle"],
@@ -1073,8 +1293,8 @@ const independenceTests = {
     "both-the-formula-and-the-support-must-factor",
     ["Both the formula and the support must factor", "公式和支撑集都必须能分解"],
     [
-      "Two continuous variables are independent only if the joint density factors into a function of $x$ times a function of $y$ and the support is a rectangle. A triangle fails even when the formula looks like a product, since the range of one variable depends on the other.",
-      "两个连续变量独立，要求联合密度能分解为 $x$ 的函数与 $y$ 的函数之积，且支撑集是矩形。三角形不满足这一条，即使公式看起来是乘积，因为一个变量的范围依赖于另一个变量。",
+      "Two continuous variables are independent only if the joint density factors into a function of $x$ times a function of $y$ and the support is a rectangle. A triangle fails even when the formula looks like a product, since the range of one variable depends on the other. In the drawing, $4xy$ on the unit square passes both tests, while $8xy$ on the triangle $0 \\le y \\le x \\le 1$ fails the second: its slices show that the range of $y$ depends on $x$. A support may also be unbounded: $6e^{-2x - 3y}$ on $x \\ge 0,\\ y \\ge 0$ is $2e^{-2x} \\cdot 3e^{-3y}$ on a product of two intervals, so $X$ and $Y$ are independent.\n\n> **Watch out.** Check both conditions. A product formula on a triangle is not independent, and a rectangle does not help a formula such as $x + y$ that cannot be split.",
+      "两个连续变量独立，要求联合密度能分解为 $x$ 的函数与 $y$ 的函数之积，且支撑集是矩形。三角形不满足这一条，即使公式看起来是乘积，因为一个变量的范围依赖于另一个变量。图中单位正方形上的 $4xy$ 两项检验都通过；而三角形 $0 \\le y \\le x \\le 1$ 上的 $8xy$ 未通过第二项：切片表明 $y$ 的范围依赖于 $x$。支撑集也可以无界：$x \\ge 0,\\ y \\ge 0$ 上的 $6e^{-2x - 3y}$ 等于 $2e^{-2x} \\cdot 3e^{-3y}$，支撑集是两个区间的乘积，所以 $X$ 与 $Y$ 独立。\n\n> **注意。** 两个条件都要检查。三角形上的乘积公式并不独立；而像 $x + y$ 这样不能拆开的公式，即使在矩形上也不独立。",
     ],
     (rng) => {
       const m = rng.int(1, 5);
@@ -1109,12 +1329,79 @@ const independenceTests = {
           "支撑集是矩形，但 $x$ 与 $y$ 的和不能写成 $x$ 的函数乘以 $y$ 的函数。",
         ],
       ];
-      return choose(
-        rng,
-        [`Are $X$ and $Y$ independent if $${density}$ on $${region}$?`, `如果在 $${region}$ 上 $${density}$，$X$ 与 $Y$ 是否独立？`],
-        option,
-        [...others, ["Independent: the density is nonnegative and integrates to one", "独立：密度非负且积分为一"]],
-        whys[kind] as Pair,
+      const integrates: Pair = ["Independent: the density is nonnegative and integrates to one", "独立：密度非负且积分为一"];
+      const steps: [Pair, Pair, Pair][] = [
+        [
+          [
+            "The formula is a constant times a power of $x$ times a power of $y$, so it factors.",
+            "公式是常数乘以 $x$ 的幂再乘以 $y$ 的幂，所以能分解。",
+          ],
+          ["The region is the unit square, a rectangle.", "区域是单位正方形，是矩形。"],
+          [
+            "Each factor, scaled to integrate to $1$ on $[0, 1]$, is a marginal, and the product of the two marginals gives back the density.",
+            "每个因子缩放到在 $[0, 1]$ 上积分为 $1$ 后就是边缘密度，两个边缘密度之积还原出联合密度。",
+          ],
+        ],
+        [
+          [
+            "The formula is a constant times a power of $x$ times a power of $y$, so it looks like a product.",
+            "公式是常数乘以 $x$ 的幂再乘以 $y$ 的幂，看起来是乘积。",
+          ],
+          ["The region is a triangle: for each $x$, $y$ only runs up to $x$.", "区域是三角形：对每个 $x$，$y$ 只能到 $x$。"],
+          [
+            "At $x = \\frac{1}{2}$ the variable $Y$ cannot exceed $\\frac{1}{2}$, while at $x = 1$ it can reach $1$, so knowing $X$ changes what $Y$ can be.",
+            "当 $x = \\frac{1}{2}$ 时 $Y$ 不能超过 $\\frac{1}{2}$，而当 $x = 1$ 时它可以到 $1$，所以知道 $X$ 会改变 $Y$ 的可能取值。",
+          ],
+        ],
+        [
+          [
+            "The formula is a sum, $x + y$ over a constant, which cannot be split into a function of $x$ times a function of $y$.",
+            "公式是和 $x + y$ 除以常数，不能拆成 $x$ 的函数乘以 $y$ 的函数。",
+          ],
+          [
+            `The region is the square $[0, ${a}]^{2}$, a rectangle, so only the formula fails.`,
+            `区域是正方形 $[0, ${a}]^{2}$，是矩形，所以只是公式不满足。`,
+          ],
+          [
+            `At the corner $(0, 0)$ the density is $0$, but each marginal there is $\\frac{1}{${2 * a}}$, so the product of the marginals is $\\frac{1}{${4 * a * a}}$, not $0$.`,
+            `在角 $(0, 0)$ 处密度为 $0$，但那里每个边缘密度都是 $\\frac{1}{${2 * a}}$，边缘密度之积为 $\\frac{1}{${4 * a * a}}$，不是 $0$。`,
+          ],
+        ],
+      ];
+      const [formulaStep, supportStep, checkStep] = steps[kind] as [Pair, Pair, Pair];
+      const reasonFor = (o: Pair): Pair => {
+        if (o === integrates)
+          return [
+            "Every density is nonnegative and integrates to one; that says nothing about independence.",
+            "每个密度都非负且积分为一；这与是否独立无关。",
+          ];
+        if (o === yes)
+          return kind === 1
+            ? ["The formula factors, but the support is a triangle, not a rectangle.", "公式能分解，但支撑集是三角形，不是矩形。"]
+            : ["The support is a square, but $x + y$ does not factor.", "支撑集是正方形，但 $x + y$ 不能分解。"];
+        if (o === support)
+          return kind === 0
+            ? ["The support is the unit square, which is a rectangle.", "支撑集是单位正方形，是矩形。"]
+            : ["The support is a square, which is a rectangle; it is the formula that fails.", "支撑集是正方形，是矩形；不满足的是公式。"];
+        return kind === 0
+          ? [
+              "The formula is a constant times a power of $x$ times a power of $y$, so it factors.",
+              "公式是常数乘以 $x$ 的幂再乘以 $y$ 的幂，所以能分解。",
+            ]
+          : ["The formula does factor; it is the support that fails.", "公式能分解；不满足的是支撑集。"];
+      };
+      return reasoned(
+        choose(
+          rng,
+          [`Are $X$ and $Y$ independent if $${density}$ on $${region}$?`, `如果在 $${region}$ 上 $${density}$，$X$ 与 $Y$ 是否独立？`],
+          option,
+          [...others, integrates],
+          [
+            `**Step 1: Test the formula.** ${formulaStep[0]}\n\n**Step 2: Test the support.** ${supportStep[0]} ${(whys[kind] as Pair)[0]}\n\n**Check.** ${checkStep[0]}`,
+            `**第一步：检验公式。**${formulaStep[1]}\n\n**第二步：检验支撑集。**${supportStep[1]}${(whys[kind] as Pair)[1]}\n\n**检验。**${checkStep[1]}`,
+          ],
+        ),
+        [...others, integrates].map((o): Reason => [o[0], ...reasonFor(o)]),
       );
     },
   ),
@@ -1125,8 +1412,8 @@ const scaledComparison = point(
   "comparing-multiples-of-two-normal-variables",
   ["Comparing multiples of two normal variables", "比较两个正态变量的倍数"],
   [
-    "To compare multiples of two independent normal variables, study their difference, which is normal as well. Its variance adds the two variances, each multiplied by the square of its coefficient, even though the variables are being subtracted.",
-    "比较两个独立正态变量的倍数时，要研究它们的差，这个差也服从正态分布。它的方差是两个方差之和，每个都乘以系数的平方，尽管变量之间是相减的。",
+    "To compare multiples of two independent normal variables, study their difference, which is normal as well. Its variance adds the two variances, each multiplied by the square of its coefficient, even though the variables are being subtracted. For independent $X \\sim N(100, 64)$ and $Y \\sim N(30, 4)$, the difference $X - 3Y$ has mean $100 - 90 = 10$ and variance $64 + 9 \\cdot 4 = 100$, so $P(X > 3Y) = P(X - 3Y > 0) = \\Phi\\left(\\frac{10}{10}\\right) = \\Phi(1)$.\n\n> **Watch out.** The variances add even for a difference, $64 + 9 \\cdot 4$, never $64 - 9 \\cdot 4$. And the coefficient is squared, $9$, not $3$.",
+    "比较两个独立正态变量的倍数时，要研究它们的差，这个差也服从正态分布。它的方差是两个方差之和，每个都乘以系数的平方，尽管变量之间是相减的。对独立的 $X \\sim N(100, 64)$ 与 $Y \\sim N(30, 4)$，差 $X - 3Y$ 的均值为 $100 - 90 = 10$，方差为 $64 + 9 \\cdot 4 = 100$，所以 $P(X > 3Y) = P(X - 3Y > 0) = \\Phi\\left(\\frac{10}{10}\\right) = \\Phi(1)$。\n\n> **注意。** 即使是差，方差也要相加：$64 + 9 \\cdot 4$，而不是 $64 - 9 \\cdot 4$。系数要平方，是 $9$ 而不是 $3$。",
   ],
   (rng) => {
     const p = rng.int(1, 3);
@@ -1142,18 +1429,63 @@ const scaledComparison = point(
     const s2 = 4 * p;
     const left = poly([p, "X"]);
     const right = poly([q, "Y"]);
-    return askDecimal(
-      [
+    const answer = phi(z);
+    const mean = p * m1 - q * m2;
+    const times = (x: number, y: number) => (x === 1 ? `${y}` : `${x} \\cdot ${y}`);
+    return numberProblem({
+      prompt: t(
         `$X \\sim N(${m1}, ${s1 * s1})$ and $Y \\sim N(${m2}, ${s2 * s2})$ are independent. Find $P(${left} > ${right})$. Use $${givenAmong(z)}$.`,
         `$X \\sim N(${m1}, ${s1 * s1})$ 与 $Y \\sim N(${m2}, ${s2 * s2})$ 独立。求 $P(${left} > ${right})$。利用 $${givenAmong(z)}$。`,
-      ],
-      phi(z),
-      [oneMinus(phi(z)), phi(z).sub(Q.of(1, 2)), Q.of(1, 2)],
-      [
-        `$${left} - ${right}$ has mean $${p * m1 - q * m2}$ and variance $${(p * s1) ** 2} + ${(q * s2) ** 2} = ${sd * sd}$, so its standard deviation is $${sd}$. This gives $z = ${zText(z)}$ and the probability $${dec(phi(z))}$.`,
-        `$${left} - ${right}$ 的均值是 $${p * m1 - q * m2}$，方差是 $${(p * s1) ** 2} + ${(q * s2) ** 2} = ${sd * sd}$，所以标准差是 $${sd}$。于是 $z = ${zText(z)}$，概率是 $${dec(phi(z))}$。`,
-      ],
-    );
+      ),
+      answer,
+      form: "decimal",
+      mistakes: distinctFrom(answer, [
+        why(
+          oneMinus(answer),
+          `That is $P(${left} < ${right})$, the other tail of the difference.`,
+          `那是 $P(${left} < ${right})$，即差的另一侧尾部。`,
+        ),
+        why(
+          answer.sub(Q.of(1, 2)),
+          "That is only the area between $0$ and the mean of the difference.",
+          "那只是 $0$ 与差的均值之间的面积。",
+        ),
+        why(
+          Q.of(1, 2),
+          "That treats the difference as centered at $0$; its mean is not $0$.",
+          "那是把差当作以 $0$ 为中心；它的均值不是 $0$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the mean of the difference", "求差的均值"],
+            t(
+              `$E(${left} - ${right}) = ${times(p, m1)} - ${times(q, m2)} = ${mean}$.`,
+              `$E(${left} - ${right}) = ${times(p, m1)} - ${times(q, m2)} = ${mean}$。`,
+            ),
+          ],
+          [
+            ["Add the scaled variances", "把缩放后的方差相加"],
+            t(
+              `$\\operatorname{Var}(${left} - ${right}) = ${times(p * p, s1 * s1)} + ${times(q * q, s2 * s2)} = ${sd * sd}$, so the standard deviation is $${sd}$.`,
+              `$\\operatorname{Var}(${left} - ${right}) = ${times(p * p, s1 * s1)} + ${times(q * q, s2 * s2)} = ${sd * sd}$，所以标准差是 $${sd}$。`,
+            ),
+          ],
+          [
+            ["Standardize", "标准化"],
+            t(
+              `$P(${left} - ${right} > 0) = P\\left(Z > -\\frac{${mean}}{${sd}}\\right) = \\Phi(${zText(z)}) = ${dec(answer)}$.`,
+              `$P(${left} - ${right} > 0) = P\\left(Z > -\\frac{${mean}}{${sd}}\\right) = \\Phi(${zText(z)}) = ${dec(answer)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The difference has a positive mean, so $${left} > ${right}$ more often than not: the probability must exceed $0.5$, and $${dec(answer)}$ does.`,
+          `差的均值为正，所以 $${left} > ${right}$ 的情形多于一半：概率应大于 $0.5$，而 $${dec(answer)}$ 正是如此。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1161,8 +1493,8 @@ const threeNormals = point(
   "a-probability-for-a-sum-of-three-normals",
   ["A probability for a sum of three normals", "三个正态变量之和的概率"],
   [
-    "A sum of independent normal variables is normal, with the means added and the variances added. The standard deviations do not add. So the sum must be standardized with the square root of the total variance before the table can be used.",
-    "独立正态变量之和仍服从正态分布，均值相加，方差相加。标准差不能相加。所以使用分布表之前，要用总方差的平方根把和标准化。",
+    "A sum of independent normal variables is normal, with the means added and the variances added. The standard deviations do not add. So the sum must be standardized with the square root of the total variance before the table can be used. For independent $X_{1} \\sim N(10, 9)$, $X_{2} \\sim N(20, 16)$ and $X_{3} \\sim N(30, 144)$, the sum has mean $60$ and variance $9 + 16 + 144 = 169$, so its standard deviation is $13$ and $P(X_{1} + X_{2} + X_{3} \\le 73) = \\Phi(1)$.\n\n> **Watch out.** Add the variances, then take the square root. Adding the standard deviations gives $3 + 4 + 12 = 19$, not $13$.",
+    "独立正态变量之和仍服从正态分布，均值相加，方差相加。标准差不能相加。所以使用分布表之前，要用总方差的平方根把和标准化。对独立的 $X_{1} \\sim N(10, 9)$、$X_{2} \\sim N(20, 16)$、$X_{3} \\sim N(30, 144)$，和的均值为 $60$，方差为 $9 + 16 + 144 = 169$，所以标准差为 $13$，$P(X_{1} + X_{2} + X_{3} \\le 73) = \\Phi(1)$。\n\n> **注意。** 先把方差相加，再开平方。把标准差相加得 $3 + 4 + 12 = 19$，而不是 $13$。",
   ],
   (rng) => {
     const [a, b, c, sd] = rng.pick([
@@ -1185,18 +1517,55 @@ const threeNormals = point(
     const sum = "X_{1} + X_{2} + X_{3}";
     const event = `${sum} ${lower ? "\\le" : ">"} ${bound}`;
     const data = `X_{1} \\sim N(${m1}, ${a})$, $X_{2} \\sim N(${m2}, ${b})$, $X_{3} \\sim N(${m3}, ${c})`;
-    return askDecimal(
-      [
+    return numberProblem({
+      prompt: t(
         `$${data}$ are independent. Find $P(${event})$. Use $${givenAmong(z)}$.`,
         `$${data}$ 相互独立。求 $P(${event})$。利用 $${givenAmong(z)}$。`,
-      ],
+      ),
       answer,
-      [oneMinus(answer), phi(z).sub(Q.of(1, 2)), Q.of(1, 2)],
-      [
-        `The sum has mean $${mean}$ and variance $${a} + ${b} + ${c} = ${sd * sd}$, so its standard deviation is $${sd}$. Then $z = ${zText(z)}$, and the probability is $${dec(answer)}$.`,
-        `和的均值是 $${mean}$，方差是 $${a} + ${b} + ${c} = ${sd * sd}$，所以标准差是 $${sd}$。于是 $z = ${zText(z)}$，概率是 $${dec(answer)}$。`,
-      ],
-    );
+      form: "decimal",
+      mistakes: distinctFrom(answer, [
+        lower
+          ? why(oneMinus(answer), "That is the upper tail; this event lies below the bound.", "那是上尾概率；这个事件在界限以下。")
+          : why(
+              oneMinus(answer),
+              "That is the table value, the lower tail; an upper tail is one minus it.",
+              "那是表中的值，即下尾概率；上尾概率要用一减去它。",
+            ),
+        why(phi(z).sub(Q.of(1, 2)), "That is only the area between the mean and the bound.", "那只是均值与界限之间的面积。"),
+        why(
+          Q.of(1, 2),
+          `That treats $${bound}$ as the mean; the mean of the sum is $${mean}$.`,
+          `那是把 $${bound}$ 当作均值；和的均值是 $${mean}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the means", "均值相加"],
+            t(`$E(${sum}) = ${m1} + ${m2} + ${m3} = ${mean}$.`, `$E(${sum}) = ${m1} + ${m2} + ${m3} = ${mean}$。`),
+          ],
+          [
+            ["Add the variances", "方差相加"],
+            t(
+              `$\\operatorname{Var}(${sum}) = ${a} + ${b} + ${c} = ${sd * sd}$, so the standard deviation is $\\sqrt{${sd * sd}} = ${sd}$.`,
+              `$\\operatorname{Var}(${sum}) = ${a} + ${b} + ${c} = ${sd * sd}$，所以标准差为 $\\sqrt{${sd * sd}} = ${sd}$。`,
+            ),
+          ],
+          [
+            ["Standardize", "标准化"],
+            t(
+              `$z = \\frac{${bound} - ${mean}}{${sd}} = ${zText(z)}$, so the probability is $${lower ? "" : "1 - "}\\Phi(${zText(z)}) = ${dec(answer)}$.`,
+              `$z = \\frac{${bound} - ${mean}}{${sd}} = ${zText(z)}$，所以概率为 $${lower ? "" : "1 - "}\\Phi(${zText(z)}) = ${dec(answer)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The bound $${bound}$ lies above the mean $${mean}$, so the ${lower ? "lower tail must exceed" : "upper tail must fall below"} $0.5$, and $${dec(answer)}$ does.`,
+          `界限 $${bound}$ 在均值 $${mean}$ 之上，所以${lower ? "下尾概率应大于" : "上尾概率应小于"} $0.5$，而 $${dec(answer)}$ 正是如此。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1204,25 +1573,57 @@ const meanMinusOne = point(
   "the-variance-of-the-sample-mean-minus-one-observation",
   ["The variance of the sample mean minus one observation", "样本均值减一个观测的方差"],
   [
-    "The sample mean contains each observation, so $\\bar{X}$ and $X_{1}$ are dependent and their variances cannot simply be added. Writing $\\bar{X} - X_{1}$ as a combination of the independent $X_{i}$ collects the coefficients and gives the right variance.",
-    "样本均值包含每个观测，所以 $\\bar{X}$ 与 $X_{1}$ 相依，它们的方差不能简单相加。把 $\\bar{X} - X_{1}$ 写成独立的 $X_{i}$ 的组合，合并系数后才能得到正确的方差。",
+    "The sample mean contains each observation, so $\\bar{X}$ and $X_{1}$ are dependent and their variances cannot simply be added. Writing $\\bar{X} - X_{1}$ as a combination of the independent $X_{i}$ collects the coefficients and gives the right variance. With $n = 100$ observations of variance $50$, $X_{1}$ has coefficient $\\frac{1}{100} - 1 = -\\frac{99}{100}$ and the other $99$ have $\\frac{1}{100}$, so $\\operatorname{Var}(\\bar{X} - X_{1}) = 50\\left(\\frac{9801}{10000} + \\frac{99}{10000}\\right) = 49.5 = \\frac{99}{2}$.\n\n> **Watch out.** Adding $\\operatorname{Var}(\\bar{X}) + \\operatorname{Var}(X_{1})$ treats them as independent and gives too much; $X_{1}$ sits inside $\\bar{X}$, so its two appearances partly cancel.",
+    "样本均值包含每个观测，所以 $\\bar{X}$ 与 $X_{1}$ 相依，它们的方差不能简单相加。把 $\\bar{X} - X_{1}$ 写成独立的 $X_{i}$ 的组合，合并系数后才能得到正确的方差。对方差为 $50$ 的 $n = 100$ 个观测，$X_{1}$ 的系数是 $\\frac{1}{100} - 1 = -\\frac{99}{100}$，其余 $99$ 个的系数是 $\\frac{1}{100}$，所以 $\\operatorname{Var}(\\bar{X} - X_{1}) = 50\\left(\\frac{9801}{10000} + \\frac{99}{10000}\\right) = 49.5 = \\frac{99}{2}$。\n\n> **注意。** 把 $\\operatorname{Var}(\\bar{X}) + \\operatorname{Var}(X_{1})$ 相加，是把它们当作独立，结果偏大；$X_{1}$ 包含在 $\\bar{X}$ 中，两次出现会部分抵消。",
   ],
   (rng) => {
     const n = rng.int(2, 12);
     const v = rng.int(1, 24);
     const answer = Q.of(v * (n - 1), n);
-    return ask(
-      [
+    const lead = v === 1 ? "" : `${v}`;
+    return numberProblem({
+      prompt: t(
         `$X_{1}, \\dots, X_{${n}}$ are i.i.d. $N(\\mu, ${v})$ with sample mean $\\bar{X}$. Find $\\operatorname{Var}(\\bar{X} - X_{1})$.`,
         `$X_{1}, \\dots, X_{${n}}$ 独立同分布于 $N(\\mu, ${v})$，样本均值为 $\\bar{X}$。求 $\\operatorname{Var}(\\bar{X} - X_{1})$。`,
-      ],
+      ),
       answer,
-      [Q.of(v * (n + 1), n), Q.of(v, n), 0],
-      [
-        `$X_{1}$ has coefficient $\\frac{1}{${n}} - 1$ and the others have $\\frac{1}{${n}}$. Squaring and adding gives $${v}\\left(\\frac{${(n - 1) ** 2}}{${n * n}} + \\frac{${n - 1}}{${n * n}}\\right) = ${answer.toLatex()}$.`,
-        `$X_{1}$ 的系数是 $\\frac{1}{${n}} - 1$，其余的系数是 $\\frac{1}{${n}}$。平方后相加，得 $${v}\\left(\\frac{${(n - 1) ** 2}}{${n * n}} + \\frac{${n - 1}}{${n * n}}\\right) = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(
+          Q.of(v * (n + 1), n),
+          "That adds $\\operatorname{Var}(\\bar{X})$ and $\\operatorname{Var}(X_{1})$ as if they were independent; $X_{1}$ is part of $\\bar{X}$.",
+          "那是把 $\\operatorname{Var}(\\bar{X})$ 与 $\\operatorname{Var}(X_{1})$ 当作独立而相加；$X_{1}$ 是 $\\bar{X}$ 的一部分。",
+        ),
+        why(Q.of(v, n), "That is $\\operatorname{Var}(\\bar{X})$ alone.", "那只是 $\\operatorname{Var}(\\bar{X})$。"),
+        why(
+          Q.of(v * (n - 1) * (n - 1), n * n),
+          "That squares only the coefficient of $X_{1}$ and leaves out the other observations.",
+          "那只平方了 $X_{1}$ 的系数，漏掉了其他观测。",
+        ),
+        why(0, "That cancels $X_{1}$ against $\\bar{X}$; they are not equal.", "那是把 $X_{1}$ 与 $\\bar{X}$ 抵消了；它们并不相等。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Collect the coefficients", "合并系数"],
+            t(
+              `$\\bar{X} - X_{1} = \\left(\\frac{1}{${n}} - 1\\right)X_{1} + \\frac{1}{${n}}(X_{2} + \\dots + X_{${n}})$, so $X_{1}$ has coefficient $-\\frac{${n - 1}}{${n}}$ and the other $${n - 1}$ have $\\frac{1}{${n}}$.`,
+              `$\\bar{X} - X_{1} = \\left(\\frac{1}{${n}} - 1\\right)X_{1} + \\frac{1}{${n}}(X_{2} + \\dots + X_{${n}})$，所以 $X_{1}$ 的系数是 $-\\frac{${n - 1}}{${n}}$，其余 $${n - 1}$ 个的系数是 $\\frac{1}{${n}}$。`,
+            ),
+          ],
+          [
+            ["Square and add", "平方后相加"],
+            t(
+              `$\\operatorname{Var} = ${lead}\\left(\\frac{${(n - 1) ** 2}}{${n * n}} + \\frac{${n - 1}}{${n * n}}\\right) = ${answer.toLatex()}$.`,
+              `$\\operatorname{Var} = ${lead}\\left(\\frac{${(n - 1) ** 2}}{${n * n}} + \\frac{${n - 1}}{${n * n}}\\right) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $\\operatorname{Cov}(\\bar{X}, X_{1}) = \\frac{${v}}{${n}}$: $\\operatorname{Var}(\\bar{X}) + \\operatorname{Var}(X_{1}) - 2\\operatorname{Cov}(\\bar{X}, X_{1}) = \\frac{${v}}{${n}} + ${v} - \\frac{${2 * v}}{${n}} = ${answer.toLatex()}$.`,
+          `由 $\\operatorname{Cov}(\\bar{X}, X_{1}) = \\frac{${v}}{${n}}$：$\\operatorname{Var}(\\bar{X}) + \\operatorname{Var}(X_{1}) - 2\\operatorname{Cov}(\\bar{X}, X_{1}) = \\frac{${v}}{${n}} + ${v} - \\frac{${2 * v}}{${n}} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1230,8 +1631,8 @@ const covarianceTable = point(
   "covariance-from-a-joint-table",
   ["Covariance from a joint table", "由联合表求协方差"],
   [
-    "The covariance needs three expectations from the same table: $E[XY]$ from the joint probabilities and $E[X]$ and $E[Y]$ from the marginals. Then $\\operatorname{Cov}(X, Y) = E[XY] - E[X]E[Y]$, which is zero when the product rule holds.",
-    "协方差需要从同一张表得到三个期望：由联合概率得 $E[XY]$，由边缘概率得 $E[X]$ 和 $E[Y]$。于是 $\\operatorname{Cov}(X, Y) = E[XY] - E[X]E[Y]$，当乘积法则成立时它为零。",
+    "The covariance needs three expectations from the same table: $E[XY]$ from the joint probabilities and $E[X]$ and $E[Y]$ from the marginals. Then $\\operatorname{Cov}(X, Y) = E[XY] - E[X]E[Y]$, which is zero when the product rule holds. If $X$ and $Y$ take the values $0$ and $10$ with $P(0, 0) = P(10, 10) = 0.4$ and $P(0, 10) = P(10, 0) = 0.1$, then $E[XY] = 100 \\cdot 0.4 = 40$ and $E[X] = E[Y] = 5$, so $\\operatorname{Cov}(X, Y) = 40 - 25 = 15$.\n\n> **Watch out.** $E[XY]$ alone is not the covariance: subtract $E[X]E[Y]$, never add it. With values $0$ and $1$, $E[XY]$ is just $P(1, 1)$, since every other cell has $xy = 0$.",
+    "协方差需要从同一张表得到三个期望：由联合概率得 $E[XY]$，由边缘概率得 $E[X]$ 和 $E[Y]$。于是 $\\operatorname{Cov}(X, Y) = E[XY] - E[X]E[Y]$，当乘积法则成立时它为零。若 $X$ 与 $Y$ 取值 $0$ 和 $10$，$P(0, 0) = P(10, 10) = 0.4$，$P(0, 10) = P(10, 0) = 0.1$，则 $E[XY] = 100 \\cdot 0.4 = 40$，$E[X] = E[Y] = 5$，所以 $\\operatorname{Cov}(X, Y) = 40 - 25 = 15$。\n\n> **注意。** 单是 $E[XY]$ 不是协方差：要减去 $E[X]E[Y]$，而不是加上。取值为 $0$ 和 $1$ 时，$E[XY]$ 就是 $P(1, 1)$，因为其他格子都有 $xy = 0$。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
@@ -1245,18 +1646,47 @@ const covarianceTable = point(
     const answer = exy.sub(ex.mul(ey));
     const f = (n: number) => Q.of(n, total).toLatex();
     const data = `P(0, 0) = ${f(a)},\\ P(0, 1) = ${f(b)},\\ P(1, 0) = ${f(c)},\\ P(1, 1) = ${f(d)}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$X$ and $Y$ take values in $\\{0, 1\\}$ with $${data}$, where the arguments are $(x, y)$. Find $\\operatorname{Cov}(X, Y)$.`,
         `$X$ 与 $Y$ 取值于 $\\{0, 1\\}$，$${data}$，其中自变量是 $(x, y)$。求 $\\operatorname{Cov}(X, Y)$。`,
-      ],
+      ),
       answer,
-      [exy, exy.add(ex.mul(ey)), answer.neg()],
-      [
-        `$E[XY] = ${exy.toLatex()}$, $E[X] = ${ex.toLatex()}$ and $E[Y] = ${ey.toLatex()}$. So the covariance is $${exy.toLatex()} - ${ex.toLatex()} \\cdot ${ey.toLatex()} = ${answer.toLatex()}$.`,
-        `$E[XY] = ${exy.toLatex()}$，$E[X] = ${ex.toLatex()}$，$E[Y] = ${ey.toLatex()}$。所以协方差是 $${exy.toLatex()} - ${ex.toLatex()} \\cdot ${ey.toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctFrom(answer, [
+        why(exy, "That is $E[XY]$ alone; $E[X]E[Y]$ must be subtracted.", "那只是 $E[XY]$；还要减去 $E[X]E[Y]$。"),
+        why(exy.add(ex.mul(ey)), "That adds $E[X]E[Y]$ instead of subtracting it.", "那是加上了 $E[X]E[Y]$，而不是减去。"),
+        why(answer.neg(), "That subtracts in the wrong order, $E[X]E[Y] - E[XY]$.", "那是减反了，算成 $E[X]E[Y] - E[XY]$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the joint expectation", "求乘积的期望"],
+            t(
+              `Only the cell $(1, 1)$ has $xy \\ne 0$, so $E[XY] = P(1, 1) = ${exy.toLatex()}$.`,
+              `只有格子 $(1, 1)$ 的 $xy \\ne 0$，所以 $E[XY] = P(1, 1) = ${exy.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Find the marginal means", "求边缘均值"],
+            t(
+              `$E[X] = P(X = 1) = ${f(c)} + ${f(d)} = ${ex.toLatex()}$ and $E[Y] = P(Y = 1) = ${f(b)} + ${f(d)} = ${ey.toLatex()}$.`,
+              `$E[X] = P(X = 1) = ${f(c)} + ${f(d)} = ${ex.toLatex()}$，$E[Y] = P(Y = 1) = ${f(b)} + ${f(d)} = ${ey.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(
+              `$\\operatorname{Cov}(X, Y) = ${exy.toLatex()} - ${ex.toLatex()} \\cdot ${ey.toLatex()} = ${answer.toLatex()}$.`,
+              `$\\operatorname{Cov}(X, Y) = ${exy.toLatex()} - ${ex.toLatex()} \\cdot ${ey.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `For a two-by-two table the covariance is also $P(0, 0)P(1, 1) - P(0, 1)P(1, 0)$, here $\\frac{(${a})(${d}) - (${b})(${c})}{${total * total}} = ${answer.toLatex()}$.`,
+          `对二乘二的表，协方差也等于 $P(0, 0)P(1, 1) - P(0, 1)P(1, 0)$，这里为 $\\frac{(${a})(${d}) - (${b})(${c})}{${total * total}} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1265,8 +1695,8 @@ const extremes = {
     "expected-maximum-minimum-and-distance-of-two-uniforms",
     ["Expected maximum, minimum and distance of two uniforms", "两个均匀变量的最大值、最小值与距离的期望"],
     [
-      "Applying the two-variable rule to $\\max(X, Y)$ or $|X - Y|$ means splitting the square along the diagonal and integrating on each triangle. The two independent uniform points on $[0, a]$ then cut the interval into three parts of equal expected length.",
-      "对 $\\max(X, Y)$ 或 $|X - Y|$ 应用二元法则，要沿对角线把正方形分开，在每个三角形上积分。于是 $[0, a]$ 上两个独立的均匀点把区间分成期望长度相等的三段。",
+      "Applying the two-variable rule to $\\max(X, Y)$ or $|X - Y|$ means splitting the square along the diagonal and integrating on each triangle. The two independent uniform points on $[0, a]$ then cut the interval into three parts of equal expected length. In the drawing $a = 3$, so $E[\\min(X, Y)] = 1$, $E[\\max(X, Y)] = 2$ and $E|X - Y| = 1$. On $[0, 30]$ the same reasoning gives $E[\\min(X, Y)] = 10$, $E[\\max(X, Y)] = 20$ and $E|X - Y| = 10$.\n\n> **Watch out.** The expected maximum is $\\frac{2a}{3}$, not the right end $a$, and the expected distance is $\\frac{a}{3}$, not $\\frac{a}{2}$, the mean of a single point.",
+      "对 $\\max(X, Y)$ 或 $|X - Y|$ 应用二元法则，要沿对角线把正方形分开，在每个三角形上积分。于是 $[0, a]$ 上两个独立的均匀点把区间分成期望长度相等的三段。图中 $a = 3$，所以 $E[\\min(X, Y)] = 1$，$E[\\max(X, Y)] = 2$，$E|X - Y| = 1$。在 $[0, 30]$ 上同样的推理给出 $E[\\min(X, Y)] = 10$，$E[\\max(X, Y)] = 20$，$E|X - Y| = 10$。\n\n> **注意。** 最大值的期望是 $\\frac{2a}{3}$，不是右端点 $a$；距离的期望是 $\\frac{a}{3}$，不是单个点的均值 $\\frac{a}{2}$。",
     ],
     (rng) => {
       const a = rng.int(1, 12);
@@ -1274,29 +1704,60 @@ const extremes = {
       const item = ["\\max(X, Y)", "\\min(X, Y)", "|X - Y|"][kind] as string;
       const third = Q.of(a, 3);
       const answer = kind === 0 ? Q.of(2 * a, 3) : third;
-      const whys: Pair[] = [
-        [
-          `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the maximum lies past two of them.`,
-          `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，最大值位于其中两段之后。`,
-        ],
-        [
-          `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the minimum lies past the first one.`,
-          `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，最小值位于第一段之后。`,
-        ],
-        [
-          `The two points cut $[0, ${a}]$ into three parts of expected length $${third.toLatex()}$, and the distance between them is the middle part.`,
-          `两点把 $[0, ${a}]$ 分成三段，期望长度都是 $${third.toLatex()}$，两点之间的距离就是中间一段。`,
-        ],
-      ];
-      return ask(
-        [
+      const twoThirds = Q.of(2 * a, 3);
+      const formula = kind === 0 ? "\\frac{2a}{3}" : "\\frac{a}{3}";
+      return numberProblem({
+        prompt: t(
           `$X$ and $Y$ are independent and uniform on $[0, ${a}]$. Find $E[${item}]$.`,
           `$X$ 与 $Y$ 独立，都在 $[0, ${a}]$ 上服从均匀分布。求 $E[${item}]$。`,
-        ],
+        ),
         answer,
-        [Q.of(a, 2), a, kind === 0 ? third : Q.of(2 * a, 3)],
-        whys[kind] as Pair,
-      );
+        mistakes: distinctFrom(answer, [
+          why(
+            Q.of(a, 2),
+            `That is the mean of a single uniform point on $[0, ${a}]$, not of $${item}$.`,
+            `那是 $[0, ${a}]$ 上单个均匀点的均值，而不是 $${item}$ 的期望。`,
+          ),
+          why(
+            a,
+            `That is the right end $${a}$, the largest value possible, not an expected value.`,
+            `那是右端点 $${a}$，是可能的最大值，而不是期望。`,
+          ),
+          kind === 0
+            ? why(
+                third,
+                "That is the expected minimum, the end of the first of the three parts.",
+                "那是最小值的期望，即三段中第一段的终点。",
+              )
+            : why(
+                twoThirds,
+                "That is the expected maximum, the end of the second of the three parts.",
+                "那是最大值的期望，即三段中第二段的终点。",
+              ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Cut the interval in three", "把区间分成三段"],
+              t(
+                `The two points cut $[0, ${a}]$ into three parts, each of expected length $\\frac{${a}}{3}${third.toLatex() === `\\frac{${a}}{3}` ? "" : ` = ${third.toLatex()}`}$.`,
+                `两点把 $[0, ${a}]$ 分成三段，每段的期望长度都是 $\\frac{${a}}{3}${third.toLatex() === `\\frac{${a}}{3}` ? "" : ` = ${third.toLatex()}`}$。`,
+              ),
+            ],
+            [
+              ["Locate the quantity", "定位所求的量"],
+              t(
+                `${["The maximum lies past two of the parts", "The minimum lies past the first part", "The distance between the points is the middle part"][kind] as string}, so $E[${item}] = ${formula} = ${answer.toLatex()}$.`,
+                `${["最大值位于两段之后", "最小值位于第一段之后", "两点之间的距离就是中间一段"][kind] as string}，所以 $E[${item}] = ${formula} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$E[\\max(X, Y)] + E[\\min(X, Y)] = E[X] + E[Y] = ${a}$, and indeed $${twoThirds.toLatex()} + ${third.toLatex()} = ${a}$; the distance is their difference, $${twoThirds.toLatex()} - ${third.toLatex()} = ${third.toLatex()}$.`,
+            `$E[\\max(X, Y)] + E[\\min(X, Y)] = E[X] + E[Y] = ${a}$，而 $${twoThirds.toLatex()} + ${third.toLatex()} = ${a}$；距离是两者之差 $${twoThirds.toLatex()} - ${third.toLatex()} = ${third.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:

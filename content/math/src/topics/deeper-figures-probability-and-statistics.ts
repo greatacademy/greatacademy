@@ -1272,8 +1272,8 @@ const exponentialCurve = point(
   "reading-the-rate-of-an-exponential-density",
   ["Reading the rate of an exponential density", "读指数密度的速率"],
   [
-    "The density of an exponential distribution is $\\lambda e^{-\\lambda x}$, so it starts at height $\\lambda$ on the vertical axis. The mean is $1 / \\lambda$, which means a tall starting point goes with a small mean. The probability of exceeding a value $x$ is $e^{-\\lambda x}$, and the drawing gives $\\lambda$ from the intercept.",
-    "指数分布的密度是 $\\lambda e^{-\\lambda x}$，所以它从纵轴上的高度 $\\lambda$ 开始。均值是 $1 / \\lambda$，所以起点高就意味着均值小。超过值 $x$ 的概率是 $e^{-\\lambda x}$，图通过截距给出 $\\lambda$。",
+    "The density of an exponential distribution is $\\lambda e^{-\\lambda x}$, so it starts at height $\\lambda$ on the vertical axis. The mean is $1 / \\lambda$, which means a tall starting point goes with a small mean. The probability of exceeding a value $x$ is $e^{-\\lambda x}$, and the drawing gives $\\lambda$ from the intercept. A curve that starts at height $5$ has $\\lambda = 5$ and mean $\\frac{1}{5} = 0.2$, and $P(X > 1) = e^{-5}$.\n\n> **Watch out.** The starting height is $\\lambda$, not the mean. The mean is its reciprocal, so the taller the curve starts, the smaller the mean.",
+    "指数分布的密度是 $\\lambda e^{-\\lambda x}$，所以它从纵轴上的高度 $\\lambda$ 开始。均值是 $1 / \\lambda$，所以起点高就意味着均值小。超过值 $x$ 的概率是 $e^{-\\lambda x}$，图通过截距给出 $\\lambda$。从高度 $5$ 开始的曲线有 $\\lambda = 5$，均值为 $\\frac{1}{5} = 0.2$，并且 $P(X > 1) = e^{-5}$。\n\n> **注意。** 起始高度是 $\\lambda$，不是均值。均值是它的倒数，所以曲线起点越高，均值越小。",
   ],
   (rng) => {
     const rate = rng.pick([0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8, 1, 1.25, 1.5, 1.6, 2, 2.5]);
@@ -1287,21 +1287,81 @@ const exponentialCurve = point(
     const svg = chart([0, 10], [0, top], intTicks(0, 10, 2), ticks, (x, y) => curvePath(f, 0, 10, x, y));
     const asksMean = rng.bool();
     const answer = asksMean ? Q.one.div(R) : R;
-    return ask(
-      asksMean
-        ? ["The curve is an exponential density. What is the mean of the distribution?", "曲线是指数密度。这个分布的均值是多少？"]
-        : [
-            "The curve is an exponential density. What is its rate parameter $\\lambda$?",
-            "曲线是指数密度。它的速率参数 $\\lambda$ 是多少？",
+    const mean = Q.one.div(R);
+    const height = Number.isInteger(rate) ? R.toLatex() : `${rate} = ${R.toLatex()}`;
+    const product = R.eq(Q.one)
+      ? t("$\\lambda = 1$ and the mean is $1$, whose product is $1$", "$\\lambda = 1$，均值为 $1$，乘积为 $1$")
+      : t(
+          `$${R.toLatex()} \\cdot ${mean.toLatex()} = 1$, the starting height times the mean`,
+          `$${R.toLatex()} \\cdot ${mean.toLatex()} = 1$，即起始高度乘以均值`,
+        );
+    return {
+      ...numberProblem({
+        prompt: asksMean
+          ? t("The curve is an exponential density. What is the mean of the distribution?", "曲线是指数密度。这个分布的均值是多少？")
+          : t(
+              "The curve is an exponential density. What is its rate parameter $\\lambda$?",
+              "曲线是指数密度。它的速率参数 $\\lambda$ 是多少？",
+            ),
+        answer,
+        wrong: [R.mul(Q.of(2, 1)), R.mul(Q.of(1, 2)), R.add(Q.one)],
+        mistakes: apart(
+          answer,
+          asksMean
+            ? [
+                why(R, "That is the starting height $\\lambda$; the mean is its reciprocal.", "那是起始高度 $\\lambda$；均值是它的倒数。"),
+                why(
+                  mean.mul(mean),
+                  "That is the variance $\\frac{1}{\\lambda^{2}}$, not the mean.",
+                  "那是方差 $\\frac{1}{\\lambda^{2}}$，不是均值。",
+                ),
+              ]
+            : [
+                why(
+                  mean,
+                  "That is the mean $\\frac{1}{\\lambda}$; the rate is the starting height itself.",
+                  "那是均值 $\\frac{1}{\\lambda}$；速率就是起始高度本身。",
+                ),
+                why(
+                  mean.mul(mean),
+                  "That is the variance $\\frac{1}{\\lambda^{2}}$; the rate is the starting height itself.",
+                  "那是方差 $\\frac{1}{\\lambda^{2}}$；速率就是起始高度本身。",
+                ),
+              ],
+        ),
+        solution: walked(
+          [
+            [
+              ["Read the intercept", "读截距"],
+              t(
+                `At $x = 0$ the density is $\\lambda e^{0} = \\lambda$, and the curve starts at height $${height}$, so $\\lambda = ${R.toLatex()}$.`,
+                `在 $x = 0$ 处密度为 $\\lambda e^{0} = \\lambda$，曲线从高度 $${height}$ 开始，所以 $\\lambda = ${R.toLatex()}$。`,
+              ),
+            ],
+            asksMean
+              ? [
+                  ["Take the reciprocal", "取倒数"],
+                  t(`The mean is $\\frac{1}{\\lambda} = ${mean.toLatex()}$.`, `均值为 $\\frac{1}{\\lambda} = ${mean.toLatex()}$。`),
+                ]
+              : [
+                  ["Name the rate", "写出速率"],
+                  t(
+                    `The rate parameter is the intercept itself: $\\lambda = ${R.toLatex()}$.`,
+                    `速率参数就是截距本身：$\\lambda = ${R.toLatex()}$。`,
+                  ),
+                ],
           ],
-      answer,
-      [asksMean ? R : Q.one.div(R), R.mul(Q.of(2, 1)), R.mul(Q.of(1, 2)), R.add(Q.one)],
-      [
-        `The curve starts at height $${R.toLatex()}$, which is $\\lambda$. The mean is $1 / \\lambda$, which equals $${Q.one.div(R).toLatex()}$.`,
-        `曲线从高度 $${R.toLatex()}$ 开始，这就是 $\\lambda$。均值是 $1 / \\lambda$，等于 $${Q.one.div(R).toLatex()}$。`,
-      ],
-      { svg, alt: t(`An exponential density starting at height ${rate} on the vertical axis.`, `从纵轴高度 ${rate} 开始的指数密度。`) },
-    );
+          t(
+            `The mean is then $\\frac{1}{\\lambda} = ${mean.toLatex()}$, and ${product.en}, as for every exponential density.`,
+            `于是均值为 $\\frac{1}{\\lambda} = ${mean.toLatex()}$，并且${product["zh-CN"]}，每个指数密度都是如此。`,
+          ),
+        ),
+      }),
+      figure: {
+        svg,
+        alt: t(`An exponential density starting at height ${rate} on the vertical axis.`, `从纵轴高度 ${rate} 开始的指数密度。`),
+      },
+    };
   },
 );
 
@@ -1309,8 +1369,8 @@ const histogramMean = point(
   "the-mean-of-a-drawn-frequency-chart",
   ["The mean of a drawn frequency chart", "图中频数图的均值"],
   [
-    "A frequency chart lists how many observations take each value. The sample mean adds each value times its frequency, and then divides by the total frequency, which is the number of observations. Dividing by the number of bars is a common slip, and it gives a wrong result unless all the frequencies happen to be equal.",
-    "频数图列出每个值有多少个观测。样本均值把每个值乘以频数相加，再除以总频数，也就是观测个数。除以条形的个数是常见错误，除非所有频数恰好相等，否则结果不对。",
+    "A frequency chart lists how many observations take each value. The sample mean adds each value times its frequency, and then divides by the total frequency, which is the number of observations. Dividing by the number of bars is a common slip, and it gives a wrong result unless all the frequencies happen to be equal.\n\nBars of heights $2, 5, 3$ at the values $1, 2, 3$ hold $2 + 5 + 3 = 10$ observations with total $2 \\cdot 1 + 5 \\cdot 2 + 3 \\cdot 3 = 21$, so the mean is $\\frac{21}{10} = 2.1$.\n\nCheck: $2.1$ lies just above $2$, the value with the tallest bar, and the bar at $3$ is taller than the bar at $1$.\n\n> **Watch out.** Divide by the total frequency, not by the number of bars: $\\frac{21}{3} = 7$ lies outside the values altogether. Averaging the values $1, 2, 3$ without their heights gives $2$, which ignores the frequencies.",
+    "频数图列出每个值有多少个观测。样本均值把每个值乘以频数相加，再除以总频数，也就是观测个数。除以条形的个数是常见错误，除非所有频数恰好相等，否则结果不对。\n\n值 $1, 2, 3$ 处的条形高 $2, 5, 3$，共 $2 + 5 + 3 = 10$ 个观测，总和为 $2 \\cdot 1 + 5 \\cdot 2 + 3 \\cdot 3 = 21$，所以均值为 $\\frac{21}{10} = 2.1$。\n\n检验：$2.1$ 略大于最高条形所在的 $2$，而 $3$ 处的条形比 $1$ 处的高。\n\n> **注意。** 要除以总频数，而不是条形个数：$\\frac{21}{3} = 7$ 甚至落在所有取值之外。不看高度直接平均 $1, 2, 3$ 得 $2$，忽略了频数。",
   ],
   (rng) => {
     const first = rng.int(1, 4);
@@ -1327,22 +1387,60 @@ const histogramMean = point(
     const svg = chart([first - 1, first + n], [0, 8], intTicks(first - 1, first + n), intTicks(0, 8, 2), (x, y) =>
       bars(values.map((v) => v - 0.4).concat([(values[n - 1] as number) + 0.6]), counts, x, y),
     );
-    return ask(
-      ["The bars give the frequency of each value in a sample. What is the sample mean?", "条形给出样本中每个值的频数。样本均值是多少？"],
-      mean,
-      [plain.eq(mean) ? mean.add(Q.of(1, total)) : plain, Q.of(weighted, n), Q.of(total, n)],
-      [
-        `There are $${total}$ observations, and the values times their frequencies add up to $${weighted}$. Dividing gives $${mean.toLatex()}$.`,
-        `共有 $${total}$ 个观测，值乘以频数之和是 $${weighted}$。相除得 $${mean.toLatex()}$。`,
-      ],
-      {
+    const products = counts.map((c, i) => `${c} \\cdot ${values[i]}`).join(" + ");
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The bars give the frequency of each value in a sample. What is the sample mean?",
+          "条形给出样本中每个值的频数。样本均值是多少？",
+        ),
+        answer: mean,
+        wrong: [mean.add(Q.of(1, total))],
+        mistakes: apart(mean, [
+          why(plain, "This averages the values and ignores the heights of the bars.", "这直接平均了取值，忽略了条形的高度。"),
+          why(
+            Q.of(weighted, n),
+            `This divides the total $${weighted}$ by the $${n}$ bars instead of the $${total}$ observations.`,
+            `这把总和 $${weighted}$ 除以 $${n}$ 根条形，而不是 $${total}$ 个观测。`,
+          ),
+          why(
+            Q.of(total, n),
+            "This is the average height of the bars, a frequency, not a value.",
+            "这是条形的平均高度，是频数，不是取值。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the bars", "读条形"],
+              t(
+                `The values $${values.join(", ")}$ have frequencies $${counts.join(", ")}$, so there are $${counts.join(" + ")} = ${total}$ observations.`,
+                `取值 $${values.join(", ")}$ 的频数为 $${counts.join(", ")}$，所以共有 $${counts.join(" + ")} = ${total}$ 个观测。`,
+              ),
+            ],
+            [["Add value times frequency", "取值乘频数相加"], t(`$${products} = ${weighted}$.`, `$${products} = ${weighted}$。`)],
+            [
+              ["Divide by the total frequency", "除以总频数"],
+              t(
+                `$\\bar{x} = \\frac{${weighted}}{${total}} = ${mean.toLatex()}$.`,
+                `$\\bar{x} = \\frac{${weighted}}{${total}} = ${mean.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$${total} \\cdot ${mean.toLatex()} = ${weighted}$ gives back the total, and the mean lies between the smallest value $${first}$ and the largest $${first + n - 1}$.`,
+            `$${total} \\cdot ${mean.toLatex()} = ${weighted}$ 还原了总和，且均值介于最小取值 $${first}$ 与最大取值 $${first + n - 1}$ 之间。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           `A frequency chart with counts ${counts.join(", ")} at the values ${values.join(", ")}.`,
           `频数图，值 ${values.join("，")} 的频数依次为 ${counts.join("，")}。`,
         ),
       },
-    );
+    };
   },
 );
 
@@ -1433,8 +1531,8 @@ const cltSpread = point(
   "the-spread-of-a-sample-mean-from-a-curve",
   ["The spread of a sample mean from a curve", "由曲线读样本均值的分散度"],
   [
-    "By the central limit theorem, the mean of a sample of size $n$ has roughly a normal distribution with the same mean as the population, and with standard deviation $\\sigma / \\sqrt{n}$. So a drawing of the population gives $\\sigma$ from its inflection points, and the sample size then shrinks that value by a factor of $\\sqrt{n}$.",
-    "由中心极限定理，容量为 $n$ 的样本均值近似服从正态分布，均值与总体相同，标准差为 $\\sigma / \\sqrt{n}$。所以总体的图从拐点给出 $\\sigma$，样本容量再把这个值缩小 $\\sqrt{n}$ 倍。",
+    "By the central limit theorem, the mean of a sample of size $n$ has roughly a normal distribution with the same mean as the population, and with standard deviation $\\sigma / \\sqrt{n}$. So a drawing of the population gives $\\sigma$ from its inflection points, and the sample size then shrinks that value by a factor of $\\sqrt{n}$.\n\nA population curve with mean $50$ and inflection points at $40$ and $60$ has $\\sigma = 10$. For samples of $25$, the mean has standard deviation $10 / \\sqrt{25} = 2$.\n\nCheck: multiplying back, $2 \\cdot \\sqrt{25} = 10$, the population's $\\sigma$.\n\n> **Watch out.** $\\sigma$ is the distance from the center to one inflection point, $10$, not the distance $20$ between the two. And divide by $\\sqrt{25} = 5$, not by $25$: $\\frac{10}{25} = 0.4$ is too small.",
+    "由中心极限定理，容量为 $n$ 的样本均值近似服从正态分布，均值与总体相同，标准差为 $\\sigma / \\sqrt{n}$。所以总体的图从拐点给出 $\\sigma$，样本容量再把这个值缩小 $\\sqrt{n}$ 倍。\n\n均值为 $50$、拐点在 $40$ 和 $60$ 的总体曲线有 $\\sigma = 10$。容量为 $25$ 的样本，其均值的标准差为 $10 / \\sqrt{25} = 2$。\n\n检验：乘回去，$2 \\cdot \\sqrt{25} = 10$，正是总体的 $\\sigma$。\n\n> **注意。** $\\sigma$ 是中心到一个拐点的距离 $10$，不是两个拐点之间的距离 $20$。并且要除以 $\\sqrt{25} = 5$，不是 $25$：$\\frac{10}{25} = 0.4$ 太小了。",
   ],
   (rng) => {
     const mu = rng.int(2, 8) * 10;
@@ -1456,25 +1554,62 @@ const cltSpread = point(
         curvePath(f, mu - 3.5 * sigma, mu + 3.5 * sigma, x, y) +
         `<circle cx="${x(mu - sigma)}" cy="${y(f(mu - sigma))}" r="4" fill="currentColor"/><circle cx="${x(mu + sigma)}" cy="${y(f(mu + sigma))}" r="4" fill="currentColor"/>`,
     );
-    return ask(
-      [
-        `The curve shows the population, with dots at its inflection points. What is the standard deviation of the mean of a sample of size $${n}$?`,
-        `曲线表示总体，点标出它的拐点。容量为 $${n}$ 的样本均值的标准差是多少？`,
-      ],
-      se,
-      [Q.of(sigma, n), Q.of(sigma, 1), Q.of(mu, root)],
-      [
-        `The inflection points show that $\\sigma = ${sigma}$. So the mean has standard deviation $${sigma} / \\sqrt{${n}} = ${sigma} / ${root} = ${se.toLatex()}$.`,
-        `拐点表明 $\\sigma = ${sigma}$。所以均值的标准差是 $${sigma} / \\sqrt{${n}} = ${sigma} / ${root} = ${se.toLatex()}$。`,
-      ],
-      {
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The curve shows the population, with dots at its inflection points. What is the standard deviation of the mean of a sample of size $${n}$?`,
+          `曲线表示总体，点标出它的拐点。容量为 $${n}$ 的样本均值的标准差是多少？`,
+        ),
+        answer: se,
+        mistakes: apart(se, [
+          why(
+            Q.of(sigma, n),
+            `This divides by $n = ${n}$; the standard deviation of the mean divides by $\\sqrt{n} = ${root}$.`,
+            `这除以了 $n = ${n}$；均值的标准差应除以 $\\sqrt{n} = ${root}$。`,
+          ),
+          why(
+            sigma,
+            "This is the population's $\\sigma$; the mean of a sample varies less, by a factor of $\\sqrt{n}$.",
+            "这是总体的 $\\sigma$；样本均值的波动要小 $\\sqrt{n}$ 倍。",
+          ),
+          why(Q.of(mu, root), `This divides the mean $${mu}$ instead of the standard deviation.`, `这除的是均值 $${mu}$，而不是标准差。`),
+          why(
+            Q.of(2 * sigma, root),
+            `This takes the gap between the dots, $${2 * sigma}$, as $\\sigma$; each dot is one standard deviation from the center.`,
+            `这把两点之间的距离 $${2 * sigma}$ 当作 $\\sigma$；每个点距中心一个标准差。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read σ from the curve", "由曲线读出 σ"],
+              t(
+                `The dots are at $${mu - sigma}$ and $${mu + sigma}$, each $${sigma}$ from the center $${mu}$, so $\\sigma = ${sigma}$.`,
+                `两点在 $${mu - sigma}$ 和 $${mu + sigma}$，各距中心 $${mu}$ 为 $${sigma}$，所以 $\\sigma = ${sigma}$。`,
+              ),
+            ],
+            [
+              ["Divide by √n", "除以 √n"],
+              t(
+                `The mean has standard deviation $${sigma} / \\sqrt{${n}} = ${sigma} / ${root} = ${se.toLatex()}$.`,
+                `均值的标准差为 $${sigma} / \\sqrt{${n}} = ${sigma} / ${root} = ${se.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Multiplying back, $${se.toLatex()} \\cdot ${root} = ${sigma}$, the population's $\\sigma$.`,
+            `乘回去，$${se.toLatex()} \\cdot ${root} = ${sigma}$，正是总体的 $\\sigma$。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           `A normal curve with mean ${mu} and inflection points at ${mu - sigma} and ${mu + sigma}.`,
           `均值为 ${mu} 的正态曲线，拐点在 ${mu - sigma} 和 ${mu + sigma}。`,
         ),
       },
-    );
+    };
   },
 );
 
@@ -1482,8 +1617,8 @@ const bivariateContours = point(
   "the-correlation-from-contour-ellipses",
   ["The correlation from contour ellipses", "由等高椭圆读相关系数"],
   [
-    "The contours of a bivariate normal density are ellipses centered at the means. When the ellipses tilt up to the right, large values of $x$ go with large values of $y$, so the correlation is positive. A tilt down to the right means negative correlation. Ellipses with axes along the coordinate axes mean zero correlation, whatever their width.",
-    "二元正态密度的等高线是以均值为中心的椭圆。椭圆向右上倾斜时，大的 $x$ 伴随大的 $y$，相关系数为正。向右下倾斜表示负相关。椭圆的轴沿坐标轴时相关系数为零，与椭圆的宽度无关。",
+    "The contours of a bivariate normal density are ellipses centered at the means. When the ellipses tilt up to the right, large values of $x$ go with large values of $y$, so the correlation is positive. A tilt down to the right means negative correlation. Ellipses with axes along the coordinate axes mean zero correlation, whatever their width. With $\\rho = 0.95$ and equal spreads, the ellipses become long and thin, hugging the line through the center at $45^\\circ$; as $\\rho$ approaches $1$ they collapse onto that line.\n\n> **Watch out.** Only the tilt shows the correlation. An ellipse stretched along the $x$-axis or the $y$-axis only shows that one variable spreads more than the other.",
+    "二元正态密度的等高线是以均值为中心的椭圆。椭圆向右上倾斜时，大的 $x$ 伴随大的 $y$，相关系数为正。向右下倾斜表示负相关。椭圆的轴沿坐标轴时相关系数为零，与椭圆的宽度无关。当 $\\rho = 0.95$ 且两个方差相等时，椭圆变得又长又细，紧贴过中心的 $45^\\circ$ 直线；$\\rho$ 趋于 $1$ 时，它们收缩到这条直线上。\n\n> **注意。** 只有倾斜说明相关性。沿 $x$ 轴或 $y$ 轴拉长的椭圆只说明一个变量比另一个分散得多。",
   ],
   (rng) => {
     const rho = rng.pick([-0.8, -0.6, -0.4, 0, 0, 0.4, 0.6, 0.8]);
@@ -1514,17 +1649,56 @@ const bivariateContours = point(
               "椭圆向右下倾斜，所以一个值大时另一个值小",
             ]
           : ["The axes of the ellipses run along the coordinate axes, with no tilt", "椭圆的轴沿坐标轴，没有倾斜"];
-    return choose(
+    const tilt: Pair =
+      rho > 0 ? ["tilt up to the right", "向右上倾斜"] : rho < 0 ? ["tilt down to the right", "向右下倾斜"] : ["have no tilt", "没有倾斜"];
+    const reasons: Record<string, Pair> = {
+      positive: [
+        `Positive correlation would tilt the ellipses up to the right; these ${tilt[0]}.`,
+        `正相关会使椭圆向右上倾斜；这些椭圆${tilt[1]}。`,
+      ],
+      negative: [
+        `Negative correlation would tilt the ellipses down to the right; these ${tilt[0]}.`,
+        `负相关会使椭圆向右下倾斜；这些椭圆${tilt[1]}。`,
+      ],
+      zero: [
+        `Zero correlation would keep the axes of the ellipses along the coordinate axes; these ${tilt[0]}.`,
+        `相关系数为零时椭圆的轴沿坐标轴；这些椭圆${tilt[1]}。`,
+      ],
+      one: [
+        "A correlation of exactly one would squeeze every contour onto a line; these are genuine ellipses.",
+        "相关系数恰好为一时，所有等高线都会收缩成一条直线；这些是真正的椭圆。",
+      ],
+    };
+    const check: Pair =
+      rho > 0
+        ? [
+            "Moving right along the long axis of the ellipses, $y$ rises, as positive correlation requires.",
+            "沿椭圆长轴向右移动时 $y$ 增大，符合正相关。",
+          ]
+        : rho < 0
+          ? [
+              "Moving right along the long axis of the ellipses, $y$ falls, as negative correlation requires.",
+              "沿椭圆长轴向右移动时 $y$ 减小，符合负相关。",
+            ]
+          : [
+              "Any stretching runs along a coordinate axis, which shows only unequal spreads, not a link between $X$ and $Y$.",
+              "椭圆即使拉长也是沿坐标轴方向，这只说明两个方差不同，而不说明 $X$ 与 $Y$ 有关联。",
+            ];
+    const verdict = names[kind] as Pair;
+    const choice = choose(
       rng,
       [
         "The curves are contours of a bivariate normal density. What do they show about the correlation of $X$ and $Y$?",
         "这些曲线是二元正态密度的等高线。关于 $X$ 和 $Y$ 的相关系数，它们说明了什么？",
       ],
-      names[kind] as Pair,
+      verdict,
       Object.keys(names)
         .filter((n) => n !== kind)
         .map((n) => names[n] as Pair),
-      [`${why[0]}.`, `${why[1]}。`],
+      [
+        `**Step 1: Read the tilt.** ${why[0]}.\n\n**Step 2: Name the sign.** ${verdict[0]}.\n\n**Check.** ${check[0]}`,
+        `**第一步：看倾斜。**${why[1]}。\n\n**第二步：写出符号。**${verdict[1]}。\n\n**检验。**${check[1]}`,
+      ],
       drawn(
         { xMin: -8, xMax: 8, yMin: -8, yMax: 8, xName: "x", yName: "y" },
         marks,
@@ -1533,6 +1707,12 @@ const bivariateContours = point(
           `以 (${cx}, ${cy}) 为中心的等高椭圆。${rho > 0 ? "它们向右上倾斜" : rho < 0 ? "它们向右下倾斜" : "它们的轴沿坐标轴"}。`,
         ),
       ),
+    );
+    return reasoned(
+      choice,
+      Object.keys(names)
+        .filter((n) => n !== kind)
+        .map((n): Reason => [(names[n] as Pair)[0], ...(reasons[n] as Pair)]),
     );
   },
 );

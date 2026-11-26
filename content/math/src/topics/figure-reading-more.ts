@@ -2303,8 +2303,8 @@ const correlationFromScatter: KnowledgePointDef = {
   figure: probabilityDrawings1["the-correlation-coefficient-for-two-random-variables#the-correlation-from-a-scatter-plot"],
   title: t("The correlation from a scatter plot", "由散点图看相关系数"),
   explanation: t(
-    "The correlation coefficient measures how closely points follow a straight line. Its sign tells whether the line rises or falls, and its size how tight the cloud is around the line: near one is tight and near zero is a shapeless cloud. It says nothing about how steep the line is, so a shallow tight cloud can have a larger correlation than a steep loose one.",
-    "相关系数衡量点有多接近一条直线。它的符号说明直线是上升还是下降，它的大小说明点云围绕直线有多紧：接近 1 很紧，接近 0 则是没有形状的点云。它和直线有多陡无关，所以平缓而紧的点云，相关系数可能比陡而松的点云大。",
+    "The correlation coefficient measures how closely points follow a straight line. Its sign tells whether the line rises or falls, and its size how tight the cloud is around the line: near one is tight and near zero is a shapeless cloud. It says nothing about how steep the line is, so a shallow tight cloud can have a larger correlation than a steep loose one. In the drawing the shallow, tight cloud on the left has $r \\approx 0.998$, while the steeper, looser cloud on the right has only $r \\approx 0.74$. At the extremes, points lying exactly on a falling line have $r = -1$, and points on $y = x^2$ placed symmetrically about $x = 0$ have $r = 0$, although $y$ depends completely on $x$.\n\n> **Watch out.** Do not read the correlation from the steepness of the cloud. Judge the sign from the direction of the trend and the size from how tightly the points hug a line.",
+    "相关系数衡量点有多接近一条直线。它的符号说明直线是上升还是下降，它的大小说明点云围绕直线有多紧：接近 1 很紧，接近 0 则是没有形状的点云。它和直线有多陡无关，所以平缓而紧的点云，相关系数可能比陡而松的点云大。图中左边平缓而紧密的点云 $r \\approx 0.998$，右边更陡但较松散的点云只有 $r \\approx 0.74$。在极端情形下，恰好落在一条下降直线上的点 $r = -1$；而关于 $x = 0$ 对称地落在 $y = x^2$ 上的点 $r = 0$，尽管 $y$ 完全由 $x$ 决定。\n\n> **注意。** 不要根据点云的陡峭程度来读相关系数。符号看趋势的方向，大小看点贴近直线的紧密程度。",
   ),
   generate(rng) {
     const kinds = [
@@ -2322,24 +2322,55 @@ const correlationFromScatter: KnowledgePointDef = {
       const y = Math.max(-5.8, Math.min(5.8, kind.slope * x + e));
       dots.push({ kind: "point", at: [x, y], accent: true });
     }
-    return pickChoice(
-      rng,
-      t("Which is the best estimate of the correlation coefficient of these points?", "这些点的相关系数最接近哪个值？"),
-      math(kind.r),
-      kinds.filter((k) => k !== kind).map((k) => math(k.r)),
-      t(
-        kind.r === "0"
-          ? "The cloud shows no rising or falling trend, so the correlation is close to zero."
-          : `The points ${kind.slope > 0 ? "rise" : "fall"} from left to right, and they are ${Math.abs(kind.slope) === 1 ? "tightly" : "loosely"} grouped around a line, so the estimate is ${kind.r}.`,
-        kind.r === "0"
-          ? "点云没有上升或下降的趋势，所以相关系数接近零。"
-          : `这些点从左到右${kind.slope > 0 ? "上升" : "下降"}，并且${Math.abs(kind.slope) === 1 ? "紧密" : "松散"}地分布在一条直线周围，所以估计值是 ${kind.r}。`,
+    const others = kinds.filter((k) => k !== kind);
+    const trend: [string, string] = kind.slope > 0 ? ["rise", "上升"] : ["fall", "下降"];
+    const tight = Math.abs(kind.slope) === 1;
+    const reason = (k: (typeof kinds)[number]): Reason => {
+      const option = `$${k.r}$`;
+      if (kind.slope === 0)
+        return [
+          option,
+          `That would need the points to ${k.slope > 0 ? "rise" : "fall"} along a line; this cloud shows no trend.`,
+          `那需要这些点沿一条直线${k.slope > 0 ? "上升" : "下降"}；这个点云没有趋势。`,
+        ];
+      if (k.slope === 0)
+        return [
+          option,
+          `That would be a shapeless cloud, but these points ${trend[0]} from left to right.`,
+          `那应是没有形状的点云，但这些点从左到右${trend[1]}。`,
+        ];
+      if (Math.sign(k.slope) !== Math.sign(kind.slope))
+        return [option, `That has the wrong sign: these points ${trend[0]} from left to right.`, `符号错了：这些点从左到右${trend[1]}。`];
+      return tight
+        ? [option, "That would be a loose cloud; these points hug a line tightly.", "那应是松散的点云；这些点紧贴一条直线。"]
+        : [
+            option,
+            "That would need the points packed tightly around a line; these are loosely scattered.",
+            "那需要点紧密地分布在直线周围；这些点分布松散。",
+          ];
+    };
+    return reasoned(
+      pickChoice(
+        rng,
+        t("Which is the best estimate of the correlation coefficient of these points?", "这些点的相关系数最接近哪个值？"),
+        math(kind.r),
+        others.map((k) => math(k.r)),
+        kind.slope === 0
+          ? t(
+              "**Step 1: Look for a trend.** The cloud shows no rising or falling trend, so the correlation has no sign to speak of.\n\n**Step 2: Judge the size.** With no line to hug, the correlation is close to $0$.\n\n**Check.** A line drawn through the cloud would be nearly flat, with points scattered evenly above and below it at every $x$.",
+              "**第一步：看趋势。**点云没有上升或下降的趋势，所以相关系数谈不上正负。\n\n**第二步：判断大小。**点没有贴近任何直线，所以相关系数接近 $0$。\n\n**检验。**穿过点云画的直线几乎是水平的，并且在每个 $x$ 处点都均匀地分布在直线上下。",
+            )
+          : t(
+              `**Step 1: Read the sign.** The points ${trend[0]} from left to right, so the correlation is ${kind.slope > 0 ? "positive" : "negative"}.\n\n**Step 2: Judge the size.** They are ${tight ? "tightly" : "loosely"} grouped around a line, so the estimate is $${kind.r}$.\n\n**Check.** ${tight ? "Almost every point lies close to one line, as a size near $1$ requires." : "A clear trend shows, but many points lie far from the line, so the size is well below $1$ yet well above $0$."}`,
+              `**第一步：读符号。**这些点从左到右${trend[1]}，所以相关系数为${kind.slope > 0 ? "正" : "负"}。\n\n**第二步：判断大小。**它们${tight ? "紧密" : "松散"}地分布在一条直线周围，所以估计值是 $${kind.r}$。\n\n**检验。**${tight ? "几乎每个点都靠近同一条直线，符合大小接近 $1$ 的情形。" : "趋势清楚，但许多点离直线较远，所以大小明显小于 $1$，又明显大于 $0$。"}`,
+            ),
+        drawn(
+          square(6),
+          dots,
+          t(`A scatter plot of 28 points with a correlation near ${kind.r}.`, `28 个点的散点图，相关系数接近 ${kind.r}。`),
+        ),
       ),
-      drawn(
-        square(6),
-        dots,
-        t(`A scatter plot of 28 points with a correlation near ${kind.r}.`, `28 个点的散点图，相关系数接近 ${kind.r}。`),
-      ),
+      others.map(reason),
     );
   },
 };

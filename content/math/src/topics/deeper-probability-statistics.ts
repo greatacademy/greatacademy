@@ -6,7 +6,7 @@ import { joinText, t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
-import { numberProblem, steps, why } from "../problems.ts";
+import { lowestTerms, numberProblem, steps, why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
@@ -609,8 +609,8 @@ const uniformEndpoints: KnowledgePointDef = {
   id: "the-endpoints-of-a-uniform-distribution-from-its-moments",
   title: t("The endpoints of a uniform distribution from its moments", "由矩求均匀分布的端点"),
   explanation: t(
-    "A uniform distribution on $[a, b]$ has mean $\\frac{a+b}{2}$ and variance $\\frac{(b-a)^2}{12}$. The variance therefore gives the width of the interval, and the mean gives its center. The endpoints lie half a width to each side of the center.",
-    "$[a, b]$ 上的均匀分布，均值是 $\\frac{a+b}{2}$，方差是 $\\frac{(b-a)^2}{12}$。所以方差给出区间的宽度，均值给出中心，端点在中心两侧各半个宽度处。",
+    "A uniform distribution on $[a, b]$ has mean $\\frac{a+b}{2}$ and variance $\\frac{(b-a)^2}{12}$. The variance therefore gives the width of the interval, and the mean gives its center. The endpoints lie half a width to each side of the center. With mean $100$ and variance $75$, $(b - a)^2 = 12 \\cdot 75 = 900$, so the width is $30$ and the interval is $[85, 115]$.\n\n> **Watch out.** The endpoint lies half a width from the mean, not a whole width. And the variance is not the width: take $\\sqrt{12\\sigma^2}$ first.",
+    "$[a, b]$ 上的均匀分布，均值是 $\\frac{a+b}{2}$，方差是 $\\frac{(b-a)^2}{12}$。所以方差给出区间的宽度，均值给出中心，端点在中心两侧各半个宽度处。若均值为 $100$，方差为 $75$，则 $(b - a)^2 = 12 \\cdot 75 = 900$，宽度为 $30$，区间为 $[85, 115]$。\n\n> **注意。** 端点离均值半个宽度，而不是一整个宽度。方差也不是宽度：要先求 $\\sqrt{12\\sigma^2}$。",
   ),
   generate(rng) {
     const w = 6 * rng.int(1, 4);
@@ -618,6 +618,7 @@ const uniformEndpoints: KnowledgePointDef = {
     const variance = (w * w) / 12;
     const upper = rng.int(0, 1) === 0;
     const answer = upper ? m + w / 2 : m - w / 2;
+    const [low, high] = [m - w / 2, m + w / 2];
     return numberProblem({
       prompt: t(
         `A uniform random variable on $[a, b]$ has mean $${m}$ and variance $${variance}$. Find $${upper ? "b" : "a"}$.`,
@@ -625,10 +626,40 @@ const uniformEndpoints: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [upper ? m + w : m - w, upper ? m + variance : m - variance, upper ? m - w / 2 : m + w / 2],
-      solution: t(
-        `From $\\frac{(b-a)^2}{12} = ${variance}$, the width is $b - a = ${w}$. The endpoint is half of that from the mean: $${m} ${upper ? "+" : "-"} ${w / 2} = ${answer}$.`,
-        `由 $\\frac{(b-a)^2}{12} = ${variance}$ 得宽度 $b - a = ${w}$。端点离均值半个宽度：$${m} ${upper ? "+" : "-"} ${w / 2} = ${answer}$。`,
+      mistakes: [
+        why(
+          upper ? m + w : m - w,
+          "That moves a whole width from the mean; the endpoint is half a width away.",
+          "那是从均值移动了一整个宽度；端点只离均值半个宽度。",
+        ),
+        why(
+          upper ? m + variance : m - variance,
+          "That uses the variance as the distance; the variance gives the width through $(b - a)^2 = 12\\sigma^2$.",
+          "那是把方差当作距离；方差要通过 $(b - a)^2 = 12\\sigma^2$ 才得到宽度。",
+        ),
+        why(upper ? low : high, `That is the other endpoint, $${upper ? "a" : "b"}$.`, `那是另一个端点 $${upper ? "a" : "b"}$。`),
+      ].filter((x, i, all) => all.findIndex((y) => y.value === x.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the width", "求宽度"],
+            t(
+              `$(b - a)^2 = 12 \\cdot ${variance} = ${w * w}$, so $b - a = ${w}$.`,
+              `$(b - a)^2 = 12 \\cdot ${variance} = ${w * w}$，所以 $b - a = ${w}$。`,
+            ),
+          ],
+          [
+            ["Step half a width from the mean", "从均值移动半个宽度"],
+            t(
+              `$${upper ? "b" : "a"} = ${m} ${upper ? "+" : "-"} ${w / 2} = ${answer}$.`,
+              `$${upper ? "b" : "a"} = ${m} ${upper ? "+" : "-"} ${w / 2} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `On $[${low}, ${high}]$ the mean is $\\frac{${low} + ${inParens(high)}}{2} = ${m}$ and the variance is $\\frac{${w}^2}{12} = ${variance}$.`,
+          `在 $[${low}, ${high}]$ 上，均值为 $\\frac{${low} + ${inParens(high)}}{2} = ${m}$，方差为 $\\frac{${w}^2}{12} = ${variance}$。`,
+        ),
       ),
     });
   },
@@ -638,24 +669,52 @@ const minimumOfExponentials: KnowledgePointDef = {
   id: "the-first-of-two-exponential-waiting-times",
   title: t("The first of two exponential waiting times", "两个指数等待时间中较早的一个"),
   explanation: t(
-    "The minimum of two independent exponential times exceeds $t$ only if both do, so $P(T > t) = e^{-\\lambda_1 t}e^{-\\lambda_2 t}$. So the minimum is exponential too, with the sum of the two rates. Add rates, not means, and the expected first failure is the reciprocal of that sum.",
-    "两个独立指数时间的最小值超过 $t$，当且仅当两者都超过 $t$，所以 $P(T > t) = e^{-\\lambda_1 t}e^{-\\lambda_2 t}$。因此最小值也服从指数分布，速率是两个速率之和。要加的是速率而不是均值，首次失效的期望时间是这个和的倒数。",
+    "The minimum of two independent exponential times exceeds $t$ only if both do, so $P(T > t) = e^{-\\lambda_1 t}e^{-\\lambda_2 t}$. So the minimum is exponential too, with the sum of the two rates. Add rates, not means, and the expected first failure is the reciprocal of that sum. With means $30$ and $60$ years, the rates add to $\\frac{1}{30} + \\frac{1}{60} = \\frac{1}{20}$, so the first failure is expected after $20$ years.\n\n> **Watch out.** Averaging or adding the means gives a time longer than one of the machines alone; the first of two failures comes sooner than either mean.",
+    "两个独立指数时间的最小值超过 $t$，当且仅当两者都超过 $t$，所以 $P(T > t) = e^{-\\lambda_1 t}e^{-\\lambda_2 t}$。因此最小值也服从指数分布，速率是两个速率之和。要加的是速率而不是均值，首次失效的期望时间是这个和的倒数。若均值为 $30$ 年和 $60$ 年，速率之和为 $\\frac{1}{30} + \\frac{1}{60} = \\frac{1}{20}$，所以首次失效的期望时间是 $20$ 年。\n\n> **注意。** 把均值平均或相加，得到的时间比其中一台机器单独的均值还长；两者中较早的失效比任何一个均值都来得早。",
   ),
   generate(rng) {
     const a = rng.int(2, 12);
     let b = rng.int(2, 12);
     if (b === a) b += 1;
     const answer = Q.of(a * b, a + b);
+    const rate = Q.of(a + b, a * b);
     return numberProblem({
       prompt: t(
         `Two machines run independently, and their lifetimes are exponential with means ${a} and ${b} years. What is the expected time until the first of them fails, in years?`,
         `两台机器独立运行，寿命服从指数分布，均值分别为 ${a} 年和 ${b} 年。直到其中一台首次失效，期望时间是多少年？`,
       ),
       answer,
-      wrong: [Q.of(a + b, 2), Math.min(a, b), Q.of(a + b, a * b)],
-      solution: t(
-        `The rates are $\\frac{1}{${a}}$ and $\\frac{1}{${b}}$, with sum $\\frac{${a + b}}{${a * b}}$. The first failure is exponential with this rate, so its mean is $${answer.toLatex()}$.`,
-        `速率是 $\\frac{1}{${a}}$ 和 $\\frac{1}{${b}}$，和为 $\\frac{${a + b}}{${a * b}}$。首次失效服从这个速率的指数分布，所以均值是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(a + b, 2), "That averages the two means; add the rates instead.", "那是把两个均值平均了；应该把速率相加。"),
+        why(
+          Math.min(a, b),
+          "That is the shorter mean; the first of two failures comes sooner still.",
+          "那是较短的均值；两者中较早的失效来得更早。",
+        ),
+        why(rate, "That is the combined rate; the expected time is its reciprocal.", "那是合并后的速率；期望时间是它的倒数。"),
+        why(a + b, "That adds the means; it is the rates that add.", "那是把均值相加了；应相加的是速率。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the rates", "速率相加"],
+            t(
+              `The rates are $\\frac{1}{${a}}$ and $\\frac{1}{${b}}$, so the first failure has rate $\\frac{1}{${a}} + \\frac{1}{${b}} = ${rate.toLatex()}$.`,
+              `速率是 $\\frac{1}{${a}}$ 和 $\\frac{1}{${b}}$，所以首次失效的速率为 $\\frac{1}{${a}} + \\frac{1}{${b}} = ${rate.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Take the reciprocal", "取倒数"],
+            t(
+              `The first failure is exponential with this rate, so its mean is $${answer.toLatex()}$ years.`,
+              `首次失效服从这个速率的指数分布，所以均值是 $${answer.toLatex()}$ 年。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ is less than the shorter mean $${Math.min(a, b)}$, as the first of two failures must be.`,
+          `$${answer.toLatex()}$ 小于较短的均值 $${Math.min(a, b)}$，两者中较早的失效理应如此。`,
+        ),
       ),
     });
   },
@@ -665,24 +724,62 @@ const probabilityFromIndependentUnion: KnowledgePointDef = {
   id: "a-probability-from-the-union-of-independent-events",
   title: t("A probability from the union of independent events", "由独立事件的并求概率"),
   explanation: t(
-    "For independent events, $P(A \\cup B) = P(A) + P(B) - P(A)P(B)$. Working with complements is cleaner: $1 - P(A \\cup B) = (1 - P(A))(1 - P(B))$. This form solves directly for one probability when the other and the union are known.",
-    "对独立事件，$P(A \\cup B) = P(A) + P(B) - P(A)P(B)$。用补事件更简洁：$1 - P(A \\cup B) = (1 - P(A))(1 - P(B))$。已知其中一个概率和并的概率时，这个形式可以直接解出另一个。",
+    "For independent events, $P(A \\cup B) = P(A) + P(B) - P(A)P(B)$. Working with complements is cleaner: $1 - P(A \\cup B) = (1 - P(A))(1 - P(B))$. This form solves directly for one probability when the other and the union are known. If $P(A) = 0.95$ and $P(A \\cup B) = 0.995$, then $1 - 0.995 = 0.005 = 0.05 \\cdot P(B')$, so $P(B') = 0.1$ and $P(B) = 0.9$.\n\n> **Watch out.** $P(A \\cup B) - P(A)$ is not $P(B)$: it leaves out the overlap $P(A)P(B)$. Divide the complement by $1 - P(A)$, not by $P(A)$.",
+    "对独立事件，$P(A \\cup B) = P(A) + P(B) - P(A)P(B)$。用补事件更简洁：$1 - P(A \\cup B) = (1 - P(A))(1 - P(B))$。已知其中一个概率和并的概率时，这个形式可以直接解出另一个。若 $P(A) = 0.95$，$P(A \\cup B) = 0.995$，则 $1 - 0.995 = 0.005 = 0.05 \\cdot P(B')$，所以 $P(B') = 0.1$，$P(B) = 0.9$。\n\n> **注意。** $P(A \\cup B) - P(A)$ 不是 $P(B)$：它漏掉了重叠部分 $P(A)P(B)$。补事件的概率要除以 $1 - P(A)$，而不是 $P(A)$。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
     const q = rng.int(1, 9);
     const union = Q.of(100 - (10 - p) * (10 - q), 100);
     const answer = Q.of(q, 10);
+    const neither = Q.of((10 - p) * (10 - q), 100);
     return numberProblem({
       prompt: t(
         `$X$ and $Y$ are independent and take the values $0$ and $1$. $P(X = 1) = ${tenths(p)}$, and the probability that at least one of them equals $1$ is $${union.toLatex()}$. Find $P(Y = 1)$.`,
         `$X$ 和 $Y$ 独立，取值为 $0$ 和 $1$。$P(X = 1) = ${tenths(p)}$，至少有一个等于 $1$ 的概率是 $${union.toLatex()}$。求 $P(Y = 1)$。`,
       ),
       answer,
-      wrong: [union.sub(Q.of(p, 10)), union.div(Q.of(p, 10)), Q.of(10 - q, 10)],
-      solution: t(
-        `Neither equals $1$ with probability $1 - ${union.toLatex()} = ${Q.of((10 - p) * (10 - q), 100).toLatex()}$, and by independence this is ${tenths(10 - p)} times $P(Y = 0)$. So $P(Y = 0) = ${Q.of(10 - q, 10).toLatex()}$ and $P(Y = 1) = ${answer.toLatex()}$.`,
-        `都不等于 $1$ 的概率是 $1 - ${union.toLatex()} = ${Q.of((10 - p) * (10 - q), 100).toLatex()}$，由独立性它等于 ${tenths(10 - p)} 乘 $P(Y = 0)$。所以 $P(Y = 0) = ${Q.of(10 - q, 10).toLatex()}$，$P(Y = 1) = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          union.sub(Q.of(p, 10)),
+          "That subtracts $P(X = 1)$ from the union and leaves out the overlap.",
+          "那是用并的概率减去 $P(X = 1)$，漏掉了重叠部分。",
+        ),
+        why(
+          union.div(Q.of(p, 10)),
+          "That divides the union by $P(X = 1)$, as if the union were a product.",
+          "那是用并的概率除以 $P(X = 1)$，好像并是乘积一样。",
+        ),
+        why(Q.of(10 - q, 10), "That is $P(Y = 0)$; subtract it from $1$.", "那是 $P(Y = 0)$；要用 $1$ 减去它。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the complement", "取补事件"],
+            t(
+              `Neither equals $1$ with probability $1 - ${union.toLatex()} = ${neither.toLatex()}$.`,
+              `都不等于 $1$ 的概率是 $1 - ${union.toLatex()} = ${neither.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Use independence", "利用独立性"],
+            t(
+              `By independence this is $P(X = 0)P(Y = 0) = ${tenths(10 - p)} \\cdot P(Y = 0)$, so $P(Y = 0) = ${Q.of(10 - q, 10).toLatex()}$.`,
+              `由独立性它等于 $P(X = 0)P(Y = 0) = ${tenths(10 - p)} \\cdot P(Y = 0)$，所以 $P(Y = 0) = ${Q.of(10 - q, 10).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Take the complement again", "再取补"],
+            t(
+              `$P(Y = 1) = 1 - ${Q.of(10 - q, 10).toLatex()} = ${tenths(q)} = ${answer.toLatex()}$.`,
+              `$P(Y = 1) = 1 - ${Q.of(10 - q, 10).toLatex()} = ${tenths(q)} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$P(X = 1) + P(Y = 1) - P(X = 1)P(Y = 1) = \\frac{${p}}{10} + \\frac{${q}}{10} - \\frac{${p * q}}{100} = ${union.toLatex()}$, the given union.`,
+          `$P(X = 1) + P(Y = 1) - P(X = 1)P(Y = 1) = \\frac{${p}}{10} + \\frac{${q}}{10} - \\frac{${p * q}}{100} = ${union.toLatex()}$，正是给定的并的概率。`,
+        ),
       ),
     });
   },
@@ -692,20 +789,26 @@ const covarianceOfCombinations: KnowledgePointDef = {
   id: "the-covariance-of-linear-combinations",
   title: t("The covariance of linear combinations", "线性组合的协方差"),
   explanation: t(
-    "Covariance is linear in each argument, and adding a constant has no effect on it. So $\\operatorname{Cov}(aX + b, cY + d) = ac\\operatorname{Cov}(X, Y)$, and $\\operatorname{Cov}(aX + bY, X) = a\\operatorname{Var}(X) + b\\operatorname{Cov}(X, Y)$, since the covariance of a variable with itself is its variance.",
-    "协方差对每个变量都是线性的，加常数不影响它。所以 $\\operatorname{Cov}(aX + b, cY + d) = ac\\operatorname{Cov}(X, Y)$，$\\operatorname{Cov}(aX + bY, X) = a\\operatorname{Var}(X) + b\\operatorname{Cov}(X, Y)$，因为变量与自身的协方差就是方差。",
+    "Covariance is linear in each argument, and adding a constant has no effect on it. So $\\operatorname{Cov}(aX + b, cY + d) = ac\\operatorname{Cov}(X, Y)$, and $\\operatorname{Cov}(aX + bY, X) = a\\operatorname{Var}(X) + b\\operatorname{Cov}(X, Y)$, since the covariance of a variable with itself is its variance. With $\\operatorname{Cov}(X, Y) = 10$, $\\operatorname{Cov}(5X + 100, -7Y + 3) = 5 \\cdot (-7) \\cdot 10 = -350$. With $\\operatorname{Var}(X) = 20$ as well, $\\operatorname{Cov}(3X - 6Y, X) = 3 \\cdot 20 - 6 \\cdot 10 = 0$.\n\n> **Watch out.** The constants $b$ and $d$ drop out entirely; they are not coefficients. And $\\operatorname{Cov}(aX, X) = a\\operatorname{Var}(X)$, with $a$ not squared: only $\\operatorname{Var}(aX)$ squares it.",
+    "协方差对每个变量都是线性的，加常数不影响它。所以 $\\operatorname{Cov}(aX + b, cY + d) = ac\\operatorname{Cov}(X, Y)$，$\\operatorname{Cov}(aX + bY, X) = a\\operatorname{Var}(X) + b\\operatorname{Cov}(X, Y)$，因为变量与自身的协方差就是方差。若 $\\operatorname{Cov}(X, Y) = 10$，则 $\\operatorname{Cov}(5X + 100, -7Y + 3) = 5 \\cdot (-7) \\cdot 10 = -350$。再设 $\\operatorname{Var}(X) = 20$，则 $\\operatorname{Cov}(3X - 6Y, X) = 3 \\cdot 20 - 6 \\cdot 10 = 0$。\n\n> **注意。** 常数 $b$ 和 $d$ 完全消失；它们不是系数。$\\operatorname{Cov}(aX, X) = a\\operatorname{Var}(X)$，$a$ 不平方：只有 $\\operatorname{Var}(aX)$ 才会平方。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
     const b = nonzero(rng, 5);
     const cov = nonzero(rng, 6);
     const variance = rng.int(1, 9);
+    const once = <T extends { readonly value: number | Q }>(list: readonly T[]) =>
+      list.filter((x, i, all) => all.findIndex((y) => y.value === x.value) === i);
     if (rng.int(0, 1) === 0) {
       const c = nonzero(rng, 4);
       const d = nonzero(rng, 5);
       const answer = a * c * cov;
       const left = poly([a, "X"], [b, ""]);
       const right = poly([c, "Y"], [d, ""]);
+      const factors = [a, c, cov].filter((f) => f !== 1).map(inParens);
+      const product = factors.length === 0 ? "1" : factors.join(" \\cdot ");
+      const coefficients = [a, c].filter((f) => f !== 1).map(inParens);
+      const shown = factors.length > 1 ? `${product} = ${answer}` : `${answer}`;
       return numberProblem({
         prompt: t(
           `$\\operatorname{Cov}(X, Y) = ${cov}$. Find $\\operatorname{Cov}(${left}, ${right})$.`,
@@ -713,15 +816,49 @@ const covarianceOfCombinations: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [answer + b * d, cov, (a + b) * (c + d) * cov],
-        solution: t(
-          `The constants have no effect, and the coefficients come out: $${inParens(a)} \\cdot ${inParens(c)} \\cdot ${inParens(cov)} = ${answer}$.`,
-          `常数不起作用，系数可以提出来：$${inParens(a)} \\cdot ${inParens(c)} \\cdot ${inParens(cov)} = ${answer}$。`,
+        mistakes: once([
+          why(
+            answer + b * d,
+            "That adds the product of the constants; constants do not change a covariance.",
+            "那是加上了常数之积；常数不改变协方差。",
+          ),
+          why(cov, "That leaves out the coefficients of $X$ and $Y$.", "那漏掉了 $X$ 和 $Y$ 的系数。"),
+          why((a + b) * (c + d) * cov, "That treats the constants as part of the coefficients.", "那是把常数当成了系数的一部分。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Drop the constants", "去掉常数"],
+              t(
+                `Adding a constant does not change a covariance, so $\\operatorname{Cov}(${left}, ${right}) = \\operatorname{Cov}(${poly([a, "X"])}, ${poly([c, "Y"])})$.`,
+                `加常数不改变协方差，所以 $\\operatorname{Cov}(${left}, ${right}) = \\operatorname{Cov}(${poly([a, "X"])}, ${poly([c, "Y"])})$。`,
+              ),
+            ],
+            [
+              ["Bring out the coefficients", "提出系数"],
+              t(
+                `$\\operatorname{Cov}(${poly([a, "X"])}, ${poly([c, "Y"])}) = ${shown}$.`,
+                `$\\operatorname{Cov}(${poly([a, "X"])}, ${poly([c, "Y"])}) = ${shown}$。`,
+              ),
+            ],
+          ],
+          t(
+            coefficients.length === 0
+              ? `Both coefficients are $1$, so the covariance is $\\operatorname{Cov}(X, Y) = ${cov}$ itself.`
+              : `Dividing by the product of the coefficients, $${answer} \\div ${inParens(a * c)} = ${cov}$, gives back $\\operatorname{Cov}(X, Y)$.`,
+            coefficients.length === 0
+              ? `两个系数都是 $1$，所以协方差就是 $\\operatorname{Cov}(X, Y) = ${cov}$。`
+              : `除以系数之积 $${answer} \\div ${inParens(a * c)} = ${cov}$，还原出 $\\operatorname{Cov}(X, Y)$。`,
+          ),
         ),
       });
     }
     const combination = poly([a, "X"], [b, "Y"]);
     const answer = a * variance + b * cov;
+    const first = a * variance;
+    const second = b * cov;
+    const split = `${poly([a, "\\operatorname{Cov}(X, X)"])} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "\\operatorname{Cov}(Y, X)"])}`;
+    const numbers = `${first} ${second < 0 ? "-" : "+"} ${Math.abs(second)}`;
     return numberProblem({
       prompt: t(
         `$\\operatorname{Var}(X) = ${variance}$ and $\\operatorname{Cov}(X, Y) = ${cov}$. Find $\\operatorname{Cov}(${combination}, X)$.`,
@@ -729,10 +866,41 @@ const covarianceOfCombinations: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [b * cov, (a + b) * cov, a * a * variance + b * cov],
-      solution: t(
-        `Split the first argument: $${inParens(a)}\\operatorname{Cov}(X, X) + ${inParens(b)}\\operatorname{Cov}(Y, X) = ${inParens(a)}(${variance}) + ${inParens(b)}(${cov}) = ${answer}$.`,
-        `拆开第一个变量：$${inParens(a)}\\operatorname{Cov}(X, X) + ${inParens(b)}\\operatorname{Cov}(Y, X) = ${inParens(a)}(${variance}) + ${inParens(b)}(${cov}) = ${answer}$。`,
+      mistakes: once([
+        why(
+          b * cov,
+          "That leaves out $\\operatorname{Cov}(X, X) = \\operatorname{Var}(X)$.",
+          "那漏掉了 $\\operatorname{Cov}(X, X) = \\operatorname{Var}(X)$。",
+        ),
+        why(
+          (a + b) * cov,
+          "That uses $\\operatorname{Cov}(X, Y)$ for $\\operatorname{Cov}(X, X)$; the covariance of $X$ with itself is its variance.",
+          "那是把 $\\operatorname{Cov}(X, Y)$ 当成了 $\\operatorname{Cov}(X, X)$；$X$ 与自身的协方差是它的方差。",
+        ),
+        why(
+          a * a * variance + b * cov,
+          "That squares the coefficient of $X$; covariance is linear, and only a variance squares a coefficient.",
+          "那是把 $X$ 的系数平方了；协方差是线性的，只有方差才把系数平方。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Split the first argument", "拆开第一个变量"],
+            t(`$\\operatorname{Cov}(${combination}, X) = ${split}$.`, `$\\operatorname{Cov}(${combination}, X) = ${split}$。`),
+          ],
+          [
+            ["Substitute", "代入"],
+            t(
+              `$\\operatorname{Cov}(X, X) = \\operatorname{Var}(X) = ${variance}$, so the covariance is $${numbers} = ${answer}$.`,
+              `$\\operatorname{Cov}(X, X) = \\operatorname{Var}(X) = ${variance}$，所以协方差为 $${numbers} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Splitting the second argument of $\\operatorname{Cov}(X, ${combination})$ instead gives the same $${numbers} = ${answer}$, since covariance is symmetric.`,
+          `改为拆开 $\\operatorname{Cov}(X, ${combination})$ 的第二个变量，得到同样的 $${numbers} = ${answer}$，因为协方差是对称的。`,
+        ),
       ),
     });
   },
@@ -742,8 +910,8 @@ const largestVarianceOfASum: KnowledgePointDef = {
   id: "the-largest-possible-variance-of-a-sum",
   title: t("The largest possible variance of a sum", "和的方差的最大可能值"),
   explanation: t(
-    "A correlation lies between $-1$ and $1$, so $|\\operatorname{Cov}(X, Y)| \\le \\sigma_X\\sigma_Y$. In $\\operatorname{Var}(X + Y) = \\sigma_X^2 + \\sigma_Y^2 + 2\\operatorname{Cov}(X, Y)$, the largest value comes at correlation $1$ and is $(\\sigma_X + \\sigma_Y)^2$. The smallest comes at $-1$ and is $(\\sigma_X - \\sigma_Y)^2$.",
-    "相关系数在 $-1$ 和 $1$ 之间，所以 $|\\operatorname{Cov}(X, Y)| \\le \\sigma_X\\sigma_Y$。在 $\\operatorname{Var}(X + Y) = \\sigma_X^2 + \\sigma_Y^2 + 2\\operatorname{Cov}(X, Y)$ 中，相关系数为 $1$ 时取最大值 $(\\sigma_X + \\sigma_Y)^2$，为 $-1$ 时取最小值 $(\\sigma_X - \\sigma_Y)^2$。",
+    "A correlation lies between $-1$ and $1$, so $|\\operatorname{Cov}(X, Y)| \\le \\sigma_X\\sigma_Y$. In $\\operatorname{Var}(X + Y) = \\sigma_X^2 + \\sigma_Y^2 + 2\\operatorname{Cov}(X, Y)$, the largest value comes at correlation $1$ and is $(\\sigma_X + \\sigma_Y)^2$. The smallest comes at $-1$ and is $(\\sigma_X - \\sigma_Y)^2$. With $\\operatorname{Var}(X) = 100$ and $\\operatorname{Var}(Y) = 400$, the standard deviations are $10$ and $20$, so $\\operatorname{Var}(X + Y)$ lies between $(20 - 10)^2 = 100$ and $(10 + 20)^2 = 900$.\n\n> **Watch out.** The extremes come at correlation $\\pm 1$, not at $0$, which gives only $\\sigma_X^2 + \\sigma_Y^2$. And the covariance term carries a factor $2$.",
+    "相关系数在 $-1$ 和 $1$ 之间，所以 $|\\operatorname{Cov}(X, Y)| \\le \\sigma_X\\sigma_Y$。在 $\\operatorname{Var}(X + Y) = \\sigma_X^2 + \\sigma_Y^2 + 2\\operatorname{Cov}(X, Y)$ 中，相关系数为 $1$ 时取最大值 $(\\sigma_X + \\sigma_Y)^2$，为 $-1$ 时取最小值 $(\\sigma_X - \\sigma_Y)^2$。若 $\\operatorname{Var}(X) = 100$，$\\operatorname{Var}(Y) = 400$，标准差为 $10$ 和 $20$，所以 $\\operatorname{Var}(X + Y)$ 介于 $(20 - 10)^2 = 100$ 与 $(10 + 20)^2 = 900$ 之间。\n\n> **注意。** 极值在相关系数为 $\\pm 1$ 时取得，而不是 $0$；相关系数为 $0$ 只得到 $\\sigma_X^2 + \\sigma_Y^2$。协方差项还带有因子 $2$。",
   ),
   generate(rng) {
     const s = rng.int(1, 9);
@@ -758,10 +926,48 @@ const largestVarianceOfASum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [s * s + u * u, largest ? (s - u) ** 2 : (s + u) ** 2, s * s + u * u + s * u],
-      solution: t(
-        `The standard deviations are $${s}$ and $${u}$. The ${largest ? "largest" : "smallest"} value comes at correlation $${largest ? 1 : -1}$, where the variance is $${s * s} + ${u * u} ${largest ? "+" : "-"} 2(${s})(${u}) = ${answer}$.`,
-        `标准差是 $${s}$ 和 $${u}$。${largest ? "最大" : "最小"}值在相关系数为 $${largest ? 1 : -1}$ 时取得，此时方差是 $${s * s} + ${u * u} ${largest ? "+" : "-"} 2(${s})(${u}) = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          s * s + u * u,
+          "That takes correlation $0$; the extreme comes at correlation $\\pm 1$.",
+          "那是取相关系数为 $0$；极值在相关系数为 $\\pm 1$ 时取得。",
+        ),
+        largest
+          ? why((s - u) ** 2, "That is the smallest possible value, at correlation $-1$.", "那是最小可能值，在相关系数为 $-1$ 时取得。")
+          : why((s + u) ** 2, "That is the largest possible value, at correlation $1$.", "那是最大可能值，在相关系数为 $1$ 时取得。"),
+        largest
+          ? why(
+              s * s + u * u + s * u,
+              "That counts the covariance $\\sigma_X\\sigma_Y$ once; it enters $\\operatorname{Var}(X + Y)$ twice.",
+              "那只计了一次协方差 $\\sigma_X\\sigma_Y$；它在 $\\operatorname{Var}(X + Y)$ 中出现两次。",
+            )
+          : why(
+              s * s + u * u - s * u,
+              "That counts the covariance $-\\sigma_X\\sigma_Y$ once; it enters $\\operatorname{Var}(X + Y)$ twice.",
+              "那只计了一次协方差 $-\\sigma_X\\sigma_Y$；它在 $\\operatorname{Var}(X + Y)$ 中出现两次。",
+            ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Bound the covariance", "确定协方差的界"],
+            t(
+              `The standard deviations are $${s}$ and $${u}$, so $\\operatorname{Cov}(X, Y)$ lies between $-${s * u}$ and $${s * u}$; the ${largest ? "largest" : "smallest"} value comes at correlation $${largest ? 1 : -1}$.`,
+              `标准差为 $${s}$ 和 $${u}$，所以 $\\operatorname{Cov}(X, Y)$ 介于 $-${s * u}$ 与 $${s * u}$ 之间；${largest ? "最大" : "最小"}值在相关系数为 $${largest ? 1 : -1}$ 时取得。`,
+            ),
+          ],
+          [
+            ["Substitute", "代入"],
+            t(
+              `$\\operatorname{Var}(X + Y) = ${s * s} + ${u * u} ${largest ? "+" : "-"} 2(${s})(${u}) = ${answer}$.`,
+              `$\\operatorname{Var}(X + Y) = ${s * s} + ${u * u} ${largest ? "+" : "-"} 2(${s})(${u}) = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$(${s} ${largest ? "+" : "-"} ${u})^2 = ${answer}$, the square of the ${largest ? "sum" : "difference"} of the standard deviations.`,
+          `$(${s} ${largest ? "+" : "-"} ${u})^2 = ${answer}$，正是两个标准差之${largest ? "和" : "差"}的平方。`,
+        ),
       ),
     });
   },
@@ -771,8 +977,8 @@ const lawOfTotalVariance: KnowledgePointDef = {
   id: "the-law-of-total-variance",
   title: t("The law of total variance", "全方差公式"),
   explanation: t(
-    "The spread of $Y$ has two sources: the spread inside each group and the differences between group means. The law of total variance adds them: $\\operatorname{Var}(Y) = E[\\operatorname{Var}(Y \\mid X)] + \\operatorname{Var}(E[Y \\mid X])$. Averaging the group variances alone leaves out the second part.",
-    "$Y$ 的分散有两个来源：各组内部的分散和各组均值之间的差异。全方差公式把它们相加：$\\operatorname{Var}(Y) = E[\\operatorname{Var}(Y \\mid X)] + \\operatorname{Var}(E[Y \\mid X])$。只对组内方差取平均，就漏掉了第二部分。",
+    "The spread of $Y$ has two sources: the spread inside each group and the differences between group means. The law of total variance adds them: $\\operatorname{Var}(Y) = E[\\operatorname{Var}(Y \\mid X)] + \\operatorname{Var}(E[Y \\mid X])$. Averaging the group variances alone leaves out the second part. If half the time $Y$ has mean $10$ and variance $4$, and otherwise mean $30$ and variance $16$, then $E[\\operatorname{Var}(Y \\mid X)] = 10$ and the means vary by $0.5 \\cdot 0.5 \\cdot 20^2 = 100$, so $\\operatorname{Var}(Y) = 110$.\n\n> **Watch out.** Weight the group variances by the group probabilities, and do not forget the spread of the group means; for two groups it is $p(1 - p)$ times the squared gap.",
+    "$Y$ 的分散有两个来源：各组内部的分散和各组均值之间的差异。全方差公式把它们相加：$\\operatorname{Var}(Y) = E[\\operatorname{Var}(Y \\mid X)] + \\operatorname{Var}(E[Y \\mid X])$。只对组内方差取平均，就漏掉了第二部分。若一半时间 $Y$ 的均值为 $10$、方差为 $4$，其余时间均值为 $30$、方差为 $16$，则 $E[\\operatorname{Var}(Y \\mid X)] = 10$，均值的方差为 $0.5 \\cdot 0.5 \\cdot 20^2 = 100$，所以 $\\operatorname{Var}(Y) = 110$。\n\n> **注意。** 组内方差要按各组的概率加权，并且不要忘记组均值的分散；两组时它等于 $p(1 - p)$ 乘以均值差的平方。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
@@ -785,16 +991,59 @@ const lawOfTotalVariance: KnowledgePointDef = {
     const within = w.mul(Q.of(v1)).add(rest.mul(Q.of(v0)));
     const between = w.mul(rest).mul(Q.of((m1 - m0) ** 2));
     const answer = within.add(between);
+    const squares = w.mul(Q.of(v1 + m1 * m1)).add(rest.mul(Q.of(v0 + m0 * m0)));
+    const mean = w.mul(Q.of(m1)).add(rest.mul(Q.of(m0)));
     return numberProblem({
       prompt: t(
         `$P(X = 1) = ${tenths(p)}$ and $P(X = 0) = ${tenths(10 - p)}$. Given $X = 0$, $Y$ has mean $${m0}$ and variance $${v0}$. Given $X = 1$, $Y$ has mean $${m1}$ and variance $${v1}$. Find $\\operatorname{Var}(Y)$.`,
         `$P(X = 1) = ${tenths(p)}$，$P(X = 0) = ${tenths(10 - p)}$。当 $X = 0$ 时，$Y$ 的均值为 $${m0}$，方差为 $${v0}$；当 $X = 1$ 时，$Y$ 的均值为 $${m1}$，方差为 $${v1}$。求 $\\operatorname{Var}(Y)$。`,
       ),
       answer,
-      wrong: [within, between, Q.of(v0 + v1, 2)],
-      solution: t(
-        `The average of the conditional variances is $${within.toLatex()}$. The conditional means differ by $${m1 - m0}$, so their variance is $${tenths(p)} \\cdot ${tenths(10 - p)} \\cdot ${(m1 - m0) ** 2} = ${between.toLatex()}$. The total is $${answer.toLatex()}$.`,
-        `条件方差的平均是 $${within.toLatex()}$。条件均值相差 $${m1 - m0}$，所以它们的方差是 $${tenths(p)} \\cdot ${tenths(10 - p)} \\cdot ${(m1 - m0) ** 2} = ${between.toLatex()}$。总和是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          within,
+          "That is only the average of the conditional variances; the spread of the means is missing.",
+          "那只是条件方差的平均；漏掉了均值的分散。",
+        ),
+        why(
+          between,
+          "That is only the variance of the conditional means; the spread inside each group is missing.",
+          "那只是条件均值的方差；漏掉了各组内部的分散。",
+        ),
+        why(
+          Q.of(v0 + v1, 2),
+          "That averages the two variances equally, ignoring the probabilities and the means.",
+          "那是把两个方差平均，忽略了概率和均值。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Average the variances", "平均条件方差"],
+            t(
+              `$E[\\operatorname{Var}(Y \\mid X)] = ${v1 === 1 ? tenths(p) : `${tenths(p)} \\cdot ${v1}`} + ${v0 === 1 ? tenths(10 - p) : `${tenths(10 - p)} \\cdot ${v0}`} = ${within.toLatex()}$.`,
+              `$E[\\operatorname{Var}(Y \\mid X)] = ${v1 === 1 ? tenths(p) : `${tenths(p)} \\cdot ${v1}`} + ${v0 === 1 ? tenths(10 - p) : `${tenths(10 - p)} \\cdot ${v0}`} = ${within.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Find the variance of the means", "求均值的方差"],
+            t(
+              `The conditional means differ by $${m1 - m0}$, so $\\operatorname{Var}(E[Y \\mid X]) = ${tenths(p)} \\cdot ${tenths(10 - p)}${m1 - m0 === 1 ? "" : ` \\cdot ${(m1 - m0) ** 2}`} = ${between.toLatex()}$.`,
+              `条件均值相差 $${m1 - m0}$，所以 $\\operatorname{Var}(E[Y \\mid X]) = ${tenths(p)} \\cdot ${tenths(10 - p)}${m1 - m0 === 1 ? "" : ` \\cdot ${(m1 - m0) ** 2}`} = ${between.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Add", "相加"],
+            t(
+              `$\\operatorname{Var}(Y) = ${within.toLatex()} + ${between.toLatex()} = ${answer.toLatex()}$.`,
+              `$\\operatorname{Var}(Y) = ${within.toLatex()} + ${between.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly, $E[Y^2] = ${tenths(p)}(${v1} + ${m1 * m1}) + ${tenths(10 - p)}(${v0} + ${m0 * m0}) = ${squares.toLatex()}$ and $E[Y] = ${mean.toLatex()}$, so $E[Y^2] - E[Y]^2 = ${answer.toLatex()}$.`,
+          `直接计算，$E[Y^2] = ${tenths(p)}(${v1} + ${m1 * m1}) + ${tenths(10 - p)}(${v0} + ${m0 * m0}) = ${squares.toLatex()}$，$E[Y] = ${mean.toLatex()}$，所以 $E[Y^2] - E[Y]^2 = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -804,8 +1053,8 @@ const mleOfNormalVariance: KnowledgePointDef = {
   id: "the-mle-of-a-normal-variance",
   title: t("The MLE of a normal variance", "正态方差的最大似然估计"),
   explanation: t(
-    "Maximizing the normal likelihood gives $\\hat{\\mu} = \\bar{x}$ and $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(x_i - \\bar{x})^2$. The divisor is $n$, not the $n - 1$ of the sample variance, so the maximum likelihood estimate is slightly biased low.",
-    "使正态似然最大，得 $\\hat{\\mu} = \\bar{x}$，$\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(x_i - \\bar{x})^2$。除数是 $n$，而不是样本方差的 $n - 1$，所以最大似然估计略微偏低。",
+    "Maximizing the normal likelihood gives $\\hat{\\mu} = \\bar{x}$ and $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(x_i - \\bar{x})^2$. The divisor is $n$, not the $n - 1$ of the sample variance, so the maximum likelihood estimate is slightly biased low.\n\nFor the sample $2, 4, 6, 8$: $\\bar{x} = 5$, the deviations are $-3, -1, 1, 3$, their squares add up to $20$, and $\\hat{\\sigma}^2 = \\frac{20}{4} = 5$.\n\nCheck: the sample variance is $\\frac{20}{3}$, and the estimate is $\\frac{n - 1}{n} = \\frac{3}{4}$ of it, $\\frac{3}{4} \\cdot \\frac{20}{3} = 5$.\n\n> **Watch out.** $\\frac{20}{3}$ is the unbiased sample variance, not the maximum likelihood estimate: the likelihood is maximized by dividing by $n = 4$.",
+    "使正态似然最大，得 $\\hat{\\mu} = \\bar{x}$，$\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(x_i - \\bar{x})^2$。除数是 $n$，而不是样本方差的 $n - 1$，所以最大似然估计略微偏低。\n\n例如样本 $2, 4, 6, 8$：$\\bar{x} = 5$，离均差为 $-3, -1, 1, 3$，平方和为 $20$，$\\hat{\\sigma}^2 = \\frac{20}{4} = 5$。\n\n检验：样本方差为 $\\frac{20}{3}$，估计值是它的 $\\frac{n - 1}{n} = \\frac{3}{4}$，$\\frac{3}{4} \\cdot \\frac{20}{3} = 5$。\n\n> **注意。** $\\frac{20}{3}$ 是无偏样本方差，不是最大似然估计：似然在除以 $n = 4$ 时最大。",
   ),
   generate(rng) {
     const n = rng.int(4, 5);
@@ -824,9 +1073,43 @@ const mleOfNormalVariance: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(squares, n - 1), squares, mean],
-      solution: t(
-        `The estimate of the mean is $\\bar{x} = ${mean}$, and the squared deviations from it add up to $${squares}$. Dividing by $n = ${n}$ gives $${answer.toLatex()}$.`,
-        `均值的估计是 $\\bar{x} = ${mean}$，与它的离差平方和是 $${squares}$。除以 $n = ${n}$ 得 $${answer.toLatex()}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          Q.of(squares, n - 1),
+          `This divides by $n - 1 = ${n - 1}$, giving the unbiased sample variance; the likelihood is maximized by dividing by $n = ${n}$.`,
+          `这除以了 $n - 1 = ${n - 1}$，得到的是无偏样本方差；似然在除以 $n = ${n}$ 时最大。`,
+        ),
+        why(squares, "This is the sum of squared deviations, not yet divided by $n$.", "这是离差平方和，还没有除以 $n$。"),
+        why(mean, "This is the estimate of the mean $\\mu$, not of the variance.", "这是均值 $\\mu$ 的估计，不是方差的估计。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Estimate the mean", "估计均值"],
+            t(
+              `$\\hat{\\mu} = \\bar{x} = \\frac{${total}}{${n}} = ${mean}$.`,
+              `$\\hat{\\mu} = \\bar{x} = \\frac{${total}}{${n}} = ${mean}$。`,
+            ),
+          ],
+          [
+            ["Sum the squared deviations", "求离差平方和"],
+            t(
+              `The deviations ${data.map((x) => `$${x - mean}$`).join(", ")} have squares adding up to $${squares}$.`,
+              `离均差 ${data.map((x) => `$${x - mean}$`).join("，")} 的平方和为 $${squares}$。`,
+            ),
+          ],
+          [
+            ["Divide by n", "除以 n"],
+            t(
+              `$\\hat{\\sigma}^2 = \\frac{${squares}}{${n}}${lowestTerms(squares, n)}$.`,
+              `$\\hat{\\sigma}^2 = \\frac{${squares}}{${n}}${lowestTerms(squares, n)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The sample variance is $\\frac{${squares}}{${n - 1}}${lowestTerms(squares, n - 1)}$, and $\\frac{${n - 1}}{${n}}$ of it is $${answer.toLatex()}$, slightly less, as the maximum likelihood estimate should be.`,
+          `样本方差为 $\\frac{${squares}}{${n - 1}}${lowestTerms(squares, n - 1)}$，它的 $\\frac{${n - 1}}{${n}}$ 是 $${answer.toLatex()}$，略小一些，正如最大似然估计应有的那样。`,
+        ),
       ),
     });
   },
@@ -836,8 +1119,8 @@ const marginAndSampleSize: KnowledgePointDef = {
   id: "how-the-margin-of-error-depends-on-the-sample-size",
   title: t("How the margin of error depends on the sample size", "误差范围如何随样本量变化"),
   explanation: t(
-    "The margin of error is proportional to $\\frac{1}{\\sqrt{n}}$. To divide the margin by $k$, the sample size must be multiplied by $k^2$. So halving a margin of error takes four times the data, and precision becomes expensive quickly.",
-    "误差范围与 $\\frac{1}{\\sqrt{n}}$ 成正比。要把误差范围除以 $k$，样本量必须乘以 $k^2$。所以把误差范围减半需要四倍的数据，精度的代价上升得很快。",
+    "The margin of error is proportional to $\\frac{1}{\\sqrt{n}}$. To divide the margin by $k$, the sample size must be multiplied by $k^2$. So halving a margin of error takes four times the data, and precision becomes expensive quickly.\n\nA sample of $25$ gives a margin of $6$. A margin of $2$ is a third as large, so the sample must grow by $3^{2} = 9$, to $225$.\n\nCheck: $6 \\cdot \\sqrt{\\frac{25}{225}} = 6 \\cdot \\frac{1}{3} = 2$, the target margin.\n\n> **Watch out.** Tripling the sample to $75$ is not enough: the margin becomes $\\frac{6}{\\sqrt{3}} \\approx 3.46$, because it shrinks with $\\sqrt{n}$, not with $n$.",
+    "误差范围与 $\\frac{1}{\\sqrt{n}}$ 成正比。要把误差范围除以 $k$，样本量必须乘以 $k^2$。所以把误差范围减半需要四倍的数据，精度的代价上升得很快。\n\n容量为 $25$ 的样本误差范围为 $6$。误差范围 $2$ 是它的三分之一，所以样本量要乘以 $3^{2} = 9$，即 $225$。\n\n检验：$6 \\cdot \\sqrt{\\frac{25}{225}} = 6 \\cdot \\frac{1}{3} = 2$，正是目标误差范围。\n\n> **注意。** 把样本量扩大三倍到 $75$ 不够：误差范围变为 $\\frac{6}{\\sqrt{3}} \\approx 3.46$，因为它随 $\\sqrt{n}$ 而不是 $n$ 缩小。",
   ),
   generate(rng) {
     const n = rng.pick([25, 30, 40, 50, 64, 80, 100, 120]);
@@ -852,9 +1135,44 @@ const marginAndSampleSize: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [n * k, n + k * k, Math.round(n * Math.sqrt(k))],
-      solution: t(
-        `The margin is to shrink by a factor of $${k}$, and it varies as $\\frac{1}{\\sqrt{n}}$, so $n$ grows by a factor of $${k}^2 = ${k * k}$. That gives $${n} \\cdot ${k * k} = ${answer}$.`,
-        `误差范围要缩小到 $\\frac{1}{${k}}$，而它与 $\\frac{1}{\\sqrt{n}}$ 成正比，所以 $n$ 要乘以 $${k}^2 = ${k * k}$，得 $${n} \\cdot ${k * k} = ${answer}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          n * k,
+          `This multiplies the sample by $${k}$, which only divides the margin by $\\sqrt{${k}}$.`,
+          `这把样本量乘以 $${k}$，误差范围只除以 $\\sqrt{${k}}$。`,
+        ),
+        why(
+          n + k * k,
+          `This adds $${k}^{2}$ to the sample; the factor $${k}^{2}$ multiplies $n$.`,
+          `这把 $${k}^{2}$ 加到样本量上；因子 $${k}^{2}$ 应乘以 $n$。`,
+        ),
+        why(
+          Math.round(n * Math.sqrt(k)),
+          `This multiplies by $\\sqrt{${k}}$; it is the margin that scales with $\\frac{1}{\\sqrt{n}}$, so $n$ scales with $${k}^{2}$.`,
+          `这乘以了 $\\sqrt{${k}}$；是误差范围与 $\\frac{1}{\\sqrt{n}}$ 成正比，所以 $n$ 要乘以 $${k}^{2}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the factor", "求缩小倍数"],
+            t(
+              `The margin goes from $${E}$ to $${E / k}$, a factor of $${k}$ smaller.`,
+              `误差范围从 $${E}$ 变为 $${E / k}$，缩小为 $\\frac{1}{${k}}$。`,
+            ),
+          ],
+          [
+            ["Square it", "平方"],
+            t(
+              `Since the margin varies as $\\frac{1}{\\sqrt{n}}$, the sample grows by $${k}^{2} = ${k * k}$, to $${n} \\cdot ${k * k} = ${answer}$.`,
+              `由于误差范围与 $\\frac{1}{\\sqrt{n}}$ 成正比，样本量要乘以 $${k}^{2} = ${k * k}$，得 $${n} \\cdot ${k * k} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${E} \\cdot \\sqrt{\\frac{${n}}{${answer}}} = ${E} \\cdot \\frac{1}{${k}} = ${E / k}$, the target margin.`,
+          `$${E} \\cdot \\sqrt{\\frac{${n}}{${answer}}} = ${E} \\cdot \\frac{1}{${k}} = ${E / k}$，正是目标误差范围。`,
+        ),
       ),
     });
   },
@@ -1413,8 +1731,8 @@ const chiSquareSum: KnowledgePointDef = {
   id: "the-variance-of-a-sum-of-chi-square-variables",
   title: t("The variance of a sum of chi-square variables", "卡方变量之和的方差"),
   explanation: t(
-    "A chi-square variable with $\\nu$ degrees of freedom is a sum of $\\nu$ independent squared standard normals, so independent chi-square variables add to another one, with their degrees of freedom added. Its variance is twice the degrees of freedom. This also agrees with adding the two separate variances, as independence allows.",
-    "自由度为 $\\nu$ 的卡方变量，是 $\\nu$ 个独立标准正态变量的平方和，所以独立的卡方变量相加还是卡方变量，自由度相加。它的方差是自由度的两倍。这也与独立时把两个方差直接相加的结果一致。",
+    "A chi-square variable with $\\nu$ degrees of freedom is a sum of $\\nu$ independent squared standard normals, so independent chi-square variables add to another one, with their degrees of freedom added. Its variance is twice the degrees of freedom. This also agrees with adding the two separate variances, as independence allows. With $50$ and $70$ degrees of freedom, the sum is chi-square with $120$ degrees of freedom and variance $240$.\n\n> **Watch out.** The degrees of freedom give the mean, $\\nu$; the variance is $2\\nu$. Add the degrees of freedom; do not multiply them.",
+    "自由度为 $\\nu$ 的卡方变量，是 $\\nu$ 个独立标准正态变量的平方和，所以独立的卡方变量相加还是卡方变量，自由度相加。它的方差是自由度的两倍。这也与独立时把两个方差直接相加的结果一致。自由度为 $50$ 和 $70$ 时，和服从自由度为 $120$ 的卡方分布，方差为 $240$。\n\n> **注意。** 自由度给出的是均值 $\\nu$；方差是 $2\\nu$。自由度要相加，不要相乘。",
   ),
   generate(rng) {
     const a = rng.int(1, 30);
@@ -1427,10 +1745,38 @@ const chiSquareSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b, 4 * (a + b), 2 * a * b],
-      solution: t(
-        `The sum is chi-square with ${a + b} degrees of freedom, and the variance is twice that, which is $${answer}$.`,
-        `和服从自由度为 ${a + b} 的卡方分布，方差是它的两倍，即 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          a + b,
+          "That is the degrees of freedom, which is the mean; the variance is twice it.",
+          "那是自由度，也就是均值；方差是它的两倍。",
+        ),
+        why(
+          4 * (a + b),
+          "That doubles twice; the variance of a chi-square variable is $2\\nu$.",
+          "那是乘了两次 $2$；卡方变量的方差是 $2\\nu$。",
+        ),
+        why(
+          2 * a * b,
+          "That multiplies the degrees of freedom; independent chi-square variables add theirs.",
+          "那是把自由度相乘了；独立卡方变量的自由度相加。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the degrees of freedom", "自由度相加"],
+            t(
+              `$X + Y$ is chi-square with $${a} + ${b} = ${a + b}$ degrees of freedom.`,
+              `$X + Y$ 服从自由度为 $${a} + ${b} = ${a + b}$ 的卡方分布。`,
+            ),
+          ],
+          [["Double", "乘以二"], t(`Its variance is $2 \\cdot ${a + b} = ${answer}$.`, `它的方差是 $2 \\cdot ${a + b} = ${answer}$。`)],
+        ],
+        t(
+          `By independence, $\\operatorname{Var}(X) + \\operatorname{Var}(Y) = ${2 * a} + ${2 * b} = ${answer}$ as well.`,
+          `由独立性，$\\operatorname{Var}(X) + \\operatorname{Var}(Y) = ${2 * a} + ${2 * b} = ${answer}$，结果相同。`,
+        ),
       ),
     });
   },
@@ -1440,8 +1786,8 @@ const gammaRatio: KnowledgePointDef = {
   id: "a-ratio-of-gamma-values-two-apart",
   title: t("A ratio of gamma values two apart", "相差二的伽马函数值之比"),
   explanation: t(
-    "The recurrence $\\Gamma(x + 1) = x\\Gamma(x)$ holds for every positive real $x$, not only for whole numbers. Applying it twice gives $\\Gamma(x + 2) = (x + 1)x\\Gamma(x)$. So a ratio of gamma values whose arguments differ by a whole number is a plain product, even when no individual value can be written in closed form.",
-    "递推式 $\\Gamma(x + 1) = x\\Gamma(x)$ 对每个正实数 $x$ 都成立，不只是整数。用两次得到 $\\Gamma(x + 2) = (x + 1)x\\Gamma(x)$。所以自变量相差整数的伽马函数值之比就是一个普通的乘积，即使单个值无法写成闭形式。",
+    "The recurrence $\\Gamma(x + 1) = x\\Gamma(x)$ holds for every positive real $x$, not only for whole numbers. Applying it twice gives $\\Gamma(x + 2) = (x + 1)x\\Gamma(x)$. So a ratio of gamma values whose arguments differ by a whole number is a plain product, even when no individual value can be written in closed form. For $x = 2.5$, $\\frac{\\Gamma(4.5)}{\\Gamma(2.5)} = 3.5 \\cdot 2.5 = 8.75 = \\frac{35}{4}$.\n\n> **Watch out.** The two factors are $x$ and $x + 1$, not $x + 1$ and $x + 2$: each step down lowers the argument by one and brings out the new, smaller argument.",
+    "递推式 $\\Gamma(x + 1) = x\\Gamma(x)$ 对每个正实数 $x$ 都成立，不只是整数。用两次得到 $\\Gamma(x + 2) = (x + 1)x\\Gamma(x)$。所以自变量相差整数的伽马函数值之比就是一个普通的乘积，即使单个值无法写成闭形式。当 $x = 2.5$ 时，$\\frac{\\Gamma(4.5)}{\\Gamma(2.5)} = 3.5 \\cdot 2.5 = 8.75 = \\frac{35}{4}$。\n\n> **注意。** 两个因子是 $x$ 和 $x + 1$，而不是 $x + 1$ 和 $x + 2$：每往下一步，自变量减一，并提出新的较小的自变量。",
   ),
   generate(rng) {
     const q = rng.int(3, 8);
@@ -1455,10 +1801,36 @@ const gammaRatio: KnowledgePointDef = {
         `求 $\\frac{\\Gamma\\left(${x.toLatex()} + 2\\right)}{\\Gamma\\left(${x.toLatex()}\\right)}$。`,
       ),
       answer,
-      wrong: [next, x, x.mul(x.add(Q.of(2)))],
-      solution: t(
-        `The recurrence used twice gives the product $${next.toLatex()} \\cdot ${x.toLatex()} = ${answer.toLatex()}$.`,
-        `用两次递推式，得乘积 $${next.toLatex()} \\cdot ${x.toLatex()} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(next, "That applies the recurrence only once; the arguments are two apart.", "那只用了一次递推式；两个自变量相差二。"),
+        why(x, "That keeps only the factor $x$ and drops $x + 1$.", "那只保留了因子 $x$，漏掉了 $x + 1$。"),
+        why(
+          x.mul(x.add(Q.of(2))),
+          "That uses $x + 2$ as a factor; the factors are $x$ and $x + 1$.",
+          "那是把 $x + 2$ 当作因子；因子应是 $x$ 和 $x + 1$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Step down once", "递推一次"],
+            t(
+              `$\\Gamma\\left(${x.toLatex()} + 2\\right) = ${next.toLatex()}\\,\\Gamma\\left(${next.toLatex()}\\right)$.`,
+              `$\\Gamma\\left(${x.toLatex()} + 2\\right) = ${next.toLatex()}\\,\\Gamma\\left(${next.toLatex()}\\right)$。`,
+            ),
+          ],
+          [
+            ["Step down again", "再递推一次"],
+            t(
+              `$\\Gamma\\left(${next.toLatex()}\\right) = ${x.toLatex()}\\,\\Gamma\\left(${x.toLatex()}\\right)$, so the ratio is $${next.toLatex()} \\cdot ${x.toLatex()} = ${answer.toLatex()}$.`,
+              `$\\Gamma\\left(${next.toLatex()}\\right) = ${x.toLatex()}\\,\\Gamma\\left(${x.toLatex()}\\right)$，所以比值为 $${next.toLatex()} \\cdot ${x.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()} \\div ${x.toLatex()} = ${next.toLatex()}$, which is $${x.toLatex()} + 1$, the second factor.`,
+          `$${answer.toLatex()} \\div ${x.toLatex()} = ${next.toLatex()}$，正是 $${x.toLatex()} + 1$，即第二个因子。`,
+        ),
       ),
     });
   },
@@ -1468,8 +1840,8 @@ const gammaMode: KnowledgePointDef = {
   id: "the-mode-of-a-gamma-distribution",
   title: t("The mode of a gamma distribution", "伽马分布的众数"),
   explanation: t(
-    "A gamma density is proportional to $x^{\\alpha - 1}e^{-\\beta x}$. To find its peak, it is easier to differentiate its logarithm, $(\\alpha - 1)\\ln x - \\beta x$, and this gives $x = \\frac{\\alpha - 1}{\\beta}$ when $\\alpha > 1$. The mode lies below the mean $\\frac{\\alpha}{\\beta}$, because the long right tail pulls the mean upward.",
-    "伽马密度正比于 $x^{\\alpha - 1}e^{-\\beta x}$。求峰值时，对它的对数 $(\\alpha - 1)\\ln x - \\beta x$ 求导更容易，当 $\\alpha > 1$ 时得 $x = \\frac{\\alpha - 1}{\\beta}$。众数低于均值 $\\frac{\\alpha}{\\beta}$，因为右侧的长尾把均值向上拉。",
+    "A gamma density is proportional to $x^{\\alpha - 1}e^{-\\beta x}$. To find its peak, it is easier to differentiate its logarithm, $(\\alpha - 1)\\ln x - \\beta x$, and this gives $x = \\frac{\\alpha - 1}{\\beta}$ when $\\alpha > 1$. The mode lies below the mean $\\frac{\\alpha}{\\beta}$, because the long right tail pulls the mean upward. For $x^{20}e^{-10x}$, $\\alpha = 21$ and $\\beta = 10$, so the mode is $\\frac{20}{10} = 2$ and the mean is $2.1$.\n\n> **Watch out.** The exponent of $x$ is already $\\alpha - 1$, so the mode is that exponent divided by $\\beta$; using $\\alpha$ itself gives the mean.",
+    "伽马密度正比于 $x^{\\alpha - 1}e^{-\\beta x}$。求峰值时，对它的对数 $(\\alpha - 1)\\ln x - \\beta x$ 求导更容易，当 $\\alpha > 1$ 时得 $x = \\frac{\\alpha - 1}{\\beta}$。众数低于均值 $\\frac{\\alpha}{\\beta}$，因为右侧的长尾把均值向上拉。对 $x^{20}e^{-10x}$，$\\alpha = 21$，$\\beta = 10$，所以众数为 $\\frac{20}{10} = 2$，均值为 $2.1$。\n\n> **注意。** $x$ 的指数已经是 $\\alpha - 1$，所以众数是这个指数除以 $\\beta$；用 $\\alpha$ 本身得到的是均值。",
   ),
   generate(rng) {
     const alpha = rng.int(2, 9);
@@ -1482,10 +1854,36 @@ const gammaMode: KnowledgePointDef = {
         `正实数上的一个密度正比于 $${factor}e^{-${coefficientOf(beta)}x}$。求它的众数。`,
       ),
       answer,
-      wrong: [Q.of(alpha, beta), Q.of(alpha - 1, beta * beta), Q.of(beta, alpha - 1)],
-      solution: t(
-        `The derivative of the logarithm is $\\frac{${alpha - 1}}{x} - ${beta}$. It is zero at $x = ${answer.toLatex()}$.`,
-        `对数的导数是 $\\frac{${alpha - 1}}{x} - ${beta}$。它在 $x = ${answer.toLatex()}$ 处为零。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(alpha, beta),
+          "That is the mean $\\frac{\\alpha}{\\beta}$, not the peak.",
+          "那是均值 $\\frac{\\alpha}{\\beta}$，不是峰值。",
+        ),
+        why(Q.of(alpha - 1, beta * beta), "That divides by the rate twice.", "那是除了两次速率。"),
+        why(Q.of(beta, alpha - 1), "That turns the ratio upside down.", "那是把比值倒过来了。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the logarithm", "取对数"],
+            t(
+              `The logarithm of the density is $${alpha - 1 === 1 ? "" : alpha - 1}\\ln x - ${coefficientOf(beta)}x$ plus a constant.`,
+              `密度的对数为 $${alpha - 1 === 1 ? "" : alpha - 1}\\ln x - ${coefficientOf(beta)}x$ 加一个常数。`,
+            ),
+          ],
+          [
+            ["Set the derivative to zero", "令导数为零"],
+            t(
+              `The derivative is $\\frac{${alpha - 1}}{x} - ${beta}$, which is zero at $x = ${answer.toLatex()}$.`,
+              `导数为 $\\frac{${alpha - 1}}{x} - ${beta}$，它在 $x = ${answer.toLatex()}$ 处为零。`,
+            ),
+          ],
+        ],
+        t(
+          `The derivative is positive below $${answer.toLatex()}$ and negative above it, so this is a peak, and it lies below the mean $${Q.of(alpha, beta).toLatex()}$.`,
+          `导数在 $${answer.toLatex()}$ 以下为正、以上为负，所以这是峰值，并且它低于均值 $${Q.of(alpha, beta).toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -1495,8 +1893,8 @@ const tDegreesForVariance: KnowledgePointDef = {
   id: "the-degrees-of-freedom-for-a-target-t-variance",
   title: t("The degrees of freedom for a target $t$ variance", "达到目标方差所需的 $t$ 分布自由度"),
   explanation: t(
-    "A $t$ distribution with $\\nu > 2$ degrees of freedom has variance $\\frac{\\nu}{\\nu - 2} = 1 + \\frac{2}{\\nu - 2}$, which falls toward 1 as $\\nu$ grows. This is why the distribution approaches the standard normal. Writing the variance in this second form makes it simple to solve an inequality for the degrees of freedom needed.",
-    "自由度 $\\nu > 2$ 的 $t$ 分布，方差是 $\\frac{\\nu}{\\nu - 2} = 1 + \\frac{2}{\\nu - 2}$，随 $\\nu$ 增大而降向 1。这就是它趋于标准正态分布的原因。把方差写成第二种形式，就很容易解出所需自由度的不等式。",
+    'A $t$ distribution with $\\nu > 2$ degrees of freedom has variance $\\frac{\\nu}{\\nu - 2} = 1 + \\frac{2}{\\nu - 2}$, which falls toward 1 as $\\nu$ grows. This is why the distribution approaches the standard normal. Writing the variance in this second form makes it simple to solve an inequality for the degrees of freedom needed. For a variance of at most $1.01$, $\\frac{2}{\\nu - 2} \\le 0.01$ needs $\\nu - 2 \\ge 200$, so $\\nu = 202$.\n\n> **Watch out.** Solve for $\\nu - 2$ and then add $2$ back. "At most" allows equality, so the boundary value itself counts.',
+    "自由度 $\\nu > 2$ 的 $t$ 分布，方差是 $\\frac{\\nu}{\\nu - 2} = 1 + \\frac{2}{\\nu - 2}$，随 $\\nu$ 增大而降向 1。这就是它趋于标准正态分布的原因。把方差写成第二种形式，就很容易解出所需自由度的不等式。要使方差不超过 $1.01$，$\\frac{2}{\\nu - 2} \\le 0.01$ 要求 $\\nu - 2 \\ge 200$，所以 $\\nu = 202$。\n\n> **注意。** 先解出 $\\nu - 2$，再加回 $2$。“不超过”允许相等，所以边界值本身也算。",
   ),
   generate(rng) {
     const m = rng.int(2, 40);
@@ -1509,10 +1907,36 @@ const tDegreesForVariance: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * m, 2 * m + 3, m + 2],
-      solution: t(
-        `The variance is $1 + \\frac{2}{\\nu - 2}$. We need $\\frac{2}{\\nu - 2} \\le \\frac{1}{${m}}$, so $\\nu - 2 \\ge ${2 * m}$ and $\\nu = ${answer}$.`,
-        `方差是 $1 + \\frac{2}{\\nu - 2}$。需要 $\\frac{2}{\\nu - 2} \\le \\frac{1}{${m}}$，所以 $\\nu - 2 \\ge ${2 * m}$，$\\nu = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(2 * m, "That is $\\nu - 2$; add $2$ back to get $\\nu$.", "那是 $\\nu - 2$；要加回 $2$ 才是 $\\nu$。"),
+        why(
+          2 * m + 3,
+          "That is one too many; at the answer the variance equals the bound, which is allowed.",
+          "那多了一个；在答案处方差恰好等于界限，这是允许的。",
+        ),
+        why(m + 2, "That drops the $2$ in $\\frac{2}{\\nu - 2}$.", "那漏掉了 $\\frac{2}{\\nu - 2}$ 中的 $2$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Rewrite the variance", "改写方差"],
+            t(
+              `$\\frac{\\nu}{\\nu - 2} = 1 + \\frac{2}{\\nu - 2}$ and $${bound.toLatex()} = 1 + \\frac{1}{${m}}$, so we need $\\frac{2}{\\nu - 2} \\le \\frac{1}{${m}}$.`,
+              `$\\frac{\\nu}{\\nu - 2} = 1 + \\frac{2}{\\nu - 2}$，而 $${bound.toLatex()} = 1 + \\frac{1}{${m}}$，所以需要 $\\frac{2}{\\nu - 2} \\le \\frac{1}{${m}}$。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `So $\\nu - 2 \\ge ${2 * m}$, and the smallest choice is $\\nu = ${answer}$.`,
+              `所以 $\\nu - 2 \\ge ${2 * m}$，最小取 $\\nu = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `At $\\nu = ${answer}$ the variance is $\\frac{${answer}}{${2 * m}} = ${bound.toLatex()}$, exactly the bound, while $\\nu = ${answer - 1}$ gives $\\frac{${answer - 1}}{${2 * m - 1}}$, which is larger.`,
+          `当 $\\nu = ${answer}$ 时方差为 $\\frac{${answer}}{${2 * m}} = ${bound.toLatex()}$，恰好等于界限；而 $\\nu = ${answer - 1}$ 给出 $\\frac{${answer - 1}}{${2 * m - 1}}$，更大。`,
+        ),
       ),
     });
   },
@@ -1556,8 +1980,8 @@ const lowerFQuantile: KnowledgePointDef = {
   id: "a-lower-f-quantile-from-an-upper-one",
   title: t("A lower $F$ quantile from an upper one", "由上侧 $F$ 分位数求下侧分位数"),
   explanation: t(
-    "If $X$ follows $F(a, b)$, then $\\frac{1}{X}$ follows $F(b, a)$, because the ratio that defines $F$ is simply turned upside down. An event $X < c$ is the same as $\\frac{1}{X} > \\frac{1}{c}$. So tables that list only upper quantiles still give lower ones: swap the degrees of freedom and take the reciprocal.",
-    "如果 $X$ 服从 $F(a, b)$，那么 $\\frac{1}{X}$ 服从 $F(b, a)$，因为定义 $F$ 的那个比只是上下颠倒了。事件 $X < c$ 等同于 $\\frac{1}{X} > \\frac{1}{c}$。所以只列上侧分位数的表也能给出下侧分位数：交换自由度，再取倒数。",
+    "If $X$ follows $F(a, b)$, then $\\frac{1}{X}$ follows $F(b, a)$, because the ratio that defines $F$ is simply turned upside down. An event $X < c$ is the same as $\\frac{1}{X} > \\frac{1}{c}$. So tables that list only upper quantiles still give lower ones: swap the degrees of freedom and take the reciprocal. The 95th percentile of $F(20, 30)$ is about $1.93$, so the 5th percentile of $F(30, 20)$ is $\\frac{1}{1.93} = \\frac{100}{193}$.\n\n> **Watch out.** The reciprocal belongs to the distribution with the degrees of freedom swapped. The 5th percentile is not one minus the 95th: percentiles of $F$ are values, not probabilities.",
+    "如果 $X$ 服从 $F(a, b)$，那么 $\\frac{1}{X}$ 服从 $F(b, a)$，因为定义 $F$ 的那个比只是上下颠倒了。事件 $X < c$ 等同于 $\\frac{1}{X} > \\frac{1}{c}$。所以只列上侧分位数的表也能给出下侧分位数：交换自由度，再取倒数。$F(20, 30)$ 的第 95 百分位数约为 $1.93$，所以 $F(30, 20)$ 的第 5 百分位数是 $\\frac{1}{1.93} = \\frac{100}{193}$。\n\n> **注意。** 倒数对应的是交换了自由度的分布。第 5 百分位数不是一减去第 95 百分位数：$F$ 的百分位数是取值，不是概率。",
   ),
   generate(rng) {
     const [b, a, hundredths] = rng.pick(upperFPercentiles);
@@ -1570,10 +1994,41 @@ const lowerFQuantile: KnowledgePointDef = {
         `$F(${b}, ${a})$ 分布的第 95 百分位数是 $${shown}$。用这个值，以精确分数的形式求 $F(${a}, ${b})$ 分布的第 5 百分位数。`,
       ),
       answer,
-      wrong: [c, Q.of(1).sub(answer), Q.of(100, hundredths + 100)],
-      solution: t(
-        `Reciprocals of $F(${a}, ${b})$ follow $F(${b}, ${a})$, and the lower 5% tail corresponds to the upper 5% tail. So the value is $\\frac{1}{${shown}} = ${answer.toLatex()}$.`,
-        `$F(${a}, ${b})$ 的倒数服从 $F(${b}, ${a})$，下侧 5% 对应上侧 5%。所以值是 $\\frac{1}{${shown}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          c,
+          `That is the 95th percentile of $F(${b}, ${a})$ itself; take its reciprocal.`,
+          `那就是 $F(${b}, ${a})$ 的第 95 百分位数本身；要取倒数。`,
+        ),
+        why(
+          Q.of(1).sub(answer),
+          "That subtracts from $1$; a percentile is a value, not a probability.",
+          "那是用 $1$ 去减；百分位数是取值，不是概率。",
+        ),
+        why(
+          Q.of(100, hundredths + 100),
+          `That is $\\frac{1}{1 + ${shown}}$, not $\\frac{1}{${shown}}$.`,
+          `那是 $\\frac{1}{1 + ${shown}}$，而不是 $\\frac{1}{${shown}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Turn the ratio over", "把比值倒过来"],
+            t(
+              `If $X$ follows $F(${a}, ${b})$, then $\\frac{1}{X}$ follows $F(${b}, ${a})$, and $P(X < c) = P\\left(\\frac{1}{X} > \\frac{1}{c}\\right)$. For this to be $0.05$, $\\frac{1}{c}$ must be the 95th percentile of $F(${b}, ${a})$, which is $${shown}$.`,
+              `若 $X$ 服从 $F(${a}, ${b})$，则 $\\frac{1}{X}$ 服从 $F(${b}, ${a})$，且 $P(X < c) = P\\left(\\frac{1}{X} > \\frac{1}{c}\\right)$。要使它等于 $0.05$，$\\frac{1}{c}$ 必须是 $F(${b}, ${a})$ 的第 95 百分位数，即 $${shown}$。`,
+            ),
+          ],
+          [
+            ["Take the reciprocal", "取倒数"],
+            t(`$c = \\frac{1}{${shown}} = ${answer.toLatex()}$.`, `$c = \\frac{1}{${shown}} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()} \\cdot ${shown} = 1$, and the 5th percentile $${answer.toLatex()}$ is below $1$, as a lower percentile of $F$ should be.`,
+          `$${answer.toLatex()} \\cdot ${shown} = 1$，且第 5 百分位数 $${answer.toLatex()}$ 小于 $1$，下侧百分位数理应如此。`,
+        ),
       ),
     });
   },
@@ -1583,8 +2038,8 @@ const trinomialConditional: KnowledgePointDef = {
   id: "a-conditional-mean-in-a-trinomial-model",
   title: t("A conditional mean in a trinomial model", "三项分布中的条件均值"),
   explanation: t(
-    "Knowing the count of the third outcome leaves the other trials to be split between the first two outcomes. Within those trials, the probabilities must be renormalized: outcome one has chance $\\frac{p_1}{p_1 + p_2}$. So the conditional distribution of $X$ is binomial, and its mean is the number of remaining trials times that new probability.",
-    "知道第三种结果的次数后，其余的试验要在前两种结果之间分配。在这些试验中，概率必须重新归一化：结果一的概率是 $\\frac{p_1}{p_1 + p_2}$。所以 $X$ 的条件分布是二项分布，均值是剩余试验次数乘以这个新概率。",
+    "Knowing the count of the third outcome leaves the other trials to be split between the first two outcomes. Within those trials, the probabilities must be renormalized: outcome one has chance $\\frac{p_1}{p_1 + p_2}$. So the conditional distribution of $X$ is binomial, and its mean is the number of remaining trials times that new probability. With $100$ trials and probabilities $0.2$, $0.3$ and $0.5$, knowing $Z = 40$ leaves $60$ trials, each giving outcome 1 with probability $\\frac{0.2}{0.2 + 0.3} = 0.4$, so $E(X \\mid Z = 40) = 24$.\n\n> **Watch out.** Do both adjustments: use only the trials that remain, and divide $p_1$ by $p_1 + p_2$.",
+    "知道第三种结果的次数后，其余的试验要在前两种结果之间分配。在这些试验中，概率必须重新归一化：结果一的概率是 $\\frac{p_1}{p_1 + p_2}$。所以 $X$ 的条件分布是二项分布，均值是剩余试验次数乘以这个新概率。若共 $100$ 次试验，概率为 $0.2$、$0.3$、$0.5$，已知 $Z = 40$ 后剩下 $60$ 次试验，每次得到结果 1 的概率为 $\\frac{0.2}{0.2 + 0.3} = 0.4$，所以 $E(X \\mid Z = 40) = 24$。\n\n> **注意。** 两处都要调整：只用剩下的试验，并把 $p_1$ 除以 $p_1 + p_2$。",
   ),
   generate(rng) {
     const n = rng.int(10, 30);
@@ -1606,10 +2061,48 @@ const trinomialConditional: KnowledgePointDef = {
         `${n} 次独立试验，每次得到结果 1、2、3 的概率分别是 $${tenths(p1)}$、$${tenths(p2)}$、$${tenths(p3)}$。设 $X$、$Z$ 分别是结果 1 和结果 3 的次数。求 $E(X \\mid Z = ${z})$。`,
       ),
       answer,
-      wrong: [Q.of(n * p1, 10), Q.of((n - z) * p1, 10), Q.of(n * p1, p1 + p2)],
-      solution: t(
-        `The other ${n - z} trials give outcome 1 with probability $\\frac{${tenths(p1)}}{${tenths(p1)} + ${tenths(p2)}} = ${Q.of(p1, p1 + p2).toLatex()}$. The mean is $${answer.toLatex()}$.`,
-        `其余 ${n - z} 次试验得到结果 1 的概率是 $\\frac{${tenths(p1)}}{${tenths(p1)} + ${tenths(p2)}} = ${Q.of(p1, p1 + p2).toLatex()}$。均值是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(n * p1, 10),
+          "That is the unconditional mean $np_1$; knowing $Z$ changes it.",
+          "那是无条件均值 $np_1$；知道 $Z$ 后它会改变。",
+        ),
+        why(
+          Q.of((n - z) * p1, 10),
+          "That uses the remaining trials but keeps the old probability $p_1$.",
+          "那用了剩下的试验，却保留了原来的概率 $p_1$。",
+        ),
+        why(
+          Q.of(n * p1, p1 + p2),
+          `That renormalizes the probability but uses all $${n}$ trials, including the $${z}$ that gave outcome 3.`,
+          `那重新归一化了概率，却用了全部 $${n}$ 次试验，包括得到结果 3 的 $${z}$ 次。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the remaining trials", "数剩下的试验"],
+            t(`$${n} - ${z} = ${n - z}$ trials gave outcome 1 or 2.`, `有 $${n} - ${z} = ${n - z}$ 次试验得到结果 1 或 2。`),
+          ],
+          [
+            ["Renormalize", "重新归一化"],
+            t(
+              `In those trials outcome 1 has probability $\\frac{${tenths(p1)}}{${tenths(p1)} + ${tenths(p2)}} = ${Q.of(p1, p1 + p2).toLatex()}$.`,
+              `在这些试验中，结果 1 的概率是 $\\frac{${tenths(p1)}}{${tenths(p1)} + ${tenths(p2)}} = ${Q.of(p1, p1 + p2).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Take the binomial mean", "求二项均值"],
+            t(
+              `$E(X \\mid Z = ${z}) = ${n - z === 1 ? "" : `${n - z} \\cdot `}${Q.of(p1, p1 + p2).toLatex()}${n - z === 1 ? "" : ` = ${answer.toLatex()}`}$.`,
+              `$E(X \\mid Z = ${z}) = ${n - z === 1 ? "" : `${n - z} \\cdot `}${Q.of(p1, p1 + p2).toLatex()}${n - z === 1 ? "" : ` = ${answer.toLatex()}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Likewise $E(Y \\mid Z = ${z}) = ${Q.of((n - z) * p2, p1 + p2).toLatex()}$, and $${answer.toLatex()} + ${Q.of((n - z) * p2, p1 + p2).toLatex()} = ${n - z}$, the remaining trials.`,
+          `同理 $E(Y \\mid Z = ${z}) = ${Q.of((n - z) * p2, p1 + p2).toLatex()}$，而 $${answer.toLatex()} + ${Q.of((n - z) * p2, p1 + p2).toLatex()} = ${n - z}$，正是剩下的试验次数。`,
+        ),
       ),
     });
   },
@@ -1619,8 +2112,8 @@ const mergedMultinomial: KnowledgePointDef = {
   id: "the-variance-of-two-merged-multinomial-counts",
   title: t("The variance of two merged multinomial counts", "合并两个多项计数的方差"),
   explanation: t(
-    "Merging two categories of a multinomial model gives a single category whose probability is the sum of the two. Its count is then binomial, with variance $n(p_i + p_j)(1 - p_i - p_j)$. Adding the two separate variances would be wrong, because multinomial counts compete for the same trials and so have a negative covariance.",
-    "合并多项模型的两个类别，就得到一个类别，它的概率是两者之和。它的计数服从二项分布，方差是 $n(p_i + p_j)(1 - p_i - p_j)$。直接把两个方差相加是错的，因为多项计数在争夺同样的试验，所以协方差为负。",
+    "Merging two categories of a multinomial model gives a single category whose probability is the sum of the two. Its count is then binomial, with variance $n(p_i + p_j)(1 - p_i - p_j)$. Adding the two separate variances would be wrong, because multinomial counts compete for the same trials and so have a negative covariance. With $200$ trials and categories of probability $0.15$ and $0.25$, the merged category has probability $0.4$ and variance $200 \\cdot 0.4 \\cdot 0.6 = 48$.\n\n> **Watch out.** The separate variances add to more than this, $200(0.15 \\cdot 0.85 + 0.25 \\cdot 0.75) = 63$; the covariance $-np_ip_j$, counted twice, brings it down to $48$.",
+    "合并多项模型的两个类别，就得到一个类别，它的概率是两者之和。它的计数服从二项分布，方差是 $n(p_i + p_j)(1 - p_i - p_j)$。直接把两个方差相加是错的，因为多项计数在争夺同样的试验，所以协方差为负。若共 $200$ 次试验，两个类别的概率为 $0.15$ 和 $0.25$，合并后的类别概率为 $0.4$，方差为 $200 \\cdot 0.4 \\cdot 0.6 = 48$。\n\n> **注意。** 两个方差分别相加会更大：$200(0.15 \\cdot 0.85 + 0.25 \\cdot 0.75) = 63$；协方差 $-np_ip_j$ 计两次后，才降到 $48$。",
   ),
   generate(rng) {
     const n = rng.int(10, 60);
@@ -1640,10 +2133,37 @@ const mergedMultinomial: KnowledgePointDef = {
         `${n} 次独立试验，每次落入四个类别之一，概率分别是 $${tenths(p1)}$、$${tenths(p2)}$、$${tenths(p3)}$、$${tenths(p4)}$。设 $X_1$、$X_2$ 是前两个类别的次数。求 $\\text{Var}(X_1 + X_2)$。`,
       ),
       answer,
-      wrong: [separate, Q.of(n * s, 10), Q.of(n * s * s, 100), Q.of(n * p1 * (10 - p1), 100)],
-      solution: t(
-        `The merged count is binomial with $p = ${tenths(s)}$. Its variance is $${n} \\cdot ${tenths(s)} \\cdot ${tenths(10 - s)} = ${answer.toLatex()}$.`,
-        `合并后的计数服从 $p = ${tenths(s)}$ 的二项分布。方差是 $${n} \\cdot ${tenths(s)} \\cdot ${tenths(10 - s)} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          separate,
+          "That adds the two separate variances and leaves out their negative covariance.",
+          "那是把两个方差分别相加，漏掉了它们的负协方差。",
+        ),
+        why(Q.of(n * s, 10), "That is the mean $np$ of the merged count, not its variance.", "那是合并计数的均值 $np$，不是方差。"),
+        why(Q.of(n * s * s, 100), "That uses $p^2$ instead of $p(1 - p)$.", "那是用了 $p^2$，而不是 $p(1 - p)$。"),
+        why(Q.of(n * p1 * (10 - p1), 100), "That is the variance of $X_1$ alone.", "那只是 $X_1$ 的方差。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Merge the categories", "合并类别"],
+            t(
+              `$X_1 + X_2$ counts trials in either category, so it is binomial with $n = ${n}$ and $p = ${tenths(p1)} + ${tenths(p2)} = ${tenths(s)}$.`,
+              `$X_1 + X_2$ 计的是落入这两个类别之一的试验，所以服从 $n = ${n}$、$p = ${tenths(p1)} + ${tenths(p2)} = ${tenths(s)}$ 的二项分布。`,
+            ),
+          ],
+          [
+            ["Take the binomial variance", "求二项方差"],
+            t(
+              `$np(1 - p) = ${n} \\cdot ${tenths(s)} \\cdot ${tenths(10 - s)} = ${answer.toLatex()}$.`,
+              `$np(1 - p) = ${n} \\cdot ${tenths(s)} \\cdot ${tenths(10 - s)} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The separate variances add to $${separate.toLatex()}$, and $2\\operatorname{Cov}(X_1, X_2) = -2np_1p_2 = -${Q.of(2 * n * p1 * p2, 100).toLatex()}$ brings this to $${answer.toLatex()}$.`,
+          `两个方差之和为 $${separate.toLatex()}$，而 $2\\operatorname{Cov}(X_1, X_2) = -2np_1p_2 = -${Q.of(2 * n * p1 * p2, 100).toLatex()}$，相加后正是 $${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -1653,24 +2173,51 @@ const marginalFromCdf: KnowledgePointDef = {
   id: "a-marginal-cdf-from-a-joint-cdf",
   title: t("A marginal CDF from a joint CDF", "由联合分布函数求边缘分布函数"),
   explanation: t(
-    "The event $X \\le x$ puts no restriction on $Y$, so the marginal distribution function comes from letting $y$ reach the top of its range: $F_X(x) = F(x, \\infty)$. On a bounded region, this means substituting the largest possible $y$. No differentiation or integration is needed, since the joint function already holds the answer.",
-    "事件 $X \\le x$ 对 $Y$ 没有限制，所以边缘分布函数是让 $y$ 达到其范围的上端得到的：$F_X(x) = F(x, \\infty)$。在有界区域上，就是代入 $y$ 的最大值。既不用求导，也不用积分，因为联合分布函数中已经含有答案。",
+    "The event $X \\le x$ puts no restriction on $Y$, so the marginal distribution function comes from letting $y$ reach the top of its range: $F_X(x) = F(x, \\infty)$. On a bounded region, this means substituting the largest possible $y$. No differentiation or integration is needed, since the joint function already holds the answer. On $0 \\le x \\le 10$, $0 \\le y \\le 5$ with $F(x, y) = \\frac{x^2y}{500}$, $P(X \\le 4) = F(4, 5) = \\frac{16 \\cdot 5}{500} = \\frac{4}{25}$.\n\n> **Watch out.** Substitute the top of the range of $y$, not $y = 1$, unless $1$ is the top. And do not differentiate: a CDF is already a probability.",
+    "事件 $X \\le x$ 对 $Y$ 没有限制，所以边缘分布函数是让 $y$ 达到其范围的上端得到的：$F_X(x) = F(x, \\infty)$。在有界区域上，就是代入 $y$ 的最大值。既不用求导，也不用积分，因为联合分布函数中已经含有答案。在 $0 \\le x \\le 10$，$0 \\le y \\le 5$ 上，若 $F(x, y) = \\frac{x^2y}{500}$，则 $P(X \\le 4) = F(4, 5) = \\frac{16 \\cdot 5}{500} = \\frac{4}{25}$。\n\n> **注意。** 要代入 $y$ 范围的上端，而不是 $y = 1$，除非上端恰好是 $1$。也不要求导：分布函数本身就是概率。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
     const b = rng.int(2, 9);
     const x = rng.int(1, a - 1);
     const answer = Q.of(x * x, a * a);
+    const top = x * x === 1 ? `${b}` : `${x * x} \\cdot ${b}`;
     return numberProblem({
       prompt: t(
         `On $0 \\le x \\le ${a}$, $0 \\le y \\le ${b}$, the joint CDF of $(X, Y)$ is $F(x, y) = \\frac{x^2y}{${a * a * b}}$. Find $P(X \\le ${x})$.`,
         `在 $0 \\le x \\le ${a}$，$0 \\le y \\le ${b}$ 上，$(X, Y)$ 的联合分布函数是 $F(x, y) = \\frac{x^2y}{${a * a * b}}$。求 $P(X \\le ${x})$。`,
       ),
       answer,
-      wrong: [Q.of(x, a), Q.of(x * x, a * a * b), Q.of(x * x, a)],
-      solution: t(
-        `Substituting the top value $y = ${b}$ gives $F_X(${x}) = \\frac{${x * x} \\cdot ${b}}{${a * a * b}} = ${answer.toLatex()}$.`,
-        `代入上端值 $y = ${b}$，得 $F_X(${x}) = \\frac{${x * x} \\cdot ${b}}{${a * a * b}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(x, a), "That drops the square on $x$.", "那漏掉了 $x$ 上的平方。"),
+        why(
+          Q.of(x * x, a * a * b),
+          `That substitutes $y = 1$; the top of the range of $y$ is $${b}$.`,
+          `那是代入了 $y = 1$；$y$ 范围的上端是 $${b}$。`,
+        ),
+        why(Q.of(x * x, a), "That divides by the right end once instead of by its square.", "那只除以了右端点一次，而不是它的平方。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Let y reach the top", "让第二个变量取到上端"],
+            t(
+              `$X \\le ${x}$ puts no limit on $Y$, so $P(X \\le ${x}) = F(${x}, ${b})$.`,
+              `$X \\le ${x}$ 对 $Y$ 没有限制，所以 $P(X \\le ${x}) = F(${x}, ${b})$。`,
+            ),
+          ],
+          [
+            ["Substitute", "代入"],
+            t(
+              `$F(${x}, ${b}) = \\frac{${top}}{${a * a * b}} = ${answer.toLatex()}$.`,
+              `$F(${x}, ${b}) = \\frac{${top}}{${a * a * b}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `In general $F_X(x) = \\frac{x^2}{${a * a}}$, which reaches $1$ at the right end $x = ${a}$, as a distribution function must.`,
+          `一般地 $F_X(x) = \\frac{x^2}{${a * a}}$，它在右端点 $x = ${a}$ 处达到 $1$，分布函数理应如此。`,
+        ),
       ),
     });
   },
@@ -1680,8 +2227,8 @@ const conditionalNormalVariance: KnowledgePointDef = {
   id: "the-conditional-variance-of-a-bivariate-normal",
   title: t("The conditional variance of a bivariate normal", "二元正态分布的条件方差"),
   explanation: t(
-    "In a bivariate normal, the conditional variance of $Y$ given $X = x$ is $\\sigma_Y^2(1 - \\rho^2)$. Unlike the conditional mean, it does not depend on the value of $x$. The factor $\\rho^2$ is the share of the variance of $Y$ that $X$ explains, so the sign of the correlation makes no difference here.",
-    "在二元正态分布中，给定 $X = x$ 时 $Y$ 的条件方差是 $\\sigma_Y^2(1 - \\rho^2)$。与条件均值不同，它不取决于 $x$ 的值。因子 $\\rho^2$ 是 $Y$ 的方差中由 $X$ 解释的比例，所以这里相关系数的符号没有影响。",
+    "In a bivariate normal, the conditional variance of $Y$ given $X = x$ is $\\sigma_Y^2(1 - \\rho^2)$. Unlike the conditional mean, it does not depend on the value of $x$. The factor $\\rho^2$ is the share of the variance of $Y$ that $X$ explains, so the sign of the correlation makes no difference here. With $\\operatorname{Var}(Y) = 400$ and $\\rho = -0.95$, the conditional variance is $400(1 - 0.9025) = 39$ for every $x$.\n\n> **Watch out.** Square the correlation: $1 - \\rho$ is not $1 - \\rho^2$. The given value of $x$ plays no part.",
+    "在二元正态分布中，给定 $X = x$ 时 $Y$ 的条件方差是 $\\sigma_Y^2(1 - \\rho^2)$。与条件均值不同，它不取决于 $x$ 的值。因子 $\\rho^2$ 是 $Y$ 的方差中由 $X$ 解释的比例，所以这里相关系数的符号没有影响。若 $\\operatorname{Var}(Y) = 400$，$\\rho = -0.95$，则对每个 $x$，条件方差都是 $400(1 - 0.9025) = 39$。\n\n> **注意。** 相关系数要平方：$1 - \\rho$ 不是 $1 - \\rho^2$。给定的 $x$ 值不起作用。",
   ),
   generate(rng) {
     const v = rng.int(1, 40);
@@ -1695,10 +2242,40 @@ const conditionalNormalVariance: KnowledgePointDef = {
         `$(X, Y)$ 服从二元正态分布，$\\text{Var}(Y) = ${v}$，相关系数是 $${r < 0 ? "-" : ""}${tenths(size)}$。求 $\\text{Var}(Y \\mid X = ${x})$。`,
       ),
       answer,
-      wrong: [Q.of(v * (10 - size), 10), Q.of(v * r * r, 100), Q.of(v)],
-      solution: t(
-        `The conditional variance is $${v}\\left(1 - ${tenths(size)}^2\\right) = ${answer.toLatex()}$, whatever the value of $x$.`,
-        `条件方差是 $${v}\\left(1 - ${tenths(size)}^2\\right) = ${answer.toLatex()}$，与 $x$ 的值无关。`,
+      mistakes: apart(answer, [
+        why(Q.of(v * (10 - size), 10), "That uses $1 - \\rho$; the correlation must be squared.", "那是用了 $1 - \\rho$；相关系数要平方。"),
+        why(
+          Q.of(v * r * r, 100),
+          "That is $\\sigma_Y^2\\rho^2$, the part of the variance that $X$ explains.",
+          "那是 $\\sigma_Y^2\\rho^2$，即由 $X$ 解释的那部分方差。",
+        ),
+        why(
+          Q.of(v),
+          "That is $\\operatorname{Var}(Y)$ itself; knowing $X$ removes part of it.",
+          "那是 $\\operatorname{Var}(Y)$ 本身；知道 $X$ 后会去掉其中一部分。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Square the correlation", "把相关系数平方"],
+            t(
+              `$\\rho^2 = ${tenths(size)}^2 = 0.${String(size * size).padStart(2, "0")}$, so $1 - \\rho^2 = 0.${100 - size * size}$.`,
+              `$\\rho^2 = ${tenths(size)}^2 = 0.${String(size * size).padStart(2, "0")}$，所以 $1 - \\rho^2 = 0.${100 - size * size}$。`,
+            ),
+          ],
+          [
+            ["Scale the variance", "缩放方差"],
+            t(
+              `$\\operatorname{Var}(Y \\mid X = ${x}) = ${v === 1 ? "" : `${v} \\cdot `}0.${100 - size * size} = ${answer.toLatex()}$, whatever the value of $x$.`,
+              `$\\operatorname{Var}(Y \\mid X = ${x}) = ${v === 1 ? "" : `${v} \\cdot `}0.${100 - size * size} = ${answer.toLatex()}$，与 $x$ 的值无关。`,
+            ),
+          ],
+        ],
+        t(
+          `The explained part $\\sigma_Y^2\\rho^2 = ${Q.of(v * r * r, 100).toLatex()}$ and the conditional variance add to $${Q.of(v * r * r, 100).toLatex()} + ${answer.toLatex()} = ${v}$, the whole variance of $Y$.`,
+          `被解释的部分 $\\sigma_Y^2\\rho^2 = ${Q.of(v * r * r, 100).toLatex()}$ 与条件方差之和为 $${Q.of(v * r * r, 100).toLatex()} + ${answer.toLatex()} = ${v}$，正是 $Y$ 的全部方差。`,
+        ),
       ),
     });
   },
@@ -1708,8 +2285,8 @@ const noSuccessInBoth: KnowledgePointDef = {
   id: "the-probability-that-two-binomial-counts-are-both-zero",
   title: t("The probability that two binomial counts are both zero", "两个二项计数都为零的概率"),
   explanation: t(
-    "Independent binomial variables with the same success probability add to another binomial, with the trial counts added. The sum is zero exactly when every one of those trials fails. So the probability comes from a single power of $1 - p$, and the two separate counts need not be handled one at a time.",
-    "成功概率相同的独立二项变量相加还是二项变量，试验次数相加。和为零，当且仅当所有这些试验都失败。所以概率来自 $1 - p$ 的一个幂，不必逐个处理两个计数。",
+    "Independent binomial variables with the same success probability add to another binomial, with the trial counts added. The sum is zero exactly when every one of those trials fails. So the probability comes from a single power of $1 - p$, and the two separate counts need not be handled one at a time. With $10$ and $20$ trials and $p = 0.1$, $P(X + Y = 0) = 0.9^{30}$, about $0.042$.\n\n> **Watch out.** $1 - (1 - p)^{m + n}$ is the probability of at least one success, the opposite event. And $p^{m + n}$ is the chance that every trial succeeds.",
+    "成功概率相同的独立二项变量相加还是二项变量，试验次数相加。和为零，当且仅当所有这些试验都失败。所以概率来自 $1 - p$ 的一个幂，不必逐个处理两个计数。若试验次数为 $10$ 和 $20$，$p = 0.1$，则 $P(X + Y = 0) = 0.9^{30}$，约为 $0.042$。\n\n> **注意。** $1 - (1 - p)^{m + n}$ 是至少一次成功的概率，即对立事件。而 $p^{m + n}$ 是每次试验都成功的概率。",
   ),
   generate(rng) {
     const q = rng.int(2, 5);
@@ -1724,10 +2301,40 @@ const noSuccessInBoth: KnowledgePointDef = {
         `$X$ 服从 ${m} 次试验的二项分布，$Y$ 服从 ${n} 次试验的二项分布，二者独立，每次试验成功的概率是 $${p.toLatex()}$。求 $P(X + Y = 0)$。`,
       ),
       answer,
-      wrong: [power(p, m + n), Q.of(1).sub(answer), power(fail, m * n + 1), power(fail, m + n + 1)],
-      solution: t(
-        `All ${m + n} trials must fail, so the probability is $\\left(${fail.toLatex()}\\right)^{${m + n}} = ${answer.toLatex()}$.`,
-        `${m + n} 次试验必须全部失败，所以概率是 $\\left(${fail.toLatex()}\\right)^{${m + n}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(power(p, m + n), "That is the probability that every trial succeeds.", "那是每次试验都成功的概率。"),
+        why(
+          Q.of(1).sub(answer),
+          "That is the probability of at least one success, the opposite event.",
+          "那是至少一次成功的概率，即对立事件。",
+        ),
+        why(
+          power(fail, m + n + 1),
+          `That counts one trial too many; there are $${m} + ${n} = ${m + n}$ trials.`,
+          `那多算了一次试验；共有 $${m} + ${n} = ${m + n}$ 次试验。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Combine the counts", "合并计数"],
+            t(
+              `$X + Y$ is binomial with $${m} + ${n} = ${m + n}$ trials and the same $p = ${p.toLatex()}$.`,
+              `$X + Y$ 服从 $${m} + ${n} = ${m + n}$ 次试验、同样 $p = ${p.toLatex()}$ 的二项分布。`,
+            ),
+          ],
+          [
+            ["Make every trial fail", "让每次试验都失败"],
+            t(
+              `$X + Y = 0$ means all ${m + n} trials fail, each with probability $${fail.toLatex()}$: $\\left(${fail.toLatex()}\\right)^{${m + n}} = ${answer.toLatex()}$.`,
+              `$X + Y = 0$ 表示 ${m + n} 次试验全部失败，每次失败的概率是 $${fail.toLatex()}$：$\\left(${fail.toLatex()}\\right)^{${m + n}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Separately, $P(X = 0) = ${power(fail, m).toLatex()}$ and $P(Y = 0) = ${power(fail, n).toLatex()}$, and their product is $${answer.toLatex()}$, as independence requires.`,
+          `分别地，$P(X = 0) = ${power(fail, m).toLatex()}$，$P(Y = 0) = ${power(fail, n).toLatex()}$，二者之积为 $${answer.toLatex()}$，与独立性一致。`,
+        ),
       ),
     });
   },
@@ -1737,8 +2344,8 @@ const poissonSplit: KnowledgePointDef = {
   id: "a-poisson-count-given-the-total",
   title: t("A Poisson count given the total", "已知总数时的泊松计数"),
   explanation: t(
-    "If $X$ and $Y$ are independent Poisson with means $\\lambda$ and $\\mu$, then knowing $X + Y = n$ turns $X$ into a binomial variable. Each of the $n$ events comes from the first source with probability $\\frac{\\lambda}{\\lambda + \\mu}$. So the conditional mean is that share of $n$, and the exponential factors disappear from the calculation.",
-    "如果 $X$、$Y$ 是均值为 $\\lambda$、$\\mu$ 的独立泊松变量，那么知道 $X + Y = n$ 后，$X$ 就变成二项变量。$n$ 个事件中的每一个来自第一个来源的概率是 $\\frac{\\lambda}{\\lambda + \\mu}$。所以条件均值就是 $n$ 的这个比例，指数因子从计算中消失了。",
+    "If $X$ and $Y$ are independent Poisson with means $\\lambda$ and $\\mu$, then knowing $X + Y = n$ turns $X$ into a binomial variable. Each of the $n$ events comes from the first source with probability $\\frac{\\lambda}{\\lambda + \\mu}$. So the conditional mean is that share of $n$, and the exponential factors disappear from the calculation. With means $30$ and $70$ and a total of $50$, each event is from the first source with probability $0.3$, so $E(X \\mid X + Y = 50) = 15$.\n\n> **Watch out.** Once the total is known, the mean $\\lambda$ alone is no longer the answer: the share $\\frac{\\lambda}{\\lambda + \\mu}$ multiplies the given total $n$.",
+    "如果 $X$、$Y$ 是均值为 $\\lambda$、$\\mu$ 的独立泊松变量，那么知道 $X + Y = n$ 后，$X$ 就变成二项变量。$n$ 个事件中的每一个来自第一个来源的概率是 $\\frac{\\lambda}{\\lambda + \\mu}$。所以条件均值就是 $n$ 的这个比例，指数因子从计算中消失了。若均值为 $30$ 和 $70$，总数为 $50$，每个事件来自第一个来源的概率是 $0.3$，所以 $E(X \\mid X + Y = 50) = 15$。\n\n> **注意。** 知道总数后，答案不再是均值 $\\lambda$ 本身：要用比例 $\\frac{\\lambda}{\\lambda + \\mu}$ 乘以给定的总数 $n$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -1751,10 +2358,36 @@ const poissonSplit: KnowledgePointDef = {
         `独立的 $X$、$Y$ 服从均值为 ${a} 和 ${b} 的泊松分布。求 $E(X \\mid X + Y = ${n})$。`,
       ),
       answer,
-      wrong: [Q.of(a), Q.of(n * b, a + b), Q.of(a, a + b)],
-      solution: t(
-        `Given the total, $X$ is binomial with ${n} trials and $p = ${Q.of(a, a + b).toLatex()}$. Its mean is $${answer.toLatex()}$.`,
-        `已知总数时，$X$ 服从 ${n} 次试验、$p = ${Q.of(a, a + b).toLatex()}$ 的二项分布。它的均值是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(a), "That is the unconditional mean of $X$; the known total changes it.", "那是 $X$ 的无条件均值；已知总数会改变它。"),
+        why(Q.of(n * b, a + b), "That is the conditional mean of $Y$, the other count.", "那是另一个计数 $Y$ 的条件均值。"),
+        why(
+          Q.of(a, a + b),
+          `That is the share for one event; multiply it by the $${n}$ events.`,
+          `那是单个事件的比例；还要乘以 $${n}$ 个事件。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the share", "求比例"],
+            t(
+              `Each of the ${n} events comes from $X$ with probability $\\frac{${a}}{${a} + ${b}} = ${Q.of(a, a + b).toLatex()}$, so $X$ given the total is binomial.`,
+              `${n} 个事件中的每一个来自 $X$ 的概率是 $\\frac{${a}}{${a} + ${b}} = ${Q.of(a, a + b).toLatex()}$，所以已知总数时 $X$ 服从二项分布。`,
+            ),
+          ],
+          [
+            ["Take the binomial mean", "求二项均值"],
+            t(
+              `$E(X \\mid X + Y = ${n}) = ${n} \\cdot ${Q.of(a, a + b).toLatex()} = ${answer.toLatex()}$.`,
+              `$E(X \\mid X + Y = ${n}) = ${n} \\cdot ${Q.of(a, a + b).toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Likewise $E(Y \\mid X + Y = ${n}) = ${Q.of(n * b, a + b).toLatex()}$, and the two conditional means add to $${n}$, the known total.`,
+          `同理 $E(Y \\mid X + Y = ${n}) = ${Q.of(n * b, a + b).toLatex()}$，两个条件均值之和为 $${n}$，正是已知的总数。`,
+        ),
       ),
     });
   },
@@ -1764,8 +2397,8 @@ const equalCovariance: KnowledgePointDef = {
   id: "the-variance-of-a-sum-with-equal-covariances",
   title: t("The variance of a sum with equal covariances", "协方差相等时和的方差"),
   explanation: t(
-    "The variance of a sum is the sum of all the entries of the covariance matrix. With $n$ variables, there are $n$ variances on the diagonal and $n(n - 1)$ covariances off it, since each pair is counted twice. Forgetting that double count is the usual slip. A shared positive covariance can dominate the total as $n$ grows.",
-    "和的方差是协方差矩阵所有元素之和。有 $n$ 个变量时，对角线上有 $n$ 个方差，对角线外有 $n(n - 1)$ 个协方差，因为每一对算了两次。常见的错误就是忘了这个两次。共同的正协方差在 $n$ 增大时可能成为总和的主要部分。",
+    "The variance of a sum is the sum of all the entries of the covariance matrix. With $n$ variables, there are $n$ variances on the diagonal and $n(n - 1)$ covariances off it, since each pair is counted twice. Forgetting that double count is the usual slip. A shared positive covariance can dominate the total as $n$ grows. With $20$ variables of variance $5$ and covariance $2$, the total is $20 \\cdot 5 + 20 \\cdot 19 \\cdot 2 = 100 + 760 = 860$, and the covariances make up most of it.\n\n> **Watch out.** Count ordered pairs, $n(n - 1)$, not unordered ones, $\\frac{n(n - 1)}{2}$: $\\operatorname{Var}(X + Y)$ already contains $2\\operatorname{Cov}(X, Y)$.",
+    "和的方差是协方差矩阵所有元素之和。有 $n$ 个变量时，对角线上有 $n$ 个方差，对角线外有 $n(n - 1)$ 个协方差，因为每一对算了两次。常见的错误就是忘了这个两次。共同的正协方差在 $n$ 增大时可能成为总和的主要部分。若有 $20$ 个变量，方差为 $5$，协方差为 $2$，总和为 $20 \\cdot 5 + 20 \\cdot 19 \\cdot 2 = 100 + 760 = 860$，其中大部分来自协方差。\n\n> **注意。** 要数有序对 $n(n - 1)$，而不是无序对 $\\frac{n(n - 1)}{2}$：$\\operatorname{Var}(X + Y)$ 中本来就含有 $2\\operatorname{Cov}(X, Y)$。",
   ),
   generate(rng) {
     const n = rng.int(3, 7);
@@ -1779,10 +2412,40 @@ const equalCovariance: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n * v, n * v + (n * (n - 1) * c) / 2, n * n * v],
-      solution: t(
-        `There are ${n} variances and $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ ordered pairs. The total is $${n * v} + ${n * (n - 1) * c} = ${answer}$.`,
-        `有 ${n} 个方差和 $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ 个有序对。总和是 $${n * v} + ${n * (n - 1) * c} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(n * v, "That adds only the variances and leaves out every covariance.", "那只加了方差，漏掉了所有协方差。"),
+        why(
+          n * v + (n * (n - 1) * c) / 2,
+          `That counts each pair once; there are $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ ordered pairs, so each covariance appears twice.`,
+          `那把每一对只算了一次；共有 $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ 个有序对，每个协方差出现两次。`,
+        ),
+        why(n * n * v, "That treats every entry of the matrix as a variance.", "那把矩阵的每个元素都当成了方差。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the diagonal", "加对角线"],
+            t(
+              `The ${n} variances give ${v === 1 ? `$${n}$` : `$${n} \\cdot ${v} = ${n * v}$`}.`,
+              `${n} 个方差之和为 ${v === 1 ? `$${n}$` : `$${n} \\cdot ${v} = ${n * v}$`}。`,
+            ),
+          ],
+          [
+            ["Add the covariances", "加协方差"],
+            t(
+              `There are $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ ordered pairs, giving ${c === 1 ? `$${n * (n - 1)}$` : `$${n * (n - 1)} \\cdot ${c} = ${n * (n - 1) * c}$`}.`,
+              `共有 $${n} \\cdot ${n - 1} = ${n * (n - 1)}$ 个有序对，给出 ${c === 1 ? `$${n * (n - 1)}$` : `$${n * (n - 1)} \\cdot ${c} = ${n * (n - 1) * c}$`}。`,
+            ),
+          ],
+          [
+            ["Add the two parts", "两部分相加"],
+            t(`$${n * v} + ${n * (n - 1) * c} = ${answer}$.`, `$${n * v} + ${n * (n - 1) * c} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Each row of the matrix adds to $${v} + ${c === 1 ? `${n - 1}` : `${n - 1} \\cdot ${c}`} = ${v + (n - 1) * c}$, and the ${n} rows give $${n} \\cdot ${v + (n - 1) * c} = ${answer}$.`,
+          `矩阵每一行之和为 $${v} + ${c === 1 ? `${n - 1}` : `${n - 1} \\cdot ${c}`} = ${v + (n - 1) * c}$，${n} 行合计 $${n} \\cdot ${v + (n - 1) * c} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1792,8 +2455,8 @@ const correlationFromMatrix: KnowledgePointDef = {
   id: "a-correlation-from-a-covariance-matrix",
   title: t("A correlation from a covariance matrix", "由协方差矩阵求相关系数"),
   explanation: t(
-    "A covariance matrix has variances on the diagonal and covariances off it. To get a correlation, divide the covariance by the square roots of the two relevant diagonal entries, not by the entries themselves. The result has no units and lies between $-1$ and $1$, which is a useful check on the arithmetic.",
-    "协方差矩阵的对角线上是方差，对角线外是协方差。求相关系数时，要用协方差除以两个相应对角元素的平方根，而不是除以元素本身。结果没有单位，并且在 $-1$ 和 $1$ 之间，这可以用来检查计算。",
+    "A covariance matrix has variances on the diagonal and covariances off it. To get a correlation, divide the covariance by the square roots of the two relevant diagonal entries, not by the entries themselves. The result has no units and lies between $-1$ and $1$, which is a useful check on the arithmetic. For $\\begin{pmatrix} 400 & -150 \\\\ -150 & 900 \\end{pmatrix}$ the standard deviations are $20$ and $30$, so the correlation is $\\frac{-150}{20 \\cdot 30} = -\\frac{1}{4}$.\n\n> **Watch out.** Take square roots first: $\\frac{-150}{400 \\cdot 900}$ divides by the variances. And keep the sign of the covariance.",
+    "协方差矩阵的对角线上是方差，对角线外是协方差。求相关系数时，要用协方差除以两个相应对角元素的平方根，而不是除以元素本身。结果没有单位，并且在 $-1$ 和 $1$ 之间，这可以用来检查计算。对 $\\begin{pmatrix} 400 & -150 \\\\ -150 & 900 \\end{pmatrix}$，标准差为 $20$ 和 $30$，所以相关系数为 $\\frac{-150}{20 \\cdot 30} = -\\frac{1}{4}$。\n\n> **注意。** 先开平方：$\\frac{-150}{400 \\cdot 900}$ 是除以了方差。还要保留协方差的符号。",
   ),
   generate(rng) {
     const p = rng.int(2, 9);
@@ -1807,10 +2470,36 @@ const correlationFromMatrix: KnowledgePointDef = {
         `$(X, Y)$ 的协方差矩阵是 $\\begin{pmatrix} ${p * p} & ${c} \\\\ ${c} & ${q * q} \\end{pmatrix}$。求 $X$ 和 $Y$ 的相关系数。`,
       ),
       answer,
-      wrong: [Q.of(c, p * p * q * q), Q.of(c, p + q), answer.neg()],
-      solution: t(
-        `The standard deviations are ${p} and ${q}, so the correlation is $\\frac{${c}}{${p} \\cdot ${q}} = ${answer.toLatex()}$.`,
-        `标准差是 ${p} 和 ${q}，所以相关系数是 $\\frac{${c}}{${p} \\cdot ${q}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(Q.of(c, p * p * q * q), "That divides by the variances instead of the standard deviations.", "那是除以了方差，而不是标准差。"),
+        why(
+          Q.of(c, p + q),
+          "That divides by the sum of the standard deviations instead of their product.",
+          "那是除以了标准差之和，而不是它们的积。",
+        ),
+        why(answer.neg(), "That flips the sign; the correlation has the sign of the covariance.", "那弄反了符号；相关系数与协方差同号。"),
+      ].filter((m, i, all) => all.findIndex((x) => String(x.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Take square roots of the diagonal", "对角元素开平方"],
+            t(
+              `$\\sigma_X = \\sqrt{${p * p}} = ${p}$ and $\\sigma_Y = \\sqrt{${q * q}} = ${q}$.`,
+              `$\\sigma_X = \\sqrt{${p * p}} = ${p}$，$\\sigma_Y = \\sqrt{${q * q}} = ${q}$。`,
+            ),
+          ],
+          [
+            ["Divide the covariance", "用协方差相除"],
+            t(
+              `$\\rho = \\frac{${c}}{${p} \\cdot ${q}} = ${answer.toLatex()}$.`,
+              `$\\rho = \\frac{${c}}{${p} \\cdot ${q}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$|${c}| < ${p * q}$, so the correlation lies strictly between $-1$ and $1$, and it has the sign of the covariance.`,
+          `$|${c}| < ${p * q}$，所以相关系数严格介于 $-1$ 和 $1$ 之间，且与协方差同号。`,
+        ),
       ),
     });
   },
@@ -1820,8 +2509,8 @@ const twoInARow: KnowledgePointDef = {
   id: "the-expected-wait-for-two-successes-in-a-row",
   title: t("The expected wait for two successes in a row", "连续两次成功的期望等待"),
   explanation: t(
-    "Condition on what happens after the first success. Reaching one success takes $\\frac{1}{p}$ trials on average. One more trial follows: with probability $p$ it finishes the run, and otherwise the whole wait starts again. The law of total expectation gives an equation for the mean, and it solves to $\\frac{1 + p}{p^2}$.",
-    "以第一次成功之后发生的事为条件。达到一次成功平均需要 $\\frac{1}{p}$ 次试验。接着再做一次试验：以概率 $p$ 完成连续，否则整个等待重新开始。全期望公式给出关于均值的方程，解得 $\\frac{1 + p}{p^2}$。",
+    "Condition on what happens after the first success. Reaching one success takes $\\frac{1}{p}$ trials on average. One more trial follows: with probability $p$ it finishes the run, and otherwise the whole wait starts again. The law of total expectation gives an equation for the mean, and it solves to $\\frac{1 + p}{p^2}$. With $p = 0.1$ the mean wait is $\\frac{1.1}{0.01} = 110$ trials.\n\n> **Watch out.** The answer is not $\\frac{1}{p^2}$, here $100$: a failure right after a success throws that success away, which adds the extra $\\frac{1}{p}$.",
+    "以第一次成功之后发生的事为条件。达到一次成功平均需要 $\\frac{1}{p}$ 次试验。接着再做一次试验：以概率 $p$ 完成连续，否则整个等待重新开始。全期望公式给出关于均值的方程，解得 $\\frac{1 + p}{p^2}$。若 $p = 0.1$，平均等待 $\\frac{1.1}{0.01} = 110$ 次试验。\n\n> **注意。** 答案不是 $\\frac{1}{p^2}$，这里即 $100$：成功之后紧接着失败，会浪费那次成功，这就多出了 $\\frac{1}{p}$。",
   ),
   generate(rng) {
     const v = rng.int(2, 12);
@@ -1834,10 +2523,40 @@ const twoInARow: KnowledgePointDef = {
         `独立试验每次成功的概率是 $${p.toLatex()}$。求直到连续两次成功所需试验次数的期望。`,
       ),
       answer,
-      wrong: [Q.of(v * v, u * u), Q.of(2 * v, u), Q.of(v * (v + u), u)],
-      solution: t(
-        `Let $E$ be the mean. Reaching a success takes $\\frac{1}{p}$ trials and one more trial follows, and with probability $1 - p$ everything restarts: $E = \\frac{1}{p} + 1 + (1 - p)E$. So $E = \\frac{1 + p}{p^2} = ${answer.toLatex()}$.`,
-        `设 $E$ 为均值。达到一次成功需要 $\\frac{1}{p}$ 次试验，接着再做一次试验，并以概率 $1 - p$ 全部重来：$E = \\frac{1}{p} + 1 + (1 - p)E$。所以 $E = \\frac{1 + p}{p^2} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(v * v, u * u),
+          "That is $\\frac{1}{p^2}$; a failure after a success wastes it, which adds $\\frac{1}{p}$.",
+          "那是 $\\frac{1}{p^2}$；成功后的失败会浪费这次成功，要再加 $\\frac{1}{p}$。",
+        ),
+        why(Q.of(2 * v, u), "That is the wait for two successes, not two in a row.", "那是等到两次成功的时间，不是连续两次。"),
+        why(
+          Q.of(v * (v + u), u),
+          "That divides by $p$ once; solving the equation divides by $p$ twice.",
+          "那只除以了一次 $p$；解方程要除以两次 $p$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Condition on the next trial", "以下一次试验为条件"],
+            t(
+              "Let $E$ be the mean. Reaching a success takes $\\frac{1}{p}$ trials, one more trial follows, and with probability $1 - p$ everything restarts: $E = \\frac{1}{p} + 1 + (1 - p)E$.",
+              "设 $E$ 为均值。达到一次成功需要 $\\frac{1}{p}$ 次试验，接着再做一次试验，并以概率 $1 - p$ 全部重来：$E = \\frac{1}{p} + 1 + (1 - p)E$。",
+            ),
+          ],
+          [
+            ["Solve for the mean", "解出均值"],
+            t(
+              `$pE = \\frac{1}{p} + 1$, so $E = \\frac{1 + p}{p^2}$. With $p = ${p.toLatex()}$ this is $${answer.toLatex()}$.`,
+              `$pE = \\frac{1}{p} + 1$，所以 $E = \\frac{1 + p}{p^2}$。代入 $p = ${p.toLatex()}$，得 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$p \\cdot E = ${p.toLatex()} \\cdot ${answer.toLatex()} = ${Q.of(v + u, u).toLatex()}$, and $\\frac{1}{p} + 1 = ${Q.of(v, u).toLatex()} + 1 = ${Q.of(v + u, u).toLatex()}$ too.`,
+          `$p \\cdot E = ${p.toLatex()} \\cdot ${answer.toLatex()} = ${Q.of(v + u, u).toLatex()}$，而 $\\frac{1}{p} + 1 = ${Q.of(v, u).toLatex()} + 1 = ${Q.of(v + u, u).toLatex()}$，二者相等。`,
+        ),
       ),
     });
   },
@@ -1847,8 +2566,8 @@ const dieAboveValue: KnowledgePointDef = {
   id: "the-mean-of-a-die-given-that-it-beats-a-value",
   title: t("The mean of a die given that it beats a value", "已知骰子超过某值时的均值"),
   explanation: t(
-    "Conditioning on an event restricts the distribution to that event and rescales it. For a fair die told to exceed $k$, the remaining faces $k + 1, \\ldots, n$ stay equally likely. So the conditional mean is the middle of the remaining faces, the average of the smallest and largest. Only then is any weighted sum needed.",
-    "以事件为条件，就是把分布限制在这个事件上并重新缩放。对一个已知超过 $k$ 的公平骰子，剩下的面 $k + 1, \\ldots, n$ 仍然等可能。所以条件均值是剩余面的中点，即最小值和最大值的平均。这里根本不需要加权求和。",
+    'Conditioning on an event restricts the distribution to that event and rescales it. For a fair die told to exceed $k$, the remaining faces $k + 1, \\ldots, n$ stay equally likely. So the conditional mean is the middle of the remaining faces, the average of the smallest and largest. Only then is any weighted sum needed. For faces $1, \\ldots, 100$ and $X > 60$, the faces $61$ to $100$ remain, and $E(X \\mid X > 60) = \\frac{61 + 100}{2} = \\frac{161}{2}$.\n\n> **Watch out.** "Beats $k$" leaves out $k$ itself: start at $k + 1$, not $k$.',
+    "以事件为条件，就是把分布限制在这个事件上并重新缩放。对一个已知超过 $k$ 的公平骰子，剩下的面 $k + 1, \\ldots, n$ 仍然等可能。所以条件均值是剩余面的中点，即最小值和最大值的平均。这里根本不需要加权求和。对面为 $1, \\ldots, 100$ 的骰子，已知 $X > 60$，剩下 $61$ 到 $100$，$E(X \\mid X > 60) = \\frac{61 + 100}{2} = \\frac{161}{2}$。\n\n> **注意。** 超过 $k$ 不包括 $k$ 本身：要从 $k + 1$ 开始，而不是 $k$。",
   ),
   generate(rng) {
     const n = rng.int(4, 20);
@@ -1860,10 +2579,40 @@ const dieAboveValue: KnowledgePointDef = {
         `一个公平骰子的面是 $1, \\ldots, ${n}$，$X$ 是它的结果。求 $E(X \\mid X > ${k})$。`,
       ),
       answer,
-      wrong: [Q.of(n + 1, 2), Q.of(k + n, 2), Q.of(n)],
-      solution: t(
-        `The faces from ${k + 1} to ${n} remain equally likely, and their average is $\\frac{${k + 1} + ${n}}{2} = ${answer.toLatex()}$.`,
-        `从 ${k + 1} 到 ${n} 的面仍然等可能，它们的平均是 $\\frac{${k + 1} + ${n}}{2} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(n + 1, 2),
+          "That is the mean of the whole die; the condition removes the low faces.",
+          "那是整个骰子的均值；条件去掉了较小的面。",
+        ),
+        why(
+          Q.of(k + n, 2),
+          `That starts at $${k}$, but $X > ${k}$ leaves out $${k}$ itself.`,
+          `那是从 $${k}$ 开始，但 $X > ${k}$ 不包括 $${k}$ 本身。`,
+        ),
+        why(Q.of(n), "That is the largest face, not the average of the remaining ones.", "那是最大的面，不是剩余面的平均。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Restrict the faces", "限制面"],
+            t(
+              `Given $X > ${k}$, the faces $${k + 1}, \\ldots, ${n}$ remain, each equally likely.`,
+              `已知 $X > ${k}$，剩下的面是 $${k + 1}, \\ldots, ${n}$，每个都等可能。`,
+            ),
+          ],
+          [
+            ["Take the middle", "取中点"],
+            t(
+              `$E(X \\mid X > ${k}) = \\frac{${k + 1} + ${n}}{2} = ${answer.toLatex()}$.`,
+              `$E(X \\mid X > ${k}) = \\frac{${k + 1} + ${n}}{2} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The smallest remaining face ${k + 1} and the largest ${n} are equally far from $${answer.toLatex()}$, at distance $${Q.of(n - k - 1, 2).toLatex()}$.`,
+          `剩余的最小面 ${k + 1} 和最大面 ${n} 到 $${answer.toLatex()}$ 的距离相等，都是 $${Q.of(n - k - 1, 2).toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -1873,8 +2622,8 @@ const addingTheMean: KnowledgePointDef = {
   id: "the-sample-variance-after-adding-the-mean",
   title: t("The sample variance after adding the mean", "加入均值后的样本方差"),
   explanation: t(
-    "A new observation equal to the sample mean leaves the mean unchanged and adds nothing to the sum of squared deviations. The divisor still grows from $n - 1$ to $n$, so the sample variance shrinks by the factor $\\frac{n - 1}{n}$. This also shows why filling in missing data with the mean makes a sample look less variable than it is.",
-    "新观测值等于样本均值时，均值不变，离差平方和也没有增加。但除数从 $n - 1$ 增加到 $n$，所以样本方差缩小为原来的 $\\frac{n - 1}{n}$。这也说明，为什么用均值填补缺失数据，会使样本看起来比实际更集中。",
+    "A new observation equal to the sample mean leaves the mean unchanged and adds nothing to the sum of squared deviations. The divisor still grows from $n - 1$ to $n$, so the sample variance shrinks by the factor $\\frac{n - 1}{n}$. This also shows why filling in missing data with the mean makes a sample look less variable than it is.\n\nA sample of $5$ values with variance $8$ has squared deviations adding up to $4 \\cdot 8 = 32$. Adding the mean gives $6$ values with the same sum $32$, so the new variance is $\\frac{32}{5}$.\n\nCheck: the new value sits exactly at the mean, so its deviation is $0$ and its square adds $0$ to the $32$.\n\n> **Watch out.** The new sample has $n + 1 = 6$ values, so the divisor is $6 - 1 = 5$, not $6$: $\\frac{32}{6} = \\frac{16}{3}$ divides by the count instead of the degrees of freedom. And the variance does change, even though the mean does not.",
+    "新观测值等于样本均值时，均值不变，离差平方和也没有增加。但除数从 $n - 1$ 增加到 $n$，所以样本方差缩小为原来的 $\\frac{n - 1}{n}$。这也说明，为什么用均值填补缺失数据，会使样本看起来比实际更集中。\n\n$5$ 个值的样本方差为 $8$，离差平方和为 $4 \\cdot 8 = 32$。加入均值后有 $6$ 个值，平方和仍为 $32$，所以新方差为 $\\frac{32}{5}$。\n\n检验：新值恰好在均值处，离均差为 $0$，平方后给 $32$ 加上 $0$。\n\n> **注意。** 新样本有 $n + 1 = 6$ 个值，除数是 $6 - 1 = 5$，不是 $6$：$\\frac{32}{6} = \\frac{16}{3}$ 除以的是个数而不是自由度。而且均值虽然不变，方差却变了。",
   ),
   generate(rng) {
     const n = rng.int(3, 30);
@@ -1887,9 +2636,51 @@ const addingTheMean: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(v), Q.of(v * n, n + 1), Q.of(v * (n - 1), n + 1)],
-      solution: t(
-        `The sum of squared deviations stays $${v} \\cdot ${n - 1} = ${v * (n - 1)}$, and the divisor becomes ${n}. So the new variance is $${answer.toLatex()}$.`,
-        `离差平方和仍是 $${v} \\cdot ${n - 1} = ${v * (n - 1)}$，除数变成 ${n}。所以新方差是 $${answer.toLatex()}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          v,
+          "This keeps the old variance; the sum of squares stays the same, but the divisor grows by one.",
+          "这保留了原方差；平方和不变，但除数增加了一。",
+        ),
+        why(
+          Q.of(v * (n - 1), n + 1),
+          `This divides by the new count $${n + 1}$; the divisor is one less, $${n}$.`,
+          `这除以了新的个数 $${n + 1}$；除数应少一，为 $${n}$。`,
+        ),
+        why(
+          Q.of(v * n, n + 1),
+          `This uses the factor $\\frac{${n}}{${n + 1}}$; the old divisor was $${n - 1}$ and the new one is $${n}$, so the factor is $\\frac{${n - 1}}{${n}}$.`,
+          `这用了因子 $\\frac{${n}}{${n + 1}}$；原除数为 $${n - 1}$，新除数为 $${n}$，因子应为 $\\frac{${n - 1}}{${n}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Recover the sum of squares", "还原平方和"],
+            t(
+              `The squared deviations add up to $(n - 1)s^{2} = ${n - 1} \\cdot ${v} = ${v * (n - 1)}$.`,
+              `离差平方和为 $(n - 1)s^{2} = ${n - 1} \\cdot ${v} = ${v * (n - 1)}$。`,
+            ),
+          ],
+          [
+            ["Add the mean", "加入均值"],
+            t(
+              `The new value has deviation $0$, so the sum stays $${v * (n - 1)}$, and there are now $${n + 1}$ values.`,
+              `新值的离均差为 $0$，平方和仍为 $${v * (n - 1)}$，现在共有 $${n + 1}$ 个值。`,
+            ),
+          ],
+          [
+            ["Divide by the new degrees of freedom", "除以新的自由度"],
+            t(
+              `The new variance is $\\frac{${v * (n - 1)}}{${n}} = ${answer.toLatex()}$.`,
+              `新方差为 $\\frac{${v * (n - 1)}}{${n}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The ratio of the new variance to the old is $\\frac{${n - 1}}{${n}}$, a little less than $1$: adding a value at the centre makes the sample look slightly less spread out.`,
+          `新方差与原方差之比为 $\\frac{${n - 1}}{${n}}$，略小于 $1$：在中心加入一个值，样本看起来稍微更集中。`,
+        ),
       ),
     });
   },
@@ -1899,8 +2690,8 @@ const correctedMean: KnowledgePointDef = {
   id: "correcting-a-sample-mean-after-a-recording-error",
   title: t("Correcting a sample mean after a recording error", "纠正记录错误后的样本均值"),
   explanation: t(
-    "A sample mean is the total divided by the sample size, so a mean and a size together recover the total. When a value was recorded wrongly, the total changes by the difference between the correct and wrong values, and the size is unchanged. So the mean changes by that difference divided by the sample size, and the full data set is not needed.",
-    "样本均值是总和除以样本量，所以均值和样本量一起就能恢复总和。某个值记录错误时，总和的变化就是正确值与错误值之差，样本量不变。所以均值的变化是这个差除以样本量，不需要完整的数据。",
+    "A sample mean is the total divided by the sample size, so a mean and a size together recover the total. When a value was recorded wrongly, the total changes by the difference between the correct and wrong values, and the size is unchanged. So the mean changes by that difference divided by the sample size, and the full data set is not needed.\n\nIf $5$ values have mean $20$ and a $12$ was recorded instead of $22$, the total $100$ becomes $100 + 10 = 110$, and the correct mean is $\\frac{110}{5} = 22$.\n\nCheck: the mean rose by $\\frac{10}{5} = 2$, the difference shared among the $5$ values.\n\n> **Watch out.** The difference is shared among all $n$ values, not added to the mean whole: adding $10$ to the mean $20$ would give $30$. And the size stays $5$, because a value was corrected, not added.",
+    "样本均值是总和除以样本量，所以均值和样本量一起就能恢复总和。某个值记录错误时，总和的变化就是正确值与错误值之差，样本量不变。所以均值的变化是这个差除以样本量，不需要完整的数据。\n\n若 $5$ 个值的均值为 $20$，其中 $22$ 被记成了 $12$，则总和 $100$ 变为 $100 + 10 = 110$，正确均值为 $\\frac{110}{5} = 22$。\n\n检验：均值增加了 $\\frac{10}{5} = 2$，即这个差由 $5$ 个值分摊。\n\n> **注意。** 差要由全部 $n$ 个值分摊，而不是整个加到均值上：把 $10$ 加到均值 $20$ 上会得到 $30$。另外样本量仍是 $5$，因为只是改正了一个值，没有增加值。",
   ),
   generate(rng) {
     const n = rng.int(4, 12);
@@ -1908,16 +2699,55 @@ const correctedMean: KnowledgePointDef = {
     const wrongValue = rng.int(5, 40);
     const right = rng.pick([...Array(40).keys()].map((i) => i + 5).filter((v) => v !== wrongValue));
     const answer = Q.of(mean).add(Q.of(right - wrongValue, n));
+    const total = n * mean;
+    const fixed = total + right - wrongValue;
+    const gap = right - wrongValue;
     return numberProblem({
       prompt: t(
         `A sample of ${n} values has mean ${mean}, but one value was recorded as ${wrongValue} instead of ${right}. Find the correct mean.`,
         `${n} 个值的均值是 ${mean}，但其中一个值被记成了 ${wrongValue}，实际是 ${right}。求正确的均值。`,
       ),
       answer,
-      wrong: [Q.of(mean + right - wrongValue), Q.of(n * mean + right, n + 1), Q.of(mean)],
-      solution: t(
-        `The total changes by $${right} - ${wrongValue} = ${right - wrongValue}$. Dividing by ${n} and adding to ${mean} gives $${answer.toLatex()}$.`,
-        `总和变化 $${right} - ${wrongValue} = ${right - wrongValue}$。除以 ${n}，再加到 ${mean} 上，得 $${answer.toLatex()}$。`,
+      wrong: [Q.of(mean)],
+      mistakes: distinctMistakes(answer, [
+        why(
+          Q.of(mean + gap),
+          `This adds the whole difference $${gap}$ to the mean; it is shared among the $${n}$ values.`,
+          `这把整个差 $${gap}$ 加到了均值上；它应由 $${n}$ 个值分摊。`,
+        ),
+        why(
+          Q.of(total + right, n + 1),
+          `This adds $${right}$ as a new value, making $${n + 1}$ values, but the wrong value must be replaced, not kept.`,
+          `这把 $${right}$ 当作新值加入，变成 $${n + 1}$ 个值，但错误的值应被替换，而不是保留。`,
+        ),
+        why(
+          Q.of(mean).sub(Q.of(gap, n)),
+          `This shifts the mean the wrong way: the total changes by $${right} - ${wrongValue}$, not $${wrongValue} - ${right}$.`,
+          `这使均值向反方向移动：总和的变化是 $${right} - ${wrongValue}$，而不是 $${wrongValue} - ${right}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Recover the total", "恢复总和"],
+            t(`The recorded total is $${n} \\cdot ${mean} = ${total}$.`, `记录的总和为 $${n} \\cdot ${mean} = ${total}$。`),
+          ],
+          [
+            ["Correct the total", "修正总和"],
+            t(
+              `Replacing $${wrongValue}$ by $${right}$ gives $${total} - ${wrongValue} + ${right} = ${fixed}$.`,
+              `把 $${wrongValue}$ 换成 $${right}$，得 $${total} - ${wrongValue} + ${right} = ${fixed}$。`,
+            ),
+          ],
+          [
+            ["Divide by the same size", "除以原样本量"],
+            t(`$\\frac{${fixed}}{${n}} = ${answer.toLatex()}$.`, `$\\frac{${fixed}}{${n}} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `The mean ${gap > 0 ? "rose" : "fell"} by $\\frac{${Math.abs(gap)}}{${n}}$, the difference shared among the $${n}$ values: $${mean} ${gap > 0 ? "+" : "-"} \\frac{${Math.abs(gap)}}{${n}} = ${answer.toLatex()}$.`,
+          `均值${gap > 0 ? "增加" : "减少"}了 $\\frac{${Math.abs(gap)}}{${n}}$，即差由 $${n}$ 个值分摊：$${mean} ${gap > 0 ? "+" : "-"} \\frac{${Math.abs(gap)}}{${n}} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -1927,8 +2757,8 @@ const uniformEndpoint: KnowledgePointDef = {
   id: "an-endpoint-of-a-uniform-by-the-method-of-moments",
   title: t("An endpoint of a uniform by the method of moments", "用矩法估计均匀分布的端点"),
   explanation: t(
-    "A uniform distribution on $[a, b]$ has mean $\\frac{a + b}{2}$ and variance $\\frac{(b - a)^2}{12}$. Matching these to the sample gives two equations. The variance gives the width $b - a$, after a square root, and the mean gives the midpoint. Each endpoint then lies half a width from the midpoint, and so the two estimates follow together.",
-    "$[a, b]$ 上的均匀分布，均值是 $\\frac{a + b}{2}$，方差是 $\\frac{(b - a)^2}{12}$。让它们与样本相等，就得到两个方程。方差开平方后给出宽度 $b - a$，均值给出中点。每个端点都与中点相距半个宽度，所以两个估计值一起得到。",
+    "A uniform distribution on $[a, b]$ has mean $\\frac{a + b}{2}$ and variance $\\frac{(b - a)^2}{12}$. Matching these to the sample gives two equations. The variance gives the width $b - a$, after a square root, and the mean gives the midpoint. Each endpoint then lies half a width from the midpoint, and so the two estimates follow together.\n\nA sample with mean $5$ and variance $3$ gives $\\frac{w^{2}}{12} = 3$, so $w^{2} = 36$ and $w = 6$. The endpoints are $5 - 3 = 2$ and $5 + 3 = 8$.\n\nCheck: the uniform distribution on $[2, 8]$ has mean $\\frac{2 + 8}{2} = 5$ and variance $\\frac{6^{2}}{12} = 3$, matching the sample.\n\n> **Watch out.** The mean is the midpoint, so $b$ is half a width above it: $5 + 6 = 11$ adds a full width and overshoots by half a width. And take the square root of $12 \\cdot 3$, not of $3$ alone.",
+    "$[a, b]$ 上的均匀分布，均值是 $\\frac{a + b}{2}$，方差是 $\\frac{(b - a)^2}{12}$。让它们与样本相等，就得到两个方程。方差开平方后给出宽度 $b - a$，均值给出中点。每个端点都与中点相距半个宽度，所以两个估计值一起得到。\n\n样本均值为 $5$、方差为 $3$ 时，$\\frac{w^{2}}{12} = 3$，所以 $w^{2} = 36$，$w = 6$。端点为 $5 - 3 = 2$ 和 $5 + 3 = 8$。\n\n检验：$[2, 8]$ 上的均匀分布均值为 $\\frac{2 + 8}{2} = 5$，方差为 $\\frac{6^{2}}{12} = 3$，与样本一致。\n\n> **注意。** 均值是中点，所以 $b$ 在它上方半个宽度：$5 + 6 = 11$ 多走了半个宽度。并且要对 $12 \\cdot 3$ 开平方，而不是只对 $3$ 开平方。",
   ),
   generate(rng) {
     const mean = rng.int(-10, 20);
@@ -1943,9 +2773,37 @@ const uniformEndpoint: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(mean + width), Q.of(mean).sub(half), Q.of(mean).add(variance)],
-      solution: t(
-        `The width satisfies $\\frac{w^2}{12} = ${variance.toLatex()}$, so $w = ${width}$. Then $b = ${mean} + ${half.toLatex()} = ${answer.toLatex()}$.`,
-        `宽度满足 $\\frac{w^2}{12} = ${variance.toLatex()}$，所以 $w = ${width}$。于是 $b = ${mean} + ${half.toLatex()} = ${answer.toLatex()}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          mean + width,
+          "This adds the whole width to the mean; the mean is the midpoint, so $b$ is only half a width above it.",
+          "这把整个宽度加到均值上；均值是中点，$b$ 只比它高半个宽度。",
+        ),
+        why(Q.of(mean).sub(half), "This is the lower endpoint $a$, half a width below the mean.", "这是下端点 $a$，比均值低半个宽度。"),
+        why(
+          Q.of(mean).add(variance),
+          "This adds the variance to the mean; the variance first gives the width through $w^{2} = 12\\sigma^{2}$.",
+          "这把方差加到均值上；方差要先通过 $w^{2} = 12\\sigma^{2}$ 给出宽度。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the width", "求宽度"],
+            t(
+              `From $\\frac{w^{2}}{12} = ${variance.toLatex()}$, $w^{2} = ${width * width}$ and $w = ${width}$.`,
+              `由 $\\frac{w^{2}}{12} = ${variance.toLatex()}$ 得 $w^{2} = ${width * width}$，$w = ${width}$。`,
+            ),
+          ],
+          [
+            ["Step up from the midpoint", "从中点向上"],
+            t(`$b = ${mean} + \\frac{${width}}{2} = ${answer.toLatex()}$.`, `$b = ${mean} + \\frac{${width}}{2} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `With $a = ${Q.of(mean).sub(half).toLatex()}$ and $b = ${answer.toLatex()}$, the midpoint is $${mean}$ and $\\frac{(b - a)^{2}}{12} = \\frac{${width * width}}{12} = ${variance.toLatex()}$, matching the sample.`,
+          `取 $a = ${Q.of(mean).sub(half).toLatex()}$，$b = ${answer.toLatex()}$，中点为 $${mean}$，$\\frac{(b - a)^{2}}{12} = \\frac{${width * width}}{12} = ${variance.toLatex()}$，与样本一致。`,
+        ),
       ),
     });
   },
@@ -1955,8 +2813,8 @@ const sizeBehindEstimate: KnowledgePointDef = {
   id: "the-sample-size-behind-an-estimated-proportion",
   title: t("The sample size behind an estimated proportion", "估计比例背后的样本量"),
   explanation: t(
-    "The estimated variance of a sample proportion is $\\frac{\\hat{p}(1 - \\hat{p})}{n}$. Published results often give only the estimate and its variance or margin, and the formula then shows how large the sample must have been. Multiply $\\hat{p}$ by $1 - \\hat{p}$, and divide by the stated variance. This makes it possible to check a claim about precision.",
-    "样本比例的估计方差是 $\\frac{\\hat{p}(1 - \\hat{p})}{n}$。发表的结果常常只给估计值及其方差或误差范围，这个公式就能说明样本必须有多大。用 $\\hat{p}$ 乘以 $1 - \\hat{p}$，再除以给出的方差。这样就能核对关于精度的说法。",
+    "The estimated variance of a sample proportion is $\\frac{\\hat{p}(1 - \\hat{p})}{n}$. Published results often give only the estimate and its variance or margin, and the formula then shows how large the sample must have been. Multiply $\\hat{p}$ by $1 - \\hat{p}$, and divide by the stated variance. This makes it possible to check a claim about precision.\n\nWith $\\hat{p} = \\frac{1}{5}$ and estimated variance $\\frac{1}{1250}$: $\\hat{p}(1 - \\hat{p}) = \\frac{1}{5} \\cdot \\frac{4}{5} = \\frac{4}{25}$, and $n = \\frac{4}{25} \\div \\frac{1}{1250} = 200$.\n\nCheck: $\\frac{4}{25} \\div 200 = \\frac{4}{5000} = \\frac{1}{1250}$, the stated variance.\n\n> **Watch out.** The numerator is $\\hat{p}(1 - \\hat{p})$, not $\\hat{p}$: $\\frac{1}{5} \\div \\frac{1}{1250} = 250$ is too large. And divide by the variance, not by its square root, which would be the standard error.",
+    "样本比例的估计方差是 $\\frac{\\hat{p}(1 - \\hat{p})}{n}$。发表的结果常常只给估计值及其方差或误差范围，这个公式就能说明样本必须有多大。用 $\\hat{p}$ 乘以 $1 - \\hat{p}$，再除以给出的方差。这样就能核对关于精度的说法。\n\n若 $\\hat{p} = \\frac{1}{5}$，估计方差为 $\\frac{1}{1250}$：$\\hat{p}(1 - \\hat{p}) = \\frac{1}{5} \\cdot \\frac{4}{5} = \\frac{4}{25}$，$n = \\frac{4}{25} \\div \\frac{1}{1250} = 200$。\n\n检验：$\\frac{4}{25} \\div 200 = \\frac{4}{5000} = \\frac{1}{1250}$，正是给出的方差。\n\n> **注意。** 分子是 $\\hat{p}(1 - \\hat{p})$，不是 $\\hat{p}$：$\\frac{1}{5} \\div \\frac{1}{1250} = 250$ 偏大。并且要除以方差，而不是它的平方根（那是标准误）。",
   ),
   generate(rng) {
     const [u, v] = rng.pick([
@@ -1981,9 +2839,44 @@ const sizeBehindEstimate: KnowledgePointDef = {
       answer: n,
       form: "integer",
       wrong: [n / 2, 2 * n, 4 * n],
-      solution: t(
-        `Here $\\hat{p}(1 - \\hat{p}) = ${product.toLatex()}$. Dividing by the variance gives $n = ${n}$.`,
-        `这里 $\\hat{p}(1 - \\hat{p}) = ${product.toLatex()}$。除以方差，得 $n = ${n}$。`,
+      mistakes: distinctMistakes(n, [
+        why(
+          p.div(variance),
+          "This divides $\\hat{p}$ alone by the variance; the numerator is $\\hat{p}(1 - \\hat{p})$.",
+          "这只用 $\\hat{p}$ 除以方差；分子应为 $\\hat{p}(1 - \\hat{p})$。",
+        ),
+        why(
+          Q.one.sub(p).div(variance),
+          "This divides $1 - \\hat{p}$ alone by the variance; the numerator is the product $\\hat{p}(1 - \\hat{p})$.",
+          "这只用 $1 - \\hat{p}$ 除以方差；分子应为乘积 $\\hat{p}(1 - \\hat{p})$。",
+        ),
+        why(
+          Q.one.div(variance),
+          "This takes the reciprocal of the variance and forgets the factor $\\hat{p}(1 - \\hat{p})$.",
+          "这取了方差的倒数，漏掉了因子 $\\hat{p}(1 - \\hat{p})$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Multiply the proportions", "两个比例相乘"],
+            t(
+              `$\\hat{p}(1 - \\hat{p}) = ${p.toLatex()} \\cdot ${Q.one.sub(p).toLatex()} = ${product.toLatex()}$.`,
+              `$\\hat{p}(1 - \\hat{p}) = ${p.toLatex()} \\cdot ${Q.one.sub(p).toLatex()} = ${product.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Divide by the variance", "除以方差"],
+            t(
+              `$n = ${product.toLatex()} \\div ${variance.toLatex()} = ${n}$.`,
+              `$n = ${product.toLatex()} \\div ${variance.toLatex()} = ${n}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Putting $n = ${n}$ back: $\\frac{${product.toLatex()}}{${n}} = ${variance.toLatex()}$, the stated variance.`,
+          `代回 $n = ${n}$：$\\frac{${product.toLatex()}}{${n}} = ${variance.toLatex()}$，正是给出的方差。`,
+        ),
       ),
     });
   },
@@ -1993,20 +2886,52 @@ const telescopingProduct: KnowledgePointDef = {
   id: "a-telescoping-product",
   title: t("A telescoping product", "裂项乘积"),
   explanation: t(
-    "In a product of fractions such as $\\frac{i + 1}{i}$, each numerator cancels the denominator of the next factor. Only the last numerator and the first denominator survive, so the whole product collapses to a single fraction. Write out the first few factors and the last few, and the pattern of cancellation becomes clear.",
-    "在 $\\frac{i + 1}{i}$ 这样的分式乘积中，每个分子都与下一个因子的分母相消。只有最后的分子和最初的分母留下来，所以整个乘积化成一个分式。写出前几个因子和后几个因子，相消的规律就清楚了。",
+    "In a product of fractions such as $\\frac{i + 1}{i}$, each numerator cancels the denominator of the next factor. Only the last numerator and the first denominator survive, so the whole product collapses to a single fraction. Write out the first few factors and the last few, and the pattern of cancellation becomes clear.\n\nFor $\\prod_{i=2}^{5} \\frac{i + 1}{i} = \\frac{3}{2} \\cdot \\frac{4}{3} \\cdot \\frac{5}{4} \\cdot \\frac{6}{5}$, the $3$, $4$ and $5$ cancel, leaving $\\frac{6}{2} = 3$.\n\nCheck: multiplying step by step, $\\frac{3}{2} \\cdot \\frac{4}{3} = 2$, then $2 \\cdot \\frac{5}{4} = \\frac{5}{2}$, then $\\frac{5}{2} \\cdot \\frac{6}{5} = 3$.\n\n> **Watch out.** The last factor is $\\frac{5 + 1}{5}$, so the surviving numerator is $6$, not $5$: $\\frac{5}{2}$ stops one factor early. And the first denominator is the starting index $2$, not $1$.",
+    "在 $\\frac{i + 1}{i}$ 这样的分式乘积中，每个分子都与下一个因子的分母相消。只有最后的分子和最初的分母留下来，所以整个乘积化成一个分式。写出前几个因子和后几个因子，相消的规律就清楚了。\n\n例如 $\\prod_{i=2}^{5} \\frac{i + 1}{i} = \\frac{3}{2} \\cdot \\frac{4}{3} \\cdot \\frac{5}{4} \\cdot \\frac{6}{5}$，$3$、$4$、$5$ 相消，剩下 $\\frac{6}{2} = 3$。\n\n检验：逐步相乘，$\\frac{3}{2} \\cdot \\frac{4}{3} = 2$，$2 \\cdot \\frac{5}{4} = \\frac{5}{2}$，$\\frac{5}{2} \\cdot \\frac{6}{5} = 3$。\n\n> **注意。** 最后一个因子是 $\\frac{5 + 1}{5}$，所以留下的分子是 $6$ 而不是 $5$：$\\frac{5}{2}$ 少乘了一个因子。最初的分母是起始下标 $2$，不是 $1$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const b = rng.int(a + 1, a + 20);
     const answer = Q.of(b + 1, a);
+    const fr = (top: number | string, bottom: number) => (bottom === 1 ? `${top}` : `\\frac{${top}}{${bottom}}`);
     return numberProblem({
       prompt: t(`Find $\\prod_{i=${a}}^{${b}} \\frac{i + 1}{i}$.`, `求 $\\prod_{i=${a}}^{${b}} \\frac{i + 1}{i}$。`),
       answer,
       wrong: [Q.of(b, a), Q.of(b + 1, a + 1), Q.of(b - a + 1)],
-      solution: t(
-        `The factors cancel in a chain, leaving the last numerator ${b + 1} over the first denominator ${a}, which is $${answer.toLatex()}$.`,
-        `各因子依次相消，留下最后的分子 ${b + 1} 和最初的分母 ${a}，即 $${answer.toLatex()}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          Q.of(b, a),
+          `This stops one factor early; the last factor is $\\frac{${b + 1}}{${b}}$, so the surviving numerator is $${b + 1}$.`,
+          `这少乘了最后一个因子；最后的因子是 $\\frac{${b + 1}}{${b}}$，留下的分子是 $${b + 1}$。`,
+        ),
+        why(
+          Q.of(b + 1, a + 1),
+          `This uses $${a + 1}$ as the first denominator; the first factor is $${fr(a + 1, a)}$, so the denominator $${a}$ survives.`,
+          `这把 $${a + 1}$ 当作最初的分母；第一个因子是 $${fr(a + 1, a)}$，留下的分母是 $${a}$。`,
+        ),
+        why(b - a + 1, "This is the number of factors, not their product.", "这是因子的个数，不是它们的乘积。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write out the factors", "写出各因子"],
+            t(
+              `$\\prod_{i=${a}}^{${b}} \\frac{i + 1}{i} = ${fr(a + 1, a)} \\cdot \\frac{${a + 2}}{${a + 1}} \\cdots \\frac{${b + 1}}{${b}}$.`,
+              `$\\prod_{i=${a}}^{${b}} \\frac{i + 1}{i} = ${fr(a + 1, a)} \\cdot \\frac{${a + 2}}{${a + 1}} \\cdots \\frac{${b + 1}}{${b}}$。`,
+            ),
+          ],
+          [
+            ["Cancel in a chain", "依次相消"],
+            t(
+              `Each numerator cancels the next denominator, leaving the last numerator $${b + 1}$ over the first denominator $${a}$, which is $${answer.toLatex()}$.`,
+              `每个分子与下一个分母相消，留下最后的分子 $${b + 1}$ 和最初的分母 $${a}$，即 $${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The first $k$ factors multiply to $${fr(`${a} + k`, a)}$; there are $${b} - ${a} + 1 = ${b - a + 1}$ factors, and $${fr(`${a} + ${b - a + 1}`, a)} = ${answer.toLatex()}$ agrees.`,
+          `前 $k$ 个因子之积为 $${fr(`${a} + k`, a)}$；共有 $${b} - ${a} + 1 = ${b - a + 1}$ 个因子，$${fr(`${a} + ${b - a + 1}`, a)} = ${answer.toLatex()}$，结果一致。`,
+        ),
       ),
     });
   },
@@ -2068,8 +2993,8 @@ const poissonMle: KnowledgePointDef = {
   id: "maximizing-a-poisson-log-likelihood",
   title: t("Maximizing a Poisson log-likelihood", "使泊松对数似然最大"),
   explanation: t(
-    "For a Poisson sample, the log-likelihood is $\\ell(\\lambda) = -n\\lambda + (\\sum x_i)\\ln\\lambda$ plus terms free of $\\lambda$. Its derivative is $-n + \\frac{\\sum x_i}{\\lambda}$. Setting this to zero gives the sample mean. The second derivative is negative, so this is a true maximum. The factorials in the likelihood do not affect the result.",
-    "对泊松样本，对数似然是 $\\ell(\\lambda) = -n\\lambda + (\\sum x_i)\\ln\\lambda$ 加上不含 $\\lambda$ 的项。它的导数是 $-n + \\frac{\\sum x_i}{\\lambda}$。令它为零，得到样本均值。二阶导数为负，所以这确实是最大值。似然中的阶乘不影响结果。",
+    "For a Poisson sample, the log-likelihood is $\\ell(\\lambda) = -n\\lambda + (\\sum x_i)\\ln\\lambda$ plus terms free of $\\lambda$. Its derivative is $-n + \\frac{\\sum x_i}{\\lambda}$. Setting this to zero gives the sample mean. The second derivative is negative, so this is a true maximum. The factorials in the likelihood do not affect the result.\n\nFor the sample $2, 4, 3$: $n = 3$ and $\\sum x_i = 9$, so $\\ell'(\\lambda) = -3 + \\frac{9}{\\lambda}$, which is zero at $\\hat{\\lambda} = 3$.\n\nCheck: $\\ell''(\\lambda) = -\\frac{9}{\\lambda^{2}} < 0$, so $\\lambda = 3$ is a maximum, and it is the sample mean $\\frac{9}{3}$.\n\n> **Watch out.** Solving $-n + \\frac{\\sum x_i}{\\lambda} = 0$ gives $\\lambda = \\frac{\\sum x_i}{n}$, not $\\frac{n}{\\sum x_i} = \\frac{1}{3}$; the Poisson mean is $\\lambda$ itself, so its estimate is the sample mean, not its reciprocal.",
+    "对泊松样本，对数似然是 $\\ell(\\lambda) = -n\\lambda + (\\sum x_i)\\ln\\lambda$ 加上不含 $\\lambda$ 的项。它的导数是 $-n + \\frac{\\sum x_i}{\\lambda}$。令它为零，得到样本均值。二阶导数为负，所以这确实是最大值。似然中的阶乘不影响结果。\n\n例如样本 $2, 4, 3$：$n = 3$，$\\sum x_i = 9$，所以 $\\ell'(\\lambda) = -3 + \\frac{9}{\\lambda}$，在 $\\hat{\\lambda} = 3$ 处为零。\n\n检验：$\\ell''(\\lambda) = -\\frac{9}{\\lambda^{2}} < 0$，所以 $\\lambda = 3$ 是最大值，它正是样本均值 $\\frac{9}{3}$。\n\n> **注意。** 解 $-n + \\frac{\\sum x_i}{\\lambda} = 0$ 得 $\\lambda = \\frac{\\sum x_i}{n}$，不是 $\\frac{n}{\\sum x_i} = \\frac{1}{3}$；泊松分布的均值就是 $\\lambda$，所以它的估计是样本均值，而不是其倒数。",
   ),
   generate(rng) {
     const n = rng.int(4, 6);
@@ -2083,9 +3008,44 @@ const poissonMle: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(n, sum), Q.of(sum), Q.of(sum, n + 1)],
-      solution: t(
-        `The derivative $-${n} + \\frac{${sum}}{\\lambda}$ is zero at $\\lambda = ${answer.toLatex()}$, the sample mean.`,
-        `导数 $-${n} + \\frac{${sum}}{\\lambda}$ 在 $\\lambda = ${answer.toLatex()}$ 处为零，这就是样本均值。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          Q.of(n, sum),
+          "This inverts the solution; $-n + \\frac{\\sum x_i}{\\lambda} = 0$ gives $\\lambda = \\frac{\\sum x_i}{n}$.",
+          "这把解颠倒了；$-n + \\frac{\\sum x_i}{\\lambda} = 0$ 给出 $\\lambda = \\frac{\\sum x_i}{n}$。",
+        ),
+        why(
+          sum,
+          "This is the total count; the derivative also has the term $-n$, so the total is divided by $n$.",
+          "这是总计数；导数中还有 $-n$ 项，所以总数要除以 $n$。",
+        ),
+        why(
+          Q.of(sum, n + 1),
+          `This divides by $${n + 1}$; the sample has $n = ${n}$ values.`,
+          `这除以了 $${n + 1}$；样本只有 $n = ${n}$ 个值。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the log-likelihood", "写出对数似然"],
+            t(
+              `With $n = ${n}$ and $\\sum x_i = ${data.join(" + ")} = ${sum}$, $\\ell(\\lambda) = -${n}\\lambda + ${sum}\\ln\\lambda$ plus terms free of $\\lambda$.`,
+              `由 $n = ${n}$，$\\sum x_i = ${data.join(" + ")} = ${sum}$，$\\ell(\\lambda) = -${n}\\lambda + ${sum}\\ln\\lambda$ 加上不含 $\\lambda$ 的项。`,
+            ),
+          ],
+          [
+            ["Set the derivative to zero", "令导数为零"],
+            t(
+              `$\\ell'(\\lambda) = -${n} + \\frac{${sum}}{\\lambda} = 0$ gives $\\lambda = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$, the sample mean.`,
+              `$\\ell'(\\lambda) = -${n} + \\frac{${sum}}{\\lambda} = 0$ 给出 $\\lambda = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$，即样本均值。`,
+            ),
+          ],
+        ],
+        t(
+          `The second derivative $-\\frac{${sum}}{\\lambda^{2}}$ is negative, so $${answer.toLatex()}$ is a maximum, not a minimum.`,
+          `二阶导数 $-\\frac{${sum}}{\\lambda^{2}}$ 为负，所以 $${answer.toLatex()}$ 是最大值而不是最小值。`,
+        ),
       ),
     });
   },
@@ -2095,8 +3055,8 @@ const exponentialMle: KnowledgePointDef = {
   id: "maximizing-an-exponential-log-likelihood",
   title: t("Maximizing an exponential log-likelihood", "使指数对数似然最大"),
   explanation: t(
-    "For an exponential sample, the log-likelihood is $\\ell(\\lambda) = n\\ln\\lambda - \\lambda\\sum x_i$, and its derivative is $\\frac{n}{\\lambda} - \\sum x_i$. Setting this to zero gives $\\hat{\\lambda} = \\frac{n}{\\sum x_i}$, the reciprocal of the sample mean. That makes sense, because the mean of the distribution is the reciprocal of its rate.",
-    "对指数样本，对数似然是 $\\ell(\\lambda) = n\\ln\\lambda - \\lambda\\sum x_i$，导数是 $\\frac{n}{\\lambda} - \\sum x_i$。令它为零，得 $\\hat{\\lambda} = \\frac{n}{\\sum x_i}$，即样本均值的倒数。这是合理的，因为这个分布的均值正是速率的倒数。",
+    "For an exponential sample, the log-likelihood is $\\ell(\\lambda) = n\\ln\\lambda - \\lambda\\sum x_i$, and its derivative is $\\frac{n}{\\lambda} - \\sum x_i$. Setting this to zero gives $\\hat{\\lambda} = \\frac{n}{\\sum x_i}$, the reciprocal of the sample mean. That makes sense, because the mean of the distribution is the reciprocal of its rate.\n\nFor $4$ values with $\\sum x_i = 10$: $\\ell'(\\lambda) = \\frac{4}{\\lambda} - 10 = 0$ gives $\\hat{\\lambda} = \\frac{4}{10} = \\frac{2}{5}$.\n\nCheck: the sample mean is $\\frac{10}{4} = \\frac{5}{2}$, and an exponential with rate $\\frac{2}{5}$ has mean $\\frac{1}{2/5} = \\frac{5}{2}$, which matches.\n\n> **Watch out.** $\\frac{\\sum x_i}{n} = \\frac{5}{2}$ estimates the mean $\\frac{1}{\\lambda}$, not the rate $\\lambda$; the rate is its reciprocal.",
+    "对指数样本，对数似然是 $\\ell(\\lambda) = n\\ln\\lambda - \\lambda\\sum x_i$，导数是 $\\frac{n}{\\lambda} - \\sum x_i$。令它为零，得 $\\hat{\\lambda} = \\frac{n}{\\sum x_i}$，即样本均值的倒数。这是合理的，因为这个分布的均值正是速率的倒数。\n\n若 $4$ 个值满足 $\\sum x_i = 10$：$\\ell'(\\lambda) = \\frac{4}{\\lambda} - 10 = 0$ 得 $\\hat{\\lambda} = \\frac{4}{10} = \\frac{2}{5}$。\n\n检验：样本均值为 $\\frac{10}{4} = \\frac{5}{2}$，速率为 $\\frac{2}{5}$ 的指数分布均值为 $\\frac{1}{2/5} = \\frac{5}{2}$，两者一致。\n\n> **注意。** $\\frac{\\sum x_i}{n} = \\frac{5}{2}$ 估计的是均值 $\\frac{1}{\\lambda}$，不是速率 $\\lambda$；速率是它的倒数。",
   ),
   generate(rng) {
     const n = rng.int(3, 40);
@@ -2109,9 +3069,37 @@ const exponentialMle: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(sum, n), Q.of(1, sum), Q.of(n + 1, sum)],
-      solution: t(
-        `The derivative $\\frac{${n}}{\\lambda} - ${sum}$ is zero at $\\lambda = ${answer.toLatex()}$.`,
-        `导数 $\\frac{${n}}{\\lambda} - ${sum}$ 在 $\\lambda = ${answer.toLatex()}$ 处为零。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          Q.of(sum, n),
+          "This is the sample mean, which estimates the mean $\\frac{1}{\\lambda}$; the rate is its reciprocal.",
+          "这是样本均值，它估计的是均值 $\\frac{1}{\\lambda}$；速率是它的倒数。",
+        ),
+        why(
+          Q.of(1, sum),
+          "This drops the factor $n$; the term $n\\ln\\lambda$ differentiates to $\\frac{n}{\\lambda}$.",
+          "这漏掉了因子 $n$；$n\\ln\\lambda$ 的导数是 $\\frac{n}{\\lambda}$。",
+        ),
+        why(Q.of(n + 1, sum), `This uses $${n + 1}$ in place of $n = ${n}$.`, `这用 $${n + 1}$ 代替了 $n = ${n}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the log-likelihood", "写出对数似然"],
+            t(`$\\ell(\\lambda) = ${n}\\ln\\lambda - ${sum}\\lambda$.`, `$\\ell(\\lambda) = ${n}\\ln\\lambda - ${sum}\\lambda$。`),
+          ],
+          [
+            ["Set the derivative to zero", "令导数为零"],
+            t(
+              `$\\ell'(\\lambda) = \\frac{${n}}{\\lambda} - ${sum} = 0$ gives $\\lambda = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$.`,
+              `$\\ell'(\\lambda) = \\frac{${n}}{\\lambda} - ${sum} = 0$ 给出 $\\lambda = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The second derivative $-\\frac{${n}}{\\lambda^{2}}$ is negative, so this is a maximum; and the fitted mean $\\frac{1}{\\lambda} = ${Q.of(sum, n).toLatex()}$ equals the sample mean $\\frac{${sum}}{${n}}$.`,
+          `二阶导数 $-\\frac{${n}}{\\lambda^{2}}$ 为负，所以这是最大值；拟合的均值 $\\frac{1}{\\lambda} = ${Q.of(sum, n).toLatex()}$ 等于样本均值 $\\frac{${sum}}{${n}}$。`,
+        ),
       ),
     });
   },
@@ -2121,12 +3109,14 @@ const geometricMle: KnowledgePointDef = {
   id: "the-best-p-for-a-geometric-sample",
   title: t("The best $p$ for a geometric sample", "几何样本的最优 $p$"),
   explanation: t(
-    "If $X$ counts the trials up to and including the first success, the likelihood of a sample is $p^n(1 - p)^{\\sum x_i - n}$. The exponents count the successes and the failures. Maximizing it gives $\\hat{p} = \\frac{n}{\\sum x_i}$, the share of all trials that were successes, which is the estimate common sense suggests.",
-    "如果 $X$ 是到第一次成功为止（含这一次）的试验次数，样本的似然是 $p^n(1 - p)^{\\sum x_i - n}$。指数分别是成功和失败的次数。使它最大，得 $\\hat{p} = \\frac{n}{\\sum x_i}$，即所有试验中成功的比例，这正是常识所提示的估计。",
+    "If $X$ counts the trials up to and including the first success, the likelihood of a sample is $p^n(1 - p)^{\\sum x_i - n}$. The exponents count the successes and the failures. Maximizing it gives $\\hat{p} = \\frac{n}{\\sum x_i}$, the share of all trials that were successes, which is the estimate common sense suggests.\n\nFor the runs $2, 3, 5$: there are $3$ successes in $10$ trials, so the likelihood is $p^{3}(1 - p)^{7}$ and $\\hat{p} = \\frac{3}{10}$.\n\nCheck: the log-likelihood $3\\ln p + 7\\ln(1 - p)$ has derivative $\\frac{3}{p} - \\frac{7}{1 - p}$, which is zero when $3(1 - p) = 7p$, that is at $p = \\frac{3}{10}$.\n\n> **Watch out.** The estimate is successes over trials, $\\frac{n}{\\sum x_i}$, not $\\frac{\\sum x_i}{n} = \\frac{10}{3}$, which is the mean run length and is not even a probability.",
+    "如果 $X$ 是到第一次成功为止（含这一次）的试验次数，样本的似然是 $p^n(1 - p)^{\\sum x_i - n}$。指数分别是成功和失败的次数。使它最大，得 $\\hat{p} = \\frac{n}{\\sum x_i}$，即所有试验中成功的比例，这正是常识所提示的估计。\n\n例如各轮次数为 $2, 3, 5$：$10$ 次试验中有 $3$ 次成功，似然为 $p^{3}(1 - p)^{7}$，$\\hat{p} = \\frac{3}{10}$。\n\n检验：对数似然 $3\\ln p + 7\\ln(1 - p)$ 的导数为 $\\frac{3}{p} - \\frac{7}{1 - p}$，当 $3(1 - p) = 7p$，即 $p = \\frac{3}{10}$ 时为零。\n\n> **注意。** 估计是成功次数除以试验次数 $\\frac{n}{\\sum x_i}$，不是 $\\frac{\\sum x_i}{n} = \\frac{10}{3}$：那是平均每轮的次数，甚至不是一个概率。",
   ),
   generate(rng) {
     const n = rng.int(4, 6);
-    const data = sampleOf(rng, n, 1, 9);
+    const drawn = sampleOf(rng, n, 1, 9);
+    // At least one failure, so that the likelihood peaks inside (0, 1).
+    const data = drawn.every((x) => x === 1) ? [2, ...drawn.slice(1)] : drawn;
     const sum = data.reduce((total, x) => total + x, 0);
     const failures = sum - n;
     const answer = Q.of(n, sum);
@@ -2137,9 +3127,44 @@ const geometricMle: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(sum, n), Q.of(n, sum + n), Q.of(1, sum)],
-      solution: t(
-        `There are ${n} successes and ${failures} ${failures === 1 ? "failure" : "failures"} in ${sum} trials, so the likelihood peaks at $p = ${answer.toLatex()}$.`,
-        `${sum} 次试验中有 ${n} 次成功、${failures} 次失败，所以似然在 $p = ${answer.toLatex()}$ 处最大。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          Q.of(sum, n),
+          "This is the mean number of trials per run, the reciprocal of the estimate; a probability cannot exceed $1$.",
+          "这是每轮的平均试验次数，是估计值的倒数；概率不能超过 $1$。",
+        ),
+        why(
+          Q.of(n, sum + n),
+          "This adds the successes to the trial count again; each count already includes its own success.",
+          "这把成功次数又加到了试验次数上；每个计数已经包含了它自己的那次成功。",
+        ),
+        why(
+          Q.of(1, sum),
+          `This counts only one success; there are $${n}$ runs, each ending in a success.`,
+          `这只计了一次成功；共有 $${n}$ 轮，每轮都以一次成功结束。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count successes and failures", "数成功与失败"],
+            t(
+              `The ${n} runs use $${data.join(" + ")} = ${sum}$ trials: $${n}$ successes and $${failures}$ ${failures === 1 ? "failure" : "failures"}.`,
+              `${n} 轮共用了 $${data.join(" + ")} = ${sum}$ 次试验：$${n}$ 次成功、$${failures}$ 次失败。`,
+            ),
+          ],
+          [
+            ["Maximize the likelihood", "使似然最大"],
+            t(
+              `The likelihood is $p^{${n}}(1 - p)^{${failures}}$, and $\\frac{${n}}{p} - \\frac{${failures}}{1 - p} = 0$ gives $p = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$.`,
+              `似然为 $p^{${n}}(1 - p)^{${failures}}$，由 $\\frac{${n}}{p} - \\frac{${failures}}{1 - p} = 0$ 得 $p = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$。`,
+            ),
+          ],
+        ],
+        t(
+          `At $p = ${answer.toLatex()}$: $\\frac{${n}}{p} = ${Q.of(n).div(answer).toLatex()}$ and $\\frac{${failures}}{1 - p} = ${Q.of(failures).div(Q.one.sub(answer)).toLatex()}$, so the derivative is zero.`,
+          `在 $p = ${answer.toLatex()}$ 处：$\\frac{${n}}{p} = ${Q.of(n).div(answer).toLatex()}$，$\\frac{${failures}}{1 - p} = ${Q.of(failures).div(Q.one.sub(answer)).toLatex()}$，所以导数为零。`,
+        ),
       ),
     });
   },
@@ -3068,8 +4093,8 @@ const remainingUniformWait: KnowledgePointDef = {
   id: "the-expected-remaining-wait-for-a-uniform-time",
   title: t("The expected remaining wait for a uniform time", "均匀时间的期望剩余等待"),
   explanation: t(
-    "Given that a uniform waiting time on $[0, T]$ has already passed $a$, its conditional distribution is uniform on the rest of the interval, $[a, T]$. So the mean remaining wait is half of what is left, $\\frac{T - a}{2}$, and it shrinks as time passes. This is the opposite of the exponential distribution, which forgets the past: there, the expected remaining wait stays the same however long one has waited.",
-    "在 $[0, T]$ 上均匀的等待时间已经超过 $a$ 的条件下，它的条件分布在区间其余部分 $[a, T]$ 上均匀。所以平均剩余等待是剩下部分的一半，$\\frac{T - a}{2}$，它随时间流逝而缩短。这与指数分布相反，指数分布会遗忘过去：无论已经等了多久，期望的剩余等待都不变。",
+    "Given that a uniform waiting time on $[0, T]$ has already passed $a$, its conditional distribution is uniform on the rest of the interval, $[a, T]$. So the mean remaining wait is half of what is left, $\\frac{T - a}{2}$, and it shrinks as time passes. This is the opposite of the exponential distribution, which forgets the past: there, the expected remaining wait stays the same however long one has waited. If the wait is uniform on $[0, 120]$ and $100$ minutes have passed, the rest is uniform on $[0, 20]$, so the expected additional wait is $10$ minutes.\n\n> **Watch out.** $\\frac{T + a}{2}$, here $110$, is the expected total time; subtract the $a$ already waited.",
+    "在 $[0, T]$ 上均匀的等待时间已经超过 $a$ 的条件下，它的条件分布在区间其余部分 $[a, T]$ 上均匀。所以平均剩余等待是剩下部分的一半，$\\frac{T - a}{2}$，它随时间流逝而缩短。这与指数分布相反，指数分布会遗忘过去：无论已经等了多久，期望的剩余等待都不变。若等待时间在 $[0, 120]$ 上均匀，已过去 $100$ 分钟，剩余时间在 $[0, 20]$ 上均匀，所以期望的额外等待是 $10$ 分钟。\n\n> **注意。** $\\frac{T + a}{2}$，这里即 $110$，是期望的总时间；要减去已经等过的 $a$。",
   ),
   generate(rng) {
     const total = rng.int(10, 60);
@@ -3081,10 +4106,45 @@ const remainingUniformWait: KnowledgePointDef = {
         `等公交车的时间在 $[0, ${total}]$ 分钟上均匀。有人已经等了 ${a} 分钟，车还没来。求期望的额外等待时间（分钟）。`,
       ),
       answer,
-      wrong: [Q.of(total, 2), Q.of(total + a, 2), Q.of(total - a), Q.of(a, 2)],
-      solution: t(
-        `Given the wait so far, the time is uniform on $[${a}, ${total}]$, so the remaining time is uniform on $[0, ${total - a}]$. Its mean is $${answer.toLatex()}$.`,
-        `已知已等待的时间，总时间在 $[${a}, ${total}]$ 上均匀，所以剩余时间在 $[0, ${total - a}]$ 上均匀。它的均值是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(total, 2),
+          "That is the mean wait before any time has passed; the uniform distribution remembers.",
+          "那是还没开始等时的平均等待；均匀分布会记住已过去的时间。",
+        ),
+        why(
+          Q.of(total + a, 2),
+          `That is the expected total time; subtract the $${a}$ already waited.`,
+          `那是期望的总时间；要减去已经等过的 $${a}$。`,
+        ),
+        why(Q.of(total - a), "That is the longest possible remaining wait, not its mean.", "那是最长可能的剩余等待，不是均值。"),
+        why(
+          Q.of(a, 2),
+          "That is half the time already waited, not half the time that remains.",
+          "那是已等时间的一半，不是剩余时间的一半。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Restrict the interval", "限制区间"],
+            t(
+              `Given the wait so far, the time is uniform on $[${a}, ${total}]$, so the remaining time is uniform on $[0, ${total - a}]$.`,
+              `已知已等待的时间，总时间在 $[${a}, ${total}]$ 上均匀，所以剩余时间在 $[0, ${total - a}]$ 上均匀。`,
+            ),
+          ],
+          [
+            ["Take the midpoint", "取中点"],
+            t(
+              `Its mean is $\\frac{${total - a}}{2} = ${answer.toLatex()}$ minutes.`,
+              `它的均值是 $\\frac{${total - a}}{2} = ${answer.toLatex()}$ 分钟。`,
+            ),
+          ],
+        ],
+        t(
+          `The expected total time is $\\frac{${a} + ${total}}{2} = ${Q.of(total + a, 2).toLatex()}$, and $${Q.of(total + a, 2).toLatex()} - ${a} = ${answer.toLatex()}$.`,
+          `期望的总时间是 $\\frac{${a} + ${total}}{2} = ${Q.of(total + a, 2).toLatex()}$，而 $${Q.of(total + a, 2).toLatex()} - ${a} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -3094,8 +4154,8 @@ const exponentialGivenExceeds: KnowledgePointDef = {
   id: "the-mean-of-an-exponential-given-that-it-exceeds-a-value",
   title: t("The mean of an exponential given that it exceeds a value", "指数变量超过某值时的均值"),
   explanation: t(
-    "The exponential distribution is memoryless, so given $X > a$, the excess $X - a$ has the same distribution as $X$ itself. The excess therefore has mean $\\frac{1}{\\lambda}$, and adding $a$ back gives $E(X \\mid X > a) = a + \\frac{1}{\\lambda}$. This avoids an integration by parts. Note that this conditional mean is the total time, and not just the extra part, so the value $a$ must be included.",
-    "指数分布无记忆，所以在 $X > a$ 的条件下，超出量 $X - a$ 与 $X$ 本身同分布。因此超出量的均值是 $\\frac{1}{\\lambda}$，再加回 $a$，得 $E(X \\mid X > a) = a + \\frac{1}{\\lambda}$。这样就不必分部积分。注意这个条件均值是总时间，不只是多出来的部分，所以必须包含 $a$。",
+    "The exponential distribution is memoryless, so given $X > a$, the excess $X - a$ has the same distribution as $X$ itself. The excess therefore has mean $\\frac{1}{\\lambda}$, and adding $a$ back gives $E(X \\mid X > a) = a + \\frac{1}{\\lambda}$. This avoids an integration by parts. Note that this conditional mean is the total time, and not just the extra part, so the value $a$ must be included. With $\\lambda = \\frac{1}{20}$ and $a = 100$, $E(X \\mid X > 100) = 100 + 20 = 120$.\n\n> **Watch out.** The mean of the excess is $\\frac{1}{\\lambda}$, not $\\lambda$: with $\\lambda = \\frac{1}{20}$ it is $20$, not $\\frac{1}{20}$.",
+    "指数分布无记忆，所以在 $X > a$ 的条件下，超出量 $X - a$ 与 $X$ 本身同分布。因此超出量的均值是 $\\frac{1}{\\lambda}$，再加回 $a$，得 $E(X \\mid X > a) = a + \\frac{1}{\\lambda}$。这样就不必分部积分。注意这个条件均值是总时间，不只是多出来的部分，所以必须包含 $a$。若 $\\lambda = \\frac{1}{20}$，$a = 100$，则 $E(X \\mid X > 100) = 100 + 20 = 120$。\n\n> **注意。** 超出量的均值是 $\\frac{1}{\\lambda}$，不是 $\\lambda$：$\\lambda = \\frac{1}{20}$ 时它是 $20$，不是 $\\frac{1}{20}$。",
   ),
   generate(rng) {
     const rate = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(1, 4), Q.of(2), Q.of(3), Q.of(2, 3), Q.of(3, 2), Q.of(1, 5), Q.of(4)]);
@@ -3109,10 +4169,41 @@ const exponentialGivenExceeds: KnowledgePointDef = {
         `设 $X$ 服从速率 $\\lambda = ${rate.toLatex()}$ 的指数分布。求 $E(X \\mid X > ${a})$。`,
       ),
       answer,
-      wrong: [mean, start, start.add(rate), start.mul(mean)],
-      solution: t(
-        `By memorylessness, the excess over ${a} has mean $${mean.toLatex()}$. So the conditional mean is $${a} + ${mean.toLatex()} = ${answer.toLatex()}$.`,
-        `由无记忆性，超过 ${a} 的部分均值是 $${mean.toLatex()}$。所以条件均值是 $${a} + ${mean.toLatex()} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          mean,
+          `That is only the mean excess; the total includes the $${a}$ already passed.`,
+          `那只是超出量的均值；总时间还包括已经过去的 $${a}$。`,
+        ),
+        why(start, "That is where the excess starts; the excess itself has a positive mean.", "那是超出量的起点；超出量本身的均值为正。"),
+        why(
+          start.add(rate),
+          "That adds the rate $\\lambda$; the mean excess is $\\frac{1}{\\lambda}$.",
+          "那加的是速率 $\\lambda$；超出量的均值是 $\\frac{1}{\\lambda}$。",
+        ),
+        why(start.mul(mean), "That multiplies the two parts; they add.", "那是把两部分相乘；应当相加。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use memorylessness", "利用无记忆性"],
+            t(
+              `Given $X > ${a}$, the excess $X - ${a}$ is again exponential with rate $${rate.toLatex()}$, so its mean is $\\frac{1}{\\lambda} = ${mean.toLatex()}$.`,
+              `已知 $X > ${a}$，超出量 $X - ${a}$ 仍服从速率为 $${rate.toLatex()}$ 的指数分布，所以均值为 $\\frac{1}{\\lambda} = ${mean.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Add back the start", "加回起点"],
+            t(
+              `$E(X \\mid X > ${a}) = ${a} + ${mean.toLatex()} = ${answer.toLatex()}$.`,
+              `$E(X \\mid X > ${a}) = ${a} + ${mean.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()} - ${a} = ${mean.toLatex()}$, the unconditional mean $E(X)$, as memorylessness says.`,
+          `$${answer.toLatex()} - ${a} = ${mean.toLatex()}$，正是无条件均值 $E(X)$，与无记忆性一致。`,
+        ),
       ),
     });
   },
@@ -3122,8 +4213,8 @@ const conditionalMeanFromJoint: KnowledgePointDef = {
   id: "a-conditional-mean-from-joint-probabilities",
   title: t("A conditional mean from joint probabilities", "由联合概率求条件均值"),
   explanation: t(
-    "Fixing $X = x$ picks out one row of the joint table. The entries of that row do not add to 1, so they must be divided by the marginal probability of the row before they can be used as a distribution. Only then can they be weighted by the values of $Y$. In effect, the conditional mean is the weighted sum of the row divided by the sum of the row, and the rest of the table plays no part.",
-    "固定 $X = x$ 就选出了联合表的一行。这一行的元素之和不是 1，所以必须除以这一行的边缘概率，才能作为分布使用。然后才能用 $Y$ 的值加权。实际上，条件均值是这一行的加权和除以这一行的和，表的其余部分不起作用。",
+    "Fixing $X = x$ picks out one row of the joint table. The entries of that row do not add to 1, so they must be divided by the marginal probability of the row before they can be used as a distribution. Only then can they be weighted by the values of $Y$. In effect, the conditional mean is the weighted sum of the row divided by the sum of the row, and the rest of the table plays no part. If the row for $X = 7$ holds $0.40$, $0.25$ and $0.05$ for $Y = 0, 1, 2$, it adds to $0.70$, its weighted sum is $0.25 + 2 \\cdot 0.05 = 0.35$, and $E(Y \\mid X = 7) = \\frac{0.35}{0.70} = \\frac{1}{2}$.\n\n> **Watch out.** Stopping at the weighted sum, here $0.35$, forgets to divide by the row total.",
+    "固定 $X = x$ 就选出了联合表的一行。这一行的元素之和不是 1，所以必须除以这一行的边缘概率，才能作为分布使用。然后才能用 $Y$ 的值加权。实际上，条件均值是这一行的加权和除以这一行的和，表的其余部分不起作用。若 $X = 7$ 这一行在 $Y = 0, 1, 2$ 处为 $0.40$、$0.25$、$0.05$，行和为 $0.70$，加权和为 $0.25 + 2 \\cdot 0.05 = 0.35$，所以 $E(Y \\mid X = 7) = \\frac{0.35}{0.70} = \\frac{1}{2}$。\n\n> **注意。** 停在加权和，这里即 $0.35$，就忘了除以行和。",
   ),
   generate(rng) {
     const a = rng.int(1, 9) * 2;
@@ -3141,10 +4232,52 @@ const conditionalMeanFromJoint: KnowledgePointDef = {
         `一个联合分布满足 $${list}，$P(X = ${x}, Y = 2) = ${shown(c)}$。求 $E(Y \\mid X = ${x})$。`,
       ),
       answer,
-      wrong: [Q.of(weighted, 100), Q.of(1), Q.of(sum, 100), Q.of(b + c, sum)],
-      solution: t(
-        `The row adds to $${shown(sum)}$, and its weighted sum is $${shown(weighted)}$. Dividing gives $${answer.toLatex()}$.`,
-        `这一行的和是 $${shown(sum)}$，加权和是 $${shown(weighted)}$。相除得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(weighted, 100),
+          "That is the weighted sum of the row, not yet divided by the row total.",
+          "那是这一行的加权和，还没有除以行和。",
+        ),
+        why(
+          Q.of(1),
+          "That is the middle value of $Y$; the three entries are not weighted equally.",
+          "那是 $Y$ 的中间值；三个元素的权重并不相同。",
+        ),
+        why(Q.of(sum, 100), `That is $P(X = ${x})$, the row total.`, `那是行和 $P(X = ${x})$。`),
+        why(
+          Q.of(b + c, sum),
+          `That is $P(Y \\ge 1 \\mid X = ${x})$; the value $Y = 2$ counts twice.`,
+          `那是 $P(Y \\ge 1 \\mid X = ${x})$；$Y = 2$ 要算两次。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the row", "求行和"],
+            t(
+              `$P(X = ${x}) = ${shown(a)} + ${shown(b)} + ${shown(c)} = ${shown(sum)}$.`,
+              `$P(X = ${x}) = ${shown(a)} + ${shown(b)} + ${shown(c)} = ${shown(sum)}$。`,
+            ),
+          ],
+          [
+            ["Weight by the values of Y", "按取值加权"],
+            t(
+              `The weighted sum is $${shown(b)} + 2 \\cdot ${shown(c)} = ${shown(weighted)}$, since $Y = 0$ adds nothing.`,
+              `加权和为 $${shown(b)} + 2 \\cdot ${shown(c)} = ${shown(weighted)}$，因为 $Y = 0$ 不贡献。`,
+            ),
+          ],
+          [
+            ["Divide by the row total", "除以行和"],
+            t(
+              `$E(Y \\mid X = ${x}) = \\frac{${shown(weighted)}}{${shown(sum)}} = ${answer.toLatex()}$.`,
+              `$E(Y \\mid X = ${x}) = \\frac{${shown(weighted)}}{${shown(sum)}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The conditional probabilities $\\frac{${a}}{${sum}}$, $\\frac{${b}}{${sum}}$ and $\\frac{${c}}{${sum}}$ add to $1$, and the mean $${answer.toLatex()}$ lies between $0$ and $2$.`,
+          `条件概率 $\\frac{${a}}{${sum}}$、$\\frac{${b}}{${sum}}$、$\\frac{${c}}{${sum}}$ 之和为 $1$，均值 $${answer.toLatex()}$ 介于 $0$ 和 $2$ 之间。`,
+        ),
       ),
     });
   },
@@ -3155,8 +4288,8 @@ const conditionalVarianceOnTriangle: KnowledgePointDef = {
   figure: probabilityDrawings1["conditional-distributions-for-continuous-random-variables#a-conditional-variance-on-a-uniform-triangle"],
   title: t("A conditional variance on a uniform triangle", "均匀三角形上的条件方差"),
   explanation: t(
-    "When a point is uniform on a region, fixing one coordinate leaves the other uniform along the corresponding slice of the region. On the triangle $0 < y < x < c$, the slice at $X = x$ is the interval from $0$ to $x$. So the conditional distribution depends on $x$ but not on the size $c$ of the triangle. The formula for the variance of a uniform variable then applies at once, with no integration needed.",
-    "当点在区域上均匀时，固定一个坐标后，另一个坐标沿区域的相应切片均匀。在三角形 $0 < y < x < c$ 上，$X = x$ 处的切片是从 $0$ 到 $x$ 的区间。所以条件分布取决于 $x$，但与三角形的大小 $c$ 无关。于是均匀变量的方差公式可以立即应用，不必积分。",
+    "When a point is uniform on a region, fixing one coordinate leaves the other uniform along the corresponding slice of the region. On the triangle $0 < y < x < c$, the slice at $X = x$ is the interval from $0$ to $x$. So the conditional distribution depends on $x$ but not on the size $c$ of the triangle. The formula for the variance of a uniform variable then applies at once, with no integration needed. The figure takes $c = 4$ and $x = 3$: the slice runs from $0$ to $3$, so $\\operatorname{Var}(Y \\mid X = 3) = \\frac{3^2}{12} = \\frac{3}{4}$. On a much larger triangle, $c = 100$ with $x = 30$, the slice is $[0, 30]$ and the conditional variance is $\\frac{900}{12} = 75$.\n\n> **Watch out.** Use the length of the slice, $x$, not the size $c$ of the triangle. And $\\frac{x^2}{3}$ is $E(Y^2 \\mid X = x)$; the square of the mean $\\frac{x}{2}$ still has to be subtracted.",
+    "当点在区域上均匀时，固定一个坐标后，另一个坐标沿区域的相应切片均匀。在三角形 $0 < y < x < c$ 上，$X = x$ 处的切片是从 $0$ 到 $x$ 的区间。所以条件分布取决于 $x$，但与三角形的大小 $c$ 无关。于是均匀变量的方差公式可以立即应用，不必积分。图中取 $c = 4$，$x = 3$：切片从 $0$ 到 $3$，所以 $\\operatorname{Var}(Y \\mid X = 3) = \\frac{3^2}{12} = \\frac{3}{4}$。在大得多的三角形上，$c = 100$，$x = 30$，切片为 $[0, 30]$，条件方差为 $\\frac{900}{12} = 75$。\n\n> **注意。** 要用切片的长度 $x$，而不是三角形的大小 $c$。$\\frac{x^2}{3}$ 是 $E(Y^2 \\mid X = x)$；还要减去均值 $\\frac{x}{2}$ 的平方。",
   ),
   generate(rng) {
     const c = rng.int(2, 12);
@@ -3168,10 +4301,41 @@ const conditionalVarianceOnTriangle: KnowledgePointDef = {
         `点 $(X, Y)$ 在三角形 $0 < y < x < ${c}$ 上均匀。求 $\\operatorname{Var}(Y \\mid X = ${x})$。`,
       ),
       answer,
-      wrong: [Q.of(x, 2), Q.of(x * x, 4), Q.of(x * x, 3), Q.of(c * c, 12)],
-      solution: t(
-        `Given $X = ${x}$, the variable $Y$ is uniform on $[0, ${x}]$. Its variance is $\\frac{${x}^2}{12} = ${answer.toLatex()}$.`,
-        `已知 $X = ${x}$，变量 $Y$ 在 $[0, ${x}]$ 上均匀。它的方差是 $\\frac{${x}^2}{12} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(x, 2), "That is the conditional mean, not the variance.", "那是条件均值，不是方差。"),
+        why(Q.of(x * x, 4), "That is the square of the conditional mean.", "那是条件均值的平方。"),
+        why(
+          Q.of(x * x, 3),
+          "That is $E(Y^2 \\mid X = x)$; the square of the mean still has to be subtracted.",
+          "那是 $E(Y^2 \\mid X = x)$；还要减去均值的平方。",
+        ),
+        why(
+          Q.of(c * c, 12),
+          `That uses the size $${c}$ of the triangle instead of the slice length $${x}$.`,
+          `那用了三角形的大小 $${c}$，而不是切片长度 $${x}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the slice", "找出切片"],
+            t(
+              `Given $X = ${x}$, the point lies on the slice $0 < y < ${x}$, so $Y$ is uniform on $[0, ${x}]$.`,
+              `已知 $X = ${x}$，点落在切片 $0 < y < ${x}$ 上，所以 $Y$ 在 $[0, ${x}]$ 上均匀。`,
+            ),
+          ],
+          [
+            ["Use the uniform variance", "用均匀分布的方差"],
+            t(
+              `$\\operatorname{Var}(Y \\mid X = ${x}) = \\frac{${x}^2}{12} = ${answer.toLatex()}$.`,
+              `$\\operatorname{Var}(Y \\mid X = ${x}) = \\frac{${x}^2}{12} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$E(Y^2 \\mid X = ${x}) - E(Y \\mid X = ${x})^2 = ${Q.of(x * x, 3).toLatex()} - ${Q.of(x * x, 4).toLatex()} = ${answer.toLatex()}$.`,
+          `$E(Y^2 \\mid X = ${x}) - E(Y \\mid X = ${x})^2 = ${Q.of(x * x, 3).toLatex()} - ${Q.of(x * x, 4).toLatex()} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -3182,8 +4346,8 @@ const rectangleFromJointCdf: KnowledgePointDef = {
   figure: probabilityDrawings1["the-joint-cdf-of-two-continuous-random-variables#a-rectangle-probability-from-a-joint-cdf"],
   title: t("A rectangle probability from a joint CDF", "由联合分布函数求矩形的概率"),
   explanation: t(
-    "A joint CDF gives the probability of a quarter-plane, and a rectangle can be built from four of these. The probability that $a < X \\le b$ and $c < Y \\le d$ is $F(b, d) - F(a, d) - F(b, c) + F(a, c)$. The last term is added back because the corner below and to the left of the rectangle was subtracted twice. Leaving out either of the middle terms would count regions that lie outside the rectangle.",
-    "联合分布函数给出四分之一平面的概率，矩形可以由四个这样的区域组成。$a < X \\le b$ 且 $c < Y \\le d$ 的概率是 $F(b, d) - F(a, d) - F(b, c) + F(a, c)$。最后一项要加回来，因为矩形左下方的角被减了两次。漏掉中间任何一项，都会把矩形外的区域算进去。",
+    "A joint CDF gives the probability of a quarter-plane, and a rectangle can be built from four of these. The probability that $a < X \\le b$ and $c < Y \\le d$ is $F(b, d) - F(a, d) - F(b, c) + F(a, c)$. The last term is added back because the corner below and to the left of the rectangle was subtracted twice. Leaving out either of the middle terms would count regions that lie outside the rectangle. The figure marks the value of $F$ at each corner of the shaded rectangle. On $[0, 10] \\times [0, 10]$ with $F(x, y) = \\frac{x^2y^2}{10000}$, $P(5 < X \\le 10,\\ 5 < Y \\le 10) = \\frac{10000 - 2500 - 2500 + 625}{10000} = \\frac{9}{16}$.\n\n> **Watch out.** $F(b, d) - F(a, c)$ is not enough: it keeps the two strips beside the rectangle. Subtract both middle terms and add the corner back.",
+    "联合分布函数给出四分之一平面的概率，矩形可以由四个这样的区域组成。$a < X \\le b$ 且 $c < Y \\le d$ 的概率是 $F(b, d) - F(a, d) - F(b, c) + F(a, c)$。最后一项要加回来，因为矩形左下方的角被减了两次。漏掉中间任何一项，都会把矩形外的区域算进去。图中在阴影矩形的每个角标出 $F$ 的值。在 $[0, 10] \\times [0, 10]$ 上，若 $F(x, y) = \\frac{x^2y^2}{10000}$，则 $P(5 < X \\le 10,\\ 5 < Y \\le 10) = \\frac{10000 - 2500 - 2500 + 625}{10000} = \\frac{9}{16}$。\n\n> **注意。** 只算 $F(b, d) - F(a, c)$ 不够：它保留了矩形旁边的两条带。要减去中间两项，再把角加回来。",
   ),
   generate(rng) {
     const big = rng.int(2, 6);
@@ -3200,15 +4364,49 @@ const rectangleFromJointCdf: KnowledgePointDef = {
         `在 $[0, ${big}] \\times [0, ${tall}]$ 上，联合分布函数是 $F(x, y) = \\frac{x^2y^2}{${scale}}$。求 $P(${a} < X \\le ${b},\\ ${c} < Y \\le ${d})$。`,
       ),
       answer,
-      wrong: [
-        Q.of(b * b * d * d, scale),
-        Q.of(b * b * d * d - a * a * c * c, scale),
-        Q.of((b - a) * (d - c), big * tall),
-        Q.of(b * b * (d * d - c * c), scale),
-      ],
-      solution: t(
-        `The four terms factor as $\\frac{(${b * b} - ${a * a})(${d * d} - ${c * c})}{${scale}}$, which equals $${answer.toLatex()}$.`,
-        `这四项可分解为 $\\frac{(${b * b} - ${a * a})(${d * d} - ${c * c})}{${scale}}$，它等于 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(b * b * d * d, scale),
+          `That is $F(${b}, ${d})$ alone, the whole quarter-plane below the top corner.`,
+          `那只是 $F(${b}, ${d})$，即右上角左下方的整个四分之一平面。`,
+        ),
+        why(
+          Q.of(b * b * d * d - a * a * c * c, scale),
+          "That subtracts only the corner $F(a, c)$ and keeps the two strips beside the rectangle.",
+          "那只减去了角 $F(a, c)$，保留了矩形旁边的两条带。",
+        ),
+        why(
+          Q.of((b - a) * (d - c), big * tall),
+          "That treats the distribution as uniform and takes a fraction of the area.",
+          "那把分布当成均匀分布，取了面积的比例。",
+        ),
+        why(
+          Q.of(b * b * (d * d - c * c), scale),
+          `That leaves out the strip to the left of $x = ${a}$.`,
+          `那漏掉了 $x = ${a}$ 左边的那条带。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Evaluate F at the corners", "求四个角的分布函数值"],
+            t(
+              `$F(${b}, ${d}) = \\frac{${b * b * d * d}}{${scale}}$, $F(${a}, ${d}) = \\frac{${a * a * d * d}}{${scale}}$, $F(${b}, ${c}) = \\frac{${b * b * c * c}}{${scale}}$, $F(${a}, ${c}) = \\frac{${a * a * c * c}}{${scale}}$.`,
+              `$F(${b}, ${d}) = \\frac{${b * b * d * d}}{${scale}}$，$F(${a}, ${d}) = \\frac{${a * a * d * d}}{${scale}}$，$F(${b}, ${c}) = \\frac{${b * b * c * c}}{${scale}}$，$F(${a}, ${c}) = \\frac{${a * a * c * c}}{${scale}}$。`,
+            ),
+          ],
+          [
+            ["Combine the four terms", "组合四项"],
+            t(
+              `$F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = \\frac{${b * b * d * d} - ${a * a * d * d} - ${b * b * c * c} + ${a * a * c * c}}{${scale}} = ${answer.toLatex()}$.`,
+              `$F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c}) = \\frac{${b * b * d * d} - ${a * a * d * d} - ${b * b * c * c} + ${a * a * c * c}}{${scale}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The numerator factors as $(${b * b} - ${a * a})(${d * d} - ${c * c}) = ${(b * b - a * a) * (d * d - c * c)}$, the product of the separate $x$ and $y$ ranges, which gives $${answer.toLatex()}$ again.`,
+          `分子可分解为 $(${b * b} - ${a * a})(${d * d} - ${c * c}) = ${(b * b - a * a) * (d * d - c * c)}$，即 $x$ 与 $y$ 两个范围之积，同样得 $${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -3218,8 +4416,8 @@ const expectedSquareOfSum: KnowledgePointDef = {
   id: "the-expected-square-of-a-sum",
   title: t("The expected square of a sum", "和的平方的期望"),
   explanation: t(
-    "Expanding gives $E[(X + Y)^2] = E(X^2) + 2E(XY) + E(Y^2)$, and independence turns the middle term into $2E(X)E(Y)$. A tidier way is to use $E(W^2) = \\operatorname{Var}(W) + E(W)^2$ with $W = X + Y$. For independent variables the variances add, so the result is the sum of the variances plus the square of the sum of the means. Both routes give the same value.",
-    "展开得 $E[(X + Y)^2] = E(X^2) + 2E(XY) + E(Y^2)$，独立性把中间项变成 $2E(X)E(Y)$。更简洁的方法是对 $W = X + Y$ 用 $E(W^2) = \\operatorname{Var}(W) + E(W)^2$。对独立变量，方差相加，所以结果是方差之和加上均值之和的平方。两条路得到相同的值。",
+    "Expanding gives $E[(X + Y)^2] = E(X^2) + 2E(XY) + E(Y^2)$, and independence turns the middle term into $2E(X)E(Y)$. A tidier way is to use $E(W^2) = \\operatorname{Var}(W) + E(W)^2$ with $W = X + Y$. For independent variables the variances add, so the result is the sum of the variances plus the square of the sum of the means. Both routes give the same value. With $E(X) = 10$, $\\operatorname{Var}(X) = 4$, $E(Y) = -30$ and $\\operatorname{Var}(Y) = 5$, $E[(X + Y)^2] = 9 + (-20)^2 = 409$.\n\n> **Watch out.** Square the sum of the means, not each mean: $9 + 10^2 + 30^2 = 1009$ drops the cross term $2E(X)E(Y) = -600$.",
+    "展开得 $E[(X + Y)^2] = E(X^2) + 2E(XY) + E(Y^2)$，独立性把中间项变成 $2E(X)E(Y)$。更简洁的方法是对 $W = X + Y$ 用 $E(W^2) = \\operatorname{Var}(W) + E(W)^2$。对独立变量，方差相加，所以结果是方差之和加上均值之和的平方。两条路得到相同的值。若 $E(X) = 10$，$\\operatorname{Var}(X) = 4$，$E(Y) = -30$，$\\operatorname{Var}(Y) = 5$，则 $E[(X + Y)^2] = 9 + (-20)^2 = 409$。\n\n> **注意。** 要把均值之和平方，而不是分别平方：$9 + 10^2 + 30^2 = 1009$ 漏掉了交叉项 $2E(X)E(Y) = -600$。",
   ),
   generate(rng) {
     const mx = nonzero(rng, 6);
@@ -3234,10 +4432,36 @@ const expectedSquareOfSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [vx + vy, (mx + my) ** 2, vx + vy + mx * mx + my * my, answer + 1],
-      solution: t(
-        `The sum has variance $${vx + vy}$ and mean $${mx + my}$, so the value is $${vx + vy} + ${inParens(mx + my)}^2 = ${answer}$.`,
-        `和的方差是 $${vx + vy}$，均值是 $${mx + my}$，所以值是 $${vx + vy} + ${inParens(mx + my)}^2 = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(vx + vy, "That is the variance of the sum; the square of its mean must be added.", "那是和的方差；还要加上均值的平方。"),
+        why((mx + my) ** 2, "That is the square of the mean; the variance must be added.", "那是均值的平方；还要加上方差。"),
+        why(
+          vx + vy + mx * mx + my * my,
+          "That squares each mean separately and drops the cross term $2E(X)E(Y)$.",
+          "那是把两个均值分别平方，漏掉了交叉项 $2E(X)E(Y)$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Describe the sum", "描述和"],
+            t(
+              `$W = X + Y$ has mean $${mx} + ${inParens(my)} = ${mx + my}$ and, by independence, variance $${vx} + ${vy} = ${vx + vy}$.`,
+              `$W = X + Y$ 的均值为 $${mx} + ${inParens(my)} = ${mx + my}$，由独立性，方差为 $${vx} + ${vy} = ${vx + vy}$。`,
+            ),
+          ],
+          [
+            ["Add the squared mean", "加上均值的平方"],
+            t(
+              `$E(W^2) = \\operatorname{Var}(W) + E(W)^2 = ${vx + vy} + ${inParens(mx + my)}^2 = ${answer}$.`,
+              `$E(W^2) = \\operatorname{Var}(W) + E(W)^2 = ${vx + vy} + ${inParens(mx + my)}^2 = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Expanding instead: $E(X^2) + 2E(X)E(Y) + E(Y^2) = ${vx + mx * mx} ${mx * my < 0 ? "-" : "+"} ${Math.abs(2 * mx * my)} + ${vy + my * my} = ${answer}$.`,
+          `改用展开：$E(X^2) + 2E(X)E(Y) + E(Y^2) = ${vx + mx * mx} ${mx * my < 0 ? "-" : "+"} ${Math.abs(2 * mx * my)} + ${vy + my * my} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3247,8 +4471,8 @@ const varianceOfProduct: KnowledgePointDef = {
   id: "the-variance-of-a-product-of-independent-variables",
   title: t("The variance of a product of independent variables", "独立变量之积的方差"),
   explanation: t(
-    "Variances add for a sum of independent variables, but they do not multiply for a product. Independence does give $E(XY) = E(X)E(Y)$ and $E(X^2Y^2) = E(X^2)E(Y^2)$, since $X^2$ and $Y^2$ are also independent. So $\\operatorname{Var}(XY) = E(X^2)E(Y^2) - (E(X)E(Y))^2$. Each second moment is the variance plus the square of the mean, which shows why the means must be known too, and not only the variances.",
-    "独立变量之和的方差相加，但乘积的方差并不相乘。独立性确实给出 $E(XY) = E(X)E(Y)$ 和 $E(X^2Y^2) = E(X^2)E(Y^2)$，因为 $X^2$ 和 $Y^2$ 也独立。所以 $\\operatorname{Var}(XY) = E(X^2)E(Y^2) - (E(X)E(Y))^2$。每个二阶矩是方差加均值的平方，这说明除了方差，还必须知道均值。",
+    "Variances add for a sum of independent variables, but they do not multiply for a product. Independence does give $E(XY) = E(X)E(Y)$ and $E(X^2Y^2) = E(X^2)E(Y^2)$, since $X^2$ and $Y^2$ are also independent. So $\\operatorname{Var}(XY) = E(X^2)E(Y^2) - (E(X)E(Y))^2$. Each second moment is the variance plus the square of the mean, which shows why the means must be known too, and not only the variances. With $E(X) = 10$, $\\operatorname{Var}(X) = 1$, $E(Y) = 20$ and $\\operatorname{Var}(Y) = 4$, the second moments are $101$ and $404$, so $\\operatorname{Var}(XY) = 101 \\cdot 404 - 200^2 = 804$.\n\n> **Watch out.** The product of the variances, here $4$, is far too small: large means make the product spread much more.",
+    "独立变量之和的方差相加，但乘积的方差并不相乘。独立性确实给出 $E(XY) = E(X)E(Y)$ 和 $E(X^2Y^2) = E(X^2)E(Y^2)$，因为 $X^2$ 和 $Y^2$ 也独立。所以 $\\operatorname{Var}(XY) = E(X^2)E(Y^2) - (E(X)E(Y))^2$。每个二阶矩是方差加均值的平方，这说明除了方差，还必须知道均值。若 $E(X) = 10$，$\\operatorname{Var}(X) = 1$，$E(Y) = 20$，$\\operatorname{Var}(Y) = 4$，二阶矩为 $101$ 和 $404$，所以 $\\operatorname{Var}(XY) = 101 \\cdot 404 - 200^2 = 804$。\n\n> **注意。** 方差之积，这里即 $4$，远远太小：均值大时，乘积的波动大得多。",
   ),
   generate(rng) {
     const mx = nonzero(rng, 5);
@@ -3265,10 +4489,43 @@ const varianceOfProduct: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [vx * vy, sx * sy, vx * my * my + vy * mx * mx, answer + 1],
-      solution: t(
-        `The second moments are $${sx}$ and $${sy}$, and $E(XY) = ${mx * my}$. So the variance is $${sx} \\cdot ${sy} - ${inParens(mx * my)}^2 = ${answer}$.`,
-        `二阶矩是 $${sx}$ 和 $${sy}$，$E(XY) = ${mx * my}$。所以方差是 $${sx} \\cdot ${sy} - ${inParens(mx * my)}^2 = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(vx * vy, "That multiplies the variances; the means matter too.", "那是把方差相乘；均值也有影响。"),
+        why(sx * sy, "That is $E(X^2Y^2)$; the square of $E(XY)$ must be subtracted.", "那是 $E(X^2Y^2)$；还要减去 $E(XY)$ 的平方。"),
+        why(
+          vx * my * my + vy * mx * mx,
+          "That leaves out the term $\\operatorname{Var}(X)\\operatorname{Var}(Y)$.",
+          "那漏掉了 $\\operatorname{Var}(X)\\operatorname{Var}(Y)$ 这一项。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the second moments", "求二阶矩"],
+            t(
+              `$E(X^2) = ${vx} + ${inParens(mx)}^2 = ${sx}$ and $E(Y^2) = ${vy} + ${inParens(my)}^2 = ${sy}$.`,
+              `$E(X^2) = ${vx} + ${inParens(mx)}^2 = ${sx}$，$E(Y^2) = ${vy} + ${inParens(my)}^2 = ${sy}$。`,
+            ),
+          ],
+          [
+            ["Use independence", "利用独立性"],
+            t(
+              `$E(X^2Y^2) = ${sx} \\cdot ${sy} = ${sx * sy}$ and $E(XY) = ${mx * my}$.`,
+              `$E(X^2Y^2) = ${sx} \\cdot ${sy} = ${sx * sy}$，$E(XY) = ${mx * my}$。`,
+            ),
+          ],
+          [
+            ["Subtract the squared mean", "减去均值的平方"],
+            t(
+              `$\\operatorname{Var}(XY) = ${sx * sy} - ${inParens(mx * my)}^2 = ${answer}$.`,
+              `$\\operatorname{Var}(XY) = ${sx * sy} - ${inParens(mx * my)}^2 = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The same value comes from $\\operatorname{Var}(X)\\operatorname{Var}(Y) + \\operatorname{Var}(X)E(Y)^2 + \\operatorname{Var}(Y)E(X)^2 = ${vx * vy} + ${vx * my * my} + ${vy * mx * mx} = ${answer}$.`,
+          `由 $\\operatorname{Var}(X)\\operatorname{Var}(Y) + \\operatorname{Var}(X)E(Y)^2 + \\operatorname{Var}(Y)E(X)^2 = ${vx * vy} + ${vx * my * my} + ${vy * mx * mx} = ${answer}$ 也得到同样的值。`,
+        ),
       ),
     });
   },
@@ -3278,8 +4535,8 @@ const momentsForPowerDensity: KnowledgePointDef = {
   id: "the-method-of-moments-for-a-power-density",
   title: t("The method of moments for a power density", "幂密度的矩估计"),
   explanation: t(
-    "The method of moments sets the mean of the model equal to the sample mean, and solves for the parameter. For the density $(\\theta + 1)x^\\theta$ on $[0, 1]$, the mean is $\\frac{\\theta + 1}{\\theta + 2}$. Setting this equal to $m$ and clearing the fraction gives a linear equation, with solution $\\hat{\\theta} = \\frac{2m - 1}{1 - m}$. A larger sample mean gives a larger estimate, because mass near 1 needs a large exponent.",
-    "矩估计令模型的均值等于样本均值，再解出参数。对 $[0, 1]$ 上的密度 $(\\theta + 1)x^\\theta$，均值是 $\\frac{\\theta + 1}{\\theta + 2}$。令它等于 $m$ 并去分母，得到线性方程，解是 $\\hat{\\theta} = \\frac{2m - 1}{1 - m}$。样本均值越大，估计也越大，因为质量靠近 1 需要大的指数。",
+    "The method of moments sets the mean of the model equal to the sample mean, and solves for the parameter. For the density $(\\theta + 1)x^\\theta$ on $[0, 1]$, the mean is $\\frac{\\theta + 1}{\\theta + 2}$. Setting this equal to $m$ and clearing the fraction gives a linear equation, with solution $\\hat{\\theta} = \\frac{2m - 1}{1 - m}$. A larger sample mean gives a larger estimate, because mass near 1 needs a large exponent.\n\nFor a sample mean of $\\frac{3}{4}$: $\\frac{\\theta + 1}{\\theta + 2} = \\frac{3}{4}$ gives $4\\theta + 4 = 3\\theta + 6$, so $\\hat{\\theta} = 2$.\n\nCheck: with $\\theta = 2$ the density is $3x^{2}$, and $\\int_0^1 x \\cdot 3x^{2}\\,dx = \\frac{3}{4}$, the sample mean.\n\n> **Watch out.** The mean is $\\frac{\\theta + 1}{\\theta + 2}$, not $\\frac{\\theta}{\\theta + 1}$: the extra factor $x$ raises the power to $\\theta + 1$ and the integral divides by $\\theta + 2$. Using the wrong mean gives $\\frac{m}{1 - m} = 3$ here.",
+    "矩估计令模型的均值等于样本均值，再解出参数。对 $[0, 1]$ 上的密度 $(\\theta + 1)x^\\theta$，均值是 $\\frac{\\theta + 1}{\\theta + 2}$。令它等于 $m$ 并去分母，得到线性方程，解是 $\\hat{\\theta} = \\frac{2m - 1}{1 - m}$。样本均值越大，估计也越大，因为质量靠近 1 需要大的指数。\n\n若样本均值为 $\\frac{3}{4}$：由 $\\frac{\\theta + 1}{\\theta + 2} = \\frac{3}{4}$ 得 $4\\theta + 4 = 3\\theta + 6$，所以 $\\hat{\\theta} = 2$。\n\n检验：$\\theta = 2$ 时密度为 $3x^{2}$，$\\int_0^1 x \\cdot 3x^{2}\\,dx = \\frac{3}{4}$，正是样本均值。\n\n> **注意。** 均值是 $\\frac{\\theta + 1}{\\theta + 2}$，不是 $\\frac{\\theta}{\\theta + 1}$：多乘的 $x$ 使幂次变为 $\\theta + 1$，积分后除以 $\\theta + 2$。用错的均值在这里会得到 $\\frac{m}{1 - m} = 3$。",
   ),
   generate(rng) {
     const q = rng.int(3, 15);
@@ -3295,9 +4552,46 @@ const momentsForPowerDensity: KnowledgePointDef = {
       ),
       answer,
       wrong: [m.div(rest), one.div(rest), answer.add(one), answer.neg()],
-      solution: t(
-        `Solving $\\frac{\\theta + 1}{\\theta + 2} = ${m.toLatex()}$ gives $\\theta = \\frac{2m - 1}{1 - m} = ${answer.toLatex()}$.`,
-        `解 $\\frac{\\theta + 1}{\\theta + 2} = ${m.toLatex()}$，得 $\\theta = \\frac{2m - 1}{1 - m} = ${answer.toLatex()}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          m.div(rest),
+          "This solves $\\frac{\\theta}{\\theta + 1} = m$; the mean of this density is $\\frac{\\theta + 1}{\\theta + 2}$.",
+          "这解的是 $\\frac{\\theta}{\\theta + 1} = m$；该密度的均值是 $\\frac{\\theta + 1}{\\theta + 2}$。",
+        ),
+        why(
+          one.div(rest),
+          "This is $\\theta + 2$, the denominator of the mean; subtract $2$ to get $\\theta$.",
+          "这是均值的分母 $\\theta + 2$；还要减去 $2$ 才是 $\\theta$。",
+        ),
+        why(
+          answer.add(one),
+          "This is $\\theta + 1$, the numerator of the mean, not $\\theta$ itself.",
+          "这是均值的分子 $\\theta + 1$，不是 $\\theta$ 本身。",
+        ),
+        why(
+          answer.neg(),
+          "This has the wrong sign; a mean above $\\frac{1}{2}$ needs a positive exponent.",
+          "符号错了；均值大于 $\\frac{1}{2}$ 需要正的指数。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Match the means", "令均值相等"],
+            t(`Set $\\frac{\\theta + 1}{\\theta + 2} = ${m.toLatex()}$.`, `令 $\\frac{\\theta + 1}{\\theta + 2} = ${m.toLatex()}$。`),
+          ],
+          [
+            ["Clear the fraction", "去分母"],
+            t(
+              `$${q}(\\theta + 1) = ${p}(\\theta + 2)$, so $${q - p === 1 ? "" : q - p}\\theta = ${2 * p - q}$ and $\\theta = ${q - p === 1 ? answer.toLatex() : `\\frac{${2 * p - q}}{${q - p}}${lowestTerms(2 * p - q, q - p)}`}$.`,
+              `$${q}(\\theta + 1) = ${p}(\\theta + 2)$，所以 $${q - p === 1 ? "" : q - p}\\theta = ${2 * p - q}$，$\\theta = ${q - p === 1 ? answer.toLatex() : `\\frac{${2 * p - q}}{${q - p}}${lowestTerms(2 * p - q, q - p)}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Putting $\\theta = ${answer.toLatex()}$ back: $\\theta + 1 = ${answer.add(one).toLatex()}$ and $\\theta + 2 = ${answer.add(Q.of(2)).toLatex()}$, whose ratio is $${m.toLatex()}$, the sample mean.`,
+          `代回 $\\theta = ${answer.toLatex()}$：$\\theta + 1 = ${answer.add(one).toLatex()}$，$\\theta + 2 = ${answer.add(Q.of(2)).toLatex()}$，两者之比为 $${m.toLatex()}$，正是样本均值。`,
+        ),
       ),
     });
   },
@@ -3307,8 +4601,8 @@ const narrowingTheMargin: KnowledgePointDef = {
   id: "the-sample-size-after-narrowing-the-margin",
   title: t("The sample size after narrowing the margin", "缩小误差范围后的样本量"),
   explanation: t(
-    "The margin of error of a mean is $z\\frac{\\sigma}{\\sqrt{n}}$, so it shrinks only with the square root of the sample size. To divide the margin by $k$ with the same confidence and spread, the sample must be multiplied by $k^2$. This means that precision gets expensive quickly: halving the margin needs four times as much data. The actual values of $z$ and $\\sigma$ cancel in the comparison and do not need to be known.",
-    "均值的误差范围是 $z\\frac{\\sigma}{\\sqrt{n}}$，所以它只随样本量的平方根缩小。要在相同置信度和离散程度下把误差范围除以 $k$，样本量必须乘以 $k^2$。这意味着精度很快变得昂贵：误差范围减半需要四倍的数据。在比较中 $z$ 和 $\\sigma$ 的实际值相消，不需要知道。",
+    "The margin of error of a mean is $z\\frac{\\sigma}{\\sqrt{n}}$, so it shrinks only with the square root of the sample size. To divide the margin by $k$ with the same confidence and spread, the sample must be multiplied by $k^2$. This means that precision gets expensive quickly: halving the margin needs four times as much data. The actual values of $z$ and $\\sigma$ cancel in the comparison and do not need to be known.\n\nA sample of $50$ gives some margin. To cut that margin to a third, the sample must grow by $3^{2} = 9$, to $450$.\n\nCheck: the margin scales by $\\sqrt{\\frac{50}{450}} = \\sqrt{\\frac{1}{9}} = \\frac{1}{3}$, as required.\n\n> **Watch out.** Multiplying the sample by $3$, to $150$, only divides the margin by $\\sqrt{3} \\approx 1.73$, because the margin depends on $\\sqrt{n}$, not on $n$.",
+    "均值的误差范围是 $z\\frac{\\sigma}{\\sqrt{n}}$，所以它只随样本量的平方根缩小。要在相同置信度和离散程度下把误差范围除以 $k$，样本量必须乘以 $k^2$。这意味着精度很快变得昂贵：误差范围减半需要四倍的数据。在比较中 $z$ 和 $\\sigma$ 的实际值相消，不需要知道。\n\n容量为 $50$ 的样本给出某个误差范围。要把它缩小到三分之一，样本量要乘以 $3^{2} = 9$，即 $450$。\n\n检验：误差范围按 $\\sqrt{\\frac{50}{450}} = \\sqrt{\\frac{1}{9}} = \\frac{1}{3}$ 缩放，符合要求。\n\n> **注意。** 把样本量乘以 $3$ 变为 $150$，误差范围只除以 $\\sqrt{3} \\approx 1.73$，因为误差范围取决于 $\\sqrt{n}$ 而不是 $n$。",
   ),
   generate(rng) {
     const n = rng.int(4, 40) * 5;
@@ -3322,9 +4616,41 @@ const narrowingTheMargin: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [n * k, n + k, n * k * k * k, 2 * n * k],
-      solution: t(
-        `The margin varies as $\\frac{1}{\\sqrt{n}}$, so $n$ must be multiplied by $${k}^2$. This gives $${answer}$.`,
-        `误差范围与 $\\frac{1}{\\sqrt{n}}$ 成比例，所以 $n$ 必须乘以 $${k}^2$。这样得 $${answer}$。`,
+      mistakes: distinctMistakes(answer, [
+        why(
+          n * k,
+          `This multiplies the sample by $${k}$, which only divides the margin by $\\sqrt{${k}}$.`,
+          `这把样本量乘以 $${k}$，误差范围只除以 $\\sqrt{${k}}$。`,
+        ),
+        why(
+          n * k * k * k,
+          `This multiplies by $${k}^{3}$; the margin depends on $\\sqrt{n}$, so the factor is $${k}^{2}$.`,
+          `这乘以了 $${k}^{3}$；误差范围取决于 $\\sqrt{n}$，因子应为 $${k}^{2}$。`,
+        ),
+        why(
+          2 * n * k,
+          `This doubles $${k}n$; the factor is $${k}^{2} = ${k * k}$, not $2 \\cdot ${k}$.`,
+          `这把 $${k}n$ 加倍；因子应为 $${k}^{2} = ${k * k}$，不是 $2 \\cdot ${k}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Compare the margins", "比较误差范围"],
+            t(
+              `With $z$ and $\\sigma$ fixed, the margins are in the ratio $\\sqrt{\\frac{${n}}{n'}}$, which must equal $\\frac{1}{${k}}$.`,
+              `$z$ 和 $\\sigma$ 不变时，误差范围之比为 $\\sqrt{\\frac{${n}}{n'}}$，它必须等于 $\\frac{1}{${k}}$。`,
+            ),
+          ],
+          [
+            ["Solve for the new size", "解出新样本量"],
+            t(`Squaring, $n' = ${k}^{2} \\cdot ${n} = ${answer}$.`, `两边平方，$n' = ${k}^{2} \\cdot ${n} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `$\\sqrt{\\frac{${answer}}{${n}}} = \\sqrt{${k * k}} = ${k}$, so the new margin is $\\frac{1}{${k}}$ of the old one.`,
+          `$\\sqrt{\\frac{${answer}}{${n}}} = \\sqrt{${k * k}} = ${k}$，所以新的误差范围是原来的 $\\frac{1}{${k}}$。`,
+        ),
       ),
     });
   },

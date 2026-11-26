@@ -750,8 +750,8 @@ const uniformVariance = {
     "mean-and-variance-from-a-rectangular-density",
     ["Mean and variance from a rectangular density", "由矩形密度求均值和方差"],
     [
-      "A continuous uniform density on $[a, b]$ is a rectangle of height $\\frac{1}{b - a}$. Its mean is the midpoint $\\frac{a + b}{2}$, and its variance is $\\frac{(b - a)^{2}}{12}$, which depends only on the width of the rectangle.",
-      "$[a, b]$ 上的连续均匀密度是高为 $\\frac{1}{b - a}$ 的矩形。均值是中点 $\\frac{a + b}{2}$，方差为 $\\frac{(b - a)^{2}}{12}$，只取决于矩形的宽度。",
+      "A continuous uniform density on $[a, b]$ is a rectangle of height $\\frac{1}{b - a}$. Its mean is the midpoint $\\frac{a + b}{2}$, and its variance is $\\frac{(b - a)^{2}}{12}$, which depends only on the width of the rectangle.\n\nIn the figure the rectangle runs over $[1, 7]$ with height $\\frac{1}{6}$, so the mean is $\\frac{1 + 7}{2} = 4$ and the variance is $\\frac{6^{2}}{12} = 3$. A rectangle on $[100, 160]$ has mean $130$ and variance $\\frac{60^{2}}{12} = 300$.\n\n> **Watch out.** The mean uses the endpoints, the variance only the width: square the width before dividing by $12$, and do not put the right endpoint in place of the width.",
+      "$[a, b]$ 上的连续均匀密度是高为 $\\frac{1}{b - a}$ 的矩形。均值是中点 $\\frac{a + b}{2}$，方差为 $\\frac{(b - a)^{2}}{12}$，只取决于矩形的宽度。\n\n图中矩形在 $[1, 7]$ 上，高为 $\\frac{1}{6}$，所以均值为 $\\frac{1 + 7}{2} = 4$，方差为 $\\frac{6^{2}}{12} = 3$。$[100, 160]$ 上的矩形均值为 $130$，方差为 $\\frac{60^{2}}{12} = 300$。\n\n> **注意。** 均值用端点，方差只用宽度：先把宽度平方再除以 $12$，不要用右端点代替宽度。",
     ],
     (rng) => {
       const a = rng.int(0, 4);
@@ -761,22 +761,61 @@ const uniformVariance = {
       const svg = chart([0, 11], [0, (1 / w) * 1.3], intTicks(0, 11), [[1 / w, `1/${w}`]], (x, y) => bars([a, b], [1 / w], x, y));
       const mean = Q.of(a + b, 2);
       const variance = Q.of(w * w, 12);
-      return ask(
-        [
-          `The graph shows the density of $X$. Find ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}.`,
-          `图中是 $X$ 的密度。求 ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}。`,
-        ],
-        wantMean ? mean : variance,
-        wantMean ? [Q.of(w, 2), Q.of(a + b, 1), Q.of(b, 1)] : [Q.of(w, 12), Q.of(w * w, 2), Q.of(b * b, 12)],
-        [
-          `The rectangle runs from $${a}$ to $${b}$, a width of $${w}$. ${wantMean ? `The mean is its midpoint, $${mean.toLatex()}$.` : `So the variance is $\\frac{${w}^{2}}{12} = ${variance.toLatex()}$.`}`,
-          `矩形从 $${a}$ 到 $${b}$，宽度为 $${w}$。${wantMean ? `均值是它的中点 $${mean.toLatex()}$。` : `所以方差为 $\\frac{${w}^{2}}{12} = ${variance.toLatex()}$。`}`,
-        ],
-        {
+      const answer = wantMean ? mean : variance;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The graph shows the density of $X$. Find ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}.`,
+            `图中是 $X$ 的密度。求 ${wantMean ? "$E(X)$" : "$\\operatorname{Var}(X)$"}。`,
+          ),
+          answer,
+          mistakes: apart(
+            answer,
+            wantMean
+              ? [
+                  why(Q.of(w, 2), "That is half the width, not the midpoint of the interval.", "那是宽度的一半，而不是区间的中点。"),
+                  why(Q.of(a + b, 1), "That adds the endpoints without dividing by $2$.", "那是把端点相加而没有除以 $2$。"),
+                  why(Q.of(b, 1), "That is the right endpoint, not the midpoint.", "那是右端点，而不是中点。"),
+                ]
+              : [
+                  why(Q.of(w, 12), "That divides the width by $12$ without squaring it.", "那是把宽度除以 $12$ 而没有平方。"),
+                  why(Q.of(w * w, 2), "That divides the squared width by $2$ instead of $12$.", "那是把宽度的平方除以 $2$，而不是 $12$。"),
+                  why(Q.of(b * b, 12), "That squares the right endpoint instead of the width.", "那是把右端点平方，而不是宽度。"),
+                ],
+          ),
+          solution: walked(
+            [
+              [
+                ["Read the rectangle", "读出矩形"],
+                t(
+                  `The rectangle runs from $${a}$ to $${b}$, a width of $${w}$, with height $\\frac{1}{${w}}$.`,
+                  `矩形从 $${a}$ 到 $${b}$，宽度为 $${w}$，高为 $\\frac{1}{${w}}$。`,
+                ),
+              ],
+              wantMean
+                ? [
+                    ["Take the midpoint", "取中点"],
+                    t(`$E(X) = \\frac{${a} + ${b}}{2} = ${mean.toLatex()}$.`, `$E(X) = \\frac{${a} + ${b}}{2} = ${mean.toLatex()}$。`),
+                  ]
+                : [
+                    ["Square the width", "把宽度平方"],
+                    t(
+                      `$\\operatorname{Var}(X) = \\frac{${w}^{2}}{12} = ${variance.toLatex()}$.`,
+                      `$\\operatorname{Var}(X) = \\frac{${w}^{2}}{12} = ${variance.toLatex()}$。`,
+                    ),
+                  ],
+            ],
+            t(
+              `The area is $${w} \\cdot \\frac{1}{${w}} = 1$, as a density's must be.`,
+              `面积为 $${w} \\cdot \\frac{1}{${w}} = 1$，密度理应如此。`,
+            ),
+          ),
+        }),
+        figure: {
           svg,
           alt: t(`A rectangular density from ${a} to ${b} with height 1/${w}.`, `从 ${a} 到 ${b} 的矩形密度，高度为 1/${w}。`),
         },
-      );
+      };
     },
   ),
   figure: probabilityDrawings1["mean-and-variance-of-the-continuous-uniform-distribution#mean-and-variance-from-a-rectangular-density"],
@@ -786,8 +825,8 @@ const exponentialMean = point(
   "the-mean-from-the-height-of-an-exponential-curve",
   ["The mean from the height of an exponential curve", "由指数曲线的高度求均值"],
   [
-    "The exponential density $f(x) = \\lambda e^{-\\lambda x}$ starts at height $\\lambda$ on the vertical axis. Its mean and its standard deviation are both $\\frac{1}{\\lambda}$. So a taller start means a faster decay and a smaller mean.",
-    "指数密度 $f(x) = \\lambda e^{-\\lambda x}$ 在纵轴上的起始高度是 $\\lambda$，均值和标准差都是 $\\frac{1}{\\lambda}$。所以起点越高，衰减越快，均值越小。",
+    "The exponential density $f(x) = \\lambda e^{-\\lambda x}$ starts at height $\\lambda$ on the vertical axis. Its mean and its standard deviation are both $\\frac{1}{\\lambda}$. So a taller start means a faster decay and a smaller mean. A curve starting at height $\\frac{1}{50}$ has mean and standard deviation $50$, variance $2500$ and $E(X^{2}) = 2500 + 2500 = 5000$.\n\n> **Watch out.** The height on the axis is $\\lambda$, not the mean: take its reciprocal, and square that reciprocal for the variance.",
+    "指数密度 $f(x) = \\lambda e^{-\\lambda x}$ 在纵轴上的起始高度是 $\\lambda$，均值和标准差都是 $\\frac{1}{\\lambda}$。所以起点越高，衰减越快，均值越小。起始高度为 $\\frac{1}{50}$ 的曲线，均值和标准差都是 $50$，方差为 $2500$，$E(X^{2}) = 2500 + 2500 = 5000$。\n\n> **注意。** 纵轴上的高度是 $\\lambda$，不是均值：要取它的倒数，求方差时再把倒数平方。",
   ],
   (rng) => {
     const den = rng.pick([2, 3, 4, 5, 6, 8, 10]);
@@ -807,29 +846,66 @@ const exponentialMean = point(
             : ["$E(X^{2})$", "$E(X^{2})$"];
     const step: [string, string] =
       kind === "variance"
-        ? [` The variance is $\\frac{1}{\\lambda^{2}} = ${answer}$.`, `方差为 $\\frac{1}{\\lambda^{2}} = ${answer}$。`]
+        ? [
+            `The variance is $\\frac{1}{\\lambda^{2}} = ${den}^{2} = ${answer}$.`,
+            `方差为 $\\frac{1}{\\lambda^{2}} = ${den}^{2} = ${answer}$。`,
+          ]
         : kind === "second"
           ? [
-              ` Then $E(X^{2}) = \\operatorname{Var}(X) + E(X)^{2} = ${den * den} + ${den * den} = ${answer}$.`,
-              `于是 $E(X^{2}) = \\operatorname{Var}(X) + E(X)^{2} = ${den * den} + ${den * den} = ${answer}$。`,
+              `$E(X^{2}) = \\operatorname{Var}(X) + E(X)^{2} = ${den * den} + ${den * den} = ${answer}$.`,
+              `$E(X^{2}) = \\operatorname{Var}(X) + E(X)^{2} = ${den * den} + ${den * den} = ${answer}$。`,
             ]
-          : ["", ""];
-    return ask(
-      [`The graph shows the exponential density of $X$. Find ${asked[0]}.`, `图中是 $X$ 的指数密度。求${asked[1]}。`],
-      answer,
-      [Q.of(1, den), den * den === answer ? den : den * den, 2 * den, den + 1],
-      [
-        `The curve starts at height $\\lambda = \\frac{1}{${den}}$, so the mean and the standard deviation are both $\\frac{1}{\\lambda} = ${den}$.${step[0]}`,
-        `曲线起始高度为 $\\lambda = \\frac{1}{${den}}$，所以均值和标准差都是 $\\frac{1}{\\lambda} = ${den}$。${step[1]}`,
-      ],
-      {
+          : kind === "mean"
+            ? [`$E(X) = \\frac{1}{\\lambda} = ${den}$.`, `$E(X) = \\frac{1}{\\lambda} = ${den}$。`]
+            : [`The standard deviation is $\\frac{1}{\\lambda} = ${den}$.`, `标准差为 $\\frac{1}{\\lambda} = ${den}$。`];
+    const other = den * den === answer ? den : den * den;
+    return {
+      ...numberProblem({
+        prompt: t(`The graph shows the exponential density of $X$. Find ${asked[0]}.`, `图中是 $X$ 的指数密度。求${asked[1]}。`),
+        answer,
+        mistakes: apart(Q.of(answer), [
+          why(
+            Q.of(1, den),
+            "That is the starting height $\\lambda$, not a value of $\\frac{1}{\\lambda}$.",
+            "那是起始高度 $\\lambda$，而不是由 $\\frac{1}{\\lambda}$ 得到的值。",
+          ),
+          kind === "variance"
+            ? why(other, "That is the standard deviation; the variance is its square.", "那是标准差；方差是它的平方。")
+            : kind === "second"
+              ? why(
+                  other,
+                  "That is only $\\operatorname{Var}(X)$; $E(X)^{2}$ must be added.",
+                  "那只是 $\\operatorname{Var}(X)$；还要加上 $E(X)^{2}$。",
+                )
+              : why(other, "That is the variance $\\frac{1}{\\lambda^{2}}$.", "那是方差 $\\frac{1}{\\lambda^{2}}$。"),
+          why(2 * den, "That doubles $\\frac{1}{\\lambda}$.", "那是把 $\\frac{1}{\\lambda}$ 加倍了。"),
+          why(den + 1, "That adds $1$ to $\\frac{1}{\\lambda}$.", "那是给 $\\frac{1}{\\lambda}$ 加了 $1$。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the starting height", "读出起始高度"],
+              t(
+                `The curve starts at height $\\lambda = \\frac{1}{${den}}$, so $\\frac{1}{\\lambda} = ${den}$.`,
+                `曲线起始高度为 $\\lambda = \\frac{1}{${den}}$，所以 $\\frac{1}{\\lambda} = ${den}$。`,
+              ),
+            ],
+            [["Use the exponential moments", "利用指数分布的矩"], t(step[0], step[1])],
+          ],
+          t(
+            `The mean $${den}$ is the first tick after $0$, where the curve has fallen to $e^{-1}$ of its start.`,
+            `均值 $${den}$ 是 $0$ 之后的第一个刻度，曲线在那里降到起点的 $e^{-1}$。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           `A decreasing exponential density starting at height 1/${den} on the vertical axis.`,
           `递减的指数密度，在纵轴上的起始高度为 1/${den}。`,
         ),
       },
-    );
+    };
   },
 );
 
@@ -852,8 +928,8 @@ const chiSquarePeak = point(
   "degrees-of-freedom-from-a-chi-square-peak",
   ["Degrees of freedom from a chi-square peak", "由卡方峰值判断自由度"],
   [
-    "For $k \\ge 2$ the chi-square density with $k$ degrees of freedom peaks at $x = k - 2$, and its mean is $k$. As $k$ grows, the curve moves right and spreads out. Its variance is $2k$.",
-    "当 $k \\ge 2$ 时，自由度为 $k$ 的卡方密度在 $x = k - 2$ 处达到峰值，均值为 $k$。$k$ 增大时，曲线右移并变宽，方差为 $2k$。",
+    "For $k \\ge 2$ the chi-square density with $k$ degrees of freedom peaks at $x = k - 2$, and its mean is $k$. As $k$ grows, the curve moves right and spreads out. Its variance is $2k$. A chi-square curve peaking at $48$ has $k = 50$, mean $50$ and variance $100$.\n\n> **Watch out.** The peak is at $k - 2$, not at $k$: add $2$ to the peak to get the degrees of freedom, and double $k$, not the peak, for the variance.",
+    "当 $k \\ge 2$ 时，自由度为 $k$ 的卡方密度在 $x = k - 2$ 处达到峰值，均值为 $k$。$k$ 增大时，曲线右移并变宽，方差为 $2k$。峰值在 $48$ 的卡方曲线有 $k = 50$，均值为 $50$，方差为 $100$。\n\n> **注意。** 峰值在 $k - 2$ 而不在 $k$：峰值加 $2$ 才是自由度；求方差时要把 $k$ 加倍，而不是把峰值加倍。",
   ],
   (rng) => {
     const k = rng.int(4, 12);
@@ -868,22 +944,68 @@ const chiSquarePeak = point(
         : kind === "mean"
           ? ["What is its mean?", "它的均值是多少？"]
           : ["What is its variance?", "它的方差是多少？"];
-    return ask(
-      [
-        `The graph shows a chi-square density, whose peak stands at a whole number. ${asked[0]}`,
-        `图中是一个卡方密度，峰值位于横轴的某个整数处。${asked[1]}`,
-      ],
-      answer,
-      kind === "variance" ? [k, 2 * peak, k + 2] : [peak, k - 1, k + 1, k + 2],
-      [
-        `The peak is at $x = ${peak}$, and the peak of a chi-square density stands at $k - 2$, so $k = ${k}$.${kind === "variance" ? ` The variance is $2k = ${answer}$.` : kind === "mean" ? ` The mean equals $k$.` : ""}`,
-        `峰值在 $x = ${peak}$，而卡方密度的峰值位于 $k - 2$，所以 $k = ${k}$。${kind === "variance" ? `方差为 $2k = ${answer}$。` : kind === "mean" ? "均值等于 $k$。" : ""}`,
-      ],
-      {
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The graph shows a chi-square density, whose peak stands at a whole number. ${asked[0]}`,
+          `图中是一个卡方密度，峰值位于横轴的某个整数处。${asked[1]}`,
+        ),
+        answer,
+        mistakes: apart(
+          Q.of(answer),
+          kind === "variance"
+            ? [
+                why(k, "That is $k$, the mean; the variance is $2k$.", "那是 $k$，即均值；方差为 $2k$。"),
+                why(2 * peak, "That doubles the peak instead of $k$.", "那是把峰值加倍，而不是把 $k$ 加倍。"),
+                why(k + 2, "That adds $2$ to $k$ instead of doubling it.", "那是给 $k$ 加 $2$，而不是加倍。"),
+              ]
+            : [
+                why(
+                  peak,
+                  "That is the peak; the peak stands at $k - 2$, so $2$ must be added.",
+                  "那是峰值；峰值位于 $k - 2$，所以要加 $2$。",
+                ),
+                why(k - 1, "That adds only $1$ to the peak.", "那是只给峰值加了 $1$。"),
+                why(k + 1, "That adds $3$ to the peak instead of $2$.", "那是给峰值加了 $3$，而不是 $2$。"),
+                why(k + 2, "That adds $4$ to the peak instead of $2$.", "那是给峰值加了 $4$，而不是 $2$。"),
+              ],
+        ),
+        solution: walked(
+          [
+            [
+              ["Read the peak", "读出峰值"],
+              t(
+                `The peak is at $x = ${peak}$, and the peak of a chi-square density stands at $k - 2$, so $k = ${peak} + 2 = ${k}$.`,
+                `峰值在 $x = ${peak}$，而卡方密度的峰值位于 $k - 2$，所以 $k = ${peak} + 2 = ${k}$。`,
+              ),
+            ],
+            [
+              ["Answer the question", "回答问题"],
+              t(
+                kind === "variance"
+                  ? `The variance is $2k = ${answer}$.`
+                  : kind === "mean"
+                    ? `The mean equals $k = ${answer}$.`
+                    : `The density has $${answer}$ degrees of freedom.`,
+                kind === "variance"
+                  ? `方差为 $2k = ${answer}$。`
+                  : kind === "mean"
+                    ? `均值等于 $k = ${answer}$。`
+                    : `该密度的自由度为 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The mean $${k}$ lies $2$ to the right of the peak $${peak}$, as the long right tail requires.`,
+            `均值 $${k}$ 在峰值 $${peak}$ 右边 $2$ 处，符合右侧长尾的形状。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(`A right-skewed chi-square density with its peak at x = ${peak}.`, `右偏的卡方密度，峰值在 x = ${peak}。`),
       },
-    );
+    };
   },
 );
 
@@ -897,8 +1019,8 @@ const tTails = point(
   "telling-t-from-the-normal-by-its-tails",
   ["Telling t from the normal by its tails", "由尾部区分 t 分布和正态分布"],
   [
-    "Student's $t$ distribution is centered at zero like the standard normal, but it has a lower peak and heavier tails, since the unknown $\\sigma$ adds uncertainty. As the degrees of freedom grow, it approaches the normal curve.",
-    "学生 $t$ 分布与标准正态分布一样以零为中心，但峰值更低、尾部更厚，因为未知的 $\\sigma$ 增加了不确定性。自由度增大时，它趋近于正态曲线。",
+    "Student's $t$ distribution is centered at zero like the standard normal, but it has a lower peak and heavier tails, since the unknown $\\sigma$ adds uncertainty. As the degrees of freedom grow, it approaches the normal curve. With $1$ degree of freedom the peak is about $0.32$ against the normal's $0.40$, while with $1000$ degrees of freedom the two curves can hardly be told apart.\n\n> **Watch out.** Fewer degrees of freedom mean the lower peak and the heavier tails, not the other way round; no $t$ density has lighter tails than the normal.",
+    "学生 $t$ 分布与标准正态分布一样以零为中心，但峰值更低、尾部更厚，因为未知的 $\\sigma$ 增加了不确定性。自由度增大时，它趋近于正态曲线。自由度为 $1$ 时峰值约为 $0.32$，而正态为 $0.40$；自由度为 $1000$ 时两条曲线几乎无法区分。\n\n> **注意。** 自由度越小，峰值越低、尾部越厚，而不是相反；没有哪个 $t$ 密度的尾部比正态更薄。",
   ],
   (rng) => {
     const against = rng.bool();
@@ -929,34 +1051,57 @@ const tTails = point(
     });
     const right: [string, string] = heavyIsA ? ["Curve $A$", "曲线 $A$"] : ["Curve $B$", "曲线 $B$"];
     const wrong: [string, string] = heavyIsA ? ["Curve $B$", "曲线 $B$"] : ["Curve $A$", "曲线 $A$"];
-    return choose(
-      rng,
-      high === 0
-        ? [
-            "One curve is the standard normal density and the other is a $t$ density. Which curve is the $t$ density?",
-            "一条曲线是标准正态密度，另一条是 $t$ 密度。哪条是 $t$ 密度？",
-          ]
-        : [
-            `The curves are the $t$ densities with $${low}$ and $${high}$ degrees of freedom. Which curve has $${low}$ degrees of freedom?`,
-            `两条曲线是自由度为 $${low}$ 和 $${high}$ 的 $t$ 密度。哪条曲线的自由度是 $${low}$？`,
-          ],
-      right,
+    const heavyName = heavyIsA ? "A" : "B";
+    const lightName = heavyIsA ? "B" : "A";
+    const lightLabel: [string, string] =
+      high === 0 ? ["the standard normal", "标准正态"] : [`$${high}$ degrees of freedom`, `自由度 $${high}$`];
+    return reasoned(
+      choose(
+        rng,
+        high === 0
+          ? [
+              "One curve is the standard normal density and the other is a $t$ density. Which curve is the $t$ density?",
+              "一条曲线是标准正态密度，另一条是 $t$ 密度。哪条是 $t$ 密度？",
+            ]
+          : [
+              `The curves are the $t$ densities with $${low}$ and $${high}$ degrees of freedom. Which curve has $${low}$ degrees of freedom?`,
+              `两条曲线是自由度为 $${low}$ 和 $${high}$ 的 $t$ 密度。哪条曲线的自由度是 $${low}$？`,
+            ],
+        right,
+        [
+          wrong,
+          ["Either: the tails of the two curves are the same", "都可以：两条曲线的尾部相同"],
+          ["Neither: a $t$ density has lighter tails than both", "都不是：$t$ 密度的尾部比两条曲线都薄"],
+        ],
+        [
+          `**Step 1: Compare the curves.** Curve $${heavyName}$ has the lower peak and the heavier tails; curve $${lightName}$ is taller in the middle.\n\n**Step 2: Match the degrees of freedom.** ${high === 0 ? `A $t$ density has a lower peak and heavier tails than the normal, so the $t$ density is curve $${heavyName}$.` : `Fewer degrees of freedom give a lower peak and heavier tails, so the curve with $${low}$ degree${low === 1 ? "" : "s"} of freedom is curve $${heavyName}$.`}\n\n**Check.** Curve $${lightName}$, with ${lightLabel[0]}, is the one closer to the normal shape.`,
+          `**第一步：比较曲线。**曲线 $${heavyName}$ 峰值更低、尾部更厚；曲线 $${lightName}$ 中间更高。\n\n**第二步：对应自由度。**${high === 0 ? `$t$ 密度比正态峰值更低、尾部更厚，所以 $t$ 密度是曲线 $${heavyName}$。` : `自由度越小，峰值越低、尾部越厚，所以自由度为 $${low}$ 的是曲线 $${heavyName}$。`}\n\n**检验。**曲线 $${lightName}$（${lightLabel[1]}）更接近正态的形状。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `Two bell curves centered at zero, one solid and labeled A, one dashed and labeled B. Curve ${heavyIsA ? "A" : "B"} has the lower peak and heavier tails.`,
+            `两条以零为中心的钟形曲线，实线标 A，虚线标 B。曲线 ${heavyIsA ? "A" : "B"} 峰值更低、尾部更厚。`,
+          ),
+        },
+      ),
       [
-        wrong,
-        ["Either: the tails of the two curves are the same", "都可以：两条曲线的尾部相同"],
-        ["Neither: a $t$ density has lighter tails than both", "都不是：$t$ 密度的尾部比两条曲线都薄"],
+        [
+          wrong[0],
+          `Curve $${lightName}$ has the higher peak and lighter tails, which belong to more degrees of freedom.`,
+          `曲线 $${lightName}$ 峰值更高、尾部更薄，对应更多的自由度。`,
+        ],
+        [
+          "Either: the tails of the two curves are the same",
+          "The tails differ: one curve stays visibly higher far from zero.",
+          "两条曲线的尾部不同：其中一条在远离零处明显更高。",
+        ],
+        [
+          "Neither: a $t$ density has lighter tails than both",
+          "A $t$ density has heavier tails than the normal, never lighter ones.",
+          "$t$ 密度的尾部比正态更厚，而不会更薄。",
+        ],
       ],
-      [
-        `Fewer degrees of freedom give a lower peak and heavier tails, which is curve $${heavyIsA ? "A" : "B"}$.`,
-        `自由度越小，峰值越低、尾部越厚，也就是曲线 $${heavyIsA ? "A" : "B"}$。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `Two bell curves centered at zero, one solid and labeled A, one dashed and labeled B. Curve ${heavyIsA ? "A" : "B"} has the lower peak and heavier tails.`,
-          `两条以零为中心的钟形曲线，实线标 A，虚线标 B。曲线 ${heavyIsA ? "A" : "B"} 峰值更低、尾部更厚。`,
-        ),
-      },
     );
   },
 );
@@ -1081,8 +1226,8 @@ const jointMarginal = point(
   "a-marginal-from-a-grid-of-probabilities",
   ["A marginal from a grid of probabilities", "由概率网格求边缘分布"],
   [
-    "On a grid of joint probabilities, the marginal $P(X = x)$ adds the numbers in the column above $x$, and $P(Y = y)$ adds the numbers in the row beside $y$.",
-    "在联合概率网格上，边缘概率 $P(X = x)$ 是 $x$ 上方那一列的数之和，$P(Y = y)$ 是 $y$ 旁边那一行的数之和。",
+    "On a grid of joint probabilities, the marginal $P(X = x)$ adds the numbers in the column above $x$, and $P(Y = y)$ adds the numbers in the row beside $y$. If the column above $x = 10$ holds $\\frac{3}{40}$, $\\frac{5}{40}$ and $\\frac{12}{40}$, then $P(X = 10) = \\frac{20}{40} = \\frac{1}{2}$.\n\n> **Watch out.** $P(X = x)$ uses the column, $P(Y = y)$ the row; do not mix them up, and keep the grid's own denominator rather than dividing by the number of points.",
+    "在联合概率网格上，边缘概率 $P(X = x)$ 是 $x$ 上方那一列的数之和，$P(Y = y)$ 是 $y$ 旁边那一行的数之和。若 $x = 10$ 上方那一列为 $\\frac{3}{40}$、$\\frac{5}{40}$、$\\frac{12}{40}$，则 $P(X = 10) = \\frac{20}{40} = \\frac{1}{2}$。\n\n> **注意。** $P(X = x)$ 用列，$P(Y = y)$ 用行，不要弄混；分母要用网格自己的分母，而不是点的个数。",
   ],
   (rng) => {
     const { cells, denominator } = jointCells(rng);
@@ -1091,19 +1236,59 @@ const jointMarginal = point(
     const column = cells.reduce((a, row) => a + (row[v - 1] as number), 0);
     const row = (cells[v - 1] as number[]).reduce((a, b) => a + b, 0);
     const [answer, other] = useX ? [column, row] : [row, column];
-    return ask(
-      [
-        `The figure shows the joint distribution of $X$ and $Y$. Find $P(${useX ? "X" : "Y"} = ${v})$.`,
-        `图中是 $X$ 和 $Y$ 的联合分布。求 $P(${useX ? "X" : "Y"} = ${v})$。`,
-      ],
-      Q.of(answer, denominator),
-      [Q.of(other, denominator), Q.of((cells[v - 1] as number[])[v - 1] as number, denominator), Q.of(answer, 9)],
-      [
-        `Add the numbers in the ${useX ? `column at $x = ${v}$` : `row at $y = ${v}$`}, which come to $\\frac{${answer}}{${denominator}}$.`,
-        `把 ${useX ? `$x = ${v}$ 那一列` : `$y = ${v}$ 那一行`} 的数相加，得 $\\frac{${answer}}{${denominator}}$。`,
-      ],
-      { svg: lattice(cells, denominator), alt: jointAlt(cells, denominator) },
-    );
+    const result = Q.of(answer, denominator);
+    const parts = useX ? cells.map((r) => r[v - 1] as number) : (cells[v - 1] as number[]);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The figure shows the joint distribution of $X$ and $Y$. Find $P(${useX ? "X" : "Y"} = ${v})$.`,
+          `图中是 $X$ 和 $Y$ 的联合分布。求 $P(${useX ? "X" : "Y"} = ${v})$。`,
+        ),
+        answer: result,
+        mistakes: apart(result, [
+          why(
+            Q.of(other, denominator),
+            useX
+              ? `That adds the row at $y = ${v}$ instead of the column at $x = ${v}$.`
+              : `That adds the column at $x = ${v}$ instead of the row at $y = ${v}$.`,
+            useX ? `那是把 $y = ${v}$ 那一行相加，而不是 $x = ${v}$ 那一列。` : `那是把 $x = ${v}$ 那一列相加，而不是 $y = ${v}$ 那一行。`,
+          ),
+          why(
+            Q.of((cells[v - 1] as number[])[v - 1] as number, denominator),
+            `That is only the point $(${v}, ${v})$, not the whole ${useX ? "column" : "row"}.`,
+            `那只是点 $(${v}, ${v})$，而不是整个${useX ? "列" : "行"}。`,
+          ),
+          why(
+            Q.of(answer, 9),
+            "That divides by the nine grid points instead of the grid's denominator.",
+            "那是除以九个网格点，而不是网格的分母。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              [useX ? "Take the column" : "Take the row", useX ? "取出这一列" : "取出这一行"],
+              t(
+                `The ${useX ? `column at $x = ${v}$` : `row at $y = ${v}$`} holds $${parts.map((p) => `\\frac{${p}}{${denominator}}`).join(", ")}$.`,
+                `${useX ? `$x = ${v}$ 那一列` : `$y = ${v}$ 那一行`}为 $${parts.map((p) => `\\frac{${p}}{${denominator}}`).join(", ")}$。`,
+              ),
+            ],
+            [
+              ["Add them", "相加"],
+              t(
+                `$P(${useX ? "X" : "Y"} = ${v}) = \\frac{${parts.join(" + ")}}{${denominator}} = ${result.toLatex()}$.`,
+                `$P(${useX ? "X" : "Y"} = ${v}) = \\frac{${parts.join(" + ")}}{${denominator}} = ${result.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The three ${useX ? "columns" : "rows"} together add to $\\frac{${denominator}}{${denominator}} = 1$, and this one holds $${answer}$ of the $${denominator}$ parts.`,
+            `三${useX ? "列" : "行"}合起来为 $\\frac{${denominator}}{${denominator}} = 1$，这一${useX ? "列" : "行"}占其中 $${answer}$ 份，共 $${denominator}$ 份。`,
+          ),
+        ),
+      }),
+      figure: { svg: lattice(cells, denominator), alt: jointAlt(cells, denominator) },
+    };
   },
 );
 
@@ -1111,8 +1296,8 @@ const jointConditional = point(
   "a-conditional-from-a-grid-of-probabilities",
   ["A conditional from a grid of probabilities", "由概率网格求条件概率"],
   [
-    "Conditioning on $X = x$ keeps only the column above $x$. The numbers there do not add to one, so divide each by their sum: $P(Y = y \\mid X = x) = \\frac{P(X = x, Y = y)}{P(X = x)}$.",
-    "以 $X = x$ 为条件时，只保留 $x$ 上方那一列。这些数之和不为一，所以每个都除以它们的和：$P(Y = y \\mid X = x) = \\frac{P(X = x, Y = y)}{P(X = x)}$。",
+    "Conditioning on $X = x$ keeps only the column above $x$. The numbers there do not add to one, so divide each by their sum: $P(Y = y \\mid X = x) = \\frac{P(X = x, Y = y)}{P(X = x)}$. If the column above $x = 10$ holds $\\frac{3}{40}$, $\\frac{5}{40}$ and $\\frac{12}{40}$, then $P(Y = 30 \\mid X = 10) = \\frac{12}{20} = \\frac{3}{5}$ for the point holding $\\frac{12}{40}$ at $y = 30$.\n\n> **Watch out.** Divide by the column's total, not by the whole grid's denominator and not by the row through the point.",
+    "以 $X = x$ 为条件时，只保留 $x$ 上方那一列。这些数之和不为一，所以每个都除以它们的和：$P(Y = y \\mid X = x) = \\frac{P(X = x, Y = y)}{P(X = x)}$。若 $x = 10$ 上方那一列为 $\\frac{3}{40}$、$\\frac{5}{40}$、$\\frac{12}{40}$，而 $y = 30$ 处的点为 $\\frac{12}{40}$，则 $P(Y = 30 \\mid X = 10) = \\frac{12}{20} = \\frac{3}{5}$。\n\n> **注意。** 要除以这一列的总和，而不是整个网格的分母，也不是经过该点的那一行。",
   ],
   (rng) => {
     const { cells, denominator } = jointCells(rng);
@@ -1121,19 +1306,57 @@ const jointConditional = point(
     const cell = (cells[y - 1] as number[])[x - 1] as number;
     const column = cells.reduce((a, row) => a + (row[x - 1] as number), 0);
     const row = (cells[y - 1] as number[]).reduce((a, b) => a + b, 0);
-    return ask(
-      [
-        `The figure shows the joint distribution of $X$ and $Y$. Find $P(Y = ${y} \\mid X = ${x})$.`,
-        `图中是 $X$ 和 $Y$ 的联合分布。求 $P(Y = ${y} \\mid X = ${x})$。`,
-      ],
-      Q.of(cell, column),
-      [Q.of(cell, denominator), Q.of(cell, row), Q.of(column, denominator)],
-      [
-        `The column at $x = ${x}$ adds to $\\frac{${column}}{${denominator}}$, and the point $(${x}, ${y})$ holds $\\frac{${cell}}{${denominator}}$. Their ratio is $\\frac{${cell}}{${column}}$.`,
-        `$x = ${x}$ 这一列之和为 $\\frac{${column}}{${denominator}}$，点 $(${x}, ${y})$ 上是 $\\frac{${cell}}{${denominator}}$。两者之比为 $\\frac{${cell}}{${column}}$。`,
-      ],
-      { svg: lattice(cells, denominator), alt: jointAlt(cells, denominator) },
-    );
+    const answer = Q.of(cell, column);
+    const reduced = answer.toLatex() === `\\frac{${cell}}{${column}}` ? "" : ` = ${answer.toLatex()}`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The figure shows the joint distribution of $X$ and $Y$. Find $P(Y = ${y} \\mid X = ${x})$.`,
+          `图中是 $X$ 和 $Y$ 的联合分布。求 $P(Y = ${y} \\mid X = ${x})$。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            Q.of(cell, denominator),
+            "That is the joint probability $P(X = x, Y = y)$, not divided by the column.",
+            "那是联合概率 $P(X = x, Y = y)$，没有除以这一列。",
+          ),
+          why(
+            Q.of(cell, row),
+            `That divides by the row at $y = ${y}$, which gives $P(X = ${x} \\mid Y = ${y})$.`,
+            `那是除以 $y = ${y}$ 那一行，得到的是 $P(X = ${x} \\mid Y = ${y})$。`,
+          ),
+          why(
+            Q.of(column, denominator),
+            `That is the marginal $P(X = ${x})$, the divisor itself.`,
+            `那是边缘概率 $P(X = ${x})$，也就是除数本身。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Add the column", "把这一列相加"],
+              t(
+                `The column at $x = ${x}$ adds to $\\frac{${column}}{${denominator}}$, and the point $(${x}, ${y})$ holds $\\frac{${cell}}{${denominator}}$.`,
+                `$x = ${x}$ 这一列之和为 $\\frac{${column}}{${denominator}}$，点 $(${x}, ${y})$ 上是 $\\frac{${cell}}{${denominator}}$。`,
+              ),
+            ],
+            [
+              ["Divide", "相除"],
+              t(
+                `$P(Y = ${y} \\mid X = ${x}) = \\frac{${cell}}{${column}}${reduced}$.`,
+                `$P(Y = ${y} \\mid X = ${x}) = \\frac{${cell}}{${column}}${reduced}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The three conditional probabilities in the column, $${cells.map((r) => `\\frac{${r[x - 1]}}{${column}}`).join(", ")}$, add to $1$.`,
+            `这一列的三个条件概率 $${cells.map((r) => `\\frac{${r[x - 1]}}{${column}}`).join(", ")}$ 之和为 $1$。`,
+          ),
+        ),
+      }),
+      figure: { svg: lattice(cells, denominator), alt: jointAlt(cells, denominator) },
+    };
   },
 );
 
@@ -1153,8 +1376,8 @@ const triangleMarginal = {
     "a-marginal-density-on-a-triangle",
     ["A marginal density on a triangle", "三角形上的边缘密度"],
     [
-      "A uniform joint density on a region has height one over the area. The marginal density at $x$ is that height times the length of the vertical slice through the region at $x$, so on a triangle the marginal changes linearly, even though the joint density is constant.",
-      "区域上的均匀联合密度，高度是面积的倒数。$x$ 处的边缘密度等于这个高度乘以区域在 $x$ 处竖直截线的长度，所以在三角形上，尽管联合密度是常数，边缘密度却线性变化。",
+      "A uniform joint density on a region has height one over the area. The marginal density at $x$ is that height times the length of the vertical slice through the region at $x$, so on a triangle the marginal changes linearly, even though the joint density is constant.\n\nIn the figure the triangle has corners $(0, 0)$, $(2, 0)$ and $(0, 2)$, area $2$ and height $\\frac{1}{2}$. The slice at $x$ has length $2 - x$, so $f_X(x) = \\frac{2 - x}{2}$; at $x = 1$ it is $\\frac{1}{2}$. On the triangle with corners $(0, 0)$, $(20, 0)$ and $(20, 20)$ the height is $\\frac{1}{200}$, and the slice at $x = 5$ has length $5$, so $f_X(5) = \\frac{5}{200} = \\frac{1}{40}$.\n\n> **Watch out.** Multiply the height by the slice's length; the joint height alone is not the marginal, and the height is one over the area, not one over the base.",
+      "区域上的均匀联合密度，高度是面积的倒数。$x$ 处的边缘密度等于这个高度乘以区域在 $x$ 处竖直截线的长度，所以在三角形上，尽管联合密度是常数，边缘密度却线性变化。\n\n图中三角形的顶点为 $(0, 0)$、$(2, 0)$、$(0, 2)$，面积为 $2$，高度为 $\\frac{1}{2}$。$x$ 处的截线长为 $2 - x$，所以 $f_X(x) = \\frac{2 - x}{2}$；在 $x = 1$ 处为 $\\frac{1}{2}$。对顶点为 $(0, 0)$、$(20, 0)$、$(20, 20)$ 的三角形，高度为 $\\frac{1}{200}$，$x = 5$ 处的截线长为 $5$，所以 $f_X(5) = \\frac{5}{200} = \\frac{1}{40}$。\n\n> **注意。** 要用高度乘以截线的长度；单独的联合高度不是边缘密度，而且高度是面积的倒数，不是底边的倒数。",
     ],
     (rng) => {
       const a = rng.int(2, 7);
@@ -1163,23 +1386,65 @@ const triangleMarginal = {
       const useX = rng.bool();
       const length = useX ? c : a - c;
       const answer = Q.of(2 * length, a * a);
-      return ask(
-        [
-          `$(X, Y)$ is uniformly distributed on the shaded triangle. Find the marginal density $f_${useX ? "X" : "Y"}(${c})$.`,
-          `$(X, Y)$ 在阴影三角形上均匀分布。求边缘密度 $f_${useX ? "X" : "Y"}(${c})$。`,
-        ],
-        answer,
-        [Q.of(2, a * a), Q.of(c, a), Q.of(2 * (a - length), a * a), Q.of(length, a * a)],
-        useX
-          ? [
-              `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$. The vertical slice at $x = ${c}$ runs from $y = 0$ to $y = ${c}$, of length $${c}$, which gives $${answer.toLatex()}$.`,
-              `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。$x = ${c}$ 处的竖直截线从 $y = 0$ 到 $y = ${c}$，长度为 $${c}$，于是得 $${answer.toLatex()}$。`,
-            ]
-          : [
-              `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$. The horizontal slice at $y = ${c}$ runs from $x = ${c}$ to $x = ${a}$, of length $${a - c}$, which gives $${answer.toLatex()}$.`,
-              `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。$y = ${c}$ 处的水平截线从 $x = ${c}$ 到 $x = ${a}$，长度为 $${a - c}$，于是得 $${answer.toLatex()}$。`,
+      const lead = length === 1 ? "" : `${length} \\cdot `;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `$(X, Y)$ is uniformly distributed on the shaded triangle. Find the marginal density $f_${useX ? "X" : "Y"}(${c})$.`,
+            `$(X, Y)$ 在阴影三角形上均匀分布。求边缘密度 $f_${useX ? "X" : "Y"}(${c})$。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              Q.of(2, a * a),
+              "That is the joint height alone, without multiplying by the slice's length.",
+              "那只是联合密度的高度，没有乘以截线的长度。",
+            ),
+            why(
+              Q.of(c, a),
+              "That divides the coordinate by the side; the height is one over the area.",
+              "那是用坐标除以边长；高度是面积的倒数。",
+            ),
+            why(
+              Q.of(2 * (a - length), a * a),
+              "That uses the length of the slice in the other direction.",
+              "那是用了另一个方向截线的长度。",
+            ),
+            why(
+              Q.of(length, a * a),
+              "That uses one over the square of the side as the height; the area is half of that square.",
+              "那是把边长平方的倒数当作高度；面积只是这个正方形的一半。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the height", "求高度"],
+                t(
+                  `The area is $${area.toLatex()}$, so the joint density is $\\frac{2}{${a * a}}$.`,
+                  `面积为 $${area.toLatex()}$，所以联合密度为 $\\frac{2}{${a * a}}$。`,
+                ),
+              ],
+              [
+                ["Multiply by the slice", "乘以截线长度"],
+                useX
+                  ? t(
+                      `The vertical slice at $x = ${c}$ runs from $y = 0$ to $y = ${c}$, of length $${c}$, so $f_X(${c}) = ${lead}\\frac{2}{${a * a}} = ${answer.toLatex()}$.`,
+                      `$x = ${c}$ 处的竖直截线从 $y = 0$ 到 $y = ${c}$，长度为 $${c}$，所以 $f_X(${c}) = ${lead}\\frac{2}{${a * a}} = ${answer.toLatex()}$。`,
+                    )
+                  : t(
+                      `The horizontal slice at $y = ${c}$ runs from $x = ${c}$ to $x = ${a}$, of length $${a - c}$, so $f_Y(${c}) = ${lead}\\frac{2}{${a * a}} = ${answer.toLatex()}$.`,
+                      `$y = ${c}$ 处的水平截线从 $x = ${c}$ 到 $x = ${a}$，长度为 $${a - c}$，所以 $f_Y(${c}) = ${lead}\\frac{2}{${a * a}} = ${answer.toLatex()}$。`,
+                    ),
+              ],
             ],
-        {
+            t(
+              `At the far edge the slice has the full length $${a}$, giving $\\frac{2}{${a}}$, and the marginal rises or falls linearly towards it.`,
+              `在最远的边上截线长为整条边 $${a}$，得 $\\frac{2}{${a}}$，边缘密度沿线性变化到这个值。`,
+            ),
+          ),
+        }),
+        figure: {
           svg: support(a, [
             [0, 0],
             [a, 0],
@@ -1190,7 +1455,7 @@ const triangleMarginal = {
             `阴影三角形，顶点为 (0, 0)、(${a}, 0) 和 (${a}, ${a})。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: probabilityDrawings1["marginal-distributions-for-continuous-random-variables#a-marginal-density-on-a-triangle"],
@@ -1201,8 +1466,8 @@ const supportIndependence = {
     "independence-from-the-shape-of-the-support",
     ["Independence from the shape of the support", "由支撑集的形状判断独立性"],
     [
-      "If $X$ and $Y$ are independent, then the set where the joint density is positive is a product: every $x$ the variable $X$ can take pairs with every $y$ the variable $Y$ can take. So independent variables have a rectangular support with sides along the axes, and a triangle or a tilted shape rules independence out at a glance.",
-      "若 $X$ 和 $Y$ 独立，则联合密度为正的集合是一个乘积：$X$ 能取的每个 $x$ 都能与 $Y$ 能取的每个 $y$ 配对。所以独立变量的支撑集是边与坐标轴平行的矩形；三角形或倾斜的形状一眼就能排除独立性。",
+      "If $X$ and $Y$ are independent, then the set where the joint density is positive is a product: every $x$ the variable $X$ can take pairs with every $y$ the variable $Y$ can take. So independent variables have a rectangular support with sides along the axes, and a triangle or a tilted shape rules independence out at a glance. The figure shows all three: the rectangle allows independence, the triangle and the tilted square do not. On the triangle $x + y \\le 100$, $y$ can reach $100$ at $x = 0$ but only $10$ at $x = 90$, so $X$ and $Y$ are dependent.\n\n> **Watch out.** A rectangular support only allows independence; the density must still factor. A support that is not a rectangle along the axes rules it out.",
+      "若 $X$ 和 $Y$ 独立，则联合密度为正的集合是一个乘积：$X$ 能取的每个 $x$ 都能与 $Y$ 能取的每个 $y$ 配对。所以独立变量的支撑集是边与坐标轴平行的矩形；三角形或倾斜的形状一眼就能排除独立性。图中画出了这三种形状：矩形允许独立，三角形和倾斜的正方形则不允许。在三角形 $x + y \\le 100$ 上，$x = 0$ 时 $y$ 可达 $100$，而 $x = 90$ 时只能到 $10$，所以 $X$ 与 $Y$ 不独立。\n\n> **注意。** 矩形支撑集只是允许独立，密度本身还必须能分解；不是沿坐标轴的矩形的支撑集则排除独立性。",
     ],
     (rng) => {
       const a = rng.int(2, 5);
@@ -1234,29 +1499,58 @@ const supportIndependence = {
         "可能独立：支撑集是沿坐标轴的矩形。",
       ];
       const no: [string, string] = ["Not independent: the possible $y$ values change with $x$.", "不独立：$y$ 的可能取值随 $x$ 变化。"];
-      return choose(
-        rng,
+      const [shapeEn, shapeZh] =
+        shape === "rectangle"
+          ? ["a rectangle with sides along the axes", "边与坐标轴平行的矩形"]
+          : shape === "triangle"
+            ? ["a triangle", "三角形"]
+            : ["a tilted square", "倾斜的正方形"];
+      return reasoned(
+        choose(
+          rng,
+          [
+            "A joint density of $X$ and $Y$ is positive exactly on the shaded region. What does the shape say about independence?",
+            "$X$ 和 $Y$ 的联合密度恰好在阴影区域上为正。这个形状说明独立性如何？",
+          ],
+          can ? yes : no,
+          [can ? no : yes, ["Always independent: any region can be a product.", "一定独立：任何区域都可以是乘积。"]],
+          [
+            `**Step 1: Name the shape.** The shaded region is ${shapeEn}.\n\n**Step 2: Compare the slices.** ${
+              can
+                ? "Each $x$ pairs with the same range of $y$, so the shape does not rule independence out, though the density itself must also factor."
+                : "At some $x$ the slice of possible $y$ values differs from its slice at another $x$, so learning $X$ tells you something about $Y$."
+            }\n\n**Check.** ${can ? "The region is the product of an interval of $x$ values and an interval of $y$ values." : "A product of two intervals would be a rectangle along the axes, which this region is not."}`,
+            `**第一步：说出形状。**阴影区域是${shapeZh}。\n\n**第二步：比较截线。**${
+              can
+                ? "每个 $x$ 都对应相同范围的 $y$，所以形状不能排除独立性，不过密度本身还必须能分解。"
+                : "不同 $x$ 处 $y$ 的可能取值范围不同，知道 $X$ 就能得到关于 $Y$ 的信息。"
+            }\n\n**检验。**${can ? "这个区域是 $x$ 的一个区间与 $y$ 的一个区间的乘积。" : "两个区间的乘积是沿坐标轴的矩形，而这个区域不是。"}`,
+          ],
+          {
+            svg: support(5, corners),
+            alt: t(
+              `A shaded ${shape === "rectangle" ? "rectangle with sides along the axes" : shape === "triangle" ? "triangle" : "tilted square"} in the plane.`,
+              `平面上的阴影${shape === "rectangle" ? "矩形，边与坐标轴平行" : shape === "triangle" ? "三角形" : "倾斜四边形"}。`,
+            ),
+          },
+        ),
         [
-          "A joint density of $X$ and $Y$ is positive exactly on the shaded region. What does the shape say about independence?",
-          "$X$ 和 $Y$ 的联合密度恰好在阴影区域上为正。这个形状说明独立性如何？",
+          [
+            yes[0],
+            "The slices of possible $y$ values change with $x$, so this region is not a product and rules independence out.",
+            "$y$ 的可能取值随 $x$ 变化，所以这个区域不是乘积，排除了独立性。",
+          ],
+          [
+            no[0],
+            "Here every $x$ pairs with the same range of $y$, so the shape alone cannot rule independence out.",
+            "这里每个 $x$ 都对应相同范围的 $y$，所以仅凭形状不能排除独立性。",
+          ],
+          [
+            "Always independent: any region can be a product.",
+            "Only a rectangle along the axes is a product of two intervals, and even then the density must factor.",
+            "只有沿坐标轴的矩形才是两个区间的乘积，即便如此，密度也必须能分解。",
+          ],
         ],
-        can ? yes : no,
-        [can ? no : yes, ["Always independent: any region can be a product.", "一定独立：任何区域都可以是乘积。"]],
-        [
-          can
-            ? "Each $x$ pairs with the same range of $y$, so the shape does not rule independence out, though the density itself must also factor."
-            : "At some $x$ the slice of possible $y$ values differs from its slice at another $x$, so learning $X$ tells you something about $Y$.",
-          can
-            ? "每个 $x$ 都对应相同范围的 $y$，所以形状不能排除独立性，不过密度本身还必须能分解。"
-            : "不同 $x$ 处 $y$ 的可能取值范围不同，知道 $X$ 就能得到关于 $Y$ 的信息。",
-        ],
-        {
-          svg: support(5, corners),
-          alt: t(
-            `A shaded ${shape === "rectangle" ? "rectangle with sides along the axes" : shape === "triangle" ? "triangle" : "tilted square"} in the plane.`,
-            `平面上的阴影${shape === "rectangle" ? "矩形，边与坐标轴平行" : shape === "triangle" ? "三角形" : "倾斜四边形"}。`,
-          ),
-        },
       );
     },
   ),
@@ -1268,8 +1562,8 @@ const jointCdfArea = {
     "a-joint-cdf-as-a-fraction-of-a-rectangle",
     ["A joint CDF as a fraction of a rectangle", "联合分布函数作为矩形的一部分"],
     [
-      "The joint CDF $F(x, y) = P(X \\le x, Y \\le y)$ collects the probability to the lower left of the point $(x, y)$. For a uniform density on a rectangle, it is the fraction of the rectangle's area lying in that corner.",
-      "联合分布函数 $F(x, y) = P(X \\le x, Y \\le y)$ 收集点 $(x, y)$ 左下方的概率。对矩形上的均匀密度，它等于这个角落占矩形面积的比例。",
+      "The joint CDF $F(x, y) = P(X \\le x, Y \\le y)$ collects the probability to the lower left of the point $(x, y)$. For a uniform density on a rectangle, it is the fraction of the rectangle's area lying in that corner. In the figure the density is uniform on $[0, 4] \\times [0, 2]$, and $F(3, 1) = \\frac{3}{4 \\cdot 2} = \\frac{3}{8}$. On $[0, 100] \\times [0, 50]$, $F(20, 10) = \\frac{200}{5000} = \\frac{1}{25}$.\n\n> **Watch out.** Multiply the sides, do not add them: the corner's area is $xy$, divided by the area of the whole rectangle, not of the drawing's grid.",
+      "联合分布函数 $F(x, y) = P(X \\le x, Y \\le y)$ 收集点 $(x, y)$ 左下方的概率。对矩形上的均匀密度，它等于这个角落占矩形面积的比例。图中密度在 $[0, 4] \\times [0, 2]$ 上均匀，$F(3, 1) = \\frac{3}{4 \\cdot 2} = \\frac{3}{8}$。在 $[0, 100] \\times [0, 50]$ 上，$F(20, 10) = \\frac{200}{5000} = \\frac{1}{25}$。\n\n> **注意。** 边长要相乘而不是相加：角落的面积是 $xy$，再除以整个矩形的面积，而不是图中网格的面积。",
     ],
     (rng) => {
       const a = rng.int(3, 6);
@@ -1282,25 +1576,53 @@ const jointCdfArea = {
         return `${rect(a, b, 'stroke="currentColor"')}${rect(u, v, 'class="accent" fill="currentColor" fill-opacity="0.3" stroke="currentColor"')}`;
       });
       const answer = Q.of(u * v, a * b);
-      return ask(
-        [
-          `$(X, Y)$ is uniform on the large rectangle. Find $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$, the shaded part.`,
-          `$(X, Y)$ 在大矩形上均匀分布。求阴影部分对应的 $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$。`,
-        ],
-        answer,
-        [Q.of(u + v, a + b), Q.of(u * v, 49), Q.of(u, a)],
-        [
-          `The shaded corner has area $${u} \\cdot ${v} = ${u * v}$ and the rectangle has area $${a} \\cdot ${b} = ${a * b}$, so the probability is $${answer.toLatex()}$.`,
-          `阴影角落的面积为 $${u} \\cdot ${v} = ${u * v}$，矩形面积为 $${a} \\cdot ${b} = ${a * b}$，所以概率为 $${answer.toLatex()}$。`,
-        ],
-        {
+      return {
+        ...numberProblem({
+          prompt: t(
+            `$(X, Y)$ is uniform on the large rectangle. Find $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$, the shaded part.`,
+            `$(X, Y)$ 在大矩形上均匀分布。求阴影部分对应的 $F(${u}, ${v}) = P(X \\le ${u}, Y \\le ${v})$。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(Q.of(u + v, a + b), "That adds the sides instead of multiplying them.", "那是把边长相加，而不是相乘。"),
+            why(
+              Q.of(u * v, 49),
+              "That divides by the drawing's $7 \\times 7$ grid instead of the rectangle's area.",
+              "那是除以图中 $7 \\times 7$ 的网格，而不是矩形的面积。",
+            ),
+            why(Q.of(u, a), "That uses only the $x$ direction and forgets the limit on $Y$.", "那是只用了 $x$ 方向，忘了 $Y$ 的限制。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the two areas", "求两个面积"],
+                t(
+                  `The shaded corner has area $(${u})(${v}) = ${u * v}$ and the rectangle has area $(${a})(${b}) = ${a * b}$.`,
+                  `阴影角落的面积为 $(${u})(${v}) = ${u * v}$，矩形面积为 $(${a})(${b}) = ${a * b}$。`,
+                ),
+              ],
+              [
+                ["Take the fraction", "取比例"],
+                t(
+                  `$F(${u}, ${v}) = \\frac{${u * v}}{${a * b}} = ${answer.toLatex()}$.`,
+                  `$F(${u}, ${v}) = \\frac{${u * v}}{${a * b}} = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The answer is the product $\\frac{${u}}{${a}} \\cdot \\frac{${v}}{${b}}$ of the two marginal fractions, as it must be for a uniform density on a rectangle.`,
+              `答案等于两个边缘比例之积 $\\frac{${u}}{${a}} \\cdot \\frac{${v}}{${b}}$，矩形上的均匀密度理应如此。`,
+            ),
+          ),
+        }),
+        figure: {
           svg,
           alt: t(
             `A rectangle from (0, 0) to (${a}, ${b}), with the corner from (0, 0) to (${u}, ${v}) shaded.`,
             `从 (0, 0) 到 (${a}, ${b}) 的矩形，其中从 (0, 0) 到 (${u}, ${v}) 的角落为阴影。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: probabilityDrawings1["the-joint-cdf-of-two-continuous-random-variables#a-joint-cdf-as-a-fraction-of-a-rectangle"],
@@ -1317,8 +1639,8 @@ const intervalParts = point(
   "the-estimate-and-margin-from-a-drawn-interval",
   ["The estimate and margin from a drawn interval", "由图中的区间读出估计值和误差范围"],
   [
-    "A confidence interval for a mean is centered on the sample mean, with the margin of error on each side. So the estimate is the midpoint of the drawn interval, and the margin is half its length.",
-    "均值的置信区间以样本均值为中心，两侧各有一个误差范围。所以估计值是图中区间的中点，误差范围是其长度的一半。",
+    "A confidence interval for a mean is centered on the sample mean, with the margin of error on each side. So the estimate is the midpoint of the drawn interval, and the margin is half its length.\n\nAn interval drawn from $17$ to $23$ has midpoint $\\frac{17 + 23}{2} = 20$, the sample mean, and margin $\\frac{23 - 17}{2} = 3$.\n\nCheck: $20 - 3 = 17$ and $20 + 3 = 23$ give back the two ends.\n\n> **Watch out.** The margin is half the length, not the whole length $23 - 17 = 6$: the interval reaches one margin to each side of the estimate.",
+    "均值的置信区间以样本均值为中心，两侧各有一个误差范围。所以估计值是图中区间的中点，误差范围是其长度的一半。\n\n图中从 $17$ 到 $23$ 的区间，中点 $\\frac{17 + 23}{2} = 20$ 是样本均值，误差范围为 $\\frac{23 - 17}{2} = 3$。\n\n检验：$20 - 3 = 17$，$20 + 3 = 23$，正好得到两个端点。\n\n> **注意。** 误差范围是长度的一半，而不是整个长度 $23 - 17 = 6$：区间在估计值两侧各延伸一个误差范围。",
   ],
   (rng) => {
     const center = rng.int(14, 26);
@@ -1326,22 +1648,57 @@ const intervalParts = point(
     const low = center - margin;
     const high = center + margin;
     const wantMargin = rng.bool();
-    return ask(
-      [
-        `The figure shows a confidence interval for a population mean. What is ${wantMargin ? "the margin of error" : "the sample mean"}?`,
-        `图中是总体均值的一个置信区间。${wantMargin ? "误差范围" : "样本均值"}是多少？`,
-      ],
-      wantMargin ? margin : center,
-      wantMargin ? [2 * margin, center, high] : [low, high, 2 * margin],
-      [
-        `The interval runs from $${low}$ to $${high}$. ${wantMargin ? `The margin is half its length, $\\frac{${high} - ${low}}{2} = ${margin}$.` : `The sample mean is its midpoint, $\\frac{${low} + ${high}}{2} = ${center}$.`}`,
-        `区间从 $${low}$ 到 $${high}$。${wantMargin ? `误差范围是长度的一半，$\\frac{${high} - ${low}}{2} = ${margin}$。` : `样本均值是它的中点，$\\frac{${low} + ${high}}{2} = ${center}$。`}`,
-      ],
-      {
+    const answer = Q.of(wantMargin ? margin : center);
+    const mistakes = wantMargin
+      ? [
+          why(
+            2 * margin,
+            "This is the whole length of the interval; the margin is half of it, one side only.",
+            "这是区间的整个长度；误差范围是它的一半，只算一侧。",
+          ),
+          why(center, "This is the midpoint, the sample mean, not the margin.", "这是中点，即样本均值，不是误差范围。"),
+          why(high, "This is the upper end of the interval, the estimate plus the margin.", "这是区间的上端点，即估计值加上误差范围。"),
+        ]
+      : [
+          why(low, "This is the lower end of the interval, one margin below the estimate.", "这是区间的下端点，比估计值低一个误差范围。"),
+          why(high, "This is the upper end of the interval, one margin above the estimate.", "这是区间的上端点，比估计值高一个误差范围。"),
+          why(2 * margin, "This is the length of the interval, not its midpoint.", "这是区间的长度，不是它的中点。"),
+        ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The figure shows a confidence interval for a population mean. What is ${wantMargin ? "the margin of error" : "the sample mean"}?`,
+          `图中是总体均值的一个置信区间。${wantMargin ? "误差范围" : "样本均值"}是多少？`,
+        ),
+        answer,
+        mistakes: apart(answer, mistakes),
+        solution: walked(
+          [
+            [["Read the ends", "读出端点"], t(`The interval runs from $${low}$ to $${high}$.`, `区间从 $${low}$ 到 $${high}$。`)],
+            wantMargin
+              ? [
+                  ["Halve the length", "取长度的一半"],
+                  t(`The margin is $\\frac{${high} - ${low}}{2} = ${margin}$.`, `误差范围为 $\\frac{${high} - ${low}}{2} = ${margin}$。`),
+                ]
+              : [
+                  ["Take the midpoint", "取中点"],
+                  t(
+                    `The sample mean is $\\frac{${low} + ${high}}{2} = ${center}$.`,
+                    `样本均值为 $\\frac{${low} + ${high}}{2} = ${center}$。`,
+                  ),
+                ],
+          ],
+          t(
+            `The estimate $${center}$ with margin $${margin}$ gives $${center} - ${margin} = ${low}$ and $${center} + ${margin} = ${high}$, the two ends drawn.`,
+            `估计值 $${center}$ 与误差范围 $${margin}$ 给出 $${center} - ${margin} = ${low}$ 和 $${center} + ${margin} = ${high}$，正是图中的两端。`,
+          ),
+        ),
+      }),
+      figure: {
         svg: intervalLine(10, 30, low, high),
         alt: t(`An interval on a number line from ${low} to ${high}.`, `数轴上从 ${low} 到 ${high} 的区间。`),
       },
-    );
+    };
   },
 );
 
@@ -1501,8 +1858,8 @@ const likelihoodPeak = {
     "successes-from-the-peak-of-a-likelihood",
     ["Successes from the peak of a likelihood", "由似然函数的峰值求成功次数"],
     [
-      "For $k$ successes in $n$ Bernoulli trials, the likelihood $L(p) = p^{k}(1 - p)^{n - k}$ peaks at the maximum likelihood estimate $\\hat{p} = \\frac{k}{n}$. So a graph of $L$ reveals the data: the position of the peak times $n$ is the number of successes.",
-      "$n$ 次伯努利试验中成功 $k$ 次时，似然函数 $L(p) = p^{k}(1 - p)^{n - k}$ 在最大似然估计 $\\hat{p} = \\frac{k}{n}$ 处达到峰值。所以 $L$ 的图能反映数据：峰值位置乘以 $n$ 就是成功次数。",
+      "For $k$ successes in $n$ Bernoulli trials, the likelihood $L(p) = p^{k}(1 - p)^{n - k}$ peaks at the maximum likelihood estimate $\\hat{p} = \\frac{k}{n}$. So a graph of $L$ reveals the data: the position of the peak times $n$ is the number of successes.\n\nA likelihood from $20$ trials that peaks at $p = 0.3$ comes from $k = 0.3 \\cdot 20 = 6$ successes.\n\nCheck: $\\hat{p} = \\frac{6}{20} = 0.3$, the position of the peak.\n\n> **Watch out.** The peak is at $\\hat{p}$, a proportion, not at the count: multiply by $n$. And $20 - 6 = 14$ counts the failures, whose share $0.7$ is the distance of the peak from $1$.",
+      "$n$ 次伯努利试验中成功 $k$ 次时，似然函数 $L(p) = p^{k}(1 - p)^{n - k}$ 在最大似然估计 $\\hat{p} = \\frac{k}{n}$ 处达到峰值。所以 $L$ 的图能反映数据：峰值位置乘以 $n$ 就是成功次数。\n\n来自 $20$ 次试验、峰值在 $p = 0.3$ 的似然函数，对应 $k = 0.3 \\cdot 20 = 6$ 次成功。\n\n检验：$\\hat{p} = \\frac{6}{20} = 0.3$，正是峰值位置。\n\n> **注意。** 峰值位置是比例 $\\hat{p}$，不是次数：要乘以 $n$。而 $20 - 6 = 14$ 是失败次数，其比例 $0.7$ 是峰值到 $1$ 的距离。",
     ],
     (rng) => {
       const n = rng.pick([10, 20, 30]);
@@ -1511,25 +1868,61 @@ const likelihoodPeak = {
       const f = (p: number) => Math.exp(k * Math.log(p || 1e-12) + (n - k) * Math.log(1 - p || 1e-12));
       const top = f(tenths / 10);
       const svg = chart([0, 1], [0, top * 1.2], tenthTicks(0, 10), [], (x, y) => curvePath(f, 0.001, 0.999, x, y));
-      return ask(
-        [
-          `The graph shows the likelihood $L(p)$ from $${n}$ independent trials. How many successes were observed?`,
-          `图中是 $${n}$ 次独立试验的似然函数 $L(p)$。观测到了多少次成功？`,
-        ],
-        k,
-        [n - k, k + 1, tenths],
-        [
-          `The peak is at $\\hat{p} = ${tenths / 10}$, and $\\hat{p} = \\frac{k}{${n}}$, so $k = ${k}$.`,
-          `峰值在 $\\hat{p} = ${tenths / 10}$，而 $\\hat{p} = \\frac{k}{${n}}$，所以 $k = ${k}$。`,
-        ],
-        {
+      const answer = Q.of(k);
+      const peak = tenths / 10;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The graph shows the likelihood $L(p)$ from $${n}$ independent trials. How many successes were observed?`,
+            `图中是 $${n}$ 次独立试验的似然函数 $L(p)$。观测到了多少次成功？`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              n - k,
+              `This is the number of failures, $${n} - ${k}$; the peak at $${peak}$ is the share of successes.`,
+              `这是失败次数 $${n} - ${k}$；峰值 $${peak}$ 是成功所占的比例。`,
+            ),
+            why(
+              Q.of(tenths, 10),
+              `This is $\\hat{p}$, the position of the peak; multiply it by $n = ${n}$ to get the count.`,
+              `这是峰值位置 $\\hat{p}$；乘以 $n = ${n}$ 才是次数。`,
+            ),
+            why(n, "This is the number of trials, not the number of successes.", "这是试验次数，不是成功次数。"),
+            why(
+              tenths,
+              `This multiplies the peak by $10$; there were $${n}$ trials, so multiply by $${n}$.`,
+              `这把峰值乘以 $10$；共有 $${n}$ 次试验，应乘以 $${n}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the peak", "读出峰值"],
+                t(
+                  `The curve peaks at $p = ${peak}$, so $\\hat{p} = ${peak}$.`,
+                  `曲线在 $p = ${peak}$ 处达到峰值，所以 $\\hat{p} = ${peak}$。`,
+                ),
+              ],
+              [
+                ["Scale by n", "乘以 n"],
+                t(
+                  `Since $\\hat{p} = \\frac{k}{${n}}$, $k = ${peak} \\cdot ${n} = ${k}$.`,
+                  `由 $\\hat{p} = \\frac{k}{${n}}$ 得 $k = ${peak} \\cdot ${n} = ${k}$。`,
+                ),
+              ],
+            ],
+            t(`$\\frac{${k}}{${n}} = ${peak}$, the position of the peak.`, `$\\frac{${k}}{${n}} = ${peak}$，正是峰值位置。`),
+          ),
+        }),
+        figure: {
           svg,
           alt: t(
             `A single-peaked likelihood curve on p from 0 to 1 with its peak at ${tenths / 10}.`,
             `p 从 0 到 1 的单峰似然曲线，峰值在 ${tenths / 10}。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: probabilityDrawings1["maximum-likelihood-estimation#successes-from-the-peak-of-a-likelihood"],
@@ -1539,8 +1932,8 @@ const continuityCorrection = point(
   "the-cut-of-a-continuity-correction",
   ["The cut of a continuity correction", "连续性修正的分界"],
   [
-    "When a normal curve approximates a binomial, each bar for $k$ covers the interval from $k - 0.5$ to $k + 0.5$. So $P(X \\le k)$ becomes the area left of $k + 0.5$, which includes the whole bar at $k$, and $P(X \\ge k)$ becomes the area right of $k - 0.5$.",
-    "用正态曲线近似二项分布时，$k$ 处的条形覆盖从 $k - 0.5$ 到 $k + 0.5$ 的区间。所以 $P(X \\le k)$ 变成 $k + 0.5$ 左侧的面积，包含 $k$ 处的整根条形；$P(X \\ge k)$ 变成 $k - 0.5$ 右侧的面积。",
+    "When a normal curve approximates a binomial, each bar for $k$ covers the interval from $k - 0.5$ to $k + 0.5$. So $P(X \\le k)$ becomes the area left of $k + 0.5$, which includes the whole bar at $k$, and $P(X \\ge k)$ becomes the area right of $k - 0.5$. For $X \\sim B(400, 0.5)$, $P(X < 210)$ excludes the bar at $210$, so it is the area left of $209.5$, while $P(X \\le 210)$ is the area left of $210.5$.\n\n> **Watch out.** Decide first whether the bar at $k$ belongs to the event: $\\le$ and $\\ge$ include it, $<$ and $>$ leave it out. Cutting at $k$ itself splits that bar in half.",
+    "用正态曲线近似二项分布时，$k$ 处的条形覆盖从 $k - 0.5$ 到 $k + 0.5$ 的区间。所以 $P(X \\le k)$ 变成 $k + 0.5$ 左侧的面积，包含 $k$ 处的整根条形；$P(X \\ge k)$ 变成 $k - 0.5$ 右侧的面积。对 $X \\sim B(400, 0.5)$，$P(X < 210)$ 不含 $210$ 处的条形，所以是 $209.5$ 左侧的面积；而 $P(X \\le 210)$ 是 $210.5$ 左侧的面积。\n\n> **注意。** 先判断 $k$ 处的条形是否属于事件：$\\le$ 与 $\\ge$ 包含它，$<$ 与 $>$ 不包含。在 $k$ 本身处分界会把这根条形切成两半。",
   ],
   (rng) => {
     const n = 20;
@@ -1554,25 +1947,56 @@ const continuityCorrection = point(
     const sign = atMost ? (strict ? "<" : "\\le") : strict ? ">" : "\\ge";
     const side: [string, string] = atMost ? ["left", "左"] : ["right", "右"];
     const opposite = 2 * k - cut;
-    return ask(
-      [
-        `A normal curve approximates the bars of $X \\sim B(20, 0.5)$. With a continuity correction, $P(X ${sign} ${k})$ is the area to the ${side[0]} of which value?`,
-        `正态曲线近似 $X \\sim B(20, 0.5)$ 的条形。使用连续性修正时，$P(X ${sign} ${k})$ 是哪个值${side[1]}侧的面积？`,
-      ],
-      Q.of(2 * cut, 2),
-      [Q.of(2 * opposite, 2), k],
-      [
-        `Each bar spans half a unit either side of its value. ${strict ? `The bar at $${k}$ is excluded` : `The bar at $${k}$ is included`}, so the cut is at $${cut}$.`,
-        `每根条形在其取值两侧各占半个单位。${strict ? `$${k}$ 处的条形不包含在内` : `$${k}$ 处的条形包含在内`}，所以分界在 $${cut}$。`,
-      ],
-      {
+    const answer = Q.of(2 * cut, 2);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `A normal curve approximates the bars of $X \\sim B(20, 0.5)$. With a continuity correction, $P(X ${sign} ${k})$ is the area to the ${side[0]} of which value?`,
+          `正态曲线近似 $X \\sim B(20, 0.5)$ 的条形。使用连续性修正时，$P(X ${sign} ${k})$ 是哪个值${side[1]}侧的面积？`,
+        ),
+        answer,
+        form: "decimal",
+        mistakes: apart(answer, [
+          why(
+            Q.of(2 * opposite, 2),
+            strict
+              ? `That includes the bar at $${k}$, which the strict inequality leaves out.`
+              : `That leaves out the bar at $${k}$, which the inequality includes.`,
+            strict ? `那是把 $${k}$ 处的条形算进去了，而严格不等式不包含它。` : `那是漏掉了 $${k}$ 处的条形，而这个不等式包含它。`,
+          ),
+          why(k, `That cuts at $${k}$ itself, splitting its bar in half.`, `那是在 $${k}$ 本身处分界，把它的条形切成两半。`),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Decide about the bar at $k$", "判断 $k$ 处的条形"],
+              t(
+                `Each bar spans half a unit either side of its value. ${strict ? `The bar at $${k}$ is excluded` : `The bar at $${k}$ is included`} by $X ${sign} ${k}$.`,
+                `每根条形在其取值两侧各占半个单位。$X ${sign} ${k}$ ${strict ? `不包含 $${k}$ 处的条形` : `包含 $${k}$ 处的条形`}。`,
+              ),
+            ],
+            [
+              ["Place the cut", "确定分界"],
+              t(
+                `So the cut is at the ${(atMost ? !strict : strict) ? "right" : "left"} edge of that bar, $${cut} = ${answer.toLatex()}$.`,
+                `所以分界在这根条形的${(atMost ? !strict : strict) ? "右" : "左"}边缘，$${cut} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The cut $${cut}$ lies half a unit from $${k}$, on a boundary between two bars, as every continuity-corrected cut does.`,
+            `分界 $${cut}$ 与 $${k}$ 相距半个单位，正好在两根条形之间，经连续性修正的分界都是如此。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(
           "Bars of the binomial distribution with n = 20 and p = 0.5, from 3 to 17, with a normal curve drawn over them. Each bar is one unit wide around its value.",
           "n = 20、p = 0.5 的二项分布条形（3 到 17），上面画有一条正态曲线。每根条形以取值为中心，宽一个单位。",
         ),
       },
-    );
+    };
   },
 );
 
@@ -1580,12 +2004,13 @@ const sampleMeanSpread = point(
   "the-sample-size-from-two-sampling-curves",
   ["The sample size from two sampling curves", "由两条抽样分布曲线求样本量"],
   [
-    "The sample mean has standard error $\\frac{\\sigma}{\\sqrt{n}}$, and a normal curve bends at one standard deviation from its center. So the bends of a sampling curve show the standard error directly, and comparing it with $\\sigma$ gives $n = \\left(\\frac{\\sigma}{\\mathrm{SE}}\\right)^{2}$.",
-    "样本均值的标准误是 $\\frac{\\sigma}{\\sqrt{n}}$，而正态曲线在距中心一个标准差处拐弯。所以抽样分布曲线的拐点直接显示标准误，与 $\\sigma$ 比较可得 $n = \\left(\\frac{\\sigma}{\\mathrm{SE}}\\right)^{2}$。",
+    "The sample mean has standard error $\\frac{\\sigma}{\\sqrt{n}}$, and a normal curve bends at one standard deviation from its center. So the bends of a sampling curve show the standard error directly, and comparing it with $\\sigma$ gives $n = \\left(\\frac{\\sigma}{\\mathrm{SE}}\\right)^{2}$.\n\nIf $\\sigma = 6$ and the curve bends at $\\pm 2$, the standard error is $2$, so $\\sqrt{n} = 6 \\div 2 = 3$ and $n = 9$.\n\nCheck: $\\frac{6}{\\sqrt{9}} = 2$, the standard error read from the curve.\n\n> **Watch out.** The ratio $6 \\div 2 = 3$ is $\\sqrt{n}$, not $n$. And read the standard error at the bends, where the curve changes from curving down to curving up, not where it meets the axis.",
+    "样本均值的标准误是 $\\frac{\\sigma}{\\sqrt{n}}$，而正态曲线在距中心一个标准差处拐弯。所以抽样分布曲线的拐点直接显示标准误，与 $\\sigma$ 比较可得 $n = \\left(\\frac{\\sigma}{\\mathrm{SE}}\\right)^{2}$。\n\n若 $\\sigma = 6$，曲线在 $\\pm 2$ 处拐弯，则标准误为 $2$，所以 $\\sqrt{n} = 6 \\div 2 = 3$，$n = 9$。\n\n检验：$\\frac{6}{\\sqrt{9}} = 2$，正是由曲线读出的标准误。\n\n> **注意。** 比值 $6 \\div 2 = 3$ 是 $\\sqrt{n}$，不是 $n$。并且标准误要在拐点处读（曲线由向下弯变为向上弯的地方），而不是在曲线接近横轴的地方。",
   ],
   (rng) => {
     const se = rng.int(1, 3);
-    const root = rng.int(2, 6);
+    // With se = 1 and root = 4, every explained mistake but one coincides.
+    const root = rng.pick(se === 1 ? [2, 3, 5, 6] : [2, 3, 4, 5, 6]);
     const sigma = se * root;
     const n = root * root;
     const f = normal(0, se);
@@ -1602,33 +2027,113 @@ const sampleMeanSpread = point(
         `以 0 为中心的钟形曲线，虚线位于拐点 x = −${se} 和 x = ${se}。`,
       ),
     };
-    if (rng.bool())
-      return ask(
-        [
-          `A population has standard deviation $\\sigma = ${sigma}$. The curve is the sampling distribution of the deviation of the sample mean from $\\mu$, and dashed lines mark its inflection points. What is the sample size?`,
-          `总体标准差 $\\sigma = ${sigma}$。曲线是样本均值与 $\\mu$ 之差的抽样分布，虚线标出它的拐点。样本量是多少？`,
-        ],
-        n,
-        [root, sigma, n + 1, sigma * sigma],
-        [
-          `The inflection points are at $\\pm ${se}$, so the standard error is $${se}$. Then $\\sqrt{n} = \\frac{${sigma}}{${se}} = ${root}$, and $n = ${n}$.`,
-          `拐点在 $\\pm ${se}$，所以标准误是 $${se}$。于是 $\\sqrt{n} = \\frac{${sigma}}{${se}} = ${root}$，$n = ${n}$。`,
-        ],
+    const readSe: Step = [
+      ["Read the standard error", "读出标准误"],
+      t(
+        `The dashed inflection points are at $\\pm ${se}$, so the standard error is $${se}$.`,
+        `虚线所示拐点在 $\\pm ${se}$，所以标准误是 $${se}$。`,
+      ),
+    ];
+    if (rng.bool()) {
+      const answer = Q.of(n);
+      return {
+        ...numberProblem({
+          prompt: t(
+            `A population has standard deviation $\\sigma = ${sigma}$. The curve is the sampling distribution of the deviation of the sample mean from $\\mu$, and dashed lines mark its inflection points. What is the sample size?`,
+            `总体标准差 $\\sigma = ${sigma}$。曲线是样本均值与 $\\mu$ 之差的抽样分布，虚线标出它的拐点。样本量是多少？`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              root,
+              `This is $\\sqrt{n} = ${sigma} \\div ${se}$; square it to get $n$.`,
+              `这是 $\\sqrt{n} = ${sigma} \\div ${se}$；平方后才是 $n$。`,
+            ),
+            why(
+              sigma,
+              "This is $\\sigma$ itself; the sample size comes from comparing $\\sigma$ with the standard error.",
+              "这是 $\\sigma$ 本身；样本量要由 $\\sigma$ 与标准误比较得到。",
+            ),
+            why(
+              sigma * sigma,
+              `This is $\\sigma^{2}$; it still has to be divided by the squared standard error $${se * se}$.`,
+              `这是 $\\sigma^{2}$；还要除以标准误的平方 $${se * se}$。`,
+            ),
+            why(
+              Q.of(sigma * sigma, 4 * se * se),
+              `This takes the gap between the dashed lines, $${2 * se}$, as the standard error; each line is one standard error from the center.`,
+              `这把两条虚线之间的距离 $${2 * se}$ 当作标准误；每条虚线距中心一个标准误。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              readSe,
+              [
+                ["Compare with σ", "与 σ 比较"],
+                t(
+                  `$\\sqrt{n} = ${sigma} \\div ${se} = ${root}$, so $n = ${root}^{2} = ${n}$.`,
+                  `$\\sqrt{n} = ${sigma} \\div ${se} = ${root}$，所以 $n = ${root}^{2} = ${n}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$\\frac{${sigma}}{\\sqrt{${n}}} = ${sigma} \\div ${root} = ${se}$, the standard error on the curve.`,
+              `$\\frac{${sigma}}{\\sqrt{${n}}} = ${sigma} \\div ${root} = ${se}$，正是曲线上的标准误。`,
+            ),
+          ),
+        }),
         figure,
-      );
-    return ask(
-      [
-        `A sample of size $n = ${n}$ is taken. The curve is the sampling distribution of the deviation of the sample mean from $\\mu$, and dashed lines mark its inflection points. What is the population standard deviation $\\sigma$?`,
-        `抽取样本量 $n = ${n}$ 的样本。曲线是样本均值与 $\\mu$ 之差的抽样分布，虚线标出它的拐点。总体标准差 $\\sigma$ 是多少？`,
-      ],
-      sigma,
-      [se, n * se, root, se + root],
-      [
-        `The inflection points are at $\\pm ${se}$, so the standard error is $${se}$. Since it equals $\\frac{\\sigma}{\\sqrt{${n}}}$, we get $\\sigma = ${se} \\cdot ${root} = ${sigma}$.`,
-        `拐点在 $\\pm ${se}$，所以标准误是 $${se}$。它等于 $\\frac{\\sigma}{\\sqrt{${n}}}$，于是 $\\sigma = ${se} \\cdot ${root} = ${sigma}$。`,
-      ],
+      };
+    }
+    const answer = Q.of(sigma);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `A sample of size $n = ${n}$ is taken. The curve is the sampling distribution of the deviation of the sample mean from $\\mu$, and dashed lines mark its inflection points. What is the population standard deviation $\\sigma$?`,
+          `抽取样本量 $n = ${n}$ 的样本。曲线是样本均值与 $\\mu$ 之差的抽样分布，虚线标出它的拐点。总体标准差 $\\sigma$ 是多少？`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            se,
+            "This is the standard error of the mean, read from the curve; the population spread is $\\sqrt{n}$ times larger.",
+            "这是由曲线读出的均值标准误；总体的离散程度是它的 $\\sqrt{n}$ 倍。",
+          ),
+          why(
+            n * se,
+            `This multiplies by $n = ${n}$; the standard error is $\\frac{\\sigma}{\\sqrt{n}}$, so multiply by $\\sqrt{${n}} = ${root}$.`,
+            `这乘以了 $n = ${n}$；标准误是 $\\frac{\\sigma}{\\sqrt{n}}$，应乘以 $\\sqrt{${n}} = ${root}$。`,
+          ),
+          why(
+            se + root,
+            "This adds $\\sqrt{n}$ to the standard error instead of multiplying.",
+            "这把 $\\sqrt{n}$ 加到标准误上，而不是相乘。",
+          ),
+          why(
+            2 * se * root,
+            `This takes the gap between the dashed lines, $${2 * se}$, as the standard error; each line is one standard error from the center.`,
+            `这把两条虚线之间的距离 $${2 * se}$ 当作标准误；每条虚线距中心一个标准误。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            readSe,
+            [
+              ["Undo the division by √n", "乘回 √n"],
+              t(
+                `Since $${se} = \\frac{\\sigma}{\\sqrt{${n}}}$, $\\sigma = ${se} \\cdot ${root} = ${sigma}$.`,
+                `由 $${se} = \\frac{\\sigma}{\\sqrt{${n}}}$ 得 $\\sigma = ${se} \\cdot ${root} = ${sigma}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$\\frac{${sigma}}{\\sqrt{${n}}} = ${sigma} \\div ${root} = ${se}$, the standard error on the curve.`,
+            `$\\frac{${sigma}}{\\sqrt{${n}}} = ${sigma} \\div ${root} = ${se}$，正是曲线上的标准误。`,
+          ),
+        ),
+      }),
       figure,
-    );
+    };
   },
 );
 
@@ -1639,8 +2144,8 @@ const gammaPeak = point(
   "the-shape-from-the-peak-of-a-gamma-curve",
   ["The shape from the peak of a gamma curve", "由伽马曲线的峰值求形状参数"],
   [
-    "A gamma density with shape $\\alpha > 1$ and rate $\\lambda$ peaks at $x = \\frac{\\alpha - 1}{\\lambda}$, and its mean is $\\frac{\\alpha}{\\lambda}$. So the mean lies a distance $\\frac{1}{\\lambda}$ to the right of the peak.",
-    "形状参数 $\\alpha > 1$、率参数 $\\lambda$ 的伽马密度在 $x = \\frac{\\alpha - 1}{\\lambda}$ 处达到峰值，均值为 $\\frac{\\alpha}{\\lambda}$。所以均值在峰值右边 $\\frac{1}{\\lambda}$ 处。",
+    "A gamma density with shape $\\alpha > 1$ and rate $\\lambda$ peaks at $x = \\frac{\\alpha - 1}{\\lambda}$, and its mean is $\\frac{\\alpha}{\\lambda}$. So the mean lies a distance $\\frac{1}{\\lambda}$ to the right of the peak. With $\\lambda = 10$ and a peak at $x = 2$, $\\alpha = 21$, the mean is $2.1$ and the variance is $\\frac{21}{100}$.\n\n> **Watch out.** The peak gives $\\alpha - 1$, not $\\alpha$: multiply the peak by $\\lambda$ and add $1$. The variance divides by $\\lambda^{2}$, the mean only by $\\lambda$.",
+    "形状参数 $\\alpha > 1$、率参数 $\\lambda$ 的伽马密度在 $x = \\frac{\\alpha - 1}{\\lambda}$ 处达到峰值，均值为 $\\frac{\\alpha}{\\lambda}$。所以均值在峰值右边 $\\frac{1}{\\lambda}$ 处。若 $\\lambda = 10$，峰值在 $x = 2$，则 $\\alpha = 21$，均值为 $2.1$，方差为 $\\frac{21}{100}$。\n\n> **注意。** 峰值给出的是 $\\alpha - 1$，不是 $\\alpha$：把峰值乘以 $\\lambda$ 再加 $1$。方差要除以 $\\lambda^{2}$，均值只除以 $\\lambda$。",
   ],
   (rng) => {
     const shape = rng.int(2, 7);
@@ -1654,22 +2159,61 @@ const gammaPeak = point(
     const answer = kind === "shape" ? Q.of(shape, 1) : kind === "mean" ? Q.of(shape, rate) : Q.of(shape, rate * rate);
     const asked: [string, string] =
       kind === "shape" ? ["the shape $\\alpha$", "形状参数 $\\alpha$"] : kind === "mean" ? ["the mean", "均值"] : ["the variance", "方差"];
-    return ask(
-      [
-        `The graph shows a gamma density with rate $\\lambda = ${rate}$, and its peak stands at a whole or half number. Find ${asked[0]}.`,
-        `图中是率参数 $\\lambda = ${rate}$ 的伽马密度，峰值位于某个整数或半整数处。求${asked[1]}。`,
-      ],
-      answer,
-      [Q.of(shape - 1, rate), Q.of(shape + 1, rate), Q.of(2 * shape, 1), Q.of(shape, rate + 1)],
-      [
-        `The peak is at $x = ${peak} = \\frac{\\alpha - 1}{${rate}}$, so $\\alpha = ${shape}$. The mean is $\\frac{\\alpha}{\\lambda} = ${Q.of(shape, rate).toLatex()}$ and the variance is $\\frac{\\alpha}{\\lambda^{2}} = ${Q.of(shape, rate * rate).toLatex()}$.`,
-        `峰值在 $x = ${peak} = \\frac{\\alpha - 1}{${rate}}$，所以 $\\alpha = ${shape}$。均值为 $\\frac{\\alpha}{\\lambda} = ${Q.of(shape, rate).toLatex()}$，方差为 $\\frac{\\alpha}{\\lambda^{2}} = ${Q.of(shape, rate * rate).toLatex()}$。`,
-      ],
-      {
+    const meanQ = Q.of(shape, rate);
+    const varQ = Q.of(shape, rate * rate);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The graph shows a gamma density with rate $\\lambda = ${rate}$, and its peak stands at a whole or half number. Find ${asked[0]}.`,
+          `图中是率参数 $\\lambda = ${rate}$ 的伽马密度，峰值位于某个整数或半整数处。求${asked[1]}。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            Q.of(shape - 1, rate),
+            "That is the position of the peak, $\\frac{\\alpha - 1}{\\lambda}$.",
+            "那是峰值的位置 $\\frac{\\alpha - 1}{\\lambda}$。",
+          ),
+          why(Q.of(shape + 1, rate), "That uses $\\alpha + 1$ in place of $\\alpha$.", "那是用 $\\alpha + 1$ 代替了 $\\alpha$。"),
+          why(Q.of(2 * shape, 1), "That doubles $\\alpha$.", "那是把 $\\alpha$ 加倍了。"),
+          why(Q.of(shape, rate + 1), "That uses $\\lambda + 1$ in place of $\\lambda$.", "那是用 $\\lambda + 1$ 代替了 $\\lambda$。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the peak", "读出峰值"],
+              t(
+                `The peak is at $x = ${peak} = \\frac{\\alpha - 1}{${rate}}$, so $\\alpha = ${peak * rate} + 1 = ${shape}$.`,
+                `峰值在 $x = ${peak} = \\frac{\\alpha - 1}{${rate}}$，所以 $\\alpha = ${peak * rate} + 1 = ${shape}$。`,
+              ),
+            ],
+            [
+              ["Answer the question", "回答问题"],
+              t(
+                kind === "shape"
+                  ? `The shape is $\\alpha = ${shape}$.`
+                  : kind === "mean"
+                    ? `The mean is $\\frac{\\alpha}{\\lambda} = \\frac{${shape}}{${rate}}${rate === 1 ? "" : ` = ${meanQ.toLatex()}`}$.`
+                    : `The variance is $\\frac{\\alpha}{\\lambda^{2}} = \\frac{${shape}}{${rate * rate}}${rate === 1 ? "" : ` = ${varQ.toLatex()}`}$.`,
+                kind === "shape"
+                  ? `形状参数为 $\\alpha = ${shape}$。`
+                  : kind === "mean"
+                    ? `均值为 $\\frac{\\alpha}{\\lambda} = \\frac{${shape}}{${rate}}${rate === 1 ? "" : ` = ${meanQ.toLatex()}`}$。`
+                    : `方差为 $\\frac{\\alpha}{\\lambda^{2}} = \\frac{${shape}}{${rate * rate}}${rate === 1 ? "" : ` = ${varQ.toLatex()}`}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The mean $${meanQ.toLatex()}$ lies $\\frac{1}{\\lambda} = ${Q.of(1, rate).toLatex()}$ to the right of the peak $${peak}$, as the right skew requires.`,
+            `均值 $${meanQ.toLatex()}$ 在峰值 $${peak}$ 右边 $\\frac{1}{\\lambda} = ${Q.of(1, rate).toLatex()}$ 处，符合右偏的形状。`,
+          ),
+        ),
+      }),
+      figure: {
         svg,
         alt: t(`A right-skewed gamma density with its peak at x = ${peak}.`, `右偏的伽马密度，峰值在 x = ${peak}。`),
       },
-    );
+    };
   },
 );
 
