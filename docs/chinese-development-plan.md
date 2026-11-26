@@ -17,7 +17,7 @@ This document turns the design in [Chinese Curriculum](chinese-curriculum.md) in
 | 4 Grades 1 and 2, heritage bridges | The first two grades and three literacy bridges | — | Each course meets its criteria |
 | 5 Grades 7 to 9, senior secondary, classical language | The rest of the native courses | — | Each course meets its criteria |
 | 6 Levels 4 to 9, judged writing, speech and conversation, exam courses | The rest of the foreign-language courses and the exam courses | Teachers scoring writing and speech | Each course meets its criteria |
-| 7 Fit for self-study | Every course teaches a learner alone: Chinese bold rendered, honest options, true grammar reasons, every word heard, words produced, grades 1 and 2 read aloud | Teachers reading for self-study | Gate CG7 |
+| 7 Fit for self-study | Every course teaches a learner alone: true feedback, unique answers, honest options, every word heard, words produced, prompts within reach, grades 1 and 2 for a child, heritage reading, Gaokao at the exam's level | Teachers reading for self-study | Gate CG7 |
 
 ```text
 CG0 ─► C1 first slice ─► CG1 ─┬─► C2 levels 1–3 ─► CG2 ─┬─► C6 levels 4–9, writing, speech, exams
@@ -182,7 +182,9 @@ Levels 4 to 9 continue C2. Judged writing reuses `libs/judge` with calibration s
 
 ## 9. Stage 7: Fit for Self-Study
 
-Stages 1 to 6 built every course; this stage makes them teach a learner who works alone. On 26 November 2026 eleven courses were walked as a learner walks them, in a lesson and in the admin preview: grade 1, levels 1 and 7, HSK 3 and HSK 7–9, heritage bridge 1, grades 5 and 8, the senior required course and Gaokao; and the kinds of question, the recordings and the lengths of the options of all 32 courses were counted. The levels, the HSK courses and the heritage bridges can be practised, but none yet teaches a learner alone; grades 1 and 2 and Gaokao cannot be used without an adult or a teacher. The milestones below close what was found, in the order of the harm to a learner alone. Each is checked by a test or the audit over every course, not over the courses walked.
+Stages 1 to 6 built every course; this stage makes them teach a learner who works alone. On 26 November 2026 the courses were reviewed in two ways. Eleven were walked as a learner walks them, in a lesson and in the admin preview: grade 1, levels 1 and 7, HSK 3 and HSK 7–9, heritage bridge 1, grades 5 and 8, the senior required course and Gaokao. All 32 were then read offline, most with several seeds, and the kinds of question, the recordings and the lengths of the options of every course were counted. None is yet ready for a learner alone. Grades 1 and 2, level 1, HSK 1, the heritage bridges 1 and 2, and Gaokao cannot be used without a teacher or an adult; the other courses can be practised, with the gaps below. What held: the position of the right option is evenly spread, every wrong option is explained, 一 and 不 are marked in the tone they are said in, the listening and speaking of the foreign-language courses have recordings, and no exam item or textbook text was found copied.
+
+The milestones close what was found, in the order of the harm to a learner alone. Each is checked by a test or the audit over every course, not over the courses reviewed.
 
 ### C7.1 Bold in Chinese Text (S)
 
@@ -192,55 +194,100 @@ Stages 1 to 6 built every course; this stage makes them teach a learner who work
 
 **Done when.** A test renders `**第一步。**文字` and `**检验。** 文字` as bold in both apps, and a scan of every rendered solution and feedback of every subject finds no `**` left.
 
-### C7.2 Options That Give the Answer Away (M)
+### C7.2 Feedback That Is Wrong (M)
 
-**Found.** In the choice questions whose options differ in length, the right option is the one longest option 72 to 84 percent of the time in grades 1 to 4 and 6, against about 31 by chance, and 42 percent in Gaokao against 27. Wrong options are often absurd: the reading of a poem by Du Fu offers "写诗人和妻子吵了一架", a story offers "他贪小便宜". A learner can answer without reading, and the engine takes it for mastery.
+**Found.** A learner alone believes what the feedback says, and some of it is false:
 
-**Build.** Wrong options written as the misreadings a learner really makes, as long and as specific as the right one: a partial reading, a reading of the wrong line, a feeling the text does not support. Shorter right options where the length carries no meaning.
+- The reasons for a wrong word order are put together by `content/chinese/src/level-1/grammar-reasons.ts` from the position of each piece. In 不V白不V, level 7 says "白 is what 吃 acts on: it comes after the verb, 吃白", where 白 is an adverb, "for nothing"; level 1 says "去 goes after the verb" and explains the 呢 of a statement as ending a question; level 6 calls 所 the object of 有; order items call 不是 and 一直 one word.
+- The passive topic of level 3 uses 叫 in its sense of giving a name.
+- The Check line of many word and gap knowledge points is garbled, in both languages: "[thank you]你！", "我[dad]是我爷爷的儿子", "我最（对人或事物有好感，感兴趣）吃…".
+- `level-5-words-53` defines 繁体字 as characters with many strokes.
 
-**Done when.** A test over every course and seeds 1 to 3: the right option is the unique longest in no more than 40 percent of the items whose options differ in length, and no choice question of the reading and recitation topics has a wrong option that a learner who has not read the text can reject.
+**Build.** Each grammar point states the roles of its pieces, and a reason is given only from a role stated; where none fits, the reason names the pattern and the right order. The Check line puts the word itself, not its gloss, into the sentence. Every reason and definition of levels 1 to 9 is listed and read once.
 
-### C7.3 Grammar Reasons That Are Wrong (M)
+**Done when.** A test fails on a reason built from a guessed role and on a Check line holding a gloss in brackets; the list of reasons and definitions, read in full, holds no false statement.
 
-**Found.** The reasons given for a wrong word order are put together by `content/chinese/src/level-1/grammar-reasons.ts` from the position of each piece, and some are false: in 不V白不V, level 7 says "白 is what 吃 acts on: it comes after the verb, 吃白", where 白 is an adverb, "for nothing"; and it treats 不要 in 不要白不要 as one word of negation. A learner alone has no one to tell them the explanation is wrong.
+### C7.3 Answers That Are Not Unique (S)
 
-**Build.** Each grammar point states the roles of its pieces, and a reason is given only from a role stated; where none fits, the reason names the pattern and the right order without a role. Every reason of levels 1 to 9 is listed and read once.
+**Found.** Some questions mark a right answer wrong: （tā）们 accepts only one of 他, 她 and 它, and in one run its solution speaks of 她们 while the answer is 他; `gaokao-language-sound` marks the acceptable sentence with 欣赏鸟鸣 as faulty; 百年＿＿ accepts 名校 but not 学堂.
 
-**Done when.** A test fails on a reason built from a guessed role, and the list of reasons, read in full, holds no false statement.
+**Build.** Gaps whose context admits several characters or words either accept them all or are given context that admits one; every item of the language-use topics is read for a second right answer.
 
-### C7.4 Hearing Every Word (M)
+**Done when.** A test over the gap generators finds no gap that a second option of the same set fills correctly, and the solution names the answer the checker expects.
 
-**Found.** The recordings exist, some 23,000, and the listening questions play them, but only about 50 knowledge points a level carry one. The 500 words of level 1 cannot be heard on their lesson pages, nor the syllables of the lesson on tones, so a foreign learner alone learns the written form and never the sound.
+### C7.4 Options That Give the Answer Away (M)
 
-**Build.** A play button beside every word, character and example sentence of the lists in explanations and in the questions of the levels, the HSK courses, pinyin and the heritage bridges, from the recordings that exist or are made by `tools/audio`; the lesson on tones plays each of its syllables.
+**Found.** In the choice questions whose options differ in length, the right option is the one longest option 72 to 84 percent of the time in grades 1 to 4 and 6, against about 31 by chance, and 42 percent in Gaokao against 27. Wrong options are often absurd ("写诗人和妻子吵了一架", "他贪小便宜", "我们要养成认真。") or not Chinese at all (想过了了, 何尝了, 有所了), and some clues give the answer away: the definition of 随声附和 restates the sentence, 疼 is the clue for 痛, 兽骨 is lifted from the definition. A learner can answer without reading, and the engine takes it for mastery.
 
-**Done when.** A test: every word and character of a list in these courses has a recording made, and every syllable of the pinyin course.
+**Build.** Wrong options written as the misreadings a learner really makes, as long and as specific as the right one; every option a well-formed word or sentence; clues that do not repeat the answer or its definition.
 
-### C7.5 Producing, Not Only Recognizing (L)
+**Done when.** A test over every course and seeds 1 to 3: the right option is the unique longest in no more than 40 percent of the items whose options differ in length; no option is an ill-formed string; no clue shares a character with its answer.
 
-**Found.** Of the 414 knowledge points of level 1, 362 are answered by a choice; the levels and the HSK courses ask no learner to type pinyin or characters. A learner who only recognizes a word cannot yet say or write it.
+### C7.5 Hearing Every Word (M)
 
-**Build.** In every topic of words, after finding and reading a word, a knowledge point that produces it: the pinyin typed from the character, the word typed from its meaning or from a recording, with the checkers the heritage bridges already use.
+**Found.** The recordings exist, some 23,000, and the listening questions play them, but only about 50 knowledge points a level carry one. The words of the lists cannot be heard on their lesson pages, nor the syllables of the lesson on tones, so a foreign learner alone learns the written form and never the sound. In the native courses the listening topics of 口语交际 are transcripts to read, and reading aloud and recitation have no model reading; the heritage bridges, whose learners already speak, have no recordings beyond pinyin.
 
-**Done when.** Every topic of words of levels 1 to 9 holds at least one knowledge point answered by typing, and no level answers more than 70 percent of its knowledge points by a choice.
+**Build.** A play button beside every word, character and example sentence of the lists and the questions of the levels, the HSK courses, pinyin and the heritage bridges; the native listening topics played, not shown; a model reading for every text read aloud or recited; recordings from `tools/audio`.
 
-### C7.6 Grades 1 and 2 Read Aloud (M)
+**Done when.** A test: every word and character of a list in these courses, every syllable of the pinyin course and every text of reading aloud and recitation has a recording, and no native listening question shows its text before it is answered.
 
-**Found.** Grade 1 teaches pinyin to children who cannot yet read, in explanations written in characters (骂, 麻 …) with nothing read aloud; the lesson on tones has no sound at all. A six-year-old cannot use it without an adult.
+### C7.6 Producing, Not Only Recognizing (L)
 
-**Build.** Explanations, prompts and feedback of grades 1 and 2 read aloud from recordings, and every pinyin question that turns on a sound plays it; written text kept to the characters already taught.
+**Found.** No knowledge point of a level or an HSK course is answered by typing, and about 90 percent are answered by a choice (level 1: 362 of 414; HSK 7–9: 2,444 of 2,666). The pinyin course has 8 topics, without the neutral tone or tone pairs, and never asks for pinyin to be typed. A learner who only recognizes a word cannot yet say or write it.
 
-**Done when.** A test: every explanation, prompt and feedback of grades 1 and 2 has a recording, and their texts use only characters taught before.
+**Build.** In every topic of words, after finding and reading a word, a knowledge point that produces it: the pinyin typed from the character, the word typed from its meaning or from a recording, with the checkers the heritage bridges already use. The pinyin course gains the neutral tone, the tone pairs and typed pinyin from a recording.
 
-### C7.7 Word Topics (S)
+**Done when.** Every topic of words of levels 1 to 9 holds at least one knowledge point answered by typing; no level answers more than 70 percent of its knowledge points by a choice; the pinyin course types pinyin and teaches the neutral tone and the tone pairs.
 
-**Found.** A topic of ten words shows the same list four times, in its introduction and in each knowledge point. Some sets gather words that do not share their theme: "Before and After" holds 了, 过, 会, 要 and 住. Wrong options miss the word most easily confused: "next; down" offers 下, 了 and 上午 but not 上. Phrases of levels 7 to 9 are written in pinyin as one word, jiùchénggǎizào, where the rules of Hanyu Pinyin orthography write jiùchéng gǎizào.
+### C7.7 Within the Learner's Reach (M)
 
-**Build.** The list shown once, in the introduction; sets regrouped by meaning, with function words taught in grammar points; the confusable word of the set offered first; pinyin of phrases written by GB/T 16159.
+**Found.** Questions of levels 1 to 3 are written in characters only, with no pinyin or translation, while their explanations are in English: "男的早上喝什么？", "这里有人＿＿？". Feedback and examples use words above the level: 干戈, 戈壁 and 而是 in level 1; 偶尔 and 哈尔滨 for 尔 in grade 1 and HSK 1; 是非 and 的确 as words of grade 1. Characters are taught by their whole shape, without their components or a way to remember them, though the design teaches components first; level 1 names strokes such as 撇 in its handwriting without a topic of strokes. Some drills of level 5 give characters forced meanings ("甫: 刚刚…"), and level 6 only now teaches 它.
 
-**Done when.** The audit reports no list repeated in a topic, and a test checks the spacing of the pinyin of every phrase.
+**Build.** Questions of levels 1 to 3 show the pinyin of characters not yet mastered and a gloss on demand; feedback and examples keep to the words taught before; characters taught with their components and how they make the meaning or the sound; a topic of strokes before the first handwriting; very common characters moved to the level where their words first need them.
 
-### C7.8 One Language for Native Courses (S)
+**Done when.** A test: every question, explanation and feedback of a course uses only characters taught by that point or shows their pinyin; every character topic names the components of its characters.
+
+### C7.8 Grades 1 and 2 for a Child (M)
+
+**Found.** Grade 1 teaches pinyin to children who cannot yet read, in adult Chinese with grammar terms such as 主语 and 宾语, and nothing is read aloud: 4 knowledge points of grade 1 and none of grade 2 have a recording, and the lesson on tones has no sound. A child types pinyin with tone numbers ("如 hao3") and the lines of poems through an input method. A six-year-old cannot use it without an adult.
+
+**Build.** Explanations, prompts and feedback of grades 1 and 2 in a child's words, without grammar terms, and read aloud; every pinyin question that turns on a sound plays it; pinyin and poem lines chosen or assembled from tiles, not typed; written text kept to the characters already taught.
+
+**Done when.** A test: every explanation, prompt and feedback of grades 1 and 2 has a recording, uses only characters taught before and no grammar term, and no question of these grades asks for typed input.
+
+### C7.9 Reading in the Heritage Bridges (M)
+
+**Found.** Each heritage bridge has only two topics of its own and no reading passages, though the design promises passages written for the learner's age; the learners, who already speak, are given nothing to read.
+
+**Build.** Passages written for the subject in each bridge, in the characters it has taught so far, for children and for adults, with questions, and recorded so the learner can read along with what they already understand when heard.
+
+**Done when.** Each bridge holds at least 24 passages, every passage keeps to the characters taught before it, and each has a recording.
+
+### C7.10 Gaokao to the Level of the Exam (L)
+
+**Found.** Gaokao practice is far easier than the exam: its idioms are those of primary school (持之以恒, 开门见山); faulty sentences are offered against absurd options; reading questions have three options where the exam has four, and the wrong ones are plainly wrong; there are only 6 informational texts, 6 literary texts and 8 poems. It shares idiom items with grade 9.
+
+**Build.** Idioms, faulty sentences and rhetorical devices at the level of the senior curriculum's quality level 4; four options in every choice question, each wrong option a plausible misreading of the text; at least 20 texts of each kind and 20 poems, written for the subject; no item shared with a lower course.
+
+**Done when.** A test checks four options and the sizes of the pools; a teacher of senior Chinese (§10.3) judges a sample to be at the exam's level.
+
+### C7.11 Enough Texts and Prompts (M)
+
+**Found.** The pools are small and prompts repeat: about 10 passages for a reading topic of grade 3, 11 long passages in HSK 3, 12 prompts for a writing knowledge point, a single prompt in `gaokao-language-sound`, and the same prompt in both writing knowledge points of `writing-7-imagination` and of `writing-8-news`. Recitation cuts ci into fragments such as 更那堪.
+
+**Build.** At least 20 passages a reading topic and 20 prompts a writing knowledge point, written for the subject; no prompt shared between knowledge points; recitation cut at the ends of lines and sense units.
+
+**Done when.** The audit counts passages and prompts and finds no prompt shared and no recitation cue that is not a whole line or sense unit.
+
+### C7.12 Word Topics (S)
+
+**Found.** A topic of ten words shows the same list four times, in its introduction and in each knowledge point, and the same example sentences recur across courses. Some sets gather words that do not share their theme: "Before and After" holds 了, 过, 会, 要 and 住. Wrong options miss the word most easily confused: "next; down" offers 下, 了 and 上午 but not 上. Phrases of levels 7 to 9 are written in pinyin as one word, jiùchénggǎizào, where the rules of Hanyu Pinyin orthography write jiùchéng gǎizào.
+
+**Build.** The list shown once, in the introduction; examples varied by course; sets regrouped by meaning, with function words taught in grammar points; the confusable word of the set offered first; pinyin of phrases written by GB/T 16159.
+
+**Done when.** The audit reports no list repeated in a topic and no example shared between courses, and a test checks the spacing of the pinyin of every phrase.
+
+### C7.13 One Language for Native Courses (S)
 
 **Found.** The native courses explain in Chinese, but Gaokao's reading topics switch to English, explanations and prompts both, when the interface is in English, while grade 5 keeps Chinese; an introduction sometimes repeats the topic's description word for word.
 
@@ -248,9 +295,9 @@ Stages 1 to 6 built every course; this stage makes them teach a learner who work
 
 **Done when.** A test over the native courses and the audit.
 
-### C7.9 Gate CG7
+### C7.14 Gate CG7
 
-C7.1 to C7.8 are done; a walk of every course, at least one lesson and ten questions each, finds none of the problems above; and teachers of Chinese as a native and as a foreign language (§10.3) read a sample of each course for self-study.
+C7.1 to C7.13 are done; a walk of every course, at least one lesson and ten questions each, finds none of the problems above; and teachers of Chinese as a native and as a foreign language (§10.3) read a sample of each course for self-study.
 
 ## 10. Across All Stages
 
