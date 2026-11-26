@@ -1135,8 +1135,8 @@ const partialSlope = {
     "a-partial-derivative-from-a-drawn-slice",
     ["A partial derivative from a drawn slice", "由所画截线读偏导数"],
     [
-      "Holding $y$ fixed slices the surface into a curve in the $xz$-plane. The partial derivative in $x$ is the slope of the tangent to that curve, read as rise over run.",
-      "固定 $y$ 把曲面截成 $xz$ 平面上的曲线。对 $x$ 的偏导数就是这条曲线切线的斜率，用纵向变化除以横向变化读出。",
+      "Holding $y$ fixed slices the surface into a curve in the $xz$-plane. The partial derivative in $x$ is the slope of the tangent to that curve, read as rise over run. If the tangent at $(4, 1)$ also passes through $(8, -4)$, it falls $5$ over a run of $4$, so $f_{x} = -\\frac{5}{4}$ there.\n\n> **Watch out.** Divide the change in $z$ by the change in $x$, not the other way round, and give the slope a minus sign when the line falls to the right. The coordinates of the point are not the slope.",
+      "固定 $y$ 把曲面截成 $xz$ 平面上的曲线。对 $x$ 的偏导数就是这条曲线切线的斜率，用纵向变化除以横向变化读出。若 $(4, 1)$ 处的切线还过 $(8, -4)$，它在横向 $4$ 内下降 $5$，所以该处 $f_{x} = -\\frac{5}{4}$。\n\n> **注意。** 用 $z$ 的变化除以 $x$ 的变化，不要颠倒；直线向右下降时斜率带负号。点的坐标不是斜率。",
     ],
     (rng) => {
       const [rise, run] = rng.pick<[number, number]>([
@@ -1162,18 +1162,54 @@ const partialSlope = {
       const answer = Q.of(rise, run);
       const P: Point = [x0, z0];
       const R: Point = [x0 + run, z0 + rise];
-      return ask(
-        [
-          `The solid curve is the slice of $z = f(x, y)$ at $y = ${y0}$, and the dashed line is its tangent at the marked point, with $x = ${x0}$. Find $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$.`,
-          `实线是 $z = f(x, y)$ 在 $y = ${y0}$ 处的截线，虚线是它在标记点（$x = ${x0}$）处的切线。求 $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$。`,
-        ],
-        answer,
-        [Q.of(run, rise), Q.of(-rise, run), z0, y0 === 0 ? x0 : y0],
-        [
-          `The tangent passes through $${at(P)}$ and $${at(R)}$, so its slope is $${answer.toLatex()}$.`,
-          `切线过 $${at(P)}$ 和 $${at(R)}$，所以斜率为 $${answer.toLatex()}$。`,
-        ],
-        fig(
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The solid curve is the slice of $z = f(x, y)$ at $y = ${y0}$, and the dashed line is its tangent at the marked point, with $x = ${x0}$. Find $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$.`,
+            `实线是 $z = f(x, y)$ 在 $y = ${y0}$ 处的截线，虚线是它在标记点（$x = ${x0}$）处的切线。求 $\\frac{\\partial f}{\\partial x}(${x0}, ${y0})$。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              Q.of(run, rise),
+              "That is run over rise; the slope divides the change in $z$ by the change in $x$.",
+              "那是横向变化除以纵向变化；斜率是 $z$ 的变化除以 $x$ 的变化。",
+            ),
+            why(
+              Q.of(-rise, run),
+              rise > 0
+                ? "The tangent rises to the right, so the slope is positive."
+                : "The tangent falls to the right, so the slope is negative.",
+              rise > 0 ? "切线向右上升，所以斜率为正。" : "切线向右下降，所以斜率为负。",
+            ),
+            why(z0, `$${z0}$ is the height of the point, not the slope of the tangent.`, `$${z0}$ 是该点的高度，不是切线的斜率。`),
+            why(
+              y0 === 0 ? x0 : y0,
+              "A coordinate of the point is not the slope; read the rise and run of the dashed line.",
+              "点的坐标不是斜率；要读虚线的纵向和横向变化。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read two points of the tangent", "读出切线上的两点"],
+                t(`The dashed line passes through $${at(P)}$ and $${at(R)}$.`, `虚线过 $${at(P)}$ 和 $${at(R)}$。`),
+              ],
+              [
+                ["Divide rise by run", "纵向变化除以横向变化"],
+                t(
+                  `$\\frac{\\partial f}{\\partial x} = \\frac{${z0 + rise} - ${paren(z0)}}{${x0 + run} - ${paren(x0)}} = \\frac{${rise}}{${run}} = ${answer.toLatex()}$.`,
+                  `$\\frac{\\partial f}{\\partial x} = \\frac{${z0 + rise} - ${paren(z0)}}{${x0 + run} - ${paren(x0)}} = \\frac{${rise}}{${run}} = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Starting at height $${z0}$ and moving $${run}$ in $x$ with slope $${answer.toLatex()}$ reaches $${z0} + ${paren(rise)} = ${z0 + rise}$, the height of the open point.`,
+              `从高度 $${z0}$ 出发，以斜率 $${answer.toLatex()}$ 沿 $x$ 移动 $${run}$，到达 $${z0} + ${paren(rise)} = ${z0 + rise}$，正是空心点的高度。`,
+            ),
+          ),
+        }),
+        figure: fig(
           { xMin: -6, xMax: 6, yMin: -6, yMax: 6, yName: "z" },
           [
             { kind: "curve", f: (x) => z0 + s * (x - x0) + bend * (x - x0) ** 2, accent: true },
@@ -1186,7 +1222,7 @@ const partialSlope = {
             `xz 平面上的曲线，${at(P)} 处的虚线切线还过 ${at(R)}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings2["geometric-interpretations-of-partial-derivatives#a-partial-derivative-from-a-drawn-slice"],
@@ -1196,8 +1232,8 @@ const directionalFromArrows = point(
   "a-directional-derivative-from-two-drawn-arrows",
   ["A directional derivative from two drawn arrows", "由两个所画箭头求方向导数"],
   [
-    "The directional derivative along $d$ uses the unit vector: $D_u f = \\nabla f \\cdot \\frac{d}{\\lVert d \\rVert}$. Forgetting to divide by the length is the usual mistake.",
-    "沿 $d$ 的方向导数用单位向量：$D_u f = \\nabla f \\cdot \\frac{d}{\\lVert d \\rVert}$。忘记除以长度是常见错误。",
+    "The directional derivative along $d$ uses the unit vector: $D_u f = \\nabla f \\cdot \\frac{d}{\\lVert d \\rVert}$. Read both arrows as coordinate pairs, take their dot product, and divide by the length of $d$. With $\\nabla f = (6, 1)$ and $d = (-8, 6)$, the dot product is $-48 + 6 = -42$ and $\\lVert d \\rVert = 10$, so $D_u f = -4.2$.\n\n> **Watch out.** Divide by $\\lVert d \\rVert$ exactly once: skipping the division or dividing by $\\lVert d \\rVert^2$ are both wrong, because only a unit vector gives a rate per unit distance.",
+    "沿 $d$ 的方向导数用单位向量：$D_u f = \\nabla f \\cdot \\frac{d}{\\lVert d \\rVert}$。把两个箭头读成坐标，求点积，再除以 $d$ 的长度。若 $\\nabla f = (6, 1)$，$d = (-8, 6)$，点积为 $-48 + 6 = -42$，$\\lVert d \\rVert = 10$，所以 $D_u f = -4.2$。\n\n> **注意。** 只除以一次 $\\lVert d \\rVert$，不是除以 $\\lVert d \\rVert^2$，也不能不除：只有单位向量才给出每单位距离的变化率。",
   ],
   (rng) => {
     const [p, q, L] = rng.pick<[number, number, number]>([
@@ -1212,18 +1248,53 @@ const directionalFromArrows = point(
     const g: Point = [rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]), rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])];
     const product = dot(g, d);
     const answer = Q.of(product, L);
-    return ask(
-      [
-        `At a point, the arrows show $\\nabla f$ and a direction $d$. Find the directional derivative of $f$ in the direction of $d$.`,
-        `在某点处，箭头表示 $\\nabla f$ 和方向 $d$。求 $f$ 沿 $d$ 方向的方向导数。`,
-      ],
-      answer,
-      [product, Q.of(product, L * L), Q.of(-product, L), Q.of(cross(g, d), L)],
-      [
-        `$\\nabla f = ${at(g)}$ and $d = ${at(d)}$, with $\\lVert d \\rVert = ${L}$, so the derivative is $\\frac{${product}}{${L}} = ${answer.toLatex()}$.`,
-        `$\\nabla f = ${at(g)}$，$d = ${at(d)}$，$\\lVert d \\rVert = ${L}$，所以方向导数为 $\\frac{${product}}{${L}} = ${answer.toLatex()}$。`,
-      ],
-      fig(
+    const sum = `${g[0]} \\cdot ${paren(d[0])} + ${paren(g[1])} \\cdot ${paren(d[1])}`;
+    const rate = product < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex();
+    return {
+      ...numberProblem({
+        prompt: t(
+          `At a point, the arrows show $\\nabla f$ and a direction $d$. Find the directional derivative of $f$ in the direction of $d$.`,
+          `在某点处，箭头表示 $\\nabla f$ 和方向 $d$。求 $f$ 沿 $d$ 方向的方向导数。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            product,
+            "That is $\\nabla f \\cdot d$ without dividing by the length of $d$.",
+            "那是 $\\nabla f \\cdot d$，没有除以 $d$ 的长度。",
+          ),
+          why(
+            Q.of(product, L * L),
+            "That divides by $\\lVert d \\rVert^2$; the unit vector divides by $\\lVert d \\rVert$ only once.",
+            "那是除以了 $\\lVert d \\rVert^2$；单位向量只除以一次 $\\lVert d \\rVert$。",
+          ),
+          why(Q.of(-product, L), "The sign is reversed, as if moving along $-d$.", "符号反了，相当于沿 $-d$ 方向。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the arrows", "读出箭头"],
+              t(
+                `$\\nabla f = ${at(g)}$ and $d = ${at(d)}$, with $\\lVert d \\rVert = ${L}$.`,
+                `$\\nabla f = ${at(g)}$，$d = ${at(d)}$，$\\lVert d \\rVert = ${L}$。`,
+              ),
+            ],
+            [
+              ["Take the dot product", "求点积"],
+              t(`$\\nabla f \\cdot d = ${sum} = ${product}$.`, `$\\nabla f \\cdot d = ${sum} = ${product}$。`),
+            ],
+            [
+              ["Divide by the length", "除以长度"],
+              t(`$D_u f = \\frac{${product}}{${L}} = ${answer.toLatex()}$.`, `$D_u f = \\frac{${product}}{${L}} = ${answer.toLatex()}$。`),
+            ],
+          ],
+          t(
+            `The rate cannot exceed $\\lVert \\nabla f \\rVert = \\sqrt{${g[0] * g[0] + g[1] * g[1]}}$ in size, and $${L} \\cdot ${rate} = ${product}$ gives back the dot product.`,
+            `变化率的大小不超过 $\\lVert \\nabla f \\rVert = \\sqrt{${g[0] * g[0] + g[1] * g[1]}}$，且 $${L} \\cdot ${rate} = ${product}$ 还原出点积。`,
+          ),
+        ),
+      }),
+      figure: fig(
         6,
         [
           { kind: "arrow", from: [0, 0], to: g, accent: true },
@@ -1233,7 +1304,7 @@ const directionalFromArrows = point(
         ],
         [`Arrows from the origin: the gradient to ${at(g)} and d to ${at(d)}.`, `从原点出发的箭头：梯度指向 ${at(g)}，d 指向 ${at(d)}。`],
       ),
-    );
+    };
   },
 );
 

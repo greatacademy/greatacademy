@@ -638,8 +638,8 @@ const gradientOnContour: KnowledgePointDef = {
   figure: multivariableDrawings2["the-gradient-as-a-normal-vector#the-gradient-on-a-level-curve"],
   title: t("The gradient on a level curve", "等值线上的梯度"),
   explanation: t(
-    "At a point of a level curve, the gradient is perpendicular to the curve and points toward larger values of $f$. For an ellipse $ax^2 + by^2 = c$ with positive $a$ and $b$, values grow away from the origin, so the gradient points outward. A vector along the curve has dot product zero with the gradient, which separates the two directions.",
-    "在等值线上的一点，梯度垂直于曲线，并指向 $f$ 增大的一侧。对正数 $a$、$b$ 的椭圆 $ax^2 + by^2 = c$，函数值离原点越远越大，所以梯度指向外侧。沿曲线方向的向量与梯度的点积为零，由此可以区分这两个方向。",
+    "At a point of a level curve, the gradient is perpendicular to the curve and points toward larger values of $f$. For an ellipse $ax^2 + by^2 = c$ with positive $a$ and $b$, values grow away from the origin, so the gradient points outward. A vector along the curve has dot product zero with the gradient, which separates the two directions. For $x^2 + 4y^2 = 8$ at $(2, 1)$, $\\nabla f = \\langle 2x, 8y \\rangle = \\langle 4, 8 \\rangle$, pointing out of the ellipse.\n\n> **Watch out.** $-\\nabla f$ is also perpendicular to the curve, but it points inward, toward smaller values. Keep the factor $2$ from each square: $\\langle ax, by \\rangle$ has the right direction but half the length.",
+    "在等值线上的一点，梯度垂直于曲线，并指向 $f$ 增大的一侧。对正数 $a$、$b$ 的椭圆 $ax^2 + by^2 = c$，函数值离原点越远越大，所以梯度指向外侧。沿曲线方向的向量与梯度的点积为零，由此可以区分这两个方向。对 $x^2 + 4y^2 = 8$ 在 $(2, 1)$ 处，$\\nabla f = \\langle 2x, 8y \\rangle = \\langle 4, 8 \\rangle$，指向椭圆外侧。\n\n> **注意。** $-\\nabla f$ 也垂直于曲线，但它指向内侧，即函数值减小的方向。要保留每个平方项求导得到的因子 $2$：$\\langle ax, by \\rangle$ 方向对，但长度只有一半。",
   ),
   generate(rng: Rng): Problem {
     const a = rng.int(1, 3);
@@ -651,19 +651,52 @@ const gradientOnContour: KnowledgePointDef = {
     const fx = 2 * a * p;
     const fy = 2 * b * q;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
+      explainedChoice(rng, {
+        prompt: t(
           `The drawing shows the level curve of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ through the point $P$. What is $\\nabla f(P)$?`,
           `图中是 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 经过点 $P$ 的等值线。$\\nabla f(P)$ 是什么？`,
         ),
-        math(angled(fx, fy)),
-        [math(angled(-fx, -fy)), math(angled(fy, -fx)), math(angled(a * p, b * q))],
-        t(
-          `Read $P = (${p}, ${q})$ from the drawing. Since $\\nabla f = \\langle ${2 * a}x, ${2 * b}y \\rangle$, we get $\\nabla f(P) = ${angled(fx, fy)}$. It points outward, where $f$ grows, and $${angled(fy, -fx)}$ runs along the curve, because its dot product with the gradient is zero.`,
-          `从图中读出 $P = (${p}, ${q})$。因为 $\\nabla f = \\langle ${2 * a}x, ${2 * b}y \\rangle$，所以 $\\nabla f(P) = ${angled(fx, fy)}$。它指向外侧，即 $f$ 增大的方向；而 $${angled(fy, -fx)}$ 沿着曲线，因为它与梯度的点积为零。`,
+        correct: math(angled(fx, fy)),
+        wrong: [
+          {
+            option: math(angled(-fx, -fy)),
+            why: t(
+              "This is $-\\nabla f$: it points into the ellipse, toward smaller values of $f$.",
+              "这是 $-\\nabla f$：它指向椭圆内部，即 $f$ 减小的方向。",
+            ),
+          },
+          {
+            option: math(angled(fy, -fx)),
+            why: t(
+              "Its dot product with the gradient is zero, so it runs along the curve, where $f$ does not change.",
+              "它与梯度的点积为零，所以沿着曲线方向，$f$ 在该方向上不变。",
+            ),
+          },
+          {
+            option: math(angled(a * p, b * q)),
+            why: t(
+              "This is half the gradient: differentiating a square brings down a factor $2$.",
+              "这是梯度的一半：对平方项求导要带下因子 $2$。",
+            ),
+          },
+        ],
+        solution: walked(
+          [
+            [["Read the point", "读出点的坐标"], t(`$P = (${p}, ${q})$ in the drawing.`, `图中 $P = (${p}, ${q})$。`)],
+            [
+              ["Differentiate", "求导"],
+              t(
+                `$\\nabla f = \\langle ${2 * a}x, ${2 * b}y \\rangle$, so $\\nabla f(P) = ${angled(fx, fy)}$.`,
+                `$\\nabla f = \\langle ${2 * a}x, ${2 * b}y \\rangle$，所以 $\\nabla f(P) = ${angled(fx, fy)}$。`,
+              ),
+            ],
+          ],
+          t(
+            `It points outward, and $f$ does grow outward: $f(P) = ${level}$, while $f(${2 * p}, ${2 * q}) = ${4 * level}$.`,
+            `它指向外侧，而 $f$ 确实向外增大：$f(P) = ${level}$，而 $f(${2 * p}, ${2 * q}) = ${4 * level}$。`,
+          ),
         ),
-      ),
+      }),
       drawn(
         square(Math.max(r, 3)),
         [
@@ -1297,6 +1330,11 @@ const linearityFromDrawing: KnowledgePointDef = {
     const q = rng.pick([-3, -2, -1, 2, 3]);
     const x = p * a + q * b;
     const y = p * c + q * d;
+    const wrongImages = [
+      math(angled(p * a + q * c, p * b + q * d)),
+      math(angled(p + a + b, q + c + d)),
+      math(angled(q * a + p * b, q * c + p * d)),
+    ];
     return withFigure(
       reasoned(
         pickChoice(
@@ -1312,6 +1350,23 @@ const linearityFromDrawing: KnowledgePointDef = {
             `由图得 $T(\\mathbf{e}_1) = ${angled(a, c)}$，$T(\\mathbf{e}_2) = ${angled(b, d)}$。由线性性，$T${angled(p, q)} = ${p}${angled(a, c)} + (${q})${angled(b, d)} = ${angled(x, y)}$。`,
           ),
         ),
+        [
+          [
+            wrongImages[0]!.en,
+            "This combines the coordinates of the arrows across instead of along each arrow; take $p$ times the whole arrow $T(\\mathbf{e}_1)$.",
+            "这是把箭头的坐标交叉组合了；应取整个箭头 $T(\\mathbf{e}_1)$ 的 $p$ 倍。",
+          ],
+          [
+            wrongImages[1]!.en,
+            "The input's coordinates multiply the arrows; they are not added to them.",
+            "输入的坐标是乘以箭头，而不是加到箭头上。",
+          ],
+          [
+            wrongImages[2]!.en,
+            "The weights are swapped: $p$ goes with $T(\\mathbf{e}_1)$ and $q$ with $T(\\mathbf{e}_2)$.",
+            "权重交换了：$p$ 配 $T(\\mathbf{e}_1)$，$q$ 配 $T(\\mathbf{e}_2)$。",
+          ],
+        ],
       ),
       drawn(
         square(reach([a, c], [b, d])),
@@ -1320,11 +1375,6 @@ const linearityFromDrawing: KnowledgePointDef = {
           `Two arrows from the origin: T(e₁) to (${a}, ${c}) and T(e₂) to (${b}, ${d}).`,
           `从原点出发的两个箭头：T(e₁) 指向 (${a}, ${c})，T(e₂) 指向 (${b}, ${d})。`,
         ),
-    const wrongImages = [
-      math(angled(p * a + q * c, p * b + q * d)),
-      math(angled(p + a + b, q + c + d)),
-      math(angled(q * a + p * b, q * c + p * d)),
-    ];
       ),
     );
   },
@@ -1338,11 +1388,6 @@ const areaFromDeterminant: KnowledgePointDef = {
   explanation: t(
     "A linear map scales every area by the absolute value of its determinant. The unit square has area $1$, so the parallelogram spanned by the columns of $A$ has area $|\\det A|$. The sign of the determinant says whether the map keeps or flips orientation, and it does not change the area, which is why the absolute value appears.\n\n> **Watch out.** Read the sides as columns: the image of $(1, 0)$ is the first column and the image of $(0, 1)$ the second. Then take $ad - bc$, with a minus sign, not $ad + bc$.",
     "线性映射把每个面积都乘以行列式的绝对值。单位正方形的面积是 $1$，所以由 $A$ 的各列张成的平行四边形面积是 $|\\det A|$。行列式的符号说明映射是否翻转定向，它不改变面积，这就是要取绝对值的原因。\n\n> **注意。** 边要按列读：$(1, 0)$ 的像是第一列，$(0, 1)$ 的像是第二列。然后算 $ad - bc$，中间是减号，不是 $ad + bc$。",
-        [
-          [wrongImages[0]!.en, "This combines the coordinates of the arrows across instead of along each arrow; take $p$ times the whole arrow $T(\\mathbf{e}_1)$.", "这是把箭头的坐标交叉组合了；应取整个箭头 $T(\\mathbf{e}_1)$ 的 $p$ 倍。"],
-          [wrongImages[1]!.en, "The input's coordinates multiply the arrows; they are not added to them.", "输入的坐标是乘以箭头，而不是加到箭头上。"],
-          [wrongImages[2]!.en, "The weights are swapped: $p$ goes with $T(\\mathbf{e}_1)$ and $q$ with $T(\\mathbf{e}_2)$.", "权重交换了：$p$ 配 $T(\\mathbf{e}_1)$，$q$ 配 $T(\\mathbf{e}_2)$。"],
-        ],
   ),
   generate(rng: Rng): Problem {
     const [a, b, c, d] = invertibleEntries(rng);
@@ -1577,6 +1622,44 @@ const eigenvectorFromDrawing: KnowledgePointDef = {
     const not = t("$\\mathbf{v}$ is not an eigenvector", "$\\mathbf{v}$ 不是特征向量");
     const value = (x: number) => t(`The eigenvalue is $${frac(x * 2, 2)}$`, `特征值是 $${frac(x * 2, 2)}$`);
     const others = [lambda === -1 ? 1 : -lambda, lambda + 1, lambda - 1].filter((x) => x !== lambda && x !== 0);
+    const wrongOptions = isEigen ? [not, ...others.map(value)] : [value(lambda), value(-lambda), value(lambda + 1)];
+    const cross = v[0] * w[1] - v[1] * w[0];
+    const i = v[0] !== 0 ? 0 : 1;
+    const j = i === 0 ? 1 : 0;
+    const ratio = Q.of(w[i], v[i]);
+    const read: [[string, string], Text, string[]] = [
+      ["Read the arrows", "读出箭头"],
+      t("", ""),
+      [`\\mathbf{v} = ${angled(v[0], v[1])}, \\quad A\\mathbf{v} = ${angled(w[0], w[1])}`],
+    ];
+    const solution = isEigen
+      ? walked(
+          [
+            read,
+            [
+              ["Compare the coordinates", "比较坐标"],
+              t(
+                `Each coordinate of $A\\mathbf{v}$ is $${frac(lambda * 2, 2)}$ times that of $\\mathbf{v}$:`,
+                `$A\\mathbf{v}$ 的每个坐标都是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍：`,
+              ),
+              [`A\\mathbf{v} = ${frac(lambda * 2, 2)}${angled(v[0], v[1])}`, `\\lambda = ${frac(lambda * 2, 2)}`],
+            ],
+          ],
+          t(
+            `The cross product $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = 0$, so the two arrows lie on one line through the origin.`,
+            `叉积 $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = 0$，所以两个箭头在过原点的同一条直线上。`,
+          ),
+        )
+      : walked(
+          [
+            read,
+            [["Test whether they are parallel", "检验是否平行"], t("", ""), [`(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = ${cross} \\ne 0`]],
+          ],
+          t(
+            `Coordinate ${i + 1} would give the factor $${ratio.toLatex()}$, but then coordinate ${j + 1} would be $${ratio.mul(Q.of(v[j])).toLatex()}$, not $${w[j]}$. So $\\mathbf{v}$ is not an eigenvector.`,
+            `由第 ${i + 1} 个坐标得倍数 $${ratio.toLatex()}$，但这样第 ${j + 1} 个坐标应为 $${ratio.mul(Q.of(v[j])).toLatex()}$，而不是 $${w[j]}$。所以 $\\mathbf{v}$ 不是特征向量。`,
+          ),
+        );
     return withFigure(
       reasoned(
         pickChoice(
@@ -1591,7 +1674,11 @@ const eigenvectorFromDrawing: KnowledgePointDef = {
         ),
         isEigen
           ? [
-              [not.en, `$A\\mathbf{v}$ is exactly $${frac(lambda * 2, 2)}$ times $\\mathbf{v}$, so the two arrows lie on one line through the origin.`, `$A\\mathbf{v}$ 恰好是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍，所以两个箭头在过原点的同一条直线上。`],
+              [
+                not.en,
+                `$A\\mathbf{v}$ is exactly $${frac(lambda * 2, 2)}$ times $\\mathbf{v}$, so the two arrows lie on one line through the origin.`,
+                `$A\\mathbf{v}$ 恰好是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍，所以两个箭头在过原点的同一条直线上。`,
+              ],
               ...others.map(
                 (x) =>
                   [
@@ -1612,45 +1699,6 @@ const eigenvectorFromDrawing: KnowledgePointDef = {
       ),
       drawn(
         square(reach(v, w)),
-    const wrongOptions = isEigen ? [not, ...others.map(value)] : [value(lambda), value(-lambda), value(lambda + 1)];
-    const cross = v[0] * w[1] - v[1] * w[0];
-    const i = v[0] !== 0 ? 0 : 1;
-    const j = i === 0 ? 1 : 0;
-    const ratio = Q.of(w[i], v[i]);
-    const read: [[string, string], Text, string[]] = [
-      ["Read the arrows", "读出箭头"],
-      t("", ""),
-      [`\\mathbf{v} = ${angled(v[0], v[1])}, \\quad A\\mathbf{v} = ${angled(w[0], w[1])}`],
-    ];
-    const solution = isEigen
-      ? walked(
-          [
-            read,
-            [
-              ["Compare the coordinates", "比较坐标"],
-              t(`Each coordinate of $A\\mathbf{v}$ is $${frac(lambda * 2, 2)}$ times that of $\\mathbf{v}$:`, `$A\\mathbf{v}$ 的每个坐标都是 $\\mathbf{v}$ 的 $${frac(lambda * 2, 2)}$ 倍：`),
-              [`A\\mathbf{v} = ${frac(lambda * 2, 2)}${angled(v[0], v[1])}`, `\\lambda = ${frac(lambda * 2, 2)}`],
-            ],
-          ],
-          t(
-            `The cross product $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = 0$, so the two arrows lie on one line through the origin.`,
-            `叉积 $(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = 0$，所以两个箭头在过原点的同一条直线上。`,
-          ),
-        )
-      : walked(
-          [
-            read,
-            [
-              ["Test whether they are parallel", "检验是否平行"],
-              t("", ""),
-              [`(${v[0]})(${w[1]}) - (${v[1]})(${w[0]}) = ${cross} \\ne 0`],
-            ],
-          ],
-          t(
-            `Coordinate ${i + 1} would give the factor $${ratio.toLatex()}$, but then coordinate ${j + 1} would be $${ratio.mul(Q.of(v[j])).toLatex()}$, not $${w[j]}$. So $\\mathbf{v}$ is not an eigenvector.`,
-            `由第 ${i + 1} 个坐标得倍数 $${ratio.toLatex()}$，但这样第 ${j + 1} 个坐标应为 $${ratio.mul(Q.of(v[j])).toLatex()}$，而不是 $${w[j]}$。所以 $\\mathbf{v}$ 不是特征向量。`,
-          ),
-        );
         [...labelledArrow(w, "Av"), ...labelledArrow(v, "v", true)],
         t(
           `Two arrows from the origin: v to (${v[0]}, ${v[1]}) and Av to (${w[0]}, ${w[1]}).`,

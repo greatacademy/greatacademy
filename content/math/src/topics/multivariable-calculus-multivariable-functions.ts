@@ -7,11 +7,14 @@ import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.
 
 import {
   choiceProblem,
+  type EquationProblem,
   equationProblem,
   explainedChoice,
   expressionProblem,
   lowestTerms,
   numberProblem,
+  type PointProblem,
+  pointLatex,
   pointProblem,
   say,
   steps,
@@ -40,6 +43,29 @@ function distinct<M extends { readonly value: number | Q }>(answer: number | Q, 
 /** spoken drops the mistaken responses that equal the answer or repeat an earlier one. */
 function spoken(answer: string, mistakes: readonly { readonly response: string; readonly why: Text }[]) {
   return mistakes.filter((m, i, all) => m.response !== answer && all.findIndex((x) => x.response === m.response) === i);
+}
+
+/** listed attaches to a problem the mistaken responses it still lists as wrong, each once. */
+function listed(problem: Problem, mistakes: readonly { readonly response: string; readonly why: Text }[]): Problem {
+  const wrong = new Set(problem.wrong ?? []);
+  return withMistakes(
+    problem,
+    mistakes.filter((m, i, all) => wrong.has(m.response) && all.findIndex((x) => x.response === m.response) === i),
+  );
+}
+
+/** pointWith builds a point problem whose wrong points each carry an explanation. */
+function pointWith(p: Omit<PointProblem, "wrong">, mistakes: readonly (readonly [readonly (number | Q)[], string, string])[]): Problem {
+  const write = p.vector ? vectorLatex : pointLatex;
+  return listed(
+    pointProblem({ ...p, wrong: mistakes.map(([v]) => v) }),
+    mistakes.map(([v, en, zh]) => ({ response: write(v), why: t(en, zh) })),
+  );
+}
+
+/** equationWith builds an equation problem whose wrong equations each carry an explanation. */
+function equationWith(p: Omit<EquationProblem, "wrong">, mistakes: readonly { readonly response: string; readonly why: Text }[]): Problem {
+  return listed(equationProblem({ ...p, wrong: mistakes.map((m) => m.response) }), mistakes);
 }
 
 const v2L = (v: readonly (number | Q)[]): string => `(${v.map((c) => (c instanceof Q ? c.toLatex() : String(c))).join(", ")})`;
@@ -2431,6 +2457,10 @@ export const computingPartialDerivativesUsingTheRulesOfDifferentiation: TopicDef
     "Partial derivatives of multivariable expressions are calculated by applying the power, product, quotient, and chain rules while treating inactive variables as constants.",
     "通过将非目标变量视为常数，应用幂法则、乘积法则、商法则和链式法则计算多元表达式的偏导数。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2y^3 - 4y$, holding $y$ constant turns $y^3$ into a constant factor, so $f_x = 2xy^3$. Holding $x$ constant instead gives $f_y = 3x^2y^2 - 4$. At $(1, 1)$, $f_y = -1$.\n\nCheck: $f(1, 1.01) - f(1, 1) = (1.030301 - 4.04) - (1 - 4) = -0.009699$, and $\\frac{-0.009699}{0.01} \\approx -0.97$, close to $f_y(1, 1) = -1$.\n\nIn this lesson we find partial derivatives as formulas with the power, product and quotient rules, holding the other variable constant.",
+    "对 $f(x, y) = x^2y^3 - 4y$，固定 $y$ 时 $y^3$ 是常数因子，所以 $f_x = 2xy^3$。改为固定 $x$，得 $f_y = 3x^2y^2 - 4$。在 $(1, 1)$ 处 $f_y = -1$。\n\n检验：$f(1, 1.01) - f(1, 1) = (1.030301 - 4.04) - (1 - 4) = -0.009699$，而 $\\frac{-0.009699}{0.01} \\approx -0.97$，接近 $f_y(1, 1) = -1$。\n\n本课我们固定另一个变量，用幂法则、乘积法则和商法则求偏导数的表达式。",
+  ),
   prerequisites: ["introduction-to-partial-derivatives"],
   encompasses: [{ topic: "introduction-to-partial-derivatives", weight: 0.3 }],
   xp: 10,
@@ -2439,43 +2469,51 @@ export const computingPartialDerivativesUsingTheRulesOfDifferentiation: TopicDef
       id: "symbolic-partial-differentiation",
       title: t("Symbolic partial differentiation", "符号偏导数计算"),
       explanation: t(
-        "A partial derivative measures change in one variable while the others are held fixed, so treat every other variable exactly as you would treat a constant. Apply standard differentiation rules while treating inactive variables as constant multipliers or independent constants:\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}.$$",
-        "偏导数衡量只改变一个变量而其他变量固定时的变化，所以把其他变量完全当作常数来处理。在将非目标变量视为常数乘子或常数项的同时，应用标准求导法则：\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}$$",
+        "A partial derivative measures change in one variable while the others are held fixed, so treat every other variable exactly as you would treat a constant. Apply standard differentiation rules while treating inactive variables as constant multipliers or independent constants:\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}.$$\n\nFor $f(x, y) = x^4y^2 + 5y$, $f_x = 4x^3y^2$: the factor $y^2$ rides along, and $5y$ has no $x$ at all.\n\n> **Watch out.** A term with no $x$, such as $y^3$, has $x$-derivative $0$. In a term such as $x^2y$ only the power of $x$ comes down, so its $x$-derivative is $2xy$, not $2x$ and not $x^2$.",
+        "偏导数衡量只改变一个变量而其他变量固定时的变化，所以把其他变量完全当作常数来处理。在将非目标变量视为常数乘子或常数项的同时，应用标准求导法则：\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}$$\n\n对 $f(x, y) = x^4y^2 + 5y$，$f_x = 4x^3y^2$：因子 $y^2$ 原样保留，而 $5y$ 根本不含 $x$。\n\n> **注意。** 不含 $x$ 的项，如 $y^3$，对 $x$ 的导数为 $0$。像 $x^2y$ 这样的项只把 $x$ 的指数乘下来，所以它对 $x$ 的导数是 $2xy$，不是 $2x$，也不是 $x^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
         const b = rng.nonZero(-5, 5);
         const c = rng.nonZero(-5, 5);
-
-        // f(x, y) = a * x^3 + b * x^2 * y + c * y^3
-        // f_x(x, y) = 3a * x^2 + 2b * x * y
+        const f = poly([a, "x^3"], [b, "x^2y"], [c, "y^3"]);
         const ans = poly([3 * a, "x^2"], [2 * b, "xy"]);
-
-        const prompt = t(
-          `Find the partial derivative $f_x(x, y)$ of $f(x, y) = ${poly([a, "x^3"], [b, "x^2y"], [c, "y^3"])}$.`,
-          `求函数 $f(x, y) = ${poly([a, "x^3"], [b, "x^2y"], [c, "y^3"])}$ 的偏导数 $f_x(x, y)$。`,
-        );
-        const solution = t(
-          steps(
-            `Differentiate each term with respect to $x$, treating $y$ as a constant:`,
-            `$\\frac{\\partial}{\\partial x}(${poly([a, "x^3"])}) = ${poly([3 * a, "x^2"])}$`,
-            `$\\frac{\\partial}{\\partial x}(${poly([b, "x^2y"])}) = ${poly([2 * b, "xy"])}$`,
-            `$\\frac{\\partial}{\\partial x}(${poly([c, "y^3"])}) = 0$`,
-            `Combine the terms: $f_x(x, y) = ${ans}$.`,
-          ),
-          steps(
-            `将 $y$ 视为常数对各项关于 $x$ 求导：`,
-            `$\\frac{\\partial}{\\partial x}(${poly([a, "x^3"])}) = ${poly([3 * a, "x^2"])}$`,
-            `$\\frac{\\partial}{\\partial x}(${poly([b, "x^2y"])}) = ${poly([2 * b, "xy"])}$`,
-            `$\\frac{\\partial}{\\partial x}(${poly([c, "y^3"])}) = 0$`,
-            `合并得到：$f_x(x, y) = ${ans}$。`,
-          ),
-        );
         return expressionProblem({
-          prompt,
-          solution,
+          prompt: t(`Find the partial derivative $f_x(x, y)$ of $f(x, y) = ${f}$.`, `求函数 $f(x, y) = ${f}$ 的偏导数 $f_x(x, y)$。`),
           answer: ans,
-          wrong: [poly([a, "x^2"], [b, "xy"]), poly([3 * a, "x^2"], [2 * b, "xy"], [3 * c, "y^2"]), poly([2 * b, "x^2"], [3 * c, "y^2"])],
+          mistakes: spoken(ans, [
+            say(
+              poly([a, "x^2"], [b, "xy"]),
+              "The power rule brings the exponent down as a factor: $x^3$ gives $3x^2$ and $x^2$ gives $2x$.",
+              "幂法则要把指数作为因子乘下来：$x^3$ 得 $3x^2$，$x^2$ 得 $2x$。",
+            ),
+            say(
+              poly([3 * a, "x^2"], [2 * b, "xy"], [3 * c, "y^2"]),
+              `$${poly([c, "y^3"])}$ has no $x$, so with $y$ held constant its $x$-derivative is $0$.`,
+              `$${poly([c, "y^3"])}$ 不含 $x$，固定 $y$ 时它对 $x$ 的导数为 $0$。`,
+            ),
+            say(
+              poly([b, "x^2"], [3 * c, "y^2"]),
+              "That is $f_y$: for $f_x$ hold $y$ constant and differentiate in $x$.",
+              "这是 $f_y$：求 $f_x$ 要固定 $y$，对 $x$ 求导。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate term by term", "逐项求导"],
+                t(
+                  `With $y$ constant, $${poly([a, "x^3"])}$ gives $${poly([3 * a, "x^2"])}$, $${poly([b, "x^2y"])}$ gives $${poly([2 * b, "xy"])}$, and $${poly([c, "y^3"])}$ gives $0$.`,
+                  `固定 $y$，$${poly([a, "x^3"])}$ 得 $${poly([3 * a, "x^2"])}$，$${poly([b, "x^2y"])}$ 得 $${poly([2 * b, "xy"])}$，$${poly([c, "y^3"])}$ 得 $0$。`,
+                ),
+              ],
+              [["Add the results", "相加"], t(`$f_x(x, y) = ${ans}$.`, `$f_x(x, y) = ${ans}$。`)],
+            ],
+            t(
+              `At $y = 1$ the function is $${poly([a, "x^3"], [b, "x^2"], [c, ""])}$, whose derivative $${poly([3 * a, "x^2"], [2 * b, "x"])}$ is $f_x$ with $y = 1$.`,
+              `在 $y = 1$ 时函数为 $${poly([a, "x^3"], [b, "x^2"], [c, ""])}$，其导数 $${poly([3 * a, "x^2"], [2 * b, "x"])}$ 正是 $y = 1$ 时的 $f_x$。`,
+            ),
+          ),
         });
       },
     },
@@ -2483,8 +2521,8 @@ export const computingPartialDerivativesUsingTheRulesOfDifferentiation: TopicDef
       id: "partial-derivatives-of-a-quotient",
       title: t("Partial derivatives of a quotient", "商的偏导数"),
       explanation: t(
-        "The quotient rule works for partial derivatives with the other variable held constant. For $f(x, y) = \\frac{x + ay}{x + by}$,\n\n$$f_x = \\frac{(x + by) - (x + ay)}{(x + by)^2} = \\frac{(b - a)y}{(x + by)^2}.$$\n\nSimplify the numerator before substituting, since much of it cancels.",
-        "商法则同样适用于偏导数，只需把另一个变量当作常数。对 $f(x, y) = \\frac{x + ay}{x + by}$，\n\n$$f_x = \\frac{(x + by) - (x + ay)}{(x + by)^2} = \\frac{(b - a)y}{(x + by)^2}.$$\n\n代入之前先化简分子，因为其中很多项会抵消。",
+        "The quotient rule works for partial derivatives with the other variable held constant. For $f(x, y) = \\frac{x + ay}{x + by}$,\n\n$$f_x = \\frac{(x + by) - (x + ay)}{(x + by)^2} = \\frac{(b - a)y}{(x + by)^2}.$$\n\nSimplify the numerator before substituting, since much of it cancels. For $\\frac{2x + y}{x - y}$, $f_x = \\frac{2(x - y) - (2x + y)}{(x - y)^2} = \\frac{-3y}{(x - y)^2}$, which is $-3$ at $(2, 1)$.\n\n> **Watch out.** The numerator is the denominator times the derivative of the top, minus the top times the derivative of the bottom; reversing it flips the sign. Substitute $y$ in the simplified numerator, not $x$.",
+        "商法则同样适用于偏导数，只需把另一个变量当作常数。对 $f(x, y) = \\frac{x + ay}{x + by}$，\n\n$$f_x = \\frac{(x + by) - (x + ay)}{(x + by)^2} = \\frac{(b - a)y}{(x + by)^2}.$$\n\n代入之前先化简分子，因为其中很多项会抵消。对 $\\frac{2x + y}{x - y}$，$f_x = \\frac{2(x - y) - (2x + y)}{(x - y)^2} = \\frac{-3y}{(x - y)^2}$，在 $(2, 1)$ 处等于 $-3$。\n\n> **注意。** 分子是分母乘分子的导数，减去分子乘分母的导数；顺序反了符号就反了。化简后的分子要代入的是 $y$，不是 $x$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4);
@@ -2493,18 +2531,55 @@ export const computingPartialDerivativesUsingTheRulesOfDifferentiation: TopicDef
         const q = rng.int(1, 3) * rng.pick([-1, 1]);
         let p = rng.int(-4, 4);
         if (p + b * q === 0) p += 1;
-        const den = (p + b * q) ** 2;
+        const d = p + b * q;
+        const den = d * d;
         const ans = Q.of((b - a) * q, den);
+        const top = poly([1, "x"], [a, "y"]);
+        const bottom = poly([1, "x"], [b, "y"]);
         return numberProblem({
           prompt: t(
-            `Find $f_x(${p}, ${q})$ for $f(x, y) = \\frac{${poly([1, "x"], [a, "y"])}}{${poly([1, "x"], [b, "y"])}}$.`,
-            `对 $f(x, y) = \\frac{${poly([1, "x"], [a, "y"])}}{${poly([1, "x"], [b, "y"])}}$，求 $f_x(${p}, ${q})$。`,
+            `Find $f_x(${p}, ${q})$ for $f(x, y) = \\frac{${top}}{${bottom}}$.`,
+            `对 $f(x, y) = \\frac{${top}}{${bottom}}$，求 $f_x(${p}, ${q})$。`,
           ),
           answer: ans,
-          wrong: [Q.of((a - b) * q, den), Q.of((b - a) * p, den), Q.of(1, p + b * q)],
-          solution: t(
-            `${steps(`f_x = \\frac{(${poly([1, "x"], [b, "y"])}) - (${poly([1, "x"], [a, "y"])})}{(${poly([1, "x"], [b, "y"])})^2} = \\frac{${poly([b - a, "y"])}}{(${poly([1, "x"], [b, "y"])})^2}`)}At $(${p}, ${q})$: $f_x = ${ans.toLatex()}$.`,
-            `${steps(`f_x = \\frac{(${poly([1, "x"], [b, "y"])}) - (${poly([1, "x"], [a, "y"])})}{(${poly([1, "x"], [b, "y"])})^2} = \\frac{${poly([b - a, "y"])}}{(${poly([1, "x"], [b, "y"])})^2}`)}在 $(${p}, ${q})$ 处：$f_x = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of((a - b) * q, den),
+              "The numerator is reversed: it is the bottom times the derivative of the top minus the top times the derivative of the bottom.",
+              "分子的顺序反了：应当是分母乘分子的导数，减去分子乘分母的导数。",
+            ),
+            why(
+              Q.of((b - a) * p, den),
+              `The simplified numerator is $${poly([b - a, "y"])}$, so substitute $y = ${q}$, not $x = ${p}$.`,
+              `化简后的分子是 $${poly([b - a, "y"])}$，所以要代入 $y = ${q}$，不是 $x = ${p}$。`,
+            ),
+            why(
+              Q.of(1, d),
+              "Differentiating only the top and keeping the bottom is not the quotient rule.",
+              "只对分子求导而保留分母，这不是商法则。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Apply the quotient rule", "用商法则"],
+                t(
+                  `With $y$ constant, both the top and the bottom have $x$-derivative $1$, so $f_x = \\frac{(${bottom}) - (${top})}{(${bottom})^2} = \\frac{${poly([b - a, "y"])}}{(${bottom})^2}$.`,
+                  `固定 $y$，分子和分母对 $x$ 的导数都是 $1$，所以 $f_x = \\frac{(${bottom}) - (${top})}{(${bottom})^2} = \\frac{${poly([b - a, "y"])}}{(${bottom})^2}$。`,
+                ),
+              ],
+              [
+                ["Substitute the point", "代入该点"],
+                t(
+                  `At $(${p}, ${q})$ the bottom is $${d}$, so $f_x = \\frac{${(b - a) * q}}{${den}} = ${ans.toLatex()}$.`,
+                  `在 $(${p}, ${q})$ 处分母为 $${d}$，所以 $f_x = \\frac{${(b - a) * q}}{${den}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Writing $f = 1 + \\frac{${poly([a - b, "y"])}}{${bottom}}$ and using $\\frac{\\partial}{\\partial x} \\frac{1}{${bottom}} = -\\frac{1}{(${bottom})^2}$ gives $f_x = \\frac{${poly([b - a, "y"])}}{(${bottom})^2}$ again.`,
+              `把 $f$ 写成 $1 + \\frac{${poly([a - b, "y"])}}{${bottom}}$，利用 $\\frac{\\partial}{\\partial x} \\frac{1}{${bottom}} = -\\frac{1}{(${bottom})^2}$，又得到 $f_x = \\frac{${poly([b - a, "y"])}}{(${bottom})^2}$。`,
+            ),
           ),
         });
       },
@@ -2520,6 +2595,10 @@ export const geometricInterpretationsOfPartialDerivatives: TopicDef = {
     "The partial derivative fx(x0, y0) represents the slope of the tangent line to the trace of z = f(x, y) in the plane y = y0.",
     "偏导数 fx(x0, y0) 表示曲面 z = f(x, y) 与平面 y = y0 的交线（截痕）在对应点处的切线斜率。",
   ),
+  intro: t(
+    "The plane $y = 2$ cuts the surface $z = x^2y - y^3$ in the curve $z = 2x^2 - 8$. Its slope at $x = 1$ is $4x = 4$, and this is $f_x(1, 2) = 2xy = 4$.\n\nCheck: on the curve, $\\frac{z(1.01) - z(1)}{0.01} = \\frac{(2.0402 - 8) - (2 - 8)}{0.01} = 4.02$, close to $4$.\n\nIn this lesson we read partial derivatives as slopes of the curves cut from a surface by the planes $y = \\text{constant}$ and $x = \\text{constant}$.",
+    "平面 $y = 2$ 截曲面 $z = x^2y - y^3$ 得曲线 $z = 2x^2 - 8$。它在 $x = 1$ 处的斜率为 $4x = 4$，这正是 $f_x(1, 2) = 2xy = 4$。\n\n检验：在这条曲线上，$\\frac{z(1.01) - z(1)}{0.01} = \\frac{(2.0402 - 8) - (2 - 8)}{0.01} = 4.02$，接近 $4$。\n\n本课我们把偏导数理解为平面 $y = \\text{常数}$ 和 $x = \\text{常数}$ 截曲面所得曲线的斜率。",
+  ),
   prerequisites: ["introduction-to-partial-derivatives"],
   encompasses: [{ topic: "introduction-to-partial-derivatives", weight: 0.3 }],
   xp: 10,
@@ -2528,39 +2607,56 @@ export const geometricInterpretationsOfPartialDerivatives: TopicDef = {
       id: "slopes-of-surface-cross-sections",
       title: t("Slopes of surface cross sections", "曲面截痕的切线斜率"),
       explanation: t(
-        "Geometrically, slicing the surface $z = f(x, y)$ by the vertical plane $y = y_0$ produces a curve $z = f(x, y_0)$. The slope of the tangent line to this curve in the $x$-direction is precisely $f_x(x_0, y_0)$.",
-        "几何上，用垂直平面 $y = y_0$ 切割曲面 $z = f(x, y)$ 会得到曲线 $z = f(x, y_0)$。该曲线在 $x$ 方向切线的斜率恰好是 $f_x(x_0, y_0)$。",
+        "Geometrically, slicing the surface $z = f(x, y)$ by the vertical plane $y = y_0$ produces a curve $z = f(x, y_0)$. The slope of the tangent line to this curve in the $x$-direction is precisely $f_x(x_0, y_0)$.\n\nFor $z = x^3 + y^2$ cut by $y = 5$, the curve is $z = x^3 + 25$, and its slope at $x = 2$ is $3 \\cdot 2^2 = 12$.\n\n> **Watch out.** In the plane $y = y_0$ the $y$ term is a constant, so it adds nothing to the slope. The slope is $f_x$, not the height $z$ and not $f_y$.",
+        "几何上，用垂直平面 $y = y_0$ 切割曲面 $z = f(x, y)$ 会得到曲线 $z = f(x, y_0)$。该曲线在 $x$ 方向切线的斜率恰好是 $f_x(x_0, y_0)$。\n\n对 $z = x^3 + y^2$ 被 $y = 5$ 所截，曲线为 $z = x^3 + 25$，它在 $x = 2$ 处的斜率为 $3 \\cdot 2^2 = 12$。\n\n> **注意。** 在平面 $y = y_0$ 中，$y$ 项是常数，对斜率没有贡献。斜率是 $f_x$，不是高度 $z$，也不是 $f_y$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
         const x0 = rng.int(-3, 3);
         const y0 = rng.int(-3, 3);
-        // z = a * x^2 + b * y^2
-        // In plane y = y0, curve is z = a * x^2 + b * y0^2, slope dz/dx = 2*a*x0
         const ans = 2 * a * x0;
-
-        const prompt = t(
-          `Find the slope of the tangent line to the cross section of the surface $z = ${poly([a, "x^2"], [b, "y^2"])}$ cut by the plane $y = ${y0}$ at the point where $x = ${x0}$.`,
-          `求曲面 $z = ${poly([a, "x^2"], [b, "y^2"])}$ 与平面 $y = ${y0}$ 相交截痕在 $x = ${x0}$ 处的切线斜率。`,
-        );
-        const solution = t(
-          steps(
-            `The slope of the tangent line in the plane $y = ${y0}$ is given by the partial derivative with respect to $x$:\n\n` +
-              `$$\\frac{\\partial z}{\\partial x} = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2"], [b, "y^2"])}\\right) = ${2 * a}x.$$`,
-            `Evaluating at $x = ${x0}$ yields the slope $m = ${2 * a}(${x0}) = ${ans}$.`,
-          ),
-          steps(
-            `平面 $y = ${y0}$ 中切线的斜率由对 $x$ 的偏导数给出：\n\n` +
-              `$$\\frac{\\partial z}{\\partial x} = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2"], [b, "y^2"])}\\right) = ${2 * a}x$$`,
-            `在 $x = ${x0}$ 处求值得到斜率 $m = ${2 * a}(${x0}) = ${ans}$。`,
-          ),
-        );
+        const surface = poly([a, "x^2"], [b, "y^2"]);
+        const curve = poly([a, "x^2"], [b * y0 * y0, ""]);
+        const z = (x: number) => a * x * x + b * y0 * y0;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the slope of the tangent line to the cross section of the surface $z = ${surface}$ cut by the plane $y = ${y0}$ at the point where $x = ${x0}$.`,
+            `求曲面 $z = ${surface}$ 与平面 $y = ${y0}$ 相交截痕在 $x = ${x0}$ 处的切线斜率。`,
+          ),
           answer: ans,
-          wrong: [2 * b * y0, a * x0, -ans],
+          mistakes: distinct(ans, [
+            why(
+              2 * b * y0,
+              "That is $f_y$, the slope across the other direction; in the plane $y = \\text{constant}$ only $x$ moves.",
+              "这是 $f_y$，另一个方向的斜率；在平面 $y = \\text{常数}$ 中只有 $x$ 在变。",
+            ),
+            why(a * x0, "The power rule gives $x^2$ the derivative $2x$, not $x$.", "幂法则使 $x^2$ 的导数为 $2x$，而不是 $x$。"),
+            why(
+              z(x0),
+              "That is the height $z$ of the point, not the slope of the curve there.",
+              "这是该点的高度 $z$，不是曲线在该点的斜率。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Cut with the plane", "用平面截"],
+                t(`Setting $y = ${y0}$ gives the curve $z = ${curve}$.`, `令 $y = ${y0}$，得曲线 $z = ${curve}$。`),
+              ],
+              [
+                ["Differentiate in x", "对 x 求导"],
+                t(
+                  `Its slope is $${poly([2 * a, "x"])}$, which at $x = ${x0}$ is $${2 * a} \\cdot ${paren(x0)} = ${ans}$.`,
+                  `它的斜率为 $${poly([2 * a, "x"])}$，在 $x = ${x0}$ 处为 $${2 * a} \\cdot ${paren(x0)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `For a quadratic the symmetric difference is exact: $\\frac{z(${x0 + 1}) - z(${x0 - 1})}{2} = \\frac{${z(x0 + 1)} - ${paren(z(x0 - 1))}}{2} = ${ans}$.`,
+              `对二次函数，对称差商是精确的：$\\frac{z(${x0 + 1}) - z(${x0 - 1})}{2} = \\frac{${z(x0 + 1)} - ${paren(z(x0 - 1))}}{2} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2568,8 +2664,8 @@ export const geometricInterpretationsOfPartialDerivatives: TopicDef = {
       id: "the-slope-of-a-surface-in-a-plane-x-equals-constant",
       title: t("The slope of a surface in a plane x = constant", "曲面在平面 x = 常数 中的斜率"),
       explanation: t(
-        "The plane $x = p$ cuts the surface $z = f(x, y)$ in a curve $z = f(p, y)$. Its slope in the $y$-direction at $y = q$ is the partial derivative $f_y(p, q)$: moving along this curve changes $y$ while $x$ stays fixed. So the slope is found by differentiating with respect to $y$ and substituting.",
-        "平面 $x = p$ 截曲面 $z = f(x, y)$ 得曲线 $z = f(p, y)$。它在 $y = q$ 处沿 $y$ 方向的斜率就是偏导数 $f_y(p, q)$：沿这条曲线移动时 $y$ 变化而 $x$ 不变。所以对 $y$ 求导再代入即可得到斜率。",
+        "The plane $x = p$ cuts the surface $z = f(x, y)$ in a curve $z = f(p, y)$. Its slope in the $y$-direction at $y = q$ is the partial derivative $f_y(p, q)$: moving along this curve changes $y$ while $x$ stays fixed. So the slope is found by differentiating with respect to $y$ and substituting.\n\nFor $z = x^2y^2 + y$ in the plane $x = 2$, the curve is $z = 4y^2 + y$, whose slope at $y = 1$ is $8 + 1 = 9$.\n\n> **Watch out.** In the plane $x = p$ a term with only $x$ is a constant and adds nothing. Substitute $x = p$ and $y = q$ into the right places after differentiating.",
+        "平面 $x = p$ 截曲面 $z = f(x, y)$ 得曲线 $z = f(p, y)$。它在 $y = q$ 处沿 $y$ 方向的斜率就是偏导数 $f_y(p, q)$：沿这条曲线移动时 $y$ 变化而 $x$ 不变。所以对 $y$ 求导再代入即可得到斜率。\n\n对 $z = x^2y^2 + y$ 在平面 $x = 2$ 中，曲线为 $z = 4y^2 + y$，它在 $y = 1$ 处的斜率为 $8 + 1 = 9$。\n\n> **注意。** 在平面 $x = p$ 中，只含 $x$ 的项是常数，没有贡献。求导之后要把 $x = p$、$y = q$ 代入正确的位置。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4) || 1;
@@ -2578,16 +2674,52 @@ export const geometricInterpretationsOfPartialDerivatives: TopicDef = {
         const p = rng.int(-3, 3);
         const q = rng.int(-3, 3);
         const slope = b * p + 2 * c * q;
+        const z = (y: number) => a * p * p + b * p * y + c * y * y;
+        const surface = poly([a, "x^2"], [b, "xy"], [c, "y^2"]);
         return numberProblem({
           prompt: t(
-            `The plane $x = ${p}$ cuts $z = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ in a curve. Find its slope $\\frac{\\partial z}{\\partial y}$ at $y = ${q}$.`,
-            `平面 $x = ${p}$ 截 $z = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ 得一曲线。求它在 $y = ${q}$ 处的斜率 $\\frac{\\partial z}{\\partial y}$。`,
+            `The plane $x = ${p}$ cuts $z = ${surface}$ in a curve. Find its slope $\\frac{\\partial z}{\\partial y}$ at $y = ${q}$.`,
+            `平面 $x = ${p}$ 截 $z = ${surface}$ 得一曲线。求它在 $y = ${q}$ 处的斜率 $\\frac{\\partial z}{\\partial y}$。`,
           ),
           answer: slope,
-          wrong: [2 * a * p + b * q, slope + 2 * a * p, b * q + 2 * c * p],
-          solution: t(
-            `$f_y = ${poly([b, "x"], [2 * c, "y"])}$, so the slope is $f_y(${p}, ${q}) = ${slope}$.`,
-            `$f_y = ${poly([b, "x"], [2 * c, "y"])}$，所以斜率为 $f_y(${p}, ${q}) = ${slope}$。`,
+          mistakes: distinct(slope, [
+            why(
+              2 * a * p + b * q,
+              "That is $f_x$; in the plane $x = \\text{constant}$ only $y$ moves.",
+              "这是 $f_x$；在平面 $x = \\text{常数}$ 中只有 $y$ 在变。",
+            ),
+            why(
+              slope + 2 * a * p,
+              `$${poly([a, "x^2"])}$ has no $y$, so in the plane $x = ${p}$ it is a constant with slope $0$.`,
+              `$${poly([a, "x^2"])}$ 不含 $y$，在平面 $x = ${p}$ 中它是常数，斜率为 $0$。`,
+            ),
+            why(
+              b * q + 2 * c * p,
+              `The values are swapped: substitute $x = ${p}$ and $y = ${q}$.`,
+              `代入的值对调了：应代入 $x = ${p}$、$y = ${q}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate in y", "对 y 求导"],
+                t(
+                  `With $x$ held constant, $f_y = ${poly([b, "x"], [2 * c, "y"])}$.`,
+                  `固定 $x$，$f_y = ${poly([b, "x"], [2 * c, "y"])}$。`,
+                ),
+              ],
+              [
+                ["Substitute the point", "代入该点"],
+                t(
+                  `$f_y(${p}, ${q}) = ${b} \\cdot ${paren(p)} + ${paren(2 * c)} \\cdot ${paren(q)} = ${slope}$.`,
+                  `$f_y(${p}, ${q}) = ${b} \\cdot ${paren(p)} + ${paren(2 * c)} \\cdot ${paren(q)} = ${slope}$。`,
+                ),
+              ],
+            ],
+            t(
+              `On the curve, $\\frac{z(${q + 1}) - z(${q - 1})}{2} = \\frac{${z(q + 1)} - ${paren(z(q - 1))}}{2} = ${slope}$, exact for a quadratic.`,
+              `在这条曲线上，$\\frac{z(${q + 1}) - z(${q - 1})}{2} = \\frac{${z(q + 1)} - ${paren(z(q - 1))}}{2} = ${slope}$，对二次函数这是精确的。`,
+            ),
           ),
         });
       },
@@ -2603,6 +2735,10 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
     "If the partial derivatives fx and fy exist and are continuous near a point, then f is differentiable at that point.",
     "若偏导数 fx 与 fy 在某点附近存在且连续，则函数在该点可微。",
   ),
+  intro: t(
+    "For $f(x, y) = x^3 + xy^2$, the partial derivatives $f_x = 3x^2 + y^2$ and $f_y = 2xy$ are polynomials, so they are continuous and $f$ is differentiable everywhere. At $(1, 2)$, $f_x = 7$ and $f_y = 4$, so a small step changes $f$ by about $7\\Delta x + 4\\Delta y$.\n\nCheck: $f(1.01, 2.01) - f(1, 2) = 5.110802 - 5 = 0.110802$, and $7(0.01) + 4(0.01) = 0.11$.\n\nIn this lesson we use continuity of the partial derivatives to show differentiability, and we compute partial derivatives from the definition where the rules do not apply.",
+    "对 $f(x, y) = x^3 + xy^2$，偏导数 $f_x = 3x^2 + y^2$ 与 $f_y = 2xy$ 都是多项式，所以连续，$f$ 处处可微。在 $(1, 2)$ 处 $f_x = 7$，$f_y = 4$，所以小步长使 $f$ 大约变化 $7\\Delta x + 4\\Delta y$。\n\n检验：$f(1.01, 2.01) - f(1, 2) = 5.110802 - 5 = 0.110802$，而 $7(0.01) + 4(0.01) = 0.11$。\n\n本课我们用偏导数的连续性说明可微性，并在求导法则不适用的地方用定义求偏导数。",
+  ),
   prerequisites: ["computing-partial-derivatives-using-the-rules-of-differentiation"],
   encompasses: [{ topic: "computing-partial-derivatives-using-the-rules-of-differentiation", weight: 0.3 }],
   xp: 10,
@@ -2611,8 +2747,8 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
       id: "sufficient-condition-for-differentiability",
       title: t("Sufficient condition for differentiability", "可微性的充分条件"),
       explanation: t(
-        "A function $z = f(x, y)$ is **differentiable** at $(a, b)$ if $\\Delta z = f_x(a, b)\\Delta x + f_y(a, b)\\Delta y + \\varepsilon_1 \\Delta x + \\varepsilon_2 \\Delta y$, where $\\varepsilon_1, \\varepsilon_2 \\to 0$ as $(\\Delta x, \\Delta y) \\to (0, 0)$. A fundamental theorem states: if the partial derivatives $f_x$ and $f_y$ exist near $(a, b)$ and are continuous at $(a, b)$, then $f$ is differentiable at $(a, b)$.",
-        "若 $\\Delta z = f_x(a, b)\\Delta x + f_y(a, b)\\Delta y + \\varepsilon_1 \\Delta x + \\varepsilon_2 \\Delta y$（其中当 $(\\Delta x, \\Delta y) \\to (0, 0)$ 时 $\\varepsilon_1, \\varepsilon_2 \\to 0$），则称函数 $z = f(x, y)$ 在 $(a, b)$ 处**可微**。基本定理表明：若偏导数 $f_x$ 与 $f_y$ 在 $(a, b)$ 附近存在且在 $(a, b)$ 处连续，则 $f$ 在 $(a, b)$ 处可微。",
+        "A function $z = f(x, y)$ is **differentiable** at $(a, b)$ if $\\Delta z = f_x(a, b)\\Delta x + f_y(a, b)\\Delta y + \\varepsilon_1 \\Delta x + \\varepsilon_2 \\Delta y$, where $\\varepsilon_1, \\varepsilon_2 \\to 0$ as $(\\Delta x, \\Delta y) \\to (0, 0)$. A fundamental theorem states: if the partial derivatives $f_x$ and $f_y$ exist near $(a, b)$ and are continuous at $(a, b)$, then $f$ is differentiable at $(a, b)$.\n\nFor $f(x, y) = x^2y^3$, $f_x = 2xy^3$ and $f_y = 3x^2y^2$ are continuous everywhere, so $f$ is differentiable everywhere.\n\n> **Watch out.** Partial derivatives that merely exist are not enough: $\\frac{xy}{x^2 + y^2}$ with value $0$ at the origin has $f_x(0, 0) = f_y(0, 0) = 0$ but is not even continuous there. In a cross term such as $xy$, both partial derivatives pick up a piece.",
+        "若 $\\Delta z = f_x(a, b)\\Delta x + f_y(a, b)\\Delta y + \\varepsilon_1 \\Delta x + \\varepsilon_2 \\Delta y$（其中当 $(\\Delta x, \\Delta y) \\to (0, 0)$ 时 $\\varepsilon_1, \\varepsilon_2 \\to 0$），则称函数 $z = f(x, y)$ 在 $(a, b)$ 处**可微**。基本定理表明：若偏导数 $f_x$ 与 $f_y$ 在 $(a, b)$ 附近存在且在 $(a, b)$ 处连续，则 $f$ 在 $(a, b)$ 处可微。\n\n对 $f(x, y) = x^2y^3$，$f_x = 2xy^3$ 与 $f_y = 3x^2y^2$ 处处连续，所以 $f$ 处处可微。\n\n> **注意。** 仅仅存在偏导数是不够的：在原点取值 $0$ 的 $\\frac{xy}{x^2 + y^2}$ 满足 $f_x(0, 0) = f_y(0, 0) = 0$，但在那里连续都谈不上。像 $xy$ 这样的交叉项，两个偏导数都会各得一部分。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -2620,34 +2756,47 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
         const c = rng.nonZero(-4, 4);
         const x0 = rng.int(-3, 3);
         const y0 = rng.int(-3, 3);
-
         const fx = 2 * a * x0 + c * y0;
         const fy = 2 * b * y0 + c * x0;
         const ans = fx + fy;
-
-        const prompt = t(
-          `Since $f_x$ and $f_y$ are continuous everywhere on $\\mathbb{R}^2$, the function $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ is differentiable at all points. Calculate $f_x(${x0}, ${y0}) + f_y(${x0}, ${y0})$.`,
-          `由于 $f_x$ 与 $f_y$ 在 $\\mathbb{R}^2$ 上处处连续，因此函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ 在所有点处均可微。计算 $f_x(${x0}, ${y0}) + f_y(${x0}, ${y0})$。`,
-        );
-        const solution = t(
-          steps(
-            `The partial derivatives are $f_x(x, y) = ${poly([2 * a, "x"], [c, "y"])}$ and $f_y(x, y) = ${poly([2 * b, "y"], [c, "x"])}$.`,
-            `Because these are continuous polynomials, $f$ is differentiable at $(${x0}, ${y0})$ by the sufficient condition for differentiability.`,
-            `Evaluate at $(${x0}, ${y0})$: $f_x(${x0}, ${y0}) = ${fx}$ and $f_y(${x0}, ${y0}) = ${fy}$.`,
-            `Summing them yields $f_x(${x0}, ${y0}) + f_y(${x0}, ${y0}) = ${fx} + (${fy}) = ${ans}$.`,
-          ),
-          steps(
-            `偏导数为 $f_x(x, y) = ${poly([2 * a, "x"], [c, "y"])}$ 与 $f_y(x, y) = ${poly([2 * b, "y"], [c, "x"])}$。`,
-            `因为多项式偏导数连续，根据可微性的充分条件，$f$ 在 $(${x0}, ${y0})$ 处可微。`,
-            `在 $(${x0}, ${y0})$ 处求值：$f_x(${x0}, ${y0}) = ${fx}$ 且 $f_y(${x0}, ${y0}) = ${fy}$。`,
-            `求和得到 $f_x(${x0}, ${y0}) + f_y(${x0}, ${y0}) = ${fx} + (${fy}) = ${ans}$。`,
-          ),
-        );
+        const f = poly([a, "x^2"], [b, "y^2"], [c, "xy"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Since $f_x$ and $f_y$ are continuous everywhere on $\\mathbb{R}^2$, the function $f(x, y) = ${f}$ is differentiable at all points. Calculate $f_x(${x0}, ${y0}) + f_y(${x0}, ${y0})$.`,
+            `由于 $f_x$ 与 $f_y$ 在 $\\mathbb{R}^2$ 上处处连续，因此函数 $f(x, y) = ${f}$ 在所有点处均可微。计算 $f_x(${x0}, ${y0}) + f_y(${x0}, ${y0})$。`,
+          ),
           answer: ans,
-          wrong: [fx, fy, ans + 2],
+          mistakes: distinct(ans, [
+            why(fx, `That is $f_x$ alone; add $f_y(${x0}, ${y0}) = ${fy}$.`, `这只是 $f_x$；还要加上 $f_y(${x0}, ${y0}) = ${fy}$。`),
+            why(fy, `That is $f_y$ alone; add $f_x(${x0}, ${y0}) = ${fx}$.`, `这只是 $f_y$；还要加上 $f_x(${x0}, ${y0}) = ${fx}$。`),
+            why(
+              2 * a * x0 + 2 * b * y0,
+              `The cross term $${poly([c, "xy"])}$ contributes $${poly([c, "y"])}$ to $f_x$ and $${poly([c, "x"])}$ to $f_y$.`,
+              `交叉项 $${poly([c, "xy"])}$ 给 $f_x$ 贡献 $${poly([c, "y"])}$，给 $f_y$ 贡献 $${poly([c, "x"])}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the partial derivatives", "求偏导数"],
+                t(
+                  `$f_x = ${poly([2 * a, "x"], [c, "y"])}$ and $f_y = ${poly([2 * b, "y"], [c, "x"])}$, both continuous polynomials.`,
+                  `$f_x = ${poly([2 * a, "x"], [c, "y"])}$，$f_y = ${poly([2 * b, "y"], [c, "x"])}$，都是连续的多项式。`,
+                ),
+              ],
+              [
+                ["Evaluate and add", "求值并相加"],
+                t(
+                  `$f_x(${x0}, ${y0}) = ${fx}$ and $f_y(${x0}, ${y0}) = ${fy}$, so the sum is $${fx} + ${paren(fy)} = ${ans}$.`,
+                  `$f_x(${x0}, ${y0}) = ${fx}$，$f_y(${x0}, ${y0}) = ${fy}$，所以和为 $${fx} + ${paren(fy)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Along the diagonal, $g(t) = f(${poly([1, "t"], [x0, ""])}, ${poly([1, "t"], [y0, ""])})$ has $t$-coefficient $${2 * a} \\cdot ${paren(x0)} + ${paren(2 * b)} \\cdot ${paren(y0)} + ${paren(c)} \\cdot ${paren(x0 + y0)} = ${ans}$, and $g'(0) = f_x + f_y$.`,
+              `沿对角线，$g(t) = f(${poly([1, "t"], [x0, ""])}, ${poly([1, "t"], [y0, ""])})$ 的 $t$ 的一次项系数为 $${2 * a} \\cdot ${paren(x0)} + ${paren(2 * b)} \\cdot ${paren(y0)} + ${paren(c)} \\cdot ${paren(x0 + y0)} = ${ans}$，而 $g'(0) = f_x + f_y$。`,
+            ),
+          ),
         });
       },
     },
@@ -2655,8 +2804,8 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
       id: "partial-derivatives-at-the-origin-from-the-definition",
       title: t("Partial derivatives at the origin from the definition", "用定义求原点处的偏导数"),
       explanation: t(
-        "When a function is defined piecewise at the origin, the rules of differentiation do not apply there, so use the definition. For $f(x, y) = \\frac{ax^3 + by^3}{x^2 + y^2}$ with $f(0, 0) = 0$,\n\n$$f_x(0, 0) = \\lim_{h \\to 0} \\frac{f(h, 0) - f(0, 0)}{h} = \\lim_{h \\to 0} \\frac{ah^3 / h^2}{h} = a,$$\n\nand in the same way $f_y(0, 0) = b$. Only the values on the axes matter for these limits.",
-        "当函数在原点处分段定义时，求导法则在那里不适用，所以要用定义。对 $f(0, 0) = 0$ 的 $f(x, y) = \\frac{ax^3 + by^3}{x^2 + y^2}$，\n\n$$f_x(0, 0) = \\lim_{h \\to 0} \\frac{f(h, 0) - f(0, 0)}{h} = \\lim_{h \\to 0} \\frac{ah^3 / h^2}{h} = a,$$\n\n同理 $f_y(0, 0) = b$。这些极限只与坐标轴上的取值有关。",
+        "When a function is defined piecewise at the origin, the rules of differentiation do not apply there, so use the definition. For $f(x, y) = \\frac{ax^3 + by^3}{x^2 + y^2}$ with $f(0, 0) = 0$,\n\n$$f_x(0, 0) = \\lim_{h \\to 0} \\frac{f(h, 0) - f(0, 0)}{h} = \\lim_{h \\to 0} \\frac{ah^3 / h^2}{h} = a,$$\n\nand in the same way $f_y(0, 0) = b$. Only the values on the axes matter for these limits. For $\\frac{x^2y + 2x^3}{x^2 + y^2}$ with value $0$ at the origin, $f(h, 0) = 2h$, so $f_x(0, 0) = 2$.\n\n> **Watch out.** The formula gives $\\frac{0}{0}$ at the origin, so do not substitute into a derivative of it; use the value $f(0, 0)$ given. Set the other variable to $0$ first, so only one term survives.",
+        "当函数在原点处分段定义时，求导法则在那里不适用，所以要用定义。对 $f(0, 0) = 0$ 的 $f(x, y) = \\frac{ax^3 + by^3}{x^2 + y^2}$，\n\n$$f_x(0, 0) = \\lim_{h \\to 0} \\frac{f(h, 0) - f(0, 0)}{h} = \\lim_{h \\to 0} \\frac{ah^3 / h^2}{h} = a,$$\n\n同理 $f_y(0, 0) = b$。这些极限只与坐标轴上的取值有关。对在原点取值 $0$ 的 $\\frac{x^2y + 2x^3}{x^2 + y^2}$，$f(h, 0) = 2h$，所以 $f_x(0, 0) = 2$。\n\n> **注意。** 公式在原点给出 $\\frac{0}{0}$，所以不能代入它的导数；要用给定的值 $f(0, 0)$。先把另一个变量设为 $0$，这样只剩下一项。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-9, 9) || 2;
@@ -2664,17 +2813,53 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
         if (b === a) b = -a;
         const wantY = rng.int(0, 1) === 1;
         const ans = wantY ? b : a;
+        const other = wantY ? a : b;
         const v = wantY ? "y" : "x";
+        const at = wantY ? "(0, h)" : "(h, 0)";
         return numberProblem({
           prompt: t(
             `Let $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$ for $(x, y) \\ne (0, 0)$ and $f(0, 0) = 0$. Find $f_{${v}}(0, 0)$.`,
             `设 $(x, y) \\ne (0, 0)$ 时 $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$，且 $f(0, 0) = 0$。求 $f_{${v}}(0, 0)$。`,
           ),
           answer: ans,
-          wrong: [0, wantY ? a : b, 3 * ans],
-          solution: t(
-            `$f_{${v}}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$.`,
-            `$f_{${v}}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              0,
+              "The value $f(0, 0) = 0$ does not make the derivative $0$; the difference quotient is the constant shown below.",
+              "$f(0, 0) = 0$ 并不意味着导数为 $0$；差商是下面求出的常数。",
+            ),
+            why(
+              other,
+              `That is the other partial derivative; on the ${wantY ? "$y$" : "$x$"}-axis only the $${v}^3$ term survives.`,
+              `这是另一个偏导数；在 ${wantY ? "$y$" : "$x$"} 轴上只剩下含 $${v}^3$ 的项。`,
+            ),
+            why(
+              3 * ans,
+              "The power $3$ does not come down: the definition gives $\\frac{h^3 / h^2}{h} = 1$ times the coefficient.",
+              "指数 $3$ 不会乘下来：由定义 $\\frac{h^3 / h^2}{h} = 1$ 再乘系数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Restrict to the axis", "限制在坐标轴上"],
+                t(
+                  `$f${at} = \\frac{${poly([ans, "h^3"])}}{h^2} = ${poly([ans, "h"])}$ for $h \\ne 0$.`,
+                  `当 $h \\ne 0$ 时，$f${at} = \\frac{${poly([ans, "h^3"])}}{h^2} = ${poly([ans, "h"])}$。`,
+                ),
+              ],
+              [
+                ["Take the limit", "取极限"],
+                t(
+                  `$f_{${v}}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h"])} - 0}{h} = ${ans}$.`,
+                  `$f_{${v}}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h"])} - 0}{h} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The quotient does not depend on $h$: at $h = 1$, $\\frac{f${wantY ? "(0, 1)" : "(1, 0)"} - f(0, 0)}{1} = \\frac{${ans}}{1} = ${ans}$.`,
+              `差商与 $h$ 无关：在 $h = 1$ 时，$\\frac{f${wantY ? "(0, 1)" : "(1, 0)"} - f(0, 0)}{1} = \\frac{${ans}}{1} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -2690,6 +2875,10 @@ export const higherOrderPartialDerivatives: TopicDef = {
     "Second partial derivatives fxx and fyy are computed by repeatedly differentiating with respect to the same variable.",
     "二阶偏导数 fxx 与 fyy 是通过对同一变量连续求导两次计算得到的。",
   ),
+  intro: t(
+    "For $f(x, y) = x^3y^2 + 4y$, $f_x = 3x^2y^2$, and differentiating again in $x$ gives $f_{xx} = 6xy^2$. In the other variable, $f_y = 2x^3y + 4$ and $f_{yy} = 2x^3$. At $(1, 2)$, $f_{xx} = 24$.\n\nCheck: $\\frac{f_x(1.01, 2) - f_x(1, 2)}{0.01} = \\frac{12.2412 - 12}{0.01} = 24.12$, close to $24$.\n\nIn this lesson we differentiate two and three times, in the order the subscripts give, to find second and third partial derivatives.",
+    "对 $f(x, y) = x^3y^2 + 4y$，$f_x = 3x^2y^2$，再对 $x$ 求导得 $f_{xx} = 6xy^2$。对另一个变量，$f_y = 2x^3y + 4$，$f_{yy} = 2x^3$。在 $(1, 2)$ 处 $f_{xx} = 24$。\n\n检验：$\\frac{f_x(1.01, 2) - f_x(1, 2)}{0.01} = \\frac{12.2412 - 12}{0.01} = 24.12$，接近 $24$。\n\n本课我们按下标给出的顺序求导两次、三次，求二阶和三阶偏导数。",
+  ),
   prerequisites: ["computing-partial-derivatives-using-the-rules-of-differentiation"],
   encompasses: [{ topic: "computing-partial-derivatives-using-the-rules-of-differentiation", weight: 0.3 }],
   xp: 10,
@@ -2698,8 +2887,8 @@ export const higherOrderPartialDerivatives: TopicDef = {
       id: "computing-second-pure-partial-derivatives",
       title: t("Computing second pure partial derivatives", "计算二阶纯偏导数"),
       explanation: t(
-        "Differentiate the first partial derivative again with respect to the same variable, still treating the other variables as constants. The second pure partial derivative $f_{xx}$ is defined as:\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right).$$",
-        "把一阶偏导数再对同一个变量求导，仍然把其他变量当作常数。二阶纯偏导数 $f_{xx}$ 定义为：\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right)$$",
+        "Differentiate the first partial derivative again with respect to the same variable, still treating the other variables as constants. The second pure partial derivative $f_{xx}$ is defined as:\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right).$$\n\nFor $f(x, y) = x^4y + y^2$, $f_x = 4x^3y$ and $f_{xx} = 12x^2y$.\n\n> **Watch out.** Stop only after the second derivative; the value of $f_x$ is not $f_{xx}$. A term such as $x^2y$ keeps a piece, $2y$, after two $x$-derivatives, while a term with no $x$ is gone after the first.",
+        "把一阶偏导数再对同一个变量求导，仍然把其他变量当作常数。二阶纯偏导数 $f_{xx}$ 定义为：\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right)$$\n\n对 $f(x, y) = x^4y + y^2$，$f_x = 4x^3y$，$f_{xx} = 12x^2y$。\n\n> **注意。** 要求到第二次导数才停；$f_x$ 的值不是 $f_{xx}$。像 $x^2y$ 这样的项对 $x$ 求导两次后还剩 $2y$，而不含 $x$ 的项第一次求导就消失了。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -2707,33 +2896,47 @@ export const higherOrderPartialDerivatives: TopicDef = {
         const c = rng.nonZero(-4, 4);
         const x0 = rng.int(-2, 2);
         const y0 = rng.int(-2, 2);
-
-        // f(x, y) = a * x^3 + b * x^2 * y + c * y^3
-        // f_x = 3a * x^2 + 2b * x * y
-        // f_xx = 6a * x + 2b * y
         const ans = 6 * a * x0 + 2 * b * y0;
-
-        const prompt = t(
-          `Calculate the second partial derivative $f_{xx}(${x0}, ${y0})$ for the function $f(x, y) = ${poly([a, "x^3"], [b, "x^2y"], [c, "y^3"])}$ at the point $(${x0}, ${y0})$.`,
-          `计算函数 $f(x, y) = ${poly([a, "x^3"], [b, "x^2y"], [c, "y^3"])}$ 在点 $(${x0}, ${y0})$ 处的二阶偏导数 $f_{xx}(${x0}, ${y0})$。`,
-        );
-        const solution = t(
-          steps(
-            `First partial with respect to $x$: $f_x(x, y) = ${poly([3 * a, "x^2"], [2 * b, "xy"])}$.`,
-            `Differentiate again with respect to $x$: $f_{xx}(x, y) = ${poly([6 * a, "x"], [2 * b, "y"])}$.`,
-            `Substitute $(x, y) = (${x0}, ${y0})$: $f_{xx}(${x0}, ${y0}) = 6(${a})(${x0}) + 2(${b})(${y0}) = ${ans}$.`,
-          ),
-          steps(
-            `对 $x$ 的一阶偏导数：$f_x(x, y) = ${poly([3 * a, "x^2"], [2 * b, "xy"])}$。`,
-            `再次对 $x$ 求导：$f_{xx}(x, y) = ${poly([6 * a, "x"], [2 * b, "y"])}$。`,
-            `代入点 $(x, y) = (${x0}, ${y0})$：$f_{xx}(${x0}, ${y0}) = 6(${a})(${x0}) + 2(${b})(${y0}) = ${ans}$。`,
-          ),
-        );
+        const f = poly([a, "x^3"], [b, "x^2y"], [c, "y^3"]);
+        const F = (x: number) => a * x ** 3 + b * x * x * y0 + c * y0 ** 3;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the second partial derivative $f_{xx}(${x0}, ${y0})$ for the function $f(x, y) = ${f}$ at the point $(${x0}, ${y0})$.`,
+            `计算函数 $f(x, y) = ${f}$ 在点 $(${x0}, ${y0})$ 处的二阶偏导数 $f_{xx}(${x0}, ${y0})$。`,
+          ),
           answer: ans,
-          wrong: [3 * a * x0 * x0 + 2 * b * x0 * y0, -ans, 6 * a * x0],
+          mistakes: distinct(ans, [
+            why(3 * a * x0 * x0 + 2 * b * x0 * y0, "That is $f_x$; differentiate in $x$ once more.", "这是 $f_x$；还要再对 $x$ 求导一次。"),
+            why(
+              6 * a * x0,
+              `$${poly([b, "x^2y"])}$ keeps $${poly([2 * b, "y"])}$ after two $x$-derivatives; it does not vanish.`,
+              `$${poly([b, "x^2y"])}$ 对 $x$ 求导两次后还剩 $${poly([2 * b, "y"])}$，不会消失。`,
+            ),
+            why(6 * c * y0, "That is $f_{yy}$; here both derivatives are in $x$.", "这是 $f_{yy}$；这里两次都对 $x$ 求导。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate once in x", "对 x 求导一次"],
+                t(`$f_x = ${poly([3 * a, "x^2"], [2 * b, "xy"])}$.`, `$f_x = ${poly([3 * a, "x^2"], [2 * b, "xy"])}$。`),
+              ],
+              [
+                ["Differentiate again in x", "再对 x 求导"],
+                t(`$f_{xx} = ${poly([6 * a, "x"], [2 * b, "y"])}$.`, `$f_{xx} = ${poly([6 * a, "x"], [2 * b, "y"])}$。`),
+              ],
+              [
+                ["Substitute the point", "代入该点"],
+                t(
+                  `$f_{xx}(${x0}, ${y0}) = ${6 * a} \\cdot ${paren(x0)} + ${paren(2 * b)} \\cdot ${paren(y0)} = ${ans}$.`,
+                  `$f_{xx}(${x0}, ${y0}) = ${6 * a} \\cdot ${paren(x0)} + ${paren(2 * b)} \\cdot ${paren(y0)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `For a cubic in $x$ the second difference is exact: $f(${x0 + 1}, ${y0}) - 2f(${x0}, ${y0}) + f(${x0 - 1}, ${y0}) = ${F(x0 + 1)} - ${paren(2 * F(x0))} + ${paren(F(x0 - 1))} = ${ans}$.`,
+              `对关于 $x$ 的三次函数，二阶差分是精确的：$f(${x0 + 1}, ${y0}) - 2f(${x0}, ${y0}) + f(${x0 - 1}, ${y0}) = ${F(x0 + 1)} - ${paren(2 * F(x0))} + ${paren(F(x0 - 1))} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2741,8 +2944,8 @@ export const higherOrderPartialDerivatives: TopicDef = {
       id: "third-order-partial-derivatives",
       title: t("Third-order partial derivatives", "三阶偏导数"),
       explanation: t(
-        "A third-order partial derivative such as $f_{xxy}$ is found by differentiating three times, in the order the subscripts are read from left to right: first with respect to $x$, then $x$ again, then $y$. Each step treats the other variable as a constant. Terms disappear as soon as their power of the current variable runs out.",
-        "像 $f_{xxy}$ 这样的三阶偏导数要求导三次，顺序按下标从左到右：先对 $x$，再对 $x$，最后对 $y$。每一步都把另一个变量当作常数。某一项一旦当前变量的次数用完就会消失。",
+        "A third-order partial derivative such as $f_{xxy}$ is found by differentiating three times, in the order the subscripts are read from left to right: first with respect to $x$, then $x$ again, then $y$. Each step treats the other variable as a constant. Terms disappear as soon as their power of the current variable runs out.\n\nFor $f(x, y) = x^4y^3$, $f_{xx} = 12x^2y^3$ and $f_{xxy} = 36x^2y^2$.\n\n> **Watch out.** Take all three derivatives: two in $x$ and then one in $y$. A term with a single $x$, such as $xy$, is gone after the second $x$-derivative, and each power that comes down multiplies the coefficient.",
+        "像 $f_{xxy}$ 这样的三阶偏导数要求导三次，顺序按下标从左到右：先对 $x$，再对 $x$，最后对 $y$。每一步都把另一个变量当作常数。某一项一旦当前变量的次数用完就会消失。\n\n对 $f(x, y) = x^4y^3$，$f_{xx} = 12x^2y^3$，$f_{xxy} = 36x^2y^2$。\n\n> **注意。** 三次导数都要求：两次对 $x$，再一次对 $y$。只含一个 $x$ 的项，如 $xy$，在第二次对 $x$ 求导后就消失了；每次乘下来的指数都要乘进系数。",
       ),
       generate(rng: Rng): Problem {
         const A = rng.int(-3, 3) || 1;
@@ -2751,16 +2954,56 @@ export const higherOrderPartialDerivatives: TopicDef = {
         const p = rng.int(-3, 3);
         const q = rng.int(-3, 3) || 1;
         const ans = 12 * A * p * q + 6 * B * q * q;
+        const f = poly([A, "x^3y^2"], [B, "x^2y^3"], [C, "xy"]);
         return numberProblem({
-          prompt: t(
-            `Find $f_{xxy}(${p}, ${q})$ for $f(x, y) = ${poly([A, "x^3y^2"], [B, "x^2y^3"], [C, "xy"])}$.`,
-            `对 $f(x, y) = ${poly([A, "x^3y^2"], [B, "x^2y^3"], [C, "xy"])}$，求 $f_{xxy}(${p}, ${q})$。`,
-          ),
+          prompt: t(`Find $f_{xxy}(${p}, ${q})$ for $f(x, y) = ${f}$.`, `对 $f(x, y) = ${f}$，求 $f_{xxy}(${p}, ${q})$。`),
           answer: ans,
-          wrong: [6 * A * p * q * q + 2 * B * q * q * q, 12 * A * p * q + 6 * B * q * q + C, 12 * A * p * q + 3 * B * q * q],
-          solution: t(
-            `${steps(`f_x = ${poly([3 * A, "x^2y^2"], [2 * B, "xy^3"], [C, "y"])}`, `f_{xx} = ${poly([6 * A, "xy^2"], [2 * B, "y^3"])}`, `f_{xxy} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}`)}At $(${p}, ${q})$ this is $${ans}$.`,
-            `${steps(`f_x = ${poly([3 * A, "x^2y^2"], [2 * B, "xy^3"], [C, "y"])}`, `f_{xx} = ${poly([6 * A, "xy^2"], [2 * B, "y^3"])}`, `f_{xxy} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}`)}在 $(${p}, ${q})$ 处其值为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              6 * A * p * q * q + 2 * B * q * q * q,
+              "That is $f_{xx}$; one more derivative, in $y$, is needed.",
+              "这是 $f_{xx}$；还要再对 $y$ 求导一次。",
+            ),
+            ...(C === 0
+              ? []
+              : [
+                  why(
+                    ans + C,
+                    `$${poly([C, "xy"])}$ has only one $x$, so it is gone after the second $x$-derivative.`,
+                    `$${poly([C, "xy"])}$ 只含一个 $x$，第二次对 $x$ 求导后就消失了。`,
+                  ),
+                ]),
+            why(
+              12 * A * p * q + 3 * B * q * q,
+              `The factor $2$ from $x^2$ stays: $${poly([B, "x^2y^3"])}$ gives $${poly([6 * B, "y^2"])}$.`,
+              `$x^2$ 乘下来的因子 $2$ 要保留：$${poly([B, "x^2y^3"])}$ 得 $${poly([6 * B, "y^2"])}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["First x-derivative", "第一次对 x 求导"],
+                t(
+                  `$f_x = ${poly([3 * A, "x^2y^2"], [2 * B, "xy^3"], [C, "y"])}$.`,
+                  `$f_x = ${poly([3 * A, "x^2y^2"], [2 * B, "xy^3"], [C, "y"])}$。`,
+                ),
+              ],
+              [
+                ["Second x-derivative", "第二次对 x 求导"],
+                t(`$f_{xx} = ${poly([6 * A, "xy^2"], [2 * B, "y^3"])}$.`, `$f_{xx} = ${poly([6 * A, "xy^2"], [2 * B, "y^3"])}$。`),
+              ],
+              [
+                ["Then the y-derivative", "再对 y 求导"],
+                t(
+                  `$f_{xxy} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}$, which at $(${p}, ${q})$ is $${ans}$.`,
+                  `$f_{xxy} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}$，在 $(${p}, ${q})$ 处为 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In the order $y$, $x$, $x$: $f_y = ${poly([2 * A, "x^3y"], [3 * B, "x^2y^2"], [C, "x"])}$, $f_{yx} = ${poly([6 * A, "x^2y"], [6 * B, "xy^2"], [C, ""])}$, $f_{yxx} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}$, the same.`,
+              `按 $y$、$x$、$x$ 的顺序：$f_y = ${poly([2 * A, "x^3y"], [3 * B, "x^2y^2"], [C, "x"])}$，$f_{yx} = ${poly([6 * A, "x^2y"], [6 * B, "xy^2"], [C, ""])}$，$f_{yxx} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}$，结果相同。`,
+            ),
           ),
         });
       },
@@ -2776,6 +3019,10 @@ export const equalityOfMixedPartialDerivatives: TopicDef = {
     "Clairaut's theorem guarantees that mixed second partial derivatives are equal, fxy = fyx, whenever they are continuous.",
     "克莱罗定理保证了当二阶混合偏导数连续时，它们相互相等，即 fxy = fyx。",
   ),
+  intro: t(
+    "For $f(x, y) = x^3y^2 + 5x$, differentiating in $x$ and then $y$ gives $f_x = 3x^2y^2 + 5$ and $f_{xy} = 6x^2y$. In the other order, $f_y = 2x^3y$ and $f_{yx} = 6x^2y$, the same.\n\nCheck: at $(1, 2)$ both orders give $6 \\cdot 1 \\cdot 2 = 12$.\n\nIn this lesson we use Clairaut's theorem to compute mixed partial derivatives in whichever order is easiest.",
+    "对 $f(x, y) = x^3y^2 + 5x$，先对 $x$ 再对 $y$ 求导，得 $f_x = 3x^2y^2 + 5$，$f_{xy} = 6x^2y$。换个顺序，$f_y = 2x^3y$，$f_{yx} = 6x^2y$，结果相同。\n\n检验：在 $(1, 2)$ 处两种顺序都给出 $6 \\cdot 1 \\cdot 2 = 12$。\n\n本课我们利用克莱罗定理，按最省事的顺序计算混合偏导数。",
+  ),
   prerequisites: ["higher-order-partial-derivatives"],
   encompasses: [{ topic: "higher-order-partial-derivatives", weight: 0.3 }],
   xp: 10,
@@ -2784,41 +3031,58 @@ export const equalityOfMixedPartialDerivatives: TopicDef = {
       id: "applying-clairauts-theorem",
       title: t("Applying Clairaut's Theorem", "应用克莱罗定理"),
       explanation: t(
-        "**Clairaut's Theorem** (Schwarz's Theorem): If $f(x, y)$ is defined on an open disk containing $(a, b)$, and $f_{xy}$ and $f_{yx}$ are both continuous on that disk, then:\n\n$$f_{xy}(a, b) = f_{yx}(a, b).$$",
-        "**克莱罗定理**（施瓦茨定理）：若 $f(x, y)$ 在包含点 $(a, b)$ 的开圆盘上有定义，且 $f_{xy}$ 与 $f_{yx}$ 在该圆盘上均连续，则：\n\n$$f_{xy}(a, b) = f_{yx}(a, b)$$",
+        "**Clairaut's Theorem** (Schwarz's Theorem): If $f(x, y)$ is defined on an open disk containing $(a, b)$, and $f_{xy}$ and $f_{yx}$ are both continuous on that disk, then:\n\n$$f_{xy}(a, b) = f_{yx}(a, b).$$\n\nFor $f(x, y) = x^3y + xy^4$, $f_x = 3x^2y + y^4$ and $f_{xy} = 3x^2 + 4y^3$; starting with $y$ gives the same.\n\n> **Watch out.** A mixed derivative takes one derivative in each variable, so a term such as $xy$ leaves its coefficient, not $0$. Every power that comes down multiplies: $x^2y^2$ gives $4xy$.",
+        "**克莱罗定理**（施瓦茨定理）：若 $f(x, y)$ 在包含点 $(a, b)$ 的开圆盘上有定义，且 $f_{xy}$ 与 $f_{yx}$ 在该圆盘上均连续，则：\n\n$$f_{xy}(a, b) = f_{yx}(a, b)$$\n\n对 $f(x, y) = x^3y + xy^4$，$f_x = 3x^2y + y^4$，$f_{xy} = 3x^2 + 4y^3$；先对 $y$ 求导结果相同。\n\n> **注意。** 混合偏导数对每个变量各求一次导，所以像 $xy$ 这样的项留下它的系数，而不是 $0$。乘下来的每个指数都要相乘：$x^2y^2$ 得 $4xy$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
         const x0 = rng.int(-2, 2);
         const y0 = rng.int(-2, 2);
-
-        // f(x, y) = a * x^2 * y^2 + b * x * y
-        // f_x = 2a * x * y^2 + b * y
-        // f_xy = 4a * x * y + b
         const ans = 4 * a * x0 * y0 + b;
-
-        const prompt = t(
-          `Calculate the mixed partial derivative $f_{xy}(${x0}, ${y0})$ for the function $f(x, y) = ${poly([a, "x^2y^2"], [b, "xy"])}$ at the point $(${x0}, ${y0})$.`,
-          `计算函数 $f(x, y) = ${poly([a, "x^2y^2"], [b, "xy"])}$ 在点 $(${x0}, ${y0})$ 处的二阶混合偏导数 $f_{xy}(${x0}, ${y0})$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute $f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y^2"], [b, "xy"])}\\right) = ${poly([2 * a, "xy^2"], [b, "y"])}$.`,
-            `Differentiate with respect to $y$: $f_{xy}(x, y) = \\frac{\\partial}{\\partial y}\\left(${poly([2 * a, "xy^2"], [b, "y"])}\\right) = ${poly([4 * a, "xy"], [b, ""])}$.`,
-            `Substitute $(x, y) = (${x0}, ${y0})$: $f_{xy}(${x0}, ${y0}) = 4(${a})(${x0})(${y0}) + ${paren(b)} = ${ans}$.`,
-          ),
-          steps(
-            `计算 $f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y^2"], [b, "xy"])}\\right) = ${poly([2 * a, "xy^2"], [b, "y"])}$。`,
-            `对 $y$ 求偏导：$f_{xy}(x, y) = \\frac{\\partial}{\\partial y}\\left(${poly([2 * a, "xy^2"], [b, "y"])}\\right) = ${poly([4 * a, "xy"], [b, ""])}$。`,
-            `代入点 $(x, y) = (${x0}, ${y0})$：$f_{xy}(${x0}, ${y0}) = 4(${a})(${x0})(${y0}) + ${paren(b)} = ${ans}$。`,
-          ),
-        );
+        const f = poly([a, "x^2y^2"], [b, "xy"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Calculate the mixed partial derivative $f_{xy}(${x0}, ${y0})$ for the function $f(x, y) = ${f}$ at the point $(${x0}, ${y0})$.`,
+            `计算函数 $f(x, y) = ${f}$ 在点 $(${x0}, ${y0})$ 处的二阶混合偏导数 $f_{xy}(${x0}, ${y0})$。`,
+          ),
           answer: ans,
-          wrong: [2 * a * x0 * y0 + b, -ans, ans + 2],
+          mistakes: distinct(ans, [
+            why(
+              2 * a * x0 * y0 + b,
+              `Both powers come down: $${poly([a, "x^2y^2"])}$ gives $${poly([4 * a, "xy"])}$, not $${poly([2 * a, "xy"])}$.`,
+              `两个指数都要乘下来：$${poly([a, "x^2y^2"])}$ 得 $${poly([4 * a, "xy"])}$，不是 $${poly([2 * a, "xy"])}$。`,
+            ),
+            why(
+              4 * a * x0 * y0,
+              `$${poly([b, "xy"])}$ leaves $${b}$ after one derivative in each variable; it does not vanish.`,
+              `$${poly([b, "xy"])}$ 对每个变量各求一次导后留下 $${b}$，不会消失。`,
+            ),
+            why(
+              2 * a * y0 * y0,
+              "That is $f_{xx}$; a mixed derivative takes one derivative in $x$ and one in $y$.",
+              "这是 $f_{xx}$；混合偏导数是对 $x$、对 $y$ 各求一次导。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate in x", "对 x 求导"],
+                t(`$f_x = ${poly([2 * a, "xy^2"], [b, "y"])}$.`, `$f_x = ${poly([2 * a, "xy^2"], [b, "y"])}$。`),
+              ],
+              [
+                ["Then in y", "再对 y 求导"],
+                t(
+                  `$f_{xy} = ${poly([4 * a, "xy"], [b, ""])}$, so $f_{xy}(${x0}, ${y0}) = ${4 * a} \\cdot ${paren(x0)} \\cdot ${paren(y0)} + ${paren(b)} = ${ans}$.`,
+                  `$f_{xy} = ${poly([4 * a, "xy"], [b, ""])}$，所以 $f_{xy}(${x0}, ${y0}) = ${4 * a} \\cdot ${paren(x0)} \\cdot ${paren(y0)} + ${paren(b)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In the other order, $f_y = ${poly([2 * a, "x^2y"], [b, "x"])}$ and $f_{yx} = ${poly([4 * a, "xy"], [b, ""])}$, the same, as Clairaut's theorem says.`,
+              `换个顺序，$f_y = ${poly([2 * a, "x^2y"], [b, "x"])}$，$f_{yx} = ${poly([4 * a, "xy"], [b, ""])}$，结果相同，正如克莱罗定理所说。`,
+            ),
+          ),
         });
       },
     },
@@ -2826,8 +3090,8 @@ export const equalityOfMixedPartialDerivatives: TopicDef = {
       id: "reordering-third-order-mixed-partials",
       title: t("Reordering third-order mixed partials", "三阶混合偏导数的换序"),
       explanation: t(
-        "When the partial derivatives are continuous, Clairaut's theorem lets you differentiate in any order: $f_{yxy} = f_{xyy} = f_{yyx}$, since each takes one derivative in $x$ and two in $y$. Choose the order that makes the work easiest. Only the number of derivatives in each variable matters, not their order.",
-        "当偏导数连续时，克莱罗定理允许以任意顺序求导：$f_{yxy} = f_{xyy} = f_{yyx}$，因为它们都对 $x$ 求一次导、对 $y$ 求两次导。选择最省事的顺序。只有对每个变量求导的次数重要，顺序无关。",
+        "When the partial derivatives are continuous, Clairaut's theorem lets you differentiate in any order: $f_{yxy} = f_{xyy} = f_{yyx}$, since each takes one derivative in $x$ and two in $y$. Choose the order that makes the work easiest. Only the number of derivatives in each variable matters, not their order.\n\nFor $f(x, y) = x^3y^2$, $f_{yxy} = f_{xyy}$: $f_x = 3x^2y^2$, $f_{xy} = 6x^2y$, $f_{xyy} = 6x^2$.\n\n> **Watch out.** $f_{yxy}$ has two $y$'s and one $x$, so it is not $f_{xxy}$. A term such as $xy^2$ survives exactly these three derivatives and leaves twice its coefficient.",
+        "当偏导数连续时，克莱罗定理允许以任意顺序求导：$f_{yxy} = f_{xyy} = f_{yyx}$，因为它们都对 $x$ 求一次导、对 $y$ 求两次导。选择最省事的顺序。只有对每个变量求导的次数重要，顺序无关。\n\n对 $f(x, y) = x^3y^2$，$f_{yxy} = f_{xyy}$：$f_x = 3x^2y^2$，$f_{xy} = 6x^2y$，$f_{xyy} = 6x^2$。\n\n> **注意。** $f_{yxy}$ 含两个 $y$、一个 $x$，所以它不是 $f_{xxy}$。像 $xy^2$ 这样的项恰好经得住这三次求导，留下系数的 $2$ 倍。",
       ),
       generate(rng: Rng): Problem {
         const A = rng.int(-3, 3) || 1;
@@ -2836,16 +3100,49 @@ export const equalityOfMixedPartialDerivatives: TopicDef = {
         const p = rng.int(-3, 3) || 2;
         const q = rng.int(-3, 3);
         const ans = 12 * A * p * q + 2 * B;
+        const f = poly([A, "x^2y^3"], [B, "xy^2"], [C, "x^3"]);
         return numberProblem({
-          prompt: t(
-            `Find $f_{yxy}(${p}, ${q})$ for $f(x, y) = ${poly([A, "x^2y^3"], [B, "xy^2"], [C, "x^3"])}$.`,
-            `对 $f(x, y) = ${poly([A, "x^2y^3"], [B, "xy^2"], [C, "x^3"])}$，求 $f_{yxy}(${p}, ${q})$。`,
-          ),
+          prompt: t(`Find $f_{yxy}(${p}, ${q})$ for $f(x, y) = ${f}$.`, `对 $f(x, y) = ${f}$，求 $f_{yxy}(${p}, ${q})$。`),
           answer: ans,
-          wrong: [12 * A * p * q, 6 * A * p * q + 2 * B, 6 * A * p * p + 2 * B],
-          solution: t(
-            `${steps(`f_y = ${poly([3 * A, "x^2y^2"], [2 * B, "xy"])}`, `f_{yx} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}`, `f_{yxy} = ${poly([12 * A, "xy"], [2 * B, ""])}`)}At $(${p}, ${q})$ this is $${ans}$.`,
-            `${steps(`f_y = ${poly([3 * A, "x^2y^2"], [2 * B, "xy"])}`, `f_{yx} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}`, `f_{yxy} = ${poly([12 * A, "xy"], [2 * B, ""])}`)}在 $(${p}, ${q})$ 处其值为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              12 * A * p * q,
+              `$${poly([B, "xy^2"])}$ survives one $x$- and two $y$-derivatives and leaves $${2 * B}$.`,
+              `$${poly([B, "xy^2"])}$ 经过一次对 $x$、两次对 $y$ 的求导后留下 $${2 * B}$。`,
+            ),
+            why(
+              6 * A * p * q + 2 * B,
+              `Both powers come down: $${poly([A, "x^2y^3"])}$ gives $${poly([12 * A, "xy"])}$ after these three derivatives.`,
+              `两个指数都要乘下来：$${poly([A, "x^2y^3"])}$ 经这三次求导得 $${poly([12 * A, "xy"])}$。`,
+            ),
+            why(
+              6 * A * q * q,
+              "That is $f_{xxy}$, two derivatives in $x$; $f_{yxy}$ has two in $y$.",
+              "这是 $f_{xxy}$，对 $x$ 求了两次导；$f_{yxy}$ 是对 $y$ 求两次。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate in y", "对 y 求导"],
+                t(`$f_y = ${poly([3 * A, "x^2y^2"], [2 * B, "xy"])}$.`, `$f_y = ${poly([3 * A, "x^2y^2"], [2 * B, "xy"])}$。`),
+              ],
+              [
+                ["Then in x", "再对 x 求导"],
+                t(`$f_{yx} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}$.`, `$f_{yx} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}$。`),
+              ],
+              [
+                ["Then in y again", "再对 y 求导"],
+                t(
+                  `$f_{yxy} = ${poly([12 * A, "xy"], [2 * B, ""])}$, which at $(${p}, ${q})$ is $${ans}$.`,
+                  `$f_{yxy} = ${poly([12 * A, "xy"], [2 * B, ""])}$，在 $(${p}, ${q})$ 处为 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In the order $x$, $y$, $y$: $f_x = ${poly([2 * A, "xy^3"], [B, "y^2"], [3 * C, "x^2"])}$, $f_{xy} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}$, $f_{xyy} = ${poly([12 * A, "xy"], [2 * B, ""])}$, the same.`,
+              `按 $x$、$y$、$y$ 的顺序：$f_x = ${poly([2 * A, "xy^3"], [B, "y^2"], [3 * C, "x^2"])}$，$f_{xy} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}$，$f_{xyy} = ${poly([12 * A, "xy"], [2 * B, ""])}$，结果相同。`,
+            ),
           ),
         });
       },
@@ -2861,6 +3158,10 @@ export const tangentPlanesToSurfaces: TopicDef = {
     "The tangent plane to z = f(x, y) at (x0, y0, z0) is given by z - z0 = fx(x0, y0)(x - x0) + fy(x0, y0)(y - y0).",
     "曲面 z = f(x, y) 在点 (x0, y0, z0) 处的切平面方程为 z - z0 = fx(x0, y0)(x - x0) + fy(x0, y0)(y - y0)。",
   ),
+  intro: t(
+    "For $z = x^3 + y^2$ at $(1, 2)$, the height is $z_0 = 5$ and the slopes are $f_x = 3x^2 = 3$ and $f_y = 2y = 4$. The tangent plane is $z - 5 = 3(x - 1) + 4(y - 2)$, or $3x + 4y - z = 6$.\n\nCheck: the point $(1, 2, 5)$ gives $3 + 8 - 5 = 6$. Near it, the plane predicts $z = 5.3$ at $(1.1, 2)$, and the surface gives $1.331 + 4 = 5.331$.\n\nIn this lesson we write the tangent plane to a graph from its two partial derivatives and find where it crosses the $z$-axis.",
+    "对 $z = x^3 + y^2$ 在 $(1, 2)$ 处，高度 $z_0 = 5$，斜率 $f_x = 3x^2 = 3$，$f_y = 2y = 4$。切平面为 $z - 5 = 3(x - 1) + 4(y - 2)$，即 $3x + 4y - z = 6$。\n\n检验：点 $(1, 2, 5)$ 代入得 $3 + 8 - 5 = 6$。在它附近，平面在 $(1.1, 2)$ 处预测 $z = 5.3$，而曲面给出 $1.331 + 4 = 5.331$。\n\n本课我们由两个偏导数写出图像的切平面，并求它与 $z$ 轴的交点。",
+  ),
   prerequisites: ["computing-partial-derivatives-using-the-rules-of-differentiation", "the-cartesian-equation-of-a-plane"],
   encompasses: [{ topic: "computing-partial-derivatives-using-the-rules-of-differentiation", weight: 0.3 }],
   xp: 10,
@@ -2870,64 +3171,83 @@ export const tangentPlanesToSurfaces: TopicDef = {
       figure: multivariableDrawings2["tangent-planes-to-surfaces#finding-equations-of-tangent-planes"],
       title: t("Finding equations of tangent planes", "求切平面方程"),
       explanation: t(
-        "The tangent plane is the flat surface that best matches the graph at a point, and its tilt in each direction is given by the partial derivatives there. For a differentiable function $z = f(x, y)$, the tangent plane at $(x_0, y_0, z_0)$ has equation:\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).$$",
-        "切平面是在一点处与图像最贴合的平面，它在各方向上的倾斜程度由该点的偏导数给出。对于可微函数 $z = f(x, y)$，其在点 $(x_0, y_0, z_0)$ 处的切平面方程为：\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0)$$",
+        "The tangent plane is the flat surface that best matches the graph at a point, and its tilt in each direction is given by the partial derivatives there. For a differentiable function $z = f(x, y)$, the tangent plane at $(x_0, y_0, z_0)$ has equation:\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).$$\n\nFor $z = x^2y$ at $(2, 1)$: $z_0 = 4$, $f_x = 2xy = 4$ and $f_y = x^2 = 4$, so $z - 4 = 4(x - 2) + 4(y - 1)$, that is $4x + 4y - z = 8$.\n\n> **Watch out.** The slopes are the values of $f_x$ and $f_y$ at the point, not the coefficients of $f$. Keep the shifts $x - x_0$ and $y - y_0$: without them the plane passes through the wrong point. Moving $z$ to the left gives $-z$.",
+        "切平面是在一点处与图像最贴合的平面，它在各方向上的倾斜程度由该点的偏导数给出。对于可微函数 $z = f(x, y)$，其在点 $(x_0, y_0, z_0)$ 处的切平面方程为：\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0)$$\n\n对 $z = x^2y$ 在 $(2, 1)$ 处：$z_0 = 4$，$f_x = 2xy = 4$，$f_y = x^2 = 4$，所以 $z - 4 = 4(x - 2) + 4(y - 1)$，即 $4x + 4y - z = 8$。\n\n> **注意。** 斜率是 $f_x$ 和 $f_y$ 在该点的值，不是 $f$ 的系数。要保留平移 $x - x_0$ 和 $y - y_0$，否则平面经过的点就错了。把 $z$ 移到左边得 $-z$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
-        const x0 = rng.int(-2, 2);
+        let x0 = rng.int(-2, 2);
         const y0 = rng.int(-2, 2);
-
-        // z = a*x^2 + b*y^2
+        if (x0 === 0 && y0 === 0) x0 = 1;
         const z0 = a * x0 * x0 + b * y0 * y0;
         const fx = 2 * a * x0;
         const fy = 2 * b * y0;
-
-        // z - z0 = fx*(x - x0) + fy*(y - y0)
-        // fx*x + fy*y - z = fx*x0 + fy*y0 - z0
         const constTerm = fx * x0 + fy * y0 - z0;
-        const lhs = poly([fx, "x"], [fy, "y"], [-1, "z"]);
-        const answer = `${lhs} = ${constTerm}`;
-
-        const prompt = t(
-          `Find the equation of the tangent plane to the surface $z = ${poly([a, "x^2"], [b, "y^2"])}$ at the point $(${x0}, ${y0}, ${z0})$.`,
-          `求曲面 $z = ${poly([a, "x^2"], [b, "y^2"])}$ 在点 $(${x0}, ${y0}, ${z0})$ 处的切平面方程。`,
-        );
-        const solution = t(
-          steps(
-            `Compute partial derivatives:\n\n` +
-              `$f_x = 2(${a})x = ${2 * a}x \\implies f_x(${x0}, ${y0}) = ${fx}$\n\n` +
-              `$f_y = 2(${b})y = ${2 * b}y \\implies f_y(${x0}, ${y0}) = ${fy}$`,
-            `Apply the tangent plane formula: $z - (${z0}) = ${fx}(x - (${x0})) + ${paren(fy)}(y - (${y0}))$.`,
-            `Rearrange to standard form: $${answer}$.`,
-          ),
-          steps(
-            `计算偏导数：\n\n` +
-              `$f_x = 2(${a})x = ${2 * a}x \\implies f_x(${x0}, ${y0}) = ${fx}$\n\n` +
-              `$f_y = 2(${b})y = ${2 * b}y \\implies f_y(${x0}, ${y0}) = ${fy}$`,
-            `应用切平面公式：$z - (${z0}) = ${fx}(x - (${x0})) + ${paren(fy)}(y - (${y0}))$。`,
-            `整理为标准形式：$${answer}$。`,
-          ),
-        );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [
-            `${poly([fy, "x"], [fx, "y"], [-1, "z"])} = ${constTerm}`,
-            `${poly([fx, "x"], [fy, "y"], [1, "z"])} = ${constTerm}`,
-            `${poly([a, "x"], [b, "y"], [-1, "z"])} = 0`,
+        const answer = `${poly([fx, "x"], [fy, "y"], [-1, "z"])} = ${constTerm}`;
+        const surface = poly([a, "x^2"], [b, "y^2"]);
+        return equationWith(
+          {
+            prompt: t(
+              `Find the equation of the tangent plane to the surface $z = ${surface}$ at the point $(${x0}, ${y0}, ${z0})$.`,
+              `求曲面 $z = ${surface}$ 在点 $(${x0}, ${y0}, ${z0})$ 处的切平面方程。`,
+            ),
+            answer,
+            solution: walked(
+              [
+                [
+                  ["Find the slopes", "求斜率"],
+                  t(
+                    `$f_x = ${poly([2 * a, "x"])}$ and $f_y = ${poly([2 * b, "y"])}$, so at $(${x0}, ${y0})$: $f_x = ${fx}$ and $f_y = ${fy}$.`,
+                    `$f_x = ${poly([2 * a, "x"])}$，$f_y = ${poly([2 * b, "y"])}$，所以在 $(${x0}, ${y0})$ 处 $f_x = ${fx}$，$f_y = ${fy}$。`,
+                  ),
+                ],
+                [
+                  ["Apply the formula", "代入公式"],
+                  t(
+                    `$z - ${paren(z0)} = ${fx}(x - ${paren(x0)}) + ${paren(fy)}(y - ${paren(y0)})$.`,
+                    `$z - ${paren(z0)} = ${fx}(x - ${paren(x0)}) + ${paren(fy)}(y - ${paren(y0)})$。`,
+                  ),
+                ],
+                [["Collect the terms", "整理"], t(`$${answer}$.`, `$${answer}$。`)],
+              ],
+              t(
+                `The point lies on the plane: $${fx} \\cdot ${paren(x0)} + ${paren(fy)} \\cdot ${paren(y0)} - ${paren(z0)} = ${constTerm}$.`,
+                `该点在平面上：$${fx} \\cdot ${paren(x0)} + ${paren(fy)} \\cdot ${paren(y0)} - ${paren(z0)} = ${constTerm}$。`,
+              ),
+            ),
+          },
+          [
+            say(
+              `${poly([fy, "x"], [fx, "y"], [-1, "z"])} = ${constTerm}`,
+              "The slopes are swapped: $f_x$ multiplies $x - x_0$ and $f_y$ multiplies $y - y_0$.",
+              "斜率颠倒了：$f_x$ 乘 $x - x_0$，$f_y$ 乘 $y - y_0$。",
+            ),
+            say(
+              `${poly([fx, "x"], [fy, "y"], [1, "z"])} = ${constTerm}`,
+              "Moving $z$ from the right side to the left changes its sign: the term is $-z$.",
+              "把 $z$ 从右边移到左边要变号：这一项是 $-z$。",
+            ),
+            say(
+              `${poly([a, "x"], [b, "y"], [-1, "z"])} = 0`,
+              `The slopes are the values $f_x = ${fx}$ and $f_y = ${fy}$ at the point, not the coefficients of $f$.`,
+              `斜率是该点处的值 $f_x = ${fx}$ 和 $f_y = ${fy}$，不是 $f$ 的系数。`,
+            ),
+            say(
+              `${poly([fx, "x"], [fy, "y"], [-1, "z"])} = ${-z0}`,
+              "The plane must pass through the point: use $x - x_0$ and $y - y_0$, not $x$ and $y$.",
+              "平面必须经过该点：要用 $x - x_0$ 和 $y - y_0$，不是 $x$ 和 $y$。",
+            ),
           ],
-        });
+        );
       },
     },
     {
       id: "the-z-intercept-of-a-tangent-plane",
       title: t("The z-intercept of a tangent plane", "切平面的 z 截距"),
       explanation: t(
-        "The tangent plane to $z = f(x, y)$ at $(a, b)$ is\n\n$$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\nIts $z$-intercept is where $x = y = 0$:\n\n$$z_0 = f(a, b) - a f_x(a, b) - b f_y(a, b).$$\n\nKeep the signs of $-a$ and $-b$ straight when the point has negative coordinates.",
-        "$z = f(x, y)$ 在 $(a, b)$ 处的切平面为\n\n$$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\n它的 $z$ 截距在 $x = y = 0$ 处：\n\n$$z_0 = f(a, b) - a f_x(a, b) - b f_y(a, b).$$\n\n当点的坐标为负时要注意 $-a$ 和 $-b$ 的符号。",
+        "The tangent plane to $z = f(x, y)$ at $(a, b)$ is\n\n$$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\nIts $z$-intercept is where $x = y = 0$:\n\n$$z_0 = f(a, b) - a f_x(a, b) - b f_y(a, b).$$\n\nFor $z = x^3 + y$ at $(1, 0)$: $f = 1$, $f_x = 3$ and $f_y = 1$, so $z_0 = 1 - 1 \\cdot 3 - 0 \\cdot 1 = -2$.\n\n> **Watch out.** Put $x = y = 0$ into the plane, not into the surface: $f(0, 0)$ is where the surface crosses the $z$-axis. Each shift gives a minus sign, $-a f_x$ and $-b f_y$, and with a negative coordinate that minus meets another.",
+        "$z = f(x, y)$ 在 $(a, b)$ 处的切平面为\n\n$$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\n它的 $z$ 截距在 $x = y = 0$ 处：\n\n$$z_0 = f(a, b) - a f_x(a, b) - b f_y(a, b).$$\n\n对 $z = x^3 + y$ 在 $(1, 0)$ 处：$f = 1$，$f_x = 3$，$f_y = 1$，所以 $z_0 = 1 - 1 \\cdot 3 - 0 \\cdot 1 = -2$。\n\n> **注意。** 要把 $x = y = 0$ 代入平面，而不是代入曲面：$f(0, 0)$ 是曲面与 $z$ 轴的交点。每个平移都带来一个负号，即 $-a f_x$ 和 $-b f_y$；坐标为负时这个负号会与另一个负号相遇。",
       ),
       generate(rng: Rng): Problem {
         const A = rng.int(-3, 3) || 1;
@@ -2939,16 +3259,56 @@ export const tangentPlanesToSurfaces: TopicDef = {
         const fx = 2 * A * a + B * b;
         const fy = B * a + D;
         const z0 = f - a * fx - b * fy;
+        const surface = poly([A, "x^2"], [B, "xy"], [D, "y"]);
         return numberProblem({
           prompt: t(
-            `Find the $z$-intercept of the tangent plane to $z = ${poly([A, "x^2"], [B, "xy"], [D, "y"])}$ at $(${a}, ${b})$.`,
-            `求 $z = ${poly([A, "x^2"], [B, "xy"], [D, "y"])}$ 在 $(${a}, ${b})$ 处切平面的 $z$ 截距。`,
+            `Find the $z$-intercept of the tangent plane to $z = ${surface}$ at $(${a}, ${b})$.`,
+            `求 $z = ${surface}$ 在 $(${a}, ${b})$ 处切平面的 $z$ 截距。`,
           ),
           answer: z0,
-          wrong: [f, f + a * fx + b * fy, f - a * fx],
-          solution: t(
-            `$f(${a}, ${b}) = ${f}$, $f_x = ${fx}$ and $f_y = ${fy}$, so $z_0 = ${f} - (${a})(${fx}) - (${b})(${fy}) = ${z0}$.`,
-            `$f(${a}, ${b}) = ${f}$，$f_x = ${fx}$，$f_y = ${fy}$，所以 $z_0 = ${f} - (${a})(${fx}) - (${b})(${fy}) = ${z0}$。`,
+          mistakes: distinct(z0, [
+            why(
+              f,
+              `$${f}$ is the height of the plane at $(${a}, ${b})$; at $x = y = 0$ the shifts add $-a f_x - b f_y$.`,
+              `$${f}$ 是平面在 $(${a}, ${b})$ 处的高度；在 $x = y = 0$ 处还要加上 $-a f_x - b f_y$。`,
+            ),
+            why(
+              f + a * fx + b * fy,
+              "At $x = 0$ the shift $x - a$ is $-a$, so the terms are subtracted.",
+              "在 $x = 0$ 处平移 $x - a$ 等于 $-a$，所以这些项要减去。",
+            ),
+            why(
+              f - a * fx,
+              `The $y$-shift also contributes: subtract $b f_y = ${paren(b)} \\cdot ${paren(fy)}$ too.`,
+              `$y$ 方向的平移也有贡献：还要减去 $b f_y = ${paren(b)} \\cdot ${paren(fy)}$。`,
+            ),
+            why(
+              0,
+              "$0$ is where the surface crosses the $z$-axis; the tangent plane crosses it elsewhere.",
+              "$0$ 是曲面与 $z$ 轴的交点；切平面与 $z$ 轴交于别处。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate at the point", "在该点求值"],
+                t(
+                  `$f(${a}, ${b}) = ${f}$, $f_x = ${poly([2 * A, "x"], [B, "y"])} = ${fx}$ and $f_y = ${poly([B, "x"], [D, ""])} = ${fy}$.`,
+                  `$f(${a}, ${b}) = ${f}$，$f_x = ${poly([2 * A, "x"], [B, "y"])} = ${fx}$，$f_y = ${poly([B, "x"], [D, ""])} = ${fy}$。`,
+                ),
+              ],
+              [
+                ["Set x and y to zero", "令 x 和 y 为零"],
+                t(
+                  `$z_0 = ${f} - ${paren(a)} \\cdot ${paren(fx)} - ${paren(b)} \\cdot ${paren(fy)} = ${z0}$.`,
+                  `$z_0 = ${f} - ${paren(a)} \\cdot ${paren(fx)} - ${paren(b)} \\cdot ${paren(fy)} = ${z0}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Going back from $(0, 0, ${z0})$ to the point along the plane adds $${paren(a)} \\cdot ${paren(fx)} + ${paren(b)} \\cdot ${paren(fy)} = ${a * fx + b * fy}$, giving $${z0} + ${paren(a * fx + b * fy)} = ${f}$, the height of the surface.`,
+              `沿平面从 $(0, 0, ${z0})$ 回到该点要加上 $${paren(a)} \\cdot ${paren(fx)} + ${paren(b)} \\cdot ${paren(fy)} = ${a * fx + b * fy}$，得 $${z0} + ${paren(a * fx + b * fy)} = ${f}$，正是曲面的高度。`,
+            ),
           ),
         });
       },
@@ -2964,6 +3324,10 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
     "The linearization L(x, y) = f(a, b) + fx(a, b)(x - a) + fy(a, b)(y - b) provides the best linear approximation to f near (a, b).",
     "线性化 L(x, y) = f(a, b) + fx(a, b)(x - a) + fy(a, b)(y - b) 提供了函数在 (a, b) 附近的最佳线性逼近。",
   ),
+  intro: t(
+    "For $f(x, y) = xy^2$ at $(2, 1)$: $f = 2$, $f_x = y^2 = 1$ and $f_y = 2xy = 4$, so $L(x, y) = 2 + (x - 2) + 4(y - 1)$. It estimates $f(2.1, 0.9) \\approx 2 + 0.1 - 0.4 = 1.7$.\n\nCheck: exactly, $f(2.1, 0.9) = 2.1 \\cdot 0.81 = 1.701$.\n\nIn this lesson we build the linearization of a function of two variables and use it to estimate values near the center.",
+    "对 $f(x, y) = xy^2$ 在 $(2, 1)$ 处：$f = 2$，$f_x = y^2 = 1$，$f_y = 2xy = 4$，所以 $L(x, y) = 2 + (x - 2) + 4(y - 1)$。它估计 $f(2.1, 0.9) \\approx 2 + 0.1 - 0.4 = 1.7$。\n\n检验：精确值 $f(2.1, 0.9) = 2.1 \\cdot 0.81 = 1.701$。\n\n本课我们写出二元函数的线性化，并用它估计中心附近的函数值。",
+  ),
   prerequisites: ["tangent-planes-to-surfaces"],
   encompasses: [{ topic: "tangent-planes-to-surfaces", weight: 0.3 }],
   xp: 10,
@@ -2972,42 +3336,65 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
       id: "computing-linearizations",
       title: t("Computing linearizations", "计算线性化表达式"),
       explanation: t(
-        "The linearization is the tangent plane written as a function, and it gives good estimates of the function at points near the center. The **linearization** of $f(x, y)$ at $(a, b)$ is:\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$",
-        "线性化就是写成函数形式的切平面，它可以很好地估计中心附近各点的函数值。函数 $f(x, y)$ 在点 $(a, b)$ 处的**线性化**为：\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b)$$",
+        "The linearization is the tangent plane written as a function, and it gives good estimates of the function at points near the center. The **linearization** of $f(x, y)$ at $(a, b)$ is:\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\nFor $f = x^2y$ at $(1, 3)$: $f = 3$, $f_x = 2xy = 6$ and $f_y = x^2 = 1$, so $L = 3 + 6(x - 1) + (y - 3) = 6x + y - 6$.\n\n> **Watch out.** $L$ uses the shifts $x - a$ and $y - b$; writing $f(a, b) + f_x x + f_y y$ is right only at the origin. Evaluate $f_x$ and $f_y$ at the center, so that $L$ has no $x^2$ or $xy$ term.",
+        "线性化就是写成函数形式的切平面，它可以很好地估计中心附近各点的函数值。函数 $f(x, y)$ 在点 $(a, b)$ 处的**线性化**为：\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b)$$\n\n对 $f = x^2y$ 在 $(1, 3)$ 处：$f = 3$，$f_x = 2xy = 6$，$f_y = x^2 = 1$，所以 $L = 3 + 6(x - 1) + (y - 3) = 6x + y - 6$。\n\n> **注意。** $L$ 用的是平移 $x - a$ 和 $y - b$；写成 $f(a, b) + f_x x + f_y y$ 只在原点处才对。要在中心处求出 $f_x$ 和 $f_y$ 的值，这样 $L$ 中就没有 $x^2$ 或 $xy$ 项。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.int(-5, 5);
-
-        // f(x, y) = a*x + b*y + c + x^2
-        // Linearization at (0, 0): f(0,0) = c, f_x(0,0) = a, f_y(0,0) = b
-        // L(x, y) = a*x + b*y + c
-        const ans = poly([a, "x"], [b, "y"], [c, ""]);
-
-        const prompt = t(
-          `Find the linearization $L(x, y)$ of the function $f(x, y) = ${poly([1, "x^2"], [a, "x"], [b, "y"], [c, ""])}$ at $(0, 0)$.`,
-          `求函数 $f(x, y) = ${poly([1, "x^2"], [a, "x"], [b, "y"], [c, ""])}$ 在点 $(0, 0)$ 处的线性化 $L(x, y)$。`,
-        );
-        const solution = t(
-          steps(
-            `Evaluate $f(0, 0) = ${c}$.`,
-            `Compute partial derivatives: $f_x(x, y) = ${poly([2, "x"], [a, ""])} \\implies f_x(0, 0) = ${a}$.`,
-            `$f_y(x, y) = ${b} \\implies f_y(0, 0) = ${b}$.`,
-            `Form the linearization: $L(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y = ${ans}$.`,
-          ),
-          steps(
-            `计算 $f(0, 0) = ${c}$。`,
-            `求偏导数：$f_x(x, y) = ${poly([2, "x"], [a, ""])} \\implies f_x(0, 0) = ${a}$。`,
-            `$f_y(x, y) = ${b} \\implies f_y(0, 0) = ${b}$。`,
-            `写出线性化表达式：$L(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y = ${ans}$。`,
-          ),
-        );
+        const p = rng.nonZero(-2, 2);
+        const q = rng.int(-2, 2);
+        const f0 = p * p + b * p * q + c;
+        const fx = 2 * p + b * q;
+        const fy = b * p;
+        const k = c - p * p - b * p * q;
+        const f = poly([1, "x^2"], [b, "xy"], [c, ""]);
+        const ans = poly([fx, "x"], [fy, "y"], [k, ""]);
         return expressionProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the linearization $L(x, y)$ of $f(x, y) = ${f}$ at $(${p}, ${q})$.`,
+            `求 $f(x, y) = ${f}$ 在 $(${p}, ${q})$ 处的线性化 $L(x, y)$。`,
+          ),
           answer: ans,
-          wrong: [poly([1, "x^2"], [a, "x"], [b, "y"]), poly([2 * a, "x"], [b, "y"], [c, ""]), poly([a, "x"], [b, "y"])],
+          mistakes: spoken(ans, [
+            say(
+              poly([fx, "x"], [fy, "y"], [f0, ""]),
+              `$L$ uses the shifts $x - ${paren(p)}$ and $y - ${paren(q)}$; adding $f(${p}, ${q})$ to $f_x x + f_y y$ is right only at the origin.`,
+              `$L$ 用的是平移 $x - ${paren(p)}$ 和 $y - ${paren(q)}$；把 $f(${p}, ${q})$ 加到 $f_x x + f_y y$ 上只在原点才对。`,
+            ),
+            say(
+              f,
+              "That is $f$ itself; $L$ is linear, with $f_x$ and $f_y$ evaluated at the center.",
+              "那是 $f$ 本身；$L$ 是线性的，$f_x$ 和 $f_y$ 要在中心处求值。",
+            ),
+            say(
+              poly([2 * p, "x"], [fy, "y"], [c - p * p, ""]),
+              `$f_x = ${poly([2, "x"], [b, "y"])}$ includes the term from $${poly([b, "xy"])}$, so $f_x(${p}, ${q}) = ${fx}$.`,
+              `$f_x = ${poly([2, "x"], [b, "y"])}$ 包含来自 $${poly([b, "xy"])}$ 的项，所以 $f_x(${p}, ${q}) = ${fx}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate at the center", "在中心处求值"],
+                t(
+                  `$f(${p}, ${q}) = ${f0}$, $f_x = ${poly([2, "x"], [b, "y"])} = ${fx}$ and $f_y = ${poly([b, "x"])} = ${fy}$.`,
+                  `$f(${p}, ${q}) = ${f0}$，$f_x = ${poly([2, "x"], [b, "y"])} = ${fx}$，$f_y = ${poly([b, "x"])} = ${fy}$。`,
+                ),
+              ],
+              [
+                ["Write L and expand", "写出 L 并展开"],
+                t(
+                  `$L = ${f0} + ${paren(fx)}(x - ${paren(p)}) + ${paren(fy)}(y - ${paren(q)}) = ${ans}$.`,
+                  `$L = ${f0} + ${paren(fx)}(x - ${paren(p)}) + ${paren(fy)}(y - ${paren(q)}) = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At the center $L(${p}, ${q}) = ${paren(fx)} \\cdot ${paren(p)} + ${paren(fy)} \\cdot ${paren(q)} + ${paren(k)} = ${f0}$, which is $f(${p}, ${q})$.`,
+              `在中心处 $L(${p}, ${q}) = ${paren(fx)} \\cdot ${paren(p)} + ${paren(fy)} \\cdot ${paren(q)} + ${paren(k)} = ${f0}$，正是 $f(${p}, ${q})$。`,
+            ),
+          ),
         });
       },
     },
@@ -3015,8 +3402,8 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
       id: "approximating-a-distance-with-a-linearization",
       title: t("Approximating a distance with a linearization", "用线性化近似距离"),
       explanation: t(
-        "For $f(x, y) = \\sqrt{x^2 + y^2}$ at a point $(p, q)$ with $\\sqrt{p^2 + q^2} = r$, the partial derivatives are $\\frac{p}{r}$ and $\\frac{q}{r}$, so\n\n$$L(x, y) = r + \\frac{p}{r}(x - p) + \\frac{q}{r}(y - q).$$\n\nNear $(p, q)$, $L$ approximates $f$ with only arithmetic. A nearby value is estimated by adding the change predicted by each partial derivative.",
-        "对 $f(x, y) = \\sqrt{x^2 + y^2}$，在满足 $\\sqrt{p^2 + q^2} = r$ 的点 $(p, q)$ 处，偏导数为 $\\frac{p}{r}$ 与 $\\frac{q}{r}$，所以\n\n$$L(x, y) = r + \\frac{p}{r}(x - p) + \\frac{q}{r}(y - q).$$\n\n在 $(p, q)$ 附近，$L$ 只需算术运算就能近似 $f$。估计附近的值时，把每个偏导数预测的变化量加上去。",
+        "For $f(x, y) = \\sqrt{x^2 + y^2}$ at a point $(p, q)$ with $\\sqrt{p^2 + q^2} = r$, the partial derivatives are $\\frac{p}{r}$ and $\\frac{q}{r}$, so\n\n$$L(x, y) = r + \\frac{p}{r}(x - p) + \\frac{q}{r}(y - q).$$\n\nNear $(p, q)$, $L$ approximates $f$ with only arithmetic. A nearby value is estimated by adding the change predicted by each partial derivative. At $(5, 12)$, $r = 13$, so $f(5.13, 12) \\approx 13 + \\frac{5}{13} \\cdot 0.13 = 13.05$, while $\\sqrt{26.3169 + 144} \\approx 13.0505$.\n\n> **Watch out.** The change in $x$ is weighted by $\\frac{p}{r}$ and the change in $y$ by $\\frac{q}{r}$. Adding the changes unweighted, or swapping the weights, ignores the direction of the point from the origin.",
+        "对 $f(x, y) = \\sqrt{x^2 + y^2}$，在满足 $\\sqrt{p^2 + q^2} = r$ 的点 $(p, q)$ 处，偏导数为 $\\frac{p}{r}$ 与 $\\frac{q}{r}$，所以\n\n$$L(x, y) = r + \\frac{p}{r}(x - p) + \\frac{q}{r}(y - q).$$\n\n在 $(p, q)$ 附近，$L$ 只需算术运算就能近似 $f$。估计附近的值时，把每个偏导数预测的变化量加上去。在 $(5, 12)$ 处 $r = 13$，所以 $f(5.13, 12) \\approx 13 + \\frac{5}{13} \\cdot 0.13 = 13.05$，而 $\\sqrt{26.3169 + 144} \\approx 13.0505$。\n\n> **注意。** $x$ 的变化乘以权重 $\\frac{p}{r}$，$y$ 的变化乘以 $\\frac{q}{r}$。不加权直接相加，或者把权重对调，都忽略了该点相对原点的方向。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, r] = rng.pick(pythagoreanTriples.filter(([, , c]) => 100 % c === 0));
@@ -3026,6 +3413,7 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
         const y = Q.of(q).add(k);
         const ans = Q.of(r).add(Q.of(p, r).mul(h)).add(Q.of(q, r).mul(k));
         const dec = (v: Q): string => String(v.toNumber());
+        const square = x.mul(x).add(y.mul(y));
         return numberProblem({
           prompt: t(
             `Use the linearization of $f(x, y) = \\sqrt{x^2 + y^2}$ at $(${p}, ${q})$ to estimate $f(${dec(x)}, ${dec(y)})$.`,
@@ -3033,10 +3421,40 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
           ),
           answer: ans,
           form: "decimal",
-          wrong: [Q.of(r).add(h).add(k), Q.of(r).add(Q.of(q, r).mul(h)).add(Q.of(p, r).mul(k)), Q.of(r)],
-          solution: t(
-            `$L = ${r} + \\frac{${p}}{${r}}(${dec(h)}) + \\frac{${q}}{${r}}(${dec(k)}) = ${dec(ans)}$.`,
-            `$L = ${r} + \\frac{${p}}{${r}}(${dec(h)}) + \\frac{${q}}{${r}}(${dec(k)}) = ${dec(ans)}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(r).add(h).add(k),
+              `Each change is weighted by its partial derivative, $\\frac{${p}}{${r}}$ for $x$ and $\\frac{${q}}{${r}}$ for $y$.`,
+              `每个变化量都要乘以它的偏导数：$x$ 乘 $\\frac{${p}}{${r}}$，$y$ 乘 $\\frac{${q}}{${r}}$。`,
+            ),
+            why(
+              Q.of(r).add(Q.of(q, r).mul(h)).add(Q.of(p, r).mul(k)),
+              `The weights are swapped: the change in $x$ goes with $f_x = \\frac{${p}}{${r}}$.`,
+              `权重对调了：$x$ 的变化对应 $f_x = \\frac{${p}}{${r}}$。`,
+            ),
+            why(r, `$${r}$ is the value at the center; add the predicted change.`, `$${r}$ 是中心处的值；还要加上预测的变化量。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the changes", "求变化量"],
+                t(
+                  `From $(${p}, ${q})$ the changes are $${dec(h)}$ in $x$ and $${dec(k)}$ in $y$, and $f_x = \\frac{${p}}{${r}}$, $f_y = \\frac{${q}}{${r}}$.`,
+                  `从 $(${p}, ${q})$ 出发，$x$ 变化 $${dec(h)}$，$y$ 变化 $${dec(k)}$，且 $f_x = \\frac{${p}}{${r}}$，$f_y = \\frac{${q}}{${r}}$。`,
+                ),
+              ],
+              [
+                ["Add the predicted change", "加上预测的变化量"],
+                t(
+                  `$L = ${r} + \\frac{${p}}{${r}} \\cdot (${dec(h)}) + \\frac{${q}}{${r}} \\cdot (${dec(k)}) = ${dec(ans)}$.`,
+                  `$L = ${r} + \\frac{${p}}{${r}} \\cdot (${dec(h)}) + \\frac{${q}}{${r}} \\cdot (${dec(k)}) = ${dec(ans)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Squaring the estimate gives $${dec(ans.mul(ans))}$, close to $${dec(x)}^2 + ${dec(y)}^2 = ${dec(square)}$.`,
+              `把估计值平方得 $${dec(ans.mul(ans))}$，接近 $${dec(x)}^2 + ${dec(y)}^2 = ${dec(square)}$。`,
+            ),
           ),
         });
       },
@@ -3052,6 +3470,10 @@ export const differentiatingUnderTheIntegralSign: TopicDef = {
     "Leibniz's rule states that the derivative of an integral with respect to a parameter equals the integral of the partial derivative.",
     "莱布尼茨法则表明，定积分对参数的导数等于被积函数偏导数的定积分。",
   ),
+  intro: t(
+    "For $F(t) = \\int_0^2 t^2x\\,dx$, differentiating inside gives $F'(t) = \\int_0^2 2tx\\,dx = 2t \\cdot 2 = 4t$.\n\nCheck: integrating first, $F(t) = t^2 \\cdot 2 = 2t^2$, whose derivative is $4t$.\n\nIn this lesson we differentiate an integral with respect to a parameter by differentiating inside it, and handle an upper limit that depends on the parameter.",
+    "对 $F(t) = \\int_0^2 t^2x\\,dx$，在积分号内求导得 $F'(t) = \\int_0^2 2tx\\,dx = 2t \\cdot 2 = 4t$。\n\n检验：先积分，$F(t) = t^2 \\cdot 2 = 2t^2$，其导数为 $4t$。\n\n本课我们通过在积分号内求导，求积分对参数的导数，并处理依赖于参数的上限。",
+  ),
   prerequisites: ["computing-partial-derivatives-using-the-rules-of-differentiation", "integrating-vector-valued-functions"],
   encompasses: [{ topic: "computing-partial-derivatives-using-the-rules-of-differentiation", weight: 0.3 }],
   xp: 10,
@@ -3060,39 +3482,63 @@ export const differentiatingUnderTheIntegralSign: TopicDef = {
       id: "applying-leibniz-integral-rule",
       title: t("Applying Leibniz's Integral Rule", "应用莱布尼茨积分法则"),
       explanation: t(
-        "When the limits are fixed, the derivative with respect to a parameter can be taken inside the integral, differentiating the integrand partially. **Leibniz's Rule**: For continuous $\\frac{\\partial f}{\\partial t}$:\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$",
-        "当积分限固定时，对参数的导数可以移到积分号里面，对被积函数求偏导数。**莱布尼茨法则**：当 $\\frac{\\partial f}{\\partial t}$ 连续时：\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx$$",
+        "When the limits are fixed, the derivative with respect to a parameter can be taken inside the integral, differentiating the integrand partially. **Leibniz's Rule**: For continuous $\\frac{\\partial f}{\\partial t}$:\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\nFor $F(t) = \\int_0^1 (x + t)^3\\,dx$, $F'(t) = \\int_0^1 3(x + t)^2\\,dx = (1 + t)^3 - t^3$, which is $1$ at $t = 0$.\n\n> **Watch out.** Differentiate in $t$ with $x$ held fixed, so a term without $t$ drops out; then still integrate in $x$ over the limits.",
+        "当积分限固定时，对参数的导数可以移到积分号里面，对被积函数求偏导数。**莱布尼茨法则**：当 $\\frac{\\partial f}{\\partial t}$ 连续时：\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx$$\n\n对 $F(t) = \\int_0^1 (x + t)^3\\,dx$，$F'(t) = \\int_0^1 3(x + t)^2\\,dx = (1 + t)^3 - t^3$，在 $t = 0$ 处等于 $1$。\n\n> **注意。** 固定 $x$ 对 $t$ 求导，所以不含 $t$ 的项消失；之后仍要在积分限上对 $x$ 积分。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(1, 5);
-        const bEven = 2 * rng.int(1, 5);
-        // F(t) = \int_0^1 (a x^2 + bEven * t * x) dx
-        // F'(t) = \int_0^1 bEven * x dx = bEven * [x^2 / 2]_0^1 = bEven / 2.
-        const ans = bEven / 2;
-
-        const prompt = t(
-          `Apply Leibniz's rule to find $F'(t)$ for $F(t) = \\int_{0}^{1} \\left(${poly([a, "x^2"], [bEven, "tx"])}\\right) dx$.`,
-          `应用莱布尼茨法则求函数 $F(t) = \\int_{0}^{1} \\left(${poly([a, "x^2"], [bEven, "tx"])}\\right) dx$ 的导数 $F'(t)$。`,
-        );
-        const solution = t(
-          steps(
-            `Differentiate under the integral sign with respect to $t$:\n\n` +
-              `$$\\frac{\\partial}{\\partial t}\\left(${poly([a, "x^2"], [bEven, "tx"])}\\right) = ${bEven}x.$$`,
-            `Integrate with respect to $x$ from $0$ to $1$:\n\n` +
-              `$$F'(t) = \\int_{0}^{1} ${bEven}x\\,dx = \\left[ \\frac{${bEven}}{2} x^2 \\right]_{0}^{1} = ${ans}.$$`,
-          ),
-          steps(
-            `在积分号下关于 $t$ 求偏导：\n\n` +
-              `$$\\frac{\\partial}{\\partial t}\\left(${poly([a, "x^2"], [bEven, "tx"])}\\right) = ${bEven}x$$`,
-            `对 $x$ 从 $0$ 到 $1$ 进行定积分：\n\n` +
-              `$$F'(t) = \\int_{0}^{1} ${bEven}x\\,dx = \\left[ \\frac{${bEven}}{2} x^2 \\right]_{0}^{1} = ${ans}$$`,
-          ),
-        );
+        const a = rng.nonZero(-5, 5);
+        const b = rng.nonZero(-4, 4);
+        const L = rng.int(1, 3);
+        const t0 = rng.nonZero(-3, 3);
+        const ans = b * t0 * L * L;
+        const integrand = poly([a, "x^2"], [b, "t^2x"]);
+        const lower = Q.of(a * L ** 3, 3);
+        const upper = Q.of(b * L * L, 2);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Let $F(t) = \\int_{0}^{${L}} \\left(${integrand}\\right) dx$. Find $F'(${t0})$.`,
+            `设 $F(t) = \\int_{0}^{${L}} \\left(${integrand}\\right) dx$。求 $F'(${t0})$。`,
+          ),
           answer: ans,
-          wrong: [bEven, ans * 2, a + ans],
+          mistakes: distinct(ans, [
+            why(
+              2 * b * t0 * L,
+              `$${poly([2 * b, "tx"])}$ still has to be integrated in $x$ from $0$ to $${L}$, not just evaluated at $x = ${L}$.`,
+              `$${poly([2 * b, "tx"])}$ 还要对 $x$ 从 $0$ 到 $${L}$ 积分，而不只是在 $x = ${L}$ 处求值。`,
+            ),
+            why(
+              lower.add(Q.of(ans)),
+              `$${poly([a, "x^2"])}$ has no $t$, so its $t$-derivative is $0$.`,
+              `$${poly([a, "x^2"])}$ 不含 $t$，所以它对 $t$ 的导数为 $0$。`,
+            ),
+            why(
+              a * L * L + b * t0 * t0 * L,
+              "That differentiates in $x$; the derivative is in $t$, with $x$ held fixed.",
+              "那是对 $x$ 求导；应当固定 $x$，对 $t$ 求导。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate inside", "在积分号内求导"],
+                t(
+                  `$\\frac{\\partial}{\\partial t}\\left(${integrand}\\right) = ${poly([2 * b, "tx"])}$.`,
+                  `$\\frac{\\partial}{\\partial t}\\left(${integrand}\\right) = ${poly([2 * b, "tx"])}$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$F'(t) = \\int_0^{${L}} ${poly([2 * b, "tx"])}\\,dx = ${poly([b, "t"])} \\cdot ${L * L} = ${poly([b * L * L, "t"])}$, so $F'(${t0}) = ${ans}$.`,
+                  `$F'(t) = \\int_0^{${L}} ${poly([2 * b, "tx"])}\\,dx = ${poly([b, "t"])} \\cdot ${L * L} = ${poly([b * L * L, "t"])}$，所以 $F'(${t0}) = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Integrating first, $F(t) = ${poly([lower, ""], [upper, "t^2"])}$, whose derivative $${poly([b * L * L, "t"])}$ is $${ans}$ at $t = ${t0}$.`,
+              `先积分，$F(t) = ${poly([lower, ""], [upper, "t^2"])}$，其导数 $${poly([b * L * L, "t"])}$ 在 $t = ${t0}$ 处为 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3100,24 +3546,66 @@ export const differentiatingUnderTheIntegralSign: TopicDef = {
       id: "differentiating-an-integral-with-a-variable-limit",
       title: t("Differentiating an integral with a variable limit", "对变上限积分求导"),
       explanation: t(
-        "When both the limit and the integrand depend on $t$, Leibniz's rule has two parts:\n\n$$\\frac{d}{dt}\\int_0^t f(x, t)\\,dx = f(t, t) + \\int_0^t \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\nThe first term comes from moving the upper limit, and the second from changing the integrand. Forgetting either part gives a wrong derivative.",
-        "当积分限和被积函数都依赖于 $t$ 时，莱布尼茨法则有两部分：\n\n$$\\frac{d}{dt}\\int_0^t f(x, t)\\,dx = f(t, t) + \\int_0^t \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\n第一项来自上限的移动，第二项来自被积函数的变化。漏掉任何一部分都会得到错误的导数。",
+        "When both the limit and the integrand depend on $t$, Leibniz's rule has two parts:\n\n$$\\frac{d}{dt}\\int_0^t f(x, t)\\,dx = f(t, t) + \\int_0^t \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\nThe first term comes from moving the upper limit, and the second from changing the integrand. For $F(t) = \\int_0^t (t + x)\\,dx$: $f(t, t) = 2t$ and $\\int_0^t 1\\,dx = t$, so $F'(t) = 3t$; indeed $F(t) = t^2 + \\frac{t^2}{2} = \\frac{3}{2}t^2$.\n\n> **Watch out.** Forgetting either part gives a wrong derivative. In the boundary term put $x = t$ into the integrand, and then evaluate at the given $t$.",
+        "当积分限和被积函数都依赖于 $t$ 时，莱布尼茨法则有两部分：\n\n$$\\frac{d}{dt}\\int_0^t f(x, t)\\,dx = f(t, t) + \\int_0^t \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\n第一项来自上限的移动，第二项来自被积函数的变化。对 $F(t) = \\int_0^t (t + x)\\,dx$：$f(t, t) = 2t$，$\\int_0^t 1\\,dx = t$，所以 $F'(t) = 3t$；确实 $F(t) = t^2 + \\frac{t^2}{2} = \\frac{3}{2}t^2$。\n\n> **注意。** 漏掉任何一部分都会得到错误的导数。边界项要把 $x = t$ 代入被积函数，然后在给定的 $t$ 处求值。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4) || 2;
         const b = rng.int(-4, 4);
-        const p = rng.int(1, 4) * rng.pick([-1, 1]);
+        const p = rng.int(2, 4) * rng.pick([-1, 1]);
         const ans = Q.of(3 * a + 2 * b, 2).mul(Q.of(p * p));
+        const integrand = poly([a, "tx"], [b, "x^2"]);
         return numberProblem({
           prompt: t(
-            `Let $F(t) = \\int_0^t (${poly([a, "tx"], [b, "x^2"])})\\,dx$. Find $F'(${p})$.`,
-            `设 $F(t) = \\int_0^t (${poly([a, "tx"], [b, "x^2"])})\\,dx$。求 $F'(${p})$。`,
+            `Let $F(t) = \\int_0^t (${integrand})\\,dx$. Find $F'(${p})$.`,
+            `设 $F(t) = \\int_0^t (${integrand})\\,dx$。求 $F'(${p})$。`,
           ),
           answer: ans,
-          wrong: [Q.of((a + b) * p * p), Q.of(a * p * p, 2), Q.of(3 * a + 2 * b, 2)],
-          solution: t(
-            `${steps(`F'(t) = (${poly([a, "t^2"], [b, "t^2"])}) + \\int_0^t ${poly([a, "x"])}\\,dx = ${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}`)}So $F'(${p}) = ${ans.toLatex()}$.`,
-            `${steps(`F'(t) = (${poly([a, "t^2"], [b, "t^2"])}) + \\int_0^t ${poly([a, "x"])}\\,dx = ${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}`)}所以 $F'(${p}) = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              (a + b) * p * p,
+              "That is only the boundary term $f(t, t)$; add the integral of $\\frac{\\partial f}{\\partial t}$ as well.",
+              "那只是边界项 $f(t, t)$；还要加上 $\\frac{\\partial f}{\\partial t}$ 的积分。",
+            ),
+            why(
+              Q.of(a * p * p, 2),
+              "That is only the integral of $\\frac{\\partial f}{\\partial t}$; the moving upper limit adds $f(t, t)$.",
+              "那只是 $\\frac{\\partial f}{\\partial t}$ 的积分；移动的上限还要加上 $f(t, t)$。",
+            ),
+            why(
+              Q.of(3 * a + 2 * b, 2),
+              `That is the coefficient of $t^2$; evaluate at $t = ${p}$.`,
+              `那是 $t^2$ 的系数；还要在 $t = ${p}$ 处求值。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["The boundary term", "边界项"],
+                t(
+                  `$f(t, t) = ${poly([a, "t^2"])} + ${paren(b)}t^2 = ${poly([a + b, "t^2"])}$.`,
+                  `$f(t, t) = ${poly([a, "t^2"])} + ${paren(b)}t^2 = ${poly([a + b, "t^2"])}$。`,
+                ),
+              ],
+              [
+                ["The inside term", "积分项"],
+                t(
+                  `$\\frac{\\partial f}{\\partial t} = ${poly([a, "x"])}$, and $\\int_0^t ${poly([a, "x"])}\\,dx = ${poly([Q.of(a, 2), "t^2"])}$.`,
+                  `$\\frac{\\partial f}{\\partial t} = ${poly([a, "x"])}$，而 $\\int_0^t ${poly([a, "x"])}\\,dx = ${poly([Q.of(a, 2), "t^2"])}$。`,
+                ),
+              ],
+              [
+                ["Add and evaluate", "相加并求值"],
+                t(
+                  `$F'(t) = ${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}$, so $F'(${p}) = ${ans.toLatex()}$.`,
+                  `$F'(t) = ${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}$，所以 $F'(${p}) = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Integrating first, $F(t) = ${poly([Q.of(a, 2), "t^3"], [Q.of(b, 3), "t^3"])} = ${poly([Q.of(3 * a + 2 * b, 6), "t^3"])}$, whose derivative is $${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}$ again.`,
+              `先积分，$F(t) = ${poly([Q.of(a, 2), "t^3"], [Q.of(b, 3), "t^3"])} = ${poly([Q.of(3 * a + 2 * b, 6), "t^3"])}$，其导数同样是 $${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}$。`,
+            ),
           ),
         });
       },
@@ -3137,6 +3625,10 @@ export const theGradientVector: TopicDef = {
     "The gradient ∇f = ⟨fx, fy⟩ points in the direction of greatest increase of f, with magnitude equal to the maximum rate of increase.",
     "梯度 ∇f = ⟨fx, fy⟩ 指向函数增长最快的方向，其模长等于该最大增长率。",
   ),
+  intro: t(
+    "For $f(x, y) = x^3y$ at $(1, 2)$, $\\nabla f = \\langle 3x^2y, x^3 \\rangle = \\langle 6, 1 \\rangle$, and its length $\\sqrt{37} \\approx 6.08$ is the fastest rate of increase there.\n\nCheck: $\\frac{f(1.01, 2) - f(1, 2)}{0.01} = \\frac{2.060602 - 2}{0.01} \\approx 6.06$, close to the first component $6$.\n\nIn this lesson we compute gradient vectors at a point and the square of their length.",
+    "对 $f(x, y) = x^3y$ 在 $(1, 2)$ 处，$\\nabla f = \\langle 3x^2y, x^3 \\rangle = \\langle 6, 1 \\rangle$，其长度 $\\sqrt{37} \\approx 6.08$ 是该处最快的增长率。\n\n检验：$\\frac{f(1.01, 2) - f(1, 2)}{0.01} = \\frac{2.060602 - 2}{0.01} \\approx 6.06$，接近第一个分量 $6$。\n\n本课我们计算一点处的梯度向量及其长度的平方。",
+  ),
   prerequisites: ["computing-partial-derivatives-using-the-rules-of-differentiation", "three-dimensional-vectors-in-component-form"],
   encompasses: [{ topic: "computing-partial-derivatives-using-the-rules-of-differentiation", weight: 0.3 }],
   xp: 10,
@@ -3145,82 +3637,126 @@ export const theGradientVector: TopicDef = {
       id: "calculating-the-gradient-vector",
       title: t("Calculating the gradient vector", "计算梯度向量"),
       explanation: t(
-        "Find each partial derivative and list them in order as the components of a vector, then substitute the point if one is given. For a scalar function $f(x, y)$, the gradient vector is:\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle.$$",
-        "求出每个偏导数，把它们依次作为向量的分量；如果给定了点，再代入该点。对于标量函数 $f(x, y)$，梯度向量为：\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle$$",
+        "Find each partial derivative and list them in order as the components of a vector, then substitute the point if one is given. For a scalar function $f(x, y)$, the gradient vector is:\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle.$$\n\nFor $f = xy^3$ at $(2, 1)$: $\\nabla f = \\langle y^3, 3xy^2 \\rangle = \\langle 1, 6 \\rangle$.\n\n> **Watch out.** The first component is $f_x$ and the second $f_y$. A cross term $cxy$ contributes $cy$ to $f_x$ and $cx$ to $f_y$, and $x^2$ gives $2x$, not $x$.",
+        "求出每个偏导数，把它们依次作为向量的分量；如果给定了点，再代入该点。对于标量函数 $f(x, y)$，梯度向量为：\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle$$\n\n对 $f = xy^3$ 在 $(2, 1)$ 处：$\\nabla f = \\langle y^3, 3xy^2 \\rangle = \\langle 1, 6 \\rangle$。\n\n> **注意。** 第一个分量是 $f_x$，第二个是 $f_y$。交叉项 $cxy$ 给 $f_x$ 贡献 $cy$，给 $f_y$ 贡献 $cx$；$x^2$ 的导数是 $2x$，不是 $x$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
         const c = rng.nonZero(-4, 4);
-        const x0 = rng.int(-2, 2);
+        let x0 = rng.int(-2, 2);
         const y0 = rng.int(-2, 2);
-
-        // f(x, y) = a*x^2 + b*y^2 + c*x*y
-        // fx = 2a*x + c*y
-        // fy = 2b*y + c*x
+        if (x0 === 0 && y0 === 0) x0 = 1;
         const ansX = 2 * a * x0 + c * y0;
         const ansY = 2 * b * y0 + c * x0;
-        const answer: Vec2 = [ansX, ansY];
-
-        const prompt = t(
-          `Calculate the gradient vector $\\nabla f(${x0}, ${y0})$ for $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ at the point $(${x0}, ${y0})$. Express your answer as a vector $\\langle x, y \\rangle$.`,
-          `计算函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [c, "xy"])}$ 在点 $(${x0}, ${y0})$ 处的梯度向量 $\\nabla f(${x0}, ${y0})$。结果以向量 $\\langle x, y \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the partial derivatives:\n\n` +
-              `$f_x = 2(${a})x + ${c === 1 ? "" : paren(c)}y = ${poly([2 * a, "x"], [c, "y"])}$\n\n` +
-              `$f_y = 2(${b})y + ${c === 1 ? "" : paren(c)}x = ${poly([2 * b, "y"], [c, "x"])}$`,
-            `Evaluate at $(${x0}, ${y0})$:\n\n` + `$f_x(${x0}, ${y0}) = ${ansX}, \\quad f_y(${x0}, ${y0}) = ${ansY}$`,
-            `The gradient vector is $\\nabla f(${x0}, ${y0}) = \\langle ${ansX}, ${ansY} \\rangle$.`,
-          ),
-          steps(
-            `计算偏导数：\n\n` +
-              `$f_x = 2(${a})x + ${c === 1 ? "" : paren(c)}y = ${poly([2 * a, "x"], [c, "y"])}$\n\n` +
-              `$f_y = 2(${b})y + ${c === 1 ? "" : paren(c)}x = ${poly([2 * b, "y"], [c, "x"])}$`,
-            `代入点 $(${x0}, ${y0})$：\n\n` + `$f_x(${x0}, ${y0}) = ${ansX}, \\quad f_y(${x0}, ${y0}) = ${ansY}$`,
-            `梯度向量为 $\\nabla f(${x0}, ${y0}) = \\langle ${ansX}, ${ansY} \\rangle$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y"],
-          wrong: [
-            [ansY, ansX],
-            [-ansX, -ansY],
-            [a * x0, b * y0],
+        const f = poly([a, "x^2"], [b, "y^2"], [c, "xy"]);
+        return pointWith(
+          {
+            prompt: t(
+              `Calculate the gradient vector $\\nabla f(${x0}, ${y0})$ for $f(x, y) = ${f}$. Express your answer as a vector $\\langle x, y \\rangle$.`,
+              `计算函数 $f(x, y) = ${f}$ 的梯度向量 $\\nabla f(${x0}, ${y0})$。结果以向量 $\\langle x, y \\rangle$ 表示。`,
+            ),
+            answer: [ansX, ansY],
+            vector: true,
+            vars: ["x", "y"],
+            solution: walked(
+              [
+                [
+                  ["Find the partial derivatives", "求偏导数"],
+                  t(
+                    `$f_x = ${poly([2 * a, "x"], [c, "y"])}$ and $f_y = ${poly([2 * b, "y"], [c, "x"])}$.`,
+                    `$f_x = ${poly([2 * a, "x"], [c, "y"])}$，$f_y = ${poly([2 * b, "y"], [c, "x"])}$。`,
+                  ),
+                ],
+                [
+                  ["Substitute the point", "代入该点"],
+                  t(
+                    `$\\nabla f(${x0}, ${y0}) = \\langle ${ansX}, ${ansY} \\rangle$.`,
+                    `$\\nabla f(${x0}, ${y0}) = \\langle ${ansX}, ${ansY} \\rangle$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Along $y = ${y0}$, $f = ${poly([a, "x^2"], [c * y0, "x"], [b * y0 * y0, ""])}$, whose derivative $${poly([2 * a, "x"], [c * y0, ""])}$ is $${ansX}$ at $x = ${x0}$, the first component.`,
+                `沿 $y = ${y0}$，$f = ${poly([a, "x^2"], [c * y0, "x"], [b * y0 * y0, ""])}$，其导数 $${poly([2 * a, "x"], [c * y0, ""])}$ 在 $x = ${x0}$ 处为 $${ansX}$，正是第一个分量。`,
+              ),
+            ),
+          },
+          [
+            [
+              [ansY, ansX],
+              "The order is $\\langle f_x, f_y \\rangle$: the $x$-derivative comes first.",
+              "顺序是 $\\langle f_x, f_y \\rangle$：对 $x$ 的导数在前。",
+            ],
+            [
+              [2 * a * x0, 2 * b * y0],
+              `The cross term $${poly([c, "xy"])}$ contributes $${poly([c, "y"])}$ to $f_x$ and $${poly([c, "x"])}$ to $f_y$.`,
+              `交叉项 $${poly([c, "xy"])}$ 给 $f_x$ 贡献 $${poly([c, "y"])}$，给 $f_y$ 贡献 $${poly([c, "x"])}$。`,
+            ],
+            [
+              [2 * a * x0 + c * x0, 2 * b * y0 + c * y0],
+              `Differentiating $${poly([c, "xy"])}$ in $x$ leaves $${poly([c, "y"])}$, not $${poly([c, "x"])}$.`,
+              `$${poly([c, "xy"])}$ 对 $x$ 求导剩下 $${poly([c, "y"])}$，不是 $${poly([c, "x"])}$。`,
+            ],
+            [
+              [a * x0 + c * y0, b * y0 + c * x0],
+              "The power rule gives $2x$ for $x^2$ and $2y$ for $y^2$.",
+              "幂法则给出 $x^2$ 的导数 $2x$，$y^2$ 的导数 $2y$。",
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "the-length-of-the-gradient",
       title: t("The length of the gradient", "梯度的长度"),
       explanation: t(
-        "The gradient $\\nabla f = (f_x, f_y)$ points in the direction of fastest increase, and its length $|\\nabla f| = \\sqrt{f_x^2 + f_y^2}$ is that greatest rate of increase. To find $|\\nabla f|^2$ at a point, compute both partial derivatives there and add their squares.",
-        "梯度 $\\nabla f = (f_x, f_y)$ 指向增长最快的方向，其长度 $|\\nabla f| = \\sqrt{f_x^2 + f_y^2}$ 就是最大增长率。要求某点处的 $|\\nabla f|^2$，先算出该点的两个偏导数，再把它们的平方相加。",
+        "The gradient $\\nabla f = (f_x, f_y)$ points in the direction of fastest increase, and its length $|\\nabla f| = \\sqrt{f_x^2 + f_y^2}$ is that greatest rate of increase. To find $|\\nabla f|^2$ at a point, compute both partial derivatives there and add their squares. For $f = xy^2$ at $(3, 1)$: $f_x = y^2 = 1$ and $f_y = 2xy = 6$, so $|\\nabla f|^2 = 1 + 36 = 37$.\n\n> **Watch out.** Square each component before adding: $(f_x + f_y)^2$ carries an extra $2f_xf_y$. Both components count, even when one is small.",
+        "梯度 $\\nabla f = (f_x, f_y)$ 指向增长最快的方向，其长度 $|\\nabla f| = \\sqrt{f_x^2 + f_y^2}$ 就是最大增长率。要求某点处的 $|\\nabla f|^2$，先算出该点的两个偏导数，再把它们的平方相加。对 $f = xy^2$ 在 $(3, 1)$ 处：$f_x = y^2 = 1$，$f_y = 2xy = 6$，所以 $|\\nabla f|^2 = 1 + 36 = 37$。\n\n> **注意。** 要先把每个分量平方再相加：$(f_x + f_y)^2$ 多出 $2f_xf_y$。两个分量都要算，即使其中一个很小。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
         const b = rng.int(-3, 3) || 2;
         const p = rng.int(-3, 3) || 1;
-        const q = rng.int(-3, 3);
+        const q = rng.int(-3, 3) || -1;
         const fx = 2 * a * p * q;
         const fy = a * p * p + 2 * b * q;
         const ans = fx * fx + fy * fy;
+        const f = poly([a, "x^2y"], [b, "y^2"]);
         return numberProblem({
-          prompt: t(
-            `Find $|\\nabla f(${p}, ${q})|^2$ for $f(x, y) = ${poly([a, "x^2y"], [b, "y^2"])}$.`,
-            `对 $f(x, y) = ${poly([a, "x^2y"], [b, "y^2"])}$，求 $|\\nabla f(${p}, ${q})|^2$。`,
-          ),
+          prompt: t(`Find $|\\nabla f(${p}, ${q})|^2$ for $f(x, y) = ${f}$.`, `对 $f(x, y) = ${f}$，求 $|\\nabla f(${p}, ${q})|^2$。`),
           answer: ans,
-          wrong: [fx + fy, ans + 2 * fx * fy, fx * fx],
-          solution: t(
-            `$f_x = ${poly([2 * a, "xy"])} = ${fx}$ and $f_y = ${poly([a, "x^2"], [2 * b, "y"])} = ${fy}$ at the point, so $|\\nabla f|^2 = ${fx * fx} + ${fy * fy} = ${ans}$.`,
-            `在该点 $f_x = ${poly([2 * a, "xy"])} = ${fx}$，$f_y = ${poly([a, "x^2"], [2 * b, "y"])} = ${fy}$，所以 $|\\nabla f|^2 = ${fx * fx} + ${fy * fy} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              fx + fy,
+              "The length squared adds the squares of the components, not the components.",
+              "长度的平方是各分量平方之和，不是分量之和。",
+            ),
+            why(
+              (fx + fy) ** 2,
+              `Squaring the sum adds the cross term $2f_xf_y = ${2 * fx * fy}$; square each component separately.`,
+              `对和平方会多出交叉项 $2f_xf_y = ${2 * fx * fy}$；要分别把每个分量平方。`,
+            ),
+            why(fx * fx, `$f_y = ${fy}$ counts too: add $${fy * fy}$.`, `$f_y = ${fy}$ 也要算：还要加上 $${fy * fy}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the components", "求分量"],
+                t(
+                  `$f_x = ${poly([2 * a, "xy"])} = ${fx}$ and $f_y = ${poly([a, "x^2"], [2 * b, "y"])} = ${fy}$ at $(${p}, ${q})$.`,
+                  `在 $(${p}, ${q})$ 处 $f_x = ${poly([2 * a, "xy"])} = ${fx}$，$f_y = ${poly([a, "x^2"], [2 * b, "y"])} = ${fy}$。`,
+                ),
+              ],
+              [
+                ["Add the squares", "平方相加"],
+                t(`$|\\nabla f|^2 = ${fx * fx} + ${fy * fy} = ${ans}$.`, `$|\\nabla f|^2 = ${fx * fx} + ${fy * fy} = ${ans}$。`),
+              ],
+            ],
+            t(
+              `$(f_x + f_y)^2 - 2f_xf_y = ${(fx + fy) ** 2} - ${paren(2 * fx * fy)} = ${ans}$ as well.`,
+              `$(f_x + f_y)^2 - 2f_xf_y = ${(fx + fy) ** 2} - ${paren(2 * fx * fy)} = ${ans}$，结果相同。`,
+            ),
           ),
         });
       },
@@ -3236,6 +3772,10 @@ export const theGradientAsANormalVector: TopicDef = {
     "The gradient vector ∇F(x0, y0, z0) is orthogonal to the tangent plane of the level surface F(x, y, z) = k at that point.",
     "梯度向量 ∇F(x0, y0, z0) 与等值面 F(x, y, z) = k 在该点处的切平面正交。",
   ),
+  intro: t(
+    "On the sphere $x^2 + y^2 + z^2 = 9$ at $(1, 2, 2)$, $\\nabla F = \\langle 2x, 2y, 2z \\rangle = \\langle 2, 4, 4 \\rangle$, which points straight out from the center.\n\nCheck: $\\langle 2, -1, 0 \\rangle$ is tangent to the sphere there, since it is perpendicular to the radius $\\langle 1, 2, 2 \\rangle$, and $\\langle 2, 4, 4 \\rangle \\cdot \\langle 2, -1, 0 \\rangle = 4 - 4 + 0 = 0$.\n\nIn this lesson we use the gradient as a normal vector to a level surface and follow the normal line it gives.",
+    "在球面 $x^2 + y^2 + z^2 = 9$ 上的 $(1, 2, 2)$ 处，$\\nabla F = \\langle 2x, 2y, 2z \\rangle = \\langle 2, 4, 4 \\rangle$，它从球心笔直向外。\n\n检验：$\\langle 2, -1, 0 \\rangle$ 垂直于半径 $\\langle 1, 2, 2 \\rangle$，所以在该处与球面相切，而 $\\langle 2, 4, 4 \\rangle \\cdot \\langle 2, -1, 0 \\rangle = 4 - 4 + 0 = 0$。\n\n本课我们用梯度作为等值面的法向量，并沿它给出的法线前进。",
+  ),
   prerequisites: ["the-gradient-vector", "tangent-planes-to-surfaces"],
   encompasses: [{ topic: "the-gradient-vector", weight: 0.3 }],
   xp: 10,
@@ -3245,8 +3785,8 @@ export const theGradientAsANormalVector: TopicDef = {
       figure: multivariableDrawings2["the-gradient-as-a-normal-vector#normal-vectors-to-level-surfaces"],
       title: t("Normal vectors to level surfaces", "等值面的法向量"),
       explanation: t(
-        "For a level surface $F(x, y, z) = k$, the gradient vector $\\mathbf{n} = \\nabla F(x_0, y_0, z_0)$ is perpendicular to the tangent plane of the surface at $(x_0, y_0, z_0)$.",
-        "对于等值面 $F(x, y, z) = k$，梯度向量 $\\mathbf{n} = \\nabla F(x_0, y_0, z_0)$ 垂直于该曲面在点 $(x_0, y_0, z_0)$ 处的切平面。",
+        "For a level surface $F(x, y, z) = k$, the gradient vector $\\mathbf{n} = \\nabla F(x_0, y_0, z_0)$ is perpendicular to the tangent plane of the surface at $(x_0, y_0, z_0)$. For $xyz = 6$ at $(1, 2, 3)$, $\\nabla F = \\langle yz, xz, xy \\rangle = \\langle 6, 3, 2 \\rangle$.\n\n> **Watch out.** Each component carries the factor that differentiation brings down, such as the $2$ from a square, and must be evaluated at the point. The position vector of the point is normal only for a sphere centered at the origin.",
+        "对于等值面 $F(x, y, z) = k$，梯度向量 $\\mathbf{n} = \\nabla F(x_0, y_0, z_0)$ 垂直于该曲面在点 $(x_0, y_0, z_0)$ 处的切平面。对 $xyz = 6$ 在 $(1, 2, 3)$ 处，$\\nabla F = \\langle yz, xz, xy \\rangle = \\langle 6, 3, 2 \\rangle$。\n\n> **注意。** 每个分量都带着求导带下来的因子，比如平方带来的 $2$，并且要在该点求值。点的位置向量只有对以原点为中心的球面才是法向量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -3254,48 +3794,64 @@ export const theGradientAsANormalVector: TopicDef = {
         const c = rng.nonZero(-3, 3);
         const pt: Vec3 = [rng.nonZero(-2, 2), rng.nonZero(-2, 2), rng.nonZero(-2, 2)];
         const level = a * pt[0] ** 2 + b * pt[1] ** 2 + c * pt[2] ** 2;
-
-        const ansX = 2 * a * pt[0];
-        const ansY = 2 * b * pt[1];
-        const ansZ = 2 * c * pt[2];
-        const answer: Vec3 = [ansX, ansY, ansZ];
-
-        const prompt = t(
-          `The level surface $F(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${level}$ passes through the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Find the normal vector $\\nabla F$ to the surface at that point. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `等值面 $F(x, y, z) = ${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${level}$ 经过点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$。求该曲面在这一点的法向量 $\\nabla F$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
-        );
-        const solution = t(
-          steps(
-            `A normal vector is given by the gradient $\\nabla F = \\langle F_x, F_y, F_z \\rangle$.`,
-            `$F_x = ${2 * a}x$, $F_y = ${2 * b}y$, $F_z = ${2 * c}z$.`,
-            `Evaluating at $(${pt[0]}, ${pt[1]}, ${pt[2]})$ gives $\\mathbf{n} = ${v3L(answer)}$.`,
-          ),
-          steps(
-            `法向量由梯度给出：$\\nabla F = \\langle F_x, F_y, F_z \\rangle$。`,
-            `$F_x = ${2 * a}x$，$F_y = ${2 * b}y$，$F_z = ${2 * c}z$。`,
-            `在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处求值得到 $\\mathbf{n} = ${v3L(answer)}$。`,
-          ),
-        );
-        return pointProblem({
-          prompt,
-          solution,
-          answer,
-          vector: true,
-          vars: ["x", "y", "z"],
-          wrong: [
-            [ansX, ansY, -ansZ],
-            [-ansX, -ansY, -ansZ],
-            [a * pt[0], b * pt[1], c * pt[2]],
+        const answer: Vec3 = [2 * a * pt[0], 2 * b * pt[1], 2 * c * pt[2]];
+        const F = poly([a, "x^2"], [b, "y^2"], [c, "z^2"]);
+        const at = `(${pt[0]}, ${pt[1]}, ${pt[2]})`;
+        return pointWith(
+          {
+            prompt: t(
+              `The level surface $${F} = ${level}$ passes through the point $${at}$. Find the normal vector $\\nabla F$ to the surface at that point. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+              `等值面 $${F} = ${level}$ 经过点 $${at}$。求该曲面在这一点的法向量 $\\nabla F$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+            ),
+            answer,
+            vector: true,
+            vars: ["x", "y", "z"],
+            solution: walked(
+              [
+                [
+                  ["Differentiate", "求导"],
+                  t(
+                    `$\\nabla F = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle$.`,
+                    `$\\nabla F = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Substitute the point", "代入该点"],
+                  t(`At $${at}$, $\\nabla F = ${v3L(answer)}$.`, `在 $${at}$ 处，$\\nabla F = ${v3L(answer)}$。`),
+                ],
+              ],
+              t(
+                `Each term of $F$ is a square, so $\\nabla F \\cdot (x, y, z) = 2F$: $${answer[0]} \\cdot ${paren(pt[0])} + ${paren(answer[1])} \\cdot ${paren(pt[1])} + ${paren(answer[2])} \\cdot ${paren(pt[2])} = ${2 * level} = 2 \\cdot ${paren(level)}$.`,
+                `$F$ 的每一项都是平方项，所以 $\\nabla F \\cdot (x, y, z) = 2F$：$${answer[0]} \\cdot ${paren(pt[0])} + ${paren(answer[1])} \\cdot ${paren(pt[1])} + ${paren(answer[2])} \\cdot ${paren(pt[2])} = ${2 * level} = 2 \\cdot ${paren(level)}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [a * pt[0], b * pt[1], c * pt[2]],
+              "Differentiating a square brings down a factor $2$ in every component.",
+              "对平方项求导，每个分量都带下因子 $2$。",
+            ],
+            [
+              [2 * a, 2 * b, 2 * c],
+              `Evaluate the partial derivatives at $${at}$; they still contain $x$, $y$ and $z$.`,
+              `要在 $${at}$ 处求偏导数的值；它们还含有 $x$、$y$、$z$。`,
+            ],
+            [
+              [pt[0], pt[1], pt[2]],
+              "The position vector is normal only to a sphere centered at the origin; use $\\nabla F$.",
+              "位置向量只对以原点为中心的球面才是法向量；要用 $\\nabla F$。",
+            ],
           ],
-        });
+        );
       },
     },
     {
       id: "following-a-normal-line-to-a-plane",
       title: t("Following a normal line to a plane", "沿法线到达平面"),
       explanation: t(
-        "At a point on the level surface $F(x, y, z) = k$, the gradient $\\nabla F$ is normal to the surface, so the normal line is $(x_0, y_0, z_0) + s\\,\\nabla F(x_0, y_0, z_0)$. To find where it meets another surface, such as the plane $z = 0$, solve the $z$-equation for $s$ and substitute that $s$ into the other coordinates.",
-        "在等值面 $F(x, y, z) = k$ 上的点处，梯度 $\\nabla F$ 垂直于曲面，所以法线为 $(x_0, y_0, z_0) + s\\,\\nabla F(x_0, y_0, z_0)$。要求它与另一曲面（如平面 $z = 0$）的交点，先由 $z$ 的方程解出 $s$，再把 $s$ 代入其他坐标。",
+        "At a point on the level surface $F(x, y, z) = k$, the gradient $\\nabla F$ is normal to the surface, so the normal line is $(x_0, y_0, z_0) + s\\,\\nabla F(x_0, y_0, z_0)$. To find where it meets another surface, such as the plane $z = 0$, solve the $z$-equation for $s$ and substitute that $s$ into the other coordinates. For $2x^2 + y^2 + z^2 = 22$ at $(1, 2, 4)$, $\\nabla F = (4, 4, 8)$; $4 + 8s = 0$ gives $s = -\\frac{1}{2}$, so the line meets $z = 0$ at $x = 1 + 4 \\cdot \\left(-\\frac{1}{2}\\right) = -1$.\n\n> **Watch out.** $F_z = 2cz$ has the factor $2$, so $s = -\\frac{1}{2c}$, negative when $z_0 > 0$ because the line must come down. Use that same $s$ in the $x$-coordinate.",
+        "在等值面 $F(x, y, z) = k$ 上的点处，梯度 $\\nabla F$ 垂直于曲面，所以法线为 $(x_0, y_0, z_0) + s\\,\\nabla F(x_0, y_0, z_0)$。要求它与另一曲面（如平面 $z = 0$）的交点，先由 $z$ 的方程解出 $s$，再把 $s$ 代入其他坐标。对 $2x^2 + y^2 + z^2 = 22$ 在 $(1, 2, 4)$ 处，$\\nabla F = (4, 4, 8)$；由 $4 + 8s = 0$ 得 $s = -\\frac{1}{2}$，所以法线在 $x = 1 + 4 \\cdot \\left(-\\frac{1}{2}\\right) = -1$ 处与 $z = 0$ 相交。\n\n> **注意。** $F_z = 2cz$ 带有因子 $2$，所以 $s = -\\frac{1}{2c}$；当 $z_0 > 0$ 时它为负，因为直线必须向下。在 $x$ 坐标中要用同一个 $s$。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = [rng.int(1, 4), rng.int(1, 4), rng.int(1, 4)];
@@ -3304,16 +3860,55 @@ export const theGradientAsANormalVector: TopicDef = {
         const r = rng.int(1, 3) * rng.pick([-1, 1]);
         const k = a * p * p + b * q * q + c * r * r;
         const ans = Q.of(p * (c - a), c);
+        const s = Q.of(-1, 2 * c);
+        const surface = poly([a, "x^2"], [b, "y^2"], [c, "z^2"]);
         return numberProblem({
           prompt: t(
-            `The normal line to $${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${k}$ at $(${p}, ${q}, ${r})$ meets the plane $z = 0$. Find the $x$-coordinate of that point.`,
-            `$${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${k}$ 在 $(${p}, ${q}, ${r})$ 处的法线与平面 $z = 0$ 相交。求交点的 $x$ 坐标。`,
+            `The normal line to $${surface} = ${k}$ at $(${p}, ${q}, ${r})$ meets the plane $z = 0$. Find the $x$-coordinate of that point.`,
+            `$${surface} = ${k}$ 在 $(${p}, ${q}, ${r})$ 处的法线与平面 $z = 0$ 相交。求交点的 $x$ 坐标。`,
           ),
           answer: ans,
-          wrong: [Q.of(p * (c + a), c), Q.of(p), Q.of(p * (a - c), a)],
-          solution: t(
-            `$\\nabla F = (${2 * a * p}, ${2 * b * q}, ${2 * c * r})$. The $z$-coordinate $${r} ${2 * c * r < 0 ? "-" : "+"} ${Math.abs(2 * c * r)}s$ is $0$ at $s = ${Q.of(-1, 2 * c).toLatex()}$, so $x = ${p} + ${paren(2 * a * p)} \\cdot \\left(${Q.of(-1, 2 * c).toLatex()}\\right) = ${ans.toLatex()}$.`,
-            `$\\nabla F = (${2 * a * p}, ${2 * b * q}, ${2 * c * r})$。$z$ 坐标 $${r} ${2 * c * r < 0 ? "-" : "+"} ${Math.abs(2 * c * r)}s$ 在 $s = ${Q.of(-1, 2 * c).toLatex()}$ 时为 $0$，所以 $x = ${p} + ${paren(2 * a * p)} \\cdot \\left(${Q.of(-1, 2 * c).toLatex()}\\right) = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(p * (c + a), c),
+              `Solving $${r} + ${paren(2 * c * r)}s = 0$ gives a negative $s = ${s.toLatex()}$, which moves $x$ by $${paren(2 * a * p)} \\cdot ${paren(s)}$.`,
+              `解 $${r} + ${paren(2 * c * r)}s = 0$ 得到负的 $s = ${s.toLatex()}$，$x$ 的移动量为 $${paren(2 * a * p)} \\cdot ${paren(s)}$。`,
+            ),
+            why(p, "Along the normal line $x$ changes too, unless $F_x = 0$.", "沿法线 $x$ 也会变化，除非 $F_x = 0$。"),
+            why(
+              Q.of(p * (c - 2 * a), c),
+              `$F_z = ${2 * c}z$ has the factor $2$, so $s = ${s.toLatex()}$, not $${Q.of(-1, c).toLatex()}$.`,
+              `$F_z = ${2 * c}z$ 带有因子 $2$，所以 $s = ${s.toLatex()}$，不是 $${Q.of(-1, c).toLatex()}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the normal", "求法向量"],
+                t(
+                  `$\\nabla F = (${2 * a * p}, ${2 * b * q}, ${2 * c * r})$ at the point.`,
+                  `在该点 $\\nabla F = (${2 * a * p}, ${2 * b * q}, ${2 * c * r})$。`,
+                ),
+              ],
+              [
+                ["Solve for s", "解出 s"],
+                t(
+                  `$z = ${r} + ${paren(2 * c * r)}s = 0$ gives $s = ${s.toLatex()}$.`,
+                  `由 $z = ${r} + ${paren(2 * c * r)}s = 0$ 得 $s = ${s.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Substitute into x", "代入 x"],
+                t(
+                  `$x = ${p} + ${paren(2 * a * p)} \\cdot ${paren(s)} = ${ans.toLatex()}$.`,
+                  `$x = ${p} + ${paren(2 * a * p)} \\cdot ${paren(s)} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The step from the meeting point back to $(${p}, ${q}, ${r})$ is $\\left(${Q.of(a * p, c).toLatex()}, ${Q.of(b * q, c).toLatex()}, ${r}\\right)$, which is $\\frac{1}{${2 * c}}\\nabla F$, so it runs along the normal.`,
+              `从交点回到 $(${p}, ${q}, ${r})$ 的位移为 $\\left(${Q.of(a * p, c).toLatex()}, ${Q.of(b * q, c).toLatex()}, ${r}\\right)$，等于 $\\frac{1}{${2 * c}}\\nabla F$，所以确实沿着法线。`,
+            ),
           ),
         });
       },
@@ -3329,6 +3924,10 @@ export const tangentLinesToLevelCurves: TopicDef = {
     "The tangent line to the level curve f(x, y) = k at (x0, y0) has normal vector ∇f(x0, y0) and equation fx(x - x0) + fy(y - y0) = 0.",
     "等值线 f(x, y) = k 在 (x0, y0) 处的切线以 ∇f(x0, y0) 为法向量，其方程为 fx(x - x0) + fy(y - y0) = 0。",
   ),
+  intro: t(
+    "On the level curve $x^3 + y^3 = 9$ at $(1, 2)$, $\\nabla f = \\langle 3x^2, 3y^2 \\rangle = \\langle 3, 12 \\rangle$. The tangent line is $3(x - 1) + 12(y - 2) = 0$, or $x + 4y = 9$, with slope $-\\frac{1}{4}$.\n\nCheck: the point fits, $1 + 8 = 9$, and implicit differentiation gives $3x^2 + 3y^2y' = 0$, so $y' = -\\frac{3}{12} = -\\frac{1}{4}$.\n\nIn this lesson we find the tangent line to a level curve from the gradient, and its slope.",
+    "在等值线 $x^3 + y^3 = 9$ 上的 $(1, 2)$ 处，$\\nabla f = \\langle 3x^2, 3y^2 \\rangle = \\langle 3, 12 \\rangle$。切线为 $3(x - 1) + 12(y - 2) = 0$，即 $x + 4y = 9$，斜率为 $-\\frac{1}{4}$。\n\n检验：该点满足 $1 + 8 = 9$；隐函数求导得 $3x^2 + 3y^2y' = 0$，所以 $y' = -\\frac{3}{12} = -\\frac{1}{4}$。\n\n本课我们由梯度求等值线的切线及其斜率。",
+  ),
   prerequisites: ["the-gradient-vector"],
   encompasses: [{ topic: "the-gradient-vector", weight: 0.3 }],
   xp: 10,
@@ -3337,45 +3936,69 @@ export const tangentLinesToLevelCurves: TopicDef = {
       id: "finding-tangent-lines-to-level-curves",
       title: t("Finding tangent lines to level curves", "求等值线的切线方程"),
       explanation: t(
-        "Because $\\nabla f(x_0, y_0) = \\langle A, B \\rangle$ is normal to the level curve $f(x, y) = k$ at $(x_0, y_0)$, the equation of the tangent line is:\n\n$$A(x - x_0) + B(y - y_0) = 0 \\iff Ax + By = Ax_0 + By_0.$$",
-        "因为 $\\nabla f(x_0, y_0) = \\langle A, B \\rangle$ 垂直于等值线 $f(x, y) = k$ 在 $(x_0, y_0)$ 处的切线，所以切线方程为：\n\n$$A(x - x_0) + B(y - y_0) = 0 \\iff Ax + By = Ax_0 + By_0$$",
+        "Because $\\nabla f(x_0, y_0) = \\langle A, B \\rangle$ is normal to the level curve $f(x, y) = k$ at $(x_0, y_0)$, the equation of the tangent line is:\n\n$$A(x - x_0) + B(y - y_0) = 0 \\iff Ax + By = Ax_0 + By_0.$$\n\nFor $xy = 6$ at $(2, 3)$, $\\nabla f = \\langle y, x \\rangle = \\langle 3, 2 \\rangle$, so the tangent line is $3x + 2y = 12$.\n\n> **Watch out.** The gradient is normal to the line: its components are the coefficients of $x$ and $y$, not a direction along the line. The right side is $Ax_0 + By_0$, so that the point lies on the line.",
+        "因为 $\\nabla f(x_0, y_0) = \\langle A, B \\rangle$ 垂直于等值线 $f(x, y) = k$ 在 $(x_0, y_0)$ 处的切线，所以切线方程为：\n\n$$A(x - x_0) + B(y - y_0) = 0 \\iff Ax + By = Ax_0 + By_0$$\n\n对 $xy = 6$ 在 $(2, 3)$ 处，$\\nabla f = \\langle y, x \\rangle = \\langle 3, 2 \\rangle$，所以切线为 $3x + 2y = 12$。\n\n> **注意。** 梯度垂直于切线：它的分量是 $x$ 和 $y$ 的系数，而不是沿切线的方向。右边是 $Ax_0 + By_0$，这样该点才在直线上。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         let x0 = rng.int(-3, 3);
         const y0 = rng.int(-3, 3);
-        if (x0 === 0 && y0 === 0) {
-          x0 = rng.pick([-1, 1]);
-        }
-
+        if (x0 === 0 && y0 === 0) x0 = rng.pick([-1, 1]);
         const A = 2 * a * x0;
         const B = 2 * b * y0;
         const C = A * x0 + B * y0;
         const answer = `${poly([A, "x"], [B, "y"])} = ${C}`;
-
-        const prompt = t(
-          `Find the equation of the tangent line to the level curve $${poly([a, "x^2"], [b, "y^2"])} = ${a * x0 * x0 + b * y0 * y0}$ at the point $(${x0}, ${y0})$.`,
-          `求等值线 $${poly([a, "x^2"], [b, "y^2"])} = ${a * x0 * x0 + b * y0 * y0}$ 在点 $(${x0}, ${y0})$ 处的切线方程。`,
+        const curve = poly([a, "x^2"], [b, "y^2"]);
+        const k = a * x0 * x0 + b * y0 * y0;
+        return equationWith(
+          {
+            prompt: t(
+              `Find the equation of the tangent line to the level curve $${curve} = ${k}$ at the point $(${x0}, ${y0})$.`,
+              `求等值线 $${curve} = ${k}$ 在点 $(${x0}, ${y0})$ 处的切线方程。`,
+            ),
+            answer,
+            solution: walked(
+              [
+                [
+                  ["Find the gradient", "求梯度"],
+                  t(
+                    `$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])} \\rangle = \\langle ${A}, ${B} \\rangle$ at $(${x0}, ${y0})$.`,
+                    `在 $(${x0}, ${y0})$ 处 $\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])} \\rangle = \\langle ${A}, ${B} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Use it as the normal", "以它为法向量"],
+                  t(
+                    `$${A}(x - ${paren(x0)}) + ${paren(B)}(y - ${paren(y0)}) = 0$, that is $${answer}$.`,
+                    `$${A}(x - ${paren(x0)}) + ${paren(B)}(y - ${paren(y0)}) = 0$，即 $${answer}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The point lies on the line: $${A} \\cdot ${paren(x0)} + ${paren(B)} \\cdot ${paren(y0)} = ${C}$, and the line is perpendicular to $\\nabla f$, as a tangent must be.`,
+                `该点在直线上：$${A} \\cdot ${paren(x0)} + ${paren(B)} \\cdot ${paren(y0)} = ${C}$，且直线垂直于 $\\nabla f$，切线正应如此。`,
+              ),
+            ),
+          },
+          [
+            say(
+              `${poly([B, "x"], [A, "y"])} = ${C}`,
+              "The coefficients are swapped: $f_x$ goes with $x$ and $f_y$ with $y$.",
+              "系数颠倒了：$f_x$ 对应 $x$，$f_y$ 对应 $y$。",
+            ),
+            say(
+              `${poly([B, "x"], [-A, "y"])} = ${B * x0 - A * y0}`,
+              "That line runs along $\\nabla f$: it is the normal line. The tangent line is perpendicular to the gradient.",
+              "那条直线沿着 $\\nabla f$：它是法线。切线垂直于梯度。",
+            ),
+            say(
+              `${poly([A, "x"], [B, "y"])} = 0`,
+              `The right side is $Ax_0 + By_0 = ${C}$, so that the point lies on the line.`,
+              `右边是 $Ax_0 + By_0 = ${C}$，这样该点才在直线上。`,
+            ),
+          ],
         );
-        const solution = t(
-          steps(
-            `The normal vector to the curve is the gradient: $\\nabla f(${x0}, ${y0}) = \\langle ${A}, ${B} \\rangle$.`,
-            `The tangent line equation is $${A}(x - (${x0})) + ${paren(B)}(y - (${y0})) = 0$.`,
-            `Rearranging yields $${answer}$.`,
-          ),
-          steps(
-            `曲线的法向量为梯度：$\\nabla f(${x0}, ${y0}) = \\langle ${A}, ${B} \\rangle$。`,
-            `切线方程为 $${A}(x - (${x0})) + ${paren(B)}(y - (${y0})) = 0$。`,
-            `整理得到 $${answer}$。`,
-          ),
-        );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [`${poly([B, "x"], [A, "y"])} = ${C}`, `${poly([A, "x"], [-B, "y"])} = ${C}`, `${poly([a, "x"], [b, "y"])} = ${C}`],
-        });
       },
     },
     {
@@ -3383,30 +4006,63 @@ export const tangentLinesToLevelCurves: TopicDef = {
       figure: multivariableDrawings2["tangent-lines-to-level-curves#the-slope-of-a-level-curve"],
       title: t("The slope of a level curve", "等值线的斜率"),
       explanation: t(
-        "The gradient $(f_x, f_y)$ is perpendicular to the level curve through a point, so the tangent line has direction $(f_y, -f_x)$ and slope\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}$$\n\nwhenever $f_y \\ne 0$. This is implicit differentiation written with partial derivatives.",
-        "梯度 $(f_x, f_y)$ 垂直于过该点的等值线，所以切线方向为 $(f_y, -f_x)$，在 $f_y \\ne 0$ 时斜率为\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}.$$\n\n这就是用偏导数写出的隐函数求导。",
+        "The gradient $(f_x, f_y)$ is perpendicular to the level curve through a point, so the tangent line has direction $(f_y, -f_x)$ and slope\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}$$\n\nwhenever $f_y \\ne 0$. This is implicit differentiation written with partial derivatives. For $x^3 + xy = 10$ at $(2, 1)$: $f_x = 3x^2 + y = 13$ and $f_y = x = 2$, so the slope is $-\\frac{13}{2}$.\n\n> **Watch out.** Keep the minus sign and put $f_x$ on top. $\\frac{f_y}{f_x}$ is the slope of the gradient itself, which is perpendicular to the curve.",
+        "梯度 $(f_x, f_y)$ 垂直于过该点的等值线，所以切线方向为 $(f_y, -f_x)$，在 $f_y \\ne 0$ 时斜率为\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}.$$\n\n这就是用偏导数写出的隐函数求导。对 $x^3 + xy = 10$ 在 $(2, 1)$ 处：$f_x = 3x^2 + y = 13$，$f_y = x = 2$，所以斜率为 $-\\frac{13}{2}$。\n\n> **注意。** 要保留负号，并把 $f_x$ 放在分子。$\\frac{f_y}{f_x}$ 是梯度本身的斜率，而梯度垂直于曲线。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(-3, 3) || 1;
-        const b = rng.int(-4, 4);
-        const c = rng.int(-3, 3) || 2;
-        const p = rng.int(-3, 3);
-        let q = rng.int(-3, 3) || 1;
-        if (b * p + 2 * c * q === 0) q += 1;
+        let a = 0;
+        let b = 0;
+        let c = 0;
+        let p = 0;
+        let q = 0;
+        do {
+          a = rng.int(-3, 3) || 1;
+          b = rng.int(-4, 4);
+          c = rng.int(-3, 3) || 2;
+          p = rng.int(-3, 3);
+          q = rng.int(-3, 3) || 1;
+        } while (2 * a * p + b * q === 0 || b * p + 2 * c * q === 0);
         const fx = 2 * a * p + b * q;
         const fy = b * p + 2 * c * q;
         const ans = Q.of(-fx, fy);
         const k = a * p * p + b * p * q + c * q * q;
+        const curve = poly([a, "x^2"], [b, "xy"], [c, "y^2"]);
         return numberProblem({
           prompt: t(
-            `Find the slope of the tangent line to the level curve $${poly([a, "x^2"], [b, "xy"], [c, "y^2"])} = ${k}$ at $(${p}, ${q})$.`,
-            `求等值线 $${poly([a, "x^2"], [b, "xy"], [c, "y^2"])} = ${k}$ 在 $(${p}, ${q})$ 处切线的斜率。`,
+            `Find the slope of the tangent line to the level curve $${curve} = ${k}$ at $(${p}, ${q})$.`,
+            `求等值线 $${curve} = ${k}$ 在 $(${p}, ${q})$ 处切线的斜率。`,
           ),
           answer: ans,
-          wrong: [Q.of(fx, fy), Q.of(fy, fx === 0 ? 1 : fx), Q.of(-fy, fx === 0 ? 1 : fx)],
-          solution: t(
-            `$f_x = ${fx}$ and $f_y = ${fy}$ at the point, so the slope is $-\\frac{f_x}{f_y} = ${ans.toLatex()}$.`,
-            `在该点 $f_x = ${fx}$，$f_y = ${fy}$，所以斜率为 $-\\frac{f_x}{f_y} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(Q.of(fx, fy), "The slope is $-\\frac{f_x}{f_y}$: keep the minus sign.", "斜率是 $-\\frac{f_x}{f_y}$：要保留负号。"),
+            why(
+              Q.of(fy, fx),
+              "That is the slope of the gradient, which is perpendicular to the curve.",
+              "那是梯度的斜率，而梯度垂直于曲线。",
+            ),
+            why(Q.of(-fy, fx), "The fraction is upside down: $f_x$ goes on top.", "分式上下颠倒了：$f_x$ 在分子。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the partial derivatives", "求偏导数"],
+                t(
+                  `$f_x = ${poly([2 * a, "x"], [b, "y"])} = ${fx}$ and $f_y = ${poly([b, "x"], [2 * c, "y"])} = ${fy}$ at $(${p}, ${q})$.`,
+                  `在 $(${p}, ${q})$ 处 $f_x = ${poly([2 * a, "x"], [b, "y"])} = ${fx}$，$f_y = ${poly([b, "x"], [2 * c, "y"])} = ${fy}$。`,
+                ),
+              ],
+              [
+                ["Divide", "相除"],
+                t(
+                  `$\\frac{dy}{dx} = -\\frac{${fx}}{${fy}} = ${ans.toLatex()}$.`,
+                  `$\\frac{dy}{dx} = -\\frac{${fx}}{${fy}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The direction $(1, ${ans.toLatex()})$ is perpendicular to $\\nabla f$: $${fx} + ${paren(fy)} \\cdot ${paren(ans)} = 0$.`,
+              `方向 $(1, ${ans.toLatex()})$ 垂直于 $\\nabla f$：$${fx} + ${paren(fy)} \\cdot ${paren(ans)} = 0$。`,
+            ),
           ),
         });
       },
@@ -3422,6 +4078,10 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
     "The tangent plane to F(x, y, z) = k at (x0, y0, z0) is Fx(x - x0) + Fy(y - y0) + Fz(z - z0) = 0.",
     "等值面 F(x, y, z) = k 在 (x0, y0, z0) 处的切平面方程为 Fx(x - x0) + Fy(y - y0) + Fz(z - z0) = 0。",
   ),
+  intro: t(
+    "For $xy + z^2 = 7$ at $(3, 2, 1)$, $\\nabla F = \\langle y, x, 2z \\rangle = \\langle 2, 3, 2 \\rangle$. The tangent plane is $2(x - 3) + 3(y - 2) + 2(z - 1) = 0$, or $2x + 3y + 2z = 14$.\n\nCheck: the point fits, $6 + 6 + 2 = 14$.\n\nIn this lesson we write tangent planes to surfaces given by an equation $F(x, y, z) = k$, and find their intercepts.",
+    "对 $xy + z^2 = 7$ 在 $(3, 2, 1)$ 处，$\\nabla F = \\langle y, x, 2z \\rangle = \\langle 2, 3, 2 \\rangle$。切平面为 $2(x - 3) + 3(y - 2) + 2(z - 1) = 0$，即 $2x + 3y + 2z = 14$。\n\n检验：该点满足 $6 + 6 + 2 = 14$。\n\n本课我们写出由方程 $F(x, y, z) = k$ 给出的曲面的切平面，并求它的截距。",
+  ),
   prerequisites: ["the-gradient-as-a-normal-vector"],
   encompasses: [{ topic: "the-gradient-as-a-normal-vector", weight: 0.3 }],
   xp: 10,
@@ -3431,60 +4091,79 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
       figure: multivariableDrawings2["tangent-planes-to-level-surfaces#computing-tangent-planes-to-implicit-surfaces"],
       title: t("Computing tangent planes to implicit surfaces", "计算隐式曲面的切平面"),
       explanation: t(
-        "The gradient is perpendicular to every level surface, so the gradient at the point serves as the normal vector of the tangent plane. For an implicitly defined surface $F(x, y, z) = k$, the tangent plane at $(x_0, y_0, z_0)$ has normal $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$:\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0.$$",
-        "梯度垂直于每个等值面，所以该点处的梯度可以作为切平面的法向量。对于隐式曲面 $F(x, y, z) = k$，其在点 $(x_0, y_0, z_0)$ 处的切平面以 $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$ 为法向量：\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0$$",
+        "The gradient is perpendicular to every level surface, so the gradient at the point serves as the normal vector of the tangent plane. For an implicitly defined surface $F(x, y, z) = k$, the tangent plane at $(x_0, y_0, z_0)$ has normal $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$:\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0.$$\n\nFor $x^2y + z = 5$ at $(1, 2, 3)$, $\\nabla F = \\langle 2xy, x^2, 1 \\rangle = \\langle 4, 1, 1 \\rangle$, so the plane is $4x + y + z = 9$.\n\n> **Watch out.** The right side is $\\nabla F \\cdot (x_0, y_0, z_0)$, not the level $k$, and not $0$. Each coefficient belongs to its own variable.",
+        "梯度垂直于每个等值面，所以该点处的梯度可以作为切平面的法向量。对于隐式曲面 $F(x, y, z) = k$，其在点 $(x_0, y_0, z_0)$ 处的切平面以 $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$ 为法向量：\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0$$\n\n对 $x^2y + z = 5$ 在 $(1, 2, 3)$ 处，$\\nabla F = \\langle 2xy, x^2, 1 \\rangle = \\langle 4, 1, 1 \\rangle$，所以切平面为 $4x + y + z = 9$。\n\n> **注意。** 右边是 $\\nabla F \\cdot (x_0, y_0, z_0)$，不是等值 $k$，也不是 $0$。每个系数对应它自己的变量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
         const c = rng.nonZero(-3, 3);
         let pt: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
-        if (pt[0] === 0 && pt[1] === 0 && pt[2] === 0) {
-          pt = [rng.pick([-1, 1]), pt[1], pt[2]];
-        }
-
+        if (pt[0] === 0 && pt[1] === 0 && pt[2] === 0) pt = [rng.pick([-1, 1]), pt[1], pt[2]];
         const A = 2 * a * pt[0];
         const B = 2 * b * pt[1];
         const C = 2 * c * pt[2];
         const D = A * pt[0] + B * pt[1] + C * pt[2];
+        const level = a * pt[0] ** 2 + b * pt[1] ** 2 + c * pt[2] ** 2;
         const answer = `${poly([A, "x"], [B, "y"], [C, "z"])} = ${D}`;
-
-        const prompt = t(
-          `Find the equation of the tangent plane to the surface $${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${a * pt[0] * pt[0] + b * pt[1] * pt[1] + c * pt[2] * pt[2]}$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$.`,
-          `求曲面 $${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${a * pt[0] * pt[0] + b * pt[1] * pt[1] + c * pt[2] * pt[2]}$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的切平面方程。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the gradient: $\\nabla F = \\langle ${2 * a}x, ${2 * b}y, ${2 * c}z \\rangle$.`,
-            `At $(${pt[0]}, ${pt[1]}, ${pt[2]})$, $\\nabla F = \\langle ${A}, ${B}, ${C} \\rangle$.`,
-            `The tangent plane is $${A}(x - (${pt[0]})) + ${paren(B)}(y - (${pt[1]})) + ${paren(C)}(z - (${pt[2]})) = 0$.`,
-            `Simplifying gives $${answer}$.`,
-          ),
-          steps(
-            `计算梯度：$\\nabla F = \\langle ${2 * a}x, ${2 * b}y, ${2 * c}z \\rangle$。`,
-            `在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处，$\\nabla F = \\langle ${A}, ${B}, ${C} \\rangle$。`,
-            `切平面方程为 $${A}(x - (${pt[0]})) + ${paren(B)}(y - (${pt[1]})) + ${paren(C)}(z - (${pt[2]})) = 0$。`,
-            `化简得 $${answer}$。`,
-          ),
-        );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [
-            `${poly([B, "x"], [A, "y"], [C, "z"])} = ${D}`,
-            `${poly([A, "x"], [B, "y"], [-C, "z"])} = ${D}`,
-            `${poly([a, "x"], [b, "y"], [c, "z"])} = ${D}`,
+        const F = poly([a, "x^2"], [b, "y^2"], [c, "z^2"]);
+        const at = `(${pt[0]}, ${pt[1]}, ${pt[2]})`;
+        return equationWith(
+          {
+            prompt: t(
+              `Find the equation of the tangent plane to the surface $${F} = ${level}$ at the point $${at}$.`,
+              `求曲面 $${F} = ${level}$ 在点 $${at}$ 处的切平面方程。`,
+            ),
+            answer,
+            solution: walked(
+              [
+                [
+                  ["Find the normal", "求法向量"],
+                  t(
+                    `$\\nabla F = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle = \\langle ${A}, ${B}, ${C} \\rangle$ at $${at}$.`,
+                    `在 $${at}$ 处 $\\nabla F = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])}, ${poly([2 * c, "z"])} \\rangle = \\langle ${A}, ${B}, ${C} \\rangle$。`,
+                  ),
+                ],
+                [
+                  ["Write the plane", "写出平面"],
+                  t(
+                    `$${A}(x - ${paren(pt[0])}) + ${paren(B)}(y - ${paren(pt[1])}) + ${paren(C)}(z - ${paren(pt[2])}) = 0$, that is $${answer}$.`,
+                    `$${A}(x - ${paren(pt[0])}) + ${paren(B)}(y - ${paren(pt[1])}) + ${paren(C)}(z - ${paren(pt[2])}) = 0$，即 $${answer}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `For a sum of squares $\\nabla F \\cdot (x_0, y_0, z_0) = 2k$, and indeed $${D} = 2 \\cdot ${paren(level)}$.`,
+                `对平方和形式的 $F$，$\\nabla F \\cdot (x_0, y_0, z_0) = 2k$，而确实 $${D} = 2 \\cdot ${paren(level)}$。`,
+              ),
+            ),
+          },
+          [
+            say(
+              `${poly([B, "x"], [A, "y"], [C, "z"])} = ${D}`,
+              "The coefficients of $x$ and $y$ are swapped: $F_x$ goes with $x$.",
+              "$x$ 和 $y$ 的系数颠倒了：$F_x$ 对应 $x$。",
+            ),
+            say(
+              `${poly([A, "x"], [B, "y"], [C, "z"])} = ${level}`,
+              `The right side is $\\nabla F \\cdot ${at} = ${D}$, not the level $${level}$.`,
+              `右边是 $\\nabla F \\cdot ${at} = ${D}$，不是等值 $${level}$。`,
+            ),
+            say(
+              `${poly([A, "x"], [B, "y"], [C, "z"])} = 0`,
+              "That plane passes through the origin; the tangent plane passes through the point.",
+              "那个平面经过原点；切平面应经过该点。",
+            ),
           ],
-        });
+        );
       },
     },
     {
       id: "intercepts-of-a-tangent-plane-to-xyz-equals-k",
       title: t("Intercepts of a tangent plane to xyz = k", "xyz = k 切平面的截距"),
       explanation: t(
-        "For $F(x, y, z) = xyz$ the gradient at $(p, q, r)$ is $(qr, pr, pq)$, so the tangent plane to $xyz = pqr$ there is $qr(x - p) + pr(y - q) + pq(z - r) = 0$. Dividing by $pqr$ gives\n\n$$\\frac{x}{p} + \\frac{y}{q} + \\frac{z}{r} = 3,$$\n\nso the intercepts are $3p$, $3q$ and $3r$.",
-        "对 $F(x, y, z) = xyz$，在 $(p, q, r)$ 处的梯度为 $(qr, pr, pq)$，所以 $xyz = pqr$ 在该点的切平面为 $qr(x - p) + pr(y - q) + pq(z - r) = 0$。两边除以 $pqr$ 得\n\n$$\\frac{x}{p} + \\frac{y}{q} + \\frac{z}{r} = 3,$$\n\n所以截距为 $3p$、$3q$ 和 $3r$。",
+        "For $F(x, y, z) = xyz$ the gradient at $(p, q, r)$ is $(qr, pr, pq)$, so the tangent plane to $xyz = pqr$ there is $qr(x - p) + pr(y - q) + pq(z - r) = 0$. Dividing by $pqr$ gives\n\n$$\\frac{x}{p} + \\frac{y}{q} + \\frac{z}{r} = 3,$$\n\nso the intercepts are $3p$, $3q$ and $3r$. For $xyz = 12$ at $(1, 2, 6)$ they are $3$, $6$ and $18$, with sum $27$.\n\n> **Watch out.** The right side is $3$, not $1$, so each intercept is three times the coordinate, with its sign. The normal is $(qr, pr, pq)$, not $(p, q, r)$.",
+        "对 $F(x, y, z) = xyz$，在 $(p, q, r)$ 处的梯度为 $(qr, pr, pq)$，所以 $xyz = pqr$ 在该点的切平面为 $qr(x - p) + pr(y - q) + pq(z - r) = 0$。两边除以 $pqr$ 得\n\n$$\\frac{x}{p} + \\frac{y}{q} + \\frac{z}{r} = 3,$$\n\n所以截距为 $3p$、$3q$ 和 $3r$。对 $xyz = 12$ 在 $(1, 2, 6)$ 处，截距为 $3$、$6$、$18$，其和为 $27$。\n\n> **注意。** 右边是 $3$，不是 $1$，所以每个截距是坐标的三倍，并带着坐标的符号。法向量是 $(qr, pr, pq)$，不是 $(p, q, r)$。",
       ),
       generate(rng: Rng): Problem {
         const nz = (): number => rng.int(1, 5) * rng.pick([-1, 1]);
@@ -3493,16 +4172,52 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
         const term = (v: string, d: number, first: boolean): string =>
           `${d < 0 ? "-" : first ? "" : "+"} ${Math.abs(d) === 1 ? v : `\\frac{${v}}{${Math.abs(d)}}`}`;
         const plane = `${term("x", p, true)} ${term("y", q, false)} ${term("z", r, false)}`.trim();
+        const S = p * p + q * q + r * r;
+        const sphere = Q.of(S, p).add(Q.of(S, q)).add(Q.of(S, r));
         return numberProblem({
           prompt: t(
             `Find the sum of the $x$-, $y$- and $z$-intercepts of the tangent plane to $xyz = ${p * q * r}$ at $(${p}, ${q}, ${r})$.`,
             `求 $xyz = ${p * q * r}$ 在 $(${p}, ${q}, ${r})$ 处切平面的 $x$、$y$、$z$ 截距之和。`,
           ),
           answer: ans,
-          wrong: [p + q + r, 2 * (p + q + r), 3 * p * q * r],
-          solution: t(
-            `The tangent plane is $${plane} = 3$, with intercepts $${3 * p}$, $${3 * q}$, $${3 * r}$, whose sum is $${ans}$.`,
-            `切平面为 $${plane} = 3$，截距为 $${3 * p}$、$${3 * q}$、$${3 * r}$，其和为 $${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              p + q + r,
+              "Dividing the plane by $pqr$ leaves $3$ on the right, so each intercept is three times the coordinate.",
+              "平面方程除以 $pqr$ 后右边是 $3$，所以每个截距是坐标的三倍。",
+            ),
+            why(
+              3 * (Math.abs(p) + Math.abs(q) + Math.abs(r)),
+              "An intercept keeps the sign of its coordinate.",
+              "截距带着对应坐标的符号。",
+            ),
+            why(
+              sphere,
+              "$(p, q, r)$ is normal to a sphere, not to $xyz = k$; the normal here is $(qr, pr, pq)$.",
+              "$(p, q, r)$ 是球面的法向量，不是 $xyz = k$ 的；这里的法向量是 $(qr, pr, pq)$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the plane", "写出平面"],
+                t(
+                  `$\\nabla F = (${q * r}, ${p * r}, ${p * q})$, and dividing $${q * r}(x - ${paren(p)}) + ${paren(p * r)}(y - ${paren(q)}) + ${paren(p * q)}(z - ${paren(r)}) = 0$ by $${p * q * r}$ gives $${plane} = 3$.`,
+                  `$\\nabla F = (${q * r}, ${p * r}, ${p * q})$，把 $${q * r}(x - ${paren(p)}) + ${paren(p * r)}(y - ${paren(q)}) + ${paren(p * q)}(z - ${paren(r)}) = 0$ 除以 $${p * q * r}$ 得 $${plane} = 3$。`,
+                ),
+              ],
+              [
+                ["Add the intercepts", "截距相加"],
+                t(
+                  `The intercepts are $${3 * p}$, $${3 * q}$ and $${3 * r}$, with sum $${ans}$.`,
+                  `截距为 $${3 * p}$、$${3 * q}$ 和 $${3 * r}$，其和为 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point lies on the plane: $\\frac{${p}}{${p}} + \\frac{${q}}{${q}} + \\frac{${r}}{${r}} = 3$, and the $x$-intercept $(${3 * p}, 0, 0)$ gives $\\frac{${3 * p}}{${p}} = 3$.`,
+              `该点在平面上：$\\frac{${p}}{${p}} + \\frac{${q}}{${q}} + \\frac{${r}}{${r}} = 3$；$x$ 截距 $(${3 * p}, 0, 0)$ 也给出 $\\frac{${3 * p}}{${p}} = 3$。`,
+            ),
           ),
         });
       },
@@ -3518,6 +4233,10 @@ export const directionalDerivatives: TopicDef = {
     "The directional derivative Du f(x0, y0) = ∇f(x0, y0) · u measures the rate of change of f in the direction of the unit vector u.",
     "方向导数 Du f(x0, y0) = ∇f(x0, y0) · u 度量函数 f 沿单位向量 u 方向的变化率。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2y$ at $(1, 3)$ in the direction $\\mathbf{u} = \\left(\\frac{3}{5}, \\frac{4}{5}\\right)$: $\\nabla f = (2xy, x^2) = (6, 1)$, so $D_{\\mathbf{u}}f = \\frac{18}{5} + \\frac{4}{5} = \\frac{22}{5} = 4.4$.\n\nCheck: a step of $0.05$ along $\\mathbf{u}$ reaches $(1.03, 3.04)$, where $f = 1.0609 \\cdot 3.04 \\approx 3.2251$, and $\\frac{3.2251 - 3}{0.05} \\approx 4.5$, close to $4.4$.\n\nIn this lesson we compute directional derivatives with unit vectors, including the direction toward a given point.",
+    "对 $f(x, y) = x^2y$ 在 $(1, 3)$ 处沿方向 $\\mathbf{u} = \\left(\\frac{3}{5}, \\frac{4}{5}\\right)$：$\\nabla f = (2xy, x^2) = (6, 1)$，所以 $D_{\\mathbf{u}}f = \\frac{18}{5} + \\frac{4}{5} = \\frac{22}{5} = 4.4$。\n\n检验：沿 $\\mathbf{u}$ 走 $0.05$ 到达 $(1.03, 3.04)$，该处 $f = 1.0609 \\cdot 3.04 \\approx 3.2251$，而 $\\frac{3.2251 - 3}{0.05} \\approx 4.5$，接近 $4.4$。\n\n本课我们用单位向量计算方向导数，包括朝向给定点的方向。",
+  ),
   prerequisites: ["the-gradient-vector"],
   encompasses: [{ topic: "the-gradient-vector", weight: 0.3 }],
   xp: 10,
@@ -3526,45 +4245,65 @@ export const directionalDerivatives: TopicDef = {
       id: "computing-directional-derivatives",
       title: t("Computing directional derivatives", "计算方向导数"),
       explanation: t(
-        "The rate of change in any direction is the dot product of the gradient with a unit vector in that direction, so normalize the direction first. For a differentiable function $f(x, y)$ and a unit vector $\\mathbf{u} = \\langle u_1, u_2 \\rangle$:\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2.$$",
-        "沿任意方向的变化率等于梯度与该方向单位向量的点积，所以要先把方向单位化。对于可微函数 $f(x, y)$ 和单位向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$：\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2$$",
+        "The rate of change in any direction is the dot product of the gradient with a unit vector in that direction, so normalize the direction first. For a differentiable function $f(x, y)$ and a unit vector $\\mathbf{u} = \\langle u_1, u_2 \\rangle$:\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2.$$\n\nFor $f = xy$ at $(2, 5)$ and $\\mathbf{u} = \\left\\langle \\frac{5}{13}, \\frac{12}{13} \\right\\rangle$: $\\nabla f = \\langle 5, 2 \\rangle$, so $D_{\\mathbf{u}}f = \\frac{25}{13} + \\frac{24}{13} = \\frac{49}{13}$.\n\n> **Watch out.** Pair $f_x$ with $u_1$ and $f_y$ with $u_2$. The components of $\\mathbf{u}$ are the fractions, so using their numerators alone multiplies the answer by the denominator.",
+        "沿任意方向的变化率等于梯度与该方向单位向量的点积，所以要先把方向单位化。对于可微函数 $f(x, y)$ 和单位向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$：\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2$$\n\n对 $f = xy$ 在 $(2, 5)$ 处、$\\mathbf{u} = \\left\\langle \\frac{5}{13}, \\frac{12}{13} \\right\\rangle$：$\\nabla f = \\langle 5, 2 \\rangle$，所以 $D_{\\mathbf{u}}f = \\frac{25}{13} + \\frac{24}{13} = \\frac{49}{13}$。\n\n> **注意。** $f_x$ 与 $u_1$ 相乘，$f_y$ 与 $u_2$ 相乘。$\\mathbf{u}$ 的分量是分数，只用分子相当于把答案乘以分母。",
       ),
       generate(rng: Rng): Problem {
         const [u1Int, u2Int, mag] = rng.pick(pythagoreanTriples);
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
-        const x0 = rng.int(-2, 2);
+        let x0 = rng.int(-2, 2);
         const y0 = rng.int(-2, 2);
-
-        // f(x, y) = a*x^2 + b*y^2
-        // fx = 2a*x0, fy = 2b*y0
+        if (x0 === 0 && y0 === 0) x0 = 1;
         const fx = 2 * a * x0;
         const fy = 2 * b * y0;
-        const u1 = Q.of(u1Int, mag);
-        const u2 = Q.of(u2Int, mag);
-        const ans = u1.mul(Q.of(fx)).add(u2.mul(Q.of(fy)));
-
-        const prompt = t(
-          `Find the directional derivative $D_{\\mathbf{u}} f(${x0}, ${y0})$ of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ in the direction of the unit vector $\\mathbf{u} = \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle$.`,
-          `求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 在点 $(${x0}, ${y0})$ 处沿单位向量 $\\mathbf{u} = \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle$ 方向的方向导数 $D_{\\mathbf{u}} f(${x0}, ${y0})$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the gradient: $\\nabla f(${x0}, ${y0}) = \\langle 2(${a})(${x0}), 2(${b})(${y0}) \\rangle = \\langle ${fx}, ${fy} \\rangle$.`,
-            `Compute the dot product with $\\mathbf{u}$:\n\n` +
-              `$$D_{\\mathbf{u}} f = \\langle ${fx}, ${fy} \\rangle \\cdot \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle = ${fx}\\left(\\frac{${u1Int}}{${mag}}\\right) + ${paren(fy)}\\left(\\frac{${u2Int}}{${mag}}\\right) = ${ans.toLatex()}.$$`,
-          ),
-          steps(
-            `计算梯度：$\\nabla f(${x0}, ${y0}) = \\langle 2(${a})(${x0}), 2(${b})(${y0}) \\rangle = \\langle ${fx}, ${fy} \\rangle$。`,
-            `计算与 $\\mathbf{u}$ 的点积：\n\n` +
-              `$$D_{\\mathbf{u}} f = \\langle ${fx}, ${fy} \\rangle \\cdot \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle = ${fx}\\left(\\frac{${u1Int}}{${mag}}\\right) + ${paren(fy)}\\left(\\frac{${u2Int}}{${mag}}\\right) = ${ans.toLatex()}$$`,
-          ),
-        );
+        const ans = Q.of(fx * u1Int + fy * u2Int, mag);
+        const u = `\\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the directional derivative $D_{\\mathbf{u}} f(${x0}, ${y0})$ of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ in the direction of the unit vector $\\mathbf{u} = ${u}$.`,
+            `求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 在点 $(${x0}, ${y0})$ 处沿单位向量 $\\mathbf{u} = ${u}$ 方向的方向导数 $D_{\\mathbf{u}} f(${x0}, ${y0})$。`,
+          ),
           answer: ans,
-          wrong: [ans.neg(), ans.add(Q.of(1)), Q.of(fx + fy)],
+          mistakes: distinct(ans, [
+            why(
+              fx + fy,
+              "Each component of the gradient is weighted by the matching component of $\\mathbf{u}$.",
+              "梯度的每个分量都要乘以 $\\mathbf{u}$ 的对应分量。",
+            ),
+            why(
+              Q.of(fx * u2Int + fy * u1Int, mag),
+              "The components are crossed: $f_x$ pairs with $u_1$ and $f_y$ with $u_2$.",
+              "分量交叉了：$f_x$ 与 $u_1$ 相乘，$f_y$ 与 $u_2$ 相乘。",
+            ),
+            why(
+              fx * u1Int + fy * u2Int,
+              `The components of $\\mathbf{u}$ are fractions; using the numerators alone multiplies by $${mag}$.`,
+              `$\\mathbf{u}$ 的分量是分数；只用分子相当于乘了 $${mag}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the gradient", "求梯度"],
+                t(
+                  `$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])} \\rangle = \\langle ${fx}, ${fy} \\rangle$ at $(${x0}, ${y0})$.`,
+                  `在 $(${x0}, ${y0})$ 处 $\\nabla f = \\langle ${poly([2 * a, "x"])}, ${poly([2 * b, "y"])} \\rangle = \\langle ${fx}, ${fy} \\rangle$。`,
+                ),
+              ],
+              [
+                ["Dot with u", "与 u 作点积"],
+                t(
+                  `$D_{\\mathbf{u}} f = ${fx} \\cdot \\frac{${u1Int}}{${mag}} + ${paren(fy)} \\cdot \\frac{${u2Int}}{${mag}} = ${ans.toLatex()}$.`,
+                  `$D_{\\mathbf{u}} f = ${fx} \\cdot \\frac{${u1Int}}{${mag}} + ${paren(fy)} \\cdot \\frac{${u2Int}}{${mag}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `No direction beats the gradient: $(${ans.toLatex()})^2 = ${ans.mul(ans).toLatex()}$ is at most $|\\nabla f|^2 = ${fx * fx + fy * fy}$.`,
+              `没有方向能超过梯度：$(${ans.toLatex()})^2 = ${ans.mul(ans).toLatex()}$ 不超过 $|\\nabla f|^2 = ${fx * fx + fy * fy}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3572,13 +4311,13 @@ export const directionalDerivatives: TopicDef = {
       id: "the-directional-derivative-toward-a-point",
       title: t("The directional derivative toward a point", "朝向某点的方向导数"),
       explanation: t(
-        "To find the rate of change of $f$ at $P$ in the direction of another point $R$, first form the vector $\\vec{PR}$ and divide it by its length to get a unit vector $\\mathbf{u}$. Then\n\n$$D_{\\mathbf{u}} f(P) = \\nabla f(P) \\cdot \\mathbf{u}.$$\n\nSkipping the normalization multiplies the answer by $|\\vec{PR}|$.",
-        "要求 $f$ 在 $P$ 处朝另一点 $R$ 方向的变化率，先构造向量 $\\vec{PR}$，再除以其长度得到单位向量 $\\mathbf{u}$。于是\n\n$$D_{\\mathbf{u}} f(P) = \\nabla f(P) \\cdot \\mathbf{u}.$$\n\n若不单位化，答案会被乘以 $|\\vec{PR}|$。",
+        "To find the rate of change of $f$ at $P$ in the direction of another point $R$, first form the vector $\\vec{PR}$ and divide it by its length to get a unit vector $\\mathbf{u}$. Then\n\n$$D_{\\mathbf{u}} f(P) = \\nabla f(P) \\cdot \\mathbf{u}.$$\n\nFor $f = xy$ at $P(1, 1)$ toward $R(4, 5)$: $\\vec{PR} = (3, 4)$ has length $5$, $\\nabla f(P) = (1, 1)$, so $D_{\\mathbf{u}}f = \\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$.\n\n> **Watch out.** Skipping the normalization multiplies the answer by $|\\vec{PR}|$. The direction is $R - P$, not the coordinates of $R$.",
+        "要求 $f$ 在 $P$ 处朝另一点 $R$ 方向的变化率，先构造向量 $\\vec{PR}$，再除以其长度得到单位向量 $\\mathbf{u}$。于是\n\n$$D_{\\mathbf{u}} f(P) = \\nabla f(P) \\cdot \\mathbf{u}.$$\n\n对 $f = xy$ 在 $P(1, 1)$ 处朝 $R(4, 5)$：$\\vec{PR} = (3, 4)$ 的长度为 $5$，$\\nabla f(P) = (1, 1)$，所以 $D_{\\mathbf{u}}f = \\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$。\n\n> **注意。** 若不单位化，答案会被乘以 $|\\vec{PR}|$。方向是 $R - P$，不是 $R$ 的坐标。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
         const b = rng.int(-5, 5) || 2;
-        const p = rng.int(-3, 3);
+        const p = rng.int(-3, 3) || 1;
         const q = rng.int(-3, 3);
         const [u0, v0, w] = rng.pick(pythagoreanTriples.slice(0, 4));
         const u = u0 * rng.pick([-1, 1]);
@@ -3592,10 +4331,40 @@ export const directionalDerivatives: TopicDef = {
             `求 $f(x, y) = ${poly([a, "x^2"], [b, "y"])}$ 在 $P(${p}, ${q})$ 处朝 $R(${p + u}, ${q + v})$ 方向的方向导数。`,
           ),
           answer: ans,
-          wrong: [Q.of(fx * u + fy * v), Q.of(fx + fy), Q.of(fx * v + fy * u, w)],
-          solution: t(
-            `$\\vec{PR} = (${u}, ${v})$ has length $${w}$, so $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$. With $\\nabla f(P) = (${fx}, ${fy})$, $D_{\\mathbf{u}} f = ${ans.toLatex()}$.`,
-            `$\\vec{PR} = (${u}, ${v})$ 的长度为 $${w}$，所以 $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$。由 $\\nabla f(P) = (${fx}, ${fy})$ 得 $D_{\\mathbf{u}} f = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              fx * u + fy * v,
+              `Divide $\\vec{PR}$ by its length $${w}$ first; otherwise the rate is multiplied by $${w}$.`,
+              `要先把 $\\vec{PR}$ 除以它的长度 $${w}$；否则变化率被乘以 $${w}$。`,
+            ),
+            why(fx + fy, "The gradient must be dotted with the unit direction, not summed.", "梯度要与单位方向作点积，而不是把分量相加。"),
+            why(
+              Q.of(fx * v + fy * u, w),
+              "The components are crossed: $f_x$ pairs with the $x$-step of $\\vec{PR}$.",
+              "分量交叉了：$f_x$ 要与 $\\vec{PR}$ 的 $x$ 分量相乘。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Make the unit vector", "求单位向量"],
+                t(
+                  `$\\vec{PR} = (${u}, ${v})$ has length $${w}$, so $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$.`,
+                  `$\\vec{PR} = (${u}, ${v})$ 的长度为 $${w}$，所以 $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$。`,
+                ),
+              ],
+              [
+                ["Dot with the gradient", "与梯度作点积"],
+                t(
+                  `$\\nabla f(P) = (${fx}, ${fy})$, so $D_{\\mathbf{u}} f = \\frac{${fx} \\cdot ${paren(u)} + ${paren(fy)} \\cdot ${paren(v)}}{${w}} = ${ans.toLatex()}$.`,
+                  `$\\nabla f(P) = (${fx}, ${fy})$，所以 $D_{\\mathbf{u}} f = \\frac{${fx} \\cdot ${paren(u)} + ${paren(fy)} \\cdot ${paren(v)}}{${w}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `No direction beats the gradient: $(${ans.toLatex()})^2 = ${ans.mul(ans).toLatex()}$ is at most $|\\nabla f|^2 = ${fx * fx + fy * fy}$.`,
+              `没有方向能超过梯度：$(${ans.toLatex()})^2 = ${ans.mul(ans).toLatex()}$ 不超过 $|\\nabla f|^2 = ${fx * fx + fy * fy}$。`,
+            ),
           ),
         });
       },
@@ -3611,6 +4380,10 @@ export const theMultivariableMeanValueTheorem: TopicDef = {
     "The multivariable mean-value theorem states that f(b) - f(a) = ∇f(c) · (b - a) for some point c on the line segment connecting a and b.",
     "多元拉格朗日中值定理表明，连接 a 与 b 的线段上存在某点 c，使得 f(b) - f(a) = ∇f(c) · (b - a)。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2 + y^2$ from $\\mathbf{a} = (0, 0)$ to $\\mathbf{b} = (2, 2)$, the change is $8$. On the segment, $\\mathbf{c} = (2s, 2s)$ has $\\nabla f(\\mathbf{c}) \\cdot (2, 2) = (4s, 4s) \\cdot (2, 2) = 16s$, which equals $8$ at $s = \\frac{1}{2}$, so $\\mathbf{c} = (1, 1)$.\n\nCheck: $\\nabla f(1, 1) = (2, 2)$ and $(2, 2) \\cdot (2, 2) = 8 = f(2, 2) - f(0, 0)$.\n\nIn this lesson we relate the change of a function along a segment to its gradient at a point between the ends.",
+    "对 $f(x, y) = x^2 + y^2$ 从 $\\mathbf{a} = (0, 0)$ 到 $\\mathbf{b} = (2, 2)$，变化量为 $8$。线段上的点 $\\mathbf{c} = (2s, 2s)$ 满足 $\\nabla f(\\mathbf{c}) \\cdot (2, 2) = (4s, 4s) \\cdot (2, 2) = 16s$，在 $s = \\frac{1}{2}$ 时等于 $8$，所以 $\\mathbf{c} = (1, 1)$。\n\n检验：$\\nabla f(1, 1) = (2, 2)$，而 $(2, 2) \\cdot (2, 2) = 8 = f(2, 2) - f(0, 0)$。\n\n本课我们把函数沿线段的变化量与两端之间某点处的梯度联系起来。",
+  ),
   prerequisites: ["directional-derivatives"],
   encompasses: [],
   xp: 10,
@@ -3619,42 +4392,64 @@ export const theMultivariableMeanValueTheorem: TopicDef = {
       id: "understanding-the-multivariable-mean-value-theorem",
       title: t("Understanding the multivariable mean-value theorem", "理解多元拉格朗日中值定理"),
       explanation: t(
-        "Let $f$ be differentiable on an open set containing the line segment from $\\mathbf{a}$ to $\\mathbf{b}$. Then there exists a point $\\mathbf{c}$ on that segment such that:\n\n$$f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a}).$$",
-        "设 $f$ 在包含从 $\\mathbf{a}$ 到 $\\mathbf{b}$ 线段的开集上可微。则在该线段上存在一点 $\\mathbf{c}$ 使得：\n\n$$f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a})$$",
+        "Let $f$ be differentiable on an open set containing the line segment from $\\mathbf{a}$ to $\\mathbf{b}$. Then there exists a point $\\mathbf{c}$ on that segment such that:\n\n$$f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a}).$$\n\nFrom $\\mathbf{a} = (1, 1)$ to $\\mathbf{b} = (4, -3)$ with $\\nabla f(\\mathbf{c}) = \\langle 2, 6 \\rangle$, the change is $\\langle 2, 6 \\rangle \\cdot \\langle 3, -4 \\rangle = 6 - 24 = -18$.\n\n> **Watch out.** Dot the gradient with the displacement $\\mathbf{b} - \\mathbf{a}$, not with $\\mathbf{b}$ itself, and pair the first components together. Reversing the displacement reverses the sign.",
+        "设 $f$ 在包含从 $\\mathbf{a}$ 到 $\\mathbf{b}$ 线段的开集上可微。则在该线段上存在一点 $\\mathbf{c}$ 使得：\n\n$$f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a})$$\n\n从 $\\mathbf{a} = (1, 1)$ 到 $\\mathbf{b} = (4, -3)$，若 $\\nabla f(\\mathbf{c}) = \\langle 2, 6 \\rangle$，变化量为 $\\langle 2, 6 \\rangle \\cdot \\langle 3, -4 \\rangle = 6 - 24 = -18$。\n\n> **注意。** 梯度要与位移 $\\mathbf{b} - \\mathbf{a}$ 作点积，而不是与 $\\mathbf{b}$ 本身；第一个分量与第一个分量相乘。位移反向，符号也反过来。",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(-4, 4);
-        const y1 = rng.int(-4, 4);
+        const y1 = rng.nonZero(-4, 4);
         const dx = rng.nonZero(-4, 4);
         const dy = rng.nonZero(-4, 4);
         const x2 = x1 + dx;
         const y2 = y1 + dy;
         const u = rng.nonZero(-5, 5);
         const v = rng.nonZero(-5, 5);
-
         const ans = u * dx + v * dy;
-
-        const prompt = t(
-          `By the Multivariable Mean-Value Theorem, for a differentiable function $f$, $f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a})$ for some point $\\mathbf{c}$ on the line segment connecting $\\mathbf{a} = (${x1}, ${y1})$ and $\\mathbf{b} = (${x2}, ${y2})$. If $\\nabla f(\\mathbf{c}) = \\langle ${u}, ${v} \\rangle$, calculate the change $f(\\mathbf{b}) - f(\\mathbf{a})$.`,
-          `根据多元拉格朗日中值定理，对于可微函数 $f$，在连接 $\\mathbf{a} = (${x1}, ${y1})$ 与 $\\mathbf{b} = (${x2}, ${y2})$ 的线段上存在某点 $\\mathbf{c}$ 满足 $f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a})$。若 $\\nabla f(\\mathbf{c}) = \\langle ${u}, ${v} \\rangle$，计算函数变化量 $f(\\mathbf{b}) - f(\\mathbf{a})$。`,
-        );
-        const solution = t(
-          steps(
-            `Compute the displacement vector: $\\mathbf{b} - \\mathbf{a} = \\langle ${x2} - (${x1}), ${y2} - (${y1}) \\rangle = \\langle ${dx}, ${dy} \\rangle$.`,
-            `Apply the theorem: $f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a}) = \\langle ${u}, ${v} \\rangle \\cdot \\langle ${dx}, ${dy} \\rangle$.`,
-            `Calculate the dot product: $(${u})(${dx}) + (${v})(${dy}) = ${u * dx} + (${v * dy}) = ${ans}$.`,
-          ),
-          steps(
-            `计算位移向量：$\\mathbf{b} - \\mathbf{a} = \\langle ${x2} - (${x1}), ${y2} - (${y1}) \\rangle = \\langle ${dx}, ${dy} \\rangle$。`,
-            `应用多元中值定理：$f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a}) = \\langle ${u}, ${v} \\rangle \\cdot \\langle ${dx}, ${dy} \\rangle$。`,
-            `计算点积：$(${u})(${dx}) + (${v})(${dy}) = ${u * dx} + (${v * dy}) = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `By the Multivariable Mean-Value Theorem, for a differentiable function $f$, $f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a})$ for some point $\\mathbf{c}$ on the line segment connecting $\\mathbf{a} = (${x1}, ${y1})$ and $\\mathbf{b} = (${x2}, ${y2})$. If $\\nabla f(\\mathbf{c}) = \\langle ${u}, ${v} \\rangle$, calculate the change $f(\\mathbf{b}) - f(\\mathbf{a})$.`,
+            `根据多元拉格朗日中值定理，对于可微函数 $f$，在连接 $\\mathbf{a} = (${x1}, ${y1})$ 与 $\\mathbf{b} = (${x2}, ${y2})$ 的线段上存在某点 $\\mathbf{c}$ 满足 $f(\\mathbf{b}) - f(\\mathbf{a}) = \\nabla f(\\mathbf{c}) \\cdot (\\mathbf{b} - \\mathbf{a})$。若 $\\nabla f(\\mathbf{c}) = \\langle ${u}, ${v} \\rangle$，计算函数变化量 $f(\\mathbf{b}) - f(\\mathbf{a})$。`,
+          ),
           answer: ans,
-          wrong: [u * dy + v * dx, ans + 2, -ans],
+          mistakes: distinct(ans, [
+            why(
+              u * dy + v * dx,
+              "The components are crossed: the first gradient component pairs with the change in $x$.",
+              "分量交叉了：梯度的第一个分量与 $x$ 的变化相乘。",
+            ),
+            why(
+              -ans,
+              "That uses $\\mathbf{a} - \\mathbf{b}$; the displacement runs from $\\mathbf{a}$ to $\\mathbf{b}$.",
+              "那用的是 $\\mathbf{a} - \\mathbf{b}$；位移是从 $\\mathbf{a}$ 到 $\\mathbf{b}$。",
+            ),
+            why(
+              u * x2 + v * y2,
+              "Dot with the displacement $\\mathbf{b} - \\mathbf{a}$, not with the point $\\mathbf{b}$.",
+              "要与位移 $\\mathbf{b} - \\mathbf{a}$ 作点积，而不是与点 $\\mathbf{b}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the displacement", "求位移"],
+                t(
+                  `$\\mathbf{b} - \\mathbf{a} = \\langle ${x2} - ${paren(x1)}, ${y2} - ${paren(y1)} \\rangle = \\langle ${dx}, ${dy} \\rangle$.`,
+                  `$\\mathbf{b} - \\mathbf{a} = \\langle ${x2} - ${paren(x1)}, ${y2} - ${paren(y1)} \\rangle = \\langle ${dx}, ${dy} \\rangle$。`,
+                ),
+              ],
+              [
+                ["Dot with the gradient", "与梯度作点积"],
+                t(
+                  `$${u} \\cdot ${paren(dx)} + ${paren(v)} \\cdot ${paren(dy)} = ${ans}$.`,
+                  `$${u} \\cdot ${paren(dx)} + ${paren(v)} \\cdot ${paren(dy)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Going back from $\\mathbf{b}$ to $\\mathbf{a}$, the displacement $\\langle ${-dx}, ${-dy} \\rangle$ gives $${-ans}$, which is $f(\\mathbf{a}) - f(\\mathbf{b})$, as it should be.`,
+              `从 $\\mathbf{b}$ 回到 $\\mathbf{a}$，位移 $\\langle ${-dx}, ${-dy} \\rangle$ 给出 $${-ans}$，正是 $f(\\mathbf{a}) - f(\\mathbf{b})$。`,
+            ),
+          ),
         });
       },
     },
@@ -3662,8 +4457,8 @@ export const theMultivariableMeanValueTheorem: TopicDef = {
       id: "the-mean-value-point-of-a-quadratic",
       title: t("The mean value point of a quadratic", "二次函数的中值点"),
       explanation: t(
-        "The mean value theorem says that for $f$ differentiable along the segment from $P$ to $R$ there is a point $C$ on it with\n\n$$f(R) - f(P) = \\nabla f(C) \\cdot (R - P).$$\n\nFor $f(x, y) = ax^2 + cy^2 + dx$ with $a, c > 0$, $\\nabla f$ changes linearly along the segment, and the point that works is exactly the midpoint of $P$ and $R$. Check this by writing $C = P + t(R - P)$ and solving for $t$.",
-        "中值定理指出，若 $f$ 沿从 $P$ 到 $R$ 的线段可微，则线段上存在点 $C$ 使\n\n$$f(R) - f(P) = \\nabla f(C) \\cdot (R - P).$$\n\n对 $a, c > 0$ 的 $f(x, y) = ax^2 + cy^2 + dx$，$\\nabla f$ 沿线段线性变化，满足条件的点恰好是 $P$ 与 $R$ 的中点。可以令 $C = P + t(R - P)$ 并解出 $t$ 来验证。",
+        "The mean value theorem says that for $f$ differentiable along the segment from $P$ to $R$ there is a point $C$ on it with\n\n$$f(R) - f(P) = \\nabla f(C) \\cdot (R - P).$$\n\nFor a quadratic such as $ax^2 + cy^2 + dx$, $\\nabla f$ changes linearly along the segment, and the point that works is exactly the midpoint of $P$ and $R$. For $f = x^2 - y^2$ from $(0, 0)$ to $(2, 4)$: $f(R) - f(P) = -12$, and at the midpoint $(1, 2)$, $\\nabla f \\cdot (2, 4) = (2, -4) \\cdot (2, 4) = -12$.\n\n> **Watch out.** The midpoint is $\\frac{P + R}{2}$, not half the displacement $\\frac{R - P}{2}$, and in general neither endpoint works.",
+        "中值定理指出，若 $f$ 沿从 $P$ 到 $R$ 的线段可微，则线段上存在点 $C$ 使\n\n$$f(R) - f(P) = \\nabla f(C) \\cdot (R - P).$$\n\n对 $ax^2 + cy^2 + dx$ 这样的二次函数，$\\nabla f$ 沿线段线性变化，满足条件的点恰好是 $P$ 与 $R$ 的中点。对 $f = x^2 - y^2$ 从 $(0, 0)$ 到 $(2, 4)$：$f(R) - f(P) = -12$，而在中点 $(1, 2)$ 处 $\\nabla f \\cdot (2, 4) = (2, -4) \\cdot (2, 4) = -12$。\n\n> **注意。** 中点是 $\\frac{P + R}{2}$，不是位移的一半 $\\frac{R - P}{2}$；一般来说两个端点都不满足。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -3671,24 +4466,63 @@ export const theMultivariableMeanValueTheorem: TopicDef = {
         const d = rng.int(-5, 5);
         const P = [rng.int(-4, 4), rng.int(-4, 4)] as const;
         const R = [P[0] + rng.int(1, 5) * rng.pick([-1, 1]), P[1] + rng.int(-4, 4)] as const;
+        const dx = R[0] - P[0];
+        const dy = R[1] - P[1];
         const mx = Q.of(P[0] + R[0], 2);
         const my = Q.of(P[1] + R[1], 2);
-        return pointProblem({
-          prompt: t(
-            `For $f(x, y) = ${poly([a, "x^2"], [c, "y^2"], [d, "x"])}$, find the point $C$ on the segment from $P(${P[0]}, ${P[1]})$ to $R(${R[0]}, ${R[1]})$ with $f(R) - f(P) = \\nabla f(C) \\cdot (R - P)$.`,
-            `对 $f(x, y) = ${poly([a, "x^2"], [c, "y^2"], [d, "x"])}$，求从 $P(${P[0]}, ${P[1]})$ 到 $R(${R[0]}, ${R[1]})$ 的线段上满足 $f(R) - f(P) = \\nabla f(C) \\cdot (R - P)$ 的点 $C$。`,
-          ),
-          answer: [mx, my],
-          wrong: [
-            [P[0], P[1]],
-            [R[0], R[1]],
-            [Q.of(R[0] - P[0], 2), Q.of(R[1] - P[1], 2)],
+        const g0 = (2 * a * P[0] + d) * dx + 2 * c * P[1] * dy;
+        const bend = a * dx * dx + c * dy * dy;
+        const change = g0 + bend;
+        const gx = mx.mul(Q.of(2 * a)).add(Q.of(d));
+        const gy = my.mul(Q.of(2 * c));
+        return pointWith(
+          {
+            prompt: t(
+              `For $f(x, y) = ${poly([a, "x^2"], [c, "y^2"], [d, "x"])}$, find the point $C$ on the segment from $P(${P[0]}, ${P[1]})$ to $R(${R[0]}, ${R[1]})$ with $f(R) - f(P) = \\nabla f(C) \\cdot (R - P)$.`,
+              `对 $f(x, y) = ${poly([a, "x^2"], [c, "y^2"], [d, "x"])}$，求从 $P(${P[0]}, ${P[1]})$ 到 $R(${R[0]}, ${R[1]})$ 的线段上满足 $f(R) - f(P) = \\nabla f(C) \\cdot (R - P)$ 的点 $C$。`,
+            ),
+            answer: [mx, my],
+            solution: walked(
+              [
+                [
+                  ["Move along the segment", "沿线段移动"],
+                  t(
+                    `With $R - P = (${dx}, ${dy})$ and $C = P + s(R - P)$, $\\nabla f(C) \\cdot (R - P) = ${g0} + ${paren(2 * bend)}s$.`,
+                    `由 $R - P = (${dx}, ${dy})$ 和 $C = P + s(R - P)$，得 $\\nabla f(C) \\cdot (R - P) = ${g0} + ${paren(2 * bend)}s$。`,
+                  ),
+                ],
+                [
+                  ["Match the change", "与变化量相等"],
+                  t(
+                    `$f(R) - f(P) = ${change} = ${g0} + ${paren(bend)}$, so $s = \\frac{1}{2}$ and $C = \\left(${mx.toLatex()}, ${my.toLatex()}\\right)$, the midpoint.`,
+                    `$f(R) - f(P) = ${change} = ${g0} + ${paren(bend)}$，所以 $s = \\frac{1}{2}$，$C = \\left(${mx.toLatex()}, ${my.toLatex()}\\right)$，即中点。`,
+                  ),
+                ],
+              ],
+              t(
+                `$\\nabla f(C) = \\left(${gx.toLatex()}, ${gy.toLatex()}\\right)$, and $${paren(gx)} \\cdot ${paren(dx)} + ${paren(gy)} \\cdot ${paren(dy)} = ${change}$.`,
+                `$\\nabla f(C) = \\left(${gx.toLatex()}, ${gy.toLatex()}\\right)$，而 $${paren(gx)} \\cdot ${paren(dx)} + ${paren(gy)} \\cdot ${paren(dy)} = ${change}$。`,
+              ),
+            ),
+          },
+          [
+            [
+              [P[0], P[1]],
+              "At $P$ the gradient gives the starting rate, which misses the bending of $f$; the point is the midpoint.",
+              "在 $P$ 处梯度只给出起始变化率，漏掉了 $f$ 的弯曲；所求点是中点。",
+            ],
+            [
+              [R[0], R[1]],
+              "At $R$ the gradient gives the final rate, which overshoots; the point is the midpoint.",
+              "在 $R$ 处梯度给出的是终点变化率，偏大了；所求点是中点。",
+            ],
+            [
+              [Q.of(dx, 2), Q.of(dy, 2)],
+              "That is half the displacement $\\frac{R - P}{2}$; the midpoint is $\\frac{P + R}{2}$.",
+              "那是位移的一半 $\\frac{R - P}{2}$；中点是 $\\frac{P + R}{2}$。",
+            ],
           ],
-          solution: t(
-            `For a quadratic with $a, c > 0$ the mean value point is the midpoint, $C = \\left(${mx.toLatex()}, ${my.toLatex()}\\right)$: along $C = P + t(R - P)$ the right side is linear in $t$ and matches the left side at $t = \\frac{1}{2}$.`,
-            `对 $a, c > 0$ 的二次函数，中值点是中点 $C = \\left(${mx.toLatex()}, ${my.toLatex()}\\right)$：沿 $C = P + t(R - P)$，右边关于 $t$ 是线性的，并在 $t = \\frac{1}{2}$ 时与左边相等。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -3706,6 +4540,10 @@ export const theMultivariableChainRule: TopicDef = {
     "The multivariable chain rule gives dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt) when z = f(x, y) with x = g(t) and y = h(t).",
     "多元链式法则表明，当 z = f(x, y) 且 x = g(t)、y = h(t) 时，dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt)。",
   ),
+  intro: t(
+    "Let $z = xy^2$ with $x = 2t$ and $y = t + 1$. At $t = 1$: $x = 2$, $y = 2$, $z_x = y^2 = 4$, $z_y = 2xy = 8$, $\\frac{dx}{dt} = 2$ and $\\frac{dy}{dt} = 1$, so $\\frac{dz}{dt} = 4 \\cdot 2 + 8 \\cdot 1 = 16$.\n\nCheck: substituting, $z = 2t(t + 1)^2$, and $\\frac{dz}{dt} = 2(t + 1)^2 + 4t(t + 1) = 8 + 8 = 16$ at $t = 1$.\n\nIn this lesson we differentiate along a path with the multivariable chain rule, with one parameter and with two.",
+    "设 $z = xy^2$，其中 $x = 2t$，$y = t + 1$。在 $t = 1$ 时：$x = 2$，$y = 2$，$z_x = y^2 = 4$，$z_y = 2xy = 8$，$\\frac{dx}{dt} = 2$，$\\frac{dy}{dt} = 1$，所以 $\\frac{dz}{dt} = 4 \\cdot 2 + 8 \\cdot 1 = 16$。\n\n检验：代入得 $z = 2t(t + 1)^2$，$\\frac{dz}{dt} = 2(t + 1)^2 + 4t(t + 1)$，在 $t = 1$ 时为 $8 + 8 = 16$。\n\n本课我们用多元链式法则沿路径求导，包括一个参数和两个参数的情形。",
+  ),
   prerequisites: ["the-gradient-vector"],
   encompasses: [{ topic: "the-gradient-vector", weight: 0.3 }],
   xp: 10,
@@ -3714,41 +4552,55 @@ export const theMultivariableChainRule: TopicDef = {
       id: "computing-derivatives-via-multivariable-chain-rule",
       title: t("Computing derivatives via the multivariable chain rule", "利用多元链式法则求导"),
       explanation: t(
-        "When each input depends on a parameter, the total rate of change adds the contribution of each input: its partial derivative times its own rate. If $z = f(x, y)$ is differentiable and $x = g(t)$, $y = h(t)$ are differentiable functions of $t$, then:\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}.$$",
-        "当每个输入都依赖于一个参数时，总变化率是各个输入贡献的和：偏导数乘以该输入自身的变化率。若 $z = f(x, y)$ 可微，且 $x = g(t)$、$y = h(t)$ 为 $t$ 的可微函数，则：\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}$$",
+        "When each input depends on a parameter, the total rate of change adds the contribution of each input: its partial derivative times its own rate. If $z = f(x, y)$ is differentiable and $x = g(t)$, $y = h(t)$ are differentiable functions of $t$, then:\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}.$$\n\nFor $z = xy$ with $x = t^3$ and $y = 2 - t$ at $t = 1$: $z_x = y = 1$, $z_y = x = 1$, $\\frac{dx}{dt} = 3$ and $\\frac{dy}{dt} = -1$, so $\\frac{dz}{dt} = 3 - 1 = 2$.\n\n> **Watch out.** Multiply each partial derivative by its own rate, $\\frac{dx}{dt}$ or $\\frac{dy}{dt}$, evaluated at the given $t$. Find $x$ and $y$ at that $t$ before substituting into the partial derivatives.",
+        "当每个输入都依赖于一个参数时，总变化率是各个输入贡献的和：偏导数乘以该输入自身的变化率。若 $z = f(x, y)$ 可微，且 $x = g(t)$、$y = h(t)$ 为 $t$ 的可微函数，则：\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}$$\n\n对 $z = xy$，$x = t^3$，$y = 2 - t$，在 $t = 1$ 时：$z_x = y = 1$，$z_y = x = 1$，$\\frac{dx}{dt} = 3$，$\\frac{dy}{dt} = -1$，所以 $\\frac{dz}{dt} = 3 - 1 = 2$。\n\n> **注意。** 每个偏导数都要乘以它自己的变化率 $\\frac{dx}{dt}$ 或 $\\frac{dy}{dt}$，并在给定的 $t$ 处求值。代入偏导数之前，先求出该 $t$ 处的 $x$ 和 $y$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
-        const k = rng.int(1, 3);
-        // z = a*x^2 + b*y^2, x = t^2, y = k*t
-        // At t = 1: x = 1, y = k, dx/dt = 2, dy/dt = k
-        // dz/dt = 2a*x*(2) + 2b*y*(k) = 4a(1) + 2b(k^2) = 4a + 2b*k^2
+        const k = rng.int(2, 3);
         const ans = 4 * a + 2 * b * k * k;
-
-        const prompt = t(
-          `Let $z = ${poly([a, "x^2"], [b, "y^2"])}$ where $x = t^2$ and $y = ${k === 1 ? "t" : `${k}t`}$. Find $\\left.\\frac{dz}{dt}\\right|_{t=1}$.`,
-          `设 $z = ${poly([a, "x^2"], [b, "y^2"])}$，其中 $x = t^2$，$y = ${k === 1 ? "t" : `${k}t`}$。求 $\\left.\\frac{dz}{dt}\\right|_{t=1}$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the chain rule: $\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}$.`,
-            `Compute partial derivatives: $\\frac{\\partial z}{\\partial x} = ${2 * a}x$, $\\frac{\\partial z}{\\partial y} = ${2 * b}y$.`,
-            `Compute derivatives with respect to $t$: $\\frac{dx}{dt} = 2t$, $\\frac{dy}{dt} = ${k}$.`,
-            `At $t = 1$, $x = 1$ and $y = ${k}$, so $\\frac{dz}{dt} = (${2 * a}(1))(2(1)) + (${2 * b}(${k}))(${k}) = ${4 * a} + ${paren(2 * b * k * k)} = ${ans}$.`,
-          ),
-          steps(
-            `应用复合函数求导法则：$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}$。`,
-            `计算偏导数：$\\frac{\\partial z}{\\partial x} = ${2 * a}x$，$\\frac{\\partial z}{\\partial y} = ${2 * b}y$。`,
-            `对 $t$ 求导：$\\frac{dx}{dt} = 2t$，$\\frac{dy}{dt} = ${k}$。`,
-            `在 $t = 1$ 时，$x = 1$ 且 $y = ${k}$，故 $\\frac{dz}{dt} = (${2 * a}(1))(2(1)) + (${2 * b}(${k}))(${k}) = ${4 * a} + ${paren(2 * b * k * k)} = ${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Let $z = ${poly([a, "x^2"], [b, "y^2"])}$ where $x = t^2$ and $y = ${k}t$. Find $\\left.\\frac{dz}{dt}\\right|_{t=1}$.`,
+            `设 $z = ${poly([a, "x^2"], [b, "y^2"])}$，其中 $x = t^2$，$y = ${k}t$。求 $\\left.\\frac{dz}{dt}\\right|_{t=1}$ 的值。`,
+          ),
           answer: ans,
-          wrong: [2 * a + 2 * b * k, ans + 2, -ans],
+          mistakes: distinct(ans, [
+            why(
+              2 * a + 2 * b * k,
+              `Each partial derivative is multiplied by its own rate: $\\frac{dx}{dt} = 2$ and $\\frac{dy}{dt} = ${k}$.`,
+              `每个偏导数都要乘以它自己的变化率：$\\frac{dx}{dt} = 2$，$\\frac{dy}{dt} = ${k}$。`,
+            ),
+            why(
+              4 * a + 2 * b * k,
+              `At $t = 1$, $y = ${k}$, so $\\frac{\\partial z}{\\partial y} = ${poly([2 * b, "y"])} = ${2 * b * k}$.`,
+              `在 $t = 1$ 时 $y = ${k}$，所以 $\\frac{\\partial z}{\\partial y} = ${poly([2 * b, "y"])} = ${2 * b * k}$。`,
+            ),
+            why(2 * a + 2 * b * k * k, "$\\frac{dx}{dt} = 2t$, which is $2$ at $t = 1$.", "$\\frac{dx}{dt} = 2t$，在 $t = 1$ 时为 $2$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate at t = 1", "在 t = 1 处求值"],
+                t(
+                  `$x = 1$, $y = ${k}$, $\\frac{dx}{dt} = 2t = 2$ and $\\frac{dy}{dt} = ${k}$; $\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "x"])} = ${2 * a}$ and $\\frac{\\partial z}{\\partial y} = ${poly([2 * b, "y"])} = ${2 * b * k}$.`,
+                  `$x = 1$，$y = ${k}$，$\\frac{dx}{dt} = 2t = 2$，$\\frac{dy}{dt} = ${k}$；$\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "x"])} = ${2 * a}$，$\\frac{\\partial z}{\\partial y} = ${poly([2 * b, "y"])} = ${2 * b * k}$。`,
+                ),
+              ],
+              [
+                ["Add the contributions", "各项贡献相加"],
+                t(
+                  `$\\frac{dz}{dt} = ${2 * a} \\cdot 2 + ${paren(2 * b * k)} \\cdot ${k} = ${ans}$.`,
+                  `$\\frac{dz}{dt} = ${2 * a} \\cdot 2 + ${paren(2 * b * k)} \\cdot ${k} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Substituting, $z = ${poly([a, "t^4"], [b * k * k, "t^2"])}$, whose derivative $${poly([4 * a, "t^3"], [2 * b * k * k, "t"])}$ is $${ans}$ at $t = 1$.`,
+              `代入得 $z = ${poly([a, "t^4"], [b * k * k, "t^2"])}$，其导数 $${poly([4 * a, "t^3"], [2 * b * k * k, "t"])}$ 在 $t = 1$ 时为 $${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3756,12 +4608,12 @@ export const theMultivariableChainRule: TopicDef = {
       id: "the-chain-rule-with-two-parameters",
       title: t("The chain rule with two parameters", "含两个参数的链式法则"),
       explanation: t(
-        "When $z = f(x, y)$ with $x$ and $y$ both functions of $s$ and $t$, the partial derivative with respect to $s$ adds one term for each path from $z$ to $s$:\n\n$$\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}.$$\n\nEvaluate $x$ and $y$ at the given $(s, t)$ before substituting into the partial derivatives of $f$.",
-        "当 $z = f(x, y)$ 且 $x$、$y$ 都是 $s$ 和 $t$ 的函数时，对 $s$ 的偏导数对从 $z$ 到 $s$ 的每条路径加一项：\n\n$$\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}.$$\n\n代入 $f$ 的偏导数之前，先求出给定 $(s, t)$ 处的 $x$ 和 $y$。",
+        "When $z = f(x, y)$ with $x$ and $y$ both functions of $s$ and $t$, the partial derivative with respect to $s$ adds one term for each path from $z$ to $s$:\n\n$$\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}.$$\n\nEvaluate $x$ and $y$ at the given $(s, t)$ before substituting into the partial derivatives of $f$. For $z = x + y^2$ with $x = s^2$ and $y = st$ at $(s, t) = (1, 2)$: $y = 2$, so $z_s = 1 \\cdot 2s + 2y \\cdot t = 2 + 8 = 10$.\n\n> **Watch out.** Both paths count, through $x$ and through $y$. With $y = st$, $\\frac{\\partial y}{\\partial s} = t$, not $s$.",
+        "当 $z = f(x, y)$ 且 $x$、$y$ 都是 $s$ 和 $t$ 的函数时，对 $s$ 的偏导数对从 $z$ 到 $s$ 的每条路径加一项：\n\n$$\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}.$$\n\n代入 $f$ 的偏导数之前，先求出给定 $(s, t)$ 处的 $x$ 和 $y$。对 $z = x + y^2$，$x = s^2$，$y = st$，在 $(s, t) = (1, 2)$ 处：$y = 2$，所以 $z_s = 1 \\cdot 2s + 2y \\cdot t = 2 + 8 = 10$。\n\n> **注意。** 经过 $x$ 和经过 $y$ 的两条路径都要算。对 $y = st$，$\\frac{\\partial y}{\\partial s} = t$，不是 $s$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-3, 3) || 1;
-        const s = rng.int(-3, 3);
+        const s = rng.int(-3, 3) || 1;
         const tt = rng.int(-3, 3) || 2;
         const x = s + tt;
         const y = s * tt;
@@ -3774,10 +4626,36 @@ export const theMultivariableChainRule: TopicDef = {
             `设 $z = ${poly([a, "x^2y"])}$，其中 $x = s + t$，$y = st$。求 $s = ${s}$，$t = ${tt}$ 时的 $\\frac{\\partial z}{\\partial s}$。`,
           ),
           answer: ans,
-          wrong: [zx + zy, zx, zx + zy * s],
-          solution: t(
-            `At this point $x = ${x}$ and $y = ${y}$. $\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "xy"])} = ${zx}$, $\\frac{\\partial z}{\\partial y} = ${poly([a, "x^2"])} = ${zy}$, $\\frac{\\partial x}{\\partial s} = 1$ and $\\frac{\\partial y}{\\partial s} = t = ${tt}$, so $\\frac{\\partial z}{\\partial s} = ${zx} + ${paren(zy)} \\cdot ${paren(tt)} = ${ans}$.`,
-            `在该点 $x = ${x}$，$y = ${y}$。$\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "xy"])} = ${zx}$，$\\frac{\\partial z}{\\partial y} = ${poly([a, "x^2"])} = ${zy}$，$\\frac{\\partial x}{\\partial s} = 1$，$\\frac{\\partial y}{\\partial s} = t = ${tt}$，所以 $\\frac{\\partial z}{\\partial s} = ${zx} + ${paren(zy)} \\cdot ${paren(tt)} = ${ans}$。`,
+          mistakes: distinct(ans, [
+            why(
+              zx + zy,
+              `$\\frac{\\partial y}{\\partial s} = t = ${tt}$, so the second term is $${zy} \\cdot ${paren(tt)}$.`,
+              `$\\frac{\\partial y}{\\partial s} = t = ${tt}$，所以第二项是 $${zy} \\cdot ${paren(tt)}$。`,
+            ),
+            why(zx, "$z$ also depends on $s$ through $y = st$; add that path.", "$z$ 还通过 $y = st$ 依赖于 $s$；要加上这条路径。"),
+            why(zx + zy * s, `$\\frac{\\partial}{\\partial s}(st) = t$, not $s$.`, `$\\frac{\\partial}{\\partial s}(st) = t$，不是 $s$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Evaluate the inner functions", "求内层函数的值"],
+                t(
+                  `At $(s, t) = (${s}, ${tt})$: $x = ${x}$, $y = ${y}$, $\\frac{\\partial x}{\\partial s} = 1$ and $\\frac{\\partial y}{\\partial s} = t = ${tt}$.`,
+                  `在 $(s, t) = (${s}, ${tt})$ 处：$x = ${x}$，$y = ${y}$，$\\frac{\\partial x}{\\partial s} = 1$，$\\frac{\\partial y}{\\partial s} = t = ${tt}$。`,
+                ),
+              ],
+              [
+                ["Add both paths", "两条路径相加"],
+                t(
+                  `$\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "xy"])} = ${zx}$ and $\\frac{\\partial z}{\\partial y} = ${poly([a, "x^2"])} = ${zy}$, so $\\frac{\\partial z}{\\partial s} = ${zx} \\cdot 1 + ${paren(zy)} \\cdot ${paren(tt)} = ${ans}$.`,
+                  `$\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "xy"])} = ${zx}$，$\\frac{\\partial z}{\\partial y} = ${poly([a, "x^2"])} = ${zy}$，所以 $\\frac{\\partial z}{\\partial s} = ${zx} \\cdot 1 + ${paren(zy)} \\cdot ${paren(tt)} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Substituting, $z = ${a === 1 ? "" : a === -1 ? "-" : a}(s + t)^2 st$; with $t = ${tt}$ fixed, the product rule gives $${a} \\cdot \\left(2 \\cdot ${paren(x)} \\cdot ${paren(y)} + ${paren(x)}^2 \\cdot ${paren(tt)}\\right) = ${ans}$.`,
+              `代入得 $z = ${a === 1 ? "" : a === -1 ? "-" : a}(s + t)^2 st$；固定 $t = ${tt}$，由乘积法则得 $${a} \\cdot \\left(2 \\cdot ${paren(x)} \\cdot ${paren(y)} + ${paren(x)}^2 \\cdot ${paren(tt)}\\right) = ${ans}$。`,
+            ),
           ),
         });
       },

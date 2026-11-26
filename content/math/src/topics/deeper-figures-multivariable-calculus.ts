@@ -4,13 +4,13 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
-import { gcd, poly, Q } from "@ga/subject-math";
+import { gcd, paren, poly, Q } from "@ga/subject-math";
 import { multivariableDrawings1 } from "../explanation-drawings-multivariable-1.ts";
 import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
-import { explainedChoice } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -33,6 +33,12 @@ function piTimes(num: number, den: number): string {
 
 /** word writes a level for a label in a drawing. */
 const word = (v: number) => String(v).replace("-", "−");
+
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly ReturnType<typeof why>[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** field draws arrows of a vector field at the grid points from -2 to 2. */
 function field(f: (x: number, y: number) => readonly [number, number], scale: number): PlaneMark[] {
@@ -191,8 +197,8 @@ const rateFromLevelCurves = point(
   "a-partial-derivative-from-level-curves",
   ["A partial derivative from level curves", "由等值线读偏导数"],
   [
-    "Evenly spaced straight level curves belong to a function that changes at a constant rate. The partial derivative across them is the change in level divided by the distance between neighbouring curves. Levels that fall in the direction of the axis make it negative, and closer curves make it larger in size.",
-    "等距的直线等值线对应以恒定变化率变化的函数。横穿它们的偏导数等于相邻曲线的值之差除以它们之间的距离。沿坐标轴方向值下降时偏导数为负，曲线越密，其绝对值越大。",
+    "Evenly spaced straight level curves belong to a function that changes at a constant rate. The partial derivative across them is the change in level divided by the distance between neighbouring curves. Levels that fall in the direction of the axis make it negative, and closer curves make it larger in size. If vertical lines $3$ apart carry the levels $10, 7, 4$ from left to right, then $f_{x} = \\frac{-3}{3} = -1$ and $f_{y} = 0$.\n\n> **Watch out.** Read the levels in the direction the axis increases, and divide by the spacing between neighbouring curves. A point between two curves still has the same rate: the function changes evenly between them.",
+    "等距的直线等值线对应以恒定变化率变化的函数。横穿它们的偏导数等于相邻曲线的值之差除以它们之间的距离。沿坐标轴方向值下降时偏导数为负，曲线越密，其绝对值越大。若相距 $3$ 的竖直线从左到右标有 $10, 7, 4$，则 $f_{x} = \\frac{-3}{3} = -1$，$f_{y} = 0$。\n\n> **注意。** 要沿坐标轴增大的方向读值，并除以相邻曲线之间的距离。位于两条曲线之间的点变化率不变：函数在它们之间均匀变化。",
   ],
   (rng) => {
     const across = rng.bool();
@@ -213,18 +219,60 @@ const rateFromLevelCurves = point(
       ];
     });
     const pAt: Point = [spacing === 1 ? 0.5 : 1, -1.5];
-    return ask(
-      [
-        `The lines are evenly spaced level curves of $f$, each labelled with its value. What is $\\frac{\\partial f}{\\partial ${name}}$ at $P$?`,
-        `这些直线是 $f$ 的等距等值线，都标有函数值。$\\frac{\\partial f}{\\partial ${name}}$ 在 $P$ 处是多少？`,
-      ],
-      slope,
-      [slope.neg(), Q.of(step), Q.of(spacing, step), Q.zero],
-      [
-        `Moving $${spacing}$ along the $${name}$-axis crosses to the next curve, and the value changes by $${step}$. So the partial derivative is $${slope.toLatex()}$.`,
-        `沿 $${name}$ 轴移动 $${spacing}$ 就到达下一条曲线，函数值变化 $${step}$。所以偏导数是 $${slope.toLatex()}$。`,
-      ],
-      fig(
+    const mid = base + 2 * step;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The lines are evenly spaced level curves of $f$, each labelled with its value. What is $\\frac{\\partial f}{\\partial ${name}}$ at $P$?`,
+          `这些直线是 $f$ 的等距等值线，都标有函数值。$\\frac{\\partial f}{\\partial ${name}}$ 在 $P$ 处是多少？`,
+        ),
+        answer: slope,
+        mistakes: apart(slope, [
+          why(
+            slope.neg(),
+            `Read the levels in the direction of increasing $${name}$: they ${step > 0 ? "rise" : "fall"} by $${Math.abs(step)}$ per curve.`,
+            `要沿 $${name}$ 增大的方向读值：每过一条曲线值${step > 0 ? "增加" : "减少"} $${Math.abs(step)}$。`,
+          ),
+          why(
+            step,
+            `$${step}$ is the change between neighbouring curves; divide it by their spacing $${spacing}$.`,
+            `$${step}$ 是相邻曲线的值之差；还要除以它们的间距 $${spacing}$。`,
+          ),
+          why(
+            Q.of(spacing, step),
+            "That is distance over change; the rate divides the change in value by the distance.",
+            "那是距离除以变化量；变化率是函数值的变化除以距离。",
+          ),
+          why(
+            0,
+            `$P$ need not lie on a curve: the value of $f$ changes evenly across the $${name}$-direction everywhere.`,
+            `$P$ 不必在曲线上：$f$ 的值在 $${name}$ 方向上处处均匀变化。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the spacing and the step", "读出间距和值之差"],
+              t(
+                `Neighbouring curves are $${spacing}$ apart along the $${name}$-axis, and the value changes by $${step}$ from one to the next as $${name}$ increases.`,
+                `相邻曲线沿 $${name}$ 轴相距 $${spacing}$，随 $${name}$ 增大，每过一条值变化 $${step}$。`,
+              ),
+            ],
+            [
+              ["Divide", "相除"],
+              t(
+                `$\\frac{\\partial f}{\\partial ${name}} = \\frac{${step}}{${spacing}} = ${slope.toLatex()}$, the same at every point, $P$ included.`,
+                `$\\frac{\\partial f}{\\partial ${name}} = \\frac{${step}}{${spacing}} = ${slope.toLatex()}$，处处相同，$P$ 处也是。`,
+              ),
+            ],
+          ],
+          t(
+            `Over two spacings, from $${name} = 0$ to $${name} = ${2 * spacing}$, the level goes from $${mid}$ to $${mid + 2 * step}$, and $\\frac{${2 * step}}{${2 * spacing}} = ${slope.toLatex()}$ again.`,
+            `跨两个间距，从 $${name} = 0$ 到 $${name} = ${2 * spacing}$，值从 $${mid}$ 变到 $${mid + 2 * step}$，而 $\\frac{${2 * step}}{${2 * spacing}} = ${slope.toLatex()}$，结果一致。`,
+          ),
+        ),
+      }),
+      figure: fig(
         square(5),
         [...marks, { kind: "point", at: across ? pAt : [pAt[1], pAt[0]], label: "P", dir: "s" }],
         [
@@ -232,7 +280,7 @@ const rateFromLevelCurves = point(
           `相距 ${spacing} 的平行${across ? "竖直" : "水平"}等值线，值每次增加 ${step}，以及点 P。`,
         ],
       ),
-    );
+    };
   },
 );
 
@@ -241,8 +289,8 @@ const gradientArrow = {
     "the-gradient-arrow-among-four",
     ["The gradient arrow among four", "四个箭头中的梯度"],
     [
-      "The gradient at a point is perpendicular to the level curve through that point and points toward higher values of the function. So two conditions decide it: the arrow must cross the level curve at a right angle, and it must point to the side where the level labels increase. Arrows along the curve show no change at all.",
-      "一点处的梯度垂直于过该点的等值线，并指向函数值增大的方向。所以由两个条件决定：箭头必须与等值线成直角相交，并指向等值标记增大的一侧。沿曲线的箭头表示函数值没有变化。",
+      "The gradient at a point is perpendicular to the level curve through that point and points toward higher values of the function. So two conditions decide it: the arrow must cross the level curve at a right angle, and it must point to the side where the level labels increase. Arrows along the curve show no change at all. If the level curves are the parallel lines $x + y = 1$, $x + y = 2$ and $x + y = 3$, the gradient at every point points along $\\langle 1, 1 \\rangle$, across the lines toward the larger labels.\n\n> **Watch out.** Being perpendicular is not enough: of the two perpendicular arrows, only the one toward larger labels is the gradient; the other is $-\\nabla f$.",
+      "一点处的梯度垂直于过该点的等值线，并指向函数值增大的方向。所以由两个条件决定：箭头必须与等值线成直角相交，并指向等值标记增大的一侧。沿曲线的箭头表示函数值没有变化。如果等值线是平行直线 $x + y = 1$、$x + y = 2$、$x + y = 3$，那么每一点的梯度都沿 $\\langle 1, 1 \\rangle$ 方向，穿过这些直线指向标记更大的一侧。\n\n> **注意。** 仅仅垂直是不够的：两个垂直的箭头中，只有指向标记更大一侧的才是梯度；另一个是 $-\\nabla f$。",
     ],
     (rng) => {
       const [x, y] = rng.pick<Point>([
@@ -281,19 +329,53 @@ const gradientArrow = {
           { kind: "label", at: to, text: letters[i] as string, dir: compass(tip) },
         );
       }
-      return choose(
-        rng,
-        [
+      const opposite = letters[rising ? 1 : 0] as string;
+      const next = levels[rising ? 2 : 0] as number;
+      const arrow = (l: string) => t(`Arrow ${l}`, `箭头 ${l}`);
+      const tangentWhy = t(
+        "This arrow runs along the circle, where $f$ does not change; the gradient crosses the level curve at a right angle.",
+        "这个箭头沿着圆，$f$ 在该方向上不变；梯度与等值线成直角相交。",
+      );
+      return explainedChoice(rng, {
+        prompt: t(
           "The circles are level curves of $f$, each labelled with its value. Which arrow at the marked point shows the direction of the gradient of $f$?",
           "这些圆是 $f$ 的等值线，都标有函数值。标记点处哪个箭头表示 $f$ 的梯度方向？",
+        ),
+        correct: arrow(correct),
+        wrong: [
+          {
+            option: arrow(opposite),
+            why: t(
+              `This arrow is perpendicular to the circle but points ${rising ? "inward" : "outward"}, toward smaller values of $f$.`,
+              `这个箭头垂直于圆，但指向${rising ? "内" : "外"}侧，即 $f$ 减小的方向。`,
+            ),
+          },
+          { option: arrow(letters[2] as string), why: tangentWhy },
+          { option: arrow(letters[3] as string), why: tangentWhy },
         ],
-        [`Arrow ${correct}`, `箭头 ${correct}`],
-        letters.filter((l) => l !== correct).map((l): Pair => [`Arrow ${l}`, `箭头 ${l}`]),
-        [
-          `The gradient is perpendicular to the circle, so it is one of the two arrows along the radius. The values ${rising ? "rise away from the origin" : "rise toward the origin"}, so the gradient points ${rising ? "outward" : "inward"}, which is arrow ${correct}.`,
-          `梯度垂直于圆，所以是沿半径的两个箭头之一。函数值${rising ? "向远离原点的方向增大" : "向靠近原点的方向增大"}，所以梯度指向${rising ? "外" : "内"}，也就是箭头 ${correct}。`,
-        ],
-        fig(
+        solution: walked(
+          [
+            [
+              ["Keep the perpendicular arrows", "保留垂直的箭头"],
+              t(
+                `The gradient is perpendicular to the circle through the point, so it is arrow ${correct} or arrow ${opposite}, along the radius.`,
+                `梯度垂直于过该点的圆，所以是沿半径的箭头 ${correct} 或箭头 ${opposite}。`,
+              ),
+            ],
+            [
+              ["Pick the rising side", "选择增大的一侧"],
+              t(
+                `The labels ${rising ? "rise away from the origin" : "rise toward the origin"}, so the gradient points ${rising ? "outward" : "inward"}: arrow ${correct}.`,
+                `标记的值${rising ? "向远离原点的方向增大" : "向靠近原点的方向增大"}，所以梯度指向${rising ? "外" : "内"}：箭头 ${correct}。`,
+              ),
+            ],
+          ],
+          t(
+            `Following arrow ${correct} leads toward the circle labelled $${next}$, larger than the value $${levels[1]}$ at the point.`,
+            `沿箭头 ${correct} 前进会走向标有 $${next}$ 的圆，比该点的值 $${levels[1]}$ 大。`,
+          ),
+        ),
+        figure: fig(
           square(8),
           [...marks, { kind: "point", at: [x, y] }],
           [
@@ -301,7 +383,7 @@ const gradientArrow = {
             `三个以原点为圆心的圆，由内向外标有 ${levels.join("，")}，以及位于 (${x}, ${y}) 的四个箭头。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: multivariableDrawings2["the-gradient-as-a-normal-vector#the-gradient-arrow-among-four"],
@@ -312,8 +394,8 @@ const tangentSlope = {
     "the-tangent-to-a-drawn-level-curve",
     ["The tangent to a drawn level curve", "图中等值线的切线"],
     [
-      "A tangent line to a level curve is perpendicular to the gradient there. For a circular level curve the gradient runs along the radius, so the tangent has the negative reciprocal of the slope of the radius. Reading the center and the point from the drawing gives the slope of the radius at once.",
-      "等值线的切线垂直于该点的梯度。对于圆形等值线，梯度沿半径方向，所以切线斜率是半径斜率的负倒数。从图中读出圆心和点，立刻得到半径的斜率。",
+      "A tangent line to a level curve is perpendicular to the gradient there. For a circular level curve the gradient runs along the radius, so the tangent has the negative reciprocal of the slope of the radius. Reading the center and the point from the drawing gives the slope of the radius at once. For a circle centered at $(2, 1)$ through $(7, 13)$, the radius has slope $\\frac{12}{5}$, so the tangent there has slope $-\\frac{5}{12}$.\n\n> **Watch out.** The negative reciprocal both flips the fraction and changes its sign; doing only one of the two gives a wrong slope. Measure the radius from the center $C$, not from the origin.",
+      "等值线的切线垂直于该点的梯度。对于圆形等值线，梯度沿半径方向，所以切线斜率是半径斜率的负倒数。从图中读出圆心和点，立刻得到半径的斜率。对圆心为 $(2, 1)$、经过 $(7, 13)$ 的圆，半径的斜率是 $\\frac{12}{5}$，所以该处切线的斜率是 $-\\frac{5}{12}$。\n\n> **注意。** 负倒数既要把分数倒过来，又要改变符号；只做其中一步都会得到错误的斜率。半径要从圆心 $C$ 量起，而不是从原点。",
     ],
     (rng) => {
       const [h, k] = [rng.int(-1, 1), rng.int(-1, 1)];
@@ -328,18 +410,55 @@ const tangentSlope = {
         [-4, -3],
       ]);
       const answer = Q.of(-dx, dy);
-      return ask(
-        [
-          "The circle is a level curve of $f$, with its center $C$ and a point $P$ marked. What is the slope of the tangent line to the level curve at $P$?",
-          "这个圆是 $f$ 的等值线，标出了圆心 $C$ 和点 $P$。等值线在 $P$ 处的切线斜率是多少？",
-        ],
-        answer,
-        [Q.of(dy, dx), Q.of(dx, dy), Q.of(-dy, dx)],
-        [
-          `The radius from $C$ to $P$ goes $${dx}$ across and $${dy}$ up, so its slope is $${Q.of(dy, dx).toLatex()}$. The tangent is perpendicular to it, with slope $${answer.toLatex()}$.`,
-          `从 $C$ 到 $P$ 的半径横向 $${dx}$，纵向 $${dy}$，斜率是 $${Q.of(dy, dx).toLatex()}$。切线与它垂直，斜率是 $${answer.toLatex()}$。`,
-        ],
-        fig(
+      const radius = Q.of(dy, dx);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The circle is a level curve of $f$, with its center $C$ and a point $P$ marked. What is the slope of the tangent line to the level curve at $P$?",
+            "这个圆是 $f$ 的等值线，标出了圆心 $C$ 和点 $P$。等值线在 $P$ 处的切线斜率是多少？",
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              radius,
+              "That is the slope of the radius, the direction of the gradient; the tangent is perpendicular to it.",
+              "那是半径的斜率，即梯度的方向；切线与它垂直。",
+            ),
+            why(
+              Q.of(dx, dy),
+              "The reciprocal is right, but a perpendicular slope also changes sign.",
+              "倒数对了，但垂直的斜率还要改变符号。",
+            ),
+            why(
+              Q.of(-dy, dx),
+              "The sign is changed, but a perpendicular slope also flips the fraction.",
+              "符号改了，但垂直的斜率还要把分数倒过来。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the radius", "读出半径"],
+                t(
+                  `From $C(${h}, ${k})$ to $P(${h + dx}, ${k + dy})$ the radius goes $${dx}$ across and $${dy}$ up, so its slope is $${radius.toLatex()}$.`,
+                  `从 $C(${h}, ${k})$ 到 $P(${h + dx}, ${k + dy})$，半径横向 $${dx}$，纵向 $${dy}$，斜率是 $${radius.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Take the negative reciprocal", "取负倒数"],
+                t(
+                  `The tangent is perpendicular to the radius, so its slope is $${answer.toLatex()}$.`,
+                  `切线垂直于半径，所以斜率是 $${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Perpendicular slopes multiply to $-1$: $${paren(radius)} \\cdot ${paren(answer)} = -1$.`,
+              `互相垂直的斜率之积为 $-1$：$${paren(radius)} \\cdot ${paren(answer)} = -1$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           square(7),
           [
             { kind: "circle", center: [h, k], r: 5, accent: true },
@@ -351,7 +470,7 @@ const tangentSlope = {
             `圆心 C 位于 (${h}, ${k})、经过位于 (${h + dx}, ${k + dy}) 的 P 的圆。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings2["tangent-lines-to-level-curves#the-tangent-to-a-drawn-level-curve"],

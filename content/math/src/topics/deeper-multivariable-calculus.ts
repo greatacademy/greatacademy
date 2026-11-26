@@ -12,7 +12,7 @@ import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { explainedChoice, numberProblem, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
+import { explainedChoice, numberProblem, pointLatex, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
@@ -405,8 +405,8 @@ const directionWithNoChange: KnowledgePointDef = {
   figure: multivariableDrawings2["directional-derivatives#a-direction-in-which-a-function-does-not-change"],
   title: t("A direction in which a function does not change", "函数值不变的方向"),
   explanation: t(
-    "The directional derivative is $\\nabla f \\cdot \\mathbf{u}$. It is zero exactly when $\\mathbf{u}$ is perpendicular to the gradient, which is the direction along the level curve. So swap the components of the gradient and change one sign to find such a direction.",
-    "方向导数是 $\\nabla f \\cdot \\mathbf{u}$。它为零，当且仅当 $\\mathbf{u}$ 与梯度垂直，也就是沿等值线的方向。所以交换梯度的两个分量并改变其中一个的符号，就得到这样的方向。",
+    "The directional derivative is $\\nabla f \\cdot \\mathbf{u}$. It is zero exactly when $\\mathbf{u}$ is perpendicular to the gradient, which is the direction along the level curve. So swap the components of the gradient and change one sign to find such a direction. For $f = xy^2$ at $(2, 1)$, $\\nabla f = \\langle y^2, 2xy \\rangle = \\langle 1, 4 \\rangle$, and $\\langle 4, -1 \\rangle$ has dot product $4 - 4 = 0$ with it.\n\n> **Watch out.** Swapping the components alone is not enough: $\\langle 4, 1 \\rangle$ has dot product $8$ with $\\langle 1, 4 \\rangle$. And the gradient itself, or its negative, is the direction of fastest change, not of no change.",
+    "方向导数是 $\\nabla f \\cdot \\mathbf{u}$。它为零，当且仅当 $\\mathbf{u}$ 与梯度垂直，也就是沿等值线的方向。所以交换梯度的两个分量并改变其中一个的符号，就得到这样的方向。对 $f = xy^2$ 在 $(2, 1)$ 处，$\\nabla f = \\langle y^2, 2xy \\rangle = \\langle 1, 4 \\rangle$，而 $\\langle 4, -1 \\rangle$ 与它的数量积是 $4 - 4 = 0$。\n\n> **注意。** 只交换分量是不够的：$\\langle 4, 1 \\rangle$ 与 $\\langle 1, 4 \\rangle$ 的数量积是 $8$。梯度本身或它的相反方向是变化最快的方向，而不是不变的方向。",
   ),
   generate(rng) {
     let g: [number, number];
@@ -423,19 +423,52 @@ const directionWithNoChange: KnowledgePointDef = {
     } while (Math.abs(g[0]) === Math.abs(g[1]));
     const f = poly([a, "x^2"], [b, "y"]);
     const vec = (u: number, v: number) => `\\langle ${u}, ${v} \\rangle`;
-    return pickChoice(
-      rng,
-      t(
+    return explainedChoice(rng, {
+      prompt: t(
         `In which direction does $f(x, y) = ${f}$ have a zero directional derivative at $(${x}, ${y})$?`,
         `在点 $(${x}, ${y})$ 处，$f(x, y) = ${f}$ 沿哪个方向的方向导数为零？`,
       ),
-      both(vec(g[1], -g[0])),
-      [both(vec(g[0], g[1])), both(vec(g[1], g[0])), both(vec(-g[0], -g[1]))],
-      t(
-        `The gradient there is $${vec(g[0], g[1])}$. The direction $${vec(g[1], -g[0])}$ has dot product $${g[0]}(${g[1]}) + ${inParens(g[1])}(${-g[0]}) = 0$ with it.`,
-        `该点的梯度是 $${vec(g[0], g[1])}$。方向 $${vec(g[1], -g[0])}$ 与它的数量积是 $${g[0]}(${g[1]}) + ${inParens(g[1])}(${-g[0]}) = 0$。`,
+      correct: both(vec(g[1], -g[0])),
+      wrong: [
+        {
+          option: both(vec(g[0], g[1])),
+          why: t("This is the gradient itself, the direction in which $f$ increases fastest.", "这就是梯度本身，是 $f$ 增大最快的方向。"),
+        },
+        {
+          option: both(vec(g[1], g[0])),
+          why: t(
+            `The components are swapped but no sign is changed, so the dot product with the gradient is $${2 * g[0] * g[1]}$, not $0$.`,
+            `分量交换了，但没有改变符号，所以与梯度的数量积是 $${2 * g[0] * g[1]}$，不是 $0$。`,
+          ),
+        },
+        {
+          option: both(vec(-g[0], -g[1])),
+          why: t("This is the negative gradient, the direction in which $f$ decreases fastest.", "这是负梯度，是 $f$ 减小最快的方向。"),
+        },
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the gradient", "求梯度"],
+            t(
+              `$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${b} \\rangle$, which is $${vec(g[0], g[1])}$ at $(${x}, ${y})$.`,
+              `$\\nabla f = \\langle ${poly([2 * a, "x"])}, ${b} \\rangle$，在 $(${x}, ${y})$ 处为 $${vec(g[0], g[1])}$。`,
+            ),
+          ],
+          [
+            ["Turn it a right angle", "旋转一个直角"],
+            t(
+              `Swap the components and change the sign of the second: $${vec(g[1], -g[0])}$.`,
+              `交换两个分量并改变第二个的符号：$${vec(g[1], -g[0])}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The dot product is $${g[0]}(${g[1]}) + ${inParens(g[1])}(${-g[0]}) = 0$, so the directional derivative is zero.`,
+          `数量积是 $${g[0]}(${g[1]}) + ${inParens(g[1])}(${-g[0]}) = 0$，所以方向导数为零。`,
+        ),
       ),
-    );
+    });
   },
 };
 
@@ -443,8 +476,8 @@ const implicitPartial: KnowledgePointDef = {
   id: "an-implicit-partial-derivative-from-the-chain-rule",
   title: t("An implicit partial derivative from the chain rule", "由链式法则求隐函数偏导数"),
   explanation: t(
-    "If $F(x, y, z) = c$ defines $z$ as a function of $x$ and $y$, differentiating with respect to $x$ gives $F_x + F_z\\frac{\\partial z}{\\partial x} = 0$. So $\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$ wherever $F_z \\ne 0$. Note the minus sign, which the fraction notation hides.",
-    "如果 $F(x, y, z) = c$ 确定 $z$ 是 $x$、$y$ 的函数，对 $x$ 求导得 $F_x + F_z\\frac{\\partial z}{\\partial x} = 0$。所以当 $F_z \\ne 0$ 时，$\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$。注意负号，分数的写法会让人忽略它。",
+    "If $F(x, y, z) = c$ defines $z$ as a function of $x$ and $y$, differentiating with respect to $x$ gives $F_x + F_z\\frac{\\partial z}{\\partial x} = 0$. So $\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$ wherever $F_z \\ne 0$. For $x^2 + xz + z^3 = 3$ at $(1, 1)$ with $z = 1$, $F_x = 2x + z = 3$ and $F_z = x + 3z^2 = 4$, so $\\frac{\\partial z}{\\partial x} = -\\frac{3}{4}$.\n\n> **Watch out.** Note the minus sign, which the fraction notation hides. And keep $F_z$ in the denominator: $-\\frac{F_z}{F_x}$ is the reciprocal, not the answer.",
+    "如果 $F(x, y, z) = c$ 确定 $z$ 是 $x$、$y$ 的函数，对 $x$ 求导得 $F_x + F_z\\frac{\\partial z}{\\partial x} = 0$。所以当 $F_z \\ne 0$ 时，$\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$。对 $x^2 + xz + z^3 = 3$，在 $(1, 1)$、$z = 1$ 处，$F_x = 2x + z = 3$，$F_z = x + 3z^2 = 4$，所以 $\\frac{\\partial z}{\\partial x} = -\\frac{3}{4}$。\n\n> **注意。** 注意负号，分数的写法会让人忽略它。还要把 $F_z$ 放在分母：$-\\frac{F_z}{F_x}$ 是倒数，不是答案。",
   ),
   generate(rng) {
     let a: number;
@@ -472,10 +505,40 @@ const implicitPartial: KnowledgePointDef = {
         `方程 $${F} = ${c}$ 在点 $(${x}, ${y}, ${z})$ 附近确定 $z$ 是 $x$、$y$ 的函数。求该点处的 $\\frac{\\partial z}{\\partial x}$。`,
       ),
       answer,
-      wrong: [answer.neg(), Q.of(-Fz, Fx), Q.of(Fx)],
-      solution: t(
-        `Here $F_x = ${a}y = ${Fx}$ and $F_z = ${b}y + 2z = ${Fz}$ at the point. So $\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z} = ${answer.toLatex()}$.`,
-        `在该点 $F_x = ${a}y = ${Fx}$，$F_z = ${b}y + 2z = ${Fz}$。所以 $\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          "The minus sign is dropped: $\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$.",
+          "漏掉了负号：$\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$。",
+        ),
+        why(Q.of(-Fz, Fx), "The fraction is upside down; $F_z$ belongs in the denominator.", "分数倒过来了；$F_z$ 应在分母。"),
+        why(
+          Fx,
+          "That is $F_x$, the partial derivative of $F$; it still has to be divided by $-F_z$.",
+          "那是 $F_x$，即 $F$ 的偏导数；还要除以 $-F_z$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate F", "对 F 求偏导"],
+            t(
+              `$F_x = ${poly([a, "y"])} = ${Fx}$ and $F_z = ${poly([b, "y"], [2, "z"])} = ${Fz}$ at the point.`,
+              `在该点 $F_x = ${poly([a, "y"])} = ${Fx}$，$F_z = ${poly([b, "y"], [2, "z"])} = ${Fz}$。`,
+            ),
+          ],
+          [
+            ["Divide with the minus sign", "带负号相除"],
+            t(
+              `$\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z} = ${answer.toLatex()}$.`,
+              `$\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The chain rule equation holds: $F_x + F_z \\frac{\\partial z}{\\partial x} = ${Fx} + ${inParens(Fz)} \\cdot ${answer.toNumber() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = 0$.`,
+          `链式法则的方程成立：$F_x + F_z \\frac{\\partial z}{\\partial x} = ${Fx} + ${inParens(Fz)} \\cdot ${answer.toNumber() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = 0$。`,
+        ),
       ),
     });
   },
@@ -485,15 +548,24 @@ const harmonicParameter: KnowledgePointDef = {
   id: "the-coefficient-that-makes-a-function-harmonic",
   title: t("The coefficient that makes a function harmonic", "使函数调和的系数"),
   explanation: t(
-    "A function is harmonic when $u_{xx} + u_{yy} = 0$ everywhere. These functions describe steady heat and electric potential. Compute both second partial derivatives with the coefficient left in, then require their sum to vanish for every $x$ and $y$.",
-    "满足处处 $u_{xx} + u_{yy} = 0$ 的函数称为调和函数，它们描述稳定的热分布和电势。保留系数算出两个二阶偏导数，再要求它们的和对所有 $x$、$y$ 都为零。",
+    "A function is harmonic when $u_{xx} + u_{yy} = 0$ everywhere. These functions describe steady heat and electric potential. Compute both second partial derivatives with the coefficient left in, then require their sum to vanish for every $x$ and $y$. For $u = e^{3x}\\cos(ky)$, $u_{xx} = 9u$ and $u_{yy} = -k^{2}u$, so the sum $(9 - k^{2})u$ vanishes everywhere when $k = 3$ or $k = -3$.\n\n> **Watch out.** Keep the factors that differentiating twice brings down: $x^{3}$ gives $6x$ but $y^{2}$ gives only $2$. Making the coefficients of $u$ itself opposite is not enough unless those factors agree.",
+    "满足处处 $u_{xx} + u_{yy} = 0$ 的函数称为调和函数，它们描述稳定的热分布和电势。保留系数算出两个二阶偏导数，再要求它们的和对所有 $x$、$y$ 都为零。对 $u = e^{3x}\\cos(ky)$，$u_{xx} = 9u$，$u_{yy} = -k^{2}u$，所以和 $(9 - k^{2})u$ 处处为零当且仅当 $k = 3$ 或 $k = -3$。\n\n> **注意。** 要保留求两次导带下来的因子：$x^{3}$ 得 $6x$，而 $y^{2}$ 只得 $2$。只让 $u$ 本身的系数互为相反数是不够的，除非这些因子相同。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const form = rng.int(0, 2);
     const u = [poly([a, "x^3"], [1, "kxy^2"]), poly([a, "x^2"], [1, "ky^2"]), poly([a, "x^2y"], [1, "ky^3"])][form]!;
     const answer = [Q.of(-3 * a), Q.of(-a), Q.of(-a, 3)][form]!;
-    const sum = [`${6 * a}x + 2kx`, `${2 * a} + 2k`, `${2 * a}y + 6ky`][form]!;
+    const [fa, fk] = (
+      [
+        [6, 2],
+        [2, 2],
+        [2, 6],
+      ] as const
+    )[form]!;
+    const v = ["x", "", "y"][form]!;
+    const uxx = poly([fa * a, v]);
+    const flipped = Q.of(-a * fk, fa);
     return numberProblem({
       prompt: t(
         `The function $u = ${u}$ satisfies $u_{xx} + u_{yy} = 0$ everywhere. Find $k$.`,
@@ -501,10 +573,46 @@ const harmonicParameter: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [answer.neg(), Q.of(-a), Q.of(a).mul(Q.of(3))],
-      solution: t(
-        `The sum of the second partial derivatives is $${sum}$. It vanishes everywhere only when $k = ${answer.toLatex()}$.`,
-        `两个二阶偏导数之和是 $${sum}$。只有 $k = ${answer.toLatex()}$ 时它才处处为零。`,
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          `With $k = ${answer.neg().toLatex()}$ the two second derivatives add up to $${poly([2 * fa * a, v])}$ instead of cancelling.`,
+          `取 $k = ${answer.neg().toLatex()}$ 时，两个二阶导数相加得 $${poly([2 * fa * a, v])}$，并没有抵消。`,
+        ),
+        why(
+          -a,
+          `Differentiating twice brings down $${fa}$ from the first term but $${fk}$ from the second; opposite coefficients in $u$ are not enough.`,
+          `求两次导时，第一项带下 $${fa}$，第二项带下 $${fk}$；只让 $u$ 中的系数相反是不够的。`,
+        ),
+        why(
+          flipped,
+          `The factors are swapped: $u_{xx}$ carries $${fa}$ and $u_{yy}$ carries $${fk}$, so $${fk}k = ${-fa * a}$.`,
+          `因子颠倒了：$u_{xx}$ 带 $${fa}$，$u_{yy}$ 带 $${fk}$，所以 $${fk}k = ${-fa * a}$。`,
+        ),
+        why(
+          0,
+          `With $k = 0$ the sum is $u_{xx} = ${uxx}$, which is not zero everywhere.`,
+          `取 $k = 0$ 时，和为 $u_{xx} = ${uxx}$，并不处处为零。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate twice", "求两次导"],
+            t(`$u_{xx} = ${uxx}$ and $u_{yy} = ${fk}k${v}$.`, `$u_{xx} = ${uxx}$，$u_{yy} = ${fk}k${v}$。`),
+          ],
+          [
+            ["Make the sum vanish", "令和为零"],
+            t(
+              `$u_{xx} + u_{yy} = (${fa * a} + ${fk}k)${v}$ is zero everywhere only when $${fk}k = ${-fa * a}$, so $k = ${answer.toLatex()}$.`,
+              `$u_{xx} + u_{yy} = (${fa * a} + ${fk}k)${v}$ 处处为零当且仅当 $${fk}k = ${-fa * a}$，所以 $k = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $k = ${answer.toLatex()}$, $u_{yy} = ${poly([-fa * a, v])}$, which cancels $u_{xx} = ${uxx}$ at every point.`,
+          `取 $k = ${answer.toLatex()}$，$u_{yy} = ${poly([-fa * a, v])}$，在每一点都与 $u_{xx} = ${uxx}$ 抵消。`,
+        ),
       ),
     });
   },
@@ -515,8 +623,8 @@ const tangentPlaneParallel: KnowledgePointDef = {
   figure: multivariableDrawings2["tangent-planes-to-surfaces#where-a-tangent-plane-is-parallel-to-a-given-plane"],
   title: t("Where a tangent plane is parallel to a given plane", "切平面在何处与已知平面平行"),
   explanation: t(
-    "The tangent plane to $z = f(x, y)$ has slopes $f_x$ and $f_y$. The plane $z = px + qy + s$ has slopes $p$ and $q$. So the two are parallel where $f_x = p$ and $f_y = q$, which are two equations for the point of tangency.",
-    "曲面 $z = f(x, y)$ 的切平面斜率是 $f_x$ 和 $f_y$，平面 $z = px + qy + s$ 的斜率是 $p$ 和 $q$。所以两者平行的位置满足 $f_x = p$，$f_y = q$，这是切点的两个方程。",
+    "The tangent plane to $z = f(x, y)$ has slopes $f_x$ and $f_y$. The plane $z = px + qy + s$ has slopes $p$ and $q$. So the two are parallel where $f_x = p$ and $f_y = q$, which are two equations for the point of tangency. For $z = e^x + y^2$ and the plane $z = x + 6y$, $e^x = 1$ gives $x = 0$ and $2y = 6$ gives $y = 3$, so the point is $(0, 3, 10)$.\n\n> **Watch out.** Take $z$ from the surface, not from the given plane: the plane is only parallel to the tangent plane and usually does not pass through the point.",
+    "曲面 $z = f(x, y)$ 的切平面斜率是 $f_x$ 和 $f_y$，平面 $z = px + qy + s$ 的斜率是 $p$ 和 $q$。所以两者平行的位置满足 $f_x = p$，$f_y = q$，这是切点的两个方程。对 $z = e^x + y^2$ 与平面 $z = x + 6y$，由 $e^x = 1$ 得 $x = 0$，由 $2y = 6$ 得 $y = 3$，所以切点是 $(0, 3, 10)$。\n\n> **注意。** $z$ 要由曲面求，而不是由已知平面求：已知平面只与切平面平行，通常并不经过切点。",
   ),
   generate(rng) {
     const a = rng.int(1, 3);
@@ -527,23 +635,58 @@ const tangentPlaneParallel: KnowledgePointDef = {
     const q = 2 * b * y;
     const z = a * x * x + b * y * y;
     const s = rng.pick([-9, -5, 1, 4, 7].filter((v) => v !== p * x + q * y - z));
-    return pointProblem({
+    const mistakes: [number[], string, string][] = [
+      [
+        [p, q, z],
+        "These are the slopes $p$ and $q$; solve $f_x = p$ and $f_y = q$ for $x$ and $y$.",
+        "这是斜率 $p$ 和 $q$；要由 $f_x = p$、$f_y = q$ 解出 $x$ 和 $y$。",
+      ],
+      [
+        [x, y, p * x + q * y + s],
+        "This height comes from the given plane, which does not pass through the point; take $z$ from the surface.",
+        "这个高度来自已知平面，它并不经过切点；$z$ 要由曲面求。",
+      ],
+      [
+        [-x, -y, z],
+        "At this point the slopes are $-p$ and $-q$, so the tangent plane tilts the opposite way.",
+        "在这一点斜率是 $-p$ 和 $-q$，切平面倾斜方向相反。",
+      ],
+    ];
+    const problem = pointProblem({
       prompt: t(
         `Find the point of the surface $z = ${poly([a, "x^2"], [b, "y^2"])}$ where the tangent plane is parallel to $z = ${poly([p, "x"], [q, "y"], [s, ""])}$. Answer as $(x, y, z)$.`,
         `求曲面 $z = ${poly([a, "x^2"], [b, "y^2"])}$ 上切平面与 $z = ${poly([p, "x"], [q, "y"], [s, ""])}$ 平行的点，写成 $(x, y, z)$。`,
       ),
       answer: [x, y, z],
       vars: ["x", "y", "z"],
-      wrong: [
-        [p, q, z],
-        [x, y, p * x + q * y + s],
-        [-x, -y, z],
-      ],
-      solution: t(
-        `Match the slopes: $${2 * a}x = ${p}$ and $${2 * b}y = ${q}$, so $x = ${x}$ and $y = ${y}$. The surface then gives $z = ${z}$.`,
-        `比较斜率：$${2 * a}x = ${p}$，$${2 * b}y = ${q}$，所以 $x = ${x}$，$y = ${y}$。由曲面得 $z = ${z}$。`,
+      wrong: mistakes.map(([v]) => v),
+      solution: walked(
+        [
+          [
+            ["Match the slopes", "比较斜率"],
+            t(
+              `$f_x = ${2 * a}x = ${p}$ and $f_y = ${2 * b}y = ${q}$, so $x = ${x}$ and $y = ${y}$.`,
+              `$f_x = ${2 * a}x = ${p}$，$f_y = ${2 * b}y = ${q}$，所以 $x = ${x}$，$y = ${y}$。`,
+            ),
+          ],
+          [
+            ["Find the height on the surface", "求曲面上的高度"],
+            t(
+              `$z = ${a === 1 ? "" : a}(${x})^2 + ${b === 1 ? "" : b}(${y})^2 = ${z}$.`,
+              `$z = ${a === 1 ? "" : a}(${x})^2 + ${b === 1 ? "" : b}(${y})^2 = ${z}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The tangent plane there is $z = ${z} + ${inParens(p)}(x - ${inParens(x)}) + ${inParens(q)}(y - ${inParens(y)})$, with the same slopes $${p}$ and $${q}$ as the given plane.`,
+          `该点的切平面是 $z = ${z} + ${inParens(p)}(x - ${inParens(x)}) + ${inParens(q)}(y - ${inParens(y)})$，与已知平面的斜率 $${p}$、$${q}$ 相同。`,
+        ),
       ),
     });
+    return withMistakes(
+      problem,
+      mistakes.map(([v, en, zh]) => say(pointLatex(v), en, zh)),
+    );
   },
 };
 
@@ -2063,8 +2206,8 @@ const integralWithLog: KnowledgePointDef = {
   id: "an-integral-with-a-logarithm-from-a-parameter",
   title: t("An integral with a logarithm from a parameter", "由参数得到含对数的积分"),
   explanation: t(
-    "Differentiating under the integral sign can evaluate integrals that look hard. Since $\\frac{\\partial}{\\partial t}x^t = x^t\\ln x$, the integral of $x^t\\ln x$ is the derivative with respect to $t$ of the integral of $x^t$. On $[0, 1]$ that integral is $\\frac{1}{t + 1}$, so the logarithm appears without integration by parts.",
-    "在积分号下求导，可以算出看起来很难的积分。由于 $\\frac{\\partial}{\\partial t}x^t = x^t\\ln x$，$x^t\\ln x$ 的积分就是 $x^t$ 的积分对 $t$ 的导数。在 $[0, 1]$ 上这个积分是 $\\frac{1}{t + 1}$，所以不用分部积分就能处理对数。",
+    "Differentiating under the integral sign can evaluate integrals that look hard. Since $\\frac{\\partial}{\\partial t}x^t = x^t\\ln x$, the integral of $x^t\\ln x$ is the derivative with respect to $t$ of the integral of $x^t$. On $[0, 1]$ that integral is $\\frac{1}{t + 1}$, so the logarithm appears without integration by parts. For $\\int_0^1 \\sqrt{x}\\ln x\\,dx$, take $t = \\frac{1}{2}$: the derivative $-\\frac{1}{(t + 1)^2}$ gives $-\\frac{1}{(3/2)^2} = -\\frac{4}{9}$.\n\n> **Watch out.** The derivative of $\\frac{1}{t + 1}$ is $-\\frac{1}{(t + 1)^2}$: the denominator is squared and the sign is negative. That matches $\\ln x < 0$ on $(0, 1)$, so the integral of a positive multiple of $x^t\\ln x$ there is negative.",
+    "在积分号下求导，可以算出看起来很难的积分。由于 $\\frac{\\partial}{\\partial t}x^t = x^t\\ln x$，$x^t\\ln x$ 的积分就是 $x^t$ 的积分对 $t$ 的导数。在 $[0, 1]$ 上这个积分是 $\\frac{1}{t + 1}$，所以不用分部积分就能处理对数。对 $\\int_0^1 \\sqrt{x}\\ln x\\,dx$，取 $t = \\frac{1}{2}$：导数 $-\\frac{1}{(t + 1)^2}$ 给出 $-\\frac{1}{(3/2)^2} = -\\frac{4}{9}$。\n\n> **注意。** $\\frac{1}{t + 1}$ 的导数是 $-\\frac{1}{(t + 1)^2}$：分母要平方，符号为负。这与 $(0, 1)$ 上 $\\ln x < 0$ 一致，所以 $x^t\\ln x$ 的正倍数在那里的积分是负的。",
   ),
   generate(rng) {
     const n = rng.int(1, 9);
@@ -2076,10 +2219,48 @@ const integralWithLog: KnowledgePointDef = {
         `计算 $\\int_0^1 ${coefficient(k)}${powerOf("x", n)}\\ln x\\,dx$。`,
       ),
       answer,
-      wrong: [answer.neg(), Q.of(-k, n + 1), Q.of(-k, n * n)],
-      solution: t(
-        `The integral of $x^t$ on $[0, 1]$ is $\\frac{1}{t + 1}$, whose derivative is $-\\frac{1}{(t + 1)^2}$. At $t = ${n}$ the integral is $${k} \\cdot \\left(-\\frac{1}{${(n + 1) ** 2}}\\right) = ${answer.toLatex()}$.`,
-        `$x^t$ 在 $[0, 1]$ 上的积分是 $\\frac{1}{t + 1}$，它的导数是 $-\\frac{1}{(t + 1)^2}$。在 $t = ${n}$ 处，积分是 $${k} \\cdot \\left(-\\frac{1}{${(n + 1) ** 2}}\\right) = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          "The sign is lost: $\\ln x < 0$ on $(0, 1)$, so the integral is negative.",
+          "符号丢了：在 $(0, 1)$ 上 $\\ln x < 0$，所以积分是负的。",
+        ),
+        why(
+          Q.of(-k, n + 1),
+          "The derivative of $\\frac{1}{t + 1}$ has $(t + 1)^2$ in the denominator, not $t + 1$.",
+          "$\\frac{1}{t + 1}$ 的导数分母是 $(t + 1)^2$，不是 $t + 1$。",
+        ),
+        why(
+          Q.of(-k, n * n),
+          `The integral of $x^t$ is $\\frac{1}{t + 1}$, so the square is $(${n} + 1)^2$, not $${n}^2$.`,
+          `$x^t$ 的积分是 $\\frac{1}{t + 1}$，所以平方的是 $(${n} + 1)^2$，不是 $${n}^2$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate the power", "积分幂函数"],
+            t("$\\int_0^1 x^t\\,dx = \\frac{1}{t + 1}$.", "$\\int_0^1 x^t\\,dx = \\frac{1}{t + 1}$。"),
+          ],
+          [
+            ["Differentiate in t", "对 t 求导"],
+            t(
+              `$\\int_0^1 x^t\\ln x\\,dx = -\\frac{1}{(t + 1)^2}$, which is $-\\frac{1}{${(n + 1) ** 2}}$ at $t = ${n}$.`,
+              `$\\int_0^1 x^t\\ln x\\,dx = -\\frac{1}{(t + 1)^2}$，在 $t = ${n}$ 处为 $-\\frac{1}{${(n + 1) ** 2}}$。`,
+            ),
+          ],
+          [
+            ["Multiply by the constant", "乘以常数"],
+            t(
+              `$${k} \\cdot \\left(-\\frac{1}{${(n + 1) ** 2}}\\right) = ${answer.toLatex()}$.`,
+              `$${k} \\cdot \\left(-\\frac{1}{${(n + 1) ** 2}}\\right) = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Integration by parts agrees: $\\int_0^1 x^{${n}}\\ln x\\,dx = \\left[\\frac{x^{${n + 1}}}{${n + 1}}\\ln x\\right]_0^1 - \\int_0^1 \\frac{x^{${n}}}{${n + 1}}\\,dx = 0 - \\frac{1}{${(n + 1) ** 2}}$.`,
+          `分部积分得到同样结果：$\\int_0^1 x^{${n}}\\ln x\\,dx = \\left[\\frac{x^{${n + 1}}}{${n + 1}}\\ln x\\right]_0^1 - \\int_0^1 \\frac{x^{${n}}}{${n + 1}}\\,dx = 0 - \\frac{1}{${(n + 1) ** 2}}$。`,
+        ),
       ),
     });
   },
@@ -2408,8 +2589,8 @@ const linearizationError: KnowledgePointDef = {
   id: "the-exact-error-of-a-linearization-of-a-product",
   title: t("The exact error of a linearization of a product", "乘积线性化的精确误差"),
   explanation: t(
-    "For $f(x, y) = cxy$ at $(a, b)$, the linearization is $L = cab + cb(x - a) + ca(y - b)$. Writing $x = a + h$ and $y = b + k$ and expanding $f$ exactly gives the same three terms plus one more, $chk$. So the error is exactly this product. It is small compared with the steps themselves, which is what it means for $f$ to be differentiable at the point.",
-    "对 $f(x, y) = cxy$ 在 $(a, b)$ 处，线性化是 $L = cab + cb(x - a) + ca(y - b)$。令 $x = a + h$，$y = b + k$，精确展开 $f$，得到同样的三项，再加一项 $chk$。所以误差恰好就是这个乘积。它相对于步长本身很小，这正是 $f$ 在该点可微的含义。",
+    "For $f(x, y) = cxy$ at $(a, b)$, the linearization is $L = cab + cb(x - a) + ca(y - b)$. Writing $x = a + h$ and $y = b + k$ and expanding $f$ exactly gives the same three terms plus one more, $chk$. So the error is exactly this product. It is small compared with the steps themselves, which is what it means for $f$ to be differentiable at the point. For $f = 5xy$ at $(2, 3)$ and the point $(2.1, 2.8)$, $h = 0.1$ and $k = -0.2$, so $f - L = 5(0.1)(-0.2) = -0.1$.\n\n> **Watch out.** The error is $f - L$, so its sign matters: it is positive exactly when $h$ and $k$ have the same sign (for $c > 0$). The terms $cbh$ and $cak$ belong to $L$, not to the error.",
+    "对 $f(x, y) = cxy$ 在 $(a, b)$ 处，线性化是 $L = cab + cb(x - a) + ca(y - b)$。令 $x = a + h$，$y = b + k$，精确展开 $f$，得到同样的三项，再加一项 $chk$。所以误差恰好就是这个乘积。它相对于步长本身很小，这正是 $f$ 在该点可微的含义。对 $f = 5xy$ 在 $(2, 3)$ 处与点 $(2.1, 2.8)$，$h = 0.1$，$k = -0.2$，所以 $f - L = 5(0.1)(-0.2) = -0.1$。\n\n> **注意。** 误差是 $f - L$，符号很重要：（当 $c > 0$ 时）它为正当且仅当 $h$ 与 $k$ 同号。$cbh$ 和 $cak$ 两项属于 $L$，不属于误差。",
   ),
   generate(rng) {
     const c = rng.int(2, 6);
@@ -2425,10 +2606,35 @@ const linearizationError: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [0, c * (a * k + b * h), h * k, -answer],
-      solution: t(
-        `Here $h = ${h}$ and $k = ${k}$, and expanding $f(a + h, b + k)$ leaves the extra term $${c}hk = ${answer}$.`,
-        `这里 $h = ${h}$，$k = ${k}$，展开 $f(a + h, b + k)$ 后多出一项 $${c}hk = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          0,
+          "The linearization is not exact for a product: the term $chk$ is left over.",
+          "对乘积来说线性化并不精确：还剩下 $chk$ 这一项。",
+        ),
+        why(
+          c * (a * k + b * h),
+          "That is $L - f(a, b)$, the change the linearization predicts, not the error.",
+          "那是 $L - f(a, b)$，即线性化预测的变化量，不是误差。",
+        ),
+        why(h * k, `The factor $${c}$ is missing: the error is $${c}hk$.`, `漏了因子 $${c}$：误差是 $${c}hk$。`),
+        why(-answer, "That is $L - f$; the question asks for $f - L$.", "那是 $L - f$；题目求的是 $f - L$。"),
+      ]),
+      solution: walked(
+        [
+          [["Read the steps", "读出步长"], t(`$h = ${h}$ and $k = ${k}$.`, `$h = ${h}$，$k = ${k}$。`)],
+          [
+            ["Use the exact error", "用精确误差"],
+            t(
+              `Expanding $f(a + h, b + k)$ leaves the extra term $${c}hk = ${c} \\cdot ${inParens(h)} \\cdot ${inParens(k)} = ${answer}$.`,
+              `展开 $f(a + h, b + k)$ 后多出一项 $${c}hk = ${c} \\cdot ${inParens(h)} \\cdot ${inParens(k)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly: $f = ${c} \\cdot ${inParens(a + h)} \\cdot ${inParens(b + k)} = ${c * (a + h) * (b + k)}$ and $L = ${c * a * b} + ${inParens(c * b * h)} + ${inParens(c * a * k)} = ${c * a * b + c * b * h + c * a * k}$, which differ by $${answer}$.`,
+          `直接计算：$f = ${c} \\cdot ${inParens(a + h)} \\cdot ${inParens(b + k)} = ${c * (a + h) * (b + k)}$，$L = ${c * a * b} + ${inParens(c * b * h)} + ${inParens(c * a * k)} = ${c * a * b + c * b * h + c * a * k}$，两者相差 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -2439,13 +2645,13 @@ const horizontalTangent: KnowledgePointDef = {
   figure: multivariableDrawings2["tangent-lines-to-level-curves#where-a-level-curve-has-a-horizontal-tangent"],
   title: t("Where a level curve has a horizontal tangent", "等值线切线水平的位置"),
   explanation: t(
-    "The tangent to a level curve $F(x, y) = k$ is perpendicular to $\\nabla F$. A horizontal tangent therefore means that the gradient points straight up or down, so $F_x = 0$ while $F_y \\ne 0$. The condition $F_x = 0$ gives a line through the origin here, and it must still be combined with the equation of the curve to find the actual points of tangency.",
-    "等值线 $F(x, y) = k$ 的切线垂直于 $\\nabla F$。所以切线水平意味着梯度竖直朝上或朝下，即 $F_x = 0$ 而 $F_y \\ne 0$。条件 $F_x = 0$ 在这里给出一条过原点的直线，还必须与曲线方程联立，才能求出实际的切点。",
+    "The tangent to a level curve $F(x, y) = k$ is perpendicular to $\\nabla F$. A horizontal tangent therefore means that the gradient points straight up or down, so $F_x = 0$ while $F_y \\ne 0$. The condition $F_x = 0$ gives a line through the origin here, and it must still be combined with the equation of the curve to find the actual points of tangency. For $x^2 + 4xy + 5y^2 = 4$, $F_x = 2x + 4y = 0$ gives $x = -2y$; then $4y^2 - 8y^2 + 5y^2 = y^2 = 4$, so the points are $(-4, 2)$ and $(4, -2)$.\n\n> **Watch out.** A horizontal tangent comes from $F_x = 0$, not $F_y = 0$, which gives vertical tangents. And the line $F_x = 0$ meets the curve at two points with opposite signs, so use the sign condition to pick the right one.",
+    "等值线 $F(x, y) = k$ 的切线垂直于 $\\nabla F$。所以切线水平意味着梯度竖直朝上或朝下，即 $F_x = 0$ 而 $F_y \\ne 0$。条件 $F_x = 0$ 在这里给出一条过原点的直线，还必须与曲线方程联立，才能求出实际的切点。对 $x^2 + 4xy + 5y^2 = 4$，$F_x = 2x + 4y = 0$ 给出 $x = -2y$；于是 $4y^2 - 8y^2 + 5y^2 = y^2 = 4$，切点是 $(-4, 2)$ 和 $(4, -2)$。\n\n> **注意。** 水平切线来自 $F_x = 0$，而不是 $F_y = 0$，后者给出竖直切线。直线 $F_x = 0$ 与曲线交于符号相反的两点，要用符号条件选出正确的那个。",
   ),
   generate(rng) {
-    const a = rng.int(1, 3);
-    const c = rng.int(2, 4);
-    const m = rng.int(1, 4);
+    const a = rng.int(2, 3);
+    const c = rng.int(2, 5);
+    const m = rng.int(1, 5);
     const level = a * (c * a - 1) * m * m;
     const answer = -a * m;
     const form = poly([a, "x^2"], [2, "xy"], [c, "y^2"]);
@@ -2456,10 +2662,45 @@ const horizontalTangent: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, m, -m - 1, -c * m],
-      solution: t(
-        `Setting $F_x = ${poly([2 * a, "x"], [2, "y"])} = 0$ gives $y = ${a === 1 ? "-x" : `-${a}x`}$. Substituting in the curve gives $x = ${m}$, so $y = ${answer}$.`,
-        `令 $F_x = ${poly([2 * a, "x"], [2, "y"])} = 0$，得 $y = ${a === 1 ? "-x" : `-${a}x`}$。代入曲线，得 $x = ${m}$，所以 $y = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          -answer,
+          `That is the $y$-coordinate of the other point, where $x = ${-m} < 0$.`,
+          `那是另一点的 $y$ 坐标，那里 $x = ${-m} < 0$。`,
+        ),
+        why(
+          m,
+          `$${m}$ is the $x$-coordinate of the point; its $y$-coordinate is $${-a}x$.`,
+          `$${m}$ 是该点的 $x$ 坐标；它的 $y$ 坐标是 $${-a}x$。`,
+        ),
+        why(
+          -m,
+          `$F_x = 0$ gives $y = -${a}x$, not $y = -x$; the factor $${a}$ is lost.`,
+          `$F_x = 0$ 给出 $y = -${a}x$，不是 $y = -x$；漏掉了因子 $${a}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Set F_x to zero", "令 F_x 为零"],
+            t(
+              `$F_x = ${poly([2 * a, "x"], [2, "y"])} = 0$ gives $y = -${a}x$.`,
+              `$F_x = ${poly([2 * a, "x"], [2, "y"])} = 0$ 给出 $y = -${a}x$。`,
+            ),
+          ],
+          [
+            ["Substitute into the curve", "代入曲线"],
+            t(
+              `$${a}x^2 - ${2 * a}x^2 + ${c * a * a}x^2 = ${a * (c * a - 1)}x^2 = ${level}$, so $x^2 = ${m * m}$ and $x = ${m}$ for $x > 0$.`,
+              `$${a}x^2 - ${2 * a}x^2 + ${c * a * a}x^2 = ${a * (c * a - 1)}x^2 = ${level}$，所以 $x^2 = ${m * m}$，取 $x > 0$ 得 $x = ${m}$。`,
+            ),
+          ],
+          [["Find y", "求 y"], t(`$y = -${a} \\cdot ${m} = ${answer}$.`, `$y = -${a} \\cdot ${m} = ${answer}$。`)],
+        ],
+        t(
+          `At $(${m}, ${answer})$: $F = ${a * m * m} - ${2 * a * m * m} + ${c * a * a * m * m} = ${level}$, and $F_y = 2x + ${2 * c}y = ${2 * m - 2 * c * a * m} \\ne 0$, so the tangent is horizontal there.`,
+          `在 $(${m}, ${answer})$ 处：$F = ${a * m * m} - ${2 * a * m * m} + ${c * a * a * m * m} = ${level}$，且 $F_y = 2x + ${2 * c}y = ${2 * m - 2 * c * a * m} \\ne 0$，所以该处切线水平。`,
+        ),
       ),
     });
   },
@@ -2469,8 +2710,8 @@ const distinctPartials: KnowledgePointDef = {
   id: "counting-the-different-partial-derivatives-of-a-given-order",
   title: t("Counting the different partial derivatives of a given order", "计算给定阶的不同偏导数个数"),
   explanation: t(
-    "When mixed partial derivatives are continuous, the order of differentiation does not matter. A partial derivative of order $k$ is therefore decided by how many times each variable is used, and these counts are whole numbers adding to $k$. Stars and bars counts them as $\\binom{n + k - 1}{k}$. Without the equality of mixed partials, there would be $n^k$ different derivatives to find.",
-    "当混合偏导数连续时，求导的顺序无关紧要。因此 $k$ 阶偏导数由每个变量被使用的次数决定，这些次数是和为 $k$ 的整数。隔板法给出个数 $\\binom{n + k - 1}{k}$。如果混合偏导数不相等，就要求 $n^k$ 个不同的导数。",
+    "When mixed partial derivatives are continuous, the order of differentiation does not matter. A partial derivative of order $k$ is therefore decided by how many times each variable is used, and these counts are whole numbers adding to $k$. Stars and bars counts them as $\\binom{n + k - 1}{k}$. Without the equality of mixed partials, there would be $n^k$ different derivatives to find. A function of $10$ variables has $\\binom{11}{2} = 55$ different second partial derivatives: $10$ pure ones and $45$ mixed ones, against $100$ orders of differentiation.\n\n> **Watch out.** $n$ variables need only $n - 1$ bars between them, so the top of the binomial is $n + k - 1$. And a variable may be used more than once, so the count is not $\\binom{n}{k}$.",
+    "当混合偏导数连续时，求导的顺序无关紧要。因此 $k$ 阶偏导数由每个变量被使用的次数决定，这些次数是和为 $k$ 的整数。隔板法给出个数 $\\binom{n + k - 1}{k}$。如果混合偏导数不相等，就要求 $n^k$ 个不同的导数。$10$ 元函数有 $\\binom{11}{2} = 55$ 个不同的二阶偏导数：$10$ 个纯偏导数和 $45$ 个混合偏导数，而求导顺序有 $100$ 种。\n\n> **注意。** $n$ 个变量之间只需 $n - 1$ 块隔板，所以二项式上方是 $n + k - 1$。而且一个变量可以使用多次，所以个数不是 $\\binom{n}{k}$。",
   ),
   generate(rng) {
     const n = rng.int(2, 7);
@@ -2483,10 +2724,48 @@ const distinctPartials: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n ** k, n * k, k + 1, answer + 1],
-      solution: t(
-        `A derivative is decided by how many times each variable is used. So the count is $\\binom{${n + k - 1}}{${k}} = ${answer}$.`,
-        `一个导数由每个变量被使用的次数决定。所以个数是 $\\binom{${n + k - 1}}{${k}} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          n ** k,
+          `$${n}^{${k}}$ counts the orders of differentiation; with continuous mixed partials the order does not matter.`,
+          `$${n}^{${k}}$ 是求导顺序的个数；混合偏导数连续时顺序无关。`,
+        ),
+        why(
+          thirdPassChoose(n + k, k),
+          `That uses $${n}$ bars; $${n}$ variables need only $${n - 1}$ bars between them.`,
+          `那用了 $${n}$ 块隔板；$${n}$ 个变量之间只需 $${n - 1}$ 块。`,
+        ),
+        ...(k <= n
+          ? [
+              why(
+                thirdPassChoose(n, k),
+                "That uses each variable at most once; a variable may be differentiated in several times.",
+                "那样每个变量至多用一次；一个变量可以被求导多次。",
+              ),
+            ]
+          : []),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reduce to counts", "化为次数"],
+            t(
+              `By the equality of mixed partials, a derivative of order $${k}$ is decided by how many times each of the $${n}$ variables is used: whole numbers $k_{1} + \\cdots + k_{${n}} = ${k}$.`,
+              `由混合偏导数相等，$${k}$ 阶导数由 $${n}$ 个变量各被使用的次数决定：整数 $k_{1} + \\cdots + k_{${n}} = ${k}$。`,
+            ),
+          ],
+          [
+            ["Count with stars and bars", "用隔板法计数"],
+            t(
+              `Arrange $${k}$ stars and $${n - 1}$ bars in a row: $\\binom{${n + k - 1}}{${k}} = ${answer}$.`,
+              `把 $${k}$ 颗星和 $${n - 1}$ 块隔板排成一行：$\\binom{${n + k - 1}}{${k}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing the places of the $${n - 1}$ bars instead gives $\\binom{${n + k - 1}}{${n - 1}} = ${thirdPassChoose(n + k - 1, n - 1)}$, the same number.`,
+          `改为选择 $${n - 1}$ 块隔板的位置，得 $\\binom{${n + k - 1}}{${n - 1}} = ${thirdPassChoose(n + k - 1, n - 1)}$，个数相同。`,
+        ),
       ),
     });
   },

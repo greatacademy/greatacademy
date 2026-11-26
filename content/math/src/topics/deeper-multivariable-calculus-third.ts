@@ -11,7 +11,7 @@ import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { ask, type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** text turns a pair of English and Chinese strings into a text. */
@@ -1145,8 +1145,8 @@ const innerFactor = point(
   "the-inner-factor-of-a-partial-derivative",
   ["The inner factor of a partial derivative", "偏导数中的内层因子"],
   [
-    "The chain rule applies to partial derivatives as usual. For $(ax + by)^{n}$, the derivative with respect to $y$ has the inner factor $b$, which belongs to $y$. Forgetting this factor, or using $a$ in its place, is the common error.",
-    "链式法则同样适用于偏导数。对 $(ax + by)^{n}$，关于 $y$ 的导数有内层因子 $b$，它属于 $y$。漏掉这个因子或误用 $a$ 是常见错误。",
+    "The chain rule applies to partial derivatives as usual. For $(ax + by)^{n}$, the derivative with respect to $y$ has the inner factor $b$, which belongs to $y$. Forgetting this factor, or using $a$ in its place, is the common error.\n\nFor $(5x - 3y)^{4}$, $f_{y} = 4(5x - 3y)^{3} \\cdot (-3) = -12(5x - 3y)^{3}$, while $f_{x} = 20(5x - 3y)^{3}$.\n\n> **Watch out.** Multiply by the inner factor of the variable you differentiate in: $b$ for $y$, $a$ for $x$. The exponent comes down and drops by one, as in one variable.",
+    "链式法则同样适用于偏导数。对 $(ax + by)^{n}$，关于 $y$ 的导数有内层因子 $b$，它属于 $y$。漏掉这个因子或误用 $a$ 是常见错误。\n\n对 $(5x - 3y)^{4}$，$f_{y} = 4(5x - 3y)^{3} \\cdot (-3) = -12(5x - 3y)^{3}$，而 $f_{x} = 20(5x - 3y)^{3}$。\n\n> **注意。** 要乘的是所求导变量的内层因子：对 $y$ 是 $b$，对 $x$ 是 $a$。指数照样乘下来并减一，和一元函数一样。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -1160,15 +1160,45 @@ const innerFactor = point(
     const outer = n === 2 ? `(${poly([a, "x"], [b, "y"])})` : `(${poly([a, "x"], [b, "y"])})^{2}`;
     const answer = n * b * p;
     const inner = poly([a, "x"], [b, "y"]);
-    return ask(
-      [`Find $f_{y}(${x0}, ${y0})$ for $f(x, y) = (${inner})^{${n}}$.`, `对 $f(x, y) = (${inner})^{${n}}$，求 $f_{y}(${x0}, ${y0})$。`],
+    return numberProblem({
+      prompt: text([
+        `Find $f_{y}(${x0}, ${y0})$ for $f(x, y) = (${inner})^{${n}}$.`,
+        `对 $f(x, y) = (${inner})^{${n}}$，求 $f_{y}(${x0}, ${y0})$。`,
+      ]),
       answer,
-      [n * p, n * a * p, b * p],
-      [
-        `$f_{y} = ${n}${outer} \\cdot ${paren(b)}$. At the point the inner sum is $${s}$, which gives $${answer}$.`,
-        `$f_{y} = ${n}${outer} \\cdot ${paren(b)}$。在该点内层的和是 $${s}$，所以结果是 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          n * p,
+          `The chain rule also multiplies by the inner factor $${b}$, the $y$-coefficient.`,
+          `链式法则还要乘以内层因子 $${b}$，即 $y$ 的系数。`,
+        ),
+        why(
+          n * a * p,
+          `$${a}$ is the inner factor for $x$; for $f_{y}$ use the $y$-coefficient $${b}$.`,
+          `$${a}$ 是 $x$ 的内层因子；求 $f_{y}$ 要用 $y$ 的系数 $${b}$。`,
+        ),
+        why(b * p, `The exponent $${n}$ comes down as a factor.`, `指数 $${n}$ 要作为因子乘下来。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Apply the chain rule", "用链式法则"],
+            text([`$f_{y} = ${n}${outer} \\cdot ${paren(b)}$.`, `$f_{y} = ${n}${outer} \\cdot ${paren(b)}$。`]),
+          ],
+          [
+            ["Substitute the point", "代入该点"],
+            text([
+              `At $(${x0}, ${y0})$ the inner sum is $${s}$, so $f_{y} = ${n} \\cdot ${paren(p)} \\cdot ${paren(b)} = ${answer}$.`,
+              `在 $(${x0}, ${y0})$ 处内层的和是 $${s}$，所以 $f_{y} = ${n} \\cdot ${paren(p)} \\cdot ${paren(b)} = ${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `$f_{x}(${x0}, ${y0}) = ${n} \\cdot ${paren(p)} \\cdot ${paren(a)} = ${n * a * p}$, and $${paren(b)} \\cdot ${paren(n * a * p)} = ${paren(a)} \\cdot ${paren(answer)}$: the two partial derivatives are in the ratio $a : b$, as for any function of $${inner}$.`,
+          `$f_{x}(${x0}, ${y0}) = ${n} \\cdot ${paren(p)} \\cdot ${paren(a)} = ${n * a * p}$，而 $${paren(b)} \\cdot ${paren(n * a * p)} = ${paren(a)} \\cdot ${paren(answer)}$：两个偏导数之比为 $a : b$，任何关于 $${inner}$ 的函数都是这样。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1176,8 +1206,8 @@ const tangentLineHeight = point(
   "following-the-tangent-line-of-a-cross-section",
   ["Following the tangent line of a cross section", "沿截线的切线前进"],
   [
-    "The partial derivative $f_{x}$ is the slope of the tangent line in the plane $y = y_{0}$. That line starts at the height of the surface at the point, so moving one unit in $x$ along it changes the height by exactly $f_{x}$.",
-    "偏导数 $f_{x}$ 是平面 $y = y_{0}$ 内切线的斜率。这条直线从曲面在该点的高度出发，所以沿它在 $x$ 方向移动一个单位，高度恰好改变 $f_{x}$。",
+    "The partial derivative $f_{x}$ is the slope of the tangent line in the plane $y = y_{0}$. That line starts at the height of the surface at the point, so moving one unit in $x$ along it changes the height by exactly $f_{x}$.\n\nFor $z = x^{3} + y$ in the plane $y = 5$, the point at $x = 2$ has height $13$ and slope $12$, so the tangent line reaches $13 + 12 = 25$ at $x = 3$, while the surface itself is at $32$.\n\n> **Watch out.** Start from the height of the surface at the point and add the slope times the step. The slope alone is a change, not a height, and stepping forward in $x$ adds it rather than subtracting.",
+    "偏导数 $f_{x}$ 是平面 $y = y_{0}$ 内切线的斜率。这条直线从曲面在该点的高度出发，所以沿它在 $x$ 方向移动一个单位，高度恰好改变 $f_{x}$。\n\n对 $z = x^{3} + y$ 在平面 $y = 5$ 中，$x = 2$ 处的点高度为 $13$、斜率为 $12$，所以切线在 $x = 3$ 处到达 $13 + 12 = 25$，而曲面本身在 $32$。\n\n> **注意。** 从曲面在该点的高度出发，加上斜率乘步长。斜率本身是变化量，不是高度；沿 $x$ 向前走要加上它，而不是减去。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -1188,18 +1218,59 @@ const tangentLineHeight = point(
     const z0 = a * x0 * x0 + b * x0 * y0 + c * y0 * y0;
     const fx = 2 * a * x0 + b * y0;
     const answer = z0 + fx;
-    return ask(
-      [
-        `The plane $y = ${y0}$ cuts $z = ${poly([a, "x^{2}"], [b, "xy"], [c, "y^{2}"])}$ in a curve. Find the height of its tangent line at $x = ${x0}$ when $x = ${x0 + 1}$.`,
-        `平面 $y = ${y0}$ 截 $z = ${poly([a, "x^{2}"], [b, "xy"], [c, "y^{2}"])}$ 得到一条曲线。求它在 $x = ${x0}$ 处的切线在 $x = ${x0 + 1}$ 时的高度。`,
-      ],
+    const surface = poly([a, "x^{2}"], [b, "xy"], [c, "y^{2}"]);
+    const next = a * (x0 + 1) ** 2 + b * (x0 + 1) * y0 + c * y0 * y0;
+    return numberProblem({
+      prompt: text([
+        `The plane $y = ${y0}$ cuts $z = ${surface}$ in a curve. Find the height of its tangent line at $x = ${x0}$ when $x = ${x0 + 1}$.`,
+        `平面 $y = ${y0}$ 截 $z = ${surface}$ 得到一条曲线。求它在 $x = ${x0}$ 处的切线在 $x = ${x0 + 1}$ 时的高度。`,
+      ]),
       answer,
-      [z0, fx, z0 - fx],
-      [
-        `At the point $z = ${z0}$ and $f_{x} = ${fx}$. One unit along the tangent line gives the height $${z0} + ${paren(fx)} = ${answer}$.`,
-        `在该点 $z = ${z0}$，$f_{x} = ${fx}$。沿切线走一个单位，高度是 $${z0} + ${paren(fx)} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          z0,
+          `$${z0}$ is the height at $x = ${x0}$; one step along the tangent line adds the slope $${fx}$.`,
+          `$${z0}$ 是 $x = ${x0}$ 处的高度；沿切线走一步还要加上斜率 $${fx}$。`,
+        ),
+        why(
+          fx,
+          `$${fx}$ is the slope, a change in height; add it to the starting height $${z0}$.`,
+          `$${fx}$ 是斜率，即高度的变化量；要加到起始高度 $${z0}$ 上。`,
+        ),
+        why(
+          z0 - fx,
+          "Stepping forward in $x$ adds the slope; subtracting it goes back to $x - 1$.",
+          "沿 $x$ 向前走要加上斜率；减去它就是退回到 $x - 1$。",
+        ),
+        why(
+          next,
+          `$${next}$ is the height of the surface at $x = ${x0 + 1}$, not of its tangent line.`,
+          `$${next}$ 是曲面在 $x = ${x0 + 1}$ 处的高度，不是切线的高度。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the height and slope", "求高度和斜率"],
+            text([
+              `At $(${x0}, ${y0})$: $z = ${z0}$ and $f_{x} = ${poly([2 * a, "x"], [b, "y"])} = ${fx}$.`,
+              `在 $(${x0}, ${y0})$ 处：$z = ${z0}$，$f_{x} = ${poly([2 * a, "x"], [b, "y"])} = ${fx}$。`,
+            ]),
+          ],
+          [
+            ["Step along the tangent line", "沿切线前进"],
+            text([
+              `One unit in $x$ changes the height by $f_{x}$: $${z0} + ${paren(fx)} = ${answer}$.`,
+              `沿 $x$ 走一个单位，高度改变 $f_{x}$：$${z0} + ${paren(fx)} = ${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The surface itself is at $${next} = ${answer} + ${paren(a)}$ when $x = ${x0 + 1}$: one unit away, the curve leaves its tangent line by exactly the coefficient $${a}$ of $x^{2}$.`,
+          `当 $x = ${x0 + 1}$ 时曲面本身在 $${next} = ${answer} + ${paren(a)}$：走出一个单位后，曲线偏离切线的量恰好是 $x^{2}$ 的系数 $${a}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1207,8 +1278,8 @@ const pathLimit = point(
   "partial-derivatives-without-continuity",
   ["Partial derivatives without continuity", "有偏导数却不连续"],
   [
-    "The function $\\frac{kxy}{x^{2} + y^{2}}$, set to zero at the origin, has both partial derivatives equal to zero there. Yet along the line $y = mx$ it is constant with a value depending on $m$, so it is not continuous and not differentiable at the origin.",
-    "函数 $\\frac{kxy}{x^{2} + y^{2}}$ 在原点取零时，两个偏导数在原点都为零。但沿直线 $y = mx$，它是取决于 $m$ 的常数，所以在原点不连续，也不可微。",
+    "The function $\\frac{kxy}{x^{2} + y^{2}}$, set to zero at the origin, has both partial derivatives equal to zero there. Yet along the line $y = mx$ it is constant with a value depending on $m$, so it is not continuous and not differentiable at the origin.\n\nFor $\\frac{20xy}{x^{2} + y^{2}}$ along $y = 3x$, the value is $\\frac{60x^{2}}{10x^{2}} = 6$, while along the axes it is $0$.\n\n> **Watch out.** The denominator becomes $(1 + m^{2})x^{2}$, so the value is $\\frac{km}{1 + m^{2}}$, not $km$. A zero partial derivative at the origin says nothing about the value along a slanted line.",
+    "函数 $\\frac{kxy}{x^{2} + y^{2}}$ 在原点取零时，两个偏导数在原点都为零。但沿直线 $y = mx$，它是取决于 $m$ 的常数，所以在原点不连续，也不可微。\n\n对 $\\frac{20xy}{x^{2} + y^{2}}$ 沿 $y = 3x$，值为 $\\frac{60x^{2}}{10x^{2}} = 6$，而沿坐标轴为 $0$。\n\n> **注意。** 分母变成 $(1 + m^{2})x^{2}$，所以值是 $\\frac{km}{1 + m^{2}}$，不是 $km$。原点处偏导数为零，并不能说明沿斜线的取值。",
   ],
   (rng) => {
     const k = nz(rng, 12);
@@ -1216,18 +1287,54 @@ const pathLimit = point(
     const q = rng.int(1, 5);
     const m = Q.of(p, q);
     const answer = Q.of(k * p * q, p * p + q * q);
-    return ask(
-      [
+    const top = Q.of(k).mul(m);
+    const bottom = Q.of(1).add(m.mul(m));
+    return numberProblem({
+      prompt: text([
         `Let $f(x, y) = \\frac{${poly([k, "xy"])}}{x^{2} + y^{2}}$ away from the origin. Find the limit of $f$ at the origin along the line $y = ${poly([m, "x"])}$.`,
         `在原点以外，设 $f(x, y) = \\frac{${poly([k, "xy"])}}{x^{2} + y^{2}}$。求 $f$ 沿直线 $y = ${poly([m, "x"])}$ 在原点的极限。`,
-      ],
+      ]),
       answer,
-      [0, m.mul(Q.of(k)), k],
-      [
-        `Substituting $y = ${poly([m, "x"])}$, the factor $x^{2}$ cancels and $f$ is the constant $${answer.toLatex()}$ along the line. Other lines give other values, so there is no limit overall.`,
-        `代入 $y = ${poly([m, "x"])}$，因子 $x^{2}$ 约去，$f$ 沿这条直线是常数 $${answer.toLatex()}$。其他直线给出其他值，所以总的极限不存在。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          0,
+          "$0$ is the value along the axes and the partial derivatives at the origin; along this slanted line the value is different.",
+          "$0$ 是沿坐标轴的值和原点处的偏导数；沿这条斜线的值不同。",
+        ),
+        why(
+          top,
+          `The denominator is $(1 + m^{2})x^{2}$, not $x^{2}$; divide by $${bottom.toLatex()}$ as well.`,
+          `分母是 $(1 + m^{2})x^{2}$，不是 $x^{2}$；还要除以 $${bottom.toLatex()}$。`,
+        ),
+        why(
+          k,
+          `Substituting $y = ${poly([m, "x"])}$ brings the slope into both the numerator and the denominator.`,
+          `代入 $y = ${poly([m, "x"])}$ 后，斜率同时进入分子和分母。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Substitute the line", "代入直线"],
+            text([
+              `With $y = ${poly([m, "x"])}$: numerator $${poly([top, "x^{2}"])}$, denominator $${poly([bottom, "x^{2}"])}$.`,
+              `代入 $y = ${poly([m, "x"])}$：分子为 $${poly([top, "x^{2}"])}$，分母为 $${poly([bottom, "x^{2}"])}$。`,
+            ]),
+          ],
+          [
+            ["Cancel the x squared", "约去 x 的平方"],
+            text([
+              `$f = \\frac{${top.toLatex()}}{${bottom.toLatex()}} = ${answer.toLatex()}$ at every point of the line except the origin, so the limit along it is $${answer.toLatex()}$.`,
+              `除原点外，直线上每一点都有 $f = \\frac{${top.toLatex()}}{${bottom.toLatex()}} = ${answer.toLatex()}$，所以沿它的极限为 $${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The point $(${q}, ${p})$ lies on the line, and $f(${q}, ${p}) = \\frac{${k * p * q}}{${q * q} + ${p * p}} = ${answer.toLatex()}$.`,
+          `点 $(${q}, ${p})$ 在这条直线上，而 $f(${q}, ${p}) = \\frac{${k * p * q}}{${q * q} + ${p * p}} = ${answer.toLatex()}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1236,8 +1343,8 @@ const steepestDescent = {
     "the-most-negative-rate-of-change",
     ["The most negative rate of change", "最小的变化率"],
     [
-      "The directional derivative along a unit vector is $|\\nabla f|\\cos\\theta$, which ranges from $-|\\nabla f|$ to $|\\nabla f|$. So the most negative rate of change occurs opposite to the gradient and equals the negative of its length, and it is zero in perpendicular directions.",
-      "沿单位向量的方向导数是 $|\\nabla f|\\cos\\theta$，范围从 $-|\\nabla f|$ 到 $|\\nabla f|$。所以最小的变化率出现在梯度的反方向，等于其长度的相反数；在垂直方向上它为零。",
+      "The directional derivative along a unit vector is $|\\nabla f|\\cos\\theta$, which ranges from $-|\\nabla f|$ to $|\\nabla f|$. So the most negative rate of change occurs opposite to the gradient and equals the negative of its length, and it is zero in perpendicular directions. For $f = 3x + 4y$, $\\nabla f = \\langle 3, 4 \\rangle$ everywhere, so the rates range from $-5$ to $5$.\n\n> **Watch out.** The smallest rate is $-|\\nabla f|$, not $0$: zero is the rate along the level curve. The length is $\\sqrt{f_x^{2} + f_y^{2}}$, not $|f_x| + |f_y|$.",
+      "沿单位向量的方向导数是 $|\\nabla f|\\cos\\theta$，范围从 $-|\\nabla f|$ 到 $|\\nabla f|$。所以最小的变化率出现在梯度的反方向，等于其长度的相反数；在垂直方向上它为零。对 $f = 3x + 4y$，处处 $\\nabla f = \\langle 3, 4 \\rangle$，所以变化率从 $-5$ 到 $5$。\n\n> **注意。** 最小的变化率是 $-|\\nabla f|$，不是 $0$：$0$ 是沿等值线的变化率。长度是 $\\sqrt{f_x^{2} + f_y^{2}}$，不是 $|f_x| + |f_y|$。",
     ],
     (rng) => {
       const [a, b, c] = rng.pick(triples);
@@ -1249,18 +1356,53 @@ const steepestDescent = {
       const p = gx - y0;
       const q = gy - x0;
       const answer = -c * k;
-      return ask(
-        [
-          `Find the smallest directional derivative of $f(x, y) = ${poly([p, "x"], [q, "y"], [1, "xy"])}$ at $(${x0}, ${y0})$ over all unit vectors.`,
-          `求 $f(x, y) = ${poly([p, "x"], [q, "y"], [1, "xy"])}$ 在 $(${x0}, ${y0})$ 处，所有单位向量方向上最小的方向导数。`,
-        ],
+      const f = poly([p, "x"], [q, "y"], [1, "xy"]);
+      return numberProblem({
+        prompt: text([
+          `Find the smallest directional derivative of $f(x, y) = ${f}$ at $(${x0}, ${y0})$ over all unit vectors.`,
+          `求 $f(x, y) = ${f}$ 在 $(${x0}, ${y0})$ 处，所有单位向量方向上最小的方向导数。`,
+        ]),
         answer,
-        [c * k, 0, -(a + b) * k],
-        [
-          `$\\nabla f = ${br(gx, gy)}$ at the point, with length $${c * k}$. The smallest rate is opposite to the gradient, so it is $${answer}$.`,
-          `在该点 $\\nabla f = ${br(gx, gy)}$，长度是 $${c * k}$。最小的变化率在梯度的反方向，所以是 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            c * k,
+            `$${c * k}$ is the largest rate, along the gradient; the smallest is opposite to it.`,
+            `$${c * k}$ 是沿梯度的最大变化率；最小的在梯度的反方向。`,
+          ),
+          why(
+            0,
+            "$0$ is the rate along the level curve, perpendicular to the gradient; opposite to the gradient it is lower.",
+            "$0$ 是沿等值线、垂直于梯度方向的变化率；在梯度反方向上更小。",
+          ),
+          why(
+            -(a + b) * k,
+            `The length is $\\sqrt{${gx * gx} + ${gy * gy}} = ${c * k}$, not $|f_x| + |f_y|$.`,
+            `长度是 $\\sqrt{${gx * gx} + ${gy * gy}} = ${c * k}$，不是 $|f_x| + |f_y|$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the gradient", "求梯度"],
+              text([
+                `$\\nabla f = ${br(poly([1, "y"], [p, ""]), poly([1, "x"], [q, ""]))} = ${br(gx, gy)}$ at $(${x0}, ${y0})$.`,
+                `在 $(${x0}, ${y0})$ 处 $\\nabla f = ${br(poly([1, "y"], [p, ""]), poly([1, "x"], [q, ""]))} = ${br(gx, gy)}$。`,
+              ]),
+            ],
+            [
+              ["Go against it", "沿反方向"],
+              text([
+                `$|\\nabla f| = \\sqrt{${gx * gx} + ${gy * gy}} = ${c * k}$, and the smallest rate is $-|\\nabla f| = ${answer}$.`,
+                `$|\\nabla f| = \\sqrt{${gx * gx} + ${gy * gy}} = ${c * k}$，最小的变化率是 $-|\\nabla f| = ${answer}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `With $\\mathbf{u} = -\\frac{1}{${c * k}}${br(gx, gy)}$, $\\nabla f \\cdot \\mathbf{u} = -\\frac{${gx * gx} + ${gy * gy}}{${c * k}} = ${answer}$.`,
+            `取 $\\mathbf{u} = -\\frac{1}{${c * k}}${br(gx, gy)}$，$\\nabla f \\cdot \\mathbf{u} = -\\frac{${gx * gx} + ${gy * gy}}{${c * k}} = ${answer}$。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings2["the-gradient-vector#the-most-negative-rate-of-change"],
@@ -1282,26 +1424,61 @@ const parallelTangentPlane = {
     "a-tangent-plane-parallel-to-a-given-plane",
     ["A tangent plane parallel to a given plane", "与已知平面平行的切平面"],
     [
-      "A tangent plane to a level surface has the gradient as its normal. So a tangent plane parallel to $ax + by + cz = d$ occurs where the gradient is a multiple of $\\langle a, b, c \\rangle$. On a sphere there are two such points, opposite each other.",
-      "等值面的切平面以梯度为法向量。所以与 $ax + by + cz = d$ 平行的切平面，出现在梯度是 $\\langle a, b, c \\rangle$ 的倍数的地方。球面上有两个这样的点，彼此相对。",
+      "A tangent plane to a level surface has the gradient as its normal. So a tangent plane parallel to $ax + by + cz = d$ occurs where the gradient is a multiple of $\\langle a, b, c \\rangle$. On a sphere there are two such points, opposite each other. For $x^{2} + y^{2} + z^{2} = 121$ and planes $2x + 6y + 9z = d$, the normal $\\langle 2, 6, 9 \\rangle$ has length $11$, the tangent points are $\\pm(2, 6, 9)$, and $d = \\pm(4 + 36 + 81) = \\pm 121$.\n\n> **Watch out.** The tangent point is the radius times the unit normal, so divide $\\langle a, b, c \\rangle$ by its length. Then $d = \\langle a, b, c \\rangle \\cdot$ point $= R\\,|\\langle a, b, c \\rangle|$, which is neither $R$ nor $R^{2}$.",
+      "等值面的切平面以梯度为法向量。所以与 $ax + by + cz = d$ 平行的切平面，出现在梯度是 $\\langle a, b, c \\rangle$ 的倍数的地方。球面上有两个这样的点，彼此相对。对 $x^{2} + y^{2} + z^{2} = 121$ 和平面 $2x + 6y + 9z = d$，法向量 $\\langle 2, 6, 9 \\rangle$ 的长度为 $11$，切点为 $\\pm(2, 6, 9)$，$d = \\pm(4 + 36 + 81) = \\pm 121$。\n\n> **注意。** 切点是半径乘以单位法向量，所以要把 $\\langle a, b, c \\rangle$ 除以它的长度。于是 $d = \\langle a, b, c \\rangle \\cdot$ 切点 $= R\\,|\\langle a, b, c \\rangle|$，既不是 $R$，也不是 $R^{2}$。",
     ],
     (rng) => {
       const [a, b, c, h] = rng.pick(quads);
       const k = rng.int(1, 4);
       const R = h * k;
       const answer = R * h;
-      return ask(
-        [
-          `Two planes $${poly([a, "x"], [b, "y"], [c, "z"])} = d$ are tangent to the sphere $x^{2} + y^{2} + z^{2} = ${R * R}$. Find the larger value of $d$.`,
-          `两个平面 $${poly([a, "x"], [b, "y"], [c, "z"])} = d$ 与球面 $x^{2} + y^{2} + z^{2} = ${R * R}$ 相切。求较大的 $d$。`,
-        ],
+      const plane = poly([a, "x"], [b, "y"], [c, "z"]);
+      return numberProblem({
+        prompt: text([
+          `Two planes $${plane} = d$ are tangent to the sphere $x^{2} + y^{2} + z^{2} = ${R * R}$. Find the larger value of $d$.`,
+          `两个平面 $${plane} = d$ 与球面 $x^{2} + y^{2} + z^{2} = ${R * R}$ 相切。求较大的 $d$。`,
+        ]),
         answer,
-        [R, R * (a + b + c), R * R],
-        [
-          `The tangent point is a multiple of $${br(a, b, c)}$, whose length is $${h}$, so it is $(${a * k}, ${b * k}, ${c * k})$. Substituting gives $d = ${answer}$.`,
-          `切点是 $${br(a, b, c)}$ 的倍数，这个向量的长度是 $${h}$，所以切点是 $(${a * k}, ${b * k}, ${c * k})$。代入得 $d = ${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            R,
+            `$${R}$ is the radius; $d$ is the normal $${br(a, b, c)}$ dotted with the tangent point, which is $${R} \\cdot ${h}$.`,
+            `$${R}$ 是半径；$d$ 是法向量 $${br(a, b, c)}$ 与切点的点积，等于 $${R} \\cdot ${h}$。`,
+          ),
+          why(
+            R * h * h,
+            `The tangent point is $${R}$ times the unit normal: divide $${br(a, b, c)}$ by its length $${h}$ first.`,
+            `切点是 $${R}$ 乘以单位法向量：要先把 $${br(a, b, c)}$ 除以它的长度 $${h}$。`,
+          ),
+          why(
+            R * R,
+            `$${R * R}$ is the right side of the sphere's equation, not of the plane's.`,
+            `$${R * R}$ 是球面方程的右边，不是平面方程的右边。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the tangent point", "求切点"],
+              text([
+                `The normal of the sphere at a point is the point itself, so the point is a multiple of $${br(a, b, c)}$, whose length is $${h}$. At radius $${R}$ it is $${k}${br(a, b, c)} = (${a * k}, ${b * k}, ${c * k})$.`,
+                `球面在一点处的法向量就是该点本身，所以切点是 $${br(a, b, c)}$ 的倍数，这个向量的长度是 $${h}$。在半径 $${R}$ 处它是 $${k}${br(a, b, c)} = (${a * k}, ${b * k}, ${c * k})$。`,
+              ]),
+            ],
+            [
+              ["Substitute into the plane", "代入平面"],
+              text([
+                `$d = ${a} \\cdot ${a * k} + ${b} \\cdot ${b * k} + ${c} \\cdot ${c * k} = ${answer}$; the opposite point gives $${-answer}$.`,
+                `$d = ${a} \\cdot ${a * k} + ${b} \\cdot ${b * k} + ${c} \\cdot ${c * k} = ${answer}$；相对的点给出 $${-answer}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `The point is on the sphere: $${a * k}^{2} + ${b * k}^{2} + ${c * k}^{2} = ${R * R}$. And the distance from the origin to the plane is $\\frac{${answer}}{${h}} = ${R}$, the radius.`,
+            `该点在球面上：$${a * k}^{2} + ${b * k}^{2} + ${c * k}^{2} = ${R * R}$。原点到平面的距离为 $\\frac{${answer}}{${h}} = ${R}$，正是半径。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings2["tangent-planes-to-level-surfaces#a-tangent-plane-parallel-to-a-given-plane"],
@@ -1311,8 +1488,8 @@ const mvtBound = point(
   "a-bound-from-the-mean-value-theorem",
   ["A bound from the mean value theorem", "由中值定理得到的上界"],
   [
-    "The mean value theorem gives $f(Q) - f(P) = \\nabla f(C) \\cdot (Q - P)$. If $|\\nabla f|$ is at most $M$ along the segment, then the Cauchy-Schwarz inequality gives $|f(Q) - f(P)| \\le M|Q - P|$, which bounds a change without knowing $C$.",
-    "中值定理给出 $f(Q) - f(P) = \\nabla f(C) \\cdot (Q - P)$。如果沿线段 $|\\nabla f|$ 不超过 $M$，柯西-施瓦茨不等式给出 $|f(Q) - f(P)| \\le M|Q - P|$，这样不必知道 $C$ 就能限制变化量。",
+    "The mean value theorem gives $f(Q) - f(P) = \\nabla f(C) \\cdot (Q - P)$. If $|\\nabla f|$ is at most $M$ along the segment, then the Cauchy-Schwarz inequality gives $|f(Q) - f(P)| \\le M|Q - P|$, which bounds a change without knowing $C$. With $|\\nabla f| \\le 15$ from $(1, 1)$ to $(4, 5)$, the distance is $5$, so $|f(4, 5) - f(1, 1)| \\le 75$.\n\n> **Watch out.** Multiply $M$ by the straight-line distance $\\sqrt{\\Delta x^{2} + \\Delta y^{2}}$, not by $\\Delta x + \\Delta y$. A bound on the gradient alone is not a bound on the change.",
+    "中值定理给出 $f(Q) - f(P) = \\nabla f(C) \\cdot (Q - P)$。如果沿线段 $|\\nabla f|$ 不超过 $M$，柯西-施瓦茨不等式给出 $|f(Q) - f(P)| \\le M|Q - P|$，这样不必知道 $C$ 就能限制变化量。若从 $(1, 1)$ 到 $(4, 5)$ 有 $|\\nabla f| \\le 15$，两点距离为 $5$，所以 $|f(4, 5) - f(1, 1)| \\le 75$。\n\n> **注意。** 要用 $M$ 乘以直线距离 $\\sqrt{\\Delta x^{2} + \\Delta y^{2}}$，而不是 $\\Delta x + \\Delta y$。梯度的上界本身不是变化量的上界。",
   ],
   (rng) => {
     const [a, b, c] = rng.pick(triples);
@@ -1321,18 +1498,49 @@ const mvtBound = point(
     const x = rng.int(-6, 6);
     const y = rng.int(-6, 6);
     const answer = M * c * u;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `$|\\nabla f| \\le ${M}$ everywhere. Find the best bound on $|f(${x + a * u}, ${y + b * u}) - f(${x}, ${y})|$ that follows from the mean value theorem.`,
         `$|\\nabla f| \\le ${M}$ 处处成立。由中值定理，求 $|f(${x + a * u}, ${y + b * u}) - f(${x}, ${y})|$ 能得到的最好上界。`,
-      ],
+      ]),
       answer,
-      [M, M * (a + b) * u, c * u],
-      [
-        `The two points are at distance $${c * u}$, as the differences are $${a * u}$ and $${b * u}$. So the bound is $${M} \\cdot ${c * u} = ${answer}$.`,
-        `两点的距离是 $${c * u}$，因为坐标差是 $${a * u}$ 和 $${b * u}$。所以上界是 $${M} \\cdot ${c * u} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          M,
+          `$${M}$ bounds the rate of change; multiply it by the distance $${c * u}$ between the points.`,
+          `$${M}$ 限制的是变化率；还要乘以两点间的距离 $${c * u}$。`,
+        ),
+        why(
+          M * (a + b) * u,
+          `The distance is $\\sqrt{${a * u}^{2} + ${b * u}^{2}} = ${c * u}$, not $${a * u} + ${b * u}$.`,
+          `距离是 $\\sqrt{${a * u}^{2} + ${b * u}^{2}} = ${c * u}$，不是 $${a * u} + ${b * u}$。`,
+        ),
+        why(
+          c * u,
+          `$${c * u}$ is the distance; the change can be up to $${M}$ times as large.`,
+          `$${c * u}$ 是距离；变化量最多可达它的 $${M}$ 倍。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the distance", "求距离"],
+            text([
+              `The differences are $${a * u}$ and $${b * u}$, so $|Q - P| = \\sqrt{${a * u}^{2} + ${b * u}^{2}} = ${c * u}$.`,
+              `坐标差是 $${a * u}$ 和 $${b * u}$，所以 $|Q - P| = \\sqrt{${a * u}^{2} + ${b * u}^{2}} = ${c * u}$。`,
+            ]),
+          ],
+          [
+            ["Multiply by the bound", "乘以上界"],
+            text([`$|f(Q) - f(P)| \\le ${M} \\cdot ${c * u} = ${answer}$.`, `$|f(Q) - f(P)| \\le ${M} \\cdot ${c * u} = ${answer}$。`]),
+          ],
+        ],
+        text([
+          `The bound is reached by $f = \\frac{${M}}{${c}}(${poly([a, "x"], [b, "y"])})$, whose gradient has length $${M}$: its change is $\\frac{${M}(${a} \\cdot ${a * u} + ${b} \\cdot ${b * u})}{${c}} = ${answer}$.`,
+          `$f = \\frac{${M}}{${c}}(${poly([a, "x"], [b, "y"])})$ 的梯度长度为 $${M}$，它的变化量为 $\\frac{${M}(${a} \\cdot ${a * u} + ${b} \\cdot ${b * u})}{${c}} = ${answer}$，正好达到这个上界。`,
+        ]),
+      ),
+    });
   },
 );
 
